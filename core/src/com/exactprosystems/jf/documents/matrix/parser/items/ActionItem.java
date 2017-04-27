@@ -237,7 +237,7 @@ public final class ActionItem extends MatrixItem
 		this.action.initDefaultValues();
 		Result result = this.action.doAction(context, evaluator, report, parameters, super.getId(), this.assertBool);
 
-		if (result == Result.Failed || result == Result.Ignored)
+		if (result == Result.StepFailed || result == Result.Failed || result == Result.Ignored)
 		{
 			return new ReturnAndResult(start, result, this.action.getReason(), this.action.getErrorKind(), this);
 		}

@@ -83,10 +83,12 @@ public final class TestCase extends MatrixItem
 	}
 
 	@Override
-	public String toString()
-	{
-		return super.toString() + " " + getName();
-	}
+    public String toString()
+    {
+        String s = getName();
+        return Str.IsNullOrEmpty(s) ? super.toString() : s;
+    }
+
 	
 	//==============================================================================================
 	// Interface Mutable
@@ -121,7 +123,6 @@ public final class TestCase extends MatrixItem
 		driver.showTextBox(this, layout, 1, 0, this.id, this.id, () -> this.id.get());
 		driver.showTitle(this, layout, 1, 1, Tokens.TestCase.get(), context.getFactory().getSettings());
 		driver.showTextBox(this, layout, 1, 2, this.name, this.name, null);
-
         driver.showLabel(this, layout, 2, 0, Tokens.Depends.get() + ":");
         driver.showComboBox(this, layout, 2, 1, this.depends, this.depends, () ->
         {
@@ -170,9 +171,9 @@ public final class TestCase extends MatrixItem
 	@Override
 	protected void writePrefixItSelf(CsvWriter writer, List<String> firstLine, List<String> secondLine)
 	{
-		addParameter(firstLine, secondLine, Tokens.TestCase.get(),  this.name.get());
-        addParameter(firstLine, secondLine, Tokens.Kind.get(),      this.kind.get());
-        addParameter(firstLine, secondLine, Tokens.Depends.get(),   this.depends.get());
+	    super.addParameter(firstLine, secondLine, Tokens.TestCase.get(),  this.name.get());
+		super.addParameter(firstLine, secondLine, Tokens.Kind.get(),      this.kind.get());
+        super.addParameter(firstLine, secondLine, Tokens.Depends.get(),   this.depends.get());
         super.addParameter(firstLine, secondLine, Tokens.For.get(), this.plugin.getExpression());
 	}
 
@@ -244,14 +245,14 @@ public final class TestCase extends MatrixItem
 	        if (!Str.IsNullOrEmpty(this.depends.get()))
 	        {
 	            MatrixItem testcase = this.owner.getRoot().find(true, TestCase.class, this.depends.get());
-	            if (testcase != null && testcase.result != null && testcase.result.getResult() == Result.Failed)
+	            if (testcase != null && testcase.result != null && testcase.result.getResult().isFail())
 	            {
 	                ret = new ReturnAndResult(start, Result.Failed, "Fail due the TestCase " + this.depends.get() + " is failed", ErrorKind.FAIL, this);
 	                
 	                if (table != null && table.size() >= 0  && !isRepOff())
 	                {
 	                    row.put(Context.timeColumn,         ret.getTime());
-	                    row.put(Context.resultColumn,       ret.getResult());
+	                    row.put(Context.resultColumn,       ret.getResult().isFail() ? Result.Failed : ret.getResult());
 	                    row.put(Context.errorColumn,        ret.getError());
 	                    table.updateValue(position, row);
 	                }
@@ -265,12 +266,12 @@ public final class TestCase extends MatrixItem
 
 			ret = context.runHandler(start, context, listener, this, HandlerKind.OnTestCaseStart, report, null, null);
 
-			if (ret.getResult() != Result.Failed)
+			if (!ret.getResult().isFail())
 			{
     			ret = executeChildren(start, context, listener, evaluator, report, new Class<?>[] { OnError.class });
 			}
 			
-			if (ret.getResult() == Result.Failed)
+			if (ret.getResult().isFail())
 			{
 	            this.plugin.evaluate(evaluator);
 	            doSreenshot(row, this.plugin.getValue(), screenshotKind, ScreenshotKind.OnError, ScreenshotKind.OnStartOrError, ScreenshotKind.OnFinishOrError);
@@ -291,7 +292,7 @@ public final class TestCase extends MatrixItem
             if (table != null && position >= 0 && !isRepOff())
 			{
 				row.put(Context.timeColumn, 		ret.getTime());
-				row.put(Context.resultColumn, 		ret.getResult());
+				row.put(Context.resultColumn, 		ret.getResult().isFail() ? Result.Failed : ret.getResult());
 				row.put(Context.errorColumn, 		ret.getError());
 				table.updateValue(position, row);
 			}
@@ -303,7 +304,7 @@ public final class TestCase extends MatrixItem
 			if (table != null && table.size() >= 0  && !isRepOff())
 			{
 				row.put(Context.timeColumn, 		ret.getTime());
-				row.put(Context.resultColumn, 		ret.getResult());
+				row.put(Context.resultColumn, 		ret.getResult().isFail() ? Result.Failed : ret.getResult());
 				row.put(Context.errorColumn, 		new MatrixError(e.getMessage(), ErrorKind.EXCEPTION, this));
 				table.updateValue(position, row);
 			}

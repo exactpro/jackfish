@@ -206,7 +206,7 @@ public final class SubCase extends MatrixItem
 
 			Result result = ret.getResult();
 			
-			if (result == Result.Failed)
+			if (result.isFail())
 			{
 				MatrixItem branchOnError = super.find(false, OnError.class, null);
 				if (branchOnError != null && branchOnError instanceof OnError)

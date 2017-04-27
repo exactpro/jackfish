@@ -38,7 +38,7 @@ import java.util.stream.Collectors;
 							"#EndStep#}}",
 		seeAlso 		= "TestCase",
 		shouldContain 	= { Tokens.Step },
-		mayContain 		= { Tokens.IgnoreErr, Tokens.Off, Tokens.Kind, Tokens.For, Tokens.RepOff },
+		mayContain 		= { Tokens.IgnoreErr, Tokens.Id, Tokens.RepOff, Tokens.Off, Tokens.Kind, Tokens.For, Tokens.Depends },
 		parents			= { Case.class, Else.class, For.class, ForEach.class, If.class,
 							OnError.class, Step.class, SubCase.class, TestCase.class, While.class },
 		real			= true,
@@ -55,12 +55,14 @@ public class Step extends MatrixItem
         this.kind = new MutableValue<String>();
         this.plugin = new Parameter(Tokens.For.get(), null);
 		this.identify = new Parameter(Tokens.Step.get(), null); 
+        this.depends = new MutableValue<String>();
 	}
 
 	@Override
 	public String toString()
 	{
-		return super.toString() + " " + this.identify.get();
+	    String s = this.identify.getValueAsString();
+		return Str.IsNullOrEmpty(s) ? super.toString() : s;
 	}
 
 	@Override
@@ -70,6 +72,7 @@ public class Step extends MatrixItem
 		clone.kind = this.kind;
         clone.plugin = this.plugin.clone();
 		clone.identify = this.identify;
+		clone.depends = this.depends;
 		return clone;
 	}
 
@@ -79,6 +82,9 @@ public class Step extends MatrixItem
 		this.identify.setExpression(systemParameters.get(Tokens.Step));
         this.kind.set(systemParameters.get(Tokens.Kind)); 
         this.plugin.setExpression(systemParameters.get(Tokens.For));
+        this.depends.set(systemParameters.get(Tokens.Depends)); 
+        
+        this.ignoreErr.set(false); // TODO we need to exclude this parameter
 	}
 
 	@Override
@@ -87,6 +93,7 @@ public class Step extends MatrixItem
 		super.addParameter(firstLine, secondLine, Tokens.Step.get(), 	this.identify.getExpression());
         super.addParameter(firstLine, secondLine, Tokens.Kind.get(),    this.kind.get());
         super.addParameter(firstLine, secondLine, Tokens.For.get(),     this.plugin.getExpression());
+        super.addParameter(firstLine, secondLine, Tokens.Depends.get(),   this.depends.get());
 	}
 
 	@Override
@@ -99,6 +106,7 @@ public class Step extends MatrixItem
 	protected boolean matchesDerived(String what, boolean caseSensitive, boolean wholeWord)
 	{
 		return SearchHelper.matches(Tokens.Step.get(), what, caseSensitive, wholeWord) 
+                || SearchHelper.matches(this.depends.get(), what, caseSensitive, wholeWord)
                 || SearchHelper.matches(this.kind.get(), what, caseSensitive, wholeWord)
                 || SearchHelper.matches(this.plugin.getExpression(), what, caseSensitive, wholeWord)
                 || SearchHelper.matches(this.identify.getExpression(), what, caseSensitive, wholeWord);
@@ -110,7 +118,7 @@ public class Step extends MatrixItem
     @Override
     public boolean isChanged()
     {
-    	if (this.plugin.isChanged() || this.identify.isChanged() || this.kind.isChanged())
+    	if (this.plugin.isChanged() || this.identify.isChanged() || this.kind.isChanged() || this.depends.isChanged())
     	{
     		return true;
     	}
@@ -124,6 +132,7 @@ public class Step extends MatrixItem
     	this.identify.saved();
     	this.kind.saved();
     	this.plugin.saved();
+    	this.depends.saved();
     }
 
 	//==============================================================================================
@@ -132,13 +141,30 @@ public class Step extends MatrixItem
 	{
 		Object layout = driver.createLayout(this, 2);
 		driver.showComment(this, layout, 0, 0, getComments());
-		driver.showTitle(this, layout, 1, 0, Tokens.Step.get(), context.getFactory().getSettings());
-        driver.showExpressionField(this, layout, 1, 1, Tokens.Step.get(), this.identify, this.identify, null, null, null, null);
-        driver.showCheckBox(this, layout, 1, 2, Tokens.IgnoreErr.get(), this.ignoreErr, this.ignoreErr);
-        driver.showLabel(this, layout, 1, 3, " Screenshot:");
-        driver.showComboBox(this, layout, 1, 4, this.kind, this.kind,() -> Arrays.stream(ScreenshotKind.values()).map(Enum::toString).collect(Collectors.toList()));
-        driver.showLabel(this, layout, 1, 5, " Plugin:");
-        driver.showExpressionField(this, layout, 1, 6, Tokens.For.get(), this.plugin, this.plugin, null, null, null, null);
+		
+        driver.showTextBox(this, layout, 1, 0, this.id, this.id, () -> this.id.get());
+		driver.showTitle(this, layout, 1, 1, Tokens.Step.get(), context.getFactory().getSettings());
+        driver.showExpressionField(this, layout, 1, 2, Tokens.Step.get(), this.identify, this.identify, null, null, null, null);
+        
+        driver.showLabel(this, layout, 2, 0, Tokens.Depends.get() + ":");
+        driver.showComboBox(this, layout, 2, 1, this.depends, this.depends, () ->
+        {
+            List<String> list = this.owner.listOfIds(Step.class);
+            list.add(0, "");
+            return list;
+        });
+        driver.showLabel(this, layout, 2, 2, " Screenshot:");
+        driver.showComboBox(this, layout, 2, 3, this.kind, this.kind,() ->
+        {   
+            return Arrays.stream(ScreenshotKind.values()).map(Enum::toString).collect(Collectors.toList());
+        });
+        driver.showLabel(this, layout, 2, 4, " Plugin:");
+        driver.showExpressionField(this, layout, 2, 5, Tokens.For.get(), this.plugin, this.plugin, null, null, null, null);
+        
+        driver.showToggleButton(this, layout, 1, 3, 
+                b -> driver.hide(this, layout, 2, b),
+                b -> (b ? "Hide" : "Show") + " additional",
+                !((this.kind.isNullOrEmpty() || this.kind.get().equals(ScreenshotKind.Never.name())) && this.depends.isNullOrEmpty() && this.plugin.isExpressionNullOrEmpty()));
 
         return layout;
 	}
@@ -156,6 +182,19 @@ public class Step extends MatrixItem
         this.identify.prepareAndCheck(evaluator, listener, this);
     }
     
+    @Override
+    protected void beforeReport(ReportBuilder report)
+    {
+        super.beforeReport(report);
+        try
+        {
+            report.putMark(this.id.get());
+        }
+        catch (Exception e)
+        {
+            logger.error(e.getMessage(), e);
+        }
+    }
 
     @Override
 	protected ReturnAndResult executeItSelf(long start, Context context, IMatrixListener listener, AbstractEvaluator evaluator, ReportBuilder report, Parameters parameters)
@@ -193,11 +232,29 @@ public class Step extends MatrixItem
 					row.put(Context.testCaseColumn, 	parent);
 				}
 
-				row.put(Context.stepIdentityColumn, 	identifyValue);
+				row.put(Context.stepIdentityColumn, 	this.getId());
 				row.put(Context.stepColumn, 			this);
 				
 				table.add(row);
 			}
+            
+            if (!Str.IsNullOrEmpty(this.depends.get()))
+            {
+                MatrixItem step = this.owner.getRoot().find(true, Step.class, this.depends.get());
+                if (step != null && step.result != null && step.result.getResult().isFail())
+                {
+                    ret = new ReturnAndResult(start, Result.StepFailed, "Fail due the Step " + this.depends.get() + " is failed", ErrorKind.FAIL, this);
+                    
+                    if (table != null && table.size() >= 0  && !isRepOff())
+                    {
+                        row.put(Context.timeColumn,         ret.getTime());
+                        row.put(Context.resultColumn,       ret.getResult().isFail() ? Result.Failed : ret.getResult());
+                        row.put(Context.errorColumn,        ret.getError());
+                        table.updateValue(position, row);
+                    }
+                    return ret;
+                }
+            }
             
             this.plugin.evaluate(evaluator);
             doSreenshot(row, this.plugin.getValue(), screenshotKind, ScreenshotKind.OnStart, ScreenshotKind.OnStartOrError);
@@ -207,12 +264,12 @@ public class Step extends MatrixItem
 
             ret = context.runHandler(start, context, listener, this, HandlerKind.OnStepStart, report, null, null);
 			
-            if (ret.getResult() != Result.Failed)
+            if (!ret.getResult().isFail())
             {
                 ret = executeChildren(start, context, listener, evaluator, report, new Class<?>[] { OnError.class });
             }
 
-            if (ret.getResult() == Result.Failed)
+            if (ret.getResult().isFail())
             {
                 this.plugin.evaluate(evaluator);
                 doSreenshot(row, this.plugin.getValue(), screenshotKind, ScreenshotKind.OnError, ScreenshotKind.OnStartOrError, ScreenshotKind.OnFinishOrError);
@@ -234,7 +291,7 @@ public class Step extends MatrixItem
             if (table != null && position >= 0 && !isRepOff())
 			{
 				row.put(Context.timeColumn, 		ret.getTime());
-				row.put(Context.resultColumn, 		ret.getResult());
+				row.put(Context.resultColumn, 		ret.getResult().isFail() ? Result.Failed : ret.getResult());
 				row.put(Context.errorColumn, 		ret.getError());
 				table.updateValue(position, row);
 			}
@@ -247,21 +304,22 @@ public class Step extends MatrixItem
             if (table != null && table.size() >= 0  && !isRepOff())
 			{
 				row.put(Context.timeColumn, 		ret.getTime());
-				row.put(Context.resultColumn, 		ret.getResult());
+				row.put(Context.resultColumn, 		ret.getResult().isFail() ? Result.Failed : ret.getResult());
 				row.put(Context.errorColumn, 		new MatrixError(e.getMessage(), ErrorKind.EXCEPTION, this));
 				table.updateValue(position, row);
 			}
-			return new ReturnAndResult(start, Result.Failed, e.getMessage(), ErrorKind.EXCEPTION, this);
+			return new ReturnAndResult(start, Result.StepFailed, e.getMessage(), ErrorKind.EXCEPTION, this);
 		}
 		finally
 		{
 		    evaluator.setLocals(locals);
 		}
 
-		return ret;
+		return ret.getResult() == Result.Failed ? new ReturnAndResult(start, ret, Result.StepFailed): ret;
 	}
 
 	private Parameter identify;
     private MutableValue<String> kind;
     private Parameter plugin;
+    private MutableValue<String> depends;
 }

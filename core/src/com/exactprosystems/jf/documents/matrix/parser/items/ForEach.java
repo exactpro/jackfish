@@ -183,7 +183,7 @@ public final class ForEach extends MatrixItem
 				ret = executeChildren(start, context, listener, evaluator, report, new Class<?>[] { OnError.class });
 				result = ret.getResult();
 
-				if (result == Result.Failed)
+				if (result.isFail())
 				{
 					MatrixItem branchOnError = super.find(false, OnError.class, null);
 					if (branchOnError != null && branchOnError instanceof OnError)
@@ -203,9 +203,9 @@ public final class ForEach extends MatrixItem
                 {
                     break;
                 }
-                if (result == Result.Failed)
+                if (result.isFail())
                 {
-                    return new ReturnAndResult(start, ret.getError(), Result.Failed);
+                    return new ReturnAndResult(start, ret.getError(), result);
                 }
                 if (result == Result.Stopped || result == Result.Return)
                 {

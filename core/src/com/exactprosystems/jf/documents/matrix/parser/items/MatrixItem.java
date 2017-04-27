@@ -830,6 +830,7 @@ public abstract class MatrixItem implements IMatrixItem, Mutable, Cloneable
 			ReportBuilder report, Class<?>[] executeUntilNot)
 	{
 		boolean wasError = false;
+        boolean wasStepError = false;
 		Object out = null;
 		MatrixError error = null;
 		//clear state
@@ -849,6 +850,10 @@ public abstract class MatrixItem implements IMatrixItem, Mutable, Cloneable
 			out = ret.getOut();
 			if (result == Result.Stopped || result == Result.Return || result == Result.Break)
 			{
+                if (wasStepError)
+                {
+                    return new ReturnAndResult(start, ret.getError(), Result.StepFailed);
+                }
 				if (wasError)
 				{
 					return new ReturnAndResult(start, ret.getError(), Result.Failed);
@@ -857,6 +862,10 @@ public abstract class MatrixItem implements IMatrixItem, Mutable, Cloneable
 			}
 			else if (result == Result.Continue)
 			{
+                if (wasStepError)
+                {
+                    return new ReturnAndResult(start, ret.getError(), Result.StepFailed);
+                }
 				if (wasError)
 				{
 					return new ReturnAndResult(start, ret.getError(), Result.Failed);
@@ -879,10 +888,26 @@ public abstract class MatrixItem implements IMatrixItem, Mutable, Cloneable
 					break;
 				}
 			}
+			else if (result == Result.StepFailed)
+            {
+                wasStepError = true;
+                error = ret.getError();
+
+                if (isTrue(item.ignoreErr.get()))
+                {
+                    result = Result.Ignored;
+                    wasStepError = false;
+                }
+            }
+
 		}
 		//restore state for current item ( parent for executing)
 		this.changeState(MatrixItemState.Executing);
 
+		if (wasStepError)
+		{
+            return new ReturnAndResult(start, error, Result.StepFailed);
+		}
 		if (wasError)
 		{
 			return new ReturnAndResult(start, error, Result.Failed);
