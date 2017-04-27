@@ -141,6 +141,7 @@ public class ShowAllParamsController implements Initializable, ContainingParent
 		this.dialog.getDialogPane().setContent(this.parent);
 		dialog.getDialogPane().getStylesheets().addAll(Common.currentThemesPaths());
 		Platform.runLater(() -> expandTree(this.treeView.getRoot()));
+		this.dialog.setOnShown(e -> Common.setFocused(filteringField));
 		Optional<ButtonType> optional = this.dialog.showAndWait();
 		ArrayList<Pair<ReadableValue, TypeMandatory>> res = new ArrayList<>();
 		if (optional.get().getButtonData().equals(ButtonBar.ButtonData.OK_DONE))

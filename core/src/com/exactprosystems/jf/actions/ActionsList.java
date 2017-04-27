@@ -125,6 +125,7 @@ public class ActionsList
 				XmlChildren.class,
 				XmlCompare.class,
 				XmlFindFirst.class,
+				XmlFromText.class,
 				XmlLoadFromFile.class,
 				XmlSelect.class,
 				XmlSelectFirst.class,

@@ -73,7 +73,7 @@ public class XmlRemove extends AbstractAction
 	@Override
 	public void doRealAction(Context context, ReportBuilder report, Parameters parameters, AbstractEvaluator evaluator) throws Exception
 	{
-		xml.removeByXpath(this.xpath);
+		this.xml.removeByXpath(this.xpath);
 		super.setResult(null);
 	}
 

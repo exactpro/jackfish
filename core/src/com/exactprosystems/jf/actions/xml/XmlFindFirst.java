@@ -79,7 +79,7 @@ public class XmlFindFirst extends AbstractAction
 	@Override
 	public void doRealAction(Context context, ReportBuilder report, Parameters parameters, AbstractEvaluator evaluator) throws Exception
 	{
-		super.setResult(xml.findOneByXpath(this.xpath));
+		super.setResult(this.xml.findOneByXpath(this.xpath));
 	}
 
 	@Override

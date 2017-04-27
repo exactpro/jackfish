@@ -19,11 +19,6 @@ import com.exactprosystems.jf.documents.matrix.parser.Parameters;
 import com.exactprosystems.jf.documents.matrix.parser.items.TypeMandatory;
 import com.exactprosystems.jf.functions.Xml;
 
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
-
 @ActionAttribute(
 		group					= ActionGroups.XML,
 		generalDescription 		= "The purpose of the action is to add a new element at the end of the parental element"
@@ -91,7 +86,7 @@ public class XmlAddNode extends AbstractAction
 	@ActionFieldAttribute(name = xmlName, mandatory = true, description = "An Xml structure to which an action has to be done.")
 	protected Xml 		xml 	= null;
 
-	@ActionFieldAttribute(name = nodeNameName, mandatory = true, description = "The name of an added element.")
+	@ActionFieldAttribute(name = nodeNameName, mandatory = false, description = "The name of an added element.")
 	protected String 	nodeName 	= null;
 
 	@ActionFieldAttribute(name = contentName, mandatory = false, description = "The contents of a new element.")

@@ -26,8 +26,8 @@ import java.util.stream.Collectors;
 
 public class MatrixTreeRow extends TreeTableRow<MatrixItem>
 {
-	private final PseudoClass customSelected = PseudoClassState.getPseudoClass("customSelectedState");
-	private final PseudoClass selected = PseudoClassState.getPseudoClass("selected");
+	private static final PseudoClass customSelected = PseudoClassState.getPseudoClass("customSelectedState");
+	private static final PseudoClass selected = PseudoClassState.getPseudoClass("selected");
 
 	public MatrixTreeRow(ContextMenu contextMenu)
 	{

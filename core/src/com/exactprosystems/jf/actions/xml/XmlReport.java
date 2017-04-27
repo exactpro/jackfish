@@ -10,14 +10,12 @@ package com.exactprosystems.jf.actions.xml;
 
 import com.exactprosystems.jf.actions.*;
 import com.exactprosystems.jf.api.common.Str;
-import com.exactprosystems.jf.api.error.ErrorKind;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.report.ReportBuilder;
 import com.exactprosystems.jf.documents.config.Context;
 import com.exactprosystems.jf.documents.matrix.parser.Parameters;
 import com.exactprosystems.jf.functions.HelpKind;
 import com.exactprosystems.jf.functions.Xml;
-import com.exactprosystems.jf.actions.ActionsReportHelper;
 
 import java.util.List;
 
@@ -84,12 +82,6 @@ public class XmlReport extends AbstractAction
 	@Override
 	public void doRealAction(Context context, ReportBuilder report, Parameters parameters, AbstractEvaluator evaluator) throws Exception
 	{
-	    if (this.xml == null)
-	    {
-	        super.setError(xmlName, ErrorKind.EMPTY_PARAMETER);
-	        return;
-	    }
-	    
 	    report = this.toReport == null ? report : this.toReport;
 		this.beforeTestCase = ActionsReportHelper.getBeforeTestCase(this.beforeTestCase, this.owner.getMatrix());
 		this.xml.report(report, this.beforeTestCase, Str.asString(this.title));

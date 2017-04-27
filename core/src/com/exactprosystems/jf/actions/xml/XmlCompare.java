@@ -8,16 +8,15 @@
 
 package com.exactprosystems.jf.actions.xml;
 
-import com.exactprosystems.jf.actions.AbstractAction;
-import com.exactprosystems.jf.actions.ActionAttribute;
-import com.exactprosystems.jf.actions.ActionFieldAttribute;
-import com.exactprosystems.jf.actions.ActionGroups;
-import com.exactprosystems.jf.api.error.ErrorKind;
+import com.exactprosystems.jf.actions.*;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.report.ReportBuilder;
 import com.exactprosystems.jf.documents.config.Context;
 import com.exactprosystems.jf.documents.matrix.parser.Parameters;
+import com.exactprosystems.jf.functions.HelpKind;
 import com.exactprosystems.jf.functions.Xml;
+
+import java.util.List;
 
 @ActionAttribute(
 		group					= ActionGroups.XML,
@@ -42,8 +41,9 @@ import com.exactprosystems.jf.functions.Xml;
 	)
 public class XmlCompare extends AbstractAction 
 {
-	public final static String actualName = "Actual";
-	public final static String expectedName = "Expected";
+	public final static String actualName          = "Actual";
+	public final static String expectedName        = "Expected";
+	public final static String ignoreNodeOrderName = "IgnoreNodeOrder";
 
 	@ActionFieldAttribute(name = actualName, mandatory = true, description = "An Xml structure is the one that has to undergo comparison.")
 	protected Xml actual = null;
@@ -51,33 +51,44 @@ public class XmlCompare extends AbstractAction
 	@ActionFieldAttribute(name = expectedName, mandatory = true, description = "An Xml structure is the one that comparison has to be done to.")
 	protected Xml expected = null;
 
+	@ActionFieldAttribute(name = ignoreNodeOrderName, mandatory = false, description = "Ignore node order.")
+	protected Boolean ignoreNodesOrder;
+
 	public XmlCompare()
 	{
 	}
-	
-	@Override
-	public void doRealAction(Context context, ReportBuilder report, Parameters parameters, AbstractEvaluator evaluator) throws Exception
-	{
-		if (this.actual == null)
-		{
-			super.setError("Actual XML object is null", ErrorKind.EMPTY_PARAMETER);
-			return;
-		}
 
-		if (this.expected == null)
+	@Override
+	protected HelpKind howHelpWithParameterDerived(Context context, Parameters parameters, String fieldName) throws Exception
+	{
+		switch (fieldName)
 		{
-			super.setError("Expected XML object is null", ErrorKind.EMPTY_PARAMETER);
-			return;
+			case ignoreNodeOrderName :
+				return HelpKind.ChooseFromList;
 		}
-	
-		boolean res = this.actual.equals(this.expected);
-		
-		super.setResult(res);
+		return super.howHelpWithParameterDerived(context, parameters, fieldName);
 	}
 
 	@Override
-	public void initDefaultValues() {
-		// TODO Auto-generated method stub
-		
+	protected void listToFillParameterDerived(List<ReadableValue> list, Context context, String parameterToFill, Parameters parameters) throws Exception
+	{
+		switch (parameterToFill)
+		{
+			case ignoreNodeOrderName:
+				list.add(ReadableValue.TRUE);
+				list.add(ReadableValue.FALSE);
+		}
+	}
+
+	@Override
+	public void doRealAction(Context context, ReportBuilder report, Parameters parameters, AbstractEvaluator evaluator) throws Exception
+	{
+		super.setResult(this.actual.compareTo(this.expected, this.ignoreNodesOrder));
+	}
+
+	@Override
+	public void initDefaultValues()
+	{
+		this.ignoreNodesOrder = false;
 	}
 }

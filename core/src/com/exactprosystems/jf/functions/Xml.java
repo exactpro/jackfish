@@ -8,22 +8,13 @@
 
 package com.exactprosystems.jf.functions;
 
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.concurrent.atomic.AtomicInteger;
+import com.exactprosystems.jf.api.common.Str;
+import com.exactprosystems.jf.common.report.HTMLhelper;
+import com.exactprosystems.jf.common.report.ReportBuilder;
+import com.exactprosystems.jf.common.report.ReportTable;
+import org.w3c.dom.*;
+import org.xml.sax.InputSource;
 
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.Marshaller;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.transform.OutputKeys;
@@ -34,16 +25,13 @@ import javax.xml.transform.stream.StreamResult;
 import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathFactory;
-
-import org.w3c.dom.Attr;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.NamedNodeMap;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
-
-import com.exactprosystems.jf.common.report.ReportBuilder;
-import com.exactprosystems.jf.common.report.ReportTable;
+import java.io.*;
+import java.nio.charset.StandardCharsets;
+import java.util.*;
+import java.util.Map.Entry;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 public class Xml  
 {
@@ -56,6 +44,14 @@ public class Xml
 			
 			this.node = docBuilder.parse(fileReader);
 		}
+	}
+
+	public Xml(Reader reader) throws Exception
+	{
+		DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
+		DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
+
+		this.node = docBuilder.parse(new InputSource(reader));
 	}
 
 	public Xml(Node node)
@@ -77,7 +73,141 @@ public class Xml
 	{
 		return this.node.equals(obj);
 	}
-	
+
+	public boolean compareTo(Xml another, Boolean ignoreNodesOrder)
+	{
+		//region tag name
+
+		if (!Str.areEqual(this.node.getNodeName(), another.node.getNodeName()))
+		{
+			return false;
+		}
+
+		//endregion
+
+		//region check text
+
+		if (!Str.areEqual(this.getText(), another.getText()))
+		{
+			return false;
+		}
+
+		//endregion
+
+		//region check parameters
+		if (this.node instanceof Element && another.node instanceof Element)
+		{
+			NamedNodeMap thisAttrs = this.node.getAttributes();
+			NamedNodeMap anotherAttrs = another.node.getAttributes();
+
+			if (thisAttrs.getLength() != anotherAttrs.getLength())
+			{
+				return false;
+			}
+			Map<String, String> thisMap = IntStream.range(0, thisAttrs.getLength())
+					.mapToObj(thisAttrs::item)
+					.filter(node -> node instanceof Attr)
+					.map(node -> (Attr)node)
+					.collect(Collectors.toMap(Attr::getName, Attr::getValue));
+
+			Map<String, String> anotherMap = IntStream.range(0, anotherAttrs.getLength())
+					.mapToObj(anotherAttrs::item)
+					.filter(node -> node instanceof Attr)
+					.map(node -> (Attr)node)
+					.collect(Collectors.toMap(Attr::getName, Attr::getValue));
+
+			if (!thisMap.equals(anotherMap))
+			{
+				return false;
+			}
+		}
+
+
+		//endregion
+
+		//region check children
+		List<Xml> thisChildren = this.getChildren();
+		List<Xml> anotherChildren = another.getChildren();
+		if (thisChildren.size() != anotherChildren.size())
+		{
+			return false;
+		}
+
+		if (!ignoreNodesOrder)
+		{
+
+			for (int i = 0; i < thisChildren.size(); i++)
+			{
+				Xml thisChild = thisChildren.get(i);
+				Xml anotherChild = anotherChildren.get(i);
+
+				if (!thisChild.compareTo(anotherChild, ignoreNodesOrder))
+				{
+					return false;
+				}
+			}
+		}
+		else
+		{
+			boolean[] thisArray = new boolean[thisChildren.size()];
+			boolean[] anotherArray = new boolean[thisChildren.size()];
+
+			int thisCounter = 0;
+			Iterator<Xml> thisIterator = thisChildren.iterator();
+			while (thisIterator.hasNext())
+			{
+				Xml thisXml = thisIterator.next();
+				int anotherCounter = 0;
+				Iterator<Xml> anotherIterator = anotherChildren.iterator();
+				while (anotherIterator.hasNext())
+				{
+					if (anotherArray[anotherCounter])
+					{
+						anotherIterator.next();
+						anotherCounter++;
+						continue;
+					}
+
+					Xml anotherXml = anotherIterator.next();
+
+					if (thisXml.compareTo(anotherXml, true))
+					{
+						thisArray[thisCounter] = true;
+						anotherArray[anotherCounter] = true;
+					}
+
+					anotherCounter++;
+				}
+				thisCounter++;
+			}
+
+			for (boolean b : thisArray)
+			{
+				if (!b)
+				{
+					return false;
+				}
+			}
+
+			for (boolean b : anotherArray)
+			{
+				if (!b)
+				{
+					return false;
+				}
+			}
+		}
+
+		//endregion
+
+		return true;
+	}
+
+	public Node getNode()
+	{
+		return node;
+	}
+
 	@Override
 	public String toString()
 	{
@@ -91,8 +221,13 @@ public class Xml
 
 	public String getText()
 	{
-		String res = this.node.getTextContent();
-		return res == null ? "" : res;
+		//from http://stackoverflow.com/questions/12191414/node-gettextcontent-is-there-a-way-to-get-text-content-of-the-current-node-no
+		NodeList list = this.node.getChildNodes();
+		return IntStream.range(0, list.getLength())
+				.mapToObj(list::item)
+				.filter(child -> child.getNodeType() == Node.TEXT_NODE)
+				.map(Node::getTextContent)
+				.collect(Collectors.joining(""));
 	}
 	
 	public void setAttributes(Map<String, Object> attr)
@@ -118,7 +253,7 @@ public class Xml
 		TransformerFactory transformerFactory = TransformerFactory.newInstance();
 		Transformer transformer = transformerFactory.newTransformer();
 		
-		transformer.setOutputProperty(OutputKeys.INDENT, "yes");		
+		transformer.setOutputProperty(OutputKeys.INDENT, "yes");
 		
 		DOMSource source = new DOMSource(this.node);
 		
@@ -128,7 +263,7 @@ public class Xml
  		
 		ReportTable table = report.addExplicitTable(title, beforeTestcase, false, 0, new int[] {}, new String[] {});
 		String buff = new String(output.toByteArray(), StandardCharsets.UTF_8);
-		table.addValues(buff);
+		table.addValues(HTMLhelper.htmlescape(buff));
 	}
 
 	public boolean save(String fileName) throws Exception
@@ -148,16 +283,16 @@ public class Xml
 
 	public List<Xml> getChildren()
 	{
-		List<Xml> res = new ArrayList<Xml>();
+		List<Xml> res = new ArrayList<>();
 		NodeList nodes = this.node.getChildNodes();
-		
 		if (nodes != null)
 		{
-			for (int i = 0; i < nodes.getLength(); i++)
-			{
-				Node node = nodes.item(i);
-				res.add(new Xml(node));
-			}
+			IntStream.range(0, nodes.getLength())
+					.mapToObj(nodes::item)
+					//check that element is not a text
+					.filter(node -> node.getNodeType() != Node.TEXT_NODE)
+					.map(Xml::new)
+					.forEach(res::add);
 		}
 			
 		return res;

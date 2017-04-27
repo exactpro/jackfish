@@ -85,7 +85,7 @@ public class XmlSelect extends AbstractAction
 	@Override
 	public void doRealAction(Context context, ReportBuilder report, Parameters parameters, AbstractEvaluator evaluator) throws Exception
 	{
-		super.setResult(xml.createListByXpath(this.nodeName, this.xpath));
+		super.setResult(this.xml.createListByXpath(this.nodeName, this.xpath));
 	}
 
 	@Override

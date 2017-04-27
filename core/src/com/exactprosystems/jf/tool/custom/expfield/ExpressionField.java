@@ -15,6 +15,7 @@ import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.CssVariables;
 import com.exactprosystems.jf.tool.custom.controls.field.CustomField;
 import com.exactprosystems.jf.tool.helpers.DialogsHelper;
+import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.event.EventDispatcher;
 import javafx.event.EventHandler;
@@ -326,7 +327,7 @@ public class ExpressionField extends CustomField
 	{
 		if (isShadowTextIsNotPresented)
 		{
-			this.setPrefWidth(Common.computeTextWidth(this.getFont(), text, 0.0D) + 40);
+			Platform.runLater(() -> this.setPrefWidth(Common.computeTextWidth(this.getFont(), text, 0.0D) + 40));
 		}
 	}
 

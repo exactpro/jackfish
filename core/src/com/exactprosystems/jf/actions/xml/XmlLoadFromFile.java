@@ -12,12 +12,15 @@ import com.exactprosystems.jf.actions.AbstractAction;
 import com.exactprosystems.jf.actions.ActionAttribute;
 import com.exactprosystems.jf.actions.ActionFieldAttribute;
 import com.exactprosystems.jf.actions.ActionGroups;
+import com.exactprosystems.jf.api.error.ErrorKind;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.report.ReportBuilder;
 import com.exactprosystems.jf.documents.config.Context;
 import com.exactprosystems.jf.documents.matrix.parser.Parameters;
 import com.exactprosystems.jf.functions.HelpKind;
 import com.exactprosystems.jf.functions.Xml;
+
+import java.io.File;
 
 @ActionAttribute(
 		group					= ActionGroups.XML,
@@ -69,6 +72,16 @@ public class XmlLoadFromFile extends AbstractAction
 	@Override
 	public void doRealAction(Context context, ReportBuilder report, Parameters parameters, AbstractEvaluator evaluator) throws Exception
 	{
+		if (!new File(this.file).exists())
+		{
+			setError("File '" + this.file + "' does not exists", ErrorKind.WRONG_PARAMETERS);
+			return;
+		}
+		if (new File(this.file).isDirectory())
+		{
+			setError("Cant load xml file from directory '" + this.file + "'", ErrorKind.WRONG_PARAMETERS);
+			return;
+		}
 		super.setResult(new Xml(this.file));
 	}
 
