@@ -256,7 +256,9 @@
             <any id="owner" xpath="//Pane[@class=&amp;quot;Internet Explorer_Server&amp;quot; and @name=&amp;quot;SilverLightMock&amp;quot;]" name=""/>
         </self>
         <onOpen/>
-        <run/>
+        <run>
+            <comboBox id="autocompleteBox" xpath=".//ComboBox[@uid=&amp;quot;autocompleteBox&amp;quot;]" owner="owner"/>
+        </run>
         <onClose/>
         <close/>
     </window>
