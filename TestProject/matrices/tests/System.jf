@@ -175,8 +175,8 @@ RESTORE;Restore;Never;;
     #Assert;#Message
     !(isdef var2);'var2 shouldnt be defined yet'
 
-    #Step;#Kind;#For
-    ;;
+    #Step;#Kind;#For;#Depends
+    ;;;
         #Action;#Name;#AsVar
         Restore;'existingName';'var2'
 
@@ -185,8 +185,8 @@ RESTORE;Restore;Never;;
     #Assert;#Message
     !(isdef var2);'var2 shouldnt be defined yet'
 
-    #Step;#Kind;#For
-    ;;
+    #Step;#Kind;#For;#Depends
+    ;;;
         #Global;#Action;#Name;#AsVar
         1;Restore;'existingName';'var2'
 
@@ -262,8 +262,8 @@ RESULT;ResultTable;Never;;
     #Id;#Action;#Decoraded
     RESTBL3;ResultTable;true
 
-    #Step;#Kind;#For
-    ;;
+    #Step;#Kind;#For;#Depends
+    ;;;
     #EndStep
 
     #Id;#Action;#Decoraded
@@ -276,12 +276,12 @@ RESULT;ResultTable;Never;;
     TEXT1;Text;Matrix
     ~;"#Id;#TestCase;#Kind;#Depends;#For"
     ~;"TC1;Testcase1;;;"
-    ~;"    #Step;#Kind;#For"
-    ~;"    'ST1';;"
+    ~;"    #Id;#Step;#Kind;#For"
+    ~;"    SID1;'ST1';;"
     ~;"    #EndStep"
     ~;""
-    ~;"    #Step;#Kind;#For"
-    ~;"    'ST2';;"
+    ~;"    #Id;#Step;#Kind;#For"
+    ~;"    SID2;'ST2';;"
     ~;"        #Fail"
     ~;"        'User error'"
     ~;""
@@ -300,9 +300,9 @@ RESULT;ResultTable;Never;;
     #Id;#RawTable
     expectedTable;Table
     @;Matrix;TestCaseId;TestCase;StepIdentity;Step;Time;Result;Error;Screenshot
-    0;new;TC1;TestCase Testcase1;;;9;Failed;User error;
-    1;new;TC1;TestCase Testcase1;ST1;Step 'ST1';3;Passed;;
-    2;new;TC1;TestCase Testcase1;ST2;Step 'ST2';1;Failed;User error;
+    0;new;TC1;Testcase1;;;9;Failed;User error;
+    1;new;TC1;Testcase1;SID1;ST1;3;Passed;;
+    2;new;TC1;Testcase1;SID2;ST2;1;Failed;User error;
     #EndRawTable
 
     #Id;#Action;#Expected;#Actual;#ExcludeColumns
@@ -323,8 +323,8 @@ RT_USERVAL;ResultTableUserValue;Never;;
     #Action;#UserValue
     ResultTableUserValue;'value'
 
-    #Step;#Kind;#For
-    ;;
+    #Step;#Kind;#For;#Depends
+    ;;;
     #EndStep
 
     #Id;#Action;#Decoraded
@@ -345,8 +345,8 @@ RT_USERVAL;ResultTableUserValue;Never;;
     #Action;#OtherValue
     ResultTableUserValue;100
 
-    #Step;#Kind;#For
-    ;;
+    #Step;#Kind;#For;#Depends
+    ;;;
         #Action;#UserValue;#OtherValue
         ResultTableUserValue;'value1';200
 

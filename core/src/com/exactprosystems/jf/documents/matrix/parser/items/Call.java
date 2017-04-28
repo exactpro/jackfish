@@ -246,7 +246,7 @@ public final class Call extends MatrixItem
 					vars.set(super.getId(), ret.getOut());
 				}
 
-				if (result == Result.Failed)
+				if (result.isFail())
 				{
 					return new ReturnAndResult(start, ret);
 				}

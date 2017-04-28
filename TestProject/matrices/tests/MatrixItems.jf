@@ -24,8 +24,8 @@ VISIBILITY;Variable visibility;Never;;
 
     // ======================================================================
     // override global value
-    #Step;#Kind;#For
-    ;;
+    #Step;#Kind;#For;#Depends
+    ;;;
         // 
         #Assert;#Message
         local1 == 123;'Expected=' + 123 + ' Actual=' + local1
@@ -61,6 +61,38 @@ VISIBILITY;Variable visibility;Never;;
     #Id;#Let
     newlocal;888
 
+    // ======================================================================
+    // visibility subcase results
+    #Id;#Let
+    additional;555
+
+    // 
+    #Id;#Global;#Call;#additional
+    callResGlobal;1;TestSub;1
+
+    #Assert;#Message
+    callResGlobal == 101;'Should be defined here'
+
+    // 
+    #Id;#Call;#additional
+    callRes;TestSub;2
+
+    #Assert;#Message
+    callRes == 102;'Should be defined here'
+
+    #Assert;#Message
+    additional == 555;'Should be defined here'
+
+    #Id;#SubCase;#additional
+    TestSub;;2
+        #Assert;#Message
+        additional != 555;'Expected !=' + 555 + ' Actual=' + additional
+
+        #Return
+        100 + additional
+
+    #EndSubCase
+
 
 #Id;#TestCase;#Kind;#Depends;#For
 VISIBILITY;Variable visibility continue;;;
@@ -69,5 +101,50 @@ VISIBILITY;Variable visibility continue;;;
 
     #Assert;#Message
     !(isdef newlocal);'Shouldnt be defined here'
+
+    #Assert;#Message
+    callResGlobal == 101;'Should be defined here'
+
+    #Assert;#Message
+    !(isdef callRes);'Shouldnt be defined here'
+
+    // ======================================================================
+    // Step var visibility
+    #Id;#Let
+    local2;1
+
+    #Id;#Global;#Let
+    global2;1;2
+
+    #Step;#Kind;#For;#Depends
+    ;;;
+        #Assert;#Message
+        local2 == 1;'Should be defined here'
+
+        #Assert;#Message
+        global2 == 2;'Should be defined here'
+
+        #Id;#Let
+        stepLocal;3
+
+        #Id;#Global;#Let
+        stepGlobal;1;4
+
+    #EndStep
+
+    #Assert;#Message
+    local2 == 1;'Should be defined here'
+
+    #Assert;#Message
+    global2 == 2;'Should be defined here'
+
+    #Assert;#Message
+    !(isdef stepLocal);'Shouldnt be defined here'
+
+    #Assert;#Message
+    stepGlobal == 4;'Should be defined here'
+
+    #Global;#Action
+    1;Print
 
 

@@ -342,7 +342,7 @@ public class HTMLReportBuilder extends ReportBuilder
 	protected void reportItemFooter(ReportWriter writer, MatrixItem item, Integer id, long time, ImageWrapper screenshot) throws IOException
 	{
 		Result result = item.getResult() == null ? Result.NotExecuted : item.getResult().getResult();
-			String styleClass = result == Result.Failed ? "danger" : "success";
+			String styleClass = result.isFail() ? "danger" : "success";
 			writer.fwrite("</tbody>");
 			writer.fwrite("</table>");
 

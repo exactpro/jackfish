@@ -155,10 +155,10 @@ public class ResultTable extends AbstractAction
 				String str = report.decorateStyle(row.get(Context.resultColumn), res == null ? "" : res.getStyle());
 				row.put(Context.resultColumn, str);
 
-				replace(row, Context.testCaseColumn, 		e -> spaceIfNull(((TestCase)e).getName()) );
+				replace(row, Context.testCaseColumn, 		this::spaceIfNull);
 				replace(row, Context.testCaseIdColumn, 		this::spaceIfNull);
 				replace(row, Context.stepIdentityColumn, 	this::spaceIfNull);
-				replace(row, Context.stepColumn, 			e -> spaceIfNull(row.get(Context.stepIdentityColumn)) );
+				replace(row, Context.stepColumn, 			this::spaceIfNull);
 				replace(row, Context.timeColumn, 			e -> report.decorateStyle(e == null ? "" : (e + " ms"), "ExecutionTime") );
 				
 				Object error = row.get(Context.errorColumn);
