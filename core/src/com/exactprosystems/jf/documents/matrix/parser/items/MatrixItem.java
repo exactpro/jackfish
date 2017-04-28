@@ -764,24 +764,6 @@ public abstract class MatrixItem implements IMatrixItem, Mutable, Cloneable
 	}
 
 
-//	protected void docItSelf(Context context, ReportBuilder report)
-//	{
-//		Class<?> type = getClass();
-//		MatrixItemAttribute attribute = type.getAnnotation(MatrixItemAttribute.class);
-//		if (attribute == null) {
-//			return;
-//		}
-//
-//		ReportTable table = report.addTable("", null, true, 100,
-//				new int[]{30, 70});
-//		table.addValues("Description", attribute.description());
-//		table.addValues("Examples", attribute.examples());
-//		if (!attribute.seeAlso().equals(""))
-//		{
-//			table.addValues("See also", attribute.seeAlso());
-//		}
-//	}
-
 	protected void checkItSelf(Context context, AbstractEvaluator evaluator, IMatrixListener listener, Set<String> ids, Parameters parameters)
 	{
 		if (ids == null)

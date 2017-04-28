@@ -15,6 +15,7 @@ import com.exactprosystems.jf.api.error.ErrorKind;
 import com.exactprosystems.jf.api.error.common.WrongSubcaseNameException;
 import com.exactprosystems.jf.common.MatrixRunner;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
+import com.exactprosystems.jf.common.evaluator.Variables;
 import com.exactprosystems.jf.common.report.ReportBuilder;
 import com.exactprosystems.jf.documents.DocumentFactory;
 import com.exactprosystems.jf.documents.matrix.Matrix;
@@ -130,59 +131,69 @@ public class Context implements IContext, AutoCloseable
         }
     }
 	
-	public ReturnAndResult  runHandler(long start, Context context, IMatrixListener listener, 
-	        MatrixItem item, HandlerKind handlerKind, ReportBuilder report, MatrixError err, MatrixItem localHandler) 
+    public ReturnAndResult runHandler(long start, Context context, IMatrixListener listener, MatrixItem item,
+            HandlerKind handlerKind, ReportBuilder report, MatrixError err, MatrixItem localHandler)
     {
-        if (localHandler instanceof OnError)
+        Variables locals = this.evaluator.createLocals(); 
+        try
         {
-            ((OnError)localHandler).setError(err);
-            
-            return new ReturnAndResult(start, localHandler.execute(context, listener, evaluator, report));
+            if (localHandler instanceof OnError)
+            {
+                ((OnError) localHandler).setError(err);
+
+                return new ReturnAndResult(start, localHandler.execute(context, listener, this.evaluator, report));
+            }
+
+            String name = this.handlers.get(handlerKind);
+            if (name == null)
+            {
+                GlobalHandler globalHandler = getConfiguration().getGlobalHandler();
+                if (globalHandler != null && globalHandler.isEnabled())
+                {
+                    name = globalHandler.getGlobalHandler(handlerKind).get();
+                }
+            }
+
+            if (!Str.IsNullOrEmpty(name))
+            {
+                SubCase handler = referenceToSubcase(name, item).subCase;
+                if (handler != null)
+                {
+                    if (handlerKind == HandlerKind.OnTestCaseError || handlerKind == HandlerKind.OnStepError)
+                    {
+                        Parameters parameters = handler.getParameters();
+                        if (parameters.size() > 0)
+                        {
+                            Parameter par = parameters.getByIndex(0);
+                            par.setValue(err);
+                            handler.setRealParameters(parameters);
+                        }
+
+                    }
+                    else
+                    {
+                        handler.setRealParameters(new Parameters());
+                    }
+
+                    return new ReturnAndResult(start,
+                            handler.execute(this, this.matrixListener, this.evaluator, report));
+                }
+                else
+                {
+                    return new ReturnAndResult(start, Result.Failed, "Handler " + name + " is not found",
+                            ErrorKind.FAIL, item);
+                }
+            }
+            if (err != null)
+            {
+                return new ReturnAndResult(start, Result.Failed, err.Message, err.Kind, err.Where);
+            }
+            return new ReturnAndResult(start, Result.Passed, null);
         }
-	    
-       String name = this.handlers.get(handlerKind);
-       if (name == null)
-       {
-           GlobalHandler globalHandler = getConfiguration().getGlobalHandler(); 
-           if (globalHandler != null && globalHandler.isEnabled())
-           {
-               name = globalHandler.getGlobalHandler(handlerKind).get();
-           }
-       }
-       
-       if (!Str.IsNullOrEmpty(name))
-       {
-           SubCase handler = referenceToSubcase(name, item).subCase;
-           if (handler != null)
-           {
-               if (handlerKind == HandlerKind.OnTestCaseError || handlerKind == HandlerKind.OnStepError)
-               {
-                   Parameters parameters = handler.getParameters();
-                   if (parameters.size() > 0)
-                   {
-                       Parameter par = parameters.getByIndex(0); 
-                       par.setValue(err);
-                       handler.setRealParameters(parameters);
-                   }
-                   
-               }
-               else
-               {
-                   handler.setRealParameters(new Parameters());
-               }
-               
-               return new ReturnAndResult(start, handler.execute(this, this.matrixListener, this.evaluator, report));
-           }
-           else
-           {
-               return new ReturnAndResult(start, Result.Failed, "Handler " + name + " is not found", ErrorKind.FAIL, item);
-           }
-       }
-       if (err != null)
-       {
-           return new ReturnAndResult(start, Result.Failed, err.Message, err.Kind, err.Where);
-       }
-       return new ReturnAndResult(start, Result.Passed, null);
+        finally
+        {
+            this.evaluator.setLocals(locals);
+        }
     }
 	
     public void showReport(String reportName)

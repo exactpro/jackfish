@@ -84,7 +84,7 @@ VISIBILITY;Variable visibility;Never;;
     additional == 555;'Should be defined here'
 
     #Id;#SubCase;#additional
-    TestSub;;2
+    TestSub;;global3
         #Assert;#Message
         additional != 555;'Expected !=' + 555 + ' Actual=' + additional
 
@@ -96,6 +96,9 @@ VISIBILITY;Variable visibility;Never;;
 
 #Id;#TestCase;#Kind;#Depends;#For
 VISIBILITY;Variable visibility continue;;;
+    #SetHandler;#Kind
+    onStepStartLocal;OnStepStart
+
     #Assert;#Message
     mixed == 100;'Expected=' + 100 + ' Actual=' + mixed
 
@@ -116,6 +119,12 @@ VISIBILITY;Variable visibility continue;;;
     #Id;#Global;#Let
     global2;1;2
 
+    #Action;#local3
+    Vars;3
+
+    #Global;#Action;#global3
+    1;Vars;4
+
     #Step;#Kind;#For;#Depends
     ;;;
         #Assert;#Message
@@ -123,6 +132,24 @@ VISIBILITY;Variable visibility continue;;;
 
         #Assert;#Message
         global2 == 2;'Should be defined here'
+
+        #Assert;#Message
+        local3 == 3;'Should be defined here'
+
+        #Assert;#Message
+        global3 == 4;'Should be defined here'
+
+        #Call;#additional
+        TestSub;local2
+
+        #Call;#additional
+        TestSub;global2
+
+        #Call;#additional
+        TestSub;local3
+
+        #Call;#additional
+        TestSub;global3
 
         #Id;#Let
         stepLocal;3
@@ -144,7 +171,14 @@ VISIBILITY;Variable visibility continue;;;
     #Assert;#Message
     stepGlobal == 4;'Should be defined here'
 
-    #Global;#Action
-    1;Print
+    #Id;#SubCase
+    onStepStartLocal;onStepStartLocal
+        #Assert;#Message
+        isdef global2;'Should be defined'
+
+        #Assert;#Message
+        !(isdef local2);'Shouldnt be defined'
+
+    #EndSubCase
 
 
