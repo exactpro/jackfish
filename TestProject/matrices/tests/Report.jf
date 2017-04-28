@@ -246,8 +246,8 @@ report chart (negavitve with empty parameters);;;
 // and for all lines and bars
 #TestCase;#Kind;#Depends;#For
 report chart Line chart;;;
-    #Step;#Kind;#For
-    'line chart with empty labels';;
+    #Step;#Kind;#For;#Depends
+    'line chart with empty labels';;;
         #Id;#Action
         TBL2;TableCreate
 
@@ -256,8 +256,8 @@ report chart Line chart;;;
 
     #EndStep
 
-    #Step;#Kind;#For
-    'line chart passed inside testcase with description';;
+    #Step;#Kind;#For;#Depends
+    'line chart passed inside testcase with description';;;
         #Id;#RawText;#Kind
         TEXT1;Text;Matrix
         ~;"#TestCase;#Kind;#Depends;#For"
@@ -312,8 +312,8 @@ report chart Line chart;;;
 
     #EndStep
 
-    #Step;#Kind;#For
-    'line chart passed outside testcase with description';;
+    #Step;#Kind;#For;#Depends
+    'line chart passed outside testcase with description';;;
         #Id;#RawText;#Kind
         TEXT2;Text;Matrix
         ~;"#Id;#TestCase;#Kind;#Depends;#For"
@@ -371,8 +371,8 @@ report chart Line chart;;;
 
     #EndStep
 
-    #Step;#Kind;#For
-    'line chart passed inside testcase without description';;
+    #Step;#Kind;#For;#Depends
+    'line chart passed inside testcase without description';;;
         #Id;#RawText;#Kind
         TEXT1;Text;Matrix
         ~;"#TestCase;#Kind;#Depends;#For"
@@ -409,8 +409,8 @@ report chart Line chart;;;
 
     #EndStep
 
-    #Step;#Kind;#For
-    'line chart with user colors';;
+    #Step;#Kind;#For;#Depends
+    'line chart with user colors';;;
         #Id;#RawText;#Kind
         TEXT21;Text;Matrix
         ~;"#Id;#TestCase;#Kind;#Depends;#For"
@@ -447,8 +447,8 @@ report chart Line chart;;;
 
 #TestCase;#Kind;#Depends;#For
 report chart Bar chart;;;
-    #Step;#Kind;#For
-    'bar chart with empty labels';;
+    #Step;#Kind;#For;#Depends
+    'bar chart with empty labels';;;
         #Id;#Action
         TBL2;TableCreate
 
@@ -457,8 +457,8 @@ report chart Bar chart;;;
 
     #EndStep
 
-    #Step;#Kind;#For
-    'bar chart passed inside testcase with description';;
+    #Step;#Kind;#For;#Depends
+    'bar chart passed inside testcase with description';;;
         #Id;#RawText;#Kind
         TEXT1;Text;Matrix
         ~;"#TestCase;#Kind;#Depends;#For"
@@ -516,8 +516,8 @@ report chart Bar chart;;;
 
     #EndStep
 
-    #Step;#Kind;#For
-    'bar chart passed outside testcase with description';;
+    #Step;#Kind;#For;#Depends
+    'bar chart passed outside testcase with description';;;
         #Id;#RawText;#Kind
         TEXT2;Text;Matrix
         ~;"#Id;#TestCase;#Kind;#Depends;#For"
@@ -578,8 +578,8 @@ report chart Bar chart;;;
 
     #EndStep
 
-    #Step;#Kind;#For
-    'bar chart passed inside testcase without description';;
+    #Step;#Kind;#For;#Depends
+    'bar chart passed inside testcase without description';;;
         #Id;#RawText;#Kind
         TEXT1;Text;Matrix
         ~;"#TestCase;#Kind;#Depends;#For"
@@ -616,8 +616,8 @@ report chart Bar chart;;;
 
     #EndStep
 
-    #Step;#Kind;#For
-    'bar chart with user colors';;
+    #Step;#Kind;#For;#Depends
+    'bar chart with user colors';;;
         #Id;#RawText;#Kind
         TEXT21;Text;Matrix
         ~;"#Id;#TestCase;#Kind;#Depends;#For"
@@ -667,8 +667,8 @@ report chart Bar chart;;;
 
 #TestCase;#Kind;#Depends;#For
 report chart Pie chart;;;
-    #Step;#Kind;#For
-    'pie chart inside table';;
+    #Step;#Kind;#For;#Depends
+    'pie chart inside table';;;
         #Id;#RawText;#Kind
         TEXT3;Text;Matrix
         ~;"#TestCase;#Kind;#Depends;#For"
@@ -713,8 +713,8 @@ report chart Pie chart;;;
 
     #EndStep
 
-    #Step;#Kind;#For
-    'pie chart outside table';;
+    #Step;#Kind;#For;#Depends
+    'pie chart outside table';;;
         #Id;#RawText;#Kind
         TEXT1;Text;Matrix
         ~;"#Id;#TestCase;#Kind;#Depends;#For"
@@ -762,8 +762,8 @@ report chart Pie chart;;;
 
     #EndStep
 
-    #Step;#Kind;#For
-    'pie chart with user colors';;
+    #Step;#Kind;#For;#Depends
+    'pie chart with user colors';;;
         #Id;#RawText;#Kind
         TEXT;Text;Matrix
         ~;"#Id;#TestCase;#Kind;#Depends;#For"
