@@ -31,7 +31,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
@@ -223,17 +222,6 @@ public class RawMessage extends MatrixItem
 	{
 		return SearchHelper.matches(this.typeName.get(), what, caseSensitive, wholeWord)
 				|| SearchHelper.matches(this.clientName.get(), what, caseSensitive, wholeWord);
-	}
-
-	@Override
-	protected void checkItSelf(Context context, AbstractEvaluator evaluator,
-			IMatrixListener listener, Set<String> ids, Parameters parameters)
-	{
-		if (this.id != null && !this.id.isNullOrEmpty() && ids.contains(this.id))
-		{
-			listener.error(this.owner, getNumber(), this, "id '" + this.id + "' has already defined.");
-		}
-		ids.add(this.id.get());
 	}
 
 	@Override

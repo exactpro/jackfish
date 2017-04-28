@@ -24,7 +24,6 @@ import com.exactprosystems.jf.documents.matrix.parser.listeners.IMatrixListener;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 @MatrixItemAttribute(
 		description 	= "Operator While is used to organized a cycle.",
@@ -130,9 +129,9 @@ public class While extends MatrixItem
 	}
     
     @Override
-    protected void checkItSelf(Context context, AbstractEvaluator evaluator, IMatrixListener listener, Set<String> ids, Parameters parameters)
+    protected void checkItSelf(Context context, AbstractEvaluator evaluator, IMatrixListener listener, Parameters parameters)
     {
-        super.checkItSelf(context, evaluator, listener, ids, parameters);
+        super.checkItSelf(context, evaluator, listener, parameters);
         this.condition.prepareAndCheck(evaluator, listener, this);
     }
     

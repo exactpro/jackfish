@@ -20,7 +20,6 @@ import com.exactprosystems.jf.functions.HelpKind;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 @MatrixItemAttribute(
 		description 		= "Adds new action into matrix",
@@ -224,9 +223,9 @@ public final class ActionItem extends MatrixItem
 	}
 
 	@Override
-	protected void checkItSelf(Context context, AbstractEvaluator evaluator, IMatrixListener listener, Set<String> ids, Parameters parameters)
+	protected void checkItSelf(Context context, AbstractEvaluator evaluator, IMatrixListener listener, Parameters parameters)
 	{
-		super.checkItSelf(context, evaluator, listener, ids, parameters);
+		super.checkItSelf(context, evaluator, listener, parameters);
 
 		this.action.checkAction(listener, this, parameters);
 	}

@@ -26,7 +26,6 @@ import com.exactprosystems.jf.documents.matrix.parser.listeners.IMatrixListener;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 @MatrixItemAttribute(
         description 	= "This operator introduces a name space in the library in order to link to Subcase from this library. \n" +
@@ -161,12 +160,9 @@ public final class NameSpace extends MatrixItem
 	}
 
 	@Override
-	protected void checkItSelf(Context context, AbstractEvaluator evaluator, IMatrixListener listener, Set<String> ids, Parameters parameters)
+	protected void checkItSelf(Context context, AbstractEvaluator evaluator, IMatrixListener listener, Parameters parameters)
 	{
-		//TODO check, that NameSpace don't contains item call, that execute current NameSpace ( overwise we will have stackoverflow)
-		ids = new HashSet<String>();
-		
-		super.checkItSelf(context, evaluator, listener, ids, parameters);
+		super.checkItSelf(context, evaluator, listener, parameters);
 	}
 
 	@Override

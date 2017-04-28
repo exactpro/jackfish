@@ -11,7 +11,6 @@ package com.exactprosystems.jf.documents.matrix.parser.items;
 import com.csvreader.CsvWriter;
 import com.exactprosystems.jf.api.error.ErrorKind;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
-import com.exactprosystems.jf.common.evaluator.Variables;
 import com.exactprosystems.jf.common.report.ReportBuilder;
 import com.exactprosystems.jf.common.report.ReportTable;
 import com.exactprosystems.jf.documents.config.Context;
@@ -25,10 +24,8 @@ import com.exactprosystems.jf.documents.matrix.parser.SearchHelper;
 import com.exactprosystems.jf.documents.matrix.parser.Tokens;
 import com.exactprosystems.jf.documents.matrix.parser.listeners.IMatrixListener;
 
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 @MatrixItemAttribute(
         description 	= "This operator describes a subprogram. In parameters the program arguments are described, factual parameters are used with Call. \n" +
@@ -178,12 +175,9 @@ public final class SubCase extends MatrixItem
 	}
 
 	@Override
-	protected void checkItSelf(Context context, AbstractEvaluator evaluator, IMatrixListener listener, Set<String> ids, Parameters parameters)
+	protected void checkItSelf(Context context, AbstractEvaluator evaluator, IMatrixListener listener, Parameters parameters)
 	{
-		//TODO check, that subcase don't contains item call, that execute current subcase ( overwise we will have stackoverflow)
-		ids = new HashSet<String>();
-		
-		super.checkItSelf(context, evaluator, listener, ids, parameters);
+		super.checkItSelf(context, evaluator, listener, parameters);
 	}
 
 	@Override

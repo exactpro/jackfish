@@ -26,7 +26,6 @@ import com.exactprosystems.jf.documents.matrix.parser.listeners.IMatrixListener;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 @MatrixItemAttribute(
 		description 	= "This operator breaks  SubCase performing and returns the result. ",
@@ -110,9 +109,9 @@ public class Return extends MatrixItem
 	}
 
     @Override
-    protected void checkItSelf(Context context, AbstractEvaluator evaluator, IMatrixListener listener, Set<String> ids, Parameters parameters)
+    protected void checkItSelf(Context context, AbstractEvaluator evaluator, IMatrixListener listener, Parameters parameters)
     {
-        super.checkItSelf(context, evaluator, listener, ids, parameters);
+        super.checkItSelf(context, evaluator, listener, parameters);
         this.returnValue.prepareAndCheck(evaluator, listener, this);
     }
 	

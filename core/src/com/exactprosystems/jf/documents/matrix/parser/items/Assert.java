@@ -26,7 +26,6 @@ import com.exactprosystems.jf.documents.matrix.parser.listeners.IMatrixListener;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 @MatrixItemAttribute(
 		description 	= "This operator is used to check an assertion. If an assertion is correct, the matrix will run," +
@@ -115,9 +114,9 @@ public class Assert extends MatrixItem
 
 
     @Override
-    protected void checkItSelf(Context context, AbstractEvaluator evaluator, IMatrixListener listener, Set<String> ids, Parameters parameters)
+    protected void checkItSelf(Context context, AbstractEvaluator evaluator, IMatrixListener listener, Parameters parameters)
     {
-        super.checkItSelf(context, evaluator, listener, ids, parameters);
+        super.checkItSelf(context, evaluator, listener, parameters);
         this.assertion.prepareAndCheck(evaluator, listener, this);
         this.message.prepareAndCheck(evaluator, listener, this);
     }

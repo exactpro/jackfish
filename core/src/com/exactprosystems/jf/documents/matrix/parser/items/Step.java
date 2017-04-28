@@ -26,7 +26,6 @@ import com.exactprosystems.jf.functions.Table;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 @MatrixItemAttribute(
@@ -176,9 +175,9 @@ public class Step extends MatrixItem
 	}
     
     @Override
-    protected void checkItSelf(Context context, AbstractEvaluator evaluator, IMatrixListener listener, Set<String> ids, Parameters parameters)
+    protected void checkItSelf(Context context, AbstractEvaluator evaluator, IMatrixListener listener, Parameters parameters)
     {
-        super.checkItSelf(context, evaluator, listener, ids, parameters);
+        super.checkItSelf(context, evaluator, listener, parameters);
         this.identify.prepareAndCheck(evaluator, listener, this);
     }
     
