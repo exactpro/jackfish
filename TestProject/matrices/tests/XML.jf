@@ -10,7 +10,7 @@ prepare;;;
         ~;"			Some text from third node"
         ~;"		</third>"
         ~;"		<fourth parameter=""parameter"" value=""value"" id=""5"">"
-        ~;"			M"
+        ~;"			"
         ~;"		</fourth>"
         ~;"	</first>"
         ~;"	<first par1=""value2"">"
@@ -39,15 +39,47 @@ prepare;;;
 
     #EndSubCase
 
+    #Id;#SubCase
+    createXmlDocument;
+        #Id;#RawText;#Kind
+        TEXT1;Text;Xml
+        ~;"<root>"
+        ~;"	<first par1=""value1"">"
+        ~;"		<third>"
+        ~;"			Some text from third node"
+        ~;"		</third>"
+        ~;"		<fourth parameter=""parameter"" value=""value"" id=""5"">"
+        ~;"			"
+        ~;"		</fourth>"
+        ~;"	</first>"
+        ~;"	<first par1=""value2"">"
+        ~;""
+        ~;"	</first>"
+        ~;"	<second par2=""value3"">"
+        ~;"		<fourth parameter=""parameter13"" value=""value14"" id=""8"">"
+        ~;"			<another>text from another</another>"
+        ~;"		</fourth>"
+        ~;"	</second>"
+        ~;"</root>"
+        #EndRawText
+
+        #Id;#Action;#Text
+        XML1;XmlFromText;TEXT1
+
+        #Return
+        XML1.Out
+
+    #EndSubCase
+
     #Id;#SubCase;#xml
-    saveToFile;;root
+    saveToFile;;doc
         #Action;#Xml;#File
         XmlSaveToFile;xml;'temp.xml'
 
     #EndSubCase
 
     #Id;#SubCase;#text
-    loadRoot;;TEXT20
+    loadRoot;;TEXT2
         #Id;#Action;#Text
         XMLFT5;XmlFromText;text
 
@@ -108,8 +140,8 @@ prepare;;;
 
 #TestCase;#Kind;#Depends;#For
 check XmlChildren;Never;;
-    #Step;#Kind;#For
-    'negative testing';;
+    #Step;#Kind;#For;#Depends
+    'negative testing';;;
         #Id;#Action;#Assert;#Xml
         XML11;XmlChildren;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;
 
@@ -133,8 +165,8 @@ check XmlChildren;Never;;
 
 #TestCase;#Kind;#Depends;#For
 check  XmlAddNode;;;
-    #Step;#Kind;#For
-    'negative testing';;
+    #Step;#Kind;#For;#Depends
+    'negative testing';;;
         #Action;#Assert;#Xml
         XmlAddNode;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;
 
@@ -146,8 +178,8 @@ check  XmlAddNode;;;
 
     #EndStep
 
-    #Step;#Kind;#For
-    'add node with xml';;
+    #Step;#Kind;#For;#Depends
+    'add node with xml';;;
         #Id;#Call
         root;createXml
 
@@ -168,8 +200,8 @@ check  XmlAddNode;;;
 
     #EndStep
 
-    #Step;#Kind;#For
-    'add node with xml document';;
+    #Step;#Kind;#For;#Depends
+    'add node with xml document';;;
         #Id;#Call
         root;createXml
 
@@ -194,8 +226,8 @@ check  XmlAddNode;;;
 
     #EndStep
 
-    #Step;#Kind;#For
-    'add node with new node with textContent';;
+    #Step;#Kind;#For;#Depends
+    'add node with new node with textContent';;;
         #Id;#Call
         root;createXml
 
@@ -207,8 +239,8 @@ check  XmlAddNode;;;
 
     #EndStep
 
-    #Step;#Kind;#For
-    'add node with new node with parameters and textContent';;
+    #Step;#Kind;#For;#Depends
+    'add node with new node with parameters and textContent';;;
         #Id;#Call
         root;createXml
 
@@ -232,8 +264,8 @@ check  XmlAddNode;;;
 
     #EndStep
 
-    #Step;#Kind;#For
-    'add node with new node with parameters and without textContent';;
+    #Step;#Kind;#For;#Depends
+    'add node with new node with parameters and without textContent';;;
         #Id;#Call
         root;createXml
 
@@ -260,8 +292,8 @@ check  XmlAddNode;;;
 
 #TestCase;#Kind;#Depends;#For
 check XmlCompare;;;
-    #Step;#Kind;#For
-    'negative testing';;
+    #Step;#Kind;#For;#Depends
+    'negative testing';;;
         #Id;#Call
         root;createXml
 
@@ -276,8 +308,8 @@ check XmlCompare;;;
 
     #EndStep
 
-    #Step;#Kind;#For
-    'compare equals roots';;
+    #Step;#Kind;#For;#Depends
+    'compare equals roots';;;
         #Id;#Call
         root1;createXml
 
@@ -289,8 +321,8 @@ check XmlCompare;;;
 
     #EndStep
 
-    #Step;#Kind;#For
-    'compare equals xmls';;
+    #Step;#Kind;#For;#Depends
+    'compare equals xmls';;;
         #Id;#RawText;#Kind
         TEXT3;Text;Xml
         ~;"<simpleTag>"
@@ -309,8 +341,8 @@ check XmlCompare;;;
 
     #EndStep
 
-    #Step;#Kind;#For
-    'compare equals nodes';;
+    #Step;#Kind;#For;#Depends
+    'compare equals nodes';;;
         #Id;#Call
         root;createXml
 
@@ -325,8 +357,8 @@ check XmlCompare;;;
 
     #EndStep
 
-    #Step;#Kind;#For
-    'compare another roots';;
+    #Step;#Kind;#For;#Depends
+    'compare another roots';;;
         #Id;#Call
         firstRoot;createXml
 
@@ -348,8 +380,8 @@ check XmlCompare;;;
 
     #EndStep
 
-    #Step;#Kind;#For
-    'compare another xmls';;
+    #Step;#Kind;#For;#Depends
+    'compare another xmls';;;
         #Id;#Call
         root;createXml
 
@@ -368,8 +400,8 @@ check XmlCompare;;;
 
     #EndStep
 
-    #Step;#Kind;#For
-    'compare nodes with different parameters size';;
+    #Step;#Kind;#For;#Depends
+    'compare nodes with different parameters size';;;
         #Id;#RawText;#Kind
         TEXT2;Text;Xml
         ~;"<simple p1=""p1"" p2=""p2"">simpleText</simple>"
@@ -391,8 +423,8 @@ check XmlCompare;;;
 
     #EndStep
 
-    #Step;#Kind;#For
-    'comapre nodes with different parameters value';;
+    #Step;#Kind;#For;#Depends
+    'comapre nodes with different parameters value';;;
         #Id;#RawText;#Kind
         TEXT7;Text;Xml
         ~;"<simple p1=""p1"" p2=""p2"">simpleText</simple>"
@@ -414,8 +446,8 @@ check XmlCompare;;;
 
     #EndStep
 
-    #Step;#Kind;#For
-    'comapre nodes with different textContent';;
+    #Step;#Kind;#For;#Depends
+    'comapre nodes with different textContent';;;
         #Id;#RawText;#Kind
         TEXT9;Text;Xml
         ~;"<simple p1=""p1"" p2=""p2"">simpleText</simple>"
@@ -437,8 +469,8 @@ check XmlCompare;;;
 
     #EndStep
 
-    #Step;#Kind;#For
-    'comapre nodes with different tagName';;
+    #Step;#Kind;#For;#Depends
+    'comapre nodes with different tagName';;;
         #Id;#RawText;#Kind
         TEXT11;Text;Xml
         ~;"<simple p1=""p1"" p2=""p2"">simpleText</simple>"
@@ -460,8 +492,8 @@ check XmlCompare;;;
 
     #EndStep
 
-    #Step;#Kind;#For
-    'compare nodes equal';;
+    #Step;#Kind;#For;#Depends
+    'compare nodes equal';;;
         #Id;#RawText;#Kind
         TEXT13;Text;Xml
         ~;"<simple p1=""p1"" p2=""p2"">simpleText</simple>"
@@ -483,8 +515,8 @@ check XmlCompare;;;
 
     #EndStep
 
-    #Step;#Kind;#For
-    'compare nodes equal with difference text';;
+    #Step;#Kind;#For;#Depends
+    'compare nodes equal with difference text';;;
         #Id;#RawText;#Kind
         TEXT15;Text;Xml
         ~;"<simple p1=""p1"" p2=""p2"">simpleText</simple>"
@@ -506,8 +538,8 @@ check XmlCompare;;;
 
     #EndStep
 
-    #Step;#Kind;#For
-    'compare with difference nodes order';;
+    #Step;#Kind;#For;#Depends
+    'compare with difference nodes order';;;
         #Id;#RawText;#Kind
         TEXT17;Text;Xml
         ~;"<root>"
@@ -535,8 +567,8 @@ check XmlCompare;;;
 
     #EndStep
 
-    #Step;#Kind;#For
-    'compare with difference nodes order and difference nodes';;
+    #Step;#Kind;#For;#Depends
+    'compare with difference nodes order and difference nodes';;;
         #Id;#RawText;#Kind
         TEXT19;Text;Xml
         ~;"<root>"
@@ -579,8 +611,8 @@ check XmlCreate;;;
 
 #TestCase;#Kind;#Depends;#For
 check XmlFindFirst;;;
-    #Step;#Kind;#For
-    'negative testings';;
+    #Step;#Kind;#For;#Depends
+    'negative testings';;;
         #Id;#Call
         root;createXml
 
@@ -595,8 +627,8 @@ check XmlFindFirst;;;
 
     #EndStep
 
-    #Step;#Kind;#For
-    'Found first node';;
+    #Step;#Kind;#For;#Depends
+    'Found first node';;;
         #Id;#Call
         root;createXml
 
@@ -611,8 +643,8 @@ check XmlFindFirst;;;
 
     #EndStep
 
-    #Step;#Kind;#For
-    'Find first second node';;
+    #Step;#Kind;#For;#Depends
+    'Find first second node';;;
         #Id;#Call
         root;createXml
 
@@ -627,8 +659,8 @@ check XmlFindFirst;;;
 
     #EndStep
 
-    #Step;#Kind;#For
-    'Node not found';;
+    #Step;#Kind;#For;#Depends
+    'Node not found';;;
         #Id;#Call
         root;createXml
 
@@ -637,8 +669,8 @@ check XmlFindFirst;;;
 
     #EndStep
 
-    #Step;#Kind;#For
-    'find node via parameters';;
+    #Step;#Kind;#For;#Depends
+    'find node via parameters';;;
         #Id;#Call
         root;createXml
 
@@ -656,15 +688,15 @@ check XmlFindFirst;;;
 
 #TestCase;#Kind;#Depends;#For
 check XmlFromText;;;
-    #Step;#Kind;#For
-    'negative testing';;
+    #Step;#Kind;#For;#Depends
+    'negative testing';;;
         #Id;#Action;#Assert;#Text
         XMLFT1;XmlFromText;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;
 
     #EndStep
 
-    #Step;#Kind;#For
-    'from invalid text';;
+    #Step;#Kind;#For;#Depends
+    'from invalid text';;;
         #Id;#RawText;#Kind
         TEXT3;Text;None
         ~;"some invalid xml"
@@ -675,8 +707,8 @@ check XmlFromText;;;
 
     #EndStep
 
-    #Step;#Kind;#For
-    'from valid text';;
+    #Step;#Kind;#For;#Depends
+    'from valid text';;;
         #Id;#Call
         root;createXml
 
@@ -688,29 +720,29 @@ check XmlFromText;;;
 
 #TestCase;#Kind;#Depends;#For
 check XmlLoadFromFile;;;
-    #Step;#Kind;#For
-    'negative testings';;
+    #Step;#Kind;#For;#Depends
+    'negative testings';;;
         #Id;#Action;#Assert;#File
         XML7;XmlLoadFromFile;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;
 
     #EndStep
 
-    #Step;#Kind;#For
-    'load from dosnt exists file';;
+    #Step;#Kind;#For;#Depends
+    'load from dosnt exists file';;;
         #Id;#Action;#Assert;#File
         XML8;XmlLoadFromFile;This.Result == Result.Failed && This.Kind == ErrorKind.WRONG_PARAMETERS;'fileThatDosntExists'
 
     #EndStep
 
-    #Step;#Kind;#For
-    'load from directory';;
+    #Step;#Kind;#For;#Depends
+    'load from directory';;;
         #Id;#Action;#Assert;#File
         XML5;XmlLoadFromFile;This.Result == Result.Failed && This.Kind == ErrorKind.WRONG_PARAMETERS;'testdata'
 
     #EndStep
 
-    #Step;#Kind;#For
-    'load from good file';;
+    #Step;#Kind;#For;#Depends
+    'load from good file';;;
         #Id;#Action;#Assert;#File
         XML6;XmlLoadFromFile;This.Out != null;'testdata/testXml.xml'
 
@@ -725,8 +757,8 @@ check XmlLoadFromFile;;;
 
 #TestCase;#Kind;#Depends;#For
 check XmlRemove;;;
-    #Step;#Kind;#For
-    'negative testing';;
+    #Step;#Kind;#For;#Depends
+    'negative testing';;;
         #Id;#Call
         root;createXml
 
@@ -741,8 +773,8 @@ check XmlRemove;;;
 
     #EndStep
 
-    #Step;#Kind;#For
-    'remove one node';;
+    #Step;#Kind;#For;#Depends
+    'remove one node';;;
         #Id;#Let
         xpath;'.//first[@par1="value2"]'
 
@@ -763,8 +795,8 @@ check XmlRemove;;;
 
     #EndStep
 
-    #Step;#Kind;#For
-    'remove more that one nodes';;
+    #Step;#Kind;#For;#Depends
+    'remove more that one nodes';;;
         #Id;#Let
         xpath;'.//first'
 
@@ -785,8 +817,8 @@ check XmlRemove;;;
 
     #EndStep
 
-    #Step;#Kind;#For
-    'remove no one nodes';;
+    #Step;#Kind;#For;#Depends
+    'remove no one nodes';;;
         #Id;#Let
         xpath;'.//notexist'
 
@@ -807,8 +839,8 @@ check XmlRemove;;;
 
     #EndStep
 
-    #Step;#Kind;#For
-    'remove from descedants';;
+    #Step;#Kind;#For;#Depends
+    'remove from descedants';;;
         #Id;#Let
         xpath;'.//fourth'
 
@@ -829,8 +861,8 @@ check XmlRemove;;;
 
 #TestCase;#Kind;#Depends;#For
 check XmlReport;;;
-    #Step;#Kind;#For
-    'negative test';;
+    #Step;#Kind;#For;#Depends
+    'negative test';;;
         #Id;#Call
         root;createXml
 
@@ -845,8 +877,8 @@ check XmlReport;;;
 
     #EndStep
 
-    #Step;#Kind;#For
-    'test before test case';;
+    #Step;#Kind;#For;#Depends
+    'test before test case';;;
         #Id;#Let
         xml;'<root>\n    <simple par="val">simple text</simple>\n</root>'
 
@@ -894,8 +926,8 @@ check XmlReport;;;
 
     #EndStep
 
-    #Step;#Kind;#For
-    'test inside test case';;
+    #Step;#Kind;#For;#Depends
+    'test inside test case';;;
         #Id;#Let
         xml;'<root>\n    <simple par="val">simple text</simple>\n</root>'
 
@@ -946,10 +978,207 @@ check XmlReport;;;
 
 #TestCase;#Kind;#Depends;#For
 check XmlSaveToFile;;;
+    #Id;#Let
+    tempFile;'xml.xml'
+
+    #Step;#Kind;#For;#Depends
+    'negative testing';;;
+        #Id;#Call
+        root;createXml
+
+        #Action;#Assert;#Xml;#File
+        XmlSaveToFile;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;;
+
+        #Action;#Assert;#Xml;#File
+        XmlSaveToFile;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;root;
+
+        #Action;#Assert;#Xml;#File
+        XmlSaveToFile;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;;'a'
+
+        #Action;#Assert;#Xml;#File
+        XmlSaveToFile;This.Result == Result.Failed;root;'testdata'
+
+    #EndStep
+
+    // remove old file, if exists.
+    // If not exists, nothing bad
+    #Id;#Let
+    deleteFile;new File(tempFile).delete()
+
+    #Step;#Kind;#For;#Depends
+    'save ,load and check, that xmls are equals';;;
+        #Id;#Call
+        root;createXmlDocument
+
+        #Action;#Assert;#Xml;#File
+        XmlSaveToFile;This.Out;root;tempFile
+
+        #Assert;#Message
+        Sys.exists(tempFile);'File not created'
+
+        #Id;#Action;#File
+        XML5;XmlLoadFromFile;tempFile
+
+        #Id;#Action;#Assert;#Expected;#Actual
+        XMLCMP1;XmlCompare;This.Out;XML5.Out;root
+
+    #EndStep
+
 
 #TestCase;#Kind;#Depends;#For
 check XmlSelectFirst;;;
+    #Step;#Kind;#For;#Depends
+    'negative testing';;;
+        #Id;#Call
+        root;createXml
+
+        #Action;#Assert;#Xpath;#NodeName;#Xml
+        XmlSelect;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;;;
+
+        #Action;#Assert;#Xpath;#NodeName;#Xml
+        XmlSelect;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;'';;
+
+        // invalid node name
+        #Action;#Assert;#Xpath;#NodeName;#Xml
+        XmlSelect;This.Result == Result.Failed;'';'123';root
+
+        // invalid xpath
+        #Action;#Assert;#Xpath;#NodeName;#Xml
+        XmlSelect;This.Result == Result.Failed;'[[[';'node';root
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'possitive test';;;
+        #Id;#Call
+        root;createXml
+
+        #Id;#Action;#Xpath;#NodeName;#Xml
+        XML5;XmlSelect;'.//first';'newNode';root
+
+        #Assert;#Message
+        XML5.Out.getNodeName() == 'newNode';'Returned node is bad'
+
+        #Assert;#Message
+        XML5.Out.getChildren().size() == 2;'Child count not expected'
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'returned nothing';;;
+        #Id;#Call
+        root;createXml
+
+        #Id;#Action;#Xpath;#NodeName;#Xml
+        XML6;XmlSelect;'.//asd';'newNode';root
+
+        #Assert;#Message
+        XML6.Out.getNodeName() == 'newNode';'Returned node is bad'
+
+        #Assert;#Message
+        XML6.Out.getChildren().size() == 0;'Child count not expected'
+
+    #EndStep
+
 
 #TestCase;#Kind;#Depends;#For
 check XmlSetNode;;;
+    #Step;#Kind;#For;#Depends
+    'negative testing';;;
+        #Action;#Assert;#Xml
+        XmlSetNode;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'set text to node with children';;;
+        #Id;#Call
+        root;createXml
+
+        #Action;#Assert;#Xml;#Text
+        XmlSetNode;root.getText() == 'My simple text';root;'My simple text'
+
+        #Assert;#Message
+        !root.hasChildren();'Child not empty'
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'set text to node without children';;;
+        #Id;#RawText;#Kind
+        TEXT2;Text;Xml
+        ~;"<simple p1=""p1"" p2=""p2"">simpleText</simple>"
+        #EndRawText
+
+        #Id;#Call;#text
+        root;loadRoot;TEXT2
+
+        #Action;#Assert;#Xml;#Text
+        XmlSetNode;root.getText() == 'My simple text';root;'My simple text'
+
+        #Assert;#Message
+        !root.hasChildren();'Child not empty'
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'set node with parameters and without text';;;
+        #Id;#Call
+        root;createXml
+
+        #Action;#Xml;#parameter1;#p2
+        XmlSetNode;root;'p1';'value2'
+
+        #Assert;#Message
+        root.getAttribute('parameter1') == 'p1';'Root dosnt contains expected attribute'
+
+        #Assert;#Message
+        root.getAttribute('p2') == 'value2';'Root dosnt contains expected attribute'
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'set node with parameters and text';;;
+        #Id;#Call
+        root;createXml
+
+        #Action;#Xml;#Text;#parameter1;#p2
+        XmlSetNode;root;'my text';'p1';'value2'
+
+        #Assert;#Message
+        !root.hasChildren();'Child not empty'
+
+        #Assert;#Message
+        root.getText() == 'my text';'Root dosnt contains expected text'
+
+        #Assert;#Message
+        root.getAttribute('parameter1') == 'p1';'Root dosnt contains expected attribute'
+
+        #Assert;#Message
+        root.getAttribute('p2') == 'value2';'Root dosnt contains expected attribute'
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'set text to document';;;
+        #Id;#Call
+        doc;createXmlDocument
+
+        // cant set text to document
+        #Action;#Assert;#Xml;#Text
+        XmlSetNode;This.Result == Result.Failed;doc;'my text'
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'set parameters to document';;;
+        #Id;#Call
+        doc;createXmlDocument
+
+        // cant set text to document
+        #Action;#Assert;#Xml;#par
+        XmlSetNode;This.Result == Result.Failed;doc;'value'
+
+    #EndStep
+
 

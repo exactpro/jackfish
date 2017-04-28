@@ -27,7 +27,10 @@ import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathFactory;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 import java.util.Map.Entry;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
@@ -203,19 +206,18 @@ public class Xml
 		return true;
 	}
 
-	public Node getNode()
-	{
-		return node;
-	}
-
 	@Override
 	public String toString()
 	{
 		return Xml.class.getSimpleName() + this.node.toString();
 	}
 	
-	public void setText(String text)
+	public void setText(String text) throws Exception
 	{
+		if (this.node.getNodeType() == Node.DOCUMENT_NODE)
+		{
+			throw new Exception("Cant set text to document");
+		}
 		this.node.setTextContent(text);
 	}
 
@@ -230,8 +232,12 @@ public class Xml
 				.collect(Collectors.joining(""));
 	}
 	
-	public void setAttributes(Map<String, Object> attr)
+	public void setAttributes(Map<String, Object> attr) throws Exception
 	{
+		if (!(this.node instanceof Element))
+		{
+			throw new Exception("Attributes may sets only into Element");
+		}
 		for (Entry<String, Object> entry : attr.entrySet())
 		{
 			((Element)this.node).setAttribute(entry.getKey(), String.valueOf(entry.getValue()));
@@ -279,6 +285,18 @@ public class Xml
  		transformer.transform( source, result);		
 		
 		return true;
+	}
+
+	public boolean hasChildren()
+	{
+		NodeList nodes = this.node.getChildNodes();
+		//check that element is not a text
+		return nodes != null && IntStream.range(0, nodes.getLength())
+				.mapToObj(nodes::item)
+				//check that element is not a text
+				.filter(node -> node.getNodeType() != Node.TEXT_NODE)
+				.count() != 0;
+
 	}
 
 	public List<Xml> getChildren()
@@ -417,6 +435,11 @@ public class Xml
 		{
 			child.setAttribute(entry.getKey(), String.valueOf(entry.getValue()));
 		}
+	}
+
+	public String getNodeName()
+	{
+		return this.node.getNodeName();
 	}
 	
 	public Document getDocument()

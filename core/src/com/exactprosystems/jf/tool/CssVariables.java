@@ -65,7 +65,6 @@ public class CssVariables
 
 	/*Matrix tab*/
 	public static final String	EXECUTING_TAB				= "executingTab";
-
 	public static final String	MATRIX_FINISHED_OK			= "matrixFinishedOk";
 	public static final String	MATRIX_FINISHED_BAD			= "matrixFinishedBad";
 
