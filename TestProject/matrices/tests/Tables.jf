@@ -1,31 +1,167 @@
 #Id;#TestCase;#Kind;#Depends;#For
 TABLE_ADD_COLUMNS;Test case;Never;;
-    #Id;#Action;#id;#name
-    TBL1;TableCreate;;
+    #Step;#Kind;#For;#Depends
+    'Add a column in empty table';;;
+        #Id;#Action
+        TBL1;TableCreate
 
-    #Action;#Table;#Columns
-    TableAddColumns;TBL1.Out;'surname'
+        #Action;#Table;#Columns
+        TableAddColumns;TBL1.Out;'one'
 
-    #Assert;#Message
-    TBL1.Out.getHeader(2).equals('surname');'column was not added'
+        #Assert;#Message
+        TBL1.Out.getHeader(0).equals('one');'the column was not added'
 
-    #Action;#Table;#Columns
-    TableAddColumns;TBL1.Out;new String[]{'adress','postindex'}
+    #EndStep
 
-    #Assert;#Message
-    TBL1.Out.getHeader(3).equals('adress') && TBL1.Out.getHeader(4).equals('postindex');'column was not added'
+    #Step;#Kind;#For;#Depends
+    'Add a column in empty table by index 0';;;
+        #Id;#Action
+        TBL1;TableCreate
 
-    #Action;#Table;#Columns;#Index
-    TableAddColumns;TBL1.Out;'age';2
+        #Action;#Table;#Columns;#Index
+        TableAddColumns;TBL1.Out;'one';0
 
-    #Assert;#Message
-    TBL1.Out.getHeader(2).equals('age');'column was not added'
+        #Assert;#Message
+        TBL1.Out.getHeader(0).equals('one');'the column was not added'
 
-    #Action;#Assert;#Table;#Columns;#Index
-    TableAddColumns;This.Result == Result.Failed && This.Kind == ErrorKind.WRONG_PARAMETERS;TBL1.Out;'preid';-1
+    #EndStep
 
-    #Action;#Assert;#Table;#Columns;#Index
-    TableAddColumns;This.Result == Result.Failed && This.Kind == ErrorKind.WRONG_PARAMETERS;TBL1.Out;'nnn';999
+    #Step;#Kind;#For;#Depends
+    'Add a column in table which one already has 2 columns';;;
+        #Id;#Action;#id;#name
+        TBL1;TableCreate;;
+
+        #Action;#Table;#Columns
+        TableAddColumns;TBL1.Out;'surname'
+
+        #Assert;#Message
+        TBL1.Out.getHeader(2).equals('surname');'the column was not added'
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'Add array of columns in table which one already has 2 columns';;;
+        #Id;#Action;#id;#name
+        TBL1;TableCreate;;
+
+        #Action;#Table;#Columns
+        TableAddColumns;TBL1.Out;new String[]{'adress','postindex'}
+
+        #Assert;#Message
+        TBL1.Out.getHeader(2).equals('adress') && TBL1.Out.getHeader(3).equals('postindex');'the column was not added'
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'Add a column by index 1 to table which one already has 2 columns';;;
+        #Id;#Action;#id;#name
+        TBL1;TableCreate;;
+
+        #Action;#Table;#Columns;#Index
+        TableAddColumns;TBL1.Out;'age';1
+
+        #Assert;#Message
+        TBL1.Out.getHeader(1).equals('age');'column was not added'
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'Add a column by empty index to table which one already has 2 columns';;;
+        #Id;#Action;#id;#name
+        TBL1;TableCreate;;
+
+        #Action;#Table;#Columns;#Index
+        TableAddColumns;TBL1.Out;'town';
+
+        #Assert;#Message
+        TBL1.Out.getHeader(TBL1.Out.getHeaderSize() - 1).equals('town');'column was not added at the end'
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'Add array of columns by index to table which one already has 2 columns';;;
+        #Id;#Action;#id;#name
+        TBL1;TableCreate;;
+
+        #Action;#Table;#Columns;#Index
+        TableAddColumns;TBL1.Out;new String[]{'adress','postindex'};1
+
+        #Assert;#Message
+        TBL1.Out.getHeader(1).equals('adress') && TBL1.Out.getHeader(2).equals('postindex');'column was not added'
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'The table field has not fill';;;
+        // 
+        #Action;#Assert;#Table;#Columns
+        TableAddColumns;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;;'name'
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'The column field has not fill';;;
+        #Id;#Action;#id;#name
+        TBL1;TableCreate;;
+
+        // 
+        #Action;#Assert;#Table;#Columns
+        TableAddColumns;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;TBL1.Out;
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'The column field has empty string value';;;
+        #Id;#Action;#id;#name
+        TBL1;TableCreate;;
+
+        #Action;#Assert;#Table;#Columns
+        TableAddColumns;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;TBL1.Out;''
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'The column field has array of strings which has an empty string';;;
+        #Id;#Action;#id;#name
+        TBL1;TableCreate;;
+
+        #Action;#Assert;#Table;#Columns
+        TableAddColumns;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;TBL1.Out;new String[]{'adress','','postindex'}
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'The index field has out of bound values';;;
+        #Id;#Action;#id;#name
+        TBL1;TableCreate;;
+
+        #Action;#Assert;#Table;#Columns;#Index
+        TableAddColumns;This.Result == Result.Failed && This.Kind == ErrorKind.WRONG_PARAMETERS;TBL1.Out;'minusOne';-1
+
+        #Action;#Assert;#Table;#Columns;#Index
+        TableAddColumns;This.Result == Result.Failed && This.Kind == ErrorKind.WRONG_PARAMETERS;TBL1.Out;'nineNineNine';999
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'The table field has a value, but it is not a table value';;;
+        #Id;#Action;#id;#name
+        TBL1;TableCreate;;
+
+        #Action;#Assert;#Table;#Columns
+        TableAddColumns;This.Result == Result.Failed && This.Kind == ErrorKind.WRONG_PARAMETERS;TBL1;'someColumn'
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'The columns field has a value, but it is not a string or array of strings value';;;
+        #Id;#Action;#id;#name
+        TBL1;TableCreate;;
+
+        #Action;#Assert;#Table;#Columns
+        TableAddColumns;This.Result == Result.Failed && This.Kind == ErrorKind.WRONG_PARAMETERS;TBL1.Out;5
+
+    #EndStep
 
 
 #Id;#TestCase;#Kind;#Depends;#For

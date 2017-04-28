@@ -68,14 +68,21 @@ public class TableAddColumns extends AbstractAction
 	@Override
 	public void doRealAction(Context context, ReportBuilder report, Parameters parameters, AbstractEvaluator evaluator) throws Exception
 	{
+		for (String column : columns)
+		{
+			if(column.isEmpty()) {
+				super.setError("Column name can't be empty string", ErrorKind.EMPTY_PARAMETER);
+				return;
+			}
+		}
+
 		if (this.index != null)
 		{
-		    if (this.index < 0 || this.index >= this.table.getHeaderSize())
+		    if (this.index < 0 || this.index > this.table.getHeaderSize())
 		    {
 		        super.setError("Index is out of bounds", ErrorKind.WRONG_PARAMETERS);
 		        return;
 		    }
-		        
 			this.table.addColumns(this.index, this.columns);
 		}
 		else
