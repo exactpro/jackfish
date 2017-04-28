@@ -22,7 +22,6 @@ import com.exactprosystems.jf.tool.helpers.DialogsHelper;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 @MatrixItemAttribute(
 		description 	= "This operator is used to describe an object asTable. In matrix editor there is a special mini editor for  rowText и rawMessage for this operator.",
@@ -191,17 +190,6 @@ public class RawTable extends MatrixItem
 	protected boolean matchesDerived(String what, boolean caseSensitive, boolean wholeWord)
 	{
 		return SearchHelper.matches(this.typeName.get(), what, caseSensitive, wholeWord);
-	}
-
-	@Override
-	protected void checkItSelf(Context context, AbstractEvaluator evaluator,
-			IMatrixListener listener, Set<String> ids, Parameters parameters)
-	{
-		if (this.id != null && !this.id.isNullOrEmpty() && ids.contains(this.id.get()))
-		{
-			listener.error(this.owner, getNumber(), this, "id '" + this.id + "' has already defined.");
-		}
-		ids.add(this.id.get());
 	}
 
 	@Override

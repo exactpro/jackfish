@@ -404,7 +404,7 @@ public class Matrix extends AbstractDocument implements IMatrix
 	public boolean checkMatrix(Context context, AbstractEvaluator evaluator, StringBuilder error)
 	{
 		this.matrixListener.reset(this);
-		this.root.check(context, evaluator, this.matrixListener, null);
+		this.root.check(context, evaluator, this.matrixListener);
 
 		if (!this.matrixListener.isOk())
 		{

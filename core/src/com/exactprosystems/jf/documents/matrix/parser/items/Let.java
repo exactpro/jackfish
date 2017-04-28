@@ -28,7 +28,6 @@ import com.exactprosystems.jf.documents.matrix.parser.listeners.IMatrixListener;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 @MatrixItemAttribute(
 		description 	= "This operator is used to name a variable and set a value. \n" +
@@ -111,7 +110,7 @@ public class Let extends MatrixItem
 	}
 
     @Override
-    protected void checkItSelf(Context context, AbstractEvaluator evaluator, IMatrixListener listener, Set<String> ids, Parameters parameters)
+    protected void checkItSelf(Context context, AbstractEvaluator evaluator, IMatrixListener listener, Parameters parameters)
     {
     	// do not call super.checkItSelf(...) because id may be the same for several Let items.
         this.value.prepareAndCheck(evaluator, listener, this);

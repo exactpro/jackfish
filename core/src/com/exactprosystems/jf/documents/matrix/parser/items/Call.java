@@ -175,7 +175,7 @@ public final class Call extends MatrixItem
 	}
 
 	@Override
-	protected void checkItSelf(Context context, AbstractEvaluator evaluator, IMatrixListener listener, Set<String> ids, Parameters parameters)
+	protected void checkItSelf(Context context, AbstractEvaluator evaluator, IMatrixListener listener, Parameters parameters)
 	{
 		updateReference(context, this.name.get());
 		

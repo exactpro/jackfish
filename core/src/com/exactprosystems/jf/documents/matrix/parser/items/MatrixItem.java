@@ -362,9 +362,9 @@ public abstract class MatrixItem implements IMatrixItem, Mutable, Cloneable
 		return getItemName() + "/";
 	}
 
-	public final void check(Context context, AbstractEvaluator evaluator, IMatrixListener checkListener, Set<String> ids)
+	public final void check(Context context, AbstractEvaluator evaluator, IMatrixListener checkListener)
 	{
-		checkItSelf(context, evaluator, checkListener, ids, this.parameters);
+		checkItSelf(context, evaluator, checkListener, this.parameters);
 	}
 
 	public final ReturnAndResult execute(Context context, IMatrixListener listener, AbstractEvaluator evaluator, ReportBuilder report)
@@ -764,26 +764,15 @@ public abstract class MatrixItem implements IMatrixItem, Mutable, Cloneable
 	}
 
 
-	protected void checkItSelf(Context context, AbstractEvaluator evaluator, IMatrixListener listener, Set<String> ids, Parameters parameters)
+	protected void checkItSelf(Context context, AbstractEvaluator evaluator, IMatrixListener listener, Parameters parameters)
 	{
-		if (ids == null)
-		{
-			ids = new HashSet<String>();
-		}
-
-		if (this.id != null && !this.id.isNullOrEmpty() && ids.contains(this.id.get()))
-		{
-			listener.error(this.owner, this.number, this, "id '" + this.id + "' has already defined.");
-		}
-		ids.add(this.id.get());
-
 		this.parameters.prepareAndCheck(evaluator, listener, this);
 
 		for(MatrixItem item : this.children)
 		{
 			if (!item.isOff())
 			{
-				item.check(context, evaluator, listener, ids);
+				item.check(context, evaluator, listener);
 			}
 		}
 	}

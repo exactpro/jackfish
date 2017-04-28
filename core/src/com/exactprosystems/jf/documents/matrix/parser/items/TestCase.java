@@ -23,10 +23,8 @@ import com.exactprosystems.jf.functions.Notifier;
 import com.exactprosystems.jf.functions.RowTable;
 import com.exactprosystems.jf.functions.Table;
 
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 @MatrixItemAttribute(
 		description 	= "The main operator in matrix directory. It is used to logically divide matrix in steps." +
@@ -189,11 +187,9 @@ public final class TestCase extends MatrixItem
 	}
 	
 	@Override
-	protected void checkItSelf(Context context, AbstractEvaluator evaluator, IMatrixListener listener, Set<String> ids, Parameters parameters)
+	protected void checkItSelf(Context context, AbstractEvaluator evaluator, IMatrixListener listener, Parameters parameters)
 	{
-		ids = new HashSet<String>();
-		
-		super.checkItSelf(context, evaluator, listener, ids, parameters);
+		super.checkItSelf(context, evaluator, listener, parameters);
 	}
 
 	@Override

@@ -221,16 +221,6 @@ public class RawText extends MatrixItem
 	}
 
 	@Override
-	protected void checkItSelf(Context context, AbstractEvaluator evaluator, IMatrixListener listener, Set<String> ids, Parameters parameters)
-	{
-		if (this.id != null && !this.id.isNullOrEmpty() && ids.contains(this.id))
-		{
-			listener.error(this.owner, getNumber(), this, "id '" + this.id + "' has already defined.");
-		}
-		ids.add(this.id.get());
-	}
-
-	@Override
 	protected ReturnAndResult executeItSelf(long start, Context context, IMatrixListener listener, AbstractEvaluator evaluator, ReportBuilder report, Parameters parameters)
 	{
 		try

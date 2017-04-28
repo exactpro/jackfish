@@ -23,7 +23,6 @@ import com.exactprosystems.jf.tool.helpers.DialogsHelper;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 @MatrixItemAttribute(
@@ -138,7 +137,7 @@ public final class SetHandler extends MatrixItem
 	}
 
 	@Override
-	protected void checkItSelf(Context context, AbstractEvaluator evaluator, IMatrixListener listener, Set<String> ids, Parameters parameters)
+	protected void checkItSelf(Context context, AbstractEvaluator evaluator, IMatrixListener listener, Parameters parameters)
 	{
 	}
 
