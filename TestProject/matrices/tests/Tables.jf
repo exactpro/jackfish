@@ -166,6 +166,276 @@ TABLE_ADD_COLUMNS;Test case;Never;;
 
 #Id;#TestCase;#Kind;#Depends;#For
 TABLE_SORT;Test case;Never;;
+    #Step;#Kind;#For;#Depends
+    'Sorting by default (ask) for sorted column';;;
+        #Id;#RawTable
+        actual;Table
+        @;numbers
+        0;1
+        1;2
+        2;3
+        #EndRawTable
+
+        #Action;#ColumnName;#Table
+        TableSort;'numbers';actual
+
+        #Id;#RawTable
+        expected;Table
+        @;numbers
+        0;1
+        1;2
+        2;3
+        #EndRawTable
+
+        #Action;#Expected;#Actual
+        TableCompareTwo;expected;actual
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'Sorting by default (ask) for unsorted column';;;
+        #Id;#RawTable
+        actual;Table
+        @;numbers
+        0;3
+        1;2
+        2;1
+        #EndRawTable
+
+        #Action;#ColumnName;#Table
+        TableSort;'numbers';actual
+
+        #Id;#RawTable
+        expected;Table
+        @;numbers
+        0;1
+        1;2
+        2;3
+        #EndRawTable
+
+        #Action;#Expected;#Actual
+        TableCompareTwo;expected;actual
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'Sorting by ascending = true for sorted column';;;
+        #Id;#RawTable
+        actual;Table
+        @;numbers
+        0;1
+        1;2
+        2;3
+        #EndRawTable
+
+        #Action;#ColumnName;#Table;#Ascending
+        TableSort;'numbers';actual;true
+
+        #Id;#RawTable
+        expected;Table
+        @;numbers
+        0;1
+        1;2
+        2;3
+        #EndRawTable
+
+        #Action;#Expected;#Actual
+        TableCompareTwo;expected;actual
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'Sorting by ascending = true for unsorted column';;;
+        #Id;#RawTable
+        actual;Table
+        @;numbers
+        0;3
+        1;2
+        2;1
+        #EndRawTable
+
+        #Action;#ColumnName;#Table;#Ascending
+        TableSort;'numbers';actual;true
+
+        #Id;#RawTable
+        expected;Table
+        @;numbers
+        0;1
+        1;2
+        2;3
+        #EndRawTable
+
+        #Action;#Expected;#Actual
+        TableCompareTwo;expected;actual
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'Sorting by ascending = false for sorted column';;;
+        #Id;#RawTable
+        actual;Table
+        @;numbers
+        0;3
+        1;2
+        2;1
+        #EndRawTable
+
+        #Action;#ColumnName;#Table;#Ascending
+        TableSort;'numbers';actual;false
+
+        #Id;#RawTable
+        expected;Table
+        @;numbers
+        0;3
+        1;2
+        2;1
+        #EndRawTable
+
+        #Action;#Expected;#Actual
+        TableCompareTwo;expected;actual
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'Sorting by ascending = false for unsorted column';;;
+        #Id;#RawTable
+        actual;Table
+        @;numbers
+        0;1
+        1;2
+        2;3
+        #EndRawTable
+
+        #Action;#ColumnName;#Table;#Ascending
+        TableSort;'numbers';actual;false
+
+        #Id;#RawTable
+        expected;Table
+        @;numbers
+        0;3
+        1;2
+        2;1
+        #EndRawTable
+
+        #Action;#Expected;#Actual
+        TableCompareTwo;expected;actual
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'If one column has sorted, then other columns also has sorted';;;
+        #Id;#RawTable
+        actual;Table
+        @;names;numbers;NewColumn
+        0;one;3;33
+        1;two;2;22
+        2;three;1;11
+        #EndRawTable
+
+        #Action;#ColumnName;#Table
+        TableSort;'numbers';actual
+
+        #Id;#RawTable
+        expected;Table
+        @;names;numbers;NewColumn
+        0;three;1;11
+        1;two;2;22
+        2;one;3;33
+        #EndRawTable
+
+        #Action;#Expected;#Actual
+        TableCompareTwo;expected;actual
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'The table field has not fill';;;
+        #Action;#Assert;#ColumnName;#Table;#Ascending
+        TableSort;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;'numbers';;true
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'The table field has a value, but it is not a table value';;;
+        #Id;#Action;#id;#name
+        TBL1;TableCreate;;
+
+        #Action;#Assert;#ColumnName;#Table;#Ascending
+        TableSort;This.Result == Result.Failed && This.Kind == ErrorKind.WRONG_PARAMETERS;'numbers';TBL1;true
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'The column with value from columnName does not exist in a table';;;
+        #Id;#RawTable
+        actual;Table
+        @;names;numbers;NewColumn
+        0;one;3;33
+        1;two;2;22
+        2;three;1;11
+        #EndRawTable
+
+        #Action;#Assert;#ColumnName;#Table
+        TableSort;This.Result == Result.Failed && This.Kind == ErrorKind.WRONG_PARAMETERS;'age';actual
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'The columnName field has not fill';;;
+        #Id;#RawTable
+        actual;Table
+        @;names;numbers;NewColumn
+        0;one;3;33
+        1;two;2;22
+        2;three;1;11
+        #EndRawTable
+
+        #Action;#Assert;#ColumnName;#Table
+        TableSort;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;;actual
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'The Ascending field has not fill';;;
+        #Id;#RawTable
+        actual;Table
+        @;names;numbers;NewColumn
+        0;one;3;33
+        1;two;2;22
+        2;three;1;11
+        #EndRawTable
+
+        #Action;#Assert;#ColumnName;#Table;#Ascending
+        TableSort;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;'numbers';actual;
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'The Ascending field has a wrong parameter';;;
+        #Id;#RawTable
+        actual;Table
+        @;names;numbers;NewColumn
+        0;one;1;11
+        1;two;2;22
+        2;three;3;33
+        #EndRawTable
+
+        #Action;#ColumnName;#Table;#Ascending
+        TableSort;'numbers';actual;'someValue'
+
+        #Id;#RawTable
+        expected;Table
+        @;names;numbers;NewColumn
+        0;three;3;33
+        1;two;2;22
+        2;one;1;11
+        #EndRawTable
+
+        #Action;#Expected;#Actual
+        TableCompareTwo;expected;actual
+
+    #EndStep
+
 
 #Id;#TestCase;#Kind;#Depends;#For
 TABLE_COMPARE_TWO;Test case;Never;;

@@ -7,6 +7,7 @@ import com.exactprosystems.jf.actions.ActionAttribute;
 import com.exactprosystems.jf.actions.ActionFieldAttribute;
 import com.exactprosystems.jf.actions.ActionGroups;
 import com.exactprosystems.jf.actions.ReadableValue;
+import com.exactprosystems.jf.api.error.ErrorKind;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.report.ReportBuilder;
 import com.exactprosystems.jf.documents.config.Context;
@@ -102,6 +103,18 @@ public class TableSort extends AbstractAction
 	@Override
 	protected void doRealAction(Context context, ReportBuilder report, Parameters parameters, AbstractEvaluator evaluator) throws Exception
 	{
+		if(this.ascending == null)
+		{
+			super.setError("Column 'Ascending' can't be empty string", ErrorKind.EMPTY_PARAMETER);
+			return;
+		}
+
+		if(!this.table.columnIsPresent(columnIndex))
+		{
+			super.setError("Column '" + columnIndex + "' doesn't exist in this table", ErrorKind.WRONG_PARAMETERS);
+			return;
+		}
+
 		super.setResult(this.table.sort(columnIndex, ascending));
 	}
 }
