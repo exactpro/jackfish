@@ -108,27 +108,20 @@ public class ClientCountMessages extends AbstractAction
 	@Override
 	public void doRealAction(Context context, ReportBuilder report, Parameters parameters, AbstractEvaluator evaluator)  throws Exception
 	{
-		if (this.connection == null)
+		IClient client = this.connection.getClient();
+		ClientHelper.errorIfDisable(client.getClass(), Possibility.Receiving);
+		Integer ret = null;
+		Map<String, Object> additional = parameters.select(TypeMandatory.Extra);
+
+		if (!Str.areEqual(this.messageType, "*") || this.conditions != null || additional != null)
 		{
-			super.setError("Connection is null", ErrorKind.EMPTY_PARAMETER);
+			ret = client.countMessages(additional, this.messageType, this.conditions);
 		}
 		else
 		{
-			IClient client = this.connection.getClient();
-			ClientHelper.errorIfDisable(client.getClass(), Possibility.Receiving);			
-			Integer ret = null;
-			Map<String, Object> additional = parameters.select(TypeMandatory.Extra);
-			
-			if (!Str.areEqual(this.messageType, "*") || this.conditions != null || additional != null)
-			{
-				ret = client.countMessages(additional, this.messageType, this.conditions);
-			}
-			else
-			{
-				ret = client.totalMessages();
-			}
-			super.setResult(ret);
+			ret = client.totalMessages();
 		}
+		super.setResult(ret);
 	}
 
 

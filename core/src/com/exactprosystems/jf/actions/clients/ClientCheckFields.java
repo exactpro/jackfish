@@ -58,17 +58,10 @@ public class ClientCheckFields extends AbstractAction
 	@Override
 	public void doRealAction(Context context, ReportBuilder report, Parameters parameters, AbstractEvaluator evaluator) throws Exception
 	{
-		if (this.connection == null)
-		{
-			super.setError("Connection is null", ErrorKind.EMPTY_PARAMETER);
-		}
-		else
-		{
-			IClient client = this.connection.getClient();
-			MapMessage map = client.getCodec().convert(this.message.getMessageType(), this.message);
-			
-			super.setResult(map.isCorrect());
-		}
+		IClient client = this.connection.getClient();
+		MapMessage map = client.getCodec().convert(this.message.getMessageType(), this.message);
+
+		super.setResult(map.isCorrect());
 	}
 
 	@Override

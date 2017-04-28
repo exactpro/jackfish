@@ -50,17 +50,11 @@ public class ClientStop extends AbstractAction
 	@Override
 	public void doRealAction(Context context, ReportBuilder report, Parameters parameters, AbstractEvaluator evaluator) throws Exception
 	{
-		if (this.connection == null)
-		{
-			super.setError("Connection is null", ErrorKind.EMPTY_PARAMETER);
-		}
-		else
-		{
-			IClient client = connection.getClient();
-			client.stop();
-			
-			super.setResult(null);
-		}
+		IClient client = connection.getClient();
+		client.stop();
+
+		super.setResult(null);
+
 	}
 
 	@Override

@@ -83,18 +83,11 @@ public class ClientSetProperties extends AbstractAction
 	@Override
 	public void doRealAction(Context context, ReportBuilder report, Parameters parameters, AbstractEvaluator evaluator) throws Exception
 	{
-		if (this.connection == null)
-		{
-			super.setError("Connection is null", ErrorKind.EMPTY_PARAMETER);
-		}
-		else
-		{
-			Parameters additional = parameters.select(TypeMandatory.Extra);
-			IClient client = this.connection.getClient();
+		Parameters additional = parameters.select(TypeMandatory.Extra);
+		IClient client = this.connection.getClient();
 
-			client.setProperties(additional.makeCopy());
-			super.setResult(null);
-		}
+		client.setProperties(additional.makeCopy());
+		super.setResult(null);
 	}
 
 }
