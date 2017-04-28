@@ -314,12 +314,6 @@ Text {
 	-fx-background-color : #5D53A2;
 
 }
-.tab:hover.stoppedTab,
-.tab:selected.stoppedTab,
-.stoppedTab {
-	-fx-background-color : red;
-
-}
 .tab:hover.matrixFinishedOk,
 .tab:selected.matrixFinishedOk,
 .matrixFinishedOk {
@@ -329,7 +323,7 @@ Text {
 .tab:hover.matrixFinishedBad,
 .tab:selected.matrixFinishedBad,
 .matrixFinishedBad {
-	-fx-background-color : red;
+	-fx-background-color : derived(#cd5c5c, 50%);
 
 }
 

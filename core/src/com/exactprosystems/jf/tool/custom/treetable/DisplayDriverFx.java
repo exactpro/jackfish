@@ -61,7 +61,8 @@ import java.util.stream.Collectors;
 
 public class DisplayDriverFx implements DisplayDriver
 {
-	private static final String GRID_PARENT = "gridParent";
+	private static final String GRID_PARENT           = "gridParent";
+	private static final String GRID_PARENT_EXP_FIELD = "gridParentExpField";
 
 	public DisplayDriverFx(MatrixTreeView treeView, Context context, MatrixContextMenu rowContextMenu, MatrixParametersContextMenu parametersContextMenu)
 	{
@@ -366,6 +367,7 @@ public class DisplayDriverFx implements DisplayDriver
 			field.setHelperForExpressionField(name, item.getMatrix());
 		}
 		GridPane temp = new GridPane();
+		temp.getStyleClass().add(GRID_PARENT_EXP_FIELD);
 		temp.add(field, 0, 0);
 		pane.add(temp, column, row);
 		GridPane.setMargin(field, INSETS);
@@ -618,6 +620,10 @@ public class DisplayDriverFx implements DisplayDriver
 			((Region) c).setMaxHeight(hide ? 0 : Control.USE_COMPUTED_SIZE);
 			((Region) c).setMinHeight(hide ? 0 : Control.USE_COMPUTED_SIZE);
 			c.setVisible(!hide);
+			if (c.isVisible() && c.getStyleClass().contains(GRID_PARENT_EXP_FIELD))
+			{
+				((GridPane) c).getChildren().stream().filter(node -> node instanceof ExpressionField).findFirst().ifPresent(Common::setFocused);
+			}
 		});
 	}
 

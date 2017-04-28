@@ -102,7 +102,7 @@ public class MatrixFx extends Matrix
 
 		if (this.controller != null)
 		{
-			this.controller.saved(getName());
+			this.controller.save(getName());
 			this.controller.displayTitle(getName());
 		}
 	}

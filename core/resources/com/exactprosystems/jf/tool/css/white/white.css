@@ -219,13 +219,12 @@
 	-fx-background-color : derived(-fx-company-color-dark, 90%);
 
 }
-
 .matrixFinishedOk {
 	-fx-background-color : derived(#4A6E3A, 90%);
 
 }
 .matrixFinishedBad {
-	-fx-background-color : derived(red, 90%);
+	-fx-background-color : derived(#cd5c5c, 50%);
 
 }
 

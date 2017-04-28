@@ -35,7 +35,6 @@ import com.exactprosystems.jf.tool.matrix.watch.WatcherFx;
 import com.exactprosystems.jf.tool.settings.SettingsPanel;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
-import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
@@ -167,7 +166,10 @@ public class MatrixFxController implements Initializable, ContainingParent, IMat
 			{
 				this.listView.getItems().clear();
 				this.listView.getItems().add(ConsoleText.defaultText(format));
-				Optional.ofNullable(tab1).ifPresent(t -> t.getStyleClass().add(CssVariables.EXECUTING_TAB));
+				Optional.ofNullable(tab1).ifPresent(t -> {
+					t.getStyleClass().removeAll(CssVariables.MATRIX_FINISHED_OK, CssVariables.MATRIX_FINISHED_BAD);
+					t.getStyleClass().add(CssVariables.EXECUTING_TAB);
+				});
 			}
 			else
 			{
@@ -195,30 +197,12 @@ public class MatrixFxController implements Initializable, ContainingParent, IMat
 		Platform.runLater(() ->
 		{
 			String format = String.format("Matrix '%s' finished.", matrix.getName());
-			if (listView != null)
+			if (this.listView != null)
 			{
-				listView.getItems().add(ConsoleText.defaultText(format));
-				Optional.ofNullable(tab).ifPresent(t -> {
-					tab.getStyleClass().remove(CssVariables.EXECUTING_TAB);
-					Task<Void> task = new Task<Void>()
-					{
-						@Override
-						protected Void call() throws Exception
-						{
-							if (failed == 0)
-							{
-								tab.getStyleClass().add(CssVariables.MATRIX_FINISHED_OK);
-							}
-							else
-							{
-								tab.getStyleClass().add(CssVariables.MATRIX_FINISHED_BAD);
-							}
-							Thread.sleep(3000);
-							tab.getStyleClass().removeAll(CssVariables.MATRIX_FINISHED_OK, CssVariables.MATRIX_FINISHED_BAD);
-							return null;
-						}
-					};
-					new Thread(task).start();
+				this.listView.getItems().add(ConsoleText.defaultText(format));
+				Optional.ofNullable(this.tab).ifPresent(t -> {
+					t.getStyleClass().remove(CssVariables.EXECUTING_TAB);
+					t.getStyleClass().add(failed == 0 ? CssVariables.MATRIX_FINISHED_OK : CssVariables.MATRIX_FINISHED_BAD);
 				});
 			}
 			else
@@ -322,8 +306,9 @@ public class MatrixFxController implements Initializable, ContainingParent, IMat
 		initShortcuts(context.getFactory().getSettings());
 	}
 
-	public void saved(String name)
+	public void save(String name)
 	{
+		this.tab.getStyleClass().removeAll(CssVariables.MATRIX_FINISHED_OK, CssVariables.MATRIX_FINISHED_BAD);
 		this.tab.saved(name);
 	}
 
