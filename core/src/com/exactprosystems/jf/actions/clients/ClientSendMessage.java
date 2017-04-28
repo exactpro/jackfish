@@ -114,19 +114,12 @@ public class ClientSendMessage extends AbstractAction
 	@Override
 	public void doRealAction(Context context, ReportBuilder report, Parameters parameters, AbstractEvaluator evaluator) throws Exception
 	{
-		if (this.connection == null)
-		{
-			super.setError("Connection is null", ErrorKind.EMPTY_PARAMETER);
-		}
-		else
-		{
-			Parameters additional = parameters.select(TypeMandatory.Extra);
-			IClient client = this.connection.getClient();
-			ClientHelper.errorIfDisable(client.getClass(), Possibility.Sending);
+		Parameters additional = parameters.select(TypeMandatory.Extra);
+		IClient client = this.connection.getClient();
+		ClientHelper.errorIfDisable(client.getClass(), Possibility.Sending);
 
-			String str = client.sendMessage(this.messageType, additional.makeCopy(), this.check);
-			super.setResult(str);
-		}
+		String str = client.sendMessage(this.messageType, additional.makeCopy(), this.check);
+		super.setResult(str);
 	}
 
 

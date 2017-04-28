@@ -84,22 +84,15 @@ public class ClientConnect extends AbstractAction
 	@Override
 	public void doRealAction(Context context, ReportBuilder report, Parameters parameters, AbstractEvaluator evaluator) throws Exception
 	{
-		if (this.connection == null)
+		IClient client = this.connection.getClient();
+		boolean res = client.connect(context, this.socket, parameters.select(TypeMandatory.Extra));
+		if (res)
 		{
-			super.setError("Connection is null", ErrorKind.EMPTY_PARAMETER);
+			super.setResult(null);
 		}
 		else
 		{
-			IClient client = this.connection.getClient();
-			boolean res = client.connect(context, this.socket, parameters.select(TypeMandatory.Extra));
-			if (res)
-			{
-				super.setResult(null);
-			}
-			else
-			{
-				super.setError("Connection can not be established.", ErrorKind.CLIENT_ERROR);
-			}
+			super.setError("Connection can not be established.", ErrorKind.CLIENT_ERROR);
 		}
 	}
 }

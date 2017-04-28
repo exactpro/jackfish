@@ -124,24 +124,17 @@ public class ClientGetMessage extends AbstractAction
 	@Override
 	public void doRealAction(Context context, ReportBuilder report, Parameters parameters, AbstractEvaluator evaluator) throws Exception
 	{
-		if (this.connection == null)
+		IClient client = this.connection.getClient();
+		ClientHelper.errorIfDisable(client.getClass(), Possibility.Receiving);
+
+		MapMessage ret = client.getMessage(parameters.select(TypeMandatory.Extra), this.messageType, this.conditions, this.timeout, this.remove);
+
+		if (ret != null)
 		{
-			super.setError("Connection is null", ErrorKind.EMPTY_PARAMETER);
+			super.setResult(ret);
+			return;
 		}
-		else
-		{
-			IClient client = this.connection.getClient();
-			ClientHelper.errorIfDisable(client.getClass(), Possibility.Receiving);			
-			
-			MapMessage ret = client.getMessage(parameters.select(TypeMandatory.Extra), this.messageType, this.conditions, this.timeout, this.remove);
-			
-			if (ret != null)
-			{
-				super.setResult(ret);
-				return;
-			}
-			super.setError("Timeout", ErrorKind.TIMEOUT);
-		}
+		super.setError("Timeout", ErrorKind.TIMEOUT);
 	}
 
 

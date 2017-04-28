@@ -64,18 +64,11 @@ public class ClientEncode extends AbstractAction
 	@Override
 	public void doRealAction(Context context, ReportBuilder report, Parameters parameters, AbstractEvaluator evaluator) throws Exception
 	{
-		if (this.connection == null)
-		{
-			super.setError("Connection is null", ErrorKind.EMPTY_PARAMETER);
-		}
-		else
-		{
-			IClient client = this.connection.getClient();
-			ClientHelper.errorIfDisable(client.getClass(), Possibility.Encoding);			
-			byte[] res = client.getCodec().encode(this.message.getMessageType(), this.message);
-			
-			super.setResult(res);
-		}
+		IClient client = this.connection.getClient();
+		ClientHelper.errorIfDisable(client.getClass(), Possibility.Encoding);
+		byte[] res = client.getCodec().encode(this.message.getMessageType(), this.message);
+
+		super.setResult(res);
 	}
 
 }

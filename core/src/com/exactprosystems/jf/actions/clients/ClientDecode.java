@@ -68,17 +68,11 @@ public class ClientDecode extends AbstractAction
 	@Override
 	public void doRealAction(Context context, ReportBuilder report, Parameters parameters, AbstractEvaluator evaluator) throws Exception
 	{
-		if (this.connection == null)
-		{
-			super.setError("Connection is null", ErrorKind.EMPTY_PARAMETER);
-		}
-		else
-		{
-			IClient client = this.connection.getClient();
-			ClientHelper.errorIfDisable(client.getClass(), Possibility.Decoding);			
-			MapMessage res = client.getCodec().decode(Converter.convertToByteArray(this.array));
-	
-			super.setResult(res);
-		}
+		IClient client = this.connection.getClient();
+		ClientHelper.errorIfDisable(client.getClass(), Possibility.Decoding);
+		MapMessage res = client.getCodec().decode(Converter.convertToByteArray(this.array));
+
+		super.setResult(res);
+
 	}
 }

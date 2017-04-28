@@ -103,32 +103,25 @@ public class ClientSendMapMessage extends AbstractAction
 	@Override
 	public void doRealAction(Context context, ReportBuilder report, Parameters parameters, AbstractEvaluator evaluator) throws Exception
 	{
-		if (this.connection == null)
+		IClient client = this.connection.getClient();
+		ClientHelper.errorIfDisable(client.getClass(), Possibility.Sending);
+
+		if (this.check)
 		{
-			super.setError("Connection is null",  ErrorKind.EMPTY_PARAMETER);
-		}
-		else
-		{
-			IClient client = this.connection.getClient();
-			ClientHelper.errorIfDisable(client.getClass(), Possibility.Sending);			
-			
-			if (this.check)
+			if (this.message.isCorrect())
 			{
-				if (this.message.isCorrect())
-				{
-					client.sendMessage(this.message.getMessageType(), this.message, true);
-					super.setResult(null);
-				}
-				else
-				{
-					super.setError("Message is failed.", ErrorKind.CLIENT_ERROR);
-				}
+				client.sendMessage(this.message.getMessageType(), this.message, true);
+				super.setResult(null);
 			}
 			else
 			{
-				client.sendMessage(this.message.getMessageType(), this.message, false);
-				super.setResult(null);
+				super.setError("Message is failed.", ErrorKind.CLIENT_ERROR);
 			}
+		}
+		else
+		{
+			client.sendMessage(this.message.getMessageType(), this.message, false);
+			super.setResult(null);
 		}
 	}
 
