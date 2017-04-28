@@ -11,7 +11,6 @@ package com.exactprosystems.jf.actions.report;
 import com.exactprosystems.jf.actions.*;
 import com.exactprosystems.jf.api.app.ChartKind;
 import com.exactprosystems.jf.api.common.Str;
-import com.exactprosystems.jf.api.error.ErrorKind;
 import com.exactprosystems.jf.api.error.common.NullParameterException;
 import com.exactprosystems.jf.charts.ChartBuilder;
 import com.exactprosystems.jf.charts.ChartFactory;
@@ -23,7 +22,7 @@ import com.exactprosystems.jf.documents.matrix.parser.items.TypeMandatory;
 import com.exactprosystems.jf.functions.HelpKind;
 import com.exactprosystems.jf.functions.Table;
 
-import java.awt.Color;
+import java.awt.*;
 import java.util.List;
 import java.util.Map;
 
@@ -166,17 +165,6 @@ public class ChartReport extends AbstractAction
 	@Override
 	public void doRealAction(Context context, ReportBuilder report, Parameters parameters, AbstractEvaluator evaluator) throws Exception
 	{
-        if (this.table == null)
-        {
-            super.setError(tableName, ErrorKind.EMPTY_PARAMETER);
-            return;
-        }
-        if (this.chartType == null)
-        {
-            super.setError(typeName, ErrorKind.EMPTY_PARAMETER);
-            return;
-        }
-	    
 		ChartBuilder chartBuilder = ChartFactory.createChartBuilder(this.chartType, this.table, this.colors, parameters.select(TypeMandatory.Extra));
 		report = this.toReport == null ? report : this.toReport;
 		// TODO perform explicit report chart

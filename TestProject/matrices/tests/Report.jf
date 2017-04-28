@@ -2,7 +2,73 @@
 prepare;;;;
 
 #TestCase;#Kind;#Depends;#For
-Check Report with one parameter;Never;;
+All negiteve testing with invalid parameters;;;
+    #Action;#Assert;#Type;#Table;#Title
+    ChartReport;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;;;
+
+    #Action;#Assert;#Type;#Table;#Title
+    ChartReport;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;ChartKind.Line;;
+
+    #Action;#Assert;#Type;#Table;#Title
+    ChartReport;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;ChartKind.Line;Table.emptyTable();
+
+    #Action;#Assert;#Type;#Table;#Title
+    ChartReport;This.Result == Result.Failed && This.Kind == ErrorKind.WRONG_PARAMETERS;'a';Table.emptyTable();'a'
+
+    #Action;#Assert;#Type;#Table;#Title
+    ChartReport;This.Result == Result.Failed && This.Kind == ErrorKind.WRONG_PARAMETERS;ChartKind.Line;'';'a'
+
+    #Action;#Assert;#Type;#Table;#Title;#ToReport
+    ChartReport;This.Result == Result.Failed && This.Kind == ErrorKind.WRONG_PARAMETERS;ChartKind.Line;Table.emptyTable();'a';new Date()
+
+    #Action;#Assert;#Type;#Table;#Title;#Colors
+    ChartReport;This.Result == Result.Failed && This.Kind == ErrorKind.WRONG_PARAMETERS;ChartKind.Line;Table.emptyTable();'a';new Date()
+
+    #Action;#Assert;#ToReport
+    Report;This.Result == Result.Failed && This.Kind == ErrorKind.WRONG_PARAMETERS;new Date()
+
+    #Action;#Assert;#Passed;#Report;#Failed
+    ReportFinish;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;;;
+
+    #Action;#Assert;#Passed;#Report;#Failed
+    ReportFinish;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;;;123
+
+    #Action;#Assert;#Passed;#Report;#Failed
+    ReportFinish;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;123;;456
+
+    #Id;#Action;#ReportName
+    REP1;ReportStart;'temp'
+
+    #Action;#Assert;#Passed;#Report;#Failed
+    ReportFinish;This.Result == Result.Failed && This.Kind == ErrorKind.WRONG_PARAMETERS;new Date();REP1.Out;123
+
+    #Action;#Assert;#Passed;#Report;#Failed
+    ReportFinish;This.Result == Result.Failed && This.Kind == ErrorKind.WRONG_PARAMETERS;123;REP1.Out;new Date()
+
+    #Action;#Assert;#Passed;#Report;#Failed
+    ReportFinish;This.Result == Result.Failed && This.Kind == ErrorKind.WRONG_PARAMETERS;123;new Date();123
+
+    #Action;#Assert;#Passed;#Report;#Failed;#FinishTime
+    ReportFinish;This.Result == Result.Failed && This.Kind == ErrorKind.WRONG_PARAMETERS;123;REP1.Out;123;3
+
+    #Action;#Assert;#Passed;#Report;#Failed;#StartTime
+    ReportFinish;This.Result == Result.Failed && This.Kind == ErrorKind.WRONG_PARAMETERS;123;REP1.Out;123;3
+
+    #Action;#Passed;#Report;#Failed
+    ReportFinish;1;REP1.Out;2
+
+    #Action;#Assert;#Name
+    ReportName;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;
+
+    #Action;#Assert;#Report
+    ReportShow;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;
+
+    #Action;#Assert;#ReportName
+    ReportStart;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;
+
+
+#Off;#TestCase;#Kind;#Depends;#For
+1;Check Report with one parameter;Never;;
     #Id;#RawText;#Kind
     TEXT1;Text;Matrix
     ~;"#TestCase;#Kind;#Depends;#For"
@@ -34,8 +100,8 @@ Check Report with one parameter;Never;;
     CALL_2;stopBrowser;appCon
 
 
-#TestCase;#Kind;#Depends;#For
-Check Report with one parameter with invalid before test case;Never;;
+#Off;#TestCase;#Kind;#Depends;#For
+1;Check Report with one parameter with invalid before test case;Never;;
     #Id;#RawText;#Kind
     TEXT1;Text;Matrix
     ~;"#TestCase;#Kind;#Depends;#For"
@@ -67,8 +133,8 @@ Check Report with one parameter with invalid before test case;Never;;
     CALL_2;stopBrowser;appCon
 
 
-#TestCase;#Kind;#Depends;#For
-Check Report with parameter beforeTestCase;Never;;
+#Off;#TestCase;#Kind;#Depends;#For
+1;Check Report with parameter beforeTestCase;Never;;
     #Id;#RawText;#Kind
     TEXT1;Text;Matrix
     ~;"#Id;#TestCase;#Kind;#Depends;#For"
@@ -100,8 +166,8 @@ Check Report with parameter beforeTestCase;Never;;
     CALL_2;stopBrowser;appCon
 
 
-#TestCase;#Kind;#Depends;#For
-Check Report with many parameters inside table;Never;;
+#Off;#TestCase;#Kind;#Depends;#For
+1;Check Report with many parameters inside table;Never;;
     #Id;#RawText;#Kind
     TEXT1;Text;Matrix
     ~;"#TestCase;#Kind;#Depends;#For"
@@ -133,8 +199,8 @@ Check Report with many parameters inside table;Never;;
     CALL_2;stopBrowser;appCon
 
 
-#TestCase;#Kind;#Depends;#For
-Check ReportName;Never;;
+#Off;#TestCase;#Kind;#Depends;#For
+1;Check ReportName;Never;;
     #Id;#RawText;#Kind
     TEXT1;Text;Matrix
     ~;"#TestCase;#Kind;#Depends;#For"
@@ -163,38 +229,20 @@ Check ReportName;Never;;
     CALL_2;stopBrowser;appCon
 
 
-#TestCase;#Kind;#Depends;#For
-Report finish without reportstart;;;
+#Off;#TestCase;#Kind;#Depends;#For
+1;Report finish without reportstart;;;
     #Action;#Assert;#Passed;#Report;#Failed
     ReportFinish;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;123;;456
 
 
-#TestCase;#Kind;#Depends;#For
-report show with invalid report;;;
+#Off;#TestCase;#Kind;#Depends;#For
+1;report show with invalid report;;;
     #Action;#Assert;#Report
     ReportShow;This.Result == Result.Failed && This.Kind == ErrorKind.WRONG_PARAMETERS;'asd'
 
 
-#TestCase;#Kind;#Depends;#For
-report finish without passed;;;
-    #Id;#Action;#ReportName
-    REP1;ReportStart;'my new report name'
-
-    #Action;#Assert;#Passed;#Report;#Failed
-    ReportFinish;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;;REP1.Out;123
-
-
-#TestCase;#Kind;#Depends;#For
-report finish without failed;;;
-    #Id;#Action;#ReportName
-    REP1;ReportStart;'my new report name1'
-
-    #Action;#Assert;#Passed;#Report;#Failed
-    ReportFinish;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;123;REP1.Out;
-
-
-#TestCase;#Kind;#Depends;#For
-report start finish;;;
+#Off;#TestCase;#Kind;#Depends;#For
+1;report start finish;;;
     #Id;#Action;#ReportName;#Version
     REP1;ReportStart;'my new report name3';'my version'
 
@@ -226,26 +274,11 @@ report start finish;;;
     CALL_3;stopBrowser;appCon
 
 
-#TestCase;#Kind;#Depends;#For
-report chart (negavitve with empty parameters);;;
-    #Action;#Assert;#Type;#Table;#Title
-    ChartReport;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;;;
-
-    #Action;#Assert;#Type;#Table;#Title
-    ChartReport;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;ChartKind.Line;;
-
-    #Id;#Action
-    TBL1;TableCreate
-
-    #Action;#Assert;#Type;#Table;#Title
-    ChartReport;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;;TBL1.Out;
-
-
 // TODO
 // Add check for all xAxis
 // and for all lines and bars
-#TestCase;#Kind;#Depends;#For
-report chart Line chart;;;
+#Off;#TestCase;#Kind;#Depends;#For
+1;report chart Line chart;;;
     #Step;#Kind;#For;#Depends
     'line chart with empty labels';;;
         #Id;#Action
@@ -445,8 +478,8 @@ report chart Line chart;;;
     #EndStep
 
 
-#TestCase;#Kind;#Depends;#For
-report chart Bar chart;;;
+#Off;#TestCase;#Kind;#Depends;#For
+1;report chart Bar chart;;;
     #Step;#Kind;#For;#Depends
     'bar chart with empty labels';;;
         #Id;#Action
@@ -665,8 +698,8 @@ report chart Bar chart;;;
     #EndStep
 
 
-#TestCase;#Kind;#Depends;#For
-report chart Pie chart;;;
+#Off;#TestCase;#Kind;#Depends;#For
+1;report chart Pie chart;;;
     #Step;#Kind;#For;#Depends
     'pie chart inside table';;;
         #Id;#RawText;#Kind

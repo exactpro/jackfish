@@ -367,9 +367,10 @@ public class Xml
 		XPath xPath = XPathFactory.newInstance().newXPath();
 		Node foundNode = (Node) xPath.evaluate(xpath, this.node, XPathConstants.NODE);
 		
-		if (res != null)
+		if (foundNode != null)
 		{
-            return new Xml(res.appendChild(foundNode));
+			res.appendChild(foundNode);
+			return new Xml(res);
 		}
 		
 		return null;

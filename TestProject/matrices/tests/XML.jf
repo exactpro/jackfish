@@ -142,11 +142,11 @@ prepare;;;
 check XmlChildren;Never;;
     #Step;#Kind;#For;#Depends
     'negative testing';;;
-        #Id;#Action;#Assert;#Xml
-        XML11;XmlChildren;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;
+        #Action;#Assert;#Xml
+        XmlChildren;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;
 
-        #Id;#Action;#Assert;#Xml
-        XML5;XmlChildren;This.Result == Result.Failed && This.Kind == ErrorKind.WRONG_PARAMETERS;'asd'
+        #Action;#Assert;#Xml
+        XmlChildren;This.Result == Result.Failed && This.Kind == ErrorKind.WRONG_PARAMETERS;'asd'
 
     #EndStep
 
@@ -175,6 +175,12 @@ check  XmlAddNode;;;
 
         #Action;#Assert;#Xml;#parameter1;#parameter2
         XmlAddNode;This.Result == Result.Failed;root;'par1';'par2'
+
+        #Action;#Assert;#Xml
+        XmlAddNode;This.Result == Result.Failed && This.Kind == ErrorKind.WRONG_PARAMETERS;new Date()
+
+        #Action;#Assert;#Xml;#NewXML
+        XmlAddNode;This.Result == Result.Failed && This.Kind == ErrorKind.WRONG_PARAMETERS;root;new Date()
 
     #EndStep
 
@@ -305,6 +311,9 @@ check XmlCompare;;;
 
         #Action;#Assert;#Expected;#Actual
         XmlCompare;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;;root
+
+        #Action;#Assert;#Expected;#Actual
+        XmlCompare;This.Result == Result.Failed && This.Kind == ErrorKind.WRONG_PARAMETERS;new Date();new Date()
 
     #EndStep
 
@@ -625,6 +634,9 @@ check XmlFindFirst;;;
         #Action;#Assert;#Xpath;#Xml
         XmlFindFirst;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;;root
 
+        #Action;#Assert;#Xpath;#Xml
+        XmlFindFirst;This.Result == Result.Failed && This.Kind == ErrorKind.WRONG_PARAMETERS;'';new Date()
+
     #EndStep
 
     #Step;#Kind;#For;#Depends
@@ -692,6 +704,9 @@ check XmlFromText;;;
     'negative testing';;;
         #Id;#Action;#Assert;#Text
         XMLFT1;XmlFromText;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;
+
+        #Id;#Action;#Assert;#Text
+        XMLFT1;XmlFromText;This.Result == Result.Failed && This.Kind == ErrorKind.WRONG_PARAMETERS;''
 
     #EndStep
 
@@ -770,6 +785,9 @@ check XmlRemove;;;
 
         #Action;#Assert;#Xpath;#Xml
         XmlRemove;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;'asd';
+
+        #Action;#Assert;#Xpath;#Xml
+        XmlRemove;This.Result == Result.Failed && This.Kind == ErrorKind.WRONG_PARAMETERS;'asd';new Date()
 
     #EndStep
 
@@ -874,6 +892,12 @@ check XmlReport;;;
 
         #Action;#Assert;#Xml;#Title
         XmlReport;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;;'asd'
+
+        #Action;#Assert;#Xml;#Title
+        XmlReport;This.Result == Result.Failed && This.Kind == ErrorKind.WRONG_PARAMETERS;new Date();'asd'
+
+        #Action;#Assert;#Xml;#Title;#ToReport
+        XmlReport;This.Result == Result.Failed && This.Kind == ErrorKind.WRONG_PARAMETERS;root;'asd';new Date()
 
     #EndStep
 
@@ -996,6 +1020,9 @@ check XmlSaveToFile;;;
         XmlSaveToFile;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;;'a'
 
         #Action;#Assert;#Xml;#File
+        XmlSaveToFile;This.Result == Result.Failed && This.Kind == ErrorKind.WRONG_PARAMETERS;new Date();'a'
+
+        #Action;#Assert;#Xml;#File
         XmlSaveToFile;This.Result == Result.Failed;root;'testdata'
 
     #EndStep
@@ -1026,7 +1053,7 @@ check XmlSaveToFile;;;
 
 
 #TestCase;#Kind;#Depends;#For
-check XmlSelectFirst;;;
+check XmlSelect;;;
     #Step;#Kind;#For;#Depends
     'negative testing';;;
         #Id;#Call
@@ -1045,6 +1072,9 @@ check XmlSelectFirst;;;
         // invalid xpath
         #Action;#Assert;#Xpath;#NodeName;#Xml
         XmlSelect;This.Result == Result.Failed;'[[[';'node';root
+
+        #Action;#Assert;#Xpath;#NodeName;#Xml
+        XmlSelect;This.Result == Result.Failed && This.Kind == ErrorKind.WRONG_PARAMETERS;'';'';new Date()
 
     #EndStep
 
@@ -1082,11 +1112,70 @@ check XmlSelectFirst;;;
 
 
 #TestCase;#Kind;#Depends;#For
+check XmlSelectFirst;;;
+    #Step;#Kind;#For;#Depends
+    'negative testing';;;
+        #Id;#Call
+        root;createXml
+
+        #Action;#Assert;#Xpath;#NodeName;#Xml
+        XmlSelectFirst;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;;;
+
+        #Action;#Assert;#Xpath;#NodeName;#Xml
+        XmlSelectFirst;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;'';;
+
+        // invalid node name
+        #Action;#Assert;#Xpath;#NodeName;#Xml
+        XmlSelectFirst;This.Result == Result.Failed;'';'123';root
+
+        // invalid xpath
+        #Action;#Assert;#Xpath;#NodeName;#Xml
+        XmlSelectFirst;This.Result == Result.Failed;'[[[';'node';root
+
+        #Action;#Assert;#Xpath;#NodeName;#Xml
+        XmlSelectFirst;This.Result == Result.Failed && This.Kind == ErrorKind.WRONG_PARAMETERS;'';'';new Date()
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'possitive test';;;
+        #Id;#Call
+        root;createXml
+
+        #Id;#Action;#Xpath;#NodeName;#Xml
+        XML5;XmlSelectFirst;'.//first';'newNode';root
+
+        #Assert;#Message
+        XML5.Out.getNodeName() == 'newNode';'Returned node is bad'
+
+        #Assert;#Message
+        XML5.Out.getChildren().size() == 1;'Child count not expected'
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'returned nothing';;;
+        #Id;#Call
+        root;createXml
+
+        #Id;#Action;#Xpath;#NodeName;#Xml
+        XML6;XmlSelectFirst;'.//asd';'newNode';root
+
+        #Assert;#Message
+        XML6.Out == null;'Found something not equals null'
+
+    #EndStep
+
+
+#TestCase;#Kind;#Depends;#For
 check XmlSetNode;;;
     #Step;#Kind;#For;#Depends
     'negative testing';;;
         #Action;#Assert;#Xml
         XmlSetNode;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;
+
+        #Action;#Assert;#Xml
+        XmlSetNode;This.Result == Result.Failed && This.Kind == ErrorKind.WRONG_PARAMETERS;new Date()
 
     #EndStep
 
