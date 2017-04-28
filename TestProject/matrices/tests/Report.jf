@@ -67,8 +67,8 @@ All negiteve testing with invalid parameters;;;
     ReportStart;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;
 
 
-#Off;#TestCase;#Kind;#Depends;#For
-1;Check Report with one parameter;Never;;
+#TestCase;#Kind;#Depends;#For
+Check Report with one parameter;Never;;
     #Id;#RawText;#Kind
     TEXT1;Text;Matrix
     ~;"#TestCase;#Kind;#Depends;#For"
@@ -100,8 +100,8 @@ All negiteve testing with invalid parameters;;;
     CALL_2;stopBrowser;appCon
 
 
-#Off;#TestCase;#Kind;#Depends;#For
-1;Check Report with one parameter with invalid before test case;Never;;
+#TestCase;#Kind;#Depends;#For
+Check Report with one parameter with invalid before test case;Never;;
     #Id;#RawText;#Kind
     TEXT1;Text;Matrix
     ~;"#TestCase;#Kind;#Depends;#For"
@@ -133,8 +133,8 @@ All negiteve testing with invalid parameters;;;
     CALL_2;stopBrowser;appCon
 
 
-#Off;#TestCase;#Kind;#Depends;#For
-1;Check Report with parameter beforeTestCase;Never;;
+#TestCase;#Kind;#Depends;#For
+Check Report with parameter beforeTestCase;Never;;
     #Id;#RawText;#Kind
     TEXT1;Text;Matrix
     ~;"#Id;#TestCase;#Kind;#Depends;#For"
@@ -166,8 +166,8 @@ All negiteve testing with invalid parameters;;;
     CALL_2;stopBrowser;appCon
 
 
-#Off;#TestCase;#Kind;#Depends;#For
-1;Check Report with many parameters inside table;Never;;
+#TestCase;#Kind;#Depends;#For
+Check Report with many parameters inside table;Never;;
     #Id;#RawText;#Kind
     TEXT1;Text;Matrix
     ~;"#TestCase;#Kind;#Depends;#For"
@@ -199,8 +199,8 @@ All negiteve testing with invalid parameters;;;
     CALL_2;stopBrowser;appCon
 
 
-#Off;#TestCase;#Kind;#Depends;#For
-1;Check ReportName;Never;;
+#TestCase;#Kind;#Depends;#For
+Check ReportName;Never;;
     #Id;#RawText;#Kind
     TEXT1;Text;Matrix
     ~;"#TestCase;#Kind;#Depends;#For"
@@ -229,20 +229,20 @@ All negiteve testing with invalid parameters;;;
     CALL_2;stopBrowser;appCon
 
 
-#Off;#TestCase;#Kind;#Depends;#For
-1;Report finish without reportstart;;;
+#TestCase;#Kind;#Depends;#For
+Report finish without reportstart;;;
     #Action;#Assert;#Passed;#Report;#Failed
     ReportFinish;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;123;;456
 
 
-#Off;#TestCase;#Kind;#Depends;#For
-1;report show with invalid report;;;
+#TestCase;#Kind;#Depends;#For
+report show with invalid report;;;
     #Action;#Assert;#Report
     ReportShow;This.Result == Result.Failed && This.Kind == ErrorKind.WRONG_PARAMETERS;'asd'
 
 
-#Off;#TestCase;#Kind;#Depends;#For
-1;report start finish;;;
+#TestCase;#Kind;#Depends;#For
+report start finish;;;
     #Id;#Action;#ReportName;#Version
     REP1;ReportStart;'my new report name3';'my version'
 
@@ -277,8 +277,8 @@ All negiteve testing with invalid parameters;;;
 // TODO
 // Add check for all xAxis
 // and for all lines and bars
-#Off;#TestCase;#Kind;#Depends;#For
-1;report chart Line chart;;;
+#TestCase;#Kind;#Depends;#For
+report chart Line chart;;;
     #Step;#Kind;#For;#Depends
     'line chart with empty labels';;;
         #Id;#Action
@@ -478,8 +478,8 @@ All negiteve testing with invalid parameters;;;
     #EndStep
 
 
-#Off;#TestCase;#Kind;#Depends;#For
-1;report chart Bar chart;;;
+#TestCase;#Kind;#Depends;#For
+report chart Bar chart;;;
     #Step;#Kind;#For;#Depends
     'bar chart with empty labels';;;
         #Id;#Action
@@ -698,8 +698,8 @@ All negiteve testing with invalid parameters;;;
     #EndStep
 
 
-#Off;#TestCase;#Kind;#Depends;#For
-1;report chart Pie chart;;;
+#TestCase;#Kind;#Depends;#For
+report chart Pie chart;;;
     #Step;#Kind;#For;#Depends
     'pie chart inside table';;;
         #Id;#RawText;#Kind
