@@ -312,11 +312,21 @@ public enum OperationKind
         }
 
         @Override
+        protected String errorMessage(Part part)
+        {
+            return null;
+        }
+
+        @Override
         public <T> boolean operateDerived(Part part, OperationExecutor<T> executor, Holder<T> holder, OperationResult result) throws Exception
         {
             List<String> list = executor.getList(holder.getValue());
             StringBuilder sb = new StringBuilder();
             boolean res = compareTwoLists(part.list, list, part.b, sb);
+            if (!res)
+            {
+                result.setError(this.toFormula(part) + " mismatched. " + sb.toString(), part.locator);
+            }
             result.setOk(res);
             return res;
         }
