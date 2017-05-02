@@ -244,14 +244,7 @@ public final class TestCase extends MatrixItem
 	            if (testcase != null && testcase.result != null && testcase.result.getResult().isFail())
 	            {
 	                ret = new ReturnAndResult(start, Result.Failed, "Fail due the TestCase " + this.depends.get() + " is failed", ErrorKind.FAIL, this);
-	                
-	                if (table != null && table.size() >= 0  && !isRepOff())
-	                {
-	                    row.put(Context.timeColumn,         ret.getTime());
-	                    row.put(Context.resultColumn,       ret.getResult().isFail() ? Result.Failed : ret.getResult());
-	                    row.put(Context.errorColumn,        ret.getError());
-	                    table.updateValue(position, row);
-	                }
+	                updateTable(table, position, row, ret, ret.getError());
 	                return ret;
 	            }
 	        }
@@ -285,25 +278,13 @@ public final class TestCase extends MatrixItem
 			
             this.plugin.evaluate(evaluator);
             doSreenshot(row, this.plugin.getValue(), screenshotKind, ScreenshotKind.OnFinish, ScreenshotKind.OnFinishOrError);
-            if (table != null && position >= 0 && !isRepOff())
-			{
-				row.put(Context.timeColumn, 		ret.getTime());
-				row.put(Context.resultColumn, 		ret.getResult().isFail() ? Result.Failed : ret.getResult());
-				row.put(Context.errorColumn, 		ret.getError());
-				table.updateValue(position, row);
-			}
+            updateTable(table, position, row, ret, ret.getError());
 		} 
 		catch (Exception e)
 		{
 		    logger.error(e.getMessage(), e);
-		    
-			if (table != null && table.size() >= 0  && !isRepOff())
-			{
-				row.put(Context.timeColumn, 		ret.getTime());
-				row.put(Context.resultColumn, 		ret.getResult().isFail() ? Result.Failed : ret.getResult());
-				row.put(Context.errorColumn, 		new MatrixError(e.getMessage(), ErrorKind.EXCEPTION, this));
-				table.updateValue(position, row);
-			}
+            updateTable(table, position, row, ret, new MatrixError(e.getMessage(), ErrorKind.EXCEPTION, this));
+            return new ReturnAndResult(start, Result.Failed, e.getMessage(), ErrorKind.EXCEPTION, this);
 		}
 		finally
 		{
@@ -313,7 +294,18 @@ public final class TestCase extends MatrixItem
 		return ret;
 	}
 
-	@Override
+    private void updateTable(Table table, int position, RowTable row, ReturnAndResult ret, MatrixError error)
+    {
+        if (table != null && position >= 0 && !isRepOff())
+        {
+            row.put(Context.timeColumn,         ret.getTime());
+            row.put(Context.resultColumn,       ret.getResult().isFail() ? Result.Failed : ret.getResult());
+            row.put(Context.errorColumn,        error);
+            table.updateValue(position, row);
+        }
+    }
+
+    @Override
 	protected void afterReport(ReportBuilder report)
 	{
         super.afterReport(report);

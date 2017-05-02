@@ -181,7 +181,7 @@ public class Parameter implements Mutable, Cloneable, Setter<String>, Getter<Str
 		catch (Exception e)
 		{
 			this.value = e.getMessage();
-			setString(this.value);
+			setString(this.name + ": " + this.value);
 		}
 		return this.isValid;
 	}

@@ -60,7 +60,7 @@ public class Step extends MatrixItem
 	@Override
 	public String toString()
 	{
-	    String s = this.identify.getValueAsString();
+	    String s = this.identify.isValid() ?  this.identify.getValueAsString() : null;
 		return Str.IsNullOrEmpty(s) ? super.toString() : s;
 	}
 
@@ -216,9 +216,6 @@ public class Step extends MatrixItem
 	        String str = settings.getValueOrDefault(Settings.GLOBAL_NS, Settings.MATRIX_NAME, Settings.MATRIX_POPUPS, "" + false).getValue();
 	        boolean showPopups = Boolean.parseBoolean(str);
 
-            this.identify.evaluate(evaluator);
-			Object identifyValue = this.identify.getValue();
-			
             if (table != null && !isRepOff())
 			{
 				position = table.size();
@@ -237,20 +234,21 @@ public class Step extends MatrixItem
 				table.add(row);
 			}
             
+            if (!this.identify.evaluate(evaluator))
+            {
+                ret = new ReturnAndResult(start, Result.StepFailed, this.identify.getValueAsString(), ErrorKind.WRONG_PARAMETERS, this);
+                updateTable(table, position, row, ret, ret.getError());
+                return ret;
+            }
+            Object identifyValue = this.identify.getValue();
+            
             if (!Str.IsNullOrEmpty(this.depends.get()))
             {
                 MatrixItem step = this.owner.getRoot().find(true, Step.class, this.depends.get());
                 if (step != null && step.result != null && step.result.getResult().isFail())
                 {
                     ret = new ReturnAndResult(start, Result.StepFailed, "Fail due the Step " + this.depends.get() + " is failed", ErrorKind.FAIL, this);
-                    
-                    if (table != null && table.size() >= 0  && !isRepOff())
-                    {
-                        row.put(Context.timeColumn,         ret.getTime());
-                        row.put(Context.resultColumn,       ret.getResult().isFail() ? Result.Failed : ret.getResult());
-                        row.put(Context.errorColumn,        ret.getError());
-                        table.updateValue(position, row);
-                    }
+                    updateTable(table, position, row, ret, ret.getError());
                     return ret;
                 }
             }
@@ -287,26 +285,12 @@ public class Step extends MatrixItem
 
             this.plugin.evaluate(evaluator);
             doSreenshot(row, this.plugin.getValue(), screenshotKind, ScreenshotKind.OnFinish, ScreenshotKind.OnFinishOrError);
-            if (table != null && position >= 0 && !isRepOff())
-			{
-				row.put(Context.timeColumn, 		ret.getTime());
-				row.put(Context.resultColumn, 		ret.getResult().isFail() ? Result.Failed : ret.getResult());
-				row.put(Context.errorColumn, 		ret.getError());
-				table.updateValue(position, row);
-			}
+            updateTable(table, position, row, ret, ret.getError());
 		} 
 		catch (Exception e)
 		{
 			logger.error(e.getMessage(), e);
-			listener.error(this.owner, getNumber(), this, e.getMessage());
-
-            if (table != null && table.size() >= 0  && !isRepOff())
-			{
-				row.put(Context.timeColumn, 		ret.getTime());
-				row.put(Context.resultColumn, 		ret.getResult().isFail() ? Result.Failed : ret.getResult());
-				row.put(Context.errorColumn, 		new MatrixError(e.getMessage(), ErrorKind.EXCEPTION, this));
-				table.updateValue(position, row);
-			}
+			updateTable(table, position, row, ret, new MatrixError(e.getMessage(), ErrorKind.EXCEPTION, this));
 			return new ReturnAndResult(start, Result.StepFailed, e.getMessage(), ErrorKind.EXCEPTION, this);
 		}
 		finally
@@ -317,7 +301,18 @@ public class Step extends MatrixItem
 		return ret.getResult() == Result.Failed ? new ReturnAndResult(start, ret, Result.StepFailed): ret;
 	}
 
-	private Parameter identify;
+    private void updateTable(Table table, int position, RowTable row, ReturnAndResult ret, MatrixError error)
+    {
+        if (table != null && position >= 0 && !isRepOff())
+        {
+            row.put(Context.timeColumn,         ret.getTime());
+            row.put(Context.resultColumn,       ret.getResult().isFail() ? Result.Failed : ret.getResult());
+            row.put(Context.errorColumn,        error);
+            table.updateValue(position, row);
+        }
+    }
+    
+    private Parameter identify;
     private MutableValue<String> kind;
     private Parameter plugin;
     private MutableValue<String> depends;
