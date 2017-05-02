@@ -325,7 +325,9 @@ public enum OperationKind
             boolean res = compareTwoLists(part.list, list, part.b, sb);
             if (!res)
             {
-                result.setError(this.toFormula(part) + " mismatched. " + sb.toString(), part.locator);
+                String mess = this.toFormula(part) + " mismatched. " + sb.toString();
+                result.setText(mess);
+                result.setError(mess, part.locator);
             }
             result.setOk(res);
             return res;
@@ -401,7 +403,9 @@ public enum OperationKind
             boolean res = part.colorCondition.isMatched(map);
             if (!res)
             {
-                result.setError("Expected color: " + ((ColorCondition)part.colorCondition).getColor() + " actual color: " + actual, part.locator);
+                String mess = "Expected color: " + ((ColorCondition)part.colorCondition).getColor() + " actual color: " + actual;
+                result.setText(mess);
+                result.setError(mess, part.locator);
             }
             result.setOk(res);
             return res;
