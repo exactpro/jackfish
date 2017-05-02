@@ -13,11 +13,7 @@ import com.exactprosystems.jf.actions.ActionAttribute;
 import com.exactprosystems.jf.actions.ActionFieldAttribute;
 import com.exactprosystems.jf.actions.ActionGroups;
 import com.exactprosystems.jf.actions.ReadableValue;
-import com.exactprosystems.jf.api.client.ClientConnection;
-import com.exactprosystems.jf.api.client.ClientHelper;
-import com.exactprosystems.jf.api.client.IClient;
-import com.exactprosystems.jf.api.client.MapMessage;
-import com.exactprosystems.jf.api.client.Possibility;
+import com.exactprosystems.jf.api.client.*;
 import com.exactprosystems.jf.api.common.ParametersKind;
 import com.exactprosystems.jf.api.error.ErrorKind;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
@@ -52,7 +48,6 @@ public class ClientSendMessage extends AbstractAction
 {
 	public final static String connectionName = "ClientConnection";
 	public final static String messageTypeName = "MessageType";
-	public final static String showName = "Show";
 	public final static String checkName = "Check";
 
 	@ActionFieldAttribute(name = connectionName, mandatory = true, description = "The connection with the client, which is derived from the action ClientLoad." )
@@ -81,6 +76,10 @@ public class ClientSendMessage extends AbstractAction
 		{
 			return HelpKind.ChooseFromList;
 		}
+		if (checkName.equals(fieldName))
+		{
+			return HelpKind.ChooseFromList;
+		}
 		boolean res = Helper.canFillParameter(this.owner.getMatrix(), context, parameters, null, connectionName, fieldName);
 		return res ? HelpKind.ChooseFromList : null;
 	}
@@ -94,7 +93,7 @@ public class ClientSendMessage extends AbstractAction
 				Helper.messageTypes(list, this.owner.getMatrix(), context, parameters, null, connectionName);
 				break;
 				
-			case showName:
+			case checkName:
 				list.add(ReadableValue.TRUE);
 				list.add(ReadableValue.FALSE);
 				break;
@@ -118,8 +117,24 @@ public class ClientSendMessage extends AbstractAction
 		IClient client = this.connection.getClient();
 		ClientHelper.errorIfDisable(client.getClass(), Possibility.Sending);
 
-		String str = client.sendMessage(this.messageType, additional.makeCopy(), this.check);
-		super.setResult(str);
+		if (this.check)
+		{
+			IMessage mes = client.getFactory().getDictionary().getMessage(this.messageType);
+			if (mes != null)
+			{
+				client.sendMessage(this.messageType, additional.makeCopy(), true);
+				super.setResult(null);
+			}
+			else
+			{
+				super.setError("Message is failed.", ErrorKind.CLIENT_ERROR);
+			}
+		}
+		else
+		{
+			client.sendMessage(this.messageType, additional.makeCopy(), false);
+			super.setResult(null);
+		}
 	}
 
 
