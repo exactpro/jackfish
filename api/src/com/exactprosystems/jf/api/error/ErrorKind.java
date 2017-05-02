@@ -32,6 +32,7 @@ public enum ErrorKind
 	FAIL					("Fail"), 
 	OTHER					("Other"),
 	CHART_EXCEPTION			("Chart exception"),
+	MATRIX_ERROR			("Matrix error"),
 	;
 
 	

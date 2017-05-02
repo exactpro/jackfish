@@ -11,6 +11,7 @@ package com.exactprosystems.jf.documents.matrix.parser.items;
 import com.csvreader.CsvWriter;
 import com.exactprosystems.jf.actions.ReadableValue;
 import com.exactprosystems.jf.api.error.ErrorKind;
+import com.exactprosystems.jf.api.error.common.MatrixException;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.evaluator.Variables;
 import com.exactprosystems.jf.common.report.ReportBuilder;
@@ -177,6 +178,7 @@ public final class Call extends MatrixItem
 	@Override
 	protected void checkItSelf(Context context, AbstractEvaluator evaluator, IMatrixListener listener, Parameters parameters)
 	{
+		checkValidId(this.id, listener);
 		updateReference(context, this.name.get());
 		
 		if (this.ref == null)

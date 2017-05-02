@@ -2,6 +2,7 @@ package com.exactprosystems.jf.common;
 
 import com.csvreader.CsvWriter;
 import com.exactprosystems.jf.actions.system.Vars;
+import com.exactprosystems.jf.api.error.common.MatrixException;
 import com.exactprosystems.jf.documents.ConsoleDocumentFactory;
 import com.exactprosystems.jf.documents.config.Configuration;
 import com.exactprosystems.jf.documents.matrix.Matrix;

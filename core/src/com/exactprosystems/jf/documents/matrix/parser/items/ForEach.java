@@ -15,7 +15,7 @@ import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.report.ReportBuilder;
 import com.exactprosystems.jf.documents.config.Context;
 import com.exactprosystems.jf.documents.matrix.parser.DisplayDriver;
-import com.exactprosystems.jf.documents.matrix.parser.MatrixException;
+import com.exactprosystems.jf.api.error.common.MatrixException;
 import com.exactprosystems.jf.documents.matrix.parser.MutableValue;
 import com.exactprosystems.jf.documents.matrix.parser.Parameter;
 import com.exactprosystems.jf.documents.matrix.parser.Parameters;
@@ -149,6 +149,7 @@ public final class ForEach extends MatrixItem
 	protected void checkItSelf(Context context, AbstractEvaluator evaluator, IMatrixListener listener, Parameters parameters)
 	{
 		super.checkItSelf(context, evaluator, listener, parameters);
+		super.checkValidId(this.var, listener);
 		this.in.prepareAndCheck(evaluator, listener, this);
 	}
 

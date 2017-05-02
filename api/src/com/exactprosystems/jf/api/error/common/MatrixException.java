@@ -6,20 +6,20 @@
 //  information which is the property of Exactpro Systems, LLC or its licensors.
 ////////////////////////////////////////////////////////////////////////////////
 
-package com.exactprosystems.jf.documents.matrix.parser;
+package com.exactprosystems.jf.api.error.common;
 
-import com.exactprosystems.jf.documents.matrix.parser.items.MatrixItem;
+import com.exactprosystems.jf.api.common.IMatrixItem;
 
 public class MatrixException extends Exception
 {
 	private static final long serialVersionUID = -8878908206137039974L;
 
-	public MatrixException(int lineNumber, MatrixItem item, Exception ex)
+	public MatrixException(int lineNumber, IMatrixItem item, Exception ex)
 	{
 		super("Matrix error in #" + lineNumber + (item == null ? " " : " '" + item.getItemName() + "' ") + ex.getMessage());
 	}
 	
-	public MatrixException(int lineNumber, MatrixItem item, String msg)
+	public MatrixException(int lineNumber, IMatrixItem item, String msg)
 	{
 		super("Matrix error in #" + lineNumber + (item == null ? " " : " '" + item.getItemName() + "' ") + msg);
 	}

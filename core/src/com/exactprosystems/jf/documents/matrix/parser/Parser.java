@@ -10,19 +10,16 @@ package com.exactprosystems.jf.documents.matrix.parser;
 
 import com.csvreader.CsvReader;
 import com.csvreader.CsvWriter;
+import com.exactprosystems.jf.api.error.common.MatrixException;
 import com.exactprosystems.jf.common.CommonHelper;
-import com.exactprosystems.jf.documents.DocumentFactory;
 import com.exactprosystems.jf.documents.config.Configuration;
-import com.exactprosystems.jf.documents.matrix.Matrix;
 import com.exactprosystems.jf.documents.matrix.parser.items.*;
-import com.exactprosystems.jf.documents.matrix.parser.listeners.IMatrixListener;
 
 import org.apache.log4j.Logger;
 
 import javax.lang.model.type.NullType;
 
 import java.io.Reader;
-import java.io.StringReader;
 import java.io.StringWriter;
 import java.io.Writer;
 import java.util.*;

@@ -71,7 +71,7 @@ public class MatrixListenerFx implements IMatrixListener
 
 	public void error(Matrix matrix, int lineNumber, MatrixItem item, String message)
 	{
-		exceptionMessage = String.format("error(%d, %s, %s)", lineNumber, item == null ? "<null>" : item.getPath(), message);
+		this.exceptionMessage = String.format("error(%d, %s, %s)", lineNumber, item == null ? "<null>" : item.getPath(), message);
 		logger.error(exceptionMessage);
 		this.ok = false;
 	}
@@ -88,6 +88,7 @@ public class MatrixListenerFx implements IMatrixListener
 
 	private boolean				ok		= false;
 	private String				exceptionMessage;
+
 
 	private static final Logger	logger	= Logger.getLogger(MatrixListenerFx.class);
 }

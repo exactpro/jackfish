@@ -20,10 +20,8 @@ import com.exactprosystems.jf.documents.config.Context;
 import com.exactprosystems.jf.documents.matrix.parser.Parameters;
 import com.exactprosystems.jf.functions.HelpKind;
 import com.exactprosystems.jf.functions.Text;
-import com.exactprosystems.jf.tool.Common;
 
 import java.io.Reader;
-import java.io.StringReader;
 import java.util.Date;
 
 @ActionAttribute(
@@ -83,9 +81,9 @@ public class MatrixRunFromText extends AbstractAction
 				Reader reader = CommonHelper.readerFromString(this.text.toString())	)
 		{
 			MatrixRunner runner = newContext.createRunner("new", reader, this.at, this.parameter);
-            newContext.setOut(context.getOut());
+			newContext.setOut(context.getOut());
 			runner.start();
-			
+
 			super.setResult(runner);
 		}
 	}

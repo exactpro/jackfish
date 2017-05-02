@@ -15,6 +15,7 @@ import com.exactprosystems.jf.api.app.Mutable;
 import com.exactprosystems.jf.api.common.Converter;
 import com.exactprosystems.jf.api.common.IMatrixItem;
 import com.exactprosystems.jf.api.common.Str;
+import com.exactprosystems.jf.api.error.common.MatrixException;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.report.ReportBuilder;
 import com.exactprosystems.jf.documents.config.Configuration;
@@ -29,8 +30,10 @@ import org.apache.log4j.Logger;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 public abstract class MatrixItem implements IMatrixItem, Mutable, Cloneable
@@ -731,6 +734,7 @@ public abstract class MatrixItem implements IMatrixItem, Mutable, Cloneable
 	{
 	}
 
+	@Override
 	public String getItemName()
 	{
 		return (isGlobal() ? "^" : "") + getClass().getSimpleName();
@@ -774,6 +778,20 @@ public abstract class MatrixItem implements IMatrixItem, Mutable, Cloneable
 			{
 				item.check(context, evaluator, listener);
 			}
+		}
+	}
+
+	protected void checkValidId(MutableValue<String> string, IMatrixListener listener)
+	{
+		String id = string.get();
+		if (Str.IsNullOrEmpty(id))
+		{
+			return;
+		}
+		boolean matches = id.matches(VALID_IDENTIFIER_REGEXP);
+		if (!matches)
+		{
+			listener.error(owner, number, this, "Invalid identifier : " + id);
 		}
 	}
 
@@ -977,6 +995,8 @@ public abstract class MatrixItem implements IMatrixItem, Mutable, Cloneable
 	// Private members
 	//==============================================================================================
 	// define state of this item
+	private static final String VALID_IDENTIFIER_REGEXP = "^[a-zA-Z_$][a-zA-Z_$0-9]*$";
+
 	protected MutableValue<String> 		id;
 	protected MutableValue<Boolean> 	off;
     protected MutableValue<Boolean>     repOff;

@@ -10,5 +10,5 @@ package com.exactprosystems.jf.api.common;
 
 public interface IMatrixItem
 {
-
+	String getItemName();
 }
