@@ -164,7 +164,7 @@ public class MatrixRunner implements IMatrixRunner, AutoCloseable
 		StringBuilder errorMsg = new StringBuilder();
 		if (!this.matrix.checkMatrix(this.context, evaluator, errorMsg))
 		{
-			throw new Exception("Matrix is incorrect. Errors : " + errorMsg.toString());
+			throw new MatrixException(0, null, "Matrix is incorrect. Errors : " + errorMsg.toString());
 		}
 		
         changeState(MatrixState.Waiting);

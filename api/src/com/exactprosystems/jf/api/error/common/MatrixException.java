@@ -9,8 +9,10 @@
 package com.exactprosystems.jf.api.error.common;
 
 import com.exactprosystems.jf.api.common.IMatrixItem;
+import com.exactprosystems.jf.api.error.ErrorKind;
+import com.exactprosystems.jf.api.error.JFException;
 
-public class MatrixException extends Exception
+public class MatrixException extends JFException
 {
 	private static final long serialVersionUID = -8878908206137039974L;
 
@@ -22,5 +24,12 @@ public class MatrixException extends Exception
 	public MatrixException(int lineNumber, IMatrixItem item, String msg)
 	{
 		super("Matrix error in #" + lineNumber + (item == null ? " " : " '" + item.getItemName() + "' ") + msg);
+	}
+
+
+	@Override
+	public ErrorKind getErrorKind()
+	{
+		return ErrorKind.MATRIX_ERROR;
 	}
 }

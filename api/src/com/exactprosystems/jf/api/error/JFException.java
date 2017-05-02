@@ -16,6 +16,11 @@ public abstract class JFException extends Exception
 	{
 		super (message, cause);
 	}
+
+	public JFException(String message)
+	{
+		super(message);
+	}
 	
 	public abstract ErrorKind getErrorKind();
 }
