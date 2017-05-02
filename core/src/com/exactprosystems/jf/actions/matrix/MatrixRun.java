@@ -12,6 +12,7 @@ import com.exactprosystems.jf.actions.AbstractAction;
 import com.exactprosystems.jf.actions.ActionAttribute;
 import com.exactprosystems.jf.actions.ActionFieldAttribute;
 import com.exactprosystems.jf.actions.ActionGroups;
+import com.exactprosystems.jf.api.error.common.MatrixException;
 import com.exactprosystems.jf.common.CommonHelper;
 import com.exactprosystems.jf.common.MatrixRunner;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
@@ -19,15 +20,7 @@ import com.exactprosystems.jf.common.report.ReportBuilder;
 import com.exactprosystems.jf.documents.config.Context;
 import com.exactprosystems.jf.documents.matrix.parser.Parameters;
 import com.exactprosystems.jf.functions.HelpKind;
-import com.exactprosystems.jf.tool.custom.console.ConsoleText;
-import com.exactprosystems.jf.tool.matrix.TabConsole;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileReader;
-import java.io.InputStreamReader;
-import java.io.PrintStream;
 import java.io.Reader;
 import java.util.Date;
 
@@ -106,6 +99,10 @@ public class MatrixRun extends AbstractAction
             newContext.setOut(context.getOut());
             runner.start();
 			super.setResult(runner);
+		}
+		catch (MatrixException matrixException)
+		{
+			super.setError(matrixException.getMessage(), matrixException.getErrorKind());
 		}
 	}
 }
