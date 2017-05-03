@@ -33,7 +33,7 @@ public class PlainTextFx extends PlainText
 		initController();
 
 		this.controller.displayTitle(Common.getSimpleTitle(getName()));
-		this.controller.displayText(super.property);
+		this.controller.displayText(super.property.get(), super.property::set);
 	}
 
 	@Override

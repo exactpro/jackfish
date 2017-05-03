@@ -8,9 +8,10 @@
    information which is the property of Exactpro Systems, LLC or its licensors.
   -->
 
+<?import com.exactprosystems.jf.tool.CssVariables?>
+<?import com.exactprosystems.jf.tool.custom.controls.field.CustomFieldWithButton?>
 <?import javafx.scene.control.*?>
-<?import javafx.scene.layout.BorderPane?>
-<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.layout.*?>
 <BorderPane fx:id="mainPane" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0"
 			xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.exactprosystems.jf.tool.text.PlainTextFxController">
 	<top>
@@ -23,9 +24,35 @@
 						<Label text="Highlight"/>
 						<ComboBox fx:id="cbHighlighting" prefWidth="150.0"/>
 						<Separator orientation="VERTICAL"/>
-						<Button fx:id="btnFindAndReplace" mnemonicParsing="false" onAction="#findAndReplace" text="FindAndReplace"/>
+						<ToggleButton fx:id="tbFindAndReplace" mnemonicParsing="false" text="FindAndReplace"/>
 					</items>
 				</ToolBar>
+				<GridPane fx:id="findPane" prefHeight="0.0" minHeight="0.0" maxHeight="0.0" minWidth="800.0" prefWidth="800.0" maxWidth="800.0" BorderPane.alignment="CENTER" visible="false">
+					<styleClass>
+						<CssVariables fx:constant="HGAP_MAX" />
+					</styleClass>
+					<rowConstraints>
+						<RowConstraints vgrow="SOMETIMES" percentHeight="50.0"/>
+						<RowConstraints vgrow="SOMETIMES" percentHeight="50.0"/>
+					</rowConstraints>
+					<columnConstraints>
+						<ColumnConstraints halignment="LEFT" percentWidth="60.0"/>
+						<ColumnConstraints halignment="LEFT" percentWidth="20.0"/>
+						<ColumnConstraints halignment="LEFT" percentWidth="20.0"/>
+					</columnConstraints>
+					<children>
+						<CustomFieldWithButton promptText="Find" fx:id="tfFind"/>
+						<CustomFieldWithButton promptText="Replace" fx:id="tfReplace" GridPane.rowIndex="1"/>
+
+						<CheckBox fx:id="cbMatchCase" text="Match case" GridPane.columnIndex="1"/>
+						<CheckBox fx:id="cbRegexp" text="RegExp" GridPane.columnIndex="2"/>
+
+						<Button text="Find all" onAction="#findAll" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+						<Button text="Replace all" onAction="#replaceAll" GridPane.columnIndex="2" GridPane.rowIndex="1"/>
+
+						<Label fx:id="lblFindCount" GridPane.columnIndex="3"/>
+					</children>
+				</GridPane>
 			</children>
 		</VBox>
 	</top>
