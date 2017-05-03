@@ -329,6 +329,10 @@ public enum OperationKind
                 result.setText(mess);
                 result.setError(mess, part.locator);
             }
+            else
+            {
+                result.setText("" + true);
+            }
             result.setOk(res);
             return res;
         }
@@ -406,6 +410,10 @@ public enum OperationKind
                 String mess = "Expected color: " + ((ColorCondition)part.colorCondition).getColor() + " actual color: " + actual;
                 result.setText(mess);
                 result.setError(mess, part.locator);
+            }
+            else
+            {
+                result.setText("" + true);
             }
             result.setOk(res);
             return res;
