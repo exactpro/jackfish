@@ -1037,6 +1037,16 @@ public enum OperationKind
 			return true;
 		}
 	}, 
+	
+	NONE("none") 
+	{
+        @Override
+        protected <T> boolean operateDerived(Part part, OperationExecutor<T> executor, Holder<T> holder,
+                OperationResult result) throws Exception
+        {
+            return false;
+        }
+    }, 
 	;
 	
 	

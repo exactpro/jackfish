@@ -28,6 +28,15 @@ public class Operation implements Iterable<Part>, Serializable
 	{
 		this.list = new ArrayList<Part>();
 	}
+	
+	public OperationKind getOperationKind(int index)
+	{
+	    if (this.list != null && index < this.list.size())
+	    {
+	        return this.list.get(index).kind;
+	    }
+	    return OperationKind.NONE;
+	}
 
 	//------------------------------------------------------------------------------------------------------------------
 	// Object
