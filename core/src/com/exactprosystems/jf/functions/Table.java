@@ -1440,8 +1440,6 @@ public class Table implements List<RowTable>, Mutable, Cloneable
             }
             else if (header.type == Header.HeaderType.COLORED)
             {
-                System.err.println("### " + report);
-                
                 if (report != null)
                 {
                     StringBuilder name = new StringBuilder();

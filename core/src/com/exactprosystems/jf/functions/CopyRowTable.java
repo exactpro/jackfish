@@ -40,7 +40,7 @@ public class CopyRowTable implements Map<String, Object>, Cloneable
         this.source = this.source.entrySet()
                 .stream()
                 .filter(e -> names.contains(e.getKey()))
-                .collect(Collectors.toMap(k -> k.getKey(), v -> Str.asString(v.getValue())));
+                .collect(Collectors.toMap(k -> k.getKey(), v -> Str.asString(v.getValue()), (k, v) -> k, LinkedHashMap::new));
     }
 
     @Override

@@ -12,6 +12,9 @@ import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
+
+import com.exactprosystems.jf.api.common.Str;
 import com.exactprosystems.jf.functions.Header.HeaderType;
 
 
@@ -41,6 +44,13 @@ public class RowTable implements Map<String, Object>, Cloneable
     public CopyRowTable copy()
     {
         return new CopyRowTable(this.source);
+    }
+    
+    public LinkedHashMap<String, Object> asLinkedMap()
+    {
+        return this.source.entrySet()
+                .stream()
+                .collect(Collectors.toMap(e -> e.getKey().name, e -> e.getValue(), (k,v) -> k, LinkedHashMap::new));
     }
     
     //==============================================================================================

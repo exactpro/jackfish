@@ -9,7 +9,6 @@
 package com.exactprosystems.jf.actions.tables;
 
 import com.exactprosystems.jf.actions.*;
-import com.exactprosystems.jf.api.common.Converter;
 import com.exactprosystems.jf.api.common.Str;
 import com.exactprosystems.jf.api.error.ErrorKind;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
@@ -20,13 +19,12 @@ import com.exactprosystems.jf.documents.matrix.parser.Parameters;
 import com.exactprosystems.jf.functions.HelpKind;
 import com.exactprosystems.jf.documents.matrix.parser.items.TypeMandatory;
 import com.exactprosystems.jf.functions.Table;
+import com.jcraft.jsch.Identity;
 
 import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
@@ -141,7 +139,7 @@ public class TableReport extends AbstractAction
 			return;
 		}
 		
-		Map<String, String> map = new HashMap<>();
+		Map<String, String> map = new LinkedHashMap<>();
 		if (this.columns == null)
 		{
     		Parameters extra = parameters.select(TypeMandatory.Extra);
@@ -156,19 +154,19 @@ public class TableReport extends AbstractAction
 		    {
 		        map = Arrays.stream((Object[])this.columns)
                     .map(e -> Str.asString(e))
-                    .collect(Collectors.toMap(a -> a, a -> a));
+                    .collect(Collectors.toMap(a -> a, a -> a, (k,v) -> k, LinkedHashMap::new));
 		    }
 		    else if (this.columns instanceof Iterable<?>)
 		    {
 		        map = StreamSupport.stream(((Iterable<?>)this.columns).spliterator(), false)
 		            .map(e -> Str.asString(e))
-		            .collect(Collectors.toMap(a -> a, a -> a));
+		            .collect(Collectors.toMap(a -> a, a -> a, (k,v) -> k, LinkedHashMap::new));
 		    }
 		    else if (this.columns instanceof Map<?, ?>)
 		    {
 		        map = ((Map<?, ?>)this.columns).entrySet()
 		            .stream()
-		            .collect(Collectors.toMap(e -> Str.asString(e.getKey()), e -> Str.asString(e.getValue())));
+		            .collect(Collectors.toMap(e -> Str.asString(e.getKey()), e -> Str.asString(e.getValue()), (k,v) -> k, LinkedHashMap::new));
 		    }
 		    else
 		    {
