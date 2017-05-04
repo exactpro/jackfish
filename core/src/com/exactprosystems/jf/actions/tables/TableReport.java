@@ -9,22 +9,33 @@
 package com.exactprosystems.jf.actions.tables;
 
 import com.exactprosystems.jf.actions.*;
+import com.exactprosystems.jf.api.common.Converter;
 import com.exactprosystems.jf.api.common.Str;
 import com.exactprosystems.jf.api.error.ErrorKind;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.report.ReportBuilder;
 import com.exactprosystems.jf.documents.config.Context;
+import com.exactprosystems.jf.documents.matrix.parser.Parameter;
 import com.exactprosystems.jf.documents.matrix.parser.Parameters;
 import com.exactprosystems.jf.functions.HelpKind;
 import com.exactprosystems.jf.documents.matrix.parser.items.TypeMandatory;
 import com.exactprosystems.jf.functions.Table;
 
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 @ActionAttribute(
 		group					= ActionGroups.Tables,
 		generalDescription 		= "This action is used to output the table to report.",
 		additionFieldsAllowed 	= true,
+        additionalDescription   = "Columns containing the data which defines the outgoing columns. Column title is given in"
+                + " the parameter’s value. In the value it is needed to specify the new name for table in the report.",
 		examples 				=
 				"{{` 1. Create a test case with id Test.`}}"
 				+ "{{` 2. Create a table with columns Name and Age. Add values to the first line of the table.`}}"
@@ -37,7 +48,7 @@ import java.util.List;
 				+ "    0;Mike;25\n"
 				+ "    #EndRawTable\n"
 				+ "    #Action;#BeforeTestCase;#Table;#Title;#Columns\n"
-				+ "    TableReport;'Test';TC;'Table title';{'Age'}#}}"
+				+ "    TableReport;'Test';TC;'Table title';{'Age' : 'Age of person'}#}}"
 	)
 public class TableReport extends AbstractAction 
 {
@@ -66,9 +77,10 @@ public class TableReport extends AbstractAction
 	@ActionFieldAttribute(name = numbersName, mandatory = false, description = "If the value is true the column with the lines numbers is output.")
 	protected Boolean withNumbers;
 
-	@ActionFieldAttribute(name = columnsName, mandatory = false, description = "Array of column titles which is needed to be output into the report.")
-	protected String[]	columns;
+	@ActionFieldAttribute(name = columnsName, mandatory = false, description = "Array or map of column titles which is needed to be output into the report.")
+	protected Object	columns;
 
+	
 	@ActionFieldAttribute(name = reportValuesName, mandatory = false, description = "If the value is false, the value"
 			+ " from the cell is output, if the value is true the expression result is output. "
 			+ "Applicable for the cells of Expression type, see {{@TableConsiderColumnAs@}}.")
@@ -83,7 +95,7 @@ public class TableReport extends AbstractAction
 	{
 		this.beforeTestCase = null;
 		this.withNumbers 	= true;
-		this.columns 		= new String[] {};
+		this.columns 		= null;
 		this.reportValues 	= false;
 		this.toReport = null;
 	}
@@ -128,15 +140,46 @@ public class TableReport extends AbstractAction
 			super.setError(tableName, ErrorKind.EMPTY_PARAMETER);
 			return;
 		}
-		Parameters columns = parameters.select(TypeMandatory.Extra);
-		if (columns.isEmpty())
+		
+		Map<String, String> map = new HashMap<>();
+		if (this.columns == null)
 		{
-			columns = null;
+    		Parameters extra = parameters.select(TypeMandatory.Extra);
+		    for (Parameter ex : extra)
+		    {
+		        map.put(ex.getName(), ex.getValueAsString());
+		    }
+		}
+		else
+		{
+		    if (this.columns.getClass().isArray())
+		    {
+		        map = Arrays.stream((Object[])this.columns)
+                    .map(e -> Str.asString(e))
+                    .collect(Collectors.toMap(a -> a, a -> a));
+		    }
+		    else if (this.columns instanceof Iterable<?>)
+		    {
+		        map = StreamSupport.stream(((Iterable<?>)this.columns).spliterator(), false)
+		            .map(e -> Str.asString(e))
+		            .collect(Collectors.toMap(a -> a, a -> a));
+		    }
+		    else if (this.columns instanceof Map<?, ?>)
+		    {
+		        map = ((Map<?, ?>)this.columns).entrySet()
+		            .stream()
+		            .collect(Collectors.toMap(e -> Str.asString(e.getKey()), e -> Str.asString(e.getValue())));
+		    }
+		    else
+		    {
+		        String key = Str.asString(this.columns);
+		        map.put(key, key);
+		    }
 		}
 		
 		report = this.toReport == null ? report : this.toReport;
 		this.beforeTestCase = ActionsReportHelper.getBeforeTestCase(this.beforeTestCase, this.owner.getMatrix());
-		this.table.report(report, Str.asString(this.title), this.beforeTestCase, this.withNumbers, this.reportValues, columns, this.columns);
+		this.table.report(report, Str.asString(this.title), this.beforeTestCase, this.withNumbers, this.reportValues, map);
 		
 		super.setResult(null);
 	}

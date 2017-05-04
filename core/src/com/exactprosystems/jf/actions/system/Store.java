@@ -21,7 +21,7 @@ import com.exactprosystems.jf.documents.matrix.parser.Parameters;
 		group = ActionGroups.System,
 		generalDescription = "The following action is needed to store values of the object from any matrix in global {{$Store$}}.\n"
 				+ "Later, this object is available by action {{@Restore@}}.\n"
-				+ "All objects from global {{$Store$}} are stored only during the current session.",
+				+ "All objects from global {{$Store$}} are stored only during the current tool session.",
 		additionFieldsAllowed = false,
 		examples 			= "Save object DateTime that contains current date and time when doing this action.\n"
 				+ "{{##Action;#Value;#Name\n"
