@@ -1,3 +1,348 @@
+// 
 #TestCase;#Kind;#Depends;#For
-Test case;Never;;
+MessageCreate;Never;;
+    #Step;#Kind;#For;#Depends
+    'Positive testing';;;
+        #Id;#Action;#Assert;#Fields;#Source;#MessageType
+        MSGCR1;MessageCreate;This.Result == Result.Passed && MSGCR1.Out.getMessageType == 'TradingSessionListUpdateReport_NoTradingSessions' && MSGCR1.Out.getSource() == 'Test';{'TradingSessionID' : 15, 'TradSesStatus' : 'Open'};'Test';'TradingSessionListUpdateReport_NoTradingSessions'
+
+        #Id;#Action;#ActualMessage;#TradingSessionID;#TradSesStatus
+        MSGCHK1;MessageCheck;MSGCR1.Out;15;'Open'
+
+        #Id;#Action;#Assert;#PartySubIDType;#PartySubID;#MessageType
+        MSGCR2;MessageCreate;This.Result == Result.Passed && This.Out.getMessageType() == 'PtysSubGrp_NoPartySubIDs';1;'01234';'PtysSubGrp_NoPartySubIDs'
+
+        #Id;#Action;#ActualMessage;#PartySubIDType;#PartySubID
+        MSGCHK2;MessageCheck;MSGCR2.Out;1;'01234'
+
+        #Id;#Action;#Source;#Fields;#MessageType
+        MSGCR4;MessageCreate;;;'TradingSessionListUpdateReport_NoTradingSessions'
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'Negative testing';;;
+        // 
+        #Id;#Action;#Assert;#MessageType
+        MSGCR3;MessageCreate;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;
+
+    #EndStep
+
+
+#TestCase;#Kind;#Depends;#For
+MessageCheck;;;
+    #Step;#Kind;#For;#Depends
+    'Positive testing';;;
+        #Id;#Global;#Action;#Source;#PartySubID;#PartySubIDType;#MessageType
+        MSGCR5;1;MessageCreate;'TestSource';'Test';2;'PtysSubGrp_NoPartySubIDs'
+
+        #Id;#Action;#ActualMessage;#PartySubID;#PartySubIDType
+        MSGCHK3;MessageCheck;MSGCR5.Out;'Test';2
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'Negative testing';;;
+        #Id;#Action;#Assert;#ActualMessage
+        MSGCHK4;MessageCheck;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;
+
+        #Id;#Action;#Assert;#ActualMessage;#PartySubID;#PartySubIDType
+        MSGCHK5;MessageCheck;This.Result == Result.Failed && This.Kind == ErrorKind.NOT_EQUAL;MSGCR5.Out;'Test';3
+
+        #Id;#Action;#Assert;#ActualMessage;#PartySubID;#PartySubIDType
+        MSGCHK6;MessageCheck;This.Result == Result.Failed && This.Kind == ErrorKind.NOT_EQUAL;MSGCR5.Out;'Test3';2
+
+        #Id;#Action;#Assert;#ActualMessage;#PartySubID;#PartySubIDType
+        MSGCHK7;MessageCheck;This.Result == Result.Failed && This.Kind == ErrorKind.NOT_EQUAL;MSGCR5.Out;'Test3';3
+
+    #EndStep
+
+
+#TestCase;#Kind;#Depends;#For
+MessageCompareTwo;;;
+    #Step;#Kind;#For;#Depends
+    'Positive testing';;;
+        #Id;#Action;#PartyRole;#PartyIDSource;#PartyID;#NoPartySubIDs;#MessageType
+        MSGCR7;MessageCreate;1;'1';'TestId';'TestId';'Parties_NoPartyIDs'
+
+        #Id;#Action;#PartyRole;#PartyIDSource;#PartyID;#NoPartySubIDs;#MessageType
+        MSGCR6;MessageCreate;1;'1';'TestId';'TestId';'Parties_NoPartyIDs'
+
+        #Id;#Action;#PartyRole;#PartyIDSource;#PartyID;#NoPartySubIDs;#MessageType
+        MSGCR8;MessageCreate;1;'1';'TestId123';'TestId';'Parties_NoPartyIDs'
+
+        #Id;#Action;#PartyRole;#PartyIDSource;#NoPartySubIDs;#MessageType
+        MSGCR9;MessageCreate;1;'1';'TestId';'Parties_NoPartyIDs'
+
+        #Id;#Action;#Expected;#Actual
+        MSGCMP1;MessageCompareTwo;MSGCR7.Out;MSGCR6.Out
+
+        #Id;#Action;#Exclude;#Expected;#Actual
+        MSGCMP1;MessageCompareTwo;;MSGCR7.Out;MSGCR6.Out
+
+        #Id;#Action;#Exclude;#Expected;#Actual
+        MSGCMP1;MessageCompareTwo;{'PartyID'};MSGCR8.Out;MSGCR6.Out
+
+        #Id;#Action;#Exclude;#Expected;#Actual
+        MSGCMP1;MessageCompareTwo;{'PartyID'};MSGCR9.Out;MSGCR6.Out
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'Negative testing';;;
+        #Id;#Action;#PartyRole;#PartyIDSource;#PartyID;#NoPartySubIDs;#MessageType
+        MSGCR7;MessageCreate;1;'1';'TestId';'asd';'Parties_NoPartyIDs'
+
+        #Id;#Action;#PartyRole;#PartyIDSource;#PartyID;#NoPartySubIDs;#MessageType
+        MSGCR6;MessageCreate;1;'1';'TestId';'TestId';'Parties_NoPartyIDs'
+
+        #Id;#Action;#Assert;#Expected;#Actual
+        MSGCMP1;MessageCompareTwo;This.Result == Result.Failed && This.Kind == ErrorKind.NOT_EQUAL;MSGCR7.Out;MSGCR6.Out
+
+        #Id;#Action;#Assert;#Expected;#Actual
+        MSGCMP2;MessageCompareTwo;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;MSGCR7.Out;
+
+        #Id;#Action;#Assert;#Expected;#Actual
+        MSGCMP2;MessageCompareTwo;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;;MSGCR7.Out
+
+        #Id;#Action;#Assert;#Expected;#Actual
+        MSGCMP2;MessageCompareTwo;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;;
+
+    #EndStep
+
+
+#TestCase;#Kind;#Depends;#For
+MessageReport;;;
+    #Step;#Kind;#For;#Depends
+    'Positive testing without before TC';;;
+        #Id;#RawText;#Kind
+        matrix;Text;Matrix
+        ~;"#TestCase;#Kind;#Depends;#For"
+        ~;";;;"
+        ~;"    #Id;#Action;#TradingSessionID;#TradSesStatus;#MessageType"
+        ~;"    MSGCR1;MessageCreate;'TestSessionId';'TestTradeStatus';'TradingSessionListUpdateReport_NoTradingSessions'"
+        ~;""
+        ~;"    #Action;#MapMessage;#Title"
+        ~;"    MessageReport;MSGCR1.Out;'My Message'"
+        #EndRawText
+
+        #Id;#Call;#rawText
+        PathToReport;runMatrix;matrix
+
+        #Id;#Call;#pathToReport
+        appCon;runBrowser;PathToReport
+
+        #Id;#Let
+        locator1;new Locator().kind(ControlKind.Label).visibility(Visibility.Visible).xpath('/html/body/table[2]/tbody/tr[2]/td/table/tbody/tr[4]/td/table/tbody/tr[2]/td/table/tbody/tr[1]/td[1]/span[@class="group" and contains(text(), "TradingSessionID")]')
+
+        #Id;#Let
+        locator2;new Locator().kind(ControlKind.Label).visibility(Visibility.Visible).xpath('/html/body/table[2]/tbody/tr[2]/td/table/tbody/tr[4]/td/table/tbody/tr[2]/td/table/tbody/tr[2]/td[1]/span[@class="group" and contains(text(), "TradSesStatus")]')
+
+        #Id;#Let
+        locator3;new Locator().kind(ControlKind.Label).visibility(Visibility.Visible).xpath('/html/body/table[2]/tbody/tr[2]/td/table/tbody/tr[4]/td/table/tbody/tr[2]/td/table/tbody/tr[1]/td[@class="tdMax" and contains(text(), "TestSessionId")]')
+
+        #Id;#Let
+        locator4;new Locator().kind(ControlKind.Label).visibility(Visibility.Visible).xpath('/html/body/table[2]/tbody/tr[2]/td/table/tbody/tr[4]/td/table/tbody/tr[2]/td/table/tbody/tr[2]/td[@class="tdMax" and contains(text(), "TestTradeStatus")]')
+
+        #Action;#Assert;#Dialog;#AppConnection;#MockElement
+        DialogFill;!This.Out.MockElement;'DialogForTestReport';appCon;Do.use(locator1).isVisible()
+
+        #Action;#Assert;#Dialog;#AppConnection;#MockElement
+        DialogFill;!This.Out.MockElement;'DialogForTestReport';appCon;Do.use(locator2).isVisible()
+
+        #Action;#Assert;#Dialog;#AppConnection;#MockElement
+        DialogFill;!This.Out.MockElement;'DialogForTestReport';appCon;Do.use(locator3).isVisible()
+
+        #Action;#Assert;#Dialog;#AppConnection;#MockElement
+        DialogFill;!This.Out.MockElement;'DialogForTestReport';appCon;Do.use(locator4).isVisible()
+
+        // 
+        #Id;#Call;#appCon
+        CALL_1;expand;appCon
+
+        #Action;#Assert;#Dialog;#AppConnection;#MockElement
+        DialogFill;This.Out.MockElement;'DialogForTestReport';appCon;Do.use('MainTable',LocatorKind.Owner).use(locator1, LocatorKind.Element).isVisible()
+
+        #Action;#Assert;#Dialog;#AppConnection;#MockElement
+        DialogFill;This.Out.MockElement;'DialogForTestReport';appCon;Do.use('MainTable',LocatorKind.Owner).use(locator2, LocatorKind.Element).isVisible()
+
+        #Action;#Assert;#Dialog;#AppConnection;#MockElement
+        DialogFill;This.Out.MockElement;'DialogForTestReport';appCon;Do.use('MainTable',LocatorKind.Owner).use(locator3, LocatorKind.Element).isVisible()
+
+        #Action;#Assert;#Dialog;#AppConnection;#MockElement
+        DialogFill;This.Out.MockElement;'DialogForTestReport';appCon;Do.use('MainTable',LocatorKind.Owner).use(locator4, LocatorKind.Element).isVisible()
+
+        #Action;#Assert;#Dialog;#AppConnection;#MockElement
+        DialogFill;This.Out.MockElement == 'TradingSessionID';'DialogForTestReport';appCon;Do.use(locator1).getValue()
+
+        #Action;#Assert;#Dialog;#AppConnection;#MockElement
+        DialogFill;This.Out.MockElement == 'TradSesStatus';'DialogForTestReport';appCon;Do.use(locator2).getValue()
+
+        #Action;#Assert;#Dialog;#AppConnection;#MockElement
+        DialogFill;This.Out.MockElement == 'TestSessionId';'DialogForTestReport';appCon;Do.use(locator3).getValue()
+
+        #Action;#Assert;#Dialog;#AppConnection;#MockElement
+        DialogFill;This.Out.MockElement == 'TestTradeStatus';'DialogForTestReport';appCon;Do.use(locator4).getValue()
+
+        #Call;#appCon
+        stopBrowser;appCon
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'Positive testing with before TC';;;
+        #Id;#RawText;#Kind
+        matrix;Text;Matrix
+        ~;"#Id;#TestCase;#Kind;#Depends;#For"
+        ~;"MyTC;;;;"
+        ~;"    #Id;#Action;#TradingSessionID;#TradSesStatus;#MessageType"
+        ~;"    MSGCR1;MessageCreate;'TestSessionId';'TestTradeStatus';'TradingSessionListUpdateReport_NoTradingSessions'"
+        ~;""
+        ~;"    #Action;#BeforeTestCase;#MapMessage;#Title"
+        ~;"    MessageReport;'MyTC';MSGCR1.Out;'My Message'"
+        #EndRawText
+
+        #Id;#Call;#rawText
+        PathToReport;runMatrix;matrix
+
+        #Id;#Call;#pathToReport
+        appCon;runBrowser;PathToReport
+
+        #Id;#Let
+        locator1;new Locator().kind(ControlKind.Label).visibility(Visibility.Visible).xpath('//span[@class="group" and contains(text(), "TradingSessionID")]')
+
+        #Id;#Let
+        locator2;new Locator().kind(ControlKind.Label).visibility(Visibility.Visible).xpath('//span[@class="group" and contains(text(), "TradSesStatus")]')
+
+        #Id;#Let
+        locator3;new Locator().kind(ControlKind.Label).visibility(Visibility.Visible).xpath('/html/body/div/div/table/tbody/tr[1]/td[@class="tdMax" and contains(text(), "TestSessionId")]')
+
+        #Id;#Let
+        locator4;new Locator().kind(ControlKind.Label).visibility(Visibility.Visible).xpath('/html/body/div/div/table/tbody/tr[2]/td[@class="tdMax" and contains(text(), "TestTradeStatus")]')
+
+        #Id;#Let
+        locator5;new Locator().kind(ControlKind.Label).visibility(Visibility.Visible).xpath('/html/body/table[2]/tbody/tr[2]/td/table/tbody/tr[4]/td/table/tbody/tr[2]/td/table/tbody/tr[1]/td[@class="tdMax" and contains(text(), "TestSessionId")]')
+
+        #Id;#Let
+        locator6;new Locator().kind(ControlKind.Label).visibility(Visibility.Visible).xpath('/html/body/table[2]/tbody/tr[2]/td/table/tbody/tr[4]/td/table/tbody/tr[2]/td/table/tbody/tr[2]/td[@class="tdMax" and contains(text(), "TestTradeStatus")]')
+
+        #Id;#Let
+        locator7;new Locator().kind(ControlKind.Label).visibility(Visibility.Visible).xpath('/html/body/table[2]/tbody/tr[2]/td/table/tbody/tr[4]/td/table/tbody/tr[2]/td/table/tbody/tr[1]/td[1]/span[@class="group" and contains(text(), "TradingSessionID")]')
+
+        #Id;#Let
+        locator8;new Locator().kind(ControlKind.Label).visibility(Visibility.Visible).xpath('/html/body/table[2]/tbody/tr[2]/td/table/tbody/tr[4]/td/table/tbody/tr[2]/td/table/tbody/tr[2]/td[1]/span[@class="group" and contains(text(), "TradSesStatus")]')
+
+        #Action;#Assert;#Dialog;#AppConnection;#MockElement
+        DialogFill;This.Out.MockElement;'DialogForTestReport';appCon;Do.use(locator1).isVisible()
+
+        #Action;#Assert;#Dialog;#AppConnection;#MockElement
+        DialogFill;This.Out.MockElement;'DialogForTestReport';appCon;Do.use(locator2).isVisible()
+
+        #Action;#Assert;#Dialog;#AppConnection;#MockElement
+        DialogFill;This.Out.MockElement;'DialogForTestReport';appCon;Do.use(locator3).isVisible()
+
+        #Action;#Assert;#Dialog;#AppConnection;#MockElement
+        DialogFill;This.Out.MockElement;'DialogForTestReport';appCon;Do.use(locator4).isVisible()
+
+        #Action;#Assert;#Dialog;#AppConnection;#MockElement
+        DialogFill;This.Out.MockElement == 'TradingSessionID';'DialogForTestReport';appCon;Do.use(locator1).getValue()
+
+        #Action;#Assert;#Dialog;#AppConnection;#MockElement
+        DialogFill;This.Out.MockElement == 'TradSesStatus';'DialogForTestReport';appCon;Do.use(locator2).getValue()
+
+        #Action;#Assert;#Dialog;#AppConnection;#MockElement
+        DialogFill;This.Out.MockElement == 'TestSessionId';'DialogForTestReport';appCon;Do.use(locator3).getValue()
+
+        #Action;#Assert;#Dialog;#AppConnection;#MockElement
+        DialogFill;This.Out.MockElement == 'TestTradeStatus';'DialogForTestReport';appCon;Do.use(locator4).getValue()
+
+        // 
+        #Id;#Call;#appCon
+        CALL_1;expand;appCon
+
+        #Action;#Assert;#Dialog;#AppConnection;#MockElement
+        DialogFill;This.Result == Result.Failed && This.Kind == ErrorKind.ELEMENT_NOT_FOUND;'DialogForTestReport';appCon;Do.use('MainTable',LocatorKind.Owner).use(locator7, LocatorKind.Element).isVisible()
+
+        #Action;#Assert;#Dialog;#AppConnection;#MockElement
+        DialogFill;This.Result == Result.Failed && This.Kind == ErrorKind.ELEMENT_NOT_FOUND;'DialogForTestReport';appCon;Do.use('MainTable',LocatorKind.Owner).use(locator8, LocatorKind.Element).isVisible()
+
+        #Action;#Assert;#Dialog;#AppConnection;#MockElement
+        DialogFill;This.Result == Result.Failed && This.Kind == ErrorKind.ELEMENT_NOT_FOUND;'DialogForTestReport';appCon;Do.use('MainTable',LocatorKind.Owner).use(locator5, LocatorKind.Element).isVisible()
+
+        #Action;#Assert;#Dialog;#AppConnection;#MockElement
+        DialogFill;This.Result == Result.Failed && This.Kind == ErrorKind.ELEMENT_NOT_FOUND;'DialogForTestReport';appCon;Do.use('MainTable',LocatorKind.Owner).use(locator6, LocatorKind.Element).isVisible()
+
+        #Call;#appCon
+        stopBrowser;appCon
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'Negative testing';;;
+        #Id;#Action;#TradingSessionID;#TradSesStatus;#MessageType
+        MSGCR10;MessageCreate;5;2;'TradingSessionListUpdateReport_NoTradingSessions'
+
+        #Action;#Assert;#MapMessage;#Title
+        MessageReport;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;MSGCR10.Out;
+
+        #Action;#Assert;#MapMessage;#Title
+        MessageReport;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;;
+
+        #Action;#Assert;#MapMessage;#Title
+        MessageReport;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;;'My Message'
+
+        #Action;#Assert;#MapMessage;#Title
+        MessageReport;This.Result == Result.Failed && This.Kind == ErrorKind.WRONG_PARAMETERS;new Date();'My Message'
+
+    #EndStep
+
+
+#TestCase;#Kind;#Depends;#For
+Subcases;;;
+    #Id;#SubCase;#rawText
+    runMatrix;returned value - path to report;matrix
+        #Id;#Action;#Text
+        MXRN1;MatrixRunFromText;rawText
+
+        #Id;#Action;#Matrix
+        MXWT1;MatrixWait;MXRN1.Out
+
+        #Assert;#Message
+        MXRN1.Out.failed() == 0;'Matrix contains failed testcase. Check the matrix'
+
+        #Return
+        MXRN1.Out.getReportName()
+
+    #EndSubCase
+
+    #Id;#SubCase;#pathToReport
+    runBrowser;returned value - appConnection;PathToReport
+        #Id;#Action;#AppId;#Browser;#URL
+        APPSTR1;ApplicationStart;mockWebApp;mockWebBrowser;'file://' + new File(pathToReport).getAbsolutePath()
+
+        #Return
+        APPSTR1.Out
+
+    #EndSubCase
+
+    #Id;#SubCase;#appCon
+    stopBrowser;;appCon
+        #Id;#Action;#AppConnection
+        APPSTP1;ApplicationStop;appCon
+
+    #EndSubCase
+
+    #Id;#SubCase;#appCon
+    expand;;appCon
+        #Id;#Action;#Dialog;#AppConnection;#Executed
+        DLGFLL1;DialogFill;'DialogForTestReport';appCon;Do.click()
+
+        #Id;#Action;#Dialog;#AppConnection;#MockElement
+        DLGFLL2;DialogFill;'DialogForTestReport';appCon;Do.use(new Locator().kind(ControlKind.Any).xpath('.//a[contains(.,"TestCase")]')).click()
+
+        #Id;#Action;#Dialog;#AppConnection;#MockElement
+        DLGFLL3;DialogFill;'DialogForTestReport';appCon;Do.use(new Locator().kind(ControlKind.Any).xpath('.//a[contains(.,"ActionItem (MessageReport)")]')).click()
+
+    #EndSubCase
+
 
