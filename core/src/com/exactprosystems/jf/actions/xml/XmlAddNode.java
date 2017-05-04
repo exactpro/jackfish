@@ -12,6 +12,7 @@ import com.exactprosystems.jf.actions.AbstractAction;
 import com.exactprosystems.jf.actions.ActionAttribute;
 import com.exactprosystems.jf.actions.ActionFieldAttribute;
 import com.exactprosystems.jf.actions.ActionGroups;
+import com.exactprosystems.jf.api.error.ErrorKind;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.report.ReportBuilder;
 import com.exactprosystems.jf.documents.config.Context;
@@ -112,6 +113,11 @@ public class XmlAddNode extends AbstractAction
 	{
 		if (copiedXML == null)
 		{
+			if (this.nodeName == null)
+			{
+				setError("Parameter #" + nodeNameName + " can't be null", ErrorKind.EMPTY_PARAMETER);
+				return;
+			}
 			this.xml.addNode(this.nodeName, this.content, parameters.select(TypeMandatory.Extra).makeCopy());
 		}
 		else
