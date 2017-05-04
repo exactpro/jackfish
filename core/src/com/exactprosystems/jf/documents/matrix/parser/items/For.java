@@ -9,6 +9,7 @@
 package com.exactprosystems.jf.documents.matrix.parser.items;
 
 import com.csvreader.CsvWriter;
+import com.exactprosystems.jf.api.common.Str;
 import com.exactprosystems.jf.api.error.ErrorKind;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.report.ReportBuilder;
@@ -142,10 +143,6 @@ public final class For extends MatrixItem
 		this.from.setExpression(systemParameters.get(Tokens.From)); 
 		this.to.setExpression(systemParameters.get(Tokens.To)); 
 		this.step.setExpression(systemParameters.get(Tokens.Step)); 
-		if (this.step == null)
-		{
-			this.step.setExpression("1");
-		}
 	}
 
 	@Override
@@ -192,7 +189,7 @@ public final class For extends MatrixItem
 		{
 			ReturnAndResult ret = null;
 			Result result = null;
-			
+
 			if (!this.from.evaluate(evaluator))
 			{
 				throw new Exception("Error in expression #From");
@@ -201,6 +198,7 @@ public final class For extends MatrixItem
 			{
 				throw new Exception("Error in expression #To");
 			}
+			setDefaultStep();
 			if (!this.step.evaluate(evaluator))
 			{
 				throw new Exception("Error in expression #Step");
@@ -302,6 +300,14 @@ public final class For extends MatrixItem
         
         setCurrent(current, evaluator);
     }
+
+	private void setDefaultStep()
+	{
+		if (Str.IsNullOrEmpty(this.step.getExpression()))
+		{
+			this.step.setExpression("1");
+		}
+	}
 
 
     private MutableValue<String> var; 
