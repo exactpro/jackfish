@@ -211,7 +211,15 @@ public final class SubCase extends MatrixItem
 					result = ret.getResult();
 				}
 			}
-			return new ReturnAndResult(start, ret);
+			if (result == Result.Return)
+			{
+				return new ReturnAndResult(start, ret);
+			}
+			else
+			{
+				return new ReturnAndResult(start, result, null);
+			}
+
 		}
 		catch (Exception e)
 		{

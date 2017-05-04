@@ -1681,6 +1681,34 @@ check OnError;;;
 
     #EndStep
 
+    #Step;#Kind;#For;#Depends
+    'positivite test with several onError section into child';;;
+        #Id;#Let
+        variable;'asd'
+
+        #Fail
+        'fail 1'
+
+        #OnError
+            #Fail
+            'fail 2'
+
+            #OnError
+                #Fail
+                'fail 3'
+
+                #OnError
+                    #Id;#Let
+                    variable;123
+
+
+
+
+        #Assert;#Message
+        variable == 123;
+
+    #EndStep
+
 
 #TestCase;#Kind;#Depends;#For
 check Fail;;;
@@ -1759,21 +1787,181 @@ check RawMessage;;;
 
 #TestCase;#Kind;#Depends;#For
 check RawTable;;;
+    #Id;#RawTable
+    DATA1;Table
+    @;A;B;C
+    0;1;23;35
+    1;8;9;45
+    2;6;3;8
+    #EndRawTable
+
+    #Assert;#Message
+    DATA1.size() == 3;'Size not expected'
+
+    #Id;#Let
+    columns;['A', 'B', 'C']
+
+    #Action;#Actual;#A;#B;#C
+    Check;DATA1[0];1;23;35
+
+    #Action;#Actual;#A;#B;#C
+    Check;DATA1[2];6;3;8
+
+    #For;#From;#To;#Step
+    i;0;DATA1.getHeaderSize() - 1;1
+        #Assert;#Message
+        columns[i] == DATA1.getHeader(i);'Assert is false'
+
+    #EndFor
+
 
 #TestCase;#Kind;#Depends;#For
 check RawText;;;
+    #Id;#RawText;#Kind
+    TEXT4;Text;None
+    ~;"my simple"
+    ~;"super"
+    ~;"bigger"
+    ~;"not bigger"
+    ~;"raw"
+    ~;"text"
+    #EndRawText
+
+    #Assert;#Message
+    TEXT4.size() == 6;'Expected size not equals actual'
+
+    #Assert;#Message
+    TEXT4[0] == 'my simple';
+
+    #Assert;#Message
+    TEXT4[5] == 'text';
+
 
 // =======================================
 // Sub functions
 // =======================================
 #TestCase;#Kind;#Depends;#For
-check SubCase;;;
+check SubCase / Call;;;
+    #Step;#Kind;#For;#Depends
+    'check that local variable from step not appear into subcase';;;
+        #Id;#Let
+        localVariable;'myLocalVariable'
 
-#TestCase;#Kind;#Depends;#For
-check Call;;;
+        #Id;#SubCase
+        SUB_1;
+            #Assert;#Message
+            isdef localVariable == false;'Local variable is appear'
 
-#TestCase;#Kind;#Depends;#For
-check Return;;;
+        #EndSubCase
+
+        #Id;#Call
+        CALL_1;SUB_1
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'check that parameters into subcase is appear into local namespace';;;
+        #Id;#SubCase;#myVariable
+        SUB_2;;'simpleString'
+            #Assert;#Message
+            isdef myVariable;'Variable not presented'
+
+        #EndSubCase
+
+        #Id;#Call;#myVariable
+        CALL_2;SUB_2;'simpleString'
+
+        #Assert;#Message
+        isdef myVariable == false;'Variable is appear'
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'check execute children until onError';;;
+        #Id;#SubCase
+        SUB_3;
+            #Id;#Let
+            myVariable;1
+
+            #Return
+            myVariable
+
+            #OnError
+                #Id;#Let
+                myVariable;100
+
+                #Return
+                myVariable
+
+
+        #EndSubCase
+
+        #Id;#Call
+        CALL_3;SUB_3
+
+        #Assert;#Message
+        CALL_3 == 1;'Expecte 1 but Actual ' + CALL_3
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'check execute children with fail and onError section';;;
+        #Id;#SubCase
+        SUB_4;
+            #Id;#Let
+            myVariable;1
+
+            #Fail
+            'some fail'
+
+            #Return
+            myVariable
+
+            #OnError
+                #Id;#Let
+                myVariable;100
+
+                #Return
+                myVariable
+
+
+        #EndSubCase
+
+        #Id;#Call
+        CALL_4;SUB_4
+
+        #Assert;#Message
+        CALL_4 == 100;'Expecte 100 but Actual ' + CALL_4
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'check subcase without return value';;;
+        #Id;#SubCase
+        SUB_5;
+            #Id;#Let
+            asd;123
+
+        #EndSubCase
+
+        #Id;#Call
+        CALL_5;SUB_5
+
+        #Assert;#Message
+        CALL_5 == null;'Subcase result not null'
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'call sub from library';;;
+        #Id;#Call;#str
+        CALL_6;testLib.simpleSub;'asd'
+
+        #Assert;#Message
+        CALL_6 == 'ASD';'Assert failed'
+
+    #EndStep
+
 
 // =======================================
 #TestCase;#Kind;#Depends;#For

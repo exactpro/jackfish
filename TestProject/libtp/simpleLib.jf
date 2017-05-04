@@ -1,0 +1,12 @@
+// 
+#Id;#NameSpace
+testLib;Simple library for testing jf functionality
+    #Id;#SubCase;#str
+    simpleSub;return string.toUppercase();
+        #Return
+        str.toUpperCase()
+
+    #EndSubCase
+
+#EndNameSpace
+
