@@ -1600,8 +1600,156 @@ check ForEach;;;
 
 
 // =======================================
+// onError into cycles cheked above
 #TestCase;#Kind;#Depends;#For
 check OnError;;;
+    #Step;#Kind;#For;#Depends
+    'positive test : variables err and error are presented inside OnError section';;;
+        #Fail
+        'some fail'
+
+        #OnError
+            #Assert;#Message
+            isdef err;'Variable err not defined'
+
+            #Assert;#Message
+            isdef error;'Variable error not defined'
+
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'positive test : onError  processing error';;;
+        #Fail
+        'some fail'
+
+        #OnError
+
+        #Fail
+        'this fail never throw'
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'positive test that error contains expected string';;;
+        #Id;#Let
+        expectedString;'my some string'
+
+        #Fail
+        expectedString
+
+        #OnError
+            #Assert;#Message
+            error == expectedString;'Expected : ' + expectedString + ' but Actual : ' + error
+
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'positive test that err contains expected string';;;
+        #Id;#Let
+        expectedString;'my some string'
+
+        #Fail
+        expectedString
+
+        #OnError
+            #Assert;#Message
+            err.Message == expectedString;'Expected : ' + expectedString + ' but Actual : ' + err.Message
+
+            #Assert;#Message
+            err.Kind == ErrorKind.FAIL;'Expected : ' + ErrorKind.FAIL + ' but Actual : ' + err.Kind
+
+            #Assert;#Message
+            err.Where != null;
+
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'positive test that error throws from another action';;;
+        #Id;#Let
+        invalidApplicationId;'Some invalid application id'
+
+        #Id;#Action;#AppId
+        APPSTR1;ApplicationStart;invalidApplicationId
+
+        #OnError
+            #Assert;#Message
+            err.Kind == ErrorKind.EXCEPTION && err.Message.contains(invalidApplicationId);'Some part of asesrt is false'
+
+
+    #EndStep
+
+
+#TestCase;#Kind;#Depends;#For
+check Fail;;;
+    #Step;#Kind;#For;#Depends
+    'negative testing with invalid fail value';;;
+        #Fail
+        asd
+
+        #OnError
+            #Assert;#Message
+            err.Kind == ErrorKind.EXCEPTION && error == 'Error in expression #Fail';
+
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'positive test with failing MatrixError';;;
+        #Id;#Let
+        myMessage;'My message'
+
+        #Id;#Let
+        myErrorKind;ErrorKind.OTHER
+
+        #Id;#Let
+        myItem;null
+
+        #Fail
+        new com.exactprosystems.jf.documents.matrix.parser.items.MatrixError(myMessage, myErrorKind, myItem)
+
+        #OnError
+            #Assert;#Message
+            err.Kind == myErrorKind;'Expected : ' + myErrorKind + ' but Actual : ' + err.Kind
+
+            #Assert;#Message
+            err.Message == myMessage;'Expected : ' + myMessage + ' but Actual : ' + err.Message
+
+            #Assert;#Message
+            err.Where == myItem;'Expected : ' + myItem + ' but Actual : ' + err.Where
+
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'posibite test with failing null';;;
+        #Fail
+        
+
+        #OnError
+            #Assert;#Message
+            err.Message == 'null' && err.Kind == ErrorKind.FAIL;'Assert is false'
+
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'positive test with failing any value';;;
+        #Id;#Let
+        failingValue;new Date()
+
+        #Fail
+        failingValue
+
+        #OnError
+            #Assert;#Message
+            err.Message == failingValue.toString() && err.Kind == ErrorKind.FAIL;'Assert is false'
+
+
+    #EndStep
+
 
 // =======================================
 // Raw items
