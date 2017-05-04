@@ -220,7 +220,11 @@ public class Parameter implements Mutable, Cloneable, Setter<String>, Getter<Str
 
 	        Class<?> valueType = value.getClass();
 
-	        if (type.isArray() && valueType.isArray())
+	        if (type == Object.class)
+	        {
+	            return;
+	        }
+	        else if (type.isArray() && valueType.isArray())
 	        {
 	        	if (valueType.getComponentType() == type.getComponentType())
 	        	{

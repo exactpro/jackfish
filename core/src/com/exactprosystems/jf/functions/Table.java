@@ -762,86 +762,162 @@ public class Table implements List<RowTable>, Mutable, Cloneable
 
 	public void report(ReportBuilder report, String title, String beforeTestcase, boolean withNumbers, boolean reportValues) throws Exception
 	{
-		String[] columns = Arrays.stream(this.headers).map(h -> h.name).toArray(num -> new String[num]);
-
-		report(report, title, beforeTestcase, withNumbers, reportValues, null, columns);
+		Map<String, String> columns = Arrays.stream(this.headers).collect(Collectors.toMap(h -> h.name, h -> h.name));
+		report(report, title, beforeTestcase, withNumbers, reportValues, columns);
 	}
 
-	public void report(ReportBuilder report, String title, String beforeTestcase, boolean withNumbers,
-					   boolean reportValues, Parameters newColumns, String... columns) throws Exception
-	{
-		if (beforeTestcase != null || report.reportIsOn()) 
-		{
-			int[] columnsIndexes = getIndexes(columns);
+//	public void report(ReportBuilder report, String title, String beforeTestcase, boolean withNumbers,
+//					   boolean reportValues, Parameters newColumns, String... columns) throws Exception
+//	{
+//		if (beforeTestcase != null || report.reportIsOn()) 
+//		{
+//			int[] columnsIndexes = getIndexes(columns);
+//
+//			if (columnsIndexes.length == 0)
+//			{
+//				columnsIndexes = new int[this.headers.length];
+//				for (int i = 0; i < this.headers.length; i++)
+//				{
+//					columnsIndexes[i] = i;
+//				}
+//			}
+//
+//			int addition = withNumbers ? 1 : 0;
+//			String[] headers = new String[addition + columnsIndexes.length];
+//			if (withNumbers)
+//			{
+//				headers[0] = "#";
+//			}
+//			int col = 0;
+//			for (int index : columnsIndexes)
+//			{
+//				headers[col++ + addition] = this.headers[index].name;
+//			}
+//			headers = convertHeaders(newColumns, headers, withNumbers);
+//			ReportTable table = report.addExplicitTable(title, beforeTestcase, true, 0, new int[] {}, headers);
+//
+//			Function<String, String> func = name -> newColumns == null ? name
+//					: newColumns.entrySet().stream().filter(e -> name.equals(String.valueOf(e.getValue()))).findFirst()
+//					.map(Entry::getKey).orElse(name);
+//
+//			int count = 0;
+//			for (Map<Header, Object> row : this.innerList)
+//			{
+//				Object[] value = new Object[headers.length];
+//				if (withNumbers)
+//				{
+//					value[0] = count;
+//				}
+//
+//				for (int i = addition; i < headers.length; i++)
+//				{
+//					Header header = headerByName(func.apply(headers[i]));
+//					if (reportValues)
+//					{
+//						value[i] = convertCell(row, header, row.get(header), report);
+//					}
+//					else
+//					{
+//						Object v = row.get(header);
+//						if (v instanceof ImageWrapper)
+//						{
+//							ImageWrapper iw = (ImageWrapper) v;
+//							String description = iw.getDescription() == null ? iw.toString() : iw.getDescription();
+//							v = report.decorateLink(description,
+//									report.getImageDir() + File.separator + iw.getName(report.getReportDir()));
+//						}
+//						else if (v instanceof ReportBuilder)
+//						{
+//							ReportBuilder rb = (ReportBuilder) v;
+//							String name = rb.getName();
+//
+//							v = report.decorateLink(name, name);
+//						}
+//						value[i] = v;
+//					}
+//				}
+//				table.addValues(value);
+//				count++;
+//			}
+//		}
+//	}
+//
+    public void report(ReportBuilder report, String title, String beforeTestcase, boolean withNumbers,
+            boolean reportValues, Map<String, String> columns) throws Exception
+    {
+        if (beforeTestcase != null || report.reportIsOn())
+        {
+            int[] columnsIndexes = getIndexes(columns.keySet().toArray(new String[] {}));
 
-			if (columnsIndexes.length == 0)
-			{
-				columnsIndexes = new int[this.headers.length];
-				for (int i = 0; i < this.headers.length; i++)
-				{
-					columnsIndexes[i] = i;
-				}
-			}
+            if (columnsIndexes.length == 0)
+            {
+                columnsIndexes = new int[this.headers.length];
+                for (int i = 0; i < this.headers.length; i++)
+                {
+                    columnsIndexes[i] = i;
+                }
+            }
 
-			int addition = withNumbers ? 1 : 0;
-			String[] headers = new String[addition + columnsIndexes.length];
-			if (withNumbers)
-			{
-				headers[0] = "#";
-			}
-			int col = 0;
-			for (int index : columnsIndexes)
-			{
-				headers[col++ + addition] = this.headers[index].name;
-			}
-			headers = convertHeaders(newColumns, headers, withNumbers);
-			ReportTable table = report.addExplicitTable(title, beforeTestcase, true, 0, new int[] {}, headers);
+            int addition = withNumbers ? 1 : 0;
+            String[] headers = new String[addition + columnsIndexes.length];
+            if (withNumbers)
+            {
+                headers[0] = "#";
+            }
+            int col = 0;
+            for (int index : columnsIndexes)
+            {
+                headers[col++ + addition] = this.headers[index].name;
+            }
+            
+            headers = convertHeaders(columns, headers, withNumbers);
+            ReportTable table = report.addExplicitTable(title, beforeTestcase, true, 0, new int[] {}, headers);
 
-			Function<String, String> func = name -> newColumns == null ? name
-					: newColumns.entrySet().stream().filter(e -> name.equals(String.valueOf(e.getValue()))).findFirst()
-					.map(Entry::getKey).orElse(name);
+            Function<String, String> func = name -> columns == null ? name
+                    : columns.entrySet().stream().filter(e -> name.equals(String.valueOf(e.getValue()))).findFirst()
+                            .map(Entry::getKey).orElse(name);
 
-			int count = 0;
-			for (Map<Header, Object> row : this.innerList)
-			{
-				Object[] value = new Object[headers.length];
-				if (withNumbers)
-				{
-					value[0] = count;
-				}
+            int count = 0;
+            for (Map<Header, Object> row : this.innerList)
+            {
+                Object[] value = new Object[headers.length];
+                if (withNumbers)
+                {
+                    value[0] = count;
+                }
 
-				for (int i = addition; i < headers.length; i++)
-				{
-					Header header = headerByName(func.apply(headers[i]));
-					if (reportValues)
-					{
-						value[i] = convertCell(row, header, row.get(header), report);
-					}
-					else
-					{
-						Object v = row.get(header);
-						if (v instanceof ImageWrapper)
-						{
-							ImageWrapper iw = (ImageWrapper) v;
-							String description = iw.getDescription() == null ? iw.toString() : iw.getDescription();
-							v = report.decorateLink(description,
-									report.getImageDir() + File.separator + iw.getName(report.getReportDir()));
-						}
-						else if (v instanceof ReportBuilder)
-						{
-							ReportBuilder rb = (ReportBuilder) v;
-							String name = rb.getName();
+                for (int i = addition; i < headers.length; i++)
+                {
+                    Header header = headerByName(func.apply(headers[i]));
+                    if (reportValues)
+                    {
+                        value[i] = convertCell(row, header, row.get(header), report);
+                    }
+                    else
+                    {
+                        Object v = row.get(header);
+                        if (v instanceof ImageWrapper)
+                        {
+                            ImageWrapper iw = (ImageWrapper) v;
+                            String description = iw.getDescription() == null ? iw.toString() : iw.getDescription();
+                            v = report.decorateLink(description,
+                                    report.getImageDir() + File.separator + iw.getName(report.getReportDir()));
+                        }
+                        else if (v instanceof ReportBuilder)
+                        {
+                            ReportBuilder rb = (ReportBuilder) v;
+                            String name = rb.getName();
 
-							v = report.decorateLink(name, name);
-						}
-						value[i] = v;
-					}
-				}
-				table.addValues(value);
-				count++;
-			}
-		}
-	}
+                            v = report.decorateLink(name, name);
+                        }
+                        value[i] = v;
+                    }
+                }
+                table.addValues(value);
+                count++;
+            }
+        }
+    }
 
 	public boolean removeRow(int index)
 	{
@@ -1160,7 +1236,7 @@ public class Table implements List<RowTable>, Mutable, Cloneable
     }
 
 	//region private methods
-	private String[] convertHeaders(Parameters parameters, String[] headers, boolean withNumbers)
+	private String[] convertHeaders(Map<String, String> parameters, String[] headers, boolean withNumbers)
 	{
 		if (parameters == null)
 		{

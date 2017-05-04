@@ -163,7 +163,7 @@ public final class ForEach extends MatrixItem
 
 			if (!this.in.evaluate(evaluator))
 			{
-				throw new Exception("Error in expression #In");
+				throw new Exception("Error in expression #In " + this.in.getValueAsString());
 			}
 
 			Object inValue = this.in.getValue();

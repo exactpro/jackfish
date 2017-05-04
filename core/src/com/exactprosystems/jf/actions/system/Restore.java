@@ -22,7 +22,7 @@ import java.util.Map.Entry;
 		group = ActionGroups.System,
 		generalDescription 		= "The following action is needed to get the value that was previously saved in global Store (see action {{@Store@}}).\n"
 				+ "One can restore only those objects that are in global Store (View -> Store).\n"
-				+ "All objects from the global Store are saved only during current session.",
+				+ "All objects from the global Store are saved only during current tool session.",
 		additionFieldsAllowed = false,
 		outputDescription 		= "A value that will be required. Otherwise, null, if a non-existent value was required.",
 		outputType				= Object.class,
