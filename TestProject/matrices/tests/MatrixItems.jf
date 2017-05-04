@@ -1625,9 +1625,6 @@ check OnError;;;
 
         #OnError
 
-        #Fail
-        'this fail never throw'
-
     #EndStep
 
     #Step;#Kind;#For;#Depends
@@ -1701,11 +1698,11 @@ check OnError;;;
                     #Id;#Let
                     variable;123
 
+                    #Assert;#Message
+                    variable == 123;
 
 
 
-        #Assert;#Message
-        variable == 123;
 
     #EndStep
 

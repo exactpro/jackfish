@@ -217,7 +217,7 @@ public final class SubCase extends MatrixItem
 			}
 			else
 			{
-				return new ReturnAndResult(start, result, null);
+				return new ReturnAndResult(start, ret.getError(), result);
 			}
 
 		}

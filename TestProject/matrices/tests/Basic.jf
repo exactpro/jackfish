@@ -47,8 +47,8 @@ RM38584;use name on assert;;;
 
 #Id;#TestCase;#Kind;#Depends;#For
 RM37970;fail into loops works incorrectly;;;
-    #Step;#Kind;#For
-    'while';;
+    #Step;#Kind;#For;#Depends
+    'while';;;
         #Id;#Call
         CALL_1;SUB_1
 
@@ -59,8 +59,8 @@ RM37970;fail into loops works incorrectly;;;
 
     #EndStep
 
-    #Step;#Kind;#For
-    'for';;
+    #Step;#Kind;#For;#Depends
+    'for';;;
         #Id;#Call
         CALL_1;SUB_2
 
@@ -71,8 +71,8 @@ RM37970;fail into loops works incorrectly;;;
 
     #EndStep
 
-    #Step;#Kind;#For
-    'foreach';;
+    #Step;#Kind;#For;#Depends
+    'foreach';;;
         #Id;#Call
         CALL_1;SUB_3
 
