@@ -1375,7 +1375,7 @@ check ForEach;;;
 
         #OnError
             #Assert;#Message
-            err.Kind == ErrorKind.EXCEPTION && err.Message == 'Error in expression #In';
+            err.Kind == ErrorKind.EXCEPTION && err.Message.startsWith('Error in expression #In');
 
 
     #EndStep
