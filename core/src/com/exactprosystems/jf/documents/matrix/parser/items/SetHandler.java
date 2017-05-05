@@ -10,6 +10,7 @@ package com.exactprosystems.jf.documents.matrix.parser.items;
 
 import com.csvreader.CsvWriter;
 import com.exactprosystems.jf.actions.ReadableValue;
+import com.exactprosystems.jf.api.common.Str;
 import com.exactprosystems.jf.api.error.ErrorKind;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.report.ReportBuilder;
@@ -146,6 +147,10 @@ public final class SetHandler extends MatrixItem
 	{
 		try
 		{
+			if (Str.IsNullOrEmpty(this.kind.get()))
+			{
+				return new ReturnAndResult(start, Result.Failed, "Kind is null", ErrorKind.EMPTY_PARAMETER, this);
+			}
 		    HandlerKind handlerKind = HandlerKind.valueOf(this.kind.get());
 		    context.setHandler(handlerKind, this.name.get(), this);
 

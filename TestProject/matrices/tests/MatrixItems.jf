@@ -1963,7 +1963,433 @@ check SubCase / Call;;;
 // =======================================
 #TestCase;#Kind;#Depends;#For
 check SetHandler;;;
+    #Id;#SubCase
+    clearStepHandlers;
+        #SetHandler;#Kind
+        ;OnStepStart
+
+        #SetHandler;#Kind
+        ;OnStepFinish
+
+        #SetHandler;#Kind
+        ;OnStepError
+
+    #EndSubCase
+
+    #Step;#Kind;#For;#Depends
+    'negative test with empty kind';;;
+        #SetHandler;#Kind
+        ;
+
+        #OnError
+            #Assert;#Message
+            err.Kind == ErrorKind.EMPTY_PARAMETER;'Kind is not expected'
+
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'negative test with invalid name';;;
+        #SetHandler;#Kind
+        'zxczxczxczxc';OnTestCaseStart
+
+        #OnError
+            #Assert;#Message
+            err.Kind == ErrorKind.EXCEPTION;'Kind not expected'
+
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'negative test with *Error handler and empty parameter for Step';;;
+        #Id;#SubCase
+        temp;
+        #EndSubCase
+
+        #SetHandler;#Kind
+        temp;OnStepError
+
+        #OnError
+            #Assert;#Message
+            err.Kind == ErrorKind.EXCEPTION;'Expected kind not exception'
+
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'negative test with *Error handler and empty parameter for TestCase';;;
+        #Id;#SubCase
+        tempTestCaseError;
+        #EndSubCase
+
+        #SetHandler;#Kind
+        tempTestCaseError;OnTestCaseError
+
+        #OnError
+            #Assert;#Message
+            err.Kind == ErrorKind.EXCEPTION;'Expected kind not exception'
+
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'set hadler OnStepStart';;;
+        #Call
+        clearStepHandlers
+
+        #Id;#Global;#Let
+        globalVariableStepStart;1;'init value'
+
+        #Id;#SubCase
+        onStepStart;
+            #Id;#Global;#Let
+            globalVariableStepStart;1;'from subcase'
+
+        #EndSubCase
+
+        #SetHandler;#Kind
+        onStepStart;OnStepStart
+
+        #Step;#Kind;#For;#Depends
+        'simple step';;;
+        #EndStep
+
+        #Assert;#Message
+        globalVariableStepStart == 'from subcase';'Expected from subcase and Actual ' + globalVariableStepStart
+
+        #Call
+        clearStepHandlers
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'set hadler OnStepFinish';;;
+        #Call
+        clearStepHandlers
+
+        #Id;#Global;#Let
+        globalVariableStepFinish;1;'init value'
+
+        #Id;#SubCase
+        onStepFinish;
+            #Id;#Global;#Let
+            globalVariableStepFinish;1;'from subcase'
+
+        #EndSubCase
+
+        #SetHandler;#Kind
+        onStepFinish;OnStepFinish
+
+        #Step;#Kind;#For;#Depends
+        'simple step';;;
+            #Id;#Global;#Let
+            globalVariableStepFinish;1;'from step'
+
+        #EndStep
+
+        #Assert;#Message
+        globalVariableStepFinish == 'from subcase';'Expected from subcase and Actual ' + globalVariableStepFinish
+
+        #Call
+        clearStepHandlers
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'set hadler OnStepError';;;
+        #Call
+        clearStepHandlers
+
+        #Id;#Global;#Let
+        globalVariableStepError;1;'init value'
+
+        #Id;#SubCase;#err
+        onStepError;;
+            #Id;#Global;#Let
+            globalVariableStepError;1;'from subcase'
+
+        #EndSubCase
+
+        #SetHandler;#Kind
+        onStepError;OnStepError
+
+        #Step;#Kind;#For;#Depends
+        'simple step check error handler';;;
+            #Id;#Global;#Let
+            globalVariable;1;'from step'
+
+            #Fail
+            'some fail'
+
+        #EndStep
+
+        #Assert;#Message
+        globalVariableStepError == 'from subcase';'Expected from subcase and Actual ' + globalVariableStepError
+
+        #Call
+        clearStepHandlers
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'set handler OnTestCaseStart';;;
+        #Id;#Let
+        name;'onTestCaseStartVariable'
+
+        #Id;#Let
+        expectedValue;'expected value'
+
+        #Action;#Value;#Name
+        Store;'init value';name
+
+        #Id;#RawText;#Kind
+        TEXT5;Text;Matrix
+        ~;"// "
+        ~;"#TestCase;#Kind;#Depends;#For"
+        ~;"init;Never;;"
+        ~;"    #SetHandler;#Kind"
+        ~;"    ;OnTestCaseStart"
+        ~;""
+        ~;"    #SetHandler;#Kind"
+        ~;"    ;OnTestCaseFinish"
+        ~;""
+        ~;"    #SetHandler;#Kind"
+        ~;"    ;OnTestCaseError"
+        ~;""
+        ~;"    #Id;#SubCase"
+        ~;"    simple;"
+        ~;"        #Action;#Value;#Name"
+        ~;"        Store;parameter.expectedValue;parameter.name"
+        ~;""
+        ~;"    #EndSubCase"
+        ~;""
+        ~;"    #SetHandler;#Kind"
+        ~;"    simple;OnTestCaseStart"
+        ~;""
+        ~;""
+        ~;""
+        ~;"#TestCase;#Kind;#Depends;#For"
+        ~;"check;;;"
+        #EndRawText
+
+        #Id;#Action;#Text
+        TXT1;TextPerform;TEXT5
+
+        #Id;#Action;#Text;#Parameter
+        MXRN3;MatrixRunFromText;TXT1.Out;{'expectedValue' : expectedValue, 'name' : name}
+
+        #Id;#Action;#Matrix
+        MXWT1;MatrixWait;MXRN3.Out
+
+        #Id;#Action;#Name
+        restoredValue;Restore;name
+
+        #Assert;#Message
+        restoredValue.Out == expectedValue;'Actual : ' + restoredValue.Out + ' and Expected : ' + expectedValue
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'set handler OnTestCaseFinish';;;
+        #Id;#Let
+        name;'onTestCaseFinishVariable'
+
+        #Id;#Let
+        expectedValue;'expected value'
+
+        #Action;#Value;#Name
+        Store;'init value';name
+
+        #Id;#RawText;#Kind
+        TEXT5;Text;Matrix
+        ~;"// "
+        ~;"#TestCase;#Kind;#Depends;#For"
+        ~;"init;Never;;"
+        ~;"    #SetHandler;#Kind"
+        ~;"    ;OnTestCaseStart"
+        ~;""
+        ~;"    #SetHandler;#Kind"
+        ~;"    ;OnTestCaseFinish"
+        ~;""
+        ~;"    #SetHandler;#Kind"
+        ~;"    ;OnTestCaseError"
+        ~;""
+        ~;"    #Id;#SubCase"
+        ~;"    simple;"
+        ~;"        #Action;#Value;#Name"
+        ~;"        Store;parameter.expectedValue;parameter.name"
+        ~;""
+        ~;"    #EndSubCase"
+        ~;""
+        ~;"    #SetHandler;#Kind"
+        ~;"    simple;OnTestCaseFinish"
+        ~;""
+        ~;""
+        ~;""
+        ~;"#TestCase;#Kind;#Depends;#For"
+        ~;"check;;;"
+        ~;"    #Action;#Value;#Name"
+        ~;"    Store;'not expected value from testcase';parameter.name"
+        #EndRawText
+
+        #Id;#Action;#Text
+        TXT1;TextPerform;TEXT5
+
+        #Id;#Action;#Text;#Parameter
+        MXRN3;MatrixRunFromText;TXT1.Out;{'expectedValue' : expectedValue, 'name' : name}
+
+        #Id;#Action;#Matrix
+        MXWT1;MatrixWait;MXRN3.Out
+
+        #Id;#Action;#Name
+        restoredValue;Restore;name
+
+        #Assert;#Message
+        restoredValue.Out == expectedValue;'Actual : ' + restoredValue.Out + ' and Expected : ' + expectedValue
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'set handler OnTestCaseError';;;
+        #Id;#Let
+        name;'onTestCaseErrorVariable'
+
+        #Id;#Let
+        expectedValue;'expected value'
+
+        #Action;#Value;#Name
+        Store;'init value';name
+
+        #Id;#RawText;#Kind
+        TEXT5;Text;Matrix
+        ~;"// "
+        ~;"#TestCase;#Kind;#Depends;#For"
+        ~;"init;Never;;"
+        ~;"    #SetHandler;#Kind"
+        ~;"    ;OnTestCaseStart"
+        ~;""
+        ~;"    #SetHandler;#Kind"
+        ~;"    ;OnTestCaseFinish"
+        ~;""
+        ~;"    #SetHandler;#Kind"
+        ~;"    ;OnTestCaseError"
+        ~;""
+        ~;"    #Id;#SubCase;#par"
+        ~;"    simple;;"
+        ~;"        #Action;#Value;#Name"
+        ~;"        Store;parameter.expectedValue;parameter.name"
+        ~;""
+        ~;"    #EndSubCase"
+        ~;""
+        ~;"    #SetHandler;#Kind"
+        ~;"    simple;OnTestCaseError"
+        ~;""
+        ~;""
+        ~;""
+        ~;"#TestCase;#Kind;#Depends;#For"
+        ~;"check;;;"
+        ~;"    #Action;#Value;#Name"
+        ~;"    Store;'not expected value from testcase';parameter.name"
+        ~;""
+        ~;"    #Fail"
+        ~;"    'some fail'"
+        #EndRawText
+
+        #Id;#Action;#Text
+        TXT1;TextPerform;TEXT5
+
+        #Id;#Action;#Text;#Parameter
+        MXRN3;MatrixRunFromText;TXT1.Out;{'expectedValue' : expectedValue, 'name' : name}
+
+        #Id;#Action;#Matrix
+        MXWT1;MatrixWait;MXRN3.Out
+
+        #Id;#Action;#Name
+        restoredValue;Restore;name
+
+        #Assert;#Message
+        restoredValue.Out == expectedValue;'Actual : ' + restoredValue.Out + ' and Expected : ' + expectedValue
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'handler error priority. Only set handler';;;
+        #Call
+        clearStepHandlers
+
+        #Id;#Global;#Let
+        checkVariable;1;'default value'
+
+        #Id;#SubCase;#err
+        checkSub;;
+            #Id;#Global;#Let
+            checkVariable;1;'from subcase value'
+
+        #EndSubCase
+
+        #SetHandler;#Kind
+        checkSub;OnStepError
+
+        #Step;#Kind;#For;#Depends
+        'check step';;;
+            #Fail
+            'some fail'
+
+        #EndStep
+
+        #Assert;#Message
+        checkVariable == 'from subcase value';'Assert is false. Actual ' + checkVariable + ' and expected from subcase value'
+
+        #Call
+        clearStepHandlers
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'handler error priority. Set handler and local';;;
+        #Call
+        clearStepHandlers
+
+        #Id;#Global;#Let
+        checkVariable;1;'default value'
+
+        #Id;#SubCase;#err
+        checkSub;;
+            #Id;#Global;#Let
+            checkVariable;1;'from subcase value'
+
+        #EndSubCase
+
+        #SetHandler;#Kind
+        checkSub;OnStepError
+
+        #Step;#Kind;#For;#Depends
+        'check step';;;
+            #Fail
+            'some fail'
+
+        #EndStep
+
+        #Assert;#Message
+        checkVariable == 'from subcase value';'Assert is false. Actual ' + checkVariable + ' and expected from subcase value'
+
+        #Call
+        clearStepHandlers
+
+        #OnError
+            #Assert;#Message
+            checkVariable == 'default value';'Assert is false. Actual ' + checkVariable + ' and expected default value'
+
+            #Call
+            clearStepHandlers
+
+
+    #EndStep
+
 
 #TestCase;#Kind;#Depends;#For
-Check Step/TestCase;;;
+Check Step (SetHandler checked above);;;
+
+#TestCase;#Kind;#Depends;#For
+Check TestCase (SetHandler checked above);;;
 

@@ -67,6 +67,13 @@ public class MatrixTreeView extends TreeTableView<MatrixItem>
 				}
 			}
 		});
+		this.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+			if (newValue != null)
+			{
+				int row = this.getRow(newValue);
+				scrollTo(row);
+			}
+		});
 	}
 
 	public void setNeedExpand(boolean flag)

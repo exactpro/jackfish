@@ -121,8 +121,13 @@ public class Context implements IContext, AutoCloseable
                 SubCase subCase = referenceToSubcase(name, item).subCase;
                 if (subCase != null)
                 {
-                    this.handlers.put(handlerKind, name);
-                }
+                	//check parameters of subcase.
+					if ((handlerKind == HandlerKind.OnStepError || handlerKind == HandlerKind.OnTestCaseError) && subCase.getParameters().size() == 0)
+					{
+						throw new WrongSubcaseNameException(String.format("Parameters count for handler %s (subCase %s) must be great that 0", handlerKind, name));
+					}
+					this.handlers.put(handlerKind, name);
+				}
                 else
                 {
                     throw new WrongSubcaseNameException(name);
