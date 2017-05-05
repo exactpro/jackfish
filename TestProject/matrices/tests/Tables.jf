@@ -439,12 +439,296 @@ TABLE_SORT;Test case;Never;;
 
 #Id;#TestCase;#Kind;#Depends;#For
 TABLE_COMPARE_TWO;Test case;Never;;
+    #Step;#Kind;#For;#Depends
+    'Positive testing';;;
+        #Step;#Kind;#For;#Depends
+        'Plain testing';;;
+            #Id;#RawTable
+            actual;Table
+            @;newH
+            0;1
+            1;2
+            2;3
+            #EndRawTable
+
+            #Id;#RawTable
+            expected;Table
+            @;newH
+            0;1
+            1;2
+            2;3
+            #EndRawTable
+
+            #Id;#Action;#Expected;#Actual
+            TBLCMP2;TableCompareTwo;expected;actual
+
+        #EndStep
+
+        #Step;#Kind;#For;#Depends
+        'Comparing with excluded columns';;;
+            #Id;#RawTable
+            actual;Table
+            @;newH;NewColumn
+            0;1;4
+            1;2;5
+            2;3;6
+            #EndRawTable
+
+            #Id;#RawTable
+            expected;Table
+            @;newH;NewColumn
+            0;1;44
+            1;2;55
+            2;3;66
+            #EndRawTable
+
+            #Id;#RawTable
+            expected2;Table
+            @;newH;NewColumn;NewColumn2
+            0;1;;
+            1;2;;
+            2;3;;
+            #EndRawTable
+
+            #Id;#Action;#ExcludeColumns;#Expected;#Actual
+            TBLCMP2;TableCompareTwo;'NewColumn';expected;actual
+
+            #Id;#Action;#ExcludeColumns;#Expected;#Actual
+            TBLCMP10;TableCompareTwo;'NewColumn';actual;expected
+
+            #Id;#Action;#ExcludeColumns;#Expected;#Actual
+            TBLCMP10;TableCompareTwo;{'NewColumn','NewColumn2'};actual;expected
+
+        #EndStep
+
+        #Step;#Kind;#For;#Depends
+        'Comparing with ignored rows order';;;
+            #Id;#RawTable
+            actual;Table
+            @;newH;NewColumn
+            0;1;4
+            1;2;5
+            2;3;6
+            #EndRawTable
+
+            #Id;#RawTable
+            expected;Table
+            @;newH;NewColumn
+            0;2;5
+            1;1;4
+            2;3;6
+            #EndRawTable
+
+            #Id;#Action;#IgnoreRowsOrder;#Expected;#Actual
+            TBLCMP2;TableCompareTwo;true;expected;actual
+
+        #EndStep
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'Negative testing';;;
+        #Step;#Kind;#For;#Depends
+        'Plain testing';;;
+            #Id;#RawTable
+            actual;Table
+            @;newH
+            0;1
+            1;2
+            2;3
+            #EndRawTable
+
+            #Id;#RawTable
+            expected;Table
+            @;newH
+            0;3
+            1;2
+            2;1
+            #EndRawTable
+
+            #Id;#Action;#Assert;#Expected;#Actual
+            TBLCMP1;TableCompareTwo;This.Result == Result.Failed && This.Kind == ErrorKind.NOT_EQUAL;expected;actual
+
+            #Id;#Action;#Assert;#Expected;#Actual
+            TBLCMP3;TableCompareTwo;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;;
+
+            #Id;#Action;#Assert;#Expected;#Actual
+            TBLCMP4;TableCompareTwo;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;;actual
+
+            #Id;#Action;#Assert;#Expected;#Actual
+            TBLCMP5;TableCompareTwo;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;expected;
+
+            #Id;#Action;#Assert;#Expected;#Actual
+            TBLCMP7;TableCompareTwo;This.Result == Result.Failed && This.Kind == ErrorKind.WRONG_PARAMETERS;new Date();new Date()
+
+        #EndStep
+
+        #Step;#Kind;#For;#Depends
+        'Comparing with excluded columns';;;
+            #Id;#RawTable
+            actual;Table
+            @;newH;NewColumn
+            0;1;4
+            1;2;5
+            2;3;6
+            #EndRawTable
+
+            #Id;#RawTable
+            expected;Table
+            @;newH;NewColumn
+            0;1;4
+            1;2;5
+            2;3;6
+            #EndRawTable
+
+            #Id;#Action;#Assert;#ExcludeColumns;#Expected;#Actual
+            TBLCMP2;TableCompareTwo;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;;expected;actual
+
+            #Id;#Action;#Assert;#ExcludeColumns;#Expected;#Actual
+            TBLCMP6;TableCompareTwo;This.Result == Result.Failed && This.Kind == ErrorKind.WRONG_PARAMETERS;new Date();expected;actual
+
+        #EndStep
+
+        #Step;#Kind;#For;#Depends
+        'Comparing with ignored rows order';;;
+            #Id;#RawTable
+            actual;Table
+            @;newH;NewColumn
+            0;1;4
+            1;2;5
+            2;3;6
+            #EndRawTable
+
+            #Id;#RawTable
+            expected;Table
+            @;newH;NewColumn
+            0;2;5
+            1;1;4
+            2;3;6
+            #EndRawTable
+
+            #Id;#Action;#Assert;#IgnoreRowsOrder;#Expected;#Actual
+            TBLCMP2;TableCompareTwo;This.Result == Result.Failed && This.Kind == ErrorKind.NOT_EQUAL;false;expected;actual
+
+            #Id;#Action;#Assert;#IgnoreRowsOrder;#Expected;#Actual
+            TBLCMP8;TableCompareTwo;This.Result == Result.Failed && This.Kind == ErrorKind.WRONG_PARAMETERS;new Date();expected;actual
+
+            #Id;#Action;#Assert;#IgnoreRowsOrder;#Expected;#Actual
+            TBLCMP9;TableCompareTwo;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;;expected;actual
+
+        #EndStep
+
+        #Step;#Kind;#For;#Depends
+        'Different size of columns';;;
+            #Id;#RawTable
+            actual;Table
+            @;newH;NewColumn
+            0;1;2
+            1;2;3
+            2;3;3
+            #EndRawTable
+
+            #Id;#RawTable
+            expected;Table
+            @;newH
+            0;1
+            1;2
+            2;3
+            #EndRawTable
+
+            #Id;#Action;#Assert;#Expected;#Actual
+            TBLCMP10;TableCompareTwo;This.Result == Result.Failed && This.Kind == ErrorKind.NOT_EQUAL;actual;expected
+
+            #Id;#Action;#ExcludeColumns;#Expected;#Actual
+            TBLCMP10;TableCompareTwo;'NewColumn';actual;expected
+
+        #EndStep
+
+        #Step;#Kind;#For;#Depends
+        'Different size of columns and rows';;;
+            #Id;#RawTable
+            actual;Table
+            @;newH;NewColumn;NewColumn1
+            0;newR;;
+            1;;;
+            2;;;
+            #EndRawTable
+
+            #Id;#RawTable
+            expected;Table
+            @;newH;NewColumn;NewColumn2;NewColumn3
+            0;newR;;;
+            1;;;;
+            2;;;;
+            3;;;;
+            #EndRawTable
+
+            #Id;#Action;#Assert;#Expected;#Actual
+            TBLCMP11;TableCompareTwo;This.Result == Result.Failed && This.Kind == ErrorKind.NOT_EQUAL;expected;actual
+
+        #EndStep
+
+    #EndStep
+
 
 #Id;#TestCase;#Kind;#Depends;#For
 TABLE_LEFT_JOIN;Test case;Never;;
 
 #Id;#TestCase;#Kind;#Depends;#For
 TABLE_ADD_VALUE;Test case;Never;;
+    #Step;#Kind;#For;#Depends
+    'Positive testing';;;
+        #Id;#RawTable
+        myTable;Table
+        @;newH
+        0;newR
+        #EndRawTable
+
+        #Action;#Assert;#Table
+        TableAddValue;This.Result == Result.Passed && myTable.size() == 2 && myTable[1].get('newH') == null;myTable
+
+        #Action;#Assert;#Table;#newH
+        TableAddValue;This.Result == Result.Passed && myTable[2].get('newH') == 'new value';myTable;'new value'
+
+        #Action;#Assert;#Index;#Table;#newH
+        TableAddValue;This.Result == Result.Passed && myTable[0].get('newH') == 'value for 0 row';0;myTable;'value for 0 row'
+
+        #Action;#Assert;#Index;#Table;#newH
+        TableAddValue;This.Result == Result.Passed && myTable[myTable.size()-1].get('newH') == 'last row';Integer.MIN_VALUE;myTable;'last row'
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'Negative testing';;;
+        #Id;#RawTable
+        myTable;Table
+        @;newH
+        0;newR
+        #EndRawTable
+
+        #Action;#Assert;#Table;#ColumnThatDoesNotExist
+        TableAddValue;This.Result == Result.Failed && This.Kind == ErrorKind.WRONG_PARAMETERS;myTable;'my value'
+
+        #Action;#Assert;#Table
+        TableAddValue;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;
+
+        #Action;#Assert;#Index;#Table
+        TableAddValue;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;;myTable
+
+        #Action;#Assert;#Table
+        TableAddValue;This.Result == Result.Failed && This.Kind == ErrorKind.WRONG_PARAMETERS;new Date()
+
+        #Action;#Assert;#Index;#Table
+        TableAddValue;This.Result == Result.Failed && This.Kind == ErrorKind.WRONG_PARAMETERS;new Date();new Date()
+
+        #Action;#Assert;#Index;#Table
+        TableAddValue;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;new Date();
+
+        #Action;#Assert;#Index;#Table
+        TableAddValue;This.Result == Result.Failed && This.Kind == ErrorKind.EXCEPTION;Integer.MAX_VALUE;myTable
+
+    #EndStep
+
 
 #Id;#TestCase;#Kind;#Depends;#For
 TABLE_COLUMN_RENAME;Test case;Never;;
