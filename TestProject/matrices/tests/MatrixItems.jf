@@ -2389,6 +2389,253 @@ check SetHandler;;;
 
 #TestCase;#Kind;#Depends;#For
 Check Step (SetHandler checked above);;;
+    #Step;#Kind;#For;#Depends
+    'negative test for testing invalid identify';;;
+        #Step;#Kind;#For;#Depends
+        asd;;;
+        #EndStep
+
+        #OnError
+            #Assert;#Message
+            err.Kind == ErrorKind.WRONG_PARAMETERS;
+
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'test for dependency with fail';;;
+        #Id;#Step;#Kind;#For;#Depends
+        faieldStep;;;;
+            #Fail
+            'some fail'
+
+        #EndStep
+
+        #Step;#Kind;#For;#Depends
+        ;;;faieldStep
+        #EndStep
+
+        #OnError
+            #Assert;#Message
+            err.Kind == ErrorKind.FAIL;'Expect kins is Fail, but Actual : ' + err.Kind
+
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'test for dependency without fail';;;
+        #Id;#Step;#Kind;#For;#Depends
+        notFailedStep;;;;
+        #EndStep
+
+        #Step;#Kind;#For;#Depends
+        ;;;notFailedStep
+        #EndStep
+
+        #OnError
+            #Fail
+            err
+
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'test screenshot on start';Never;;
+        #Id;#Step;#Kind;#For;#Depends
+        screenOnStart;;OnStart;;
+        #EndStep
+
+        #Id;#Action;#Decoraded
+        resTbl;ResultTable;true
+
+        #Id;#Action;#Table;#StepIdentity
+        TBLSLCT1;TableSelect;resTbl.Out;'screenOnStart'
+
+        #Assert;#Message
+        TBLSLCT1.Out.size() == 1;'Found more that one row'
+
+        #Id;#Let
+        screenShot;TBLSLCT1.Out.get(0).Screenshot
+
+        #Assert;#Message
+        !Str.IsNullOrEmpty(screenShot);'Screenshot is null or empty'
+
+        #Assert;#Message
+        screenShot.matches('<a href=".+?">OnStart</a>');'String not matches'
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'test screenshot on startOnError ( without error)';Never;;
+        #Id;#Step;#Kind;#For;#Depends
+        screenOnStartOrError;;OnStartOrError;;
+        #EndStep
+
+        #Id;#Action;#Decoraded
+        resTbl;ResultTable;true
+
+        #Id;#Action;#Table;#StepIdentity
+        TBLSLCT1;TableSelect;resTbl.Out;'screenOnStartOrError'
+
+        #Assert;#Message
+        TBLSLCT1.Out.size() == 1;'Found more that one row'
+
+        #Id;#Let
+        screenShot;TBLSLCT1.Out.get(0).Screenshot
+
+        #Assert;#Message
+        !Str.IsNullOrEmpty(screenShot);'Screenshot is null or empty'
+
+        #Assert;#Message
+        screenShot.matches('<a href=".+?">OnStart</a>');'String not matches'
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'test screenshot on startOnError ( with error)';Never;;
+        #Id;#Step;#Kind;#For;#Depends
+        screenOnStartOrErrorWithError;;OnStartOrError;;
+            #Fail
+            'some fail'
+
+        #EndStep
+
+        #OnError
+            #Id;#Action;#Decoraded
+            resTbl;ResultTable;true
+
+            #Id;#Action;#Table;#StepIdentity
+            TBLSLCT1;TableSelect;resTbl.Out;'screenOnStartOrErrorWithError'
+
+            #Assert;#Message
+            TBLSLCT1.Out.size() == 1;'Found more that one row'
+
+            #Id;#Let
+            screenShot;TBLSLCT1.Out.get(0).Screenshot
+
+            #Assert;#Message
+            !Str.IsNullOrEmpty(screenShot);'Screenshot is null or empty'
+
+            #Assert;#Message
+            screenShot.matches('<a href=".+?">OnError</a>');'String not matches'
+
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'test screenshot on finish';Never;;
+        #Id;#Step;#Kind;#For;#Depends
+        screenOnFinish;;OnFinish;;
+        #EndStep
+
+        #Id;#Action;#Decoraded
+        resTbl;ResultTable;true
+
+        #Id;#Action;#Table;#StepIdentity
+        TBLSLCT1;TableSelect;resTbl.Out;'screenOnFinish'
+
+        #Assert;#Message
+        TBLSLCT1.Out.size() == 1;'Found more that one row'
+
+        #Id;#Let
+        screenShot;TBLSLCT1.Out.get(0).Screenshot
+
+        #Assert;#Message
+        !Str.IsNullOrEmpty(screenShot);'Screenshot is null or empty'
+
+        #Assert;#Message
+        screenShot.matches('<a href=".+?">OnFinish</a>');'String not matches'
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'test screenshot on finish or error ( without fail)';Never;;
+        #Id;#Step;#Kind;#For;#Depends
+        screenOnFinishOrError;;OnFinishOrError;;
+        #EndStep
+
+        #Id;#Action;#Decoraded
+        resTbl;ResultTable;true
+
+        #Id;#Action;#Table;#StepIdentity
+        TBLSLCT1;TableSelect;resTbl.Out;'screenOnFinishOrError'
+
+        #Assert;#Message
+        TBLSLCT1.Out.size() == 1;'Found more that one row'
+
+        #Id;#Let
+        screenShot;TBLSLCT1.Out.get(0).Screenshot
+
+        #Assert;#Message
+        !Str.IsNullOrEmpty(screenShot);'Screenshot is null or empty'
+
+        #Assert;#Message
+        screenShot.matches('<a href=".+?">OnFinish</a>');'String not matches'
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'test screenshot on finish or error ( with fail)';Never;;
+        #Id;#Step;#Kind;#For;#Depends
+        screenOnFinishOrErrorWithFail;;OnFinishOrError;;
+            #Fail
+            'a'
+
+        #EndStep
+
+        #OnError
+            #Id;#Action;#Decoraded
+            resTbl;ResultTable;true
+
+            #Id;#Action;#Table;#StepIdentity
+            TBLSLCT1;TableSelect;resTbl.Out;'screenOnFinishOrErrorWithFail'
+
+            #Assert;#Message
+            TBLSLCT1.Out.size() == 1;'Found more that one row'
+
+            #Id;#Let
+            screenShot;TBLSLCT1.Out.get(0).Screenshot
+
+            #Assert;#Message
+            !Str.IsNullOrEmpty(screenShot);'Screenshot is null or empty'
+
+            #Assert;#Message
+            screenShot.matches('<a href=".+?">OnError</a>');'String not matches'
+
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'test screenshot on error';Never;;
+        #Id;#Step;#Kind;#For;#Depends
+        screenOnError;;OnError;;
+            #Fail
+            'a'
+
+        #EndStep
+
+        #OnError
+            #Id;#Action;#Decoraded
+            resTbl;ResultTable;true
+
+            #Id;#Action;#Table;#StepIdentity
+            TBLSLCT1;TableSelect;resTbl.Out;'screenOnError'
+
+            #Assert;#Message
+            TBLSLCT1.Out.size() == 1;'Found more that one row'
+
+            #Id;#Let
+            screenShot;TBLSLCT1.Out.get(0).Screenshot
+
+            #Assert;#Message
+            !Str.IsNullOrEmpty(screenShot);'Screenshot is null or empty'
+
+            #Assert;#Message
+            screenShot.matches('<a href=".+?">OnError</a>');'String not matches'
+
+
+    #EndStep
+
 
 #TestCase;#Kind;#Depends;#For
 Check TestCase (SetHandler checked above);;;
