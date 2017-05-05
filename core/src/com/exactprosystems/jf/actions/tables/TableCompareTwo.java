@@ -76,8 +76,8 @@ public class TableCompareTwo extends AbstractAction
 	@Override
 	public void initDefaultValues()
 	{
-		exclude = new String[]{};
-		ignoreRowsOrder = false;
+		this.exclude = new String[]{};
+		this.ignoreRowsOrder = false;
 	}
 
 	@Override
@@ -102,15 +102,15 @@ public class TableCompareTwo extends AbstractAction
 	@Override
 	public void doRealAction(Context context, ReportBuilder report, Parameters parameters, AbstractEvaluator evaluator) throws Exception
 	{
-		if (this.actual == null)
+		if (this.exclude == null)
 		{
-			super.setError("Actual table is null", ErrorKind.EMPTY_PARAMETER);
+			super.setError("ExcludeColumns is null", ErrorKind.EMPTY_PARAMETER);
 			return;
 		}
 
-		if (this.expected == null)
+		if (this.ignoreRowsOrder == null)
 		{
-			super.setError("Expected table is null", ErrorKind.EMPTY_PARAMETER);
+			super.setError("IgnoreRowsOrder is null", ErrorKind.EMPTY_PARAMETER);
 			return;
 		}
 

@@ -64,6 +64,13 @@ public class TableAddValue extends AbstractAction
 	@Override
 	public void doRealAction(Context context, ReportBuilder report, Parameters parameters, AbstractEvaluator evaluator) throws Exception
 	{
+
+		if (this.index == null)
+		{
+			super.setError("Index is null", ErrorKind.EMPTY_PARAMETER);
+			return;
+		}
+
         Parameters params = parameters.select(TypeMandatory.Extra);
         for (String name : params.keySet())
         {

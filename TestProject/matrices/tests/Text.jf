@@ -1,5 +1,5 @@
 #TestCase;#Kind;#Depends;#For
-Create;Never;;
+TextCreate;Never;;
     #Id;#Let
     TestString;'My String 1234567890!@#$%^&*()\\//'
 
@@ -12,7 +12,7 @@ Create;Never;;
 
 
 #TestCase;#Kind;#Depends;#For
-Text Add New Line;;;
+TextAddNewLine;;;
     #Id;#Let
     TestLine;'My test line'
 
@@ -40,7 +40,7 @@ Text Add New Line;;;
 
 
 #TestCase;#Kind;#Depends;#For
-Text Load From File;;;
+TextLoadFromFile;;;
     #Id;#Let
     testString;'My test text for Text actions'
 
@@ -61,7 +61,7 @@ Text Load From File;;;
 
 
 #TestCase;#Kind;#Depends;#For
-Text Perform;;;
+TextPerform;;;
     #Id;#Let
     length;100
 
@@ -78,11 +78,11 @@ Text Perform;;;
     TXT9;TextPerform;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;
 
     #Id;#Action;#Assert;#Text
-    TXT10;TextPerform;TXT10.Result == Result.Failed && TXT10.Reason.contains('Error: unresolvable property or identifier: size');TXT11.Out
+    TXT10;TextPerform;This.Result == Result.Failed && This.Kind == ErrorKind.EXCEPTION;TXT11.Out
 
 
 #TestCase;#Kind;#Depends;#For
-Text Set Value;;;
+TextSetValue;;;
     #Id;#Let
     first;'First Line'
 
@@ -130,7 +130,7 @@ Text Set Value;;;
 
 
 #TestCase;#Kind;#Depends;#For
-Text Save To File;;;
+TextSaveToFile;;;
     #Id;#Let
     testString;'My test text for Text actions'
 

@@ -294,6 +294,9 @@ MessageReport;;;
         #Action;#Assert;#MapMessage;#Title
         MessageReport;This.Result == Result.Failed && This.Kind == ErrorKind.WRONG_PARAMETERS;new Date();'My Message'
 
+        #Action;#Assert;#ToReport;#MapMessage;#Title
+        MessageReport;This.Result == Result.Failed && This.Kind == ErrorKind.WRONG_PARAMETERS;new Date();MSGCR10.Out;'My message'
+
     #EndStep
 
 
