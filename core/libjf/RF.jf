@@ -155,8 +155,8 @@ RF;RegressionFramework
 
                         #For;#From;#To;#Step
                         i;standartResult.Out.getHeaderSize();resultTab.Out.getHeaderSize() - 1;1
-                            #Id;#RawText
-                            TEXT6;Text
+                            #Id;#RawText;#Kind
+                            TEXT6;Text;None
                             ~;"INSERT INTO user_details (details_id, name, value) VALUES (?, ?, ?);"
                             #EndRawText
 
@@ -220,8 +220,8 @@ RF;RegressionFramework
         _rf_dialect
             #Case
             'MYSQL'
-                #Id;#RawText
-                TEXT4;Text
+                #Id;#RawText;#Kind
+                TEXT4;Text;None
                 ~;"SELECT  "
                 ~;"	sp.count AS `Passed`, "
                 ~;"	sf.count AS `Failed`"
@@ -232,8 +232,8 @@ RF;RegressionFramework
 
             #Case
             'MSSQL'
-                #Id;#RawText
-                TEXT4;Text
+                #Id;#RawText;#Kind
+                TEXT4;Text;None
                 ~;"SELECT  "
                 ~;"	sp.count AS ""Passed"", "
                 ~;"	sf.count AS ""Failed"""
@@ -281,8 +281,8 @@ RF;RegressionFramework
         _rf_dialect
             #Case
             'MYSQL'
-                #Id;#RawText
-                TEXT1;delete from details
+                #Id;#RawText;#Kind
+                TEXT1;delete from details;None
                 ~;"DELETE FROM details"
                 ~;"WHERE scenario_id IN ("
                 ~;"    SELECT id FROM scenarios"
@@ -293,8 +293,8 @@ RF;RegressionFramework
                 ~;")"
                 #EndRawText
 
-                #Id;#RawText
-                TEXT2;delete from scenarios
+                #Id;#RawText;#Kind
+                TEXT2;delete from scenarios;None
                 ~;"DELETE FROM scenarios"
                 ~;"WHERE run_id IN ("
                 ~;"    SELECT id FROM runs"
@@ -302,16 +302,16 @@ RF;RegressionFramework
                 ~;")"
                 #EndRawText
 
-                #Id;#RawText
-                TEXT3;delete from runs
+                #Id;#RawText;#Kind
+                TEXT3;delete from runs;None
                 ~;"DELETE FROM runs WHERE create_time=?"
                 #EndRawText
 
 
             #Case
             'MSSQL'
-                #Id;#RawText
-                TEXT1;delete from details
+                #Id;#RawText;#Kind
+                TEXT1;delete from details;None
                 ~;"DELETE FROM details "
                 ~;"WHERE scenario_id in ("
                 ~;"    SELECT scenario_id "
@@ -331,8 +331,8 @@ RF;RegressionFramework
                 ~;")"
                 #EndRawText
 
-                #Id;#RawText
-                TEXT2;delete from scenarios
+                #Id;#RawText;#Kind
+                TEXT2;delete from scenarios;None
                 ~;"DELETE FROM scenarios "
                 ~;"WHERE run_id in ("
                 ~;"SELECT run_id FROM scenarios AS s "
@@ -344,8 +344,8 @@ RF;RegressionFramework
                 ~;")"
                 #EndRawText
 
-                #Id;#RawText
-                TEXT3;delete from runs
+                #Id;#RawText;#Kind
+                TEXT3;delete from runs;None
                 ~;"DELETE FROM runs WHERE id in (SELECT id FROM runs WHERE create_time = ?);"
                 #EndRawText
 
@@ -389,8 +389,8 @@ RF;RegressionFramework
         _rf_dialect
             #Case
             'MYSQL'
-                #Id;#RawText
-                TEXT2;Text
+                #Id;#RawText;#Kind
+                TEXT2;Text;None
                 ~;"SELECT "
                 ~;"  r.tool_version,"
                 ~;"  r.app_version,"
@@ -412,8 +412,8 @@ RF;RegressionFramework
 
             #Case
             'MSSQL'
-                #Id;#RawText
-                TEXT2;Text
+                #Id;#RawText;#Kind
+                TEXT2;Text;None
                 ~;"SELECT "
                 ~;"  r.tool_version,"
                 ~;"  r.app_version,"
@@ -483,8 +483,8 @@ RF;RegressionFramework
         #Id;#Call;#sql;#date
         runId;RF.runIdFromDate;SQL;date
 
-        #Id;#RawText
-        testSetText;Text
+        #Id;#RawText;#Kind
+        testSetText;Text;None
         ~;"SELECT s.test_set, s.host"
         ~;"FROM scenarios AS s "
         ~;"WHERE s.test_set <> '' AND s.manual = 0 AND s.run_id = ?"
@@ -499,8 +499,8 @@ RF;RegressionFramework
 
         #ForEach;#In
         testSet;testSetQuery.Out
-            #Id;#RawText
-            totalCountSQL;Text
+            #Id;#RawText;#Kind
+            totalCountSQL;Text;None
             ~;"SELECT COUNT(d.id) AS count,SUM(d.time) AS time"
             ~;"FROM details AS d"
             ~;"WHERE d.scenario_id IN ("
@@ -518,8 +518,8 @@ RF;RegressionFramework
             #Id;#Let
             totalTime;SQLSLCT1.Out.size() > 0 ? SQLSLCT1.Out[0].time : null
 
-            #Id;#RawText
-            failuresSQL;Text
+            #Id;#RawText;#Kind
+            failuresSQL;Text;None
             ~;"SELECT COUNT(d.id) AS count "
             ~;"FROM details AS d"
             ~;"WHERE d.scenario_id IN ("
@@ -540,15 +540,15 @@ RF;RegressionFramework
             #Id;#Action;#name;#failures;#tests;#time;#Content;#NodeName;#Xml
             rootNode;XmlAddNode;testSet.test_set;failures;totalCount;totalTime / 1000;;'testsuites';xml.Out
 
-            #Id;#Action;#Xpath;#NodeName;#Xml
-            XML1;XmlSelectFirst;'//testsuites';'testsuites';xml.Out
+            #Id;#Action;#Xpath;#Xml
+            XML1;XmlFindFirst;'//testsuites';xml.Out
 
             #Switch
             _rf_dialect
                 #Case
                 'MYSQL'
-                    #Id;#RawText
-                    TEXT5;Text
+                    #Id;#RawText;#Kind
+                    TEXT5;Text;None
                     ~;"SELECT "
                     ~;"  s.id, s.scenario, "
                     ~;"  IF(s.failed > 0, ""Failed"", ""Passed"") AS status, "
@@ -563,8 +563,8 @@ RF;RegressionFramework
 
                 #Case
                 'MSSQL'
-                    #Id;#RawText
-                    TEXT5;Text
+                    #Id;#RawText;#Kind
+                    TEXT5;Text;None
                     ~;"SELECT "
                     ~;"  s.id, s.scenario, "
                     ~;"  CASE WHEN s.failed <> 0 THEN  0 ELSE 1 END AS status, "
@@ -592,8 +592,8 @@ RF;RegressionFramework
 
             #For;#From;#To;#Step
             rowScenarios;0;(int)scenarios.size - 1;1
-                #Id;#RawText
-                countTSQL;Text
+                #Id;#RawText;#Kind
+                countTSQL;Text;None
                 ~;"SELECT COUNT(id) AS tests, SUM(time) as totalTime  "
                 ~;"FROM details"
                 ~;"WHERE scenario_id = ?"
@@ -608,8 +608,8 @@ RF;RegressionFramework
                 #Id;#Let
                 TStotalTime;SQLSLCT3.Out.size() > 0 ? SQLSLCT3.Out[0].totalTime : null
 
-                #Id;#RawText
-                failCountTSQL;Text
+                #Id;#RawText;#Kind
+                failCountTSQL;Text;None
                 ~;"SELECT count(result) as fail"
                 ~;"FROM details"
                 ~;"WHERE result = ""Failed"" and scenario_id = ? "
@@ -621,8 +621,8 @@ RF;RegressionFramework
                 #Id;#Let
                 failTS;SQLSLCT4.Out.size() > 0 ? SQLSLCT4.Out[0].fail : null
 
-                #Id;#RawText
-                errorcountSQL;Text
+                #Id;#RawText;#Kind
+                errorcountSQL;Text;None
                 ~;"SELECT count(error) as error"
                 ~;"FROM details"
                 ~;"WHERE error <> 'null' and scenario_id = ? "
@@ -643,8 +643,8 @@ RF;RegressionFramework
                 #Id;#Let
                 last;XML2.Out[XML2.Out.size - 1]
 
-                #Id;#RawText
-                findTestCase;Text
+                #Id;#RawText;#Kind
+                findTestCase;Text;None
                 ~;"SELECT testcase, time, error from details"
                 ~;"where scenario_id = ?"
                 #EndRawText
@@ -687,6 +687,233 @@ RF;RegressionFramework
 
     #EndSubCase
 
+    #Id;#SubCase;#date;#pathToSave;#matrixName
+    repXmlExport2;Export to XML file;;;
+        #Id;#Call
+        SQL;RF.Connect
+
+        #Id;#Call;#sql;#date
+        runId;RF.runIdFromDate;SQL;date
+
+        #Id;#RawText;#Kind
+        findTotalTime;Text;None
+        ~;"select sum(time) as time from details where scenario_id in (select id from scenarios where run_id = ?) AND step ='null'"
+        #EndRawText
+
+        #Id;#Action;#id;#Query;#Connection
+        SQLSLCT14;SQLselect;runId.id;findTotalTime.toString();SQL
+
+        #Id;#Let
+        totalDuration;SQLSLCT14.Out.size() > 0 ? SQLSLCT14.Out[0].time : null
+
+        #Id;#RawText;#Kind
+        totalCountSQL;Text;None
+        ~;"SELECT COUNT(d.id) AS tCount"
+        ~;"FROM details d"
+        ~;"WHERE d.scenario_id IN ("
+        ~;"SELECT DISTINCT id "
+        ~;"FROM scenarios"
+        ~;"WHERE run_id = ? and test_set <> '' "
+        ~;") AND step = 'null'"
+        #EndRawText
+
+        #Id;#Action;#runId;#Query;#Connection
+        SQLSLCT7;SQLselect;runId.id;totalCountSQL.toString();SQL
+
+        #Id;#Let
+        totalCount;SQLSLCT7.Out.size() > 0 ? SQLSLCT7.Out[0].tCount : null
+
+        #Id;#RawText;#Kind
+        totalFailedSQL;Text;None
+        ~;"SELECT COUNT(d.id) AS tCount"
+        ~;"FROM details d"
+        ~;"WHERE d.scenario_id IN ("
+        ~;"SELECT DISTINCT id "
+        ~;"FROM scenarios"
+        ~;"WHERE run_id = ?"
+        ~;") and d.result = 'Failed'  AND step ='null'"
+        #EndRawText
+
+        #Id;#Action;#runId;#Query;#Connection
+        SQLSLCT8;SQLselect;runId.id;totalFailedSQL.toString();SQL
+
+        #Id;#Let
+        totalFailed;SQLSLCT8.Out.size() > 0 ? SQLSLCT8.Out[0].tCount : null
+
+        #Id;#Action
+        xml;XmlCreate
+
+        #Id;#Action;#time;#tests;#name;#failures;#NodeName;#Xml
+        rootNode;XmlAddNode;totalDuration / 1000;totalCount;matrixName;totalFailed;'testsuites';xml.Out
+
+        #Id;#Action;#Xpath;#Xml
+        XML3;XmlFindFirst;'//testsuites';xml.Out
+
+        #Id;#RawText;#Kind
+        totalScenarios;Text;None
+        ~;"SELECT DISTINCT scenario  "
+        ~;"FROM scenarios"
+        ~;"WHERE run_id = ? and test_set <> ''"
+        ~;" "
+        #EndRawText
+
+        #Id;#Action;#runId;#Query;#Connection
+        SQLSLCT9;SQLselect;runId.id;totalScenarios.toString();SQL
+
+        #Id;#Let
+        scenarios;SQLSLCT9.Out
+
+        #Id;#RawText;#Kind
+        findHostSQL;Text;None
+        ~;"SELECT DISTINCT host FROM scenarios WHERE run_id = ?"
+        #EndRawText
+
+        #Id;#Action;#id;#Query;#Connection
+        SQLSLCT13;SQLselect;runId.id;findHostSQL.toString();SQL
+
+        #Id;#Let
+        host;SQLSLCT13.Out[0].host
+
+        #For;#From;#To;#Step
+        rowScenarios;0;(int)scenarios.size - 1;1
+            #Id;#RawText;#Kind
+            countTSQL;Text;None
+            ~;"SELECT COUNT(id) AS tests, SUM(time) AS totalTime"
+            ~;"FROM details"
+            ~;"WHERE scenario_id IN (SELECT id FROM scenarios WHERE scenario = ? AND run_id = ?)  AND step ='null'"
+            #EndRawText
+
+            #Id;#Action;#scenario;#id;#Query;#Connection
+            SQLSLCT10;SQLselect;scenarios[rowScenarios].scenario;runId.id;countTSQL.toString();SQL
+
+            #Id;#Let
+            TStests;SQLSLCT10.Out.size() > 0 ? SQLSLCT10.Out[0].tests : null
+
+            #Id;#Let
+            TStotalTime;SQLSLCT10.Out.size() > 0 ? SQLSLCT10.Out[0].totalTime : null
+
+            #Id;#RawText;#Kind
+            failCountTSQL;Text;None
+            ~;"SELECT COUNT(result) as fail"
+            ~;"FROM details"
+            ~;"WHERE result = 'Failed' and scenario_id IN (SELECT id FROM scenarios WHERE scenario = ? AND run_id = ?) AND step ='null'"
+            #EndRawText
+
+            #Id;#Action;#scenario;#id;#Query;#Connection
+            SQLSLCT11;SQLselect;scenarios[rowScenarios].scenario;runId.id;failCountTSQL.toString();SQL
+
+            #Id;#Let
+            failTS;SQLSLCT11.Out.size() > 0 ? SQLSLCT11.Out[0].fail : null
+
+            #Id;#RawText;#Kind
+            errorcountSQL;Text;None
+            ~;"SELECT count(error) as error"
+            ~;"FROM details"
+            ~;"WHERE error <> 'null' and scenario_id IN (SELECT id FROM scenarios WHERE scenario = ? AND run_id = ?) AND step ='null'"
+            #EndRawText
+
+            #Id;#Action;#scenario;#id;#Query;#Connection
+            SQLSLCT12;SQLselect;scenarios[rowScenarios].scenario;runId.id;errorcountSQL.toString();SQL
+
+            #Id;#Let
+            errorTS;SQLSLCT12.Out.size() > 0 ? SQLSLCT12.Out[0].error : null
+
+            #Switch
+            _rf_dialect
+                #Case
+                'MYSQL'
+                    #Id;#RawText;#Kind
+                    TEXT7;Text;None
+                    ~;"select time(min(start_time)) as time,"
+                    ~;"date(min(start_time)) as date"
+                    ~;"from scenarios where id IN (select id from scenarios where run_id = ? and scenario = ?)"
+                    #EndRawText
+
+
+                #Case
+                'MSSQL'
+                    #Id;#RawText;#Kind
+                    TEXT7;Text;None
+                    ~;"select CONVERT(TIME, min(start_time)) as time,"
+                    ~;"CONVERT(DATE ,min(start_time)) as date"
+                    ~;"from scenarios where id IN (select id from scenarios where run_id = ? and scenario = ?)"
+                    #EndRawText
+
+
+                #Default
+                    #Fail
+                    'Unknown SQL dialect: ' + _rf_dialect
+
+
+            #EndSwitch
+
+            #Id;#Action;#id;#scenario;#Query;#Connection
+            SQLSLCT15;SQLselect;runId.id;scenarios[rowScenarios].scenario;TEXT7.toString();SQL
+
+            #Id;#Let
+            date;SQLSLCT15.Out.size() > 0 ? SQLSLCT15.Out[0].date : null
+
+            #Id;#Let
+            time;SQLSLCT15.Out.size() > 0 ? SQLSLCT15.Out[0].time : null
+
+            #Action;#NodeName;#timestamp;#time;#tests;#skipped;#name;#hostname;#failures;#errors;#Xml
+            XmlAddNode;'testsuite';date + 'T' + time;TStotalTime /1000;TStests;0;scenarios[rowScenarios].scenario;host;failTS;errorTS;XML3.Out
+
+            #Id;#RawText;#Kind
+            findAllIdsForScenario;Text;None
+            ~;"select id from details where scenario_id in (SELECT id FROM scenarios WHERE scenario = ? AND run_id = ?) group by testcase"
+            #EndRawText
+
+            #Id;#Action;#scenario;#id;#Query;#Connection
+            SQLSLCT16;SQLselect;scenarios[rowScenarios].scenario;runId.id;findAllIdsForScenario;SQL
+
+            #Id;#Let
+            scenarioIds;SQLSLCT16.Out
+
+            #Id;#Action;#Xml
+            XML5;XmlChildren;XML3.Out
+
+            #Id;#Let
+            last;XML5.Out[XML5.Out.size - 1]
+
+            #ForEach;#In
+            id;scenarioIds
+                #Id;#RawText;#Kind
+                infoFromDetails;Text;None
+                ~;"SELECT testcase, time, error FROM details where id = ?"
+                #EndRawText
+
+                #Id;#Action;#id;#Query;#Connection
+                SQLSLCT17;SQLselect;id.id;infoFromDetails.toString();SQL
+
+                #Action;#classname;#name;#time;#NodeName;#Xml
+                XmlAddNode;scenarios[rowScenarios].scenario;SQLSLCT17.Out[0].testcase;SQLSLCT17.Out[0].time / 1000;'testcase';last
+
+                #If
+                !SQLSLCT17.Out[0].error.equals('null')
+                    #Id;#Action;#Xml
+                    XML6;XmlChildren;last
+
+                    #Action;#message;#type;#NodeName;#Xml
+                    XmlAddNode;SQLSLCT17.Out[0].error;'testFailure';'failure';XML6.Out[XML6.Out.size - 1]
+
+                #EndIf
+
+            #EndForEach
+
+        #EndFor
+
+        #Id;#Let
+        fileName;'regression ' + matrixName + '.xml'
+
+        #Id;#Let
+        filePath;pathToSave + '/' +fileName
+
+        #Action;#Xml;#File
+        XmlSaveToFile;XML3.Out;filePath
+
+    #EndSubCase
+
     // //==============================================
     // // Export the last regression set to csv file for import into QC
     // //==============================================
@@ -698,8 +925,8 @@ RF;RegressionFramework
         #Id;#Call;#sql;#date
         runId;runIdFromDate;SQL;date
 
-        #Id;#RawText
-        testSetText;Text
+        #Id;#RawText;#Kind
+        testSetText;Text;None
         ~;"SELECT "
         ~;"  s.test_set "
         ~;"FROM scenarios AS s "
@@ -725,8 +952,8 @@ RF;RegressionFramework
             _rf_dialect
                 #Case
                 'MYSQL'
-                    #Id;#RawText
-                    TEXT5;Text
+                    #Id;#RawText;#Kind
+                    TEXT5;Text;None
                     ~;"SELECT "
                     ~;"  s.id, s.scenario, "
                     ~;"  IF(s.failed > 0, ""Failed"", ""Passed"") AS status, "
@@ -741,8 +968,8 @@ RF;RegressionFramework
 
                 #Case
                 'MSSQL'
-                    #Id;#RawText
-                    TEXT5;Text
+                    #Id;#RawText;#Kind
+                    TEXT5;Text;None
                     ~;"SELECT "
                     ~;"  s.id, s.scenario, "
                     ~;"  CASE WHEN s.failed <> 0 THEN  0 ELSE 1 END AS status, "
@@ -770,8 +997,8 @@ RF;RegressionFramework
 
             #For;#From;#To;#Step
             rowScenarios;0;(int)scenarios.size - 1;1
-                #Id;#RawText
-                selectFromTableText;Text
+                #Id;#RawText;#Kind
+                selectFromTableText;Text;None
                 ~;"SELECT d.scenario_id, d.error  FROM details AS d "
                 ~;"WHERE scenario_id = ? "
                 ~;"AND "
@@ -869,8 +1096,8 @@ RF;RegressionFramework
         _rf_dialect
             #Case
             'MYSQL'
-                #Id;#RawText
-                TEXT1;Text
+                #Id;#RawText;#Kind
+                TEXT1;Text;None
                 ~;"SELECT "
                 ~;"  s.scenario, "
                 ~;"  DATE(s.start_time) AS date, "
@@ -892,8 +1119,8 @@ RF;RegressionFramework
 
             #Case
             'MSSQL'
-                #Id;#RawText
-                TEXT1;Text
+                #Id;#RawText;#Kind
+                TEXT1;Text;None
                 ~;"SELECT "
                 ~;"  s.scenario, "
                 ~;"  CONVERT(date,s.start_time) AS date, "
@@ -1041,8 +1268,8 @@ RF;RegressionFramework
 
         #If
         date == null
-            #Id;#RawText
-            query;Text
+            #Id;#RawText;#Kind
+            query;Text;None
             ~;"SELECT "
             ~;"  r.tool_version,"
             ~;"  r.app_version,"
@@ -1064,8 +1291,8 @@ RF;RegressionFramework
         _rf_dialect
             #Case
             'MYSQL'
-                #Id;#RawText
-                query;Text
+                #Id;#RawText;#Kind
+                query;Text;None
                 ~;"SELECT id, tool_version, app_version, create_time, duration "
                 ~;"FROM runs "
                 ~;"WHERE create_time <= ? "
@@ -1076,8 +1303,8 @@ RF;RegressionFramework
 
             #Case
             'MSSQL'
-                #Id;#RawText
-                query;Text
+                #Id;#RawText;#Kind
+                query;Text;None
                 ~;"SELECT TOP 1 id, tool_version, app_version, create_time, duration   "
                 ~;"FROM runs "
                 ~;"WHERE create_time <= ? "
@@ -1123,8 +1350,8 @@ RF;RegressionFramework
         _rf_dialect
             #Case
             'MYSQL'
-                #Id;#RawText
-                query;Text
+                #Id;#RawText;#Kind
+                query;Text;None
                 ~;"SELECT r.create_time, r.duration "
                 ~;"FROM runs AS r "
                 ~;"WHERE r.id = (SELECT id  "
@@ -1137,8 +1364,8 @@ RF;RegressionFramework
 
             #Case
             'MSSQL'
-                #Id;#RawText
-                query;Text
+                #Id;#RawText;#Kind
+                query;Text;None
                 ~;"SELECT r.create_time, r.duration "
                 ~;"FROM runs AS r "
                 ~;"WHERE r.id = (SELECT TOP 1 id "
@@ -1248,8 +1475,8 @@ RF;RegressionFramework
             _rf_dialect
                 #Case
                 'MYSQL'
-                    #Id;#RawText
-                    query1;create
+                    #Id;#RawText;#Kind
+                    query1;create;None
                     ~;"CREATE TABLE IF NOT EXISTS `runs` ("
                     ~;"  `id` int(11) NOT NULL AUTO_INCREMENT,"
                     ~;"  `create_time` datetime DEFAULT NULL,"
@@ -1260,8 +1487,8 @@ RF;RegressionFramework
                     ~;") ENGINE=InnoDB AUTO_INCREMENT=94 DEFAULT CHARSET=utf8;"
                     #EndRawText
 
-                    #Id;#RawText
-                    query2;create
+                    #Id;#RawText;#Kind
+                    query2;create;None
                     ~;"CREATE TABLE IF NOT EXISTS `scenarios` ("
                     ~;"  `id` int(11) NOT NULL AUTO_INCREMENT,"
                     ~;"  `run_id` int(11) NOT NULL,"
@@ -1282,8 +1509,8 @@ RF;RegressionFramework
                     ~;") ENGINE=InnoDB AUTO_INCREMENT=278 DEFAULT CHARSET=utf8;"
                     #EndRawText
 
-                    #Id;#RawText
-                    query3;create
+                    #Id;#RawText;#Kind
+                    query3;create;None
                     ~;"CREATE TABLE IF NOT EXISTS `details` ("
                     ~;"  `id` int(11) NOT NULL AUTO_INCREMENT,"
                     ~;"  `scenario_id` int(11) NOT NULL,"
@@ -1297,8 +1524,8 @@ RF;RegressionFramework
                     ~;") ENGINE=InnoDB AUTO_INCREMENT=567 DEFAULT CHARSET=utf8;"
                     #EndRawText
 
-                    #Id;#RawText
-                    query4;create
+                    #Id;#RawText;#Kind
+                    query4;create;None
                     ~;"CREATE TABLE IF NOT EXISTS `user_details` ("
                     ~;"  `id` int(11) NOT NULL AUTO_INCREMENT,"
                     ~;"  `details_id` int(11) NOT NULL,"
@@ -1311,8 +1538,8 @@ RF;RegressionFramework
 
                 #Case
                 'MSSQL'
-                    #Id;#RawText
-                    query1;create
+                    #Id;#RawText;#Kind
+                    query1;create;None
                     ~;"IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE table_name = 'runs' and TABLE_SCHEMA=SCHEMA_NAME()) "
                     ~;"CREATE TABLE runs "
                     ~;"("
@@ -1324,8 +1551,8 @@ RF;RegressionFramework
                     ~;") ;"
                     #EndRawText
 
-                    #Id;#RawText
-                    query2;create
+                    #Id;#RawText;#Kind
+                    query2;create;None
                     ~;"IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE table_name = 'scenarios' and TABLE_SCHEMA=SCHEMA_NAME()) "
                     ~;"CREATE TABLE  scenarios  "
                     ~;"("
@@ -1349,8 +1576,8 @@ RF;RegressionFramework
                     ~;" "
                     #EndRawText
 
-                    #Id;#RawText
-                    query3;create
+                    #Id;#RawText;#Kind
+                    query3;create;None
                     ~;"IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE table_name = 'details' and TABLE_SCHEMA=SCHEMA_NAME()) "
                     ~;"CREATE TABLE details "
                     ~;"("
@@ -1365,8 +1592,8 @@ RF;RegressionFramework
                     ~;" );"
                     #EndRawText
 
-                    #Id;#RawText
-                    query4;create
+                    #Id;#RawText;#Kind
+                    query4;create;None
                     ~;"IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE table_name = 'user_details' and TABLE_SCHEMA=SCHEMA_NAME())"
                     ~;"CREATE TABLE user_details "
                     ~;"("
