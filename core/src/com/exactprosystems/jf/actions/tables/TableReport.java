@@ -142,11 +142,11 @@ public class TableReport extends AbstractAction
 		Map<String, String> map = new LinkedHashMap<>();
 		if (this.columns == null)
 		{
-    		Parameters extra = parameters.select(TypeMandatory.Extra);
-		    for (Parameter ex : extra)
-		    {
-		        map.put(ex.getName(), ex.getValueAsString());
-		    }
+            Parameters extra = parameters.select(TypeMandatory.Extra);
+            for (Parameter ex : extra)
+            {
+                map.put(ex.getName(), ex.getValueAsString());
+            }
 		}
 		else
 		{
