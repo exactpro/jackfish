@@ -32,12 +32,11 @@ public class IconCell extends TreeTableCell<MatrixItem, MatrixItemState>
 						setGraphic(new ImageView(new Image(CssVariables.Icons.EXECUTING_ITEM_ICON)));
 					}
 					return;
+
 				case ExecutingWithBreakPoint:
-					if (isTracing)
-					{
-						setGraphic(new ImageView(new Image(CssVariables.Icons.EXECUTING_BREAK_POINT_ICON)));
-					}
+					setGraphic(new ImageView(new Image(isTracing ? CssVariables.Icons.EXECUTING_BREAK_POINT_ICON : CssVariables.Icons.BREAK_POINT_ICON)));
 					return;
+
 				case ExecutingParent:
 					if (isTracing && treeItem != null && !treeItem.isExpanded())
 					{
