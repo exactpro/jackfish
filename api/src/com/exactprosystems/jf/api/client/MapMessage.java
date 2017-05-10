@@ -107,55 +107,7 @@ public class MapMessage implements Map<String, Object>, Serializable, Mutable, C
 	@Override
 	public String toString()
 	{
-		StringBuilder sb = new StringBuilder("MapMessage { ");
-		if (this.messageType != null)
-		{
-			sb.append(messageTypeName)
-				.append(" = ")
-				.append(this.messageType)
-				.append("\n");
-		}
-		
-		String comma = "";
-		for (Map.Entry<String, Object> entry : this.fields.entrySet())
-		{
-			String key = entry.getKey();
-			Object value = entry.getValue();
-			
-			sb.append(comma);
-			sb.append(key); 
-			sb.append(" : ");
-
-			if (value == null)
-			{
-				sb.append("null");
-			}
-			else if (value.getClass().isArray())
-			{
-				sb.append(Arrays.toString((Object[])value));
-			}
-			else
-			{
-				sb.append(value.toString());
-			}
-			comma = ", ";
-		}
-		
-		sb.append(" } ");
-		
-		if (this.source != null)
-		{
-			sb.append("\nSource : ");
-			sb.append(this.source);
-		}
-		
-		if (this.errors != null)
-		{
-			sb.append("\nErrors : ");
-			sb.append(Arrays.toString(this.errors.toArray()));
-		}
-		
-		return sb.toString();
+       return MapMessage.class.getSimpleName() + " [" + messageTypeName + ":" + getMessageType() + "]";
 	}
 	
 	public boolean extendEquals(MapMessage obj, String[] exculde)
