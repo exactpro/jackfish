@@ -69,8 +69,7 @@ public class MatrixRunner implements IMatrixRunner, AutoCloseable
 
 	public Boolean process (FourParameterFunction<Matrix, Context, ReportBuilder, Date, Boolean> fn) throws Exception
 	{
-		Boolean res = fn.apply(this.matrix, this.context, this.report, this.startTime);
-		return res;
+		return fn.apply(this.matrix, this.context, this.report, this.startTime);
 	}
 
 	@Override

@@ -644,6 +644,15 @@ public class MatrixFx extends Matrix
 		}
 	}
 
+	public void pausedMatrix(Matrix matrix) throws Exception
+	{
+		//TODO this is awesome code. We need check binding Matrix, MatrixRunner and Context
+		if (matrix == this && getMatrixRunner() != null)
+		{
+			getMatrixRunner().pause();
+		}
+	}
+
 	public void stepMatrix() throws Exception
 	{
 		if (getMatrixRunner() != null)

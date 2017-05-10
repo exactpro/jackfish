@@ -249,6 +249,7 @@ public class MatrixFxController implements Initializable, ContainingParent, IMat
 	{
 		try
 		{
+			this.model.pausedMatrix(matrix);
 			this.refreshTreeIfToogle();
 			Optional.ofNullable(this.watcher).ifPresent(WatcherFx::update);
 			TreeItem<MatrixItem> treeItem = this.tree.find(item);

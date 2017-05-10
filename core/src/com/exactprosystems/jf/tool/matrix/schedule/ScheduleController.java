@@ -196,17 +196,17 @@ public class ScheduleController implements Initializable, ContainingParent
 		this.dialog.showAndWait();
 	}
 
-	public void displayRunner(IMatrixRunner runner)
+	void displayRunner(IMatrixRunner runner)
 	{
         this.tableView.getItems().add(new RunnerWithState(runner));
 	}
 
-	public void removeRunner(IMatrixRunner runner)
+	void removeRunner(IMatrixRunner runner)
 	{
 		this.tableView.getItems().removeIf(e -> e.runner == runner); 
 	}
 
-	public void displayState(IMatrixRunner runner, MatrixState state, int done, int total)
+	void displayState(IMatrixRunner runner, MatrixState state, int done, int total)
 	{
 		this.tableView.getItems().stream().filter(r -> r.getRunner().equals(runner)).findFirst().ifPresent(runnerWithState -> {
 			runnerWithState.setState(state);
@@ -216,19 +216,12 @@ public class ScheduleController implements Initializable, ContainingParent
 		refresh();
 	}
 
-	private void refresh()
-	{
-		Platform.runLater(() -> {
-			this.tableView.getColumns().get(0).setVisible(false);
-			this.tableView.getColumns().get(0).setVisible(true);
-		});
-	}
-
-	public boolean isShowing()
+	boolean isShowing()
 	{
 		return !(this.dialog == null || !this.dialog.isShowing());
 	}
 
+	//region Action methods
 	public void startSelected(ActionEvent actionEvent)
 	{
 		Common.tryCatch(() -> this.model.startSelected(getSelected()), "Error on start matrices");
@@ -253,6 +246,16 @@ public class ScheduleController implements Initializable, ContainingParent
 	{
 		Common.tryCatch(this.model::loadSeveral, "Error on load matrices");
 	}
+	//endregion
+
+	//region private methods
+	private void refresh()
+	{
+		Platform.runLater(() -> {
+			this.tableView.getColumns().get(0).setVisible(false);
+			this.tableView.getColumns().get(0).setVisible(true);
+		});
+	}
 
 	private List<IMatrixRunner> getSelected()
 	{
@@ -262,6 +265,9 @@ public class ScheduleController implements Initializable, ContainingParent
 				.map(RunnerWithState::getRunner)
 				.collect(Collectors.toList());
 	}
+
+
+	//endregion
 
 	private class RunnerWithState {
 		private String executed;

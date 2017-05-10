@@ -19,10 +19,7 @@ import com.exactprosystems.jf.documents.matrix.parser.listeners.RunnerListener;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.custom.tab.CustomTab;
 import com.exactprosystems.jf.tool.helpers.DialogsHelper;
-import com.exactprosystems.jf.tool.matrix.MatrixFx;
-
 import javafx.stage.Window;
-
 import org.apache.log4j.Logger;
 
 import java.io.File;
@@ -55,6 +52,7 @@ public class RunnerScheduler implements RunnerListener
 		}
 	}
 
+	//region Interface RunnerListener
 	@Override
 	public void subscribe(IMatrixRunner runner)
 	{
@@ -82,57 +80,42 @@ public class RunnerScheduler implements RunnerListener
 	{
 		this.controller.displayState(matrixRunner, state, done, total);
 	}
+	//endregion
 
-	public void startSelected(List<IMatrixRunner> collect)
+	void startSelected(List<IMatrixRunner> collect)
 	{
-		long count = collect.stream().filter(IMatrixRunner::isRunning).count();
-		if (count == 0)
-		{
-			this.map.keySet().stream().filter(collect::contains).forEach(runner -> Common.tryCatch(runner::start, "Error on start runner"));
-		}
+		this.map.keySet().stream()
+				.filter(collect::contains)
+				.forEach(runner -> Common.tryCatch(runner::start, "Error on start runner"));
 	}
 
-	public void stopSelected(List<IMatrixRunner> collect)
+	void stopSelected(List<IMatrixRunner> collect)
 	{
-		this.map.keySet().stream().filter(collect::contains).forEach(runner -> Common.tryCatch(runner::stop, "Error on start runner"));
+		this.map.keySet().stream()
+				.filter(collect::contains)
+				.forEach(runner -> Common.tryCatch(runner::stop, "Error on start runner"));
 	}
 
-	public void loadSeveral()
+	void destroySelected(List<IMatrixRunner> collect)
 	{
-		List<File> files = DialogsHelper.showMultipleDialog("Choose matrices", "jf files (*.jf)", "*.jf");
-		if (files != null)
-		{
-			files.stream().filter(Objects::nonNull)
-			.forEach(file -> Common.tryCatch(() ->
-			{
-		        try(Reader reader = CommonHelper.readerFromFile(file))
-		        {
-					Context context = this.factory.createContext();
-					MatrixRunner runner = context.createRunner(file.getPath(), reader, null, null);
-					//	                this.map.put(runner, Boolean.TRUE);
-					this.subscribe(runner);
-		        }
-			}, "Error on create new runner"));
-		}
+		this.map.keySet().stream().filter(collect::contains).forEach(runner -> Common.tryCatch(((MatrixRunner)runner)::close, "Error on start runner"));
 	}
 
-	public void showSelected(List<IMatrixRunner> collect)
+	void showSelected(List<IMatrixRunner> collect)
 	{
-		this.map.keySet().stream().filter(collect::contains).forEach(runner -> Common.tryCatch(() ->
+		this.map.keySet().stream()
+				.filter(collect::contains)
+				.forEach(runner -> Common.tryCatch(() ->
 		{
 			((MatrixRunner)runner).process((matrix, context, report, startTime) ->
 			{
 				CustomTab tab = Common.checkDocument(matrix);
-				if (tab != null)
-				{
-					matrix = (MatrixFx) tab.getDocument();
-				}
-				else
+				if (tab == null)
 				{
 					try
 					{
 						unsubscribe(runner);
-						matrix = this.factory.createMatrix(matrix.getName(), (MatrixRunner)runner); // TODO something weird
+						matrix.load(new FileReader(matrix.getName()));
 						matrix.display();
 					}
 					catch (Exception e)
@@ -141,15 +124,29 @@ public class RunnerScheduler implements RunnerListener
 						return false;
 					}
 				}
-				
 				return true;
 			});
-			
+
 		}, "Error on start runner"));
 	}
 
-	public void destroySelected(List<IMatrixRunner> collect)
+	void loadSeveral()
 	{
-		this.map.keySet().stream().filter(collect::contains).forEach(runner -> Common.tryCatch(((MatrixRunner)runner)::close, "Error on start runner"));
+		List<File> files = DialogsHelper.showMultipleDialog("Choose matrices", "jf files (*.jf)", "*.jf");
+		if (files != null)
+		{
+			files.stream()
+				.filter(Objects::nonNull)
+				.forEach(file -> Common.tryCatch(() ->
+				{
+					try(Reader reader = CommonHelper.readerFromFile(file))
+					{
+						Context context = this.factory.createContext();
+						MatrixRunner runner = context.createRunner(file.getPath(), reader, null, null);
+						//	                this.map.put(runner, Boolean.TRUE);
+						this.subscribe(runner);
+		    	    }
+				}, "Error on create new runner"));
+		}
 	}
 }
