@@ -9,13 +9,19 @@
 package com.exactprosystems.jf.tool.text;
 
 import com.exactprosystems.jf.common.Settings;
+import com.exactprosystems.jf.common.highlighter.StyleWithRange;
 import com.exactprosystems.jf.documents.DocumentFactory;
 import com.exactprosystems.jf.documents.text.PlainText;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.helpers.DialogsHelper;
 import javafx.scene.control.ButtonType;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class PlainTextFx extends PlainText
 {
@@ -74,6 +80,54 @@ public class PlainTextFx extends PlainText
 		this.controller.close();
 	}
 	//endregion
+
+	public List<StyleWithRange> createStyles(String str, boolean isMatchCase, boolean isRegExp, AtomicInteger atomicInteger)
+	{
+		ArrayList<StyleWithRange> list = new ArrayList<>();
+		try
+		{
+			Matcher matcher = createMatcher(str, isMatchCase, isRegExp);
+			int last = 0;
+			while (matcher.find())
+			{
+				list.add(new StyleWithRange(null, matcher.start() - last));
+				list.add(new StyleWithRange("found", matcher.end() - matcher.start()));
+				last = matcher.end();
+				atomicInteger.addAndGet(1);
+			}
+			list.add(new StyleWithRange(null, super.property.get().length() - last));
+		}
+		catch (Exception e)
+		{
+			list.clear();
+			list.add(new StyleWithRange(null, super.property.get().length()));
+		}
+		return list;
+	}
+
+	private Matcher createMatcher(String str, boolean isMatchCase, boolean isRegExp)
+	{
+		if (!isRegExp)
+		{
+			str = Pattern.quote(str);
+		}
+		Pattern pattern = Pattern.compile(str, isMatchCase ? 0 : Pattern.CASE_INSENSITIVE + Pattern.MULTILINE);
+		return pattern.matcher(this.property.get());
+	}
+
+	public void replace(String str, String replaceTo, boolean isMatchCase, boolean isRegExp)
+	{
+		try
+		{
+			String newString = createMatcher(str, isMatchCase, isRegExp).replaceAll(replaceTo);
+			this.property.setValue(newString);
+			this.controller.displayText(super.property.get(), super.property::set);
+		}
+		catch (Exception e)
+		{
+
+		}
+	}
 
 	private void initController()
 	{

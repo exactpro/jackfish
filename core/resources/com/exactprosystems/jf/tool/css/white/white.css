@@ -759,8 +759,9 @@ CellView > .text-input.text-field{
 
 }
 .found {
-	-fx-fill: gold;
-	-fx-font-weight: bold;
+	-fx-background-fill: #E17F00;
+	-fx-fill : #eeeeee;
+
 }
 /*Java syntax*/
 .symbols {

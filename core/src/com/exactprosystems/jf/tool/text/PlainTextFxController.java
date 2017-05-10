@@ -20,6 +20,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.control.*;
+import javafx.scene.input.KeyCode;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import org.fxmisc.richtext.LineNumberFactory;
@@ -29,6 +30,7 @@ import org.reactfx.Subscription;
 
 import java.net.URL;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
 
 public class PlainTextFxController implements Initializable, ContainingParent
@@ -51,38 +53,71 @@ public class PlainTextFxController implements Initializable, ContainingParent
 	private CustomTab    tab;
 	private Subscription lastSubscription;
 
+	private boolean findPanelIsOpened = false;
+
 	//region Interface Initializible
 	@Override
 	public void initialize(URL url, ResourceBundle resourceBundle)
 	{
 		this.textArea = new StyleClassedTextArea();
+		this.textArea.setOnKeyPressed(event -> {
+			if (event.getCode() == KeyCode.F && event.isControlDown())
+			{
+				this.tbFindAndReplace.selectedProperty().setValue(!this.tbFindAndReplace.isSelected());
+			}
+		});
 		this.textArea.getUndoManager().forgetHistory();
 		this.textArea.getUndoManager().mark();
 
 		// position the caret at the beginning
 		this.textArea.selectRange(0, 0);
 		this.cbHighlighting.getItems().addAll(Highlighter.values());
-		this.cbHighlighting.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) ->
-		{
-			Optional.ofNullable(this.lastSubscription).ifPresent(Subscription::unsubscribe);
-			this.textArea.setStyleSpans(0, Common.convertFromList(newValue.getStyles(this.textArea.getText())));
-			this.lastSubscription = this.textArea.richChanges().filter(ch -> !ch.getInserted().equals(ch.getRemoved())).subscribe(
-					change -> this.textArea.setStyleSpans(0, Common.convertFromList(newValue.getStyles(this.textArea.getText()))));
+		this.cbHighlighting.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+			if (!this.findPanelIsOpened)
+			{
+				subscribeAndSet(newValue);
+			}
 		});
 		this.cbHighlighting.getSelectionModel().selectFirst();
 		this.cbShowLineNumbers.selectedProperty().addListener((observable, oldValue, newValue) -> this.textArea.setParagraphGraphicFactory(newValue ? LineNumberFactory.get(this.textArea) : null));
 
 		this.tbFindAndReplace.selectedProperty().addListener((observable, oldValue, newValue) ->
 		{
+			this.findPanelIsOpened = newValue;
+
 			this.findPane.setVisible(newValue);
 			this.findPane.setPrefHeight(newValue ? 60 : 0);
 			this.findPane.setMinHeight(newValue ? 60 : 0);
 			this.findPane.setMaxHeight(newValue ? 60 : 0);
+
+			if (!newValue)
+			{
+				subscribeAndSet(this.cbHighlighting.getSelectionModel().getSelectedItem());
+			}
+			else
+			{
+				if (!this.tfFind.getText().isEmpty())
+				{
+					findAll(null);
+				}
+				else
+				{
+					Optional.ofNullable(this.lastSubscription).ifPresent(Subscription::unsubscribe);
+					this.textArea.clearStyle(0, this.textArea.getText().length());
+				}
+			}
+
+			Common.setFocused(this.tfFind);
 		});
 
 		this.mainPane.setCenter(this.textArea);
 		GridPane.setColumnSpan(this.textArea, 2);
+
+		this.cbRegexp.selectedProperty().addListener((observable, oldValue, newValue) -> findAll(null));
+		this.cbMatchCase.selectedProperty().addListener((observable, oldValue, newValue) -> findAll(null));
+		this.tfFind.textProperty().addListener((observable, oldValue, newValue) -> findAll(null));
 	}
+
 	//endregion
 
 	//region Interface ContainingParent
@@ -133,23 +168,34 @@ public class PlainTextFxController implements Initializable, ContainingParent
 		if (this.tfFind.getText().isEmpty())
 		{
 			this.lblFindCount.setText("");
+			Optional.ofNullable(this.lastSubscription).ifPresent(Subscription::unsubscribe);
+			this.textArea.clearStyle(0, this.textArea.getText().length());
 		}
-		Optional.ofNullable(this.lastSubscription).ifPresent(Subscription::unsubscribe);
-		List<StyleWithRange> styles = createStyles(this.tfFind.getText(), this.cbMatchCase.isSelected(), this.cbRegexp.isSelected());
-		StyleSpans<Collection<String>> styleSpans = Common.convertFromList(styles);
-		this.textArea.setStyleSpans(0, styleSpans);
+		else
+		{
+			AtomicInteger atomicInteger = new AtomicInteger(0);
+			Optional.ofNullable(this.lastSubscription).ifPresent(Subscription::unsubscribe);
+			List<StyleWithRange> styles = this.model.createStyles(this.tfFind.getText(), this.cbMatchCase.isSelected(), this.cbRegexp.isSelected(), atomicInteger);
+			StyleSpans<Collection<String>> styleSpans = Common.convertFromList(styles);
+			this.textArea.setStyleSpans(0, styleSpans);
+			this.lblFindCount.setText("Found " + atomicInteger.get());
+		}
 	}
 
 	public void replaceAll(ActionEvent actionEvent)
 	{
-
+		if (!this.tfFind.getText().isEmpty())
+		{
+			this.model.replace(this.tfFind.getText(), this.tfReplace.getText(), this.cbMatchCase.isSelected(), this.cbRegexp.isSelected());
+		}
 	}
 
-	private List<StyleWithRange> createStyles(String str, boolean isMatchCase, boolean isRegExp)
+	private void subscribeAndSet(Highlighter highlighter)
 	{
-		ArrayList<StyleWithRange> list = new ArrayList<>();
-		list.add(new StyleWithRange("found", 30));
-		list.add(new StyleWithRange(null, this.textArea.getText().length() - 30));
-		return list;
+		Optional.ofNullable(this.lastSubscription).ifPresent(Subscription::unsubscribe);
+		this.textArea.setStyleSpans(0, Common.convertFromList(highlighter.getStyles(this.textArea.getText())));
+		this.lastSubscription = this.textArea.richChanges()
+				.filter(ch -> !ch.getInserted().equals(ch.getRemoved()))
+				.subscribe(change -> this.textArea.setStyleSpans(0, Common.convertFromList(highlighter.getStyles(this.textArea.getText()))));
 	}
 }
