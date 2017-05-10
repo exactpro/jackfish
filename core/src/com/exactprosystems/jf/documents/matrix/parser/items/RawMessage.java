@@ -75,6 +75,7 @@ public class RawMessage extends MatrixItem
 	protected Object displayYourself(DisplayDriver driver, Context context)
 	{
 		Object layout = driver.createLayout(this, 3);
+		
 		driver.showComment(this, layout, 0, 0, getComments());
 		driver.showTextBox(this, layout, 1, 0, this.id, this.id, () -> this.id.get());
 		driver.showTitle(this, layout, 1, 1, Tokens.RawMessage.get(), context.getFactory().getSettings());
@@ -108,6 +109,7 @@ public class RawMessage extends MatrixItem
 		driver.showToggleButton(this, layout, 1, 7, 
 		        b -> driver.hide(this, layout, 2, b), 
 		        b -> b ? "Hide" : "Show", this.message.size() != 0);
+		driver.showTree(this, layout, 2, 0, this.message);
 		driver.hide(this, layout, 2, this.message.size() == 0);
 		return layout;
 	}
@@ -170,7 +172,8 @@ public class RawMessage extends MatrixItem
 		this.clientName.set(systemParameters.get(Tokens.Client));
 		this.message = new MapMessage(this.typeName.get(), null, null);
 		
-		
+//		
+//		
 //		this.message.put("Fld1", 1);
 //		this.message.put("Fld2", 2);
 //
@@ -179,7 +182,7 @@ public class RawMessage extends MatrixItem
 //		group1.put("Field2", 102);
 //
 //		MapMessage subGroup1 = new MapMessage(null);
-//		subGroup1.put("SubField1", "$66");
+//		subGroup1.put("SubField1", "66");
 //		subGroup1.put("SubField2", 302);
 //
 //		MapMessage subGroup2 = new MapMessage(null);
@@ -353,7 +356,9 @@ public class RawMessage extends MatrixItem
 					this.groups.get(key).add(this.reading);
 					if (key == 0)
 					{
+					    String type = this.message.getMessageType();
 						this.message = this.reading;
+						this.message.setMessageType(type);
 						this.reading = null;
 					}
 				}

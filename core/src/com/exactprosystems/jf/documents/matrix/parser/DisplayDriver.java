@@ -8,6 +8,7 @@
 
 package com.exactprosystems.jf.documents.matrix.parser;
 
+import com.exactprosystems.jf.api.client.MapMessage;
 import com.exactprosystems.jf.common.Settings;
 import com.exactprosystems.jf.common.highlighter.Highlighter;
 import com.exactprosystems.jf.documents.config.Context;
@@ -47,6 +48,7 @@ public interface DisplayDriver
 	void 		showToggleButton	(MatrixItem item, Object layout, int row, int column, Consumer<Boolean> action, Function<Boolean, String> changeName, boolean initialValue);
 	void 		showParameters		(MatrixItem item, Object layout, int row, int column, Parameters parameters, FormulaGenerator generator, boolean oneLine);
 	void 		showGrid			(MatrixItem item, Object layout, int row, int column, Table table);
+    void        showTree            (MatrixItem item, Object layout, int row, int column, MapMessage message);
 	void 		hide				(MatrixItem item, Object layout, int row, boolean hide);
 	void		setupCall			(MatrixItem item, String reference, Parameters parameters);
 	void 		setCurrentItem		(MatrixItem item, Matrix matrix, boolean needExpand);

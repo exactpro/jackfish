@@ -418,7 +418,7 @@ public class Do
 		return new Operation().script(script);
 	}
 
-	static final String dragNdropCursor = "DragNdrop method, where starting coordinates are x1 and x2 inside current element and  ending coordinates are x2 and y2 inside another element. Method has parameter for physically moving cursor.";
+	static final String dragNdropCursor = "DragNdrop method, where starting coordinates are x1 and y1 inside current element and  ending coordinates are x2 and y2 inside another element. Method has parameter for physically moving cursor.";
 	@DescriptionAttribute(text = Do.dragNdropCursor)
 	public static Operation dragNdrop(@FieldParameter(name = "x1") int x1, @FieldParameter(name = "y1") int y1, @FieldParameter(name = "another") String another, @FieldParameter(name = "x2") int x2, @FieldParameter(name = "y2") int y2, @FieldParameter(name="moveCursor") boolean moveCursor)
 	{

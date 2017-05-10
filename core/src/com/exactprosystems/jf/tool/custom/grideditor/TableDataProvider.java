@@ -33,12 +33,6 @@ public class TableDataProvider implements DataProvider<String>
 	private Consumer<DataProvider<String>> displayFunction;
 
 	//region Constructors
-	@Deprecated
-	public TableDataProvider(Table table)
-	{
-		this.table = table;
-	}
-
 	public TableDataProvider(Table table, BiConsumer<Command, Command> undoRedoFunction)
 	{
 		this.table = table;

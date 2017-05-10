@@ -9,6 +9,7 @@
 package com.exactprosystems.jf.tool.custom.treetable;
 
 import com.exactprosystems.jf.api.app.AppConnection;
+import com.exactprosystems.jf.api.client.MapMessage;
 import com.exactprosystems.jf.api.common.Str;
 import com.exactprosystems.jf.common.MatrixRunner;
 import com.exactprosystems.jf.common.Settings;
@@ -610,6 +611,25 @@ public class DisplayDriverFx implements DisplayDriver
 		pane.add(borderPane, column, row, 10, 2);
 	}
 
+    @Override
+    public void showTree(MatrixItem item, Object layout, int row, int column, MapMessage message)
+    {
+        GridPane pane = (GridPane) layout;
+//        DataProvider<String> provider = new TableDataProvider(table, (undo, redo) -> item.getMatrix().addCommand(undo, redo));
+//        SpreadsheetView view = new SpreadsheetView(provider);
+//        provider.displayFunction(view::display);
+//        view.setPrefHeight(25 * (Math.min(provider.getRowHeaders().size(), 50) + 1));
+
+        BorderPane borderPane = new BorderPane();
+        borderPane.getStyleClass().add(GRID_PARENT);
+//        borderPane.setCenter(view);
+//        DragResizer.makeResizable(borderPane, view::setPrefHeight);
+        BorderPane.setMargin(borderPane, new Insets(0, 0, 10, 0));
+
+        pane.add(borderPane, column, row, 10, 2);
+    }
+
+	
 	@Override
 	public void hide(MatrixItem item, Object layout, int row, boolean hide)
 	{
