@@ -21,7 +21,6 @@ import com.exactprosystems.jf.documents.matrix.parser.Parameters;
 
 @ActionAttribute(
         group = ActionGroups.Matrix,
-        suffix = "MXWT",
         generalDescription = "The purpose of this action is to wait until the executed matrix stops. "
                 + "If the matrix doesn’t stop during the specified timeout, an action is failed.",
         additionFieldsAllowed = false,

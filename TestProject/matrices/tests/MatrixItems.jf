@@ -2397,7 +2397,7 @@ Check Step (SetHandler checked above);;;
 
         #OnError
             #Assert;#Message
-            err.Kind == ErrorKind.WRONG_PARAMETERS;
+            err.Kind == ErrorKind.WRONG_PARAMETERS;'Wrong parameters'
 
 
     #EndStep
@@ -2639,4 +2639,371 @@ Check Step (SetHandler checked above);;;
 
 #TestCase;#Kind;#Depends;#For
 Check TestCase (SetHandler checked above);;;
+    #Step;#Kind;#For;#Depends
+    'test for dependency with fail';;;
+        #Id;#RawText;#Kind
+        TEXT6;Text;Matrix
+        ~;"#Id;#TestCase;#Kind;#Depends;#For"
+        ~;"failedTestCase;Test case;Never;;"
+        ~;"    #Fail"
+        ~;"    'Some fail'"
+        ~;""
+        ~;""
+        ~;""
+        ~;"#TestCase;#Kind;#Depends;#For"
+        ~;";;failedTestCase;"
+        ~;"    #Action;#Value;#Name"
+        ~;"    Store;'my new value';parameter.variableKey"
+        #EndRawText
+
+        #Action;#Value;#Name
+        Store;'variable from matrix';'variableKey'
+
+        #Id;#Action;#Text;#Parameter
+        MXRN4;MatrixRunFromText;TEXT6;{'variableValue':'temp','variableKey' : 'variableKey'}
+
+        #Action;#Matrix
+        MatrixWait;MXRN4.Out
+
+        #Assert;#Message
+        MXRN4.Out.failed() == 2;'Failed count not expected'
+
+        #Assert;#Message
+        MXRN4.Out.passed() == 0;'Passed count not expected'
+
+        #Id;#Action;#Name
+        restored;Restore;'variableKey'
+
+        #Assert;#Message
+        restored.Out == 'variable from matrix';'Restored value not expected'
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'test for dependency without fail';;;
+        #Id;#RawText;#Kind
+        TEXT6;Text;Matrix
+        ~;"#Id;#TestCase;#Kind;#Depends;#For"
+        ~;"failedTestCase;Test case;Never;;"
+        ~;""
+        ~;""
+        ~;"#TestCase;#Kind;#Depends;#For"
+        ~;";;failedTestCase;"
+        ~;"    #Action;#Value;#Name"
+        ~;"    Store;'my new value';parameter.variableKey"
+        #EndRawText
+
+        #Action;#Value;#Name
+        Store;'variable from matrix';'variableKey'
+
+        #Id;#Action;#Text;#Parameter
+        MXRN4;MatrixRunFromText;TEXT6;{'variableValue':'temp','variableKey' : 'variableKey'}
+
+        #Action;#Matrix
+        MatrixWait;MXRN4.Out
+
+        #Assert;#Message
+        MXRN4.Out.failed() == 0;'Failed count not expected'
+
+        #Assert;#Message
+        MXRN4.Out.passed() == 2;'Passed count not expected'
+
+        #Id;#Action;#Name
+        restored;Restore;'variableKey'
+
+        #Assert;#Message
+        restored.Out == 'my new value';'Restored value not expected'
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'test screenshot on start';;;
+        #Id;#RawText;#Kind
+        TEXT6;Text;Matrix
+        ~;"#Id;#TestCase;#Kind;#Depends;#For"
+        ~;"screenTestCaseOnStart;Test case;OnStart;;"
+        #EndRawText
+
+        #Id;#Action;#Text
+        MXRN4;MatrixRunFromText;TEXT6
+
+        #Action;#Matrix
+        MatrixWait;MXRN4.Out
+
+        #Assert;#Message
+        MXRN4.Out.failed() == 0;'Failed count not expected'
+
+        #Assert;#Message
+        MXRN4.Out.passed() == 1;'Passed count not expected'
+
+        #Id;#Action;#Decoraded;#Matrix
+        resTbl;ResultTable;true;MXRN4.Out
+
+        #Id;#Action;#Table;#TestCaseId
+        TBLSLCT1;TableSelect;resTbl.Out;'screenTestCaseOnStart'
+
+        #Assert;#Message
+        TBLSLCT1.Out.size() == 1;'Found more that one row'
+
+        #Id;#Let
+        screenShot;TBLSLCT1.Out.get(0).Screenshot
+
+        #Assert;#Message
+        !Str.IsNullOrEmpty(screenShot);'Screenshot is null or empty'
+
+        #Assert;#Message
+        screenShot.matches('<a href=".+?">OnStart</a>');'String not matches'
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'test screenshot on startOnError ( without error)';;;
+        #Id;#RawText;#Kind
+        TEXT6;Text;Matrix
+        ~;"// "
+        ~;"#Id;#TestCase;#Kind;#Depends;#For"
+        ~;"screenTestCaseOnStartOnError;Test case;OnStartOrError;;"
+        #EndRawText
+
+        #Id;#Action;#Text
+        MXRN4;MatrixRunFromText;TEXT6
+
+        #Action;#Matrix
+        MatrixWait;MXRN4.Out
+
+        #Assert;#Message
+        MXRN4.Out.failed() == 0;'Failed count not expected'
+
+        #Assert;#Message
+        MXRN4.Out.passed() == 1;'Passed count not expected'
+
+        #Id;#Action;#Decoraded;#Matrix
+        resTbl;ResultTable;true;MXRN4.Out
+
+        #Id;#Action;#Table;#TestCaseId
+        TBLSLCT1;TableSelect;resTbl.Out;'screenTestCaseOnStartOnError'
+
+        #Assert;#Message
+        TBLSLCT1.Out.size() == 1;'Found more that one row'
+
+        #Id;#Let
+        screenShot;TBLSLCT1.Out.get(0).Screenshot
+
+        #Assert;#Message
+        !Str.IsNullOrEmpty(screenShot);'Screenshot is null or empty'
+
+        #Assert;#Message
+        screenShot.matches('<a href=".+?">OnStart</a>');'String not matches'
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'test screenshot on startOnError ( with error)';;;
+        #Id;#RawText;#Kind
+        TEXT6;Text;Matrix
+        ~;"// "
+        ~;"#Id;#TestCase;#Kind;#Depends;#For"
+        ~;"screenTestCaseOnStartOnErrorWithError;Test case;OnStartOrError;;"
+        ~;"    #Fail"
+        ~;"    'Some fail'"
+        #EndRawText
+
+        #Id;#Action;#Text
+        MXRN4;MatrixRunFromText;TEXT6
+
+        #Action;#Matrix
+        MatrixWait;MXRN4.Out
+
+        #Assert;#Message
+        MXRN4.Out.failed() ==1;'Failed count not expected'
+
+        #Assert;#Message
+        MXRN4.Out.passed() == 0;'Passed count not expected'
+
+        #Id;#Action;#Decoraded;#Matrix
+        resTbl;ResultTable;true;MXRN4.Out
+
+        #Id;#Action;#Table;#TestCaseId
+        TBLSLCT1;TableSelect;resTbl.Out;'screenTestCaseOnStartOnErrorWithError'
+
+        #Assert;#Message
+        TBLSLCT1.Out.size() == 1;'Found more that one row'
+
+        #Id;#Let
+        screenShot;TBLSLCT1.Out.get(0).Screenshot
+
+        #Assert;#Message
+        !Str.IsNullOrEmpty(screenShot);'Screenshot is null or empty'
+
+        #Assert;#Message
+        screenShot.matches('<a href=".+?">OnError</a>');'String not matches'
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'test screenshot on finish';;;
+        #Id;#RawText;#Kind
+        TEXT6;Text;Matrix
+        ~;"#Id;#TestCase;#Kind;#Depends;#For"
+        ~;"screenTestCaseOnFinish;Test case;OnFinish;;"
+        #EndRawText
+
+        #Id;#Action;#Text
+        MXRN4;MatrixRunFromText;TEXT6
+
+        #Action;#Matrix
+        MatrixWait;MXRN4.Out
+
+        #Assert;#Message
+        MXRN4.Out.failed() == 0;'Failed count not expected'
+
+        #Assert;#Message
+        MXRN4.Out.passed() == 1;'Passed count not expected'
+
+        #Id;#Action;#Decoraded;#Matrix
+        resTbl;ResultTable;true;MXRN4.Out
+
+        #Id;#Action;#Table;#TestCaseId
+        TBLSLCT1;TableSelect;resTbl.Out;'screenTestCaseOnFinish'
+
+        #Assert;#Message
+        TBLSLCT1.Out.size() == 1;'Found more that one row'
+
+        #Id;#Let
+        screenShot;TBLSLCT1.Out.get(0).Screenshot
+
+        #Assert;#Message
+        !Str.IsNullOrEmpty(screenShot);'Screenshot is null or empty'
+
+        #Assert;#Message
+        screenShot.matches('<a href=".+?">OnFinish</a>');'String not matches'
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'test screenshot on finish on error (without faied)';;;
+        #Id;#RawText;#Kind
+        TEXT6;Text;Matrix
+        ~;"#Id;#TestCase;#Kind;#Depends;#For"
+        ~;"screenTestCaseOnFinishOnError;Test case;OnFinishOrError;;"
+        #EndRawText
+
+        #Id;#Action;#Text
+        MXRN4;MatrixRunFromText;TEXT6
+
+        #Action;#Matrix
+        MatrixWait;MXRN4.Out
+
+        #Assert;#Message
+        MXRN4.Out.failed() ==0;'Failed count not expected'
+
+        #Assert;#Message
+        MXRN4.Out.passed() == 1;'Passed count not expected'
+
+        #Id;#Action;#Decoraded;#Matrix
+        resTbl;ResultTable;true;MXRN4.Out
+
+        #Id;#Action;#Table;#TestCaseId
+        TBLSLCT1;TableSelect;resTbl.Out;'screenTestCaseOnFinishOnError'
+
+        #Assert;#Message
+        TBLSLCT1.Out.size() == 1;'Found more that one row'
+
+        #Id;#Let
+        screenShot;TBLSLCT1.Out.get(0).Screenshot
+
+        #Assert;#Message
+        !Str.IsNullOrEmpty(screenShot);'Screenshot is null or empty'
+
+        #Assert;#Message
+        screenShot.matches('<a href=".+?">OnFinish</a>');'String not matches'
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'test screenshot on finish on error (without faied)';;;
+        #Id;#RawText;#Kind
+        TEXT6;Text;Matrix
+        ~;"// "
+        ~;"#Id;#TestCase;#Kind;#Depends;#For"
+        ~;"screenTestCaseOnStartOnErrorWithFail;Test case;OnFinishOrError;;"
+        ~;"    #Fail"
+        ~;"    'Some fail'"
+        #EndRawText
+
+        #Id;#Action;#Text
+        MXRN4;MatrixRunFromText;TEXT6
+
+        #Action;#Matrix
+        MatrixWait;MXRN4.Out
+
+        #Assert;#Message
+        MXRN4.Out.failed() == 1;'Failed count not expected'
+
+        #Assert;#Message
+        MXRN4.Out.passed() == 0;'Passed count not expected'
+
+        #Id;#Action;#Decoraded;#Matrix
+        resTbl;ResultTable;true;MXRN4.Out
+
+        #Id;#Action;#Table;#TestCaseId
+        TBLSLCT1;TableSelect;resTbl.Out;'screenTestCaseOnStartOnErrorWithFail'
+
+        #Assert;#Message
+        TBLSLCT1.Out.size() == 1;'Found more that one row'
+
+        #Id;#Let
+        screenShot;TBLSLCT1.Out.get(0).Screenshot
+
+        #Assert;#Message
+        !Str.IsNullOrEmpty(screenShot);'Screenshot is null or empty'
+
+        #Assert;#Message
+        screenShot.matches('<a href=".+?">OnError</a>');'String not matches'
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'test screenshot on finish on error';;;
+        #Id;#RawText;#Kind
+        TEXT6;Text;Matrix
+        ~;"// "
+        ~;"#Id;#TestCase;#Kind;#Depends;#For"
+        ~;"screenTestCaseOnError;Test case;OnError;;"
+        ~;"    #Fail"
+        ~;"    'Some fail'"
+        #EndRawText
+
+        #Id;#Action;#Text
+        MXRN4;MatrixRunFromText;TEXT6
+
+        #Action;#Matrix
+        MatrixWait;MXRN4.Out
+
+        #Assert;#Message
+        MXRN4.Out.failed() == 1;'Failed count not expected'
+
+        #Assert;#Message
+        MXRN4.Out.passed() == 0;'Passed count not expected'
+
+        #Id;#Action;#Decoraded;#Matrix
+        resTbl;ResultTable;true;MXRN4.Out
+
+        #Id;#Action;#Table;#TestCaseId
+        TBLSLCT1;TableSelect;resTbl.Out;'screenTestCaseOnError'
+
+        #Assert;#Message
+        TBLSLCT1.Out.size() == 1;'Found more that one row'
+
+        #Id;#Let
+        screenShot;TBLSLCT1.Out.get(0).Screenshot
+
+        #Assert;#Message
+        !Str.IsNullOrEmpty(screenShot);'Screenshot is null or empty'
+
+        #Assert;#Message
+        screenShot.matches('<a href=".+?">OnError</a>');'String not matches'
+
+    #EndStep
+
 
