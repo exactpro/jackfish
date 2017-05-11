@@ -115,7 +115,7 @@ public class RunnerScheduler implements RunnerListener
 					try
 					{
 						unsubscribe(runner);
-						matrix.load(new FileReader(matrix.getName()));
+						matrix.load(new FileReader(runner.getMatrixName()));
 						matrix.display();
 					}
 					catch (Exception e)
