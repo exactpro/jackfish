@@ -29,7 +29,10 @@ import org.fxmisc.richtext.StyleSpans;
 import org.reactfx.Subscription;
 
 import java.net.URL;
-import java.util.*;
+import java.util.Collection;
+import java.util.List;
+import java.util.Optional;
+import java.util.ResourceBundle;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
 
@@ -96,15 +99,8 @@ public class PlainTextFxController implements Initializable, ContainingParent
 			}
 			else
 			{
-				if (!this.tfFind.getText().isEmpty())
-				{
-					findAll(null);
-				}
-				else
-				{
-					Optional.ofNullable(this.lastSubscription).ifPresent(Subscription::unsubscribe);
-					this.textArea.clearStyle(0, this.textArea.getText().length());
-				}
+				Optional.ofNullable(this.lastSubscription).ifPresent(Subscription::unsubscribe);
+				this.textArea.clearStyle(0, this.textArea.getText().length());
 			}
 
 			Common.setFocused(this.tfFind);
@@ -113,9 +109,10 @@ public class PlainTextFxController implements Initializable, ContainingParent
 		this.mainPane.setCenter(this.textArea);
 		GridPane.setColumnSpan(this.textArea, 2);
 
-		this.cbRegexp.selectedProperty().addListener((observable, oldValue, newValue) -> findAll(null));
-		this.cbMatchCase.selectedProperty().addListener((observable, oldValue, newValue) -> findAll(null));
-		this.tfFind.textProperty().addListener((observable, oldValue, newValue) -> findAll(null));
+		this.cbRegexp.selectedProperty().addListener((observable, oldValue, newValue) -> this.model.resetMatcher(this.tfFind.getText(), this.cbMatchCase.isSelected(), this.cbRegexp.isSelected()));
+		this.cbMatchCase.selectedProperty().addListener((observable, oldValue, newValue) -> this.model.resetMatcher(this.tfFind.getText(), this.cbMatchCase.isSelected(), this.cbRegexp.isSelected()));
+		this.tfFind.setText("asd");
+		this.tfFind.textProperty().addListener((observable, oldValue, newValue) -> this.model.resetMatcher(this.tfFind.getText(), this.cbMatchCase.isSelected(), this.cbRegexp.isSelected()));
 	}
 
 	//endregion
@@ -160,7 +157,6 @@ public class PlainTextFxController implements Initializable, ContainingParent
 		this.textArea.clear();
 		this.textArea.appendText(text);
 		this.textArea.textProperty().addListener((observable, oldValue, newValue) -> consumer.accept(newValue));
-		this.textArea.positionCaret(0);
 	}
 
 	public void findAll(ActionEvent actionEvent)
@@ -175,7 +171,7 @@ public class PlainTextFxController implements Initializable, ContainingParent
 		{
 			AtomicInteger atomicInteger = new AtomicInteger(0);
 			Optional.ofNullable(this.lastSubscription).ifPresent(Subscription::unsubscribe);
-			List<StyleWithRange> styles = this.model.createStyles(this.tfFind.getText(), this.cbMatchCase.isSelected(), this.cbRegexp.isSelected(), atomicInteger);
+			List<StyleWithRange> styles = this.model.findAll(this.tfFind.getText(), this.cbMatchCase.isSelected(), this.cbRegexp.isSelected(), atomicInteger);
 			StyleSpans<Collection<String>> styleSpans = Common.convertFromList(styles);
 			this.textArea.setStyleSpans(0, styleSpans);
 			this.lblFindCount.setText("Found " + atomicInteger.get());
@@ -186,8 +182,34 @@ public class PlainTextFxController implements Initializable, ContainingParent
 	{
 		if (!this.tfFind.getText().isEmpty())
 		{
-			this.model.replace(this.tfFind.getText(), this.tfReplace.getText(), this.cbMatchCase.isSelected(), this.cbRegexp.isSelected());
+			this.model.replaceAll(this.tfFind.getText(), this.tfReplace.getText(), this.cbMatchCase.isSelected(), this.cbRegexp.isSelected());
 		}
+	}
+
+	public void findNext(ActionEvent actionEvent)
+	{
+		Optional.ofNullable(this.lastSubscription).ifPresent(Subscription::unsubscribe);
+		List<StyleWithRange> styles = this.model.findNext(this.tfFind.getText(), this.cbMatchCase.isSelected(), this.cbRegexp.isSelected());
+		StyleSpans<Collection<String>> styleSpans = Common.convertFromList(styles);
+		this.textArea.setStyleSpans(0, styleSpans);
+		if (styles.size() != 1)
+		{
+			styles.stream()
+					.filter(s -> s.getStyle() == null)
+					.findFirst()
+					.ifPresent(s -> this.textArea.moveTo(s.getRange()));
+		}
+	}
+
+	public void replaceCurrent(ActionEvent actionEvent)
+	{
+		this.model.replaceCurrent(this.tfReplace.getText());
+	}
+
+	public void replaceAndFind(ActionEvent actionEvent)
+	{
+		this.replaceCurrent(null);
+		this.findNext(null);
 	}
 
 	private void subscribeAndSet(Highlighter highlighter)

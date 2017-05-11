@@ -27,7 +27,7 @@
 						<ToggleButton fx:id="tbFindAndReplace" mnemonicParsing="false" text="FindAndReplace"/>
 					</items>
 				</ToolBar>
-				<GridPane fx:id="findPane" prefHeight="0.0" minHeight="0.0" maxHeight="0.0" minWidth="800.0" prefWidth="800.0" maxWidth="800.0" BorderPane.alignment="CENTER" visible="false">
+				<GridPane fx:id="findPane" prefHeight="0.0" minHeight="0.0" maxHeight="0.0" BorderPane.alignment="CENTER" visible="false">
 					<styleClass>
 						<CssVariables fx:constant="HGAP_MAX" />
 					</styleClass>
@@ -36,21 +36,28 @@
 						<RowConstraints vgrow="SOMETIMES" percentHeight="50.0"/>
 					</rowConstraints>
 					<columnConstraints>
-						<ColumnConstraints halignment="LEFT" percentWidth="60.0"/>
-						<ColumnConstraints halignment="LEFT" percentWidth="20.0"/>
-						<ColumnConstraints halignment="LEFT" percentWidth="20.0"/>
+						<ColumnConstraints halignment="LEFT" percentWidth="52.0"/>
+						<ColumnConstraints halignment="LEFT" percentWidth="12.0"/>
+						<ColumnConstraints halignment="LEFT" percentWidth="12.0"/>
+						<ColumnConstraints halignment="LEFT" percentWidth="12.0"/>
+						<ColumnConstraints halignment="LEFT" percentWidth="12.0"/>
 					</columnConstraints>
 					<children>
 						<CustomFieldWithButton promptText="Find" fx:id="tfFind"/>
 						<CustomFieldWithButton promptText="Replace" fx:id="tfReplace" GridPane.rowIndex="1"/>
 
 						<CheckBox fx:id="cbMatchCase" text="Match case" GridPane.columnIndex="1"/>
-						<CheckBox fx:id="cbRegexp" text="RegExp" GridPane.columnIndex="2"/>
+						<CheckBox fx:id="cbRegexp" text="RegExp" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
 
-						<Button text="Find all" onAction="#findAll" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+						<Button text="Find all" onAction="#findAll" GridPane.columnIndex="2"/>
 						<Button text="Replace all" onAction="#replaceAll" GridPane.columnIndex="2" GridPane.rowIndex="1"/>
 
-						<Label fx:id="lblFindCount" GridPane.columnIndex="3"/>
+						<Button text="Find next" onAction="#findNext" GridPane.columnIndex="3"/>
+						<Button text="Replace" onAction="#replaceCurrent" GridPane.rowIndex="1" GridPane.columnIndex="3"/>
+
+						<Button text="Replace and find" onAction="#replaceAndFind" GridPane.columnIndex="4"/>
+
+						<Label fx:id="lblFindCount" GridPane.columnIndex="4" GridPane.rowIndex="1"/>
 					</children>
 				</GridPane>
 			</children>

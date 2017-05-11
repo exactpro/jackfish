@@ -25,6 +25,8 @@ import java.util.regex.Pattern;
 
 public class PlainTextFx extends PlainText
 {
+	static final String FOUND_STYLE_CLASS = "found";
+
 	public PlainTextFx(String fileName, DocumentFactory factory)
 	{
 		super(fileName, factory);
@@ -81,45 +83,37 @@ public class PlainTextFx extends PlainText
 	}
 	//endregion
 
-	public List<StyleWithRange> createStyles(String str, boolean isMatchCase, boolean isRegExp, AtomicInteger atomicInteger)
+	List<StyleWithRange> findAll(String str, boolean isMatchCase, boolean isRegExp, AtomicInteger atomicInteger)
 	{
+		resetMatcher(str, isMatchCase, isRegExp);
 		ArrayList<StyleWithRange> list = new ArrayList<>();
 		try
 		{
-			Matcher matcher = createMatcher(str, isMatchCase, isRegExp);
+			Matcher matcher = this.matcher.reset(this.property.get());
 			int last = 0;
 			while (matcher.find())
 			{
 				list.add(new StyleWithRange(null, matcher.start() - last));
-				list.add(new StyleWithRange("found", matcher.end() - matcher.start()));
+				list.add(new StyleWithRange(FOUND_STYLE_CLASS, matcher.end() - matcher.start()));
 				last = matcher.end();
-				atomicInteger.addAndGet(1);
+				atomicInteger.incrementAndGet();
 			}
-			list.add(new StyleWithRange(null, super.property.get().length() - last));
+			list.add(new StyleWithRange(null, getLength() - last));
 		}
 		catch (Exception e)
 		{
 			list.clear();
-			list.add(new StyleWithRange(null, super.property.get().length()));
+			list.add(new StyleWithRange(null, getLength()));
 		}
 		return list;
 	}
 
-	private Matcher createMatcher(String str, boolean isMatchCase, boolean isRegExp)
+	void replaceAll(String str, String replaceTo, boolean isMatchCase, boolean isRegExp)
 	{
-		if (!isRegExp)
-		{
-			str = Pattern.quote(str);
-		}
-		Pattern pattern = Pattern.compile(str, isMatchCase ? 0 : Pattern.CASE_INSENSITIVE + Pattern.MULTILINE);
-		return pattern.matcher(this.property.get());
-	}
-
-	public void replace(String str, String replaceTo, boolean isMatchCase, boolean isRegExp)
-	{
+		resetMatcher(str, isMatchCase, isRegExp);
 		try
 		{
-			String newString = createMatcher(str, isMatchCase, isRegExp).replaceAll(replaceTo);
+			String newString = this.matcher.reset(this.property.get()).replaceAll(replaceTo);
 			this.property.setValue(newString);
 			this.controller.displayText(super.property.get(), super.property::set);
 		}
@@ -127,6 +121,78 @@ public class PlainTextFx extends PlainText
 		{
 
 		}
+	}
+
+	List<StyleWithRange> findNext(String text, boolean isMatchCase, boolean isRegExp)
+	{
+		ArrayList<StyleWithRange> list = new ArrayList<>();
+		if (this.matcher == null)
+		{
+			resetMatcher(text, isMatchCase, isRegExp);
+		}
+		Matcher matcher = this.matcher.reset(this.property.get());
+		boolean lastFind = matcher.find(this.lastPos);
+		if (!lastFind)
+		{
+			this.lastPos = 0;
+			boolean findFromZero = matcher.find(this.lastPos);
+			if (!findFromZero)
+			{
+				list.add(new StyleWithRange(null, getLength()));
+			}
+			else
+			{
+				return findNext(text, isMatchCase, isRegExp);
+			}
+		}
+		else
+		{
+			list.add(new StyleWithRange(null, matcher.start()));
+			list.add(new StyleWithRange(FOUND_STYLE_CLASS, matcher.end() - matcher.start()));
+			list.add(new StyleWithRange(null, getLength() - matcher.end()));
+			this.lastPos = matcher.end();
+		}
+		return list;
+	}
+
+	void replaceCurrent(String replacement)
+	{
+		try
+		{
+			int start = this.matcher.start();
+			Matcher matcher = this.matcher.reset(this.property.get());
+			boolean find = matcher.find(start);
+			if (find)
+			{
+				StringBuffer sb = new StringBuffer();
+				matcher.appendReplacement(sb, replacement);
+				matcher.appendTail(sb);
+				String newString = sb.toString();
+				this.property.setValue(newString);
+				this.controller.displayText(super.property.get(), super.property::set);
+			}
+		}
+		catch (Exception e)
+		{
+			;
+		}
+	}
+
+	void resetMatcher(String str, boolean isMatchCase, boolean isRegExp)
+	{
+		if (!isRegExp)
+		{
+			str = Pattern.quote(str);
+		}
+		Pattern pattern = Pattern.compile(str, isMatchCase ? 0 : Pattern.CASE_INSENSITIVE + Pattern.MULTILINE);
+		this.matcher = pattern.matcher(this.property.get());
+		this.lastPos = 0;
+	}
+
+	//region private methods
+	private int getLength()
+	{
+		return super.property.get().length();
 	}
 
 	private void initController()
@@ -139,7 +205,11 @@ public class PlainTextFx extends PlainText
 			this.isControllerInit = true;
 		}
 	}
+	//endregion
 
+	private Matcher matcher;
+	private int lastPos = 0;
 	private boolean isControllerInit = false;
+
 	private PlainTextFxController controller;
 }
