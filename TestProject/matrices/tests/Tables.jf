@@ -696,6 +696,9 @@ TABLE_ADD_VALUE;Test case;Never;;
         #Action;#Assert;#Index;#Table;#newH
         TableAddValue;This.Result == Result.Passed && myTable[myTable.size()-1].get('newH') == 'last row';Integer.MIN_VALUE;myTable;'last row'
 
+        #Action;#Assert;#Table;#newH
+        TableAddValue;This.Result == Result.Passed && myTable[myTable.size()-1].get('newH') == null;myTable;
+
     #EndStep
 
     #Step;#Kind;#For;#Depends
@@ -732,12 +735,317 @@ TABLE_ADD_VALUE;Test case;Never;;
 
 #Id;#TestCase;#Kind;#Depends;#For
 TABLE_COLUMN_RENAME;Test case;Never;;
+    #Step;#Kind;#For;#Depends
+    'Positive testing';;;
+        #Id;#Let
+        column;'newName1'
+
+        #Id;#Let
+        column2;'newName2'
+
+        #Id;#Let
+        column3;'newName3'
+
+        #Id;#RawTable
+        myTable;Table
+        @;newH;NewColumn
+        0;newR;newR2
+        #EndRawTable
+
+        #Action;#Assert;#Table;#newH
+        TableColumnRename;This.Result == Result.Passed && myTable[0].get(column) == 'newR';myTable;column
+
+        #Action;#Assert;#Table;#newName1;#NewColumn
+        TableColumnRename;This.Result == Result.Passed && myTable[0].get('newName2') == 'newR' && myTable[0].get('newName3') == 'newR2';myTable;column2;column3
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'Negative testing';;;
+        #Id;#RawTable
+        myTable;Table
+        @;newH
+        0;newR
+        #EndRawTable
+
+        #Action;#Assert;#Table
+        TableColumnRename;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;
+
+        #Action;#Assert;#Table;#
+        TableColumnRename;This.Result == Result.Failed && This.Kind == ErrorKind.EXCEPTION;myTable;
+
+        #Action;#Assert;#Table;#
+        TableColumnRename;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;;
+
+        #Action;#Assert;#Table;#newH
+        TableColumnRename;This.Result == Result.Failed && This.Kind == ErrorKind.EXCEPTION;myTable;
+
+        #Action;#Assert;#Table;#
+        TableColumnRename;This.Result == Result.Failed && This.Kind == ErrorKind.EXCEPTION;myTable;'newName'
+
+        #Action;#Assert;#Table
+        TableColumnRename;This.Result == Result.Failed && This.Kind == ErrorKind.WRONG_PARAMETERS;new Date()
+
+        #Action;#Assert;#Table;#columnThatDoesntExist
+        TableColumnRename;This.Result == Result.Failed && This.Kind == ErrorKind.EXCEPTION;myTable;'newName'
+
+    #EndStep
+
+
+#Id;#TestCase;#Kind;#Depends;#For
+TABLE_SAVE_TO_FILE;Test case;Never;;
+    #Step;#Kind;#For;#Depends
+    'Positive testing';;;
+        #Step;#Kind;#For;#Depends
+        'Delimiters';;;
+            #Id;#RawTable
+            tableForSaving;Table
+            @;newH;NewColumn
+            0;1;2
+            1;3;4
+            #EndRawTable
+
+            #Action;#Table;#File
+            TableSaveToFile;tableForSaving;new File('').getAbsolutePath().replace(File.separator, '/') + '/testdata/ForTableTests.csv'
+
+            #Id;#Action;#File
+            TBL2;TableLoadFromFile;'testdata/ForTableTests.csv'
+
+            #Id;#Action;#Expected;#Actual
+            TBLCMP14;TableCompareTwo;tableForSaving;TBL2.Out
+
+            #Action;#Delimiter;#Table;#File
+            TableSaveToFile;',';tableForSaving;new File('').getAbsolutePath().replace(File.separator, '/') + '/testdata/ForTableTests.csv'
+
+            #Id;#Action;#Delimiter;#File
+            TBL3;TableLoadFromFile;',';'testdata/ForTableTests.csv'
+
+            #Id;#Action;#Expected;#Actual
+            TBLCMP15;TableCompareTwo;tableForSaving;TBL2.Out
+
+        #EndStep
+
+        #Step;#Kind;#For;#Depends
+        'SaveValues';;;
+            #Id;#Let
+            var1;100
+
+            #Id;#RawTable
+            myTable;Table
+            @;newH
+            0;var1/var1
+            #EndRawTable
+
+            #Action;#Expression;#Table
+            TableConsiderColumnsAs;'newH';myTable
+
+            #Action;#SaveValues;#Table;#File
+            TableSaveToFile;true;myTable;new File('').getAbsolutePath().replace(File.separator, '/') + '/testdata/ForTableTests.csv'
+
+            #Id;#Action;#Assert;#File
+            TBL3;TableLoadFromFile;This.Out[0].get('newH') == 1;new File('').getAbsolutePath().replace(File.separator, '/') + '/testdata/ForTableTests.csv'
+
+            #Action;#SaveValues;#Table;#File
+            TableSaveToFile;false;myTable;new File('').getAbsolutePath().replace(File.separator, '/') + '/testdata/ForTableTests.csv'
+
+            #Id;#Action;#Assert;#File
+            TBL3;TableLoadFromFile;This.Out[0].get('newH') == 'var1/var1';new File('').getAbsolutePath().replace(File.separator, '/') + '/testdata/ForTableTests.csv'
+
+        #EndStep
+
+        #Step;#Kind;#For;#Depends
+        'Complex';;;
+            #Id;#Let
+            var1;100
+
+            #Id;#RawTable
+            myTable;Table
+            @;newH
+            0;var1/var1
+            #EndRawTable
+
+            #Action;#Expression;#Table
+            TableConsiderColumnsAs;'newH';myTable
+
+            #Action;#Delimiter;#SaveValues;#Table;#File
+            TableSaveToFile;',';true;myTable;new File('').getAbsolutePath().replace(File.separator, '/') + '/testdata/ForTableTests.csv'
+
+            #Id;#Action;#Assert;#Delimiter;#File
+            TBL3;TableLoadFromFile;This.Out[0].get('newH') == 1;',';new File('').getAbsolutePath().replace(File.separator, '/') + '/testdata/ForTableTests.csv'
+
+        #EndStep
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'Negative testing';;;
+        #Step;#Kind;#For;#Depends
+        'Empty parameters';;;
+            #Id;#RawTable
+            myTable;Table
+            @;newH
+            0;newR
+            #EndRawTable
+
+            #Action;#Assert;#Delimiter;#SaveValues;#Table;#File
+            TableSaveToFile;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;;;;
+
+            #Action;#Assert;#SaveValues;#Table;#File
+            TableSaveToFile;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;;;
+
+            #Action;#Assert;#Delimiter;#Table;#File
+            TableSaveToFile;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;;;
+
+            #Action;#Assert;#Table;#File
+            TableSaveToFile;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;myTable;
+
+            #Action;#Assert;#Table;#File
+            TableSaveToFile;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;;new File('').getAbsolutePath().replace(File.separator, '/') + '/testdata/ForTableTests.csv'
+
+            #Action;#Assert;#Delimiter;#Table;#File
+            TableSaveToFile;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;;myTable;new File('').getAbsolutePath().replace(File.separator, '/') + '/testdata/ForTableTests.csv'
+
+            #Action;#Assert;#SaveValues;#Table;#File
+            TableSaveToFile;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;;myTable;new File('').getAbsolutePath().replace(File.separator, '/') + '/testdata/ForTableTests.csv'
+
+            #Action;#Assert;#Delimiter;#Table;#File
+            TableSaveToFile;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;;myTable;
+
+        #EndStep
+
+        #Step;#Kind;#For;#Depends
+        'Wrong parameters';;;
+            #Id;#RawTable
+            myTable;Table
+            @;newH;NewColumn
+            0;1;2
+            1;3;4
+            #EndRawTable
+
+            #Action;#Assert;#Table;#File
+            TableSaveToFile;This.Result == Result.Failed && This.Kind == ErrorKind.WRONG_PARAMETERS;new Date();new File('').getAbsolutePath().replace(File.separator, '/') + '/testdata/ForTableTests.csv'
+
+            #Action;#Assert;#SaveValues;#Table;#File
+            TableSaveToFile;This.Result == Result.Failed && This.Kind == ErrorKind.WRONG_PARAMETERS;new Date();myTable;new File('').getAbsolutePath().replace(File.separator, '/') + '/testdata/ForTableTests.csv'
+
+        #EndStep
+
+    #EndStep
+
 
 #Id;#TestCase;#Kind;#Depends;#For
 TABLE_LOAD_FROM_FILE;Test case;Never;;
+    #Step;#Kind;#For;#Depends
+    'Positive testing';;;
+        #Id;#RawTable
+        myTable;Table
+        @;newH;NewColumn
+        0;1;2
+        1;3;4
+        #EndRawTable
+
+        #Action;#Table;#File
+        TableSaveToFile;myTable;new File('').getAbsolutePath().replace(File.separator, '/') + '/testdata/ForTableTests.csv'
+
+        #Id;#Action;#File
+        loadedTable;TableLoadFromFile;new File('').getAbsolutePath().replace(File.separator, '/') + '/testdata/ForTableTests.csv'
+
+        #Id;#Action;#Expected;#Actual
+        TBLCMP12;TableCompareTwo;myTable;loadedTable.Out
+
+        #Action;#Delimiter;#Table;#File
+        TableSaveToFile;',';myTable;new File('').getAbsolutePath().replace(File.separator, '/') + '/testdata/ForTableTests.csv'
+
+        #Id;#Action;#Delimiter;#File
+        TBL5;TableLoadFromFile;',';new File('').getAbsolutePath().replace(File.separator, '/') + '/testdata/ForTableTests.csv'
+
+        #Id;#Action;#Expected;#Actual
+        TBLCMP13;TableCompareTwo;myTable;TBL5.Out
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'Negative testing';;;
+        #Id;#RawTable
+        myTable;Table
+        @;newH;NewColumn
+        0;1;2
+        1;3;4
+        #EndRawTable
+
+        #Action;#Table;#File
+        TableSaveToFile;myTable;new File('').getAbsolutePath().replace(File.separator, '/') + '/testdata/ForTableTests.csv'
+
+        #Id;#Action;#Assert;#File
+        TBL4;TableLoadFromFile;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;
+
+        #Id;#Action;#Assert;#File
+        TBL4;TableLoadFromFile;This.Result == Result.Failed && This.Kind == ErrorKind.EXCEPTION;'sdf'
+
+    #EndStep
+
 
 #Id;#TestCase;#Kind;#Depends;#For
 TABLE_REMOVE_COLUMNS;Test case;Never;;
+    #Step;#Kind;#For;#Depends
+    'Positive testing';;;
+        #Id;#RawTable
+        myTable;Table
+        @;newH;NewColumn
+        0;1;2
+        1;3;4
+        #EndRawTable
+
+        #Id;#RawTable
+        myTable1;Table
+        @;newH;NewColumn
+        0;1;2
+        1;3;4
+        #EndRawTable
+
+        #Id;#RawTable
+        myTable2;Table
+        @;newH;NewColumn
+        0;1;2
+        1;3;4
+        #EndRawTable
+
+        #Action;#Assert;#Table;#Columns
+        TableRemoveColumns;myTable.getHeaderSize() == 1;myTable;'NewColumn'
+
+        #Action;#Assert;#Table;#Columns
+        TableRemoveColumns;myTable1.getHeaderSize() == 0;myTable1;{'NewColumn','newH'}
+
+        #Action;#Assert;#Table;#Columns
+        TableRemoveColumns;myTable2.getHeaderSize() == 1;myTable2;{'NewColumn','DoesNotExist'}
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'Negative testing';;;
+        #Id;#RawTable
+        myTable;Table
+        @;newH
+        0;newR
+        #EndRawTable
+
+        #Id;#Action;#Assert;#Table;#Columns
+        tt;TableRemoveColumns;This.Result == Result.Failed && This.Kind == ErrorKind.WRONG_PARAMETERS && myTable.getHeaderSize() == 1;myTable;new Date()
+
+        #Action;#Assert;#Table;#Columns
+        TableRemoveColumns;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER && myTable.getHeaderSize() == 1;myTable;
+
+        #Action;#Assert;#Table;#Columns
+        TableRemoveColumns;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER && myTable.getHeaderSize() == 1;;'newH'
+
+        #Action;#Assert;#Table;#Columns
+        TableRemoveColumns;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER && myTable.getHeaderSize() == 1;;
+
+        #Action;#Assert;#Table;#Columns
+        TableRemoveColumns;This.Result == Result.Failed && This.Kind == ErrorKind.WRONG_PARAMETERS && myTable.getHeaderSize() == 1;new Date();'newH'
+
+    #EndStep
+
 
 #Id;#TestCase;#Kind;#Depends;#For
 TABLE_CONSIDER_COLUMNS_AS;Test case;Never;;
@@ -750,9 +1058,6 @@ TABLE_REPLACE;Test case;Never;;
 
 #Id;#TestCase;#Kind;#Depends;#For
 TABLE_LOAD_FROM_DIR;Test case;Never;;
-
-#Id;#TestCase;#Kind;#Depends;#For
-TABLE_SAVE_TO_FILE;Test case;Never;;
 
 #Id;#TestCase;#Kind;#Depends;#For
 TABLE_CREATE;Test case;Never;;
