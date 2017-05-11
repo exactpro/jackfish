@@ -1,7 +1,7 @@
 // 
 #Id;#NameSpace
 testLib;Simple library for testing jf functionality
-    #Id;#SubCase;#str
+    #Id;#SubCase;str
     simpleSub;return string.toUppercase();
         #Return
         str.toUpperCase()
@@ -9,4 +9,5 @@ testLib;Simple library for testing jf functionality
     #EndSubCase
 
 #EndNameSpace
+
 

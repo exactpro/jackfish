@@ -1,164 +1,165 @@
 #Id;#TestCase;#Kind;#Depends;#For
 INIT;Setup;;;
-    #Id;#Global;#Action;#Decoraded
+    #Id;#Global;#Action;$Decoraded
     RESTBL1;1;ResultTable;true
 
 
 // 
 #Id;#TestCase;#Kind;#Depends;#For
 Test;MatrixItems;;;
-    #Call;#testName
+    #Call;testName
     runMatrix;'MatrixItems'
 
 
 // 
 #Id;#TestCase;#Kind;#Depends;#For
 Test;EventHandlers;;;
-    #Call;#testName
+    #Call;testName
     runMatrix;'EventHandlers'
 
 
 #Id;#TestCase;#Kind;#Depends;#For
 Test;Basic;;;
-    #Call;#testName
+    #Call;testName
     runMatrix;'Basic'
 
 
 #Id;#TestCase;#Kind;#Depends;#For
 Test;GUI;;;
-    #Call;#testName
+    #Call;testName
     runMatrix;'GUI'
 
 
 #Id;#TestCase;#Kind;#Depends;#For
 Test;System;;;
-    #Call;#testName
+    #Call;testName
     runMatrix;'System'
 
 
 #Id;#TestCase;#Kind;#Depends;#For
 Test;Report;;;
-    #Call;#testName
+    #Call;testName
     runMatrix;'Report'
 
 
 #Id;#TestCase;#Kind;#Depends;#For
 Test;App;;;
-    #Call;#testName
+    #Call;testName
     runMatrix;'App'
 
 
 #Id;#TestCase;#Kind;#Depends;#For
 Test;Messages;;;
-    #Call;#testName
+    #Call;testName
     runMatrix;'Messages'
 
 
 #Id;#TestCase;#Kind;#Depends;#For
 Test;Clients;;;
-    #Call;#testName
+    #Call;testName
     runMatrix;'Clients'
 
 
 #Id;#TestCase;#Kind;#Depends;#For
 Test;Services;;;
-    #Call;#testName
+    #Call;testName
     runMatrix;'Services'
 
 
 #Id;#TestCase;#Kind;#Depends;#For
 Test;Tables;;;
-    #Call;#testName
+    #Call;testName
     runMatrix;'Tables'
 
 
 #Id;#TestCase;#Kind;#Depends;#For
 Test;Text;;;
-    #Call;#testName
+    #Call;testName
     runMatrix;'Text'
 
 
 #Id;#TestCase;#Kind;#Depends;#For
 Test;XML;;;
-    #Call;#testName
+    #Call;testName
     runMatrix;'XML'
 
 
 #Id;#TestCase;#Kind;#Depends;#For
 Test;SQL;;;
-    #Call;#testName
+    #Call;testName
     runMatrix;'SQL'
 
 
 #Id;#TestCase;#Kind;#Depends;#For
 Test;Matrix;;;
-    #Call;#testName
+    #Call;testName
     runMatrix;'Matrix'
 
 
 #Id;#TestCase;#Kind;#Depends;#For
 Test;CheckMockWeb;;;
-    #Id;#Action;#Matrix;#Parameter
+    #Id;#Action;$Matrix;$Parameter
     MXRN1;MatrixRun;matrixTestsPath + 'prepareMock.jf';'WEB'
 
-    #Id;#Action;#Matrix
+    #Id;#Action;$Matrix
     MXWT1;MatrixWait;MXRN1.Out
 
-    #Call;#testName
+    #Call;testName
     runMatrix;'checkWEB'
 
 
 #Id;#TestCase;#Kind;#Depends;#For
 Test;CheckMockSwing;;;
-    #Id;#Action;#Matrix;#Parameter
+    #Id;#Action;$Matrix;$Parameter
     MXRN1;MatrixRun;matrixTestsPath + 'prepareMock.jf';'SWING'
 
-    #Id;#Action;#Matrix
+    #Id;#Action;$Matrix
     MXWT1;MatrixWait;MXRN1.Out
 
-    #Call;#testName
+    #Call;testName
     runMatrix;'checkSWING'
 
 
 #Id;#TestCase;#Kind;#Depends;#For
 Test;CheckMockWin;;;
-    #Id;#Action;#Matrix;#Parameter
+    #Id;#Action;$Matrix;$Parameter
     MXRN1;MatrixRun;matrixTestsPath + 'prepareMock.jf';'WIN'
 
-    #Id;#Action;#Matrix
+    #Id;#Action;$Matrix
     MXWT1;MatrixWait;MXRN1.Out
 
-    #Call;#testName
+    #Call;testName
     runMatrix;'checkWIN'
 
 
 // 
 #Id;#TestCase;#Kind;#Depends;#For
 REPORT;Cleanup;;;
-    #Action;#Table;#Title;#BeforeTestCase
+    #Action;$Table;$Title;$BeforeTestCase
     TableReport;RESTBL1.Out;'All tests';'INIT'
 
     // RM38487 (impossible to use Result as a field) solved for this case
-    #Id;#Action;#Table;#Result
+    #Id;#Action;$Table;Result
     TBLSLCT1;TableSelect;RESTBL1.Out;new RegexpCondition('Result', '^.*Failed.*$')
 
     #Assert;#Message
     TBLSLCT1.Out.size() == 0;'There are fails in the tests'
 
-    #Id;#SubCase;#testName
+    #Id;#SubCase;testName
     runMatrix;Running test;'Matrix'
-        #Id;#Action;#Matrix
+        #Id;#Action;$Matrix
         MXRN1;MatrixRun;matrixTestsPath + testName +  '.jf'
 
-        #Id;#Action;#Matrix
+        #Id;#Action;$Matrix
         MXWT1;MatrixWait;MXRN1.Out
 
-        #Id;#Action;#Decoraded;#Matrix
+        #Id;#Action;$Decoraded;$Matrix
         RESTBL2;ResultTable;true;MXRN1.Out
 
-        #Action;#UnitedTable;#MainTable
+        #Action;$UnitedTable;$MainTable
         TableUnion;RESTBL2.Out;RESTBL1.Out
 
     #EndSubCase
+
 
 

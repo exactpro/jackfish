@@ -24,13 +24,13 @@ prepare;;;
         ~;"</root>"
         #EndRawText
 
-        #Id;#Action;#Text
+        #Id;#Action;$Text
         XML1;XmlFromText;TEXT1
 
-        #Id;#Action;#Xml
+        #Id;#Action;$Xml
         XML2;XmlChildren;XML1.Out
 
-        #Id;#Action;#Xpath;#Xml
+        #Id;#Action;$Xpath;$Xml
         XML4;XmlFindFirst;'.//third';XML1.Out
 
         // return root of xml. Not document
@@ -63,7 +63,7 @@ prepare;;;
         ~;"</root>"
         #EndRawText
 
-        #Id;#Action;#Text
+        #Id;#Action;$Text
         XML1;XmlFromText;TEXT1
 
         #Return
@@ -71,19 +71,19 @@ prepare;;;
 
     #EndSubCase
 
-    #Id;#SubCase;#xml
+    #Id;#SubCase;xml
     saveToFile;;doc
-        #Action;#Xml;#File
+        #Action;$Xml;$File
         XmlSaveToFile;xml;'temp.xml'
 
     #EndSubCase
 
-    #Id;#SubCase;#text
+    #Id;#SubCase;text
     loadRoot;;TEXT2
-        #Id;#Action;#Text
+        #Id;#Action;$Text
         XMLFT5;XmlFromText;text
 
-        #Id;#Action;#Xml
+        #Id;#Action;$Xml
         XML3;XmlChildren;XMLFT5.Out
 
         #Return
@@ -91,12 +91,12 @@ prepare;;;
 
     #EndSubCase
 
-    #Id;#SubCase;#rawText
+    #Id;#SubCase;rawText
     runMatrix;returned value - path to report;matrix
-        #Id;#Action;#Text
+        #Id;#Action;$Text
         MXRN1;MatrixRunFromText;rawText
 
-        #Id;#Action;#Matrix
+        #Id;#Action;$Matrix
         MXWT1;MatrixWait;MXRN1.Out
 
         #Assert;#Message
@@ -107,9 +107,9 @@ prepare;;;
 
     #EndSubCase
 
-    #Id;#SubCase;#pathToReport
+    #Id;#SubCase;pathToReport
     runBrowser;returned value - appConnection;pathToReport
-        #Id;#Action;#AppId;#Browser;#URL
+        #Id;#Action;$AppId;Browser;URL
         APPSTR1;ApplicationStart;mockWebApp;mockWebBrowser;'file://' + new File(pathToReport).getAbsolutePath()
 
         #Return
@@ -117,22 +117,22 @@ prepare;;;
 
     #EndSubCase
 
-    #Id;#SubCase;#appCon
+    #Id;#SubCase;appCon
     stopBrowser;;appCon
-        #Id;#Action;#AppConnection
+        #Id;#Action;$AppConnection
         APPSTP1;ApplicationStop;appCon
 
     #EndSubCase
 
-    #Id;#SubCase;#appCon
+    #Id;#SubCase;appCon
     expand;;appCon
-        #Id;#Action;#Dialog;#AppConnection;#Executed
+        #Id;#Action;$Dialog;$AppConnection;Executed
         DLGFLL1;DialogFill;'DialogForTestReport';appCon;Do.click()
 
-        #Id;#Action;#Dialog;#AppConnection;#MockElement
+        #Id;#Action;$Dialog;$AppConnection;MockElement
         DLGFLL2;DialogFill;'DialogForTestReport';appCon;Do.use(new Locator().kind(ControlKind.Any).xpath('.//a[contains(.,"TestCase")]')).click()
 
-        #Id;#Action;#Dialog;#AppConnection;#MockElement
+        #Id;#Action;$Dialog;$AppConnection;MockElement
         DLGFLL3;DialogFill;'DialogForTestReport';appCon;Do.use(new Locator().kind(ControlKind.Any).xpath('.//a[contains(.,"ActionItem (XmlReport)")]')).click()
 
     #EndSubCase
@@ -142,10 +142,10 @@ prepare;;;
 check XmlChildren;Never;;
     #Step;#Kind;#For;#Depends
     'negative testing';;;
-        #Action;#Assert;#Xml
+        #Action;#Assert;$Xml
         XmlChildren;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;
 
-        #Action;#Assert;#Xml
+        #Action;#Assert;$Xml
         XmlChildren;This.Result == Result.Failed && This.Kind == ErrorKind.WRONG_PARAMETERS;'asd'
 
     #EndStep
@@ -153,13 +153,13 @@ check XmlChildren;Never;;
     #Id;#Call
     root;createXml
 
-    #Id;#Action;#Assert;#Xml
+    #Id;#Action;#Assert;$Xml
     rootChildren;XmlChildren;This.Out.size() == 3;root
 
-    #Id;#Action;#Assert;#Xml
+    #Id;#Action;#Assert;$Xml
     first;XmlChildren;This.Out.size() == 2;rootChildren.Out[0]
 
-    #Id;#Action;#Assert;#Xml
+    #Id;#Action;#Assert;$Xml
     first2;XmlChildren;This.Out.size() == 0;rootChildren.Out[1]
 
 
@@ -167,19 +167,19 @@ check XmlChildren;Never;;
 check  XmlAddNode;;;
     #Step;#Kind;#For;#Depends
     'negative testing';;;
-        #Action;#Assert;#Xml
+        #Action;#Assert;$Xml
         XmlAddNode;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;
 
         #Id;#Call
         root;createXml
 
-        #Action;#Assert;#Xml;#parameter1;#parameter2
+        #Action;#Assert;$Xml;parameter1;parameter2
         XmlAddNode;This.Result == Result.Failed && This.Reason == 'Parameter #NodeName can\'t be null' && This.Kind == ErrorKind.EMPTY_PARAMETER;root;'par1';'par2'
 
-        #Action;#Assert;#Xml
+        #Action;#Assert;$Xml
         XmlAddNode;This.Result == Result.Failed && This.Kind == ErrorKind.WRONG_PARAMETERS;new Date()
 
-        #Action;#Assert;#Xml;#NewXML
+        #Action;#Assert;$Xml;$NewXML
         XmlAddNode;This.Result == Result.Failed && This.Kind == ErrorKind.WRONG_PARAMETERS;root;new Date()
 
     #EndStep
@@ -189,10 +189,10 @@ check  XmlAddNode;;;
         #Id;#Call
         root;createXml
 
-        #Id;#Action;#Xml
+        #Id;#Action;$Xml
         first;XmlChildren;root
 
-        #Action;#NewXML;#Xml
+        #Action;$NewXML;$Xml
         XmlAddNode;first.Out[0];root
 
         #Assert;#Message
@@ -218,13 +218,13 @@ check  XmlAddNode;;;
         ~;"</myXml>"
         #EndRawText
 
-        #Id;#Action;#Text
+        #Id;#Action;$Text
         XMLFT1;XmlFromText;TEXT2
 
         #Id;#Let
         oldChildCount;XMLFT1.Out.getChildren()[0].getChildren().size()
 
-        #Action;#Xml;#NewXML
+        #Action;$Xml;$NewXML
         XmlAddNode;XMLFT1.Out;root
 
         #Assert;#Message
@@ -237,7 +237,7 @@ check  XmlAddNode;;;
         #Id;#Call
         root;createXml
 
-        #Action;#Xml;#NodeName;#Content
+        #Action;$Xml;$NodeName;$Content
         XmlAddNode;root;'simpleNodeName';'simple node content'
 
         #Assert;#Message
@@ -250,7 +250,7 @@ check  XmlAddNode;;;
         #Id;#Call
         root;createXml
 
-        #Action;#Xml;#NodeName;#Content;#parameter1;#parameter2
+        #Action;$Xml;$NodeName;$Content;parameter1;parameter2
         XmlAddNode;root;'simpleNodeName';'simple node content';'par1';'par2'
 
         #Assert;#Message
@@ -275,7 +275,7 @@ check  XmlAddNode;;;
         #Id;#Call
         root;createXml
 
-        #Action;#Xml;#NodeName;#parameter1;#parameter2
+        #Action;$Xml;$NodeName;parameter1;parameter2
         XmlAddNode;root;'simpleNodeName';'par1';'par2'
 
         #Assert;#Message
@@ -303,16 +303,16 @@ check XmlCompare;;;
         #Id;#Call
         root;createXml
 
-        #Action;#Assert;#Expected;#Actual
+        #Action;#Assert;$Expected;$Actual
         XmlCompare;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;;
 
-        #Action;#Assert;#Expected;#Actual
+        #Action;#Assert;$Expected;$Actual
         XmlCompare;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;root;
 
-        #Action;#Assert;#Expected;#Actual
+        #Action;#Assert;$Expected;$Actual
         XmlCompare;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;;root
 
-        #Action;#Assert;#Expected;#Actual
+        #Action;#Assert;$Expected;$Actual
         XmlCompare;This.Result == Result.Failed && This.Kind == ErrorKind.WRONG_PARAMETERS;new Date();new Date()
 
     #EndStep
@@ -325,7 +325,7 @@ check XmlCompare;;;
         #Id;#Call
         root2;createXml
 
-        #Id;#Action;#Assert;#Expected;#Actual
+        #Id;#Action;#Assert;$Expected;$Actual
         XMLCMP1;XmlCompare;XMLCMP1.Out;root1;root2
 
     #EndStep
@@ -339,13 +339,13 @@ check XmlCompare;;;
         ~;"</simpleTag>"
         #EndRawText
 
-        #Id;#Action;#Text
+        #Id;#Action;$Text
         XMLFT2;XmlFromText;TEXT3
 
-        #Id;#Action;#Text
+        #Id;#Action;$Text
         XMLFT3;XmlFromText;TEXT3
 
-        #Id;#Action;#Assert;#Expected;#Actual
+        #Id;#Action;#Assert;$Expected;$Actual
         XMLCMP2;XmlCompare;XMLCMP2.Out;XMLFT2.Out;XMLFT3.Out
 
     #EndStep
@@ -361,7 +361,7 @@ check XmlCompare;;;
         #Id;#Let
         second;root.getChildren()[0].getChildren()[0]
 
-        #Id;#Action;#Assert;#Expected;#Actual
+        #Id;#Action;#Assert;$Expected;$Actual
         XMLCMP3;XmlCompare;XMLCMP3.Out;first;second
 
     #EndStep
@@ -378,13 +378,13 @@ check XmlCompare;;;
         ~;"</simpleTag>"
         #EndRawText
 
-        #Id;#Action;#Text
+        #Id;#Action;$Text
         XMLFT1;XmlFromText;TEXT4
 
         #Id;#Let
         secondRoot;XMLFT1.Out.getChildren()[0].getChildren()[0]
 
-        #Id;#Action;#Assert;#Expected;#Actual
+        #Id;#Action;#Assert;$Expected;$Actual
         XMLCMP4;XmlCompare;!XMLCMP4.Out;firstRoot;secondRoot
 
     #EndStep
@@ -401,10 +401,10 @@ check XmlCompare;;;
         ~;"</simpleTag>"
         #EndRawText
 
-        #Id;#Action;#Text
+        #Id;#Action;$Text
         XMLFT4;XmlFromText;TEXT5
 
-        #Id;#Action;#Assert;#Expected;#Actual
+        #Id;#Action;#Assert;$Expected;$Actual
         XMLCMP5;XmlCompare;!XMLCMP5.Out;XMLFT4.Out;root
 
     #EndStep
@@ -421,13 +421,13 @@ check XmlCompare;;;
         ~;"<simple p1=""p1"" p2=""p2"" p3=""p3"">simpleText</simple>"
         #EndRawText
 
-        #Id;#Call;#text
+        #Id;#Call;text
         first;loadRoot;TEXT2
 
-        #Id;#Call;#text
+        #Id;#Call;text
         second;loadRoot;TEXT6
 
-        #Id;#Action;#Assert;#Expected;#Actual
+        #Id;#Action;#Assert;$Expected;$Actual
         XMLCMP6;XmlCompare;!XMLCMP6.Out;first;second
 
     #EndStep
@@ -444,13 +444,13 @@ check XmlCompare;;;
         ~;"<simple p1=""p3"" p2=""p4"">simpleText</simple>"
         #EndRawText
 
-        #Id;#Call;#text
+        #Id;#Call;text
         first;loadRoot;TEXT7
 
-        #Id;#Call;#text
+        #Id;#Call;text
         second;loadRoot;TEXT8
 
-        #Id;#Action;#Assert;#Expected;#Actual
+        #Id;#Action;#Assert;$Expected;$Actual
         XMLCMP7;XmlCompare;!XMLCMP7.Out;first;second
 
     #EndStep
@@ -467,13 +467,13 @@ check XmlCompare;;;
         ~;"<simple p1=""p1"" p2=""p2"">anotherText</simple>"
         #EndRawText
 
-        #Id;#Call;#text
+        #Id;#Call;text
         first;loadRoot;TEXT9
 
-        #Id;#Call;#text
+        #Id;#Call;text
         second;loadRoot;TEXT10
 
-        #Id;#Action;#Assert;#Expected;#Actual
+        #Id;#Action;#Assert;$Expected;$Actual
         XMLCMP8;XmlCompare;!XMLCMP8.Out;first;second
 
     #EndStep
@@ -490,13 +490,13 @@ check XmlCompare;;;
         ~;"<another p1=""p1"" p2=""p2"">simpleText</another>"
         #EndRawText
 
-        #Id;#Call;#text
+        #Id;#Call;text
         first;loadRoot;TEXT11
 
-        #Id;#Call;#text
+        #Id;#Call;text
         second;loadRoot;TEXT12
 
-        #Id;#Action;#Assert;#Expected;#Actual
+        #Id;#Action;#Assert;$Expected;$Actual
         XMLCMP9;XmlCompare;!XMLCMP9.Out;first;second
 
     #EndStep
@@ -513,13 +513,13 @@ check XmlCompare;;;
         ~;"<simple p1=""p1"" p2=""p2"">simpleText</simple>"
         #EndRawText
 
-        #Id;#Call;#text
+        #Id;#Call;text
         first;loadRoot;TEXT13
 
-        #Id;#Call;#text
+        #Id;#Call;text
         second;loadRoot;TEXT14
 
-        #Id;#Action;#Assert;#Expected;#Actual
+        #Id;#Action;#Assert;$Expected;$Actual
         XMLCMP10;XmlCompare;XMLCMP10.Out;first;second
 
     #EndStep
@@ -536,13 +536,13 @@ check XmlCompare;;;
         ~;"<simple p1=""p1"" p2=""p2"">simpleText<simple p1=""p1"" p2=""p2"">simpleText</simple></simple>"
         #EndRawText
 
-        #Id;#Call;#text
+        #Id;#Call;text
         first;loadRoot;TEXT15
 
-        #Id;#Call;#text
+        #Id;#Call;text
         second;loadRoot;TEXT16
 
-        #Id;#Action;#Assert;#Expected;#Actual
+        #Id;#Action;#Assert;$Expected;$Actual
         XMLCMP11;XmlCompare;!XMLCMP11.Out;first;second
 
     #EndStep
@@ -565,13 +565,13 @@ check XmlCompare;;;
         ~;"</root>"
         #EndRawText
 
-        #Id;#Call;#text
+        #Id;#Call;text
         first;loadRoot;TEXT17
 
-        #Id;#Call;#text
+        #Id;#Call;text
         second;loadRoot;TEXT18
 
-        #Id;#Action;#Assert;#Expected;#Actual;#IgnoreNodeOrder
+        #Id;#Action;#Assert;$Expected;$Actual;$IgnoreNodeOrder
         XMLCMP12;XmlCompare;XMLCMP12.Out;first;second;true
 
     #EndStep
@@ -594,13 +594,13 @@ check XmlCompare;;;
         ~;"</root>"
         #EndRawText
 
-        #Id;#Call;#text
+        #Id;#Call;text
         first;loadRoot;TEXT19
 
-        #Id;#Call;#text
+        #Id;#Call;text
         second;loadRoot;TEXT20
 
-        #Id;#Action;#Assert;#Expected;#Actual;#IgnoreNodeOrder
+        #Id;#Action;#Assert;$Expected;$Actual;$IgnoreNodeOrder
         XMLCMP13;XmlCompare;!XMLCMP13.Out;first;second;true
 
     #EndStep
@@ -625,16 +625,16 @@ check XmlFindFirst;;;
         #Id;#Call
         root;createXml
 
-        #Action;#Assert;#Xpath;#Xml
+        #Action;#Assert;$Xpath;$Xml
         XmlFindFirst;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;;
 
-        #Action;#Assert;#Xpath;#Xml
+        #Action;#Assert;$Xpath;$Xml
         XmlFindFirst;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;'asd';
 
-        #Action;#Assert;#Xpath;#Xml
+        #Action;#Assert;$Xpath;$Xml
         XmlFindFirst;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;;root
 
-        #Action;#Assert;#Xpath;#Xml
+        #Action;#Assert;$Xpath;$Xml
         XmlFindFirst;This.Result == Result.Failed && This.Kind == ErrorKind.WRONG_PARAMETERS;'';new Date()
 
     #EndStep
@@ -644,7 +644,7 @@ check XmlFindFirst;;;
         #Id;#Call
         root;createXml
 
-        #Id;#Action;#Xpath;#Xml
+        #Id;#Action;$Xpath;$Xml
         XML4;XmlFindFirst;'.//first';root
 
         #Assert;#Message
@@ -660,7 +660,7 @@ check XmlFindFirst;;;
         #Id;#Call
         root;createXml
 
-        #Id;#Action;#Xpath;#Xml
+        #Id;#Action;$Xpath;$Xml
         XML5;XmlFindFirst;'.//first[2]';root
 
         #Assert;#Message
@@ -676,7 +676,7 @@ check XmlFindFirst;;;
         #Id;#Call
         root;createXml
 
-        #Id;#Action;#Assert;#Xpath;#Xml
+        #Id;#Action;#Assert;$Xpath;$Xml
         XML6;XmlFindFirst;XML6.Out == null;'.//nodenotfound';root
 
     #EndStep
@@ -686,7 +686,7 @@ check XmlFindFirst;;;
         #Id;#Call
         root;createXml
 
-        #Id;#Action;#Xpath;#Xml
+        #Id;#Action;$Xpath;$Xml
         XML7;XmlFindFirst;'.//fourth[@value="value14"]';root
 
         #Assert;#Message
@@ -702,10 +702,10 @@ check XmlFindFirst;;;
 check XmlFromText;;;
     #Step;#Kind;#For;#Depends
     'negative testing';;;
-        #Id;#Action;#Assert;#Text
+        #Id;#Action;#Assert;$Text
         XMLFT1;XmlFromText;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;
 
-        #Id;#Action;#Assert;#Text
+        #Id;#Action;#Assert;$Text
         XMLFT1;XmlFromText;This.Result == Result.Failed && This.Kind == ErrorKind.WRONG_PARAMETERS;''
 
     #EndStep
@@ -717,7 +717,7 @@ check XmlFromText;;;
         ~;"some invalid xml"
         #EndRawText
 
-        #Id;#Action;#Assert;#Text
+        #Id;#Action;#Assert;$Text
         XMLFT2;XmlFromText;This.Result == Result.Failed;TEXT3
 
     #EndStep
@@ -737,28 +737,28 @@ check XmlFromText;;;
 check XmlLoadFromFile;;;
     #Step;#Kind;#For;#Depends
     'negative testings';;;
-        #Id;#Action;#Assert;#File
+        #Id;#Action;#Assert;$File
         XML7;XmlLoadFromFile;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;
 
     #EndStep
 
     #Step;#Kind;#For;#Depends
     'load from dosnt exists file';;;
-        #Id;#Action;#Assert;#File
+        #Id;#Action;#Assert;$File
         XML8;XmlLoadFromFile;This.Result == Result.Failed && This.Kind == ErrorKind.WRONG_PARAMETERS;'fileThatDosntExists'
 
     #EndStep
 
     #Step;#Kind;#For;#Depends
     'load from directory';;;
-        #Id;#Action;#Assert;#File
+        #Id;#Action;#Assert;$File
         XML5;XmlLoadFromFile;This.Result == Result.Failed && This.Kind == ErrorKind.WRONG_PARAMETERS;'testdata'
 
     #EndStep
 
     #Step;#Kind;#For;#Depends
     'load from good file';;;
-        #Id;#Action;#Assert;#File
+        #Id;#Action;#Assert;$File
         XML6;XmlLoadFromFile;This.Out != null;'testdata/testXml.xml'
 
         #Id;#Let
@@ -777,16 +777,16 @@ check XmlRemove;;;
         #Id;#Call
         root;createXml
 
-        #Action;#Assert;#Xpath;#Xml
+        #Action;#Assert;$Xpath;$Xml
         XmlRemove;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;;
 
-        #Action;#Assert;#Xpath;#Xml
+        #Action;#Assert;$Xpath;$Xml
         XmlRemove;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;;root
 
-        #Action;#Assert;#Xpath;#Xml
+        #Action;#Assert;$Xpath;$Xml
         XmlRemove;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;'asd';
 
-        #Action;#Assert;#Xpath;#Xml
+        #Action;#Assert;$Xpath;$Xml
         XmlRemove;This.Result == Result.Failed && This.Kind == ErrorKind.WRONG_PARAMETERS;'asd';new Date()
 
     #EndStep
@@ -799,10 +799,10 @@ check XmlRemove;;;
         #Id;#Call
         root;createXml
 
-        #Action;#Xpath;#Xml
+        #Action;$Xpath;$Xml
         XmlRemove;xpath;root
 
-        #Id;#Action;#Xpath;#Xml
+        #Id;#Action;$Xpath;$Xml
         XML5;XmlFindFirst;xpath;root
 
         #Assert;#Message
@@ -821,10 +821,10 @@ check XmlRemove;;;
         #Id;#Call
         root;createXml
 
-        #Action;#Xpath;#Xml
+        #Action;$Xpath;$Xml
         XmlRemove;xpath;root
 
-        #Id;#Action;#Xpath;#Xml
+        #Id;#Action;$Xpath;$Xml
         XML6;XmlFindFirst;xpath;root
 
         #Assert;#Message
@@ -843,10 +843,10 @@ check XmlRemove;;;
         #Id;#Call
         root;createXml
 
-        #Action;#Xpath;#Xml
+        #Action;$Xpath;$Xml
         XmlRemove;xpath;root
 
-        #Id;#Action;#Xpath;#Xml
+        #Id;#Action;$Xpath;$Xml
         XML8;XmlFindFirst;xpath;root
 
         #Assert;#Message
@@ -865,10 +865,10 @@ check XmlRemove;;;
         #Id;#Call
         root;createXml
 
-        #Action;#Xpath;#Xml
+        #Action;$Xpath;$Xml
         XmlRemove;xpath;root
 
-        #Id;#Action;#Xpath;#Xml
+        #Id;#Action;$Xpath;$Xml
         XML7;XmlFindFirst;xpath;root
 
         #Assert;#Message
@@ -884,19 +884,19 @@ check XmlReport;;;
         #Id;#Call
         root;createXml
 
-        #Action;#Assert;#Xml;#Title
+        #Action;#Assert;$Xml;$Title
         XmlReport;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;;
 
-        #Action;#Assert;#Xml;#Title
+        #Action;#Assert;$Xml;$Title
         XmlReport;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;root;
 
-        #Action;#Assert;#Xml;#Title
+        #Action;#Assert;$Xml;$Title
         XmlReport;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;;'asd'
 
-        #Action;#Assert;#Xml;#Title
+        #Action;#Assert;$Xml;$Title
         XmlReport;This.Result == Result.Failed && This.Kind == ErrorKind.WRONG_PARAMETERS;new Date();'asd'
 
-        #Action;#Assert;#Xml;#Title;#ToReport
+        #Action;#Assert;$Xml;$Title;$ToReport
         XmlReport;This.Result == Result.Failed && This.Kind == ErrorKind.WRONG_PARAMETERS;root;'asd';new Date()
 
     #EndStep
@@ -923,29 +923,29 @@ check XmlReport;;;
         ~;"    XmlReport;XMLFT1.Out;'simple xml';'tc'"
         #EndRawText
 
-        #Id;#Call;#rawText
+        #Id;#Call;rawText
         pathToReport;runMatrix;matrix
 
-        #Id;#Call;#pathToReport
+        #Id;#Call;pathToReport
         appCon;runBrowser;pathToReport
 
         #Id;#Let
         locator;new Locator().kind(ControlKind.Label).visibility(Visibility.Visible).xpath('.//td[@class=\'tdMax\' and contains(.,\'<simple par="val">simple text</simple>\')]')
 
-        #Id;#Action;#Assert;#Dialog;#AppConnection;#MockElement
+        #Id;#Action;#Assert;$Dialog;$AppConnection;MockElement
         DLGFLL4;DialogFill;This.Out.MockElement;'DialogForTestReport';appCon;Do.use(locator).isVisible()
 
-        #Id;#Action;#Assert;#Dialog;#AppConnection;#MockElement
+        #Id;#Action;#Assert;$Dialog;$AppConnection;MockElement
         DLGFLL5;DialogFill;DLGFLL5.Out.MockElement.contains(xml);'DialogForTestReport';appCon;Do.use(locator).getValue()
 
         // 
-        #Id;#Call;#appCon
+        #Id;#Call;appCon
         CALL_1;expand;appCon
 
-        #Id;#Action;#Assert;#Dialog;#AppConnection;#MockElement
+        #Id;#Action;#Assert;$Dialog;$AppConnection;MockElement
         DLGFLL6;DialogFill;This.Result == Result.Failed && This.Reason.contains('No one element was found');'DialogForTestReport';appCon;Do.use('MainTable',LocatorKind.Owner).use(locator, LocatorKind.Element).isVisible()
 
-        #Call;#appCon
+        #Call;appCon
         stopBrowser;appCon
 
     #EndStep
@@ -972,29 +972,29 @@ check XmlReport;;;
         ~;"    XmlReport;XMLFT1.Out;'simple xml'"
         #EndRawText
 
-        #Id;#Call;#rawText
+        #Id;#Call;rawText
         pathToReport;runMatrix;matrix
 
-        #Id;#Call;#pathToReport
+        #Id;#Call;pathToReport
         appCon;runBrowser;pathToReport
 
         #Id;#Let
         locator;new Locator().kind(ControlKind.Label).visibility(Visibility.Visible).xpath('.//td[@class=\'tdMax\' and contains(.,\'<simple par="val">simple text</simple>\')]')
 
-        #Action;#Assert;#Dialog;#AppConnection;#MockElement
+        #Action;#Assert;$Dialog;$AppConnection;MockElement
         DialogFill;!This.Out.MockElement;'DialogForTestReport';appCon;Do.use(locator).isVisible()
 
         // 
-        #Id;#Call;#appCon
+        #Id;#Call;appCon
         CALL_1;expand;appCon
 
-        #Action;#Assert;#Dialog;#AppConnection;#MockElement
+        #Action;#Assert;$Dialog;$AppConnection;MockElement
         DialogFill;This.Out.MockElement;'DialogForTestReport';appCon;Do.use('MainTable',LocatorKind.Owner).use(locator, LocatorKind.Element).isVisible()
 
-        #Action;#Assert;#Dialog;#AppConnection;#MockElement
+        #Action;#Assert;$Dialog;$AppConnection;MockElement
         DialogFill;This.Out.MockElement.contains(xml);'DialogForTestReport';appCon;Do.use(locator).getValue()
 
-        #Call;#appCon
+        #Call;appCon
         stopBrowser;appCon
 
     #EndStep
@@ -1010,19 +1010,19 @@ check XmlSaveToFile;;;
         #Id;#Call
         root;createXml
 
-        #Action;#Assert;#Xml;#File
+        #Action;#Assert;$Xml;$File
         XmlSaveToFile;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;;
 
-        #Action;#Assert;#Xml;#File
+        #Action;#Assert;$Xml;$File
         XmlSaveToFile;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;root;
 
-        #Action;#Assert;#Xml;#File
+        #Action;#Assert;$Xml;$File
         XmlSaveToFile;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;;'a'
 
-        #Action;#Assert;#Xml;#File
+        #Action;#Assert;$Xml;$File
         XmlSaveToFile;This.Result == Result.Failed && This.Kind == ErrorKind.WRONG_PARAMETERS;new Date();'a'
 
-        #Action;#Assert;#Xml;#File
+        #Action;#Assert;$Xml;$File
         XmlSaveToFile;This.Result == Result.Failed;root;'testdata'
 
     #EndStep
@@ -1037,16 +1037,16 @@ check XmlSaveToFile;;;
         #Id;#Call
         root;createXmlDocument
 
-        #Action;#Assert;#Xml;#File
+        #Action;#Assert;$Xml;$File
         XmlSaveToFile;This.Out;root;tempFile
 
         #Assert;#Message
         Sys.exists(tempFile);'File not created'
 
-        #Id;#Action;#File
+        #Id;#Action;$File
         XML5;XmlLoadFromFile;tempFile
 
-        #Id;#Action;#Assert;#Expected;#Actual
+        #Id;#Action;#Assert;$Expected;$Actual
         XMLCMP1;XmlCompare;This.Out;XML5.Out;root
 
     #EndStep
@@ -1059,21 +1059,21 @@ check XmlSelect;;;
         #Id;#Call
         root;createXml
 
-        #Action;#Assert;#Xpath;#NodeName;#Xml
+        #Action;#Assert;$Xpath;$NodeName;$Xml
         XmlSelect;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;;;
 
-        #Action;#Assert;#Xpath;#NodeName;#Xml
+        #Action;#Assert;$Xpath;$NodeName;$Xml
         XmlSelect;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;'';;
 
         // invalid node name
-        #Action;#Assert;#Xpath;#NodeName;#Xml
+        #Action;#Assert;$Xpath;$NodeName;$Xml
         XmlSelect;This.Result == Result.Failed;'';'123';root
 
         // invalid xpath
-        #Action;#Assert;#Xpath;#NodeName;#Xml
+        #Action;#Assert;$Xpath;$NodeName;$Xml
         XmlSelect;This.Result == Result.Failed;'[[[';'node';root
 
-        #Action;#Assert;#Xpath;#NodeName;#Xml
+        #Action;#Assert;$Xpath;$NodeName;$Xml
         XmlSelect;This.Result == Result.Failed && This.Kind == ErrorKind.WRONG_PARAMETERS;'';'';new Date()
 
     #EndStep
@@ -1083,7 +1083,7 @@ check XmlSelect;;;
         #Id;#Call
         root;createXml
 
-        #Id;#Action;#Xpath;#NodeName;#Xml
+        #Id;#Action;$Xpath;$NodeName;$Xml
         XML5;XmlSelect;'.//first';'newNode';root
 
         #Assert;#Message
@@ -1099,7 +1099,7 @@ check XmlSelect;;;
         #Id;#Call
         root;createXml
 
-        #Id;#Action;#Xpath;#NodeName;#Xml
+        #Id;#Action;$Xpath;$NodeName;$Xml
         XML6;XmlSelect;'.//asd';'newNode';root
 
         #Assert;#Message
@@ -1118,21 +1118,21 @@ check XmlSelectFirst;;;
         #Id;#Call
         root;createXml
 
-        #Action;#Assert;#Xpath;#NodeName;#Xml
+        #Action;#Assert;$Xpath;$NodeName;$Xml
         XmlSelectFirst;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;;;
 
-        #Action;#Assert;#Xpath;#NodeName;#Xml
+        #Action;#Assert;$Xpath;$NodeName;$Xml
         XmlSelectFirst;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;'';;
 
         // invalid node name
-        #Action;#Assert;#Xpath;#NodeName;#Xml
+        #Action;#Assert;$Xpath;$NodeName;$Xml
         XmlSelectFirst;This.Result == Result.Failed;'';'123';root
 
         // invalid xpath
-        #Action;#Assert;#Xpath;#NodeName;#Xml
+        #Action;#Assert;$Xpath;$NodeName;$Xml
         XmlSelectFirst;This.Result == Result.Failed;'[[[';'node';root
 
-        #Action;#Assert;#Xpath;#NodeName;#Xml
+        #Action;#Assert;$Xpath;$NodeName;$Xml
         XmlSelectFirst;This.Result == Result.Failed && This.Kind == ErrorKind.WRONG_PARAMETERS;'';'';new Date()
 
     #EndStep
@@ -1142,7 +1142,7 @@ check XmlSelectFirst;;;
         #Id;#Call
         root;createXml
 
-        #Id;#Action;#Xpath;#NodeName;#Xml
+        #Id;#Action;$Xpath;$NodeName;$Xml
         XML5;XmlSelectFirst;'.//first';'newNode';root
 
         #Assert;#Message
@@ -1158,7 +1158,7 @@ check XmlSelectFirst;;;
         #Id;#Call
         root;createXml
 
-        #Id;#Action;#Xpath;#NodeName;#Xml
+        #Id;#Action;$Xpath;$NodeName;$Xml
         XML6;XmlSelectFirst;'.//asd';'newNode';root
 
         #Assert;#Message
@@ -1171,10 +1171,10 @@ check XmlSelectFirst;;;
 check XmlSetNode;;;
     #Step;#Kind;#For;#Depends
     'negative testing';;;
-        #Action;#Assert;#Xml
+        #Action;#Assert;$Xml
         XmlSetNode;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;
 
-        #Action;#Assert;#Xml
+        #Action;#Assert;$Xml
         XmlSetNode;This.Result == Result.Failed && This.Kind == ErrorKind.WRONG_PARAMETERS;new Date()
 
     #EndStep
@@ -1184,7 +1184,7 @@ check XmlSetNode;;;
         #Id;#Call
         root;createXml
 
-        #Action;#Assert;#Xml;#Text
+        #Action;#Assert;$Xml;$Text
         XmlSetNode;root.getText() == 'My simple text';root;'My simple text'
 
         #Assert;#Message
@@ -1199,10 +1199,10 @@ check XmlSetNode;;;
         ~;"<simple p1=""p1"" p2=""p2"">simpleText</simple>"
         #EndRawText
 
-        #Id;#Call;#text
+        #Id;#Call;text
         root;loadRoot;TEXT2
 
-        #Action;#Assert;#Xml;#Text
+        #Action;#Assert;$Xml;$Text
         XmlSetNode;root.getText() == 'My simple text';root;'My simple text'
 
         #Assert;#Message
@@ -1215,7 +1215,7 @@ check XmlSetNode;;;
         #Id;#Call
         root;createXml
 
-        #Action;#Xml;#parameter1;#p2
+        #Action;$Xml;parameter1;p2
         XmlSetNode;root;'p1';'value2'
 
         #Assert;#Message
@@ -1231,7 +1231,7 @@ check XmlSetNode;;;
         #Id;#Call
         root;createXml
 
-        #Action;#Xml;#Text;#parameter1;#p2
+        #Action;$Xml;$Text;parameter1;p2
         XmlSetNode;root;'my text';'p1';'value2'
 
         #Assert;#Message
@@ -1254,7 +1254,7 @@ check XmlSetNode;;;
         doc;createXmlDocument
 
         // cant set text to document
-        #Action;#Assert;#Xml;#Text
+        #Action;#Assert;$Xml;$Text
         XmlSetNode;This.Result == Result.Failed;doc;'my text'
 
     #EndStep
@@ -1265,9 +1265,10 @@ check XmlSetNode;;;
         doc;createXmlDocument
 
         // cant set text to document
-        #Action;#Assert;#Xml;#par
+        #Action;#Assert;$Xml;par
         XmlSetNode;This.Result == Result.Failed;doc;'value'
 
     #EndStep
+
 
 

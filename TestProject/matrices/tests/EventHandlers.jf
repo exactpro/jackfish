@@ -18,15 +18,15 @@ T1;T1;;;
     #SetHandler;#Kind
     onStepError;OnStepError
 
-    #Step;#Kind;#For
-    'S1';;
+    #Step;#Kind;#For;#Depends
+    'S1';;;
         #Id;#Global;#Let
         s;1;1
 
     #EndStep
 
-    #Step;#Kind;#For
-    'S2';;
+    #Step;#Kind;#For;#Depends
+    'S2';;;
         #Id;#Global;#Let
         s;1;2
 
@@ -43,8 +43,8 @@ T1;T1;;;
     #SetHandler;#Kind
     ;OnStepError
 
-    #Step;#Kind;#For
-    'S3';;
+    #Step;#Kind;#For;#Depends
+    'S3';;;
         #Id;#Global;#Let
         s;1;3
 
@@ -72,7 +72,7 @@ T1;T1;;;
 
     #EndSubCase
 
-    #Id;#SubCase;#errr
+    #Id;#SubCase;errr
     onStepError;OnStepError;
         #Id;#Global;#Let
         res;1;res + 'SE' + s + errr.Message + ' '
@@ -108,7 +108,7 @@ T2;T2;;;
 
     #EndSubCase
 
-    #Id;#SubCase;#errr
+    #Id;#SubCase;errr
     onError;OnError;
         #Id;#Global;#Let
         res;1;res + 'E' + t + errr.Message + ' '
@@ -173,10 +173,11 @@ T7;T7;;;
     #Id;#Global;#Let
     t;1;7
 
-    #Action;#res
+    #Action;res
     Print;res
 
     #Assert;#Message
     res == 'SS1 SF1 SS2 OnError SS3 s3e6 F2 S3 E3f3 S4 f5e5 f6e6 ';'test failed'
+
 
 

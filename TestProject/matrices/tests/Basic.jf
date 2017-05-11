@@ -8,7 +8,7 @@ RM38805;rename columns in action TableReport;Never;;
     2;j;k;l;a;czxc;zx;a;1;a
     #EndRawTable
 
-    #Action;#Table;#Title;#Numbers;#scenario;#result;#date;#time;#user;#host
+    #Action;$Table;$Title;$Numbers;scenario;result;date;time;user;host
     TableReport;DATA1;'Consolidated Umbrella Report: ';false;'Matrix Name';'Execution Status';'Execution Date';'Execution Time';'Exectuted By';'Execution Machine'
 
 
@@ -38,10 +38,10 @@ RM38584;use name on assert;;;
     2;val3
     #EndRawTable
 
-    #Action;#Assert;#Table;#col1
+    #Action;#Assert;$Table;col1
     TableSelect;This.Out.size() == 1;DATA1;'val2'
 
-    #Id;#Action;#Assert;#Table;#col1
+    #Id;#Action;#Assert;$Table;col1
     tableSelect;TableSelect;tableSelect.Out.size() == 1;DATA1;'val2'
 
 
@@ -153,40 +153,40 @@ RM38720;TableLoadFromDir return table when directory doesn't exists;;;
     #Id;#Let
     path;'/directoryThatDoesNotExists'
 
-    #Id;#Action;#Assert;#Dir
+    #Id;#Action;#Assert;$Dir
     TBLD1;TableLoadFromDir;This.Reason.equals('Directory \'' + path + '\' doesn\'t exists.');path
 
-    #Id;#Action;#Assert;#Dir
+    #Id;#Action;#Assert;$Dir
     TBLD2;TableLoadFromDir;TBLD2.Out.getHeader(0) == 'Name' && TBLD2.Out.getHeader(4) == 'Hidden';'.'
 
 
 #Id;#TestCase;#Kind;#Depends;#For
 RM38916;AddColumnTable action does't update lines after add column;;;
-    #Id;#Action;#testName
+    #Id;#Action;testName
     TBL2;TableCreate;
 
     #Id;#Let
     t;TBL2.Out
 
-    #Action;#Table;#testName
+    #Action;$Table;testName
     TableAddValue;t;'name1'
 
-    #Action;#Table;#testName
+    #Action;$Table;testName
     TableAddValue;t;'name2'
 
-    #Action;#Table;#Columns
+    #Action;$Table;$Columns
     TableAddColumns;t;'description'
 
-    #Action;#Table
+    #Action;$Table
     TableAddValue;t
 
-    #Action;#Table;#Index;#description
+    #Action;$Table;$Index;description
     TableSetValue;t;0;'zero'
 
-    #Action;#Table;#Index;#description
+    #Action;$Table;$Index;description
     TableSetValue;t;1;'one'
 
-    #Action;#Table;#Index;#description
+    #Action;$Table;$Index;description
     TableSetValue;t;2;'two'
 
     #Assert;#Message
@@ -209,16 +209,16 @@ RM40665;[TableSort] Sorting for integer isn't correct;Never;;
     2;3
     #EndRawTable
 
-    #Id;#Action;#ColumnName;#Table
+    #Id;#Action;$ColumnName;$Table
     TBLS2;TableSort;'int';DATA1
 
     #Assert;#Message
     TBLS2.Out[0].int == '10';'Wrong string order'
 
-    #Action;#Table;#Integer
+    #Action;$Table;$Integer
     TableConsiderColumnsAs;DATA1;'int'
 
-    #Id;#Action;#ColumnName;#Table
+    #Id;#Action;$ColumnName;$Table
     TBLS1;TableSort;'int';DATA1
 
     #Assert;#Message
@@ -234,10 +234,10 @@ RM39588;Action TableSetValue is passed when enter nonexistent column;Never;;
     0;newR
     #EndRawTable
 
-    #Action;#Assert;#Table;#Index;#ffff
+    #Action;#Assert;$Table;$Index;ffff
     TableSetValue;This.Result == Result.Failed && This.Reason.contains('not exist');DATA1;0;1111
 
-    #Action;#Assert;#Table;#gggg
+    #Action;#Assert;$Table;gggg
     TableAddValue;This.Result == Result.Failed && This.Reason.contains('not exist');DATA1;22222
 
 
@@ -257,10 +257,11 @@ RM41079;aggregate conditions (or, and) work improperly;Never;;
     7;;;
     #EndRawTable
 
-    #Id;#Action;#Table;#nnnn
+    #Id;#Action;$Table;nnnn
     TBLSLCT1;TableSelect;DATA1;Condition.or(Condition.not(Condition.empty('col1')), Condition.not(Condition.empty('col2')), Condition.empty('nnnn'))
 
     #Assert;#Message
     TBLSLCT1.Out.size() == 7;'Wrong numbers. Expected 7 Actual ' + TBLSLCT1.Out.size()
+
 
 

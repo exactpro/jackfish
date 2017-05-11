@@ -3,36 +3,36 @@ CHECK;Check;Never;;
     #Id;#Let
     actual;{'one' : 'oneValue', 'two' : 100 }
 
-    #Action;#Actual;#one
+    #Action;$Actual;one
     Check;actual;'oneValue'
 
-    #Action;#Actual;#one;#two
+    #Action;$Actual;one;two
     Check;actual;'oneValue';100
 
-    #Action;#Actual;#DoNotFail;#one;#two
+    #Action;$Actual;$DoNotFail;one;two
     Check;actual;true;'oneValue';100
 
-    #Action;#Actual;#DoNotFail;#one;#two
+    #Action;$Actual;$DoNotFail;one;two
     Check;actual;false;'oneValue';100
 
-    #Action;#Actual;#DoNotFail;#one;#two;#tree
+    #Action;$Actual;$DoNotFail;one;two;tree
     Check;actual;true;'oneValue';100;'anyValue'
 
     // =====================================================================
     // Negative tests
-    #Action;#Assert;#Actual
+    #Action;#Assert;$Actual
     Check;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;
 
-    #Action;#Assert;#Actual
+    #Action;#Assert;$Actual
     Check;This.Result == Result.Failed && This.Kind == ErrorKind.WRONG_PARAMETERS;111
 
-    #Action;#Assert;#Actual;#one;#two
+    #Action;#Assert;$Actual;one;two
     Check;This.Result == Result.Failed && This.Kind == ErrorKind.NOT_EQUAL;actual;'oneValue';200
 
-    #Action;#Assert;#Actual;#one;#two;#tree
+    #Action;#Assert;$Actual;one;two;tree
     Check;This.Result == Result.Failed && This.Kind == ErrorKind.NOT_EQUAL;actual;'oneValue';100;'anyValue'
 
-    #Action;#Assert;#Actual;#DoNotFail;#one;#two;#tree
+    #Action;#Assert;$Actual;$DoNotFail;one;two;tree
     Check;This.Result == Result.Failed && This.Kind == ErrorKind.NOT_EQUAL;actual;false;'oneValue';100;'anyValue'
 
 
@@ -52,36 +52,36 @@ COMPARE;Compare;Never;;
 
     // =====================================================================
     // Negative tests
-    #Id;#Action;#Assert;#Expected;#Actual
+    #Id;#Action;#Assert;$Expected;$Actual
     CMP1;Compare;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;;
 
     // Negative testing
-    #Id;#Action;#Assert;#Expected;#Actual
+    #Id;#Action;#Assert;$Expected;$Actual
     CMP2;Compare;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;expected;
 
     // Negative testing
-    #Id;#Action;#Assert;#Expected;#Actual
+    #Id;#Action;#Assert;$Expected;$Actual
     CMP3;Compare;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;;actual1
 
 
 #Id;#TestCase;#Kind;#Depends;#For
 EXEC;Execute;Never;;
-    #Id;#Action;#Command;#Wait
+    #Id;#Action;$Command;$Wait
     EXEC1;Execute;'java -version';true
 
     #Assert;#Message
     EXEC1.Out.Text.contains('Runtime Environment') && EXEC1.Out.Text.contains('1.8');'Wrong text'
 
-    #Id;#Action;#Command;#Wait
+    #Id;#Action;$Command;$Wait
     EXEC2;Execute;'java -version';false
 
-    #Action;#Time
+    #Action;$Time
     Wait;500
 
     #Assert;#Message
     EXEC2.Out.Text.isEmpty();'Wrong text'
 
-    #Id;#Action;#Command;#Wait;#WorkDir
+    #Id;#Action;$Command;$Wait;$WorkDir
     EXEC3;Execute;'java -version';true;'.'
 
     #Assert;#Message
@@ -89,22 +89,22 @@ EXEC;Execute;Never;;
 
     // =====================================================================
     // Negative tests
-    #Id;#Action;#Assert;#Command
+    #Id;#Action;#Assert;$Command
     EXEC4;Execute;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;
 
-    #Id;#Action;#Assert;#Command
+    #Id;#Action;#Assert;$Command
     EXEC5;Execute;This.Result == Result.Failed && This.Kind == ErrorKind.EXCEPTION;'wrong command'
 
-    #Id;#Action;#Assert;#Command;#Wait
+    #Id;#Action;#Assert;$Command;$Wait
     EXEC6;Execute;This.Result == Result.Failed && This.Kind == ErrorKind.WRONG_PARAMETERS;'';100
 
-    #Id;#Action;#Assert;#Command;#Wait;#WorkDir
+    #Id;#Action;#Assert;$Command;$Wait;$WorkDir
     EXEC7;Execute;This.Result == Result.Failed && This.Kind == ErrorKind.EXCEPTION;'java -version';true;100
 
 
 #Id;#TestCase;#Kind;#Depends;#For
 INPUT;Input;Never;;
-    #Id;#Action;#DefaultValue;#HelpKind;#Title
+    #Id;#Action;$DefaultValue;$HelpKind;$Title
     INP6;Input;100;HelpKind.ChooseFolder;'dont change it'
 
     #Assert;#Message
@@ -112,19 +112,19 @@ INPUT;Input;Never;;
 
     // =====================================================================
     // Negative tests
-    #Id;#Action;#Assert;#DefaultValue;#HelpKind;#Title
+    #Id;#Action;#Assert;$DefaultValue;$HelpKind;$Title
     INP1;Input;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;;;
 
-    #Id;#Action;#Assert;#DefaultValue;#HelpKind;#Title
+    #Id;#Action;#Assert;$DefaultValue;$HelpKind;$Title
     INP2;Input;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;;HelpKind.ChooseSaveFile;
 
-    #Id;#Action;#Assert;#DefaultValue;#HelpKind;#Title
+    #Id;#Action;#Assert;$DefaultValue;$HelpKind;$Title
     INP3;Input;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;;HelpKind.ChooseSaveFile;''
 
-    #Id;#Action;#Assert;#DefaultValue;#HelpKind;#Title
+    #Id;#Action;#Assert;$DefaultValue;$HelpKind;$Title
     INP4;Input;This.Result == Result.Failed && This.Kind == ErrorKind.WRONG_PARAMETERS;;100;''
 
-    #Id;#Action;#Assert;#DefaultValue;#HelpKind;#Title
+    #Id;#Action;#Assert;$DefaultValue;$HelpKind;$Title
     INP5;Input;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;;HelpKind.ChooseOpenFile;new Date()
 
 
@@ -133,31 +133,31 @@ PRINT;Print;Never;;
     #Action
     Print
 
-    #Action;#Str
+    #Action;$Str
     Print;'print test'
 
-    #Action;#a;#b;#c;#
+    #Action;a;b;c;
     Print;100;'it is b';true;'without title'
 
 
 #Id;#TestCase;#Kind;#Depends;#For
 RESTORE;Restore;Never;;
-    #Id;#Action;#Name
+    #Id;#Action;$Name
     RST;Restore;''
 
     #Assert;#Message
     RST.Out == null;'Should be null'
 
-    #Id;#Action;#Name
+    #Id;#Action;$Name
     RST1;Restore;'nonExistingName'
 
     #Assert;#Message
     RST1.Out == null;'Should be null'
 
-    #Action;#Value;#Name
+    #Action;$Value;$Name
     Store;100;'existingName'
 
-    #Id;#Action;#Name
+    #Id;#Action;$Name
     RST2;Restore;'existingName'
 
     #Assert;#Message
@@ -166,7 +166,7 @@ RESTORE;Restore;Never;;
     #Id;#Let
     var1;1
 
-    #Id;#Action;#Name;#AsVar
+    #Id;#Action;$Name;$AsVar
     RST3;Restore;'existingName';'var1'
 
     #Assert;#Message
@@ -177,7 +177,7 @@ RESTORE;Restore;Never;;
 
     #Step;#Kind;#For;#Depends
     ;;;
-        #Action;#Name;#AsVar
+        #Action;$Name;$AsVar
         Restore;'existingName';'var2'
 
     #EndStep
@@ -187,7 +187,7 @@ RESTORE;Restore;Never;;
 
     #Step;#Kind;#For;#Depends
     ;;;
-        #Global;#Action;#Name;#AsVar
+        #Global;#Action;$Name;$AsVar
         1;Restore;'existingName';'var2'
 
     #EndStep
@@ -209,10 +209,10 @@ RESTORE;Restore;Never;;
     ~;"    1;Restore;'existingName2';'extVar2'"
     #EndRawText
 
-    #Id;#Action;#Text
+    #Id;#Action;$Text
     MXRN1;MatrixRunFromText;TEXT1
 
-    #Id;#Action;#Matrix
+    #Id;#Action;$Matrix
     MXWT1;MatrixWait;MXRN1.Out
 
     #Assert;#Message
@@ -221,7 +221,7 @@ RESTORE;Restore;Never;;
     #Assert;#Message
     !(isdef extVar2);'Shouldnt be defined'
 
-    #Id;#Action;#Name;#AsVar
+    #Id;#Action;$Name;$AsVar
     RST4;Restore;'existingName2';'var3'
 
     #Assert;#Message
@@ -229,7 +229,7 @@ RESTORE;Restore;Never;;
 
     // =====================================================================
     // Negative tests
-    #Id;#Action;#Assert;#Name
+    #Id;#Action;#Assert;$Name
     RST5;Restore;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;
 
 
@@ -238,7 +238,7 @@ RESULT;ResultTable;Never;;
     #Id;#Let
     expectedColumns;[ 'Matrix', 'TestCaseId', 'TestCase', 'StepIdentity', 'Step', 'Time', 'Result', 'Error', 'Screenshot' ]
 
-    #Id;#Action;#Decoraded
+    #Id;#Action;$Decoraded
     RESTBL1;ResultTable;true
 
     #Assert;#Message
@@ -250,7 +250,7 @@ RESULT;ResultTable;Never;;
     #Assert;#Message
     RESTBL1.Out[0].keySet().containsAll(expectedColumns);'Wrong column set'
 
-    #Id;#Action;#Decoraded
+    #Id;#Action;$Decoraded
     RESTBL2;ResultTable;false
 
     #Assert;#Message
@@ -259,14 +259,14 @@ RESULT;ResultTable;Never;;
     #Assert;#Message
     RESTBL2.Out[0].keySet().containsAll(expectedColumns);'Wrong column set'
 
-    #Id;#Action;#Decoraded
+    #Id;#Action;$Decoraded
     RESTBL3;ResultTable;true
 
     #Step;#Kind;#For;#Depends
     ;;;
     #EndStep
 
-    #Id;#Action;#Decoraded
+    #Id;#Action;$Decoraded
     RESTBL4;ResultTable;true
 
     #Assert;#Message
@@ -288,13 +288,13 @@ RESULT;ResultTable;Never;;
     ~;"    #EndStep"
     #EndRawText
 
-    #Id;#Action;#Text
+    #Id;#Action;$Text
     MXRN1;MatrixRunFromText;TEXT1
 
-    #Id;#Action;#Matrix
+    #Id;#Action;$Matrix
     MXWT1;MatrixWait;MXRN1.Out
 
-    #Id;#Action;#Decoraded;#Matrix
+    #Id;#Action;$Decoraded;$Matrix
     RESTBL5;ResultTable;false;MXRN1.Out
 
     #Id;#RawTable
@@ -305,29 +305,29 @@ RESULT;ResultTable;Never;;
     2;new;TC1;Testcase1;SID2;ST2;1;Failed;User error;
     #EndRawTable
 
-    #Id;#Action;#Expected;#Actual;#ExcludeColumns
+    #Id;#Action;$Expected;$Actual;$ExcludeColumns
     TBLCMP1;TableCompareTwo;expectedTable;RESTBL5.Out;'Time'
 
     // =====================================================================
     // Negative tests
-    #Id;#Action;#Assert;#Decoraded
+    #Id;#Action;#Assert;$Decoraded
     RESTBL6;ResultTable;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;
 
     // 
-    #Id;#Action;#Assert;#Decoraded;#Matrix
+    #Id;#Action;#Assert;$Decoraded;$Matrix
     RESTBL7;ResultTable;This.Result == Result.Failed && This.Kind == ErrorKind.WRONG_PARAMETERS;true;100
 
 
 #Id;#TestCase;#Kind;#Depends;#For
 RT_USERVAL;ResultTableUserValue;Never;;
-    #Action;#UserValue
+    #Action;UserValue
     ResultTableUserValue;'value'
 
     #Step;#Kind;#For;#Depends
     ;;;
     #EndStep
 
-    #Id;#Action;#Decoraded
+    #Id;#Action;$Decoraded
     RESTBL1;ResultTable;false
 
     #Assert;#Message
@@ -342,20 +342,20 @@ RT_USERVAL;ResultTableUserValue;Never;;
     #Assert;#Message
     RESTBL1.Out[RESTBL1.Out.size - 1].UserValue == null;'Wrong value'
 
-    #Action;#OtherValue
+    #Action;OtherValue
     ResultTableUserValue;100
 
     #Step;#Kind;#For;#Depends
     ;;;
-        #Action;#UserValue;#OtherValue
+        #Action;UserValue;OtherValue
         ResultTableUserValue;'value1';200
 
     #EndStep
 
-    #Id;#Action;#Decoraded
+    #Id;#Action;$Decoraded
     RESTBL2;ResultTable;false
 
-    #Action;#Table;#Title
+    #Action;$Table;$Title
     TableReport;RESTBL2.Out;''
 
     #Assert;#Message
@@ -385,16 +385,16 @@ RT_USERVAL;ResultTableUserValue;Never;;
     ~;"    ResultTableUserValue;101;201"
     #EndRawText
 
-    #Id;#Action;#Text
+    #Id;#Action;$Text
     MXRN1;MatrixRunFromText;TEXT1
 
-    #Id;#Action;#Matrix
+    #Id;#Action;$Matrix
     MXWT1;MatrixWait;MXRN1.Out
 
-    #Id;#Action;#Decoraded;#Matrix
+    #Id;#Action;$Decoraded;$Matrix
     RESTBL3;ResultTable;false;MXRN1.Out
 
-    #Action;#Table;#Title
+    #Action;$Table;$Title
     TableReport;RESTBL3.Out;''
 
     #Id;#RawTable
@@ -404,53 +404,53 @@ RT_USERVAL;ResultTableUserValue;Never;;
     1;null;101;201
     #EndRawTable
 
-    #Action;#Table;#Expression
+    #Action;$Table;$Expression
     TableConsiderColumnsAs;DATA1;{ 'UserValue1', 'UserValue2', 'UserValue3'}
 
-    #Id;#Action;#Expected;#Actual;#ExcludeColumns
+    #Id;#Action;$Expected;$Actual;$ExcludeColumns
     TBLCMP1;TableCompareTwo;DATA1;RESTBL3.Out;{'Matrix', 'TestCaseId', 'TestCase', 'StepIdentity', 'Step', 'Time', 'Result', 'Error', 'Screenshot'}
 
     // =====================================================================
     // Negative tests
-    #Action;#Assert;#Matrix
+    #Action;#Assert;$Matrix
     ResultTableUserValue;This.Result == Result.Failed && This.Kind == ErrorKind.WRONG_PARAMETERS;1000
 
-    #Action;#Assert;#Time
+    #Action;#Assert;Time
     ResultTableUserValue;This.Result == Result.Failed && This.Kind == ErrorKind.WRONG_PARAMETERS;DateTime.current()
 
 
 #Id;#TestCase;#Kind;#Depends;#For
 SHOW;Show;Never;;
-    #Action;#Text;#Notifier
+    #Action;$Text;$Notifier
     Show;'error';Notifier.Error
 
-    #Action;#Text;#Notifier
+    #Action;$Text;$Notifier
     Show;'info';Notifier.Info
 
-    #Action;#Text;#Notifier
+    #Action;$Text;$Notifier
     Show;'success';Notifier.Success
 
     // =====================================================================
     // Negative tests
-    #Action;#Assert;#Text;#Notifier
+    #Action;#Assert;$Text;$Notifier
     Show;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;;
 
-    #Action;#Assert;#Text;#Notifier
+    #Action;#Assert;$Text;$Notifier
     Show;This.Result == Result.Failed && This.Kind == ErrorKind.WRONG_PARAMETERS;'text';100
 
 
 #Id;#TestCase;#Kind;#Depends;#For
 STORE;Store;Never;;
-    #Action;#Value;#Name
+    #Action;$Value;$Name
     Store;100;100
 
-    #Id;#Action;#Name
+    #Id;#Action;$Name
     RST1;Restore;100
 
     #Assert;#Message
     RST1.Out == 100;
 
-    #Id;#Action;#Name
+    #Id;#Action;$Name
     RST2;Restore;'100'
 
     #Assert;#Message
@@ -464,13 +464,13 @@ STORE;Store;Never;;
     ~;"    Store;300;'300'"
     #EndRawText
 
-    #Id;#Action;#Text
+    #Id;#Action;$Text
     MXRN1;MatrixRunFromText;TEXT1
 
-    #Id;#Action;#Matrix
+    #Id;#Action;$Matrix
     MXWT1;MatrixWait;MXRN1.Out
 
-    #Id;#Action;#Name
+    #Id;#Action;$Name
     RST3;Restore;300
 
     #Assert;#Message
@@ -478,10 +478,10 @@ STORE;Store;Never;;
 
     // =====================================================================
     // Negative tests
-    #Action;#Assert;#Value;#Name
+    #Action;#Assert;$Value;$Name
     Store;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;;
 
-    #Action;#Assert;#Value;#Name
+    #Action;#Assert;$Value;$Name
     Store;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;1000;
 
 
@@ -490,7 +490,7 @@ WAIT;Wait;Never;;
     #Id;#Let
     start;System.currentTimeMillis()
 
-    #Action;#Time
+    #Action;$Time
     Wait;100
 
     #Id;#Let
@@ -505,7 +505,7 @@ WAIT;Wait;Never;;
     #Id;#Let
     start;System.currentTimeMillis()
 
-    #Action;#ByTime
+    #Action;$ByTime
     Wait;DateTime.addTime(0, 0, 1)
 
     #Id;#Let
@@ -520,7 +520,7 @@ WAIT;Wait;Never;;
     #Id;#Let
     start;System.currentTimeMillis()
 
-    #Action;#ByTime
+    #Action;$ByTime
     Wait;DateTime.addTime(0, 0, -1)
 
     #Id;#Let
@@ -535,7 +535,7 @@ WAIT;Wait;Never;;
     #Id;#Let
     start;System.currentTimeMillis()
 
-    #Action;#Time
+    #Action;$Time
     Wait;-10
 
     #Id;#Let
@@ -551,5 +551,6 @@ WAIT;Wait;Never;;
     // Negative tests
     #Action;#Assert
     Wait;This.Result == Result.Failed && This.Kind == ErrorKind.WRONG_PARAMETERS
+
 
 
