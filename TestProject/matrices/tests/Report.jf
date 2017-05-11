@@ -73,8 +73,10 @@ Check Report with one parameter;Never;;
     TEXT1;Text;Matrix
     ~;"#TestCase;#Kind;#Depends;#For"
     ~;"Test case;Never;;"
-    ~;"    #Action;#Str"
+    ~;"    #Action;$Str"
     ~;"    Report;'report with one parameter'"
+    ~;""
+    ~;""
     #EndRawText
 
     #Id;#Call;rawText
@@ -106,8 +108,10 @@ Check Report with one parameter with invalid before test case;Never;;
     TEXT1;Text;Matrix
     ~;"#TestCase;#Kind;#Depends;#For"
     ~;"Test case;Never;;"
-    ~;"    #Action;#Str;#BeforeTestCase"
+    ~;"    #Action;$Str;$BeforeTestCase"
     ~;"    Report;'report with one parameter';'invalid testCaseId'"
+    ~;""
+    ~;""
     #EndRawText
 
     #Id;#Call;rawText
@@ -139,8 +143,10 @@ Check Report with parameter beforeTestCase;Never;;
     TEXT1;Text;Matrix
     ~;"#Id;#TestCase;#Kind;#Depends;#For"
     ~;"before;Test case;Never;;"
-    ~;"    #Action;#Str;#BeforeTestCase"
+    ~;"    #Action;$Str;$BeforeTestCase"
     ~;"    Report;'report with one parameter';'before'"
+    ~;""
+    ~;""
     #EndRawText
 
     #Id;#Call;rawText
@@ -172,8 +178,10 @@ Check Report with many parameters inside table;Never;;
     TEXT1;Text;Matrix
     ~;"#TestCase;#Kind;#Depends;#For"
     ~;"Test case;Never;;"
-    ~;"    #Action;#One;#two"
+    ~;"    #Action;One;two"
     ~;"    Report;'one';'Two'"
+    ~;""
+    ~;""
     #EndRawText
 
     #Id;#Call;rawText
@@ -205,8 +213,10 @@ Check ReportName;Never;;
     TEXT1;Text;Matrix
     ~;"#TestCase;#Kind;#Depends;#For"
     ~;"Test case;Never;;"
-    ~;"    #Action;#Name"
+    ~;"    #Action;$Name"
     ~;"    ReportName;'report name'"
+    ~;""
+    ~;""
     #EndRawText
 
     #Id;#Call;rawText
@@ -306,8 +316,10 @@ report chart Line chart;;;
         ~;"    5;2006;4;5"
         ~;"    #EndRawTable"
         ~;""
-        ~;"    #Action;#Type;#Table;#Title;#Labels;#YAxisDescription"
+        ~;"    #Action;$Type;$Table;$Title;Labels;YAxisDescription"
         ~;"    ChartReport;ChartKind.Line;DATA1;'line chart';'Labels';'description'"
+        ~;""
+        ~;""
         #EndRawText
 
         #Id;#Call;rawText
@@ -362,8 +374,10 @@ report chart Line chart;;;
         ~;"    5;2006;4;5"
         ~;"    #EndRawTable"
         ~;""
-        ~;"    #Action;#Type;#Table;#Title;#Labels;#YAxisDescription;#BeforeTestCase"
+        ~;"    #Action;$Type;$Table;$Title;Labels;YAxisDescription;$BeforeTestCase"
         ~;"    ChartReport;ChartKind.Line;DATA1;'line chart';'Labels';'description';'myId'"
+        ~;""
+        ~;""
         #EndRawText
 
         #Id;#Call;rawText
@@ -421,8 +435,10 @@ report chart Line chart;;;
         ~;"    5;2006;4;5"
         ~;"    #EndRawTable"
         ~;""
-        ~;"    #Action;#Type;#Table;#Title;#Labels"
+        ~;"    #Action;$Type;$Table;$Title;Labels"
         ~;"    ChartReport;ChartKind.Line;DATA1;'line chart';'Labels'"
+        ~;""
+        ~;""
         #EndRawText
 
         #Id;#Call;rawText
@@ -459,8 +475,10 @@ report chart Line chart;;;
         ~;"    5;2006;4;5"
         ~;"    #EndRawTable"
         ~;""
-        ~;"    #Action;#Type;#Table;#Title;#Labels;#YAxisDescription;#BeforeTestCase;#Colors"
+        ~;"    #Action;$Type;$Table;$Title;Labels;YAxisDescription;$BeforeTestCase;$Colors"
         ~;"    ChartReport;ChartKind.Line;DATA1;'line chart';'Labels';'description';'myId';{'Mike salary' : Color.GREEN, 'John Salary' : Color.RED}"
+        ~;""
+        ~;""
         #EndRawText
 
         #Id;#Call;rawText
@@ -507,8 +525,10 @@ report chart Bar chart;;;
         ~;"    5;2006;4;5"
         ~;"    #EndRawTable"
         ~;""
-        ~;"    #Action;#Type;#Table;#Title;#Labels;#YAxisDescription"
+        ~;"    #Action;$Type;$Table;$Title;Labels;YAxisDescription"
         ~;"    ChartReport;ChartKind.Bar;DATA1;'line chart';'Labels';'description'"
+        ~;""
+        ~;""
         #EndRawText
 
         #Id;#Call;rawText
@@ -566,8 +586,10 @@ report chart Bar chart;;;
         ~;"    5;2006;4;5"
         ~;"    #EndRawTable"
         ~;""
-        ~;"    #Action;#Type;#Table;#Title;#Labels;#YAxisDescription;#BeforeTestCase"
+        ~;"    #Action;$Type;$Table;$Title;Labels;YAxisDescription;$BeforeTestCase"
         ~;"    ChartReport;ChartKind.Bar;DATA1;'line chart';'Labels';'description';'myId'"
+        ~;""
+        ~;""
         #EndRawText
 
         #Id;#Call;rawText
@@ -628,8 +650,10 @@ report chart Bar chart;;;
         ~;"    5;2006;4;5"
         ~;"    #EndRawTable"
         ~;""
-        ~;"    #Action;#Type;#Table;#Title;#Labels"
+        ~;"    #Action;$Type;$Table;$Title;Labels"
         ~;"    ChartReport;ChartKind.Bar;DATA1;'line chart';'Labels'"
+        ~;""
+        ~;""
         #EndRawText
 
         #Id;#Call;rawText
@@ -666,8 +690,10 @@ report chart Bar chart;;;
         ~;"    5;2006;4;5"
         ~;"    #EndRawTable"
         ~;""
-        ~;"    #Action;#Type;#Table;#Title;#Labels;#YAxisDescription;#BeforeTestCase;#Colors"
+        ~;"    #Action;$Type;$Table;$Title;Labels;YAxisDescription;$BeforeTestCase;$Colors"
         ~;"    ChartReport;ChartKind.Bar;DATA1;'line chart';'Labels';'description';'myId';{'Mike salary' : Color.GREEN, 'John Salary' : Color.RED}"
+        ~;""
+        ~;""
         #EndRawText
 
         #Id;#Call;rawText
@@ -712,8 +738,10 @@ report chart Pie chart;;;
         ~;"    0;1;2;3"
         ~;"    #EndRawTable"
         ~;""
-        ~;"    #Action;#Type;#Table;#Title"
+        ~;"    #Action;$Type;$Table;$Title"
         ~;"    ChartReport;ChartKind.Pie;DATA1;'Title'"
+        ~;""
+        ~;""
         #EndRawText
 
         #Id;#Call;rawText
@@ -758,8 +786,10 @@ report chart Pie chart;;;
         ~;"    0;1;2;3"
         ~;"    #EndRawTable"
         ~;""
-        ~;"    #Action;#Type;#Table;#Title;#BeforeTestCase"
+        ~;"    #Action;$Type;$Table;$Title;$BeforeTestCase"
         ~;"    ChartReport;ChartKind.Pie;DATA1;'Title';'myId'"
+        ~;""
+        ~;""
         #EndRawText
 
         #Id;#Call;rawText
@@ -807,8 +837,10 @@ report chart Pie chart;;;
         ~;"    0;1;2;3"
         ~;"    #EndRawTable"
         ~;""
-        ~;"    #Action;#Type;#Table;#Title;#BeforeTestCase;#Colors"
+        ~;"    #Action;$Type;$Table;$Title;$BeforeTestCase;$Colors"
         ~;"    ChartReport;ChartKind.Pie;DATA1;'Title';'myId';{'A' : Color.RED, 'B' : Color.GREEN, 'C' : Color.BLUE}"
+        ~;""
+        ~;""
         #EndRawText
 
         #Id;#Call;rawText
@@ -907,6 +939,5 @@ subcases;;;
         #EndForEach
 
     #EndSubCase
-
 
 

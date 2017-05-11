@@ -916,11 +916,14 @@ check XmlReport;;;
         ~;"    ~;""	<simple par=""""val"""">simple text</simple>"""
         ~;"    ~;""</root>"""
         ~;"    #EndRawText"
-        ~;"    #Id;#Action;#Text"
+        ~;""
+        ~;"    #Id;#Action;$Text"
         ~;"    XMLFT1;XmlFromText;TEXT1"
         ~;""
-        ~;"    #Action;#Xml;#Title;#BeforeTestCase"
+        ~;"    #Action;$Xml;$Title;$BeforeTestCase"
         ~;"    XmlReport;XMLFT1.Out;'simple xml';'tc'"
+        ~;""
+        ~;""
         #EndRawText
 
         #Id;#Call;rawText
@@ -965,11 +968,14 @@ check XmlReport;;;
         ~;"    ~;""	<simple par=""""val"""">simple text</simple>"""
         ~;"    ~;""</root>"""
         ~;"    #EndRawText"
-        ~;"    #Id;#Action;#Text"
+        ~;""
+        ~;"    #Id;#Action;$Text"
         ~;"    XMLFT1;XmlFromText;TEXT1"
         ~;""
-        ~;"    #Action;#Xml;#Title"
+        ~;"    #Action;$Xml;$Title"
         ~;"    XmlReport;XMLFT1.Out;'simple xml'"
+        ~;""
+        ~;""
         #EndRawText
 
         #Id;#Call;rawText
@@ -1269,6 +1275,5 @@ check XmlSetNode;;;
         XmlSetNode;This.Result == Result.Failed;doc;'value'
 
     #EndStep
-
 
 

@@ -192,6 +192,8 @@ check Let;;;
         ~;"Test case;Never;;"
         ~;"    #Id;#Let"
         ~;"    asd'asd;"
+        ~;""
+        ~;""
         #EndRawText
 
         #Id;#Action;#Assert;$Text
@@ -254,6 +256,8 @@ check Let;;;
         ~;"Test case;Never;;"
         ~;"    #Id;#Let"
         ~;"    asd zxc;'asd zxc'"
+        ~;""
+        ~;""
         #EndRawText
 
         #Id;#Action;#Assert;$Text
@@ -272,6 +276,8 @@ check Assert;;;
         ~;"Test case;Never;;"
         ~;"    #Assert;#Message"
         ~;"    asd'asd;"
+        ~;""
+        ~;""
         #EndRawText
 
         #Id;#Action;#Assert;$Text
@@ -375,6 +381,8 @@ check Switch Case Default;;;
         ~;"        Print"
         ~;""
         ~;"    #EndSwitch"
+        ~;""
+        ~;""
         #EndRawText
 
         #Id;#Action;#Assert;$Text
@@ -618,6 +626,8 @@ check If / Else;;;
         ~;"    #If"
         ~;"    asd'asd"
         ~;"    #EndIf"
+        ~;""
+        ~;""
         #EndRawText
 
         #Id;#Action;#Assert;$Text
@@ -762,6 +772,8 @@ check For;;;
         ~;"    #For;#From;#To;#Step"
         ~;"    123asd zxc;;;"
         ~;"    #EndFor"
+        ~;""
+        ~;""
         #EndRawText
 
         #Id;#Action;#Assert;$Text
@@ -1360,6 +1372,8 @@ check ForEach;;;
         ~;"    #ForEach;#In"
         ~;"    123asd zxc;"
         ~;"    #EndForEach"
+        ~;""
+        ~;""
         #EndRawText
 
         #Id;#Action;#Assert;$Text
@@ -2158,7 +2172,7 @@ check SetHandler;;;
         ~;""
         ~;"    #Id;#SubCase"
         ~;"    simple;"
-        ~;"        #Action;#Value;#Name"
+        ~;"        #Action;$Value;$Name"
         ~;"        Store;parameter.expectedValue;parameter.name"
         ~;""
         ~;"    #EndSubCase"
@@ -2167,9 +2181,9 @@ check SetHandler;;;
         ~;"    simple;OnTestCaseStart"
         ~;""
         ~;""
-        ~;""
         ~;"#TestCase;#Kind;#Depends;#For"
         ~;"check;;;"
+        ~;""
         #EndRawText
 
         #Id;#Action;$Text
@@ -2216,7 +2230,7 @@ check SetHandler;;;
         ~;""
         ~;"    #Id;#SubCase"
         ~;"    simple;"
-        ~;"        #Action;#Value;#Name"
+        ~;"        #Action;$Value;$Name"
         ~;"        Store;parameter.expectedValue;parameter.name"
         ~;""
         ~;"    #EndSubCase"
@@ -2225,11 +2239,12 @@ check SetHandler;;;
         ~;"    simple;OnTestCaseFinish"
         ~;""
         ~;""
-        ~;""
         ~;"#TestCase;#Kind;#Depends;#For"
         ~;"check;;;"
-        ~;"    #Action;#Value;#Name"
+        ~;"    #Action;$Value;$Name"
         ~;"    Store;'not expected value from testcase';parameter.name"
+        ~;""
+        ~;""
         #EndRawText
 
         #Id;#Action;$Text
@@ -2274,9 +2289,9 @@ check SetHandler;;;
         ~;"    #SetHandler;#Kind"
         ~;"    ;OnTestCaseError"
         ~;""
-        ~;"    #Id;#SubCase;#par"
+        ~;"    #Id;#SubCase;par"
         ~;"    simple;;"
-        ~;"        #Action;#Value;#Name"
+        ~;"        #Action;$Value;$Name"
         ~;"        Store;parameter.expectedValue;parameter.name"
         ~;""
         ~;"    #EndSubCase"
@@ -2285,14 +2300,15 @@ check SetHandler;;;
         ~;"    simple;OnTestCaseError"
         ~;""
         ~;""
-        ~;""
         ~;"#TestCase;#Kind;#Depends;#For"
         ~;"check;;;"
-        ~;"    #Action;#Value;#Name"
+        ~;"    #Action;$Value;$Name"
         ~;"    Store;'not expected value from testcase';parameter.name"
         ~;""
         ~;"    #Fail"
         ~;"    'some fail'"
+        ~;""
+        ~;""
         #EndRawText
 
         #Id;#Action;$Text
@@ -2402,6 +2418,9 @@ Check Step (SetHandler checked above);;;
         ~;"    #OnError"
         ~;"        #Assert;#Message"
         ~;"        err.Kind == ErrorKind.WRONG_PARAMETERS;'Wrong parameters'"
+        ~;""
+        ~;""
+        ~;""
         #EndRawText
 
         #Id;#Action;$Text
@@ -2439,6 +2458,9 @@ Check Step (SetHandler checked above);;;
         ~;"    #OnError"
         ~;"        #Assert;#Message"
         ~;"        err.Kind == ErrorKind.FAIL;'Expect kins is Fail, but Actual : ' + err.Kind"
+        ~;""
+        ~;""
+        ~;""
         #EndRawText
 
         #Id;#Action;$Text
@@ -2538,10 +2560,10 @@ Check Step (SetHandler checked above);;;
         ~;"    #EndStep"
         ~;""
         ~;"    #OnError"
-        ~;"        #Id;#Action;#Decoraded"
+        ~;"        #Id;#Action;$Decoraded"
         ~;"        resTbl;ResultTable;true"
         ~;""
-        ~;"        #Id;#Action;#Table;#StepIdentity"
+        ~;"        #Id;#Action;$Table;StepIdentity"
         ~;"        TBLSLCT1;TableSelect;resTbl.Out;'screenOnStartOrErrorWithError'"
         ~;""
         ~;"        #Assert;#Message"
@@ -2555,6 +2577,9 @@ Check Step (SetHandler checked above);;;
         ~;""
         ~;"        #Assert;#Message"
         ~;"        screenShot.matches('<a href="".+?"">OnError</a>');'String not matches'"
+        ~;""
+        ~;""
+        ~;""
         #EndRawText
 
         #Id;#Action;$Text
@@ -2638,10 +2663,10 @@ Check Step (SetHandler checked above);;;
         ~;"    #EndStep"
         ~;""
         ~;"    #OnError"
-        ~;"        #Id;#Action;#Decoraded"
+        ~;"        #Id;#Action;$Decoraded"
         ~;"        resTbl;ResultTable;true"
         ~;""
-        ~;"        #Id;#Action;#Table;#StepIdentity"
+        ~;"        #Id;#Action;$Table;StepIdentity"
         ~;"        TBLSLCT1;TableSelect;resTbl.Out;'screenOnFinishOrErrorWithFail'"
         ~;""
         ~;"        #Assert;#Message"
@@ -2655,6 +2680,9 @@ Check Step (SetHandler checked above);;;
         ~;""
         ~;"        #Assert;#Message"
         ~;"        screenShot.matches('<a href="".+?"">OnError</a>');'String not matches'"
+        ~;""
+        ~;""
+        ~;""
         #EndRawText
 
         #Id;#Action;$Text
@@ -2685,10 +2713,10 @@ Check Step (SetHandler checked above);;;
         ~;"    #EndStep"
         ~;""
         ~;"    #OnError"
-        ~;"        #Id;#Action;#Decoraded"
+        ~;"        #Id;#Action;$Decoraded"
         ~;"        resTbl;ResultTable;true"
         ~;""
-        ~;"        #Id;#Action;#Table;#StepIdentity"
+        ~;"        #Id;#Action;$Table;StepIdentity"
         ~;"        TBLSLCT1;TableSelect;resTbl.Out;'screenOnError'"
         ~;""
         ~;"        #Assert;#Message"
@@ -2702,6 +2730,9 @@ Check Step (SetHandler checked above);;;
         ~;""
         ~;"        #Assert;#Message"
         ~;"        screenShot.matches('<a href="".+?"">OnError</a>');'String not matches'"
+        ~;""
+        ~;""
+        ~;""
         #EndRawText
 
         #Id;#Action;$Text
@@ -2731,11 +2762,12 @@ Check TestCase (SetHandler checked above);;;
         ~;"    'Some fail'"
         ~;""
         ~;""
-        ~;""
         ~;"#TestCase;#Kind;#Depends;#For"
         ~;";;failedTestCase;"
-        ~;"    #Action;#Value;#Name"
+        ~;"    #Action;$Value;$Name"
         ~;"    Store;'my new value';parameter.variableKey"
+        ~;""
+        ~;""
         #EndRawText
 
         #Action;$Value;$Name
@@ -2768,11 +2800,12 @@ Check TestCase (SetHandler checked above);;;
         ~;"#Id;#TestCase;#Kind;#Depends;#For"
         ~;"failedTestCase;Test case;Never;;"
         ~;""
-        ~;""
         ~;"#TestCase;#Kind;#Depends;#For"
         ~;";;failedTestCase;"
-        ~;"    #Action;#Value;#Name"
+        ~;"    #Action;$Value;$Name"
         ~;"    Store;'my new value';parameter.variableKey"
+        ~;""
+        ~;""
         #EndRawText
 
         #Action;$Value;$Name
@@ -2804,6 +2837,7 @@ Check TestCase (SetHandler checked above);;;
         TEXT6;Text;Matrix
         ~;"#Id;#TestCase;#Kind;#Depends;#For"
         ~;"screenTestCaseOnStart;Test case;OnStart;;"
+        ~;""
         #EndRawText
 
         #Id;#Action;$Text
@@ -2845,6 +2879,7 @@ Check TestCase (SetHandler checked above);;;
         ~;"// "
         ~;"#Id;#TestCase;#Kind;#Depends;#For"
         ~;"screenTestCaseOnStartOnError;Test case;OnStartOrError;;"
+        ~;""
         #EndRawText
 
         #Id;#Action;$Text
@@ -2888,6 +2923,8 @@ Check TestCase (SetHandler checked above);;;
         ~;"screenTestCaseOnStartOnErrorWithError;Test case;OnStartOrError;;"
         ~;"    #Fail"
         ~;"    'Some fail'"
+        ~;""
+        ~;""
         #EndRawText
 
         #Id;#Action;$Text
@@ -2928,6 +2965,7 @@ Check TestCase (SetHandler checked above);;;
         TEXT6;Text;Matrix
         ~;"#Id;#TestCase;#Kind;#Depends;#For"
         ~;"screenTestCaseOnFinish;Test case;OnFinish;;"
+        ~;""
         #EndRawText
 
         #Id;#Action;$Text
@@ -2968,6 +3006,7 @@ Check TestCase (SetHandler checked above);;;
         TEXT6;Text;Matrix
         ~;"#Id;#TestCase;#Kind;#Depends;#For"
         ~;"screenTestCaseOnFinishOnError;Test case;OnFinishOrError;;"
+        ~;""
         #EndRawText
 
         #Id;#Action;$Text
@@ -3011,6 +3050,8 @@ Check TestCase (SetHandler checked above);;;
         ~;"screenTestCaseOnStartOnErrorWithFail;Test case;OnFinishOrError;;"
         ~;"    #Fail"
         ~;"    'Some fail'"
+        ~;""
+        ~;""
         #EndRawText
 
         #Id;#Action;$Text
@@ -3054,6 +3095,8 @@ Check TestCase (SetHandler checked above);;;
         ~;"screenTestCaseOnError;Test case;OnError;;"
         ~;"    #Fail"
         ~;"    'Some fail'"
+        ~;""
+        ~;""
         #EndRawText
 
         #Id;#Action;$Text
@@ -3087,6 +3130,5 @@ Check TestCase (SetHandler checked above);;;
         screenShot.matches('<a href=".+?">OnError</a>');'String not matches'
 
     #EndStep
-
 
 

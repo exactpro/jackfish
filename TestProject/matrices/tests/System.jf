@@ -199,14 +199,16 @@ RESTORE;Restore;Never;;
     TEXT1;Text;Matrix
     ~;"#TestCase;#Kind;#Depends;#For"
     ~;"Test case;Never;;"
-    ~;"    #Action;#Value;#Name"
+    ~;"    #Action;$Value;$Name"
     ~;"    Store;200;'existingName2'"
     ~;""
-    ~;"    #Action;#Name;#AsVar"
+    ~;"    #Action;$Name;$AsVar"
     ~;"    Restore;'existingName2';'extVar1'"
     ~;""
-    ~;"    #Global;#Action;#Name;#AsVar"
+    ~;"    #Global;#Action;$Name;$AsVar"
     ~;"    1;Restore;'existingName2';'extVar2'"
+    ~;""
+    ~;""
     #EndRawText
 
     #Id;#Action;$Text
@@ -276,16 +278,18 @@ RESULT;ResultTable;Never;;
     TEXT1;Text;Matrix
     ~;"#Id;#TestCase;#Kind;#Depends;#For"
     ~;"TC1;Testcase1;;;"
-    ~;"    #Id;#Step;#Kind;#For"
-    ~;"    SID1;'ST1';;"
+    ~;"    #Id;#Step;#Kind;#For;#Depends"
+    ~;"    SID1;'ST1';;;"
     ~;"    #EndStep"
     ~;""
-    ~;"    #Id;#Step;#Kind;#For"
-    ~;"    SID2;'ST2';;"
+    ~;"    #Id;#Step;#Kind;#For;#Depends"
+    ~;"    SID2;'ST2';;;"
     ~;"        #Fail"
     ~;"        'User error'"
     ~;""
     ~;"    #EndStep"
+    ~;""
+    ~;""
     #EndRawText
 
     #Id;#Action;$Text
@@ -374,15 +378,16 @@ RT_USERVAL;ResultTableUserValue;Never;;
     TEXT1;Text;Matrix
     ~;"#Id;#TestCase;#Kind;#Depends;#For"
     ~;"TC1;Test case 1;Never;;"
-    ~;"    #Action;#UserValue1;#UserValue2"
+    ~;"    #Action;UserValue1;UserValue2"
     ~;"    ResultTableUserValue;100;200"
-    ~;""
     ~;""
     ~;""
     ~;"#Id;#TestCase;#Kind;#Depends;#For"
     ~;"TC2;Test case 2;;;"
-    ~;"    #Action;#UserValue2;#UserValue3"
+    ~;"    #Action;UserValue2;UserValue3"
     ~;"    ResultTableUserValue;101;201"
+    ~;""
+    ~;""
     #EndRawText
 
     #Id;#Action;$Text
@@ -457,11 +462,13 @@ STORE;Store;Never;;
     RST2.Out == 100;
 
     #Id;#RawText;#Kind
-    TEXT1;Text;None
+    TEXT1;Text;Matrix
     ~;"#TestCase;#Kind;#Depends;#For"
     ~;"Test case;Never;;"
-    ~;"    #Action;#Value;#Name"
+    ~;"    #Action;$Value;$Name"
     ~;"    Store;300;'300'"
+    ~;""
+    ~;""
     #EndRawText
 
     #Id;#Action;$Text
@@ -551,6 +558,5 @@ WAIT;Wait;Never;;
     // Negative tests
     #Action;#Assert
     Wait;This.Result == Result.Failed && This.Kind == ErrorKind.WRONG_PARAMETERS
-
 
 

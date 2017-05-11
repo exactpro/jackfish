@@ -119,11 +119,13 @@ MessageReport;;;
         matrix;Text;Matrix
         ~;"#TestCase;#Kind;#Depends;#For"
         ~;";;;"
-        ~;"    #Id;#Action;#TradingSessionID;#TradSesStatus;#MessageType"
+        ~;"    #Id;#Action;TradingSessionID;TradSesStatus;$MessageType"
         ~;"    MSGCR1;MessageCreate;'TestSessionId';'TestTradeStatus';'TradingSessionListUpdateReport_NoTradingSessions'"
         ~;""
-        ~;"    #Action;#MapMessage;#Title"
+        ~;"    #Action;$MapMessage;$Title"
         ~;"    MessageReport;MSGCR1.Out;'My Message'"
+        ~;""
+        ~;""
         #EndRawText
 
         #Id;#Call;rawText
@@ -195,11 +197,13 @@ MessageReport;;;
         matrix;Text;Matrix
         ~;"#Id;#TestCase;#Kind;#Depends;#For"
         ~;"MyTC;;;;"
-        ~;"    #Id;#Action;#TradingSessionID;#TradSesStatus;#MessageType"
+        ~;"    #Id;#Action;TradingSessionID;TradSesStatus;$MessageType"
         ~;"    MSGCR1;MessageCreate;'TestSessionId';'TestTradeStatus';'TradingSessionListUpdateReport_NoTradingSessions'"
         ~;""
-        ~;"    #Action;#BeforeTestCase;#MapMessage;#Title"
+        ~;"    #Action;$BeforeTestCase;$MapMessage;$Title"
         ~;"    MessageReport;'MyTC';MSGCR1.Out;'My Message'"
+        ~;""
+        ~;""
         #EndRawText
 
         #Id;#Call;rawText
@@ -347,6 +351,5 @@ Subcases;;;
         DLGFLL3;DialogFill;'DialogForTestReport';appCon;Do.use(new Locator().kind(ControlKind.Any).xpath('.//a[contains(.,"ActionItem (MessageReport)")]')).click()
 
     #EndSubCase
-
 
 
