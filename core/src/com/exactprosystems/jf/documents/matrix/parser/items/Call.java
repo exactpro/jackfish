@@ -158,11 +158,11 @@ public final class Call extends MatrixItem
 	@Override
 	protected void writePrefixItSelf(CsvWriter writer, List<String> firstLine, List<String> secondLine)
 	{
-		addParameter(firstLine, secondLine, Tokens.Call.get(), this.name.get());
+		addParameter(firstLine, secondLine, TypeMandatory.System, Tokens.Call.get(), this.name.get());
 	
 		for (Parameter parameter : getParameters())
 		{
-			super.addParameter(firstLine, secondLine, parameter.getName(), parameter.getExpression());
+			super.addParameter(firstLine, secondLine, TypeMandatory.Extra, parameter.getName(), parameter.getExpression());
 		}
 	}
 

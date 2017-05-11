@@ -70,7 +70,7 @@ public class Break extends MatrixItem
     @Override
     protected void writePrefixItSelf(CsvWriter writer, List<String> firstLine, List<String> secondLine)
     {
-        super.addParameter(firstLine, Tokens.Break.get());
+        super.addParameter(firstLine, TypeMandatory.System, Tokens.Break.get());
     }
 
     @Override

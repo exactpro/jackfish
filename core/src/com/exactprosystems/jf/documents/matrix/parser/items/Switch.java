@@ -117,7 +117,7 @@ public class Switch extends MatrixItem
 	@Override
 	protected void writePrefixItSelf(CsvWriter writer, List<String> firstLine, List<String> secondLine)
 	{
-		super.addParameter(firstLine, secondLine, Tokens.Switch.get(), this.switcher.getExpression());
+		super.addParameter(firstLine, secondLine, TypeMandatory.System, Tokens.Switch.get(), this.switcher.getExpression());
 	}
 
 	@Override
@@ -130,7 +130,7 @@ public class Switch extends MatrixItem
 	@Override
 	protected void writeSuffixItSelf(CsvWriter writer, List<String> line, String indent)
 	{
-		super.addParameter(line, Tokens.EndSwitch.get());
+		super.addParameter(line, TypeMandatory.System, Tokens.EndSwitch.get());
 	}
 
     @Override

@@ -62,7 +62,7 @@ public class ReportOn extends MatrixItem
 	@Override
 	protected void writePrefixItSelf(CsvWriter writer, List<String> firstLine, List<String> secondLine)
 	{
-		super.addParameter(firstLine, Tokens.ReportOn.get());
+		super.addParameter(firstLine, TypeMandatory.System, Tokens.ReportOn.get());
 	}
 
 

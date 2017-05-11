@@ -341,12 +341,19 @@ import java.util.stream.Collectors;
 	//------------------------------------------------------------------------------------------------------------------
 
 	
-	public void add(String name, String expression)
+	public void add(String name, String expression, TypeMandatory mandatory)
 	{
 		this.changed = true;
-		this.parameters.add(new Parameter(name, expression));
+		Parameter par = new Parameter(name, expression);
+		par.setType(mandatory);
+		this.parameters.add(par);
 	}
 	
+    public void add(String name, String expression)
+    {
+        add(name, expression, null);
+    }
+    
 	public void replaceIfExists(Parameter parameter)
 	{
 		String name = parameter.getName();

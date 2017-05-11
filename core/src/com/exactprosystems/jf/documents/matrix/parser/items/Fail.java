@@ -157,7 +157,7 @@ public class Fail extends MatrixItem
 	@Override
 	protected void writePrefixItSelf(CsvWriter writer, List<String> firstLine, List<String> secondLine)
 	{
-		super.addParameter(firstLine, secondLine, Tokens.Fail.get(), this.failValue.getExpression());
+		super.addParameter(firstLine, secondLine, TypeMandatory.System, Tokens.Fail.get(), this.failValue.getExpression());
 	}
 
 	@Override

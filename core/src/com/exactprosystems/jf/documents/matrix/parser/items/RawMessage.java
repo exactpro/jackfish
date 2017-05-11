@@ -207,15 +207,15 @@ public class RawMessage extends MatrixItem
 	@Override
 	protected void writePrefixItSelf(CsvWriter writer, List<String> firstLine, List<String> secondLine)
 	{
-		addParameter(firstLine, secondLine, Tokens.RawMessage.get(), this.typeName.get());
-		addParameter(firstLine, secondLine, Tokens.Client.get(), this.clientName.get());
+		addParameter(firstLine, secondLine, TypeMandatory.System, Tokens.RawMessage.get(), this.typeName.get());
+		addParameter(firstLine, secondLine, TypeMandatory.System, Tokens.Client.get(), this.clientName.get());
 	}
 	
 	@Override
 	protected void writeSuffixItSelf(CsvWriter writer, List<String> line, String indent)
 	{
 		save(writer, this.message, indent, new AtomicInteger(0));
-		super.addParameter(line, Tokens.EndRawMessage.get());
+		super.addParameter(line, TypeMandatory.System, Tokens.EndRawMessage.get());
 	}
 	
 

@@ -462,7 +462,7 @@ public abstract class MatrixItem implements IMatrixItem, Mutable, Cloneable
 
 		if (!this.id.isNullOrEmpty())
 		{
-			addParameter(firstLine, secondLine, Tokens.Id.get(), this.id.get());
+			addParameter(firstLine, secondLine, TypeMandatory.System, Tokens.Id.get(), this.id.get());
 		}
 
 		MatrixItemAttribute annotation = getClass().getAnnotation(MatrixItemAttribute.class);
@@ -501,11 +501,11 @@ public abstract class MatrixItem implements IMatrixItem, Mutable, Cloneable
 		{
 			if (hasValue)
 			{
-				addParameter(firstLine, secondLine, token.get(), "1");
+				addParameter(firstLine, secondLine, TypeMandatory.System, token.get(), "1");
 			}
 			else
 			{
-				addParameter(firstLine, token.get());
+				addParameter(firstLine, TypeMandatory.System, token.get());
 			}
 		}	
 	}
@@ -907,9 +907,10 @@ public abstract class MatrixItem implements IMatrixItem, Mutable, Cloneable
 		}
 	}
 
-	protected final void addParameter(List<String> firstLine, List<String> secondLine, String parameter, String value)
+	protected final void addParameter(List<String> firstLine, List<String> secondLine, TypeMandatory type, String parameter, String value)
 	{
-		firstLine.add(Parser.systemPrefix + parameter);
+	    String prefix = Parser.useNewSyntax ? type.getPrefix() : Parser.systemPrefix; 
+		firstLine.add(prefix + parameter);
 		if (value == null)
 		{
 			secondLine.add("");
@@ -920,9 +921,10 @@ public abstract class MatrixItem implements IMatrixItem, Mutable, Cloneable
 		}
 	}
 
-	protected final void addParameter(List<String> firstLine, String parameter)
+	protected final void addParameter(List<String> firstLine, TypeMandatory type, String parameter)
 	{
-		firstLine.add(Parser.systemPrefix + parameter);
+        String prefix = Parser.useNewSyntax ? type.getPrefix() : Parser.systemPrefix; 
+		firstLine.add(prefix + parameter);
 	}
 
 	protected Boolean isTrue(boolean hasValue, Map<Tokens, String> systemParameters, Tokens token)

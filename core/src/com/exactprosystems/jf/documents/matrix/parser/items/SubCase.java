@@ -145,11 +145,11 @@ public final class SubCase extends MatrixItem
 	@Override
 	protected void writePrefixItSelf(CsvWriter writer, List<String> firstLine, List<String> secondLine)
 	{
-		addParameter(firstLine, secondLine, Tokens.SubCase.get(), this.name.get());
+		addParameter(firstLine, secondLine, TypeMandatory.System, Tokens.SubCase.get(), this.name.get());
 
 		for (Parameter entry : getParameters())
 		{
-			super.addParameter(firstLine, secondLine, entry.getName(), entry.getExpression());
+			super.addParameter(firstLine, secondLine, TypeMandatory.Extra, entry.getName(), entry.getExpression());
 		}
 	}
 
@@ -165,7 +165,7 @@ public final class SubCase extends MatrixItem
 	@Override
 	protected void writeSuffixItSelf(CsvWriter writer, List<String> line, String indent)
 	{
-		super.addParameter(line, Tokens.EndSubCase.get());
+		super.addParameter(line, TypeMandatory.System, Tokens.EndSubCase.get());
 	}
 
 	@Override

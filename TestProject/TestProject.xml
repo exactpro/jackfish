@@ -58,7 +58,7 @@
         <clientDescription>Test dts client</clientDescription>
         <clientJar>${JF}/clients/fix.jar</clientJar>
         <clientLimit>0</clientLimit>
-        <clientDictionary>../core/dic/clients/FIX50.xml</clientDictionary>
+        <clientDictionary>clientDic/FIX50.xml</clientDictionary>
     </clientEntry>
     <serviceEntry>
         <name>TestService</name>

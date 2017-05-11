@@ -74,13 +74,13 @@ public class While extends MatrixItem
 	@Override
 	protected void writePrefixItSelf(CsvWriter writer, List<String> firstLine, List<String> secondLine)
 	{
-		super.addParameter(firstLine, secondLine, Tokens.While.get(), 	this.condition.getExpression());
+		super.addParameter(firstLine, secondLine, TypeMandatory.System, 	Tokens.While.get(), this.condition.getExpression());
 	}
 
 	@Override
 	protected void writeSuffixItSelf(CsvWriter writer, List<String> line, String indent)
 	{
-		super.addParameter(line, Tokens.EndWhile.get());
+		super.addParameter(line, TypeMandatory.System, Tokens.EndWhile.get());
 	}
 
 	@Override

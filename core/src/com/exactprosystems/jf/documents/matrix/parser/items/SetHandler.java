@@ -123,8 +123,8 @@ public final class SetHandler extends MatrixItem
 	@Override
 	protected void writePrefixItSelf(CsvWriter writer, List<String> firstLine, List<String> secondLine)
 	{
-		addParameter(firstLine, secondLine, Tokens.SetHandler.get(), this.name.get());
-        addParameter(firstLine, secondLine, Tokens.Kind.get(), this.kind.get());
+		addParameter(firstLine, secondLine, TypeMandatory.System, Tokens.SetHandler.get(), this.name.get());
+        addParameter(firstLine, secondLine, TypeMandatory.System, Tokens.Kind.get(), this.kind.get());
 	}
 
 	@Override

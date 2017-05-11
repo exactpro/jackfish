@@ -169,10 +169,10 @@ public final class TestCase extends MatrixItem
 	@Override
 	protected void writePrefixItSelf(CsvWriter writer, List<String> firstLine, List<String> secondLine)
 	{
-	    super.addParameter(firstLine, secondLine, Tokens.TestCase.get(),  this.name.get());
-		super.addParameter(firstLine, secondLine, Tokens.Kind.get(),      this.kind.get());
-        super.addParameter(firstLine, secondLine, Tokens.Depends.get(),   this.depends.get());
-        super.addParameter(firstLine, secondLine, Tokens.For.get(), this.plugin.getExpression());
+	    super.addParameter(firstLine, secondLine, TypeMandatory.System,  Tokens.TestCase.get(), this.name.get());
+		super.addParameter(firstLine, secondLine, TypeMandatory.System,      Tokens.Kind.get(), this.kind.get());
+        super.addParameter(firstLine, secondLine, TypeMandatory.System,   Tokens.Depends.get(), this.depends.get());
+        super.addParameter(firstLine, secondLine, TypeMandatory.System, Tokens.For.get(), this.plugin.getExpression());
 	}
 
 	@Override

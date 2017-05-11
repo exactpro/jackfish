@@ -219,7 +219,7 @@ public abstract class DocumentFactory
 
 	protected abstract IMatrixListener 		createMatrixListener();
 	
-	public abstract RunnerListener 		getRunnerListener();
+	public abstract RunnerListener          getRunnerListener();
 	
 	private void checkConfiguration() throws EmptyConfigurationException
 	{

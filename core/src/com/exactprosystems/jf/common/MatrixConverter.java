@@ -23,8 +23,8 @@ import java.util.stream.Collectors;
 public class MatrixConverter {
 
     private Map<String, Predicate<MatrixItem>> predicates = new HashMap<>();
-    private List<MutableString> matricesFolders;
-    private List<MutableString> libsFolders;
+    private List<String> matricesFolders;
+    private List<String> libsFolders;
     private String toFolder;
 
 
@@ -32,19 +32,19 @@ public class MatrixConverter {
         predicates.put("Vars", item -> item.getClass() == ActionItem.class && ((ActionItem) item).getActionClass() == Vars.class);
     }
 
-    public MatrixConverter(List<MutableString> matricesFolders, List<MutableString> libsFolders, String toFolder) {
+    public MatrixConverter(List<String> matr, List<String> libs, String toFolder) {
 
-        this.matricesFolders = matricesFolders;
-        this.libsFolders = libsFolders;
+        this.matricesFolders = matr;
+        this.libsFolders = libs;
         this.toFolder = toFolder.endsWith(File.separator) ? toFolder : (toFolder + File.separator);
     }
 
     public void start() {
 
-        List<MutableString> commonFolder = new ArrayList<>(matricesFolders);
+        List<String> commonFolder = new ArrayList<>(matricesFolders);
         commonFolder.addAll(libsFolders);
 
-        commonFolder.forEach(folder -> convert(new File(folder.get())));
+        commonFolder.forEach(folder -> convert(new File(folder)));
     }
 
     private void convert(File path) {
@@ -66,6 +66,8 @@ public class MatrixConverter {
                 {
                     try
                     {
+                        System.out.println("Converting " + path.getName() + " ...");
+                        
                         Matrix matrix = new Matrix(path.getPath(), new ConsoleDocumentFactory(VerboseLevel.None));
                         matrix.load(new FileReader(path));
                         CsvWriter writer = prepareCsvWriter(toFolder + path.getParent() + File.separator + path.getName());
@@ -75,7 +77,9 @@ public class MatrixConverter {
                         writer.flush();
                         writer.close();
 
-                    } catch (Exception e)
+                        System.out.println("... done");
+                    } 
+                    catch (Exception e)
                     {
                         e.printStackTrace();
                     }

@@ -130,7 +130,7 @@ public class Case extends MatrixItem
 	@Override
 	protected void writePrefixItSelf(CsvWriter writer, List<String> firstLine, List<String> secondLine)
 	{
-		super.addParameter(firstLine, secondLine, Tokens.Case.get(), this.variant.getExpression());
+		super.addParameter(firstLine, secondLine, TypeMandatory.System, Tokens.Case.get(), this.variant.getExpression());
 	}
 
 	@Override

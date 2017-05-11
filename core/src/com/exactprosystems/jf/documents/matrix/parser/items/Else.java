@@ -61,7 +61,7 @@ public class Else extends MatrixItem
 	@Override
 	protected void writePrefixItSelf(CsvWriter writer, List<String> firstLine, List<String> secondLine)
 	{
-		super.addParameter(firstLine, Tokens.Else.get());
+		super.addParameter(firstLine, TypeMandatory.System, Tokens.Else.get());
 	}
 
     @Override
