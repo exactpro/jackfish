@@ -115,7 +115,7 @@ public class If extends MatrixItem
 	@Override
 	protected void writePrefixItSelf(CsvWriter writer, List<String> firstLine, List<String> secondLine)
 	{
-		super.addParameter(firstLine, secondLine, Tokens.If.get(), this.condition.getExpression());
+		super.addParameter(firstLine, secondLine, TypeMandatory.System, Tokens.If.get(), this.condition.getExpression());
 	}
 
 	@Override
@@ -128,7 +128,7 @@ public class If extends MatrixItem
 	@Override
 	protected void writeSuffixItSelf(CsvWriter writer, List<String> line, String indent)
 	{
-		super.addParameter(line, Tokens.EndIf.get());
+		super.addParameter(line, TypeMandatory.System, Tokens.EndIf.get());
 	}
 
     @Override

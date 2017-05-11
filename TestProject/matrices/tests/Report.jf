@@ -3,67 +3,67 @@ prepare;;;;
 
 #TestCase;#Kind;#Depends;#For
 All negiteve testing with invalid parameters;;;
-    #Action;#Assert;#Type;#Table;#Title
+    #Action;#Assert;$Type;$Table;$Title
     ChartReport;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;;;
 
-    #Action;#Assert;#Type;#Table;#Title
+    #Action;#Assert;$Type;$Table;$Title
     ChartReport;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;ChartKind.Line;;
 
-    #Action;#Assert;#Type;#Table;#Title
+    #Action;#Assert;$Type;$Table;$Title
     ChartReport;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;ChartKind.Line;Table.emptyTable();
 
-    #Action;#Assert;#Type;#Table;#Title
+    #Action;#Assert;$Type;$Table;$Title
     ChartReport;This.Result == Result.Failed && This.Kind == ErrorKind.WRONG_PARAMETERS;'a';Table.emptyTable();'a'
 
-    #Action;#Assert;#Type;#Table;#Title
+    #Action;#Assert;$Type;$Table;$Title
     ChartReport;This.Result == Result.Failed && This.Kind == ErrorKind.WRONG_PARAMETERS;ChartKind.Line;'';'a'
 
-    #Action;#Assert;#Type;#Table;#Title;#ToReport
+    #Action;#Assert;$Type;$Table;$Title;$ToReport
     ChartReport;This.Result == Result.Failed && This.Kind == ErrorKind.WRONG_PARAMETERS;ChartKind.Line;Table.emptyTable();'a';new Date()
 
-    #Action;#Assert;#Type;#Table;#Title;#Colors
+    #Action;#Assert;$Type;$Table;$Title;$Colors
     ChartReport;This.Result == Result.Failed && This.Kind == ErrorKind.WRONG_PARAMETERS;ChartKind.Line;Table.emptyTable();'a';new Date()
 
-    #Action;#Assert;#ToReport
+    #Action;#Assert;$ToReport
     Report;This.Result == Result.Failed && This.Kind == ErrorKind.WRONG_PARAMETERS;new Date()
 
-    #Action;#Assert;#Passed;#Report;#Failed
+    #Action;#Assert;$Passed;$Report;$Failed
     ReportFinish;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;;;
 
-    #Action;#Assert;#Passed;#Report;#Failed
+    #Action;#Assert;$Passed;$Report;$Failed
     ReportFinish;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;;;123
 
-    #Action;#Assert;#Passed;#Report;#Failed
+    #Action;#Assert;$Passed;$Report;$Failed
     ReportFinish;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;123;;456
 
-    #Id;#Action;#ReportName
+    #Id;#Action;$ReportName
     REP1;ReportStart;'temp'
 
-    #Action;#Assert;#Passed;#Report;#Failed
+    #Action;#Assert;$Passed;$Report;$Failed
     ReportFinish;This.Result == Result.Failed && This.Kind == ErrorKind.WRONG_PARAMETERS;new Date();REP1.Out;123
 
-    #Action;#Assert;#Passed;#Report;#Failed
+    #Action;#Assert;$Passed;$Report;$Failed
     ReportFinish;This.Result == Result.Failed && This.Kind == ErrorKind.WRONG_PARAMETERS;123;REP1.Out;new Date()
 
-    #Action;#Assert;#Passed;#Report;#Failed
+    #Action;#Assert;$Passed;$Report;$Failed
     ReportFinish;This.Result == Result.Failed && This.Kind == ErrorKind.WRONG_PARAMETERS;123;new Date();123
 
-    #Action;#Assert;#Passed;#Report;#Failed;#FinishTime
+    #Action;#Assert;$Passed;$Report;$Failed;$FinishTime
     ReportFinish;This.Result == Result.Failed && This.Kind == ErrorKind.WRONG_PARAMETERS;123;REP1.Out;123;3
 
-    #Action;#Assert;#Passed;#Report;#Failed;#StartTime
+    #Action;#Assert;$Passed;$Report;$Failed;$StartTime
     ReportFinish;This.Result == Result.Failed && This.Kind == ErrorKind.WRONG_PARAMETERS;123;REP1.Out;123;3
 
-    #Action;#Passed;#Report;#Failed
+    #Action;$Passed;$Report;$Failed
     ReportFinish;1;REP1.Out;2
 
-    #Action;#Assert;#Name
+    #Action;#Assert;$Name
     ReportName;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;
 
-    #Action;#Assert;#Report
+    #Action;#Assert;$Report
     ReportShow;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;
 
-    #Action;#Assert;#ReportName
+    #Action;#Assert;$ReportName
     ReportStart;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;
 
 
@@ -77,26 +77,26 @@ Check Report with one parameter;Never;;
     ~;"    Report;'report with one parameter'"
     #EndRawText
 
-    #Id;#Call;#rawText
+    #Id;#Call;rawText
     pathToReport;runMatrix;TEXT1
 
-    #Id;#Call;#pathToReport
+    #Id;#Call;pathToReport
     appCon;runBrowser;pathToReport
 
     #Id;#Let
     locator;new Locator().kind(ControlKind.Any).visibility(Visibility.Visible).xpath('.//span[contains(.,\'report with one parameter\')]')
 
-    #Id;#Action;#Assert;#Dialog;#AppConnection;#MockElement
+    #Id;#Action;#Assert;$Dialog;$AppConnection;MockElement
     DLGFLL1;DialogFill;This.Out.MockElement == false;'DialogForTestReport';appCon;Do.use(locator).isVisible()
 
-    #Id;#Call;#appCon
+    #Id;#Call;appCon
     CALL_2;expand;appCon
 
     // check that element inside table
-    #Id;#Action;#Assert;#Dialog;#AppConnection;#MockElement
+    #Id;#Action;#Assert;$Dialog;$AppConnection;MockElement
     DLGFLL5;DialogFill;This.Out.MockElement == true;'DialogForTestReport';appCon;Do.use(locator).isVisible()
 
-    #Id;#Call;#appCon
+    #Id;#Call;appCon
     CALL_2;stopBrowser;appCon
 
 
@@ -110,26 +110,26 @@ Check Report with one parameter with invalid before test case;Never;;
     ~;"    Report;'report with one parameter';'invalid testCaseId'"
     #EndRawText
 
-    #Id;#Call;#rawText
+    #Id;#Call;rawText
     pathToReport;runMatrix;TEXT1
 
-    #Id;#Call;#pathToReport
+    #Id;#Call;pathToReport
     appCon;runBrowser;pathToReport
 
     #Id;#Let
     locator;new Locator().kind(ControlKind.Any).visibility(Visibility.Visible).xpath('.//span[contains(.,\'report with one parameter\')]')
 
-    #Id;#Action;#Assert;#Dialog;#AppConnection;#MockElement
+    #Id;#Action;#Assert;$Dialog;$AppConnection;MockElement
     DLGFLL1;DialogFill;This.Out.MockElement == false;'DialogForTestReport';appCon;Do.use(locator).isVisible()
 
-    #Id;#Call;#appCon
+    #Id;#Call;appCon
     CALL_2;expand;appCon
 
     // check that element inside table
-    #Id;#Action;#Assert;#Dialog;#AppConnection;#MockElement
+    #Id;#Action;#Assert;$Dialog;$AppConnection;MockElement
     DLGFLL5;DialogFill;This.Out.MockElement == true;'DialogForTestReport';appCon;Do.use(locator).isVisible()
 
-    #Id;#Call;#appCon
+    #Id;#Call;appCon
     CALL_2;stopBrowser;appCon
 
 
@@ -143,26 +143,26 @@ Check Report with parameter beforeTestCase;Never;;
     ~;"    Report;'report with one parameter';'before'"
     #EndRawText
 
-    #Id;#Call;#rawText
+    #Id;#Call;rawText
     pathToReport;runMatrix;TEXT1
 
-    #Id;#Call;#pathToReport
+    #Id;#Call;pathToReport
     appCon;runBrowser;pathToReport
 
     #Id;#Let
     locator;new Locator().kind(ControlKind.Any).visibility(Visibility.Visible).xpath('.//span[contains(.,\'report with one parameter\')]')
 
-    #Id;#Action;#Assert;#Dialog;#AppConnection;#MockElement
+    #Id;#Action;#Assert;$Dialog;$AppConnection;MockElement
     DLGFLL1;DialogFill;This.Out.MockElement == true;'DialogForTestReport';appCon;Do.use(locator).isVisible()
 
-    #Id;#Call;#appCon
+    #Id;#Call;appCon
     CALL_2;expand;appCon
 
     // check that element outside table
-    #Id;#Action;#Assert;#Dialog;#AppConnection;#MockElement
+    #Id;#Action;#Assert;$Dialog;$AppConnection;MockElement
     DLGFLL5;DialogFill;This.Result == Result.Failed && This.Reason.contains('No one element was found');'DialogForTestReport';appCon;Do.use('MainTable', LocatorKind.Owner).use(locator, LocatorKind.Element).isVisible()
 
-    #Id;#Call;#appCon
+    #Id;#Call;appCon
     CALL_2;stopBrowser;appCon
 
 
@@ -176,26 +176,26 @@ Check Report with many parameters inside table;Never;;
     ~;"    Report;'one';'Two'"
     #EndRawText
 
-    #Id;#Call;#rawText
+    #Id;#Call;rawText
     pathToReport;runMatrix;TEXT1
 
-    #Id;#Call;#pathToReport
+    #Id;#Call;pathToReport
     appCon;runBrowser;pathToReport
 
     #Id;#Let
     locator;new Locator().kind(ControlKind.Any).visibility(Visibility.Visible).xpath('.//span[contains(text(), "One = one") and contains(text(), "two = Two")]')
 
-    #Id;#Action;#Assert;#Dialog;#AppConnection;#MockElement
+    #Id;#Action;#Assert;$Dialog;$AppConnection;MockElement
     DLGFLL1;DialogFill;This.Out.MockElement == false;'DialogForTestReport';appCon;Do.use(locator).isVisible()
 
-    #Id;#Call;#appCon
+    #Id;#Call;appCon
     CALL_1;expand;appCon
 
     // check that element inside table
-    #Id;#Action;#Assert;#Dialog;#AppConnection;#MockElement
+    #Id;#Action;#Assert;$Dialog;$AppConnection;MockElement
     DLGFLL5;DialogFill;This.Out.MockElement == true;'DialogForTestReport';appCon;Do.use(locator).isVisible()
 
-    #Id;#Call;#appCon
+    #Id;#Call;appCon
     CALL_2;stopBrowser;appCon
 
 
@@ -209,44 +209,44 @@ Check ReportName;Never;;
     ~;"    ReportName;'report name'"
     #EndRawText
 
-    #Id;#Call;#rawText
+    #Id;#Call;rawText
     pathToReport;runMatrix;TEXT1
 
     #Assert;#Message
     pathToReport.endsWith('report name.html');'Report file dosnt contains expected string'
 
-    #Id;#Call;#pathToReport
+    #Id;#Call;pathToReport
     appCon;runBrowser;pathToReport
 
     #Id;#Let
     locator;new Locator().kind(ControlKind.Any).visibility(Visibility.Visible).xpath('.//span[@id=\'name\']/span[.=\'report name\']')
 
     // check that report contains 'report name'
-    #Id;#Action;#Assert;#Dialog;#AppConnection;#MockElement
+    #Id;#Action;#Assert;$Dialog;$AppConnection;MockElement
     DLGFLL1;DialogFill;This.Out.MockElement == true;'DialogForTestReport';appCon;Do.use(locator).isVisible()
 
-    #Id;#Call;#appCon
+    #Id;#Call;appCon
     CALL_2;stopBrowser;appCon
 
 
 #TestCase;#Kind;#Depends;#For
 Report finish without reportstart;;;
-    #Action;#Assert;#Passed;#Report;#Failed
+    #Action;#Assert;$Passed;$Report;$Failed
     ReportFinish;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;123;;456
 
 
 #TestCase;#Kind;#Depends;#For
 report show with invalid report;;;
-    #Action;#Assert;#Report
+    #Action;#Assert;$Report
     ReportShow;This.Result == Result.Failed && This.Kind == ErrorKind.WRONG_PARAMETERS;'asd'
 
 
 #TestCase;#Kind;#Depends;#For
 report start finish;;;
-    #Id;#Action;#ReportName;#Version
+    #Id;#Action;$ReportName;$Version
     REP1;ReportStart;'my new report name3';'my version'
 
-    #Action;#ToReport;#Str
+    #Action;$ToReport;$Str
     Report;REP1.Out;'par'
 
     #Id;#Let
@@ -261,16 +261,16 @@ report start finish;;;
     #Id;#Let
     finishTime;DateTime.date(1,1,1,1,1,1)
 
-    #Action;#Passed;#Report;#Failed;#FinishTime;#StartTime
+    #Action;$Passed;$Report;$Failed;$FinishTime;$StartTime
     ReportFinish;passed;REP1.Out;failed;finishTime;startTime
 
-    #Id;#Call;#pathToReport
+    #Id;#Call;pathToReport
     appCon;runBrowser;REP1.Out.getReportName()
 
-    #Id;#Action;#Dialog;#AppConnection;#Executed;#Passed;#Failed;#startTime;#finishTime;#version
+    #Id;#Action;$Dialog;$AppConnection;Executed;Passed;Failed;startTime;finishTime;version
     DLGFLL4;DialogFill;'DialogForTestReport';appCon;Do.check('Executed : ' + (passed+failed));Do.check('Passed : ' + passed);Do.check('Failed : ' + failed);Do.check(startTime.str('yyyy-MM-dd HH:mm:ss'));Do.check(finishTime.str('yyyy-MM-dd HH:mm:ss'));Do.check('my version')
 
-    #Id;#Call;#appCon
+    #Id;#Call;appCon
     CALL_3;stopBrowser;appCon
 
 
@@ -284,7 +284,7 @@ report chart Line chart;;;
         #Id;#Action
         TBL2;TableCreate
 
-        #Action;#Assert;#Type;#Table;#Title;#YAxisDescription
+        #Action;#Assert;$Type;$Table;$Title;YAxisDescription
         ChartReport;This.Result == Result.Failed && This.Kind==ErrorKind.EMPTY_PARAMETER;ChartKind.Line;TBL2.Out;'line chart';'description'
 
     #EndStep
@@ -310,19 +310,19 @@ report chart Line chart;;;
         ~;"    ChartReport;ChartKind.Line;DATA1;'line chart';'Labels';'description'"
         #EndRawText
 
-        #Id;#Call;#rawText
+        #Id;#Call;rawText
         CALL_1;runMatrix;TEXT1
 
-        #Id;#Call;#pathToReport
+        #Id;#Call;pathToReport
         appCon;runBrowser;CALL_1
 
-        #Id;#Action;#Assert;#Dialog;#AppConnection;#title;#svg
+        #Id;#Action;#Assert;$Dialog;$AppConnection;title;svg
         DLGFLL5;DialogFill;This.Out.title == false && This.Out.svg == false;'DialogForTestCharts';appCon;Do.isVisible();Do.isVisible()
 
-        #Id;#Call;#appCon
+        #Id;#Call;appCon
         CALL_3;expandChart;appCon
 
-        #Id;#Action;#Dialog;#AppConnection;#title;#description;#xAxisTicks;#lines;#svg
+        #Id;#Action;$Dialog;$AppConnection;title;description;xAxisTicks;lines;svg
         DLGFLL6;DialogFill;'DialogForTestCharts';appCon;Do.check('line chart');Do.check('description');Do.count();Do.count();Do.isVisible()
 
         #Assert;#Message
@@ -334,13 +334,13 @@ report chart Line chart;;;
         #Assert;#Message
         DLGFLL6.Out.svg;'Expected true'
 
-        #Id;#Action;#Assert;#Dialog;#AppConnection;#xAxisTicks;#lines
+        #Id;#Action;#Assert;$Dialog;$AppConnection;xAxisTicks;lines
         DLGFLL7;DialogFill;DLGFLL7.Out.xAxisTicks == 2001 && DLGFLL7.Out.lines == "Mike salary";'DialogForTestCharts';appCon;Do.use(0).getValue();Do.use(0).getValue()
 
-        #Id;#Action;#Assert;#Dialog;#AppConnection;#xAxisTicks;#lines
+        #Id;#Action;#Assert;$Dialog;$AppConnection;xAxisTicks;lines
         DLGFLL8;DialogFill;DLGFLL8.Out.xAxisTicks == 2006 && DLGFLL8.Out.lines == "John Salary";'DialogForTestCharts';appCon;Do.use(5).getValue();Do.use(1).getValue()
 
-        #Id;#Call;#appCon
+        #Id;#Call;appCon
         CALL_2;stopBrowser;appCon
 
     #EndStep
@@ -366,19 +366,19 @@ report chart Line chart;;;
         ~;"    ChartReport;ChartKind.Line;DATA1;'line chart';'Labels';'description';'myId'"
         #EndRawText
 
-        #Id;#Call;#rawText
+        #Id;#Call;rawText
         CALL_2;runMatrix;TEXT2
 
-        #Id;#Call;#pathToReport
+        #Id;#Call;pathToReport
         appCon;runBrowser;CALL_2
 
-        #Id;#Action;#Assert;#Dialog;#AppConnection;#title;#svg
+        #Id;#Action;#Assert;$Dialog;$AppConnection;title;svg
         DLGFLL55;DialogFill;This.Out.title == true && This.Out.svg == true;'DialogForTestCharts';appCon;Do.isVisible();Do.isVisible()
 
-        #Id;#Call;#appCon
+        #Id;#Call;appCon
         CALL_3;expandChart;appCon
 
-        #Id;#Action;#Dialog;#AppConnection;#title;#description;#xAxisTicks;#lines;#svg
+        #Id;#Action;$Dialog;$AppConnection;title;description;xAxisTicks;lines;svg
         DLGFLL66;DialogFill;'DialogForTestCharts';appCon;Do.check('line chart');Do.check('description');Do.count();Do.count();Do.isVisible()
 
         #Assert;#Message
@@ -390,16 +390,16 @@ report chart Line chart;;;
         #Assert;#Message
         DLGFLL66.Out.svg;'Expected true'
 
-        #Id;#Action;#Assert;#Dialog;#AppConnection;#xAxisTicks;#lines
+        #Id;#Action;#Assert;$Dialog;$AppConnection;xAxisTicks;lines
         DLGFLL77;DialogFill;DLGFLL77.Out.xAxisTicks == 2001 && DLGFLL77.Out.lines == "Mike salary";'DialogForTestCharts';appCon;Do.use(0).getValue();Do.use(0).getValue()
 
-        #Id;#Action;#Assert;#Dialog;#AppConnection;#xAxisTicks;#lines
+        #Id;#Action;#Assert;$Dialog;$AppConnection;xAxisTicks;lines
         DLGFLL88;DialogFill;DLGFLL88.Out.xAxisTicks == 2006 && DLGFLL88.Out.lines == "John Salary";'DialogForTestCharts';appCon;Do.use(5).getValue();Do.use(1).getValue()
 
-        #Id;#Action;#Assert;#Dialog;#AppConnection;#MockElement
+        #Id;#Action;#Assert;$Dialog;$AppConnection;MockElement
         DLGFLL9;DialogFill;This.Result == Result.Failed;'DialogForTestReport';appCon;Do.use(new Locator().kind(ControlKind.Any).xpath('.//table[contains(@class,"innerTable")]//div[@class="container"]')).isVisible()
 
-        #Id;#Call;#appCon
+        #Id;#Call;appCon
         CALL_2;stopBrowser;appCon
 
     #EndStep
@@ -425,19 +425,19 @@ report chart Line chart;;;
         ~;"    ChartReport;ChartKind.Line;DATA1;'line chart';'Labels'"
         #EndRawText
 
-        #Id;#Call;#rawText
+        #Id;#Call;rawText
         CALL_1;runMatrix;TEXT1
 
-        #Id;#Call;#pathToReport
+        #Id;#Call;pathToReport
         appCon;runBrowser;CALL_1
 
-        #Id;#Call;#appCon
+        #Id;#Call;appCon
         CALL_3;expandChart;appCon
 
-        #Id;#Action;#Dialog;#AppConnection;#description
+        #Id;#Action;$Dialog;$AppConnection;description
         DLGFLL667;DialogFill;'DialogForTestCharts';appCon;Do.check('')
 
-        #Id;#Call;#appCon
+        #Id;#Call;appCon
         CALL_2;stopBrowser;appCon
 
     #EndStep
@@ -463,16 +463,16 @@ report chart Line chart;;;
         ~;"    ChartReport;ChartKind.Line;DATA1;'line chart';'Labels';'description';'myId';{'Mike salary' : Color.GREEN, 'John Salary' : Color.RED}"
         #EndRawText
 
-        #Id;#Call;#rawText
+        #Id;#Call;rawText
         CALL_4;runMatrix;TEXT21
 
-        #Id;#Call;#pathToReport
+        #Id;#Call;pathToReport
         appCon;runBrowser;CALL_4
 
-        #Id;#Action;#Dialog;#AppConnection;#svg;#svg
+        #Id;#Action;$Dialog;$AppConnection;svg;svg
         DLGFLL10;DialogFill;'DialogForTestCharts';appCon;Do.checkColor(686,113, Color.GREEN);Do.checkColor(534, 62, Color.RED)
 
-        #Id;#Call;#appCon
+        #Id;#Call;appCon
         CALL_5;stopBrowser;appCon
 
     #EndStep
@@ -485,7 +485,7 @@ report chart Bar chart;;;
         #Id;#Action
         TBL2;TableCreate
 
-        #Action;#Assert;#Type;#Table;#Title;#YAxisDescription
+        #Action;#Assert;$Type;$Table;$Title;YAxisDescription
         ChartReport;This.Result == Result.Failed && This.Kind==ErrorKind.EMPTY_PARAMETER;ChartKind.Bar;TBL2.Out;'line chart';'description'
 
     #EndStep
@@ -511,19 +511,19 @@ report chart Bar chart;;;
         ~;"    ChartReport;ChartKind.Bar;DATA1;'line chart';'Labels';'description'"
         #EndRawText
 
-        #Id;#Call;#rawText
+        #Id;#Call;rawText
         CALL_1;runMatrix;TEXT1
 
-        #Id;#Call;#pathToReport
+        #Id;#Call;pathToReport
         appCon;runBrowser;CALL_1
 
-        #Id;#Action;#Assert;#Dialog;#AppConnection;#title;#svg
+        #Id;#Action;#Assert;$Dialog;$AppConnection;title;svg
         DLGFLL5;DialogFill;This.Out.title == false && This.Out.svg == false;'DialogForTestCharts';appCon;Do.isVisible();Do.isVisible()
 
-        #Id;#Call;#appCon
+        #Id;#Call;appCon
         CALL_3;expandChart;appCon
 
-        #Id;#Action;#Dialog;#AppConnection;#title;#description;#xAxisTicks;#bars;#legend;#svg
+        #Id;#Action;$Dialog;$AppConnection;title;description;xAxisTicks;bars;legend;svg
         DLGFLL6;DialogFill;'DialogForTestCharts';appCon;Do.check('line chart');Do.check('description');Do.count();Do.count();Do.count();Do.isVisible()
 
         #Assert;#Message
@@ -538,13 +538,13 @@ report chart Bar chart;;;
         #Assert;#Message
         DLGFLL6.Out.svg;'Expected true'
 
-        #Id;#Action;#Assert;#Dialog;#AppConnection;#xAxisTicks;#legend
+        #Id;#Action;#Assert;$Dialog;$AppConnection;xAxisTicks;legend
         DLGFLL7;DialogFill;DLGFLL7.Out.xAxisTicks == 2001 && DLGFLL7.Out.legend == "Mike salary";'DialogForTestCharts';appCon;Do.use(0).getValue();Do.use(0).getValue()
 
-        #Id;#Action;#Assert;#Dialog;#AppConnection;#xAxisTicks;#legend
+        #Id;#Action;#Assert;$Dialog;$AppConnection;xAxisTicks;legend
         DLGFLL8;DialogFill;DLGFLL8.Out.xAxisTicks == 2006 && DLGFLL8.Out.legend == "John Salary";'DialogForTestCharts';appCon;Do.use(5).getValue();Do.use(1).getValue()
 
-        #Id;#Call;#appCon
+        #Id;#Call;appCon
         CALL_2;stopBrowser;appCon
 
     #EndStep
@@ -570,19 +570,19 @@ report chart Bar chart;;;
         ~;"    ChartReport;ChartKind.Bar;DATA1;'line chart';'Labels';'description';'myId'"
         #EndRawText
 
-        #Id;#Call;#rawText
+        #Id;#Call;rawText
         CALL_2;runMatrix;TEXT2
 
-        #Id;#Call;#pathToReport
+        #Id;#Call;pathToReport
         appCon;runBrowser;CALL_2
 
-        #Id;#Action;#Assert;#Dialog;#AppConnection;#title;#svg
+        #Id;#Action;#Assert;$Dialog;$AppConnection;title;svg
         DLGFLL55;DialogFill;This.Out.title == true && This.Out.svg == true;'DialogForTestCharts';appCon;Do.isVisible();Do.isVisible()
 
-        #Id;#Call;#appCon
+        #Id;#Call;appCon
         CALL_3;expandChart;appCon
 
-        #Id;#Action;#Dialog;#AppConnection;#title;#description;#xAxisTicks;#legend;#bars;#svg
+        #Id;#Action;$Dialog;$AppConnection;title;description;xAxisTicks;legend;bars;svg
         DLGFLL66;DialogFill;'DialogForTestCharts';appCon;Do.check('line chart');Do.check('description');Do.count();Do.count();Do.count();Do.isVisible()
 
         #Assert;#Message
@@ -597,16 +597,16 @@ report chart Bar chart;;;
         #Assert;#Message
         DLGFLL66.Out.svg;'Expected true'
 
-        #Id;#Action;#Assert;#Dialog;#AppConnection;#xAxisTicks;#legend
+        #Id;#Action;#Assert;$Dialog;$AppConnection;xAxisTicks;legend
         DLGFLL77;DialogFill;DLGFLL77.Out.xAxisTicks == 2001 && DLGFLL77.Out.legend == "Mike salary";'DialogForTestCharts';appCon;Do.use(0).getValue();Do.use(0).getValue()
 
-        #Id;#Action;#Assert;#Dialog;#AppConnection;#xAxisTicks;#legend
+        #Id;#Action;#Assert;$Dialog;$AppConnection;xAxisTicks;legend
         DLGFLL88;DialogFill;DLGFLL88.Out.xAxisTicks == 2006 && DLGFLL88.Out.legend == "John Salary";'DialogForTestCharts';appCon;Do.use(5).getValue();Do.use(1).getValue()
 
-        #Id;#Action;#Assert;#Dialog;#AppConnection;#MockElement
+        #Id;#Action;#Assert;$Dialog;$AppConnection;MockElement
         DLGFLL9;DialogFill;This.Result == Result.Failed;'DialogForTestReport';appCon;Do.use(new Locator().kind(ControlKind.Any).xpath('.//table[contains(@class,"innerTable")]//div[@class="container"]')).isVisible()
 
-        #Id;#Call;#appCon
+        #Id;#Call;appCon
         CALL_2;stopBrowser;appCon
 
     #EndStep
@@ -632,19 +632,19 @@ report chart Bar chart;;;
         ~;"    ChartReport;ChartKind.Bar;DATA1;'line chart';'Labels'"
         #EndRawText
 
-        #Id;#Call;#rawText
+        #Id;#Call;rawText
         CALL_1;runMatrix;TEXT1
 
-        #Id;#Call;#pathToReport
+        #Id;#Call;pathToReport
         appCon;runBrowser;CALL_1
 
-        #Id;#Call;#appCon
+        #Id;#Call;appCon
         CALL_3;expandChart;appCon
 
-        #Id;#Action;#Dialog;#AppConnection;#description
+        #Id;#Action;$Dialog;$AppConnection;description
         DLGFLL667;DialogFill;'DialogForTestCharts';appCon;Do.check('')
 
-        #Id;#Call;#appCon
+        #Id;#Call;appCon
         CALL_2;stopBrowser;appCon
 
     #EndStep
@@ -670,7 +670,7 @@ report chart Bar chart;;;
         ~;"    ChartReport;ChartKind.Bar;DATA1;'line chart';'Labels';'description';'myId';{'Mike salary' : Color.GREEN, 'John Salary' : Color.RED}"
         #EndRawText
 
-        #Id;#Call;#rawText
+        #Id;#Call;rawText
         CALL_4;runMatrix;TEXT21
 
         #Id;#Let
@@ -679,20 +679,20 @@ report chart Bar chart;;;
         #Id;#Let
         redRects;[144,269,444,585,728,874]
 
-        #Id;#Call;#pathToReport
+        #Id;#Call;pathToReport
         appCon;runBrowser;CALL_4
 
         #For;#From;#To;#Step
         i;0;greenRects.size() - 1;1
-            #Id;#Action;#Dialog;#AppConnection;#svg;#svg
+            #Id;#Action;$Dialog;$AppConnection;svg;svg
             DLGFLL11;DialogFill;'DialogForTestCharts';appCon;Do.checkColor(greenRects[i],400,Color.GREEN);Do.checkColor(redRects[i],400,Color.RED)
 
         #EndFor
 
-        #Id;#Action;#Dialog;#AppConnection;#svg;#svg
+        #Id;#Action;$Dialog;$AppConnection;svg;svg
         DLGFLL12;DialogFill;'DialogForTestCharts';appCon;Do.checkColor(926,28,Color.GREEN);Do.checkColor(926,49,Color.RED)
 
-        #Id;#Call;#appCon
+        #Id;#Call;appCon
         CALL_5;stopBrowser;appCon
 
     #EndStep
@@ -716,19 +716,19 @@ report chart Pie chart;;;
         ~;"    ChartReport;ChartKind.Pie;DATA1;'Title'"
         #EndRawText
 
-        #Id;#Call;#rawText
+        #Id;#Call;rawText
         CALL_4;runMatrix;TEXT3
 
-        #Id;#Call;#pathToReport
+        #Id;#Call;pathToReport
         appCon;runBrowser;CALL_4
 
-        #Id;#Action;#Assert;#Dialog;#AppConnection;#title;#svg
+        #Id;#Action;#Assert;$Dialog;$AppConnection;title;svg
         DLGFLL1;DialogFill;This.Out.title == false && This.Out.svg == false;'DialogForTestCharts';appCon;Do.isVisible();Do.isVisible()
 
-        #Id;#Call;#appCon
+        #Id;#Call;appCon
         CALL_1;expandChart;appCon
 
-        #Id;#Action;#Assert;#Dialog;#AppConnection;#slices
+        #Id;#Action;#Assert;$Dialog;$AppConnection;slices
         DLGFLL5;DialogFill;This.Out.slices == 3;'DialogForTestCharts';appCon;Do.count()
 
         #Id;#Let
@@ -736,12 +736,12 @@ report chart Pie chart;;;
 
         #For;#From;#To;#Step
         i;0;list.size() - 1;1
-            #Id;#Action;#Dialog;#AppConnection;#slices
+            #Id;#Action;$Dialog;$AppConnection;slices
             DLGFLL6;DialogFill;'DialogForTestCharts';appCon;Do.use(i).check(list[i])
 
         #EndFor
 
-        #Id;#Call;#appCon
+        #Id;#Call;appCon
         CALL_6;stopBrowser;appCon
 
     #EndStep
@@ -762,16 +762,16 @@ report chart Pie chart;;;
         ~;"    ChartReport;ChartKind.Pie;DATA1;'Title';'myId'"
         #EndRawText
 
-        #Id;#Call;#rawText
+        #Id;#Call;rawText
         pathToReport;runMatrix;TEXT1
 
-        #Id;#Call;#pathToReport
+        #Id;#Call;pathToReport
         appCon;runBrowser;pathToReport
 
-        #Id;#Action;#Assert;#Dialog;#AppConnection;#title;#svg
+        #Id;#Action;#Assert;$Dialog;$AppConnection;title;svg
         DLGFLL11;DialogFill;This.Out.title == true && This.Out.svg == true;'DialogForTestCharts';appCon;Do.isVisible();Do.isVisible()
 
-        #Id;#Action;#Assert;#Dialog;#AppConnection;#slices
+        #Id;#Action;#Assert;$Dialog;$AppConnection;slices
         DLGFLL55;DialogFill;This.Out.slices == 3;'DialogForTestCharts';appCon;Do.count()
 
         #Id;#Let
@@ -779,18 +779,18 @@ report chart Pie chart;;;
 
         #For;#From;#To;#Step
         i;0;list.size() - 1;1
-            #Id;#Action;#Dialog;#AppConnection;#slices
+            #Id;#Action;$Dialog;$AppConnection;slices
             DLGFLL66;DialogFill;'DialogForTestCharts';appCon;Do.use(i).check(list[i])
 
         #EndFor
 
-        #Id;#Call;#appCon
+        #Id;#Call;appCon
         CALL_1;expandChart;appCon
 
-        #Id;#Action;#Assert;#Dialog;#AppConnection;#MockElement
+        #Id;#Action;#Assert;$Dialog;$AppConnection;MockElement
         DLGFLL9;DialogFill;This.Result == Result.Failed;'DialogForTestReport';appCon;Do.use(new Locator().kind(ControlKind.Any).xpath('.//table[contains(@class,"innerTable")]//div[@class="container"]')).isVisible()
 
-        #Id;#Call;#appCon
+        #Id;#Call;appCon
         CALL_6;stopBrowser;appCon
 
     #EndStep
@@ -811,16 +811,16 @@ report chart Pie chart;;;
         ~;"    ChartReport;ChartKind.Pie;DATA1;'Title';'myId';{'A' : Color.RED, 'B' : Color.GREEN, 'C' : Color.BLUE}"
         #EndRawText
 
-        #Id;#Call;#rawText
+        #Id;#Call;rawText
         pathToReport;runMatrix;TEXT
 
-        #Id;#Call;#pathToReport
+        #Id;#Call;pathToReport
         appCon;runBrowser;pathToReport
 
-        #Id;#Action;#Dialog;#AppConnection;#svg;#svg;#svg
+        #Id;#Action;$Dialog;$AppConnection;svg;svg;svg
         DLGFLL56;DialogFill;'DialogForTestCharts';appCon;Do.checkColor(100, 85, Color.RED);Do.checkColor(100, 200, Color.GREEN);Do.checkColor(200, 200, Color.BLUE)
 
-        #Id;#Call;#appCon
+        #Id;#Call;appCon
         CALL_2;stopBrowser;appCon
 
     #EndStep
@@ -828,12 +828,12 @@ report chart Pie chart;;;
 
 #TestCase;#Kind;#Depends;#For
 subcases;;;
-    #Id;#SubCase;#rawText
+    #Id;#SubCase;rawText
     runMatrix;returned value - path to report;TEXT
-        #Id;#Action;#Text
+        #Id;#Action;$Text
         MXRN1;MatrixRunFromText;rawText
 
-        #Id;#Action;#Matrix
+        #Id;#Action;$Matrix
         MXWT1;MatrixWait;MXRN1.Out
 
         #Assert;#Message
@@ -844,9 +844,9 @@ subcases;;;
 
     #EndSubCase
 
-    #Id;#SubCase;#pathToReport
+    #Id;#SubCase;pathToReport
     runBrowser;returned value - appConnection;pathToReport
-        #Id;#Action;#AppId;#Browser;#URL
+        #Id;#Action;$AppId;Browser;URL
         APPSTR1;ApplicationStart;mockWebApp;mockWebBrowser;'file://' + new File(pathToReport).getAbsolutePath()
 
         #Return
@@ -854,40 +854,40 @@ subcases;;;
 
     #EndSubCase
 
-    #Id;#SubCase;#appCon
+    #Id;#SubCase;appCon
     stopBrowser;;appCon
-        #Id;#Action;#AppConnection
+        #Id;#Action;$AppConnection
         APPSTP1;ApplicationStop;appCon
 
     #EndSubCase
 
-    #Id;#SubCase;#appCon
+    #Id;#SubCase;appCon
     expand;;appCon
-        #Id;#Action;#Dialog;#AppConnection;#Executed
+        #Id;#Action;$Dialog;$AppConnection;Executed
         DLGFLL1;DialogFill;'DialogForTestReport';appCon;Do.click()
 
-        #Id;#Action;#Dialog;#AppConnection;#MockElement
+        #Id;#Action;$Dialog;$AppConnection;MockElement
         DLGFLL2;DialogFill;'DialogForTestReport';appCon;Do.use(new Locator().kind(ControlKind.Any).xpath('.//a[contains(.,"TestCase")]')).click()
 
-        #Id;#Action;#Dialog;#AppConnection;#MockElement
+        #Id;#Action;$Dialog;$AppConnection;MockElement
         DLGFLL3;DialogFill;'DialogForTestReport';appCon;Do.use(new Locator().kind(ControlKind.Any).xpath('.//a[contains(.,"ActionItem (Report)")]')).click()
 
     #EndSubCase
 
-    #Id;#SubCase;#appCon
+    #Id;#SubCase;appCon
     expandChart;;appCon
-        #Id;#Action;#Dialog;#AppConnection;#Executed
+        #Id;#Action;$Dialog;$AppConnection;Executed
         DLGFLL1;DialogFill;'DialogForTestReport';appCon;Do.click()
 
-        #Id;#Action;#Dialog;#AppConnection;#MockElement
+        #Id;#Action;$Dialog;$AppConnection;MockElement
         DLGFLL2;DialogFill;'DialogForTestReport';appCon;Do.use(new Locator().kind(ControlKind.Any).xpath('.//a[contains(.,"TestCase")]')).click()
 
-        #Id;#Action;#Dialog;#AppConnection;#MockElement
+        #Id;#Action;$Dialog;$AppConnection;MockElement
         DLGFLL3;DialogFill;'DialogForTestReport';appCon;Do.use(new Locator().kind(ControlKind.Any).xpath('.//a[contains(.,"ActionItem (ChartReport)")]')).click()
 
     #EndSubCase
 
-    #Id;#SubCase;#appCon;#list
+    #Id;#SubCase;appCon;list
     expandWithPath;;;
         #If
         !(list is java.util.List)
@@ -896,16 +896,17 @@ subcases;;;
 
         #EndIf
 
-        #Id;#Action;#Dialog;#AppConnection;#Executed
+        #Id;#Action;$Dialog;$AppConnection;Executed
         DLGFLL1;DialogFill;'DialogForTestReport';appCon;Do.click()
 
         #ForEach;#In
         link;list
-            #Id;#Action;#MockElement;#Dialog;#AppConnection
+            #Id;#Action;MockElement;$Dialog;$AppConnection
             DLGFLL4;DialogFill;Do.use(new Locator().kind(ControlKind.Any).xpath('.//a[contains(.,"'+link+'")]')).click();'DialogForTestReport';appCon
 
         #EndForEach
 
     #EndSubCase
+
 
 

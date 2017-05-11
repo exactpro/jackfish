@@ -68,7 +68,7 @@ public class Continue extends MatrixItem
 	@Override
 	protected void writePrefixItSelf(CsvWriter writer, List<String> firstLine, List<String> secondLine)
 	{
-		super.addParameter(firstLine, Tokens.Continue.get());
+		super.addParameter(firstLine, TypeMandatory.System, Tokens.Continue.get());
 	}
 
 	@Override

@@ -126,8 +126,8 @@ public final class ForEach extends MatrixItem
 	@Override
 	protected void writePrefixItSelf(CsvWriter writer, List<String> firstLine, List<String> secondLine)
 	{
-		super.addParameter(firstLine, secondLine, Tokens.ForEach.get(), this.var.get());
-		super.addParameter(firstLine, secondLine, Tokens.In.get(), this.in.getExpression());
+		super.addParameter(firstLine, secondLine, TypeMandatory.System, Tokens.ForEach.get(), this.var.get());
+		super.addParameter(firstLine, secondLine, TypeMandatory.System, Tokens.In.get(), this.in.getExpression());
 	}
 
 	@Override
@@ -142,7 +142,7 @@ public final class ForEach extends MatrixItem
 	@Override
 	protected void writeSuffixItSelf(CsvWriter writer, List<String> line, String indent)
 	{
-		super.addParameter(line, Tokens.EndForEach.get());
+		super.addParameter(line, TypeMandatory.System, Tokens.EndForEach.get());
 	}
 
 	@Override

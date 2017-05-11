@@ -161,7 +161,7 @@ public class Let extends MatrixItem
 	@Override
 	protected void writePrefixItSelf(CsvWriter writer, List<String> firstLine, List<String> secondLine)
 	{
-		super.addParameter(firstLine, secondLine, Tokens.Let.get(), this.value.getExpression());
+		super.addParameter(firstLine, secondLine, TypeMandatory.System, Tokens.Let.get(), this.value.getExpression());
 	}
 
 	@Override

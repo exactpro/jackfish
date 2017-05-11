@@ -136,7 +136,7 @@ public final class NameSpace extends MatrixItem
 	@Override
 	protected void writePrefixItSelf(CsvWriter writer, List<String> firstLine, List<String> secondLine)
 	{
-		addParameter(firstLine, secondLine, Tokens.NameSpace.get(), this.name.get());
+		addParameter(firstLine, secondLine, TypeMandatory.System, Tokens.NameSpace.get(), this.name.get());
 	}
 
 	@Override
@@ -150,7 +150,7 @@ public final class NameSpace extends MatrixItem
 	@Override
 	protected void writeSuffixItSelf(CsvWriter writer, List<String> line, String indent)
 	{
-		super.addParameter(line, Tokens.EndNameSpace.get());
+		super.addParameter(line, TypeMandatory.System, Tokens.EndNameSpace.get());
 	}
 
 	@Override

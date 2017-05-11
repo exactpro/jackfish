@@ -158,7 +158,7 @@ public class Return extends MatrixItem
 	@Override
 	protected void writePrefixItSelf(CsvWriter writer, List<String> firstLine, List<String> secondLine)
 	{
-		super.addParameter(firstLine, secondLine, Tokens.Return.get(), this.returnValue.getExpression());
+		super.addParameter(firstLine, secondLine, TypeMandatory.System, Tokens.Return.get(), this.returnValue.getExpression());
 	}
 
 	@Override

@@ -191,8 +191,8 @@ public class RawText extends MatrixItem
 	@Override
 	protected void writePrefixItSelf(CsvWriter writer, List<String> firstLine, List<String> secondLine)
 	{
-		addParameter(firstLine, secondLine, Tokens.RawText.get(), this.description.get());
-		addParameter(firstLine, secondLine, Tokens.Kind.get(), this.highlighterMutableValue.get());
+		addParameter(firstLine, secondLine, TypeMandatory.System, Tokens.RawText.get(), this.description.get());
+		addParameter(firstLine, secondLine, TypeMandatory.System, Tokens.Kind.get(), this.highlighterMutableValue.get());
 	}
 
 	@Override
@@ -210,7 +210,7 @@ public class RawText extends MatrixItem
 			logger.error(e.getMessage(), e);
 		}
 
-		super.addParameter(line, Tokens.EndRawText.get());
+		super.addParameter(line, TypeMandatory.System, Tokens.EndRawText.get());
 	}
 
 	@Override

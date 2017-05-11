@@ -89,16 +89,16 @@ public class Step extends MatrixItem
 	@Override
 	protected void writePrefixItSelf(CsvWriter writer, List<String> firstLine, List<String> secondLine)
 	{
-		super.addParameter(firstLine, secondLine, Tokens.Step.get(), 	this.identify.getExpression());
-        super.addParameter(firstLine, secondLine, Tokens.Kind.get(),    this.kind.get());
-        super.addParameter(firstLine, secondLine, Tokens.For.get(),     this.plugin.getExpression());
-        super.addParameter(firstLine, secondLine, Tokens.Depends.get(),   this.depends.get());
+		super.addParameter(firstLine, secondLine, TypeMandatory.System, 	Tokens.Step.get(), this.identify.getExpression());
+        super.addParameter(firstLine, secondLine, TypeMandatory.System,    Tokens.Kind.get(), this.kind.get());
+        super.addParameter(firstLine, secondLine, TypeMandatory.System,     Tokens.For.get(), this.plugin.getExpression());
+        super.addParameter(firstLine, secondLine, TypeMandatory.System,   Tokens.Depends.get(), this.depends.get());
 	}
 
 	@Override
 	protected void writeSuffixItSelf(CsvWriter writer, List<String> line, String indent)
 	{
-		super.addParameter(line, Tokens.EndStep.get());
+		super.addParameter(line, TypeMandatory.System, Tokens.EndStep.get());
 	}
 
 	@Override

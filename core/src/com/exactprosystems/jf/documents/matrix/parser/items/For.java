@@ -148,10 +148,10 @@ public final class For extends MatrixItem
 	@Override
 	protected void writePrefixItSelf(CsvWriter writer, List<String> firstLine, List<String> secondLine)
 	{
-		super.addParameter(firstLine, secondLine, Tokens.For.get(), 	this.var.get());
-		super.addParameter(firstLine, secondLine, Tokens.From.get(), 	this.from.getExpression());
-		super.addParameter(firstLine, secondLine, Tokens.To.get(), 		this.to.getExpression());
-		super.addParameter(firstLine, secondLine, Tokens.Step.get(), 	this.step.getExpression());
+		super.addParameter(firstLine, secondLine, TypeMandatory.System, 	Tokens.For.get(), this.var.get());
+		super.addParameter(firstLine, secondLine, TypeMandatory.System, 	Tokens.From.get(), this.from.getExpression());
+		super.addParameter(firstLine, secondLine, TypeMandatory.System, 		Tokens.To.get(), this.to.getExpression());
+		super.addParameter(firstLine, secondLine, TypeMandatory.System, 	Tokens.Step.get(), this.step.getExpression());
 	}
 
 	@Override
@@ -169,7 +169,7 @@ public final class For extends MatrixItem
 	@Override
 	protected void writeSuffixItSelf(CsvWriter writer, List<String> line, String indent)
 	{
-		super.addParameter(line, Tokens.EndFor.get());
+		super.addParameter(line, TypeMandatory.System, Tokens.EndFor.get());
 	}
 
     @Override

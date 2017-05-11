@@ -19,6 +19,7 @@ import com.exactprosystems.jf.documents.matrix.parser.*;
 import com.exactprosystems.jf.documents.matrix.parser.listeners.IMatrixListener;
 import com.exactprosystems.jf.functions.HelpKind;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -210,16 +211,16 @@ public final class ActionItem extends MatrixItem
 	@Override
 	protected void writePrefixItSelf(CsvWriter writer, List<String> firstLine, List<String> secondLine)
 	{
-		super.addParameter(firstLine, secondLine, Tokens.Action.get(), getActionName());
+		super.addParameter(firstLine, secondLine, TypeMandatory.System, Tokens.Action.get(), getActionName());
 
 		if (!this.assertBool.isExpressionNullOrEmpty())
 		{
-			super.addParameter(firstLine, secondLine, Tokens.Assert.get(), this.assertBool.getExpression());
+			super.addParameter(firstLine, secondLine, TypeMandatory.System, Tokens.Assert.get(), this.assertBool.getExpression());
 		}
 
 		for (Parameter parameter : getParameters())
 		{
-			super.addParameter(firstLine, secondLine, parameter.getName(), parameter.getExpression());
+			super.addParameter(firstLine, secondLine, parameter.getType(), parameter.getName(), parameter.getExpression());
 		}
 	}
 

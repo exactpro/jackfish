@@ -1,6 +1,6 @@
 #Id;#TestCase;#Kind;#Depends;#For
 INIT;Init;;;
-    #Id;#Global;#Action;#AppId;#Browser;#URL
+    #Id;#Global;#Action;$AppId;Browser;URL
     APPSTR1;1;ApplicationStart;mockWebApp;mockWebBrowser;mockWebURL
 
 
@@ -18,25 +18,25 @@ ALERT;DialogAlert;;;
     #Id;#Let
     text;'text in alert'
 
-    #Id;#Action;#Dialog;#AppConnection;#TextBox
+    #Id;#Action;$Dialog;$AppConnection;TextBox
     DLGFLL1;DialogFill;'Main';APPSTR1.Out;Do.script('alert(\''+text+'\')')
 
-    #Id;#Action;#Perform;#AppConnection
+    #Id;#Action;$Perform;$AppConnection
     DLGALRT1;DialogAlert;PerformKind.Dismiss;APPSTR1.Out
 
     #Assert;#Message
     DLGALRT1.Out == text;'Wrong text'
 
-    #Id;#Action;#Dialog;#AppConnection;#TextBox
+    #Id;#Action;$Dialog;$AppConnection;TextBox
     DLGFLL2;DialogFill;'Main';APPSTR1.Out;Do.script('prompt(\''+text+'\')')
 
-    #Id;#Action;#Perform;#AppConnection
+    #Id;#Action;$Perform;$AppConnection
     DLGALRT2;DialogAlert;PerformKind.Nothing;APPSTR1.Out
 
     #Assert;#Message
     DLGALRT2.Out == text;'Wrong text'
 
-    #Id;#Action;#Perform;#AppConnection;#Text
+    #Id;#Action;$Perform;$AppConnection;$Text
     DLGALRT3;DialogAlert;PerformKind.Accept;APPSTR1.Out;'new text'
 
     #Assert;#Message
@@ -69,7 +69,7 @@ IMAGE_SAVE;ImageSave;;;
     #Id;#Action
     DSK2;DesktopScreenshot
 
-    #Id;#Action;#Image;#Dir
+    #Id;#Action;$Image;$Dir
     IMGSV1;ImageSave;DSK2.Out;'reports'
 
     #Assert;#Message
@@ -78,7 +78,7 @@ IMAGE_SAVE;ImageSave;;;
     #Id;#Let
     fileName;'reports/saved.jpg'
 
-    #Id;#Action;#Image;#File
+    #Id;#Action;$Image;$File
     IMGSV2;ImageSave;DSK2.Out;fileName
 
     #Assert;#Message
@@ -86,22 +86,23 @@ IMAGE_SAVE;ImageSave;;;
 
     // =====================================================================
     // Negative tests
-    #Id;#Action;#Assert;#Image
+    #Id;#Action;#Assert;$Image
     IMGSV3;ImageSave;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;
 
-    #Id;#Action;#Assert;#Image
+    #Id;#Action;#Assert;$Image
     IMGSV4;ImageSave;This.Result == Result.Failed && This.Kind == ErrorKind.WRONG_PARAMETERS;DSK2.Out
 
-    #Id;#Action;#Assert;#Image;#File
+    #Id;#Action;#Assert;$Image;$File
     IMGSV5;ImageSave;This.Result == Result.Failed && This.Kind == ErrorKind.EXCEPTION;DSK2.Out;''
 
-    #Id;#Action;#Assert;#Image;#Dir
+    #Id;#Action;#Assert;$Image;$Dir
     IMGSV6;ImageSave;This.Result == Result.Failed && This.Kind == ErrorKind.WRONG_PARAMETERS;DSK2.Out;''
 
 
 #Id;#TestCase;#Kind;#Depends;#For
 CLEANUP;Cleanup;;;
-    #Id;#Action;#AppConnection
+    #Id;#Action;$AppConnection
     APPSTP1;ApplicationStop;APPSTR1.Out
+
 
 

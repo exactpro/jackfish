@@ -186,8 +186,8 @@ public class Assert extends MatrixItem
 	@Override
 	protected void writePrefixItSelf(CsvWriter writer, List<String> firstLine, List<String> secondLine)
 	{
-		super.addParameter(firstLine, secondLine, Tokens.Assert.get(), 	this.assertion.getExpression());
-		super.addParameter(firstLine, secondLine, Tokens.Message.get(), this.message.getExpression());
+		super.addParameter(firstLine, secondLine, TypeMandatory.System, 	Tokens.Assert.get(), this.assertion.getExpression());
+		super.addParameter(firstLine, secondLine, TypeMandatory.System, Tokens.Message.get(), this.message.getExpression());
 	}
 
 	@Override

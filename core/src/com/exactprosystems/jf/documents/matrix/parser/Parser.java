@@ -26,11 +26,14 @@ import java.util.*;
 
 public class Parser
 {
+    public static boolean useNewSyntax = false;
+    
 	// other syntax details
 	public static final String	error					= "error";
 	public static final String	err						= "err";
 	public static final String	commentPrefix			= "//";
 	public static final String	systemPrefix			= "#";
+    public static final String  knownPrefix             = "$";
 	public static final char	prefferedQuotes			= '"';
 
 	public Parser()
@@ -97,8 +100,7 @@ public class Parser
 				});
 	}
 
-    public MatrixItem readMatrix(MatrixItem root, Reader rawReader)
-            throws MatrixException
+    public MatrixItem readMatrix(MatrixItem root, Reader rawReader) throws MatrixException
     {
         CsvReader reader = new CsvReader(rawReader);
         reader.setSkipEmptyRecords(false);
@@ -120,8 +122,8 @@ public class Parser
             {
                 count++;
                 str = reader.getValues();
-
-                if (arrayOfEmpties(str) && !needFillValue)
+                
+                if (Arrays.stream(str).allMatch(String::isEmpty) && !needFillValue)
                 {
                     // nothing to do
                     continue;
@@ -130,7 +132,7 @@ public class Parser
                 if (str[0].startsWith(commentPrefix))
                 {
                     // it is a comment
-                    comments.add(removeCommentMark(str[0]));
+                    comments.add(str[0].substring(commentPrefix.length()).trim());
                     continue;
                 }
 
@@ -176,7 +178,6 @@ public class Parser
                     }
 
                     needFillValue = false;
-
                     currentItem = addNewMatrixItem(currentItem, itemAttr, headers, str, comments);
                     comments.clear();
                 }
@@ -247,27 +248,37 @@ public class Parser
                 {
                     break;
                 }
-
-                if (header != null && header.startsWith(commentPrefix))
+                if (header != null)
                 {
-                    break;
-                }
+                    if(header.startsWith(commentPrefix))
+                    {
+                        break;
+                    }
 
-                if (header != null && header.startsWith(systemPrefix))
-                {
-                    String token = header.substring(systemPrefix.length());
                     if (value != null)
                     {
-                        value = value.replaceAll(Configuration.unicodeDelimiter,
-                                String.valueOf(Configuration.matrixDelimiter));
+                        value = value.replaceAll(Configuration.unicodeDelimiter, String.valueOf(Configuration.matrixDelimiter));
                     }
-                    if (Tokens.contains(token))
+                    if (header.startsWith(systemPrefix))
                     {
-                        systemParameters.put(Tokens.valueOf(token), value);
+                        String token = header.substring(systemPrefix.length());
+                        if (Tokens.contains(token))
+                        {
+                            systemParameters.put(Tokens.valueOf(token), value);
+                        }
+                        else
+                        {
+                            userParameters.add(token, value, TypeMandatory.Extra);
+                        }
+                    }
+                    else if (header.startsWith(knownPrefix))
+                    {
+                        String parName = header.substring(knownPrefix.length());
+                        userParameters.add(parName, value, TypeMandatory.Mandatory);
                     }
                     else
                     {
-                        userParameters.add(token, value);
+                        userParameters.add(header, value, TypeMandatory.Extra);
                     }
                 }
             }
@@ -426,16 +437,13 @@ public class Parser
 		for (Class<?> itemType :  knownItems)
 		{
 			List<Tokens> tokensCopy = new ArrayList<Tokens>();
-			tokensCopy.addAll(tokens);
-			
+            tokensCopy.addAll(tokens);
 			MatrixItemAttribute annotation = itemType.getAnnotation(MatrixItemAttribute.class);
-
 			tokensCopy.removeAll(Arrays.asList(annotation.mayContain()));
 			
 			if (tokensCopy.containsAll(Arrays.asList(annotation.shouldContain())))
 			{
 				tokensCopy.removeAll(Arrays.asList(annotation.shouldContain()));
-				
 				if (annotation.hasParameters() || (!annotation.hasParameters() && tokensCopy.size() == 0))
 				{
 					suitable.add(new ItemTypeAndAttribute(annotation, itemType));
@@ -445,39 +453,16 @@ public class Parser
 
 		if (suitable.size() == 0)
 		{
-			throw new MatrixException(lineNumber, null, "Unknown syntax item "
-					+ Arrays.toString(tokens.toArray()));
+			throw new MatrixException(lineNumber, null, "Unknown syntax item " + Arrays.toString(tokens.toArray()));
 		}
 		
 		if (suitable.size() > 1)
 		{
-			String s = "";
-			for (ItemTypeAndAttribute item : suitable)
-			{
-				s += item.itemType.getSimpleName() + " ";
-			}
-			
+			String s = suitable.stream().map(i -> i.itemType.getSimpleName()).reduce(" ", String::concat);
 			throw new MatrixException(lineNumber, null, "Too many syntax items are suitable: " + s); 
 		}
 
 		return suitable.get(0);
-	}
-
-	private boolean arrayOfEmpties(String[] array)
-	{
-		for (String element : array)
-		{
-			if (!element.isEmpty())
-			{
-				return false;
-			}
-		}
-		return true; 
-	}
-
-	private String removeCommentMark(String string)
-	{
-		return string.substring(commentPrefix.length()).trim();
 	}
 
 	private static final Logger logger = Logger.getLogger(Parser.class);

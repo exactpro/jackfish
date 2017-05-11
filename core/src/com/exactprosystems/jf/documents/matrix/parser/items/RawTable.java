@@ -167,7 +167,7 @@ public class RawTable extends MatrixItem
 	@Override
 	protected void writePrefixItSelf(CsvWriter writer, List<String> firstLine, List<String> secondLine)
 	{
-		addParameter(firstLine, secondLine, Tokens.RawTable.get(), this.typeName.get());
+		addParameter(firstLine, secondLine, TypeMandatory.System, Tokens.RawTable.get(), this.typeName.get());
 	}
 	
 	@Override
@@ -182,7 +182,7 @@ public class RawTable extends MatrixItem
 			logger.error(e.getMessage(), e);
 		}
 
-		super.addParameter(line, Tokens.EndRawTable.get());
+		super.addParameter(line, TypeMandatory.System, Tokens.EndRawTable.get());
 	}
 	
 

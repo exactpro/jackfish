@@ -5,7 +5,7 @@ TABLE_ADD_COLUMNS;Test case;Never;;
         #Id;#Action
         TBL1;TableCreate
 
-        #Action;#Table;#Columns
+        #Action;$Table;$Columns
         TableAddColumns;TBL1.Out;'one'
 
         #Assert;#Message
@@ -18,7 +18,7 @@ TABLE_ADD_COLUMNS;Test case;Never;;
         #Id;#Action
         TBL1;TableCreate
 
-        #Action;#Table;#Columns;#Index
+        #Action;$Table;$Columns;$Index
         TableAddColumns;TBL1.Out;'one';0
 
         #Assert;#Message
@@ -28,10 +28,10 @@ TABLE_ADD_COLUMNS;Test case;Never;;
 
     #Step;#Kind;#For;#Depends
     'Add a column in table which one already has 2 columns';;;
-        #Id;#Action;#id;#name
+        #Id;#Action;id;name
         TBL1;TableCreate;;
 
-        #Action;#Table;#Columns
+        #Action;$Table;$Columns
         TableAddColumns;TBL1.Out;'surname'
 
         #Assert;#Message
@@ -41,10 +41,10 @@ TABLE_ADD_COLUMNS;Test case;Never;;
 
     #Step;#Kind;#For;#Depends
     'Add array of columns in table which one already has 2 columns';;;
-        #Id;#Action;#id;#name
+        #Id;#Action;id;name
         TBL1;TableCreate;;
 
-        #Action;#Table;#Columns
+        #Action;$Table;$Columns
         TableAddColumns;TBL1.Out;new String[]{'adress','postindex'}
 
         #Assert;#Message
@@ -54,10 +54,10 @@ TABLE_ADD_COLUMNS;Test case;Never;;
 
     #Step;#Kind;#For;#Depends
     'Add a column by index 1 to table which one already has 2 columns';;;
-        #Id;#Action;#id;#name
+        #Id;#Action;id;name
         TBL1;TableCreate;;
 
-        #Action;#Table;#Columns;#Index
+        #Action;$Table;$Columns;$Index
         TableAddColumns;TBL1.Out;'age';1
 
         #Assert;#Message
@@ -67,10 +67,10 @@ TABLE_ADD_COLUMNS;Test case;Never;;
 
     #Step;#Kind;#For;#Depends
     'Add a column by empty index to table which one already has 2 columns';;;
-        #Id;#Action;#id;#name
+        #Id;#Action;id;name
         TBL1;TableCreate;;
 
-        #Action;#Table;#Columns;#Index
+        #Action;$Table;$Columns;$Index
         TableAddColumns;TBL1.Out;'town';
 
         #Assert;#Message
@@ -80,10 +80,10 @@ TABLE_ADD_COLUMNS;Test case;Never;;
 
     #Step;#Kind;#For;#Depends
     'Add array of columns by index to table which one already has 2 columns';;;
-        #Id;#Action;#id;#name
+        #Id;#Action;id;name
         TBL1;TableCreate;;
 
-        #Action;#Table;#Columns;#Index
+        #Action;$Table;$Columns;$Index
         TableAddColumns;TBL1.Out;new String[]{'adress','postindex'};1
 
         #Assert;#Message
@@ -94,71 +94,71 @@ TABLE_ADD_COLUMNS;Test case;Never;;
     #Step;#Kind;#For;#Depends
     'The table field has not fill';;;
         // 
-        #Action;#Assert;#Table;#Columns
+        #Action;#Assert;$Table;$Columns
         TableAddColumns;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;;'name'
 
     #EndStep
 
     #Step;#Kind;#For;#Depends
     'The column field has not fill';;;
-        #Id;#Action;#id;#name
+        #Id;#Action;id;name
         TBL1;TableCreate;;
 
         // 
-        #Action;#Assert;#Table;#Columns
+        #Action;#Assert;$Table;$Columns
         TableAddColumns;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;TBL1.Out;
 
     #EndStep
 
     #Step;#Kind;#For;#Depends
     'The column field has empty string value';;;
-        #Id;#Action;#id;#name
+        #Id;#Action;id;name
         TBL1;TableCreate;;
 
-        #Action;#Assert;#Table;#Columns
+        #Action;#Assert;$Table;$Columns
         TableAddColumns;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;TBL1.Out;''
 
     #EndStep
 
     #Step;#Kind;#For;#Depends
     'The column field has array of strings which has an empty string';;;
-        #Id;#Action;#id;#name
+        #Id;#Action;id;name
         TBL1;TableCreate;;
 
-        #Action;#Assert;#Table;#Columns
+        #Action;#Assert;$Table;$Columns
         TableAddColumns;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;TBL1.Out;new String[]{'adress','','postindex'}
 
     #EndStep
 
     #Step;#Kind;#For;#Depends
     'The index field has out of bound values';;;
-        #Id;#Action;#id;#name
+        #Id;#Action;id;name
         TBL1;TableCreate;;
 
-        #Action;#Assert;#Table;#Columns;#Index
+        #Action;#Assert;$Table;$Columns;$Index
         TableAddColumns;This.Result == Result.Failed && This.Kind == ErrorKind.WRONG_PARAMETERS;TBL1.Out;'minusOne';-1
 
-        #Action;#Assert;#Table;#Columns;#Index
+        #Action;#Assert;$Table;$Columns;$Index
         TableAddColumns;This.Result == Result.Failed && This.Kind == ErrorKind.WRONG_PARAMETERS;TBL1.Out;'nineNineNine';999
 
     #EndStep
 
     #Step;#Kind;#For;#Depends
     'The table field has a value, but it is not a table value';;;
-        #Id;#Action;#id;#name
+        #Id;#Action;id;name
         TBL1;TableCreate;;
 
-        #Action;#Assert;#Table;#Columns
+        #Action;#Assert;$Table;$Columns
         TableAddColumns;This.Result == Result.Failed && This.Kind == ErrorKind.WRONG_PARAMETERS;TBL1;'someColumn'
 
     #EndStep
 
     #Step;#Kind;#For;#Depends
     'The columns field has a value, but it is not a string or array of strings value';;;
-        #Id;#Action;#id;#name
+        #Id;#Action;id;name
         TBL1;TableCreate;;
 
-        #Action;#Assert;#Table;#Columns
+        #Action;#Assert;$Table;$Columns
         TableAddColumns;This.Result == Result.Failed && This.Kind == ErrorKind.WRONG_PARAMETERS;TBL1.Out;5
 
     #EndStep
@@ -176,7 +176,7 @@ TABLE_SORT;Test case;Never;;
         2;3
         #EndRawTable
 
-        #Action;#ColumnName;#Table
+        #Action;$ColumnName;$Table
         TableSort;'numbers';actual
 
         #Id;#RawTable
@@ -187,7 +187,7 @@ TABLE_SORT;Test case;Never;;
         2;3
         #EndRawTable
 
-        #Action;#Expected;#Actual
+        #Action;$Expected;$Actual
         TableCompareTwo;expected;actual
 
     #EndStep
@@ -202,7 +202,7 @@ TABLE_SORT;Test case;Never;;
         2;1
         #EndRawTable
 
-        #Action;#ColumnName;#Table
+        #Action;$ColumnName;$Table
         TableSort;'numbers';actual
 
         #Id;#RawTable
@@ -213,7 +213,7 @@ TABLE_SORT;Test case;Never;;
         2;3
         #EndRawTable
 
-        #Action;#Expected;#Actual
+        #Action;$Expected;$Actual
         TableCompareTwo;expected;actual
 
     #EndStep
@@ -228,7 +228,7 @@ TABLE_SORT;Test case;Never;;
         2;3
         #EndRawTable
 
-        #Action;#ColumnName;#Table;#Ascending
+        #Action;$ColumnName;$Table;$Ascending
         TableSort;'numbers';actual;true
 
         #Id;#RawTable
@@ -239,7 +239,7 @@ TABLE_SORT;Test case;Never;;
         2;3
         #EndRawTable
 
-        #Action;#Expected;#Actual
+        #Action;$Expected;$Actual
         TableCompareTwo;expected;actual
 
     #EndStep
@@ -254,7 +254,7 @@ TABLE_SORT;Test case;Never;;
         2;1
         #EndRawTable
 
-        #Action;#ColumnName;#Table;#Ascending
+        #Action;$ColumnName;$Table;$Ascending
         TableSort;'numbers';actual;true
 
         #Id;#RawTable
@@ -265,7 +265,7 @@ TABLE_SORT;Test case;Never;;
         2;3
         #EndRawTable
 
-        #Action;#Expected;#Actual
+        #Action;$Expected;$Actual
         TableCompareTwo;expected;actual
 
     #EndStep
@@ -280,7 +280,7 @@ TABLE_SORT;Test case;Never;;
         2;1
         #EndRawTable
 
-        #Action;#ColumnName;#Table;#Ascending
+        #Action;$ColumnName;$Table;$Ascending
         TableSort;'numbers';actual;false
 
         #Id;#RawTable
@@ -291,7 +291,7 @@ TABLE_SORT;Test case;Never;;
         2;1
         #EndRawTable
 
-        #Action;#Expected;#Actual
+        #Action;$Expected;$Actual
         TableCompareTwo;expected;actual
 
     #EndStep
@@ -306,7 +306,7 @@ TABLE_SORT;Test case;Never;;
         2;3
         #EndRawTable
 
-        #Action;#ColumnName;#Table;#Ascending
+        #Action;$ColumnName;$Table;$Ascending
         TableSort;'numbers';actual;false
 
         #Id;#RawTable
@@ -317,7 +317,7 @@ TABLE_SORT;Test case;Never;;
         2;1
         #EndRawTable
 
-        #Action;#Expected;#Actual
+        #Action;$Expected;$Actual
         TableCompareTwo;expected;actual
 
     #EndStep
@@ -332,7 +332,7 @@ TABLE_SORT;Test case;Never;;
         2;three;1;11
         #EndRawTable
 
-        #Action;#ColumnName;#Table
+        #Action;$ColumnName;$Table
         TableSort;'numbers';actual
 
         #Id;#RawTable
@@ -343,24 +343,24 @@ TABLE_SORT;Test case;Never;;
         2;one;3;33
         #EndRawTable
 
-        #Action;#Expected;#Actual
+        #Action;$Expected;$Actual
         TableCompareTwo;expected;actual
 
     #EndStep
 
     #Step;#Kind;#For;#Depends
     'The table field has not fill';;;
-        #Action;#Assert;#ColumnName;#Table;#Ascending
+        #Action;#Assert;$ColumnName;$Table;$Ascending
         TableSort;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;'numbers';;true
 
     #EndStep
 
     #Step;#Kind;#For;#Depends
     'The table field has a value, but it is not a table value';;;
-        #Id;#Action;#id;#name
+        #Id;#Action;id;name
         TBL1;TableCreate;;
 
-        #Action;#Assert;#ColumnName;#Table;#Ascending
+        #Action;#Assert;$ColumnName;$Table;$Ascending
         TableSort;This.Result == Result.Failed && This.Kind == ErrorKind.WRONG_PARAMETERS;'numbers';TBL1;true
 
     #EndStep
@@ -375,7 +375,7 @@ TABLE_SORT;Test case;Never;;
         2;three;1;11
         #EndRawTable
 
-        #Action;#Assert;#ColumnName;#Table
+        #Action;#Assert;$ColumnName;$Table
         TableSort;This.Result == Result.Failed && This.Kind == ErrorKind.WRONG_PARAMETERS;'age';actual
 
     #EndStep
@@ -390,7 +390,7 @@ TABLE_SORT;Test case;Never;;
         2;three;1;11
         #EndRawTable
 
-        #Action;#Assert;#ColumnName;#Table
+        #Action;#Assert;$ColumnName;$Table
         TableSort;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;;actual
 
     #EndStep
@@ -405,7 +405,7 @@ TABLE_SORT;Test case;Never;;
         2;three;1;11
         #EndRawTable
 
-        #Action;#Assert;#ColumnName;#Table;#Ascending
+        #Action;#Assert;$ColumnName;$Table;$Ascending
         TableSort;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;'numbers';actual;
 
     #EndStep
@@ -420,7 +420,7 @@ TABLE_SORT;Test case;Never;;
         2;three;3;33
         #EndRawTable
 
-        #Action;#ColumnName;#Table;#Ascending
+        #Action;$ColumnName;$Table;$Ascending
         TableSort;'numbers';actual;'someValue'
 
         #Id;#RawTable
@@ -431,7 +431,7 @@ TABLE_SORT;Test case;Never;;
         2;one;1;11
         #EndRawTable
 
-        #Action;#Expected;#Actual
+        #Action;$Expected;$Actual
         TableCompareTwo;expected;actual
 
     #EndStep
@@ -459,7 +459,7 @@ TABLE_COMPARE_TWO;Test case;Never;;
             2;3
             #EndRawTable
 
-            #Id;#Action;#Expected;#Actual
+            #Id;#Action;$Expected;$Actual
             TBLCMP2;TableCompareTwo;expected;actual
 
         #EndStep
@@ -490,13 +490,13 @@ TABLE_COMPARE_TWO;Test case;Never;;
             2;3;;
             #EndRawTable
 
-            #Id;#Action;#ExcludeColumns;#Expected;#Actual
+            #Id;#Action;$ExcludeColumns;$Expected;$Actual
             TBLCMP2;TableCompareTwo;'NewColumn';expected;actual
 
-            #Id;#Action;#ExcludeColumns;#Expected;#Actual
+            #Id;#Action;$ExcludeColumns;$Expected;$Actual
             TBLCMP10;TableCompareTwo;'NewColumn';actual;expected
 
-            #Id;#Action;#ExcludeColumns;#Expected;#Actual
+            #Id;#Action;$ExcludeColumns;$Expected;$Actual
             TBLCMP10;TableCompareTwo;{'NewColumn','NewColumn2'};actual;expected
 
         #EndStep
@@ -519,7 +519,7 @@ TABLE_COMPARE_TWO;Test case;Never;;
             2;3;6
             #EndRawTable
 
-            #Id;#Action;#IgnoreRowsOrder;#Expected;#Actual
+            #Id;#Action;$IgnoreRowsOrder;$Expected;$Actual
             TBLCMP2;TableCompareTwo;true;expected;actual
 
         #EndStep
@@ -546,19 +546,19 @@ TABLE_COMPARE_TWO;Test case;Never;;
             2;1
             #EndRawTable
 
-            #Id;#Action;#Assert;#Expected;#Actual
+            #Id;#Action;#Assert;$Expected;$Actual
             TBLCMP1;TableCompareTwo;This.Result == Result.Failed && This.Kind == ErrorKind.NOT_EQUAL;expected;actual
 
-            #Id;#Action;#Assert;#Expected;#Actual
+            #Id;#Action;#Assert;$Expected;$Actual
             TBLCMP3;TableCompareTwo;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;;
 
-            #Id;#Action;#Assert;#Expected;#Actual
+            #Id;#Action;#Assert;$Expected;$Actual
             TBLCMP4;TableCompareTwo;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;;actual
 
-            #Id;#Action;#Assert;#Expected;#Actual
+            #Id;#Action;#Assert;$Expected;$Actual
             TBLCMP5;TableCompareTwo;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;expected;
 
-            #Id;#Action;#Assert;#Expected;#Actual
+            #Id;#Action;#Assert;$Expected;$Actual
             TBLCMP7;TableCompareTwo;This.Result == Result.Failed && This.Kind == ErrorKind.WRONG_PARAMETERS;new Date();new Date()
 
         #EndStep
@@ -581,10 +581,10 @@ TABLE_COMPARE_TWO;Test case;Never;;
             2;3;6
             #EndRawTable
 
-            #Id;#Action;#Assert;#ExcludeColumns;#Expected;#Actual
+            #Id;#Action;#Assert;$ExcludeColumns;$Expected;$Actual
             TBLCMP2;TableCompareTwo;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;;expected;actual
 
-            #Id;#Action;#Assert;#ExcludeColumns;#Expected;#Actual
+            #Id;#Action;#Assert;$ExcludeColumns;$Expected;$Actual
             TBLCMP6;TableCompareTwo;This.Result == Result.Failed && This.Kind == ErrorKind.WRONG_PARAMETERS;new Date();expected;actual
 
         #EndStep
@@ -607,13 +607,13 @@ TABLE_COMPARE_TWO;Test case;Never;;
             2;3;6
             #EndRawTable
 
-            #Id;#Action;#Assert;#IgnoreRowsOrder;#Expected;#Actual
+            #Id;#Action;#Assert;$IgnoreRowsOrder;$Expected;$Actual
             TBLCMP2;TableCompareTwo;This.Result == Result.Failed && This.Kind == ErrorKind.NOT_EQUAL;false;expected;actual
 
-            #Id;#Action;#Assert;#IgnoreRowsOrder;#Expected;#Actual
+            #Id;#Action;#Assert;$IgnoreRowsOrder;$Expected;$Actual
             TBLCMP8;TableCompareTwo;This.Result == Result.Failed && This.Kind == ErrorKind.WRONG_PARAMETERS;new Date();expected;actual
 
-            #Id;#Action;#Assert;#IgnoreRowsOrder;#Expected;#Actual
+            #Id;#Action;#Assert;$IgnoreRowsOrder;$Expected;$Actual
             TBLCMP9;TableCompareTwo;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;;expected;actual
 
         #EndStep
@@ -636,10 +636,10 @@ TABLE_COMPARE_TWO;Test case;Never;;
             2;3
             #EndRawTable
 
-            #Id;#Action;#Assert;#Expected;#Actual
+            #Id;#Action;#Assert;$Expected;$Actual
             TBLCMP10;TableCompareTwo;This.Result == Result.Failed && This.Kind == ErrorKind.NOT_EQUAL;actual;expected
 
-            #Id;#Action;#ExcludeColumns;#Expected;#Actual
+            #Id;#Action;$ExcludeColumns;$Expected;$Actual
             TBLCMP10;TableCompareTwo;'NewColumn';actual;expected
 
         #EndStep
@@ -663,7 +663,7 @@ TABLE_COMPARE_TWO;Test case;Never;;
             3;;;;
             #EndRawTable
 
-            #Id;#Action;#Assert;#Expected;#Actual
+            #Id;#Action;#Assert;$Expected;$Actual
             TBLCMP11;TableCompareTwo;This.Result == Result.Failed && This.Kind == ErrorKind.NOT_EQUAL;expected;actual
 
         #EndStep
@@ -684,16 +684,16 @@ TABLE_ADD_VALUE;Test case;Never;;
         0;newR
         #EndRawTable
 
-        #Action;#Assert;#Table
+        #Action;#Assert;$Table
         TableAddValue;This.Result == Result.Passed && myTable.size() == 2 && myTable[1].get('newH') == null;myTable
 
-        #Action;#Assert;#Table;#newH
+        #Action;#Assert;$Table;newH
         TableAddValue;This.Result == Result.Passed && myTable[2].get('newH') == 'new value';myTable;'new value'
 
-        #Action;#Assert;#Index;#Table;#newH
+        #Action;#Assert;$Index;$Table;newH
         TableAddValue;This.Result == Result.Passed && myTable[0].get('newH') == 'value for 0 row';0;myTable;'value for 0 row'
 
-        #Action;#Assert;#Index;#Table;#newH
+        #Action;#Assert;$Index;$Table;newH
         TableAddValue;This.Result == Result.Passed && myTable[myTable.size()-1].get('newH') == 'last row';Integer.MIN_VALUE;myTable;'last row'
 
     #EndStep
@@ -706,25 +706,25 @@ TABLE_ADD_VALUE;Test case;Never;;
         0;newR
         #EndRawTable
 
-        #Action;#Assert;#Table;#ColumnThatDoesNotExist
+        #Action;#Assert;$Table;ColumnThatDoesNotExist
         TableAddValue;This.Result == Result.Failed && This.Kind == ErrorKind.WRONG_PARAMETERS;myTable;'my value'
 
-        #Action;#Assert;#Table
+        #Action;#Assert;$Table
         TableAddValue;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;
 
-        #Action;#Assert;#Index;#Table
+        #Action;#Assert;$Index;$Table
         TableAddValue;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;;myTable
 
-        #Action;#Assert;#Table
+        #Action;#Assert;$Table
         TableAddValue;This.Result == Result.Failed && This.Kind == ErrorKind.WRONG_PARAMETERS;new Date()
 
-        #Action;#Assert;#Index;#Table
+        #Action;#Assert;$Index;$Table
         TableAddValue;This.Result == Result.Failed && This.Kind == ErrorKind.WRONG_PARAMETERS;new Date();new Date()
 
-        #Action;#Assert;#Index;#Table
+        #Action;#Assert;$Index;$Table
         TableAddValue;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;new Date();
 
-        #Action;#Assert;#Index;#Table
+        #Action;#Assert;$Index;$Table
         TableAddValue;This.Result == Result.Failed && This.Kind == ErrorKind.EXCEPTION;Integer.MAX_VALUE;myTable
 
     #EndStep
@@ -774,4 +774,5 @@ TABLE_REPORT;Test case;Never;;
 
 #Id;#TestCase;#Kind;#Depends;#For
 TABLE_REMOVE_ROW;Test case;Never;;
+
 

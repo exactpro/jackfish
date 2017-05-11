@@ -82,7 +82,7 @@ public final class OnError extends MatrixItem
 	@Override
 	protected void writePrefixItSelf(CsvWriter writer, List<String> firstLine, List<String> secondLine)
 	{
-		super.addParameter(firstLine, Tokens.OnError.get());
+		super.addParameter(firstLine, TypeMandatory.System, Tokens.OnError.get());
 	}
 
 	@Override

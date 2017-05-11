@@ -67,14 +67,14 @@ VISIBILITY;Variable visibility;Never;;
     additional;555
 
     // 
-    #Id;#Global;#Call;#additional
+    #Id;#Global;#Call;additional
     callResGlobal;1;TestSub;1
 
     #Assert;#Message
     callResGlobal == 101;'Should be defined here'
 
     // 
-    #Id;#Call;#additional
+    #Id;#Call;additional
     callRes;TestSub;2
 
     #Assert;#Message
@@ -83,7 +83,7 @@ VISIBILITY;Variable visibility;Never;;
     #Assert;#Message
     additional == 555;'Should be defined here'
 
-    #Id;#SubCase;#additional
+    #Id;#SubCase;additional
     TestSub;;global3
         #Assert;#Message
         additional != 555;'Expected !=' + 555 + ' Actual=' + additional
@@ -119,11 +119,11 @@ VISIBILITY;Variable visibility continue;;;
     #Id;#Global;#Let
     global2;1;2
 
-    #Action;#local3
-    Vars;3
+    #Id;#Let
+    local3;3
 
-    #Global;#Action;#global3
-    1;Vars;4
+    #Id;#Global;#Let
+    global3;1;4
 
     #Step;#Kind;#For;#Depends
     ;;;
@@ -139,16 +139,16 @@ VISIBILITY;Variable visibility continue;;;
         #Assert;#Message
         global3 == 4;'Should be defined here'
 
-        #Call;#additional
+        #Call;additional
         TestSub;local2
 
-        #Call;#additional
+        #Call;additional
         TestSub;global2
 
-        #Call;#additional
+        #Call;additional
         TestSub;local3
 
-        #Call;#additional
+        #Call;additional
         TestSub;global3
 
         #Id;#Let
@@ -194,7 +194,7 @@ check Let;;;
         ~;"    asd'asd;"
         #EndRawText
 
-        #Id;#Action;#Assert;#Text
+        #Id;#Action;#Assert;$Text
         MXRN2;MatrixRunFromText;This.Kind == ErrorKind.MATRIX_ERROR && This.Result == Result.Failed && This.Reason.contains('Invalid identifier : asd\'asd');TEXT2
 
     #EndStep
@@ -256,7 +256,7 @@ check Let;;;
         ~;"    asd zxc;'asd zxc'"
         #EndRawText
 
-        #Id;#Action;#Assert;#Text
+        #Id;#Action;#Assert;$Text
         MXRN1;MatrixRunFromText;This.Result == Result.Failed && This.Kind == ErrorKind.MATRIX_ERROR && This.Reason.contains('Invalid identifier : asd zxc');TEXT1
 
     #EndStep
@@ -274,7 +274,7 @@ check Assert;;;
         ~;"    asd'asd;"
         #EndRawText
 
-        #Id;#Action;#Assert;#Text
+        #Id;#Action;#Assert;$Text
         MXRN2;MatrixRunFromText;This.Kind == ErrorKind.MATRIX_ERROR && This.Result == Result.Failed && This.Reason.contains('asd\'asd');TEXT2
 
     #EndStep
@@ -377,7 +377,7 @@ check Switch Case Default;;;
         ~;"    #EndSwitch"
         #EndRawText
 
-        #Id;#Action;#Assert;#Text
+        #Id;#Action;#Assert;$Text
         MXRN2;MatrixRunFromText;This.Kind == ErrorKind.MATRIX_ERROR && This.Result == Result.Failed && This.Reason.contains('Switch must contain only Case or Default item');TEXT2
 
     #EndStep
@@ -620,7 +620,7 @@ check If / Else;;;
         ~;"    #EndIf"
         #EndRawText
 
-        #Id;#Action;#Assert;#Text
+        #Id;#Action;#Assert;$Text
         MXRN1;MatrixRunFromText;This.Kind == ErrorKind.MATRIX_ERROR && This.Result == Result.Failed && This.Reason.contains('asd\'asd');TEXT1
 
     #EndStep
@@ -764,7 +764,7 @@ check For;;;
         ~;"    #EndFor"
         #EndRawText
 
-        #Id;#Action;#Assert;#Text
+        #Id;#Action;#Assert;$Text
         MXRN1;MatrixRunFromText;This.Result == Result.Failed && This.Kind == ErrorKind.MATRIX_ERROR && This.Reason.contains('Invalid identifier : 123asd zxc');TEXT3
 
     #EndStep
@@ -1362,7 +1362,7 @@ check ForEach;;;
         ~;"    #EndForEach"
         #EndRawText
 
-        #Id;#Action;#Assert;#Text
+        #Id;#Action;#Assert;$Text
         MXRN1;MatrixRunFromText;This.Result == Result.Failed && This.Kind == ErrorKind.MATRIX_ERROR && This.Reason.contains('Invalid identifier : 123asd zxc');TEXT3
 
     #EndStep
@@ -1668,7 +1668,7 @@ check OnError;;;
         #Id;#Let
         invalidApplicationId;'Some invalid application id'
 
-        #Id;#Action;#AppId
+        #Id;#Action;$AppId
         APPSTR1;ApplicationStart;invalidApplicationId
 
         #OnError
@@ -1798,10 +1798,10 @@ check RawTable;;;
     #Id;#Let
     columns;['A', 'B', 'C']
 
-    #Action;#Actual;#A;#B;#C
+    #Action;$Actual;A;B;C
     Check;DATA1[0];1;23;35
 
-    #Action;#Actual;#A;#B;#C
+    #Action;$Actual;A;B;C
     Check;DATA1[2];6;3;8
 
     #For;#From;#To;#Step
@@ -1858,14 +1858,14 @@ check SubCase / Call;;;
 
     #Step;#Kind;#For;#Depends
     'check that parameters into subcase is appear into local namespace';;;
-        #Id;#SubCase;#myVariable
+        #Id;#SubCase;myVariable
         SUB_2;;'simpleString'
             #Assert;#Message
             isdef myVariable;'Variable not presented'
 
         #EndSubCase
 
-        #Id;#Call;#myVariable
+        #Id;#Call;myVariable
         CALL_2;SUB_2;'simpleString'
 
         #Assert;#Message
@@ -1951,7 +1951,7 @@ check SubCase / Call;;;
 
     #Step;#Kind;#For;#Depends
     'call sub from library';;;
-        #Id;#Call;#str
+        #Id;#Call;str
         CALL_6;testLib.simpleSub;'asd'
 
         #Assert;#Message
@@ -2103,7 +2103,7 @@ check SetHandler;;;
         #Id;#Global;#Let
         globalVariableStepError;1;'init value'
 
-        #Id;#SubCase;#err
+        #Id;#SubCase;err
         onStepError;;
             #Id;#Global;#Let
             globalVariableStepError;1;'from subcase'
@@ -2139,7 +2139,7 @@ check SetHandler;;;
         #Id;#Let
         expectedValue;'expected value'
 
-        #Action;#Value;#Name
+        #Action;$Value;$Name
         Store;'init value';name
 
         #Id;#RawText;#Kind
@@ -2172,16 +2172,16 @@ check SetHandler;;;
         ~;"check;;;"
         #EndRawText
 
-        #Id;#Action;#Text
+        #Id;#Action;$Text
         TXT1;TextPerform;TEXT5
 
-        #Id;#Action;#Text;#Parameter
+        #Id;#Action;$Text;$Parameter
         MXRN3;MatrixRunFromText;TXT1.Out;{'expectedValue' : expectedValue, 'name' : name}
 
-        #Id;#Action;#Matrix
+        #Id;#Action;$Matrix
         MXWT1;MatrixWait;MXRN3.Out
 
-        #Id;#Action;#Name
+        #Id;#Action;$Name
         restoredValue;Restore;name
 
         #Assert;#Message
@@ -2197,7 +2197,7 @@ check SetHandler;;;
         #Id;#Let
         expectedValue;'expected value'
 
-        #Action;#Value;#Name
+        #Action;$Value;$Name
         Store;'init value';name
 
         #Id;#RawText;#Kind
@@ -2232,16 +2232,16 @@ check SetHandler;;;
         ~;"    Store;'not expected value from testcase';parameter.name"
         #EndRawText
 
-        #Id;#Action;#Text
+        #Id;#Action;$Text
         TXT1;TextPerform;TEXT5
 
-        #Id;#Action;#Text;#Parameter
+        #Id;#Action;$Text;$Parameter
         MXRN3;MatrixRunFromText;TXT1.Out;{'expectedValue' : expectedValue, 'name' : name}
 
-        #Id;#Action;#Matrix
+        #Id;#Action;$Matrix
         MXWT1;MatrixWait;MXRN3.Out
 
-        #Id;#Action;#Name
+        #Id;#Action;$Name
         restoredValue;Restore;name
 
         #Assert;#Message
@@ -2257,7 +2257,7 @@ check SetHandler;;;
         #Id;#Let
         expectedValue;'expected value'
 
-        #Action;#Value;#Name
+        #Action;$Value;$Name
         Store;'init value';name
 
         #Id;#RawText;#Kind
@@ -2295,16 +2295,16 @@ check SetHandler;;;
         ~;"    'some fail'"
         #EndRawText
 
-        #Id;#Action;#Text
+        #Id;#Action;$Text
         TXT1;TextPerform;TEXT5
 
-        #Id;#Action;#Text;#Parameter
+        #Id;#Action;$Text;$Parameter
         MXRN3;MatrixRunFromText;TXT1.Out;{'expectedValue' : expectedValue, 'name' : name}
 
-        #Id;#Action;#Matrix
+        #Id;#Action;$Matrix
         MXWT1;MatrixWait;MXRN3.Out
 
-        #Id;#Action;#Name
+        #Id;#Action;$Name
         restoredValue;Restore;name
 
         #Assert;#Message
@@ -2320,7 +2320,7 @@ check SetHandler;;;
         #Id;#Global;#Let
         checkVariable;1;'default value'
 
-        #Id;#SubCase;#err
+        #Id;#SubCase;err
         checkSub;;
             #Id;#Global;#Let
             checkVariable;1;'from subcase value'
@@ -2353,7 +2353,7 @@ check SetHandler;;;
         #Id;#Global;#Let
         checkVariable;1;'default value'
 
-        #Id;#SubCase;#err
+        #Id;#SubCase;err
         checkSub;;
             #Id;#Global;#Let
             checkVariable;1;'from subcase value'
@@ -2404,10 +2404,10 @@ Check Step (SetHandler checked above);;;
         ~;"        err.Kind == ErrorKind.WRONG_PARAMETERS;'Wrong parameters'"
         #EndRawText
 
-        #Id;#Action;#Text
+        #Id;#Action;$Text
         MXRN5;MatrixRunFromText;TEXT7
 
-        #Action;#Matrix
+        #Action;$Matrix
         MatrixWait;MXRN5.Out
 
         #Assert;#Message
@@ -2441,10 +2441,10 @@ Check Step (SetHandler checked above);;;
         ~;"        err.Kind == ErrorKind.FAIL;'Expect kins is Fail, but Actual : ' + err.Kind"
         #EndRawText
 
-        #Id;#Action;#Text
+        #Id;#Action;$Text
         MXRN5;MatrixRunFromText;TEXT7
 
-        #Action;#Matrix
+        #Action;$Matrix
         MatrixWait;MXRN5.Out
 
         #Assert;#Message
@@ -2478,10 +2478,10 @@ Check Step (SetHandler checked above);;;
         screenOnStart;;OnStart;;
         #EndStep
 
-        #Id;#Action;#Decoraded
+        #Id;#Action;$Decoraded
         resTbl;ResultTable;true
 
-        #Id;#Action;#Table;#StepIdentity
+        #Id;#Action;$Table;StepIdentity
         TBLSLCT1;TableSelect;resTbl.Out;'screenOnStart'
 
         #Assert;#Message
@@ -2504,10 +2504,10 @@ Check Step (SetHandler checked above);;;
         screenOnStartOrError;;OnStartOrError;;
         #EndStep
 
-        #Id;#Action;#Decoraded
+        #Id;#Action;$Decoraded
         resTbl;ResultTable;true
 
-        #Id;#Action;#Table;#StepIdentity
+        #Id;#Action;$Table;StepIdentity
         TBLSLCT1;TableSelect;resTbl.Out;'screenOnStartOrError'
 
         #Assert;#Message
@@ -2557,10 +2557,10 @@ Check Step (SetHandler checked above);;;
         ~;"        screenShot.matches('<a href="".+?"">OnError</a>');'String not matches'"
         #EndRawText
 
-        #Id;#Action;#Text
+        #Id;#Action;$Text
         MXRN5;MatrixRunFromText;TEXT7
 
-        #Action;#Matrix
+        #Action;$Matrix
         MatrixWait;MXRN5.Out
 
         #Assert;#Message
@@ -2577,10 +2577,10 @@ Check Step (SetHandler checked above);;;
         screenOnFinish;;OnFinish;;
         #EndStep
 
-        #Id;#Action;#Decoraded
+        #Id;#Action;$Decoraded
         resTbl;ResultTable;true
 
-        #Id;#Action;#Table;#StepIdentity
+        #Id;#Action;$Table;StepIdentity
         TBLSLCT1;TableSelect;resTbl.Out;'screenOnFinish'
 
         #Assert;#Message
@@ -2603,10 +2603,10 @@ Check Step (SetHandler checked above);;;
         screenOnFinishOrError;;OnFinishOrError;;
         #EndStep
 
-        #Id;#Action;#Decoraded
+        #Id;#Action;$Decoraded
         resTbl;ResultTable;true
 
-        #Id;#Action;#Table;#StepIdentity
+        #Id;#Action;$Table;StepIdentity
         TBLSLCT1;TableSelect;resTbl.Out;'screenOnFinishOrError'
 
         #Assert;#Message
@@ -2657,10 +2657,10 @@ Check Step (SetHandler checked above);;;
         ~;"        screenShot.matches('<a href="".+?"">OnError</a>');'String not matches'"
         #EndRawText
 
-        #Id;#Action;#Text
+        #Id;#Action;$Text
         MXRN5;MatrixRunFromText;TEXT7
 
-        #Action;#Matrix
+        #Action;$Matrix
         MatrixWait;MXRN5.Out
 
         #Assert;#Message
@@ -2704,10 +2704,10 @@ Check Step (SetHandler checked above);;;
         ~;"        screenShot.matches('<a href="".+?"">OnError</a>');'String not matches'"
         #EndRawText
 
-        #Id;#Action;#Text
+        #Id;#Action;$Text
         MXRN5;MatrixRunFromText;TEXT7
 
-        #Action;#Matrix
+        #Action;$Matrix
         MatrixWait;MXRN5.Out
 
         #Assert;#Message
@@ -2738,13 +2738,13 @@ Check TestCase (SetHandler checked above);;;
         ~;"    Store;'my new value';parameter.variableKey"
         #EndRawText
 
-        #Action;#Value;#Name
+        #Action;$Value;$Name
         Store;'variable from matrix';'variableKey'
 
-        #Id;#Action;#Text;#Parameter
+        #Id;#Action;$Text;$Parameter
         MXRN4;MatrixRunFromText;TEXT6;{'variableValue':'temp','variableKey' : 'variableKey'}
 
-        #Action;#Matrix
+        #Action;$Matrix
         MatrixWait;MXRN4.Out
 
         #Assert;#Message
@@ -2753,7 +2753,7 @@ Check TestCase (SetHandler checked above);;;
         #Assert;#Message
         MXRN4.Out.passed() == 0;'Passed count not expected'
 
-        #Id;#Action;#Name
+        #Id;#Action;$Name
         restored;Restore;'variableKey'
 
         #Assert;#Message
@@ -2775,13 +2775,13 @@ Check TestCase (SetHandler checked above);;;
         ~;"    Store;'my new value';parameter.variableKey"
         #EndRawText
 
-        #Action;#Value;#Name
+        #Action;$Value;$Name
         Store;'variable from matrix';'variableKey'
 
-        #Id;#Action;#Text;#Parameter
+        #Id;#Action;$Text;$Parameter
         MXRN4;MatrixRunFromText;TEXT6;{'variableValue':'temp','variableKey' : 'variableKey'}
 
-        #Action;#Matrix
+        #Action;$Matrix
         MatrixWait;MXRN4.Out
 
         #Assert;#Message
@@ -2790,7 +2790,7 @@ Check TestCase (SetHandler checked above);;;
         #Assert;#Message
         MXRN4.Out.passed() == 2;'Passed count not expected'
 
-        #Id;#Action;#Name
+        #Id;#Action;$Name
         restored;Restore;'variableKey'
 
         #Assert;#Message
@@ -2806,10 +2806,10 @@ Check TestCase (SetHandler checked above);;;
         ~;"screenTestCaseOnStart;Test case;OnStart;;"
         #EndRawText
 
-        #Id;#Action;#Text
+        #Id;#Action;$Text
         MXRN4;MatrixRunFromText;TEXT6
 
-        #Action;#Matrix
+        #Action;$Matrix
         MatrixWait;MXRN4.Out
 
         #Assert;#Message
@@ -2818,10 +2818,10 @@ Check TestCase (SetHandler checked above);;;
         #Assert;#Message
         MXRN4.Out.passed() == 1;'Passed count not expected'
 
-        #Id;#Action;#Decoraded;#Matrix
+        #Id;#Action;$Decoraded;$Matrix
         resTbl;ResultTable;true;MXRN4.Out
 
-        #Id;#Action;#Table;#TestCaseId
+        #Id;#Action;$Table;TestCaseId
         TBLSLCT1;TableSelect;resTbl.Out;'screenTestCaseOnStart'
 
         #Assert;#Message
@@ -2847,10 +2847,10 @@ Check TestCase (SetHandler checked above);;;
         ~;"screenTestCaseOnStartOnError;Test case;OnStartOrError;;"
         #EndRawText
 
-        #Id;#Action;#Text
+        #Id;#Action;$Text
         MXRN4;MatrixRunFromText;TEXT6
 
-        #Action;#Matrix
+        #Action;$Matrix
         MatrixWait;MXRN4.Out
 
         #Assert;#Message
@@ -2859,10 +2859,10 @@ Check TestCase (SetHandler checked above);;;
         #Assert;#Message
         MXRN4.Out.passed() == 1;'Passed count not expected'
 
-        #Id;#Action;#Decoraded;#Matrix
+        #Id;#Action;$Decoraded;$Matrix
         resTbl;ResultTable;true;MXRN4.Out
 
-        #Id;#Action;#Table;#TestCaseId
+        #Id;#Action;$Table;TestCaseId
         TBLSLCT1;TableSelect;resTbl.Out;'screenTestCaseOnStartOnError'
 
         #Assert;#Message
@@ -2890,10 +2890,10 @@ Check TestCase (SetHandler checked above);;;
         ~;"    'Some fail'"
         #EndRawText
 
-        #Id;#Action;#Text
+        #Id;#Action;$Text
         MXRN4;MatrixRunFromText;TEXT6
 
-        #Action;#Matrix
+        #Action;$Matrix
         MatrixWait;MXRN4.Out
 
         #Assert;#Message
@@ -2902,10 +2902,10 @@ Check TestCase (SetHandler checked above);;;
         #Assert;#Message
         MXRN4.Out.passed() == 0;'Passed count not expected'
 
-        #Id;#Action;#Decoraded;#Matrix
+        #Id;#Action;$Decoraded;$Matrix
         resTbl;ResultTable;true;MXRN4.Out
 
-        #Id;#Action;#Table;#TestCaseId
+        #Id;#Action;$Table;TestCaseId
         TBLSLCT1;TableSelect;resTbl.Out;'screenTestCaseOnStartOnErrorWithError'
 
         #Assert;#Message
@@ -2930,10 +2930,10 @@ Check TestCase (SetHandler checked above);;;
         ~;"screenTestCaseOnFinish;Test case;OnFinish;;"
         #EndRawText
 
-        #Id;#Action;#Text
+        #Id;#Action;$Text
         MXRN4;MatrixRunFromText;TEXT6
 
-        #Action;#Matrix
+        #Action;$Matrix
         MatrixWait;MXRN4.Out
 
         #Assert;#Message
@@ -2942,10 +2942,10 @@ Check TestCase (SetHandler checked above);;;
         #Assert;#Message
         MXRN4.Out.passed() == 1;'Passed count not expected'
 
-        #Id;#Action;#Decoraded;#Matrix
+        #Id;#Action;$Decoraded;$Matrix
         resTbl;ResultTable;true;MXRN4.Out
 
-        #Id;#Action;#Table;#TestCaseId
+        #Id;#Action;$Table;TestCaseId
         TBLSLCT1;TableSelect;resTbl.Out;'screenTestCaseOnFinish'
 
         #Assert;#Message
@@ -2970,10 +2970,10 @@ Check TestCase (SetHandler checked above);;;
         ~;"screenTestCaseOnFinishOnError;Test case;OnFinishOrError;;"
         #EndRawText
 
-        #Id;#Action;#Text
+        #Id;#Action;$Text
         MXRN4;MatrixRunFromText;TEXT6
 
-        #Action;#Matrix
+        #Action;$Matrix
         MatrixWait;MXRN4.Out
 
         #Assert;#Message
@@ -2982,10 +2982,10 @@ Check TestCase (SetHandler checked above);;;
         #Assert;#Message
         MXRN4.Out.passed() == 1;'Passed count not expected'
 
-        #Id;#Action;#Decoraded;#Matrix
+        #Id;#Action;$Decoraded;$Matrix
         resTbl;ResultTable;true;MXRN4.Out
 
-        #Id;#Action;#Table;#TestCaseId
+        #Id;#Action;$Table;TestCaseId
         TBLSLCT1;TableSelect;resTbl.Out;'screenTestCaseOnFinishOnError'
 
         #Assert;#Message
@@ -3013,10 +3013,10 @@ Check TestCase (SetHandler checked above);;;
         ~;"    'Some fail'"
         #EndRawText
 
-        #Id;#Action;#Text
+        #Id;#Action;$Text
         MXRN4;MatrixRunFromText;TEXT6
 
-        #Action;#Matrix
+        #Action;$Matrix
         MatrixWait;MXRN4.Out
 
         #Assert;#Message
@@ -3025,10 +3025,10 @@ Check TestCase (SetHandler checked above);;;
         #Assert;#Message
         MXRN4.Out.passed() == 0;'Passed count not expected'
 
-        #Id;#Action;#Decoraded;#Matrix
+        #Id;#Action;$Decoraded;$Matrix
         resTbl;ResultTable;true;MXRN4.Out
 
-        #Id;#Action;#Table;#TestCaseId
+        #Id;#Action;$Table;TestCaseId
         TBLSLCT1;TableSelect;resTbl.Out;'screenTestCaseOnStartOnErrorWithFail'
 
         #Assert;#Message
@@ -3056,10 +3056,10 @@ Check TestCase (SetHandler checked above);;;
         ~;"    'Some fail'"
         #EndRawText
 
-        #Id;#Action;#Text
+        #Id;#Action;$Text
         MXRN4;MatrixRunFromText;TEXT6
 
-        #Action;#Matrix
+        #Action;$Matrix
         MatrixWait;MXRN4.Out
 
         #Assert;#Message
@@ -3068,10 +3068,10 @@ Check TestCase (SetHandler checked above);;;
         #Assert;#Message
         MXRN4.Out.passed() == 0;'Passed count not expected'
 
-        #Id;#Action;#Decoraded;#Matrix
+        #Id;#Action;$Decoraded;$Matrix
         resTbl;ResultTable;true;MXRN4.Out
 
-        #Id;#Action;#Table;#TestCaseId
+        #Id;#Action;$Table;TestCaseId
         TBLSLCT1;TableSelect;resTbl.Out;'screenTestCaseOnError'
 
         #Assert;#Message
@@ -3087,5 +3087,6 @@ Check TestCase (SetHandler checked above);;;
         screenShot.matches('<a href=".+?">OnError</a>');'String not matches'
 
     #EndStep
+
 
 

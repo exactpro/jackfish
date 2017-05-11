@@ -41,6 +41,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class MainRunner
 {
@@ -107,6 +108,7 @@ public class MainRunner
 			Option saveSchema 	= new Option("schema", 	"Save the config schema." );
 			Option help 		= new Option("help", 	"Print this message." );
 			Option versionOut 	= new Option("version", "Print version only.");
+            Option newSyntax    = new Option("new",     "Use new syntax for matrices." );
 			Option shortPaths 	= new Option("short", 	"Show only short paths in tracing." );
             Option console      = new Option("console",	"Do not open GUI. Batch mode.");
             Option forgetScreenPosition = new Option("forgetScreenPosition", "If this option is mentioned then just don't restore position and size from the previous run.");
@@ -125,6 +127,7 @@ public class MainRunner
 			options.addOption(saveDocs);
             options.addOption(saveSchema);
 			options.addOption(help);
+            options.addOption(newSyntax);
 			options.addOption(shortPaths);
             options.addOption(console);
             options.addOption(child);
@@ -184,6 +187,11 @@ public class MainRunner
 		    	System.exit(0);
 		    }
 		    
+		    if (line.hasOption(newSyntax.getOpt()) || line.hasOption(convertTo.getOpt()))
+		    {
+		        com.exactprosystems.jf.documents.matrix.parser.Parser.useNewSyntax = true;
+		    }
+		    
 			String verboseString = line.getOptionValue(traceLevel.getOpt());
 			VerboseLevel verboseLevel = VerboseLevel.All;
 			if (verboseString != null)
@@ -216,7 +224,7 @@ public class MainRunner
 					break;
 				}
 	
-				if (line.hasOption(console.getOpt()))
+				if (line.hasOption(console.getOpt()) || line.hasOption(convertTo.getOpt()))
 				{
 					runInConsoleMode(line, configString, verboseLevel, startAtName, inputName, outputName, shortPaths, convertTo);
 				}
@@ -332,7 +340,12 @@ public class MainRunner
 		if (line.hasOption(convertTo.getOpt()))
 		{
 			String newFolderName = line.getOptionValue(convertTo.getOpt());
-			MatrixConverter matrixConverter = new MatrixConverter(configuration.getMatricesValue(), configuration.getLibrariesValue(), newFolderName);
+			// TODO
+			
+			List<String> matr = configuration.getMatricesValue().stream().map(a -> makeDirWithSubstitutions(a.get())).collect(Collectors.toList());
+            List<String> libs = configuration.getLibrariesValue().stream().map(a -> makeDirWithSubstitutions(a.get())).collect(Collectors.toList());
+			
+			MatrixConverter matrixConverter = new MatrixConverter(matr, libs, newFolderName);
 			matrixConverter.start();
 			System.out.println("All matrix converted and saved to folder " + newFolderName);
 			return;

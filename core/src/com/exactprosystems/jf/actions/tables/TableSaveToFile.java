@@ -15,6 +15,7 @@ import com.exactprosystems.jf.actions.ActionAttribute;
 import com.exactprosystems.jf.actions.ActionFieldAttribute;
 import com.exactprosystems.jf.actions.ActionGroups;
 import com.exactprosystems.jf.actions.ReadableValue;
+import com.exactprosystems.jf.api.error.ErrorKind;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.report.ReportBuilder;
 import com.exactprosystems.jf.documents.config.Context;
@@ -113,6 +114,18 @@ public class TableSaveToFile extends AbstractAction
 	@Override
 	public void doRealAction(Context context, ReportBuilder report, Parameters parameters, AbstractEvaluator evaluator) throws Exception
 	{
+		if (saveValues == null)
+		{
+			super.setError("SaveValues is null", ErrorKind.EMPTY_PARAMETER);
+			return;
+		}
+
+		if (delimiter == null)
+		{
+			super.setError("Delimiter is null", ErrorKind.EMPTY_PARAMETER);
+			return;
+		}
+
 		super.setResult(this.table.save(this.fileName, this.delimiter.charAt(0), this.saveValues, false));
 	}
 }
