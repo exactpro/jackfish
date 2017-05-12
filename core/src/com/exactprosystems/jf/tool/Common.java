@@ -292,7 +292,12 @@ public abstract class Common
 		return date.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
 	}
 
-	public static Date convert(LocalDateTime dateTime) {
+	public static Date convert(LocalDateTime dateTime)
+	{
+		if (dateTime == null)
+		{
+			return null;
+		}
 		Instant instant = dateTime.atZone(ZoneId.systemDefault()).toInstant();
 		return Date.from(instant);
 	}

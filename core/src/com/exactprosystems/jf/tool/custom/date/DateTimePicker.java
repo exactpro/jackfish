@@ -15,11 +15,21 @@ import java.util.Date;
 public class DateTimePicker extends DatePicker{
 
 	private ObjectProperty<LocalDateTime> dateTimeValue;
+	private static DateTimeFormatter formatter = DateTimeFormatter.ofPattern(Common.DATE_TIME_PATTERN);
 
 	public DateTimePicker(Date initial)
 	{
 		super();
 		this.dateTimeValue = new SimpleObjectProperty<>();
+		this.getEditor().textProperty().addListener((observable, oldValue, newValue) -> {
+			try
+			{
+				setDateTime(LocalDateTime.parse(newValue, formatter));
+			}
+			catch (Exception e)
+			{
+			}
+		});
 		if (initial != null)
 		{
 			dateTimeValueProperty().setValue(Common.convert(initial));
@@ -32,8 +42,6 @@ public class DateTimePicker extends DatePicker{
 		}
 		setConverter(new StringConverter<LocalDate>()
 		{
-			DateTimeFormatter formatter = DateTimeFormatter.ofPattern(Common.DATE_TIME_PATTERN);
-
 			@Override
 			public String toString(LocalDate object)
 			{
@@ -71,7 +79,7 @@ public class DateTimePicker extends DatePicker{
 		this.dateTimeValue.set(value);
 	}
 
-	ObjectProperty<LocalDateTime> dateTimeValueProperty(){
+	public ObjectProperty<LocalDateTime> dateTimeValueProperty(){
 		if (dateTimeValue == null){
 			dateTimeValue = new SimpleObjectProperty<>();
 		}
