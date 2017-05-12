@@ -16,11 +16,17 @@ import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.CssVariables;
 import com.exactprosystems.jf.tool.custom.expfield.ExpressionField;
 import com.exactprosystems.jf.tool.helpers.DialogsHelper;
+
+import javafx.animation.Animation;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.application.Platform;
+import javafx.beans.value.ChangeListener;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Priority;
+import javafx.util.Duration;
 
 import java.io.File;
 import java.time.LocalDateTime;
@@ -33,15 +39,24 @@ public class UserInputDialog extends Dialog<String>
 	private final ExpressionField expressionField;
 	private final Label expressionLabel;
 	private AbstractEvaluator evaluator;
+	private Timeline timer;
 	private boolean visible = true;
+	private int timeout = -1;
 
-	public UserInputDialog(String defaultValue, AbstractEvaluator evaluator, HelpKind helpKind, List<ReadableValue> dataSource, boolean showLabel)
+	public UserInputDialog(String defaultValue, AbstractEvaluator evaluator, HelpKind helpKind, List<ReadableValue> dataSource, 
+	        boolean showLabel, int timeout)
 	{
 		this.visible = showLabel;
+		this.timeout = timeout;
 		final DialogPane dialogPane = getDialogPane();
 		this.setResizable(true);
 		dialogPane.getStylesheets().addAll(Common.currentThemesPaths());
 		this.evaluator = evaluator;
+		
+		this.timer = new Timeline(new KeyFrame(Duration.millis(this.timeout), ae -> { System.err.println(">>>"); close(); } ));
+		this.timer.setCycleCount(1);
+		this.timer.play();
+		
 		this.expressionField = new ExpressionField(evaluator, defaultValue);
 		this.expressionLabel = new Label();
 		this.expressionField.setHelperForExpressionField("Title", null);
@@ -135,13 +150,19 @@ public class UserInputDialog extends Dialog<String>
 
 		updateGrid();
 		updateExpressionLabel(defaultValue);
-		this.expressionField.textProperty().addListener((observable, oldValue, newValue) -> {
-			updateExpressionLabel(newValue);
+		this.expressionField.textProperty().addListener((observable, oldValue, newValue) -> 
+		{
+            this.timer.stop();
+            this.timer.play();
+            updateExpressionLabel(newValue);
+            System.err.println(">>>>> change: " + newValue);
 		});
 
 		setResultConverter((dialogButton) ->
 		{
 			ButtonBar.ButtonData data = dialogButton == null ? null : dialogButton.getButtonData();
+			this.timer.stop();
+			System.err.println("@@@ " + data);
 			return data == ButtonBar.ButtonData.OK_DONE ? expressionField.getText() : null;
 		});
 	}

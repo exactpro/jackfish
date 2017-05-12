@@ -218,6 +218,58 @@
         <appStartPort>7000</appStartPort>
     </appEntry>
     <appEntry>
+        <name>WEB_MOCK</name>
+        <parameters>
+            <key>ChromeDriverPath</key>
+            <value>unix/chromedriver-linux-2.28-x64.</value>
+        </parameters>
+        <parameters>
+            <key>IEDriverPath</key>
+            <value></value>
+        </parameters>
+        <parameters>
+            <key>ChromeDriverBinary</key>
+            <value></value>
+        </parameters>
+        <parameters>
+            <key>jreExec</key>
+            <value></value>
+        </parameters>
+        <parameters>
+            <key>jreArgs</key>
+            <value>-Xms128m -Xmx1G</value>
+        </parameters>
+        <parameters>
+            <key>SafariDriverPath</key>
+            <value></value>
+        </parameters>
+        <parameters>
+            <key>FirefoxProfileDirectory</key>
+            <value></value>
+        </parameters>
+        <parameters>
+            <key>UsePrivateMode</key>
+            <value></value>
+        </parameters>
+        <parameters>
+            <key>GeckoDriverPath</key>
+            <value>unix/geckodriver-linux-0.11.1-x64.</value>
+        </parameters>
+        <parameters>
+            <key>LogLevel</key>
+            <value>ALL</value>
+        </parameters>
+        <parameters>
+            <key>NewSearch</key>
+            <value>true</value>
+        </parameters>
+        <appDescription>Web applications</appDescription>
+        <appDicPath>dic/gui/mock_web_dic.xml</appDicPath>
+        <appJar>${JF}/apps/web.jar</appJar>
+        <appWorkDir>${JF}/apps</appWorkDir>
+        <appStartPort>7000</appStartPort>
+    </appEntry>
+    <appEntry>
         <name>win</name>
         <parameters>
             <key>jreExec</key>

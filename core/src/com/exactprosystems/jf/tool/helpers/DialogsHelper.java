@@ -472,7 +472,8 @@ public abstract class DialogsHelper
         return res[0];
     }
 	
-	public static String showUserInput(AbstractEvaluator evaluator, String title, Object defaultValue, HelpKind helpKind, List<ReadableValue> dataSource)
+	public static String showUserInput(AbstractEvaluator evaluator, String title, Object defaultValue, HelpKind helpKind, 
+	        List<ReadableValue> dataSource, int timeout)
 	{
 		Task<String> task = new Task<String>()
 		{
@@ -480,10 +481,12 @@ public abstract class DialogsHelper
 			protected String call() throws Exception
 			{
 				String literal = Common.createLiteral(defaultValue, evaluator);
-				UserInputDialog dialog = new UserInputDialog(literal, evaluator, helpKind, dataSource, true);
+				UserInputDialog dialog = new UserInputDialog(literal, evaluator, helpKind, dataSource, true, timeout);
 				dialog.setTitle(title);
 				dialog.getDialogPane().setHeader(null);
 				Optional<String> s = dialog.showAndWait();
+				System.err.println("## " + s);
+				
 				return s.orElse(literal);
 			}
 		};

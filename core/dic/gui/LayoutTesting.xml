@@ -25,7 +25,7 @@
         <run>
             <button id="Item1" uid="" xpath=".//a[contains(text(), &amp;quot;Item 1&amp;quot;)]" owner="MenuPanel" class="" name="" title="" text="Item 1">
                 <info>
-                    <xpath>/div/ul/li[1]/a</xpath>
+                    <xpath>/ul/li[1]/a</xpath>
                     <rectangle x1="0.0" y1="0.0" x2="0.03288409703504044" y2="1.0"/>
                     <node>a</node>
                     <attr name="href">#</attr>
@@ -33,21 +33,21 @@
             </button>
             <button id="Item2" uid="" xpath=".//a[contains(text(), &amp;quot;Item 2&amp;quot;)]" owner="MenuPanel" class="" name="" title="" text="Item 2">
                 <info>
-                    <xpath>/div/ul/li[2]/a</xpath>
+                    <xpath>/ul/li[2]/a</xpath>
                     <rectangle x1="0.03504043126684636" y1="0.0" x2="0.0679245283018868" y2="1.0"/>
                     <node>a</node>
                     <attr name="href">#</attr>
                 </info>
             </button>
-            <button id="Item3" uid="" owner="MenuPanel" class="" name="" title="" text="Item 31">
+            <button id="Item3" xpath=".//li[3]//a" owner="MenuPanel" rows="" header="" columns=""/>
+            <button id="Item4" uid="" owner="MenuPanel" class="" name="" title="" text="Item 4">
                 <info>
-                    <xpath>/div/ul/li[3]/a</xpath>
-                    <rectangle x1="0.07008086253369272" y1="0.0" x2="0.10296495956873317" y2="1.0"/>
+                    <xpath>/ul/li[4]/a</xpath>
+                    <rectangle x1="0.1051212938005391" y1="0.0" x2="0.13800539083557953" y2="1.0"/>
                     <node>a</node>
                     <attr name="href">#</attr>
                 </info>
             </button>
-            <button id="Item4" uid="" owner="MenuPanel" class="" name="" title="" text="Item 4"/>
         </run>
         <onClose/>
         <close/>
@@ -57,6 +57,34 @@
         <onOpen/>
         <run>
             <textBox id="TableLikePanel" xpath=".//div[@id=&amp;quot;grid1&amp;quot;]" visibility="Enable"/>
+        </run>
+        <onClose/>
+        <close/>
+    </window>
+    <window name="MyDialog">
+        <self>
+            <any id="owner" xpath="//body"/>
+        </self>
+        <onOpen>
+            <wait id="waitOpen" ref="owner" addition="WaitToAppear" timeout="5000"/>
+        </onOpen>
+        <run>
+            <button id="But1" xpath=".//li[2]//a" owner="owner" rows="" header="" columns="">
+                <info>
+                    <xpath>/div[2]/ul/li[2]/a</xpath>
+                    <rectangle x1="0.03504043126684636" y1="0.20408163265306123" x2="0.0679245283018868" y2="0.30612244897959184"/>
+                    <node>a</node>
+                    <attr name="href">#</attr>
+                </info>
+            </button>
+            <button id="But2" xpath=".//li[3]//a" owner="owner" rows="" header="" columns="">
+                <info>
+                    <xpath>/div[2]/ul/li[3]/a</xpath>
+                    <rectangle x1="0.07008086253369272" y1="0.20408163265306123" x2="0.10296495956873317" y2="0.30612244897959184"/>
+                    <node>a</node>
+                    <attr name="href">#</attr>
+                </info>
+            </button>
         </run>
         <onClose/>
         <close/>

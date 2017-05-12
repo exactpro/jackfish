@@ -131,7 +131,8 @@ public class GlobalHandlerNode extends TreeNode
 					model.createEvaluator(),
 					HelpKind.ChooseFromList,
 					list,
-					false
+					false,
+					-1
 			);
 			dialog.setTitle("Choose subCase for handler " + this.kind.name());
 			Optional<String> value = dialog.showAndWait();

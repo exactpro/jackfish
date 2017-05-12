@@ -139,7 +139,7 @@ public class ConsoleDocumentFactory extends DocumentFactory
     }
 
 	@Override
-	public Object input(AbstractEvaluator evaluator, String title, Object defaultValue, HelpKind helpKind, List<ReadableValue> dataSource)
+	public Object input(AbstractEvaluator evaluator, String title, Object defaultValue, HelpKind helpKind, List<ReadableValue> dataSource, int timeout)
 	{
 		return defaultValue;
 	}

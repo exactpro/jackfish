@@ -141,9 +141,9 @@ public class FxDocumentFactory extends DocumentFactory
 
 
 	@Override
-	public Object input(AbstractEvaluator evaluator, String title, Object defaultValue, HelpKind helpKind, List<ReadableValue> dataSource)
+	public Object input(AbstractEvaluator evaluator, String title, Object defaultValue, HelpKind helpKind, List<ReadableValue> dataSource, int timeout)
 	{
-		String result = DialogsHelper.showUserInput(evaluator, title, defaultValue, helpKind, dataSource);
+		String result = DialogsHelper.showUserInput(evaluator, title, defaultValue, helpKind, dataSource, timeout);
 		Object value;
 		try
 		{

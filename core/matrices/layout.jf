@@ -5,29 +5,26 @@
 // //  This is unpublished, licensed software, confidential and proprietary
 // //  information which is the property of Exactpro Systems, LLC or its licensors.
 // //==============================================
-#Id;#TestCase
-INIT;Test case
-    #Action;#Screenshot
-    ResultTableUserValue;
-
+#Id;#TestCase;#Kind;#Depends;#For
+INIT;Test case;;;
     #Id;#Global;#Action;#AppId;#Browser;#URL
     APPSTR1;1;ApplicationStart;'WEB';'Chrome';'http://samples.galenframework.com/tutorial1/tutorial1.html'
 
 
-#TestCase
-Validate
+#TestCase;#Kind;#Depends;#For
+Validate;;;
+    #Id;#Let
+    kind;APPSTR1.Out.getDictionary().getWindow('Main').getControlForName(null, 'content').getBindedClass()
+
     #Id;#Action;#Dialog;#AppConnection;#content
     DLG1;DialogValidate;'Main';APPSTR1.Out;1
 
     #Id;#Action;#AppConnection;#Description;#Dialog
     IMGGET1;ImageGet;APPSTR1.Out;'Screenshot';'Main'
 
-    #Action;#Screenshot
-    ResultTableUserValue;IMGGET1.Out
 
-
-#TestCase
-Laoyout
+#TestCase;#Kind;#Depends;#For
+Laoyout;;;
     #Id;#Action;#AppConnection;#Height;#Width
     APPSZ1;ApplicationResize;APPSTR1.Out;600;600
 
@@ -50,13 +47,10 @@ Laoyout
         #Id;#Action;#AppConnection;#Description;#Dialog
         IMGGET1;ImageGet;APPSTR1.Out;'Screenshot small';'Main'
 
-        #Action;#Screenshot
-        ResultTableUserValue;IMGGET1.Out
 
 
-
-#TestCase
-cleanup
+#TestCase;#Kind;#Depends;#For
+cleanup;;;
     #Id;#Action;#AppConnection
     APPSTP1;ApplicationStop;APPSTR1.Out
 

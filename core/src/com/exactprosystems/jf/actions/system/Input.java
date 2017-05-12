@@ -40,6 +40,7 @@ public class Input extends AbstractAction
     public final static String dataSourceName   = "DataSource";
     public final static String helpKindName     = "HelpKind";
     public static final String titleName		= "Title";
+    public final static String timeoutName      = "Timeout";
 
     @ActionFieldAttribute(name=titleName, mandatory = true, description = "Title of user input")
     protected String title;
@@ -53,6 +54,8 @@ public class Input extends AbstractAction
     @ActionFieldAttribute(name = helpKindName, mandatory = true, description = "How to help user enter or choose a value.")
     protected HelpKind helpKind;
 
+    @ActionFieldAttribute(name = timeoutName, mandatory = false, description = "If this timeout expires default value will be used.")
+    protected Integer timeout;
     
     public Input()
 	{
@@ -62,6 +65,7 @@ public class Input extends AbstractAction
 	public void initDefaultValues() 
 	{
 		this.dataSource = null;
+		this.timeout = 10000;
 	}
 	
     @Override
@@ -121,7 +125,7 @@ public class Input extends AbstractAction
             list.add(new ReadableValue(Str.asString(this.dataSource)));
         }
 		
-		Object input = context.getFactory().input(context.getEvaluator(), this.title, this.defaultValue, this.helpKind, list);
+		Object input = context.getFactory().input(context.getEvaluator(), this.title, this.defaultValue, this.helpKind, list, this.timeout);
 		if (input instanceof MatrixError)
 		{
 			super.setError(((MatrixError) input).Message, ((MatrixError) input).Kind);
