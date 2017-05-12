@@ -3,81 +3,66 @@ Init;Never;;
     #Id;#Call
     allDates;RF.listOfDates
 
-    #Id;#Action;#DefaultValue;#HelpKind;#Title;#DataSource
+    #Id;#Action;$DefaultValue;$HelpKind;$Title;$DataSource
     inputDate;Input;'';HelpKind.ChooseFromList;'Choose the regression run. Leave empty if all';allDates
 
     #Id;#Let
-    date;inputDate.Out == '' ? null : inputDate.Out
+    date;inputDate.Out == '' ? null : DateTime.date(inputDate.Out)
 
-    #Id;#Let
-    Overall;'Overall'
+    #Id;#Action;$DefaultValue;$Title;$HelpKind;$DataSource
+    INP1;Input;'Overall';'Choose the report:';HelpKind.ChooseFromList;[ 'Overall', 'Progress', 'Summary', 'Export', 'Detailed', 'Remove']
 
-    #Id;#Let
-    Progress;'Progress'
-
-    #Id;#Let
-    Summary;'Summary'
-
-    #Id;#Let
-    Export;'Export'
-
-    #Id;#Let
-    Detailed;'Detailed'
-
-    #Id;#Let
-    Remove;'Remove summary'
-
-    #Id;#Action;#DefaultValue;#Title;#HelpKind;#DataSource
-    INP1;Input;Overall;'Choose the report:';HelpKind.ChooseFromList;[ Overall, Progress, Summary, Export, Detailed, Remove]
+    #Action;
+    Print;INP1.Out.getClass()
 
     #Switch
     INP1.Out
         #Case
-        Overall
-            #Call;#date
+        'Overall'
+            #Call;date
             RF.repOverall;date
 
 
         #Case
-        Progress
+        'Progress'
             #Call
             RF.repProgress
 
 
         // 
         #Case
-        Summary
-            #Call;#date
+        'Summary'
+            #Call;date
             RF.repSummary;date
 
 
         // 
         #Case
-        Export
-            #Id;#Action;#DefaultValue;#HelpKind;#Title
+        'Export'
+            #Id;#Action;$DefaultValue;$HelpKind;$Title
             name;Input;'reports';HelpKind.ChooseSaveFile;'Choose the path to save export(s)'
 
-            #Call;#pathToSave;#date
+            #Call;pathToSave;date
             RF.repCsvExport;name.Out;date
 
 
         // 
         #Case
-        Detailed
-            #Call;#date
+        'Detailed'
+            #Call;date
             RF.repLastAllDetails;date
 
 
         #Case
-        Remove
-            #Id;#Call;#date
+        'Remove'
+            #Id;#Call;date
             CALL_1;RF.deleteSummary;date
 
 
     #EndSwitch
 
     #OnError
-        #Action;#Text;#Notifier
+        #Action;$Text;$Notifier
         Show;error;Notifier.Error
 
         #Fail

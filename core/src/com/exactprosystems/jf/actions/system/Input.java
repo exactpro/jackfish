@@ -97,22 +97,22 @@ public class Input extends AbstractAction
 		{}
 		else if (this.dataSource.getClass().isArray())
 		{
-		    Arrays.stream((Object[])this.dataSource).forEach(o -> list.add(new ReadableValue(Common.createLiteral(o, evaluator))));
+		    Arrays.stream((Object[])this.dataSource).forEach(o -> list.add(new ReadableValue(Str.asString(o))));
 		}
 		else if (this.dataSource instanceof List<?>)
 		{
-		    ((List<?>)this.dataSource).stream().forEach(o -> list.add(new ReadableValue(Common.createLiteral(o, evaluator))));
+		    ((List<?>)this.dataSource).stream().forEach(o -> list.add(new ReadableValue(Str.asString(o))));
 		}
         else if (this.dataSource instanceof Map<?,?>)
         {
-            ((Map<?,?>)this.dataSource).entrySet().stream().forEach(o -> list.add(new ReadableValue(Common.createLiteral(o.getKey(), evaluator), Str.asString(o.getValue()))));
+            ((Map<?,?>)this.dataSource).entrySet().stream().forEach(o -> list.add(new ReadableValue(Str.asString(o.getKey()), Str.asString(o.getValue()))));
         }
         else
         {
             list.add(new ReadableValue(Str.asString(this.dataSource)));
         }
 		
-		Object input = context.getFactory().input(context.getEvaluator(), this.title, this.defaultValue, this.helpKind, list, this.timeout);
+		Object input = context.getFactory().input(evaluator, this.title, this.defaultValue, this.helpKind, list, this.timeout);
 		if (input == null)
 		{
             super.setError("User cancelled input", ErrorKind.INPUT_CACNELLED);

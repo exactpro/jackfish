@@ -9,6 +9,7 @@
 package com.exactprosystems.jf.tool.custom;
 
 import com.exactprosystems.jf.actions.ReadableValue;
+import com.exactprosystems.jf.api.common.Converter;
 import com.exactprosystems.jf.api.common.Str;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.functions.HelpKind;
@@ -42,7 +43,7 @@ import java.util.function.Supplier;
 
 public class UserInputDialog extends Dialog<Object>
 {
-	private final GridPane grid;
+	private GridPane grid;
     private Control mainControl;
 	private Timeline timer;
 	private Supplier<Object> result = () -> null;  
@@ -50,125 +51,139 @@ public class UserInputDialog extends Dialog<Object>
 	public UserInputDialog(Object defaultValue, AbstractEvaluator evaluator, HelpKind helpKind, List<ReadableValue> dataSource, int timeout)
 	{
 		timeout = timeout < 0 ? Integer.MAX_VALUE : timeout;
-		final DialogPane dialogPane = getDialogPane();
+		DialogPane dialogPane = getDialogPane();
 		this.setResizable(true);
 		dialogPane.getStylesheets().addAll(Common.currentThemesPaths());
 		this.timer = new Timeline(new KeyFrame(Duration.millis(timeout), ae -> done()) );
 		this.timer.setCycleCount(1);
 		this.timer.play();
-
-        if (helpKind != null )
-		{
-			switch (helpKind)
-			{
-			    case Number:
-                    this.mainControl = createNumberTextField(Integer.parseInt("" + defaultValue));
-			        break;
-			    
-			    case Boolean:
-                    this.mainControl = createBooleanField(Boolean.parseBoolean("" + defaultValue));
-                    break;
-			        
-			    case Expression:
-                    this.mainControl = createExpressionField(evaluator, Str.asString(defaultValue));
-                    break;
-
-				case ChooseDateTime:
-				    this.mainControl = createDateTimePickerField((Date)defaultValue);
-				    break;
-				
-				case ChooseOpenFile:
-                    ExpressionField openFile = createExpressionField(evaluator, Str.asString(defaultValue));
-                    this.mainControl = openFile;
-                    openFile.setNameSecond(helpKind.getLabel());
-					openFile.setSecondActionListener(str ->
-					{
-					    this.timer.stop();
-						File file = DialogsHelper.showOpenSaveDialog("Choose file to open", "All files", "*.*", DialogsHelper.OpenSaveMode.OpenFile);
-						this.timer.play();
-						if (file != null)
-						{
-							return Common.getRelativePath(file.getAbsolutePath());
-						}
-						return str;
-					});
-					break;
-
-				case ChooseFolder:
-                {
-                    ExpressionField chooseFolder = createExpressionField(evaluator, Str.asString(defaultValue));
-                    this.mainControl = chooseFolder;
-                    chooseFolder.setNameSecond(helpKind.getLabel());
-					chooseFolder.setSecondActionListener(str ->
-					{
-                        this.timer.stop();
-						File file = DialogsHelper.showDirChooseDialog("Choose directory");
-                        this.timer.play();
-						if (file != null)
-						{
-							return Common.getRelativePath(file.getAbsolutePath());
-						}
-						return str;
-					});
-					break;
-                }
-				case ChooseFromList:
-				    dataSource = dataSource == null ? Collections.emptyList() : dataSource; 
-                    this.mainControl = createListViewField(dataSource);
-					break;
-
-				default:
-                    this.mainControl = createTextField(Str.asString(defaultValue));
-                    break;
-			}
-		}
-
-        EventHandler<? super KeyEvent> onKeyPressed = this.mainControl.getOnKeyPressed();
-        this.mainControl.setOnKeyPressed(k -> 
-        { 
-            if (onKeyPressed != null)
-            {
-                onKeyPressed.handle(k);
-            }
-            restartTimer(); 
-        });
-
-        EventHandler<? super MouseEvent> onMouseMoved = this.mainControl.getOnMouseMoved();
-        this.mainControl.setOnMouseMoved(m -> 
+		
+        try
         {
-            if (onMouseMoved != null)
+            if (helpKind != null )
             {
-                onMouseMoved.handle(m);
-            }
-            restartTimer(); 
-        });
-        
-		this.grid = new GridPane();
-		this.grid.setHgap(10);
-		this.grid.setVgap(10);
-		this.grid.setMaxWidth(Double.MAX_VALUE);
-		this.grid.setAlignment(Pos.CENTER_LEFT);
+            	switch (helpKind)
+            	{
+            	    case Number:
+                        this.mainControl = createNumberTextField(Converter.convertToType(defaultValue, Integer.class));
+            	        break;
+            	    
+            	    case Boolean:
+                        this.mainControl = createBooleanField(Converter.convertToType(defaultValue, Boolean.class));
+                        break;
+            	        
+            	    case Expression:
+                        this.mainControl = createExpressionField(evaluator, Str.asString(defaultValue));
+                        break;
 
-		dialogPane.getButtonTypes().addAll(ButtonType.OK);
-		dialogPane.setPrefWidth(550);
-		dialogPane.setMaxWidth(550);
-		dialogPane.setMinWidth(550);
-		dialogPane.setPrefHeight(200);
-		dialogPane.setMinHeight(200);
-		dialogPane.setMaxHeight(200);
+            		case ChooseDateTime:
+            		    this.mainControl = createDateTimePickerField(Converter.convertToType(defaultValue, Date.class));
+            		    break;
+            		
+            		case ChooseOpenFile:
+                        ExpressionField openFile = createExpressionField(evaluator, Str.asString(defaultValue));
+                        this.mainControl = openFile;
+                        openFile.setNameSecond(helpKind.getLabel());
+            			openFile.setSecondActionListener(str ->
+            			{
+            			    this.timer.stop();
+            				File file = DialogsHelper.showOpenSaveDialog("Choose file to open", "All files", "*.*", DialogsHelper.OpenSaveMode.OpenFile);
+            				this.timer.play();
+            				if (file != null)
+            				{
+            					return Common.getRelativePath(file.getAbsolutePath());
+            				}
+            				return str;
+            			});
+            			break;
+
+            		case ChooseFolder:
+                    {
+                        ExpressionField chooseFolder = createExpressionField(evaluator, Str.asString(defaultValue));
+                        this.mainControl = chooseFolder;
+                        chooseFolder.setNameSecond(helpKind.getLabel());
+            			chooseFolder.setSecondActionListener(str ->
+            			{
+                            this.timer.stop();
+            				File file = DialogsHelper.showDirChooseDialog("Choose directory");
+                            this.timer.play();
+            				if (file != null)
+            				{
+            					return Common.getRelativePath(file.getAbsolutePath());
+            				}
+            				return str;
+            			});
+            			break;
+                    }
+            		case ChooseFromList:
+            		    dataSource = dataSource == null ? Collections.emptyList() : dataSource; 
+                        this.mainControl = createListViewField(dataSource, Str.asString(defaultValue));
+            			break;
+
+            		default:
+                        this.mainControl = createTextField(Str.asString(defaultValue));
+                        break;
+            	}
+            }
+
+            EventHandler<? super KeyEvent> onKeyPressed = this.mainControl.getOnKeyPressed();
+            this.mainControl.setOnKeyPressed(k -> 
+            { 
+                if (onKeyPressed != null)
+                {
+                    onKeyPressed.handle(k);
+                }
+                restartTimer(); 
+            });
+
+            EventHandler<? super MouseEvent> onMouseMoved = this.mainControl.getOnMouseMoved();
+            this.mainControl.setOnMouseMoved(m -> 
+            {
+                if (onMouseMoved != null)
+                {
+                    onMouseMoved.handle(m);
+                }
+                restartTimer(); 
+            });
+            
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+
+        this.grid = new GridPane();
+        this.grid.setHgap(10);
+        this.grid.setVgap(10);
+        this.grid.setMaxWidth(Double.MAX_VALUE);
+        this.grid.setAlignment(Pos.CENTER_LEFT);
+
+        dialogPane.getButtonTypes().addAll(ButtonType.OK);
+        dialogPane.setPrefWidth(550);
+        dialogPane.setMaxWidth(550);
+        dialogPane.setMinWidth(550);
+        dialogPane.setPrefHeight(200);
+        dialogPane.setMinHeight(200);
+        dialogPane.setMaxHeight(200);
+        dialogPane.setContent(this.grid);
+
+        setResultConverter((dialogButton) ->
+        {
+            ButtonBar.ButtonData data = dialogButton == null ? null : dialogButton.getButtonData();
+            this.timer.stop();
+            return data == ButtonBar.ButtonData.OK_DONE ? this.result.get() : null;
+        });
+
+        if (this.mainControl == null)
+        {
+            Platform.runLater(this::close);
+            return;
+        }
 
         grid.getChildren().clear();
         grid.add(this.mainControl, 0, 0);
-        getDialogPane().setContent(grid);
 
         Platform.runLater(this.mainControl::requestFocus);
-		
-		setResultConverter((dialogButton) ->
-		{
-			ButtonBar.ButtonData data = dialogButton == null ? null : dialogButton.getButtonData();
-			this.timer.stop();
-			return data == ButtonBar.ButtonData.OK_DONE ? this.result.get() : null;
-		});
 	}
 
     private DateTimePicker createDateTimePickerField(Date defaultValue)
@@ -237,9 +252,10 @@ public class UserInputDialog extends Dialog<Object>
         return expressionField;
 	}
 	
-    private ListView<ReadableValue> createListViewField(List<ReadableValue> dataSource)
+    private ListView<ReadableValue> createListViewField(List<ReadableValue> dataSource, String defaultValue)
     {
         ListView<ReadableValue> list = new ListView<>(FXCollections.observableList(dataSource));
+        list.getSelectionModel().select(new ReadableValue(defaultValue));
         list.setOnKeyPressed(keyEvent ->
         {
             if (keyEvent.getCode() == KeyCode.ENTER)
@@ -250,7 +266,11 @@ public class UserInputDialog extends Dialog<Object>
         list.setMaxWidth(Double.MAX_VALUE);
         GridPane.setHgrow(list, Priority.ALWAYS);
         GridPane.setFillWidth(list, true);
-        this.result = () -> list.getSelectionModel().getSelectedItem();
+        this.result = () ->
+        {
+            ReadableValue item = list.getSelectionModel().getSelectedItem();
+            return item == null ? null : item.getValue();
+        };
         
         return list;
     }
@@ -260,8 +280,11 @@ public class UserInputDialog extends Dialog<Object>
 	    Button buttonOk = ((Button)getDialogPane().lookupButton(ButtonType.OK));
 	    Platform.runLater(() -> 
 	    {
-	        buttonOk.requestFocus();   
-	        buttonOk.fire();
+	        if (buttonOk != null)
+	        {
+    	        buttonOk.requestFocus();   
+    	        buttonOk.fire();
+	        }
 	    });
     }
 

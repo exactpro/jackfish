@@ -13,7 +13,7 @@ RF;RegressionFramework
     // // Runs all matrixes which names are enumerated in the column  Name
     // // of the table and puts results into database
     // //==============================================
-    #Id;#SubCase;#table
+    #Id;#SubCase;table
     RunAll;Run all matrixes from table;
         #Assert;#Message
         table != null && table instanceof Table;'The parameter table should be Table'
@@ -48,7 +48,7 @@ RF;RegressionFramework
         #Id;#Let
         needD;DateTime.date(curD.years(),curD.months(),curD.days(),curD.hours(),curD.minutes(),curD.seconds())
 
-        #Id;#Action;#Connection;#Query;#CreateTime;#ToolVersion;#AppVersion
+        #Id;#Action;$Connection;$Query;CreateTime;ToolVersion;AppVersion
         selectRunId;SQLinsert;SQL;'INSERT INTO runs (create_time, duration, tool_version, app_version) VALUES (?, -1, ?, ?)\u003b';needD;VersionInfo.getVersion();config_version
 
         #Id;#Let
@@ -66,7 +66,7 @@ RF;RegressionFramework
         #Id;#Let
         begin;System.currentTimeMillis()
 
-        #Id;#Action;#Decoraded
+        #Id;#Action;$Decoraded
         standartResult;ResultTable;false
 
         // // Main loop
@@ -95,7 +95,7 @@ RF;RegressionFramework
                 #Id;#Let
                 scenarioName;row.containsKey('Name') && !Str.IsNullOrEmpty(row.Name) ? row.Name : scenario
 
-                #Id;#Action;#Connection;#Query;#RunId;#Scenario;#Counter;#Performer;#Priority;#Manual;#StartTime;#Host;#User;#TestSet
+                #Id;#Action;$Connection;$Query;RunId;Scenario;Counter;Performer;Priority;Manual;StartTime;Host;User;TestSet
                 selectScenarioId;SQLinsert;SQL;'INSERT INTO scenarios (run_id, scenario, counter, performer, priority, manual, start_time, host, username, test_set) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';runId;scenarioName;counter;row.Performer;row.Priority;manual ? 1 : 0;DateTime.current();Sys.hostName();Sys.userName();row.TestSet
 
                 #Id;#Let
@@ -106,22 +106,22 @@ RF;RegressionFramework
                     #Id;#Let
                     totalCount;totalCount + 1
 
-                    #Action;#Str
+                    #Action;$Str
                     Print;'Starting: ' + scenarioName
 
-                    #Id;#Action;#Matrix;#Parameter
+                    #Id;#Action;$Matrix;$Parameter
                     MXRN;MatrixRun;row.Scenario + '.jf';counter
 
-                    #Action;#Matrix
+                    #Action;$Matrix
                     MatrixWait;MXRN.Out
 
-                    #Action;#Connection;#Query;#Passed;#Failed;#Report;#ScenarioId
+                    #Action;$Connection;$Query;Passed;Failed;Report;ScenarioId
                     SQLexecute;SQL;'UPDATE scenarios SET passed = ?, failed = ?, report = ?, done = 1 WHERE id = ?';MXRN.Out.passed();MXRN.Out.failed();MXRN.Out.reportAsBlob();scenarioId
 
-                    #Id;#Action;#Decoraded;#Matrix
+                    #Id;#Action;$Decoraded;$Matrix
                     resultTab;ResultTable;false;MXRN.Out
 
-                    #Action;#Passed;#Failed
+                    #Action;Passed;Failed
                     Print;MXRN.Out.passed();MXRN.Out.failed()
 
                     #Id;#Let
@@ -136,13 +136,13 @@ RF;RegressionFramework
                         _rf_dialect
                             #Case
                             'MYSQL'
-                                #Id;#Action;#Connection;#Query;#ScenarioId;#Testcase;#Stepp;#Time;#Result;#Error;#Screenshot
+                                #Id;#Action;$Connection;$Query;ScenarioId;Testcase;Stepp;Time;Result;Error;Screenshot
                                 selectDetails;SQLinsert;SQL;'INSERT INTO details (scenario_id, testcase, step, time, result, error, screenshot) VALUES (?, ?, ?, ?, ?, ?, ?)';scenarioId;'' + details.TestCase;'' + details.Step;details.Time;'' + details.Result;'' + details.Error;Converter.storableToBlob(details.Screenshot)
 
 
                             #Case
                             'MSSQL'
-                                #Id;#Action;#Connection;#Query;#ScenarioId;#Testcase;#Stepp;#Time;#Result;#Error;#Screenshot
+                                #Id;#Action;$Connection;$Query;ScenarioId;Testcase;Stepp;Time;Result;Error;Screenshot
                                 selectDetails;SQLinsert;SQL;'INSERT INTO details (scenario_id, testcase, step, time, result, error, screenshot) VALUES (?, ?, ?, ?, ?, ?, CONVERT(VARBINARY(MAX),?))';scenarioId;'' + details.TestCase;'' + details.Step;details.Time;'' + details.Result;'' + details.Error;Converter.storableToBlob(details.Screenshot)
 
 
@@ -160,7 +160,7 @@ RF;RegressionFramework
                             ~;"INSERT INTO user_details (details_id, name, value) VALUES (?, ?, ?);"
                             #EndRawText
 
-                            #Action;#Connection;#Query;#detailsId;#name;#value
+                            #Action;$Connection;$Query;detailsId;name;value
                             SQLinsert;SQL;TEXT6.toString();selectDetails.Out[0];resultTab.Out.getHeader(i);details[resultTab.Out.getHeader(i)]
 
                         #EndFor
@@ -169,10 +169,10 @@ RF;RegressionFramework
 
                     #If
                     (MXRN.Out.failed() > 0) && (isdef _rf_default_handler) && (!(Str.IsNullOrEmpty(_rf_default_handler)))
-                        #Id;#Action;#Matrix;#Parameter
+                        #Id;#Action;$Matrix;$Parameter
                         ERRMX;MatrixRun;_rf_default_handler;scenario
 
-                        #Id;#Action;#Matrix
+                        #Id;#Action;$Matrix
                         MXWT1;MatrixWait;ERRMX.Out
 
                     #EndIf
@@ -182,19 +182,19 @@ RF;RegressionFramework
             #EndFor
 
             #OnError
-                #Action;#Error
+                #Action;Error
                 Print;error
 
 
         #EndForEach
 
-        #Action;#Total matrixes;#Passed
+        #Action;Total matrixes;Passed
         Print;totalCount;successCount
 
-        #Action;#Connection;#Query;#Duration;#RunId
+        #Action;$Connection;$Query;Duration;RunId
         SQLexecute;SQL;'UPDATE runs SET duration = ? WHERE id = ?';(int)(System.currentTimeMillis() - begin);runId
 
-        #Action;#Connection
+        #Action;$Connection
         SQLdisconnect;SQL
 
         #Assert;#Message
@@ -205,16 +205,16 @@ RF;RegressionFramework
     // //==============================================
     // // Shows the overall report
     // //==============================================
-    #Id;#SubCase;#date
+    #Id;#SubCase;date
     repOverall;Overall progress;
         #Id;#Call
         SQL;RF.Connect
 
-        #Id;#Call;#sql;#date
+        #Id;#Call;sql;date
         runId;runIdFromDate;SQL;date
 
         #Id;#Let
-        title;'Overall' + (date == null ? '' : (' on ' +DateTime.strDate(date)))
+        title;'Overall' + (date == null ? '' : (' on ' + DateTime.strDate(date)))
 
         #Switch
         _rf_dialect
@@ -249,22 +249,22 @@ RF;RegressionFramework
 
         #EndSwitch
 
-        #Id;#Action;#Connection;#Query;#runId;#runId
+        #Id;#Action;$Connection;$Query;runId;runId
         select;SQLselect;SQL;TEXT4.toString();runId.id;runId.id
 
-        #Id;#Action;#ReportName;#Version
+        #Id;#Action;$ReportName;$Version
         REP1;ReportStart;title;'JF: ' + runId.tool_version + '  APP: ' + runId.app_version
 
-        #Action;#Type;#Table;#ToReport;#Title;#Colors
+        #Action;$Type;$Table;$ToReport;$Title;$Colors
         ChartReport;ChartKind.Pie;select.Out;REP1.Out;'{{4 ' + title + ' 4}}';{ 'Passed' : Color.GREEN, 'Failed' : Color.RED }
 
-        #Action;#Table;#Title;#Numbers;#ToReport
+        #Action;$Table;$Title;$Numbers;$ToReport
         TableReport;select.Out;'Table';false;REP1.Out
 
-        #Action;#Report;#Passed;#Failed
+        #Action;$Report;$Passed;$Failed
         ReportFinish;REP1.Out;(int)select.Out[0].Passed;(int)select.Out[0].Failed
 
-        #Action;#Report
+        #Action;$Report
         ReportShow;REP1.Out.getReportName()
 
     #EndSubCase
@@ -272,7 +272,7 @@ RF;RegressionFramework
     // //==============================================
     // // Delete the summary report
     // //==============================================
-    #Id;#SubCase;#date
+    #Id;#SubCase;date
     deleteSummary;deleteSummary;
         #Id;#Call
         SQL;RF.Connect
@@ -357,13 +357,13 @@ RF;RegressionFramework
 
         #EndSwitch
 
-        #Id;#Action;#Query;#Connection;#date_date
+        #Id;#Action;$Query;$Connection;date_date
         SQLEXEC1;SQLexecute;TEXT1.toString();SQL;date
 
-        #Id;#Action;#Query;#Connection;#date_date
+        #Id;#Action;$Query;$Connection;date_date
         SQLEXEC1;SQLexecute;TEXT2.toString();SQL;date
 
-        #Id;#Action;#Query;#Connection;#date_date
+        #Id;#Action;$Query;$Connection;date_date
         SQLEXEC1;SQLexecute;TEXT3.toString();SQL;date
 
     #EndSubCase
@@ -371,7 +371,7 @@ RF;RegressionFramework
     // //==============================================
     // // Shows the summary report
     // //==============================================
-    #Id;#SubCase;#date
+    #Id;#SubCase;date
     repSummary;Summary report;
         #Id;#Call
         SQL;RF.Connect
@@ -379,10 +379,10 @@ RF;RegressionFramework
         #Id;#Let
         title;'Consolidated Umbrella Report' + (date == null ? '' : (' on ' +DateTime.strDate(date)))
 
-        #Id;#Call;#sql;#date
+        #Id;#Call;sql;date
         runId;runIdFromDate;SQL;date
 
-        #Id;#Call;#sql;#date
+        #Id;#Call;sql;date
         times;timesFromDate;SQL;date
 
         #Switch
@@ -440,34 +440,34 @@ RF;RegressionFramework
 
         #EndSwitch
 
-        #Id;#Action;#Connection;#Query;#runId;#runId
+        #Id;#Action;$Connection;$Query;runId;runId
         select;SQLselect;SQL;TEXT2.toString();runId.id;runId.id
 
         #Id;#Let
         table;select.Out
 
-        #Id;#Action;#Table;#result
+        #Id;#Action;$Table;result
         passed;TableSelect;table;'Passed'
 
-        #Id;#Action;#Table;#result
+        #Id;#Action;$Table;result
         failed;TableSelect;table;'Failed'
 
-        #Action;#Replace;#Table;#Columns;#Search;#MatchCell
+        #Action;$Replace;$Table;$Columns;$Search;$MatchCell
         TableReplace;'<div class=\"Passed\">Passed</div>';table;{ 'result' };'Passed';true
 
-        #Action;#Replace;#Table;#Columns;#Search;#MatchCell
+        #Action;$Replace;$Table;$Columns;$Search;$MatchCell
         TableReplace;'<div class=\"Failed\">Failed</div>';table;{ 'result' };'Failed';true
 
-        #Id;#Action;#ReportName;#Version
+        #Id;#Action;$ReportName;$Version
         REP1;ReportStart;title;'JF: ' + runId.tool_version + '  APP: ' + runId.app_version
 
-        #Action;#Table;#Title;#ToReport;#Numbers;#testSet;#scenario;#result;#date;#time;#username;#host;#report
+        #Action;$Table;$Title;$ToReport;$Numbers;testSet;scenario;result;date;time;username;host;report
         TableReport;table;'{{4' + title + '4}}';REP1.Out;false;'Test set';'Matrix Name';'Execution Status';'Execution Date';'Execution Time';'Exectuted By';'Execution Machine';'Report link'
 
-        #Action;#Passed;#Failed;#Report;#StartTime;#FinishTime
+        #Action;$Passed;$Failed;$Report;$StartTime;$FinishTime
         ReportFinish;passed.Out.size();failed.Out.size();REP1.Out;times.startTime;times.finishTime
 
-        #Action;#Report
+        #Action;$Report
         ReportShow;REP1.Out.getReportName()
 
     #EndSubCase
@@ -475,12 +475,12 @@ RF;RegressionFramework
     // //==============================================
     // // Export the last regression set to xml file for import into QC
     // //==============================================
-    #Id;#SubCase;#date;#pathToSave
+    #Id;#SubCase;date;pathToSave
     repXmlExport;Export to XML file;;
         #Id;#Call
         SQL;RF.Connect
 
-        #Id;#Call;#sql;#date
+        #Id;#Call;sql;date
         runId;RF.runIdFromDate;SQL;date
 
         #Id;#RawText;#Kind
@@ -491,7 +491,7 @@ RF;RegressionFramework
         ~;"GROUP BY s.test_set; "
         #EndRawText
 
-        #Id;#Action;#runId;#Query;#Connection
+        #Id;#Action;runId;$Query;$Connection
         testSetQuery;SQLselect;runId.id;testSetText.toString();SQL
 
         #Id;#Let
@@ -509,7 +509,7 @@ RF;RegressionFramework
             ~;")"
             #EndRawText
 
-            #Id;#Action;#test_set;#run_id;#Query;#Connection
+            #Id;#Action;test_set;run_id;$Query;$Connection
             SQLSLCT1;SQLselect;testSet.test_set;runId.id;totalCountSQL.toString();SQL
 
             #Id;#Let
@@ -528,7 +528,7 @@ RF;RegressionFramework
             ~;") and result = 'Failed'"
             #EndRawText
 
-            #Id;#Action;#test_set;#runId;#Query;#Connection
+            #Id;#Action;test_set;runId;$Query;$Connection
             SQLSLCT2;SQLselect;testSet.test_set;runId.id;failuresSQL.toString();SQL
 
             #Id;#Let
@@ -537,10 +537,10 @@ RF;RegressionFramework
             #Id;#Action
             xml;XmlCreate
 
-            #Id;#Action;#name;#failures;#tests;#time;#Content;#NodeName;#Xml
+            #Id;#Action;name;failures;tests;time;$Content;$NodeName;$Xml
             rootNode;XmlAddNode;testSet.test_set;failures;totalCount;totalTime / 1000;;'testsuites';xml.Out
 
-            #Id;#Action;#Xpath;#Xml
+            #Id;#Action;$Xpath;$Xml
             XML1;XmlFindFirst;'//testsuites';xml.Out
 
             #Switch
@@ -584,7 +584,7 @@ RF;RegressionFramework
 
             #EndSwitch
 
-            #Id;#Action;#Connection;#Query;#runId;#testSet
+            #Id;#Action;$Connection;$Query;runId;testSet
             query;SQLselect;SQL;TEXT5.toString();runId.id;testSet.test_set
 
             #Id;#Let
@@ -599,7 +599,7 @@ RF;RegressionFramework
                 ~;"WHERE scenario_id = ?"
                 #EndRawText
 
-                #Id;#Action;#scenarioId;#Query;#Connection
+                #Id;#Action;scenarioId;$Query;$Connection
                 SQLSLCT3;SQLselect;scenarios[rowScenarios].id;countTSQL.toString;SQL
 
                 #Id;#Let
@@ -615,7 +615,7 @@ RF;RegressionFramework
                 ~;"WHERE result = ""Failed"" and scenario_id = ? "
                 #EndRawText
 
-                #Id;#Action;#scenarioId;#Query;#Connection
+                #Id;#Action;scenarioId;$Query;$Connection
                 SQLSLCT4;SQLselect;scenarios[rowScenarios].id;failCountTSQL.toString();SQL
 
                 #Id;#Let
@@ -628,16 +628,16 @@ RF;RegressionFramework
                 ~;"WHERE error <> 'null' and scenario_id = ? "
                 #EndRawText
 
-                #Id;#Action;#scenarioId;#Query;#Connection
+                #Id;#Action;scenarioId;$Query;$Connection
                 SQLSLCT6;SQLselect;scenarios[rowScenarios].id;errorcountSQL.toString();SQL
 
                 #Id;#Let
                 errorTS;SQLSLCT6.Out.size() > 0 ? SQLSLCT6.Out[0].error : null
 
-                #Action;#hostname;#timestamp;#failures;#time;#tests;#NodeName;#Xml;#name;#errors;#skipped;#disabled
+                #Action;hostname;timestamp;failures;time;tests;$NodeName;$Xml;name;errors;skipped;disabled
                 XmlAddNode;hostname;scenarios[rowScenarios].date + 'T' + scenarios[rowScenarios].time;failTS;TStotalTime /1000;TStests;'testsuite';XML1.Out;scenarios[rowScenarios].scenario;errorTS;0;0
 
-                #Id;#Action;#Xml
+                #Id;#Action;$Xml
                 XML2;XmlChildren;XML1.Out
 
                 #Id;#Let
@@ -649,23 +649,23 @@ RF;RegressionFramework
                 ~;"where scenario_id = ?"
                 #EndRawText
 
-                #Id;#Action;#scenarioId;#Query;#Connection
+                #Id;#Action;scenarioId;$Query;$Connection
                 SQLSLCT5;SQLselect;scenarios[rowScenarios].id;findTestCase.toString();SQL
 
-                #Action;#Table;#Title
+                #Action;$Table;$Title
                 TableReport;SQLSLCT5.Out;'1234'
 
                 #ForEach;#In
                 testCases;SQLSLCT5.Out
-                    #Action;#name;#classname;#time;#NodeName;#Xml
+                    #Action;name;classname;time;$NodeName;$Xml
                     XmlAddNode;testCases.testcase;scenarios[rowScenarios].scenario;testCases.time /1000;'testcase';last
 
                     #If
                     !testCases.error.equals('null')
-                        #Id;#Action;#Xml
+                        #Id;#Action;$Xml
                         XML4;XmlChildren;last
 
-                        #Action;#type;#message;#NodeName;#Xml
+                        #Action;type;message;$NodeName;$Xml
                         XmlAddNode;'testFailure';testCases.error;'failure';XML4.Out[XML4.Out.size - 1]
 
                     #EndIf
@@ -680,19 +680,19 @@ RF;RegressionFramework
             #Id;#Let
             filePath;pathToSave + '/' +fileName
 
-            #Action;#Xml;#File
+            #Action;$Xml;$File
             XmlSaveToFile;XML1.Out;filePath
 
         #EndForEach
 
     #EndSubCase
 
-    #Id;#SubCase;#date;#pathToSave;#matrixName
+    #Id;#SubCase;date;pathToSave;matrixName
     repXmlExport2;Export to XML file;;;
         #Id;#Call
         SQL;RF.Connect
 
-        #Id;#Call;#sql;#date
+        #Id;#Call;sql;date
         runId;RF.runIdFromDate;SQL;date
 
         #Id;#RawText;#Kind
@@ -700,7 +700,7 @@ RF;RegressionFramework
         ~;"select sum(time) as time from details where scenario_id in (select id from scenarios where run_id = ?) AND step ='null'"
         #EndRawText
 
-        #Id;#Action;#id;#Query;#Connection
+        #Id;#Action;id;$Query;$Connection
         SQLSLCT14;SQLselect;runId.id;findTotalTime.toString();SQL
 
         #Id;#Let
@@ -717,7 +717,7 @@ RF;RegressionFramework
         ~;") AND step = 'null'"
         #EndRawText
 
-        #Id;#Action;#runId;#Query;#Connection
+        #Id;#Action;runId;$Query;$Connection
         SQLSLCT7;SQLselect;runId.id;totalCountSQL.toString();SQL
 
         #Id;#Let
@@ -734,7 +734,7 @@ RF;RegressionFramework
         ~;") and d.result = 'Failed'  AND step ='null'"
         #EndRawText
 
-        #Id;#Action;#runId;#Query;#Connection
+        #Id;#Action;runId;$Query;$Connection
         SQLSLCT8;SQLselect;runId.id;totalFailedSQL.toString();SQL
 
         #Id;#Let
@@ -743,10 +743,10 @@ RF;RegressionFramework
         #Id;#Action
         xml;XmlCreate
 
-        #Id;#Action;#time;#tests;#name;#failures;#NodeName;#Xml
+        #Id;#Action;time;tests;name;failures;$NodeName;$Xml
         rootNode;XmlAddNode;totalDuration / 1000;totalCount;matrixName;totalFailed;'testsuites';xml.Out
 
-        #Id;#Action;#Xpath;#Xml
+        #Id;#Action;$Xpath;$Xml
         XML3;XmlFindFirst;'//testsuites';xml.Out
 
         #Id;#RawText;#Kind
@@ -757,7 +757,7 @@ RF;RegressionFramework
         ~;" "
         #EndRawText
 
-        #Id;#Action;#runId;#Query;#Connection
+        #Id;#Action;runId;$Query;$Connection
         SQLSLCT9;SQLselect;runId.id;totalScenarios.toString();SQL
 
         #Id;#Let
@@ -768,7 +768,7 @@ RF;RegressionFramework
         ~;"SELECT DISTINCT host FROM scenarios WHERE run_id = ?"
         #EndRawText
 
-        #Id;#Action;#id;#Query;#Connection
+        #Id;#Action;id;$Query;$Connection
         SQLSLCT13;SQLselect;runId.id;findHostSQL.toString();SQL
 
         #Id;#Let
@@ -783,7 +783,7 @@ RF;RegressionFramework
             ~;"WHERE scenario_id IN (SELECT id FROM scenarios WHERE scenario = ? AND run_id = ?)  AND step ='null'"
             #EndRawText
 
-            #Id;#Action;#scenario;#id;#Query;#Connection
+            #Id;#Action;scenario;id;$Query;$Connection
             SQLSLCT10;SQLselect;scenarios[rowScenarios].scenario;runId.id;countTSQL.toString();SQL
 
             #Id;#Let
@@ -799,7 +799,7 @@ RF;RegressionFramework
             ~;"WHERE result = 'Failed' and scenario_id IN (SELECT id FROM scenarios WHERE scenario = ? AND run_id = ?) AND step ='null'"
             #EndRawText
 
-            #Id;#Action;#scenario;#id;#Query;#Connection
+            #Id;#Action;scenario;id;$Query;$Connection
             SQLSLCT11;SQLselect;scenarios[rowScenarios].scenario;runId.id;failCountTSQL.toString();SQL
 
             #Id;#Let
@@ -812,7 +812,7 @@ RF;RegressionFramework
             ~;"WHERE error <> 'null' and scenario_id IN (SELECT id FROM scenarios WHERE scenario = ? AND run_id = ?) AND step ='null'"
             #EndRawText
 
-            #Id;#Action;#scenario;#id;#Query;#Connection
+            #Id;#Action;scenario;id;$Query;$Connection
             SQLSLCT12;SQLselect;scenarios[rowScenarios].scenario;runId.id;errorcountSQL.toString();SQL
 
             #Id;#Let
@@ -847,7 +847,7 @@ RF;RegressionFramework
 
             #EndSwitch
 
-            #Id;#Action;#id;#scenario;#Query;#Connection
+            #Id;#Action;id;scenario;$Query;$Connection
             SQLSLCT15;SQLselect;runId.id;scenarios[rowScenarios].scenario;TEXT7.toString();SQL
 
             #Id;#Let
@@ -856,7 +856,7 @@ RF;RegressionFramework
             #Id;#Let
             time;SQLSLCT15.Out.size() > 0 ? SQLSLCT15.Out[0].time : null
 
-            #Action;#NodeName;#timestamp;#time;#tests;#skipped;#name;#hostname;#failures;#errors;#Xml
+            #Action;$NodeName;timestamp;time;tests;skipped;name;hostname;failures;errors;$Xml
             XmlAddNode;'testsuite';date + 'T' + time;TStotalTime /1000;TStests;0;scenarios[rowScenarios].scenario;host;failTS;errorTS;XML3.Out
 
             #Id;#RawText;#Kind
@@ -864,13 +864,13 @@ RF;RegressionFramework
             ~;"select id from details where scenario_id in (SELECT id FROM scenarios WHERE scenario = ? AND run_id = ?) group by testcase"
             #EndRawText
 
-            #Id;#Action;#scenario;#id;#Query;#Connection
+            #Id;#Action;scenario;id;$Query;$Connection
             SQLSLCT16;SQLselect;scenarios[rowScenarios].scenario;runId.id;findAllIdsForScenario;SQL
 
             #Id;#Let
             scenarioIds;SQLSLCT16.Out
 
-            #Id;#Action;#Xml
+            #Id;#Action;$Xml
             XML5;XmlChildren;XML3.Out
 
             #Id;#Let
@@ -883,18 +883,18 @@ RF;RegressionFramework
                 ~;"SELECT testcase, time, error FROM details where id = ?"
                 #EndRawText
 
-                #Id;#Action;#id;#Query;#Connection
+                #Id;#Action;id;$Query;$Connection
                 SQLSLCT17;SQLselect;id.id;infoFromDetails.toString();SQL
 
-                #Action;#classname;#name;#time;#NodeName;#Xml
+                #Action;classname;name;time;$NodeName;$Xml
                 XmlAddNode;scenarios[rowScenarios].scenario;SQLSLCT17.Out[0].testcase;SQLSLCT17.Out[0].time / 1000;'testcase';last
 
                 #If
                 !SQLSLCT17.Out[0].error.equals('null')
-                    #Id;#Action;#Xml
+                    #Id;#Action;$Xml
                     XML6;XmlChildren;last
 
-                    #Action;#message;#type;#NodeName;#Xml
+                    #Action;message;type;$NodeName;$Xml
                     XmlAddNode;SQLSLCT17.Out[0].error;'testFailure';'failure';XML6.Out[XML6.Out.size - 1]
 
                 #EndIf
@@ -909,7 +909,7 @@ RF;RegressionFramework
         #Id;#Let
         filePath;pathToSave + '/' +fileName
 
-        #Action;#Xml;#File
+        #Action;$Xml;$File
         XmlSaveToFile;XML3.Out;filePath
 
     #EndSubCase
@@ -917,12 +917,12 @@ RF;RegressionFramework
     // //==============================================
     // // Export the last regression set to csv file for import into QC
     // //==============================================
-    #Id;#SubCase;#date;#pathToSave
+    #Id;#SubCase;date;pathToSave
     repCsvExport;Export to CSV file;;
         #Id;#Call
         SQL;Connect
 
-        #Id;#Call;#sql;#date
+        #Id;#Call;sql;date
         runId;runIdFromDate;SQL;date
 
         #Id;#RawText;#Kind
@@ -934,7 +934,7 @@ RF;RegressionFramework
         ~;"GROUP BY s.test_set; "
         #EndRawText
 
-        #Id;#Action;#Query;#Connection;#runId
+        #Id;#Action;$Query;$Connection;runId
         testSetQuery;SQLselect;testSetText.toString();SQL;runId.id
 
         #ForEach;#In
@@ -942,7 +942,7 @@ RF;RegressionFramework
             #Id;#Let
             countSteps;0
 
-            #Id;#Action;#Test Name;#Execution Status;#Execution Date;#Execution Time;#Executed By;#Execution Machine
+            #Id;#Action;Test Name;Execution Status;Execution Date;Execution Time;Executed By;Execution Machine
             createTable;TableCreate;;;;;;
 
             #Id;#Let
@@ -989,7 +989,7 @@ RF;RegressionFramework
 
             #EndSwitch
 
-            #Id;#Action;#Connection;#Query;#runId;#testSet
+            #Id;#Action;$Connection;$Query;runId;testSet
             query;SQLselect;SQL;TEXT5.toString();runId.id;testSet.test_set
 
             #Id;#Let
@@ -1006,13 +1006,13 @@ RF;RegressionFramework
                 ~;"  ;"
                 #EndRawText
 
-                #Id;#Action;#Connection;#Query;#scenario_id;#scenario_id
+                #Id;#Action;$Connection;$Query;scenario_id;scenario_id
                 selectFromTable;SQLselect;SQL;selectFromTableText.toString();scenarios[rowScenarios].id;scenarios[rowScenarios].id
 
                 #Id;#Let
                 selectSteps;selectFromTable.Out
 
-                #Action;#Table;#Test Name;#Execution Status;#Execution Date;#Execution Time;#Executed By;#Execution Machine
+                #Action;$Table;Test Name;Execution Status;Execution Date;Execution Time;Executed By;Execution Machine
                 TableAddValue;resultTable;scenarios[rowScenarios].scenario;scenarios[rowScenarios].status;scenarios[rowScenarios].date;scenarios[rowScenarios].time;scenarios[rowScenarios].username;scenarios[rowScenarios].host
 
                 #For;#From;#To;#Step
@@ -1022,7 +1022,7 @@ RF;RegressionFramework
                         #Id;#Let
                         countSteps;countSteps + 1
 
-                        #Action;#Table;#Columns
+                        #Action;$Table;$Columns
                         TableAddColumns;resultTable;'Step' + countSteps
 
                     #EndIf
@@ -1059,19 +1059,19 @@ RF;RegressionFramework
 
             #EndFor
 
-            #Action;#Replace;#Table;#Search;#Columns
+            #Action;$Replace;$Table;$Search;$Columns
             TableReplace;'';resultTable;null;stepHeaders.toArray()
 
-            #Action;#Replace;#Table;#Columns;#MatchCell;#Search
+            #Action;$Replace;$Table;$Columns;$MatchCell;$Search
             TableReplace;'Failed';resultTable;{'Execution Status'};true;0
 
-            #Action;#Replace;#Table;#Columns;#MatchCell;#Search
+            #Action;$Replace;$Table;$Columns;$MatchCell;$Search
             TableReplace;'Passed';resultTable;{'Execution Status'};true;1
 
             #Id;#Let
             fileName;testSet.test_set + DateTime.strDate(runId.create_time, '_yyyyMMdd_HHmmss') + '.csv'
 
-            #Action;#Table;#File;#Delimiter
+            #Action;$Table;$File;$Delimiter
             TableSaveToFile;resultTable;pathToSave + '/' +fileName;','
 
         #EndForEach
@@ -1081,12 +1081,12 @@ RF;RegressionFramework
     // //==============================================
     // // Collects  all details of all scenarios of last regression in readable form
     // //==============================================
-    #Id;#SubCase;#date
+    #Id;#SubCase;date
     repLastAllDetails;Shows a report of last details;
         #Id;#Call
         SQL;Connect
 
-        #Id;#Call;#sql;#date
+        #Id;#Call;sql;date
         runId;runIdFromDate;SQL;date
 
         #Id;#Let
@@ -1147,40 +1147,40 @@ RF;RegressionFramework
 
         #EndSwitch
 
-        #Id;#Action;#Connection;#Query;#runId
+        #Id;#Action;$Connection;$Query;runId
         select;SQLselect;SQL;TEXT1.toString();runId.id
 
         #Id;#Let
         table;select.Out
 
-        #Id;#Action;#Table;#result
+        #Id;#Action;$Table;result
         passed;TableSelect;table;'Passed'
 
-        #Id;#Action;#Table;#result
+        #Id;#Action;$Table;result
         failed;TableSelect;table;'Failed'
 
-        #Action;#Table;#Columns;#MatchCell;#Search;#Replace
+        #Action;$Table;$Columns;$MatchCell;$Search;$Replace
         TableReplace;table;{ 'step', 'error' };true;'null';''
 
-        #Action;#Table;#Columns;#MatchCell;#Search;#Replace
+        #Action;$Table;$Columns;$MatchCell;$Search;$Replace
         TableReplace;table;{ 'screenshot'};true;null;''
 
-        #Action;#Replace;#Table;#Columns;#Search;#MatchCell
+        #Action;$Replace;$Table;$Columns;$Search;$MatchCell
         TableReplace;'<div class=\"Passed\">Passed</div>';table;{ 'result' };'Passed';true
 
-        #Action;#Replace;#Table;#Columns;#Search;#MatchCell
+        #Action;$Replace;$Table;$Columns;$Search;$MatchCell
         TableReplace;'<div class=\"Failed\">Failed</div>';table;{ 'result' };'Failed';true
 
-        #Id;#Action;#ReportName;#Version
+        #Id;#Action;$ReportName;$Version
         report;ReportStart;title;'JF: ' + runId.tool_version + '  APP: ' + runId.app_version
 
-        #Action;#Table;#Title;#ToReport;#Numbers;#scenario;#testcase;#result;#error;#screenshot
+        #Action;$Table;$Title;$ToReport;$Numbers;scenario;testcase;result;error;screenshot
         TableReport;table;'{{4' + title + '4}}';report.Out;false;'Matrix';'Step Name';'Status';'Result';'Screenshots'
 
-        #Action;#Report;#Passed;#Failed
+        #Action;$Report;$Passed;$Failed
         ReportFinish;report.Out;passed.Out.size();failed.Out.size()
 
-        #Action;#Report
+        #Action;$Report
         ReportShow;report.Out.getReportName()
 
     #EndSubCase
@@ -1197,13 +1197,13 @@ RF;RegressionFramework
         _rf_dialect
             #Case
             'MYSQL'
-                #Id;#Action;#Connection;#Query
+                #Id;#Action;$Connection;$Query
                 select;SQLselect;SQL;'SELECT DATE(r.create_time) AS `Period`, AVG(s.passed / (s.passed + s.failed)) AS `Average` FROM runs AS r LEFT JOIN scenarios AS s ON s.run_id = r.id GROUP BY r.id'
 
 
             #Case
             'MSSQL'
-                #Id;#Action;#Connection;#Query
+                #Id;#Action;$Connection;$Query
                 select;SQLselect;SQL;'SELECT MAX(CONVERT(date,r.create_time)) AS "Period", AVG(s.passed / (s.passed + s.failed)) AS "Average" FROM runs AS r LEFT JOIN scenarios AS s ON s.run_id = r.id GROUP BY r.id'
 
 
@@ -1214,16 +1214,16 @@ RF;RegressionFramework
 
         #EndSwitch
 
-        #Id;#Action;#ReportName
+        #Id;#Action;$ReportName
         REP2;ReportStart;'Progress'
 
-        #Action;#Type;#Table;#Title;#Labels;#ToReport
+        #Action;$Type;$Table;$Title;Labels;$ToReport
         ChartReport;ChartKind.Line;select.Out;'{{4 Progress 4}}';'Period';REP2.Out
 
-        #Action;#Report;#Passed;#Failed
+        #Action;$Report;$Passed;$Failed
         ReportFinish;REP2.Out;0;0
 
-        #Action;#Report
+        #Action;$Report
         ReportShow;REP2.Out.getReportName()
 
     #EndSubCase
@@ -1236,7 +1236,7 @@ RF;RegressionFramework
         #Id;#Call
         SQL;Connect
 
-        #Id;#Action;#Connection;#Query
+        #Id;#Action;$Connection;$Query
         query;SQLselect;SQL;'select create_time from runs'
 
         #Id;#Let
@@ -1245,7 +1245,7 @@ RF;RegressionFramework
         #ForEach;#In
         row;query.Out
             #Id;#Let
-            dateTimeItem;new Date(row.create_time.getTime())
+            dateTimeItem;DateTime.strDateTime(row.create_time)
 
             #Let
             reportDataList.add(dateTimeItem)
@@ -1261,7 +1261,7 @@ RF;RegressionFramework
     // // For empty date returns the last runs.id, for non-empty - the last id, which
     // // create_date not less than desired
     // //==============================================
-    #Id;#SubCase;#sql;#date
+    #Id;#SubCase;sql;date
     runIdFromDate;Gets runs.id for desired date;;
         #Assert;#Message
         sql != null;'SQL connection is NULL'
@@ -1279,7 +1279,7 @@ RF;RegressionFramework
             ~;"WHERE r.id = (SELECT MAX(id) AS id FROM runs)"
             #EndRawText
 
-            #Id;#Action;#Connection;#Query
+            #Id;#Action;$Connection;$Query
             select1;SQLselect;sql;query.toString()
 
             #Return
@@ -1319,7 +1319,7 @@ RF;RegressionFramework
 
         #EndSwitch
 
-        #Id;#Action;#Connection;#Query;#CreateTime
+        #Id;#Action;$Connection;$Query;CreateTime
         select2;SQLselect;sql;query.toString();date
 
         #Return
@@ -1331,14 +1331,14 @@ RF;RegressionFramework
     // // For empty date returns the last runs.id, for non-empty - the last id, which
     // // create_date not less than desired
     // //==============================================
-    #Id;#SubCase;#sql;#date
+    #Id;#SubCase;sql;date
     timesFromDate;Gets runs.create_time & duration for desired date;;
         #Assert;#Message
         sql != null;'SQL connection is NULL'
 
         #If
         date == null
-            #Id;#Action;#Connection;#Query
+            #Id;#Action;$Connection;$Query
             select1;SQLselect;sql;'SELECT r.create_time, r.duration FROM runs AS r WHERE r.id = (SELECT MAX(id) AS id FROM runs)'
 
             #Return
@@ -1382,7 +1382,7 @@ RF;RegressionFramework
 
         #EndSwitch
 
-        #Id;#Action;#Connection;#Query;#CreateTime
+        #Id;#Action;$Connection;$Query;CreateTime
         select2;SQLselect;sql;query.toString();date
 
         #Return
@@ -1415,7 +1415,7 @@ RF;RegressionFramework
         #Assert;#Message
         isdef _rf_password && _rf_password != null;'The variable _rf_password is null or undefinded'
 
-        #Id;#Action;#User;#Server;#Base;#Sql;#Password
+        #Id;#Action;$User;$Server;$Base;$Sql;$Password
         SQLCNT;SQLconnect;_rf_user;_rf_host;_rf_base;_rf_type;_rf_password
 
         #Id;#Let
@@ -1425,16 +1425,16 @@ RF;RegressionFramework
         _rf_dialect
             #Case
             'MYSQL'
-                #Id;#Action;#Query;#Connection
+                #Id;#Action;$Query;$Connection
                 chck1;SQLselect;'check table runs fast';SQLCNT.Out
 
-                #Id;#Action;#Query;#Connection
+                #Id;#Action;$Query;$Connection
                 chck2;SQLselect;'check table scenarios fast';SQLCNT.Out
 
-                #Id;#Action;#Query;#Connection
+                #Id;#Action;$Query;$Connection
                 chck3;SQLselect;'check table details fast';SQLCNT.Out
 
-                #Id;#Action;#Query;#Connection
+                #Id;#Action;$Query;$Connection
                 chck4;SQLselect;'check table user_details fast';SQLCNT.Out
 
                 #Id;#Let
@@ -1443,16 +1443,16 @@ RF;RegressionFramework
 
             #Case
             'MSSQL'
-                #Id;#Action;#Query;#Connection
+                #Id;#Action;$Query;$Connection
                 chck1;SQLselect;'SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME =\'runs\' and TABLE_SCHEMA=SCHEMA_NAME()';SQLCNT.Out
 
-                #Id;#Action;#Query;#Connection
+                #Id;#Action;$Query;$Connection
                 chck2;SQLselect;'SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME =\'scenarios\' and TABLE_SCHEMA=SCHEMA_NAME()';SQLCNT.Out
 
-                #Id;#Action;#Query;#Connection
+                #Id;#Action;$Query;$Connection
                 chck3;SQLselect;'SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME =\'details\' and TABLE_SCHEMA=SCHEMA_NAME()';SQLCNT.Out
 
-                #Id;#Action;#Query;#Connection
+                #Id;#Action;$Query;$Connection
                 chck4;SQLselect;'SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME =\'user_details\' and TABLE_SCHEMA=SCHEMA_NAME()';SQLCNT.Out
 
                 #Id;#Let
@@ -1468,7 +1468,7 @@ RF;RegressionFramework
 
         #If
         tablesAreNotExists
-            #Action;#Text;#Notifier
+            #Action;$Text;$Notifier
             Show;'Creating tables';Notifier.Info
 
             #Switch
@@ -1612,16 +1612,16 @@ RF;RegressionFramework
 
             #EndSwitch
 
-            #Action;#Query;#Connection
+            #Action;$Query;$Connection
             SQLexecute;query1.toString();SQLCNT.Out
 
-            #Action;#Query;#Connection
+            #Action;$Query;$Connection
             SQLexecute;query2.toString();SQLCNT.Out
 
-            #Action;#Query;#Connection
+            #Action;$Query;$Connection
             SQLexecute;query3.toString();SQLCNT.Out
 
-            #Action;#Query;#Connection
+            #Action;$Query;$Connection
             SQLexecute;query4.toString();SQLCNT.Out
 
         #EndIf
