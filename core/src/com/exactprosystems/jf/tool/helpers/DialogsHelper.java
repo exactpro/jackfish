@@ -480,7 +480,7 @@ public abstract class DialogsHelper
 			@Override
 			protected Object call() throws Exception
 			{
-				UserInputDialog dialog = new UserInputDialog(defaultValue, evaluator, helpKind, dataSource, true, timeout);
+				UserInputDialog dialog = new UserInputDialog(defaultValue, evaluator, helpKind, dataSource, timeout);
 				dialog.setTitle(title);
 				dialog.getDialogPane().setHeader(null);
 				Optional<Object> s = dialog.showAndWait();

@@ -104,8 +104,8 @@ EXEC;Execute;Never;;
 
 #Id;#TestCase;#Kind;#Depends;#For
 INPUT;Input;Never;;
-    #Id;#Action;$DefaultValue;$HelpKind;$Title
-    INP6;Input;100;HelpKind.ChooseFolder;'dont change it'
+    #Id;#Action;$DefaultValue;$HelpKind;$Title;$Timeout
+    INP6;Input;100;HelpKind.Number;'dont change it';1000
 
     #Assert;#Message
     INP6.Out == 100;'Value is wrong'
