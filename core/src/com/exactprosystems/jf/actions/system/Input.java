@@ -15,13 +15,11 @@ import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.report.ReportBuilder;
 import com.exactprosystems.jf.documents.config.Context;
 import com.exactprosystems.jf.documents.matrix.parser.Parameters;
-import com.exactprosystems.jf.documents.matrix.parser.items.MatrixError;
 import com.exactprosystems.jf.functions.HelpKind;
 import com.exactprosystems.jf.tool.Common;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
@@ -65,7 +63,7 @@ public class Input extends AbstractAction
 	public void initDefaultValues() 
 	{
 		this.dataSource = null;
-		this.timeout = 10000;
+		this.timeout = -1;
 	}
 	
     @Override
@@ -93,17 +91,6 @@ public class Input extends AbstractAction
 	@Override
 	public void doRealAction(Context context, ReportBuilder report, Parameters parameters, AbstractEvaluator evaluator) throws Exception
 	{
-		if (this.title == null)
-		{
-			super.setError("Title is null", ErrorKind.EMPTY_PARAMETER);
-			return;
-		}
-		if (this.defaultValue == null)
-		{
-			super.setError("Default value is null", ErrorKind.EMPTY_PARAMETER);
-			return;
-		}
-		
 		List<ReadableValue> list = new ArrayList<>();
 		
 		if (this.dataSource == null)
@@ -126,10 +113,10 @@ public class Input extends AbstractAction
         }
 		
 		Object input = context.getFactory().input(context.getEvaluator(), this.title, this.defaultValue, this.helpKind, list, this.timeout);
-		if (input instanceof MatrixError)
+		if (input == null)
 		{
-			super.setError(((MatrixError) input).Message, ((MatrixError) input).Kind);
-			return;
+            super.setError("User cancelled input", ErrorKind.INPUT_CACNELLED);
+            return;
 		}
 		super.setResult(input);
 	}

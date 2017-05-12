@@ -472,27 +472,24 @@ public abstract class DialogsHelper
         return res[0];
     }
 	
-	public static String showUserInput(AbstractEvaluator evaluator, String title, Object defaultValue, HelpKind helpKind, 
+	public static Object showUserInput(AbstractEvaluator evaluator, String title, Object defaultValue, HelpKind helpKind, 
 	        List<ReadableValue> dataSource, int timeout)
 	{
-		Task<String> task = new Task<String>()
+		Task<Object> task = new Task<Object>()
 		{
 			@Override
-			protected String call() throws Exception
+			protected Object call() throws Exception
 			{
-				String literal = Common.createLiteral(defaultValue, evaluator);
-				UserInputDialog dialog = new UserInputDialog(literal, evaluator, helpKind, dataSource, true, timeout);
+				UserInputDialog dialog = new UserInputDialog(defaultValue, evaluator, helpKind, dataSource, true, timeout);
 				dialog.setTitle(title);
 				dialog.getDialogPane().setHeader(null);
-				Optional<String> s = dialog.showAndWait();
-				System.err.println("## " + s);
-				
-				return s.orElse(literal);
+				Optional<Object> s = dialog.showAndWait();
+				return s.isPresent() ? s.get() : null;
 			}
 		};
 
-		final String[] res = {Common.createLiteral(defaultValue, evaluator)};
-		task.setOnSucceeded(e -> res[0] = ((String) e.getSource().getValue()));
+		final Object[] res = { defaultValue };
+		task.setOnSucceeded(e -> res[0] = e.getSource().getValue());
 		Platform.runLater(task);
 		try
 		{

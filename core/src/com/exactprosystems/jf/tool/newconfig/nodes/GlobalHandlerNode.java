@@ -135,8 +135,8 @@ public class GlobalHandlerNode extends TreeNode
 					-1
 			);
 			dialog.setTitle("Choose subCase for handler " + this.kind.name());
-			Optional<String> value = dialog.showAndWait();
-			value.ifPresent(v -> Common.tryCatch(() -> model.updateHandlerValue(this.kind, v), "Error on update value"));
+			Optional<Object> value = dialog.showAndWait();
+			value.ifPresent(v -> Common.tryCatch(() -> model.updateHandlerValue(this.kind, Str.asString(v)), "Error on update value"));
 		}
 
 		@Override

@@ -13,15 +13,12 @@ import com.exactprosystems.jf.api.common.DateTime;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.functions.HelpKind;
 import com.exactprosystems.jf.tool.Common;
-import com.exactprosystems.jf.tool.CssVariables;
 import com.exactprosystems.jf.tool.custom.expfield.ExpressionField;
 import com.exactprosystems.jf.tool.helpers.DialogsHelper;
 
-import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Platform;
-import javafx.beans.value.ChangeListener;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
@@ -33,32 +30,25 @@ import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 
-public class UserInputDialog extends Dialog<String>
+public class UserInputDialog extends Dialog<Object>
 {
 	private final GridPane grid;
 	private final ExpressionField expressionField;
-	private final Label expressionLabel;
-	private AbstractEvaluator evaluator;
 	private Timeline timer;
-	private boolean visible = true;
 	private int timeout = -1;
 
-	public UserInputDialog(String defaultValue, AbstractEvaluator evaluator, HelpKind helpKind, List<ReadableValue> dataSource, 
+	public UserInputDialog(Object defaultValue, AbstractEvaluator evaluator, HelpKind helpKind, List<ReadableValue> dataSource, 
 	        boolean showLabel, int timeout)
 	{
-		this.visible = showLabel;
-		this.timeout = timeout;
+		this.timeout = timeout < 0 ? Integer.MAX_VALUE : timeout;
 		final DialogPane dialogPane = getDialogPane();
 		this.setResizable(true);
 		dialogPane.getStylesheets().addAll(Common.currentThemesPaths());
-		this.evaluator = evaluator;
-		
-		this.timer = new Timeline(new KeyFrame(Duration.millis(this.timeout), ae -> { System.err.println(">>>"); close(); } ));
+		this.timer = new Timeline(new KeyFrame(Duration.millis(this.timeout), ae -> onTimeout()) );
 		this.timer.setCycleCount(1);
 		this.timer.play();
 		
-		this.expressionField = new ExpressionField(evaluator, defaultValue);
-		this.expressionLabel = new Label();
+		this.expressionField = new ExpressionField(evaluator, "" + defaultValue);
 		this.expressionField.setHelperForExpressionField("Title", null);
 		if (helpKind != null )
 		{
@@ -130,9 +120,6 @@ public class UserInputDialog extends Dialog<String>
 		GridPane.setHgrow(expressionField, Priority.ALWAYS);
 		GridPane.setFillWidth(expressionField, true);
 
-		GridPane.setHgrow(expressionLabel, Priority.ALWAYS);
-		GridPane.setFillWidth(expressionLabel, true);
-
 		this.grid = new GridPane();
 		this.grid.setHgap(10);
 		this.grid.setVgap(10);
@@ -149,48 +136,31 @@ public class UserInputDialog extends Dialog<String>
 		dialogPane.setMaxHeight(200);
 
 		updateGrid();
-		updateExpressionLabel(defaultValue);
-		this.expressionField.textProperty().addListener((observable, oldValue, newValue) -> 
-		{
-            this.timer.stop();
-            this.timer.play();
-            updateExpressionLabel(newValue);
-            System.err.println(">>>>> change: " + newValue);
-		});
-
+		this.expressionField.textProperty().addListener((observable, oldValue, newValue) -> onChange() );
 		setResultConverter((dialogButton) ->
 		{
 			ButtonBar.ButtonData data = dialogButton == null ? null : dialogButton.getButtonData();
 			this.timer.stop();
-			System.err.println("@@@ " + data);
 			return data == ButtonBar.ButtonData.OK_DONE ? expressionField.getText() : null;
 		});
 	}
 
-	private void updateExpressionLabel(String value)
-	{
-		this.expressionLabel.getStyleClass().removeAll(CssVariables.INCORRECT_FIELD, CssVariables.EVALUATE_SUCCESS);
-		try
-		{
-			this.expressionLabel.setText(String.valueOf(evaluator.evaluate(value)));
-			this.expressionLabel.getStyleClass().add(CssVariables.EVALUATE_SUCCESS);
-		}
-		catch (Exception e)
-		{
-			this.expressionLabel.getStyleClass().add(CssVariables.INCORRECT_FIELD);
-			this.expressionLabel.setText(e.getMessage());
-		}
-	}
+	private void onTimeout()
+    { 
+        System.err.println(">>>");
+        ((Button)getDialogPane().lookupButton(ButtonType.OK)).fire();
+    }
 
+	private void onChange()
+    {
+        this.timer.stop();
+        this.timer.play();
+    }
+	
 	private void updateGrid()
 	{
 		grid.getChildren().clear();
-
 		grid.add(expressionField, 0, 0);
-		if (this.visible)
-		{
-			grid.add(expressionLabel, 0, 1);
-		}
 		getDialogPane().setContent(grid);
 
 		Platform.runLater(expressionField::requestFocus);

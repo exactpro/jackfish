@@ -12,8 +12,8 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
 
-public class DateTimePicker extends DatePicker{
-
+public class DateTimePicker extends DatePicker
+{
 	private ObjectProperty<LocalDateTime> dateTimeValue;
 
 	public DateTimePicker(Date initial)

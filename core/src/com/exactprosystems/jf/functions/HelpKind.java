@@ -2,6 +2,10 @@ package com.exactprosystems.jf.functions;
 
 public enum HelpKind
 { 
+    String                  (""),
+    Number                  (""),
+    Boolean                 (""),
+    Expression              (""),
     ChooseSaveFile          ("…"), 
     ChooseOpenFile          ("…"), 
     ChooseFolder            ("…"), 
