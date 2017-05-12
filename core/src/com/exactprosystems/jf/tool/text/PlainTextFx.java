@@ -9,6 +9,7 @@
 package com.exactprosystems.jf.tool.text;
 
 import com.exactprosystems.jf.common.Settings;
+import com.exactprosystems.jf.common.highlighter.Highlighter;
 import com.exactprosystems.jf.common.highlighter.StyleWithRange;
 import com.exactprosystems.jf.documents.DocumentFactory;
 import com.exactprosystems.jf.documents.text.PlainText;
@@ -29,7 +30,13 @@ public class PlainTextFx extends PlainText
 
 	public PlainTextFx(String fileName, DocumentFactory factory)
 	{
+		this(fileName, factory, Highlighter.None);
+	}
+
+	public PlainTextFx(String fileName, DocumentFactory factory, Highlighter highlighter)
+	{
 		super(fileName, factory);
+		this.initHighlighter = highlighter;
 	}
 
 	//region AbstractDocument
@@ -200,13 +207,14 @@ public class PlainTextFx extends PlainText
 		if (!this.isControllerInit)
 		{
 			this.controller = Common.loadController(PlainTextFxController.class.getResource("PlainTextFx.fxml"));
-			this.controller.init(this, getFactory().getSettings());
+			this.controller.init(this, getFactory().getSettings(), this.initHighlighter);
 			Optional.ofNullable(getFactory().getConfiguration()).ifPresent(c -> c.register(this));
 			this.isControllerInit = true;
 		}
 	}
 	//endregion
 
+	private Highlighter initHighlighter;
 	private Matcher matcher;
 	private int lastPos = 0;
 	private boolean isControllerInit = false;

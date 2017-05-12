@@ -111,7 +111,6 @@ public class PlainTextFxController implements Initializable, ContainingParent
 
 		this.cbRegexp.selectedProperty().addListener((observable, oldValue, newValue) -> this.model.resetMatcher(this.tfFind.getText(), this.cbMatchCase.isSelected(), this.cbRegexp.isSelected()));
 		this.cbMatchCase.selectedProperty().addListener((observable, oldValue, newValue) -> this.model.resetMatcher(this.tfFind.getText(), this.cbMatchCase.isSelected(), this.cbRegexp.isSelected()));
-		this.tfFind.setText("asd");
 		this.tfFind.textProperty().addListener((observable, oldValue, newValue) -> this.model.resetMatcher(this.tfFind.getText(), this.cbMatchCase.isSelected(), this.cbRegexp.isSelected()));
 	}
 
@@ -125,13 +124,14 @@ public class PlainTextFxController implements Initializable, ContainingParent
 	}
 	//endregion
 
-	public void init(PlainTextFx model, Settings settings)
+	public void init(PlainTextFx model, Settings settings, Highlighter initHighlighter)
 	{
 		this.model = model;
 		SettingsValue value = settings.getValueOrDefault(Settings.GLOBAL_NS, Settings.SETTINGS, Settings.FONT, "Monospaced$16");
 		this.textArea.setFont(Common.fontFromString(value.getValue()));
 		this.tab = CustomTabPane.getInstance().createTab(model);
 		this.tab.setContent(this.pane);
+		this.cbHighlighting.getSelectionModel().select(initHighlighter);
 		CustomTabPane.getInstance().addTab(this.tab);
 		CustomTabPane.getInstance().selectTab(this.tab);
 	}

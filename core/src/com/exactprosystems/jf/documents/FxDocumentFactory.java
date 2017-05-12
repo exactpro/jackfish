@@ -13,6 +13,7 @@ import com.exactprosystems.jf.api.common.IMatrixRunner;
 import com.exactprosystems.jf.api.error.ErrorKind;
 import com.exactprosystems.jf.common.Settings;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
+import com.exactprosystems.jf.common.highlighter.Highlighter;
 import com.exactprosystems.jf.documents.config.Configuration;
 import com.exactprosystems.jf.documents.config.Context;
 import com.exactprosystems.jf.documents.csv.Csv;
@@ -101,7 +102,7 @@ public class FxDocumentFactory extends DocumentFactory
 	@Override
 	protected PlainText createPlainText(String fileName, Configuration configuration) throws Exception
 	{
-		return new PlainTextFx(fileName, this);
+		return new PlainTextFx(fileName, this, fileName.endsWith(Configuration.matrixExt) ? Highlighter.Matrix : Highlighter.None);
 	}
 
 	@Override
