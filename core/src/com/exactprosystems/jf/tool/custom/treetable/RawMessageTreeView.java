@@ -1,6 +1,7 @@
 package com.exactprosystems.jf.tool.custom.treetable;
 
 import com.exactprosystems.jf.api.client.MapMessage;
+import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 
@@ -28,6 +29,7 @@ public class RawMessageTreeView extends TreeView<RawMessageTreeView.MessageBean>
 				if (bean != null && !empty)
 				{
 					HBox box = new HBox();
+					box.setAlignment(Pos.CENTER_LEFT);
 
 					box.getChildren().add(new Label(bean.name + (bean.value.length() != 0 ? " : " : "")));
 
@@ -52,41 +54,7 @@ public class RawMessageTreeView extends TreeView<RawMessageTreeView.MessageBean>
 		});
 
 		this.setRoot(root);
-	}
-
-	private void updateMessage(String name, String value, MapMessage message)
-	{
-
-		for (Map.Entry<String, Object> entry : message.entrySet())
-		{
-			String oldName = entry.getKey();
-			Object oldValue = entry.getValue();
-
-			if (oldValue.getClass().isArray())
-			{
-				Object[] array = (Object[]) oldValue;
-
-				for (Object group : array)
-				{
-					if (group instanceof MapMessage)
-					{
-						if (((MapMessage) group).containsKey(name))
-						{
-							((MapMessage) group).put(name, value);
-						}
-					}
-				}
-			}
-			else
-			{
-				if (oldName.equals(name))
-				{
-					message.put(name, value);
-				}
-			}
-		}
-
-
+		this.setShowRoot(false);
 	}
 
 	private void add(TreeItem<MessageBean> treeItem, String name, Object value)
@@ -123,6 +91,40 @@ public class RawMessageTreeView extends TreeView<RawMessageTreeView.MessageBean>
 		}
 
 		treeItem.getChildren().add(item);
+	}
+
+	private void updateMessage(String name, String value, MapMessage message)
+	{
+		for (Map.Entry<String, Object> entry : message.entrySet())
+		{
+			String oldName = entry.getKey();
+			Object oldValue = entry.getValue();
+
+			if (oldValue.getClass().isArray())
+			{
+				Object[] array = (Object[]) oldValue;
+
+				for (Object group : array)
+				{
+					if (group instanceof MapMessage)
+					{
+						if (((MapMessage) group).containsKey(name))
+						{
+							((MapMessage) group).put(name, value);
+						}
+					}
+				}
+			}
+			else
+			{
+				if (oldName.equals(name))
+				{
+					message.put(name, value);
+				}
+			}
+		}
+
+
 	}
 
 	class MessageBean
