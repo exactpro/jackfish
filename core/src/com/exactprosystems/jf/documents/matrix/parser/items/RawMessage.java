@@ -193,6 +193,12 @@ public class RawMessage extends MatrixItem
 		group2.put("SubGroup1", new Map[] { subGroup1 });
 		group2.put("SubGroup2", new Map[] { subGroup2 });
 
+		MapMessage group3 = new MapMessage(null);
+		group3.put("group3f1", "f1");
+		group3.put("group3f2", "f2");
+
+		group2.put("Simple Group", group3);
+
 		this.message.put("Group1", new Map[] { group1, group2 } );
 	}
 
