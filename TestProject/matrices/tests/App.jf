@@ -1,4 +1,55 @@
 #TestCase;#Kind;#Depends;#For
-Test case;Never;;
+Apllication start;Never;;
+    #Step;#Kind;#For;#Depends
+    'Positive testing';;;
+        #Id;#Action;#Assert;$AppId;Browser;URL
+        APPSTR1;ApplicationStart;This.Result == Result.Passed && This.Out.isGood();mockWebApp;mockWebBrowser;mockWebURL
+
+        #Id;#Action;$AppConnection
+        APPSTP1;ApplicationStop;APPSTR1.Out
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'Negative testing';;;
+        #Step;#Kind;#For;#Depends
+        'Empty parameters';;;
+            #Id;#Action;#Assert;$AppId;Browser;URL
+            APPSTR1;ApplicationStart;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;;;
+
+            #Id;#Action;#Assert;$AppId;Browser;URL
+            APPSTR1;ApplicationStart;This.Result == Result.Failed && This.Kind == ErrorKind.EXCEPTION;mockWebApp;;
+
+            #Id;#Action;#Assert;$AppId;Browser;URL
+            APPSTR1;ApplicationStart;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;;;mockWebURL
+
+            #Id;#Action;#Assert;$AppId;Browser;URL
+            APPSTR1;ApplicationStart;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;;mockWebBrowser;
+
+            #Id;#Action;#Assert;$AppId;Browser;URL
+            APPSTR1;ApplicationStart;This.Result == Result.Failed && This.Kind == ErrorKind.EXCEPTION;mockWebApp;mockWebBrowser;
+
+            #Id;#Action;#Assert;$AppId;Browser;URL
+            APPSTR1;ApplicationStart;This.Result == Result.Failed && This.Kind == ErrorKind.EXCEPTION;mockWebApp;;mockWebURL
+
+            #Id;#Action;#Assert;$AppId;Browser;URL
+            APPSTR1;ApplicationStart;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;;mockWebBrowser;mockWebURL
+
+        #EndStep
+
+        #Step;#Kind;#For;#Depends
+        'Wrong parameters';;;
+            #Id;#Action;#Assert;$AppId;Browser;URL
+            APPSTR1;ApplicationStart;This.Result == Result.Failed && This.Kind == ErrorKind.EXCEPTION;mockWebApp;mockWebBrowser;''
+
+            #Id;#Action;#Assert;$AppId;Browser;URL
+            APPSTR1;ApplicationStart;This.Result == Result.Failed && This.Kind == ErrorKind.EXCEPTION;mockWebApp;'ndx';mockWebURL
+
+            #Id;#Action;#Assert;$AppId;Browser;URL
+            APPSTR1;ApplicationStart;This.Result == Result.Failed && This.Kind == ErrorKind.EXCEPTION;new Date();mockWebBrowser;mockWebURL
+
+        #EndStep
+
+    #EndStep
 
 

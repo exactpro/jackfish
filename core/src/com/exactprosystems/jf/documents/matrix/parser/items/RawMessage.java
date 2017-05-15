@@ -101,7 +101,7 @@ public class RawMessage extends MatrixItem
 				return factory.getDictionary().getMessages().stream().map(IField::getName).collect(Collectors.toList());
 			}
 			catch (Exception e)
-			{e.printStackTrace(); }
+			{}
 			return null;
 		}); 
 		driver.showCheckBox(this, layout, 1, 6, "Global", this.global, this.global);
