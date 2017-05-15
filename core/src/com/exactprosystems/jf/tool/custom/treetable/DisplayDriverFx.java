@@ -615,19 +615,73 @@ public class DisplayDriverFx implements DisplayDriver
     public void showTree(MatrixItem item, Object layout, int row, int column, MapMessage message)
     {
         GridPane pane = (GridPane) layout;
-//        DataProvider<String> provider = new TableDataProvider(table, (undo, redo) -> item.getMatrix().addCommand(undo, redo));
-//        SpreadsheetView view = new SpreadsheetView(provider);
-//        provider.displayFunction(view::display);
-//        view.setPrefHeight(25 * (Math.min(provider.getRowHeaders().size(), 50) + 1));
+		TreeView<MessageBean> treeView = new TreeView<>();
+		TreeItem<MessageBean> root = new TreeItem<>(new MessageBean("Message",""));
+		DragResizer.makeResizable(treeView, treeView::setPrefHeight);
+		for (Map.Entry<String, Object> entry : message.entrySet())
+		{
+			add(root, entry.getKey(), entry.getValue());
+		}
 
-        BorderPane borderPane = new BorderPane();
-        borderPane.getStyleClass().add(GRID_PARENT);
-//        borderPane.setCenter(view);
-//        DragResizer.makeResizable(borderPane, view::setPrefHeight);
-        BorderPane.setMargin(borderPane, new Insets(0, 0, 10, 0));
+		treeView.setCellFactory(p -> new TreeCell<MessageBean>(){
+			@Override
+			protected void updateItem(MessageBean bean, boolean empty) {
+				super.updateItem(bean, empty);
+				if (bean != null && !empty)
+				{
+					HBox box = new HBox();
+					box.getChildren().add(new Label(bean.name));
+					if (bean.value != null && bean.value.length() != 0)
+					{
+						box.getChildren().add(new TextField(bean.value));
+					}
+					box.setSpacing(10);
+					setGraphic(box);
+				}
+				else
+				{
+					setGraphic(null);
+				}
+			}
+		});
 
-        pane.add(borderPane, column, row, 10, 2);
+		treeView.setRoot(root);
+
+        pane.add(treeView, column, row, 10, 2);
     }
+
+	private void add(TreeItem<MessageBean> treeItem, String name, Object value)
+	{
+		TreeItem<MessageBean> item = new TreeItem<>();
+		item.setValue(new MessageBean(name, !(value.getClass().isArray() || value instanceof Map) ? String.valueOf(value) : ""));
+
+		if (value.getClass().isArray())
+		{
+			Object[] value1 = (Object[]) value;
+			for (Object o : value1)
+			{
+				TreeItem<MessageBean> item2 = new TreeItem<>(new MessageBean("Repeating group",""));
+				item.getChildren().add(item2);
+
+				if (o instanceof Map)
+				{
+					for (Map.Entry<String, Object> entry : ((Map<String, Object>) o).entrySet())
+					{
+						add(item2, entry.getKey(), entry.getValue());
+					}
+				}
+			}
+		}else if (value instanceof Map)
+		{
+			Map<String,Object> newMap = (Map<String,Object>) value;
+			for (Map.Entry<String, Object> entry : newMap.entrySet())
+			{
+				add(item, entry.getKey(), entry.getValue());
+			}
+		}
+
+		treeItem.getChildren().add(item);
+	}
 
 	
 	@Override
@@ -810,4 +864,19 @@ public class DisplayDriverFx implements DisplayDriver
 	private Context context;
 	private MatrixContextMenu rowContextMenu;
 	private MatrixParametersContextMenu parametersContextMenu;
+
+	private static class MessageBean {
+		String name;
+		String value;
+
+		public MessageBean(String name, String value) {
+			this.name = name;
+			this.value = value;
+		}
+
+		@Override
+		public String toString() {
+			return  "Name= '" + name + '\'' + (this.value.length() > 0 ? ", Value= '" + value + '\'' : "");
+		}
+	}
 }
