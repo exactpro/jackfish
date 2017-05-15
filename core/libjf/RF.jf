@@ -13,8 +13,8 @@ RF;RegressionFramework
     // // Runs all matrixes which names are enumerated in the column  Name
     // // of the table and puts results into database
     // //==============================================
-    #Id;#SubCase;table
-    RunAll;Run all matrixes from table;
+    #Id;#SubCase;table;name
+    RunAll;Run all matrixes from table;;
         #Assert;#Message
         table != null && table instanceof Table;'The parameter table should be Table'
 
@@ -48,8 +48,8 @@ RF;RegressionFramework
         #Id;#Let
         needD;DateTime.date(curD.years(),curD.months(),curD.days(),curD.hours(),curD.minutes(),curD.seconds())
 
-        #Id;#Action;$Connection;$Query;CreateTime;ToolVersion;AppVersion
-        selectRunId;SQLinsert;SQL;'INSERT INTO runs (create_time, duration, tool_version, app_version) VALUES (?, -1, ?, ?)\u003b';needD;VersionInfo.getVersion();config_version
+        #Id;#Action;$Connection;$Query;Name;CreateTime;ToolVersion;AppVersion
+        selectRunId;SQLinsert;SQL;'INSERT INTO runs (name, create_time, duration, tool_version, app_version) VALUES (?, ?, -1, ?, ?)\u003b';name;needD;VersionInfo.getVersion();config_version
 
         #Id;#Let
         runId;selectRunId.Out[0]
@@ -156,7 +156,7 @@ RF;RegressionFramework
                         #For;#From;#To;#Step
                         i;standartResult.Out.getHeaderSize();resultTab.Out.getHeaderSize() - 1;1
                             #Id;#RawText;#Kind
-                            TEXT6;Text;None
+                            TEXT6;Text;Sql
                             ~;"INSERT INTO user_details (details_id, name, value) VALUES (?, ?, ?);"
                             #EndRawText
 
@@ -214,14 +214,14 @@ RF;RegressionFramework
         runId;runIdFromDate;SQL;date
 
         #Id;#Let
-        title;'Overall' + (date == null ? '' : (' on ' + DateTime.strDate(date)))
+        title;'Overall ' + Str.asString(runId.name) + (date == null ? '' : (' on ' + DateTime.strDate(date)))
 
         #Switch
         _rf_dialect
             #Case
             'MYSQL'
                 #Id;#RawText;#Kind
-                TEXT4;Text;None
+                TEXT4;Text;Sql
                 ~;"SELECT  "
                 ~;"	sp.count AS `Passed`, "
                 ~;"	sf.count AS `Failed`"
@@ -233,7 +233,7 @@ RF;RegressionFramework
             #Case
             'MSSQL'
                 #Id;#RawText;#Kind
-                TEXT4;Text;None
+                TEXT4;Text;Sql
                 ~;"SELECT  "
                 ~;"	sp.count AS ""Passed"", "
                 ~;"	sf.count AS ""Failed"""
@@ -282,7 +282,7 @@ RF;RegressionFramework
             #Case
             'MYSQL'
                 #Id;#RawText;#Kind
-                TEXT1;delete from details;None
+                TEXT1;delete from details;Sql
                 ~;"DELETE FROM details"
                 ~;"WHERE scenario_id IN ("
                 ~;"    SELECT id FROM scenarios"
@@ -294,7 +294,7 @@ RF;RegressionFramework
                 #EndRawText
 
                 #Id;#RawText;#Kind
-                TEXT2;delete from scenarios;None
+                TEXT2;delete from scenarios;Sql
                 ~;"DELETE FROM scenarios"
                 ~;"WHERE run_id IN ("
                 ~;"    SELECT id FROM runs"
@@ -303,7 +303,7 @@ RF;RegressionFramework
                 #EndRawText
 
                 #Id;#RawText;#Kind
-                TEXT3;delete from runs;None
+                TEXT3;delete from runs;Sql
                 ~;"DELETE FROM runs WHERE create_time=?"
                 #EndRawText
 
@@ -311,7 +311,7 @@ RF;RegressionFramework
             #Case
             'MSSQL'
                 #Id;#RawText;#Kind
-                TEXT1;delete from details;None
+                TEXT1;delete from details;Sql
                 ~;"DELETE FROM details "
                 ~;"WHERE scenario_id in ("
                 ~;"    SELECT scenario_id "
@@ -332,7 +332,7 @@ RF;RegressionFramework
                 #EndRawText
 
                 #Id;#RawText;#Kind
-                TEXT2;delete from scenarios;None
+                TEXT2;delete from scenarios;Sql
                 ~;"DELETE FROM scenarios "
                 ~;"WHERE run_id in ("
                 ~;"SELECT run_id FROM scenarios AS s "
@@ -345,7 +345,7 @@ RF;RegressionFramework
                 #EndRawText
 
                 #Id;#RawText;#Kind
-                TEXT3;delete from runs;None
+                TEXT3;delete from runs;Sql
                 ~;"DELETE FROM runs WHERE id in (SELECT id FROM runs WHERE create_time = ?);"
                 #EndRawText
 
@@ -376,21 +376,21 @@ RF;RegressionFramework
         #Id;#Call
         SQL;RF.Connect
 
-        #Id;#Let
-        title;'Consolidated Umbrella Report' + (date == null ? '' : (' on ' +DateTime.strDate(date)))
-
         #Id;#Call;sql;date
         runId;runIdFromDate;SQL;date
 
         #Id;#Call;sql;date
         times;timesFromDate;SQL;date
 
+        #Id;#Let
+        title;'Consolidated Umbrella Report '  + Str.asString(runId.name) + (date == null ? '' : (' on ' +DateTime.strDate(date)))
+
         #Switch
         _rf_dialect
             #Case
             'MYSQL'
                 #Id;#RawText;#Kind
-                TEXT2;Text;None
+                TEXT2;Text;Sql
                 ~;"SELECT "
                 ~;"  r.tool_version,"
                 ~;"  r.app_version,"
@@ -413,7 +413,7 @@ RF;RegressionFramework
             #Case
             'MSSQL'
                 #Id;#RawText;#Kind
-                TEXT2;Text;None
+                TEXT2;Text;Sql
                 ~;"SELECT "
                 ~;"  r.tool_version,"
                 ~;"  r.app_version,"
@@ -452,17 +452,14 @@ RF;RegressionFramework
         #Id;#Action;$Table;result
         failed;TableSelect;table;'Failed'
 
-        #Action;$Replace;$Table;$Columns;$Search;$MatchCell
-        TableReplace;'<div class=\"Passed\">Passed</div>';table;{ 'result' };'Passed';true
-
-        #Action;$Replace;$Table;$Columns;$Search;$MatchCell
-        TableReplace;'<div class=\"Failed\">Failed</div>';table;{ 'result' };'Failed';true
+        #Action;$Table;$Colored;$Hyperlink
+        TableConsiderColumnsAs;table;'result';'report'
 
         #Id;#Action;$ReportName;$Version
         REP1;ReportStart;title;'JF: ' + runId.tool_version + '  APP: ' + runId.app_version
 
-        #Action;$Table;$Title;$ToReport;$Numbers;testSet;scenario;result;date;time;username;host;report
-        TableReport;table;'{{4' + title + '4}}';REP1.Out;false;'Test set';'Matrix Name';'Execution Status';'Execution Date';'Execution Time';'Exectuted By';'Execution Machine';'Report link'
+        #Action;$Table;$Title;$ToReport;$Numbers;$ReportValues;testSet;scenario;result;date;time;username;host;report
+        TableReport;table;'{{4' + title + '4}}';REP1.Out;false;true;'Test set';'Matrix Name';'Execution Status';'Execution Date';'Execution Time';'Exectuted By';'Execution Machine';'Report link'
 
         #Action;$Passed;$Failed;$Report;$StartTime;$FinishTime
         ReportFinish;passed.Out.size();failed.Out.size();REP1.Out;times.startTime;times.finishTime
@@ -484,7 +481,7 @@ RF;RegressionFramework
         runId;RF.runIdFromDate;SQL;date
 
         #Id;#RawText;#Kind
-        testSetText;Text;None
+        testSetText;Text;Sql
         ~;"SELECT s.test_set, s.host"
         ~;"FROM scenarios AS s "
         ~;"WHERE s.test_set <> '' AND s.manual = 0 AND s.run_id = ?"
@@ -500,7 +497,7 @@ RF;RegressionFramework
         #ForEach;#In
         testSet;testSetQuery.Out
             #Id;#RawText;#Kind
-            totalCountSQL;Text;None
+            totalCountSQL;Text;Sql
             ~;"SELECT COUNT(d.id) AS count,SUM(d.time) AS time"
             ~;"FROM details AS d"
             ~;"WHERE d.scenario_id IN ("
@@ -519,7 +516,7 @@ RF;RegressionFramework
             totalTime;SQLSLCT1.Out.size() > 0 ? SQLSLCT1.Out[0].time : null
 
             #Id;#RawText;#Kind
-            failuresSQL;Text;None
+            failuresSQL;Text;Sql
             ~;"SELECT COUNT(d.id) AS count "
             ~;"FROM details AS d"
             ~;"WHERE d.scenario_id IN ("
@@ -548,7 +545,7 @@ RF;RegressionFramework
                 #Case
                 'MYSQL'
                     #Id;#RawText;#Kind
-                    TEXT5;Text;None
+                    TEXT5;Text;Sql
                     ~;"SELECT "
                     ~;"  s.id, s.scenario, "
                     ~;"  IF(s.failed > 0, ""Failed"", ""Passed"") AS status, "
@@ -564,7 +561,7 @@ RF;RegressionFramework
                 #Case
                 'MSSQL'
                     #Id;#RawText;#Kind
-                    TEXT5;Text;None
+                    TEXT5;Text;Sql
                     ~;"SELECT "
                     ~;"  s.id, s.scenario, "
                     ~;"  CASE WHEN s.failed <> 0 THEN  0 ELSE 1 END AS status, "
@@ -593,7 +590,7 @@ RF;RegressionFramework
             #For;#From;#To;#Step
             rowScenarios;0;(int)scenarios.size - 1;1
                 #Id;#RawText;#Kind
-                countTSQL;Text;None
+                countTSQL;Text;Sql
                 ~;"SELECT COUNT(id) AS tests, SUM(time) as totalTime  "
                 ~;"FROM details"
                 ~;"WHERE scenario_id = ?"
@@ -609,7 +606,7 @@ RF;RegressionFramework
                 TStotalTime;SQLSLCT3.Out.size() > 0 ? SQLSLCT3.Out[0].totalTime : null
 
                 #Id;#RawText;#Kind
-                failCountTSQL;Text;None
+                failCountTSQL;Text;Sql
                 ~;"SELECT count(result) as fail"
                 ~;"FROM details"
                 ~;"WHERE result = ""Failed"" and scenario_id = ? "
@@ -622,7 +619,7 @@ RF;RegressionFramework
                 failTS;SQLSLCT4.Out.size() > 0 ? SQLSLCT4.Out[0].fail : null
 
                 #Id;#RawText;#Kind
-                errorcountSQL;Text;None
+                errorcountSQL;Text;Sql
                 ~;"SELECT count(error) as error"
                 ~;"FROM details"
                 ~;"WHERE error <> 'null' and scenario_id = ? "
@@ -644,7 +641,7 @@ RF;RegressionFramework
                 last;XML2.Out[XML2.Out.size - 1]
 
                 #Id;#RawText;#Kind
-                findTestCase;Text;None
+                findTestCase;Text;Sql
                 ~;"SELECT testcase, time, error from details"
                 ~;"where scenario_id = ?"
                 #EndRawText
@@ -696,8 +693,8 @@ RF;RegressionFramework
         runId;RF.runIdFromDate;SQL;date
 
         #Id;#RawText;#Kind
-        findTotalTime;Text;None
-        ~;"select sum(time) as time from details where scenario_id in (select id from scenarios where run_id = ?) AND step ='null'"
+        findTotalTime;Text;Sql
+        ~;"SELECT SUM(time) AS time FROM details WHERE scenario_id IN (SELECT id FROM scenarios WHERE run_id = ?) AND step ='null'"
         #EndRawText
 
         #Id;#Action;id;$Query;$Connection
@@ -707,7 +704,7 @@ RF;RegressionFramework
         totalDuration;SQLSLCT14.Out.size() > 0 ? SQLSLCT14.Out[0].time : null
 
         #Id;#RawText;#Kind
-        totalCountSQL;Text;None
+        totalCountSQL;Text;Sql
         ~;"SELECT COUNT(d.id) AS tCount"
         ~;"FROM details d"
         ~;"WHERE d.scenario_id IN ("
@@ -724,7 +721,7 @@ RF;RegressionFramework
         totalCount;SQLSLCT7.Out.size() > 0 ? SQLSLCT7.Out[0].tCount : null
 
         #Id;#RawText;#Kind
-        totalFailedSQL;Text;None
+        totalFailedSQL;Text;Sql
         ~;"SELECT COUNT(d.id) AS tCount"
         ~;"FROM details d"
         ~;"WHERE d.scenario_id IN ("
@@ -750,7 +747,7 @@ RF;RegressionFramework
         XML3;XmlFindFirst;'//testsuites';xml.Out
 
         #Id;#RawText;#Kind
-        totalScenarios;Text;None
+        totalScenarios;Text;Sql
         ~;"SELECT DISTINCT scenario  "
         ~;"FROM scenarios"
         ~;"WHERE run_id = ? and test_set <> ''"
@@ -764,7 +761,7 @@ RF;RegressionFramework
         scenarios;SQLSLCT9.Out
 
         #Id;#RawText;#Kind
-        findHostSQL;Text;None
+        findHostSQL;Text;Sql
         ~;"SELECT DISTINCT host FROM scenarios WHERE run_id = ?"
         #EndRawText
 
@@ -777,7 +774,7 @@ RF;RegressionFramework
         #For;#From;#To;#Step
         rowScenarios;0;(int)scenarios.size - 1;1
             #Id;#RawText;#Kind
-            countTSQL;Text;None
+            countTSQL;Text;Sql
             ~;"SELECT COUNT(id) AS tests, SUM(time) AS totalTime"
             ~;"FROM details"
             ~;"WHERE scenario_id IN (SELECT id FROM scenarios WHERE scenario = ? AND run_id = ?)  AND step ='null'"
@@ -793,7 +790,7 @@ RF;RegressionFramework
             TStotalTime;SQLSLCT10.Out.size() > 0 ? SQLSLCT10.Out[0].totalTime : null
 
             #Id;#RawText;#Kind
-            failCountTSQL;Text;None
+            failCountTSQL;Text;Sql
             ~;"SELECT COUNT(result) as fail"
             ~;"FROM details"
             ~;"WHERE result = 'Failed' and scenario_id IN (SELECT id FROM scenarios WHERE scenario = ? AND run_id = ?) AND step ='null'"
@@ -806,10 +803,10 @@ RF;RegressionFramework
             failTS;SQLSLCT11.Out.size() > 0 ? SQLSLCT11.Out[0].fail : null
 
             #Id;#RawText;#Kind
-            errorcountSQL;Text;None
+            errorcountSQL;Text;Sql
             ~;"SELECT count(error) as error"
             ~;"FROM details"
-            ~;"WHERE error <> 'null' and scenario_id IN (SELECT id FROM scenarios WHERE scenario = ? AND run_id = ?) AND step ='null'"
+            ~;"WHERE error <> 'null' AND scenario_id IN (SELECT id FROM scenarios WHERE scenario = ? AND run_id = ?) AND step ='null'"
             #EndRawText
 
             #Id;#Action;scenario;id;$Query;$Connection
@@ -823,20 +820,20 @@ RF;RegressionFramework
                 #Case
                 'MYSQL'
                     #Id;#RawText;#Kind
-                    TEXT7;Text;None
-                    ~;"select time(min(start_time)) as time,"
-                    ~;"date(min(start_time)) as date"
-                    ~;"from scenarios where id IN (select id from scenarios where run_id = ? and scenario = ?)"
+                    TEXT7;Text;Sql
+                    ~;"SELECT TIME(MIN(start_time)) AS time,"
+                    ~;"DATE(MIN(start_time)) AS date"
+                    ~;"FROM scenarios WHERE id IN (SELECT id FROM scenarios WHERE run_id = ? AND scenario = ?)"
                     #EndRawText
 
 
                 #Case
                 'MSSQL'
                     #Id;#RawText;#Kind
-                    TEXT7;Text;None
-                    ~;"select CONVERT(TIME, min(start_time)) as time,"
-                    ~;"CONVERT(DATE ,min(start_time)) as date"
-                    ~;"from scenarios where id IN (select id from scenarios where run_id = ? and scenario = ?)"
+                    TEXT7;Text;Sql
+                    ~;"SELECT CONVERT(TIME, MIN(start_time)) AS time,"
+                    ~;"CONVERT(DATE, MIN(start_time)) AS date"
+                    ~;"FROM scenarios WHERE id IN (SELECT id FROM scenarios WHERE run_id = ? AND scenario = ?)"
                     #EndRawText
 
 
@@ -860,8 +857,8 @@ RF;RegressionFramework
             XmlAddNode;'testsuite';date + 'T' + time;TStotalTime /1000;TStests;0;scenarios[rowScenarios].scenario;host;failTS;errorTS;XML3.Out
 
             #Id;#RawText;#Kind
-            findAllIdsForScenario;Text;None
-            ~;"select id from details where scenario_id in (SELECT id FROM scenarios WHERE scenario = ? AND run_id = ?) group by testcase"
+            findAllIdsForScenario;Text;Sql
+            ~;"SELECT id FROM details WHERE scenario_id IN (SELECT id FROM scenarios WHERE scenario = ? AND run_id = ?) GROUP BY testcase"
             #EndRawText
 
             #Id;#Action;scenario;id;$Query;$Connection
@@ -879,8 +876,8 @@ RF;RegressionFramework
             #ForEach;#In
             id;scenarioIds
                 #Id;#RawText;#Kind
-                infoFromDetails;Text;None
-                ~;"SELECT testcase, time, error FROM details where id = ?"
+                infoFromDetails;Text;Sql
+                ~;"SELECT testcase, time, error FROM details WHERE id = ?"
                 #EndRawText
 
                 #Id;#Action;id;$Query;$Connection
@@ -926,7 +923,7 @@ RF;RegressionFramework
         runId;runIdFromDate;SQL;date
 
         #Id;#RawText;#Kind
-        testSetText;Text;None
+        testSetText;Text;Sql
         ~;"SELECT "
         ~;"  s.test_set "
         ~;"FROM scenarios AS s "
@@ -953,7 +950,7 @@ RF;RegressionFramework
                 #Case
                 'MYSQL'
                     #Id;#RawText;#Kind
-                    TEXT5;Text;None
+                    TEXT5;Text;Sql
                     ~;"SELECT "
                     ~;"  s.id, s.scenario, "
                     ~;"  IF(s.failed > 0, ""Failed"", ""Passed"") AS status, "
@@ -969,7 +966,7 @@ RF;RegressionFramework
                 #Case
                 'MSSQL'
                     #Id;#RawText;#Kind
-                    TEXT5;Text;None
+                    TEXT5;Text;Sql
                     ~;"SELECT "
                     ~;"  s.id, s.scenario, "
                     ~;"  CASE WHEN s.failed <> 0 THEN  0 ELSE 1 END AS status, "
@@ -998,7 +995,7 @@ RF;RegressionFramework
             #For;#From;#To;#Step
             rowScenarios;0;(int)scenarios.size - 1;1
                 #Id;#RawText;#Kind
-                selectFromTableText;Text;None
+                selectFromTableText;Text;Sql
                 ~;"SELECT d.scenario_id, d.error  FROM details AS d "
                 ~;"WHERE scenario_id = ? "
                 ~;"AND "
@@ -1090,14 +1087,14 @@ RF;RegressionFramework
         runId;runIdFromDate;SQL;date
 
         #Id;#Let
-        title;'Details' + (date == null ? '' : (' on ' +DateTime.strDate(date)))
+        title;'Details '  + Str.asString(runId.name) + (date == null ? '' : (' on ' +DateTime.strDate(date)))
 
         #Switch
         _rf_dialect
             #Case
             'MYSQL'
                 #Id;#RawText;#Kind
-                TEXT1;Text;None
+                TEXT1;Text;Sql
                 ~;"SELECT "
                 ~;"  s.scenario, "
                 ~;"  DATE(s.start_time) AS date, "
@@ -1120,7 +1117,7 @@ RF;RegressionFramework
             #Case
             'MSSQL'
                 #Id;#RawText;#Kind
-                TEXT1;Text;None
+                TEXT1;Text;Sql
                 ~;"SELECT "
                 ~;"  s.scenario, "
                 ~;"  CONVERT(date,s.start_time) AS date, "
@@ -1165,17 +1162,14 @@ RF;RegressionFramework
         #Action;$Table;$Columns;$MatchCell;$Search;$Replace
         TableReplace;table;{ 'screenshot'};true;null;''
 
-        #Action;$Replace;$Table;$Columns;$Search;$MatchCell
-        TableReplace;'<div class=\"Passed\">Passed</div>';table;{ 'result' };'Passed';true
-
-        #Action;$Replace;$Table;$Columns;$Search;$MatchCell
-        TableReplace;'<div class=\"Failed\">Failed</div>';table;{ 'result' };'Failed';true
+        #Action;$Table;$Colored;$Hyperlink
+        TableConsiderColumnsAs;table;'result';'screenshot'
 
         #Id;#Action;$ReportName;$Version
         report;ReportStart;title;'JF: ' + runId.tool_version + '  APP: ' + runId.app_version
 
-        #Action;$Table;$Title;$ToReport;$Numbers;scenario;testcase;result;error;screenshot
-        TableReport;table;'{{4' + title + '4}}';report.Out;false;'Matrix';'Step Name';'Status';'Result';'Screenshots'
+        #Action;$Table;$Title;$ToReport;$Numbers;$ReportValues;scenario;testcase;result;error;screenshot
+        TableReport;table;'{{4' + title + '4}}';report.Out;false;true;'Matrix';'Step Name';'Status';'Result';'Screenshots'
 
         #Action;$Report;$Passed;$Failed
         ReportFinish;report.Out;passed.Out.size();failed.Out.size()
@@ -1237,10 +1231,10 @@ RF;RegressionFramework
         SQL;Connect
 
         #Id;#Action;$Connection;$Query
-        query;SQLselect;SQL;'select create_time from runs'
+        query;SQLselect;SQL;'select name, create_time from runs'
 
         #Id;#Let
-        reportDataList;new ArrayList()
+        reportDataList;new LinkedHashMap()
 
         #ForEach;#In
         row;query.Out
@@ -1248,7 +1242,7 @@ RF;RegressionFramework
             dateTimeItem;DateTime.strDateTime(row.create_time)
 
             #Let
-            reportDataList.add(dateTimeItem)
+            reportDataList.put(dateTimeItem, row.name)
 
         #EndForEach
 
@@ -1269,8 +1263,9 @@ RF;RegressionFramework
         #If
         date == null
             #Id;#RawText;#Kind
-            query;Text;None
+            query;Text;Sql
             ~;"SELECT "
+            ~;"  r.name, "
             ~;"  r.tool_version,"
             ~;"  r.app_version,"
             ~;"  r.id,"
@@ -1283,7 +1278,7 @@ RF;RegressionFramework
             select1;SQLselect;sql;query.toString()
 
             #Return
-            select1.Out.size() > 0 ? { 'id' : select1.Out[0].id, 'tool_version' : select1.Out[0].tool_version, 'app_version' : select1.Out[0].app_version, 'create_time' : select1.Out[0].create_time }: { '' : null }
+            select1.Out.size() > 0 ? { 'name' : select1.Out[0].name, 'id' : select1.Out[0].id, 'tool_version' : select1.Out[0].tool_version, 'app_version' : select1.Out[0].app_version, 'create_time' : select1.Out[0].create_time }: { '' : null }
 
         #EndIf
 
@@ -1292,8 +1287,8 @@ RF;RegressionFramework
             #Case
             'MYSQL'
                 #Id;#RawText;#Kind
-                query;Text;None
-                ~;"SELECT id, tool_version, app_version, create_time, duration "
+                query;Text;Sql
+                ~;"SELECT name, id, tool_version, app_version, create_time, duration "
                 ~;"FROM runs "
                 ~;"WHERE create_time <= ? "
                 ~;"ORDER BY create_time DESC "
@@ -1304,8 +1299,8 @@ RF;RegressionFramework
             #Case
             'MSSQL'
                 #Id;#RawText;#Kind
-                query;Text;None
-                ~;"SELECT TOP 1 id, tool_version, app_version, create_time, duration   "
+                query;Text;Sql
+                ~;"SELECT TOP 1 name, id, tool_version, app_version, create_time, duration   "
                 ~;"FROM runs "
                 ~;"WHERE create_time <= ? "
                 ~;"ORDER BY create_time DESC  "
@@ -1323,7 +1318,7 @@ RF;RegressionFramework
         select2;SQLselect;sql;query.toString();date
 
         #Return
-        select2.Out.size() > 0 ? { 'id' : select2.Out[0].id, 'tool_version' : select2.Out[0].tool_version, 'app_version' : select2.Out[0].app_version, 'create_time' :  select2.Out[0].create_time, 'duration' :  select2.Out[0].duration}: { '' : null }
+        select2.Out.size() > 0 ? { 'name' : select2.Out[0].name, 'id' : select2.Out[0].id, 'tool_version' : select2.Out[0].tool_version, 'app_version' : select2.Out[0].app_version, 'create_time' :  select2.Out[0].create_time, 'duration' :  select2.Out[0].duration}: { '' : null }
 
     #EndSubCase
 
@@ -1351,7 +1346,7 @@ RF;RegressionFramework
             #Case
             'MYSQL'
                 #Id;#RawText;#Kind
-                query;Text;None
+                query;Text;Sql
                 ~;"SELECT r.create_time, r.duration "
                 ~;"FROM runs AS r "
                 ~;"WHERE r.id = (SELECT id  "
@@ -1365,7 +1360,7 @@ RF;RegressionFramework
             #Case
             'MSSQL'
                 #Id;#RawText;#Kind
-                query;Text;None
+                query;Text;Sql
                 ~;"SELECT r.create_time, r.duration "
                 ~;"FROM runs AS r "
                 ~;"WHERE r.id = (SELECT TOP 1 id "
@@ -1476,7 +1471,7 @@ RF;RegressionFramework
                 #Case
                 'MYSQL'
                     #Id;#RawText;#Kind
-                    query1;create;None
+                    query1;create;Sql
                     ~;"CREATE TABLE IF NOT EXISTS `runs` ("
                     ~;"  `id` int(11) NOT NULL AUTO_INCREMENT,"
                     ~;"  `create_time` datetime DEFAULT NULL,"
@@ -1488,7 +1483,7 @@ RF;RegressionFramework
                     #EndRawText
 
                     #Id;#RawText;#Kind
-                    query2;create;None
+                    query2;create;Sql
                     ~;"CREATE TABLE IF NOT EXISTS `scenarios` ("
                     ~;"  `id` int(11) NOT NULL AUTO_INCREMENT,"
                     ~;"  `run_id` int(11) NOT NULL,"
@@ -1510,7 +1505,7 @@ RF;RegressionFramework
                     #EndRawText
 
                     #Id;#RawText;#Kind
-                    query3;create;None
+                    query3;create;Sql
                     ~;"CREATE TABLE IF NOT EXISTS `details` ("
                     ~;"  `id` int(11) NOT NULL AUTO_INCREMENT,"
                     ~;"  `scenario_id` int(11) NOT NULL,"
@@ -1525,7 +1520,7 @@ RF;RegressionFramework
                     #EndRawText
 
                     #Id;#RawText;#Kind
-                    query4;create;None
+                    query4;create;Sql
                     ~;"CREATE TABLE IF NOT EXISTS `user_details` ("
                     ~;"  `id` int(11) NOT NULL AUTO_INCREMENT,"
                     ~;"  `details_id` int(11) NOT NULL,"
@@ -1539,7 +1534,7 @@ RF;RegressionFramework
                 #Case
                 'MSSQL'
                     #Id;#RawText;#Kind
-                    query1;create;None
+                    query1;create;Sql
                     ~;"IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE table_name = 'runs' and TABLE_SCHEMA=SCHEMA_NAME()) "
                     ~;"CREATE TABLE runs "
                     ~;"("
@@ -1552,7 +1547,7 @@ RF;RegressionFramework
                     #EndRawText
 
                     #Id;#RawText;#Kind
-                    query2;create;None
+                    query2;create;Sql
                     ~;"IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE table_name = 'scenarios' and TABLE_SCHEMA=SCHEMA_NAME()) "
                     ~;"CREATE TABLE  scenarios  "
                     ~;"("
@@ -1577,7 +1572,7 @@ RF;RegressionFramework
                     #EndRawText
 
                     #Id;#RawText;#Kind
-                    query3;create;None
+                    query3;create;Sql
                     ~;"IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE table_name = 'details' and TABLE_SCHEMA=SCHEMA_NAME()) "
                     ~;"CREATE TABLE details "
                     ~;"("
@@ -1593,7 +1588,7 @@ RF;RegressionFramework
                     #EndRawText
 
                     #Id;#RawText;#Kind
-                    query4;create;None
+                    query4;create;Sql
                     ~;"IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE table_name = 'user_details' and TABLE_SCHEMA=SCHEMA_NAME())"
                     ~;"CREATE TABLE user_details "
                     ~;"("

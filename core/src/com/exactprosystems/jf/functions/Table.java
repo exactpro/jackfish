@@ -1352,10 +1352,26 @@ public class Table implements List<RowTable>, Mutable, Cloneable
             {
                 if (report != null)
                 {
-                    StringBuilder name = new StringBuilder();
-                    StringBuilder link = new StringBuilder();
-                    splitToTwo(Str.asString(source), name, link);
-                    value = report.decorateLink(name.toString(), link.toString());
+                    if (source instanceof ImageWrapper)
+                    {
+                        ImageWrapper iw = (ImageWrapper) source;
+                        String description = iw.getDescription() == null ? iw.toString() : iw.getDescription();
+                        value = report.decorateLink(description,
+                                report.getImageDir() + File.separator + iw.getName(report.getReportDir()));
+                    }
+                    else if (source instanceof ReportBuilder)
+                    {
+                        ReportBuilder rb = (ReportBuilder) source;
+                        String name = rb.getName();
+                        value = report.decorateLink(name, name);
+                    }
+                    else
+                    {
+                        StringBuilder name = new StringBuilder();
+                        StringBuilder link = new StringBuilder();
+                        splitToTwo(Str.asString(source), name, link);
+                        value = report.decorateLink(name.toString(), link.toString());
+                    }
                 }
                 else
                 {

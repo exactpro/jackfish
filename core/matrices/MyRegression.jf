@@ -13,19 +13,22 @@ INIT;Test case;;;
     6;;matrices/EE/EE1007;;FireFox;;;;3
     #EndRawTable
 
+    #Id;#Action;$DefaultValue;$HelpKind;$Title
+    name;Input;'Test';HelpKind.String;'Give memorable name of this regression'
+
     #Id;#Global;#Let
     date;1;DateTime.current().shiftTime(0, 0, 1)
 
-    #Call;#table
-    RF.RunAll;table
+    #Call;table;name
+    RF.RunAll;table;name.Out
 
 
 #TestCase;#Kind;#Depends;#For
 Summary report;;;
-    #Call;#date
+    #Call;date
     RF.repSummary;date
 
-    #Call;#pathToSave;#date
+    #Call;pathToSave;date
     RF.repCsvExport;'reports';date
 
 

@@ -12,9 +12,6 @@ Init;Never;;
     #Id;#Action;$DefaultValue;$Title;$HelpKind;$DataSource
     INP1;Input;'Overall';'Choose the report:';HelpKind.ChooseFromList;[ 'Overall', 'Progress', 'Summary', 'Export', 'Detailed', 'Remove']
 
-    #Action;
-    Print;INP1.Out.getClass()
-
     #Switch
     INP1.Out
         #Case
