@@ -633,7 +633,12 @@ public class DisplayDriverFx implements DisplayDriver
 					box.getChildren().add(new Label(bean.name));
 					if (bean.value != null && bean.value.length() != 0)
 					{
-						box.getChildren().add(new TextField(bean.value));
+						TextField field = new TextField(bean.value);
+						field.textProperty().addListener((observable, oldValue, newValue) -> {
+							bean.value = newValue;
+							updateMessage(bean.name, newValue, message);
+						});
+						box.getChildren().add(field);
 					}
 					box.setSpacing(10);
 					setGraphic(box);
@@ -649,6 +654,40 @@ public class DisplayDriverFx implements DisplayDriver
 
         pane.add(treeView, column, row, 10, 2);
     }
+
+	private void updateMessage(String name, String value, MapMessage message) {
+
+		for (Map.Entry<String, Object> entry : message.entrySet())
+		{
+			String oldName = entry.getKey();
+			Object oldValue = entry.getValue();
+
+			if (oldValue.getClass().isArray())
+			{
+				Object[] array = (Object[])oldValue;
+
+				for (Object group : array)
+				{
+					if (group instanceof MapMessage)
+					{
+						if (((MapMessage) group).containsKey(name))
+						{
+							((MapMessage) group).put(name, value);
+						}
+					}
+				}
+			}
+			else
+			{
+				if (oldName.equals(name))
+				{
+					message.put(name, value);
+				}
+			}
+		}
+
+
+	}
 
 	private void add(TreeItem<MessageBean> treeItem, String name, Object value)
 	{
@@ -869,7 +908,7 @@ public class DisplayDriverFx implements DisplayDriver
 		String name;
 		String value;
 
-		public MessageBean(String name, String value) {
+		MessageBean(String name, String value) {
 			this.name = name;
 			this.value = value;
 		}
