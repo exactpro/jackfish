@@ -630,7 +630,9 @@ public class DisplayDriverFx implements DisplayDriver
 				if (bean != null && !empty)
 				{
 					HBox box = new HBox();
-					box.getChildren().add(new Label(bean.name));
+
+                    box.getChildren().add(new Label(bean.name + (bean.value.length() != 0 ? " : " : "")));
+
 					if (bean.value != null && bean.value.length() != 0)
 					{
 						TextField field = new TextField(bean.value);
@@ -697,17 +699,19 @@ public class DisplayDriverFx implements DisplayDriver
 		if (value.getClass().isArray())
 		{
 			Object[] value1 = (Object[]) value;
-			for (Object o : value1)
+			for (int i = 0; i < value1.length; i++)
 			{
-				TreeItem<MessageBean> item2 = new TreeItem<>(new MessageBean("Repeating group",""));
+			    item.setValue(new MessageBean(name + " [" + value1.length + "]", ""));
+				TreeItem<MessageBean> item2 = new TreeItem<>(new MessageBean(name + " #" + i,""));
 				item.getChildren().add(item2);
 
-				if (o instanceof Map)
+				if (value1[i] instanceof Map)
 				{
-					for (Map.Entry<String, Object> entry : ((Map<String, Object>) o).entrySet())
+					for (Map.Entry<String, Object> entry : ((Map<String, Object>) value1[i]).entrySet())
 					{
 						add(item2, entry.getKey(), entry.getValue());
 					}
+
 				}
 			}
 		}else if (value instanceof Map)
@@ -715,7 +719,7 @@ public class DisplayDriverFx implements DisplayDriver
 			Map<String,Object> newMap = (Map<String,Object>) value;
 			for (Map.Entry<String, Object> entry : newMap.entrySet())
 			{
-				add(item, entry.getKey(), entry.getValue());
+				add(item, entry.getKey(), entry.getValue() );
 			}
 		}
 
