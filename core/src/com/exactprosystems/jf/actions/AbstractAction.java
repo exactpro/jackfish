@@ -20,11 +20,8 @@ import com.exactprosystems.jf.documents.matrix.parser.Parameter;
 import com.exactprosystems.jf.documents.matrix.parser.Parameters;
 import com.exactprosystems.jf.documents.matrix.parser.Result;
 import com.exactprosystems.jf.documents.matrix.parser.Tokens;
-import com.exactprosystems.jf.documents.matrix.parser.items.ActionItem;
+import com.exactprosystems.jf.documents.matrix.parser.items.*;
 import com.exactprosystems.jf.functions.HelpKind;
-import com.exactprosystems.jf.documents.matrix.parser.items.MatrixError;
-import com.exactprosystems.jf.documents.matrix.parser.items.MatrixItem;
-import com.exactprosystems.jf.documents.matrix.parser.items.TypeMandatory;
 import com.exactprosystems.jf.documents.matrix.parser.listeners.IMatrixListener;
 import org.apache.log4j.Logger;
 
@@ -44,7 +41,7 @@ public abstract class AbstractAction implements Cloneable
 	{
 		if (!(item instanceof ActionItem))
 		{
-			return false;
+			return item.getClass().getAnnotation(MatrixItemAttribute.class).hasParameters();
 		}
 		Class<? extends AbstractAction> clazz = ((ActionItem) item).getActionClass();
 		ActionAttribute annotation = clazz.getAnnotation(ActionAttribute.class);
