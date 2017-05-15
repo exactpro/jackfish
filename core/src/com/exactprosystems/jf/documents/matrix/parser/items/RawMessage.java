@@ -88,21 +88,23 @@ public class RawMessage extends MatrixItem
 		{
 			if (this.clientName == null)
 			{
-				return null;
+				return new ArrayList<>();
 			}
 			try
 			{
 				IClientFactory  factory = context.getConfiguration().getClientPool().loadClientFactory(this.clientName.get());
 				if (factory == null)
 				{
-					return null;
+					return new ArrayList<>();
 				}
 				
 				return factory.getDictionary().getMessages().stream().map(IField::getName).collect(Collectors.toList());
 			}
 			catch (Exception e)
-			{}
-			return null;
+			{
+				;
+			}
+			return new ArrayList<>();
 		}); 
 		driver.showCheckBox(this, layout, 1, 6, "Global", this.global, this.global);
 		driver.showToggleButton(this, layout, 1, 7, 
