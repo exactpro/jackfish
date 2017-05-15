@@ -8,6 +8,7 @@
 
 package com.exactprosystems.jf.tool.matrix;
 
+import com.exactprosystems.jf.actions.AbstractAction;
 import com.exactprosystems.jf.actions.ReadableValue;
 import com.exactprosystems.jf.api.app.AppConnection;
 import com.exactprosystems.jf.api.common.IMatrixRunner;
@@ -363,6 +364,10 @@ public class MatrixFx extends Matrix
 	//==============================================================================================================================
 	public void parameterInsert(MatrixItem item, int index)
 	{
+		if (!AbstractAction.additionFieldsAllow(item))
+		{
+			return;
+		}
 		int number = item.getNumber();
 		Command undo = () ->
 		{

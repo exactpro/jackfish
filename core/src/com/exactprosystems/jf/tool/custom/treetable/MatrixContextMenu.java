@@ -8,6 +8,7 @@
 
 package com.exactprosystems.jf.tool.custom.treetable;
 
+import com.exactprosystems.jf.actions.AbstractAction;
 import com.exactprosystems.jf.common.Settings;
 import com.exactprosystems.jf.common.Settings.SettingsValue;
 import com.exactprosystems.jf.common.report.ContextHelpFactory;
@@ -99,6 +100,7 @@ public class MatrixContextMenu extends ContextMenu
 				copy.setDisable(b);
 				deleteItem.setDisable(b);
 				help.setDisable(b);
+				parAdd.setDisable(!AbstractAction.additionFieldsAllow(selectedItem.getValue()));
 			}
 		});
 	}

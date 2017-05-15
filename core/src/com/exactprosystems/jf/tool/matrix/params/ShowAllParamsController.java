@@ -39,11 +39,9 @@ public class ShowAllParamsController implements Initializable, ContainingParent
 	public ListView<CellOnList> listView;
 	public TextField filteringField;
 
-	private CheckBoxTreeItem<ReadableValue> mandatory;
 	private CheckBoxTreeItem<ReadableValue> notMandatory;
 	private CheckBoxTreeItem<ReadableValue> extra;
 
-	private ObservableList<TreeItem<ReadableValue>> manChildren;
 	private ObservableList<TreeItem<ReadableValue>> notChildren;
 	private ObservableList<TreeItem<ReadableValue>> extChildren;
 
@@ -77,16 +75,13 @@ public class ShowAllParamsController implements Initializable, ContainingParent
 		rootItem.setExpanded(true);
 		rootItem.setIndependent(false);
 
-		this.mandatory = new CheckBoxTreeItem<>(new ReadableValue("Mandatory"));
-		this.mandatory.setIndependent(false);
-
 		this.notMandatory = new CheckBoxTreeItem<>(new ReadableValue("Not Mandatory"));
 		this.notMandatory.setIndependent(false);
 
 		this.extra = new CheckBoxTreeItem<>(new ReadableValue("Extra"));
 		this.extra.setIndependent(false);
 
-		rootItem.getChildren().addAll(this.mandatory, this.notMandatory, this.extra);
+		rootItem.getChildren().addAll(this.notMandatory, this.extra);
 
 		for (Map.Entry<ReadableValue, TypeMandatory> entry : map.entrySet())
 		{
@@ -95,17 +90,6 @@ public class ShowAllParamsController implements Initializable, ContainingParent
 			parameters.entrySet().stream().filter(objectEntry -> objectEntry.getKey().equals(checkBox.getValue().getValue())).findFirst().ifPresent(objectEntry -> flag[0] = true);
 			switch (entry.getValue())
 			{
-				case Mandatory:
-					if (!flag[0])
-					{
-						this.mandatory.getChildren().add(checkBox);
-						checkBox.selectedProperty().addListener((observableValue, prevValue, newValue) -> 
-						{
-							addRemoveItem(newValue, new CellOnList(checkBox.getValue(), TypeMandatory.Mandatory));
-						});
-					}
-					break;
-
 				case NotMandatory:
 					if (!flag[0])
 					{
@@ -126,7 +110,6 @@ public class ShowAllParamsController implements Initializable, ContainingParent
 					break;
 			}
 		}
-		manChildren = FXCollections.observableArrayList(mandatory.getChildren());
 		notChildren = FXCollections.observableArrayList(notMandatory.getChildren());
 		extChildren = FXCollections.observableArrayList(extra.getChildren());
 		listeners();
@@ -162,7 +145,6 @@ public class ShowAllParamsController implements Initializable, ContainingParent
 			@Override
 			public void changed(ObservableValue<? extends String> observableValue, String s, String t1)
 			{
-				mandatory.getChildren().setAll(manChildren);
 				notMandatory.getChildren().setAll(notChildren);
 				extra.getChildren().setAll(extChildren);
 				if (!t1.isEmpty())
@@ -171,7 +153,6 @@ public class ShowAllParamsController implements Initializable, ContainingParent
 					ObservableList<TreeItem<ReadableValue>> nC = FXCollections.observableArrayList();
 					ObservableList<TreeItem<ReadableValue>> eC = FXCollections.observableArrayList();
 
-					filtering(mC, mandatory, t1);
 					filtering(nC, notMandatory, t1);
 					filtering(eC, extra, t1);
 				}

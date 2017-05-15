@@ -8,6 +8,7 @@
 
 package com.exactprosystems.jf.tool.matrix.params;
 
+import com.exactprosystems.jf.actions.AbstractAction;
 import com.exactprosystems.jf.actions.ReadableValue;
 import com.exactprosystems.jf.actions.gui.DialogFill;
 import com.exactprosystems.jf.api.common.DateTime;
@@ -204,7 +205,7 @@ public class ParametersPane extends CustomScrollPane
 			if (dragboard.hasString())
 			{
 				String str = dragboard.getString();
-				if (str != null && str.startsWith("[") && str.endsWith("]"))
+				if (str != null && str.startsWith("[") && str.endsWith("]") && AbstractAction.additionFieldsAllow(this.matrixItem))
 				{
 					String[] fields = str.substring(1, str.length() - 1).split(",");
 					Common.tryCatch(() -> getMatrix().parameterInsert(this.matrixItem, -1, Arrays.stream(fields).map(i -> new Pair<>(new ReadableValue(i.trim()), TypeMandatory.Extra)).collect(Collectors.toList())), "Error on change parameters");

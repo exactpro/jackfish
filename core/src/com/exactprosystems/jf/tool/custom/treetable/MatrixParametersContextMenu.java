@@ -9,6 +9,7 @@
 package com.exactprosystems.jf.tool.custom.treetable;
 
 
+import com.exactprosystems.jf.actions.AbstractAction;
 import com.exactprosystems.jf.actions.ReadableValue;
 import com.exactprosystems.jf.api.error.app.ProxyException;
 import com.exactprosystems.jf.common.Settings;
@@ -112,6 +113,7 @@ public class MatrixParametersContextMenu extends MatrixContextMenu
 				this.parMoveLeft.setDisable(!canMove);
 				this.parRemove.setDisable(!parameters.canRemove(this.index));
 				this.parShowAll.setDisable(!(matrixItem instanceof ActionItem));
+				this.parAdd.setDisable(!AbstractAction.additionFieldsAllow(matrixItem));
 				
 				Point location = MouseInfo.getPointerInfo().getLocation();
 				super.show(this.row, location.getX(), location.getY());

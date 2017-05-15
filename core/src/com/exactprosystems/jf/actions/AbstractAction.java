@@ -40,6 +40,17 @@ public abstract class AbstractAction implements Cloneable
         clearResults();
     }
 
+	public static boolean additionFieldsAllow(MatrixItem item)
+	{
+		if (!(item instanceof ActionItem))
+		{
+			return false;
+		}
+		Class<? extends AbstractAction> clazz = ((ActionItem) item).getActionClass();
+		ActionAttribute annotation = clazz.getAnnotation(ActionAttribute.class);
+		return annotation.additionFieldsAllowed();
+	}
+
     @Override
     public AbstractAction clone() throws CloneNotSupportedException
     {
