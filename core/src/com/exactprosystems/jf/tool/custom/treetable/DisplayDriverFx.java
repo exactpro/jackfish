@@ -611,122 +611,15 @@ public class DisplayDriverFx implements DisplayDriver
 		pane.add(borderPane, column, row, 10, 2);
 	}
 
-    @Override
-    public void showTree(MatrixItem item, Object layout, int row, int column, MapMessage message)
-    {
-        GridPane pane = (GridPane) layout;
-		TreeView<MessageBean> treeView = new TreeView<>();
-		TreeItem<MessageBean> root = new TreeItem<>(new MessageBean("Message",""));
-		DragResizer.makeResizable(treeView, treeView::setPrefHeight);
-		for (Map.Entry<String, Object> entry : message.entrySet())
-		{
-			add(root, entry.getKey(), entry.getValue());
-		}
-
-		treeView.setCellFactory(p -> new TreeCell<MessageBean>(){
-			@Override
-			protected void updateItem(MessageBean bean, boolean empty) {
-				super.updateItem(bean, empty);
-				if (bean != null && !empty)
-				{
-					HBox box = new HBox();
-
-                    box.getChildren().add(new Label(bean.name + (bean.value.length() != 0 ? " : " : "")));
-
-					if (bean.value != null && bean.value.length() != 0)
-					{
-						TextField field = new TextField(bean.value);
-						field.textProperty().addListener((observable, oldValue, newValue) -> {
-							bean.value = newValue;
-							updateMessage(bean.name, newValue, message);
-						});
-						box.getChildren().add(field);
-					}
-					box.setSpacing(10);
-					setGraphic(box);
-				}
-				else
-				{
-					setGraphic(null);
-				}
-			}
-		});
-
-		treeView.setRoot(root);
-
-        pane.add(treeView, column, row, 10, 2);
-    }
-
-	private void updateMessage(String name, String value, MapMessage message) {
-
-		for (Map.Entry<String, Object> entry : message.entrySet())
-		{
-			String oldName = entry.getKey();
-			Object oldValue = entry.getValue();
-
-			if (oldValue.getClass().isArray())
-			{
-				Object[] array = (Object[])oldValue;
-
-				for (Object group : array)
-				{
-					if (group instanceof MapMessage)
-					{
-						if (((MapMessage) group).containsKey(name))
-						{
-							((MapMessage) group).put(name, value);
-						}
-					}
-				}
-			}
-			else
-			{
-				if (oldName.equals(name))
-				{
-					message.put(name, value);
-				}
-			}
-		}
-
-
-	}
-
-	private void add(TreeItem<MessageBean> treeItem, String name, Object value)
+	@Override
+	public void showTree(MatrixItem item, Object layout, int row, int column, MapMessage message)
 	{
-		TreeItem<MessageBean> item = new TreeItem<>();
-		item.setValue(new MessageBean(name, !(value.getClass().isArray() || value instanceof Map) ? String.valueOf(value) : ""));
-
-		if (value.getClass().isArray())
-		{
-			Object[] value1 = (Object[]) value;
-			for (int i = 0; i < value1.length; i++)
-			{
-			    item.setValue(new MessageBean(name + " [" + value1.length + "]", ""));
-				TreeItem<MessageBean> item2 = new TreeItem<>(new MessageBean(name + " #" + i,""));
-				item.getChildren().add(item2);
-
-				if (value1[i] instanceof Map)
-				{
-					for (Map.Entry<String, Object> entry : ((Map<String, Object>) value1[i]).entrySet())
-					{
-						add(item2, entry.getKey(), entry.getValue());
-					}
-
-				}
-			}
-		}else if (value instanceof Map)
-		{
-			Map<String,Object> newMap = (Map<String,Object>) value;
-			for (Map.Entry<String, Object> entry : newMap.entrySet())
-			{
-				add(item, entry.getKey(), entry.getValue() );
-			}
-		}
-
-		treeItem.getChildren().add(item);
+		GridPane pane = (GridPane) layout;
+		RawMessageTreeView treeView = new RawMessageTreeView(message);
+		DragResizer.makeResizable(treeView, treeView::setPrefHeight);
+		pane.add(treeView, column, row, 10, 2);
 	}
 
-	
 	@Override
 	public void hide(MatrixItem item, Object layout, int row, boolean hide)
 	{
@@ -907,19 +800,4 @@ public class DisplayDriverFx implements DisplayDriver
 	private Context context;
 	private MatrixContextMenu rowContextMenu;
 	private MatrixParametersContextMenu parametersContextMenu;
-
-	private static class MessageBean {
-		String name;
-		String value;
-
-		MessageBean(String name, String value) {
-			this.name = name;
-			this.value = value;
-		}
-
-		@Override
-		public String toString() {
-			return  "Name= '" + name + '\'' + (this.value.length() > 0 ? ", Value= '" + value + '\'' : "");
-		}
-	}
 }
