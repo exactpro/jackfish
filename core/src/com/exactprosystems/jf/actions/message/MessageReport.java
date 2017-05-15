@@ -133,7 +133,11 @@ public class MessageReport extends AbstractAction
             {
                 int count = 0;
                 Object[] array = (Object[])value;
-                for (Object group : array)
+				String oldPath = path;
+				path = makePath(path, name + "( " + array.length + " )");
+				addRow(table, path+"/*", "");
+
+				for (Object group : array)
                 {
                     if (group instanceof MapMessage)
                     {
@@ -142,12 +146,18 @@ public class MessageReport extends AbstractAction
                     }
                     count++;
                 }
-            }
-            else
-            {
-                addRow(table, makePath(path, name), Str.asString(value));
-            }
-        }
+				path = oldPath;
+			}
+			else if (value instanceof MapMessage)
+			{
+				addRow(table, makePath(path, name), "");
+				outMessage(table, (MapMessage)value, makePath(path, name));
+			}
+			else
+			{
+				addRow(table, makePath(path, name), Str.asString(value));
+			}
+		}
     }
     
     private String makePath(String path, String addon)

@@ -158,6 +158,7 @@ $(document).ready(function(){
 
 	$('a.group').each(function(i,e) {
 		$(e).click(function(event) {
+
 			var tr = $(this).parent().parent();
 			var isOpened = $(tr).attr('opened');
 
@@ -168,30 +169,33 @@ $(document).ready(function(){
 				$(tr).removeAttr('opened');
 				isOpened = false;
 			}
-			var indentLevel = parseInt($(tr).attr('indent-level'));
-                            console.log(indentLevel);
+
+			var indentLevel = parseInt($(this).attr('indent-level'));
+			console.log(indentLevel);
 			var all = $(tr).nextAll();
 			for(var i = 0; i < all.length; i++) {
-				var elem = $(all[i]);
+				var currentTr = $(all[i]);
+				var elem = $(currentTr).find('.group');
 				var il = elem.attr('indent-level');
 				if (parseInt(il) <= indentLevel) {
 					break;
 				}
 				if (!isOpened) {
-					$(elem).removeAttr('opened');
-					$(elem).hide();
+					$(currentTr).removeAttr('opened');
+					$(currentTr).hide("fast");
 					continue;
 				}
 				if (parseInt(il) > (indentLevel+1)) {
 					continue;
 				}
 
-				if ($(elem).is(':visible')) {
-					$(elem).hide();
+				if ($(currentTr).is(':visible')) {
+					$(currentTr).hide("fast");
 				} else {
-					$(elem).show();
+					$(currentTr).show("fast");
 				}
 			}
 		});
+
 	});
 });
