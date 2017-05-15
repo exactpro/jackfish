@@ -29,7 +29,7 @@ import com.exactprosystems.jf.documents.matrix.parser.Parameters;
 				+ " Start of the client is not mandatory.",
 		additionFieldsAllowed 	= false,
 		examples 				= "{{`1. Load the client for FIX.`}}"
-				+ "{{`2. Clear the list of the client messages.`}}"
+				+ "{{`2. Clear the list of the client messages.`}} "
 				+ "{{#CLLD1;ClientLoad;'FIX'\n"
 				+ "#Id;#Action;#ClientConnection\n"
 				+ "CLCLM1;ClientClearMessages;CLLD1.Out#}}"

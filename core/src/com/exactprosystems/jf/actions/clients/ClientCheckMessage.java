@@ -43,14 +43,16 @@ import java.util.Map.Entry;
 		additionFieldsAllowed 	= true,
 		additionalDescription   = "In additional parameters, the names and values which should be compared with MapMessage, which is passed in parameter {{$ActualMessage$}}, are pointed out.",
 		examples 				= "{{`1. Load the client for FIX`}}"
-				+ "{{`2. Create a message type FIX with a set key-value :FirstName:FirstValue.`}}"
-				+ "{{`3. Check the message.`}}"
-				+ "{{##Id;#Action;#ClientId\n"
-				+ "CLLD1;ClientLoad;'FIX'\n"
-				+ "#Id;#Action;#ClientConnection;#MessageType;#FirstName\n"
-				+ "CLCRMM1;ClientCreateMapMessage;CLLD1.Out;'35';'FirstValue'\n"
-				+ "#Id;#Action;#ActualMessage;#ExpectedMessageType;#ClientConnection;#FirstName\n"
-				+ "CLMSGCHK1;ClientCheckMessage;CLCRMM1.Out;'35';CLLD1.Out;'FirstValue'#}}"
+				+ "{{`2. Create a message type FIX with a set key-value.`}}"
+				+ "{{`3. Check the message.`}} "
+				+ "{{##Id;#Action;$ClientId\n" +
+				"CLLD1;ClientLoad;'TestClient'\n" +
+				"#Id;#Action;Address;Port;$ClientConnection\n" +
+				"CLSTRT1;ClientStart;'127.0.0.1';13000;CLLD3.Out\n" +
+				"#Id;#Action;PartyID;PartyIDSource;PartyRole;$MessageType\n" +
+				"MSGCR1;MessageCreate;'test';'1';3;'35'" +
+				"#Id;#Action;PartyID;$ActualMessage;$ExpectedMessageType;$ClientConnection\n" +
+				"CLMSGCHK1;ClientCheckMessage;'test';MSGCR1.Out;'35';CLLD1.Out#}}"
 	)
 public class ClientCheckMessage extends AbstractAction 
 {

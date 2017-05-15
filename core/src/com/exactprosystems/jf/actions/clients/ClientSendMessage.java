@@ -37,12 +37,12 @@ import java.util.List;
 		examples 				= "{{`1. Load the client for FIX.`}}"
 				+ "{{`2. Connect to the port №10555.`}}"
 				+ "{{`3. Create and send the message, check it beforehand with the indication of CHECK - true in the  parameter.`}}"
-				+ "{{##Id;#Action;#ClientId\n"
-				+ "CLLD1;ClientLoad;'FIX'\n"
-				+ "#Id;#Action;#ClientConnection;#Socket\n"
-				+ "CLCNCT1;ClientConnect;CLLD1.Out;10555\n"
-				+ "#Id;#Action;#ClientConnection;#MessageType;#Name;#SecondName\n"
-				+ "CLSM1;ClientSendMessage;CLLD1.Out;'35';'Value';'SecondValue'#}}"
+				+ "{{##Id;#Action;$ClientId\n" +
+				"CLLD1;ClientLoad;'TestClient'\n" +
+				"#Id;#Action;Address;Port;$ClientConnection\n" +
+				"CLSTRT1;ClientStart;'127.0.0.1';10555;CLLD1.Out\n" +
+				"#Id;#Action;$Check;PartyID;$ClientConnection;$MessageType\n" +
+				"CLSM1;ClientSendMessage;true;'test';CLLD1.Out;'35'#}}"
 	)
 public class ClientSendMessage extends AbstractAction
 {

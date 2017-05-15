@@ -34,17 +34,17 @@ import java.util.List;
 				+ "The start of the client is mandatory. It is targeted at converting messages for specified type and its sending.",
 		additionFieldsAllowed 	= false,
 		examples 				= "{{`1. Load the client for FIX.`}}"
-				+ "{{`2. Creat the message with the help of MessageCreate method.`}}"
-				+ "{{`3. Connect to the port №10555.`}}"
+				+ "{{`2. Create the message with the help of MessageCreate method.`}}"
+				+ "{{`3. Connect to the port №13000.`}}"
 				+ "{{`4. Send the created message, test it preliminarily with the indication of CHECK - true in the  parameter.`}}"
-				+ "{{##Id;#Action;#ClientId\n"
-				+ "CLLD1;ClientLoad;'FIX'\n"
-				+ "#Id;#Action;#Fields\n"
-				+ "MSGCR1;MessageCreate;{'First item' : 'First Value', 'Second Item' : 'Second Value'}\n"
-				+ "#Id;#Action;#ClientConnection;#Socket\n"
-				+ "CLCNCT1;ClientConnect;CLLD1.Out;10555\n"
-				+ "#Id;#Action;#Check;#Message;#ClientConnection\n"
-				+ "CLSMM1;ClientSendMapMessage;true;MSGCR1.Out;CLLD1.Out#}}"
+				+ "{{##Id;#Action;$ClientId\n" +
+				"CLLD1;ClientLoad;'FIX'\n" +
+				"#Id;#Action;PartyID;$MessageType\n" +
+				"MSGCR1;MessageCreate;'qpwoei';'35'\n" +
+				"#Id;#Action;Address;Port;$ClientConnection\n" +
+				"CLSTRT1;ClientStart;'127.0.0.1';13000;CLLD3.Out\n" +
+				"#Id;#Action;$Check;$MapMessage;$ClientConnection\n" +
+				"CLSMM1;ClientSendMapMessage;true;MSGCR1.Out;CLLD1.Out#}}"
 	)
 public class ClientSendMapMessage extends AbstractAction
 {

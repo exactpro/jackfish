@@ -35,15 +35,15 @@ import com.exactprosystems.jf.documents.matrix.parser.Parameters;
 		examples 				= "{{`1. Load the client for FIX.`}}"
 				+ "{{`2. Create the message.`}}"
 				+ "{{`3. Encode the message.`}}"
-				+ "{{`4. Decode the message.`}}"
-				+ "{{##Id;#Action;#ClientId\n"
-				+ "CLLD1;ClientLoad;'FIX'\n"
-				+ "#Id;#Action;#Name\n"
-				+ "MSGCR1;MessageCreate;'Value'\n"
-				+ "#Id;#Action;#Message;#ClientConnection\n"
-				+ "CLENC1;ClientEncode;MSGCR1.Out;CLLD1.Out\n"
-				+ "#Id;#Action;#Array;#ClientConnection\n"
-				+ "CLDEC1;ClientDecode;CLENC1.Out;CLLD1.Out#}}"
+				+ "{{`4. Decode the message.`}} "
+				+ "{{##Id;#Action;$ClientId\n" +
+				"CLLD1;ClientLoad;'FIX'\n" +
+				"#Id;#Action;PartyID;$MessageType\n" +
+				"MSGCR1;MessageCreate;'test';'35'\n" +
+				"#Id;#Action;$MapMessage;$ClientConnection\n" +
+				"CLENC1;ClientEncode;MSGCR1.Out;CLLD1.Out\n" +
+				"#Id;#Action;$Array;$ClientConnection\n" +
+				"CLDEC1;ClientDecode;CLENC1.Out;CLLD4.Out#}}"
 		)
 public class ClientDecode extends AbstractAction
 {

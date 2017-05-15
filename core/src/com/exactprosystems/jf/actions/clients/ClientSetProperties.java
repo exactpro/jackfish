@@ -34,7 +34,7 @@ import java.util.List;
 		additionFieldsAllowed 	= true,
 		additionalDescription 	= "In the value of the additional parameter the name of the property is indicated, in the parameter  value the property value is pointed out.",
 		examples 				= "{{`1. Load the client for FIX`}}"
-				+ "{{`2. Set the propertyName the value Value`}}"
+				+ "{{`2. Set the propertyName the value Value`}} "
 				+ "{{##Id;#Action;#ClientId\n"
 				+ "CLLD1;ClientLoad;'FIX'\n"
 				+ "#Id;#Action;#ClientConnection;#Name\n"

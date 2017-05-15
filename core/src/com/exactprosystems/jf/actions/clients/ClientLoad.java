@@ -33,7 +33,7 @@ import java.util.List;
 		additionFieldsAllowed 	= false,
 		outputDescription 		= "The connection with the Client.",
 		outputType 				= ClientConnection.class,
-		examples 				= "{{`Load the client for FIX.`}}"
+		examples 				= "{{`Load the client for FIX.`}} "
 				+ "{{##Id;#Action;#ClientId\n"
 				+ "CLLD1;ClientLoad;'FIX'#}}"
 	)

@@ -42,7 +42,7 @@ import com.exactprosystems.jf.functions.HelpKind;
 		outputDescription 		= "The message or error, if the message was not found within the time limit.",
 		outputType				= MapMessage.class,
 		examples 				= "{{`1. Load the client for FIX.`}}"
-				+ "{{`2. Find the message with the value Value and name Name.`}}"
+				+ "{{`2. Find the message with the value Value and name Name.`}} "
 				+ "{{##Id;#Action;#ClientId\n"
 				+ "CLLD1;ClientLoad;'FIX'\n"
 				+ "#Id;#Action;#ClientConnection;#MessageType;#Name\n"

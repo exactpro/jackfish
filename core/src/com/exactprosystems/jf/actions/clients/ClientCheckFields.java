@@ -30,14 +30,14 @@ import com.exactprosystems.jf.documents.matrix.parser.Parameters;
 		outputDescription 		= "True, if the message is correct.",
 		outputType				= Boolean.class,
 		examples 				= "{{`1.Load the client for FIX.`}}"
-				+ "{{`2.Create a message type FIX with a set key-value - FirstName:FirstValue.`}}"
-				+ "{{`3.Check the message.`}}"
-				+ "{{##Id;#Action;#ClientId\n"
-				+ "CLLD1;ClientLoad;'FIX'\n"
-				+ "#Id;#Action;#ClientConnection;#MessageType;#Name\n"
-				+ "CLCRMM1;ClientCreateMapMessage;CLLD1.Out;'35';'Value'\n"
-				+ "#Id;#Action;#Message;#ClientConnection\n"
-				+ "CLCHM1;ClientCheckFields;CLCRMM1.Out;CLLD1.Out#}}"
+				+ "{{`2.Create a message type FIX with a set key-value.`}}"
+				+ "{{`3.Check the message.`}} "
+				+ "{{##Id;#Action;$ClientId\n" +
+				"CLLD1;ClientLoad;'FIX'\n" +
+				"#Id;#Action;PartyID;PartyIDSource;PartyRole;$MessageType\n" +
+				"MSGCR1;MessageCreate;'test';'1';3;'35'\n" +
+				"#Id;#Action;#Assert;$MapMessage;$ClientConnection\n" +
+				"CLCHM1;ClientCheckFields;This.Out == true;MSGCR1.Out;CLLD1.Out#}}"
 	)
 public class ClientCheckFields extends AbstractAction
 {

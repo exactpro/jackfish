@@ -33,13 +33,13 @@ import com.exactprosystems.jf.documents.matrix.parser.Parameters;
 		outputType				= byte[].class,
 		examples 				= "{{`1. Load the client for FIX.`}}"
 				+ "{{`2. Create the message.`}}"
-				+ "{{`3. Encode the message.`}}"
-				+ "{{##Id;#Action;#ClientId\n"
-				+ "CLLD1;ClientLoad;'FIX'\n"
-				+ "#Id;#Action;#Name\n"
-				+ "MSGCR1;MessageCreate;'Value'\n"
-				+ "#Id;#Action;#Message;#ClientConnection\n"
-				+ "CLENC1;ClientEncode;MSGCR1.Out;CLLD1.Out#}}"
+				+ "{{`3. Encode the message.`}} "
+				+ "{{##Id;#Action;$ClientId\n" +
+				"CLLD;ClientLoad;'FIX'\n" +
+				"#Id;#Action;PartyID;$MessageType\n" +
+				"MSGCR1;MessageCreate;'test';'35'\n" +
+				"#Id;#Action;$MapMessage;$ClientConnection\n" +
+				"CLENC1;ClientEncode;MSGCR1.Out;CLLD.Out#}}"
 	)
 public class ClientEncode extends AbstractAction
 {
