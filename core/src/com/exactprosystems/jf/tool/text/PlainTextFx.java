@@ -28,15 +28,11 @@ public class PlainTextFx extends PlainText
 {
 	static final String FOUND_STYLE_CLASS = "found";
 
-	public PlainTextFx(String fileName, DocumentFactory factory)
-	{
-		this(fileName, factory, Highlighter.None);
-	}
-
 	public PlainTextFx(String fileName, DocumentFactory factory, Highlighter highlighter)
 	{
 		super(fileName, factory);
 		this.initHighlighter = highlighter;
+		resetMatcher("", false, false);
 	}
 
 	//region AbstractDocument
@@ -46,9 +42,8 @@ public class PlainTextFx extends PlainText
 		super.display();
 
 		initController();
-
+		this.controller.updateText(this.property.get());
 		this.controller.displayTitle(Common.getSimpleTitle(getName()));
-		this.controller.displayText(super.property.get(), super.property::set);
 	}
 
 	@Override
@@ -90,9 +85,8 @@ public class PlainTextFx extends PlainText
 	}
 	//endregion
 
-	List<StyleWithRange> findAll(String str, boolean isMatchCase, boolean isRegExp, AtomicInteger atomicInteger)
+	List<StyleWithRange> findAll(AtomicInteger atomicInteger)
 	{
-		resetMatcher(str, isMatchCase, isRegExp);
 		ArrayList<StyleWithRange> list = new ArrayList<>();
 		try
 		{
@@ -115,28 +109,9 @@ public class PlainTextFx extends PlainText
 		return list;
 	}
 
-	void replaceAll(String str, String replaceTo, boolean isMatchCase, boolean isRegExp)
-	{
-		resetMatcher(str, isMatchCase, isRegExp);
-		try
-		{
-			String newString = this.matcher.reset(this.property.get()).replaceAll(replaceTo);
-			this.property.setValue(newString);
-			this.controller.displayText(super.property.get(), super.property::set);
-		}
-		catch (Exception e)
-		{
-
-		}
-	}
-
-	List<StyleWithRange> findNext(String text, boolean isMatchCase, boolean isRegExp)
+	List<StyleWithRange> findNext()
 	{
 		ArrayList<StyleWithRange> list = new ArrayList<>();
-		if (this.matcher == null)
-		{
-			resetMatcher(text, isMatchCase, isRegExp);
-		}
 		Matcher matcher = this.matcher.reset(this.property.get());
 		boolean lastFind = matcher.find(this.lastPos);
 		if (!lastFind)
@@ -149,7 +124,7 @@ public class PlainTextFx extends PlainText
 			}
 			else
 			{
-				return findNext(text, isMatchCase, isRegExp);
+				return findNext();
 			}
 		}
 		else
@@ -160,6 +135,26 @@ public class PlainTextFx extends PlainText
 			this.lastPos = matcher.end();
 		}
 		return list;
+	}
+
+	List<StyleWithRange> getCurrentStyles(int lastDifference)
+	{
+		this.lastPos = matcher.start() + lastDifference;
+		return findNext();
+	}
+
+	void replaceAll(String replaceTo)
+	{
+		try
+		{
+			String newString = this.matcher.reset(this.property.get()).replaceAll(replaceTo);
+			this.property.setValue(newString);
+			this.controller.updateText(super.property.get());
+		}
+		catch (Exception e)
+		{
+			;
+		}
 	}
 
 	void replaceCurrent(String replacement)
@@ -176,7 +171,7 @@ public class PlainTextFx extends PlainText
 				matcher.appendTail(sb);
 				String newString = sb.toString();
 				this.property.setValue(newString);
-				this.controller.displayText(super.property.get(), super.property::set);
+				this.controller.updateText(super.property.get());
 			}
 		}
 		catch (Exception e)
@@ -207,6 +202,7 @@ public class PlainTextFx extends PlainText
 		if (!this.isControllerInit)
 		{
 			this.controller = Common.loadController(PlainTextFxController.class.getResource("PlainTextFx.fxml"));
+			this.controller.displayText(super.property.get(), super.property::set);
 			this.controller.init(this, getFactory().getSettings(), this.initHighlighter);
 			Optional.ofNullable(getFactory().getConfiguration()).ifPresent(c -> c.register(this));
 			this.isControllerInit = true;

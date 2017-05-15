@@ -23,18 +23,14 @@ import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
-import org.fxmisc.richtext.LineNumberFactory;
-import org.fxmisc.richtext.StyleClassedTextArea;
-import org.fxmisc.richtext.StyleSpans;
+import org.fxmisc.richtext.*;
 import org.reactfx.Subscription;
 
 import java.net.URL;
-import java.util.Collection;
-import java.util.List;
-import java.util.Optional;
-import java.util.ResourceBundle;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
+import java.util.function.Supplier;
 
 public class PlainTextFxController implements Initializable, ContainingParent
 {
@@ -56,7 +52,8 @@ public class PlainTextFxController implements Initializable, ContainingParent
 	private CustomTab    tab;
 	private Subscription lastSubscription;
 
-	private boolean findPanelIsOpened = false;
+	private Supplier<StyleSpans<Collection<String>>> lastFindSupplier = () -> null;
+	private int lastDifference = 0;
 
 	//region Interface Initializible
 	@Override
@@ -75,35 +72,23 @@ public class PlainTextFxController implements Initializable, ContainingParent
 		// position the caret at the beginning
 		this.textArea.selectRange(0, 0);
 		this.cbHighlighting.getItems().addAll(Highlighter.values());
-		this.cbHighlighting.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-			if (!this.findPanelIsOpened)
-			{
-				subscribeAndSet(newValue);
-			}
-		});
+		this.cbHighlighting.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> subscribeAndSet());
 		this.cbHighlighting.getSelectionModel().selectFirst();
 		this.cbShowLineNumbers.selectedProperty().addListener((observable, oldValue, newValue) -> this.textArea.setParagraphGraphicFactory(newValue ? LineNumberFactory.get(this.textArea) : null));
 
 		this.tbFindAndReplace.selectedProperty().addListener((observable, oldValue, newValue) ->
 		{
-			this.findPanelIsOpened = newValue;
-
 			this.findPane.setVisible(newValue);
 			this.findPane.setPrefHeight(newValue ? 60 : 0);
 			this.findPane.setMinHeight(newValue ? 60 : 0);
 			this.findPane.setMaxHeight(newValue ? 60 : 0);
+			subscribeAndSet();
+			Common.setFocused(this.tfFind);
 
 			if (!newValue)
 			{
-				subscribeAndSet(this.cbHighlighting.getSelectionModel().getSelectedItem());
+				this.lastFindSupplier = () -> null;
 			}
-			else
-			{
-				Optional.ofNullable(this.lastSubscription).ifPresent(Subscription::unsubscribe);
-				this.textArea.clearStyle(0, this.textArea.getText().length());
-			}
-
-			Common.setFocused(this.tfFind);
 		});
 
 		this.mainPane.setCenter(this.textArea);
@@ -154,27 +139,32 @@ public class PlainTextFxController implements Initializable, ContainingParent
 
 	public void displayText(String text, Consumer<String> consumer)
 	{
-		this.textArea.clear();
-		this.textArea.appendText(text);
-		this.textArea.textProperty().addListener((observable, oldValue, newValue) -> consumer.accept(newValue));
+		this.textArea.replaceText(text);
+		this.textArea.richChanges().addObserver(change -> consumer.accept(this.textArea.getText()));
+	}
+
+	public void updateText(String text)
+	{
+		this.textArea.replaceText(text);
 	}
 
 	public void findAll(ActionEvent actionEvent)
 	{
 		if (this.tfFind.getText().isEmpty())
 		{
+			this.lastFindSupplier = () -> null;
 			this.lblFindCount.setText("");
-			Optional.ofNullable(this.lastSubscription).ifPresent(Subscription::unsubscribe);
-			this.textArea.clearStyle(0, this.textArea.getText().length());
+			this.subscribeAndSet();
 		}
 		else
 		{
-			AtomicInteger atomicInteger = new AtomicInteger(0);
-			Optional.ofNullable(this.lastSubscription).ifPresent(Subscription::unsubscribe);
-			List<StyleWithRange> styles = this.model.findAll(this.tfFind.getText(), this.cbMatchCase.isSelected(), this.cbRegexp.isSelected(), atomicInteger);
-			StyleSpans<Collection<String>> styleSpans = Common.convertFromList(styles);
-			this.textArea.setStyleSpans(0, styleSpans);
-			this.lblFindCount.setText("Found " + atomicInteger.get());
+			this.lastFindSupplier = () -> {
+				AtomicInteger atomicInteger = new AtomicInteger(0);
+				List<StyleWithRange> styles = this.model.findAll(atomicInteger);
+				this.lblFindCount.setText("Found " + atomicInteger.get());
+				return Common.convertFromList(styles);
+			};
+			subscribeAndSet();
 		}
 	}
 
@@ -182,16 +172,14 @@ public class PlainTextFxController implements Initializable, ContainingParent
 	{
 		if (!this.tfFind.getText().isEmpty())
 		{
-			this.model.replaceAll(this.tfFind.getText(), this.tfReplace.getText(), this.cbMatchCase.isSelected(), this.cbRegexp.isSelected());
+			this.model.replaceAll(this.tfReplace.getText());
 		}
 	}
 
 	public void findNext(ActionEvent actionEvent)
 	{
-		Optional.ofNullable(this.lastSubscription).ifPresent(Subscription::unsubscribe);
-		List<StyleWithRange> styles = this.model.findNext(this.tfFind.getText(), this.cbMatchCase.isSelected(), this.cbRegexp.isSelected());
-		StyleSpans<Collection<String>> styleSpans = Common.convertFromList(styles);
-		this.textArea.setStyleSpans(0, styleSpans);
+		List<StyleWithRange> styles = this.model.findNext();
+		this.lastFindSupplier = () -> Common.convertFromList(this.model.getCurrentStyles(lastDifference));
 		if (styles.size() != 1)
 		{
 			styles.stream()
@@ -199,6 +187,7 @@ public class PlainTextFxController implements Initializable, ContainingParent
 					.findFirst()
 					.ifPresent(s -> this.textArea.moveTo(s.getRange()));
 		}
+		this.subscribeAndSet();
 	}
 
 	public void replaceCurrent(ActionEvent actionEvent)
@@ -212,12 +201,62 @@ public class PlainTextFxController implements Initializable, ContainingParent
 		this.findNext(null);
 	}
 
-	private void subscribeAndSet(Highlighter highlighter)
+	//region private methods
+	private void subscribeAndSet()
 	{
+		Highlighter highlighter = this.cbHighlighting.getSelectionModel().getSelectedItem();
+
 		Optional.ofNullable(this.lastSubscription).ifPresent(Subscription::unsubscribe);
-		this.textArea.setStyleSpans(0, Common.convertFromList(highlighter.getStyles(this.textArea.getText())));
+		this.textArea.setStyleSpans(0, union(convert(highlighter), this.lastFindSupplier.get()));
+
 		this.lastSubscription = this.textArea.richChanges()
 				.filter(ch -> !ch.getInserted().equals(ch.getRemoved()))
-				.subscribe(change -> this.textArea.setStyleSpans(0, Common.convertFromList(highlighter.getStyles(this.textArea.getText()))));
+				.subscribe(change -> {
+					this.lastDifference = change.getInserted().length() - change.getRemoved().length();
+					this.textArea.setStyleSpans(0, union(convert(highlighter), this.lastFindSupplier.get()));
+				});
 	}
+
+	private StyleSpans<Collection<String>> convert(Highlighter highlighter)
+	{
+		return Common.convertFromList(highlighter.getStyles(this.textArea.getText()));
+	}
+
+	private static StyleSpans<Collection<String>> union(StyleSpans<Collection<String>> initList, StyleSpans<Collection<String>> findList)
+	{
+		if (findList == null)
+		{
+			return initList;
+		}
+		StyleSpansBuilder<Collection<String>> spansBuilder = new StyleSpansBuilder<>();
+		for(int i = 0; i < initList.length(); i++)
+		{
+			StyleSpan<Collection<String>> find = get(i, findList);
+			StyleSpan<Collection<String>> init = get(i, initList);
+			boolean b = find == null || (find.getStyle().size() == 1 && find.getStyle().iterator().next().equals("default"));
+			Collection<String> strings = b ? init.getStyle() : find.getStyle();
+			StyleSpan<Collection<String>> newSpan = new StyleSpan<>(strings, 1);
+			spansBuilder.add(newSpan);
+		}
+
+		return spansBuilder.create();
+	}
+
+	private static StyleSpan<Collection<String>> get(int position, StyleSpans<Collection<String>> list)
+	{
+		int curPos = 0;
+		for (int i = 0; i < list.getSpanCount(); i++)
+		{
+			StyleSpan<Collection<String>> styleSpan = list.getStyleSpan(i);
+			if (curPos <= position && (curPos + styleSpan.getLength() - 1) >= position)
+			{
+				return styleSpan;
+			}
+			curPos += styleSpan.getLength();
+		}
+		//never happens
+		return new StyleSpan<>(Collections.singleton("default"), 1);
+	}
+
+	//endregion
 }
