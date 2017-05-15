@@ -10,6 +10,7 @@ package com.exactprosystems.jf.documents.matrix.parser.items;
 
 import com.csvreader.CsvWriter;
 import com.exactprosystems.jf.api.client.IClientFactory;
+import com.exactprosystems.jf.api.client.IField;
 import com.exactprosystems.jf.api.client.MapMessage;
 import com.exactprosystems.jf.api.common.Str;
 import com.exactprosystems.jf.api.error.ErrorKind;
@@ -81,9 +82,7 @@ public class RawMessage extends MatrixItem
 		driver.showTitle(this, layout, 1, 1, Tokens.RawMessage.get(), context.getFactory().getSettings());
 		driver.showLabel(this, layout, 1, 2, Tokens.Client.get());
 		driver.showComboBox(this, layout, 1, 3, this.clientName, this.clientName, () ->
-		{
-			return context.getConfiguration().getClientPool().clientNames();
-		}); 
+				context.getConfiguration().getClientPool().clientNames());
 		driver.showLabel(this, layout, 1, 4, "Message type");
 		driver.showComboBox(this, layout, 1, 5, this.typeName, this.typeName, () ->
 		{
@@ -99,10 +98,10 @@ public class RawMessage extends MatrixItem
 					return null;
 				}
 				
-				return factory.getDictionary().getMessages().stream().map(m ->  m.getName()).collect(Collectors.toList());
+				return factory.getDictionary().getMessages().stream().map(IField::getName).collect(Collectors.toList());
 			}
 			catch (Exception e)
-			{ }
+			{e.printStackTrace(); }
 			return null;
 		}); 
 		driver.showCheckBox(this, layout, 1, 6, "Global", this.global, this.global);
@@ -172,30 +171,29 @@ public class RawMessage extends MatrixItem
 		this.clientName.set(systemParameters.get(Tokens.Client));
 		this.message = new MapMessage(this.typeName.get(), null, null);
 		
-//		
-//		
-//		this.message.put("Fld1", 1);
-//		this.message.put("Fld2", 2);
-//
-//		MapMessage group1 = new MapMessage(null);
-//		group1.put("Field1", 101);
-//		group1.put("Field2", 102);
-//
-//		MapMessage subGroup1 = new MapMessage(null);
-//		subGroup1.put("SubField1", "66");
-//		subGroup1.put("SubField2", 302);
-//
-//		MapMessage subGroup2 = new MapMessage(null);
-//		subGroup2.put("SSubField1", 401);
-//		subGroup2.put("SSubField2", 402);
-//		
-//		MapMessage group2 = new MapMessage(null);
-//		group2.put("FieldGroup1", 201);
-//		group2.put("FieldGroup2", 202);
-//		group2.put("SubGroup1", new Map[] { subGroup1 });
-//		group2.put("SubGroup2", new Map[] { subGroup2 });
-//
-//		this.message.put("Group1", new Map[] { group1, group2 } );
+
+		this.message.put("Fld1", 1);
+		this.message.put("Fld2", 2);
+
+		MapMessage group1 = new MapMessage(null);
+		group1.put("Field1", 101);
+		group1.put("Field2", 102);
+
+		MapMessage subGroup1 = new MapMessage(null);
+		subGroup1.put("SubField1", "66");
+		subGroup1.put("SubField2", 302);
+
+		MapMessage subGroup2 = new MapMessage(null);
+		subGroup2.put("SSubField1", 401);
+		subGroup2.put("SSubField2", 402);
+
+		MapMessage group2 = new MapMessage(null);
+		group2.put("FieldGroup1", 201);
+		group2.put("FieldGroup2", 202);
+		group2.put("SubGroup1", new Map[] { subGroup1 });
+		group2.put("SubGroup2", new Map[] { subGroup2 });
+
+		this.message.put("Group1", new Map[] { group1, group2 } );
 	}
 
 	@Override
