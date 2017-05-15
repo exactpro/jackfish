@@ -19,9 +19,11 @@ public class RawMessageTreeView extends TreeView<RawMessageTreeView.MessageBean>
 			add(root, entry.getKey(), entry.getValue());
 		}
 
-		this.setCellFactory(p -> new TreeCell<MessageBean>(){
+		this.setCellFactory(p -> new TreeCell<MessageBean>()
+		{
 			@Override
-			protected void updateItem(MessageBean bean, boolean empty) {
+			protected void updateItem(MessageBean bean, boolean empty)
+			{
 				super.updateItem(bean, empty);
 				if (bean != null && !empty)
 				{
@@ -32,7 +34,8 @@ public class RawMessageTreeView extends TreeView<RawMessageTreeView.MessageBean>
 					if (bean.value != null && bean.value.length() != 0)
 					{
 						TextField field = new TextField(bean.value);
-						field.textProperty().addListener((observable, oldValue, newValue) -> {
+						field.textProperty().addListener((observable, oldValue, newValue) ->
+						{
 							bean.value = newValue;
 							updateMessage(bean.name, newValue, message);
 						});
@@ -51,7 +54,8 @@ public class RawMessageTreeView extends TreeView<RawMessageTreeView.MessageBean>
 		this.setRoot(root);
 	}
 
-	private void updateMessage(String name, String value, MapMessage message) {
+	private void updateMessage(String name, String value, MapMessage message)
+	{
 
 		for (Map.Entry<String, Object> entry : message.entrySet())
 		{
@@ -60,7 +64,7 @@ public class RawMessageTreeView extends TreeView<RawMessageTreeView.MessageBean>
 
 			if (oldValue.getClass().isArray())
 			{
-				Object[] array = (Object[])oldValue;
+				Object[] array = (Object[]) oldValue;
 
 				for (Object group : array)
 				{
@@ -96,7 +100,7 @@ public class RawMessageTreeView extends TreeView<RawMessageTreeView.MessageBean>
 			for (int i = 0; i < value1.length; i++)
 			{
 				item.setValue(new MessageBean(name + " [" + value1.length + "]", ""));
-				TreeItem<MessageBean> item2 = new TreeItem<>(new MessageBean(name + " #" + i,""));
+				TreeItem<MessageBean> item2 = new TreeItem<>(new MessageBean(name + " #" + i, ""));
 				item.getChildren().add(item2);
 
 				if (value1[i] instanceof Map)
@@ -108,30 +112,34 @@ public class RawMessageTreeView extends TreeView<RawMessageTreeView.MessageBean>
 
 				}
 			}
-		}else if (value instanceof Map)
+		}
+		else if (value instanceof Map)
 		{
-			Map<String,Object> newMap = (Map<String,Object>) value;
+			Map<String, Object> newMap = (Map<String, Object>) value;
 			for (Map.Entry<String, Object> entry : newMap.entrySet())
 			{
-				add(item, entry.getKey(), entry.getValue() );
+				add(item, entry.getKey(), entry.getValue());
 			}
 		}
 
 		treeItem.getChildren().add(item);
 	}
 
-	class MessageBean {
+	class MessageBean
+	{
 		String name;
 		String value;
 
-		MessageBean(String name, String value) {
+		MessageBean(String name, String value)
+		{
 			this.name = name;
 			this.value = value;
 		}
 
 		@Override
-		public String toString() {
-			return  "Name= '" + name + '\'' + (this.value.length() > 0 ? ", Value= '" + value + '\'' : "");
+		public String toString()
+		{
+			return "Name= '" + name + '\'' + (this.value.length() > 0 ? ", Value= '" + value + '\'' : "");
 		}
 	}
 }
