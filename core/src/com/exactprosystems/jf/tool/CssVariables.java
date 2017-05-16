@@ -227,6 +227,8 @@ public class CssVariables
 	public static final String TEMP_VIEW_CUSTOM_TAB  		= "tempCustomTabSimple";
 	public static final String TEMP_VIEW_OVER_CUSTOM_TAB 	= "tempCustomTabOver";
 
+	public static final String TREE_ITEM_WITH_BORDERS		= "treeItemWithBorders";
+
 
 	public static final String	IMAGE_AREA					= "imageArea";
 

@@ -8,9 +8,11 @@
 
 package com.exactprosystems.jf.common;
 
+import com.exactprosystems.jf.actions.ActionGroups;
 import com.exactprosystems.jf.api.app.Mutable;
 import com.exactprosystems.jf.api.common.Str;
 import com.exactprosystems.jf.documents.matrix.parser.ScreenshotKind;
+import com.exactprosystems.jf.documents.matrix.parser.Tokens;
 import com.exactprosystems.jf.documents.matrix.parser.items.MutableArrayList;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.dictionary.dialog.WizardSettings;
@@ -21,7 +23,9 @@ import javax.xml.bind.JAXBContext;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
 import javax.xml.bind.annotation.*;
-import java.io.*;
+import java.io.File;
+import java.io.Reader;
+import java.io.Writer;
 import java.util.*;
 import java.util.Map.Entry;
 import java.util.stream.Collectors;
@@ -292,98 +296,127 @@ public class Settings
 		return settings;
 	}
 
+	//region default settings
+	private static Settings DEFAULT_SETTINGS;
+
 	public static Settings defaultSettings()
 	{
-		Settings settings = new Settings();
+		if (DEFAULT_SETTINGS == null)
+		{
+			DEFAULT_SETTINGS = new Settings();
 
-		settings.setMapValues(GLOBAL_NS, SETTINGS, mapOf(
-				MAX_LAST_COUNT,"10",
-				TIME_NOTIFICATION,"5",
-				THEME,"WHITE",
-				USE_FULL_SCREEN,"false",
-				USE_FULLSCREEN_XPATH,"false",
-				COPYRIGHT,"",
-				FONT, "System$13"
-		));
+			DEFAULT_SETTINGS.setMapValues(GLOBAL_NS, SETTINGS, mapOf(
+					MAX_LAST_COUNT,"10",
+					TIME_NOTIFICATION,"5",
+					THEME,"WHITE",
+					USE_FULL_SCREEN,"false",
+					USE_FULLSCREEN_XPATH,"false",
+					COPYRIGHT,"",
+					FONT, "System$13"
+			));
 
-		settings.setMapValues(GLOBAL_NS, SHORTCUTS_NAME, mapOf(
-				//Document
-				SAVE_DOCUMENT,"Ctrl+S",
-				SAVE_DOCUMENT_AS,"Shift+Ctrl+S",
-				UNDO,"Ctrl+Z",
-				REDO,"Shift+Ctrl+Z",
+			DEFAULT_SETTINGS.setMapValues(GLOBAL_NS, SHORTCUTS_NAME, mapOf(
+					//Document
+					SAVE_DOCUMENT,"Ctrl+S",
+					SAVE_DOCUMENT_AS,"Shift+Ctrl+S",
+					UNDO,"Ctrl+Z",
+					REDO,"Shift+Ctrl+Z",
 
-				//Matrix navigation
-				ADD_ITEMS, "Insert",
-				COPY_ITEMS, "Ctrl+C",
-				PASTE_ITEMS, "Ctrl+V",
-				HELP,"Ctrl+F1",
-				DELETE_ITEM,"Delete",
-				SHOW_ALL,"Ctrl+Q",
-				GO_TO_LINE,"Ctrl+G",
-				ADD_PARAMETER, "Ctrl+P",
-				BREAK_POINT,"Ctrl+B",
+					//Matrix navigation
+					ADD_ITEMS, "Insert",
+					COPY_ITEMS, "Ctrl+C",
+					PASTE_ITEMS, "Ctrl+V",
+					HELP,"Ctrl+F1",
+					DELETE_ITEM,"Delete",
+					SHOW_ALL,"Ctrl+Q",
+					GO_TO_LINE,"Ctrl+G",
+					ADD_PARAMETER, "Ctrl+P",
+					BREAK_POINT,"Ctrl+B",
 
-				//Matrix actions
-				SHOW_WATCH, "F2",
-				TRACING, "F3",
-				START_MATRIX, "F4",
-				STOP_MATRIX, "F5",
-				PAUSE_MATRIX, "F6",
-				STEP_MATRIX, "F7",
-				SHOW_RESULT, "F8",
-				FIND_ON_MATRIX,"Ctrl+F",
+					//Matrix actions
+					SHOW_WATCH, "F2",
+					TRACING, "F3",
+					START_MATRIX, "F4",
+					STOP_MATRIX, "F5",
+					PAUSE_MATRIX, "F6",
+					STEP_MATRIX, "F7",
+					SHOW_RESULT, "F8",
+					FIND_ON_MATRIX,"Ctrl+F",
 
-				//Other
-				SHOW_ALL_TABS,"Ctrl+E"
-		));
+					//Other
+					SHOW_ALL_TABS,"Ctrl+E"
+			));
 
-		settings.setMapValues(GLOBAL_NS, LOGS_NAME, mapOf(
-				ALL, "0x000000ff",
-				DEBUG, "0x334db3ff",
-				ERROR, "0xcc3333ff",
-				FATAL, "0xcc3333ff",
-				INFO, "0x336633ff",
-				TRACE, "0x8066ccff",
-				WARN, "0xe64d4dff"
-		));
+			DEFAULT_SETTINGS.setMapValues(GLOBAL_NS, LOGS_NAME, mapOf(
+					ALL, "0x000000ff",
+					DEBUG, "0x334db3ff",
+					ERROR, "0xcc3333ff",
+					FATAL, "0xcc3333ff",
+					INFO, "0x336633ff",
+					TRACE, "0x8066ccff",
+					WARN, "0xe64d4dff"
+			));
 
-		settings.setMapValues(GLOBAL_NS, MATRIX_COLORS, mapOf(
-				//TODO add all colors
-		));
+			DEFAULT_SETTINGS.setMapValues(GLOBAL_NS, MATRIX_COLORS, mapOf(
+					ActionGroups.App.name(), "rgba(59,217,88,1.0)",
+					ActionGroups.Matrix.name(), "rgba(255,191,0,1.0)",
+					ActionGroups.GUI.name(), "rgba(179,230,179,1.0)",
+					ActionGroups.Messages.name(), "rgba(252,91,0,1.0)",
+					ActionGroups.Tables.name(), "rgba(0,255,156,1.0)",
+					ActionGroups.Text.name(), "rgba(0,162,255,1.0)",
+					ActionGroups.Clients.name(), "rgba(234,151,52,1.0)",
+					ActionGroups.Services.name(), "rgba(208,0,118,1.0)",
+					ActionGroups.SQL.name(), "rgba(0,17,255,1.0)",
+					ActionGroups.System.name(), "rgba(255,230,128,1.0)",
+					ActionGroups.Report.name(), "rgba(68,129,210,1.0)",
+					ActionGroups.XML.name(), "rgba(249,255,0,1.0)",
+
+					Tokens.Assert.name(), "rgba(177,0,0,1.0)",
+					Tokens.NameSpace.name(), "rgba(128,0,128,1.0)",
+					Tokens.TestCase.name(), "rgba(128,0,128,1.0)",
+					Tokens.RawTable.name(), "rgba(0,255,156,1.0)",
+					Tokens.RawMessage.name(), "rgba(252,91,0,1.0)",
+					Tokens.SubCase.name(), "rgba(128,0,128,1.0)",
+					Tokens.RawText.name(), "rgba(0,162,255,1.0)",
+					Tokens.Step.name(), "rgba(128,0,128,1.0)",
+					Tokens.Let.name(), "rgba(0,138,0,1.0)"
+					 
+			));
 
 
-		settings.setMapValues(GLOBAL_NS, MATRIX_NAME, mapOf(
-				MATRIX_DEFAULT_SCREENSHOT, ScreenshotKind.Never.name(),
-				MATRIX_POPUPS, "false",
-				MATRIX_FOLD_ITEMS, "false"
-		));
+			DEFAULT_SETTINGS.setMapValues(GLOBAL_NS, MATRIX_NAME, mapOf(
+					MATRIX_DEFAULT_SCREENSHOT, ScreenshotKind.Never.name(),
+					MATRIX_POPUPS, "false",
+					MATRIX_FOLD_ITEMS, "false"
+			));
 
-		settings.setMapValues(GLOBAL_NS, GIT, mapOf(
-				GIT_KNOWN_HOST, "",
-				GIT_SSH_IDENTITY, ""
-		));
+			DEFAULT_SETTINGS.setMapValues(GLOBAL_NS, GIT, mapOf(
+					GIT_KNOWN_HOST, "",
+					GIT_SSH_IDENTITY, ""
+			));
 
-		settings.setMapValues(GLOBAL_NS, WIZARD_NAME, mapOf(
-				WizardSettings.Kind.TYPE.name()+MAX, "1",
-				WizardSettings.Kind.TYPE.name()+MIN, "0",
+			DEFAULT_SETTINGS.setMapValues(GLOBAL_NS, WIZARD_NAME, mapOf(
+					WizardSettings.Kind.TYPE.name()+MAX, "1",
+					WizardSettings.Kind.TYPE.name()+MIN, "0",
 
-				WizardSettings.Kind.PATH.name()+MAX, "1",
-				WizardSettings.Kind.PATH.name()+MIN, "0",
+					WizardSettings.Kind.PATH.name()+MAX, "1",
+					WizardSettings.Kind.PATH.name()+MIN, "0",
 
-				WizardSettings.Kind.SIZE.name()+MAX, "1",
-				WizardSettings.Kind.SIZE.name()+MIN, "0",
+					WizardSettings.Kind.SIZE.name()+MAX, "1",
+					WizardSettings.Kind.SIZE.name()+MIN, "0",
 
-				WizardSettings.Kind.POSITION.name()+MAX, "1",
-				WizardSettings.Kind.POSITION.name()+MIN, "0",
+					WizardSettings.Kind.POSITION.name()+MAX, "1",
+					WizardSettings.Kind.POSITION.name()+MIN, "0",
 
-				WizardSettings.Kind.ATTR.name()+MAX, "1",
-				WizardSettings.Kind.ATTR.name()+MIN, "0",
+					WizardSettings.Kind.ATTR.name()+MAX, "1",
+					WizardSettings.Kind.ATTR.name()+MIN, "0",
 
-				THRESHOLD, "0.6"
-		));
-		return settings;
+					THRESHOLD, "0.6"
+			));
+		}
+		return DEFAULT_SETTINGS;
 	}
+	//endregion
 
 	public synchronized void save(String fileName) throws Exception
 	{

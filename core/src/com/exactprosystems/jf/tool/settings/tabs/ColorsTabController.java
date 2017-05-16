@@ -7,6 +7,7 @@ import com.exactprosystems.jf.common.Settings;
 import com.exactprosystems.jf.documents.matrix.parser.Tokens;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.ContainingParent;
+import com.exactprosystems.jf.tool.CssVariables;
 import com.exactprosystems.jf.tool.settings.SettingsPanel;
 import javafx.event.ActionEvent;
 import javafx.fxml.Initializable;
@@ -16,6 +17,7 @@ import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
 
 import java.net.URL;
 import java.util.*;
@@ -59,10 +61,12 @@ public class ColorsTabController implements Initializable, ContainingParent, ITa
 			if (selectedItem != null)
 			{
 				this.colorsMap.put(selectedItem.getValue().name, this.colorPicker.getValue());
+				updateTree();
 			}
 		});
 
 		initialColorItems();
+		restoreToDefault();
 	}
 	//endregion
 
@@ -114,7 +118,9 @@ public class ColorsTabController implements Initializable, ContainingParent, ITa
 	@Override
 	public void restoreToDefault()
 	{
-
+		Settings settings = Settings.defaultSettings();
+		this.colorsMap.replaceAll((key,value) -> getDefaultColor(settings, key));
+		updateTree();
 	}
 
 	public void restoreDefaults(ActionEvent actionEvent)
@@ -150,15 +156,24 @@ public class ColorsTabController implements Initializable, ContainingParent, ITa
 		updateTree();
 	}
 
-	private void updateTree()
-	{
-		int selectedIndex = this.treeViewColors.getSelectionModel().getSelectedIndex();
-		this.treeViewColors.getSelectionModel().select(0);
-		this.treeViewColors.getSelectionModel().clearAndSelect(selectedIndex);
-	}
 	//endregion
 
 	//region private methods
+	private Color getDefaultColor(Settings settings, String key)
+	{
+		return Optional.ofNullable(settings.getValue(Settings.GLOBAL_NS, Settings.MATRIX_COLORS, key))
+				.map(Settings.SettingsValue::getValue)
+				.map(Color::valueOf)
+				.orElse(Color.TRANSPARENT);
+	}
+
+	private void updateTree()
+	{
+		boolean oldExpandedState = this.treeViewColors.getRoot().isExpanded();
+		this.treeViewColors.getRoot().setExpanded(!oldExpandedState);
+		this.treeViewColors.getRoot().setExpanded(oldExpandedState);
+	}
+
 	private void initialColorItems()
 	{
 		TreeCellBean actions = new TreeCellBean("Actions");
@@ -234,14 +249,19 @@ public class ColorsTabController implements Initializable, ContainingParent, ITa
 		protected void updateItem(TreeCellBean item, boolean empty)
 		{
 			super.updateItem(item, empty);
-			setStyle("");
+			this.getStyleClass().remove(CssVariables.TREE_ITEM_WITH_BORDERS);
 			if (item != null && !empty)
 			{
-				setStyle("-fx-border-color:black; -fx-border-width : 0 0 1 0; -fx-indent : 16");
+				this.getStyleClass().add(CssVariables.TREE_ITEM_WITH_BORDERS);
 				BorderPane pane = new BorderPane();
 				Label value = new Label(item.name);
 				BorderPane.setAlignment(value, Pos.CENTER_LEFT);
 				pane.setCenter(value);
+
+				Rectangle rectangle = new Rectangle(16,16);
+				rectangle.setFill(colorsMap.get(item.name));
+
+				pane.setRight(rectangle);
 //				if (item.isChangeable)
 //				{
 //					ColorPicker color = new ColorPicker(item.color);

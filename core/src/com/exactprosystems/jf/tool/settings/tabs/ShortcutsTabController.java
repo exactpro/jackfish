@@ -149,6 +149,8 @@ public class ShortcutsTabController implements Initializable, ContainingParent, 
 		this.matrixNavigation.replaceAll(biFunction);
 		this.matrixActions.replaceAll(biFunction);
 		this.other.replaceAll(biFunction);
+
+		displayShortcuts(this.cbShortcutsName.getSelectionModel().getSelectedItem());
 	}
 
 	public void restoreDefaults(ActionEvent actionEvent)
@@ -273,6 +275,9 @@ public class ShortcutsTabController implements Initializable, ContainingParent, 
 
 		this.matrixNavigation.forEach((key, value) -> treeItemNavigation.getChildren().add(new TreeItem<>(new EditableCell(key, value))));
 		this.matrixActions.forEach((key, value) -> treeItemActions.getChildren().add(new TreeItem<>(new EditableCell(key, value))));
+
+		treeItemActions.setExpanded(true);
+		treeItemNavigation.setExpanded(true);
 	}
 
 	private void displayOtherShortcuts()
@@ -297,12 +302,11 @@ public class ShortcutsTabController implements Initializable, ContainingParent, 
 		@Override
 		protected void updateItem(GridPane item, boolean empty)
 		{
-			//TODO set styleclass instead of style
-			this.setStyle("");
+			this.getStyleClass().remove(CssVariables.TREE_ITEM_WITH_BORDERS);
 			super.updateItem(item, empty);
 			if (item != null && !empty)
 			{
-				this.setStyle("-fx-border-color:black; -fx-border-width : 0 0 1 0");
+				this.getStyleClass().add(CssVariables.TREE_ITEM_WITH_BORDERS);
 				this.setGraphic(item);
 			}
 			else

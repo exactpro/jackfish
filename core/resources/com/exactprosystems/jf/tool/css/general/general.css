@@ -446,6 +446,12 @@
 	-fx-border-color : transparent;
 }
 
+/*Settings panel*/
+.treeItemWithBorders {
+	-fx-border-color:black;
+	-fx-border-width : 0 0 1 0;
+}
+
 /*Matrix tab*/
 #matrixBtnStartDefaultClient,
 #matrixBtnStopDefaultClient,
