@@ -9,6 +9,7 @@
 package com.exactprosystems.jf.tool.custom.treetable;
 
 import com.exactprosystems.jf.api.app.AppConnection;
+import com.exactprosystems.jf.api.client.IMessageDictionary;
 import com.exactprosystems.jf.api.client.MapMessage;
 import com.exactprosystems.jf.api.common.Str;
 import com.exactprosystems.jf.common.MatrixRunner;
@@ -44,6 +45,7 @@ import com.exactprosystems.jf.tool.matrix.MatrixFx;
 import com.exactprosystems.jf.tool.matrix.params.ParametersPane;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
+import javafx.event.ActionEvent;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
@@ -220,29 +222,39 @@ public class DisplayDriverFx implements DisplayDriver
 	}
 
 	@Override
-	public void showComboBox(MatrixItem item, Object layout, int row, int column, Setter<String> set, Getter<String> get, Supplier<List<String>> handler)
+	public void showComboBox(MatrixItem item, Object layout, int row, int column, Setter<String> set, Getter<String> get, Supplier<List<String>> handler, Function<String, Boolean> needUpdate)
 	{
 		GridPane pane = (GridPane) layout;
 		ComboBox<String> comboBox = new ComboBox<>();
 		comboBox.setValue(get.get());
-		comboBox.setOnAction(e ->
-		{
-			String lastValue = get.get();
-			String value = comboBox.getValue();
-			if (Str.areEqual(lastValue, value))
+		comboBox.setOnAction(event -> {
+			if (event instanceof StubEvent)
 			{
+
+			}
+			String lastValue = get.get();
+			String newValue = comboBox.getValue();
+			if (Str.areEqual(lastValue, newValue))
+			{
+				return;
+			}
+
+			//TODO
+			if (!needUpdate.apply(newValue))
+			{
+				comboBox.getSelectionModel().select(lastValue);
 				return;
 			}
 
 			Command undo = () ->
 			{
 				set.set(lastValue);
-				comboBox.setValue(lastValue);
+				comboBox.getSelectionModel().select(lastValue);
 			};
 			Command redo = () ->
 			{
-				set.set(value);
-				comboBox.setValue(value);
+				set.set(newValue);
+				comboBox.getSelectionModel().select(newValue);
 			};
 			item.getMatrix().addCommand(undo, redo);
 		});
@@ -260,6 +272,11 @@ public class DisplayDriverFx implements DisplayDriver
 		}
 		pane.add(comboBox, column, row);
 		GridPane.setMargin(comboBox, INSETS);
+	}
+
+	private class StubEvent extends ActionEvent
+	{
+
 	}
 
 	@Override
@@ -612,12 +629,23 @@ public class DisplayDriverFx implements DisplayDriver
 	}
 
 	@Override
-	public void showTree(MatrixItem item, Object layout, int row, int column, MapMessage message)
+	public void showTree(MatrixItem item, Object layout, int row, int column, MapMessage message, IMessageDictionary dictionary)
 	{
 		GridPane pane = (GridPane) layout;
 		RawMessageTreeView treeView = new RawMessageTreeView(message);
+		treeView.displayTree(message, dictionary);
 		DragResizer.makeResizable(treeView, treeView::setPrefHeight);
 		pane.add(treeView, column, row, 10, 2);
+	}
+
+	@Override
+	public void updateTree(MatrixItem item, Object layout, MapMessage message, IMessageDictionary dictionary)
+	{
+		((GridPane) layout).getChildren().stream()
+				.filter(node -> node instanceof RawMessageTreeView)
+				.findFirst()
+				.map(node -> (RawMessageTreeView)node)
+				.ifPresent(rawMessageTreeView -> rawMessageTreeView.displayTree(message, dictionary));
 	}
 
 	@Override

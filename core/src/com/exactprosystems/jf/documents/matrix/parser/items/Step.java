@@ -151,12 +151,12 @@ public class Step extends MatrixItem
             List<String> list = this.owner.listOfIds(Step.class);
             list.add(0, "");
             return list;
-        });
+        }, (str) -> true);
         driver.showLabel(this, layout, 2, 2, " Screenshot:");
         driver.showComboBox(this, layout, 2, 3, this.kind, this.kind,() ->
         {   
             return Arrays.stream(ScreenshotKind.values()).map(Enum::toString).collect(Collectors.toList());
-        });
+        }, (str) -> true);
         driver.showLabel(this, layout, 2, 4, " Plugin:");
         driver.showExpressionField(this, layout, 2, 5, Tokens.For.get(), this.plugin, this.plugin, null, null, null, null);
         

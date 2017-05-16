@@ -107,7 +107,7 @@ public class RawText extends MatrixItem
 						driver.displayHighlight(layout, Highlighter.byName(newValue));
 					}
 				}, this.highlighterMutableValue,
-				() -> Arrays.stream(Highlighter.values()).map(Highlighter::name).collect(Collectors.toList()));
+				() -> Arrays.stream(Highlighter.values()).map(Highlighter::name).collect(Collectors.toList()), (str) -> true);
 
 		return layout;
 	}

@@ -1,5 +1,6 @@
 package com.exactprosystems.jf.tool.custom.treetable;
 
+import com.exactprosystems.jf.api.client.IMessageDictionary;
 import com.exactprosystems.jf.api.client.MapMessage;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
@@ -9,17 +10,14 @@ import java.util.Map;
 
 public class RawMessageTreeView extends TreeView<RawMessageTreeView.MessageBean>
 {
-	private MapMessage message;
+	private MapMessage         message;
+	private IMessageDictionary dictionary;
 
 	public RawMessageTreeView(MapMessage message)
 	{
 		this.message = message;
+		this.setContextMenu(createContextMenu());
 		TreeItem<MessageBean> root = new TreeItem<>(new MessageBean("Message", ""));
-		for (Map.Entry<String, Object> entry : message.entrySet())
-		{
-			add(root, entry.getKey(), entry.getValue());
-		}
-
 		this.setCellFactory(p -> new TreeCell<MessageBean>()
 		{
 			@Override
@@ -54,8 +52,28 @@ public class RawMessageTreeView extends TreeView<RawMessageTreeView.MessageBean>
 		});
 
 		this.setRoot(root);
-		this.setShowRoot(false);
+		root.setExpanded(true);
 	}
+
+	public void displayTree(MapMessage message, IMessageDictionary dictionary)
+	{
+		this.message = message;
+		this.dictionary = dictionary;
+		TreeItem<MessageBean> root = this.getRoot();
+		root.getChildren().clear();
+		for (Map.Entry<String, Object> entry : message.entrySet())
+		{
+			add(root, entry.getKey(), entry.getValue());
+		}
+	}
+
+	private ContextMenu createContextMenu()
+	{
+		ContextMenu contextMenu = new ContextMenu();
+		contextMenu.getItems().add(new MenuItem("Stub item"));
+		return contextMenu;
+	}
+
 
 	private void add(TreeItem<MessageBean> treeItem, String name, Object value)
 	{

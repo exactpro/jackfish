@@ -79,7 +79,7 @@ public final class SetHandler extends MatrixItem
         driver.showComboBox(this, layout, 1, 3, this.kind, this.kind, () ->
         {
             return Arrays.stream(HandlerKind.values()).map(k -> k.toString()).collect(Collectors.toList());
-        });
+        }, (str) -> true);
 
 		return layout;
 	}
