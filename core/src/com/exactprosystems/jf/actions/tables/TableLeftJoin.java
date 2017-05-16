@@ -100,13 +100,37 @@ public class TableLeftJoin extends AbstractAction
 	{
 		Parameters extra = parameters.select(TypeMandatory.Extra);
 		Table newTable = this.leftTable.clone();
-		newTable.clear(); // (fi!)
+		newTable.clear();
 
 		for (Parameter column : extra)
 		{
 			newTable.addColumns(column.getName());
 		}
-		
+
+		if(this.leftAlias.isEmpty())
+		{
+			super.setError("Column '" + leftAliasName + "' can't be empty string.", ErrorKind.EMPTY_PARAMETER);
+			return;
+		}
+
+		if(this.rightAlias.isEmpty())
+		{
+			super.setError("Column '" + rightAliasName + "' can't be empty string.", ErrorKind.EMPTY_PARAMETER);
+			return;
+		}
+
+		if(evaluator.getLocals().getVariable(this.leftAlias) != null)
+		{
+			super.setError("Variable with name '" + this.leftAlias + "' already exist", ErrorKind.WRONG_PARAMETERS);
+			return;
+		}
+
+		if(evaluator.getLocals().getVariable(this.rightAlias) != null)
+		{
+			super.setError("Variable with name '" + this.rightAlias + "' already exist", ErrorKind.WRONG_PARAMETERS);
+			return;
+		}
+
 		for (RowTable rowLeft : this.leftTable)
 		{
 			evaluator.getLocals().set(this.leftAlias, rowLeft);
@@ -114,7 +138,7 @@ public class TableLeftJoin extends AbstractAction
 			for (RowTable rowRight : this.rightTable)
 			{
 				evaluator.getLocals().set(this.rightAlias, rowRight);
-				
+
 				Object cond = evaluator.evaluate(this.condition);
 				if (cond instanceof Boolean)
 				{
