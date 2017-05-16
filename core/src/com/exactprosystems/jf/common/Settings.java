@@ -335,9 +335,9 @@ public class Settings
 
 					//Matrix actions
 					SHOW_WATCH, "F2",
-					TRACING, "F3",
-					START_MATRIX, "F4",
-					STOP_MATRIX, "F5",
+					TRACING, "Ctrl+F3",
+					START_MATRIX, "Ctrl+F4",
+					STOP_MATRIX, "Ctrl+F5",
 					PAUSE_MATRIX, "F6",
 					STEP_MATRIX, "F7",
 					SHOW_RESULT, "F8",
