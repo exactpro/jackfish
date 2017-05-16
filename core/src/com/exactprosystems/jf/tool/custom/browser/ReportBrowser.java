@@ -7,6 +7,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 package com.exactprosystems.jf.tool.custom.browser;
 
+import com.exactprosystems.jf.api.common.Sys;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.CssVariables;
 import javafx.application.Platform;
@@ -18,7 +19,7 @@ import javafx.scene.control.*;
 import javafx.scene.control.MenuItem;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.MouseButton;
+import javafx.scene.input.*;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.text.Text;
@@ -105,6 +106,7 @@ public class ReportBrowser extends BorderPane
 		private WebEngine engine;
 		private Hyperlink crossButton;
 		private Text textTab;
+		private Boolean ctrlC = false;
 
 		private void createContextMenu(WebView webView)
 		{
@@ -133,6 +135,22 @@ public class ReportBrowser extends BorderPane
 			});
 		}
 
+		private void createCtrlCHandler(WebView view) {
+			view.addEventHandler(KeyEvent.KEY_PRESSED, event -> {
+				if(new KeyCodeCombination(KeyCode.C, KeyCombination.CONTROL_DOWN).match(event))
+				{
+					ctrlC = true;
+				}
+			});
+			view.addEventHandler(KeyEvent.KEY_RELEASED, event -> {
+				if(event.getCode().equals(KeyCode.CONTROL) && ctrlC)
+				{
+					ctrlC = false;
+					Sys.copyToClipboard((String) view.getEngine().executeScript("window.getSelection().toString()"));
+				}
+			});
+		}
+
 		public CustomBrowserTab()
 		{
 			WebView view = new WebView();
@@ -140,6 +158,7 @@ public class ReportBrowser extends BorderPane
 			this.setContent(view);
 			view.setContextMenuEnabled(false);
 			createContextMenu(view);
+			createCtrlCHandler(view);
 
 			textTab = new Text();
 			this.textTab.setText("New tab...");

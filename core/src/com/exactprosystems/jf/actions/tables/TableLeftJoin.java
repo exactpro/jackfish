@@ -34,24 +34,34 @@ import com.exactprosystems.jf.functions.Table;
 				"{{`1. Create a table with columns Name and Age, Gender. Populate it with two rows.`}}"
 				+ "{{`2. Create a table with columns City, Street, Name. Populate it with two rows.`}}"
 				+ "{{`3. Use Left Join choosing rows from the first table on condition: matching column Name. `}}"
-				+ "{{##Id;#TestCase\n"
-				+ "Test;\n"
-				+ "    #Id;#RawTable\n"
-				+ "    TC;Table\n"
-				+ "    @;Name;Age;Gender\n"
-				+ "    0;Mike;42;Male\n"
-				+ "    1;Olga;21;Female\n"
-				+ "    #EndRawTable\n"
-				+ "    #Id;#RawTable\n"
-				+ "    TC1;Table\n"
-				+ "    @;City;Street;Name\n"
-				+ "    0;London;12;Mike\n"
-				+ "    1;London;3;Anna\n"
-				+ "    #EndRawTable\n"
-				+ "    #Id;#Action;#Condition;#LeftTable;#RightAlias;#LeftAlias;#RightTable\n"
-				+ "    TBLJN1;TableLeftJoin;'a.Name == b.Name';TC;'b';'a';TC1\n"
-				+ "    #Action;#Table;#Title\n"
-				+ "    TableReport;TBLJN1.Out;'title'#}}"
+				+ "{{#"
+				+		"#TestCase;#Kind;#Depends;#For\n" +
+						";Never;;\n" +
+						"    #Id;#RawTable\n" +
+						"    City;Table\n" +
+						"    @;id;Name;Language\n" +
+						"    0;1;London;us\n" +
+						"    1;2;Moscow;ru\n" +
+						"    2;3;France;fr\n" +
+						"    #EndRawTable\n" +
+						"\n" +
+						"    #Id;#RawTable\n" +
+						"    Person;Table\n" +
+						"    @;Name;CityId\n" +
+						"    0;Andrey;1\n" +
+						"    1;Victor;2\n" +
+						"    2;Aleksander;1\n" +
+						"    3;Valery;4\n" +
+						"    4;Kate;3\n" +
+						"    #EndRawTable\n" +
+						"\n" +
+						"    #Id;#Action;$Condition;$LeftTable;$LeftAlias;$RightTable;$RightAlias;CityName;Language\n" +
+						"    TBLJN1;TableLeftJoin;'person.CityId == city.id';Person;'person';City;'city';'city.Name';'city.Language'\n" +
+						"\n" +
+						"    #Action;$Table;$Title\n" +
+						"    TableReport;TBLJN1.Out;'title'" +
+						"\n"
+				+ "#}}"
 )
 public class TableLeftJoin extends AbstractAction
 {
@@ -91,7 +101,7 @@ public class TableLeftJoin extends AbstractAction
 		Parameters extra = parameters.select(TypeMandatory.Extra);
 		Table newTable = this.leftTable.clone();
 		newTable.clear(); // (fi!)
-		
+
 		for (Parameter column : extra)
 		{
 			newTable.addColumns(column.getName());
@@ -108,8 +118,7 @@ public class TableLeftJoin extends AbstractAction
 				Object cond = evaluator.evaluate(this.condition);
 				if (cond instanceof Boolean)
 				{
-					boolean on = ((Boolean)cond).booleanValue();
-					if (on)
+					if ((Boolean) cond)
 					{
 						RowTable newRow = rowLeft.clone();
 						for (Parameter column : extra)
