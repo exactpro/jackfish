@@ -31,7 +31,7 @@ public class MatrixTabController implements Initializable, ContainingParent, ITa
 	public void initialize(URL location, ResourceBundle resources)
 	{
 		this.cbScreenshot.getItems().addAll(ScreenshotKind.values());
-		this.cbScreenshot.getSelectionModel().select(ScreenshotKind.Never);
+		restoreToDefault();
 	}
 	//endregion
 
@@ -50,9 +50,9 @@ public class MatrixTabController implements Initializable, ContainingParent, ITa
 
 	public void displayInfo(Map<String, String> collect)
 	{
-		this.cbScreenshot.getSelectionModel().select(ScreenshotKind.valueOf(collect.getOrDefault(Settings.MATRIX_DEFAULT_SCREENSHOT, ScreenshotKind.Never.name())));
-		this.cbPopup.setSelected(Boolean.valueOf(collect.getOrDefault(Settings.MATRIX_POPUPS, "false")));
-		this.cbFoldNewItems.setSelected(Boolean.valueOf(collect.getOrDefault(Settings.MATRIX_FOLD_ITEMS, "false")));
+		SettingsPanel.setValue(Settings.MATRIX_DEFAULT_SCREENSHOT, collect, str -> this.cbScreenshot.getSelectionModel().select(ScreenshotKind.valueOf(str)));
+		SettingsPanel.setValue(Settings.MATRIX_POPUPS, collect, str -> this.cbPopup.setSelected(Boolean.parseBoolean(str)));
+		SettingsPanel.setValue(Settings.MATRIX_FOLD_ITEMS, collect, str -> this.cbFoldNewItems.setSelected(Boolean.parseBoolean(str)));
 	}
 
 	public void displayInto(Tab tab)
@@ -79,6 +79,11 @@ public class MatrixTabController implements Initializable, ContainingParent, ITa
 	@Override
 	public void restoreToDefault()
 	{
+		Settings settings = Settings.defaultSettings();
+
+		this.cbScreenshot.getSelectionModel().select(ScreenshotKind.valueOf(settings.getValue(Settings.GLOBAL_NS, Settings.MATRIX_NAME, Settings.MATRIX_DEFAULT_SCREENSHOT).getValue()));
+		this.cbPopup.setSelected(Boolean.parseBoolean(settings.getValue(Settings.GLOBAL_NS, Settings.MATRIX_NAME, Settings.MATRIX_POPUPS).getValue()));
+		this.cbFoldNewItems.setSelected(Boolean.parseBoolean(settings.getValue(Settings.GLOBAL_NS, Settings.MATRIX_NAME, Settings.MATRIX_FOLD_ITEMS).getValue()));
 
 	}
 
