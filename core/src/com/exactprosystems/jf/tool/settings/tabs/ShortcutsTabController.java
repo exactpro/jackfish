@@ -24,9 +24,11 @@ import java.net.URL;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.ResourceBundle;
+import java.util.function.BiFunction;
 import java.util.function.Consumer;
 
 import static com.exactprosystems.jf.common.Settings.GLOBAL_NS;
+import static com.exactprosystems.jf.common.Settings.SHORTCUTS_NAME;
 
 public class ShortcutsTabController implements Initializable, ContainingParent, ITabHeight, ITabRestored
 {
@@ -34,7 +36,7 @@ public class ShortcutsTabController implements Initializable, ContainingParent, 
 	{
 		Document,
 		Matrix,
-		Other;
+		Other
 	}
 
 	public GridPane gridPane;
@@ -130,7 +132,14 @@ public class ShortcutsTabController implements Initializable, ContainingParent, 
 	@Override
 	public void restoreToDefault()
 	{
+		Settings settings = Settings.defaultSettings();
 
+		BiFunction<String, String, String> biFunction = (key, value) -> settings.getValue(GLOBAL_NS, SHORTCUTS_NAME, key).getValue();
+
+		this.documents.replaceAll(biFunction);
+		this.matrixNavigation.replaceAll(biFunction);
+		this.matrixActions.replaceAll(biFunction);
+		this.other.replaceAll(biFunction);
 	}
 
 	public void restoreDefaults(ActionEvent actionEvent)
@@ -156,7 +165,7 @@ public class ShortcutsTabController implements Initializable, ContainingParent, 
 		{
 			EditableCell editableCell = (EditableCell) selectedItem.getValue();
 			String key = editableCell.lblName.getText();
-			Settings.SettingsValue valueOrDefault = Settings.defaultSettings().getValueOrDefault(GLOBAL_NS, Settings.SHORTCUTS_NAME, key, Common.EMPTY);
+			Settings.SettingsValue valueOrDefault = Settings.defaultSettings().getValue(GLOBAL_NS, Settings.SHORTCUTS_NAME, key);
 			updateShortcut(valueOrDefault.getValue(), editableCell);
 		}
 	}
@@ -230,7 +239,7 @@ public class ShortcutsTabController implements Initializable, ContainingParent, 
 	{
 		ObservableList<TreeItem<GridPane>> children = this.treeView.getRoot().getChildren();
 		children.clear();
-		this.documents.entrySet().forEach(e -> children.add(new TreeItem<>(new EditableCell(e.getKey(), e.getValue()))));
+		this.documents.forEach((key, value) -> children.add(new TreeItem<>(new EditableCell(key, value))));
 	}
 
 	private void displayMatrixShortcuts()
@@ -242,15 +251,15 @@ public class ShortcutsTabController implements Initializable, ContainingParent, 
 
 		this.treeView.getRoot().getChildren().addAll(treeItemNavigation, treeItemActions);
 
-		this.matrixNavigation.entrySet().forEach(e -> treeItemNavigation.getChildren().add(new TreeItem<>(new EditableCell(e.getKey(), e.getValue()))));
-		this.matrixActions.entrySet().forEach(e -> treeItemActions.getChildren().add(new TreeItem<>(new EditableCell(e.getKey(), e.getValue()))));
+		this.matrixNavigation.forEach((key, value) -> treeItemNavigation.getChildren().add(new TreeItem<>(new EditableCell(key, value))));
+		this.matrixActions.forEach((key, value) -> treeItemActions.getChildren().add(new TreeItem<>(new EditableCell(key, value))));
 	}
 
 	private void displayOtherShortcuts()
 	{
 		ObservableList<TreeItem<GridPane>> children = this.treeView.getRoot().getChildren();
 		children.clear();
-		this.other.entrySet().forEach(e -> children.add(new TreeItem<>(new EditableCell(e.getKey(), e.getValue()))));
+		this.other.forEach((key, value) -> children.add(new TreeItem<>(new EditableCell(key, value))));
 	}
 
 	private GridPane createGridPane(String lbl)
