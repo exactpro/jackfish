@@ -19,23 +19,24 @@ import java.net.URL;
 import java.util.Arrays;
 import java.util.Map;
 import java.util.ResourceBundle;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 public class MainTabController implements Initializable, ContainingParent, ITabHeight, ITabRestored
 {
 	private SettingsPanel model;
-	private Parent parent;
+	private Parent        parent;
 
-	public GridPane mainGrid;
-	public NumberTextField ntfMaxLastMatrixCount;
-	public NumberTextField ntfTimeNotification;
-	public CheckBox useFullScreen;
-	public ComboBox<Theme> comboBoxTheme;
+	public GridPane         mainGrid;
+	public NumberTextField  ntfMaxLastMatrixCount;
+	public NumberTextField  ntfTimeNotification;
+	public CheckBox         useFullScreen;
+	public ComboBox<Theme>  comboBoxTheme;
 	public ComboBox<String> cbFontFamily;
 	public ComboBox<Double> cbFontSize;
-	public CheckBox useFullScreenXpath;
-	public TextArea taCopyright;
-	public GridPane numberGrid;
+	public CheckBox         useFullScreenXpath;
+	public TextArea         taCopyright;
+	public GridPane         numberGrid;
 
 	@Override
 	public void setParent(Parent parent)
@@ -46,25 +47,25 @@ public class MainTabController implements Initializable, ContainingParent, ITabH
 	@Override
 	public void initialize(URL location, ResourceBundle resources)
 	{
-		restoreToDefault();
-
 		this.ntfMaxLastMatrixCount = new NumberTextField(0);
 		this.ntfMaxLastMatrixCount.setId(Settings.MAX_LAST_COUNT);
+
 		this.ntfTimeNotification = new NumberTextField(0);
 		this.ntfTimeNotification.setId(Settings.TIME_NOTIFICATION);
+
 		this.numberGrid.add(this.ntfMaxLastMatrixCount, 1, 0, 2, 1);
 		this.numberGrid.add(this.ntfTimeNotification, 1, 1);
-
-		this.comboBoxTheme.setId(Settings.THEME);
-		this.useFullScreen.setId(Settings.USE_FULL_SCREEN);
 
 		this.comboBoxTheme.setItems(FXCollections.observableArrayList(Arrays.stream(Theme.values()).filter(Theme::isVisible).collect(Collectors.toList())));
 		initializeFont();
 
-		comboBoxTheme.getSelectionModel().selectedItemProperty().addListener((observableValue, theme, theme2) -> Platform.runLater(() -> this.useFullScreen.getScene().getStylesheets().setAll(theme2.getPath())));
+		comboBoxTheme.getSelectionModel().selectedItemProperty().addListener((observableValue, theme, theme2) ->
+				Platform.runLater(() ->
+						this.comboBoxTheme.getScene().getStylesheets().setAll(theme2.getPath())
+				)
+		);
 
-		this.useFullScreen.setOnAction(actionEvent -> this.model.updateSettingsValue(this.useFullScreen.getId(), Settings.SETTINGS, String.valueOf(useFullScreen.isSelected())));
-		this.useFullScreenXpath.setOnAction(actionEvent -> this.model.updateSettingsValue(this.useFullScreenXpath.getId(), Settings.SETTINGS, String.valueOf(useFullScreenXpath.isSelected())));
+		restoreToDefault();
 	}
 
 	public void init(SettingsPanel model)
@@ -74,22 +75,30 @@ public class MainTabController implements Initializable, ContainingParent, ITabH
 
 	public void displayInfo(Map<String, String> res)
 	{
-		Font font = Common.fontFromString(res.get(Settings.FONT));
+		setValue(Settings.MAX_LAST_COUNT, res, str -> this.ntfMaxLastMatrixCount.setText(str));
+		setValue(Settings.TIME_NOTIFICATION, res, str -> this.ntfTimeNotification.setText(str));
 
-		this.cbFontFamily.getSelectionModel().select(font.getFamily());
-		this.cbFontSize.getSelectionModel().select(font.getSize());
-		this.comboBoxTheme.getSelectionModel().select(Theme.valueOf(res.get(comboBoxTheme.getId()) == null ? Theme.WHITE.name() : res.get(comboBoxTheme.getId())));
+		setValue(Settings.THEME, res, str -> this.comboBoxTheme.getSelectionModel().select(Theme.valueOf(str)));
 
-		this.ntfMaxLastMatrixCount.setText(res.get(ntfMaxLastMatrixCount.getId()) == null ?
-				Settings.defaultSettings().getValueOrDefault(Settings.GLOBAL_NS, "Main", Settings.MAX_LAST_COUNT, "").getValue() : res.get(ntfMaxLastMatrixCount.getId()));
-		this.ntfTimeNotification.setText(res.get(ntfTimeNotification.getId()) == null ?
-				Settings.defaultSettings().getValueOrDefault(Settings.GLOBAL_NS, "Main", Settings.TIME_NOTIFICATION, "").getValue() : res.get(ntfTimeNotification.getId()));
-		this.useFullScreen.setSelected(Boolean.valueOf(res.get(useFullScreen.getId()) == null ?
-				Settings.defaultSettings().getValueOrDefault(Settings.GLOBAL_NS, "Main", Settings.USE_FULL_SCREEN, "false").getValue() : res.get(useFullScreen.getId())));
-		this.useFullScreenXpath.setSelected(Boolean.valueOf(res.get(useFullScreenXpath.getId()) == null ?
-				Settings.defaultSettings().getValueOrDefault(Settings.GLOBAL_NS, "Main", Settings.USE_FULLSCREEN_XPATH, "false").getValue() : res.get(useFullScreenXpath.getId())));
-		this.taCopyright.setText(res.get(taCopyright.getId()) == null ?
-				Settings.defaultSettings().getValueOrDefault(Settings.GLOBAL_NS, "Main", Settings.COPYRIGHT, "").getValue() : res.get(taCopyright.getId()).replaceAll("\\\\n", System.lineSeparator()));
+		setValue(Settings.FONT, res, str -> {
+			Font font = Common.fontFromString(str);
+
+			this.cbFontFamily.getSelectionModel().select(font.getFamily());
+			this.cbFontSize.getSelectionModel().select(font.getSize());
+		});
+
+		setValue(Settings.USE_FULL_SCREEN, res, str -> this.useFullScreen.setSelected(Boolean.parseBoolean(str)));
+		setValue(Settings.USE_FULLSCREEN_XPATH, res, str -> this.useFullScreenXpath.setSelected(Boolean.parseBoolean(str)));
+		setValue(Settings.COPYRIGHT, res, str -> this.taCopyright.setText(str.replaceAll("\\\\n", System.lineSeparator())));
+	}
+
+	private void setValue(String keyName, Map<String, String> map, Consumer<String> consumer)
+	{
+		String value = map.get(keyName);
+		if (value != null)
+		{
+			consumer.accept(value);
+		}
 	}
 
 	public void displayInto(Tab tab)
@@ -104,6 +113,47 @@ public class MainTabController implements Initializable, ContainingParent, ITabH
 		return -1;
 	}
 
+	public void save()
+	{
+		this.model.updateSettingsValue(Settings.MAX_LAST_COUNT, Settings.SETTINGS, String.valueOf(this.ntfMaxLastMatrixCount.getValue()));
+		this.model.updateSettingsValue(Settings.TIME_NOTIFICATION, Settings.SETTINGS, String.valueOf(this.ntfTimeNotification.getValue()));
+
+		this.model.updateSettingsValue(Settings.THEME, Settings.SETTINGS, this.comboBoxTheme.getSelectionModel().getSelectedItem().toString());
+		Font font = Font.font(this.cbFontFamily.getSelectionModel().getSelectedItem(), this.cbFontSize.getSelectionModel().getSelectedItem());
+		this.model.updateSettingsValue(Settings.FONT, Settings.SETTINGS, Common.stringFromFont(font));
+
+		this.model.updateSettingsValue(Settings.USE_FULL_SCREEN, Settings.SETTINGS, String.valueOf(this.useFullScreen.isSelected()));
+		this.model.updateSettingsValue(Settings.USE_FULLSCREEN_XPATH, Settings.SETTINGS, String.valueOf(this.useFullScreenXpath.isSelected()));
+
+		this.model.updateSettingsValue(Settings.COPYRIGHT, Settings.SETTINGS, this.taCopyright.getText().replaceAll(System.lineSeparator(), "\\\\n"));
+	}
+
+	@Override
+	public void restoreToDefault()
+	{
+		Settings defaultSettings = Settings.defaultSettings();
+
+		this.ntfMaxLastMatrixCount.setValue(Integer.parseInt(defaultSettings.getValue(Settings.GLOBAL_NS, Settings.SETTINGS, Settings.MAX_LAST_COUNT).getValue()));
+		this.ntfTimeNotification.setValue(Integer.parseInt(defaultSettings.getValue(Settings.GLOBAL_NS, Settings.SETTINGS, Settings.TIME_NOTIFICATION).getValue()));
+
+		this.comboBoxTheme.getSelectionModel().select(Theme.valueOf(defaultSettings.getValue(Settings.GLOBAL_NS, Settings.SETTINGS, Settings.THEME).getValue()));
+
+		String fontValue = defaultSettings.getValue(Settings.GLOBAL_NS, Settings.SETTINGS, Settings.FONT).getValue();
+		Font font = Common.fontFromString(fontValue);
+		this.cbFontFamily.getSelectionModel().select(font.getFamily());
+		this.cbFontSize.getSelectionModel().select(font.getSize());
+
+		this.useFullScreen.setSelected(Boolean.parseBoolean(defaultSettings.getValue(Settings.GLOBAL_NS, Settings.SETTINGS, Settings.USE_FULL_SCREEN).getValue()));
+		this.useFullScreenXpath.setSelected(Boolean.parseBoolean(defaultSettings.getValue(Settings.GLOBAL_NS, Settings.SETTINGS, Settings.USE_FULLSCREEN_XPATH).getValue()));
+
+		this.taCopyright.setText(defaultSettings.getValue(Settings.GLOBAL_NS, Settings.SETTINGS, Settings.COPYRIGHT).getValue().replaceAll("\\\\n", System.lineSeparator()));
+	}
+
+	public void restoreDefaults(ActionEvent actionEvent)
+	{
+		restoreToDefault();
+	}
+
 	private void initializeFont()
 	{
 		cbFontFamily.getStyleClass().add("font-menu-button");
@@ -111,7 +161,8 @@ public class MainTabController implements Initializable, ContainingParent, ITabH
 		cbFontFamily.setPrefWidth(150);
 		cbFontFamily.setMaxWidth(150);
 		cbFontFamily.setFocusTraversable(false);
-		cbFontFamily.setCellFactory(param -> {
+		cbFontFamily.setCellFactory(param ->
+		{
 			final ListCell<String> cell = new ListCell<String>()
 			{
 				@Override
@@ -164,34 +215,5 @@ public class MainTabController implements Initializable, ContainingParent, ITabH
 				}
 			}
 		});
-		Arrays.asList(cbFontFamily, cbFontSize).stream().forEach(cb -> cb.setOnAction(event -> {
-			Font font = Font.font(cbFontFamily.getValue(), cbFontSize.getValue());
-			model.updateSettingsValue(Settings.FONT, Settings.SETTINGS, Common.stringFromFont(font));
-		}));
-	}
-
-	public void save()
-	{
-		Arrays.asList(this.useFullScreen, this.useFullScreenXpath)
-				.forEach(cb -> this.model.updateSettingsValue(cb.getId(), Settings.SETTINGS, String.valueOf(cb.isSelected())));
-
-		this.model.updateSettingsValue(this.comboBoxTheme.getId(), Settings.SETTINGS, this.comboBoxTheme.getSelectionModel().getSelectedItem().toString());
-
-		this.model.updateSettingsValue(this.ntfTimeNotification.getId(), Settings.SETTINGS, String.valueOf(this.ntfTimeNotification.getValue()));
-		this.model.updateSettingsValue(this.ntfMaxLastMatrixCount.getId(), Settings.SETTINGS, String.valueOf(this.ntfMaxLastMatrixCount.getValue()));
-		this.model.updateSettingsValue(this.taCopyright.getId(), Settings.SETTINGS, this.taCopyright.getText().replaceAll(System.lineSeparator(), "\\\\n"));
-	}
-
-
-
-	@Override
-	public void restoreToDefault()
-	{
-
-	}
-
-	public void restoreDefaults(ActionEvent actionEvent)
-	{
-		restoreToDefault();
 	}
 }
