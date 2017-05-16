@@ -35,13 +35,13 @@ public class LogTabController implements Initializable, ContainingParent, ITabHe
 	@Override
 	public void initialize(URL location, ResourceBundle resources)
 	{
-		this.colorLogsMap.put(this.cpFatal.getId(), this.cpFatal);
-		this.colorLogsMap.put(this.cpError.getId(), this.cpError);
-		this.colorLogsMap.put(this.cpWarn.getId(), this.cpWarn);
-		this.colorLogsMap.put(this.cpInfo.getId(), this.cpInfo);
-		this.colorLogsMap.put(this.cpDebug.getId(), this.cpDebug);
-		this.colorLogsMap.put(this.cpTrace.getId(), this.cpTrace);
-		this.colorLogsMap.put(this.cpAll.getId(), this.cpAll);
+		this.colorLogsMap.put(Settings.FATAL, this.cpFatal);
+		this.colorLogsMap.put(Settings.ERROR, this.cpError);
+		this.colorLogsMap.put(Settings.WARN, this.cpWarn);
+		this.colorLogsMap.put(Settings.INFO, this.cpInfo);
+		this.colorLogsMap.put(Settings.DEBUG, this.cpDebug);
+		this.colorLogsMap.put(Settings.TRACE, this.cpTrace);
+		this.colorLogsMap.put(Settings.ALL, this.cpAll);
 	}
 	//endregion
 
@@ -60,7 +60,7 @@ public class LogTabController implements Initializable, ContainingParent, ITabHe
 
 	public void displayInfo(Map<String, String> res)
 	{
-		res.entrySet().forEach(entry -> colorLogsMap.get(entry.getKey()).setValue(Color.valueOf(entry.getValue())));
+		res.forEach((key, value) -> this.colorLogsMap.get(key).setValue(Color.valueOf(value)));
 	}
 
 	public void displayInto(Tab tab)
@@ -77,13 +77,14 @@ public class LogTabController implements Initializable, ContainingParent, ITabHe
 
 	public void save()
 	{
-		this.colorLogsMap.entrySet().forEach(entry -> this.model.updateSettingsValue(entry.getKey(), Settings.LOGS_NAME, entry.getValue().getValue().toString()));
+		this.colorLogsMap.forEach((key, value) -> this.model.updateSettingsValue(key, Settings.LOGS_NAME, value.getValue().toString()));
 	}
 
 	@Override
 	public void restoreToDefault()
 	{
-
+		Settings settings = Settings.defaultSettings();
+		this.colorLogsMap.forEach((key, value) -> value.setValue(Color.valueOf(settings.getValue(Settings.GLOBAL_NS, Settings.LOGS_NAME, key).getValue())));
 	}
 
 	public void restoreDefaults(ActionEvent actionEvent)

@@ -23,19 +23,19 @@
 			</rowConstraints>
 			<children>
 				<Label text="FATAL :" />
-				<ColorPicker id="FATAL" fx:id="cpFatal" maxWidth="1.7976931348623157E308" GridPane.columnIndex="1" />
+				<ColorPicker fx:id="cpFatal" maxWidth="1.7976931348623157E308" GridPane.columnIndex="1" />
 				<Label text="ERROR :" GridPane.rowIndex="1" />
-				<ColorPicker id="ERROR" fx:id="cpError" maxWidth="1.7976931348623157E308" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+				<ColorPicker fx:id="cpError" maxWidth="1.7976931348623157E308" GridPane.columnIndex="1" GridPane.rowIndex="1" />
 				<Label text="WARN :" GridPane.rowIndex="2" />
-				<ColorPicker id="WARN" fx:id="cpWarn" maxWidth="1.7976931348623157E308" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+				<ColorPicker fx:id="cpWarn" maxWidth="1.7976931348623157E308" GridPane.columnIndex="1" GridPane.rowIndex="2" />
 				<Label text="ALL :" GridPane.rowIndex="3" />
-				<ColorPicker id="ALL" fx:id="cpAll" maxWidth="1.7976931348623157E308" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+				<ColorPicker fx:id="cpAll" maxWidth="1.7976931348623157E308" GridPane.columnIndex="1" GridPane.rowIndex="3" />
 				<Label text="INFO :" GridPane.columnIndex="2" />
-				<ColorPicker id="INFO" fx:id="cpInfo" maxWidth="1.7976931348623157E308" GridPane.columnIndex="3" />
+				<ColorPicker fx:id="cpInfo" maxWidth="1.7976931348623157E308" GridPane.columnIndex="3" />
 				<Label text="DEBUG :" GridPane.columnIndex="2" GridPane.rowIndex="1" />
-				<ColorPicker id="DEBUG" fx:id="cpDebug" maxWidth="1.7976931348623157E308" GridPane.columnIndex="3" GridPane.rowIndex="1" />
+				<ColorPicker fx:id="cpDebug" maxWidth="1.7976931348623157E308" GridPane.columnIndex="3" GridPane.rowIndex="1" />
 				<Label text="TRACE :" GridPane.columnIndex="2" GridPane.rowIndex="2" />
-				<ColorPicker id="TRACE" fx:id="cpTrace" maxWidth="1.7976931348623157E308" GridPane.columnIndex="3" GridPane.rowIndex="2" />
+				<ColorPicker fx:id="cpTrace" maxWidth="1.7976931348623157E308" GridPane.columnIndex="3" GridPane.rowIndex="2" />
 				<Button text="Restore default" onAction="#restoreDefaults" GridPane.columnIndex="3" GridPane.rowIndex="3" GridPane.halignment="RIGHT" GridPane.valignment="CENTER"/>
 			</children>
 		</GridPane>
