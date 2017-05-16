@@ -16,6 +16,7 @@ import javafx.scene.input.KeyEvent;
 
 import java.io.IOException;
 import java.util.*;
+import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -137,6 +138,7 @@ public class SettingsPanel
 		Map<String, String> matrixNav = mapFunction.apply(matrixNavigationList);
 		Map<String, String> matrixAct = mapFunction.apply(matrixActionsList);
 		Map<String, String> other = mapFunction.apply(otherList);
+
 		this.controller.displayShortcuts(docs, matrixNav, matrixAct, other);
 	}
 
@@ -196,5 +198,14 @@ public class SettingsPanel
 		List<String> list = new ArrayList<>();
 		Arrays.stream(args).forEach(list::add);
 		return list;
+	}
+
+	public static void setValue(String keyName, Map<String, String> map, Consumer<String> consumer)
+	{
+		String value = map.get(keyName);
+		if (value != null)
+		{
+			consumer.accept(value);
+		}
 	}
 }

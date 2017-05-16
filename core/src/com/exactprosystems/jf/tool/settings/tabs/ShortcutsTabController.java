@@ -23,6 +23,7 @@ import javafx.scene.layout.GridPane;
 import java.net.URL;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Objects;
 import java.util.ResourceBundle;
 import java.util.function.BiFunction;
 import java.util.function.Consumer;
@@ -81,6 +82,7 @@ public class ShortcutsTabController implements Initializable, ContainingParent, 
 		this.cbShortcutsName.getItems().addAll(ShortcutType.values());
 		this.cbShortcutsName.getSelectionModel().selectFirst();
 		this.cbShortcutsName.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> displayShortcuts(newValue));
+		restoreToDefault();
 	}
 	//endregion
 
@@ -103,6 +105,13 @@ public class ShortcutsTabController implements Initializable, ContainingParent, 
 		this.matrixNavigation = matrixNavigation;
 		this.matrixActions = matrixActions;
 		this.other = other;
+
+		Settings settings = Settings.defaultSettings();
+
+		replaceNoneValuesToDefault(this.documents, settings);
+		replaceNoneValuesToDefault(this.matrixNavigation, settings);
+		replaceNoneValuesToDefault(this.matrixActions, settings);
+		replaceNoneValuesToDefault(this.other, settings);
 
 		displayShortcuts(ShortcutType.Document);
 	}
@@ -216,6 +225,17 @@ public class ShortcutsTabController implements Initializable, ContainingParent, 
 	//endregion
 
 	//region private methods
+	private void replaceNoneValuesToDefault(Map<String, String> map, Settings settings)
+	{
+		map.replaceAll((key,value) -> {
+			if (Objects.equals(value, Common.EMPTY))
+			{
+				return settings.getValue(Settings.GLOBAL_NS, Settings.SHORTCUTS_NAME, key).getValue();
+			}
+			return value;
+		});
+	}
+
 	private void displayShortcuts(ShortcutType type)
 	{
 		this.btnDefault.setDisable(true);

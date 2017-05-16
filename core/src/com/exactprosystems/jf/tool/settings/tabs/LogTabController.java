@@ -42,6 +42,8 @@ public class LogTabController implements Initializable, ContainingParent, ITabHe
 		this.colorLogsMap.put(Settings.DEBUG, this.cpDebug);
 		this.colorLogsMap.put(Settings.TRACE, this.cpTrace);
 		this.colorLogsMap.put(Settings.ALL, this.cpAll);
+
+		restoreToDefault();
 	}
 	//endregion
 

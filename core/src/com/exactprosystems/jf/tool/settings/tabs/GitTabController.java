@@ -46,6 +46,8 @@ public class GitTabController implements Initializable, ContainingParent, ITabHe
 			Optional.ofNullable(file).map(File::getAbsolutePath).ifPresent(this.cfSSHIdentity::setText);
 		});
 		this.gridGit.add(this.cfSSHIdentity, 1, 1);
+
+		restoreToDefault();
 	}
 	//endregion
 
@@ -64,8 +66,8 @@ public class GitTabController implements Initializable, ContainingParent, ITabHe
 
 	public void displayInfo(Map<String, String> collect)
 	{
-		this.cfKnownHost.setText(collect.getOrDefault(Settings.GIT_KNOWN_HOST, ""));
-		this.cfSSHIdentity.setText(collect.getOrDefault(Settings.GIT_SSH_IDENTITY, ""));
+		SettingsPanel.setValue(Settings.GIT_KNOWN_HOST, collect, this.cfKnownHost::setText);
+		SettingsPanel.setValue(Settings.GIT_SSH_IDENTITY, collect, this.cfSSHIdentity::setText);
 	}
 
 	public void displayInto(Tab tab)
@@ -91,7 +93,10 @@ public class GitTabController implements Initializable, ContainingParent, ITabHe
 	@Override
 	public void restoreToDefault()
 	{
+		Settings settings = Settings.defaultSettings();
 
+		this.cfKnownHost.setText(settings.getValue(Settings.GLOBAL_NS, Settings.GIT, Settings.GIT_KNOWN_HOST).getValue());
+		this.cfSSHIdentity.setText(settings.getValue(Settings.GLOBAL_NS, Settings.GIT, Settings.GIT_SSH_IDENTITY).getValue());
 	}
 
 	public void restoreDefaults(ActionEvent actionEvent)

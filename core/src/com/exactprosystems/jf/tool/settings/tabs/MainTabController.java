@@ -19,7 +19,6 @@ import java.net.URL;
 import java.util.Arrays;
 import java.util.Map;
 import java.util.ResourceBundle;
-import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 public class MainTabController implements Initializable, ContainingParent, ITabHeight, ITabRestored
@@ -75,30 +74,21 @@ public class MainTabController implements Initializable, ContainingParent, ITabH
 
 	public void displayInfo(Map<String, String> res)
 	{
-		setValue(Settings.MAX_LAST_COUNT, res, str -> this.ntfMaxLastMatrixCount.setText(str));
-		setValue(Settings.TIME_NOTIFICATION, res, str -> this.ntfTimeNotification.setText(str));
+		SettingsPanel.setValue(Settings.MAX_LAST_COUNT, res, str -> this.ntfMaxLastMatrixCount.setText(str));
+		SettingsPanel.setValue(Settings.TIME_NOTIFICATION, res, str -> this.ntfTimeNotification.setText(str));
 
-		setValue(Settings.THEME, res, str -> this.comboBoxTheme.getSelectionModel().select(Theme.valueOf(str)));
+		SettingsPanel.setValue(Settings.THEME, res, str -> this.comboBoxTheme.getSelectionModel().select(Theme.valueOf(str)));
 
-		setValue(Settings.FONT, res, str -> {
+		SettingsPanel.setValue(Settings.FONT, res, str -> {
 			Font font = Common.fontFromString(str);
 
 			this.cbFontFamily.getSelectionModel().select(font.getFamily());
 			this.cbFontSize.getSelectionModel().select(font.getSize());
 		});
 
-		setValue(Settings.USE_FULL_SCREEN, res, str -> this.useFullScreen.setSelected(Boolean.parseBoolean(str)));
-		setValue(Settings.USE_FULLSCREEN_XPATH, res, str -> this.useFullScreenXpath.setSelected(Boolean.parseBoolean(str)));
-		setValue(Settings.COPYRIGHT, res, str -> this.taCopyright.setText(str.replaceAll("\\\\n", System.lineSeparator())));
-	}
-
-	private void setValue(String keyName, Map<String, String> map, Consumer<String> consumer)
-	{
-		String value = map.get(keyName);
-		if (value != null)
-		{
-			consumer.accept(value);
-		}
+		SettingsPanel.setValue(Settings.USE_FULL_SCREEN, res, str -> this.useFullScreen.setSelected(Boolean.parseBoolean(str)));
+		SettingsPanel.setValue(Settings.USE_FULLSCREEN_XPATH, res, str -> this.useFullScreenXpath.setSelected(Boolean.parseBoolean(str)));
+		SettingsPanel.setValue(Settings.COPYRIGHT, res, str -> this.taCopyright.setText(str.replaceAll("\\\\n", System.lineSeparator())));
 	}
 
 	public void displayInto(Tab tab)
