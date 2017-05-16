@@ -41,17 +41,14 @@ public class SettingsPanel
 			Settings.SHOW_ALL,
 			Settings.DELETE_ITEM,
 			Settings.COPY_ITEMS,
-			Settings.PASTE_ITEMS,
-			Settings.COLLAPSE_ALL,
-			Settings.COLLAPSE_ONE,
-			Settings.EXPAND_ALL,
-			Settings.EXPAND_ONE
+			Settings.PASTE_ITEMS
 	).collect(Collectors.toList());
 
 	public static final List<String> matrixActionsList = Stream.of(
 			Settings.START_MATRIX,
 			Settings.STOP_MATRIX,
 			Settings.PAUSE_MATRIX,
+			Settings.STEP_MATRIX,
 			Settings.SHOW_RESULT,
 			Settings.SHOW_WATCH,
 			Settings.TRACING,

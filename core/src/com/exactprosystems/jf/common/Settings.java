@@ -62,15 +62,12 @@ public class Settings
 	public static final String DELETE_ITEM		= "DeleteItem";
 	public static final String COPY_ITEMS		= "CopyItems";
 	public static final String PASTE_ITEMS		= "PasteItems";
-	public static final String COLLAPSE_ALL		= "CollapseAll";
-	public static final String COLLAPSE_ONE		= "CollapseOne";
-	public static final String EXPAND_ALL		= "ExpandAll";
-	public static final String EXPAND_ONE		= "ExpandOne";
 
 	//matrix actions shortcuts
 	public static final String START_MATRIX		= "StartMatrix";
 	public static final String STOP_MATRIX		= "StopMatrix";
 	public static final String PAUSE_MATRIX		= "PauseMatrix";
+	public static final String STEP_MATRIX		= "StepMatrix";
 	public static final String SHOW_RESULT		= "ShowResult";
 	public static final String SHOW_WATCH		= "ShowWatch";
 	public static final String TRACING			= "Tracing";
@@ -297,8 +294,50 @@ public class Settings
 
 	public static Settings defaultSettings()
 	{
-		//TODO add all default shortcuts and other settings.
 		Settings settings = new Settings();
+
+		settings.setMapValues(GLOBAL_NS, SETTINGS, mapOf(
+				MAX_LAST_COUNT,"10",
+				TIME_NOTIFICATION,"5",
+				THEME,"WHITE",
+				USE_FULL_SCREEN,"false",
+				USE_FULLSCREEN_XPATH,"false",
+				COPYRIGHT,"",
+				FONT, "System$13"
+		));
+
+		settings.setMapValues(GLOBAL_NS, SHORTCUTS_NAME, mapOf(
+				//Document
+				SAVE_DOCUMENT,"Ctrl+S",
+				SAVE_DOCUMENT_AS,"Shift+Ctrl+S",
+				UNDO,"Ctrl+Z",
+				REDO,"Shift+Ctrl+Z",
+
+				//Matrix navigation
+				ADD_ITEMS, "Insert",
+				COPY_ITEMS, "Ctrl+C",
+				PASTE_ITEMS, "Ctrl+V",
+				HELP,"Ctrl+F1",
+				DELETE_ITEM,"Delete",
+				SHOW_ALL,"Ctrl+Q",
+				GO_TO_LINE,"Ctrl+G",
+				ADD_PARAMETER, "Ctrl+P",
+				BREAK_POINT,"Ctrl+B",
+
+				//Matrix actions
+				SHOW_WATCH, "F2",
+				TRACING, "F3",
+				START_MATRIX, "F4",
+				STOP_MATRIX, "F5",
+				PAUSE_MATRIX, "F6",
+				STEP_MATRIX, "F7",
+				SHOW_RESULT, "F8",
+				FIND_ON_MATRIX,"Ctrl+F",
+
+				//Other
+				SHOW_ALL_TABS,"Ctrl+E"
+		));
+
 		settings.setMapValues(GLOBAL_NS, LOGS_NAME, mapOf(
 				ALL, "0x000000ff",
 				DEBUG, "0x334db3ff",
@@ -308,36 +347,23 @@ public class Settings
 				TRACE, "0x8066ccff",
 				WARN, "0xe64d4dff"
 		));
-		settings.setMapValues(GLOBAL_NS, SETTINGS, mapOf(
-				MAX_LAST_COUNT,"10",
-				USE_FULL_SCREEN,"false",
-				TIME_NOTIFICATION,"5",
-				THEME,"WHITE",
-				COPYRIGHT,"//==============================================\\n//  Copyright (c) 2009-2016, Exactpro Systems, LLC\\n//  Quality Assurance &amp; Related Development for Innovative " +
-						"Trading Systems.\\n//  All rights reserved.\\n//  This is unpublished, licensed software, confidential and proprietary\\n//  information which is the property of Exactpro Systems, LLC or its licensors.\\n//==============================================",
-				USE_FULLSCREEN_XPATH,"false"
-		));
-		settings.setValue(GLOBAL_NS, SETTINGS, FONT, "System$13");
-		settings.setMapValues(GLOBAL_NS, SHORTCUTS_NAME, mapOf(
-				FIND_ON_MATRIX,"Ctrl+F",
-				SHOW_ALL_TABS,"Ctrl+E",
-				SAVE_DOCUMENT,"Ctrl+S",
-				SAVE_DOCUMENT_AS,"Shift+Ctrl+S",
-				BREAK_POINT,"Ctrl+B",
-				DELETE_ITEM,"Delete",
-				EXPAND_ONE,"Ctrl+Equals",
-				COLLAPSE_ALL,"Shift+Ctrl+Minus",
-				COLLAPSE_ONE,"Ctrl+Minus",
-				EXPAND_ALL,"Shift+Ctrl+Equals",
-				SHOW_ALL,"Ctrl+Q",
-				GO_TO_LINE,"Ctrl+G",
-				UNDO,"Ctrl+Z",
-				REDO,"Shift+Ctrl+Z"
+
+		settings.setMapValues(GLOBAL_NS, MATRIX_COLORS, mapOf(
+				//TODO add all colors
 		));
 
+
 		settings.setMapValues(GLOBAL_NS, MATRIX_NAME, mapOf(
-				MATRIX_DEFAULT_SCREENSHOT, ScreenshotKind.Never.name(), MATRIX_POPUPS, "false", MATRIX_FOLD_ITEMS, "false"
+				MATRIX_DEFAULT_SCREENSHOT, ScreenshotKind.Never.name(),
+				MATRIX_POPUPS, "false",
+				MATRIX_FOLD_ITEMS, "false"
 		));
+
+		settings.setMapValues(GLOBAL_NS, GIT, mapOf(
+				GIT_KNOWN_HOST, "",
+				GIT_SSH_IDENTITY, ""
+		));
+
 		settings.setMapValues(GLOBAL_NS, WIZARD_NAME, mapOf(
 				WizardSettings.Kind.TYPE.name()+MAX, "1",
 				WizardSettings.Kind.TYPE.name()+MIN, "0",
@@ -354,7 +380,7 @@ public class Settings
 				WizardSettings.Kind.ATTR.name()+MAX, "1",
 				WizardSettings.Kind.ATTR.name()+MIN, "0",
 
-				THRESHOLD, "0.5"
+				THRESHOLD, "0.6"
 		));
 		return settings;
 	}
@@ -565,13 +591,10 @@ public class Settings
 				DELETE_ITEM,
 				COPY_ITEMS,
 				PASTE_ITEMS,
-				COLLAPSE_ALL,
-				COLLAPSE_ONE,
-				EXPAND_ALL,
-				EXPAND_ONE,
 				START_MATRIX,
 				STOP_MATRIX,
 				PAUSE_MATRIX,
+				STEP_MATRIX,
 				SHOW_RESULT,
 				SHOW_WATCH,
 				TRACING,

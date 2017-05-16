@@ -597,6 +597,10 @@ public class MatrixFxController implements Initializable, ContainingParent, IMat
 				{
 					model.pauseMatrix();
 				}
+				else if (SettingsPanel.match(settings, keyEvent, Settings.STEP_MATRIX))
+				{
+					model.stepMatrix();
+				}
 				else if (SettingsPanel.match(settings, keyEvent, Settings.SHOW_RESULT))
 				{
 					model.showResult();
@@ -625,6 +629,7 @@ public class MatrixFxController implements Initializable, ContainingParent, IMat
 			this.btnStartMatrix.setTooltip(new Tooltip("Start\n" + getShortcutTooltip(settings, Settings.START_MATRIX)));
 			this.btnStopMatrix.setTooltip(new Tooltip("Stop\n" + getShortcutTooltip(settings, Settings.STOP_MATRIX)));
 			this.btnPauseMatrix.setTooltip(new Tooltip("Pause\n" + getShortcutTooltip(settings, Settings.PAUSE_MATRIX)));
+			this.btnPauseMatrix.setTooltip(new Tooltip("Step\n" + getShortcutTooltip(settings, Settings.STEP_MATRIX)));
 			this.btnFind.setTooltip(new Tooltip("Find\n" + getShortcutTooltip(settings, Settings.FIND_ON_MATRIX)));
 
 			this.toggleTracing.setTooltip(new Tooltip("Color off"));
