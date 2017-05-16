@@ -54,6 +54,7 @@ public class RawMessageTreeView extends TreeView<RawMessageTreeView.MessageBean>
 		});
 
 		this.setRoot(root);
+		this.setContextMenu(contextMenu());
 		this.setShowRoot(false);
 	}
 
@@ -126,6 +127,27 @@ public class RawMessageTreeView extends TreeView<RawMessageTreeView.MessageBean>
 
 
 	}
+
+	private ContextMenu contextMenu() {
+		ContextMenu contextMenu = new ContextMenu();
+
+		MenuItem addNodeItem = new MenuItem("Add item");
+		addNodeItem.setOnAction(e -> {
+			TreeItem<MessageBean> selectedItem = this.getSelectionModel().getSelectedItem();
+			add(selectedItem,"new item", " ");
+		});
+
+
+		MenuItem addGroup = new MenuItem("Add group");
+		addGroup.setOnAction(e -> {
+			TreeItem<MessageBean> selectedItem = this.getSelectionModel().getSelectedItem();
+			add(selectedItem, "new group", new Map[0]);
+		});
+		contextMenu.getItems().addAll(addNodeItem,addGroup);
+
+		return contextMenu;
+	}
+
 
 	class MessageBean
 	{

@@ -28,10 +28,7 @@ import com.exactprosystems.jf.documents.matrix.parser.SearchHelper;
 import com.exactprosystems.jf.documents.matrix.parser.Tokens;
 import com.exactprosystems.jf.documents.matrix.parser.listeners.IMatrixListener;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
@@ -171,37 +168,39 @@ public class RawMessage extends MatrixItem
 	{
 		this.typeName.set(systemParameters.get(Tokens.RawMessage));
 		this.clientName.set(systemParameters.get(Tokens.Client));
-		this.message = new MapMessage(this.typeName.get(), null, null);
-		
+		Map<String, Object> map = new LinkedHashMap<>();
+		map.put("Root", "");
+		this.message = new MapMessage(this.typeName.get(), map, null);
 
-		this.message.put("Fld1", 1);
-		this.message.put("Fld2", 2);
 
-		MapMessage group1 = new MapMessage(null);
-		group1.put("Field1", 101);
-		group1.put("Field2", 102);
-
-		MapMessage subGroup1 = new MapMessage(null);
-		subGroup1.put("SubField1", "66");
-		subGroup1.put("SubField2", 302);
-
-		MapMessage subGroup2 = new MapMessage(null);
-		subGroup2.put("SSubField1", 401);
-		subGroup2.put("SSubField2", 402);
-
-		MapMessage group2 = new MapMessage(null);
-		group2.put("FieldGroup1", 201);
-		group2.put("FieldGroup2", 202);
-		group2.put("SubGroup1", new Map[] { subGroup1 });
-		group2.put("SubGroup2", new Map[] { subGroup2 });
-
-		MapMessage group3 = new MapMessage(null);
-		group3.put("group3f1", "f1");
-		group3.put("group3f2", "f2");
-
-		group2.put("Simple Group", group3);
-
-		this.message.put("Group1", new Map[] { group1, group2 } );
+//		this.message.put("Fld1", 1);
+//		this.message.put("Fld2", 2);
+//
+//		MapMessage group1 = new MapMessage(null);
+//		group1.put("Field1", 101);
+//		group1.put("Field2", 102);
+//
+//		MapMessage subGroup1 = new MapMessage(null);
+//		subGroup1.put("SubField1", "66");
+//		subGroup1.put("SubField2", 302);
+//
+//		MapMessage subGroup2 = new MapMessage(null);
+//		subGroup2.put("SSubField1", 401);
+//		subGroup2.put("SSubField2", 402);
+//
+//		MapMessage group2 = new MapMessage(null);
+//		group2.put("FieldGroup1", 201);
+//		group2.put("FieldGroup2", 202);
+//		group2.put("SubGroup1", new Map[] { subGroup1 });
+//		group2.put("SubGroup2", new Map[] { subGroup2 });
+//
+//		MapMessage group3 = new MapMessage(null);
+//		group3.put("group3f1", "f1");
+//		group3.put("group3f2", "f2");
+//
+//		group2.put("Simple Group", group3);
+//
+//		this.message.put("Group1", new Map[] { group1, group2 } );
 	}
 
 	@Override
