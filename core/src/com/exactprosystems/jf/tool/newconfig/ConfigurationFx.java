@@ -135,6 +135,14 @@ public class ConfigurationFx extends Configuration
 	//endregion
 
 	//region abstract document
+
+	@Override
+	public void refresh() throws Exception
+	{
+		super.refresh();
+		DialogsHelper.showSuccess("Configuration was refreshed successful!");
+	}
+
 	@Override
 	public void display() throws Exception
 	{
