@@ -10,7 +10,6 @@ package com.exactprosystems.jf.tool.matrix;
 
 import com.exactprosystems.jf.actions.AbstractAction;
 import com.exactprosystems.jf.actions.ReadableValue;
-import com.exactprosystems.jf.api.app.AppConnection;
 import com.exactprosystems.jf.api.common.IMatrixRunner;
 import com.exactprosystems.jf.api.common.Str;
 import com.exactprosystems.jf.api.common.Sys;
@@ -26,10 +25,12 @@ import com.exactprosystems.jf.documents.matrix.parser.Parameter;
 import com.exactprosystems.jf.documents.matrix.parser.Parameters;
 import com.exactprosystems.jf.documents.matrix.parser.Parser;
 import com.exactprosystems.jf.documents.matrix.parser.Tokens;
-import com.exactprosystems.jf.documents.matrix.parser.items.*;
+import com.exactprosystems.jf.documents.matrix.parser.items.MatrixItem;
+import com.exactprosystems.jf.documents.matrix.parser.items.NameSpace;
+import com.exactprosystems.jf.documents.matrix.parser.items.TempItem;
+import com.exactprosystems.jf.documents.matrix.parser.items.TypeMandatory;
 import com.exactprosystems.jf.documents.matrix.parser.listeners.IMatrixListener;
 import com.exactprosystems.jf.functions.Text;
-import com.exactprosystems.jf.tool.ApplicationConnector;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.helpers.DialogsHelper;
 import javafx.scene.control.ButtonType;
@@ -155,11 +156,6 @@ public class MatrixFx extends Matrix
 	{
 		super.close(settings);
 		storeSettings(settings);
-		if (this.getDefaultApplicationConnection() != null)
-		{
-			stopDefaultApplication();
-		}
-
 		if (this.controller != null)
 		{
 		    this.controller.close();
@@ -291,12 +287,6 @@ public class MatrixFx extends Matrix
 			addCommand(undo, redo);
 			super.changed(true);
 		}
-	}
-
-	@Override
-	public AppConnection getDefaultApplicationConnection()
-	{
-		return this.applicationConnector == null ? null : this.applicationConnector.getAppConnection();
 	}
 
 	private static class Temp
@@ -680,33 +670,6 @@ public class MatrixFx extends Matrix
         this.controller.showWatcher(this, (Context)getMatrixRunner().getContext());
 	}
 
-	public void startDefaultApplication(String idAppEntry) throws Exception
-	{
-		if (idAppEntry.equals(EMPTY_STRING))
-		{
-			DialogsHelper.showInfo("Select not empty application id");
-			return;
-		}
-		this.applicationConnector.setIdAppEntry(idAppEntry);
-		this.applicationConnector.startApplication();
-	}
-
-	public void connectDefaultApplication(String idAppEntry) throws Exception
-	{
-		if (idAppEntry.equals(EMPTY_STRING))
-		{
-			DialogsHelper.showInfo("Select not empty application id");
-			return;
-		}
-		this.applicationConnector.setIdAppEntry(idAppEntry);
-		this.applicationConnector.connectApplication();
-	}
-
-	public void stopDefaultApplication() throws Exception
-	{
-		this.applicationConnector.stopApplication();
-	}
-
 	//==============================================================================================================================
 	private void init(DocumentFactory factory) throws Exception
 	{
@@ -717,7 +680,6 @@ public class MatrixFx extends Matrix
 			getMatrixRunner().setStartTime(this.startDate);
 			getMatrixRunner().getContext().setOut(this.console);
 		}
-		this.applicationConnector = new ApplicationConnector(factory);
 
 		super.saved();
 	}
@@ -732,8 +694,6 @@ public class MatrixFx extends Matrix
             this.controller.init(this, (Context)getMatrixRunner().getContext(), this.console); 
 			setListener(this.controller);
 			this.isControllerInit = true;
-			this.applicationConnector.setApplicationListener(this.controller::displayApplicationStatus);
-
 		}
 	}
 
@@ -877,7 +837,6 @@ public class MatrixFx extends Matrix
 	private MatrixFxController 		controller;
 	private Date 					startDate = new Date();
 	private TabConsole 				console;
-	private ApplicationConnector    applicationConnector;
 	private String defaultAppId    = EMPTY_STRING;
 	private String defaultClientId = EMPTY_STRING;
 

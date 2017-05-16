@@ -8,7 +8,6 @@
 
 package com.exactprosystems.jf.tool.custom.treetable;
 
-import com.exactprosystems.jf.api.app.AppConnection;
 import com.exactprosystems.jf.api.client.MapMessage;
 import com.exactprosystems.jf.api.common.Str;
 import com.exactprosystems.jf.common.MatrixRunner;
@@ -34,7 +33,6 @@ import com.exactprosystems.jf.tool.custom.grideditor.DataProvider;
 import com.exactprosystems.jf.tool.custom.grideditor.SpreadsheetView;
 import com.exactprosystems.jf.tool.custom.grideditor.TableDataProvider;
 import com.exactprosystems.jf.tool.custom.label.CommentsLabel;
-import com.exactprosystems.jf.tool.custom.layout.wizard.LayoutWizard;
 import com.exactprosystems.jf.tool.custom.number.NumberSpinner;
 import com.exactprosystems.jf.tool.custom.number.NumberTextField;
 import com.exactprosystems.jf.tool.custom.tab.CustomTab;
@@ -760,14 +758,15 @@ public class DisplayDriverFx implements DisplayDriver
 	@Override
 	public void layoutWizard(MatrixItem item, Table table, Context context)
 	{
-		AppConnection defaultApplicationConnection = item.getMatrix().getDefaultApplicationConnection();
-		if (defaultApplicationConnection == null)
-		{
-			DialogsHelper.showInfo("You need to start application");
-			return;
-		}
-		LayoutWizard wizard = new LayoutWizard(table, defaultApplicationConnection, context.getEvaluator());
-		wizard.show();
+		//TODO think about it
+//		AppConnection defaultApplicationConnection = item.getMatrix().getDefaultApplicationConnection();
+//		if (defaultApplicationConnection == null)
+//		{
+//			DialogsHelper.showInfo("You need to start application");
+//			return;
+//		}
+//		LayoutWizard wizard = new LayoutWizard(table, defaultApplicationConnection, context.getEvaluator());
+//		wizard.show();
 	}
 
 	private void updateStyle(String key, Settings settings, Label label)

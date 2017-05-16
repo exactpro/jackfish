@@ -26,7 +26,6 @@ import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.CssVariables;
 import com.exactprosystems.jf.tool.DragDetector;
 import com.exactprosystems.jf.tool.custom.expfield.ExpressionField;
-import com.exactprosystems.jf.tool.custom.layout.LayoutExpressionBuilder;
 import com.exactprosystems.jf.tool.custom.scroll.CustomScrollPane;
 import com.exactprosystems.jf.tool.custom.treetable.MatrixContextMenu;
 import com.exactprosystems.jf.tool.custom.treetable.MatrixParametersContextMenu;
@@ -298,8 +297,9 @@ public class ParametersPane extends CustomScrollPane
 								}
 								try
 								{
-									LayoutExpressionBuilder viewer = new LayoutExpressionBuilder(par.getName(), expressionField.getText(), this.matrixItem.getParent().getMatrix().getDefaultApplicationConnection(), dialogName, evaluator);
-									return viewer.show("Layout expression for " + par.getName(), false);
+									//TODO think about it
+//									LayoutExpressionBuilder viewer = new LayoutExpressionBuilder(par.getName(), expressionField.getText(), this.matrixItem.getParent().getMatrix().getDefaultApplicationConnection(), dialogName, evaluator);
+//									return viewer.show("Layout expression for " + par.getName(), false);
 								}
 								catch (Exception e)
 								{

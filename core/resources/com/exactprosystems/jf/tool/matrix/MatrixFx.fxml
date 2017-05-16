@@ -93,33 +93,6 @@
 											<center>
 												<ComboBox fx:id="cbDefaultApp" maxWidth="1.7976931348623157E308" onAction="#changeDefaultApp" BorderPane.alignment="CENTER_LEFT"/>
 											</center>
-											<right>
-												<HBox alignment="CENTER_LEFT" prefHeight="43.0" BorderPane.alignment="CENTER_LEFT">
-													<children>
-														<Button id="matrixBtnStartDefaultApplication" fx:id="btnStartDefaultApplication" mnemonicParsing="false" onAction="#startDefaultApplication"
-																styleClass="$transparentBackground">
-															<tooltip>
-																<Tooltip text="Start the selected application"/>
-															</tooltip>
-														</Button>
-														<Button id="matrixBtnConnectDefaultApplication" fx:id="btnConnectDefaultApplication" mnemonicParsing="false" onAction="#connectDefaultApplication"
-																styleClass="$transparentBackground">
-															<tooltip>
-																<Tooltip text="Connect the selected application"/>
-															</tooltip>
-														</Button>
-														<Button id="matrixBtnStopDefaultApplication" fx:id="btnStopDefaultApplication" mnemonicParsing="false" onAction="#stopDefaultApplication"
-																styleClass="$transparentBackground">
-															<tooltip>
-																<Tooltip text="Stop the selected application"/>
-															</tooltip>
-														</Button>
-													</children>
-													<padding>
-														<Insets left="8.0"/>
-													</padding>
-												</HBox>
-											</right>
 										</BorderPane>
 										<BorderPane prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="2">
 											<center>
@@ -132,27 +105,6 @@
 													</padding>
 												</Label>
 											</left>
-											<right>
-												<HBox alignment="CENTER_LEFT" prefHeight="43.0" BorderPane.alignment="CENTER_LEFT">
-													<children>
-														<Button id="matrixBtnStartDefaultClient" fx:id="btnStartDefaultClient" mnemonicParsing="false" onAction="#startDefaultClient"
-																styleClass="$transparentBackground">
-															<tooltip>
-																<Tooltip text="Start the selected client"/>
-															</tooltip>
-														</Button>
-														<Button id="matrixBtnStopDefaultClient" fx:id="btnStopDefaultClient" mnemonicParsing="false" onAction="#stopDefaultClient"
-																styleClass="$transparentBackground">
-															<tooltip>
-																<Tooltip text="Stop the selected component"/>
-															</tooltip>
-														</Button>
-													</children>
-													<padding>
-														<Insets left="8.0"/>
-													</padding>
-												</HBox>
-											</right>
 										</BorderPane>
 										<Separator orientation="VERTICAL" prefHeight="35.0" prefWidth="0.0" GridPane.columnIndex="1" GridPane.halignment="CENTER"/>
 									</children>

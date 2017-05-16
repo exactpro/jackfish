@@ -8,7 +8,6 @@
 
 package com.exactprosystems.jf.documents.matrix;
 
-import com.exactprosystems.jf.api.app.AppConnection;
 import com.exactprosystems.jf.api.app.IApplicationFactory;
 import com.exactprosystems.jf.api.client.IClientFactory;
 import com.exactprosystems.jf.api.common.IMatrix;
@@ -32,7 +31,10 @@ import com.exactprosystems.jf.documents.matrix.parser.items.TestCase;
 import com.exactprosystems.jf.documents.matrix.parser.listeners.IMatrixListener;
 import org.apache.log4j.Logger;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.Reader;
+import java.io.StringWriter;
+import java.io.Writer;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -153,12 +155,6 @@ public class Matrix extends AbstractDocument implements IMatrix
 	public IClientFactory getDefaultClient()
 	{
 		return this.defaultClient;
-	}
-
-	@Override
-	public AppConnection getDefaultApplicationConnection()
-	{
-		return null;
 	}
 
 	@Override
