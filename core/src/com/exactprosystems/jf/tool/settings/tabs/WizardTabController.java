@@ -17,7 +17,7 @@ import java.net.URL;
 import java.util.Map;
 import java.util.ResourceBundle;
 
-public class WizardTabController implements Initializable, ContainingParent, ITabHeight
+public class WizardTabController implements Initializable, ContainingParent, ITabHeight, ITabRestored
 {
 	public Parent parent;
 	public TextField tfTypeMin;
@@ -40,7 +40,7 @@ public class WizardTabController implements Initializable, ContainingParent, ITa
 	@Override
 	public void initialize(URL location, ResourceBundle resources)
 	{
-		defaultSettings();
+		restoreToDefault();
 	}
 	//endregion
 
@@ -113,10 +113,11 @@ public class WizardTabController implements Initializable, ContainingParent, ITa
 
 	public void restoreDefaults(ActionEvent event)
 	{
-		defaultSettings();
+		this.restoreToDefault();
 	}
 
-	private void defaultSettings()
+	@Override
+	public void restoreToDefault()
 	{
 		Settings defaultSettings = Settings.defaultSettings();
 		this.tfTypeMin.setText(defaultSettings.getValue(Settings.GLOBAL_NS, Settings.WIZARD_NAME, WizardSettings.Kind.TYPE.name() + Settings.MIN).getValue());

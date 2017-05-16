@@ -5,6 +5,7 @@ import com.exactprosystems.jf.tool.ContainingParent;
 import com.exactprosystems.jf.tool.custom.controls.field.CustomFieldWithButton;
 import com.exactprosystems.jf.tool.helpers.DialogsHelper;
 import com.exactprosystems.jf.tool.settings.SettingsPanel;
+import javafx.event.ActionEvent;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.Parent;
@@ -18,7 +19,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
-public class GitTabController implements Initializable, ContainingParent, ITabHeight
+public class GitTabController implements Initializable, ContainingParent, ITabHeight, ITabRestored
 {
 	public Parent parent;
 	private SettingsPanel model;
@@ -85,5 +86,16 @@ public class GitTabController implements Initializable, ContainingParent, ITabHe
 	{
 		this.model.updateSettingsValue(Settings.GIT_KNOWN_HOST, Settings.GIT, this.cfKnownHost.getText());
 		this.model.updateSettingsValue(Settings.GIT_SSH_IDENTITY, Settings.GIT, this.cfSSHIdentity.getText());
+	}
+
+	@Override
+	public void restoreToDefault()
+	{
+
+	}
+
+	public void restoreDefaults(ActionEvent actionEvent)
+	{
+		restoreToDefault();
 	}
 }

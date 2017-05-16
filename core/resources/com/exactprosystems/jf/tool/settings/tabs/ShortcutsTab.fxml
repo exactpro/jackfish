@@ -1,33 +1,32 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import javafx.geometry.*?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-
-<GridPane fx:id="gridPane" hgap="8.0" maxHeight="599.0" minHeight="500.0" prefHeight="599.0" prefWidth="570.0" vgap="8.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.exactprosystems.jf.tool.settings.tabs.ShortcutsTabController">
+<GridPane fx:id="gridPane" hgap="8.0" maxHeight="599.0" minHeight="500.0" prefHeight="599.0" prefWidth="570.0" vgap="8.0" xmlns="http://javafx.com/javafx/8"
+		  xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.exactprosystems.jf.tool.settings.tabs.ShortcutsTabController">
 	<columnConstraints>
-		<ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" maxWidth="150.0" minWidth="10.0" percentWidth="20.0" prefWidth="100.0" />
-		<ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="50.0" prefWidth="100.0" />
-		<ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+		<ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" maxWidth="150.0" minWidth="10.0" percentWidth="20.0" prefWidth="100.0"/>
+		<ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="50.0" prefWidth="100.0"/>
 	</columnConstraints>
 	<rowConstraints>
-		<RowConstraints maxHeight="30.0" minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+		<RowConstraints maxHeight="30.0" minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+		<RowConstraints maxHeight="30.0" minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+		<RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
 	</rowConstraints>
 	<children>
 		<Label text="ShortCuts for :"/>
 		<ComboBox fx:id="cbShortcutsName" prefWidth="150.0" GridPane.columnIndex="1"/>
 		<VBox alignment="TOP_CENTER" prefHeight="200.0" prefWidth="100.0" spacing="8.0" GridPane.columnIndex="2" GridPane.rowIndex="1">
 			<children>
-				<Button fx:id="btnAccept" disable="true" mnemonicParsing="false" onAction="#acceptShortCuts" prefWidth="150.0" text="Accept" />
-				<Button fx:id="btnDefault" disable="true" mnemonicParsing="false" onAction="#defaultShortCuts" prefWidth="150.0" text="Default" />
-				<Button fx:id="btnDelete" disable="true" mnemonicParsing="false" onAction="#deleteShortcuts" prefWidth="150.0" text="Delete" />
+				<Button fx:id="btnAccept" disable="true" mnemonicParsing="false" onAction="#acceptShortCuts" prefWidth="150.0" text="Accept"/>
+				<Button fx:id="btnDefault" disable="true" mnemonicParsing="false" onAction="#defaultShortCuts" prefWidth="150.0" text="Default"/>
+				<Button fx:id="btnDelete" disable="true" mnemonicParsing="false" onAction="#deleteShortcuts" prefWidth="150.0" text="Delete"/>
 			</children>
 		</VBox>
+		<Button text="Restore default" onAction="#restoreDefaults" GridPane.columnIndex="2" GridPane.rowIndex="2" GridPane.halignment="RIGHT" GridPane.valignment="BOTTOM"/>
 	</children>
 	<padding>
-		<Insets bottom="8.0" left="8.0" right="8.0" top="8.0" />
+		<Insets bottom="8.0" left="8.0" right="8.0" top="8.0"/>
 	</padding>
 </GridPane>

@@ -9,9 +9,7 @@
   -->
 
 <?import javafx.geometry.Insets?>
-<?import javafx.scene.control.CheckBox?>
-<?import javafx.scene.control.ComboBox?>
-<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <AnchorPane prefHeight="150.0" prefWidth="200.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.exactprosystems.jf.tool.settings.tabs.MatrixTabController">
 	<children>
@@ -24,12 +22,14 @@
 				<RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
 				<RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
 				<RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+				<RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
 			</rowConstraints>
 			<children>
 				<Label text="Screenshot" GridPane.halignment="RIGHT"/>
 				<ComboBox fx:id="cbScreenshot" GridPane.columnIndex="1"/>
 				<CheckBox fx:id="cbPopup" mnemonicParsing="false" text="Popup" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
 				<CheckBox fx:id="cbFoldNewItems" mnemonicParsing="false" text="Fold new items" GridPane.rowIndex="2" GridPane.columnIndex="1"/>
+				<Button text="Restore default" onAction="#restoreDefaults" GridPane.columnIndex="1" GridPane.rowIndex="3" GridPane.halignment="RIGHT" GridPane.valignment="CENTER"/>
 			</children>
 		</GridPane>
 	</children>

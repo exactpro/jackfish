@@ -8,6 +8,7 @@ import com.exactprosystems.jf.tool.settings.SettingsPanel;
 import com.exactprosystems.jf.tool.settings.Theme;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
+import javafx.event.ActionEvent;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.control.*;
@@ -20,7 +21,7 @@ import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.stream.Collectors;
 
-public class MainTabController implements Initializable, ContainingParent, ITabHeight
+public class MainTabController implements Initializable, ContainingParent, ITabHeight, ITabRestored
 {
 	private SettingsPanel model;
 	private Parent parent;
@@ -45,6 +46,8 @@ public class MainTabController implements Initializable, ContainingParent, ITabH
 	@Override
 	public void initialize(URL location, ResourceBundle resources)
 	{
+		restoreToDefault();
+
 		this.ntfMaxLastMatrixCount = new NumberTextField(0);
 		this.ntfMaxLastMatrixCount.setId(Settings.MAX_LAST_COUNT);
 		this.ntfTimeNotification = new NumberTextField(0);
@@ -177,5 +180,18 @@ public class MainTabController implements Initializable, ContainingParent, ITabH
 		this.model.updateSettingsValue(this.ntfTimeNotification.getId(), Settings.SETTINGS, String.valueOf(this.ntfTimeNotification.getValue()));
 		this.model.updateSettingsValue(this.ntfMaxLastMatrixCount.getId(), Settings.SETTINGS, String.valueOf(this.ntfMaxLastMatrixCount.getValue()));
 		this.model.updateSettingsValue(this.taCopyright.getId(), Settings.SETTINGS, this.taCopyright.getText().replaceAll(System.lineSeparator(), "\\\\n"));
+	}
+
+
+
+	@Override
+	public void restoreToDefault()
+	{
+
+	}
+
+	public void restoreDefaults(ActionEvent actionEvent)
+	{
+		restoreToDefault();
 	}
 }

@@ -5,7 +5,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<GridPane fx:id="colorsPane" maxHeight="1.7976931348623157E308" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="570.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.exactprosystems.jf.tool.settings.tabs.ColorsTabController">
+<GridPane fx:id="colorsPane" maxHeight="1.7976931348623157E308" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.exactprosystems.jf.tool.settings.tabs.ColorsTabController">
 	<fx:define>
 		<CssVariables fx:id="verMin" fx:constant="VERTICAL_MIN"/>
 		<CssVariables fx:id="verMid" fx:constant="VERTICAL_MID"/>
@@ -23,9 +23,9 @@
 		<RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
 	</rowConstraints>
 	<children>
-		<HBox prefWidth="100.0" GridPane.columnIndex="1">
+		<HBox GridPane.columnIndex="1">
 			<children>
-				<VBox prefHeight="200.0" HBox.hgrow="SOMETIMES">
+				<VBox HBox.hgrow="SOMETIMES">
 					<children>
 						<Label id="$verMid" />
 						<ColorPicker fx:id="colorPicker" maxWidth="150.0" />
@@ -42,7 +42,7 @@
 				<Label id="$horMax" />
 			</children>
 		</HBox>
-		<BorderPane fx:id="borderView" prefHeight="200.0" prefWidth="200.0">
+		<BorderPane fx:id="borderView" prefHeight="200.0" prefWidth="200.0" GridPane.rowSpan="2">
 			<top>
 				<Label id="$verMid" BorderPane.alignment="CENTER" />
 			</top>
@@ -56,5 +56,6 @@
 				<Label id="$verMax" BorderPane.alignment="CENTER" />
 			</bottom>
 		</BorderPane>
+		<Button text="Restore default" onAction="#restoreDefaults" GridPane.columnIndex="1" GridPane.rowIndex="1" GridPane.halignment="RIGHT" GridPane.valignment="CENTER"/>
 	</children>
 </GridPane>

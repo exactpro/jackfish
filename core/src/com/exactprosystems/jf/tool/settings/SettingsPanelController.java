@@ -13,6 +13,7 @@ import com.exactprosystems.jf.tool.ContainingParent;
 import com.exactprosystems.jf.tool.helpers.DialogsHelper;
 import com.exactprosystems.jf.tool.settings.tabs.*;
 import javafx.animation.Timeline;
+import javafx.event.ActionEvent;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.control.*;
@@ -95,7 +96,7 @@ public class SettingsPanelController implements Initializable, ContainingParent
 					}
 					else
 					{
-						this.dialog.setHeight(150 + currentHeight);
+						this.dialog.setHeight(190 + currentHeight);
 					}
 					//endregion
 				}
@@ -234,5 +235,14 @@ public class SettingsPanelController implements Initializable, ContainingParent
 			this.dialog.hide();
 		}
 		return false;
+	}
+
+	public void restoreAllToDefault(ActionEvent actionEvent)
+	{
+		this.tabPane.getTabs().stream()
+				.map(Tab::getUserData)
+				.filter(controller -> controller instanceof ITabRestored)
+				.map(controller -> (ITabRestored) controller)
+				.forEach(ITabRestored::restoreToDefault);
 	}
 }

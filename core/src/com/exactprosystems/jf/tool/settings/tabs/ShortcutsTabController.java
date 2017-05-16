@@ -28,7 +28,7 @@ import java.util.function.Consumer;
 
 import static com.exactprosystems.jf.common.Settings.GLOBAL_NS;
 
-public class ShortcutsTabController implements Initializable, ContainingParent, ITabHeight
+public class ShortcutsTabController implements Initializable, ContainingParent, ITabHeight, ITabRestored
 {
 	private enum ShortcutType
 	{
@@ -63,7 +63,7 @@ public class ShortcutsTabController implements Initializable, ContainingParent, 
 		this.treeView.setShowRoot(false);
 		this.treeView.setRoot(new TreeItem<>());
 		this.treeView.setCellFactory(e -> new CustomTreeCell());
-		this.gridPane.add(this.treeView, 0, 1, 2, 1);
+		this.gridPane.add(this.treeView, 0, 1, 2, 2);
 
 		this.treeView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) ->
 		{
@@ -125,6 +125,17 @@ public class ShortcutsTabController implements Initializable, ContainingParent, 
 		this.matrixNavigation.entrySet().forEach(consumer);
 		this.matrixActions.entrySet().forEach(consumer);
 		this.other.entrySet().forEach(consumer);
+	}
+
+	@Override
+	public void restoreToDefault()
+	{
+
+	}
+
+	public void restoreDefaults(ActionEvent actionEvent)
+	{
+		restoreToDefault();
 	}
 
 	//region actions methods

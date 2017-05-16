@@ -4,6 +4,7 @@ import com.exactprosystems.jf.common.Settings;
 import com.exactprosystems.jf.documents.matrix.parser.ScreenshotKind;
 import com.exactprosystems.jf.tool.ContainingParent;
 import com.exactprosystems.jf.tool.settings.SettingsPanel;
+import javafx.event.ActionEvent;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.Parent;
@@ -17,7 +18,7 @@ import java.net.URL;
 import java.util.Map;
 import java.util.ResourceBundle;
 
-public class MatrixTabController implements Initializable, ContainingParent, ITabHeight
+public class MatrixTabController implements Initializable, ContainingParent, ITabHeight, ITabRestored
 {
 	public Parent parent;
 	public ComboBox<ScreenshotKind> cbScreenshot;
@@ -73,5 +74,16 @@ public class MatrixTabController implements Initializable, ContainingParent, ITa
 		this.model.updateSettingsValue(Settings.MATRIX_DEFAULT_SCREENSHOT, Settings.MATRIX_NAME, this.cbScreenshot.getSelectionModel().getSelectedItem().name());
 		this.model.updateSettingsValue(Settings.MATRIX_POPUPS, Settings.MATRIX_NAME, String.valueOf(this.cbPopup.isSelected()));
 		this.model.updateSettingsValue(Settings.MATRIX_FOLD_ITEMS, Settings.MATRIX_NAME, String.valueOf(this.cbFoldNewItems.isSelected()));
+	}
+
+	@Override
+	public void restoreToDefault()
+	{
+
+	}
+
+	public void restoreDefaults(ActionEvent actionEvent)
+	{
+		restoreToDefault();
 	}
 }

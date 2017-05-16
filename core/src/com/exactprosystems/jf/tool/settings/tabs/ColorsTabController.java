@@ -22,7 +22,7 @@ import java.util.*;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
-public class ColorsTabController implements Initializable, ContainingParent, ITabHeight
+public class ColorsTabController implements Initializable, ContainingParent, ITabHeight, ITabRestored
 {
 	public Parent parent;
 	public ColorPicker colorPicker;
@@ -109,6 +109,17 @@ public class ColorsTabController implements Initializable, ContainingParent, ITa
 				.stream()
 				.filter(e -> !e.getValue().equals(Color.TRANSPARENT))
 				.forEach(entry -> this.model.updateSettingsValue(entry.getKey(), Settings.MATRIX_COLORS, Common.colorToString(entry.getValue())));
+	}
+
+	@Override
+	public void restoreToDefault()
+	{
+
+	}
+
+	public void restoreDefaults(ActionEvent actionEvent)
+	{
+		restoreToDefault();
 	}
 
 	//region event methods

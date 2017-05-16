@@ -1,14 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
-<!--
-   Copyright (c) 2009-2015, Exactpro Systems, LLC
-   Quality Assurance & Related Development for Innovative Trading Systems.
-   All rights reserved.
-   This is unpublished, licensed software, confidential and proprietary
-   information which is the property of Exactpro Systems, LLC or its licensors.
-  -->
-
-<?import java.lang.*?>
 <?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
@@ -22,7 +12,6 @@
 				<ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" percentWidth="40.0" prefWidth="100.0"/>
 			</columnConstraints>
 			<rowConstraints>
-				<RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
 				<RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
 				<RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
 				<RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
@@ -56,9 +45,9 @@
 				<TextField fx:id="tfAttrMax" GridPane.columnIndex="2" GridPane.rowIndex="5"/>
 
 				<Label text="Threshold : " GridPane.rowIndex="6"/>
-				<TextField fx:id="tfThreshold" GridPane.rowIndex="6" GridPane.columnIndex="1" GridPane.columnSpan="2"/>
+				<TextField fx:id="tfThreshold" GridPane.rowIndex="6" GridPane.columnIndex="1"/>
 
-				<Button text="Restore default" GridPane.rowIndex="7" GridPane.columnIndex="2" onAction="#restoreDefaults"/>
+				<Button text="Restore default" GridPane.rowIndex="6" GridPane.columnIndex="2" onAction="#restoreDefaults" GridPane.valignment="CENTER" GridPane.halignment="RIGHT"/>
 			</children>
 		</GridPane>
 	</children>

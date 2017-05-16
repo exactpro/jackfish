@@ -8,76 +8,79 @@
    information which is the property of Exactpro Systems, LLC or its licensors.
   -->
 
-<?import java.lang.*?>
 <?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-
-<GridPane fx:id="mainGrid" hgap="8.0" maxHeight="599.0" minHeight="500.0" prefHeight="599.0" prefWidth="570.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.exactprosystems.jf.tool.settings.tabs.MainTabController">
+<GridPane gridLinesVisible="false" fx:id="mainGrid" hgap="8.0" maxHeight="599.0" minHeight="500.0" prefHeight="599.0" prefWidth="570.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
+		  fx:controller="com.exactprosystems.jf.tool.settings.tabs.MainTabController">
 	<columnConstraints>
-		<ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" minWidth="10.0" percentWidth="40.0" prefWidth="100.0" />
-		<ColumnConstraints fillWidth="false" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+		<ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" minWidth="10.0" percentWidth="40.0" prefWidth="100.0"/>
+		<ColumnConstraints fillWidth="false" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
 	</columnConstraints>
 	<rowConstraints>
-		<RowConstraints minHeight="10.0" percentHeight="7.0" prefHeight="30.0" vgrow="SOMETIMES" />
-		<RowConstraints minHeight="10.0" percentHeight="7.0" prefHeight="30.0" vgrow="SOMETIMES" />
-		<RowConstraints minHeight="10.0" percentHeight="7.0" prefHeight="30.0" vgrow="SOMETIMES" />
-		<RowConstraints minHeight="10.0" percentHeight="7.0" prefHeight="30.0" vgrow="SOMETIMES" />
-		<RowConstraints minHeight="10.0" percentHeight="7.0" prefHeight="30.0" vgrow="SOMETIMES" />
-		<RowConstraints minHeight="10.0" percentHeight="7.0" prefHeight="30.0" vgrow="SOMETIMES" />
-		<RowConstraints minHeight="10.0" percentHeight="7.0" prefHeight="30.0" vgrow="SOMETIMES" />
-		<RowConstraints minHeight="10.0" percentHeight="7.0" prefHeight="30.0" vgrow="SOMETIMES" />
-		<RowConstraints minHeight="10.0" percentHeight="7.0" prefHeight="30.0" vgrow="SOMETIMES" />
-		<RowConstraints minHeight="10.0" percentHeight="7.0" prefHeight="30.0" vgrow="SOMETIMES" />
-		<RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+		<RowConstraints minHeight="10.0" percentHeight="7.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+		<RowConstraints minHeight="10.0" percentHeight="7.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+		<RowConstraints minHeight="10.0" percentHeight="7.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+		<RowConstraints minHeight="10.0" percentHeight="7.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+		<RowConstraints minHeight="10.0" percentHeight="7.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+		<RowConstraints minHeight="10.0" percentHeight="7.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+		<RowConstraints minHeight="10.0" percentHeight="7.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+		<RowConstraints minHeight="10.0" percentHeight="7.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+		<RowConstraints minHeight="10.0" percentHeight="7.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+		<RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+		<RowConstraints minHeight="10.0" percentHeight="7.0" prefHeight="30.0" vgrow="SOMETIMES"/>
 	</rowConstraints>
 	<children>
-		<CheckBox id="useFullScreen" fx:id="useFullScreen" mnemonicParsing="false" text="Use fullscreen mode" GridPane.columnIndex="1" GridPane.rowIndex="6" />
-		<Label text="Theme :" GridPane.halignment="RIGHT" GridPane.rowIndex="3" />
-		<ComboBox id="theme" fx:id="comboBoxTheme" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="3" />
-		<Label text="Copyright" GridPane.halignment="LEFT" GridPane.rowIndex="9" GridPane.valignment="BOTTOM">
-			<GridPane.margin>
-				<Insets bottom="8.0" />
-			</GridPane.margin>
-		</Label>
-		<TextArea id="copyright" fx:id="taCopyright" prefHeight="200.0" prefWidth="200.0" promptText="Copyright" GridPane.columnSpan="2" GridPane.rowIndex="10">
-			<GridPane.margin>
-				<Insets right="5.0" />
-			</GridPane.margin>
-		</TextArea>
-		<CheckBox id="useFullScreenXpath" fx:id="useFullScreenXpath" mnemonicParsing="false" text="Use fullscreen xpath dialog" GridPane.columnIndex="1" GridPane.rowIndex="7" />
-		<Label text="Font :" GridPane.halignment="RIGHT" GridPane.rowIndex="4" />
-		<ComboBox fx:id="cbFontFamily" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="4" />
-		<Separator prefWidth="200.0" GridPane.columnSpan="2" GridPane.rowIndex="2" />
-		<Label text="Font size :" GridPane.rowIndex="5" />
-		<ComboBox fx:id="cbFontSize" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="5" />
 		<GridPane fx:id="numberGrid" GridPane.columnSpan="2" GridPane.rowSpan="2">
 			<columnConstraints>
-				<ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" minWidth="10.0" percentWidth="40.0" prefWidth="100.0" />
-				<ColumnConstraints fillWidth="false" hgrow="SOMETIMES" maxWidth="133.0" minWidth="133.0" prefWidth="133.0" />
-				<ColumnConstraints fillWidth="false" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+				<ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" minWidth="10.0" percentWidth="40.0" prefWidth="100.0"/>
+				<ColumnConstraints fillWidth="false" hgrow="SOMETIMES" maxWidth="133.0" minWidth="133.0" prefWidth="133.0"/>
+				<ColumnConstraints fillWidth="false" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
 			</columnConstraints>
 			<rowConstraints>
-				<RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-				<RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+				<RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+				<RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
 			</rowConstraints>
 			<children>
 				<Label text="Max last matrix count :" GridPane.halignment="RIGHT">
-               <GridPane.margin>
-                  <Insets right="4.0" />
-               </GridPane.margin></Label>
+					<GridPane.margin>
+						<Insets right="4.0"/>
+					</GridPane.margin>
+				</Label>
 				<Label text="Time notification :" GridPane.rowIndex="1">
-               <GridPane.margin>
-                  <Insets right="4.0" />
-               </GridPane.margin></Label>
+					<GridPane.margin>
+						<Insets right="4.0"/>
+					</GridPane.margin>
+				</Label>
 				<Label text="sec." GridPane.columnIndex="2" GridPane.rowIndex="1">
-               <GridPane.margin>
-                  <Insets left="4.0" />
-               </GridPane.margin></Label>
+					<GridPane.margin>
+						<Insets left="4.0"/>
+					</GridPane.margin>
+				</Label>
 			</children>
 		</GridPane>
+		<Separator prefWidth="200.0" GridPane.columnSpan="2" GridPane.rowIndex="2"/>
+		<Label text="Theme :" GridPane.halignment="RIGHT" GridPane.rowIndex="3"/>
+		<ComboBox id="theme" fx:id="comboBoxTheme" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="3"/>
+		<Label text="Font :" GridPane.halignment="RIGHT" GridPane.rowIndex="4"/>
+		<ComboBox fx:id="cbFontFamily" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="4"/>
+		<Label text="Font size :" GridPane.rowIndex="5"/>
+		<ComboBox fx:id="cbFontSize" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="5"/>
+		<CheckBox id="useFullScreen" fx:id="useFullScreen" mnemonicParsing="false" text="Use fullscreen mode" GridPane.columnIndex="1" GridPane.rowIndex="6"/>
+		<CheckBox id="useFullScreenXpath" fx:id="useFullScreenXpath" mnemonicParsing="false" text="Use fullscreen xpath dialog" GridPane.columnIndex="1" GridPane.rowIndex="7"/>
+		<Label text="Copyright" GridPane.halignment="LEFT" GridPane.rowIndex="8" GridPane.valignment="BOTTOM">
+			<GridPane.margin>
+				<Insets bottom="8.0"/>
+			</GridPane.margin>
+		</Label>
+		<TextArea id="copyright" fx:id="taCopyright" prefHeight="200.0" prefWidth="200.0" promptText="Copyright" GridPane.columnSpan="2" GridPane.rowIndex="9">
+			<GridPane.margin>
+				<Insets right="5.0"/>
+			</GridPane.margin>
+		</TextArea>
+		<Button text="Restore default" onAction="#restoreDefaults" GridPane.columnIndex="1" GridPane.rowIndex="10" GridPane.halignment="RIGHT" GridPane.valignment="CENTER"/>
 	</children>
 	<padding>
-		<Insets bottom="8.0" left="8.0" right="8.0" top="8.0" />
+		<Insets bottom="8.0" left="8.0" right="8.0" top="8.0"/>
 	</padding>
 </GridPane>

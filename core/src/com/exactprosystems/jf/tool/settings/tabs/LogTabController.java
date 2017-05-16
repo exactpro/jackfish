@@ -3,6 +3,7 @@ package com.exactprosystems.jf.tool.settings.tabs;
 import com.exactprosystems.jf.common.Settings;
 import com.exactprosystems.jf.tool.ContainingParent;
 import com.exactprosystems.jf.tool.settings.SettingsPanel;
+import javafx.event.ActionEvent;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.control.ColorPicker;
@@ -16,7 +17,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.ResourceBundle;
 
-public class LogTabController implements Initializable, ContainingParent, ITabHeight
+public class LogTabController implements Initializable, ContainingParent, ITabHeight, ITabRestored
 {
 	public Parent parent;
 	private SettingsPanel model;
@@ -77,5 +78,16 @@ public class LogTabController implements Initializable, ContainingParent, ITabHe
 	public void save()
 	{
 		this.colorLogsMap.entrySet().forEach(entry -> this.model.updateSettingsValue(entry.getKey(), Settings.LOGS_NAME, entry.getValue().getValue().toString()));
+	}
+
+	@Override
+	public void restoreToDefault()
+	{
+
+	}
+
+	public void restoreDefaults(ActionEvent actionEvent)
+	{
+		restoreToDefault();
 	}
 }
