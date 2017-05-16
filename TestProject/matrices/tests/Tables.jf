@@ -673,6 +673,435 @@ TABLE_COMPARE_TWO;Test case;Never;;
 
 #Id;#TestCase;#Kind;#Depends;#For
 TABLE_LEFT_JOIN;Test case;Never;;
+    #Step;#Kind;#For;#Depends
+    'Join without additional parameters (only left Table)';;;
+        #Id;#RawTable
+        City;Table
+        @;id;Name;Language
+        0;1;London;us
+        1;2;Moscow;ru
+        2;3;France;fr
+        #EndRawTable
+
+        #Id;#RawTable
+        Person;Table
+        @;Name;CityId
+        0;Andrey;1
+        1;Victor;2
+        2;Aleksander;1
+        3;Valery;4
+        4;Kate;3
+        #EndRawTable
+
+        #Id;#Action;$Condition;$LeftTable;$LeftAlias;$RightTable;$RightAlias
+        TBLJN1;TableLeftJoin;'person.CityId == city.id';Person;'person';City;'city'
+
+        #Id;#RawTable
+        expected;Table
+        @;Name;CityId
+        0;Andrey;1
+        1;Victor;2
+        2;Aleksander;1
+        3;Kate;3
+        #EndRawTable
+
+        #Action;$Expected;$Actual
+        TableCompareTwo;expected;TBLJN1.Out
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'Join with additional parameters (both tables)';;;
+        #Id;#RawTable
+        City;Table
+        @;id;Name;Language
+        0;1;London;us
+        1;2;Moscow;ru
+        2;3;France;fr
+        #EndRawTable
+
+        #Id;#RawTable
+        Person;Table
+        @;Name;CityId
+        0;Andrey;1
+        1;Victor;2
+        2;Aleksander;1
+        3;Valery;4
+        4;Kate;3
+        #EndRawTable
+
+        #Id;#Action;$Condition;$LeftTable;$LeftAlias;$RightTable;$RightAlias;CityName;Language
+        TBLJN1;TableLeftJoin;'person.CityId == city.id';Person;'person';City;'city';'city.Name';'city.Language'
+
+        #Id;#RawTable
+        expected;Table
+        @;Name;CityId;CityName;Language
+        0;Andrey;1;London;us
+        1;Victor;2;Moscow;ru
+        2;Aleksander;1;London;us
+        3;Kate;3;France;fr
+        #EndRawTable
+
+        #Action;$Expected;$Actual
+        TableCompareTwo;expected;TBLJN1.Out
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'Join with additional parameters (Empty Title)';;;
+        #Id;#RawTable
+        City;Table
+        @;id;Name;Language
+        0;1;London;us
+        1;2;Moscow;ru
+        2;3;France;fr
+        #EndRawTable
+
+        #Id;#RawTable
+        Person;Table
+        @;Name;CityId
+        0;Andrey;1
+        1;Victor;2
+        2;Aleksander;1
+        3;Valery;4
+        4;Kate;3
+        #EndRawTable
+
+        #Id;#Action;$Condition;$LeftTable;$LeftAlias;$RightTable;$RightAlias;
+        TBLJN1;TableLeftJoin;'person.CityId == city.id';Person;'person';City;'city';'city.Name'
+
+        #Id;#RawTable
+        expected;Table
+        @;Name;CityId;
+        0;Andrey;1;London
+        1;Victor;2;Moscow
+        2;Aleksander;1;London
+        3;Kate;3;France
+        #EndRawTable
+
+        #Action;$Expected;$Actual
+        TableCompareTwo;expected;TBLJN1.Out
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'Join with additional parameters (Empty Value)';;;
+        #Id;#RawTable
+        City;Table
+        @;id;Name;Language
+        0;1;London;us
+        1;2;Moscow;ru
+        2;3;France;fr
+        #EndRawTable
+
+        #Id;#RawTable
+        Person;Table
+        @;Name;CityId
+        0;Andrey;1
+        1;Victor;2
+        2;Aleksander;1
+        3;Valery;4
+        4;Kate;3
+        #EndRawTable
+
+        #Id;#Action;$Condition;$LeftTable;$LeftAlias;$RightTable;$RightAlias;CityName
+        TBLJN1;TableLeftJoin;'person.CityId == city.id';Person;'person';City;'city';
+
+        #Id;#RawTable
+        expected;Table
+        @;Name;CityId;CityName
+        0;Andrey;1;
+        1;Victor;2;
+        2;Aleksander;1;
+        3;Kate;3;
+        #EndRawTable
+
+        #Action;$Expected;$Actual
+        TableCompareTwo;expected;TBLJN1.Out
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'wrong condition';;;
+        #Id;#RawTable
+        City;Table
+        @;id;Name;Language
+        0;1;London;us
+        1;2;Moscow;ru
+        2;3;France;fr
+        #EndRawTable
+
+        #Id;#RawTable
+        Person;Table
+        @;Name;CityId
+        0;Andrey;1
+        1;Victor;2
+        2;Aleksander;1
+        3;Valery;4
+        4;Kate;3
+        #EndRawTable
+
+        #Id;#Action;#Assert;$Condition;$LeftTable;$LeftAlias;$RightTable;$RightAlias
+        TBLJN1;TableLeftJoin;This.Result == Result.Failed && This.Kind == ErrorKind.EXCEPTION;'person.CityId == de';Person;'person';City;'city'
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'variable of left alias already exists';;;
+        #Id;#RawTable
+        City;Table
+        @;id;Name;Language
+        0;1;London;us
+        1;2;Moscow;ru
+        2;3;France;fr
+        #EndRawTable
+
+        #Id;#RawTable
+        Person;Table
+        @;Name;CityId
+        0;Andrey;1
+        1;Victor;2
+        2;Aleksander;1
+        3;Valery;4
+        4;Kate;3
+        #EndRawTable
+
+        #Id;#Let
+        person;'1'
+
+        #Id;#Action;#Assert;$Condition;$LeftTable;$LeftAlias;$RightTable;$RightAlias
+        TBLJN1;TableLeftJoin;This.Result == Result.Failed && This.Kind == ErrorKind.WRONG_PARAMETERS;'person.CityId == city.Id';Person;'person';City;'city'
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'variable of right alias already exists';;;
+        #Id;#RawTable
+        City;Table
+        @;id;Name;Language
+        0;1;London;us
+        1;2;Moscow;ru
+        2;3;France;fr
+        #EndRawTable
+
+        #Id;#RawTable
+        Person;Table
+        @;Name;CityId
+        0;Andrey;1
+        1;Victor;2
+        2;Aleksander;1
+        3;Valery;4
+        4;Kate;3
+        #EndRawTable
+
+        #Id;#Let
+        city;'1'
+
+        #Id;#Action;#Assert;$Condition;$LeftTable;$LeftAlias;$RightTable;$RightAlias
+        TBLJN1;TableLeftJoin;This.Result == Result.Failed && This.Kind == ErrorKind.WRONG_PARAMETERS;'person.CityId == city.Id';Person;'person';City;'city'
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'empty left alias parameter';;;
+        #Id;#RawTable
+        City;Table
+        @;id;Name;Language
+        0;1;London;us
+        1;2;Moscow;ru
+        2;3;France;fr
+        #EndRawTable
+
+        #Id;#RawTable
+        Person;Table
+        @;Name;CityId
+        0;Andrey;1
+        1;Victor;2
+        2;Aleksander;1
+        3;Valery;4
+        4;Kate;3
+        #EndRawTable
+
+        #Id;#Action;#Assert;$Condition;$LeftTable;$LeftAlias;$RightTable;$RightAlias
+        TBLJN1;TableLeftJoin;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;'person.CityId == city.Id';Person;;City;'city'
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'empty right alias parameter';;;
+        #Id;#RawTable
+        City;Table
+        @;id;Name;Language
+        0;1;London;us
+        1;2;Moscow;ru
+        2;3;France;fr
+        #EndRawTable
+
+        #Id;#RawTable
+        Person;Table
+        @;Name;CityId
+        0;Andrey;1
+        1;Victor;2
+        2;Aleksander;1
+        3;Valery;4
+        4;Kate;3
+        #EndRawTable
+
+        #Id;#Action;#Assert;$Condition;$LeftTable;$LeftAlias;$RightTable;$RightAlias
+        TBLJN1;TableLeftJoin;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;'person.CityId == city.Id';Person;'person';City;
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'left alias is empty string';;;
+        #Id;#RawTable
+        City;Table
+        @;id;Name;Language
+        0;1;London;us
+        1;2;Moscow;ru
+        2;3;France;fr
+        #EndRawTable
+
+        #Id;#RawTable
+        Person;Table
+        @;Name;CityId
+        0;Andrey;1
+        1;Victor;2
+        2;Aleksander;1
+        3;Valery;4
+        4;Kate;3
+        #EndRawTable
+
+        #Id;#Action;#Assert;$Condition;$LeftTable;$LeftAlias;$RightTable;$RightAlias
+        TBLJN1;TableLeftJoin;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;'person.CityId == city.Id';Person;'';City;'city'
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'right alias is empty string';;;
+        #Id;#RawTable
+        City;Table
+        @;id;Name;Language
+        0;1;London;us
+        1;2;Moscow;ru
+        2;3;France;fr
+        #EndRawTable
+
+        #Id;#RawTable
+        Person;Table
+        @;Name;CityId
+        0;Andrey;1
+        1;Victor;2
+        2;Aleksander;1
+        3;Valery;4
+        4;Kate;3
+        #EndRawTable
+
+        #Id;#Action;#Assert;$Condition;$LeftTable;$LeftAlias;$RightTable;$RightAlias
+        TBLJN1;TableLeftJoin;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;'person.CityId == city.Id';Person;'person';City;''
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'empty condition';;;
+        #Id;#RawTable
+        City;Table
+        @;id;Name;Language
+        0;1;London;us
+        1;2;Moscow;ru
+        2;3;France;fr
+        #EndRawTable
+
+        #Id;#RawTable
+        Person;Table
+        @;Name;CityId
+        0;Andrey;1
+        1;Victor;2
+        2;Aleksander;1
+        3;Valery;4
+        4;Kate;3
+        #EndRawTable
+
+        #Id;#Action;#Assert;$Condition;$LeftTable;$LeftAlias;$RightTable;$RightAlias
+        TBLJN1;TableLeftJoin;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;;Person;'person';City;'city'
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'condition is empty string';;;
+        #Id;#RawTable
+        City;Table
+        @;id;Name;Language
+        0;1;London;us
+        1;2;Moscow;ru
+        2;3;France;fr
+        #EndRawTable
+
+        #Id;#RawTable
+        Person;Table
+        @;Name;CityId
+        0;Andrey;1
+        1;Victor;2
+        2;Aleksander;1
+        3;Valery;4
+        4;Kate;3
+        #EndRawTable
+
+        #Id;#Action;#Assert;$Condition;$LeftTable;$LeftAlias;$RightTable;$RightAlias
+        TBLJN1;TableLeftJoin;This.Result == Result.Failed && This.Kind == ErrorKind.WRONG_PARAMETERS;'';Person;'person';City;'city'
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'empty Left Table parameter';;;
+        #Id;#RawTable
+        City;Table
+        @;id;Name;Language
+        0;1;London;us
+        1;2;Moscow;ru
+        2;3;France;fr
+        #EndRawTable
+
+        #Id;#RawTable
+        Person;Table
+        @;Name;CityId
+        0;Andrey;1
+        1;Victor;2
+        2;Aleksander;1
+        3;Valery;4
+        4;Kate;3
+        #EndRawTable
+
+        #Id;#Action;#Assert;$Condition;$LeftTable;$LeftAlias;$RightTable;$RightAlias
+        TBLJN1;TableLeftJoin;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;'person.CityId == city.id';;'person';City;'city'
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'empty Right Table parameter';;;
+        #Id;#RawTable
+        City;Table
+        @;id;Name;Language
+        0;1;London;us
+        1;2;Moscow;ru
+        2;3;France;fr
+        #EndRawTable
+
+        #Id;#RawTable
+        Person;Table
+        @;Name;CityId
+        0;Andrey;1
+        1;Victor;2
+        2;Aleksander;1
+        3;Valery;4
+        4;Kate;3
+        #EndRawTable
+
+        #Id;#Action;#Assert;$Condition;$LeftTable;$LeftAlias;$RightTable;$RightAlias
+        TBLJN1;TableLeftJoin;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;'person.CityId == city.id';Person;'person';;'city'
+
+    #EndStep
+
 
 #Id;#TestCase;#Kind;#Depends;#For
 TABLE_ADD_VALUE;Test case;Never;;

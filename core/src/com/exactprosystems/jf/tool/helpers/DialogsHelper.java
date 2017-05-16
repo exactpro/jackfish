@@ -10,6 +10,7 @@ package com.exactprosystems.jf.tool.helpers;
 
 import com.exactprosystems.jf.actions.ReadableValue;
 import com.exactprosystems.jf.api.common.Str;
+import com.exactprosystems.jf.api.common.Sys;
 import com.exactprosystems.jf.common.MatrixRunner;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.report.HelpBuilder;
@@ -50,8 +51,7 @@ import javafx.scene.control.MenuItem;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.KeyCode;
-import javafx.scene.input.MouseButton;
+import javafx.scene.input.*;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.text.Text;
@@ -694,6 +694,7 @@ public abstract class DialogsHelper
 		WebEngine engine = browser.getEngine();
 		engine.loadContent(content);
 		browser.setContextMenuEnabled(false);
+		createCtrlCHandler(browser);
 		createContextMenu(browser);
 
 		BorderPane borderPane = new BorderPane();
@@ -716,16 +717,34 @@ public abstract class DialogsHelper
 		dialog.show();
 	}
 
-	private static void createContextMenu(WebView webView) {
+	private static class Modifiers
+	{
+		private boolean ctrlC = false;
+	}
+
+	private static void createCtrlCHandler(WebView webView)
+	{
+		Modifiers modifiers = new Modifiers();
+		webView.addEventHandler(KeyEvent.KEY_PRESSED, event -> {
+			if(new KeyCodeCombination(KeyCode.C, KeyCombination.CONTROL_DOWN).match(event))
+			{
+				modifiers.ctrlC = true;
+			}
+		});
+		webView.addEventHandler(KeyEvent.KEY_RELEASED, event -> {
+			if(event.getCode().equals(KeyCode.CONTROL) && modifiers.ctrlC)
+			{
+				modifiers.ctrlC = false;
+				Sys.copyToClipboard((String) webView.getEngine().executeScript("window.getSelection().toString()"));
+			}
+		});
+	}
+
+	private static void createContextMenu(WebView webView)
+	{
 		ContextMenu contextMenu = new ContextMenu();
 		MenuItem copy = new MenuItem("Copy");
-		copy.setOnAction(e -> {
-			String selection;
-			selection = (String) webView.getEngine()
-					.executeScript("window.getSelection().toString()");
-			StringSelection stringSelection = new StringSelection(selection);
-			Toolkit.getDefaultToolkit().getSystemClipboard().setContents(stringSelection, null);
-		});
+		copy.setOnAction(e -> Sys.copyToClipboard((String) webView.getEngine().executeScript("window.getSelection().toString()")));
 
 		contextMenu.getItems().addAll(copy);
 
