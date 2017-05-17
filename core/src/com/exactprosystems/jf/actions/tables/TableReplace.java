@@ -4,6 +4,7 @@ import com.exactprosystems.jf.actions.AbstractAction;
 import com.exactprosystems.jf.actions.ActionAttribute;
 import com.exactprosystems.jf.actions.ActionFieldAttribute;
 import com.exactprosystems.jf.actions.ActionGroups;
+import com.exactprosystems.jf.api.error.ErrorKind;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.report.ReportBuilder;
 import com.exactprosystems.jf.documents.config.Context;
@@ -81,6 +82,18 @@ public class TableReplace extends AbstractAction
 	{
 		if (this.regexp == null)
 		{
+			if(this.matchCell == null)
+			{
+				super.setError("Column '" + this.matchCellname + "' can't be empty.", ErrorKind.EMPTY_PARAMETER);
+				return;
+			}
+
+			if(this.search == null)
+			{
+				super.setError("Column '" + this.searchName + "' or '" + this.regexpName + "' can't be empty.", ErrorKind.EMPTY_PARAMETER);
+				return;
+			}
+
 			this.table.replace(this.search, this.replace, this.matchCell, this.columns);
 		}
 		else
