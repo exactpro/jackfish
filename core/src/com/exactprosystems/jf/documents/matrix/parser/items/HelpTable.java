@@ -8,11 +8,6 @@
 
 package com.exactprosystems.jf.documents.matrix.parser.items;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.net.URL;
-
 import com.exactprosystems.jf.api.error.ErrorKind;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.report.ReportBuilder;
@@ -21,14 +16,15 @@ import com.exactprosystems.jf.documents.matrix.parser.Parameters;
 import com.exactprosystems.jf.documents.matrix.parser.Result;
 import com.exactprosystems.jf.documents.matrix.parser.ReturnAndResult;
 import com.exactprosystems.jf.documents.matrix.parser.listeners.IMatrixListener;
+import com.exactprosystems.jf.functions.Table;
 
 
-public class HelpTextItem extends MatrixItem
+public class HelpTable extends MatrixItem
 {
-	public HelpTextItem(String str, URL url)
+	public HelpTable(String str, Table table)
 	{
 		this.str = str;
-        this.url = url;
+		this.table = table;
 	}
 
 	@Override
@@ -42,18 +38,7 @@ public class HelpTextItem extends MatrixItem
 	{
         try
         {
-            report.outLine(this, null, this.str, null);
-
-            StringBuilder sb = new StringBuilder();
-            try ( BufferedReader reader = new BufferedReader(new FileReader( new File(this.url.getFile()))) )
-            {
-                String line;
-                while ((line = reader.readLine()) != null)
-                {
-                    sb.append(line).append("\n\r");
-                }
-            }
-            report.outLine(this, null, sb.toString(), null);
+            this.table.report(report, this.str, null, false, true);
         }
         catch (Exception e)
         {
@@ -63,6 +48,6 @@ public class HelpTextItem extends MatrixItem
         return new ReturnAndResult(start, Result.Passed); 
 	}
 
-	private String str = null;
-    private URL url = null;
+	private String str;
+	private Table table;
 }

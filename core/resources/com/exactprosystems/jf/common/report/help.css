@@ -142,3 +142,43 @@ ins .active{
     padding: 1em;
     white-space: nowrap;
 }
+
+.BLACK {
+	color: black; 
+}
+.BLUE {
+	color: blue;
+}
+.CYAN {
+	color: 	#00FFFF;
+}
+.DARK_GRAY {
+	color: 	#A9A9A9;
+}
+.GRAY {
+	color: gray;
+}
+.GREEN {
+	color: green;
+}
+.LIGHT_GRAY {
+	color: #D3D3D3;
+}
+.MAGENTA {
+	color: 	#FF00FF;
+}
+.ORANGE {
+	color: orange;
+}
+.PINK {
+	color: 	#FFC0CB;
+}
+.RED {
+	color: red;
+}
+.WHITE {
+	color: white;
+}
+.YELLOW {
+	color: yellow;
+}

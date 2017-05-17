@@ -17,17 +17,18 @@ import com.exactprosystems.jf.documents.matrix.parser.Result;
 import com.exactprosystems.jf.documents.matrix.parser.ReturnAndResult;
 import com.exactprosystems.jf.documents.matrix.parser.listeners.IMatrixListener;
 
-public class HelpChapterItem extends MatrixItem
+public class HelpChapter extends MatrixItem
 {
-	public HelpChapterItem(String name)
+	public HelpChapter(String name, int level)
 	{
 		this.str = name;
+		this.level = level;
 	}
 
 	@Override
 	public String getItemName()
 	{
-		return ""; // this.str;
+		return this.str;
 	}
 	
 	@Override
@@ -35,7 +36,9 @@ public class HelpChapterItem extends MatrixItem
 	{
         try
         {
-            report.outLine(this, null, this.str, null);
+            String title = String.format("{{%d%s%d}}", this.level, this.str, this.level);
+            
+            report.outLine(this, null, title, null);
         }
         catch (Exception e)
         {
@@ -46,4 +49,5 @@ public class HelpChapterItem extends MatrixItem
 	}
 
 	private String str = null;
+	private int level = 0;
 }

@@ -10,6 +10,10 @@ package com.exactprosystems.jf.common;
 
 import com.exactprosystems.jf.api.common.DateTime;
 import com.exactprosystems.jf.api.common.Str;
+import com.exactprosystems.jf.common.documentation.DocumentationBuilder;
+import com.exactprosystems.jf.common.report.ReportBuilder;
+import com.exactprosystems.jf.common.report.ReportFactory;
+import com.exactprosystems.jf.common.report.TexReportFactory;
 import com.exactprosystems.jf.common.rtfhelp.RtfGenerator;
 import com.exactprosystems.jf.common.version.VersionInfo;
 import com.exactprosystems.jf.documents.ConsoleDocumentFactory;
@@ -572,7 +576,18 @@ public class MainRunner
 	
     private static void saveDocs() throws Exception
     {
-        RtfGenerator.createRTF(true);
+        if (VersionInfo.getVersion().endsWith("LocalBuild"))
+        {
+            DocumentFactory factory = new ConsoleDocumentFactory(VerboseLevel.Errors);
+            Context context = factory.createContext();
+            ReportFactory reportFactory = new TexReportFactory();
+            ReportBuilder reportBuilder = DocumentationBuilder.createUserManual(reportFactory, context);
+            
+        }
+        else
+        {
+            RtfGenerator.createRTF(true);
+        }
     }
 	
 	private static void saveSchema(Class<?> clazz, final String fileName)

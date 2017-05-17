@@ -236,7 +236,7 @@ public abstract class ReportBuilder implements Storable
 	{
 		try
 		{
-			File dir = new File(this.reportDir);
+			File dir = new File(this.reportDir); 
 			if (!dir.exists())
 			{
 				dir.mkdir();

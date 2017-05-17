@@ -11,7 +11,10 @@ package com.exactprosystems.jf.tool.custom.treetable;
 import com.exactprosystems.jf.actions.AbstractAction;
 import com.exactprosystems.jf.common.Settings;
 import com.exactprosystems.jf.common.Settings.SettingsValue;
+import com.exactprosystems.jf.common.documentation.DocumentationBuilder;
 import com.exactprosystems.jf.common.report.ContextHelpFactory;
+import com.exactprosystems.jf.common.report.HTMLReportFactory;
+import com.exactprosystems.jf.common.report.HelpFactory;
 import com.exactprosystems.jf.common.report.ReportBuilder;
 import com.exactprosystems.jf.documents.config.Context;
 import com.exactprosystems.jf.documents.matrix.parser.Tokens;
@@ -40,7 +43,6 @@ import javafx.stage.Stage;
 import org.fxmisc.richtext.StyledTextArea;
 
 import java.util.Arrays;
-import java.util.Date;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -177,7 +179,7 @@ public class MatrixContextMenu extends ContextMenu
 		Common.tryCatch(() ->
 		{
 		    MatrixItem item = treeView.currentItem();
-		    MatrixItem[] inserted =  matrix.insertNew(item, Tokens.TempItem.get(), null);
+		    matrix.insertNew(item, Tokens.TempItem.get(), null);
 		}, "Error on add before");
 	}
 
@@ -282,27 +284,10 @@ public class MatrixContextMenu extends ContextMenu
 				MatrixItem item = this.tree.currentItem();
 				if (item != null && !(item instanceof End))
 				{
-					ReportBuilder report = new ContextHelpFactory().createReportBuilder(null, null, new Date());
-					
-					MatrixItem help = null;
-					if (item instanceof ActionItem)
-					{
-					    help = new HelpActionItem( ((ActionItem)item).getActionClass() );
-					}
-					else
-					{
-					    help = new HelpItem(item.getClass());
-					}
-					
-// TODO experiment
-//					MatrixItem text = new HelpChapterItem("{{1 chapter 1}}");
-//					help.insert(0, text);
-					
-					report.reportStarted(null, "");
-					help.execute(context, context.getMatrixListener(), context.getEvaluator(), report);
-					report.reportFinished(0, 0, null, null);
+//                    ReportBuilder report = DocumentationBuilder.createHelpForItem(new ContextHelpFactory(), context, item); 
+				    ReportBuilder report = DocumentationBuilder.createHelpForItem(new HelpFactory(), context, item); 
 
-					WebView browser = new WebView();
+				    WebView browser = new WebView();
 					WebEngine engine = browser.getEngine();
 					String str = report.getContent();
 					engine.loadContent(str);
@@ -314,7 +299,7 @@ public class MatrixContextMenu extends ContextMenu
 					dialog.getDialogPane().setPrefHeight(768);
 					dialog.setResizable(true);
 					dialog.getDialogPane().setHeader(new Label());
-					dialog.setTitle("Help for " + help.getItemName());
+					dialog.setTitle("Help for " + item.getItemName());
 					dialog.setHeaderText(null);
 					dialog.getDialogPane().getStylesheets().addAll(Common.currentThemesPaths());
 					dialog.show();

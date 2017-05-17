@@ -30,25 +30,26 @@ import java.util.Map;
 
 public class HelpBuilder extends ReportBuilder
 {
-	private StringWriter menuWriter = new StringWriter();
+    private static final long serialVersionUID = 2996761166031621596L;
+
+    private StringWriter menuWriter = new StringWriter();
 	private StringWriter actionWriter = new StringWriter();
 
 	public HelpBuilder(Date currentTime) throws IOException
 	{
-		super(null, null, currentTime);
+		super(".", "help", currentTime);
 	}
 
 	@Override
 	protected String postProcess(String result)
 	{
 		return super.postProcess(result);
-		//		return super.postProcess(HTMLhelper.htmlescape(result));
 	}
 
 	@Override
 	protected String decorateStyle(String value, String style)
 	{
-		return HTMLhelper.htmlMarker(value);
+        return String.format("<div class=\"%s\">%s</div>", style, value);
 	}
 
 	@Override
@@ -405,6 +406,20 @@ public class HelpBuilder extends ReportBuilder
 	@Override
 	protected void reportImage(ReportWriter writer, MatrixItem item, String beforeTestcase, String fileName, String title, Boolean asLink) throws IOException
 	{
+	    System.err.println(">> " + fileName);
+	    
+        writer.fwrite(
+                "<span class='tableTitle'>%s</span><br>",
+                this.postProcess(title));
+
+        if (asLink)
+        {
+            writer.fwrite("<a href=" + fileName+ ">Image</a><br>");
+        }
+        else
+        {
+            writer.fwrite("<img src='%s' class='img'/><br>", fileName);
+        }
 	}
 	//endregion
 

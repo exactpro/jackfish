@@ -132,6 +132,7 @@ public class ContextHelpBuilder extends ReportBuilder
 	@Override
 	protected void reportItemLine(ReportWriter writer, MatrixItem item, String beforeTestcase, String string, String labelId) throws IOException
 	{
+        writer.fwrite(string);
 	}
 	
 	@Override

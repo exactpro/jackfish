@@ -23,3 +23,4 @@ public class HelpFactory extends ReportFactory
 		return result;
 	}
 }
+
