@@ -21,6 +21,7 @@ import com.exactprosystems.jf.documents.DocumentFactory;
 import com.exactprosystems.jf.documents.config.Configuration;
 import com.exactprosystems.jf.documents.config.Context;
 import com.exactprosystems.jf.documents.guidic.GuiDictionary;
+import com.exactprosystems.jf.documents.matrix.parser.items.MatrixItem;
 import com.exactprosystems.jf.documents.msgdic.MessageDictionary;
 import com.exactprosystems.jf.tool.main.Main;
 import com.exactprosystems.jf.tool.main.Preloader;
@@ -579,15 +580,21 @@ public class MainRunner
         if (VersionInfo.getVersion().endsWith("LocalBuild"))
         {
             DocumentFactory factory = new ConsoleDocumentFactory(VerboseLevel.Errors);
+            Configuration configuration = factory.createConfig(null); 
+            factory.setConfiguration(configuration);
             Context context = factory.createContext();
             ReportFactory reportFactory = new TexReportFactory();
-            ReportBuilder reportBuilder = DocumentationBuilder.createUserManual(reportFactory, context);
-            
+            ReportBuilder report = reportFactory.createReportBuilder(".", "UserManual" + VersionInfo.getVersion(), new Date());
+            MatrixItem help = DocumentationBuilder.createUserManual(report, context);
+            report.reportStarted(null, VersionInfo.getVersion());
+            help.execute(context, context.getMatrixListener(), context.getEvaluator(), report);
+            report.reportFinished(0, 0, null, null);
         }
         else
         {
             RtfGenerator.createRTF(true);
         }
+        System.out.println("Documentation has been created.");
     }
 	
 	private static void saveSchema(Class<?> clazz, final String fileName)

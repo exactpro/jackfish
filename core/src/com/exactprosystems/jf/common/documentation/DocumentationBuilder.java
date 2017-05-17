@@ -1,7 +1,6 @@
 package com.exactprosystems.jf.common.documentation;
 
 import java.io.InputStream;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -14,19 +13,13 @@ import com.exactprosystems.jf.actions.ActionGroups;
 import com.exactprosystems.jf.actions.ActionsList;
 import com.exactprosystems.jf.api.app.ControlKind;
 import com.exactprosystems.jf.api.app.OperationKind;
-import com.exactprosystems.jf.api.error.ErrorKind;
 import com.exactprosystems.jf.common.ControlsAttributes;
 import com.exactprosystems.jf.common.report.ReportBuilder;
 import com.exactprosystems.jf.common.report.ReportFactory;
-import com.exactprosystems.jf.common.report.ReportTable;
-import com.exactprosystems.jf.common.rtfhelp.Help;
-import com.exactprosystems.jf.common.rtfhelp.RtfGenerator;
 import com.exactprosystems.jf.common.version.VersionInfo;
 import com.exactprosystems.jf.documents.config.Context;
 import com.exactprosystems.jf.documents.guidic.controls.AbstractControl;
 import com.exactprosystems.jf.documents.matrix.parser.Parser;
-import com.exactprosystems.jf.documents.matrix.parser.Result;
-import com.exactprosystems.jf.documents.matrix.parser.ReturnAndResult;
 import com.exactprosystems.jf.documents.matrix.parser.items.ActionItem;
 import com.exactprosystems.jf.documents.matrix.parser.items.HelpActionItem;
 import com.exactprosystems.jf.documents.matrix.parser.items.HelpTable;
@@ -41,17 +34,13 @@ import com.exactprosystems.jf.functions.Table;
 
 public class DocumentationBuilder
 {
-    public static ReportBuilder createHelp (ReportFactory factory, Context context) throws Exception
+    public static MatrixItem createHelp (ReportBuilder report, Context context) throws Exception
     {
-        ReportBuilder report = factory.createReportBuilder(".", "help", new Date());
-        
-        return report;
+        return null;
     }
     
-    public static ReportBuilder createUserManual (ReportFactory factory, Context context) throws Exception
+    public static MatrixItem createUserManual (ReportBuilder report, Context context) throws Exception
     {
-        ReportBuilder report = factory.createReportBuilder(".", "UserManual" + VersionInfo.getVersion(), new Date());
-
         MatrixItem help = new HelpChapter("Help", 1);
 
         addText(help, DocumentationBuilder.class.getResourceAsStream("intro.txt"));
@@ -61,13 +50,11 @@ public class DocumentationBuilder
 //      addAllActions(help);
 //      addPicture(help, "", RtfGenerator.class.getResourceAsStream("Footer.png"));
         
-        return report;
+        return help;
     }
         
-    public static ReportBuilder createHelpForItem (ReportFactory factory, Context context, MatrixItem item) throws Exception
+    public static MatrixItem createHelpForItem (ReportBuilder report, Context context, MatrixItem item) throws Exception
     {
-        ReportBuilder report = factory.createReportBuilder(null, null, new Date());
-        
         MatrixItem help = null;
         
         if (item instanceof ActionItem)
@@ -78,12 +65,8 @@ public class DocumentationBuilder
         {
             help = new HelpItem(item.getClass());
         }
-
-        report.reportStarted(null, "");
-        help.execute(context, context.getMatrixListener(), context.getEvaluator(), report);
-        report.reportFinished(0, 0, null, null);
         
-        return report;
+        return help;
     }
     
     public static void addPicture(MatrixItem root, String title, InputStream stream) throws Exception

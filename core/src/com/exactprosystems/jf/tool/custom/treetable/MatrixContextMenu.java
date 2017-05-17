@@ -13,8 +13,6 @@ import com.exactprosystems.jf.common.Settings;
 import com.exactprosystems.jf.common.Settings.SettingsValue;
 import com.exactprosystems.jf.common.documentation.DocumentationBuilder;
 import com.exactprosystems.jf.common.report.ContextHelpFactory;
-import com.exactprosystems.jf.common.report.HTMLReportFactory;
-import com.exactprosystems.jf.common.report.HelpFactory;
 import com.exactprosystems.jf.common.report.ReportBuilder;
 import com.exactprosystems.jf.documents.config.Context;
 import com.exactprosystems.jf.documents.matrix.parser.Tokens;
@@ -43,6 +41,7 @@ import javafx.stage.Stage;
 import org.fxmisc.richtext.StyledTextArea;
 
 import java.util.Arrays;
+import java.util.Date;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -277,34 +276,38 @@ public class MatrixContextMenu extends ContextMenu
 			this.context = context;
 		}
 
-		@Override
-		public void handle(ActionEvent actionEvent)
-		{
-			Common.tryCatch(() -> {
-				MatrixItem item = this.tree.currentItem();
-				if (item != null && !(item instanceof End))
-				{
-//                    ReportBuilder report = DocumentationBuilder.createHelpForItem(new ContextHelpFactory(), context, item); 
-				    ReportBuilder report = DocumentationBuilder.createHelpForItem(new HelpFactory(), context, item); 
+        @Override
+        public void handle(ActionEvent actionEvent)
+        {
+            Common.tryCatch(() ->
+            {
+                MatrixItem item = this.tree.currentItem();
+                if (item != null && !(item instanceof End))
+                {
+                    ReportBuilder report = new ContextHelpFactory().createReportBuilder(null, null, new Date());
+                    MatrixItem help = DocumentationBuilder.createHelpForItem(report, context, item);
+                    report.reportStarted(null, "");
+                    help.execute(context, context.getMatrixListener(), context.getEvaluator(), report);
+                    report.reportFinished(0, 0, null, null);
 
-				    WebView browser = new WebView();
-					WebEngine engine = browser.getEngine();
-					String str = report.getContent();
-					engine.loadContent(str);
+                    WebView browser = new WebView();
+                    WebEngine engine = browser.getEngine();
+                    String str = report.getContent();
+                    engine.loadContent(str);
 
-					Dialog<?> dialog = new Alert(Alert.AlertType.INFORMATION);
-					Common.addIcons(((Stage) dialog.getDialogPane().getScene().getWindow()));
-					dialog.getDialogPane().setContent(browser);
-					dialog.getDialogPane().setPrefWidth(1024);
-					dialog.getDialogPane().setPrefHeight(768);
-					dialog.setResizable(true);
-					dialog.getDialogPane().setHeader(new Label());
-					dialog.setTitle("Help for " + item.getItemName());
-					dialog.setHeaderText(null);
-					dialog.getDialogPane().getStylesheets().addAll(Common.currentThemesPaths());
-					dialog.show();
-				}
-			}, "Error on show result");
-		}
+                    Dialog<?> dialog = new Alert(Alert.AlertType.INFORMATION);
+                    Common.addIcons(((Stage) dialog.getDialogPane().getScene().getWindow()));
+                    dialog.getDialogPane().setContent(browser);
+                    dialog.getDialogPane().setPrefWidth(1024);
+                    dialog.getDialogPane().setPrefHeight(768);
+                    dialog.setResizable(true);
+                    dialog.getDialogPane().setHeader(new Label());
+                    dialog.setTitle("Help for " + item.getItemName());
+                    dialog.setHeaderText(null);
+                    dialog.getDialogPane().getStylesheets().addAll(Common.currentThemesPaths());
+                    dialog.show();
+                }
+            }, "Error on show result");
+        }
 	}
 }
