@@ -23,12 +23,14 @@ import com.exactprosystems.jf.common.MutableString;
 import com.exactprosystems.jf.common.Settings;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.undoredo.Command;
+import com.exactprosystems.jf.documents.Document;
 import com.exactprosystems.jf.documents.DocumentFactory;
 import com.exactprosystems.jf.documents.config.*;
 import com.exactprosystems.jf.documents.matrix.Matrix;
 import com.exactprosystems.jf.documents.matrix.parser.listeners.RunnerListener;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.SupportedEntry;
+import com.exactprosystems.jf.tool.custom.tab.CustomTab;
 import com.exactprosystems.jf.tool.git.GitUtil;
 import com.exactprosystems.jf.tool.helpers.DialogsHelper;
 import com.exactprosystems.jf.tool.main.DocumentKind;
@@ -44,6 +46,7 @@ import javafx.stage.Stage;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.io.File;
 import java.io.Reader;
+import java.nio.file.*;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -352,6 +355,49 @@ public class ConfigurationFx extends Configuration
 	public void excludeMatrixDirectory(String file)
 	{
 		excludeFile(file, super.matricesValue, this::displayMatrix);
+	}
+
+	public void renameMatrix(File file) throws Exception
+	{
+		String newName = ConfigurationTreeView.showInputDialog("Enter new name:").orElse(null);
+		if (newName != null)
+		{
+			String newFilePath = getNewFilePath(file, newName);
+			File tmp = new File(newFilePath);
+			if (tmp.exists())
+			{
+				if (!DialogsHelper.showQuestionDialog(
+						String.format("A file with path %s already exists. The file will rewrited", tmp.getPath())
+						, "Do you want to continue?"
+				))
+				{
+					return;
+				}
+
+			}
+			CustomTab customTab = Common.checkDocument(file.getAbsolutePath());
+			if (customTab != null)
+			{
+				Document document = customTab.getDocument();
+				boolean needContinue = true;
+				if (document.isChanged())
+				{
+					needContinue = DialogsHelper.showQuestionDialog(
+							"A File was changed. Before renaming the file will save."
+							,"Would you like to continue?"
+					);
+				}
+				if (needContinue)
+				{
+					document.save(newFilePath);
+					removeFileFromFileSystem(file, this::displayMatrix);
+				}
+			}
+			else
+			{
+				this.renameFile(file, newName, this::displayMatrix);
+			}
+		}
 	}
 
 	public void openMatrix(File file) throws Exception
@@ -1100,6 +1146,23 @@ public class ConfigurationFx extends Configuration
 			throw new Exception("Can't create new file");
 		}
 		return newFile;
+	}
+
+	private void renameFile(File file, String newName, DisplayFunction displayFunction) throws Exception
+	{
+		String newPath = getNewFilePath(file, newName);
+		Files.move(file.toPath(), Paths.get(newPath), StandardCopyOption.REPLACE_EXISTING);
+		displayFunction.display();
+	}
+
+	private String getNewFilePath(File file, String newName)
+	{
+		String ext = file.getName().substring(file.getName().lastIndexOf("."));
+		if (!newName.endsWith(ext))
+		{
+			newName += ext;
+		}
+		return file.getAbsolutePath().replaceAll(file.getName(), newName);
 	}
 
 	private void removeFileFromFileSystem(File removeFile, DisplayFunction displayFunction)

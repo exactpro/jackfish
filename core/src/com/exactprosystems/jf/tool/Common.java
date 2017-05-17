@@ -149,6 +149,16 @@ public abstract class Common
 				.orElse(null);
 	}
 
+	public static CustomTab checkDocument(String fileName)
+	{
+		return CustomTabPane.getInstance().getTabs()
+				.stream()
+				.map(t -> (CustomTab) t)
+				.filter(tab -> tab.getDocument().getName().equals(fileName))
+				.findFirst()
+				.orElse(null);
+	}
+
 	public enum SpacerEnum {
 		VerticalMin(CssVariables.VERTICAL_MIN),
 		VerticalMid(CssVariables.VERTICAL_MID),
