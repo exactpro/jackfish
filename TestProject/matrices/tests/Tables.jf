@@ -1478,6 +1478,336 @@ TABLE_REMOVE_COLUMNS;Test case;Never;;
 
 #Id;#TestCase;#Kind;#Depends;#For
 TABLE_CONSIDER_COLUMNS_AS;Test case;Never;;
+    #Step;#Kind;#For;#Depends
+    'Field of table name was not filled';;;
+        #Id;#RawTable
+        TC;Table
+        @;Name;Column
+        0;Mike;2
+        1;John;32
+        2;Fred;21
+        #EndRawTable
+
+        #Assert;#Message
+        TC[0].Column.getClass() == String;
+
+        #Action;#Assert;$Table;$Integer
+        TableConsiderColumnsAs;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;;'Column'
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'Was introduced column name which there is not in a table';;;
+        #Id;#RawTable
+        TC;Table
+        @;Name;Column
+        0;Mike;2
+        1;John;32
+        2;Fred;21
+        #EndRawTable
+
+        #Assert;#Message
+        TC[0].Column.getClass() == String;
+
+        #Action;#Assert;$Table;$Integer
+        TableConsiderColumnsAs;This.Result == Result.Failed && This.Kind == ErrorKind.EXCEPTION;TC;'wrongColumn'
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'Converter field was not filled';;;
+        #Id;#RawTable
+        TC;Table
+        @;Name;Column
+        0;Mike;2
+        1;John;32
+        2;Fred;21
+        #EndRawTable
+
+        #Assert;#Message
+        TC[0].Column.getClass() == String;
+
+        #Action;#Assert;$Table;$Integer
+        TableConsiderColumnsAs;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;TC;
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'Convert with column with empty cells';;;
+        #Id;#RawTable
+        TC;Table
+        @;Name;Column
+        0;Mike;
+        1;John;32
+        2;Fred;21
+        #EndRawTable
+
+        #Action;$Table;$Title
+        TableReport;TC;'table before'
+
+        #Assert;#Message
+        TC[0].Column.getClass() == String;
+
+        #Action;$Table;$Integer
+        TableConsiderColumnsAs;TC;'Column'
+
+        #Action;#Assert;
+        Print;This.Result == Result.Failed && This.Kind == ErrorKind.EXPRESSION_ERROR;TC[0].Column
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'Convert with wrong types';;;
+        #Id;#RawTable
+        TC;Table
+        @;Name;Column
+        0;Mike;true
+        1;John;32
+        2;Fred;21
+        #EndRawTable
+
+        #Action;$Table;$Title
+        TableReport;TC;'table before'
+
+        #Assert;#Message
+        TC[0].Column.getClass() == String;
+
+        #Action;$Table;$Integer
+        TableConsiderColumnsAs;TC;'Column'
+
+        #Action;#Assert;
+        Print;This.Result == Result.Failed && This.Kind == ErrorKind.EXPRESSION_ERROR;TC[0].Column
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'Convert some columns';;;
+        #Id;#RawTable
+        TC;Table
+        @;Name;ColumnInt;ColumnBoolean;ColumnString
+        0;Mike;42;true;a
+        1;John;32;false;b
+        2;Fred;21;false;c
+        #EndRawTable
+
+        #Assert;#Message
+        TC[0].ColumnInt.getClass() == String && TC[0].ColumnBoolean.getClass() == String && TC[0].ColumnString.getClass() == String;
+
+        #Action;$Table;$Integer;$String;$Boolean
+        TableConsiderColumnsAs;TC;'ColumnInt';'ColumnString';'ColumnBoolean'
+
+        #Assert;#Message
+        TC[0].ColumnInt.getClass() == Integer && TC[0].ColumnBoolean.getClass() == Boolean && TC[0].ColumnString.getClass() == String;
+
+        #Assert;#Message
+        TC[0].ColumnInt == 42 && TC[0].ColumnBoolean == true && TC[0].ColumnString.equals('a');
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'Convert to Integer';;;
+        #Id;#RawTable
+        TC;Table
+        @;Name;Column
+        0;Mike;42
+        1;John;32
+        2;Fred;21
+        #EndRawTable
+
+        #Assert;#Message
+        TC[0].Column.getClass() == String;
+
+        #Action;$Table;$Integer
+        TableConsiderColumnsAs;TC;'Column'
+
+        #Assert;#Message
+        TC[0].Column.getClass() == Integer && TC[0].Column == 42;
+
+        #Assert;#Message
+        TC[TC.size()-1].Column.getClass() == Integer && TC[TC.size()-1].Column == 21;
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'Convert to String';;;
+        #Id;#RawTable
+        TC;Table
+        @;Name;Column
+        0;Mike;7
+        1;John;a
+        2;Fred;21
+        #EndRawTable
+
+        #Assert;#Message
+        TC[0].Column.getClass() == String;
+
+        #Action;$Table;$Integer
+        TableConsiderColumnsAs;TC;'Column'
+
+        #Assert;#Message
+        TC[0].Column.getClass() == Integer;
+
+        #Assert;#Message
+        TC[TC.size()-1].Column.getClass() == Integer;
+
+        #Action;$Table;$String
+        TableConsiderColumnsAs;TC;'Column'
+
+        #Assert;#Message
+        TC[0].Column.getClass() == String && TC[0].Column.equals('7');
+
+        #Assert;#Message
+        TC[TC.size()-1].Column.getClass() == String && TC[TC.size()-1].Column.equals('21');
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'Convert to Boolean';;;
+        #Id;#RawTable
+        TC;Table
+        @;Name;Column
+        0;Mike;true
+        1;John;false
+        2;Fred;false
+        #EndRawTable
+
+        #Assert;#Message
+        TC[0].Column.getClass() == String;
+
+        #Action;$Table;$Boolean
+        TableConsiderColumnsAs;TC;'Column'
+
+        #Assert;#Message
+        TC[0].Column.getClass() == Boolean && TC[0].Column == true;
+
+        #Assert;#Message
+        TC[TC.size()-1].Column.getClass() == Boolean && TC[TC.size()-1].Column == false;
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'Convert to Double';;;
+        #Id;#RawTable
+        TC;Table
+        @;Name;Column
+        0;Mike;1.02
+        1;John;5.0008
+        2;Fred;6
+        #EndRawTable
+
+        #Assert;#Message
+        TC[0].Column.getClass() == String;
+
+        #Action;$Table;$Double
+        TableConsiderColumnsAs;TC;'Column'
+
+        #Assert;#Message
+        TC[0].Column.getClass() == Double && TC[0].Column == 1.02;
+
+        #Assert;#Message
+        TC[1].Column.getClass() == Double && TC[1].Column == 5.0008;
+
+        #Assert;#Message
+        TC[TC.size()-1].Column.getClass() == Double && TC[TC.size()-1].Column == 6;
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'Convert to BigDecimal';;;
+        #Id;#RawTable
+        TC;Table
+        @;Name;Column
+        0;Mike;1.02
+        1;John;5.0008
+        2;Fred;6
+        #EndRawTable
+
+        #Assert;#Message
+        TC[0].Column.getClass() == String;
+
+        #Action;$Table;$BigDecimal
+        TableConsiderColumnsAs;TC;'Column'
+
+        #Assert;#Message
+        TC[0].Column.getClass() == BigDecimal && TC[0].Column == 1.02 && TC[0].Column.scale() == 2;
+
+        #Assert;#Message
+        TC[1].Column.getClass() == BigDecimal && TC[1].Column == 5.0008 && TC[1].Column.scale() == 4;
+
+        #Assert;#Message
+        TC[TC.size()-1].Column.getClass() == BigDecimal && TC[TC.size()-1].Column == 6 && TC[TC.size()-1].Column.scale() == 0;
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'Convert to Date';;;
+        #Id;#RawTable
+        TC;Table
+        @;Name;Column
+        0;Mike;12/7/2007
+        1;John;10/10/2002
+        2;Fred;12/2/1999
+        #EndRawTable
+
+        #Assert;#Message
+        TC[0].Column.getClass() == String;
+
+        #Action;$Table;$Date
+        TableConsiderColumnsAs;TC;'Column'
+
+        #Assert;#Message
+        TC[0].Column.getClass() == Date && DateTime.getYears(TC[0].Column) == 2007 && DateTime.getMonths(TC[0].Column) == 6 && DateTime.getDays(TC[0].Column) == 12\u003b;
+
+        #Assert;#Message
+        TC[1].Column.getClass() == Date && DateTime.getYears(TC[1].Column) == 2002 && DateTime.getMonths(TC[1].Column) == 9 && DateTime.getDays(TC[1].Column) == 10\u003b;
+
+        #Assert;#Message
+        TC[2].Column.getClass() == Date && DateTime.getYears(TC[2].Column) == 1999 && DateTime.getMonths(TC[2].Column) == 1 && DateTime.getDays(TC[2].Column) == 12\u003b;
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'Convert to Expression';;;
+        #Id;#RawTable
+        TC;Table
+        @;Name;Column
+        0;Mike;5 * 4
+        1;John;'a'.equals('a')
+        2;Fred;10 < 2
+        #EndRawTable
+
+        #Assert;#Message
+        TC[0].Column.getClass() == String;
+
+        #Action;$Table;$Expression
+        TableConsiderColumnsAs;TC;'Column'
+
+        #Assert;#Message
+        TC[0].Column == 20;
+
+        #Assert;#Message
+        TC[1].Column == true;
+
+        #Assert;#Message
+        TC[TC.size()-1].Column == false;
+
+    #EndStep
+
+    // TODO write later, make help example
+    #Step;#Kind;#For;#Depends
+    'Convert to Group';;;
+    #EndStep
+
+    // TODO write later, make help example
+    #Step;#Kind;#For;#Depends
+    'Convert to Hyperlink';;;
+    #EndStep
+
+    // TODO write later, make help example
+    #Step;#Kind;#For;#Depends
+    'Convert to Colored';;;
+    #EndStep
+
 
 #Id;#TestCase;#Kind;#Depends;#For
 TABLE_GET_ROW_INDEXES;Test case;Never;;

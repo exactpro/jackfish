@@ -12,6 +12,7 @@ import com.exactprosystems.jf.actions.AbstractAction;
 import com.exactprosystems.jf.actions.ActionAttribute;
 import com.exactprosystems.jf.actions.ActionFieldAttribute;
 import com.exactprosystems.jf.actions.ActionGroups;
+import com.exactprosystems.jf.api.error.ErrorKind;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.report.ReportBuilder;
 import com.exactprosystems.jf.documents.config.Context;
@@ -120,6 +121,21 @@ public class TableConsiderColumnsAs extends AbstractAction
 	@Override
 	public void doRealAction(Context context, ReportBuilder report, Parameters parameters, AbstractEvaluator evaluator) throws Exception
 	{
+		if(this.asString == null
+		|| this.asBoolean == null
+		|| this.asInteger == null
+		|| this.asDouble == null
+		|| this.asBigDecimal == null
+		|| this.asDate == null
+		|| this.asExpression == null
+		|| this.asGroup == null
+		|| this.asHyperlink == null
+		|| this.asColored == null)
+		{
+			super.setError("Columns of considering can't be empty.", ErrorKind.EMPTY_PARAMETER);
+			return;
+		}
+
 		if (this.asString.length > 0)
 		{
 			this.table.considerAsString(this.asString);

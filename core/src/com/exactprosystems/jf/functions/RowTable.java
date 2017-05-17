@@ -100,7 +100,15 @@ public class RowTable implements Map<String, Object>, Cloneable
         {
             if (entry.getKey().name.equals(key))
             {
-                return entry.getValue();
+                if(entry.getValue() instanceof Exception)
+                {
+                    Exception e = (Exception) entry.getValue();
+                    throw new RuntimeException(e.getMessage(), e);
+                }
+                else
+                {
+                    return entry.getValue();
+                }
             }
         }
         
