@@ -1399,7 +1399,7 @@ public class Table implements List<RowTable>, Mutable, Cloneable
         }
         catch (Exception e)
         {
-            value = e.getMessage();
+            value = e;
         }
 
         return value;
