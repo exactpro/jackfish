@@ -1991,6 +1991,200 @@ TABLE_GET_ROW_INDEXES;Test case;Never;;
 
 #Id;#TestCase;#Kind;#Depends;#For
 TABLE_REPLACE;Test case;Never;;
+    #Step;#Kind;#For;#Depends
+    'Regex - one column';;;
+        #Id;#RawTable
+        TC;Table
+        @;Name;Mail
+        0;John;c0nst@money.simply.net
+        1;Mike;somebody@dev.com.ua
+        2;Bruce;Name.Sur_name@gmail.com
+        3;Anna;user33@somewhere.in.the.net
+        #EndRawTable
+
+        #Action;$Regexp;$Replace;$Table;$Columns
+        TableReplace;'[a-zA-Z]{1}[a-zA-Z\\d\\.\\_]+@([a-zA-Z]+\\.){1,2}((net)|(com)|(org))';'passed';TC;'Mail'
+
+        #Assert;#Message
+        TC.get(0).get('Mail') == 'passed'&& TC.get(2).get('Mail') == 'passed';'Replacement was not made'
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'Regex - several columns';;;
+        #Id;#RawTable
+        TC;Table
+        @;Name;WorkMail;HomeMail
+        0;John;c0nst@money.simply.net;somebody@dev.com.ua
+        1;Mike;somebody@dev.com.ua;c0nst@money.simply.net
+        2;Bruce;Name.Sur_name@gmail.com;user33@somewhere.in.the.net
+        3;Anna;user33@somewhere.in.the.net;Name.Sur_name@gmail.com
+        #EndRawTable
+
+        #Action;$Regexp;$Replace;$Table;$Columns
+        TableReplace;'[a-zA-Z]{1}[a-zA-Z\\d\\.\\_]+@([a-zA-Z]+\\.){1,2}((net)|(com)|(org))';'passed';TC;{'WorkMail','HomeMail'}
+
+        #Assert;#Message
+        TC[0].WorkMail == 'passed' && TC[1].WorkMail == 'somebody@dev.com.ua' && TC[2].WorkMail == 'passed' && TC[3].WorkMail == 'user33@somewhere.in.the.net';'Replacement was not made'
+
+        #Assert;#Message
+        TC[0].HomeMail == 'somebody@dev.com.ua' && TC[1].HomeMail == 'passed' && TC[2].HomeMail == 'user33@somewhere.in.the.net' && TC[3].HomeMail == 'passed';'Replacement was not made'
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'Replace empty cells';;;
+        #Id;#RawTable
+        TC;Table
+        @;Name;Column
+        0;John;10
+        1;Mike;
+        2;Bruce;
+        3;Anna;30
+        #EndRawTable
+
+        #Action;$Replace;$Table;$Columns;$Search
+        TableReplace;'0';TC;'Column';''
+
+        #Assert;#Message
+        TC[0].Column == '10' && TC[1].Column == '0' && TC[2].Column == '0' && TC[3].Column == '30';'Replacement was not made'
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'Search field can not be null';;;
+        #Id;#RawTable
+        TC;Table
+        @;Name;Column
+        0;John;10
+        1;Mike;
+        2;Bruce;
+        3;Anna;30
+        #EndRawTable
+
+        #Action;#Assert;$Replace;$Table;$Columns;$Search
+        TableReplace;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;'0';TC;'Column';
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'MatchCell field can not be null';;;
+        #Id;#RawTable
+        TC;Table
+        @;Name;Column
+        0;John;10
+        1;Mike;
+        2;Bruce;
+        3;Anna;30
+        #EndRawTable
+
+        #Action;#Assert;$Replace;$Table;$Columns;$Search;$MatchCell
+        TableReplace;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;'0';TC;'Column';'';
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'MatchCell field Boolean.TRUE';;;
+        #Id;#RawTable
+        TC;Table
+        @;Name;Column
+        0;John;0
+        1;Mike;3
+        2;Bruce;30
+        3;Anna;300
+        #EndRawTable
+
+        #Action;$Replace;$Table;$Columns;$Search;$MatchCell
+        TableReplace;'X';TC;'Column';'3';Boolean.TRUE
+
+        #Assert;#Message
+        TC[0].Column == '0' && TC[1].Column == 'X' && TC[2].Column == '30' && TC[3].Column == '300';'Replacement was not made'
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'MatchCell field Boolean.FALSE';;;
+        #Id;#RawTable
+        TC;Table
+        @;Name;Column
+        0;John;0
+        1;Mike;3
+        2;Bruce;30
+        3;Anna;300
+        #EndRawTable
+
+        #Action;$Replace;$Table;$Columns;$Search;$MatchCell
+        TableReplace;'X';TC;'Column';'3';Boolean.FALSE
+
+        #Assert;#Message
+        TC[0].Column == '0' && TC[1].Column == 'X' && TC[2].Column == 'X0' && TC[3].Column == 'X00';'Replacement was not made'
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'Replace field can not be null';;;
+        #Id;#RawTable
+        TC;Table
+        @;Name;Column
+        0;John;0
+        1;Mike;3
+        2;Bruce;30
+        3;Anna;300
+        #EndRawTable
+
+        #Action;#Assert;$Replace;$Table;$Columns;$Search;$MatchCell
+        TableReplace;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;;TC;'Column';'3';Boolean.FALSE
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'Table field can not be null';;;
+        #Id;#RawTable
+        TC;Table
+        @;Name;Column
+        0;John;0
+        1;Mike;3
+        2;Bruce;30
+        3;Anna;300
+        #EndRawTable
+
+        #Action;#Assert;$Replace;$Table;$Columns;$Search;$MatchCell
+        TableReplace;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;'X';;'Column';'3';Boolean.FALSE
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'Columns field can not be null';;;
+        #Id;#RawTable
+        TC;Table
+        @;Name;Column
+        0;John;0
+        1;Mike;3
+        2;Bruce;30
+        3;Anna;300
+        #EndRawTable
+
+        #Action;#Assert;$Replace;$Table;$Columns;$Search;$MatchCell
+        TableReplace;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;'X';TC;;'3';Boolean.FALSE
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'Regex field can not be null';;;
+        #Id;#RawTable
+        TC;Table
+        @;Name;Mail
+        0;John;c0nst@money.simply.net
+        1;Mike;somebody@dev.com.ua
+        2;Bruce;Name.Sur_name@gmail.com
+        3;Anna;user33@somewhere.in.the.net
+        #EndRawTable
+
+        #Action;#Assert;$Regexp;$Replace;$Table;$Columns
+        TableReplace;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;;'passed';TC;'Mail'
+
+    #EndStep
+
 
 #Id;#TestCase;#Kind;#Depends;#For
 TABLE_LOAD_FROM_DIR;Test case;Never;;
