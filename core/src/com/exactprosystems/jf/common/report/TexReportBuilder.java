@@ -93,8 +93,8 @@ public class TexReportBuilder extends ReportBuilder
             case "$" + CM: return "";       
     
             // style for code
-            case OM + "#": return "";    
-            case "#" + CM: return "";  
+            case OM + "#": return "\\begin{alltt}";    
+            case "#" + CM: return "\\end{alltt}";  
             
             // style for references
             case OM + "@": return "";
@@ -148,6 +148,7 @@ public class TexReportBuilder extends ReportBuilder
 	@Override
 	protected void reportHeaderTotal(ReportWriter writer, Date date) throws IOException
 	{
+	    // nothing to do
 	}
 
 	@Override
