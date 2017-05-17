@@ -32,6 +32,7 @@ public class MatrixTreeNode extends TreeNode
 	private TreeItem<TreeNode>	treeItem;
 
 	private static final SerializablePair<String, String> REFRESH_MATRIX = new SerializablePair<>("Refresh", CssVariables.Icons.REFRESH);
+	private static final SerializablePair<String, String> RENAME_MATRIX = new SerializablePair<>("Rename", null);
 
 	private static final SerializablePair<String, String> OPEN_MATRIX = new SerializablePair<>("Open matrix", CssVariables.Icons.MATRIX_ICON);
 	private static final SerializablePair<String, String> OPEN_AS_TEXT = new SerializablePair<>("Open as text", CssVariables.Icons.MATRIX_ICON);
@@ -75,6 +76,7 @@ public class MatrixTreeNode extends TreeNode
 				ConfigurationTreeView.createDisabledItem(REMOVE_MATRIX_FOLDER),
 				ConfigurationTreeView.createDisabledItem(EXCLUDE_MATRIX_FOLDER),
 				ConfigurationTreeView.createItem(REFRESH_MATRIX, () -> this.model.updateMatrices(), "Error on refresh matrices"),
+				ConfigurationTreeView.createDisabledItem(RENAME_MATRIX),
 				new SeparatorMenuItem(),
 				ConfigurationTreeView.createDisabledItem("Git", null)
 		);
@@ -93,7 +95,8 @@ public class MatrixTreeNode extends TreeNode
 					ConfigurationTreeView.createDisabledItem(REMOVE_MATRIX),
 					ConfigurationTreeView.createDisabledItem(ADD_TO_TOOLBAR),
 					ConfigurationTreeView.createItem(EXCLUDE_MATRIX_FOLDER, () -> model.excludeMatrixDirectory(file.getName()), "Error on remove matrix directory"),
-					ConfigurationTreeView.createDisabledItem(REFRESH_MATRIX)
+					ConfigurationTreeView.createDisabledItem(REFRESH_MATRIX),
+					ConfigurationTreeView.createDisabledItem(RENAME_MATRIX)
 			);
 			return menu;
 		};
@@ -109,7 +112,8 @@ public class MatrixTreeNode extends TreeNode
 					ConfigurationTreeView.createItem(ADD_TO_TOOLBAR, () -> this.model.addToToolbar(Common.getRelativePath(file.getPath())), "Error on add matrix to toolbar"),
 					ConfigurationTreeView.createDisabledItem(REMOVE_MATRIX_FOLDER),
 					ConfigurationTreeView.createDisabledItem(EXCLUDE_MATRIX_FOLDER),
-					ConfigurationTreeView.createDisabledItem(REFRESH_MATRIX)
+					ConfigurationTreeView.createDisabledItem(REFRESH_MATRIX),
+					ConfigurationTreeView.createItem(RENAME_MATRIX, () -> this.model.renameMatrix(file), "Error on rename matrix")
 			);
 			return menu;
 		};
@@ -125,7 +129,8 @@ public class MatrixTreeNode extends TreeNode
 					ConfigurationTreeView.createDisabledItem(ADD_TO_TOOLBAR),
 					ConfigurationTreeView.createItem(REMOVE_MATRIX_FOLDER, () -> this.model.removeMatrix(file), "Error on remove folder"),
 					ConfigurationTreeView.createDisabledItem(EXCLUDE_MATRIX_FOLDER),
-					ConfigurationTreeView.createDisabledItem(REFRESH_MATRIX)
+					ConfigurationTreeView.createDisabledItem(REFRESH_MATRIX),
+					ConfigurationTreeView.createDisabledItem(RENAME_MATRIX)
 			);
 			return menu;
 		};
