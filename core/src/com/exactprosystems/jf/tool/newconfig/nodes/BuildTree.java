@@ -9,17 +9,13 @@ package com.exactprosystems.jf.tool.newconfig.nodes;
 
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.newconfig.ConfigurationFx;
-import com.exactprosystems.jf.tool.newconfig.ConfigurationTreeView;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.SeparatorMenuItem;
 import javafx.scene.control.TreeItem;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
@@ -27,6 +23,7 @@ public class BuildTree
 {
 	private final File initialFile;
 	private final TreeItem<TreeNode> initialTreeItem;
+	private final Comparator<File> fileComparator;
 	private Function<File, ContextMenu> menuTopFolder;
 	private Predicate<File> fileFilter;
 	private Function<File, ContextMenu> menuFiles;
@@ -34,10 +31,11 @@ public class BuildTree
 	private Function<File, Common.Function> doubleClickEvent;
 	private List<String> ignoredFiles = new ArrayList<>();
 
-	public BuildTree(File initialFile, TreeItem<TreeNode> initialTreeItem)
+	public BuildTree(File initialFile, TreeItem<TreeNode> initialTreeItem, Comparator<File> fileComparator)
 	{
 		this.initialFile = initialFile;
 		this.initialTreeItem = initialTreeItem;
+		this.fileComparator = fileComparator;
 		this.menuTopFolder = (f) -> null;
 		this.fileFilter = (f) -> true;
 		this.menuFiles = (f) -> null;
@@ -118,7 +116,10 @@ public class BuildTree
 			TreeItem<TreeNode> folderNode = new TreeItem<>(folderTreeNode);
 			addListenerToExpandChild(folderNode);
 			rootNode.getChildren().add(folderNode);
-			Optional.ofNullable(rootFile.listFiles()).ifPresent(files -> Arrays.stream(files).sorted(ConfigurationTreeView.comparator).forEach(file -> byPassReq(file, folderNode, null, fileFilter, menuFiles, this.menuFolder, doubleClickEvent)));
+			Optional.ofNullable(rootFile.listFiles())
+					.ifPresent(files -> Arrays.stream(files)
+							.sorted(this.fileComparator)
+							.forEach(file -> byPassReq(file, folderNode, null, fileFilter, menuFiles, this.menuFolder, doubleClickEvent)));
 		}
 		else if (fileFilter.test(rootFile))
 		{

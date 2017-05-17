@@ -85,8 +85,8 @@ public class ReportTreeNode extends TreeNode
 				return menu;
 			};
 			Arrays.stream(files)
-					.sorted(ConfigurationTreeView.comparator)
-					.forEach(initFile -> new BuildTree(initFile, this.treeItem)
+					.sorted(model.getFileComparator())
+					.forEach(initFile -> new BuildTree(initFile, this.treeItem,model.getFileComparator())
 						.doubleClickEvent(file -> () -> this.model.openReport(file))
 						.menuFiles(menuFiles)
 						.byPass()

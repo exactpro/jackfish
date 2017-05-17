@@ -142,6 +142,9 @@ public class Settings
 	public static final String SQL			= "SQL_";
 	public static final String WATCHER		= "WATCHER";
 
+	public static final String CONFIG_DIALOG = "CONFIGURATION";
+	public static final String CONFIG_COMPARATOR = "COMPARATOR";
+
 	@XmlRootElement(name = "value")
 	@XmlAccessorType(XmlAccessType.NONE)
 	public static class SettingsValue implements Mutable

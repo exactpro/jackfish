@@ -13,7 +13,6 @@ import com.exactprosystems.jf.documents.vars.SystemVars;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.CssVariables;
 import com.exactprosystems.jf.tool.newconfig.ConfigurationFx;
-import com.exactprosystems.jf.tool.newconfig.ConfigurationTreeView;
 import javafx.scene.Node;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
@@ -117,9 +116,9 @@ public class FileSystemTreeNode extends TreeNode
 			};
 
 			Arrays.stream(initialFiles)
-					.sorted(ConfigurationTreeView.comparator)
+					.sorted(model.getFileComparator())
 					.forEach(
-							file -> new BuildTree(file, this.treeItem)
+							file -> new BuildTree(file, this.treeItem,model.getFileComparator())
 									.ignoredFiles(ignoreFiles.stream().map(ConfigurationFx::path).collect(Collectors.toList()))
 									.menuTopFolder(menuTopFolder).doubleClickEvent(doubleClickFunction)
 									.menuFiles(menuFiles)

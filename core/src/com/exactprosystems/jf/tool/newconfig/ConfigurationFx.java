@@ -51,6 +51,7 @@ import java.util.stream.Collectors;
 public class ConfigurationFx extends Configuration
 {
 	//region fields
+	private CompareEnum currentCompareEnum;
 	private Main model;
 	private ConfigurationFxController controller;
 	private BorderPane pane;
@@ -214,6 +215,7 @@ public class ConfigurationFx extends Configuration
 	@Override
 	public void close(Settings settings) throws Exception
 	{
+		storeSettings(settings);
 		super.close(settings);
 
 		if (this.model != null)
@@ -276,6 +278,17 @@ public class ConfigurationFx extends Configuration
 	public void newLibrary() throws Exception
 	{
 		this.model.newLibrary();
+	}
+
+	public void changeSortType(CompareEnum compareEnum) throws Exception
+	{
+		this.currentCompareEnum = compareEnum;
+		this.display();
+	}
+
+	public Comparator<File> getFileComparator()
+	{
+		return this.currentCompareEnum.getComparator();
 	}
 	//endregion
 
@@ -841,6 +854,19 @@ public class ConfigurationFx extends Configuration
 	}
 
 	//region private methods
+	private void restoreSettings()
+	{
+		Settings settings = getFactory().getSettings();
+		Settings.SettingsValue valueOrDefault = settings.getValueOrDefault(Settings.GLOBAL_NS, Settings.CONFIG_DIALOG, Settings.CONFIG_COMPARATOR, CompareEnum.ALPHABET_0_1.name());
+		String value = valueOrDefault.getValue();
+		this.currentCompareEnum = CompareEnum.valueOf(value);
+	}
+
+	private void storeSettings(Settings settings)
+	{
+		settings.setValue(Settings.GLOBAL_NS, Settings.CONFIG_DIALOG, Settings.CONFIG_COMPARATOR, this.currentCompareEnum.name());
+	}
+
 	private <T extends Entry> void addNewEntry(Class<T> clazz, List<T> list, String name, DisplayFunction func) throws Exception
 	{
 		if (name == null || name.isEmpty())
@@ -1254,10 +1280,11 @@ public class ConfigurationFx extends Configuration
 	{
 		if (!this.isControllerInit)
 		{
-			this.controller = Common.loadController(ConfigurationFx.class.getResource("config.fxml"));
-			this.controller.init(this, this.pane);
-			
+			restoreSettings();
 			this.isControllerInit = true;
+
+			this.controller = Common.loadController(ConfigurationFx.class.getResource("config.fxml"));
+			this.controller.init(this, this.pane, this.currentCompareEnum);
 		}
 	}
 }

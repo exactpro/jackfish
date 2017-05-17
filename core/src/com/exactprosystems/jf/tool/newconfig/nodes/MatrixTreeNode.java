@@ -129,7 +129,7 @@ public class MatrixTreeNode extends TreeNode
 			);
 			return menu;
 		};
-		matricesValue.forEach(file -> new BuildTree(new File(file), this.treeItem)
+		matricesValue.forEach(file -> new BuildTree(new File(file), this.treeItem,model.getFileComparator())
 				.fileFilter(f -> ConfigurationFx.getExtension(f.getAbsolutePath()).equals(Configuration.matrixExt)).menuTopFolder(topFolderMenu)
 				.doubleClickEvent(f -> () -> Common.tryCatch(() -> this.model.openMatrix(f), "Error on open matrix file")).menuFiles(menuFiles)
 				.menuFolder(menuFolders).byPass());

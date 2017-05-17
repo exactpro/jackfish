@@ -263,7 +263,7 @@ public class ClientTreeNode extends TreeNode
 				);
 				return menu;
 			};
-			listClientDictionaries.forEach(file -> new BuildTree(file, this.treeItem)
+			listClientDictionaries.forEach(file -> new BuildTree(file, this.treeItem,model.getFileComparator())
 					.fileFilter(f -> ConfigurationFx.getExtension(f.getAbsolutePath()).equals(Configuration.dictExt))
 					.doubleClickEvent(f -> () -> this.model.openClientDictionary(f)).menuTopFolder(topFolderFunc).menuFiles(filesFunc).byPass());
 		}

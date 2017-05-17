@@ -13,7 +13,6 @@ import com.exactprosystems.jf.tool.CssVariables;
 import com.exactprosystems.jf.tool.newconfig.nodes.ConfigurationTreeNode;
 import com.exactprosystems.jf.tool.newconfig.nodes.SeparatorTreeNode;
 import com.exactprosystems.jf.tool.newconfig.nodes.TreeNode;
-
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Node;
@@ -26,7 +25,6 @@ import javafx.scene.layout.HBox;
 
 import java.awt.*;
 import java.io.File;
-import java.util.Comparator;
 import java.util.Optional;
 
 public class ConfigurationTreeView extends TreeView<TreeNode>
@@ -102,22 +100,6 @@ public class ConfigurationTreeView extends TreeView<TreeNode>
 			}
 		});
 	}
-
-	public static Comparator<File>	comparator	= (f1, f2) ->
-		{
-			if (f1.isDirectory() && !f2.isDirectory())
-			{
-				return -1;
-			}
-			else if (!f1.isDirectory() && f2.isDirectory())
-			{
-				return 1;
-			}
-			else
-			{
-				return f1.getName().toLowerCase().compareTo(f2.getName().toLowerCase());
-			}
-		};
 
 	public static Optional<String> showInputDialog(String headerText)
 	{

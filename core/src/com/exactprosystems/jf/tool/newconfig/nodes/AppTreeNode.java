@@ -264,7 +264,7 @@ public class AppTreeNode extends TreeNode
 				return menu;
 			};
 			listAppDictionaries.forEach(file ->
-					new BuildTree(file, this.treeItem)
+					new BuildTree(file, this.treeItem, model.getFileComparator())
 							.fileFilter(f -> ConfigurationFx.getExtension(f.getAbsolutePath()).equals(Configuration.dictExt))
 							.doubleClickEvent(f -> () -> this.model.openAppsDictionary(f))
 							.menuTopFolder(topFolderFunc)

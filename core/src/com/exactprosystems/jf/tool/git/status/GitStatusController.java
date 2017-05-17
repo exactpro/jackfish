@@ -12,7 +12,7 @@ import com.exactprosystems.jf.tool.ContainingParent;
 import com.exactprosystems.jf.tool.CssVariables;
 import com.exactprosystems.jf.tool.git.GitBean;
 import com.exactprosystems.jf.tool.git.GitUtil;
-import com.exactprosystems.jf.tool.newconfig.ConfigurationTreeView;
+import com.exactprosystems.jf.tool.newconfig.CompareEnum;
 import com.exactprosystems.jf.tool.newconfig.nodes.BuildTree;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -262,7 +262,7 @@ public class GitStatusController implements Initializable, ContainingParent
 		children.sort((t1,t2) -> {
 			File f1 = t1.getValue().getFile();
 			File f2 = t2.getValue().getFile();
-			return ConfigurationTreeView.comparator.compare(f1, f2);
+			return CompareEnum.ALPHABET_0_1.getComparator().compare(f1, f2);
 		});
 		bean.getChildren().setAll(children);
 		BuildTree.addListenerToExpandChild(bean);
