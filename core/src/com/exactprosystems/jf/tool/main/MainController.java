@@ -575,6 +575,10 @@ public class MainController implements Initializable, ContainingParent
 			{
 				return;
 			}
+			else if (keyEvent.getCode() == KeyCode.F1 && !keyEvent.isControlDown() && !keyEvent.isShiftDown() && !keyEvent.isAltDown())
+			{
+				showAboutProgram(null);
+			}
 			else if (SettingsPanel.match(settings, keyEvent, Settings.SHOW_ALL_TABS))
 			{
 				showAllTabs();
