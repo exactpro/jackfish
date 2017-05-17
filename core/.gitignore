@@ -4,3 +4,5 @@
 /remote_out.txt
 version.properties
 *.rtf
+
+UserManualLocalBuild.*

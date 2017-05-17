@@ -13,6 +13,8 @@ import java.io.InputStream;
 
 public abstract class ReportWriter  
 {
+    public abstract void newline() throws IOException;
+    
 	public abstract void fwrite(String fmt, Object... args) throws IOException; 
 	
 	public abstract void fwrite(String str) throws IOException; 

@@ -22,7 +22,13 @@ class StringWriter extends  ReportWriter
 		this.builder = new StringBuilder();
 	}
 	
-	@Override
+    @Override
+    public void newline() throws IOException
+    {
+        this.builder.append('\n');
+    }
+
+    @Override
 	public void fwrite(String fmt, Object... args) throws IOException 
 	{
 		this.builder.append(String.format(fmt, args));

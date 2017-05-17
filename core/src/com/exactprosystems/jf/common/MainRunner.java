@@ -584,7 +584,7 @@ public class MainRunner
             factory.setConfiguration(configuration);
             Context context = factory.createContext();
             ReportFactory reportFactory = new TexReportFactory();
-            ReportBuilder report = reportFactory.createReportBuilder(".", "UserManual" + VersionInfo.getVersion(), new Date());
+            ReportBuilder report = reportFactory.createReportBuilder(".", "UserManual" + VersionInfo.getVersion() + ".tex", new Date());
             MatrixItem help = DocumentationBuilder.createUserManual(report, context);
             report.reportStarted(null, VersionInfo.getVersion());
             help.execute(context, context.getMatrixListener(), context.getEvaluator(), report);

@@ -43,12 +43,18 @@ public class DocumentationBuilder
     {
         MatrixItem help = new HelpChapter("Help", 1);
 
-        addText(help, DocumentationBuilder.class.getResourceAsStream("intro.txt"));
-        
-//      addAllControlsTable(help, "All controls", context);
-//      addAllItems(help);
-//      addAllActions(help);
-//      addPicture(help, "", RtfGenerator.class.getResourceAsStream("Footer.png"));
+//        addChapter(help, "Introduction", 3);
+        addText(help, DocumentationBuilder.class.getResourceAsStream("intro1.txt"));
+        addPicture(help, "Architecture", DocumentationBuilder.class.getResourceAsStream("Intro.png"));
+        addText(help, DocumentationBuilder.class.getResourceAsStream("intro2.txt"));
+//        addChapter(help, "MVEL", 3);
+//        addText(help, DocumentationBuilder.class.getResourceAsStream("mvel.txt"));
+//        addChapter(help, "All controls", 3);
+//        addAllControlsTable(help, "All controls", context);
+//        addChapter(help, "Matrix syntax", 3);
+//        addAllItems(help);
+//        addChapter(help, "Actions by groups", 3);
+//        addAllActions(help);
         
         return help;
     }
@@ -139,6 +145,12 @@ public class DocumentationBuilder
         catch (Exception e)
         {
         }
+    }
+    
+    public static void addChapter(MatrixItem root, String title, int level) throws Exception
+    {
+        MatrixItem chapter = new HelpChapter(title, level);
+        root.insert(root.count(), chapter);
     }
     
     public static void addText(MatrixItem root, InputStream stream) throws Exception

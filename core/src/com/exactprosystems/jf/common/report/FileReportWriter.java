@@ -24,7 +24,13 @@ public class FileReportWriter extends ReportWriter
 		this.writer = new BufferedWriter(new FileWriter(fileName));
 	}
 	
-	@Override
+    @Override
+    public void newline() throws IOException
+    {
+        this.writer.write("\n");
+    }
+
+    @Override
 	public void fwrite(String fmt, Object... args) throws IOException 
 	{
 		this.writer.write(String.format(fmt, args));
@@ -66,4 +72,5 @@ public class FileReportWriter extends ReportWriter
 	private Writer writer;
 
 	private String fileName;
+
 }

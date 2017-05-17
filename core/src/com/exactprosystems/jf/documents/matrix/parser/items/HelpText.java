@@ -50,7 +50,7 @@ public class HelpText extends MatrixItem
                 String line;
                 while ((line = reader.readLine()) != null)
                 {
-                    sb.append(line).append("\n\r");
+                    sb.append(line).append("\n");
                 }
             }
             report.outLine(this, null, sb.toString(), null);

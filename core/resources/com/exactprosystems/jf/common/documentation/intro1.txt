@@ -1,0 +1,19 @@
+{{2Introduction2}}
+
+JackFish ("JF" further in this document) is a tool for test automation of web-based applications built on Selenium framework. 
+JF can perform positive and negative functional testing, GUI testing, verification of a variety of data formats (xml, csv, text, etc.). 
+
+JF produces a detailed report about performing each test case. 
+It allows QA engineers without software development experience to automate test scenarios. 
+In order to achieve that, JF uses a simple csv format expression language where rows contain actions that manipulate GUI controls on web pages, 
+and the columns contain parameters for each such action. Additionally, to simplify the process, 
+JF introduces a dictionary entity that describes all GUI controls and methods for locating them on a web-page, 
+and also assigns them names that are referred to in test cases. 
+
+The solution also includes GUI editors for preparing dictionaries and test scenario files. 
+The tool supports a GUI-less mode of running it and can work with multiple browsers simultaneously.
+
+{{2Architecture2}}
+
+The following diagram explains the JF architecture on a high level:
+
