@@ -160,7 +160,7 @@ public class MatrixContextMenu extends ContextMenu
 			}
 			else if (SettingsPanel.match(settings, keyEvent, Settings.HELP))
 			{
-				showHelp(context, treeView);
+				showHelp(context, treeView).handle(null);
 			}
 			else if (SettingsPanel.match(settings, keyEvent, Settings.ADD_PARAMETER))
 			{

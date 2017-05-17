@@ -117,7 +117,7 @@ public enum CompareEnum
 		@Override
 		public String getName()
 		{
-			return "Alphabet desc";
+			return "Date desc";
 		}
 	};
 
