@@ -784,13 +784,39 @@ public class SeleniumRemoteApplication extends RemoteApplication
 		{
 			throw new Exception("url is null");
 		}
-		String tab = args.get("Tab");
+
+		String whereOpen = args.get(WebAppFactory.whereOpenName);
 		boolean flag = false;
-		if (tab != null)
+		switch (whereOpen)
 		{
-			flag = tab.equalsIgnoreCase("true");
+			case WebAppFactory.openInUrl :
+				this.driver.get(url);
+				break;
+
+			case WebAppFactory.openInWindow:
+				flag = true;
+			case WebAppFactory.openInTab :
+				this.driver.executeScript(String.format(
+						"function createDoc(){"
+						+ "var w = window.open('%s' %s,'height='+window.outerHeight+',width='+window.outerWidth)"
+						+ "}; createDoc();", url, flag ? ",'_blank'" : "")
+				);
+				break;
+			default:
+				this.driver.executeScript(String.format(
+						"function createDoc(){"
+								+ "var w = window.open('%s')"
+								+ "}; createDoc();", url)
+				);
 		}
-		this.driver.executeScript("function createDoc(){var w = window.open('" + url + "'" + (flag ? ",'_blank'" : "") + ")}; createDoc();");
+
+		//		String tab = args.get(WebAppFactory.tabName);
+//		boolean flag = false;
+//		if (tab != null)
+//		{
+//			flag = tab.equalsIgnoreCase("true");
+//		}
+//		this.driver.executeScript("function createDoc(){var w = window.open('" + url + "'" + (flag ? ",'_blank'" : "") + ")}; createDoc();");
 	}
 
 	@Override

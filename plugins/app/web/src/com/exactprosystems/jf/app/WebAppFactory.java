@@ -35,8 +35,14 @@ public class WebAppFactory implements IApplicationFactory
 	public static final String firefoxProfileDir	= "FirefoxProfileDirectory";
 	public static final String usePrivateMode       = "UsePrivateMode";
 
-	public final static String browserName 			= "Browser";
-	public final static String urlName 				= "URL";
+	public final static String browserName   = "Browser";
+	public final static String urlName       = "URL";
+	public static final String whereOpenName = "WhereOpen";
+
+	public static final String openInTab		= "tab";
+	public static final String openInWindow		= "window";
+	public static final String openInUrl		= "url";
+
 
 	public static final String propertyUrlName		= "URL";
 	public static final String propertyTitle		= "Title";
@@ -68,6 +74,7 @@ public class WebAppFactory implements IApplicationFactory
 					usePrivateMode, logLevel };
 			case START:		return new String[] { browserName, urlName };
 			case PROPERTY:	return new String[] { propertyUrlName, propertyTitle };
+			case NEW_INSTANCE: return new String[] {urlName, whereOpenName };
 			default:		return empty;	
 		}
 	}
@@ -75,7 +82,8 @@ public class WebAppFactory implements IApplicationFactory
 	@Override
 	public boolean canFillParameter(String parameterToFill)
 	{
-		return browserName.equals(parameterToFill);
+		return browserName.equals(parameterToFill)
+			|| whereOpenName.equals(parameterToFill);
 	}
 
 	@Override
@@ -84,7 +92,7 @@ public class WebAppFactory implements IApplicationFactory
 		switch (parameterToFill)
 		{
 			case browserName:
-				String[] result = new String[]
+				return new String[]
 						{
 							"AndroidChrome",
 							"AndroidBrowser",
@@ -95,7 +103,9 @@ public class WebAppFactory implements IApplicationFactory
 							"PhantomJS",
 							"Safari",
 						};
-				return result;
+
+			case whereOpenName:
+				return new String[] {openInTab, openInWindow, openInUrl };
 
 			default:
 				return new String[0];

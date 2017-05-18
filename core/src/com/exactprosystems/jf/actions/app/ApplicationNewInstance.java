@@ -8,15 +8,10 @@
 
 package com.exactprosystems.jf.actions.app;
 
-import com.exactprosystems.jf.actions.AbstractAction;
-import com.exactprosystems.jf.actions.ActionAttribute;
-import com.exactprosystems.jf.actions.ActionFieldAttribute;
-import com.exactprosystems.jf.actions.ActionGroups;
-import com.exactprosystems.jf.actions.ReadableValue;
+import com.exactprosystems.jf.actions.*;
 import com.exactprosystems.jf.api.app.AppConnection;
 import com.exactprosystems.jf.api.app.IApplication;
 import com.exactprosystems.jf.api.common.ParametersKind;
-import com.exactprosystems.jf.api.error.ErrorKind;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.report.ReportBuilder;
 import com.exactprosystems.jf.documents.config.Context;
@@ -45,7 +40,6 @@ import java.util.Map;
 public class ApplicationNewInstance extends AbstractAction
 {
 	public static final String connectionName = "AppConnection";
-	public static final String tabName = "Tab";
 
 	@ActionFieldAttribute(name = connectionName, mandatory = true, description = "A special object which identifies"
 			+ " the started application session. This object is required in many other actions to specify the "
@@ -53,27 +47,18 @@ public class ApplicationNewInstance extends AbstractAction
 			+ "as {{@ApplicationStart@}}, {{@ApplicationConnectTo@}}." )
 	protected AppConnection connection	= null;
 
-	@ActionFieldAttribute(name = tabName, mandatory = false, description = "It is true by default. If the value is"
-			+ " True, it opens a new tab in the browser.   If the value is false, it opens a new browser window."
-			+ " Supported only by web.jar plug-in.")
-	protected Boolean tab;
-
 	@Override
 	protected void helpToAddParametersDerived(List<ReadableValue> list, Context context, Parameters parameters) throws Exception
 	{
-		Helper.helpToAddParameters(list, ParametersKind.START, this.owner.getMatrix(), context, parameters, null, connectionName);
+		Helper.helpToAddParameters(list, ParametersKind.NEW_INSTANCE, this.owner.getMatrix(), context, parameters, null, connectionName);
 	}
 
 	@Override
 	protected HelpKind howHelpWithParameterDerived(Context context, Parameters parameters, String fieldName) throws Exception
 	{
-		boolean res = false;
+		boolean res;
 		switch (fieldName)
 		{
-			case tabName:
-				res = true;
-				break;
-				
 			default:
 				res = Helper.canFillParameter(this.owner.getMatrix(), context, parameters, null, connectionName, fieldName);
 				break;
@@ -85,43 +70,25 @@ public class ApplicationNewInstance extends AbstractAction
 	@Override
 	protected void listToFillParameterDerived(List<ReadableValue> list, Context context, String parameterToFill, Parameters parameters) throws Exception
 	{
-		switch (parameterToFill)
-		{
-			case tabName:
-				list.add(ReadableValue.TRUE);
-				list.add(ReadableValue.FALSE);
-				break;
-				
-			default:
-				Helper.fillListForParameter(list, this.owner.getMatrix(), context, parameters, null, connectionName, parameterToFill);
-				break;
-		}
+		Helper.fillListForParameter(list, this.owner.getMatrix(), context, parameters, null, connectionName, parameterToFill);
 	}
 	
 	@Override
 	protected void doRealAction(Context context, ReportBuilder report, Parameters parameters, AbstractEvaluator evaluator) throws Exception
 	{
-		if (this.connection == null)
+		Map<String, String> args = new HashMap<>();
+		for (Parameter parameter : parameters.select(TypeMandatory.Extra))
 		{
-			super.setError("Connection is null", ErrorKind.EMPTY_PARAMETER);
+			args.put(parameter.getName(), String.valueOf(parameter.getValue()));
 		}
-		else
-		{
-			Map<String, String> args = new HashMap<>();
-			args.put(tabName, String.valueOf(this.tab));
-			for (Parameter parameter : parameters.select(TypeMandatory.Extra))
-			{
-				args.put(parameter.getName(), String.valueOf(parameter.getValue()));
-			}
-			IApplication app = connection.getApplication();
-			app.service().newInstance(args);
-			super.setResult(null);
-		}
+		IApplication app = connection.getApplication();
+		app.service().newInstance(args);
+		super.setResult(null);
 	}
 
 	@Override
 	public void initDefaultValues() 
 	{
-		tab = false;
+
 	}
 }

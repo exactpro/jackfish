@@ -10,5 +10,5 @@ package com.exactprosystems.jf.api.common;
 
 public enum ParametersKind
 {
-	LOAD, START, CONNECT, STOP, PROPERTY, ENCODE, PROPS 
+	LOAD, START, CONNECT, STOP, PROPERTY, ENCODE, PROPS, NEW_INSTANCE
 }
