@@ -20,19 +20,26 @@ import com.exactprosystems.jf.documents.matrix.parser.items.MatrixItem;
 import com.exactprosystems.jf.documents.matrix.parser.items.TypeMandatory;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.CssVariables;
+import com.exactprosystems.jf.tool.custom.grideditor.SpreadsheetGridView;
+import com.exactprosystems.jf.tool.custom.grideditor.SpreadsheetView;
 import com.exactprosystems.jf.tool.matrix.MatrixFx;
 import com.exactprosystems.jf.tool.matrix.params.ParameterGridPane;
 import com.exactprosystems.jf.tool.matrix.params.ShowAllParams;
-
+import com.exactprosystems.jf.tool.settings.SettingsPanel;
 import javafx.event.Event;
 import javafx.event.EventHandler;
+import javafx.event.EventTarget;
 import javafx.scene.Node;
 import javafx.scene.control.MenuItem;
+import javafx.scene.control.TextInputControl;
+import javafx.scene.control.TreeItem;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.ContextMenuEvent;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.GridPane;
 import javafx.util.Pair;
+import org.fxmisc.richtext.StyledTextArea;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -71,31 +78,48 @@ public class MatrixParametersContextMenu extends MatrixContextMenu
 		this.parAdd.setGraphic(new ImageView(new Image(CssVariables.Icons.ADD_PARAMETER_ICON)));
 		this.parAdd.setOnAction(event -> changeParameters(event, matrix::parameterInsert));
 
-
-		this.parShowAll = new MenuItem("All parameters ...");
-		this.parShowAll.setGraphic(new ImageView(new Image(CssVariables.Icons.ALL_PARAMETERS_ICON)));
-		this.parShowAll.setOnAction(event -> Common.tryCatch(() ->
-		{
-			if (this.row != null && this.row.getItem() instanceof ActionItem)
-			{
-				ActionItem actionItem = (ActionItem) this.row.getItem();
-				Map<ReadableValue, TypeMandatory> map = actionItem.helpToAddParameters(context);
-				ShowAllParams params = new ShowAllParams(map, actionItem.getParameters(), actionItem.getItemName());
-				ArrayList<Pair<ReadableValue, TypeMandatory>> result = params.show();
-				matrix.parameterInsert(actionItem, this.index, result);
-			}
-
-		}, "Error on show all parameters"));
+		this.parShowAll = new MenuItem("All parameters ...",new ImageView(new Image(CssVariables.Icons.ALL_PARAMETERS_ICON)));
+		this.parShowAll.setAccelerator(Common.getShortcut(settings, Settings.ALL_PARAMETERS));
+		this.parShowAll.setOnAction(event -> allParameters(context, matrix, event));
 
 		getItems().add(0, this.parRemove);
 		getItems().add(1, this.parMoveLeft);
 		getItems().add(2, this.parMoveRight);
 		getItems().add(3, this.parAdd);
 		getItems().add(4, this.parShowAll);
-	} 
-	
-	
-	
+	}
+
+	@Override
+	public void initShortcuts(Settings settings, MatrixTreeView treeView, MatrixFx matrix, Context context)
+	{
+		super.initShortcuts(settings, treeView, matrix, context);
+		treeView.addEventHandler(KeyEvent.KEY_RELEASED, keyEvent -> {
+			EventTarget parent = keyEvent.getTarget();
+			if (!(parent instanceof Node))
+			{
+				return;
+			}
+			if (parent instanceof TextInputControl || parent instanceof SpreadsheetView || parent instanceof SpreadsheetGridView || parent instanceof StyledTextArea)
+			{
+				return;
+			}
+			boolean inside = parent instanceof MatrixTreeView;
+			while (!inside && parent != null)
+			{
+				parent = ((Node) parent).getParent();
+				inside = parent instanceof MatrixTreeView;
+			}
+			if (!inside)
+			{
+				return;
+			}
+			if (SettingsPanel.match(settings, keyEvent, Settings.ALL_PARAMETERS))
+			{
+				allParameters(context, matrix, keyEvent);
+			}
+		});
+	}
+
 	public EventHandler<ContextMenuEvent> createContextMenuHandler()
 	{
 		return (event ->
@@ -137,6 +161,40 @@ public class MatrixParametersContextMenu extends MatrixContextMenu
 				func.call(this.row.getItem(), this.index);
 			}
 		}, "Error on change parameters");
+	}
+
+	private void allParameters(Context context, MatrixFx matrix, Event event)
+	{
+		Common.tryCatch(() ->
+		{
+			MatrixItem item = getActionItem(event);
+			if (item instanceof ActionItem)
+			{
+				ActionItem actionItem = (ActionItem) item;
+				Map<ReadableValue, TypeMandatory> map = actionItem.helpToAddParameters(context);
+				ShowAllParams params = new ShowAllParams(map, actionItem.getParameters(), actionItem.getItemName());
+				ArrayList<Pair<ReadableValue, TypeMandatory>> result = params.show();
+				matrix.parameterInsert(actionItem, this.index, result);
+			}
+
+		}, "Error on show all parameters");
+	}
+
+	private MatrixItem getActionItem(Event event)
+	{
+		if (this.row != null)
+		{
+			return this.row.getItem();
+		}
+		if (event.getSource() instanceof MatrixTreeView)
+		{
+			TreeItem<MatrixItem> selectedItem = ((MatrixTreeView) event.getSource()).getSelectionModel().getSelectedItem();
+			if (selectedItem != null)
+			{
+				return selectedItem.getValue();
+			}
+		}
+		return null;
 	}
 
 

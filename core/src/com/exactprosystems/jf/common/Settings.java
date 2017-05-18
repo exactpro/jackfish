@@ -58,6 +58,7 @@ public class Settings
 
 	//matrix navigation shortcuts
 	public static final String ADD_ITEMS		= "Add";
+	public static final String ALL_PARAMETERS	= "AllParameters";
 	public static final String BREAK_POINT		= "BreakPoint";
 	public static final String ADD_PARAMETER	= "AddParameter";
 	public static final String HELP				= "Help";
@@ -327,6 +328,7 @@ public class Settings
 
 					//Matrix navigation
 					ADD_ITEMS, "Insert",
+					ALL_PARAMETERS, "Ctrl+X",
 					COPY_ITEMS, "Ctrl+C",
 					PASTE_ITEMS, "Ctrl+V",
 					HELP,"Ctrl+F1",
@@ -619,6 +621,7 @@ public class Settings
 	{
 		return Stream.of(
 				ADD_ITEMS,
+				ALL_PARAMETERS,
 				BREAK_POINT,
 				ADD_PARAMETER,
 				HELP,
