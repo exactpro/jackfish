@@ -83,25 +83,27 @@ public class DateTime extends Date
 	@DescriptionAttribute(text = "Shift current time right @hours, @minutes and @seconds")
 	public DateTime shiftTime(@FieldParameter(name = "hours") int hours, @FieldParameter(name = "minutes") int minutes, @FieldParameter(name = "seconds") int seconds)
 	{
+	    DateTime other = new DateTime(this); 
 		Calendar c = new GregorianCalendar();
-		c.setTime(this);
+		c.setTime(other);
 		c.add(Calendar.HOUR, hours);
 		c.add(Calendar.MINUTE, minutes);
 		c.add(Calendar.SECOND, seconds);
-		setDate(c.getTime());
-		return this;
+		other.setDate(c.getTime());
+		return other;
 	}
 
 	@DescriptionAttribute(text = "Shift current date right @year, @month and @day")
 	public DateTime shiftDate(@FieldParameter(name = "year") int year, @FieldParameter(name = "month") int month, @FieldParameter(name = "day") int day)
 	{
+        DateTime other = new DateTime(this); 
 		Calendar c = new GregorianCalendar();
-		c.setTime(this);
+		c.setTime(other);
 		c.add(Calendar.YEAR, year);
 		c.add(Calendar.MONTH, month);
 		c.add(Calendar.DAY_OF_MONTH, day);
-		setDate(c.getTime());
-		return this;
+		other.setDate(c.getTime());
+        return other;
 	}
 
 	@DescriptionAttribute(text = "Return current year")
