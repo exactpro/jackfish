@@ -1,3 +1,16 @@
+18.05.2017 4.5.2394
+Feature #42203
+Win plugin- ApplicationResize- add possibility to move main window.
+
+Add new action ApplicationMove. Move the main window to X and Y coordinates.
+Example :
+
+#Action;$X;$Y;$AppConnection
+ApplicationMove;300;300;APPSTR1.Out
+
+
+Added a new not mandatory field Normal to action ApplicationResize.
+If the field Normal is true, the main window will resize to a normal state ( initial state)
 --------------------------------------------------------------------------------
 15.05.2017 4.5.0
 Added ctrl+c ctrl+v keyboard events in help and reports

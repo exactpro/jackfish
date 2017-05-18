@@ -34,6 +34,7 @@ public class ActionsList
 		        ApplicationResize.class,
 				ApplicationCloseWindow.class,
 				ApplicationNavigate.class,
+				ApplicationMove.class,
 		        ClientCheckMessage.class,
 		        ClientCheckFields.class,
 		        ClientClearMessages.class,

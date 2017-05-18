@@ -261,6 +261,7 @@ public JnaDriverImpl(Logger logger) throws Exception
 	 * if @param c == 0 -> arg is array of string with separator %<br>
 	 * if @param c == 1 -> arg is array of int with separator %<br>
 	 * if @param c == 2 -> arg is array of double with separator %<br>
+	 * if @param c == 3 -> arg is window state <br>
 	 */
 	public String doPatternCall(UIProxyJNA element, WindowPattern pattern, String method, String args, int c) throws Exception
 	{

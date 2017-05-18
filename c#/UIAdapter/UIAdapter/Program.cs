@@ -1025,7 +1025,13 @@ namespace UIAdapter
                         if (element.TryGetCurrentPattern(WindowPattern.Pattern, out windowPattern))
                         {
                             var windowP = windowPattern as WindowPattern;
-                            windowP.SetWindowVisualState(WindowVisualState.Normal);
+                            if (windowP.Current.WindowVisualState != WindowVisualState.Normal)
+                            {
+                                throw new Exception(
+                                    "Window state is not normal. Current state is " + windowP.Current.WindowVisualState
+                                    + " . Use ApplicationResize with parameter Normal true for change to window to normal state."
+                                    );
+                            }
                         }
                         //TODO set position via win api
                         IntPtr hWnd = new IntPtr(handler.Current.NativeWindowHandle);
@@ -1033,8 +1039,18 @@ namespace UIAdapter
                         MyRect rect = new MyRect();
                         bool f = Win32.UnsafeNativeMethods.GetWindowRect(hWnd, ref rect);
                         logger.All("GetWindowRect : " + f);
-                        logger.All(String.Format("Window has left {0}, top {1}, right {2}, bottom {3}", rect.Left, rect.Top, rect.Right, rect.Bottom)); 
-                        bool f1 = Win32.UnsafeNativeMethods.MoveWindow(hWnd, rect.Left, rect.Top, (int) args[0], (int) args[1], false);
+                        logger.All(String.Format("Window has left {0}, top {1}, right {2}, bottom {3}", rect.Left, rect.Top, rect.Right, rect.Bottom));
+                        bool f1;
+                        if ("Move".Equals(method))
+                        {
+                            int w = Math.Abs(rect.Left - rect.Right);
+                            int h = Math.Abs(rect.Top - rect.Bottom);
+                            f1 = Win32.UnsafeNativeMethods.MoveWindow(hWnd, (int)args[0], (int)args[1], w, h, true);
+                        }
+                        else
+                        {
+                            f1 = Win32.UnsafeNativeMethods.MoveWindow(hWnd, rect.Left, rect.Top, (int)args[0], (int)args[1], true);
+                        }
                         logger.All("Move window : " + f1);
                         bool f2 = Win32.UnsafeNativeMethods.GetWindowRect(hWnd, ref rect);
                         logger.All("GetWindowRect : " + f2);

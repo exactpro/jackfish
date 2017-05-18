@@ -39,7 +39,7 @@ public interface IRemoteApplication extends Remote
 	void 						newInstance		(Map<String, String> args) throws Exception;
 	String 						switchTo		(Map<String, String> criteria, boolean softCondition) throws RemoteException;
 	void 						switchToFrame	(Locator owner) throws RemoteException;
-	void 						resize			(int height, int width, boolean maximize, boolean minimize) throws RemoteException;
+	void 						resize			(int height, int width, boolean maximize, boolean minimize, boolean normal) throws RemoteException;
 	ImageWrapper 				getImage		(Locator owner, Locator element) throws RemoteException;
 	Rectangle 					getRectangle	(Locator owner, Locator element) throws RemoteException;
 	Collection<String> 			findAll			(Locator owner, Locator element) throws RemoteException;
@@ -52,4 +52,5 @@ public interface IRemoteApplication extends Remote
 	byte[] getTreeBytes(Locator owner) throws RemoteException;
 
 	void                        startNewDialog  () throws RemoteException;
+	void 						moveWindow(int x, int y) throws RemoteException;
 }

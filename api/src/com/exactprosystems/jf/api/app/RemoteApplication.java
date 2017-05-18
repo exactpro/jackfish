@@ -322,11 +322,11 @@ public abstract class RemoteApplication implements IRemoteApplication
 	}
 
 	@Override
-	public final void resize (int height, int width, boolean maximize, boolean minimize) throws RemoteException
+	public final void resize(int height, int width, boolean maximize, boolean minimize, boolean normal) throws RemoteException
 	{
 		try 
 		{
-			resizeDerived(height, width, maximize, minimize);
+			resizeDerived(height, width, maximize, minimize, normal);
 		}
 		catch (RemoteException e)
 		{
@@ -533,6 +533,23 @@ public abstract class RemoteApplication implements IRemoteApplication
 		}
 	}
 
+	@Override
+	public void moveWindow(int x, int y) throws RemoteException
+	{
+		try
+		{
+			this.moveWindowDerived(x, y);
+		}
+		catch (RemoteException e)
+		{
+			throw e;
+		}
+		catch (Exception e)
+		{
+			String msg = String.format("Error on moveWindow(%s,%s)", x, y);
+			throw new ProxyException(msg, e.getMessage(), e);
+		}
+	}
 
 	protected abstract void createLoggerDerived(String logName, String serverLogLevel, String serverLogPattern) throws Exception;
 
@@ -558,7 +575,7 @@ public abstract class RemoteApplication implements IRemoteApplication
 
 	protected abstract void switchToFrameDerived(Locator owner) throws Exception;
 
-	protected abstract void resizeDerived (int height, int width, boolean maximize, boolean minimize) throws Exception;
+	protected abstract void resizeDerived(int height, int width, boolean maximize, boolean minimize, boolean normal) throws Exception;
 
 	protected abstract Collection<String> findAllDerived(Locator owner, Locator element) throws Exception;
 	
@@ -579,6 +596,8 @@ public abstract class RemoteApplication implements IRemoteApplication
 	protected abstract Document getTreeDerived(Locator owner) throws Exception;
 
 	protected abstract void startNewDialogDerived() throws Exception;
+
+	protected abstract void moveWindowDerived(int x, int y) throws Exception;
 
 	private static String removeExtraQuotes(String string)
 	{

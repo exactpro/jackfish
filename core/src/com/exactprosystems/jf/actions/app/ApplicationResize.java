@@ -40,7 +40,8 @@ public class ApplicationResize extends AbstractAction
 	public final static String widthName 		= "Width";
 	public final static String minimizeName 	= "Minimize";
 	public final static String maximizeName 	= "Maximize";
-	
+	public final static String normalName		= "Normal";
+
 	@ActionFieldAttribute(name = connectionName, mandatory = true, description = "A special object which identifies the"
 			+ " started application session. This object is required in many other actions to specify the session"
 			+ " of the application the indicated action belongs to. It is the output value of such actions"
@@ -58,6 +59,9 @@ public class ApplicationResize extends AbstractAction
 
 	@ActionFieldAttribute(name = maximizeName, mandatory = false, description = "If the parameter value is true, it sets the maximum size of the window." )
 	protected Boolean maximize;
+
+	@ActionFieldAttribute(name = normalName, mandatory = false, description = "If the parameter value is true, it sets normal size of the window.")
+	protected Boolean normal;
 
 	public ApplicationResize()
 	{
@@ -86,7 +90,9 @@ public class ApplicationResize extends AbstractAction
 					this.height == null ? 0 : this.height.intValue(), 
 					this.width == null ? 0 : this.width.intValue(), 
 					this.maximize == null ? false : this.maximize.booleanValue(),
-					this.minimize == null ? false : this.minimize.booleanValue());
+					this.minimize == null ? false : this.minimize.booleanValue(),
+					this.normal == null ? false : this.normal.booleanValue()
+			);
 			super.setResult(null);
 		}
 	}
