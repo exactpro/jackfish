@@ -27,26 +27,40 @@ import com.exactprosystems.jf.functions.Table;
 				+ " from the main one, the values in such columns will be null.",
 		additionFieldsAllowed 	= false,
 		examples 				=
-				"{{`1. Create a table with columns Name,  Age and Gender. Complete the table with 2 lines.`}}"
-				+ "{{`2. Create a table with columns Name and Age. Complete the table with 2 lines.`}}"
-				+ "{{`3. Add the lines from the second table to the end of the first one.`}}"
-				+ "{{`4. Verify that the table size is equal to 4. `}}"
-				+ "{{##Id;#RawTable\n"
-				+ "TC;Table\n"
-				+ "@;Name;Age;Gender\n"
-				+ "0;Mike;42;Male\n"
-				+ "1;Anna;21;Female\n"
-				+ "#EndRawTable\n"
-				+ "#Id;#RawTable\n"
-				+ "TC1;Table\n"
-				+ "@;Name;Age\n"
-				+ "0;Mike;42\n"
-				+ "1;Anna;21\n"
-				+ "#EndRawTable\n"
-				+ "#Action;#UnitedTable;#MainTable\n"
-				+ "TableUnion;TC1;TC\n"
-				+ "#Assert;#Message\n"
-				+ "TC.size() == 4;#}}"
+				"{{#" +
+						"#Id;#RawTable\n" +
+						"main;Table\n" +
+						"@;Name;Age;Gender\n" +
+						"0;Mike;42;Male\n" +
+						"1;Anna;21;Female\n" +
+						"#EndRawTable\n" +
+						"\n" +
+						"#Id;#RawTable\n" +
+						"additional;Table\n" +
+						"@;Name;Age\n" +
+						"0;Fred;28\n" +
+						"1;Carl;10\n" +
+						"#EndRawTable\n" +
+						"\n" +
+						"#Action;$UnitedTable;$MainTable\n" +
+						"TableUnion;additional;main\n" +
+						"\n" +
+						"#Action;$Table;$Title\n" +
+						"TableReport;main;'dfdf'\n" +
+						"\n" +
+						"#Id;#RawTable\n" +
+						"expected;Table\n" +
+						"@;Name;Age;Gender\n" +
+						"0;Mike;42;Male\n" +
+						"1;Anna;21;Female\n" +
+						"2;Fred;28;\n" +
+						"3;Carl;10;\n" +
+						"#EndRawTable\n" +
+						"\n" +
+						"#Id;#Action;$Expected;$Actual\n" +
+						"TBLCMP1;TableCompareTwo;expected;main\n" +
+						"\n" +
+						"#}}"
 )
 public class TableUnion extends AbstractAction
 {
@@ -69,12 +83,27 @@ public class TableUnion extends AbstractAction
 	}
 
 	@Override
-	public void doRealAction(Context context, ReportBuilder report,
-			Parameters parameters, AbstractEvaluator evaluator) throws Exception
+	public void doRealAction(Context context, ReportBuilder report,	Parameters parameters, AbstractEvaluator evaluator) throws Exception
 	{
-		for (RowTable row : this.unitedTable)
+		boolean atLeastOneCoincidence = false;
+		for (int mainNum = 0; mainNum < this.mainTable.getHeaderSize(); mainNum++)
 		{
-			this.mainTable.add(row);
+			for (int unitedNum = 0; unitedNum < this.unitedTable.getHeaderSize(); unitedNum++)
+			{
+				if(this.mainTable.getHeader(mainNum).equals(this.unitedTable.getHeader(unitedNum)))
+				{
+					atLeastOneCoincidence = true;
+					break;
+				}
+			}
+		}
+
+		if(atLeastOneCoincidence)
+		{
+			for (RowTable row : this.unitedTable)
+			{
+				this.mainTable.add(row);
+			}
 		}
 
 		super.setResult(null);

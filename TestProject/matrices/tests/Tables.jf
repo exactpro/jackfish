@@ -2719,6 +2719,190 @@ TABLE_SELECT;Test case;Never;;
 
 #Id;#TestCase;#Kind;#Depends;#For
 TABLE_UNION;Test case;Never;;
+    #Step;#Kind;#For;#Depends
+    'there is not have any coincidenced columns';;;
+        #Id;#RawTable
+        main;Table
+        @;Name;Age;Gender
+        0;Mike;42;Male
+        1;Anna;21;Female
+        #EndRawTable
+
+        #Id;#RawTable
+        additional;Table
+        @;NameName;AgeAge
+        0;Fred;28
+        1;Carl;10
+        #EndRawTable
+
+        #Action;$UnitedTable;$MainTable
+        TableUnion;additional;main
+
+        #Action;$Table;$Title
+        TableReport;main;'dfdf'
+
+        #Id;#RawTable
+        expected;Table
+        @;Name;Age;Gender
+        0;Mike;42;Male
+        1;Anna;21;Female
+        #EndRawTable
+
+        #Id;#Action;$Expected;$Actual
+        TBLCMP1;TableCompareTwo;expected;main
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'Untitled table field does not fill';;;
+        #Id;#RawTable
+        main;Table
+        @;Name;Age;Gender
+        0;Mike;42;Male
+        1;Anna;21;Female
+        #EndRawTable
+
+        #Id;#RawTable
+        additional;Table
+        @;Name;Age
+        0;Fred;28
+        1;Carl;10
+        #EndRawTable
+
+        #Action;#Assert;$UnitedTable;$MainTable
+        TableUnion;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;;main
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'Main table field does not fill';;;
+        #Id;#RawTable
+        main;Table
+        @;Name;Age;Gender
+        0;Mike;42;Male
+        1;Anna;21;Female
+        #EndRawTable
+
+        #Id;#RawTable
+        additional;Table
+        @;Name;Age
+        0;Fred;28
+        1;Carl;10
+        #EndRawTable
+
+        #Action;#Assert;$UnitedTable;$MainTable
+        TableUnion;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;additional;
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'main has columns > then additional';;;
+        #Id;#RawTable
+        main;Table
+        @;Name;Age;Gender
+        0;Mike;42;Male
+        1;Anna;21;Female
+        #EndRawTable
+
+        #Id;#RawTable
+        additional;Table
+        @;Name;Age
+        0;Fred;28
+        1;Carl;10
+        #EndRawTable
+
+        #Action;$UnitedTable;$MainTable
+        TableUnion;additional;main
+
+        #Action;$Table;$Title
+        TableReport;main;'dfdf'
+
+        #Id;#RawTable
+        expected;Table
+        @;Name;Age;Gender
+        0;Mike;42;Male
+        1;Anna;21;Female
+        2;Fred;28;
+        3;Carl;10;
+        #EndRawTable
+
+        #Id;#Action;$Expected;$Actual
+        TBLCMP1;TableCompareTwo;expected;main
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'main has columns == then additional';;;
+        #Id;#RawTable
+        main;Table
+        @;Name;Age
+        0;Mike;42
+        1;Anna;21
+        #EndRawTable
+
+        #Id;#RawTable
+        additional;Table
+        @;Name;Age
+        0;Fred;28
+        1;Carl;10
+        #EndRawTable
+
+        #Action;$UnitedTable;$MainTable
+        TableUnion;additional;main
+
+        #Action;$Table;$Title
+        TableReport;main;'dfdf'
+
+        #Id;#RawTable
+        expected;Table
+        @;Name;Age
+        0;Mike;42
+        1;Anna;21
+        2;Fred;28
+        3;Carl;10
+        #EndRawTable
+
+        #Id;#Action;$Expected;$Actual
+        TBLCMP1;TableCompareTwo;expected;main
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'main has columns < then additional';;;
+        #Id;#RawTable
+        main;Table
+        @;Name;Age
+        0;Mike;42
+        1;Anna;21
+        #EndRawTable
+
+        #Id;#RawTable
+        additional;Table
+        @;Name;Age;Gender
+        0;Fred;28;Male
+        1;Carl;10;Female
+        #EndRawTable
+
+        #Action;$UnitedTable;$MainTable
+        TableUnion;additional;main
+
+        #Action;$Table;$Title
+        TableReport;main;'dfdf'
+
+        #Id;#RawTable
+        expected;Table
+        @;Name;Age
+        0;Mike;42
+        1;Anna;21
+        2;Fred;28
+        3;Carl;10
+        #EndRawTable
+
+        #Id;#Action;$Expected;$Actual
+        TBLCMP1;TableCompareTwo;expected;main
+
+    #EndStep
+
 
 #Id;#TestCase;#Kind;#Depends;#For
 TABLE_REPORT;Test case;Never;;
