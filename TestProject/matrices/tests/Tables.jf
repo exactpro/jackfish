@@ -2188,6 +2188,66 @@ TABLE_REPLACE;Test case;Never;;
 
 #Id;#TestCase;#Kind;#Depends;#For
 TABLE_LOAD_FROM_DIR;Test case;Never;;
+    #Step;#Kind;#For;#Depends
+    'correct full way';;;
+        #Id;#Action;$Dir
+        actual;TableLoadFromDir;new File('').getAbsolutePath() + "/testdata/loadfromdir"
+
+        #Id;#RawTable
+        Expected;Table
+        @;Name;Size;Date;Is directory;Hidden
+        0;.settings.xml;17232.0;Thu May 18 08:23:51 MSK 2017;false;true
+        1;main.log;178.0;Thu May 18 08:23:45 MSK 2017;false;false
+        2;matrix.jf;1426.0;Wed May 17 09:57:43 MSK 2017;false;false
+        3;dir;4096.0;Thu May 18 08:34:36 MSK 2017;true;false
+        4;table.csv;23.0;Wed May 17 19:49:35 MSK 2017;false;false
+        #EndRawTable
+
+        #Id;#Action;$Expected;$Actual
+        TBLCMP1;TableCompareTwo;Expected;actual.Out
+
+        #Action;$Table;$Title
+        TableReport;actual.Out;'dirs'
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'correct short way';;;
+        #Id;#Action;$Dir
+        actual;TableLoadFromDir;'testdata/loadfromdir'
+
+        #Id;#RawTable
+        Expected;Table
+        @;Name;Size;Date;Is directory;Hidden
+        0;.settings.xml;17232.0;Thu May 18 08:23:51 MSK 2017;false;true
+        1;main.log;178.0;Thu May 18 08:23:45 MSK 2017;false;false
+        2;matrix.jf;1426.0;Wed May 17 09:57:43 MSK 2017;false;false
+        3;dir;4096.0;Thu May 18 08:34:36 MSK 2017;true;false
+        4;table.csv;23.0;Wed May 17 19:49:35 MSK 2017;false;false
+        #EndRawTable
+
+        #Id;#Action;$Expected;$Actual
+        TBLCMP1;TableCompareTwo;Expected;actual.Out
+
+        #Action;$Table;$Title
+        TableReport;actual.Out;'dirs'
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'incorrect way';;;
+        #Id;#Action;#Assert;$Dir
+        actual;TableLoadFromDir;This.Result == Result.Failed && This.Kind == ErrorKind.WRONG_PARAMETERS;new File('').getAbsolutePath() + '/testdata/loadfromdir' + '/folderwhichisnot'
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'empty dir';;;
+        #Id;#Action;#Assert;$Dir
+        actual;TableLoadFromDir;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;
+
+    #EndStep
+
 
 #Id;#TestCase;#Kind;#Depends;#For
 TABLE_CREATE;Test case;Never;;
