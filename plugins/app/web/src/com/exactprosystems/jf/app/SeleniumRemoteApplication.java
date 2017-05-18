@@ -15,7 +15,6 @@ import com.exactprosystems.jf.api.common.Str;
 import com.exactprosystems.jf.api.error.app.FeatureNotSupportedException;
 import com.exactprosystems.jf.api.error.app.NullParameterException;
 import com.exactprosystems.jf.api.error.app.TimeoutException;
-
 import org.apache.log4j.*;
 import org.openqa.selenium.*;
 import org.openqa.selenium.Dimension;
@@ -38,8 +37,8 @@ import java.io.File;
 import java.io.Serializable;
 import java.rmi.RemoteException;
 import java.util.*;
+import java.util.List;
 import java.util.Map.Entry;
-import java.util.concurrent.TimeUnit;
 
 public class SeleniumRemoteApplication extends RemoteApplication
 {
@@ -455,7 +454,7 @@ public class SeleniumRemoteApplication extends RemoteApplication
 	}
 
 	@Override
-	protected void resizeDerived(int height, int width, boolean maximize, boolean minimize) throws Exception
+	protected void resizeDerived(int height, int width, boolean maximize, boolean minimize, boolean normal) throws Exception
 	{
 		if (maximize)
 		{
@@ -831,6 +830,12 @@ public class SeleniumRemoteApplication extends RemoteApplication
 	protected void startNewDialogDerived() throws Exception
 	{
 
+	}
+
+	@Override
+	protected void moveWindowDerived(int x, int y) throws Exception
+	{
+		throw new FeatureNotSupportedException("moveWindow");
 	}
 
 	@Override

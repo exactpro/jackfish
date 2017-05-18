@@ -334,7 +334,7 @@ public class WinRemoteApplicationJNA extends RemoteApplication
 	}
 
 	@Override
-	protected void resizeDerived(int height, int width, boolean maximize, boolean minimize) throws Exception
+	protected void resizeDerived(int height, int width, boolean maximize, boolean minimize, boolean normal) throws Exception
 	{
 		try
 		{
@@ -344,7 +344,11 @@ public class WinRemoteApplicationJNA extends RemoteApplication
 			{
 				throw new ElementNotFoundException("Current window not found");
 			}
-			if (maximize)
+			if (normal)
+			{
+				this.driver.doPatternCall(currentWindow, WindowPattern.WindowPattern, "SetWindowVisualState", "Normal", 3);
+			}
+			else if (maximize)
 			{
 				this.driver.doPatternCall(currentWindow, WindowPattern.WindowPattern, "SetWindowVisualState", "Maximized", 3);
 			}
@@ -555,6 +559,30 @@ public class WinRemoteApplicationJNA extends RemoteApplication
 	protected void startNewDialogDerived() throws Exception
 	{
 		this.driver.clearCache();
+	}
+
+	@Override
+	protected void moveWindowDerived(int x, int y) throws Exception
+	{
+		try
+		{
+			UIProxyJNA currentWindow = currentWindow();
+			if (currentWindow == null)
+			{
+				throw new ElementNotFoundException("Current window not found");
+			}
+			this.driver.doPatternCall(currentWindow, WindowPattern.TransformPattern, "Move", x + "%" + y, 1);
+		}
+		catch (RemoteException e)
+		{
+			throw e;
+		}
+		catch (Exception e)
+		{
+			this.logger.error(String.format("moveWindow(%d,%d)", x, y));
+			this.logger.error(e.getMessage(), e);
+			throw e;
+		}
 	}
 
 	@Override

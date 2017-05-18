@@ -255,7 +255,7 @@ public class SwingRemoteApplication extends RemoteApplication
 	}
 
 	@Override
-	protected void resizeDerived(int height, int width, boolean maximize, boolean minimize) throws Exception
+	protected void resizeDerived(int height, int width, boolean maximize, boolean minimize, boolean normal) throws Exception
 	{
 		try
 		{
@@ -263,7 +263,11 @@ public class SwingRemoteApplication extends RemoteApplication
 			if (component instanceof JFrame)
 			{
 				JFrame frame = (JFrame)component;
-				if (maximize)
+				if (minimize)
+				{
+					frame.setExtendedState(JFrame.NORMAL);
+				}
+				else if (maximize)
 				{
 					frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
 				}
@@ -570,6 +574,22 @@ public class SwingRemoteApplication extends RemoteApplication
 	protected void startNewDialogDerived() throws Exception
 	{
 		//done
+	}
+
+	@Override
+	protected void moveWindowDerived(int x, int y) throws Exception
+	{
+		try
+		{
+			Component component = this.operationExecutor.currentFrame();
+			component.setLocation(x, y);
+		}
+		catch (Exception e)
+		{
+			logger.error(String.format("moveWindow(%s,%s)", x, y));
+			logger.error(e.getMessage(), e);
+			throw e;
+		}
 	}
 
 	@Override
