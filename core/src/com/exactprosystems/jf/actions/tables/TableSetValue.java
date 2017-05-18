@@ -80,7 +80,7 @@ public class TableSetValue extends AbstractAction
             }
         }
 
-		if (this.index >= this.table.size())
+		if (this.index >= this.table.size() || this.index < 0)
 		{
 			super.setError("The index is out of bound of the table", ErrorKind.WRONG_PARAMETERS);
 			return;

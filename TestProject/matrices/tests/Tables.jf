@@ -2344,7 +2344,7 @@ TABLE_SET_VALUE;Test case;Never;;
     #EndStep
 
     #Step;#Kind;#For;#Depends
-    'index is out of bound';;;
+    'index is out of bound > size';;;
         #Id;#RawTable
         TC;Table
         @;Name;Age
@@ -2353,6 +2353,19 @@ TABLE_SET_VALUE;Test case;Never;;
 
         #Action;#Assert;$Table;$Index;Name
         TableSetValue;This.Result == Result.Failed && This.Kind == ErrorKind.WRONG_PARAMETERS;TC;1;'John'
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'index is out of bound < 0';;;
+        #Id;#RawTable
+        TC;Table
+        @;Name;Age
+        0;Mike;25
+        #EndRawTable
+
+        #Action;#Assert;$Table;$Index;Name
+        TableSetValue;This.Result == Result.Failed && This.Kind == ErrorKind.WRONG_PARAMETERS;TC;-1;'John'
 
     #EndStep
 
@@ -2906,7 +2919,139 @@ TABLE_UNION;Test case;Never;;
 
 #Id;#TestCase;#Kind;#Depends;#For
 TABLE_REPORT;Test case;Never;;
+    #Step;#Kind;#For;#Depends
+    'table field does not fill';;;
+        #Id;#RawTable
+        TC;Table
+        @;Name;Age
+        0;Mike;25
+        1;John;23
+        #EndRawTable
+
+        #Id;#Action;#Assert;$BeforeTestCase;$Table;$Title;$Columns
+        tt;TableReport;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;'Test';;'Table title';{'Age' : 'Age of person'}
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'title field does not fill';;;
+        #Id;#RawTable
+        TC;Table
+        @;Name;Age
+        0;Mike;25
+        1;John;23
+        #EndRawTable
+
+        #Id;#Action;#Assert;$BeforeTestCase;$Table;$Title;$Columns
+        tt;TableReport;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;'Test';TC;;{'Age' : 'Age of person'}
+
+    #EndStep
+
+    #Off;#Step;#Kind;#For;#Depends
+    1;'example';;;
+        #Id;#RawTable
+        TC;Table
+        @;Name;Age
+        0;Mike;25
+        1;John;23
+        #EndRawTable
+
+        #Id;#Action;$BeforeTestCase;$Table;$Title;$Columns;$Numbers;$ReportValues;$ToReport
+        tt;TableReport;'Test';TC;'Title';{'Age' : 'Age of person'};true;true;
+
+    #EndStep
+
 
 #Id;#TestCase;#Kind;#Depends;#For
 TABLE_REMOVE_ROW;Test case;Never;;
+    #Step;#Kind;#For;#Depends
+    'remove first row';;;
+        #Id;#RawTable
+        actual;Table
+        @;Name;Age
+        0;Mike;25
+        1;Anna;20
+        #EndRawTable
+
+        #Id;#Action;$Table;$Index
+        TBLRR1;TableRemoveRow;actual;0
+
+        #Id;#RawTable
+        expected;Table
+        @;Name;Age
+        0;Anna;20
+        #EndRawTable
+
+        #Id;#Action;$Expected;$Actual
+        TBLCMP1;TableCompareTwo;expected;actual
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'remove last row';;;
+        #Id;#RawTable
+        actual;Table
+        @;Name;Age
+        0;Mike;25
+        1;Anna;20
+        2;Kate;21
+        #EndRawTable
+
+        #Id;#Action;$Table;$Index
+        TBLRR1;TableRemoveRow;actual;2
+
+        #Id;#RawTable
+        expected;Table
+        @;Name;Age
+        0;Mike;25
+        1;Anna;20
+        #EndRawTable
+
+        #Id;#Action;$Expected;$Actual
+        TBLCMP1;TableCompareTwo;expected;actual
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'table field does not fill';;;
+        #Id;#RawTable
+        actual;Table
+        @;Name;Age
+        0;Mike;25
+        1;Anna;20
+        #EndRawTable
+
+        #Id;#Action;#Assert;$Table;$Index
+        TBLRR1;TableRemoveRow;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;;1
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'index is out of bound > size';;;
+        #Id;#RawTable
+        actual;Table
+        @;Name;Age
+        0;Mike;25
+        1;Anna;20
+        #EndRawTable
+
+        #Id;#Action;#Assert;$Table;$Index
+        TBLRR1;TableRemoveRow;This.Result == Result.Failed && This.Kind == ErrorKind.WRONG_PARAMETERS;actual;2
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'index is out of bound < 0';;;
+        #Id;#RawTable
+        actual;Table
+        @;Name;Age
+        0;Mike;25
+        1;Anna;20
+        #EndRawTable
+
+        #Id;#Action;#Assert;$Table;$Index
+        TBLRR1;TableRemoveRow;This.Result == Result.Failed && This.Kind == ErrorKind.WRONG_PARAMETERS;actual;-1
+
+    #EndStep
+
 
