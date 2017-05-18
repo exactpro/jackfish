@@ -35,6 +35,7 @@ public class SettingsPanel
 
 	public static final List<String> matrixNavigationList = Stream.of(
 			Settings.ADD_ITEMS,
+			Settings.ALL_PARAMETERS,
 			Settings.BREAK_POINT,
 			Settings.ADD_PARAMETER,
 			Settings.HELP,
