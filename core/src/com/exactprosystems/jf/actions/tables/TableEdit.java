@@ -31,7 +31,23 @@ import com.exactprosystems.jf.functions.Table;
 		additionalDescription   = "Values where a parameter name – a table column name, a parameter value – true, if it is allowed to edit.",
         outputDescription       = "Returns true if the user pushed the button Ok.",
 		suffix					= "TBEDT",
-        outputType              = Boolean.class
+        outputType              = Boolean.class,
+		examples = "{{#" +
+				"#Id;#RawTable\n" +
+				"TC;Table\n" +
+				"@;Name;Age;City\n" +
+				"0;Mike;25;London\n" +
+				"1;Jane;21;Moscow\n" +
+				"2;Ann;19;France\n" +
+				"#EndRawTable\n" +
+				"\n" +
+				"#Action;$Table;$Title;Name;Age;City\n" +
+				"TableEdit;TC;'Title';true;false;true\n" +
+				"\n" +
+				"#Action;$Table;$Title\n" +
+				"TableReport;TC;'table after edit'\n" +
+				"\n" +
+				"#}}"
 		
 	)
 public class TableEdit extends AbstractAction 

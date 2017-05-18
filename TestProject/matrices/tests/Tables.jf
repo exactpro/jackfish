@@ -2461,6 +2461,69 @@ TABLE_SET_VALUE;Test case;Never;;
 
 #Id;#TestCase;#Kind;#Depends;#For
 TABLE_EDIT;Test case;Never;;
+    #Step;#Kind;#For;#Depends
+    'table field does not fill';;;
+        #Id;#RawTable
+        TC;Table
+        @;Name;Age
+        0;Mike;25
+        1;Jane;21
+        2;Ann;19
+        #EndRawTable
+
+        #Id;#Action;#Assert;$Table;$Title;Name;Age
+        TBEDT1;TableEdit;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;;'Title';;
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'title field does not fill';;;
+        #Id;#RawTable
+        TC;Table
+        @;Name;Age
+        0;Mike;25
+        1;Jane;21
+        2;Ann;19
+        #EndRawTable
+
+        #Id;#Action;#Assert;$Table;$Title;Name;Age
+        TBEDT1;TableEdit;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;TC;;;
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'wrong boolean parameters';;;
+        #Id;#RawTable
+        TC;Table
+        @;Name;Age
+        0;Mike;25
+        1;Jane;21
+        2;Ann;19
+        #EndRawTable
+
+        #Id;#Action;#Assert;$Table;$Title;Name;Age
+        TBEDT1;TableEdit;This.Result == Result.Failed && This.Kind == ErrorKind.WRONG_PARAMETERS;TC;'Title';'true';'false'
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'example';;;
+        #Id;#RawTable
+        TC;Table
+        @;Name;Age;City
+        0;Mike;25;London
+        1;Jane;21;Moscow
+        2;Ann;19;France
+        #EndRawTable
+
+        #Action;$Table;$Title;Name;Age;City
+        TableEdit;TC;'Title';true;false;true
+
+        #Action;$Table;$Title
+        TableReport;TC;'table after edit'
+
+    #EndStep
+
 
 #Id;#TestCase;#Kind;#Depends;#For
 TABLE_SELECT;Test case;Never;;
