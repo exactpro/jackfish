@@ -629,10 +629,10 @@ public class DisplayDriverFx implements DisplayDriver
 	}
 
 	@Override
-	public void showTree(MatrixItem item, Object layout, int row, int column, MapMessage message, IMessageDictionary dictionary)
+	public void showTree(MatrixItem item, Object layout, int row, int column, MapMessage message, IMessageDictionary dictionary, Context context)
 	{
 		GridPane pane = (GridPane) layout;
-		RawMessageTreeView treeView = new RawMessageTreeView(message);
+		RawMessageTreeView treeView = new RawMessageTreeView(message, context.getEvaluator());
 		treeView.displayTree(message, dictionary);
 		DragResizer.makeResizable(treeView, treeView::setPrefHeight);
 		pane.add(treeView, column, row, 10, 2);

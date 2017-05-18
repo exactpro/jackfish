@@ -119,7 +119,7 @@ public class RawMessage extends MatrixItem
 		driver.showToggleButton(this, layout, 1, 7, 
 		        b -> driver.hide(this, layout, 2, b), 
 		        b -> b ? "Hide" : "Show", this.message.size() != 0);
-		driver.showTree(this, layout, 2, 0, this.message, getDictionary(context));
+		driver.showTree(this, layout, 2, 0, this.message, getDictionary(context), context);
 		driver.hide(this, layout, 2, this.message.size() == 0);
 		return layout;
 	}
@@ -181,7 +181,7 @@ public class RawMessage extends MatrixItem
 		this.typeName.set(systemParameters.get(Tokens.RawMessage));
 		this.clientName.set(systemParameters.get(Tokens.Client));
 		Map<String, Object> map = new LinkedHashMap<>();
-		map.put("Root", "");
+		map.put("", "");
 		this.message = new MapMessage(this.typeName.get(), map, null);
 
 

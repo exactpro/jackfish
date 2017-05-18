@@ -49,7 +49,7 @@ public interface DisplayDriver
 	void 		showToggleButton	(MatrixItem item, Object layout, int row, int column, Consumer<Boolean> action, Function<Boolean, String> changeName, boolean initialValue);
 	void 		showParameters		(MatrixItem item, Object layout, int row, int column, Parameters parameters, FormulaGenerator generator, boolean oneLine);
 	void 		showGrid			(MatrixItem item, Object layout, int row, int column, Table table);
-	void		showTree			(MatrixItem item, Object layout, int row, int column, MapMessage message, IMessageDictionary dictionary);
+	void		showTree(MatrixItem item, Object layout, int row, int column, MapMessage message, IMessageDictionary dictionary, Context context);
 	void 		updateTree			(MatrixItem item, Object layout, MapMessage message, IMessageDictionary dictionary);
 	void 		hide				(MatrixItem item, Object layout, int row, boolean hide);
 	void		setupCall			(MatrixItem item, String reference, Parameters parameters);
