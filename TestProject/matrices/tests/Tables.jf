@@ -2527,6 +2527,195 @@ TABLE_EDIT;Test case;Never;;
 
 #Id;#TestCase;#Kind;#Depends;#For
 TABLE_SELECT;Test case;Never;;
+    #Step;#Kind;#For;#Depends
+    'table field does not fill';;;
+        #Id;#Action;#Assert;$Table;Age
+        TS;TableSelect;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;;new StringCondition('Name','Mike')
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'select by expression';;;
+        #Id;#RawTable
+        TC;Table
+        @;Name;Age
+        0;Mike;42
+        1;John;32
+        2;Fred;21
+        #EndRawTable
+
+        #Action;$Table;$Integer
+        TableConsiderColumnsAs;TC;'Age'
+
+        #Id;#Action;$Table;Age
+        actual;TableSelect;TC;new NumberCondition('Age','>',25)
+
+        #Id;#RawTable
+        expected;Table
+        @;Name;Age
+        0;Mike;42
+        1;John;32
+        #EndRawTable
+
+        #Id;#Action;$Expected;$Actual
+        TBLCMP1;TableCompareTwo;expected;actual.Out
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'select by condition for another column';;;
+        #Id;#RawTable
+        TC;Table
+        @;Name;Age
+        0;Mike;42
+        1;John;42
+        2;Fred;21
+        #EndRawTable
+
+        #Id;#Action;$Table;Age
+        actual;TableSelect;TC;new StringCondition('Name','Mike')
+
+        #Id;#RawTable
+        expected;Table
+        @;Name;Age
+        0;Mike;42
+        #EndRawTable
+
+        #Id;#Action;$Expected;$Actual
+        TBLCMP1;TableCompareTwo;expected;actual.Out
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'simple select';;;
+        #Id;#RawTable
+        TC;Table
+        @;Name;Age
+        0;Mike;42
+        1;John;42
+        2;Fred;21
+        #EndRawTable
+
+        #Id;#Action;$Table;Name
+        actual;TableSelect;TC;'Mike'
+
+        #Id;#RawTable
+        expected;Table
+        @;Name;Age
+        0;Mike;42
+        #EndRawTable
+
+        #Id;#Action;$Expected;$Actual
+        TBLCMP1;TableCompareTwo;expected;actual.Out
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'column does not exist in table';;;
+        #Id;#RawTable
+        TC;Table
+        @;Name;Age
+        0;Mike;42
+        1;John;42
+        2;Fred;21
+        #EndRawTable
+
+        #Id;#Action;#Assert;$Table;Age;City
+        actual;TableSelect;This.Result == Result.Failed && This.Kind == ErrorKind.WRONG_PARAMETERS;TC;42;'Mike'
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'column does not have name';;;
+        #Id;#RawTable
+        TC;Table
+        @;Name;Age
+        0;Mike;42
+        1;John;42
+        2;Fred;21
+        #EndRawTable
+
+        #Id;#Action;#Assert;$Table;Age;
+        actual;TableSelect;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;TC;42;'Mike'
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'there is not coincidence';;;
+        #Id;#RawTable
+        TC;Table
+        @;Name;Age
+        0;Mike;43
+        1;John;42
+        2;Fred;21
+        #EndRawTable
+
+        #Id;#Action;$Table;Age;Name
+        actual;TableSelect;TC;42;'Fred'
+
+        #Id;#Action;Name;Age
+        expected;TableCreate;;
+
+        #Id;#Action;$Expected;$Actual
+        TBLCMP1;TableCompareTwo;expected.Out;actual.Out
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'select by several column values';;;
+        #Id;#RawTable
+        TC;Table
+        @;Name;Age
+        0;Mike;43
+        1;John;42
+        2;Fred;21
+        3;John;43
+        4;John;42
+        #EndRawTable
+
+        #Id;#Action;$Table;Age;Name
+        actual;TableSelect;TC;42;'John'
+
+        #Id;#RawTable
+        expected;Table
+        @;Name;Age
+        0;John;42
+        1;John;42
+        #EndRawTable
+
+        #Id;#Action;$Expected;$Actual
+        TBLCMP1;TableCompareTwo;expected;actual.Out
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'OR condition';;;
+        #Id;#RawTable
+        TC;Table
+        @;Name;Age
+        0;Mike;43
+        1;John;42
+        2;Fred;21
+        3;John;43
+        4;John;42
+        #EndRawTable
+
+        #Id;#Action;$Table;Name
+        actual;TableSelect;TC;new OrCondition(new StringCondition('Name','Fred'), new NumberCondition('Age','>',42))
+
+        #Id;#RawTable
+        expected;Table
+        @;Name;Age
+        0;Mike;43
+        1;Fred;21
+        2;John;43
+        #EndRawTable
+
+        #Id;#Action;$Expected;$Actual
+        TBLCMP1;TableCompareTwo;expected;actual.Out
+
+    #EndStep
+
 
 #Id;#TestCase;#Kind;#Depends;#For
 TABLE_UNION;Test case;Never;;

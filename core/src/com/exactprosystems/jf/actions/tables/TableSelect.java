@@ -13,6 +13,7 @@ import com.exactprosystems.jf.actions.ActionAttribute;
 import com.exactprosystems.jf.actions.ActionFieldAttribute;
 import com.exactprosystems.jf.actions.ActionGroups;
 import com.exactprosystems.jf.api.conditions.Condition;
+import com.exactprosystems.jf.api.error.ErrorKind;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.report.ReportBuilder;
 import com.exactprosystems.jf.documents.config.Context;
@@ -90,6 +91,22 @@ public class TableSelect extends AbstractAction
 	public void doRealAction(Context context, ReportBuilder report, Parameters parameters, AbstractEvaluator evaluator) throws Exception
 	{
 		Parameters extra = parameters.select(TypeMandatory.Extra);
+
+		for (String name : extra.keySet())
+		{
+			if (name.isEmpty())
+			{
+				super.setError("The column name does not have to contain an empty value", ErrorKind.EMPTY_PARAMETER);
+				return;
+			}
+
+			if (!this.table.columnIsPresent(name))
+			{
+				super.setError("The header " + name + " does not exist in the table", ErrorKind.WRONG_PARAMETERS);
+				return;
+			}
+		}
+
 		Condition[] conditions = Condition.convertToCondition(extra);
 		Table newTable = this.table.select(conditions);
 		
