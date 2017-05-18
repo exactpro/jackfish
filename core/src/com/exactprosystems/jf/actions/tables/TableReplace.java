@@ -80,25 +80,25 @@ public class TableReplace extends AbstractAction
 	@Override
 	public void doRealAction(Context context, ReportBuilder report, Parameters parameters, AbstractEvaluator evaluator) throws Exception
 	{
-		if (this.regexp == null)
+	    if (this.regexp != null)
+        {
+            this.table.replace(this.regexp, this.replace, this.columns);
+        }
+	    else
 		{
 			if(this.matchCell == null)
 			{
-				super.setError("Column '" + this.matchCellname + "' can't be empty.", ErrorKind.EMPTY_PARAMETER);
+				super.setError("Parameter '" + matchCellname + "' can't be empty.", ErrorKind.EMPTY_PARAMETER);
 				return;
 			}
 
-			if(this.search == null)
+			if(!parameters.containsKey(searchName))
 			{
-				super.setError("Column '" + this.searchName + "' or '" + this.regexpName + "' can't be empty.", ErrorKind.EMPTY_PARAMETER);
+				super.setError("Parameter '" + searchName + "' or '" + regexpName + "' can't be empty.", ErrorKind.EMPTY_PARAMETER);
 				return;
 			}
 
 			this.table.replace(this.search, this.replace, this.matchCell, this.columns);
-		}
-		else
-		{
-			this.table.replace(this.regexp, this.replace, this.columns);
 		}
 		
 		super.setResult(null);
