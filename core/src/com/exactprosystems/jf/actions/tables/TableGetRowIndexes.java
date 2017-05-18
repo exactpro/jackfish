@@ -78,12 +78,6 @@ public class TableGetRowIndexes extends AbstractAction
 	{
 		Parameters extra = parameters.select(TypeMandatory.Extra);
 
-		if(extra.size() == 0)
-		{
-			super.setError("Action TableGetRowIndexes must have at least one additional parameter.", ErrorKind.EMPTY_PARAMETER);
-			return;
-		}
-
 		Condition[] conditions = Condition.convertToCondition(extra);
 		List<Integer> indexes = this.table.findAllIndexes(conditions);
 		
