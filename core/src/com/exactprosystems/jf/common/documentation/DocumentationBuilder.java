@@ -13,7 +13,9 @@ import com.exactprosystems.jf.actions.ActionGroups;
 import com.exactprosystems.jf.actions.ActionsList;
 import com.exactprosystems.jf.api.app.ControlKind;
 import com.exactprosystems.jf.api.app.OperationKind;
+import com.exactprosystems.jf.api.common.DateTime;
 import com.exactprosystems.jf.common.ControlsAttributes;
+import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.report.ReportBuilder;
 import com.exactprosystems.jf.common.report.ReportFactory;
 import com.exactprosystems.jf.common.version.VersionInfo;
@@ -41,12 +43,21 @@ public class DocumentationBuilder
     
     public static MatrixItem createUserManual (ReportBuilder report, Context context) throws Exception
     {
+        AbstractEvaluator evaluator = context.getEvaluator();
+        
         MatrixItem help = new HelpChapter("Help", 1);
-
+        
+        String[][] table1 = new String[][] 
+                {
+                    { "{{*Date*}}", "{{*Version*}}", "{{*By*}}", "{{*Comments*}}" },
+                    { DateTime.current().str("dd MMM yyyy"), VersionInfo.getVersion(), "Valery Florov", "Initial Draft" }
+                };
+        addTable(help, "{{/Document Information/}}", table1, new int[] { 20, 20, 30, 30 },  evaluator);
+//
 //        addChapter(help, "Introduction", 3);
         addText(help, DocumentationBuilder.class.getResourceAsStream("intro1.txt"));
-        addPicture(help, "Architecture", DocumentationBuilder.class.getResourceAsStream("Intro.png"));
-        addText(help, DocumentationBuilder.class.getResourceAsStream("intro2.txt"));
+//        addPicture(help, "Architecture", DocumentationBuilder.class.getResourceAsStream("Intro.png"));
+//        addText(help, DocumentationBuilder.class.getResourceAsStream("intro2.txt"));
 //        addChapter(help, "MVEL", 3);
 //        addText(help, DocumentationBuilder.class.getResourceAsStream("mvel.txt"));
 //        addChapter(help, "All controls", 3);
@@ -81,6 +92,12 @@ public class DocumentationBuilder
         root.insert(root.count(), picture);
     }
     
+    public static void addTable(MatrixItem root, String title, String[][] content, int[] widths, AbstractEvaluator evaluator) throws Exception
+    {
+        Table table = new Table(content, evaluator);
+        MatrixItem text = new HelpTable(title, table, widths);
+        root.insert(root.count(), text);
+    }
     
     public static void addAllControlsTable(MatrixItem root, String title, Context context) throws Exception
     {
@@ -139,7 +156,7 @@ public class DocumentationBuilder
                 table.addValue(arr);
             }
             
-            MatrixItem tableItem = new HelpTable(title, table);
+            MatrixItem tableItem = new HelpTable(title, table, new int[] {}); // TODO
             root.insert(root.count(), tableItem);
         }
         catch (Exception e)

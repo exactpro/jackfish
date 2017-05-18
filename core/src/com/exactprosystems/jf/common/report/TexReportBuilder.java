@@ -14,7 +14,10 @@ import com.exactprosystems.jf.charts.ChartBuilder;
 import com.exactprosystems.jf.documents.matrix.parser.items.*;
 
 import java.io.*;
+import java.util.Arrays;
 import java.util.Date;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 public class TexReportBuilder extends ReportBuilder 
 {
@@ -81,11 +84,11 @@ public class TexReportBuilder extends ReportBuilder
             case "2" + CM: return "";  
     
             // header 3
-            case OM + "3": return "";
+            case OM + "3": return "\\\\newpage";
             case "3" + CM: return "";  
     
             // header 4 (max level)
-            case OM + "4": return "";
+            case OM + "4": return "\\\\newpage";
             case "4" + CM: return "";  
     
             // style for identifiers
@@ -93,8 +96,8 @@ public class TexReportBuilder extends ReportBuilder
             case "$" + CM: return "";       
     
             // style for code
-            case OM + "#": return "\\begin{alltt}";    
-            case "#" + CM: return "\\end{alltt}";  
+            case OM + "#": return "\\\\begin{alltt}";    
+            case "#" + CM: return "\\\\end{alltt}";  
             
             // style for references
             case OM + "@": return "";
@@ -102,19 +105,31 @@ public class TexReportBuilder extends ReportBuilder
     
             // paragraph
             case OM + "`": return "";
-            case "`" + CM: return "\\newline";
+            case "`" + CM: return "\\\\newline";
     
             // underscored
             case OM + "_": return "";
             case "_" + CM: return "";
     
             // bolder
-            case OM + "*": return "\\bold{";
+            case OM + "*": return "\\\\textbf{";
             case "*" + CM: return "}";
 
             // italic
-            case OM + "/": return "\\textit{";
+            case OM + "/": return "\\\\textit{";
             case "/" + CM: return "}";
+            
+            // table
+            case OM + "=": return "\\\\begin{longtable}[h]{lp{0.7\\\\linewidth}} \\\\begin{tabular}{|p{0}|p{50pt}|p{150pt}|p{150pt}|p{100pt}|p{}|p{}|p{}|p{}|p{}|p{}|} \\\\hline";
+            case "=" + CM: return "\\\\end{tabular} \\\\end{longtable}";
+
+            // row table
+            case OM + "-": return "";
+            case "-" + CM: return "\\\\\\\\ \\\\hline";
+
+            // cell of row table
+            case OM + "+": return "&";
+            case "+" + CM: return "";
         }
         
         return "";
@@ -143,6 +158,11 @@ public class TexReportBuilder extends ReportBuilder
 	protected void reportHeader(ReportWriter writer, Date date, String version) throws IOException
 	{
 	    writer.include(getClass().getResourceAsStream("tex1.txt"));
+	    writer.fwrite("\\begin{document}");
+//        %% \\maketitle
+//        %% \\newpage
+//        %% \\tableofcontents
+//        %% \\newpage
 	}
 
 	@Override
@@ -189,7 +209,7 @@ public class TexReportBuilder extends ReportBuilder
             itemId = "";
         }
 
-		writer.fwrite("\\subsection{%s}\n", item.getItemName().trim());
+//		writer.fwrite("\\subsection{%s}", itemId).newline();
 //        addBookmarks(writer, item.getItemName().trim());
 	}
 
@@ -201,38 +221,32 @@ public class TexReportBuilder extends ReportBuilder
 	@Override
 	protected void reportImage(ReportWriter writer, MatrixItem item, String beforeTestcase, String fileName, String title, Boolean asLink) throws IOException
 	{
-		//TODO check center
-        writer.fwrite("\\includegraphics[width=0.3\\textwidth]{%s}", fileName);
+        writer.fwrite("\\includegraphics[width=0.3\\textwidth]{%s}", fileName).newline();
         if (!Str.IsNullOrEmpty(title))
         {
-			writer.fwrite("\\caption{%s}\n", this.postProcess(title));
+			writer.fwrite("\\caption{%s}", title).newline();
 		}
 	}
 
 	@Override
 	protected void reportItemLine(ReportWriter writer, MatrixItem item, String beforeTestcase, String string, String labelId) throws IOException
 	{
-		writer.fwrite(postProcess(string) + "\n");
+		writer.fwrite(string).newline();
 	}
 
 	@Override
 	protected void tableHeader(ReportWriter writer, ReportTable table, String tableTitle, String[] columns, int[] percents) throws IOException
 	{
-		writer.fwrite(" \n \\begin{table}[h] \n");
+	    System.err.println(">> " + Arrays.toString(percents));
+	    
+		writer.fwrite("\\begin{longtable}[h]{lp{0.7\\linewidth}}").newline();
 		if (!Str.IsNullOrEmpty(tableTitle))
 		{
-			writer.fwrite("\\caption{%s}\n", this.postProcess(tableTitle));
+			writer.fwrite("\\caption{%s} \\newline", tableTitle).newline();
 		}
-		writer.fwrite("\\begin{center} \n");
-		StringBuilder sb = new StringBuilder();
-		sb.append("|");
-		for (String c : columns)
-		{
-			sb.append("c|");
-		}
-		writer.fwrite("\\begin{tabular}{" + sb.toString() + "} \n");
-		writer.fwrite("\\hline \n");
-
+		String tab = Arrays.stream(columns).map(c -> "l").collect(Collectors.joining("|"));
+		writer.fwrite("\\begin{tabular}{|%s|} \\hline", tab).newline();
+		tableRow(writer, table, 0, columns);
 	}
 	
 	@Override
@@ -240,33 +254,16 @@ public class TexReportBuilder extends ReportBuilder
 	{
 		if (value != null)
         {
-            if (value.length == 2){
-                writer.fwrite("\\multicolumn{}{|p{0.4\\linewidth}|}{\\raggedright %s} & \\multicolumn{}{p{0.6\\linewidth}|}{\\raggedright %s}\\\\",
-                        replaceMarker(ReportHelper.objToString(value[0], false)),
-                        replaceMarker(ReportHelper.objToString(value[1], false)));
-            }
-
-            /*for (int i = 0; i < value.length ; i++)
-        	{
-        		if (i != value.length-1)
-        		{
-					writer.fwrite("%s & ", replaceMarker(ReportHelper.objToString(value[i], false)));
-				} else
-				{
-					writer.fwrite("%s \\\\ ", replaceMarker(ReportHelper.objToString(value[i], false)));
-				}
-			}*/
-            writer.fwrite("\n");
+		    String s = Arrays.stream(value).map(o -> Objects.toString(o)).reduce((s1, s2) -> s1 + "&" + s2).orElse("");
+            writer.fwrite(s).fwrite("\\\\ \\hline").newline();
         }
 	}
 
 	@Override
 	protected void tableFooter(ReportWriter writer, ReportTable table) throws IOException
 	{
-		writer.fwrite("\\hline \n");
-		writer.fwrite("\\end{tabular} \n");
-		writer.fwrite("\\end{center} \n");
-        writer.fwrite("\\end{table} \n");
+		writer.fwrite("\\end{tabular}").newline()
+		    .fwrite("\\end{longtable}").newline();
 	}
 
 	@Override
@@ -274,10 +271,4 @@ public class TexReportBuilder extends ReportBuilder
 	{
 		chartBuilder.report(writer, ++chartCount);
 	}
-
-//	private void addBookmarks(ReportWriter writer, String  uniqueName) throws IOException
-//	{
-//		writer.fwrite("\\hypertarget{%s}{}",  uniqueName);
-//	}
-
 }

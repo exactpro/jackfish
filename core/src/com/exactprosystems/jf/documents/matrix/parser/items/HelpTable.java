@@ -8,6 +8,8 @@
 
 package com.exactprosystems.jf.documents.matrix.parser.items;
 
+import java.util.Collections;
+
 import com.exactprosystems.jf.api.error.ErrorKind;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.report.ReportBuilder;
@@ -21,10 +23,11 @@ import com.exactprosystems.jf.functions.Table;
 
 public class HelpTable extends MatrixItem
 {
-	public HelpTable(String str, Table table)
+	public HelpTable(String str, Table table, int[] widths)
 	{
 		this.str = str;
 		this.table = table;
+		this.widths = widths;
 	}
 
 	@Override
@@ -38,7 +41,7 @@ public class HelpTable extends MatrixItem
 	{
         try
         {
-            this.table.report(report, this.str, null, false, true);
+            this.table.report(report, this.str, null, false, true, Collections.emptyMap(), this.widths);
         }
         catch (Exception e)
         {
@@ -50,4 +53,5 @@ public class HelpTable extends MatrixItem
 
 	private String str;
 	private Table table;
+    protected int[]  widths;
 }

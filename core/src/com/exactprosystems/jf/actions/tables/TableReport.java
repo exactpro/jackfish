@@ -9,6 +9,7 @@
 package com.exactprosystems.jf.actions.tables;
 
 import com.exactprosystems.jf.actions.*;
+import com.exactprosystems.jf.api.common.Converter;
 import com.exactprosystems.jf.api.common.Str;
 import com.exactprosystems.jf.api.error.ErrorKind;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
@@ -57,6 +58,7 @@ public class TableReport extends AbstractAction
     public final static String columnsName        = "Columns";
     public final static String reportValuesName   = "ReportValues";
     public final static String toReportName       = "ToReport";
+    public final static String widthName          = "Width";
 
 	@ActionFieldAttribute(name=toReportName, mandatory = false, description = 
             "This parameter is used for directing the output from the given object to the external report "
@@ -78,6 +80,8 @@ public class TableReport extends AbstractAction
 	@ActionFieldAttribute(name = columnsName, mandatory = false, description = "Array or map of column titles which is needed to be output into the report.")
 	protected Object	columns;
 
+    @ActionFieldAttribute(name = widthName, mandatory = false, description = "Array of integers which define widht of each column.")
+    protected int[]  widths;
 	
 	@ActionFieldAttribute(name = reportValuesName, mandatory = false, description = "If the value is false, the value"
 			+ " from the cell is output, if the value is true the expression result is output. "
@@ -94,6 +98,7 @@ public class TableReport extends AbstractAction
 		this.beforeTestCase = null;
 		this.withNumbers 	= true;
 		this.columns 		= null;
+		this.widths         = null;
 		this.reportValues 	= false;
 		this.toReport = null;
 	}
@@ -175,9 +180,11 @@ public class TableReport extends AbstractAction
 		    }
 		}
 		
+		
+		
 		report = this.toReport == null ? report : this.toReport;
 		this.beforeTestCase = ActionsReportHelper.getBeforeTestCase(this.beforeTestCase, this.owner.getMatrix());
-		this.table.report(report, Str.asString(this.title), this.beforeTestCase, this.withNumbers, this.reportValues, map);
+		this.table.report(report, Str.asString(this.title), this.beforeTestCase, this.withNumbers, this.reportValues, map, this.widths);
 		
 		super.setResult(null);
 	}

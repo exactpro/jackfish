@@ -1,5 +1,25 @@
 {{2Introduction2}}
 
+{{*Unary Operators*}}
+
+{{=
+{{-{{+{{*Operator*}}+}}	{{+{{*Description*}}+}}	{{+{{*Example*}}+}}-}}
+{{-{{+new+}}	{{+Object instantiation+}}	{{+ {{#new String("foo")#}} +}}-}}
+{{-{{+with+}}	{{+Block WITH Operator. Perform multiple operations on a single object instance+}}	{{+ 
+{{#
+with (value) 
+{ 
+  name = 'Foo', 
+  age = 18, 
+  sex = Sex.FEMALE 
+} 
+#}}+}}-}}
+{{-{{+assert+}}	{{+Assert that a value is true or fail with an AssertionError+}}	{{+{{#assert foo != null#}}+}}-}}
+{{-{{+isdef+}}	{{+Tests whether or not a variable is defined within the scope+}}	{{+{{#isdef variableName#}}+}}-}}
+{{-{{+!+}}	    {{+Boolean negation operator+}}	{{+{{#!true == false#}}+}}-}}
+=}}
+
+
 JackFish ("JF" further in this document) is a tool for test automation of web-based applications built on Selenium framework. 
 JF can perform positive and negative functional testing, GUI testing, verification of a variety of data formats (xml, csv, text, etc.). 
 

@@ -763,11 +763,11 @@ public class Table implements List<RowTable>, Mutable, Cloneable
 
 	public void report(ReportBuilder report, String title, String beforeTestcase, boolean withNumbers, boolean reportValues) throws Exception
 	{
-		report(report, title, beforeTestcase, withNumbers, reportValues, Collections.emptyMap());
+		report(report, title, beforeTestcase, withNumbers, reportValues, Collections.emptyMap(), null);
 	}
 
     public void report(ReportBuilder report, String title, String beforeTestcase, boolean withNumbers,
-            boolean reportValues, Map<String, String> columns) throws Exception
+            boolean reportValues, Map<String, String> columns, int[] widths) throws Exception
     {
         if (beforeTestcase != null || report.reportIsOn())
         {

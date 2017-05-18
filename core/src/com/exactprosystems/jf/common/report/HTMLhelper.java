@@ -161,6 +161,18 @@ public class HTMLhelper
             // italic
             case OM + "/": return "<i>";
             case "/" + CM: return "</i>";
+
+            // table
+            case OM + "=": return "<table>";
+            case "=" + CM: return "</table>";
+
+            // row table
+            case OM + "-": return "<tr>";
+            case "-" + CM: return "</tr>";
+
+            // cell of row table
+            case OM + "+": return "<td>";
+            case "+" + CM: return "</td>";
 		}
 		return "";
 	}

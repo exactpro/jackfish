@@ -19,6 +19,7 @@ public class ReportTable
 		this.beforeTestcase = beforeTestcase;
 		this.decorated = decorated;
 		this.columns = columns;
+		this.widths = widths;
 	}
 
 	public void addValues(Object ... values)
@@ -51,6 +52,11 @@ public class ReportTable
 		return this.columns;
 	}
 
+    public int[] getWidths()
+    {
+        return this.widths;
+    }
+
 	public List<Object[]> getData()
 	{
 		return this.data;
@@ -60,5 +66,6 @@ public class ReportTable
 	protected String title;
 	protected String beforeTestcase;
 	protected String[] columns;
+    protected int[] widths;
 	protected List<Object[]> data;
 }
