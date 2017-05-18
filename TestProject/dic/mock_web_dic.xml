@@ -90,4 +90,17 @@
         </onClose>
         <close/>
     </window>
+    <window name="DialogForTestTableReport">
+        <self>
+            <any id="self" xpath="//div[@class=&amp;quot;container&amp;quot;]"/>
+        </self>
+        <onOpen/>
+        <run>
+            <any id="tableReport" xpath="//span[contains(text(),&amp;#39;Title&amp;#39;)]/.." class="" addition="Many" visibility="Visible"/>
+            <label id="numbers" xpath=".//th[contains(text(),&amp;#39;#&amp;#39;)]" owner="tableReport" addition="Many"/>
+            <table id="table" xpath=".//table" owner="tableReport" addition="Many"/>
+        </run>
+        <onClose/>
+        <close/>
+    </window>
 </dictionary>
