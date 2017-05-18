@@ -674,6 +674,133 @@ TABLE_COMPARE_TWO;Test case;Never;;
 #Id;#TestCase;#Kind;#Depends;#For
 TABLE_LEFT_JOIN;Test case;Never;;
     #Step;#Kind;#For;#Depends
+    'left > right';;;
+        #Id;#RawTable
+        Left;Table
+        @;id;Name;Language
+        0;1;London;us
+        1;2;Moscow;ru
+        2;3;France;fr
+        #EndRawTable
+
+        #Id;#RawTable
+        Right;Table
+        @;Name;LeftId
+        0;Andrey;1
+        1;Victor;2
+        #EndRawTable
+
+        #Id;#Action;$Condition;$LeftTable;$LeftAlias;$RightTable;$RightAlias;PersonName
+        TBLJN1;TableLeftJoin;'left.id == right.LeftId';Left;'left';Right;'right';'right.Name'
+
+        #Id;#RawTable
+        expected;Table
+        @;id;Name;Language;PersonName
+        0;1;London;us;Andrey
+        1;2;Moscow;ru;Victor
+        2;3;France;fr;
+        #EndRawTable
+
+        #Action;$Expected;$Actual
+        TableCompareTwo;expected;TBLJN1.Out
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'left == right (equals id)';;;
+        #Id;#RawTable
+        Left;Table
+        @;id;Name;Language
+        0;1;London;us
+        1;2;Moscow;ru
+        #EndRawTable
+
+        #Id;#RawTable
+        Right;Table
+        @;Name;LeftId
+        0;Andrey;1
+        1;Victor;2
+        #EndRawTable
+
+        #Id;#Action;$Condition;$LeftTable;$LeftAlias;$RightTable;$RightAlias;PersonName
+        TBLJN1;TableLeftJoin;'left.id == right.LeftId';Left;'left';Right;'right';'right.Name'
+
+        #Id;#RawTable
+        expected;Table
+        @;id;Name;Language;PersonName
+        0;1;London;us;Andrey
+        1;2;Moscow;ru;Victor
+        #EndRawTable
+
+        #Action;$Expected;$Actual
+        TableCompareTwo;expected;TBLJN1.Out
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'left == right (not equals id)';;;
+        #Id;#RawTable
+        Left;Table
+        @;id;Name;Language
+        0;1;London;us
+        1;3;France;fr
+        #EndRawTable
+
+        #Id;#RawTable
+        Right;Table
+        @;Name;LeftId
+        0;Andrey;1
+        1;Victor;2
+        #EndRawTable
+
+        #Id;#Action;$Condition;$LeftTable;$LeftAlias;$RightTable;$RightAlias;PersonName
+        TBLJN1;TableLeftJoin;'left.id == right.LeftId';Left;'left';Right;'right';'right.Name'
+
+        #Id;#RawTable
+        expected;Table
+        @;id;Name;Language;PersonName
+        0;1;London;us;Andrey
+        1;3;France;fr;
+        #EndRawTable
+
+        #Action;$Expected;$Actual
+        TableCompareTwo;expected;TBLJN1.Out
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'left < right';;;
+        #Id;#RawTable
+        Left;Table
+        @;id;Name;Language
+        0;1;London;us
+        1;2;Moscow;ru
+        #EndRawTable
+
+        #Id;#RawTable
+        Right;Table
+        @;Name;LeftId
+        0;Andrey;1
+        1;Victor;2
+        2;Alexander;3
+        #EndRawTable
+
+        #Id;#Action;$Condition;$LeftTable;$LeftAlias;$RightTable;$RightAlias;PersonName
+        TBLJN1;TableLeftJoin;'left.id == right.LeftId';Left;'left';Right;'right';'right.Name'
+
+        #Id;#RawTable
+        expected;Table
+        @;id;Name;Language;PersonName
+        0;1;London;us;Andrey
+        1;2;Moscow;ru;Victor
+        #EndRawTable
+
+        #Action;$Expected;$Actual
+        TableCompareTwo;expected;TBLJN1.Out
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
     'Join without additional parameters (only left Table)';;;
         #Id;#RawTable
         City;Table
@@ -696,13 +823,17 @@ TABLE_LEFT_JOIN;Test case;Never;;
         #Id;#Action;$Condition;$LeftTable;$LeftAlias;$RightTable;$RightAlias
         TBLJN1;TableLeftJoin;'person.CityId == city.id';Person;'person';City;'city'
 
+        #Action;$Table;$Title
+        TableReport;TBLJN1.Out;'After join'
+
         #Id;#RawTable
         expected;Table
         @;Name;CityId
         0;Andrey;1
         1;Victor;2
         2;Aleksander;1
-        3;Kate;3
+        3;Valery;4
+        4;Kate;3
         #EndRawTable
 
         #Action;$Expected;$Actual
@@ -739,7 +870,8 @@ TABLE_LEFT_JOIN;Test case;Never;;
         0;Andrey;1;London;us
         1;Victor;2;Moscow;ru
         2;Aleksander;1;London;us
-        3;Kate;3;France;fr
+        3;Valery;4;;
+        4;Kate;3;France;fr
         #EndRawTable
 
         #Action;$Expected;$Actual
@@ -776,7 +908,8 @@ TABLE_LEFT_JOIN;Test case;Never;;
         0;Andrey;1;London
         1;Victor;2;Moscow
         2;Aleksander;1;London
-        3;Kate;3;France
+        3;Valery;4;
+        4;Kate;3;France
         #EndRawTable
 
         #Action;$Expected;$Actual
@@ -813,7 +946,8 @@ TABLE_LEFT_JOIN;Test case;Never;;
         0;Andrey;1;
         1;Victor;2;
         2;Aleksander;1;
-        3;Kate;3;
+        3;Valery;4;
+        4;Kate;3;
         #EndRawTable
 
         #Action;$Expected;$Actual
@@ -2947,8 +3081,8 @@ TABLE_REPORT;Test case;Never;;
 
     #EndStep
 
-    #Off;#Step;#Kind;#For;#Depends
-    1;'example';;;
+    #Step;#Kind;#For;#Depends
+    'example';;;
         #Id;#RawTable
         TC;Table
         @;Name;Age

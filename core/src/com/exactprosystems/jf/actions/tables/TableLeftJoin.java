@@ -133,6 +133,7 @@ public class TableLeftJoin extends AbstractAction
 
 		for (RowTable rowLeft : this.leftTable)
 		{
+            boolean hasColumn = false;
 			evaluator.getLocals().set(this.leftAlias, rowLeft);
 			
 			for (RowTable rowRight : this.rightTable)
@@ -142,21 +143,32 @@ public class TableLeftJoin extends AbstractAction
 				Object cond = evaluator.evaluate(this.condition);
 				if (cond instanceof Boolean)
 				{
-					if ((Boolean) cond)
-					{
-						RowTable newRow = rowLeft.clone();
-						for (Parameter column : extra)
-						{
-							newRow.put(column.getName(), evaluator.evaluate("" + column.getValue()));
-						}
-						newTable.add(newRow);
-					}
+				    if((Boolean) cond)
+                    {
+                        hasColumn = true;
+                        RowTable newRow = rowLeft.clone();
+                        for (Parameter column : extra)
+                        {
+                            newRow.put(column.getName(), evaluator.evaluate("" + column.getValue()));
+                        }
+                        newTable.add(newRow);
+                    }
 				}
 				else 
 				{
 					super.setError("Join condition must be Boolean", ErrorKind.WRONG_PARAMETERS);
 					return;
 				}
+			}
+
+			if(!hasColumn)
+			{
+				RowTable newRow = rowLeft.clone();
+				for (Parameter column : extra)
+				{
+					newRow.put(column.getName(), "");
+				}
+				newTable.add(newRow);
 			}
 		}
 		
