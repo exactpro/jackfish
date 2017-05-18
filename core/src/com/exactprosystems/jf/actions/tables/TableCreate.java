@@ -57,7 +57,7 @@ public class TableCreate extends AbstractAction
 		{
 			if(columnName.isEmpty())
 			{
-				super.setError("The column must not contain an empty name.", ErrorKind.EMPTY_PARAMETER);
+				super.setError("The column name does not have to contain an empty value.", ErrorKind.EMPTY_PARAMETER);
 				return;
 			}
 		}

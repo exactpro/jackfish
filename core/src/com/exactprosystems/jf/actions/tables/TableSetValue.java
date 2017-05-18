@@ -67,13 +67,25 @@ public class TableSetValue extends AbstractAction
         Parameters params = parameters.select(TypeMandatory.Extra);
         for (String name : params.keySet())
         {
+			if (name.isEmpty())
+			{
+				super.setError("The column name does not have to contain an empty value", ErrorKind.EMPTY_PARAMETER);
+				return;
+			}
+
             if (!this.table.columnIsPresent(name))
             {
                 super.setError("The header " + name + " does not exist in the table", ErrorKind.WRONG_PARAMETERS);
                 return;
             }
         }
-        
+
+		if (this.index >= this.table.size())
+		{
+			super.setError("The index is out of bound of the table", ErrorKind.WRONG_PARAMETERS);
+			return;
+		}
+
 		this.table.setValue(this.index, params);
 		super.setResult(null);
 	}
