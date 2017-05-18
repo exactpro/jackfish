@@ -48,18 +48,78 @@ LAYOUT;DialogCheckLayout;;;
 
 #Id;#TestCase;#Kind;#Depends;#For
 CLOSE;DialogClose;;;
+    #Id;#Action;#Assert;$Dialog;$AppConnection
+    DLGCLS1;DialogClose;This.Result == Result.Failed && This.Kind == ErrorKind.EXCEPTION;'someDialog';APPSTR1.Out
+
+    #Id;#Action;#Assert;$Dialog;$AppConnection
+    DLGCLS2;DialogClose;This.Out > 0;'Main';APPSTR1.Out
+
+    #Id;#Action;#Assert;$Dialog;$AppConnection
+    DLGCLS3;DialogClose;This.Result == Result.Failed && This.Kind == ErrorKind.ELEMENT_NOT_FOUND;'DontUse';APPSTR1.Out
+
 
 #Id;#TestCase;#Kind;#Depends;#For
 FILL;DialogFill;;;
+    #Id;#Action;TextBox;$DoNotClose;$StopOnFail;$DoNotOpen;$Dialog;$AppConnection
+    DLGFLL3;DialogFill;Do.text('1234567890');true;true;false;'Main';APPSTR1.Out
+
+    #Id;#Action;#Assert;NotExistsWindow;$Dialog;$AppConnection
+    DLGFLL4;DialogFill;This.Result == Result.Failed && This.Kind == ErrorKind.DIALOG_NOT_FOUND;Do.text('1234567890');'NotExistsWindow';APPSTR1.Out
+
+    #Id;#Action;#Assert;TextBox;$StopOnFail;$Dialog;$AppConnection
+    DLGFLL5;DialogFill;This.Result == Result.Failed && This.Kind == ErrorKind.OPERATION_FAILED;Do.getTable();true;'Main';APPSTR1.Out
+
+    #Id;#Action;#Assert;$StopOnFail;$Dialog;$AppConnection;TextBox;TextBox
+    DLGFLL6;DialogFill;This.Result == Result.Failed && This.Kind == ErrorKind.OPERATION_FAILED;true;'Main';APPSTR1.Out;Do.text('1234567890');Do.getTable()
+
 
 #Id;#TestCase;#Kind;#Depends;#For
 SWITCH;DialogSwitchToWindow;;;
 
 #Id;#TestCase;#Kind;#Depends;#For
 VALIDATE;DialogValidate;;;
+    #Action;#Assert;$Dialog;$AppConnection
+    DialogValidate;This.Result == Result.Failed && This.Kind == ErrorKind.DIALOG_NOT_FOUND;'NotExistDialog';APPSTR1.Out
+
+    #Action;#Assert;$Dialog;$AppConnection
+    DialogValidate;This.Result == Result.Passed;'Main';APPSTR1.Out
+
+    #Action;#Assert;TextBox;$Dialog;$AppConnection
+    DialogValidate;This.Result == Result.Failed && This.Kind == ErrorKind.FAIL;179;'Main';APPSTR1.Out
+
+    #Action;#Assert;$DoNotOpen;$DoNotClose;$Dialog;$AppConnection
+    DialogValidate;This.Result == Result.Failed && This.Kind == ErrorKind.NOT_EQUAL;false;false;'DontUse';APPSTR1.Out
+
+    #Action;#Assert;$DoNotClose;$Dialog;$AppConnection
+    DialogValidate;This.Result == Result.Failed && This.Kind == ErrorKind.NOT_EQUAL;false;'DontUse';APPSTR1.Out
+
 
 #Id;#TestCase;#Kind;#Depends;#For
 IMAGE_GET;ImageGet;;;
+    #Id;#Action;$Dialog;$AppConnection
+    IMGGET1;ImageGet;;APPSTR1.Out
+
+    #Id;#Action;#Assert;$Dialog;$AppConnection
+    IMGGET2;ImageGet;This.Result == Result.Failed && This.Kind == ErrorKind.DIALOG_NOT_FOUND;'NotExist';APPSTR1.Out
+
+    #Id;#Action;#Assert;$Dialog;$Name;$AppConnection
+    IMGGET3;ImageGet;This.Result == Result.Failed && This.Kind == ErrorKind.EXCEPTION;'DontUse';;APPSTR1.Out
+
+    #Id;#Action;#Assert;$Dialog;$Name;$AppConnection
+    IMGGET4;ImageGet;This.Result == Result.Failed && This.Kind == ErrorKind.ELEMENT_NOT_FOUND;'Main';'NotExistImage';APPSTR1.Out
+
+    #Id;#Action;ImageIDE;$Dialog;$AppConnection
+    DLGFLL7;DialogFill;Do.move();'Main';APPSTR1.Out
+
+    #Id;#Action;#Assert;$Description;$Dialog;$Name;$AppConnection
+    IMGGET5;ImageGet;This.Out.getDescription() == 'string';'string';'Main';'ImageIDE';APPSTR1.Out
+
+    #Id;#Action;$Description;$Dialog;$Y1;$X1;$Y2;$X2;$Name;$AppConnection
+    IMGGET6;ImageGet;'str';'Main';10;10;5;20;'ImageIDE';APPSTR1.Out
+
+    #Assert;#Message
+    IMGGET6.Out.getImage().getWidth() == 10;'Wrong size!'
+
 
 #Id;#TestCase;#Kind;#Depends;#For
 IMAGE_REP;ImageReport;;;
@@ -103,6 +163,5 @@ IMAGE_SAVE;ImageSave;;;
 CLEANUP;Cleanup;;;
     #Id;#Action;$AppConnection
     APPSTP1;ApplicationStop;APPSTR1.Out
-
 
 

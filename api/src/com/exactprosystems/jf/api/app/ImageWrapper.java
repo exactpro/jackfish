@@ -110,7 +110,7 @@ public class ImageWrapper implements Storable
 	{
 		BufferedImage bi = new BufferedImage(this.width, this.height, BufferedImage.TYPE_INT_RGB);
 		bi.setRGB(0, 0, this.width, this.height, this.pixels, 0, this.width);
-		return new ImageWrapper(bi.getSubimage(x1, y1, x2-x1, y2-y1));
+		return new ImageWrapper(bi.getSubimage(x1, y1, x2-x1, y1-y2));
 	}
 
 	public BufferedImage getImage()

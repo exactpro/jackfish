@@ -79,4 +79,15 @@
         <onClose/>
         <close/>
     </window>
+    <window name="DontUse">
+        <self/>
+        <onOpen>
+            <textBox id="TextBox" uid="input" xpath="" expression="Do.getTable()"/>
+        </onOpen>
+        <run/>
+        <onClose>
+            <textBox uid="input" expression="Do.getTable()"/>
+        </onClose>
+        <close/>
+    </window>
 </dictionary>
