@@ -8,6 +8,8 @@
 
 package com.exactprosystems.jf.tool.custom.treetable;
 
+import com.exactprosystems.jf.api.app.AppConnection;
+import com.exactprosystems.jf.api.client.IMessageDictionary;
 import com.exactprosystems.jf.api.client.MapMessage;
 import com.exactprosystems.jf.api.common.Str;
 import com.exactprosystems.jf.common.MatrixRunner;
@@ -42,6 +44,7 @@ import com.exactprosystems.jf.tool.matrix.MatrixFx;
 import com.exactprosystems.jf.tool.matrix.params.ParametersPane;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
+import javafx.event.ActionEvent;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
@@ -218,29 +221,39 @@ public class DisplayDriverFx implements DisplayDriver
 	}
 
 	@Override
-	public void showComboBox(MatrixItem item, Object layout, int row, int column, Setter<String> set, Getter<String> get, Supplier<List<String>> handler)
+	public void showComboBox(MatrixItem item, Object layout, int row, int column, Setter<String> set, Getter<String> get, Supplier<List<String>> handler, Function<String, Boolean> needUpdate)
 	{
 		GridPane pane = (GridPane) layout;
 		ComboBox<String> comboBox = new ComboBox<>();
 		comboBox.setValue(get.get());
-		comboBox.setOnAction(e ->
-		{
-			String lastValue = get.get();
-			String value = comboBox.getValue();
-			if (Str.areEqual(lastValue, value))
+		comboBox.setOnAction(event -> {
+			if (event instanceof StubEvent)
 			{
+
+			}
+			String lastValue = get.get();
+			String newValue = comboBox.getValue();
+			if (Str.areEqual(lastValue, newValue))
+			{
+				return;
+			}
+
+			//TODO
+			if (!needUpdate.apply(newValue))
+			{
+				comboBox.getSelectionModel().select(lastValue);
 				return;
 			}
 
 			Command undo = () ->
 			{
 				set.set(lastValue);
-				comboBox.setValue(lastValue);
+				comboBox.getSelectionModel().select(lastValue);
 			};
 			Command redo = () ->
 			{
-				set.set(value);
-				comboBox.setValue(value);
+				set.set(newValue);
+				comboBox.getSelectionModel().select(newValue);
 			};
 			item.getMatrix().addCommand(undo, redo);
 		});
@@ -258,6 +271,11 @@ public class DisplayDriverFx implements DisplayDriver
 		}
 		pane.add(comboBox, column, row);
 		GridPane.setMargin(comboBox, INSETS);
+	}
+
+	private class StubEvent extends ActionEvent
+	{
+
 	}
 
 	@Override
@@ -609,79 +627,26 @@ public class DisplayDriverFx implements DisplayDriver
 		pane.add(borderPane, column, row, 10, 2);
 	}
 
-    @Override
-    public void showTree(MatrixItem item, Object layout, int row, int column, MapMessage message)
-    {
-        GridPane pane = (GridPane) layout;
-		TreeView<MessageBean> treeView = new TreeView<>();
-		TreeItem<MessageBean> root = new TreeItem<>(new MessageBean("Message",""));
-		DragResizer.makeResizable(treeView, treeView::setPrefHeight);
-		for (Map.Entry<String, Object> entry : message.entrySet())
-		{
-			add(root, entry.getKey(), entry.getValue());
-		}
-
-		treeView.setCellFactory(p -> new TreeCell<MessageBean>(){
-			@Override
-			protected void updateItem(MessageBean bean, boolean empty) {
-				super.updateItem(bean, empty);
-				if (bean != null && !empty)
-				{
-					HBox box = new HBox();
-					box.getChildren().add(new Label(bean.name));
-					if (bean.value != null && bean.value.length() != 0)
-					{
-						box.getChildren().add(new TextField(bean.value));
-					}
-					box.setSpacing(10);
-					setGraphic(box);
-				}
-				else
-				{
-					setGraphic(null);
-				}
-			}
-		});
-
-		treeView.setRoot(root);
-
-        pane.add(treeView, column, row, 10, 2);
-    }
-
-	private void add(TreeItem<MessageBean> treeItem, String name, Object value)
+	@Override
+	public void showTree(MatrixItem item, Object layout, int row, int column, MapMessage message, IMessageDictionary dictionary, Context context)
 	{
-		TreeItem<MessageBean> item = new TreeItem<>();
-		item.setValue(new MessageBean(name, !(value.getClass().isArray() || value instanceof Map) ? String.valueOf(value) : ""));
-
-		if (value.getClass().isArray())
-		{
-			Object[] value1 = (Object[]) value;
-			for (Object o : value1)
-			{
-				TreeItem<MessageBean> item2 = new TreeItem<>(new MessageBean("Repeating group",""));
-				item.getChildren().add(item2);
-
-				if (o instanceof Map)
-				{
-					for (Map.Entry<String, Object> entry : ((Map<String, Object>) o).entrySet())
-					{
-						add(item2, entry.getKey(), entry.getValue());
-					}
-				}
-			}
-		}else if (value instanceof Map)
-		{
-			Map<String,Object> newMap = (Map<String,Object>) value;
-			for (Map.Entry<String, Object> entry : newMap.entrySet())
-			{
-				add(item, entry.getKey(), entry.getValue());
-			}
-		}
-
-		treeItem.getChildren().add(item);
+		GridPane pane = (GridPane) layout;
+		RawMessageTreeView treeView = new RawMessageTreeView(message, context.getEvaluator());
+		treeView.displayTree(message, dictionary);
+		DragResizer.makeResizable(treeView, treeView::setPrefHeight);
+		pane.add(treeView, column, row, 10, 2);
 	}
 
-	
+	@Override
+	public void updateTree(MatrixItem item, Object layout, MapMessage message, IMessageDictionary dictionary)
+	{
+		((GridPane) layout).getChildren().stream()
+				.filter(node -> node instanceof RawMessageTreeView)
+				.findFirst()
+				.map(node -> (RawMessageTreeView)node)
+				.ifPresent(rawMessageTreeView -> rawMessageTreeView.displayTree(message, dictionary));
+	}
+
 	@Override
 	public void hide(MatrixItem item, Object layout, int row, boolean hide)
 	{
@@ -863,19 +828,4 @@ public class DisplayDriverFx implements DisplayDriver
 	private Context context;
 	private MatrixContextMenu rowContextMenu;
 	private MatrixParametersContextMenu parametersContextMenu;
-
-	private static class MessageBean {
-		String name;
-		String value;
-
-		public MessageBean(String name, String value) {
-			this.name = name;
-			this.value = value;
-		}
-
-		@Override
-		public String toString() {
-			return  "Name= '" + name + '\'' + (this.value.length() > 0 ? ", Value= '" + value + '\'' : "");
-		}
-	}
 }

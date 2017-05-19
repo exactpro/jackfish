@@ -11,6 +11,7 @@ package com.exactprosystems.jf.documents.matrix.parser.items;
 import com.csvreader.CsvWriter;
 import com.exactprosystems.jf.api.client.IClientFactory;
 import com.exactprosystems.jf.api.client.IField;
+import com.exactprosystems.jf.api.client.IMessageDictionary;
 import com.exactprosystems.jf.api.client.MapMessage;
 import com.exactprosystems.jf.api.common.Str;
 import com.exactprosystems.jf.api.error.ErrorKind;
@@ -27,11 +28,9 @@ import com.exactprosystems.jf.documents.matrix.parser.ReturnAndResult;
 import com.exactprosystems.jf.documents.matrix.parser.SearchHelper;
 import com.exactprosystems.jf.documents.matrix.parser.Tokens;
 import com.exactprosystems.jf.documents.matrix.parser.listeners.IMatrixListener;
+import com.exactprosystems.jf.tool.helpers.DialogsHelper;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
@@ -82,33 +81,45 @@ public class RawMessage extends MatrixItem
 		driver.showTitle(this, layout, 1, 1, Tokens.RawMessage.get(), context.getFactory().getSettings());
 		driver.showLabel(this, layout, 1, 2, Tokens.Client.get());
 		driver.showComboBox(this, layout, 1, 3, this.clientName, this.clientName, () ->
-				context.getConfiguration().getClientPool().clientNames());
+				context.getConfiguration().getClientPool().clientNames(), (str) -> true);
 		driver.showLabel(this, layout, 1, 4, "Message type");
-		driver.showComboBox(this, layout, 1, 5, this.typeName, this.typeName, () ->
+		driver.showComboBox(this, layout, 1, 5, str ->
+		{
+			this.typeName.set(str);
+			this.message.setMessageType(str);
+			driver.updateTree(this, layout, this.message, getDictionary(context));
+		}
+		, this.typeName, () ->
 		{
 			if (this.clientName == null)
 			{
-				return null;
+				return new ArrayList<>();
 			}
 			try
 			{
-				IClientFactory  factory = context.getConfiguration().getClientPool().loadClientFactory(this.clientName.get());
-				if (factory == null)
+				IMessageDictionary dictionary = getDictionary(context);
+				if (dictionary == null)
 				{
-					return null;
+					return new ArrayList<>();
 				}
-				
-				return factory.getDictionary().getMessages().stream().map(IField::getName).collect(Collectors.toList());
+				return dictionary.getMessages().stream().map(IField::getName).collect(Collectors.toList());
 			}
 			catch (Exception e)
-			{}
-			return null;
-		}); 
+			{
+				;
+			}
+			return new ArrayList<>();
+		}
+		, str -> {
+				//TODO
+//				return	DialogsHelper.showQuestionDialog("Do you want to change message type?", "The message will cleared");
+				return	true;
+		});
 		driver.showCheckBox(this, layout, 1, 6, "Global", this.global, this.global);
 		driver.showToggleButton(this, layout, 1, 7, 
 		        b -> driver.hide(this, layout, 2, b), 
 		        b -> b ? "Hide" : "Show", this.message.size() != 0);
-		driver.showTree(this, layout, 2, 0, this.message);
+		driver.showTree(this, layout, 2, 0, this.message, getDictionary(context), context);
 		driver.hide(this, layout, 2, this.message.size() == 0);
 		return layout;
 	}
@@ -169,31 +180,39 @@ public class RawMessage extends MatrixItem
 	{
 		this.typeName.set(systemParameters.get(Tokens.RawMessage));
 		this.clientName.set(systemParameters.get(Tokens.Client));
-		this.message = new MapMessage(this.typeName.get(), null, null);
-		
+		Map<String, Object> map = new LinkedHashMap<>();
+		map.put("", "");
+		this.message = new MapMessage(this.typeName.get(), map, null);
 
-		this.message.put("Fld1", 1);
-		this.message.put("Fld2", 2);
 
-		MapMessage group1 = new MapMessage(null);
-		group1.put("Field1", 101);
-		group1.put("Field2", 102);
-
-		MapMessage subGroup1 = new MapMessage(null);
-		subGroup1.put("SubField1", "66");
-		subGroup1.put("SubField2", 302);
-
-		MapMessage subGroup2 = new MapMessage(null);
-		subGroup2.put("SSubField1", 401);
-		subGroup2.put("SSubField2", 402);
-
-		MapMessage group2 = new MapMessage(null);
-		group2.put("FieldGroup1", 201);
-		group2.put("FieldGroup2", 202);
-		group2.put("SubGroup1", new Map[] { subGroup1 });
-		group2.put("SubGroup2", new Map[] { subGroup2 });
-
-		this.message.put("Group1", new Map[] { group1, group2 } );
+//		this.message.put("Fld1", 1);
+//		this.message.put("Fld2", 2);
+//
+//		MapMessage group1 = new MapMessage(null);
+//		group1.put("Field1", 101);
+//		group1.put("Field2", 102);
+//
+//		MapMessage subGroup1 = new MapMessage(null);
+//		subGroup1.put("SubField1", "66");
+//		subGroup1.put("SubField2", 302);
+//
+//		MapMessage subGroup2 = new MapMessage(null);
+//		subGroup2.put("SSubField1", 401);
+//		subGroup2.put("SSubField2", 402);
+//
+//		MapMessage group2 = new MapMessage(null);
+//		group2.put("FieldGroup1", 201);
+//		group2.put("FieldGroup2", 202);
+//		group2.put("SubGroup1", new Map[] { subGroup1 });
+//		group2.put("SubGroup2", new Map[] { subGroup2 });
+//
+//		MapMessage group3 = new MapMessage(null);
+//		group3.put("group3f1", "f1");
+//		group3.put("group3f2", "f2");
+//
+//		group2.put("Simple Group", group3);
+//
+//		this.message.put("Group1", new Map[] { group1, group2 } );
 	}
 
 	@Override
@@ -362,6 +381,25 @@ public class RawMessage extends MatrixItem
 				}
 			}
 		}
+	}
+
+	private IMessageDictionary getDictionary(Context context)
+	{
+		try
+		{
+			IClientFactory  factory = context.getConfiguration().getClientPool().loadClientFactory(this.clientName.get());
+			if (factory == null)
+			{
+				DialogsHelper.showError("Can't load factory " + this.clientName.get());
+				return null;
+			}
+			return factory.getDictionary();
+		}
+		catch (Exception e)
+		{
+			DialogsHelper.showError(e.getMessage());
+		}
+		return null;
 	}
 
 	private String[] headers = null;

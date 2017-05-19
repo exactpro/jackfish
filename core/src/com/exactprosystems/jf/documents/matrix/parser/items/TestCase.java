@@ -127,14 +127,14 @@ public final class TestCase extends MatrixItem
             List<String> list = this.owner.listOfIds(TestCase.class);
             list.add(0, "");
             return list;
-        });
+        }, (str) -> true);
         driver.showLabel(this, layout, 2, 2, "Screenshot:");
         driver.showComboBox(this, layout, 2, 3, this.kind, this.kind, () ->
         {
         	List<String> list = ScreenshotKind.names();
         	list.add(0, "");
         	return list;
-        });
+        }, (str) -> true);
         driver.showLabel(this, layout, 2, 4, "Plugin:");
         driver.showExpressionField(this, layout, 2, 5, Tokens.For.get(), this.plugin, this.plugin, null, null, null, null);
 		driver.showToggleButton(this, layout, 1, 3, 
