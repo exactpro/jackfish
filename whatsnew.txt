@@ -1,3 +1,7 @@
+19.05.2017
+Change version to 4.5.1
+--------------------------------------------------------------------------------
+
 18.05.2017 4.5.2399
 Remove not mandatory field in the action ApplicationNewInstance.
 This parameter moved to plugin.
