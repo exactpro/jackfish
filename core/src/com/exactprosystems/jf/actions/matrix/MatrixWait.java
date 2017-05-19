@@ -55,6 +55,12 @@ public class MatrixWait extends AbstractAction
     public void doRealAction(Context context, ReportBuilder report, Parameters parameters, AbstractEvaluator evaluator)
             throws Exception
     {
+        if(this.time == null)
+        {
+            super.setError("Column '" + this.timeName + "' can't be empty.", ErrorKind.EMPTY_PARAMETER);
+            return;
+        }
+
         if (this.matrix == null)
         {
             super.setError("The matrix object is null", ErrorKind.EMPTY_PARAMETER);
