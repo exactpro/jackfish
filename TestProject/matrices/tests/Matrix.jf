@@ -15,20 +15,11 @@ MATRIX_WAIT;Test case;Never;;
         #Assert;#Message
         MXRN1.Out.passed == 0 && MXRN1.Out.failed == 0;
 
-        #Id;#Let
-        sec1;DateTime.current().getSeconds()
-
         #Action;$Matrix
         MatrixWait;MXRN1.Out
 
-        #Id;#Let
-        sec2;DateTime.current().getSeconds()
-
-        #Id;#Let
-        w;(int) (sec2 - sec1)
-
         #Assert;#Message
-        MXRN1.Out.passed == 1 && MXRN1.Out.failed == 0 && w == 3;
+        MXRN1.Out.passed == 1 && MXRN1.Out.failed == 0;
 
     #EndStep
 
@@ -40,20 +31,11 @@ MATRIX_WAIT;Test case;Never;;
         #Assert;#Message
         MXRN1.Out.passed == 0 && MXRN1.Out.failed == 0;
 
-        #Id;#Let
-        sec1;DateTime.current().getSeconds()
-
         #Action;$Matrix;$Time
         MatrixWait;MXRN1.Out;1000
 
-        #Id;#Let
-        sec2;DateTime.current().getSeconds()
-
-        #Id;#Let
-        w;(int) (sec2 - sec1)
-
         #Assert;#Message
-        MXRN1.Out.passed == 0 && MXRN1.Out.failed == 0 && w == 1;
+        MXRN1.Out.passed == 0 && MXRN1.Out.failed == 0;
 
     #EndStep
 
@@ -81,20 +63,11 @@ MATRIX_WAIT;Test case;Never;;
         #Assert;#Message
         MXRN1.Out.passed == 0 && MXRN1.Out.failed == 0;
 
-        #Id;#Let
-        sec1;DateTime.current().getSeconds()
-
         #Action;$Matrix;$Time
         MatrixWait;MXRN1.Out;0
 
-        #Id;#Let
-        sec2;DateTime.current().getSeconds()
-
-        #Id;#Let
-        w;(int) (sec2 - sec1)
-
         #Assert;#Message
-        MXRN1.Out.passed == 1 && MXRN1.Out.failed == 0 && w == 3;
+        MXRN1.Out.passed == 1 && MXRN1.Out.failed == 0;
 
     #EndStep
 
