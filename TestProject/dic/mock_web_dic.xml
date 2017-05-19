@@ -79,7 +79,7 @@
         <onClose/>
         <close/>
     </window>
-    <window name="DontUse">
+    <window name="Empty">
         <self/>
         <onOpen>
             <textBox id="TextBox" uid="input" xpath="" expression="Do.getTable()"/>
@@ -88,6 +88,17 @@
         <onClose>
             <textBox uid="input" expression="Do.getTable()"/>
         </onClose>
+        <close/>
+    </window>
+    <window name="DialogForCheckReportImage">
+        <self>
+            <any id="Owner" xpath="//body"/>
+        </self>
+        <onOpen/>
+        <run>
+            <image id="logo" xpath="//img"/>
+        </run>
+        <onClose/>
         <close/>
     </window>
     <window name="DialogForTestTableReport">

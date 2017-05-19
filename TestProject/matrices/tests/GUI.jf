@@ -45,6 +45,24 @@ ALERT;DialogAlert;;;
 
 #Id;#TestCase;#Kind;#Depends;#For
 LAYOUT;DialogCheckLayout;;;
+    #Action;#Assert;$DoNotClose;$Dialog;$AppConnection
+    DialogCheckLayout;This.Result == Result.Failed && This.Kind == ErrorKind.NOT_EQUAL;false;'Empty';APPSTR1.Out
+
+    #Action;#Assert;$DoNotOpen;$Dialog;$AppConnection
+    DialogCheckLayout;This.Result == Result.Failed && This.Kind == ErrorKind.NOT_EQUAL;false;'Empty';APPSTR1.Out
+
+    #Id;#Let
+    map;new LinkedHashMap()
+
+    #Let
+    map.put('TextBox', Do.text('123'))
+
+    #Action;$Fields;$Dialog;$AppConnection
+    DialogCheckLayout;map;'Main';APPSTR1.Out
+
+    #Action;TextBox;$Dialog;$AppConnection
+    DialogCheckLayout;Do.text('123');'Main';APPSTR1.Out
+
 
 #Id;#TestCase;#Kind;#Depends;#For
 CLOSE;DialogClose;;;
@@ -55,7 +73,7 @@ CLOSE;DialogClose;;;
     DLGCLS2;DialogClose;This.Out > 0;'Main';APPSTR1.Out
 
     #Id;#Action;#Assert;$Dialog;$AppConnection
-    DLGCLS3;DialogClose;This.Result == Result.Failed && This.Kind == ErrorKind.ELEMENT_NOT_FOUND;'DontUse';APPSTR1.Out
+    DLGCLS3;DialogClose;This.Result == Result.Failed && This.Kind == ErrorKind.ELEMENT_NOT_FOUND;'Empty';APPSTR1.Out
 
 
 #Id;#TestCase;#Kind;#Depends;#For
@@ -74,9 +92,6 @@ FILL;DialogFill;;;
 
 
 #Id;#TestCase;#Kind;#Depends;#For
-SWITCH;DialogSwitchToWindow;;;
-
-#Id;#TestCase;#Kind;#Depends;#For
 VALIDATE;DialogValidate;;;
     #Action;#Assert;$Dialog;$AppConnection
     DialogValidate;This.Result == Result.Failed && This.Kind == ErrorKind.DIALOG_NOT_FOUND;'NotExistDialog';APPSTR1.Out
@@ -85,13 +100,16 @@ VALIDATE;DialogValidate;;;
     DialogValidate;This.Result == Result.Passed;'Main';APPSTR1.Out
 
     #Action;#Assert;TextBox;$Dialog;$AppConnection
+    DialogValidate;This.Result == Result.Passed;1;'Main';APPSTR1.Out
+
+    #Action;#Assert;TextBox;$Dialog;$AppConnection
     DialogValidate;This.Result == Result.Failed && This.Kind == ErrorKind.FAIL;179;'Main';APPSTR1.Out
 
     #Action;#Assert;$DoNotOpen;$DoNotClose;$Dialog;$AppConnection
-    DialogValidate;This.Result == Result.Failed && This.Kind == ErrorKind.NOT_EQUAL;false;false;'DontUse';APPSTR1.Out
+    DialogValidate;This.Result == Result.Failed && This.Kind == ErrorKind.NOT_EQUAL;false;false;'Empty';APPSTR1.Out
 
     #Action;#Assert;$DoNotClose;$Dialog;$AppConnection
-    DialogValidate;This.Result == Result.Failed && This.Kind == ErrorKind.NOT_EQUAL;false;'DontUse';APPSTR1.Out
+    DialogValidate;This.Result == Result.Failed && This.Kind == ErrorKind.NOT_EQUAL;false;'Empty';APPSTR1.Out
 
 
 #Id;#TestCase;#Kind;#Depends;#For
@@ -103,7 +121,7 @@ IMAGE_GET;ImageGet;;;
     IMGGET2;ImageGet;This.Result == Result.Failed && This.Kind == ErrorKind.DIALOG_NOT_FOUND;'NotExist';APPSTR1.Out
 
     #Id;#Action;#Assert;$Dialog;$Name;$AppConnection
-    IMGGET3;ImageGet;This.Result == Result.Failed && This.Kind == ErrorKind.EXCEPTION;'DontUse';;APPSTR1.Out
+    IMGGET3;ImageGet;This.Result == Result.Failed && This.Kind == ErrorKind.EXCEPTION;'Empty';;APPSTR1.Out
 
     #Id;#Action;#Assert;$Dialog;$Name;$AppConnection
     IMGGET4;ImageGet;This.Result == Result.Failed && This.Kind == ErrorKind.ELEMENT_NOT_FOUND;'Main';'NotExistImage';APPSTR1.Out
@@ -123,6 +141,33 @@ IMAGE_GET;ImageGet;;;
 
 #Id;#TestCase;#Kind;#Depends;#For
 IMAGE_REP;ImageReport;;;
+    #Id;#Action;ImageIDE;$Dialog;$AppConnection
+    DLGFLL8;DialogFill;Do.move();'Main';APPSTR1.Out
+
+    #Id;#Action;$Dialog;$Name;$AppConnection
+    IMGGET7;ImageGet;'Main';'ImageIDE';APPSTR1.Out
+
+    #Id;#Action;$ReportName
+    REP1;ReportStart;'ImageReportFromTest'
+
+    #Id;#Action;$ToReport;$Title;$Image
+    IMGRPT1;ImageReport;REP1.Out;'title';IMGGET7.Out
+
+    #Action;$Passed;$Report;$Failed
+    ReportFinish;1;REP1.Out;0
+
+    #Id;#Let
+    name;'file://' + new File(REP1.Out.getReportName()).getAbsolutePath()
+
+    #Id;#Action;Browser;URL;$AppId
+    APPSTR2;ApplicationStart;mockWebBrowser;name;mockWebApp
+
+    #Id;#Action;#Assert;logo;$Dialog;$AppConnection
+    DLGFLL9;DialogFill;This.Out.logo == true;Do.isVisible();'DialogForCheckReportImage';APPSTR2.Out
+
+    #Id;#Action;$AppConnection
+    APPSTP2;ApplicationStop;APPSTR2.Out
+
 
 #Id;#TestCase;#Kind;#Depends;#For
 IMAGE_SAVE;ImageSave;;;
@@ -157,6 +202,23 @@ IMAGE_SAVE;ImageSave;;;
 
     #Id;#Action;#Assert;$Image;$Dir
     IMGSV6;ImageSave;This.Result == Result.Failed && This.Kind == ErrorKind.WRONG_PARAMETERS;DSK2.Out;''
+
+#Id;#TestCase;#Kind;#Depends;#For
+SWITCH;DialogSwitchToWindow;;;
+    #Action;$AppConnection
+    DialogSwitchToWindow;APPSTR1.Out
+
+    #Action;#Assert;$Dialog;$AppConnection
+    DialogSwitchToWindow;This.Result == Result.Failed && This.Kind == ErrorKind.EXCEPTION;'Main';APPSTR1.Out
+
+    #Action;#Assert;$Dialog;$Frame;$AppConnection
+    DialogSwitchToWindow;This.Result == Result.Failed && This.Kind == ErrorKind.ELEMENT_NOT_FOUND;'Main';'blabla';APPSTR1.Out
+
+    #Action;#Assert;$Frame;$Dialog;$AppConnection
+    DialogSwitchToWindow;This.Result == Result.Failed && This.Kind == ErrorKind.DIALOG_NOT_FOUND;'anyFrame';'NotExist';APPSTR1.Out
+
+    #Action;$Frame;$Dialog;$AppConnection
+    DialogSwitchToWindow;'MyFrame';'Main';APPSTR1.Out
 
 
 #Id;#TestCase;#Kind;#Depends;#For
