@@ -8,9 +8,11 @@
 
 package com.exactprosystems.jf.common;
 
+import com.exactprosystems.jf.actions.ActionGroups;
 import com.exactprosystems.jf.api.app.Mutable;
 import com.exactprosystems.jf.api.common.Str;
 import com.exactprosystems.jf.documents.matrix.parser.ScreenshotKind;
+import com.exactprosystems.jf.documents.matrix.parser.Tokens;
 import com.exactprosystems.jf.documents.matrix.parser.items.MutableArrayList;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.dictionary.dialog.WizardSettings;
@@ -359,33 +361,30 @@ public class Settings
 					TRACE, "0x8066ccff",
 					WARN, "0xe64d4dff"
 			));
-			//TODO set normal colors and uncomment
-			DEFAULT_SETTINGS.setMapValues(GLOBAL_NS, MATRIX_COLORS, mapOf(
-					/*
-					ActionGroups.App.name(), "rgba(59,217,88,1.0)",
-					ActionGroups.Matrix.name(), "rgba(255,191,0,1.0)",
-					ActionGroups.GUI.name(), "rgba(179,230,179,1.0)",
-					ActionGroups.Messages.name(), "rgba(252,91,0,1.0)",
-					ActionGroups.Tables.name(), "rgba(0,255,156,1.0)",
-					ActionGroups.Text.name(), "rgba(0,162,255,1.0)",
-					ActionGroups.Clients.name(), "rgba(234,151,52,1.0)",
-					ActionGroups.Services.name(), "rgba(208,0,118,1.0)",
-					ActionGroups.SQL.name(), "rgba(0,17,255,1.0)",
-					ActionGroups.System.name(), "rgba(255,230,128,1.0)",
-					ActionGroups.Report.name(), "rgba(68,129,210,1.0)",
-					ActionGroups.XML.name(), "rgba(249,255,0,1.0)",
 
-					Tokens.Assert.name(), "rgba(177,0,0,1.0)",
-					Tokens.NameSpace.name(), "rgba(128,0,128,1.0)",
-					Tokens.TestCase.name(), "rgba(128,0,128,1.0)",
-					Tokens.RawTable.name(), "rgba(0,255,156,1.0)",
-					Tokens.RawMessage.name(), "rgba(252,91,0,1.0)",
-					Tokens.SubCase.name(), "rgba(128,0,128,1.0)",
-					Tokens.RawText.name(), "rgba(0,162,255,1.0)",
-					Tokens.Step.name(), "rgba(128,0,128,1.0)",
-					Tokens.Let.name(), "rgba(0,138,0,1.0)"
-					*/
-					 
+			DEFAULT_SETTINGS.setMapValues(GLOBAL_NS, MATRIX_COLORS, mapOf(
+					ActionGroups.App.name(), "rgba(118,145,39,1.0)",
+					ActionGroups.Matrix.name(), "rgba(85,183,183,1.0)",
+					ActionGroups.GUI.name(), "rgba(82,168,100,1.0)",
+					ActionGroups.Messages.name(), "rgba(231,116,52,1.0)",
+					ActionGroups.Tables.name(), "rgba(209,73,73,1.0)",
+					ActionGroups.Text.name(), "rgba(84,174,227,1.0)",
+					ActionGroups.Clients.name(), "rgba(170,142,206,1.0)",
+					ActionGroups.Services.name(), "rgba(101,177,170,1.0)",
+					ActionGroups.SQL.name(), "rgba(211,52,114,1.0)",
+					ActionGroups.System.name(), "rgba(237,173,52,1.0)",
+					ActionGroups.Report.name(), "rgba(73,149,182,1.0)",
+					ActionGroups.XML.name(), "rgba(201,138,205,1.0)",
+
+					Tokens.Assert.name(), "rgba(205,80,122,1.0)",
+					Tokens.NameSpace.name(), "rgba(87,149,27,1.0)",
+					Tokens.TestCase.name(), "rgba(80,158,228,1.0)",
+					Tokens.RawTable.name(), "rgba(209,73,73,1.0)",
+					Tokens.RawMessage.name(), "rgba(231,116,52,1.0)",
+					Tokens.SubCase.name(), "rgba(81,159,226,1.0)",
+					Tokens.RawText.name(), "rgba(84,174,227,1.0)",
+					Tokens.Step.name(), "rgba(81,159,226,1.0)",
+					Tokens.Let.name(), "rgba(76,131,76,1.0)"
 			));
 
 
