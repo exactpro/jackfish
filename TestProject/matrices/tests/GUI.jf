@@ -63,6 +63,15 @@ LAYOUT;DialogCheckLayout;;;
     #Action;TextBox;$Dialog;$AppConnection
     DialogCheckLayout;Do.text('123');'Main';APPSTR1.Out
 
+    #Id;#Let
+    mapIncorrect;new LinkedHashMap()
+
+    #Let
+    mapIncorrect.put('', Do.text('123'))
+
+    #Action;#Assert;$Fields;$Dialog;$AppConnection
+    DialogCheckLayout;This.Result == Result.Failed && This.Kind == ErrorKind.LOCATOR_NOT_FOUND;mapIncorrect;'Main';APPSTR1.Out
+
 
 #Id;#TestCase;#Kind;#Depends;#For
 CLOSE;DialogClose;;;
@@ -202,6 +211,7 @@ IMAGE_SAVE;ImageSave;;;
 
     #Id;#Action;#Assert;$Image;$Dir
     IMGSV6;ImageSave;This.Result == Result.Failed && This.Kind == ErrorKind.WRONG_PARAMETERS;DSK2.Out;''
+
 
 #Id;#TestCase;#Kind;#Depends;#For
 SWITCH;DialogSwitchToWindow;;;

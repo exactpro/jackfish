@@ -185,7 +185,7 @@ public class Section implements ISection, Mutable
 	public IControl getControlByIdAndValue(String name, Object obj) 
 	{
 		IControl result = getControlById(name);
-		if (result.getAddition() != null && result.getAddition() == Addition.SwitchByValue)
+		if (result != null && result.getAddition() != null && result.getAddition() == Addition.SwitchByValue)
 		{
 			result = getControlById(name+obj);
 		}
