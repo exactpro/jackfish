@@ -8,6 +8,7 @@
 
 package com.exactprosystems.jf.documents.matrix.parser;
 
+import com.exactprosystems.jf.actions.AbstractAction;
 import com.exactprosystems.jf.api.app.Mutable;
 import com.exactprosystems.jf.api.common.Converter;
 import com.exactprosystems.jf.api.common.Str;
@@ -17,6 +18,8 @@ import com.exactprosystems.jf.documents.matrix.parser.items.TypeMandatory;
 import com.exactprosystems.jf.documents.matrix.parser.listeners.IMatrixListener;
 
 import java.lang.reflect.Array;
+
+import org.apache.log4j.Logger;
 
 public class Parameter implements Mutable, Cloneable, Setter<String>, Getter<String>
 {
@@ -268,6 +271,8 @@ public class Parameter implements Mutable, Cloneable, Setter<String>, Getter<Str
         {
         	this.isValid = false;
         	this.value = e.getMessage(); 
+        	
+        	logger.error(e.getMessage(), e);
         }
     }
 
@@ -279,4 +284,6 @@ public class Parameter implements Mutable, Cloneable, Setter<String>, Getter<Str
 	boolean isValid;
 	TypeMandatory type;
 	private boolean changed;
+
+    protected static final Logger logger = Logger.getLogger(Parameter.class);
 }

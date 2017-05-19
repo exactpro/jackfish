@@ -18,10 +18,13 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.Objects;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 public class TexReportBuilder extends ReportBuilder 
 {
     private static final long serialVersionUID = -6980809888694705058L;
+    
+    private static final int TEXT_WIDTH = 350; // pt
 
     private static Integer chartCount = 0;
 	
@@ -244,7 +247,13 @@ public class TexReportBuilder extends ReportBuilder
 		{
 			writer.fwrite("\\caption{%s} \\newline", tableTitle).newline();
 		}
-		String tab = Arrays.stream(columns).map(c -> "l").collect(Collectors.joining("|"));
+		
+		int sum = Arrays.stream(percents).sum();
+		String tab = IntStream.range(0, columns.length)
+		        .mapToObj(i -> i)
+		        .map(o -> (sum <= 0 || percents.length <= o ? "l" : "p{" + (percents[o] * TEXT_WIDTH / sum) + "pt}"))
+		        .collect(Collectors.joining("|"));
+
 		writer.fwrite("\\begin{tabular}{|%s|} \\hline", tab).newline();
 		tableRow(writer, table, 0, columns);
 	}
