@@ -92,9 +92,6 @@ FILL;DialogFill;;;
 
 
 #Id;#TestCase;#Kind;#Depends;#For
-SWITCH;DialogSwitchToWindow;;;
-
-#Id;#TestCase;#Kind;#Depends;#For
 VALIDATE;DialogValidate;;;
     #Action;#Assert;$Dialog;$AppConnection
     DialogValidate;This.Result == Result.Failed && This.Kind == ErrorKind.DIALOG_NOT_FOUND;'NotExistDialog';APPSTR1.Out
@@ -205,6 +202,23 @@ IMAGE_SAVE;ImageSave;;;
 
     #Id;#Action;#Assert;$Image;$Dir
     IMGSV6;ImageSave;This.Result == Result.Failed && This.Kind == ErrorKind.WRONG_PARAMETERS;DSK2.Out;''
+
+#Id;#TestCase;#Kind;#Depends;#For
+SWITCH;DialogSwitchToWindow;;;
+    #Action;$AppConnection
+    DialogSwitchToWindow;APPSTR1.Out
+
+    #Action;#Assert;$Dialog;$AppConnection
+    DialogSwitchToWindow;This.Result == Result.Failed && This.Kind == ErrorKind.EXCEPTION;'Main';APPSTR1.Out
+
+    #Action;#Assert;$Dialog;$Frame;$AppConnection
+    DialogSwitchToWindow;This.Result == Result.Failed && This.Kind == ErrorKind.ELEMENT_NOT_FOUND;'Main';'blabla';APPSTR1.Out
+
+    #Action;#Assert;$Frame;$Dialog;$AppConnection
+    DialogSwitchToWindow;This.Result == Result.Failed && This.Kind == ErrorKind.DIALOG_NOT_FOUND;'anyFrame';'NotExist';APPSTR1.Out
+
+    #Action;$Frame;$Dialog;$AppConnection
+    DialogSwitchToWindow;'MyFrame';'Main';APPSTR1.Out
 
 
 #Id;#TestCase;#Kind;#Depends;#For
