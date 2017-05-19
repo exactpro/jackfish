@@ -351,8 +351,15 @@ public class MainRunner
             List<String> libs = configuration.getLibrariesValue().stream().map(a -> makeDirWithSubstitutions(a.get())).collect(Collectors.toList());
 			
 			MatrixConverter matrixConverter = new MatrixConverter(matr, libs, newFolderName);
-			matrixConverter.start();
-			System.out.println("All matrix converted and saved to folder " + newFolderName);
+			boolean start = matrixConverter.start();
+			if (!start)
+			{
+				System.out.println("Converting was failing. Check all problems and restart converting");
+			}
+			else
+			{
+				System.out.println(String.format("All matrix converted and saved to folder '%s'", newFolderName));
+			}
 			return;
 		}
 		

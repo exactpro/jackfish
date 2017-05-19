@@ -8,11 +8,9 @@
 
 package com.exactprosystems.jf.common;
 
-import com.exactprosystems.jf.actions.ActionGroups;
 import com.exactprosystems.jf.api.app.Mutable;
 import com.exactprosystems.jf.api.common.Str;
 import com.exactprosystems.jf.documents.matrix.parser.ScreenshotKind;
-import com.exactprosystems.jf.documents.matrix.parser.Tokens;
 import com.exactprosystems.jf.documents.matrix.parser.items.MutableArrayList;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.dictionary.dialog.WizardSettings;
@@ -361,8 +359,9 @@ public class Settings
 					TRACE, "0x8066ccff",
 					WARN, "0xe64d4dff"
 			));
-
+			//TODO set normal colors and uncomment
 			DEFAULT_SETTINGS.setMapValues(GLOBAL_NS, MATRIX_COLORS, mapOf(
+					/*
 					ActionGroups.App.name(), "rgba(59,217,88,1.0)",
 					ActionGroups.Matrix.name(), "rgba(255,191,0,1.0)",
 					ActionGroups.GUI.name(), "rgba(179,230,179,1.0)",
@@ -385,6 +384,7 @@ public class Settings
 					Tokens.RawText.name(), "rgba(0,162,255,1.0)",
 					Tokens.Step.name(), "rgba(128,0,128,1.0)",
 					Tokens.Let.name(), "rgba(0,138,0,1.0)"
+					*/
 					 
 			));
 

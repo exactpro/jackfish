@@ -19,7 +19,6 @@ import com.exactprosystems.jf.documents.matrix.parser.*;
 import com.exactprosystems.jf.documents.matrix.parser.listeners.IMatrixListener;
 import com.exactprosystems.jf.functions.HelpKind;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -131,6 +130,11 @@ public final class ActionItem extends MatrixItem
 	public ActionGroups group()
 	{
 		return this.action.getClass().getAnnotation(ActionAttribute.class).group();
+	}
+
+	public boolean assertIsPresented()
+	{
+		return !Str.IsNullOrEmpty(this.assertBool.getExpression());
 	}
 
 	//==============================================================================================
