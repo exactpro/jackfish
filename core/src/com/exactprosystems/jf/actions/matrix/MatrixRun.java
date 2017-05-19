@@ -97,6 +97,7 @@ public class MatrixRun extends AbstractAction
 		{
 			MatrixRunner runner = newContext.createRunner(this.matrix, reader, this.at, this.parameter);
             newContext.setOut(context.getOut());
+            runner.setStartTime(this.at);
             runner.start();
 			super.setResult(runner);
 		}
