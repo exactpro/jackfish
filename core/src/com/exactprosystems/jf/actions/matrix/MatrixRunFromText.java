@@ -82,8 +82,8 @@ public class MatrixRunFromText extends AbstractAction
 		{
 			MatrixRunner runner = newContext.createRunner("new", reader, this.at, this.parameter);
 			newContext.setOut(context.getOut());
+			runner.setStartTime(this.at);
 			runner.start();
-
 			super.setResult(runner);
 		}
 		catch (MatrixException matrixException)

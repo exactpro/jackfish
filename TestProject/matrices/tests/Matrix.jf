@@ -3,6 +3,384 @@ MATRIX_WAIT;Test case;Never;;
 
 #Id;#TestCase;#Kind;#Depends;#For
 MATRIX_RUN_FROM_TEXT;Test case;Never;;
+    #Step;#Kind;#For;#Depends
+    'get report name passed';;;
+        #Id;#Let
+        date;DateTime.current().str('yMMd_Hmmss')
+
+        #Id;#RawText;#Kind
+        TEXT1;Text;Matrix
+        ~;"// "
+        ~;"#TestCase;#Kind;#Depends;#For"
+        ~;"Test case;Never;;"
+        ~;"    #Id;#Let"
+        ~;"    a;5"
+        ~;""
+        ~;"    #Id;#Let"
+        ~;"    b;10"
+        ~;""
+        ~;"    #Action;"
+        ~;"    Print;a + b"
+        #EndRawText
+
+        #Id;#Action;$Text
+        MXRN1;MatrixRunFromText;TEXT1
+
+        #Action;$Matrix
+        MatrixWait;MXRN1.Out
+
+        #Assert;#Message
+        MXRN1.Out.getReportName() == 'reports/' + date + '_new_PASSED.html';
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'get report name failed';;;
+        #Id;#Let
+        date;DateTime.current().str('yMMd_Hmmss')
+
+        #Id;#RawText;#Kind
+        TEXT1;Text;Matrix
+        ~;"// "
+        ~;"#TestCase;#Kind;#Depends;#For"
+        ~;"Test case;Never;;"
+        ~;"    #Fail"
+        ~;"    "
+        #EndRawText
+
+        #Id;#Action;$Text
+        MXRN1;MatrixRunFromText;TEXT1
+
+        #Action;$Matrix
+        MatrixWait;MXRN1.Out
+
+        #Assert;#Message
+        MXRN1.Out.getReportName() == 'reports/' + date + '_new_FAILED.html';
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'matrix field has a wrong matrix';;;
+        #Id;#Action;#Assert;$Text
+        MXRN1;MatrixRunFromText;This.Result == Result.Failed && This.Kind == ErrorKind.WRONG_PARAMETERS;'1232312'
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'matrix field does not filled';;;
+        #Id;#Action;#Assert;$Text
+        MXRN2;MatrixRunFromText;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'matrix passed';;;
+        #Id;#RawText;#Kind
+        TEXT1;Text;Matrix
+        ~;"// "
+        ~;"#TestCase;#Kind;#Depends;#For"
+        ~;"Test case;Never;;"
+        ~;"    #Id;#Let"
+        ~;"    a;5"
+        ~;""
+        ~;"    #Id;#Let"
+        ~;"    b;10"
+        ~;""
+        ~;"    #Action;"
+        ~;"    Print;a + b"
+        #EndRawText
+
+        #Id;#Action;$Text
+        MXRN1;MatrixRunFromText;TEXT1
+
+        #Action;$Matrix
+        MatrixWait;MXRN1.Out
+
+        #Assert;#Message
+        MXRN1.Out.passed() == 1 && MXRN1.Out.failed() == 0;
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'matrix failed';;;
+        #Id;#RawText;#Kind
+        TEXT1;Text;Matrix
+        ~;"// "
+        ~;"#TestCase;#Kind;#Depends;#For"
+        ~;"Test case;Never;;"
+        ~;"    #Fail"
+        ~;"    "
+        #EndRawText
+
+        #Id;#Action;$Text
+        MXRN1;MatrixRunFromText;TEXT1
+
+        #Action;$Matrix
+        MatrixWait;MXRN1.Out
+
+        #Assert;#Message
+        MXRN1.Out.passed() == 0 && MXRN1.Out.failed() == 1;
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'matrix parameters';;;
+        #Id;#RawText;#Kind
+        TEXT1;Text;Matrix
+        ~;"// "
+        ~;"#TestCase;#Kind;#Depends;#For"
+        ~;"Test case;Never;;"
+        ~;"    #Id;#Let"
+        ~;"    a;parameter"
+        ~;""
+        ~;"    #Id;#Let"
+        ~;"    b;5"
+        ~;""
+        ~;"    #Assert;#Message"
+        ~;"    a + b == 10;"
+        #EndRawText
+
+        #Id;#Action;$Text;$Parameter
+        MXRN1;MatrixRunFromText;TEXT1;5
+
+        #Action;$Matrix
+        MatrixWait;MXRN1.Out
+
+        #Assert;#Message
+        MXRN1.Out.passed() == 1 && MXRN1.Out.failed() == 0;
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'matrix parameters null';;;
+        #Id;#RawText;#Kind
+        TEXT1;Text;Matrix
+        ~;"// "
+        ~;"#TestCase;#Kind;#Depends;#For"
+        ~;"Test case;Never;;"
+        ~;"    #If"
+        ~;"    parameter != null"
+        ~;"        #Fail"
+        ~;"        "
+        ~;""
+        ~;"    #EndIf"
+        #EndRawText
+
+        #Id;#Action;$Text;$Parameter
+        MXRN1;MatrixRunFromText;TEXT1;
+
+        #Action;$Matrix
+        MatrixWait;MXRN1.Out
+
+        #Assert;#Message
+        MXRN1.Out.passed() == 1 && MXRN1.Out.failed() == 0;
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'matrix at time after';;;
+        #Id;#Let
+        hoursCurrent;DateTime.getHours(new Date())
+
+        #Id;#Let
+        minutesCurrent;DateTime.getMinutes(new Date())
+
+        #Id;#Let
+        secondsCurrent;DateTime.getSeconds(new Date())
+
+        #Id;#Let
+        yearsCurrent;DateTime.getYears(new Date())
+
+        #Id;#Let
+        monthsCurrent;DateTime.getMonths(new Date())
+
+        #Id;#Let
+        daysCurrent;DateTime.getDays(new Date())
+
+        #If
+        secondsCurrent > 55
+            #Id;#Let
+            seconds;secondsCurrent - 55
+
+            #Id;#Let
+            minutes;minutesCurrent + 1
+
+            #If
+            minutesCurrent == 59
+                #Id;#Let
+                minutes;0
+
+                #Id;#Let
+                hours;hoursCurrent + 1
+
+                #If
+                hours == 24
+                    #Id;#Let
+                    hours;0
+
+                #EndIf
+
+            #Else
+                #Id;#Let
+                minutes;minutesCurrent + 1
+
+                #Id;#Let
+                hours;hoursCurrent
+
+
+            #EndIf
+
+        #Else
+            #Id;#Let
+            seconds;secondsCurrent + 5
+
+            #Id;#Let
+            minutes;minutesCurrent
+
+            #Id;#Let
+            hours;hoursCurrent
+
+
+        #EndIf
+
+        #Id;#RawText;#Kind
+        TEXT1;Text;Matrix
+        ~;"// "
+        ~;"#TestCase;#Kind;#Depends;#For"
+        ~;"Test case;Never;;"
+        ~;"    #Id;#Let"
+        ~;"    a;5"
+        ~;""
+        ~;"    #Id;#Let"
+        ~;"    b;10"
+        ~;""
+        ~;"    #Action;"
+        ~;"    Print;a + b"
+        #EndRawText
+
+        #Id;#Action;$Text;$At
+        MXRN1;MatrixRunFromText;TEXT1;DateTime.date(yearsCurrent, monthsCurrent, daysCurrent,  hours, minutes, seconds)
+
+        #Action;$Matrix
+        MatrixWait;MXRN1.Out
+
+        #Assert;#Message
+        hours == DateTime.getHours(MXRN1.Out.getStartTime()) && minutes == DateTime.getMinutes(MXRN1.Out.getStartTime()) && seconds == DateTime.getSeconds(MXRN1.Out.getStartTime());
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'matrix at time is empty';;;
+        #Id;#Let
+        hoursCurrent;DateTime.getHours(new Date())
+
+        #Id;#Let
+        minutesCurrent;DateTime.getMinutes(new Date())
+
+        #Id;#Let
+        secondsCurrent;DateTime.getSeconds(new Date())
+
+        #Id;#Let
+        yearsCurrent;DateTime.getYears(new Date())
+
+        #Id;#Let
+        monthsCurrent;DateTime.getMonths(new Date())
+
+        #Id;#Let
+        daysCurrent;DateTime.getDays(new Date())
+
+        #Action;'matrix is going to start'
+        Print;DateTime.date(yearsCurrent, monthsCurrent, daysCurrent,  hoursCurrent, minutesCurrent, secondsCurrent)
+
+        #Id;#RawText;#Kind
+        TEXT1;Text;Matrix
+        ~;"// "
+        ~;"#TestCase;#Kind;#Depends;#For"
+        ~;"Test case;Never;;"
+        ~;"    #Action;'matrix start fact'"
+        ~;"    Print;new Date()"
+        #EndRawText
+
+        #Id;#Action;$Text;$At
+        MXRN1;MatrixRunFromText;TEXT1;
+
+        #Action;$Matrix
+        MatrixWait;MXRN1.Out
+
+        #Assert;#Message
+        hoursCurrent == DateTime.getHours(MXRN1.Out.getStartTime()) && minutesCurrent == DateTime.getMinutes(MXRN1.Out.getStartTime());
+
+    #EndStep
+
+    // expected - write before date to starttime
+    #Step;#Kind;#For;#Depends
+    'matrix at time before';;;
+        #Id;#Let
+        hoursCurrent;DateTime.getHours(new Date())
+
+        #Id;#Let
+        minutesCurrent;DateTime.getMinutes(new Date())
+
+        #Id;#Let
+        secondsCurrent;DateTime.getSeconds(new Date())
+
+        #Id;#Let
+        yearsCurrent;DateTime.getYears(new Date())
+
+        #Id;#Let
+        monthsCurrent;DateTime.getMonths(new Date())
+
+        #Id;#Let
+        daysCurrent;DateTime.getDays(new Date())
+
+        #If
+        minutesCurrent == 59
+            #Id;#Let
+            minutes;0
+
+            #Id;#Let
+            hours;hoursCurrent - 1
+
+            #If
+            hours == 24
+                #Id;#Let
+                hours;0
+
+            #EndIf
+
+        #Else
+            #Id;#Let
+            minutes;minutesCurrent - 1
+
+            #Id;#Let
+            hours;hoursCurrent
+
+
+        #EndIf
+
+        #Action;'matrix is going to start'
+        Print;DateTime.date(yearsCurrent, monthsCurrent, daysCurrent,  hours, minutes, secondsCurrent)
+
+        #Id;#RawText;#Kind
+        TEXT1;Text;Matrix
+        ~;"// "
+        ~;"#TestCase;#Kind;#Depends;#For"
+        ~;"Test case;Never;;"
+        ~;"    #Action;'matrix start fact'"
+        ~;"    Print;new Date()"
+        #EndRawText
+
+        #Id;#Action;$Text;$At
+        MXRN1;MatrixRunFromText;TEXT1;DateTime.date(yearsCurrent, monthsCurrent, daysCurrent,  hours, minutes, secondsCurrent)
+
+        #Action;$Matrix
+        MatrixWait;MXRN1.Out
+
+        #Assert;#Message
+        hours == DateTime.getHours(MXRN1.Out.getStartTime()) && minutes == DateTime.getMinutes(MXRN1.Out.getStartTime());
+
+    #EndStep
+
 
 #Id;#TestCase;#Kind;#Depends;#For
 MATRIX_RUN;Test case;Never;;
