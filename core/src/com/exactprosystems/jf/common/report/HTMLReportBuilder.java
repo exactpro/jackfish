@@ -21,6 +21,7 @@ import java.io.File;
 import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.stream.Collectors;
 
@@ -420,13 +421,14 @@ public class HTMLReportBuilder extends ReportBuilder
 		writer.fwrite("<thead>\n");
         for (int i = 0; i < columns.length; i++)
         {
-        	if (percents == null || percents.length < i || percents[i] <= 0)
+            int percent = (percents == null || percents.length <= i) ? 0 : percents[i]; 
+        	if (percent <= 0)
         	{
         		writer.fwrite("<th>%s</th>", columns[i]);
         	}
         	else
         	{
-        		writer.fwrite("<th width='%d%%'>%s</th>", percents[i], columns[i]);
+        		writer.fwrite("<th width='%d%%'>%s</th>", percent, columns[i]);
         	}
         }
         writer.fwrite("</thead>\n");
