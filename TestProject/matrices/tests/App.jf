@@ -1,5 +1,78 @@
 #TestCase;#Kind;#Depends;#For
+Application close window;;;
+    #Step;#Kind;#For;#Depends
+    'positive testing';;;
+        #Id;#Call
+        app;appStart
+
+        #Id;#Action;#Assert;$AppConnection
+        APPCW1;ApplicationCloseWindow;This.Result == Result.Passed;app
+
+        #Id;#Action;$AppConnection
+        APPSTP1;ApplicationStop;app
+
+    #EndStep
+
+    #Off;#Step;#Kind;#For;#Depends
+    1;'positive testing with 2 tabs';;;
+        #Id;#Let
+        newUrl;'https://www.google.ru'
+
+        #Id;#Call
+        app;appStart
+
+        #Id;#Action;$AppConnection;URL;WhereOpen
+        APPNI1;ApplicationNewInstance;app;newUrl;'tab'
+
+        #Assert;#Message
+        app.getApplication().service().titles().size() == 2;'Page count not expected'
+
+        #Id;#Action;$AppConnection;URL;$SoftCondition
+        APPSW1;ApplicationSwitchTo;app;newUrl;true
+
+        #Id;#Action;#Assert;$AppConnection
+        APPCW2;ApplicationCloseWindow;This.Result == Result.Passed;app
+
+        #Assert;#Message
+        app.getApplication().service().titles().size() == 1;'Page count not expected'
+
+        #Id;#Action;$AppConnection
+        APPSTP2;ApplicationStop;app
+
+    #EndStep
+
+
+#TestCase;#Kind;#Depends;#For
 Apllication start;Never;;
+    #Step;#Kind;#For;#Depends
+    'Negative testing with empty parameters';;;
+        #Id;#Action;#Assert;$AppId;Browser;URL
+        APPSTR1;ApplicationStart;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;;;
+
+        #Id;#Action;#Assert;$AppId;Browser;URL
+        APPSTR1;ApplicationStart;This.Result == Result.Failed && This.Kind == ErrorKind.EXCEPTION;mockWebApp;;
+
+        #Id;#Action;#Assert;$AppId;Browser;URL
+        APPSTR1;ApplicationStart;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;;;mockWebURL
+
+        #Id;#Action;#Assert;$AppId;Browser;URL
+        APPSTR1;ApplicationStart;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;;mockWebBrowser;
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'Negative testing with wrong parameters';;;
+        #Id;#Action;#Assert;$AppId;Browser;URL
+        APPSTR1;ApplicationStart;This.Result == Result.Failed && This.Kind == ErrorKind.EXCEPTION;mockWebApp;mockWebBrowser;''
+
+        #Id;#Action;#Assert;$AppId;Browser;URL
+        APPSTR1;ApplicationStart;This.Result == Result.Failed && This.Kind == ErrorKind.EXCEPTION;mockWebApp;'ndx';mockWebURL
+
+        #Id;#Action;#Assert;$AppId;Browser;URL
+        APPSTR1;ApplicationStart;This.Result == Result.Failed && This.Kind == ErrorKind.EXCEPTION;new Date();mockWebBrowser;mockWebURL
+
+    #EndStep
+
     #Step;#Kind;#For;#Depends
     'Positive testing';;;
         #Id;#Action;#Assert;$AppId;Browser;URL
@@ -10,46 +83,17 @@ Apllication start;Never;;
 
     #EndStep
 
-    #Step;#Kind;#For;#Depends
-    'Negative testing';;;
-        #Step;#Kind;#For;#Depends
-        'Empty parameters';;;
-            #Id;#Action;#Assert;$AppId;Browser;URL
-            APPSTR1;ApplicationStart;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;;;
 
-            #Id;#Action;#Assert;$AppId;Browser;URL
-            APPSTR1;ApplicationStart;This.Result == Result.Failed && This.Kind == ErrorKind.EXCEPTION;mockWebApp;;
+#TestCase;#Kind;#Depends;#For
+subcases;;;
+    #Id;#SubCase
+    appStart;
+        #Id;#Action;$AppId;Browser;URL
+        APPSTR2;ApplicationStart;mockWebApp;mockWebBrowser;mockWebURL
 
-            #Id;#Action;#Assert;$AppId;Browser;URL
-            APPSTR1;ApplicationStart;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;;;mockWebURL
+        #Return
+        APPSTR2.Out
 
-            #Id;#Action;#Assert;$AppId;Browser;URL
-            APPSTR1;ApplicationStart;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;;mockWebBrowser;
-
-            #Id;#Action;#Assert;$AppId;Browser;URL
-            APPSTR1;ApplicationStart;This.Result == Result.Failed && This.Kind == ErrorKind.EXCEPTION;mockWebApp;mockWebBrowser;
-
-            #Id;#Action;#Assert;$AppId;Browser;URL
-            APPSTR1;ApplicationStart;This.Result == Result.Failed && This.Kind == ErrorKind.EXCEPTION;mockWebApp;;mockWebURL
-
-            #Id;#Action;#Assert;$AppId;Browser;URL
-            APPSTR1;ApplicationStart;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;;mockWebBrowser;mockWebURL
-
-        #EndStep
-
-        #Step;#Kind;#For;#Depends
-        'Wrong parameters';;;
-            #Id;#Action;#Assert;$AppId;Browser;URL
-            APPSTR1;ApplicationStart;This.Result == Result.Failed && This.Kind == ErrorKind.EXCEPTION;mockWebApp;mockWebBrowser;''
-
-            #Id;#Action;#Assert;$AppId;Browser;URL
-            APPSTR1;ApplicationStart;This.Result == Result.Failed && This.Kind == ErrorKind.EXCEPTION;mockWebApp;'ndx';mockWebURL
-
-            #Id;#Action;#Assert;$AppId;Browser;URL
-            APPSTR1;ApplicationStart;This.Result == Result.Failed && This.Kind == ErrorKind.EXCEPTION;new Date();mockWebBrowser;mockWebURL
-
-        #EndStep
-
-    #EndStep
+    #EndSubCase
 
 
