@@ -1,0 +1,38 @@
+#Id;#TestCase;#Kind;#Depends;#For
+Setup;Setup;;;
+
+// 
+#Id;#TestCase;#Kind;#Depends;#For
+Step 1;Step 1;;;
+
+#Id;#TestCase;#Kind;#Depends;#For
+Step 2;Step 2;;;
+
+#Id;#TestCase;#Kind;#Depends;#For
+Cleanup;Cleanup;;;
+    #Id;#Global;#RawTable
+    table;1;Table
+    @;Step;Description;Expected Result
+    0;Step 1;Navigate to Product Upload;The new file upload screen opens
+    1;Step 2;Open Windows Exploerer. Identify a valid Russell file that does not already exist in the datebase;Windows Explorer opens
+    #EndRawTable
+
+    #Id;#Action;$Decoraded
+    RESTBL1;ResultTable;true
+
+    #Action;$Table;$Title
+    TableReport;RESTBL1.Out;'res'
+
+    #Id;#Off;#Action;$RightTable;$RightAlias;$Condition;$LeftTable;$LeftAlias;Description
+    TBLJN1;1;TableLeftJoin;table;'a';'b.TestCaseId == a.Step';RESTBL1.Out;'b';'a.Description'
+
+    #Id;#Action;$RightTable;$RightAlias;$Condition;$LeftTable;$LeftAlias;TestCaseId;Result;Error;Screenshot
+    TBLJN1;TableLeftJoin;RESTBL1.Out;'a';'a.TestCaseId == b.Step';table;'b';'a.TestCaseId';'a.Result';'a.Error';'a.Screenshot'
+
+    #Off;#Action;$BeforeTestCase;$Table;$Numbers;$Title
+    1;TableReport;'Setup';TBLJN1.Out;false;'Total Report: '
+
+    #Action;$BeforeTestCase;$Table;$Numbers;$Title;TestCaseId;Result;Description;Expected Result;Error;Screenshot
+    TableReport;'Setup';TBLJN1.Out;false;'Total Report: ';'Step';'Status';'Description';'Expected Result';'Actual Result';'Screenshot'
+
+
