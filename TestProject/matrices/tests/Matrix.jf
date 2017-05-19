@@ -140,7 +140,10 @@ MATRIX_RUN_FROM_TEXT;Test case;Never;;
         MatrixWait;MXRN1.Out
 
         #Assert;#Message
-        MXRN1.Out.getReportName() == 'reports' + slash + date + '_new_PASSED.html';
+        MXRN1.Out.getReportName().contains('reports' + slash);'Actual = ' + MXRN1.Out.getReportName()
+
+        #Assert;#Message
+        MXRN1.Out.getReportName().contains('_new_PASSED.html');'Actual = ' + MXRN1.Out.getReportName()
 
     #EndStep
 
@@ -177,7 +180,10 @@ MATRIX_RUN_FROM_TEXT;Test case;Never;;
         MatrixWait;MXRN1.Out
 
         #Assert;#Message
-        MXRN1.Out.getReportName() == 'reports' + slash + date + '_new_FAILED.html';
+        MXRN1.Out.getReportName().contains('reports' + slash);'Actual = ' + MXRN1.Out.getReportName()
+
+        #Assert;#Message
+        MXRN1.Out.getReportName().contains('_new_FAILED.html');'Actual = ' + MXRN1.Out.getReportName()
 
     #EndStep
 
@@ -530,7 +536,10 @@ MATRIX_RUN;Test case;Never;;
         MatrixWait;MXRN1.Out
 
         #Assert;#Message
-        MXRN1.Out.getReportName() == 'reports' + slash + date + '_passed_PASSED.html';
+        MXRN1.Out.getReportName().contains('reports' + slash);'Actual = ' + MXRN1.Out.getReportName()
+
+        #Assert;#Message
+        MXRN1.Out.getReportName().contains('_passed_PASSED.html');'Actual = ' + MXRN1.Out.getReportName()
 
     #EndStep
 
@@ -558,7 +567,10 @@ MATRIX_RUN;Test case;Never;;
         MatrixWait;MXRN1.Out
 
         #Assert;#Message
-        MXRN1.Out.getReportName() == 'reports' + slash + date + '_failed_FAILED.html';
+        MXRN1.Out.getReportName().contains('reports' + slash);'Actual = ' + MXRN1.Out.getReportName()
+
+        #Assert;#Message
+        MXRN1.Out.getReportName().contains('_failed_FAILED.html');'Actual = ' + MXRN1.Out.getReportName()
 
     #EndStep
 
