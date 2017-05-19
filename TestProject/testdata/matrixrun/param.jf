@@ -1,0 +1,13 @@
+// 
+#TestCase;#Kind;#Depends;#For
+Test case;Never;;
+    #Id;#Let
+    a;parameter
+
+    #Id;#Let
+    b;5
+
+    #Assert;#Message
+    a + b == 10;
+
+

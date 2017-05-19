@@ -1,0 +1,11 @@
+// 
+#TestCase;#Kind;#Depends;#For
+Test case;Never;;
+    #If
+    parameter != null
+        #Fail
+        
+
+    #EndIf
+
+

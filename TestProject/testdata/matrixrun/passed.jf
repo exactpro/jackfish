@@ -1,0 +1,13 @@
+// 
+#TestCase;#Kind;#Depends;#For
+Test case;Never;;
+    #Id;#Let
+    a;5
+
+    #Id;#Let
+    b;10
+
+    #Action;
+    Print;a + b
+
+
