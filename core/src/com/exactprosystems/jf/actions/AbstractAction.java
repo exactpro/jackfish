@@ -343,9 +343,6 @@ public abstract class AbstractAction implements Cloneable
 		this.action.Errors = errors;
 	}
 
-    protected static final Logger logger = Logger.getLogger(AbstractAction.class);
-
-
     //==============================================================================================
     // Private members
     //==============================================================================================
@@ -605,20 +602,15 @@ public abstract class AbstractAction implements Cloneable
         }
     	
     	public Object Out;
-
     	public Parameters In;
-    	
     	public String Reason;
-    	
     	public ErrorKind Kind;
-    	
     	public Result Result;
-
 		public Map<String, MatrixError> Errors;
     }
     
     private Action action;
-    
     protected MatrixItem owner;
 
+    protected static final Logger logger = Logger.getLogger(AbstractAction.class);
 }

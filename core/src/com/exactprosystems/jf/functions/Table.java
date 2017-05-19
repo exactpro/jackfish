@@ -794,8 +794,9 @@ public class Table implements List<RowTable>, Mutable, Cloneable
                 headers[col++ + addition] = this.headers[index].name;
             }
             
+            widths = widths == null ? new int[] {} : widths;
             headers = convertHeaders(columns, headers, withNumbers);
-            ReportTable table = report.addExplicitTable(title, beforeTestcase, true, 0, new int[] {}, headers);
+            ReportTable table = report.addExplicitTable(title, beforeTestcase, true, 0, widths, headers);
 
             Function<String, String> func = name -> columns.isEmpty() ? name
                     : columns.entrySet().stream().filter(e -> name.equals(String.valueOf(e.getValue()))).findFirst()

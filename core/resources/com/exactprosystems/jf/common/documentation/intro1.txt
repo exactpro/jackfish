@@ -2,7 +2,7 @@
 
 {{*Unary Operators*}}
 
-{{=
+{{={{[10,20,30]}}
 {{-{{+{{*Operator*}}+}}	{{+{{*Description*}}+}}	{{+{{*Example*}}+}}-}}
 {{-{{+new+}}	{{+Object instantiation+}}	{{+ {{#new String("foo")#}} +}}-}}
 {{-{{+with+}}	{{+Block WITH Operator. Perform multiple operations on a single object instance+}}	{{+ 

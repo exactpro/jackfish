@@ -81,7 +81,7 @@ public class TableReport extends AbstractAction
 	protected Object	columns;
 
     @ActionFieldAttribute(name = widthName, mandatory = false, description = "Array of integers which define widht of each column.")
-    protected int[]  widths;
+    protected Integer[]  widths;
 	
 	@ActionFieldAttribute(name = reportValuesName, mandatory = false, description = "If the value is false, the value"
 			+ " from the cell is output, if the value is true the expression result is output. "
@@ -180,11 +180,15 @@ public class TableReport extends AbstractAction
 		    }
 		}
 		
-		
+		int[] width = null;
+		if (this.widths != null)
+		{
+		    width = Arrays.stream(this.widths).mapToInt(Integer::intValue).toArray(); 
+		}
 		
 		report = this.toReport == null ? report : this.toReport;
 		this.beforeTestCase = ActionsReportHelper.getBeforeTestCase(this.beforeTestCase, this.owner.getMatrix());
-		this.table.report(report, Str.asString(this.title), this.beforeTestCase, this.withNumbers, this.reportValues, map, this.widths);
+		this.table.report(report, Str.asString(this.title), this.beforeTestCase, this.withNumbers, this.reportValues, map, width);
 		
 		super.setResult(null);
 	}
