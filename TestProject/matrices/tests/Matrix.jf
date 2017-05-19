@@ -5,6 +5,18 @@ MATRIX_WAIT;Test case;Never;;
 MATRIX_RUN_FROM_TEXT;Test case;Never;;
     #Step;#Kind;#For;#Depends
     'get report name passed';;;
+        #If
+        Sys.osName().contains('Win')
+            #Id;#Let
+            slash;'\\'
+
+        #Else
+            #Id;#Let
+            slash;'/'
+
+
+        #EndIf
+
         #Id;#Let
         date;DateTime.current().str('yMMd_Hmmss')
 
@@ -30,12 +42,24 @@ MATRIX_RUN_FROM_TEXT;Test case;Never;;
         MatrixWait;MXRN1.Out
 
         #Assert;#Message
-        MXRN1.Out.getReportName() == 'reports/' + date + '_new_PASSED.html';
+        MXRN1.Out.getReportName() == 'reports' + slash + date + '_new_PASSED.html';
 
     #EndStep
 
     #Step;#Kind;#For;#Depends
     'get report name failed';;;
+        #If
+        Sys.osName().contains('Win')
+            #Id;#Let
+            slash;'\\'
+
+        #Else
+            #Id;#Let
+            slash;'/'
+
+
+        #EndIf
+
         #Id;#Let
         date;DateTime.current().str('yMMd_Hmmss')
 
@@ -55,7 +79,7 @@ MATRIX_RUN_FROM_TEXT;Test case;Never;;
         MatrixWait;MXRN1.Out
 
         #Assert;#Message
-        MXRN1.Out.getReportName() == 'reports/' + date + '_new_FAILED.html';
+        MXRN1.Out.getReportName() == 'reports' + slash + date + '_new_FAILED.html';
 
     #EndStep
 
@@ -386,6 +410,18 @@ MATRIX_RUN_FROM_TEXT;Test case;Never;;
 MATRIX_RUN;Test case;Never;;
     #Step;#Kind;#For;#Depends
     'get report name passed';;;
+        #If
+        Sys.osName().contains('Win')
+            #Id;#Let
+            slash;'\\'
+
+        #Else
+            #Id;#Let
+            slash;'/'
+
+
+        #EndIf
+
         #Id;#Let
         date;DateTime.current().str('yMMd_Hmmss')
 
@@ -396,12 +432,24 @@ MATRIX_RUN;Test case;Never;;
         MatrixWait;MXRN1.Out
 
         #Assert;#Message
-        MXRN1.Out.getReportName() == 'reports/' + date + '_passed_PASSED.html';
+        MXRN1.Out.getReportName() == 'reports' + slash + date + '_passed_PASSED.html';
 
     #EndStep
 
     #Step;#Kind;#For;#Depends
     'get report name failed';;;
+        #If
+        Sys.osName().contains('Win')
+            #Id;#Let
+            slash;'\\'
+
+        #Else
+            #Id;#Let
+            slash;'/'
+
+
+        #EndIf
+
         #Id;#Let
         date;DateTime.current().str('yMMd_Hmmss')
 
@@ -412,7 +460,7 @@ MATRIX_RUN;Test case;Never;;
         MatrixWait;MXRN1.Out
 
         #Assert;#Message
-        MXRN1.Out.getReportName() == 'reports/' + date + '_failed_FAILED.html';
+        MXRN1.Out.getReportName() == 'reports' + slash + date + '_failed_FAILED.html';
 
     #EndStep
 
