@@ -103,18 +103,6 @@ MATRIX_WAIT;Test case;Never;;
 MATRIX_RUN_FROM_TEXT;Test case;Never;;
     #Step;#Kind;#For;#Depends
     'get report name passed';;;
-        #If
-        Sys.osName().contains('Win')
-            #Id;#Let
-            slash;'\\'
-
-        #Else
-            #Id;#Let
-            slash;'/'
-
-
-        #EndIf
-
         #Id;#Let
         date;DateTime.current().str('yMMd_Hmmss')
 
@@ -140,27 +128,12 @@ MATRIX_RUN_FROM_TEXT;Test case;Never;;
         MatrixWait;MXRN1.Out
 
         #Assert;#Message
-        MXRN1.Out.getReportName().contains('reports' + slash);'Actual = ' + MXRN1.Out.getReportName()
-
-        #Assert;#Message
         MXRN1.Out.getReportName().contains('_new_PASSED.html');'Actual = ' + MXRN1.Out.getReportName()
 
     #EndStep
 
     #Step;#Kind;#For;#Depends
     'get report name failed';;;
-        #If
-        Sys.osName().contains('Win')
-            #Id;#Let
-            slash;'\\'
-
-        #Else
-            #Id;#Let
-            slash;'/'
-
-
-        #EndIf
-
         #Id;#Let
         date;DateTime.current().str('yMMd_Hmmss')
 
@@ -178,9 +151,6 @@ MATRIX_RUN_FROM_TEXT;Test case;Never;;
 
         #Action;$Matrix
         MatrixWait;MXRN1.Out
-
-        #Assert;#Message
-        MXRN1.Out.getReportName().contains('reports' + slash);'Actual = ' + MXRN1.Out.getReportName()
 
         #Assert;#Message
         MXRN1.Out.getReportName().contains('_new_FAILED.html');'Actual = ' + MXRN1.Out.getReportName()
@@ -514,18 +484,6 @@ MATRIX_RUN_FROM_TEXT;Test case;Never;;
 MATRIX_RUN;Test case;Never;;
     #Step;#Kind;#For;#Depends
     'get report name passed';;;
-        #If
-        Sys.osName().contains('Win')
-            #Id;#Let
-            slash;'\\'
-
-        #Else
-            #Id;#Let
-            slash;'/'
-
-
-        #EndIf
-
         #Id;#Let
         date;DateTime.current().str('yMMd_Hmmss')
 
@@ -534,9 +492,6 @@ MATRIX_RUN;Test case;Never;;
 
         #Action;$Matrix
         MatrixWait;MXRN1.Out
-
-        #Assert;#Message
-        MXRN1.Out.getReportName().contains('reports' + slash);'Actual = ' + MXRN1.Out.getReportName()
 
         #Assert;#Message
         MXRN1.Out.getReportName().contains('_passed_PASSED.html');'Actual = ' + MXRN1.Out.getReportName()
@@ -567,9 +522,6 @@ MATRIX_RUN;Test case;Never;;
         MatrixWait;MXRN1.Out
 
         #Assert;#Message
-        MXRN1.Out.getReportName().contains('reports' + slash);'Actual = ' + MXRN1.Out.getReportName()
-
-        #Assert;#Message
         MXRN1.Out.getReportName().contains('_failed_FAILED.html');'Actual = ' + MXRN1.Out.getReportName()
 
     #EndStep
@@ -577,7 +529,7 @@ MATRIX_RUN;Test case;Never;;
     #Step;#Kind;#For;#Depends
     'matrix field has a wrong matrix';;;
         #Id;#Action;#Assert;$Matrix
-        MXRN1;MatrixRun;This.Result == Result.Failed && This.Kind == ErrorKind.MATRIX_ERROR;'config.xml'
+        MXRN1;MatrixRun;This.Result == Result.Failed && This.Kind == ErrorKind.MATRIX_ERROR;'testdata/loadfromdir/table.csv'
 
     #EndStep
 
