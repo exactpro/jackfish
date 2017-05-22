@@ -52,7 +52,7 @@ public class DocumentationBuilder
                     { "{{*Date*}}", "{{*Version*}}", "{{*By*}}", "{{*Comments*}}" },
                     { DateTime.current().str("dd MMM yyyy"), VersionInfo.getVersion(), "Valery Florov", "Initial Draft" }
                 };
-        addTable(help, "{{/Document Information/}}", table1, new int[] { 10, 10, 10, 10 },  evaluator);
+//        addTable(help, "{{/Document Information/}}", table1, new int[] { 10, 10, 10, 30 },  evaluator);
 //
 //        addChapter(help, "Introduction", 3);
         addText(help, DocumentationBuilder.class.getResourceAsStream("intro1.txt"));
