@@ -1,12 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import com.exactprosystems.jf.tool.CssVariables?>
 <?import com.exactprosystems.jf.tool.custom.controls.field.CustomFieldWithButton?>
+<?import com.exactprosystems.jf.tool.custom.find.FindPanel?>
+<?import com.exactprosystems.jf.tool.custom.scale.ScalePane?>
 <?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.Group?>
 <?import javafx.scene.layout.*?>
-<?import com.exactprosystems.jf.tool.custom.scale.ScalePane?>
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.exactprosystems.jf.tool.custom.xpath.XpathViewerContentController">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8"
+			xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.exactprosystems.jf.tool.custom.xpath.XpathViewerContentController">
 	<bottom>
 		<BorderPane prefHeight="31.0" prefWidth="600.0" BorderPane.alignment="CENTER">
 			<center>
@@ -21,7 +24,6 @@
 					<BorderPane.margin>
 						<Insets top="10.0"/>
 					</BorderPane.margin>
-
 				</Label>
 			</right>
 			<top>
@@ -66,7 +68,8 @@
 										</BorderPane>
 										<BorderPane prefHeight="200.0" prefWidth="200.0" GridPane.rowIndex="2">
 											<center>
-												<Button fx:id="btnXpath1" alignment="BASELINE_LEFT" maxWidth="1.7976931348623157E308" onAction="#copyXpath" textAlignment="LEFT" BorderPane.alignment="CENTER"/>
+												<Button fx:id="btnXpath1" alignment="BASELINE_LEFT" maxWidth="1.7976931348623157E308" onAction="#copyXpath" textAlignment="LEFT"
+														BorderPane.alignment="CENTER"/>
 											</center>
 											<right>
 												<HBox alignment="CENTER_RIGHT" prefHeight="29.0" prefWidth="76.0" BorderPane.alignment="BOTTOM_LEFT">
@@ -100,7 +103,8 @@
 										</BorderPane>
 										<BorderPane prefHeight="200.0" prefWidth="200.0" GridPane.rowIndex="4">
 											<center>
-												<Button fx:id="btnXpath3" alignment="BASELINE_LEFT" maxWidth="1.7976931348623157E308" onAction="#copyXpath" prefHeight="25.0" prefWidth="403.0" BorderPane.alignment="CENTER"/>
+												<Button fx:id="btnXpath3" alignment="BASELINE_LEFT" maxWidth="1.7976931348623157E308" onAction="#copyXpath" prefHeight="25.0" prefWidth="403.0"
+														BorderPane.alignment="CENTER"/>
 											</center>
 											<right>
 												<HBox alignment="CENTER_RIGHT" prefHeight="29.0" prefWidth="76.0" BorderPane.alignment="CENTER">
@@ -146,33 +150,23 @@
 	</bottom>
 	<center>
 		<SplitPane fx:id="splitPane" dividerPositions="0.0" orientation="VERTICAL" prefHeight="200.0" prefWidth="160.0" BorderPane.alignment="CENTER">
+			<styleClass>
+				<CssVariables fx:constant="SPLIT_PANE_HIDE_DIVIDER"/>
+			</styleClass>
 			<items>
-				<ScrollPane fx:id="scrollPaneImage" fitToHeight="true" fitToWidth="true" maxHeight="0.0" minHeight="0.0" prefHeight="0.0" prefViewportHeight="-1.0" prefViewportWidth="-1.0">
-					<content>
-						<AnchorPane fx:id="anchorImage">
-							<children>
-								<Group fx:id="group" AnchorPane.bottomAnchor="0" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0" AnchorPane.topAnchor="0"/>
-							</children>
-						</AnchorPane>
-					</content>
-				</ScrollPane>
-				<AnchorPane fx:id="anchorTree" maxHeight="Infinity" maxWidth="Infinity">
+				<GridPane fx:id="gridPaneTreeView">
+					<columnConstraints>
+						<ColumnConstraints hgrow="SOMETIMES" minWidth="10.0"/>
+					</columnConstraints>
+					<rowConstraints>
+						<RowConstraints minHeight="10.0" vgrow="SOMETIMES"/>
+						<RowConstraints maxHeight="30.0" minHeight="30.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+					</rowConstraints>
 					<children>
-						<TreeView fx:id="treeView" maxHeight="1.7976931348623157E308" minHeight="100.0" AnchorPane.bottomAnchor="0" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0" AnchorPane.topAnchor="0"/>
+						<FindPanel fx:id="findPanel" GridPane.rowIndex="1"/>
 					</children>
-				</AnchorPane>
+				</GridPane>
 			</items>
 		</SplitPane>
 	</center>
-	<top>
-		<HBox fx:id="hBoxUtil" alignment="CENTER_LEFT" spacing="5" visible="false">
-			<children>
-				<CheckBox fx:id="cbShowImage" mnemonicParsing="false" text="show image"/>
-				<Separator orientation="VERTICAL"/>
-				<ScalePane fx:id="scalePane"/>
-				<ToggleButton fx:id="btnInspect" text="" opacity="0.5"/>
-				<Label fx:id="lblInspectRectangle" text=""/>
-			</children>
-		</HBox>
-	</top>
 </BorderPane>

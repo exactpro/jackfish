@@ -137,6 +137,11 @@ public class ImageViewWithScale implements IScaleListener
 	}
 
 	//region public methods
+	public void hideIds()
+	{
+		this.hBox.getChildren().remove(2,4);
+	}
+
 	public BorderPane getContent()
 	{
 		return this.mainPane;

@@ -18,6 +18,7 @@ import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.ContainingParent;
 import com.exactprosystems.jf.tool.CssVariables;
 import com.exactprosystems.jf.tool.custom.BorderWrapper;
+import com.exactprosystems.jf.tool.custom.ServiceLambdaBean;
 import com.exactprosystems.jf.tool.custom.tab.CustomTab;
 import com.exactprosystems.jf.tool.custom.xpath.XpathViewer;
 import com.exactprosystems.jf.tool.dictionary.DictionaryFx;
@@ -37,9 +38,9 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.TransferMode;
 import javafx.scene.layout.*;
 import javafx.scene.text.Text;
-import org.w3c.dom.Document;
 
 import java.net.URL;
+import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.ResourceBundle;
@@ -302,17 +303,57 @@ public class NavigationController implements Initializable, ContainingParent
 			}
 			IRemoteApplication service = this.appConnection.getApplication().service();
 			service.startNewDialog();
-			//			Document document = service.getTree(owner);
-			byte[] treeBytes = service.getTreeBytes(owner);
-			Document document = Converter.convertByteArrayToXmlDocument(treeBytes);
-			if (document != null)
+
+			Locator finalOwner = owner;
+			XpathViewer xpathViewer = new XpathViewer(owner, () -> {
+				try
+				{
+					byte[] treeBytes = service.getTreeBytes(finalOwner);
+					return Converter.convertByteArrayToXmlDocument(treeBytes);
+				}
+				catch (Exception e)
+				{
+
+				}
+				return null;
+			}, new ServiceLambdaBean(() ->
 			{
-				XpathViewer viewer = new XpathViewer(owner, document, service);
-				String id = currentElement().getID();
-	
-				String result = viewer.show(xpath, "Xpath for " + (id == null ? "empty" : id), Common.currentThemesPaths(), this.fullScreen);
-		        this.model.parameterSet(currentWindow(), currentSection(), currentElement(), AbstractControl.xpathName, result);
-			}
+				try
+				{
+					return service.getImage(null, finalOwner).getImage();
+				}
+				catch (RemoteException e)
+				{
+
+				}
+				return null;
+			}, () ->
+			{
+				try
+				{
+					return service.getRectangle(null, finalOwner);
+				}
+				catch (RemoteException e)
+				{
+
+				}
+				return null;
+			}));
+			String id = currentElement().getID();
+			String result = xpathViewer.show(xpath, "Xpath for " + (id == null ? "empty" : id), Common.currentThemesPaths(), this.fullScreen);
+			this.model.parameterSet(currentWindow(), currentSection(), currentElement(), AbstractControl.xpathName, result);
+
+			//			Document document = service.getTree(owner);
+//			byte[] treeBytes = service.getTreeBytes(owner);
+//			Document document = Converter.convertByteArrayToXmlDocument(treeBytes);
+//			if (document != null)
+//			{
+//				XpathViewer viewer = new XpathViewer(owner, document, service);
+//				String id = currentElement().getID();
+//
+//				String result = viewer.show(xpath, "Xpath for " + (id == null ? "empty" : id), Common.currentThemesPaths(), this.fullScreen);
+//		        this.model.parameterSet(currentWindow(), currentSection(), currentElement(), AbstractControl.xpathName, result);
+//			}
 		}
 	}
 
