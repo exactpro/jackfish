@@ -124,18 +124,6 @@ public class TexReportBuilder extends ReportBuilder
             // italic
             case OM + "/": return "\\\\textit{";
             case "/" + CM: return "}";
-            
-            // table
-            case OM + "=": return "\\\\begin{longtable}[h]{lp{0.7\\\\linewidth}} \\\\begin{tabular}{|p{0}|p{50pt}|p{150pt}|p{150pt}|p{100pt}|p{}|p{}|p{}|p{}|p{}|p{}|} \\\\hline";
-            case "=" + CM: return "\\\\end{tabular} \\\\end{longtable}";
-
-            // row table
-            case OM + "-": return "";
-            case "-" + CM: return "\\\\\\\\ \\\\hline";
-
-            // cell of row table
-            case OM + "+": return "&";
-            case "+" + CM: return "";
         }
         
         return "";
@@ -246,7 +234,6 @@ public class TexReportBuilder extends ReportBuilder
 	@Override
 	protected void tableHeader(ReportWriter writer, ReportTable table, String tableTitle, String[] columns, int[] percents) throws IOException
 	{
-	    System.err.println(">> " + Arrays.toString(percents));
 	    tableTitle = replaseQoutesToBrases(tableTitle);
 	    
 		writer.fwrite("\\begin{longtable}[h]{lp{0.7\\linewidth}}").newline();
