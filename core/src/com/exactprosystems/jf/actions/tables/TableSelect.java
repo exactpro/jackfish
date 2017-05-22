@@ -92,20 +92,20 @@ public class TableSelect extends AbstractAction
 	{
 		Parameters extra = parameters.select(TypeMandatory.Extra);
 
-		for (String name : extra.keySet())
-		{
-			if (name.isEmpty())
-			{
-				super.setError("The column name does not have to contain an empty value", ErrorKind.EMPTY_PARAMETER);
-				return;
-			}
-
-			if (!this.table.columnIsPresent(name))
-			{
-				super.setError("The header " + name + " does not exist in the table", ErrorKind.WRONG_PARAMETERS);
-				return;
-			}
-		}
+//		for (String name : extra.keySet())
+//		{
+//			if (name.isEmpty())
+//			{
+//				super.setError("The column name does not have to contain an empty value", ErrorKind.EMPTY_PARAMETER);
+//				return;
+//			}
+//
+//			if (!this.table.columnIsPresent(name))
+//			{
+//				super.setError("The header " + name + " does not exist in the table", ErrorKind.WRONG_PARAMETERS);
+//				return;
+//			}
+//		}
 
 		Condition[] conditions = Condition.convertToCondition(extra);
 		Table newTable = this.table.select(conditions);

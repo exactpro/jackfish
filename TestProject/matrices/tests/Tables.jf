@@ -2745,8 +2745,8 @@ TABLE_SELECT;Test case;Never;;
 
     #EndStep
 
-    #Step;#Kind;#For;#Depends
-    'column does not exist in table';;;
+    #Off;#Step;#Kind;#For;#Depends
+    1;'column does not exist in table';;;
         #Id;#RawTable
         TC;Table
         @;Name;Age
@@ -2760,8 +2760,8 @@ TABLE_SELECT;Test case;Never;;
 
     #EndStep
 
-    #Step;#Kind;#For;#Depends
-    'column does not have name';;;
+    #Off;#Step;#Kind;#For;#Depends
+    1;'column does not have name';;;
         #Id;#RawTable
         TC;Table
         @;Name;Age
