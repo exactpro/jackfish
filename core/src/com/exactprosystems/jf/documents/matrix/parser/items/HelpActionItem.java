@@ -40,7 +40,7 @@ public class HelpActionItem extends MatrixItem
     {
         ActionAttribute attr = clazz.getAnnotation(ActionAttribute.class);
 
-        ReportTable table = report.addTable("", null, true, 0, new int[] { 30, 70 }, "Action item", clazz.getSimpleName());
+        ReportTable table = report.addTable("", null, true, 0, new int[] { 20, 80 }, "Action item", clazz.getSimpleName());
 
         table.addValues("Description", attr.generalDescription());
         if (attr.additionFieldsAllowed())
@@ -53,20 +53,22 @@ public class HelpActionItem extends MatrixItem
             table.addValues("Additional fields", "No");
         }
         StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < attr.seeAlsoClass().length; i++){
+        for (int i = 0; i < attr.seeAlsoClass().length; i++)
+        {
             sb.append(attr.seeAlsoClass()[i].getSimpleName());
-            if (i != attr.seeAlsoClass().length-1){
+            if (i != attr.seeAlsoClass().length-1)
+            {
                 sb.append(", ");
             }
         }
         table.addValues("See also", sb.toString());
-        table.addValues("Examples", HTMLhelper.htmlescape(attr.examples()));
+        table.addValues("Examples", attr.examples());
 
         // Input
         Field[] fields = clazz.getDeclaredFields();
-        table = report.addTable("Input:", null, true, 4, new int[] { 0, 0, 60, 0, 0 }, "Field name", "Field type",
+        table = report.addTable("Input:", null, true, 4, new int[] { 15, 15, 60, 10 }, "Field name", "Field type",
                 "Description", "Mandatory");
-        table.addValues();
+
         for (Field f : fields)
         {
             ActionFieldAttribute annotation = f.getAnnotation(ActionFieldAttribute.class);
@@ -79,7 +81,7 @@ public class HelpActionItem extends MatrixItem
         }
 
         // Output
-        table = report.addTable("Output:", null, true, 100, new int[] { 20, 40 }, "Output type", "Description");
+        table = report.addTable("Output:", null, true, 100, new int[] { 30, 70 }, "Output type", "Description");
         table.addValues(attr.outputType().getSimpleName(), attr.outputDescription());
     }
 

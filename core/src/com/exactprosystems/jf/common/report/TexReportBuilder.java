@@ -26,7 +26,7 @@ public class TexReportBuilder extends ReportBuilder
 {
     private static final long serialVersionUID = -6980809888694705058L;
     
-    private static final int TEXT_WIDTH = 350; // pt
+    private static final int TEXT_WIDTH = 150; // mm
 
     private static Integer chartCount = 0;
 	
@@ -244,7 +244,7 @@ public class TexReportBuilder extends ReportBuilder
 		
 		String tab = IntStream.range(0, columns.length)
 		        .mapToObj(i -> i)
-		        .map(o -> (percents.length <= o ? "l" : "p{" + (percents[o] * TEXT_WIDTH / 100) + "pt}"))
+		        .map(o -> (percents.length <= o ? "l" : "p{" + (percents[o] * TEXT_WIDTH / 100) + "mm}"))
 		        .collect(Collectors.joining("|"));
 
 		writer.fwrite("\\begin{tabular}{|%s|} \\hline", tab).newline();
