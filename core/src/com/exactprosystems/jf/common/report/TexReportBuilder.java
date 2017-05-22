@@ -17,6 +17,8 @@ import java.io.*;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.Objects;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -47,24 +49,28 @@ public class TexReportBuilder extends ReportBuilder
 	@Override
 	protected String decorateStyle(String value, String style)
 	{
-		return value;
+//		return replaseBrases(value);
+        return value;
 	}
 
 	@Override
 	protected String decorateLink(String name, String link)
 	{
+//	    name = replaseBrases(name);
 		return String.format("\\hyperlink{%s}{%s}", name.trim(), link.trim());
 	}
 
 	@Override
 	protected String decorateExpandingBlock(String name, String content)
 	{
+//        return replaseBrases(name);
 		return name;
 	}
 
     @Override
     protected String decorateGroupCell(String content, int level, boolean isNode)
     {
+//        return replaseBrases(content);
         return content;
     }
 
@@ -160,6 +166,7 @@ public class TexReportBuilder extends ReportBuilder
 	@Override
 	protected void reportHeader(ReportWriter writer, Date date, String version) throws IOException
 	{
+//	    version = replaseBrases(version);
 	    writer.include(getClass().getResourceAsStream("tex1.txt"));
 	    writer.fwrite("\\begin{document}");
 //        %% \\maketitle
@@ -224,6 +231,7 @@ public class TexReportBuilder extends ReportBuilder
 	@Override
 	protected void reportImage(ReportWriter writer, MatrixItem item, String beforeTestcase, String fileName, String title, Boolean asLink) throws IOException
 	{
+//	    title = replaseBrases(title);
         writer.fwrite("\\includegraphics[width=0.3\\textwidth]{%s}", fileName).newline();
         if (!Str.IsNullOrEmpty(title))
         {
@@ -234,6 +242,7 @@ public class TexReportBuilder extends ReportBuilder
 	@Override
 	protected void reportItemLine(ReportWriter writer, MatrixItem item, String beforeTestcase, String string, String labelId) throws IOException
 	{
+//	    string = replaseBrases(string);
 		writer.fwrite(string).newline();
 	}
 
@@ -241,6 +250,7 @@ public class TexReportBuilder extends ReportBuilder
 	protected void tableHeader(ReportWriter writer, ReportTable table, String tableTitle, String[] columns, int[] percents) throws IOException
 	{
 	    System.err.println(">> " + Arrays.toString(percents));
+//	    tableTitle = replaseBrases(tableTitle);
 	    
 		writer.fwrite("\\begin{longtable}[h]{lp{0.7\\linewidth}}").newline();
 		if (!Str.IsNullOrEmpty(tableTitle))
@@ -248,10 +258,9 @@ public class TexReportBuilder extends ReportBuilder
 			writer.fwrite("\\caption{%s} \\newline", tableTitle).newline();
 		}
 		
-		int sum = Arrays.stream(percents).sum();
 		String tab = IntStream.range(0, columns.length)
 		        .mapToObj(i -> i)
-		        .map(o -> (sum <= 0 || percents.length <= o ? "l" : "p{" + (percents[o] * TEXT_WIDTH / sum) + "pt}"))
+		        .map(o -> (percents.length <= o ? "l" : "p{" + (percents[o] * TEXT_WIDTH / 100) + "pt}"))
 		        .collect(Collectors.joining("|"));
 
 		writer.fwrite("\\begin{tabular}{|%s|} \\hline", tab).newline();
@@ -263,7 +272,7 @@ public class TexReportBuilder extends ReportBuilder
 	{
 		if (value != null)
         {
-		    String s = Arrays.stream(value).map(o -> Objects.toString(o)).reduce((s1, s2) -> s1 + "&" + s2).orElse("");
+		    String s = Arrays.stream(value).map(o -> replaseBrases(Objects.toString(o))).reduce((s1, s2) -> s1 + "&" + s2).orElse("");
             writer.fwrite(s).fwrite("\\\\ \\hline").newline();
         }
 	}
@@ -278,6 +287,32 @@ public class TexReportBuilder extends ReportBuilder
 	@Override
 	protected void reportChart(ReportWriter writer, String title, String beforeTestCase, ChartBuilder chartBuilder) throws IOException
 	{
+//	    title = replaseBrases(title);
 		chartBuilder.report(writer, ++chartCount);
 	}
+	
+    private String replaseBrases(String source)
+    {
+        if (source == null)
+        {
+            return null;
+        }
+        
+        String reg = "((\\{)|(\\}))";
+
+        Pattern patt = Pattern.compile(reg);
+        Matcher m = patt.matcher(source);
+        StringBuffer sb = new StringBuffer(source.length());
+        while (m.find())
+        {
+            String text = m.group(1);
+            System.err.println("!!!!!!!!!!!!!!!!! " + text);
+            m.appendReplacement(sb, "\\\\" + text);
+        }
+        m.appendTail(sb);
+
+//        System.err.println("## " + source + " => " + sb.toString());
+        
+        return sb.toString();
+    }
 }
