@@ -153,7 +153,7 @@ public class TexReportBuilder extends ReportBuilder
 	{
 	    version = replaseQoutesToBrases(version);
 	    writer.include(getClass().getResourceAsStream("tex1.txt"));
-	    writer.fwrite("\\begin{document}");
+//	    writer.fwrite("\\begin{document}");
 //        %% \\maketitle
 //        %% \\newpage
 //        %% \\tableofcontents

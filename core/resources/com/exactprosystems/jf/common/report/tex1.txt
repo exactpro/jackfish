@@ -17,6 +17,19 @@
 %% \usepackage[colorinlistoftodos]{todonotes}
 \usepackage[colorlinks=true, bookmarks=true, allcolors=blue]{hyperref}
 
+\usepackage{fancyhdr}
+
+\pagestyle{fancy}
+\fancyhf{}
+\rhead{MAGIC PICTURE(COMING SOON)}
+\lhead{CONFIDENTIAL}
+\lfoot{JackFish. User Guide}
+\rfoot{Page \thepage}
+\renewcommand{\headrulewidth}{0pt}
+\renewcommand{\footrulewidth}{0pt}
+
+\begin{document}
+
 \title{JackFish}
 \author{JackFish dev team}
 \date{\today}
