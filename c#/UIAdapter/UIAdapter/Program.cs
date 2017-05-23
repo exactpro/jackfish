@@ -1027,10 +1027,7 @@ namespace UIAdapter
                             var windowP = windowPattern as WindowPattern;
                             if (windowP.Current.WindowVisualState != WindowVisualState.Normal)
                             {
-                                throw new Exception(
-                                    "Window state is not normal. Current state is " + windowP.Current.WindowVisualState
-                                    + " . Use ApplicationResize with parameter Normal true for change to window to normal state."
-                                    );
+                                throw new Exception("Current state is " + windowP.Current.WindowVisualState + ", but need normal");
                             }
                         }
                         //TODO set position via win api

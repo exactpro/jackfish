@@ -406,8 +406,6 @@ public class HelpBuilder extends ReportBuilder
 	@Override
 	protected void reportImage(ReportWriter writer, MatrixItem item, String beforeTestcase, String fileName, String title, Boolean asLink) throws IOException
 	{
-	    System.err.println(">> " + fileName);
-	    
         writer.fwrite(
                 "<span class='tableTitle'>%s</span><br>",
                 this.postProcess(title));

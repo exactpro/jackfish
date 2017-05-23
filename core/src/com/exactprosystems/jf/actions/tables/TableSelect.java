@@ -51,7 +51,7 @@ import com.exactprosystems.jf.functions.Table;
 				+ "#Id;#Action;#Table;#Age\n"
 				+ "TS;TableSelect;TC;new StringCondition('Name','Mike')\n"
 				+ "#Assert;#Message\n"
-				+ "TS.Out.size() == 1;#}}\n"
+				+ "TS.Out.size() == 1;#}}"
 				+ "{{`Example #2:`}}"
 				+ "{{`1. Create a table with columns Name and Age. Complete the table with 3 lines.`}}"
 				+ "{{`2. Set the data type  Integer for the column Age.`}}"

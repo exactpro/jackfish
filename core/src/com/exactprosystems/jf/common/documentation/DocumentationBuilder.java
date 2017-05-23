@@ -11,6 +11,7 @@ import com.exactprosystems.jf.actions.AbstractAction;
 import com.exactprosystems.jf.actions.ActionAttribute;
 import com.exactprosystems.jf.actions.ActionGroups;
 import com.exactprosystems.jf.actions.ActionsList;
+import com.exactprosystems.jf.actions.tables.TableSelect;
 import com.exactprosystems.jf.api.app.ControlKind;
 import com.exactprosystems.jf.api.app.OperationKind;
 import com.exactprosystems.jf.api.common.DateTime;
@@ -23,6 +24,7 @@ import com.exactprosystems.jf.documents.config.Context;
 import com.exactprosystems.jf.documents.guidic.controls.AbstractControl;
 import com.exactprosystems.jf.documents.matrix.parser.Parser;
 import com.exactprosystems.jf.documents.matrix.parser.items.ActionItem;
+import com.exactprosystems.jf.documents.matrix.parser.items.Call;
 import com.exactprosystems.jf.documents.matrix.parser.items.HelpActionItem;
 import com.exactprosystems.jf.documents.matrix.parser.items.HelpTable;
 import com.exactprosystems.jf.documents.matrix.parser.items.HelpChapter;
@@ -52,7 +54,7 @@ public class DocumentationBuilder
                     { "{{*Date*}}", "{{*Version*}}", "{{*By*}}", "{{*Comments*}}" },
                     { DateTime.current().str("dd MMM yyyy"), VersionInfo.getVersion(), "Valery Florov", "Initial Draft" }
                 };
-        addTable(help, "{{/Document Information/}}", table1, new int[] { 10, 10, 10, 10 },  evaluator);
+//        addTable(help, "{{/Document Information/}}", table1, new int[] { 10, 10, 10, 30 },  evaluator);
 //
 //        addChapter(help, "Introduction", 3);
         addText(help, DocumentationBuilder.class.getResourceAsStream("intro1.txt"));
@@ -66,6 +68,10 @@ public class DocumentationBuilder
 //        addAllItems(help);
 //        addChapter(help, "Actions by groups", 3);
 //        addAllActions(help);
+        
+//        help.insert(help.count(), new HelpItem(Call.class));
+//        help.insert(help.count(), new HelpActionItem(TableSelect.class));
+
         
         return help;
     }

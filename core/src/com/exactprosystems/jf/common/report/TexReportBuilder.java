@@ -26,7 +26,7 @@ public class TexReportBuilder extends ReportBuilder
 {
     private static final long serialVersionUID = -6980809888694705058L;
     
-    private static final int TEXT_WIDTH = 350; // pt
+    private static final int TEXT_WIDTH = 150; // mm
 
     private static Integer chartCount = 0;
 	
@@ -43,35 +43,32 @@ public class TexReportBuilder extends ReportBuilder
 	@Override
 	protected String postProcess(String result)
 	{
-		return super.postProcess(result);
+		return super.postProcess(replaseBrasesToQuotes(result));
 	}
 
 	@Override
 	protected String decorateStyle(String value, String style)
 	{
-//		return replaseBrases(value);
-        return value;
+		return replaseQoutesToBrases(value);
 	}
 
 	@Override
 	protected String decorateLink(String name, String link)
 	{
-//	    name = replaseBrases(name);
+	    name = replaseQoutesToBrases(name);
 		return String.format("\\hyperlink{%s}{%s}", name.trim(), link.trim());
 	}
 
 	@Override
 	protected String decorateExpandingBlock(String name, String content)
 	{
-//        return replaseBrases(name);
-		return name;
+        return replaseQoutesToBrases(name);
 	}
 
     @Override
     protected String decorateGroupCell(String content, int level, boolean isNode)
     {
-//        return replaseBrases(content);
-        return content;
+        return replaseQoutesToBrases(content);
     }
 
 	@Override
@@ -127,18 +124,6 @@ public class TexReportBuilder extends ReportBuilder
             // italic
             case OM + "/": return "\\\\textit{";
             case "/" + CM: return "}";
-            
-            // table
-            case OM + "=": return "\\\\begin{longtable}[h]{lp{0.7\\\\linewidth}} \\\\begin{tabular}{|p{0}|p{50pt}|p{150pt}|p{150pt}|p{100pt}|p{}|p{}|p{}|p{}|p{}|p{}|} \\\\hline";
-            case "=" + CM: return "\\\\end{tabular} \\\\end{longtable}";
-
-            // row table
-            case OM + "-": return "";
-            case "-" + CM: return "\\\\\\\\ \\\\hline";
-
-            // cell of row table
-            case OM + "+": return "&";
-            case "+" + CM: return "";
         }
         
         return "";
@@ -166,7 +151,7 @@ public class TexReportBuilder extends ReportBuilder
 	@Override
 	protected void reportHeader(ReportWriter writer, Date date, String version) throws IOException
 	{
-//	    version = replaseBrases(version);
+	    version = replaseQoutesToBrases(version);
 	    writer.include(getClass().getResourceAsStream("tex1.txt"));
 	    writer.fwrite("\\begin{document}");
 //        %% \\maketitle
@@ -231,7 +216,7 @@ public class TexReportBuilder extends ReportBuilder
 	@Override
 	protected void reportImage(ReportWriter writer, MatrixItem item, String beforeTestcase, String fileName, String title, Boolean asLink) throws IOException
 	{
-//	    title = replaseBrases(title);
+	    title = replaseQoutesToBrases(title);
         writer.fwrite("\\includegraphics[width=0.3\\textwidth]{%s}", fileName).newline();
         if (!Str.IsNullOrEmpty(title))
         {
@@ -242,15 +227,14 @@ public class TexReportBuilder extends ReportBuilder
 	@Override
 	protected void reportItemLine(ReportWriter writer, MatrixItem item, String beforeTestcase, String string, String labelId) throws IOException
 	{
-//	    string = replaseBrases(string);
+	    string = replaseQoutesToBrases(string);
 		writer.fwrite(string).newline();
 	}
 
 	@Override
 	protected void tableHeader(ReportWriter writer, ReportTable table, String tableTitle, String[] columns, int[] percents) throws IOException
 	{
-	    System.err.println(">> " + Arrays.toString(percents));
-//	    tableTitle = replaseBrases(tableTitle);
+	    tableTitle = replaseQoutesToBrases(tableTitle);
 	    
 		writer.fwrite("\\begin{longtable}[h]{lp{0.7\\linewidth}}").newline();
 		if (!Str.IsNullOrEmpty(tableTitle))
@@ -260,7 +244,7 @@ public class TexReportBuilder extends ReportBuilder
 		
 		String tab = IntStream.range(0, columns.length)
 		        .mapToObj(i -> i)
-		        .map(o -> (percents.length <= o ? "l" : "p{" + (percents[o] * TEXT_WIDTH / 100) + "pt}"))
+		        .map(o -> (percents.length <= o ? "l" : "p{" + (percents[o] * TEXT_WIDTH / 100) + "mm}"))
 		        .collect(Collectors.joining("|"));
 
 		writer.fwrite("\\begin{tabular}{|%s|} \\hline", tab).newline();
@@ -272,7 +256,7 @@ public class TexReportBuilder extends ReportBuilder
 	{
 		if (value != null)
         {
-		    String s = Arrays.stream(value).map(o -> replaseBrases(Objects.toString(o))).reduce((s1, s2) -> s1 + "&" + s2).orElse("");
+		    String s = Arrays.stream(value).map(o -> replaseQoutesToBrases(Objects.toString(o))).reduce((s1, s2) -> s1 + "&" + s2).orElse("");
             writer.fwrite(s).fwrite("\\\\ \\hline").newline();
         }
 	}
@@ -287,18 +271,18 @@ public class TexReportBuilder extends ReportBuilder
 	@Override
 	protected void reportChart(ReportWriter writer, String title, String beforeTestCase, ChartBuilder chartBuilder) throws IOException
 	{
-//	    title = replaseBrases(title);
+	    title = replaseQoutesToBrases(title);
 		chartBuilder.report(writer, ++chartCount);
 	}
-	
-    private String replaseBrases(String source)
+
+    private String replaseBrasesToQuotes(String source)
     {
         if (source == null)
         {
             return null;
         }
         
-        String reg = "((\\{)|(\\}))";
+        String reg = "(([^\\{]\\{[^\\{])|([^\\}]\\}[^\\}]))";
 
         Pattern patt = Pattern.compile(reg);
         Matcher m = patt.matcher(source);
@@ -306,13 +290,20 @@ public class TexReportBuilder extends ReportBuilder
         while (m.find())
         {
             String text = m.group(1);
-            System.err.println("!!!!!!!!!!!!!!!!! " + text);
-            m.appendReplacement(sb, "\\\\" + text);
+            text = text.replace('{', '«').replace('}', '»');
+            m.appendReplacement(sb, text);
         }
         m.appendTail(sb);
 
-//        System.err.println("## " + source + " => " + sb.toString());
-        
         return sb.toString();
+    }
+
+    private String replaseQoutesToBrases(String source)
+    {
+        if (source == null)
+        {
+            return null;
+        }
+        return source.replace("«", "\\{").replace("»", "\\}");
     }
 }
