@@ -22,7 +22,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -34,9 +33,9 @@ public class XpathViewer
 
 	private String relativeXpath;
 
-	private Supplier<Document> documentSupplier;
-	private ServiceLambdaBean  serviceLambdaBean;
-	private Locator            ownerLocator;
+	private Common.SupplierWithException<Document> documentSupplier;
+	private ServiceLambdaBean                      serviceLambdaBean;
+	private Locator                                ownerLocator;
 
 
 	private static ExecutorService executor = Executors.newFixedThreadPool(1);
@@ -45,14 +44,7 @@ public class XpathViewer
 	private int xOffset = 0;
 	private int yOffset = 0;
 
-	@Deprecated
-	public XpathViewer(Locator owner, Document document, IRemoteApplication service)
-	{
-		this.document = document;
-		this.ownerLocator = owner;
-	}
-
-	public XpathViewer(Locator ownerLocator, Supplier<Document> documentSupplier, ServiceLambdaBean serviceLambdaBean) throws Exception
+	public XpathViewer(Locator ownerLocator, Common.SupplierWithException<Document> documentSupplier, ServiceLambdaBean serviceLambdaBean)
 	{
 		this.ownerLocator = ownerLocator;
 		this.serviceLambdaBean = serviceLambdaBean;
@@ -153,8 +145,6 @@ public class XpathViewer
 					protected Document call() throws Exception
 					{
 						return documentSupplier.get();
-						//						byte[] treeBytes = service.getTreeBytes(ownerLocator);
-						//						return Converter.convertByteArrayToXmlDocument(treeBytes);
 					}
 				};
 			}
@@ -218,7 +208,14 @@ public class XpathViewer
 			}
 			this.controller.displayDocumentFailing(message);
 		});
-		this.imageService.start();
+		if (this.serviceLambdaBean != null)
+		{
+			this.imageService.start();
+		}
+		else
+		{
+			this.controller.displayImage(null);
+		}
 		this.documentService.start();
 	}
 

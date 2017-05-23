@@ -18,6 +18,7 @@ import com.exactprosystems.jf.documents.guidic.Window;
 import com.exactprosystems.jf.documents.guidic.controls.AbstractControl;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.CssVariables;
+import com.exactprosystems.jf.tool.custom.ServiceLambdaBean;
 import com.exactprosystems.jf.tool.custom.xpath.ImageAndOffset;
 import com.exactprosystems.jf.tool.custom.xpath.TreeItemState;
 import com.exactprosystems.jf.tool.custom.xpath.XpathViewer;
@@ -755,7 +756,12 @@ public class DialogWizard
 
 	String showXpathViewer(String xpath)
 	{
-		return new XpathViewer(this.selfControl.locator(), this.document, service()).show(xpath, "Xpath builder", Common.currentThemesPaths(), false);
+		ServiceLambdaBean serviceLambdaBean = new ServiceLambdaBean(
+				() -> this.service().getImage(null, this.selfControl.locator()).getImage(),
+				() -> this.service().getRectangle(null, this.selfControl.locator())
+		);
+		XpathViewer xpathViewer = new XpathViewer(this.selfControl.locator(), () -> this.document, serviceLambdaBean);
+		return xpathViewer.show(xpath, "Xpath builder", Common.currentThemesPaths(), false);
 	}
 
 	void removeElement(ElementWizardBean bean)

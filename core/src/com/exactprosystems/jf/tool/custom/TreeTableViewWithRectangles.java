@@ -49,7 +49,11 @@ public class TreeTableViewWithRectangles
 
 	private Node waitingNode;
 
+	@Deprecated
 	private DialogWizardController controller;
+
+	private Consumer<Void> updateCounters;
+	private Consumer<Void> refreshTable;
 
 	private Consumer<List<Rectangle>> removeConsumer;
 	private List<Consumer<XpathTreeItem>> selectionConsumers = new ArrayList<>();
@@ -65,9 +69,10 @@ public class TreeTableViewWithRectangles
 	}};
 
 	//TODO remove DialogWizardController
-	public TreeTableViewWithRectangles(DialogWizardController dialogWizardController)
+	public TreeTableViewWithRectangles(Consumer<Void> updateCounters, Consumer<Void> refreshTable)
 	{
-		this.controller = dialogWizardController;
+		this.updateCounters = updateCounters;
+		this.refreshTable = refreshTable;
 		this.anchorPane = new AnchorPane();
 		this.treeTableView = new TreeTableView<>();
 		this.treeTableView.setSkin(new MyCustomSkin(this.treeTableView));
@@ -113,9 +118,9 @@ public class TreeTableViewWithRectangles
 //					this.controller.changeStateCount(-1, xpathTreeItem.getState());
 					xpathTreeItem.changeState();
 //					this.controller.changeStateCount(+1, xpathTreeItem.getState());
-					this.controller.refreshTable();
+					this.refreshTable.accept(null);
 					this.displayMarkedRows();
-					this.controller.updateCounters();
+					this.updateCounters.accept(null);
 					refresh();
 				}
 			}
@@ -373,8 +378,8 @@ public class TreeTableViewWithRectangles
 //			this.controller.changeStateCount(-1, prevStateIsSet ? selectedItem.getValue().getState() : TreeItemState.UPDATE);
 			selectedItem.getValue().addRelation(bean, TreeItemState.UPDATE);
 //			this.controller.changeStateCount(1, selectedItem.getValue().getState());
-			this.controller.updateCounters();
-			this.controller.refreshTable();
+			this.updateCounters.accept(null);
+			this.refreshTable.accept(null);
 		}
 		this.displayMarkedRows();
 		refresh();

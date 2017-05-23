@@ -35,8 +35,6 @@ import java.util.stream.Collectors;
 
 public class XpathViewerContentController implements Initializable, ContainingParent
 {
-	//	public TreeView<XpathItem> treeView;
-
 	//region TreeView
 	private TreeTableViewWithRectangles        treeTableViewWithRectangles;
 	public  FindPanel<TreeItem<XpathTreeItem>> findPanel;
@@ -74,13 +72,10 @@ public class XpathViewerContentController implements Initializable, ContainingPa
 	private Parent      parent;
 	private XpathViewer model;
 
-	//TODO think about it
-	private Map<Rectangle, Set<TreeItem<XpathItem>>> map = new HashMap<>();
-
 	@Override
 	public void initialize(URL location, ResourceBundle resources)
 	{
-		this.treeTableViewWithRectangles = new TreeTableViewWithRectangles(null);
+		this.treeTableViewWithRectangles = new TreeTableViewWithRectangles(v->{}, v->{});
 		this.imageViewWithScale = new ImageViewWithScale();
 		this.imageViewWithScale.hideIds();
 
@@ -138,11 +133,7 @@ public class XpathViewerContentController implements Initializable, ContainingPa
 		headerLabel.setMinHeight(0);
 		headerLabel.setMaxHeight(0);
 		dialog.getDialogPane().setHeader(headerLabel);
-		dialog.setOnShowing(event ->
-		{
-			this.model.displayImageAndTree();
-			this.model.applyXpath(this.cfMainExpression.getText());
-		});
+		dialog.setOnShowing(event -> this.model.displayImageAndTree());
 		if (fullScreen)
 		{
 			dialog.setOnShown(event -> ((Stage) dialog.getDialogPane().getScene().getWindow()).setFullScreen(true));
@@ -175,16 +166,33 @@ public class XpathViewerContentController implements Initializable, ContainingPa
 	// ============================================================
 	// display methods
 	// ============================================================
-	public void displayDocument(Document document, int xOffset, int yOffset)
+	void displayDocument(Document document, int xOffset, int yOffset)
 	{
 		if (document != null)
 		{
 			this.treeTableViewWithRectangles.displayDocument(document, xOffset, yOffset);
 			BufferedImage image = this.imageViewWithScale.getImage();
-			this.imageViewWithScale.setListRectangles(this.treeTableViewWithRectangles.buildMap(image.getWidth(), image.getHeight(), new Dimension(image.getWidth() / 16, image.getHeight() / 16)));
+			if (image != null)
+			{
+				this.imageViewWithScale.setListRectangles(this.treeTableViewWithRectangles.buildMap(image.getWidth(), image.getHeight(), new Dimension(image.getWidth() / 16, image.getHeight() / 16)));
+			}
 			String oldText = this.cfMainExpression.getText();
 			this.cfMainExpression.clear();
 			this.cfMainExpression.setText(oldText);
+		}
+	}
+
+	void displayImage(BufferedImage image)
+	{
+		this.splitPane.setDividerPositions(0.0);
+		if (image != null)
+		{
+			this.imageViewWithScale.displayImage(image);
+			this.splitPane.setDividerPositions(0.5);
+		}
+		else
+		{
+			this.splitPane.getItems().remove(0);
 		}
 	}
 
@@ -204,7 +212,7 @@ public class XpathViewerContentController implements Initializable, ContainingPa
 		this.imageViewWithScale.replaceWaitingPane(node);
 	}
 
-	public void deselectItems()
+	void deselectItems()
 	{
 		Platform.runLater(() -> this.treeTableViewWithRectangles.forEach(treeItem ->
 				Optional.ofNullable(treeItem)
@@ -213,7 +221,7 @@ public class XpathViewerContentController implements Initializable, ContainingPa
 		));
 	}
 
-	public void displayResults(List<Node> nodes)
+	void displayResults(List<Node> nodes)
 	{
 		Platform.runLater(() ->
 		{
@@ -229,8 +237,7 @@ public class XpathViewerContentController implements Initializable, ContainingPa
 			else
 			{
 				List<TreeItem<XpathTreeItem>> items = this.treeTableViewWithRectangles.findByNodes(nodes);
-				items.stream()
-						.filter(Objects::nonNull)
+				items.stream().filter(Objects::nonNull)
 						.map(TreeItem::getValue)
 						.filter(Objects::nonNull)
 						.map(XpathTreeItem::getBox)
@@ -280,16 +287,6 @@ public class XpathViewerContentController implements Initializable, ContainingPa
 			this.labelXpath3Count.setText(String.valueOf(nodes3 == null ? "" : nodes3.size()));
 			this.labelXpath4Count.setText(String.valueOf(nodes4 == null ? "" : nodes4.size()));
 		});
-	}
-
-	public void displayImage(BufferedImage image)
-	{
-		this.splitPane.setDividerPositions(0.0);
-		if (image != null)
-		{
-			this.imageViewWithScale.displayImage(image);
-			this.splitPane.setDividerPositions(0.5);
-		}
 	}
 
 	public void displayRectangle(Rectangle rectangle)

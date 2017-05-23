@@ -1,38 +1,31 @@
 package com.exactprosystems.jf.tool.custom;
 
+import com.exactprosystems.jf.tool.Common;
+
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.util.function.Supplier;
+import java.util.Objects;
 
 public class ServiceLambdaBean
 {
-	private Supplier<BufferedImage> bufferedImageSupplier;
-	private Supplier<Rectangle>     rectangleSupplier;
+	private final Common.SupplierWithException<BufferedImage> bufferedImageSupplier;
+	private final Common.SupplierWithException<Rectangle>     rectangleSupplier;
 
-	public ServiceLambdaBean(Supplier<BufferedImage> bufferedImageSupplier, Supplier<Rectangle> rectangleSupplier)
+	public ServiceLambdaBean(Common.SupplierWithException<BufferedImage> bufferedImageSupplier, Common.SupplierWithException<Rectangle> rectangleSupplier)
 	{
+		Objects.requireNonNull(bufferedImageSupplier);
+		Objects.requireNonNull(rectangleSupplier);
 		this.bufferedImageSupplier = bufferedImageSupplier;
 		this.rectangleSupplier = rectangleSupplier;
 	}
 
-
-	public Supplier<BufferedImage> bufferedImageSupplier()
+	public Common.SupplierWithException<BufferedImage> bufferedImageSupplier()
 	{
 		return bufferedImageSupplier;
 	}
 
-	public void setBufferedImageSupplier(Supplier<BufferedImage> bufferedImageSupplier)
-	{
-		this.bufferedImageSupplier = bufferedImageSupplier;
-	}
-
-	public Supplier<Rectangle> rectangleSupplier()
+	public Common.SupplierWithException<Rectangle> rectangleSupplier()
 	{
 		return rectangleSupplier;
-	}
-
-	public void setRectangleSupplier(Supplier<Rectangle> rectangleSupplier)
-	{
-		this.rectangleSupplier = rectangleSupplier;
 	}
 }

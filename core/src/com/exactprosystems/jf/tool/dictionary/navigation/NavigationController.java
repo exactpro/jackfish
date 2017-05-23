@@ -40,7 +40,6 @@ import javafx.scene.layout.*;
 import javafx.scene.text.Text;
 
 import java.net.URL;
-import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.ResourceBundle;
@@ -306,39 +305,12 @@ public class NavigationController implements Initializable, ContainingParent
 
 			Locator finalOwner = owner;
 			XpathViewer xpathViewer = new XpathViewer(owner, () -> {
-				try
-				{
-					byte[] treeBytes = service.getTreeBytes(finalOwner);
-					return Converter.convertByteArrayToXmlDocument(treeBytes);
-				}
-				catch (Exception e)
-				{
-
-				}
-				return null;
-			}, new ServiceLambdaBean(() ->
-			{
-				try
-				{
-					return service.getImage(null, finalOwner).getImage();
-				}
-				catch (RemoteException e)
-				{
-
-				}
-				return null;
-			}, () ->
-			{
-				try
-				{
-					return service.getRectangle(null, finalOwner);
-				}
-				catch (RemoteException e)
-				{
-
-				}
-				return null;
-			}));
+				byte[] treeBytes = service.getTreeBytes(finalOwner);
+				return Converter.convertByteArrayToXmlDocument(treeBytes);
+			}, new ServiceLambdaBean(
+					() -> service.getImage(null, finalOwner).getImage(),
+					() -> service.getRectangle(null, finalOwner))
+			);
 			String id = currentElement().getID();
 			String result = xpathViewer.show(xpath, "Xpath for " + (id == null ? "empty" : id), Common.currentThemesPaths(), this.fullScreen);
 			this.model.parameterSet(currentWindow(), currentSection(), currentElement(), AbstractControl.xpathName, result);
