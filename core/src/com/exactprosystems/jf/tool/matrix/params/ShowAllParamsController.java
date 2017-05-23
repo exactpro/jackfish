@@ -23,6 +23,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.CheckBoxTreeCell;
+import javafx.scene.input.KeyCode;
 import javafx.stage.Stage;
 import javafx.util.Pair;
 
@@ -36,14 +37,14 @@ import java.util.stream.Collectors;
 public class ShowAllParamsController implements Initializable, ContainingParent
 {
 	public TreeView<ReadableValue> treeView;
-	public ListView<CellOnList> listView;
-	public TextField filteringField;
+	public ListView<CellOnList>    listView;
+	public TextField               tfFilter;
 
 	private CheckBoxTreeItem<ReadableValue> notMandatory;
 	private CheckBoxTreeItem<ReadableValue> extra;
 
-	private ObservableList<TreeItem<ReadableValue>> notChildren;
-	private ObservableList<TreeItem<ReadableValue>> extChildren;
+	private ObservableList<TreeItem<ReadableValue>> notMandatoryChildren;
+	private ObservableList<TreeItem<ReadableValue>> extraChildren;
 
 	private Dialog<ButtonType> dialog;
 	private Parent parent;
@@ -52,7 +53,7 @@ public class ShowAllParamsController implements Initializable, ContainingParent
 	@Override
 	public void initialize(URL url, ResourceBundle resourceBundle)
 	{
-		assert filteringField != null : "fx:id=\"tf\" was not injected: check your FXML file 'showAllParams.fxml'.";
+		assert tfFilter != null : "fx:id=\"tf\" was not injected: check your FXML file 'showAllParams.fxml'.";
 		assert treeView != null : "fx:id=\"treeView\" was not injected: check your FXML file 'showAllParams.fxml'.";
 		assert listView != null : "fx:id=\"listView\" was not injected: check your FXML file 'showAllParams.fxml'.";
 
@@ -68,50 +69,41 @@ public class ShowAllParamsController implements Initializable, ContainingParent
 	public void setContent(Map<ReadableValue, TypeMandatory> map, Parameters parameters, String title)
 	{
 		this.title = title;
-		treeView.setCellFactory(CheckBoxTreeCell.<ReadableValue>forTreeView());
+		this.treeView.setCellFactory(CheckBoxTreeCell.forTreeView());
 
 		CheckBoxTreeItem<ReadableValue> rootItem = new CheckBoxTreeItem<>(new ReadableValue("All"));
-		treeView.setRoot(rootItem);
+		this.treeView.setRoot(rootItem);
 		rootItem.setExpanded(true);
 		rootItem.setIndependent(false);
 
-		this.notMandatory = new CheckBoxTreeItem<>(new ReadableValue("Not Mandatory"));
+		this.notMandatory = new CheckBoxTreeItem<>(new ReadableValue(TypeMandatory.NotMandatory.name()));
 		this.notMandatory.setIndependent(false);
 
-		this.extra = new CheckBoxTreeItem<>(new ReadableValue("Extra"));
+		this.extra = new CheckBoxTreeItem<>(new ReadableValue(TypeMandatory.Extra.name()));
 		this.extra.setIndependent(false);
 
 		rootItem.getChildren().addAll(this.notMandatory, this.extra);
 
-		for (Map.Entry<ReadableValue, TypeMandatory> entry : map.entrySet())
-		{
-			final CheckBoxTreeItem<ReadableValue> checkBox = new CheckBoxTreeItem<>(entry.getKey());
-			final boolean[] flag = { false };
-			parameters.entrySet().stream().filter(objectEntry -> objectEntry.getKey().equals(checkBox.getValue().getValue())).findFirst().ifPresent(objectEntry -> flag[0] = true);
-			switch (entry.getValue())
+		map.forEach((value, mandatory) -> {
+			CheckBoxTreeItem<ReadableValue> checkBox = new CheckBoxTreeItem<>(value);
+			boolean isPresented = parameters.entrySet().stream().anyMatch(entry -> entry.getKey().equals(value.getValue()));
+			checkBox.selectedProperty().addListener((observableValue, prevValue, newValue) -> addRemoveItem(newValue, new CellOnList(value, mandatory)));
+			switch (mandatory)
 			{
 				case NotMandatory:
-					if (!flag[0])
+					if (!isPresented)
 					{
 						this.notMandatory.getChildren().add(checkBox);
-						checkBox.selectedProperty().addListener((observableValue, prevValue, newValue) -> 
-						{
-							addRemoveItem(newValue, new CellOnList(checkBox.getValue(), TypeMandatory.NotMandatory));
-						});
 					}
 					break;
-
 				case Extra:
 					this.extra.getChildren().add(checkBox);
-					checkBox.selectedProperty().addListener((observableValue, prevValue, newValue) -> 
-					{
-						addRemoveItem(newValue, new CellOnList(checkBox.getValue(), TypeMandatory.Extra));
-					});
 					break;
 			}
-		}
-		notChildren = FXCollections.observableArrayList(notMandatory.getChildren());
-		extChildren = FXCollections.observableArrayList(extra.getChildren());
+		});
+
+		notMandatoryChildren = FXCollections.observableArrayList(notMandatory.getChildren());
+		extraChildren = FXCollections.observableArrayList(extra.getChildren());
 		listeners();
 	}
 
@@ -124,7 +116,7 @@ public class ShowAllParamsController implements Initializable, ContainingParent
 		this.dialog.getDialogPane().setContent(this.parent);
 		dialog.getDialogPane().getStylesheets().addAll(Common.currentThemesPaths());
 		Platform.runLater(() -> expandTree(this.treeView.getRoot()));
-		this.dialog.setOnShown(e -> Common.setFocused(filteringField));
+		this.dialog.setOnShown(e -> Common.setFocused(tfFilter));
 		Optional<ButtonType> optional = this.dialog.showAndWait();
 		ArrayList<Pair<ReadableValue, TypeMandatory>> res = new ArrayList<>();
 		if (optional.get().getButtonData().equals(ButtonBar.ButtonData.OK_DONE))
@@ -140,16 +132,15 @@ public class ShowAllParamsController implements Initializable, ContainingParent
 	//============================================================
 	private void listeners()
 	{
-		this.filteringField.textProperty().addListener(new ChangeListener<String>()
+		this.tfFilter.textProperty().addListener(new ChangeListener<String>()
 		{
 			@Override
 			public void changed(ObservableValue<? extends String> observableValue, String s, String t1)
 			{
-				notMandatory.getChildren().setAll(notChildren);
-				extra.getChildren().setAll(extChildren);
+				notMandatory.getChildren().setAll(notMandatoryChildren);
+				extra.getChildren().setAll(extraChildren);
 				if (!t1.isEmpty())
 				{
-					ObservableList<TreeItem<ReadableValue>> mC = FXCollections.observableArrayList();
 					ObservableList<TreeItem<ReadableValue>> nC = FXCollections.observableArrayList();
 					ObservableList<TreeItem<ReadableValue>> eC = FXCollections.observableArrayList();
 
@@ -158,17 +149,48 @@ public class ShowAllParamsController implements Initializable, ContainingParent
 				}
 			}
 
-			private void filtering(ObservableList<TreeItem<ReadableValue>> l, CheckBoxTreeItem<ReadableValue> c, String s)
+			private void filtering(ObservableList<TreeItem<ReadableValue>> list, CheckBoxTreeItem<ReadableValue> treeItem, String str)
 			{
-				c.setIndependent(false);
-				l.addAll(c.getChildren().stream().filter(item -> item.getValue().getValue().toLowerCase().contains(s.toLowerCase())).collect(Collectors.toList()));
-				c.getChildren().clear();
-				c.getChildren().addAll(l);
-				if (l.size() > 0)
+				treeItem.setIndependent(false);
+				list.addAll(treeItem.getChildren().stream().filter(item -> item.getValue().getValue().toLowerCase().contains(str.toLowerCase())).collect(Collectors.toList()));
+				treeItem.getChildren().clear();
+				treeItem.getChildren().addAll(list);
+				if (list.size() > 0)
 				{
-					c.setExpanded(true);
+					treeItem.setExpanded(true);
 				}
-				c.setIndependent(true);
+				treeItem.setIndependent(true);
+			}
+		});
+
+		this.tfFilter.setOnKeyPressed(event -> {
+			if (event.getCode() == KeyCode.DOWN || event.getCode() == KeyCode.TAB)
+			{
+				Common.setFocused(this.treeView, 0);
+				this.treeView.getSelectionModel().clearAndSelect(0);
+			}
+		});
+
+		this.treeView.setOnKeyPressed(event -> {
+			if (event.getCode() == KeyCode.SPACE)
+			{
+				CheckBoxTreeItem selectedItem = (CheckBoxTreeItem) this.treeView.getSelectionModel().getSelectedItem();
+				selectedItem.setSelected(!selectedItem.isSelected());
+			}
+			else if ((event.getCode() == KeyCode.UP && this.treeView.getSelectionModel().getSelectedItem() == this.treeView.getRoot()) || event.getCode() == KeyCode.TAB)
+			{
+				this.treeView.getSelectionModel().clearSelection();
+				Common.setFocused(this.tfFilter, 0);
+			}
+			else if (event.getCode() == KeyCode.ENTER)
+			{
+				this.dialog.setResult(ButtonType.OK);
+				this.dialog.hide();
+			}
+			else if (event.getCode() == KeyCode.ESCAPE)
+			{
+				this.dialog.setResult(ButtonType.CANCEL);
+				this.dialog.hide();
 			}
 		});
 	}
@@ -251,7 +273,6 @@ public class ShowAllParamsController implements Initializable, ContainingParent
 			if (empty)
 			{
 				setText(null);
-				setGraphic(null);
 			}
 			else
 			{

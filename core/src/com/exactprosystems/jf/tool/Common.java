@@ -99,6 +99,22 @@ public abstract class Common
 		thread.start();
 	}
 
+	public static void setFocused(final Node node, int delay)
+	{
+		Thread thread = new Thread(new Task<Void>()
+		{
+			@Override
+			protected Void call() throws Exception
+			{
+				Thread.sleep(delay);
+				Platform.runLater(node::requestFocus);
+				return null;
+			}
+		});
+		thread.setName("Focused node with delay : " + node + " , thread id : " + thread.getId());
+		thread.start();
+	}
+
 	public static boolean appIsFocused()
 	{
 		return node != null && node.isFocused();

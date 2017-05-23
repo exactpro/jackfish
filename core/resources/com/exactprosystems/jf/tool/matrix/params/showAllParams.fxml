@@ -22,6 +22,6 @@
       </SplitPane>
    </center>
    <top>
-      <TextField fx:id="filteringField" BorderPane.alignment="CENTER" />
+      <TextField fx:id="tfFilter" BorderPane.alignment="CENTER" />
    </top>
 </BorderPane>

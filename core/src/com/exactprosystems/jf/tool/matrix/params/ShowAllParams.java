@@ -12,10 +12,8 @@ import com.exactprosystems.jf.actions.ReadableValue;
 import com.exactprosystems.jf.documents.matrix.parser.Parameters;
 import com.exactprosystems.jf.documents.matrix.parser.items.TypeMandatory;
 import com.exactprosystems.jf.tool.Common;
-
 import javafx.util.Pair;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Map;
 
@@ -23,7 +21,7 @@ public class ShowAllParams
 {
 	private ShowAllParamsController controller;
 
-	public ShowAllParams(Map<ReadableValue, TypeMandatory> map, Parameters parameters, String title) throws IOException
+	public ShowAllParams(Map<ReadableValue, TypeMandatory> map, Parameters parameters, String title)
 	{
 		this.controller = Common.loadController(ShowAllParams.class.getResource("showAllParams.fxml"));
 		this.controller.setContent(map, parameters, title);
