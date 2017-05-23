@@ -587,19 +587,6 @@ public class MainRunner
 			list.add(str);
 		}
 	}
-
-	private static boolean deleteDir(File dir) {
-		if (dir.isDirectory()) {
-			String[] children = dir.list();
-			for (int i=0; i<children.length; i++) {
-				boolean success = deleteDir(new File(dir, children[i]));
-				if (!success) {
-					return false;
-				}
-			}
-		}
-		return dir.delete();
-	}
 	
     private static void saveDocs(String dir) throws Exception
     {
@@ -610,9 +597,9 @@ public class MainRunner
             factory.setConfiguration(configuration);
             Context context = factory.createContext();
             ReportFactory reportFactory = new TexReportFactory();
-            if (Files.exists(Paths.get(dir)))
+            if (!Files.exists(Paths.get(dir)))
             {
-				deleteDir(new File(dir));
+				Files.createDirectories(Paths.get(dir));
 			}
             Files.createDirectories(Paths.get(dir));
             ReportBuilder report = reportFactory.createReportBuilder(dir, "UserManual" + VersionInfo.getVersion() + ".tex", new Date());

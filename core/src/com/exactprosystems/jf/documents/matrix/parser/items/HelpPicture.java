@@ -52,7 +52,7 @@ public class HelpPicture extends MatrixItem
         {
             BufferedImage imBuff = ImageIO.read(this.stream);
             ImageWrapper image = new ImageWrapper(imBuff);
-            report.outImage(this, null, image.getName("."), this.title, false);
+            report.outImage(this, null, image.getName(report.getReportDir()), this.title, false);
         }
         catch (Exception e)
         {

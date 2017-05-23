@@ -144,7 +144,7 @@ public class TexReportBuilder extends ReportBuilder
 	@Override
 	protected String generateReportDir(String matrixName, Date date) throws IOException
 	{
-	    return matrixName;
+	    return "";
 	}
 
 	//region Global report
@@ -217,7 +217,7 @@ public class TexReportBuilder extends ReportBuilder
 	protected void reportImage(ReportWriter writer, MatrixItem item, String beforeTestcase, String fileName, String title, Boolean asLink) throws IOException
 	{
 	    title = replaseQoutesToBrases(title);
-        writer.fwrite("\\includegraphics[width=0.3\\textwidth]{%s}", fileName).newline();
+        writer.fwrite("\\includegraphics[width=0.3\\textwidth]{%s}", fileName.replace("/", "")).newline();
         if (!Str.IsNullOrEmpty(title))
         {
 			writer.fwrite("\\caption{%s}", title).newline();
