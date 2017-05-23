@@ -26,7 +26,7 @@
 		<VBox HBox.hgrow="ALWAYS" prefHeight="200.0" prefWidth="100.0" fx:id="vBoxWindow">
 			<children>
 				<Label id="$verMid"/>
-				<HBox alignment="CENTER_LEFT">
+				<HBox alignment="CENTER_LEFT" fx:id="hBoxWindow">
 					<children>
 						<Button id="dictionaryBtnNewDialog" fx:id="btnNewDialog" alignment="CENTER" mnemonicParsing="false" onAction="#newWindow" styleClass="$transparentBackground">
 							<tooltip>

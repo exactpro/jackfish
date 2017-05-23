@@ -10,31 +10,31 @@ package com.exactprosystems.jf.tool.wizard.all;
 
 import java.util.List;
 
+import com.exactprosystems.jf.api.app.IGuiDictionary;
+import com.exactprosystems.jf.api.app.IWindow;
 import com.exactprosystems.jf.api.common.IContext;
 import com.exactprosystems.jf.api.wizard.WizardAttribute;
 import com.exactprosystems.jf.api.wizard.WizardCategory;
 import com.exactprosystems.jf.api.wizard.WizardCommand;
 import com.exactprosystems.jf.api.wizard.WizardResult;
-import com.exactprosystems.jf.documents.matrix.Matrix;
-import com.exactprosystems.jf.documents.matrix.parser.items.MatrixItem;
 import com.exactprosystems.jf.tool.helpers.DialogsHelper;
 import com.exactprosystems.jf.tool.wizard.AbstractWizard;
 import com.exactprosystems.jf.tool.wizard.CommandBuilder;
 
 @WizardAttribute(
-            name = "Small wizard",
-            category = WizardCategory.MATRIX,
-            shortDescription = "This wizard adds thre Let items to a matrix before current item.",
-            detailedDescription = "Once upon a {{*time*}} far far away two robbers lived...",
-            strongCriteries = false,
-            criteries = { MatrixItem.class, Matrix.class }
+            name = "Test dictionary wizard",
+            category = WizardCategory.GUI_DICTIONARY,
+            shortDescription = "This wizard is only for test purpose.",
+            detailedDescription = "Here you descrioption might be",
+            strongCriteries = true,
+            criteries = { IGuiDictionary.class, IWindow.class }
         )
-public class SmallWizard extends AbstractWizard
+public class DictionaryWizard extends AbstractWizard
 {
-    private Matrix      currentMatrix   = null;
-    private MatrixItem  currentItem     = null;
+    private IGuiDictionary  currentDictionary   = null;
+    private IWindow         currentWindow       = null;
     
-    public SmallWizard()
+    public DictionaryWizard()
     {
     }
 
@@ -43,8 +43,8 @@ public class SmallWizard extends AbstractWizard
     {
         super.init(context, parameters);
         
-        this.currentMatrix = super.get(Matrix.class, parameters);
-        this.currentItem   = super.get(MatrixItem.class, parameters);
+        this.currentDictionary = super.get(IGuiDictionary.class, parameters);
+        this.currentWindow     = super.get(IWindow.class, parameters);
     }
 
     @Override
@@ -52,13 +52,10 @@ public class SmallWizard extends AbstractWizard
     {
         super.run();
         
-//        DialogsHelper.showInfo("This is a small wizard");
-        System.err.println("!!!!!!!!!!!!!!!!!!!!!!!!!!");
+        DialogsHelper.showInfo("This is a small wizard " + this.currentDictionary + "  " + this.currentWindow);
         
         List<WizardCommand> commands = CommandBuilder
                 .start()
-                .addMatrixItem(this.currentMatrix, this.currentItem, 5)
-                .removeMatrixItem(this.currentMatrix, this.currentItem, 5)
                 .build();
         
         return WizardResult.submit(commands);

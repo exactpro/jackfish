@@ -12,7 +12,10 @@ import com.exactprosystems.jf.api.app.*;
 import com.exactprosystems.jf.api.app.IWindow.SectionKind;
 import com.exactprosystems.jf.api.common.Converter;
 import com.exactprosystems.jf.api.common.Str;
+import com.exactprosystems.jf.api.wizard.WizardManager;
 import com.exactprosystems.jf.common.Settings;
+import com.exactprosystems.jf.common.version.VersionInfo;
+import com.exactprosystems.jf.documents.config.Context;
 import com.exactprosystems.jf.documents.guidic.controls.AbstractControl;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.ContainingParent;
@@ -20,6 +23,7 @@ import com.exactprosystems.jf.tool.CssVariables;
 import com.exactprosystems.jf.tool.custom.BorderWrapper;
 import com.exactprosystems.jf.tool.custom.ServiceLambdaBean;
 import com.exactprosystems.jf.tool.custom.tab.CustomTab;
+import com.exactprosystems.jf.tool.custom.wizard.WizardButton;
 import com.exactprosystems.jf.tool.custom.xpath.XpathViewer;
 import com.exactprosystems.jf.tool.dictionary.DictionaryFx;
 import com.exactprosystems.jf.tool.dictionary.DictionaryFxController;
@@ -59,9 +63,10 @@ public class NavigationController implements Initializable, ContainingParent
 	public FindListView<BorderPaneAndControl> listViewElement;
 
 	public ToggleGroup groupSection;
-	public HBox hBoxElement;
 	public VBox vBoxWindow;
+    public HBox hBoxWindow;
 	public VBox vBoxElement;
+    public HBox hBoxElement;
 
 	public Button btnNewElement;
 	public Button btnDeleteElement;
@@ -73,6 +78,8 @@ public class NavigationController implements Initializable, ContainingParent
 	public Button btnPasteDialog;
 	public Button btnTestWindow;
 	public Button btnShowWizard;
+    public WizardButton btnWindowWizardManager;
+    public WizardButton btnElementWizardManager;
 
 	private Parent pane;
 
@@ -95,7 +102,6 @@ public class NavigationController implements Initializable, ContainingParent
 	public void initialize(URL url, ResourceBundle resourceBundle)
 	{
 		assert groupSection != null : "fx:id=\"buttonGroup\" was not injected: check your FXML file 'Navigation.fxml'.";
-		assert hBoxElement != null : "fx:id=\"hBoxElement\" was not injected: check your FXML file 'Navigation.fxml'.";
 		assert btnFindElement != null : "fx:id=\"btnFindElement\" was not injected: check your FXML file 'Navigation.fxml'.";
 		assert btnFindDialog != null : "fx:id=\"btnFindDialog\" was not injected: check your FXML file 'Navigation.fxml'.";
 		
@@ -109,6 +115,16 @@ public class NavigationController implements Initializable, ContainingParent
 		
 		this.vBoxWindow.getChildren().add(0, this.listViewWindow);
 
+		this.btnWindowWizardManager = new WizardButton();
+		this.btnWindowWizardManager.setVisible(VersionInfo.isDevVersion());
+		this.btnWindowWizardManager.setTooltip(new Tooltip("Wizards"));
+        this.hBoxWindow.getChildren().add(this.btnWindowWizardManager);
+		
+        this.btnElementWizardManager = new WizardButton();
+        this.btnElementWizardManager.setVisible(VersionInfo.isDevVersion());
+        this.btnElementWizardManager.setTooltip(new Tooltip("Wizards"));
+        this.hBoxElement.getChildren().add(this.btnElementWizardManager);
+		
 		this.listViewElement = new FindListView<>((e, s) -> (!Str.IsNullOrEmpty(e.control.getID()) && e.control.getID().toUpperCase().contains(s.toUpperCase()) || (e.control.getBindedClass().getClazz().toUpperCase()
 				.contains(s.toUpperCase()))),
 				false);
@@ -157,6 +173,12 @@ public class NavigationController implements Initializable, ContainingParent
 		this.fullScreen = Boolean.parseBoolean(settings.getValueOrDefault(Settings.GLOBAL_NS, Settings.SETTINGS, "useFullScreenXpath", "false").getValue());
 		setChoiseBoxListeners();
 
+		Context context = model.getFactory().createContext();
+		WizardManager manager = model.getFactory().getWizardManager();
+		
+		this.btnWindowWizardManager.initButton(context, manager, () -> new Object[] { model, currentWindow() });
+		this.btnElementWizardManager.initButton(context, manager, () -> new Object[] { model, currentWindow(), currentSection(), currentElement() });
+		
 		gridPane.add(this.pane, 0, 0);
 	}
 

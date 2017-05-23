@@ -28,6 +28,7 @@ import com.exactprosystems.jf.documents.config.Context;
 import com.exactprosystems.jf.documents.matrix.Matrix;
 import com.exactprosystems.jf.documents.matrix.parser.items.HelpItem;
 import com.exactprosystems.jf.documents.matrix.parser.items.MatrixItem;
+import com.exactprosystems.jf.tool.wizard.all.DictionaryWizard;
 import com.exactprosystems.jf.tool.wizard.all.SmallWizard;
 
 public class WizardManagerImpl implements WizardManager
@@ -50,7 +51,8 @@ public class WizardManagerImpl implements WizardManager
     
     private static final Logger logger = Logger.getLogger(WizardManagerImpl.class);
 
-    private static List<Class<? extends Wizard>> knownWizards = Arrays.asList(SmallWizard.class); 
+    private static List<Class<? extends Wizard>> knownWizards = Arrays.asList(
+            SmallWizard.class, DictionaryWizard.class); 
     
     public WizardManagerImpl()
     {
@@ -121,16 +123,15 @@ public class WizardManagerImpl implements WizardManager
             return;
         }
         
-//        if (context == null)
-//        {
-//            return;
-//        }
+        if (context == null)
+        {
+            return;
+        }
         
         try
         {
             Wizard wiz = wizard.newInstance();
             wiz.init(context, parameters);
-            System.err.println(">> " + wiz);
             
             WizardResult result = wiz.run();
             if (result.submitted())
@@ -156,6 +157,11 @@ public class WizardManagerImpl implements WizardManager
         WizardAttribute attr = attributes(wizard);
         
         if (attr == null)
+        {
+            return false;
+        }
+        
+        if (attr.strongCriteries() && criteries.length != attr.criteries().length)
         {
             return false;
         }
