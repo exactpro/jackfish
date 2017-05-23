@@ -124,8 +124,8 @@ public class Main extends Application
 		notifyPreloader(new Preloader.ProgressNotification(0));
 		try
 		{
-			this.factory = new FxDocumentFactory(Main.this);
 			this.wizardManager = new WizardManagerImpl();
+			this.factory = new FxDocumentFactory(this, this.wizardManager);
 			this.settings = this.factory.getSettings();
 			DialogsHelper.setTimeNotification(Integer.parseInt(this.settings.getValueOrDefault(Settings.GLOBAL_NS, Settings.SETTINGS, Settings.TIME_NOTIFICATION, "5").getValue()));
 		}

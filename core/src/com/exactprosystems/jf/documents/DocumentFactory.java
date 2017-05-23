@@ -10,6 +10,7 @@ package com.exactprosystems.jf.documents;
 
 import com.exactprosystems.jf.actions.ReadableValue;
 import com.exactprosystems.jf.api.common.IMatrixRunner;
+import com.exactprosystems.jf.api.wizard.WizardManager;
 import com.exactprosystems.jf.common.MatrixRunner;
 import com.exactprosystems.jf.common.Settings;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
@@ -220,6 +221,8 @@ public abstract class DocumentFactory
 	protected abstract IMatrixListener 		createMatrixListener();
 	
 	public abstract RunnerListener          getRunnerListener();
+
+	public abstract WizardManager			getWizardManager();
 	
 	private void checkConfiguration() throws EmptyConfigurationException
 	{

@@ -12,6 +12,7 @@ package com.exactprosystems.jf.tool.custom.treetable;
 import com.exactprosystems.jf.actions.AbstractAction;
 import com.exactprosystems.jf.actions.ReadableValue;
 import com.exactprosystems.jf.api.error.app.ProxyException;
+import com.exactprosystems.jf.api.wizard.WizardManager;
 import com.exactprosystems.jf.common.Settings;
 import com.exactprosystems.jf.documents.config.Context;
 import com.exactprosystems.jf.documents.matrix.parser.Parameters;
@@ -22,6 +23,7 @@ import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.CssVariables;
 import com.exactprosystems.jf.tool.custom.grideditor.SpreadsheetGridView;
 import com.exactprosystems.jf.tool.custom.grideditor.SpreadsheetView;
+import com.exactprosystems.jf.tool.helpers.DialogsHelper;
 import com.exactprosystems.jf.tool.matrix.MatrixFx;
 import com.exactprosystems.jf.tool.matrix.params.ParameterGridPane;
 import com.exactprosystems.jf.tool.matrix.params.ShowAllParams;
@@ -81,6 +83,18 @@ public class MatrixParametersContextMenu extends MatrixContextMenu
 		this.parShowAll = new MenuItem("All parameters ...",new ImageView(new Image(CssVariables.Icons.ALL_PARAMETERS_ICON)));
 		this.parShowAll.setAccelerator(Common.getShortcut(settings, Settings.ALL_PARAMETERS));
 		this.parShowAll.setOnAction(event -> allParameters(context, matrix, event));
+
+		//TODO add icon
+		MenuItem parameterWizard = new MenuItem("For parameter");
+		parameterWizard.setOnAction(event -> {
+			WizardManager manager = context.getFactory().getWizardManager();
+			manager.runWizardDefault(context
+					, () -> new Object[]{ matrix, tree.getSelectionModel().getSelectedItem().getValue(), row.getItem().getParameters().getByIndex(this.index)}
+					, (suitableWizards) -> DialogsHelper.selectFromList("Choose suitable wizard", null, suitableWizards, manager::nameOf)
+					, DialogsHelper::showInfo
+			);
+		});
+		menuWizard.getItems().add(parameterWizard);
 
 		getItems().add(0, this.parRemove);
 		getItems().add(1, this.parMoveLeft);

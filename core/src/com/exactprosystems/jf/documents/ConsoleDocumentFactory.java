@@ -10,6 +10,7 @@ package com.exactprosystems.jf.documents;
 
 import com.exactprosystems.jf.actions.ReadableValue;
 import com.exactprosystems.jf.api.common.IMatrixRunner;
+import com.exactprosystems.jf.api.wizard.WizardManager;
 import com.exactprosystems.jf.common.Settings;
 import com.exactprosystems.jf.common.VerboseLevel;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
@@ -150,6 +151,12 @@ public class ConsoleDocumentFactory extends DocumentFactory
 		return new DummyRunnerListener();
 	}
 
+	@Override
+	public WizardManager getWizardManager()
+	{
+		//TODO implement empty wizard manager
+		return null;
+	}
 
 	private VerboseLevel verboseLevel;
 }
