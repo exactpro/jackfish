@@ -10,6 +10,8 @@ package com.exactprosystems.jf.api.wizard;
 
 import java.util.List;
 
+import com.exactprosystems.jf.api.common.IContext;
+
 public interface WizardManager
 {
     String nameOf(Class<? extends Wizard> wizard);
@@ -20,5 +22,5 @@ public interface WizardManager
     List<Class<? extends Wizard>> allWizards();
     List<Class<? extends Wizard>> suitableWizards(Object ... criteries);
     
-    void runWizard(Class<? extends Wizard> wizard, Object ... criteries); 
+    void runWizard(Class<? extends Wizard> wizard, IContext context, Object ... criteries); 
 }

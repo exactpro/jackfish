@@ -9,6 +9,7 @@
 package com.exactprosystems.jf.tool.main;
 
 import com.exactprosystems.jf.api.common.Str;
+import com.exactprosystems.jf.api.wizard.WizardManager;
 import com.exactprosystems.jf.common.CommonHelper;
 import com.exactprosystems.jf.common.MainRunner;
 import com.exactprosystems.jf.common.MatrixRunner;
@@ -45,6 +46,7 @@ import com.exactprosystems.jf.tool.matrix.MatrixFx;
 import com.exactprosystems.jf.tool.newconfig.ConfigurationFx;
 import com.exactprosystems.jf.tool.newconfig.wizard.WizardConfiguration;
 import com.exactprosystems.jf.tool.settings.Theme;
+import com.exactprosystems.jf.tool.wizard.WizardManagerImpl;
 import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.JSchException;
 import com.jcraft.jsch.Session;
@@ -86,6 +88,7 @@ public class Main extends Application
 	private Configuration config;
 	private Settings settings;
 	private DocumentFactory	factory;
+	private WizardManager wizardManager;
 
 	private String username;
 	private String password;
@@ -122,6 +125,7 @@ public class Main extends Application
 		try
 		{
 			this.factory = new FxDocumentFactory(Main.this);
+			this.wizardManager = new WizardManagerImpl();
 			this.settings = this.factory.getSettings();
 			DialogsHelper.setTimeNotification(Integer.parseInt(this.settings.getValueOrDefault(Settings.GLOBAL_NS, Settings.SETTINGS, Settings.TIME_NOTIFICATION, "5").getValue()));
 		}

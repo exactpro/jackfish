@@ -18,4 +18,8 @@ public class VersionInfo
         return version == null ? "LocalBuild" : version;
     }
 
+    public static boolean isExperimental()
+    {
+        return getVersion().endsWith("LocalBuild");
+    }
 }
