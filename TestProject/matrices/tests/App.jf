@@ -1,5 +1,5 @@
 #TestCase;#Kind;#Depends;#For
-Application close window;;;
+Application Close Window;;;
     #Step;#Kind;#For;#Depends
     'positive testing';;;
         #Id;#Call
@@ -13,8 +13,8 @@ Application close window;;;
 
     #EndStep
 
-    #Off;#Step;#Kind;#For;#Depends
-    1;'positive testing with 2 tabs';;;
+    #Step;#Kind;#For;#Depends
+    'positive testing with 2 tabs';;;
         #Id;#Let
         newUrl;'https://www.google.ru'
 
@@ -24,26 +24,39 @@ Application close window;;;
         #Id;#Action;$AppConnection;URL;WhereOpen
         APPNI1;ApplicationNewInstance;app;newUrl;'tab'
 
+        #Action;$Time
+        Wait;1500
+
         #Assert;#Message
         app.getApplication().service().titles().size() == 2;'Page count not expected'
-
-        #Id;#Action;$AppConnection;URL;$SoftCondition
-        APPSW1;ApplicationSwitchTo;app;newUrl;true
 
         #Id;#Action;#Assert;$AppConnection
         APPCW2;ApplicationCloseWindow;This.Result == Result.Passed;app
 
+        #Id;#Action;$SoftCondition;Title;$AppConnection
+        APPSW1;ApplicationSwitchTo;true;'Google';app
+
         #Assert;#Message
         app.getApplication().service().titles().size() == 1;'Page count not expected'
+
+        #Action;$Time
+        Wait;1500
 
         #Id;#Action;$AppConnection
         APPSTP2;ApplicationStop;app
 
     #EndStep
 
+    #Step;#Kind;#For;#Depends
+    'negative testing';;;
+        #Id;#Action;#Assert;$AppConnection
+        APPCW3;ApplicationCloseWindow;This.Result == Result.Failed && This.Kind == ErrorKind.WRONG_PARAMETERS;new Date()
+
+    #EndStep
+
 
 #TestCase;#Kind;#Depends;#For
-Apllication start;Never;;
+Apllication Start;Never;;
     #Step;#Kind;#For;#Depends
     'Negative testing with empty parameters';;;
         #Id;#Action;#Assert;$AppId;Browser;URL
@@ -80,6 +93,390 @@ Apllication start;Never;;
 
         #Id;#Action;$AppConnection
         APPSTP1;ApplicationStop;APPSTR1.Out
+
+    #EndStep
+
+
+#TestCase;#Kind;#Depends;#For
+Application Navigate;;;
+    #Step;#Kind;#For;#Depends
+    'Positive';;;
+        #Id;#Action;Browser;URL;$AppId
+        APPSTR3;ApplicationStart;mockWebBrowser;'https://www.google.ru/';mockWebApp
+
+        #Id;#Action;Title;$AppConnection
+        APPPAR1;ApplicationGetProperties;;APPSTR3.Out
+
+        #Id;#Let
+        firstTitle;APPPAR1.Out.get('Title')
+
+        #Id;#Action;URL;WhereOpen;$AppConnection
+        APPNI1;ApplicationNewInstance;'https://www.exactprosystems.com/';'url';APPSTR3.Out
+
+        #Action;$Time
+        Wait;2500
+
+        #Id;#Action;Title;$AppConnection
+        APPPAR2;ApplicationGetProperties;;APPSTR3.Out
+
+        #Id;#Let
+        secondTitle;APPPAR2.Out.get('Title')
+
+        #Id;#Action;$Navigate;$AppConnection
+        APPPNVG2;ApplicationNavigate;NavigateKind.BACK;APPSTR3.Out
+
+        #Action;$Time
+        Wait;1000
+
+        #Id;#Action;Title;$AppConnection
+        APPPAR3;ApplicationGetProperties;;APPSTR3.Out
+
+        #Id;#Let
+        thirdTitle;APPPAR3.Out.get('Title')
+
+        #Assert;#Message
+        firstTitle != secondTitle && firstTitle == thirdTitle;'Wrong navigation'
+
+        #Id;#Action;$AppConnection
+        APPSTP1;ApplicationStop;APPSTR3.Out
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'Negative';;;
+        #Id;#Call
+        CALL_1;appStart
+
+        #Id;#Action;#Assert;$Navigate;$AppConnection
+        APPPNVG1;ApplicationNavigate;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;;
+
+        #Id;#Action;#Assert;$Navigate;$AppConnection
+        APPPNVG1;ApplicationNavigate;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;NavigateKind.BACK;
+
+        #Id;#Action;#Assert;$Navigate;$AppConnection
+        APPPNVG1;ApplicationNavigate;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;;CALL_1
+
+        #Id;#Action;#Assert;$Navigate;$AppConnection
+        APPPNVG1;ApplicationNavigate;This.Result == Result.Failed && This.Kind == ErrorKind.WRONG_PARAMETERS;;new Date()
+
+        #Id;#Action;#Assert;$Navigate;$AppConnection
+        APPPNVG1;ApplicationNavigate;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;new Date();
+
+        #Id;#Action;#Assert;$Navigate;$AppConnection
+        APPPNVG1;ApplicationNavigate;This.Result == Result.Failed && This.Kind == ErrorKind.WRONG_PARAMETERS;new Date();new Date()
+
+        #Id;#Action;$AppConnection
+        APPSTP1;ApplicationStop;CALL_1
+
+    #EndStep
+
+
+#Off;#TestCase;#Kind;#Depends;#For
+1;Application ConnectTo;;;
+    #Step;#Kind;#For;#Depends
+    'Positive';;;
+        #Id;#Call
+        CALL_1;appStart
+
+        #Id;#Action;$AppConnection;$AppId
+        APPSTR1;ApplicationConnectTo;CALL_1;mockWebApp
+
+        #Id;#Action;$AppConnection
+        APPSTP1;ApplicationStop;CALL_1
+
+        #Id;#Action;$AppConnection
+        APPSTP2;ApplicationStop;APPSTR1.Out
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'Negative';;;
+    #EndStep
+
+
+#TestCase;#Kind;#Depends;#For
+Application GetProperties;;;
+    #Step;#Kind;#For;#Depends
+    'Positive';;;
+        #Id;#Let
+        altURL;'https://www.google.ru'
+
+        #Id;#Action;Browser;URL;$AppId
+        APPSTR3;ApplicationStart;mockWebBrowser;altURL;mockWebApp
+
+        #Id;#Action;#Assert;URL;Title;$AppConnection
+        APPPAR1;ApplicationGetProperties;This.Result == Result.Passed && This.Out.get('Title').contains('Google') && This.Out.get('URL').contains(altURL);;;APPSTR3.Out
+
+        #Id;#Action;#Assert;new Date();new Date();$AppConnection
+        APPPAR2;ApplicationGetProperties;This.Result == Result.Passed && This.Out.get('URL') == null && This.Out.get('Title') == null;;;APPSTR3.Out
+
+        #Id;#Action;$AppConnection
+        APPSTP1;ApplicationStop;APPSTR3.Out
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'Negative';;;
+        #Id;#Call
+        CALL_2;appStart
+
+        #Id;#Action;#Assert;URL;Title;$AppConnection
+        APPPAR1;ApplicationGetProperties;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;;;
+
+        #Id;#Action;#Assert;URL;Title;$AppConnection
+        APPPAR1;ApplicationGetProperties;This.Result == Result.Failed && This.Kind == ErrorKind.WRONG_PARAMETERS;;;new Date()
+
+        #Id;#Action;$AppConnection
+        APPSTP2;ApplicationStop;CALL_2
+
+    #EndStep
+
+
+#Off;#TestCase;#Kind;#Depends;#For
+1;Application Move;;;
+    #Step;#Kind;#For;#Depends
+    'Positive';;;
+        #Id;#Call
+        CALL_3;appStart
+
+        #Id;#Action;$Width;$Height;$AppConnection
+        APPSZ1;ApplicationResize;500;500;CALL_3
+
+        #Action;$X;$Y;$AppConnection
+        ApplicationMove;;;CALL_3
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'Negative';;;
+        #Action;$X;$Y;$AppConnection
+        ApplicationMove;;;
+
+    #EndStep
+
+
+#TestCase;#Kind;#Depends;#For
+Application New Instance;;;
+    #Step;#Kind;#For;#Depends
+    'Positive';;;
+        #Id;#Let
+        newURL;'https://www.google.ru'
+
+        #Id;#Call
+        CALL_3;appStart
+
+        #Id;#Action;#Assert;WhereOpen;URL;$AppConnection
+        APPNI2;ApplicationNewInstance;CALL_3.getApplication().service().titles().size() == 1 && CALL_3.getApplication().service().getProperty('URL').contains(newURL);'url';newURL;CALL_3
+
+        #Id;#Action;$AppConnection
+        APPSTP3;ApplicationStop;CALL_3
+
+        #Id;#Call
+        CALL_4;appStart
+
+        #Id;#Action;WhereOpen;URL;$AppConnection
+        APPNI2;ApplicationNewInstance;'tab';newURL;CALL_4
+
+        #Action;$Time
+        Wait;2000
+
+        #Id;#Action;URL;Title;$AppConnection
+        APPSW1;ApplicationSwitchTo;newURL;'Google';CALL_4
+
+        #Assert;#Message
+        CALL_4.getApplication().service().titles().size() == 2 && CALL_4.getApplication().service().getProperty('URL').contains(newURL);
+
+        #Id;#Action;$AppConnection
+        APPSTP3;ApplicationStop;CALL_4
+
+        #Id;#Call
+        CALL_5;appStart
+
+        #Id;#Action;WhereOpen;URL;$AppConnection
+        APPNI2;ApplicationNewInstance;'window';newURL;CALL_5
+
+        #Action;$Time
+        Wait;2000
+
+        #Id;#Action;URL;Title;$AppConnection
+        APPSW1;ApplicationSwitchTo;newURL;'Google';CALL_5
+
+        #Assert;#Message
+        CALL_5.getApplication().service().getProperty('URL').contains(newURL);'Window didn\'t appear'
+
+        #Id;#Action;$AppConnection
+        APPSTP3;ApplicationStop;CALL_5
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'Negative';;;
+        #Id;#Call
+        CALL_1;appStart
+
+        #Id;#Action;#Assert;$AppConnection
+        APPNI1;ApplicationNewInstance;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;
+
+        #Id;#Action;#Assert;$AppConnection
+        APPNI1;ApplicationNewInstance;This.Result == Result.Failed && This.Kind == ErrorKind.WRONG_PARAMETERS;new Date()
+
+        #Id;#Action;#Assert;$AppConnection
+        APPNI2;ApplicationNewInstance;This.Result == Result.Failed && This.Kind == ErrorKind.EXCEPTION;CALL_1
+
+        #Id;#Action;WhereOpen;URL;$AppConnection
+        APPNI2;ApplicationNewInstance;;'sdfsdfsdf';CALL_1
+
+        #Id;#Action;$AppConnection
+        APPSTP1;ApplicationStop;CALL_1
+
+    #EndStep
+
+
+#TestCase;#Kind;#Depends;#For
+Application Refresh;;;
+    #Step;#Kind;#For;#Depends
+    'Positive';;;
+        #Id;#Let
+        text;'some text'
+
+        #Id;#Call
+        CALL_1;appStart
+
+        #Id;#Action;$Dialog;$AppConnection;TextBox;TextBox
+        DLGFLL1;DialogFill;'Main';CALL_1;text;Do.check(text)
+
+        #Id;#Action;$AppConnection
+        APPR1;ApplicationRefresh;CALL_1
+
+        #Id;#Action;#Assert;$Dialog;$AppConnection;TextBox
+        DLGFLL1;DialogFill;This.Result == Result.Passed && This.Out.TextBox.isEmpty();'Main';CALL_1;Do.getValue()
+
+        #Id;#Action;$AppConnection
+        APPSTP1;ApplicationStop;CALL_1
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'Negative';;;
+        #Id;#Action;#Assert;$AppConnection
+        APPR2;ApplicationRefresh;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;
+
+        #Id;#Action;#Assert;$AppConnection
+        APPR3;ApplicationRefresh;This.Result == Result.Failed && This.Kind == ErrorKind.WRONG_PARAMETERS;new Date()
+
+    #EndStep
+
+
+#TestCase;#Kind;#Depends;#For
+Application Resize;;;
+    #Step;#Kind;#For;#Depends
+    'Positive';;;
+        #Id;#Call
+        CALL_6;appStart
+
+        #Id;#Action;#Assert;$Height;$Width;$AppConnection
+        APPSZ1;ApplicationResize;This.Result == Result.Passed;500;500;CALL_6
+
+        #Id;#Action;$AppConnection
+        APPSTP4;ApplicationStop;CALL_6
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'Negative';;;
+        #Id;#Action;#Assert;$AppConnection
+        APPSZ2;ApplicationResize;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;
+
+        #Id;#Action;#Assert;$AppConnection
+        APPSZ3;ApplicationResize;This.Result == Result.Failed && This.Kind == ErrorKind.WRONG_PARAMETERS;new Date()
+
+    #EndStep
+
+
+#TestCase;#Kind;#Depends;#For
+Application Stop;;;
+    #Step;#Kind;#For;#Depends
+    'Positive';;;
+        #Id;#Call
+        CALL_1;appStart
+
+        #Id;#Action;$AppConnection
+        APPSTP1;ApplicationStop;CALL_1
+
+        #Id;#Action;#Assert;$Dialog;$AppConnection
+        DLGFLL1;DialogFill;This.Result == Result.Failed && This.Kind == ErrorKind.APPLICATION_ERROR;'Main';CALL_1
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'Negative';;;
+        #Id;#Action;#Assert;$AppConnection
+        APPSTP2;ApplicationStop;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;
+
+        #Id;#Action;#Assert;$AppConnection
+        APPSTP2;ApplicationStop;This.Result == Result.Failed && This.Kind == ErrorKind.WRONG_PARAMETERS;new Date()
+
+    #EndStep
+
+
+#TestCase;#Kind;#Depends;#For
+Application SwitchTo;;;
+    #Step;#Kind;#For;#Depends
+    'Positive';;;
+        #Id;#Let
+        newURL;'https://www.google.ru'
+
+        #Id;#Let
+        title;'Google'
+
+        #Id;#Call
+        CALL_1;appStart
+
+        #Id;#Action;URL;WhereOpen;$AppConnection
+        APPNI1;ApplicationNewInstance;newURL;'tab';CALL_1
+
+        #Id;#Action;URL;Title;$AppConnection
+        APPSW1;ApplicationSwitchTo;newURL;title;CALL_1
+
+        #Id;#Action;#Assert;Title;URL;$AppConnection
+        APPPAR1;ApplicationGetProperties;This.Result == Result.Passed && This.Out.get('URL').contains(newURL) && This.Out.get('Title') == title;;;CALL_1
+
+        #Id;#Action;$AppConnection
+        APPSTP1;ApplicationStop;CALL_1
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'Negative';;;
+        #Id;#Let
+        title;'Google'
+
+        #Id;#Let
+        newURL;'https://www.google.ru'
+
+        #Id;#Call
+        CALL_1;appStart
+
+        #Id;#Action;#Assert;$AppConnection
+        APPSW1;ApplicationSwitchTo;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;
+
+        #Id;#Action;#Assert;$AppConnection
+        APPSW1;ApplicationSwitchTo;This.Result == Result.Failed && This.Kind == ErrorKind.WRONG_PARAMETERS;new Date()
+
+        #Id;#Action;#Assert;Title;$AppConnection
+        APPSW2;ApplicationSwitchTo;This.Result == Result.Failed && This.Kind == ErrorKind.ELEMENT_NOT_FOUND;title;CALL_1
+
+        #Id;#Action;#Assert;URL;$AppConnection
+        APPSW2;ApplicationSwitchTo;This.Result == Result.Failed && This.Kind == ErrorKind.ELEMENT_NOT_FOUND;newURL;CALL_1
+
+        #Id;#Action;#Assert;$SoftCondition;$AppConnection
+        APPSW2;ApplicationSwitchTo;This.Result == Result.Failed && This.Kind == ErrorKind.EXCEPTION;;CALL_1
+
+        #Id;#Action;#Assert;$SoftCondition;URL;Title;$AppConnection
+        APPSW2;ApplicationSwitchTo;This.Result == Result.Failed && This.Kind == ErrorKind.EXCEPTION;;;;CALL_1
+
+        #Id;#Action;$AppConnection
+        APPSTP1;ApplicationStop;CALL_1
 
     #EndStep
 
