@@ -44,11 +44,6 @@ import javafx.geometry.VPos;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.control.*;
-import javafx.scene.control.Button;
-import javafx.scene.control.Dialog;
-import javafx.scene.control.Label;
-import javafx.scene.control.MenuItem;
-import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.*;
@@ -64,14 +59,12 @@ import javafx.stage.Stage;
 import javafx.util.Duration;
 import org.apache.log4j.Logger;
 
-import java.awt.*;
-import java.awt.datatransfer.StringSelection;
 import java.io.File;
 import java.io.IOException;
 import java.io.StringReader;
 import java.nio.file.Paths;
 import java.util.*;
-import java.util.List;
+import java.util.function.Function;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -318,6 +311,108 @@ public abstract class DialogsHelper
 			}
 			listView.getItems().clear();
 			list.stream().filter(t -> t.toString().toUpperCase().contains(t1.toUpperCase())).forEach(t -> listView.getItems().add(t));
+		});
+
+		tf.setOnKeyPressed(keyEvent ->
+		{
+			if (keyEvent.getCode() == KeyCode.ENTER && listView.getItems().size() == 1)
+			{
+				result[0] = listView.getItems().get(0);
+				dialog.close();
+			}
+			if (keyEvent.getCode() == KeyCode.DOWN)
+			{
+				listView.requestFocus();
+				listView.getFocusModel().focus(0);
+			}
+		});
+		Platform.runLater(tf::requestFocus);
+		dialog.getDialogPane().getStylesheets().addAll(Common.currentThemesPaths());
+		Optional<ButtonType> buttonType = dialog.showAndWait();
+		if (buttonType.isPresent())
+		{
+			if (buttonType.get().getButtonData().equals(ButtonBar.ButtonData.OK_DONE))
+			{
+				Optional.ofNullable(listView.getSelectionModel().getSelectedItem()).ifPresent(t -> result[0] = t);
+			}
+			return result[0];
+		}
+		return result[0];
+	}
+
+	public static <T> T selectFromList(String title, T initValue, final List<T> list, Function<T,String> converter)
+	{
+		@SuppressWarnings("unchecked")
+		T[] result = (T[]) new Object[]{initValue};
+
+		if (list == null || list.isEmpty())
+		{
+			showInfo("Nothing to show");
+			return result[0];
+		}
+		if (list.size() == 1)
+		{
+			return list.get(0);
+		}
+		ArrayList<T> tempList = new ArrayList<>(list);
+		BorderPane pane = new BorderPane();
+		ListView<T> listView = new ListView<>(FXCollections.observableList(tempList));
+		listView.setCellFactory(p -> new ListCell<T>(){
+			@Override
+			protected void updateItem(T item, boolean empty)
+			{
+				super.updateItem(item, empty);
+				if (item != null && !empty)
+				{
+					setText(converter.apply(item));
+				}
+				else
+				{
+					setText(null);
+				}
+			}
+		});
+		pane.setCenter(listView);
+		TextField tf = new TextField();
+		pane.setTop(tf);
+		Dialog<ButtonType> dialog = new Alert(Alert.AlertType.CONFIRMATION);
+		Common.addIcons(((Stage) dialog.getDialogPane().getScene().getWindow()));
+		dialog.getDialogPane().setPrefWidth(500);
+		dialog.setHeaderText(title);
+		dialog.getDialogPane().setContent(pane);
+		dialog.setResizable(true);
+		dialog.getDialogPane().getContent().autosize();
+
+		listView.setOnMouseClicked(mouseEvent ->
+		{
+			if (mouseEvent.getClickCount() == 2)
+			{
+				T selectedItem = listView.getSelectionModel().getSelectedItem();
+				result[0] = selectedItem;
+				dialog.close();
+			}
+		});
+
+		listView.setOnKeyPressed(keyEvent ->
+		{
+			if (keyEvent.getCode() == KeyCode.ENTER)
+			{
+				Optional.ofNullable(listView.getSelectionModel().getSelectedItem()).ifPresent(t ->
+				{
+					result[0] = t;
+					dialog.close();
+				});
+			}
+		});
+
+		tf.textProperty().addListener((observableValue, s, t1) ->
+		{
+			if (t1.isEmpty())
+			{
+				listView.getItems().addAll(list);
+			}
+			listView.getItems().clear();
+			list.stream().filter(t -> converter.apply(t).toUpperCase().contains(t1.toUpperCase())).forEach(t -> listView.getItems().add(t));
 		});
 
 		tf.setOnKeyPressed(keyEvent ->
