@@ -18,6 +18,8 @@ import java.lang.annotation.Target;
 public @interface WizardAttribute
 {
     String name();
-    String description();
+    String shortDescription();
+    String detailedDescription();
+    WizardCategory category();
     Class<?>[] criteries() default {};
 }

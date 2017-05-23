@@ -8,17 +8,23 @@
 
 package com.exactprosystems.jf.api.wizard;
 
-import java.util.List;
-
-public interface WizardManager
+public enum WizardCategory
 {
-    String nameOf(Class<? extends Wizard> wizard);
-    String shortDescriptionOf(Class<? extends Wizard> wizard);
-    String detailedDescriptionOf(Class<? extends Wizard> wizard);
-    WizardCategory categoryOf(Class<? extends Wizard> wizard);
+    MATRIX              ("Matrix wizard"),
+    GUI_DICTIONARY      ("GUI dictionary wizard"),
+    MESSAGE_DICTIONARY  ("Message dictionary wizard"),
+    OTHER               ("Universal wizard");
     
-    List<Class<? extends Wizard>> allWizards();
-    List<Class<? extends Wizard>> suitableWizards(Object ... criteries);
+    private WizardCategory(String name)
+    {
+        this.name = name;
+    }
     
-    void runWizard(Class<? extends Wizard> wizard, Object ... criteries); 
+    @Override
+    public String toString()
+    {
+        return this.name;
+    }
+
+    private String name; 
 }
