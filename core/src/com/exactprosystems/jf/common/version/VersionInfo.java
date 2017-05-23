@@ -10,16 +10,18 @@ package com.exactprosystems.jf.common.version;
 
 public class VersionInfo
 {
-    public static String getVersion()
-    {
-        Package pkg = VersionInfo.class.getPackage();
-        String version = pkg.getImplementationVersion(); 
+	private static final String LOCAL_BUILD = "LocalBuild";
 
-        return version == null ? "LocalBuild" : version;
-    }
+	public static String getVersion()
+	{
+		Package pkg = VersionInfo.class.getPackage();
+		String version = pkg.getImplementationVersion();
 
-    public static boolean isExperimental()
-    {
-        return getVersion().endsWith("LocalBuild");
-    }
+		return version == null ? "LocalBuild" : version;
+	}
+
+	public static boolean isDevVersion()
+	{
+		return getVersion().equals(LOCAL_BUILD);
+	}
 }

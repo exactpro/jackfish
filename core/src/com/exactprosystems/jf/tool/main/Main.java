@@ -252,7 +252,7 @@ public class Main extends Application
 			stage.setX(x);
 			stage.setY(y);
 		});
-		controller.init(factory, Main.this, settings, stage);
+		controller.init(factory, this, this.wizardManager, settings, stage);
 		Common.node = stage;
 		controller.display();
 		controller.initShortcuts();

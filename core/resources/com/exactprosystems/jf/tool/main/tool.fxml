@@ -110,7 +110,7 @@
 										<MenuItem fx:id="gitChangeCredential" mnemonicParsing="false" onAction="#gitChangeCredential" text="Change credential"/>
 									</items>
 								</Menu>
-								<Menu mnemonicParsing="false" text="Help">
+								<Menu mnemonicParsing="false" text="Help" fx:id="menuHelp">
 									<items>
 										<MenuItem fx:id="helpActionsHelp" id="helpActionsHelp" mnemonicParsing="false" onAction="#showActionsHelp" text="Actions help"/>
 										<SeparatorMenuItem mnemonicParsing="false"/>

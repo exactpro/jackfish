@@ -9,9 +9,12 @@
 package com.exactprosystems.jf.tool.main;
 
 import com.exactprosystems.jf.api.common.Str;
+import com.exactprosystems.jf.api.wizard.WizardCategory;
+import com.exactprosystems.jf.api.wizard.WizardManager;
 import com.exactprosystems.jf.common.Settings;
 import com.exactprosystems.jf.common.Settings.SettingsValue;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
+import com.exactprosystems.jf.common.version.VersionInfo;
 import com.exactprosystems.jf.documents.Document;
 import com.exactprosystems.jf.documents.DocumentFactory;
 import com.exactprosystems.jf.documents.config.Configuration;
@@ -54,10 +57,8 @@ import java.awt.*;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.net.URL;
-import java.util.Collection;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.ResourceBundle;
+import java.util.*;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -117,8 +118,8 @@ public class MainController implements Initializable, ContainingParent
 	public MenuItem gitTags;
 	public MenuItem				gitChangeCredential;
 
+	public Menu					menuHelp;
 	public MenuItem				helpActionsHelp;
-
 	public MenuItem				helpAboutProgram;
 
 	public Button				btnOpenMatrix;
@@ -249,7 +250,7 @@ public class MainController implements Initializable, ContainingParent
 		this.stage.show();
 	}
 
-	public void init(DocumentFactory factory, Main model, Settings settings, Stage stage)
+	public void init(DocumentFactory factory, Main model, WizardManager wizardManager, Settings settings, Stage stage)
 	{
 		this.factory = factory;
 		this.model = model;
@@ -269,6 +270,43 @@ public class MainController implements Initializable, ContainingParent
 		this.stage.setMinWidth(600);
 		Common.addIcons(this.stage);
 		initializeButtons(settings);
+
+		if (VersionInfo.isDevVersion())
+		{
+			Menu wizard = new Menu("Wizard");
+			this.menuHelp.getItems().add(0, wizard);
+
+			Map<WizardCategory, Menu> map = Arrays.stream(WizardCategory.values())
+					.collect(Collectors.toMap(Function.identity(), v -> {
+						Menu menu = new Menu(v.toString());
+						wizard.getItems().add(menu);
+						return menu;
+					}));
+
+			wizardManager.allWizards().forEach(wizardClass -> {
+				WizardCategory wizardCategory = wizardManager.categoryOf(wizardClass);
+				String wizardName = wizardManager.nameOf(wizardClass);
+				MenuItem menuItem = new MenuItem(wizardName);
+
+				//TODO replace via ReportBuilder/alert
+				menuItem.setOnAction(e -> System.err.println(wizardManager.detailedDescriptionOf(wizardClass)));
+				map.get(wizardCategory).getItems().add(menuItem);
+			});
+
+			Menu menuAll = new Menu("All");
+			menuAll.getItems().addAll(map.values().stream()
+					.map(Menu::getItems)
+					.flatMap(Collection::stream)
+					.map(menuItem -> {
+						MenuItem newMenu = new MenuItem(menuItem.getText());
+						newMenu.setOnAction(e -> menuItem.getOnAction().handle(e));
+						return newMenu;
+					})
+					.sorted(Comparator.comparing(k -> k.getText().toLowerCase()))
+					.collect(Collectors.toList())
+			);
+			wizard.getItems().add(menuAll);
+		}
 	}
 
 	public void displayTitle(String title)
