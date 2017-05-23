@@ -18,6 +18,7 @@ import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.ContainingParent;
 import com.exactprosystems.jf.tool.CssVariables;
 import com.exactprosystems.jf.tool.custom.BorderWrapper;
+import com.exactprosystems.jf.tool.custom.ServiceLambdaBean;
 import com.exactprosystems.jf.tool.custom.tab.CustomTab;
 import com.exactprosystems.jf.tool.custom.xpath.XpathViewer;
 import com.exactprosystems.jf.tool.dictionary.DictionaryFx;
@@ -37,7 +38,6 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.TransferMode;
 import javafx.scene.layout.*;
 import javafx.scene.text.Text;
-import org.w3c.dom.Document;
 
 import java.net.URL;
 import java.util.ArrayList;
@@ -302,17 +302,30 @@ public class NavigationController implements Initializable, ContainingParent
 			}
 			IRemoteApplication service = this.appConnection.getApplication().service();
 			service.startNewDialog();
+
+			Locator finalOwner = owner;
+			XpathViewer xpathViewer = new XpathViewer(owner, () -> {
+				byte[] treeBytes = service.getTreeBytes(finalOwner);
+				return Converter.convertByteArrayToXmlDocument(treeBytes);
+			}, new ServiceLambdaBean(
+					() -> service.getImage(null, finalOwner).getImage(),
+					() -> service.getRectangle(null, finalOwner))
+			);
+			String id = currentElement().getID();
+			String result = xpathViewer.show(xpath, "Xpath for " + (id == null ? "empty" : id), Common.currentThemesPaths(), this.fullScreen);
+			this.model.parameterSet(currentWindow(), currentSection(), currentElement(), AbstractControl.xpathName, result);
+
 			//			Document document = service.getTree(owner);
-			byte[] treeBytes = service.getTreeBytes(owner);
-			Document document = Converter.convertByteArrayToXmlDocument(treeBytes);
-			if (document != null)
-			{
-				XpathViewer viewer = new XpathViewer(owner, document, service);
-				String id = currentElement().getID();
-	
-				String result = viewer.show(xpath, "Xpath for " + (id == null ? "empty" : id), Common.currentThemesPaths(), this.fullScreen);
-		        this.model.parameterSet(currentWindow(), currentSection(), currentElement(), AbstractControl.xpathName, result);
-			}
+//			byte[] treeBytes = service.getTreeBytes(owner);
+//			Document document = Converter.convertByteArrayToXmlDocument(treeBytes);
+//			if (document != null)
+//			{
+//				XpathViewer viewer = new XpathViewer(owner, document, service);
+//				String id = currentElement().getID();
+//
+//				String result = viewer.show(xpath, "Xpath for " + (id == null ? "empty" : id), Common.currentThemesPaths(), this.fullScreen);
+//		        this.model.parameterSet(currentWindow(), currentSection(), currentElement(), AbstractControl.xpathName, result);
+//			}
 		}
 	}
 

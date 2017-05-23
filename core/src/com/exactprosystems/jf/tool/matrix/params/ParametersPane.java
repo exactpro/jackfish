@@ -390,7 +390,7 @@ public class ParametersPane extends CustomScrollPane
 										Xml xml = (Xml) obj;
 										Object value = evaluator.tryEvaluate(par.getExpression());
 										String initial = value == null ? null : String.valueOf(value);
-										XpathViewer viewer = new XpathViewer(null, xml.getDocument(), null);
+										XpathViewer viewer = new XpathViewer(null, xml::getDocument, null);
 										String res = viewer.show(initial, "Xpath for " + par.getName(), themePaths, false);
 										if (res != null)
 										{

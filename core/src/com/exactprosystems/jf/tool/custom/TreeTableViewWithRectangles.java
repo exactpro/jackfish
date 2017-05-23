@@ -49,7 +49,11 @@ public class TreeTableViewWithRectangles
 
 	private Node waitingNode;
 
+	@Deprecated
 	private DialogWizardController controller;
+
+	private Consumer<Void> updateCounters;
+	private Consumer<Void> refreshTable;
 
 	private Consumer<List<Rectangle>> removeConsumer;
 	private List<Consumer<XpathTreeItem>> selectionConsumers = new ArrayList<>();
@@ -64,9 +68,11 @@ public class TreeTableViewWithRectangles
 		put(TreeItemState.UPDATE, true);
 	}};
 
-	public TreeTableViewWithRectangles(DialogWizardController dialogWizardController)
+	//TODO remove DialogWizardController
+	public TreeTableViewWithRectangles(Consumer<Void> updateCounters, Consumer<Void> refreshTable)
 	{
-		this.controller = dialogWizardController;
+		this.updateCounters = updateCounters;
+		this.refreshTable = refreshTable;
 		this.anchorPane = new AnchorPane();
 		this.treeTableView = new TreeTableView<>();
 		this.treeTableView.setSkin(new MyCustomSkin(this.treeTableView));
@@ -112,9 +118,9 @@ public class TreeTableViewWithRectangles
 //					this.controller.changeStateCount(-1, xpathTreeItem.getState());
 					xpathTreeItem.changeState();
 //					this.controller.changeStateCount(+1, xpathTreeItem.getState());
-					this.controller.refreshTable();
+					this.refreshTable.accept(null);
 					this.displayMarkedRows();
-					this.controller.updateCounters();
+					this.updateCounters.accept(null);
 					refresh();
 				}
 			}
@@ -148,6 +154,11 @@ public class TreeTableViewWithRectangles
 
 	
 	//region public methods
+	public void hideFirstColumn()
+	{
+		this.treeTableView.getColumns().get(0).setVisible(false);
+	}
+
 	public void replaceWaitingPane(Node node)
 	{
 		AnchorPane.setTopAnchor(node, 50.0);
@@ -334,6 +345,17 @@ public class TreeTableViewWithRectangles
 		return list;
 	}
 
+	public List<TreeItem<XpathTreeItem>> findByNodes(List<org.w3c.dom.Node> nodes)
+	{
+		TreeItem<XpathTreeItem> root = this.treeTableView.getRoot();
+		List<TreeItem<XpathTreeItem>> list = new ArrayList<>();
+		byPass(root, list, xpathTreeItem -> xpathTreeItem != null
+				&& xpathTreeItem.getNode() != null
+				&& nodes.stream().anyMatch(node -> xpathTreeItem.getNode() == node)
+		);
+		return list;
+	}
+
 	public void refresh()
 	{
 		Platform.runLater(() -> {
@@ -356,8 +378,8 @@ public class TreeTableViewWithRectangles
 //			this.controller.changeStateCount(-1, prevStateIsSet ? selectedItem.getValue().getState() : TreeItemState.UPDATE);
 			selectedItem.getValue().addRelation(bean, TreeItemState.UPDATE);
 //			this.controller.changeStateCount(1, selectedItem.getValue().getState());
-			this.controller.updateCounters();
-			this.controller.refreshTable();
+			this.updateCounters.accept(null);
+			this.refreshTable.accept(null);
 		}
 		this.displayMarkedRows();
 		refresh();
@@ -388,6 +410,14 @@ public class TreeTableViewWithRectangles
 	public void removeConsumer(Consumer<List<Rectangle>> consumer)
 	{
 		this.removeConsumer = consumer;
+	}
+
+	public void forEach(Consumer<XpathTreeItem> consumer)
+	{
+		byPass(this.treeTableView.getRoot(), new ArrayList<>(), xpathTreeItem -> {
+			consumer.accept(xpathTreeItem);
+			return false;
+		});
 	}
 	//endregion
 
@@ -556,6 +586,10 @@ public class TreeTableViewWithRectangles
 
 	private void byPass(TreeItem<XpathTreeItem> treeItem, List<TreeItem<XpathTreeItem>> list, Predicate<XpathTreeItem> predicate)
 	{
+		if (treeItem == null)
+		{
+			return;
+		}
 		XpathTreeItem value = treeItem.getValue();
 		if (predicate.test(value))
 		{

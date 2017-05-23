@@ -106,7 +106,7 @@ public class DialogWizardController implements Initializable, ContainingParent
 		this.imageViewWithScale = new ImageViewWithScale();
 		this.verSplitPane.getItems().add(0, this.imageViewWithScale.getContent());
 
-		this.treeViewWithRectangles = new TreeTableViewWithRectangles(this);
+		this.treeViewWithRectangles = new TreeTableViewWithRectangles(v -> this.updateCounters(), v -> this.refreshTable());
 		this.paneTreeView.setCenter(this.treeViewWithRectangles.getContent());
 
 		this.imageViewWithScale.setClickConsumer(this.treeViewWithRectangles::selectItem);
@@ -341,7 +341,6 @@ public class DialogWizardController implements Initializable, ContainingParent
 
 	void displayOnButtons(boolean isOpenFilled, boolean isCloseFilled)
 	{
-		//TODO replace via style classes
 		this.btnGenerateOnOpen.setStyle("-fx-background-color : " + (!isOpenFilled ? "rgba(0,255,0, 0.1)" : "rgba(255,0,0, 0.1)"));
 		this.btnGenerateOnClose.setStyle("-fx-background-color : " + (!isCloseFilled ? "rgba(0,255,0, 0.1)" : "rgba(255,0,0, 0.1)"));
 	}

@@ -38,6 +38,7 @@ public class ImageViewWithScale implements IScaleListener
 {
 	private final static double WIDHT_COORDS = 120;
 
+	//region fields
 	private final BorderPane mainPane;
 	private final ScrollPane scrollPane;
 	private final AnchorPane anchorPane;
@@ -69,6 +70,7 @@ public class ImageViewWithScale implements IScaleListener
 
 	private Consumer<Rectangle> clickConsumer;
 	private DoubleConsumer scaleConsumer;
+	//endregion
 
 	public ImageViewWithScale()
 	{
@@ -137,6 +139,11 @@ public class ImageViewWithScale implements IScaleListener
 	}
 
 	//region public methods
+	public void hideIds()
+	{
+		this.hBox.getChildren().remove(this.cbIds);
+	}
+
 	public BorderPane getContent()
 	{
 		return this.mainPane;
@@ -377,6 +384,10 @@ public class ImageViewWithScale implements IScaleListener
 
 	private javafx.scene.paint.Color getPixelColor(Point point)
 	{
+		if (this.image == null)
+		{
+			return Color.TRANSPARENT;
+		}
 		try
 		{
 			point.setLocation(point.x / scale, point.y / scale);
@@ -405,7 +416,7 @@ public class ImageViewWithScale implements IScaleListener
 	private void printMouseCoords(MouseEvent event)
 	{
 		Point point = getMouseCoords(event);
-		this.lblInspect.setText("X=" + point.x + " Y=" + point.y);
+		this.lblInspect.setText("X=" + (int) (point.x / this.scale) + " Y=" + (int) (point.y / this.scale));
 	}
 
 	private void printPixelColor(MouseEvent event)

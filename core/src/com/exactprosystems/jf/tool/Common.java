@@ -316,14 +316,14 @@ public abstract class Common
 	// try catch functions
 	// --------------------------------------------------------------------------------------------------------------------------
 	@FunctionalInterface
-	public static interface Function
+	public interface Function
 	{
 		void call() throws ProxyException, Exception;
 	}
 
-	public interface FunctionWithReturn<T>
+	public interface SupplierWithException<T>
 	{
-		T call() throws ProxyException, Exception;
+		T get() throws Exception;
 	}
 
 	public static void tryCatch(Function fn, String error)
@@ -344,11 +344,11 @@ public abstract class Common
 		}
 	}
 
-	public static <T> T tryCatch(FunctionWithReturn<T> func, String error, T defaultValue)
+	public static <T> T tryCatch(SupplierWithException<T> func, String error, T defaultValue)
 	{
 		try
 		{
-			return func.call();
+			return func.get();
 		}
 		catch (ProxyException e)
 		{
