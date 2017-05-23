@@ -10,6 +10,7 @@ package com.exactprosystems.jf.api.wizard;
 
 import com.exactprosystems.jf.api.common.IContext;
 
+@FunctionalInterface
 public interface WizardCommand
 {
     void apply(IContext context);

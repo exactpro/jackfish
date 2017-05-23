@@ -8,24 +8,47 @@
 
 package com.exactprosystems.jf.tool.wizard;
 
+import java.util.Arrays;
+
 import com.exactprosystems.jf.api.common.IContext;
 import com.exactprosystems.jf.api.wizard.Wizard;
 import com.exactprosystems.jf.api.wizard.WizardResult;
 
 public abstract class AbstractWizard implements Wizard
 {
+    protected IContext context;
 
     @Override
     public void init(IContext context, Object ... parameters)
     {
-        // TODO Auto-generated method stub
-        
+        this.context = context;
     }
 
     @Override
     public WizardResult run()
     {
-        // TODO Auto-generated method stub
-        return null;
+        return WizardResult.deny();
+    }
+
+    @Override
+    public String toString()
+    {
+        return getClass().getSimpleName();
+    }
+    
+    @SuppressWarnings("unchecked")
+    protected <T> T get(Class<T> clazz, Object[] parameters)
+    {
+        if (parameters == null)
+        {
+            return null;
+        }
+        
+        Object res = Arrays.stream(parameters)
+                .filter(p -> p != null && clazz.isAssignableFrom(p.getClass()))
+                .findFirst()
+                .orElse(null);
+        
+        return (T)res;
     }
 }

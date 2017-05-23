@@ -41,9 +41,10 @@ public class WizardManagerImpl implements WizardManager
         Matrix matrix = new Matrix("Matrix", factory);
         MatrixItem item = new HelpItem(HelpItem.class);
         
-        System.err.println("suitable = " + manager.suitableWizards(item, matrix));
-        System.err.println("suitable = " + manager.suitableWizards(matrix, item));
-
+        List<Class<? extends Wizard>> list = manager.suitableWizards(item, matrix);
+        System.err.println("suitable = " + list);
+        Class<? extends Wizard> wizard = list.get(0);
+        manager.runWizard(wizard, context, item, matrix);
     }
 
     
@@ -120,15 +121,16 @@ public class WizardManagerImpl implements WizardManager
             return;
         }
         
-        if (context == null)
-        {
-            return;
-        }
+//        if (context == null)
+//        {
+//            return;
+//        }
         
         try
         {
             Wizard wiz = wizard.newInstance();
             wiz.init(context, parameters);
+            System.err.println(">> " + wiz);
             
             WizardResult result = wiz.run();
             if (result.submitted())
@@ -139,6 +141,7 @@ public class WizardManagerImpl implements WizardManager
         }
         catch (InstantiationException | IllegalAccessException e)
         {
+            e.printStackTrace();
             logger.error(e.getMessage(), e);
         }
     }

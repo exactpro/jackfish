@@ -8,13 +8,18 @@
 
 package com.exactprosystems.jf.tool.wizard.all;
 
+import java.util.List;
+
 import com.exactprosystems.jf.api.common.IContext;
 import com.exactprosystems.jf.api.wizard.WizardAttribute;
 import com.exactprosystems.jf.api.wizard.WizardCategory;
+import com.exactprosystems.jf.api.wizard.WizardCommand;
 import com.exactprosystems.jf.api.wizard.WizardResult;
 import com.exactprosystems.jf.documents.matrix.Matrix;
 import com.exactprosystems.jf.documents.matrix.parser.items.MatrixItem;
+import com.exactprosystems.jf.tool.helpers.DialogsHelper;
 import com.exactprosystems.jf.tool.wizard.AbstractWizard;
+import com.exactprosystems.jf.tool.wizard.CommandBuilder;
 
 @WizardAttribute(
             name = "Small wizard",
@@ -25,7 +30,8 @@ import com.exactprosystems.jf.tool.wizard.AbstractWizard;
         )
 public class SmallWizard extends AbstractWizard
 {
-    private MatrixItem currentItem = null;
+    private Matrix      currentMatrix   = null;
+    private MatrixItem  currentItem     = null;
     
     public SmallWizard()
     {
@@ -35,8 +41,9 @@ public class SmallWizard extends AbstractWizard
     public void init(IContext context, Object ... parameters)
     {
         super.init(context, parameters);
-
-        // TODO Auto-generated method stub
+        
+        this.currentMatrix = super.get(Matrix.class, parameters);
+        this.currentItem   = super.get(MatrixItem.class, parameters);
     }
 
     @Override
@@ -44,8 +51,16 @@ public class SmallWizard extends AbstractWizard
     {
         super.run();
         
-        // TODO Auto-generated method stub
-        return null;
+//        DialogsHelper.showInfo("This is a small wizard");
+        System.err.println("!!!!!!!!!!!!!!!!!!!!!!!!!!");
+        
+        List<WizardCommand> commands = CommandBuilder
+                .start()
+                .addMatrixItem(this.currentMatrix, this.currentItem, 5)
+                .removeMatrixItem(this.currentMatrix, this.currentItem, 5)
+                .build();
+        
+        return WizardResult.submit(commands);
     }
 
 }
