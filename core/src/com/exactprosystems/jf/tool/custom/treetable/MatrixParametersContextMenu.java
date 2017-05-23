@@ -94,7 +94,6 @@ public class MatrixParametersContextMenu extends MatrixContextMenu
 					, DialogsHelper::showInfo
 			);
 		});
-		menuWizard.getItems().add(parameterWizard);
 
 		getItems().add(0, this.parRemove);
 		getItems().add(1, this.parMoveLeft);
@@ -152,7 +151,9 @@ public class MatrixParametersContextMenu extends MatrixContextMenu
 				this.parRemove.setDisable(!parameters.canRemove(this.index));
 				this.parShowAll.setDisable(!(matrixItem instanceof ActionItem));
 				this.parAdd.setDisable(!AbstractAction.additionFieldsAllow(matrixItem));
-				
+
+				super.addWizards(matrixItem.getMatrix(), matrixItem, row.getItem().getParameters().getByIndex(this.index));
+
 				Point location = MouseInfo.getPointerInfo().getLocation();
 				super.show(this.row, location.getX(), location.getY());
 			}

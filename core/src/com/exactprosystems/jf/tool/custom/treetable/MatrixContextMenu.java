@@ -9,6 +9,7 @@
 package com.exactprosystems.jf.tool.custom.treetable;
 
 import com.exactprosystems.jf.actions.AbstractAction;
+import com.exactprosystems.jf.api.wizard.Wizard;
 import com.exactprosystems.jf.api.wizard.WizardManager;
 import com.exactprosystems.jf.common.Settings;
 import com.exactprosystems.jf.common.Settings.SettingsValue;
@@ -51,11 +52,13 @@ public class MatrixContextMenu extends ContextMenu
 {
 	private boolean fold = false;
 
-	protected Menu menuWizard = new Menu("Wizard");
+	private Menu menuWizard = new Menu("Wizard");
+	private Context context;
 
 	public MatrixContextMenu(Context context, MatrixFx matrix, MatrixTreeView tree, Settings settings)
 	{
 		super();
+		this.context = context;
 
 		SettingsValue foldSetting = settings.getValueOrDefault(Settings.GLOBAL_NS, Settings.MATRIX_NAME, Settings.MATRIX_FOLD_ITEMS, "false");
 		this.fold = Boolean.parseBoolean(foldSetting.getValue());
@@ -94,18 +97,6 @@ public class MatrixContextMenu extends ContextMenu
 		parAdd.setAccelerator(Common.getShortcut(settings, Settings.ADD_PARAMETER));
 		parAdd.setOnAction(event -> addParameter(matrix, tree));
 
-		//TODO add icon
-		MenuItem itemWizard = new MenuItem("For item");
-		itemWizard.setOnAction(event -> {
-			WizardManager manager = context.getFactory().getWizardManager();
-			manager.runWizardDefault(context
-					, () -> new Object[]{matrix, tree.getSelectionModel().getSelectedItem().getValue()}
-					, (suitableWizards) -> DialogsHelper.selectFromList("Choose suitable wizard", null, suitableWizards, manager::nameOf)
-					, DialogsHelper::showInfo
-			);
-		});
-		menuWizard.getItems().add(itemWizard);
-
 		getItems().addAll(breakPoint, new SeparatorMenuItem(), parAdd, new SeparatorMenuItem(), copy, pasteBefore, new SeparatorMenuItem(), addBefore,
 				deleteItem, gotoItem, new SeparatorMenuItem(), menuWizard, new SeparatorMenuItem(), help);
 		this.setOnShown(event ->
@@ -120,6 +111,8 @@ public class MatrixContextMenu extends ContextMenu
 				deleteItem.setDisable(b);
 				help.setDisable(b);
 				parAdd.setDisable(!AbstractAction.additionFieldsAllow(selectedItem.getValue()));
+				menuWizard.setDisable(b);
+				this.addWizards(matrix, tree.getSelectionModel().getSelectedItem().getValue());
 			}
 		});
 	}
@@ -185,6 +178,21 @@ public class MatrixContextMenu extends ContextMenu
 				addParameter(matrix, treeView);
 			}
 		});
+	}
+
+	protected void addWizards(Object ... criteries)
+	{
+		WizardManager manager = context.getFactory().getWizardManager();
+		java.util.List<Class<? extends Wizard>> suitableWizards = manager.suitableWizards(criteries);
+		menuWizard.getItems().clear();
+		menuWizard.getItems().addAll(suitableWizards.stream()
+				.map(wizardClass -> {
+					MenuItem menuItem = new MenuItem(manager.nameOf(wizardClass));
+					menuItem.setOnAction(e -> manager.runWizard(wizardClass, context, criteries));
+					return menuItem;
+				})
+				.collect(Collectors.toList())
+		);
 	}
 
 	private ActionHelp showHelp(Context context, MatrixTreeView tree)
