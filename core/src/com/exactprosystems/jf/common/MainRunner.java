@@ -40,6 +40,7 @@ import java.lang.ProcessBuilder.Redirect;
 import java.lang.management.ManagementFactory;
 import java.lang.management.RuntimeMXBean;
 import java.net.URISyntaxException;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -107,9 +108,13 @@ public class MainRunner
 					.withDescription("Convert old matrices to the new format")
 					.create("convertTo");
 
+			Option saveDocs = OptionBuilder
+					.withArgName("dir")
+					.hasArg()
+					.withDescription("Save the documentation in specified folder.")
+					.create("docs");
 
-
-            Option saveDocs     = new Option("docs",    "Save the documentation in rtf format." );
+            //Option saveDocs     = new Option("docs",    "Save the documentation in rtf format." );
 			Option saveSchema 	= new Option("schema", 	"Save the config schema." );
 			Option help 		= new Option("help", 	"Print this message." );
 			Option versionOut 	= new Option("version", "Print version only.");
@@ -174,7 +179,8 @@ public class MainRunner
 
             if (line.hasOption(saveDocs.getOpt()))
             {
-				saveDocs();
+				String dir = line.getOptionValue(saveDocs.getOpt());
+				saveDocs(dir);
 
                 System.exit(0);
             }
@@ -581,8 +587,21 @@ public class MainRunner
 			list.add(str);
 		}
 	}
+
+	private static boolean deleteDir(File dir) {
+		if (dir.isDirectory()) {
+			String[] children = dir.list();
+			for (int i=0; i<children.length; i++) {
+				boolean success = deleteDir(new File(dir, children[i]));
+				if (!success) {
+					return false;
+				}
+			}
+		}
+		return dir.delete();
+	}
 	
-    private static void saveDocs() throws Exception
+    private static void saveDocs(String dir) throws Exception
     {
         if (VersionInfo.getVersion().endsWith("LocalBuild"))
         {
@@ -591,7 +610,12 @@ public class MainRunner
             factory.setConfiguration(configuration);
             Context context = factory.createContext();
             ReportFactory reportFactory = new TexReportFactory();
-            ReportBuilder report = reportFactory.createReportBuilder(".", "UserManual" + VersionInfo.getVersion() + ".tex", new Date());
+            if (Files.exists(Paths.get(dir)))
+            {
+				deleteDir(new File(dir));
+			}
+            Files.createDirectories(Paths.get(dir));
+            ReportBuilder report = reportFactory.createReportBuilder(dir, "UserManual" + VersionInfo.getVersion() + ".tex", new Date());
             MatrixItem help = DocumentationBuilder.createUserManual(report, context);
             report.reportStarted(null, VersionInfo.getVersion());
             help.execute(context, context.getMatrixListener(), context.getEvaluator(), report);
