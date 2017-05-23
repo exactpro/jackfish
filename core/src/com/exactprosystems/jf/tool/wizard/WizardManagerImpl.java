@@ -15,8 +15,6 @@ import com.exactprosystems.jf.api.wizard.Wizard;
 import com.exactprosystems.jf.api.wizard.WizardAttribute;
 import com.exactprosystems.jf.api.wizard.WizardCategory;
 import com.exactprosystems.jf.api.wizard.WizardManager;
-import com.sun.org.apache.bcel.internal.generic.ATHROW;
-import com.sun.xml.internal.ws.api.message.Attachment;
 
 public class WizardManagerImpl implements WizardManager
 {
