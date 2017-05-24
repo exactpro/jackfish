@@ -10,27 +10,37 @@ package com.exactprosystems.jf.tool.wizard;
 
 import com.exactprosystems.jf.api.common.IContext;
 import com.exactprosystems.jf.api.wizard.Wizard;
+import com.exactprosystems.jf.api.wizard.WizardCommand;
 import com.exactprosystems.jf.api.wizard.WizardManager;
 import com.exactprosystems.jf.api.wizard.WizardResult;
+import com.exactprosystems.jf.documents.config.Context;
+
+import javafx.scene.layout.BorderPane;
 
 import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
+import java.util.function.Supplier;
 
 public abstract class AbstractWizard implements Wizard
 {
-	protected IContext      context;
+	protected Context      context;
 	protected WizardManager wizardManager;
 
 	@Override
 	public void init(IContext context, WizardManager wizardManager, Object... parameters)
 	{
-		this.context = context;
+		this.context = (Context)context;
 		this.wizardManager = wizardManager;
 	}
 
 	@Override
 	public WizardResult run()
 	{
-		return WizardResult.deny();
+	    WizardDialog dialog = new WizardDialog(this, this.context);
+	    Supplier<List<WizardCommand> > resultSupplier = initDialog(dialog.getPane());
+	    Optional<Boolean> succeed = dialog.showAndWait();
+		return succeed.orElse(false) ?  WizardResult.submit(resultSupplier.get()) : WizardResult.deny();
 	}
 
 	@Override
@@ -57,4 +67,6 @@ public abstract class AbstractWizard implements Wizard
 
 		return (T) res;
 	}
+	
+	protected abstract Supplier<List<WizardCommand> > initDialog(BorderPane borderPane);
 }

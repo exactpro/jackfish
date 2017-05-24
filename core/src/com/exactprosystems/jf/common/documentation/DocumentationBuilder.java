@@ -15,6 +15,8 @@ import com.exactprosystems.jf.actions.tables.TableSelect;
 import com.exactprosystems.jf.api.app.ControlKind;
 import com.exactprosystems.jf.api.app.OperationKind;
 import com.exactprosystems.jf.api.common.DateTime;
+import com.exactprosystems.jf.api.wizard.Wizard;
+import com.exactprosystems.jf.api.wizard.WizardManager;
 import com.exactprosystems.jf.common.ControlsAttributes;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.report.ReportBuilder;
@@ -31,6 +33,7 @@ import com.exactprosystems.jf.documents.matrix.parser.items.HelpChapter;
 import com.exactprosystems.jf.documents.matrix.parser.items.HelpItem;
 import com.exactprosystems.jf.documents.matrix.parser.items.HelpPicture;
 import com.exactprosystems.jf.documents.matrix.parser.items.HelpText;
+import com.exactprosystems.jf.documents.matrix.parser.items.HelpWizardItem;
 import com.exactprosystems.jf.documents.matrix.parser.items.MatrixItem;
 import com.exactprosystems.jf.documents.matrix.parser.items.MatrixItemAttribute;
 import com.exactprosystems.jf.documents.matrix.parser.items.TempItem;
@@ -110,6 +113,14 @@ public class DocumentationBuilder
         return help;
     }
     
+    public static MatrixItem createHelpForWizard(ReportBuilder report, Context context, Class<? extends Wizard> clazz)
+    {
+        WizardManager manager = context.getFactory().getWizardManager();
+        MatrixItem help = new HelpWizardItem(manager, clazz);
+        return help;
+    }
+    
+
     public static void addPicture(MatrixItem root, String title, InputStream stream) throws Exception
     {
         MatrixItem picture = new HelpPicture(title, stream);
@@ -249,5 +260,5 @@ public class DocumentationBuilder
             }
         }
     }
-    
+
 }

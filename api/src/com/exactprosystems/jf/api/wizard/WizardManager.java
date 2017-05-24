@@ -19,7 +19,9 @@ public interface WizardManager
 {
 	String nameOf(Class<? extends Wizard> wizard);
 
-	String shortDescriptionOf(Class<? extends Wizard> wizard);
+    String pictureOf(Class<? extends Wizard> wizard);
+
+    String shortDescriptionOf(Class<? extends Wizard> wizard);
 
 	String detailedDescriptionOf(Class<? extends Wizard> wizard);
 

@@ -64,6 +64,17 @@ public class WizardManagerImpl implements WizardManager
     }
 
     @Override
+    public String pictureOf(Class<? extends Wizard> wizard)
+    {
+        WizardAttribute attr = attributes(wizard);
+        if (attr == null)
+        {
+            return null;
+        }
+        return attr.pictureName();
+    }
+
+    @Override
     public String shortDescriptionOf(Class<? extends Wizard> wizard)
     {
         WizardAttribute attr = attributes(wizard);

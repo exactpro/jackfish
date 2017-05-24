@@ -60,7 +60,7 @@ public class MatrixContextMenu extends ContextMenu
 	{
 		super();
 		this.context = context;
-		this.menuWizard.setVisible(!VersionInfo.isDevVersion());
+		this.menuWizard.setVisible(VersionInfo.isDevVersion());
 
 		SettingsValue foldSetting = settings.getValueOrDefault(Settings.GLOBAL_NS, Settings.MATRIX_NAME, Settings.MATRIX_FOLD_ITEMS, "false");
 		this.fold = Boolean.parseBoolean(foldSetting.getValue());
@@ -288,7 +288,7 @@ public class MatrixContextMenu extends ContextMenu
 		}, "Error on add new parameter");
 	}
 
-	private class ActionHelp implements EventHandler<ActionEvent>
+	private static class ActionHelp implements EventHandler<ActionEvent>
 	{
 		private MatrixTreeView tree;
 		private Context        context;
@@ -309,28 +309,10 @@ public class MatrixContextMenu extends ContextMenu
 				{
 					ReportBuilder report = new ContextHelpFactory().createReportBuilder(null, null, new Date());
 					MatrixItem help = DocumentationBuilder.createHelpForItem(report, context, item);
-					report.reportStarted(null, "");
-					help.execute(context, context.getMatrixListener(), context.getEvaluator(), report);
-					report.reportFinished(0, 0, null, null);
-
-					WebView browser = new WebView();
-					WebEngine engine = browser.getEngine();
-					String str = report.getContent();
-					engine.loadContent(str);
-
-					Dialog<?> dialog = new Alert(Alert.AlertType.INFORMATION);
-					Common.addIcons(((Stage) dialog.getDialogPane().getScene().getWindow()));
-					dialog.getDialogPane().setContent(browser);
-					dialog.getDialogPane().setPrefWidth(1024);
-					dialog.getDialogPane().setPrefHeight(768);
-					dialog.setResizable(true);
-					dialog.getDialogPane().setHeader(new Label());
-					dialog.setTitle("Help for " + item.getItemName());
-					dialog.setHeaderText(null);
-					dialog.getDialogPane().getStylesheets().addAll(Common.currentThemesPaths());
-					dialog.show();
+					DialogsHelper.showHelpDialog(context, item.getItemName(), report, help);
 				}
 			}, "Error on show result");
 		}
+
 	}
 }

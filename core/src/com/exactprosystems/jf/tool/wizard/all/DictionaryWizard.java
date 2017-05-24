@@ -12,14 +12,18 @@ import com.exactprosystems.jf.api.app.IGuiDictionary;
 import com.exactprosystems.jf.api.app.IWindow;
 import com.exactprosystems.jf.api.common.IContext;
 import com.exactprosystems.jf.api.wizard.*;
-import com.exactprosystems.jf.tool.helpers.DialogsHelper;
 import com.exactprosystems.jf.tool.wizard.AbstractWizard;
 import com.exactprosystems.jf.tool.wizard.CommandBuilder;
 
+import javafx.scene.layout.BorderPane;
+import javafx.scene.text.Text;
+
 import java.util.List;
+import java.util.function.Supplier;
 
 @WizardAttribute(
             name = "Test dictionary wizard",
+            pictureName = "DictionaryWizard.png",
             category = WizardCategory.GUI_DICTIONARY,
             shortDescription = "This wizard is only for test purpose.",
             detailedDescription = "Here you descrioption might be",
@@ -45,17 +49,17 @@ public class DictionaryWizard extends AbstractWizard
     }
 
     @Override
-    public WizardResult run()
+    protected Supplier<List<WizardCommand>> initDialog(BorderPane borderPane)
     {
-        super.run();
+        borderPane.setCenter(new Text("test"));
         
-        DialogsHelper.showInfo("This is a small wizard " + this.currentDictionary + "  " + this.currentWindow);
-        
-        List<WizardCommand> commands = CommandBuilder
-                .start()
-                .build();
-        
-        return WizardResult.submit(commands);
+        return () ->
+        {
+            List<WizardCommand> commands = CommandBuilder
+                    .start()
+                    .build();
+            
+            return commands;
+        };
     }
-
 }

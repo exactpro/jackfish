@@ -15,10 +15,15 @@ import com.exactprosystems.jf.documents.matrix.parser.items.MatrixItem;
 import com.exactprosystems.jf.tool.wizard.AbstractWizard;
 import com.exactprosystems.jf.tool.wizard.CommandBuilder;
 
+import javafx.scene.control.Button;
+import javafx.scene.layout.BorderPane;
+
 import java.util.List;
+import java.util.function.Supplier;
 
 @WizardAttribute(
             name = "Small wizard",
+            pictureName = "SmallWizard.png",
             category = WizardCategory.MATRIX,
             shortDescription = "This wizard adds thre Let items to a matrix before current item.",
             detailedDescription = "Once upon a {{*time*}} far far away two robbers lived...",
@@ -44,20 +49,19 @@ public class SmallWizard extends AbstractWizard
     }
 
     @Override
-    public WizardResult run()
+    protected Supplier<List<WizardCommand>> initDialog(BorderPane borderPane)
     {
-        super.run();
+        borderPane.setCenter(new Button("test"));
         
-//        DialogsHelper.showInfo("This is a small wizard");
-        System.err.println("!!!!!!!!!!!!!!!!!!!!!!!!!!");
-        
-        List<WizardCommand> commands = CommandBuilder
-                .start()
-                .addMatrixItem(this.currentMatrix, this.currentItem, 5)
-                .removeMatrixItem(this.currentMatrix, this.currentItem, 5)
-                .build();
-        
-        return WizardResult.submit(commands);
+        return () ->
+        {
+            List<WizardCommand> commands = CommandBuilder
+                    .start()
+                    .addMatrixItem(this.currentMatrix, this.currentItem, 5)
+                    .removeMatrixItem(this.currentMatrix, this.currentItem, 5)
+                    .build();
+            
+            return commands;
+        };
     }
-
 }

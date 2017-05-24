@@ -18,6 +18,7 @@ import java.lang.annotation.Target;
 public @interface WizardAttribute
 {
     String name();
+    String pictureName();
     String shortDescription();
     String detailedDescription();
     WizardCategory category();

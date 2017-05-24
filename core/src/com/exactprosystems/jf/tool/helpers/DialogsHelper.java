@@ -9,12 +9,14 @@
 package com.exactprosystems.jf.tool.helpers;
 
 import com.exactprosystems.jf.actions.ReadableValue;
+import com.exactprosystems.jf.api.common.IContext;
 import com.exactprosystems.jf.api.common.Str;
 import com.exactprosystems.jf.api.common.Sys;
 import com.exactprosystems.jf.common.MatrixRunner;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.report.HelpBuilder;
 import com.exactprosystems.jf.common.report.HelpFactory;
+import com.exactprosystems.jf.common.report.ReportBuilder;
 import com.exactprosystems.jf.common.version.VersionInfo;
 import com.exactprosystems.jf.documents.Document;
 import com.exactprosystems.jf.documents.DocumentFactory;
@@ -22,6 +24,7 @@ import com.exactprosystems.jf.documents.DocumentInfo;
 import com.exactprosystems.jf.documents.config.Configuration;
 import com.exactprosystems.jf.documents.config.Context;
 import com.exactprosystems.jf.documents.matrix.Matrix;
+import com.exactprosystems.jf.documents.matrix.parser.items.MatrixItem;
 import com.exactprosystems.jf.functions.HelpKind;
 import com.exactprosystems.jf.functions.Notifier;
 import com.exactprosystems.jf.functions.Table;
@@ -523,6 +526,31 @@ public abstract class DialogsHelper
 		return file;
 	}
 
+    public static void showHelpDialog(Context context, String name, ReportBuilder report, MatrixItem help) throws Exception
+    {
+        report.reportStarted(null, "");
+        help.execute(context, context.getMatrixListener(), context.getEvaluator(), report);
+        report.reportFinished(0, 0, null, null);
+
+        WebView browser = new WebView();
+        WebEngine engine = browser.getEngine();
+        String str = report.getContent();
+        engine.loadContent(str);
+
+        Dialog<?> dialog = new Alert(Alert.AlertType.INFORMATION);
+        Common.addIcons(((Stage) dialog.getDialogPane().getScene().getWindow()));
+        dialog.getDialogPane().setContent(browser);
+        dialog.getDialogPane().setPrefWidth(1024);
+        dialog.getDialogPane().setPrefHeight(768);
+        dialog.setResizable(true);
+        dialog.getDialogPane().setHeader(new Label());
+        dialog.setTitle("Help for " + name);
+        dialog.setHeaderText(null);
+        dialog.getDialogPane().getStylesheets().addAll(Common.currentThemesPaths());
+        dialog.show();
+    }
+
+	
 	public static String showHelperDialog(String title, AbstractEvaluator evaluator, String value, Matrix matrix)
 	{
 		try
