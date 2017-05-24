@@ -72,7 +72,7 @@ public class TexReportBuilder extends ReportBuilder
     }
 
 	@Override
-	protected String replaceMarker(String marker)
+	protected String replaceMarker(String marker) //https://www.sharelatex.com/learn/Sections_and_chapters
 	{
         if (marker == null)
         {
@@ -86,12 +86,12 @@ public class TexReportBuilder extends ReportBuilder
             case "1" + CM: return "";  
     
             // header 2
-            case OM + "2": return "";
-            case "2" + CM: return "";  
+            case OM + "2": return "\\\\section*{ ";
+            case "2" + CM: return " }";
     
             // header 3
-            case OM + "3": return "\\\\newpage";
-            case "3" + CM: return "";  
+            case OM + "3": return "\\\\subsection*{ ";
+            case "3" + CM: return " }";
     
             // header 4 (max level)
             case OM + "4": return "\\\\newpage";

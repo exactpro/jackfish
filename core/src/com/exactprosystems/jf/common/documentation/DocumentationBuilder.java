@@ -47,16 +47,34 @@ public class DocumentationBuilder
     {
         AbstractEvaluator evaluator = context.getEvaluator();
         
-        MatrixItem help = new HelpChapter("Help", 1);
-        
-        String[][] table1 = new String[][] 
+        MatrixItem help = new HelpChapter("\\huge {{*JackFish*}}", 1); //todo
+
+        String[][] table1 = new String[][]
+                {
+                        { "Version",  VersionInfo.getVersion()},
+                        { "Release date", DateTime.current().str("dd MMM yyyy")}
+                };
+
+        String[][] table2 = new String[][]
                 {
                     { "{{*Date*}}", "{{*Version*}}", "{{*By*}}", "{{*Comments*}}" },
                     { DateTime.current().str("dd MMM yyyy"), VersionInfo.getVersion(), "Valery Florov", "Initial Draft" }
                 };
-//        addTable(help, "{{/Document Information/}}", table1, new int[] { 10, 10, 10, 30 },  evaluator);
-//
-//        addChapter(help, "Introduction", 3);
+        String[][] table3 = new String[][]
+                {
+                        { "{{*Abbreviation*}}", "{{*Meaning*}}" },
+                        { "JF", "JackFish" }
+                };
+
+
+        addChapter(help, "\\Large {{*User Guide*}}", 1);
+        addTable(help, "", table1, new int[] { 50, 50 },  evaluator);
+        addChapter(help, "\\Large {{*Document Information*}}", 1);
+        addTable(help, "", table2, new int[] { 25, 23, 23, 25 },  evaluator);
+        addChapter(help, "\\Large {{*Abbreviations*}}", 1);
+        addTable(help, "", table3, new int[] { 50, 50 },  evaluator);
+
+//        addChapter(help, "Introduction", 2);
         addText(help, DocumentationBuilder.class.getResourceAsStream("intro1.txt"));
 //        addPicture(help, "Architecture", DocumentationBuilder.class.getResourceAsStream("Intro.png"));
 //        addText(help, DocumentationBuilder.class.getResourceAsStream("intro2.txt"));
