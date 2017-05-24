@@ -8,18 +8,15 @@
 
 package com.exactprosystems.jf.tool.wizard.all;
 
-import java.util.List;
-
 import com.exactprosystems.jf.api.app.IGuiDictionary;
 import com.exactprosystems.jf.api.app.IWindow;
 import com.exactprosystems.jf.api.common.IContext;
-import com.exactprosystems.jf.api.wizard.WizardAttribute;
-import com.exactprosystems.jf.api.wizard.WizardCategory;
-import com.exactprosystems.jf.api.wizard.WizardCommand;
-import com.exactprosystems.jf.api.wizard.WizardResult;
+import com.exactprosystems.jf.api.wizard.*;
 import com.exactprosystems.jf.tool.helpers.DialogsHelper;
 import com.exactprosystems.jf.tool.wizard.AbstractWizard;
 import com.exactprosystems.jf.tool.wizard.CommandBuilder;
+
+import java.util.List;
 
 @WizardAttribute(
             name = "Test dictionary wizard",
@@ -39,9 +36,9 @@ public class DictionaryWizard extends AbstractWizard
     }
 
     @Override
-    public void init(IContext context, Object ... parameters)
+    public void init(IContext context, WizardManager wizardManager, Object... parameters)
     {
-        super.init(context, parameters);
+        super.init(context, wizardManager, parameters);
         
         this.currentDictionary = super.get(IGuiDictionary.class, parameters);
         this.currentWindow     = super.get(IWindow.class, parameters);

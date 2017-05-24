@@ -25,7 +25,7 @@ public class ConfigurationToolBar extends ToolBar
 		this.model = model;
 
 		this.sortButton = new SplitMenuButton();
-		this.sortButton.setText("Sort by");
+		this.sortButton.setText("Sort");
 
 		ToggleGroup toggleGroup = new ToggleGroup();
 

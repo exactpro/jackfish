@@ -8,19 +8,8 @@
 
 package com.exactprosystems.jf.tool.wizard;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.stream.Collectors;
-
-import org.apache.log4j.Logger;
-
 import com.exactprosystems.jf.api.common.IContext;
-import com.exactprosystems.jf.api.wizard.Wizard;
-import com.exactprosystems.jf.api.wizard.WizardAttribute;
-import com.exactprosystems.jf.api.wizard.WizardCategory;
-import com.exactprosystems.jf.api.wizard.WizardCommand;
-import com.exactprosystems.jf.api.wizard.WizardManager;
-import com.exactprosystems.jf.api.wizard.WizardResult;
+import com.exactprosystems.jf.api.wizard.*;
 import com.exactprosystems.jf.common.VerboseLevel;
 import com.exactprosystems.jf.documents.ConsoleDocumentFactory;
 import com.exactprosystems.jf.documents.DocumentFactory;
@@ -30,6 +19,11 @@ import com.exactprosystems.jf.documents.matrix.parser.items.HelpItem;
 import com.exactprosystems.jf.documents.matrix.parser.items.MatrixItem;
 import com.exactprosystems.jf.tool.wizard.all.DictionaryWizard;
 import com.exactprosystems.jf.tool.wizard.all.SmallWizard;
+import org.apache.log4j.Logger;
+
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class WizardManagerImpl implements WizardManager
 {
@@ -131,7 +125,7 @@ public class WizardManagerImpl implements WizardManager
         try
         {
             Wizard wiz = wizard.newInstance();
-            wiz.init(context, parameters);
+            wiz.init(context, this, parameters);
             
             WizardResult result = wiz.run();
             if (result.submitted())

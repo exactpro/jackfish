@@ -8,18 +8,14 @@
 
 package com.exactprosystems.jf.tool.wizard.all;
 
-import java.util.List;
-
 import com.exactprosystems.jf.api.common.IContext;
-import com.exactprosystems.jf.api.wizard.WizardAttribute;
-import com.exactprosystems.jf.api.wizard.WizardCategory;
-import com.exactprosystems.jf.api.wizard.WizardCommand;
-import com.exactprosystems.jf.api.wizard.WizardResult;
+import com.exactprosystems.jf.api.wizard.*;
 import com.exactprosystems.jf.documents.matrix.Matrix;
 import com.exactprosystems.jf.documents.matrix.parser.items.MatrixItem;
-import com.exactprosystems.jf.tool.helpers.DialogsHelper;
 import com.exactprosystems.jf.tool.wizard.AbstractWizard;
 import com.exactprosystems.jf.tool.wizard.CommandBuilder;
+
+import java.util.List;
 
 @WizardAttribute(
             name = "Small wizard",
@@ -39,9 +35,9 @@ public class SmallWizard extends AbstractWizard
     }
 
     @Override
-    public void init(IContext context, Object ... parameters)
+    public void init(IContext context, WizardManager wizardManager, Object... parameters)
     {
-        super.init(context, parameters);
+        super.init(context, wizardManager, parameters);
         
         this.currentMatrix = super.get(Matrix.class, parameters);
         this.currentItem   = super.get(MatrixItem.class, parameters);

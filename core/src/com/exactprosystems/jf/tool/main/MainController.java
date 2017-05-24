@@ -67,7 +67,7 @@ public class MainController implements Initializable, ContainingParent
 	private final static int	PANE_WIDTH	= 800;
 	private final static int	PANE_HEIGHT	= 600;
 
-	private final static double	INIT_VALUE	= 0.15;
+	private final static double	INIT_VALUE	= 0.20;
 	private final static double	MIN_VALUE	= 0.05;
 
 	private static final Logger	logger		= Logger.getLogger(MainController.class);
