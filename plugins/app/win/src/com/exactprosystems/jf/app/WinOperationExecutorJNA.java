@@ -530,18 +530,28 @@ public class WinOperationExecutorJNA implements OperationExecutor<UIProxyJNA>
 				try
 				{
 					this.driver.clearCache();
-					List<UIProxyJNA> elements = this.findAll(null, locator);
-					this.logger.debug("Found : " + elements.size() + " elements on method wait. Expected : " + (toAppear ? ">0" : "0") );
+					int size = -1;
+					try
+					{
+						List<UIProxyJNA> elements = this.findAll(null, locator);
+						size = elements.size();
+					}
+					catch (ElementNotFoundException e)
+					{
+						size = 0;
+					}
+
+					this.logger.debug("Found : " + size + " elements on method wait. Expected : " + (toAppear ? ">0" : "0") );
 					if (toAppear)
 					{
-						if (elements.size() > 0)
+						if (size > 0)
 						{
 							return true;
 						}
 					}
 					else
 					{
-						if (elements.size() == 0)
+						if (size == 0)
 						{
 							return true;
 						}
