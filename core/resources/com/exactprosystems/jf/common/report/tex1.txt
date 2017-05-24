@@ -28,6 +28,28 @@
 \renewcommand{\headrulewidth}{0pt}
 \renewcommand{\footrulewidth}{0pt}
 
+\usepackage[dvipsnames]{xcolor}
+\usepackage{lipsum}
+
+\newlength{\seplinewidth}
+\newlength{\seplinesep}
+\setlength{\seplinewidth}{1mm}
+\setlength{\seplinesep}{2mm}
+\colorlet{sepline}{BurntOrange}
+\newcommand*{\sepline}{
+  \par
+  \vspace{\dimexpr\seplinesep+.5\parskip}
+  \cleaders\vbox{
+    \begingroup
+      \color{sepline}
+      \hrule width\linewidth height\seplinewidth
+    \endgroup
+  }\vskip\seplinewidth
+  \vspace{\dimexpr\seplinesep-.5\parskip}
+}
+
+%%use \sepline for printing colored line
+
 \begin{document}
 
 \title{JackFish}
