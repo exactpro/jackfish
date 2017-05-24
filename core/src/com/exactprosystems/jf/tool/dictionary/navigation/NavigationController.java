@@ -117,12 +117,10 @@ public class NavigationController implements Initializable, ContainingParent
 
 		this.btnWindowWizardManager = new WizardButton();
 		this.btnWindowWizardManager.setVisible(VersionInfo.isDevVersion());
-		this.btnWindowWizardManager.setTooltip(new Tooltip("Wizards"));
         this.hBoxWindow.getChildren().add(this.btnWindowWizardManager);
 		
         this.btnElementWizardManager = new WizardButton();
         this.btnElementWizardManager.setVisible(VersionInfo.isDevVersion());
-        this.btnElementWizardManager.setTooltip(new Tooltip("Wizards"));
         this.hBoxElement.getChildren().add(this.btnElementWizardManager);
 		
 		this.listViewElement = new FindListView<>((e, s) -> (!Str.IsNullOrEmpty(e.control.getID()) && e.control.getID().toUpperCase().contains(s.toUpperCase()) || (e.control.getBindedClass().getClazz().toUpperCase()

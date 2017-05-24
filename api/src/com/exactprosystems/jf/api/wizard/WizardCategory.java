@@ -11,6 +11,7 @@ package com.exactprosystems.jf.api.wizard;
 public enum WizardCategory
 {
     MATRIX              ("Matrix wizard"),
+    CONFIGURATION       ("Configuration wizard"),
     GUI_DICTIONARY      ("GUI dictionary wizard"),
     MESSAGE_DICTIONARY  ("Message dictionary wizard"),
     OTHER               ("Universal wizard");

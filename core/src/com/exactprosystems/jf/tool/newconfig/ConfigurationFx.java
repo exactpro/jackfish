@@ -1345,7 +1345,7 @@ public class ConfigurationFx extends Configuration
 		{
 			restoreSettings();
 			this.isControllerInit = true;
-
+			
 			this.controller = Common.loadController(ConfigurationFx.class.getResource("config.fxml"));
 			this.controller.init(this, this.pane, this.currentCompareEnum);
 		}
