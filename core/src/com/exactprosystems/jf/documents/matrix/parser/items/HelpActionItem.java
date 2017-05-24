@@ -8,13 +8,14 @@
 package com.exactprosystems.jf.documents.matrix.parser.items;
 
 import java.lang.reflect.Field;
+import java.util.Arrays;
+import java.util.stream.Collectors;
 
 import com.exactprosystems.jf.actions.AbstractAction;
 import com.exactprosystems.jf.actions.ActionAttribute;
 import com.exactprosystems.jf.actions.ActionFieldAttribute;
 import com.exactprosystems.jf.api.error.ErrorKind;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
-import com.exactprosystems.jf.common.report.HTMLhelper;
 import com.exactprosystems.jf.common.report.ReportBuilder;
 import com.exactprosystems.jf.common.report.ReportTable;
 import com.exactprosystems.jf.documents.config.Context;
@@ -36,37 +37,34 @@ public class HelpActionItem extends MatrixItem
         return "Action " + this.actionClazz.getSimpleName();
     }
     
-    public static void actionReport(ReportBuilder report, MatrixItem item, Class<? extends AbstractAction> clazz)
+    public void actionReport(ReportBuilder report, MatrixItem item, Class<? extends AbstractAction> clazz)
     {
         ActionAttribute attr = clazz.getAnnotation(ActionAttribute.class);
 
-        ReportTable table = report.addTable("", null, true, 0, new int[] { 20, 80 }, "Action item", clazz.getSimpleName());
+        report.itemIntermediate(item);
+        report.outLine(this, null, "{{`" + attr.generalDescription() + "`}}", null);
 
-        table.addValues("Description", attr.generalDescription());
         if (attr.additionFieldsAllowed())
         {
-            table.addValues("Additional fields", "Yes");
-            table.addValues("Additional fields description", attr.additionalDescription());
+            report.outLine(this, null, "{{*Additional fields - Yes*}}", null);
+            report.outLine(this, null, "{{`" + attr.additionalDescription() + "`}}", null);
         }
         else
         {
-            table.addValues("Additional fields", "No");
+            report.outLine(this, null, "{{*Additional fields - No*}}", null);
         }
-        StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < attr.seeAlsoClass().length; i++)
+        report.outLine(this, null, "{{*Examples*}}", null);
+        report.outLine(this, null, "{{`" + attr.examples() + "`}}", null);
+        if (attr.seeAlsoClass().length != 0)
         {
-            sb.append(attr.seeAlsoClass()[i].getSimpleName());
-            if (i != attr.seeAlsoClass().length-1)
-            {
-                sb.append(", ");
-            }
+            report.outLine(this, null, "{{*See also*}}", null);
+            String s = Arrays.stream(attr.seeAlsoClass()).map(c -> "{{@" + c.getSimpleName() + "@}}").collect(Collectors.joining(", "));
+            report.outLine(this, null, "{{`" + s + "`}}", null);
         }
-        table.addValues("See also", sb.toString());
-        table.addValues("Examples", attr.examples());
-
+        
         // Input
         Field[] fields = clazz.getDeclaredFields();
-        table = report.addTable("Input:", null, true, 4, new int[] { 15, 15, 60, 10 }, "Field name", "Field type",
+        ReportTable table = report.addTable("{{*Input fields:*}}", null, true, 4, new int[] { 15, 15, 60, 10 }, "Field name", "Field type",
                 "Description", "Mandatory");
 
         for (Field f : fields)
@@ -81,7 +79,7 @@ public class HelpActionItem extends MatrixItem
         }
 
         // Output
-        table = report.addTable("Output:", null, true, 100, new int[] { 30, 70 }, "Output type", "Description");
+        table = report.addTable("{{*Output:*}}", null, true, 100, new int[] { 30, 70 }, "Output type", "Description");
         table.addValues(attr.outputType().getSimpleName(), attr.outputDescription());
     }
 

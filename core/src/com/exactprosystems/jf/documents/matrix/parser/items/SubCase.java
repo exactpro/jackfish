@@ -36,7 +36,6 @@ import java.util.Map;
 							"#Action;#Greeting\n" +
 							"Print;'Hello!'\n" +
 							"#EndSubCase#}}",
-		seeAlso 		= "Call, Return",
         shouldContain 	= { Tokens.SubCase },
         mayContain 		= { Tokens.Id, Tokens.Off, Tokens.RepOff },
         parents			= { TestCase.class, NameSpace.class },

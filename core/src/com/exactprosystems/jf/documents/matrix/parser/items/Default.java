@@ -31,7 +31,6 @@ import java.util.List;
 							"#Action;#Greeting\n" +
 							"Print;'Farewell'\n" +
 							"#EndSwitch#}}",
-		seeAlso 		= "For, While, Break",
 		shouldContain 	= { Tokens.Default },
 		mayContain 		= { Tokens.Off, Tokens.RepOff }, 
 		parents			= { Switch.class },

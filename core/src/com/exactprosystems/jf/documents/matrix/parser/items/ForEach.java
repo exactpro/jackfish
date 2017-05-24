@@ -40,7 +40,6 @@ import java.util.concurrent.atomic.AtomicReference;
 						"#Action;#a\n" +
 						"Print;a\n" +
 						"#EndForEach#}}",
-	seeAlso 		= "For, While",
 	shouldContain 	= { Tokens.ForEach, Tokens.In },
 	mayContain 		= { Tokens.Off, Tokens.RepOff }, 
 	parents			= { Case.class, Else.class, For.class, ForEach.class, If.class,

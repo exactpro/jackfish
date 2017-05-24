@@ -35,7 +35,6 @@ import java.util.stream.Collectors;
 		examples 		= "{{##Step;#Kind\n" +
 							";\n" +
 							"#EndStep#}}",
-		seeAlso 		= "TestCase",
 		shouldContain 	= { Tokens.Step },
 		mayContain 		= { Tokens.IgnoreErr, Tokens.Id, Tokens.RepOff, Tokens.Off, Tokens.Kind, Tokens.For, Tokens.Depends },
 		parents			= { Case.class, Else.class, For.class, ForEach.class, If.class,

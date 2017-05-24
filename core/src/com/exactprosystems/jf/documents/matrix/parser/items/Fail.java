@@ -40,7 +40,6 @@ import java.util.Map;
 								"#OnError\n" +
 								"#Action;#Where error was\n" +
 								"Print;err.Where#}}",
-		seeAlso 			= "TestCase",
 		shouldContain 		= { Tokens.Fail }, 
 		mayContain 			= { Tokens.Off, Tokens.RepOff }, 
 		parents				= { Case.class, Else.class, For.class, ForEach.class, If.class,

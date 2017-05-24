@@ -41,7 +41,6 @@ import java.util.Map;
 							"#Action;#today\n" +
 							"Print;'is not 2017'\n" +
 							"#EndIf#}}",
-		seeAlso 		= "Else",
         shouldContain 	= { Tokens.If },
         mayContain 		= { Tokens.Off, Tokens.RepOff },
 		parents			= { Case.class, Else.class, For.class, ForEach.class, If.class,

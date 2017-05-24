@@ -47,7 +47,6 @@ import java.util.List;
 							"#OnError\n" +
 							"#Action;#Where error was\n" +
 							"Print;err.Where#}}",
-		seeAlso 		= "Fail",
 		shouldContain 	= { Tokens.OnError },
 		mayContain 		= { Tokens.Off, Tokens.RepOff },
 		parents			= { For.class, ForEach.class, OnError.class, Step.class, SubCase.class, TestCase.class },

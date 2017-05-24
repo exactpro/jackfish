@@ -39,7 +39,6 @@ import java.util.Map;
 							"To get the access  from the different TestCase is essentially to enter the parameter  Global for an action.(mark checkbox with G)",
 		examples 		= "{{##TestCase;#Kind;#Depends;#For\n" +
 							";;;#}}",
-		seeAlso 		= "Step",
 		shouldContain 	= { Tokens.TestCase },
 		mayContain 		= { Tokens.Id, Tokens.RepOff, Tokens.Off, Tokens.Kind, Tokens.For, Tokens.Depends },
 		parents			= { MatrixRoot.class },

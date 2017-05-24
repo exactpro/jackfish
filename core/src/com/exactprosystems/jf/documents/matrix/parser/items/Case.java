@@ -56,7 +56,6 @@ import java.util.Map;
 				"#Action;#result\n" +
 				"Print;false\n" +
 				"#EndSwitch",
-		seeAlso 		= "Switch",
 		shouldContain 	= { Tokens.Case },
 		mayContain 		= { Tokens.Off, Tokens.RepOff }, 
         closes			= Switch.class,

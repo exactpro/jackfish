@@ -31,7 +31,6 @@ import java.util.List;
 							"#Action;#today\n" +
 							"Print;'is not 2017'\n" +
 							"#EndIf#}}",
-		seeAlso 		= "If",
 		shouldContain 	= { Tokens.Else },
 		mayContain 		= { Tokens.Off, Tokens.RepOff }, 
 		parents			= { If.class }, 

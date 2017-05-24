@@ -38,7 +38,6 @@ import java.util.Map;
 							"#Id;#Let\n" +
 							"a;a+1\n" +
 							"#EndWhile#}}",
-		seeAlso 		= "For, ForEach",
 		shouldContain 	= { Tokens.While },
 		mayContain 		= { Tokens.Off, Tokens.RepOff },
 		parents			= { Case.class, Else.class, For.class, ForEach.class, If.class,

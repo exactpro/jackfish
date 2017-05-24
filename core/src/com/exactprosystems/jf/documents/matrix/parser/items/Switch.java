@@ -43,7 +43,6 @@ import java.util.Map;
 							"#Action;#Greeting\n" +
 							"Print;'Bye!'\n" +
 							"#EndSwitch#}}",
-		seeAlso 		= "Case, Default",
         shouldContain 	= { Tokens.Switch },
         mayContain 		= { Tokens.Off, Tokens.RepOff },
 		parents			= { Case.class, Else.class, For.class, ForEach.class, If.class,

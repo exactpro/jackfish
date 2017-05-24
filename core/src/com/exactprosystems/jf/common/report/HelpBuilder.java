@@ -24,9 +24,11 @@ import com.exactprosystems.jf.documents.matrix.parser.items.TempItem;
 
 import java.io.IOException;
 import java.lang.reflect.Field;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 public class HelpBuilder extends ReportBuilder
 {
@@ -458,10 +460,18 @@ public class HelpBuilder extends ReportBuilder
 			ReportTable table = report.addTable("", null, true, 100, new int[] { 30, 70 });
 			table.addValues("Description", attribute.description());
             table.addValues("Examples", attribute.examples());
-            if (!attribute.seeAlso().equals(""))
+//            if (!attribute.seeAlso().equals(""))
+//            {
+//                table.addValues("See also", attribute.seeAlso());
+//            }
+
+            if (attribute.seeAlsoClass().length != 0)
             {
-                table.addValues("See also", attribute.seeAlso());
+                String s = Arrays.stream(attribute.seeAlsoClass()).map(c -> "{{@" + c.getSimpleName() + "@}}").collect(Collectors.joining(", "));
+                table.addValues("See also", s);
+                
             }
+            
             report.itemFinished(tmp, 0, null);
         }
     }

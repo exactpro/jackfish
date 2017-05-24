@@ -7,6 +7,9 @@
 ////////////////////////////////////////////////////////////////////////////////
 package com.exactprosystems.jf.documents.matrix.parser.items;
 
+import java.util.Arrays;
+import java.util.stream.Collectors;
+
 import com.exactprosystems.jf.api.error.ErrorKind;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.report.ReportBuilder;
@@ -30,7 +33,7 @@ public class HelpItem extends MatrixItem
         return this.itemClazz.getSimpleName();
     }
     
-    public static void itemReport(ReportBuilder report, MatrixItem item, Class<? extends MatrixItem> clazz)
+    public void itemReport(ReportBuilder report, MatrixItem item, Class<? extends MatrixItem> clazz)
     {
         MatrixItemAttribute attribute = clazz.getAnnotation(MatrixItemAttribute.class);
         if (attribute == null)
@@ -43,12 +46,14 @@ public class HelpItem extends MatrixItem
         }
 
         report.itemIntermediate(item);
-        ReportTable table = report.addTable("", null, true, 100, new int[] { 30, 70 });
-        table.addValues("Description", attribute.description());
-        table.addValues("Examples", attribute.examples());
-        if (!attribute.seeAlso().equals(""))
+        report.outLine(this, null, "{{`" + attribute.description() + "`}}", null);
+        report.outLine(this, null, "{{*Examples*}}", null);
+        report.outLine(this, null, "{{`" + attribute.examples() + "`}}", null);
+        if (attribute.seeAlsoClass().length != 0)
         {
-            table.addValues("See also", attribute.seeAlso());
+            report.outLine(this, null, "{{*See also*}}", null);
+            String s = Arrays.stream(attribute.seeAlsoClass()).map(c -> "{{@" + c.getSimpleName() + "@}}").collect(Collectors.joining(", "));
+            report.outLine(this, null, "{{`" + s + "`}}", null);
         }
     }
 

@@ -36,7 +36,6 @@ import java.util.Map;
 							"#Return\n" +
 							"result\n" +
 							"#EndSubCase#}}",
-		seeAlso 		= "SubCase, Call",
 		shouldContain 	= { Tokens.Return },
 		mayContain 		= { Tokens.Off, Tokens.RepOff }, 
 		parents			= { Case.class, Else.class, For.class, ForEach.class, If.class,

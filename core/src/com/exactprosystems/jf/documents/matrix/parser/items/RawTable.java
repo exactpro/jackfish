@@ -30,7 +30,6 @@ import java.util.Map;
 							"@;newH\n" +
 							"0;newR\n" +
 							"#EndRawTable#}}",
-		seeAlso 		= "RawText",
 		shouldContain 	= { Tokens.RawTable }, 
 		mayContain 		= { Tokens.Id, Tokens.Off, Tokens.RepOff, Tokens.Global }, 
 		parents			= { Case.class, Else.class, For.class, ForEach.class, If.class,

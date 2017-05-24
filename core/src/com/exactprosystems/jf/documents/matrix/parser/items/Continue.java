@@ -37,7 +37,6 @@ import java.util.List;
 							"#Action;#a\n" +
 							"Print;a\n" +
 							"#EndFor#}}",
-		seeAlso 		= "For, While, Break",
 		shouldContain 	= { Tokens.Continue },
 		mayContain 		= { Tokens.Off, Tokens.RepOff }, 
 		parents			= { Case.class, Else.class, For.class, ForEach.class, If.class,

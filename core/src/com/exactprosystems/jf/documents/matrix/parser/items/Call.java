@@ -46,7 +46,6 @@ import java.util.Set;
 				"#EndSubCase\n" +
 				"#Id;#Call;#firstNumber;#secondNumber\n" +
 				"CALL_1;Add;1;2#}}",
-		seeAlso 		= "SubCase, Return",
 		shouldContain 	= { Tokens.Call },
 
 		mayContain 		= { Tokens.Id, Tokens.Off, Tokens.RepOff },

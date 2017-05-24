@@ -43,7 +43,6 @@ import java.util.Map;
 							"Print;'Hello!'\n" +
 							"#EndSubCase\n" +
 							"#EndNameSpace#}}",
-		seeAlso 		= "SubCase, Call",
         shouldContain 	= { Tokens.NameSpace },
         mayContain 		= { Tokens.Id, Tokens.Off, Tokens.RepOff },
         parents			= { MatrixRoot.class },

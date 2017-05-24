@@ -30,7 +30,6 @@ import java.util.stream.Collectors;
 							"TEXT1;Text\n" +
 							"\"Hello world\"\n" +
 							"#EndRawText#}}",
-		seeAlso 		= "RawTable",
 		shouldContain 	= { Tokens.RawText }, 
 		mayContain 		= { Tokens.Id, Tokens.Off, Tokens.RepOff, Tokens.Global, Tokens.Kind},
 		parents			= { Case.class, Else.class, For.class, ForEach.class, If.class,

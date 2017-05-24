@@ -33,7 +33,6 @@ import java.util.List;
 							"#Break \n" +
 							"#EndIf \n" +
 							"#EndFor#}}",
-		seeAlso 		= "For, While, {{@Continue@}}",
 		shouldContain 	= { Tokens.Break },
 		mayContain 		= { Tokens.Off, Tokens.RepOff },
 		parents			= { Case.class, Else.class, For.class, ForEach.class, If.class,
