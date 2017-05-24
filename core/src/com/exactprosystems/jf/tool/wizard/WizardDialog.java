@@ -1,7 +1,6 @@
 package com.exactprosystems.jf.tool.wizard;
 
 import com.exactprosystems.jf.api.wizard.Wizard;
-import com.exactprosystems.jf.api.wizard.WizardResult;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.CssVariables;
 import com.exactprosystems.jf.tool.helpers.DialogsHelper;
@@ -14,7 +13,7 @@ import javafx.scene.control.Dialog;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
 
-public class WizardDialog extends Dialog<WizardResult>
+public class WizardDialog extends Dialog<Boolean>
 {
 	private Wizard wizard;
 	private BorderPane borderPane;
@@ -90,14 +89,12 @@ public class WizardDialog extends Dialog<WizardResult>
 
 		Button wizardOk = new Button("Accept");
 		wizardOk.setOnAction(e -> {
-			//TODO it's correctyly?
-			WizardResult run = this.wizard.run();
-			this.setResult(run);
+			this.setResult(true);
 			this.close();
 		});
 		Button wizardClose = new Button("Close");
 		wizardClose.setOnAction(e -> {
-			this.setResult(WizardResult.deny());
+			this.setResult(false);
 			this.close();
 		});
 
