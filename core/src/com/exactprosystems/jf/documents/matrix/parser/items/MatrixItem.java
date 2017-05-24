@@ -294,7 +294,7 @@ public abstract class MatrixItem implements IMatrixItem, Mutable, Cloneable
     //==========================================================================================================================
 	// Public members
 	//==========================================================================================================================
-	public final void init(Matrix owner) throws MatrixException
+	public final void init(Matrix owner)
 	{
 		this.owner 			= owner;
 		for (MatrixItem child : this.children)
