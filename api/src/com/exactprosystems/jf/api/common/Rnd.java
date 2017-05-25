@@ -41,6 +41,17 @@ public class Rnd
 		return rnd(from, to, 1);
 	}
 
+	@DescriptionAttribute(text = "Generates random String with chars from @donor and length equals @length")
+	public static String generateString (@FieldParameter(name = "donor") String donor, @FieldParameter(name = "length") int length)
+	{
+		char[] text = new char[length];
+		for (int i = 0; i < length; i++)
+		{
+			text[i] = donor.charAt(random.nextInt(donor.length()));
+		}
+		return new String(text);
+	}
+
 	private static Random random = null;
 
 	static
