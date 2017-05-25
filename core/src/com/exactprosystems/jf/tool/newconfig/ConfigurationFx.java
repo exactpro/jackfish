@@ -359,7 +359,7 @@ public class ConfigurationFx extends Configuration
 
 	public void renameMatrix(File file) throws Exception
 	{
-		String newName = ConfigurationTreeView.showInputDialog("Enter new name:").orElse(null);
+		String newName = ConfigurationTreeView.showInputDialog("Enter new name:", file.getName()).orElse(null);
 		if (newName != null)
 		{
 			String newFilePath = getNewFilePath(file, newName);

@@ -197,7 +197,7 @@ public class MatrixParametersContextMenu extends MatrixContextMenu
 
 	private MatrixItem getActionItem(Event event)
 	{
-		if (this.row != null)
+		if (this.row != null && !(event instanceof KeyEvent))
 		{
 			return this.row.getItem();
 		}

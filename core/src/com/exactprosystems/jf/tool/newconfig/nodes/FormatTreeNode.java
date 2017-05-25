@@ -49,7 +49,7 @@ public class FormatTreeNode extends TreeNode
 	public Optional<ContextMenu> contextMenu()
 	{
 		ContextMenu contextMenu = ConfigurationTreeView.add("Add format",
-				e -> ConfigurationTreeView.showInputDialog("Enter new format").ifPresent(
+				e -> ConfigurationTreeView.showInputDialog("Enter new format", "").ifPresent(
 						res -> Common.tryCatch(() -> this.model.addNewAdditionalFormat(res), "Error on add new format")
 				));
 		contextMenu.getItems().addAll(

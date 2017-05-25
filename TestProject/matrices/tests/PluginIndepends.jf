@@ -1,0 +1,137 @@
+#TestCase;#Kind;#Depends;#For
+prepare;;;
+    #Id;#SubCase;app;dialog
+    checkWait;;APPSTR1.Out;dialog
+        #Action;#Assert;$Dialog;$AppConnection;buttonShowArea;buttonHideArea;$DoNotClose
+        DialogFill;This.Out.buttonHideArea == true;dialog;app;Do.push().delay(1000);Do.isVisible();true
+
+        #Action;$Dialog;$AppConnection;buttonHideArea
+        DialogFill;dialog;app;Do.push()
+
+    #EndSubCase
+
+
+#TestCase;#Kind;#Depends;#For
+Test waitTo(Dis)Apper with ref;Never;;
+    #Id;#Let
+    dialog;'DialogForTestWaitWithRef'
+
+    #Id;#Let
+    apps;[]
+
+    #Step;#Kind;#For;#Depends
+    'web';;;
+        #Id;#Action;$AppId;Browser;URL
+        APPSTR1;ApplicationStart;mockWebApp;mockWebBrowser;mockWebURL
+
+        #Id;#Let
+        add;apps.add(APPSTR1.Out)
+
+        #Call;app;dialog
+        checkWait;APPSTR1.Out;dialog
+
+        #Id;#Action;$AppConnection
+        APPSTP2;ApplicationStop;APPSTR1.Out
+
+        #Id;#Let
+        remove;apps.remove(APPSTR1.Out)
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'win';;;
+        #If
+        Sys.osName().startsWith('Win')
+        #EndIf
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'swing';;;
+        #Id;#Action;$AppId;Jar;MainClass
+        APPSTR1;ApplicationStart;'SWING';mockSwingJar;mockSwingClass
+
+        #Id;#Let
+        add;apps.add(APPSTR1.Out)
+
+        #Call;app;dialog
+        checkWait;APPSTR1.Out;dialog
+
+        #Action;$AppConnection
+        ApplicationStop;APPSTR1.Out
+
+        #Id;#Let
+        remove;apps.remove(APPSTR1.Out)
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'close apps';;;
+        #ForEach;#In
+        app;apps
+            #Id;#Action;$AppConnection;$Kill
+            APPSTP1;ApplicationStop;app;true
+
+        #EndForEach
+
+    #EndStep
+
+
+#TestCase;#Kind;#Depends;#For
+Test waitTo(Dis)Apper without ref;Never;;
+    #Id;#Let
+    dialog;'DialogForTestWaitWithoutRef'
+
+    #Id;#Let
+    apps;[]
+
+    #Step;#Kind;#For;#Depends
+    'web';;;
+        #Id;#Action;$AppId;Browser;URL
+        APPSTR1;ApplicationStart;mockWebApp;mockWebBrowser;mockWebURL
+
+        #Id;#Let
+        add;apps.add(APPSTR1.Out)
+
+        #Call;app;dialog
+        checkWait;APPSTR1.Out;dialog
+
+        #Id;#Action;$AppConnection
+        APPSTP2;ApplicationStop;APPSTR1.Out
+
+        #Id;#Let
+        remove;apps.remove(APPSTR1.Out)
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'swing';;;
+        #Id;#Action;$AppId;Jar;MainClass
+        APPSTR1;ApplicationStart;'SWING';mockSwingJar;mockSwingClass
+
+        #Id;#Let
+        add;apps.add(APPSTR1.Out)
+
+        #Call;app;dialog
+        checkWait;APPSTR1.Out;dialog
+
+        #Action;$AppConnection
+        ApplicationStop;APPSTR1.Out
+
+        #Id;#Let
+        remove;apps.remove(APPSTR1.Out)
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'close apps';;;
+        #ForEach;#In
+        app;apps
+            #Id;#Action;$AppConnection;$Kill
+            APPSTP1;ApplicationStop;app;true
+
+        #EndForEach
+
+    #EndStep
+
+

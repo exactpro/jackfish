@@ -132,6 +132,30 @@ Test;CheckMockWin;;;
     runMatrix;'checkWIN'
 
 
+#Id;#TestCase;#Kind;#Depends;#For
+Test;Check plugin independs matrix;;;
+    #Call;testName
+    runMatrix;'PluginIndepends'
+
+
+#Id;#TestCase;#Kind;#Depends;#For
+Test;Check web plugin;;;
+    #Call;testName
+    runMatrix;'WebPlugin'
+
+
+#Id;#TestCase;#Kind;#Depends;#For
+Test;Check swing plugin;;;
+    #Call;testName
+    runMatrix;'SwingPlugin'
+
+
+#Id;#TestCase;#Kind;#Depends;#For
+Test;Check win plugin;;;
+    #Call;testName
+    runMatrix;'WinPlugin'
+
+
 // 
 #Id;#TestCase;#Kind;#Depends;#For
 REPORT;Cleanup;;;
@@ -146,7 +170,7 @@ REPORT;Cleanup;;;
     TBLSLCT1.Out.size() == 0;'There are fails in the tests'
 
     #Id;#SubCase;testName
-    runMatrix;Running test;'Matrix'
+    runMatrix;Running test;'WinPlugin'
         #Id;#Action;$Matrix
         MXRN1;MatrixRun;matrixTestsPath + testName +  '.jf'
 
@@ -160,6 +184,5 @@ REPORT;Cleanup;;;
         TableUnion;RESTBL2.Out;RESTBL1.Out
 
     #EndSubCase
-
 
 

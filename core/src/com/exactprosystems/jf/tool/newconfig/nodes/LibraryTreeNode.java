@@ -82,7 +82,7 @@ public class LibraryTreeNode extends TreeNode
 					.map(Common::getRelativePath)
 					.map(MenuItem::new)
 					.peek(item -> item.setOnAction(
-							e -> ConfigurationTreeView.showInputDialog("Enter new name")
+							e -> ConfigurationTreeView.showInputDialog("Enter new name", "")
 									.ifPresent(name -> Common.tryCatch(() -> this.model.addNewLibrary(new File(item.getText()), name),
 											"Error on create new library")
 									)

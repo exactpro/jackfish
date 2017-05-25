@@ -58,7 +58,7 @@ public class ClientTreeNode extends TreeNode
 	{
 		ContextMenu menu = ConfigurationTreeView.add(
 				"Add client",
-				e -> ConfigurationTreeView.showInputDialog("Enter new client name").ifPresent(
+				e -> ConfigurationTreeView.showInputDialog("Enter new client name", "").ifPresent(
 						res -> Common.tryCatch(() -> this.model.addNewClientEntry(res), "Error on add new client")));
 		menu.getItems().addAll(
 				ConfigurationTreeView.createItem(TEST_VERSION, () -> this.model.testClientVersion(), "Error on test app version"),
