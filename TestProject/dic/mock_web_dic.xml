@@ -114,4 +114,36 @@
         <onClose/>
         <close/>
     </window>
+    <window name="DialogForTestWaitWithRef">
+        <self>
+            <panel id="owner" uid="divWithWait"/>
+        </self>
+        <onOpen>
+            <wait owner="owner" ref="buttonShowArea" addition="WaitToAppear" timeout="5000"/>
+        </onOpen>
+        <run>
+            <button id="buttonShowArea" uid="showButton" owner="owner"/>
+            <button id="buttonHideArea" uid="hideButton" owner="owner"/>
+        </run>
+        <onClose>
+            <wait owner="owner" ref="buttonHideArea" addition="WaitToDisappear" timeout="5000"/>
+        </onClose>
+        <close/>
+    </window>
+    <window name="DialogForTestWaitWithoutRef">
+        <self>
+            <panel id="owner" uid="divWithWait"/>
+        </self>
+        <onOpen>
+            <wait uid="showButton" owner="owner" addition="WaitToAppear" timeout="5000"/>
+        </onOpen>
+        <run>
+            <button id="buttonShowArea" uid="showButton" owner="owner"/>
+            <button id="buttonHideArea" uid="hideButton" owner="owner"/>
+        </run>
+        <onClose>
+            <wait uid="hideButton" owner="owner" addition="WaitToDisappear" timeout="5000"/>
+        </onClose>
+        <close/>
+    </window>
 </dictionary>

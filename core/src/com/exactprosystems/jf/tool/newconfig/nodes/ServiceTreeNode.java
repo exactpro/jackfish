@@ -50,7 +50,7 @@ public class ServiceTreeNode extends TreeNode
 	public Optional<ContextMenu> contextMenu()
 	{
 		ContextMenu menu = ConfigurationTreeView.add("Add service",
-				e -> ConfigurationTreeView.showInputDialog("Enter new service name")
+				e -> ConfigurationTreeView.showInputDialog("Enter new service name", "")
 						.ifPresent(res -> Common.tryCatch(() -> this.model.addNewServiceEntry(res), "Error on add new service")));
 		menu.getItems().addAll(
 				ConfigurationTreeView.createItem(TEST_VERSION, () -> this.model.testServiceVersion(), "Error on test service version"),

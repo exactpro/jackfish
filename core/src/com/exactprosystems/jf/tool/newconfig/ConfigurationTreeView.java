@@ -101,9 +101,9 @@ public class ConfigurationTreeView extends TreeView<TreeNode>
 		});
 	}
 
-	public static Optional<String> showInputDialog(String headerText)
+	public static Optional<String> showInputDialog(String headerText, String initValue)
 	{
-		Dialog<String> dialog = new TextInputDialog();
+		Dialog<String> dialog = new TextInputDialog(initValue);
 		dialog.setHeaderText(headerText);
 		return dialog.showAndWait();
 	}

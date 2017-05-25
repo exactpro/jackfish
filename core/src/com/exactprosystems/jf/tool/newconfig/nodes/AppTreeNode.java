@@ -57,7 +57,7 @@ public class AppTreeNode extends TreeNode
 	public Optional<ContextMenu> contextMenu()
 	{
 		ContextMenu menu = ConfigurationTreeView.add("Add new app",
-				e -> ConfigurationTreeView.showInputDialog("Enter new app name")
+				e -> ConfigurationTreeView.showInputDialog("Enter new app name", "")
 						.ifPresent(res -> Common.tryCatch(() -> this.model.addNewAppEntry(res), "Error on add new application")));
 		menu.getItems().addAll(
 				ConfigurationTreeView.createItem(TEST_VERSION, () -> this.model.testAppVersion(), "Error on test app version"),

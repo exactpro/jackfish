@@ -70,6 +70,7 @@ public class MockApp
 		createPanelSplitPane();
 		createPanelAny();
 		createPanelWithDisableComponents();
+		createPanelWithHiddenArea();
 
 		this.frame.setSize(new Dimension(800, 800));
 		this.frame.setVisible(true);
@@ -165,6 +166,27 @@ public class MockApp
 		panel.add(textField);
 
 		createPanel("panelPanel").add(panel);
+	}
+
+	private void createPanelWithHiddenArea()
+	{
+		JPanel panel = new JPanel();
+		JPanel hiddenPanel = new JPanel();
+
+		JButton buttonShowArea = new JButton("Show area");
+		buttonShowArea.setName("showButton");
+		JButton buttonHideArea = new JButton("Hide area");
+		buttonHideArea.setName("hideButton");
+
+		hiddenPanel.add(buttonHideArea);
+		panel.add(buttonShowArea);
+		panel.add(hiddenPanel);
+
+		hiddenPanel.setVisible(false);
+
+		buttonShowArea.addActionListener(event -> hiddenPanel.setVisible(true));
+		buttonHideArea.addActionListener(event -> hiddenPanel.setVisible(false));
+		createPanel("panelWithHiddenArea").add(panel);
 	}
 
 	private JMenuBar createMenu()

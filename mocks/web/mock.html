@@ -77,6 +77,19 @@
 	document.addEventListener('DOMContentLoaded', function () {
 		document.querySelector('#checkbox').addEventListener('change', function(e) {console.log(e)});
 	});
+
+	var showArea = function(flag) {
+		if (flag) {
+			$("#hiddenDiv").show();
+		} else {
+			$("#hiddenDiv").hide();
+		}
+	};
+
+	$(document).ready(function(e) {
+		$("#hiddenDiv").hide();
+	});
+
 	</script>
 </head>
 <body onload="addAllListeners()">
@@ -289,6 +302,13 @@
 
 <div id="divImageIDE">
     <img src="ide.png" alt="Test Image" id="imageIDE" name="ImageIDE" class="add_listener" kindname="ImageIDE" func="123456" />
+</div>
+
+<div id="divWithWait">
+	<button id="showButton" onclick="showArea(true)">Click me for show hidden area</button>
+	<div id="hiddenDiv">
+		<button id="hideButton" onclick="showArea(false)">Click me for hide showing area</button>
+	</div>
 </div>
 
 </body>

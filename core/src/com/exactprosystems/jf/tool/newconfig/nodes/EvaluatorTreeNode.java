@@ -42,7 +42,7 @@ public class EvaluatorTreeNode extends TreeNode
 	public Optional<ContextMenu> contextMenu()
 	{
 		ContextMenu contextMenu = ConfigurationTreeView.add("Add import",
-				e -> ConfigurationTreeView.showInputDialog("Enter new import").ifPresent(
+				e -> ConfigurationTreeView.showInputDialog("Enter new import", "").ifPresent(
 						res -> Common.tryCatch(() -> this.model.addNewEvaluatorImport(res), "Error on add new import")
 				));
 		contextMenu.getItems().addAll(
