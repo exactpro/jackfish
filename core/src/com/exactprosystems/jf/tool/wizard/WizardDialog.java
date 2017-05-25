@@ -8,8 +8,6 @@
 
 package com.exactprosystems.jf.tool.wizard;
 
-import java.util.Date;
-
 import com.exactprosystems.jf.api.wizard.Wizard;
 import com.exactprosystems.jf.common.documentation.DocumentationBuilder;
 import com.exactprosystems.jf.common.report.ContextHelpFactory;
@@ -25,112 +23,128 @@ import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonBar;
 import javafx.scene.control.Dialog;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
 
+import java.util.Date;
+
 public class WizardDialog extends Dialog<Boolean>
 {
-    private Wizard     wizard;
-    private BorderPane borderPane;
+	private Wizard     wizard;
+	private BorderPane borderPane;
 
-    public WizardDialog(Wizard wizard, Context context)
-    {
-        super();
-        this.wizard = wizard;
-        this.setTitle(wizard.manager().nameOf(wizard.getClass()));
-        this.setResizable(true);
-        this.initOwner(Common.node);
-        this.getDialogPane().getStylesheets().addAll(Common.currentThemesPaths());
-        Common.addIcons((Stage) this.getDialogPane().getScene().getWindow());
-        this.getDialogPane().setMinHeight(300.0);
-        this.getDialogPane().setMinWidth(300.0);
+	public WizardDialog(Wizard wizard, Context context)
+	{
+		super();
+		this.wizard = wizard;
+		this.setTitle(wizard.manager().nameOf(wizard.getClass()));
+		this.setResizable(true);
+		this.initOwner(Common.node);
+		this.getDialogPane().getStylesheets().addAll(Common.currentThemesPaths());
+		Stage stage = ((Stage) this.getDialogPane().getScene().getWindow());
+		Common.addIcons(stage);
+		stage.setOnCloseRequest(event -> {
+			this.setResult(false);
+			this.close();
+		});
+		stage.setMinHeight(350.0);
+		stage.setMinWidth(350.0);
 
-        createContent(context);
-    }
+		this.getDialogPane().setMinSize(300.0, 300.0);
 
-    public BorderPane getPane()
-    {
-        return this.borderPane;
-    }
+		createContent(context);
+	}
 
-    // region private methods
-    private void createContent(Context context)
-    {
-        this.borderPane = new BorderPane();
-        BorderPane mainPane = new BorderPane();
-        this.getDialogPane().setContent(mainPane);
-        mainPane.setCenter(this.borderPane);
+	public BorderPane getPane()
+	{
+		return this.borderPane;
+	}
 
-        // region hide button bar
-        Node lookup = this.getDialogPane().lookup(".button-bar");
-        if (lookup instanceof ButtonBar)
-        {
-            ButtonBar buttonBar = (ButtonBar) lookup;
-            buttonBar.setPrefHeight(0.0);
-            buttonBar.setMinHeight(0.0);
-            buttonBar.setMaxHeight(0.0);
-            buttonBar.setVisible(false);
-        }
-        // endregion
+	// region private methods
+	private void createContent(Context context)
+	{
+		this.borderPane = new BorderPane();
 
-        GridPane gridPane = new GridPane();
-        RowConstraints r0 = new RowConstraints();
-        r0.setMaxHeight(30.0);
-        r0.setMinHeight(30.0);
-        r0.setPrefHeight(30.0);
+		BorderPane borderPane = new BorderPane();
+		ScrollPane scrollPane = new ScrollPane(this.borderPane);
+		scrollPane.setFitToHeight(true);
+		scrollPane.setFitToWidth(true);
+		this.getDialogPane().setContent(borderPane);
+		borderPane.setCenter(scrollPane);
 
-        gridPane.getRowConstraints().add(r0);
+		// region hide button bar
+		Node lookup = this.getDialogPane().lookup(".button-bar");
+		if (lookup instanceof ButtonBar)
+		{
+			ButtonBar buttonBar = (ButtonBar) lookup;
+			buttonBar.setPrefHeight(0.0);
+			buttonBar.setMinHeight(0.0);
+			buttonBar.setMaxHeight(0.0);
+			buttonBar.setVisible(false);
+		}
+		// endregion
 
-        ColumnConstraints c0 = new ColumnConstraints();
-        c0.setPercentWidth(30);
-        c0.setMinWidth(40);
-        c0.setHalignment(HPos.LEFT);
+		GridPane gridPane = new GridPane();
 
-        ColumnConstraints c1 = new ColumnConstraints();
-        c1.setPercentWidth(70);
-        c1.setHalignment(HPos.RIGHT);
+		RowConstraints r1 = new RowConstraints();
+		r1.setMaxHeight(30.0);
+		r1.setMinHeight(30.0);
+		r1.setPrefHeight(30.0);
 
-        gridPane.getColumnConstraints().addAll(c0, c1);
+		gridPane.getRowConstraints().addAll(r1);
 
-        Button wizardHelp = new Button("Help");
-        Common.customizeLabeled(wizardHelp, CssVariables.TRANSPARENT_BACKGROUND, CssVariables.Icons.ACTIONS_HELP_ICON);
-        wizardHelp.setOnAction(event ->
-        {
-            try
-            {
-                String name = this.wizard.manager().nameOf(this.wizard.getClass());
-                ReportBuilder report = new ContextHelpFactory().createReportBuilder(null, null, new Date());
-                MatrixItem help = DocumentationBuilder.createHelpForWizard(report, context, this.wizard.getClass());
-                DialogsHelper.showHelpDialog(context, name, report, help);
-            }
-            catch (Exception e)
-            {
-                DialogsHelper.showError(e.getMessage());
-            }
-        });
+		ColumnConstraints c0 = new ColumnConstraints();
+		c0.setFillWidth(true);
+		c0.setPercentWidth(30);
+		c0.setMinWidth(40);
+		c0.setHalignment(HPos.LEFT);
 
-        gridPane.add(wizardHelp, 0, 0);
-        mainPane.setBottom(gridPane);
+		ColumnConstraints c1 = new ColumnConstraints();
+		c1.setPercentWidth(70);
+		c1.setHalignment(HPos.RIGHT);
 
-        Button wizardOk = new Button("Accept");
-        wizardOk.setOnAction(e ->
-        {
-            this.setResult(true);
-            this.close();
-        });
-        Button wizardClose = new Button("Close");
-        wizardClose.setOnAction(e ->
-        {
-            this.setResult(false);
-            this.close();
-        });
+		gridPane.getColumnConstraints().addAll(c0, c1);
 
-        HBox box = new HBox();
-        box.setAlignment(Pos.CENTER_RIGHT);
-        GridPane.setHgrow(box, Priority.ALWAYS);
-        box.getChildren().addAll(wizardClose, Common.createSpacer(Common.SpacerEnum.HorizontalMid), wizardOk);
-        gridPane.add(box, 1, 0);
+		Button wizardHelp = new Button("Help");
+		Common.customizeLabeled(wizardHelp, CssVariables.TRANSPARENT_BACKGROUND, CssVariables.Icons.ACTIONS_HELP_ICON);
+		wizardHelp.setOnAction(event ->
+		{
+			try
+			{
+				String name = this.wizard.manager().nameOf(this.wizard.getClass());
+				ReportBuilder report = new ContextHelpFactory().createReportBuilder(null, null, new Date());
+				MatrixItem help = DocumentationBuilder.createHelpForWizard(report, context, this.wizard.getClass());
+				DialogsHelper.showHelpDialog(context, name, report, help);
+			}
+			catch (Exception e)
+			{
+				DialogsHelper.showError(e.getMessage());
+			}
+		});
 
-    }
-    // endregion
+		gridPane.add(wizardHelp, 0, 1);
+		borderPane.setBottom(gridPane);
+
+		Button wizardOk = new Button("Accept");
+		wizardOk.setOnAction(e ->
+		{
+			this.setResult(true);
+			this.close();
+		});
+		Button wizardClose = new Button("Close");
+		wizardClose.setOnAction(e ->
+		{
+			this.setResult(false);
+			this.close();
+		});
+
+		HBox box = new HBox();
+		box.setAlignment(Pos.CENTER_RIGHT);
+		GridPane.setHgrow(box, Priority.ALWAYS);
+		box.getChildren().addAll(wizardClose, Common.createSpacer(Common.SpacerEnum.HorizontalMid), wizardOk);
+		gridPane.add(box, 1, 1);
+
+	}
+	// endregion
 }

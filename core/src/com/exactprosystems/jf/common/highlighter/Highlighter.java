@@ -2,8 +2,11 @@ package com.exactprosystems.jf.common.highlighter;
 
 import com.exactprosystems.jf.actions.ActionsList;
 import com.exactprosystems.jf.documents.matrix.parser.Tokens;
+import gherkin.GherkinDialect;
+import gherkin.GherkinDialectProvider;
 
 import java.util.*;
+import java.util.function.Function;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -248,6 +251,44 @@ public enum Highlighter
 			map.put("SEMICOLON", "semicolon");
 			map.put("STRING", "string");
 			map.put("STRING2", "string");
+			return map;
+		}
+	},
+
+	Gherkin
+	{
+		private GherkinDialect dialect = new GherkinDialectProvider().getDefaultDialect();
+
+		private List<String> quote(List<String> list, Function<String, String> mapper)
+		{
+			return list.stream().map(mapper).map(Pattern::quote).collect(Collectors.toList());
+		}
+
+		private final String FUTURE_PATTERN = "(" + String.join("|", quote(dialect.getFeatureKeywords(), s -> s + ":")) + ")\\b";
+		private final String SCENARIO_PATTERN = "(" + String.join(":|", quote(dialect.getScenarioKeywords(), s -> s + ":")) + ")\\b";
+		private final String STEPS_PATTERN = "^\\s+(" + String.join("|", quote(dialect.getStepKeywords(), Function.identity())) + ")\\b";
+
+		@Override
+		protected Map<String, String> groupPatternMap()
+		{
+			Map<String, String> map = new HashMap<>();
+
+			map.put("FUTURE", FUTURE_PATTERN);
+			map.put("SCENARIO", SCENARIO_PATTERN);
+			map.put("STEPS", STEPS_PATTERN);
+
+			return map;
+		}
+
+		@Override
+		protected Map<String, String> groupStyleMap()
+		{
+			Map<String, String> map = new HashMap<>();
+
+			map.put("FUTURE", "keyword");
+			map.put("SCENARIO", "comment");
+			map.put("STEPS", "tagmark");
+
 			return map;
 		}
 	};
