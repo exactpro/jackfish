@@ -9,15 +9,16 @@
 package com.exactprosystems.jf.tool.wizard.all;
 
 import com.exactprosystems.jf.api.common.IContext;
-import com.exactprosystems.jf.api.wizard.*;
-import com.exactprosystems.jf.documents.matrix.Matrix;
+import com.exactprosystems.jf.api.wizard.WizardAttribute;
+import com.exactprosystems.jf.api.wizard.WizardCategory;
+import com.exactprosystems.jf.api.wizard.WizardCommand;
+import com.exactprosystems.jf.api.wizard.WizardManager;
 import com.exactprosystems.jf.documents.matrix.parser.Tokens;
 import com.exactprosystems.jf.documents.matrix.parser.items.CommentString;
 import com.exactprosystems.jf.documents.matrix.parser.items.MatrixItem;
 import com.exactprosystems.jf.tool.matrix.MatrixFx;
 import com.exactprosystems.jf.tool.wizard.AbstractWizard;
 import com.exactprosystems.jf.tool.wizard.CommandBuilder;
-
 import javafx.scene.control.Button;
 import javafx.scene.layout.BorderPane;
 
@@ -70,7 +71,7 @@ public class SmallWizard extends AbstractWizard
             List<WizardCommand> commands = CommandBuilder
                     .start()
                     .addMatrixItem(this.currentMatrix, this.parentItem, let1, this.index)
-                    .addMatrixItem(this.currentMatrix, this.parentItem, let2, this.index)
+                    .addMatrixItem(this.currentMatrix, this.parentItem, let2, ++this.index)
 //                    .addMatrixItem(this.currentMatrix, this.parentItem, let3, this.index)
 //                    .removeMatrixItem(this.currentMatrix, this.currentItem, 5)
                     .build();
