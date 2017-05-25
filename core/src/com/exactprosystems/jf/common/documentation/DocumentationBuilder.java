@@ -50,7 +50,7 @@ public class DocumentationBuilder
     {
         AbstractEvaluator evaluator = context.getEvaluator();
         
-        MatrixItem help = new HelpChapter("\\huge {{*JackFish*}}", 1); //todo
+        MatrixItem help = new HelpChapter("\\huge {{*JackFish*}}", 1);
 
         String[][] table1 = new String[][]
                 {
@@ -77,9 +77,13 @@ public class DocumentationBuilder
         addChapter(help, "\\Large {{*Abbreviations*}}", 1);
         addTable(help, "", table3, new int[] { 50, 50 },  evaluator);
 
-//        addChapter(help, "Introduction", 2);
+        //todo table of contents
+//        addChapter(help, "", 4);
+//        addChapter(help, " {{toc}}", 4);
+
+        addChapter(help, "", 4);
         addText(help, DocumentationBuilder.class.getResourceAsStream("intro1.txt"));
-//        addPicture(help, "Architecture", DocumentationBuilder.class.getResourceAsStream("Intro.png"));
+        addPicture(help, "Architecture", DocumentationBuilder.class.getResourceAsStream("Intro.png"));
 //        addText(help, DocumentationBuilder.class.getResourceAsStream("intro2.txt"));
 //        addChapter(help, "MVEL", 3);
 //        addText(help, DocumentationBuilder.class.getResourceAsStream("mvel.txt"));

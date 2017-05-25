@@ -17,6 +17,7 @@
 %% \usepackage[colorinlistoftodos]{todonotes}
 \usepackage[colorlinks=true, bookmarks=true, allcolors=blue]{hyperref}
 
+\usepackage{lastpage} %%can't use it? just install package texlive-latex-extra
 \usepackage{fancyhdr}
 
 \pagestyle{fancy}
@@ -24,31 +25,14 @@
 \rhead{MAGIC PICTURE(COMING SOON)}
 \lhead{CONFIDENTIAL}
 \lfoot{JackFish. User Guide}
-\rfoot{Page \thepage}
+\rfoot{Page \thepage\ of \pageref{LastPage}}
 \renewcommand{\headrulewidth}{0pt}
 \renewcommand{\footrulewidth}{0pt}
 
 \usepackage[dvipsnames]{xcolor}
-\usepackage{lipsum}
 
-\newlength{\seplinewidth}
-\newlength{\seplinesep}
-\setlength{\seplinewidth}{1mm}
-\setlength{\seplinesep}{2mm}
-\colorlet{sepline}{BurntOrange}
-\newcommand*{\sepline}{
-  \par
-  \vspace{\dimexpr\seplinesep+.5\parskip}
-  \cleaders\vbox{
-    \begingroup
-      \color{sepline}
-      \hrule width\linewidth height\seplinewidth
-    \endgroup
-  }\vskip\seplinewidth
-  \vspace{\dimexpr\seplinesep-.5\parskip}
-}
-
-%%use \sepline for printing colored line
+\newcommand\crule[3][black]{\textcolor{#1}{\rule{#2}{#3}}} %%do you want colored rectangle? use it!
+%% example: \crule[COLORNAME]{width}{height}
 
 \begin{document}
 

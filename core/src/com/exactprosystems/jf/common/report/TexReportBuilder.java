@@ -217,11 +217,11 @@ public class TexReportBuilder extends ReportBuilder
 	protected void reportImage(ReportWriter writer, MatrixItem item, String beforeTestcase, String fileName, String title, Boolean asLink) throws IOException
 	{
 	    title = replaseQoutesToBrases(title);
-        writer.fwrite("\\includegraphics[width=0.3\\textwidth]{%s}", fileName.replace("/", "")).newline();
-        if (!Str.IsNullOrEmpty(title))
+        writer.fwrite("\\includegraphics[width=0.9\\textwidth]{%s}", fileName.replace("/", "")).newline();
+        /*if (!Str.IsNullOrEmpty(title))
         {
 			writer.fwrite("\\caption{%s}", title).newline();
-		}
+		}*/
 	}
 
 	@Override
@@ -235,8 +235,10 @@ public class TexReportBuilder extends ReportBuilder
 	protected void tableHeader(ReportWriter writer, ReportTable table, String tableTitle, String[] columns, int[] percents) throws IOException
 	{
 	    tableTitle = replaseQoutesToBrases(tableTitle);
-	    
-		writer.fwrite("\\begin{longtable}[h]{lp{0.7\\linewidth}}").newline();
+	    double constant = 0.9;
+
+	    writer.fwrite("\\begin{center}").newline();
+		writer.fwrite(String.format("\\begin{longtable}[h]{lp{%s\\linewidth}}", constant)).newline();
 		if (!Str.IsNullOrEmpty(tableTitle))
 		{
 			writer.fwrite("\\caption{%s} \\newline", tableTitle).newline();
@@ -244,7 +246,7 @@ public class TexReportBuilder extends ReportBuilder
 		
 		String tab = IntStream.range(0, columns.length)
 		        .mapToObj(i -> i)
-		        .map(o -> (percents.length <= o ? "l" : "p{" + (percents[o] * TEXT_WIDTH / 100) + "mm}"))
+		        .map(o -> (percents.length <= o ? "l" : "p{" + (percents[o] * TEXT_WIDTH * constant/ 100) + "mm}"))
 		        .collect(Collectors.joining("|"));
 
 		writer.fwrite("\\begin{tabular}{|%s|} \\hline", tab).newline();
@@ -265,7 +267,8 @@ public class TexReportBuilder extends ReportBuilder
 	protected void tableFooter(ReportWriter writer, ReportTable table) throws IOException
 	{
 		writer.fwrite("\\end{tabular}").newline()
-		    .fwrite("\\end{longtable}").newline();
+		    .fwrite("\\end{longtable}").newline()
+			.fwrite("\\end{center}").newline();
 	}
 
 	@Override
