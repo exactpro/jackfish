@@ -65,9 +65,8 @@ public class LinkedProperties extends Properties
 	public void store(Writer writer, String comments) throws IOException
 	{
 		BufferedWriter bw = (writer instanceof BufferedWriter) ? (BufferedWriter) writer : new BufferedWriter(writer);
-		bw.write("#" + new Date().toString());
-		bw.newLine();
-		synchronized (this) {
+		synchronized (this)
+		{
 			for (Map.Entry<Object, Object> entry : linkMap.entrySet())
 			{
 				bw.write(entry.getKey() + "=" + entry.getValue());

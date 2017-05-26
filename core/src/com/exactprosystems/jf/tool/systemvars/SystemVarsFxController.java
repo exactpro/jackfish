@@ -118,8 +118,10 @@ public class SystemVarsFxController implements Initializable, ContainingParent
 		this.tableView.completeFirstColumn("Name", "name", true, false);
 		this.tableView.completeSecondColumn("Expression", "expression", true, false);
 		this.tableView.completeThirdColumn("Value", "valueAsString", false, true);
-		this.tableView.onFinishEditFirstColumn((par, value) -> { this.model.updateNameRow(current(), value); });
-		this.tableView.onFinishEditSecondColumn((par, value) -> { this.model.updateExpressionRow(current(), value); });
+		this.tableView.completeFourthColumn("Description", "description", true, true);
+		this.tableView.onFinishEditFirstColumn((par, value) -> this.model.updateNameRow(current(), value));
+		this.tableView.onFinishEditSecondColumn((par, value) -> this.model.updateExpressionRow(current(), value));
+		this.tableView.onFinishEditFourthColumn((par, varlue) -> this.model.updateDescriptionRow(current(), varlue));
 		this.tableView.setRowFactory((v) -> new ColorRow());
 		this.tableView.setSortable(false);
 	}
