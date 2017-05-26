@@ -8,18 +8,18 @@
 
 package com.exactprosystems.jf.documents.matrix.parser;
 
-import com.exactprosystems.jf.actions.AbstractAction;
 import com.exactprosystems.jf.api.app.Mutable;
 import com.exactprosystems.jf.api.common.Converter;
 import com.exactprosystems.jf.api.common.Str;
+import com.exactprosystems.jf.common.MutableString;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.documents.matrix.parser.items.MatrixItem;
 import com.exactprosystems.jf.documents.matrix.parser.items.TypeMandatory;
 import com.exactprosystems.jf.documents.matrix.parser.listeners.IMatrixListener;
+import org.apache.log4j.Logger;
 
 import java.lang.reflect.Array;
-
-import org.apache.log4j.Logger;
+import java.util.Optional;
 
 public class Parameter implements Mutable, Cloneable, Setter<String>, Getter<String>
 {
@@ -35,6 +35,21 @@ public class Parameter implements Mutable, Cloneable, Setter<String>, Getter<Str
 		this.changed = false;
 	}
 
+	public void setDescription(String description)
+	{
+		if (this.description == null)
+		{
+			this.description = new MutableString();
+		}
+		this.description.set(description);
+		this.changed = true;
+	}
+
+	public String getDescription()
+	{
+		return Optional.ofNullable(this.description).map(MutableString::get).orElse(null);
+	}
+
 	public void setAll(Parameter parameter)
 	{
 		this.setExpression(parameter.expression);
@@ -44,6 +59,7 @@ public class Parameter implements Mutable, Cloneable, Setter<String>, Getter<Str
 		this.value = parameter.value;
 		setString(this.value);
 		this.isValid = parameter.isValid;
+		this.description = new MutableString(parameter.getDescription());
 	}
 
 	@Override
@@ -57,6 +73,7 @@ public class Parameter implements Mutable, Cloneable, Setter<String>, Getter<Str
 		clone.expression = expression;
 		clone.compiled = compiled;
 		clone.changed = changed;
+		clone.description = description;
 
 		return clone;
 	}
@@ -88,7 +105,10 @@ public class Parameter implements Mutable, Cloneable, Setter<String>, Getter<Str
 	
 	public boolean matches(String what, boolean caseSensitive, boolean wholeWord)
 	{
-		return SearchHelper.matches(this.name, what, caseSensitive, wholeWord) || SearchHelper.matches(this.expression, what, caseSensitive, wholeWord);
+		return SearchHelper.matches(this.name, what, caseSensitive, wholeWord)
+				|| SearchHelper.matches(this.expression, what, caseSensitive, wholeWord)
+				|| SearchHelper.matches(getDescription(), what, caseSensitive, wholeWord)
+				;
 	}
 
 	public void setExpression(String expression)
@@ -275,6 +295,8 @@ public class Parameter implements Mutable, Cloneable, Setter<String>, Getter<Str
         	logger.error(e.getMessage(), e);
         }
     }
+
+    private MutableString description;
 
 	private String name;
 	String expression;

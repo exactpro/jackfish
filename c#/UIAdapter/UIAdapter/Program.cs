@@ -1119,6 +1119,17 @@ namespace UIAdapter
             return element.GetCurrentPropertyValue(AutomationElement.IsEnabledProperty).ToString();
         }
 
+        [DllExport("elementIsVisible", CallingConvention.Cdecl)]
+        public static string ElementIsVisible(String inid)
+        {
+            long startMethod = getMilis();
+            int[] id = stringToIntArray(inid);
+            UpdateHandler();
+            AutomationElement element = FindByRuntimeId(id);
+            logger.All("method elementIsEnabled", getMilis() - startMethod);
+            return "" + !element.Current.IsOffscreen;
+        }
+
         [DllExport("getProperty", CallingConvention.Cdecl)]
         public static string GetProperty(String inid, int propertyId)
         {

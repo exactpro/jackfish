@@ -16,12 +16,11 @@ import com.exactprosystems.jf.documents.matrix.parser.Parameter;
 import com.exactprosystems.jf.documents.vars.SystemVars;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.helpers.DialogsHelper;
-
 import javafx.scene.control.ButtonType;
 import javafx.util.Pair;
 
-import java.io.Reader;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -59,18 +58,6 @@ public class SystemVarsFx extends SystemVars
 		this.controller.displayNewParameters(evaluateData());
 	}
 
-	@Override
-	public void create() throws Exception
-	{
-		super.create();
-	}
-	
-	@Override
-	public void load(Reader reader) throws Exception
-	{
-		super.load(reader);
-	}
-	
 	@Override
 	public void save(String fileName) throws Exception
 	{
@@ -142,6 +129,21 @@ public class SystemVarsFx extends SystemVars
 		super.changed(true);
 	}
 
+	void updateDescriptionRow(int index, String newValue)
+	{
+		String lastDescription = getParameterByIndex(index).getDescription();
+		Command undo = () ->
+		{
+			getParameterByIndex(index).setDescription(lastDescription);
+		};
+		Command redo = () ->
+		{
+			getParameterByIndex(index).setDescription(newValue);
+		};
+		addCommand(undo, redo);
+		super.changed(true);
+	}
+
 	public void addNewVariable() throws Exception
 	{
 		Command undo = () -> 
@@ -159,8 +161,8 @@ public class SystemVarsFx extends SystemVars
 	public void removeParameters(List<Parameter> parameters)
 	{
 		List<Pair<Integer, Parameter>>  indexes = parameters.stream()
-			.map(par -> new Pair<Integer, Parameter>(getParameters().getIndex(par), par))
-			.sorted((pair1, pair2) -> pair1.getKey() - pair2.getKey()).collect(Collectors.toList());
+			.map(par -> new Pair<>(getParameters().getIndex(par), par))
+			.sorted(Comparator.comparingInt(Pair::getKey)).collect(Collectors.toList());
 		
 		Command undo = () -> 
 		{

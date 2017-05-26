@@ -10,11 +10,8 @@ package com.exactprosystems.jf.tool.custom.table;
 
 import com.exactprosystems.jf.api.common.Str;
 import com.exactprosystems.jf.tool.CssVariables;
-import com.exactprosystems.jf.tool.newconfig.TablePair;
 import javafx.application.Platform;
-import javafx.beans.property.ReadOnlyBooleanProperty;
 import javafx.collections.FXCollections;
-import javafx.event.Event;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
@@ -30,6 +27,7 @@ public class CustomTable<T> extends TableView<T>
 	private CustomTableColumn firstColumn;
 	private CustomTableColumn secondColumn;
 	private CustomTableColumn thirdColumn;
+	private CustomTableColumn fourthColumn;
 	private boolean mayChanged;
 	private ContextMenuListener<T> listener;
 	private ContextMenu contextMenu;
@@ -60,6 +58,7 @@ public class CustomTable<T> extends TableView<T>
 		this.firstColumn 		= new CustomTableColumn();
 		this.secondColumn		= new CustomTableColumn();
 		this.thirdColumn		= new CustomTableColumn();
+		this.fourthColumn		= new CustomTableColumn();
 		this.listener = listener;
 		this.mayChanged = true;
 		this.setEditable(true);
@@ -91,6 +90,12 @@ public class CustomTable<T> extends TableView<T>
 		showColumn(thirdColumn, 2);
 	}
 
+	public void completeFourthColumn(String name, String valueFactory, boolean editable, boolean needTooltip)
+	{
+		completeColumn(fourthColumn, name, valueFactory, editable, needTooltip);
+		showColumn(fourthColumn, 3);
+	}
+
 	public void onFinishEditFirstColumn(EditCommit<T> editCommit)
 	{
 		onEditCommitColumn(firstColumn, editCommit);
@@ -104,6 +109,11 @@ public class CustomTable<T> extends TableView<T>
 	public void onFinishEditThirdColumn(EditCommit<T> editCommit)
 	{
 		onEditCommitColumn(thirdColumn, editCommit);
+	}
+
+	public void onFinishEditFourthColumn(EditCommit<T> editCommit)
+	{
+		onEditCommitColumn(this.fourthColumn, editCommit);
 	}
 
 	public void setSortable(boolean flag)

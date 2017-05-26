@@ -86,11 +86,11 @@ public class TexReportBuilder extends ReportBuilder
             case "1" + CM: return "";  
     
             // header 2
-            case OM + "2": return "\\\\section*{ ";
+            case OM + "2": return "\\\\section{ ";
             case "2" + CM: return " }";
     
             // header 3
-            case OM + "3": return "\\\\subsection*{ ";
+            case OM + "3": return "\\\\subsection{ ";
             case "3" + CM: return " }";
     
             // header 4 (max level)
@@ -102,8 +102,11 @@ public class TexReportBuilder extends ReportBuilder
             case "$" + CM: return "";       
     
             // style for code
-            case OM + "#": return "\\\\begin{alltt}";    
-            case "#" + CM: return "\\\\end{alltt}";  
+            case OM + "#": return "\\\\begingroup\n" +
+								"    \\\\fontsize{10pt}{12pt}\\\\selectfont\n" +
+								"    \\\\begin{verbatim}  ";
+            case "#" + CM: return "  \\\\end{verbatim}\n" +
+									"\\\\endgroup";
             
             // style for references
             case OM + "@": return "";
