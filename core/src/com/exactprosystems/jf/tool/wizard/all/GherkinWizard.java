@@ -18,6 +18,7 @@ import com.exactprosystems.jf.documents.matrix.parser.Tokens;
 import com.exactprosystems.jf.documents.matrix.parser.items.MatrixItem;
 import com.exactprosystems.jf.documents.matrix.parser.items.TestCase;
 import com.exactprosystems.jf.tool.Common;
+import com.exactprosystems.jf.tool.helpers.DialogsHelper;
 import com.exactprosystems.jf.tool.matrix.MatrixFx;
 import com.exactprosystems.jf.tool.wizard.AbstractWizard;
 import com.exactprosystems.jf.tool.wizard.CommandBuilder;
@@ -47,6 +48,7 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
+import java.util.function.Consumer;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
@@ -90,7 +92,14 @@ public class GherkinWizard extends AbstractWizard
 		return () ->
 		{
 			CommandBuilder builder = CommandBuilder.start();
-			createStructure().forEach(item -> builder.addMatrixItem(this.currentMatrix, this.parentItem, item, this.index++));
+			Exception[] exceptions = new Exception[1];
+			Consumer<Exception> onError = e -> exceptions[0] = e;
+			createStructure(onError).forEach(item -> builder.addMatrixItem(this.currentMatrix, this.parentItem, item, this.index++));
+			if (exceptions[0] != null)
+			{
+				DialogsHelper.showError(exceptions[0].getMessage());
+				return new ArrayList<>();
+			}
 			return builder.build();
 		};
 	}
@@ -136,7 +145,7 @@ public class GherkinWizard extends AbstractWizard
 		borderPane.setRight(hBox);
 	}
 
-	private List<MatrixItem> createStructure()
+	private List<MatrixItem> createStructure(Consumer<Exception> onError)
 	{
 		List<MatrixItem> list = new ArrayList<>();
 		parse((child, comment) ->
@@ -155,7 +164,7 @@ public class GherkinWizard extends AbstractWizard
 			systemMap.put(Tokens.Step, "'Step [" + step.getKeyword() + "] " + step.getText() + "'");
 			Common.tryCatch(() -> stepItem.init(this.currentMatrix, null, systemMap, null), "Error");
 			scenario.insert(scenario.count(), stepItem);
-		});
+		},onError);
 		return list;
 	}
 
@@ -174,10 +183,12 @@ public class GherkinWizard extends AbstractWizard
 			scenario.setExpanded(true);
 			root.getChildren().add(scenario);
 			return scenario;
-		}, (step, scenario) -> scenario.getChildren().add(new TreeItem<>("Step [" + step.getKeyword() + "] " + step.getText())));
+		}
+		, (step, scenario) -> scenario.getChildren().add(new TreeItem<>("Step [" + step.getKeyword() + "] " + step.getText()))
+		, e -> root.getChildren().setAll(new TreeItem<>("Some error with parsing text")));
 	}
 
-	private <T> void parse(BiFunction<ScenarioDefinition, String, T> testCaseConsumer, BiConsumer<Step, T> stepConsumer)
+	private <T> void parse(BiFunction<ScenarioDefinition, String, T> testCaseConsumer, BiConsumer<Step, T> stepConsumer, Consumer<Exception> onError)
 	{
 		try
 		{
@@ -200,7 +211,7 @@ public class GherkinWizard extends AbstractWizard
 		}
 		catch (Exception e)
 		{
-			;
+			onError.accept(e);
 		}
 	}
 }
