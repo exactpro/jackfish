@@ -1,16 +1,14 @@
 package com.exactprosystems.jf.tool.wizard;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.apache.log4j.Logger;
-
 import com.exactprosystems.jf.api.wizard.WizardCommand;
 import com.exactprosystems.jf.documents.matrix.Matrix;
 import com.exactprosystems.jf.documents.matrix.parser.Parser;
-import com.exactprosystems.jf.documents.matrix.parser.Tokens;
 import com.exactprosystems.jf.documents.matrix.parser.items.MatrixItem;
 import com.exactprosystems.jf.tool.matrix.MatrixFx;
+import org.apache.log4j.Logger;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class CommandBuilder
 {
