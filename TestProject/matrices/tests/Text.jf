@@ -157,6 +157,172 @@ TextSaveToFile;;;
 
 
 #TestCase;#Kind;#Depends;#For
-TODO Text Report;;;
+Text Report;;;
+    #Step;#Kind;#For;#Depends
+    'Positive';;;
+        #Step;#Kind;#For;#Depends
+        'Before TC';;;
+            #Id;#RawText;#Kind
+            TEXT1;Text;None
+            ~;"#Id;#TestCase;#Kind;#Depends;#For"
+            ~;"test;;;;"
+            ~;"    #Id;#RawText;#Kind"
+            ~;"    TEXT1;Text;None"
+            ~;"    ~;""My test text"""
+            ~;"    #EndRawText"
+            ~;""
+            ~;"    #Action;$BeforeTestCase;$Title;$Text"
+            ~;"    TextReport;'test';'my title';TEXT1"
+            #EndRawText
+
+            #Id;#Call;rawText
+            CALL_1;runMatrix;TEXT1
+
+            #Id;#Call;pathToReport
+            appCon;runBrowser;CALL_1
+
+            #Id;#Let
+            locator;new Locator().kind(ControlKind.Label).visibility(Visibility.Visible).xpath('/html/body/div/div/table/tbody/tr/td[@class="tdMax"]')
+
+            #Id;#Let
+            locator2;new Locator().kind(ControlKind.Label).visibility(Visibility.Visible).xpath('/html/body/table[2]/tbody/tr[2]/td/table/tbody/tr[4]/td/table/tbody/tr[2]/td/table/tbody')
+
+            #Action;#Assert;$Dialog;$AppConnection;MockElement
+            DialogFill;This.Out.MockElement;'DialogForTestReport';appCon;Do.use(locator).isVisible()
+
+            #Action;#Assert;$Dialog;$AppConnection;MockElement
+            DialogFill;This.Out.MockElement.equals('My test text');'DialogForTestReport';appCon;Do.use(locator).getValue()
+
+            // 
+            #Id;#Call;appCon
+            CALL_1;expand;appCon
+
+            #Action;#Assert;$Dialog;$AppConnection;MockElement
+            DialogFill;This.Result == Result.Failed;'DialogForTestReport';appCon;Do.use(locator2).isVisible()
+
+            #Id;#Call;appCon
+            CALL_3;stopBrowser;appCon
+
+        #EndStep
+
+        #Step;#Kind;#For;#Depends
+        'Inside TC';;;
+            #Id;#RawText;#Kind
+            TEXT1;Text;None
+            ~;"#TestCase;#Kind;#Depends;#For"
+            ~;";;;"
+            ~;"    #Id;#RawText;#Kind"
+            ~;"    TEXT1;Text;None"
+            ~;"    ~;""My test text"""
+            ~;"    #EndRawText"
+            ~;""
+            ~;"    #Action;$Title;$Text"
+            ~;"    TextReport;'my title';TEXT1"
+            #EndRawText
+
+            #Id;#Call;rawText
+            CALL_1;runMatrix;TEXT1
+
+            #Id;#Call;pathToReport
+            appCon;runBrowser;CALL_1
+
+            #Id;#Let
+            locator;new Locator().kind(ControlKind.Label).visibility(Visibility.Visible).xpath('/html/body/table[2]/tbody/tr[2]/td/table/tbody/tr[4]/td/table/tbody/tr[2]/td/table/tbody')
+
+            #Action;#Assert;$Dialog;$AppConnection;MockElement
+            DialogFill;!This.Out.MockElement;'DialogForTestReport';appCon;Do.use(locator).isVisible()
+
+            // 
+            #Id;#Call;appCon
+            CALL_1;expand;appCon
+
+            #Action;#Assert;$Dialog;$AppConnection;MockElement
+            DialogFill;This.Out.MockElement;'DialogForTestReport';appCon;Do.use('MainTable',LocatorKind.Owner).use(locator, LocatorKind.Element).isVisible()
+
+            #Action;#Assert;$Dialog;$AppConnection;MockElement
+            DialogFill;This.Out.MockElement.equals('My test text');'DialogForTestReport';appCon;Do.use(locator).getValue()
+
+            #Id;#Call;appCon
+            CALL_3;stopBrowser;appCon
+
+        #EndStep
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'Negative';;;
+        #Id;#RawText;#Kind
+        TEXT1;Text;None
+        #EndRawText
+
+        #Action;#Assert;$Title;$Text
+        TextReport;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;;
+
+        #Action;#Assert;$ToReport;$BeforeTestCase;$Title;$Text
+        TextReport;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;;;;TEXT1
+
+        #Action;#Assert;$Title;$Text
+        TextReport;This.Result == Result.Failed && This.Kind == ErrorKind.WRONG_PARAMETERS;;new Date()
+
+    #EndStep
+
+
+#TestCase;#Kind;#Depends;#For
+subcases;;;
+    #Id;#SubCase
+    appStart;
+        #Id;#Action;$AppId;Browser;URL
+        APPSTR2;ApplicationStart;mockWebApp;mockWebBrowser;mockWebURL
+
+        #Return
+        APPSTR2.Out
+
+    #EndSubCase
+
+    #Id;#SubCase;rawText
+    runMatrix;returned value - path to report;TEXT1
+        #Id;#Action;$Text
+        MXRN1;MatrixRunFromText;rawText
+
+        #Id;#Action;$Matrix
+        MXWT1;MatrixWait;MXRN1.Out
+
+        #Assert;#Message
+        MXRN1.Out.failed() == 0;'Matrix contains failed testcase. Check the matrix'
+
+        #Return
+        MXRN1.Out.getReportName()
+
+    #EndSubCase
+
+    #Id;#SubCase;pathToReport
+    runBrowser;returned value - appConnection;CALL_1
+        #Id;#Action;$AppId;Browser;URL
+        APPSTR1;ApplicationStart;mockWebApp;mockWebBrowser;'file://' + new File(pathToReport).getAbsolutePath()
+
+        #Return
+        APPSTR1.Out
+
+    #EndSubCase
+
+    #Id;#SubCase;appCon
+    stopBrowser;;appCon
+        #Id;#Action;$AppConnection
+        APPSTP1;ApplicationStop;appCon
+
+    #EndSubCase
+
+    #Id;#SubCase;appCon
+    expand;;appCon
+        #Id;#Action;$Dialog;$AppConnection;Executed
+        DLGFLL1;DialogFill;'DialogForTestReport';appCon;Do.click()
+
+        #Id;#Action;$Dialog;$AppConnection;MockElement
+        DLGFLL2;DialogFill;'DialogForTestReport';appCon;Do.use(new Locator().kind(ControlKind.Any).xpath('.//a[contains(.,"TestCase")]')).click()
+
+        #Id;#Action;$Dialog;$AppConnection;MockElement
+        DLGFLL3;DialogFill;'DialogForTestReport';appCon;Do.use(new Locator().kind(ControlKind.Any).xpath('.//a[contains(.,"ActionItem (TextReport)")]')).click()
+
+    #EndSubCase
 
 

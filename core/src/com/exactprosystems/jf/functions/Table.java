@@ -1073,7 +1073,7 @@ public class Table implements List<RowTable>, Mutable, Cloneable
 			Map<Header, Object> line = convert(arr);
 //			System.err.println(">>   " + line);
 			this.innerList.add(line);
-//			System.err.println("<< " + this.size() + " " + this.get(this.innerList.size() - 1));
+            System.err.println("<< Table.addValue " + this.size() + " " + line);
 		}
 	}
 
@@ -1272,14 +1272,15 @@ public class Table implements List<RowTable>, Mutable, Cloneable
 	    return Arrays.stream(this.headers).filter(h -> h.name.equals(name)).findFirst().orElse(null);
 	}
 
-	private Map<Header, Object> convert(Object[] e)
+	private Map<Header, Object> convert(Object[] arr)
 	{
-		Map<Header, Object> map = new LinkedHashMap<>();
-		for (int i = 0; i < Math.min(this.headers.length, e.length); i++)
-		{
-			map.put(this.headers[i], e[i]);
-		}
-		return map;
+        Map<Header, Object> res = 
+                IntStream.range(0, Math.min(this.headers.length, arr.length))
+                .mapToObj(i -> i)
+                .collect(Collectors.toMap(i -> this.headers[i], j -> arr[j], (k,v) -> k, LinkedHashMap::new));
+        Set<Header>  keys = res.keySet();
+        Arrays.stream(this.headers).filter(h -> !keys.contains(h)).forEach(h -> res.put(h, null));
+        return res;
 	}
 
 	private Map<Header, Object> convert(Map<String, Object> map)
@@ -1299,6 +1300,8 @@ public class Table implements List<RowTable>, Mutable, Cloneable
     protected Object convertCell(Map<Header, Object> row,  Header header, Object source, ReportBuilder report)
     {
 //        System.err.println(">> convertCell " + row + " " + header + " " + source);
+        System.err.println(">>>>> convertCell1 " + Arrays.toString(this.headers));
+        System.err.println(">>>>> convertCell2 " + Arrays.toString(row.keySet().toArray()));
         
         if (header.type == null)
         {

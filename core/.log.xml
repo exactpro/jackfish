@@ -77,5 +77,10 @@
 		<level value="ERROR" />
 		<appender-ref ref="LogMainFile" />
 	</logger>
+	
+	<logger name="org.mvel2" additivity="false">
+		<level value="NONE" />
+		<appender-ref ref="LogMainFile" />
+	</logger>
 
 </log4j:configuration>

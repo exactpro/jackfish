@@ -126,7 +126,7 @@ public class RowTable implements Map<String, Object>, Cloneable
 //        System.err.println("@ " + this.currentRow.values());
         Header header = this.table.headerByName(Str.asString(key));
         Object value = this.currentRow.get(header);
-        System.err.println(">> " + header + " " + value);
+        System.err.println(">> RowTable.get " + header + " " + value);
         value = this.table.convertCell(this.currentRow, header, value, null);
         if(value instanceof Exception)
         {
