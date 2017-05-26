@@ -50,7 +50,7 @@ public class RowTable implements Map<String, Object>, Cloneable
         LinkedHashMap<String, Object> map = this.currentRow.entrySet()
                 .stream()
                 .filter(e -> names.contains(e.getKey().name))
-                .collect(Collectors.toMap(e -> e.getKey().name, e -> e.getValue(), (k,v) -> k, LinkedHashMap::new));
+                .collect(Collectors.toMap(e -> e.getKey().name, e -> Str.asString(e.getValue()), (k,v) -> k, LinkedHashMap::new));
         
         return new CopyRowTable(map);
     }
@@ -121,19 +121,15 @@ public class RowTable implements Map<String, Object>, Cloneable
     @Override
     public Object get(Object key)
     {
-        checkRow(); // TODO edit here
-        
-//        System.err.println("@ " + this.currentRow.values());
+        checkRow(); 
         Header header = this.table.headerByName(Str.asString(key));
         Object value = this.currentRow.get(header);
-        System.err.println(">> RowTable.get " + header + " " + value);
         value = this.table.convertCell(this.currentRow, header, value, null);
         if(value instanceof Exception)
         {
             Exception e = (Exception) value;
             throw new WrongExpressionException(e.getMessage());
         }
-//        System.err.println("@@@ get " + key + " " + value);
         return value;
     }
 

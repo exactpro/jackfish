@@ -65,13 +65,12 @@ public class Table implements List<RowTable>, Mutable, Cloneable
 	public Table(Table table, AbstractEvaluator evaluator)
 	{
 		this(evaluator);
-		this.addColumns(Arrays.stream(table.headers).map(h -> h.name).toArray(String[]::new));
-		for (int i = 0; i < table.innerList.size(); i++)
-		{
-			Map<Header, Object> newMap = new LinkedHashMap<>();
-			newMap.putAll(table.innerList.get(i));
-			this.innerList.add(newMap);
-		}
+        this.addColumns(Arrays.stream(table.headers).map(h -> h.name).toArray(String[]::new));
+	    for (int i = 0; i < table.size(); i++)
+        {
+	        RowTable row = table.get(i);
+	        this.add(row);
+        }
 	}
 
 	public Table(String[] headers, AbstractEvaluator evaluator)
@@ -311,6 +310,8 @@ public class Table implements List<RowTable>, Mutable, Cloneable
 			}
 			while (expectedIterator.hasNext())
 			{
+	             System.err.println("5");
+
                 CopyRowTable expectedRow = expectedIterator.next().copy(expectedNames);
 				table = addMismatchedRow(table, report, differences, "Extra row[" + rowCount + "]", ReportHelper.objToString(expectedRow, false), "");
 				rowCount++;
@@ -383,7 +384,7 @@ public class Table implements List<RowTable>, Mutable, Cloneable
 			@Override
 			public RowTable next()
 			{
-			    return Table.this.get(this.index);
+			    return Table.this.get(this.index++);
 			}
 
 			@Override
@@ -999,14 +1000,12 @@ public class Table implements List<RowTable>, Mutable, Cloneable
 		this.innerList.set(index, newMap);
 	}
 
-    public Object setValue(int index, String key, Object value)
+    public Object setValue(int index, String key, Object value) 
     {
         changed(true);
         Header header = headerByName(key);
         Map<Header, Object> row = this.innerList.get(index);
-        value = convertCell(row, header, value, null);
-        row.put(header, value);
-        return value;
+        return row.put(header, value);
     }
 
 	public void setValue(int index, RowTable row)
@@ -1058,10 +1057,8 @@ public class Table implements List<RowTable>, Mutable, Cloneable
 		}
 	}
 
-	public void addValue(Object[] arr) // TODO
+	public void addValue(Object[] arr) 
 	{
-//	    System.err.println(">> " + Arrays.toString(arr));
-	    
 		changed(true);
 		if (this.headers != null)
 		{
@@ -1071,9 +1068,7 @@ public class Table implements List<RowTable>, Mutable, Cloneable
 			}
 
 			Map<Header, Object> line = convert(arr);
-//			System.err.println(">>   " + line);
 			this.innerList.add(line);
-            System.err.println("<< Table.addValue " + this.size() + " " + line);
 		}
 	}
 
@@ -1299,10 +1294,6 @@ public class Table implements List<RowTable>, Mutable, Cloneable
 
     protected Object convertCell(Map<Header, Object> row,  Header header, Object source, ReportBuilder report)
     {
-//        System.err.println(">> convertCell " + row + " " + header + " " + source);
-        System.err.println(">>>>> convertCell1 " + Arrays.toString(this.headers));
-        System.err.println(">>>>> convertCell2 " + Arrays.toString(row.keySet().toArray()));
-        
         if (header.type == null)
         {
             return source;

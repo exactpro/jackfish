@@ -3726,7 +3726,7 @@ MVEL;Test case;;;
         TableConsiderColumnsAs;DATA1;'expr';'int'
 
         #Assert;#Message
-        DATA1[0].expr == 210 && DATA1[1].expr == 'ab';
+        DATA1[0].expr == '100110' && DATA1[1].expr == 'ab';
 
         #Id;#Let
         i;0
@@ -3736,7 +3736,7 @@ MVEL;Test case;;;
             #If
             i == 0
                 #Assert;#Message
-                row.expr == 210;
+                row.expr == '100110';
 
             #EndIf
 

@@ -36,6 +36,7 @@ public class CopyRowTable extends RowTable implements Cloneable
 	{
 	    super(null, 0);
 	    this.source = new LinkedHashMap<String, Object>();
+	    
 	}
 	
     public void makeStrValues(Set<String> names)
@@ -74,7 +75,8 @@ public class CopyRowTable extends RowTable implements Cloneable
             return false;
         }
         CopyRowTable other = (CopyRowTable) obj;
-        return Objects.equals(this.source, other.source);
+        boolean res = Objects.equals(this.source, other.source);
+        return res;
     }
 
     //==============================================================================================
