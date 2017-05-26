@@ -2835,7 +2835,7 @@ TABLE_SELECT;Test case;Never;;
         4;John;42
         #EndRawTable
 
-        #Id;#Action;$Table;Name
+        #Id;#Action;$Table;
         actual;TableSelect;TC;new OrCondition(new StringCondition('Name','Fred'), new NumberCondition('Age','>',42))
 
         #Id;#RawTable
@@ -3139,8 +3139,11 @@ TABLE_REPORT;Test case;Never;;
         CALL_1;expand;appCon
 
         // 
-        #Id;#Action;#Assert;$Dialog;$AppConnection;table
-        DLGFLL1;DialogFill;This.Out.table.equals('50');'DialogForTestTableReport';appCon;Do.getValue(1,0)
+        #Id;#Action;$Dialog;$AppConnection;table
+        DLGFLL1;DialogFill;'DialogForTestTableReport';appCon;Do.getValue(1,0)
+
+        #Assert;#Message
+        DLGFLL1.Out.table.equals('50');
 
         // 
         #Id;#Action;#Assert;$Dialog;$AppConnection;table
@@ -3507,8 +3510,253 @@ TABLE_REMOVE_ROW;Test case;Never;;
     #EndStep
 
 
-#TestCase;#Kind;#Depends;#For
-subcases;;;
+#Id;#TestCase;#Kind;#Depends;#For
+MVEL;Test case;;;
+    #Step;#Kind;#For;#Depends
+    'linear sequence';;;
+        #Id;#Let
+        name1;'D'
+
+        #Id;#Let
+        name;'B'
+
+        #Id;#RawTable
+        TBL1;Table
+        @;Column
+        0;'A' + name + 'C'
+        #EndRawTable
+
+        #Action;$Table;$Expression
+        TableConsiderColumnsAs;TBL1;'Column'
+
+        #Action;
+        Print;TBL1[0].Column
+
+        #Assert;#Message
+        TBL1[0].Column == 'ABC';
+
+        #Action;
+        Print;TBL1[0].Column
+
+        #Assert;#Message
+        TBL1[0].Column == 'ABC';
+
+        #Action;
+        Print;TBL1[0].Column = name1
+
+        #Action;#Assert;
+        Print;This.Result == Result.Failed && This.Kind == ErrorKind.EXPRESSION_ERROR;TBL1[0].Column
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'foreach';;;
+        #Id;#Let
+        name1;100
+
+        #Id;#Let
+        name;'abc'
+
+        #Id;#RawTable
+        DATA1;Table
+        @;Column;Column2
+        0;'name';123
+        1;55555;123
+        2;name;123
+        #EndRawTable
+
+        #Action;$Table;$Expression
+        TableConsiderColumnsAs;DATA1;'Column'
+
+        #ForEach;#In
+        raw;DATA1
+            #Action;;
+            Print;raw.Column;raw.Column2
+
+        #EndForEach
+
+        #Assert;#Message
+        DATA1[0].Column == 'name' && DATA1[0].Column2 == 123;
+
+        #Assert;#Message
+        DATA1[1].Column == 55555 && DATA1[1].Column2 == 123;
+
+        #Assert;#Message
+        DATA1[2].Column == 'abc' && DATA1[2].Column2 == 123;
+
+        #ForEach;#In
+        raw;DATA1
+            #Action;;
+            Print;raw.Column;raw.Column2
+
+        #EndForEach
+
+        #Assert;#Message
+        DATA1[0].Column == 'name' && DATA1[0].Column2 == 123;
+
+        #Assert;#Message
+        DATA1[1].Column == 55555 && DATA1[1].Column2 == 123;
+
+        #Assert;#Message
+        DATA1[2].Column == 'abc' && DATA1[2].Column2 == 123;
+
+        #Id;#Let
+        i;0
+
+        #ForEach;#In
+        raw;DATA1
+            #Id;#Let
+            i;i +1
+
+            #Action;;;
+            Print;raw.Column = name1 + i;raw.Column2 = '000' + i;raw.Column
+
+        #EndForEach
+
+        #Assert;#Message
+        DATA1[0].Column == 101 && DATA1[0].Column2 == 0001;
+
+        #Assert;#Message
+        DATA1[1].Column == 102 && DATA1[1].Column2 == 0002;
+
+        #Assert;#Message
+        DATA1[2].Column == 103 && DATA1[2].Column2 == 0003;
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'let';;;
+        #Id;#RawTable
+        DATA1;Table
+        @;value;expr
+        0;abc;100 + 10
+        1;def;'abac+10'
+        #EndRawTable
+
+        #Action;$Table;$Expression
+        TableConsiderColumnsAs;DATA1;'expr'
+
+        #Id;#Let
+        d;DATA1[0].expr = '\'_100+10\''
+
+        #Id;#Let
+        e;DATA1[0].value
+
+        #Id;#Let
+        f;DATA1[0].expr
+
+        #Assert;#Message
+        d == '\'_100+10\'' && e == 'abc'  && f == '_100+10';
+
+        // // for debug
+        #Off;#Action;$Table;$Title;$ReportValues;$BeforeTestCase
+        1;TableReport;DATA1;'after expressions changes';false;'MVEL'
+
+        // // for debug
+        #Off;#Action;$Table;$Title;$ReportValues;$BeforeTestCase
+        1;TableReport;DATA1;'after changes';true;'MVEL'
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'int & expression';;;
+        #Id;#RawTable
+        DATA1;Table
+        @;value;expr;int
+        0;abc;100 + 10;100
+        1;def;'abac+10';200
+        #EndRawTable
+
+        #Action;$Table;$Expression;$Integer
+        TableConsiderColumnsAs;DATA1;'expr';'int'
+
+        #Id;#Let
+        row;DATA1[0]
+
+        #IgnoreErr;#Action;row.expr;row.expr
+        1;Print;row.expr;DATA1[0].expr
+
+        #IgnoreErr;#Action;row.int;row.int
+        1;Print;row.int;DATA1[0].int
+
+        #Assert;#Message
+        row.expr == 110 && DATA1[0].expr == 110;
+
+        #Assert;#Message
+        row.int == 100 && DATA1[0].int == 100;
+
+        #Let
+        row.int = row.expr + row.int
+
+        #Assert;#Message
+        row.int == 210;
+
+        #Let
+        row.expr = '\'abac+100\''
+
+        #Let
+        row.int = 'aaa'
+
+        #Action;#Assert;row.expr;row.expr
+        Print;This.Result == Result.Passed;row.expr;DATA1[0].expr
+
+        #Action;#Assert;row.int;row.int
+        Print;This.Result == Result.Failed && This.Kind == ErrorKind.EXPRESSION_ERROR;row.int;DATA1[0].int
+
+        // // for debug
+        #Off;#Action;$Table;$Title;$ReportValues;$BeforeTestCase
+        1;TableReport;DATA1;'after expressions changes';false;'MVEL'
+
+        // // for debug
+        #Off;#Action;$Table;$Title;$ReportValues;$BeforeTestCase
+        1;TableReport;DATA1;'after changes';true;'MVEL'
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    '_ as row';;;
+        #Id;#RawTable
+        DATA1;Table
+        @;value;expr;int;string
+        0;abc;_.int + 100 + 10;100;c
+        1;def;'a' + _.string;200;b
+        #EndRawTable
+
+        #Action;$Table;$Expression;$Integer
+        TableConsiderColumnsAs;DATA1;'expr';'int'
+
+        #Assert;#Message
+        DATA1[0].expr == 210 && DATA1[1].expr == 'ab';
+
+        #Id;#Let
+        i;0
+
+        #ForEach;#In
+        row;DATA1
+            #If
+            i == 0
+                #Assert;#Message
+                row.expr == 210;
+
+            #EndIf
+
+            #If
+            i == 1
+                #Assert;#Message
+                row.expr == 'ab';
+
+            #EndIf
+
+            #Id;#Let
+            i;i + 1
+
+        #EndForEach
+
+    #EndStep
+
+
+#Id;#TestCase;#Kind;#Depends;#For
+UTIL;subcases;;;
     #Id;#SubCase;rawText
     runMatrix;returned value - path to report;TEXT1
         #Id;#Action;$Text

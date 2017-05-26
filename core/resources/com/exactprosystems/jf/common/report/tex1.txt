@@ -17,6 +17,7 @@
 %% \usepackage[colorinlistoftodos]{todonotes}
 \usepackage[colorlinks=true, bookmarks=true, allcolors=blue]{hyperref}
 
+\usepackage{lastpage} %%can't use it? just install package texlive-latex-extra
 \usepackage{fancyhdr}
 
 \pagestyle{fancy}
@@ -24,9 +25,14 @@
 \rhead{MAGIC PICTURE(COMING SOON)}
 \lhead{CONFIDENTIAL}
 \lfoot{JackFish. User Guide}
-\rfoot{Page \thepage}
+\rfoot{Page \thepage\ of \pageref{LastPage}}
 \renewcommand{\headrulewidth}{0pt}
 \renewcommand{\footrulewidth}{0pt}
+
+\usepackage[dvipsnames]{xcolor}
+
+\newcommand\crule[3][black]{\textcolor{#1}{\rule{#2}{#3}}} %%do you want colored rectangle? use it!
+%% example: \crule[COLORNAME]{width}{height}
 
 \begin{document}
 
