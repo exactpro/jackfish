@@ -148,7 +148,7 @@ public class Fail extends MatrixItem
 		catch (Exception e)
 		{
 			logger.error(e.getMessage(), e);
-			listener.error(this.owner, getNumber(), this, e.getMessage());
+            listener.error(this.owner, getNumber(), this, e.getMessage());
 			return new ReturnAndResult(start, Result.Failed, e.getMessage(), ErrorKind.EXCEPTION, this);
 		}
 	}

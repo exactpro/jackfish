@@ -94,7 +94,7 @@ class Header implements Cloneable
 	@Override
 	public String toString()
 	{
-		return this.name;
+		return this.name + ":" + super.hashCode();
 	}
 
 	@Override

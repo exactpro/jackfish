@@ -6,3 +6,4 @@ version.properties
 *.rtf
 
 UserManualLocalBuild.*
+/temp/

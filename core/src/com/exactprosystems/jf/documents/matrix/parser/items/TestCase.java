@@ -211,8 +211,8 @@ public final class TestCase extends MatrixItem
         Variables locals = evaluator.createLocals(); 
 		ReturnAndResult ret = null;
 		Table table = context.getTable();
-		RowTable row = new RowTable();
-		int position = -1;
+        int position = table.size();
+		RowTable row = table.addNew();
 		super.screenshot = null;
 		try
 		{
@@ -228,13 +228,9 @@ public final class TestCase extends MatrixItem
 	        
 	        if (table != null && !isRepOff())
 			{
-				position = table.size();
-
 				row.put(Context.matrixColumn, 			this.owner.getName());
 				row.put(Context.testCaseIdColumn, 		this.getId());
 				row.put(Context.testCaseColumn, 		this);
-				
-				table.add(row);
 			}
 
 	        if (!Str.IsNullOrEmpty(this.depends.get()))

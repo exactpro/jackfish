@@ -16,6 +16,7 @@ public enum ErrorKind
 	EMPTY_PARAMETER			("Empty parameter"), 
 	WRONG_PARAMETERS		("Wrong parameters"),
 	INPUT_CACNELLED         ("User cancelled input"),
+    ROW_EXPIRED             ("Row is not actual now"), 
 	LOCATOR_NOT_FOUND		("Locator is not found in a dictionary"),
 	DIALOG_NOT_FOUND		("Dialog is not found"),
 	ELEMENT_NOT_FOUND		("Element is not found"),

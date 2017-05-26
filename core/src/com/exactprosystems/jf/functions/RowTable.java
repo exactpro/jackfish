@@ -15,40 +15,61 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import com.exactprosystems.jf.api.common.Str;
-import com.exactprosystems.jf.functions.Header.HeaderType;
+import com.exactprosystems.jf.api.error.common.RowExpiredException;
+import com.exactprosystems.jf.api.error.common.WrongExpressionException;
 
 
 public class RowTable implements Map<String, Object>, Cloneable
 {
-    public RowTable(Map<Header, Object> map)
+    private Map<Header, Object> currentRow;    
+    private Table table;
+    private int index = 0;
+    
+    public RowTable(Table table, int index)
     {
-        if (map == null)
-        {
-            throw new NullPointerException("map");
-        }
-        
-        this.source = map;
+        this.table = table;
+        this.index = index;
+        this.currentRow = null;
     }
-
-    public RowTable()
+    
+    public int index()
     {
-        this(new LinkedHashMap<Header, Object>());
+        return this.index;
     }
     
     @Override
     public String toString()
     {
-        return this.source.toString();
+        checkRow();
+        return this.currentRow.toString();
+    }
+    
+    public CopyRowTable copy(Set<String> names)
+    {
+        checkRow();
+        LinkedHashMap<String, Object> map = this.currentRow.entrySet()
+                .stream()
+                .filter(e -> names.contains(e.getKey().name))
+                .collect(Collectors.toMap(e -> e.getKey().name, e -> e.getValue(), (k,v) -> k, LinkedHashMap::new));
+        
+        return new CopyRowTable(map);
     }
     
     public CopyRowTable copy()
     {
-        return new CopyRowTable(this.source);
+        checkRow();
+        return new CopyRowTable(asLinkedMap());
     }
     
     public LinkedHashMap<String, Object> asLinkedMap()
     {
-        return this.source.entrySet()
+        checkRow();
+        return asLinkedMap(this.currentRow);
+    }
+    
+    public static LinkedHashMap<String, Object> asLinkedMap(Map<Header, Object> map)
+    {
+        return map.entrySet()
                 .stream()
                 .collect(Collectors.toMap(e -> e.getKey().name, e -> e.getValue(), (k,v) -> k, LinkedHashMap::new));
     }
@@ -59,7 +80,7 @@ public class RowTable implements Map<String, Object>, Cloneable
     @Override
     public RowTable clone() throws CloneNotSupportedException
     {
-        RowTable clone = new RowTable(); 
+        RowTable clone = new RowTable(this.table, this.index); 
         clone.putAll(this);
         return clone;
     }
@@ -72,77 +93,68 @@ public class RowTable implements Map<String, Object>, Cloneable
     @Override
     public int size()
     {
-        return this.source.size();
+        checkRow();
+        return this.currentRow.size();
     }
 
     @Override
     public boolean isEmpty()
     {
-        return this.source.isEmpty();
+        checkRow();
+        return this.currentRow.isEmpty();
     }
 
     @Override
     public boolean containsKey(Object key)
     {
+        checkRow();
         return keySet().contains(key);
     }
 
     @Override
     public boolean containsValue(Object value)
     {
-        return this.source.containsValue(value);
+        checkRow();
+        return this.currentRow.containsValue(value);
     }
 
     @Override
     public Object get(Object key)
     {
-        for (Map.Entry<Header, Object> entry : this.source.entrySet())
-        {
-            if (entry.getKey().name.equals(key))
-            {
-                if(entry.getValue() instanceof Exception)
-                {
-                    Exception e = (Exception) entry.getValue();
-                    throw new RuntimeException(e.getMessage(), e);
-                }
-                else
-                {
-                    return entry.getValue();
-                }
-            }
-        }
+        checkRow(); // TODO edit here
         
-        return null;
+//        System.err.println("@ " + this.currentRow.values());
+        Header header = this.table.headerByName(Str.asString(key));
+        Object value = this.currentRow.get(header);
+        System.err.println(">> " + header + " " + value);
+        value = this.table.convertCell(this.currentRow, header, value, null);
+        if(value instanceof Exception)
+        {
+            Exception e = (Exception) value;
+            throw new WrongExpressionException(e.getMessage());
+        }
+//        System.err.println("@@@ get " + key + " " + value);
+        return value;
     }
 
     @Override
     public Object put(String key, Object value)
     {
-        for (Map.Entry<Header, Object> entry : this.source.entrySet())
-        {
-            if (entry.getKey().name.equals(key))
-            {
-                Object res = entry.getValue();
-                entry.setValue(value);
-                return res;
-            }
-        }
-
-        Header header = new Header(key, HeaderType.STRING);
-        this.source.put(header, value);
-        
-        return null;
+        checkRow();
+        return this.table.setValue(index, key, value);
     }
 
     @Override
     public Object remove(Object key)
     {
+        checkRow();
         return put(key == null ? null : key.toString(), null);
     }
 
     @Override
     public void putAll(Map<? extends String, ? extends Object> m)
     {
+        checkRow();
         for (Map.Entry<? extends String, ? extends Object> entry : m.entrySet())
         {
             put(entry.getKey(), entry.getValue());
@@ -152,7 +164,8 @@ public class RowTable implements Map<String, Object>, Cloneable
     @Override
     public void clear()
     {
-        for (Map.Entry<Header, Object> entry : this.source.entrySet())
+        checkRow();
+        for (Map.Entry<Header, Object> entry : this.currentRow.entrySet())
         {
             entry.setValue(null);
         }
@@ -161,30 +174,42 @@ public class RowTable implements Map<String, Object>, Cloneable
     @Override
     public Set<String> keySet()
     {
+        checkRow();
         Set<String> res = new LinkedHashSet<>();
-        for (Header key : this.source.keySet())
-        {
-            res.add(key.name);
-        }
+        this.currentRow.keySet().forEach(k -> res.add(k.name));
         return res;
     }
 
     @Override
     public Collection<Object> values()
     {
-        return this.source.values();
+        checkRow();
+        return this.currentRow.values();
     }
 
     @Override
     public Set<Map.Entry<String, Object>> entrySet()
     {
+        checkRow();
         Map<String, Object> res = new LinkedHashMap<>();
-        for (Map.Entry<Header, Object> entry : this.source.entrySet())
+        for (Map.Entry<Header, Object> entry : this.currentRow.entrySet())
         {
             res.put(entry.getKey().name, entry.getValue());
         }
         return res.entrySet();
     }
 
-    private Map<Header, Object> source;
+    private void checkRow() throws RowExpiredException
+    {
+        if (this.currentRow == null)
+        {
+            this.currentRow = this.table.getInner(this.index);
+            return;
+        }
+        if (this.table.getInner(this.index) != this.currentRow)
+        {
+            throw new RowExpiredException("Expired");
+        }
+    }
+
 }

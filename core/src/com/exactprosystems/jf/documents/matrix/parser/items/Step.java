@@ -200,8 +200,8 @@ public class Step extends MatrixItem
         Variables locals = evaluator.createLocals(); 
 		ReturnAndResult ret = null;
 		Table table = context.getTable();
-		RowTable row = new RowTable();
-		int position = -1;
+        int position = table.size();
+        RowTable row =  table.addNew();
 		super.screenshot = null;
 		try
 		{
@@ -217,8 +217,6 @@ public class Step extends MatrixItem
 
             if (table != null && !isRepOff())
 			{
-				position = table.size();
-				
 				row.put(Context.matrixColumn, 			this.owner.getName());
 				MatrixItem parent = findParent(TestCase.class);
 				if (parent instanceof TestCase)
@@ -229,8 +227,6 @@ public class Step extends MatrixItem
 
 				row.put(Context.stepIdentityColumn, 	this.getId());
 				row.put(Context.stepColumn, 			this);
-				
-				table.add(row);
 			}
             
             if (!this.identify.evaluate(evaluator))

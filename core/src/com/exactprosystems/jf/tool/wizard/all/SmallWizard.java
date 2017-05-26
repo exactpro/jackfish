@@ -70,9 +70,9 @@ public class SmallWizard extends AbstractWizard
             
             List<WizardCommand> commands = CommandBuilder
                     .start()
-                    .addMatrixItem(this.currentMatrix, this.parentItem, let1, this.index)
-                    .addMatrixItem(this.currentMatrix, this.parentItem, let2, ++this.index)
-//                    .addMatrixItem(this.currentMatrix, this.parentItem, let3, this.index)
+                    .addMatrixItem(this.currentMatrix, this.parentItem, let1, this.index++)
+                    .addMatrixItem(this.currentMatrix, this.parentItem, let2, this.index++)
+//                    .addMatrixItem(this.currentMatrix, this.parentItem, let3, this.index++)
 //                    .removeMatrixItem(this.currentMatrix, this.currentItem, 5)
                     .build();
             

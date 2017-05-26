@@ -15,23 +15,26 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import com.exactprosystems.jf.api.common.Str;
+import com.exactprosystems.jf.api.error.common.WrongExpressionException;
 
 
-public class CopyRowTable implements Map<String, Object>, Cloneable
+public class CopyRowTable extends RowTable implements Cloneable
 {
-	public CopyRowTable(Map<Header, Object> map)
+    private Map<String, Object> source;
+
+    public CopyRowTable(Map<String, Object> map)
 	{
 	    this();
-	    
 		if (map == null)
 		{
 			throw new NullPointerException("map");
 		}
-		map.forEach((k,v) -> this.source.put(k.name, v));
+		this.source.putAll(map);
 	}
 
 	public CopyRowTable()
 	{
+	    super(null, 0);
 	    this.source = new LinkedHashMap<String, Object>();
 	}
 	
@@ -117,7 +120,13 @@ public class CopyRowTable implements Map<String, Object>, Cloneable
 	@Override
 	public Object get(Object key)
 	{
-	    return this.source.get(key);
+	    Object value = this.source.get(key);
+        if(value instanceof Exception)
+        {
+            Exception e = (Exception) value;
+            throw new WrongExpressionException(e.getMessage());
+        }
+        return value;
 	}
 
 	@Override
@@ -161,6 +170,4 @@ public class CopyRowTable implements Map<String, Object>, Cloneable
 	{
 	    return this.source.entrySet();
 	}
-
-    private Map<String, Object> source;
 }
