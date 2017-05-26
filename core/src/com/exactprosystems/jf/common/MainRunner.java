@@ -601,7 +601,6 @@ public class MainRunner
             {
 				Files.createDirectories(Paths.get(dir));
 			}
-            Files.createDirectories(Paths.get(dir));
             ReportBuilder report = reportFactory.createReportBuilder(dir, "UserManual" + VersionInfo.getVersion() + ".tex", new Date());
             MatrixItem help = DocumentationBuilder.createUserManual(report, context);
             report.reportStarted(null, VersionInfo.getVersion());
