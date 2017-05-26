@@ -264,9 +264,11 @@ public enum Highlighter
 			return list.stream().map(mapper).map(Pattern::quote).collect(Collectors.toList());
 		}
 
-		private final String FUTURE_PATTERN = "(" + String.join("|", quote(dialect.getFeatureKeywords(), s -> s + ":")) + ")\\b";
-		private final String SCENARIO_PATTERN = "(" + String.join(":|", quote(dialect.getScenarioKeywords(), s -> s + ":")) + ")\\b";
-		private final String STEPS_PATTERN = "^\\s+(" + String.join("|", quote(dialect.getStepKeywords(), Function.identity())) + ")\\b";
+		private Function<String, String> function = s -> s + ":";
+
+		private final String FUTURE_PATTERN = "(" + String.join("|", quote(dialect.getFeatureKeywords(), function)) + ")";
+		private final String SCENARIO_PATTERN = "(" + String.join("|", quote(dialect.getScenarioKeywords(), function)) + ")";
+		private final String STEPS_PATTERN = "(" + String.join("|", quote(dialect.getStepKeywords(), Function.identity())) + ")";
 
 		@Override
 		protected Map<String, String> groupPatternMap()
@@ -286,8 +288,8 @@ public enum Highlighter
 			Map<String, String> map = new HashMap<>();
 
 			map.put("FUTURE", "keyword");
-			map.put("SCENARIO", "comment");
-			map.put("STEPS", "tagmark");
+			map.put("SCENARIO", "paren");
+			map.put("STEPS", "comment");
 
 			return map;
 		}
