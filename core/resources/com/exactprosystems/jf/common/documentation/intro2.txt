@@ -1,4 +1,3 @@
-{{&Test Cases Preparation&}}
 The file with test scenarios has the following csv format:
 
 {{#
@@ -35,7 +34,7 @@ The dictionary can be filled manually or by capturing the elements automatically
 The configuration of JF is in a quite simple xml file where all needed entities are described. 
 It includes plug-ins, dictionaries, routine user libraries, etc. 
 
-{{&The systems requirements are as follows:&}} 
+{{/The systems requirements are as follows:/}}
 Linux or Windows with Java SE 1.8, 
 at least 1 GB RAM for comfortable work, 
 10 GB HDD for the tool and log files. 
