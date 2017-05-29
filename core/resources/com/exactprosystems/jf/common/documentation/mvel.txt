@@ -1,4 +1,4 @@
-{{!MVEL!}}
+{{2MVEL2}}
 {{&Basic Syntax&}}
 MVEL is an expression language based on Java-syntax, with some marked differences specific to MVEL.  Unlike Java however, MVEL is dynamically typed (with optional typing), meaning type qualification is not required in the the source. 
 

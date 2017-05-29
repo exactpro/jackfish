@@ -78,8 +78,8 @@ public class DocumentationBuilder
         addTable(help, "", table3, new int[] { 50, 50 },  evaluator);
 
         //todo table of contents
-//        addChapter(help, "", 4);
-//        addChapter(help, " {{toc}}", 4);
+        addChapter(help, "", 4);
+        addChapter(help, "\\tableofcontents", 4);
 
         addChapter(help, "", 4);
         addText(help, DocumentationBuilder.class.getResourceAsStream("intro1.txt"));
