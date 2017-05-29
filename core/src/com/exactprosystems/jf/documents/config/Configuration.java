@@ -73,6 +73,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.io.*;
 import java.math.MathContext;
+import java.time.Instant;
 import java.util.*;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -168,6 +169,7 @@ public class Configuration extends AbstractDocument
         DEFAULT_IMPORTS.add(new MutableString(Map.class.getCanonicalName()));
         DEFAULT_IMPORTS.add(new MutableString(VersionInfo.class.getPackage().getName()));
 
+        DEFAULT_IMPORTS.add(new MutableString(Instant.class.getPackage().getName()));
         DEFAULT_IMPORTS.add(new MutableString(MathContext.class.getPackage().getName()));
         DEFAULT_IMPORTS.add(new MutableString(List.class.getPackage().getName()));
 		DEFAULT_IMPORTS.add(new MutableString(Matcher.class.getPackage().getName()));

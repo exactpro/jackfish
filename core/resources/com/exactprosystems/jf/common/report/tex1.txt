@@ -15,21 +15,21 @@
 \usepackage{amsmath}
 \usepackage{graphicx}
 %% \usepackage[colorinlistoftodos]{todonotes}
-\usepackage[colorlinks=true, bookmarks=true, allcolors=blue]{hyperref}
+\usepackage[colorlinks=true, bookmarks=true, allcolors=blue, linktoc=all]{hyperref}
 
 \usepackage{lastpage} %%can't use it? just install package texlive-latex-extra
 \usepackage{fancyhdr}
 \usepackage[dvipsnames]{xcolor}
 
 \usepackage{scrextend} %% https://tex.stackexchange.com/questions/5339/how-to-specify-font-size-less-than-10pt-or-more-than-12pt
-\changefontsizes[20pt]{16pt}
+\changefontsizes[10pt]{10pt}
 
 \pagestyle{fancy}
 \fancyhf{}
 \rhead{MAGIC PICTURE(COMING SOON)}
 \lhead{CONFIDENTIAL}
 \lfoot{JackFish. User Guide}
-\rfoot{Page \thepage\ of \pageref{LastPage}}
+\rfoot{\thepage\ of {\hypersetup{linkcolor=black}\pageref{LastPage}}}
 \renewcommand{\headrulewidth}{0pt}
 \renewcommand{\footrulewidth}{0pt}
 

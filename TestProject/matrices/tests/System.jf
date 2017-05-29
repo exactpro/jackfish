@@ -406,7 +406,7 @@ RT_USERVAL;ResultTableUserValue;Never;;
     DATA1;Table
     @;UserValue1;UserValue2;UserValue3
     0;100;200;
-    1;null;101;201
+    1;;101;201
     #EndRawTable
 
     #Action;$Table;$Expression

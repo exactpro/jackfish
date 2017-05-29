@@ -103,7 +103,7 @@ public class TexReportBuilder extends ReportBuilder
     
             // style for code
             case OM + "#": return "\\\\begingroup\n" +
-								"    \\\\fontsize{10pt}{12pt}\\\\selectfont\n" +
+								"    \\\\fontsize{12pt}{10pt}\\\\selectfont\n" +
 								"    \\\\begin{verbatim}  ";
             case "#" + CM: return "  \\\\end{verbatim}\n" +
 									"\\\\endgroup";
@@ -221,10 +221,7 @@ public class TexReportBuilder extends ReportBuilder
 	{
 	    title = replaseQoutesToBrases(title);
         writer.fwrite("\\includegraphics[width=0.9\\textwidth]{%s}", fileName.replace("/", "")).newline();
-        /*if (!Str.IsNullOrEmpty(title))
-        {
-			writer.fwrite("\\caption{%s}", title).newline();
-		}*/
+		writer.fwrite("\\newline").newline();
 	}
 
 	@Override

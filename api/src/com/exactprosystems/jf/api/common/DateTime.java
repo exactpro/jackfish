@@ -12,9 +12,12 @@ package com.exactprosystems.jf.api.common;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.Clock;
+import java.time.ZoneId;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.TimeZone;
 
 public class DateTime extends Date
 {
@@ -25,7 +28,14 @@ public class DateTime extends Date
 		super();
 	}
 
-	public DateTime(Date date)
+    public DateTime(String zoneId)
+    {
+        super();
+        ZoneId zone = ZoneId.of(zoneId);
+        setDate(Date.from(Clock.system(zone).instant()));
+    }
+
+    public DateTime(Date date)
 	{
 		super();
 		setTime(date.getTime());
@@ -197,6 +207,16 @@ public class DateTime extends Date
 		return new SimpleDateFormat(format).format(this);
 	}
 	
+    @DescriptionAttribute(text="Convert current instance of date to String via @format using @zoneId")
+    public String str(@FieldParameter(name = "format") String format, String zoneId)
+    {
+        ZoneId zone = ZoneId.of(zoneId);
+        TimeZone tz = TimeZone.getTimeZone(zone);
+        SimpleDateFormat sdf = new SimpleDateFormat(format);
+        sdf.setTimeZone(tz);
+        return sdf.format(this);
+    }
+	
 	//------------------------------------------------------------------------------------------------------------------
 	// fabric methods
 	//------------------------------------------------------------------------------------------------------------------
@@ -206,7 +226,13 @@ public class DateTime extends Date
 		return new DateTime();
 	}
 
-	@DescriptionAttribute(text = "Return current time")
+    @DescriptionAttribute(text = "Return current date for given @zoneId")
+    public static DateTime current(String zoneId)
+    {
+        return new DateTime(zoneId);
+    }
+
+    @DescriptionAttribute(text = "Return current time")
 	public static DateTime currentTime()
 	{
 		return getTime(new Date());
@@ -218,6 +244,16 @@ public class DateTime extends Date
 		return new DateTime(new SimpleDateFormat(format).parse(str));
 	}
 
+    @DescriptionAttribute(text = "Return date from @str using @format for date using @zoneId. If @str dosen't fit converters, will be ParseException")
+    public static DateTime dateTime(@FieldParameter(name = "str") String str, @FieldParameter(name = "format") String format, String zoneId) throws ParseException
+    {
+        ZoneId zone = ZoneId.of(zoneId);
+        TimeZone tz = TimeZone.getTimeZone(zone);
+        SimpleDateFormat sdf = new SimpleDateFormat(format);
+        sdf.setTimeZone(tz);
+        return new DateTime(sdf.parse(str));
+    }
+	
 	@DescriptionAttribute(text = "Return date from @str. If @str dosen't fit converters, will be ParseException")
 	public static DateTime date(@FieldParameter(name = "str") String str) throws ParseException
 	{
@@ -291,7 +327,21 @@ public class DateTime extends Date
 		return new SimpleDateFormat(format).format(date);
 	}
 
-	@DescriptionAttribute(text = "Convert @date to string with date converter")
+    @DescriptionAttribute(text = "Convert @date to string with @format converter")
+    public static String strDate(Date date, String format, String zoneId)
+    {
+        if (date == null)
+        {
+            return "";
+        }
+        ZoneId zone = ZoneId.of(zoneId);
+        TimeZone tz = TimeZone.getTimeZone(zone);
+        SimpleDateFormat sdf = new SimpleDateFormat(format);
+        sdf.setTimeZone(tz);
+        return sdf.format(date);
+    }
+
+    @DescriptionAttribute(text = "Convert @date to string with date converter")
 	public static String strDate(@FieldParameter(name = "date") Date date)
 	{
 		if (date == null)
