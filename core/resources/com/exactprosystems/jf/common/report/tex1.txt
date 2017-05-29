@@ -1,4 +1,4 @@
-\documentclass[a4paper]{article}
+\documentclass[a4paper]{article} %% https://tex.stackexchange.com/questions/155896/what-is-the-default-font-size-of-a-latex-document
 
 %% Language and font encodings
 \usepackage[english]{babel}
@@ -19,6 +19,10 @@
 
 \usepackage{lastpage} %%can't use it? just install package texlive-latex-extra
 \usepackage{fancyhdr}
+\usepackage[dvipsnames]{xcolor}
+
+\usepackage{scrextend} %% https://tex.stackexchange.com/questions/5339/how-to-specify-font-size-less-than-10pt-or-more-than-12pt
+\changefontsizes[20pt]{16pt}
 
 \pagestyle{fancy}
 \fancyhf{}
@@ -29,14 +33,17 @@
 \renewcommand{\headrulewidth}{0pt}
 \renewcommand{\footrulewidth}{0pt}
 
-\usepackage[dvipsnames]{xcolor}
-
 \newcommand\crule[3][black]{\textcolor{#1}{\rule{#2}{#3}}} %%do you want colored rectangle? use it!
 %% example: \crule[COLORNAME]{width}{height}
 
-\begin{document}
+\newcommand{\nocontentsline}[3]{}
+\newcommand{\toclesslab}[3]{\bgroup\let\addcontentsline=\noc‌​ontentsline#1{#2\lab‌​el{#3}}\egroup}
 
 \title{JackFish}
 \author{JackFish dev team}
 \date{\today}
+
+\begin{document}
+
+
 
