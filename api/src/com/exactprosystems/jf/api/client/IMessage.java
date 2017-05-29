@@ -13,6 +13,7 @@ import java.util.List;
 public interface IMessage extends IField
 {
 	List<IField>	getFields();
+	List<IField>	getMessageField();
 	IField			getField(String name);
 
 }

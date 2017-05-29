@@ -8,26 +8,26 @@
 
 package com.exactprosystems.jf.documents.msgdic;
 
-import java.util.ArrayList;
-import java.util.List;
+import com.exactprosystems.jf.api.client.IAttribute;
+import com.exactprosystems.jf.api.client.IField;
+import com.exactprosystems.jf.api.client.IMessage;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
-
-import com.exactprosystems.jf.api.client.IAttribute;
-import com.exactprosystems.jf.api.client.IField;
-import com.exactprosystems.jf.api.client.IMessage;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "Message", propOrder = { "fields" })
+@XmlType(name = "Message", propOrder = {"fields"})
 public class Message extends Field implements IMessage
 {
 	public Message()
 	{
 	}
-	
+
 	@Override
 	public String toString()
 	{
@@ -35,56 +35,63 @@ public class Message extends Field implements IMessage
 	}
 
 	@XmlElement(name = "field")
-	protected List<Field>	fields = new ArrayList<>();
+	protected List<Field> fields = new ArrayList<>();
 
 	//----------------------------------------------------------------------------------------------------------------------
 	// interface IMessage
 	//----------------------------------------------------------------------------------------------------------------------
 	@SuppressWarnings("unchecked")
-    @Override
+	@Override
 	public List<IField> getFields()
 	{
-	    List<IField> res = new ArrayList<>();
-	    addAllField(res, (List<IField>)(List<?>)this.fields);
+		List<IField> res = new ArrayList<>();
+		addAllField(res, (List<IField>) (List<?>) this.fields);
 		return res;
+	}
+
+	@Override
+	public List<IField> getMessageField()
+	{
+		return this.fields.stream().map(f -> (IField) f).collect(Collectors.toList());
 	}
 
 	private static void addAllField(List<IField> list, List<IField> messageList)
 	{
-        for (IField field : messageList)
-        {
-            IField ref = field.getReference();
-            if (ref != null)
-            {
-                if (ref instanceof Message)
-                {
-                    Message refMessage = (Message)ref;
-                    IAttribute entityType = refMessage.getAttribute("entity_type");
-                    if (entityType == null)
-                    {
-                        continue;
-                    }
-                    if ("Group".equals(entityType.getValue()))
-                    {
-                        list.add(field);
-                    }
-                    else
-                    {
-                        addAllField(list, refMessage.getFields());
-                    }
-                }
-                else
-                {
-                    list.add(ref);
-                }
-            }
-            else
-            {
-                list.add(field);
-            }
-        }
+		//TODO think about this method
+		for (IField field : messageList)
+		{
+			IField ref = field.getReference();
+			if (ref != null)
+			{
+				if (ref instanceof Message)
+				{
+					Message refMessage = (Message) ref;
+					IAttribute entityType = refMessage.getAttribute("entity_type");
+					if (entityType == null)
+					{
+						continue;
+					}
+					if ("Group".equals(entityType.getValue()))
+					{
+						list.add(field);
+					}
+					else
+					{
+						addAllField(list, refMessage.getFields());
+					}
+				}
+				else
+				{
+					list.add(ref);
+				}
+			}
+			else
+			{
+				list.add(field);
+			}
+		}
 	}
-	
+
 	@Override
 	public IField getField(String name)
 	{
@@ -96,7 +103,7 @@ public class Message extends Field implements IMessage
 				return field;
 			}
 		}
-			
-		return null; 
+
+		return null;
 	}
 }

@@ -9,10 +9,7 @@
 package com.exactprosystems.jf.documents.matrix.parser.items;
 
 import com.csvreader.CsvWriter;
-import com.exactprosystems.jf.api.client.IClientFactory;
-import com.exactprosystems.jf.api.client.IField;
-import com.exactprosystems.jf.api.client.IMessageDictionary;
-import com.exactprosystems.jf.api.client.MapMessage;
+import com.exactprosystems.jf.api.client.*;
 import com.exactprosystems.jf.api.common.Str;
 import com.exactprosystems.jf.api.error.ErrorKind;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
@@ -80,14 +77,15 @@ public class RawMessage extends MatrixItem
 		driver.showTextBox(this, layout, 1, 0, this.id, this.id, () -> this.id.get());
 		driver.showTitle(this, layout, 1, 1, Tokens.RawMessage.get(), context.getFactory().getSettings());
 		driver.showLabel(this, layout, 1, 2, Tokens.Client.get());
-		driver.showComboBox(this, layout, 1, 3, this.clientName, this.clientName, () ->
-				context.getConfiguration().getClientPool().clientNames(), (str) -> true);
+		driver.showComboBox(this, layout, 1, 3, this.clientName, this.clientName, () -> context.getConfiguration().getClientPool().clientNames(), (str) -> true);
 		driver.showLabel(this, layout, 1, 4, "Message type");
 		driver.showComboBox(this, layout, 1, 5, str ->
 		{
 			this.typeName.set(str);
 			this.message.setMessageType(str);
-			driver.updateTree(this, layout, this.message, getDictionary(context));
+			IMessageDictionary dictionary = getDictionary(context);
+			updateMessage(str, dictionary);
+			driver.updateTree(this, layout, this.message, dictionary);
 		}
 		, this.typeName, () ->
 		{
@@ -165,7 +163,7 @@ public class RawMessage extends MatrixItem
 	@Override
 	public void processRawData(String[] str)
 	{
-		addValue(this.message, str);
+		addValue(str);
 	}
 	
 	@Override
@@ -181,7 +179,6 @@ public class RawMessage extends MatrixItem
 		this.typeName.set(systemParameters.get(Tokens.RawMessage));
 		this.clientName.set(systemParameters.get(Tokens.Client));
 		Map<String, Object> map = new LinkedHashMap<>();
-		map.put("", "");
 		this.message = new MapMessage(this.typeName.get(), map, null);
 
 
@@ -339,7 +336,7 @@ public class RawMessage extends MatrixItem
 		}
 	}
 
-	private void addValue(MapMessage message, String[] str)
+	private void addValue(String[] str)
 	{
 		if (str.length > 0)
 		{
@@ -397,9 +394,41 @@ public class RawMessage extends MatrixItem
 		}
 		catch (Exception e)
 		{
-			DialogsHelper.showError(e.getMessage());
+			;
 		}
 		return null;
+	}
+
+	private void updateMessage(String messageType, IMessageDictionary dictionary)
+	{
+		this.message.clear();
+		IMessage message = dictionary.getMessageByName(messageType);
+		extractFields(this.message, message.getMessageField());
+	}
+
+	private void extractFields(MapMessage mapMessage, List<IField> fields)
+	{
+		fields.stream()
+				.filter(IField::isRequired)
+				.forEach(field -> {
+					String name = field.getName();
+					IField reference = field.getReference();
+					if (reference instanceof IMessage)
+					{
+						mapMessage.put(name, new Map[]{extractMapMessage((IMessage) reference)});
+					}
+					else
+					{
+						mapMessage.put(name, field.getDefaultvalue() == null ? "" : field.getDefaultvalue());
+					}
+				});
+	}
+
+	private MapMessage extractMapMessage(IMessage reference)
+	{
+		MapMessage mapMessage = new MapMessage(null);
+		extractFields(mapMessage, reference.getMessageField());
+		return mapMessage;
 	}
 
 	private String[] headers = null;

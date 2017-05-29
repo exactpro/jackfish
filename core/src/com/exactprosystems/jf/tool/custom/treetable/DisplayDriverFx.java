@@ -8,7 +8,6 @@
 
 package com.exactprosystems.jf.tool.custom.treetable;
 
-import com.exactprosystems.jf.api.app.AppConnection;
 import com.exactprosystems.jf.api.client.IMessageDictionary;
 import com.exactprosystems.jf.api.client.MapMessage;
 import com.exactprosystems.jf.api.common.Str;
@@ -227,9 +226,9 @@ public class DisplayDriverFx implements DisplayDriver
 		ComboBox<String> comboBox = new ComboBox<>();
 		comboBox.setValue(get.get());
 		comboBox.setOnAction(event -> {
-			if (event instanceof StubEvent)
+			if (comboBox.getValue() == null)
 			{
-
+				return;
 			}
 			String lastValue = get.get();
 			String newValue = comboBox.getValue();
@@ -631,7 +630,7 @@ public class DisplayDriverFx implements DisplayDriver
 	public void showTree(MatrixItem item, Object layout, int row, int column, MapMessage message, IMessageDictionary dictionary, Context context)
 	{
 		GridPane pane = (GridPane) layout;
-		RawMessageTreeView treeView = new RawMessageTreeView(message, context.getEvaluator());
+		RawMessageTreeView treeView = new RawMessageTreeView(context.getEvaluator());
 		treeView.displayTree(message, dictionary);
 		DragResizer.makeResizable(treeView, treeView::setPrefHeight);
 		pane.add(treeView, column, row, 10, 2);
