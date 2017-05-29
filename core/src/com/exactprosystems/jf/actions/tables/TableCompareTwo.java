@@ -55,6 +55,7 @@ public class TableCompareTwo extends AbstractAction
 	public final static String expectedName = "Expected";
 	public final static String excludeName = "ExcludeColumns";
 	public final static String ignoreRowsOrderName = "IgnoreRowsOrder";
+    public final static String compareValuesName = "CompareValues";
 
 	@ActionFieldAttribute(name = actualName, mandatory = true, description = "A table which is to be compared. .")
 	protected Table actual = null;
@@ -68,6 +69,8 @@ public class TableCompareTwo extends AbstractAction
 	@ActionFieldAttribute(name = ignoreRowsOrderName, mandatory = false, description = "Ignore row order.")
 	protected Boolean ignoreRowsOrder;
 
+    @ActionFieldAttribute(name = compareValuesName, mandatory = false, description = "If true compare values otherwise compare string repesentaion of values.")
+    protected Boolean compareValues;
 
 	public TableCompareTwo()
 	{
@@ -78,6 +81,7 @@ public class TableCompareTwo extends AbstractAction
 	{
 		this.exclude = new String[]{};
 		this.ignoreRowsOrder = false;
+		this.compareValues = false;
 	}
 
 	@Override
@@ -115,7 +119,8 @@ public class TableCompareTwo extends AbstractAction
 		}
 
 		Table differences = new Table(new String[] { "Description", "Expected", "Actual" }, evaluator);
-		boolean res = Table.extendEquals(report, differences, this.actual, this.expected, this.exclude, this.ignoreRowsOrder);
+		boolean res = Table.extendEquals(report, differences, this.actual, this.expected, this.exclude, 
+		      this.ignoreRowsOrder, this.compareValues);
 
         super.setResult(differences);
 		if (!res)

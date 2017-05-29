@@ -146,12 +146,12 @@ public class TableLeftJoin extends AbstractAction
 				    if((Boolean) cond)
                     {
                         hasColumn = true;
-                        RowTable newRow = rowLeft.clone();
+                        RowTable newRow = newTable.addNew();
+                        newRow.putAll(rowLeft);
                         for (Parameter column : extra)
                         {
                             newRow.put(column.getName(), evaluator.evaluate("" + column.getValue()));
                         }
-                        newTable.add(newRow);
                     }
 				}
 				else 
@@ -163,12 +163,12 @@ public class TableLeftJoin extends AbstractAction
 
 			if(!hasColumn)
 			{
-				RowTable newRow = rowLeft.clone();
+				RowTable newRow = newTable.addNew();
+				newRow.putAll(rowLeft);
 				for (Parameter column : extra)
 				{
 					newRow.put(column.getName(), "");
 				}
-				newTable.add(newRow);
 			}
 		}
 		

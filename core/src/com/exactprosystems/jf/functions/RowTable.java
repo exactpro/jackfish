@@ -44,13 +44,13 @@ public class RowTable implements Map<String, Object>, Cloneable
         return this.currentRow.toString();
     }
     
-    public CopyRowTable copy(Set<String> names)
+    public CopyRowTable copy(Set<String> names, boolean compareValues)
     {
         checkRow();
         LinkedHashMap<String, Object> map = this.currentRow.entrySet()
                 .stream()
-                .filter(e -> names.contains(e.getKey().name))
-                .collect(Collectors.toMap(e -> e.getKey().name, e -> Str.asString(e.getValue()), (k,v) -> k, LinkedHashMap::new));
+                .filter(e -> e.getKey() != null && names.contains(e.getKey().name))
+                .collect(Collectors.toMap(e -> e.getKey().name, e -> compareValues ? e.getValue() : Str.asString(e.getValue()), (k,v) -> k, LinkedHashMap::new));
         
         return new CopyRowTable(map);
     }
@@ -172,7 +172,7 @@ public class RowTable implements Map<String, Object>, Cloneable
     {
         checkRow();
         Set<String> res = new LinkedHashSet<>();
-        this.currentRow.keySet().forEach(k -> res.add(k.name));
+        this.currentRow.keySet().stream().filter(k -> k != null).forEach(k -> res.add(k.name));
         return res;
     }
 
@@ -190,7 +190,10 @@ public class RowTable implements Map<String, Object>, Cloneable
         Map<String, Object> res = new LinkedHashMap<>();
         for (Map.Entry<Header, Object> entry : this.currentRow.entrySet())
         {
-            res.put(entry.getKey().name, entry.getValue());
+            if (entry.getKey() != null)
+            {
+                res.put(entry.getKey().name, entry.getValue());
+            }
         }
         return res.entrySet();
     }

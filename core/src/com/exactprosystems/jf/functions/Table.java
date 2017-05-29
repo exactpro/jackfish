@@ -213,7 +213,8 @@ public class Table implements List<RowTable>, Mutable, Cloneable
 	}
 	//endregion
 
-	public static boolean extendEquals(ReportBuilder report, Table differences, Table actual, Table expected, String[] exclude, boolean ignoreRowsOrder)
+	public static boolean extendEquals(ReportBuilder report, Table differences, Table actual, Table expected, String[] exclude, 
+	        boolean ignoreRowsOrder, boolean compareValues)
 	{
 		Set<String> expectedNames = expected.names(exclude);
 		Set<String> actualNames   = actual.names(exclude);
@@ -235,7 +236,7 @@ public class Table implements List<RowTable>, Mutable, Cloneable
 			Iterator<RowTable> actualIterator = actual.iterator();
 			while (actualIterator.hasNext())
 			{
-                CopyRowTable actualRow = actualIterator.next().copy(expectedNames);
+                CopyRowTable actualRow = actualIterator.next().copy(expectedNames, compareValues);
 				int expectedCounter = 0;
 				Iterator<RowTable> expectedIterator = expected.iterator();
 				while (expectedIterator.hasNext())
@@ -246,7 +247,7 @@ public class Table implements List<RowTable>, Mutable, Cloneable
 				        expectedCounter++;
 				        continue;
 				    }
-				    CopyRowTable expectedRow = expectedIterator.next().copy(expectedNames);
+				    CopyRowTable expectedRow = expectedIterator.next().copy(expectedNames, compareValues);
 					if (Objects.equals(actualRow, expectedRow))
 					{
 						actualMatched[actualCounter] = true;
@@ -262,7 +263,7 @@ public class Table implements List<RowTable>, Mutable, Cloneable
 			Iterator<RowTable> expectedIterator = expected.iterator();
 			while (expectedIterator.hasNext())
 			{
-			    CopyRowTable expectedRow = expectedIterator.next().copy(expectedNames);
+			    CopyRowTable expectedRow = expectedIterator.next().copy(expectedNames, compareValues);
 				if (!expectedMatched[count])
 				{
 					table = addMismatchedRow(table, report, differences, "Extra row[" + count + "]", ReportHelper.objToString(expectedRow, false), "");
@@ -275,7 +276,7 @@ public class Table implements List<RowTable>, Mutable, Cloneable
 			actualIterator = actual.iterator();
 			while (actualIterator.hasNext())
 			{
-			    CopyRowTable actualRow = actualIterator.next().copy(expectedNames); 
+			    CopyRowTable actualRow = actualIterator.next().copy(expectedNames, compareValues); 
 				if (!actualMatched[count])
 				{
 					table = addMismatchedRow(table, report, differences, "Extra row[" + count + "]", "", ReportHelper.objToString(actualRow, false));
@@ -292,8 +293,8 @@ public class Table implements List<RowTable>, Mutable, Cloneable
 			int rowCount = 0;
 			while (actualIterator.hasNext() && expectedIterator.hasNext())
 			{
-				CopyRowTable actualRow = actualIterator.next().copy(expectedNames);
-				CopyRowTable expectedRow = expectedIterator.next().copy(expectedNames);
+				CopyRowTable actualRow = actualIterator.next().copy(expectedNames, compareValues);
+				CopyRowTable expectedRow = expectedIterator.next().copy(expectedNames, compareValues);
 				if (!Objects.equals(actualRow, expectedRow))
 				{
 					table = addMismatchedRow(table, report, differences, "Row[" + rowCount + "]", ReportHelper.objToString(expectedRow, false), ReportHelper.objToString(actualRow, false));
@@ -312,14 +313,14 @@ public class Table implements List<RowTable>, Mutable, Cloneable
 			{
 	             System.err.println("5");
 
-                CopyRowTable expectedRow = expectedIterator.next().copy(expectedNames);
+                CopyRowTable expectedRow = expectedIterator.next().copy(expectedNames, compareValues);
 				table = addMismatchedRow(table, report, differences, "Extra row[" + rowCount + "]", ReportHelper.objToString(expectedRow, false), "");
 				rowCount++;
 				result = false;
 			}
 			while (actualIterator.hasNext())
 			{
-			    CopyRowTable actualRow = actualIterator.next().copy(expectedNames);
+			    CopyRowTable actualRow = actualIterator.next().copy(expectedNames, compareValues);
 				table = addMismatchedRow(table, report, differences, "Extra row[" + rowCount + "]", "", ReportHelper.objToString(actualRow, false));
 				rowCount++;
 				result = false;
@@ -1269,10 +1270,11 @@ public class Table implements List<RowTable>, Mutable, Cloneable
 
 	private Map<Header, Object> convert(Object[] arr)
 	{
-        Map<Header, Object> res = 
-                IntStream.range(0, Math.min(this.headers.length, arr.length))
-                .mapToObj(i -> i)
-                .collect(Collectors.toMap(i -> this.headers[i], j -> arr[j], (k,v) -> k, LinkedHashMap::new));
+        Map<Header, Object> res = new LinkedHashMap<>();
+        for (int i = 0; i < Math.min(this.headers.length, arr.length); i++)
+        {
+            res.put(this.headers[i], arr[i]);
+        }
         Set<Header>  keys = res.keySet();
         Arrays.stream(this.headers).filter(h -> !keys.contains(h)).forEach(h -> res.put(h, null));
         return res;
@@ -1280,8 +1282,11 @@ public class Table implements List<RowTable>, Mutable, Cloneable
 
 	private Map<Header, Object> convert(Map<String, Object> map)
 	{
-		Map<Header, Object> res = map.entrySet().stream()
-		        .collect(Collectors.toMap(e -> headerByName(e.getKey()), e -> e.getValue(), (k,v) -> k, LinkedHashMap::new));
+        Map<Header, Object> res = new LinkedHashMap<>();
+        for (Entry<String, Object> e : map.entrySet())
+        {
+            res.put(headerByName(e.getKey()), e.getValue());
+        }
 		Set<Header>  keys = res.keySet();
 		Arrays.stream(this.headers).filter(h -> !keys.contains(h)).forEach(h -> res.put(h, null));
 		return res;
