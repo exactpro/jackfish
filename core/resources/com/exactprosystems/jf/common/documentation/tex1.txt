@@ -17,7 +17,7 @@
 
 \usepackage{lastpage} %%can't use it? just install package texlive-latex-extra
 \usepackage{fancyhdr}
-\usepackage[dvipsnames]{xcolor}
+\usepackage[usenames,dvipsnames,svgnames,table]{xcolor}
 
 \usepackage{scrextend} %% https://tex.stackexchange.com/questions/5339/how-to-specify-font-size-less-than-10pt-or-more-than-12pt
 \changefontsizes[10pt]{10pt}
@@ -31,8 +31,9 @@
 \lfoot{JackFish. User Guide}
 \rfoot{\thepage\ of {\hypersetup{linkcolor=black}\pageref{LastPage}}}
 \renewcommand{\headrulewidth}{0pt}
-\renewcommand{\footrulewidth}{0pt}
-%%\renewcommand{\footrule}{{\color{BurntOrange}\oldfootrule}}
+\renewcommand{\footrulewidth}{1pt}
+\renewcommand{\footrule}{\hbox to\headwidth{\color{BurntOrange}\leaders\hrule height \footrulewidth\hfill}}
+
 
 \newcommand\crule[3][black]{\textcolor{#1}{\rule{#2}{#3}}} %%do you want colored rectangle? use it!
 %% example: \crule[COLORNAME]{width}{height}
@@ -46,7 +47,4 @@
 
 \begin{document}
 
-
-
-
-
+%%\thispagestyle{empty}
