@@ -5,13 +5,17 @@ import com.exactprosystems.jf.api.client.*;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.tool.custom.expfield.ExpressionField;
 import javafx.collections.FXCollections;
+import javafx.geometry.HPos;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
+import javafx.scene.layout.ColumnConstraints;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 
 import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 
@@ -44,11 +48,26 @@ public class RawMessageTreeView extends TreeView<RawMessageTreeView.MessageBean>
 					HBox box = new HBox();
 					box.setAlignment(Pos.CENTER_LEFT);
 
+					GridPane gridPane = new GridPane();
+					ColumnConstraints c0 = new ColumnConstraints();
+					c0.setPercentWidth(30.0);
+					c0.setHalignment(HPos.LEFT);
+
+					ColumnConstraints c1 = new ColumnConstraints();
+					c1.setPercentWidth(70.0);
+					c1.setHalignment(HPos.RIGHT);
+					c1.setFillWidth(true);
+					c1.setHgrow(Priority.ALWAYS);
+
+					gridPane.getColumnConstraints().addAll(c0, c1);
+
 					{
 						Label labelName = new Label(bean.name);
 						Control controlValue = createControl(bean.name);
-						HBox.setHgrow(controlValue, Priority.ALWAYS);
-						box.getChildren().addAll(labelName, controlValue);
+
+						gridPane.add(labelName, 0, 0);
+						gridPane.add(controlValue, 1, 0);
+						setGraphic(gridPane);
 					}
 
 					if (2 < 1)
@@ -95,10 +114,11 @@ public class RawMessageTreeView extends TreeView<RawMessageTreeView.MessageBean>
 						});
 
 						box.getChildren().add(value);
+						box.setSpacing(10);
+						setGraphic(box);
 					}
 
-					box.setSpacing(10);
-					setGraphic(box);
+
 				}
 				else
 				{
@@ -117,6 +137,7 @@ public class RawMessageTreeView extends TreeView<RawMessageTreeView.MessageBean>
 
 		this.getRoot().getChildren().clear();
 		this.getRoot().getChildren().setAll(FXCollections.emptyObservableList());
+		this.getRoot().getValue().name = message.getMessageType();
 
 		message.forEach((key, value) -> add(this.getRoot(), key, value));
 	}
@@ -211,6 +232,28 @@ public class RawMessageTreeView extends TreeView<RawMessageTreeView.MessageBean>
 	{
 		ContextMenu contextMenu = new ContextMenu();
 
+		MenuItem addAllRequired = new MenuItem("Add all required");
+		addAllRequired.setOnAction(e -> {
+			TreeItem<MessageBean> selectedItem = this.getSelectionModel().getSelectedItem();
+			IMessage message = this.dictionary.getMessage(selectedItem.getValue().name);
+			System.out.println("message : " + message);
+			if (message != null)
+			{
+				//save old filled fields
+
+			}
+			else
+			{
+				return;
+			}
+		});
+
+		MenuItem addField = new MenuItem("Add fields");
+		addField.setOnAction(e -> {
+			//TODO display dialog listView with checkboxes;
+
+		});
+
 		MenuItem addNodeItem = new MenuItem("Add item");
 		addNodeItem.setOnAction(e ->
 		{
@@ -225,7 +268,7 @@ public class RawMessageTreeView extends TreeView<RawMessageTreeView.MessageBean>
 			TreeItem<MessageBean> selectedItem = this.getSelectionModel().getSelectedItem();
 			add(selectedItem, "", new Map[0]);
 		});
-		contextMenu.getItems().addAll(addNodeItem, addGroup);
+		contextMenu.getItems().addAll(addField, addAllRequired, addNodeItem, addGroup);
 
 		return contextMenu;
 	}
@@ -251,6 +294,35 @@ public class RawMessageTreeView extends TreeView<RawMessageTreeView.MessageBean>
 		return expressionField;
 	}
 
+	private void extractFields(MapMessage mapMessage, List<IField> fields, Function<String, Boolean> function)
+	{
+		fields.stream()
+				.filter(IField::isRequired)
+				.forEach(field -> {
+					String name = field.getName();
+					if (function.apply(name))
+					{
+						return;
+					}
+					IField reference = field.getReference();
+					if (reference instanceof IMessage)
+					{
+						mapMessage.put(name, extractMapMessage((IMessage) reference, function));
+					}
+					else
+					{
+						mapMessage.put(name, field.getDefaultvalue() == null ? "" : field.getDefaultvalue());
+					}
+				});
+	}
+
+	private MapMessage extractMapMessage(IMessage reference, Function<String, Boolean> function)
+	{
+		MapMessage mapMessage = new MapMessage(null);
+		extractFields(mapMessage, reference.getMessageField(), function);
+		return mapMessage;
+	}
+
 
 	class MessageBean
 	{
@@ -267,6 +339,29 @@ public class RawMessageTreeView extends TreeView<RawMessageTreeView.MessageBean>
 		public String toString()
 		{
 			return "Name= '" + name + '\'' + (this.value.length() > 0 ? ", Value= '" + value + '\'' : "");
+		}
+
+		@Override
+		public boolean equals(Object o)
+		{
+			if (this == o)
+			{
+				return true;
+			}
+			if (o == null || getClass() != o.getClass())
+			{
+				return false;
+			}
+
+			MessageBean that = (MessageBean) o;
+
+			return name != null ? name.equals(that.name) : that.name == null;
+		}
+
+		@Override
+		public int hashCode()
+		{
+			return name != null ? name.hashCode() : 0;
 		}
 	}
 

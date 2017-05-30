@@ -415,7 +415,7 @@ public class RawMessage extends MatrixItem
 					IField reference = field.getReference();
 					if (reference instanceof IMessage)
 					{
-						mapMessage.put(name, new Map[]{extractMapMessage((IMessage) reference)});
+						mapMessage.put(name, extractMapMessage((IMessage) reference));
 					}
 					else
 					{
