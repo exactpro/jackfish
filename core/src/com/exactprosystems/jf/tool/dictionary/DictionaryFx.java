@@ -775,7 +775,7 @@ public class DictionaryFx extends GuiDictionary
 		}
 		else
 		{
-			this.controller.println("" + obj);
+			this.controller.println("Entered string is not Operation or Spec" + obj);
 		}
 	}
 
@@ -843,6 +843,7 @@ public class DictionaryFx extends GuiDictionary
 			OperationResult result = abstractControl.operate(this.applicationConnector.getAppConnection().getApplication().service(), window, operation);
 			return Optional.of(result);
 		}
+		DialogsHelper.showError("Start a application before doing the operation");
 		return Optional.empty();
 	}
 

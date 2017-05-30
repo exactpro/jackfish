@@ -172,10 +172,6 @@ public class OperationResult implements Serializable
         {
             builder.append(" int [").append(this.integer).append("];");
         }
-        if (this.text != null)
-		{
-			builder.append(" text [").append(this.text).append("];");
-		}
 		if (this.rectangle != null)
 		{
 			builder.append(" rectangle [").append(this.rectangle).append("];");
@@ -195,6 +191,14 @@ public class OperationResult implements Serializable
 		if (this.array != null)
 		{
 			builder.append(" array [").append(Arrays.deepToString(this.array)).append("];");
+		}
+		if (builder.toString().isEmpty())
+		{
+			return "" + this.text;
+		}
+		if (this.text != null)
+		{
+			builder.append(" text [").append(this.text).append("];");
 		}
 		return builder.toString();
 	}
