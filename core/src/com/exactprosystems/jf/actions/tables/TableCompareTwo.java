@@ -16,8 +16,11 @@ import com.exactprosystems.jf.documents.config.Context;
 import com.exactprosystems.jf.documents.matrix.parser.Parameters;
 import com.exactprosystems.jf.functions.HelpKind;
 import com.exactprosystems.jf.functions.Table;
+import com.exactprosystems.jf.functions.Table.TableCompareResult;
 
 import java.util.List;
+import java.util.Objects;
+import java.util.Set;
 
 @ActionAttribute(
 		group					= ActionGroups.Tables,
@@ -117,16 +120,29 @@ public class TableCompareTwo extends AbstractAction
 			super.setError("IgnoreRowsOrder is null", ErrorKind.EMPTY_PARAMETER);
 			return;
 		}
-
+		
+		
+		Set<String> actualColumns = this.actual.names(this.exclude);
+        Set<String> expectedColumns = this.expected.names(this.exclude);
+		
+		if (!Objects.equals(actualColumns, expectedColumns))
+		{
+            super.setError("Actual columns " + actualColumns + " doesn't match expected columns " + expectedColumns, 
+                ErrorKind.WRONG_PARAMETERS);
+            return;
+		}
+		
 		Table differences = new Table(new String[] { "Description", "Expected", "Actual" }, evaluator);
-		boolean res = Table.extendEquals(report, differences, this.actual, this.expected, this.exclude, 
+		TableCompareResult res = Table.extendEquals(report, differences, this.actual, this.expected, this.exclude, 
 		      this.ignoreRowsOrder, this.compareValues);
 
         super.setResult(differences);
-		if (!res)
+		if (!res.equal)
 		{
-			super.setError("Tables are not equal.", ErrorKind.NOT_EQUAL);
+            String message = String.format("{{`Tables are not equal.`}}{{` %d - matched`}}{{` %d - extra actual`}}{{` %d - extra expected`}}", 
+                res.matched, res.extraActual, res.extraExpected);
+		
+			super.setError(message, ErrorKind.NOT_EQUAL);
 		}
 	}
-
 }
