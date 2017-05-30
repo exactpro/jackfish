@@ -8,6 +8,8 @@
 
 package com.exactprosystems.jf.common.report;
 
+import com.exactprosystems.jf.common.documentation.TexReportBuilder;
+
 import java.io.IOException;
 import java.util.Date;
 
