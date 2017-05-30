@@ -29,7 +29,7 @@ import java.util.stream.Collectors;
 
 public class WinOperationExecutorJNA implements OperationExecutor<UIProxyJNA>
 {
-	static final String RECTANGLE_PATTERN = "(-?\\d+),(-?\\d+),(\\d+),(\\d+)";
+	static final String RECTANGLE_PATTERN = "(-?\\d+)[,;](-?\\d+)[,;](\\d+)[,;](\\d+)";
 	private static final String SEPARATOR_CELL = "###";
 	private static final String SEPARATOR_ROWS = ";;;";
 	private static final String SEPARATOR_COMMA = ",";
