@@ -115,8 +115,11 @@ RF;RegressionFramework
                     #Action;$Matrix
                     MatrixWait;MXRN.Out
 
-                    #Action;$Connection;$Query;Passed;Failed;Report;ScenarioId
-                    SQLexecute;SQL;'UPDATE scenarios SET passed = ?, failed = ?, report = ?, done = 1 WHERE id = ?';MXRN.Out.passed();MXRN.Out.failed();MXRN.Out.reportAsBlob();scenarioId
+                    #Action;$Connection;$Query;Passed;Failed;ScenarioId
+                    SQLexecute;SQL;'UPDATE scenarios SET passed = ?, failed = ?, done = 1 WHERE id = ?';MXRN.Out.passed();MXRN.Out.failed();scenarioId
+
+                    #IgnoreErr;#Action;$Connection;$Query;Report;ScenarioId
+                    1;SQLexecute;SQL;'Update scenarios SET report = ? WHERE id = ?';MXRN.Out.reportAsBlob();scenarioId
 
                     #Id;#Action;$Decoraded;$Matrix
                     resultTab;ResultTable;false;MXRN.Out
@@ -136,14 +139,20 @@ RF;RegressionFramework
                         _rf_dialect
                             #Case
                             'MYSQL'
-                                #Id;#Action;$Connection;$Query;ScenarioId;Testcase;Stepp;Time;Result;Error;Screenshot
-                                selectDetails;SQLinsert;SQL;'INSERT INTO details (scenario_id, testcase, step, time, result, error, screenshot) VALUES (?, ?, ?, ?, ?, ?, ?)';scenarioId;'' + details.TestCase;'' + details.Step;details.Time;'' + details.Result;'' + details.Error;Converter.storableToBlob(details.Screenshot)
+                                #Id;#Action;$Connection;$Query;ScenarioId;Testcase;Stepp;Time;Result;Error
+                                selectDetails;SQLinsert;SQL;'INSERT INTO details (scenario_id, testcase, step, time, result, error) VALUES (?, ?, ?, ?, ?, ?)';scenarioId;'' + details.TestCase;'' + details.Step;details.Time;'' + details.Result;'' + details.Error
+
+                                #Id;#IgnoreErr;#Action;$Connection;$Query;Screenshot;Id
+                                SQLEXEC2;1;SQLexecute;SQL;'UPDATE details SET screenshot = ? WHERE id = ?' ;Converter.storableToBlob(details.Screenshot);selectDetails.Out[0]
 
 
                             #Case
                             'MSSQL'
-                                #Id;#Action;$Connection;$Query;ScenarioId;Testcase;Stepp;Time;Result;Error;Screenshot
-                                selectDetails;SQLinsert;SQL;'INSERT INTO details (scenario_id, testcase, step, time, result, error, screenshot) VALUES (?, ?, ?, ?, ?, ?, CONVERT(VARBINARY(MAX),?))';scenarioId;'' + details.TestCase;'' + details.Step;details.Time;'' + details.Result;'' + details.Error;Converter.storableToBlob(details.Screenshot)
+                                #Id;#Action;$Connection;$Query;ScenarioId;Testcase;Stepp;Time;Result;Error
+                                selectDetails;SQLinsert;SQL;'INSERT INTO details (scenario_id, testcase, step, time, result, error) VALUES (?, ?, ?, ?, ?, ?)';scenarioId;'' + details.TestCase;'' + details.Step;details.Time;'' + details.Result;'' + details.Error
+
+                                #Id;#IgnoreErr;#Action;$Connection;$Query;Screenshot;Id
+                                SQLEXEC3;1;SQLexecute;SQL;'UPDATE details SET screenshot = CONVERT(VARBINARY(MAX),?)) WHERE id = ?';Converter.storableToBlob(details.Screenshot);selectDetails.Out[0]
 
 
                             #Default
@@ -1478,6 +1487,7 @@ RF;RegressionFramework
                     ~;"  `duration` int(11) DEFAULT NULL,"
                     ~;"  `tool_version` VARCHAR(100) NULL,"
                     ~;"  `app_version` VARCHAR(100) NULL,"
+                    ~;"  `name` VARCHAR(300) NULL,"
                     ~;"  PRIMARY KEY (`id`)"
                     ~;") ENGINE=InnoDB AUTO_INCREMENT=94 DEFAULT CHARSET=utf8;"
                     #EndRawText
@@ -1542,7 +1552,8 @@ RF;RegressionFramework
                     ~;"  create_time datetime DEFAULT NULL,  "
                     ~;"  duration int DEFAULT NULL,"
                     ~;"  tool_version VARCHAR(100) NULL,"
-                    ~;"  app_version VARCHAR(100) NULL"
+                    ~;"  app_version VARCHAR(100) NULL,"
+                    ~;"  name VARCHAR(300) NULL"
                     ~;") ;"
                     #EndRawText
 
