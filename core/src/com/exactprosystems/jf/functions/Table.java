@@ -314,6 +314,8 @@ public class Table implements List<RowTable>, Mutable, Cloneable
                 }
 				else
 				{
+	                extraExpected++;
+	                extraActual++;
 					table = addMismatchedRow(table, report, differences, "Row[" + rowCount + "]", ReportHelper.objToString(expectedRow, false), ReportHelper.objToString(actualRow, false));
 					for (String name : expectedNames)
 					{

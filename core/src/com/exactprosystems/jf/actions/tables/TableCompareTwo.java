@@ -139,7 +139,7 @@ public class TableCompareTwo extends AbstractAction
         super.setResult(differences);
 		if (!res.equal)
 		{
-            String message = String.format("{{`Tables are not equal.`}}{{` %d - matched`}}{{` %d - extra actual`}}{{` %d - extra expected`}}", 
+            String message = String.format("Tables are not equal.\n %d - matched\n %d - extra actual\n %d - extra expected", 
                 res.matched, res.extraActual, res.extraExpected);
 		
 			super.setError(message, ErrorKind.NOT_EQUAL);
