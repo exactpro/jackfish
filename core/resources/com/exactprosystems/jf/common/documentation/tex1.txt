@@ -1,6 +1,5 @@
 \documentclass[a4paper]{article} %% https://tex.stackexchange.com/questions/155896/what-is-the-default-font-size-of-a-latex-document
 
-%% Language and font encodings
 \usepackage[english]{babel}
 %% \usepackage[utf8x]{inputenc}
 \usepackage[T1]{fontenc}
@@ -9,9 +8,8 @@
 \usepackage{longtable}
 
 %% Sets page size and margins
-\usepackage[a4paper,top=3cm,bottom=2cm,left=3cm,right=3cm,marginparwidth=1.75cm]{geometry}
+\usepackage[a4paper,top=3cm,bottom=3cm,left=3cm,right=3cm,marginparwidth=1.75cm, margin=1in,headsep=0.5in]{geometry}
 
-%% Useful packages
 \usepackage{amsmath}
 \usepackage{graphicx}
 %% \usepackage[colorinlistoftodos]{todonotes}
@@ -24,14 +22,17 @@
 \usepackage{scrextend} %% https://tex.stackexchange.com/questions/5339/how-to-specify-font-size-less-than-10pt-or-more-than-12pt
 \changefontsizes[10pt]{10pt}
 
+%%\let\oldfootrule\footrule
+
 \pagestyle{fancy}
 \fancyhf{}
-\rhead{MAGIC PICTURE(COMING SOON)}
-\lhead{CONFIDENTIAL}
+\rhead{\includegraphics[width=4cm, height=1.3cm]{header.png}}
+\lhead{\textbf{CONFIDENTIAL}}
 \lfoot{JackFish. User Guide}
 \rfoot{\thepage\ of {\hypersetup{linkcolor=black}\pageref{LastPage}}}
 \renewcommand{\headrulewidth}{0pt}
 \renewcommand{\footrulewidth}{0pt}
+%%\renewcommand{\footrule}{{\color{BurntOrange}\oldfootrule}}
 
 \newcommand\crule[3][black]{\textcolor{#1}{\rule{#2}{#3}}} %%do you want colored rectangle? use it!
 %% example: \crule[COLORNAME]{width}{height}
@@ -44,6 +45,8 @@
 \date{\today}
 
 \begin{document}
+
+
 
 
 
