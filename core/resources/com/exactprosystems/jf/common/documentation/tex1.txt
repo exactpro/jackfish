@@ -22,18 +22,27 @@
 \usepackage{scrextend} %% https://tex.stackexchange.com/questions/5339/how-to-specify-font-size-less-than-10pt-or-more-than-12pt
 \changefontsizes[10pt]{10pt}
 
-%%\let\oldfootrule\footrule
-
-\pagestyle{fancy}
-\fancyhf{}
-\rhead{\includegraphics[width=4cm, height=1.3cm]{header.png}}
-\lhead{\textbf{CONFIDENTIAL}}
-\lfoot{JackFish. User Guide}
-\rfoot{\thepage\ of {\hypersetup{linkcolor=black}\pageref{LastPage}}}
 \renewcommand{\headrulewidth}{0pt}
 \renewcommand{\footrulewidth}{1pt}
 \renewcommand{\footrule}{\hbox to\headwidth{\color{BurntOrange}\leaders\hrule height \footrulewidth\hfill}}
 
+\setlength{\skip\footins}{1cm}
+
+\fancypagestyle{allpages}{
+    \fancyhf{}
+    \rhead{\includegraphics[width=4cm, height=1.3cm]{header.png}}
+    \lhead{\textbf{CONFIDENTIAL}}
+    \lfoot{JackFish. User Guide}
+    \rfoot{\thepage\ of {\hypersetup{linkcolor=black}\pageref{LastPage}}}
+}
+
+\fancypagestyle{firstpage}
+{
+   \fancyhf{}
+   \rhead{\includegraphics[width=4cm, height=1.3cm]{header.png}}
+   \lhead{\textbf{CONFIDENTIAL}}
+   \lfoot{\includegraphics[width=4cm, height=1.3cm]{footer.png} \newline \tiny{London Stock Exchange Group plc. Registered in England & Wales No 5369106. Registered office 10 Paternoster Square, London EC4M 7LS} }
+}
 
 \newcommand\crule[3][black]{\textcolor{#1}{\rule{#2}{#3}}} %%do you want colored rectangle? use it!
 %% example: \crule[COLORNAME]{width}{height}
@@ -47,4 +56,6 @@
 
 \begin{document}
 
-%%\thispagestyle{empty}
+
+\newpage
+\thispagestyle{firstpage}
