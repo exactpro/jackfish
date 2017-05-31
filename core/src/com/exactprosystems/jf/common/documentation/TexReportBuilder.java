@@ -98,7 +98,7 @@ public class TexReportBuilder extends ReportBuilder
             case "3" + CM: return " }";
     
             // header 4 (max level)
-            case OM + "4": return "\\\\newpage";
+            case OM + "4": return "\\\\newpage ";
             case "4" + CM: return "";  
     
             // style for identifiers
@@ -249,18 +249,16 @@ public class TexReportBuilder extends ReportBuilder
 	    double constant = 0.9;
 
 	    writer.fwrite("\\begin{center}").newline();
-		writer.fwrite(String.format("\\begin{longtable}[h]{lp{%s\\linewidth}}", constant)).newline();
 		if (!Str.IsNullOrEmpty(tableTitle))
 		{
 			writer.fwrite("\\caption{%s} \\newline", tableTitle).newline();
 		}
-		
 		String tab = IntStream.range(0, columns.length)
 		        .mapToObj(i -> i)
 		        .map(o -> (percents.length <= o ? "l" : "p{" + (percents[o] * TEXT_WIDTH * constant/ 100) + "mm}"))
 		        .collect(Collectors.joining("|"));
 
-		writer.fwrite("\\begin{tabular}{|%s|} \\hline", tab).newline();
+		writer.fwrite(String.format("\\begin{longtable}{|%s|} \\hline", tab)).newline();
 		tableRow(writer, table, 0, columns);
 	}
 	
@@ -277,8 +275,7 @@ public class TexReportBuilder extends ReportBuilder
 	@Override
 	protected void tableFooter(ReportWriter writer, ReportTable table) throws IOException
 	{
-		writer.fwrite("\\end{tabular}").newline()
-		    .fwrite("\\end{longtable}").newline()
+		writer.fwrite("\\end{longtable}").newline()
 			.fwrite("\\end{center}").newline();
 	}
 
@@ -291,7 +288,8 @@ public class TexReportBuilder extends ReportBuilder
 
     private String replaseBrasesToQuotes(String source)
     {
-        if (source == null)
+		return source;
+        /*if (source == null)
         {
             return null;
         }
@@ -309,15 +307,16 @@ public class TexReportBuilder extends ReportBuilder
         }
         m.appendTail(sb);
 
-        return sb.toString();
+        return sb.toString();*/
     }
 
     private String replaseQoutesToBrases(String source)
     {
-        if (source == null)
+    	return source;
+        /*if (source == null)
         {
             return null;
         }
-        return source.replace("«", "\\{").replace("»", "\\}");
+        return source.replace("«", "\\{").replace("»", "\\}");*/
     }
 }

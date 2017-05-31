@@ -438,6 +438,74 @@ TABLE_SORT;Test case;Never;;
 
 
 #Id;#TestCase;#Kind;#Depends;#For
+TABLE_COLUMNS_AS_LIST;;;;
+    #Step;#Kind;#For;#Depends
+    'Positive testing';;;
+        #Step;#Kind;#For;#Depends
+        'Without values';;;
+            #Id;#RawTable
+            DATA2;Table
+            @;A
+            0;1
+            1;2
+            2;3
+            3;4
+            4;5
+            #EndRawTable
+
+            #Id;#Action;#Assert;$Table;$Column
+            TBL2;TableColumnAsList;This.Out.size() == 5 && This.Result == Result.Passed && This.Out[0] == '1';DATA2;'A'
+
+        #EndStep
+
+        #Step;#Kind;#For;#Depends
+        'With values';;;
+            #Id;#Let
+            v;13
+
+            #Id;#RawTable
+            DATA2;Table
+            @;A
+            0;v + 10
+            1;2
+            2;3
+            3;4
+            4;5
+            #EndRawTable
+
+            #Action;$Table;$Expression
+            TableConsiderColumnsAs;DATA2;'A'
+
+            #Id;#Action;#Assert;$Table;$Column;$GetValues
+            TBL2;TableColumnAsList;This.Out.size() == 5 && This.Result == Result.Passed && This.Out[0] == 23;DATA2;'A';true
+
+        #EndStep
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'Negative testing';;;
+        #Step;#Kind;#For;#Depends
+        'With not existing column';;;
+            #Id;#RawTable
+            DATA2;Table
+            @;A
+            0;1
+            1;2
+            2;3
+            3;4
+            4;5
+            #EndRawTable
+
+            #Id;#Action;#Assert;$Table;$Column
+            TBL2;TableColumnAsList;This.Result == Result.Failed && This.Kind == ErrorKind.WRONG_PARAMETERS;DATA2;'B'
+
+        #EndStep
+
+    #EndStep
+
+
+#Id;#TestCase;#Kind;#Depends;#For
 TABLE_COMPARE_TWO;Test case;Never;;
     #Step;#Kind;#For;#Depends
     'Positive testing';;;
@@ -521,6 +589,73 @@ TABLE_COMPARE_TWO;Test case;Never;;
 
             #Id;#Action;$IgnoreRowsOrder;$Expected;$Actual
             TBLCMP2;TableCompareTwo;true;expected;actual
+
+        #EndStep
+
+        #Step;#Kind;#For;#Depends
+        'Comparting with compareValues is true';;;
+            #Id;#Let
+            tmp;12
+
+            #Id;#Let
+            anotherTmp;10
+
+            #Id;#RawTable
+            actual;Table
+            @;newH;NewColumn
+            0;tmp+1;4
+            1;2;tmp+3
+            2;3;6
+            #EndRawTable
+
+            #Id;#RawTable
+            expected;Table
+            @;newH;NewColumn
+            0;anotherTmp+3;4
+            1;2;anotherTmp+5
+            2;3;6
+            #EndRawTable
+
+            #Action;$Table;$Expression
+            TableConsiderColumnsAs;actual;{'newH', 'NewColumn'}
+
+            #Action;$Table;$Expression
+            TableConsiderColumnsAs;expected;{'newH', 'NewColumn'}
+
+            #Id;#Action;$Expected;$Actual;$CompareValues
+            TBLCMP2;TableCompareTwo;expected;actual;true
+
+        #EndStep
+
+        #Step;#Kind;#For;#Depends
+        'Compare with compareValues is false';;;
+            #Id;#Let
+            tmp;12
+
+            #Id;#RawTable
+            actual;Table
+            @;newH;NewColumn
+            0;tmp+1;4
+            1;2;tmp+3
+            2;3;6
+            #EndRawTable
+
+            #Id;#RawTable
+            expected;Table
+            @;newH;NewColumn
+            0;tmp+1;4
+            1;2;tmp+3
+            2;3;6
+            #EndRawTable
+
+            #Action;$Table;$Expression
+            TableConsiderColumnsAs;actual;{'newH', 'NewColumn'}
+
+            #Action;$Table;$Expression
+            TableConsiderColumnsAs;expected;{'newH', 'NewColumn'}
+
+            #Id;#Action;$Expected;$Actual;$CompareValues
+            TBLCMP2;TableCompareTwo;expected;actual;false
 
         #EndStep
 
@@ -637,7 +772,7 @@ TABLE_COMPARE_TWO;Test case;Never;;
             #EndRawTable
 
             #Id;#Action;#Assert;$Expected;$Actual
-            TBLCMP10;TableCompareTwo;This.Result == Result.Failed && This.Kind == ErrorKind.NOT_EQUAL;actual;expected
+            TBLCMP10;TableCompareTwo;This.Result == Result.Failed && This.Kind == ErrorKind.WRONG_PARAMETERS;actual;expected
 
             #Id;#Action;$ExcludeColumns;$Expected;$Actual
             TBLCMP10;TableCompareTwo;'NewColumn';actual;expected
@@ -664,7 +799,77 @@ TABLE_COMPARE_TWO;Test case;Never;;
             #EndRawTable
 
             #Id;#Action;#Assert;$Expected;$Actual
-            TBLCMP11;TableCompareTwo;This.Result == Result.Failed && This.Kind == ErrorKind.NOT_EQUAL;expected;actual
+            TBLCMP11;TableCompareTwo;This.Result == Result.Failed && This.Kind == ErrorKind.WRONG_PARAMETERS;expected;actual
+
+        #EndStep
+
+        #Step;#Kind;#For;#Depends
+        'Compare tables with compareValues is true, but cells not equals';;;
+            #Id;#Let
+            tmp;12
+
+            #Id;#Let
+            anotherTmp;5
+
+            #Id;#RawTable
+            actual;Table
+            @;newH;NewColumn
+            0;tmp+1;4
+            1;2;tmp+3
+            2;3;6
+            #EndRawTable
+
+            #Id;#RawTable
+            expected;Table
+            @;newH;NewColumn
+            0;anotherTmp+3;4
+            1;2;anotherTmp+5
+            2;3;6
+            #EndRawTable
+
+            #Action;$Table;$Expression
+            TableConsiderColumnsAs;actual;{'newH', 'NewColumn'}
+
+            #Action;$Table;$Expression
+            TableConsiderColumnsAs;expected;{'newH', 'NewColumn'}
+
+            #Id;#Action;#Assert;$Expected;$Actual;$CompareValues
+            TBLCMP2;TableCompareTwo;This.Result == Result.Failed && This.Kind == ErrorKind.NOT_EQUAL;expected;actual;true
+
+        #EndStep
+
+        #Step;#Kind;#For;#Depends
+        'Compare tables with compareValues is false, but cells not equals';;;
+            #Id;#Let
+            tmp;12
+
+            #Id;#Let
+            anotherTmp;5
+
+            #Id;#RawTable
+            actual;Table
+            @;newH;NewColumn
+            0;tmp+1;4
+            1;2;tmp+3
+            2;3;6
+            #EndRawTable
+
+            #Id;#RawTable
+            expected;Table
+            @;newH;NewColumn
+            0;anotherTmp+3;4
+            1;2;anotherTmp+5
+            2;3;6
+            #EndRawTable
+
+            #Action;$Table;$Expression
+            TableConsiderColumnsAs;actual;{'newH', 'NewColumn'}
+
+            #Action;$Table;$Expression
+            TableConsiderColumnsAs;expected;{'newH', 'NewColumn'}
+
+            #Id;#Action;#Assert;$Expected;$Actual;$CompareValues
+            TBLCMP2;TableCompareTwo;This.Result == Result.Failed && This.Kind == ErrorKind.NOT_EQUAL;expected;actual;false
 
         #EndStep
 

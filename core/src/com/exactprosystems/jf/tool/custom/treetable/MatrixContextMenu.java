@@ -16,7 +16,6 @@ import com.exactprosystems.jf.common.Settings.SettingsValue;
 import com.exactprosystems.jf.common.documentation.DocumentationBuilder;
 import com.exactprosystems.jf.common.report.ContextHelpFactory;
 import com.exactprosystems.jf.common.report.ReportBuilder;
-import com.exactprosystems.jf.common.version.VersionInfo;
 import com.exactprosystems.jf.documents.config.Context;
 import com.exactprosystems.jf.documents.matrix.parser.Tokens;
 import com.exactprosystems.jf.documents.matrix.parser.items.End;
@@ -39,9 +38,6 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Pane;
-import javafx.scene.web.WebEngine;
-import javafx.scene.web.WebView;
-import javafx.stage.Stage;
 import org.fxmisc.richtext.StyledTextArea;
 
 import java.util.Arrays;
@@ -60,7 +56,6 @@ public class MatrixContextMenu extends ContextMenu
 	{
 		super();
 		this.context = context;
-		this.menuWizard.setVisible(VersionInfo.isDevVersion());
 
 		SettingsValue foldSetting = settings.getValueOrDefault(Settings.GLOBAL_NS, Settings.MATRIX_NAME, Settings.MATRIX_FOLD_ITEMS, "false");
 		this.fold = Boolean.parseBoolean(foldSetting.getValue());

@@ -72,7 +72,7 @@ public class TableCompareTwo extends AbstractAction
 	@ActionFieldAttribute(name = ignoreRowsOrderName, mandatory = false, description = "Ignore row order.")
 	protected Boolean ignoreRowsOrder;
 
-    @ActionFieldAttribute(name = compareValuesName, mandatory = false, description = "If true compare values otherwise compare string repesentaion of values.")
+    @ActionFieldAttribute(name = compareValuesName, mandatory = false, description = "If true compare values otherwise compare string representation of values.")
     protected Boolean compareValues;
 
 	public TableCompareTwo()
@@ -90,7 +90,7 @@ public class TableCompareTwo extends AbstractAction
 	@Override
 	protected HelpKind howHelpWithParameterDerived(Context context, Parameters parameters, String fieldName) throws Exception
 	{
-		return ignoreRowsOrderName.equals(fieldName) ? HelpKind.ChooseFromList : null;
+		return ignoreRowsOrderName.equals(fieldName) || compareValuesName.equals(fieldName) ? HelpKind.ChooseFromList : null;
 	}
 
 	@Override
@@ -99,6 +99,7 @@ public class TableCompareTwo extends AbstractAction
 		switch (parameterToFill)
 		{
 			case ignoreRowsOrderName:
+			case compareValuesName:
 				list.add(ReadableValue.TRUE);
 				list.add(ReadableValue.FALSE);
 				break;
