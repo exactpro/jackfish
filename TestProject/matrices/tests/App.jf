@@ -22,7 +22,7 @@ Application Close Window;;;
         app;appStart
 
         #Id;#Action;$AppConnection;URL;WhereOpen
-        APPNI1;ApplicationNewInstance;app;newUrl;'tab'
+        APPNI1;ApplicationNewInstance;app;newUrl;'OpenInTab'
 
         #Action;$Time
         Wait;1500
@@ -111,7 +111,7 @@ Application Navigate;;;
         firstTitle;APPPAR1.Out.get('Title')
 
         #Id;#Action;URL;WhereOpen;$AppConnection
-        APPNI1;ApplicationNewInstance;'https://www.exactprosystems.com/';'url';APPSTR3.Out
+        APPNI1;ApplicationNewInstance;'https://www.exactprosystems.com/';'OpenNewUrl';APPSTR3.Out
 
         #Action;$Time
         Wait;2500
@@ -421,50 +421,119 @@ Application New Instance;;;
         #Id;#Let
         newURL;'https://www.google.ru'
 
-        #Id;#Call
-        CALL_3;appStart
+        #Step;#Kind;#For;#Depends
+        'open in current url';;;
+            #Id;#Call
+            CALL_3;appStart
 
-        #Id;#Action;#Assert;WhereOpen;URL;$AppConnection
-        APPNI2;ApplicationNewInstance;CALL_3.getApplication().service().titles().size() == 1 && CALL_3.getApplication().service().getProperty('URL').contains(newURL);'url';newURL;CALL_3
+            #Id;#Action;#Assert;WhereOpen;URL;$AppConnection
+            APPNI2;ApplicationNewInstance;CALL_3.getApplication().service().titles().size() == 1 && CALL_3.getApplication().service().getProperty('URL').contains(newURL);'OpenNewUrl';newURL;CALL_3
 
-        #Id;#Action;$AppConnection
-        APPSTP3;ApplicationStop;CALL_3
+            #Id;#Action;$AppConnection
+            APPSTP3;ApplicationStop;CALL_3
 
-        #Id;#Call
-        CALL_4;appStart
+        #EndStep
 
-        #Id;#Action;WhereOpen;URL;$AppConnection
-        APPNI2;ApplicationNewInstance;'tab';newURL;CALL_4
+        #Step;#Kind;#For;#Depends
+        'open in tab';;;
+            #Id;#Call
+            CALL_4;appStart
 
-        #Action;$Time
-        Wait;2000
+            #Id;#Action;WhereOpen;URL;$AppConnection
+            APPNI2;ApplicationNewInstance;'OpenInTab';newURL;CALL_4
 
-        #Id;#Action;URL;Title;$AppConnection
-        APPSW1;ApplicationSwitchTo;newURL;'Google';CALL_4
+            #Action;$Time
+            Wait;2000
 
-        #Assert;#Message
-        CALL_4.getApplication().service().titles().size() == 2 && CALL_4.getApplication().service().getProperty('URL').contains(newURL);
+            #Id;#Action;URL;Title;$AppConnection
+            APPSW1;ApplicationSwitchTo;newURL;'Google';CALL_4
 
-        #Id;#Action;$AppConnection
-        APPSTP3;ApplicationStop;CALL_4
+            #Assert;#Message
+            CALL_4.getApplication().service().titles().size() == 2 && CALL_4.getApplication().service().getProperty('URL').contains(newURL);
 
-        #Id;#Call
-        CALL_5;appStart
+            #Id;#Action;$AppConnection
+            APPSTP3;ApplicationStop;CALL_4
 
-        #Id;#Action;WhereOpen;URL;$AppConnection
-        APPNI2;ApplicationNewInstance;'window';newURL;CALL_5
+        #EndStep
 
-        #Action;$Time
-        Wait;2000
+        #Step;#Kind;#For;#Depends
+        'open in window';;;
+            #Id;#Call
+            CALL_5;appStart
 
-        #Id;#Action;URL;Title;$AppConnection
-        APPSW1;ApplicationSwitchTo;newURL;'Google';CALL_5
+            #Id;#Action;WhereOpen;URL;$AppConnection
+            APPNI2;ApplicationNewInstance;'OpenInWindow';newURL;CALL_5
 
-        #Assert;#Message
-        CALL_5.getApplication().service().getProperty('URL').contains(newURL);'Window didn\'t appear'
+            #Action;$Time
+            Wait;2000
 
-        #Id;#Action;$AppConnection
-        APPSTP3;ApplicationStop;CALL_5
+            #Id;#Action;URL;Title;$AppConnection
+            APPSW1;ApplicationSwitchTo;newURL;'Google';CALL_5
+
+            #Assert;#Message
+            CALL_5.getApplication().service().getProperty('URL').contains(newURL);'Window didn\'t appear'
+
+            #Id;#Action;$AppConnection
+            APPSTP3;ApplicationStop;CALL_5
+
+        #EndStep
+
+        #Step;#Kind;#For;#Depends
+        'open in new tab without parameter whereOpen';;;
+            #Id;#Call
+            CALL_4;appStart
+
+            #Id;#Action;URL;$AppConnection
+            APPNI2;ApplicationNewInstance;newURL;CALL_4
+
+            #Action;$Time
+            Wait;2000
+
+            #Id;#Action;URL;Title;$AppConnection
+            APPSW1;ApplicationSwitchTo;newURL;'Google';CALL_4
+
+            #Assert;#Message
+            CALL_4.getApplication().service().titles().size() == 2 && CALL_4.getApplication().service().getProperty('URL').contains(newURL);
+
+            #Id;#Action;$AppConnection
+            APPSTP3;ApplicationStop;CALL_4
+
+        #EndStep
+
+        #Step;#Kind;#For;#Depends
+        'open in new tab with parameter Tab';;;
+            #Id;#Call
+            CALL_4;appStart
+
+            #Id;#Action;URL;$AppConnection;Tab
+            APPNI2;ApplicationNewInstance;newURL;CALL_4;true
+
+            #Action;$Time
+            Wait;2000
+
+            #Id;#Action;URL;Title;$AppConnection
+            APPSW1;ApplicationSwitchTo;newURL;'Google';CALL_4
+
+            #Assert;#Message
+            CALL_4.getApplication().service().titles().size() == 2 && CALL_4.getApplication().service().getProperty('URL').contains(newURL);
+
+            #Id;#Action;$AppConnection
+            APPSTP3;ApplicationStop;CALL_4
+
+        #EndStep
+
+        #Step;#Kind;#For;#Depends
+        'open in url with paramneter url and Tab';;;
+            #Id;#Call
+            CALL_3;appStart
+
+            #Id;#Action;#Assert;WhereOpen;Tab;URL;$AppConnection
+            APPNI2;ApplicationNewInstance;CALL_3.getApplication().service().titles().size() == 1 && CALL_3.getApplication().service().getProperty('URL').contains(newURL);'OpenNewUrl';true;newURL;CALL_3
+
+            #Id;#Action;$AppConnection
+            APPSTP3;ApplicationStop;CALL_3
+
+        #EndStep
 
     #EndStep
 
@@ -482,8 +551,8 @@ Application New Instance;;;
         #Id;#Action;#Assert;$AppConnection
         APPNI2;ApplicationNewInstance;This.Result == Result.Failed && This.Kind == ErrorKind.EXCEPTION;CALL_1
 
-        #Id;#Action;WhereOpen;URL;$AppConnection
-        APPNI2;ApplicationNewInstance;;'sdfsdfsdf';CALL_1
+        #Id;#Action;#Assert;$AppConnection;URL;WhereOpen
+        APPNI3;ApplicationNewInstance;This.Result == Result.Failed && This.Kind == ErrorKind.EXCEPTION;CALL_1;'someUrl';'asdasdasd'
 
         #Id;#Action;$AppConnection
         APPSTP1;ApplicationStop;CALL_1
@@ -592,7 +661,7 @@ Application SwitchTo;;;
         CALL_1;appStart
 
         #Id;#Action;URL;WhereOpen;$AppConnection
-        APPNI1;ApplicationNewInstance;newURL;'tab';CALL_1
+        APPNI1;ApplicationNewInstance;newURL;'OpenInTab';CALL_1
 
         #Id;#Action;URL;Title;$AppConnection
         APPSW1;ApplicationSwitchTo;newURL;title;CALL_1

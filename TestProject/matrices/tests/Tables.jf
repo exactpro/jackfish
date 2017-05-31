@@ -873,6 +873,39 @@ TABLE_COMPARE_TWO;Test case;Never;;
 
         #EndStep
 
+        #Step;#Kind;#For;#Depends
+        'Compare and check message';;;
+            #Id;#RawTable
+            DATA1;Table
+            @;Col1;Col2
+            0;1;1
+            1;1;1
+            2;1;1
+            #EndRawTable
+
+            #Id;#RawTable
+            DATA2;Table
+            @;Col1;Col2
+            0;1;1
+            1;1;2
+            2;1;1
+            #EndRawTable
+
+            #Id;#Action;#Assert;$Expected;$Actual;$IgnoreRowsOrder
+            TBLCMP1;TableCompareTwo;This.Result == Result.Failed;DATA1;DATA2;true
+
+            #Id;#RawTable
+            DATA3;Table
+            @;Description;Expected;Actual
+            0;Extra row[1];1;2
+            1;Extra row[2];2;1
+            #EndRawTable
+
+            #Id;#Action;#Assert;$Expected;$Actual
+            TBLCMP16;TableCompareTwo;This.Result == Result.Passed && This.Out.size() == 0;DATA3;TBLCMP1.Out
+
+        #EndStep
+
     #EndStep
 
 

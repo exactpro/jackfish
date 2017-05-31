@@ -472,7 +472,7 @@ public abstract class AbstractAction implements Cloneable
                 {
                 	if (this.action.Result != Result.Passed)
                 	{
-                		setResult(null);
+                		setResult(this.action.Out);
                 	}
                 }
             }
