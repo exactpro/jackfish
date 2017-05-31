@@ -15,6 +15,8 @@ import com.exactprosystems.jf.api.common.Str;
 import com.exactprosystems.jf.api.error.app.FeatureNotSupportedException;
 import com.exactprosystems.jf.api.error.app.NullParameterException;
 import com.exactprosystems.jf.api.error.app.TimeoutException;
+import com.exactprosystems.jf.app.WebAppFactory.WhereToOpen;
+
 import org.apache.log4j.*;
 import org.openqa.selenium.*;
 import org.openqa.selenium.Dimension;
@@ -784,24 +786,38 @@ public class SeleniumRemoteApplication extends RemoteApplication
 		{
 			throw new Exception("url is null");
 		}
-
-		String whereOpen = args.get(WebAppFactory.whereOpenName);
-		boolean flag = false;
-		switch (whereOpen)
+		
+		WhereToOpen whereToOpen = WhereToOpen.OpenInTab;
+		
+		String inTab = args.get(WebAppFactory.tabName);
+		if (inTab != null)
 		{
-			case WebAppFactory.openInUrl :
+		    whereToOpen = inTab.equals("" + true) ? WhereToOpen.OpenInTab : WhereToOpen.OpenInWindow;
+		}
+		    
+		String whereOpen = args.get(WebAppFactory.whereOpenName);
+		if (whereOpen != null)
+		{
+		    whereToOpen = WhereToOpen.valueOf(whereOpen);
+		}
+		
+		boolean flag = false;
+		switch (whereToOpen)
+		{
+			case OpenNewUrl:
 				this.driver.get(url);
 				break;
 
-			case WebAppFactory.openInWindow:
+			case OpenInWindow:
 				flag = true;
-			case WebAppFactory.openInTab :
+			case OpenInTab:
 				this.driver.executeScript(String.format(
 						"function createDoc(){"
 						+ "var w = window.open('%s' %s,'height='+window.outerHeight+',width='+window.outerWidth)"
 						+ "}; createDoc();", url, flag ? ",'_blank'" : "")
 				);
 				break;
+
 			default:
 				this.driver.executeScript(String.format(
 						"function createDoc(){"
@@ -809,14 +825,6 @@ public class SeleniumRemoteApplication extends RemoteApplication
 								+ "}; createDoc();", url)
 				);
 		}
-
-		//		String tab = args.get(WebAppFactory.tabName);
-//		boolean flag = false;
-//		if (tab != null)
-//		{
-//			flag = tab.equalsIgnoreCase("true");
-//		}
-//		this.driver.executeScript("function createDoc(){var w = window.open('" + url + "'" + (flag ? ",'_blank'" : "") + ")}; createDoc();");
 	}
 
 	@Override

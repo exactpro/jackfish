@@ -16,6 +16,7 @@ import com.exactprosystems.jf.api.app.LocatorFieldKind;
 import com.exactprosystems.jf.api.app.PluginInfo;
 import com.exactprosystems.jf.api.common.ParametersKind;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -23,29 +24,26 @@ import java.util.Scanner;
 
 public class WebAppFactory implements IApplicationFactory
 {
-	public static final String logLevel				= "LogLevel";
-	public final static String jreExecName 			= "jreExec";
-	public final static String jreArgsName 			= "jreArgs";
+    public static final String   logLevel             = "LogLevel";
+    public final static String   jreExecName          = "jreExec";
+    public final static String   jreArgsName          = "jreArgs";
 
-	public static final String safariDriverPathName	= "SafariDriverPath";
-	public static final String chromeDriverPathName	= "ChromeDriverPath";
-	public static final String geckoDriverPathName	= "GeckoDriverPath";
-	public static final String ieDriverPathName		= "IEDriverPath";
-	public static final String chromeDriverBinary	= "ChromeDriverBinary";
-	public static final String firefoxProfileDir	= "FirefoxProfileDirectory";
-	public static final String usePrivateMode       = "UsePrivateMode";
+    public static final String   safariDriverPathName = "SafariDriverPath";
+    public static final String   chromeDriverPathName = "ChromeDriverPath";
+    public static final String   geckoDriverPathName  = "GeckoDriverPath";
+    public static final String   ieDriverPathName     = "IEDriverPath";
+    public static final String   chromeDriverBinary   = "ChromeDriverBinary";
+    public static final String   firefoxProfileDir    = "FirefoxProfileDirectory";
+    public static final String   usePrivateMode       = "UsePrivateMode";
 
-	public final static String browserName   = "Browser";
-	public final static String urlName       = "URL";
-	public static final String whereOpenName = "WhereOpen";
+    public final static String   browserName          = "Browser";
+    public final static String   urlName              = "URL";
+    public static final String   whereOpenName        = "WhereOpen";
 
-	public static final String openInTab		= "tab";
-	public static final String openInWindow		= "window";
-	public static final String openInUrl		= "url";
+    public static final String   tabName              = "Tab";
 
-
-	public static final String propertyUrlName		= "URL";
-	public static final String propertyTitle		= "Title";
+    public static final String   propertyUrlName      = "URL";
+    public static final String   propertyTitle        = "Title";
 	
 	private static String[] empty = {  };
 
@@ -60,6 +58,17 @@ public class WebAppFactory implements IApplicationFactory
 
 	private IGuiDictionary dictionary = null;
 
+	public enum WhereToOpen 
+	{
+	    OpenInTab,
+	    OpenInWindow,
+	    OpenNewUrl;
+	    
+	    public static String[] names()
+	    {
+	        return new String[] { OpenInTab.name(), OpenInWindow.name(), OpenNewUrl.name() };
+	    }
+	}
 
 
 	//----------------------------------------------------------------------------------------------
@@ -74,7 +83,7 @@ public class WebAppFactory implements IApplicationFactory
 					usePrivateMode, logLevel };
 			case START:		return new String[] { browserName, urlName };
 			case PROPERTY:	return new String[] { propertyUrlName, propertyTitle };
-			case NEW_INSTANCE: return new String[] {urlName, whereOpenName };
+			case NEW_INSTANCE: return new String[] { urlName, whereOpenName };
 			default:		return empty;	
 		}
 	}
@@ -105,7 +114,7 @@ public class WebAppFactory implements IApplicationFactory
 						};
 
 			case whereOpenName:
-				return new String[] {openInTab, openInWindow, openInUrl };
+				return WhereToOpen.names();
 
 			default:
 				return new String[0];
