@@ -249,18 +249,16 @@ public class TexReportBuilder extends ReportBuilder
 	    double constant = 0.9;
 
 	    writer.fwrite("\\begin{center}").newline();
-		writer.fwrite(String.format("\\begin{longtable}[h]{lp{%s\\linewidth}}", constant)).newline();
 		if (!Str.IsNullOrEmpty(tableTitle))
 		{
 			writer.fwrite("\\caption{%s} \\newline", tableTitle).newline();
 		}
-		
 		String tab = IntStream.range(0, columns.length)
 		        .mapToObj(i -> i)
 		        .map(o -> (percents.length <= o ? "l" : "p{" + (percents[o] * TEXT_WIDTH * constant/ 100) + "mm}"))
 		        .collect(Collectors.joining("|"));
 
-		writer.fwrite("\\begin{tabular}{|%s|} \\hline", tab).newline();
+		writer.fwrite(String.format("\\begin{longtable}{|%s|} \\hline", tab)).newline();
 		tableRow(writer, table, 0, columns);
 	}
 	
@@ -277,8 +275,7 @@ public class TexReportBuilder extends ReportBuilder
 	@Override
 	protected void tableFooter(ReportWriter writer, ReportTable table) throws IOException
 	{
-		writer.fwrite("\\end{tabular}").newline()
-		    .fwrite("\\end{longtable}").newline()
+		writer.fwrite("\\end{longtable}").newline()
 			.fwrite("\\end{center}").newline();
 	}
 
