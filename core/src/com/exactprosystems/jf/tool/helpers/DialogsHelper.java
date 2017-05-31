@@ -9,7 +9,6 @@
 package com.exactprosystems.jf.tool.helpers;
 
 import com.exactprosystems.jf.actions.ReadableValue;
-import com.exactprosystems.jf.api.common.IContext;
 import com.exactprosystems.jf.api.common.Str;
 import com.exactprosystems.jf.api.common.Sys;
 import com.exactprosystems.jf.common.MatrixRunner;
@@ -720,6 +719,7 @@ public abstract class DialogsHelper
 				boolean addButton = configuration != null;
 				ReportBrowser reportBrowser = new ReportBrowser(file);
 				Dialog<ButtonType> dialog = new Dialog<>();
+				dialog.initOwner(Common.node);
 				Common.addIcons(((Stage) dialog.getDialogPane().getScene().getWindow()));
 				if (addButton)
 				{
