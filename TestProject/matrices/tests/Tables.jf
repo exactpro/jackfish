@@ -879,7 +879,7 @@ TABLE_COMPARE_TWO;Test case;Never;;
             DATA1;Table
             @;Col1;Col2
             0;1;1
-            1;1;1
+            1;2;1
             2;1;1
             #EndRawTable
 
@@ -897,8 +897,8 @@ TABLE_COMPARE_TWO;Test case;Never;;
             #Id;#RawTable
             DATA3;Table
             @;Description;Expected;Actual
-            0;Extra row[1];1;2
-            1;Extra row[2];2;1
+            0;Extra row[1];[ Col2 : 1, Col1 : 2 ];
+            1;Extra row[1];;[ Col1 : 1, Col2 : 2 ]
             #EndRawTable
 
             #Id;#Action;#Assert;$Expected;$Actual
