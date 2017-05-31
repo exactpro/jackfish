@@ -74,14 +74,14 @@ public class DocumentationBuilder
         addTable(help, "", table3, new int[] { 50, 50 },  evaluator);
 
         //todo table of contents
-        addChapter(help, "", 4);
+        addChapter(help, "\\pagestyle{allpages}", 4);
         addChapter(help, "\\tableofcontents", 4);
 
         addChapter(help, "", 4);
         addText(help, DocumentationBuilder.class.getResourceAsStream("intro1.txt"));
         addPicture(help, "Architecture", DocumentationBuilder.class.getResourceAsStream("Intro.png"));
         addText(help, DocumentationBuilder.class.getResourceAsStream("intro2.txt"));
-//        addChapter(help, "MVEL", 3);
+        addChapter(help, "MVEL", 2);
 //        addText(help, DocumentationBuilder.class.getResourceAsStream("mvel.txt"));
 //        addChapter(help, "All controls", 3);
 //        addAllControlsTable(help, "All controls", context);
