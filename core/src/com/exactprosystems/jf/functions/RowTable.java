@@ -7,16 +7,12 @@
 
 package com.exactprosystems.jf.functions;
 
-import java.util.Collection;
-import java.util.LinkedHashMap;
-import java.util.LinkedHashSet;
-import java.util.Map;
-import java.util.Set;
-import java.util.stream.Collectors;
-
 import com.exactprosystems.jf.api.common.Str;
 import com.exactprosystems.jf.api.error.common.RowExpiredException;
 import com.exactprosystems.jf.api.error.common.WrongExpressionException;
+
+import java.util.*;
+import java.util.stream.Collectors;
 
 
 public class RowTable implements Map<String, Object>, Cloneable
@@ -50,7 +46,7 @@ public class RowTable implements Map<String, Object>, Cloneable
         LinkedHashMap<String, Object> map = this.currentRow.entrySet()
                 .stream()
                 .filter(e -> e.getKey() != null && names.contains(e.getKey().name))
-                .collect(Collectors.toMap(e -> e.getKey().name, e -> compareValues ? e.getValue() : Str.asString(e.getValue()), (k,v) -> k, LinkedHashMap::new));
+                .collect(Collectors.toMap(e -> e.getKey().name, e -> compareValues ? get(e.getKey().name) : Str.asString(e.getValue()), (k,v) -> k, LinkedHashMap::new));
         
         return new CopyRowTable(map);
     }
