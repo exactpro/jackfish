@@ -263,6 +263,7 @@ public class Table implements List<RowTable>, Mutable, Cloneable
 					    matched++;
 						actualMatched[actualCounter] = true;
 						expectedMatched[expectedCounter] = true;
+						break;
 					}
 
 					expectedCounter++;
