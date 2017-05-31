@@ -128,7 +128,7 @@ public class TableCompareTwo extends AbstractAction
 		if (!Objects.equals(actualColumns, expectedColumns))
 		{
             super.setError("Actual columns " + actualColumns + " doesn't match expected columns " + expectedColumns, 
-                ErrorKind.WRONG_PARAMETERS);
+                ErrorKind.NOT_EQUAL);
             return;
 		}
 		
