@@ -23,8 +23,6 @@ import com.exactprosystems.jf.common.report.ReportTable;
 import com.exactprosystems.jf.exceptions.ColumnIsPresentException;
 import com.exactprosystems.jf.sql.SqlConnection;
 import org.apache.log4j.Logger;
-import org.eclipse.jgit.ignore.internal.Strings;
-
 import java.io.*;
 import java.sql.*;
 import java.util.*;
@@ -50,11 +48,25 @@ public class Table implements List<RowTable>, Mutable, Cloneable
 	private Header[] headers;
 	private AbstractEvaluator evaluator;
 
-	private String fileName;
 	private boolean changed;
 	private static final Logger logger = Logger.getLogger(Table.class);
 	//endregion
 
+	public static class TableCompareResult
+	{
+	    public TableCompareResult(boolean equal, int matched, int extraExpected, int extraActual)
+        {
+	        this.equal = equal;
+	        this.matched = matched;
+	        this.extraExpected = extraExpected;
+	        this.extraActual = extraActual;
+        }
+	    public final boolean equal;
+	    public final int matched;
+        public final int extraExpected;
+        public final int extraActual;
+	}
+	
 	//region Constructors
 	private Table(AbstractEvaluator evaluator)
 	{
@@ -146,9 +158,6 @@ public class Table implements List<RowTable>, Mutable, Cloneable
 	public Table(String fileName, char delimiter, AbstractEvaluator evaluator) throws Exception
 	{
 		this(evaluator);
-
-		this.fileName = fileName;
-		
 		try (Reader reader = new BufferedReader(new FileReader(fileName)))
 		{
 			read(reader, delimiter);
@@ -195,7 +204,6 @@ public class Table implements List<RowTable>, Mutable, Cloneable
 	{
 		Table clone = (Table)super.clone();
 		
-		clone.fileName = this.fileName;
 		clone.headers = this.headers.clone();
 		clone.innerList = new ArrayList<>();
 		for (Map<Header, Object> item : this.innerList)
@@ -207,13 +215,11 @@ public class Table implements List<RowTable>, Mutable, Cloneable
 			}
 			clone.innerList.add(copy);
 		}
-		
-		
 		return clone;
 	}
 	//endregion
 
-	public static boolean extendEquals(ReportBuilder report, Table differences, Table actual, Table expected, String[] exclude, 
+	public static TableCompareResult extendEquals(ReportBuilder report, Table differences, Table actual, Table expected, String[] exclude, 
 	        boolean ignoreRowsOrder, boolean compareValues)
 	{
 		Set<String> expectedNames = expected.names(exclude);
@@ -223,9 +229,13 @@ public class Table implements List<RowTable>, Mutable, Cloneable
 		if (!expectedNames.equals(actualNames))
 		{
 			table = addMismatchedRow(table, report, differences, "Column names", Arrays.toString(expectedNames.toArray()), Arrays.toString(actualNames.toArray()));
-			return false;
+			return new TableCompareResult(false, 0, 0, 0);
 		}
 
+        int matched = 0;
+        int extraExpected = 0;
+        int extraActual = 0;
+		
 		boolean result = true;
 		if (ignoreRowsOrder)
 		{
@@ -250,6 +260,7 @@ public class Table implements List<RowTable>, Mutable, Cloneable
 				    CopyRowTable expectedRow = expectedIterator.next().copy(expectedNames, compareValues);
 					if (Objects.equals(actualRow, expectedRow))
 					{
+					    matched++;
 						actualMatched[actualCounter] = true;
 						expectedMatched[expectedCounter] = true;
 					}
@@ -266,6 +277,7 @@ public class Table implements List<RowTable>, Mutable, Cloneable
 			    CopyRowTable expectedRow = expectedIterator.next().copy(expectedNames, compareValues);
 				if (!expectedMatched[count])
 				{
+				    extraExpected++;
 					table = addMismatchedRow(table, report, differences, "Extra row[" + count + "]", ReportHelper.objToString(expectedRow, false), "");
 					result = false;
 				}
@@ -279,6 +291,7 @@ public class Table implements List<RowTable>, Mutable, Cloneable
 			    CopyRowTable actualRow = actualIterator.next().copy(expectedNames, compareValues); 
 				if (!actualMatched[count])
 				{
+				    extraActual++;
 					table = addMismatchedRow(table, report, differences, "Extra row[" + count + "]", "", ReportHelper.objToString(actualRow, false));
 					result = false;
 				}
@@ -295,8 +308,14 @@ public class Table implements List<RowTable>, Mutable, Cloneable
 			{
 				CopyRowTable actualRow = actualIterator.next().copy(expectedNames, compareValues);
 				CopyRowTable expectedRow = expectedIterator.next().copy(expectedNames, compareValues);
-				if (!Objects.equals(actualRow, expectedRow))
+				if (Objects.equals(actualRow, expectedRow))
+                {
+                    matched++;
+                }
+				else
 				{
+	                extraExpected++;
+	                extraActual++;
 					table = addMismatchedRow(table, report, differences, "Row[" + rowCount + "]", ReportHelper.objToString(expectedRow, false), ReportHelper.objToString(actualRow, false));
 					for (String name : expectedNames)
 					{
@@ -311,8 +330,7 @@ public class Table implements List<RowTable>, Mutable, Cloneable
 			}
 			while (expectedIterator.hasNext())
 			{
-	             System.err.println("5");
-
+			    extraExpected++;
                 CopyRowTable expectedRow = expectedIterator.next().copy(expectedNames, compareValues);
 				table = addMismatchedRow(table, report, differences, "Extra row[" + rowCount + "]", ReportHelper.objToString(expectedRow, false), "");
 				rowCount++;
@@ -320,6 +338,7 @@ public class Table implements List<RowTable>, Mutable, Cloneable
 			}
 			while (actualIterator.hasNext())
 			{
+			    extraActual++;
 			    CopyRowTable actualRow = actualIterator.next().copy(expectedNames, compareValues);
 				table = addMismatchedRow(table, report, differences, "Extra row[" + rowCount + "]", "", ReportHelper.objToString(actualRow, false));
 				rowCount++;
@@ -327,7 +346,7 @@ public class Table implements List<RowTable>, Mutable, Cloneable
 			}
 		}
 
-		return result;
+		return new TableCompareResult(result, matched, extraExpected, extraActual);
 	}
 
 	public static String generateColumnName(Table table)
@@ -344,7 +363,7 @@ public class Table implements List<RowTable>, Mutable, Cloneable
 	@Override
 	public String toString()
 	{
-		return Table.class.getSimpleName() + " [" + this.fileName + ":" + Arrays.toString(this.headers) + ":" + size() + "]";
+		return Table.class.getSimpleName() + " " + Arrays.toString(this.headers) + ":" + size();
 	}
 
 	//==============================================================================================
@@ -535,6 +554,38 @@ public class Table implements List<RowTable>, Mutable, Cloneable
         int index = this.innerList.size();
         addValue(index, Collections.emptyMap());
         return get(index);
+    }
+    
+    public List<Object> getColumnAsList(String column, boolean getValues)
+    {
+        List<Object> res = new ArrayList<>(size());
+        Header header = headerByName(column);
+        
+        for (Map<Header, Object> row : this.innerList)
+        {
+            Object value = row.get(header);
+            if (getValues)
+            {
+                value = convertCell(row, header, value, null);
+            }
+            res.add(value);
+        }
+        return res;
+    }
+    
+    public Set<String> names(String[] exclude)
+    {
+        Set<String> set = new LinkedHashSet<String>();
+        set.addAll(Arrays.asList(exclude));
+        Set<String> names = new LinkedHashSet<String>();
+        for (Header name : this.headers)
+        {
+            if (!set.contains(name.name))
+            {
+                names.add(name.name);
+            }
+        }
+        return names;
     }
 
 	public Table sort(String colName, boolean az) throws Exception
@@ -1209,23 +1260,6 @@ public class Table implements List<RowTable>, Mutable, Cloneable
 		
         return result; 
 	}
-
-	private Set<String> names(String[] exclude)
-	{
-		Set<String> set = new LinkedHashSet<String>();
-		set.addAll(Arrays.asList(exclude));
-		Set<String> names = new LinkedHashSet<String>();
-		for (Header name : this.headers)
-		{
-			if (!set.contains(name.name))
-			{
-				names.add(name.name);
-			}
-		}
-
-		return names;
-	}
-
 
 	private void considerAs(Header.HeaderType type, String... columns) throws Exception
 	{

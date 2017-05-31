@@ -101,6 +101,7 @@ public class ActionsList
 		        TableEdit.class,
 		        TableGetRowIndexes.class,
 		        TableLeftJoin.class,
+		        TableColumnAsList.class,
 				TableRemoveColumns.class,
 		        TableLoadFromFile.class,
 				TableLoadFromDir.class,

@@ -98,7 +98,7 @@ public class TexReportBuilder extends ReportBuilder
             case "3" + CM: return " }";
     
             // header 4 (max level)
-            case OM + "4": return "\\\\newpage";
+            case OM + "4": return "\\\\newpage ";
             case "4" + CM: return "";  
     
             // style for identifiers
@@ -291,7 +291,8 @@ public class TexReportBuilder extends ReportBuilder
 
     private String replaseBrasesToQuotes(String source)
     {
-        if (source == null)
+		return source;
+        /*if (source == null)
         {
             return null;
         }
@@ -309,15 +310,16 @@ public class TexReportBuilder extends ReportBuilder
         }
         m.appendTail(sb);
 
-        return sb.toString();
+        return sb.toString();*/
     }
 
     private String replaseQoutesToBrases(String source)
     {
-        if (source == null)
+    	return source;
+        /*if (source == null)
         {
             return null;
         }
-        return source.replace("«", "\\{").replace("»", "\\}");
+        return source.replace("«", "\\{").replace("»", "\\}");*/
     }
 }
