@@ -556,93 +556,77 @@ public class DialogWizardController implements Initializable, ContainingParent
 		columnId.setEditable(true);
 		columnId.setCellFactory(e -> new TableCell<ElementWizardBean, String>()
 		{
-			private TextField tf;
-
-			@Override
-			protected void updateItem(String item, boolean empty)
-			{
-				super.updateItem(item, empty);
-				if (item != null && !empty)
-				{
-					setText(getString());
-					setContentDisplay(ContentDisplay.TEXT_ONLY);
-				}
-				else
-				{
-					setGraphic(null);
-					setText(null);
-				}
-			}
+			private TextField textField;
 
 			@Override
 			public void startEdit()
 			{
 				super.startEdit();
-				createTextField();
-				this.tf.setText(getString());
-				setGraphic(this.tf);
+				if (textField == null)
+				{
+					createTextField();
+				}
+				textField.setText(getString());
+				setGraphic(textField);
 				setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
-				Platform.runLater(this.tf::requestFocus);
+				Platform.runLater(textField::requestFocus);
 			}
 
 			@Override
 			public void cancelEdit()
 			{
 				super.cancelEdit();
-				setText(getString());
+				setText(Str.asString(getItem()));
 				setContentDisplay(ContentDisplay.TEXT_ONLY);
 			}
 
 			@Override
-			public void commitEdit(String item)
+			protected void updateItem(String s, boolean b)
 			{
-				if (!isEditing() && !item.equals(getItem()))
+				super.updateItem(s, b);
+				if (b || s == null)
 				{
-					TableView<ElementWizardBean> table = getTableView();
-					if (table != null)
-					{
-						TableColumn<ElementWizardBean, String> column = getTableColumn();
-						TableColumn.CellEditEvent<ElementWizardBean, String> event = new TableColumn.CellEditEvent<>(table, new TablePosition<>(table, getIndex(), column), TableColumn.editCommitEvent(), item);
-						javafx.event.Event.fireEvent(column, event);
-					}
+					setText(null);
+					setGraphic(null);
 				}
-			}
-
-			private void createTextField()
-			{
-				if (this.tf == null)
+				else
 				{
-					this.tf = new TextField(getString());
-					this.tf.focusedProperty().addListener((observable, oldValue, newValue) ->
-					{
-						if (!newValue && tf != null)
-						{
-							commitEdit(tf.getText());
-						}
-					});
-					this.tf.setOnKeyPressed(t ->
-					{
-						if (t.getCode() == KeyCode.ENTER)
-						{
-							commitEdit(tf.getText());
-						}
-						else if (t.getCode() == KeyCode.ESCAPE)
-						{
-							cancelEdit();
-						}
-						else if (t.getCode() == KeyCode.TAB)
-						{
-							commitEdit(tf.getText());
-						}
-					});
+					setText(getString());
+					setContentDisplay(ContentDisplay.TEXT_ONLY);
 				}
 			}
 
 			private String getString()
 			{
-				return String.valueOf(getItem() == null ? "" : getItem());
+				return Str.asString(getItem());
+			}
+
+			private void createTextField()
+			{
+				textField = new TextField(getString());
+				textField.getStyleClass().add(CssVariables.TEXT_FIELD_VARIABLES);
+				textField.setMinWidth(this.getWidth() - this.getGraphicTextGap() * 2);
+				textField.setOnKeyPressed(t ->
+				{
+					if (t.getCode() == KeyCode.ENTER || t.getCode() == KeyCode.TAB)
+					{
+						commitEdit(textField.getText());
+					}
+					else if (t.getCode() == KeyCode.ESCAPE)
+					{
+						cancelEdit();
+					}
+				});
+				textField.focusedProperty().addListener((observable, oldValue, newValue) ->
+				{
+					if (!newValue && textField != null)
+					{
+						commitEdit(textField.getText());
+					}
+				});
 			}
 		});
+
 		columnId.setOnEditCommit(e ->
 		{
 			ElementWizardBean elementWizardBean = e.getRowValue();
@@ -699,21 +683,6 @@ public class DialogWizardController implements Initializable, ContainingParent
 				super.cancelEdit();
 				setText(getString());
 				setContentDisplay(ContentDisplay.TEXT_ONLY);
-			}
-
-			@Override
-			public void commitEdit(ControlKind item)
-			{
-				if (!isEditing() && !item.equals(getItem()))
-				{
-					TableView<ElementWizardBean> table = getTableView();
-					if (table != null)
-					{
-						TableColumn<ElementWizardBean, ControlKind> column = getTableColumn();
-						TableColumn.CellEditEvent<ElementWizardBean, ControlKind> event = new TableColumn.CellEditEvent<>(table, new TablePosition<>(table, getIndex(), column), TableColumn.editCommitEvent(), item);
-						javafx.event.Event.fireEvent(column, event);
-					}
-				}
 			}
 
 			private void createCB()
