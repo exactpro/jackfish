@@ -115,11 +115,8 @@ RF;RegressionFramework
                     #Action;$Matrix
                     MatrixWait;MXRN.Out
 
-                    #Action;$Connection;$Query;Passed;Failed;ScenarioId
-                    SQLexecute;SQL;'UPDATE scenarios SET passed = ?, failed = ?, done = 1 WHERE id = ?';MXRN.Out.passed();MXRN.Out.failed();scenarioId
-
-                    #IgnoreErr;#Action;$Connection;$Query;Report;ScenarioId
-                    1;SQLexecute;SQL;'Update scenarios SET report = ? WHERE id = ?';MXRN.Out.reportAsBlob();scenarioId
+                    #Action;$Connection;$Query;Passed;Failed;Report;ScenarioId
+                    SQLexecute;SQL;'UPDATE scenarios SET passed = ?, failed = ?, report = ?, done = 1 WHERE id = ?';MXRN.Out.passed();MXRN.Out.failed();MXRN.Out.reportAsBlob();scenarioId
 
                     #Id;#Action;$Decoraded;$Matrix
                     resultTab;ResultTable;false;MXRN.Out
@@ -139,20 +136,14 @@ RF;RegressionFramework
                         _rf_dialect
                             #Case
                             'MYSQL'
-                                #Id;#Action;$Connection;$Query;ScenarioId;Testcase;Stepp;Time;Result;Error
-                                selectDetails;SQLinsert;SQL;'INSERT INTO details (scenario_id, testcase, step, time, result, error) VALUES (?, ?, ?, ?, ?, ?)';scenarioId;'' + details.TestCase;'' + details.Step;details.Time;'' + details.Result;'' + details.Error
-
-                                #Id;#IgnoreErr;#Action;$Connection;$Query;Screenshot;Id
-                                SQLEXEC2;1;SQLexecute;SQL;'UPDATE details SET screenshot = ? WHERE id = ?' ;Converter.storableToBlob(details.Screenshot);selectDetails.Out[0]
+                                #Id;#Action;$Connection;$Query;ScenarioId;Testcase;Stepp;Time;Result;Error;Screenshot
+                                selectDetails;SQLinsert;SQL;'INSERT INTO details (scenario_id, testcase, step, time, result, error, screenshot) VALUES (?, ?, ?, ?, ?, ?, ?)';scenarioId;'' + details.TestCase;'' + details.Step;details.Time;'' + details.Result;'' + details.Error;Converter.storableToBlob(details.Screenshot)
 
 
                             #Case
                             'MSSQL'
-                                #Id;#Action;$Connection;$Query;ScenarioId;Testcase;Stepp;Time;Result;Error
-                                selectDetails;SQLinsert;SQL;'INSERT INTO details (scenario_id, testcase, step, time, result, error) VALUES (?, ?, ?, ?, ?, ?)';scenarioId;'' + details.TestCase;'' + details.Step;details.Time;'' + details.Result;'' + details.Error
-
-                                #Id;#IgnoreErr;#Action;$Connection;$Query;Screenshot;Id
-                                SQLEXEC3;1;SQLexecute;SQL;'UPDATE details SET screenshot = CONVERT(VARBINARY(MAX),?)) WHERE id = ?';Converter.storableToBlob(details.Screenshot);selectDetails.Out[0]
+                                #Id;#Action;$Connection;$Query;ScenarioId;Testcase;Stepp;Time;Result;Error;Screenshot
+                                selectDetails;SQLinsert;SQL;'INSERT INTO details (scenario_id, testcase, step, time, result, error, screenshot) VALUES (?, ?, ?, ?, ?, ?, CONVERT(VARBINARY(MAX),?))';scenarioId;'' + details.TestCase;'' + details.Step;details.Time;'' + details.Result;'' + details.Error;Converter.storableToBlob(details.Screenshot)
 
 
                             #Default
@@ -407,7 +398,7 @@ RF;RegressionFramework
                 ~;"  s.manual, "
                 ~;"  DATE(s.start_time) AS date, "
                 ~;"  TIME(s.start_time) AS time, "
-                ~;"  IF(s.failed = 0, ""Passed"", ""Failed"") AS result, "
+                ~;"  IF(s.failed > 0, """"Failed"""", IF (s.passed > 0, """"Passed"""", """"Unknown"""")) AS status,"
                 ~;"  s.performer AS performer, "
                 ~;"  s.test_set AS testSet, "
                 ~;"  s.host AS host, "
@@ -430,7 +421,11 @@ RF;RegressionFramework
                 ~;"  s.manual, "
                 ~;"  CONVERT(DATE, s.start_time) AS date,"
                 ~;"  CONVERT(TIME, s.start_time) AS time, "
-                ~;"  case s.failed when 0 then 'Passed' else 'Failed' end as result,"
+                ~;"  CASE "
+                ~;"	WHEN s.failed <> 0 THEN  0 "
+                ~;"	WHEN s.passed <> 0 THEN 1"
+                ~;"	ELSE -1 "
+                ~;"  END AS status,"
                 ~;"  s.performer AS performer, "
                 ~;"  s.test_set AS testSet, "
                 ~;"  s.host AS host, "
@@ -557,7 +552,7 @@ RF;RegressionFramework
                     TEXT5;Text;Sql
                     ~;"SELECT "
                     ~;"  s.id, s.scenario, "
-                    ~;"  IF(s.failed > 0, ""Failed"", ""Passed"") AS status, "
+                    ~;"  IF(s.failed > 0, ""Failed"", IF (s.passed > 0, ""Passed"", ""Unknown"")) AS status, "
                     ~;"  s.host, "
                     ~;"  s.username, "
                     ~;"  DATE(s.start_time) AS date, "
@@ -573,7 +568,11 @@ RF;RegressionFramework
                     TEXT5;Text;Sql
                     ~;"SELECT "
                     ~;"  s.id, s.scenario, "
-                    ~;"  CASE WHEN s.failed <> 0 THEN  0 ELSE 1 END AS status, "
+                    ~;"  CASE "
+                    ~;"	WHEN s.failed <> 0 THEN  0 "
+                    ~;"	WHEN s.passed <> 0 THEN 1"
+                    ~;"	ELSE -1 "
+                    ~;"  END AS status,"
                     ~;"  s.host, "
                     ~;"  s.username, "
                     ~;"  CONVERT(DATE, s.start_time) AS date, "
@@ -962,7 +961,11 @@ RF;RegressionFramework
                     TEXT5;Text;Sql
                     ~;"SELECT "
                     ~;"  s.id, s.scenario, "
-                    ~;"  IF(s.failed > 0, ""Failed"", ""Passed"") AS status, "
+                    ~;"  IF (s.failed > 0, ""Failed"", "
+                    ~;"	IF (s.passed > 0, ""Passed"", "
+                    ~;"		""Unknown"""
+                    ~;"	    )"
+                    ~;"     ) AS status, "
                     ~;"  s.host, "
                     ~;"  s.username, "
                     ~;"  DATE(s.start_time) AS date, "
@@ -978,7 +981,11 @@ RF;RegressionFramework
                     TEXT5;Text;Sql
                     ~;"SELECT "
                     ~;"  s.id, s.scenario, "
-                    ~;"  CASE WHEN s.failed <> 0 THEN  0 ELSE 1 END AS status, "
+                    ~;"  CASE "
+                    ~;"	WHEN s.failed <> 0 THEN  0 "
+                    ~;"	WHEN s.passed <> 0 THEN 1"
+                    ~;"	ELSE -1 "
+                    ~;"  END AS status, "
                     ~;"  s.host, "
                     ~;"  s.username, "
                     ~;"  CONVERT(DATE, s.start_time) AS date, "
@@ -1070,6 +1077,9 @@ RF;RegressionFramework
 
             #Action;$Replace;$Table;$Columns;$MatchCell;$Search
             TableReplace;'Failed';resultTable;{'Execution Status'};true;0
+
+            #Action;$Replace;$Table;$Columns;$MatchCell;$Search
+            TableReplace;'Unknown';resultTable;{'Execution Status'};true;-1
 
             #Action;$Replace;$Table;$Columns;$MatchCell;$Search
             TableReplace;'Passed';resultTable;{'Execution Status'};true;1
