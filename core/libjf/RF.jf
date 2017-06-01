@@ -398,7 +398,7 @@ RF;RegressionFramework
                 ~;"  s.manual, "
                 ~;"  DATE(s.start_time) AS date, "
                 ~;"  TIME(s.start_time) AS time, "
-                ~;"  IF(s.failed > 0, """"Failed"""", IF (s.passed > 0, """"Passed"""", """"Unknown"""")) AS status,"
+                ~;"  IF(s.failed > 0, ""Failed"", IF (s.passed > 0, ""Passed"", ""Unknown"")) AS result, "
                 ~;"  s.performer AS performer, "
                 ~;"  s.test_set AS testSet, "
                 ~;"  s.host AS host, "
@@ -425,7 +425,7 @@ RF;RegressionFramework
                 ~;"	WHEN s.failed <> 0 THEN  0 "
                 ~;"	WHEN s.passed <> 0 THEN 1"
                 ~;"	ELSE -1 "
-                ~;"  END AS status,"
+                ~;"  END AS result,"
                 ~;"  s.performer AS performer, "
                 ~;"  s.test_set AS testSet, "
                 ~;"  s.host AS host, "
@@ -449,6 +449,12 @@ RF;RegressionFramework
 
         #Id;#Let
         table;select.Out
+
+        #Action;$Replace;$Table;$Columns;$MatchCell;$Search
+        TableReplace;'Failed';table;{'result'};true;0
+
+        #Action;$Replace;$Table;$Columns;$MatchCell;$Search
+        TableReplace;'Passed';table;{'result'};true;1
 
         #Id;#Action;$Table;result
         passed;TableSelect;table;'Passed'
