@@ -12,6 +12,7 @@ import com.exactprosystems.jf.api.app.IGuiDictionary;
 import com.exactprosystems.jf.api.app.IWindow;
 import com.exactprosystems.jf.api.common.IContext;
 import com.exactprosystems.jf.api.wizard.*;
+import com.exactprosystems.jf.tool.helpers.DialogsHelper;
 import com.exactprosystems.jf.tool.wizard.AbstractWizard;
 import com.exactprosystems.jf.tool.wizard.CommandBuilder;
 
@@ -49,10 +50,14 @@ public class DictionaryWizard extends AbstractWizard
     }
 
     @Override
-    protected Supplier<List<WizardCommand>> initDialog(BorderPane borderPane)
+    protected void initDialog(BorderPane borderPane)
     {
         borderPane.setCenter(new Text("test"));
-        
+    }
+
+    @Override
+    protected Supplier<List<WizardCommand>> getCommands()
+    {
         return () ->
         {
             List<WizardCommand> commands = CommandBuilder
@@ -61,5 +66,17 @@ public class DictionaryWizard extends AbstractWizard
             
             return commands;
         };
+    }
+
+    @Override
+    public boolean canWork()
+    {
+        return this.currentWindow.getName().startsWith("n");
+    }
+
+    @Override
+    public void showError()
+    {
+        DialogsHelper.showError("Some error message");
     }
 }

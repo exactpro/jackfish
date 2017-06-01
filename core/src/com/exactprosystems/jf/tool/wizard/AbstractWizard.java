@@ -38,9 +38,16 @@ public abstract class AbstractWizard implements Wizard
 	public WizardResult run()
 	{
 	    WizardDialog dialog = new WizardDialog(this, this.context);
-	    Supplier<List<WizardCommand> > resultSupplier = initDialog(dialog.getPane());
-	    Optional<Boolean> succeed = dialog.showAndWait();
-		return succeed.orElse(false) ?  WizardResult.submit(resultSupplier.get()) : WizardResult.deny();
+	    initDialog(dialog.getPane());
+	    boolean succeed = dialog.showAndWait().orElse(false);
+
+	    if (succeed)
+	    {
+	        Supplier<List<WizardCommand> > resultSupplier = getCommands();
+	        return WizardResult.submit(resultSupplier.get());
+	    }
+	    
+		return  WizardResult.deny();
 	}
 
 	@Override
@@ -68,5 +75,9 @@ public abstract class AbstractWizard implements Wizard
 		return (T) res;
 	}
 	
-	protected abstract Supplier<List<WizardCommand> > initDialog(BorderPane borderPane);
+	protected abstract void initDialog(BorderPane borderPane);
+
+    protected abstract Supplier<List<WizardCommand> > getCommands();
+    
+    
 }

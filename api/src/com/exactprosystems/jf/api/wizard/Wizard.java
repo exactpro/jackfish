@@ -14,5 +14,7 @@ public interface Wizard
 {
 	WizardManager manager();
     void init(IContext context, WizardManager wizardManager, Object... parameters);
+    boolean canWork();
     WizardResult run();
+    void showError();
 }
