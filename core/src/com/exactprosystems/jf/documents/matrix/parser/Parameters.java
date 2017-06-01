@@ -372,7 +372,7 @@ import java.util.stream.Collectors;
 		this.changed = true;
 		Parameter element = new Parameter(name, expression);
 		element.setType(type);
-		this.parameters.add(index, element);
+		this.parameters.add(Math.min(index, this.parameters.size()), element);
 	}
 
 	public boolean canRemove(int index)
