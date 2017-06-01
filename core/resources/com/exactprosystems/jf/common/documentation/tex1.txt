@@ -47,9 +47,6 @@
 \newcommand\crule[3][black]{\textcolor{#1}{\rule{#2}{#3}}} %%do you want colored rectangle? use it!
 %% example: \crule[COLORNAME]{width}{height}
 
-\newcommand{\nocontentsline}[3]{}
-\newcommand{\toclesslab}[3]{\bgroup\let\addcontentsline=\noc‌​ontentsline#1{#2\lab‌​el{#3}}\egroup}
-
 \title{JackFish}
 \author{JackFish dev team}
 \date{\today}

@@ -47,32 +47,31 @@ public class TexReportBuilder extends ReportBuilder
 	@Override
 	protected String postProcess(String result)
 	{
-		return super.postProcess(replaseBrasesToQuotes(result));
+		return super.postProcess(result);
 	}
 
 	@Override
 	protected String decorateStyle(String value, String style)
 	{
-		return replaseQoutesToBrases(value);
+		return replaceSymbols(value);
 	}
 
 	@Override
 	protected String decorateLink(String name, String link)
 	{
-	    name = replaseQoutesToBrases(name);
 		return String.format("\\hyperlink{%s}{%s}", name.trim(), link.trim());
 	}
 
 	@Override
 	protected String decorateExpandingBlock(String name, String content)
 	{
-        return replaseQoutesToBrases(name);
+        return name;
 	}
 
     @Override
     protected String decorateGroupCell(String content, int level, boolean isNode)
     {
-        return replaseQoutesToBrases(content);
+        return content;
     }
 
 	@Override
@@ -103,8 +102,9 @@ public class TexReportBuilder extends ReportBuilder
     
             // style for identifiers
             case OM + "$": return "";     
-            case "$" + CM: return "";       
-    
+            case "$" + CM: return "";
+
+			// http://tostudents.ru/2010/01/07/overfull-i-underfull-perepolnennye-i-razrezhennye-stroki/
             // style for code
             case OM + "#": return "\\\\begingroup\n" +
 								"    \\\\fontsize{12pt}{10pt}\\\\selectfont\n" +
@@ -158,7 +158,6 @@ public class TexReportBuilder extends ReportBuilder
 	@Override
 	protected void reportHeader(ReportWriter writer, Date date, String version) throws IOException
 	{
-	    version = replaseQoutesToBrases(version);
 	    writer.include(getClass().getResourceAsStream("tex1.txt"));
 
 	    InputStream isFooter = getClass().getResourceAsStream("Footer.png");
@@ -230,7 +229,6 @@ public class TexReportBuilder extends ReportBuilder
 	@Override
 	protected void reportImage(ReportWriter writer, MatrixItem item, String beforeTestcase, String fileName, String title, Boolean asLink) throws IOException
 	{
-	    title = replaseQoutesToBrases(title);
         writer.fwrite("\\includegraphics[width=0.9\\textwidth]{%s}", fileName.replace("/", "")).newline();
 		writer.fwrite("\\newline").newline();
 	}
@@ -238,14 +236,12 @@ public class TexReportBuilder extends ReportBuilder
 	@Override
 	protected void reportItemLine(ReportWriter writer, MatrixItem item, String beforeTestcase, String string, String labelId) throws IOException
 	{
-	    string = replaseQoutesToBrases(string);
 		writer.fwrite(string).newline();
 	}
 
 	@Override
 	protected void tableHeader(ReportWriter writer, ReportTable table, String tableTitle, String[] columns, int[] percents) throws IOException
 	{
-	    tableTitle = replaseQoutesToBrases(tableTitle);
 	    double constant = 0.9;
 
 	    writer.fwrite("\\begin{center}").newline();
@@ -267,7 +263,7 @@ public class TexReportBuilder extends ReportBuilder
 	{
 		if (value != null)
         {
-		    String s = Arrays.stream(value).map(o -> replaseQoutesToBrases(Objects.toString(o))).reduce((s1, s2) -> s1 + "&" + s2).orElse("");
+		    String s = Arrays.stream(value).map(o -> Objects.toString(o)).reduce((s1, s2) -> s1 + "&" + s2).orElse("");
             writer.fwrite(s).fwrite("\\\\ \\hline").newline();
         }
 	}
@@ -282,41 +278,41 @@ public class TexReportBuilder extends ReportBuilder
 	@Override
 	protected void reportChart(ReportWriter writer, String title, String beforeTestCase, ChartBuilder chartBuilder) throws IOException
 	{
-	    title = replaseQoutesToBrases(title);
 		chartBuilder.report(writer, ++chartCount);
 	}
 
-    private String replaseBrasesToQuotes(String source)
-    {
-		return source;
-        /*if (source == null)
-        {
-            return null;
-        }
-        
-        String reg = "(([^\\{]\\{[^\\{])|([^\\}]\\}[^\\}]))";
+	private String replaceSymbols(String source)
+	{
+		String reg = "(&&|~|&|^|%|#|$)";
+		Pattern patt = Pattern.compile(reg);
+		Matcher m = patt.matcher(source);
+		StringBuffer sb = new StringBuffer(source.length());
+		while (m.find())
+		{
+			String text = m.group(1);
+			switch (text)
+			{
+				case "&": text = text.replace("&", "\\&");
+					break;
+				case "&&": text = text.replace("&&", "\\&\\&");
+					break;
+				case "~": text = "\\sim";
+					break;
+				case "^": text = "^"; //todo ????????????????????
+					break;
+				case "%": text = "\\%";
+					break;
+				case "#": text = "\\#";
+					break;
+				case "$": text = "\\textdollar";
+					break;
+				default:
+			}
+			m.appendReplacement(sb, text);
+		}
+		m.appendTail(sb);
 
-        Pattern patt = Pattern.compile(reg);
-        Matcher m = patt.matcher(source);
-        StringBuffer sb = new StringBuffer(source.length());
-        while (m.find())
-        {
-            String text = m.group(1);
-            text = text.replace('{', '«').replace('}', '»');
-            m.appendReplacement(sb, text);
-        }
-        m.appendTail(sb);
+		return sb.toString();
 
-        return sb.toString();*/
-    }
-
-    private String replaseQoutesToBrases(String source)
-    {
-    	return source;
-        /*if (source == null)
-        {
-            return null;
-        }
-        return source.replace("«", "\\{").replace("»", "\\}");*/
-    }
+	}
 }
