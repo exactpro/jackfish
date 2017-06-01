@@ -164,7 +164,7 @@ Sometimes you have property expressions which may contain a null element, requir
 
 This is functionally equivalent to writing:
 
-{{#if (user.manager != null) { return user.manager.name; } else { return null; }#}}
+{{#if (user.manager != null) {return user.manager.name;} else {return null;}#}}
 
 {{&Collections&}}
 
@@ -174,7 +174,7 @@ Traversal of collections can also be achieved using abbreviated syntax.
 
 Lists are accessed the same as array's. For example:
 
-{{# user[5]#}}
+{{#user[5]#}}
 
 is the equivelent of the Java code:
 
@@ -328,7 +328,8 @@ Here is a functional Quicksort algorithm implemented using projections:
 
 {{#         pivot = list[0];#}}
 
-{{#         concat(quicksort(($ in list if $ < pivot)), pivot, quicksort(($ in list if $ > pivot)));#}}
+{{#         concat(quicksort(($ in list if $ < pivot)), #}}
+{{#                 pivot, quicksort(($ in list if $ > pivot)));#}}
 
 {{#    }#}}
 
@@ -366,7 +367,8 @@ MVEL allows the definition of lambda functions.
 
 A simple lambda expression
 
-{{#threshold = def (x) { x >= 10 ? x : 0 }; result = cost + threshold(lowerBound);#}}
+{{#threshold = def (x) { x >= 10 ? x : 0 }; #}}
+{{#result = cost + threshold(lowerBound);#}}
 
 The above example defines a lambda and assigns it to the variable "threshold". Lambda's are essentially functions that are assignable to variables. They are essentially closures and can be used as such.
 
