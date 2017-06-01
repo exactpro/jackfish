@@ -13,6 +13,7 @@ import com.exactprosystems.jf.api.app.*;
 import com.exactprosystems.jf.api.app.IWindow.SectionKind;
 import com.exactprosystems.jf.api.common.Str;
 import com.exactprosystems.jf.api.error.ErrorKind;
+import com.exactprosystems.jf.api.error.app.WrongParameterException;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.report.ReportBuilder;
 import com.exactprosystems.jf.common.report.ReportTable;
@@ -136,6 +137,10 @@ public class DialogCheckLayout extends AbstractAction
 		}
 		IGuiDictionary dictionary = connection.getDictionary();
 		IWindow window = dictionary.getWindow(this.dialog);
+		if (window == null)
+		{
+			throw new WrongParameterException("The dialog with name '" + this.dialog + "' does not found in the dictionary");
+		}
 		Set<ControlKind> supportedControls = new HashSet<>();
 		supportedControls.addAll(Arrays.asList(app.getFactory().supportedControlKinds()));
 
