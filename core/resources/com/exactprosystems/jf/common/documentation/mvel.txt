@@ -1,9 +1,9 @@
-{{&Basic Syntax&}}
+{{& Basic Syntax &}}
 MVEL is an expression language based on Java-syntax, with some marked differences specific to MVEL.  Unlike Java however, MVEL is dynamically typed (with optional typing), meaning type qualification is not required in the the source. 
 
 An MVEL expression can be as simple as a single identifier, or as complicated as a full blown boolean expression with method calls and inline collection creations.
 
-{{&Simple Property Expression&}}
+{{& Simple Property Expression &}}
 In this expression, we simply have a single identifier {{*(user.name)*}}, which by itself, is what we refer to in MVEL as a {{*property*}} {{*expression*}}, in that the only purpose of the expression is to extract a property out of a variable or context object.  Property expressions are one of the most common uses, allowing MVEL to be used as a very high performance, easy to use, reflection-optimizer.  
 
 MVEL can even be used for evaluating a boolean expression:
@@ -15,10 +15,10 @@ Like Java, MVEL supports the full gambit of operator precedence rules, including
 {{#(user.name == 'John Doe') && ((x * 2) - 1) > 20#}}
 
 
-{{&MVEL 2.0 Operators&}}
+{{& MVEL 2.0 Operators &}}
 The following chart is a complete list and description of all operators present in MVEL.
 
-{{&Unary Operators&}}
+{{& Unary Operators &}}
 
 {{=
 {{*Operator*}}|20`{{*Description*}}|40`{{*Example*}}|40``
@@ -30,7 +30,7 @@ isdef`Tests whether or not a variable is defined within the scope`isdef variable
 =}}
 
 
-{{&Comparison Operators&}}
+{{& Comparison Operators &}}
 
 {{=
 {{*Operator*}}|20`{{*Description*}}|40`{{*Example*}}|40``
@@ -46,7 +46,7 @@ strsim`String Similarity Check.  Compares to strings and returns a similarity be
 soundslike`Soundex Check.  Performs a soundex comparison between two strings. See: Soundex.`"foobar" soundslike "fubar"
 =}}
 
-{{&Logical Operators&}}
+{{& Logical Operators &}}
 
 {{=
 {{*Operator*}}|20`{{*Description*}}|40`{{*Example*}}|40``
@@ -56,7 +56,7 @@ or`Chained OR.  Checks a sequence of values for emptiness and returns the first 
 ~=`Regular Expression Match.  Checks to see if the value on the left matches the regular expression on the right.`foo ~= '[a-z].+'
 =}}
 
-{{&Bitwise Operators&}}
+{{& Bitwise Operators &}}
 
 {{=
 {{*Operator*}}|20`{{*Description*}}|40`{{*Example*}}|40``
@@ -65,7 +65,7 @@ or`Chained OR.  Checks a sequence of values for emptiness and returns the first 
 ^`Bitwise XOR.`foo ^ 5
 =}}
 
-{{&Arithmetic Operators&}}
+{{& Arithmetic Operators &}}
 
 {{=
 {{*Operator*}}|20`{{*Description*}}|40`{{*Example*}}|40``
@@ -76,7 +76,7 @@ or`Chained OR.  Checks a sequence of values for emptiness and returns the first 
 %`Modulus.  Divides the number on the left by the number on the right and returns the remainder.`2 % 1
 =}}
 
-{{&Other Operators&}}
+{{& Other Operators &}}
 
 {{=
 {{*Operator*}}|20`{{*Description*}}|40`{{*Example*}}|40``
@@ -87,7 +87,7 @@ in`Projection/Fold. Projects across a collection.  See: Projections and Folds.`(
 =}}
 
 
-{{&Inline List, Maps and Arrays&}}
+{{& Inline List, Maps and Arrays &}}
 MVEL allows you to express Lists, Maps and Arrays using simple elegant syntax. Consider the following example:
 
 {{#['Bob' : new Person('Bob'), 'Michael' : new Person('Michael')]#}}
@@ -105,7 +105,7 @@ This can be a very powerful way to express data structures inside of MVEL. You c
 
 {{#something.someMethod(['foo' : 'bar']);#}}
 
-{{&Lists&}}
+{{& Lists &}}
 
 Lists are expressed in the following format: [item1, item2, ...]
 
@@ -113,7 +113,7 @@ For example:
 
 {{#["Jim", "Bob", "Smith"]#}}
 
-{{&Maps&}}
+{{& Maps &}}
 
 Maps are expressed in the following format: [key1 : value1, key2: value2, ...]
 
@@ -121,7 +121,7 @@ For example:
 
 {{#["Foo" : "Bar", "Bar" : "Foo"]#}}
 
-{{&Arrays&}}
+{{& Arrays &}}
 
 Arrays are expressed in the following format: {item1, item2, ...}
 
@@ -129,7 +129,7 @@ For example:
 
 {{#{"Jim", "Bob", "Smith"}#}}
 
-{{&Array Coercion&}}
+{{& Array Coercion &}}
 
 One important facet about inline arrays to understand is their special ability to be coerced to other array types. When you declare an inline array, it is untyped, but say for example you are passing to a method that accepts int[]. You simply can write your code as the following:
 
@@ -138,13 +138,13 @@ One important facet about inline arrays to understand is their special ability t
 In this case, MVEL will see that the target method accepts an {{*int[]*}} and automatically type the array as such.
 
 
-{{&MVEL 2.0 Property Navigation&}}
+{{& MVEL 2.0 Property Navigation &}}
 
 MVEL property navigation follows well-established conventions found in other bean property expressions found in other languages such as Groovy, OGNL, EL, etc.
 
 Unlike some other languages which require qualification depending on the underlying method of access, MVEL provides a single, unified syntax for accessing properties, static fields, maps, etc.
 
-{{&Bean Properties&}}
+{{& Bean Properties &}}
 
 Most java developers are familiar with and user the getter/setter paradigm in their Java objects in order to encapsulate property accessors.   For example, you might access a property from an object as such:
 
@@ -156,7 +156,7 @@ In order to simplify this, you can access the same property using the following 
 
 {{*Note:*}} In situations where the field in the object is {{*public*}}, MVEL will still prefer to access the property via it's getter method.
 
-{{&Null-Safe Bean Navigation&}}
+{{& Null-Safe Bean Navigation &}}
 
 Sometimes you have property expressions which may contain a null element, requiring you to create a null-check. You can simplify this by using the null-safe operator:
 
@@ -166,11 +166,11 @@ This is functionally equivalent to writing:
 
 {{#if (user.manager != null) {return user.manager.name;} else {return null;}#}}
 
-{{&Collections&}}
+{{& Collections &}}
 
 Traversal of collections can also be achieved using abbreviated syntax.
 
-{{&List Access&}}
+{{& List Access &}}
 
 Lists are accessed the same as array's. For example:
 
@@ -180,7 +180,7 @@ is the equivelent of the Java code:
 
 {{#user.get(5);#}}
 
-{{&Map Access&}}
+{{& Map Access &}}
 
 Maps are accessed in the same way as array's except any object can be passed as the index value. For example:
 
@@ -196,7 +196,7 @@ For Maps that use a String as a key, you may use another special syntax:
 
 ... Allowing you to treat the Map itself as a virtual object.
 
-{{&Strings as Arrays&}}
+{{& Strings as Arrays &}}
 
 For the purposes of using property indexes (as well as iteration) all Strings are treated as arrays. In MVEL you may refer to the first character in a String variable as such:
 
@@ -205,11 +205,11 @@ For the purposes of using property indexes (as well as iteration) all Strings ar
 {{#foo[0]; // returns 'M'#}}
 
 
-{{&MVEL 2.0 Literals&}}
+{{& MVEL 2.0 Literals &}}
 
 A literal is used to represent a fixed-value in the source of a particular script.
 
-{{&String literals&}}
+{{& String literals &}}
 
 String literals may be denoted by single or double quotes.
 
@@ -218,7 +218,7 @@ String literals may be denoted by single or double quotes.
 {{#'This is also string literal'#}}
 
 
-{{&String escape sequences&}}
+{{& String escape sequences &}}
 
 \\ - Double escape allows rendering of single backslash in string.
 \n - Newline
@@ -226,7 +226,7 @@ String literals may be denoted by single or double quotes.
 \u#### - Unicode character (Example: \uAE00)
 \### - Octal character (Example: \73)
 
-{{&Numeric literals&}}
+{{& Numeric literals &}}
 
 Integers can be represented in decimal (base 10), octadecimal (base 8), or hexadecimal (base 16).
 A decimal integer can be expressed as any number that does not start with zero.
@@ -241,7 +241,7 @@ Hexidecimal is represented by prefixing the integer with 0x followed by numbers 
 
 {{#0xAFF0 // hex#}}
 
-{{&Floating point literals&}}
+{{& Floating point literals &}}
 
 A floating point number consists of a whole number and a factional part denoted by the point/period character, with an optional type suffix.
 
@@ -251,7 +251,7 @@ A floating point number consists of a whole number and a factional part denoted 
 
 {{#14.5f // a float#}}
 
-{{&BigInteger and BigDecimal literals&}}
+{{& BigInteger and BigDecimal literals &}}
 
 You can represent BigInteger and BigDecimal literals by using the suffixes B and I (uppercase is mandatory).
 
@@ -259,7 +259,7 @@ You can represent BigInteger and BigDecimal literals by using the suffixes B and
 
 {{#8.4I // BigInteger#}}
 
-{{&Boolean literals&}}
+{{& Boolean literals &}}
 
 Boolean literals are represented by the reserved keywords true and false.
 
@@ -267,7 +267,7 @@ Null literal
 The null literal is denoted by the reserved keywords null or nil.
 
 
-{{&MVEL 2.0 Projections and Folds&}}
+{{& MVEL 2.0 Projections and Folds &}}
 
 Put simply, projections (also known as list comprehensions) are a way of representing collections. Using a very simple syntax, you can inspect very complex object models inside collections.
 
@@ -279,7 +279,7 @@ You can even perform nested operations. Imagine instead, that the User object ha
 
 {{#familyMembers = (name in (familyMembers in users));#}}
 
-{{&Filters&}}
+{{& Filters &}}
 
 You can also filter projections with a constraint with the if operator:
 
@@ -289,7 +289,7 @@ $ serves as the placeholder for the element being filtered. It is actually a reg
 
 {{#($ in fooList if $.name contains 'foobie')#}}
 
-{{&Other Examples&}}
+{{& Other Examples &}}
 
 Here are some more examples:
 
@@ -359,11 +359,11 @@ Here is a functional Quicksort algorithm implemented using projections:
 {{#quicksort(list);#}}
 
 
-{{&Lambda Expressions&}}
+{{& Lambda Expressions &}}
 
 MVEL allows the definition of lambda functions.
 
-{{&Example&}}
+{{& Example &}}
 
 A simple lambda expression
 
