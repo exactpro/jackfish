@@ -211,8 +211,14 @@ public final class TestCase extends MatrixItem
         Variables locals = evaluator.createLocals(); 
 		ReturnAndResult ret = null;
 		Table table = context.getTable();
-        int position = table.size();
-		RowTable row = table.addNew();
+        int position = -1;
+		RowTable row = null;
+		if(!isRepOff())
+		{
+    		position = table.size();
+            row = table.addNew();
+		}
+
 		super.screenshot = null;
 		try
 		{
@@ -226,7 +232,7 @@ public final class TestCase extends MatrixItem
 	        String str = settings.getValueOrDefault(Settings.GLOBAL_NS, Settings.MATRIX_NAME, Settings.MATRIX_POPUPS, "" + false).getValue();
 	        boolean showPopups = Boolean.parseBoolean(str);
 	        
-	        if (table != null && !isRepOff())
+	        if (row != null)
 			{
 				row.put(Context.matrixColumn, 			this.owner.getName());
 				row.put(Context.testCaseIdColumn, 		this.getId());
@@ -291,7 +297,7 @@ public final class TestCase extends MatrixItem
 
     private void updateTable(Table table, int position, RowTable row, ReturnAndResult ret, MatrixError error)
     {
-        if (table != null && position >= 0 && !isRepOff())
+        if (table != null && position >= 0 && row != null)
         {
             row.put(Context.timeColumn,         ret.getTime());
             row.put(Context.resultColumn,       ret.getResult().isFail() ? Result.Failed : ret.getResult());
