@@ -54,10 +54,7 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.text.Text;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
-import javafx.stage.DirectoryChooser;
-import javafx.stage.FileChooser;
-import javafx.stage.Modality;
-import javafx.stage.Stage;
+import javafx.stage.*;
 import javafx.util.Duration;
 import org.apache.log4j.Logger;
 
@@ -719,7 +716,6 @@ public abstract class DialogsHelper
 				boolean addButton = configuration != null;
 				ReportBrowser reportBrowser = new ReportBrowser(file);
 				Dialog<ButtonType> dialog = new Dialog<>();
-				dialog.initOwner(Common.node);
 				Common.addIcons(((Stage) dialog.getDialogPane().getScene().getWindow()));
 				if (addButton)
 				{

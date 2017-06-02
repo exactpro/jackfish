@@ -1,3 +1,137 @@
 #TestCase;#Kind;#Depends;#For
-Test case;Never;;
+Negative testing;;;
+    #Step;#Kind;#For;#Depends
+    'Test start without browser';;;
+        #Id;#Action;#Assert;$AppId
+        APPSTR1;ApplicationStart;This.Result == Result.Failed && This.Kind == ErrorKind.EXCEPTION;mockWebApp
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'Test start without url';;;
+        #Id;#Action;#Assert;$AppId;Browser
+        APPSTR1;ApplicationStart;This.Result == Result.Failed && This.Kind == ErrorKind.EXCEPTION;mockWebApp;'Chrome'
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'Test start with inavlid browser';;;
+        #Id;#Action;#Assert;$AppId;Browser;URL
+        APPSTR2;ApplicationStart;This.Result == Result.Failed && This.Kind == ErrorKind.EXCEPTION;mockWebApp;new Date();'http://google.ru'
+
+    #EndStep
+
+
+#TestCase;#Kind;#Depends;#For
+Test chrome;Never;;
+    #Step;#Kind;#For;#Depends
+    'start app without chromedriverpath';;;
+        #Id;#Action;#Assert;$AppId;Browser;URL
+        APPSTR3;ApplicationStart;This.Kind == ErrorKind.EXCEPTION && This.Result == Result.Failed;'WEB_WITHOUT_ANY_DRIVERS_PATH';'Chrome';mockWebURL
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'start app with invalid chromedriverpath';;;
+        #Id;#Action;#Assert;$AppId;Browser;URL
+        APPSTR3;ApplicationStart;This.Kind == ErrorKind.EXCEPTION && This.Result == Result.Failed;'WEB_WITH_INVALID_ANY_DRIVERS_PATH';'Chrome';mockWebURL
+
+    #EndStep
+
+    // TODO add test
+    #Step;#Kind;#For;#Depends
+    'start app with chromedriverbinary';;;
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'test most used actions';Never;;
+        #Id;#Action;$AppId;Browser;URL
+        APPSTR4;ApplicationStart;mockWebApp;'Chrome';mockWebURL
+
+        #Id;#Call;app
+        CALL_1;checkBrowser;APPSTR4.Out
+
+        #Action;$AppConnection
+        ApplicationStop;APPSTR4.Out
+
+        #OnError
+            #Action;$AppConnection
+            ApplicationStop;APPSTR4.Out
+
+            #Fail
+            err
+
+
+    #EndStep
+
+
+// Test for selenium 3+
+#Off;#TestCase;#Kind;#Depends;#For
+1;Test firefox;;;
+    #Step;#Kind;#For;#Depends
+    'start app without geckodriver path';;;
+        #Id;#Action;#Assert;$AppId;Browser;URL
+        APPSTR3;ApplicationStart;This.Kind == ErrorKind.EXCEPTION && This.Result == Result.Failed;'WEB_WITHOUT_ANY_DRIVERS_PATH';'Firefox';mockWebURL
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'start app with invalid geckodriver path';;;
+        #Id;#Action;#Assert;$AppId;Browser;URL
+        APPSTR3;ApplicationStart;This.Kind == ErrorKind.EXCEPTION && This.Result == Result.Failed;'WEB_WITH_INVALID_ANY_DRIVERS_PATH';'Chrome';mockWebURL
+
+    #EndStep
+
+    // TODO add test
+    #Step;#Kind;#For;#Depends
+    'start with firefoxprofile';;;
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'test most used actions';Never;;
+        #Id;#Action;$AppId;Browser;URL
+        APPSTR4;ApplicationStart;mockWebApp;'Firefox';mockWebURL
+
+        #Id;#Call;app
+        CALL_1;checkBrowser;APPSTR4.Out
+
+        #Action;$AppConnection
+        ApplicationStop;APPSTR4.Out
+
+        #OnError
+            #Action;$AppConnection
+            ApplicationStop;APPSTR4.Out
+
+            #Fail
+            err
+
+
+    #EndStep
+
+
+#TestCase;#Kind;#Depends;#For
+Test IE;;;
+    #If
+    !Sys.osName().startsWith('Win')
+        #Return
+        'Current OS is not Windows'
+
+    #EndIf
+
+
+#TestCase;#Kind;#Depends;#For
+subcase;;;
+    #Id;#SubCase;app
+    checkBrowser;;APPSTR4.Out
+        #Id;#Action;$Dialog;$AppConnection;Button;centralLabel
+        DLGFLL1;DialogFill;'Main';app;Do.push();Do.check('Button_click')
+
+        #Id;#Action;$Dialog;$AppConnection;TextBox;centralLabel
+        DLGFLL1;DialogFill;'Main';app;'someText';Do.check('TextBox_someText')
+
+        #Id;#Action;$Dialog;$AppConnection;TextBox;centralLabel
+        DLGFLL1;DialogFill;'Main';app;Do.press(Keyboard.W);Do.check('TextBox_someTextw')
+
+    #EndSubCase
+
 

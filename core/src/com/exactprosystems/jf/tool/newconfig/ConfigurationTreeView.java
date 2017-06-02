@@ -21,6 +21,7 @@ import javafx.scene.control.Dialog;
 import javafx.scene.control.MenuItem;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyCode;
 import javafx.scene.layout.HBox;
 
 import java.awt.*;
@@ -54,6 +55,15 @@ public class ConfigurationTreeView extends TreeView<TreeNode>
 		{
 			TreeItem<TreeNode> selectedItem = this.getSelectionModel().getSelectedItem();
 			if (selectedItem != null && selectedItem.getChildren().size() == 0 && event.getClickCount() == 2)
+			{
+				Optional.ofNullable(selectedItem.getValue().onDoubleClickEvent()).ifPresent(fnc -> Common.tryCatch(fnc, "Error on call"));
+			}
+		});
+
+		this.setOnKeyPressed(event ->
+		{
+			TreeItem<TreeNode> selectedItem = this.getSelectionModel().getSelectedItem();
+			if (selectedItem != null && selectedItem.getChildren().size() == 0 && event.getCode() == KeyCode.ENTER)
 			{
 				Optional.ofNullable(selectedItem.getValue().onDoubleClickEvent()).ifPresent(fnc -> Common.tryCatch(fnc, "Error on call"));
 			}

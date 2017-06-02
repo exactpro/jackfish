@@ -69,11 +69,6 @@ public class ProxyWebApp extends ProxyApplication
 			driverParameters.put(ProxyApplication.remoteLogLevelName, logLevel);
 		}
 
-		String safariDriverPath 	= driverParameters.get(WebAppFactory.safariDriverPathName);
-		if (safariDriverPath != null && !safariDriverPath.isEmpty())
-		{
-			parameters.put(WebAppFactory.safariDriverPathName, safariDriverPath);
-		}
 		String chromeDriverPath 	= driverParameters.get(WebAppFactory.chromeDriverPathName);
 		if (chromeDriverPath != null && !chromeDriverPath.isEmpty())
 		{

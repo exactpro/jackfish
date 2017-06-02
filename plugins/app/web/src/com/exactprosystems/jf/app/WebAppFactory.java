@@ -8,15 +8,9 @@
 
 package com.exactprosystems.jf.app;
 
-import com.exactprosystems.jf.api.app.ControlKind;
-import com.exactprosystems.jf.api.app.IApplication;
-import com.exactprosystems.jf.api.app.IApplicationFactory;
-import com.exactprosystems.jf.api.app.IGuiDictionary;
-import com.exactprosystems.jf.api.app.LocatorFieldKind;
-import com.exactprosystems.jf.api.app.PluginInfo;
+import com.exactprosystems.jf.api.app.*;
 import com.exactprosystems.jf.api.common.ParametersKind;
 
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -28,7 +22,6 @@ public class WebAppFactory implements IApplicationFactory
     public final static String   jreExecName          = "jreExec";
     public final static String   jreArgsName          = "jreArgs";
 
-    public static final String   safariDriverPathName = "SafariDriverPath";
     public static final String   chromeDriverPathName = "ChromeDriverPath";
     public static final String   geckoDriverPathName  = "GeckoDriverPath";
     public static final String   ieDriverPathName     = "IEDriverPath";
@@ -79,7 +72,7 @@ public class WebAppFactory implements IApplicationFactory
 	{
 		switch (kind)
 		{
-			case LOAD:		return new String[] { jreExecName, jreArgsName, safariDriverPathName, chromeDriverPathName, geckoDriverPathName, ieDriverPathName, chromeDriverBinary, firefoxProfileDir,
+			case LOAD:		return new String[] { jreExecName, jreArgsName, chromeDriverPathName, geckoDriverPathName, ieDriverPathName, chromeDriverBinary, firefoxProfileDir,
 					usePrivateMode, logLevel };
 			case START:		return new String[] { browserName, urlName };
 			case PROPERTY:	return new String[] { propertyUrlName, propertyTitle };

@@ -13,10 +13,8 @@ import com.exactprosystems.jf.api.common.Converter;
 import com.exactprosystems.jf.api.common.SerializablePair;
 import com.exactprosystems.jf.api.common.Str;
 import com.exactprosystems.jf.api.error.app.FeatureNotSupportedException;
-import com.exactprosystems.jf.api.error.app.NullParameterException;
 import com.exactprosystems.jf.api.error.app.TimeoutException;
 import com.exactprosystems.jf.app.WebAppFactory.WhereToOpen;
-
 import org.apache.log4j.*;
 import org.openqa.selenium.*;
 import org.openqa.selenium.Dimension;
@@ -203,15 +201,6 @@ public class SeleniumRemoteApplication extends RemoteApplication
 				throw new Exception("URL can't be null or empty.");
 			}
 
-			String safariDriverPath = args.get(WebAppFactory.safariDriverPathName);
-			if (safariDriverPath != null && !safariDriverPath.isEmpty())
-			{
-				logger.info(WebAppFactory.safariDriverPathName + " = " + safariDriverPath);
-				
-				// TODO - what?
-				
-			}
-
 			String chromeDriverPath = args.get(WebAppFactory.chromeDriverPathName);
 			if (chromeDriverPath != null && !chromeDriverPath.isEmpty())
 			{
@@ -253,16 +242,6 @@ public class SeleniumRemoteApplication extends RemoteApplication
 
 			logger.info("Starting " + browserName + " on " + url);
 
-			if (browserName == null)
-			{
-				throw new NullParameterException(WebAppFactory.browserName);
-			}
-
-			if (url == null)
-			{
-				throw new NullParameterException(WebAppFactory.urlName);
-			}
-			
             Thread t = new Thread(new Runnable()
             {
                 public void run()
@@ -290,6 +269,7 @@ public class SeleniumRemoteApplication extends RemoteApplication
                     }
                     catch (Exception e)
                     {
+                    	te = e;
                         logger.error(e.getMessage(), e);
                     }
                     
