@@ -41,8 +41,26 @@ Test waitTo(Dis)Apper with ref;Never;;
     #Step;#Kind;#For;#Depends
     'win';;;
         #If
-        Sys.osName().startsWith('Win')
+        !Sys.osName().startsWith('Win')
+            #Return
+            
+
         #EndIf
+
+        #Id;#Action;$AppId;Exec;AlwaysToFront;WorkDir
+        APPSTR1;ApplicationStart;mockWinApp;mockWinExec;true;mockWinDir
+
+        #Id;#Let
+        add;apps.add(APPSTR1.Out)
+
+        #Call;app;dialog
+        checkWait;APPSTR1.Out;dialog
+
+        #Id;#Action;$AppConnection
+        APPSTP2;ApplicationStop;APPSTR1.Out
+
+        #Id;#Let
+        remove;apps.remove(APPSTR1.Out)
 
     #EndStep
 
@@ -89,6 +107,32 @@ Test waitTo(Dis)Apper without ref;Never;;
     'web';;;
         #Id;#Action;$AppId;Browser;URL
         APPSTR1;ApplicationStart;mockWebApp;mockWebBrowser;mockWebURL
+
+        #Id;#Let
+        add;apps.add(APPSTR1.Out)
+
+        #Call;app;dialog
+        checkWait;APPSTR1.Out;dialog
+
+        #Id;#Action;$AppConnection
+        APPSTP2;ApplicationStop;APPSTR1.Out
+
+        #Id;#Let
+        remove;apps.remove(APPSTR1.Out)
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'win';;;
+        #If
+        !Sys.osName().startsWith('Win')
+            #Return
+            
+
+        #EndIf
+
+        #Id;#Action;$AppId;Exec;AlwaysToFront;WorkDir
+        APPSTR1;ApplicationStart;mockWinApp;mockWinExec;true;mockWinDir
 
         #Id;#Let
         add;apps.add(APPSTR1.Out)

@@ -204,5 +204,15 @@ namespace mock_win
         {
             centralLabel.Text = "cm_one_click";
         }
+
+        private void showButton_Click(object sender, EventArgs e)
+        {
+            hideButton.Visible = true;
+        }
+
+        private void hideButton_Click(object sender, EventArgs e)
+        {
+            hideButton.Visible = false;
+        }
     }
 }

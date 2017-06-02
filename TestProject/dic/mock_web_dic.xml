@@ -120,8 +120,8 @@
             <wait owner="owner" ref="buttonShowArea" addition="WaitToAppear" timeout="5000"/>
         </onOpen>
         <run>
-            <button id="buttonShowArea" uid="" owner="owner" name="showButton"/>
-            <button id="buttonHideArea" uid="" owner="owner" name="hideButton"/>
+            <button id="buttonShowArea" owner="owner" name="showButton"/>
+            <button id="buttonHideArea" owner="owner" name="hideButton"/>
         </run>
         <onClose>
             <wait owner="owner" ref="buttonHideArea" addition="WaitToDisappear" timeout="5000"/>
@@ -134,8 +134,8 @@
             <wait uid="" owner="owner" name="showButton" addition="WaitToAppear" timeout="5000"/>
         </onOpen>
         <run>
-            <button id="buttonShowArea" uid="" owner="owner" name="showButton"/>
-            <button id="buttonHideArea" uid="" owner="owner" name="hideButton"/>
+            <button id="buttonShowArea" owner="owner" name="showButton"/>
+            <button id="buttonHideArea" owner="owner" name="hideButton"/>
         </run>
         <onClose>
             <wait uid="" owner="owner" name="hideButton" addition="WaitToDisappear" timeout="5000"/>

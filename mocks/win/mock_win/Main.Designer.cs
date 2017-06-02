@@ -90,6 +90,8 @@
             this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem2 = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem3 = new System.Windows.Forms.ToolStripMenuItem();
+            this.showButton = new System.Windows.Forms.Button();
+            this.hideButton = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.Table1)).BeginInit();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.Slider)).BeginInit();
@@ -566,14 +568,27 @@
             this.toolStripMenuItem3.Name = "toolStripMenuItem3";
             resources.ApplyResources(this.toolStripMenuItem3, "toolStripMenuItem3");
             // 
+            // showButton
+            // 
+            resources.ApplyResources(this.showButton, "showButton");
+            this.showButton.Name = "showButton";
+            this.showButton.UseVisualStyleBackColor = true;
+            this.showButton.Click += new System.EventHandler(this.showButton_Click);
+            // 
+            // hideButton
+            // 
+            resources.ApplyResources(this.hideButton, "hideButton");
+            this.hideButton.Name = "hideButton";
+            this.hideButton.UseVisualStyleBackColor = true;
+            this.hideButton.Click += new System.EventHandler(this.hideButton_Click);
+            // 
             // Main
             // 
             resources.ApplyResources(this, "$this");
-            this.StartPosition = System.Windows.Forms.FormStartPosition.Manual;
-            this.Left = 100;
-            this.Top = 50;
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ContextMenuStrip = this.contextMenuStrip1;
+            this.Controls.Add(this.hideButton);
+            this.Controls.Add(this.showButton);
             this.Controls.Add(this.ToggleButton);
             this.Controls.Add(this.Any);
             this.Controls.Add(this.Splitter);
@@ -684,6 +699,8 @@
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem1;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem2;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem3;
+        private System.Windows.Forms.Button showButton;
+        private System.Windows.Forms.Button hideButton;
     }
 }
 
