@@ -80,15 +80,16 @@
 
 	var showArea = function(flag) {
 		if (flag) {
-			$("#hiddenDiv").show();
+			$("#hideButton").show();
 		} else {
-			$("#hiddenDiv").hide();
+			$("#hideButton").hide();
 		}
 	};
 
 	$(document).ready(function(e) {
-		$("#hiddenDiv").hide();
+		$("#hideButton").hide();
 	});
+
 
 	</script>
 </head>
@@ -113,14 +114,14 @@
 	<input id="input" class="add_listener" onkeyup="textBoxKeyUp(event,this)" onkeydown="textBoxKeyDown(event,this)" kindname="TextBox" func="123" name="TextBox"/>
 </div>
 
-<div id="divTable" >
+<div id="divTable">
 	<table id="table" border="1px" class="add_listener" kindname="Table" func="456" name="Table">
 		<thead>
-			<tr>
-				<th>Head1</th>
-				<th>Head2</th>
-				<th>Head3</th>
-			</tr>
+		<tr>
+			<th>Head1</th>
+			<th>Head2</th>
+			<th>Head3</th>
+		</tr>
 		</thead>
 		<tbody>
 		<tr>
@@ -142,7 +143,7 @@
 	</table>
 </div>
 
-<div id="divTable1" >
+<div id="divTable1">
 	<label id="labelTable1"></label>
 	<table id="table1" border="1px" name="Table">
 		<thead>
@@ -175,35 +176,35 @@
 <div id="divTable2">
 	<table id="tableDuplicateColumns">
 		<thead>
-			<tr>
-				<th>A</th>
-				<th>B</th>
-				<th>A</th>
-				<th>C</th>
-				<th>B</th>
-				<th>A</th>
-			</tr>
+		<tr>
+			<th>A</th>
+			<th>B</th>
+			<th>A</th>
+			<th>C</th>
+			<th>B</th>
+			<th>A</th>
+		</tr>
 		</thead>
 		<tbody>
-			<tr>
-				<td>1</td>
-				<td>2</td>
-				<td>3</td>
-				<td>4</td>
-				<td>5</td>
-				<td>6</td>
-			</tr>
+		<tr>
+			<td>1</td>
+			<td>2</td>
+			<td>3</td>
+			<td>4</td>
+			<td>5</td>
+			<td>6</td>
+		</tr>
 		</tbody>
 	</table>
 </div>
 
 <div id="divCheckbox">
-	<input id ="checkbox" type="checkbox" name="CheckBox" class="checkBoxUnChecked add_listener" func="123456" value="CheckBox" kindname="CheckBox" checked/>
+	<input id="checkbox" type="checkbox" name="CheckBox" class="checkBoxUnChecked add_listener" func="123456" value="CheckBox" kindname="CheckBox" checked/>
 	CheckBox
 </div>
 
 <div id="divToggleBox">
-	<input id ="toggleb" type="checkbox" name="ToggleB" class="toggleBoxUnChecked add_listener" func="123456" value="ToggleB" kindname="ToggleB" checked/>
+	<input id="toggleb" type="checkbox" name="ToggleB" class="toggleBoxUnChecked add_listener" func="123456" value="ToggleB" kindname="ToggleB" checked/>
 	ToggleB
 </div>
 
@@ -250,7 +251,7 @@
 </div>
 
 <dialog id="dialogd" name="DialogD" class="add_listener" kindname="DialogD" func="123456" open>
-    This is an open dialog window
+	This is an open dialog window
 </dialog>
 
 <div id="divUL">
@@ -282,33 +283,31 @@
 </div>
 
 <div id="divNavbar">
-    <ul id="navbar">
-        <li id="main" class="add_listener" kindname="Main" name="Main" func="123456">Main</li>
-        <li id="news" class="add_listener" kindname="News" name="News" func="123456">News</li>
-        <li>Contacts
-            <ul>
-                <li id="address" class="add_listener" kindname="Address" name="Address" func="123456">Address</li>
-                <li id="phone" class="add_listener" kindname="Phone" name="Phone" func="123456">Phone</li>
-                <li id="email" class="add_listener" kindname="Email" name="Email" func="123456">Email</li>
-            </ul>
-        </li>
-        <li id="about" class="add_listener" kindname="About" name="About" func="123456">About</li>
-    </ul>
+	<ul id="navbar">
+		<li id="main" class="add_listener" kindname="Main" name="Main" func="123456">Main</li>
+		<li id="news" class="add_listener" kindname="News" name="News" func="123456">News</li>
+		<li>Contacts
+			<ul>
+				<li id="address" class="add_listener" kindname="Address" name="Address" func="123456">Address</li>
+				<li id="phone" class="add_listener" kindname="Phone" name="Phone" func="123456">Phone</li>
+				<li id="email" class="add_listener" kindname="Email" name="Email" func="123456">Email</li>
+			</ul>
+		</li>
+		<li id="about" class="add_listener" kindname="About" name="About" func="123456">About</li>
+	</ul>
 </div>
 
 <div id="divFrame">
-    <iframe id="myIframe" name="MyFrame" class="add_listener" kindname="MyFrame" func="123456" src="iframe.html"></iframe>
+	<iframe id="myIframe" name="MyFrame" class="add_listener" kindname="MyFrame" func="123456" src="iframe.html"></iframe>
 </div>
 
 <div id="divImageIDE">
-    <img src="ide.png" alt="Test Image" id="imageIDE" name="ImageIDE" class="add_listener" kindname="ImageIDE" func="123456" />
+	<img src="ide.png" alt="Test Image" id="imageIDE" name="ImageIDE" class="add_listener" kindname="ImageIDE" func="123456"/>
 </div>
 
 <div id="divWithWait">
-	<button id="showButton" onclick="showArea(true)">Click me for show hidden area</button>
-	<div id="hiddenDiv">
-		<button id="hideButton" onclick="showArea(false)">Click me for hide showing area</button>
-	</div>
+	<button name="showButton" id="showButton" onclick="showArea(true)">Click me for show hidden area</button>
+	<button name="hideButton" id="hideButton" onclick="showArea(false)">Click me for hide showing area</button>
 </div>
 
 </body>
