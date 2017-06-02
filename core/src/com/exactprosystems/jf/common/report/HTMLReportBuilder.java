@@ -365,7 +365,7 @@ public class HTMLReportBuilder extends ReportBuilder
 	}
 
 	@Override
-	protected void reportImage(ReportWriter writer, MatrixItem item, String beforeTestcase, String fileName, String title, ImageReportMode reportMode) throws IOException
+	protected void reportImage(ReportWriter writer, MatrixItem item, String beforeTestcase, String fileName, String embedded, String title, ImageReportMode reportMode) throws IOException
 	{
 		if (beforeTestcase != null)
 		{
@@ -380,7 +380,7 @@ public class HTMLReportBuilder extends ReportBuilder
 		switch (reportMode)
         {
         case AsEmbeddedImage:
-            writer.fwrite("<img src='data:image/png;base64%s' class='img'/><br>", fileName);
+            writer.fwrite("<img src='data:image/jpeg;base64,%s' class='img'/><br>", embedded);
             break;
 
         case AsImage:

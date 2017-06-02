@@ -46,25 +46,20 @@ public class HelpWizardItem extends MatrixItem
         
         report.itemIntermediate(this);
         
-        String data = "";
-
+        byte[] bytes = null;
         try
         {
             InputStream inputStream = this.wizardClazz.getResourceAsStream(picture);
-            byte[] bytes = new byte[inputStream.available()];
+            bytes = new byte[inputStream.available()];
             inputStream.read(bytes);
-            byte[] encoded = java.util.Base64.getEncoder().encode(bytes);
-            data = new String(encoded);
         }
         catch (IOException e)
         {
             logger.error(e.getMessage(), e);
         }
-        System.err.println("<< " + picture);
-        System.err.println("<< " + data);
         
         report.outLine(this, null, "{{`" + shortDescription + "`}}", null);
-        report.outImage(this, null, data, "{{*Picture*}}", ImageReportMode.AsEmbeddedImage); 
+        report.outImage(this, null, null, bytes, "{{* View example *}}", ImageReportMode.AsEmbeddedImage); 
         report.outLine(this, null, "{{`" + detailedDescription + "`}}", null);
     }
 

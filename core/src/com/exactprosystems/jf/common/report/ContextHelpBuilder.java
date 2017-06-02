@@ -23,8 +23,6 @@ public class ContextHelpBuilder extends ReportBuilder
     public ContextHelpBuilder(Date currentTime) throws IOException
     {
         super(null, null, currentTime);
-        
-        System.err.println("11111111111111111111111111");
     }
 
 	@Override
@@ -127,19 +125,16 @@ public class ContextHelpBuilder extends ReportBuilder
     }
 
 	@Override
-	protected void reportImage(ReportWriter writer, MatrixItem item, String beforeTestcase, String fileName, String title, ImageReportMode reportMode) throws IOException
+	protected void reportImage(ReportWriter writer, MatrixItem item, String beforeTestcase, String fileName, String embedded, String title, ImageReportMode reportMode) throws IOException
 	{
         writer.fwrite(
                 "<span class='tableTitle'>%s</span><br>",
                 this.postProcess(title));
 
-        System.err.println("## " + title);
-        System.err.println("## " + fileName);
-        
         switch (reportMode)
         {
         case AsEmbeddedImage:
-            writer.fwrite("<img src='data:image/png;base64%s' class='img'/><br>", fileName);
+            writer.fwrite("<img src='data:image/jpeg;base64,%s' class='img'/><br>", embedded);
             break;
 
         case AsImage:

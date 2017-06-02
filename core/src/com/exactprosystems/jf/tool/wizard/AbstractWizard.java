@@ -19,7 +19,6 @@ import javafx.scene.layout.BorderPane;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
 import java.util.function.Supplier;
 
 public abstract class AbstractWizard implements Wizard

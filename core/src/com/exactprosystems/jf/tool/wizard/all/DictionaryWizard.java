@@ -69,14 +69,14 @@ public class DictionaryWizard extends AbstractWizard
     }
 
     @Override
-    public boolean canWork()
+    public boolean beforeRun()
     {
-        return this.currentWindow.getName().startsWith("n");
+        boolean res =  this.currentWindow.getName().startsWith("n");
+        if (!res)
+        {
+            DialogsHelper.showError("Some error message");
+        }
+        return res;
     }
 
-    @Override
-    public void showError()
-    {
-        DialogsHelper.showError("Some error message");
-    }
 }

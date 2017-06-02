@@ -24,6 +24,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ButtonBar;
 import javafx.scene.control.Dialog;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.input.KeyCode;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
 
@@ -132,17 +133,24 @@ public class WizardDialog extends Dialog<Boolean>
 			this.setResult(true);
 			this.close();
 		});
-		Button wizardClose = new Button("Close");
-		wizardClose.setOnAction(e ->
+		Button wizardRefuse = new Button("Refuse");
+		wizardRefuse.setOnAction(e ->
 		{
 			this.setResult(false);
 			this.close();
 		});
-
+        this.borderPane.setOnKeyPressed(event ->
+        {
+            if (event.getCode() == KeyCode.ESCAPE)
+            {
+                wizardRefuse.fire();
+            }
+        });
+		
 		HBox box = new HBox();
 		box.setAlignment(Pos.CENTER_RIGHT);
 		GridPane.setHgrow(box, Priority.ALWAYS);
-		box.getChildren().addAll(wizardClose, Common.createSpacer(Common.SpacerEnum.HorizontalMid), wizardOk);
+		box.getChildren().addAll(wizardRefuse, Common.createSpacer(Common.SpacerEnum.HorizontalMid), wizardOk);
 		gridPane.add(box, 1, 1);
 
 	}

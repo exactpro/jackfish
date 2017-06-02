@@ -53,8 +53,8 @@ import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 @WizardAttribute(
-        name                = "Gherkin wizard", 
-        pictureName         = "GherkinWizard.png", 
+        name            = "Gherkin wizard", 
+        pictureName         = "GherkinWizard.jpg", 
         category            = WizardCategory.MATRIX, 
         shortDescription    = "This wizard create matrix structure from Gherkin code", 
         detailedDescription = "This wizard create matrix structure from Gherkin code", 
@@ -86,14 +86,9 @@ public class GherkinWizard extends AbstractWizard
     }
 
     @Override
-    public boolean canWork()
+    public boolean beforeRun()
     {
         return true;
-    }
-
-    @Override
-    public void showError()
-    {
     }
 
     @Override

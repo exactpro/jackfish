@@ -239,17 +239,27 @@ public abstract class ReportBuilder implements Storable
 		}
 	}
 	
-	public final void outImage(MatrixItem item, String beforeTestcase, String fileName, String title, ImageReportMode reportMode)
+	public final void outImage(MatrixItem item, String beforeTestcase, String fileName, byte[] data, String title, ImageReportMode reportMode)
 	{
 		try
 		{
-			File dir = new File(this.reportDir); 
-			if (!dir.exists())
-			{
-				dir.mkdir();
-			}
+		    if (this.reportDir != null)
+		    {
+    			File dir = new File(this.reportDir); 
+    			if (!dir.exists())
+    			{
+    				dir.mkdir();
+    			}
+		    }
+
+            String embedded = "";
+		    if (data != null)
+		    {
+    	        byte[] encoded = java.util.Base64.getEncoder().encode(data);
+    	        embedded = new String(encoded);
+		    }
 			
-			reportImage(this.writer, item, beforeTestcase, this.imageDir + File.separator + fileName, postProcess(title), reportMode);
+			reportImage(this.writer, item, beforeTestcase, this.imageDir + File.separator + fileName, embedded, postProcess(title), reportMode);
 		} 
 		catch (IOException e)
 		{
@@ -422,7 +432,7 @@ public abstract class ReportBuilder implements Storable
 	
 	protected abstract void reportItemLine(ReportWriter writer, MatrixItem item, String beforeTestcase, String string, String labelId) throws IOException;
 
-	protected abstract void reportImage(ReportWriter writer, MatrixItem item, String beforeTestcase, String fileName, String title, ImageReportMode reportMode) throws IOException;
+	protected abstract void reportImage(ReportWriter writer, MatrixItem item, String beforeTestcase, String fileName, String embedded, String title, ImageReportMode reportMode) throws IOException;
 
 	protected abstract void reportItemFooter(ReportWriter writer, MatrixItem entry, Integer id, long time, ImageWrapper screenshot) throws IOException;
 	
