@@ -299,15 +299,15 @@ public class TexReportBuilder extends ReportBuilder
 					break;
 				case "&&": text = text.replace("&&", "\\\\&\\\\&");
 					break;
-				case "~": text = "\\\\sim";
+				case "~": text = text.replace("~", "\\\\sim");
 					break;
-				case "^":  //todo ????????????????????
+				case "^": text = text.replace("^", "\\\\wedge");
 					break;
-				case "%": text = "\\\\%";
+				case "%": text = text.replace("%", "\\\\%");
 					break;
-				case "#": text = "\\\\#";
+				case "#": text = text.replace("#", "\\\\#");
 					break;
-				case "$": text = "\\textdollar";
+				case "$": text = text.replace("$", "\\\\textdollar");
 					break;
 				default:
 			}
