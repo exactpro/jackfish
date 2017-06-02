@@ -115,15 +115,13 @@
         <close/>
     </window>
     <window name="DialogForTestWaitWithRef">
-        <self>
-            <panel id="owner" uid="divWithWait"/>
-        </self>
+        <self/>
         <onOpen>
             <wait owner="owner" ref="buttonShowArea" addition="WaitToAppear" timeout="5000"/>
         </onOpen>
         <run>
-            <button id="buttonShowArea" uid="showButton" owner="owner"/>
-            <button id="buttonHideArea" uid="hideButton" owner="owner"/>
+            <button id="buttonShowArea" uid="" owner="owner" name="showButton"/>
+            <button id="buttonHideArea" uid="" owner="owner" name="hideButton"/>
         </run>
         <onClose>
             <wait owner="owner" ref="buttonHideArea" addition="WaitToDisappear" timeout="5000"/>
@@ -131,18 +129,16 @@
         <close/>
     </window>
     <window name="DialogForTestWaitWithoutRef">
-        <self>
-            <panel id="owner" uid="divWithWait"/>
-        </self>
+        <self/>
         <onOpen>
-            <wait uid="showButton" owner="owner" addition="WaitToAppear" timeout="5000"/>
+            <wait uid="" owner="owner" name="showButton" addition="WaitToAppear" timeout="5000"/>
         </onOpen>
         <run>
-            <button id="buttonShowArea" uid="showButton" owner="owner"/>
-            <button id="buttonHideArea" uid="hideButton" owner="owner"/>
+            <button id="buttonShowArea" uid="" owner="owner" name="showButton"/>
+            <button id="buttonHideArea" uid="" owner="owner" name="hideButton"/>
         </run>
         <onClose>
-            <wait uid="hideButton" owner="owner" addition="WaitToDisappear" timeout="5000"/>
+            <wait uid="" owner="owner" name="hideButton" addition="WaitToDisappear" timeout="5000"/>
         </onClose>
         <close/>
     </window>
