@@ -150,7 +150,11 @@ public class HTMLhelper
 			case OM + "`": return "<p>";
 			case "`" + CM: return "</p>";
 
-			// underscored
+            // new page
+            case OM + "&": return "<p>";
+            case "&" + CM: return "</p>";
+
+            // underscored
 			case OM + "_": return "<u>";
 			case "_" + CM: return "</u>";
 

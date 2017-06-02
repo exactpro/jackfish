@@ -98,12 +98,12 @@ public class TexReportBuilder extends ReportBuilder
             case "3" + CM: return " }";
     
             // header 4 (max level)
-            case OM + "4": return "\\\\newpage ";
+            case OM + "4": return "";
             case "4" + CM: return "";  
     
             // style for identifiers
-            case OM + "$": return "";     
-            case "$" + CM: return "";
+            case OM + "$": return "\\\\verb+";     
+            case "$" + CM: return "+";
 
 			// http://tostudents.ru/2010/01/07/overfull-i-underfull-perepolnennye-i-razrezhennye-stroki/
             // style for code
@@ -121,6 +121,10 @@ public class TexReportBuilder extends ReportBuilder
             case OM + "`": return "";
             case "`" + CM: return "\\\\newline";
     
+            // new page
+            case OM + "&": return "";
+            case "&" + CM: return "\\\\newpage \\\\pagestyle{allpages}";  
+
             // underscored
             case OM + "_": return "";
             case "_" + CM: return "";
@@ -131,10 +135,7 @@ public class TexReportBuilder extends ReportBuilder
 
             // italic
             case OM + "/": return "\\\\textit{";
-            case "/" + CM: return "} \\\\newline";
-
-			case OM + "&": return "\\\\verb+";
-			case "&" + CM: return "+";
+            case "/" + CM: return "}";
         }
         
         return "";

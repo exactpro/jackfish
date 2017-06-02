@@ -50,7 +50,7 @@ public class DocumentationBuilder
 
         String[][] table1 = new String[][]
                 {
-                        { "Version",  VersionInfo.getVersion()},
+                        { "Version",  VersionInfo.getVersion() },
                         { "Release date", DateTime.current().str("dd MMM yyyy")}
                 };
 
@@ -59,23 +59,24 @@ public class DocumentationBuilder
                     { "{{*Date*}}", "{{*Version*}}", "{{*By*}}", "{{*Comments*}}" },
                     { DateTime.current().str("dd MMM yyyy"), VersionInfo.getVersion(), "Valery Florov", "Initial Draft" }
                 };
+                
         String[][] table3 = new String[][]
                 {
-                        { "{{*Abbreviation*}}", "{{*Meaning*}}" },
-                        { "JF", "JackFish" }
+                    { "{{*Abbreviation*}}", "{{*Meaning*}}" },
+                    { "JF", "JackFish" }
                 };
 
 
-        addChapter(help, "\\Large {{*User Guide*}}", 1);
-        addTable(help, "", table1, new int[] { 50, 50 },  evaluator);
-        addChapter(help, "\\Large {{*Document Information*}}", 1);
-        addTable(help, "", table2, new int[] { 25, 23, 23, 25 },  evaluator);
-        addChapter(help, "\\Large {{*Abbreviations*}}", 1);
-        addTable(help, "", table3, new int[] { 50, 50 },  evaluator);
+//        addChapter(help, "\\Large {{*User Guide*}}", 1);
+        addTable(help, "{{*User Guide*}}", table1, new int[] { 50, 50 },  evaluator);
+//        addChapter(help, "\\Large {{*Document Information*}}", 1);
+        addTable(help, "{{*Document Information*}}", table2, new int[] { 25, 23, 23, 25 },  evaluator);
+//        addChapter(help, "\\Large {{*Abbreviations*}}", 1);
+        addTable(help, "{{*Abbreviations*}}", table3, new int[] { 50, 50 },  evaluator);
 
         //todo table of contents
-        //addChapter(help, "\\pagestyle{allpages}", 4);
-        addChapter(help, "\\tableofcontents", 4);
+//        addChapter(help, "\\pagestyle{allpages}", 4);
+//        addChapter(help, "\\tableofcontents", 4);
 
         addChapter(help, "", 4);
         addText(help, DocumentationBuilder.class.getResourceAsStream("intro1.txt"));
