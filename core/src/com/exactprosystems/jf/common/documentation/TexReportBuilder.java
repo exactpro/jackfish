@@ -47,13 +47,13 @@ public class TexReportBuilder extends ReportBuilder
 	@Override
 	protected String postProcess(String result)
 	{
-		return super.postProcess(result);
+		return replaceSymbols(super.postProcess(result));
 	}
 
 	@Override
 	protected String decorateStyle(String value, String style)
 	{
-		return replaceSymbols(value);
+		return value;
 	}
 
 	@Override
@@ -131,6 +131,9 @@ public class TexReportBuilder extends ReportBuilder
             // italic
             case OM + "/": return "\\\\textit{";
             case "/" + CM: return "}";
+
+			case OM + "&": return "";
+			case "&" + CM: return "";
         }
         
         return "";
@@ -292,17 +295,17 @@ public class TexReportBuilder extends ReportBuilder
 			String text = m.group(1);
 			switch (text)
 			{
-				case "&": text = text.replace("&", "\\&");
+				case "&": text = text.replace("&", "\\\\&");
 					break;
-				case "&&": text = text.replace("&&", "\\&\\&");
+				case "&&": text = text.replace("&&", "\\\\&\\\\&");
 					break;
-				case "~": text = "\\sim";
+				case "~": text = "\\\\sim";
 					break;
-				case "^": text = "^"; //todo ????????????????????
+				case "^":  //todo ????????????????????
 					break;
-				case "%": text = "\\%";
+				case "%": text = "\\\\%";
 					break;
-				case "#": text = "\\#";
+				case "#": text = "\\\\#";
 					break;
 				case "$": text = "\\textdollar";
 					break;
