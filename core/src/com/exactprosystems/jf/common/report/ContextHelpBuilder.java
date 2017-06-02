@@ -10,6 +10,7 @@ package com.exactprosystems.jf.common.report;
 
 import com.exactprosystems.jf.api.app.ImageWrapper;
 import com.exactprosystems.jf.charts.ChartBuilder;
+import com.exactprosystems.jf.common.report.ReportBuilder.ImageReportMode;
 import com.exactprosystems.jf.documents.matrix.parser.items.MatrixItem;
 
 import java.io.IOException;
@@ -22,6 +23,8 @@ public class ContextHelpBuilder extends ReportBuilder
     public ContextHelpBuilder(Date currentTime) throws IOException
     {
         super(null, null, currentTime);
+        
+        System.err.println("11111111111111111111111111");
     }
 
 	@Override
@@ -124,9 +127,32 @@ public class ContextHelpBuilder extends ReportBuilder
     }
 
 	@Override
-	protected void reportImage(ReportWriter writer, MatrixItem item, String beforeTestcase, String fileName, String title, Boolean asLink) throws IOException
+	protected void reportImage(ReportWriter writer, MatrixItem item, String beforeTestcase, String fileName, String title, ImageReportMode reportMode) throws IOException
 	{
-		
+        writer.fwrite(
+                "<span class='tableTitle'>%s</span><br>",
+                this.postProcess(title));
+
+        System.err.println("## " + title);
+        System.err.println("## " + fileName);
+        
+        switch (reportMode)
+        {
+        case AsEmbeddedImage:
+            writer.fwrite("<img src='data:image/png;base64%s' class='img'/><br>", fileName);
+            break;
+
+        case AsImage:
+            writer.fwrite("<img src='%s' class='img'/><br>", fileName);
+            break;
+
+        case AsLink:
+            writer.fwrite("<a href=" + fileName+ ">Image</a><br>");
+            break;
+
+        default:
+            break;
+        }
 	}
 
 	@Override

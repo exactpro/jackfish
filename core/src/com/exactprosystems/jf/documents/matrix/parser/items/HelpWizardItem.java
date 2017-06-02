@@ -8,11 +8,16 @@
 
 package com.exactprosystems.jf.documents.matrix.parser.items;
 
+import java.io.IOException;
+import java.io.InputStream;
+
 import com.exactprosystems.jf.api.error.ErrorKind;
 import com.exactprosystems.jf.api.wizard.Wizard;
 import com.exactprosystems.jf.api.wizard.WizardManager;
+import com.exactprosystems.jf.common.documentation.DocumentationBuilder;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.report.ReportBuilder;
+import com.exactprosystems.jf.common.report.ReportBuilder.ImageReportMode;
 import com.exactprosystems.jf.documents.config.Context;
 import com.exactprosystems.jf.documents.matrix.parser.Parameters;
 import com.exactprosystems.jf.documents.matrix.parser.Result;
@@ -41,8 +46,25 @@ public class HelpWizardItem extends MatrixItem
         
         report.itemIntermediate(this);
         
+        String data = "";
+
+        try
+        {
+            InputStream inputStream = this.wizardClazz.getResourceAsStream(picture);
+            byte[] bytes = new byte[inputStream.available()];
+            inputStream.read(bytes);
+            byte[] encoded = java.util.Base64.getEncoder().encode(bytes);
+            data = new String(encoded);
+        }
+        catch (IOException e)
+        {
+            logger.error(e.getMessage(), e);
+        }
+        System.err.println("<< " + picture);
+        System.err.println("<< " + data);
+        
         report.outLine(this, null, "{{`" + shortDescription + "`}}", null);
-        report.outImage(this, null, picture, "{{*Picture*}}", false); 
+        report.outImage(this, null, data, "{{*Picture*}}", ImageReportMode.AsEmbeddedImage); 
         report.outLine(this, null, "{{`" + detailedDescription + "`}}", null);
     }
 

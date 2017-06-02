@@ -52,8 +52,15 @@ import java.util.function.Consumer;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
-@WizardAttribute(name = "Gherkin wizard", pictureName = "GherkinWizard.png", category = WizardCategory.MATRIX, shortDescription = "This wizard create matrix structure from Gherkin code", detailedDescription = "This wizard create matrix structure from Gherkin code", strongCriteries = true, criteries = {
-        TestCase.class, MatrixFx.class })
+@WizardAttribute(
+        name                = "Gherkin wizard", 
+        pictureName         = "GherkinWizard.png", 
+        category            = WizardCategory.MATRIX, 
+        shortDescription    = "This wizard create matrix structure from Gherkin code", 
+        detailedDescription = "This wizard create matrix structure from Gherkin code", 
+        strongCriteries     = true, 
+        criteries           = { TestCase.class, MatrixFx.class }
+        )
 public class GherkinWizard extends AbstractWizard
 {
     private MatrixFx       currentMatrix  = null;

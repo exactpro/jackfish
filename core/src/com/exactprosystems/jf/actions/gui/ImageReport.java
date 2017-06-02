@@ -14,6 +14,7 @@ import com.exactprosystems.jf.api.common.Str;
 import com.exactprosystems.jf.api.error.ErrorKind;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.report.ReportBuilder;
+import com.exactprosystems.jf.common.report.ReportBuilder.ImageReportMode;
 import com.exactprosystems.jf.documents.config.Context;
 import com.exactprosystems.jf.documents.matrix.parser.Parameters;
 import com.exactprosystems.jf.functions.HelpKind;
@@ -90,7 +91,8 @@ public class ImageReport extends AbstractAction
 		
 		report = this.toReport == null ? report : this.toReport;
 		this.beforeTestCase = ActionsReportHelper.getBeforeTestCase(this.beforeTestCase, this.owner.getMatrix());
-		report.outImage(super.owner, this.beforeTestCase, this.image.getName(report.getReportDir()), Str.asString(this.title), this.asLink);
+		report.outImage(super.owner, this.beforeTestCase, this.image.getName(report.getReportDir()), Str.asString(this.title), 
+		        this.asLink ? ImageReportMode.AsLink : ImageReportMode.AsImage);
 		super.setResult(this.image.getFileName());
 	}
 
