@@ -27,6 +27,13 @@ public abstract class ReportBuilder implements Storable
 {
     private static final long serialVersionUID = -4301681183671789970L;
 
+    public enum ImageReportMode
+    {
+        AsLink,
+        AsImage,
+        AsEmbeddedImage;
+    }
+    
     public final static String SUFFIX 	= "_RUNNING";
 	public final static String PASSED 	= "_PASSED";
 	public final static String FAILED 	= "_FAILED";
@@ -232,17 +239,27 @@ public abstract class ReportBuilder implements Storable
 		}
 	}
 	
-	public final void outImage(MatrixItem item, String beforeTestcase, String fileName, String title, Boolean asLink)
+	public final void outImage(MatrixItem item, String beforeTestcase, String fileName, byte[] data, String title, ImageReportMode reportMode)
 	{
 		try
 		{
-			File dir = new File(this.reportDir); 
-			if (!dir.exists())
-			{
-				dir.mkdir();
-			}
+		    if (this.reportDir != null)
+		    {
+    			File dir = new File(this.reportDir); 
+    			if (!dir.exists())
+    			{
+    				dir.mkdir();
+    			}
+		    }
+
+            String embedded = "";
+		    if (data != null)
+		    {
+    	        byte[] encoded = java.util.Base64.getEncoder().encode(data);
+    	        embedded = new String(encoded);
+		    }
 			
-			reportImage(this.writer, item, beforeTestcase, this.imageDir + File.separator + fileName, postProcess(title), asLink);
+			reportImage(this.writer, item, beforeTestcase, this.imageDir + File.separator + fileName, embedded, postProcess(title), reportMode);
 		} 
 		catch (IOException e)
 		{
@@ -415,7 +432,7 @@ public abstract class ReportBuilder implements Storable
 	
 	protected abstract void reportItemLine(ReportWriter writer, MatrixItem item, String beforeTestcase, String string, String labelId) throws IOException;
 
-	protected abstract void reportImage(ReportWriter writer, MatrixItem item, String beforeTestcase, String fileName, String title, Boolean asLink) throws IOException;
+	protected abstract void reportImage(ReportWriter writer, MatrixItem item, String beforeTestcase, String fileName, String embedded, String title, ImageReportMode reportMode) throws IOException;
 
 	protected abstract void reportItemFooter(ReportWriter writer, MatrixItem entry, Integer id, long time, ImageWrapper screenshot) throws IOException;
 	

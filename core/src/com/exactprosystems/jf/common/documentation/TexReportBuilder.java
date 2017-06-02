@@ -14,6 +14,7 @@ import com.exactprosystems.jf.charts.ChartBuilder;
 import com.exactprosystems.jf.common.report.ReportBuilder;
 import com.exactprosystems.jf.common.report.ReportTable;
 import com.exactprosystems.jf.common.report.ReportWriter;
+import com.exactprosystems.jf.common.report.ReportBuilder.ImageReportMode;
 import com.exactprosystems.jf.documents.matrix.parser.items.*;
 
 import java.io.*;
@@ -230,7 +231,7 @@ public class TexReportBuilder extends ReportBuilder
 	}
 
 	@Override
-	protected void reportImage(ReportWriter writer, MatrixItem item, String beforeTestcase, String fileName, String title, Boolean asLink) throws IOException
+	protected void reportImage(ReportWriter writer, MatrixItem item, String beforeTestcase, String fileName, String embedded, String title, ImageReportMode reportMode) throws IOException
 	{
         writer.fwrite("\\includegraphics[width=0.9\\textwidth]{%s}", fileName.replace("/", "")).newline();
 		writer.fwrite("\\newline").newline();

@@ -24,6 +24,7 @@ import com.exactprosystems.jf.api.common.Str;
 import com.exactprosystems.jf.api.error.ErrorKind;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.report.ReportBuilder;
+import com.exactprosystems.jf.common.report.ReportBuilder.ImageReportMode;
 import com.exactprosystems.jf.documents.config.Context;
 import com.exactprosystems.jf.documents.matrix.parser.Parameters;
 import com.exactprosystems.jf.documents.matrix.parser.Result;
@@ -52,7 +53,7 @@ public class HelpPicture extends MatrixItem
         {
             BufferedImage imBuff = ImageIO.read(this.stream);
             ImageWrapper image = new ImageWrapper(imBuff);
-            report.outImage(this, null, image.getName(report.getReportDir()), this.title, false);
+            report.outImage(this, null, image.getName(report.getReportDir()), null, this.title, ImageReportMode.AsImage);
         }
         catch (Exception e)
         {

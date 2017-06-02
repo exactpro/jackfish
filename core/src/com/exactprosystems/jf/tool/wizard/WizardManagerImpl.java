@@ -138,7 +138,7 @@ public class WizardManagerImpl implements WizardManager
             Wizard wiz = wizard.newInstance();
             wiz.init(context, this, parameters);
             
-            if (wiz.canWork())
+            if (wiz.beforeRun())
             {
                 WizardResult result = wiz.run();
                 if (result.submitted())
@@ -146,10 +146,6 @@ public class WizardManagerImpl implements WizardManager
                     List<WizardCommand> commands = result.commands();
                     commands.forEach(c -> c.apply(context));
                 }
-            }
-            else
-            {
-                wiz.showError();
             }
         }
         catch (InstantiationException | IllegalAccessException e)
