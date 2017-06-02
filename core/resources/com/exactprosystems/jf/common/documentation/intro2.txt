@@ -15,11 +15,11 @@ Login
 #}}
 
 Where:
-{{$#AppId$}}, {{$#Browser$}}, {{$#URL$}} and etc. is the header of an action that describes the names of parameter;
-{{$ApplicationStart$}}, {{$Vars$}} and etc. is the actual action that manipulates a GUI control or verifies some parameters retrieved from a web page.
+{{&#AppId, #Browser, #URL&}} and etc. is the header of an action that describes the names of parameter;
+{{&ApplicationStart, Vars&}} and etc. is the actual action that manipulates a GUI control or verifies some parameters retrieved from a web page.
 
 Each cell in csv in the file can contain an MVEL language expression. This allows calculating math expression and calling any Java language function. 
-This gives the possibility of creating very complex and flexible scenarios. There is also a possibility of using {{$#If$}} and {{$#For$}} statements 
+This gives the possibility of creating very complex and flexible scenarios. There is also a possibility of using {{&#If&}} and {{&#For&}} statements
 as well as sub routines that can described in a separate file.
 
 It is possible to edit scenarios in any text editor, but we find that built-in JF script editor is the most comfortable. 

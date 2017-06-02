@@ -48,7 +48,7 @@ public class TexReportBuilder extends ReportBuilder
 	@Override
 	protected String postProcess(String result)
 	{
-		return replaceSymbols(super.postProcess(result));
+		return super.postProcess(result);
 	}
 
 	@Override
@@ -131,10 +131,10 @@ public class TexReportBuilder extends ReportBuilder
 
             // italic
             case OM + "/": return "\\\\textit{";
-            case "/" + CM: return "}";
+            case "/" + CM: return "} \\\\newline";
 
-			case OM + "&": return "";
-			case "&" + CM: return "";
+			case OM + "&": return "\\\\verb+";
+			case "&" + CM: return "+";
         }
         
         return "";
