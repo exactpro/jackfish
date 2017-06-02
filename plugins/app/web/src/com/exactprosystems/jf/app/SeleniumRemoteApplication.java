@@ -254,6 +254,7 @@ public class SeleniumRemoteApplication extends RemoteApplication
 							browser = Browser.valueOf(browserName.toUpperCase());
 						} catch (Exception e){
 							te =  new Exception("Wrong browser name.");
+							throw te;
 						}
                         driver = new WebDriverListenerNew(browser.createDriver(chromeDriverBinary, firefoxProfileDirectory, usePrivateMode));
                         operationExecutor = new SeleniumOperationExecutor(driver, logger);

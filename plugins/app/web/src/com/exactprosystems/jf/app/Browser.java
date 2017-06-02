@@ -74,6 +74,10 @@ public enum Browser
 					return new ChromeDriver(capabilities_browser);
 				
 			case CHROME:
+				if (Str.IsNullOrEmpty(System.getProperty(ChromeDriverService.CHROME_DRIVER_EXE_PROPERTY)))
+				{
+					throw new Exception("You need set the 'ChromeDriverPath' parameter on plugin to valid value");
+				}
 				ChromeOptions options = new ChromeOptions();
 				options.addArguments("--disable-extensions"); // TODO think about it. Mb take out this on parameters for adapter?
 				if (pathToBinary != null && !pathToBinary.isEmpty())
