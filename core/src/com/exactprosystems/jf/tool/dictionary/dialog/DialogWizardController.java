@@ -104,10 +104,10 @@ public class DialogWizardController implements Initializable, ContainingParent
         this.counters.put(TreeItemState.QUESTION,   this.cbQuestion);
 	    
 		this.imageViewWithScale = new ImageViewWithScale();
-		this.verSplitPane.getItems().add(0, this.imageViewWithScale.getContent());
+		this.verSplitPane.getItems().add(0, this.imageViewWithScale);
 
 		this.treeViewWithRectangles = new TreeTableViewWithRectangles(v -> this.updateCounters(), v -> this.refreshTable());
-		this.paneTreeView.setCenter(this.treeViewWithRectangles.getContent());
+		this.paneTreeView.setCenter(this.treeViewWithRectangles);
 
 		this.imageViewWithScale.setClickConsumer(this.treeViewWithRectangles::selectItem);
 		this.treeViewWithRectangles.addSelectionConsumer(xpathItem -> this.imageViewWithScale.displayRectangle(xpathItem == null ? null : xpathItem.getRectangle()));

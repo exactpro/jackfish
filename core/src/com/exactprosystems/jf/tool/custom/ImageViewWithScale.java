@@ -34,12 +34,11 @@ import java.util.function.Consumer;
 import java.util.function.DoubleConsumer;
 import java.util.stream.Collectors;
 
-public class ImageViewWithScale implements IScaleListener
+public class ImageViewWithScale extends BorderPane implements IScaleListener
 {
 	private final static double WIDHT_COORDS = 120;
 
 	//region fields
-	private final BorderPane mainPane;
 	private final ScrollPane scrollPane;
 	private final AnchorPane anchorPane;
 	private final ScalePane scalePane;
@@ -74,7 +73,7 @@ public class ImageViewWithScale implements IScaleListener
 
 	public ImageViewWithScale()
 	{
-		this.mainPane = new BorderPane();
+		super();
 		this.scrollPane = new ScrollPane();
 		this.anchorPane = new AnchorPane();
 		this.scalePane = new ScalePane();
@@ -97,7 +96,7 @@ public class ImageViewWithScale implements IScaleListener
 		this.scrollPane.setFitToHeight(true);
 		this.scrollPane.setFitToWidth(true);
 
-		this.mainPane.setCenter(this.scrollPane);
+		this.setCenter(this.scrollPane);
 
 		this.scrollPane.setContent(this.anchorPane);
 		BorderPane.setAlignment(this.anchorPane, Pos.CENTER);
@@ -108,7 +107,7 @@ public class ImageViewWithScale implements IScaleListener
 		AnchorPane.setRightAnchor(this.group, 0.0);
 		AnchorPane.setBottomAnchor(this.group, 0.0);
 
-		this.mainPane.setTop(this.hBox);
+		this.setTop(this.hBox);
 		this.hBox.setAlignment(Pos.CENTER_LEFT);
 
 		this.btnInspect.setId(CssVariables.BUTTON_INSPECT);
@@ -142,11 +141,6 @@ public class ImageViewWithScale implements IScaleListener
 	public void hideIds()
 	{
 		this.hBox.getChildren().remove(this.cbIds);
-	}
-
-	public BorderPane getContent()
-	{
-		return this.mainPane;
 	}
 
 	public void displayImage(BufferedImage image)

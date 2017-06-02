@@ -11,7 +11,6 @@ import com.exactprosystems.jf.tool.custom.xpath.TreeItemState;
 import com.exactprosystems.jf.tool.custom.xpath.XpathItem;
 import com.exactprosystems.jf.tool.custom.xpath.XpathTreeItem;
 import com.exactprosystems.jf.tool.custom.xpath.XpathViewer;
-import com.exactprosystems.jf.tool.dictionary.dialog.DialogWizardController;
 import com.exactprosystems.jf.tool.dictionary.dialog.ElementWizardBean;
 import com.sun.javafx.scene.control.skin.TreeTableViewSkin;
 import javafx.application.Platform;
@@ -38,19 +37,15 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-public class TreeTableViewWithRectangles
+public class TreeTableViewWithRectangles extends AnchorPane
 {
 	public static final double TRANSPARENT_RECT = 0.25;
 
-	private final AnchorPane anchorPane;
 	private final TreeTableView<XpathTreeItem> treeTableView;
 
 	private int currentIndex = -1;
 
 	private Node waitingNode;
-
-	@Deprecated
-	private DialogWizardController controller;
 
 	private Consumer<Void> updateCounters;
 	private Consumer<Void> refreshTable;
@@ -68,12 +63,11 @@ public class TreeTableViewWithRectangles
 		put(TreeItemState.UPDATE, true);
 	}};
 
-	//TODO remove DialogWizardController
 	public TreeTableViewWithRectangles(Consumer<Void> updateCounters, Consumer<Void> refreshTable)
 	{
+		super();
 		this.updateCounters = updateCounters;
 		this.refreshTable = refreshTable;
-		this.anchorPane = new AnchorPane();
 		this.treeTableView = new TreeTableView<>();
 		this.treeTableView.setSkin(new MyCustomSkin(this.treeTableView));
 		this.treeTableView.getStyleClass().add(CssVariables.EMPTY_HEADER_COLUMN);
@@ -83,7 +77,7 @@ public class TreeTableViewWithRectangles
 		AnchorPane.setRightAnchor(this.treeTableView, 0.0);
 		AnchorPane.setBottomAnchor(this.treeTableView, 0.0);
 
-		this.anchorPane.getChildren().add(this.treeTableView);
+		this.getChildren().add(this.treeTableView);
 
 		TreeTableColumn<XpathTreeItem, XpathTreeItem> c0 = new TreeTableColumn<>();
 		int value = 30;
@@ -164,19 +158,14 @@ public class TreeTableViewWithRectangles
 		AnchorPane.setTopAnchor(node, 50.0);
 		AnchorPane.setLeftAnchor(node, 50.0);
 
-		this.anchorPane.getChildren().remove(this.waitingNode);
+		this.getChildren().remove(this.waitingNode);
 		this.waitingNode = node;
-		this.anchorPane.getChildren().add(this.waitingNode);
-	}
-
-	public Node getContent()
-	{
-		return this.anchorPane;
+		this.getChildren().add(this.waitingNode);
 	}
 
 	public void displayDocument(Document document, int xOffset, int yOffset)
 	{
-		this.anchorPane.getChildren().remove(this.waitingNode);
+		this.getChildren().remove(this.waitingNode);
 
 		this.treeTableView.setRoot(new TreeItem<>());
 		this.displayTree(document, this.treeTableView.getRoot(), xOffset, yOffset);
@@ -438,7 +427,7 @@ public class TreeTableViewWithRectangles
 		AnchorPane.setLeftAnchor(this.waitingNode, 50.0);
 		AnchorPane.setTopAnchor(this.waitingNode, 50.0);
 
-		this.anchorPane.getChildren().add(this.waitingNode);
+		this.getChildren().add(this.waitingNode);
 	}
 
 	private void expand(TreeItem<XpathTreeItem> item)
@@ -607,7 +596,6 @@ public class TreeTableViewWithRectangles
 	{
 		return this.getMarkedRows()
 				.stream()
-				.filter(r -> true)
 				.map(markedRow -> {
 					XpathTreeItem value = markedRow.getValue();
 					TreeItemState state = value.getState();

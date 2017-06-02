@@ -82,8 +82,8 @@ public class XpathViewerContentController implements Initializable, ContainingPa
 		this.imageViewWithScale.setClickConsumer(this.treeTableViewWithRectangles::selectItem);
 
 		this.treeTableViewWithRectangles.hideFirstColumn();
-		this.gridPaneTreeView.add(this.treeTableViewWithRectangles.getContent(), 0, 0);
-		this.splitPane.getItems().add(0, this.imageViewWithScale.getContent());
+		this.gridPaneTreeView.add(this.treeTableViewWithRectangles, 0, 0);
+		this.splitPane.getItems().add(0, this.imageViewWithScale);
 
 		this.findPanel.getStyleClass().remove(CssVariables.FIND_PANEL);
 		this.findPanel.setListener(new IFind<TreeItem<XpathTreeItem>>()
