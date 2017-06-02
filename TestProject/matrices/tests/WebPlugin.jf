@@ -118,6 +118,41 @@ Test IE;;;
 
     #EndIf
 
+    #Step;#Kind;#For;#Depends
+    'start app without iedriver path';;;
+        #Id;#Action;#Assert;$AppId;Browser;URL
+        APPSTR3;ApplicationStart;This.Kind == ErrorKind.EXCEPTION && This.Result == Result.Failed;'WEB_WITHOUT_ANY_DRIVERS_PATH';'InternetExplorer';mockWebURL
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'start app with invalid iedriver path';;;
+        #Id;#Action;#Assert;$AppId;Browser;URL
+        APPSTR3;ApplicationStart;This.Kind == ErrorKind.EXCEPTION && This.Result == Result.Failed;'WEB_WITH_INVALID_ANY_DRIVERS_PATH';'InternetExplorer';mockWebURL
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'test most used actions';Never;;
+        #Id;#Action;$AppId;Browser;URL
+        APPSTR4;ApplicationStart;mockWebApp;'InternetExplorer';mockWebURL
+
+        #Id;#Call;app
+        CALL_1;checkBrowser;APPSTR4.Out
+
+        #Action;$AppConnection
+        ApplicationStop;APPSTR4.Out
+
+        #OnError
+            #Action;$AppConnection
+            ApplicationStop;APPSTR4.Out
+
+            #Fail
+            err
+
+
+    #EndStep
+
 
 #TestCase;#Kind;#Depends;#For
 subcase;;;

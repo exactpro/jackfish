@@ -16,6 +16,7 @@ import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.firefox.FirefoxProfile;
 import org.openqa.selenium.ie.InternetExplorerDriver;
+import org.openqa.selenium.ie.InternetExplorerDriverService;
 import org.openqa.selenium.opera.OperaDriver;
 import org.openqa.selenium.phantomjs.PhantomJSDriver;
 import org.openqa.selenium.remote.DesiredCapabilities;
@@ -64,7 +65,7 @@ public enum Browser
 					DesiredCapabilities capabilities_chrome = new DesiredCapabilities();
 					capabilities_chrome.setCapability(ChromeOptions.CAPABILITY, chromeOptions);
 					return new ChromeDriver(capabilities_chrome);
-				
+
 			case ANDROIDBROWSER:
 					ChromeOptions browserOptions = new ChromeOptions();
 					browserOptions.setExperimentalOption("androidPackage", "com.android.browser");
@@ -87,6 +88,10 @@ public enum Browser
 				return new ChromeDriver(options);
 
 			case INTERNETEXPLORER:
+				if (Str.IsNullOrEmpty(System.getProperty(InternetExplorerDriverService.IE_DRIVER_EXE_PROPERTY)))
+				{
+					throw new Exception("You need set the 'IEDriverPath' parameter on plugin to valid value");
+				}
 				DesiredCapabilities capabilities = DesiredCapabilities.internetExplorer();
 				capabilities.setCapability("ie.enableFullPageScreenshot", false);
 				capabilities.setCapability("enablePersistentHover", false);
