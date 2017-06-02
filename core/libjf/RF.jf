@@ -235,8 +235,8 @@ RF;RegressionFramework
                 #Id;#RawText;#Kind
                 TEXT4;Text;Sql
                 ~;"SELECT  "
-                ~;"	sp.count AS "Passed", "
-                ~;"	sf.count AS "Failed" "
+                ~;"	sp.count AS 'Passed', "
+                ~;"	sf.count AS 'Failed' "
                 ~;"FROM (SELECT COUNT(id) AS count FROM scenarios WHERE failed = 0 AND run_id = ? ) AS sp "
                 ~;"LEFT JOIN (SELECT COUNT(id) AS count FROM scenarios WHERE failed <> 0 AND run_id = ? ) AS sf ON 1=1"
                 #EndRawText
@@ -398,7 +398,7 @@ RF;RegressionFramework
                 ~;"  s.manual, "
                 ~;"  DATE(s.start_time) AS date, "
                 ~;"  TIME(s.start_time) AS time, "
-                ~;"  IF(s.failed > 0, "Failed", IF (s.passed > 0, "Passed", "Unknown")) AS result, "
+                ~;"  IF(s.failed > 0, 'Failed', IF (s.passed > 0, 'Passed', 'Unknown')) AS result, "
                 ~;"  s.performer AS performer, "
                 ~;"  s.test_set AS testSet, "
                 ~;"  s.host AS host, "
@@ -558,7 +558,7 @@ RF;RegressionFramework
                     TEXT5;Text;Sql
                     ~;"SELECT "
                     ~;"  s.id, s.scenario, "
-                    ~;"  IF(s.failed > 0, "Failed", IF (s.passed > 0, "Passed", "Unknown")) AS status, "
+                    ~;"  IF(s.failed > 0, 'Failed', IF (s.passed > 0, 'Passed', 'Unknown')) AS status, "
                     ~;"  s.host, "
                     ~;"  s.username, "
                     ~;"  DATE(s.start_time) AS date, "
@@ -623,7 +623,7 @@ RF;RegressionFramework
                 failCountTSQL;Text;Sql
                 ~;"SELECT count(result) as fail"
                 ~;"FROM details"
-                ~;"WHERE result = "Failed" and scenario_id = ? "
+                ~;"WHERE result = 'Failed' and scenario_id = ? "
                 #EndRawText
 
                 #Id;#Action;scenarioId;$Query;$Connection
@@ -967,9 +967,9 @@ RF;RegressionFramework
                     TEXT5;Text;Sql
                     ~;"SELECT "
                     ~;"  s.id, s.scenario, "
-                    ~;"  IF (s.failed > 0, "Failed", "
-                    ~;"	IF (s.passed > 0, "Passed", "
-                    ~;"		"Unknown" "
+                    ~;"  IF (s.failed > 0, 'Failed', "
+                    ~;"	IF (s.passed > 0, 'Passed', "
+                    ~;"		'Unknown' "
                     ~;"	    )"
                     ~;"     ) AS status, "
                     ~;"  s.host, "
