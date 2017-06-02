@@ -119,7 +119,11 @@ public class RowTable implements Map<String, Object>, Cloneable
     {
         checkRow(); 
         Header header = this.table.headerByName(Str.asString(key));
-        Object value = this.currentRow.get(header);
+		if (header == null)
+		{
+			throw new WrongExpressionException(String.format("Header with name '%s' not found into table", key));
+		}
+		Object value = this.currentRow.get(header);
         value = this.table.convertCell(this.currentRow, header, value, null);
         if(value instanceof Exception)
         {
