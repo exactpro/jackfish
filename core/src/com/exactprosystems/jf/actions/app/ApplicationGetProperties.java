@@ -22,7 +22,6 @@ import com.exactprosystems.jf.api.app.AppConnection;
 import com.exactprosystems.jf.api.app.IApplication;
 import com.exactprosystems.jf.api.app.IRemoteApplication;
 import com.exactprosystems.jf.api.common.ParametersKind;
-import com.exactprosystems.jf.api.error.ErrorKind;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.report.ReportBuilder;
 import com.exactprosystems.jf.documents.config.Context;
@@ -41,10 +40,11 @@ import com.exactprosystems.jf.functions.HelpKind;
 				+ "parameters {{$Title$}} and {{$URL$}} are available for web plug-in. They are necessary to get the information"
 				+ " about the title bar and the address respectively.`}} The parameters can be chosen in the dialogue"
 				+ " window opened with the context menu of this action in {{$“All parameters”$}} option.",
-		examples = "{{##Id;#Action;#URL;#AppConnection\n" +
-				"AGP1;ApplicationGetProperties;;app\n" +
-				"#Assert;#Message\n" +
-				"!Str.IsNullOrEmpty(AGP1.Out.URL);'String is null or empty'#}}",
+		examples = "{{##Id;#Action;#URL;#AppConnection\n"
+				+ "AGP1;ApplicationGetProperties;;app\n"
+				+ "\n"
+				+ "#Assert;#Message\n"
+				+ "!Str.IsNullOrEmpty(AGP1.Out.URL);'String is null or empty'#}}",
 		seeAlsoClass = {ApplicationStart.class, ApplicationConnectTo.class}
 )
 public class ApplicationGetProperties extends AbstractAction
@@ -57,10 +57,6 @@ public class ApplicationGetProperties extends AbstractAction
 			+ "It is the output value of such actions as {{@ApplicationStart@}}, {{@ApplicationConnectTo@}}.")
 	protected AppConnection		connection		= null;
 
-	public ApplicationGetProperties()
-	{
-	}
-	
 	@Override
 	protected void helpToAddParametersDerived(List<ReadableValue> list, Context context, Parameters parameters) throws Exception
 	{
@@ -84,29 +80,17 @@ public class ApplicationGetProperties extends AbstractAction
 	@Override
 	public void doRealAction(Context context, ReportBuilder report, Parameters parameters, AbstractEvaluator evaluator) throws Exception
 	{
-		if (this.connection == null)
+		Map<String, Object> outValue = new LinkedHashMap<>();
+		
+		IApplication app = connection.getApplication();
+		IRemoteApplication service = app.service();
+		
+		for (Parameter parameter : parameters.select(TypeMandatory.Extra))
 		{
-			super.setError("Connection is null", ErrorKind.EMPTY_PARAMETER);
+			Serializable value = service.getProperty(parameter.getName());
+			outValue.put(parameter.getName(), value);
 		}
-		else
-		{
-			Map<String, Object> outValue = new LinkedHashMap<>();
-			
-			IApplication app = connection.getApplication();
-			IRemoteApplication service = app.service();
-			
-			for (Parameter parameter : parameters.select(TypeMandatory.Extra))
-			{
-				Serializable value = service.getProperty(parameter.getName());
-				outValue.put(parameter.getName(), value);
-			}
 
-			super.setResult(outValue);
-		}
-	}
-
-	@Override
-	public void initDefaultValues()
-	{
+		super.setResult(outValue);
 	}
 }

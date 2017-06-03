@@ -44,10 +44,6 @@ public class ClientLoad extends AbstractAction
 	@ActionFieldAttribute(name = idName, mandatory = true, description = "Id of the Client, with which the connection should be made." )
 	protected String 		id	= null;
 
-	public ClientLoad()
-	{
-	}
-
 	@Override
 	protected HelpKind howHelpWithParameterDerived(Context context, Parameters parameters, String fieldName) throws Exception
 	{
@@ -65,11 +61,6 @@ public class ClientLoad extends AbstractAction
 
 			default:
 		}
-	}
-
-	@Override
-	public void initDefaultValues() 
-	{
 	}
 
 	@Override

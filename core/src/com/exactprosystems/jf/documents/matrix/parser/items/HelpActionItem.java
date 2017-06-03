@@ -46,18 +46,18 @@ public class HelpActionItem extends MatrixItem
 
         if (attr.additionFieldsAllowed())
         {
-            report.outLine(this, null, "{{*Additional fields - Yes*}}", null);
+            report.outLine(this, null, "{{`{{*Additional fields - Yes*}}`}}", null);
             report.outLine(this, null, "{{`" + attr.additionalDescription() + "`}}", null);
         }
         else
         {
-            report.outLine(this, null, "{{*Additional fields - No*}}", null);
+            report.outLine(this, null, "{{`{{*Additional fields - No*}}`}}", null);
         }
-        report.outLine(this, null, "{{*Examples*}}", null);
+        report.outLine(this, null, "{{`{{*Examples*}}`}}", null);
         report.outLine(this, null, "{{`" + attr.examples() + "`}}", null);
         if (attr.seeAlsoClass().length != 0)
         {
-            report.outLine(this, null, "{{*See also*}}", null);
+            report.outLine(this, null, "{{`{{*See also*}}`}}", null);
             String s = Arrays.stream(attr.seeAlsoClass()).map(c -> "{{@" + c.getSimpleName() + "@}}").collect(Collectors.joining(", "));
             report.outLine(this, null, "{{`" + s + "`}}", null);
         }

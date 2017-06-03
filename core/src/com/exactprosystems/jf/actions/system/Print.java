@@ -37,10 +37,6 @@ public class Print extends AbstractAction
 	@ActionFieldAttribute(name = strName, mandatory = false, description = "Comments to the output row.")
 	protected String message; 
 	
-	public Print()
-	{
-	}
-	
 	@Override
 	public void initDefaultValues() 
 	{

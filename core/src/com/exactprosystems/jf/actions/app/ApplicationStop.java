@@ -14,7 +14,6 @@ import com.exactprosystems.jf.actions.ActionFieldAttribute;
 import com.exactprosystems.jf.actions.ActionGroups;
 import com.exactprosystems.jf.api.app.AppConnection;
 import com.exactprosystems.jf.api.app.IApplication;
-import com.exactprosystems.jf.api.error.ErrorKind;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.report.ReportBuilder;
 import com.exactprosystems.jf.documents.config.Context;
@@ -46,32 +45,18 @@ public class ApplicationStop extends AbstractAction
 	@ActionFieldAttribute(name=needKillName, mandatory = false, description = "If true, the process will killed")
 	protected Boolean needKill;
 
-	public ApplicationStop()
+	@Override
+	public void initDefaultValues() 
 	{
+		this.needKill = false;
 	}
-
-
 
 	@Override
 	public void doRealAction(Context context, ReportBuilder report, Parameters parameters, AbstractEvaluator evaluator) throws Exception 
 	{
-		if (this.connection == null)
-		{
-			super.setError("Connection is null", ErrorKind.EMPTY_PARAMETER);
-		}
-		else
-		{
-			boolean kill = needKill.booleanValue();
-			IApplication app = connection.getApplication();
-			app.stop(kill);
-			
-			super.setResult(null);
-		}
-	}
-
-	@Override
-	public void initDefaultValues() {
-		needKill = false;
-		
+		boolean kill = needKill.booleanValue();
+		IApplication app = this.connection.getApplication();
+		app.stop(kill);
+		super.setResult(null);
 	}
 }

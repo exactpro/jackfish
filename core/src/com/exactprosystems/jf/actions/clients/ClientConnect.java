@@ -39,6 +39,7 @@ import com.exactprosystems.jf.functions.HelpKind;
 				+ "{{`2. Connect the client to the port №10506.`}}"
 				+ "{{##Id;#Action;#ClientId\n"
 				+ "CLLD1;ClientLoad;'FIX'\n"
+				+ "\n"
 				+ "#Id;#Action;#ClientConnection;#Socket\n"
 				+ "CLCNCT1;ClientConnect;CLLD1.Out;10506#}}"
 )
@@ -52,10 +53,6 @@ public class ClientConnect extends AbstractAction
 
 	@ActionFieldAttribute(name = socketName, mandatory = true, description = "The port that will use the client.")
 	protected Socket socket = null;
-
-	public ClientConnect()
-	{
-	}
 
 	@Override
 	protected void helpToAddParametersDerived(List<ReadableValue> list, Context context, Parameters parameters) throws Exception
@@ -74,11 +71,6 @@ public class ClientConnect extends AbstractAction
 	protected void listToFillParameterDerived(List<ReadableValue> list, Context context, String parameterToFill, Parameters parameters) throws Exception
 	{
 		Helper.messageValues(list, context, this.owner.getMatrix(), parameters, null, connectionName, null, parameterToFill);
-	}
-
-	@Override
-	public void initDefaultValues() 
-	{
 	}
 
 	@Override

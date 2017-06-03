@@ -15,7 +15,6 @@ import com.exactprosystems.jf.actions.ActionGroups;
 import com.exactprosystems.jf.api.client.ClientConnection;
 import com.exactprosystems.jf.api.client.IClient;
 import com.exactprosystems.jf.api.client.MapMessage;
-import com.exactprosystems.jf.api.error.ErrorKind;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.report.ReportBuilder;
 import com.exactprosystems.jf.documents.config.Context;
@@ -32,12 +31,14 @@ import com.exactprosystems.jf.documents.matrix.parser.Parameters;
 		examples 				= "{{`1.Load the client for FIX.`}}"
 				+ "{{`2.Create a message type FIX with a set key-value.`}}"
 				+ "{{`3.Check the message.`}} "
-				+ "{{##Id;#Action;$ClientId\n" +
-				"CLLD1;ClientLoad;'FIX'\n" +
-				"#Id;#Action;PartyID;PartyIDSource;PartyRole;$MessageType\n" +
-				"MSGCR1;MessageCreate;'test';'1';3;'35'\n" +
-				"#Id;#Action;#Assert;$MapMessage;$ClientConnection\n" +
-				"CLCHM1;ClientCheckFields;This.Out == true;MSGCR1.Out;CLLD1.Out#}}"
+				+ "{{##Id;#Action;$ClientId\n"
+				+ "CLLD1;ClientLoad;'FIX'\n"
+				+ "\n"
+				+ "#Id;#Action;PartyID;PartyIDSource;PartyRole;$MessageType\n"
+				+ "MSGCR1;MessageCreate;'test';'1';3;'35'\n"
+				+ "\n"
+				+ "#Id;#Action;#Assert;$MapMessage;$ClientConnection\n"
+				+ "CLCHM1;ClientCheckFields;This.Out == true;MSGCR1.Out;CLLD1.Out#}}"
 	)
 public class ClientCheckFields extends AbstractAction
 {
@@ -50,22 +51,11 @@ public class ClientCheckFields extends AbstractAction
 	@ActionFieldAttribute(name = messageName, mandatory = true, description = "The message that is required to check." )
 	protected MapMessage	message	= null; 
 
-
-	public ClientCheckFields()
-	{
-	}
-
 	@Override
 	public void doRealAction(Context context, ReportBuilder report, Parameters parameters, AbstractEvaluator evaluator) throws Exception
 	{
 		IClient client = this.connection.getClient();
 		MapMessage map = client.getCodec().convert(this.message.getMessageType(), this.message);
-
 		super.setResult(map.isCorrect());
-	}
-
-	@Override
-	public void initDefaultValues() 
-	{
 	}
 }

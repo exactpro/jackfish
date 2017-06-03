@@ -20,7 +20,6 @@ import com.exactprosystems.jf.api.client.Possibility;
 import com.exactprosystems.jf.api.common.ParametersKind;
 import com.exactprosystems.jf.api.common.Str;
 import com.exactprosystems.jf.api.conditions.Condition;
-import com.exactprosystems.jf.api.error.ErrorKind;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.report.ReportBuilder;
 import com.exactprosystems.jf.documents.config.Context;
@@ -44,6 +43,7 @@ import java.util.Map;
 				+ "{{`2. Count the number of messages with the field name Name and  the field value Value.`}} "
 				+ "{{##Id;#Action;#ClientId\n"
 				+ "CLLD1;ClientLoad;'FIX'\n"
+				+ "\n"
 				+ "#Id;#Action;#ClientConnection;#MessageType;#Name\n"
 				+ "CLCNT1;ClientCountMessages;CLLD1.Out;'35';'Value'#}}"
 	)
@@ -61,10 +61,6 @@ public class ClientCountMessages extends AbstractAction
 
 	@ActionFieldAttribute(name = conditionsName, mandatory = false, description = "The conditions in which the comparison will be carried out.")
 	protected Condition[] conditions;
-
-	public ClientCountMessages()
-	{
-	}
 	
 	@Override
 	protected void helpToAddParametersDerived(List<ReadableValue> list, Context context, Parameters parameters) throws Exception
@@ -102,7 +98,7 @@ public class ClientCountMessages extends AbstractAction
 	@Override
 	public void initDefaultValues() 
 	{
-		conditions = null;
+		this.conditions = null;
 	}
 
 	@Override
@@ -123,6 +119,4 @@ public class ClientCountMessages extends AbstractAction
 		}
 		super.setResult(ret);
 	}
-
-
 }

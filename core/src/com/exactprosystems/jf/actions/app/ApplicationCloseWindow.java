@@ -29,9 +29,9 @@ import com.exactprosystems.jf.documents.matrix.parser.Parameters;
 		additionFieldsAllowed	= false,
 		outputDescription		= "Returns the title bar of the window which was closed.",
 		outputType				= String.class,
-		examples 				=
-				"{{##Id;#Action;#AppConnection\n"
+		examples = "{{##Id;#Action;#AppConnection\n"
 				+ "ACW;ApplicationCloseWindow;app\n"
+				+ "\n"
 				+ "#Assert;#Message\n"
 				+ "!Str.IsNullOrEmpty(ACW.Out);'String is null or empty'#}}",
         seeAlsoClass            = { ApplicationStart.class, ApplicationConnectTo.class }
@@ -46,36 +46,19 @@ public class ApplicationCloseWindow extends AbstractAction
 			+ "{{@ApplicationStart@}}, {{@ApplicationConnectTo@}}.")
 	protected AppConnection connection = null;
 
-	public ApplicationCloseWindow()
-	{
-	}
-
 	@Override
 	protected void doRealAction(Context context, ReportBuilder report, Parameters parameters, AbstractEvaluator evaluator) throws Exception
 	{
-		if (this.connection == null)
+		IApplication app = connection.getApplication();
+		String res = app.service().closeWindow();
+
+		if (res.equals(""))
 		{
-			super.setError("Connection is null", ErrorKind.EMPTY_PARAMETER);
+			super.setError("Can not close the window", ErrorKind.ELEMENT_NOT_FOUND);
 		}
 		else
 		{
-			IApplication app = connection.getApplication();
-			String res = app.service().closeWindow();
-
-			if (res.equals(""))
-			{
-				super.setError("Can not close the window", ErrorKind.ELEMENT_NOT_FOUND);
-			}
-			else
-			{
-				super.setResult(res);
-			}
+			super.setResult(res);
 		}
-	}
-
-	@Override
-	public void initDefaultValues() {
-		// TODO Auto-generated method stub
-		
 	}
 }

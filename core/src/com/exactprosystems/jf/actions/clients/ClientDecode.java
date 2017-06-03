@@ -18,7 +18,6 @@ import com.exactprosystems.jf.api.client.IClient;
 import com.exactprosystems.jf.api.client.MapMessage;
 import com.exactprosystems.jf.api.client.Possibility;
 import com.exactprosystems.jf.api.common.Converter;
-import com.exactprosystems.jf.api.error.ErrorKind;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.report.ReportBuilder;
 import com.exactprosystems.jf.documents.config.Context;
@@ -36,14 +35,17 @@ import com.exactprosystems.jf.documents.matrix.parser.Parameters;
 				+ "{{`2. Create the message.`}}"
 				+ "{{`3. Encode the message.`}}"
 				+ "{{`4. Decode the message.`}} "
-				+ "{{##Id;#Action;$ClientId\n" +
-				"CLLD1;ClientLoad;'FIX'\n" +
-				"#Id;#Action;PartyID;$MessageType\n" +
-				"MSGCR1;MessageCreate;'test';'35'\n" +
-				"#Id;#Action;$MapMessage;$ClientConnection\n" +
-				"CLENC1;ClientEncode;MSGCR1.Out;CLLD1.Out\n" +
-				"#Id;#Action;$Array;$ClientConnection\n" +
-				"CLDEC1;ClientDecode;CLENC1.Out;CLLD4.Out#}}"
+				+ "{{##Id;#Action;$ClientId\n"
+				+ "CLLD1;ClientLoad;'FIX'\n"
+				+ "\n"
+				+ "#Id;#Action;PartyID;$MessageType\n"
+				+ "MSGCR1;MessageCreate;'test';'35'\n"
+				+ "\n"
+				+ "#Id;#Action;$MapMessage;$ClientConnection\n"
+				+ "CLENC1;ClientEncode;MSGCR1.Out;CLLD1.Out\n"
+				+ "\n"
+				+ "#Id;#Action;$Array;$ClientConnection\n"
+				+ "CLDEC1;ClientDecode;CLENC1.Out;CLLD4.Out#}}"
 		)
 public class ClientDecode extends AbstractAction
 {
@@ -56,15 +58,6 @@ public class ClientDecode extends AbstractAction
 	@ActionFieldAttribute(name = arrayName, mandatory = true, description = "A massive byte which is required to convert in MapMessage.")
 	protected Byte[]	array	= null;
 
-	public ClientDecode()
-	{
-	}
-
-	@Override
-	public void initDefaultValues() 
-	{
-	}
-
 	@Override
 	public void doRealAction(Context context, ReportBuilder report, Parameters parameters, AbstractEvaluator evaluator) throws Exception
 	{
@@ -73,6 +66,5 @@ public class ClientDecode extends AbstractAction
 		MapMessage res = client.getCodec().decode(Converter.convertToByteArray(this.array));
 
 		super.setResult(res);
-
 	}
 }

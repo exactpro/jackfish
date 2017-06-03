@@ -24,7 +24,6 @@ import com.exactprosystems.jf.api.error.ErrorKind;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.report.ReportBuilder;
 import com.exactprosystems.jf.documents.config.Context;
-import com.exactprosystems.jf.documents.matrix.parser.Parameter;
 import com.exactprosystems.jf.documents.matrix.parser.Parameters;
 import com.exactprosystems.jf.documents.matrix.parser.items.TypeMandatory;
 import com.exactprosystems.jf.functions.HelpKind;
@@ -63,10 +62,6 @@ public class ApplicationSwitchTo extends AbstractAction
 			+ " The window title bar is allowed to have the value of Title field and not to be the same.")
 	protected Boolean 				softCondition;
 
-	public ApplicationSwitchTo()
-	{
-	}
-
 	@Override
     protected void helpToAddParametersDerived(List<ReadableValue> list, Context context, Parameters parameters) throws Exception
     {
@@ -89,22 +84,22 @@ public class ApplicationSwitchTo extends AbstractAction
 	@Override
 	public void initDefaultValues() 
 	{
-		softCondition	= true;
+		this.softCondition	= true;
 	}
 	
 	@Override
 	public void doRealAction(Context context, ReportBuilder report, Parameters parameters, AbstractEvaluator evaluator) throws Exception 
 	{
-		if (this.connection == null)
+		if (this.softCondition == null)
 		{
-			super.setError("Connection is null", ErrorKind.EMPTY_PARAMETER);
+			super.setError(softConditionName + " is null", ErrorKind.EMPTY_PARAMETER);
 		}
 		else
 		{
 		    Map<String, String> map = new HashMap<>();
 		    parameters.select(TypeMandatory.Extra).forEach((k,v) -> map.put(k, String.valueOf(v)));
 		    
-			IApplication app = connection.getApplication();
+			IApplication app = this.connection.getApplication();
 			String res = app.service().switchTo(map, this.softCondition);
 			
 			if (res.equals(""))

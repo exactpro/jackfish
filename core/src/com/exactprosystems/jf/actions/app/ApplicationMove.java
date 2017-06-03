@@ -1,3 +1,11 @@
+////////////////////////////////////////////////////////////////////////////////
+//  Copyright (c) 2009-2015, Exactpro Systems, LLC
+//  Quality Assurance & Related Development for Innovative Trading Systems.
+//  All rights reserved.
+//  This is unpublished, licensed software, confidential and proprietary
+//  information which is the property of Exactpro Systems, LLC or its licensors.
+////////////////////////////////////////////////////////////////////////////////
+
 package com.exactprosystems.jf.actions.app;
 
 import com.exactprosystems.jf.actions.AbstractAction;
@@ -15,8 +23,8 @@ import com.exactprosystems.jf.documents.matrix.parser.Parameters;
 		group = ActionGroups.App,
 		generalDescription = "Plug-in depend action. This action is used for moving the main window",
 		additionFieldsAllowed = false,
-		seeAlsoClass = {ApplicationStart.class, ApplicationConnectTo.class},
-		additionalDescription = "Moving the main window"
+		examples = "", // TODO add examples here. VMF 03.05.17
+		seeAlsoClass = {ApplicationStart.class, ApplicationConnectTo.class}
 )
 public class ApplicationMove extends AbstractAction
 {
@@ -37,15 +45,9 @@ public class ApplicationMove extends AbstractAction
 	protected Integer y;
 
 	@Override
-	public void initDefaultValues()
-	{
-
-	}
-
-	@Override
 	protected void doRealAction(Context context, ReportBuilder report, Parameters parameters, AbstractEvaluator evaluator) throws Exception
 	{
-		IApplication application = connection.getApplication();
+		IApplication application = this.connection.getApplication();
 		application.service().moveWindow(this.x, this.y);
 		super.setResult(null);
 	}

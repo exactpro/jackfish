@@ -288,7 +288,9 @@ public abstract class AbstractAction implements Cloneable
         }
 	}
 
-	public abstract void initDefaultValues();
+	public void initDefaultValues()
+	{
+	}
     
     //==========================================================================================================================
     // Protected members should be overridden
@@ -305,10 +307,6 @@ public abstract class AbstractAction implements Cloneable
 	protected void helpToAddParametersDerived(List<ReadableValue> list, Context context, Parameters parameters)  throws Exception
 	{
 	}
-
-//    protected void doRealDocumetation(Context context, ReportBuilder report)
-//    {
-//    }
 
     protected abstract void doRealAction(Context context, ReportBuilder report, Parameters parameters, AbstractEvaluator evaluator) throws Exception;
 

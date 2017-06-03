@@ -16,7 +16,6 @@ import com.exactprosystems.jf.api.client.ClientConnection;
 import com.exactprosystems.jf.api.client.ClientHelper;
 import com.exactprosystems.jf.api.client.IClient;
 import com.exactprosystems.jf.api.client.Possibility;
-import com.exactprosystems.jf.api.error.ErrorKind;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.report.ReportBuilder;
 import com.exactprosystems.jf.documents.config.Context;
@@ -30,7 +29,9 @@ import com.exactprosystems.jf.documents.matrix.parser.Parameters;
 		additionFieldsAllowed 	= false,
 		examples 				= "{{`1. Load the client for FIX.`}}"
 				+ "{{`2. Clear the list of the client messages.`}} "
-				+ "{{#CLLD1;ClientLoad;'FIX'\n"
+				+ "{{##Id;#Action;#ClientId\n"
+				+ "CLLD1;ClientLoad;'FIX'\n"
+				+ "\n"
 				+ "#Id;#Action;#ClientConnection\n"
 				+ "CLCLM1;ClientClearMessages;CLLD1.Out#}}"
 	)
@@ -41,10 +42,6 @@ public class ClientClearMessages extends AbstractAction
 	@ActionFieldAttribute(name = connectionName, mandatory = true, description = "The connection with the client, which is derived from the action {{@ClientLoad@}}." )
 	protected ClientConnection	connection	= null;
 
-	public ClientClearMessages()
-	{
-	}
-	
 	@Override
 	public void doRealAction(Context context, ReportBuilder report, Parameters parameters, AbstractEvaluator evaluator) throws Exception
 	{
@@ -54,11 +51,4 @@ public class ClientClearMessages extends AbstractAction
 
 		super.setResult(null);
 	}
-
-	@Override
-	public void initDefaultValues() {
-		// TODO Auto-generated method stub
-		
-	}
-
 }

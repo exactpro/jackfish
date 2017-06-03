@@ -17,7 +17,6 @@ import com.exactprosystems.jf.api.client.ClientHelper;
 import com.exactprosystems.jf.api.client.IClient;
 import com.exactprosystems.jf.api.client.MapMessage;
 import com.exactprosystems.jf.api.client.Possibility;
-import com.exactprosystems.jf.api.error.ErrorKind;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.report.ReportBuilder;
 import com.exactprosystems.jf.documents.config.Context;
@@ -34,12 +33,14 @@ import com.exactprosystems.jf.documents.matrix.parser.Parameters;
 		examples 				= "{{`1. Load the client for FIX.`}}"
 				+ "{{`2. Create the message.`}}"
 				+ "{{`3. Encode the message.`}} "
-				+ "{{##Id;#Action;$ClientId\n" +
-				"CLLD;ClientLoad;'FIX'\n" +
-				"#Id;#Action;PartyID;$MessageType\n" +
-				"MSGCR1;MessageCreate;'test';'35'\n" +
-				"#Id;#Action;$MapMessage;$ClientConnection\n" +
-				"CLENC1;ClientEncode;MSGCR1.Out;CLLD.Out#}}"
+				+ "{{##Id;#Action;$ClientId\n"
+				+ "CLLD;ClientLoad;'FIX'\n"
+				+ "\n"
+				+ "#Id;#Action;PartyID;$MessageType\n"
+				+ "MSGCR1;MessageCreate;'test';'35'\n"
+				+ "\n"
+				+ "#Id;#Action;$MapMessage;$ClientConnection\n"
+				+ "CLENC1;ClientEncode;MSGCR1.Out;CLLD.Out#}}"
 	)
 public class ClientEncode extends AbstractAction
 {
@@ -51,16 +52,7 @@ public class ClientEncode extends AbstractAction
 
 	@ActionFieldAttribute(name = messageName, mandatory = true, description = "The object type MapMessage, which is required to convert in a massive byte." )
 	protected MapMessage	message	= null;
-
-	public ClientEncode() 
-	{
-	}
 	
-	@Override
-	public void initDefaultValues() 
-	{
-	}
-
 	@Override
 	public void doRealAction(Context context, ReportBuilder report, Parameters parameters, AbstractEvaluator evaluator) throws Exception
 	{
@@ -70,5 +62,4 @@ public class ClientEncode extends AbstractAction
 
 		super.setResult(res);
 	}
-
 }

@@ -45,14 +45,17 @@ import java.util.Map.Entry;
 		examples 				= "{{`1. Load the client for FIX`}}"
 				+ "{{`2. Create a message type FIX with a set key-value.`}}"
 				+ "{{`3. Check the message.`}} "
-				+ "{{##Id;#Action;$ClientId\n" +
-				"CLLD1;ClientLoad;'TestClient'\n" +
-				"#Id;#Action;Address;Port;$ClientConnection\n" +
-				"CLSTRT1;ClientStart;'127.0.0.1';13000;CLLD3.Out\n" +
-				"#Id;#Action;PartyID;PartyIDSource;PartyRole;$MessageType\n" +
-				"MSGCR1;MessageCreate;'test';'1';3;'35'" +
-				"#Id;#Action;PartyID;$ActualMessage;$ExpectedMessageType;$ClientConnection\n" +
-				"CLMSGCHK1;ClientCheckMessage;'test';MSGCR1.Out;'35';CLLD1.Out#}}"
+				+ "{{##Id;#Action;$ClientId\n"
+				+ "CLLD1;ClientLoad;'TestClient'\n"
+				+ "\n"
+				+ "#Id;#Action;Address;Port;$ClientConnection\n"
+				+ "CLSTRT1;ClientStart;'127.0.0.1';13000;CLLD3.Out\n"
+				+ "\n"
+				+ "#Id;#Action;PartyID;PartyIDSource;PartyRole;$MessageType\n"
+				+ "MSGCR1;MessageCreate;'test';'1';3;'35'\n"
+				+ "\n"
+				+ "#Id;#Action;PartyID;$ActualMessage;$ExpectedMessageType;$ClientConnection\n"
+				+ "CLMSGCHK1;ClientCheckMessage;'test';MSGCR1.Out;'35';CLLD1.Out#}}"
 	)
 public class ClientCheckMessage extends AbstractAction 
 {
@@ -68,10 +71,6 @@ public class ClientCheckMessage extends AbstractAction
 
 	@ActionFieldAttribute(name = expectedMessageTypeName, mandatory = true, description = "The message type that is expected." )
 	protected String	messageType	= null;
-
-	public ClientCheckMessage()
-	{
-	}
 
 	@Override
 	protected void helpToAddParametersDerived(List<ReadableValue> list, Context context, Parameters parameters) throws Exception
@@ -105,21 +104,9 @@ public class ClientCheckMessage extends AbstractAction
 		}
 	}
 	
-	
-	@Override
-	public void initDefaultValues() 
-	{
-	}
-
 	@Override
 	public void doRealAction(Context context, ReportBuilder report, Parameters parameters, AbstractEvaluator evaluator) throws Exception
 	{
-		if (this.actual == null)
-		{
-			super.setError("Actual object is null", ErrorKind.EMPTY_PARAMETER);
-			return;
-		}
-		
 		boolean sameTypes = Str.areEqual(this.messageType, this.actual.getMessageType());
 		
 		Map<String, String> diff = ClientHelper.difference(this.actual, Condition.convertToCondition(parameters.select(TypeMandatory.Extra))); 

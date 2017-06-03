@@ -14,7 +14,6 @@ import com.exactprosystems.jf.actions.ActionFieldAttribute;
 import com.exactprosystems.jf.actions.ActionGroups;
 import com.exactprosystems.jf.api.app.AppConnection;
 import com.exactprosystems.jf.api.app.IApplication;
-import com.exactprosystems.jf.api.error.ErrorKind;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.report.ReportBuilder;
 import com.exactprosystems.jf.documents.config.Context;
@@ -25,12 +24,12 @@ import com.exactprosystems.jf.documents.matrix.parser.Parameters;
 		suffix					= "APPSZ",
 		generalDescription 		= "The purpose of the action is to change the window size of the application under test.",
 		additionFieldsAllowed 	= false,
-		examples = "Example №1.\n" +
-				"{{##Action;#AppConnection;#Width;#Height\n" +
-				"ApplicationResize;app;1000;1000#}}\n" +
-				"Example №2.\n" +
-				"{{##Action;#Maximize;#AppConnection\n" +
-				"ApplicationResize;true;app#}}\n",
+		examples = "Example №1."
+				+ "{{##Action;#AppConnection;#Width;#Height\n"
+				+ "ApplicationResize;app;1000;1000#}}"
+				+ "Example №2."
+				+ "{{##Action;#Maximize;#AppConnection\n"
+				+ "ApplicationResize;true;app#}}",
 		seeAlsoClass = {ApplicationStart.class, ApplicationConnectTo.class}
 	)
 public class ApplicationResize extends AbstractAction
@@ -63,38 +62,26 @@ public class ApplicationResize extends AbstractAction
 	@ActionFieldAttribute(name = normalName, mandatory = false, description = "If the parameter value is true, it sets normal size of the window.")
 	protected Boolean normal;
 
-	public ApplicationResize()
-	{
-	}
-
 	@Override
 	public void initDefaultValues() 
 	{
-		height 		= null;
-		width		= null;
-		minimize	= null;
-		maximize	= null;
+		this.height 	= null;
+		this.width		= null;
+		this.minimize	= null;
+		this.maximize	= null;
 	}
 	
 	@Override
 	public void doRealAction(Context context, ReportBuilder report, Parameters parameters, AbstractEvaluator evaluator) throws Exception 
 	{
-		if (this.connection == null)
-		{
-			super.setError("Connection is null", ErrorKind.EMPTY_PARAMETER);
-		}
-		else
-		{
-			IApplication app = connection.getApplication();
-			app.service().resize(
-					this.height == null ? 0 : this.height.intValue(), 
-					this.width == null ? 0 : this.width.intValue(), 
-					this.maximize == null ? false : this.maximize.booleanValue(),
-					this.minimize == null ? false : this.minimize.booleanValue(),
-					this.normal == null ? false : this.normal.booleanValue()
-			);
-			super.setResult(null);
-		}
+		IApplication app = connection.getApplication();
+		app.service().resize(
+				this.height 	== null ? 0 : this.height.intValue(), 
+				this.width 		== null ? 0 : this.width.intValue(), 
+				this.maximize 	== null ? false : this.maximize.booleanValue(),
+				this.minimize 	== null ? false : this.minimize.booleanValue(),
+				this.normal 	== null ? false : this.normal.booleanValue()
+		);
+		super.setResult(null);
 	}
-
 }

@@ -30,11 +30,13 @@ import java.util.Map;
 		generalDescription = "Plug-in dependent action. The action is used to open new windows in the web browser.",
 		additionFieldsAllowed = true,
 		additionalDescription = "The parameters are determined by the chosen plug-in. For example, the available"
-				+ " parameters for win.jar are the following: {{` {{$URL$}} – string. It defines the URL.`}} {{` "
-				+ "{{$Browser$}} - string. It defines which browser should be launched.`}} The parameters can be chosen in the dialogue"
+				+ " parameters for win.jar are the following: "
+				+ "{{` {{$URL$}} – string. It defines the URL.`}} "
+				+ "{{` {{$Browser$}} - string. It defines which browser should be launched.`}} "
+				+ "The parameters can be chosen in the dialogue"
 				+ " window opened with the context menu of this action in {{$“All parameters”$}} option.",
-		examples = "{{##Id;#Action;#Browser;#URL;#AppConnection\n" +
-				"APPNI1;ApplicationNewInstance;'Chrome';'http://google.com';app#}}",
+		examples = "{{##Id;#Action;#Browser;#URL;#AppConnection\n"
+				+ "APPNI1;ApplicationNewInstance;'Chrome';'http://google.com';app#}}",
 		seeAlsoClass = {ApplicationStart.class, ApplicationConnectTo.class}
 )
 public class ApplicationNewInstance extends AbstractAction
@@ -81,14 +83,8 @@ public class ApplicationNewInstance extends AbstractAction
 		{
 			args.put(parameter.getName(), String.valueOf(parameter.getValue()));
 		}
-		IApplication app = connection.getApplication();
+		IApplication app = this.connection.getApplication();
 		app.service().newInstance(args);
 		super.setResult(null);
-	}
-
-	@Override
-	public void initDefaultValues() 
-	{
-
 	}
 }

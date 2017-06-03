@@ -40,11 +40,6 @@ public class ApplicationRefresh extends AbstractAction
 			+ " as {{@ApplicationStart@}}, {{@ApplicationConnectTo@}}.")
 	protected AppConnection	connection	= null;
 
-
-	public ApplicationRefresh()
-	{
-	}
-
 	@Override
 	public void doRealAction(Context context, ReportBuilder report, Parameters parameters, AbstractEvaluator evaluator) throws Exception
 	{
@@ -58,11 +53,5 @@ public class ApplicationRefresh extends AbstractAction
 			app.service().refresh();
 			super.setResult(null);
 		}
-	}
-
-	@Override
-	public void initDefaultValues() 
-	{
-		// TODO Auto-generated method stub
 	}
 }

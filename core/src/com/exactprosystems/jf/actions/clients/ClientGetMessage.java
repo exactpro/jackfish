@@ -45,6 +45,7 @@ import com.exactprosystems.jf.functions.HelpKind;
 				+ "{{`2. Find the message with the value Value and name Name.`}} "
 				+ "{{##Id;#Action;#ClientId\n"
 				+ "CLLD1;ClientLoad;'FIX'\n"
+				+ "\n"
 				+ "#Id;#Action;#ClientConnection;#MessageType;#Name\n"
 				+ "CLGM1;ClientGetMessage;CLLD1.Out;'35';'Value'#}}"
 	)
@@ -71,10 +72,6 @@ public class ClientGetMessage extends AbstractAction
 	@ActionFieldAttribute(name = removeName, mandatory = false, description = "Delete the found message.")
 	protected Boolean remove;
 
-	public ClientGetMessage()
-	{
-	}
-	
 	@Override
 	protected void helpToAddParametersDerived(List<ReadableValue> list, Context context, Parameters parameters) throws Exception
 	{
@@ -116,9 +113,9 @@ public class ClientGetMessage extends AbstractAction
 	@Override
 	public void initDefaultValues() 
 	{
-		conditions = null;
-		timeout = 20000;
-		remove = true;
+		this.conditions = null;
+		this.timeout = 20000;
+		this.remove = true;
 	}
 	
 	@Override
@@ -136,6 +133,4 @@ public class ClientGetMessage extends AbstractAction
 		}
 		super.setError("Timeout", ErrorKind.TIMEOUT);
 	}
-
-
 }
