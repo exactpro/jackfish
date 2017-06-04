@@ -11,12 +11,14 @@ package com.exactprosystems.jf.tool.wizard;
 import com.exactprosystems.jf.api.common.IContext;
 import com.exactprosystems.jf.api.wizard.*;
 import com.exactprosystems.jf.common.VerboseLevel;
+import com.exactprosystems.jf.common.version.VersionInfo;
 import com.exactprosystems.jf.documents.ConsoleDocumentFactory;
 import com.exactprosystems.jf.documents.DocumentFactory;
 import com.exactprosystems.jf.documents.config.Context;
 import com.exactprosystems.jf.documents.matrix.Matrix;
 import com.exactprosystems.jf.documents.matrix.parser.items.HelpItem;
 import com.exactprosystems.jf.documents.matrix.parser.items.MatrixItem;
+import com.exactprosystems.jf.tool.wizard.all.CodeExampleWizard;
 import com.exactprosystems.jf.tool.wizard.all.DictionaryWizard;
 import com.exactprosystems.jf.tool.wizard.all.GherkinWizard;
 import org.apache.log4j.Logger;
@@ -46,7 +48,7 @@ public class WizardManagerImpl implements WizardManager
     private static final Logger logger = Logger.getLogger(WizardManagerImpl.class);
 
     private static List<Class<? extends Wizard>> knownWizards = Arrays.asList(
-            GherkinWizard.class, DictionaryWizard.class);
+            GherkinWizard.class, DictionaryWizard.class, CodeExampleWizard.class );
     
     public WizardManagerImpl()
     {
@@ -172,6 +174,11 @@ public class WizardManagerImpl implements WizardManager
         if (attr.strongCriteries() && criteries.length != attr.criteries().length)
         {
             return false;
+        }
+
+        if (attr.experimental() && !VersionInfo.isDevVersion())
+        {
+        	return false;
         }
         
         List<Class<?>> criteriaClasses = Arrays.stream(criteries)

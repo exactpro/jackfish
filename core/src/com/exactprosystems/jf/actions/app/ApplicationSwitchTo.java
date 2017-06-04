@@ -92,24 +92,21 @@ public class ApplicationSwitchTo extends AbstractAction
 	{
 		if (this.softCondition == null)
 		{
-			super.setError(softConditionName + " is null", ErrorKind.EMPTY_PARAMETER);
+			this.softCondition	= true;
+		}
+	    Map<String, String> map = new HashMap<>();
+	    parameters.select(TypeMandatory.Extra).forEach((k,v) -> map.put(k, String.valueOf(v)));
+	    
+		IApplication app = this.connection.getApplication();
+		String res = app.service().switchTo(map, this.softCondition);
+		
+		if (res.equals(""))
+		{
+			super.setError("Can not find the window.", ErrorKind.ELEMENT_NOT_FOUND);
 		}
 		else
 		{
-		    Map<String, String> map = new HashMap<>();
-		    parameters.select(TypeMandatory.Extra).forEach((k,v) -> map.put(k, String.valueOf(v)));
-		    
-			IApplication app = this.connection.getApplication();
-			String res = app.service().switchTo(map, this.softCondition);
-			
-			if (res.equals(""))
-			{
-				super.setError("Can not find the window.", ErrorKind.ELEMENT_NOT_FOUND);
-			}
-			else
-			{
-				super.setResult(res);
-			}
+			super.setResult(res);
 		}
 	}
 

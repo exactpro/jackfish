@@ -1,5 +1,6 @@
 package com.exactprosystems.jf.tool.wizard;
 
+import com.exactprosystems.jf.api.common.Sys;
 import com.exactprosystems.jf.api.wizard.WizardCommand;
 import com.exactprosystems.jf.documents.matrix.Matrix;
 import com.exactprosystems.jf.documents.matrix.parser.Parser;
@@ -47,6 +48,14 @@ public class CommandBuilder
         });
         return this;
     }
+    
+	public CommandBuilder clipboard(String string)
+	{
+		Sys.copyToClipboard(string);
+		
+		return this;
+	}
+
 
     public static MatrixItem create(Matrix matrix, String itemName, String actionName)
     {
@@ -62,4 +71,5 @@ public class CommandBuilder
         }
         return null;
     }
+
 }

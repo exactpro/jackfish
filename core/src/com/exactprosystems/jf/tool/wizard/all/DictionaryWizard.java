@@ -23,14 +23,15 @@ import java.util.List;
 import java.util.function.Supplier;
 
 @WizardAttribute(
-            name = "Test dictionary wizard",
-            pictureName = "DictionaryWizard.png",
-            category = WizardCategory.GUI_DICTIONARY,
-            shortDescription = "This wizard is only for test purpose.",
-            detailedDescription = "Here you descrioption might be",
-            strongCriteries = true,
-            criteries = { IGuiDictionary.class, IWindow.class }
-        )
+        name 				= "Test dictionary wizard",
+        pictureName 		= "DictionaryWizard.png",
+        category 			= WizardCategory.GUI_DICTIONARY,
+        shortDescription 	= "This wizard is only for test purpose.",
+        detailedDescription = "Here you descrioption might be",
+        experimental 		= true,
+        strongCriteries 	= true,
+        criteries 			= { IGuiDictionary.class, IWindow.class }
+    )
 public class DictionaryWizard extends AbstractWizard
 {
     private IGuiDictionary  currentDictionary   = null;

@@ -22,6 +22,7 @@ public @interface WizardAttribute
     String shortDescription();
     String detailedDescription();
     WizardCategory category();
+    boolean experimental();
     boolean strongCriteries();
     Class<?>[] criteries() default {};
 }

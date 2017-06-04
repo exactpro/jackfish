@@ -58,6 +58,7 @@ import java.util.stream.Collectors;
         category            = WizardCategory.MATRIX, 
         shortDescription    = "This wizard create matrix structure from Gherkin code", 
         detailedDescription = "This wizard create matrix structure from Gherkin code", 
+        experimental 		= false, 
         strongCriteries     = true, 
         criteries           = { TestCase.class, MatrixFx.class }
         )
