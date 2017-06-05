@@ -1,0 +1,26 @@
+// 
+#TestCase;#Kind;#Depends;#For
+Test case;Never;;
+    #Id;#Let
+    v;'v'
+
+    #Id;#RawTable
+    DATA1;Table
+    @;newH
+    0;v + 'zzz'
+    #EndRawTable
+
+    #Action;$Table;$Expression
+    TableConsiderColumnsAs;DATA1;'newH'
+
+    #Call;table
+    testLib.simpleSubWithTable;DATA1
+
+    #ForEach;#In
+    row;DATA1
+        #Action;Value
+        Print;row.newH+'.jf'
+
+    #EndForEach
+
+

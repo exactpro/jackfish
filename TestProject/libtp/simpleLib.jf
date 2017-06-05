@@ -8,6 +8,16 @@ testLib;Simple library for testing jf functionality
 
     #EndSubCase
 
-#EndNameSpace
+    #Id;#SubCase;table
+    simpleSubWithTable;;
+        #ForEach;#In
+        row;table
+            #Action;Str
+            Print;row.newH
 
+        #EndForEach
+
+    #EndSubCase
+
+#EndNameSpace
 
