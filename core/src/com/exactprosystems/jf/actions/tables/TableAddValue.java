@@ -12,6 +12,7 @@ import com.exactprosystems.jf.actions.AbstractAction;
 import com.exactprosystems.jf.actions.ActionAttribute;
 import com.exactprosystems.jf.actions.ActionFieldAttribute;
 import com.exactprosystems.jf.actions.ActionGroups;
+import com.exactprosystems.jf.actions.DefaultValuePool;
 import com.exactprosystems.jf.api.error.ErrorKind;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.report.ReportBuilder;
@@ -47,20 +48,10 @@ public class TableAddValue extends AbstractAction
 	@ActionFieldAttribute(name = tableName, mandatory = true, description = "A table where it is needed to add a line.")
 	protected Table 	table 	= null;
 
-	@ActionFieldAttribute(name = indexName, mandatory = false, description = "A line index, where a new line is added. "
+	@ActionFieldAttribute(name = indexName, mandatory = false, def = DefaultValuePool.IntMin, description = "A line index, where a new line is added. "
 			+ "If it is a negative value it will be inserted at the end of the table. Numeration starts with 0.")
 	protected Integer	index;
 
-	public TableAddValue()
-	{
-	}
-
-	@Override
-	public void initDefaultValues() 
-	{
-		index	= Integer.MIN_VALUE;
-	}
-	
 	@Override
 	public void doRealAction(Context context, ReportBuilder report, Parameters parameters, AbstractEvaluator evaluator) throws Exception
 	{

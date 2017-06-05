@@ -12,6 +12,7 @@ import com.exactprosystems.jf.actions.AbstractAction;
 import com.exactprosystems.jf.actions.ActionAttribute;
 import com.exactprosystems.jf.actions.ActionFieldAttribute;
 import com.exactprosystems.jf.actions.ActionGroups;
+import com.exactprosystems.jf.actions.DefaultValuePool;
 import com.exactprosystems.jf.api.error.ErrorKind;
 import com.exactprosystems.jf.common.MatrixRunner;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
@@ -39,17 +40,11 @@ public class MatrixWait extends AbstractAction
             + " matrix which is run.")
     protected MatrixRunner     matrix     = null;
 
-    @ActionFieldAttribute(name = timeName, mandatory = false, description = "Matrix timeout per millisecond."
+    @ActionFieldAttribute(name = timeName, mandatory = false, def = DefaultValuePool.Long0, description = "Matrix timeout per millisecond."
             + "If the matrix doesn’t stop during the specified timeout, an action is failed."
             + "If the value is 0 – there will be pending before the matrix stops with no time limit."
             + "Be careful with such a value, if the started matrix is cycled, the current matrix will hang up in latency.")
     protected Long             time;
-
-    @Override
-    public void initDefaultValues()
-    {
-        this.time = 0L;
-    }
 
     @Override
     public void doRealAction(Context context, ReportBuilder report, Parameters parameters, AbstractEvaluator evaluator)

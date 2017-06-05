@@ -62,20 +62,9 @@ public class XmlChildren extends AbstractAction
 			+ " be applied. From the root of this structure a list of elements will be drawn.")
 	protected Xml				xml				= null;
 
-	public XmlChildren()
-	{
-	}
-
 	@Override
 	public void doRealAction(Context context, ReportBuilder report, Parameters parameters, AbstractEvaluator evaluator) throws Exception
 	{
 		super.setResult(xml.getChildren());
 	}
-
-	@Override
-	public void initDefaultValues() {
-		// TODO Auto-generated method stub
-		
-	}
-
 }

@@ -81,11 +81,6 @@ public class ClientSendRawMessage extends AbstractAction
 	}
 
 	@Override
-	public void initDefaultValues() 
-	{
-	}
-
-	@Override
 	public void doRealAction(Context context, ReportBuilder report, Parameters parameters, AbstractEvaluator evaluator) throws Exception
 	{
 		IClient client = this.connection.getClient();

@@ -43,10 +43,6 @@ public class TextLoadFromFile extends AbstractAction
 	@ActionFieldAttribute(name = fileName, mandatory = true, description = "A text file, the text of which is required to type")
 	protected String 	file 	= null;
 
-	public TextLoadFromFile()
-	{
-	}
-	
 	@Override
 	protected HelpKind howHelpWithParameterDerived(Context context,	Parameters parameters, String fieldName) throws Exception
 	{
@@ -57,11 +53,5 @@ public class TextLoadFromFile extends AbstractAction
 	public void doRealAction(Context context, ReportBuilder report, Parameters parameters, AbstractEvaluator evaluator) throws Exception
 	{
 		super.setResult(new Text(this.file));
-	}
-
-	@Override
-	public void initDefaultValues() {
-		// TODO Auto-generated method stub
-		
 	}
 }

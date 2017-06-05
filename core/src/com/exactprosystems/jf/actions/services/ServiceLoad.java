@@ -46,10 +46,6 @@ public class ServiceLoad extends AbstractAction
 			+ "configuration at such ServiceId, an action finishes with an error." )
 	protected String 		id	= null;
 
-	public ServiceLoad()
-	{
-	}
-
 	@Override
 	protected HelpKind howHelpWithParameterDerived(Context context, Parameters parameters, String fieldName)
 	{
@@ -85,11 +81,4 @@ public class ServiceLoad extends AbstractAction
 			super.setError(e.getMessage(), ErrorKind.SERVICE_ERROR);
 		}
 	}
-
-	@Override
-	public void initDefaultValues()
-	{
-
-	}
-
 }

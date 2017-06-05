@@ -68,37 +68,25 @@ public class ChartReport extends AbstractAction
     public final static String  colorsName          = "Colors";
 	public final static String	toReportName		= "ToReport";
 
-	@ActionFieldAttribute(name=toReportName, mandatory = false, description = 
-            "This parameter is used for directing the output from the given object to the external report "
-          + "created by the {{$ReportStart$}} action.")
-	protected ReportBuilder toReport;
-
 	@ActionFieldAttribute(name = titleName, mandatory = true, description = "Title.")
-	protected String 	title 	= null;
+	protected String 	title;
 
 	@ActionFieldAttribute(name = tableName, mandatory = true, description = "Table that contains data for a graph.")
-	protected Table 	table 	= null;
+	protected Table 	table;
 
 	@ActionFieldAttribute(name = typeName, mandatory = true, description = "Type of graph.")
-	protected ChartKind			 chartType 			=  null;
+	protected ChartKind			 chartType;
 
-    @ActionFieldAttribute(name = colorsName, mandatory = false, description = "Color map.")
-    protected Map<String, Color>    colors           =  null;
+    @ActionFieldAttribute(name=toReportName, mandatory = false, def = DefaultValuePool.Null, description = 
+            "This parameter is used for directing the output from the given object to the external report "
+          + "created by the {{$ReportStart$}} action.")
+    protected ReportBuilder toReport;
 
-	@ActionFieldAttribute(name = beforeTestCaseName, mandatory = false, description = "Allows to display a graph at the top of the report.")
-	protected String			beforeTestCase		= null;
+    @ActionFieldAttribute(name = colorsName, mandatory = false, def = DefaultValuePool.Null, description = "Color map.")
+    protected Map<String, Color>    colors;
 
-	public ChartReport()
-	{
-	}
-
-	@Override
-	public void initDefaultValues()
-	{
-		this.beforeTestCase = null;
-		this.toReport = null;
-		this.colors = null;
-	}
+	@ActionFieldAttribute(name = beforeTestCaseName, mandatory = false, def = DefaultValuePool.Null, description = "Allows to display a graph at the top of the report.")
+	protected String			beforeTestCase;
 
 	@Override
 	public void helpToAddParametersDerived(List<ReadableValue> list, Context context, Parameters parameters) throws Exception

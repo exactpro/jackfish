@@ -12,6 +12,7 @@ import com.exactprosystems.jf.actions.AbstractAction;
 import com.exactprosystems.jf.actions.ActionAttribute;
 import com.exactprosystems.jf.actions.ActionFieldAttribute;
 import com.exactprosystems.jf.actions.ActionGroups;
+import com.exactprosystems.jf.actions.DefaultValuePool;
 import com.exactprosystems.jf.api.error.ErrorKind;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.report.ReportBuilder;
@@ -51,19 +52,9 @@ public class TableAddColumns extends AbstractAction
 	@ActionFieldAttribute(name = columnsName, mandatory = true, description = "Array of column titles’ names.")
 	protected String[]	columns 	= new String[] {};
 
-	@ActionFieldAttribute(name = indexName, mandatory = false, description = "Line number  where it is needed to insert."
+	@ActionFieldAttribute(name = indexName, mandatory = false, def = DefaultValuePool.Null, description = "Line number  where it is needed to insert."
 			+ "Numeration starts with 0. By default it will be inserted at end of the table.")
 	protected Integer	index;
-	
-	public TableAddColumns()
-	{
-	}
-
-	@Override
-	public void initDefaultValues() 
-	{
-		this.index	= null;
-	}
 	
 	@Override
 	public void doRealAction(Context context, ReportBuilder report, Parameters parameters, AbstractEvaluator evaluator) throws Exception

@@ -16,6 +16,7 @@ import com.exactprosystems.jf.actions.AbstractAction;
 import com.exactprosystems.jf.actions.ActionAttribute;
 import com.exactprosystems.jf.actions.ActionFieldAttribute;
 import com.exactprosystems.jf.actions.ActionGroups;
+import com.exactprosystems.jf.actions.DefaultValuePool;
 import com.exactprosystems.jf.api.error.ErrorKind;
 import com.exactprosystems.jf.common.MatrixRunner;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
@@ -58,14 +59,9 @@ public class ResultTableUserValue extends AbstractAction
 {
 	public final static String	matrixName		= "Matrix";
 
-	@ActionFieldAttribute(name = matrixName, mandatory = false, description = "Object MatrixRunner is indicated (that "
+	@ActionFieldAttribute(name = matrixName, mandatory = false, def = DefaultValuePool.Null, description = "Object MatrixRunner is indicated (that "
 			+ "is an output value of actions {{@MatrixRun@}} and {{@MatrixRunFromText@}}). This action will be used in the summary table. ")
 	protected MatrixRunner		matrix			= null;
-
-	@Override
-	public void initDefaultValues()
-	{
-	}
 
 	@Override
 	public void doRealAction(Context context, ReportBuilder report, Parameters parameters, AbstractEvaluator evaluator) throws Exception

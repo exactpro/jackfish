@@ -12,6 +12,7 @@ import com.exactprosystems.jf.actions.AbstractAction;
 import com.exactprosystems.jf.actions.ActionAttribute;
 import com.exactprosystems.jf.actions.ActionFieldAttribute;
 import com.exactprosystems.jf.actions.ActionGroups;
+import com.exactprosystems.jf.actions.DefaultValuePool;
 import com.exactprosystems.jf.api.error.ErrorKind;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.report.ReportBuilder;
@@ -35,19 +36,12 @@ public class Wait extends AbstractAction
 	public final static String timeName = "Time";
 	public final static String byTimeName = "ByTime";
 
-	@ActionFieldAttribute(name = timeName, mandatory = false, description = "Time in milliseconds, during this time running of a matrix will be stopped.")
+	@ActionFieldAttribute(name = timeName, mandatory = false, def = DefaultValuePool.Null, description = "Time in milliseconds, during this time running of a matrix will be stopped.")
 	protected Integer timeout;
 
-	@ActionFieldAttribute(name = byTimeName, mandatory = false, description = "Time before which running a matrix will"
+	@ActionFieldAttribute(name = byTimeName, mandatory = false, def = DefaultValuePool.Null, description = "Time before which running a matrix will"
 			+ " be stopped. It is ignored when parameter “Time” is specified.")
 	protected Date byTime;
-
-	@Override
-	public void initDefaultValues() 
-	{
-		timeout = null;
-		byTime = null;
-	}
 
 	@Override
 	protected HelpKind howHelpWithParameterDerived(Context context, Parameters parameters, String fieldName) throws Exception

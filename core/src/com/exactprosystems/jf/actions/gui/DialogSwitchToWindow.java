@@ -48,20 +48,13 @@ public class DialogSwitchToWindow extends AbstractAction
 			+ " as {{@ApplicationStart@}}, {{@ApplicationConnectTo@}}.")
 	protected AppConnection		connection		= null;
 
-	@ActionFieldAttribute(name = dialogName, mandatory = false, description = "The name of the dialog containing the frame which needs to be connected to."
+	@ActionFieldAttribute(name = dialogName, mandatory = false, def = DefaultValuePool.Null, description = "The name of the dialog containing the frame which needs to be connected to."
 			+ "If is absent tool will switch to the parent frame.")
 	protected String			dialog;
 
-	@ActionFieldAttribute(name = frameName, mandatory = false, description = "Frame name to which the focus will be set.")
+	@ActionFieldAttribute(name = frameName, mandatory = false, def = DefaultValuePool.Null, description = "Frame name to which the focus will be set.")
 	protected String 			frame;
 
-	@Override
-	public void initDefaultValues() 
-	{
-		dialog	= null;
-		frame	= null;
-	}
-	
 	@Override
 	protected HelpKind howHelpWithParameterDerived(Context context, Parameters parameters, String fieldName) throws Exception
 	{

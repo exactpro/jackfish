@@ -14,6 +14,7 @@ import com.exactprosystems.jf.actions.AbstractAction;
 import com.exactprosystems.jf.actions.ActionAttribute;
 import com.exactprosystems.jf.actions.ActionFieldAttribute;
 import com.exactprosystems.jf.actions.ActionGroups;
+import com.exactprosystems.jf.actions.DefaultValuePool;
 import com.exactprosystems.jf.api.error.ErrorKind;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.report.ReportBuilder;
@@ -58,23 +59,12 @@ public class ReportFinish extends AbstractAction
     @ActionFieldAttribute(name = failedName, mandatory = true, description = "A number of failed actions is specified.")
     protected Integer          failed;
 
-	@ActionFieldAttribute(name = startTimeName, mandatory = false, description = "Time when the report starts to be built. If the parameter is not set then the current time is used.")
+	@ActionFieldAttribute(name = startTimeName, mandatory = false, def = DefaultValuePool.Null, description = "Time when the report starts to be built. If the parameter is not set then the current time is used.")
 	protected Date startTime; 
 
-	@ActionFieldAttribute(name = finishTimeName, mandatory = false, description = "The time when the report is finished. If the parameter is not set then the curent time is used.")
+	@ActionFieldAttribute(name = finishTimeName, mandatory = false, def = DefaultValuePool.Null, description = "The time when the report is finished. If the parameter is not set then the curent time is used.")
 	protected Date finishTime; 
 
-	public ReportFinish()
-	{
-	}
-	
-	@Override
-	public void initDefaultValues() 
-	{
-		this.startTime = null;
-		this.finishTime = null;
-	}
-	
 	@Override
 	public void doRealAction(Context context, ReportBuilder report, Parameters parameters, AbstractEvaluator evaluator) throws Exception
 	{

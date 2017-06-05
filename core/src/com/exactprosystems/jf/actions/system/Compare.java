@@ -12,6 +12,7 @@ import com.exactprosystems.jf.actions.AbstractAction;
 import com.exactprosystems.jf.actions.ActionAttribute;
 import com.exactprosystems.jf.actions.ActionFieldAttribute;
 import com.exactprosystems.jf.actions.ActionGroups;
+import com.exactprosystems.jf.actions.DefaultValuePool;
 import com.exactprosystems.jf.actions.ReadableValue;
 import com.exactprosystems.jf.api.common.Str;
 import com.exactprosystems.jf.api.error.ErrorKind;
@@ -59,18 +60,14 @@ public class Compare extends AbstractAction
     @ActionFieldAttribute(name = actualName, mandatory = true, description = "A set of names and values that should be compared as actual value.")
     protected Map<String, Object> actual       = Collections.emptyMap();
 
-    @ActionFieldAttribute(name = dontFailName, mandatory = false, description = "If true, then when identifying"
+    @ActionFieldAttribute(name = expectedName, mandatory = true, description = "A set of names and values that should be compared as expected value.")
+    protected Map<String, Object> expected     = Collections.emptyMap();
+
+    @ActionFieldAttribute(name = dontFailName, mandatory = false, def = DefaultValuePool.False, description = "If true, then when identifying"
             + " differences as a result of the comparison, action will still be marked as Passed, otherwise, as "
             + "Failed. By default, a parameter has a false value.")
     protected Boolean             dontFail;
 
-    @ActionFieldAttribute(name = expectedName, mandatory = true, description = "A set of names and values that should be compared as expected value.")
-    protected Map<String, Object> expected     = Collections.emptyMap();
-
-    public Compare()
-    {
-    }
-    
     @Override
     protected HelpKind howHelpWithParameterDerived(Context context, Parameters parameters, String fieldName)
     {
@@ -92,13 +89,6 @@ public class Compare extends AbstractAction
                 list.add(ReadableValue.FALSE);
                 break;
         }
-    }
-
-
-    @Override
-    public void initDefaultValues()
-    {
-        this.dontFail = false;
     }
 
     @Override

@@ -60,49 +60,34 @@ public class TableReport extends AbstractAction
     public final static String toReportName       = "ToReport";
     public final static String widthName          = "Width";
 
-	@ActionFieldAttribute(name=toReportName, mandatory = false, description = 
-            "This parameter is used for directing the output from the given object to the external report "
-          + "created by the {{@ReportStart@}} action.")
-	protected ReportBuilder toReport;
-
 	@ActionFieldAttribute(name = tableName, mandatory = true, description = "A table which is needed to to be output into the report.")
 	protected Table 	table 	= null;
-
-	@ActionFieldAttribute(name = beforeTestCaseName, mandatory = false, description = "Enables to output the table on the highest level of the report.")
-	protected String 	beforeTestCase 	= null;
 
 	@ActionFieldAttribute(name = titleName, mandatory = true, description = "The title of the output table.")
 	protected String 	title 	= null;
 
-	@ActionFieldAttribute(name = numbersName, mandatory = false, description = "If the value is true the column with the lines numbers is output.")
+    @ActionFieldAttribute(name=toReportName, mandatory = false, def = DefaultValuePool.Null, description = 
+            "This parameter is used for directing the output from the given object to the external report "
+          + "created by the {{@ReportStart@}} action.")
+    protected ReportBuilder toReport;
+
+    @ActionFieldAttribute(name = beforeTestCaseName, mandatory = false, def = DefaultValuePool.Null, description = "Enables to output the table on the highest level of the report.")
+    protected String    beforeTestCase;
+
+	@ActionFieldAttribute(name = numbersName, mandatory = false, def = DefaultValuePool.True, description = "If the value is true the column with the lines numbers is output.")
 	protected Boolean withNumbers;
 
-	@ActionFieldAttribute(name = columnsName, mandatory = false, description = "Array or map of column titles which is needed to be output into the report.")
+	@ActionFieldAttribute(name = columnsName, mandatory = false, def = DefaultValuePool.Null, description = "Array or map of column titles which is needed to be output into the report.")
 	protected Object	columns;
 
-    @ActionFieldAttribute(name = widthName, mandatory = false, description = "Array of integers which define widht of each column.")
+    @ActionFieldAttribute(name = widthName, mandatory = false, def = DefaultValuePool.Null, description = "Array of integers which define widht of each column.")
     protected Integer[]  widths;
 	
-	@ActionFieldAttribute(name = reportValuesName, mandatory = false, description = "If the value is false, the value"
+	@ActionFieldAttribute(name = reportValuesName, mandatory = false, def = DefaultValuePool.False, description = "If the value is false, the value"
 			+ " from the cell is output, if the value is true the expression result is output. "
 			+ "Applicable for the cells of Expression type, see {{@TableConsiderColumnAs@}}.")
 	protected Boolean	reportValues;
 
-	public TableReport()
-	{
-	}
-
-	@Override
-	public void initDefaultValues() 
-	{
-		this.beforeTestCase = null;
-		this.withNumbers 	= true;
-		this.columns 		= null;
-		this.widths         = null;
-		this.reportValues 	= false;
-		this.toReport = null;
-	}
-	
 	@Override
 	protected HelpKind howHelpWithParameterDerived(Context context, Parameters parameters, String fieldName) throws Exception
 	{

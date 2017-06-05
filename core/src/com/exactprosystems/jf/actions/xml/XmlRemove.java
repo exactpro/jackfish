@@ -55,14 +55,10 @@ public class XmlRemove extends AbstractAction
 	public final static String xpathName = "Xpath";
 
 	@ActionFieldAttribute(name = xmlName, mandatory = true, description = "An Xml structure that needs to be changed (altered)")
-	protected Xml 	xml 	= null;
+	protected Xml 	xml;
 
 	@ActionFieldAttribute(name = xpathName, mandatory = true, description = "Formula for the search of an element.")
-	protected String 	xpath 	= null;
-
-	public XmlRemove()
-	{
-	}
+	protected String 	xpath;
 	
 	@Override
 	protected HelpKind howHelpWithParameterDerived(Context context,	Parameters parameters, String fieldName) throws Exception
@@ -76,12 +72,5 @@ public class XmlRemove extends AbstractAction
 		this.xml.removeByXpath(this.xpath);
 		super.setResult(null);
 	}
-
-	@Override
-	public void initDefaultValues() {
-		// TODO Auto-generated method stub
-		
-	}
-
 }
 

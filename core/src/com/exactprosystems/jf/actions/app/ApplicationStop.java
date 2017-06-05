@@ -12,6 +12,7 @@ import com.exactprosystems.jf.actions.AbstractAction;
 import com.exactprosystems.jf.actions.ActionAttribute;
 import com.exactprosystems.jf.actions.ActionFieldAttribute;
 import com.exactprosystems.jf.actions.ActionGroups;
+import com.exactprosystems.jf.actions.DefaultValuePool;
 import com.exactprosystems.jf.api.app.AppConnection;
 import com.exactprosystems.jf.api.app.IApplication;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
@@ -42,14 +43,8 @@ public class ApplicationStop extends AbstractAction
 			+ " as {{@ApplicationStart@}}, {{@ApplicationConnectTo@}}.")
 	protected AppConnection	connection	= null;
 
-	@ActionFieldAttribute(name=needKillName, mandatory = false, description = "If true, the process will killed")
+	@ActionFieldAttribute(name=needKillName, mandatory = false, def = DefaultValuePool.False, description = "If true, the process will killed")
 	protected Boolean needKill;
-
-	@Override
-	public void initDefaultValues() 
-	{
-		this.needKill = false;
-	}
 
 	@Override
 	public void doRealAction(Context context, ReportBuilder report, Parameters parameters, AbstractEvaluator evaluator) throws Exception 

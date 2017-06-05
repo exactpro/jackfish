@@ -41,7 +41,7 @@ public class TableColumnAsList extends AbstractAction
     @ActionFieldAttribute(name = columnName, mandatory = true, description = "Column name which will be extracted.")
     protected String column = null;
 
-    @ActionFieldAttribute(name = getValuesName, mandatory = false, description = "If true get values otherwise get expressions.")
+    @ActionFieldAttribute(name = getValuesName, mandatory = false, def = DefaultValuePool.False, description = "If true get values otherwise get expressions.")
     protected Boolean getValues;
 
 
@@ -71,12 +71,6 @@ public class TableColumnAsList extends AbstractAction
         }
     }
 
-    @Override
-    public void initDefaultValues() 
-    {
-        this.getValues = false;
-    }
-    
 	@Override
 	public void doRealAction(Context context, ReportBuilder report, Parameters parameters, AbstractEvaluator evaluator) throws Exception
 	{

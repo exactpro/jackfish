@@ -46,10 +46,6 @@ public class TableRemoveRow extends AbstractAction
 			+ " negative value the last line will be deleted. Numeration starts with 0.")
 	protected Integer row = null;
 
-	public TableRemoveRow()
-	{
-	}
-
 	@Override
 	protected void doRealAction(Context context, ReportBuilder report, Parameters parameters, AbstractEvaluator evaluator) throws Exception
 	{
@@ -60,11 +56,5 @@ public class TableRemoveRow extends AbstractAction
 		}
 
 		super.setResult(table.removeRow(row));
-	}
-
-	@Override
-	public void initDefaultValues() {
-		// TODO Auto-generated method stub
-		
 	}
 }

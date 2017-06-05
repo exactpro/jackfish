@@ -44,15 +44,6 @@ public class Show extends AbstractAction
 	@ActionFieldAttribute(name = textName, mandatory = true, description = "Output row.")
 	protected String text; 
 	
-	public Show()
-	{
-	}
-	
-	@Override
-	public void initDefaultValues() 
-	{
-	}
-	
 	@Override
 	protected HelpKind howHelpWithParameterDerived(Context context, Parameters parameters, String fieldName) throws Exception
 	{

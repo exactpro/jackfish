@@ -54,31 +54,20 @@ public class XmlReport extends AbstractAction
     public final static String titleName          = "Title";
     public final static String toReportName       = "ToReport";
 
-	@ActionFieldAttribute(name=toReportName, mandatory = false, description = 
-            "This parameter is used for directing the output from the given object to the external report "
-          + "created by the {{$ReportStart$}} action.")
-	protected ReportBuilder toReport;
-
 	@ActionFieldAttribute(name = xmlName, mandatory = true, description = "The Xml structure that needs to be kept (preserved).")
 	protected Xml 	xml 	= null;
-
-	@ActionFieldAttribute(name = beforeTestCaseName, mandatory = false, description = "Enables to output the table on the highest level of the report.")
-	protected String 	beforeTestCase 	= null;
 
 	@ActionFieldAttribute(name = titleName, mandatory = true, description = "The heading of the output Xml structure.")
 	protected String 	title 	= null;
 
-	public XmlReport()
-	{
-	}
+	@ActionFieldAttribute(name=toReportName, mandatory = false, def = DefaultValuePool.Null, description = 
+            "This parameter is used for directing the output from the given object to the external report "
+          + "created by the {{$ReportStart$}} action.")
+	protected ReportBuilder toReport;
 
-	@Override
-	public void initDefaultValues() 
-	{
-		this.beforeTestCase = null;
-		this.toReport = null;
-	}
-	
+	@ActionFieldAttribute(name = beforeTestCaseName, mandatory = false, def = DefaultValuePool.Null, description = "Enables to output the table on the highest level of the report.")
+	protected String 	beforeTestCase 	= null;
+
 	@Override
 	public void doRealAction(Context context, ReportBuilder report, Parameters parameters, AbstractEvaluator evaluator) throws Exception
 	{

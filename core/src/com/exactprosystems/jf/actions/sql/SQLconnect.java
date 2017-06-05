@@ -70,9 +70,6 @@ public class SQLconnect  extends AbstractAction
 	@ActionFieldAttribute(name = passwordName, mandatory = true, description = "Database password.")
 	protected String password 	= "";
 
-	public SQLconnect()
-	{}
-
 	@Override
 	protected HelpKind howHelpWithParameterDerived(Context context, Parameters parameters, String fieldName)
 	{
@@ -117,10 +114,5 @@ public class SQLconnect  extends AbstractAction
 		{
 			super.setError(e.getMessage(), ErrorKind.SQL_ERROR);
 		}
-	}
-
-	@Override
-	public void initDefaultValues() 
-	{
 	}
 }

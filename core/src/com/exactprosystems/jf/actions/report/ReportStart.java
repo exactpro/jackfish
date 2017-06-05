@@ -14,6 +14,7 @@ import com.exactprosystems.jf.actions.AbstractAction;
 import com.exactprosystems.jf.actions.ActionAttribute;
 import com.exactprosystems.jf.actions.ActionFieldAttribute;
 import com.exactprosystems.jf.actions.ActionGroups;
+import com.exactprosystems.jf.actions.DefaultValuePool;
 import com.exactprosystems.jf.api.common.Str;
 import com.exactprosystems.jf.api.error.ErrorKind;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
@@ -41,19 +42,9 @@ public class ReportStart extends AbstractAction
 	@ActionFieldAttribute(name = reportNameName, mandatory = true, description = "Name of a created report.")
 	protected String reportName; 
 
-    @ActionFieldAttribute(name = versionName, mandatory = false, description = "Version of the report. It will be displayed in report")
+    @ActionFieldAttribute(name = versionName, mandatory = false, def = DefaultValuePool.Null, description = "Version of the report. It will be displayed in report")
     protected String version; 
 
-	public ReportStart()
-	{
-	}
-	
-	@Override
-	public void initDefaultValues() 
-	{
-	    this.version = null;
-	}
-	
 	@Override
 	public void doRealAction(Context context, ReportBuilder report, Parameters parameters, AbstractEvaluator evaluator) throws Exception
 	{

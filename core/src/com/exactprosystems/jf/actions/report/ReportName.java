@@ -33,20 +33,11 @@ public class ReportName extends AbstractAction
 	@ActionFieldAttribute(name = nameName, mandatory = true, description = "Text that will be added to the name of the report.")
 	protected String name 		= "";
 	
-	public ReportName()
-	{
-	}
-	
 	@Override
 	public void doRealAction(Context context, ReportBuilder report, Parameters parameters, AbstractEvaluator evaluator) throws Exception
 	{
 		report.setName(this.name);
 		super.setResult(null);
-	}
-
-	@Override
-	public void initDefaultValues() 
-	{
 	}
 }
 

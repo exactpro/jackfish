@@ -58,39 +58,24 @@ public class ImageGet extends AbstractAction
 	@ActionFieldAttribute(name = dialogName, mandatory = false, description = "The name of the dialog.")
 	protected String			dialog			= null;
 
-	@ActionFieldAttribute(name = nameName, mandatory = false, description = "The name of the element.")
+	@ActionFieldAttribute(name = nameName, mandatory = false, def = DefaultValuePool.Null, description = "The name of the element.")
 	protected String			name;
 
-	@ActionFieldAttribute(name = descriptionName, mandatory = false, description = "The description of the image which will be displayed in tooltip.")
+	@ActionFieldAttribute(name = descriptionName, mandatory = false, def = DefaultValuePool.EmptyString, description = "The description of the image which will be displayed in tooltip.")
 	protected String			description;
 
-	@ActionFieldAttribute(name = x_leftUp, mandatory = false, description = "X coordinate is for left upper corner")
-	protected Integer			x1					= Integer.MIN_VALUE;
+	@ActionFieldAttribute(name = x_leftUp, mandatory = false, def = DefaultValuePool.IntMin, description = "X coordinate is for left upper corner")
+	protected Integer			x1;
 
-	@ActionFieldAttribute(name = y_leftUp, mandatory = false, description = "Y coordinate is for left upper corner")
-	protected Integer			y1					= Integer.MIN_VALUE;
+	@ActionFieldAttribute(name = y_leftUp, mandatory = false, def = DefaultValuePool.IntMin, description = "Y coordinate is for left upper corner")
+	protected Integer			y1;
 
-	@ActionFieldAttribute(name = x_rightDown, mandatory = false, description = "X coordinate is for right bottom corner")
-	protected Integer			x2					= Integer.MIN_VALUE;
+	@ActionFieldAttribute(name = x_rightDown, mandatory = false, def = DefaultValuePool.IntMin, description = "X coordinate is for right bottom corner")
+	protected Integer			x2;
 
-	@ActionFieldAttribute(name = y_rightDown, mandatory = false, description = "Y coordinate is for right bottom corner")
-	protected Integer			y2					= Integer.MIN_VALUE;
+	@ActionFieldAttribute(name = y_rightDown, mandatory = false, def = DefaultValuePool.IntMin, description = "Y coordinate is for right bottom corner")
+	protected Integer			y2;
 
-	public ImageGet()
-	{
-	}
-
-	@Override
-	public void initDefaultValues() 
-	{
-		this.dialog = null;
-		this.name	= null;
-		this.x1 = Integer.MIN_VALUE;
-		this.y1 = Integer.MIN_VALUE;
-		this.x2 = Integer.MIN_VALUE;
-		this.y2 = Integer.MIN_VALUE;
-	}
-	
 	@Override
 	protected HelpKind howHelpWithParameterDerived(Context context, Parameters parameters, String fieldName)
 	{

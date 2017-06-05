@@ -12,6 +12,7 @@ import com.exactprosystems.jf.actions.AbstractAction;
 import com.exactprosystems.jf.actions.ActionAttribute;
 import com.exactprosystems.jf.actions.ActionFieldAttribute;
 import com.exactprosystems.jf.actions.ActionGroups;
+import com.exactprosystems.jf.actions.DefaultValuePool;
 import com.exactprosystems.jf.api.app.AppConnection;
 import com.exactprosystems.jf.api.app.IApplication;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
@@ -47,30 +48,21 @@ public class ApplicationResize extends AbstractAction
 			+ " as {{@ApplicationStart@}}, {{@ApplicationConnectTo@}}." )
 	protected AppConnection	connection	= null;
 
-	@ActionFieldAttribute(name = heightName, mandatory = false, description = "The window height is changed to the specified height." )
+	@ActionFieldAttribute(name = heightName, mandatory = false, def = DefaultValuePool.Null, description = "The window height is changed to the specified height." )
 	protected Integer height;
 
-	@ActionFieldAttribute(name = widthName, mandatory = false, description = "The window width is changed to the specified width." )
+	@ActionFieldAttribute(name = widthName, mandatory = false, def = DefaultValuePool.Null, description = "The window width is changed to the specified width." )
 	protected Integer width;
 
-	@ActionFieldAttribute(name = minimizeName, mandatory = false, description = "If the parameter value is true, it sets the minimum size of the window." )
+	@ActionFieldAttribute(name = minimizeName, mandatory = false, def = DefaultValuePool.Null, description = "If the parameter value is true, it sets the minimum size of the window." )
 	protected Boolean minimize;
 
-	@ActionFieldAttribute(name = maximizeName, mandatory = false, description = "If the parameter value is true, it sets the maximum size of the window." )
+	@ActionFieldAttribute(name = maximizeName, mandatory = false, def = DefaultValuePool.Null, description = "If the parameter value is true, it sets the maximum size of the window." )
 	protected Boolean maximize;
 
-	@ActionFieldAttribute(name = normalName, mandatory = false, description = "If the parameter value is true, it sets normal size of the window.")
+	@ActionFieldAttribute(name = normalName, mandatory = false, def = DefaultValuePool.Null, description = "If the parameter value is true, it sets normal size of the window.")
 	protected Boolean normal;
 
-	@Override
-	public void initDefaultValues() 
-	{
-		this.height 	= null;
-		this.width		= null;
-		this.minimize	= null;
-		this.maximize	= null;
-	}
-	
 	@Override
 	public void doRealAction(Context context, ReportBuilder report, Parameters parameters, AbstractEvaluator evaluator) throws Exception 
 	{

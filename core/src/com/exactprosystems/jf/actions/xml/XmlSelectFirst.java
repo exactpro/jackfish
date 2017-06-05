@@ -63,19 +63,15 @@ public class XmlSelectFirst extends AbstractAction
 
 
 	@ActionFieldAttribute(name = xmlName, mandatory = true, description = "An Xml structure in which an operation needs to be done.")
-	protected Xml 	xml 	= null;
+	protected Xml 	xml;
 
 
 	@ActionFieldAttribute(name = nodeNameName, mandatory = true, description = "Insert the selection result into assigned tag.")
-	protected String 	nodeName 	= null;
+	protected String 	nodeName;
 
 
 	@ActionFieldAttribute(name = xpathName, mandatory = true, description = "The Xpath, the path to the element.")
-	protected String 	xpath 	= null;
-
-	public XmlSelectFirst()
-	{
-	}
+	protected String 	xpath;
 
 	@Override
 	protected HelpKind howHelpWithParameterDerived(Context context,	Parameters parameters, String fieldName) throws Exception
@@ -88,12 +84,5 @@ public class XmlSelectFirst extends AbstractAction
 	{
 		super.setResult(xml.createOneByXpath(this.nodeName,this.xpath));
 	}
-
-	@Override
-	public void initDefaultValues() {
-		// TODO Auto-generated method stub
-		
-	}
-
 }
 

@@ -64,10 +64,4 @@ public class TableCreate extends AbstractAction
 		
 		super.setResult(new Table(headers, evaluator));
 	}
-
-	@Override
-	public void initDefaultValues() {
-		// TODO Auto-generated method stub
-		
-	}
 }

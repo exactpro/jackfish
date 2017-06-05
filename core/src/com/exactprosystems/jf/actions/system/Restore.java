@@ -41,15 +41,9 @@ public class Restore extends AbstractAction
 	@ActionFieldAttribute(name = nameName, mandatory = true, description = "The name of the object which value will be restored.")
 	protected String name = null;
 
-	@ActionFieldAttribute(name = asVarName, mandatory = false, description = "the name of the variable that will be "
+	@ActionFieldAttribute(name = asVarName, mandatory = false, def = DefaultValuePool.Null, description = "the name of the variable that will be "
 			+ "given the value of the restored object. A variable will be global if an action is tagged “G”, otherwise, variable will be local.")
 	protected String asVar;
-
-	@Override
-	public void initDefaultValues() 
-	{
-		asVar = null;
-	}
 	
 	@Override
 	protected HelpKind howHelpWithParameterDerived(Context context, Parameters parameters, String fieldName) throws Exception

@@ -12,6 +12,7 @@ import com.exactprosystems.jf.actions.AbstractAction;
 import com.exactprosystems.jf.actions.ActionAttribute;
 import com.exactprosystems.jf.actions.ActionFieldAttribute;
 import com.exactprosystems.jf.actions.ActionGroups;
+import com.exactprosystems.jf.actions.DefaultValuePool;
 import com.exactprosystems.jf.api.client.MapMessage;
 import com.exactprosystems.jf.api.error.ErrorKind;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
@@ -47,17 +48,8 @@ public class MessageCompareTwo extends AbstractAction
 	@ActionFieldAttribute(name = expectedName, mandatory = true, description = "MapMessage which should be compared with.")
 	protected MapMessage expected = null;
 
-	@ActionFieldAttribute(name = excludeName, mandatory = false, description = "An array of column names which should be excluded from comparison.")
+	@ActionFieldAttribute(name = excludeName, mandatory = false, def = DefaultValuePool.Null, description = "An array of column names which should be excluded from comparison.")
 	protected String[] exclude;
-	
-	public MessageCompareTwo()
-	{
-	}
-
-	@Override
-	public void initDefaultValues() {
-		exclude = null;
-	}
 	
 	@Override
 	public void doRealAction(Context context, ReportBuilder report, Parameters parameters, AbstractEvaluator evaluator) throws Exception

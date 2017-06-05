@@ -44,10 +44,6 @@ public class XmlSaveToFile extends AbstractAction
 			+ "already contains a file then it will be replaced.")
 	protected String 	fileName 	= null;
 
-	public XmlSaveToFile()
-	{
-	}
-	
 	@Override
 	protected HelpKind howHelpWithParameterDerived(Context context,	Parameters parameters, String fieldName) throws Exception
 	{
@@ -58,11 +54,5 @@ public class XmlSaveToFile extends AbstractAction
 	public void doRealAction(Context context, ReportBuilder report, Parameters parameters, AbstractEvaluator evaluator) throws Exception
 	{
 		super.setResult(this.xml.save(this.fileName));
-	}
-
-	@Override
-	public void initDefaultValues() {
-		// TODO Auto-generated method stub
-		
 	}
 }

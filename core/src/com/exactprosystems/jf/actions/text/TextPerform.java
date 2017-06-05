@@ -57,10 +57,6 @@ public class TextPerform extends AbstractAction
 	@ActionFieldAttribute(name = textName, mandatory = true, description = "Object {{$Text$}}, with which the operation is required to perform.")
 	protected Text 	text 	= null;
 
-	public TextPerform()
-	{
-	}
-
 	@Override
 	public void doRealAction(Context context, ReportBuilder report, Parameters parameters, AbstractEvaluator evaluator) throws Exception
 	{
@@ -68,12 +64,5 @@ public class TextPerform extends AbstractAction
 		
 		super.setResult(result);
 	}
-
-	@Override
-	public void initDefaultValues() {
-		// TODO Auto-generated method stub
-		
-	}
-
 }
 

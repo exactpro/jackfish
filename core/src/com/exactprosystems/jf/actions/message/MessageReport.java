@@ -44,25 +44,20 @@ public class MessageReport extends AbstractAction
     public final static String titleName          = "Title";
     public final static String toReportName       = "ToReport";
 
-	@ActionFieldAttribute(name=toReportName, mandatory = false, description = 
-            "This parameter is used for directing the output from the given object to the external report "
-          + "created by the {{$ReportStart$}} action.")
-	protected ReportBuilder toReport;
-
 	@ActionFieldAttribute(name = messageName, mandatory = true, description = "Object {{$MapMessage$}}, which is required to output.")
 	protected MapMessage 	message 	= null;
-
-	@ActionFieldAttribute(name = beforeTestCaseName, mandatory = false, description = "It accepts id test case before " +
-			"which the text will be displayed in the report.")
-	protected String 	beforeTestCase 	= null;
 
 	@ActionFieldAttribute(name = titleName, mandatory = true, description = "The title of the text.")
 	protected String 	title 	= null;
 
-	
-	public MessageReport()
-	{
-	}
+    @ActionFieldAttribute(name=toReportName, mandatory = false, def = DefaultValuePool.Null, description = 
+            "This parameter is used for directing the output from the given object to the external report "
+          + "created by the {{$ReportStart$}} action.")
+    protected ReportBuilder toReport;
+
+    @ActionFieldAttribute(name = beforeTestCaseName, mandatory = false, def = DefaultValuePool.Null, description = "It accepts id test case before " +
+            "which the text will be displayed in the report.")
+    protected String    beforeTestCase  = null;
 
     @Override
     protected HelpKind howHelpWithParameterDerived(Context context, Parameters parameters, String fieldName) throws Exception
@@ -87,13 +82,6 @@ public class MessageReport extends AbstractAction
             default:
         }
     }
-
-    @Override
-	public void initDefaultValues() 
-	{
-		this.beforeTestCase = null;
-		this.toReport = null;
-	}
 
     @Override
     public void doRealAction(Context context, ReportBuilder report, Parameters parameters, AbstractEvaluator evaluator)

@@ -42,28 +42,16 @@ public class Report extends AbstractAction
     public final static String strName            = "Str";
     public final static String toReportName       = "ToReport";
 
-	@ActionFieldAttribute(name=toReportName, mandatory = false, description = 
+	@ActionFieldAttribute(name=toReportName, mandatory = false, def = DefaultValuePool.Null, description = 
             "This parameter is used for directing the output from the given object to the external report "
           + "created by the {{@ReportStart@}} action.")
 	protected ReportBuilder toReport;
 
-	@ActionFieldAttribute(name = beforeTestCaseName, mandatory = false, description = "Allows to output a table at the top of the report.")
+	@ActionFieldAttribute(name = beforeTestCaseName, mandatory = false, def = DefaultValuePool.Null, description = "Allows to output a table at the top of the report.")
 	protected String 	beforeTestCase 	= null;
 
-	@ActionFieldAttribute(name = strName, mandatory = false, description = "Output row.")
+	@ActionFieldAttribute(name = strName, mandatory = false, def = DefaultValuePool.EmptyString, description = "Output row.")
 	protected String message; 
-	
-	public Report()
-	{
-	}
-	
-	@Override
-	public void initDefaultValues() 
-	{
-		this.message 		= "";
-		this.beforeTestCase = null;
-		this.toReport = null;
-	}
 	
 	@Override
 	public void doRealAction(Context context, ReportBuilder report, Parameters parameters, AbstractEvaluator evaluator) throws Exception

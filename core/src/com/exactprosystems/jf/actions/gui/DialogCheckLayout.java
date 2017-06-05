@@ -62,27 +62,15 @@ public class DialogCheckLayout extends AbstractAction
 	@ActionFieldAttribute(name = dialogName, mandatory = true, description = "A name of the dialog.")
 	protected String			dialog			= null;
 
-	@ActionFieldAttribute(name = doNotOpenName, mandatory = false, description = "Do not open a new dialog.")
+	@ActionFieldAttribute(name = doNotOpenName, mandatory = false, def = DefaultValuePool.False, description = "Do not open a new dialog.")
 	protected Boolean			doNotOpen;
 
-	@ActionFieldAttribute(name = doNotCloseName, mandatory = false, description = "Do not close a dialog.")
+	@ActionFieldAttribute(name = doNotCloseName, mandatory = false, def = DefaultValuePool.False, description = "Do not close a dialog.")
 	protected Boolean			doNotClose;
 
-	@ActionFieldAttribute(name = fieldsName, mandatory = false, description = "Map of control name : control operation.")
+	@ActionFieldAttribute(name = fieldsName, mandatory = false, def = DefaultValuePool.Null, description = "Map of control name : control operation.")
 	protected Map<String, Object> fields;
 
-
-	public DialogCheckLayout()
-	{
-	}
-
-	@Override
-	public void initDefaultValues() 
-	{
-		doNotOpen		= false;
-		doNotClose		= false;
-	}
-	
 	@Override
 	protected HelpKind howHelpWithParameterDerived(Context context, Parameters parameters, String fieldName)
 	{

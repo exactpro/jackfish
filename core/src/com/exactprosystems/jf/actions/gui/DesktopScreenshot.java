@@ -35,18 +35,9 @@ public class DesktopScreenshot extends AbstractAction
 {
 	public final static String	descriptionName	= "Description";
 	
-	@ActionFieldAttribute(name = descriptionName, mandatory = false, description = "The description of the image which will be displayed in tooltip.")
+	@ActionFieldAttribute(name = descriptionName, mandatory = false, def = DefaultValuePool.EmptyString, description = "The description of the image which will be displayed in tooltip.")
 	protected String			description;
 
-	public DesktopScreenshot()
-	{
-	}
-
-	@Override
-	public void initDefaultValues() 
-	{
-	}
-	
 	@Override
 	public void doRealAction(Context context, ReportBuilder report, Parameters parameters, AbstractEvaluator evaluator) throws Exception 
 	{

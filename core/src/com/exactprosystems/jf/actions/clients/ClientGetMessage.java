@@ -14,6 +14,7 @@ import com.exactprosystems.jf.actions.AbstractAction;
 import com.exactprosystems.jf.actions.ActionAttribute;
 import com.exactprosystems.jf.actions.ActionFieldAttribute;
 import com.exactprosystems.jf.actions.ActionGroups;
+import com.exactprosystems.jf.actions.DefaultValuePool;
 import com.exactprosystems.jf.actions.ReadableValue;
 import com.exactprosystems.jf.api.client.ClientConnection;
 import com.exactprosystems.jf.api.client.ClientHelper;
@@ -63,13 +64,13 @@ public class ClientGetMessage extends AbstractAction
 	@ActionFieldAttribute(name = messageTypeName, mandatory = true, description = "The type of the message. Use * for any type of messages." )
 	protected String	messageType	= null;
 
-	@ActionFieldAttribute(name = conditionsName, mandatory = false, description = "The conditions upon which the message will be checked.")
+	@ActionFieldAttribute(name = conditionsName, mandatory = false, def = DefaultValuePool.Null, description = "The conditions upon which the message will be checked.")
 	protected Condition[] conditions;
 
-	@ActionFieldAttribute(name = timeoutName, mandatory = false, description = "The time which is given to find the acceptable message.")
+	@ActionFieldAttribute(name = timeoutName, mandatory = false, def = DefaultValuePool.Int20000, description = "The time which is given to find the acceptable message.")
 	protected Integer timeout;
 	
-	@ActionFieldAttribute(name = removeName, mandatory = false, description = "Delete the found message.")
+	@ActionFieldAttribute(name = removeName, mandatory = false, def = DefaultValuePool.True, description = "Delete the found message.")
 	protected Boolean remove;
 
 	@Override
@@ -108,14 +109,6 @@ public class ClientGetMessage extends AbstractAction
 				Helper.messageValues(list, context, this.owner.getMatrix(), parameters, null, connectionName, messageTypeName, parameterToFill);
 				break;
 		}
-	}
-	
-	@Override
-	public void initDefaultValues() 
-	{
-		this.conditions = null;
-		this.timeout = 20000;
-		this.remove = true;
 	}
 	
 	@Override

@@ -4,6 +4,7 @@ import com.exactprosystems.jf.actions.AbstractAction;
 import com.exactprosystems.jf.actions.ActionAttribute;
 import com.exactprosystems.jf.actions.ActionFieldAttribute;
 import com.exactprosystems.jf.actions.ActionGroups;
+import com.exactprosystems.jf.actions.DefaultValuePool;
 import com.exactprosystems.jf.api.error.ErrorKind;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.report.ReportBuilder;
@@ -52,31 +53,19 @@ public class TableReplace extends AbstractAction
 	@ActionFieldAttribute(name = replaceName, mandatory = true, description = "Value which replaces.")
 	protected Object 	replace = null;
 	
-	@ActionFieldAttribute(name = searchName, mandatory = false, description = "If a cell value or a part of a cell is "
+	@ActionFieldAttribute(name = searchName, mandatory = false, def = DefaultValuePool.Null, description = "If a cell value or a part of a cell is "
 			+ "equal to this value, cell will be replaced. It is ignored if you set Regexp. ")
 	protected Object 	search;
 
-	@ActionFieldAttribute(name = regexpName, mandatory = false, description = "If a cell value complies with this"
+	@ActionFieldAttribute(name = regexpName, mandatory = false, def = DefaultValuePool.Null, description = "If a cell value complies with this"
 			+ " regular expression it will be replaced.")
 	protected String 	regexp;
 
-	@ActionFieldAttribute(name = matchCellname, mandatory = false, description = "if the value is true, the cell will be"
+	@ActionFieldAttribute(name = matchCellname, mandatory = false, def = DefaultValuePool.True, description = "if the value is true, the cell will be"
 			+ " replaced, otherwise only the one that complies. It is used only when setting Search parameter and is "
 			+ "ignored when setting Regexp.")
 	protected Boolean	matchCell;
 
-	public TableReplace()
-	{
-	}
-	
-	@Override
-	public void initDefaultValues() 
-	{
-		search 	= null;
-		regexp 	= null;
-		matchCell = true;
-	}
-	
 	@Override
 	public void doRealAction(Context context, ReportBuilder report, Parameters parameters, AbstractEvaluator evaluator) throws Exception
 	{

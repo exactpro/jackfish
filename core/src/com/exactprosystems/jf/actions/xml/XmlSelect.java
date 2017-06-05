@@ -72,10 +72,6 @@ public class XmlSelect extends AbstractAction
 	@ActionFieldAttribute(name = xpathName, mandatory = true, description = "The Xpath, the path to the element.")
 	protected String 	xpath 	= null;
 
-	public XmlSelect()
-	{
-	}
-
 	@Override
 	protected HelpKind howHelpWithParameterDerived(Context context,	Parameters parameters, String fieldName) throws Exception
 	{
@@ -87,12 +83,5 @@ public class XmlSelect extends AbstractAction
 	{
 		super.setResult(this.xml.createListByXpath(this.nodeName, this.xpath));
 	}
-
-	@Override
-	public void initDefaultValues() {
-		// TODO Auto-generated method stub
-		
-	}
-
 }
 

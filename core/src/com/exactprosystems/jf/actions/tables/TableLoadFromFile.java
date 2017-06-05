@@ -14,6 +14,7 @@ import com.exactprosystems.jf.actions.AbstractAction;
 import com.exactprosystems.jf.actions.ActionAttribute;
 import com.exactprosystems.jf.actions.ActionFieldAttribute;
 import com.exactprosystems.jf.actions.ActionGroups;
+import com.exactprosystems.jf.actions.DefaultValuePool;
 import com.exactprosystems.jf.actions.ReadableValue;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.report.ReportBuilder;
@@ -46,15 +47,9 @@ public class TableLoadFromFile extends AbstractAction
 	@ActionFieldAttribute(name = fileName, mandatory = true, description = "Path to file")
 	protected String 	file 	= null;
 
-	@ActionFieldAttribute(name = delimiterName, mandatory = false, description = "Any symbol, which divides values in"
+	@ActionFieldAttribute(name = delimiterName, mandatory = false, def = DefaultValuePool.Semicolon, description = "Any symbol, which divides values in"
 			+ " file. By default ',' . is accepted.")
 	protected String	delimiter;
-
-	@Override
-	public void initDefaultValues() 
-	{
-		delimiter 	= ";";
-	}
 	
 	@Override
 	protected HelpKind howHelpWithParameterDerived(Context context, Parameters parameters, String fieldName) throws Exception

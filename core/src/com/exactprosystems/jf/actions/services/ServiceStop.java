@@ -42,10 +42,6 @@ public class ServiceStop extends AbstractAction
 	@ActionFieldAttribute(name = connectionName, mandatory = true, description = "A connection with a service is specified, that needed to be closed." )
 	protected ServiceConnection	connection	= null;
 
-	public ServiceStop()
-	{
-	}
-
 	@Override
 	public void doRealAction(Context context, ReportBuilder report, Parameters parameters, AbstractEvaluator evaluator) throws Exception
 	{
@@ -65,10 +61,4 @@ public class ServiceStop extends AbstractAction
 			super.setError(e.getMessage(), ErrorKind.SERVICE_ERROR);
 		}
 	}
-
-	@Override
-	public void initDefaultValues() {
-
-	}
-
 }

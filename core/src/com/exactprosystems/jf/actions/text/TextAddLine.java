@@ -41,20 +41,11 @@ public class TextAddLine extends AbstractAction {
     @ActionFieldAttribute(name = lineName, mandatory = true, description = "The line that should be added.")
     protected String line = null;
 
-    public TextAddLine() {
-    }
-
     @Override
     public void doRealAction(Context context, ReportBuilder report, Parameters parameters, AbstractEvaluator evaluator) throws Exception {
         text.add(this.line);
 
         super.setResult(null);
-    }
-
-    @Override
-    public void initDefaultValues() {
-        // TODO Auto-generated method stub
-
     }
 }
 

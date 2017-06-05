@@ -12,6 +12,7 @@ import com.exactprosystems.jf.actions.AbstractAction;
 import com.exactprosystems.jf.actions.ActionAttribute;
 import com.exactprosystems.jf.actions.ActionFieldAttribute;
 import com.exactprosystems.jf.actions.ActionGroups;
+import com.exactprosystems.jf.actions.DefaultValuePool;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.report.ReportBuilder;
 import com.exactprosystems.jf.documents.config.Context;
@@ -56,19 +57,9 @@ public class XmlSetNode extends AbstractAction
 	@ActionFieldAttribute(name = xmlName, mandatory = true, description = "A type of Xml object to which an action needs to be applied.")
 	protected Xml 	xml 	= null;
 
-	@ActionFieldAttribute(name = textName, mandatory = false, description = "Content which has to be transferred to the element.")
+	@ActionFieldAttribute(name = textName, mandatory = false, def = DefaultValuePool.Null, description = "Content which has to be transferred to the element.")
 	protected String 	text;
 
-	public XmlSetNode()
-	{
-	}
-	
-	@Override
-	public void initDefaultValues() 
-	{
-		text 	= null;
-	}
-	
 	@Override
 	public void doRealAction(Context context, ReportBuilder report, Parameters parameters, AbstractEvaluator evaluator) throws Exception
 	{

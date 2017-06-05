@@ -43,10 +43,6 @@ public class ClientStop extends AbstractAction
 	@ActionFieldAttribute(name = connectionName, mandatory = true, description = "The connection with the client, which is derived from the action ClientLoad." )
 	protected ClientConnection	connection	= null;
 
-	public ClientStop()
-	{
-	}
-	
 	@Override
 	public void doRealAction(Context context, ReportBuilder report, Parameters parameters, AbstractEvaluator evaluator) throws Exception
 	{
@@ -56,11 +52,4 @@ public class ClientStop extends AbstractAction
 		super.setResult(null);
 
 	}
-
-	@Override
-	public void initDefaultValues() {
-		// TODO Auto-generated method stub
-		
-	}
-
 }

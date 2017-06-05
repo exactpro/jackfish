@@ -61,14 +61,10 @@ public class XmlFindFirst extends AbstractAction
 	public final static String xpathName = "Xpath";
 
 	@ActionFieldAttribute(name = xmlName, mandatory = true, description = "An Xml structure in which the element needs to be detected.")
-	protected Xml 	xml 	= null;
+	protected Xml 	xml;
 
 	@ActionFieldAttribute(name = xpathName, mandatory = true, description = "The Xpath, the path to the element.")
-	protected String 	xpath 	= null;
-
-	public XmlFindFirst()
-	{
-	}
+	protected String 	xpath;
 
 	@Override
 	protected HelpKind howHelpWithParameterDerived(Context context, Parameters parameters, String fieldName) throws Exception
@@ -81,12 +77,5 @@ public class XmlFindFirst extends AbstractAction
 	{
 		super.setResult(this.xml.findOneByXpath(this.xpath));
 	}
-
-	@Override
-	public void initDefaultValues() {
-		// TODO Auto-generated method stub
-		
-	}
-
 }
 

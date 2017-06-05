@@ -60,10 +60,6 @@ public class TableEdit extends AbstractAction
 
     @ActionFieldAttribute(name = tableName, mandatory = true, description = "A table which is needed to to be edited.")
     protected Table     table   = null;
-
-    public TableEdit()
-	{
-	}
 	
     @Override
     protected HelpKind howHelpWithParameterDerived(Context context, Parameters parameters, String fieldName) throws Exception
@@ -95,12 +91,6 @@ public class TableEdit extends AbstractAction
                 break;
         }
     }
-    
-
-	@Override
-	public void initDefaultValues() 
-	{
-	}
 	
 	@Override
 	public void doRealAction(Context context, ReportBuilder report, Parameters parameters, AbstractEvaluator evaluator) throws Exception

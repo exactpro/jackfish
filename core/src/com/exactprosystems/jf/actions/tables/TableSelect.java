@@ -76,36 +76,12 @@ public class TableSelect extends AbstractAction
 	public final static String tableName = "Table";
 
 	@ActionFieldAttribute(name = tableName, mandatory = true, description = "The table from which rows are selected")
-	protected Table 	table 	= null;
-
-	public TableSelect()
-	{
-	}
-	
-	@Override
-	public void initDefaultValues() 
-	{
-	}
+	protected Table 	table;
 
 	@Override
 	public void doRealAction(Context context, ReportBuilder report, Parameters parameters, AbstractEvaluator evaluator) throws Exception
 	{
 		Parameters extra = parameters.select(TypeMandatory.Extra);
-
-//		for (String name : extra.keySet())
-//		{
-//			if (name.isEmpty())
-//			{
-//				super.setError("The column name does not have to contain an empty value", ErrorKind.EMPTY_PARAMETER);
-//				return;
-//			}
-//
-//			if (!this.table.columnIsPresent(name))
-//			{
-//				super.setError("The header " + name + " does not exist in the table", ErrorKind.WRONG_PARAMETERS);
-//				return;
-//			}
-//		}
 
 		Condition[] conditions = Condition.convertToCondition(extra);
 		Table newTable = this.table.select(conditions);

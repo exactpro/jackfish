@@ -20,4 +20,5 @@ public @interface ActionFieldAttribute
 	String name();
 	String description();
 	boolean mandatory();
+	DefaultValuePool def() default DefaultValuePool.Null;
 }

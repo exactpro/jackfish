@@ -21,10 +21,6 @@ import javax.xml.parsers.DocumentBuilderFactory;
 )
 public class XmlCreate extends AbstractAction
 {
-    public XmlCreate()
-    {
-    }
-
     @Override
     public void doRealAction(Context context, ReportBuilder report, Parameters parameters, AbstractEvaluator evaluator) throws Exception
     {
@@ -32,11 +28,5 @@ public class XmlCreate extends AbstractAction
         DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
         Document document = docBuilder.newDocument();
         super.setResult(new Xml(document));
-    }
-
-    @Override
-    public void initDefaultValues() {
-        // TODO Auto-generated method stub
-
     }
 }

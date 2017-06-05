@@ -268,7 +268,7 @@ public abstract class AbstractAction implements Cloneable
     	return res;
 	}
 
-	public void correctParametersType(Parameters parameters)
+	public final void correctParametersType(Parameters parameters)
 	{
         Map<String, FieldAndAttributes> fields = getFieldsAttributes();
         for(Parameter parameter : parameters)
@@ -288,10 +288,27 @@ public abstract class AbstractAction implements Cloneable
         }
 	}
 
-	public void initDefaultValues()
-	{
-	}
-    
+	public final void initDefaultValues()
+    {
+        try
+        {
+            Map<String, FieldAndAttributes> attributes = getFieldsAttributes();
+            for(FieldAndAttributes attr : attributes.values())
+            {
+                if (!attr.attribute.mandatory())
+                {
+                    attr.field.setAccessible(true);
+                    attr.field.set(this, attr.attribute.def().getValue());
+                }
+            }
+        }
+        catch (Exception e)
+        {
+            logger.error(e.getMessage(), e);
+        }
+    }
+	    
+
     //==========================================================================================================================
     // Protected members should be overridden
     //==========================================================================================================================

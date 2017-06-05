@@ -73,15 +73,6 @@ public class TableUnion extends AbstractAction
 	@ActionFieldAttribute(name = unitedTableName, mandatory = true, description = "Table with the lines that will be added to the main one")
 	protected Table unitedTable = null;
 
-	public TableUnion()
-	{
-	}
-
-	@Override
-	public void initDefaultValues()
-	{
-	}
-
 	@Override
 	public void doRealAction(Context context, ReportBuilder report,	Parameters parameters, AbstractEvaluator evaluator) throws Exception
 	{

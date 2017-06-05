@@ -16,6 +16,7 @@ import com.exactprosystems.jf.actions.AbstractAction;
 import com.exactprosystems.jf.actions.ActionAttribute;
 import com.exactprosystems.jf.actions.ActionFieldAttribute;
 import com.exactprosystems.jf.actions.ActionGroups;
+import com.exactprosystems.jf.actions.DefaultValuePool;
 import com.exactprosystems.jf.actions.ReadableValue;
 import com.exactprosystems.jf.api.app.AppConnection;
 import com.exactprosystems.jf.api.app.IApplication;
@@ -57,7 +58,7 @@ public class ApplicationSwitchTo extends AbstractAction
 			+ " as {{@ApplicationStart@}}, {{@ApplicationConnectTo@}}.")
 	protected AppConnection	connection	= null;
 
-	@ActionFieldAttribute(name = softConditionName, mandatory = false, description = "If the parameter value is true,"
+	@ActionFieldAttribute(name = softConditionName, mandatory = false, def = DefaultValuePool.True, description = "If the parameter value is true,"
 			+ " the string in Title will be compared to the window title bar using the “contains” principle."
 			+ " The window title bar is allowed to have the value of Title field and not to be the same.")
 	protected Boolean 				softCondition;
@@ -82,17 +83,13 @@ public class ApplicationSwitchTo extends AbstractAction
     }
 
 	@Override
-	public void initDefaultValues() 
-	{
-		this.softCondition	= true;
-	}
-	
-	@Override
 	public void doRealAction(Context context, ReportBuilder report, Parameters parameters, AbstractEvaluator evaluator) throws Exception 
 	{
 		if (this.softCondition == null)
 		{
-			this.softCondition	= true;
+			super.setError(softConditionName + " is null", ErrorKind.WRONG_PARAMETERS);
+			return;
+			
 		}
 	    Map<String, String> map = new HashMap<>();
 	    parameters.select(TypeMandatory.Extra).forEach((k,v) -> map.put(k, String.valueOf(v)));

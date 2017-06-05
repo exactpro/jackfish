@@ -47,10 +47,4 @@ public class Store extends AbstractAction
 		
 		super.setResult(null);
 	}
-
-	@Override
-	public void initDefaultValues() {
-		// TODO Auto-generated method stub
-		
-	}
 }

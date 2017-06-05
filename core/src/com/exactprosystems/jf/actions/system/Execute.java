@@ -12,6 +12,7 @@ import com.exactprosystems.jf.actions.AbstractAction;
 import com.exactprosystems.jf.actions.ActionAttribute;
 import com.exactprosystems.jf.actions.ActionFieldAttribute;
 import com.exactprosystems.jf.actions.ActionGroups;
+import com.exactprosystems.jf.actions.DefaultValuePool;
 import com.exactprosystems.jf.actions.ExecuteResult;
 import com.exactprosystems.jf.actions.ReadableValue;
 import com.exactprosystems.jf.api.common.ProcessTools;
@@ -53,20 +54,13 @@ public class Execute extends AbstractAction
 	@ActionFieldAttribute(name = commandName, mandatory = true, description = "A system command that will be executed.")
 	protected String command 	= "";
 
-	@ActionFieldAttribute(name = waitName, mandatory = false, description = "waiting for the command to terminate. "
+	@ActionFieldAttribute(name = waitName, mandatory = false, def = DefaultValuePool.True, description = "waiting for the command to terminate. "
 			+ "If true - execution of the matrix is stopped until the command is executed. By default – true.")
 	protected Boolean wait; 
 	
-	@ActionFieldAttribute(name = workDirName, mandatory = false, description = "A task of the working directory for the"
+	@ActionFieldAttribute(name = workDirName, mandatory = false, def = DefaultValuePool.Null, description = "A task of the working directory for the"
 			+ " current command.")
 	protected String workDir;
-
-	@Override
-	public void initDefaultValues() 
-	{
-		wait 		= true; 
-		workDir		= null;
-	}
 	
 	@Override
 	protected HelpKind howHelpWithParameterDerived(Context context, Parameters parameters, String fieldName)

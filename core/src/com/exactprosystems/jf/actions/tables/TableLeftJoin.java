@@ -86,15 +86,6 @@ public class TableLeftJoin extends AbstractAction
 	@ActionFieldAttribute(name = conditionName, mandatory = true, description = "Condition under which row sample is made.")
 	protected String condition = null;
 
-	public TableLeftJoin()
-	{
-	}
-
-	@Override
-	public void initDefaultValues()
-	{
-	}
-
 	@Override
 	public void doRealAction(Context context, ReportBuilder report, Parameters parameters, AbstractEvaluator evaluator) throws Exception
 	{

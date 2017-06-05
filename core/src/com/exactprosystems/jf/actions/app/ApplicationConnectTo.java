@@ -1,4 +1,5 @@
 ////////////////////////////////////////////////////////////////////////////////
+
 //  Copyright (c) 2009-2015, Exactpro Systems, LLC
 //  Quality Assurance & Related Development for Innovative Trading Systems.
 //  All rights reserved.
@@ -12,6 +13,7 @@ import com.exactprosystems.jf.actions.AbstractAction;
 import com.exactprosystems.jf.actions.ActionAttribute;
 import com.exactprosystems.jf.actions.ActionFieldAttribute;
 import com.exactprosystems.jf.actions.ActionGroups;
+import com.exactprosystems.jf.actions.DefaultValuePool;
 import com.exactprosystems.jf.actions.ReadableValue;
 import com.exactprosystems.jf.actions.gui.*;
 import com.exactprosystems.jf.api.app.AppConnection;
@@ -68,7 +70,7 @@ public class ApplicationConnectTo extends AbstractAction
 			+ " the dictionary.")
 	protected String 		id	= null;
 
-    @ActionFieldAttribute(name = connectionName, mandatory = false, description = "A special object which identifies the"
+    @ActionFieldAttribute(name = connectionName, mandatory = false, def = DefaultValuePool.Null, description = "A special object which identifies the"
             + " started application session. In case this parameter is not empty the reconnect is performed. "
             + " It is the output value of such actions as {{@ApplicationStart@}}.")
     protected AppConnection connection = null;
@@ -116,12 +118,6 @@ public class ApplicationConnectTo extends AbstractAction
 		}
 	}
 
-	@Override
-	public void initDefaultValues()
-	{
-		this.connection = null;
-	}
-	
     @Override
 	public void doRealAction(Context context, ReportBuilder report, Parameters parameters, AbstractEvaluator evaluator) throws Exception 
 	{

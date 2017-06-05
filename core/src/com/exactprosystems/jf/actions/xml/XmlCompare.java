@@ -51,12 +51,8 @@ public class XmlCompare extends AbstractAction
 	@ActionFieldAttribute(name = expectedName, mandatory = true, description = "An Xml structure is the one that comparison has to be done to.")
 	protected Xml expected = null;
 
-	@ActionFieldAttribute(name = ignoreNodeOrderName, mandatory = false, description = "Ignore node order.")
+	@ActionFieldAttribute(name = ignoreNodeOrderName, mandatory = false, def = DefaultValuePool.False, description = "Ignore node order.")
 	protected Boolean ignoreNodesOrder;
-
-	public XmlCompare()
-	{
-	}
 
 	@Override
 	protected HelpKind howHelpWithParameterDerived(Context context, Parameters parameters, String fieldName) throws Exception
@@ -84,11 +80,5 @@ public class XmlCompare extends AbstractAction
 	public void doRealAction(Context context, ReportBuilder report, Parameters parameters, AbstractEvaluator evaluator) throws Exception
 	{
 		super.setResult(this.actual.compareTo(this.expected, this.ignoreNodesOrder));
-	}
-
-	@Override
-	public void initDefaultValues()
-	{
-		this.ignoreNodesOrder = false;
 	}
 }

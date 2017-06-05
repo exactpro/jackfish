@@ -12,6 +12,7 @@ import com.exactprosystems.jf.actions.AbstractAction;
 import com.exactprosystems.jf.actions.ActionAttribute;
 import com.exactprosystems.jf.actions.ActionFieldAttribute;
 import com.exactprosystems.jf.actions.ActionGroups;
+import com.exactprosystems.jf.actions.DefaultValuePool;
 import com.exactprosystems.jf.actions.ReadableValue;
 import com.exactprosystems.jf.api.client.*;
 import com.exactprosystems.jf.api.common.ParametersKind;
@@ -56,12 +57,8 @@ public class ClientSendMessage extends AbstractAction
 	@ActionFieldAttribute(name = messageTypeName, mandatory = true, description = "The type of the created message." )
 	protected String	messageType	= null;
 
-	@ActionFieldAttribute(name = checkName, mandatory = false, description = "Checks the validation before the message sending. As a default true.")
+	@ActionFieldAttribute(name = checkName, mandatory = false, def = DefaultValuePool.True, description = "Checks the validation before the message sending. As a default true.")
 	protected Boolean	check;
-
-	public ClientSendMessage()
-	{
-	}
 
 	@Override
 	protected void helpToAddParametersDerived(List<ReadableValue> list, Context context, Parameters parameters) throws Exception
@@ -104,12 +101,6 @@ public class ClientSendMessage extends AbstractAction
 		}
 	}
 	
-	@Override
-	public void initDefaultValues() 
-	{
-		check	= true;
-	}
-
 	@Override
 	public void doRealAction(Context context, ReportBuilder report, Parameters parameters, AbstractEvaluator evaluator) throws Exception
 	{

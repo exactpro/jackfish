@@ -95,10 +95,4 @@ public class SQLexecute extends AbstractAction
 			}
 		}
 	}
-
-	@Override
-	public void initDefaultValues() 
-	{
-	}
-
 }

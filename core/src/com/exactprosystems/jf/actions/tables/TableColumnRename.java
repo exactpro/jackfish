@@ -41,12 +41,6 @@ public class TableColumnRename extends AbstractAction
 	protected Table table = null;
 
 	@Override
-	public void initDefaultValues()
-	{
-
-	}
-
-	@Override
 	protected void doRealAction(Context context, ReportBuilder report, Parameters parameters, AbstractEvaluator evaluator) throws Exception
 	{
 		Parameters select = parameters.select(TypeMandatory.Extra);

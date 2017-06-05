@@ -52,10 +52,6 @@ public class ReportShow extends AbstractAction
 	@ActionFieldAttribute(name = reportName, mandatory = true, description = "Object of Report type which should be displayed.")
 	protected String 	report 	= null;
 
-	public ReportShow()
-	{
-	}
-	
     @Override
     protected HelpKind howHelpWithParameterDerived(Context context, Parameters parameters, String fieldName) throws Exception
     {
@@ -66,11 +62,6 @@ public class ReportShow extends AbstractAction
         }
         return null;
     }
-	
-	@Override
-	public void initDefaultValues() 
-	{
-	}
 	
 	@Override
 	public void doRealAction(Context context, ReportBuilder report, Parameters parameters, AbstractEvaluator evaluator) throws Exception

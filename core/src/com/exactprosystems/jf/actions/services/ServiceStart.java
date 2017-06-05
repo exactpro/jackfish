@@ -43,10 +43,6 @@ public class ServiceStart extends AbstractAction
 	@ActionFieldAttribute(name = connectionName, mandatory = true, description = "A connection with a service is specified, that should be run. An output object of {{@ServiceLoad@}} action is indicated." )
 	protected ServiceConnection	connection	= null;
 
-	public ServiceStart()
-	{
-	}
-	
 	@Override
 	protected HelpKind howHelpWithParameterDerived(Context context, Parameters parameters, String fieldName) throws Exception
 	{
@@ -103,11 +99,4 @@ public class ServiceStart extends AbstractAction
 			super.setError(e.getMessage(), ErrorKind.SERVICE_ERROR);
 		}
 	}
-
-	@Override
-	public void initDefaultValues() 
-	{
-		
-	}
-
 }

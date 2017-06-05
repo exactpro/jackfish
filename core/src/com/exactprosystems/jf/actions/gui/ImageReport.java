@@ -51,35 +51,22 @@ public class ImageReport extends AbstractAction
 	public final static String	toReportName		= "ToReport";
 	public final static String	asLinkName		= "AsLink";
 
-	@ActionFieldAttribute(name=toReportName, mandatory = false, description = "The Report object which will include the indicated image is specified."
+    @ActionFieldAttribute(name = imageName, mandatory = true, description = "The image to be placed in the report.")
+    protected ImageWrapper      image;
+
+	@ActionFieldAttribute(name=toReportName, mandatory = false, def = DefaultValuePool.Null, description = "The Report object which will include the indicated image is specified."
 			+ "  Report is an  an output value of the ReportStart action.")
 	protected ReportBuilder toReport;
 
-	@ActionFieldAttribute(name = imageName, mandatory = true, description = "The image to be placed in the report.")
-	protected ImageWrapper		image		= null;
+	@ActionFieldAttribute(name = beforeTestCaseName, mandatory = false, def = DefaultValuePool.Null, description = "Enables to output the table on the highest level of the report.")
+	protected String 	beforeTestCase;
 
-	@ActionFieldAttribute(name = beforeTestCaseName, mandatory = false, description = "Enables to output the table on the highest level of the report.")
-	protected String 	beforeTestCase 	= null;
-
-	@ActionFieldAttribute(name = titleName, mandatory = false, description = "The title of the image.")
+	@ActionFieldAttribute(name = titleName, mandatory = false, def = DefaultValuePool.EmptyString, description = "The title of the image.")
 	protected String			title;
 
-	@ActionFieldAttribute(name = asLinkName, mandatory = false, description = "Instead of the image the link to it is generated in the report.")
+	@ActionFieldAttribute(name = asLinkName, mandatory = false, def = DefaultValuePool.False, description = "Instead of the image the link to it is generated in the report.")
 	protected Boolean			asLink;
 
-    public ImageReport()
-	{
-	}
-
-	@Override
-	public void initDefaultValues() 
-	{
-		this.beforeTestCase	= null;
-		this.title			= null;
-		this.toReport = null;
-		this.asLink = false;
-	}
-    
 	@Override
 	public void doRealAction(Context context, ReportBuilder report, Parameters parameters, AbstractEvaluator evaluator) throws Exception 
 	{

@@ -12,6 +12,7 @@ import com.exactprosystems.jf.actions.AbstractAction;
 import com.exactprosystems.jf.actions.ActionAttribute;
 import com.exactprosystems.jf.actions.ActionFieldAttribute;
 import com.exactprosystems.jf.actions.ActionGroups;
+import com.exactprosystems.jf.actions.DefaultValuePool;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.report.ReportBuilder;
 import com.exactprosystems.jf.documents.config.Context;
@@ -34,14 +35,8 @@ public class Print extends AbstractAction
 {
 	public final static String strName = "Str";
 
-	@ActionFieldAttribute(name = strName, mandatory = false, description = "Comments to the output row.")
+	@ActionFieldAttribute(name = strName, mandatory = false, def = DefaultValuePool.EmptyString, description = "Comments to the output row.")
 	protected String message; 
-	
-	@Override
-	public void initDefaultValues() 
-	{
-		message 	= "";
-	}
 	
 	@Override
 	public void doRealAction(Context context, ReportBuilder report, Parameters parameters, AbstractEvaluator evaluator) throws Exception

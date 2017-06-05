@@ -24,6 +24,7 @@ import com.exactprosystems.jf.actions.AbstractAction;
 import com.exactprosystems.jf.actions.ActionAttribute;
 import com.exactprosystems.jf.actions.ActionFieldAttribute;
 import com.exactprosystems.jf.actions.ActionGroups;
+import com.exactprosystems.jf.actions.DefaultValuePool;
 import com.exactprosystems.jf.actions.ReadableValue;
 import com.exactprosystems.jf.api.app.ImageWrapper;
 import com.exactprosystems.jf.api.error.ErrorKind;
@@ -78,15 +79,9 @@ public class ResultTable extends AbstractAction
 			+ " human-readable kind. When indicating false, values that are in the table will be objects  which can be used later.")
 	protected Boolean decorated;
 
-	@ActionFieldAttribute(name = matrixName, mandatory = false, description = "Object MatrixRunner is indicated "
+	@ActionFieldAttribute(name = matrixName, mandatory = false, def = DefaultValuePool.Null, description = "Object MatrixRunner is indicated "
 			+ "(that is an output value of actions {{@MatrixRun@}} and {{@MatrixRunFromText@}}). This action will be used in the summary table.")
 	protected MatrixRunner matrix = null;
-
-	@Override
-	public void initDefaultValues()
-	{
-		this.matrix = null;
-	}
 
 	@Override
 	protected HelpKind howHelpWithParameterDerived(Context context,

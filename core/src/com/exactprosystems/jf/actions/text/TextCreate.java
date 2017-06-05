@@ -50,10 +50,6 @@ public class TextCreate extends AbstractAction
 	@ActionFieldAttribute(name = contentName, mandatory = true, description = "The text which is required to type.")
 	protected String 	content 	= null;
 
-	public TextCreate()
-	{
-	}
-	
 	@Override
 	public void doRealAction(Context context, ReportBuilder report, Parameters parameters, AbstractEvaluator evaluator) throws Exception
 	{
@@ -62,12 +58,6 @@ public class TextCreate extends AbstractAction
 			Text text = new Text(reader);
 			super.setResult(text);
 		}
-	}
-
-	@Override
-	public void initDefaultValues() {
-		// TODO Auto-generated method stub
-		
 	}
 }
 

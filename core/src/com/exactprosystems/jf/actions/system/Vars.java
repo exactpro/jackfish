@@ -37,6 +37,7 @@ import com.exactprosystems.jf.documents.matrix.parser.items.TypeMandatory;
 		seeAlsoClass = {Let.class}
 )
 
+@Deprecated
 public class Vars extends AbstractAction
 {
 
@@ -52,11 +53,5 @@ public class Vars extends AbstractAction
 			evaluator.getLocals().set(parameters.select(TypeMandatory.Extra));
 		}
 		super.setResult(null);
-	}
-
-	@Override
-	public void initDefaultValues() {
-		// TODO Auto-generated method stub
-		
 	}
 }

@@ -47,10 +47,6 @@ public class TextSaveToFile extends AbstractAction
 	@ActionFieldAttribute(name = fileNameName, mandatory = true, description = "A path where to save a file and the file name with an extension.")
 	protected String 	fileName 	= null;
 
-	public TextSaveToFile()
-	{
-	}
-	
 	@Override
 	protected HelpKind howHelpWithParameterDerived(Context context,	Parameters parameters, String fieldName) throws Exception
 	{
@@ -61,11 +57,5 @@ public class TextSaveToFile extends AbstractAction
 	public void doRealAction(Context context, ReportBuilder report, Parameters parameters, AbstractEvaluator evaluator) throws Exception
 	{
 		super.setResult(this.text.save(this.fileName));
-	}
-
-	@Override
-	public void initDefaultValues() {
-		// TODO Auto-generated method stub
-		
 	}
 }

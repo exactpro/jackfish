@@ -12,6 +12,7 @@ import com.exactprosystems.jf.actions.AbstractAction;
 import com.exactprosystems.jf.actions.ActionAttribute;
 import com.exactprosystems.jf.actions.ActionFieldAttribute;
 import com.exactprosystems.jf.actions.ActionGroups;
+import com.exactprosystems.jf.actions.DefaultValuePool;
 import com.exactprosystems.jf.api.app.ImageWrapper;
 import com.exactprosystems.jf.api.error.ErrorKind;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
@@ -50,25 +51,14 @@ public class ImageSave extends AbstractAction
 	public final static String	fileName	= "File";
 	
 	@ActionFieldAttribute(name = imageName, mandatory = true, description = "The object of the Image type which needs to be saved.")
-	protected ImageWrapper		image		= null;
+	protected ImageWrapper		image;
 
-	@ActionFieldAttribute(name = dirName, mandatory = false, description = "Directory where the file should be saved.  In this case the filename will be generated.")
+	@ActionFieldAttribute(name = dirName, mandatory = false, def = DefaultValuePool.Null, description = "Directory where the file should be saved.  In this case the filename will be generated.")
 	protected String			dir;
 
-	@ActionFieldAttribute(name = fileName, mandatory = false, description = "The path to the file where the image will be saved.")
+	@ActionFieldAttribute(name = fileName, mandatory = false, def = DefaultValuePool.Null, description = "The path to the file where the image will be saved.")
 	protected String			file;
 
-	public ImageSave()
-	{
-	}
-	
-	@Override
-	public void initDefaultValues()
-	{
-		dir			= null;
-		file		= null;
-	}
-	
 	@Override
 	protected HelpKind howHelpWithParameterDerived(Context context,	Parameters parameters, String fieldName) throws Exception
 	{

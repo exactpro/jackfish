@@ -51,10 +51,6 @@ public class TextSetValue extends AbstractAction
 	@ActionFieldAttribute(name = indexName, mandatory = true, description = "Line index, which is required to change. ")
 	protected Integer	index 	= 0;
 
-	public TextSetValue()
-	{
-	}
-	
 	@Override
 	public void doRealAction(Context context, ReportBuilder report, Parameters parameters, AbstractEvaluator evaluator) throws Exception
 	{
@@ -67,12 +63,6 @@ public class TextSetValue extends AbstractAction
 		text.set(this.index, this.line);
 
 		super.setResult(null);
-	}
-
-	@Override
-	public void initDefaultValues() {
-		// TODO Auto-generated method stub
-		
 	}
 }
 

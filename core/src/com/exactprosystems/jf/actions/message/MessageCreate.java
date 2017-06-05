@@ -12,6 +12,7 @@ import com.exactprosystems.jf.actions.AbstractAction;
 import com.exactprosystems.jf.actions.ActionAttribute;
 import com.exactprosystems.jf.actions.ActionFieldAttribute;
 import com.exactprosystems.jf.actions.ActionGroups;
+import com.exactprosystems.jf.actions.DefaultValuePool;
 import com.exactprosystems.jf.actions.ReadableValue;
 import com.exactprosystems.jf.actions.clients.Helper;
 import com.exactprosystems.jf.api.client.MapMessage;
@@ -50,16 +51,12 @@ public class MessageCreate extends AbstractAction
 	@ActionFieldAttribute(name = messageTypeName, mandatory = true, description = "The type of created MapMessage should be specified." )
 	protected String 				messageType;
 
-	@ActionFieldAttribute(name = sourceName, mandatory = false, description = "The source of created MapMessage should be specified." )
+	@ActionFieldAttribute(name = sourceName, mandatory = false, def = DefaultValuePool.Null, description = "The source of created MapMessage should be specified." )
 	protected String 				source;
 
-	@ActionFieldAttribute(name = fieldsName, mandatory = false, description = "The collection of Map type values is specified." )
+	@ActionFieldAttribute(name = fieldsName, mandatory = false, def = DefaultValuePool.Null, description = "The collection of Map type values is specified." )
 	protected Map<String, Object> 	fields;
 
-	public MessageCreate()
-	{
-	}
-	
     @Override
     protected void helpToAddParametersDerived(List<ReadableValue> list, Context context, Parameters parameters)
             throws Exception
@@ -95,14 +92,6 @@ public class MessageCreate extends AbstractAction
         }
     }
 	
-	@Override
-	public void initDefaultValues() 
-	{
-		messageType	= null;
-		source	= null;
-		fields	= null;
-	}
-
 	@SuppressWarnings("rawtypes")
 	@Override
 	public void doRealAction(Context context, ReportBuilder report, Parameters parameters, AbstractEvaluator evaluator) throws Exception

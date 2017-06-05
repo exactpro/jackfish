@@ -64,15 +64,6 @@ public class TableGetRowIndexes extends AbstractAction
 	@ActionFieldAttribute(name = tableName, mandatory = true, description = "The table in which row is serached")
 	protected Table 	table 	= null;
 
-	public TableGetRowIndexes()
-	{
-	}
-	
-	@Override
-	public void initDefaultValues() 
-	{
-	}
-
 	@Override
 	public void doRealAction(Context context, ReportBuilder report, Parameters parameters, AbstractEvaluator evaluator) throws Exception
 	{

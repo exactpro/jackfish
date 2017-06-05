@@ -79,11 +79,4 @@ public class SQLtableUpload extends AbstractAction
 			}
 		}
 	}
-
-	@Override
-	public void initDefaultValues() 
-	{
-	}
-		
-
 }

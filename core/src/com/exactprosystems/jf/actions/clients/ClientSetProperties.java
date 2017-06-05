@@ -76,11 +76,6 @@ public class ClientSetProperties extends AbstractAction
 	}
 
 	@Override
-	public void initDefaultValues()
-	{
-	}
-
-	@Override
 	public void doRealAction(Context context, ReportBuilder report, Parameters parameters, AbstractEvaluator evaluator) throws Exception
 	{
 		Parameters additional = parameters.select(TypeMandatory.Extra);

@@ -65,10 +65,4 @@ public class SQLdisconnect extends AbstractAction
 			}
 		}
 	}
-
-	@Override
-	public void initDefaultValues() 
-	{
-	}
-
 }

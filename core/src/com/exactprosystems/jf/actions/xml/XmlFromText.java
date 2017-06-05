@@ -51,10 +51,6 @@ public class XmlFromText extends AbstractAction
 	@ActionFieldAttribute(name = textName, mandatory = true, description = "{{$Text$}} object related to the xml.")
 	protected Text text = null;
 
-	public XmlFromText()
-	{
-	}
-
 	@Override
 	public void doRealAction(Context context, ReportBuilder report, Parameters parameters, AbstractEvaluator evaluator) throws Exception
 	{
@@ -62,11 +58,5 @@ public class XmlFromText extends AbstractAction
 		{
 			super.setResult(new Xml(reader));
 		}
-	}
-
-	@Override
-	public void initDefaultValues()
-	{
-
 	}
 }

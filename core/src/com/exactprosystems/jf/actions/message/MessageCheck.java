@@ -49,10 +49,6 @@ public class MessageCheck extends AbstractAction
 	@ActionFieldAttribute(name = actualName, mandatory = true, description = "an object of MapMessage type.")
 	protected MapMessage actual = null;
 
-	public MessageCheck()
-	{
-	}
-	
 	@Override
 	public void doRealAction(Context context, ReportBuilder report, Parameters parameters, AbstractEvaluator evaluator) throws Exception
 	{
@@ -78,11 +74,5 @@ public class MessageCheck extends AbstractAction
 			
 			super.setError("The message does not match.", ErrorKind.NOT_EQUAL);
 		}
-	}
-
-	@Override
-	public void initDefaultValues() {
-		// TODO Auto-generated method stub
-		
 	}
 }

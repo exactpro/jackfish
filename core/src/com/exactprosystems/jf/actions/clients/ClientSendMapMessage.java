@@ -12,6 +12,7 @@ import com.exactprosystems.jf.actions.AbstractAction;
 import com.exactprosystems.jf.actions.ActionAttribute;
 import com.exactprosystems.jf.actions.ActionFieldAttribute;
 import com.exactprosystems.jf.actions.ActionGroups;
+import com.exactprosystems.jf.actions.DefaultValuePool;
 import com.exactprosystems.jf.actions.ReadableValue;
 import com.exactprosystems.jf.api.client.ClientConnection;
 import com.exactprosystems.jf.api.client.ClientHelper;
@@ -58,13 +59,8 @@ public class ClientSendMapMessage extends AbstractAction
 	@ActionFieldAttribute(name = messageName, mandatory = true, description = "Message that is required to send." )
 	protected MapMessage	message	= null;
 
-	@ActionFieldAttribute(name = checkName, mandatory = false, description = "Validation message check before sending. As a default true." )
+	@ActionFieldAttribute(name = checkName, mandatory = false, def = DefaultValuePool.True, description = "Validation message check before sending. As a default true." )
 	protected Boolean	check;
-
-
-	public ClientSendMapMessage()
-	{
-	}
 
 
 	@Override
@@ -92,12 +88,6 @@ public class ClientSendMapMessage extends AbstractAction
 				Helper.messageTypes(list, this.owner.getMatrix(), context, parameters, null, connectionName);
 				break;
 		}
-	}
-
-	@Override
-	public void initDefaultValues() 
-	{
-		this.check	= true;
 	}
 
 	@Override

@@ -12,6 +12,7 @@ import com.exactprosystems.jf.actions.AbstractAction;
 import com.exactprosystems.jf.actions.ActionAttribute;
 import com.exactprosystems.jf.actions.ActionFieldAttribute;
 import com.exactprosystems.jf.actions.ActionGroups;
+import com.exactprosystems.jf.actions.DefaultValuePool;
 import com.exactprosystems.jf.api.error.common.MatrixException;
 import com.exactprosystems.jf.common.CommonHelper;
 import com.exactprosystems.jf.common.MatrixRunner;
@@ -52,22 +53,15 @@ public class MatrixRunFromText extends AbstractAction
 	@ActionFieldAttribute(name = textName, mandatory = true, description = "{{$Text$}} object related to the execution matrix.")
 	protected Text text	= null;
 
-	@ActionFieldAttribute(name = atName, mandatory = false, description = "Is used to state the time when the matrix"
+	@ActionFieldAttribute(name = atName, mandatory = false, def = DefaultValuePool.Null, description = "Is used to state the time when the matrix"
 			+ " is started. If the specified time is not yet, the launched matrix goes the halted state before the"
 			+ " start time, otherwise, the matrix starts straightaway.")
 	protected Date at;
 
-	@ActionFieldAttribute(name = parameterName, mandatory = false, description = "Is used to pass parameters to"
+	@ActionFieldAttribute(name = parameterName, mandatory = false, def = DefaultValuePool.Null, description = "Is used to pass parameters to"
 			+ " the started matrix. As a call – by – reference mechanism is used, be careful – the started"
 			+ " matrix could modify the object passed.")
 	protected Object parameter;
-	
-	@Override
-	public void initDefaultValues() 
-	{
-		at			= null;
-		parameter	= null;
-	}
 	
 	@Override
 	protected HelpKind howHelpWithParameterDerived(Context context, Parameters parameters, String fieldName) throws Exception

@@ -66,26 +66,14 @@ public class TableCompareTwo extends AbstractAction
 	@ActionFieldAttribute(name = expectedName, mandatory = true, description = "A table which is to be compared with.")
 	protected Table expected = null;
 
-	@ActionFieldAttribute(name = excludeName, mandatory = false, description = "An array of column names, which are excluded out of comparison.")
+	@ActionFieldAttribute(name = excludeName, mandatory = false, def = DefaultValuePool.EmptyArrString, description = "An array of column names, which are excluded out of comparison.")
 	protected String[] exclude;
 
-	@ActionFieldAttribute(name = ignoreRowsOrderName, mandatory = false, description = "Ignore row order.")
+	@ActionFieldAttribute(name = ignoreRowsOrderName, mandatory = false, def = DefaultValuePool.False, description = "Ignore row order.")
 	protected Boolean ignoreRowsOrder;
 
-    @ActionFieldAttribute(name = compareValuesName, mandatory = false, description = "If true compare values otherwise compare string representation of values.")
+    @ActionFieldAttribute(name = compareValuesName, mandatory = false, def = DefaultValuePool.False, description = "If true compare values otherwise compare string representation of values.")
     protected Boolean compareValues;
-
-	public TableCompareTwo()
-	{
-	}
-
-	@Override
-	public void initDefaultValues()
-	{
-		this.exclude = new String[]{};
-		this.ignoreRowsOrder = false;
-		this.compareValues = false;
-	}
 
 	@Override
 	protected HelpKind howHelpWithParameterDerived(Context context, Parameters parameters, String fieldName) throws Exception

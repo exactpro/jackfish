@@ -57,15 +57,9 @@ public class DialogAlert extends AbstractAction
 			+ "Dismiss – click “Cancel”.")
 	protected PerformKind perform = null;
 
-	@ActionFieldAttribute(name = textName, mandatory = false, description = "Used to input text in the corresponding field of notification.")
+	@ActionFieldAttribute(name = textName, mandatory = false, def = DefaultValuePool.Null, description = "Used to input text in the corresponding field of notification.")
 	protected String text;
 
-	@Override
-	public void initDefaultValues() 
-	{
-		text = null;
-	}
-	
 	@Override
 	protected HelpKind howHelpWithParameterDerived(Context context, Parameters parameters, String fieldName) throws Exception
 	{
@@ -121,6 +115,4 @@ public class DialogAlert extends AbstractAction
 		service.setAlertText(this.text, this.perform);
 		this.setResult(alertText.getKey());
 	}
-
-
 }

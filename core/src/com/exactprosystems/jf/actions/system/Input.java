@@ -46,26 +46,15 @@ public class Input extends AbstractAction
 	@ActionFieldAttribute(name = defaultValueName, mandatory = true, description = "Default value if the timout expiered.")
 	protected Object defaultValue; 
 	
-    @ActionFieldAttribute(name = dataSourceName, mandatory = false, description = "Collection (a list or a map) to choice value.")
-    protected Object dataSource; 
-
     @ActionFieldAttribute(name = helpKindName, mandatory = true, description = "How to help user enter or choose a value.")
     protected HelpKind helpKind;
 
-    @ActionFieldAttribute(name = timeoutName, mandatory = false, description = "If this timeout expires default value will be used.")
+    @ActionFieldAttribute(name = dataSourceName, mandatory = false, def = DefaultValuePool.Null, description = "Collection (a list or a map) to choice value.")
+    protected Object dataSource; 
+
+    @ActionFieldAttribute(name = timeoutName, mandatory = false, def = DefaultValuePool.IntMin, description = "If this timeout expires default value will be used.")
     protected Integer timeout;
     
-    public Input()
-	{
-	}
-	
-	@Override
-	public void initDefaultValues() 
-	{
-		this.dataSource = null;
-		this.timeout = -1;
-	}
-	
     @Override
     protected HelpKind howHelpWithParameterDerived(Context context, Parameters parameters, String fieldName) throws Exception
     {

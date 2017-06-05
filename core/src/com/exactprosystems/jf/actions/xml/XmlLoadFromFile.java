@@ -58,10 +58,6 @@ public class XmlLoadFromFile extends AbstractAction
 
 	@ActionFieldAttribute(name = fileName, mandatory = true, description = "The path to the file.")
 	protected String 	file 	= null;
-
-	public XmlLoadFromFile()
-	{
-	}
 	
 	@Override
 	protected HelpKind howHelpWithParameterDerived(Context context, Parameters parameters, String fieldName) throws Exception
@@ -83,11 +79,5 @@ public class XmlLoadFromFile extends AbstractAction
 			return;
 		}
 		super.setResult(new Xml(this.file));
-	}
-
-	@Override
-	public void initDefaultValues() {
-		// TODO Auto-generated method stub
-		
 	}
 }

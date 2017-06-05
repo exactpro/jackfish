@@ -12,6 +12,7 @@ import com.exactprosystems.jf.actions.AbstractAction;
 import com.exactprosystems.jf.actions.ActionAttribute;
 import com.exactprosystems.jf.actions.ActionFieldAttribute;
 import com.exactprosystems.jf.actions.ActionGroups;
+import com.exactprosystems.jf.actions.DefaultValuePool;
 import com.exactprosystems.jf.api.error.ErrorKind;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.report.ReportBuilder;
@@ -69,55 +70,36 @@ public class TableConsiderColumnsAs extends AbstractAction
 	@ActionFieldAttribute(name = tableName, mandatory = true, description = "A table is needed to be performed.\n")
 	protected Table 	table 	= null;
 
-	@ActionFieldAttribute(name = asStringName, mandatory = false, description = "Is specified as an array of column names, where it is needed to set data type - String.")
+	@ActionFieldAttribute(name = asStringName, mandatory = false, def = DefaultValuePool.EmptyArrString, description = "Is specified as an array of column names, where it is needed to set data type - String.")
 	protected String[]	asString;
 
-	@ActionFieldAttribute(name = asBooleanName, mandatory = false, description = "Is specified as an array of column names, where it is needed to set data type - Boolean.")
+	@ActionFieldAttribute(name = asBooleanName, mandatory = false, def = DefaultValuePool.EmptyArrString, description = "Is specified as an array of column names, where it is needed to set data type - Boolean.")
 	protected String[]	asBoolean;
 
-	@ActionFieldAttribute(name = asIntegerName, mandatory = false, description = "Is specified as an array of column names, where it is needed to set data type - Integer.")
+	@ActionFieldAttribute(name = asIntegerName, mandatory = false, def = DefaultValuePool.EmptyArrString, description = "Is specified as an array of column names, where it is needed to set data type - Integer.")
 	protected String[]	asInteger;
 
-	@ActionFieldAttribute(name = asDoubleName, mandatory = false, description = "Is specified as an array of column names, where it is needed to set data type - Double.")
+	@ActionFieldAttribute(name = asDoubleName, mandatory = false, def = DefaultValuePool.EmptyArrString, description = "Is specified as an array of column names, where it is needed to set data type - Double.")
 	protected String[]	asDouble;
 
-	@ActionFieldAttribute(name = asBigDecimalName, mandatory = false, description = "Is specified as an array of column names, where it is needed to set data type - BigDecimal.")
+	@ActionFieldAttribute(name = asBigDecimalName, mandatory = false, def = DefaultValuePool.EmptyArrString, description = "Is specified as an array of column names, where it is needed to set data type - BigDecimal.")
 	protected String[]	asBigDecimal;
 
-	@ActionFieldAttribute(name = asDateName, mandatory = false, description = "Is specified as an array of column names, where it is needed to set data type - Date.")
+	@ActionFieldAttribute(name = asDateName, mandatory = false, def = DefaultValuePool.EmptyArrString, description = "Is specified as an array of column names, where it is needed to set data type - Date.")
 	protected String[]	asDate;
 
-	@ActionFieldAttribute(name = asExpressionName, mandatory = false, description = "Is specified as an array of column names, where it is needed to set data type - Expression.")
+	@ActionFieldAttribute(name = asExpressionName, mandatory = false, def = DefaultValuePool.EmptyArrString, description = "Is specified as an array of column names, where it is needed to set data type - Expression.")
 	protected String[]	asExpression;
 	
-    @ActionFieldAttribute(name = asGroupName, mandatory = false, description = "Is specified as an array of column names, where it is needed to set data type - Group.")
+    @ActionFieldAttribute(name = asGroupName, mandatory = false, def = DefaultValuePool.EmptyArrString, description = "Is specified as an array of column names, where it is needed to set data type - Group.")
     protected String[]  asGroup;
     
-    @ActionFieldAttribute(name = asHyperlinkName, mandatory = false, description = "Is specified as an array of column names, where it is needed to set data type - Hyperlink.")
+    @ActionFieldAttribute(name = asHyperlinkName, mandatory = false, def = DefaultValuePool.EmptyArrString, description = "Is specified as an array of column names, where it is needed to set data type - Hyperlink.")
     protected String[]  asHyperlink;
 
-    @ActionFieldAttribute(name = asColoredName, mandatory = false, description = "Is specified as an array of column names, where it is needed to set data type - Colored.")
+    @ActionFieldAttribute(name = asColoredName, mandatory = false, def = DefaultValuePool.EmptyArrString, description = "Is specified as an array of column names, where it is needed to set data type - Colored.")
     protected String[]  asColored;
 
-	public TableConsiderColumnsAs()
-	{
-	}
-	
-	@Override
-	public void initDefaultValues() 
-	{
-		this.asString 		= new String[] {};
-		this.asBoolean 		= new String[] {};
-		this.asInteger 		= new String[] {};
-		this.asDouble 		= new String[] {};
-		this.asBigDecimal 	= new String[] {};
-		this.asDate 		= new String[] {};
-		this.asExpression 	= new String[] {};
-		this.asGroup        = new String[] {};
-		this.asHyperlink    = new String[] {};
-        this.asColored      = new String[] {};
-	}
-	
 	@Override
 	public void doRealAction(Context context, ReportBuilder report, Parameters parameters, AbstractEvaluator evaluator) throws Exception
 	{

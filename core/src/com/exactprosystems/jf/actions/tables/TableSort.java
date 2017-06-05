@@ -6,6 +6,7 @@ import com.exactprosystems.jf.actions.AbstractAction;
 import com.exactprosystems.jf.actions.ActionAttribute;
 import com.exactprosystems.jf.actions.ActionFieldAttribute;
 import com.exactprosystems.jf.actions.ActionGroups;
+import com.exactprosystems.jf.actions.DefaultValuePool;
 import com.exactprosystems.jf.actions.ReadableValue;
 import com.exactprosystems.jf.api.error.ErrorKind;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
@@ -50,20 +51,10 @@ public class TableSort extends AbstractAction
 	@ActionFieldAttribute(name = columnName, mandatory = true, description = "Column title that defines the table sorting.")
 	protected String columnIndex = null;
 
-	@ActionFieldAttribute(name = ascendingName, mandatory = false, description = "Sorting type: true – ascending sorting,"
+	@ActionFieldAttribute(name = ascendingName, mandatory = false, def = DefaultValuePool.True, description = "Sorting type: true – ascending sorting,"
 			+ " false – descending sorting. By default is true.")
 	protected Boolean ascending;
 
-	public TableSort()
-	{
-	}
-
-	@Override
-	public void initDefaultValues() 
-	{
-		ascending = true;
-	}
-	
 	@Override
 	protected HelpKind howHelpWithParameterDerived(Context context,	Parameters parameters, String fieldName) throws Exception
 	{

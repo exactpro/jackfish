@@ -52,15 +52,6 @@ public class TableSetValue extends AbstractAction
 			+ " value. Numeration starts with 0.")
 	protected Integer	index 	= 0;
 
-	public TableSetValue()
-	{
-	}
-	
-    @Override
-    public void initDefaultValues() 
-    {
-    }
-
     @Override
 	public void doRealAction(Context context, ReportBuilder report, Parameters parameters, AbstractEvaluator evaluator) throws Exception
 	{

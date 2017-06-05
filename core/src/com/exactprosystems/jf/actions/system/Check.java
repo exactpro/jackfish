@@ -12,6 +12,7 @@ import com.exactprosystems.jf.actions.AbstractAction;
 import com.exactprosystems.jf.actions.ActionAttribute;
 import com.exactprosystems.jf.actions.ActionFieldAttribute;
 import com.exactprosystems.jf.actions.ActionGroups;
+import com.exactprosystems.jf.actions.DefaultValuePool;
 import com.exactprosystems.jf.actions.ReadableValue;
 import com.exactprosystems.jf.api.client.ClientHelper;
 import com.exactprosystems.jf.api.client.MapMessage;
@@ -59,14 +60,10 @@ public class Check extends AbstractAction
     @ActionFieldAttribute(name = actualName, mandatory = true, description = "A set of names and values that should be compared.")
     protected Map<String, Object> actual = Collections.emptyMap(); 
     
-    @ActionFieldAttribute(name = dontFailName, mandatory = false, description = "If true, then when identifying"
+    @ActionFieldAttribute(name = dontFailName, mandatory = false, def = DefaultValuePool.False, description = "If true, then when identifying"
             + " differences as a result of the comparison, action will still be marked as Passed, otherwise, as "
             + "Failed. By default, a parameter has a false value.")
     protected Boolean dontFail; 
-
-    public Check()
-    {
-    }
 
     @Override
     protected HelpKind howHelpWithParameterDerived(Context context, Parameters parameters, String fieldName)
@@ -89,13 +86,6 @@ public class Check extends AbstractAction
                 list.add(ReadableValue.FALSE);
                 break;
         }
-    }
-
-    
-    @Override
-    public void initDefaultValues() 
-    {
-        this.dontFail = false;
     }
     
     @Override

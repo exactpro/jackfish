@@ -42,7 +42,7 @@ public class TableLoadFromDir extends AbstractAction
 {
     public final static String dirName = "Dir";
 
-    @ActionFieldAttribute(name = dirName,description = "Path to directory. It’s not permitted to use ways with metacharacters (wildcard).",mandatory = true)
+    @ActionFieldAttribute(name = dirName, mandatory = true, description = "Path to directory. It’s not permitted to use ways with metacharacters (wildcard).")
     protected String directory = null;
 
     @Override
@@ -61,12 +61,5 @@ public class TableLoadFromDir extends AbstractAction
         }else{
             super.setError("Directory '" + directory + "' doesn't exists.", ErrorKind.WRONG_PARAMETERS);
         }
-
     }
-
-	@Override
-	public void initDefaultValues() {
-		// TODO Auto-generated method stub
-		
-	}
 }

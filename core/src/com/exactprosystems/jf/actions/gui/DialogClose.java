@@ -133,10 +133,4 @@ public class DialogClose extends AbstractAction
 		
 		super.setResult(closed);
 	}
-
-	@Override
-	public void initDefaultValues() {
-		// TODO Auto-generated method stub
-		
-	}
 }

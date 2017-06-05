@@ -12,6 +12,7 @@ import com.exactprosystems.jf.actions.AbstractAction;
 import com.exactprosystems.jf.actions.ActionAttribute;
 import com.exactprosystems.jf.actions.ActionFieldAttribute;
 import com.exactprosystems.jf.actions.ActionGroups;
+import com.exactprosystems.jf.actions.DefaultValuePool;
 import com.exactprosystems.jf.api.error.ErrorKind;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.report.ReportBuilder;
@@ -87,27 +88,16 @@ public class XmlAddNode extends AbstractAction
 	@ActionFieldAttribute(name = xmlName, mandatory = true, description = "An Xml structure to which an action has to be done.")
 	protected Xml 		xml 	= null;
 
-	@ActionFieldAttribute(name = nodeNameName, mandatory = false, description = "The name of an added element.")
-	protected String 	nodeName 	= null;
+	@ActionFieldAttribute(name = nodeNameName, mandatory = false, def = DefaultValuePool.Null, description = "The name of an added element.")
+	protected String 	nodeName;
 
-	@ActionFieldAttribute(name = contentName, mandatory = false, description = "The contents of a new element.")
+	@ActionFieldAttribute(name = contentName, mandatory = false, def = DefaultValuePool.Null, description = "The contents of a new element.")
 	protected String 	content;
 
-	@ActionFieldAttribute(name =  newXML, mandatory = false, description = "Node that has to be added to the original "
+	@ActionFieldAttribute(name =  newXML, mandatory = false, def = DefaultValuePool.Null, description = "Node that has to be added to the original "
 			+ "structure. If it is indicated then parameters NodeName and Content are ignored.")
 	protected Xml 		copiedXML;
 
-	public XmlAddNode()
-	{
-	}
-
-	@Override
-	public void initDefaultValues() 
-	{
-		content 	= null;
-		copiedXML 	= null;
-	}
-	
 	@Override
 	public void doRealAction(Context context, ReportBuilder report, Parameters parameters, AbstractEvaluator evaluator) throws Exception
 	{

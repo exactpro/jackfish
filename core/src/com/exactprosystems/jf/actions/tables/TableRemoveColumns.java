@@ -47,20 +47,10 @@ public class TableRemoveColumns extends AbstractAction
 	@ActionFieldAttribute(name = columnsName, mandatory = true, description = "An array of column names to delete.")
 	protected String[] columns = new String[] {};
 
-	public TableRemoveColumns()
-	{
-	}
-
 	@Override
 	protected void doRealAction(Context context, ReportBuilder report, Parameters parameters, AbstractEvaluator evaluator) throws Exception
 	{
 		this.table.removeColumns(this.columns);
 		super.setResult(null);
-	}
-
-	@Override
-	public void initDefaultValues() {
-		// TODO Auto-generated method stub
-		
 	}
 }

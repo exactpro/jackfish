@@ -12,6 +12,7 @@ import com.exactprosystems.jf.actions.AbstractAction;
 import com.exactprosystems.jf.actions.ActionAttribute;
 import com.exactprosystems.jf.actions.ActionFieldAttribute;
 import com.exactprosystems.jf.actions.ActionGroups;
+import com.exactprosystems.jf.actions.DefaultValuePool;
 import com.exactprosystems.jf.actions.ReadableValue;
 import com.exactprosystems.jf.api.client.ClientConnection;
 import com.exactprosystems.jf.api.client.ClientHelper;
@@ -59,7 +60,7 @@ public class ClientCountMessages extends AbstractAction
 	@ActionFieldAttribute(name = messageTypeName, mandatory = true, description = "Message type. Use * for any type of messages." )
 	protected String	messageType	= null;
 
-	@ActionFieldAttribute(name = conditionsName, mandatory = false, description = "The conditions in which the comparison will be carried out.")
+	@ActionFieldAttribute(name = conditionsName, mandatory = false, def = DefaultValuePool.Null, description = "The conditions in which the comparison will be carried out.")
 	protected Condition[] conditions;
 	
 	@Override
@@ -95,12 +96,6 @@ public class ClientCountMessages extends AbstractAction
 		}
 	}
 	
-	@Override
-	public void initDefaultValues() 
-	{
-		this.conditions = null;
-	}
-
 	@Override
 	public void doRealAction(Context context, ReportBuilder report, Parameters parameters, AbstractEvaluator evaluator)  throws Exception
 	{

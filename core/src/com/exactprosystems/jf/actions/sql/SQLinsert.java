@@ -97,10 +97,4 @@ public class SQLinsert extends AbstractAction
 			}
 		}
 	}
-
-	@Override
-	public void initDefaultValues() 
-	{
-	}
-
 }

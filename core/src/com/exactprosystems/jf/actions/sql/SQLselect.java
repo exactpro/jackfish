@@ -100,11 +100,4 @@ public class SQLselect extends AbstractAction
 			}
 		}
 	}
-
-	@Override
-	public void initDefaultValues() 
-	{
-	}
-		
-
 }

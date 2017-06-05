@@ -40,7 +40,6 @@ public class WizardManagerImpl implements WizardManager
         MatrixItem item = new HelpItem(HelpItem.class);
         
         List<Class<? extends Wizard>> list = manager.suitableWizards(item, matrix);
-        System.err.println("suitable = " + list);
         Class<? extends Wizard> wizard = list.get(0);
         manager.runWizard(wizard, context, item, matrix);
     }
