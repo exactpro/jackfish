@@ -126,7 +126,13 @@ public class SwingOperationExecutor implements OperationExecutor<ComponentFixtur
         this.info = info;
     }
 
-    @Override
+	@Override
+	public boolean isSupported(ControlKind kind)
+	{
+		return this.info.isSupported(kind);
+	}
+
+	@Override
 	public Rectangle getRectangle(ComponentFixture<Component> component) throws Exception
 	{
 		try

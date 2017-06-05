@@ -12,12 +12,13 @@ import com.exactprosystems.jf.api.common.IPool;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 public interface IApplicationPool extends IPool
 {
 	List<String> appNames();
 	
-	ControlKind[]		supportedControlKinds(String id) throws Exception;
+	Set<ControlKind> 	supportedControlKinds(String id) throws Exception;
 	
 	boolean 			isLoaded(String id);
 	IApplicationFactory	loadApplicationFactory(String id) throws Exception;

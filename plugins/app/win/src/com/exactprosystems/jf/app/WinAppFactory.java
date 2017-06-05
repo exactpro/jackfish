@@ -11,9 +11,8 @@ package com.exactprosystems.jf.app;
 import com.exactprosystems.jf.api.app.*;
 import com.exactprosystems.jf.api.common.ParametersKind;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.Scanner;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class WinAppFactory implements IApplicationFactory
 {
@@ -38,7 +37,7 @@ public class WinAppFactory implements IApplicationFactory
     public static final String      propertyTitle           = "Title";
 	private static String[] empty = {  };
 
-	private static ControlKind[] supportedControls = 
+	private static ControlKind[] supportedControls =
 		{ 
 			ControlKind.Any, ControlKind.Wait, ControlKind.Button, ControlKind.CheckBox, ControlKind.ComboBox, ControlKind.Dialog,
 			ControlKind.Frame, ControlKind.Image, ControlKind.Label, ControlKind.ListView, ControlKind.Menu, ControlKind.MenuItem, ControlKind.Panel,
@@ -121,9 +120,9 @@ public class WinAppFactory implements IApplicationFactory
 	}
 
 	@Override
-	public ControlKind[] supportedControlKinds()
+	public Set<ControlKind> supportedControlKinds()
 	{
-		return supportedControls;
+		return Arrays.stream(supportedControls).collect(Collectors.toSet());
 	}
 
 	@Override

@@ -10,6 +10,7 @@ package com.exactprosystems.jf.api.app;
 
 import com.exactprosystems.jf.api.common.Str;
 import com.exactprosystems.jf.api.conditions.ColorCondition;
+import com.exactprosystems.jf.api.error.app.ControlNotSupportedException;
 import com.exactprosystems.jf.api.error.app.ElementNotEnabled;
 import com.exactprosystems.jf.api.error.app.ElementNotFoundException;
 import com.exactprosystems.jf.api.error.app.OperationNotAllowedException;
@@ -1097,7 +1098,11 @@ public enum OperationKind
 		}
 		if (!locator.getControlKind().isAllowed(part.kind))
 		{
-            throw new OperationNotAllowedException("Operation " + part.kind + " is not allowed for " + locator.getControlKind());
+            throw new OperationNotAllowedException("Operation \'" + part.kind + "\' is not allowed for \'" + locator.getControlKind() + "\'");
+		}
+		if (!executor.isSupported(locator.getControlKind()))
+		{
+			throw new ControlNotSupportedException("Control \'" + locator.getControlKind() + "\' is not supported for current plugin");
 		}
 
 		// find it, if it needs

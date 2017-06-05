@@ -11,10 +11,8 @@ package com.exactprosystems.jf.app;
 import com.exactprosystems.jf.api.app.*;
 import com.exactprosystems.jf.api.common.ParametersKind;
 
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.Scanner;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class WebAppFactory implements IApplicationFactory
 {
@@ -157,9 +155,9 @@ public class WebAppFactory implements IApplicationFactory
 	}
 
 	@Override
-	public ControlKind[] supportedControlKinds()
+	public Set<ControlKind> supportedControlKinds()
 	{
-		return supportedControls;
+		return Arrays.stream(supportedControls).collect(Collectors.toSet());
 	}
 
 	@Override

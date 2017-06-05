@@ -16,10 +16,8 @@ import com.exactprosystems.jf.api.app.LocatorFieldKind;
 import com.exactprosystems.jf.api.app.PluginInfo;
 import com.exactprosystems.jf.api.common.ParametersKind;
 
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.Scanner;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class SwingAppFactory implements IApplicationFactory
 {
@@ -118,9 +116,9 @@ public class SwingAppFactory implements IApplicationFactory
 	}
 
 	@Override
-	public ControlKind[] supportedControlKinds()
+	public Set<ControlKind> supportedControlKinds()
 	{
-		return supportedControls;
+		return Arrays.stream(supportedControls).collect(Collectors.toSet());
 	}
 
 	@Override
@@ -134,7 +132,7 @@ public class SwingAppFactory implements IApplicationFactory
     {
         Map<ControlKind, String[]> controlMap = new LinkedHashMap<>();
 
-        for (ControlKind kind : ControlKind.values())
+        for (ControlKind kind : supportedControls)
         {
             controlMap.put(kind, new String[] { "*" });
         }

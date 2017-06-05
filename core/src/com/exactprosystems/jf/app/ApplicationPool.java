@@ -21,7 +21,6 @@ import com.exactprosystems.jf.documents.guidic.GuiDictionary;
 
 import org.apache.log4j.Logger;
 
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.Reader;
 import java.net.DatagramSocket;
@@ -64,7 +63,7 @@ public class ApplicationPool implements IApplicationPool
 	// IApplicationPool
 	//----------------------------------------------------------------------------------------------
 	@Override
-	public ControlKind[] supportedControlKinds(String id) throws Exception
+	public Set<ControlKind> supportedControlKinds(String id) throws Exception
 	{
 		IApplicationFactory applicationFactory = loadFactory(id);
 

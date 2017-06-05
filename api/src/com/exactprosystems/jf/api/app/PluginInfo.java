@@ -58,4 +58,9 @@ public class PluginInfo implements Serializable
     
     private Map<ControlKind, String[]>      controlMap;
     private Map<LocatorFieldKind, String>   fieldMap;
+
+    public boolean isSupported(ControlKind kind)
+    {
+        return controlMap.containsKey(kind);
+    }
 }

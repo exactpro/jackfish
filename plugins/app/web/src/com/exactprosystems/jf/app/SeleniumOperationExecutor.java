@@ -67,6 +67,12 @@ public class SeleniumOperationExecutor implements OperationExecutor<WebElement>
     }
 
 	@Override
+	public boolean isSupported(ControlKind kind)
+	{
+		return this.info.isSupported(kind);
+	}
+
+	@Override
 	public Rectangle getRectangle(WebElement component) throws Exception
 	{
 		try

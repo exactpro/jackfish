@@ -19,6 +19,7 @@ import java.util.concurrent.atomic.AtomicLong;
 public interface OperationExecutor<T>
 {
     void                        setPluginInfo   (PluginInfo info);
+    boolean						isSupported		(ControlKind kind);
 	Rectangle					getRectangle	(T component) throws Exception;
 	
 	Color 						getColor		(String color) throws Exception;
