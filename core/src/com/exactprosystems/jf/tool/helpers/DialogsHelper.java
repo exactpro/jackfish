@@ -12,6 +12,7 @@ import com.exactprosystems.jf.actions.ReadableValue;
 import com.exactprosystems.jf.api.common.Str;
 import com.exactprosystems.jf.api.common.Sys;
 import com.exactprosystems.jf.common.MatrixRunner;
+import com.exactprosystems.jf.common.Settings;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.report.HelpBuilder;
 import com.exactprosystems.jf.common.report.HelpFactory;
@@ -46,6 +47,11 @@ import javafx.geometry.VPos;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.Dialog;
+import javafx.scene.control.Label;
+import javafx.scene.control.MenuItem;
+import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.*;
@@ -54,15 +60,20 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.text.Text;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
-import javafx.stage.*;
+import javafx.stage.DirectoryChooser;
+import javafx.stage.FileChooser;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
 import javafx.util.Duration;
 import org.apache.log4j.Logger;
 
+import java.awt.*;
 import java.io.File;
 import java.io.IOException;
 import java.io.StringReader;
 import java.nio.file.Paths;
 import java.util.*;
+import java.util.List;
 import java.util.function.Function;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -707,6 +718,20 @@ public abstract class DialogsHelper
 
 	public static void displayReport(File file, String matrixName, DocumentFactory factory)
 	{
+		Settings.SettingsValue value = factory.getSettings().getValueOrDefault(Settings.GLOBAL_NS, Settings.SETTINGS, Settings.USE_EXTERNAL_REPORT_VIEWER, "false");
+		boolean useExternalReportViewer = Boolean.parseBoolean(value.getValue());
+		if (useExternalReportViewer)
+		{
+			if (Desktop.isDesktopSupported())
+			{
+				Common.openDefaultBrowser(file.getAbsolutePath());
+				return;
+			}
+			else
+			{
+				DialogsHelper.showError("Desktop is not supported. Used internal report browser");
+			}
+		}
 		Platform.runLater(() ->
 		{
 			final String[] matrName = {matrixName};

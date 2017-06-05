@@ -18,6 +18,7 @@
 		<RowConstraints minHeight="10.0" percentHeight="7.0" prefHeight="30.0" vgrow="SOMETIMES"/>
 		<RowConstraints minHeight="10.0" percentHeight="7.0" prefHeight="30.0" vgrow="SOMETIMES"/>
 		<RowConstraints minHeight="10.0" percentHeight="7.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+		<RowConstraints minHeight="10.0" percentHeight="7.0" prefHeight="30.0" vgrow="SOMETIMES"/>
 		<RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
 		<RowConstraints minHeight="10.0" percentHeight="7.0" prefHeight="30.0" vgrow="SOMETIMES"/>
 	</rowConstraints>
@@ -62,20 +63,21 @@
 		<ComboBox fx:id="cbFontSize" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="5"/>
 
 		<CheckBox fx:id="useFullScreen" mnemonicParsing="false" text="Use fullscreen mode" GridPane.columnIndex="1" GridPane.rowIndex="6"/>
-		<CheckBox fx:id="useFullScreenXpath" mnemonicParsing="false" text="Use fullscreen xpath dialog" GridPane.columnIndex="1" GridPane.rowIndex="7"/>
+		<CheckBox fx:id="useExternalReportViewer" mnemonicParsing="false" text="Use external report viewer" GridPane.columnIndex="1" GridPane.rowIndex="7"/>
+		<CheckBox fx:id="useFullScreenXpath" mnemonicParsing="false" text="Use fullscreen xpath dialog" GridPane.columnIndex="1" GridPane.rowIndex="8"/>
 
-		<Label text="Copyright" GridPane.halignment="LEFT" GridPane.rowIndex="8" GridPane.valignment="BOTTOM">
+		<Label text="Copyright" GridPane.halignment="LEFT" GridPane.rowIndex="9" GridPane.valignment="BOTTOM">
 			<GridPane.margin>
 				<Insets bottom="8.0"/>
 			</GridPane.margin>
 		</Label>
-		<TextArea fx:id="taCopyright" prefHeight="200.0" prefWidth="200.0" promptText="Copyright" GridPane.columnSpan="2" GridPane.rowIndex="9">
+		<TextArea fx:id="taCopyright" prefHeight="200.0" prefWidth="200.0" promptText="Copyright" GridPane.columnSpan="2" GridPane.rowIndex="10">
 			<GridPane.margin>
 				<Insets right="5.0"/>
 			</GridPane.margin>
 		</TextArea>
 
-		<Button text="Restore default" onAction="#restoreDefaults" GridPane.columnIndex="1" GridPane.rowIndex="10" GridPane.halignment="RIGHT" GridPane.valignment="CENTER"/>
+		<Button text="Restore default" onAction="#restoreDefaults" GridPane.columnIndex="1" GridPane.rowIndex="11" GridPane.halignment="RIGHT" GridPane.valignment="CENTER"/>
 	</children>
 	<padding>
 		<Insets bottom="8.0" left="8.0" right="8.0" top="8.0"/>
