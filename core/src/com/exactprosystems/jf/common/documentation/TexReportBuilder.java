@@ -104,13 +104,13 @@ public class TexReportBuilder extends ReportBuilder
             case "5" + CM: return " }";
     
             // style for identifiers
-            case OM + "$": return "\\\\verb+";     
-            case "$" + CM: return "+";
+            case OM + "$": return "{\\\\color{codecolor} \\\\verb+";
+            case "$" + CM: return "+}";
 
 			// http://tostudents.ru/2010/01/07/overfull-i-underfull-perepolnennye-i-razrezhennye-stroki/
             // style for code
             case OM + "#": return "\\\\begingroup\n" +
-								"    \\\\fontsize{10pt}{10pt}\\\\selectfont\n" +
+								"    \\\\fontsize{10pt}{10pt}\\\\selectfont\\\\color{codecolor}\n" +
 								"    \\\\begin{verbatim}  ";
             case "#" + CM: return "  \\\\end{verbatim}\n" +
 									"\\\\endgroup";
@@ -178,6 +178,12 @@ public class TexReportBuilder extends ReportBuilder
 		Files.deleteIfExists(header.toPath());
 		Files.copy(isHeader, header.toPath());
 		isHeader.close();
+
+		/*InputStream isLine = getClass().getResourceAsStream("Line.png");
+		File orangeLine = new File(this.getReportDir() + File.separator + "Line.png");
+		Files.deleteIfExists(orangeLine.toPath());
+		Files.copy(isLine, orangeLine.toPath());
+		isLine.close();*/
 	}
 
 	@Override

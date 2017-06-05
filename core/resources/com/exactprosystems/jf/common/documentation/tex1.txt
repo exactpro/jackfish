@@ -53,6 +53,10 @@
 
 \linespread{1.5}
 
+%%color for code examples
+\definecolor{codecolor}{RGB}{0, 50, 0}
+
+
 \begin{document}
 
 
