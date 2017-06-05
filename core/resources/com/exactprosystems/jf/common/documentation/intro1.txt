@@ -1,5 +1,5 @@
 {{&&}}
-{{2Introduction2}}
+{{3Introduction3}}
 
 {{*Unary Operators*}}
 
@@ -21,7 +21,7 @@ isdef`Tests whether or not a variable is defined within the scope`{{#isdef varia
 =}}
 
 
-JackFish ("JF" further in this document) is a tool for test automation of web-based applications built on Selenium framework. 
+{{1JackFish ("JF" further in this document) is a tool for test automation of web-based applications built on Selenium framework.
 JF can perform positive and negative functional testing, GUI testing, verification of a variety of data formats (xml, csv, text, etc.). 
 
 JF produces a detailed report about performing each test case. 
@@ -32,9 +32,9 @@ JF introduces a dictionary entity that describes all GUI controls and methods fo
 and also assigns them names that are referred to in test cases. 
 
 The solution also includes GUI editors for preparing dictionaries and test scenario files. 
-The tool supports a GUI-less mode of running it and can work with multiple browsers simultaneously.
+The tool supports a GUI-less mode of running it and can work with multiple browsers simultaneously.1}}
 
-{{2Architecture2}}
+{{3Architecture3}}
 
-The following diagram explains the JF architecture on a high level:
+{{2The following diagram explains the JF architecture on a high level:2}}
 

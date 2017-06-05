@@ -67,23 +67,15 @@ public class DocumentationBuilder
                 };
 
 
-//        addChapter(help, "\\Large {{*User Guide*}}", 1);
         addTable(help, "{{*User Guide*}}", table1, new int[] { 50, 50 },  evaluator);
-//        addChapter(help, "\\Large {{*Document Information*}}", 1);
         addTable(help, "{{*Document Information*}}", table2, new int[] { 25, 23, 23, 25 },  evaluator);
-//        addChapter(help, "\\Large {{*Abbreviations*}}", 1);
         addTable(help, "{{*Abbreviations*}}", table3, new int[] { 50, 50 },  evaluator);
 
-        //todo table of contents
-//        addChapter(help, "\\pagestyle{allpages}", 4);
-//        addChapter(help, "\\tableofcontents", 4);
-
-        addChapter(help, "", 4);
         addText(help, DocumentationBuilder.class.getResourceAsStream("intro1.txt"));
-        addPicture(help, "Architecture", DocumentationBuilder.class.getResourceAsStream("Intro.png"));
+        /*addPicture(help, "Architecture", DocumentationBuilder.class.getResourceAsStream("Intro.png"));
         addText(help, DocumentationBuilder.class.getResourceAsStream("intro2.txt"));
         addChapter(help, "MVEL", 2);
-        addText(help, DocumentationBuilder.class.getResourceAsStream("mvel.txt"));
+        addText(help, DocumentationBuilder.class.getResourceAsStream("mvel.txt"));*/
 //        addChapter(help, "All controls", 3);
 //        addAllControlsTable(help, "All controls", context);
 //        addChapter(help, "Matrix syntax", 3);
