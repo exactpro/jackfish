@@ -21,6 +21,7 @@ import com.exactprosystems.jf.documents.matrix.parser.items.MatrixItem;
 import com.exactprosystems.jf.tool.wizard.all.CodeExampleWizard;
 import com.exactprosystems.jf.tool.wizard.all.DictionaryWizard;
 import com.exactprosystems.jf.tool.wizard.all.GherkinWizard;
+import com.exactprosystems.jf.tool.wizard.all.SupportedControlWizard;
 import org.apache.log4j.Logger;
 
 import java.util.Arrays;
@@ -48,7 +49,11 @@ public class WizardManagerImpl implements WizardManager
     private static final Logger logger = Logger.getLogger(WizardManagerImpl.class);
 
     private static List<Class<? extends Wizard>> knownWizards = Arrays.asList(
-            GherkinWizard.class, DictionaryWizard.class, CodeExampleWizard.class );
+            GherkinWizard.class,
+			DictionaryWizard.class,
+			SupportedControlWizard.class,
+			CodeExampleWizard.class
+	);
     
     public WizardManagerImpl()
     {

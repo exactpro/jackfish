@@ -7,7 +7,11 @@
 ////////////////////////////////////////////////////////////////////////////////
 package com.exactprosystems.jf.tool.newconfig.nodes;
 
+import com.exactprosystems.jf.api.app.IApplicationPool;
 import com.exactprosystems.jf.api.common.SerializablePair;
+import com.exactprosystems.jf.api.wizard.Wizard;
+import com.exactprosystems.jf.api.wizard.WizardManager;
+import com.exactprosystems.jf.app.ApplicationPool;
 import com.exactprosystems.jf.documents.config.AppEntry;
 import com.exactprosystems.jf.documents.config.Configuration;
 import com.exactprosystems.jf.tool.Common;
@@ -18,6 +22,8 @@ import com.exactprosystems.jf.tool.newconfig.ConfigurationTreeView;
 import com.exactprosystems.jf.tool.newconfig.TablePair;
 import javafx.scene.Node;
 import javafx.scene.control.ContextMenu;
+import javafx.scene.control.Menu;
+import javafx.scene.control.MenuItem;
 import javafx.scene.control.TreeItem;
 import javafx.scene.image.Image;
 import javafx.scene.text.Text;
@@ -27,6 +33,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 public class AppTreeNode extends TreeNode
 {
@@ -140,7 +147,31 @@ public class AppTreeNode extends TreeNode
 		public Optional<ContextMenu> contextMenu()
 		{
 			ContextMenu menu = new ContextMenu();
+
+			Menu menuWizard = new Menu("Wizard");
+			try
+			{
+				WizardManager manager = model.getFactory().getWizardManager();
+				IApplicationPool appPool = model.getApplicationPool();
+				Object[] criteries = new Object[]{appPool.loadApplicationFactory(getEntry().toString()), ((ApplicationPool) appPool).getDictionary(getEntry())};
+				java.util.List<Class<? extends Wizard>> suitableWizards = manager.suitableWizards(criteries);
+				menuWizard.getItems().clear();
+				menuWizard.getItems().addAll(suitableWizards.stream().map(wizardClass ->
+				{
+					MenuItem menuItem = new MenuItem(manager.nameOf(wizardClass));
+					menuItem.setOnAction(e -> manager.runWizard(wizardClass, model.getFactory().createContext(), criteries));
+					return menuItem;
+				}).collect(Collectors.toList()));
+			}
+			catch (Exception e)
+			{
+				//TODO
+				e.printStackTrace();
+			}
+
+
 			menu.getItems().addAll(
+					menuWizard,
 					ConfigurationTreeView.createDisabledItem(ADD_NEW_APP),
 					ConfigurationTreeView.createDisabledItem(TEST_VERSION),
 					ConfigurationTreeView.createDisabledItem(REFRESH),
