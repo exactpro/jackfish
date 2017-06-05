@@ -18,6 +18,7 @@ import com.exactprosystems.jf.documents.config.Context;
 import com.exactprosystems.jf.documents.matrix.Matrix;
 import com.exactprosystems.jf.documents.matrix.parser.items.HelpItem;
 import com.exactprosystems.jf.documents.matrix.parser.items.MatrixItem;
+import com.exactprosystems.jf.tool.helpers.DialogsHelper;
 import com.exactprosystems.jf.tool.wizard.all.CodeExampleWizard;
 import com.exactprosystems.jf.tool.wizard.all.DictionaryWizard;
 import com.exactprosystems.jf.tool.wizard.all.GherkinWizard;
@@ -151,7 +152,8 @@ public class WizardManagerImpl implements WizardManager
                 {
                     List<WizardCommand> commands = result.commands();
                     commands.forEach(c -> c.apply(context));
-                }
+					DialogsHelper.showSuccess("Wizard {" + this.nameOf(wizard) + "} success");
+				}
             }
         }
         catch (InstantiationException | IllegalAccessException e)

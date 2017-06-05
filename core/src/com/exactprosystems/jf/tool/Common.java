@@ -59,6 +59,7 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.*;
 import java.util.List;
+import java.util.function.Consumer;
 
 public abstract class Common
 {
@@ -66,6 +67,8 @@ public abstract class Common
 	
 	// TODO move it to Main
 	public static Stage			node;
+
+	private static Consumer<String> browserListener;
 
 	public final static String	SETTINGS_PATH			= ".settings.xml";
 	public final static int		PREF_HEIGHT				= 23;
@@ -82,6 +85,16 @@ public abstract class Common
 	public final static String	DATE_TIME_PATTERN		= "HH:mm:ss dd.MM.yyyy";
 
 	public static final Logger	logger					= Logger.getLogger(Common.class);
+
+	public static void reportListener(Consumer<String> listener)
+	{
+		Common.browserListener = listener;
+	}
+
+	public static void openDefaultBrowser(String url)
+	{
+		Common.browserListener.accept(url);
+	}
 
 	public static void setFocused(final Node node)
 	{

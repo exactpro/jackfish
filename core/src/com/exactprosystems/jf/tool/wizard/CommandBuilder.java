@@ -56,6 +56,17 @@ public class CommandBuilder
 		return this;
 	}
 
+	public CommandBuilder addCommand(WizardCommand command)
+	{
+		this.commands.add(command);
+		return this;
+	}
+
+	public boolean isEmpty()
+	{
+		return this.commands.isEmpty();
+	}
+
 
     public static MatrixItem create(Matrix matrix, String itemName, String actionName)
     {

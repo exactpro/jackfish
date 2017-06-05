@@ -53,7 +53,6 @@ public class SeleniumRemoteApplication extends RemoteApplication
 
 	private	Exception te = null;
 
-
 	private static final String SCRIPT = 
 		" \n" +
 		"function attrs(e) { \n" +
@@ -98,43 +97,6 @@ public class SeleniumRemoteApplication extends RemoteApplication
 		"}; \n" +
 		" \n" +
 		"return go(arguments[0]); \n";
-
-	// TODO is it the same information as in plugin info?
-	private static Map<String, ArrayList<ControlKind>> mapTagsControlKind = new HashMap<>();
-
-	static
-	{
-		mapTagsControlKind.put("button",	new SimpleArrayBuilder<ControlKind>().
-				add(ControlKind.Button).
-				add(ControlKind.CheckBox).
-				add(ControlKind.TabPanel).build());
-		mapTagsControlKind.put("span",	new SimpleArrayBuilder<ControlKind>().add(ControlKind.Label).build());
-		mapTagsControlKind.put("a",			new SimpleArrayBuilder<ControlKind>().add(ControlKind.Button).build());
-		mapTagsControlKind.put("img",		new SimpleArrayBuilder<ControlKind>().add(ControlKind.Button).build());
-		mapTagsControlKind.put("input",		new SimpleArrayBuilder<ControlKind>().
-				add(ControlKind.TextBox).
-				add(ControlKind.Button).
-				add(ControlKind.CheckBox).
-				add(ControlKind.ComboBox).
-				add(ControlKind.RadioButton).
-				add(ControlKind.ToggleButton).build());
-		mapTagsControlKind.put("select",	new SimpleArrayBuilder<ControlKind>().add(ControlKind.ComboBox).build());
-		mapTagsControlKind.put("form",		new SimpleArrayBuilder<ControlKind>().
-				add(ControlKind.Dialog).
-				add(ControlKind.Frame).build());
-		mapTagsControlKind.put("body",		new SimpleArrayBuilder<ControlKind>().add(ControlKind.Frame).build());
-		mapTagsControlKind.put("label",		new SimpleArrayBuilder<ControlKind>().add(ControlKind.Label).build());
-		mapTagsControlKind.put("li",		new SimpleArrayBuilder<ControlKind>().
-				add(ControlKind.MenuItem).
-				add(ControlKind.Menu).build());
-		mapTagsControlKind.put("div",		new SimpleArrayBuilder<ControlKind>().add(ControlKind.Panel).build());
-		mapTagsControlKind.put("tr",		new SimpleArrayBuilder<ControlKind>().add(ControlKind.Row).build());
-		mapTagsControlKind.put("table",		new SimpleArrayBuilder<ControlKind>().add(ControlKind.Table).build());
-		mapTagsControlKind.put("textarea",	new SimpleArrayBuilder<ControlKind>().add(ControlKind.TextBox).build());
-		mapTagsControlKind.put("ul",		new SimpleArrayBuilder<ControlKind>().add(ControlKind.ListView).build());
-		mapTagsControlKind.put("*",			new SimpleArrayBuilder<ControlKind>().add(ControlKind.Any).build());
-
-	}
 
 	public SeleniumRemoteApplication()
 	{
@@ -311,7 +273,7 @@ public class SeleniumRemoteApplication extends RemoteApplication
 		catch (Exception e)
 		{
 			logger.error(e.getMessage(), e);
-			throw e;
+			throw new Exception(e.getMessage());
 		}
 		
 		return -1;

@@ -50,6 +50,7 @@ import com.exactprosystems.jf.tool.wizard.WizardManagerImpl;
 import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.JSchException;
 import com.jcraft.jsch.Session;
+import com.sun.deploy.uitoolkit.impl.fx.HostServicesFactory;
 import javafx.application.Application;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
@@ -254,6 +255,7 @@ public class Main extends Application
 		});
 		controller.init(factory, this, this.wizardManager, settings, stage);
 		Common.node = stage;
+		Common.reportListener(url -> Common.tryCatch(() -> HostServicesFactory.getInstance(this).showDocument(url), "Error on show report"));
 		controller.display();
 		controller.initShortcuts();
 		this.isFromInit = false;

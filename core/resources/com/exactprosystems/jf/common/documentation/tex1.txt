@@ -8,7 +8,7 @@
 \usepackage{longtable}
 
 %% Sets page size and margins
-\usepackage[a4paper,top=3cm,bottom=3cm,left=3cm,right=3cm,marginparwidth=1.75cm, margin=1in,headsep=0.5in]{geometry}
+\usepackage[a4paper, top=3cm, bottom=4cm, footskip = 30pt, left=3cm, right=1.75cm, marginparwidth=1.75cm, headsep=0.7in]{geometry}
 
 \usepackage{amsmath}
 \usepackage{graphicx}
@@ -30,8 +30,8 @@
 
 \fancypagestyle{allpages}{
     \fancyhf{}
-    \rhead{\includegraphics[width=4cm, height=1.3cm]{header.png}}
-    \lhead{\textbf{CONFIDENTIAL}}
+    \rhead{\includegraphics[width=5cm, height=1.5cm]{header.png}}
+    \lhead{\textbf{CONFIDENTIAL} \newline}
     \lfoot{JackFish. User Guide}
     \rfoot{\thepage\ of {\hypersetup{linkcolor=black}\pageref{LastPage}}}
 }
@@ -39,7 +39,7 @@
 \fancypagestyle{firstpage}
 {
    \fancyhf{}
-   \rhead{\includegraphics[width=4cm, height=1.3cm]{header.png}}
+   \rhead{\includegraphics[width=5cm, height=1.5cm]{header.png}}
    \lhead{\textbf{CONFIDENTIAL}}
    \lfoot{\includegraphics[width=4cm, height=1.3cm]{footer.png} \newline \tiny{London Stock Exchange Group plc. Registered in England & Wales No 5369106. Registered office 10 Paternoster Square, London EC4M 7LS} }
 }

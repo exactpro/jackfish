@@ -30,6 +30,7 @@ public class MainTabController implements Initializable, ContainingParent, ITabH
 	public NumberTextField  ntfMaxLastMatrixCount;
 	public NumberTextField  ntfTimeNotification;
 	public CheckBox         useFullScreen;
+	public CheckBox         useExternalReportViewer;
 	public ComboBox<Theme>  comboBoxTheme;
 	public ComboBox<String> cbFontFamily;
 	public ComboBox<Double> cbFontSize;
@@ -87,6 +88,7 @@ public class MainTabController implements Initializable, ContainingParent, ITabH
 		});
 
 		SettingsPanel.setValue(Settings.USE_FULL_SCREEN, res, str -> this.useFullScreen.setSelected(Boolean.parseBoolean(str)));
+		SettingsPanel.setValue(Settings.USE_EXTERNAL_REPORT_VIEWER, res, str -> this.useExternalReportViewer.setSelected(Boolean.parseBoolean(str)));
 		SettingsPanel.setValue(Settings.USE_FULLSCREEN_XPATH, res, str -> this.useFullScreenXpath.setSelected(Boolean.parseBoolean(str)));
 		SettingsPanel.setValue(Settings.COPYRIGHT, res, str -> this.taCopyright.setText(str.replaceAll("\\\\n", System.lineSeparator())));
 	}
@@ -113,6 +115,7 @@ public class MainTabController implements Initializable, ContainingParent, ITabH
 		this.model.updateSettingsValue(Settings.FONT, Settings.SETTINGS, Common.stringFromFont(font));
 
 		this.model.updateSettingsValue(Settings.USE_FULL_SCREEN, Settings.SETTINGS, String.valueOf(this.useFullScreen.isSelected()));
+		this.model.updateSettingsValue(Settings.USE_EXTERNAL_REPORT_VIEWER, Settings.SETTINGS, String.valueOf(this.useExternalReportViewer.isSelected()));
 		this.model.updateSettingsValue(Settings.USE_FULLSCREEN_XPATH, Settings.SETTINGS, String.valueOf(this.useFullScreenXpath.isSelected()));
 
 		this.model.updateSettingsValue(Settings.COPYRIGHT, Settings.SETTINGS, this.taCopyright.getText().replaceAll(System.lineSeparator(), "\\\\n"));
@@ -134,6 +137,7 @@ public class MainTabController implements Initializable, ContainingParent, ITabH
 		this.cbFontSize.getSelectionModel().select(font.getSize());
 
 		this.useFullScreen.setSelected(Boolean.parseBoolean(defaultSettings.getValue(Settings.GLOBAL_NS, Settings.SETTINGS, Settings.USE_FULL_SCREEN).getValue()));
+		this.useExternalReportViewer.setSelected(Boolean.parseBoolean(defaultSettings.getValue(Settings.GLOBAL_NS, Settings.SETTINGS, Settings.USE_EXTERNAL_REPORT_VIEWER).getValue()));
 		this.useFullScreenXpath.setSelected(Boolean.parseBoolean(defaultSettings.getValue(Settings.GLOBAL_NS, Settings.SETTINGS, Settings.USE_FULLSCREEN_XPATH).getValue()));
 
 		this.taCopyright.setText(defaultSettings.getValue(Settings.GLOBAL_NS, Settings.SETTINGS, Settings.COPYRIGHT).getValue().replaceAll("\\\\n", System.lineSeparator()));

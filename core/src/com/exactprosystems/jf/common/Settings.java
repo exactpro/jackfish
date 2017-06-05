@@ -83,6 +83,7 @@ public class Settings
 	public static final String	MAX_LAST_COUNT = "maxFilesCount";
 	public static final String	TIME_NOTIFICATION = "timeNotification";
 	public static final String	THEME = "theme";
+	public static final String	USE_EXTERNAL_REPORT_VIEWER = "useExternalReportViewer";
 	public static final String	USE_FULL_SCREEN	= "useFullScreen";
 	public static final String	USE_FULLSCREEN_XPATH = "useFullScreenXpath";
 	public static final String	COPYRIGHT = "copyright";
@@ -314,6 +315,7 @@ public class Settings
 					TIME_NOTIFICATION,"5",
 					THEME,"WHITE",
 					USE_FULL_SCREEN,"false",
+					USE_EXTERNAL_REPORT_VIEWER, "false",
 					USE_FULLSCREEN_XPATH,"false",
 					COPYRIGHT,"",
 					FONT, "System$13"
