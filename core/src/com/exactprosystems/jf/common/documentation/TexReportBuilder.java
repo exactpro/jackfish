@@ -92,7 +92,7 @@ public class TexReportBuilder extends ReportBuilder
 			case "2" + CM: return "}";
     
             // header 3
-            case OM + "3": return "\\\\section{ ";
+            case OM + "3": return "\\\\newpage \\\\section{ ";
             case "3" + CM: return " }";
     
             // header 4
@@ -249,13 +249,13 @@ public class TexReportBuilder extends ReportBuilder
 	@Override
 	protected void tableHeader(ReportWriter writer, ReportTable table, String tableTitle, String[] columns, int[] percents) throws IOException
 	{
-	    double constant = 0.9;
+	    double constant = 1;
 
-	    writer.fwrite("\\begin{center}").newline();
 		if (!Str.IsNullOrEmpty(tableTitle))
 		{
-			writer.fwrite("\\caption{%s} \\newline", tableTitle).newline();
+			writer.fwrite("\\newline \\caption{%s}", tableTitle).newline();
 		}
+	    writer.fwrite("\\begin{center}").newline();
 		String tab = IntStream.range(0, columns.length)
 		        .mapToObj(i -> i)
 		        .map(o -> (percents.length <= o ? "l" : "p{" + (percents[o] * TEXT_WIDTH * constant/ 100) + "mm}"))
