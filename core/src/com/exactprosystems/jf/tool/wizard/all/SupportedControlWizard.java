@@ -15,6 +15,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 
 import java.util.List;
+import java.util.Set;
 import java.util.function.Supplier;
 
 @WizardAttribute(
@@ -51,7 +52,7 @@ public class SupportedControlWizard extends AbstractWizard
 	@Override
 	protected void initDialog(BorderPane borderPane)
 	{
-		ControlKind[] supportedValues = this.appFactory.supportedControlKinds();
+		Set<ControlKind> supportedValues = this.appFactory.supportedControlKinds();
 		borderPane.setPrefSize(600.0, 600.0);
 		TreeView<SimpleBean> treeView = createTreeView(supportedValues);
 
@@ -66,7 +67,7 @@ public class SupportedControlWizard extends AbstractWizard
 				.build();
 	}
 
-	private TreeView<SimpleBean> createTreeView(ControlKind[] supportedValues)
+	private TreeView<SimpleBean> createTreeView(Set<ControlKind> supportedValues)
 	{
 		TreeView<SimpleBean> treeView = new TreeView<>();
 		treeView.setCellFactory(param -> new TreeCell<SimpleBean>(){

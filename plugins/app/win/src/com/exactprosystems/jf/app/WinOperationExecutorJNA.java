@@ -53,6 +53,12 @@ public class WinOperationExecutorJNA implements OperationExecutor<UIProxyJNA>
     }
 
 	@Override
+	public boolean isSupported(ControlKind kind)
+	{
+		return this.info.isSupported(kind);
+	}
+
+	@Override
 	public Rectangle getRectangle(UIProxyJNA component) throws Exception
 	{
 		try

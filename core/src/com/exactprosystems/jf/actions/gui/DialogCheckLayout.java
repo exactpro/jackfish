@@ -141,8 +141,7 @@ public class DialogCheckLayout extends AbstractAction
 		{
 			throw new WrongParameterException("The dialog with name '" + this.dialog + "' does not found in the dictionary");
 		}
-		Set<ControlKind> supportedControls = new HashSet<>();
-		supportedControls.addAll(Arrays.asList(app.getFactory().supportedControlKinds()));
+		Set<ControlKind> supportedControls = app.getFactory().supportedControlKinds();
 
 		logger.debug("Process dialog: " + window);
 

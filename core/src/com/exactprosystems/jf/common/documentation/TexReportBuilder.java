@@ -22,8 +22,6 @@ import java.nio.file.Files;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.Objects;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -85,21 +83,25 @@ public class TexReportBuilder extends ReportBuilder
 
         switch (marker)
         {
-            // header 1 (min level)
-            case OM + "1": return "";
-            case "1" + CM: return "";  
-    
-            // header 2
-            case OM + "2": return "\\\\section{ ";
-            case "2" + CM: return " }";
+            // header 1
+            case OM + "1": return "\\\\normalsize{";
+            case "1" + CM: return "}";
+
+			// header 2
+			case OM + "2": return "\\\\large{";
+			case "2" + CM: return "}";
     
             // header 3
-            case OM + "3": return "\\\\subsection{ ";
+            case OM + "3": return "\\\\section{ ";
             case "3" + CM: return " }";
     
-            // header 4 (max level)
-            case OM + "4": return "";
-            case "4" + CM: return "";  
+            // header 4
+            case OM + "4": return "\\\\subsection{ ";
+            case "4" + CM: return " }";
+    
+            // header 5
+            case OM + "5": return "\\\\subsubsection{";
+            case "5" + CM: return " }";
     
             // style for identifiers
             case OM + "$": return "\\\\verb+";     
@@ -108,7 +110,7 @@ public class TexReportBuilder extends ReportBuilder
 			// http://tostudents.ru/2010/01/07/overfull-i-underfull-perepolnennye-i-razrezhennye-stroki/
             // style for code
             case OM + "#": return "\\\\begingroup\n" +
-								"    \\\\fontsize{12pt}{10pt}\\\\selectfont\n" +
+								"    \\\\fontsize{10pt}{10pt}\\\\selectfont\n" +
 								"    \\\\begin{verbatim}  ";
             case "#" + CM: return "  \\\\end{verbatim}\n" +
 									"\\\\endgroup";
@@ -123,7 +125,7 @@ public class TexReportBuilder extends ReportBuilder
     
             // new page
             case OM + "&": return "";
-            case "&" + CM: return "\\\\newpage \\\\pagestyle{allpages}";  
+            case "&" + CM: return "\\\\newpage \\\\pagestyle{allpages} \\\\tableofcontents \\\\newpage";
 
             // underscored
             case OM + "_": return "";
@@ -284,40 +286,5 @@ public class TexReportBuilder extends ReportBuilder
 	protected void reportChart(ReportWriter writer, String title, String beforeTestCase, ChartBuilder chartBuilder) throws IOException
 	{
 		chartBuilder.report(writer, ++chartCount);
-	}
-
-	private String replaceSymbols(String source)
-	{
-		String reg = "(&&|~|&|^|%|#|$)";
-		Pattern patt = Pattern.compile(reg);
-		Matcher m = patt.matcher(source);
-		StringBuffer sb = new StringBuffer(source.length());
-		while (m.find())
-		{
-			String text = m.group(1);
-			switch (text)
-			{
-				case "&": text = text.replace("&", "\\\\&");
-					break;
-				case "&&": text = text.replace("&&", "\\\\&\\\\&");
-					break;
-				case "~": text = text.replace("~", "\\\\sim");
-					break;
-				case "^": text = text.replace("^", "\\\\wedge");
-					break;
-				case "%": text = text.replace("%", "\\\\%");
-					break;
-				case "#": text = text.replace("#", "\\\\#");
-					break;
-				case "$": text = text.replace("$", "\\\\textdollar");
-					break;
-				default:
-			}
-			m.appendReplacement(sb, text);
-		}
-		m.appendTail(sb);
-
-		return sb.toString();
-
 	}
 }

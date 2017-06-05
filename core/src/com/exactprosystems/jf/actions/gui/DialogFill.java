@@ -13,6 +13,7 @@ import com.exactprosystems.jf.api.app.*;
 import com.exactprosystems.jf.api.app.IWindow.SectionKind;
 import com.exactprosystems.jf.api.common.Str;
 import com.exactprosystems.jf.api.error.ErrorKind;
+import com.exactprosystems.jf.api.error.app.ControlNotSupportedException;
 import com.exactprosystems.jf.api.error.app.ElementNotFoundException;
 import com.exactprosystems.jf.api.error.app.NullParameterException;
 import com.exactprosystems.jf.api.error.app.OperationNotAllowedException;
@@ -178,8 +179,7 @@ public class DialogFill extends AbstractAction
             return;
         }
 
-        Set<ControlKind> supportedControls = new HashSet<>();
-		supportedControls.addAll(Arrays.asList(app.getFactory().supportedControlKinds()));
+        Set<ControlKind> supportedControls = app.getFactory().supportedControlKinds();
 
 		logger.debug("Process dialog: " + window);
 
@@ -206,7 +206,7 @@ public class DialogFill extends AbstractAction
 			{
 				if (checkControl(supportedControls, control))
 				{
-					super.setError(message(id, window, onOpen, control, null, "is not allowed"), ErrorKind.OPERATION_NOT_ALLOWED);
+					super.setError(message(id, window, onOpen, control, null, "is not supported"), ErrorKind.CONTROL_NOT_SUPPORTED);
 					return;
 				}
 
@@ -251,10 +251,10 @@ public class DialogFill extends AbstractAction
 
 			if (checkControl(supportedControls, control))
 			{
-				String message = message(id, window, run, control, null, "is not allowed");
-				errorsValue.put(name, new MatrixError(message, ErrorKind.LOCATOR_NOT_FOUND, this.owner));
+				String message = message(id, window, run, control, null, "is not supported");
+				errorsValue.put(name, new MatrixError(message, ErrorKind.CONTROL_NOT_SUPPORTED, this.owner));
 				super.setErrors(errorsValue);
-				super.setError(message, ErrorKind.LOCATOR_NOT_FOUND);
+				super.setError(message, ErrorKind.CONTROL_NOT_SUPPORTED);
 				return;
 			}
 
@@ -310,6 +310,10 @@ public class DialogFill extends AbstractAction
 					{
 						errorKind = ErrorKind.OPERATION_NOT_ALLOWED;
 					}
+					else if (t instanceof ControlNotSupportedException)
+					{
+						errorKind = ErrorKind.CONTROL_NOT_SUPPORTED;
+					}
 					else if (t instanceof NullParameterException)
 					{
 						errorKind = ErrorKind.EMPTY_PARAMETER;
@@ -352,7 +356,7 @@ public class DialogFill extends AbstractAction
 			{
 				if (checkControl(supportedControls, control))
 				{
-					super.setError(message(id, window, onClose, control, null, "is not allowed"), ErrorKind.OPERATION_NOT_ALLOWED);
+					super.setError(message(id, window, onClose, control, null, "is not supported"), ErrorKind.CONTROL_NOT_SUPPORTED);
 					return;
 				}
 

@@ -142,8 +142,7 @@ public class DialogValidate extends AbstractAction
             return;
         }
 		
-		Set<ControlKind> supportedControls = new HashSet<>();
-		supportedControls.addAll(Arrays.asList(app.getFactory().supportedControlKinds()));
+		Set<ControlKind> supportedControls = app.getFactory().supportedControlKinds();
 
 		logger.debug("Process dialog: " + window);
 

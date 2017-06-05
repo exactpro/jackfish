@@ -35,7 +35,7 @@ public enum ErrorKind
 	OTHER					("Other"),
 	CHART_EXCEPTION			("Chart exception"),
 	MATRIX_ERROR			("Matrix error"),
-	;
+    CONTROL_NOT_SUPPORTED	("Control is not supported");
 
 	
 	ErrorKind(String name)
