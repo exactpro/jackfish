@@ -110,7 +110,7 @@ public class TexReportBuilder extends ReportBuilder
 			// http://tostudents.ru/2010/01/07/overfull-i-underfull-perepolnennye-i-razrezhennye-stroki/
             // style for code
             case OM + "#": return "\\\\begingroup\n" +
-								"    \\\\fontsize{12pt}{10pt}\\\\selectfont\n" +
+								"    \\\\fontsize{10pt}{10pt}\\\\selectfont\n" +
 								"    \\\\begin{verbatim}  ";
             case "#" + CM: return "  \\\\end{verbatim}\n" +
 									"\\\\endgroup";

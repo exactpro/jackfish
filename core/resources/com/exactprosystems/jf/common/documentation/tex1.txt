@@ -51,6 +51,8 @@
 \author{JackFish dev team}
 \date{\today}
 
+\linespread{1.5}
+
 \begin{document}
 
 
