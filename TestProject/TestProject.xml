@@ -35,6 +35,7 @@
     <matrix>matrices</matrix>
     <appDict>dic</appDict>
     <library>libtp</library>
+	<library>../core/libjf</library>
     <globalHandler enable="true">
         <onTestCaseStart></onTestCaseStart>
         <onTestCaseFinish></onTestCaseFinish>

@@ -156,6 +156,12 @@ Test;Check win plugin;;;
     runMatrix;'WinPlugin'
 
 
+#Id;#TestCase;#Kind;#Depends;#For
+Test;Test RF.jf;;;
+    #Call;testName
+    runMatrix;'TestRF'
+
+
 // 
 #Id;#TestCase;#Kind;#Depends;#For
 REPORT;Cleanup;;;
