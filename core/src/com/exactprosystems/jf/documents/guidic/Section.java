@@ -126,7 +126,7 @@ public class Section implements ISection, Mutable
 	}
 
 	@Override
-	public void addControl(int index, IControl control) throws Exception
+	public void addControl(int index, IControl control)
 	{
 		if (control != null && control instanceof AbstractControl)
 		{
@@ -266,7 +266,7 @@ public class Section implements ISection, Mutable
 		return this.controls.remove(control);
 	}
 	
-	public void replaceControl(IControl control, IControl newControl) throws Exception
+	public void replaceControl(IControl control, IControl newControl)
 	{
 		Iterator<AbstractControl> iter = this.controls.iterator();
 		int index = 0;

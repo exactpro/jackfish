@@ -103,8 +103,11 @@ public class DictionaryFx extends GuiDictionary
 	public void save(String fileName) throws Exception
 	{
 		super.save(fileName);
-		this.controller.saved(getName());
-		displayTitle(getName());
+		if (this.controller != null)
+		{
+			this.controller.saved(getName());
+			displayTitle(getName());
+		}
 	}
 
 	@Override

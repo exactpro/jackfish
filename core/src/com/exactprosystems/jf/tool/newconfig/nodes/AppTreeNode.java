@@ -7,11 +7,9 @@
 ////////////////////////////////////////////////////////////////////////////////
 package com.exactprosystems.jf.tool.newconfig.nodes;
 
-import com.exactprosystems.jf.api.app.IApplicationPool;
 import com.exactprosystems.jf.api.common.SerializablePair;
 import com.exactprosystems.jf.api.wizard.Wizard;
 import com.exactprosystems.jf.api.wizard.WizardManager;
-import com.exactprosystems.jf.app.ApplicationPool;
 import com.exactprosystems.jf.documents.config.AppEntry;
 import com.exactprosystems.jf.documents.config.Configuration;
 import com.exactprosystems.jf.tool.Common;
@@ -149,26 +147,17 @@ public class AppTreeNode extends TreeNode
 			ContextMenu menu = new ContextMenu();
 
 			Menu menuWizard = new Menu("Wizard");
-			try
-			{
-				WizardManager manager = model.getFactory().getWizardManager();
-				IApplicationPool appPool = model.getApplicationPool();
-				Object[] criteries = new Object[]{appPool.loadApplicationFactory(getEntry().toString()), ((ApplicationPool) appPool).getDictionary(getEntry())};
-				java.util.List<Class<? extends Wizard>> suitableWizards = manager.suitableWizards(criteries);
-				menuWizard.getItems().clear();
-				menuWizard.getItems().addAll(suitableWizards.stream().map(wizardClass ->
-				{
-					MenuItem menuItem = new MenuItem(manager.nameOf(wizardClass));
-					menuItem.setOnAction(e -> manager.runWizard(wizardClass, model.getFactory().createContext(), criteries));
-					return menuItem;
-				}).collect(Collectors.toList()));
-			}
-			catch (Exception e)
-			{
-				//TODO
-				e.printStackTrace();
-			}
+			WizardManager manager = model.getFactory().getWizardManager();
+			Object[] criteries = new Object[]{ model.getApplicationPool(), this.getEntry()};
 
+			java.util.List<Class<? extends Wizard>> suitableWizards = manager.suitableWizards(criteries);
+			menuWizard.getItems().clear();
+			menuWizard.getItems().addAll(suitableWizards.stream().map(wizardClass ->
+			{
+				MenuItem menuItem = new MenuItem(manager.nameOf(wizardClass));
+				menuItem.setOnAction(e -> manager.runWizard(wizardClass, model.getFactory().createContext(), criteries));
+				return menuItem;
+			}).collect(Collectors.toList()));
 
 			menu.getItems().addAll(
 					menuWizard,
