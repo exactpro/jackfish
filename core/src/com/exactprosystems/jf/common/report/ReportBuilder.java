@@ -168,19 +168,19 @@ public abstract class ReportBuilder implements Storable
 		putMark(this.writer, str);
 	}
 
-    public final ReportTable addExplicitTable(String title, String beforeTestcase, boolean decoraded, int quotedSince, int[] widths, String ... columns)
+    public final ReportTable addExplicitTable(String title, String beforeTestcase, boolean decoraded, boolean bordered, int[] widths, String ... columns)
     {
         Integer uniq = this.uniques.peek();
-        ReportTable info = new ReportTable(title, beforeTestcase, decoraded, quotedSince, widths, columns);
+        ReportTable info = new ReportTable(title, beforeTestcase, decoraded, bordered, widths, columns);
         this.reportData.get(uniq).add(info);
         
         return info;
     }
 
-	public final ReportTable addTable(String title, String beforeTestcase, boolean decoraded, int quotedSince, int[] widths, String ... columns)
+	public final ReportTable addTable(String title, String beforeTestcase, boolean decoraded, boolean bordered, int[] widths, String ... columns)
 	{
 		Integer uniq = this.uniques.peek();
-		ReportTable info = new ReportTable(title, beforeTestcase, decoraded, quotedSince, widths, columns);
+		ReportTable info = new ReportTable(title, beforeTestcase, decoraded, bordered, widths, columns);
 		if (this.reportIsOn())
 		{
 		    this.reportData.get(uniq).add(info);

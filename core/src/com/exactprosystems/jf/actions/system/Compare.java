@@ -96,7 +96,7 @@ public class Compare extends AbstractAction
             throws Exception
     {
         String[] headers = new String[] { "Field", "Expected", "Actual", "Result" };
-        ReportTable table = report.addTable("Comparing fields:", null, true, 1, new int[] { 25, 25, 25, 25 }, headers);
+        ReportTable table = report.addTable("Comparing fields:", null, true, true, new int[] { 25, 25, 25, 25 }, headers);
         boolean res = true;
         Table resultTable = new Table(headers, evaluator);
         

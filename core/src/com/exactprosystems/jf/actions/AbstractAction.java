@@ -366,7 +366,7 @@ public abstract class AbstractAction implements Cloneable
     {
         if (!parameters.isEmpty())
         {
-            ReportTable table = report.addTable("Input parameters", null, false, 2,
+            ReportTable table = report.addTable("Input parameters", null, false, true,
                     new int[] {20, 40, 40}, new String[] {"Parameter", "Expression", "Value"});
 
             for (Parameter param : parameters)
@@ -380,13 +380,13 @@ public abstract class AbstractAction implements Cloneable
     {
         if (!assertBool.isExpressionNullOrEmpty() )
         {
-	        ReportTable assertTable = report.addTable("Assert", null, false, 1,
+	        ReportTable assertTable = report.addTable("Assert", null, false, true,
 	                new int[] {60, 40}, new String[] {"Expression", "Value"});
 	
 	        assertTable.addValues(assertBool.getExpression(), assertBool.getValue());
         }
 
-        ReportTable resultTable = report.addTable("Results", null, false, 1,
+        ReportTable resultTable = report.addTable("Results", null, false, true,
                 new int[] {20, 80}, new String[] {"Parameter", "Value"});
 
         tableRowIfNotNull(resultTable, "Result", 		this.action.Result);

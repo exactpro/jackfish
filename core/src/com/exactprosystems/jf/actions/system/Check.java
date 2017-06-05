@@ -99,7 +99,7 @@ public class Check extends AbstractAction
         }
         else
         {
-            ReportTable table = report.addTable("Mismatched fields:", null, true, 1, new int[] { 20, 80 }, "Name", "Expected + Actual");
+            ReportTable table = report.addTable("Mismatched fields:", null, true, true, new int[] { 20, 80 }, "Name", "Expected + Actual");
             for (Entry<String, String> entry : diff.entrySet())
             {
                 table.addValues(entry.getKey(), entry.getValue());

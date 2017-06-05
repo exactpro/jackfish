@@ -122,7 +122,7 @@ public class Return extends MatrixItem
 			this.returnValue.evaluate(evaluator);
 			if (!this.returnValue.isValid())
 			{
-				ReportTable table = report.addTable("Return", null, true, 1, 
+				ReportTable table = report.addTable("Return", null, true, true, 
 						new int[] {50, 50}, new String[] {"Expression", "Error"});
 			
 				String msg = "Error in expression #Return";
@@ -136,7 +136,7 @@ public class Return extends MatrixItem
 			Object eval = this.returnValue.getValue();
 			if (this.returnValue != null)
 			{
-				ReportTable table = report.addTable("Return", null, true, 1, 
+				ReportTable table = report.addTable("Return", null, true, true, 
 						new int[] {50, 50}, new String[] {"Expression", "Value"});
 			
 	        	table.addValues(this.returnValue.getExpression(), eval);

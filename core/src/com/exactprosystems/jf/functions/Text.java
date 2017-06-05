@@ -94,7 +94,7 @@ public class Text implements List<String>, Mutable, Cloneable
 	
 	public void report(ReportBuilder report, String beforeTestcase, String title) throws Exception
 	{
-		ReportTable table = report.addExplicitTable(title, beforeTestcase, true, 0, new int[] {});
+		ReportTable table = report.addExplicitTable(title, beforeTestcase, true, true, new int[] {});
 		
 		for(String list : this.list)
 		{

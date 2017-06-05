@@ -125,7 +125,7 @@ public class Let extends MatrixItem
 			this.value.evaluate(evaluator);
 			if (!this.value.isValid())
 			{
-				ReportTable table = report.addTable("Let", null, true, 1, 
+				ReportTable table = report.addTable("Let", null, true, true, 
 						new int[] {50, 50}, new String[] {"Expression", "Error"});
 			
 				String msg = "Error in expression #Let";
@@ -142,7 +142,7 @@ public class Let extends MatrixItem
 				vars.set(getId(), val);
 			}
 			
-			ReportTable table = report.addTable("Let", null, true, 1, 
+			ReportTable table = report.addTable("Let", null, true, true, 
 					new int[] {50, 50}, new String[] {"Expression", "Value"});
 		
         	table.addValues(this.value.getExpression(), val);

@@ -13,11 +13,12 @@ import java.util.List;
 
 public class ReportTable
 {
-	public ReportTable(String title, String beforeTestcase, boolean decorated, int quotedSince, int[] widths, String[] columns)
+	public ReportTable(String title, String beforeTestcase, boolean decorated, boolean bordered, int[] widths, String[] columns)
 	{
 		this.title = title;
 		this.beforeTestcase = beforeTestcase;
 		this.decorated = decorated;
+		this.bordered = bordered;
 		this.columns = columns;
 		this.widths = widths;
 	}
@@ -47,6 +48,11 @@ public class ReportTable
 		return this.decorated;
 	}
 
+    public boolean isBordered()
+    {
+        return this.bordered;
+    }
+
 	public String[] getColumns()
 	{
 		return this.columns;
@@ -63,6 +69,7 @@ public class ReportTable
 	}
 
 	protected boolean decorated;
+    protected boolean bordered;
 	protected String title;
 	protected String beforeTestcase;
 	protected String[] columns;

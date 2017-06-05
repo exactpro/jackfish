@@ -161,7 +161,7 @@ public class Switch extends MatrixItem
 			this.switcher.evaluate(evaluator);
 			if (!this.switcher.isValid())
 			{
-				ReportTable table = report.addTable("Switch", null, true, 1, 
+				ReportTable table = report.addTable("Switch", null, true, true, 
 						new int[] {50, 50}, new String[] {"Expression", "Error"});
 			
 				String msg = "Error in expression #Switch";

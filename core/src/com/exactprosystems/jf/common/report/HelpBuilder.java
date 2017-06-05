@@ -458,7 +458,7 @@ public class HelpBuilder extends ReportBuilder
             tmp = (MatrixItem) clazz.newInstance();
             report.itemStarted(tmp);
             report.itemIntermediate(tmp);
-			ReportTable table = report.addTable("", null, true, 100, new int[] { 30, 70 });
+			ReportTable table = report.addTable("", null, true, true, new int[] { 30, 70 });
 			table.addValues("Description", attribute.description());
             table.addValues("Examples", attribute.examples());
 //            if (!attribute.seeAlso().equals(""))
@@ -488,7 +488,7 @@ public class HelpBuilder extends ReportBuilder
 
         ActionAttribute attr = clazz.getAnnotation(ActionAttribute.class);
 
-        table = report.addTable("", null, true, 0, new int[] { 30, 70 }, "Action item", clazz.getSimpleName());
+        table = report.addTable("", null, true, true, new int[] { 30, 70 }, "Action item", clazz.getSimpleName());
 
         table.addValues("Description", attr.generalDescription());
         if (attr.additionFieldsAllowed())
@@ -512,7 +512,7 @@ public class HelpBuilder extends ReportBuilder
 
         // Input
         Field[] fields = clazz.getDeclaredFields();
-        table = report.addTable("Input:", null, true, 4, new int[] { 0, 0, 60, 0, 0 }, "Field name", "Field type",
+        table = report.addTable("Input:", null, true, true, new int[] { 0, 0, 60, 0, 0 }, "Field name", "Field type",
                 "Description", "Mandatory");
         table.addValues();
         for (Field f : fields)
@@ -527,7 +527,7 @@ public class HelpBuilder extends ReportBuilder
         }
 
         // Output
-        table = report.addTable("Output:", null, true, 100, new int[] { 20, 40 }, "Output type", "Description");
+        table = report.addTable("Output:", null, true, true, new int[] { 20, 40 }, "Output type", "Description");
         table.addValues(attr.outputType().getSimpleName(), attr.outputDescription());
 
         report.itemFinished(tmp, 0, null);

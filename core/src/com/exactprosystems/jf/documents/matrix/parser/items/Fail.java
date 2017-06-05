@@ -119,7 +119,7 @@ public class Fail extends MatrixItem
 			this.failValue.evaluate(evaluator);
 			if (!this.failValue.isValid())
 			{
-				ReportTable table = report.addTable("Fail", null, true, 1, new int[] { 50, 50 }, new String[] { "Expression", "Error" });
+				ReportTable table = report.addTable("Fail", null, true, true, new int[] { 50, 50 }, new String[] { "Expression", "Error" });
 
 				String msg = "Error in expression #Fail";
 				table.addValues(this.failValue.getExpression(), msg);
@@ -131,7 +131,7 @@ public class Fail extends MatrixItem
 			Object eval = this.failValue.getValue();
 			if (this.failValue != null)
 			{
-				ReportTable table = report.addTable("Fail", null, true, 1, new int[] { 50, 50 }, new String[] { "Expression", "Value" });
+				ReportTable table = report.addTable("Fail", null, true, true, new int[] { 50, 50 }, new String[] { "Expression", "Value" });
 
 				table.addValues(this.failValue.getExpression(), eval);
 

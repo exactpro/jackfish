@@ -851,7 +851,7 @@ public class Table implements List<RowTable>, Mutable, Cloneable
             
             widths = widths == null ? new int[] {} : widths;
             headers = convertHeaders(columns, headers, withNumbers);
-            ReportTable table = report.addExplicitTable(title, beforeTestcase, true, 0, widths, headers);
+            ReportTable table = report.addExplicitTable(title, beforeTestcase, true, true, widths, headers);
 
             Function<String, String> func = name -> columns.isEmpty() ? name
                     : columns.entrySet().stream().filter(e -> name.equals(String.valueOf(e.getValue()))).findFirst()
@@ -1254,7 +1254,7 @@ public class Table implements List<RowTable>, Mutable, Cloneable
 	    ReportTable result = table;
 		if (result == null)
 		{
-		    result = report.addTable("Differences", null, true, 0, new int[]{30, 35, 35}, "Description", "Expected", "Actual");
+		    result = report.addTable("Differences", null, true, true, new int[]{30, 35, 35}, "Description", "Expected", "Actual");
 		}
 		result.addValues(name, expectedValue, actualValue);
         differences.addValue(new String[] { name, expectedValue, actualValue } );

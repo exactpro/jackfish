@@ -130,7 +130,7 @@ public class Assert extends MatrixItem
 			this.message.evaluate(evaluator);
 			if (!this.assertion.isValid() || !this.message.isValid())
 			{
-				ReportTable table = report.addTable("Assert", null, true, 1, 
+				ReportTable table = report.addTable("Assert", null, true, true, 
 						new int[] {50, 50}, new String[] {"Expression", "Error"});
 
 				String msg = "Error in expression ";
@@ -152,7 +152,7 @@ public class Assert extends MatrixItem
 			Object eval = this.assertion.getValue();
 			if (eval instanceof Boolean)
 			{
-				ReportTable table = report.addTable("Assert", null, true, 1, 
+				ReportTable table = report.addTable("Assert", null, true, true, 
 						new int[] {50, 50}, new String[] {"Expression", "Value"});
 
 				boolean bool = (Boolean)eval;

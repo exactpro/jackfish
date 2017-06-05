@@ -148,7 +148,7 @@ public class If extends MatrixItem
 			this.condition.evaluate(evaluator);
 			if (!this.condition.isValid())
 			{
-				ReportTable table = report.addTable("If", null, true, 1, 
+				ReportTable table = report.addTable("If", null, true, true, 
 						new int[] {50, 50}, new String[] {"Expression", "Error"});
 			
 				String msg = "Error in expression #If.\n"+this.condition.getValueAsString();

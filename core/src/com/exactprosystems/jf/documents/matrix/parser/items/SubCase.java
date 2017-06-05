@@ -243,7 +243,7 @@ public final class SubCase extends MatrixItem
 	// ==============================================================================================
 	private void reportParameters(ReportBuilder report, Parameters parameters)
 	{
-		ReportTable table = report.addTable("Input parameters", null, true, 2, new int[] { 20, 40, 40 }, new String[] { "Parameter", "Expression", "Value" });
+		ReportTable table = report.addTable("Input parameters", null, true, true, new int[] { 20, 40, 40 }, new String[] { "Parameter", "Expression", "Value" });
 
 		for (Parameter parameter : parameters)
 		{

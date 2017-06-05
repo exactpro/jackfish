@@ -163,7 +163,7 @@ public class DialogValidate extends AbstractAction
 		
 		
 		boolean totalResult = true;
-		ReportTable table = report.addTable("Dialog validation", null, true, 0, new int[] { 25, 65 }, "Field", "Result");
+		ReportTable table = report.addTable("Dialog validation", null, true, true, new int[] { 25, 65 }, "Field", "Result");
 		SectionKind run = SectionKind.Run;
 		logger.debug("Perform " + run);
 		ISection sectionRun = window.getSection(run);

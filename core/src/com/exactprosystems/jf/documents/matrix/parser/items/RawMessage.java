@@ -247,7 +247,7 @@ public class RawMessage extends MatrixItem
 	{
 		try
 		{
-			ReportTable table = report.addTable("Message", null, true, 100, new int[] { });
+			ReportTable table = report.addTable("Message", null, true, true, new int[] { });
 			table.addValues(Str.asString(this.message));
 			Variables vars = isGlobal() ? evaluator.getGlobals() : evaluator.getLocals();
 			ReturnAndResult ret = new ReturnAndResult(start, Result.Passed, this.message);

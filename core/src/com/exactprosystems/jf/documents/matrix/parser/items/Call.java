@@ -272,7 +272,7 @@ public final class Call extends MatrixItem
     {
         if (!parameters.isEmpty())
         {
-            ReportTable table = report.addTable("Input parameters", null, true, 2,
+            ReportTable table = report.addTable("Input parameters", null, true, true,
                     new int[] {20, 40, 40}, new String[] {"Parameter", "Expression", "Value"});
 
             for (Parameter param : parameters)

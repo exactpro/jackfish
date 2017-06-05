@@ -82,7 +82,7 @@ public class HelpText extends MatrixItem
                             columns[i] = columnNWidth[0];
                             widths[i] = columnNWidth.length > 1 ? Integer.parseInt(columnNWidth[1]) : 0; 
                         }
-                        table = report.addExplicitTable("", null, true, 0, widths, columns);
+                        table = report.addExplicitTable("", null, true, true, widths, columns);
                     }
                     else
                     {
