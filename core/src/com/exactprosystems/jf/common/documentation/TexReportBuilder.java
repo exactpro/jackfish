@@ -261,13 +261,20 @@ public class TexReportBuilder extends ReportBuilder
 		{
 			writer.fwrite("\\newline \\caption{%s}", tableTitle).newline();
 		}
+		String delimiter = table.isBordered() ? "|" : "";
 	    writer.fwrite("\\begin{center}").newline();
 		String tab = IntStream.range(0, columns.length)
 		        .mapToObj(i -> i)
 		        .map(o -> (percents.length <= o ? "l" : "p{" + (percents[o] * TEXT_WIDTH * constant/ 100) + "mm}"))
-		        .collect(Collectors.joining("|"));
+		        .collect(Collectors.joining(delimiter));
 
-		writer.fwrite(String.format("\\begin{longtable}{|%s|} \\hline", tab)).newline();
+		if (table.isBordered()){
+			writer.fwrite(String.format("\\begin{longtable}{|%s|} \\hline", tab)).newline();
+		}
+		else {
+			writer.fwrite(String.format("\\begin{longtable}{%s}", tab)).newline();
+		}
+
 		tableRow(writer, table, 0, columns);
 	}
 	
@@ -277,7 +284,10 @@ public class TexReportBuilder extends ReportBuilder
 		if (value != null)
         {
 		    String s = Arrays.stream(value).map(o -> Objects.toString(o)).reduce((s1, s2) -> s1 + "&" + s2).orElse("");
-            writer.fwrite(s).fwrite("\\\\ \\hline").newline();
+			writer.fwrite(s).fwrite("\\\\");
+		    if (table.isBordered())
+            	writer.fwrite(" \\hline");
+		    writer.newline();
         }
 	}
 
