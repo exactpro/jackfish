@@ -628,36 +628,24 @@ public class SeleniumOperationExecutor implements OperationExecutor<WebElement>
 	@Override
 	public int getTableSize(WebElement component, Locator additional, Locator header, boolean useNumericHeader) throws Exception
 	{
-		Exception real = null;
-		int repeat = 1;
-		do
+		String outerHTML = component.getAttribute("outerHTML");
+		Elements rows = findRows(Jsoup.parse(outerHTML));
+		AtomicBoolean atomicBoolean = new AtomicBoolean(false);
+		if(header != null)
 		{
-			try
-			{
-				List<WebElement> tbody = component.findElements(By.xpath("child::tbody"));
-				if (tbody.isEmpty())
-				{
-					return 0;
-				}
-				WebElement firstTbody = tbody.get(0);
-				return firstTbody.findElements(By.xpath("child::tr")).size();
-			}
-			catch (StaleElementReferenceException e)
-			{
-				real = e;
-				logger.debug("Element is no longer attached to the DOM. Try in SeleniumOperationExecutor : " + repeat);
-			}
-			catch (Exception e)
-			{
-				logger.error("Error on get row with color");
-				logger.error(e.getMessage(), e);
-				throw new RemoteException(e.getMessage());
-			}
+			getHeadersFromHeaderField(header);
 		}
-		while (++repeat < repeatLimit);
-		throw real;
+		else
+		{
+			getHeadersFromHTML(outerHTML, atomicBoolean, null);
+		}
+		if (atomicBoolean.get())
+		{
+			rows.remove(0);
+		}
+		return rows.size();
 	}
-	
+
     @Override
     public Color getColorXY(WebElement component, int x, int y) throws Exception
     {

@@ -67,14 +67,14 @@ public class DocumentationBuilder
                 };
 
 
-        addTable(help, "{{*User Guide*}}", table1, new int[] { 50, 50 },  evaluator);
-        addTable(help, "{{*Document Information*}}", table2, new int[] { 25, 23, 23, 25 },  evaluator);
-        addTable(help, "{{*Abbreviations*}}", table3, new int[] { 50, 50 },  evaluator);
+        addTable(help, "{{*User Guide*}}",              true,  table1, new int[] { 50, 50 },  evaluator);
+        addTable(help, "{{*Document Information*}}",    false, table2, new int[] { 25, 23, 23, 25 },  evaluator);
+        addTable(help, "{{*Abbreviations*}}",           true,  table3, new int[] { 50, 50 },  evaluator);
 
         addText(help, DocumentationBuilder.class.getResourceAsStream("intro1.txt"));
         addPicture(help, "Architecture", DocumentationBuilder.class.getResourceAsStream("Intro.png"));
         addText(help, DocumentationBuilder.class.getResourceAsStream("intro2.txt"));
-        addChapter(help, "MVEL", 2);
+        addChapter(help, "MVEL", 3);
         addText(help, DocumentationBuilder.class.getResourceAsStream("mvel.txt"));
 //        addChapter(help, "All controls", 3);
 //        addAllControlsTable(help, "All controls", context);
@@ -120,10 +120,10 @@ public class DocumentationBuilder
         root.insert(root.count(), picture);
     }
     
-    public static void addTable(MatrixItem root, String title, String[][] content, int[] widths, AbstractEvaluator evaluator) throws Exception
+    public static void addTable(MatrixItem root, String title, boolean bordered, String[][] content, int[] widths, AbstractEvaluator evaluator) throws Exception
     {
         Table table = new Table(content, evaluator);
-        MatrixItem text = new HelpTable(title, table, widths);
+        MatrixItem text = new HelpTable(title, table, bordered, widths);
         root.insert(root.count(), text);
     }
     

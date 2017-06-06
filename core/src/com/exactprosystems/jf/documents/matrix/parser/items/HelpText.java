@@ -55,7 +55,7 @@ public class HelpText extends MatrixItem
             
             String source = sb.toString();
             
-            String reg = "(\\{\\{=.*?=\\}\\})";
+            String reg = "((\\{\\{[=|-]).*?([=|-]\\}\\}))";
             
             Pattern patt = Pattern.compile(reg, Pattern.DOTALL);
             String[] parts = patt.split(source);
@@ -66,6 +66,9 @@ public class HelpText extends MatrixItem
             Matcher m = patt.matcher(source);
             while (m.find())
             {
+                String text = m.group(2);
+                boolean bordered = text.contains("=");
+                
                 String strTable = m.group();
                 String[] lines = strTable.split("``");
                 ReportTable table = null;
@@ -82,7 +85,7 @@ public class HelpText extends MatrixItem
                             columns[i] = columnNWidth[0];
                             widths[i] = columnNWidth.length > 1 ? Integer.parseInt(columnNWidth[1]) : 0; 
                         }
-                        table = report.addExplicitTable("", null, true, true, widths, columns);
+                        table = report.addExplicitTable("", null, true, bordered, widths, columns);
                     }
                     else
                     {

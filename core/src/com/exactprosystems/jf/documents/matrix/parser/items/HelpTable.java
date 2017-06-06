@@ -23,11 +23,17 @@ import com.exactprosystems.jf.functions.Table;
 
 public class HelpTable extends MatrixItem
 {
-	public HelpTable(String str, Table table, int[] widths)
+    public HelpTable(String str, Table table, boolean bordered, int[] widths)
+    {
+        this.str = str;
+        this.table = table;
+        this.widths = widths;
+        this.bordered = bordered;
+    }
+
+    public HelpTable(String str, Table table, int[] widths)
 	{
-		this.str = str;
-		this.table = table;
-		this.widths = widths;
+        this(str, table, false, widths);
 	}
 
 	@Override
@@ -41,7 +47,7 @@ public class HelpTable extends MatrixItem
 	{
         try
         {
-            this.table.report(report, this.str, null, false, true, Collections.emptyMap(), this.widths);
+            this.table.report(report, this.str, null, false, true, this.bordered, Collections.emptyMap(), this.widths);
         }
         catch (Exception e)
         {
@@ -53,5 +59,6 @@ public class HelpTable extends MatrixItem
 
 	private String str;
 	private Table table;
-    protected int[]  widths;
+    private int[]  widths;
+    private boolean bordered;
 }

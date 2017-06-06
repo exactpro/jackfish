@@ -29,7 +29,7 @@ public class TexReportBuilder extends ReportBuilder
 {
     private static final long serialVersionUID = -6980809888694705058L;
     
-    private static final int TEXT_WIDTH = 150; // mm
+    private static final double TEXT_WIDTH = 150; // mm
 
     private static Integer chartCount = 0;
 	
@@ -110,7 +110,7 @@ public class TexReportBuilder extends ReportBuilder
 			// http://tostudents.ru/2010/01/07/overfull-i-underfull-perepolnennye-i-razrezhennye-stroki/
             // style for code
             case OM + "#": return "\\\\begingroup\n" +
-								"    \\\\fontsize{10pt}{10pt}\\\\selectfont\\\\color{codecolor}\n" +
+								"    \\\\fontsize{12pt}{10pt}\\\\selectfont\\\\color{codecolor}\n" +
 								"    \\\\begin{verbatim}  ";
             case "#" + CM: return "  \\\\end{verbatim}\n" +
 									"\\\\endgroup";
@@ -255,19 +255,24 @@ public class TexReportBuilder extends ReportBuilder
 	@Override
 	protected void tableHeader(ReportWriter writer, ReportTable table, String tableTitle, String[] columns, int[] percents) throws IOException
 	{
-	    double constant = 1;
-
 		if (!Str.IsNullOrEmpty(tableTitle))
 		{
 			writer.fwrite("\\newline \\caption{%s}", tableTitle).newline();
 		}
+		String delimiter = table.isBordered() ? "|" : "";
 	    writer.fwrite("\\begin{center}").newline();
 		String tab = IntStream.range(0, columns.length)
 		        .mapToObj(i -> i)
-		        .map(o -> (percents.length <= o ? "l" : "p{" + (percents[o] * TEXT_WIDTH * constant/ 100) + "mm}"))
-		        .collect(Collectors.joining("|"));
+		        .map(o -> (percents.length <= o ? "l" : "p{" + (percents[o] * TEXT_WIDTH / 100) + "mm}"))
+		        .collect(Collectors.joining(delimiter));
 
-		writer.fwrite(String.format("\\begin{longtable}{|%s|} \\hline", tab)).newline();
+		if (table.isBordered()){
+			writer.fwrite(String.format("\\begin{longtable}{|%s|} \\hline", tab)).newline();
+		}
+		else {
+			writer.fwrite(String.format("\\begin{longtable}{%s}", tab)).newline();
+		}
+
 		tableRow(writer, table, 0, columns);
 	}
 	
@@ -277,7 +282,11 @@ public class TexReportBuilder extends ReportBuilder
 		if (value != null)
         {
 		    String s = Arrays.stream(value).map(o -> Objects.toString(o)).reduce((s1, s2) -> s1 + "&" + s2).orElse("");
-            writer.fwrite(s).fwrite("\\\\ \\hline").newline();
+			writer.fwrite(s).fwrite("\\\\");
+		    if (table.isBordered()) {
+                writer.fwrite(" \\hline");
+            }
+		    writer.newline();
         }
 	}
 

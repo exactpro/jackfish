@@ -818,11 +818,11 @@ public class Table implements List<RowTable>, Mutable, Cloneable
 
 	public void report(ReportBuilder report, String title, String beforeTestcase, boolean withNumbers, boolean reportValues) throws Exception
 	{
-		report(report, title, beforeTestcase, withNumbers, reportValues, Collections.emptyMap(), null);
+		report(report, title, beforeTestcase, withNumbers, reportValues, true, Collections.emptyMap(), null);
 	}
 
     public void report(ReportBuilder report, String title, String beforeTestcase, boolean withNumbers,
-            boolean reportValues, Map<String, String> columns, int[] widths) throws Exception
+            boolean reportValues, boolean bordered, Map<String, String> columns, int[] widths) throws Exception
     {
         if (beforeTestcase != null || report.reportIsOn())
         {
@@ -851,7 +851,7 @@ public class Table implements List<RowTable>, Mutable, Cloneable
             
             widths = widths == null ? new int[] {} : widths;
             headers = convertHeaders(columns, headers, withNumbers);
-            ReportTable table = report.addExplicitTable(title, beforeTestcase, true, true, widths, headers);
+            ReportTable table = report.addExplicitTable(title, beforeTestcase, true, bordered, widths, headers);
 
             Function<String, String> func = name -> columns.isEmpty() ? name
                     : columns.entrySet().stream().filter(e -> name.equals(String.valueOf(e.getValue()))).findFirst()
