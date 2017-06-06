@@ -24,18 +24,18 @@
             <label id="Label" owner="owner" class="javax.swing.JLabel" name="centralLabel" text="" addition="Many"/>
             <progressBar id="ProgressBar" owner="owner" class="javax.swing.JProgressBar" name="ProgressBar" addition="Many"/>
             <panel id="Panel" owner="owner" class="javax.swing.JPanel" name="Panel" addition="Many"/>
-            <dialog id="DialogD" title="Dialog" addition="Many"/>
-            <listView id="ListView" owner="owner" class="javax.swing.JList" addition="Many"/>
+            <dialog id="Dialog" title="Dialog" addition="Many"/>
+            <listView id="List" owner="owner" class="javax.swing.JList" addition="Many"/>
             <menu id="Menu" owner="owner" class="javax.swing.JMenu" name="Menu" action="Menu" text="Menu" addition="Many"/>
-            <menuItem id="MenuItem" owner="owner" class="javax.swing.JMenuItem" name="MenuItem" action="MenuItem" text="MenuItem" addition="Many"/>
+            <menuItem id="Menuitem" owner="owner" class="javax.swing.JMenuItem" name="Menuitem" action="Menuitem" text="Menuitem" addition="Many"/>
             <menu id="Menu" owner="owner" class="javax.swing.JMenu" action="Menu1" text="Menu1" addition="Many"/>
             <menu id="Menu1" owner="owner" class="javax.swing.JMenu" action="JMenu 1" text="JMenu 1"/>
-            <image id="Image" owner="owner"/>
+            <image id="Image" xpath="" owner="owner" name="Image" addition="Many"/>
             <row id="Row" owner="owner"/>
             <treeItem id="TreeItem" owner="owner"/>
             <splitter id="Splitter" owner="owner" class="javax.swing.JSplitPane" name="Splitter" addition="Many"/>
             <radioButton id="RadioButton1" owner="owner" class="javax.swing.JRadioButton" action="Yellow" text="Yellow" addition="Many"/>
-            <toolTip id="ToolTip" owner="owner" text="ToolTip" addition="Many"/>
+            <toolTip id="Tooltip" owner="owner" text="Tooltip" addition="Many"/>
             <menu id="Menu2" xpath=".//JMenu[@action=&amp;quot;Menu1&amp;quot;]" owner="owner" class="" action="" text=""/>
             <any id="Any" owner="owner" class="javax.swing.JButton" name="Any" action="Any" text="Any" addition="Many"/>
             <wait id="Wait" owner="owner" addition="Many"/>

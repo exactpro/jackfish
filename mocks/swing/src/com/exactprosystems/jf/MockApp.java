@@ -9,6 +9,7 @@ package com.exactprosystems.jf;
 
 import sun.awt.TimedWindowEvent;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.event.*;
 import javax.swing.table.DefaultTableModel;
@@ -17,6 +18,10 @@ import javax.swing.text.JTextComponent;
 import javax.swing.tree.DefaultMutableTreeNode;
 import java.awt.*;
 import java.awt.event.*;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+import java.net.URL;
 import java.util.EventObject;
 
 import static java.awt.event.WindowEvent.WINDOW_GAINED_FOCUS;
@@ -59,7 +64,6 @@ public class MockApp
 		createPanelCombobox();
 		createPanelSlider();
 		createPanelToggleButton();
-		createPanelImage();
 		createPanelTree();
 		createTabPanel();
 		createPanelListView();
@@ -71,6 +75,7 @@ public class MockApp
 		createPanelAny();
 		createPanelWithDisableComponents();
 		createPanelWithHiddenArea();
+		createPanelImage();
 
 		this.frame.setSize(new Dimension(800, 800));
 		this.frame.setVisible(true);
@@ -247,7 +252,7 @@ public class MockApp
 		});
 		addListeners(menu, menuName);
 
-		String menuItemName = "MenuItem";
+		String menuItemName = "Menuitem";
 		JMenuItem menuItem = new JMenuItem(menuItemName);
 		addListeners(menuItem, menuItemName);
 		menuItem.addActionListener(e -> centralLabel.setText(menuItemName + "_click"));
@@ -286,7 +291,7 @@ public class MockApp
 		ToolTipManager.sharedInstance().setInitialDelay(0);
 		ToolTipManager.sharedInstance().setReshowDelay(0);
 		ToolTipManager.sharedInstance().setLightWeightPopupEnabled(true);
-		jMenu.setToolTipText("ToolTip");
+		jMenu.setToolTipText("Tooltip");
 		jMenu.add(menuItem);
 		menuBar.add(menu);
 		menuBar.add(jMenu);
@@ -744,7 +749,18 @@ public class MockApp
 
 	private void createPanelImage()
 	{
-
+		String pathname = new File("").getAbsolutePath() + "/../mocks/swing/ide.png";
+		JPanel panel = createPanel("panelImage");
+		panel.add(new JLabel(pathname));
+		try {
+			BufferedImage img = ImageIO.read(new File(pathname));
+			ImageIcon icon = new ImageIcon(img);
+			JLabel label = new JLabel(icon);
+			addListeners(label, "Image");
+			panel.add(label);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 	private void addListeners(Component component, String name)
@@ -811,7 +827,7 @@ public class MockApp
 		stringDefaultListModel.addElement("Blue");
 		stringDefaultListModel.addElement("Orange");
 		JList<String> list = new JList<>(stringDefaultListModel);
-		String name = "ListView";
+		String name = "List";
 		addListeners(list, name);
 		list.getSelectionModel().addListSelectionListener(l -> centralLabel.setText(name + "_" + list.getSelectedValue()));
 		panel.add(list);
@@ -839,7 +855,7 @@ public class MockApp
 		JDialog dialog = new JDialog(frame, "Dialog");
 		dialog.setLocation(1000,600);
 		JButton button = new JButton("ButtonD");
-		addListeners(dialog, "DialogD");
+		addListeners(dialog, "Dialog");
 		addListeners(button, "ButtonD");
 		dialog.setLayout(new FlowLayout());
 		dialog.add(button);

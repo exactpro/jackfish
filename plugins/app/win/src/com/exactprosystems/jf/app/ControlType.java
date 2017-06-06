@@ -3,6 +3,7 @@ package com.exactprosystems.jf.app;
 public enum ControlType
 {
     Any("Any", -1),
+    Wait("Wait", -1),
     Button("Button",50000),
     Calendar("Calendar",50001),
     CheckBox("CheckBox",50002),
