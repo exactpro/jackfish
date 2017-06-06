@@ -1,3 +1,293 @@
 #TestCase;#Kind;#Depends;#For
-Test case;Never;;
+Global variables and subcases;;;
+    // ovveride default vars
+    #Id;#Global;#Let
+    _rf_default_handler;1;'testdata/tf_matrixes/MatrixCleanup.jf'
+
+    #Id;#Global;#Let
+    pathToMatrices;1;'testdata/rf_matrixes/'
+
+    #Id;#Global;#Let
+    regressionName;1;'TestValue_'+System.currentTimeMillis()
+
+    #Id;#Global;#Let
+    testSetMatrix1;1;'Some test set'
+
+    #Id;#Global;#Let
+    testSetMatrix2;1;'Some another test set'
+
+    #Id;#Global;#Let
+    nameMatrix1;1;'Some name for matrix 1'
+
+    #Id;#Global;#Let
+    nameMatrix2;1;'Some another name for matrix 2'
+
+    #Id;#SubCase;callName
+    findReport;find report file by call name. return file.getAbsolutePath();'Overall '
+        #Id;#Let
+        reportFolder;new File('reports')
+
+        #Id;#Let
+        reports;reportFolder.listFiles()
+
+        #Assert;#Message
+        reports != null;'Set valid report folder path'
+
+        #For;#From;#To;#Step
+        i;0;reports.length - 1;1
+            #Id;#Let
+            report;reports[i]
+
+            #If
+            report.getName().contains(callName + regressionName)
+                #Return
+                report.getAbsolutePath()
+
+            #EndIf
+
+        #EndFor
+
+    #EndSubCase
+
+    #Id;#SubCase;fileName
+    findFile;return file.getAbsolutePath;testSetMatrix2 + DateTime.strDate(runId.create_time, '_yyyyMMdd_HHmmss')
+        #Id;#Let
+        reportFolder;new File('reports')
+
+        #Id;#Let
+        reports;reportFolder.listFiles()
+
+        #Assert;#Message
+        reports != null;'Set valid report folder path'
+
+        #For;#From;#To;#Step
+        i;0;reports.length - 1;1
+            #Id;#Let
+            report;reports[i]
+
+            #If
+            report.getName().contains(fileName)
+                #Return
+                report.getAbsolutePath()
+
+            #EndIf
+
+        #EndFor
+
+    #EndSubCase
+
+
+#TestCase;#Kind;#Depends;#For
+Drop and create database;;;
+    #Id;#Action;$User;$Server;$Base;$Sql;$Password
+    SQLCNT;SQLconnect;_rf_user;_rf_host;'';_rf_type;_rf_password
+
+    #Id;#Action;$Query;$Connection;base
+    SQLSLCT1;SQLselect;'SELECT SCHEMA_NAME FROM INFORMATION_SCHEMA.SCHEMATA WHERE SCHEMA_NAME = ?';SQLCNT.Out;_rf_base
+
+    #If
+    SQLSLCT1.Out.size() > 0
+        #Id;#Action;$Query;$Connection
+        SQLEXEC1;SQLexecute;'drop database ' + _rf_base;SQLCNT.Out
+
+        #Id;#Action;$Query;$Connection
+        SQLEXEC2;SQLexecute;'create database ' + _rf_base;SQLCNT.Out
+
+    #EndIf
+
+    #Id;#Action;$Connection
+    SQLDCNT1;SQLdisconnect;SQLCNT.Out
+
+
+#TestCase;#Kind;#Depends;#For
+Run regression;Never;;
+    #Id;#RawTable
+    table;Table
+    @;Off;Scenario;Name;TestSet;Start;Finish;Performer;Priority
+    0;;pathToMatrices + 'Matrix1';nameMatrix1;testSetMatrix1;;;Some performer;0
+    1;;pathToMatrices + 'Matrix2';nameMatrix2;testSetMatrix2;0;2;;4
+    2;x;pathToMatrices + 'Matrix3';;;;;;1
+    #EndRawTable
+
+    #Action;$Table;$Expression
+    TableConsiderColumnsAs;table;{'Scenario', 'TestSet', 'Name'}
+
+    #Id;#Action;$DefaultValue;$HelpKind;$Title
+    INP1;Input;regressionName;HelpKind.String;'Enter some test name'
+
+    #Id;#Global;#Let
+    regressionName;1;INP1.Out
+
+    #Call;table;name
+    RF.RunAll;table;INP1.Out
+
+    #OnError
+        #Assert;#Message
+        error == 'Regression failed';'Regression failed by reason : ' + error
+
+
+
+#TestCase;#Kind;#Depends;#For
+Check repOverall;;;
+    #Call;date
+    RF.repOverall;
+
+    #Id;#Call;callName
+    reportPath;findReport;'Overall '
+
+    #Id;#Call;pathToReport
+    app;testLib.runBrowser;reportPath
+
+    #Id;#Action;#Assert;$Dialog;$AppConnection;title;svg
+    DLGFLL11;DialogFill;This.Out.title == true && This.Out.svg == true;'DialogForTestCharts';app;Do.isVisible();Do.isVisible()
+
+    #Id;#Action;#Assert;$Dialog;$AppConnection;slices
+    DLGFLL55;DialogFill;This.Out.slices == 2;'DialogForTestCharts';app;Do.count()
+
+    #Id;#Let
+    list;['Passed', 'Failed']
+
+    #For;#From;#To;#Step
+    i;0;list.size() - 1;1
+        #Id;#Action;$Dialog;$AppConnection;slices
+        DLGFLL66;DialogFill;'DialogForTestCharts';app;Do.use(i).check(list[i])
+
+    #EndFor
+
+    #Id;#Action;$Dialog;$AppConnection;Executed;Passed;Failed
+    DLGFLL4;DialogFill;'DialogForTestReport';app;Do.check('Executed : 2');Do.check('Passed : ' + 1);Do.check('Failed : ' + 1)
+
+    #Call;appCon
+    testLib.stopBrowser;app
+
+
+#TestCase;#Kind;#Depends;#For
+Check summary;;;
+    #Call;date
+    RF.repSummary;
+
+    #Id;#Call;callName
+    reportPath;findReport;'Consolidated Umbrella Report '
+
+    #Id;#Call;pathToReport
+    app;testLib.runBrowser;reportPath
+
+    #Id;#Action;$Dialog;$AppConnection;Executed;Passed;Failed
+    DLGFLL4;DialogFill;'DialogForTestReport';app;Do.check('Executed : 2');Do.check('Passed : ' + 1);Do.check('Failed : ' + 1)
+
+    #Id;#Action;$Dialog;$AppConnection;umbrellaTable
+    DLGFLL1;DialogFill;'DialogForTestReport';app;Do.getTable()
+
+    #Action;$Table;$Title
+    TableReport;DLGFLL1.Out.umbrellaTable;'umbrella table'
+
+    #Id;#RawTable
+    expected;Table
+    @;Test set;Matrix Name;Execution Status;Executed By;Execution Machine
+    0;testSetMatrix1;nameMatrix1;Passed;Sys.userName();Sys.hostName()
+    1;testSetMatrix2;nameMatrix2;Failed;Sys.userName();Sys.hostName()
+    #EndRawTable
+
+    #Action;$Table;$Expression
+    TableConsiderColumnsAs;expected;{'Executed By', 'Execution Machine', 'Matrix Name', 'Test set'}
+
+    #Id;#Action;$Expected;$Actual;$ExcludeColumns;$CompareValues
+    TBLCMP1;TableCompareTwo;expected;DLGFLL1.Out.umbrellaTable;{'Execution Date', 'Execution Time', 'Report link'};true
+
+    #Call;appCon
+    testLib.stopBrowser;app
+
+
+#TestCase;#Kind;#Depends;#For
+Check exportToXml;;;
+    #Id;#Let
+    matrixName;'my_name' + System.currentTimeMillis()
+
+    #Call;date;pathToSave;matrixName
+    RF.repXmlExport2;;'reports';matrixName
+
+    #Assert;#Message
+    new File('reports/regression ' + matrixName+'.xml').exists();'Xml does not created'
+
+
+#TestCase;#Kind;#Depends;#For
+Check repCsvExport;;;
+    #Call;date;pathToSave
+    RF.repCsvExport;;'reports'
+
+    #Id;#Call
+    SQL;RF.Connect
+
+    #Id;#Call;sql;date
+    runId;RF.runIdFromDate;SQL;
+
+    #Id;#Action;$Connection
+    SQLDCNT2;SQLdisconnect;SQL
+
+    #Step;#Kind;#For;#Depends
+    'check matrix1';;;
+        #Id;#Call;fileName
+        filePath;findFile;testSetMatrix1 + DateTime.strDate(runId.create_time, '_yyyyMMdd_HHmmss')
+
+        #Id;#Action;$File;$Delimiter
+        TBL1;TableLoadFromFile;filePath;','
+
+        #Id;#RawTable
+        expected;Table
+        @;Test Name;Execution Status;Execution Date;Execution Time;Executed By;Execution Machine;Step1;Step2
+        0;nameMatrix1;Passed;2017-06-06;12:19:18 PM;Sys.userName();Sys.hostName();;
+        #EndRawTable
+
+        #Action;$Table;$Expression
+        TableConsiderColumnsAs;expected;{'Test Name', 'Execution Machine', 'Executed By'}
+
+        #Id;#Action;$Expected;$Actual;$ExcludeColumns;$CompareValues
+        TBLCMP2;TableCompareTwo;expected;TBL1.Out;{'Execution Date', 'Execution Time'};true
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'check matrix2';;;
+        #Id;#Call;fileName
+        filePath;findFile;testSetMatrix2 + DateTime.strDate(runId.create_time, '_yyyyMMdd_HHmmss')
+
+        #Id;#Action;$File;$Delimiter
+        TBL1;TableLoadFromFile;filePath;','
+
+        #Id;#RawTable
+        expected;Table
+        @;Test Name;Execution Status;Execution Date;Execution Time;Executed By;Execution Machine;Step1
+        0;nameMatrix2;Failed;2017-06-06;12:19:18 PM;Sys.userName();Sys.hostName();some reason for failing
+        #EndRawTable
+
+        #Action;$Table;$Expression
+        TableConsiderColumnsAs;expected;{'Test Name', 'Execution Machine', 'Executed By'}
+
+        #Id;#Action;$Expected;$Actual;$ExcludeColumns;$CompareValues
+        TBLCMP2;TableCompareTwo;expected;TBL1.Out;{'Execution Date', 'Execution Time'};true
+
+    #EndStep
+
+
+// TODO add tests
+#TestCase;#Kind;#Depends;#For
+Check repLastAllDetails;;;
+    #Call;date
+    RF.repLastAllDetails;
+
+
+#TestCase;#Kind;#Depends;#For
+Check repProgress;;;
+    #Call
+    RF.repProgress
+
+
+#TestCase;#Kind;#Depends;#For
+Check listOfDates;;;
+    #Id;#Call
+    list;RF.listOfDates
+
+    #Assert;#Message
+    list.size() == 1;'Actual size : ' + list.size()
+
 

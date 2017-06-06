@@ -1,0 +1,17 @@
+#TestCase;#Kind;#Depends;#For
+;;;
+    #Step;#Kind;#For;#Depends
+    'Simple step';;;
+        #Action;$Time
+        Wait;200
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'Simple another step';;;
+        #Action;$Time
+        Wait;200
+
+    #EndStep
+
+

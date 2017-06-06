@@ -469,7 +469,7 @@ RF;RegressionFramework
         REP1;ReportStart;title;'JF: ' + runId.tool_version + '  APP: ' + runId.app_version
 
         #Action;$Table;$Title;$ToReport;$Numbers;$ReportValues;testSet;scenario;result;date;time;username;host;report
-        TableReport;table;'{{4' + title + '4}}';REP1.Out;false;true;'Test set';'Matrix Name';'Execution Status';'Execution Date';'Execution Time';'Exectuted By';'Execution Machine';'Report link'
+        TableReport;table;'{{4' + title + '4}}';REP1.Out;false;true;'Test set';'Matrix Name';'Execution Status';'Execution Date';'Execution Time';'Executed By';'Execution Machine';'Report link'
 
         #Action;$Passed;$Failed;$Report;$StartTime;$FinishTime
         ReportFinish;passed.Out.size();failed.Out.size();REP1.Out;times.startTime;times.finishTime
@@ -1217,7 +1217,7 @@ RF;RegressionFramework
             #Case
             'MYSQL'
                 #Id;#Action;$Connection;$Query
-                select;SQLselect;SQL;'SELECT DATE(r.create_time) AS 'Period', AVG(s.passed / (s.passed + s.failed)) AS 'Average' FROM runs AS r LEFT JOIN scenarios AS s ON s.run_id = r.id GROUP BY r.id'
+                select;SQLselect;SQL;'SELECT DATE(r.create_time) AS `Period`, AVG(s.passed / (s.passed + s.failed)) AS `Average` FROM runs AS r LEFT JOIN scenarios AS s ON s.run_id = r.id GROUP BY r.id'
 
 
             #Case

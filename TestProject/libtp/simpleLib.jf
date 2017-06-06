@@ -8,14 +8,20 @@ testLib;Simple library for testing jf functionality
 
     #EndSubCase
 
-    #Id;#SubCase;table
-    simpleSubWithTable;;
-        #ForEach;#In
-        row;table
-            #Action;Str
-            Print;row.newH
+    #Id;#SubCase;pathToReport
+    runBrowser;returned value - appConnection;pathToReport
+        #Id;#Action;$AppId;Browser;URL
+        APPSTR1;ApplicationStart;mockWebApp;mockWebBrowser;'file://' + new File(pathToReport).getAbsolutePath()
 
-        #EndForEach
+        #Return
+        APPSTR1.Out
+
+    #EndSubCase
+
+    #Id;#SubCase;appCon
+    stopBrowser;;appCon
+        #Id;#Action;$AppConnection
+        APPSTP1;ApplicationStop;appCon
 
     #EndSubCase
 

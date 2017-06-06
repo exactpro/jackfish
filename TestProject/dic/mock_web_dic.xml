@@ -57,6 +57,7 @@
             <label id="startTime" xpath=".//span[@id=&amp;#39;startTime&amp;#39;]/span"/>
             <label id="finishTime" xpath=".//span[@id=&amp;#39;finishTime&amp;#39;]/span"/>
             <label id="version" xpath="//table[@class=&amp;quot;table&amp;quot;]/tbody/tr[2]/td[2]"/>
+            <table id="umbrellaTable" class="table table-bordered !repLog"/>
         </run>
         <onClose/>
         <close/>

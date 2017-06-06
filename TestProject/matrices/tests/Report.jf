@@ -83,7 +83,7 @@ Check Report with one parameter;Never;;
     pathToReport;runMatrix;TEXT1
 
     #Id;#Call;pathToReport
-    appCon;runBrowser;pathToReport
+    appCon;testLib.runBrowser;pathToReport
 
     #Id;#Let
     locator;new Locator().kind(ControlKind.Any).visibility(Visibility.Visible).xpath('.//span[contains(.,\'report with one parameter\')]')
@@ -99,7 +99,7 @@ Check Report with one parameter;Never;;
     DLGFLL5;DialogFill;This.Out.MockElement == true;'DialogForTestReport';appCon;Do.use(locator).isVisible()
 
     #Id;#Call;appCon
-    CALL_2;stopBrowser;appCon
+    CALL_2;testLib.stopBrowser;appCon
 
 
 #TestCase;#Kind;#Depends;#For
@@ -118,7 +118,7 @@ Check Report with one parameter with invalid before test case;Never;;
     pathToReport;runMatrix;TEXT1
 
     #Id;#Call;pathToReport
-    appCon;runBrowser;pathToReport
+    appCon;testLib.runBrowser;pathToReport
 
     #Id;#Let
     locator;new Locator().kind(ControlKind.Any).visibility(Visibility.Visible).xpath('.//span[contains(.,\'report with one parameter\')]')
@@ -134,7 +134,7 @@ Check Report with one parameter with invalid before test case;Never;;
     DLGFLL5;DialogFill;This.Out.MockElement == true;'DialogForTestReport';appCon;Do.use(locator).isVisible()
 
     #Id;#Call;appCon
-    CALL_2;stopBrowser;appCon
+    CALL_2;testLib.stopBrowser;appCon
 
 
 #TestCase;#Kind;#Depends;#For
@@ -153,7 +153,7 @@ Check Report with parameter beforeTestCase;Never;;
     pathToReport;runMatrix;TEXT1
 
     #Id;#Call;pathToReport
-    appCon;runBrowser;pathToReport
+    appCon;testLib.runBrowser;pathToReport
 
     #Id;#Let
     locator;new Locator().kind(ControlKind.Any).visibility(Visibility.Visible).xpath('.//span[contains(.,\'report with one parameter\')]')
@@ -169,7 +169,7 @@ Check Report with parameter beforeTestCase;Never;;
     DLGFLL5;DialogFill;This.Result == Result.Failed && This.Reason.contains('No one element was found');'DialogForTestReport';appCon;Do.use('MainTable', LocatorKind.Owner).use(locator, LocatorKind.Element).isVisible()
 
     #Id;#Call;appCon
-    CALL_2;stopBrowser;appCon
+    CALL_2;testLib.stopBrowser;appCon
 
 
 #TestCase;#Kind;#Depends;#For
@@ -188,7 +188,7 @@ Check Report with many parameters inside table;Never;;
     pathToReport;runMatrix;TEXT1
 
     #Id;#Call;pathToReport
-    appCon;runBrowser;pathToReport
+    appCon;testLib.runBrowser;pathToReport
 
     #Id;#Let
     locator;new Locator().kind(ControlKind.Any).visibility(Visibility.Visible).xpath('.//span[contains(text(), "One = one") and contains(text(), "two = Two")]')
@@ -204,7 +204,7 @@ Check Report with many parameters inside table;Never;;
     DLGFLL5;DialogFill;This.Out.MockElement == true;'DialogForTestReport';appCon;Do.use(locator).isVisible()
 
     #Id;#Call;appCon
-    CALL_2;stopBrowser;appCon
+    CALL_2;testLib.stopBrowser;appCon
 
 
 #TestCase;#Kind;#Depends;#For
@@ -226,7 +226,7 @@ Check ReportName;Never;;
     pathToReport.endsWith('report name.html');'Report file dosnt contains expected string'
 
     #Id;#Call;pathToReport
-    appCon;runBrowser;pathToReport
+    appCon;testLib.runBrowser;pathToReport
 
     #Id;#Let
     locator;new Locator().kind(ControlKind.Any).visibility(Visibility.Visible).xpath('.//span[@id=\'name\']/span[.=\'report name\']')
@@ -236,7 +236,7 @@ Check ReportName;Never;;
     DLGFLL1;DialogFill;This.Out.MockElement == true;'DialogForTestReport';appCon;Do.use(locator).isVisible()
 
     #Id;#Call;appCon
-    CALL_2;stopBrowser;appCon
+    CALL_2;testLib.stopBrowser;appCon
 
 
 #TestCase;#Kind;#Depends;#For
@@ -275,13 +275,13 @@ report start finish;;;
     ReportFinish;passed;REP1.Out;failed;finishTime;startTime
 
     #Id;#Call;pathToReport
-    appCon;runBrowser;REP1.Out.getReportName()
+    appCon;testLib.runBrowser;REP1.Out.getReportName()
 
     #Id;#Action;$Dialog;$AppConnection;Executed;Passed;Failed;startTime;finishTime;version
     DLGFLL4;DialogFill;'DialogForTestReport';appCon;Do.check('Executed : ' + (passed+failed));Do.check('Passed : ' + passed);Do.check('Failed : ' + failed);Do.check(startTime.str('yyyy-MM-dd HH:mm:ss'));Do.check(finishTime.str('yyyy-MM-dd HH:mm:ss'));Do.check('my version')
 
     #Id;#Call;appCon
-    CALL_3;stopBrowser;appCon
+    CALL_3;testLib.stopBrowser;appCon
 
 
 // TODO
@@ -326,7 +326,7 @@ report chart Line chart;;;
         CALL_1;runMatrix;TEXT1
 
         #Id;#Call;pathToReport
-        appCon;runBrowser;CALL_1
+        appCon;testLib.runBrowser;CALL_1
 
         #Id;#Action;#Assert;$Dialog;$AppConnection;title;svg
         DLGFLL5;DialogFill;This.Out.title == false && This.Out.svg == false;'DialogForTestCharts';appCon;Do.isVisible();Do.isVisible()
@@ -353,7 +353,7 @@ report chart Line chart;;;
         DLGFLL8;DialogFill;DLGFLL8.Out.xAxisTicks == 2006 && DLGFLL8.Out.lines == "John Salary";'DialogForTestCharts';appCon;Do.use(5).getValue();Do.use(1).getValue()
 
         #Id;#Call;appCon
-        CALL_2;stopBrowser;appCon
+        CALL_2;testLib.stopBrowser;appCon
 
     #EndStep
 
@@ -384,7 +384,7 @@ report chart Line chart;;;
         CALL_2;runMatrix;TEXT2
 
         #Id;#Call;pathToReport
-        appCon;runBrowser;CALL_2
+        appCon;testLib.runBrowser;CALL_2
 
         #Id;#Action;#Assert;$Dialog;$AppConnection;title;svg
         DLGFLL55;DialogFill;This.Out.title == true && This.Out.svg == true;'DialogForTestCharts';appCon;Do.isVisible();Do.isVisible()
@@ -414,7 +414,7 @@ report chart Line chart;;;
         DLGFLL9;DialogFill;This.Result == Result.Failed;'DialogForTestReport';appCon;Do.use(new Locator().kind(ControlKind.Any).xpath('.//table[contains(@class,"innerTable")]//div[@class="container"]')).isVisible()
 
         #Id;#Call;appCon
-        CALL_2;stopBrowser;appCon
+        CALL_2;testLib.stopBrowser;appCon
 
     #EndStep
 
@@ -445,7 +445,7 @@ report chart Line chart;;;
         CALL_1;runMatrix;TEXT1
 
         #Id;#Call;pathToReport
-        appCon;runBrowser;CALL_1
+        appCon;testLib.runBrowser;CALL_1
 
         #Id;#Call;appCon
         CALL_3;expandChart;appCon
@@ -454,7 +454,7 @@ report chart Line chart;;;
         DLGFLL667;DialogFill;'DialogForTestCharts';appCon;Do.check('')
 
         #Id;#Call;appCon
-        CALL_2;stopBrowser;appCon
+        CALL_2;testLib.stopBrowser;appCon
 
     #EndStep
 
@@ -485,13 +485,13 @@ report chart Line chart;;;
         CALL_4;runMatrix;TEXT21
 
         #Id;#Call;pathToReport
-        appCon;runBrowser;CALL_4
+        appCon;testLib.runBrowser;CALL_4
 
         #Id;#Action;$Dialog;$AppConnection;svg;svg
         DLGFLL10;DialogFill;'DialogForTestCharts';appCon;Do.checkColor(686,113, Color.GREEN);Do.checkColor(534, 62, Color.RED)
 
         #Id;#Call;appCon
-        CALL_5;stopBrowser;appCon
+        CALL_5;testLib.stopBrowser;appCon
 
     #EndStep
 
@@ -535,7 +535,7 @@ report chart Bar chart;;;
         CALL_1;runMatrix;TEXT1
 
         #Id;#Call;pathToReport
-        appCon;runBrowser;CALL_1
+        appCon;testLib.runBrowser;CALL_1
 
         #Id;#Action;#Assert;$Dialog;$AppConnection;title;svg
         DLGFLL5;DialogFill;This.Out.title == false && This.Out.svg == false;'DialogForTestCharts';appCon;Do.isVisible();Do.isVisible()
@@ -565,7 +565,7 @@ report chart Bar chart;;;
         DLGFLL8;DialogFill;DLGFLL8.Out.xAxisTicks == 2006 && DLGFLL8.Out.legend == "John Salary";'DialogForTestCharts';appCon;Do.use(5).getValue();Do.use(1).getValue()
 
         #Id;#Call;appCon
-        CALL_2;stopBrowser;appCon
+        CALL_2;testLib.stopBrowser;appCon
 
     #EndStep
 
@@ -596,7 +596,7 @@ report chart Bar chart;;;
         CALL_2;runMatrix;TEXT2
 
         #Id;#Call;pathToReport
-        appCon;runBrowser;CALL_2
+        appCon;testLib.runBrowser;CALL_2
 
         #Id;#Action;#Assert;$Dialog;$AppConnection;title;svg
         DLGFLL55;DialogFill;This.Out.title == true && This.Out.svg == true;'DialogForTestCharts';appCon;Do.isVisible();Do.isVisible()
@@ -629,7 +629,7 @@ report chart Bar chart;;;
         DLGFLL9;DialogFill;This.Result == Result.Failed;'DialogForTestReport';appCon;Do.use(new Locator().kind(ControlKind.Any).xpath('.//table[contains(@class,"innerTable")]//div[@class="container"]')).isVisible()
 
         #Id;#Call;appCon
-        CALL_2;stopBrowser;appCon
+        CALL_2;testLib.stopBrowser;appCon
 
     #EndStep
 
@@ -660,7 +660,7 @@ report chart Bar chart;;;
         CALL_1;runMatrix;TEXT1
 
         #Id;#Call;pathToReport
-        appCon;runBrowser;CALL_1
+        appCon;testLib.runBrowser;CALL_1
 
         #Id;#Call;appCon
         CALL_3;expandChart;appCon
@@ -669,7 +669,7 @@ report chart Bar chart;;;
         DLGFLL667;DialogFill;'DialogForTestCharts';appCon;Do.check('')
 
         #Id;#Call;appCon
-        CALL_2;stopBrowser;appCon
+        CALL_2;testLib.stopBrowser;appCon
 
     #EndStep
 
@@ -706,7 +706,7 @@ report chart Bar chart;;;
         redRects;[144,269,444,585,728,874]
 
         #Id;#Call;pathToReport
-        appCon;runBrowser;CALL_4
+        appCon;testLib.runBrowser;CALL_4
 
         #For;#From;#To;#Step
         i;0;greenRects.size() - 1;1
@@ -719,7 +719,7 @@ report chart Bar chart;;;
         DLGFLL12;DialogFill;'DialogForTestCharts';appCon;Do.checkColor(926,28,Color.GREEN);Do.checkColor(926,49,Color.RED)
 
         #Id;#Call;appCon
-        CALL_5;stopBrowser;appCon
+        CALL_5;testLib.stopBrowser;appCon
 
     #EndStep
 
@@ -748,7 +748,7 @@ report chart Pie chart;;;
         CALL_4;runMatrix;TEXT3
 
         #Id;#Call;pathToReport
-        appCon;runBrowser;CALL_4
+        appCon;testLib.runBrowser;CALL_4
 
         #Id;#Action;#Assert;$Dialog;$AppConnection;title;svg
         DLGFLL1;DialogFill;This.Out.title == false && This.Out.svg == false;'DialogForTestCharts';appCon;Do.isVisible();Do.isVisible()
@@ -770,7 +770,7 @@ report chart Pie chart;;;
         #EndFor
 
         #Id;#Call;appCon
-        CALL_6;stopBrowser;appCon
+        CALL_6;testLib.stopBrowser;appCon
 
     #EndStep
 
@@ -796,10 +796,10 @@ report chart Pie chart;;;
         pathToReport;runMatrix;TEXT1
 
         #Id;#Call;pathToReport
-        appCon;runBrowser;pathToReport
+        appCon;testLib.runBrowser;pathToReport
 
         #Id;#Action;#Assert;$Dialog;$AppConnection;title;svg
-        DLGFLL11;DialogFill;This.Out.title == true && This.Out.svg == true;'DialogForTestCharts';appCon;Do.isVisible();Do.isVisible()
+        DLGFLL11;DialogFill;This.Out.title == true && This.Out.svg == true;'DialogForTestCharts';app;Do.isVisible();Do.isVisible()
 
         #Id;#Action;#Assert;$Dialog;$AppConnection;slices
         DLGFLL55;DialogFill;This.Out.slices == 3;'DialogForTestCharts';appCon;Do.count()
@@ -821,7 +821,7 @@ report chart Pie chart;;;
         DLGFLL9;DialogFill;This.Result == Result.Failed;'DialogForTestReport';appCon;Do.use(new Locator().kind(ControlKind.Any).xpath('.//table[contains(@class,"innerTable")]//div[@class="container"]')).isVisible()
 
         #Id;#Call;appCon
-        CALL_6;stopBrowser;appCon
+        CALL_6;testLib.stopBrowser;appCon
 
     #EndStep
 
@@ -847,13 +847,13 @@ report chart Pie chart;;;
         pathToReport;runMatrix;TEXT
 
         #Id;#Call;pathToReport
-        appCon;runBrowser;pathToReport
+        appCon;testLib.runBrowser;pathToReport
 
         #Id;#Action;$Dialog;$AppConnection;svg;svg;svg
         DLGFLL56;DialogFill;'DialogForTestCharts';appCon;Do.checkColor(100, 85, Color.RED);Do.checkColor(100, 200, Color.GREEN);Do.checkColor(200, 200, Color.BLUE)
 
         #Id;#Call;appCon
-        CALL_2;stopBrowser;appCon
+        CALL_2;testLib.stopBrowser;appCon
 
     #EndStep
 
@@ -861,7 +861,7 @@ report chart Pie chart;;;
 #TestCase;#Kind;#Depends;#For
 subcases;;;
     #Id;#SubCase;rawText
-    runMatrix;returned value - path to report;TEXT
+    runMatrix;returned value - path to report;TEXT1
         #Id;#Action;$Text
         MXRN1;MatrixRunFromText;rawText
 
@@ -873,23 +873,6 @@ subcases;;;
 
         #Return
         MXRN1.Out.getReportName()
-
-    #EndSubCase
-
-    #Id;#SubCase;pathToReport
-    runBrowser;returned value - appConnection;pathToReport
-        #Id;#Action;$AppId;Browser;URL
-        APPSTR1;ApplicationStart;mockWebApp;mockWebBrowser;'file://' + new File(pathToReport).getAbsolutePath()
-
-        #Return
-        APPSTR1.Out
-
-    #EndSubCase
-
-    #Id;#SubCase;appCon
-    stopBrowser;;appCon
-        #Id;#Action;$AppConnection
-        APPSTP1;ApplicationStop;appCon
 
     #EndSubCase
 

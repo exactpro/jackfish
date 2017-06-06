@@ -1,0 +1,4 @@
+#TestCase;#Kind;#Depends;#For
+Test case;Never;;
+    #Action;#Text;#Notifier
+    Show;'This is a cleanup matrix for: ' + parameter ;Notifier.Error

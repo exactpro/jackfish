@@ -1,0 +1,10 @@
+#TestCase;#Kind;#Depends;#For
+;;;
+    #Step;#Kind;#For;#Depends
+    'Always failed step';;;
+        #Fail
+        'some reason for failing'
+
+    #EndStep
+
+
