@@ -23,7 +23,11 @@ The following chart is a complete list and description of all operators present 
 {{=
 {{*Operator*}}|20`{{*Description*}}|40`{{*Example*}}|40``
 {{$new$}}`Object instantiation`{{$new String("foo")$}}``
-{{$with$}}`Block WITH Operator. Perform multiple operations on a single object instance`{{$with (value) { name = 'Foo', age = 18, sex = Sex.FEMALE }$}}``
+{{$with$}}`Block WITH Operator. Perform multiple operations on a single object instance`{{#
+with (value) { name = 'Foo',
+age = 18,
+sex = Sex.FEMALE }
+#}}``
 {{$assert$}}`Assert that a value is true or fail with an AssertionError`{{$assert foo != null$}}``
 {{$isdef$}}`Tests whether or not a variable is defined within the scope`{{$isdef variableName$}}``
 {{$!$}}`Boolean negation operator`{{$!true == false$}}
