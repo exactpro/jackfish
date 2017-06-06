@@ -74,7 +74,7 @@ public class DocumentationBuilder
         addText(help, DocumentationBuilder.class.getResourceAsStream("intro1.txt"));
         addPicture(help, "Architecture", DocumentationBuilder.class.getResourceAsStream("Intro.png"));
         addText(help, DocumentationBuilder.class.getResourceAsStream("intro2.txt"));
-        addChapter(help, "MVEL", 2);
+        addChapter(help, "MVEL", 3);
         addText(help, DocumentationBuilder.class.getResourceAsStream("mvel.txt"));
 //        addChapter(help, "All controls", 3);
 //        addAllControlsTable(help, "All controls", context);

@@ -2,10 +2,13 @@
 
 \usepackage[english]{babel}
 %% \usepackage[utf8x]{inputenc}
-\usepackage[T1]{fontenc}
 \usepackage{listings}
 \usepackage{alltt}
 \usepackage{longtable}
+
+\usepackage[scaled]{helvet}
+\renewcommand\familydefault{\sfdefault}
+\usepackage[T1]{fontenc}
 
 %% Sets page size and margins
 \usepackage[a4paper, top=3cm, bottom=4cm, footskip = 30pt, left=3cm, right=1.75cm, marginparwidth=1.75cm, headsep=0.7in]{geometry}
@@ -44,12 +47,9 @@
    \lfoot{\includegraphics[width=4cm, height=1.3cm]{footer.png} \newline \tiny{London Stock Exchange Group plc. Registered in England & Wales No 5369106. Registered office 10 Paternoster Square, London EC4M 7LS} }
 }
 
-\newcommand\crule[3][black]{\textcolor{#1}{\rule{#2}{#3}}} %%do you want colored rectangle? use it!
+%%do you want colored rectangle? use it!
+\newcommand\crule[3][black]{\textcolor{#1}{\rule{#2}{#3}}}
 %% example: \crule[COLORNAME]{width}{height}
-
-\title{JackFish}
-\author{JackFish dev team}
-\date{\today}
 
 \linespread{1.5}
 
