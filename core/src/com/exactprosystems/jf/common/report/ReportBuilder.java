@@ -267,6 +267,22 @@ public abstract class ReportBuilder implements Storable
 		}
 	}
 
+	public final void outTreeNode(MatrixItem item, String beforeTestcase, String string, int level)
+	{
+		try
+		{
+			string = postProcess(string);
+			if (this.reportIsOn)
+			{
+				reportItemLine(this.writer, item, beforeTestcase, string, null);
+			}
+		} 
+		catch (IOException e)
+		{ 
+			logger.error(e.getMessage(), e);
+		}
+	}
+
 	public final void outLine(MatrixItem item, String beforeTestcase, String string, Integer labelId)
 	{
 		try
