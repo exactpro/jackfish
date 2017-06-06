@@ -1,3 +1,31 @@
 #TestCase;#Kind;#Depends;#For
-Test case;Never;;
+Application start;Never;;
+    #Step;#Kind;#For;#Depends
+    'Start without any parameters';;;
+        #Id;#Action;#Assert;$AppId
+        APPSTR1;ApplicationStart;This.Result == Result.Failed && This.Kind == ErrorKind.EXCEPTION;'WIN'
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'Start without workdir';;;
+        #Id;#Action;#Assert;$AppId;Exec
+        APPSTR2;ApplicationStart;This.Result == Result.Failed && This.Kind == ErrorKind.EXCEPTION;'WIN';'calc.exe'
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'Start with invalid exec';;;
+        #Id;#Action;#Assert;$AppId;WorkDir;Exec
+        APPSTR3;ApplicationStart;This.Result == Result.Failed && This.Kind == ErrorKind.EXCEPTION;'WIN';'.';new Date()
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'Start with invalid workdir';;;
+        #Id;#Action;#Assert;$AppId;WorkDir;Exec
+        APPSTR3;ApplicationStart;This.Result == Result.Failed && This.Kind == ErrorKind.EXCEPTION;'WIN';new Date();'calc.exe'
+
+    #EndStep
+
 
