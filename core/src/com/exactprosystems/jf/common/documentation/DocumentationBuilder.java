@@ -116,7 +116,7 @@ public class DocumentationBuilder
 
     public static void addPicture(MatrixItem root, String title, InputStream stream) throws Exception
     {
-        MatrixItem picture = new HelpPicture(title, stream);
+        MatrixItem picture = new HelpPicture(title, stream, 100); // TODO
         root.insert(root.count(), picture);
     }
     

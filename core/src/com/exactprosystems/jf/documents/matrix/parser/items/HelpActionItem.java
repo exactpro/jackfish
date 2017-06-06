@@ -64,7 +64,7 @@ public class HelpActionItem extends MatrixItem
         
         // Input
         Field[] fields = clazz.getDeclaredFields();
-        ReportTable table = report.addTable("{{*Input fields:*}}", null, true, true, new int[] { 15, 15, 50, 10, 10 }, "Field name", "Field type",
+        ReportTable table = report.addTable("{{*Input:*}}", null, true, false, new int[] { 15, 15, 50, 10, 10 }, "Field name", "Field type",
                 "Description", "Mandatory", "Default");
 
         for (Field f : fields)
@@ -85,7 +85,7 @@ public class HelpActionItem extends MatrixItem
         }
 
         // Output
-        table = report.addTable("{{*Output:*}}", null, true, true, new int[] { 30, 70 }, "Output type", "Description");
+        table = report.addTable("{{*Output:*}}", null, true, false, new int[] { 30, 70 }, "Result type", "Description");
         table.addValues(attr.outputType().getSimpleName(), attr.outputDescription());
     }
 

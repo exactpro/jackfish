@@ -424,7 +424,14 @@ public class HTMLReportBuilder extends ReportBuilder
 			writer.fwrite("<div class='movable' data-moveto='%s' >\n",table.getBeforeTestcase());
 		}
         writer.fwrite("<span>%s</span>", this.postProcess(tableTitle));
-		writer.fwrite("<table width='100%%' class='table table-bordered'>\n");
+        if (table.isBordered())
+        {
+            writer.fwrite("<table width='100%%' class='table table-bordered'>\n");
+        }
+        else
+        {
+            writer.fwrite("<table width='100%%' class='table'>\n");
+        }
 
 		//region display headers
 		writer.fwrite("<thead>\n");

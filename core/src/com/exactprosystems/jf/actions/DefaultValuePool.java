@@ -8,6 +8,8 @@
 
 package com.exactprosystems.jf.actions;
 
+import com.exactprosystems.jf.common.report.ReportHelper;
+
 public enum DefaultValuePool
 {
     Null            (null),
@@ -34,7 +36,7 @@ public enum DefaultValuePool
     @Override
     public String toString()
     {
-        return "" + this.value;
+        return ReportHelper.objToString(this.value, false);
     }
 
     private Object value;
