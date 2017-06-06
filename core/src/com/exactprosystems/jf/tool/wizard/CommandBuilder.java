@@ -51,8 +51,10 @@ public class CommandBuilder
     
 	public CommandBuilder clipboard(String string)
 	{
-		Sys.copyToClipboard(string);
-		
+        this.commands.add(context -> 
+        {
+    		Sys.copyToClipboard(string);
+        });
 		return this;
 	}
 
