@@ -72,7 +72,7 @@ public class DocumentationBuilder
         addTable(help, "{{*Abbreviations*}}",           true,  table3, new int[] { 50, 50 },  evaluator);
 
         addText(help, DocumentationBuilder.class.getResourceAsStream("intro1.txt"));
-        addPicture(help, "Architecture", DocumentationBuilder.class.getResourceAsStream("Intro.png"));
+        addPicture(help, "Architecture", 80, DocumentationBuilder.class.getResourceAsStream("Intro.png"));
         addText(help, DocumentationBuilder.class.getResourceAsStream("intro2.txt"));
         addChapter(help, "MVEL", 3);
         addText(help, DocumentationBuilder.class.getResourceAsStream("mvel.txt"));
@@ -114,9 +114,9 @@ public class DocumentationBuilder
     }
     
 
-    public static void addPicture(MatrixItem root, String title, InputStream stream) throws Exception
+    public static void addPicture(MatrixItem root, String title, int width, InputStream stream) throws Exception
     {
-        MatrixItem picture = new HelpPicture(title, stream, 100); // TODO
+        MatrixItem picture = new HelpPicture(title, stream, width); 
         root.insert(root.count(), picture);
     }
     

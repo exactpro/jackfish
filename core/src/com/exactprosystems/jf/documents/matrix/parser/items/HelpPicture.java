@@ -34,11 +34,11 @@ import com.exactprosystems.jf.documents.matrix.parser.listeners.IMatrixListener;
 
 public class HelpPicture extends MatrixItem
 {
-	public HelpPicture(String title, InputStream stream, int width)
+	public HelpPicture(String title, InputStream stream, int scale)
 	{
 	    this.title = title;
         this.stream = stream;
-        this.width = width;
+        this.scale = scale;
 	}
 
 	@Override
@@ -54,7 +54,7 @@ public class HelpPicture extends MatrixItem
         {
             BufferedImage imBuff = ImageIO.read(this.stream);
             ImageWrapper image = new ImageWrapper(imBuff);
-            report.outImage(this, null, image.getName(report.getReportDir()), null, this.title, ImageReportMode.AsImage);
+            report.outImage(this, null, image.getName(report.getReportDir()), null, this.title, this.scale, ImageReportMode.AsImage);
         }
         catch (Exception e)
         {
@@ -66,5 +66,5 @@ public class HelpPicture extends MatrixItem
 
 	private String title;
 	private InputStream stream = null;
-	private int width = 100;
+	private int scale = 100;
 }

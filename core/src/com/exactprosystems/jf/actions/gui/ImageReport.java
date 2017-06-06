@@ -78,7 +78,7 @@ public class ImageReport extends AbstractAction
 		
 		report = this.toReport == null ? report : this.toReport;
 		this.beforeTestCase = ActionsReportHelper.getBeforeTestCase(this.beforeTestCase, this.owner.getMatrix());
-		report.outImage(super.owner, this.beforeTestCase, this.image.getName(report.getReportDir()), null, Str.asString(this.title), 
+		report.outImage(super.owner, this.beforeTestCase, this.image.getName(report.getReportDir()), null, Str.asString(this.title), -1,
 		        this.asLink ? ImageReportMode.AsLink : ImageReportMode.AsImage);
 		super.setResult(this.image.getFileName());
 	}

@@ -407,7 +407,7 @@ public class HelpBuilder extends ReportBuilder
 	}
 
 	@Override
-	protected void reportImage(ReportWriter writer, MatrixItem item, String beforeTestcase, String fileName, String embedded, String title, ImageReportMode reportMode) throws IOException
+	protected void reportImage(ReportWriter writer, MatrixItem item, String beforeTestcase, String fileName, String embedded, String title, int scale, ImageReportMode reportMode) throws IOException
 	{
         writer.fwrite(
                 "<span class='tableTitle'>%s</span><br>",
