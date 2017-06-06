@@ -90,7 +90,6 @@
 		$("#hideButton").hide();
 	});
 
-
 	</script>
 </head>
 <body onload="addAllListeners()">
@@ -117,11 +116,11 @@
 <div id="divTable">
 	<table id="table" border="1px" class="add_listener" kindname="Table" func="456" name="Table">
 		<thead>
-		<tr>
-			<th>Head1</th>
-			<th>Head2</th>
-			<th>Head3</th>
-		</tr>
+			<tr>
+				<th>Head1</th>
+				<th>Head2</th>
+				<th>Head3</th>
+			</tr>
 		</thead>
 		<tbody>
 		<tr>
@@ -143,7 +142,7 @@
 	</table>
 </div>
 
-<div id="divTable1">
+<div id="divTable1" >
 	<label id="labelTable1"></label>
 	<table id="table1" border="1px" name="Table">
 		<thead>
@@ -176,36 +175,36 @@
 <div id="divTable2">
 	<table id="tableDuplicateColumns">
 		<thead>
-		<tr>
-			<th>A</th>
-			<th>B</th>
-			<th>A</th>
-			<th>C</th>
-			<th>B</th>
-			<th>A</th>
-		</tr>
+			<tr>
+				<th>A</th>
+				<th>B</th>
+				<th>A</th>
+				<th>C</th>
+				<th>B</th>
+				<th>A</th>
+			</tr>
 		</thead>
 		<tbody>
-		<tr>
-			<td>1</td>
-			<td>2</td>
-			<td>3</td>
-			<td>4</td>
-			<td>5</td>
-			<td>6</td>
-		</tr>
+			<tr>
+				<td>1</td>
+				<td>2</td>
+				<td>3</td>
+				<td>4</td>
+				<td>5</td>
+				<td>6</td>
+			</tr>
 		</tbody>
 	</table>
 </div>
 
 <div id="divCheckbox">
-	<input id="checkbox" type="checkbox" name="CheckBox" class="checkBoxUnChecked add_listener" func="123456" value="CheckBox" kindname="CheckBox" checked/>
+	<input id ="checkbox" type="checkbox" name="CheckBox" class="checkBoxUnChecked add_listener" func="123456" value="CheckBox" kindname="CheckBox" checked/>
 	CheckBox
 </div>
 
 <div id="divToggleBox">
-	<input id="toggleb" type="checkbox" name="ToggleB" class="toggleBoxUnChecked add_listener" func="123456" value="ToggleB" kindname="ToggleB" checked/>
-	ToggleB
+	<input id ="toggleb" type="checkbox" name="ToggleButton" class="toggleBoxUnChecked add_listener" func="123456" value="ToggleButton" kindname="ToggleButton" checked/>
+	ToggleButton
 </div>
 
 <div id="divSlider">
@@ -222,8 +221,8 @@
 	<label id="labelRadioGroup"></label>
 </div>
 
-<div id="basicpanel" name="PanelBase" class="add_listener panel panel-default" kindname="PanelBase" func="123456">
-	BasicPanel
+<div id="panel" name="Panel" class="add_listener panel panel-default" kindname="Panel" func="123456">
+	Panel
 </div>
 
 <div id="divProgress">
@@ -232,7 +231,7 @@
 
 <div id="divCombobox">
 	<label id="labelCombobox">Combobox example</label>
-	<select id="combobox" name="ComboBox" class="add_listener" kindname="ComboBox" func="23456" onchange="changeCombobox(this)">
+	<select id="combobox" name="ComboBox" class="add_listener" kindname="ComboBox" func="123456" onchange="changeCombobox(this)">
 		<option value="Green">Green</option>
 		<option value="Yellow">Yellow</option>
 		<option value="Orange">Orange</option>
@@ -250,17 +249,17 @@
 	</div>
 </div>
 
-<dialog id="dialogd" name="DialogD" class="add_listener" kindname="DialogD" func="123456" open>
-	This is an open dialog window
+<dialog id="dialog" name="Dialog" class="add_listener" kindname="Dialog" func="123456" open>
+    This is an open dialog window
 </dialog>
 
 <div id="divUL">
 	<label id="labelUL">List UL Example</label>
-	<ul id="listUL" name="ListUL" class="add_listener" kindname="ListUL" func="123456">
+	<ul id="List" name="List" class="add_listener" kindname="List" func="123456">
 		<li>Coffee</li>
 		<li><a href="http://www.google.com" title="Juice">Juice</a></li>
 		<li>Tea
-			<ul id="nested_listUL">
+			<ul id="nested_list">
 				<li>Black tea</li>
 				<li>Green tea</li>
 			</ul>
@@ -283,26 +282,26 @@
 </div>
 
 <div id="divNavbar">
-	<ul id="navbar">
-		<li id="main" class="add_listener" kindname="Main" name="Main" func="123456">Main</li>
-		<li id="news" class="add_listener" kindname="News" name="News" func="123456">News</li>
-		<li>Contacts
-			<ul>
-				<li id="address" class="add_listener" kindname="Address" name="Address" func="123456">Address</li>
-				<li id="phone" class="add_listener" kindname="Phone" name="Phone" func="123456">Phone</li>
-				<li id="email" class="add_listener" kindname="Email" name="Email" func="123456">Email</li>
-			</ul>
-		</li>
-		<li id="about" class="add_listener" kindname="About" name="About" func="123456">About</li>
-	</ul>
+    <ul id="navbar">
+        <li id="main" class="add_listener" kindname="Main" name="Main" func="123456">Main</li>
+        <li id="news" class="add_listener" kindname="News" name="News" func="123456">News</li>
+        <li>Contacts
+            <ul>
+                <li id="address" class="add_listener" kindname="Address" name="Address" func="123456">Address</li>
+                <li id="phone" class="add_listener" kindname="Phone" name="Phone" func="123456">Phone</li>
+                <li id="email" class="add_listener" kindname="Email" name="Email" func="123456">Email</li>
+            </ul>
+        </li>
+        <li id="about" class="add_listener" kindname="About" name="About" func="123456">About</li>
+    </ul>
 </div>
 
 <div id="divFrame">
-	<iframe id="myIframe" name="MyFrame" class="add_listener" kindname="MyFrame" func="123456" src="iframe.html"></iframe>
+    <iframe id="myIframe" name="MyFrame" class="add_listener" kindname="MyFrame" func="123456" src="iframe.html"></iframe>
 </div>
 
 <div id="divImageIDE">
-	<img src="ide.png" alt="Test Image" id="imageIDE" name="ImageIDE" class="add_listener" kindname="ImageIDE" func="123456"/>
+    <img src="ide.png" alt="Test Image" id="image" name="Image" class="add_listener" kindname="Image" func="123456" />
 </div>
 
 <div id="divWithWait">

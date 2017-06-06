@@ -1059,8 +1059,14 @@ public class SeleniumOperationExecutor implements OperationExecutor<WebElement>
 	{
 		//TODO think about it
 		scrollToElement(component);
-		new Select(component).selectByVisibleText(selectedText);
-		return true;
+		switch (component.getTagName())
+		{
+			case "select":
+				new Select(component).selectByVisibleText(selectedText);
+				return true;
+			default:
+				return true;
+		}
 	}
 
 	@Override

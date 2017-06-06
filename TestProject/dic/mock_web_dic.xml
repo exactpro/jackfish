@@ -9,7 +9,7 @@
             <button id="Button" uid="button"/>
             <textBox id="TextBox" uid="input"/>
             <label id="Label" uid="centralLabel"/>
-            <label id="centralLabel" uid="centralLabel" visibility="Visible"/>
+            <label id="centralLabel" uid="centralLabel" addition="Many" visibility="Visible"/>
             <any id="Any" uid="any" addition="Many"/>
             <label id="moveLabel" uid="moveLabel" visibility="Visible"/>
             <button id="Button1" class="manyButton" addition="Many"/>
@@ -21,14 +21,25 @@
             <radioButton id="RadioButton" uid="radioButton" addition="Many"/>
             <radioButton id="RadioButton1" uid="radioButton1" addition="Many"/>
             <progressBar id="ProgressBar" uid="ProgressBar" addition="Many"/>
-            <toggleButton id="ToggleB" uid="toggleb" addition="Many"/>
+            <toggleButton id="ToggleButton" uid="toggleb" addition="Many"/>
             <comboBox id="ComboBox" uid="combobox" addition="Many"/>
-            <panel id="PanelBase" uid="basicpanel" addition="Many"/>
-            <listView id="ListUL" uid="listUL" addition="Many"/>
-            <frame id="MyFrame" uid="myIframe" owner="" addition="Many"/>
-            <dialog id="DialogD" uid="dialogd" xpath=".//dialog[@id=&amp;quot;dialogd&amp;quot;]" owner="" addition="Many"/>
-            <image id="ImageIDE" uid="imageIDE" owner="" addition="Many"/>
+            <panel id="Panel" uid="panel" addition="Many"/>
+            <listView id="List" uid="List" addition="Many"/>
+            <frame id="Frame" uid="myIframe" owner="" addition="Many"/>
+            <dialog id="Dialog" uid="dialog" xpath=".//dialog[@id=&amp;quot;dialog&amp;quot;]" owner="" addition="Many"/>
+            <image id="Image" uid="image" owner="" addition="Many"/>
             <comboBox id="EditableComboBox" uid="editableComboBox" addition="Many"/>
+            <any id="Value" owner="" weak="true"/>
+            <scrollBar id="ScrollBar" xpath="//body" owner="" addition="Many"/>
+            <tree id="Tree" xpath="//body" owner="" addition="Many"/>
+            <splitter id="Splitter" xpath="//body" owner="" addition="Many"/>
+            <toolTip id="Tooltip" xpath="//body" owner="" addition="Many"/>
+            <menu id="Menu" xpath="//body" owner="" addition="Many"/>
+            <menuItem id="MenuItem" xpath="//body" owner="" addition="Many"/>
+            <row id="Header" xpath="//tr[1]" owner=""/>
+            <table id="tt" owner="" rows="Rows" header="Header"/>
+            <row id="Rows" xpath="//tr[2]" owner=""/>
+            <table id="tttt" xpath="//table" owner=""/>
         </run>
         <onClose/>
         <close>

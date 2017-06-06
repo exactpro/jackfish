@@ -41,10 +41,9 @@ public class WebAppFactory implements IApplicationFactory
 	private static ControlKind[] supportedControls = 
 		{ 
 			ControlKind.Any, ControlKind.Wait, ControlKind.Button, ControlKind.CheckBox, ControlKind.ComboBox, ControlKind.Dialog,
-			ControlKind.Frame, ControlKind.Image, ControlKind.Label, ControlKind.ListView, ControlKind.Menu, ControlKind.MenuItem, ControlKind.Panel,
-			ControlKind.ProgressBar, ControlKind.RadioButton, ControlKind.Row, ControlKind.ScrollBar, ControlKind.Slider, ControlKind.Splitter,
+			ControlKind.Frame, ControlKind.Image, ControlKind.Label, ControlKind.ListView, ControlKind.Panel,
+			ControlKind.ProgressBar, ControlKind.RadioButton, ControlKind.Row, ControlKind.Slider,
 			ControlKind.Spinner, ControlKind.Table, ControlKind.TabPanel, ControlKind.TextBox, ControlKind.ToggleButton, 
-			ControlKind.Tooltip, ControlKind.Tree, ControlKind.TreeItem,
 		};
 
 	private IGuiDictionary dictionary = null;
@@ -179,26 +178,19 @@ public class WebAppFactory implements IApplicationFactory
         add(controlMap, ControlKind.Frame,         "form", "body", "frame", "iframe");
         add(controlMap, ControlKind.Image,         "img");
         add(controlMap, ControlKind.Label,         "label", "span");
-        add(controlMap, ControlKind.MenuItem,      "li");
         add(controlMap, ControlKind.Panel,         "div");
         add(controlMap, ControlKind.ProgressBar,   "progress");
         add(controlMap, ControlKind.RadioButton,   "input");
         add(controlMap, ControlKind.Row,           "tr");
-        add(controlMap, ControlKind.ScrollBar,     "*");
-        add(controlMap, ControlKind.Slider,        "div"); 
-        add(controlMap, ControlKind.Splitter,      "*");
+        add(controlMap, ControlKind.Slider,        "div");
         add(controlMap, ControlKind.Spinner,       "*");
         add(controlMap, ControlKind.Table,         "table");
         add(controlMap, ControlKind.TabPanel,      "button");
         add(controlMap, ControlKind.TextBox,       "input", "textarea");
         add(controlMap, ControlKind.ToggleButton,  "input");
         add(controlMap, ControlKind.ListView,      "ul");
-        add(controlMap, ControlKind.Tree,          "");
         add(controlMap, ControlKind.Wait,          "*");
-        add(controlMap, ControlKind.Tooltip,       "*");
-        add(controlMap, ControlKind.Menu,          "li");
-        add(controlMap, ControlKind.TreeItem,      "");
-        
+
         Map<LocatorFieldKind, String>   fieldMap = new HashMap<>();
         
         fieldMap.put(LocatorFieldKind.ACTION,       "action");

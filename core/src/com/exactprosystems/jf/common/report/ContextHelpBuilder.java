@@ -176,9 +176,18 @@ public class ContextHelpBuilder extends ReportBuilder
 				"<span class='tableTitle'>%s</span><br>",
 				this.postProcess(tableTitle));
 
-        writer.fwrite(
-        		"<table width='100%%' border='1' bordercolor='#000000' cellpadding='3' cellspacing='0'>\n" +
-        		"<tr style='font-weight: bold;'>\n");
+		if (table.isBordered())
+		{
+            writer.fwrite(
+            		"<table width='100%%' border='1' bordercolor='#000000' cellpadding='3' cellspacing='0'>\n" +
+            		"<tr style='font-weight: bold;'>\n");
+		}
+		else
+		{
+            writer.fwrite(
+                    "<table width='100%%' border='0' cellpadding='3' cellspacing='0'>\n" +
+                    "<tr style='font-weight: bold;'>\n");
+		}
 
         for (int i = 0; i < columns.length; i++)
         {
