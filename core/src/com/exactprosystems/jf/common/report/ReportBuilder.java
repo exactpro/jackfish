@@ -13,6 +13,8 @@ import com.exactprosystems.jf.api.common.Storable;
 import com.exactprosystems.jf.charts.ChartBuilder;
 import com.exactprosystems.jf.documents.matrix.parser.items.MatrixItem;
 import com.exactprosystems.jf.documents.matrix.parser.items.MatrixRoot;
+import com.exactprosystems.jf.functions.Content;
+
 import org.apache.log4j.Logger;
 
 import java.io.*;
@@ -267,14 +269,16 @@ public abstract class ReportBuilder implements Storable
 		}
 	}
 
-	public final void outTreeNode(MatrixItem item, String beforeTestcase, String string, int level)
+	public final void outContent(MatrixItem item, String beforeTestcase, Content content, String title)
 	{
 		try
 		{
-			string = postProcess(string);
 			if (this.reportIsOn)
 			{
-				reportItemLine(this.writer, item, beforeTestcase, string, null);
+	            title = postProcess(title);
+			    
+			    
+				reportContent(this.writer, item, beforeTestcase, content, title);
 			}
 		} 
 		catch (IOException e)
@@ -364,7 +368,7 @@ public abstract class ReportBuilder implements Storable
 			return null;
 		}
 		
-        String reg = "((\\{\\{[1|2|3|4|$|#|@|`|_|*|/|&|=|-])|([1|2|3|4|$|#|@|`|_|*|/|&|=|-]\\}\\}))";
+        String reg = "((\\{\\{[1|2|3|4|$|#|@|\\^|`|_|*|/|&|=|-])|([1|2|3|4|$|#|@|\\^|`|_|*|/|&|=|-]\\}\\}))";
 
 		Pattern patt = Pattern.compile(reg);
 		Matcher m = patt.matcher(source);
@@ -446,6 +450,8 @@ public abstract class ReportBuilder implements Storable
 
 	protected abstract void reportItemHeader(ReportWriter writer, MatrixItem entry, Integer id) throws IOException;
 	
+    protected abstract void reportContent(ReportWriter writer, MatrixItem item, String beforeTestcase, Content content, String title) throws IOException;
+
 	protected abstract void reportItemLine(ReportWriter writer, MatrixItem item, String beforeTestcase, String string, String labelId) throws IOException;
 
 	protected abstract void reportImage(ReportWriter writer, MatrixItem item, String beforeTestcase, String fileName, String embedded, String title, int scale, ImageReportMode reportMode) throws IOException;

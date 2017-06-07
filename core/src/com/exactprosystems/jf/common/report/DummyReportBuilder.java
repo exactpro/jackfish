@@ -12,6 +12,7 @@ import com.exactprosystems.jf.api.app.ImageWrapper;
 import com.exactprosystems.jf.charts.ChartBuilder;
 import com.exactprosystems.jf.common.report.ReportBuilder.ImageReportMode;
 import com.exactprosystems.jf.documents.matrix.parser.items.MatrixItem;
+import com.exactprosystems.jf.functions.Content;
 
 import java.io.IOException;
 import java.util.Date;
@@ -124,6 +125,12 @@ public class DummyReportBuilder extends ReportBuilder
 	{
 		
 	}
+
+    @Override
+    protected void reportContent(ReportWriter writer, MatrixItem item, String beforeTestcase, Content content,
+            String title) throws IOException
+    {
+    }
 
 	@Override
 	protected void reportItemLine(ReportWriter writer, MatrixItem item,

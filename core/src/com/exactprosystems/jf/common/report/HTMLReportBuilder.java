@@ -15,6 +15,7 @@ import com.exactprosystems.jf.documents.config.Configuration;
 import com.exactprosystems.jf.documents.matrix.parser.Result;
 import com.exactprosystems.jf.documents.matrix.parser.items.CommentString;
 import com.exactprosystems.jf.documents.matrix.parser.items.MatrixItem;
+import com.exactprosystems.jf.functions.Content;
 
 import java.awt.Color;
 import java.io.File;
@@ -401,7 +402,15 @@ public class HTMLReportBuilder extends ReportBuilder
 		}
 	}
 
-	@Override
+    @Override
+    protected void reportContent(ReportWriter writer, MatrixItem item, String beforeTestcase, Content content,
+            String title) throws IOException
+    {
+        // TODO Auto-generated method stub
+        
+    }
+
+    @Override
 	protected void reportItemLine(ReportWriter writer, MatrixItem item, String beforeTestcase, String string, String labelId) throws IOException
 	{
 		if (labelId == null)

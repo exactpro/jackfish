@@ -26,6 +26,7 @@ import com.exactprosystems.jf.documents.matrix.parser.items.ActionItem;
 import com.exactprosystems.jf.documents.matrix.parser.items.HelpActionItem;
 import com.exactprosystems.jf.documents.matrix.parser.items.HelpTable;
 import com.exactprosystems.jf.documents.matrix.parser.items.HelpChapter;
+import com.exactprosystems.jf.documents.matrix.parser.items.HelpContent;
 import com.exactprosystems.jf.documents.matrix.parser.items.HelpItem;
 import com.exactprosystems.jf.documents.matrix.parser.items.HelpPicture;
 import com.exactprosystems.jf.documents.matrix.parser.items.HelpText;
@@ -33,6 +34,7 @@ import com.exactprosystems.jf.documents.matrix.parser.items.HelpWizardItem;
 import com.exactprosystems.jf.documents.matrix.parser.items.MatrixItem;
 import com.exactprosystems.jf.documents.matrix.parser.items.MatrixItemAttribute;
 import com.exactprosystems.jf.documents.matrix.parser.items.TempItem;
+import com.exactprosystems.jf.functions.Content;
 import com.exactprosystems.jf.functions.Table;
 
 public class DocumentationBuilder
@@ -46,7 +48,7 @@ public class DocumentationBuilder
     {
         AbstractEvaluator evaluator = context.getEvaluator();
         
-        MatrixItem help = new HelpChapter("\\huge {{*JackFish*}}", 1);
+        MatrixItem help = new HelpChapter("\\huge {{* JackFish *}}", 1);
 
         String[][] table1 = new String[][]
                 {
@@ -71,6 +73,9 @@ public class DocumentationBuilder
         addTable(help, "{{*Document Information*}}",    false, table2, new int[] { 25, 23, 23, 25 },  evaluator);
         addTable(help, "{{*Abbreviations*}}",           true,  table3, new int[] { 50, 50 },  evaluator);
 
+        addChapter(help, "{{&&}}", 1);
+        addContent(help, "{{*Table of contenst*}}", new Content());
+        
         addText(help, DocumentationBuilder.class.getResourceAsStream("intro1.txt"));
         addPicture(help, "Architecture", 80, DocumentationBuilder.class.getResourceAsStream("Intro.png"));
         addText(help, DocumentationBuilder.class.getResourceAsStream("intro2.txt"));
@@ -114,6 +119,12 @@ public class DocumentationBuilder
     }
     
 
+    public static void addContent(MatrixItem root, String title, Content content) throws Exception
+    {
+        MatrixItem contentItem = new HelpContent(title, content); 
+        root.insert(root.count(), contentItem);
+    }
+    
     public static void addPicture(MatrixItem root, String title, int width, InputStream stream) throws Exception
     {
         MatrixItem picture = new HelpPicture(title, stream, width); 

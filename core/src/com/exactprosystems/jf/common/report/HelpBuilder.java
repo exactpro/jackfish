@@ -22,6 +22,7 @@ import com.exactprosystems.jf.documents.matrix.parser.items.ActionItem;
 import com.exactprosystems.jf.documents.matrix.parser.items.MatrixItem;
 import com.exactprosystems.jf.documents.matrix.parser.items.MatrixItemAttribute;
 import com.exactprosystems.jf.documents.matrix.parser.items.TempItem;
+import com.exactprosystems.jf.functions.Content;
 
 import java.io.IOException;
 import java.lang.reflect.Field;
@@ -338,7 +339,15 @@ public class HelpBuilder extends ReportBuilder
 		}
 	}
 
-	@Override
+    @Override
+    protected void reportContent(ReportWriter writer, MatrixItem item, String beforeTestcase, Content content,
+            String title) throws IOException
+    {
+        // TODO Auto-generated method stub
+        
+    }
+
+    @Override
 	protected void reportItemLine(ReportWriter writer, MatrixItem item, String beforeTestcase, String string, String labelId) throws IOException
 	{
 

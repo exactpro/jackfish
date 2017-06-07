@@ -16,16 +16,16 @@ import com.exactprosystems.jf.documents.matrix.parser.Parameters;
 import com.exactprosystems.jf.documents.matrix.parser.Result;
 import com.exactprosystems.jf.documents.matrix.parser.ReturnAndResult;
 import com.exactprosystems.jf.documents.matrix.parser.listeners.IMatrixListener;
-import com.exactprosystems.jf.functions.Xml;
+import com.exactprosystems.jf.functions.Content;
 
 
 
-public class HelpTree extends MatrixItem
+public class HelpContent extends MatrixItem
 {
-    public HelpTree(String title, Xml xml)
+    public HelpContent(String title, Content content)
     {
     	this.title = title;
-    	this.xml = xml;
+    	this.content = content;
     }
 
     @Override
@@ -39,8 +39,7 @@ public class HelpTree extends MatrixItem
     {
         try
         {
-        	report.outLine(this, null, this.title, null);
-        	outNode(report, this.xml, 0);
+        	report.outContent(this, null, this.content, this.title);
         }
         catch (Exception e)
         {
@@ -50,15 +49,6 @@ public class HelpTree extends MatrixItem
         return new ReturnAndResult(start, Result.Passed); 
     }
     
-    private void outNode(ReportBuilder report, Xml xml, int level)
-    {
-    	report.outTreeNode(this, null, xml.getNodeName(), level);
-    	for(Xml child : xml.getChildren())
-    	{
-    		outNode(report, child, level + 1);
-    	}
-    }
-    
     private String title;
-    private Xml xml;
+    private Content content;
 }
