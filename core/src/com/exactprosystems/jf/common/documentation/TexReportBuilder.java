@@ -52,36 +52,7 @@ public class TexReportBuilder extends ReportBuilder
 	@Override
 	protected String decorateStyle(String value, String style)
 	{
-		String rgbColor;
-		switch (style){
-			case "BLACK": rgbColor = "black";
-				break;
-			case "BLUE": rgbColor = "blue";
-				break;
-			case "CYAN": rgbColor = "cyan";
-				break;
-			case "DARK_GRAY": rgbColor = "darkgray";
-				break;
-			case "GRAY": rgbColor = "gray";
-				break;
-			case "GREEN": rgbColor = "green";
-				break;
-			case "LIGHT_GRAY": rgbColor = "lightgray";
-				break;
-			case "MAGENTA": rgbColor = "magenta";
-				break;
-			case "ORANGE": rgbColor = "orange";
-				break;
-			case "PINK": rgbColor = "pink";
-				break;
-			case "RED": rgbColor = "red";
-				break;
-			case "WHITE": rgbColor = "white";
-				break;
-			default: rgbColor = "black";
-		}
-
-		return String.format("\\textcolor{%s}{%s}", rgbColor, value);
+		return String.format("\\textcolor{%s}{%s}", style.replace("Failed", "red").replace("_", "").toLowerCase(), value);
 	}
 
 	@Override
