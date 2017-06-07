@@ -995,6 +995,12 @@ public class SeleniumOperationExecutor implements OperationExecutor<WebElement>
 			try
 			{
 				scrollToElement(component);
+				if("div".equals(component.getTagName())
+						|| "select".equals(component.getTagName())
+						|| "td".equals(component.getTagName()))
+				{
+					return true;
+				}
 				if (clear)
 				{
 					component.clear();

@@ -694,7 +694,8 @@ public class SwingOperationExecutor implements OperationExecutor<ComponentFixtur
 					return true;
 				}
 			}
-			throw new OperationNotAllowedException(String.format("Component %s does not support text entering", component.target));
+			return true;
+			//throw new OperationNotAllowedException(String.format("Component %s does not support text entering", component.target));
 		}
 		catch (RemoteException e)
 		{
