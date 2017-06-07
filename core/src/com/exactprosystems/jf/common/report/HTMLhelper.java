@@ -135,18 +135,22 @@ public class HTMLhelper
 			case "4" + CM: return "</h4>";	
 
 			// style for identifiers
-			case OM + "$": return "<b style=\"color:#8e44ad\"><i>";		
+			case OM + "$": return "<b style='color:#8e44ad'><i>";		
 			case "$" + CM: return "</i></b>";		
 
 			// style for code
-			case OM + "#": return "<pre style=\"padding-left: 10px; color:#16a085; margin: 10px; border-left: 1px solid #CCC;\"><code>";	
+			case OM + "#": return "<pre style='padding-left: 10px; color:#16a085; margin: 10px; border-left: 1px solid #CCC;'><code>";	
 			case "#" + CM: return "</code></pre>";	
 			
 			// style for references
-			case OM + "@": return "<a style=\"color:Blue\">";
+			case OM + "@": return "<a style='color:Blue'>";
 			case "@" + CM: return "</a>";
 
-			// paragraph
+            // text 90 degrees rotated
+            case OM + "^": return "<div class='rotate'>";
+            case "^" + CM: return "</div>";
+
+            // paragraph
 			case OM + "`": return "<p>";
 			case "`" + CM: return "</p>";
 

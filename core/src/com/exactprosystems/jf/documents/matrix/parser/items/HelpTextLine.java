@@ -16,49 +16,34 @@ import com.exactprosystems.jf.documents.matrix.parser.Parameters;
 import com.exactprosystems.jf.documents.matrix.parser.Result;
 import com.exactprosystems.jf.documents.matrix.parser.ReturnAndResult;
 import com.exactprosystems.jf.documents.matrix.parser.listeners.IMatrixListener;
-import com.exactprosystems.jf.functions.Xml;
 
-
-
-public class HelpTree extends MatrixItem
+public class HelpTextLine extends MatrixItem
 {
-    public HelpTree(String title, Xml xml)
-    {
-    	this.title = title;
-    	this.xml = xml;
-    }
+	public HelpTextLine(String name)
+	{
+		this.str = name;
+	}
 
-    @Override
-    public String getItemName()
-    {
-        return "";
-    }
-    
-    @Override
-    protected ReturnAndResult executeItSelf(long start, Context context, IMatrixListener listener, AbstractEvaluator evaluator, ReportBuilder report, Parameters parameters)
-    {
+	@Override
+	public String getItemName()
+	{
+		return this.str;
+	}
+	
+	@Override
+	protected ReturnAndResult executeItSelf(long start, Context context, IMatrixListener listener, AbstractEvaluator evaluator, ReportBuilder report, Parameters parameters)
+	{
         try
         {
-        	report.outLine(this, null, this.title, null);
-        	outNode(report, this.xml, 0);
+            report.outLine(this, null, this.str, null);
         }
         catch (Exception e)
         {
             logger.error(e.getMessage(), e);
             return new ReturnAndResult(start, Result.Failed, e.getMessage(), ErrorKind.EXCEPTION, this);
         }
-        return new ReturnAndResult(start, Result.Passed); 
-    }
-    
-    private void outNode(ReportBuilder report, Xml xml, int level)
-    {
-    	report.outTreeNode(this, null, xml.getNodeName(), level);
-    	for(Xml child : xml.getChildren())
-    	{
-    		outNode(report, child, level + 1);
-    	}
-    }
-    
-    private String title;
-    private Xml xml;
+        return executeChildren(start, context, listener, evaluator, report, new Class<?>[] {  });
+	}
+
+	private String str = null;
 }

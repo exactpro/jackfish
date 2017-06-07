@@ -2,9 +2,11 @@ package com.exactprosystems.jf.common.documentation;
 
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import com.exactprosystems.jf.actions.AbstractAction;
 import com.exactprosystems.jf.actions.ActionAttribute;
@@ -26,13 +28,16 @@ import com.exactprosystems.jf.documents.matrix.parser.items.ActionItem;
 import com.exactprosystems.jf.documents.matrix.parser.items.HelpActionItem;
 import com.exactprosystems.jf.documents.matrix.parser.items.HelpTable;
 import com.exactprosystems.jf.documents.matrix.parser.items.HelpChapter;
+import com.exactprosystems.jf.documents.matrix.parser.items.HelpContent;
 import com.exactprosystems.jf.documents.matrix.parser.items.HelpItem;
 import com.exactprosystems.jf.documents.matrix.parser.items.HelpPicture;
 import com.exactprosystems.jf.documents.matrix.parser.items.HelpText;
+import com.exactprosystems.jf.documents.matrix.parser.items.HelpTextLine;
 import com.exactprosystems.jf.documents.matrix.parser.items.HelpWizardItem;
 import com.exactprosystems.jf.documents.matrix.parser.items.MatrixItem;
 import com.exactprosystems.jf.documents.matrix.parser.items.MatrixItemAttribute;
 import com.exactprosystems.jf.documents.matrix.parser.items.TempItem;
+import com.exactprosystems.jf.functions.Content;
 import com.exactprosystems.jf.functions.Table;
 
 public class DocumentationBuilder
@@ -46,7 +51,7 @@ public class DocumentationBuilder
     {
         AbstractEvaluator evaluator = context.getEvaluator();
         
-        MatrixItem help = new HelpChapter("\\huge {{*JackFish*}}", 1);
+        MatrixItem help = new HelpChapter("\\huge {{* JackFish *}}", 1);
 
         String[][] table1 = new String[][]
                 {
@@ -66,11 +71,22 @@ public class DocumentationBuilder
                     { "JF", "JackFish" }
                 };
 
-
         addTable(help, "{{*User Guide*}}",              true,  table1, new int[] { 50, 50 },  evaluator);
         addTable(help, "{{*Document Information*}}",    false, table2, new int[] { 25, 23, 23, 25 },  evaluator);
         addTable(help, "{{*Abbreviations*}}",           true,  table3, new int[] { 50, 50 },  evaluator);
 
+        addTextLine(help, "{{&&}}");
+        addContent(help, "{{*Table of contenst*}}", new Content());
+        
+        List<OperationKind> operations = Arrays.stream(OperationKind.values()).collect(Collectors.toList());
+        int size = operations.size();
+        addAllControlsTable(help, "All controls", context, operations.subList(0, size/3), true);
+        addTextLine(help, "{{&&}}");
+        addAllControlsTable(help, "All controls - continue", context, operations.subList(size/3, size*2/3), true);
+        addTextLine(help, "{{&&}}");
+        addAllControlsTable(help, "All controls - end", context, operations.subList(size*2/3, size), true);
+        addTextLine(help, "{{&&}}");
+        
         addText(help, DocumentationBuilder.class.getResourceAsStream("intro1.txt"));
         addPicture(help, "Architecture", 80, DocumentationBuilder.class.getResourceAsStream("Intro.png"));
         addText(help, DocumentationBuilder.class.getResourceAsStream("intro2.txt"));
@@ -114,6 +130,12 @@ public class DocumentationBuilder
     }
     
 
+    public static void addContent(MatrixItem root, String title, Content content) throws Exception
+    {
+        MatrixItem contentItem = new HelpContent(title, content); 
+        root.insert(root.count(), contentItem);
+    }
+    
     public static void addPicture(MatrixItem root, String title, int width, InputStream stream) throws Exception
     {
         MatrixItem picture = new HelpPicture(title, stream, width); 
@@ -127,7 +149,7 @@ public class DocumentationBuilder
         root.insert(root.count(), text);
     }
     
-    public static void addAllControlsTable(MatrixItem root, String title, Context context) throws Exception
+    public static void addAllControlsTable(MatrixItem root, String title, Context context, List<OperationKind> operations, boolean rotate) throws Exception
     {
         try
         {
@@ -140,9 +162,16 @@ public class DocumentationBuilder
             List<String> headers = new ArrayList<>();
             headers.add("#");
             
-            for (OperationKind kind : OperationKind.values())
+            for (OperationKind kind : operations)
             {
-                headers.add(kind.toString());
+                if (rotate)
+                {
+                    headers.add("{{^" + kind.toString() + "^}}");
+                }
+                else
+                {
+                    headers.add(kind.toString());
+                }
             }
 
             Table table = new Table(headers.toArray(new String[] {}), context.getEvaluator());
@@ -153,7 +182,7 @@ public class DocumentationBuilder
 
             for (ControlKind k : ControlKind.values())
             {
-                String[] arr = new String[OperationKind.values().length + 1];
+                String[] arr = new String[operations.size() + 1];
                 
                 Class<?> controlClass = Class.forName(AbstractControl.class.getPackage().getName() +"."+ k.getClazz());
                 arr[0] = controlClass.getSimpleName();
@@ -161,7 +190,7 @@ public class DocumentationBuilder
                 ControlsAttributes annotation = controlClass.getAnnotation(ControlsAttributes.class);
                 OperationKind defaultOperation = annotation.bindedClass().defaultOperation();
                 int count = 1; 
-                for (OperationKind kind : OperationKind.values())
+                for (OperationKind kind : operations)
                 {
                     if (annotation.bindedClass().isAllowed(kind))
                     {
@@ -184,7 +213,7 @@ public class DocumentationBuilder
                 table.addValue(arr);
             }
             
-            MatrixItem tableItem = new HelpTable(title, table, new int[] {}); // TODO
+            MatrixItem tableItem = new HelpTable(title, table, true, new int[] {}); // TODO
             root.insert(root.count(), tableItem);
         }
         catch (Exception e)
@@ -196,6 +225,12 @@ public class DocumentationBuilder
     {
         MatrixItem chapter = new HelpChapter(title, level);
         root.insert(root.count(), chapter);
+    }
+    
+    public static void addTextLine(MatrixItem root, String str) throws Exception
+    {
+        MatrixItem line = new HelpTextLine(str);
+        root.insert(root.count(), line);
     }
     
     public static void addText(MatrixItem root, InputStream stream) throws Exception

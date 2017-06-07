@@ -34,6 +34,7 @@ public class MockApp
 	private JLabel moveLabel;
 	private JTextField textField;
 	private JFrame frame3;
+	private boolean firstRun;
 
 	public static void main(String[] args)
 	{
@@ -81,12 +82,12 @@ public class MockApp
 		this.frame.setVisible(true);
 
 		// frame two
-		this.frame2 = new JFrame("Mock swing app additional frame");
-		this.frame2.setLocation(1000, 200);
-		this.frame2.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-		this.frame2.setSize(new Dimension(1100,700));
-		this.frame2.setVisible(true);
-		allEvents(createPanelFrame2());
+//		this.frame2 = new JFrame("Mock swing app additional frame");
+//		this.frame2.setLocation(1000, 200);
+//		this.frame2.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+//		this.frame2.setSize(new Dimension(1100,700));
+//		this.frame2.setVisible(true);
+//		allEvents(createPanelFrame2());
 		//createAndShowGui();
 	}
 
@@ -157,7 +158,7 @@ public class MockApp
 	private void createPanelWithDisableComponents() {
 		JPanel panel = new JPanel();
 		// disabled
-		JLabel label = new JLabel("qwe");
+		JLabel label = new JLabel("Panel");
 		JComboBox<String> comboBox = new JComboBox<>(new String[]{"Green", "Yellow", "Orange", "Blue"});
 		JCheckBox checkBox = new JCheckBox();
 		JTextField textField = new JTextField("some text");
@@ -252,7 +253,7 @@ public class MockApp
 		});
 		addListeners(menu, menuName);
 
-		String menuItemName = "Menuitem";
+		String menuItemName = "MenuItem";
 		JMenuItem menuItem = new JMenuItem(menuItemName);
 		addListeners(menuItem, menuItemName);
 		menuItem.addActionListener(e -> centralLabel.setText(menuItemName + "_click"));
@@ -324,7 +325,7 @@ public class MockApp
 
 		String name = "Button";
 		JButton button = new JButton(name);
-		button.addActionListener(event -> centralLabel.setText("Button_push"));
+		button.addActionListener(event -> centralLabel.setText("Button_click"));
 		addListeners(button, name);
 		panelButton.add(button);
 	}
@@ -442,7 +443,7 @@ public class MockApp
 		JPanel panel = createPanel("panelCheckbox");
 
 		String name = "CheckBox";
-		JCheckBox checkBox = new JCheckBox(name);
+		JCheckBox checkBox = new JCheckBox(name,true);
 		checkBox.addActionListener(event -> centralLabel.setText(checkBox.isSelected() ? "checked" : "unchecked"));
 		addListeners(checkBox, name);
 		checkBox.addItemListener(e -> {
@@ -681,6 +682,7 @@ public class MockApp
 	{
 		JPanel panel = createPanel("panelCombobox", 3);
 		JComboBox<String> comboBox = new JComboBox<>(new String[]{"Green", "Yellow", "Orange", "Blue"});
+		comboBox.setEditable(true);
 		String name = "ComboBox";
 		comboBox.getModel().setSelectedItem("Green");
 		addListeners(comboBox, name);
@@ -740,7 +742,7 @@ public class MockApp
 	private void createPanelToggleButton()
 	{
 		JPanel panel = createPanel("panelToggleButton");
-		JToggleButton toggleButton = new JToggleButton("Press_me");
+		JToggleButton toggleButton = new JToggleButton("ToggleButton", true);
 		String name = "ToggleButton";
 		addListeners(toggleButton, name);
 		toggleButton.addItemListener(event -> centralLabel.setText(name + "_" + (toggleButton.isSelected() ? "checked" : "unchecked")));
@@ -845,7 +847,7 @@ public class MockApp
 	private void createPanelPanel()
 	{
 		JPanel panel = new JPanel();
-		panel.add(new JLabel("qwe"));
+		panel.add(new JLabel("Panel"));
 		addListeners(panel, "Panel");
 		createPanel("panelPanel").add(panel);
 	}
@@ -881,7 +883,11 @@ public class MockApp
 		splitPane.addPropertyChangeListener(evt -> {
 			if (evt.getPropertyName().equals(JSplitPane.DIVIDER_LOCATION_PROPERTY))
 			{
-				centralLabel.setText(name + "_" + splitPane.getDividerLocation());
+				if(firstRun)
+				{
+					centralLabel.setText(name + "_" + splitPane.getDividerLocation());
+				}
+				firstRun = true;
 			}
 		});
 		splitPane.setLeftComponent(new JLabel("LEFT COMPONENT"));

@@ -14,8 +14,8 @@ import com.exactprosystems.jf.charts.ChartBuilder;
 import com.exactprosystems.jf.common.report.ReportBuilder;
 import com.exactprosystems.jf.common.report.ReportTable;
 import com.exactprosystems.jf.common.report.ReportWriter;
-import com.exactprosystems.jf.common.report.ReportBuilder.ImageReportMode;
 import com.exactprosystems.jf.documents.matrix.parser.items.*;
+import com.exactprosystems.jf.functions.Content;
 
 import java.io.*;
 import java.nio.file.Files;
@@ -52,7 +52,38 @@ public class TexReportBuilder extends ReportBuilder
 	@Override
 	protected String decorateStyle(String value, String style)
 	{
-		return value;
+		String rgbColor;
+		switch (style){
+			case "BLACK": rgbColor = "black";
+				break;
+			case "BLUE": rgbColor = "blue";
+				break;
+			case "CYAN": rgbColor = "cyan";
+				break;
+			case "DARK_GRAY": rgbColor = "darkgray";
+				break;
+			case "GRAY": rgbColor = "gray";
+				break;
+			case "GREEN": rgbColor = "green";
+				break;
+			case "LIGHT_GRAY": rgbColor = "lightgray";
+				break;
+			case "MAGENTA": rgbColor = "magenta";
+				break;
+			case "ORANGE": rgbColor = "orange";
+				break;
+			case "PINK": rgbColor = "pink";
+				break;
+			case "RED": rgbColor = "red";
+				break;
+			case "WHITE": rgbColor = "white";
+				break;
+			case "Failed": rgbColor = "red";
+				break;
+			default: rgbColor = "black";
+		}
+
+		return String.format("\\textcolor{%s}{%s}", rgbColor, value);
 	}
 
 	@Override
@@ -119,13 +150,17 @@ public class TexReportBuilder extends ReportBuilder
             case OM + "@": return "";
             case "@" + CM: return "";
     
+            // text 90 degrees rotated
+            case OM + "^": return "\\\\rotatebox{90}{";
+            case "^" + CM: return "}";
+
             // paragraph
             case OM + "`": return "";
             case "`" + CM: return "\\\\newline";
     
             // new page
             case OM + "&": return "";
-            case "&" + CM: return "\\\\newpage \\\\pagestyle{allpages} \\\\tableofcontents \\\\newpage";
+            case "&" + CM: return "\\\\newpage \\\\pagestyle{allpages}";
 
             // underscored
             case OM + "_": return "";
@@ -248,6 +283,13 @@ public class TexReportBuilder extends ReportBuilder
 		writer.fwrite("\\newline").newline();
 	}
 
+    @Override
+    protected void reportContent(ReportWriter writer, MatrixItem item, String beforeTestcase, Content content,
+            String title) throws IOException
+    {
+        writer.fwrite("\\tableofcontents \\newpage").newline();
+    }
+	
 	@Override
 	protected void reportItemLine(ReportWriter writer, MatrixItem item, String beforeTestcase, String string, String labelId) throws IOException
 	{

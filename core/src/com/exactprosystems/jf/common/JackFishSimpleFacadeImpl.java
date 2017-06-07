@@ -1,11 +1,11 @@
 package com.exactprosystems.jf.common;
 
 import java.io.BufferedReader;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.math.BigInteger;
+import java.util.Date;
 import java.util.Random;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -18,7 +18,7 @@ import com.exactprosystems.jf.actions.app.ApplicationConnectTo;
 import com.exactprosystems.jf.actions.app.ApplicationStart;
 import com.exactprosystems.jf.actions.app.ApplicationStop;
 import com.exactprosystems.jf.api.error.common.NullParameterException;
-import com.exactprosystems.jf.common.report.DummyReportBuilder;
+import com.exactprosystems.jf.common.report.ContextHelpBuilder;
 import com.exactprosystems.jf.common.report.ReportBuilder;
 import com.exactprosystems.jf.documents.ConsoleDocumentFactory;
 import com.exactprosystems.jf.documents.DocumentFactory;
@@ -48,7 +48,7 @@ public class JackFishSimpleFacadeImpl implements IJackFishSimpleFacade {
 	private JackFishSimpleFacadeImpl() {
 		// hide constructor
 		try {
-			this.report = new DummyReportBuilder();
+			this.report = new ContextHelpBuilder(new Date());
 			this.report.itemStarted(new ActionItem()); // workaround
 														// EmptyStackException
 		} catch (IOException e) {
