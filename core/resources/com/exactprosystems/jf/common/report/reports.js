@@ -198,4 +198,11 @@ $(document).ready(function(){
 		});
 
 	});
+
+	//rotate
+	$(".rotate").width($(".rotate > span").width())
+	$(".rotate").parent().height($(".rotate").width())
+	$(".rotate").css("position", "relative")
+	$(".rotate").css("left", - ($(".rotate").width() / 2) + 10)
+	$(".rotate").css("top", ($(".rotate").width() / 2) - 10)
 });
