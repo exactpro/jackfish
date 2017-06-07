@@ -105,7 +105,7 @@ public class ApplicationPool implements IApplicationPool
 	}
 
 	@Override
-	public synchronized AppConnection connectToApplication(String id, Map<String, String> parameters) throws Exception
+	public AppConnection connectToApplication(String id, Map<String, String> parameters) throws Exception
 	{
 		try
 		{
@@ -119,8 +119,8 @@ public class ApplicationPool implements IApplicationPool
 			int port = firstFreePort(entry);
 
 			Map<String, String> driverParameters = getDriverParameters(entry);
-			IApplicationFactory applicationFactory = loadFactory(id, entry);
-			IApplication application = applicationFactory.createApplication();
+			final IApplicationFactory applicationFactory = loadFactory(id, entry);
+			final IApplication application = applicationFactory.createApplication();
 			application.init(this, applicationFactory);
 			String remoteClassName = applicationFactory.getRemoteClassName();
 			String jarPath = MainRunner.makeDirWithSubstitutions(entry.get(Configuration.appJar)); 
@@ -144,7 +144,7 @@ public class ApplicationPool implements IApplicationPool
 	
 	
 	@Override
-	public synchronized AppConnection 	startApplication(String id, Map<String, String> parameters) throws Exception
+	public AppConnection 	startApplication(String id, Map<String, String> parameters) throws Exception
 	{
 		try
 		{
@@ -158,8 +158,8 @@ public class ApplicationPool implements IApplicationPool
 			int port = firstFreePort(entry);
 			
 			Map<String, String> driverParameters = getDriverParameters(entry);
-			IApplicationFactory applicationFactory = loadFactory(id, entry);
-			IApplication application = applicationFactory.createApplication();
+			final IApplicationFactory applicationFactory = loadFactory(id, entry);
+			final IApplication application = applicationFactory.createApplication();
 			application.init(this, applicationFactory);
 			String remoteClassName = applicationFactory.getRemoteClassName();
 			String jarPath = MainRunner.makeDirWithSubstitutions(entry.get(Configuration.appJar));
@@ -207,7 +207,7 @@ public class ApplicationPool implements IApplicationPool
 
 	
 	@Override
-	public synchronized void stopApplication(AppConnection connection) throws Exception
+	public void stopApplication(AppConnection connection) throws Exception
 	{
 		try
 		{
@@ -217,8 +217,8 @@ public class ApplicationPool implements IApplicationPool
 			}
 			
 			IApplication app = connection.getApplication();
+            this.connections.remove(connection);
 			app.stop(false);
-			this.connections.remove(connection);
 		}
 		catch (Exception e)
 		{
@@ -229,10 +229,10 @@ public class ApplicationPool implements IApplicationPool
 	}
 
 	@Override
-	public synchronized void stopAllApplications() throws Exception
+	public void stopAllApplications() throws Exception
 	{
 		//java.util.ConcurrentModificationException
-		for (AppConnection connection : this.connections)
+		for (AppConnection connection : this.connections.toArray(new AppConnection[] {}))
 		{
 			try
 			{
@@ -247,6 +247,27 @@ public class ApplicationPool implements IApplicationPool
 	}
 	//----------------------------------------------------------------------------------------------
 
+    public GuiDictionary getDictionary(AppEntry entry) throws Exception
+    {
+        String dictionaryName = entry.get(Configuration.appDicPath);
+        dictionaryName = MainRunner.makeDirWithSubstitutions(dictionaryName);
+
+        GuiDictionary dictionary = null;
+        if (!Str.IsNullOrEmpty(dictionaryName))
+        {
+            dictionary = this.factory.createAppDictionary(dictionaryName);
+            try (Reader reader = CommonHelper.readerFromFileName(dictionaryName))
+            {
+                dictionary.load(reader);
+            }
+            // TODO why we do it?
+            AbstractEvaluator evaluator = this.factory.createEvaluator();
+            dictionary.evaluateAll(evaluator);
+        }
+        return dictionary;
+    }	    
+
+    //----------------------------------------------------------------------------------------------
 	private IApplicationFactory loadFactory(String id) throws Exception
 	{
 		AppEntry entry = parametersEntry(id);
@@ -266,36 +287,43 @@ public class ApplicationPool implements IApplicationPool
 	
 	private IApplicationFactory loadFactory(String id, AppEntry entry) throws Exception
 	{
-		IApplicationFactory applicationFactory = this.appFactories.get(id);
-		if (applicationFactory == null)
-		{
-			String jarName	= entry.get(Configuration.appJar);
-			jarName	= MainRunner.makeDirWithSubstitutions(jarName); 
-			
-			List<URL> urls = new ArrayList<URL>();
-			urls.add(new URL("file:" + jarName));
-
-			ClassLoader parent = getClass().getClassLoader();
-			URLClassLoader classLoader = new URLClassLoader(urls.toArray(new URL[] {}), parent);
-			
-			ServiceLoader<IApplicationFactory> loader = ServiceLoader.load(IApplicationFactory.class, classLoader);
-			Iterator<IApplicationFactory> iterator = loader.iterator();
-			if(iterator.hasNext())
-			{
-				applicationFactory = iterator.next();
-			}
-			if (applicationFactory == null)
-			{
-				throw new Exception("The application factory with id '" + id + "' is not found");
-			}
-			
-			GuiDictionary dictionary = getDictionary(entry);
-			applicationFactory.init(dictionary);
-			this.appFactories.put(id, applicationFactory);
-		}
-		
+	    IApplicationFactory applicationFactory = this.appFactories.get(id);
+        if (applicationFactory == null)
+        {
+            synchronized (this.appFactories)
+            {
+        		applicationFactory = this.appFactories.get(id);
+        		if (applicationFactory == null)
+        		{
+        			String jarName	= entry.get(Configuration.appJar);
+        			jarName	= MainRunner.makeDirWithSubstitutions(jarName); 
+        			
+        			List<URL> urls = new ArrayList<URL>();
+        			urls.add(new URL("file:" + jarName));
+        
+        			ClassLoader parent = getClass().getClassLoader();
+        			URLClassLoader classLoader = new URLClassLoader(urls.toArray(new URL[] {}), parent);
+        			
+        			ServiceLoader<IApplicationFactory> loader = ServiceLoader.load(IApplicationFactory.class, classLoader);
+        			Iterator<IApplicationFactory> iterator = loader.iterator();
+        			if(iterator.hasNext())
+        			{
+        				applicationFactory = iterator.next();
+        			}
+        			if (applicationFactory == null)
+        			{
+        				throw new Exception("The application factory with id '" + id + "' is not found");
+        			}
+        			
+        			GuiDictionary dictionary = getDictionary(entry);
+        			applicationFactory.init(dictionary);
+        			this.appFactories.put(id, applicationFactory);
+                }
+        	}
+        }
 		return applicationFactory;
 	}
+	
 	private int firstFreePort(AppEntry entry) throws Exception
 	{
 		String startPortStr = entry.get(Configuration.appStartPort);
@@ -317,26 +345,6 @@ public class ApplicationPool implements IApplicationPool
 		}
 		
 		return port;
-	}
-	
-	public GuiDictionary getDictionary(AppEntry entry) throws Exception
-	{
-		String dictionaryName = entry.get(Configuration.appDicPath);
-		dictionaryName	= MainRunner.makeDirWithSubstitutions(dictionaryName);
-		
-		GuiDictionary dictionary = null;
-		if (!Str.IsNullOrEmpty(dictionaryName))
-		{
-			dictionary = this.factory.createAppDictionary(dictionaryName);
-	    	try (Reader reader = CommonHelper.readerFromFileName(dictionaryName))
-	    	{
-	    		dictionary.load(reader);
-	    	}
-			//TODO why we do it?
-			AbstractEvaluator evaluator = this.factory.createEvaluator();
-			dictionary.evaluateAll(evaluator);
-		}
-		return dictionary;
 	}
 	
 	private Map<String, String> getDriverParameters(AppEntry entry) throws Exception
