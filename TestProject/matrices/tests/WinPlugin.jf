@@ -23,9 +23,180 @@ Application start;Never;;
 
     #Step;#Kind;#For;#Depends
     'Start with invalid workdir';;;
-        #Id;#Action;#Assert;$AppId;WorkDir;Exec
-        APPSTR3;ApplicationStart;This.Result == Result.Failed && This.Kind == ErrorKind.EXCEPTION;'WIN';new Date();'calc.exe'
+        #Id;#Action;$AppId;WorkDir;Exec
+        APPSTR3;ApplicationStart;'WIN';new Date();'calc.exe'
+
+        #Id;#Action;$AppConnection
+        APPSTP1;ApplicationStop;APPSTR3.Out
 
     #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'start with valid parameters';;;
+        #Id;#Action;$AppId;WorkDir;Exec
+        APPSTR3;ApplicationStart;'WIN';mockWinDir;mockWinExec
+
+        #Id;#Action;$AppConnection
+        APPSTP1;ApplicationStop;APPSTR3.Out
+
+    #EndStep
+
+
+#TestCase;#Kind;#Depends;#For
+Application connect;;;
+    #Id;#Action;$AppId;WorkDir;Exec
+    app;ApplicationStart;'WIN';mockWinDir;mockWinExec
+
+    #Id;#Action;$AppConnection;Rectangle
+    APPPAR2;ApplicationGetProperties;app.Out;
+
+    #Id;#Let
+    pid;app.Out.getProcessId()
+
+    #Id;#Let
+    h;APPPAR2.Out.Rectangle.height
+
+    #Id;#Let
+    w;APPPAR2.Out.Rectangle.width
+
+    #Step;#Kind;#For;#Depends
+    'Connect via title';;;
+        #Id;#Action;$AppId;MainWindow
+        APPSTR4;ApplicationConnectTo;'WIN';'MockWin'
+
+        #Id;#Action;$AppConnection
+        APPSTP2;ApplicationStop;APPSTR4.Out
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'Connect via size';;;
+        #Id;#Action;$AppId;Height;Width
+        APPSTR4;ApplicationConnectTo;'WIN';h;w
+
+        #Id;#Action;$AppConnection
+        APPSTP2;ApplicationStop;APPSTR4.Out
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'Connecti via pid';;;
+        #Id;#Action;$AppId;PID
+        APPSTR4;ApplicationConnectTo;'WIN';pid
+
+        #Id;#Action;$AppConnection
+        APPSTP2;ApplicationStop;APPSTR4.Out
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'Connecti via title and pid';;;
+        #Id;#Action;$AppId;WorkDir;Exec
+        newApp;ApplicationStart;'WIN';mockWinDir;mockWinExec
+
+        #Id;#Action;#Assert;$AppId;MainWindow
+        APPSTR1;ApplicationConnectTo;This.Result == Result.Failed && This.Kind == ErrorKind.EXCEPTION;'WIN';'MockWin'
+
+        #Id;#Action;$AppId;PID;MainWindow
+        APPSTR1;ApplicationConnectTo;'WIN';newApp.Out.getProcessId();'MockWin'
+
+        #Id;#Action;$AppConnection
+        APPSTP3;ApplicationStop;APPSTR1.Out
+
+        #Id;#Action;$AppConnection
+        APPSTP4;ApplicationStop;newApp.Out
+
+    #EndStep
+
+    #Id;#Action;$AppConnection
+    APPSTP1;ApplicationStop;app.Out
+
+    #Step;#Kind;#For;#Depends
+    'Connect with timeout';;;
+        #Id;#RawText;#Kind
+        TEXT1;Text;Matrix
+        ~;"// "
+        ~;"#TestCase;#Kind;#Depends;#For"
+        ~;"Test case;Never;;"
+        ~;"    #Action;$Time"
+        ~;"    Wait;5000"
+        ~;""
+        ~;"    #Id;#Action;$Command;$Wait"
+        ~;"    EXEC1;Execute;'notepad.exe';false"
+        #EndRawText
+
+        #Id;#Action;$Text
+        MXRN1;MatrixRunFromText;TEXT1
+
+        #Id;#Action;$AppId;MainWindow;Timeout
+        APPSTR1;ApplicationConnectTo;'WIN';'Untitled';30000
+
+        #Id;#Action;$AppConnection;$Kill
+        APPSTP1;ApplicationStop;APPSTR1.Out;true
+
+    #EndStep
+
+
+#TestCase;#Kind;#Depends;#For
+Application stop;;;
+    #Step;#Kind;#For;#Depends
+    'Start - stop';;;
+        #Id;#Action;$AppId;WorkDir;Exec
+        app;ApplicationStart;'WIN';mockWinDir;mockWinExec
+
+        #Id;#Action;$AppConnection
+        APPSTP5;ApplicationStop;app.Out
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'connect - stop';;;
+        #Id;#Action;$AppId;WorkDir;Exec
+        app;ApplicationStart;'WIN';mockWinDir;mockWinExec
+
+        #Id;#Action;$AppId;PID
+        APPSTR5;ApplicationConnectTo;'WIN';app.Out.getProcessId()
+
+        #Id;#Action;$AppConnection
+        APPSTP6;ApplicationStop;APPSTR5.Out
+
+        #Id;#Action;$AppConnection
+        APPSTP5;ApplicationStop;app.Out
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'connect - stop with kill';;;
+        #Id;#Action;$AppId;WorkDir;Exec
+        app;ApplicationStart;'WIN';mockWinDir;mockWinExec
+
+        #Id;#Action;$AppId;PID
+        APPSTR5;ApplicationConnectTo;'WIN';app.Out.getProcessId()
+
+        #Id;#Action;$AppConnection;$Kill
+        APPSTP6;ApplicationStop;APPSTR5.Out;true
+
+        #Id;#Action;#Assert;$AppConnection;Rectangle
+        APPPAR1;ApplicationGetProperties;This.Result == Result.Failed && This.Kind == ErrorKind.EXCEPTION;app.Out;
+
+        #Id;#Action;$AppConnection
+        APPSTP5;ApplicationStop;app.Out
+
+    #EndStep
+
+
+#TestCase;#Kind;#Depends;#For
+Application get properties;;;
+    #Id;#Action;$AppId;WorkDir;Exec
+    app;ApplicationStart;'WIN';mockWinDir;mockWinExec
+
+    #Id;#Action;#Assert;$AppConnection;Rectangle
+    APPPAR2;ApplicationGetProperties;This.Out.Rectangle == new java.awt.Rectangle(0,0,881,845);app.Out;
+
+    #Id;#Action;#Assert;$AppConnection;Title
+    APPPAR3;ApplicationGetProperties;This.Result == Result.Failed && This.Kind == ErrorKind.EXCEPTION;app.Out;
+
+    #Id;#Action;$AppConnection
+    APPSTP5;ApplicationStop;app.Out
 
 
