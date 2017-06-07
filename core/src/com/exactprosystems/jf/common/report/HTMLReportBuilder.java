@@ -17,12 +17,10 @@ import com.exactprosystems.jf.documents.matrix.parser.items.CommentString;
 import com.exactprosystems.jf.documents.matrix.parser.items.MatrixItem;
 import com.exactprosystems.jf.functions.Content;
 
-import java.awt.Color;
 import java.io.File;
 import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.stream.Collectors;
 

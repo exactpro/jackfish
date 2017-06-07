@@ -1539,7 +1539,7 @@ RF;RegressionFramework
                         ~;"  `step` varchar(256) DEFAULT NULL,"
                         ~;"  `time` int(11) DEFAULT NULL,"
                         ~;"  `result` varchar(45) DEFAULT NULL,"
-                        ~;"  `error` varchar(256) DEFAULT NULL,"
+                        ~;"  `error` varchar(1000) DEFAULT NULL,"
                         ~;"  `screenshot` longblob,"
                         ~;"  PRIMARY KEY (`id`)"
                         ~;") ENGINE=InnoDB AUTO_INCREMENT=567 DEFAULT CHARSET=utf8;"
@@ -1609,7 +1609,7 @@ RF;RegressionFramework
                     ~;"  step varchar(256) DEFAULT NULL,"
                     ~;"  time int DEFAULT NULL,"
                     ~;"  result varchar(45) DEFAULT NULL,"
-                    ~;"  error varchar(256) DEFAULT NULL,"
+                    ~;"  error varchar(1000) DEFAULT NULL,"
                     ~;"  screenshot VARBINARY(MAX)"
                     ~;" );"
                     #EndRawText
