@@ -32,6 +32,7 @@ import com.exactprosystems.jf.documents.matrix.parser.items.HelpContent;
 import com.exactprosystems.jf.documents.matrix.parser.items.HelpItem;
 import com.exactprosystems.jf.documents.matrix.parser.items.HelpPicture;
 import com.exactprosystems.jf.documents.matrix.parser.items.HelpText;
+import com.exactprosystems.jf.documents.matrix.parser.items.HelpTextLine;
 import com.exactprosystems.jf.documents.matrix.parser.items.HelpWizardItem;
 import com.exactprosystems.jf.documents.matrix.parser.items.MatrixItem;
 import com.exactprosystems.jf.documents.matrix.parser.items.MatrixItemAttribute;
@@ -74,17 +75,17 @@ public class DocumentationBuilder
         addTable(help, "{{*Document Information*}}",    false, table2, new int[] { 25, 23, 23, 25 },  evaluator);
         addTable(help, "{{*Abbreviations*}}",           true,  table3, new int[] { 50, 50 },  evaluator);
 
-        addChapter(help, "{{&&}}", 1);
+        addTextLine(help, "{{&&}}");
         addContent(help, "{{*Table of contenst*}}", new Content());
         
         List<OperationKind> operations = Arrays.stream(OperationKind.values()).collect(Collectors.toList());
         int size = operations.size();
         addAllControlsTable(help, "All controls", context, operations.subList(0, size/3), true);
-        addChapter(help, "{{&&}}", 1);
+        addTextLine(help, "{{&&}}");
         addAllControlsTable(help, "All controls - continue", context, operations.subList(size/3, size*2/3), true);
-        addChapter(help, "{{&&}}", 1);
+        addTextLine(help, "{{&&}}");
         addAllControlsTable(help, "All controls - end", context, operations.subList(size*2/3, size), true);
-        addChapter(help, "{{&&}}", 1);
+        addTextLine(help, "{{&&}}");
         
         addText(help, DocumentationBuilder.class.getResourceAsStream("intro1.txt"));
         addPicture(help, "Architecture", 80, DocumentationBuilder.class.getResourceAsStream("Intro.png"));
@@ -224,6 +225,12 @@ public class DocumentationBuilder
     {
         MatrixItem chapter = new HelpChapter(title, level);
         root.insert(root.count(), chapter);
+    }
+    
+    public static void addTextLine(MatrixItem root, String str) throws Exception
+    {
+        MatrixItem line = new HelpTextLine(str);
+        root.insert(root.count(), line);
     }
     
     public static void addText(MatrixItem root, InputStream stream) throws Exception
