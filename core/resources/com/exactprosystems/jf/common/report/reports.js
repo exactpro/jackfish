@@ -130,6 +130,11 @@ $(document).ready(function(){
 			tbl.hide();
 		} else {
 			tbl.show();
+			var childs = tbl.find(".rotatedDiv")
+			if (childs.length == 1) {
+				var rotateDiv = $(childs[0]).children('.rotate');
+				rotateDivFunction(rotateDiv)
+			}
 		}
 	});
 
@@ -200,9 +205,18 @@ $(document).ready(function(){
 	});
 
 	//rotate
-	$(".rotate").width($(".rotate > span").width())
-	$(".rotate").parent().height($(".rotate").width())
-	$(".rotate").css("position", "relative")
-	$(".rotate").css("left", - ($(".rotate").width() / 2) + 10)
-	$(".rotate").css("top", ($(".rotate").width() / 2) - 10)
+
+	var rotateDivFunction = function(rd) {
+		$(rd).width($(rd).children('span').width())
+		$(rd).parent().height($(rd).width())
+		$(rd).css("position", "relative")
+		$(rd).css("left", - ($(rd).width() / 2) + 10)
+		$(rd).css("top", ($(rd).width() / 2) - 10)
+	}
+
+	$('.rotate').each(function(i,e) {
+		rotateDivFunction(e);
+	})
+
+
 });
