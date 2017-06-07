@@ -254,7 +254,12 @@ public class Section implements ISection, Mutable
 	{
 		return this.controls.indexOf(control);
 	}
-	
+
+	public AbstractControl getByIndex(int index)
+	{
+		return this.controls.get(index);
+	}
+
 	public void setControl(int position, AbstractControl control)
 	{
 		control.setSection(this);

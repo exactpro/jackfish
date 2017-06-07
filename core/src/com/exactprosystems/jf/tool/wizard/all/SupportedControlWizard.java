@@ -5,6 +5,7 @@ import com.exactprosystems.jf.api.app.IControl;
 import com.exactprosystems.jf.api.app.ISection;
 import com.exactprosystems.jf.api.app.IWindow;
 import com.exactprosystems.jf.api.common.IContext;
+import com.exactprosystems.jf.api.common.Str;
 import com.exactprosystems.jf.api.wizard.WizardAttribute;
 import com.exactprosystems.jf.api.wizard.WizardCategory;
 import com.exactprosystems.jf.api.wizard.WizardCommand;
@@ -108,12 +109,21 @@ public class SupportedControlWizard extends AbstractWizard
 					{
 						SimpleBean controlSimpleBean = controlTreeItem.getValue();
 						String controlName = controlSimpleBean.name;
-						IControl controlById = section.getControlById(controlName);
-						IControl copyControl = Common.tryCatch(() -> AbstractControl.createCopy(controlById, controlSimpleBean.value)
+						IControl oldControl;
+						if (Str.IsNullOrEmpty(controlName))
+						{
+							oldControl = ((Section) section).getByIndex(controlSimpleBean.index);
+						}
+						else
+						{
+							 oldControl = section.getControlById(controlName);
+						}
+
+						IControl copyControl = Common.tryCatch(() -> AbstractControl.createCopy(oldControl, controlSimpleBean.value)
 								, "Error on create copy"
-								, controlById
+								, oldControl
 						);
-						builder.replaceControl(((Section) section), controlById, copyControl);
+						builder.replaceControl(((Section) section), oldControl, copyControl);
 					}
 				}
 			}
@@ -189,6 +199,10 @@ public class SupportedControlWizard extends AbstractWizard
 					{
 						needAddSection = true;
 						SimpleBean itemBean = new SimpleBean(control.getID(), control.getBindedClass());
+						if (Str.IsNullOrEmpty(control.getID()))
+						{
+							itemBean.index = ((Section) section).indexOf(((AbstractControl) control));
+						}
 						TreeItem<SimpleBean> controlBean = new TreeItem<>(itemBean);
 						sectionBean.getChildren().add(controlBean);
 					}
@@ -216,6 +230,8 @@ public class SupportedControlWizard extends AbstractWizard
 	{
 		String name;
 		ControlKind value;
+
+		int index = -1;
 
 		SimpleBean(String name)
 		{
