@@ -799,7 +799,7 @@ report chart Pie chart;;;
         appCon;testLib.runBrowser;pathToReport
 
         #Id;#Action;#Assert;$Dialog;$AppConnection;title;svg
-        DLGFLL11;DialogFill;This.Out.title == true && This.Out.svg == true;'DialogForTestCharts';app;Do.isVisible();Do.isVisible()
+        DLGFLL11;DialogFill;This.Out.title == true && This.Out.svg == true;'DialogForTestCharts';appCon;Do.isVisible();Do.isVisible()
 
         #Id;#Action;#Assert;$Dialog;$AppConnection;slices
         DLGFLL55;DialogFill;This.Out.slices == 3;'DialogForTestCharts';appCon;Do.count()
@@ -861,7 +861,7 @@ report chart Pie chart;;;
 #TestCase;#Kind;#Depends;#For
 subcases;;;
     #Id;#SubCase;rawText
-    runMatrix;returned value - path to report;TEXT1
+    runMatrix;returned value - path to report;TEXT
         #Id;#Action;$Text
         MXRN1;MatrixRunFromText;rawText
 

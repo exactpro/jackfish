@@ -1,9 +1,5 @@
 #TestCase;#Kind;#Depends;#For
 Global variables and subcases;;;
-    // ovveride default vars
-    #Id;#Global;#Let
-    _rf_default_handler;1;'testdata/tf_matrixes/MatrixCleanup.jf'
-
     #Id;#Global;#Let
     pathToMatrices;1;'testdata/rf_matrixes/'
 

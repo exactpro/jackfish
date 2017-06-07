@@ -698,10 +698,7 @@ Application SwitchTo;;;
         APPSW2;ApplicationSwitchTo;This.Result == Result.Failed && This.Kind == ErrorKind.ELEMENT_NOT_FOUND;newURL;CALL_1
 
         #Id;#Action;#Assert;$SoftCondition;$AppConnection
-        APPSW2;ApplicationSwitchTo;This.Result == Result.Failed && This.Kind == ErrorKind.EXCEPTION;;CALL_1
-
-        #Id;#Action;#Assert;$SoftCondition;URL;Title;$AppConnection
-        APPSW2;ApplicationSwitchTo;This.Result == Result.Failed && This.Kind == ErrorKind.EXCEPTION;;;;CALL_1
+        APPSW2;ApplicationSwitchTo;This.Result == Result.Failed && This.Kind == ErrorKind.WRONG_PARAMETERS;;CALL_1
 
         #Id;#Action;$AppConnection
         APPSTP1;ApplicationStop;CALL_1

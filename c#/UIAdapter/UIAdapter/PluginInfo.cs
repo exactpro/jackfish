@@ -115,6 +115,10 @@ namespace UIAdapter
             {
                 return null;
             }
+            if (kind == ControlKind.Wait)
+            {
+                return null;
+            }
             if (kind == ControlKind.Any)
             {
                 return Condition.TrueCondition;

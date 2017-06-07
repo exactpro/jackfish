@@ -3,8 +3,9 @@ import com.ullink.Msbuild
 description = "UIAdapter"
 
 task buildUIAdapter(type: Msbuild){
-    projectFile = 'UIAdapterRunner/UIAdapterRunner.csproj'
-
+    projectFile = 'UIAdapter/UIAdapter.csproj'
+	platform = "x64"
+	configuration = "Debug"
     verbosity = 'detailed'
     ext["flp1"] = "LogFile=" + file("${project.name}.errors.log").path + ";ErrorsOnly;Verbosity=diag"
 }
