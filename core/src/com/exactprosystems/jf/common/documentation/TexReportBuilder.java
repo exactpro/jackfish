@@ -17,9 +17,6 @@ import com.exactprosystems.jf.common.report.ReportWriter;
 import com.exactprosystems.jf.documents.matrix.parser.items.*;
 import com.exactprosystems.jf.functions.Content;
 
-import static com.exactprosystems.jf.common.report.ReportBuilder.CM;
-import static com.exactprosystems.jf.common.report.ReportBuilder.OM;
-
 import java.io.*;
 import java.nio.file.Files;
 import java.util.Arrays;

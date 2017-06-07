@@ -2,9 +2,11 @@ package com.exactprosystems.jf.common.documentation;
 
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import com.exactprosystems.jf.actions.AbstractAction;
 import com.exactprosystems.jf.actions.ActionAttribute;
@@ -68,13 +70,21 @@ public class DocumentationBuilder
                     { "JF", "JackFish" }
                 };
 
-
         addTable(help, "{{*User Guide*}}",              true,  table1, new int[] { 50, 50 },  evaluator);
         addTable(help, "{{*Document Information*}}",    false, table2, new int[] { 25, 23, 23, 25 },  evaluator);
         addTable(help, "{{*Abbreviations*}}",           true,  table3, new int[] { 50, 50 },  evaluator);
 
         addChapter(help, "{{&&}}", 1);
         addContent(help, "{{*Table of contenst*}}", new Content());
+        
+        List<OperationKind> operations = Arrays.stream(OperationKind.values()).collect(Collectors.toList());
+        int size = operations.size();
+        addAllControlsTable(help, "All controls", context, operations.subList(0, size/3), true);
+        addChapter(help, "{{&&}}", 1);
+        addAllControlsTable(help, "All controls - continue", context, operations.subList(size/3, size*2/3), true);
+        addChapter(help, "{{&&}}", 1);
+        addAllControlsTable(help, "All controls - end", context, operations.subList(size*2/3, size), true);
+        addChapter(help, "{{&&}}", 1);
         
         addText(help, DocumentationBuilder.class.getResourceAsStream("intro1.txt"));
         addPicture(help, "Architecture", 80, DocumentationBuilder.class.getResourceAsStream("Intro.png"));
@@ -138,7 +148,7 @@ public class DocumentationBuilder
         root.insert(root.count(), text);
     }
     
-    public static void addAllControlsTable(MatrixItem root, String title, Context context) throws Exception
+    public static void addAllControlsTable(MatrixItem root, String title, Context context, List<OperationKind> operations, boolean rotate) throws Exception
     {
         try
         {
@@ -151,9 +161,16 @@ public class DocumentationBuilder
             List<String> headers = new ArrayList<>();
             headers.add("#");
             
-            for (OperationKind kind : OperationKind.values())
+            for (OperationKind kind : operations)
             {
-                headers.add(kind.toString());
+                if (rotate)
+                {
+                    headers.add("{{^" + kind.toString() + "^}}");
+                }
+                else
+                {
+                    headers.add(kind.toString());
+                }
             }
 
             Table table = new Table(headers.toArray(new String[] {}), context.getEvaluator());
@@ -164,7 +181,7 @@ public class DocumentationBuilder
 
             for (ControlKind k : ControlKind.values())
             {
-                String[] arr = new String[OperationKind.values().length + 1];
+                String[] arr = new String[operations.size() + 1];
                 
                 Class<?> controlClass = Class.forName(AbstractControl.class.getPackage().getName() +"."+ k.getClazz());
                 arr[0] = controlClass.getSimpleName();
@@ -172,7 +189,7 @@ public class DocumentationBuilder
                 ControlsAttributes annotation = controlClass.getAnnotation(ControlsAttributes.class);
                 OperationKind defaultOperation = annotation.bindedClass().defaultOperation();
                 int count = 1; 
-                for (OperationKind kind : OperationKind.values())
+                for (OperationKind kind : operations)
                 {
                     if (annotation.bindedClass().isAllowed(kind))
                     {
@@ -195,7 +212,7 @@ public class DocumentationBuilder
                 table.addValue(arr);
             }
             
-            MatrixItem tableItem = new HelpTable(title, table, new int[] {}); // TODO
+            MatrixItem tableItem = new HelpTable(title, table, true, new int[] {}); // TODO
             root.insert(root.count(), tableItem);
         }
         catch (Exception e)
