@@ -113,14 +113,13 @@ public class SupportedControlWizard extends AbstractWizard
 								, "Error on create copy"
 								, controlById
 						);
-						//TODO cast
-						builder.addCommand(context -> ((Section) section).replaceControl(controlById, copyControl));
+						builder.replaceControl(((Section) section), controlById, copyControl);
 					}
 				}
 			}
 			if (!builder.isEmpty())
 			{
-				builder.addCommand(context -> Common.tryCatch(() -> this.dictionary.save(this.dictionary.getName()), "Error on save dictionary"));
+				builder.saveDictionary(this.dictionary);
 			}
 
 			return builder.build();

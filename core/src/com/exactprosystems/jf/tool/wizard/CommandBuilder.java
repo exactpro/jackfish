@@ -1,10 +1,14 @@
 package com.exactprosystems.jf.tool.wizard;
 
+import com.exactprosystems.jf.api.app.IControl;
 import com.exactprosystems.jf.api.common.Sys;
 import com.exactprosystems.jf.api.wizard.WizardCommand;
+import com.exactprosystems.jf.documents.guidic.GuiDictionary;
+import com.exactprosystems.jf.documents.guidic.Section;
 import com.exactprosystems.jf.documents.matrix.Matrix;
 import com.exactprosystems.jf.documents.matrix.parser.Parser;
 import com.exactprosystems.jf.documents.matrix.parser.items.MatrixItem;
+import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.matrix.MatrixFx;
 import org.apache.log4j.Logger;
 
@@ -58,9 +62,17 @@ public class CommandBuilder
 		return this;
 	}
 
-	public CommandBuilder addCommand(WizardCommand command)
+	public CommandBuilder replaceControl(Section section, IControl oldControl, IControl newControl)
 	{
-		this.commands.add(command);
+		this.commands.add(context -> section.replaceControl(oldControl, newControl));
+		return this;
+	}
+
+	public CommandBuilder saveDictionary(GuiDictionary dictionary)
+	{
+		this.commands.add(context -> {
+			Common.tryCatch(() -> dictionary.save(dictionary.getName()), "Error on save dictionary");
+		});
 		return this;
 	}
 
