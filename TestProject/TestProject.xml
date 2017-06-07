@@ -87,7 +87,7 @@
         </parameters>
         <parameters>
             <key>jreArgs</key>
-            <value>-Xms128m -Xmx1G</value>
+            <value>-Xms128m -Xmx1G -agentlib:jdwp=transport=dt_socket,server=n,address=kos236.exactpro.com:5005,suspend=n,onuncaught=n</value>
         </parameters>
         <parameters>
             <key>SafariDriverPath</key>
