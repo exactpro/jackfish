@@ -130,13 +130,8 @@ $(document).ready(function(){
 		function(event) {
 			//show columns
 			var tdTS = $('td.timestamp');
-			$(tdTS).show()
-			$(tdTS).width('215')
-			$(tdTS).css('position', 'relative')
-			tdTS.each(function(index, element) {
-				moveTimeSpanToLeft($(this))
-
-			})
+			$('td.timestamp').show()
+			$('td.timestamp').width('215')
 		},
 		function(event) {
 			//hide columns
@@ -145,11 +140,6 @@ $(document).ready(function(){
 		}
 	)
 	$('td.timestamp').hide();
-	var moveTimeSpanToLeft = function(td) {
-		var left = -1 * ($(td).parent()[0].getBoundingClientRect().left - 16);
-		$(td).css('left', left+'px')
-	}
-
 
 	$("a.showBody").click(function(event) {
 		var tbl = $(this).parent().parent().next();
@@ -163,10 +153,6 @@ $(document).ready(function(){
 				var rotateDiv = $(childs[0]).children('.rotate');
 				rotateDivFunction(rotateDiv)
 			}
-
-			//find timestamps and move it
-			var tds = tbl.find('td.timestamp')
-			tds.each(function(index, elem) { moveTimeSpanToLeft($(elem))})
 		}
 	});
 
