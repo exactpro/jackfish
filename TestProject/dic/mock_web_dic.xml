@@ -102,6 +102,17 @@
         </onClose>
         <close/>
     </window>
+    <window name="NotAllowedForGUIOnly">
+        <self/>
+        <onOpen>
+            <menu id="Menu" uid="input" xpath=""/>
+        </onOpen>
+        <run/>
+        <onClose>
+            <menu id="Menu" uid="input" xpath=""/>
+        </onClose>
+        <close/>
+    </window>
     <window name="DialogForCheckReportImage">
         <self>
             <any id="Owner" xpath="//body"/>
@@ -152,6 +163,15 @@
         <onClose>
             <wait uid="" owner="owner" name="hideButton" addition="WaitToDisappear" timeout="5000"/>
         </onClose>
+        <close/>
+    </window>
+    <window name="DialogValidateForGUI">
+        <self/>
+        <onOpen>
+            <textBox id="TextBox" uid="input" expression="Do.click(5,5,MouseAction.RightDoubleClick)"/>
+        </onOpen>
+        <run/>
+        <onClose/>
         <close/>
     </window>
 </dictionary>
