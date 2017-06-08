@@ -191,7 +191,7 @@ public class HTMLReportBuilder extends ReportBuilder
 		writer.fwrite("<button class='btn btn-danger filterFailed' type='button'>Failed : <span id='fail' class='badge'>0</span></button>");
 		writer.fwrite("<button class='btn btn-default filterExpandAllFailed' type='button'><span class='text-danger'>Expand all failed</span></button>");
 		writer.fwrite("<button class='btn btn-default filterCollapseAll' type='button'>Collapse all</button>");
-		writer.fwrite("<button class='btn btn-default timestamp' type='button'>Hide/Show timesptams</button>");
+		writer.fwrite("<button class='btn btn-default timestamp' type='button'>Time off/on</button>");
 		writer.fwrite("</td>");
 		writer.fwrite("</tr>");
 		writer.fwrite("</table>\n");

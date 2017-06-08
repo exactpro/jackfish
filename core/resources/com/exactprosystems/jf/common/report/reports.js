@@ -125,11 +125,18 @@ $(document).ready(function(){
 
 	});
 
+	//timestamp
 	$('button.timestamp').toggle(
 		function(event) {
 			//show columns
-			$('td.timestamp').show()
-			$('td.timestamp').width('215')
+			var tdTS = $('td.timestamp');
+			$(tdTS).show()
+			$(tdTS).width('215')
+			$(tdTS).css('position', 'relative')
+			tdTS.each(function(index, element) {
+				moveTimeSpanToLeft($(this))
+
+			})
 		},
 		function(event) {
 			//hide columns
@@ -138,6 +145,11 @@ $(document).ready(function(){
 		}
 	)
 	$('td.timestamp').hide();
+	var moveTimeSpanToLeft = function(td) {
+		var left = -1 * ($(td).parent()[0].getBoundingClientRect().left - 16);
+		$(td).css('left', left+'px')
+	}
+
 
 	$("a.showBody").click(function(event) {
 		var tbl = $(this).parent().parent().next();
@@ -145,11 +157,16 @@ $(document).ready(function(){
 			tbl.hide();
 		} else {
 			tbl.show();
+			//find rotate div and rotate it
 			var childs = tbl.find(".rotatedDiv")
 			if (childs.length == 1) {
 				var rotateDiv = $(childs[0]).children('.rotate');
 				rotateDivFunction(rotateDiv)
 			}
+
+			//find timestamps and move it
+			var tds = tbl.find('td.timestamp')
+			tds.each(function(index, elem) { moveTimeSpanToLeft($(elem))})
 		}
 	});
 
@@ -174,6 +191,7 @@ $(document).ready(function(){
 		return indentLevel != 0;
 	}).map(function(i,e) {
 		$(this).parent().parent().hide()
+
 	});
 
 	$('a.group').each(function(i,e) {
