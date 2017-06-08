@@ -311,7 +311,7 @@ public class MockApp
 	{
 		JPanel panel = createPanel("panelCentralLabel");
 		label.setName("centralLabel");
-		label.setText("Central label");
+		label.setText("CentralLabel");
 		moveLabel.setName("moveLabel");
 		moveLabel.setText("Move label");
 		panel.add(new JLabel());
