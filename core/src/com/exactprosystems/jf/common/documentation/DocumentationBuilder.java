@@ -37,6 +37,7 @@ import com.exactprosystems.jf.documents.matrix.parser.items.HelpWizardItem;
 import com.exactprosystems.jf.documents.matrix.parser.items.MatrixItem;
 import com.exactprosystems.jf.documents.matrix.parser.items.MatrixItemAttribute;
 import com.exactprosystems.jf.documents.matrix.parser.items.NameSpace;
+import com.exactprosystems.jf.documents.matrix.parser.items.SubCase;
 import com.exactprosystems.jf.documents.matrix.parser.items.TempItem;
 import com.exactprosystems.jf.functions.Content;
 import com.exactprosystems.jf.functions.Table;
@@ -80,6 +81,12 @@ public class DocumentationBuilder
         addTable(help, "{{*Abbreviations*}}",           false,  table3, new int[] { 50, 50 },  evaluator);
         addTextLine(help, "{{&&}}");
 
+//        help.insert(help.count(), new HelpItem(SubCase.class));
+//        help.insert(help.count(), new HelpItem(NameSpace.class));
+//        help.insert(help.count(), new HelpActionItem(TableSelect.class));
+
+
+        
         addContent(help, "{{*Table of contenst*}}", new Content());
         addTextLine(help, "{{&&}}");
         
@@ -94,11 +101,11 @@ public class DocumentationBuilder
 
         addTextLine(help, "{{5All controls5}}");
         addAllControlsTable(help, "All controls", context, operations.subList(0, size/3), true, true);
-        addTextLine(help, "{{&&}}");
+//        addTextLine(help, "{{&&}}");
         addAllControlsTable(help, "All controls - continue", context, operations.subList(size/3, size*2/3), true, true);
-        addTextLine(help, "{{&&}}");
+//        addTextLine(help, "{{&&}}");
         addAllControlsTable(help, "All controls - end", context, operations.subList(size*2/3, size), true, true);
-        addTextLine(help, "{{&&}}");
+//        addTextLine(help, "{{&&}}");
         
         addTextLine(help, "{{5Matrix syntax5}}");
         addAllItems(help);
@@ -259,8 +266,7 @@ public class DocumentationBuilder
                 continue;
             }
 
-//            item.insert(item.count(), new HelpItem((Class<? extends MatrixItem>) clazz));
-            item.insert(item.count(), new HelpItem(NameSpace.class));
+            item.insert(item.count(), new HelpItem((Class<? extends MatrixItem>) clazz));
         }
     }
     
@@ -285,8 +291,7 @@ public class DocumentationBuilder
             {
                 if (entry.getValue() == groups)
                 {
-//                    groupItem.insert(groupItem.count(), new HelpActionItem((Class<? extends AbstractAction>) entry.getKey()));
-                    groupItem.insert(groupItem.count(), new HelpActionItem(TableSelect.class));
+                    groupItem.insert(groupItem.count(), new HelpActionItem((Class<? extends AbstractAction>) entry.getKey()));
                 }
             }
         }

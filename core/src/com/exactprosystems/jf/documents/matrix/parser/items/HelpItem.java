@@ -13,7 +13,6 @@ import java.util.stream.Collectors;
 import com.exactprosystems.jf.api.error.ErrorKind;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.report.ReportBuilder;
-import com.exactprosystems.jf.common.report.ReportTable;
 import com.exactprosystems.jf.documents.config.Context;
 import com.exactprosystems.jf.documents.matrix.parser.Parameters;
 import com.exactprosystems.jf.documents.matrix.parser.Result;
@@ -46,14 +45,15 @@ public class HelpItem extends MatrixItem
         }
         
         report.itemIntermediate(item);
+        report.putMark(this.itemClazz.getSimpleName());
         report.outLine(this, null, "{{`{{3" + this.itemClazz.getSimpleName() + "3}}`}}", null);
         report.outLine(this, null, "{{`" + attribute.description() + "`}}", null);
-        report.outLine(this, null, "{{`{{*Examples*}}`}}", null);
-        report.outLine(this, null, "{{`" + attribute.examples() + "`}}", null);
+//        report.outLine(this, null, "{{`{{*Examples*}}`}}", null);
+//        report.outLine(this, null, "{{`" + attribute.examples() + "`}}", null);
         if (attribute.seeAlsoClass().length != 0)
         {
             report.outLine(this, null, "{{`{{*See also*}}`}}", null);
-            String s = Arrays.stream(attribute.seeAlsoClass()).map(c -> "{{@" + c.getSimpleName() + "@}}").collect(Collectors.joining(", "));
+            String s = Arrays.stream(attribute.seeAlsoClass()).map(c -> report.decorateLink(c.getSimpleName(), c.getSimpleName())).collect(Collectors.joining(", "));
             report.outLine(this, null, "{{`" + s + "`}}", null);
         }
     }

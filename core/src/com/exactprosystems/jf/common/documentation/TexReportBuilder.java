@@ -123,16 +123,16 @@ public class TexReportBuilder extends ReportBuilder
 			case "2" + CM: return "}";
     
             // header 3
-			case OM + "3": return "\\\\subsubsection{ ";
-			case "3" + CM: return " }";
+			case OM + "3": return "\\\\subsubsection{ \\\\Large{";
+			case "3" + CM: return "} }";
     
             // header 4
-            case OM + "4": return "\\\\subsection{ ";
-            case "4" + CM: return " }";
+            case OM + "4": return "\\\\subsection{ \\\\LARGE{";
+            case "4" + CM: return "} }";
     
             // header 5
-			case OM + "5": return "\\\\section{ ";
-			case "5" + CM: return " }";
+			case OM + "5": return "\\\\section{ \\\\huge{";
+			case "5" + CM: return "} }";
     
             // style for identifiers
             case OM + "$": return "{\\\\color{codecolor} \\\\verb+";
@@ -147,7 +147,7 @@ public class TexReportBuilder extends ReportBuilder
 									"\\\\endgroup";
             
             // style for references
-            case OM + "@": return "\\\\hyperref[]{";
+            case OM + "@": return "\\\\superhyperlink{";
             case "@" + CM: return "}";
     
             // text 90 degrees rotated
@@ -187,7 +187,7 @@ public class TexReportBuilder extends ReportBuilder
 	@Override
 	protected void putMark(ReportWriter writer, String mark) throws IOException
 	{
-		writer.fwrite(String.format("\\label{%s}", mark));
+		writer.fwrite(String.format("\\hypertarget{%s} \\newline ", mark));
 	}
 
 	@Override

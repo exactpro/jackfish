@@ -165,9 +165,16 @@ public abstract class ReportBuilder implements Storable
 		return this.reportIsOn;
 	}
 
-	public final void putMark(String str) throws Exception 
+	public final void putMark(String str) 
 	{
-		putMark(this.writer, str);
+		try
+		{
+			putMark(this.writer, str);
+		} 
+		catch (IOException e)
+		{
+			logger.error(e.getMessage(), e);
+		}
 	}
 
     public final ReportTable addExplicitTable(String title, String beforeTestcase, boolean decoraded, boolean bordered, int[] widths, String ... columns)

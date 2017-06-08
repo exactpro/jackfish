@@ -31,7 +31,7 @@ import java.util.Map;
         description 	= "This operator introduces a name space in the library in order to link to Subcase from this library. \n" +
 							"In the operator NameSpace are SubCases, which can be called with the use of Call - NameSpaceId.SubCase ID afterwards.\n" +
 							"The Id of NameSpace operator is the name of the creating library.\n" +
-							"In the name space NameSpace are SubCase.",
+							"In the name space {{@NameSpace@}} are {{@SubCase@}}.",
 		examples 		= "Create a library MyLibrary, which contains SubCase PrintHi.\n" +
 							"After the given matrix has been saved in a file, which is used to store libraries, it can be called in Call operator as following: \n" +
 							"MyLibrary.PrintHi\n" +

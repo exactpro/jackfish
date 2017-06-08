@@ -1,4 +1,4 @@
-{{3 Basic Syntax 3}}
+{{4 Basic Syntax 4}}
 MVEL is an expression language based on Java-syntax, with some marked differences specific to MVEL.  Unlike Java however, 
 MVEL is dynamically typed (with optional typing), meaning type qualification is not required in the the source. 
 An MVEL expression can be as simple as a single identifier, or as complicated as a full blown boolean expression with method calls and inline collection creations.
@@ -17,7 +17,7 @@ Like Java, MVEL supports the full gambit of operator precedence rules, including
 {{#(user.name == 'John Doe') && ((x * 2) - 1) > 20#}}
 
 
-{{3 MVEL 2.0 Operators 3}}
+{{4 MVEL 2.0 Operators 4}}
 The following chart is a complete list and description of all operators present in MVEL.
 
 {{3 Unary Operators 3}}
@@ -94,7 +94,7 @@ sex = Sex.FEMALE }
 =}}
 
 
-{{3 Inline List, Maps and Arrays 3}}
+{{4 Inline List, Maps and Arrays 4}}
 
 MVEL allows you to express Lists, Maps and Arrays using simple elegant syntax. Consider the following example:
 
@@ -159,7 +159,7 @@ foo.someMethod({1,2,3,4});
 
 In this case, MVEL will see that the target method accepts an {{*int[]*}} and automatically type the array as such.
 
-{{3 MVEL 2.0 Property Navigation 3}}
+{{4 MVEL 2.0 Property Navigation 4}}
 
 MVEL property navigation follows well-established conventions found in other bean property expressions found in other languages such as Groovy, OGNL, EL, etc.
 Unlike some other languages which require qualification depending on the underlying method of access, MVEL provides a single, 
@@ -246,7 +246,7 @@ foo = "My String";
 foo[0]; // returns 'M'
 #}}
 
-{{3 MVEL 2.0 Literals 3}}
+{{4 MVEL 2.0 Literals 4}}
 
 A literal is used to represent a fixed-value in the source of a particular script.
 
@@ -315,7 +315,7 @@ Boolean literals are represented by the reserved keywords true and false.
 
 The {{$null$}} literal is denoted by the reserved keywords {{$null$}} or {{$nil$}}.
 
-{{3 MVEL 2.0 Projections and Folds 3}}
+{{4 MVEL 2.0 Projections and Folds 4}}
 
 Put simply, projections (also known as list comprehensions) are a way of representing collections. 
 Using a very simple syntax, you can inspect very complex object models inside collections.
@@ -395,7 +395,7 @@ list = [5,2,4,1,18,10,15,1,0];
 // sort it!
 quicksort(list);
 
-{{3 Lambda Expressions 3}}
+{{4 Lambda Expressions 4}}
 
 MVEL allows the definition of lambda functions.
 

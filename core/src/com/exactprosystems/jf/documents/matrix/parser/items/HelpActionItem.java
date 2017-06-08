@@ -42,11 +42,9 @@ public class HelpActionItem extends MatrixItem
         ActionAttribute attr = clazz.getAnnotation(ActionAttribute.class);
 
         report.itemIntermediate(item);
-        
+        report.putMark(this.actionClazz.getCanonicalName());
         report.outLine(this, null, "{{`{{3" + "Action " + this.actionClazz.getSimpleName() + "3}}`}}", null);
-        
         report.outLine(this, null, "{{`" + attr.generalDescription() + "`}}", null);
-
         if (attr.additionFieldsAllowed())
         {
             report.outLine(this, null, "{{`{{*Additional fields - Yes*}}`}}", null);
@@ -56,12 +54,12 @@ public class HelpActionItem extends MatrixItem
         {
             report.outLine(this, null, "{{`{{*Additional fields - No*}}`}}", null);
         }
-        report.outLine(this, null, "{{`{{*Examples*}}`}}", null);
-        report.outLine(this, null, "{{`" + attr.examples() + "`}}", null);
+//        report.outLine(this, null, "{{`{{*Examples*}}`}}", null);
+//        report.outLine(this, null, "{{`" + attr.examples() + "`}}", null);
         if (attr.seeAlsoClass().length != 0)
         {
             report.outLine(this, null, "{{`{{*See also*}}`}}", null);
-            String s = Arrays.stream(attr.seeAlsoClass()).map(c -> "{{@" + c.getSimpleName() + "@}}").collect(Collectors.joining(", "));
+            String s = Arrays.stream(attr.seeAlsoClass()).map(c -> report.decorateLink(c.getSimpleName(), c.getSimpleName())).collect(Collectors.joining(", "));
             report.outLine(this, null, "{{`" + s + "`}}", null);
         }
         
