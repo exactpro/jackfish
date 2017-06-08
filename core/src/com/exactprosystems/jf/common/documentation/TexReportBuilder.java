@@ -279,7 +279,7 @@ public class TexReportBuilder extends ReportBuilder
 	@Override
 	protected void reportImage(ReportWriter writer, MatrixItem item, String beforeTestcase, String fileName, String embedded, String title, int scale, ImageReportMode reportMode) throws IOException
 	{
-        writer.fwrite("\\includegraphics[width=%f\\textwidth]{%s}", scale < 0 ? 1.0 : scale / 100.0, fileName.replace("/", "")).newline();
+        writer.fwrite("\\includegraphics[width=%f\\textwidth]{%s}", scale < 0 ? 1.0 : scale / 100.0, fileName.replace(File.separator, "")).newline();
 		writer.fwrite("\\newline").newline();
 	}
 

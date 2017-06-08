@@ -87,11 +87,11 @@ public class DocumentationBuilder
         addTextLine(help, "{{3MVEL3}}");
         addText(help, DocumentationBuilder.class.getResourceAsStream("mvel.txt"));
         addTextLine(help, "{{3All controls3}}");
-        addAllControlsTable(help, "All controls", context, operations.subList(0, size/3), true);
+        addAllControlsTable(help, "All controls", context, operations.subList(0, size/3), true, false);
         addTextLine(help, "{{&&}}");
-        addAllControlsTable(help, "All controls - continue", context, operations.subList(size/3, size*2/3), true);
+        addAllControlsTable(help, "All controls - continue", context, operations.subList(size/3, size*2/3), true, false);
         addTextLine(help, "{{&&}}");
-        addAllControlsTable(help, "All controls - end", context, operations.subList(size*2/3, size), true);
+        addAllControlsTable(help, "All controls - end", context, operations.subList(size*2/3, size), true, false);
         addTextLine(help, "{{&&}}");
         addTextLine(help, "{{3Matrix syntax3}}");
         addAllItems(help);
@@ -148,7 +148,7 @@ public class DocumentationBuilder
         root.insert(root.count(), text);
     }
     
-    public static void addAllControlsTable(MatrixItem root, String title, Context context, List<OperationKind> operations, boolean rotate) throws Exception
+    public static void addAllControlsTable(MatrixItem root, String title, Context context, List<OperationKind> operations, boolean rotate, boolean bordered) throws Exception
     {
         try
         {
@@ -212,7 +212,7 @@ public class DocumentationBuilder
                 table.addValue(arr);
             }
             
-            MatrixItem tableItem = new HelpTable(title, table, true, new int[] {}); // TODO
+            MatrixItem tableItem = new HelpTable(title, table, bordered, new int[] {}); // TODO
             root.insert(root.count(), tableItem);
         }
         catch (Exception e)

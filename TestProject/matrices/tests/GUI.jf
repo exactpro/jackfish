@@ -135,14 +135,14 @@ IMAGE_GET;ImageGet;;;
     #Id;#Action;#Assert;$Dialog;$Name;$AppConnection
     IMGGET4;ImageGet;This.Result == Result.Failed && This.Kind == ErrorKind.ELEMENT_NOT_FOUND;'Main';'NotExistImage';APPSTR1.Out
 
-    #Id;#Action;ImageIDE;$Dialog;$AppConnection
+    #Id;#Action;Image;$Dialog;$AppConnection
     DLGFLL7;DialogFill;Do.move();'Main';APPSTR1.Out
 
     #Id;#Action;#Assert;$Description;$Dialog;$Name;$AppConnection
-    IMGGET5;ImageGet;This.Out.getDescription() == 'string';'string';'Main';'ImageIDE';APPSTR1.Out
+    IMGGET5;ImageGet;This.Out.getDescription() == 'string';'string';'Main';'Image';APPSTR1.Out
 
     #Id;#Action;$Description;$Dialog;$Y1;$X1;$Y2;$X2;$Name;$AppConnection
-    IMGGET6;ImageGet;'str';'Main';10;10;5;20;'ImageIDE';APPSTR1.Out
+    IMGGET6;ImageGet;'str';'Main';10;10;5;20;'Image';APPSTR1.Out
 
     #Assert;#Message
     IMGGET6.Out.getImage().getWidth() == 10;'Wrong size!'
@@ -150,11 +150,11 @@ IMAGE_GET;ImageGet;;;
 
 #Id;#TestCase;#Kind;#Depends;#For
 IMAGE_REP;ImageReport;;;
-    #Id;#Action;ImageIDE;$Dialog;$AppConnection
+    #Id;#Action;Image;$Dialog;$AppConnection
     DLGFLL8;DialogFill;Do.move();'Main';APPSTR1.Out
 
     #Id;#Action;$Dialog;$Name;$AppConnection
-    IMGGET7;ImageGet;'Main';'ImageIDE';APPSTR1.Out
+    IMGGET7;ImageGet;'Main';'Image';APPSTR1.Out
 
     #Id;#Action;$ReportName
     REP1;ReportStart;'ImageReportFromTest'
