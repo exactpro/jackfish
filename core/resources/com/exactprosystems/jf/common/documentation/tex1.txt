@@ -5,24 +5,21 @@
 \usepackage{listings}
 \usepackage{alltt}
 \usepackage{longtable}
-
 \usepackage[scaled]{helvet}
 \renewcommand\familydefault{\sfdefault}
 \usepackage[T1]{fontenc}
 
 %% Sets page size and margins
 \usepackage[a4paper, top=3cm, bottom=4cm, footskip = 30pt, left=3cm, right=1.75cm, marginparwidth=1.75cm, headsep=0.7in]{geometry}
-
 \usepackage{amsmath}
 \usepackage{graphicx}
 %% \usepackage[colorinlistoftodos]{todonotes}
 \usepackage[colorlinks=true, bookmarks=true, allcolors=blue, linktoc=all]{hyperref}
-
 \usepackage{lastpage} %%can't use it? just install package texlive-latex-extra
 \usepackage{fancyhdr}
 \usepackage[usenames,dvipsnames,svgnames,table]{xcolor}
-
 \usepackage{scrextend} %% https://tex.stackexchange.com/questions/5339/how-to-specify-font-size-less-than-10pt-or-more-than-12pt
+
 \changefontsizes[10pt]{10pt}
 
 \renewcommand{\headrulewidth}{0pt}
@@ -30,6 +27,7 @@
 \renewcommand{\footrule}{\hbox to\headwidth{\color{BurntOrange}\leaders\hrule height \footrulewidth\hfill}}
 
 \setlength{\skip\footins}{1cm}
+\definecolor{urlcolor}{HTML}{799B03}
 
 \fancypagestyle{allpages}{
     \fancyhf{}
@@ -52,13 +50,12 @@
 %% example: \crule[COLORNAME]{width}{height}
 
 \linespread{1.5}
+\parindent=0
 
 %%color for code examples
-\definecolor{codecolor}{RGB}{0, 50, 0}
+\definecolor{codecolor}{RGB}{0, 100, 0}
 
 
 \begin{document}
-
-
 \newpage
 \thispagestyle{firstpage}

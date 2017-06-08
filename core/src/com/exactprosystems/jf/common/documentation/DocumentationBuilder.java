@@ -75,33 +75,39 @@ public class DocumentationBuilder
         List<OperationKind> operations = Arrays.stream(OperationKind.values()).collect(Collectors.toList());
         int size = operations.size();
                 
-        addTable(help, "{{*User Guide*}}",              true,  table1, new int[] { 50, 50 },  evaluator);
-        addTable(help, "{{*Document Information*}}",    false, table2, new int[] { 25, 23, 23, 25 },  evaluator);
-        addTable(help, "{{*Abbreviations*}}",           true,  table3, new int[] { 50, 50 },  evaluator);
-
+        addTable(help, "{{*User Guide*}}",              false,  table1, new int[] { 50, 50 },  evaluator);
+        addTable(help, "{{*Document Information*}}",    false,  table2, new int[] { 25, 23, 23, 25 },  evaluator);
+        addTable(help, "{{*Abbreviations*}}",           false,  table3, new int[] { 50, 50 },  evaluator);
         addTextLine(help, "{{&&}}");
-//        addContent(help, "{{*Table of contenst*}}", new Content());
-//        
-//        
-//        addText(help, DocumentationBuilder.class.getResourceAsStream("intro1.txt"));
-//        addPicture(help, "Architecture", 80, DocumentationBuilder.class.getResourceAsStream("Intro.png"));
-//        addText(help, DocumentationBuilder.class.getResourceAsStream("intro2.txt"));
-//        addTextLine(help, "{{5MVEL5}}");
-//        addText(help, DocumentationBuilder.class.getResourceAsStream("mvel.txt"));
-//        addTextLine(help, "{{5All controls5}}");
-//        addAllControlsTable(help, "All controls", context, operations.subList(0, size/3), true, false);
-//        addTextLine(help, "{{&&}}");
-//        addAllControlsTable(help, "All controls - continue", context, operations.subList(size/3, size*2/3), true, false);
-//        addTextLine(help, "{{&&}}");
-//        addAllControlsTable(help, "All controls - end", context, operations.subList(size*2/3, size), true, false);
-//        addTextLine(help, "{{&&}}");
-//        addTextLine(help, "{{5Matrix syntax5}}");
-//        addAllItems(help);
-//        addTextLine(help, "{{5Actions by groups5}}");
-//        addAllActions(help);
+
+        addContent(help, "{{*Table of contenst*}}", new Content());
+        addTextLine(help, "{{&&}}");
         
-        help.insert(help.count(), new HelpItem(NameSpace.class));
-        help.insert(help.count(), new HelpActionItem(TableSelect.class));
+        addText(help, DocumentationBuilder.class.getResourceAsStream("intro1.txt"));
+        addPicture(help, "Architecture", 80, DocumentationBuilder.class.getResourceAsStream("Intro.png"));
+        addText(help, DocumentationBuilder.class.getResourceAsStream("intro2.txt"));
+        addTextLine(help, "{{&&}}");
+        
+        addTextLine(help, "{{5MVEL5}}");
+        addText(help, DocumentationBuilder.class.getResourceAsStream("mvel.txt"));
+        addTextLine(help, "{{&&}}");
+
+        addTextLine(help, "{{5All controls5}}");
+        addAllControlsTable(help, "All controls", context, operations.subList(0, size/3), true, true);
+        addTextLine(help, "{{&&}}");
+        addAllControlsTable(help, "All controls - continue", context, operations.subList(size/3, size*2/3), true, true);
+        addTextLine(help, "{{&&}}");
+        addAllControlsTable(help, "All controls - end", context, operations.subList(size*2/3, size), true, true);
+        addTextLine(help, "{{&&}}");
+        
+        addTextLine(help, "{{5Matrix syntax5}}");
+        addAllItems(help);
+        addTextLine(help, "{{&&}}");
+        
+        addTextLine(help, "{{5Actions by groups5}}");
+        addAllActions(help);
+        addTextLine(help, "{{&&}}");
+
 
         
         return help;
@@ -214,7 +220,7 @@ public class DocumentationBuilder
                 table.addValue(arr);
             }
             
-            MatrixItem tableItem = new HelpTable(title, table, bordered, new int[] {}); // TODO
+            MatrixItem tableItem = new HelpTable(title, table, bordered, new int[] {}); 
             root.insert(root.count(), tableItem);
         }
         catch (Exception e)
@@ -237,7 +243,7 @@ public class DocumentationBuilder
     @SuppressWarnings("unchecked")
     public static void addAllItems(MatrixItem root) throws Exception
     {
-        MatrixItem item = new HelpTextLine("{{4All items4}}");
+        MatrixItem item = new HelpTextLine("{{4Items4}}");
         root.insert(root.count(), item);
 
         for (Class<?> clazz : Parser.knownItems)
@@ -253,14 +259,15 @@ public class DocumentationBuilder
                 continue;
             }
 
-            item.insert(item.count(), new HelpItem((Class<? extends MatrixItem>) clazz));
+//            item.insert(item.count(), new HelpItem((Class<? extends MatrixItem>) clazz));
+            item.insert(item.count(), new HelpItem(NameSpace.class));
         }
     }
     
     @SuppressWarnings("unchecked")
     public static void addAllActions(MatrixItem root)
     {
-        MatrixItem item = new HelpTextLine("{{4All actions by groups4}}");
+        MatrixItem item = new HelpTextLine("{{5All actions by groups5}}");
         root.insert(root.count(), item);
 
         Map<Class<?>, ActionGroups> map = new HashMap<>();
@@ -271,14 +278,15 @@ public class DocumentationBuilder
 
         for (ActionGroups groups : ActionGroups.values())
         {
-            MatrixItem groupItem = new HelpTextLine("{{3" + groups.toString() + "3}}");
+            MatrixItem groupItem = new HelpTextLine("{{4" + groups.toString() + "4}}");
             item.insert(item.count(), groupItem);
 
             for (Map.Entry<Class<?>, ActionGroups> entry : map.entrySet())
             {
                 if (entry.getValue() == groups)
                 {
-                    groupItem.insert(groupItem.count(), new HelpActionItem((Class<? extends AbstractAction>) entry.getKey()));
+//                    groupItem.insert(groupItem.count(), new HelpActionItem((Class<? extends AbstractAction>) entry.getKey()));
+                    groupItem.insert(groupItem.count(), new HelpActionItem(TableSelect.class));
                 }
             }
         }

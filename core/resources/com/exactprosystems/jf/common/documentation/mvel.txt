@@ -1,11 +1,13 @@
-{{/ Basic Syntax /}}
-MVEL is an expression language based on Java-syntax, with some marked differences specific to MVEL.  Unlike Java however, MVEL is dynamically typed (with optional typing), meaning type qualification is not required in the the source. 
-
+{{3 Basic Syntax 3}}
+MVEL is an expression language based on Java-syntax, with some marked differences specific to MVEL.  Unlike Java however, 
+MVEL is dynamically typed (with optional typing), meaning type qualification is not required in the the source. 
 An MVEL expression can be as simple as a single identifier, or as complicated as a full blown boolean expression with method calls and inline collection creations.
 
-{{/ Simple Property Expression /}}
-In this expression, we simply have a single identifier {{*(user.name)*}}, which by itself, is what we refer to in MVEL as a {{*property*}} {{*expression*}}, in that the only purpose of the expression is to extract a property out of a variable or context object.  Property expressions are one of the most common uses, allowing MVEL to be used as a very high performance, easy to use, reflection-optimizer.  
+{{3 Simple Property Expression 3}}
 
+In this expression, we simply have a single identifier {{*(user.name)*}}, which by itself, is what we refer to in MVEL as a 
+{{*property*}} {{*expression*}}, in that the only purpose of the expression is to extract a property out of a variable or context object.  
+Property expressions are one of the most common uses, allowing MVEL to be used as a very high performance, easy to use, reflection-optimizer.  
 MVEL can even be used for evaluating a boolean expression:
 
 {{#user.name == 'John Doe'#}}
@@ -15,15 +17,16 @@ Like Java, MVEL supports the full gambit of operator precedence rules, including
 {{#(user.name == 'John Doe') && ((x * 2) - 1) > 20#}}
 
 
-{{/ MVEL 2.0 Operators /}}
+{{3 MVEL 2.0 Operators 3}}
 The following chart is a complete list and description of all operators present in MVEL.
 
-{{/ Unary Operators /}}
+{{3 Unary Operators 3}}
 
 {{=
 {{*Operator*}}|20`{{*Description*}}|40`{{*Example*}}|40``
 {{$new$}}`Object instantiation`{{$new String("foo")$}}``
-{{$with$}}`Block WITH Operator. Perform multiple operations on a single object instance`{{#
+{{$with$}}`Block WITH Operator. Perform multiple operations on a single object instance`
+{{#
 with (value) { name = 'Foo',
 age = 18,
 sex = Sex.FEMALE }
@@ -34,7 +37,7 @@ sex = Sex.FEMALE }
 =}}
 
 
-{{/ Comparison Operators /}}
+{{3 Comparison Operators 3}}
 
 {{=
 {{*Operator*}}|20`{{*Description*}}|40`{{*Example*}}|40``
@@ -50,7 +53,7 @@ sex = Sex.FEMALE }
 {{$soundslike$}}`Soundex Check.  Performs a soundex comparison between two strings. See: Soundex.`{{$"foobar" soundslike "fubar"$}}
 =}}
 
-{{/ Logical Operators /}}
+{{3 Logical Operators 3}}
 
 {{=
 {{*Operator*}}|20`{{*Description*}}|40`{{*Example*}}|40``
@@ -60,7 +63,7 @@ sex = Sex.FEMALE }
 {{$~=$}}`Regular Expression Match.  Checks to see if the value on the left matches the regular expression on the right.`{{$foo ~= '[a-z].+'$}}
 =}}
 
-{{/ Bitwise Operators /}}
+{{3 Bitwise Operators 3}}
 
 {{=
 {{*Operator*}}|20`{{*Description*}}|40`{{*Example*}}|40``
@@ -69,7 +72,7 @@ sex = Sex.FEMALE }
 {{$^$}}`Bitwise XOR.`{{$foo ^ 5$}}
 =}}
 
-{{/ Arithmetic Operators }}
+{{3 Arithmetic Operators }}
 
 {{=
 {{*Operator*}}|20`{{*Description*}}|40`{{*Example*}}|40``
@@ -80,7 +83,7 @@ sex = Sex.FEMALE }
 {{$%$}}`Modulus.  Divides the number on the left by the number on the right and returns the remainder.`{{$2 % 1$}}
 =}}
 
-{{/ Other Operators /}}
+{{3 Other Operators 3}}
 
 {{=
 {{*Operator*}}|20`{{*Description*}}|40`{{*Example*}}|40``
@@ -91,68 +94,85 @@ sex = Sex.FEMALE }
 =}}
 
 
-{{/ Inline List, Maps and Arrays /}}
+{{3 Inline List, Maps and Arrays 3}}
+
 MVEL allows you to express Lists, Maps and Arrays using simple elegant syntax. Consider the following example:
 
-{{#['Bob' : new Person('Bob'), 'Michael' : new Person('Michael')]#}}
+{{#
+['Bob' : new Person('Bob'), 'Michael' : new Person('Michael')]
+#}}
 
 This is functionally equivalent to the following code:
 
-{{#Map map = new HashMap();
-
-  map.put("Bob", new Person("Bob"));
-
-  map.put("Michael", new Person("Michael"));#}}
+{{#
+Map map = new HashMap();
+map.put("Bob", new Person("Bob"));
+map.put("Michael", new Person("Michael"));
+#}}
 
 
 This can be a very powerful way to express data structures inside of MVEL. You can use these constructs anywhere, even as a parameter to a method:
 
-{{#something.someMethod(['foo' : 'bar']);#}}
+{{#
+something.someMethod(['foo' : 'bar']);
+#}}
 
-{{/ Lists /}}
+{{3 Lists 3}}
 
-Lists are expressed in the following format: [item1, item2, ...]
-
-For example:
-
-{{#["Jim", "Bob", "Smith"]#}}
-
-{{/ Maps /}}
-
-Maps are expressed in the following format: [key1 : value1, key2: value2, ...]
+Lists are expressed in the following format: {{$[item1, item2, ...]$}}
 
 For example:
 
-{{#["Foo" : "Bar", "Bar" : "Foo"]#}}
+{{#
+["Jim", "Bob", "Smith"]
+#}}
 
-{{/ Arrays /}}
+{{3 Maps 3}}
 
-Arrays are expressed in the following format: {item1, item2, ...}
+Maps are expressed in the following format: {{$[key1 : value1, key2: value2, ...]$}}
 
 For example:
 
-{{#{"Jim", "Bob", "Smith"}#}}
+{{#
+["Foo" : "Bar", "Bar" : "Foo"]
+#}}
 
-{{/ Array Coercion /}}
+{{3 Arrays 3}}
 
-One important facet about inline arrays to understand is their special ability to be coerced to other array types. When you declare an inline array, it is untyped, but say for example you are passing to a method that accepts int[]. You simply can write your code as the following:
+Arrays are expressed in the following format: {{${item1, item2, ...}$}}
 
-{{#foo.someMethod({1,2,3,4});#}}
+For example:
+
+{{#
+{"Jim", "Bob", "Smith"}
+#}}
+
+{{3 Array Coercion 3}}
+
+One important facet about inline arrays to understand is their special ability to be coerced to other array types. 
+When you declare an inline array, it is untyped, but say for example you are passing to a method that accepts int[]. 
+You simply can write your code as the following:
+
+{{#
+foo.someMethod({1,2,3,4});
+#}}
 
 In this case, MVEL will see that the target method accepts an {{*int[]*}} and automatically type the array as such.
 
-
-{{/ MVEL 2.0 Property Navigation /}}
+{{3 MVEL 2.0 Property Navigation 3}}
 
 MVEL property navigation follows well-established conventions found in other bean property expressions found in other languages such as Groovy, OGNL, EL, etc.
+Unlike some other languages which require qualification depending on the underlying method of access, MVEL provides a single, 
+unified syntax for accessing properties, static fields, maps, etc.
 
-Unlike some other languages which require qualification depending on the underlying method of access, MVEL provides a single, unified syntax for accessing properties, static fields, maps, etc.
+{{3 Bean Properties 3}}
 
-{{/ Bean Properties /}}
+Most java developers are familiar with and user the getter/setter paradigm in their Java objects in order to encapsulate property accessors.   
+For example, you might access a property from an object as such:
 
-Most java developers are familiar with and user the getter/setter paradigm in their Java objects in order to encapsulate property accessors.   For example, you might access a property from an object as such:
-
-{{#user.getManager().getName();#}}
+{{#
+user.getManager().getName();
+#}}
 
 In order to simplify this, you can access the same property using the following expression:
 
@@ -160,39 +180,55 @@ In order to simplify this, you can access the same property using the following 
 
 {{*Note:*}} In situations where the field in the object is {{*public*}}, MVEL will still prefer to access the property via it's getter method.
 
-{{/ Null-Safe Bean Navigation /}}
+{{3 Null-Safe Bean Navigation 3}}
 
 Sometimes you have property expressions which may contain a null element, requiring you to create a null-check. You can simplify this by using the null-safe operator:
 
-{{#user.?manager.name#}}
+{{#
+user.?manager.name
+#}}
 
 This is functionally equivalent to writing:
 
-{{#if (user.manager != null) {return user.manager.name;} else {return null;}#}}
+{{#
+if (user.manager != null) {
+    return user.manager.name;
+} else {
+    return null;
+}
+#}}
 
-{{/ Collections /}}
+{{3 Collections 3}}
 
 Traversal of collections can also be achieved using abbreviated syntax.
 
-{{/ List Access /}}
+{{3 List Access 3}}
 
 Lists are accessed the same as array's. For example:
 
-{{#user[5]#}}
+{{#
+user[5]
+#}}
 
 is the equivelent of the Java code:
 
-{{#user.get(5);#}}
+{{#
+user.get(5);
+#}}
 
-{{/ Map Access /}}
+{{3 Map Access 3}}
 
 Maps are accessed in the same way as array's except any object can be passed as the index value. For example:
 
-{{#user["foobar"]#}}
+{{#
+user["foobar"]
+#}}
 
 is the equivelent of the Java code:
 
-{{#user.get("foobar");#}}
+{{#
+user.get("foobar");
+#}}
 
 For Maps that use a String as a key, you may use another special syntax:
 
@@ -200,29 +236,30 @@ For Maps that use a String as a key, you may use another special syntax:
 
 ... Allowing you to treat the Map itself as a virtual object.
 
-{{/ Strings as Arrays /}}
+{{3 Strings as Arrays 3}}
 
-For the purposes of using property indexes (as well as iteration) all Strings are treated as arrays. In MVEL you may refer to the first character in a String variable as such:
+For the purposes of using property indexes (as well as iteration) all Strings are treated as arrays. 
+In MVEL you may refer to the first character in a String variable as such:
 
-{{#foo = "My String";#}}
+{{#
+foo = "My String";
+foo[0]; // returns 'M'
+#}}
 
-{{#foo[0]; // returns 'M'#}}
-
-
-{{/ MVEL 2.0 Literals /}}
+{{3 MVEL 2.0 Literals 3}}
 
 A literal is used to represent a fixed-value in the source of a particular script.
 
-{{/ String literals /}}
+{{3 String literals 3}}
 
-String literals may be denoted by single or double quotes.
+String literals may be denoted by single quotes.
 
-{{#"This is a string literal"#}}
+{{#
+'This is also string literal'
+#}}
 
-{{#'This is also string literal'#}}
 
-
-{{/ String escape sequences /}}
+{{3 String escape sequences 3}}
 
 {{$\\$}} - Double escape allows rendering of single backslash in string.
 {{$\n$}} - Newline
@@ -230,151 +267,149 @@ String literals may be denoted by single or double quotes.
 {{$\u####$}} - Unicode character (Example: {{$\uAE00$}})
 {{$\###$}} - Octal character (Example: {{$\73$}})
 
-{{/ Numeric literals /}}
+{{3 Numeric literals 3}}
 
 Integers can be represented in decimal (base 10), octadecimal (base 8), or hexadecimal (base 16).
 A decimal integer can be expressed as any number that does not start with zero.
 
-{{#125 // decimal#}}
+{{#
+125 // decimal
+#}}
 
 An octadecimal representation of an integer is possible by prefixing the number with a zero, followed by digits ranging from 0 to 7.
 
-{{#0353 // octal#}}
+{{#
+0353 // octal
+#}}
 
 Hexidecimal is represented by prefixing the integer with 0x followed by numbers ranging from 0-9..A-F.
 
-{{#0xAFF0 // hex#}}
+{{#
+0xAFF0 // hex
+#}}
 
-{{/ Floating point literals /}}
+{{3 Floating point literals 3}}
 
 A floating point number consists of a whole number and a factional part denoted by the point/period character, with an optional type suffix.
 
-{{#10.503 // a double
+{{#
+10.503  // a double
+94.92d  // a double
+14.5f   // a float
+#}}
 
-  94.92d // a double
-
-  14.5f // a float#}}
-
-{{/ BigInteger and BigDecimal literals /}}
+{{3 BigInteger and BigDecimal literals 3}}
 
 You can represent BigInteger and BigDecimal literals by using the suffixes B and I (uppercase is mandatory).
 
-{{#104.39484B // BigDecimal#}}
+{{#
+104.39484B // BigDecimal
+8.4I       // BigInteger
+#}}
 
-{{#8.4I // BigInteger#}}
-
-{{/ Boolean literals /}}
+{{3 Boolean literals 3}}
 
 Boolean literals are represented by the reserved keywords true and false.
 
-Null literal
-The null literal is denoted by the reserved keywords null or nil.
+{{3 Null literal 3}}
 
+The {{$null$}} literal is denoted by the reserved keywords {{$null$}} or {{$nil$}}.
 
-{{/ MVEL 2.0 Projections and Folds /}}
+{{3 MVEL 2.0 Projections and Folds 3}}
 
-Put simply, projections (also known as list comprehensions) are a way of representing collections. Using a very simple syntax, you can inspect very complex object models inside collections.
+Put simply, projections (also known as list comprehensions) are a way of representing collections. 
+Using a very simple syntax, you can inspect very complex object models inside collections.
+Imagine you have a collection of {{*User*}} objects. Each of these objects has a {{*Parent.*}} 
+Now say you want to get a list of all names of the parents (assuming the Parent class has a {{*name*}} field) 
+in the hierarchy of users, you would write something like this:
 
-Imagine you have a collection of {{*User*}} objects. Each of these objects has a {{*Parent.*}} Now say you want to get a list of all names of the parents (assuming the Parent class has a {{*name*}} field) in the hierarchy of users, you would write something like this:
+{{#
+parentNames = (parent.name in users);
+#}}
 
-{{#parentNames = (parent.name in users);#}}
+You can even perform nested operations. Imagine instead, that the User object had a collection member called family Members, 
+and we wanted a list of all the family members names:
 
-You can even perform nested operations. Imagine instead, that the User object had a collection member called familyMembers, and we wanted a list of all the family members names:
+{{#
+familyMembers = (name in (familyMembers in users));
+#}}
 
-{{#familyMembers = (name in (familyMembers in users));#}}
-
-{{/ Filters /}}
+{{3 Filters 3}}
 
 You can also filter projections with a constraint with the if operator:
 
-{{#(doSomeMethod() in listOfThings if $.shouldBeRun())#}}
+{{#
+(doSomeMethod() in listOfThings if $.shouldBeRun())
+#}}
 
-{{$$$}} serves as the placeholder for the element being filtered. It is actually a regular variable that exists inside the context of the projection. You can also use it to return the current element in the projection to the representative list.
+{{$$$}} serves as the placeholder for the element being filtered. It is actually a regular variable that exists inside the context of the projection. 
+You can also use it to return the current element in the projection to the representative list.
 
-{{#($ in fooList if $.name contains 'foobie')#}}
+{{#
+($ in fooList if $.name contains 'foobie')
+#}}
 
-{{/ Other Examples /}}
+{{3 Other Examples 3}}
 
 Here are some more examples:
 
-{{#(toUpperCase() in ["foo", "bar"]); // returns ["FOO", "BAR"]
-
+{{#
+(toUpperCase() in ["foo", "bar"]); // returns ["FOO", "BAR"]
 (($ < 10) in [2,4,8,16,32]);       // returns [true, true, true, false, false]
-
-($ in [2,4,8,16,32] if $ < 10);     // returns [2,4,8]#}}
+($ in [2,4,8,16,32] if $ < 10);    // returns [2,4,8]
+#}}
 
 Here is a functional Quicksort algorithm implemented using projections:
 
+{{#
 /**
-
  * Sample MVEL 2.0 Script
-
  * "Functional QuickSort"
-
  * by: Christopher Michael Brock, Inspired by: Dhanji Prasanna
-
  */
 
-
-{{#import java.util.*;#}}
-
+import java.util.*;
 // the main quicksort algorithm
-
-{{#def quicksort(list) {
-
+def quicksort(list) {
     if (list.size() <= 1) {
-
          list;
-
     }
-
     else {
-
          pivot = list[0];
-
          concat(quicksort(($ in list if $ < pivot)),
                  pivot, quicksort(($ in list if $ > pivot)));
-
     }
-
-}#}}
+}
 
 // define method to concatenate lists.
-
-{{#def concat(list1, pivot, list2) {
-
+def concat(list1, pivot, list2) {
     concatList = new ArrayList(list1);
-
     concatList.add(pivot);
-
     concatList.addAll(list2);
-
     concatList;
-
-}#}}
-
+}
 
 // create a list to sort
-
-{{#list = [5,2,4,1,18,10,15,1,0];#}}
+list = [5,2,4,1,18,10,15,1,0];
 
 // sort it!
+quicksort(list);
 
-{{#quicksort(list);#}}
-
-
-{{/ Lambda Expressions /}}
+{{3 Lambda Expressions 3}}
 
 MVEL allows the definition of lambda functions.
 
-{{/ Example /}}
+{{3 Example 3}}
 
 A simple lambda expression
 
-{{#threshold = def (x) { x >= 10 ? x : 0 };
-result = cost + threshold(lowerBound);#}}
+{{#
+threshold = def (x) { x >= 10 ? x : 0 };
+result = cost + threshold(lowerBound);
+#}}
 
-The above example defines a lambda and assigns it to the variable "threshold". Lambda's are essentially functions that are assignable to variables. They are essentially closures and can be used as such.
+The above example defines a lambda and assigns it to the variable "threshold". 
+Lambda's are essentially functions that are assignable to variables. They are essentially closures and can be used as such.
 
 
 

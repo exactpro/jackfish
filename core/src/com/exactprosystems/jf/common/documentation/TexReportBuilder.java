@@ -131,7 +131,7 @@ public class TexReportBuilder extends ReportBuilder
             case "4" + CM: return " }";
     
             // header 5
-			case OM + "5": return "\\\\newpage \\\\section{ ";
+			case OM + "5": return "\\\\section{ ";
 			case "5" + CM: return " }";
     
             // style for identifiers
@@ -147,8 +147,8 @@ public class TexReportBuilder extends ReportBuilder
 									"\\\\endgroup";
             
             // style for references
-            case OM + "@": return "";
-            case "@" + CM: return "";
+            case OM + "@": return "\\\\hyperref[]{";
+            case "@" + CM: return "}";
     
             // text 90 degrees rotated
             case OM + "^": return "\\\\rotatebox{90}{";
@@ -163,8 +163,8 @@ public class TexReportBuilder extends ReportBuilder
             case "&" + CM: return "\\\\newpage \\\\pagestyle{allpages}";
 
             // underscored
-            case OM + "_": return "";
-            case "_" + CM: return "";
+            case OM + "_": return "\\\\underline{";
+            case "_" + CM: return "}";
     
             // bolder
             case OM + "*": return "\\\\textbf{";
@@ -287,7 +287,7 @@ public class TexReportBuilder extends ReportBuilder
     protected void reportContent(ReportWriter writer, MatrixItem item, String beforeTestcase, Content content,
             String title) throws IOException
     {
-        writer.fwrite("\\tableofcontents \\newpage").newline();
+        writer.fwrite("\\tableofcontents").newline();
     }
 	
 	@Override

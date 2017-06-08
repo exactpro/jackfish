@@ -34,7 +34,7 @@ import java.util.Map;
 							"In the name space NameSpace are SubCase.",
 		examples 		= "Create a library MyLibrary, which contains SubCase PrintHi.\n" +
 							"After the given matrix has been saved in a file, which is used to store libraries, it can be called in Call operator as following: \n" +
-							"MyLibrary.PrintHi" +
+							"MyLibrary.PrintHi\n" +
 							"{{##Id;#NameSpace\n" +
 							"MyLibrary;\n" +
 							"#Id;#SubCase\n" +

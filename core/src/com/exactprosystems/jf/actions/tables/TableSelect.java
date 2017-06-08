@@ -34,11 +34,11 @@ import com.exactprosystems.jf.functions.Table;
 		outputDescription 		= "Outputs the table containing the selected lines.",
 		outputType				= Table.class,
 		seeAlsoClass = {RawTable.class, TableLoadFromDir.class, TableLoadFromFile.class, TableCreate.class},
-		examples = "{{`Example #1:`}}"
-				+ "{{`1. Create a table with columns Name and Age. Complete the table with 3 lines.`}}"
-				+ "{{`2. Set the data type  Integer for the column Age.`}}"
-				+ "{{`3. With the actionTableSelect select all lines with the value 'Mike' in the column Name.`}}"
-				+ "{{`4. Verify that the size of the table is equal to 1. `}}"
+		examples = "{{`Example #1:`}}\n"
+				+ "{{`1. Create a table with columns Name and Age. Complete the table with 3 lines.`}}\n"
+				+ "{{`2. Set the data type  Integer for the column Age.`}}\n"
+				+ "{{`3. With the actionTableSelect select all lines with the value 'Mike' in the column Name.`}}\n"
+				+ "{{`4. Verify that the size of the table is equal to 1. `}}\n"
 				+ "{{##Id;#RawTable\n"
 				+ "TC;Table\n"
 				+ "@;Name;Age\n"
@@ -51,12 +51,12 @@ import com.exactprosystems.jf.functions.Table;
 				+ "#Id;#Action;#Table;#Age\n"
 				+ "TS;TableSelect;TC;new StringCondition('Name','Mike')\n"
 				+ "#Assert;#Message\n"
-				+ "TS.Out.size() == 1;#}}"
-				+ "{{`Example #2:`}}"
-				+ "{{`1. Create a table with columns Name and Age. Complete the table with 3 lines.`}}"
-				+ "{{`2. Set the data type  Integer for the column Age.`}}"
-				+ "{{`3. With the action TableSelect selectall lines where the column values Age are more than 20 and less than 40`}}"
-				+ "{{`4. Verify that the size of the table is equal to 2. `}}"
+				+ "TS.Out.size() == 1;#}}\n"
+				+ "{{`Example #2:`}}\n"
+				+ "{{`1. Create a table with columns Name and Age. Complete the table with 3 lines.`}}\n"
+				+ "{{`2. Set the data type  Integer for the column Age.`}}\n"
+				+ "{{`3. With the action TableSelect selectall lines where the column values Age are more than 20 and less than 40`}}\n"
+				+ "{{`4. Verify that the size of the table is equal to 2. `}}\n"
 				+ "{{##Id;#RawTable\n"
 				+ "TC;Table\n"
 				+ "@;Name;Age\n"
@@ -69,7 +69,7 @@ import com.exactprosystems.jf.functions.Table;
 				+ "#Id;#Action;#Table;#Age\n"
 				+ "TS;TableSelect;TC;new AndCondition(new NumberCondition('Age','>',20), new NumberCondition('Age','<',40))\n"
 				+ "#Assert;#Message\n"
-				+ "TS.Out.size() == 2;#}}"
+				+ "TS.Out.size() == 2;#}}\n"
 	)
 public class TableSelect extends AbstractAction 
 {
