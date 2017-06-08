@@ -201,6 +201,15 @@ public class DateTime extends Date
 		return new DateTime(calendar.getTime());
 	}
 
+   @DescriptionAttribute(text = "Convert this date to string with date-time converter")
+    public String str()
+    {
+        synchronized (dateTimeFormater)
+        {
+            return dateTimeFormater.format(this);
+        }
+    }
+	
 	@DescriptionAttribute(text="Convert current instance of date to String via @format")
 	public String str(@FieldParameter(name = "format") String format)
 	{

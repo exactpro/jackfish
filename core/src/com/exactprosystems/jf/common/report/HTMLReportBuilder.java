@@ -314,7 +314,7 @@ public class HTMLReportBuilder extends ReportBuilder
 			);
 		}
 		writer.fwrite("<tr id='tr_%s'>", id);
-		writer.fwrite("<td class='timestamp'>%s</td>", DateTime.current().str("yyyy-MM-dd HH:mm:ss.SSS"));
+		writer.fwrite("<td class='timestamp'>%s</td>", DateTime.current().str());
 		writer.fwrite("<th scope='row'>%03d</th>", item.getNumber());
 		writer.fwrite("<td>%s</td>", itemId);
 		writer.fwrite("<td><a href='javascript:void(0)' class='showBody'>%s</a></td>", item.getItemName());
