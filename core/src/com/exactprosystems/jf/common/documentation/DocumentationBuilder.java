@@ -27,7 +27,6 @@ import com.exactprosystems.jf.documents.matrix.parser.Parser;
 import com.exactprosystems.jf.documents.matrix.parser.items.ActionItem;
 import com.exactprosystems.jf.documents.matrix.parser.items.HelpActionItem;
 import com.exactprosystems.jf.documents.matrix.parser.items.HelpTable;
-import com.exactprosystems.jf.documents.matrix.parser.items.HelpChapter;
 import com.exactprosystems.jf.documents.matrix.parser.items.HelpContent;
 import com.exactprosystems.jf.documents.matrix.parser.items.HelpItem;
 import com.exactprosystems.jf.documents.matrix.parser.items.HelpPicture;
@@ -51,7 +50,7 @@ public class DocumentationBuilder
     {
         AbstractEvaluator evaluator = context.getEvaluator();
         
-        MatrixItem help = new HelpChapter("\\huge {{* JackFish *}}", 1);
+        MatrixItem help = new HelpTextLine("{{* JackFish *}}"); // TODO think about
 
         String[][] table1 = new String[][]
                 {
@@ -71,6 +70,9 @@ public class DocumentationBuilder
                     { "JF", "JackFish" }
                 };
 
+        List<OperationKind> operations = Arrays.stream(OperationKind.values()).collect(Collectors.toList());
+        int size = operations.size();
+                
         addTable(help, "{{*User Guide*}}",              true,  table1, new int[] { 50, 50 },  evaluator);
         addTable(help, "{{*Document Information*}}",    false, table2, new int[] { 25, 23, 23, 25 },  evaluator);
         addTable(help, "{{*Abbreviations*}}",           true,  table3, new int[] { 50, 50 },  evaluator);
@@ -78,26 +80,23 @@ public class DocumentationBuilder
         addTextLine(help, "{{&&}}");
         addContent(help, "{{*Table of contenst*}}", new Content());
         
-        List<OperationKind> operations = Arrays.stream(OperationKind.values()).collect(Collectors.toList());
-        int size = operations.size();
+        
+        addText(help, DocumentationBuilder.class.getResourceAsStream("intro1.txt"));
+        addPicture(help, "Architecture", 80, DocumentationBuilder.class.getResourceAsStream("Intro.png"));
+        addText(help, DocumentationBuilder.class.getResourceAsStream("intro2.txt"));
+        addTextLine(help, "{{3MVEL3}}");
+        addText(help, DocumentationBuilder.class.getResourceAsStream("mvel.txt"));
+        addTextLine(help, "{{3All controls3}}");
         addAllControlsTable(help, "All controls", context, operations.subList(0, size/3), true);
         addTextLine(help, "{{&&}}");
         addAllControlsTable(help, "All controls - continue", context, operations.subList(size/3, size*2/3), true);
         addTextLine(help, "{{&&}}");
         addAllControlsTable(help, "All controls - end", context, operations.subList(size*2/3, size), true);
         addTextLine(help, "{{&&}}");
-        
-        addText(help, DocumentationBuilder.class.getResourceAsStream("intro1.txt"));
-        addPicture(help, "Architecture", 80, DocumentationBuilder.class.getResourceAsStream("Intro.png"));
-        addText(help, DocumentationBuilder.class.getResourceAsStream("intro2.txt"));
-        addChapter(help, "MVEL", 3);
-        addText(help, DocumentationBuilder.class.getResourceAsStream("mvel.txt"));
-//        addChapter(help, "All controls", 3);
-//        addAllControlsTable(help, "All controls", context);
-//        addChapter(help, "Matrix syntax", 3);
-//        addAllItems(help);
-//        addChapter(help, "Actions by groups", 3);
-//        addAllActions(help);
+        addTextLine(help, "{{3Matrix syntax3}}");
+        addAllItems(help);
+        addTextLine(help, "{{3Actions by groups3}}");
+        addAllActions(help);
         
 //        help.insert(help.count(), new HelpItem(Call.class));
 //        help.insert(help.count(), new HelpActionItem(TableSelect.class));
@@ -221,12 +220,6 @@ public class DocumentationBuilder
         }
     }
     
-    public static void addChapter(MatrixItem root, String title, int level) throws Exception
-    {
-        MatrixItem chapter = new HelpChapter(title, level);
-        root.insert(root.count(), chapter);
-    }
-    
     public static void addTextLine(MatrixItem root, String str) throws Exception
     {
         MatrixItem line = new HelpTextLine(str);
@@ -242,7 +235,7 @@ public class DocumentationBuilder
     @SuppressWarnings("unchecked")
     public static void addAllItems(MatrixItem root) throws Exception
     {
-        MatrixItem item = new HelpChapter("Matrix syntax", 2);
+        MatrixItem item = new HelpTextLine("{{2Matrix syntax2}}");
         root.insert(root.count(), item);
 
         for (Class<?> clazz : Parser.knownItems)
@@ -265,7 +258,7 @@ public class DocumentationBuilder
     @SuppressWarnings("unchecked")
     public static void addAllActions(MatrixItem root)
     {
-        MatrixItem item = new HelpChapter("All actions by groups", 2);
+        MatrixItem item = new HelpTextLine("{{2All actions by groups2}}");
         root.insert(root.count(), item);
 
         Map<Class<?>, ActionGroups> map = new HashMap<>();
@@ -276,7 +269,7 @@ public class DocumentationBuilder
 
         for (ActionGroups groups : ActionGroups.values())
         {
-            MatrixItem groupItem = new HelpChapter(groups.toString(), 3);
+            MatrixItem groupItem = new HelpTextLine("{{3" + groups.toString() + "3}}");
             item.insert(item.count(), groupItem);
 
             for (Map.Entry<Class<?>, ActionGroups> entry : map.entrySet())
