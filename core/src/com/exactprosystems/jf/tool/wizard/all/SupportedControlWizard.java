@@ -154,6 +154,9 @@ public class SupportedControlWizard extends AbstractWizard
 					{
 						ComboBox<ControlKind> comboBox = new ComboBox<>();
 						comboBox.getItems().setAll(supportedControls);
+						box.getChildren().add(new Label("old value : " + item.value));
+						box.getChildren().add(new Label(", select new value : "));
+						box.getChildren().add(comboBox);
 						comboBox.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
 							if (newValue != null)
 							{
@@ -161,9 +164,6 @@ public class SupportedControlWizard extends AbstractWizard
 							}
 						});
 						comboBox.getSelectionModel().select(ControlKind.Any);
-						box.getChildren().add(new Label("old value : " + item.value));
-						box.getChildren().add(new Label(", select new value : "));
-						box.getChildren().add(comboBox);
 					}
 					setGraphic(box);
 				}
