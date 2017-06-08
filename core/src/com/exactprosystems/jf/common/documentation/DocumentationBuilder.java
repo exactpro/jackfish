@@ -84,19 +84,19 @@ public class DocumentationBuilder
         addText(help, DocumentationBuilder.class.getResourceAsStream("intro1.txt"));
         addPicture(help, "Architecture", 80, DocumentationBuilder.class.getResourceAsStream("Intro.png"));
         addText(help, DocumentationBuilder.class.getResourceAsStream("intro2.txt"));
-        addTextLine(help, "{{3MVEL3}}");
+        addTextLine(help, "{{5MVEL5}}");
         addText(help, DocumentationBuilder.class.getResourceAsStream("mvel.txt"));
-        addTextLine(help, "{{3All controls3}}");
+        addTextLine(help, "{{5All controls5}}");
         addAllControlsTable(help, "All controls", context, operations.subList(0, size/3), true, false);
         addTextLine(help, "{{&&}}");
         addAllControlsTable(help, "All controls - continue", context, operations.subList(size/3, size*2/3), true, false);
         addTextLine(help, "{{&&}}");
         addAllControlsTable(help, "All controls - end", context, operations.subList(size*2/3, size), true, false);
         addTextLine(help, "{{&&}}");
-        addTextLine(help, "{{3Matrix syntax3}}");
+        addTextLine(help, "{{5Matrix syntax5}}");
         addAllItems(help);
-        addTextLine(help, "{{3Actions by groups3}}");
-        addAllActions(help);
+        /*addTextLine(help, "{{3Actions by groups3}}");
+        addAllActions(help);*/
         
 //        help.insert(help.count(), new HelpItem(Call.class));
 //        help.insert(help.count(), new HelpActionItem(TableSelect.class));
