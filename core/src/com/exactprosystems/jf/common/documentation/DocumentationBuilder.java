@@ -12,6 +12,7 @@ import com.exactprosystems.jf.actions.AbstractAction;
 import com.exactprosystems.jf.actions.ActionAttribute;
 import com.exactprosystems.jf.actions.ActionGroups;
 import com.exactprosystems.jf.actions.ActionsList;
+import com.exactprosystems.jf.actions.tables.TableSelect;
 import com.exactprosystems.jf.api.app.ControlKind;
 import com.exactprosystems.jf.api.app.OperationKind;
 import com.exactprosystems.jf.api.common.DateTime;
@@ -35,6 +36,7 @@ import com.exactprosystems.jf.documents.matrix.parser.items.HelpTextLine;
 import com.exactprosystems.jf.documents.matrix.parser.items.HelpWizardItem;
 import com.exactprosystems.jf.documents.matrix.parser.items.MatrixItem;
 import com.exactprosystems.jf.documents.matrix.parser.items.MatrixItemAttribute;
+import com.exactprosystems.jf.documents.matrix.parser.items.NameSpace;
 import com.exactprosystems.jf.documents.matrix.parser.items.TempItem;
 import com.exactprosystems.jf.functions.Content;
 import com.exactprosystems.jf.functions.Table;
@@ -84,22 +86,22 @@ public class DocumentationBuilder
 //        addText(help, DocumentationBuilder.class.getResourceAsStream("intro1.txt"));
 //        addPicture(help, "Architecture", 80, DocumentationBuilder.class.getResourceAsStream("Intro.png"));
 //        addText(help, DocumentationBuilder.class.getResourceAsStream("intro2.txt"));
-//        addTextLine(help, "{{3MVEL3}}");
+//        addTextLine(help, "{{5MVEL5}}");
 //        addText(help, DocumentationBuilder.class.getResourceAsStream("mvel.txt"));
-//        addTextLine(help, "{{3All controls3}}");
+//        addTextLine(help, "{{5All controls5}}");
 //        addAllControlsTable(help, "All controls", context, operations.subList(0, size/3), true, false);
 //        addTextLine(help, "{{&&}}");
 //        addAllControlsTable(help, "All controls - continue", context, operations.subList(size/3, size*2/3), true, false);
 //        addTextLine(help, "{{&&}}");
 //        addAllControlsTable(help, "All controls - end", context, operations.subList(size*2/3, size), true, false);
 //        addTextLine(help, "{{&&}}");
-        addTextLine(help, "{{3Matrix syntax3}}");
-        addAllItems(help);
-//        addTextLine(help, "{{3Actions by groups3}}");
+//        addTextLine(help, "{{5Matrix syntax5}}");
+//        addAllItems(help);
+//        addTextLine(help, "{{5Actions by groups5}}");
 //        addAllActions(help);
         
-//        help.insert(help.count(), new HelpItem(Call.class));
-//        help.insert(help.count(), new HelpActionItem(TableSelect.class));
+        help.insert(help.count(), new HelpItem(NameSpace.class));
+        help.insert(help.count(), new HelpActionItem(TableSelect.class));
 
         
         return help;

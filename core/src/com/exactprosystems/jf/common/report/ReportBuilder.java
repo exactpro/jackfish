@@ -368,7 +368,7 @@ public abstract class ReportBuilder implements Storable
 			return null;
 		}
 		
-        String reg = "((\\{\\{[1|2|3|4|$|#|@|\\^|`|_|*|/|&|=|-])|([1|2|3|4|$|#|@|\\^|`|_|*|/|&|=|-]\\}\\}))";
+        String reg = "((\\{\\{[1|2|3|4|5|$|#|@|\\^|`|_|*|/|&|=|-])|([1|2|3|4|5|$|#|@|\\^|`|_|*|/|&|=|-]\\}\\}))";
 
 		Pattern patt = Pattern.compile(reg);
 		Matcher m = patt.matcher(source);

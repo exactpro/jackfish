@@ -1056,8 +1056,14 @@ public class SeleniumOperationExecutor implements OperationExecutor<WebElement>
 	public boolean selectByIndex(WebElement component, int index) throws Exception
 	{
 		scrollToElement(component);
-		new Select(component).selectByIndex(index);
-		return true;
+		switch (component.getTagName())
+		{
+			case "select":
+				new Select(component).selectByIndex(index);
+				return true;
+			default:
+				return true;
+		}
 	}
 
 	@Override
