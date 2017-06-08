@@ -19,7 +19,7 @@ Global variables and subcases;;;
     nameMatrix2;1;'Some another name for matrix 2'
 
     #Id;#SubCase;callName
-    findReport;find report file by call name. return file.getAbsolutePath();'Overall '
+    findReport;find report file by call name. return file.getAbsolutePath();'Details '
         #Id;#Let
         reportFolder;new File('reports')
 
@@ -88,6 +88,11 @@ Drop and create database;;;
 
         #Id;#Action;$Query;$Connection
         SQLEXEC2;SQLexecute;'create database ' + _rf_base;SQLCNT.Out
+
+    #Else
+        #Id;#Action;$Query;$Connection
+        SQLEXEC2;SQLexecute;'create database ' + _rf_base;SQLCNT.Out
+
 
     #EndIf
 
@@ -265,11 +270,42 @@ Check repCsvExport;;;
     #EndStep
 
 
-// TODO add tests
+// 
 #TestCase;#Kind;#Depends;#For
 Check repLastAllDetails;;;
     #Call;date
     RF.repLastAllDetails;
+
+    #Id;#Call;callName
+    reportPath;findReport;'Details '
+
+    #Id;#Call;pathToReport
+    app;testLib.runBrowser;reportPath
+
+    #Id;#Action;$Dialog;$AppConnection;Executed;Passed;Failed
+    DLGFLL4;DialogFill;'DialogForTestReport';app;Do.check('Executed : 5');Do.check('Passed : ' + 3);Do.check('Failed : ' + 2)
+
+    #Id;#Action;$Dialog;$AppConnection;umbrellaTable
+    DLGFLL1;DialogFill;'DialogForTestReport';app;Do.getTable()
+
+    #Id;#RawTable
+    expected;Table
+    @;Matrix;TestCase Name;Step name;Status;Result
+    0;nameMatrix1;TestCase;;Passed;
+    1;nameMatrix1;TestCase;Simple step;Passed;
+    2;nameMatrix1;TestCase;Simple another step;Passed;
+    3;nameMatrix2;TestCase;;Failed;some reason for failing
+    4;nameMatrix2;TestCase;Always failed step;Failed;some reason for failing
+    #EndRawTable
+
+    #Action;$Table;$Expression
+    TableConsiderColumnsAs;expected;{'Matrix'}
+
+    #Id;#Action;$Expected;$Actual;$ExcludeColumns;$CompareValues
+    TBLCMP1;TableCompareTwo;expected;DLGFLL1.Out.umbrellaTable;{'Screenshots'};true
+
+    #Call;appCon
+    testLib.stopBrowser;app
 
 
 #TestCase;#Kind;#Depends;#For
