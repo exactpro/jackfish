@@ -46,6 +46,7 @@ public class HelpItem extends MatrixItem
         }
 
         report.itemIntermediate(item);
+        report.outLine(this, null,  "{{4" + clazz.getSimpleName() + "4}}" , null);
         report.outLine(this, null, "{{`" + attribute.description() + "`}}", null);
         report.outLine(this, null, "{{*Examples*}}", null);
         report.outLine(this, null, "{{`" + attribute.examples() + "`}}", null);
