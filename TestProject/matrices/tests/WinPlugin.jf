@@ -136,6 +136,40 @@ Application connect;;;
 
     #EndStep
 
+    #Step;#Kind;#For;#Depends
+    'Connect with timeout 2';;;
+        #Id;#RawText;#Kind
+        TEXT1;Text;Matrix
+        ~;"// "
+        ~;"#TestCase;#Kind;#Depends;#For"
+        ~;"Test case;Never;;"
+        ~;"    #Action;$Time"
+        ~;"    Wait;5000"
+        ~;""
+        ~;"    #Id;#Action;Exec;WorkDir;$AppId"
+        ~;"    APPSTR1;ApplicationStart;mockWinExec;mockWinDir;'WIN'"
+        ~;""
+        ~;"    #Action;$Value;$Name"
+        ~;"    Store;APPSTR1.Out;'appConnection'"
+        #EndRawText
+
+        #Id;#Action;$Text
+        MXRN1;MatrixRunFromText;TEXT1
+
+        #Id;#Action;$AppId;MainWindow;Timeout
+        APPSTR1;ApplicationConnectTo;'WIN';'MockWin';30000
+
+        #Id;#Action;$AppConnection;$Kill
+        APPSTP7;ApplicationStop;APPSTR1.Out;true
+
+        #Action;$Name;$AsVar
+        Restore;'appConnection';'appC'
+
+        #Id;#Action;$AppConnection
+        APPSTP8;ApplicationStop;appC
+
+    #EndStep
+
 
 #TestCase;#Kind;#Depends;#For
 Application stop;;;
