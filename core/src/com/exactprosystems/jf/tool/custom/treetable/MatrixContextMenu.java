@@ -304,7 +304,7 @@ public class MatrixContextMenu extends ContextMenu
 				{
 					ReportBuilder report = new ContextHelpFactory().createReportBuilder(null, null, new Date());
 					MatrixItem help = DocumentationBuilder.createHelpForItem(report, context, item);
-					DialogsHelper.showHelpDialog(context, item.getItemName(), report, help);
+					DialogsHelper.showHelpDialog(context, item.getClass().getSimpleName(), report, help);
 				}
 			}, "Error on show result");
 		}

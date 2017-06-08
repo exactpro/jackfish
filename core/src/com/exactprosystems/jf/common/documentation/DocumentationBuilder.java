@@ -78,25 +78,25 @@ public class DocumentationBuilder
         addTable(help, "{{*Abbreviations*}}",           true,  table3, new int[] { 50, 50 },  evaluator);
 
         addTextLine(help, "{{&&}}");
-        addContent(help, "{{*Table of contenst*}}", new Content());
-        
-        
-        addText(help, DocumentationBuilder.class.getResourceAsStream("intro1.txt"));
-        addPicture(help, "Architecture", 80, DocumentationBuilder.class.getResourceAsStream("Intro.png"));
-        addText(help, DocumentationBuilder.class.getResourceAsStream("intro2.txt"));
-        addTextLine(help, "{{3MVEL3}}");
-        addText(help, DocumentationBuilder.class.getResourceAsStream("mvel.txt"));
-        addTextLine(help, "{{3All controls3}}");
-        addAllControlsTable(help, "All controls", context, operations.subList(0, size/3), true, false);
-        addTextLine(help, "{{&&}}");
-        addAllControlsTable(help, "All controls - continue", context, operations.subList(size/3, size*2/3), true, false);
-        addTextLine(help, "{{&&}}");
-        addAllControlsTable(help, "All controls - end", context, operations.subList(size*2/3, size), true, false);
-        addTextLine(help, "{{&&}}");
+//        addContent(help, "{{*Table of contenst*}}", new Content());
+//        
+//        
+//        addText(help, DocumentationBuilder.class.getResourceAsStream("intro1.txt"));
+//        addPicture(help, "Architecture", 80, DocumentationBuilder.class.getResourceAsStream("Intro.png"));
+//        addText(help, DocumentationBuilder.class.getResourceAsStream("intro2.txt"));
+//        addTextLine(help, "{{3MVEL3}}");
+//        addText(help, DocumentationBuilder.class.getResourceAsStream("mvel.txt"));
+//        addTextLine(help, "{{3All controls3}}");
+//        addAllControlsTable(help, "All controls", context, operations.subList(0, size/3), true, false);
+//        addTextLine(help, "{{&&}}");
+//        addAllControlsTable(help, "All controls - continue", context, operations.subList(size/3, size*2/3), true, false);
+//        addTextLine(help, "{{&&}}");
+//        addAllControlsTable(help, "All controls - end", context, operations.subList(size*2/3, size), true, false);
+//        addTextLine(help, "{{&&}}");
         addTextLine(help, "{{3Matrix syntax3}}");
         addAllItems(help);
-        addTextLine(help, "{{3Actions by groups3}}");
-        addAllActions(help);
+//        addTextLine(help, "{{3Actions by groups3}}");
+//        addAllActions(help);
         
 //        help.insert(help.count(), new HelpItem(Call.class));
 //        help.insert(help.count(), new HelpActionItem(TableSelect.class));
@@ -235,7 +235,7 @@ public class DocumentationBuilder
     @SuppressWarnings("unchecked")
     public static void addAllItems(MatrixItem root) throws Exception
     {
-        MatrixItem item = new HelpTextLine("{{2Matrix syntax2}}");
+        MatrixItem item = new HelpTextLine("{{4All items4}}");
         root.insert(root.count(), item);
 
         for (Class<?> clazz : Parser.knownItems)
@@ -258,7 +258,7 @@ public class DocumentationBuilder
     @SuppressWarnings("unchecked")
     public static void addAllActions(MatrixItem root)
     {
-        MatrixItem item = new HelpTextLine("{{2All actions by groups2}}");
+        MatrixItem item = new HelpTextLine("{{4All actions by groups4}}");
         root.insert(root.count(), item);
 
         Map<Class<?>, ActionGroups> map = new HashMap<>();
