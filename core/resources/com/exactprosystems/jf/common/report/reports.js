@@ -122,7 +122,22 @@ $(document).ready(function(){
 	});
 	$("button.filterCollapseAll").click(function(event) {
 		hideTable();
+
 	});
+
+	$('button.timestamp').toggle(
+		function(event) {
+			//show columns
+			$('td.timestamp').show()
+			$('td.timestamp').width('215')
+		},
+		function(event) {
+			//hide columns
+			$('td.timestamp').hide()
+			$('td.timestamp').width('0')
+		}
+	)
+	$('td.timestamp').hide();
 
 	$("a.showBody").click(function(event) {
 		var tbl = $(this).parent().parent().next();
@@ -205,7 +220,6 @@ $(document).ready(function(){
 	});
 
 	//rotate
-
 	var rotateDivFunction = function(rd) {
 		$(rd).width($(rd).children('span').width())
 		$(rd).parent().height($(rd).width())
@@ -213,9 +227,9 @@ $(document).ready(function(){
 		$(rd).css("left", - ($(rd).width() / 2) + 10)
 		$(rd).css("top", ($(rd).width() / 2) - 10)
 	}
-
 	$('.rotate').each(function(i,e) {
 		rotateDivFunction(e);
+
 	})
 
 

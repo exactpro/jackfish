@@ -9,6 +9,7 @@
 package com.exactprosystems.jf.common.report;
 
 import com.exactprosystems.jf.api.app.ImageWrapper;
+import com.exactprosystems.jf.api.common.DateTime;
 import com.exactprosystems.jf.api.common.Str;
 import com.exactprosystems.jf.charts.ChartBuilder;
 import com.exactprosystems.jf.documents.config.Configuration;
@@ -31,7 +32,8 @@ public class HTMLReportBuilder extends ReportBuilder
 	private static Integer chartCount = 0;
 	private static final String reportExt = ".html";
 	private static final DateFormat dateTimeFormatter = new SimpleDateFormat("yyyyMMdd_HHmmss_");
-	
+	private final int columnCount = 7;
+
 	public HTMLReportBuilder()
 	{
 		super();
@@ -189,12 +191,13 @@ public class HTMLReportBuilder extends ReportBuilder
 		writer.fwrite("<button class='btn btn-danger filterFailed' type='button'>Failed : <span id='fail' class='badge'>0</span></button>");
 		writer.fwrite("<button class='btn btn-default filterExpandAllFailed' type='button'><span class='text-danger'>Expand all failed</span></button>");
 		writer.fwrite("<button class='btn btn-default filterCollapseAll' type='button'>Collapse all</button>");
+		writer.fwrite("<button class='btn btn-default timestamp' type='button'>Hide/Show timesptams</button>");
 		writer.fwrite("</td>");
 		writer.fwrite("</tr>");
 		writer.fwrite("</table>\n");
 
 		writer.fwrite("<table class='table repLog table-bordered'>\n");
-		writer.fwrite(createColgroup());
+//		writer.fwrite(createColgroup());
 		writer.fwrite("<tbody>");
 	}
 
@@ -298,18 +301,20 @@ public class HTMLReportBuilder extends ReportBuilder
 
 		//region display header
 
-		String collect = item.getComments().stream().map(CommentString::toString).collect(Collectors.joining("<br>"));
+		String collect = item.getComments().stream().map(CommentString::toString).collect(Collectors.joining("<br>\n"));
 		if (!collect.isEmpty())
 		{
 			writer.fwrite(
 					"<tr class='comment'>\n"+
-						"<td colspan='6'>\n" +
-							collect +"\n"+
+						"<td colspan='%s'>\n" +
+							"%s"+
 						"</td>\n" +
 					"</tr>\n"
+					,this.columnCount, collect
 			);
 		}
 		writer.fwrite("<tr id='tr_%s'>", id);
+		writer.fwrite("<td class='timestamp'>%s</td>", DateTime.current().str("yyyy-MM-dd HH:mm:ss.SSS"));
 		writer.fwrite("<th scope='row'>%03d</th>", item.getNumber());
 		writer.fwrite("<td>%s</td>", itemId);
 		writer.fwrite("<td><a href='javascript:void(0)' class='showBody'>%s</a></td>", item.getItemName());
@@ -320,21 +325,21 @@ public class HTMLReportBuilder extends ReportBuilder
 		//endregion
 
 		writer.fwrite("<tr>");
-		writer.fwrite("<td colspan='6' class='parTd'>");
+		writer.fwrite("<td colspan='%s' class='parTd'>", this.columnCount);
 		writer.fwrite("<table class='table table-bordered innerTable'>");
-		writer.fwrite(createColgroup());
+//		writer.fwrite(createColgroup());
 		writer.fwrite("<tbody>");
 	}
 
 	private String createColgroup()
 	{
 		return "<colgroup>\n" +
-				"<col width='5%'>\n" +
-				"<col width='10%'>\n" +
-				"<col width='40%'>\n" +
-				"<col width='15%'>\n" +
-				"<col width='15%'>\n" +
-				"<col width='15%'>\n" +
+				"  <col width='5%'>\n" +
+				"  <col width='10%'>\n" +
+				"  <col width='40%'>\n" +
+				"  <col width='15%'>\n" +
+				"  <col width='15%'>\n" +
+				"  <col width='15%'>\n" +
 				"</colgroup>\n";
 	}
 
@@ -342,25 +347,25 @@ public class HTMLReportBuilder extends ReportBuilder
 	protected void reportItemFooter(ReportWriter writer, MatrixItem item, Integer id, long time, ImageWrapper screenshot) throws IOException
 	{
 		Result result = item.getResult() == null ? Result.NotExecuted : item.getResult().getResult();
-			String styleClass = result.isFail() ? "danger" : "success";
-			writer.fwrite("</tbody>");
-			writer.fwrite("</table>");
+		String styleClass = result.isFail() ? "danger" : "success";
+		writer.fwrite("</tbody>");
+		writer.fwrite("</table>");
 
 		//region javascript insert
 		writer.fwrite("<script type='text/javascript'>\n");
-			writer.fwrite("$('#tr_%s').addClass('%s');\n", id, styleClass);
-			writer.fwrite("$('#hs_%s').html('<strong class=\"text-%s\">%s</strong>');\n", id, styleClass, result);
-			writer.fwrite("$('#time_%s').html('%s ms');\n", id, time <= 1 ? "< 1" : time);
-			if (screenshot != null)
-			{
-				String link = decorateLink(screenshot.getDescription(), getImageDir() + "/" + screenshot.getName(getReportDir()));
-				writer.fwrite("$('#scr_%s').html('%s');\n",id,link);
-			}
-			writer.fwrite("</script>\n");
+		writer.fwrite("$('#tr_%s').addClass('%s');\n", id, styleClass);
+		writer.fwrite("$('#hs_%s').html('<strong class=\"text-%s\">%s</strong>');\n", id, styleClass, result);
+		writer.fwrite("$('#time_%s').html('%s ms');\n", id, time <= 1 ? "< 1" : time);
+		if (screenshot != null)
+		{
+			String link = decorateLink(screenshot.getDescription(), getImageDir() + "/" + screenshot.getName(getReportDir()));
+			writer.fwrite("$('#scr_%s').html('%s');\n",id,link);
+		}
+		writer.fwrite("</script>\n");
 		//endregion
 
-			writer.fwrite("</td>");
-			writer.fwrite("</tr>");
+		writer.fwrite("</td>");
+		writer.fwrite("</tr>");
 	}
 
 	@Override
@@ -417,7 +422,13 @@ public class HTMLReportBuilder extends ReportBuilder
 		}
 		else
 		{
-			writer.fwrite("<tr><td colspan='6'><span class='label' id='%s'>%s</span></td></tr>", labelId, string);
+			writer.fwrite(
+					  "<tr>\n"
+					+ "  <td colspan='%s'>\n"
+					+ "     <span class='label' id='%s'>%s</span>\n"
+					+ "  </td>\n"
+					+ "</tr>\n"
+					, this.columnCount, labelId, string);
 		}
 	}
 
