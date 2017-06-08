@@ -1,3 +1,111 @@
 #TestCase;#Kind;#Depends;#For
-Test case;Never;;
+Application start;Never;;
+    #Step;#Kind;#For;#Depends
+    'App start without any';;;
+        #Id;#Action;#Assert;$AppId
+        APPSTR2;ApplicationStart;This.Kind == ErrorKind.EXCEPTION && This.Result == Result.Failed;'SWING'
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'App start without jar';;;
+        #Id;#Action;#Assert;$AppId;MainClass
+        APPSTR2;ApplicationStart;This.Kind == ErrorKind.EXCEPTION && This.Result == Result.Failed;'SWING';
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'App start with invalid class name';;;
+        #Id;#Action;#Assert;$AppId;Jar;MainClass
+        APPSTR2;ApplicationStart;This.Kind == ErrorKind.EXCEPTION && This.Result == Result.Failed;'SWING';mockSwingJar;new Date()
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'App start with invalid jar file';;;
+        #Id;#Action;#Assert;$AppId;Jar;MainClass
+        APPSTR2;ApplicationStart;This.Kind == ErrorKind.EXCEPTION && This.Result == Result.Failed;'SWING';new Date();mockSwingClass
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'App start with valid parameters';;;
+        #Id;#Action;$AppId;Jar;MainClass
+        APPSTR1;ApplicationStart;'SWING';mockSwingJar;mockSwingClass
+
+        #Id;#Action;$AppConnection
+        APPSTP1;ApplicationStop;APPSTR1.Out
+
+    #EndStep
+
+
+// //TODO need add tests
+#TestCase;#Kind;#Depends;#For
+Appliaction connect;;;
+
+#TestCase;#Kind;#Depends;#For
+;;;
+    #Id;#Action;$AppId;Jar;MainClass
+    APPSTR1;ApplicationStart;'SWING';mockSwingJar;mockSwingClass
+
+    #Step;#Kind;#For;#Depends
+    'Get properties';;;
+        #Id;#Action;$AppConnection;Title
+        APPPAR1;ApplicationGetProperties;APPSTR1.Out;
+
+        #Assert;#Message
+        APPPAR1.Out.Title == 'frame0';'Actula name : ' +APPPAR1.Out.Title
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'Move';;;
+        #Action;$X;$Y;$AppConnection
+        ApplicationMove;10;10;APPSTR1.Out
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'Resize';;;
+        #Id;#Action;$AppConnection;$Minimize
+        APPSZ1;ApplicationResize;APPSTR1.Out;true
+
+        #Id;#Action;$AppConnection;$Maximize
+        APPSZ1;ApplicationResize;APPSTR1.Out;true
+
+        #Id;#Action;$AppConnection;$Normal
+        APPSZ1;ApplicationResize;APPSTR1.Out;true
+
+        #Id;#Action;$AppConnection;$Height;$Width
+        APPSZ1;ApplicationResize;APPSTR1.Out;200;200
+
+    #EndStep
+
+    #Id;#Action;$AppConnection
+    APPSTP1;ApplicationStop;APPSTR1.Out
+
+
+#Off;#TestCase;#Kind;#Depends;#For
+1;Appliaction negative;;;
+    #Id;#Action;$AppId;Jar;Args;MainClass
+    APPSTR1;ApplicationStart;'SWING';mockSwingJar;;mockSwingClass
+
+    #Id;#Action;#Assert;$AppConnection
+    APPR1;ApplicationRefresh;This.Kind == ErrorKind.EXCEPTION && This.Result == Result.Failed;APPSTR1.Out
+
+    #Id;#Action;#Assert;$Navigate;$AppConnection
+    APPPNVG1;ApplicationNavigate;This.Kind == ErrorKind.EXCEPTION && This.Result == Result.Failed;NavigateKind.BACK;APPSTR1.Out
+
+    #Id;#Action;#Assert;$AppConnection
+    APPNI1;ApplicationNewInstance;This.Kind == ErrorKind.EXCEPTION && This.Result == Result.Failed;APPSTR1.Out
+
+    #Id;#Action;#Assert;$AppConnection
+    APPCW1;ApplicationCloseWindow;This.Kind == ErrorKind.EXCEPTION && This.Result == Result.Failed;APPSTR1.Out
+
+    #Id;#Action;#Assert;$AppConnection
+    APPSW1;ApplicationSwitchTo;This.Kind == ErrorKind.EXCEPTION && This.Result == Result.Failed;APPSTR1.Out
+
+    #Id;#Action;$AppConnection
+    APPSTP1;ApplicationStop;APPSTR1.Out
+
 

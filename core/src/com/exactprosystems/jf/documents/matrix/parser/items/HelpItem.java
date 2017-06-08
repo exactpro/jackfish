@@ -46,13 +46,13 @@ public class HelpItem extends MatrixItem
         }
         
         report.itemIntermediate(item);
-        report.outLine(this, null, "{{2" + this.itemClazz.getSimpleName() + "2}}", null);
+        report.outLine(this, null, "{{`{{2" + this.itemClazz.getSimpleName() + "2}}`}}", null);
         report.outLine(this, null, "{{`" + attribute.description() + "`}}", null);
-        report.outLine(this, null, "{{*Examples*}}", null);
+        report.outLine(this, null, "{{`{{*Examples*}}`}}", null);
         report.outLine(this, null, "{{`" + attribute.examples() + "`}}", null);
         if (attribute.seeAlsoClass().length != 0)
         {
-            report.outLine(this, null, "{{*See also*}}", null);
+            report.outLine(this, null, "{{`{{*See also*}}`}}", null);
             String s = Arrays.stream(attribute.seeAlsoClass()).map(c -> "{{@" + c.getSimpleName() + "@}}").collect(Collectors.joining(", "));
             report.outLine(this, null, "{{`" + s + "`}}", null);
         }

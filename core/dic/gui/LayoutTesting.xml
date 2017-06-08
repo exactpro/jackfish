@@ -85,6 +85,7 @@
                     <attr name="href">#</attr>
                 </info>
             </button>
+            <panel owner="owner"/>
         </run>
         <onClose/>
         <close/>

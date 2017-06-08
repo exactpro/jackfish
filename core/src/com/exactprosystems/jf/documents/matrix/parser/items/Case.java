@@ -55,7 +55,7 @@ import java.util.Map;
 				"expression.matches('[\\\\w|\\\\s]+[(]455{1}[)]')\n" +
 				"#Action;#result\n" +
 				"Print;false\n" +
-				"#EndSwitch",
+				"#EndSwitch#}}",
 		shouldContain 	= { Tokens.Case },
 		mayContain 		= { Tokens.Off, Tokens.RepOff }, 
         closes			= Switch.class,

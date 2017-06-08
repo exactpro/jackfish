@@ -1,6 +1,10 @@
+#NameSpace
+
+#EndNameSpace
+
 #Id;#TestCase;#Kind;#Depends;#For
 TestCase1;This matrix always passed;;;
-    #Action;#Time
+    #Action;$Time
     Wait;200
 
     #Step;#Kind;#For;#Depends
@@ -17,5 +21,23 @@ TestCase1;This matrix always passed;;;
         'Actual is not equal expected'
 
     #EndStep
+
+
+#Id;#TestCase;#Kind;#Depends;#For
+FINAL;Final;;;
+    #Id;#Action;$Decoraded
+    RESTBL1;ResultTable;true
+
+    #Id;#Action;$Decoraded
+    RESTBL2;ResultTable;false
+
+    #Action;$Text;$Notifier
+    Show;'true ' +RESTBL1.Out[0].Matrix;Notifier.Info
+
+    #Action;$Time
+    Wait;1000
+
+    #Action;$Text;$Notifier
+    Show;'false' + RESTBL2.Out[0].Matrix;Notifier.Info
 
 

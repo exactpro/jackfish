@@ -11,12 +11,12 @@ package com.exactprosystems.jf.app;
 import com.exactprosystems.jf.api.app.*;
 import com.exactprosystems.jf.api.common.ProcessTools;
 import com.exactprosystems.jf.api.common.SerializablePair;
+import com.exactprosystems.jf.api.common.Str;
 import com.exactprosystems.jf.api.error.app.FeatureNotSupportedException;
-
+import com.exactprosystems.jf.api.error.app.NullParameterException;
 import net.sourceforge.jnlp.Launcher;
 import net.sourceforge.jnlp.runtime.ApplicationInstance;
 import net.sourceforge.jnlp.runtime.JNLPRuntime;
-
 import org.apache.log4j.*;
 import org.fest.swing.core.BasicRobot;
 import org.fest.swing.core.ComponentMatcher;
@@ -25,7 +25,6 @@ import org.fest.swing.fixture.ComponentFixture;
 import org.w3c.dom.Document;
 
 import javax.swing.*;
-
 import java.awt.*;
 import java.awt.event.WindowEvent;
 import java.awt.image.BufferedImage;
@@ -34,8 +33,10 @@ import java.lang.reflect.Method;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.rmi.RemoteException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 
 public class SwingRemoteApplication extends RemoteApplication
 {
@@ -144,7 +145,15 @@ public class SwingRemoteApplication extends RemoteApplication
 	protected int runDerived(Map<String, String> args) throws Exception
 	{
 		String mainClass = args.get(SwingAppFactory.mainClassName);
+		if (Str.IsNullOrEmpty(mainClass))
+		{
+			throw new NullParameterException("MainClass can't be null");
+		}
 		String jar = args.get(SwingAppFactory.jarName);
+		if (Str.IsNullOrEmpty(jar))
+		{
+			throw new NullParameterException("Jar can't be null");
+		}
 		String arg = args.get(SwingAppFactory.argsName);
 
 		logger.debug("Launching application: class=" + mainClass + " jar=" + jar + " arg=" + arg);
@@ -263,20 +272,27 @@ public class SwingRemoteApplication extends RemoteApplication
 			if (component instanceof JFrame)
 			{
 				JFrame frame = (JFrame)component;
-				if (minimize)
+				if (normal)
 				{
+					logger.debug("Change state to normal");
 					frame.setExtendedState(JFrame.NORMAL);
+					logger.debug("Current state is " + frame.getExtendedState());
 				}
 				else if (maximize)
 				{
+					logger.debug("Change state to maximized");
 					frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
+					logger.debug("Current state is " + frame.getExtendedState());
 				}
 				else if (minimize)
 				{
+					logger.debug("Change state to minimize");
 					frame.setExtendedState(JFrame.ICONIFIED);
+					logger.debug("Current state is " + frame.getExtendedState());
 				}
 				else
 				{
+					logger.debug("Change state via w and h");
 					frame.setSize(width, height);
 				}
 			}

@@ -34,7 +34,7 @@ public class HelpActionItem extends MatrixItem
     @Override
     public String getItemName()
     {
-        return "Action " + this.actionClazz.getSimpleName();
+        return "";
     }
     
     public void actionReport(ReportBuilder report, MatrixItem item, Class<? extends AbstractAction> clazz)
@@ -42,6 +42,9 @@ public class HelpActionItem extends MatrixItem
         ActionAttribute attr = clazz.getAnnotation(ActionAttribute.class);
 
         report.itemIntermediate(item);
+        
+        report.outLine(this, null, "{{`{{2" + "Action " + this.actionClazz.getSimpleName() + "2}}`}}", null);
+        
         report.outLine(this, null, "{{`" + attr.generalDescription() + "`}}", null);
 
         if (attr.additionFieldsAllowed())
