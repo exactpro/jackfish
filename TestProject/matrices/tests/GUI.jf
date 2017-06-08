@@ -45,11 +45,11 @@ ALERT;DialogAlert;;;
 
 #Id;#TestCase;#Kind;#Depends;#For
 LAYOUT;DialogCheckLayout;;;
-    #Action;#Assert;$DoNotClose;$Dialog;$AppConnection
-    DialogCheckLayout;This.Result == Result.Failed && This.Kind == ErrorKind.NOT_EQUAL;false;'Empty';APPSTR1.Out
+    #Action;#Assert;$DoNotOpen;$DoNotClose;$Dialog;$AppConnection
+    DialogCheckLayout;This.Result == Result.Failed && This.Kind == ErrorKind.OPERATION_NOT_ALLOWED;true;false;'NotAllowedForGUIOnly';APPSTR1.Out
 
     #Action;#Assert;$DoNotOpen;$Dialog;$AppConnection
-    DialogCheckLayout;This.Result == Result.Failed && This.Kind == ErrorKind.NOT_EQUAL;false;'Empty';APPSTR1.Out
+    DialogCheckLayout;This.Result == Result.Failed && This.Kind == ErrorKind.OPERATION_NOT_ALLOWED;false;'NotAllowedForGUIOnly';APPSTR1.Out
 
     #Id;#Let
     map;new LinkedHashMap()
@@ -94,10 +94,13 @@ FILL;DialogFill;;;
     DLGFLL4;DialogFill;This.Result == Result.Failed && This.Kind == ErrorKind.DIALOG_NOT_FOUND;Do.text('1234567890');'NotExistsWindow';APPSTR1.Out
 
     #Id;#Action;#Assert;TextBox;$StopOnFail;$Dialog;$AppConnection
-    DLGFLL5;DialogFill;This.Result == Result.Failed && This.Kind == ErrorKind.OPERATION_FAILED;Do.getTable();true;'Main';APPSTR1.Out
+    DLGFLL5;DialogFill;This.Result == Result.Failed && This.Kind == ErrorKind.OPERATION_NOT_ALLOWED;Do.getTable();true;'Main';APPSTR1.Out
 
-    #Id;#Action;#Assert;$StopOnFail;$Dialog;$AppConnection;TextBox;TextBox
-    DLGFLL6;DialogFill;This.Result == Result.Failed && This.Kind == ErrorKind.OPERATION_FAILED;true;'Main';APPSTR1.Out;Do.text('1234567890');Do.getTable()
+    #Id;#Action;#Assert;$DoNotOpen;$Dialog;$AppConnection
+    DLGFLL10;DialogFill;This.Result == Result.Failed && This.Kind == ErrorKind.CONTROL_NOT_SUPPORTED;false;'NotAllowedForGUIOnly';APPSTR1.Out
+
+    #Id;#Action;#Assert;$StopOnFail;$Dialog;$AppConnection;TextBox
+    DLGFLL6;DialogFill;This.Result == Result.Failed && This.Kind == ErrorKind.OPERATION_FAILED;true;'Main';APPSTR1.Out;Do.click(5,5,MouseAction.RightDoubleClick)
 
 
 #Id;#TestCase;#Kind;#Depends;#For
@@ -115,10 +118,13 @@ VALIDATE;DialogValidate;;;
     DialogValidate;This.Result == Result.Failed && This.Kind == ErrorKind.FAIL;179;'Main';APPSTR1.Out
 
     #Action;#Assert;$DoNotOpen;$DoNotClose;$Dialog;$AppConnection
-    DialogValidate;This.Result == Result.Failed && This.Kind == ErrorKind.NOT_EQUAL;false;false;'Empty';APPSTR1.Out
+    DialogValidate;This.Result == Result.Failed && This.Kind == ErrorKind.OPERATION_NOT_ALLOWED;true;false;'NotAllowedForGUIOnly';APPSTR1.Out
 
-    #Action;#Assert;$DoNotClose;$Dialog;$AppConnection
-    DialogValidate;This.Result == Result.Failed && This.Kind == ErrorKind.NOT_EQUAL;false;'Empty';APPSTR1.Out
+    #Action;#Assert;$DoNotOpen;$Dialog;$AppConnection
+    DialogValidate;This.Result == Result.Failed && This.Kind == ErrorKind.NOT_EQUAL;false;'DialogValidateForGUI';APPSTR1.Out
+
+    #Action;#Assert;TextBox;$DoNotClose;$Dialog;$AppConnection
+    DialogValidate;This.Result == Result.Failed && This.Kind == ErrorKind.EXCEPTION;Do.click(5,5,MouseAction.RightDoubleClick);false;'Main';APPSTR1.Out
 
 
 #Id;#TestCase;#Kind;#Depends;#For
@@ -228,7 +234,7 @@ SWITCH;DialogSwitchToWindow;;;
     DialogSwitchToWindow;This.Result == Result.Failed && This.Kind == ErrorKind.DIALOG_NOT_FOUND;'anyFrame';'NotExist';APPSTR1.Out
 
     #Action;$Frame;$Dialog;$AppConnection
-    DialogSwitchToWindow;'MyFrame';'Main';APPSTR1.Out
+    DialogSwitchToWindow;'Frame';'Main';APPSTR1.Out
 
 
 #Id;#TestCase;#Kind;#Depends;#For
