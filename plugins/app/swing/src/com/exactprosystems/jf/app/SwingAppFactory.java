@@ -16,11 +16,14 @@ import com.exactprosystems.jf.api.app.LocatorFieldKind;
 import com.exactprosystems.jf.api.app.PluginInfo;
 import com.exactprosystems.jf.api.common.ParametersKind;
 
+import java.io.InputStream;
 import java.util.*;
 import java.util.stream.Collectors;
 
 public class SwingAppFactory implements IApplicationFactory
 {
+    public static final String helpFileName     = "help.txt";
+
     public static final String logLevel         = "LogLevel";
 	public final static String jreExecName 		= "jreExec";
 	public final static String jreArgsName 		= "jreArgs";
@@ -77,31 +80,22 @@ public class SwingAppFactory implements IApplicationFactory
 	// IApplicationFactory
 	//----------------------------------------------------------------------------------------------
 	@Override
-	public String getHelp()
-	{
-		StringBuilder builder = new StringBuilder();
-		try
-		{
-			try (Scanner in = new Scanner(SwingAppFactory.class.getResourceAsStream(helpFileName)))
-			{
-				while (in.hasNext())
-				{
-					builder.append(in.nextLine());
-				}
-			}
-		}
-		catch (Exception e)
-		{
-			builder = new StringBuilder("Help not found");
-		}
-		return builder.toString();
-	}
-
-	@Override
 	public void init(IGuiDictionary dictionary)
 	{
 		this.dictionary = dictionary;
 	}
+
+    @Override
+    public InputStream getHelp()
+    {
+        return SwingAppFactory.class.getResourceAsStream(helpFileName);
+    }
+
+    @Override
+    public Set<ControlKind> supportedControlKinds()
+    {
+        return Arrays.stream(supportedControls).collect(Collectors.toSet());
+    }
 
 	@Override
 	public IApplication createApplication()
@@ -113,12 +107,6 @@ public class SwingAppFactory implements IApplicationFactory
 	public String getRemoteClassName()
 	{
 		return SwingRemoteApplication.class.getCanonicalName();
-	}
-
-	@Override
-	public Set<ControlKind> supportedControlKinds()
-	{
-		return Arrays.stream(supportedControls).collect(Collectors.toSet());
 	}
 
 	@Override

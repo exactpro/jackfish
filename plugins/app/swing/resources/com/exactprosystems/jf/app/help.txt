@@ -1,0 +1,6 @@
+A swing plugin used for testing swing based application. The plugin based on {{*FEST*}} Framework. 
+Can starts on {{/Window/}}, {{/Linux/}} and {{/MacOS/}}.
+
+The plugin can start application via designate path to a jar and main class with {{@ApplicationStart@}} action.
+The plugin can connect to application via url to jnlp file with {{@ApplicationConnect@}} action.
+The plugin can't work with cells how independent elements. Only works with table.

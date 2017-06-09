@@ -1,0 +1,7 @@
+A win plugin used for testing windows base application. The plugin based on UIAutomation framework. 
+Can start only on {{/Windows//}.
+The plugin supported following frameworks : WinForms, Win32, WPF and Silverlight.
+The plugin can start application via designate path to exe file and path to working dir with {{@ApplicationStart@}} action.
+The plugin can connect to a started application via designate PID of application, title, height/width 
+application with {{@ApplicationConnect@}}, action. 
+The plugin can't work with cells how independent elements. Only works with table.

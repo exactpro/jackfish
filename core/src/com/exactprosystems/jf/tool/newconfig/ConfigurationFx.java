@@ -7,6 +7,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 package com.exactprosystems.jf.tool.newconfig;
 
+import com.exactprosystems.jf.api.app.ControlKind;
 import com.exactprosystems.jf.api.app.IApplicationFactory;
 import com.exactprosystems.jf.api.client.IClientFactory;
 import com.exactprosystems.jf.api.client.IClientsPool;
@@ -21,12 +22,16 @@ import com.exactprosystems.jf.app.ApplicationPool;
 import com.exactprosystems.jf.common.MatrixRunner;
 import com.exactprosystems.jf.common.MutableString;
 import com.exactprosystems.jf.common.Settings;
+import com.exactprosystems.jf.common.documentation.DocumentationBuilder;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
+import com.exactprosystems.jf.common.report.ContextHelpFactory;
+import com.exactprosystems.jf.common.report.ReportBuilder;
 import com.exactprosystems.jf.common.undoredo.Command;
 import com.exactprosystems.jf.documents.Document;
 import com.exactprosystems.jf.documents.DocumentFactory;
 import com.exactprosystems.jf.documents.config.*;
 import com.exactprosystems.jf.documents.matrix.Matrix;
+import com.exactprosystems.jf.documents.matrix.parser.items.MatrixItem;
 import com.exactprosystems.jf.documents.matrix.parser.listeners.RunnerListener;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.SupportedEntry;
@@ -45,6 +50,7 @@ import javafx.stage.Stage;
 
 import javax.xml.bind.annotation.XmlRootElement;
 import java.io.File;
+import java.io.InputStream;
 import java.io.Reader;
 import java.nio.file.*;
 import java.util.*;
@@ -782,9 +788,12 @@ public class ConfigurationFx extends Configuration
 
 	public void showAppHelp(AppEntry entry) throws Exception
 	{
-		IApplicationFactory iApplicationFactory = this.getApplicationPool().loadApplicationFactory(entry.get(entryName));
-		String help = iApplicationFactory.getHelp();
-		DialogsHelper.showAppHelp(help);
+        IApplicationFactory applicationFactory = this.getApplicationPool().loadApplicationFactory(entry.get(entryName));
+        Context context = factory.createContext();
+        ReportBuilder report = new ContextHelpFactory().createReportBuilder(null, null, new Date());
+        MatrixItem help = DocumentationBuilder.createHelpForPlugin(report, context, entry.get(entryName), applicationFactory);
+        DialogsHelper.showHelpDialog(context, entry.get(entryName), report, help);
+		
 	}
 
 	public void excludeAppDictionaryFolder(String file) throws Exception

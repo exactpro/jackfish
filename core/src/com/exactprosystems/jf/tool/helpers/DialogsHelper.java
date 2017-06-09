@@ -698,24 +698,6 @@ public abstract class DialogsHelper
 		}
 	}
 
-	public static void showAppHelp(String help)
-	{
-		WebView browser = new WebView();
-		WebEngine engine = browser.getEngine();
-		engine.loadContent(help);
-		Dialog<ButtonType> dialog = new Alert(Alert.AlertType.INFORMATION);
-		Common.addIcons(((Stage) dialog.getDialogPane().getScene().getWindow()));
-		dialog.setResizable(true);
-		dialog.getDialogPane().setPrefWidth(1024);
-		dialog.getDialogPane().setPrefHeight(768);
-		dialog.getDialogPane().setContent(browser);
-		dialog.initModality(Modality.NONE);
-		dialog.getDialogPane().setHeader(new Label());
-		dialog.setTitle("Help");
-		dialog.getDialogPane().getStylesheets().addAll(Common.currentThemesPaths());
-		dialog.show();
-	}
-
 	public static void displayReport(File file, String matrixName, DocumentFactory factory)
 	{
 		Settings.SettingsValue value = factory.getSettings().getValueOrDefault(Settings.GLOBAL_NS, Settings.SETTINGS, Settings.USE_EXTERNAL_REPORT_VIEWER, "false");

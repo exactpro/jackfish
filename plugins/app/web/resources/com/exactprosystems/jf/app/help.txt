@@ -1,0 +1,13 @@
+A Web plugin used for testings web browser application. The plugin based on {{*Selenium*}} framework. 
+Can starts on {{/Windows/}}, {{/Linux/}} and {{/MacOS/}}. (InternetExplorer only on {{/Windows/}}).
+The plugin supported cross browse testing. 
+Supported browsers : {{/AndroidChrome/}}, {{/AndroidBrowser/}}, {{/Firefox/}}, {{/Chrome/}}, {{/InternetExplorer/}}, 
+{{/Opera/}}, {{/PhantomJS/}}, {{/Safari/}}.
+For testing in Chrome browser, it needs to set path to chromedriver. (ChromeDriverPath in parameters for plugin)
+For testing in IE need set path to IEdriver (IEDriverPath in parameters for plugin)
+For starting application need designate browser and url.
+
+The web plugin can't join to started application ( via an action {{@ApplicationConnectTo@}}).
+The web plugin can't move window ( via action {{@ApplicationMove@}})
+The web plugin can open new page ( via action {{@ApplicationNewInstance@}})
+The web plugin can work with cells into table how independent elements. 

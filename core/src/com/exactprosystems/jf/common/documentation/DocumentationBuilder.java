@@ -6,6 +6,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import com.exactprosystems.jf.actions.AbstractAction;
@@ -15,6 +16,7 @@ import com.exactprosystems.jf.actions.ActionsList;
 import com.exactprosystems.jf.actions.tables.TableSelect;
 import com.exactprosystems.jf.api.app.ControlKind;
 import com.exactprosystems.jf.api.app.Do;
+import com.exactprosystems.jf.api.app.IApplicationFactory;
 import com.exactprosystems.jf.api.app.OperationKind;
 import com.exactprosystems.jf.api.common.DateTime;
 import com.exactprosystems.jf.api.wizard.Wizard;
@@ -137,6 +139,18 @@ public class DocumentationBuilder
         return help;
     }
     
+    public static MatrixItem createHelpForPlugin(ReportBuilder report, Context context, String title, IApplicationFactory applicationFactory) throws Exception
+    {
+        InputStream stream = applicationFactory.getHelp();
+        MatrixItem help = new HelpTextLine("{{`{{*" + title + "*}}`}}"); 
+        addText(help, stream);
+        addTextLine(help, "{{`{{*Supported controls*}}`}}");
+        Set<ControlKind> controls = applicationFactory.supportedControlKinds();
+        String s = controls.stream().map(c -> "{{@" + c.getClazz() + "@}}").collect(Collectors.joining(", "));
+        addTextLine(help, "{{`" + s + "`}}");
+        
+        return help;
+    }
 
     public static void addContent(MatrixItem root, String title, Content content) throws Exception
     {

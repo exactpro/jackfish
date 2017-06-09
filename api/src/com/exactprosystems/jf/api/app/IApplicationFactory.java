@@ -10,14 +10,14 @@ package com.exactprosystems.jf.api.app;
 
 import com.exactprosystems.jf.api.common.IFactory;
 
+import java.io.InputStream;
 import java.util.Set;
 
 public interface IApplicationFactory  extends IFactory
 {
-	String helpFileName	=	"helpFile.html";
-	String				getHelp();
-	void				init(IGuiDictionary dictionary);
-	
+    void                init(IGuiDictionary dictionary);
+    
+	InputStream		    getHelp();
 	Set<ControlKind> 	supportedControlKinds();
 
 	IApplication 		createApplication() throws Exception;

@@ -11,11 +11,14 @@ package com.exactprosystems.jf.app;
 import com.exactprosystems.jf.api.app.*;
 import com.exactprosystems.jf.api.common.ParametersKind;
 
+import java.io.InputStream;
 import java.util.*;
 import java.util.stream.Collectors;
 
 public class WinAppFactory implements IApplicationFactory
 {
+    public static final String      helpFileName            = "help.txt";
+    
 	public static final String		logLevel				= "LogLevel";
 	public static final String		jreExecName				= "jreExec";
 	public static final String		jreArgsName				= "jreArgs";
@@ -80,32 +83,23 @@ public class WinAppFactory implements IApplicationFactory
 	// IApplicationFactory
 	//----------------------------------------------------------------------------------------------
 
-	@Override
-	public String getHelp()
-	{
-		StringBuilder builder = new StringBuilder();
-		try
-		{
-			try (Scanner in = new Scanner(WinAppFactory.class.getResourceAsStream(helpFileName)))
-			{
-				while (in.hasNext())
-				{
-					builder.append(in.nextLine());
-				}
-			}
-		}
-		catch (Exception e)
-		{
-			builder = new StringBuilder("Help not found");
-		}
-		return builder.toString();
-	}
+    @Override
+    public void init(IGuiDictionary dictionary)
+    {
+        this.dictionary = dictionary;
+    }
 
 	@Override
-	public void init(IGuiDictionary dictionary)
+	public InputStream getHelp()
 	{
-		this.dictionary = dictionary;
+		return WinAppFactory.class.getResourceAsStream(helpFileName);
 	}
+
+    @Override
+    public Set<ControlKind> supportedControlKinds()
+    {
+        return Arrays.stream(supportedControls).collect(Collectors.toSet());
+    }
 
 	@Override
 	public IApplication createApplication() throws Exception
@@ -117,12 +111,6 @@ public class WinAppFactory implements IApplicationFactory
 	public String getRemoteClassName()
 	{
 		return WinRemoteApplicationJNA.class.getCanonicalName();
-	}
-
-	@Override
-	public Set<ControlKind> supportedControlKinds()
-	{
-		return Arrays.stream(supportedControls).collect(Collectors.toSet());
 	}
 
 	@Override
