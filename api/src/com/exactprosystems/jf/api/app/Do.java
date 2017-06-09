@@ -20,6 +20,11 @@ import java.util.List;
  * 1st parameter (x) - column index
  * 2nd parameter (y) - row index
  */
+
+@DescriptionAttribute(
+		text = "This class contains methods which are used in such action as DialogFill "
+				+ "to manipulate controls on the screen. "
+		)
 public class Do
 {
 	//region Utilities operations

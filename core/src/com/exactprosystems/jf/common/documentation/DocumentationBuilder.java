@@ -14,6 +14,7 @@ import com.exactprosystems.jf.actions.ActionGroups;
 import com.exactprosystems.jf.actions.ActionsList;
 import com.exactprosystems.jf.actions.tables.TableSelect;
 import com.exactprosystems.jf.api.app.ControlKind;
+import com.exactprosystems.jf.api.app.Do;
 import com.exactprosystems.jf.api.app.OperationKind;
 import com.exactprosystems.jf.api.common.DateTime;
 import com.exactprosystems.jf.api.wizard.Wizard;
@@ -27,6 +28,7 @@ import com.exactprosystems.jf.documents.guidic.controls.AbstractControl;
 import com.exactprosystems.jf.documents.matrix.parser.Parser;
 import com.exactprosystems.jf.documents.matrix.parser.items.ActionItem;
 import com.exactprosystems.jf.documents.matrix.parser.items.HelpActionItem;
+import com.exactprosystems.jf.documents.matrix.parser.items.HelpClass;
 import com.exactprosystems.jf.documents.matrix.parser.items.HelpTable;
 import com.exactprosystems.jf.documents.matrix.parser.items.HelpContent;
 import com.exactprosystems.jf.documents.matrix.parser.items.HelpItem;
@@ -83,7 +85,7 @@ public class DocumentationBuilder
         
         addContent(help, "{{*Table of contenst*}}", new Content());
         addTextLine(help, "{{&&}}");
-        
+
         addText(help, DocumentationBuilder.class.getResourceAsStream("intro1.txt"));
         addPicture(help, "Architecture", 80, DocumentationBuilder.class.getResourceAsStream("Intro.png"));
         addText(help, DocumentationBuilder.class.getResourceAsStream("intro2.txt"));
@@ -107,6 +109,7 @@ public class DocumentationBuilder
         addTextLine(help, "{{&&}}");
 */
 
+//        addClass(help, Do.class);
         
         return help;
     }
@@ -238,6 +241,12 @@ public class DocumentationBuilder
         root.insert(root.count(), text);
     }
     
+    public static void addClass(MatrixItem root, Class<?> clazz) throws Exception
+    {
+        MatrixItem item = new HelpClass(clazz);
+        root.insert(root.count(), item);
+    }
+
     @SuppressWarnings("unchecked")
     public static void addAllItems(MatrixItem root) throws Exception
     {
