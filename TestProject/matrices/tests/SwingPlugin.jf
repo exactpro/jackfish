@@ -85,8 +85,8 @@ Appliaction connect;;;
     APPSTP1;ApplicationStop;APPSTR1.Out
 
 
-#Off;#TestCase;#Kind;#Depends;#For
-1;Appliaction negative;;;
+#TestCase;#Kind;#Depends;#For
+Appliaction negative;;;
     #Id;#Action;$AppId;Jar;Args;MainClass
     APPSTR1;ApplicationStart;'SWING';mockSwingJar;;mockSwingClass
 
