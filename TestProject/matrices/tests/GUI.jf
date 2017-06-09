@@ -196,7 +196,7 @@ IMAGE_SAVE;ImageSave;;;
     Sys.exists(IMGSV1.Out);'Image is not saved'
 
     #Id;#Let
-    fileName;'reports/saved.jpg'
+    fileName;'../../reports/saved.jpg'
 
     #Id;#Action;$Image;$File
     IMGSV2;ImageSave;DSK2.Out;fileName
