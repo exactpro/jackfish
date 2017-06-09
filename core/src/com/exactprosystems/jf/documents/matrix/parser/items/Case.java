@@ -43,7 +43,7 @@ import java.util.Map;
 				"#EndSwitch#}}" +
 				"Logical data type which equals true is transferred into field  switch \n" +
 				"The Case will be performed, which field’s expression will returns true." +
-				"#Id;#Let\n" +
+				"{{##Id;#Let\n" +
 				"expression;'Annoucements(425)'\n" +
 				"#Switch\n" +
 				"true\n" +
