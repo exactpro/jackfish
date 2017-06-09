@@ -156,7 +156,7 @@ public class TexReportBuilder extends ReportBuilder
 
             // paragraph
             case OM + "`": return "";
-            case "`" + CM: return "\\\\newline";
+            case "`" + CM: return "\\\\newline{}";
     
             // new page
             case OM + "&": return "";
