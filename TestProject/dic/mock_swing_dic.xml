@@ -41,6 +41,13 @@
             <wait id="Wait" owner="owner" addition="Many"/>
             <label id="moveLabel" owner="owner" class="javax.swing.JLabel" name="moveLabel" text=""/>
             <button id="Button1" owner="owner" class="javax.swing.JButton" name="ButtonMany" addition="Many"/>
+            <button id="buttonShowArea" uid="" owner="owner" name="showButton" text=""/>
+            <button id="buttonHideArea" uid="" owner="owner" name="hideButton" text=""/>
+            <button id="countButton" owner="" name="countButton"/>
+            <button id="countButtonClear" owner="" name="countButtonClear"/>
+            <label id="countLabel" owner="" name="countLabel"/>
+            <label id="pressLabel" owner="" name="pressLabel"/>
+            <label id="downUpLabel" owner="" name="downUpLabel"/>
         </run>
         <onClose/>
         <close/>

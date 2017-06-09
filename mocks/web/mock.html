@@ -90,6 +90,38 @@
 		$("#hideButton").hide();
 	});
 
+	var counter = 0;
+	var makeCounter = function(flag) {
+		if(!flag){
+			counter = -1;
+		}
+		counter++;
+		$('#countLabel').html(counter);
+	}
+
+	document.onkeydown = function(evt) {
+		evt = evt || window.event;
+		var a = $('#moveLabel').text();
+		a = a.substring(0,a.length-5);
+		if (evt.keyCode == 27) {
+			var a = $('#moveLabel').text();
+			a = a.substring(0,a.length-5);
+			$('#pressLabel').html(a + "_press_Escape");
+    	}
+    	if (evt.keyCode == 17) {
+			$('#downUpLabel').html(a + "_down_Control");
+    	}
+	};
+
+	document.onkeyup = function(evt) {
+		evt = evt || window.event;
+		var a = $('#moveLabel').text();
+		a = a.substring(0,a.length-5);
+    	if (evt.keyCode == 17) {
+			$('#downUpLabel').html(a + "_up_Control");
+    	}
+	};
+
 	</script>
 </head>
 <body onload="addAllListeners()">
@@ -100,6 +132,8 @@
 		<tr>
 			<td width="200px"><label id="centralLabel" class="add_listener" kindname="Label" func="123456" name="centralLabel">CentralLabel</label></td>
 			<td width="200px"><label id="moveLabel">Move label</label></td>
+			<td width="200px"><label id="pressLabel" name="pressLabel">Press label</label></td>
+			<td width="200px"><label id="downUpLabel" name="downUpLabel">Down Up label</label></td>
 		</tr>
 		</tbody>
 	</table>
@@ -114,7 +148,7 @@
 </div>
 
 <div id="divTable">
-	<table id="table" border="1px" class="add_listener" kindname="Table" func="456" name="Table">
+	<table id="table" border="1px" class="add_listener" kindname="Table" func="456" name="Table" width="50%">
 		<thead>
 			<tr>
 				<th>Head1</th>
@@ -128,15 +162,15 @@
 			<td class="add_listener" kindname="Table" func="123456"><label>tr_1_td_2</label></td>
 			<td class="add_listener" kindname="Table" func="123456"><label>tr_1_td_3</label></td>
 		</tr>
-		<tr style="margin:5px">
-			<td class="add_listener" kindname="Table" func="123456"><label>tr_2_td_1</label></td>
+		<tr style="margin:5px color:#aaa">
+			<td class="add_listener" kindname="Table" func="123456" style="margin:5px color:#fff"><label>tr_2_td_1</label></td>
 			<td class="add_listener" kindname="Table" func="123456"><label>tr_2_td_2</label></td>
 			<td class="add_listener" kindname="Table" func="123456"><label>tr_2_td_3</label></td>
 		</tr>
 		<tr style="margin:5px">
-			<td class="add_listener" kindname="Table" func="123456"><label>tr_3_td_1</label></td>
-			<td class="add_listener" kindname="Table" func="123456"><label>tr_3_td_2</label></td>
-			<td class="add_listener" kindname="Table" func="123456"><label>tr_3_td_3</label></td>
+			<td class="add_listener" kindname="Table" func="123456" style="color: #333; background-color: #fff"><label>tr_3_td_1</label></td>
+			<td class="add_listener" kindname="Table" func="123456" style="color: #333; background-color: #fff"><label>tr_3_td_2</label></td>
+			<td class="add_listener" kindname="Table" func="123456" style="color: #333; background-color: #fff"><label>tr_3_td_3</label></td>
 		</tr>
 		</tbody>
 	</table>
@@ -144,7 +178,7 @@
 
 <div id="divTable1" >
 	<label id="labelTable1"></label>
-	<table id="table1" border="1px" name="Table">
+	<table id="table1" border="1px" name="Table" width="50%">
 		<thead>
 		<tr>
 			<th>Head1</th>
@@ -154,7 +188,7 @@
 		</thead>
 		<tbody>
 		<tr>
-			<td class="add_listener" kindname="Table" func="123456"><label>tr_1_td_1</label></td>
+			<td class="add_listener"  kindname="Table" func="123456"><label>tr_1_td_1</label></td>
 			<td class="add_listener" kindname="Table" func="123456"><label>tr_1_td_2</label></td>
 			<td class="add_listener" kindname="Table" func="123456"><label>tr_1_td_3</label></td>
 		</tr>
@@ -308,6 +342,12 @@
 <div id="divWithWait">
 	<button name="showButton" id="showButton" onclick="showArea(true)">Click me for show hidden area</button>
 	<button name="hideButton" id="hideButton" onclick="showArea(false)">Click me for hide showing area</button>
+</div>
+
+<div id="divRepeat">
+	<button name="countButtonClear" id="countButtonClear" onclick="makeCounter(false)">Clear</button>
+	<button name="countButton" id="countButton" onclick="makeCounter(true)">+1</button>
+	<label  name="countLabel" id="countLabel">Count</label>
 </div>
 
 </body>

@@ -1245,7 +1245,7 @@ public class SwingOperationExecutor implements OperationExecutor<ComponentFixtur
 				JTree tree = component.targetCastedTo(JTree.class);
 				int index = findIndex(tree, path);
 				if (index == -1) {
-					throw new WrongParameterException("Path '" + path + "' is not found in the tree.");
+					return Collections.emptyList();
 				}
 				List<String> res = new ArrayList<>();
 				res.add(String.valueOf(index));

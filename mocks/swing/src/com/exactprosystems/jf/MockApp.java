@@ -12,6 +12,7 @@ import sun.awt.TimedWindowEvent;
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.event.*;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellEditor;
 import javax.swing.text.JTextComponent;
@@ -31,10 +32,13 @@ public class MockApp
 	private JFrame frame;
 	private JFrame frame2;
 	private JLabel centralLabel;
+	private JLabel pressLabel;
+	private JLabel downUpLabel;
 	private JLabel moveLabel;
 	private JTextField textField;
 	private JFrame frame3;
 	private boolean firstRun;
+	private int counter;
 
 	public static void main(String[] args)
 	{
@@ -52,9 +56,11 @@ public class MockApp
 		this.frame.setLocation(200, 200);
 		this.frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 		this.centralLabel = new JLabel();
+		this.pressLabel = new JLabel();
 		addListeners(this.centralLabel, "Label");
 		this.moveLabel = new JLabel();
-		createPanelCentralPanel(centralLabel, moveLabel);
+		this.downUpLabel = new JLabel();
+		createPanelCentralPanel(centralLabel, moveLabel, pressLabel, downUpLabel);
 
 		createPanelButton();
 		createPanelInput();
@@ -77,6 +83,7 @@ public class MockApp
 		createPanelWithDisableComponents();
 		createPanelWithHiddenArea();
 		createPanelImage();
+		createPanelRepeat();
 
 		this.frame.setSize(new Dimension(800, 800));
 		this.frame.setVisible(true);
@@ -89,6 +96,37 @@ public class MockApp
 //		this.frame2.setVisible(true);
 //		allEvents(createPanelFrame2());
 		//createAndShowGui();
+	}
+
+	private void createPanelRepeat()
+	{
+		counter = 0;
+		JPanel panel = createPanel("panelRepeat");
+		JButton countButtonClear = new JButton("Clear");
+		countButtonClear.setName("countButtonClear");
+		JButton countButton = new JButton("+1");
+		countButton.setName("countButton");
+		JLabel countLabel = new JLabel("Count");
+		countLabel.setName("countLabel");
+
+		countButtonClear.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				counter = 0;
+				countLabel.setText(String.valueOf(counter));
+			}
+		});
+		countButton.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				counter++;
+				countLabel.setText(String.valueOf(counter));
+			}
+		});
+
+		panel.add(countButtonClear);
+		panel.add(countButton);
+		panel.add(countLabel);
 	}
 
 	private void createAndShowGui() {
@@ -226,22 +264,22 @@ public class MockApp
 			@Override
 			public void menuKeyReleased(MenuKeyEvent e)
 			{
-				if (e.getKeyCode() == KeyEvent.VK_F1)
+				if (e.getKeyCode() == KeyEvent.VK_CONTROL)
 				{
-					centralLabel.setText(menuName + "_up_F1");
+					downUpLabel.setText(menuName + "_up_Control");
 				}
 			}
 
 			@Override
 			public void menuKeyPressed(MenuKeyEvent e)
 			{
-				if (e.getKeyCode() == KeyEvent.VK_F1)
+				if (e.getKeyCode() == KeyEvent.VK_CONTROL)
 				{
-					centralLabel.setText(menuName + "_down_F1");
+					downUpLabel.setText(menuName + "_down_Control");
 				}
 				if (e.getKeyCode() == KeyEvent.VK_ESCAPE)
 				{
-					centralLabel.setText(menuName + "_press_Escape");
+					pressLabel.setText(menuName + "_press_Escape");
 				}
 			}
 
@@ -262,22 +300,22 @@ public class MockApp
 			@Override
 			public void menuKeyReleased(MenuKeyEvent e)
 			{
-				if (e.getKeyCode() == KeyEvent.VK_F1)
+				if (e.getKeyCode() == KeyEvent.VK_CONTROL)
 				{
-					centralLabel.setText(menuItemName + "_up_F1");
+					downUpLabel.setText(menuItemName + "_up_Control");
 				}
 			}
 
 			@Override
 			public void menuKeyPressed(MenuKeyEvent e)
 			{
-				if (e.getKeyCode() == KeyEvent.VK_F1)
+				if (e.getKeyCode() == KeyEvent.VK_CONTROL)
 				{
-					centralLabel.setText(menuItemName + "_down_F1");
+					downUpLabel.setText(menuItemName + "_down_Control");
 				}
 				if (e.getKeyCode() == KeyEvent.VK_ESCAPE)
 				{
-					centralLabel.setText(menuItemName + "_press_Escape");
+					pressLabel.setText(menuItemName + "_press_Escape");
 				}
 			}
 
@@ -307,16 +345,22 @@ public class MockApp
 		return menuBar;
 	}
 
-	private void createPanelCentralPanel(JLabel label, JLabel moveLabel)
+	private void createPanelCentralPanel(JLabel centralLabel, JLabel moveLabel, JLabel pressLabel, JLabel downUpLabel)
 	{
 		JPanel panel = createPanel("panelCentralLabel");
-		label.setName("centralLabel");
-		label.setText("CentralLabel");
+		centralLabel.setName("centralLabel");
+		centralLabel.setText("CentralLabel");
 		moveLabel.setName("moveLabel");
-		moveLabel.setText("Move label");
+		moveLabel.setText("Movelabel");
+		pressLabel.setName("pressLabel");
+		pressLabel.setText("Presslabel");
+		downUpLabel.setName("downUpLabel");
+		downUpLabel.setText("DownUplabel");
 		panel.add(new JLabel());
-		panel.add(label);
+		panel.add(centralLabel);
 		panel.add(moveLabel);
+		panel.add(pressLabel);
+		panel.add(downUpLabel);
 	}
 
 	private void createPanelButton()
@@ -498,8 +542,6 @@ public class MockApp
 				}
 			}
 		});
-
-
 //		for (int c = 0; c < table.getColumnCount(); c++)
 //		{
 //			if (c != 1)
@@ -794,11 +836,11 @@ public class MockApp
 		DefaultMutableTreeNode blue = new DefaultMutableTreeNode("blue");
 		DefaultMutableTreeNode green = new DefaultMutableTreeNode("green");
 		root.add(colorsRed);
+		root.add(orange);
 		root.add(colors);
 		colors.add(red);
 		colors.add(blue);
 		colors.add(green);
-		root.add(orange);
 		tree.expandRow(0);
 
 		JScrollPane scrollPane = new JScrollPane(tree);
@@ -927,13 +969,13 @@ public class MockApp
 			public void keyPressed(KeyEvent e)
 			{
 				super.keyPressed(e);
-				if (e.getKeyCode() == KeyEvent.VK_F1)
+				if (e.getKeyCode() == KeyEvent.VK_CONTROL)
 				{
-					centralLabel.setText(name + "_down_F1");
+					downUpLabel.setText(name + "_down_Control");
 				}
 				if (e.getKeyCode() == KeyEvent.VK_ESCAPE)
 				{
-					centralLabel.setText(name + "_press_Escape");
+					pressLabel.setText(name + "_press_Escape");
 				}
 			}
 
@@ -941,13 +983,13 @@ public class MockApp
 			public void keyReleased(KeyEvent e)
 			{
 				super.keyReleased(e);
-				if (e.getKeyCode() == KeyEvent.VK_F1)
+				if (e.getKeyCode() == KeyEvent.VK_CONTROL)
 				{
-					centralLabel.setText(name + "_up_F1");
+					downUpLabel.setText(name + "_up_Control");
 				}
 				if (e.getKeyCode() == KeyEvent.VK_CONTROL)
 				{
-					centralLabel.setText(name + "_up_CONTROL");
+					centralLabel.setText(name + "_up_Control");
 				}
 			}
 		};

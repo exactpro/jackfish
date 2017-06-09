@@ -36,10 +36,13 @@
             <toolTip id="Tooltip" xpath="//body" owner="" addition="Many"/>
             <menu id="Menu" xpath="//body" owner="" addition="Many"/>
             <menuItem id="MenuItem" xpath="//body" owner="" addition="Many"/>
-            <row id="Header" xpath="//tr[1]" owner=""/>
-            <table id="tt" owner="" rows="Rows" header="Header"/>
-            <row id="Rows" xpath="//tr[2]" owner=""/>
-            <table id="tttt" xpath="//table" owner=""/>
+            <button id="buttonShowArea" owner="owner" name="showButton" addition="Many"/>
+            <button id="buttonHideArea" owner="owner" name="hideButton" addition="Many"/>
+            <button id="countButton" owner="" name="countButton"/>
+            <button id="countButtonClear" owner="" name="countButtonClear"/>
+            <label id="countLabel" owner="" name="countLabel"/>
+            <label id="pressLabel" owner="" name="pressLabel"/>
+            <label id="downUpLabel" owner="" name="downUpLabel"/>
         </run>
         <onClose/>
         <close>
