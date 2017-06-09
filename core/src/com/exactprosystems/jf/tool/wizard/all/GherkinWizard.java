@@ -31,12 +31,8 @@ import gherkin.ast.Step;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.geometry.Pos;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.TreeItem;
-import javafx.scene.control.TreeView;
+import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import org.fxmisc.richtext.StyleClassedTextArea;
@@ -53,14 +49,56 @@ import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 @WizardAttribute(
-        name            = "Gherkin wizard", 
-        pictureName         = "GherkinWizard.jpg", 
-        category            = WizardCategory.MATRIX, 
-        shortDescription    = "This wizard create matrix structure from Gherkin code", 
-        detailedDescription = "This wizard create matrix structure from Gherkin code", 
-        experimental 		= false, 
-        strongCriteries     = true, 
-        criteries           = { TestCase.class, MatrixFx.class }
+        name            = "Gherkin wizard",
+        pictureName         = "GherkinWizard.jpg",
+        category            = WizardCategory.MATRIX,
+        shortDescription    = "This wizard create matrix structure from Gherkin code",
+        experimental 		= false,
+        strongCriteries     = true,
+        criteries           = { TestCase.class, MatrixFx.class },
+		detailedDescription = "{{`On left side editor, in which pasting Gherkin text. The editor has highlighting of Gherkin keywords.`}}"
+				+ "{{`When you pasting a text, you may push the button {{$Preview$}} on right side for show preview structure.`}}"
+				+ "{{`On a {{$tree$}}, under the button Preview, shows simple structure of matrix.`}}"
+				+ "{{`The {{$Future$}} keyword will translated to comment for first TestCase`}}"
+				+ "{{`The {{$Scenario$}} keywords will translated to TestCase with description`}}"
+				+ "{{`The other steps ({{$Given, And, etc$}}) will translated to Step with description`}}"
+				+ "{{``}}"
+				+ "{{`{{3Example:3}}`}}"
+				+ "{{`For a Gherkin code above will generate next items ( after push the button {{$Accept$}} ):`}}"
+				+ "{{#// Some terse yet descriptive text of what is desired\n"
+				+ "// In order to realize a named business value\n"
+				+ "// As an explicit system actor\n"
+				+ "// I want to gain some beneficial outcome which furthers the goal\n"
+				+ "#TestCase;#Kind;#Depends;#For\n"
+				+ "TestCase (Scenario) Some determinable business situation;;;\n"
+				+ "    #Step;#Kind;#For;#Depends\n"
+				+ "    'Step [Given ] some precondition';;;\n"
+				+ "    #EndStep\n"
+				+ "\n"
+				+ "    #Step;#Kind;#For;#Depends\n"
+				+ "    'Step [And ] some other precondition';;;\n"
+				+ "    #EndStep\n"
+				+ "\n"
+				+ "    #Step;#Kind;#For;#Depends\n"
+				+ "    'Step [When ] some action by the actor';;;\n"
+				+ "    #EndStep\n"
+				+ "\n"
+				+ "    #Step;#Kind;#For;#Depends\n"
+				+ "    'Step [And ] some other action';;;\n"
+				+ "    #EndStep\n"
+				+ "\n"
+				+ "    #Step;#Kind;#For;#Depends\n"
+				+ "    'Step [And ] yet another action';;;\n"
+				+ "    #EndStep\n"
+				+ "\n"
+				+ "    #Step;#Kind;#For;#Depends\n"
+				+ "    'Step [Then ] some testable outcome is achieved';;;\n"
+				+ "    #EndStep\n"
+				+ "\n"
+				+ "    #Step;#Kind;#For;#Depends\n"
+				+ "    'Step [And ] something else we can check happens too';;;\n"
+				+ "    #EndStep\n"
+				+ "#}}"
         )
 public class GherkinWizard extends AbstractWizard
 {
@@ -135,7 +173,8 @@ public class GherkinWizard extends AbstractWizard
         VBox.setVgrow(textArea, Priority.ALWAYS);
         borderPane.setCenter(vBox);
 
-        HBox hBox = new HBox();
+		SplitPane splitPane = new SplitPane();
+
 
         VBox box = new VBox();
         box.setPrefWidth(350.0);
@@ -149,9 +188,8 @@ public class GherkinWizard extends AbstractWizard
         box.getChildren().add(treeView);
         VBox.setVgrow(treeView, Priority.ALWAYS);
 
-        hBox.getChildren().addAll(Common.createSpacer(Common.SpacerEnum.HorizontalMid), box,
-                Common.createSpacer(Common.SpacerEnum.HorizontalMid));
-        borderPane.setRight(hBox);
+		splitPane.getItems().addAll(vBox, box);
+        borderPane.setCenter(splitPane);
     }
 
     private List<MatrixItem> createStructure(Consumer<Exception> onError)

@@ -13,11 +13,16 @@ import com.exactprosystems.jf.api.wizard.WizardCategory;
 import com.exactprosystems.jf.api.wizard.WizardManager;
 import com.exactprosystems.jf.common.Settings;
 import com.exactprosystems.jf.common.Settings.SettingsValue;
+import com.exactprosystems.jf.common.documentation.DocumentationBuilder;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
+import com.exactprosystems.jf.common.report.ContextHelpFactory;
+import com.exactprosystems.jf.common.report.ReportBuilder;
 import com.exactprosystems.jf.common.version.VersionInfo;
 import com.exactprosystems.jf.documents.Document;
 import com.exactprosystems.jf.documents.DocumentFactory;
 import com.exactprosystems.jf.documents.config.Configuration;
+import com.exactprosystems.jf.documents.config.Context;
+import com.exactprosystems.jf.documents.matrix.parser.items.MatrixItem;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.ContainingParent;
 import com.exactprosystems.jf.tool.CssVariables;
@@ -277,19 +282,26 @@ public class MainController implements Initializable, ContainingParent
 			this.menuHelp.getItems().add(0, wizard);
 
 			Map<WizardCategory, Menu> map = Arrays.stream(WizardCategory.values())
-					.collect(Collectors.toMap(Function.identity(), v -> {
-						Menu menu = new Menu(v.toString());
-						wizard.getItems().add(menu);
-						return menu;
-					}));
+					.collect(Collectors.toMap(Function.identity(), v -> Stream.of(v)
+							.map(WizardCategory::toString)
+							.map(Menu::new)
+							.peek(wizard.getItems()::add)
+							.findFirst()
+							.orElse(null))
+					);
 
 			wizardManager.allWizards().forEach(wizardClass -> {
 				WizardCategory wizardCategory = wizardManager.categoryOf(wizardClass);
 				String wizardName = wizardManager.nameOf(wizardClass);
 				MenuItem menuItem = new MenuItem(wizardName);
 
-				//TODO replace via ReportBuilder/alert
-				menuItem.setOnAction(e -> System.err.println(wizardManager.detailedDescriptionOf(wizardClass)));
+				menuItem.setOnAction(e -> Common.tryCatch(() -> {
+					Context context = factory.createContext();
+					ReportBuilder report = new ContextHelpFactory().createReportBuilder(null, null, new Date());
+					MatrixItem help = DocumentationBuilder.createHelpForWizard(report, context, wizardClass);
+					DialogsHelper.showHelpDialog(context, wizardName, report, help);
+				},""));
+
 				map.get(wizardCategory).getItems().add(menuItem);
 			});
 

@@ -547,7 +547,7 @@ public abstract class DialogsHelper
         Dialog<?> dialog = new Alert(Alert.AlertType.INFORMATION);
         Common.addIcons(((Stage) dialog.getDialogPane().getScene().getWindow()));
         dialog.getDialogPane().setContent(browser);
-        dialog.getDialogPane().setPrefWidth(1024);
+        dialog.getDialogPane().setPrefWidth(1124);
         dialog.getDialogPane().setPrefHeight(768);
         dialog.setResizable(true);
         dialog.getDialogPane().setHeader(new Label());
