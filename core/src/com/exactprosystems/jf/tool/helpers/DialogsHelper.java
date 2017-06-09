@@ -739,7 +739,7 @@ public abstract class DialogsHelper
 			{
 				Configuration configuration = factory.getConfiguration();
 				boolean addButton = configuration != null;
-				ReportBrowser reportBrowser = new ReportBrowser(file);
+				ReportBrowser reportBrowser = new ReportBrowser(factory.createContext(), file);
 				Dialog<ButtonType> dialog = new Dialog<>();
 				Common.addIcons(((Stage) dialog.getDialogPane().getScene().getWindow()));
 				if (addButton)

@@ -315,7 +315,11 @@ public class HTMLReportBuilder extends ReportBuilder
 		}
 		writer.fwrite("<tr id='tr_%s'>", id);
 		writer.fwrite("<td class='timestamp'>%s</td>", DateTime.current().str());
-		writer.fwrite("<th scope='row'>%03d</th>", item.getNumber());
+		writer.fwrite(
+				  "<th scope='row'>\n"
+				+ "  <a href='javascript:void(0)' source='%s'>%03d</a>\n"
+				+ "</th>\n",
+				item.getMatrix().getName(), item.getNumber());
 		writer.fwrite("<td>%s</td>", itemId);
 		writer.fwrite("<td><a href='javascript:void(0)' class='showBody'>%s</a></td>", item.getItemName());
 		writer.fwrite("<td id='hs_%s'> </td>", id);

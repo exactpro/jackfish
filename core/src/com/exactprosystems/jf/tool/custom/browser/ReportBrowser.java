@@ -8,8 +8,14 @@
 package com.exactprosystems.jf.tool.custom.browser;
 
 import com.exactprosystems.jf.api.common.Sys;
+import com.exactprosystems.jf.common.MatrixRunner;
+import com.exactprosystems.jf.documents.config.Context;
+import com.exactprosystems.jf.documents.matrix.parser.items.MatrixItem;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.CssVariables;
+import com.exactprosystems.jf.tool.custom.tab.CustomTab;
+import com.exactprosystems.jf.tool.helpers.DialogsHelper;
+import com.exactprosystems.jf.tool.matrix.MatrixFx;
 import javafx.application.Platform;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Worker;
@@ -28,23 +34,30 @@ import javafx.scene.web.WebHistory;
 import javafx.scene.web.WebView;
 import javafx.stage.Stage;
 import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
+import org.w3c.dom.events.EventListener;
+import org.w3c.dom.events.EventTarget;
 
 import java.awt.*;
 import java.awt.datatransfer.StringSelection;
 import java.io.File;
+import java.io.FileReader;
+import java.util.Date;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.stream.IntStream;
 
 public class ReportBrowser extends BorderPane
 {
 	private TabPane tabPane;
 	private File reportFile;
 
-	public ReportBrowser(File reportFile)
+	public ReportBrowser(Context context, File reportFile)
 	{
 		this.getStyleClass().add(CssVariables.BROWSER);
 		this.reportFile = reportFile;
-		initTabPane();
+		initTabPane(context);
 		initToolbar();
 	}
 
@@ -91,11 +104,11 @@ public class ReportBrowser extends BorderPane
 		this.setTop(toolBar);
 	}
 
-	private void initTabPane()
+	private void initTabPane(Context context)
 	{
 		this.tabPane = new TabPane();
 		this.setCenter(this.tabPane);
-		CustomBrowserTab mainTab = new CustomBrowserTab();
+		CustomBrowserTab mainTab = new CustomBrowserTab(context);
 		mainTab.load(this.reportFile);
 		mainTab.setClosable(false);
 		this.tabPane.getTabs().add(mainTab);
@@ -151,7 +164,7 @@ public class ReportBrowser extends BorderPane
 			});
 		}
 
-		public CustomBrowserTab()
+		public CustomBrowserTab(Context context)
 		{
 			WebView view = new WebView();
 			this.engine = view.getEngine();
@@ -174,6 +187,65 @@ public class ReportBrowser extends BorderPane
 						title = location.substring(location.lastIndexOf(File.separator) + 1);
 					}
 					this.textTab.setText(title);
+
+					EventListener listener = evt ->
+					{
+						Platform.runLater(() -> {
+							EventTarget aElement = evt.getTarget();
+							if (aElement instanceof Element)
+							{
+								Element element = (Element) aElement;
+								String matrixSourcePath = element.getAttribute("source");
+								final int number = Integer.parseInt(element.getTextContent());
+								final MatrixFx[] matrix = {null};
+								CustomTab customTab = Common.checkDocument(new File(matrixSourcePath));
+
+								if (customTab != null)
+								{
+									com.exactprosystems.jf.documents.Document document = customTab.getDocument();
+									if (document instanceof MatrixFx)
+									{
+										matrix[0] = (MatrixFx) document;
+										customTab.getTabPane().getSelectionModel().select(customTab);
+									}
+									else
+									{
+
+									}
+								}
+								else
+								{
+									Common.tryCatch(() -> {
+										MatrixRunner runner = context.createRunner(matrixSourcePath, null, new Date(), null);
+										matrix[0] = (MatrixFx) context.getFactory().createMatrix(matrixSourcePath, runner);
+										matrix[0].load(new FileReader(matrixSourcePath));
+										matrix[0].display();
+									}, "Error on load matrix");
+								}
+
+								if (matrix[0] != null)
+								{
+									MatrixItem item = matrix[0].find(matrixItem -> matrixItem.getNumber() == number);
+									if (item != null)
+									{
+										matrix[0].setCurrent(item, false);
+									}
+									else
+									{
+										DialogsHelper.showError(String.format("Can't find item with number '%s' in a matrhix '%s'", number, matrixSourcePath));
+									}
+								}
+							}
+						});
+					};
+
+					Document doc = this.engine.getDocument();
+					NodeList allA = doc.getElementsByTagName("a");
+					IntStream.range(0, allA.getLength())
+							.mapToObj(allA::item)
+							.filter(node -> node.getAttributes().getNamedItem("source") != null)
+							.filter(node -> node instanceof EventTarget)
+							.forEach(node -> ((EventTarget) node).addEventListener("click", listener, false));
 				}
 			});
 
@@ -190,7 +262,7 @@ public class ReportBrowser extends BorderPane
 
 			this.engine.setCreatePopupHandler(param ->
 			{
-				CustomBrowserTab customTab = new CustomBrowserTab();
+				CustomBrowserTab customTab = new CustomBrowserTab(context);
 				this.getTabPane().getTabs().add(customTab);
 				this.getTabPane().getSelectionModel().select(customTab);
 				// RM38890 the tab needs be resized for display image

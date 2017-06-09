@@ -1,5 +1,15 @@
 #Id;#NameSpace
 LIB;Standart libraries
+    #Id;#SubCase;#str
+    callLibFromLib2;;
+        #Id;#Call;#str
+        CALL_1;LIB_2.callFromLib1;str
+
+        #Return
+        CALL_1
+
+    #EndSubCase
+
     #Id;#SubCase
     SUB_1;
         #Id;#Action;#Decoraded

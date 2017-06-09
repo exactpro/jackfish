@@ -1,0 +1,11 @@
+#Id;#NameSpace
+LIB_2;Standart libraries
+    #Id;#SubCase;#str
+    callFromLib1;;
+        #Return
+        str.toUpperCase()
+
+    #EndSubCase
+
+#EndNameSpace
+

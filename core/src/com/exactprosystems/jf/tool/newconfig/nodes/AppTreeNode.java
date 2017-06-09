@@ -160,7 +160,6 @@ public class AppTreeNode extends TreeNode
 			}).collect(Collectors.toList()));
 
 			menu.getItems().addAll(
-					menuWizard,
 					ConfigurationTreeView.createDisabledItem(ADD_NEW_APP),
 					ConfigurationTreeView.createDisabledItem(TEST_VERSION),
 					ConfigurationTreeView.createDisabledItem(REFRESH),
@@ -169,6 +168,7 @@ public class AppTreeNode extends TreeNode
 					ConfigurationTreeView.createItem(REMOVE, () -> model.removeAppEntry(getEntry()), String.format("Error on remove entry '%s'", getEntry().toString())),
 					ConfigurationTreeView.createItem(ADD_ALL_KNOWN_PARAMS, () -> model.addAllAppParams(getEntry()), String.format("Error on add all parameters for entry '%s'", getEntry())),
 					ConfigurationTreeView.createItem(SHOW_HELP, () -> model.showAppHelp(getEntry()), "Error on show help"),
+					menuWizard,
 					ConfigurationTreeView.createDisabledItem("Git", null)
 			);
 			return Optional.of(menu);
