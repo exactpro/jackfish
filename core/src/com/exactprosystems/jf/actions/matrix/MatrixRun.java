@@ -22,6 +22,7 @@ import com.exactprosystems.jf.documents.config.Context;
 import com.exactprosystems.jf.documents.matrix.parser.Parameters;
 import com.exactprosystems.jf.functions.HelpKind;
 
+import java.io.File;
 import java.io.Reader;
 import java.util.Date;
 
@@ -89,7 +90,7 @@ public class MatrixRun extends AbstractAction
         try(Context newContext = context.getFactory().createContext();
             Reader reader = CommonHelper.readerFromFileName(this.matrix) )
 		{
-			MatrixRunner runner = newContext.createRunner(this.matrix, reader, this.at, this.parameter);
+			MatrixRunner runner = newContext.createRunner(new File(this.matrix).getAbsolutePath(), reader, this.at, this.parameter);
             newContext.setOut(context.getOut());
             runner.setStartTime(this.at);
             runner.start();
