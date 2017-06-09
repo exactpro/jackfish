@@ -28,7 +28,7 @@ import java.util.stream.Collectors;
 
 @MatrixItemAttribute(
 		description 	= "Sets up an event handler for all TestCases or Steps.",
-		examples 		= "{{##SetHandler#}}",
+		examples 		= "{{#\n#SetHandler#}}",
 		shouldContain 	= { Tokens.SetHandler },
 		mayContain 		= { Tokens.Off, Tokens.RepOff, Tokens.Kind },
 		real			= true,

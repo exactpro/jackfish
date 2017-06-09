@@ -21,7 +21,8 @@ import java.util.List;
 @MatrixItemAttribute(
 		description 	= "This operator describes a line of the operator If which is performed if condition  - false." +
 							" Line Else is only one for If.",
-		examples 		= "{{##Id;#Let\n" +
+		examples 		= "{{#\n" +
+							"#Id;#Let\n" +
 							"year;new DateTime().getYears(new Date())\n" +
 							"#If\n" +
 							"year == 2017\n" +

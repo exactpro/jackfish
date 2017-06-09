@@ -30,13 +30,14 @@ import java.util.Map;
 import java.util.concurrent.atomic.AtomicReference;
 
 @MatrixItemAttribute(
-		description 	= "Operator For is used to organize a cycle which should be performed a given number of times. This cycle can for for increase and reduction." +
+		description 	= "Operator For is used to organize a cycle which should be performed a given number of times. This cycle can for for increase and reduction. " +
 							"Fields:\n" +
-							"For – a variable is given what iteration will be performed by.\n" +
-							"From -  a numeric value which a cycle will be started with is given. \n" +
+							"For - a variable is given what iteration will be performed by.\n" +
+							"From - a numeric value which a cycle will be started with is given. \n" +
 							"To - a numeric value which is reached and the last iteration will be performed.  \n" +
-				"Step – a step, which will change the value in the field from.",
-		examples 		= "{{##For;#From;#To;#Step\n" +
+				"Step - a step, which will change the value in the field from.",
+		examples 		= "{{#\n" +
+							"#For;#From;#To;#Step\n" +
 							"a;1;10;1\n" +
 							"#Action;#a\n" +
 							"Print;a\n" +

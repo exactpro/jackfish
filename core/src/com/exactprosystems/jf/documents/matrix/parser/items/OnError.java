@@ -26,21 +26,22 @@ import com.exactprosystems.jf.documents.matrix.parser.listeners.IMatrixListener;
 import java.util.List;
 
 @MatrixItemAttribute(
-		description 	= "This operator is used to proceed failures in matrix when it’s running.  It can be called if there is a failure only." +
-							" It can be put in: TestCase, SubCase, For, ForEach, Step and OnError. \n" +
-							"If there are failures in these blocks, an error-handler is searched and it operates. In this case a failure feature is removed from the block." +
+		description 	= "This operator is used to proceed failures in matrix when it's running.  It can be called if there is a failure only." +
+							" It can be put in: TestCase, SubCase, For, ForEach, Step and OnError.\n " +
+							" If there are failures in these blocks, an error-handler is searched and it operates. In this case a failure feature is removed from the block." +
 							"  After a failure has been proceeded the block is performed if there are no more mistakes after the operator OnError.\n" +
 							"By performing OnError two local variables error and err are created implicitly.\n" +
-							"err – is a structured object, which contains fields \n" +
-							"err.Where – returns the action name where there was a failure. \n" +
-							"err.Message – returns a failure message err.\n" +
-							"Kind – returns a failure type.\n" +
+							"err - is a structured object, which contains fields \n" +
+							"err.Where - returns the action name where there was a failure. \n" +
+							"err.Message - returns a failure message err.\n" +
+							"Kind - returns a failure type.\n" +
 							"error variable keeps a failure massage. \n" +
 							"OnError error-handler is prior to the global error-handler.",
-		examples 		= "Create action SQLConnectbut don’t give the parameter  Connection to it.. The arosen failure is proceeded and discovered.\n" +
+		examples 		= "Create action SQLConnectbut don't give the parameter  Connection to it.. The arosen failure is proceeded and discovered.\n" +
 							"As a result of the proceeded example the following line will be displayed in" +
 							" console - Where error was = ActionItem:SQLexecute." +
-							"{{##TestCase;#Kind;#Depends;#For\n" +
+							"{{#\n" +
+							"#TestCase;#Kind;#Depends;#For\n" +
 							"Test case;Never;;\n" +
 							"#Id;#Action;#Query;#Connection\n" +
 							"SQLEXEC1;SQLexecute;'';\n" +

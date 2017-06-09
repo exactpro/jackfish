@@ -33,7 +33,8 @@ import java.util.stream.Collectors;
 
 @MatrixItemAttribute(
 		description 	= "This operator is used to describe an object MapMessage of the type given.",
-		examples 		= "{{##Id;#RawMessage;#Client\n" +
+		examples 		= "{{#\n" +
+							"#Id;#RawMessage;#Client\n" +
 							"MSG1;none;FIX\n" +
 							"$;MessageType\n" +
 							"0;none\n" +

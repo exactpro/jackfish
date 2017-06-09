@@ -29,7 +29,8 @@ import java.util.Map;
 
 @MatrixItemAttribute(
 		description 	= "This operator breaks  SubCase performing and returns the result. ",
-		examples 		= "{{##Id;#SubCase\n" +
+		examples 		= "{{#\n" +
+							"#Id;#SubCase\n" +
 							"SUB_1;\n" +
 							"#Id;#Let\n" +
 							"result;2+2*2\n" +

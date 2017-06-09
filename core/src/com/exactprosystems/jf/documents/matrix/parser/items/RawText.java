@@ -26,7 +26,8 @@ import java.util.stream.Collectors;
 
 @MatrixItemAttribute(
 		description 	= "This operator is used to describe an object as Text. It has its own mini editor.",
-		examples 		= "{{##Id;#RawText\n" +
+		examples 		= "{{#\n" +
+							"#Id;#RawText\n" +
 							"TEXT1;Text\n" +
 							"\"Hello world\"\n" +
 							"#EndRawText#}}",

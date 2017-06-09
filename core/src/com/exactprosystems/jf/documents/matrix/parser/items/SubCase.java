@@ -28,10 +28,11 @@ import java.util.List;
 import java.util.Map;
 
 @MatrixItemAttribute(
-        description 	= "This operator describes a subprogram. In parameters the program arguments are described, factual parameters are used with Call. \n" +
-							"SubCase is performed by the Call operator only." +
+        description 	= "This operator describes a subprogram. In parameters the program arguments are described, factual parameters are used with Call.\n " +
+							" SubCase is performed by the Call operator only." +
 							" SubCase operator can even be located in commented testcases.",
-		examples 		= "{{##Id;#SubCase\n" +
+		examples 		= "{{#\n" +
+							"#Id;#SubCase\n" +
 							"SUB_1;\n" +
 							"#Action;#Greeting\n" +
 							"Print;'Hello!'\n" +
