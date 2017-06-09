@@ -30,8 +30,9 @@ import java.util.Map;
 @MatrixItemAttribute(
         description 	= "This operator creates matrix branch depending on condition.  The operator if takes a logic expression." +
 							" If true is a result of this expression, a code block inside of if operator is performed. \n" +
-							"If the expression is false, the operator line Else is performed. If this line isn’t there, an action is performed continually. ",
-		examples 		= "{{##Id;#Let\n" +
+							"If the expression is false, the operator line Else is performed. If this line isn't there, an action is performed continually. ",
+		examples 		= "{{#\n" +
+							"#Id;#Let\n" +
 							"year;new DateTime().getYears(new Date())\n" +
 							"#If\n" +
 							"year == 2017\n" +

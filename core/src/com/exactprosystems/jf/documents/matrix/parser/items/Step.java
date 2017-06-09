@@ -32,7 +32,8 @@ import java.util.stream.Collectors;
 		description 	= "This is an analogue of TestCase block , it is used to divide TestCase. \n" +
 							"Each Step keeps its result in a separate line in a system table  (see action ResultTable).\n" +
 							"Step which contains an action ResultTable is always Passed.",
-		examples 		= "{{##Step;#Kind\n" +
+		examples 		= "{{#\n" +
+                            "#Step;#Kind\n" +
 							";\n" +
 							"#EndStep#}}",
 		shouldContain 	= { Tokens.Step },

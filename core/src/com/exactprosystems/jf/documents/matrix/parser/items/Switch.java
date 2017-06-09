@@ -28,11 +28,12 @@ import java.util.List;
 import java.util.Map;
 
 @MatrixItemAttribute(
-        description 	= "This operator allows to define multiple branches. With case и default the operator will be performed which condition is true. If no case suits, default is performed.",
+        description 	= "This operator allows to define multiple branches. With case and default the operator will be performed which condition is true. If no case suits, default is performed.",
 		examples 		= "In switch is transferred true in case are placed expressions as regular. \n" +
 							"In the field switch number 1 is passed, which matches the number from the first Case given. \n" +
 							"If number 2 is passed to Switch, the second Case is performed" +
-							"{{##Switch\n" +
+							"{{#\n" +
+							"#Switch\n" +
 							"1\n" +
 							"#Case\n" +
 							"1\n" +

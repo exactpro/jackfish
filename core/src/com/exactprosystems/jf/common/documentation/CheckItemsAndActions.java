@@ -13,7 +13,11 @@ public class CheckItemsAndActions {
     }
 
     public static void main(String[] args){
+        checkItems();
+        checkActions();
+    }
 
+    private static void checkItems(){
         for (Class<?> clazz : Parser.knownItems)
         {
             MatrixItemAttribute attribute = clazz.getAnnotation(MatrixItemAttribute.class);
@@ -27,24 +31,32 @@ public class CheckItemsAndActions {
                 continue;
             }
 
-            String examples = attribute.examples();
+            checkPartOfAttribute(attribute.description(), clazz.getSimpleName());
+            checkPartOfAttribute(attribute.examples(), clazz.getSimpleName());
 
-            if (!Str.IsNullOrEmpty(examples)){
-                Pattern openPattern = Pattern.compile("(\\{\\{[#])");
-                Pattern closePattern = Pattern.compile("([#]\\}\\})");
-                Matcher open = openPattern.matcher(examples);
-                int openCount = 0;
-                int closeCount = 0;
-                while (open.find()){
-                    openCount +=1;
-                }
-                Matcher close = closePattern.matcher(examples);
-                while (close.find()){
-                    closeCount +=1;
-                }
-                if (openCount != closeCount){
-                    System.out.println(clazz.getSimpleName());
-                }
+        }
+    }
+
+    private static void checkActions(){
+
+    }
+
+    private static void checkPartOfAttribute(String string, String className){
+        if (!Str.IsNullOrEmpty(string)){
+            Pattern openPattern = Pattern.compile("(\\{\\{[1|2|3|4|5|$|#|@|\\^|`|_|*|/|&|=|-])");
+            Pattern closePattern = Pattern.compile("([1|2|3|4|5|$|#|@|\\^|`|_|*|/|&|=|-]\\}\\})");
+            Matcher open = openPattern.matcher(string);
+            int openCount = 0;
+            int closeCount = 0;
+            while (open.find()){
+                openCount +=1;
+            }
+            Matcher close = closePattern.matcher(string);
+            while (close.find()){
+                closeCount +=1;
+            }
+            if (openCount != closeCount){
+                System.out.println(className);
             }
         }
     }

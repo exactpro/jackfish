@@ -34,7 +34,8 @@ import java.util.Map;
 							"If there is no name, this expression is performed. The variable name is given In the left field," +
 							" in the right field is the variable value or expression, which result will be saved in the variable.",
 		examples 		= "The variable  greeting is set with value Hello Wolrd!" +
-							"{{##Id;#Let\n" +
+							"{{#\n" +
+							"#Id;#Let\n" +
 							"greeting;'Hello world!'#}}",
 		shouldContain 	= { Tokens.Let },
 		mayContain 		= { Tokens.Id, Tokens.Off, Tokens.RepOff, Tokens.Global }, 

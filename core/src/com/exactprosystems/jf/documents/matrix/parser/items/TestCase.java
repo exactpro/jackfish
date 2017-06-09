@@ -28,16 +28,17 @@ import java.util.Map;
 
 @MatrixItemAttribute(
 		description 	= "The main operator in matrix directory. It is used to logically divide matrix in steps." +
-							" This is the high level operator, can’t be put in any other actions or operators including TestCase. \n" +
+							" This is the high level operator, can't be put in any other actions or operators including TestCase. \n" +
 							"All TestCase are performed one by one, independently of the performed results in previous testcases." +
 							" Nevertheless, the dependence can be set with the field Depends.  If TestCase from the parameter Depends is failed,the dependend one will be failed too.\n" +
 							"Each TestCase also contains Screenshot parameter which is used to specify when in the TestCase given a screenshot is made.  \n" +
 							"TestCase ID is used to shortly identify and link to it in the parameter BeforeTestCase of actions TableReport, TextReport etc.\n" +
 							"Each TestCase keeps the performed result in a separate line in a system table  (see action ResultTable). \n" +
-							"TestCase which has an action ResultTable is always Passed.\n" +
-							"EachTestCase introduces its name space, that means actions and variables from one TestCase aren’t accessible from another one.\n" +
+							" TestCase which has an action ResultTable is always Passed.\n" +
+							"EachTestCase introduces its name space, that means actions and variables from one TestCase aren't accessible from another one.\n" +
 							"To get the access  from the different TestCase is essentially to enter the parameter  Global for an action.(mark checkbox with G)",
-		examples 		= "{{##TestCase;#Kind;#Depends;#For\n" +
+		examples 		= "{{#\n" +
+							"#TestCase;#Kind;#Depends;#For\n" +
 							";;;#}}",
 		shouldContain 	= { Tokens.TestCase },
 		mayContain 		= { Tokens.Id, Tokens.RepOff, Tokens.Off, Tokens.Kind, Tokens.For, Tokens.Depends },

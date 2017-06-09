@@ -30,7 +30,8 @@ import java.util.Map;
 				"After one of the blocks  case has been performed an operator  switch is being broken.\n" +
 				"Example №1:\n" +
 				"Variable a is transmitted into field  switch. The  Case will be performed which value matches a variable value.\n" +
-				"{{##Switch\n" +
+				"{{#\n" +
+				"#Switch\n" +
 				"a\n" +
 				"#Case\n" +
 				"1\n" +
@@ -40,10 +41,11 @@ import java.util.Map;
 				"2\n" +
 				"#Action;#Greeting\n" +
 				"Print;'Bye!'\n" +
-				"#EndSwitch#}}" +
+				"#EndSwitch#}} \n" +
 				"Logical data type which equals true is transferred into field  switch \n" +
-				"The Case will be performed, which field’s expression will returns true." +
-				"{{##Id;#Let\n" +
+				"The Case will be performed, which field's expression will returns true." +
+				"{{#\n" +
+				"#Id;#Let\n" +
 				"expression;'Annoucements(425)'\n" +
 				"#Switch\n" +
 				"true\n" +

@@ -80,12 +80,6 @@ public class DocumentationBuilder
         addTable(help, "{{*Document Information*}}",    false,  table2, new int[] { 25, 23, 23, 25 },  evaluator);
         addTable(help, "{{*Abbreviations*}}",           false,  table3, new int[] { 50, 50 },  evaluator);
         addTextLine(help, "{{&&}}");
-
-//        help.insert(help.count(), new HelpItem(SubCase.class));
-//        help.insert(help.count(), new HelpItem(NameSpace.class));
-//        help.insert(help.count(), new HelpActionItem(TableSelect.class));
-
-
         
         addContent(help, "{{*Table of contenst*}}", new Content());
         addTextLine(help, "{{&&}}");
@@ -101,20 +95,17 @@ public class DocumentationBuilder
 
         addTextLine(help, "{{5All controls5}}");
         addAllControlsTable(help, "All controls", context, operations.subList(0, size/3), true, true);
-//        addTextLine(help, "{{&&}}");
         addAllControlsTable(help, "All controls - continue", context, operations.subList(size/3, size*2/3), true, true);
-//        addTextLine(help, "{{&&}}");
         addAllControlsTable(help, "All controls - end", context, operations.subList(size*2/3, size), true, true);
-//        addTextLine(help, "{{&&}}");
-        
+
         addTextLine(help, "{{5Matrix syntax5}}");
         addAllItems(help);
         addTextLine(help, "{{&&}}");
         
-        addTextLine(help, "{{5Actions by groups5}}");
+        /*addTextLine(help, "{{5Actions by groups5}}");
         addAllActions(help);
         addTextLine(help, "{{&&}}");
-
+*/
 
         
         return help;

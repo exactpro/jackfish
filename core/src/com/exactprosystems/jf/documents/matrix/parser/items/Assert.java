@@ -29,12 +29,13 @@ import java.util.Map;
 
 @MatrixItemAttribute(
 		description 	= "This operator is used to check an assertion. If an assertion is correct, the matrix will run," +
-							" if an assertion is incorrect, the operator is terminated and it is reported in user’s message." +
+							" if an assertion is incorrect, the operator is terminated and it is reported in user's message." +
 							" This operator is used to check equality of expected and actual values." +
 							"Fields:\n" +
 							"Assert - assertion.\n" +
-							"Message – a message, which will be reported",
-		examples 		= "{{##Assert;#Message\n" + "a == 10;'The value of ' + a + ' doesn match 10'#}}",
+							"Message - a message, which will be reported",
+		examples 		= "{{#\n" +
+							"#Assert;#Message\n" + "a == 10;'The value of ' + a + ' doesn match 10'#}}",
 		shouldContain 	= { Tokens.Assert },
 		mayContain 		= { Tokens.Off, Tokens.RepOff, Tokens.Message }, 
 		parents			= { Case.class, Else.class, For.class, ForEach.class, If.class,

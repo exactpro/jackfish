@@ -25,8 +25,9 @@ import java.util.List;
 
 @MatrixItemAttribute(
 		description 	= "This operator is used to break cycles  for, forEach and while.",
-		examples 		= "Create cycle from 1 to 10 using an operator For, cycle when variable is а = 9 break a cycle using an operator Break." +
-							"{{##For;#From;#To;#Step \n" +
+		examples 		= "Create cycle from 1 to 10 using an operator For, cycle when variable is a = 9 break a cycle using an operator Break." +
+							"{{#\n" +
+							"#For;#From;#To;#Step \n" +
 							"a;1;10;1 \n" +
 							"#If \n" +
 							"a == 9 \n" +

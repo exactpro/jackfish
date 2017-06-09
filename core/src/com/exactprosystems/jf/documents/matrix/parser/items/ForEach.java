@@ -33,9 +33,10 @@ import java.util.concurrent.atomic.AtomicReference;
 @MatrixItemAttribute(
 	description 	= "Operator ForEach is used to organize a cycle according the collection elements: massive, list, table, Map etc. \n" +
 						"Fields:\n" +
-						"ForEach – a variable name is given which is set with the next element value by each iteration.  \n" +
-						"In – a collection is given which is needed to organize a cycle.",
-	examples 		= "{{##ForEach;#In\n" +
+						"ForEach - a variable name is given which is set with the next element value by each iteration.  \n" +
+						"In - a collection is given which is needed to organize a cycle.",
+	examples 		= "{{#\n" +
+						"#ForEach;#In\n" +
 						"a;['First', 'Second']\n" +
 						"#Action;#a\n" +
 						"Print;a\n" +

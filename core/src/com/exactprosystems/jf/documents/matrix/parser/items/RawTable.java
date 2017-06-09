@@ -24,8 +24,9 @@ import java.util.List;
 import java.util.Map;
 
 @MatrixItemAttribute(
-		description 	= "This operator is used to describe an object asTable. In matrix editor there is a special mini editor for  rowText и rawMessage for this operator.",
-		examples 		= "{{##Id;#RawTable\n" +
+		description 	= "This operator is used to describe an object asTable. In matrix editor there is a special mini editor for  rowText and rawMessage for this operator.",
+		examples 		= "{{#\n" +
+							"#Id;#RawTable\n" +
 							"DATA1;Table\n" +
 							"@;newH\n" +
 							"0;newR\n" +
