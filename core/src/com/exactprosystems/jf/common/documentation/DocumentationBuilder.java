@@ -269,6 +269,12 @@ public class DocumentationBuilder
 
         for (Class<?> clazz : Parser.knownItems)
         {
+            Deprecated deprecated = clazz.getAnnotation(Deprecated.class);
+            if (deprecated != null)
+            {
+                continue;
+            }
+            
             MatrixItemAttribute attribute = clazz.getAnnotation(MatrixItemAttribute.class);
             if (attribute == null)
             {
@@ -303,6 +309,12 @@ public class DocumentationBuilder
 
             for (Map.Entry<Class<?>, ActionGroups> entry : map.entrySet())
             {
+                Deprecated deprecated = entry.getKey().getAnnotation(Deprecated.class);
+                if (deprecated != null)
+                {
+                    continue;
+                }
+                
                 if (entry.getValue() == groups)
                 {
                     groupItem.insert(groupItem.count(), new HelpActionItem((Class<? extends AbstractAction>) entry.getKey()));
