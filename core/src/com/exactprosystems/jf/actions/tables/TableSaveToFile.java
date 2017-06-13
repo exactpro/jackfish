@@ -27,7 +27,7 @@ import com.exactprosystems.jf.functions.Table;
 @ActionAttribute(
 		group					= ActionGroups.Tables,
 		generalDescription 		= "This action is used to save a table to the file with csv structure."
-				+ "{{`CSV (Comma-Separated Values) is a text format, used for displaying data from the table."
+				+ "{{`CSV (Comma-Separated Values)`}} is a text format, used for displaying data from the table."
 				+ "Specification: Each line in the file is one line from the table. The first line contains column titles.",
 		additionFieldsAllowed 	= false,
 		outputDescription 		= "True if saved successfully.",

@@ -1,5 +1,7 @@
 package com.exactprosystems.jf.common.documentation;
 
+import com.exactprosystems.jf.actions.ActionAttribute;
+import com.exactprosystems.jf.actions.ActionsList;
 import com.exactprosystems.jf.api.common.Str;
 import com.exactprosystems.jf.documents.matrix.parser.Parser;
 import com.exactprosystems.jf.documents.matrix.parser.items.*;
@@ -38,7 +40,16 @@ public class CheckItemsAndActions {
     }
 
     private static void checkActions(){
-
+        for (Class<?> clazz : ActionsList.actions)
+        {
+            ActionAttribute attr = clazz.getAnnotation(ActionAttribute.class);
+            if (attr != null){
+                checkPartOfAttribute(attr.generalDescription(), clazz.getSimpleName());
+                checkPartOfAttribute(attr.examples(), clazz.getSimpleName());
+                checkPartOfAttribute(attr.additionalDescription(), clazz.getSimpleName());
+                checkPartOfAttribute(attr.outputDescription(), clazz.getSimpleName());
+            }
+        }
     }
 
     private static void checkPartOfAttribute(String string, String className){

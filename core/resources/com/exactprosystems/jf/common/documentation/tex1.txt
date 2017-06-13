@@ -57,6 +57,11 @@
 %%color for code examples
 \definecolor{codecolor}{RGB}{0, 100, 0}
 
+\usepackage{sectsty}
+\sectionfont{\fontsize{25}{10}\selectfont}
+\subsectionfont{\fontsize{20}{10}\selectfont}
+\subsubsectionfont{\fontsize{15}{10}\selectfont}
+
 
 \begin{document}
 \newpage

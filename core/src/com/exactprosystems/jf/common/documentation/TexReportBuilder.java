@@ -123,16 +123,16 @@ public class TexReportBuilder extends ReportBuilder
 			case "2" + CM: return "}";
     
             // header 3
-			case OM + "3": return "\\\\Large{ \\\\subsubsection{ ";
-			case "3" + CM: return "} }";
+			case OM + "3": return "\\\\subsubsection{ ";
+			case "3" + CM: return "}";
     
             // header 4
-            case OM + "4": return "\\\\LARGE{ \\\\subsection{ ";
-            case "4" + CM: return "} }";
+            case OM + "4": return "\\\\subsection{ ";
+            case "4" + CM: return "}";
     
             // header 5
-			case OM + "5": return "\\\\huge{ \\\\section{ ";
-			case "5" + CM: return "} }";
+			case OM + "5": return "\\\\section{ ";
+			case "5" + CM: return "}";
     
             // style for identifiers
             case OM + "$": return "{\\\\color{codecolor} \\\\verb+";
