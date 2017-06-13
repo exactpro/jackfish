@@ -24,7 +24,7 @@ import java.awt.image.BufferedImage;
 		suffix					= "DSK",
 		generalDescription 		= "The purpose of the action is to capture the full screenshot along with the desktop.\n"
 				+ "This gives the user the advantage to see system notifications of third-party applications.  The disadvantage"
-				+ " is that the screenshot is captured on the ‘upper layer’, i.e the events/windows overlapped by other windows will not be seen. ",
+				+ " is that the screenshot is captured on the 'upper layer', i.e the events/windows overlapped by other windows will not be seen. ",
 		additionFieldsAllowed 	= false,
 		outputDescription 		= "An image which is grabbed from the desktop.", 
 		outputType 				= ImageWrapper.class,

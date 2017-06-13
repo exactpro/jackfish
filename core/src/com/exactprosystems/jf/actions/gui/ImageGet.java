@@ -29,7 +29,7 @@ import static com.exactprosystems.jf.actions.gui.Helper.message;
 		suffix					= "IMGGET",
 		generalDescription 		= "The purpose of this action is to get the screenshot of the started application."
 				+ "Without setting optional parameters the screenshot of the whole application is made. When setting the "
-				+ "Dialog parameter, the screenshot of the first element of ‘Self’ section is made. When setting the Dialog "
+				+ "Dialog parameter, the screenshot of the first element of 'Self' section is made. When setting the Dialog "
 				+ "and Name parameters, the screenshot of the element indicated in Name is made.",
 		additionFieldsAllowed 	= false,
 		outputDescription 		= "An image which is grabbed from the screen.", 

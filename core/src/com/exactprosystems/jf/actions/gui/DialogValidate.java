@@ -58,10 +58,10 @@ public class DialogValidate extends AbstractAction
 	@ActionFieldAttribute(name = dialogName, mandatory = true, description = "The dialog whose elements need to be checked for accessibility.")
 	protected String			dialog			= null;
 
-	@ActionFieldAttribute(name = doNotOpenName, mandatory = false, def = DefaultValuePool.False, description = " When true is set, the operations indicated in ‘On open’ section of the current dialog are performed.  False by default.")
+	@ActionFieldAttribute(name = doNotOpenName, mandatory = false, def = DefaultValuePool.False, description = " When true is set, the operations indicated in 'On open' section of the current dialog are performed.  False by default.")
 	protected Boolean			doNotOpen;
 
-	@ActionFieldAttribute(name = doNotCloseName, mandatory = false, def = DefaultValuePool.False, description = "When true is set, the operations indicated in ‘On close’ section of the current dialog are performed.  False by default.")
+	@ActionFieldAttribute(name = doNotCloseName, mandatory = false, def = DefaultValuePool.False, description = "When true is set, the operations indicated in 'On close' section of the current dialog are performed.  False by default.")
 	protected Boolean			doNotClose;
 
 	@Override

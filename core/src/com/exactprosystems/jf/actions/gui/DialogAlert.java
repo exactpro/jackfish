@@ -52,9 +52,9 @@ public class DialogAlert extends AbstractAction
 
 	@ActionFieldAttribute(name = performName, mandatory = true, description = "The PerformKind type. The parameter "
 			+ "responsible for actions with alert.  There are 3 states to the parameter:\n"
-			+ "Nothing – ignore the notification.\n"
-			+ "Accept – click “OK”.\n"
-			+ "Dismiss – click “Cancel”.")
+			+ "Nothing - ignore the notification.\n"
+			+ "Accept - click 'OK'.\n"
+			+ "Dismiss - click 'Cancel'.")
 	protected PerformKind perform = null;
 
 	@ActionFieldAttribute(name = textName, mandatory = false, def = DefaultValuePool.Null, description = "Used to input text in the corresponding field of notification.")

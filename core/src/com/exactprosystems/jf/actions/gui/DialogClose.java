@@ -33,7 +33,7 @@ import static com.exactprosystems.jf.actions.gui.Helper.message;
 		generalDescription 		= "The purpose of the action is to close the dialogs.  The dialog to be closed needs to"
 				+ " be described in the Close section of the dictionary. When working with swing and win plug-ins, Dialogs"
 				+ " can be closed without being described in the Close section because there is a capability to programmatically"
-				+ " close the window. In web the elements can’t be closed programmatically and require direct handling.",
+				+ " close the window. In web the elements can't be closed programmatically and require direct handling.",
 		outputDescription 		= "The number of dialogs closed. ",
 		outputType 				= Integer.class,
 		examples 				= "{{`1. Start the web application.`}}"
