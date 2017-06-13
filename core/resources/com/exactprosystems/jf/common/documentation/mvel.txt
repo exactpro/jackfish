@@ -87,7 +87,9 @@ sex = Sex.FEMALE }
 
 {{=
 {{*Operator*}}|20`{{*Description*}}|40`{{*Example*}}|40``
-{{$+$}}`String Concatenation.  Overloaded operator for concatenating two strings together.`{{$"foo" + ;bar" $}}``
+{{$+$}}`String Concatenation.  Overloaded operator for concatenating two strings together.`{{#
+"foo" + ;bar"
+#}}``
 {{$#$}}`Concatenation Operator.  Concatenates two literals as strings.`{{$1 # 2 returns "12" $}}``
 {{$in$}}`Projection/Fold. Projects across a collection.  See: Projections and Folds.`{{$(foo in list) $}}``
 {{$=$}}`Assignment.  Assigns the value on the right to the variable on the left.`{{$var = "foobar"$}}
