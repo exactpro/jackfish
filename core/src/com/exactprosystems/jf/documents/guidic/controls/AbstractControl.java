@@ -488,18 +488,6 @@ public abstract class AbstractControl implements IControl, Mutable
 			operation.tune(window);
 			return remote.operate(owner, element, rows, header, operation);
 		}
-//		catch (RemoteException re) // TODO remove it
-//		{
-//			logger.error(re.getMessage(), re);
-//			//TODO
-//			if (re.getMessage().contains("is not allowed") || re.getMessage().contains("does not support text entering"))
-//			{
-//				OperationResult result = new OperationResult();
-//				result.setError(re.getMessage(), locator());
-//				return result;
-//			}
-//			throw re;
-//		}
 		catch (Exception e)
 		{
 			logger.error(e.getMessage(), e);

@@ -12,8 +12,6 @@ import com.exactprosystems.jf.api.app.*;
 import com.exactprosystems.jf.api.client.ICondition;
 import com.exactprosystems.jf.api.common.Converter;
 import com.exactprosystems.jf.api.conditions.StringCondition;
-import com.exactprosystems.jf.api.error.ErrorKind;
-import com.exactprosystems.jf.api.error.JFRemoteException;
 import com.exactprosystems.jf.api.error.app.ElementNotFoundException;
 import com.exactprosystems.jf.api.error.app.FeatureNotSupportedException;
 import com.exactprosystems.jf.api.error.app.OperationNotAllowedException;
@@ -177,7 +175,7 @@ public class SwingOperationExecutor implements OperationExecutor<ComponentFixtur
 			throw e;
 		}
 	}
-	
+
 	@Override
 	public List<ComponentFixture<Component>> findAll(ControlKind controlKind, ComponentFixture<Component> window, Locator locator) throws Exception
 	{
@@ -371,6 +369,33 @@ public class SwingOperationExecutor implements OperationExecutor<ComponentFixtur
 				default:
 					throw new OperationNotAllowedException(String.format("Component %s dosen't support press operation", component));
 			}
+
+			final Component target = component.target;
+			final ArrayList<InputEvent> events = new ArrayList<>();
+			int keyCode = getKeyCode(key);
+			int modifiers = getModifierKeysArePressed();
+
+			if(b)
+			{
+				events.add(new KeyEvent(target, KeyEvent.KEY_PRESSED, System.currentTimeMillis(), modifiers, keyCode, (char) keyCode));
+			}
+			else
+			{
+				events.add(new KeyEvent(target, KeyEvent.KEY_RELEASED, System.currentTimeMillis(), modifiers, keyCode, (char) keyCode));
+			}
+
+			SwingUtilities.invokeLater(new Runnable()
+			{
+				@Override
+				public void run()
+				{
+					for (InputEvent event : events)
+					{
+						logger.debug("event : " + event);
+						target.dispatchEvent(event);
+					}
+				}
+			});
 		}
 		catch (RemoteException e)
 		{
@@ -907,7 +932,7 @@ public class SwingOperationExecutor implements OperationExecutor<ComponentFixtur
 	}
 
 	@Override
-	public String script(ComponentFixture<Component> component, String script) throws Exception
+	public String script(ComponentFixture<Component> component, String script) throws FeatureNotSupportedException
 	{
 		throw new FeatureNotSupportedException("script");
 	}

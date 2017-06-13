@@ -43,6 +43,10 @@
             <label id="countLabel" owner="" name="countLabel"/>
             <label id="pressLabel" owner="" name="pressLabel"/>
             <label id="downUpLabel" owner="" name="downUpLabel"/>
+            <button id="invisibleButton" owner="owner" name="invisibleButton" visibility="Visible"/>
+            <button id="notEnabledButton" owner="owner" name="notEnabledButton"/>
+            <label id="sliderLabel" uid="" name="sliderLabel" addition="Many"/>
+            <button id="colorButton" owner="owner" name="colorButton"/>
         </run>
         <onClose/>
         <close>

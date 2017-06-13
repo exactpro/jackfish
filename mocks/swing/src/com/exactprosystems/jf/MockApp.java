@@ -35,6 +35,7 @@ public class MockApp
 	private JLabel pressLabel;
 	private JLabel downUpLabel;
 	private JLabel moveLabel;
+	private JLabel sliderLabel;
 	private JTextField textField;
 	private JFrame frame3;
 	private boolean firstRun;
@@ -60,7 +61,8 @@ public class MockApp
 		addListeners(this.centralLabel, "Label");
 		this.moveLabel = new JLabel();
 		this.downUpLabel = new JLabel();
-		createPanelCentralPanel(centralLabel, moveLabel, pressLabel, downUpLabel);
+		this.sliderLabel = new JLabel();
+		createPanelCentralPanel(centralLabel, moveLabel, pressLabel, downUpLabel, sliderLabel);
 
 		createPanelButton();
 		createPanelInput();
@@ -84,6 +86,7 @@ public class MockApp
 		createPanelWithHiddenArea();
 		createPanelImage();
 		createPanelRepeat();
+		createPanelVisibleEnabled();
 
 		this.frame.setSize(new Dimension(800, 800));
 		this.frame.setVisible(true);
@@ -96,6 +99,18 @@ public class MockApp
 //		this.frame2.setVisible(true);
 //		allEvents(createPanelFrame2());
 		//createAndShowGui();
+	}
+
+	private void createPanelVisibleEnabled() {
+		JPanel panel = createPanel("panelVisibleEnabled");
+		JButton notEnabledButton = new JButton("notEnabledButton");
+		notEnabledButton.setName("notEnabledButton");
+		notEnabledButton.setEnabled(false);
+		JButton invisibleButton = new JButton("invisibleButton");
+		invisibleButton.setName("invisibleButton");
+		invisibleButton.setVisible(false);
+		panel.add(notEnabledButton);
+		panel.add(invisibleButton);
 	}
 
 	private void createPanelRepeat()
@@ -345,7 +360,7 @@ public class MockApp
 		return menuBar;
 	}
 
-	private void createPanelCentralPanel(JLabel centralLabel, JLabel moveLabel, JLabel pressLabel, JLabel downUpLabel)
+	private void createPanelCentralPanel(JLabel centralLabel, JLabel moveLabel, JLabel pressLabel, JLabel downUpLabel, JLabel sliderLabel)
 	{
 		JPanel panel = createPanel("panelCentralLabel");
 		centralLabel.setName("centralLabel");
@@ -356,11 +371,14 @@ public class MockApp
 		pressLabel.setText("Presslabel");
 		downUpLabel.setName("downUpLabel");
 		downUpLabel.setText("DownUplabel");
+		sliderLabel.setName("sliderLabel");
+		sliderLabel.setText("sliderlabel");
 		panel.add(new JLabel());
 		panel.add(centralLabel);
 		panel.add(moveLabel);
 		panel.add(pressLabel);
 		panel.add(downUpLabel);
+		panel.add(sliderLabel);
 	}
 
 	private void createPanelButton()
@@ -708,16 +726,14 @@ public class MockApp
 
 	private void createPanelSlider()
 	{
-		JPanel panel = createPanel("panelSlider", 3);
+		JPanel panel = createPanel("panelSlider");
 		JSlider slider = new JSlider(JSlider.HORIZONTAL);
 		String name = "Slider";
 		slider.setValue(0);
 		addListeners(slider, name);
-		slider.getModel().addChangeListener(e -> centralLabel.setText("Slider_" + String.valueOf(slider.getValue())));
+		slider.getModel().addChangeListener(e -> sliderLabel.setText("Slider_" + String.valueOf(slider.getValue())));
 
 		panel.add(slider);
-		panel.add(new JLabel());
-		panel.add(new JLabel());
 	}
 
 	private void createPanelCombobox()
@@ -913,7 +929,7 @@ public class MockApp
 		JScrollBar bar = new JScrollBar(Adjustable.HORIZONTAL);
 		String name = "ScrollBar";
 		addListeners(bar, name);
-		bar.getModel().addChangeListener(event -> centralLabel.setText("ScrollBar_" + String.valueOf(bar.getValue())));
+		bar.getModel().addChangeListener(event -> sliderLabel.setText("ScrollBar_" + String.valueOf(bar.getValue())));
 		createPanel("panelScrollBar").add(bar);
 	}
 
@@ -927,7 +943,7 @@ public class MockApp
 			{
 				if(firstRun)
 				{
-					centralLabel.setText(name + "_" + splitPane.getDividerLocation());
+					sliderLabel.setText(name + "_" + splitPane.getDividerLocation());
 				}
 				firstRun = true;
 			}

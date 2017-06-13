@@ -48,6 +48,9 @@
             <label id="countLabel" owner="" name="countLabel"/>
             <label id="pressLabel" owner="" name="pressLabel"/>
             <label id="downUpLabel" owner="" name="downUpLabel"/>
+            <button id="invisibleButton" xpath="" name="invisibleButton" visibility="Visible"/>
+            <button id="notEnabledButton" name="notEnabledButton"/>
+            <label id="sliderLabel" uid="" name="sliderLabel" addition="Many"/>
         </run>
         <onClose/>
         <close/>

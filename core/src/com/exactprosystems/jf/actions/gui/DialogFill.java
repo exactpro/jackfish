@@ -13,10 +13,7 @@ import com.exactprosystems.jf.api.app.*;
 import com.exactprosystems.jf.api.app.IWindow.SectionKind;
 import com.exactprosystems.jf.api.common.Str;
 import com.exactprosystems.jf.api.error.ErrorKind;
-import com.exactprosystems.jf.api.error.app.ControlNotSupportedException;
-import com.exactprosystems.jf.api.error.app.ElementNotFoundException;
-import com.exactprosystems.jf.api.error.app.NullParameterException;
-import com.exactprosystems.jf.api.error.app.OperationNotAllowedException;
+import com.exactprosystems.jf.api.error.app.*;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.report.ReportBuilder;
 import com.exactprosystems.jf.documents.config.Context;
@@ -301,6 +298,10 @@ public class DialogFill extends AbstractAction
 					else if (t instanceof ControlNotSupportedException)
 					{
 						errorKind = ErrorKind.CONTROL_NOT_SUPPORTED;
+					}
+					else if (t instanceof FeatureNotSupportedException)
+					{
+						errorKind = ErrorKind.FEATURE_NOT_SUPPORTED;
 					}
 					else if (t instanceof NullParameterException)
 					{

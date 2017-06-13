@@ -8,11 +8,7 @@
 
 package com.exactprosystems.jf.app;
 
-import com.exactprosystems.jf.api.app.ControlKind;
-import com.exactprosystems.jf.api.app.IRemoteApplication;
-import com.exactprosystems.jf.api.app.Locator;
-import com.exactprosystems.jf.api.app.LocatorFieldKind;
-import com.exactprosystems.jf.api.app.PluginInfo;
+import com.exactprosystems.jf.api.app.*;
 import com.exactprosystems.jf.api.common.Converter;
 import com.exactprosystems.jf.api.common.Str;
 import com.exactprosystems.jf.api.error.app.ElementNotFoundException;
@@ -241,6 +237,10 @@ public class MatcherSwing<T extends Component> extends GenericTypeMatcher<T>
         }
 
         boolean result = isVisible(obj);
+        if(this.locator.getVisibility() == Visibility.Visible)
+        {
+            result = true;
+        }
         Component objNew = obj;
 
         if (!result)
