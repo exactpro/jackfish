@@ -40,7 +40,7 @@ public class Wait extends AbstractAction
 	protected Integer timeout;
 
 	@ActionFieldAttribute(name = byTimeName, mandatory = false, def = DefaultValuePool.Null, description = "Time before which running a matrix will"
-			+ " be stopped. It is ignored when parameter “Time” is specified.")
+			+ " be stopped. It is ignored when parameter 'Time' is specified.")
 	protected Date byTime;
 
 	@Override

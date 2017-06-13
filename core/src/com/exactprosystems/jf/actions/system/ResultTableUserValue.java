@@ -35,7 +35,7 @@ import com.exactprosystems.jf.functions.Table;
 				+ "Changes values for the current row (current test case or step).",
 		additionFieldsAllowed 	= true,
 		additionalDescription = "Names of additional columns are specified in the value of the additional parameter, "
-				+ "in the value of the parameter – values are indicated, that will be added to the row that corresponds "
+				+ "in the value of the parameter - values are indicated, that will be added to the row that corresponds "
 				+ "to that test case or step, where the following action is. {{`If names match, additional columns do not "
 				+ "replace columns of the system table: Matrix, TestCaseId, TestCase, StepIdentity, Step, Time, Result, Error, Screenshot.`}}",
 		examples 				= "{{##Id;#TestCase;#Kind;#For\n"

@@ -37,7 +37,7 @@ import java.util.Map.Entry;
                 + " Map, for example: table rows, MapMessages.",
         additionFieldsAllowed   = true,
         outputType              = Boolean.class,
-        outputDescription       = "A logical variable, true if matching values are equal, else – false. If there are"
+        outputDescription       = "A logical variable, true if matching values are equal, else - false. If there are"
                 + " differences between matching values table {{$Mismatched$}} fields that contains information about "
                 + "mismatched values, is added to the report.",
         additionalDescription = "Helps to pass values and their names that are needed to be compared.",
