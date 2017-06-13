@@ -24,7 +24,8 @@ public interface IRemoteApplication extends Remote
 	String rectangleName = "jf_rectangle";
 	String visibleName = "jf_visible";
 
-	Serializable                getProperty		(String name) throws RemoteException;
+	Serializable                getProperty		(String name, Serializable prop) throws RemoteException;
+    void                        setProperty     (String name, Serializable prop) throws RemoteException;
 
 	void 						createLogger	(String logName, String serverLogLevel, String serverLogPattern) throws RemoteException;
     void                        setPluginInfo   (PluginInfo info) throws RemoteException;

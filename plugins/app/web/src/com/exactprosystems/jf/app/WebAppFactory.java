@@ -23,21 +23,26 @@ public class WebAppFactory implements IApplicationFactory
     public final static String   jreExecName          = "jreExec";
     public final static String   jreArgsName          = "jreArgs";
 
-    public static final String   chromeDriverPathName = "ChromeDriverPath";
-    public static final String   geckoDriverPathName  = "GeckoDriverPath";
-    public static final String   ieDriverPathName     = "IEDriverPath";
-    public static final String   chromeDriverBinary   = "ChromeDriverBinary";
-    public static final String   firefoxProfileDir    = "FirefoxProfileDirectory";
-    public static final String   usePrivateMode       = "UsePrivateMode";
+    public static final String   chromeDriverPathName     = "ChromeDriverPath";
+    public static final String   geckoDriverPathName      = "GeckoDriverPath";
+    public static final String   ieDriverPathName         = "IEDriverPath";
+    public static final String   chromeDriverBinary       = "ChromeDriverBinary";
+    public static final String   firefoxProfileDir        = "FirefoxProfileDirectory";
+    public static final String   usePrivateMode           = "UsePrivateMode";
 
-    public final static String   browserName          = "Browser";
-    public final static String   urlName              = "URL";
-    public static final String   whereOpenName        = "WhereOpen";
+    public final static String   browserName              = "Browser";
+    public final static String   urlName                  = "URL";
+    public static final String   whereOpenName            = "WhereOpen";
 
-    public static final String   tabName              = "Tab";
+    public static final String   tabName                  = "Tab";
 
-    public static final String   propertyUrlName      = "URL";
-    public static final String   propertyTitle        = "Title";
+    public static final String   propertyUrlName          = "URL";
+    public static final String   propertyTitle            = "Title";
+    public static final String   propertyAddCookie        = "AddCookie";
+    public static final String   propertyGetCookie        = "GetCookie";
+    public static final String   propertyGetAllCookies    = "GetAllCookies";
+    public static final String   propertyRemoveCookie     = "RemoveCookie";
+    public static final String   propertyRemoveAllCookies = "RemoveAllCookies";
 	
 	private static String[] empty = {  };
 
@@ -72,12 +77,13 @@ public class WebAppFactory implements IApplicationFactory
 	{
 		switch (kind)
 		{
-			case LOAD:		return new String[] { jreExecName, jreArgsName, chromeDriverPathName, geckoDriverPathName, ieDriverPathName, chromeDriverBinary, firefoxProfileDir,
-					usePrivateMode, logLevel };
-			case START:		return new String[] { browserName, urlName };
-			case PROPERTY:	return new String[] { propertyUrlName, propertyTitle };
-			case NEW_INSTANCE: return new String[] { urlName, whereOpenName };
-			default:		return empty;	
+			case LOAD:		    return new String[] { jreExecName, jreArgsName, chromeDriverPathName, geckoDriverPathName, ieDriverPathName, 
+			        chromeDriverBinary, firefoxProfileDir, usePrivateMode, logLevel };
+			case START:         return new String[] { browserName, urlName };
+			case GET_PROPERTY:  return new String[] { propertyUrlName, propertyTitle, propertyGetCookie, propertyGetAllCookies };
+            case SET_PROPERTY:  return new String[] { propertyUrlName, propertyTitle, propertyAddCookie, propertyRemoveCookie, propertyRemoveAllCookies };
+			case NEW_INSTANCE:  return new String[] { urlName, whereOpenName };
+			default:		    return empty;	
 		}
 	}
 

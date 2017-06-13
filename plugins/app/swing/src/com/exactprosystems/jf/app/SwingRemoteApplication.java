@@ -80,7 +80,7 @@ public class SwingRemoteApplication extends RemoteApplication
     }
 
 	@Override
-	public Serializable getProperty(String name) throws RemoteException
+	public Serializable getProperty(String name, Serializable prop) throws RemoteException
 	{
 	    if (this.operationExecutor != null)
 	    {
@@ -92,6 +92,11 @@ public class SwingRemoteApplication extends RemoteApplication
 	    }
         return null;
 	}
+
+    @Override
+    public void setProperty(String name, Serializable prop) throws RemoteException
+    {
+    }
 
 	@Override
 	protected int connectDerived(Map<String, String> args) throws Exception

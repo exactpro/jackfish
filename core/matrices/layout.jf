@@ -7,57 +7,63 @@
 // //==============================================
 #Id;#TestCase;#Kind;#Depends;#For
 INIT;Test case;;;
-    #Id;#Global;#Action;#AppId;#Browser;#URL
-    APPSTR1;1;ApplicationStart;'WEB';'Chrome';'http://samples.galenframework.com/tutorial1/tutorial1.html'
+    #Id;#Global;#Action;$AppId;Browser;URL
+    APPSTR1;1;ApplicationStart;'WEB';'Chrome';'https://ya.ru/'
+
+    #Id;#Off;#Global;#Action;$AppId;Browser;URL
+    APPSTR1;1;1;ApplicationStart;'WEB';'Chrome';'http://samples.galenframework.com/tutorial1/tutorial1.html'
 
 
 #TestCase;#Kind;#Depends;#For
 Validate;;;
+    #Id;#Action;$AppConnection;GetAllCookies;GetCookie
+    APPPAR1;ApplicationGetProperties;APPSTR1.Out;;'yandex_gid'
+
     #Id;#Let
     kind;APPSTR1.Out.getDictionary().getWindow('Main').getControlForName(null, 'content').getBindedClass()
 
-    #Id;#Action;#Dialog;#AppConnection;#content
+    #Id;#Action;$Dialog;$AppConnection;content
     DLG1;DialogValidate;'Main';APPSTR1.Out;1
 
-    #Id;#Action;#AppConnection;#Description;#Dialog
+    #Id;#Action;$AppConnection;$Description;$Dialog
     IMGGET1;ImageGet;APPSTR1.Out;'Screenshot';'Main'
 
 
 #TestCase;#Kind;#Depends;#For
 Laoyout;;;
-    #Id;#Action;#AppConnection;#Height;#Width
+    #Id;#Action;$AppConnection;$Height;$Width
     APPSZ1;ApplicationResize;APPSTR1.Out;600;600
 
-    #Action;#Time
+    #Action;$Time
     Wait;1000
 
-    #Action;#Dialog;#AppConnection;#content
+    #Action;$Dialog;$AppConnection;content
     DialogCheckLayout;'Main';APPSTR1.Out;DoSpec.left('side-panel', 0).tAlign('side-panel', 0).bAlign('side-panel', 0)
 
-    #Action;#AppConnection;#Height;#Width
+    #Action;$AppConnection;$Height;$Width
     ApplicationResize;APPSTR1.Out;600;400
 
-    #Action;#Time
+    #Action;$Time
     Wait;1000
 
-    #Action;#Dialog;#AppConnection;#content
+    #Action;$Dialog;$AppConnection;content
     DialogCheckLayout;'Main';APPSTR1.Out;DoSpec.top('side-panel', 0).hCenter('side-panel' , 0)
 
     #OnError
-        #Id;#Action;#AppConnection;#Description;#Dialog
+        #Id;#Action;$AppConnection;$Description;$Dialog
         IMGGET1;ImageGet;APPSTR1.Out;'Screenshot small';'Main'
 
 
 
 #TestCase;#Kind;#Depends;#For
 cleanup;;;
-    #Id;#Action;#AppConnection
+    #Id;#Action;$AppConnection
     APPSTP1;ApplicationStop;APPSTR1.Out
 
-    #Id;#Action;#Decoraded
+    #Id;#Action;$Decoraded
     RESTBL1;ResultTable;true
 
-    #Action;#Table;#Title;#Numbers;#BeforeTestCase
+    #Action;$Table;$Title;$Numbers;$BeforeTestCase
     TableReport;RESTBL1.Out;'Results';false;'INIT'
 
 

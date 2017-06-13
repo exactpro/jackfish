@@ -14,20 +14,12 @@ import java.awt.Color;
 import java.awt.Rectangle;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.concurrent.atomic.AtomicLong;
 
 public interface OperationExecutor<T>
 {
     void                        setPluginInfo   (PluginInfo info);
     boolean						isSupported		(ControlKind kind);
-    
-    void						addCookie		(CookieBean bean) throws Exception;
-    void						removeCookie	(String name) throws Exception;
-    void						removeCookies	() throws Exception;
-    CookieBean					getCookie		(String name) throws Exception;
-    Set<CookieBean>				getCookies		() throws Exception;
-    
 	Rectangle					getRectangle	(T component) throws Exception;
 	
 	Color 						getColor		(String color) throws Exception;

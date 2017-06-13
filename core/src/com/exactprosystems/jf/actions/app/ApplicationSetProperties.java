@@ -34,24 +34,21 @@ import com.exactprosystems.jf.functions.HelpKind;
 @ActionAttribute(
 		group 				= ActionGroups.App, 
 		suffix 				= "APPPAR", 
-		generalDescription 	= "Plug-in dependent action. The purpose of the action is to get certain properties"
-				+ " from the available connection.",
+		generalDescription 	= "Plug-in dependent action. The purpose of the action is to set certain properties"
+				+ " into the available connection.",
 		additionFieldsAllowed = true,
 		additionalDescription = "The parameters are determined by the chosen plug-in. {{`For example, additional "
-				+ "parameters {{$Title$}} and {{$URL$}} are available for web plug-in. They are necessary to get the information"
-				+ " about the title bar and the address respectively.`}} The parameters can be chosen in the dialogue"
+				+ "parameters {{$CookieAdd$}} and {{$CookieRemove$}} are available for web plug-in. They are necessary "
+				+ "to add and to remove a cookie respectively.`}} The parameters can be chosen in the dialogue"
 				+ " window opened with the context menu of this action in {{$“All parameters”$}} option.",
-        outputType              = Map.class,
-        outputDescription       = "Associative array which displays the names of the elements processed by the action "
-                + "along with prpperties received from the app.",
-		examples = "{{##Id;#Action;#URL;#AppConnection\n"
-				+ "AGP1;ApplicationGetProperties;;app\n"
+		examples = "{{##Id;#Action;#CookieRemove\n"
+				+ "AGP1;ApplicationGetProperties;'name'\n"
 				+ "\n"
 				+ "#Assert;#Message\n"
-				+ "!Str.IsNullOrEmpty(AGP1.Out.URL);'String is null or empty'#}}",
-		seeAlsoClass = { ApplicationSetProperties.class, ApplicationStart.class, ApplicationConnectTo.class }
+				+ "AGP1.Out.CookieRemove;'Cookie was not removed'#}}",
+		seeAlsoClass = { ApplicationGetProperties.class, ApplicationStart.class, ApplicationConnectTo.class }
 )
-public class ApplicationGetProperties extends AbstractAction
+public class ApplicationSetProperties extends AbstractAction
 {
 	public static final String	connectionName	= "AppConnection";
 
@@ -64,7 +61,7 @@ public class ApplicationGetProperties extends AbstractAction
 	@Override
 	protected void helpToAddParametersDerived(List<ReadableValue> list, Context context, Parameters parameters) throws Exception
 	{
-		Helper.helpToAddParameters(list, ParametersKind.GET_PROPERTY, this.owner.getMatrix(), context, parameters, null, connectionName);
+		Helper.helpToAddParameters(list, ParametersKind.SET_PROPERTY, this.owner.getMatrix(), context, parameters, null, connectionName);
 	}
 
 	@Override
@@ -84,27 +81,22 @@ public class ApplicationGetProperties extends AbstractAction
 	@Override
 	public void doRealAction(Context context, ReportBuilder report, Parameters parameters, AbstractEvaluator evaluator) throws Exception
 	{
-		Map<String, Object> outValue = new LinkedHashMap<>();
-		
 		IApplication app = connection.getApplication();
 		IRemoteApplication service = app.service();
 		
 		for (Parameter parameter : parameters.select(TypeMandatory.Extra))
 		{
-
-            if (parameter.getValue() == null || parameter.getValue() instanceof Serializable)
-            {
-                Serializable prop = parameter.getValue() == null ? null : (Serializable)parameter.getValue();
-                Serializable value = service.getProperty(parameter.getName(), prop);
-                outValue.put(parameter.getName(), value);
-            }
-            else
-            {
-                super.setError("Parameter " + parameter.getName() + " should be Serializable type.", ErrorKind.WRONG_PARAMETERS);
-                return;
-            }
+		    if (parameter.getValue() instanceof Serializable)
+		    {
+		        Serializable prop = (Serializable)parameter.getValue();
+    			service.setProperty(parameter.getName(), prop);
+		    }
+		    else
+		    {
+		        super.setError("Parameter " + parameter.getName() + " should be Serializable type.", ErrorKind.WRONG_PARAMETERS);
+		        return;
+		    }
 		}
-
-		super.setResult(outValue);
+		super.setResult(null);
 	}
 }

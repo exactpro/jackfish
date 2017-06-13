@@ -100,37 +100,6 @@ public class WinOperationExecutorJNA implements OperationExecutor<UIProxyJNA>
 		//TODO think about it
 		return null;
 	}
-
-	@Override
-	public void addCookie(CookieBean bean) throws Exception
-	{
-		throw new FeatureNotSupportedException("addCookie");
-	}
-
-	@Override
-	public void removeCookie(String name) throws Exception
-	{
-		throw new FeatureNotSupportedException("removeCookie");
-	}
-
-	@Override
-	public void removeCookies() throws Exception
-	{
-		throw new FeatureNotSupportedException("removeCookies");
-	}
-
-	@Override
-	public CookieBean getCookie(String name) throws Exception
-	{
-		throw new FeatureNotSupportedException("getCookie");
-	}
-
-	@Override
-	public Set<CookieBean> getCookies() throws Exception
-	{
-		throw new FeatureNotSupportedException("getCookies");
-	}
-
 	
 	@Override
 	public List<UIProxyJNA> findAll(ControlKind controlKind, UIProxyJNA window, Locator locator) throws Exception

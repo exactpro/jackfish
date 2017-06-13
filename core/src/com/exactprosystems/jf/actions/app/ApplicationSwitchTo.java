@@ -66,7 +66,7 @@ public class ApplicationSwitchTo extends AbstractAction
 	@Override
     protected void helpToAddParametersDerived(List<ReadableValue> list, Context context, Parameters parameters) throws Exception
     {
-        Helper.helpToAddParameters(list, ParametersKind.PROPERTY, this.owner.getMatrix(), context, parameters, null, connectionName);
+        Helper.helpToAddParameters(list, ParametersKind.GET_PROPERTY, this.owner.getMatrix(), context, parameters, null, connectionName);
     }
 
     @Override

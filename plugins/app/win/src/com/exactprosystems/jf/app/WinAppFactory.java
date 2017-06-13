@@ -59,11 +59,12 @@ public class WinAppFactory implements IApplicationFactory
 	{
 		switch (kind)
 		{
-			case LOAD:		return new String[] { jreExecName, jreArgsName, maxTimeout, logLevel};
-			case START:		return new String[] { execName, workDirName, argsName, alwaysToFront };
-			case CONNECT:   return new String[] { mainWindowName, mainWindowHeight, mainWindowWidth, pidName, controlKindName, connectionTimeout, alwaysToFront };
-			case PROPERTY:  return new String[] { propertyWindowRectangle, propertyTitle }; 
-			default:		return empty;	
+			case LOAD:		     return new String[] { jreExecName, jreArgsName, maxTimeout, logLevel};
+			case START:		     return new String[] { execName, workDirName, argsName, alwaysToFront };
+			case CONNECT:        return new String[] { mainWindowName, mainWindowHeight, mainWindowWidth, pidName, controlKindName, connectionTimeout, alwaysToFront };
+			case GET_PROPERTY:   return new String[] { propertyWindowRectangle, propertyTitle }; 
+            case SET_PROPERTY:   return new String[] { propertyTitle }; 
+			default:		     return empty;	
 		}
 	}
 	

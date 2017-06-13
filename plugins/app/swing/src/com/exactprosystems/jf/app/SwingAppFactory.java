@@ -56,11 +56,12 @@ public class SwingAppFactory implements IApplicationFactory
 	{
 		switch (kind)
 		{
-			case LOAD:		return new String[] { jreExecName, jreArgsName, logLevel };
-			case START:		return new String[] { jarName, argsName, mainClassName };
-			case CONNECT:	return new String[] { urlName };
-            case PROPERTY:  return new String[] { propertyTitle };
-			default:		return empty;	
+			case LOAD:		    return new String[] { jreExecName, jreArgsName, logLevel };
+			case START:		    return new String[] { jarName, argsName, mainClassName };
+			case CONNECT:	    return new String[] { urlName };
+            case GET_PROPERTY:  return new String[] { propertyTitle };
+            case SET_PROPERTY:  return new String[] { propertyTitle };
+			default:		    return empty;	
 		}
 	}
 	

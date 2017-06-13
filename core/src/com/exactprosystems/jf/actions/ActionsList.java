@@ -27,6 +27,7 @@ public class ActionsList
 			{
 		        ApplicationConnectTo.class,
 		        ApplicationGetProperties.class,
+		        ApplicationSetProperties.class,
 		        ApplicationRefresh.class,
 		        ApplicationStart.class,
 		        ApplicationStop.class,

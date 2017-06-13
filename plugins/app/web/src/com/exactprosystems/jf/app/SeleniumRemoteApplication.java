@@ -17,8 +17,6 @@ import com.exactprosystems.jf.api.error.app.TimeoutException;
 import com.exactprosystems.jf.app.WebAppFactory.WhereToOpen;
 import org.apache.log4j.*;
 import org.openqa.selenium.*;
-import org.openqa.selenium.Dimension;
-import org.openqa.selenium.Point;
 import org.openqa.selenium.chrome.ChromeDriverService;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.firefox.GeckoDriverService;
@@ -37,8 +35,8 @@ import java.io.File;
 import java.io.Serializable;
 import java.rmi.RemoteException;
 import java.util.*;
-import java.util.List;
 import java.util.Map.Entry;
+import java.util.stream.Collectors;
 
 public class SeleniumRemoteApplication extends RemoteApplication
 {
@@ -123,7 +121,7 @@ public class SeleniumRemoteApplication extends RemoteApplication
     }
 
 	@Override
-	public Serializable getProperty(String name) throws RemoteException
+	public Serializable getProperty(String name, Serializable prop) throws RemoteException
 	{
 		if (this.driver != null)
 		{
@@ -134,11 +132,68 @@ public class SeleniumRemoteApplication extends RemoteApplication
 
 				case WebAppFactory.propertyTitle:
 					return this.driver.getTitle();
+					
+                case WebAppFactory.propertyGetCookie:
+			        Cookie cookie = this.driver.manage().getCookieNamed("" + prop);
+			        return new CookieBean(cookie.getName(), cookie.getValue())
+                            .setPath(cookie.getPath())
+                            .setDomain(cookie.getDomain())
+                            .setSecure(cookie.isSecure())
+                            .setHttpOnly(cookie.isHttpOnly())
+                            .setExpary(cookie.getExpiry());
+
+                case WebAppFactory.propertyGetAllCookies:
+                    Set<Cookie> set = this.driver.manage().getCookies();
+                    return set.stream().map(c -> new CookieBean(c.getName(), c.getValue())
+                                .setPath(c.getPath())
+                                .setDomain(c.getDomain())
+                                .setSecure(c.isSecure())
+                                .setHttpOnly(c.isHttpOnly())
+                                .setExpary(c.getExpiry())
+                    ).collect(Collectors.toCollection(ArrayList::new));
 			}
 		}
 		return null;
 	}
 
+    @Override
+    public void setProperty(String name, Serializable prop) throws RemoteException
+    {
+        if (this.driver != null)
+        {
+            switch (name)
+            {
+                case WebAppFactory.propertyAddCookie:
+                    if (prop instanceof CookieBean)
+                    {
+                        CookieBean bean = (CookieBean)prop;
+                        Cookie cookie = new Cookie.Builder(bean.name, bean.value)
+                        .path(bean.path)
+                        .domain(bean.domain)
+                        .expiresOn(bean.expiry)
+                        .isSecure(bean.isSecure)
+                        .isHttpOnly(bean.isHttpOnly)
+                        .build();
+                        this.driver.manage().addCookie(cookie);
+                    }
+                    break;
+                   
+                case WebAppFactory.propertyRemoveCookie:
+                    this.driver.manage().deleteCookieNamed(prop.toString());
+                    break;
+            
+                case WebAppFactory.propertyRemoveAllCookies:
+                    this.driver.manage().deleteAllCookies();
+                    break;
+                    
+                case WebAppFactory.propertyUrlName:
+                    this.driver.get(prop.toString());
+                    break;
+            }
+        }
+    }
+
+	
 	@Override
 	protected int connectDerived(Map<String, String> args) throws Exception
 	{
@@ -439,7 +494,7 @@ public class SeleniumRemoteApplication extends RemoteApplication
                         {
                             String name = entry.getKey();
                             String expected = entry.getValue();
-                            String actual = String.valueOf(getProperty(name));
+                            String actual = String.valueOf(getProperty(name, null));
                             sb.append(name).append(":").append(actual).append(" ");
 
                             res = res && (softCondition && actual.contains(expected) || !softCondition && actual.equals(expected));
