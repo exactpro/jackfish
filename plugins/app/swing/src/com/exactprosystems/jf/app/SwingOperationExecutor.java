@@ -12,6 +12,8 @@ import com.exactprosystems.jf.api.app.*;
 import com.exactprosystems.jf.api.client.ICondition;
 import com.exactprosystems.jf.api.common.Converter;
 import com.exactprosystems.jf.api.conditions.StringCondition;
+import com.exactprosystems.jf.api.error.ErrorKind;
+import com.exactprosystems.jf.api.error.JFRemoteException;
 import com.exactprosystems.jf.api.error.app.ElementNotFoundException;
 import com.exactprosystems.jf.api.error.app.FeatureNotSupportedException;
 import com.exactprosystems.jf.api.error.app.OperationNotAllowedException;
@@ -176,6 +178,37 @@ public class SwingOperationExecutor implements OperationExecutor<ComponentFixtur
 		}
 	}
 
+	@Override
+	public void addCookie(CookieBean bean) throws Exception
+	{
+		throw new FeatureNotSupportedException("addCookie");
+	}
+
+	@Override
+	public void removeCookie(String name) throws Exception
+	{
+		throw new FeatureNotSupportedException("removeCookie");
+	}
+
+	@Override
+	public void removeCookies() throws Exception
+	{
+		throw new FeatureNotSupportedException("removeCookies");
+	}
+
+	@Override
+	public CookieBean getCookie(String name) throws Exception
+	{
+		throw new FeatureNotSupportedException("getCookie");
+	}
+
+	@Override
+	public Set<CookieBean> getCookies() throws Exception
+	{
+		throw new FeatureNotSupportedException("getCookies");
+	}
+
+	
 	@Override
 	public List<ComponentFixture<Component>> findAll(ControlKind controlKind, ComponentFixture<Component> window, Locator locator) throws Exception
 	{
@@ -2153,4 +2186,5 @@ public class SwingOperationExecutor implements OperationExecutor<ComponentFixtur
 		{
 		};
 	}
+
 }

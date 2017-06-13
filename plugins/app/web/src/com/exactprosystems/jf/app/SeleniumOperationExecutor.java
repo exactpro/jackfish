@@ -13,6 +13,7 @@ import com.exactprosystems.jf.api.client.ICondition;
 import com.exactprosystems.jf.api.common.Converter;
 import com.exactprosystems.jf.api.common.Str;
 import com.exactprosystems.jf.api.error.app.ElementNotFoundException;
+import com.exactprosystems.jf.api.error.app.FeatureNotSupportedException;
 import com.exactprosystems.jf.api.error.app.TooManyElementsException;
 import org.apache.log4j.Logger;
 import org.jsoup.Jsoup;
@@ -36,6 +37,7 @@ import java.util.*;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicLong;
+import java.util.stream.Collectors;
 
 import javax.imageio.ImageIO;
 
@@ -108,6 +110,65 @@ public class SeleniumOperationExecutor implements OperationExecutor<WebElement>
 		return new Color(Integer.parseInt(colors[0]), Integer.parseInt(colors[1]), Integer.parseInt(colors[2]), Integer.parseInt(colors[3]));
 	}
 
+	@Override
+	public void addCookie(CookieBean bean) throws Exception
+	{
+		Cookie cookie = new Cookie.Builder(bean.name, bean.value)
+				.path(bean.path)
+				.domain(bean.domain)
+				.expiresOn(bean.expiry)
+				.isSecure(bean.isSecure)
+				.isHttpOnly(bean.isHttpOnly)
+				.build();
+		
+		this.driver.manage().addCookie(cookie);
+	}
+
+	@Override
+	public void removeCookie(String name) throws Exception
+	{
+		this.driver.manage().deleteCookieNamed(name);
+	}
+
+	@Override
+	public void removeCookies() throws Exception
+	{
+		this.driver.manage().deleteAllCookies();
+	}
+
+	@Override
+	public CookieBean getCookie(String name) throws Exception
+	{
+		Cookie cookie = this.driver.manage().getCookieNamed(name);
+		CookieBean bean = new CookieBean();
+		bean.name = cookie.getName();
+		bean.value = cookie.getValue();
+		bean.path = cookie.getPath();
+		bean.domain = cookie.getDomain();
+		bean.isSecure = cookie.isSecure();
+		bean.isHttpOnly = cookie.isHttpOnly();
+		bean.expiry = cookie.getExpiry();
+		return bean;
+	}
+
+	@Override
+	public Set<CookieBean> getCookies() throws Exception
+	{
+		Set<Cookie> set = this.driver.manage().getCookies();
+		return set.stream().map(cookie -> 
+		{
+			CookieBean bean = new CookieBean();
+			bean.name = cookie.getName();
+			bean.value = cookie.getValue();
+			bean.path = cookie.getPath();
+			bean.domain = cookie.getDomain();
+			bean.isSecure = cookie.isSecure();
+			bean.isHttpOnly = cookie.isHttpOnly();
+			bean.expiry = cookie.getExpiry();
+			return bean;
+		}).collect(Collectors.toSet());
+	}
+	
 	//region table is container
 	@Override
 	public boolean tableIsContainer()
