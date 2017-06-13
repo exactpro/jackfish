@@ -55,7 +55,7 @@ public class Execute extends AbstractAction
 	protected String command 	= "";
 
 	@ActionFieldAttribute(name = waitName, mandatory = false, def = DefaultValuePool.True, description = "waiting for the command to terminate. "
-			+ "If true - execution of the matrix is stopped until the command is executed. By default – true.")
+			+ "If true - execution of the matrix is stopped until the command is executed. By default - true.")
 	protected Boolean wait; 
 	
 	@ActionFieldAttribute(name = workDirName, mandatory = false, def = DefaultValuePool.Null, description = "A task of the working directory for the"

@@ -42,7 +42,7 @@ public class Restore extends AbstractAction
 	protected String name = null;
 
 	@ActionFieldAttribute(name = asVarName, mandatory = false, def = DefaultValuePool.Null, description = "the name of the variable that will be "
-			+ "given the value of the restored object. A variable will be global if an action is tagged “G”, otherwise, variable will be local.")
+			+ "given the value of the restored object. A variable will be global if an action is tagged 'G', otherwise, variable will be local.")
 	protected String asVar;
 	
 	@Override

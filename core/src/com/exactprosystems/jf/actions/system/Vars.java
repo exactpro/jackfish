@@ -20,7 +20,7 @@ import com.exactprosystems.jf.documents.matrix.parser.items.TypeMandatory;
 
 @ActionAttribute(
 		group 			 	  = ActionGroups.System,
-		generalDescription 	  = "<b>Deprecated.</b>\n"
+		generalDescription 	  = "{{*Deprecated.*}}\n"
 				+ "The following action is needed to create and assigning values to the variables.\n"
 				+ "A variable is needed to store objects, numbers, and rows.\n"
 				+ "A local variable is available in  {{@TestCase@}}, {{@SubCase@}}, {{@Step@}}. A global variable is available \n"
@@ -29,9 +29,9 @@ import com.exactprosystems.jf.documents.matrix.parser.items.TypeMandatory;
 				+ "See {{@Let@}}.",
 		additionFieldsAllowed = true,
 		additionalDescription = "The name of the variable is specified in the name of the parameter, the value of the"
-				+ " variable – in the value of the parameter. When tagged as “G” a variable is created as global.\n"
+				+ " variable – in the value of the parameter. When tagged as 'G' a variable is created as global.\n"
 				+ "More than one variable could be given.",
-		examples 			  = "Create 2 global variables with names “name” and “age”, with values “Mike” and “42” accordingly.\n"
+		examples 			  = "Create 2 global variables with names 'name' and 'age', with values 'Mike' and '42' accordingly.\n"
 				+ "{{##Global;#Action;#name;#age\n"
 				+ "1;Vars;'Mike';'42'#}}",
 		seeAlsoClass = {Let.class}
