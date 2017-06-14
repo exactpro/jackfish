@@ -310,7 +310,7 @@ RESULT;ResultTable;Never;;
     #EndRawTable
 
     #Id;#Action;$Expected;$Actual;$ExcludeColumns
-    TBLCMP1;TableCompareTwo;expectedTable;RESTBL5.Out;'Time'
+    TBLCMP1;TableCompareTwo;expectedTable;RESTBL5.Out;{ 'Time', 'Matrix' }
 
     // =====================================================================
     // Negative tests
