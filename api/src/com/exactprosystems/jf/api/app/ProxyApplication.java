@@ -163,7 +163,7 @@ public abstract class ProxyApplication implements IApplication
     			// nothing to do
     		}
 	    	
-	    	Thread.sleep(1000 + attempt * 1000);
+	    	Thread.sleep(1000 + attempt * 100);
 	    }
         if (this.service != null)
 	    {
