@@ -2497,7 +2497,7 @@ Check Step (SetHandler checked above);;;
     #Step;#Kind;#For;#Depends
     'test screenshot on start';Never;;
         #Id;#Step;#Kind;#For;#Depends
-        screenOnStart;;OnStart;;
+        screenOnStart;'screenOnStart';OnStart;;
         #EndStep
 
         #Id;#Action;$Decoraded
@@ -2523,7 +2523,7 @@ Check Step (SetHandler checked above);;;
     #Step;#Kind;#For;#Depends
     'test screenshot on startOnError ( without error)';Never;;
         #Id;#Step;#Kind;#For;#Depends
-        screenOnStartOrError;;OnStartOrError;;
+        screenOnStartOrError;'screenOnStartOrError';OnStartOrError;;
         #EndStep
 
         #Id;#Action;$Decoraded
@@ -2553,7 +2553,7 @@ Check Step (SetHandler checked above);;;
         ~;"#TestCase;#Kind;#Depends;#For"
         ~;"Test case;Never;;"
         ~;"    #Id;#Step;#Kind;#For;#Depends"
-        ~;"    screenOnStartOrErrorWithError;;OnStartOrError;;"
+        ~;"    ;'screenOnStartOrErrorWithError';OnStartOrError;;"
         ~;"        #Fail"
         ~;"        'some fail'"
         ~;""
@@ -2577,9 +2577,6 @@ Check Step (SetHandler checked above);;;
         ~;""
         ~;"        #Assert;#Message"
         ~;"        screenShot.matches('<a href="".+?"">OnError</a>');'String not matches'"
-        ~;""
-        ~;""
-        ~;""
         #EndRawText
 
         #Id;#Action;$Text
@@ -2598,8 +2595,8 @@ Check Step (SetHandler checked above);;;
 
     #Step;#Kind;#For;#Depends
     'test screenshot on finish';Never;;
-        #Id;#Step;#Kind;#For;#Depends
-        screenOnFinish;;OnFinish;;
+        #Step;#Kind;#For;#Depends
+        'screenOnFinish';OnFinish;;
         #EndStep
 
         #Id;#Action;$Decoraded
@@ -2624,8 +2621,8 @@ Check Step (SetHandler checked above);;;
 
     #Step;#Kind;#For;#Depends
     'test screenshot on finish or error ( without fail)';Never;;
-        #Id;#Step;#Kind;#For;#Depends
-        screenOnFinishOrError;;OnFinishOrError;;
+        #Step;#Kind;#For;#Depends
+        'screenOnFinishOrError';OnFinishOrError;;
         #EndStep
 
         #Id;#Action;$Decoraded
@@ -2656,7 +2653,7 @@ Check Step (SetHandler checked above);;;
         ~;"#TestCase;#Kind;#Depends;#For"
         ~;"Test case;Never;;"
         ~;"    #Id;#Step;#Kind;#For;#Depends"
-        ~;"    screenOnFinishOrErrorWithFail;;OnFinishOrError;;"
+        ~;"    ;'screenOnFinishOrErrorWithFail';OnFinishOrError;;"
         ~;"        #Fail"
         ~;"        'a'"
         ~;""
@@ -2680,9 +2677,6 @@ Check Step (SetHandler checked above);;;
         ~;""
         ~;"        #Assert;#Message"
         ~;"        screenShot.matches('<a href="".+?"">OnError</a>');'String not matches'"
-        ~;""
-        ~;""
-        ~;""
         #EndRawText
 
         #Id;#Action;$Text
@@ -2706,7 +2700,7 @@ Check Step (SetHandler checked above);;;
         ~;"#TestCase;#Kind;#Depends;#For"
         ~;"Test case;Never;;"
         ~;"    #Id;#Step;#Kind;#For;#Depends"
-        ~;"    screenOnError;;OnError;;"
+        ~;"    ;'screenOnError';OnError;;"
         ~;"        #Fail"
         ~;"        'a'"
         ~;""
@@ -2730,9 +2724,6 @@ Check Step (SetHandler checked above);;;
         ~;""
         ~;"        #Assert;#Message"
         ~;"        screenShot.matches('<a href="".+?"">OnError</a>');'String not matches'"
-        ~;""
-        ~;""
-        ~;""
         #EndRawText
 
         #Id;#Action;$Text

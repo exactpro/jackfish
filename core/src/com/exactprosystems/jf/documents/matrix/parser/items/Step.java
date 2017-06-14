@@ -60,7 +60,7 @@ public class Step extends MatrixItem
 	@Override
 	public String toString()
 	{
-		return getClass().getSimpleName() + " " + this.identify.getExpression();
+		return getClass().getSimpleName() + " " + this.getId();
 	}
 
 	@Override
