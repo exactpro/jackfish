@@ -35,7 +35,8 @@ import java.util.Map;
 				+ "{{` {{$Browser$}} - string. It defines which browser should be launched.`}} "
 				+ "The parameters can be chosen in the dialogue"
 				+ " window opened with the context menu of this action in {{$'All parameters'$}} option.",
-		examples = "{{##Id;#Action;#Browser;#URL;#AppConnection\n"
+		examples = "{{#\n" +
+				"#Id;#Action;#Browser;#URL;#AppConnection\n"
 				+ "APPNI1;ApplicationNewInstance;'Chrome';'http://google.com';app#}}",
 		seeAlsoClass = {ApplicationStart.class, ApplicationConnectTo.class}
 )

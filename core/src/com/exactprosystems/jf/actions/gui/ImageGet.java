@@ -35,7 +35,8 @@ import static com.exactprosystems.jf.actions.gui.Helper.message;
 		outputDescription 		= "An image which is grabbed from the screen.", 
 		outputType 				= ImageWrapper.class,
 		examples 				= "{{`1. Make the screenshot of the logo element located in MyDialog.`}}"
-				+ "{{##Id;#Action;#Description;#Dialog;#Name;#AppConnection\n"
+				+ "{{#\n" +
+				"#Id;#Action;#Description;#Dialog;#Name;#AppConnection\n"
 				+ "IMGGET1;ImageGet;'Chrome screenshot';'MyDialog';'logo';App#}}"
 	)
 public class ImageGet extends AbstractAction

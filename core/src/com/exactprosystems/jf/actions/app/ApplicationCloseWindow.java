@@ -29,7 +29,8 @@ import com.exactprosystems.jf.documents.matrix.parser.Parameters;
 		additionFieldsAllowed	= false,
 		outputDescription		= "Returns the title bar of the window which was closed.",
 		outputType				= String.class,
-		examples = "{{##Id;#Action;#AppConnection\n"
+		examples = "{{#\n" +
+				"#Id;#Action;#AppConnection\n"
 				+ "ACW;ApplicationCloseWindow;app\n"
 				+ "\n"
 				+ "#Assert;#Message\n"

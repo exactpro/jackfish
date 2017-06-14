@@ -25,12 +25,16 @@ import com.exactprosystems.jf.documents.matrix.parser.Parameters;
 		suffix					= "APPSZ",
 		generalDescription 		= "The purpose of the action is to change the window size of the application under test.",
 		additionFieldsAllowed 	= false,
-		examples = "Example №1."
-				+ "{{##Action;#AppConnection;#Width;#Height\n"
-				+ "ApplicationResize;app;1000;1000#}}"
-				+ "Example №2."
-				+ "{{##Action;#Maximize;#AppConnection\n"
-				+ "ApplicationResize;true;app#}}",
+		examples = "Example 1."
+				+ "{{#\n" +
+				"#Action;#AppConnection;#Width;#Height\n"
+				+ "ApplicationResize;app;1000;1000\n" +
+				"#}} \n"
+				+ "Example 2."
+				+ "{{#\n" +
+				"#Action;#Maximize;#AppConnection\n"
+				+ "ApplicationResize;true;app\n" +
+				"#}}",
 		seeAlsoClass = {ApplicationStart.class, ApplicationConnectTo.class}
 	)
 public class ApplicationResize extends AbstractAction

@@ -41,7 +41,8 @@ import com.exactprosystems.jf.functions.HelpKind;
                 + " window opened with the context menu of this action in {{$'All parameters'$}} option.",
 		outputDescription 		= "It returns the title bar of the window which gained the focus.",
 		outputType				= String.class,
-		examples = "{{##Id;#Action;#Title;#AppConnection\n" +
+		examples = "{{#\n" +
+				"#Id;#Action;#Title;#AppConnection\n" +
 				"AST;ApplicationSwitchTo;'Title';app\n" +
 				"#Assert;#Message\n" +
 				"Str.IsNullOrEmpty(AST.Out);'Title is null'#}}",

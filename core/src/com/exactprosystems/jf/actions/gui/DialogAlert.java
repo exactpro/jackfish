@@ -33,7 +33,8 @@ import java.util.List;
 		outputType				= String.class,
 		examples 				= "{{`1. Type 'hello' in the pop-up notification field`}}"
 				+ "{{`2. Ensure we have the notification heading as an output value.`}}"
-				+ "{{##Id;#Action;#Text;#Perform;#AppConnection\n"
+				+ "{{#\n" +
+				"#Id;#Action;#Text;#Perform;#AppConnection\n"
 				+ "DLGALRT1;DialogAlert;'hello';PerformKind.Accept;APPSTR1.Out\n"
 				+ "#Assert;#Message\n"
 				+ "DLGALRT1.Out != null;#}}"

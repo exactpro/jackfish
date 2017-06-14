@@ -30,7 +30,8 @@ import java.util.List;
 				+ "The parameters can be chosen in the"
 				+ " dialogue window opened with the context menu of this action in {{$'All parameters'$}} option.",
 		examples =
-				"{{##Action;#Navigate;#Navigate;#AppConnection\n"
+				"{{#\n" +
+				"#Action;#Navigate;#Navigate;#AppConnection\n"
 				+ "ApplicationNavigate;NavigateKind.BACK;NavigateKind.FORWARD;app#}}",
 		seeAlsoClass = {ApplicationStart.class, ApplicationConnectTo.class}
 )

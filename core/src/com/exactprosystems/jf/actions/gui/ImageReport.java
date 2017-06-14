@@ -33,7 +33,8 @@ import java.util.List;
 				+ "{{`2. Capture the whole application.`}}"
 				+ "{{`3. Create new report.`}}"
 				+ "{{`4. Send the generated image to the new report.`}}"
-				+ "{{##Id;#Action;#Browser;#URL;#AppId\n"
+				+ "{{#\n" +
+				"#Id;#Action;#Browser;#URL;#AppId\n"
 				+ "APPSTR1;ApplicationStart;'Chrome';'https://google.com';'WEB'\n"
 				+ "#Id;#Action;#AppConnection\n"
 				+ "IMGGET1;ImageGet;APPSTR1.Out\n"

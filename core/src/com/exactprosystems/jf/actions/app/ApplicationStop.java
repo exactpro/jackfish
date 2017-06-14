@@ -28,7 +28,8 @@ import com.exactprosystems.jf.documents.matrix.parser.Parameters;
 				+ " {{@ApplicationStart@}} or {{@ApplicationConnectTo@}}. The flag {{$'Global'$}} (indicated with letter 'G')"
 				+ " should be set in actions {{@ApplicationStart@}} or {{@ApplicationConnectTo@}}.",
 		additionFieldsAllowed 	= false,
-		examples = "{{##Action;#AppConnection\n" +
+		examples = "{{#\n" +
+				"#Action;#AppConnection\n" +
 				"ApplicationStop;app\n#}}",
 		seeAlsoClass = {ApplicationConnectTo.class, ApplicationStart.class}
 	)

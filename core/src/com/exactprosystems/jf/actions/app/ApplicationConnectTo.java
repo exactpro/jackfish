@@ -50,7 +50,8 @@ import java.util.Map;
 				+ "This object is required in many other actions to specify the session of the application the"
 				+ " indicated action belongs to. Should be created with an active {{$'Global'$}} flag.",
 		outputType				= AppConnection.class,
-		examples = "{{##Id;#Global;#Action;#Browser;#URL;#AppId\n"
+		examples = "{{#\n" +
+				"#Id;#Global;#Action;#Browser;#URL;#AppId\n"
 				+ "app;1;ApplicationStart;'Chrome';'http://google.com';'WEB'\n"
 				+ "\n"
 				+ "#Assert;#Message\n"

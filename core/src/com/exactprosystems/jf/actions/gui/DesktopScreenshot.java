@@ -28,7 +28,8 @@ import java.awt.image.BufferedImage;
 		additionFieldsAllowed 	= false,
 		outputDescription 		= "An image which is grabbed from the desktop.", 
 		outputType 				= ImageWrapper.class,
-		examples 				= "{{##Id;#Action;#Description\n"
+		examples 				= "{{#\n" +
+				"#Id;#Action;#Description\n"
 				+ "DSK1;DesktopScreenshot;'My desktop'#}}"
 	)
 public class DesktopScreenshot extends AbstractAction

@@ -44,7 +44,8 @@ import com.exactprosystems.jf.functions.HelpKind;
         outputType              = Map.class,
         outputDescription       = "Associative array which displays the names of the elements processed by the action "
                 + "along with prpperties received from the app.",
-		examples = "{{##Id;#Action;#URL;#AppConnection\n"
+		examples = "{{#\n" +
+				"#Id;#Action;#URL;#AppConnection\n"
 				+ "AGP1;ApplicationGetProperties;;app\n"
 				+ "\n"
 				+ "#Assert;#Message\n"
