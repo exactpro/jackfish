@@ -60,8 +60,7 @@ public class Step extends MatrixItem
 	@Override
 	public String toString()
 	{
-	    String s = this.identify.isValid() ?  this.identify.getValueAsString() : null;
-		return Str.IsNullOrEmpty(s) ? super.toString() : s;
+		return getClass().getSimpleName() + " " + this.identify.getExpression();
 	}
 
 	@Override
@@ -171,7 +170,7 @@ public class Step extends MatrixItem
     @Override
 	public String getItemName()
 	{
-		return super.getItemName() + " " + (this.identify.getExpression() == null ? "" : this.identify.getExpression());
+		return super.getItemName() + " " + Str.asString(this.identify.getExpression());
 	}
     
     @Override
@@ -230,9 +229,7 @@ public class Step extends MatrixItem
 					row.put(Context.testCaseIdColumn, 	parent.getId());
 					row.put(Context.testCaseColumn, 	parent);
 				}
-
-				row.put(Context.stepIdentityColumn, 	this.getId());
-				row.put(Context.stepColumn, 			this);
+                row.put(Context.stepColumn,             this);
 			}
             
             if (!this.identify.evaluate(evaluator))
@@ -242,6 +239,10 @@ public class Step extends MatrixItem
                 return ret;
             }
             Object identifyValue = this.identify.getValue();
+            if (row != null)
+            {
+                row.put(Context.stepIdentityColumn,     "" + identifyValue);
+            }
             
             if (!Str.IsNullOrEmpty(this.depends.get()))
             {
