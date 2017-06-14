@@ -13,6 +13,8 @@ namespace mock_win
 {
     public partial class Main : Form
     {
+        private int counter = 0;
+
         public Main()
         {
             InitializeComponent();
@@ -116,7 +118,29 @@ namespace mock_win
 
         private void CommonKeyDown(object sender, KeyEventArgs e)
         {
-            writeTextOncentralLabelKeyboard(writeControlNameOnCentralLabel(sender), e);
+            string text = writeControlNameOnCentralLabel(sender);
+            if (e.KeyValue == 17)
+            {
+                downUpLabel.Text = text + "_down_Control";
+            }
+        }
+
+        private void CommonKeyUp(object sender, KeyEventArgs e)
+        {
+            string text = writeControlNameOnCentralLabel(sender);
+            if (e.KeyValue == 17)
+            {
+                downUpLabel.Text = text + "_up_Control";
+            }
+        }
+
+        private void CommonKeyPress(object sender, KeyPressEventArgs e)
+        {
+            string text = writeControlNameOnCentralLabel(sender);
+            if (e.KeyChar == (int)Keys.Escape)
+            {
+                pressLabel.Text = text + "_press_Escape";
+            }
         }
 
         private string writeControlNameOnCentralLabel(object sender)
@@ -141,14 +165,18 @@ namespace mock_win
             return text;
         }
 
-        private void writeTextOncentralLabelKeyboard(string text, KeyEventArgs e)
+        private void writeTextOncentralLabelKeyboard(string text, EventArgs e)
         {
-            if (e.KeyCode == Keys.Escape)
+            if (((KeyEventArgs)e).KeyValue == 17)
             {
-                centralLabel.Text = text + "_press_Escape";
-            }
 
-            if (Control.ModifierKeys == Keys.Shift)
+            }
+            //if (e == Keys.Escape)
+            //{
+            //    pressLabel.Text = text + "_press_Escape";
+            //}
+
+            if (Control.ModifierKeys == Keys.Control)
             {
                 centralLabel.Text = text + "_press_Control";
             }
@@ -213,6 +241,38 @@ namespace mock_win
         private void hideButton_Click(object sender, EventArgs e)
         {
             hideButton.Visible = false;
+        }
+
+        private void label1_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void Table_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void ComboBox_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void countButton_Click(object sender, EventArgs e)
+        {
+            counter++;
+            countLabel.Text = counter.ToString();
+        }
+
+        private void countButtonClear_Click(object sender, EventArgs e)
+        {
+            counter = 0;
+            countLabel.Text = "0";
         }
     }
 }
