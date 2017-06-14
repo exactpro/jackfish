@@ -39,8 +39,9 @@ import java.util.Map;
 		additionFieldsAllowed 	= true,
 		outputDescription 		= "Message object.",
 		outputType				= MapMessage.class,
-		examples = "{{##Id;#Action;#Fields\n" +
-				"MSGCR1;MessageCreate;{'First item' : 'First Value', 'Second Item' : 'Second Value'}#}}"
+		examples = "{{#\n" +
+				"#Id;#Action;#Fields\n" +
+				"MSGCR1;MessageCreate;{'First item':'First Value', 'Second Item':'Second Value'}#}}"
 	)
 public class MessageCreate extends AbstractAction 
 {

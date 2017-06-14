@@ -24,15 +24,16 @@ import com.exactprosystems.jf.documents.matrix.parser.Parameters;
 		group					= ActionGroups.Messages,
 		suffix					= "MSGCMP",
 		generalDescription 		= "The purpose of the action is to compare two MapMessage.\n" +
-				"MapMessage is the output of such actions as MessageCreate, ClientCreateMapMessage, ClientDecode, ClientGetMessage, ClientSendMessage. \n" +
-				"If there is dissimilarity in the compared objects MapMessage action fails.",
+				"MapMessage is the output of such actions as MessageCreate, ClientCreateMapMessage, ClientDecode, ClientGetMessage, ClientSendMessage. \n" +
+				" If there is dissimilarity in the compared objects MapMessage action fails.",
 		additionFieldsAllowed 	= false,
 		examples = "1-2. Create two objects of MapMessage type with different values \n" +
 				"3. Check them with MessageCompareTwo action.\n" +
-				"{{##Id;#Action;#Fields\n" +
-				"MSGCR1;MessageCreate;{'First item' : 'First Value', 'Second Item' : 'Second Value'}\n" +
+				"{{#\n" +
 				"#Id;#Action;#Fields\n" +
-				"MSGCR2;MessageCreate;{'First item' : 'First Value', 'Fourth Item' : 'Fourth Value'}\n" +
+				"MSGCR1;MessageCreate;{'First item':'First Value', 'Second Item':'Second Value'}\n" +
+				"#Id;#Action;#Fields\n" +
+				"MSGCR2;MessageCreate;{'First item':'First Value', 'Fourth Item':'Fourth Value'}\n" +
 				"#Id;#Action;#Expected;#Actual\n" +
 				"MSGCMP1;MessageCompareTwo;MSGCR2.Out;MSGCR1.Out#}}"
 	)
