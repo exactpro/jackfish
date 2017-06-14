@@ -46,8 +46,8 @@ generalDescription 		=
 additionalDescription	= 
 	  "The structure and meaning of parameters depend on the plug-in used. For example, web.jar "
 	+ "requires the following list:" 
-	+ "{{` {{$Browser$}} – the browser in which the web application is started, `}}"
-	+ "{{` {{$URL$}} – the Internet link to the application server. `}}"
+	+ "{{` {{$Browser$}} - the browser in which the web application is started, `}}"
+	+ "{{` {{$URL$}} - the Internet link to the application server. `}}"
 	+ "In order to avoid errors in writing these additional parameters, the user can add them by using "
 	+ "the matrices editor accessible via the 'All parameters...' context menu after the {{$AppId$}} parameter "
 	+ "has been filled (and is filled by the constant string).",
@@ -62,7 +62,8 @@ examples				=
 	  "As a rule, {{$ApplicationStart$}} is placed in one of the initial TestCases where initialization is performed. "
 	+ "Therefore it requires that the {{$Global$}} flag be set, as access to the output value is necessary within "
 	+ "the whole matrix rather than just within the {{$TestCase$}} containing the action. "
-	+ "{{##Id;#Global;#Action;#AppId;#Browser;#URL\n"
+	+ "{{#\n" +
+	  "#Id;#Global;#Action;#AppId;#Browser;#URL\n"
 	+ "APPSTR1;1;ApplicationStart;'WEB';Browser;Env1 #}} "
 	+ "It is a standart using this action with web.jar plugin.",
 seeAlsoClass = {ApplicationStop.class, ApplicationConnectTo.class, ApplicationGetProperties.class, ApplicationNewInstance.class,

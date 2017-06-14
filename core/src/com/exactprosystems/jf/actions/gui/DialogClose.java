@@ -39,7 +39,8 @@ import static com.exactprosystems.jf.actions.gui.Helper.message;
 		examples 				= "{{`1. Start the web application.`}}"
 				+ "{{`2. Close all the elements described in the Close section of MyDialog.`}}"
 				+ "{{`3. Check the number of closed elements.`}}"
-				+ "{{##Id;#Action;#Browser;#URL;#AppId\n"
+				+ "{{#\n" +
+				"#Id;#Action;#Browser;#URL;#AppId\n"
 				+ "APPSTR1;ApplicationStart;'Chrome';'https://google.com';'WEB'\n"
 				+ "#Id;#Action;#Dialog;#AppConnection\n"
 				+ "DLGCLS1;DialogClose;'MyDialog';APPSTR1.Out\n"

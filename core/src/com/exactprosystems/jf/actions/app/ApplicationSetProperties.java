@@ -40,8 +40,9 @@ import com.exactprosystems.jf.functions.HelpKind;
 		additionalDescription = "The parameters are determined by the chosen plug-in. {{`For example, additional "
 				+ "parameters {{$CookieAdd$}} and {{$CookieRemove$}} are available for web plug-in. They are necessary "
 				+ "to add and to remove a cookie respectively.`}} The parameters can be chosen in the dialogue"
-				+ " window opened with the context menu of this action in {{$“All parameters”$}} option.",
-		examples = "{{##Id;#Action;#CookieRemove\n"
+				+ " window opened with the context menu of this action in {{$'All parameters'$}} option.",
+		examples = "{{#\n" +
+				"#Id;#Action;#CookieRemove\n"
 				+ "AGP1;ApplicationGetProperties;'name'\n"
 				+ "\n"
 				+ "#Assert;#Message\n"

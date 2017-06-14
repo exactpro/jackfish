@@ -29,7 +29,8 @@ import java.util.List;
 		examples 				= "{{`1. Start the web application.`}}"
 				+ "{{`2. Connect to the desktop application, the window headed WinApp.`}}"
 				+ "{{`3. Switch focus back to the MainFrame of the web application, located in MyDialog.`}}"
-				+ "{{##Id;#Action;#Browser;#URL;#AppId\n"
+				+ "{{#\n" +
+				"#Id;#Action;#Browser;#URL;#AppId\n"
 				+ "APPSTR1;ApplicationStart;'Chrome';'https://google.com';'WEB'\n"
 				+ "#Id;#Action;#AppId;#Main window\n"
 				+ "APPSTR2;ApplicationConnectTo;'WIN';'WinApp'\n"

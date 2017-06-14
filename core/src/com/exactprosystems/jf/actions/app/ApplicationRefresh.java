@@ -26,7 +26,8 @@ import com.exactprosystems.jf.documents.matrix.parser.Parameters;
 		generalDescription 		= "Plug-in dependent action. The purpose of the action is to refresh the application "
 				+ "window. It should be used only with web plug-in.",
 		additionFieldsAllowed 	= false,
-		examples = "{{##Action;#AppConnection\n" +
+		examples = "{{#\n" +
+				"#Action;#AppConnection\n" +
 				"ApplicationRefresh;app\n#}}",
 		seeAlsoClass = {ApplicationStart.class, ApplicationConnectTo.class}
 	)

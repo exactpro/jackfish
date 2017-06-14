@@ -45,12 +45,13 @@ import java.util.Map;
 				+ "{{` {{$Height$}} - the height of the window.`}} "
 				+ "{{` {{$Width$}} - the width of the window.`}} "
 				+ "The parameters can be chosen"
-				+ " in the dialogue window opened with the context menu of this action in {{$“All parameters”$}} option.",
+				+ " in the dialogue window opened with the context menu of this action in {{$'All parameters'$}} option.",
 		outputDescription 		= "A special object which identifies the started application session."
 				+ "This object is required in many other actions to specify the session of the application the"
-				+ " indicated action belongs to. Should be created with an active {{$“Global”$}} flag.",
+				+ " indicated action belongs to. Should be created with an active {{$'Global'$}} flag.",
 		outputType				= AppConnection.class,
-		examples = "{{##Id;#Global;#Action;#Browser;#URL;#AppId\n"
+		examples = "{{#\n" +
+				"#Id;#Global;#Action;#Browser;#URL;#AppId\n"
 				+ "app;1;ApplicationStart;'Chrome';'http://google.com';'WEB'\n"
 				+ "\n"
 				+ "#Assert;#Message\n"
