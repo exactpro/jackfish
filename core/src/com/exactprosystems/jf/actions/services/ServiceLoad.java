@@ -34,7 +34,8 @@ import java.util.List;
 		additionFieldsAllowed 	= false,
 		outputDescription = "Is a connection with a loaded server. It is used for further interaction with the loaded server.",
 		outputType 				= ServiceConnection.class,
-		examples 				= "{{##Id;#Action;#ServiceId\n"
+		examples 				= "{{#\n" +
+				"#Id;#Action;#ServiceId\n"
 				+ "SRVLD1;ServiceLoad;'TEST'#}}"
 	)
 public class ServiceLoad extends AbstractAction 

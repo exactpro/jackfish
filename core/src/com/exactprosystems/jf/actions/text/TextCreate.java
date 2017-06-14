@@ -36,7 +36,8 @@ import java.io.StringReader;
 		outputDescription 		= "The object type {{$Text$}} is the text-based pattern which consists of lines.",
 		outputType				= Text.class,
 		examples =
- "{{##Id;#Action;#Content\n"
+ "{{#\n" +
+ "#Id;#Action;#Content\n"
 + "TXT1;TextCreate;'Text'\n"
 + "#Assert;#Message\n"
 + "TXT1.Out.toString() == 'Text';#}}\n",

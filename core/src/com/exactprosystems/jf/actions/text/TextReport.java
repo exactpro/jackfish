@@ -28,10 +28,11 @@ import java.util.List;
 + "It is applied when it is necessary to examine the content of the object {{$Text$}}.",
 		additionFieldsAllowed 	= false,
 		examples =
- "{{##Id;#Action;#Content\n"
+ "{{#\n" +
+ "#Id;#Action;#Content\n"
 + "TXT1;TextCreate;'Text'\n"
 + "#Action;#Title;#Text\n"
-+ "TextReport;’My text’;TXT1.Out#}}\n",
++ "TextReport;'My text';TXT1.Out#}}\n",
 		seeAlsoClass = {TextPerform.class, TextAddLine.class, TextLoadFromFile.class, TextCreate.class, TextSaveToFile.class,
 		TextSetValue.class}
 	)

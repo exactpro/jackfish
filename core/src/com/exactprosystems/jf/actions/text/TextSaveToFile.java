@@ -28,10 +28,11 @@ import com.exactprosystems.jf.functions.Text;
 		outputDescription 		= "True if saving is successful.",
 		outputType				= Boolean.class,
 		examples =
- "{{##Id;#Action;#Content\n"
+ "{{#\n" +
+ "#Id;#Action;#Content\n"
 +"TXT1;TextCreate;'Text'\n"
 + "#Id;#Action;#Text;#File\n"
-+ "TXT2;TextSaveToFile;TXT1.Out;’path/file.txt’\n"
++ "TXT2;TextSaveToFile;TXT1.Out;'path/file.txt'\n"
 + "#Assert;#Message\n"
 + "TXT2.Out;#}}\n",
 		seeAlsoClass = {TextReport.class, TextAddLine.class, TextLoadFromFile.class, TextCreate.class, TextPerform.class, TextSetValue.class}

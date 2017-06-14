@@ -28,7 +28,8 @@ import com.exactprosystems.jf.documents.matrix.parser.Parameters;
 		examples 				= "{{`1. Load MatrixService.`}}"
 				+ "{{`2. Run a service with additional parameter Port, that was specified earlier.`}}"
 				+ "{{`3. Close a connection.`}} "
-				+ "{{##Id;#Action;#ServiceId\n"
+				+ "{{#\n" +
+				"#Id;#Action;#ServiceId\n"
 				+ "SRVLD1;ServiceLoad;'MatrixService'\n"
 				+ "#Id;#Action;#Port;#ServiceConnection\n"
 				+ "SRVSTRT1;ServiceStart;10565;SRVLD1.Out\n"

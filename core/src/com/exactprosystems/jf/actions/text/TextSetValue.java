@@ -29,7 +29,8 @@ import com.exactprosystems.jf.functions.Text;
 + "from which it was obtained.",
 		additionFieldsAllowed 	= false,
 		examples =
- "{{##Id;#Action;#Content\n"
+ "{{#\n" +
+ "#Id;#Action;#Content\n"
 + "TXT1;TextCreate;'Text'\n"
 + "#Action;#Line;#Text;#Index\n"
 + "TextSetValue;'string successfully set';TXT1.Out;2#}}",

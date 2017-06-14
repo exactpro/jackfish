@@ -40,7 +40,8 @@ import com.exactprosystems.jf.functions.Text;
         outputDescription 		= "The object type {{$Text$}} is the text-based pattern which consists of lines. ",
         outputType				= Text.class,
         examples                =
- "{{##Id;#Action;#Content\n"
+ "{{#\n" +
+ "#Id;#Action;#Content\n"
 + "TXT1;TextCreate;'My taxes in 2016 is @{amount * 0.13} rub'\n"
 + "#Id;#Let\n"
 + "amount;100\n"

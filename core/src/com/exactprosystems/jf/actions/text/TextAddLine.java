@@ -25,7 +25,8 @@ import com.exactprosystems.jf.functions.Text;
                         + "Object type {{$Text$}} is a text-based pattern which consists of lines. "
                         + "The action can work for object creation {{$Text$}} line-by-line from different sources.",
         additionFieldsAllowed = false,
-        examples =        "{{##Id;#Action;#Content\n"
+        examples =        "{{#\n" +
+                        "#Id;#Action;#Content\n"
                         + "TXT1;TextCreate;'Text'\n"
                         + "#Action;#Line;#Text\n"
                         + "TextAddLine;'New line';TXT1.Out#}}\n",
