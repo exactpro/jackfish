@@ -1,0 +1,307 @@
+#Id;#TestCase;#Kind;#Depends;#For
+INIT;Test case;Never;;
+    #Id;#Global;#Let
+    getExp;1;def (pl, v1, v2, v3) {if(pl == 'Web') {return v1\u003b}if(pl == 'Swing') {return v2\u003b}if(pl == 'Win') {return v3\u003b}}\u003b
+
+    #Id;#Let
+    getBefore;def (pl, v1, v2, v3) {if(pl == 'Web') {return v1\u003b}if(pl == 'Swing') {return v2\u003b}if(pl == 'Win') {return v3\u003b}}\u003b
+
+    // {web,swing,win} or All
+    #Id;#Global;#RawTable
+    controls;1;Table
+    @;On;needBefore;Before;getRowPar;getRow;colorPar;Name;getAttr;getAttrPar;getValue;get;setValue;text;getList;check;getListPar;getValuePar
+    0;x;;;'\'tr_3_td_3\'';;'new Color(246,246,246)';Label;'centralLabel';'\'centralLabel\'';'CentralLabel';'CentralLabel';;;;'CentralLabel';'new ArrayList([\'Green\',\'Yellow\', \'Orange\',\'Blue\']),false';'\'CentralLabel\''
+    1;x;;;'\'tr_3_td_3\'';;'new Color(246,246,246)';Button;'Button';'\'Button\'';'Button';'Button';;;;'Button';'new ArrayList([\'Green\',\'Yellow\', \'Orange\',\'Blue\']),false';'\'Button\''
+    2;x;;;'\'tr_3_td_3\'';;'new Color(246,246,246)';TextBox;'TextBox';'\'TextBox\'';'';'';;'Green';;'';'new ArrayList([\'Green\',\'Yellow\', \'Orange\',\'Blue\']),false';'\'\''
+    3;x;;;'\'tr_3_td_3\'';;'new Color(246,246,246)';Any;'Any';'\'Any\'';;;;;;true;'new ArrayList([\'Green\',\'Yellow\', \'Orange\',\'Blue\']),false';'\'\''
+    4;x;;;'\'tr_3_td_3\'';;'new Color(246,246,246)';CheckBox;'CheckBox';'\'CheckBox\'';true;'CheckBox';;;;true;'new ArrayList([\'Green\',\'Yellow\', \'Orange\',\'Blue\']),false';'\'true\''
+    5;x;;;'\'tr_3_td_3\'';;'new Color(246,246,246)';ToggleButton;'ToggleButton';'\'ToggleButton\'';true;'ToggleButton';;;;true;'new ArrayList([\'Green\',\'Yellow\', \'Orange\',\'Blue\']),false';'\'true\''
+    6;x;;;'\'tr_3_td_3\'';;'new Color(246,246,246)';ComboBox;'ComboBox';'\'ComboBox\'';'Green';'Green';;'Green';'[Green, Yellow, Orange, Blue]';'Green';getExp(plugin,'new ArrayList([\'Green\',\'Yellow\', \'Orange\',\'Blue\']),false','new ArrayList([\'Green\',\'Yellow\', \'Orange\',\'Blue\']),false','');'\'Green\''
+    7;x;;;'\'tr_3_td_3\'';'{Head1=tr_3_td_1, Head2=tr_3_td_2, Head3=tr_3_td_3}';'new Color(246,246,246)';Table;'Table';'\'Table\'';'tr_2_td_2';;;getExp(plugin,'tr_2_td_2','Green','0');;'tr_2_td_2';'new ArrayList([\'Green\',\'Yellow\', \'Orange\',\'Blue\']),false';'\'tr_2_td_2\''
+    8;x;;;'\'tr_3_td_3\'';;'new Color(246,246,246)';Slider;'Slider';'\'Slider\'';getExp(plugin,'',0,'0');;'Slider_30';;;getExp(plugin,'',0,'0');'new ArrayList([\'Green\',\'Yellow\', \'Orange\',\'Blue\']),false';getExp(plugin,'\'\'','0','0')
+    9;x;;;'\'tr_3_td_3\'';;'new Color(246,246,246)';RadioButton;'RadioButton';'\'RadioButton\'';false;'Green';;;;false;'new ArrayList([\'Green\',\'Yellow\', \'Orange\',\'Blue\']),false';'\'false\''
+    10;x;;;'\'tr_3_td_3\'';;'new Color(246,246,246)';ProgressBar;'ProgressBar';'\'ProgressBar\'';10;;;;;true;'new ArrayList([\'Green\',\'Yellow\', \'Orange\',\'Blue\']),false';'\'10\''
+    11;x;;;'\'tr_3_td_3\'';;'new Color(246,246,246)';Panel;'Panel';'\'Panel\'';'Panel';;;'Panel';;true;'new ArrayList([\'Green\',\'Yellow\', \'Orange\',\'Blue\']),false';'\'Panel\''
+    12;x;{'Do.select(\'Green\').delay(400)','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','',''};true;'\'tr_3_td_3\'';;'new Color(246,246,246)';List;'List';'\'List\'';getExp(plugin,'Coffee\nJuice\nTea\nBlack tea\nGreen tea\nMilk','Green','Green');;;;getExp(plugin,'[Coffee, Juice, Tea\nBlack tea\nGreen tea, Milk]','[Green, Yellow, Red, Blue, Orange]','');true;getExp(plugin,'new ArrayList([\'Coffee\',\'Juice\', \'Tea\nBlack tea\nGreen tea\',\'Milk\']),false','new ArrayList([\'Green\',\'Yellow\',\'Red\',\'Blue\',\'Orange\']),false','');getExp(plugin,'\'Coffee\nJuice\nTea\nBlack tea\nGreen tea\nMilk\'','\'Green\'','\'Green\'')
+    13;x;;;'\'tr_3_td_3\'';;'new Color(246,246,246)';Dialog;'Dialog';'\'Dialog\'';;;;;;true;'new ArrayList([\'Green\',\'Yellow\', \'Orange\',\'Blue\']),false';'\'\''
+    14;x;;;'\'tr_3_td_3\'';;'new Color(246,246,246)';Image;'Image';'\'Image\'';;;;;;true;'new ArrayList([\'Green\',\'Yellow\', \'Orange\',\'Blue\']),false';'\'\''
+    15;x;;;'\'tr_3_td_3\'';;'new Color(246,246,246)';Wait;'Wait';'\'Wait\'';;;;;;true;'new ArrayList([\'Green\',\'Yellow\', \'Orange\',\'Blue\']),false';'\'\''
+    16;x;;;'\'tr_3_td_3\'';;'new Color(246,246,246)';ScrollBar;'ScrollBar';'\'ScrollBar\'';0;;'ScrollBar_30';;;true;'new ArrayList([\'Green\',\'Yellow\', \'Orange\',\'Blue\']),false';'\'0\''
+    17;x;;;'\'[JTree][Orange]\'';'{value=[JTree][Orange]}';'new Color(246,246,246)';Tree;'Tree';'\'Tree\'';;;;;;true;'new ArrayList([\'Green\',\'Yellow\', \'Orange\',\'Blue\']),false';'\'\''
+    18;x;;;'\'[JTree][Orange]\'';;'new Color(246,246,246)';Splitter;'Splitter';'\'Splitter\'';125;;'Splitter_30';;;true;'new ArrayList([\'Green\',\'Yellow\', \'Orange\',\'Blue\']),false';'\'125\''
+    19;x;{'Do.use(\'Menu2\').move()','','','','','','','','','','','','','','','','Do.use(\'Menu2\').move()','Do.use(\'Menu2\').move()','','','','','Do.use(\'Menu2\').move()','Do.use(\'Menu2\').move()','Do.use(\'Menu2\').move()','Do.use(\'Menu2\').move()','Do.use(\'Menu2\').move()','Do.use(\'Menu2\').move()','Do.use(\'Menu2\').move()','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','',''};true;'\'[JTree][Orange]\'';;'new Color(246,246,246)';Tooltip;;'\'Tooltip\'';'Tooltip';'Tooltip';;;;true;'new ArrayList([\'Green\',\'Yellow\', \'Orange\',\'Blue\']),false';'\'Tooltip\''
+    20;x;;;'\'[JTree][Orange]\'';;'new Color(246,246,246)';Menu;'Menu';'\'Menu\'';;'Menu';;;;true;'new ArrayList([\'Green\',\'Yellow\', \'Orange\',\'Blue\']),false';'\'\''
+    21;x;{'Do.use(\'Menu2\').move()','','','','','','','','','','','','','','','Do.use(\'Menu2\').click()','Do.use(\'Menu2\').click()','Do.use(\'Menu2\').click()','','','','','','','','','Do.use(\'Menu2\').click()','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','',''};true;'\'[JTree][Orange]\'';;'new Color(246,246,246)';MenuItem;'MenuItem';'\'MenuItem\'';;'MenuItem';;;;true;'new ArrayList([\'Green\',\'Yellow\', \'Orange\',\'Blue\']),false';'\'\''
+    #EndRawTable
+
+    #Action;$Table;$Expression
+    TableConsiderColumnsAs;controls;{'needBefore','getAttr','getValue','get','setValue','text','getList','check','getListPar','getValuePar','getAttrPar','colorPar','getRow','getRowPar'}
+
+    #Id;#Global;#RawTable
+    operations;1;Table
+    @;On;Name;Operation;Actual;Par
+    0;x;Do.check;Do.check(par);true;control.getValuePar
+    1;x;Do.check(false);Do.check(par,false);true;control.getValuePar
+    2;x;Do.check(x,y);Do.check(par,1,1);true;control.getValuePar
+    3;x;Do.checkRegexp;Do.checkRegexp('\\w*');true;control.getValuePar
+    4;x;Do.checkRegexp(false);Do.checkRegexp('\\w*',false);true;control.getValuePar
+    5;x;Do.checkRegexp(x,y);Do.checkRegexp('\\w*',1,1);true;control.getValuePar
+    6;x;Do.checkAttr;Do.checkAttr('name',par);true;control.getAttrPar
+    7;x;Do.checkAttrRegexp;Do.checkAttrRegexp('name','\\w*');true;control.getAttrPar
+    8;x;Do.checkList;Do.checkList(par);true;control.getListPar
+    9;;Do.checkColor;Do.checkColor(5,5,par);true;control.colorPar
+    10;x;getAttr;Do.getAttr('name');control.getAttr;
+    11;x;getValue;Do.getValue();control.getValue;
+    12;x;getValueXY;Do.getValue(1,1);control.getValue;
+    13;x;get;Do.get();control.get;
+    14;x;click;Do.click().use('centralLabel').getValue();control.Name + '_click';
+    15;x;doubleClick;Do.click(1,1,MouseAction.LeftDoubleClick).use('centralLabel').getValue();control.Name + '_double_click';
+    16;x;clickXY;Do.click(2,1).use('centralLabel').getValue();control.Name + '_click';
+    17;x;forech;Do.foreach(Do.click(1,1,MouseAction.LeftDoubleClick)).use('centralLabel').getValue();control.Name + '_double_click';
+    18;x;setValue;Do.setValue(30).use('sliderLabel').getValue();control.setValue;
+    19;x;text;Do.text('Green').getValue();control.text;
+    20;x;textTrue;Do.text('Green',true).getValue();control.text;
+    21;x;textXY;Do.text('Green',1,1).getValue(1,1);control.text;
+    22;x;push;Do.push().use('centralLabel').getValue();control.Name + '_click';
+    23;x;getList;Do.getList();control.getList;
+    24;x;Do.toggle;Do.toggle(true).toggle(false).toggle(true).getValue();true;
+    25;x;Do.select(int);Do.select(0).getValue();control.getValue;
+    26;x;Do.select(string);Do.select('Green').getValue();control.getValue;
+    27;x;Do.count;Do.count();1;
+    28;x;Do.use;Do.use(0).count();1;
+    29;x;Do.move;Do.move().use('moveLabel').getValue();control.Name + '_move';
+    30;x;Do.move(x,y);Do.move(1,1).use('moveLabel').getValue();control.Name + '_move';
+    31;;Do.getRectangle;;;
+    32;x;Do.getRow;Do.getRow(new StringCondition('Head3',par));control.getRow;control.getRowPar
+    33;x;Do.getRowIndexes;Do.getRowIndexes(new StringCondition('Head3',par));'[2]';control.getRowPar
+    34;x;Do.getRowByIndex;Do.getRowByIndex(2);control.getRow;
+    35;x;Do.getRowWithColor;Do.getRowWithColor(2);'{Head1=value=\'tr_3_td_1\', color=Color[51, 51, 51], backColor=Color[255, 255, 255], Head2=value=\'tr_3_td_2\', color=Color[51, 51, 51], backColor=Color[255, 255, 255], Head3=value=\'tr_3_td_3\', color=Color[51, 51, 51], backColor=Color[255, 255, 255]}';
+    36;;Do.getColor;Do.getColor(1,1);'color [java.awt.Color[r=255,g=255,b=255]]';
+    37;x;Do.getTableSize;Do.getTableSize();3;
+    38;x;Do.getTable;Do.getTable();'Table [Head1, Head2, Head3]:3';
+    39;x;Do.expand;Do.expand('[JTree][colors]').getRowIndexes(new StringCondition('Head3','[JTree, colors][red]'));'[4]';
+    40;x;Do.collapse;Do.collapse('[JTree][colors]').getRowIndexes(new StringCondition('Head3','[JTree, colors][red]'));'[]';
+    41;x;Do.wait;Do.use('buttonShowArea').click().wait('buttonHideArea', 10000, true).use('buttonHideArea').getAttr('name').click();'hideButton';
+    42;x;Do.delay;Do.use('buttonShowArea').click().delay(100).use('buttonHideArea').getAttr('name').click();'hideButton';
+    43;x;Do.repeat;Do.use('countButtonClear').click().use('countButton').repeat(2, Do.click()).use('countLabel').getValue();2;
+    44;x;Do.press;Do.press(Keyboard.ESCAPE).use('pressLabel').getValue();control.Name + '_press_Escape';
+    45;x;Do.keyDown;Do.keyDown(Keyboard.CONTROL).use('downUpLabel').getValue();control.Name + '_down_Control';
+    46;x;Do.keyUp;Do.keyUp(Keyboard.CONTROL).use('downUpLabel').getValue();control.Name + '_up_Control';
+    47;x;Do.isEnabled;Do.isEnabled();true;
+    48;x;Do.isVisible;Do.isVisible();true;
+    49;x;Do.isEnabled;Do.use('notEnabledButton').isEnabled();false;
+    50;x;Do.isVisible;Do.use('invisibleButton').isVisible();false;
+    51;x;Do.script;Do.use('countButtonClear').click().script('counter = 99').use('countButton').click().use('countLabel').getValue();100;
+    52;x;Do.dragNDrop;Do.use('Slider').setValue(2).dragNdrop(20, 6, 'Slider', 397, 6).use('sliderLabel').getValue();'Slider_50';
+    #EndRawTable
+
+    #Action;$Table;$Expression
+    TableConsiderColumnsAs;operations;{'Actual','Par'}
+
+
+#Id;#TestCase;#Kind;#Depends;#For
+EXECUTE;;;;
+    #Call;plugin
+    RUN;'Web'
+
+    #Call;plugin
+    RUN;'Swing'
+
+    #Off;#Call;plugin
+    1;RUN;'Win'
+
+
+#Id;#TestCase;#Kind;#Depends;#For
+SUBCASES;;;;
+    #Id;#SubCase;plugin
+    RUN;Run;'Web'
+        #Step;#Kind;#For;#Depends
+        'start application';;;
+            #Id;#Action;Plugin;Control;Operation;Expected;Actual;Result
+            TBL1;TableCreate;;;;;;
+
+            #Id;#Global;#Let
+            table_result;1;TBL1.Out
+
+            #Action;$Table;$Colored
+            TableConsiderColumnsAs;table_result;'Result'
+
+            #If
+            plugin == 'Web'
+                #Id;#Action;$AppId;Browser;URL
+                APPSTR1;ApplicationStart;mockWebApp;mockWebBrowser;mockWebURL
+
+                #Id;#Global;#Let
+                appCon;1;APPSTR1.Out
+
+            #EndIf
+
+            #If
+            plugin == 'Swing'
+                #Id;#Action;$AppId;Jar;Args;MainClass
+                APPSTR1;ApplicationStart;mockSwingApp;mockSwingJar;'';mockSwingClass
+
+                #Id;#Global;#Let
+                appCon;1;APPSTR1.Out
+
+            #EndIf
+
+            #If
+            plugin == 'Win'
+                #Id;#Action;$AppId;Browser;URL
+                APPSTR1;ApplicationStart;mockWebApp;mockWebBrowser;mockWebURL
+
+                #Id;#Global;#Let
+                appCon;1;APPSTR1.Out
+
+            #EndIf
+
+        #EndStep
+
+        #Step;#Kind;#For;#Depends
+        'run tests';;;
+            #ForEach;#In
+            control;controls
+                #Id;#Let
+                field;'DLG.Out.' + control.Name
+
+                #If
+                control.On.equals('')
+                    #Continue
+
+                #EndIf
+
+                #Id;#Let
+                needNum;-1
+
+                #ForEach;#In
+                operation;operations
+                    #Id;#Let
+                    needNum;needNum + 1
+
+                    #If
+                    operation.On.equals('')
+                        #Continue
+
+                    #EndIf
+
+                    #Id;#Let
+                    before;Do.delay(1)
+
+                    #Id;#Let
+                    op;operation.Operation
+
+                    #If
+                    operation.Operation.contains('par')
+                        #If
+                        operation.Par != null
+                            #Id;#Let
+                            op;op.replace('par',operation.Par)
+
+                        #EndIf
+
+                    #EndIf
+
+                    #If
+                    !control.Before.isEmpty()
+                        #If
+                        !control.needBefore[needNum].isEmpty()
+                            #Id;#Let
+                            before;control.needBefore[needNum]
+
+                        #EndIf
+
+                    #EndIf
+
+                    #Id;#Action;$Dialog;$AppConnection;$Fields
+                    DLG;DialogFill;'Main';appCon;{control.Name : before}
+
+                    #Id;#Action;$Dialog;$AppConnection;$Fields
+                    DLG;DialogFill;'Main';appCon;{control.Name : op}
+
+                    #Assert;#Message
+                    evaluator.evaluate(field).toString() == operation.Actual.toString();
+
+                    #Action;$Table;Plugin;Control;Operation;Expected;Actual;Result
+                    TableAddValue;table_result;plugin;control.Name;operation.Name;evaluator.evaluate(field);operation.Actual;'OK'
+
+                    #OnError
+                        #Switch
+                        DLG.Kind
+                            #Case
+                            ErrorKind.OPERATION_NOT_ALLOWED
+                                #If
+                                appCon.getDictionary().getWindow('Main').getControlForName(null, control.Name).getBindedClass().isAllowed(evaluator.evaluate(op).getOperationKind(0)) == false
+                                    #Action;$Table;Plugin;Control;Operation;Expected;Actual;Result
+                                    TableAddValue;table_result;plugin;control.Name;operation.Name;'OPERATION IS NOT ALLOWED';'OPERATION IS NOT ALLOWED';'OK'
+
+                                #Else
+                                    #Action;$Table;Plugin;Control;Operation;Expected;Actual;Result
+                                    TableAddValue;table_result;plugin;control.Name;operation.Name;'OPERATION_CHECK_FAILED';'OPERATION_CHECK_FAILED';'FAILED'
+
+
+                                #EndIf
+
+                                #Continue
+
+
+                            #Case
+                            ErrorKind.FEATURE_NOT_SUPPORTED
+                                #Action;$Table;Plugin;Control;Operation;Expected;Actual;Result
+                                TableAddValue;table_result;plugin;control.Name;operation.Name;'FEATURE_NOT_SUPPORTED';'FEATURE_NOT_SUPPORTED';'OK'
+
+                                #Continue
+
+
+                            #Case
+                            ErrorKind.CONTROL_NOT_SUPPORTED
+                                #If
+                                appCon.getApplication().getFactory().getInfo().isSupported(appCon.getDictionary().getWindow('Main').getControlForName(null, control.Name).getBindedClass()) == false
+                                    #Action;$Table;Plugin;Control;Operation;Expected;Actual;Result
+                                    TableAddValue;table_result;plugin;control.Name;operation.Name;'ELEMENT IS NOT SUPPORTED';'ELEMENT IS NOT SUPPORTED';'OK'
+
+                                #Else
+                                    #Action;$Table;Plugin;Control;Operation;Expected;Actual;Result
+                                    TableAddValue;table_result;plugin;control.Name;operation.Name;'CONTROL_CHECK_FAILED';'CONTROL_CHECK_FAILED';'FAILED'
+
+
+                                #EndIf
+
+                                #Continue
+
+
+                            #Case
+                            ErrorKind.EXCEPTION
+                                #Action;$Table;Plugin;Control;Operation;Expected;Actual;Result
+                                TableAddValue;table_result;plugin;control.Name;operation.Name;'EXCEPTION';'EXCEPTION';'FAILED'
+
+                                #Continue
+
+
+                            #Default
+                                #Action;$Table;Plugin;Control;Operation;Expected;Actual;Result
+                                TableAddValue;table_result;plugin;control.Name;operation.Name;evaluator.evaluate(field);operation.Actual;'FAILED'
+
+
+                        #EndSwitch
+
+
+                #EndForEach
+
+            #EndForEach
+
+        #EndStep
+
+        #Step;#Kind;#For;#Depends
+        'close application';;;
+            #Id;#Action;$AppConnection
+            APPSTP1;ApplicationStop;appCon
+
+            #Action;$Table;$Title;$BeforeTestCase
+            TableReport;table_result;'Result';'INIT'
+
+        #EndStep
+
+    #EndSubCase
+
+

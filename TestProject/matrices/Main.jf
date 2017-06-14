@@ -99,7 +99,7 @@ Test;Matrix;;;
 #Id;#TestCase;#Kind;#Depends;#For
 Test;Controls;;;
     #Call;testName
-    runMatrix;'controls'
+    runMatrix;'Controls'
 
 
 #Id;#TestCase;#Kind;#Depends;#For
