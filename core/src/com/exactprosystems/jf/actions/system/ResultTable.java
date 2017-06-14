@@ -27,6 +27,7 @@ import com.exactprosystems.jf.actions.ActionGroups;
 import com.exactprosystems.jf.actions.DefaultValuePool;
 import com.exactprosystems.jf.actions.ReadableValue;
 import com.exactprosystems.jf.api.app.ImageWrapper;
+import com.exactprosystems.jf.api.common.Str;
 import com.exactprosystems.jf.api.error.ErrorKind;
 import com.exactprosystems.jf.common.MatrixRunner;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
@@ -149,11 +150,13 @@ public class ResultTable extends AbstractAction
 				Result res = (Result)row.get(Context.resultColumn);
 				String str = report.decorateStyle(row.get(Context.resultColumn), res == null ? "" : res.getStyle());
 				row.put(Context.resultColumn, str);
+				
+                String stepIdentity = Str.asString(row.get(Context.stepIdentityColumn));
+                row.put(Context.stepIdentityColumn, stepIdentity);
+                row.put(Context.stepColumn,         stepIdentity);
 
 				replace(row, Context.testCaseColumn, 		this::spaceIfNull);
 				replace(row, Context.testCaseIdColumn, 		this::spaceIfNull);
-				replace(row, Context.stepIdentityColumn, 	this::spaceIfNull);
-				replace(row, Context.stepColumn, 			this::spaceIfNull);
 				replace(row, Context.timeColumn, 			e -> report.decorateStyle(e == null ? "" : (e + " ms"), "ExecutionTime") );
 				
 				Object error = row.get(Context.errorColumn);

@@ -29,7 +29,6 @@ public class Parameter implements Mutable, Cloneable, Setter<String>, Getter<Str
 		this.expression = expression;
 		this.compiled = null;
 		this.value = null;
-		setString(null);
 		this.isValid = false;
 		this.type = TypeMandatory.Extra;
 		this.changed = false;
@@ -57,7 +56,6 @@ public class Parameter implements Mutable, Cloneable, Setter<String>, Getter<Str
 		this.compiled = null;
 		
 		this.value = parameter.value;
-		setString(this.value);
 		this.isValid = parameter.isValid;
 		this.description = new MutableString(parameter.getDescription());
 	}
@@ -67,7 +65,6 @@ public class Parameter implements Mutable, Cloneable, Setter<String>, Getter<Str
 	{
 		Parameter clone = ((Parameter) super.clone());
 		clone.value = null;
-		clone.valueAsString = "null";
 		clone.type = type;
 		clone.name = name;
 		clone.expression = expression;
@@ -146,7 +143,7 @@ public class Parameter implements Mutable, Cloneable, Setter<String>, Getter<Str
 
 	public String getValueAsString()
 	{
-		return this.valueAsString;
+		return "" + this.value;
 	}
 
 	public boolean isValid()
@@ -197,14 +194,12 @@ public class Parameter implements Mutable, Cloneable, Setter<String>, Getter<Str
 			if (this.compiled != null)
 			{
 				this.value = evaluator.execute(this.compiled);
-				setString(this.value);
 			}
 			this.isValid = true;
 		}
 		catch (Exception e)
 		{
 			this.value = e.getMessage();
-			setString(this.name + ": " + this.value);
 		}
 		return this.isValid;
 	}
@@ -213,7 +208,6 @@ public class Parameter implements Mutable, Cloneable, Setter<String>, Getter<Str
 	{
 		this.isValid = false;
 		this.value = null;
-		this.valueAsString = "null";
 		this.type = TypeMandatory.Extra;
 
 		this.changed = true;
@@ -223,11 +217,6 @@ public class Parameter implements Mutable, Cloneable, Setter<String>, Getter<Str
 	public String toString()
 	{
 		return this.name + " : " + this.expression;
-	}
-
-	private void setString(Object value)
-	{
-		valueAsString = value == null ?  "null" : value.toString();
 	}
 
     public final void correctType(Class<?> type) throws Exception
@@ -298,14 +287,13 @@ public class Parameter implements Mutable, Cloneable, Setter<String>, Getter<Str
 
     private MutableString description;
 
-	private String name;
-	String expression;
-	Object compiled;
-	Object value;
-	private String valueAsString;
-	boolean isValid;
-	TypeMandatory type;
-	private boolean changed;
+	private    String name;
+	protected  String expression;
+	private    Object compiled;
+	protected  Object value;
+	protected  boolean isValid;
+	protected  TypeMandatory type;
+	private    boolean changed;
 
     protected static final Logger logger = Logger.getLogger(Parameter.class);
 }

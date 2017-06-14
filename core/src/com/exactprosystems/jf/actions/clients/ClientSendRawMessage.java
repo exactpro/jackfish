@@ -33,7 +33,7 @@ import java.util.List;
 				+ "The start of the client is mandatory.",
 		additionFieldsAllowed 	= false,
 		examples 				= "{{`1. Load the client for FIX.`}}"
-				+ "{{`2. Connect to the port №10555.`}}"
+				+ "{{`2. Connect to the port #10555.`}}"
 				+ "{{`3. Create and send the raw message.`}} "
 				+ "{{#\n" +
 				"#Id;#Global;#Let\n" +

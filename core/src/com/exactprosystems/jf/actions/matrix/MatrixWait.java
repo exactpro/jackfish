@@ -23,9 +23,10 @@ import com.exactprosystems.jf.documents.matrix.parser.Parameters;
 @ActionAttribute(
         group = ActionGroups.Matrix,
         generalDescription = "The purpose of this action is to wait until the executed matrix stops. "
-                + "If the matrix doesn’t stop during the specified timeout, an action is failed.",
+                + "If the matrix doesn't stop during the specified timeout, an action is failed.",
         additionFieldsAllowed = false,
-        examples = "{{##Id;#Action;#Matrix\n" +
+        examples = "{{#\n" +
+                "#Id;#Action;#Matrix\n" +
                 "MXRN1;MatrixRun;'matrices/Matrix.jf'\n" +
                 "#Id;#Action;#Time;#Matrix\n" +
                 "MXWT1;MatrixWait;5000;MXRN1.Out#}}",
@@ -41,8 +42,8 @@ public class MatrixWait extends AbstractAction
     protected MatrixRunner     matrix     = null;
 
     @ActionFieldAttribute(name = timeName, mandatory = false, def = DefaultValuePool.Long0, description = "Matrix timeout per millisecond."
-            + "If the matrix doesn’t stop during the specified timeout, an action is failed."
-            + "If the value is 0 – there will be pending before the matrix stops with no time limit."
+            + "If the matrix doesn't stop during the specified timeout, an action is failed."
+            + "If the value is 0 - there will be pending before the matrix stops with no time limit."
             + "Be careful with such a value, if the started matrix is cycled, the current matrix will hang up in latency.")
     protected Long             time;
 
