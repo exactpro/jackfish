@@ -109,8 +109,8 @@ Test chrome;Never;;
     #EndStep
 
 
-#TestCase;#Kind;#Depends;#For
-Test IE;;;
+#Off;#TestCase;#Kind;#Depends;#For
+1;Test IE;;;
     #If
     !Sys.osName().startsWith('Win')
         #Return
