@@ -36,7 +36,7 @@ import java.util.List;
 		outputType = MapMessage.class,
 		additionalDescription 	= "In additional parameters name and values set is indicated which will be converted into the message type which is typical for the client.",
 		examples 				= "{{`1. Load the client for FIX.`}}"
-				+ "{{`2. Connect to the port number 10555.`}}"
+				+ "{{`2. Connect to the port #10555.`}}"
 				+ "{{`3. Create and send the message, check it beforehand with the indication of CHECK - true in the  parameter.`}}"
 				+ "{{#\n" +
 				"#Id;#Action;$ClientId\n" +

@@ -36,7 +36,7 @@ import java.util.List;
 		additionFieldsAllowed 	= false,
 		examples 				= "{{`1. Load the client for FIX.`}}"
 				+ "{{`2. Create the message with the help of MessageCreate method.`}}"
-				+ "{{`3. Connect to the port number 13000.`}}"
+				+ "{{`3. Connect to the port #13000.`}}"
 				+ "{{`4. Send the created message, test it preliminarily with the indication of CHECK - true in the  parameter.`}}"
 				+ "{{#\n" +
 				"#Id;#Action;$ClientId\n" +
