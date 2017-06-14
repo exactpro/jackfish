@@ -40,7 +40,8 @@ import com.exactprosystems.jf.functions.HelpKind;
 				+ "in the value of which, correspondingly the address and the service port are indicated, with which the connection is required.",
 		examples 				= "{{`1. Load the client for FIX.`}}"
 				+ "{{`2. Start the client.`}}"
-				+ "{{##Id;#Action;#ClientId\n"
+				+ "{{#\n" +
+				"#Id;#Action;#ClientId\n"
 				+ "CLLD1;ClientLoad;'FIX'\n"
 				+ "#Id;#Action;#ClientConnection\n"
 				+ "CLSTRT1;ClientStart;CLLD1.Out#}}"

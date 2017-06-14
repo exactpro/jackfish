@@ -29,7 +29,8 @@ import com.exactprosystems.jf.documents.matrix.parser.Parameters;
 		additionFieldsAllowed 	= false,
 		examples 				= "{{`1. Load the client for FIX.`}}"
 				+ "{{`2. Clear the list of the client messages.`}} "
-				+ "{{##Id;#Action;#ClientId\n"
+				+ "{{#\n" +
+				"#Id;#Action;#ClientId\n"
 				+ "CLLD1;ClientLoad;'FIX'\n"
 				+ "\n"
 				+ "#Id;#Action;#ClientConnection\n"

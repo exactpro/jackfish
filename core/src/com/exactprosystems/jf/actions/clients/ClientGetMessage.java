@@ -44,7 +44,8 @@ import com.exactprosystems.jf.functions.HelpKind;
 		outputType				= MapMessage.class,
 		examples 				= "{{`1. Load the client for FIX.`}}"
 				+ "{{`2. Find the message with the value Value and name Name.`}} "
-				+ "{{##Id;#Action;#ClientId\n"
+				+ "{{#\n" +
+				"#Id;#Action;#ClientId\n"
 				+ "CLLD1;ClientLoad;'FIX'\n"
 				+ "\n"
 				+ "#Id;#Action;#ClientConnection;#MessageType;#Name\n"

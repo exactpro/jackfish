@@ -42,7 +42,8 @@ import java.util.Map;
 		additionalDescription 	= "In the name of the parameter the key is indicated, in the option setting the predicted value is indicated.",
 		examples 				= "{{`1. Load the client for FIX.`}}"
 				+ "{{`2. Count the number of messages with the field name Name and  the field value Value.`}} "
-				+ "{{##Id;#Action;#ClientId\n"
+				+ "{{#\n" +
+				"#Id;#Action;#ClientId\n"
 				+ "CLLD1;ClientLoad;'FIX'\n"
 				+ "\n"
 				+ "#Id;#Action;#ClientConnection;#MessageType;#Name\n"

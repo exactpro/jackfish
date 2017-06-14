@@ -34,7 +34,8 @@ import java.util.List;
 		outputDescription 		= "The connection with the Client.",
 		outputType 				= ClientConnection.class,
 		examples 				= "{{`Load the client for FIX.`}} "
-				+ "{{##Id;#Action;#ClientId\n"
+				+ "{{#\n" +
+				"#Id;#Action;#ClientId\n"
 				+ "CLLD1;ClientLoad;'FIX'#}}"
 	)
 public class ClientLoad extends AbstractAction 

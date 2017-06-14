@@ -37,7 +37,8 @@ import com.exactprosystems.jf.functions.HelpKind;
 		additionalDescription = "Parameters for  the client run are indicated.",
 		examples 			  = "{{`1. Load the client for FIX.`}}"
 				+ "{{`2. Connect the client to the port №10506.`}}"
-				+ "{{##Id;#Action;#ClientId\n"
+				+ "{{#\n" +
+				"#Id;#Action;#ClientId\n"
 				+ "CLLD1;ClientLoad;'FIX'\n"
 				+ "\n"
 				+ "#Id;#Action;#ClientConnection;#Socket\n"

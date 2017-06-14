@@ -33,7 +33,8 @@ import com.exactprosystems.jf.documents.matrix.parser.Parameters;
 		examples 				= "{{`1. Load the client for FIX.`}}"
 				+ "{{`2. Create the message.`}}"
 				+ "{{`3. Encode the message.`}} "
-				+ "{{##Id;#Action;$ClientId\n"
+				+ "{{#\n" +
+				"#Id;#Action;$ClientId\n"
 				+ "CLLD;ClientLoad;'FIX'\n"
 				+ "\n"
 				+ "#Id;#Action;PartyID;$MessageType\n"
