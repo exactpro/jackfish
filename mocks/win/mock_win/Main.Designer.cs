@@ -54,7 +54,7 @@
             this.label3 = new System.Windows.Forms.Label();
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.label4 = new System.Windows.Forms.Label();
-            this.ListView = new System.Windows.Forms.ListBox();
+            this.List = new System.Windows.Forms.ListBox();
             this.Table = new System.Windows.Forms.ListView();
             this.header1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.header2 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
@@ -76,14 +76,13 @@
             this.openToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.menu2 = new System.Windows.Forms.ToolStripMenuItem();
             this.HScrollBar = new System.Windows.Forms.HScrollBar();
             this.VScrollBar = new System.Windows.Forms.VScrollBar();
             this.Splitter = new System.Windows.Forms.SplitContainer();
             this.label6 = new System.Windows.Forms.Label();
             this.label7 = new System.Windows.Forms.Label();
             this.Any = new System.Windows.Forms.Button();
-            this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.ToggleButton = new System.Windows.Forms.CheckBox();
             this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
             this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
@@ -92,6 +91,16 @@
             this.toolStripMenuItem3 = new System.Windows.Forms.ToolStripMenuItem();
             this.showButton = new System.Windows.Forms.Button();
             this.hideButton = new System.Windows.Forms.Button();
+            this.pressLabel = new System.Windows.Forms.Label();
+            this.downUpLabel = new System.Windows.Forms.Label();
+            this.sliderLabel = new System.Windows.Forms.Label();
+            this.menuItemToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.countButtonClear = new System.Windows.Forms.Button();
+            this.countButton = new System.Windows.Forms.Button();
+            this.countLabel = new System.Windows.Forms.Label();
+            this.notEnabledButton = new System.Windows.Forms.Button();
+            this.invisibleButton = new System.Windows.Forms.Button();
+            this.colorButton = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.Table1)).BeginInit();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.Slider)).BeginInit();
@@ -112,6 +121,8 @@
             this.Button.Name = "Button";
             this.Button.UseVisualStyleBackColor = true;
             this.Button.KeyDown += new System.Windows.Forms.KeyEventHandler(this.CommonKeyDown);
+            this.Button.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.CommonKeyPress);
+            this.Button.KeyUp += new System.Windows.Forms.KeyEventHandler(this.CommonKeyUp);
             this.Button.MouseDown += new System.Windows.Forms.MouseEventHandler(this.CommonMouseDown);
             this.Button.MouseMove += new System.Windows.Forms.MouseEventHandler(this.CommonMouseMove);
             // 
@@ -121,6 +132,8 @@
             this.TextBox.Name = "TextBox";
             this.TextBox.TextChanged += new System.EventHandler(this.TextBox_TextChanged);
             this.TextBox.KeyDown += new System.Windows.Forms.KeyEventHandler(this.CommonKeyDown);
+            this.TextBox.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.CommonKeyPress);
+            this.TextBox.KeyUp += new System.Windows.Forms.KeyEventHandler(this.CommonKeyUp);
             this.TextBox.MouseDown += new System.Windows.Forms.MouseEventHandler(this.CommonMouseDown);
             this.TextBox.MouseMove += new System.Windows.Forms.MouseEventHandler(this.CommonMouseMove);
             // 
@@ -131,6 +144,8 @@
             this.CheckBox.UseVisualStyleBackColor = true;
             this.CheckBox.CheckedChanged += new System.EventHandler(this.CheckBox_CheckedChanged);
             this.CheckBox.KeyDown += new System.Windows.Forms.KeyEventHandler(this.CommonKeyDown);
+            this.CheckBox.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.CommonKeyPress);
+            this.CheckBox.KeyUp += new System.Windows.Forms.KeyEventHandler(this.CommonKeyUp);
             this.CheckBox.MouseMove += new System.Windows.Forms.MouseEventHandler(this.CommonMouseMove);
             this.CheckBox.MouseUp += new System.Windows.Forms.MouseEventHandler(this.CommonMouseDown);
             // 
@@ -201,6 +216,8 @@
             this.Green.TabStop = true;
             this.Green.UseVisualStyleBackColor = true;
             this.Green.KeyDown += new System.Windows.Forms.KeyEventHandler(this.CommonKeyDown);
+            this.Green.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.CommonKeyPress);
+            this.Green.KeyUp += new System.Windows.Forms.KeyEventHandler(this.CommonKeyUp);
             this.Green.MouseDown += new System.Windows.Forms.MouseEventHandler(this.CommonMouseDown);
             this.Green.MouseMove += new System.Windows.Forms.MouseEventHandler(this.CommonMouseMove);
             // 
@@ -256,9 +273,12 @@
             resources.GetString("ComboBox.Items4")});
             resources.ApplyResources(this.ComboBox, "ComboBox");
             this.ComboBox.Name = "ComboBox";
+            this.ComboBox.SelectedIndexChanged += new System.EventHandler(this.ComboBox_SelectedIndexChanged);
             this.ComboBox.SelectedValueChanged += new System.EventHandler(this.ComboBox_SelectedValueChanged);
             this.ComboBox.TextChanged += new System.EventHandler(this.ComboBox_TextValueChanged);
             this.ComboBox.KeyDown += new System.Windows.Forms.KeyEventHandler(this.CommonKeyDown);
+            this.ComboBox.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.CommonKeyPress);
+            this.ComboBox.KeyUp += new System.Windows.Forms.KeyEventHandler(this.CommonKeyUp);
             this.ComboBox.MouseDown += new System.Windows.Forms.MouseEventHandler(this.CommonMouseDown);
             this.ComboBox.MouseMove += new System.Windows.Forms.MouseEventHandler(this.CommonMouseMove);
             // 
@@ -268,6 +288,8 @@
             this.Slider.Maximum = 50;
             this.Slider.Name = "Slider";
             this.Slider.KeyDown += new System.Windows.Forms.KeyEventHandler(this.CommonKeyDown);
+            this.Slider.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.CommonKeyPress);
+            this.Slider.KeyUp += new System.Windows.Forms.KeyEventHandler(this.CommonKeyUp);
             this.Slider.MouseDown += new System.Windows.Forms.MouseEventHandler(this.CommonMouseDown);
             this.Slider.MouseMove += new System.Windows.Forms.MouseEventHandler(this.CommonMouseMove);
             // 
@@ -278,6 +300,8 @@
             this.Tree.Nodes.AddRange(new System.Windows.Forms.TreeNode[] {
             ((System.Windows.Forms.TreeNode)(resources.GetObject("Tree.Nodes")))});
             this.Tree.KeyDown += new System.Windows.Forms.KeyEventHandler(this.CommonKeyDown);
+            this.Tree.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.CommonKeyPress);
+            this.Tree.KeyUp += new System.Windows.Forms.KeyEventHandler(this.CommonKeyUp);
             this.Tree.MouseDown += new System.Windows.Forms.MouseEventHandler(this.CommonMouseDown);
             this.Tree.MouseMove += new System.Windows.Forms.MouseEventHandler(this.CommonMouseMove);
             // 
@@ -290,6 +314,8 @@
             this.TabPanel.SelectedIndex = 0;
             this.TabPanel.Selected += new System.Windows.Forms.TabControlEventHandler(this.TabPanel_Selected);
             this.TabPanel.KeyDown += new System.Windows.Forms.KeyEventHandler(this.CommonKeyDown);
+            this.TabPanel.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.CommonKeyPress);
+            this.TabPanel.KeyUp += new System.Windows.Forms.KeyEventHandler(this.CommonKeyUp);
             this.TabPanel.MouseDown += new System.Windows.Forms.MouseEventHandler(this.CommonMouseDown);
             this.TabPanel.MouseMove += new System.Windows.Forms.MouseEventHandler(this.CommonMouseMove);
             // 
@@ -317,39 +343,43 @@
             resources.ApplyResources(this.label4, "label4");
             this.label4.Name = "label4";
             // 
-            // ListView
+            // List
             // 
-            this.ListView.FormattingEnabled = true;
-            this.ListView.Items.AddRange(new object[] {
-            resources.GetString("ListView.Items"),
-            resources.GetString("ListView.Items1"),
-            resources.GetString("ListView.Items2"),
-            resources.GetString("ListView.Items3"),
-            resources.GetString("ListView.Items4")});
-            resources.ApplyResources(this.ListView, "ListView");
-            this.ListView.Name = "ListView";
-            this.ListView.SelectedIndexChanged += new System.EventHandler(this.ListView_SelectedIndexChanged);
-            this.ListView.DisplayMemberChanged += new System.EventHandler(this.ListView_SelectedIndexChanged);
-            this.ListView.SelectedValueChanged += new System.EventHandler(this.ListView_SelectedIndexChanged);
-            this.ListView.KeyDown += new System.Windows.Forms.KeyEventHandler(this.CommonKeyDown);
-            this.ListView.MouseMove += new System.Windows.Forms.MouseEventHandler(this.CommonMouseMove);
-            this.ListView.MouseUp += new System.Windows.Forms.MouseEventHandler(this.CommonMouseDown);
+            this.List.FormattingEnabled = true;
+            this.List.Items.AddRange(new object[] {
+            resources.GetString("List.Items"),
+            resources.GetString("List.Items1"),
+            resources.GetString("List.Items2"),
+            resources.GetString("List.Items3"),
+            resources.GetString("List.Items4")});
+            resources.ApplyResources(this.List, "List");
+            this.List.Name = "List";
+            this.List.SelectedIndexChanged += new System.EventHandler(this.ListView_SelectedIndexChanged);
+            this.List.DisplayMemberChanged += new System.EventHandler(this.ListView_SelectedIndexChanged);
+            this.List.SelectedValueChanged += new System.EventHandler(this.ListView_SelectedIndexChanged);
+            this.List.KeyDown += new System.Windows.Forms.KeyEventHandler(this.CommonKeyDown);
+            this.List.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.CommonKeyPress);
+            this.List.KeyUp += new System.Windows.Forms.KeyEventHandler(this.CommonKeyUp);
+            this.List.MouseMove += new System.Windows.Forms.MouseEventHandler(this.CommonMouseMove);
+            this.List.MouseUp += new System.Windows.Forms.MouseEventHandler(this.CommonMouseDown);
             // 
             // Table
             // 
-            this.Table.Activation = System.Windows.Forms.ItemActivation.OneClick;
             this.Table.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.header1,
             this.header2,
             this.header3});
-            this.Table.FullRowSelect = true;
             this.Table.GridLines = true;
             this.Table.HoverSelection = true;
             resources.ApplyResources(this.Table, "Table");
+            this.Table.LabelEdit = true;
             this.Table.Name = "Table";
             this.Table.UseCompatibleStateImageBehavior = false;
             this.Table.View = System.Windows.Forms.View.Details;
+            this.Table.SelectedIndexChanged += new System.EventHandler(this.Table_SelectedIndexChanged);
             this.Table.KeyDown += new System.Windows.Forms.KeyEventHandler(this.CommonKeyDown);
+            this.Table.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.CommonKeyPress);
+            this.Table.KeyUp += new System.Windows.Forms.KeyEventHandler(this.CommonKeyUp);
             this.Table.MouseDown += new System.Windows.Forms.MouseEventHandler(this.CommonMouseDown);
             this.Table.MouseMove += new System.Windows.Forms.MouseEventHandler(this.CommonMouseMove);
             // 
@@ -391,9 +421,10 @@
             // 
             this.Menu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.MenuItem,
-            this.aboutToolStripMenuItem});
+            this.menu2});
             resources.ApplyResources(this.Menu, "Menu");
             this.Menu.Name = "Menu";
+            this.Menu.ShowItemToolTips = true;
             this.Menu.MouseDown += new System.Windows.Forms.MouseEventHandler(this.CommonMouseDown);
             this.Menu.MouseMove += new System.Windows.Forms.MouseEventHandler(this.CommonMouseMove);
             // 
@@ -479,10 +510,13 @@
             this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
             resources.ApplyResources(this.exitToolStripMenuItem, "exitToolStripMenuItem");
             // 
-            // aboutToolStripMenuItem
+            // menu2
             // 
-            this.aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
-            resources.ApplyResources(this.aboutToolStripMenuItem, "aboutToolStripMenuItem");
+            this.menu2.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.menuItemToolStripMenuItem});
+            this.menu2.Name = "menu2";
+            resources.ApplyResources(this.menu2, "menu2");
+            this.menu2.Click += new System.EventHandler(this.aboutToolStripMenuItem_Click);
             // 
             // HScrollBar
             // 
@@ -530,6 +564,8 @@
             this.Any.Name = "Any";
             this.Any.UseVisualStyleBackColor = true;
             this.Any.KeyDown += new System.Windows.Forms.KeyEventHandler(this.CommonKeyDown);
+            this.Any.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.CommonKeyPress);
+            this.Any.KeyUp += new System.Windows.Forms.KeyEventHandler(this.CommonKeyUp);
             this.Any.MouseDown += new System.Windows.Forms.MouseEventHandler(this.CommonMouseDown);
             this.Any.MouseMove += new System.Windows.Forms.MouseEventHandler(this.CommonMouseMove);
             // 
@@ -540,6 +576,8 @@
             this.ToggleButton.UseVisualStyleBackColor = true;
             this.ToggleButton.CheckedChanged += new System.EventHandler(this.CheckBox_CheckedChanged);
             this.ToggleButton.KeyDown += new System.Windows.Forms.KeyEventHandler(this.CommonKeyDown);
+            this.ToggleButton.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.CommonKeyPress);
+            this.ToggleButton.KeyUp += new System.Windows.Forms.KeyEventHandler(this.CommonKeyUp);
             this.ToggleButton.MouseMove += new System.Windows.Forms.MouseEventHandler(this.CommonMouseMove);
             this.ToggleButton.MouseUp += new System.Windows.Forms.MouseEventHandler(this.CommonMouseDown);
             // 
@@ -582,11 +620,80 @@
             this.hideButton.UseVisualStyleBackColor = true;
             this.hideButton.Click += new System.EventHandler(this.hideButton_Click);
             // 
+            // pressLabel
+            // 
+            resources.ApplyResources(this.pressLabel, "pressLabel");
+            this.pressLabel.Name = "pressLabel";
+            // 
+            // downUpLabel
+            // 
+            resources.ApplyResources(this.downUpLabel, "downUpLabel");
+            this.downUpLabel.Name = "downUpLabel";
+            // 
+            // sliderLabel
+            // 
+            resources.ApplyResources(this.sliderLabel, "sliderLabel");
+            this.sliderLabel.Name = "sliderLabel";
+            this.sliderLabel.Click += new System.EventHandler(this.label1_Click);
+            // 
+            // menuItemToolStripMenuItem
+            // 
+            this.menuItemToolStripMenuItem.Name = "menuItemToolStripMenuItem";
+            resources.ApplyResources(this.menuItemToolStripMenuItem, "menuItemToolStripMenuItem");
+            // 
+            // countButtonClear
+            // 
+            resources.ApplyResources(this.countButtonClear, "countButtonClear");
+            this.countButtonClear.Name = "countButtonClear";
+            this.countButtonClear.UseVisualStyleBackColor = true;
+            this.countButtonClear.Click += new System.EventHandler(this.countButtonClear_Click);
+            // 
+            // countButton
+            // 
+            resources.ApplyResources(this.countButton, "countButton");
+            this.countButton.Name = "countButton";
+            this.countButton.UseVisualStyleBackColor = true;
+            this.countButton.Click += new System.EventHandler(this.countButton_Click);
+            // 
+            // countLabel
+            // 
+            resources.ApplyResources(this.countLabel, "countLabel");
+            this.countLabel.Name = "countLabel";
+            // 
+            // notEnabledButton
+            // 
+            resources.ApplyResources(this.notEnabledButton, "notEnabledButton");
+            this.notEnabledButton.Name = "notEnabledButton";
+            this.notEnabledButton.UseVisualStyleBackColor = true;
+            // 
+            // invisibleButton
+            // 
+            resources.ApplyResources(this.invisibleButton, "invisibleButton");
+            this.invisibleButton.Name = "invisibleButton";
+            this.invisibleButton.UseVisualStyleBackColor = true;
+            // 
+            // colorButton
+            // 
+            this.colorButton.BackColor = System.Drawing.Color.Red;
+            resources.ApplyResources(this.colorButton, "colorButton");
+            this.colorButton.ForeColor = System.Drawing.Color.White;
+            this.colorButton.Name = "colorButton";
+            this.colorButton.UseVisualStyleBackColor = false;
+            // 
             // Main
             // 
             resources.ApplyResources(this, "$this");
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ContextMenuStrip = this.contextMenuStrip1;
+            this.Controls.Add(this.colorButton);
+            this.Controls.Add(this.invisibleButton);
+            this.Controls.Add(this.notEnabledButton);
+            this.Controls.Add(this.countLabel);
+            this.Controls.Add(this.countButton);
+            this.Controls.Add(this.countButtonClear);
+            this.Controls.Add(this.sliderLabel);
+            this.Controls.Add(this.downUpLabel);
+            this.Controls.Add(this.pressLabel);
             this.Controls.Add(this.hideButton);
             this.Controls.Add(this.showButton);
             this.Controls.Add(this.ToggleButton);
@@ -598,7 +705,7 @@
             this.Controls.Add(this.Panel);
             this.Controls.Add(this.ProgressBar);
             this.Controls.Add(this.Table);
-            this.Controls.Add(this.ListView);
+            this.Controls.Add(this.List);
             this.Controls.Add(this.TabPanel);
             this.Controls.Add(this.Tree);
             this.Controls.Add(this.Slider);
@@ -613,7 +720,6 @@
             this.Controls.Add(this.Menu);
             this.MainMenuStrip = this.Menu;
             this.Name = "Main";
-            this.toolTip1.SetToolTip(this, resources.GetString("$this.ToolTip"));
             ((System.ComponentModel.ISupportInitialize)(this.Table1)).EndInit();
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
@@ -658,8 +764,7 @@
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.TabPage tabPage2;
         private System.Windows.Forms.Label label4;
-        private System.Windows.Forms.ListBox ListView;
-        private System.Windows.Forms.ListView Table;
+        private System.Windows.Forms.ListBox List;
         private System.Windows.Forms.ColumnHeader header1;
         private System.Windows.Forms.ColumnHeader header2;
         private System.Windows.Forms.ColumnHeader header3;
@@ -677,7 +782,7 @@
         private System.Windows.Forms.ToolStripMenuItem openToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
         private System.Windows.Forms.ToolStripMenuItem exitToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem aboutToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem menu2;
         private System.Windows.Forms.ToolStripMenuItem fourToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem fiveToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem sixToolStripMenuItem;
@@ -687,7 +792,6 @@
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.Button Any;
-        private System.Windows.Forms.ToolTip toolTip1;
         private System.Windows.Forms.CheckBox ToggleButton;
         private System.Windows.Forms.SaveFileDialog saveFileDialog1;
         private System.Windows.Forms.DataGridViewTextBoxColumn name;
@@ -701,6 +805,17 @@
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem3;
         private System.Windows.Forms.Button showButton;
         private System.Windows.Forms.Button hideButton;
+        public System.Windows.Forms.Label pressLabel;
+        public System.Windows.Forms.Label downUpLabel;
+        public System.Windows.Forms.Label sliderLabel;
+        private System.Windows.Forms.ToolStripMenuItem menuItemToolStripMenuItem;
+        private System.Windows.Forms.ListView Table;
+        private System.Windows.Forms.Button countButtonClear;
+        private System.Windows.Forms.Button countButton;
+        public System.Windows.Forms.Label countLabel;
+        private System.Windows.Forms.Button notEnabledButton;
+        private System.Windows.Forms.Button invisibleButton;
+        private System.Windows.Forms.Button colorButton;
     }
 }
 
