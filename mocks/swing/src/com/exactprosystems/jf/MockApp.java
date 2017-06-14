@@ -87,6 +87,7 @@ public class MockApp
 		createPanelImage();
 		createPanelRepeat();
 		createPanelVisibleEnabled();
+		createPanelColorAndRect();
 
 		this.frame.setSize(new Dimension(800, 800));
 		this.frame.setVisible(true);
@@ -99,6 +100,18 @@ public class MockApp
 //		this.frame2.setVisible(true);
 //		allEvents(createPanelFrame2());
 		//createAndShowGui();
+	}
+
+	private void createPanelColorAndRect() {
+		JPanel panel = new JPanel(new FlowLayout());
+		panel.setName("panelVisibleEnabled");
+		JButton colorButton = new JButton("#red");
+		colorButton.setPreferredSize(new Dimension(100, 25));
+		colorButton.setBackground(Color.RED);
+		colorButton.setForeground(Color.WHITE);
+		colorButton.setName("colorButton");
+		panel.add(colorButton);
+		this.frame.getContentPane().add(panel);
 	}
 
 	private void createPanelVisibleEnabled() {
@@ -340,7 +353,8 @@ public class MockApp
 
 			}
 		});
-		JMenu jMenu = new JMenu("Menu1");
+		JMenu jMenu = new JMenu("Menu2");
+		jMenu.setName("menu2");
 		ToolTipManager.sharedInstance().setEnabled(true);
 		ToolTipManager.sharedInstance().setInitialDelay(0);
 		ToolTipManager.sharedInstance().setReshowDelay(0);

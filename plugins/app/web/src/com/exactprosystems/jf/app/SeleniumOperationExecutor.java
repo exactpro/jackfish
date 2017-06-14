@@ -23,6 +23,7 @@ import org.openqa.selenium.*;
 import org.openqa.selenium.Dimension;
 import org.openqa.selenium.Point;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.safari.SafariDriver;
 import org.openqa.selenium.support.ui.Select;
@@ -650,11 +651,33 @@ public class SeleniumOperationExecutor implements OperationExecutor<WebElement>
     public Color getColorXY(WebElement component, int x, int y) throws Exception
     {
     	scrollToElement(component);
-        Point location = component.getLocation();
-        File image = driver.getScreenshotAs(OutputType.FILE);
-        BufferedImage bufferedImage = ImageIO.read(image);
-        int rgb = bufferedImage.getRGB(location.x + x, location.y + y);
-        return new Color(rgb);
+		Point location = component.getLocation();
+		Dimension size = component.getSize();
+		java.awt.Rectangle componentRectangle = new Rectangle(location.x, location.y, size.width, size.height);
+
+		Number startX = (Number) driver.executeScript("return document.documentElement.getBoundingClientRect().left");
+		Number startY = (Number) driver.executeScript("return document.documentElement.getBoundingClientRect().top");
+		Number width  = (Number) driver.executeScript("return window.innerWidth || document.documentElement.getBoundingClientRect().right - document.documentElement.getBoundingClientRect().left");
+		Number height = (Number) driver.executeScript("return window.innerHeight || document.documentElement.getBoundingClientRect().bottom - document.documentElement.getBoundingClientRect().top");
+
+		Rectangle windowRectangle = new Rectangle(Math.abs(startX.intValue()), Math.abs(startY.intValue()), width.intValue(), height.intValue());
+		Rectangle returnRectangle = windowRectangle.intersection(componentRectangle);
+
+		if (!(driver.getWrappedDriver() instanceof FirefoxDriver))
+		{
+			returnRectangle.setLocation(returnRectangle.x - Math.abs(startX.intValue()), returnRectangle.y - Math.abs(startY.intValue()));
+		}
+
+		if (returnRectangle.isEmpty())
+		{
+			throw new Exception("Element out of screen");
+		}
+
+		File image = driver.getScreenshotAs(OutputType.FILE);
+		BufferedImage bufferedImage = ImageIO.read(image);
+
+		BufferedImage subimage = bufferedImage.getSubimage(returnRectangle.x, returnRectangle.y, returnRectangle.width, returnRectangle.height);
+		return new Color(subimage.getRGB(x,y));
     }
 	//endregion
 

@@ -36,7 +36,7 @@
             <splitter id="Splitter" owner="owner" class="javax.swing.JSplitPane" name="Splitter" addition="Many"/>
             <radioButton id="RadioButton1" owner="owner" class="javax.swing.JRadioButton" action="Yellow" text="Yellow" addition="Many"/>
             <toolTip id="Tooltip" owner="owner" text="Tooltip" addition="Many"/>
-            <menu id="Menu2" xpath=".//JMenu[@action=&amp;quot;Menu1&amp;quot;]" owner="owner" class="" action="" text=""/>
+            <menu id="Menu2" xpath="" owner="owner" class="" name="menu2" action="" text=""/>
             <any id="Any" owner="owner" class="javax.swing.JButton" name="Any" action="Any" text="Any" addition="Many"/>
             <wait id="Wait" owner="owner" addition="Many"/>
             <label id="moveLabel" owner="owner" class="javax.swing.JLabel" name="moveLabel" text=""/>
@@ -51,6 +51,7 @@
             <button id="invisibleButton" xpath="" name="invisibleButton" visibility="Visible"/>
             <button id="notEnabledButton" name="notEnabledButton"/>
             <label id="sliderLabel" uid="" name="sliderLabel" addition="Many"/>
+            <button id="colorButton" owner="owner" name="colorButton"/>
         </run>
         <onClose/>
         <close/>
