@@ -43,7 +43,8 @@ import java.util.Date;
 				+ " of the started matrix.",
 		outputType				= MatrixRunner.class,
 		examples =
-				"{{##Id;#Action;#Matrix\n" +
+				"{{#\n" +
+				"#Id;#Action;#Matrix\n" +
 				"MXRN1;MatrixRun;'matrices/Matrix.jf'\n" +
 				"#Assert;#Message\n" +
 				"MXRN1.Out.isRunning();'MatrixRun is failed'#}}",
@@ -66,7 +67,7 @@ public class MatrixRun extends AbstractAction
 	protected Date at;
 
 	@ActionFieldAttribute(name = parameterName, mandatory = false, def = DefaultValuePool.Null, description = "Is used to pass parameters"
-			+ " to the started matrix. As a call – by – reference mechanism is used, be careful – the started matrix"
+			+ " to the started matrix. As a call - by - reference mechanism is used, be careful - the started matrix"
 			+ " could modify the object passed. It should be considered and can be used for a feedback mechanism between matrices.")
 	protected Object parameter;
 

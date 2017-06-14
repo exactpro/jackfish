@@ -38,7 +38,8 @@ import java.util.Date;
 				+ "With the help of this object property one can access information about the number of"
 				+ " successfully run and failed test cases of the started matrix. ",
 		outputType				= MatrixRunner.class,
-		examples = "{{##Id;#Action;#Text\n" +
+		examples = "{{#\n" +
+				"#Id;#Action;#Text\n" +
 				"MXRN1;MatrixRunFromText;Text\n" +
 				"#Assert;#Message\n" +
 				"MXRN1.Out.isRunning();'MatrixRun is failed'#}}",
@@ -59,7 +60,7 @@ public class MatrixRunFromText extends AbstractAction
 	protected Date at;
 
 	@ActionFieldAttribute(name = parameterName, mandatory = false, def = DefaultValuePool.Null, description = "Is used to pass parameters to"
-			+ " the started matrix. As a call – by – reference mechanism is used, be careful – the started"
+			+ " the started matrix. As a call - by - reference mechanism is used, be careful - the started"
 			+ " matrix could modify the object passed.")
 	protected Object parameter;
 	
