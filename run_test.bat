@@ -1,1 +1,1 @@
-java -jar core/jackfish.jar -config=TestProject/TestProject.xml
+java -jar core/jackfish.jar -config=TestProject/TestProject.xml -new
