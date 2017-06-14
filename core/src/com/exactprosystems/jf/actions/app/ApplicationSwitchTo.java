@@ -38,7 +38,7 @@ import com.exactprosystems.jf.functions.HelpKind;
 		additionalDescription   = "The parameters are determined by the chosen plug-in. {{`For example, additional "
                 + "parameters {{$Title$}} and {{$URL$}} are available for web plug-in. They are necessary to get the information"
                 + " about the title bar and the address respectively.`}} The parameters can be chosen in the dialogue"
-                + " window opened with the context menu of this action in {{$“All parameters”$}} option.", 
+                + " window opened with the context menu of this action in {{$'All parameters'$}} option.",
 		outputDescription 		= "It returns the title bar of the window which gained the focus.",
 		outputType				= String.class,
 		examples = "{{##Id;#Action;#Title;#AppConnection\n" +
@@ -59,7 +59,7 @@ public class ApplicationSwitchTo extends AbstractAction
 	protected AppConnection	connection	= null;
 
 	@ActionFieldAttribute(name = softConditionName, mandatory = false, def = DefaultValuePool.True, description = "If the parameter value is true,"
-			+ " the string in Title will be compared to the window title bar using the “contains” principle."
+			+ " the string in Title will be compared to the window title bar using the 'contains' principle."
 			+ " The window title bar is allowed to have the value of Title field and not to be the same.")
 	protected Boolean 				softCondition;
 

@@ -30,9 +30,9 @@ import java.util.Map;
 		group = ActionGroups.Report, 
 		generalDescription = "The following action is needed to display graphs and diagrams in reports based on data from the tables.",
 		additionFieldsAllowed = true,
-		additionalDescription = "Depend on the type of the graph/diagram. {{` {{$Labels$}} – it is needed to name a column, "
-				+ "which values will be used for creating a diagram.`}} {{` {{$YAxisDescription$}} – it is needed to specify the "
-				+ "name that will be assigned to Z-axis.`}} {{` {{$Values$}} – the name of the column, which values will be used "
+		additionalDescription = "Depend on the type of the graph/diagram. {{` {{$Labels$}} - it is needed to name a column, "
+				+ "which values will be used for creating a diagram.`}} {{` {{$YAxisDescription$}} - it is needed to specify the "
+				+ "name that will be assigned to Z-axis.`}} {{` {{$Values$}} - the name of the column, which values will be used "
 				+ "for creating Pie type diagram.`}}",
 		examples = "1. Make a table\n"
 				+ "2. Create a report by ReportStart action\n"

@@ -25,7 +25,7 @@ import com.exactprosystems.jf.documents.matrix.parser.Parameters;
 		suffix					= "APPSTP",
 		generalDescription 		= "The purpose of the action is to close the application under test. As a rule,"
 				+ " ApplicationStop is placed in one of the last TestCases to stop the application initialized in"
-				+ " {{@ApplicationStart@}} or {{@ApplicationConnectTo@}}. The flag {{$“Global”$}} (indicated with letter “G”)"
+				+ " {{@ApplicationStart@}} or {{@ApplicationConnectTo@}}. The flag {{$'Global'$}} (indicated with letter 'G')"
 				+ " should be set in actions {{@ApplicationStart@}} or {{@ApplicationConnectTo@}}.",
 		additionFieldsAllowed 	= false,
 		examples = "{{##Action;#AppConnection\n" +

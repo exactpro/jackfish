@@ -28,7 +28,7 @@ import java.util.List;
 				+ " parameter {{$Navigate$}} is available for web plug-in. It has two values {{$BACK$}} and {{$FORWARD$}} which help"
 				+ " to move within the browser back and forward respectively.`}} "
 				+ "The parameters can be chosen in the"
-				+ " dialogue window opened with the context menu of this action in {{$“All parameters”$}} option.",
+				+ " dialogue window opened with the context menu of this action in {{$'All parameters'$}} option.",
 		examples =
 				"{{##Action;#Navigate;#Navigate;#AppConnection\n"
 				+ "ApplicationNavigate;NavigateKind.BACK;NavigateKind.FORWARD;app#}}",

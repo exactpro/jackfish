@@ -46,8 +46,8 @@ generalDescription 		=
 additionalDescription	= 
 	  "The structure and meaning of parameters depend on the plug-in used. For example, web.jar "
 	+ "requires the following list:" 
-	+ "{{` {{$Browser$}} – the browser in which the web application is started, `}}"
-	+ "{{` {{$URL$}} – the Internet link to the application server. `}}"
+	+ "{{` {{$Browser$}} - the browser in which the web application is started, `}}"
+	+ "{{` {{$URL$}} - the Internet link to the application server. `}}"
 	+ "In order to avoid errors in writing these additional parameters, the user can add them by using "
 	+ "the matrices editor accessible via the 'All parameters...' context menu after the {{$AppId$}} parameter "
 	+ "has been filled (and is filled by the constant string).",

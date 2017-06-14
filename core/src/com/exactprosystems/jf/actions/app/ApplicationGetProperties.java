@@ -40,7 +40,7 @@ import com.exactprosystems.jf.functions.HelpKind;
 		additionalDescription = "The parameters are determined by the chosen plug-in. {{`For example, additional "
 				+ "parameters {{$Title$}} and {{$URL$}} are available for web plug-in. They are necessary to get the information"
 				+ " about the title bar and the address respectively.`}} The parameters can be chosen in the dialogue"
-				+ " window opened with the context menu of this action in {{$“All parameters”$}} option.",
+				+ " window opened with the context menu of this action in {{$'All parameters'$}} option.",
         outputType              = Map.class,
         outputDescription       = "Associative array which displays the names of the elements processed by the action "
                 + "along with prpperties received from the app.",
