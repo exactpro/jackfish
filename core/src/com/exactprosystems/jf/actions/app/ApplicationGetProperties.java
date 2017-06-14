@@ -96,6 +96,7 @@ public class ApplicationGetProperties extends AbstractAction
             {
                 Serializable prop = parameter.getValue() == null ? null : (Serializable)parameter.getValue();
                 Serializable value = service.getProperty(parameter.getName(), prop);
+                
                 outValue.put(parameter.getName(), value);
             }
             else

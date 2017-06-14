@@ -133,7 +133,10 @@ public class SeleniumRemoteApplication extends RemoteApplication
 				case WebAppFactory.propertyTitle:
 					return this.driver.getTitle();
 					
-                case WebAppFactory.propertyGetCookie:
+                case WebAppFactory.propertyAllTitles:
+                    return titles().stream().collect(Collectors.toCollection(ArrayList::new));
+
+                case WebAppFactory.propertyCookie:
 			        Cookie cookie = this.driver.manage().getCookieNamed("" + prop);
 			        return new CookieBean(cookie.getName(), cookie.getValue())
                             .setPath(cookie.getPath())
@@ -142,7 +145,7 @@ public class SeleniumRemoteApplication extends RemoteApplication
                             .setHttpOnly(cookie.isHttpOnly())
                             .setExpary(cookie.getExpiry());
 
-                case WebAppFactory.propertyGetAllCookies:
+                case WebAppFactory.propertyAllCookies:
                     Set<Cookie> set = this.driver.manage().getCookies();
                     return set.stream().map(c -> new CookieBean(c.getName(), c.getValue())
                                 .setPath(c.getPath())

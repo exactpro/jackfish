@@ -38,9 +38,10 @@ public class WebAppFactory implements IApplicationFactory
 
     public static final String   propertyUrlName          = "URL";
     public static final String   propertyTitle            = "Title";
+    public static final String   propertyAllTitles        = "AllTitles";
+    public static final String   propertyCookie           = "Cookie";
+    public static final String   propertyAllCookies       = "AllCookies";
     public static final String   propertyAddCookie        = "AddCookie";
-    public static final String   propertyGetCookie        = "GetCookie";
-    public static final String   propertyGetAllCookies    = "GetAllCookies";
     public static final String   propertyRemoveCookie     = "RemoveCookie";
     public static final String   propertyRemoveAllCookies = "RemoveAllCookies";
 	
@@ -80,7 +81,7 @@ public class WebAppFactory implements IApplicationFactory
 			case LOAD:		    return new String[] { jreExecName, jreArgsName, chromeDriverPathName, geckoDriverPathName, ieDriverPathName, 
 			        chromeDriverBinary, firefoxProfileDir, usePrivateMode, logLevel };
 			case START:         return new String[] { browserName, urlName };
-			case GET_PROPERTY:  return new String[] { propertyUrlName, propertyTitle, propertyGetCookie, propertyGetAllCookies };
+			case GET_PROPERTY:  return new String[] { propertyUrlName, propertyTitle, propertyAllTitles, propertyCookie, propertyAllCookies };
             case SET_PROPERTY:  return new String[] { propertyUrlName, propertyTitle, propertyAddCookie, propertyRemoveCookie, propertyRemoveAllCookies };
 			case NEW_INSTANCE:  return new String[] { urlName, whereOpenName };
 			default:		    return empty;	
