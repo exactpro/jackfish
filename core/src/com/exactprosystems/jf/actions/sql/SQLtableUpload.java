@@ -31,16 +31,22 @@ import com.exactprosystems.jf.sql.SqlConnection;
 				"{{` 2. Create a connection to a database. `}}" +
 				"{{` 3. Execute a query to create the Users table. `}}" +
 				"{{` 4. Upload data from the Table object to Users table of the current database. `}}\n" +
-				"{{##Id;#RawTable\n" +
+				"{{#\n" +
+				"#Id;#RawTable\n" +
 				"DATA1;Table\n" +
 				"@;Name;Age\n" +
 				"0;Mike;25\n" +
 				"1;Anna;24\n" +
 				"#EndRawTable\n" +
 				"#Id;#Action;#User;#Server;#Base;#Sql;#Password\n" +
-				"SQLCNT1;SQLconnect;'username';'127.0.0.1:3306';'myDatabase';'MySQL';'userpassword'\n" +
+				"SQLCNT1;SQLconnect;'username';'127.0.0.1:3306';'database';'MySQL';'password'\n" +
+				"#Id;#RawText;#Kind \n" +
+				"createTable;Text;None\n " +
+				"~;CREATE TABLE users (id INT(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY, \n" +
+				"name VARCHAR(30) NOT NULL,age int NOT NULL)\n" +
+				"#EndRawText\n" +
 				"#Id;#Action;#Query;#Connection\n" +
-				"SQLEXEC1;SQLexecute;'CREATE TABLE users (id INT(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY,name VARCHAR(30) NOT NULL,age int NOT NULL)';SQLCNT1.Out\n" +
+				"SQLEXEC1;SQLexecute;createTable;SQLCNT1.Out\n" +
 				"#Action;#Table;#Connection;#Data\n" +
 				"SQLtableUpload;'users';SQLCNT1.Out;DATA1#}}",
 		seeAlsoClass = {SQLdisconnect.class, SQLexecute.class, SQLinsert.class, SQLselect.class, SQLconnect.class}

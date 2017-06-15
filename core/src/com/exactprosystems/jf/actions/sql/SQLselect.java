@@ -33,7 +33,8 @@ import com.exactprosystems.jf.sql.SqlConnection;
 		additionalDescription = "The additional parameter is defined by the data that will be used in completed SQL"
 				+ " query instead of placeholders -'?'. The parameter name is not used during the execution and in"
 				+ " this case can serve as a comment for the user. For example you can use it as an object "
-				+ "description set as a parameter value. {{$ Attention! You should mind the order of additional parameters. $}}",
+				+ "description set as a parameter value. \n" +
+				"{{#\nAttention! You should mind the order of additional parameters. #}}",
 		outputDescription 		= "Select SQL query returns a Table object. The returned Table column names coincide"
 				+ " with the Table column names we get as a result of a query.",
 		outputType				= Table.class,
@@ -43,18 +44,32 @@ import com.exactprosystems.jf.sql.SqlConnection;
 				"{{` 5. Execute the query to fill in the Users table using placeholders in additional parameters `}}" +
 				"{{` 6. Execute SQLselect action using placeholders in additional parameters `}}" +
 				"{{` 7. Add the table to the report using the Table Report action `}}\n" +
-				"{{##Id;#Action;#User;#Server;#Base;#Sql;#Password\n" +
-				"SQLCNT1;SQLconnect;'username';'127.0.0.1:3306';'myDatabase';'MySQL';'userpassword'\n" +
+				"{{#\n" +
+				"#Id;#Action;#User;#Server;#Base;#Sql;#Password\n" +
+				"SQLCNT1;SQLconnect;'username';'127.0.0.1:3306';'database';'MySQL';'password'\n" +
+				"#Id;#RawText;#Kind \n" +
+				"createTable;Text;None\n" +
+				"~;CREATE TABLE users (id INT(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY, \n" +
+				"name VARCHAR(30) NOT NULL,age int NOT NULL)\n" +
+				"#EndRawText\n" +
 				"#Id;#Action;#Query;#Connection\n" +
-				"SQLEXEC1;SQLexecute;'CREATE TABLE users (id INT(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY,name VARCHAR(30) NOT NULL,age int NOT NULL)';SQLCNT1.Out\n" +
+				"SQLEXEC1;SQLexecute;createTable;SQLCNT1.Out\n" +
 				"#Id;#Let\n" +
 				"name;'mike'\n" +
 				"#Id;#Let\n" +
 				"age;23\n" +
-				"#Id;#Action;#Query;#Connection;#User name we get earlier ;#User age we get earlier\n" +
-				"SQLEXEC3;SQLexecute;'insert into users (name, age) values (?, ?)';SQLCNT1.Out;name;age\n" +
-				"#Id;#Action;#Query;#Connection;#User name we get earlier ;#User age we get earlier\n" +
-				"SQLSLCT1;SQLselect;'select name, age from test.users where name = ? and age = ?';SQLCNT1.Out;name;age\n" +
+				"#Id;#RawText;#Kind \n" +
+				"insertQuery;Text;None\n" +
+				"~;insert into users (name, age) values (?, ?)" +
+				"#EndRawText\n" +
+				"#Id;#RawText;#Kind \n" +
+				"selectQuery;Text;None\n" +
+				"~;select name, age from test.users where name = ? and age = ?\n" +
+				"#EndRawText\n" +
+				"#Id;#Action;#Query;#Connection;#User name;#User age\n" +
+				"SQLEXEC3;SQLexecute;insertQuery;SQLCNT1.Out;name;age\n" +
+				"#Id;#Action;#Query;#Connection;#User name;#User age\n" +
+				"SQLSLCT1;SQLselect;selectQuery;SQLCNT1.Out;name;age\n" +
 				"#Action;#Table;#Title\n" +
 				"TableReport;SQLSLCT1.Out;'Report title'#}}",
 		seeAlsoClass = {SQLdisconnect.class, SQLexecute.class, SQLinsert.class, SQLtableUpload.class, SQLconnect.class}
