@@ -27,7 +27,7 @@ import com.exactprosystems.jf.functions.Table;
 				+ " from the main one, the values in such columns will be null.",
 		additionFieldsAllowed 	= false,
 		examples 				=
-				"{{#" +
+				"{{#\n" +
 						"#Id;#RawTable\n" +
 						"main;Table\n" +
 						"@;Name;Age;Gender\n" +

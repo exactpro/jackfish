@@ -16,12 +16,12 @@ import com.exactprosystems.jf.functions.Table;
 		group					= ActionGroups.Tables,
 		generalDescription 		= "This action is determined to rename a column in the table given.",
 		additionFieldsAllowed 	= true,
-		additionalDescription 	= "The column name given is indicated in a parameter’s name, a new column name is in a parameter’s value.",
+		additionalDescription 	= "The column name given is indicated in a parameter's name, a new column name is in a parameter's value.",
 		examples 				=
 				"{{`1. Create a table with columns Name and Age.`}}"
 				+ "{{`2. Rename column Name into FirstName.`}}"
 				+ "{{`3. Verify that a new name is assigned to a column. `}}"
-				+ "{{##Id;#RawTable\n"
+				+ "{{#\n#Id;#RawTable\n"
 				+ "TC;Table\n"
 				+ "@;Name;Age\n"
 				+ "0;;\n"

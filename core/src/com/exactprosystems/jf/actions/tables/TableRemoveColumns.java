@@ -26,7 +26,7 @@ import com.exactprosystems.jf.functions.Table;
 				"{{`1. Create a table with columns Name,Age,Gender,Salary`}}"
 				+ "{{`2. Delete columns Name, Age, Gender  in a table  given.`}}"
 				+ "{{`3.Verify that headings are deleted. `}}"
-				+ "{{##Id;#RawTable\n"
+				+ "{{#\n#Id;#RawTable\n"
 				+ "TC;Table\n"
 				+ "@;Name;Age;Gender;Salary\n"
 				+ "0;;;;\n"

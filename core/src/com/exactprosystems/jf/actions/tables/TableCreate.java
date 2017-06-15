@@ -36,10 +36,10 @@ import com.exactprosystems.jf.functions.Table;
 		outputType				= Table.class,
 		examples 				= "{{`1.Create a table with columns Name and Age.`}}"
 				+ "{{`2. Verify that the created object has columns  set initially.`}}\n"
-				+ "{{##Id;#Action;#Name;#Age\n"
+				+ "{{#\n#Id;#Action;#Name;#Age\n"
 				+ "TC;TableCreate;;\n"
 				+ "#Assert;#Message\n"
-				+ "TC.Out.getHeader(0) == 'Name' && TC.Out.getHeader(1) == 'Age';'Table is not correct'#}}\n",
+				+ "TC.Out.getHeader(0)=='Name' && TC.Out.getHeader(1)=='Age';'Table isn't correct'#}}\n",
 		seeAlsoClass = {RawTable.class, TableLoadFromDir.class, TableLoadFromFile.class, TableSelect.class}
 	)
 public class TableCreate extends AbstractAction 

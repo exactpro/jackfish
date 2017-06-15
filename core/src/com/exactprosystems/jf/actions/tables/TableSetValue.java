@@ -30,7 +30,8 @@ import com.exactprosystems.jf.functions.Table;
 		examples = "{{`1. Create a table with columns Name and Age. Add values to the first line of the table.`}}"
 				+ "{{`2. Set the value for the columns Name and Age 'John' and '42' in the first line.`}}"
 				+ "{{`3. Verify that the new values were inserted correctly. `}}"
-				+ "{{##Id;#RawTable\n"
+				+ "{{#\n" +
+				"#Id;#RawTable\n"
 				+ "TC;Table\n"
 				+ "@;Name;Age\n"
 				+ "0;Mike;25\n"

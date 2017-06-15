@@ -30,10 +30,10 @@ import com.exactprosystems.jf.functions.Table;
 				+ "Can be applied when it Is needed to get all indexes of the such lines.",
 		additionFieldsAllowed 	= true,
 		additionalDescription   = "Columns containing the data which defines the search conditions. Column title is given in"
-				+ " the parameter’s value. In the value it is needed to specify the content which defines the search.",
+				+ " the parameter's value. In the value it is needed to specify the content which defines the search.",
 		outputDescription 		= "Outputs the index list matching to conditions.",
 		outputType				= List.class,
-		examples = "{{#" +
+		examples = "{{#\n" +
 				"#Id;#RawTable\n" +
 				"TC;Table\n" +
 				"@;Name;Column\n" +

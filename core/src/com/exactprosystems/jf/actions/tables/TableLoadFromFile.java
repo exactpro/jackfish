@@ -27,15 +27,16 @@ import com.exactprosystems.jf.functions.Table;
 @ActionAttribute(
 		group					= ActionGroups.Tables,
 		suffix					= "TBL",
-		generalDescription 		= "This action is determined to create a table from file csv."
-				+ "{{`{{$CSV$}} (Comma-Separated Values) — a text format, which is determined to display table data."
+		generalDescription 		= "This action is determined to create a table from file csv. "
+				+ "{{`{{$CSV$}} (Comma-Separated Values) - a text format, which is determined to display table data."
 				+ "Specification: Each file row is a table row. The first row contains column titles.`}}",
 		additionFieldsAllowed 	= false,
 		outputDescription 		= "If file is not found, object Table is not created.",
 		outputType				= Table.class,
 		examples 				=
 				"{{`1. Get table downloaded from file testTable.csv divided internally with '|'. Verify that table is downloaded correctly.`}} "
-				+ "{{##Id;#Action;#Assert;#File;#Delimiter\n"
+				+ "{{#\n" +
+				"#Id;#Action;#Assert;#File;#Delimiter\n"
 				+ "TLFF;TableLoadFromFile;TLFF.Out.size() > 0;'PathToFile/testTable.csv';'|'#}}",
 		seeAlsoClass = {RawTable.class, TableLoadFromDir.class, TableCreate.class, TableSelect.class}
 	)

@@ -34,7 +34,7 @@ import com.exactprosystems.jf.functions.Table;
 				"{{`1. Create a table with columns Name and Age, Gender. Populate it with two rows.`}}"
 				+ "{{`2. Create a table with columns City, Street, Name. Populate it with two rows.`}}"
 				+ "{{`3. Use Left Join choosing rows from the first table on condition: matching column Name. `}}"
-				+ "{{#"
+				+ "{{#\n"
 				+		"#TestCase;#Kind;#Depends;#For\n" +
 						";Never;;\n" +
 						"    #Id;#RawTable\n" +

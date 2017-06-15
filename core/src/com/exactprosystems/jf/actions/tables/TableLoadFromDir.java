@@ -25,7 +25,7 @@ import java.io.File;
 @ActionAttribute(
         group                 = ActionGroups.Tables,
         suffix                = "TBLD",
-        generalDescription    = "This action is determined to get directory structure as an object Table."
+        generalDescription    = "This action is determined to get directory structure as an object Table. "
                 + "Can be used to check required files in  this directory.",
         additionFieldsAllowed = false,
         outputDescription     = "Table which consists columns Name, Size, Date, Is directory, Hidden. Each table row contains"
@@ -34,7 +34,8 @@ import java.io.File;
                 + " table is created with column titles and 0 rows.",
         outputType = Table.class,
         examples              ="{{`1. Create a table with information about files/folders in directory Home.`}}\n"
-                + "{{##Id;#Action;#Dir\n"
+                + "{{#\n" +
+                "#Id;#Action;#Dir\n"
                 + "TBLD1;TableLoadFromDir;System.getProperty('user.home')#}}",
         seeAlsoClass = {RawTable.class, TableCreate.class, TableLoadFromFile.class, TableSelect.class}
 )
@@ -42,7 +43,7 @@ public class TableLoadFromDir extends AbstractAction
 {
     public final static String dirName = "Dir";
 
-    @ActionFieldAttribute(name = dirName, mandatory = true, description = "Path to directory. It’s not permitted to use ways with metacharacters (wildcard).")
+    @ActionFieldAttribute(name = dirName, mandatory = true, description = "Path to directory. It's not permitted to use ways with metacharacters (wildcard).")
     protected String directory = null;
 
     @Override

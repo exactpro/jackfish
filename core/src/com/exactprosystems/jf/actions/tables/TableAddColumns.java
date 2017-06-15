@@ -29,7 +29,7 @@ import com.exactprosystems.jf.functions.Table;
 				"{{`1. Create a table with columns Name and Age.`}}"
 				+ "{{`2. Add to the table created columns Gender and Salary (to the line number 0).`}}"
 				+ "{{`3. Verify that the table has columns  Gender, Salary, Name and Age. `}}"
-				+ "{{##Id;#RawTable\n"
+				+ "{{#\n#Id;#RawTable\n"
 				+ "TC;Table\n"
 				+ "@;Name;Age\n"
 				+ "0;;\n"
@@ -49,7 +49,7 @@ public class TableAddColumns extends AbstractAction
 	@ActionFieldAttribute(name = tableName, mandatory = true, description = "A table which is needed to add columns. ")
 	protected Table 	table 	= null;
 
-	@ActionFieldAttribute(name = columnsName, mandatory = true, description = "Array of column titles’ names.")
+	@ActionFieldAttribute(name = columnsName, mandatory = true, description = "Array of column titles' names.")
 	protected String[]	columns 	= new String[] {};
 
 	@ActionFieldAttribute(name = indexName, mandatory = false, def = DefaultValuePool.Null, description = "Line number  where it is needed to insert."

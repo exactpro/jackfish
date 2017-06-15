@@ -30,7 +30,7 @@ import java.util.Set;
 		outputType              = Table.class,
 		outputDescription       = "A table as a resulf of compare.",
 		examples 				=
-				"{{`1 Create a table with columns Name and Age. The first table line is applied with values Mike and 42 accordingly.`}}"
+				"{{`1. Create a table with columns Name and Age. The first table line is applied with values Mike and 42 accordingly.`}}"
 				+ "{{`2. Create a table similar to the previous. The first table line is applied with values Mike and 42 accordingly.`}}"
 				+ "{{`3. Compare two tables.`}}"
 				+ "Information about distinctions ( line number and columns titles which values do not match) is reported as a result of this action in form of:"
@@ -39,7 +39,7 @@ import java.util.Set;
 				+ "{{`0 [ Name : Mike, Age : 42 ] [ Name : Mike, Age : 41 ]`}}"
 				+ "{{`Age 42 41`}}"
 				+ "{{`If tables have different columns numbers, distinctions in cells will be ignored and information about all columns titles is displayed.`}} "
-				+ "{{##Id;#RawTable\n"
+				+ "{{#\n#Id;#RawTable\n"
 				+ "TC;Table\n"
 				+ "@;Name;Age\n"
 				+ "0;Mike;42\n"

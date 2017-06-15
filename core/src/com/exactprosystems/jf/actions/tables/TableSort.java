@@ -26,7 +26,8 @@ import com.exactprosystems.jf.functions.Table;
 		examples = "{{` 1. Create a table with columns Name and Age. Complete the table with 3 lines.`}}"
 				+ "{{`2. Do top-down sorting in  Age.`}}"
 				+ "{{`3. Output the sorted table to report. `}}"
-				+ "{{##Id;#RawTable\n"
+				+ "{{#\n" +
+				"#Id;#RawTable\n"
 				+ "TC;Table\n"
 				+ "@;Name;Age\n"
 				+ "0;Mike;42\n"
@@ -51,8 +52,8 @@ public class TableSort extends AbstractAction
 	@ActionFieldAttribute(name = columnName, mandatory = true, description = "Column title that defines the table sorting.")
 	protected String columnIndex = null;
 
-	@ActionFieldAttribute(name = ascendingName, mandatory = false, def = DefaultValuePool.True, description = "Sorting type: true – ascending sorting,"
-			+ " false – descending sorting. By default is true.")
+	@ActionFieldAttribute(name = ascendingName, mandatory = false, def = DefaultValuePool.True, description = "Sorting type: true - ascending sorting,"
+			+ " false - descending sorting. By default is true.")
 	protected Boolean ascending;
 
 	@Override

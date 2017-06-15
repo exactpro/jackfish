@@ -21,18 +21,21 @@ import com.exactprosystems.jf.functions.Table;
 				"{{`1. Create a table with columns Name and Age. Add four lines with data about Mike, Anna, John, Bruce.`}}"
 				+ "{{`2. Replace all that comply with Regexp with 'passed'.`}}"
 				+ "{{`3. Verify if everything was correct.`}} "
-				+ "{{##Id;#RawTable\n"
+				+ "{{#\n" +
+				"#Id;#RawTable\n"
 				+ "TC;Table\n"
 				+ "@;Name;Mail\n"
 				+ "0;John;c0nst@money.simply.net\n"
 				+ "1;Mike;somebody@dev.com.ua\n"
 				+ "2;Bruce;Name.Sur_name@gmail.com\n"
 				+ "3;Anna;user33@somewhere.in.the.net\n"
-				+ "#EndRawTable\n"
+				+ "#EndRawTable\n" +
+				"#Id;#Let\n" +
+				"rgxp;'[a-zA-Z]{1}[a-zA-Z\\\\d\\\\.\\\\_]+@([a-zA-Z]+\\\\.){1,2}((net)|(com)|(org))'\n"
 				+ "#Action;#Regexp;#Replace;#Table;#Columns\n"
-				+ "TableReplace;'[a-zA-Z]{1}[a-zA-Z\\\\d\\\\.\\\\_]+@([a-zA-Z]+\\\\.){1,2}((net)|(com)|(org))';'passed';TC;'Mail'\n"
+				+ "TableReplace;rgxp;'passed';TC;'Mail'\n"
 				+ "#Assert;#Message\n"
-				+ "TC.get(0).get('Mail') == 'passed'&& TC.get(2).get('Mail') == 'passed';'Replacement was not made'#}}",
+				+ "TC.get(0).get('Mail')=='passed' && TC.get(2).get('Mail')=='passed';'Assert!'#}}",
 		seeAlsoClass = {TableAddValue.class, TableAddColumns.class, TableConsiderColumnsAs.class, TableColumnRename.class, TableRemoveRow.class}
 	)
 public class TableReplace extends AbstractAction 

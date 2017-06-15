@@ -30,7 +30,7 @@ import com.exactprosystems.jf.functions.Table;
 				+ "Line extracting is done according to the content which is specified in additional parameters.",
 		additionFieldsAllowed 	= true,
 		additionalDescription   = "Columns containing the data which defines the selection. Column title is given in"
-				+ " the parameter’s value. In the value it is needed to specify the content which defines the selection.",
+				+ " the parameter's value. In the value it is needed to specify the content which defines the selection.",
 		outputDescription 		= "Outputs the table containing the selected lines.",
 		outputType				= Table.class,
 		seeAlsoClass = {RawTable.class, TableLoadFromDir.class, TableLoadFromFile.class, TableCreate.class},
@@ -39,7 +39,7 @@ import com.exactprosystems.jf.functions.Table;
 				+ "{{`2. Set the data type  Integer for the column Age.`}}\n"
 				+ "{{`3. With the actionTableSelect select all lines with the value 'Mike' in the column Name.`}}\n"
 				+ "{{`4. Verify that the size of the table is equal to 1. `}}\n"
-				+ "{{##Id;#RawTable\n"
+				+ "{{#\n#Id;#RawTable\n"
 				+ "TC;Table\n"
 				+ "@;Name;Age\n"
 				+ "0;Mike;42\n"
@@ -55,9 +55,9 @@ import com.exactprosystems.jf.functions.Table;
 				+ "{{`Example #2:`}}\n"
 				+ "{{`1. Create a table with columns Name and Age. Complete the table with 3 lines.`}}\n"
 				+ "{{`2. Set the data type  Integer for the column Age.`}}\n"
-				+ "{{`3. With the action TableSelect selectall lines where the column values Age are more than 20 and less than 40`}}\n"
+				+ "{{`3. With the action TableSelect select all lines where the column values Age are more than 20 and less than 40`}}\n"
 				+ "{{`4. Verify that the size of the table is equal to 2. `}}\n"
-				+ "{{##Id;#RawTable\n"
+				+ "{{#\n#Id;#RawTable\n"
 				+ "TC;Table\n"
 				+ "@;Name;Age\n"
 				+ "0;Mike;42\n"
@@ -66,8 +66,10 @@ import com.exactprosystems.jf.functions.Table;
 				+ "#EndRawTable\n"
 				+ "#Action;#Table;#Integer\n"
 				+ "TableConsiderColumnsAs;TC;'Age'\n"
+				+ "#Id;#Let\n"
+				+ "condition; new AndCondition(new NumberCondition('Age','>',20), new NumberCondition('Age','<',40))"
 				+ "#Id;#Action;#Table;#Age\n"
-				+ "TS;TableSelect;TC;new AndCondition(new NumberCondition('Age','>',20), new NumberCondition('Age','<',40))\n"
+				+ "TS;TableSelect;TC;condition\n"
 				+ "#Assert;#Message\n"
 				+ "TS.Out.size() == 2;#}}\n"
 	)

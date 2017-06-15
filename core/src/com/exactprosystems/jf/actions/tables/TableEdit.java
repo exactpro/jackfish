@@ -28,11 +28,11 @@ import com.exactprosystems.jf.functions.Table;
 		group					= ActionGroups.Tables,
 		generalDescription 		= "Edit a table via interaction with a user",
 		additionFieldsAllowed 	= true,
-		additionalDescription   = "Values where a parameter name – a table column name, a parameter value – true, if it is allowed to edit.",
+		additionalDescription   = "Values where a parameter name - a table column name, a parameter value - true, if it is allowed to edit.",
         outputDescription       = "Returns true if the user pushed the button Ok.",
 		suffix					= "TBEDT",
         outputType              = Boolean.class,
-		examples = "{{#" +
+		examples = "{{#\n" +
 				"#Id;#RawTable\n" +
 				"TC;Table\n" +
 				"@;Name;Age;City\n" +

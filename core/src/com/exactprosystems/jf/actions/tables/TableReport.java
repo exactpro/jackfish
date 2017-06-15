@@ -34,12 +34,12 @@ import java.util.stream.StreamSupport;
 		generalDescription 		= "This action is used to output the table to report.",
 		additionFieldsAllowed 	= true,
         additionalDescription   = "Columns containing the data which defines the outgoing columns. Column title is given in"
-                + " the parameter’s value. In the value it is needed to specify the new name for table in the report.",
+                + " the parameter's value. In the value it is needed to specify the new name for table in the report.",
 		examples 				=
 				"{{` 1. Create a test case with id Test.`}}"
 				+ "{{` 2. Create a table with columns Name and Age. Add values to the first line of the table.`}}"
 				+ "{{` 3. Output the table into the report only with the column Age, before the test case with id Test.`}} "
-				+ "{{##Id;#TestCase\n"
+				+ "{{#\n#Id;#TestCase\n"
 				+ "Test;\n"
 				+ "    #Id;#RawTable\n"
 				+ "    TC;Table\n"

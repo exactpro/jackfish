@@ -25,11 +25,11 @@ import com.exactprosystems.jf.functions.Table;
 		group					= ActionGroups.Tables,
 		generalDescription 		= "This action  is determined to add lines to a Table..",
 		additionFieldsAllowed 	= true,
-		additionalDescription 	= "Are used to insert values where a parameter name – a column name, a parameter value – a cell value.",
+		additionalDescription 	= "Are used to insert values where a parameter name - a column name, a parameter value - a cell value.",
 		examples 				=
 				"{{`1. Create a table with columns Name and Age. Add a value into 0 line to a column Name. A cell in a column Age leave empty.`}}"
 				+ "{{`2. Verify that a value in the first line of a column Name is equal 'Mike', Age is equal  null. Column Age is filled with a value null. `}}"
-				+ "{{##Id;#RawTable\n"
+				+ "{{#\n#Id;#RawTable\n"
 				+ "TC;Table\n"
 				+ "@;Name;Age\n"
 				+ "0;;\n"

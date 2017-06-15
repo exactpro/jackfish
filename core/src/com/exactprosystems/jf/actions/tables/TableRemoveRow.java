@@ -22,7 +22,8 @@ import com.exactprosystems.jf.functions.Table;
 				"{{` 1. Create a table with columns Name and Age. Add two lines with data to the table. `}}"
 				+ "{{` 2. Delete the first line in the table, the line with the index 0. `}}"
 				+ "{{` 3. Verify that the first line was deleted and was replaced with the line containing data about Anna. `}}"
-				+ "{{##Id;#RawTable\n"
+				+ "{{#\n" +
+				"#Id;#RawTable\n"
 				+ "TC;Table\n"
 				+ "@;Name;Age\n"
 				+ "0;Mike;25\n"
