@@ -26,18 +26,18 @@ import com.exactprosystems.jf.functions.Table;
 				+ "table is created from different sources or if new columns are added to the table given.",
 		additionFieldsAllowed 	= false,
 		examples 				=
-				"{{`1. Create a table with columns Name and Age.`}}"
-				+ "{{`2. Add to the table created columns Gender and Salary (to the line number 0).`}}"
-				+ "{{`3. Verify that the table has columns  Gender, Salary, Name and Age. `}}"
+				"{{`1. Create a table with column Name.`}}"
+				+ "{{`2. Add to the table created column Age (to the line number 0).`}}"
+				+ "{{`3. Verify that the table has columns Name and Age. `}}"
 				+ "{{#\n#Id;#RawTable\n"
 				+ "TC;Table\n"
-				+ "@;Name;Age\n"
-				+ "0;;\n"
+				+ "@;Name\n"
+				+ "0;\n"
 				+ "#EndRawTable\n"
 				+ "#Action;#Index;#Table;#Columns\n"
-				+ "TableAddColumns;0;TC;{'Gender','Salary'}\n"
+				+ "TableAddColumns;0;TC;{'Age'}\n"
 				+ "#Assert;#Message\n"
-				+ "TC.getHeader(0) == 'Gender' && TC.getHeader(1) == 'Salary' && TC.getHeader(2) == 'Name' && TC.getHeader(3) == 'Age';'Table is not correct'#}}",
+				+ "TC.getHeader(0) == 'Name' && TC.getHeader(1) == 'Age';'Table is not correct'#}}",
 		seeAlsoClass = {TableReplace.class, TableColumnRename.class, TableAddValue.class, TableConsiderColumnsAs.class}
 	)
 public class TableAddColumns extends AbstractAction 

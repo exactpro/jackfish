@@ -31,8 +31,8 @@ import com.exactprosystems.jf.functions.Table;
 		outputDescription 		= "Table structure.",
 		outputType				= Table.class,
 		examples 				=
-				"{{`1. Create a table with columns Name and Age, Gender. Populate it with two rows.`}}"
-				+ "{{`2. Create a table with columns City, Street, Name. Populate it with two rows.`}}"
+				"{{`1. Create a table with columns Name and Language. Populate it with few rows.`}}"
+				+ "{{`2. Create a table with columns Name and CityId. Populate it with few rows.`}}"
 				+ "{{`3. Use Left Join choosing rows from the first table on condition: matching column Name. `}}"
 				+ "{{#\n"
 				+		"#TestCase;#Kind;#Depends;#For\n" +
