@@ -34,7 +34,7 @@ import com.exactprosystems.jf.sql.SqlConnection;
 				+ " query instead of placeholders -'?'. The parameter name is not used during the execution and in"
 				+ " this case can serve as a comment for the user. For example you can use it as an object "
 				+ "description set as a parameter value. \n" +
-				"{{$Attention! You should mind the order of additional parameters. $}}",
+				"{{*Attention!*}} You should mind the order of additional parameters.",
 		outputDescription 		= "Select SQL query returns a Table object. The returned Table column names coincide"
 				+ " with the Table column names we get as a result of a query.",
 		outputType				= Table.class,

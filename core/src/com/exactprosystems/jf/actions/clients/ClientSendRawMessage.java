@@ -36,11 +36,15 @@ import java.util.List;
 				+ "{{`2. Connect to the port #10555.`}}"
 				+ "{{`3. Create and send the raw message.`}} "
 				+ "{{#\n" +
-				"#Id;#Global;#Let\n" +
-				"bytes;1;'8=FIXT.1.1|9=91|35=A|34=1|49=SenderCompID|52=20170426-08:25:00.002|56=TargetCompID|98=0|108=1|141=Y|1137=9|10=131|'.replace('|', '\\001').getBytes()" +
+				"#Id;#Let\n" +
+				"str;'8=FIXT.1.1|9=91|35=A|34=1|49=SenderCompID|52=20170426-08:25:00.002'\n" +
+				"#Id;#Let\n" +
+				"str;str + '|56=TargetCompID|98=0|108=1|141=Y|1137=9|10=131|'\n" +
+				"#Id;#Let\n" +
+				"bytes;str.replace('|', '\\001').getBytes()\n" +
 				"#Id;#Action;$ClientId\n" +
 				"CLLD1;ClientLoad;'FIX'\n" +
-				"#Id;#Action;#ClientConnection;#Socket\n" +
+				"#Id;#Action;$ClientConnection;$Socket\n" +
 				"CLCNCT1;ClientConnect;CLLD1.Out;10555\n" +
 				"#Id;#Action;$ClientConnection;$Data\n" +
 				"CLSRM1;ClientSendRawMessage;CLLD1.Out;bytes#}}"
