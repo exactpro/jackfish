@@ -33,7 +33,7 @@ import com.exactprosystems.jf.sql.SqlConnection;
 				+ " query instead of placeholders -'?'. The parameter name is not used during the execution and in"
 				+ " this case can serve as a comment for the user. For example you can use it as an object "
 				+ "description set as a parameter value. \n" +
-				"{{#\nAttention! You should mind the order of additional parameters. #}}",
+				"{{$Attention! You should mind the order of additional parameters. $}}",
 		outputType = Boolean.class,
 		outputDescription = "Returns 'true' if the query was for data selection and 'false' if for data change.",
 		examples = "{{` 1. Create a connection to a database. `}}" +

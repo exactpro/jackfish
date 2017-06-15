@@ -33,8 +33,8 @@ import com.exactprosystems.jf.sql.SqlConnection;
 		additionalDescription = "The additional parameter is defined by the data that will be used in completed SQL"
 				+ " query instead of placeholders -'?'. The parameter name is not used during the execution and in"
 				+ " this case can serve as a comment for the user. For example you can use it as an object "
-				+ "description set as a parameter value.\n " +
-				"{{#\nAttention! You should mind the order of additional parameters. #}}",
+				+ "description set as a parameter value. \n" +
+				"{{$Attention! You should mind the order of additional parameters. $}}",
 		outputDescription 		= "Returns a list containing primary auto-increment line key generated as a result"
 				+ " of executing an SQL query.",
 		outputType				= List.class,
