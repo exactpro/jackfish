@@ -17,6 +17,9 @@ import javax.xml.parsers.DocumentBuilderFactory;
 @ActionAttribute(
         group = ActionGroups.XML,
         generalDescription = "Create new xml.",
+        examples = "{{#\n" +
+                "#Id;#Action\n" +
+                "xml;XmlCreate#}}",
         additionFieldsAllowed = false
 )
 public class XmlCreate extends AbstractAction

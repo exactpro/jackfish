@@ -31,7 +31,8 @@ import com.exactprosystems.jf.functions.Xml;
 		outputType 				= List.class,
 		examples 				= "1. Create an Xml object by downloading it from the file.\n "
 				+ "{{`Contents of an xml file:`}} "
-				+ "{{#<note> \n"
+				+ "{{#\n" +
+				"<note> \n"
 				+ "<to>\n"
 				+ "<friend>\n"
 				+ "<name id=\"first\">Tove</name>\n"
@@ -48,7 +49,8 @@ import com.exactprosystems.jf.functions.Xml;
 				+ "{{`2. Get a list of all affiliated elements.`}}"
 				+ "{{`3. Make sure the list has been created and its size is more than 0.`}}"
 				+ "\n"
-				+ "{{##Id;#Action;#File\n"
+				+ "{{#\n" +
+				"#Id;#Action;#File\n"
 				+ "XML1;XmlLoadFromFile;'Xml.xml'\n"
 				+ "#Id;#Action;#Xml\n"
 				+ "XML2;XmlChildren;XML1.Out#}}"

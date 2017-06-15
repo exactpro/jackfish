@@ -27,9 +27,10 @@ import com.exactprosystems.jf.functions.Xml;
 		additionalDescription 	= "With the help of additional parameters attributes for the the core node can be transferred."
 				+ "Parameter is given the name of an attribute, the value of the parameter has the value of the attribute.",
 		examples 				= "{{`1. Create an Xml object by downloading it from the file.`}}"
-				+ "{{`2. Transfer to the core element content ‘Text for insert’`}}"
+				+ "{{`2. Transfer to the core element content 'Text for insert'`}}"
 				+ "{{`3. Contents of an xml file:`}} "
-				+ "{{#<note>"
+				+ "{{#\n" +
+				"<note>"
 				+ "<to>\n"
 				+ "<friend>\n"
 				+ "<name id=\"first\">Tove</name>\n"
@@ -44,7 +45,8 @@ import com.exactprosystems.jf.functions.Xml;
 				+ "<body>Don't forget me this weekend!</body>\n"
 				+ "</note>#}}"
 				+ "\n"
-				+ "{{##Id;#Action;#File\n"
+				+ "{{#\n" +
+				"#Id;#Action;#File\n"
 				+ "XML1;XmlLoadFromFile;'/path/Xml.xml'\n"
 				+ "#Id;#Action;#Text;#Xml\n"
 				+ "XSN;XmlSetNode;'Text for insert';Xml#}}"

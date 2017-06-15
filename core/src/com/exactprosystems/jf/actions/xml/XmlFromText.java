@@ -23,7 +23,8 @@ import java.io.Reader;
 		outputType				= Xml.class,
 		examples 				= "{{`1. Create Xml object by parsing the text.`}} "
 				+ "{{`Contents of an text object:`}} "
-				+ "{{#<note> \n"
+				+ "{{#\n" +
+				"<note> \n"
 				+ "<to>\n"
 				+ "<friend>\n"
 				+ "<name id=\"first\">Tove</name>\n"
@@ -39,7 +40,8 @@ import java.io.Reader;
 				+ "</note>#}}"
 				+ "\n"
 				+ "{{`2. Make sure that the object has been created and contains nodes.`}} "
-				+ "{{##Id;#Action;#Text\n"
+				+ "{{#\n" +
+				"#Id;#Action;#Text\n"
 				+ "XML1;XmlFromText;TEXT1\n"
 				+ "#Assert;#Message\n"
 				+ "XML1.Result.toString() == 'Passed';'No such attribute'#}}"

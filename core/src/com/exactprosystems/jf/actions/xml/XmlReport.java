@@ -26,7 +26,8 @@ import java.util.List;
 		additionFieldsAllowed 	= false,
 		examples 				= "{{`1. Create an Xml object by downloading it from the file.`}}"
 				+ "{{`Contents of an xml file:`}} "
-				+ "{{#<note> \n"
+				+ "{{#\n" +
+				"<note> \n"
 				+ "<to>\n"
 				+ "<friend>\n"
 				+ "<name id=\"first\">Tove</name>\n"
@@ -42,10 +43,11 @@ import java.util.List;
 				+ "</note>#}}"
 				+ "\n"
 				+ "{{`2. Reflect the content of the Xml object in the report.`}} "
-				+ "{{##Id;#Action;#File\n"
+				+ "{{#\n" +
+				"#Id;#Action;#File\n"
 				+ "XML1;XmlLoadFromFile;'/path/Xml.xml'\n"
 				+ "#Action;#Xml;#Title\n"
-				+ "XmlReport;Xml1;’Xml report’#}}"
+				+ "XmlReport;Xml1;'Xml report'#}}"
 	)
 public class XmlReport extends AbstractAction 
 {

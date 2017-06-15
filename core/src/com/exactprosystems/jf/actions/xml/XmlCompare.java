@@ -30,7 +30,8 @@ import java.util.List;
 				+ "{{`3. Compare two Xml structures.`}}"
 				+ "{{`4. Check the results of the comparison.`}}"
 				+ "\n"
-				+ "{{##Id;#Action;#File\n"
+				+ "{{#\n" +
+				"#Id;#Action;#File\n"
 				+ "XML1;XmlLoadFromFile;'pathToTheFile'\n"
 				+ "#Id;#Action;#Xpath;#NodeName;#Xml\n"
 				+ "XML2;XmlSelect;'//friend';'newParent';XML1.Out\n"

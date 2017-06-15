@@ -31,7 +31,8 @@ import java.io.File;
 		outputType				= Xml.class,
 		examples 				= "{{`1. Create Xml object by downloading it from the file.`}} "
 				+ "{{`Contents of an xml file:`}} "
-				+ "{{#<note> \n"
+				+ "{{#\n" +
+				"<note> \n"
 				+ "<to>\n"
 				+ "<friend>\n"
 				+ "<name id=\"first\">Tove</name>\n"
@@ -47,7 +48,8 @@ import java.io.File;
 				+ "</note>#}}"
 				+ "\n"
 				+ "{{`2. Make sure that the object has been created and contains nodes.`}} "
-				+ "{{##Id;#Action;#File\n"
+				+ "{{#\n" +
+				"#Id;#Action;#File\n"
 				+ "XML1;XmlLoadFromFile;'PathToTheFile'\n"
 				+ "#Assert;#Message\n"
 				+ "XML1.Result.toString() == 'Passed';'No such attribute'#}}"

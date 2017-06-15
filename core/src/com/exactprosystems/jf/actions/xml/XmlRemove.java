@@ -25,7 +25,8 @@ import com.exactprosystems.jf.functions.Xml;
 		additionFieldsAllowed 	= false,
 		examples 				= "{{`1. Create an Xml object by downloading it from the file.`}}"
 				+ "{{`Contents of an xml file:`}} "
-				+ "{{#<note> \n"
+				+ "{{#\n" +
+				"<note> \n"
 				+ "<to>\n"
 				+ "<friend>\n"
 				+ "<name id=\"first\">Tove</name>\n"
@@ -42,7 +43,8 @@ import com.exactprosystems.jf.functions.Xml;
 				+ "\n"
 				+ "{{`2. Delete the element in transferring XPath.`}}"
 				+ "{{`3. Make sure that the element has been deleted and its content is not in the report.`}} "
-				+ "{{##Id;#Action;#File\n"
+				+ "{{#\n" +
+				"#Id;#Action;#File\n"
 				+ "XML1;XmlLoadFromFile;'/path/Xml.xml'\n"
 				+ "#Action;#Xpath;#Xml\n"
 				+ "XmlRemove;'//from';XML1.Out\n"

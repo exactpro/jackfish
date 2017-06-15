@@ -31,7 +31,8 @@ import com.exactprosystems.jf.functions.Xml;
 		outputType				= Xml.class,
 		examples 				= "{{`1. Create an object by downloading it from the file.`}}"
 				+ "{{`Contents of an xml file:`}} "
-				+ "{{#<note> \n"
+				+ "{{#\n" +
+				"<note> \n"
 				+ "<to>\n"
 				+ "<friend>\n"
 				+ "<name id=\"first\">Tove</name>\n"
@@ -48,7 +49,8 @@ import com.exactprosystems.jf.functions.Xml;
 				+ "\n"
 				+ "{{`2. Find the first element name.`}}"
 				+ "{{`3. Check the output.`}} "
-				+ "{{##Id;#Action;#File\n"
+				+ "{{#\n" +
+				"#Id;#Action;#File\n"
 				+ "XML2;XmlLoadFromFile;'/path/Xml.xml'\n"
 				+ "#Id;#Action;#Xpath;#Xml\n"
 				+ "XML2;XmlFindFirst;'//name';XML1.Out\n"
