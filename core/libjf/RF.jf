@@ -136,14 +136,14 @@ RF;RegressionFramework
                         _rf_dialect
                             #Case
                             'MYSQL'
-                                #Id;#Action;$Connection;$Query;ScenarioId;Testcase;Stepp;Time;Result;Error;Screenshot
-                                selectDetails;SQLinsert;SQL;'INSERT INTO details (scenario_id, testcase, step, time, result, error, screenshot) VALUES (?, ?, ?, ?, ?, ?, ?)';scenarioId;'' + details.TestCase;'' + details.Step;details.Time;'' + details.Result;'' + details.Error;Converter.storableToBlob(details.Screenshot)
+                                #Id;#Action;$Connection;$Query;ScenarioId;Testcase;Step;Time;Result;Error;Screenshot
+                                selectDetails;SQLinsert;SQL;'INSERT INTO details (scenario_id, testcase, step, time, result, error, screenshot) VALUES (?, ?, ?, ?, ?, ?, ?)';scenarioId;'' + details.TestCase;'' + details.StepIdentity;details.Time;'' + details.Result;'' + details.Error;Converter.storableToBlob(details.Screenshot)
 
 
                             #Case
                             'MSSQL'
-                                #Id;#Action;$Connection;$Query;ScenarioId;Testcase;Stepp;Time;Result;Error;Screenshot
-                                selectDetails;SQLinsert;SQL;'INSERT INTO details (scenario_id, testcase, step, time, result, error, screenshot) VALUES (?, ?, ?, ?, ?, ?, CONVERT(VARBINARY(MAX),?))';scenarioId;'' + details.TestCase;'' + details.Step;details.Time;'' + details.Result;'' + details.Error;Converter.storableToBlob(details.Screenshot)
+                                #Id;#Action;$Connection;$Query;ScenarioId;Testcase;Step;Time;Result;Error;Screenshot
+                                selectDetails;SQLinsert;SQL;'INSERT INTO details (scenario_id, testcase, step, time, result, error, screenshot) VALUES (?, ?, ?, ?, ?, ?, CONVERT(VARBINARY(MAX),?))';scenarioId;'' + details.TestCase;'' + details.StepIdentity;details.Time;'' + details.Result;'' + details.Error;Converter.storableToBlob(details.Screenshot)
 
 
                             #Default

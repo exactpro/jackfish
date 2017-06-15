@@ -38,6 +38,7 @@ public class Context implements IContext, AutoCloseable
 	public static final String matrixColumn 			= "Matrix";
 	public static final String testCaseIdColumn 		= "TestCaseId";
 	public static final String testCaseColumn 			= "TestCase";
+    public static final String stepIdColumn             = "StepId";
 	public static final String stepColumn 				= "Step";
 	public static final String stepIdentityColumn 		= "StepIdentity";
 	public static final String timeColumn 				= "Time";
@@ -46,8 +47,8 @@ public class Context implements IContext, AutoCloseable
     public static final String screenshotColumn         = "Screenshot";
 	public static final String[] resultColumns = new String[]
 			{
-				matrixColumn, testCaseIdColumn, testCaseColumn, stepIdentityColumn, stepColumn, timeColumn, 
-				resultColumn, errorColumn, screenshotColumn
+				matrixColumn, testCaseIdColumn, testCaseColumn, stepIdColumn, stepIdentityColumn, stepColumn, 
+				timeColumn, resultColumn, errorColumn, screenshotColumn
 			};
 
 	public static class EntryPoint

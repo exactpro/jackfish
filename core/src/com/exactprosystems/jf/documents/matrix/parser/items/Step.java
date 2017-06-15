@@ -60,7 +60,8 @@ public class Step extends MatrixItem
 	@Override
 	public String toString()
 	{
-		return getClass().getSimpleName() + " " + this.getId();
+        String s = this.identify.getExpression();
+        return Str.IsNullOrEmpty(s) ? super.toString() : s;
 	}
 
 	@Override
@@ -229,6 +230,7 @@ public class Step extends MatrixItem
 					row.put(Context.testCaseIdColumn, 	parent.getId());
 					row.put(Context.testCaseColumn, 	parent);
 				}
+                row.put(Context.stepIdColumn,           this.getId());
                 row.put(Context.stepColumn,             this);
 			}
             

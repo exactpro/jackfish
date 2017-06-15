@@ -224,8 +224,20 @@ Application get properties;;;
     #Id;#Action;$AppId;WorkDir;Exec
     app;ApplicationStart;'WIN';mockWinDir;mockWinExec
 
-    #Id;#Action;#Assert;$AppConnection;Rectangle
-    APPPAR2;ApplicationGetProperties;This.Out.Rectangle == new java.awt.Rectangle(0,0,881,845);app.Out;
+    #Id;#Action;$AppConnection;Rectangle
+    APPPAR2;ApplicationGetProperties;app.Out;
+
+    #Id;#Let
+    width;APPPAR2.Out.Rectangle.width
+
+    #Id;#Let
+    height;APPPAR2.Out.Rectangle.height
+
+    #Assert;#Message
+    width > 800 && width < 1000;'Width is  wrong ' + width
+
+    #Assert;#Message
+    height > 800 && height < 1000;'Height is  wrong ' + height
 
     #Id;#Action;#Assert;$AppConnection;Title
     APPPAR3;ApplicationGetProperties;This.Result == Result.Failed && This.Kind == ErrorKind.EXCEPTION;app.Out;

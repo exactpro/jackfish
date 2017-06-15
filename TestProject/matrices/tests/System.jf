@@ -238,7 +238,7 @@ RESTORE;Restore;Never;;
 #Id;#TestCase;#Kind;#Depends;#For
 RESULT;ResultTable;Never;;
     #Id;#Let
-    expectedColumns;[ 'Matrix', 'TestCaseId', 'TestCase', 'StepIdentity', 'Step', 'Time', 'Result', 'Error', 'Screenshot' ]
+    expectedColumns;[ 'Matrix', 'TestCaseId', 'TestCase', 'StepId', 'StepIdentity', 'Step', 'Time', 'Result', 'Error', 'Screenshot' ]
 
     #Id;#Action;$Decoraded
     RESTBL1;ResultTable;true
@@ -288,8 +288,6 @@ RESULT;ResultTable;Never;;
     ~;"        'User error'"
     ~;""
     ~;"    #EndStep"
-    ~;""
-    ~;""
     #EndRawText
 
     #Id;#Action;$Text
@@ -303,10 +301,10 @@ RESULT;ResultTable;Never;;
 
     #Id;#RawTable
     expectedTable;Table
-    @;Matrix;TestCaseId;TestCase;StepIdentity;Step;Time;Result;Error;Screenshot
-    0;new;TC1;Testcase1;;;9;Failed;User error;
-    1;new;TC1;Testcase1;SID1;ST1;3;Passed;;
-    2;new;TC1;Testcase1;SID2;ST2;1;Failed;User error;
+    @;Matrix;TestCaseId;TestCase;StepId;StepIdentity;Step;Time;Result;Error;Screenshot
+    0;new;TC1;Testcase1;;;;9;Failed;User error;
+    1;new;TC1;Testcase1;SID1;ST1;'ST1';3;Passed;;
+    2;new;TC1;Testcase1;SID2;ST2;'ST2';1;Failed;User error;
     #EndRawTable
 
     #Id;#Action;$Expected;$Actual;$ExcludeColumns
@@ -413,7 +411,7 @@ RT_USERVAL;ResultTableUserValue;Never;;
     TableConsiderColumnsAs;DATA1;{ 'UserValue1', 'UserValue2', 'UserValue3'}
 
     #Id;#Action;$Expected;$Actual;$ExcludeColumns
-    TBLCMP1;TableCompareTwo;DATA1;RESTBL3.Out;{'Matrix', 'TestCaseId', 'TestCase', 'StepIdentity', 'Step', 'Time', 'Result', 'Error', 'Screenshot'}
+    TBLCMP1;TableCompareTwo;DATA1;RESTBL3.Out;{'Matrix', 'TestCaseId', 'TestCase', 'StepId', 'StepIdentity', 'Step', 'Time', 'Result', 'Error', 'Screenshot'}
 
     // =====================================================================
     // Negative tests
