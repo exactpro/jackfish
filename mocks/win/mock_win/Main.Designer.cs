@@ -77,6 +77,7 @@
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menu2 = new System.Windows.Forms.ToolStripMenuItem();
+            this.menuItemToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.HScrollBar = new System.Windows.Forms.HScrollBar();
             this.VScrollBar = new System.Windows.Forms.VScrollBar();
             this.Splitter = new System.Windows.Forms.SplitContainer();
@@ -94,13 +95,13 @@
             this.pressLabel = new System.Windows.Forms.Label();
             this.downUpLabel = new System.Windows.Forms.Label();
             this.sliderLabel = new System.Windows.Forms.Label();
-            this.menuItemToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.countButtonClear = new System.Windows.Forms.Button();
             this.countButton = new System.Windows.Forms.Button();
             this.countLabel = new System.Windows.Forms.Label();
             this.notEnabledButton = new System.Windows.Forms.Button();
             this.invisibleButton = new System.Windows.Forms.Button();
             this.colorButton = new System.Windows.Forms.Button();
+            this.pushLabel = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.Table1)).BeginInit();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.Slider)).BeginInit();
@@ -120,6 +121,7 @@
             resources.ApplyResources(this.Button, "Button");
             this.Button.Name = "Button";
             this.Button.UseVisualStyleBackColor = true;
+            this.Button.Click += new System.EventHandler(this.Button_Click);
             this.Button.KeyDown += new System.Windows.Forms.KeyEventHandler(this.CommonKeyDown);
             this.Button.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.CommonKeyPress);
             this.Button.KeyUp += new System.Windows.Forms.KeyEventHandler(this.CommonKeyUp);
@@ -285,7 +287,7 @@
             // Slider
             // 
             resources.ApplyResources(this.Slider, "Slider");
-            this.Slider.Maximum = 50;
+            this.Slider.Maximum = 100;
             this.Slider.Name = "Slider";
             this.Slider.KeyDown += new System.Windows.Forms.KeyEventHandler(this.CommonKeyDown);
             this.Slider.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.CommonKeyPress);
@@ -518,6 +520,11 @@
             resources.ApplyResources(this.menu2, "menu2");
             this.menu2.Click += new System.EventHandler(this.aboutToolStripMenuItem_Click);
             // 
+            // menuItemToolStripMenuItem
+            // 
+            this.menuItemToolStripMenuItem.Name = "menuItemToolStripMenuItem";
+            resources.ApplyResources(this.menuItemToolStripMenuItem, "menuItemToolStripMenuItem");
+            // 
             // HScrollBar
             // 
             resources.ApplyResources(this.HScrollBar, "HScrollBar");
@@ -636,11 +643,6 @@
             this.sliderLabel.Name = "sliderLabel";
             this.sliderLabel.Click += new System.EventHandler(this.label1_Click);
             // 
-            // menuItemToolStripMenuItem
-            // 
-            this.menuItemToolStripMenuItem.Name = "menuItemToolStripMenuItem";
-            resources.ApplyResources(this.menuItemToolStripMenuItem, "menuItemToolStripMenuItem");
-            // 
             // countButtonClear
             // 
             resources.ApplyResources(this.countButtonClear, "countButtonClear");
@@ -659,6 +661,7 @@
             // 
             resources.ApplyResources(this.countLabel, "countLabel");
             this.countLabel.Name = "countLabel";
+            this.countLabel.Click += new System.EventHandler(this.countLabel_Click);
             // 
             // notEnabledButton
             // 
@@ -680,11 +683,17 @@
             this.colorButton.Name = "colorButton";
             this.colorButton.UseVisualStyleBackColor = false;
             // 
+            // pushLabel
+            // 
+            resources.ApplyResources(this.pushLabel, "pushLabel");
+            this.pushLabel.Name = "pushLabel";
+            // 
             // Main
             // 
             resources.ApplyResources(this, "$this");
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ContextMenuStrip = this.contextMenuStrip1;
+            this.Controls.Add(this.pushLabel);
             this.Controls.Add(this.colorButton);
             this.Controls.Add(this.invisibleButton);
             this.Controls.Add(this.notEnabledButton);
@@ -816,6 +825,7 @@
         private System.Windows.Forms.Button notEnabledButton;
         private System.Windows.Forms.Button invisibleButton;
         private System.Windows.Forms.Button colorButton;
+        public System.Windows.Forms.Label pushLabel;
     }
 }
 

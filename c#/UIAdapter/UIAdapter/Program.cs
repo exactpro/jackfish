@@ -734,14 +734,23 @@ namespace UIAdapter
         }
 
         [DllExport("sendKey", CallingConvention.Cdecl)]
-        public static void SendKey(String key)
+        public static void SendKey(String inid, String key)
         {
             try
             {
                 long startMethod = getMilis();
                 // TODO see this reference for understanding sendWait 
                 // https://msdn.microsoft.com/ru-ru/library/system.windows.forms.sendkeys.send(v=vs.110).aspx
+
+                int[] id = stringToIntArray(inid);
+                if (id == null || id.Length == 0)
+                {
+                    return;
+                }
                 UpdateHandler();
+                AutomationElement element = FindByRuntimeId(id);
+                element.SetFocus();
+
                 //toFront();
                 //old implementtation. remote it if all works
                 /*
@@ -854,12 +863,20 @@ namespace UIAdapter
         }
 
         [DllExport("upAndDown", CallingConvention.Cdecl)]
-        public static void UpAndDown(String key, bool isDown)
+        public static void UpAndDown(String inid, String key, bool isDown)
         {
             try
             {
                 long startMethod = getMilis();
+                int[] id = stringToIntArray(inid);
+                if (id == null || id.Length == 0)
+                {
+                    return;
+                }
                 UpdateHandler();
+                AutomationElement element = FindByRuntimeId(id);
+                element.SetFocus();
+
                 VirtualKeyCode keyCode = 0x00;
 
                 if (key.ToUpper().Equals("SHIFT"))
@@ -1128,6 +1145,36 @@ namespace UIAdapter
             AutomationElement element = FindByRuntimeId(id);
             logger.All("method elementIsEnabled", getMilis() - startMethod);
             return "" + !element.Current.IsOffscreen;
+        }
+
+        [DllExport("getRectangle", CallingConvention.Cdecl)]
+        public static string getRectangle(String inid)
+        {
+            long startMethod = getMilis();
+            int[] id = stringToIntArray(inid);
+            UpdateHandler();
+            AutomationElement element = FindByRuntimeId(id);
+            AutomationElement titleBar = handler.FindFirst(TreeScope.Descendants, new PropertyCondition(AutomationElement.AutomationIdProperty, "TitleBar"));
+            Rect handlerRect = handler.Current.BoundingRectangle;
+            Rect elementRect = element.Current.BoundingRectangle;
+            Rect titleBarRect;
+            Rect finalRect;
+            double left;
+            double top;
+            if (titleBar != null)
+            {
+                titleBarRect = titleBar.Current.BoundingRectangle;
+                left = elementRect.Left - titleBarRect.Left;
+                top = elementRect.Top - titleBarRect.Top - titleBarRect.Height;
+            }
+            else
+            {
+                left = elementRect.Left;
+                top = elementRect.Top;
+            }
+
+            finalRect = new Rect(left, top, elementRect.Width, elementRect.Height);
+            return finalRect.ToString();
         }
 
         [DllExport("getProperty", CallingConvention.Cdecl)]

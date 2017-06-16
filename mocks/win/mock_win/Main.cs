@@ -14,6 +14,8 @@ namespace mock_win
     public partial class Main : Form
     {
         private int counter = 0;
+        private int sliderValue = -99;
+        Timer timer;
 
         public Main()
         {
@@ -22,6 +24,20 @@ namespace mock_win
             fillListView();
             fillContextMenu();
             ComboBox.SelectedIndex = 0;
+
+            this.timer = new Timer();
+            this.timer.Interval = 100;
+            this.timer.Tick += new EventHandler(timer_Tick);
+            this.timer.Enabled = true;
+        }
+
+        private void timer_Tick(object sender, EventArgs e)
+        {
+            if (Slider.Value != sliderValue)
+            {
+                sliderValue = Slider.Value;
+                sliderLabel.Text = "Slider_" + Slider.Value;
+            }
         }
 
         private void fillContextMenu()
@@ -99,6 +115,7 @@ namespace mock_win
 
         private void writeTextOncentralLabelMouse(string text, MouseEventArgs e)
         {
+            pushLabel.Text = "";
             if (e.Button == MouseButtons.Left)
             {
                 if (e.Clicks == 1)
@@ -274,5 +291,20 @@ namespace mock_win
             counter = 0;
             countLabel.Text = "0";
         }
+
+        private void countLabel_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void Button_Click(object sender, EventArgs e)
+        {
+            pushLabel.Text = "Button_push";
+        }
+
+        //private void Slider_ValueChanged(object sender, EventArgs e)
+        //{
+        //    sliderLabel.Text = "Slider_" + ((TrackBar)sender).Value;
+        //}
     }
 }

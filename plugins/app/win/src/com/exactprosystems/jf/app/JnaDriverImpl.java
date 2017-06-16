@@ -218,20 +218,20 @@ public JnaDriverImpl(Logger logger) throws Exception
 		return result;
 	}
 
-	public void sendKeys(String key) throws Exception
+	public void sendKeys(UIProxyJNA component, String key) throws Exception
 	{
 		long start = System.currentTimeMillis();
-		this.jnaDriver.sendKey(key);
+		this.jnaDriver.sendKey(component.getIdString(), key);
 		this.logger.info(String.format("key(%s), time (ms) : %d", key, 
 				System.currentTimeMillis() - start));
 		checkCSharpTimes();
 		checkError();
 	}
 
-	public void upAndDown(String key, boolean isDown) throws Exception
+	public void upAndDown(UIProxyJNA component, String key, boolean isDown) throws Exception
 	{
 		long start = System.currentTimeMillis();
-		this.jnaDriver.upAndDown(key, isDown);
+		this.jnaDriver.upAndDown(component.getIdString(), key, isDown);
 		this.logger.info(String.format("upAndDown (%s, %b), time (ms) : %d", key, isDown, System.currentTimeMillis() - start));
 		checkCSharpTimes();
 		checkError();
@@ -537,4 +537,13 @@ public JnaDriverImpl(Logger logger) throws Exception
 	}
 
 	private JnaDriver jnaDriver;
+
+	public String getRectangle(UIProxyJNA element) throws RemoteException {
+		long start = System.currentTimeMillis();
+		String result = ConvertString.replaceUnicodeSubStringsToCharSymbols(this.jnaDriver.getRectangle(element.getIdString()));
+		this.logger.info(String.format("getRectangle(%s) = %s, time (ms) : %d", element, result, System.currentTimeMillis() - start));
+		checkCSharpTimes();
+		checkError();
+		return result;
+	}
 }
