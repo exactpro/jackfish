@@ -3,6 +3,7 @@ package com.exactprosystems.jf.tool.wizard;
 import com.exactprosystems.jf.api.app.IControl;
 import com.exactprosystems.jf.api.common.Sys;
 import com.exactprosystems.jf.api.wizard.WizardCommand;
+import com.exactprosystems.jf.documents.Document;
 import com.exactprosystems.jf.documents.guidic.GuiDictionary;
 import com.exactprosystems.jf.documents.guidic.Section;
 import com.exactprosystems.jf.documents.matrix.Matrix;
@@ -64,14 +65,18 @@ public class CommandBuilder
 
 	public CommandBuilder replaceControl(Section section, IControl oldControl, IControl newControl)
 	{
-		this.commands.add(context -> section.replaceControl(oldControl, newControl));
+		this.commands.add(context -> 
+		{ 
+		    section.replaceControl(oldControl, newControl);
+		});
 		return this;
 	}
 
-	public CommandBuilder saveDictionary(GuiDictionary dictionary)
+	public CommandBuilder saveDocument(Document doc)
 	{
-		this.commands.add(context -> {
-			Common.tryCatch(() -> dictionary.save(dictionary.getName()), "Error on save dictionary");
+		this.commands.add(context -> 
+		{
+			Common.tryCatch(() -> doc.save(doc.getName()), "Error on save " + doc.getName());
 		});
 		return this;
 	}

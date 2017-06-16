@@ -23,6 +23,8 @@ import com.exactprosystems.jf.tool.wizard.all.CodeExampleWizard;
 import com.exactprosystems.jf.tool.wizard.all.DictionaryWizard;
 import com.exactprosystems.jf.tool.wizard.all.GherkinWizard;
 import com.exactprosystems.jf.tool.wizard.all.SupportedControlWizard;
+import com.exactprosystems.jf.tool.wizard.all.XpathWizard;
+
 import org.apache.log4j.Logger;
 
 import java.util.Arrays;
@@ -52,7 +54,8 @@ public class WizardManagerImpl implements WizardManager
             GherkinWizard.class,
 			DictionaryWizard.class,
 			SupportedControlWizard.class,
-			CodeExampleWizard.class
+			CodeExampleWizard.class,
+			XpathWizard.class
 	);
     
     public WizardManagerImpl()
