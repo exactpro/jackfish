@@ -57,7 +57,7 @@ public class DocumentationBuilder
     {
         AbstractEvaluator evaluator = context.getEvaluator();
         
-        MatrixItem help = new HelpTextLine("{{* JackFish *}}"); // TODO think about
+        MatrixItem help = new HelpTextLine("\\JackFishHuge");
 
         String[][] table1 = new String[][]
                 {

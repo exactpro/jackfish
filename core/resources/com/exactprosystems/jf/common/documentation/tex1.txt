@@ -49,7 +49,7 @@
 \newcommand\crule[3][black]{\textcolor{#1}{\rule{#2}{#3}}}
 %% example: \crule[COLORNAME]{width}{height}
 \newcommand{\superhyperlink}[1]{\hyperlink{#1}{#1}}
-\newcommand{\JackFish}{\HUGE{JackFish}}
+\newcommand{\JackFishHuge}{\textbf{\Huge{JackFish}}}
 
 \linespread{1.5}
 \parindent=0
