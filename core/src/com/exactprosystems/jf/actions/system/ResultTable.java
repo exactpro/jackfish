@@ -51,7 +51,7 @@ import com.exactprosystems.jf.functions.Table;
 		additionFieldsAllowed 	= false, 
 		outputDescription 		= "A copy if the system table that has columns Matrix, TestCaseId, TestCase, StepIdentity, Step, Time, Result, Error, Screenshot.",
 		outputType 				= Table.class,
-		examples 				= "{{##Id;#TestCase;#Kind\n"
+		examples 				= "{{#\n#Id;#TestCase;#Kind\n"
 				+ "First;;\n"
 				+ "    #Action;#name\n"
 				+ "    Print;'value'\n"

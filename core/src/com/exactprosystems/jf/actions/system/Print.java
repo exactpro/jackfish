@@ -26,7 +26,7 @@ import com.exactprosystems.jf.documents.matrix.parser.items.TypeMandatory;
 		additionFieldsAllowed 	= true,
 		additionalDescription 	= "The name of the output object is indicated in the name of the additional parameter,"
 				+ " the output object is indicated in the value of the parameter.",
-		examples = "The following example will output the following row to the console: “Comment for a string:  Name = Value”\n"
+		examples = "The following example will output the following row to the console: 'Comment for a string:  Name = Value'\n"
 				+ "{{##Action;#Str;#Name\n"
 				+ "Print;'Comment for a string: ';'Value'#}}",
 		seeAlsoClass = {Show.class}

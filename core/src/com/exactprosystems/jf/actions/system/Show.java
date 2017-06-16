@@ -27,9 +27,9 @@ import com.exactprosystems.jf.functions.Notifier;
 		group					= ActionGroups.System,
 		generalDescription 		= "The following action is needed to output values in the pop-up notification that appears above all windows.",
 		additionFieldsAllowed 	= false,
-		examples 				= "Output the following row \"Current time is: current_time\" in the pop-up window, "
+		examples 				= "Output the following row \"Current time is: currentTime\" in the pop-up window, "
 				+ "with notification type Info.\n"
-				+ "{{##Action;#Text;#Notifier\n"
+				+ "{{#\n#Action;#Text;#Notifier\n"
 				+ "Show;'Current time is: ' + DateTime.currentTime();Notifier.Info#}}",
 		seeAlsoClass = {Print.class}
 	)

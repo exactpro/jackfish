@@ -24,7 +24,7 @@ import com.exactprosystems.jf.documents.matrix.parser.Parameters;
 				+ "All objects from global {{$Store$}} are stored only during the current tool session.",
 		additionFieldsAllowed = false,
 		examples 			= "Save object DateTime that contains current date and time when doing this action.\n"
-				+ "{{##Action;#Value;#Name\n"
+				+ "{{#\n#Action;#Value;#Name\n"
 				+ "Store;DateTime.current();'Current time'#}}",
 		seeAlsoClass = {Restore.class}
 )

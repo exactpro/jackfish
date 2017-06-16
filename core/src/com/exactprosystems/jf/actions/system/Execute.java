@@ -40,7 +40,7 @@ import java.util.List;
 		outputType				= ExecuteResult.class,
 		examples = "{{`1. Run system command “help”`}}"
 				+ "2. Check if you get an answer in the form of text when executing the current command.\n"
-				+ "{{##Id;#Action;#Command\n"
+				+ "{{#\n#Id;#Action;#Command\n"
 				+ "EXEC1;Execute;'help'\n"
 				+ "#Assert;#Message\n"
 				+ "Str.IsNullOrEmpty(EXEC1.Out.Text);'Command wasn't executed'#}}"

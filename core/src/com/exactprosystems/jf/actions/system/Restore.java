@@ -28,7 +28,7 @@ import java.util.Map.Entry;
 		outputType				= Object.class,
 		examples 				= "Restore value with name Current time that was stored by action Store. Assign it to "
 				+ "the local variable “create date”.\n"
-				+ "{{##Action;#AsVar;#Name\n"
+				+ "{{#\n#Action;#AsVar;#Name\n"
 				+ "Restore;'create date';'Current time'#}}",
 		seeAlsoClass = {Store.class}
 )
