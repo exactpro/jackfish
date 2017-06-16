@@ -68,7 +68,8 @@ public abstract class MatrixItem implements IMatrixItem, Mutable, Cloneable
 			clone.global 	= this.global.clone();
 			clone.ignoreErr = this.ignoreErr.clone();
 
-			clone.owner = owner;
+            clone.source    = this.source;
+			clone.owner     = this.owner;
 			clone.comments 	= (MutableArrayList<CommentString>) comments.clone();
 			clone.parent 	= this.parent;
 			clone.children 	= new MutableArrayList<MatrixItem>(children.size());
@@ -211,6 +212,11 @@ public abstract class MatrixItem implements IMatrixItem, Mutable, Cloneable
 	//==============================================================================================
 	// Getters / Setters
 	//==============================================================================================
+    public final Matrix getSource()
+    {
+        return this.source;
+    }
+
 	public final Matrix getMatrix()
 	{
 		return this.owner;
@@ -593,6 +599,7 @@ public abstract class MatrixItem implements IMatrixItem, Mutable, Cloneable
 	public final void insert(int index, MatrixItem item)
 	{
 		item.parent = this;
+		item.source = this.owner;
 		item.owner = this.owner;
 		this.children.add(index, item);
 	}
@@ -1010,6 +1017,7 @@ public abstract class MatrixItem implements IMatrixItem, Mutable, Cloneable
 
 	// do not define state
 	protected Object layout;
+    protected Matrix source;
     protected Matrix owner;
     protected int number;
 	protected MatrixItem parent;

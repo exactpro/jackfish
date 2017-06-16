@@ -319,7 +319,7 @@ public class HTMLReportBuilder extends ReportBuilder
 				  "<th scope='row'>\n"
 				+ "  <a href='javascript:void(0)' source='%s'>%03d</a>\n"
 				+ "</th>\n",
-				item.getMatrix().getName(), item.getNumber());
+				item.getMatrix().getName(), item.getNumber()); // TODO change to getSource()
 		writer.fwrite("<td>%s</td>", itemId);
 		writer.fwrite("<td><a href='javascript:void(0)' class='showBody'>%s</a></td>", item.getItemName());
 		writer.fwrite("<td id='hs_%s'> </td>", id);
