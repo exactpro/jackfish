@@ -12,8 +12,8 @@ namespace UIAdapter
     {
         public static AutomationElement[] Find(AutomationElement owner, ControlKind controlKind, string Uid, string Xpath, string Clazz, string Name, string Title, string Text, Boolean many, int maxTimeout)
         {
-            /*Task<AutomationElement[]> task = Task<AutomationElement[]>.Factory.StartNew(() =>
-            {*/
+            Task<AutomationElement[]> task = Task<AutomationElement[]>.Factory.StartNew(() =>
+            {
                 AutomationElement[] ret = null;
                 if (!String.IsNullOrEmpty(Xpath))
                 {
@@ -60,7 +60,7 @@ namespace UIAdapter
                     }
                 }
                 return ret;
-            /*});
+            });
             try
             {
                 Program.logger.All("Start found component during " + maxTimeout + " ms", -1);
@@ -80,7 +80,7 @@ namespace UIAdapter
             {
                 Program.logger.All("Tut u nas exception : " + e.InnerException.Message, -1);
                 throw e.InnerException;
-            }*/
+            }
         }
 
         public static void ClearCache()

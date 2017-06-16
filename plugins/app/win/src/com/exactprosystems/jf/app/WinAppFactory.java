@@ -140,35 +140,37 @@ public class WinAppFactory implements IApplicationFactory
 		fieldMap.put(LocatorFieldKind.CLAZZ,	AttributeKind.CLASS.name().toLowerCase());
 		fieldMap.put(LocatorFieldKind.NAME,		AttributeKind.NAME.name().toLowerCase());
 		fieldMap.put(LocatorFieldKind.TEXT,		AttributeKind.TEXT.name().toLowerCase());
-
+    	
 		PluginInfo info = new PluginInfo(fieldMap);
-		info.add(ControlKind.Any).setTypes(ControlType.Any.name());
-		info.add(ControlKind.Button).setTypes(ControlType.Button.name(), ControlType.SplitButton.name(), ControlType.Hyperlink.name());
-		info.add(ControlKind.CheckBox).setTypes(ControlType.CheckBox.name());
-		info.add(ControlKind.ComboBox).setTypes(ControlType.ComboBox.name());
-		info.add(ControlKind.Dialog).setTypes(ControlType.Window.name());
-		info.add(ControlKind.Frame).setTypes(ControlType.Window.name());
-		info.add(ControlKind.Label).setTypes(ControlType.Text.name())
-				.addExcludes(OperationKind.KEY_DOWN, OperationKind.KEY_UP, OperationKind.PRESS);
-		info.add(ControlKind.MenuItem).setTypes(ControlType.MenuItem.name());
-		info.add(ControlKind.Panel).setTypes(ControlType.Pane.name());
-		info.add(ControlKind.RadioButton).setTypes(ControlType.RadioButton.name());
-		info.add(ControlKind.Row).setTypes(ControlType.Custom.name());
-		info.add(ControlKind.Table).setTypes(ControlType.Table.name(), ControlType.DataGrid.name());
-		info.add(ControlKind.TabPanel).setTypes(ControlType.Tab.name());
-		info.add(ControlKind.TextBox).setTypes(ControlType.Edit.name(), ControlType.Document.name());
-		info.add(ControlKind.Menu).setTypes(ControlType.Menu.name());
-		info.add(ControlKind.Wait).setTypes(ControlType.Wait.name());
-		info.add(ControlKind.ToggleButton).setTypes(ControlType.Button.name());
-		info.add(ControlKind.ListView).setTypes(ControlType.List.name(), ControlType.DataGrid.name());
-		info.add(ControlKind.Tree).setTypes(ControlType.Tree.name());
-		info.add(ControlKind.Tooltip).setTypes(ControlType.ToolTip.name());
-		info.add(ControlKind.Image).setTypes(ControlType.Image.name());
-		info.add(ControlKind.Spinner).setTypes(ControlType.Spinner.name());
-		info.add(ControlKind.ProgressBar).setTypes(ControlType.ProgressBar.name());
-		info.add(ControlKind.ScrollBar).setTypes(ControlType.ScrollBar.name());
-		info.add(ControlKind.Slider).setTypes(ControlType.Slider.name());
-		info.add(ControlKind.TreeItem).setTypes(ControlType.TreeItem.name());
+		info.addTypes(ControlKind.Any,			ControlType.Any.name());
+		info.addTypes(ControlKind.Button,		ControlType.Button.name(), ControlType.SplitButton.name(), ControlType.Hyperlink.name());
+		info.addTypes(ControlKind.CheckBox,		ControlType.CheckBox.name());
+		info.addTypes(ControlKind.ComboBox,		ControlType.ComboBox.name());
+		info.addTypes(ControlKind.Dialog,		ControlType.Window.name());
+		info.addTypes(ControlKind.Frame,		ControlType.Window.name());
+
+		info.addTypes(ControlKind.Label,		ControlType.Text.name());
+		info.addExcludes(ControlKind.Label, 	OperationKind.KEY_DOWN, OperationKind.KEY_UP, OperationKind.PRESS);
+
+		info.addTypes(ControlKind.MenuItem,		ControlType.MenuItem.name());
+		info.addTypes(ControlKind.Panel,		ControlType.Pane.name());
+		info.addTypes(ControlKind.RadioButton,	ControlType.RadioButton.name());
+		info.addTypes(ControlKind.Row,			ControlType.Custom.name());
+		info.addTypes(ControlKind.Table,		ControlType.Table.name(), ControlType.DataGrid.name());
+		info.addTypes(ControlKind.TabPanel,		ControlType.Tab.name());
+		info.addTypes(ControlKind.TextBox,		ControlType.Edit.name(), ControlType.Document.name());
+		info.addTypes(ControlKind.Menu,			ControlType.Menu.name());
+		info.addTypes(ControlKind.Wait,			ControlType.Wait.name());
+		info.addTypes(ControlKind.ToggleButton,	ControlType.Button.name());
+		info.addTypes(ControlKind.ListView,		ControlType.List.name(), ControlType.DataGrid.name());
+		info.addTypes(ControlKind.Tree,			ControlType.Tree.name());
+		info.addTypes(ControlKind.Tooltip,		ControlType.ToolTip.name());
+		info.addTypes(ControlKind.Image,		ControlType.Image.name());
+		info.addTypes(ControlKind.Spinner,		ControlType.Spinner.name());
+		info.addTypes(ControlKind.ProgressBar,	ControlType.ProgressBar.name());
+		info.addTypes(ControlKind.ScrollBar,	ControlType.ScrollBar.name());
+		info.addTypes(ControlKind.Slider,		ControlType.Slider.name());
+		info.addTypes(ControlKind.TreeItem,		ControlType.TreeItem.name());
 
 		return info;
     }

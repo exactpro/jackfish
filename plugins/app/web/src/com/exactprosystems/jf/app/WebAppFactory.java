@@ -187,21 +187,26 @@ public class WebAppFactory implements IApplicationFactory
 
 		PluginInfo info = new PluginInfo(fieldMap);
 
-		info.add(ControlKind.Any).setTypes("*");
-		info.add(ControlKind.Button).setTypes("button", "input", "a", "img");
-		info.add(ControlKind.CheckBox).setTypes("button", "input");
-		info.add(ControlKind.ComboBox).setTypes("select", "input");
-		info.add(ControlKind.Dialog).setTypes("form");
-		info.add(ControlKind.Frame).setTypes("form", "body", "frame", "iframe");
-		info.add(ControlKind.Image).setTypes("img");
-		info.add(ControlKind.Label).setTypes("label", "span");
-		info.add(ControlKind.Panel).setTypes("div");
-		info.add(ControlKind.ProgressBar).setTypes("progress");
-		info.add(ControlKind.RadioButton).setTypes("input");
-		info.add(ControlKind.Row).setTypes("tr");
-		info.add(ControlKind.Slider).setTypes("div");
-		info.add(ControlKind.Spinner).setTypes("*");
-
+		info.addTypes(ControlKind.Any, "*");
+        info.addTypes(ControlKind.Button, "button", "input", "a", "img");
+        info.addTypes(ControlKind.CheckBox, "button", "input");
+		info.addTypes(ControlKind.ComboBox,"select", "input");
+		info.addTypes(ControlKind.Dialog,"form");
+		info.addTypes(ControlKind.Frame,"form", "body", "frame", "iframe");
+		info.addTypes(ControlKind.Image,"img");
+		info.addTypes(ControlKind.Label,"label", "span");
+		info.addTypes(ControlKind.Panel,"div");
+		info.addTypes(ControlKind.ProgressBar,"progress");
+		info.addTypes(ControlKind.RadioButton,"input");
+		info.addTypes(ControlKind.Row,"tr");
+		info.addTypes(ControlKind.Slider,"div");
+		info.addTypes(ControlKind.Spinner,"*");
+        info.addTypes(ControlKind.Table,"table");
+        info.addTypes(ControlKind.TabPanel,"button");
+        info.addTypes(ControlKind.TextBox,"input", "textarea");
+		info.addTypes(ControlKind.ToggleButton,"input");
+		info.addTypes(ControlKind.ListView,"ul");
+        info.addTypes(ControlKind.Wait,"*");
 
 		return info;
     }

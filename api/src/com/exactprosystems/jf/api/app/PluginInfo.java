@@ -30,6 +30,10 @@ public class PluginInfo implements Serializable
         {
             return null;
         }
+        if(this.controlMap.get(kind) == null)
+        {
+            return null;
+        }
         return this.controlMap.get(kind).getTypes();
     }
 
@@ -56,7 +60,7 @@ public class PluginInfo implements Serializable
         return this.fieldMap.get(kind);
     }
 
-    public PluginInfo add(ControlKind kind, String ... types) 
+    public void addTypes(ControlKind kind, String ... types)
     {
         ControlInfo controlInfo = this.controlMap.get(kind);
         if (controlInfo == null)
@@ -65,10 +69,9 @@ public class PluginInfo implements Serializable
             this.controlMap.put(kind, controlInfo);
         }
         controlInfo.setTypes(types);
-        return this;
     }
 
-    public PluginInfo addExclusion(ControlKind kind, OperationKind ... operations) 
+    public void addExcludes(ControlKind kind, OperationKind ... operations)
     {
         ControlInfo controlInfo = this.controlMap.get(kind);
         if (controlInfo == null)
@@ -78,7 +81,6 @@ public class PluginInfo implements Serializable
         }
 
         controlInfo.addExcludes(operations);
-        return this;
     }
     
     
@@ -113,16 +115,14 @@ public class PluginInfo implements Serializable
             return excludes;
         }
 
-        public ControlInfo setTypes(String ... types)
+        public void setTypes(String ... types)
         {
             this.types.addAll(Arrays.asList(types));
-            return this;
         }
 
-        public ControlInfo addExcludes(OperationKind ... operations)
+        public void addExcludes(OperationKind ... operations)
         {
             this.excludes.addAll(Arrays.asList(operations));
-            return this;
         }
     }
 }
