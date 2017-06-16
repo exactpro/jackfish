@@ -10,6 +10,7 @@ package com.exactprosystems.jf.tool.dictionary.dialog;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -71,7 +72,8 @@ public class WizardMatcher
         {
             return null;
         }
-        String[] nodes = this.pluginInfo.nodeByControlKind(controlKind);
+        Set<String> setNodes = this.pluginInfo.nodeByControlKind(controlKind);
+        String[] nodes = setNodes.toArray(new String[setNodes.size()]);
         if (nodes != null)
         {
             return complexXpath(locator, nodes);

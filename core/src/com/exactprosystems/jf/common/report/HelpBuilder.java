@@ -14,7 +14,6 @@ import com.exactprosystems.jf.api.app.ImageWrapper;
 import com.exactprosystems.jf.api.app.OperationKind;
 import com.exactprosystems.jf.charts.ChartBuilder;
 import com.exactprosystems.jf.common.ControlsAttributes;
-import com.exactprosystems.jf.common.report.ReportBuilder.ImageReportMode;
 import com.exactprosystems.jf.common.version.VersionInfo;
 import com.exactprosystems.jf.documents.guidic.controls.AbstractControl;
 import com.exactprosystems.jf.documents.matrix.parser.Parser;

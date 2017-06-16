@@ -125,34 +125,34 @@ public class WinAppFactory implements IApplicationFactory
     @Override
     public PluginInfo getInfo()
     {
-		Map<ControlKind, String[]> controlMap = new LinkedHashMap<>();
-
-		add(controlMap, ControlKind.Any,           	ControlType.Any);
-		add(controlMap, ControlKind.Button,        	ControlType.Button, ControlType.SplitButton, ControlType.Hyperlink);
-		add(controlMap, ControlKind.CheckBox,	   	ControlType.CheckBox);
-		add(controlMap, ControlKind.ComboBox,	   	ControlType.ComboBox);
-		add(controlMap, ControlKind.Dialog,        	ControlType.Window);
-		add(controlMap, ControlKind.Frame,         	ControlType.Window);
-		add(controlMap, ControlKind.Label,         	ControlType.Text);
-		add(controlMap, ControlKind.MenuItem,      	ControlType.MenuItem);
-		add(controlMap, ControlKind.Panel,         	ControlType.Pane);
-		add(controlMap, ControlKind.RadioButton,   	ControlType.RadioButton);
-		add(controlMap, ControlKind.Row,           	ControlType.Custom);
-		add(controlMap, ControlKind.Table,         	ControlType.Table, ControlType.DataGrid);
-		add(controlMap, ControlKind.TabPanel,      	ControlType.Tab);
-		add(controlMap, ControlKind.TextBox,       	ControlType.Edit, ControlType.Document);
-		add(controlMap, ControlKind.Menu,			ControlType.Menu);
-		add(controlMap, ControlKind.Wait,			ControlType.Wait);
-		add(controlMap, ControlKind.ToggleButton,  	ControlType.Button);
-		add(controlMap, ControlKind.ListView,  		ControlType.List, ControlType.DataGrid);
-		add(controlMap, ControlKind.Tree,  			ControlType.Tree);
-		add(controlMap, ControlKind.Tooltip, 		ControlType.ToolTip);
-		add(controlMap, ControlKind.Image, 			ControlType.Image);
-		add(controlMap, ControlKind.Spinner, 		ControlType.Spinner);
-		add(controlMap, ControlKind.ProgressBar,	ControlType.ProgressBar);
-		add(controlMap, ControlKind.ScrollBar,		ControlType.ScrollBar);
-		add(controlMap, ControlKind.Slider,			ControlType.Slider);
-		add(controlMap, ControlKind.TreeItem,		ControlType.TreeItem);
+		Map<ControlKind, ControlInfo> controlMap = new LinkedHashMap<>();
+		controlMap.put(ControlKind.Any, 		new ControlInfo().addTypes(ControlType.Any.name())
+														  .addExcludes(OperationKind.KEY_DOWN, OperationKind.KEY_UP, OperationKind.PRESS));
+		controlMap.put(ControlKind.Button,		new ControlInfo().addTypes(ControlType.Button.name(), ControlType.SplitButton.name(), ControlType.Hyperlink.name()));
+		controlMap.put(ControlKind.CheckBox, 	new ControlInfo().addTypes(ControlType.CheckBox.name()));
+		controlMap.put(ControlKind.ComboBox,	new ControlInfo().addTypes(ControlType.ComboBox.name()));
+		controlMap.put(ControlKind.Dialog,      new ControlInfo().addTypes(ControlType.Window.name()));
+		controlMap.put(ControlKind.Frame,       new ControlInfo().addTypes(ControlType.Window.name()));
+		controlMap.put(ControlKind.Label,       new ControlInfo().addTypes(ControlType.Text.name()));
+		controlMap.put(ControlKind.MenuItem,    new ControlInfo().addTypes(ControlType.MenuItem.name()));
+		controlMap.put(ControlKind.Panel,       new ControlInfo().addTypes(ControlType.Pane.name()));
+		controlMap.put(ControlKind.RadioButton, new ControlInfo().addTypes(ControlType.RadioButton.name()));
+		controlMap.put(ControlKind.Row,         new ControlInfo().addTypes(ControlType.Custom.name()));
+		controlMap.put(ControlKind.Table,       new ControlInfo().addTypes(ControlType.Table.name(), ControlType.DataGrid.name()));
+		controlMap.put(ControlKind.TabPanel,    new ControlInfo().addTypes(ControlType.Tab.name()));
+		controlMap.put(ControlKind.TextBox,     new ControlInfo().addTypes(ControlType.Edit.name(), ControlType.Document.name()));
+		controlMap.put(ControlKind.Menu,		new ControlInfo().addTypes(ControlType.Menu.name()));
+		controlMap.put(ControlKind.Wait,		new ControlInfo().addTypes(ControlType.Wait.name()));
+		controlMap.put(ControlKind.ToggleButton,new ControlInfo().addTypes(ControlType.Button.name()));
+		controlMap.put(ControlKind.ListView,  	new ControlInfo().addTypes(ControlType.List.name(), ControlType.DataGrid.name()));
+		controlMap.put(ControlKind.Tree,  		new ControlInfo().addTypes(ControlType.Tree.name()));
+		controlMap.put(ControlKind.Tooltip, 	new ControlInfo().addTypes(ControlType.ToolTip.name()));
+		controlMap.put(ControlKind.Image, 		new ControlInfo().addTypes(ControlType.Image.name()));
+		controlMap.put(ControlKind.Spinner, 	new ControlInfo().addTypes(ControlType.Spinner.name()));
+		controlMap.put(ControlKind.ProgressBar,	new ControlInfo().addTypes(ControlType.ProgressBar.name()));
+		controlMap.put(ControlKind.ScrollBar,	new ControlInfo().addTypes(ControlType.ScrollBar.name()));
+		controlMap.put(ControlKind.Slider,		new ControlInfo().addTypes(ControlType.Slider.name()));
+		controlMap.put(ControlKind.TreeItem,	new ControlInfo().addTypes(ControlType.TreeItem.name()));
 
 		Map<LocatorFieldKind, String> fieldMap = new LinkedHashMap<>();
 		fieldMap.put(LocatorFieldKind.UID,		AttributeKind.UID.name().toLowerCase());
@@ -160,20 +160,6 @@ public class WinAppFactory implements IApplicationFactory
 		fieldMap.put(LocatorFieldKind.NAME,		AttributeKind.NAME.name().toLowerCase());
 		fieldMap.put(LocatorFieldKind.TEXT,		AttributeKind.TEXT.name().toLowerCase());
 
-		Map<ControlKind, OperationKind[]> notAllowedOperationMap = new LinkedHashMap<>();
-		notAllowedOperationMap.put(ControlKind.Label, new OperationKind[]{OperationKind.KEY_DOWN, OperationKind.KEY_UP, OperationKind.PRESS});
-
-		return new PluginInfo(controlMap, fieldMap, notAllowedOperationMap);
+		return new PluginInfo(controlMap, fieldMap);
     }
-
-    //----------------------------------------------------------------------------------------------
-	private static void add(Map<ControlKind, String[]> controlMap, ControlKind kind, ControlType ... types)
-	{
-		String[] a = new String[types.length];
-		for (int i = 0; i < a.length; i++) {
-			a[i] = types[i].getName();
-		}
-		controlMap.put(kind, a);
-	}
-	//----------------------------------------------------------------------------------------------
 }

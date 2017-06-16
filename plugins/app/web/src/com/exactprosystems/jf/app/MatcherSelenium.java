@@ -21,8 +21,7 @@ import com.exactprosystems.jf.api.app.Visibility;
 import com.exactprosystems.jf.api.error.app.NullParameterException;
 
 import java.rmi.RemoteException;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 public class MatcherSelenium extends By
 {
@@ -98,7 +97,8 @@ public class MatcherSelenium extends By
         {
             return null;
         }
-        String[] nodes = this.pluginInfo.nodeByControlKind(controlKind);
+        Set<String> setNodes = this.pluginInfo.nodeByControlKind(controlKind);
+        String[] nodes = setNodes.toArray(new String[setNodes.size()]);
         if (nodes != null)
         {
             return complexXpath(locator, nodes);

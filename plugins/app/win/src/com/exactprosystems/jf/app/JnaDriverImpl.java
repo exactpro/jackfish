@@ -17,6 +17,7 @@ import java.io.InputStream;
 import java.nio.file.*;
 import java.rmi.RemoteException;
 import java.util.Arrays;
+import java.util.Set;
 
 
 /*
@@ -463,8 +464,7 @@ public JnaDriverImpl(Logger logger) throws Exception
 				case 4: throw new ElementNotFoundException(error);
 				case 5: throw new TooManyElementsException(error);
 				case 6: throw new InternalErrorException(error);
-				case 7:
-					throw new TimeoutException(error);
+				case 7:	throw new TimeoutException(error);
 			}
 		}
 	}
@@ -491,7 +491,7 @@ public JnaDriverImpl(Logger logger) throws Exception
 		builder.append("KindMap{");
 		String bigSep = "";
 		for (ControlKind kind : ControlKind.values()) {
-			String[] strings = info.nodeByControlKind(kind);
+			Set<String> strings = info.nodeByControlKind(kind);
 			if (strings != null) {
 				builder.append(bigSep).append(kind.ordinal()).append(":");
 				String sep = "";

@@ -165,28 +165,28 @@ public class WebAppFactory implements IApplicationFactory
     @Override
     public PluginInfo getInfo()
     {
-        Map<ControlKind, String[]>      controlMap = new LinkedHashMap<>();
+        Map<ControlKind, ControlInfo>      controlMap = new LinkedHashMap<>();
 
-        add(controlMap, ControlKind.Any,           "*");
-        add(controlMap, ControlKind.Button,        "button", "input", "a", "img");
-        add(controlMap, ControlKind.CheckBox,      "button", "input");
-        add(controlMap, ControlKind.ComboBox,      "select", "input");
-        add(controlMap, ControlKind.Dialog,        "form");
-        add(controlMap, ControlKind.Frame,         "form", "body", "frame", "iframe");
-        add(controlMap, ControlKind.Image,         "img");
-        add(controlMap, ControlKind.Label,         "label", "span");
-        add(controlMap, ControlKind.Panel,         "div");
-        add(controlMap, ControlKind.ProgressBar,   "progress");
-        add(controlMap, ControlKind.RadioButton,   "input");
-        add(controlMap, ControlKind.Row,           "tr");
-        add(controlMap, ControlKind.Slider,        "div");
-        add(controlMap, ControlKind.Spinner,       "*");
-        add(controlMap, ControlKind.Table,         "table");
-        add(controlMap, ControlKind.TabPanel,      "button");
-        add(controlMap, ControlKind.TextBox,       "input", "textarea");
-        add(controlMap, ControlKind.ToggleButton,  "input");
-        add(controlMap, ControlKind.ListView,      "ul");
-        add(controlMap, ControlKind.Wait,          "*");
+        controlMap.put(ControlKind.Any,           new ControlInfo().addTypes("*"));
+        controlMap.put(ControlKind.Button,        new ControlInfo().addTypes("button", "input", "a", "img"));
+        controlMap.put(ControlKind.CheckBox,      new ControlInfo().addTypes("button", "input"));
+        controlMap.put(ControlKind.ComboBox,      new ControlInfo().addTypes("select", "input"));
+        controlMap.put(ControlKind.Dialog,        new ControlInfo().addTypes("form"));
+        controlMap.put(ControlKind.Frame,         new ControlInfo().addTypes("form", "body", "frame", "iframe"));
+        controlMap.put(ControlKind.Image,         new ControlInfo().addTypes("img"));
+        controlMap.put(ControlKind.Label,         new ControlInfo().addTypes("label", "span"));
+        controlMap.put(ControlKind.Panel,         new ControlInfo().addTypes("div"));
+        controlMap.put(ControlKind.ProgressBar,   new ControlInfo().addTypes("progress"));
+        controlMap.put(ControlKind.RadioButton,   new ControlInfo().addTypes("input"));
+        controlMap.put(ControlKind.Row,           new ControlInfo().addTypes("tr"));
+        controlMap.put(ControlKind.Slider,        new ControlInfo().addTypes("div"));
+        controlMap.put(ControlKind.Spinner,       new ControlInfo().addTypes("*"));
+        controlMap.put(ControlKind.Table,         new ControlInfo().addTypes("table"));
+        controlMap.put(ControlKind.TabPanel,      new ControlInfo().addTypes("button"));
+        controlMap.put(ControlKind.TextBox,       new ControlInfo().addTypes("input", "textarea"));
+        controlMap.put(ControlKind.ToggleButton,  new ControlInfo().addTypes("input"));
+        controlMap.put(ControlKind.ListView,      new ControlInfo().addTypes("ul"));
+        controlMap.put(ControlKind.Wait,          new ControlInfo().addTypes("*"));
 
         Map<LocatorFieldKind, String>   fieldMap = new HashMap<>();
         
@@ -197,16 +197,7 @@ public class WebAppFactory implements IApplicationFactory
         fieldMap.put(LocatorFieldKind.TITLE,        "title");
         fieldMap.put(LocatorFieldKind.TEXT,         "placeholder");
         fieldMap.put(LocatorFieldKind.TOOLTIP,      "title");
-        
-		Map<ControlKind, OperationKind[]> notAllowedOperationMap = new LinkedHashMap<>();
 
-		return new PluginInfo(controlMap, fieldMap, notAllowedOperationMap);
-    }
-
-	//----------------------------------------------------------------------------------------------
-	
-    private static void add(Map<ControlKind, String[]> controlMap, ControlKind kind, String ... nodes)
-    {
-        controlMap.put(kind, nodes);
+		return new PluginInfo(controlMap, fieldMap);
     }
 }

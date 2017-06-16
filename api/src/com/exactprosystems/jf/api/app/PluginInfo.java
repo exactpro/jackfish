@@ -9,29 +9,25 @@
 package com.exactprosystems.jf.api.app;
 
 import java.io.Serializable;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 public class PluginInfo implements Serializable
 {
     private static final long serialVersionUID = -1595364917643729823L;
 
-    public PluginInfo(Map<ControlKind, String[]> controlMap, Map<LocatorFieldKind, String> fieldMap, Map<ControlKind, OperationKind[]> notAllowedOperationMap)
+    public PluginInfo(Map<ControlKind, ControlInfo> controlMap, Map<LocatorFieldKind, String> fieldMap)
     {
         this.controlMap = controlMap;
         this.fieldMap = fieldMap;
-        this.notAllowedOperationMap = notAllowedOperationMap;
     }
     
-    public String[] nodeByControlKind(ControlKind kind)
+    public Set<String> nodeByControlKind(ControlKind kind)
     {
         if (this.controlMap == null)
         {
             return null;
         }
-        return this.controlMap.get(kind);
+        return this.controlMap.get(kind).getTypes();
     }
 
     public ControlKind controlKindByNode (String node)
@@ -42,8 +38,8 @@ public class PluginInfo implements Serializable
         }
         Optional<ControlKind> optional = this.controlMap.entrySet()
         		.stream()
-        		.filter(e -> Arrays.stream(e.getValue()).anyMatch(s -> s.equals(node)))
-        		.map(m -> m.getKey())
+        		.filter(e -> e.getValue().getTypes().stream().anyMatch(s -> s.equals(node)))
+        		.map(Map.Entry::getKey)
         		.findFirst();
         return optional.orElse(ControlKind.Any);
     }
@@ -58,8 +54,7 @@ public class PluginInfo implements Serializable
         return this.fieldMap.get(kind);
     }
     
-    private Map<ControlKind, String[]>      controlMap;
-    private Map<ControlKind, OperationKind[]>    notAllowedOperationMap;
+    private Map<ControlKind, ControlInfo>      controlMap;
     private Map<LocatorFieldKind, String>   fieldMap;
 
     public boolean isSupported(ControlKind kind)
@@ -68,21 +63,6 @@ public class PluginInfo implements Serializable
     }
 
     public boolean isAllowed(ControlKind kind, OperationKind operation) {
-        if(notAllowedOperationMap.containsKey(kind))
-        {
-            List<OperationKind> operations = Arrays.asList(notAllowedOperationMap.get(kind));
-            if(operations.contains(operation))
-            {
-                return false;
-            }
-            else
-            {
-                return true;
-            }
-        }
-        else
-        {
-            return true;
-        }
+        return controlMap.containsKey(kind) && !controlMap.get(kind).getExcludes().contains(operation);
     }
 }

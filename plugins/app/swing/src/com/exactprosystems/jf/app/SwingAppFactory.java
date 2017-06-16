@@ -116,11 +116,11 @@ public class SwingAppFactory implements IApplicationFactory
     @Override
     public PluginInfo getInfo()
     {
-        Map<ControlKind, String[]> controlMap = new LinkedHashMap<>();
+        Map<ControlKind, ControlInfo> controlMap = new LinkedHashMap<>();
 
         for (ControlKind kind : supportedControls)
         {
-            controlMap.put(kind, new String[] { "*" });
+            controlMap.put(kind, new ControlInfo().addTypes("*"));
         }
 
         Map<LocatorFieldKind, String> fieldMap = new HashMap<>();
@@ -133,8 +133,6 @@ public class SwingAppFactory implements IApplicationFactory
         fieldMap.put(LocatorFieldKind.TEXT,     null);
         fieldMap.put(LocatorFieldKind.TOOLTIP,  "tooltip");
 
-		Map<ControlKind, OperationKind[]> notAllowedOperationMap = new LinkedHashMap<>();
-
-		return new PluginInfo(controlMap, fieldMap, notAllowedOperationMap);
+		return new PluginInfo(controlMap, fieldMap);
     }
 }
