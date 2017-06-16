@@ -21,8 +21,8 @@ import com.exactprosystems.jf.documents.matrix.parser.Parameters;
 		group					= ActionGroups.Report,
 		generalDescription 		= "The following action is needed to add text to the name of the created report.",
 		additionFieldsAllowed 	= false,
-		examples 				= "If to execute the following example the name of the report file will be given – “Date and time of"
-				+ " running matrix”_”Matrix name”_ “PASSED” Chrome.html\n"
+		examples 				= "If to execute the following example the name of the report file will be given – 'Date and time of"
+				+ " running matrix'_'Matrix name'_'PASSED' Chrome.html\n"
 				+ "{{##Action;#Name\n"
 				+ "ReportName;'Chrome'#}}"
 	)
