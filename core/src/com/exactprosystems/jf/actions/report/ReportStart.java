@@ -31,7 +31,7 @@ import com.exactprosystems.jf.documents.matrix.parser.Parameters;
 		suffix                  = "REP",
 		outputDescription       = "Created report.",
         outputType              = ReportBuilder.class,
-		examples 				= "{{##Id;#Action;#Version;#ReportName\n" +
+		examples 				= "{{#\n#Id;#Action;#Version;#ReportName\n" +
 				"REP1;ReportStart;'3.141592';'MyReport'#}}"
 	)
 public class ReportStart extends AbstractAction 

@@ -38,7 +38,7 @@ import java.util.Map;
 				+ "2. Create a report by ReportStart action\n"
 				+ "3. Create a graph based on the table. Specify a newly created report in parameter Report.\n"
 				+ "4-5. Display a report.\n"
-				+ "{{##Id;#TestCase;#Kind;#Depends;#For\n"
+				+ "{{#\n#Id;#TestCase;#Kind;#Depends;#For\n"
 				+ "Chart;;;;\n"
 				+ "    #Id;#RawTable\n"
 				+ "    DATA1;Table\n"

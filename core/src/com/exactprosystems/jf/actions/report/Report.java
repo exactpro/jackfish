@@ -27,7 +27,7 @@ import java.util.List;
 		additionalDescription   = "The name and the value that will be shown in the report.",
 		examples 				= "This example will add the following row ”String for printing: name = value” to "
 				+ "the report that was created by action {{@ReportStart@}} \n"
-				+ "{{##Id;#Action;#ReportName\n"
+				+ "{{#\n#Id;#Action;#ReportName\n"
 				+ "REP1;ReportStart;'My Report'\n"
 				+ "#Action;#ToReport;#Str;#name\n"
 				+ "Report;REP1.Out;'String for printing:';'value'\n"

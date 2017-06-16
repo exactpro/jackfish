@@ -31,7 +31,7 @@ import java.io.File;
 				+ "{{`3. Move the object Table using TableReport action to the report created in the first step.`}}"
 				+ "{{`4. Finish building Report object.`}}"
 				+ "{{`5. Display the report.`}} "
-				+ "{{##Id;#Action;#Version;#ReportName\n"
+				+ "{{#\n#Id;#Action;#Version;#ReportName\n"
 				+ "REP1;ReportStart;'3.141592';'MyReport'\n"
 				+ "#Id;#RawTable\n"
 				+ "DATA1;Table\n"
