@@ -8,6 +8,8 @@
 
 package com.exactprosystems.jf.api.app;
 
+import sun.plugin2.main.server.Plugin;
+
 import java.io.Serializable;
 import java.util.*;
 
@@ -15,9 +17,12 @@ public class PluginInfo implements Serializable
 {
     private static final long serialVersionUID = -1595364917643729823L;
 
-    public PluginInfo(Map<ControlKind, ControlInfo> controlMap, Map<LocatorFieldKind, String> fieldMap)
+    private Map<ControlKind, ControlInfo>   controlMap;
+    private Map<LocatorFieldKind, String>   fieldMap;
+
+    public PluginInfo(Map<LocatorFieldKind, String> fieldMap)
     {
-        this.controlMap = controlMap;
+        this.controlMap = new HashMap<>();
         this.fieldMap = fieldMap;
     }
     
@@ -43,7 +48,6 @@ public class PluginInfo implements Serializable
         		.findFirst();
         return optional.orElse(ControlKind.Any);
     }
-    
 
     public String attributeName(LocatorFieldKind kind)
     {
@@ -53,9 +57,12 @@ public class PluginInfo implements Serializable
         }
         return this.fieldMap.get(kind);
     }
-    
-    private Map<ControlKind, ControlInfo>      controlMap;
-    private Map<LocatorFieldKind, String>   fieldMap;
+
+    public ControlInfo add(ControlKind kind) {
+        ControlInfo controlInfo = new ControlInfo();
+        this.controlMap.put(kind, controlInfo);
+        return controlInfo;
+    }
 
     public boolean isSupported(ControlKind kind)
     {
@@ -64,5 +71,36 @@ public class PluginInfo implements Serializable
 
     public boolean isAllowed(ControlKind kind, OperationKind operation) {
         return controlMap.containsKey(kind) && !controlMap.get(kind).getExcludes().contains(operation);
+    }
+
+    public class ControlInfo
+    {
+        Set<String> types;
+        Set<OperationKind> excludes;
+
+        public ControlInfo() {
+            this.types = new HashSet<>();
+            this.excludes = new HashSet<>();
+        }
+
+        public Set<String> getTypes() {
+            return types;
+        }
+
+        public Set<OperationKind> getExcludes() {
+            return excludes;
+        }
+
+        public ControlInfo setTypes(String ... types)
+        {
+            this.types.addAll(Arrays.asList(types));
+            return this;
+        }
+
+        public ControlInfo addExcludes(OperationKind ... operations)
+        {
+            this.excludes.addAll(Arrays.asList(operations));
+            return this;
+        }
     }
 }
