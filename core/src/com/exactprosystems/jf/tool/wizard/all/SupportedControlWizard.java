@@ -136,7 +136,7 @@ public class SupportedControlWizard extends AbstractWizard
 			}
 			if (!builder.isEmpty())
 			{
-				builder.saveDictionary(this.dictionary);
+				builder.saveDocument(this.dictionary);
 			}
 
 			return builder.build();
