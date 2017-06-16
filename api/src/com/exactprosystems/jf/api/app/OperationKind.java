@@ -1096,7 +1096,7 @@ public enum OperationKind
 		{
 			throw new OperationNotAllowedException("Can't use operate for dummy locator and dummy control");
 		}
-		if (!locator.getControlKind().isAllowed(part.kind))
+		if (!locator.getControlKind().isAllowed(part.kind) || !executor.isAllowed(locator.getControlKind(), part.kind))
 		{
             throw new OperationNotAllowedException("Operation \'" + part.kind + "\' is not allowed for \'" + locator.getControlKind() + "\'");
 		}

@@ -95,7 +95,9 @@ public class SwingAppFactory implements IApplicationFactory
     @Override
     public Set<ControlKind> supportedControlKinds()
     {
-        return Arrays.stream(supportedControls).collect(Collectors.toSet());
+        return Arrays.stream(supportedControls)
+                .sorted((c1,c2) -> c1.name().compareTo(c2.name()))
+                .collect(Collectors.toCollection(LinkedHashSet::new));
     }
 
 	@Override

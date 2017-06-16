@@ -7,8 +7,8 @@ INIT;Test case;Never;;
     #Id;#Global;#RawTable
     controls;1;Table
     @;On;Before;getRowPar;getRow;colorPar;Name;getAttr;getAttrPar;getValue;get;setValue;text;getList;check;getListPar;getValuePar
-    0;x;'Do.move()';'\'tr_3_td_3\'';;'new Color(246,246,246)';Label;'centralLabel';'\'centralLabel\'';'CentralLabel';'CentralLabel';;;;'CentralLabel';'new ArrayList([\'Green\',\'Yellow\', \'Orange\',\'Blue\']),false';'\'CentralLabel\''
-    1;;;'\'tr_3_td_3\'';;'new Color(246,246,246)';Button;'Button';'\'Button\'';'Button';'Button';;;;'Button';'new ArrayList([\'Green\',\'Yellow\', \'Orange\',\'Blue\']),false';'\'Button\''
+    0;;'Do.move()';'\'tr_3_td_3\'';;'new Color(246,246,246)';Label;'centralLabel';'\'centralLabel\'';'CentralLabel';'CentralLabel';;;;'CentralLabel';'new ArrayList([\'Green\',\'Yellow\', \'Orange\',\'Blue\']),false';'\'CentralLabel\''
+    1;x;;'\'tr_3_td_3\'';;'new Color(246,246,246)';Button;'Button';'\'Button\'';'Button';'Button';;;;'Button';'new ArrayList([\'Green\',\'Yellow\', \'Orange\',\'Blue\']),false';'\'Button\''
     2;;;'\'tr_3_td_3\'';;'new Color(246,246,246)';TextBox;'TextBox';'\'TextBox\'';'';'';;'Green';;'';'new ArrayList([\'Green\',\'Yellow\', \'Orange\',\'Blue\']),false';'\'\''
     3;;;'\'tr_3_td_3\'';;'new Color(246,246,246)';Any;'Any';'\'Any\'';;;;;;true;'new ArrayList([\'Green\',\'Yellow\', \'Orange\',\'Blue\']),false';'\'\''
     4;;'Do.move()';'\'tr_3_td_3\'';;'new Color(246,246,246)';CheckBox;'CheckBox';'\'CheckBox\'';true;'CheckBox';;;;true;'new ArrayList([\'Green\',\'Yellow\', \'Orange\',\'Blue\']),false';'\'true\''
@@ -59,7 +59,7 @@ INIT;Test case;Never;;
     19;x;text;Do.text('Green').getValue();control.text;
     20;x;textTrue;Do.text('Green',true).getValue();control.text;
     21;x;textXY;Do.text('Green',1,1).getValue(1,1);control.text;
-    22;x;push;Do.push().use('centralLabel').getValue();control.Name + '_click';
+    22;x;push;Do.push().use('pushLabel').getValue();control.Name + '_push';
     23;x;getList;Do.getList();control.getList;
     24;x;Do.toggle;Do.toggle(true).toggle(false).toggle(true).getValue();true;
     25;x;Do.select(int);Do.select(0).getValue();control.getValue;
@@ -68,7 +68,7 @@ INIT;Test case;Never;;
     28;x;Do.use;Do.use(0).count();1;
     29;x;Do.move;Do.move().use('moveLabel').getValue();control.Name + '_move';
     30;x;Do.move(x,y);Do.move(1,1).use('moveLabel').getValue();control.Name + '_move';
-    31;x;Do.getRectangle;Do.use('colorButton').getRectangle();'java.awt.Rectangle[x=550,y=997,width=100,height=25]';'
+    31;x;Do.getRectangle;Do.use('colorButton').getRectangle();'java.awt.Rectangle[x=550,y=800,width=100,height=25]';'
     32;x;Do.getRow;Do.getRow(new StringCondition('Head3',par));control.getRow;control.getRowPar
     33;x;Do.getRowIndexes;Do.getRowIndexes(new StringCondition('Head3',par));'[2]';control.getRowPar
     34;x;Do.getRowByIndex;Do.getRowByIndex(2);control.getRow;
@@ -87,9 +87,9 @@ INIT;Test case;Never;;
     47;x;Do.isEnabled;Do.isEnabled();true;
     48;x;Do.isVisible;Do.isVisible();true;
     49;x;Do.isEnabled;Do.use('notEnabledButton').isEnabled();false;
-    50;x;Do.isVisible;Do.use('invisibleButton').isVisible();false;
+    50;x;Do.isVisible;Do.use('invisibleButton').isVisible();getExp(plugin,false,false,ErrorKind.ELEMENT_NOT_FOUND);
     51;x;Do.script;Do.use('countButtonClear').click().script('counter = 99').use('countButton').click().use('countLabel').getValue();100;
-    52;x;Do.dragNDrop;Do.use('Slider').setValue(2).dragNdrop(20, 6, 'Slider', 397, 6).use('sliderLabel').getValue();'Slider_50';
+    52;x;Do.dragNDrop;Do.use('Slider').setValue(0).dragNdrop(10, 6, 'Slider', 395, 6).use('sliderLabel').getValue();'Slider_50';
     #EndRawTable
 
     #Action;$Table;$Expression
@@ -120,8 +120,8 @@ SUBCASES;;;;
     RUN;Run;'Win'
         #Step;#Kind;#For;#Depends
         'start application';;;
-            #Id;#Action;Plugin;Control;Operation;Expected;Actual;Result
-            TBL1;TableCreate;;;;;;
+            #Id;#Action;Plugin;Control;Operation;Time;Expected;Actual;Result
+            TBL1;TableCreate;;;;;;;
 
             #Id;#Global;#Let
             table_result;1;TBL1.Out
@@ -183,6 +183,9 @@ SUBCASES;;;;
                 #ForEach;#In
                 operation;operations
                     #Id;#Let
+                    startTime;DateTime.current().getTime()
+
+                    #Id;#Let
                     needNum;needNum + 1
 
                     #If
@@ -224,8 +227,11 @@ SUBCASES;;;;
                     #Assert;#Message
                     evaluator.evaluate(field).toString() == operation.Actual.toString();
 
-                    #Action;$Table;Plugin;Control;Operation;Expected;Actual;Result
-                    TableAddValue;table_result;plugin;control.Name;operation.Name;evaluator.evaluate(field);operation.Actual;'OK'
+                    #Action;$Table;Plugin;Control;Operation;Time;Expected;Actual;Result
+                    TableAddValue;table_result;plugin;control.Name;operation.Name;DateTime.current().getTime() - startTime;evaluator.evaluate(field);operation.Actual;'OK'
+
+                    #Action;
+                    Print;control.Name + ' - ' + operation.Name + ' (' + (DateTime.current().getTime() - startTime) + ')'
 
                     #OnError
                         #Switch
@@ -234,12 +240,18 @@ SUBCASES;;;;
                             ErrorKind.OPERATION_NOT_ALLOWED
                                 #If
                                 appCon.getDictionary().getWindow('Main').getControlForName(null, control.Name).getBindedClass().isAllowed(evaluator.evaluate(op).getOperationKind(0)) == false
-                                    #Action;$Table;Plugin;Control;Operation;Expected;Actual;Result
-                                    TableAddValue;table_result;plugin;control.Name;operation.Name;'OPERATION IS NOT ALLOWED';'OPERATION IS NOT ALLOWED';'OK'
+                                    #Action;$Table;Plugin;Control;Operation;Time;Expected;Actual;Result
+                                    TableAddValue;table_result;plugin;control.Name;operation.Name;DateTime.current().getTime() - startTime;'OPERATION IS NOT ALLOWED';'OPERATION IS NOT ALLOWED';'OK'
+
+                                    #Action;
+                                    Print;control.Name + ' - ' + operation.Name + ' (' + (DateTime.current().getTime() - startTime) + ')'
 
                                 #Else
-                                    #Action;$Table;Plugin;Control;Operation;Expected;Actual;Result
-                                    TableAddValue;table_result;plugin;control.Name;operation.Name;'OPERATION_CHECK_FAILED';'OPERATION_CHECK_FAILED';'FAILED'
+                                    #Action;$Table;Plugin;Control;Operation;Time;Expected;Actual;Result
+                                    TableAddValue;table_result;plugin;control.Name;operation.Name;DateTime.current().getTime() - startTime;'OPERATION_CHECK_FAILED';'OPERATION_CHECK_FAILED';'FAILED'
+
+                                    #Action;
+                                    Print;control.Name + ' - ' + operation.Name + ' (' + (DateTime.current().getTime() - startTime) + ')'
 
                                     #Id;#Let
                                     failed;true
@@ -252,8 +264,8 @@ SUBCASES;;;;
 
                             #Case
                             ErrorKind.FEATURE_NOT_SUPPORTED
-                                #Action;$Table;Plugin;Control;Operation;Expected;Actual;Result
-                                TableAddValue;table_result;plugin;control.Name;operation.Name;'FEATURE_NOT_SUPPORTED';'FEATURE_NOT_SUPPORTED';'OK'
+                                #Action;$Table;Plugin;Control;Operation;Time;Expected;Actual;Result
+                                TableAddValue;table_result;plugin;control.Name;operation.Name;DateTime.current().getTime() - startTime;'FEATURE_NOT_SUPPORTED';'FEATURE_NOT_SUPPORTED';'OK'
 
                                 #Continue
 
@@ -262,12 +274,18 @@ SUBCASES;;;;
                             ErrorKind.CONTROL_NOT_SUPPORTED
                                 #If
                                 appCon.getApplication().getFactory().getInfo().isSupported(appCon.getDictionary().getWindow('Main').getControlForName(null, control.Name).getBindedClass()) == false
-                                    #Action;$Table;Plugin;Control;Operation;Expected;Actual;Result
-                                    TableAddValue;table_result;plugin;control.Name;operation.Name;'ELEMENT IS NOT SUPPORTED';'ELEMENT IS NOT SUPPORTED';'OK'
+                                    #Action;$Table;Plugin;Control;Operation;Time;Expected;Actual;Result
+                                    TableAddValue;table_result;plugin;control.Name;operation.Name;DateTime.current().getTime() - startTime;'ELEMENT IS NOT SUPPORTED';'ELEMENT IS NOT SUPPORTED';'OK'
+
+                                    #Action;
+                                    Print;control.Name + ' - ' + operation.Name + ' (' + (DateTime.current().getTime() - startTime) + ')'
 
                                 #Else
-                                    #Action;$Table;Plugin;Control;Operation;Expected;Actual;Result
-                                    TableAddValue;table_result;plugin;control.Name;operation.Name;'CONTROL_CHECK_FAILED';'CONTROL_CHECK_FAILED';'FAILED'
+                                    #Action;$Table;Plugin;Control;Operation;Time;Expected;Actual;Result
+                                    TableAddValue;table_result;plugin;control.Name;operation.Name;DateTime.current().getTime() - startTime;'CONTROL_CHECK_FAILED';'CONTROL_CHECK_FAILED';'FAILED'
+
+                                    #Action;
+                                    Print;control.Name + ' - ' + operation.Name + ' (' + (DateTime.current().getTime() - startTime) + ')'
 
                                     #Id;#Let
                                     failed;true
@@ -279,9 +297,35 @@ SUBCASES;;;;
 
 
                             #Case
+                            ErrorKind.ELEMENT_NOT_FOUND
+                                #If
+                                operation.Actual == ErrorKind.ELEMENT_NOT_FOUND
+                                    #Action;$Table;Plugin;Control;Operation;Time;Expected;Actual;Result
+                                    TableAddValue;table_result;plugin;control.Name;operation.Name;DateTime.current().getTime() - startTime;'ELEMENT_NOT_FOUND';'ELEMENT_NOT_FOUND';'OK'
+
+                                    #Action;
+                                    Print;control.Name + ' - ' + operation.Name + ' (' + (DateTime.current().getTime() - startTime) + ')'
+
+                                #Else
+                                    #Action;$Table;Plugin;Control;Operation;Time;Expected;Actual;Result
+                                    TableAddValue;table_result;plugin;control.Name;operation.Name;DateTime.current().getTime() - startTime;'ELEMENT_NOT_FOUND';'ELEMENT_NOT_FOUND';'FAILED'
+
+                                    #Action;
+                                    Print;control.Name + ' - ' + operation.Name + ' (' + (DateTime.current().getTime() - startTime) + ')'
+
+
+                                #EndIf
+
+                                #Continue
+
+
+                            #Case
                             ErrorKind.EXCEPTION
-                                #Action;$Table;Plugin;Control;Operation;Expected;Actual;Result
-                                TableAddValue;table_result;plugin;control.Name;operation.Name;'EXCEPTION';'EXCEPTION';'FAILED'
+                                #Action;$Table;Plugin;Control;Operation;Time;Expected;Actual;Result
+                                TableAddValue;table_result;plugin;control.Name;operation.Name;DateTime.current().getTime() - startTime;'EXCEPTION';'EXCEPTION';'FAILED'
+
+                                #Action;
+                                Print;control.Name + ' - ' + operation.Name + ' (' + (DateTime.current().getTime() - startTime) + ')'
 
                                 #Id;#Let
                                 failed;true
@@ -290,8 +334,11 @@ SUBCASES;;;;
 
 
                             #Default
-                                #Action;$Table;Plugin;Control;Operation;Expected;Actual;Result
-                                TableAddValue;table_result;plugin;control.Name;operation.Name;evaluator.evaluate(field);operation.Actual;'FAILED'
+                                #Action;$Table;Plugin;Control;Operation;Time;Expected;Actual;Result
+                                TableAddValue;table_result;plugin;control.Name;operation.Name;DateTime.current().getTime() - startTime;evaluator.evaluate(field);operation.Actual;'FAILED'
+
+                                #Action;
+                                Print;control.Name + ' - ' + operation.Name + ' (' + (DateTime.current().getTime() - startTime) + ')'
 
                                 #Id;#Let
                                 failed;true

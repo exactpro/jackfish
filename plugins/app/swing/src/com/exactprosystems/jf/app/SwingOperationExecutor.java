@@ -126,6 +126,12 @@ public class SwingOperationExecutor implements OperationExecutor<ComponentFixtur
         this.info = info;
     }
 
+    @Override
+    public boolean isAllowed(ControlKind kind, OperationKind operation)
+    {
+        return true;
+    }
+
 	@Override
 	public boolean isSupported(ControlKind kind)
 	{
