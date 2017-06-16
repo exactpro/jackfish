@@ -37,9 +37,9 @@ public interface JnaDriver extends Library {
 
 	String elementAttribute(String elementId, int partId);
 	String getList(String elementId);
-	void sendKey(String key);
+	void sendKey(String elementId, String key);
 
-	void upAndDown(String key, boolean isDown);
+	void upAndDown(String elementId, String key, boolean isDown);
 	void mouse(String elementId, int actionId, int x, int y);
 
 	void dragNdrop(int x1, int y1, int x2, int y2);
@@ -73,6 +73,8 @@ public interface JnaDriver extends Library {
 
     String elementIsEnabled(String idString);
     String elementIsVisible(String idString);
+
+    String getRectangle(String idString);
     //endregion
 
 }

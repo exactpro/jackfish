@@ -63,24 +63,8 @@ public class WinOperationExecutorJNA implements OperationExecutor<UIProxyJNA>
 	{
 		try
 		{
-			String property = this.driver.getProperty(component, WindowProperty.BoundingRectangleProperty);
-			if (property.equalsIgnoreCase("Empty"))
-			{
-				return new Rectangle(0,0,0,0);
-			}
-			Rectangle rectangle = new Rectangle();
-			Pattern pattern = Pattern.compile(RECTANGLE_PATTERN);
-			Matcher matcher = pattern.matcher(property);
-			if (matcher.matches())
-			{
-				rectangle.setBounds(Integer.parseInt(matcher.group(1)), Integer.parseInt(matcher.group(2)), Integer.parseInt(matcher
-						.group(3)), Integer.parseInt(matcher.group(4)));
-			}
-			else
-			{
-				throw new RemoteException("returned rectangle not matches pattern " + RECTANGLE_PATTERN+" , rect : " + property);
-			}
-			return rectangle;
+			String property = this.driver.getRectangle(component);
+			return stringToRect(property);
 		}
 		catch (RemoteException e)
 		{
@@ -94,10 +78,25 @@ public class WinOperationExecutorJNA implements OperationExecutor<UIProxyJNA>
 		}
 	}
 
+	private Rectangle stringToRect(String srtingRect) throws RemoteException {
+		Rectangle rectangle = new Rectangle();
+		Pattern pattern = Pattern.compile(RECTANGLE_PATTERN);
+		Matcher matcher = pattern.matcher(srtingRect);
+		if (matcher.matches())
+		{
+			rectangle.setBounds(Integer.parseInt(matcher.group(1)), Integer.parseInt(matcher.group(2)), Integer.parseInt(matcher
+					.group(3)), Integer.parseInt(matcher.group(4)));
+		}
+		else
+		{
+			throw new RemoteException("returned rectangle not matches pattern " + RECTANGLE_PATTERN+" , rect : " + srtingRect);
+		}
+		return rectangle;
+	}
+
 	@Override
 	public Color getColor(String color) throws Exception
 	{
-		//TODO think about it
 		return null;
 	}
 	
@@ -283,7 +282,7 @@ public class WinOperationExecutorJNA implements OperationExecutor<UIProxyJNA>
 	{
 		try
 		{
-			this.driver.sendKeys(key.name());
+			this.driver.sendKeys(component, key.name());
 			return true;
 		}
 		catch (RemoteException e)
@@ -303,7 +302,7 @@ public class WinOperationExecutorJNA implements OperationExecutor<UIProxyJNA>
 	{
 		try
 		{
-			this.driver.upAndDown(key.name(), b);
+			this.driver.upAndDown(component, key.name(), b);
 			return true;
 		}
 		catch (RemoteException e)
@@ -806,7 +805,8 @@ public class WinOperationExecutorJNA implements OperationExecutor<UIProxyJNA>
 
 			if(kind == AttributeKind.ITEMS)
 			{
-				Rectangle rect = getRectangle(component);
+				String property = this.driver.getProperty(component, WindowProperty.BoundingRectangleProperty);
+				Rectangle rect = stringToRect(property);
 				int[] xy = {rect.x + 20, rect.y + rect.height + 1};
 				return this.driver.elementAttribute(new UIProxyJNA(xy), kind);
 			}
@@ -848,7 +848,8 @@ public class WinOperationExecutorJNA implements OperationExecutor<UIProxyJNA>
 	{
 		try
 		{
-			Rectangle dragRect = this.getRectangle(drag);
+			String property = this.driver.getProperty(drag, WindowProperty.BoundingRectangleProperty);
+			Rectangle dragRect = stringToRect(property);
 			if (isCoordsDidNotIntroduce(x1,y1))
 			{
 				Point point = getCenterOf(dragRect);
@@ -868,7 +869,7 @@ public class WinOperationExecutorJNA implements OperationExecutor<UIProxyJNA>
 			}
 			else
 			{
-				Rectangle rDrop = this.getRectangle(drop);
+				Rectangle rDrop = stringToRect(this.driver.getProperty(drop, WindowProperty.BoundingRectangleProperty));
 				x2 += rDrop.x;
 				y2 += rDrop.y;
 			}
@@ -1105,7 +1106,8 @@ public class WinOperationExecutorJNA implements OperationExecutor<UIProxyJNA>
     @Override
     public Color getColorXY(UIProxyJNA component, int x, int y) throws Exception
     {
-		Rectangle rectangle = getRectangle(component);
+		String property = this.driver.getProperty(component, WindowProperty.BoundingRectangleProperty);
+    	Rectangle rectangle = stringToRect(property);
 		return new Robot().getPixelColor(rectangle.x + x, rectangle.y + y);
     }
 

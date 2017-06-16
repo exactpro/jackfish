@@ -141,7 +141,7 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;Button.ZOrder" xml:space="preserve">
-    <value>32</value>
+    <value>33</value>
   </data>
   <data name="TextBox.Location" type="System.Drawing.Point, System.Drawing">
     <value>13, 76</value>
@@ -162,7 +162,7 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;TextBox.ZOrder" xml:space="preserve">
-    <value>31</value>
+    <value>32</value>
   </data>
   <data name="CheckBox.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -189,7 +189,7 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;CheckBox.ZOrder" xml:space="preserve">
-    <value>30</value>
+    <value>31</value>
   </data>
   <metadata name="name.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
@@ -225,7 +225,7 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;Table1.ZOrder" xml:space="preserve">
-    <value>29</value>
+    <value>30</value>
   </data>
   <metadata name="name.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
@@ -288,13 +288,13 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;centralLabel.ZOrder" xml:space="preserve">
-    <value>28</value>
+    <value>29</value>
   </data>
   <data name="moveLabel.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
   </data>
   <data name="moveLabel.Location" type="System.Drawing.Point, System.Drawing">
-    <value>215, 30</value>
+    <value>177, 30</value>
   </data>
   <data name="moveLabel.Size" type="System.Drawing.Size, System.Drawing">
     <value>59, 13</value>
@@ -315,7 +315,7 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;moveLabel.ZOrder" xml:space="preserve">
-    <value>27</value>
+    <value>28</value>
   </data>
   <metadata name="Green.Locked" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
@@ -426,7 +426,7 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;panel1.ZOrder" xml:space="preserve">
-    <value>26</value>
+    <value>27</value>
   </data>
   <metadata name="Blue.Locked" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
@@ -532,13 +532,16 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;ComboBox.ZOrder" xml:space="preserve">
-    <value>25</value>
+    <value>26</value>
   </data>
   <data name="Slider.Location" type="System.Drawing.Point, System.Drawing">
-    <value>12, 336</value>
+    <value>13, 336</value>
+  </data>
+  <data name="Slider.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>0, 0, 0, 0</value>
   </data>
   <data name="Slider.Size" type="System.Drawing.Size, System.Drawing">
-    <value>817, 45</value>
+    <value>802, 45</value>
   </data>
   <data name="Slider.TabIndex" type="System.Int32, mscorlib">
     <value>10</value>
@@ -553,7 +556,7 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;Slider.ZOrder" xml:space="preserve">
-    <value>24</value>
+    <value>25</value>
   </data>
   <data name="Tree.Location" type="System.Drawing.Point, System.Drawing">
     <value>12, 416</value>
@@ -648,7 +651,7 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;Tree.ZOrder" xml:space="preserve">
-    <value>23</value>
+    <value>24</value>
   </data>
   <metadata name="tabPage1.Locked" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
@@ -699,7 +702,7 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;TabPanel.ZOrder" xml:space="preserve">
-    <value>22</value>
+    <value>23</value>
   </data>
   <metadata name="tabPage1.Locked" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
@@ -888,7 +891,7 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;List.ZOrder" xml:space="preserve">
-    <value>21</value>
+    <value>22</value>
   </data>
   <data name="Table.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
     <value>On</value>
@@ -912,7 +915,7 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;Table.ZOrder" xml:space="preserve">
-    <value>20</value>
+    <value>21</value>
   </data>
   <data name="header1.Text" xml:space="preserve">
     <value>Head1</value>
@@ -951,7 +954,7 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;ProgressBar.ZOrder" xml:space="preserve">
-    <value>19</value>
+    <value>20</value>
   </data>
   <data name="Panel.Location" type="System.Drawing.Point, System.Drawing">
     <value>12, 666</value>
@@ -972,7 +975,7 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;Panel.ZOrder" xml:space="preserve">
-    <value>18</value>
+    <value>19</value>
   </data>
   <data name="groupBox1.Location" type="System.Drawing.Point, System.Drawing">
     <value>391, 666</value>
@@ -996,7 +999,7 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;groupBox1.ZOrder" xml:space="preserve">
-    <value>17</value>
+    <value>18</value>
   </data>
   <metadata name="Menu.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>17, 17</value>
@@ -1023,7 +1026,7 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;Menu.ZOrder" xml:space="preserve">
-    <value>33</value>
+    <value>34</value>
   </data>
   <data name="MenuItem.Size" type="System.Drawing.Size, System.Drawing">
     <value>50, 20</value>
@@ -1032,7 +1035,7 @@
     <value>Menu</value>
   </data>
   <data name="optionsToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>152, 22</value>
+    <value>116, 22</value>
   </data>
   <data name="optionsToolStripMenuItem.Text" xml:space="preserve">
     <value>Options</value>
@@ -1074,25 +1077,25 @@
     <value>six</value>
   </data>
   <data name="toolStripSeparator1.Size" type="System.Drawing.Size, System.Drawing">
-    <value>149, 6</value>
+    <value>113, 6</value>
   </data>
   <data name="saveToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>152, 22</value>
+    <value>116, 22</value>
   </data>
   <data name="saveToolStripMenuItem.Text" xml:space="preserve">
     <value>Save</value>
   </data>
   <data name="openToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>152, 22</value>
+    <value>116, 22</value>
   </data>
   <data name="openToolStripMenuItem.Text" xml:space="preserve">
     <value>Open</value>
   </data>
   <data name="toolStripSeparator2.Size" type="System.Drawing.Size, System.Drawing">
-    <value>149, 6</value>
+    <value>113, 6</value>
   </data>
   <data name="exitToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>152, 22</value>
+    <value>116, 22</value>
   </data>
   <data name="exitToolStripMenuItem.Text" xml:space="preserve">
     <value>Exit</value>
@@ -1105,6 +1108,12 @@
   </data>
   <data name="menu2.ToolTipText" xml:space="preserve">
     <value>Tooltip</value>
+  </data>
+  <data name="menuItemToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>129, 22</value>
+  </data>
+  <data name="menuItemToolStripMenuItem.Text" xml:space="preserve">
+    <value>MenuItem</value>
   </data>
   <data name="HScrollBar.Location" type="System.Drawing.Point, System.Drawing">
     <value>12, 695</value>
@@ -1125,7 +1134,7 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;HScrollBar.ZOrder" xml:space="preserve">
-    <value>16</value>
+    <value>17</value>
   </data>
   <data name="VScrollBar.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
     <value>NoControl</value>
@@ -1149,7 +1158,7 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;VScrollBar.ZOrder" xml:space="preserve">
-    <value>15</value>
+    <value>16</value>
   </data>
   <data name="Splitter.Location" type="System.Drawing.Point, System.Drawing">
     <value>12, 715</value>
@@ -1263,7 +1272,7 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;Splitter.ZOrder" xml:space="preserve">
-    <value>14</value>
+    <value>15</value>
   </data>
   <data name="Any.Location" type="System.Drawing.Point, System.Drawing">
     <value>12, 745</value>
@@ -1287,7 +1296,7 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;Any.ZOrder" xml:space="preserve">
-    <value>13</value>
+    <value>14</value>
   </data>
   <data name="ToggleButton.Appearance" type="System.Windows.Forms.Appearance, System.Windows.Forms">
     <value>Button</value>
@@ -1317,7 +1326,7 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;ToggleButton.ZOrder" xml:space="preserve">
-    <value>12</value>
+    <value>13</value>
   </data>
   <metadata name="saveFileDialog1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>229, 17</value>
@@ -1377,7 +1386,7 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;showButton.ZOrder" xml:space="preserve">
-    <value>11</value>
+    <value>12</value>
   </data>
   <data name="hideButton.Location" type="System.Drawing.Point, System.Drawing">
     <value>419, 774</value>
@@ -1404,7 +1413,7 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;hideButton.ZOrder" xml:space="preserve">
-    <value>10</value>
+    <value>11</value>
   </data>
   <data name="pressLabel.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -1434,7 +1443,7 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;pressLabel.ZOrder" xml:space="preserve">
-    <value>8</value>
+    <value>10</value>
   </data>
   <data name="downUpLabel.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -1464,7 +1473,7 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;downUpLabel.ZOrder" xml:space="preserve">
-    <value>7</value>
+    <value>9</value>
   </data>
   <data name="sliderLabel.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -1494,13 +1503,7 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;sliderLabel.ZOrder" xml:space="preserve">
-    <value>6</value>
-  </data>
-  <data name="menuItemToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>152, 22</value>
-  </data>
-  <data name="menuItemToolStripMenuItem.Text" xml:space="preserve">
-    <value>MenuItem</value>
+    <value>8</value>
   </data>
   <data name="countButtonClear.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
     <value>NoControl</value>
@@ -1509,13 +1512,13 @@
     <value>26, 774</value>
   </data>
   <data name="countButtonClear.Size" type="System.Drawing.Size, System.Drawing">
-    <value>75, 23</value>
+    <value>111, 23</value>
   </data>
   <data name="countButtonClear.TabIndex" type="System.Int32, mscorlib">
     <value>30</value>
   </data>
   <data name="countButtonClear.Text" xml:space="preserve">
-    <value>Clear</value>
+    <value>countButtonClear</value>
   </data>
   <data name="&gt;&gt;countButtonClear.Name" xml:space="preserve">
     <value>countButtonClear</value>
@@ -1527,22 +1530,22 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;countButtonClear.ZOrder" xml:space="preserve">
-    <value>5</value>
+    <value>7</value>
   </data>
   <data name="countButton.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
     <value>NoControl</value>
   </data>
   <data name="countButton.Location" type="System.Drawing.Point, System.Drawing">
-    <value>107, 774</value>
+    <value>143, 774</value>
   </data>
   <data name="countButton.Size" type="System.Drawing.Size, System.Drawing">
-    <value>75, 23</value>
+    <value>112, 23</value>
   </data>
   <data name="countButton.TabIndex" type="System.Int32, mscorlib">
     <value>31</value>
   </data>
   <data name="countButton.Text" xml:space="preserve">
-    <value>+1</value>
+    <value>countButton</value>
   </data>
   <data name="&gt;&gt;countButton.Name" xml:space="preserve">
     <value>countButton</value>
@@ -1554,7 +1557,7 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;countButton.ZOrder" xml:space="preserve">
-    <value>4</value>
+    <value>6</value>
   </data>
   <data name="countLabel.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -1563,16 +1566,16 @@
     <value>NoControl</value>
   </data>
   <data name="countLabel.Location" type="System.Drawing.Point, System.Drawing">
-    <value>196, 779</value>
+    <value>261, 779</value>
   </data>
   <data name="countLabel.Size" type="System.Drawing.Size, System.Drawing">
-    <value>35, 13</value>
+    <value>60, 13</value>
   </data>
   <data name="countLabel.TabIndex" type="System.Int32, mscorlib">
     <value>32</value>
   </data>
   <data name="countLabel.Text" xml:space="preserve">
-    <value>Count</value>
+    <value>countLabel</value>
   </data>
   <data name="&gt;&gt;countLabel.Name" xml:space="preserve">
     <value>countLabel</value>
@@ -1584,7 +1587,7 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;countLabel.ZOrder" xml:space="preserve">
-    <value>3</value>
+    <value>5</value>
   </data>
   <data name="notEnabledButton.Enabled" type="System.Boolean, mscorlib">
     <value>False</value>
@@ -1614,7 +1617,7 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;notEnabledButton.ZOrder" xml:space="preserve">
-    <value>2</value>
+    <value>4</value>
   </data>
   <data name="invisibleButton.Enabled" type="System.Boolean, mscorlib">
     <value>False</value>
@@ -1647,7 +1650,7 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;invisibleButton.ZOrder" xml:space="preserve">
-    <value>1</value>
+    <value>3</value>
   </data>
   <data name="colorButton.Enabled" type="System.Boolean, mscorlib">
     <value>False</value>
@@ -1659,13 +1662,13 @@
     <value>550, 800</value>
   </data>
   <data name="colorButton.Size" type="System.Drawing.Size, System.Drawing">
-    <value>111, 23</value>
+    <value>100, 25</value>
   </data>
   <data name="colorButton.TabIndex" type="System.Int32, mscorlib">
     <value>35</value>
   </data>
   <data name="colorButton.Text" xml:space="preserve">
-    <value>#red</value>
+    <value>colorButton</value>
   </data>
   <data name="&gt;&gt;colorButton.Name" xml:space="preserve">
     <value>colorButton</value>
@@ -1677,7 +1680,37 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;colorButton.ZOrder" xml:space="preserve">
-    <value>0</value>
+    <value>2</value>
+  </data>
+  <data name="pushLabel.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="pushLabel.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="pushLabel.Location" type="System.Drawing.Point, System.Drawing">
+    <value>300, 30</value>
+  </data>
+  <data name="pushLabel.Size" type="System.Drawing.Size, System.Drawing">
+    <value>56, 13</value>
+  </data>
+  <data name="pushLabel.TabIndex" type="System.Int32, mscorlib">
+    <value>36</value>
+  </data>
+  <data name="pushLabel.Text" xml:space="preserve">
+    <value>pushLabel</value>
+  </data>
+  <data name="&gt;&gt;pushLabel.Name" xml:space="preserve">
+    <value>pushLabel</value>
+  </data>
+  <data name="&gt;&gt;pushLabel.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;pushLabel.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;pushLabel.ZOrder" xml:space="preserve">
+    <value>1</value>
   </data>
   <metadata name="$this.Localizable" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
@@ -1690,6 +1723,9 @@
   </data>
   <data name="$this.ClientSize" type="System.Drawing.Size, System.Drawing">
     <value>865, 834</value>
+  </data>
+  <data name="$this.Location" type="System.Drawing.Point, System.Drawing">
+    <value>70, 0</value>
   </data>
   <data name="$this.StartPosition" type="System.Windows.Forms.FormStartPosition, System.Windows.Forms">
     <value>Manual</value>
@@ -1829,6 +1865,12 @@
   <data name="&gt;&gt;menu2.Type" xml:space="preserve">
     <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
+  <data name="&gt;&gt;menuItemToolStripMenuItem.Name" xml:space="preserve">
+    <value>menuItemToolStripMenuItem</value>
+  </data>
+  <data name="&gt;&gt;menuItemToolStripMenuItem.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
   <data name="&gt;&gt;saveFileDialog1.Name" xml:space="preserve">
     <value>saveFileDialog1</value>
   </data>
@@ -1851,12 +1893,6 @@
     <value>toolStripMenuItem3</value>
   </data>
   <data name="&gt;&gt;toolStripMenuItem3.Type" xml:space="preserve">
-    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;menuItemToolStripMenuItem.Name" xml:space="preserve">
-    <value>menuItemToolStripMenuItem</value>
-  </data>
-  <data name="&gt;&gt;menuItemToolStripMenuItem.Type" xml:space="preserve">
     <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;$this.Name" xml:space="preserve">

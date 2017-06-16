@@ -2,7 +2,7 @@
 <dictionary>
     <window name="Main">
         <self>
-            <any id="owner" xpath="/Window"/>
+            <any id="owner" uid="" xpath="/Window" name=""/>
         </self>
         <onOpen/>
         <run>
@@ -33,6 +33,18 @@
             <wait id="Wait" owner="owner" addition="Many"/>
             <label id="Label" uid="centralLabel" owner="owner" class="" name="" text="" addition="Many"/>
             <button id="DialogCloseButton" owner="owner" name="Close"/>
+            <button id="buttonShowArea" owner="owner" name="showButton" addition="Many"/>
+            <button id="buttonHideArea" owner="owner" name="hideButton" addition="Many"/>
+            <button id="countButton" owner="" name="countButton"/>
+            <button id="countButtonClear" owner="" name="countButtonClear"/>
+            <label id="countLabel" uid="countLabel" owner="" name=""/>
+            <label id="pressLabel" uid="pressLabel" owner="" name=""/>
+            <label id="downUpLabel" uid="downUpLabel" owner="" name=""/>
+            <button id="invisibleButton" name="invisibleButton" visibility="Visible"/>
+            <button id="notEnabledButton" owner="owner" name="notEnabledButton"/>
+            <label id="sliderLabel" uid="sliderLabel" name="" addition="Many"/>
+            <button id="colorButton" owner="owner" name="colorButton"/>
+            <label id="pushLabel" uid="pushLabel" name="" addition="Many"/>
         </run>
         <onClose/>
         <close/>
