@@ -8,8 +8,6 @@
 
 package com.exactprosystems.jf.api.app;
 
-import sun.plugin2.main.server.Plugin;
-
 import java.io.Serializable;
 import java.util.*;
 
@@ -58,12 +56,32 @@ public class PluginInfo implements Serializable
         return this.fieldMap.get(kind);
     }
 
-    public ControlInfo add(ControlKind kind) {
-        ControlInfo controlInfo = new ControlInfo();
-        this.controlMap.put(kind, controlInfo);
-        return controlInfo;
+    public PluginInfo add(ControlKind kind, String ... types) 
+    {
+        ControlInfo controlInfo = this.controlMap.get(kind);
+        if (controlInfo == null)
+        {
+            controlInfo = new ControlInfo();
+            this.controlMap.put(kind, controlInfo);
+        }
+        controlInfo.setTypes(types);
+        return this;
     }
 
+    public PluginInfo addExclusion(ControlKind kind, OperationKind ... operations) 
+    {
+        ControlInfo controlInfo = this.controlMap.get(kind);
+        if (controlInfo == null)
+        {
+            controlInfo = new ControlInfo();
+            this.controlMap.put(kind, controlInfo);
+        }
+
+        controlInfo.addExcludes(operations);
+        return this;
+    }
+    
+    
     public boolean isSupported(ControlKind kind)
     {
         return controlMap.containsKey(kind);
@@ -73,17 +91,21 @@ public class PluginInfo implements Serializable
         return controlMap.containsKey(kind) && !controlMap.get(kind).getExcludes().contains(operation);
     }
 
-    public class ControlInfo
+    private static  class ControlInfo implements Serializable
     {
-        Set<String> types;
-        Set<OperationKind> excludes;
+        private static final long serialVersionUID = -6381695821017225511L;
 
-        public ControlInfo() {
+        public Set<String> types;
+        public Set<OperationKind> excludes;
+
+        public ControlInfo() 
+        {
             this.types = new HashSet<>();
             this.excludes = new HashSet<>();
         }
 
-        public Set<String> getTypes() {
+        public Set<String> getTypes() 
+        {
             return types;
         }
 
