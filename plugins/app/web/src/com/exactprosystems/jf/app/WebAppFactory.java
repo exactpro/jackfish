@@ -198,7 +198,9 @@ public class WebAppFactory implements IApplicationFactory
         fieldMap.put(LocatorFieldKind.TEXT,         "placeholder");
         fieldMap.put(LocatorFieldKind.TOOLTIP,      "title");
         
-        return new PluginInfo(controlMap, fieldMap);
+		Map<ControlKind, OperationKind[]> notAllowedOperationMap = new LinkedHashMap<>();
+
+		return new PluginInfo(controlMap, fieldMap, notAllowedOperationMap);
     }
 
 	//----------------------------------------------------------------------------------------------

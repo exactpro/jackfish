@@ -8,12 +8,7 @@
 
 package com.exactprosystems.jf.app;
 
-import com.exactprosystems.jf.api.app.ControlKind;
-import com.exactprosystems.jf.api.app.IApplication;
-import com.exactprosystems.jf.api.app.IApplicationFactory;
-import com.exactprosystems.jf.api.app.IGuiDictionary;
-import com.exactprosystems.jf.api.app.LocatorFieldKind;
-import com.exactprosystems.jf.api.app.PluginInfo;
+import com.exactprosystems.jf.api.app.*;
 import com.exactprosystems.jf.api.common.ParametersKind;
 
 import java.io.InputStream;
@@ -138,6 +133,8 @@ public class SwingAppFactory implements IApplicationFactory
         fieldMap.put(LocatorFieldKind.TEXT,     null);
         fieldMap.put(LocatorFieldKind.TOOLTIP,  "tooltip");
 
-        return new PluginInfo(controlMap, fieldMap);
+		Map<ControlKind, OperationKind[]> notAllowedOperationMap = new LinkedHashMap<>();
+
+		return new PluginInfo(controlMap, fieldMap, notAllowedOperationMap);
     }
 }

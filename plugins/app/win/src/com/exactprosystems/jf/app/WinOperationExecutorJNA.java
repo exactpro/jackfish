@@ -35,13 +35,6 @@ public class WinOperationExecutorJNA implements OperationExecutor<UIProxyJNA>
 	private static final String SEPARATOR_COMMA = ",";
 	private static final String EMPTY_CELL = "EMPTY_CELL_EMPTY";
 	private static final String EMPTY_HEADER_CELL = "EMPTY_HEADER_CELL_EMPTY";
-	private static Set<OperationKind> notAllowedForLabel; 
-	
-	static 
-	{
-	    notAllowedForLabel = new HashSet<>();
-	    notAllowedForLabel.addAll(Arrays.asList(OperationKind.KEY_DOWN, OperationKind.KEY_UP, OperationKind.PRESS)); 
-	}
 
 	private Logger logger;
 	private JnaDriverImpl driver;
@@ -62,12 +55,7 @@ public class WinOperationExecutorJNA implements OperationExecutor<UIProxyJNA>
     @Override
     public boolean isAllowed(ControlKind kind, OperationKind operation)
     {
-        if (kind == ControlKind.Label &&  notAllowedForLabel.contains(operation))
-        {
-            return false;
-        }
-        
-        return true;
+		return this.info.isAllowed(kind, operation);
     }
     
 	@Override
