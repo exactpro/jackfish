@@ -18,7 +18,6 @@
             <radioButton id="RadioButton" xpath=".//RadioButton[contains(@uid,&amp;quot;Green&amp;quot;)]" owner="owner" class="" action="" text="" addition="Many"/>
             <tree id="Tree" uid="" xpath=".//Tree" owner="owner" class="" addition="Many"/>
             <tabPanel id="TabPanel" uid="TabPanel" owner="owner" class="" addition="Many"/>
-            <label id="centralLabel" uid="centralLabel" owner="owner" class="" name="" text="" addition="Many"/>
             <label id="moveLabel" uid="moveLabel" owner="owner" class="" name="" text="" addition="Many"/>
             <checkBox id="ToggleButton" uid="ToggleButton" owner="owner" class="" name="" addition="Many"/>
             <progressBar id="ProgressBar" uid="ProgressBar" owner="owner" class="" name="" addition="Many"/>
@@ -31,7 +30,7 @@
             <toolTip id="ToolTip" owner="owner" text="It&amp;#39;s some Tooltip!" addition="Many"/>
             <any id="Any" uid="Any" owner="owner" class="" name="" action="" text="" addition="Many"/>
             <wait id="Wait" owner="owner" addition="Many"/>
-            <label id="Label" uid="centralLabel" owner="owner" class="" name="" text="" addition="Many"/>
+            <label id="Label" uid="CentralLabel" owner="owner" class="" name="" text="" addition="Many"/>
             <button id="DialogCloseButton" owner="owner" name="Close"/>
             <button id="buttonShowArea" owner="owner" name="showButton" addition="Many"/>
             <button id="buttonHideArea" owner="owner" name="hideButton" addition="Many"/>

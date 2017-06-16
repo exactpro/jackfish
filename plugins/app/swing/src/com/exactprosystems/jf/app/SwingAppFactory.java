@@ -113,6 +113,16 @@ public class SwingAppFactory implements IApplicationFactory
 		return this.dictionary;
 	}
 
+	@Override
+	public boolean isAllowed(ControlKind kind, OperationKind operation) {
+		return getInfo().isAllowed(kind, operation);
+	}
+
+	@Override
+	public boolean isSupported(ControlKind kind) {
+		return getInfo().isSupported(kind);
+	}
+
     @Override
     public PluginInfo getInfo()
     {

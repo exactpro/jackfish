@@ -39,7 +39,7 @@
             this.check = new System.Windows.Forms.DataGridViewCheckBoxColumn();
             this.dateColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.numberColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.centralLabel = new System.Windows.Forms.Label();
+            this.CentralLabel = new System.Windows.Forms.Label();
             this.moveLabel = new System.Windows.Forms.Label();
             this.Green = new System.Windows.Forms.RadioButton();
             this.Yellow = new System.Windows.Forms.RadioButton();
@@ -197,12 +197,12 @@
             this.numberColumn.Name = "numberColumn";
             this.numberColumn.ReadOnly = true;
             // 
-            // centralLabel
+            // CentralLabel
             // 
-            resources.ApplyResources(this.centralLabel, "centralLabel");
-            this.centralLabel.Name = "centralLabel";
-            this.centralLabel.MouseDown += new System.Windows.Forms.MouseEventHandler(this.CommonMouseDown);
-            this.centralLabel.MouseMove += new System.Windows.Forms.MouseEventHandler(this.CommonMouseMove);
+            resources.ApplyResources(this.CentralLabel, "CentralLabel");
+            this.CentralLabel.Name = "CentralLabel";
+            this.CentralLabel.MouseDown += new System.Windows.Forms.MouseEventHandler(this.CommonMouseDown);
+            this.CentralLabel.MouseMove += new System.Windows.Forms.MouseEventHandler(this.CommonMouseMove);
             // 
             // moveLabel
             // 
@@ -721,7 +721,7 @@
             this.Controls.Add(this.ComboBox);
             this.Controls.Add(this.panel1);
             this.Controls.Add(this.moveLabel);
-            this.Controls.Add(this.centralLabel);
+            this.Controls.Add(this.CentralLabel);
             this.Controls.Add(this.Table1);
             this.Controls.Add(this.CheckBox);
             this.Controls.Add(this.TextBox);
@@ -758,7 +758,7 @@
         private System.Windows.Forms.TextBox TextBox;
         private System.Windows.Forms.CheckBox CheckBox;
         private System.Windows.Forms.DataGridView Table1;
-        public System.Windows.Forms.Label centralLabel;
+        public System.Windows.Forms.Label CentralLabel;
         public System.Windows.Forms.Label moveLabel;
         private System.Windows.Forms.RadioButton Green;
         private System.Windows.Forms.RadioButton Yellow;

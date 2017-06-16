@@ -263,31 +263,31 @@
   <data name="numberColumn.HeaderText" xml:space="preserve">
     <value>Number column</value>
   </data>
-  <data name="centralLabel.AutoSize" type="System.Boolean, mscorlib">
+  <data name="CentralLabel.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
   </data>
-  <data name="centralLabel.Location" type="System.Drawing.Point, System.Drawing">
+  <data name="CentralLabel.Location" type="System.Drawing.Point, System.Drawing">
     <value>71, 29</value>
   </data>
-  <data name="centralLabel.Size" type="System.Drawing.Size, System.Drawing">
+  <data name="CentralLabel.Size" type="System.Drawing.Size, System.Drawing">
     <value>66, 13</value>
   </data>
-  <data name="centralLabel.TabIndex" type="System.Int32, mscorlib">
+  <data name="CentralLabel.TabIndex" type="System.Int32, mscorlib">
     <value>4</value>
   </data>
-  <data name="centralLabel.Text" xml:space="preserve">
+  <data name="CentralLabel.Text" xml:space="preserve">
     <value>CentralLabel</value>
   </data>
-  <data name="&gt;&gt;centralLabel.Name" xml:space="preserve">
-    <value>centralLabel</value>
+  <data name="&gt;&gt;CentralLabel.Name" xml:space="preserve">
+    <value>CentralLabel</value>
   </data>
-  <data name="&gt;&gt;centralLabel.Type" xml:space="preserve">
+  <data name="&gt;&gt;CentralLabel.Type" xml:space="preserve">
     <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="&gt;&gt;centralLabel.Parent" xml:space="preserve">
+  <data name="&gt;&gt;CentralLabel.Parent" xml:space="preserve">
     <value>$this</value>
   </data>
-  <data name="&gt;&gt;centralLabel.ZOrder" xml:space="preserve">
+  <data name="&gt;&gt;CentralLabel.ZOrder" xml:space="preserve">
     <value>29</value>
   </data>
   <data name="moveLabel.AutoSize" type="System.Boolean, mscorlib">

@@ -162,32 +162,19 @@ public class WebAppFactory implements IApplicationFactory
 		return this.dictionary;
 	}
 
-    @Override
+	@Override
+	public boolean isAllowed(ControlKind kind, OperationKind operation) {
+		return getInfo().isAllowed(kind, operation);
+	}
+
+	@Override
+	public boolean isSupported(ControlKind kind) {
+		return getInfo().isSupported(kind);
+	}
+
+	@Override
     public PluginInfo getInfo()
     {
-        Map<ControlKind, ControlInfo>      controlMap = new LinkedHashMap<>();
-
-        controlMap.put(ControlKind.Any,           new ControlInfo().addTypes("*"));
-        controlMap.put(ControlKind.Button,        new ControlInfo().addTypes("button", "input", "a", "img"));
-        controlMap.put(ControlKind.CheckBox,      new ControlInfo().addTypes("button", "input"));
-        controlMap.put(ControlKind.ComboBox,      new ControlInfo().addTypes("select", "input"));
-        controlMap.put(ControlKind.Dialog,        new ControlInfo().addTypes("form"));
-        controlMap.put(ControlKind.Frame,         new ControlInfo().addTypes("form", "body", "frame", "iframe"));
-        controlMap.put(ControlKind.Image,         new ControlInfo().addTypes("img"));
-        controlMap.put(ControlKind.Label,         new ControlInfo().addTypes("label", "span"));
-        controlMap.put(ControlKind.Panel,         new ControlInfo().addTypes("div"));
-        controlMap.put(ControlKind.ProgressBar,   new ControlInfo().addTypes("progress"));
-        controlMap.put(ControlKind.RadioButton,   new ControlInfo().addTypes("input"));
-        controlMap.put(ControlKind.Row,           new ControlInfo().addTypes("tr"));
-        controlMap.put(ControlKind.Slider,        new ControlInfo().addTypes("div"));
-        controlMap.put(ControlKind.Spinner,       new ControlInfo().addTypes("*"));
-        controlMap.put(ControlKind.Table,         new ControlInfo().addTypes("table"));
-        controlMap.put(ControlKind.TabPanel,      new ControlInfo().addTypes("button"));
-        controlMap.put(ControlKind.TextBox,       new ControlInfo().addTypes("input", "textarea"));
-        controlMap.put(ControlKind.ToggleButton,  new ControlInfo().addTypes("input"));
-        controlMap.put(ControlKind.ListView,      new ControlInfo().addTypes("ul"));
-        controlMap.put(ControlKind.Wait,          new ControlInfo().addTypes("*"));
-
         Map<LocatorFieldKind, String>   fieldMap = new HashMap<>();
         
         fieldMap.put(LocatorFieldKind.ACTION,       "action");
@@ -198,6 +185,24 @@ public class WebAppFactory implements IApplicationFactory
         fieldMap.put(LocatorFieldKind.TEXT,         "placeholder");
         fieldMap.put(LocatorFieldKind.TOOLTIP,      "title");
 
-		return new PluginInfo(controlMap, fieldMap);
+		PluginInfo info = new PluginInfo(fieldMap);
+
+		info.add(ControlKind.Any).setTypes("*");
+		info.add(ControlKind.Button).setTypes("button", "input", "a", "img");
+		info.add(ControlKind.CheckBox).setTypes("button", "input");
+		info.add(ControlKind.ComboBox).setTypes("select", "input");
+		info.add(ControlKind.Dialog).setTypes("form");
+		info.add(ControlKind.Frame).setTypes("form", "body", "frame", "iframe");
+		info.add(ControlKind.Image).setTypes("img");
+		info.add(ControlKind.Label).setTypes("label", "span");
+		info.add(ControlKind.Panel).setTypes("div");
+		info.add(ControlKind.ProgressBar).setTypes("progress");
+		info.add(ControlKind.RadioButton).setTypes("input");
+		info.add(ControlKind.Row).setTypes("tr");
+		info.add(ControlKind.Slider).setTypes("div");
+		info.add(ControlKind.Spinner).setTypes("*");
+
+
+		return info;
     }
 }

@@ -24,6 +24,9 @@ public interface IApplicationFactory  extends IFactory
 	String 				getRemoteClassName();
 	
 	IGuiDictionary 		getDictionary();
-    
-    PluginInfo          getInfo();      
+
+	boolean				isAllowed(ControlKind kind, OperationKind operation);
+	boolean				isSupported(ControlKind kind);
+
+    PluginInfo          getInfo();
 }

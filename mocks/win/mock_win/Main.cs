@@ -25,6 +25,8 @@ namespace mock_win
             fillContextMenu();
             ComboBox.SelectedIndex = 0;
 
+
+
             this.timer = new Timer();
             this.timer.Interval = 100;
             this.timer.Tick += new EventHandler(timer_Tick);
@@ -120,16 +122,16 @@ namespace mock_win
             {
                 if (e.Clicks == 1)
                 {
-                    centralLabel.Text = text + "_click";
+                    CentralLabel.Text = text + "_click";
                 }
                 else
                 {
-                    centralLabel.Text = text + "_double_click";
+                    CentralLabel.Text = text + "_double_click";
                 }
             }
             else
             {
-                centralLabel.Text = text + "_rightClick";
+                CentralLabel.Text = text + "_rightClick";
             }
         }
 
@@ -195,7 +197,7 @@ namespace mock_win
 
             if (Control.ModifierKeys == Keys.Control)
             {
-                centralLabel.Text = text + "_press_Control";
+                CentralLabel.Text = text + "_press_Control";
             }
         }
 
@@ -204,50 +206,50 @@ namespace mock_win
             CheckBox control = (CheckBox)sender;
             if (control.Checked)
             {
-                centralLabel.Text = control.Name + "_checked";
+                CentralLabel.Text = control.Name + "_checked";
             }
             else
             {
-                centralLabel.Text = control.Name + "_unchecked";
+                CentralLabel.Text = control.Name + "_unchecked";
             }
         }
 
         private void ComboBox_SelectedValueChanged(object sender, EventArgs e)
         {
-            centralLabel.Text = ComboBox.Name + "_" + ComboBox.SelectedItem;
+            CentralLabel.Text = ComboBox.Name + "_" + ComboBox.SelectedItem;
         }
 
         private void ComboBox_TextValueChanged(object sender, EventArgs e)
         {
-            centralLabel.Text = ComboBox.Name + "_" + ComboBox.Text;
+            CentralLabel.Text = ComboBox.Name + "_" + ComboBox.Text;
         }
 
         private void TextBox_TextChanged(object sender, EventArgs e)
         {
-            centralLabel.Text = TextBox.Name + "_" + TextBox.Text;
+            CentralLabel.Text = TextBox.Name + "_" + TextBox.Text;
         }
 
         private void TabPanel_Selected(object sender, TabControlEventArgs e)
         {
             TabControl control = (TabControl)sender;
-            centralLabel.Text = control.Name + "_" + control.SelectedTab.Text;
+            CentralLabel.Text = control.Name + "_" + control.SelectedTab.Text;
         }
 
         private void ListView_SelectedIndexChanged(object sender, EventArgs e)
         {
             ListBox control = (ListBox)sender;
             control.GetSelected(0);
-            centralLabel.Text = control.Name + "_" + control.SelectedItem.ToString();
+            CentralLabel.Text = control.Name + "_" + control.SelectedItem.ToString();
         }
 
         private void sixToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            centralLabel.Text = "six_click";
+            CentralLabel.Text = "six_click";
         }
 
         private void toolStripMenuItem1_Click(object sender, EventArgs e)
         {
-            centralLabel.Text = "cm_one_click";
+            CentralLabel.Text = "cm_one_click";
         }
 
         private void showButton_Click(object sender, EventArgs e)

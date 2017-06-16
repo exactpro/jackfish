@@ -749,7 +749,16 @@ namespace UIAdapter
                 }
                 UpdateHandler();
                 AutomationElement element = FindByRuntimeId(id);
-                element.SetFocus();
+                if (element.Current.IsKeyboardFocusable)
+                {
+                    element.SetFocus();
+                }
+                else
+                {
+                    SetLastErrorNumber(3);
+                    MakeError(new Exception("Operation Press not allowed"));
+                    return;
+                }
 
                 //toFront();
                 //old implementtation. remote it if all works
@@ -875,7 +884,16 @@ namespace UIAdapter
                 }
                 UpdateHandler();
                 AutomationElement element = FindByRuntimeId(id);
-                element.SetFocus();
+                if (element.Current.IsKeyboardFocusable)
+                {
+                    element.SetFocus();
+                }
+                else
+                {
+                    SetLastErrorNumber(3);
+                    MakeError(new Exception("Operation KeyDown and KeyUp not allowed"));
+                    return;
+                }
 
                 VirtualKeyCode keyCode = 0x00;
 
