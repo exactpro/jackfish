@@ -10,6 +10,7 @@ package com.exactprosystems.jf.api.app;
 
 import java.io.Serializable;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -17,10 +18,11 @@ public class PluginInfo implements Serializable
 {
     private static final long serialVersionUID = -1595364917643729823L;
 
-    public PluginInfo(Map<ControlKind, String[]> controlMap, Map<LocatorFieldKind, String> fieldMap)
+    public PluginInfo(Map<ControlKind, String[]> controlMap, Map<LocatorFieldKind, String> fieldMap, Map<ControlKind, OperationKind[]> notAllowedOperationMap)
     {
         this.controlMap = controlMap;
         this.fieldMap = fieldMap;
+        this.notAllowedOperationMap = notAllowedOperationMap;
     }
     
     public String[] nodeByControlKind(ControlKind kind)
@@ -57,10 +59,30 @@ public class PluginInfo implements Serializable
     }
     
     private Map<ControlKind, String[]>      controlMap;
+    private Map<ControlKind, OperationKind[]>    notAllowedOperationMap;
     private Map<LocatorFieldKind, String>   fieldMap;
 
     public boolean isSupported(ControlKind kind)
     {
         return controlMap.containsKey(kind);
+    }
+
+    public boolean isAllowed(ControlKind kind, OperationKind operation) {
+        if(notAllowedOperationMap.containsKey(kind))
+        {
+            List<OperationKind> operations = Arrays.asList(notAllowedOperationMap.get(kind));
+            if(operations.contains(operation))
+            {
+                return false;
+            }
+            else
+            {
+                return true;
+            }
+        }
+        else
+        {
+            return true;
+        }
     }
 }

@@ -160,7 +160,10 @@ public class WinAppFactory implements IApplicationFactory
 		fieldMap.put(LocatorFieldKind.NAME,		AttributeKind.NAME.name().toLowerCase());
 		fieldMap.put(LocatorFieldKind.TEXT,		AttributeKind.TEXT.name().toLowerCase());
 
-		return new PluginInfo(controlMap, fieldMap);
+		Map<ControlKind, OperationKind[]> notAllowedOperationMap = new LinkedHashMap<>();
+		notAllowedOperationMap.put(ControlKind.Label, new OperationKind[]{OperationKind.KEY_DOWN, OperationKind.KEY_UP, OperationKind.PRESS});
+
+		return new PluginInfo(controlMap, fieldMap, notAllowedOperationMap);
     }
 
     //----------------------------------------------------------------------------------------------
