@@ -432,7 +432,14 @@ public class Configuration extends AbstractDocument
 	{
 		synchronized (this.globals)
 		{
-			this.globals.put(name, value);
+			if (value == null)
+			{
+				this.globals.remove(name);
+			}
+			else
+			{
+				this.globals.put(name, value);
+			}
 		}
 	}
 
