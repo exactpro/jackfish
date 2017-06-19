@@ -25,8 +25,6 @@ namespace mock_win
             fillContextMenu();
             ComboBox.SelectedIndex = 0;
 
-
-
             this.timer = new Timer();
             this.timer.Interval = 100;
             this.timer.Tick += new EventHandler(timer_Tick);
@@ -94,7 +92,7 @@ namespace mock_win
             string text;
             switch (control.Name)
             {
-                case "centralLabel":
+                case "CentralLabel":
                     text = "Label";
                     break;
                 case "Blue":
@@ -168,7 +166,7 @@ namespace mock_win
             string text;
             switch (control.Name)
             {
-                case "centralLabel":
+                case "CentralLabel":
                     text = "Label";
                     break;
                 case "Blue":

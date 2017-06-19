@@ -44,6 +44,7 @@
             <label id="sliderLabel" uid="sliderLabel" name="" addition="Many"/>
             <button id="colorButton" owner="owner" name="colorButton"/>
             <label id="pushLabel" uid="pushLabel" name="" addition="Many"/>
+            <label id="centralLabel" uid="CentralLabel" owner="owner" class="" name="" text="" addition="Many"/>
         </run>
         <onClose/>
         <close/>
