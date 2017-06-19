@@ -45,6 +45,7 @@
             <button id="colorButton" owner="owner" name="colorButton"/>
             <label id="pushLabel" uid="pushLabel" name="" addition="Many"/>
             <label id="centralLabel" uid="CentralLabel" owner="owner" class="" name="" text="" addition="Many"/>
+            <label id="checkedLabel" uid="checkedLabel" owner="" name=""/>
         </run>
         <onClose/>
         <close/>

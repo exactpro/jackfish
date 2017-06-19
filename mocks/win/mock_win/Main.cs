@@ -204,11 +204,11 @@ namespace mock_win
             CheckBox control = (CheckBox)sender;
             if (control.Checked)
             {
-                CentralLabel.Text = control.Name + "_checked";
+                checkedLabel.Text = control.Name + "_checked";
             }
             else
             {
-                CentralLabel.Text = control.Name + "_unchecked";
+                checkedLabel.Text = control.Name + "_unchecked";
             }
         }
 
@@ -300,6 +300,11 @@ namespace mock_win
         private void Button_Click(object sender, EventArgs e)
         {
             pushLabel.Text = "Button_push";
+        }
+
+        private void CheckBox_MouseUp(object sender, MouseEventArgs e)
+        {
+
         }
 
         //private void Slider_ValueChanged(object sender, EventArgs e)

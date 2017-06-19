@@ -102,6 +102,7 @@
             this.invisibleButton = new System.Windows.Forms.Button();
             this.colorButton = new System.Windows.Forms.Button();
             this.pushLabel = new System.Windows.Forms.Label();
+            this.checkedLabel = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.Table1)).BeginInit();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.Slider)).BeginInit();
@@ -142,14 +143,17 @@
             // CheckBox
             // 
             resources.ApplyResources(this.CheckBox, "CheckBox");
+            this.CheckBox.Checked = true;
+            this.CheckBox.CheckState = System.Windows.Forms.CheckState.Checked;
             this.CheckBox.Name = "CheckBox";
             this.CheckBox.UseVisualStyleBackColor = true;
             this.CheckBox.CheckedChanged += new System.EventHandler(this.CheckBox_CheckedChanged);
             this.CheckBox.KeyDown += new System.Windows.Forms.KeyEventHandler(this.CommonKeyDown);
             this.CheckBox.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.CommonKeyPress);
             this.CheckBox.KeyUp += new System.Windows.Forms.KeyEventHandler(this.CommonKeyUp);
+            this.CheckBox.MouseDown += new System.Windows.Forms.MouseEventHandler(this.CommonMouseDown);
             this.CheckBox.MouseMove += new System.Windows.Forms.MouseEventHandler(this.CommonMouseMove);
-            this.CheckBox.MouseUp += new System.Windows.Forms.MouseEventHandler(this.CommonMouseDown);
+            this.CheckBox.MouseUp += new System.Windows.Forms.MouseEventHandler(this.CheckBox_MouseUp);
             // 
             // Table1
             // 
@@ -271,8 +275,7 @@
             resources.GetString("ComboBox.Items"),
             resources.GetString("ComboBox.Items1"),
             resources.GetString("ComboBox.Items2"),
-            resources.GetString("ComboBox.Items3"),
-            resources.GetString("ComboBox.Items4")});
+            resources.GetString("ComboBox.Items3")});
             resources.ApplyResources(this.ComboBox, "ComboBox");
             this.ComboBox.Name = "ComboBox";
             this.ComboBox.SelectedIndexChanged += new System.EventHandler(this.ComboBox_SelectedIndexChanged);
@@ -579,14 +582,16 @@
             // ToggleButton
             // 
             resources.ApplyResources(this.ToggleButton, "ToggleButton");
+            this.ToggleButton.Checked = true;
+            this.ToggleButton.CheckState = System.Windows.Forms.CheckState.Checked;
             this.ToggleButton.Name = "ToggleButton";
             this.ToggleButton.UseVisualStyleBackColor = true;
             this.ToggleButton.CheckedChanged += new System.EventHandler(this.CheckBox_CheckedChanged);
             this.ToggleButton.KeyDown += new System.Windows.Forms.KeyEventHandler(this.CommonKeyDown);
             this.ToggleButton.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.CommonKeyPress);
             this.ToggleButton.KeyUp += new System.Windows.Forms.KeyEventHandler(this.CommonKeyUp);
+            this.ToggleButton.MouseDown += new System.Windows.Forms.MouseEventHandler(this.CommonMouseDown);
             this.ToggleButton.MouseMove += new System.Windows.Forms.MouseEventHandler(this.CommonMouseMove);
-            this.ToggleButton.MouseUp += new System.Windows.Forms.MouseEventHandler(this.CommonMouseDown);
             // 
             // contextMenuStrip1
             // 
@@ -688,11 +693,17 @@
             resources.ApplyResources(this.pushLabel, "pushLabel");
             this.pushLabel.Name = "pushLabel";
             // 
+            // checkedLabel
+            // 
+            resources.ApplyResources(this.checkedLabel, "checkedLabel");
+            this.checkedLabel.Name = "checkedLabel";
+            // 
             // Main
             // 
             resources.ApplyResources(this, "$this");
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ContextMenuStrip = this.contextMenuStrip1;
+            this.Controls.Add(this.checkedLabel);
             this.Controls.Add(this.pushLabel);
             this.Controls.Add(this.colorButton);
             this.Controls.Add(this.invisibleButton);
@@ -826,6 +837,7 @@
         private System.Windows.Forms.Button invisibleButton;
         private System.Windows.Forms.Button colorButton;
         public System.Windows.Forms.Label pushLabel;
+        public System.Windows.Forms.Label checkedLabel;
     }
 }
 

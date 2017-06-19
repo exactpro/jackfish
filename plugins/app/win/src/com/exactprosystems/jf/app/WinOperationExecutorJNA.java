@@ -413,16 +413,67 @@ public class WinOperationExecutorJNA implements OperationExecutor<UIProxyJNA>
 	@Override
 	public boolean selectByIndex(UIProxyJNA component, int index) throws Exception
 	{
-		throw new OperationNotAllowedException("selectByIndex()"); // TODO need to implement
+		try
+		{
+			List<UIProxyJNA> elementsList = findComponents(component, WindowTreeScope.Descendants, WindowProperty.LocalizedControlTypeProperty, "list item");
+			this.driver.doPatternCall(elementsList.get(index), WindowPattern.SelectionItemPattern, "Select", null, -1);
+			return true;
+		}
+		catch(WrongParameterException ignored)
+		{
+			return true;
+		}
 	}
 		
 		
 	@Override
 	public boolean select(UIProxyJNA component, String selectedText) throws Exception
 	{
-		int[] itemId = findItem(component, selectedText);
-		this.driver.doPatternCall(new UIProxyJNA(itemId), WindowPattern.SelectionItemPattern, "Select", null, -1);
-		return true;
+		try
+		{
+			int[] itemId = findItem(component, selectedText);
+			this.driver.doPatternCall(new UIProxyJNA(itemId), WindowPattern.SelectionItemPattern, "Select", null, -1);
+			return true;
+		}
+		catch (WrongParameterException ignore)
+		{
+			return true;
+		}
+	}
+
+	private List<UIProxyJNA> findComponents(UIProxyJNA component, WindowTreeScope scope, WindowProperty property, String string) throws Exception {
+		try
+		{
+			int length = 100;
+			int[] arr = new int[length];
+			int count = this.driver.findAll(arr, component, scope, property, string);
+			if (count > length)
+			{
+				length = count;
+				arr = new int[length];
+				this.driver.findAll(arr, component, scope, property, string);
+			}
+			ArrayList<UIProxyJNA> list = new ArrayList<>();
+
+			int itemsCount = arr[0];
+			int itemLength = arr[1];
+			int[] items = Arrays.copyOfRange(arr, 2, arr.length);
+			for (int i = 0; i < itemsCount; i++) {
+				list.add(new UIProxyJNA(Arrays.copyOfRange(items, 0, itemLength)));
+				items = Arrays.copyOfRange(items, itemLength+1, items.length);
+			}
+			return list;
+		}
+		catch (RemoteException e)
+		{
+			throw e;
+		}
+		catch (Exception e)
+		{
+			this.logger.error(String.format("select(%s)", component));
+			this.logger.error(e.getMessage(), e);
+			throw e;
+		}
 	}
 
 	private int[] findItem(UIProxyJNA component, String selectedText) throws Exception {

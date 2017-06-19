@@ -34,10 +34,12 @@ namespace UIAdapterRunner
             //UIAdapter.Program.ListAll(getStringId(ref arr), (int)ControlKind.Button, null, null, null, "invisibleButton", null, null, false);
             //UIAdapter.Program.FindAllForLocator(arr, arr.Length, getStringId(ref arr), (int)UIAdapter.ControlKind.Button, "Button", null, null, null, null, null, false);
             //UIAdapter.Program.FindAllForLocator(arr, arr.Length, getStringId(ref arr), (int)UIAdapter.ControlKind.Button, "colorButton", null, null, null, null, null, false);
-            UIAdapter.Program.FindAllForLocator(arr, arr.Length, getStringId(ref arr), (int)UIAdapter.ControlKind.Label, "CentralLabel", null, null, null, null, null, false);
+            UIAdapter.Program.FindAllForLocator(arr, arr.Length, getStringId(ref arr), (int)UIAdapter.ControlKind.ComboBox, "ComboBox", null, null, null, null, null, false);
             //UIAdapter.Program.GetProperty(getStringId(ref arr), 30001);
             //UIAdapter.Program.getRectangle(getStringId(ref arr));
-            UIAdapter.Program.UpAndDown(getStringId(ref arr), "CONTROL", true);
+            //UIAdapter.Program.UpAndDown(getStringId(ref arr), "CONTROL", true);
+            int c = UIAdapter.Program.FindAll(arr, arr.Length, getStringId(ref arr), (int)TreeScope.Descendants, 30004, "list item");
+            c = 5;
             //UIAdapter.Program.getList(getStringId(ref arr));
 
             //UIAdapter.Program.FindAll(arr, arr.Length, getStringId(ref arr), (int) TreeScope.Descendants, AutomationElementIdentifiers.NameProperty.Id, "sports");
