@@ -67,7 +67,7 @@ import com.exactprosystems.jf.functions.Table;
 				+ "#Action;#Table;#Integer\n"
 				+ "TableConsiderColumnsAs;TC;'Age'\n"
 				+ "#Id;#Let\n"
-				+ "condition; new AndCondition(new NumberCondition('Age','>',20))"
+				+ "condition; new AndCondition(new NumberCondition('Age','>',20))\n"
 				+ "#Id;#Action;#Table;#Age\n"
 				+ "TS;TableSelect;TC;condition\n"
 				+ "#Assert;#Message\n"

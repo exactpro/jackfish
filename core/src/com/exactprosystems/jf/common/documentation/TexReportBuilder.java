@@ -22,6 +22,8 @@ import java.nio.file.Files;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.Objects;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -46,7 +48,17 @@ public class TexReportBuilder extends ReportBuilder
 	@Override
 	protected String postProcess(String result)
 	{
-		return super.postProcess(result);
+		Pattern patt = Pattern.compile("([^\\\\]_)");
+		Matcher m = patt.matcher(result);
+		StringBuffer sb = new StringBuffer(result.length());
+		while (m.find())
+		{
+			String text = m.group(1);
+			text = text.replace("_", "\\\\_");
+			m.appendReplacement(sb, text);
+		}
+		m.appendTail(sb);
+		return super.postProcess(sb.toString());
 	}
 
 	@Override
@@ -215,12 +227,6 @@ public class TexReportBuilder extends ReportBuilder
 			Files.deleteIfExists(header.toPath());
 			Files.copy(isHeader, header.toPath());
 		}
-
-		/*InputStream isLine = getClass().getResourceAsStream("Line.png");
-		File orangeLine = new File(this.getReportDir() + File.separator + "Line.png");
-		Files.deleteIfExists(orangeLine.toPath());
-		Files.copy(isLine, orangeLine.toPath());
-		isLine.close();*/
 	}
 
 	@Override
@@ -266,9 +272,6 @@ public class TexReportBuilder extends ReportBuilder
 		{
             itemId = "";
         }
-
-//		writer.fwrite("\\subsection{%s}", itemId).newline();
-//        addBookmarks(writer, item.getItemName().trim());
 	}
 
 	@Override

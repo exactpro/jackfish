@@ -54,8 +54,8 @@ public class HelpActionItem extends MatrixItem
         {
             report.outLine(this, null, "{{`{{*Additional fields - No*}}`}}", null);
         }
-//        report.outLine(this, null, "{{`{{*Examples*}}`}}", null);
-//        report.outLine(this, null, "{{`" + attr.examples() + "`}}", null);
+        report.outLine(this, null, "{{`{{*Examples*}}`}}", null);
+        report.outLine(this, null, "{{`" + attr.examples() + "`}}", null);
         if (attr.seeAlsoClass().length != 0)
         {
             report.outLine(this, null, "{{`{{*See also*}}`}}", null);
