@@ -33,7 +33,7 @@ import java.util.Map;
 							" SubCase operator can even be located in commented testcases.",
 		examples 		= "{{#\n" +
 							"#Id;#SubCase\n" +
-							"SUB_1;\n" +
+							"SUB1;\n" +
 							"#Action;#Greeting\n" +
 							"Print;'Hello!'\n" +
 							"#EndSubCase#}}",

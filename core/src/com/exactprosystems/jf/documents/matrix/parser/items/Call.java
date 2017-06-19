@@ -46,7 +46,7 @@ import java.util.Set;
 				"result\n" +
 				"#EndSubCase\n" +
 				"#Id;#Call;#firstNumber;#secondNumber\n" +
-				"CALL_1;Add;1;2#}}",
+				"CALL1;Add;1;2#}}",
 		shouldContain 	= { Tokens.Call },
 
 		mayContain 		= { Tokens.Id, Tokens.Off, Tokens.RepOff },

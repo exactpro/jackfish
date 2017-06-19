@@ -38,21 +38,31 @@ import com.exactprosystems.jf.functions.Table;
 				+ "in the value of the parameter - values are indicated, that will be added to the row that corresponds "
 				+ "to that test case or step, where the following action is. {{`If names match, additional columns do not "
 				+ "replace columns of the system table: Matrix, TestCaseId, TestCase, StepIdentity, Step, Time, Result, Error, Screenshot.`}}",
-		examples 				= "{{##Id;#TestCase;#Kind;#For\n"
-				+ "First;;;\n"
-				+ "#Id;#Action;#Content\n"
-				+ "TXT1;TextCreate;'#TestCase;#Kind;#For\\n;;\\n    #Action;#Time\\n  Wait;1\\n\\n    #Fail \\n  "
-				+ " \\'Failed\\'\\n\\n #TestCase;#Kind;#For\\n;;\\n    #Action;#Time\\n    Wait;1'\n"
-				+ "    #Id;#Action;#Text\n"
-				+ "    MXRN1;MatrixRunFromText;TXT1.Out\n"
-				+ "    #Id;#Action;#Matrix\n"
-				+ "    MXWT1;MatrixWait;MXRN1.Out\n"
-				+ "    #Action;#Matrix\n"
-				+ "    ResultTableUserValue;MXRN1.Out\n"
-				+ "    #Id;#Action;#Matrix;#Decoraded\n"
-				+ "    RESTBL1;ResultTable;MXRN1.Out;true\n"
-				+ "    #Action;#BeforeTestCase;#Table;#Title\n"
-				+ "    TableReport;'First';RESTBL1.Out;'Result table'#}}",
+		examples 				= "{{#\n" +
+				"#Id;#TestCase;#Kind;#Depends;#For\n" +
+				"RT_USERVAL;ResultTableUserValue;Never;;\n" +
+				"    #Action;UserValue\n" +
+				"    ResultTableUserValue;'value'\n" +
+				"    #Step;#Kind;#For;#Depends\n" +
+				"    ;;;\n" +
+				"    #EndStep\n" +
+				"    #Id;#Action;$Decoraded\n" +
+				"    RESTBL1;ResultTable;false\n" +
+				"    #Assert;#Message\n" +
+				"    RESTBL1.Out[RESTBL1.Out.size - 1].Result == Result.Passed;'Assert'\n" +
+				"    #Id;#Let\n" +
+				"    firstTableSize;RESTBL1.Out.size\n" +
+				"    #Assert;#Message\n" +
+				"    RESTBL1.Out[RESTBL1.Out.size - 2].UserValue == 'value';'Wrong value'\n" +
+				"    #Assert;#Message\n" +
+				"    RESTBL1.Out[RESTBL1.Out.size - 1].UserValue == null;'Wrong value'\n" +
+				"    #Action;OtherValue\n" +
+				"    ResultTableUserValue;100\n" +
+				"    #Step;#Kind;#For;#Depends\n" +
+				"    ;;;\n" +
+				"        #Action;UserValue;OtherValue\n" +
+				"        ResultTableUserValue;'value1';200\n" +
+				"    #EndStep#}}",
 		seeAlsoClass = {ResultTable.class}
 )
 public class ResultTableUserValue extends AbstractAction

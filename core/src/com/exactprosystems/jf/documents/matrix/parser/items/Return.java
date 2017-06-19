@@ -31,7 +31,7 @@ import java.util.Map;
 		description 	= "This operator breaks  SubCase performing and returns the result. ",
 		examples 		= "{{#\n" +
 							"#Id;#SubCase\n" +
-							"SUB_1;\n" +
+							"SUB1;\n" +
 							"#Id;#Let\n" +
 							"result;2+2*2\n" +
 							"#Return\n" +

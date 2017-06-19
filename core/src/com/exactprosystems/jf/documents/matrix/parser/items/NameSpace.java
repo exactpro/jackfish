@@ -39,7 +39,7 @@ import java.util.Map;
 							"#Id;#NameSpace\n" +
 							"MyLibrary;\n" +
 							"#Id;#SubCase\n" +
-							"SUB_1;\n" +
+							"SUB1;\n" +
 							"#Action;#Greeting\n" +
 							"Print;'Hello!'\n" +
 							"#EndSubCase\n" +
