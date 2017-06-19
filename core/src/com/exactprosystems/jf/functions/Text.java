@@ -94,12 +94,15 @@ public class Text implements List<String>, Mutable, Cloneable
 	
 	public void report(ReportBuilder report, String beforeTestcase, String title) throws Exception
 	{
-		ReportTable table = report.addExplicitTable(title, beforeTestcase, true, true, new int[] {});
-		
-		for(String list : this.list)
-		{
-			table.addValues(list);
-		}
+        if (beforeTestcase != null || report.reportIsOn())
+        {
+    		ReportTable table = report.addExplicitTable(title, beforeTestcase, true, true, new int[] {});
+    		
+    		for(String list : this.list)
+    		{
+    			table.addValues(list);
+    		}
+        }
 	}
 
 	public Text perform(AbstractEvaluator evaluator) throws Exception

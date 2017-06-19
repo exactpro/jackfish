@@ -719,20 +719,6 @@ public class DisplayDriverFx implements DisplayDriver
 		}
 	}
 
-	@Override
-	public void layoutWizard(MatrixItem item, Table table, Context context)
-	{
-		//TODO think about it
-//		AppConnection defaultApplicationConnection = item.getMatrix().getDefaultApplicationConnection();
-//		if (defaultApplicationConnection == null)
-//		{
-//			DialogsHelper.showInfo("You need to start application");
-//			return;
-//		}
-//		LayoutWizard wizard = new LayoutWizard(table, defaultApplicationConnection, context.getEvaluator());
-//		wizard.show();
-	}
-
 	private void updateStyle(String key, Settings settings, Label label)
 	{
 		Settings.SettingsValue value = settings.getValue(Settings.GLOBAL_NS, Settings.MATRIX_COLORS, key);

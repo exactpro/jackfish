@@ -76,10 +76,10 @@ public class RawTable extends MatrixItem
 		        b -> driver.hide(this, layout, 2, b), 
 		        b -> b ? "Hide" : "Show", this.table.size() != 0);
 		driver.hide(this, layout, 2, this.table.size() == 0);
-		driver.showButton(this, layout, 1, 5, "Layout wizard", item -> driver.layoutWizard(item, table, context));
 
+        driver.showLabel(this, layout, 1, 5, "rows =");
 		driver.showSpinner(this, layout, 1, 6, 75, v -> this.prefRows = v, () -> this.prefRows, 0, 250);
-		driver.showLabel(this, layout, 1, 7, "x");
+		driver.showLabel(this, layout, 1, 7, "columns =");
 		driver.showSpinner(this, layout, 1, 8, 75, v -> this.prefCols = v, () -> this.prefCols, 0, 50);
 		driver.showButton(this, layout, 1, 9, "Apply", item ->
 		{

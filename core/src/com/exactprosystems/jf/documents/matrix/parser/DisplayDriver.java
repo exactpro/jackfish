@@ -55,5 +55,4 @@ public interface DisplayDriver
 	void		setupCall			(MatrixItem item, String reference, Parameters parameters);
 	void 		setCurrentItem		(MatrixItem item, Matrix matrix, boolean needExpand);
 	void		deleteItem			(MatrixItem item);
-	void		layoutWizard		(MatrixItem item, Table table, Context context);
 }
