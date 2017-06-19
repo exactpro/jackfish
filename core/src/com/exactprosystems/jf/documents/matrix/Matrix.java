@@ -99,7 +99,7 @@ public class Matrix extends AbstractDocument implements IMatrix
       {
           Matrix copy = new Matrix(getName(), getFactory(), this.runner, this.matrixListener, this.isLibrary);
           copy.root = this.root.clone();
-          copy.root.init(copy);
+          copy.root.init(copy, copy);
           copy.buffer = new StringBuilder(this.buffer);
           copy.enumerate();
           return copy;
@@ -183,7 +183,7 @@ public class Matrix extends AbstractDocument implements IMatrix
 
 			Parser parser = new Parser();
 			this.root = parser.readMatrix(this.root, stringReader);
-			this.root.init(this);
+			this.root.init(this, this);
 			enumerate();
 		}
 	}
@@ -194,7 +194,7 @@ public class Matrix extends AbstractDocument implements IMatrix
 		super.create();
 
 		this.root = new MatrixRoot(getName());
-		this.root.init(this);
+		this.root.init(this, this);
 		TestCase item = new TestCase("Test case");
 		item.createId();
 		this.root.insert(0, item);

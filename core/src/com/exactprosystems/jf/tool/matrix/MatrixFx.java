@@ -251,7 +251,7 @@ public class MatrixFx extends Matrix
 			{
 				newItem = Parser.createItem(Tokens.Action.get(), newItemName);
 			}
-			newItem.init(this);
+			newItem.init(this, this);
 			newItem.createId();
 			insert(tempItem.getParent(), index, newItem);
 		}
@@ -549,7 +549,7 @@ public class MatrixFx extends Matrix
 	public MatrixItem[] insertNew(MatrixItem item, String kind, String value) throws Exception
 	{
 		MatrixItem newItem = Parser.createItem(kind, value);
-		newItem.init(this);
+		newItem.init(this, this);
 		newItem.createId();
 		MatrixItem[] items = new MatrixItem[]{newItem};
 		insert(item, items);
@@ -722,7 +722,7 @@ public class MatrixFx extends Matrix
 		for (int i = 0; i < items.length; i++)
 		{
 			MatrixItem item = items[i];
-			item.init(this);
+			item.init(this, this);
 			insert(parent, index + i, item);
 		}
 		enumerate();

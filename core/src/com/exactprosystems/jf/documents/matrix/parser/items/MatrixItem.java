@@ -300,12 +300,13 @@ public abstract class MatrixItem implements IMatrixItem, Mutable, Cloneable
     //==========================================================================================================================
 	// Public members
 	//==========================================================================================================================
-	public final void init(Matrix owner)
+	public final void init(Matrix owner, Matrix source)
 	{
 		this.owner 			= owner;
+		this.source         = source;
 		for (MatrixItem child : this.children)
 		{
-			child.init(owner);
+			child.init(owner, source);
 		}
 	}
 
@@ -315,6 +316,7 @@ public abstract class MatrixItem implements IMatrixItem, Mutable, Cloneable
 		MatrixItemAttribute annotation = this.getClass().getAnnotation(MatrixItemAttribute.class);
 		boolean hasValue = annotation.hasValue();
 		this.owner 			= owner;
+        this.source         = owner;
 		if (comments != null)
 		{
 			this.comments = new MutableArrayList<CommentString>();
@@ -599,8 +601,8 @@ public abstract class MatrixItem implements IMatrixItem, Mutable, Cloneable
 	public final void insert(int index, MatrixItem item)
 	{
 		item.parent = this;
-		item.source = this.owner;
-		item.owner = this.owner;
+		item.owner  = this.owner;
+        item.source = this.owner;
 		this.children.add(index, item);
 	}
 
@@ -798,7 +800,7 @@ public abstract class MatrixItem implements IMatrixItem, Mutable, Cloneable
 		boolean matches = id.matches(VALID_IDENTIFIER_REGEXP);
 		if (!matches)
 		{
-			listener.error(owner, number, this, "Invalid identifier : " + id);
+			listener.error(this.source, this.number, this, "Invalid identifier : " + id);
 		}
 	}
 

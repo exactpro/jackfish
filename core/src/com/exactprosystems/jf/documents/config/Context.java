@@ -297,7 +297,7 @@ public class Context implements IContext, AutoCloseable
 	            matrix = matrix.makeCopy();
 	            if (item != null)
 	            {
-	                matrix.getRoot().init(item.getMatrix());
+	                matrix.getRoot().init(item.getMatrix(), matrix);
 	            }
 	            this.libs.put(ns, matrix);
 	            

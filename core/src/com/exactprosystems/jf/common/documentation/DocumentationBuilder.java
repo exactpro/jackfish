@@ -102,10 +102,9 @@ public class DocumentationBuilder
         addAllItems(help);
         addTextLine(help, "{{&&}}");
         
-        /*addTextLine(help, "{{5Actions by groups5}}");
+        addTextLine(help, "{{5Actions by groups5}}");
         addAllActions(help);
         addTextLine(help, "{{&&}}");
-*/
 
 //        addClass(help, Do.class);
         

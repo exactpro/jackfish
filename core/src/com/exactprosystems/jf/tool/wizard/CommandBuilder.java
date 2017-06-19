@@ -40,7 +40,7 @@ public class CommandBuilder
         this.commands.add(context -> 
         {
             matrix.insert(where, index, what);
-            where.init(matrix);
+            where.init(matrix, matrix);
         });
         return this;
     }
@@ -92,7 +92,7 @@ public class CommandBuilder
         try
         {
             MatrixItem res = Parser.createItem(itemName, actionName);
-            res.init(matrix);
+            res.init(matrix, matrix);
             return res;
         }
         catch (Exception e)
