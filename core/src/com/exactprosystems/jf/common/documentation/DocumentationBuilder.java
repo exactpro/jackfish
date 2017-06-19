@@ -75,8 +75,12 @@ public class DocumentationBuilder
 
         List<OperationKind> operations = Arrays.stream(OperationKind.values()).collect(Collectors.toList());
         int size = operations.size();
-                
+
+        addTextLine(help, "{{``}}");
+        addPicture(help, "", 100, DocumentationBuilder.class.getResourceAsStream("BurntOrangeLine.png"));
         addTable(help, "{{*User Guide*}}",              false,  table1, new int[] { 50, 50 },  evaluator);
+        /*addTextLine(help, "{{``}}");
+        addPicture(help, "", 100, DocumentationBuilder.class.getResourceAsStream("BurntOrangeLine.png"));*/
         addTable(help, "{{*Document Information*}}",    false,  table2, new int[] { 25, 23, 23, 25 },  evaluator);
         addTable(help, "{{*Abbreviations*}}",           false,  table3, new int[] { 50, 50 },  evaluator);
         addTextLine(help, "{{&&}}");
@@ -101,11 +105,11 @@ public class DocumentationBuilder
         addTextLine(help, "{{5Matrix syntax5}}");
         addAllItems(help);
         addTextLine(help, "{{&&}}");
-        
-        addTextLine(help, "{{5Actions by groups5}}");
+
         addAllActions(help);
         addTextLine(help, "{{&&}}");
 
+        //todo
 //        addClass(help, Do.class);
         
         return help;
