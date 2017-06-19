@@ -469,11 +469,11 @@ public class WinRemoteApplicationJNA extends RemoteApplication
 				{
 					throw new ElementNotFoundException("Current window not found");
 				}
-				return this.operationExecutor.getRectangle(currentWindow);
+				return this.operationExecutor.getRectangle(currentWindow, true);
 			}
 			else
 			{
-				return this.operationExecutor.getRectangle(this.operationExecutor.find(owner, element));
+				return this.operationExecutor.getRectangle(this.operationExecutor.find(owner, element), true);
 			}
 		}
 		catch (RemoteException e)
@@ -663,7 +663,7 @@ public class WinRemoteApplicationJNA extends RemoteApplication
 		}
 		if (addRectangles)
 		{
-			node.setAttribute(IRemoteApplication.rectangleName, Converter.rectangleToString(this.operationExecutor.getRectangle(parent)));
+			node.setAttribute(IRemoteApplication.rectangleName, Converter.rectangleToString(this.operationExecutor.getRectangle(parent, true)));
 		}
 		String isVisible = this.driver.elementAttribute(parent, AttributeKind.VISIBLE);
 		node.setAttribute(IRemoteApplication.visibleName, "" + isVisible);

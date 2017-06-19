@@ -20,10 +20,10 @@ public class PluginInfo implements Serializable
 
     public PluginInfo(Map<LocatorFieldKind, String> fieldMap)
     {
-        this.controlMap = new HashMap<>();
+        this.controlMap = new EnumMap<>(ControlKind.class);
         this.fieldMap = fieldMap;
     }
-    
+
     public Set<String> nodeByControlKind(ControlKind kind)
     {
         if (this.controlMap == null)
@@ -37,7 +37,7 @@ public class PluginInfo implements Serializable
         return this.controlMap.get(kind).getTypes();
     }
 
-    public ControlKind controlKindByNode (String node)
+    public ControlKind controlKindByNode(String node)
     {
         if (this.controlMap == null)
         {
@@ -62,27 +62,15 @@ public class PluginInfo implements Serializable
 
     public void addTypes(ControlKind kind, String ... types)
     {
-        ControlInfo controlInfo = this.controlMap.get(kind);
-        if (controlInfo == null)
-        {
-            controlInfo = new ControlInfo();
-            this.controlMap.put(kind, controlInfo);
-        }
-        controlInfo.setTypes(types);
+        ControlInfo controlInfo = this.controlMap.computeIfAbsent(kind, k -> new ControlInfo());
+        controlInfo.addTypes(types);
     }
 
     public void addExcludes(ControlKind kind, OperationKind ... operations)
     {
-        ControlInfo controlInfo = this.controlMap.get(kind);
-        if (controlInfo == null)
-        {
-            controlInfo = new ControlInfo();
-            this.controlMap.put(kind, controlInfo);
-        }
-
+        ControlInfo controlInfo = this.controlMap.computeIfAbsent(kind, k -> new ControlInfo());
         controlInfo.addExcludes(operations);
     }
-    
     
     public boolean isSupported(ControlKind kind)
     {
@@ -93,34 +81,34 @@ public class PluginInfo implements Serializable
         return controlMap.containsKey(kind) && !controlMap.get(kind).getExcludes().contains(operation);
     }
 
-    private static  class ControlInfo implements Serializable
+    private static class ControlInfo implements Serializable
     {
         private static final long serialVersionUID = -6381695821017225511L;
 
-        public Set<String> types;
-        public Set<OperationKind> excludes;
+        private Set<String> types;
+        private Set<OperationKind> excludes;
 
-        public ControlInfo() 
+        private ControlInfo()
         {
             this.types = new HashSet<>();
             this.excludes = new HashSet<>();
         }
 
-        public Set<String> getTypes() 
+        private Set<String> getTypes()
         {
             return types;
         }
 
-        public Set<OperationKind> getExcludes() {
+        private Set<OperationKind> getExcludes() {
             return excludes;
         }
 
-        public void setTypes(String ... types)
+        private void addTypes(String ... types)
         {
             this.types.addAll(Arrays.asList(types));
         }
 
-        public void addExcludes(OperationKind ... operations)
+        private void addExcludes(OperationKind ... operations)
         {
             this.excludes.addAll(Arrays.asList(operations));
         }

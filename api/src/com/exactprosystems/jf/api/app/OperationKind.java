@@ -181,7 +181,7 @@ public enum OperationKind
 		@Override
 		public <T> boolean operateDerived(Part part, OperationExecutor<T> executor, Holder<T> holder, OperationResult result) throws Exception
 		{
-			result.setRectangle(executor.getRectangle(holder.getValue()));
+			result.setRectangle(executor.getRectangle(holder.getValue(), false));
 			return true;
 		}
 	},
