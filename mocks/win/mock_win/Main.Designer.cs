@@ -55,7 +55,7 @@
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.label4 = new System.Windows.Forms.Label();
             this.List = new System.Windows.Forms.ListBox();
-            this.Table = new System.Windows.Forms.ListView();
+            this.Table3 = new System.Windows.Forms.ListView();
             this.header1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.header2 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.header3 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
@@ -103,6 +103,10 @@
             this.colorButton = new System.Windows.Forms.Button();
             this.pushLabel = new System.Windows.Forms.Label();
             this.checkedLabel = new System.Windows.Forms.Label();
+            this.Table = new System.Windows.Forms.DataGridView();
+            this.Head1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Head2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Head3 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             ((System.ComponentModel.ISupportInitialize)(this.Table1)).BeginInit();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.Slider)).BeginInit();
@@ -115,6 +119,7 @@
             this.Splitter.Panel2.SuspendLayout();
             this.Splitter.SuspendLayout();
             this.contextMenuStrip1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.Table)).BeginInit();
             this.SuspendLayout();
             // 
             // Button
@@ -292,6 +297,8 @@
             resources.ApplyResources(this.Slider, "Slider");
             this.Slider.Maximum = 100;
             this.Slider.Name = "Slider";
+            this.Slider.DragDrop += new System.Windows.Forms.DragEventHandler(this.Slider_DragDrop);
+            this.Slider.DragOver += new System.Windows.Forms.DragEventHandler(this.Slider_DragOver);
             this.Slider.KeyDown += new System.Windows.Forms.KeyEventHandler(this.CommonKeyDown);
             this.Slider.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.CommonKeyPress);
             this.Slider.KeyUp += new System.Windows.Forms.KeyEventHandler(this.CommonKeyUp);
@@ -368,25 +375,25 @@
             this.List.MouseMove += new System.Windows.Forms.MouseEventHandler(this.CommonMouseMove);
             this.List.MouseUp += new System.Windows.Forms.MouseEventHandler(this.CommonMouseDown);
             // 
-            // Table
+            // Table3
             // 
-            this.Table.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.Table3.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.header1,
             this.header2,
             this.header3});
-            this.Table.GridLines = true;
-            this.Table.HoverSelection = true;
-            resources.ApplyResources(this.Table, "Table");
-            this.Table.LabelEdit = true;
-            this.Table.Name = "Table";
-            this.Table.UseCompatibleStateImageBehavior = false;
-            this.Table.View = System.Windows.Forms.View.Details;
-            this.Table.SelectedIndexChanged += new System.EventHandler(this.Table_SelectedIndexChanged);
-            this.Table.KeyDown += new System.Windows.Forms.KeyEventHandler(this.CommonKeyDown);
-            this.Table.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.CommonKeyPress);
-            this.Table.KeyUp += new System.Windows.Forms.KeyEventHandler(this.CommonKeyUp);
-            this.Table.MouseDown += new System.Windows.Forms.MouseEventHandler(this.CommonMouseDown);
-            this.Table.MouseMove += new System.Windows.Forms.MouseEventHandler(this.CommonMouseMove);
+            this.Table3.GridLines = true;
+            this.Table3.HoverSelection = true;
+            resources.ApplyResources(this.Table3, "Table3");
+            this.Table3.LabelEdit = true;
+            this.Table3.Name = "Table3";
+            this.Table3.UseCompatibleStateImageBehavior = false;
+            this.Table3.View = System.Windows.Forms.View.Details;
+            this.Table3.SelectedIndexChanged += new System.EventHandler(this.Table_SelectedIndexChanged);
+            this.Table3.KeyDown += new System.Windows.Forms.KeyEventHandler(this.CommonKeyDown);
+            this.Table3.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.CommonKeyPress);
+            this.Table3.KeyUp += new System.Windows.Forms.KeyEventHandler(this.CommonKeyUp);
+            this.Table3.MouseDown += new System.Windows.Forms.MouseEventHandler(this.CommonMouseDown);
+            this.Table3.MouseMove += new System.Windows.Forms.MouseEventHandler(this.CommonMouseMove);
             // 
             // header1
             // 
@@ -698,11 +705,44 @@
             resources.ApplyResources(this.checkedLabel, "checkedLabel");
             this.checkedLabel.Name = "checkedLabel";
             // 
+            // Table
+            // 
+            this.Table.AllowUserToAddRows = false;
+            this.Table.AllowUserToDeleteRows = false;
+            this.Table.AllowUserToOrderColumns = true;
+            this.Table.ColumnHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.Single;
+            this.Table.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.Table.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.Head1,
+            this.Head2,
+            this.Head3});
+            resources.ApplyResources(this.Table, "Table");
+            this.Table.Name = "Table";
+            this.Table.RowHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.Single;
+            this.Table.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing;
+            this.Table.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.Table_CellContentClick);
+            // 
+            // Head1
+            // 
+            resources.ApplyResources(this.Head1, "Head1");
+            this.Head1.Name = "Head1";
+            // 
+            // Head2
+            // 
+            resources.ApplyResources(this.Head2, "Head2");
+            this.Head2.Name = "Head2";
+            // 
+            // Head3
+            // 
+            resources.ApplyResources(this.Head3, "Head3");
+            this.Head3.Name = "Head3";
+            // 
             // Main
             // 
             resources.ApplyResources(this, "$this");
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ContextMenuStrip = this.contextMenuStrip1;
+            this.Controls.Add(this.Table);
             this.Controls.Add(this.checkedLabel);
             this.Controls.Add(this.pushLabel);
             this.Controls.Add(this.colorButton);
@@ -724,7 +764,7 @@
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.Panel);
             this.Controls.Add(this.ProgressBar);
-            this.Controls.Add(this.Table);
+            this.Controls.Add(this.Table3);
             this.Controls.Add(this.List);
             this.Controls.Add(this.TabPanel);
             this.Controls.Add(this.Tree);
@@ -758,6 +798,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.Splitter)).EndInit();
             this.Splitter.ResumeLayout(false);
             this.contextMenuStrip1.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.Table)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -829,7 +870,7 @@
         public System.Windows.Forms.Label downUpLabel;
         public System.Windows.Forms.Label sliderLabel;
         private System.Windows.Forms.ToolStripMenuItem menuItemToolStripMenuItem;
-        private System.Windows.Forms.ListView Table;
+        private System.Windows.Forms.ListView Table3;
         private System.Windows.Forms.Button countButtonClear;
         private System.Windows.Forms.Button countButton;
         public System.Windows.Forms.Label countLabel;
@@ -838,6 +879,10 @@
         private System.Windows.Forms.Button colorButton;
         public System.Windows.Forms.Label pushLabel;
         public System.Windows.Forms.Label checkedLabel;
+        private System.Windows.Forms.DataGridView Table;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Head1;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Head2;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Head3;
     }
 }
 

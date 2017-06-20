@@ -16,11 +16,14 @@ namespace mock_win
         private int counter = 0;
         private int sliderValue = -99;
         Timer timer;
+        Point mouseDownPos;
+        int mouseTimeClick;
 
         public Main()
         {
             InitializeComponent();
             fillTable();
+            fillTable1();
             fillListView();
             fillContextMenu();
             ComboBox.SelectedIndex = 0;
@@ -55,19 +58,28 @@ namespace mock_win
             list.Add(new String[] { "tr_1_td_1", "tr_1_td_2", "tr_1_td_3" });
             list.Add(new String[] { "tr_2_td_1", "tr_2_td_2", "tr_2_td_3" });
             list.Add(new String[] { "tr_3_td_1", "tr_3_td_2", "tr_3_td_3" });
-            list.Add(new String[] { "Green", "", "51" });
-            list.Add(new String[] { "Stark", "North", "35" });
 
             foreach (String[] item in list)
             {
                 ListViewItem lvi = new ListViewItem(item[0]);
                 lvi.SubItems.Add(item[1]);
                 lvi.SubItems.Add(item[2]);
-                Table.Items.Add(lvi);
+                Table3.Items.Add(lvi);
             }
         }
 
         private void fillTable()
+        {
+            for (int i = 0; i < 3; i++)
+            {
+                Table.Rows.Add();
+                Table.Rows[i].Cells["Head1"].Value = "tr_" + (i + 1) + "_td_1";
+                Table.Rows[i].Cells["Head2"].Value = "tr_" + (i + 1) + "_td_2";
+                Table.Rows[i].Cells["Head3"].Value = "tr_" + (i + 1) + "_td_3";
+            }
+        }
+
+        private void fillTable1()
         {
             Table1.Columns[3].DefaultCellStyle.Format = "yyyy.MM.dd HH:mm:ss";
             for (int i=0; i<5; i++)
@@ -121,6 +133,16 @@ namespace mock_win
                 if (e.Clicks == 1)
                 {
                     CentralLabel.Text = text + "_click";
+
+                    int dx = e.X - mouseDownPos.X;
+                    int dy = e.Y - mouseDownPos.Y;
+                    if (Math.Abs(dx) <= SystemInformation.DoubleClickSize.Width && Math.Abs(dy) <= SystemInformation.DoubleClickSize.Height)
+                    {
+                        if (mouseTimeClick - DateTime.Now.Millisecond <= 1000)
+                        {
+                            CentralLabel.Text = text + "_double_click";
+                        }
+                    }
                 }
                 else
                 {
@@ -131,6 +153,8 @@ namespace mock_win
             {
                 CentralLabel.Text = text + "_rightClick";
             }
+            mouseDownPos = e.Location;
+            mouseTimeClick = DateTime.Now.Millisecond;
         }
 
         private void CommonKeyDown(object sender, KeyEventArgs e)
@@ -307,9 +331,19 @@ namespace mock_win
 
         }
 
-        //private void Slider_ValueChanged(object sender, EventArgs e)
-        //{
-        //    sliderLabel.Text = "Slider_" + ((TrackBar)sender).Value;
-        //}
+        private void Slider_DragDrop(object sender, DragEventArgs e)
+        {
+            Console.WriteLine("drop");
+        }
+
+        private void Slider_DragOver(object sender, DragEventArgs e)
+        {
+            Console.WriteLine("over");
+        }
+
+        private void Table_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
+
+        }
     }
 }
