@@ -79,8 +79,8 @@ public class DocumentationBuilder
         addTextLine(help, "{{``}}");
         addPicture(help, "", 100, DocumentationBuilder.class.getResourceAsStream("BurntOrangeLine.png"));
         addTable(help, "{{*User Guide*}}",              false,  table1, new int[] { 50, 50 },  evaluator);
-        /*addTextLine(help, "{{``}}");
-        addPicture(help, "", 100, DocumentationBuilder.class.getResourceAsStream("BurntOrangeLine.png"));*/
+        addTextLine(help, "{{``}}");
+        addPicture(help, "", 100, DocumentationBuilder.class.getResourceAsStream("BurntOrangeLine.png"));
         addTable(help, "{{*Document Information*}}",    false,  table2, new int[] { 25, 23, 23, 25 },  evaluator);
         addTable(help, "{{*Abbreviations*}}",           false,  table3, new int[] { 50, 50 },  evaluator);
         addTextLine(help, "{{&&}}");
@@ -98,9 +98,14 @@ public class DocumentationBuilder
         addTextLine(help, "{{&&}}");
 
         addTextLine(help, "{{5All controls5}}");
+        addText(help, DocumentationBuilder.class.getResourceAsStream("controls.txt"));
+        addTextLine(help, "{{&&}}");
         addAllControlsTable(help, "All controls", context, operations.subList(0, size/3), true, true);
+        addTextLine(help, "{{&&}}");
         addAllControlsTable(help, "All controls - continue", context, operations.subList(size/3, size*2/3), true, true);
+        addTextLine(help, "{{&&}}");
         addAllControlsTable(help, "All controls - end", context, operations.subList(size*2/3, size), true, true);
+        addTextLine(help, "{{&&}}");
 
         addTextLine(help, "{{5Matrix syntax5}}");
         addAllItems(help);
