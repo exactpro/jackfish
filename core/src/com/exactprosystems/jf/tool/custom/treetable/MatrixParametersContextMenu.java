@@ -12,6 +12,7 @@ package com.exactprosystems.jf.tool.custom.treetable;
 import com.exactprosystems.jf.actions.AbstractAction;
 import com.exactprosystems.jf.actions.ReadableValue;
 import com.exactprosystems.jf.api.error.app.ProxyException;
+import com.exactprosystems.jf.api.wizard.Wizard;
 import com.exactprosystems.jf.api.wizard.WizardManager;
 import com.exactprosystems.jf.common.Settings;
 import com.exactprosystems.jf.documents.config.Context;
@@ -45,6 +46,7 @@ import org.fxmisc.richtext.StyledTextArea;
 
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 public class MatrixParametersContextMenu extends MatrixContextMenu
@@ -86,14 +88,21 @@ public class MatrixParametersContextMenu extends MatrixContextMenu
 
 		//TODO add icon
 		MenuItem parameterWizard = new MenuItem("For parameter");
-		parameterWizard.setOnAction(event -> {
-			WizardManager manager = context.getFactory().getWizardManager();
-			manager.runWizardDefault(context
-					, () -> new Object[]{ matrix, tree.getSelectionModel().getSelectedItem().getValue(), row.getItem().getParameters().getByIndex(this.index)}
-					, (suitableWizards) -> DialogsHelper.selectFromList("Choose suitable wizard", null, suitableWizards, manager::nameOf)
-					, DialogsHelper::showInfo
-			);
-		});
+        parameterWizard.setOnAction(event ->
+        {
+            WizardManager manager = context.getFactory().getWizardManager();
+            Object[] criteries = new Object[] { matrix, tree.getSelectionModel().getSelectedItem().getValue(),
+                    row.getItem().getParameters().getByIndex(this.index) };
+            
+            List<Class<? extends Wizard>> suitable  = manager.suitableWizards(criteries);
+            if (suitable.isEmpty())
+            {
+                DialogsHelper.showInfo("No one wizard is accesible here");
+                return;
+            }
+            Class<? extends Wizard> wizardClass = DialogsHelper.selectFromList("Choose wizard", null, suitable, wizard ->  manager.nameOf(wizard));
+            manager.runWizard(wizardClass, context, criteries);
+        });
 
 		getItems().add(0, this.parRemove);
 		getItems().add(1, this.parMoveLeft);

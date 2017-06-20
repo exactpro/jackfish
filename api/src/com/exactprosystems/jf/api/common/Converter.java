@@ -51,7 +51,6 @@ public class Converter
 	public static byte[] convertXmlDocumentToZipByteArray(Document tree) throws Exception
 	{
 		byte[] bytes = convertToByteArray(tree);
-		System.err.println("Convert tree to byte array size : " + bytes.length);
 
 		ByteArrayOutputStream outputStream;
 
@@ -64,7 +63,6 @@ public class Converter
 			outputStream = baos;
 		}
 		byte[] newBytes = outputStream.toByteArray();
-		System.err.println("Zip byte array size : " + newBytes.length);
 		return newBytes;
 	}
 

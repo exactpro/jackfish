@@ -8,11 +8,11 @@
 
 package com.exactprosystems.jf.tool.wizard.all;
 
-import com.exactprosystems.jf.api.app.IGuiDictionary;
-import com.exactprosystems.jf.api.app.IWindow;
+import com.exactprosystems.jf.api.app.AppConnection;
 import com.exactprosystems.jf.api.common.IContext;
 import com.exactprosystems.jf.api.wizard.*;
-import com.exactprosystems.jf.tool.helpers.DialogsHelper;
+import com.exactprosystems.jf.documents.guidic.Window;
+import com.exactprosystems.jf.tool.dictionary.DictionaryFx;
 import com.exactprosystems.jf.tool.wizard.AbstractWizard;
 import com.exactprosystems.jf.tool.wizard.CommandBuilder;
 
@@ -30,12 +30,13 @@ import java.util.function.Supplier;
         detailedDescription = "Here you descrioption might be",
         experimental 		= true,
         strongCriteries 	= true,
-        criteries 			= { IGuiDictionary.class, IWindow.class }
+        criteries 			= { DictionaryFx.class, Window.class }
     )
 public class DictionaryWizard extends AbstractWizard
 {
-    private IGuiDictionary  currentDictionary   = null;
-    private IWindow         currentWindow       = null;
+    private AppConnection   currentConnection   = null;
+    private DictionaryFx    currentDictionary   = null;
+    private Window          currentWindow       = null;
     
     public DictionaryWizard()
     {
@@ -46,8 +47,9 @@ public class DictionaryWizard extends AbstractWizard
     {
         super.init(context, wizardManager, parameters);
         
-        this.currentDictionary = super.get(IGuiDictionary.class, parameters);
-        this.currentWindow     = super.get(IWindow.class, parameters);
+        this.currentConnection = super.get(AppConnection.class, parameters);
+        this.currentDictionary = super.get(DictionaryFx.class, parameters);
+        this.currentWindow     = super.get(Window.class, parameters);
     }
 
     @Override

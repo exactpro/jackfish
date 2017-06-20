@@ -180,23 +180,27 @@ public class WizardManagerImpl implements WizardManager
             return false;
         }
         
-        if (attr.strongCriteries() && criteries.length != attr.criteries().length)
-        {
-            return false;
-        }
-
         if (attr.experimental() && !VersionInfo.isDevVersion())
         {
         	return false;
         }
         
-        List<Class<?>> criteriaClasses = Arrays.stream(criteries)
+        Class<?>[] criteriaClasses = Arrays.stream(criteries)
                 .filter(o -> o != null)
                 .map(o -> o.getClass())
-                .collect(Collectors.toList());
-        
-        return Arrays.stream(attr.criteries())
-                .allMatch(c -> criteriaClasses.stream().anyMatch(cc -> c.isAssignableFrom(cc)));
+                .toArray(Class[]::new);
+
+        boolean res = contains(criteriaClasses, attr.criteries());
+        if (attr.strongCriteries())
+        {
+            res = res && contains(attr.criteries(), criteriaClasses);
+        }
+        return res;
+    }
+
+    private boolean contains(Class<?>[] expected, Class<?>[] actual)
+    {
+        return Arrays.stream(expected).allMatch(c -> Arrays.stream(actual).anyMatch(cc -> c.isAssignableFrom(cc) || cc.isAssignableFrom(c)));
     }
     
     private WizardAttribute attributes(Class<? extends Wizard> wizard)
