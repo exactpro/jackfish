@@ -34,9 +34,6 @@ INIT;Test case;Never;;
     #Action;$Table;$Expression
     TableConsiderColumnsAs;controls;{'Before','getAttr','getValue','get','setValue','text','getList','check','getListPar','getValuePar','getAttrPar','colorPar','getRow','getRowPar'}
 
-    #Id;#Global;#Let
-    getColorRow;1;getExp(plugin, '{Head1=value=\'tr_3_td_1\', color=Color[51, 51, 51], backColor=Color[255, 255, 255], Head2=value=\'tr_3_td_2\', color=Color[51, 51, 51], backColor=Color[255, 255, 255], Head3=value=\'tr_3_td_3\', color=Color[51, 51, 51], backColor=Color[255, 255, 255]}','{Head1=value=\'tr_3_td_1\', color=Color[51, 51, 51], backColor=Color[255, 255, 255], Head2=value=\'tr_3_td_2\', color=Color[51, 51, 51], backColor=Color[255, 255, 255], Head3=value=\'tr_3_td_3\', color=Color[51, 51, 51], backColor=Color[255, 255, 255]}',ErrorKind.FEATURE_NOT_SUPPORTED)
-
     #Id;#Global;#RawTable
     operations;1;Table
     @;On;Name;Operation;Actual;Par
@@ -75,7 +72,7 @@ INIT;Test case;Never;;
     32;x;Do.getRow;Do.getRow(new StringCondition('Head3',par));control.getRow;control.getRowPar
     33;x;Do.getRowIndexes;Do.getRowIndexes(new StringCondition('Head3',par));'[2]';control.getRowPar
     34;x;Do.getRowByIndex;Do.getRowByIndex(2);control.getRow;
-    35;x;Do.getRowWithColor;Do.getRowWithColor(2);getColorRow;
+    35;x;Do.getRowWithColor;Do.getRowWithColor(2);getExp(plugin, '{Head1=value=\'tr_3_td_1\', color=Color[51, 51, 51], backColor=Color[255, 255, 255], Head2=value=\'tr_3_td_2\', color=Color[51, 51, 51], backColor=Color[255, 255, 255], Head3=value=\'tr_3_td_3\', color=Color[51, 51, 51], backColor=Color[255, 255, 255]}','{Head1=value=\'tr_3_td_1\', color=Color[51, 51, 51], backColor=Color[255, 255, 255], Head2=value=\'tr_3_td_2\', color=Color[51, 51, 51], backColor=Color[255, 255, 255], Head3=value=\'tr_3_td_3\', color=Color[51, 51, 51], backColor=Color[255, 255, 255]}',ErrorKind.FEATURE_NOT_SUPPORTED);
     36;;Do.getColor;Do.use('colorButton').getColor(5,5);'java.awt.Color[r=255,g=0,b=0]';
     37;x;Do.getTableSize;Do.getTableSize();3;
     38;x;Do.getTable;Do.getTable();'Table [Head1, Head2, Head3]:3';
