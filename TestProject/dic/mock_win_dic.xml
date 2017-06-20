@@ -23,7 +23,7 @@
             <progressBar id="ProgressBar" uid="ProgressBar" owner="owner" class="" name="" addition="Many"/>
             <panel id="Panel" uid="Panel" owner="owner" class="" name="" addition="Many"/>
             <dialog id="DialogD" uid="" name="Save As" title="" addition="Many"/>
-            <listView id="ListView" uid="ListView" owner="owner" class="" addition="Many"/>
+            <listView id="List" uid="List" owner="owner" class="" addition="Many"/>
             <menu id="Menu" uid="" xpath=".//MenuBar[@uid=&amp;quot;Menu&amp;quot;]" owner="owner" class="" name="" action="" text="" addition="Many"/>
             <menuItem id="MenuItem" xpath=".//MenuItem[@name=&amp;quot;six&amp;quot;]" owner="owner" class="" name="" action="" text="" addition="Many"/>
             <treeItem id="TreeItem" owner="owner"/>
@@ -46,6 +46,7 @@
             <label id="pushLabel" uid="pushLabel" name="" addition="Many"/>
             <label id="centralLabel" uid="CentralLabel" owner="owner" class="" name="" text="" addition="Many"/>
             <label id="checkedLabel" uid="checkedLabel" owner="" name=""/>
+            <menu id="Menu2" uid="" xpath="" owner="owner" class="" name="Menu2" action="" text=""/>
         </run>
         <onClose/>
         <close/>

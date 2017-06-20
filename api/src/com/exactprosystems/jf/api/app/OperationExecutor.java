@@ -21,7 +21,7 @@ public interface OperationExecutor<T>
     void                        setPluginInfo   (PluginInfo info);
     boolean                     isAllowed       (ControlKind kind, OperationKind operation);
     boolean						isSupported		(ControlKind kind);
-	Rectangle					getRectangle	(T component, boolean global) throws Exception;
+	Rectangle					getRectangle	(T component) throws Exception;
 	
 	Color 						getColor		(String color) throws Exception;
 

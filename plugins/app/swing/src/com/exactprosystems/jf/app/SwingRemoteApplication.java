@@ -458,7 +458,7 @@ public class SwingRemoteApplication extends RemoteApplication
 			{
 				component = this.operationExecutor.find(owner, element);
 			}
-			return this.operationExecutor.getRectangle(component, true);
+			return this.operationExecutor.getRectangle(component);
 		}
 		catch (RemoteException e)
 		{

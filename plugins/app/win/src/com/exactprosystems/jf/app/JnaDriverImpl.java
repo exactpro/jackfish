@@ -538,12 +538,12 @@ public JnaDriverImpl(Logger logger) throws Exception
 
 	private JnaDriver jnaDriver;
 
-	public String getRectangle(UIProxyJNA element) throws RemoteException {
-		long start = System.currentTimeMillis();
-		String result = ConvertString.replaceUnicodeSubStringsToCharSymbols(this.jnaDriver.getRectangle(element.getIdString()));
-		this.logger.info(String.format("getRectangle(%s) = %s, time (ms) : %d", element, result, System.currentTimeMillis() - start));
-		checkCSharpTimes();
-		checkError();
-		return result;
-	}
+//	public String getRectangle(UIProxyJNA element) throws RemoteException {
+//		long start = System.currentTimeMillis();
+//		String result = ConvertString.replaceUnicodeSubStringsToCharSymbols(this.jnaDriver.getRectangle(element.getIdString()));
+//		this.logger.info(String.format("getRectangle(%s) = %s, time (ms) : %d", element, result, System.currentTimeMillis() - start));
+//		checkCSharpTimes();
+//		checkError();
+//		return result;
+//	}
 }

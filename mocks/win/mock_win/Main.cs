@@ -5,6 +5,7 @@ using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -27,6 +28,7 @@ namespace mock_win
             fillListView();
             fillContextMenu();
             ComboBox.SelectedIndex = 0;
+            createDialog();
 
             this.timer = new Timer();
             this.timer.Interval = 100;
@@ -41,6 +43,13 @@ namespace mock_win
                 sliderValue = Slider.Value;
                 sliderLabel.Text = "Slider_" + Slider.Value;
             }
+        }
+
+        public static void createDialog()
+        {
+            Dialog form = new Dialog() { Left = 1000, Top = 300 };
+            form.StartPosition = FormStartPosition.Manual;
+            form.Show();
         }
 
         private void fillContextMenu()
@@ -98,7 +107,7 @@ namespace mock_win
             if (saveFileDialog1.ShowDialog() == DialogResult.Cancel) return;
         }
 
-        private void CommonMouseMove(object sender, MouseEventArgs e)
+        public void CommonMouseMove(object sender, MouseEventArgs e)
         {
             Control control = (Control)sender;
             string text;
@@ -125,7 +134,7 @@ namespace mock_win
             writeTextOncentralLabelMouse(writeControlNameOnCentralLabel(sender), e);
         }
 
-        private void writeTextOncentralLabelMouse(string text, MouseEventArgs e)
+        public void writeTextOncentralLabelMouse(string text, MouseEventArgs e)
         {
             long timeDif = DateTime.UtcNow.Ticks / TimeSpan.TicksPerMillisecond - mouseTimeClick;
             mouseTimeClick = DateTime.UtcNow.Ticks / TimeSpan.TicksPerMillisecond;
@@ -161,32 +170,59 @@ namespace mock_win
 
         private void CommonKeyDown(object sender, KeyEventArgs e)
         {
-            string text = writeControlNameOnCentralLabel(sender);
-            if (e.KeyValue == 17)
-            {
-                downUpLabel.Text = text + "_down_Control";
-            }
+            //Console.WriteLine("4");
+            //string text = writeControlNameOnCentralLabel(sender);
+            //if (e.KeyValue == 17)
+            //{
+            //    downUpLabel.Text = text + "_down_Control";
+            //}
         }
 
         private void CommonKeyUp(object sender, KeyEventArgs e)
         {
-            string text = writeControlNameOnCentralLabel(sender);
-            if (e.KeyValue == 17)
-            {
-                downUpLabel.Text = text + "_up_Control";
-            }
+            //Console.WriteLine("5");
+            //string text = writeControlNameOnCentralLabel(sender);
+            //if (e.KeyValue == 17)
+            //{
+            //    downUpLabel.Text = text + "_up_Control";
+            //}
         }
 
         private void CommonKeyPress(object sender, KeyPressEventArgs e)
         {
-            string text = writeControlNameOnCentralLabel(sender);
-            if (e.KeyChar == (int)Keys.Escape)
+            //Console.WriteLine("6");
+            //string text = writeControlNameOnCentralLabel(sender);
+            //if (e.KeyChar == (int)Keys.Escape)
+            //{
+            //    pressLabel.Text = text + "_press_Escape";
+            //}
+        }
+
+        public void GlobalKeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyValue == 17)
             {
-                pressLabel.Text = text + "_press_Escape";
+                downUpLabel.Text = moveLabel.Text.Split('_')[0] + "_down_Control";
             }
         }
 
-        private string writeControlNameOnCentralLabel(object sender)
+        public void GlobalKeyUp(object sender, KeyEventArgs e)
+        {
+            if (e.KeyValue == 17)
+            {
+                downUpLabel.Text = moveLabel.Text.Split('_')[0] + "_up_Control";
+            }
+        }
+
+        public void GlobalKeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (e.KeyChar == (int)Keys.Escape)
+            {
+                pressLabel.Text = moveLabel.Text.Split('_')[0] + "_press_Escape";
+            }
+        }
+
+        public string writeControlNameOnCentralLabel(object sender)
         {
             Control control = (Control)sender;
             string text;
@@ -210,15 +246,6 @@ namespace mock_win
 
         private void writeTextOncentralLabelKeyboard(string text, EventArgs e)
         {
-            if (((KeyEventArgs)e).KeyValue == 17)
-            {
-
-            }
-            //if (e == Keys.Escape)
-            //{
-            //    pressLabel.Text = text + "_press_Escape";
-            //}
-
             if (Control.ModifierKeys == Keys.Control)
             {
                 CentralLabel.Text = text + "_press_Control";

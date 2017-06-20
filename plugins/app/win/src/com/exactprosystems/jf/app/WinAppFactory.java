@@ -42,8 +42,7 @@ public class WinAppFactory implements IApplicationFactory
 
 	private static ControlKind[] supportedControls =
 		{ 
-			ControlKind.Any, ControlKind.Wait, ControlKind.Button, ControlKind.CheckBox, ControlKind.ComboBox, ControlKind.Dialog,
-			ControlKind.Frame, ControlKind.Image, ControlKind.Label, ControlKind.ListView, ControlKind.Menu, ControlKind.MenuItem, ControlKind.Panel,
+			ControlKind.Any, ControlKind.Wait, ControlKind.Button, ControlKind.CheckBox, ControlKind.ComboBox, ControlKind.Dialog, ControlKind.Label, ControlKind.ListView, ControlKind.Menu, ControlKind.MenuItem, ControlKind.Panel,
 			ControlKind.ProgressBar, ControlKind.RadioButton, ControlKind.Row, ControlKind.ScrollBar, ControlKind.Slider, ControlKind.Splitter,
 			ControlKind.Spinner, ControlKind.Table, ControlKind.TabPanel, ControlKind.TextBox, ControlKind.ToggleButton, 
 			ControlKind.Tooltip, ControlKind.Tree, ControlKind.TreeItem,
@@ -147,11 +146,7 @@ public class WinAppFactory implements IApplicationFactory
 		info.addTypes(ControlKind.CheckBox,		ControlType.CheckBox.name());
 		info.addTypes(ControlKind.ComboBox,		ControlType.ComboBox.name());
 		info.addTypes(ControlKind.Dialog,		ControlType.Window.name());
-		info.addTypes(ControlKind.Frame,		ControlType.Window.name());
-
 		info.addTypes(ControlKind.Label,		ControlType.Text.name());
-		info.addExcludes(ControlKind.Label, 	OperationKind.KEY_DOWN, OperationKind.KEY_UP, OperationKind.PRESS);
-
 		info.addTypes(ControlKind.MenuItem,		ControlType.MenuItem.name());
 		info.addTypes(ControlKind.Panel,		ControlType.Pane.name());
 		info.addTypes(ControlKind.RadioButton,	ControlType.RadioButton.name());
@@ -165,7 +160,6 @@ public class WinAppFactory implements IApplicationFactory
 		info.addTypes(ControlKind.ListView,		ControlType.List.name(), ControlType.DataGrid.name());
 		info.addTypes(ControlKind.Tree,			ControlType.Tree.name());
 		info.addTypes(ControlKind.Tooltip,		ControlType.ToolTip.name());
-		info.addTypes(ControlKind.Image,		ControlType.Image.name());
 		info.addTypes(ControlKind.Spinner,		ControlType.Spinner.name());
 		info.addTypes(ControlKind.ProgressBar,	ControlType.ProgressBar.name());
 		info.addTypes(ControlKind.ScrollBar,	ControlType.ScrollBar.name());

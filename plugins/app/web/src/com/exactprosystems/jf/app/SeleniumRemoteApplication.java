@@ -697,7 +697,7 @@ public class SeleniumRemoteApplication extends RemoteApplication
 				{
 					webElement = this.operationExecutor.find(owner, element);
 				}
-				return this.operationExecutor.getRectangle(webElement, true);
+				return this.operationExecutor.getRectangle(webElement);
 			}
 			catch (StaleElementReferenceException e)
 			{

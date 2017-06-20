@@ -139,7 +139,7 @@ public class SwingOperationExecutor implements OperationExecutor<ComponentFixtur
 	}
 
 	@Override
-	public Rectangle getRectangle(ComponentFixture<Component> component, boolean global) throws Exception
+	public Rectangle getRectangle(ComponentFixture<Component> component) throws Exception
 	{
 		try
 		{

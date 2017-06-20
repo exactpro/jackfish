@@ -755,9 +755,7 @@ namespace UIAdapter
                 }
                 else
                 {
-                    SetLastErrorNumber(3);
-                    MakeError(new Exception("Operation Press not allowed"));
-                    return;
+                    handler.SetFocus();
                 }
 
                 //toFront();
@@ -890,9 +888,7 @@ namespace UIAdapter
                 }
                 else
                 {
-                    SetLastErrorNumber(3);
-                    MakeError(new Exception("Operation KeyDown and KeyUp not allowed"));
-                    return;
+                    handler.SetFocus();
                 }
 
                 VirtualKeyCode keyCode = 0x00;

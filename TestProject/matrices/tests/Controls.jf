@@ -46,7 +46,7 @@ INIT;Test case;Never;;
     6;x;Do.checkAttr;Do.checkAttr('name',par);true;control.getAttrPar
     7;x;Do.checkAttrRegexp;Do.checkAttrRegexp('name','\\w*');true;control.getAttrPar
     8;x;Do.checkList;Do.checkList(par);true;control.getListPar
-    9;;Do.checkColor;Do.use('colorButton').checkColor(5,5,new Color(255,0,0));true;control.colorPar
+    9;x;Do.checkColor;Do.use('colorButton').checkColor(5,5,new Color(255,0,0));true;control.colorPar
     10;x;getAttr;Do.getAttr('name');control.getAttr;
     11;x;getValue;Do.getValue();control.getValue;
     12;x;getValueXY;Do.getValue(1,1);control.getValue;
@@ -73,23 +73,23 @@ INIT;Test case;Never;;
     33;x;Do.getRowIndexes;Do.getRowIndexes(new StringCondition('Head3',par));'[2]';control.getRowPar
     34;x;Do.getRowByIndex;Do.getRowByIndex(2);control.getRow;
     35;x;Do.getRowWithColor;Do.getRowWithColor(2);getExp(plugin, '{Head1=value=\'tr_3_td_1\', color=Color[51, 51, 51], backColor=Color[255, 255, 255], Head2=value=\'tr_3_td_2\', color=Color[51, 51, 51], backColor=Color[255, 255, 255], Head3=value=\'tr_3_td_3\', color=Color[51, 51, 51], backColor=Color[255, 255, 255]}','{Head1=value=\'tr_3_td_1\', color=Color[51, 51, 51], backColor=Color[255, 255, 255], Head2=value=\'tr_3_td_2\', color=Color[51, 51, 51], backColor=Color[255, 255, 255], Head3=value=\'tr_3_td_3\', color=Color[51, 51, 51], backColor=Color[255, 255, 255]}',ErrorKind.FEATURE_NOT_SUPPORTED);
-    36;;Do.getColor;Do.use('colorButton').getColor(5,5);'java.awt.Color[r=255,g=0,b=0]';
+    36;x;Do.getColor;Do.use('colorButton').getColor(5,5);'java.awt.Color[r=255,g=0,b=0]';
     37;x;Do.getTableSize;Do.getTableSize();3;
     38;x;Do.getTable;Do.getTable();'Table [Head1, Head2, Head3]:3';
     39;x;Do.expand;Do.expand('[JTree][colors]').getRowIndexes(new StringCondition('Head3','[JTree, colors][red]'));'[4]';
     40;x;Do.collapse;Do.collapse('[JTree][colors]').getRowIndexes(new StringCondition('Head3','[JTree, colors][red]'));'[]';
-    41;;Do.wait;Do.use('buttonShowArea').click().wait('buttonHideArea', 10000, true).use('buttonHideArea').getAttr('name').click();'hideButton';
-    42;;Do.delay;Do.use('buttonShowArea').click().delay(100).use('buttonHideArea').getAttr('name').click();'hideButton';
+    41;x;Do.wait;Do.use('buttonShowArea').click().wait('buttonHideArea', 10000, true).use('buttonHideArea').getAttr('name').click();'hideButton';
+    42;x;Do.delay;Do.use('buttonShowArea').click().delay(100).use('buttonHideArea').getAttr('name').click();'hideButton';
     43;x;Do.repeat;Do.use('countButtonClear').click().use('countButton').repeat(2, Do.click()).use('countLabel').getValue();2;
     44;x;Do.press;Do.press(Keyboard.ESCAPE).use('pressLabel').getValue();control.Name + '_press_Escape';
     45;x;Do.keyDown;Do.keyDown(Keyboard.CONTROL).use('downUpLabel').getValue();control.Name + '_down_Control';
     46;x;Do.keyUp;Do.keyUp(Keyboard.CONTROL).use('downUpLabel').getValue();control.Name + '_up_Control';
-    47;;Do.isEnabled;Do.isEnabled();true;
-    48;;Do.isVisible;Do.isVisible();true;
-    49;;Do.isEnabled;Do.use('notEnabledButton').isEnabled();false;
-    50;;Do.isVisible;Do.use('invisibleButton').isVisible();getExp(plugin,false,false,ErrorKind.ELEMENT_NOT_FOUND);
-    51;;Do.script;Do.use('countButtonClear').click().script('counter = 99').use('countButton').click().use('countLabel').getValue();100;
-    52;;Do.dragNDrop;Do.use('Slider').setValue(0).dragNdrop(10, 6, 'Slider', 395, 6).use('sliderLabel').getValue();'Slider_50';
+    47;x;Do.isEnabled;Do.isEnabled();true;
+    48;x;Do.isVisible;Do.isVisible();true;
+    49;x;Do.isEnabled;Do.use('notEnabledButton').isEnabled();false;
+    50;x;Do.isVisible;Do.use('invisibleButton').isVisible();getExp(plugin,false,false,ErrorKind.ELEMENT_NOT_FOUND);
+    51;x;Do.script;Do.use('countButtonClear').click().script('counter = 99').use('countButton').click().use('countLabel').getValue();100;
+    52;x;Do.dragNDrop;Do.use('Slider').setValue(0).dragNdrop(10, 6, 'Slider', 395, 6).use('sliderLabel').getValue();'Slider_50';
     #EndRawTable
 
     #Action;$Table;$Expression

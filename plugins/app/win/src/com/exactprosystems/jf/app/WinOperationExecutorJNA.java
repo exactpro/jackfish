@@ -65,20 +65,28 @@ public class WinOperationExecutorJNA implements OperationExecutor<UIProxyJNA>
 	}
 
 	@Override
-	public Rectangle getRectangle(UIProxyJNA component, boolean global) throws Exception
+	public Rectangle getRectangle(UIProxyJNA component) throws Exception
 	{
 		try
 		{
-			String property;
-			if(global)
+			String property = this.driver.getProperty(component, WindowProperty.BoundingRectangleProperty);
+			if (property.equalsIgnoreCase("Empty"))
 			{
-				property = this.driver.getProperty(component, WindowProperty.BoundingRectangleProperty);
+				return new Rectangle(0,0,0,0);
+			}
+			Rectangle rectangle = new Rectangle();
+			Pattern pattern = Pattern.compile(RECTANGLE_PATTERN);
+			Matcher matcher = pattern.matcher(property);
+			if (matcher.matches())
+			{
+				rectangle.setBounds(Integer.parseInt(matcher.group(1)), Integer.parseInt(matcher.group(2)), Integer.parseInt(matcher
+						.group(3)), Integer.parseInt(matcher.group(4)));
 			}
 			else
 			{
-				property = this.driver.getRectangle(component);
+				throw new RemoteException("returned rectangle not matches pattern " + RECTANGLE_PATTERN+" , rect : " + property);
 			}
-			return stringToRect(property);
+			return rectangle;
 		}
 		catch (RemoteException e)
 		{

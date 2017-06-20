@@ -470,8 +470,8 @@ public enum PieceKind implements Measure
 				return;
 			}
 
-			Rectangle s = executor.getRectangle(self.get(0), true);
-			Rectangle o = executor.getRectangle(others.get(0), true);
+			Rectangle s = executor.getRectangle(self.get(0));
+			Rectangle o = executor.getRectangle(others.get(0));
 
 			if (	s.x > o.x || (s.x + s.width) < (o.x + o.width)
 				|| 	s.y > o.y || (s.y + s.height) < (o.y + o.height) )
@@ -1039,8 +1039,8 @@ public enum PieceKind implements Measure
 			return;
 		}
 
-		Rectangle selfArea = executor.getRectangle(self.get(0), true);
-		Rectangle otherArea = (others.size() > 0) ? executor.getRectangle(others.get(0), true) : null;
+		Rectangle selfArea = executor.getRectangle(self.get(0));
+		Rectangle otherArea = (others.size() > 0) ? executor.getRectangle(others.get(0)) : null;
 
 		long value = func.distance(selfArea, otherArea);
 

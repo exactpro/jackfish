@@ -62,8 +62,8 @@
             this.ProgressBar = new System.Windows.Forms.ProgressBar();
             this.Panel = new System.Windows.Forms.Panel();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.Menu = new System.Windows.Forms.MenuStrip();
-            this.MenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.MenuMain = new System.Windows.Forms.MenuStrip();
+            this.Menu = new System.Windows.Forms.ToolStripMenuItem();
             this.optionsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.oneToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.twoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -76,8 +76,8 @@
             this.openToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.menu2 = new System.Windows.Forms.ToolStripMenuItem();
-            this.menuItemToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.Menu2 = new System.Windows.Forms.ToolStripMenuItem();
+            this.MenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.HScrollBar = new System.Windows.Forms.HScrollBar();
             this.VScrollBar = new System.Windows.Forms.VScrollBar();
             this.Splitter = new System.Windows.Forms.SplitContainer();
@@ -113,7 +113,7 @@
             this.TabPanel.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.tabPage2.SuspendLayout();
-            this.Menu.SuspendLayout();
+            this.MenuMain.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.Splitter)).BeginInit();
             this.Splitter.Panel1.SuspendLayout();
             this.Splitter.Panel2.SuspendLayout();
@@ -429,28 +429,28 @@
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.TabStop = false;
             // 
+            // MenuMain
+            // 
+            this.MenuMain.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.Menu,
+            this.Menu2});
+            resources.ApplyResources(this.MenuMain, "MenuMain");
+            this.MenuMain.Name = "MenuMain";
+            this.MenuMain.ShowItemToolTips = true;
+            this.MenuMain.MouseDown += new System.Windows.Forms.MouseEventHandler(this.CommonMouseDown);
+            this.MenuMain.MouseMove += new System.Windows.Forms.MouseEventHandler(this.CommonMouseMove);
+            // 
             // Menu
             // 
-            this.Menu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.MenuItem,
-            this.menu2});
-            resources.ApplyResources(this.Menu, "Menu");
-            this.Menu.Name = "Menu";
-            this.Menu.ShowItemToolTips = true;
-            this.Menu.MouseDown += new System.Windows.Forms.MouseEventHandler(this.CommonMouseDown);
-            this.Menu.MouseMove += new System.Windows.Forms.MouseEventHandler(this.CommonMouseMove);
-            // 
-            // MenuItem
-            // 
-            this.MenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.Menu.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.optionsToolStripMenuItem,
             this.toolStripSeparator1,
             this.saveToolStripMenuItem,
             this.openToolStripMenuItem,
             this.toolStripSeparator2,
             this.exitToolStripMenuItem});
-            this.MenuItem.Name = "MenuItem";
-            resources.ApplyResources(this.MenuItem, "MenuItem");
+            this.Menu.Name = "Menu";
+            resources.ApplyResources(this.Menu, "Menu");
             // 
             // optionsToolStripMenuItem
             // 
@@ -522,18 +522,18 @@
             this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
             resources.ApplyResources(this.exitToolStripMenuItem, "exitToolStripMenuItem");
             // 
-            // menu2
+            // Menu2
             // 
-            this.menu2.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.menuItemToolStripMenuItem});
-            this.menu2.Name = "menu2";
-            resources.ApplyResources(this.menu2, "menu2");
-            this.menu2.Click += new System.EventHandler(this.aboutToolStripMenuItem_Click);
+            this.Menu2.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.MenuItem});
+            this.Menu2.Name = "Menu2";
+            resources.ApplyResources(this.Menu2, "Menu2");
+            this.Menu2.Click += new System.EventHandler(this.aboutToolStripMenuItem_Click);
             // 
-            // menuItemToolStripMenuItem
+            // MenuItem
             // 
-            this.menuItemToolStripMenuItem.Name = "menuItemToolStripMenuItem";
-            resources.ApplyResources(this.menuItemToolStripMenuItem, "menuItemToolStripMenuItem");
+            this.MenuItem.Name = "MenuItem";
+            resources.ApplyResources(this.MenuItem, "MenuItem");
             // 
             // HScrollBar
             // 
@@ -783,9 +783,13 @@
             this.Controls.Add(this.CheckBox);
             this.Controls.Add(this.TextBox);
             this.Controls.Add(this.Button);
-            this.Controls.Add(this.Menu);
-            this.MainMenuStrip = this.Menu;
+            this.Controls.Add(this.MenuMain);
+            this.KeyPreview = true;
+            this.MainMenuStrip = this.MenuMain;
             this.Name = "Main";
+            this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.GlobalKeyDown);
+            this.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.GlobalKeyPress);
+            this.KeyUp += new System.Windows.Forms.KeyEventHandler(this.GlobalKeyUp);
             ((System.ComponentModel.ISupportInitialize)(this.Table1)).EndInit();
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
@@ -795,8 +799,8 @@
             this.tabPage1.PerformLayout();
             this.tabPage2.ResumeLayout(false);
             this.tabPage2.PerformLayout();
-            this.Menu.ResumeLayout(false);
-            this.Menu.PerformLayout();
+            this.MenuMain.ResumeLayout(false);
+            this.MenuMain.PerformLayout();
             this.Splitter.Panel1.ResumeLayout(false);
             this.Splitter.Panel1.PerformLayout();
             this.Splitter.Panel2.ResumeLayout(false);
@@ -838,8 +842,8 @@
         private System.Windows.Forms.ProgressBar ProgressBar;
         private System.Windows.Forms.Panel Panel;
         private System.Windows.Forms.GroupBox groupBox1;
-        private System.Windows.Forms.MenuStrip Menu;
-        private System.Windows.Forms.ToolStripMenuItem MenuItem;
+        private System.Windows.Forms.MenuStrip MenuMain;
+        private System.Windows.Forms.ToolStripMenuItem Menu;
         private System.Windows.Forms.ToolStripMenuItem optionsToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
         private System.Windows.Forms.ToolStripMenuItem oneToolStripMenuItem;
@@ -849,7 +853,7 @@
         private System.Windows.Forms.ToolStripMenuItem openToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
         private System.Windows.Forms.ToolStripMenuItem exitToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem menu2;
+        private System.Windows.Forms.ToolStripMenuItem Menu2;
         private System.Windows.Forms.ToolStripMenuItem fourToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem fiveToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem sixToolStripMenuItem;
@@ -875,7 +879,7 @@
         public System.Windows.Forms.Label pressLabel;
         public System.Windows.Forms.Label downUpLabel;
         public System.Windows.Forms.Label sliderLabel;
-        private System.Windows.Forms.ToolStripMenuItem menuItemToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem MenuItem;
         private System.Windows.Forms.ListView Table3;
         private System.Windows.Forms.Button countButtonClear;
         private System.Windows.Forms.Button countButton;

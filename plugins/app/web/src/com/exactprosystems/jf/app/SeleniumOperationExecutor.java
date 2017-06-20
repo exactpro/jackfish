@@ -79,7 +79,7 @@ public class SeleniumOperationExecutor implements OperationExecutor<WebElement>
 	}
 
 	@Override
-	public Rectangle getRectangle(WebElement component, boolean global) throws Exception
+	public Rectangle getRectangle(WebElement component) throws Exception
 	{
 		try
 		{
