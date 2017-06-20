@@ -30,10 +30,13 @@ import javafx.stage.Stage;
 
 import java.util.Date;
 
+import org.apache.log4j.Logger;
+
 public class WizardDialog extends Dialog<Boolean>
 {
 	private Wizard     wizard;
 	private BorderPane borderPane;
+    private static final Logger logger = Logger.getLogger(WizardDialog.class);
 
 	public WizardDialog(Wizard wizard, Context context)
 	{
@@ -45,10 +48,11 @@ public class WizardDialog extends Dialog<Boolean>
 		this.getDialogPane().getStylesheets().addAll(Common.currentThemesPaths());
 		Stage stage = ((Stage) this.getDialogPane().getScene().getWindow());
 		Common.addIcons(stage);
-		stage.setOnCloseRequest(event -> {
-			this.setResult(false);
-			this.close();
-		});
+        stage.setOnCloseRequest(event ->
+        {
+            this.setResult(false);
+            this.close();
+        });
 		stage.setMinHeight(350.0);
 		stage.setMinWidth(350.0);
 
@@ -120,6 +124,7 @@ public class WizardDialog extends Dialog<Boolean>
 			}
 			catch (Exception e)
 			{
+			    logger.error(e.getMessage(), e);
 				DialogsHelper.showError(e.getMessage());
 			}
 		});

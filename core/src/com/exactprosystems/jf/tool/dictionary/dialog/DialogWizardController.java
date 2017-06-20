@@ -502,13 +502,18 @@ public class DialogWizardController implements Initializable, ContainingParent
 	private void initDialog()
 	{
 		this.dialog = new Alert(Alert.AlertType.CONFIRMATION);
-		Common.addIcons(((Stage) this.dialog.getDialogPane().getScene().getWindow()));
+        Stage stage = ((Stage) this.dialog.getDialogPane().getScene().getWindow());
+		Common.addIcons(stage);
 		this.dialog.setResult(new ButtonType("", ButtonBar.ButtonData.CANCEL_CLOSE));
 		this.dialog.setResizable(true);
 		this.dialog.getDialogPane().getStylesheets().addAll(Common.currentThemesPaths());
 		this.dialog.setTitle("Dialog wizard " + this.windowName);
-		this.dialog.setWidth(1500.0);
+		this.dialog.setWidth(1200.0);
 		this.dialog.setHeight(1000.0);
+		
+        stage.setMinWidth(1230);
+		stage.setMinHeight(725);
+		
 		Label header = new Label();
 		header.setMinHeight(0.0);
 		header.setPrefHeight(0.0);
