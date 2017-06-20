@@ -60,6 +60,7 @@ import java.time.ZoneId;
 import java.util.*;
 import java.util.List;
 import java.util.function.Consumer;
+import java.util.function.Supplier;
 
 public abstract class Common
 {
@@ -360,6 +361,7 @@ public abstract class Common
 		void call() throws ProxyException, Exception;
 	}
 
+    @FunctionalInterface
 	public interface SupplierWithException<T>
 	{
 		T get() throws Exception;
