@@ -710,6 +710,7 @@
             this.Table.AllowUserToAddRows = false;
             this.Table.AllowUserToDeleteRows = false;
             this.Table.AllowUserToOrderColumns = true;
+            this.Table.BackgroundColor = System.Drawing.Color.White;
             this.Table.ColumnHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.Single;
             this.Table.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.Table.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
@@ -721,6 +722,11 @@
             this.Table.RowHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.Single;
             this.Table.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing;
             this.Table.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.Table_CellContentClick);
+            this.Table.KeyDown += new System.Windows.Forms.KeyEventHandler(this.CommonKeyDown);
+            this.Table.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.CommonKeyPress);
+            this.Table.KeyUp += new System.Windows.Forms.KeyEventHandler(this.CommonKeyUp);
+            this.Table.MouseDown += new System.Windows.Forms.MouseEventHandler(this.CommonMouseDown);
+            this.Table.MouseMove += new System.Windows.Forms.MouseEventHandler(this.CommonMouseMove);
             // 
             // Head1
             // 

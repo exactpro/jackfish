@@ -1107,7 +1107,7 @@ public class WinOperationExecutorJNA implements OperationExecutor<UIProxyJNA>
 	@Override
 	public Map<String, ValueAndColor> getRowWithColor(UIProxyJNA component, Locator additional, Locator header, boolean useNumericHeader, String[] columns, int i) throws Exception
 	{
-		return null; // TODO WTF?
+		throw new FeatureNotSupportedException("getRowWithColor");
 	}
 
 	@Override

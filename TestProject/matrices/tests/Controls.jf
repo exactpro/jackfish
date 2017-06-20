@@ -15,7 +15,7 @@ INIT;Test case;Never;;
     5;x;'Do.move()';'\'tr_3_td_3\'';;'new Color(246,246,246)';ToggleButton;'ToggleButton';'\'ToggleButton\'';getExp(plugin,true,true,'On');'ToggleButton';;;;true;'new ArrayList([\'Green\',\'Yellow\', \'Orange\',\'Blue\']),false';getExp(plugin,'\'true\'','\'true\'','\'On\'')
     6;x;;'\'tr_3_td_3\'';;'new Color(246,246,246)';ComboBox;getExp(plugin,'ComboBox','ComboBox','Green');getExp(plugin,'\'ComboBox\'','\'ComboBox\'','\'Green\'');'Green';'Green';;'Green';'[Green, Yellow, Orange, Blue]';'Green';'new ArrayList([\'Green\',\'Yellow\', \'Orange\',\'Blue\']),false';'\'Green\''
     7;x;;'\'tr_3_td_3\'';'{Head1=tr_3_td_1, Head2=tr_3_td_2, Head3=tr_3_td_3}';'new Color(246,246,246)';Table;getExp(plugin,'Table','Table','DataGridView');getExp(plugin,'\'Table\'','\'Table\'','\'DataGridView\'');'tr_2_td_2';;;getExp(plugin,'tr_2_td_2','Green','0');;'tr_2_td_2';'new ArrayList([\'Green\',\'Yellow\', \'Orange\',\'Blue\']),false';'\'tr_2_td_2\''
-    8;x;'Do.setValue(0)';'\'tr_3_td_3\'';;'new Color(246,246,246)';Slider;'Slider';getExp(plugin,'\'Slider\'','\'Slider\'','\'\'');getExp(plugin,'',0,'0');;'Slider_30';;;getExp(plugin,'',0,'0');'new ArrayList([\'Green\',\'Yellow\', \'Orange\',\'Blue\']),false';getExp(plugin,'\'\'','0','0')
+    8;x;'Do.setValue(0)';'\'tr_3_td_3\'';;'new Color(246,246,246)';Slider;getExp(plugin,'Slider','Slider','');getExp(plugin,'\'Slider\'','\'Slider\'','\'\'');getExp(plugin,'',0,'0');;'Slider_30';;;getExp(plugin,'',0,'0');'new ArrayList([\'Green\',\'Yellow\', \'Orange\',\'Blue\']),false';getExp(plugin,'\'\'','0','0')
     9;x;;'\'tr_3_td_3\'';;'new Color(246,246,246)';RadioButton;'RadioButton';'\'RadioButton\'';false;'Green';;;;false;'new ArrayList([\'Green\',\'Yellow\', \'Orange\',\'Blue\']),false';'\'false\''
     10;x;;'\'tr_3_td_3\'';;'new Color(246,246,246)';ProgressBar;'ProgressBar';'\'ProgressBar\'';10;;;;;true;'new ArrayList([\'Green\',\'Yellow\', \'Orange\',\'Blue\']),false';'\'10\''
     11;x;;'\'tr_3_td_3\'';;'new Color(246,246,246)';Panel;'Panel';'\'Panel\'';'Panel';;;'Panel';;true;'new ArrayList([\'Green\',\'Yellow\', \'Orange\',\'Blue\']),false';'\'Panel\''
@@ -33,6 +33,9 @@ INIT;Test case;Never;;
 
     #Action;$Table;$Expression
     TableConsiderColumnsAs;controls;{'Before','getAttr','getValue','get','setValue','text','getList','check','getListPar','getValuePar','getAttrPar','colorPar','getRow','getRowPar'}
+
+    #Id;#Global;#Let
+    getColorRow;1;getExp(plugin, '{Head1=value=\'tr_3_td_1\', color=Color[51, 51, 51], backColor=Color[255, 255, 255], Head2=value=\'tr_3_td_2\', color=Color[51, 51, 51], backColor=Color[255, 255, 255], Head3=value=\'tr_3_td_3\', color=Color[51, 51, 51], backColor=Color[255, 255, 255]}','{Head1=value=\'tr_3_td_1\', color=Color[51, 51, 51], backColor=Color[255, 255, 255], Head2=value=\'tr_3_td_2\', color=Color[51, 51, 51], backColor=Color[255, 255, 255], Head3=value=\'tr_3_td_3\', color=Color[51, 51, 51], backColor=Color[255, 255, 255]}',ErrorKind.FEATURE_NOT_SUPPORTED)
 
     #Id;#Global;#RawTable
     operations;1;Table
@@ -72,7 +75,7 @@ INIT;Test case;Never;;
     32;x;Do.getRow;Do.getRow(new StringCondition('Head3',par));control.getRow;control.getRowPar
     33;x;Do.getRowIndexes;Do.getRowIndexes(new StringCondition('Head3',par));'[2]';control.getRowPar
     34;x;Do.getRowByIndex;Do.getRowByIndex(2);control.getRow;
-    35;x;Do.getRowWithColor;Do.getRowWithColor(2);'{Head1=value=\'tr_3_td_1\', color=Color[51, 51, 51], backColor=Color[255, 255, 255], Head2=value=\'tr_3_td_2\', color=Color[51, 51, 51], backColor=Color[255, 255, 255], Head3=value=\'tr_3_td_3\', color=Color[51, 51, 51], backColor=Color[255, 255, 255]}';
+    35;x;Do.getRowWithColor;Do.getRowWithColor(2);getColorRow;
     36;;Do.getColor;Do.use('colorButton').getColor(5,5);'java.awt.Color[r=255,g=0,b=0]';
     37;x;Do.getTableSize;Do.getTableSize();3;
     38;x;Do.getTable;Do.getTable();'Table [Head1, Head2, Head3]:3';
@@ -264,8 +267,17 @@ SUBCASES;;;;
 
                             #Case
                             ErrorKind.FEATURE_NOT_SUPPORTED
-                                #Action;$Table;Plugin;Control;Operation;Time;Expected;Actual;Result
-                                TableAddValue;table_result;plugin;control.Name;operation.Name;DateTime.current().getTime() - startTime;'FEATURE_NOT_SUPPORTED';'FEATURE_NOT_SUPPORTED';'OK'
+                                #If
+                                operation.Actual == ErrorKind.FEATURE_NOT_SUPPORTED
+                                    #Action;$Table;Plugin;Control;Operation;Time;Expected;Actual;Result
+                                    TableAddValue;table_result;plugin;control.Name;operation.Name;DateTime.current().getTime() - startTime;'FEATURE_NOT_SUPPORTED';'FEATURE_NOT_SUPPORTED';'OK'
+
+                                #Else
+                                    #Action;$Table;Plugin;Control;Operation;Time;Expected;Actual;Result
+                                    TableAddValue;table_result;plugin;control.Name;operation.Name;DateTime.current().getTime() - startTime;'FEATURE_NOT_SUPPORTED';'FEATURE_NOT_SUPPORTED';'FAILED'
+
+
+                                #EndIf
 
                                 #Continue
 

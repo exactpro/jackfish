@@ -17,7 +17,7 @@ namespace mock_win
         private int sliderValue = -99;
         Timer timer;
         Point mouseDownPos;
-        int mouseTimeClick;
+        long mouseTimeClick;
 
         public Main()
         {
@@ -127,6 +127,8 @@ namespace mock_win
 
         private void writeTextOncentralLabelMouse(string text, MouseEventArgs e)
         {
+            long timeDif = DateTime.UtcNow.Ticks / TimeSpan.TicksPerMillisecond - mouseTimeClick;
+            mouseTimeClick = DateTime.UtcNow.Ticks / TimeSpan.TicksPerMillisecond;
             pushLabel.Text = "";
             if (e.Button == MouseButtons.Left)
             {
@@ -138,7 +140,7 @@ namespace mock_win
                     int dy = e.Y - mouseDownPos.Y;
                     if (Math.Abs(dx) <= SystemInformation.DoubleClickSize.Width && Math.Abs(dy) <= SystemInformation.DoubleClickSize.Height)
                     {
-                        if (mouseTimeClick - DateTime.Now.Millisecond <= 1000)
+                        if (timeDif <= 500)
                         {
                             CentralLabel.Text = text + "_double_click";
                         }
@@ -154,7 +156,7 @@ namespace mock_win
                 CentralLabel.Text = text + "_rightClick";
             }
             mouseDownPos = e.Location;
-            mouseTimeClick = DateTime.Now.Millisecond;
+            Console.WriteLine(timeDif);
         }
 
         private void CommonKeyDown(object sender, KeyEventArgs e)
