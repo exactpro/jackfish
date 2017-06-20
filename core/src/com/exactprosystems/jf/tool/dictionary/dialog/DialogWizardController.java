@@ -508,7 +508,7 @@ public class DialogWizardController implements Initializable, ContainingParent
 		this.dialog.setResizable(true);
 		this.dialog.getDialogPane().getStylesheets().addAll(Common.currentThemesPaths());
 		this.dialog.setTitle("Dialog wizard " + this.windowName);
-		this.dialog.setWidth(1200.0);
+		this.dialog.setWidth(1500.0);
 		this.dialog.setHeight(1000.0);
 		
         stage.setMinWidth(1230);
