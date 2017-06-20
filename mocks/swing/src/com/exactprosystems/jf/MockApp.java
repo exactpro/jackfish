@@ -7,12 +7,9 @@
 ////////////////////////////////////////////////////////////////////////////////
 package com.exactprosystems.jf;
 
-import sun.awt.TimedWindowEvent;
-
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.event.*;
-import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellEditor;
 import javax.swing.text.JTextComponent;
@@ -22,10 +19,7 @@ import java.awt.event.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.net.URL;
 import java.util.EventObject;
-
-import static java.awt.event.WindowEvent.WINDOW_GAINED_FOCUS;
 
 public class MockApp
 {
@@ -186,11 +180,11 @@ public class MockApp
 	private void allEvents(JTextArea textArea) {
 		Toolkit.getDefaultToolkit().addAWTEventListener(
 				event -> {
-					if(event instanceof TimedWindowEvent)
-					{
-						int i = 0;
-						i++;
-					}
+//					if(event instanceof TimedWindowEvent)
+//					{
+//						int i = 0;
+//						i++;
+//					}
 					if(event instanceof FocusEvent)
 					{
 						int i = 0;
@@ -430,7 +424,7 @@ public class MockApp
 					//frame2.dispatchEvent(new sun.awt.TimedWindowEvent(frame2, WINDOW_LOST_FOCUS, null, 0));
 					//frame2.dispatchEvent(new WindowEvent(frame2, WindowEvent.WINDOW_DEACTIVATED, 0, 0));
 					frame3.dispatchEvent(new WindowEvent(frame3, WindowEvent.WINDOW_ACTIVATED, 0, 0));
-					frame3.dispatchEvent(new sun.awt.TimedWindowEvent(frame3, WINDOW_GAINED_FOCUS, null, 0));
+//					frame3.dispatchEvent(new sun.awt.TimedWindowEvent(frame3, WINDOW_GAINED_FOCUS, null, 0));
 					//frame.dispatchEvent(new FocusEvent(frame, FocusEvent.FOCUS_GAINED));
 					//frame.dispatchEvent(new PaintEvent(frame, PaintEvent.PAINT, frame.getBounds()));
 					//frame2.dispatchEvent(new PaintEvent(frame2, PaintEvent.PAINT, frame2.getBounds()));
