@@ -44,7 +44,7 @@ public class ConfigurationToolBar extends ToolBar
         Context context = model.getFactory().createContext();
         WizardManager manager = model.getFactory().getWizardManager();
         
-        this.wizardButton.initButton(context, manager, () -> new Object[] { model } );
+        this.wizardButton.initButton(context, manager, () -> new Object[] { model }, null);
 		
 		
 		toggleGroup.selectedToggleProperty().addListener((observable, oldValue, newValue) ->

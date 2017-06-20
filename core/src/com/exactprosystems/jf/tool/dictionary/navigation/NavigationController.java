@@ -174,8 +174,12 @@ public class NavigationController implements Initializable, ContainingParent
 		Context context = model.getFactory().createContext();
 		WizardManager manager = model.getFactory().getWizardManager();
 		
-		this.btnWindowWizardManager.initButton(context, manager, () -> new Object[] { model, currentWindow() });
-		this.btnElementWizardManager.initButton(context, manager, () -> new Object[] { model, currentWindow(), currentSection(), currentElement() });
+		this.btnWindowWizardManager.initButton(context, manager, 
+		        () -> new Object[] { model, currentWindow() }, 
+		        () -> new Object[] { this.appConnection });
+		this.btnElementWizardManager.initButton(context, manager, 
+		        () -> new Object[] { model, currentWindow(), currentSection(), currentElement() }, 
+		        () -> new Object[] { this.appConnection });
 		
 		gridPane.add(this.pane, 0, 0);
 	}

@@ -8,6 +8,7 @@
 
 package com.exactprosystems.jf.tool.wizard.all;
 
+import com.exactprosystems.jf.api.app.AppConnection;
 import com.exactprosystems.jf.api.app.IControl;
 import com.exactprosystems.jf.api.app.IGuiDictionary;
 import com.exactprosystems.jf.api.app.ISection;
@@ -58,7 +59,7 @@ import java.util.function.Supplier;
         shortDescription 	= "This wizard help to build xpath expression to find an element on screen.",
         detailedDescription = "Here you descrioption might be",
         experimental 		= true,
-        strongCriteries 	= false,
+        strongCriteries 	= true,
         criteries 			= { DictionaryFx.class, Window.class, SectionKind.class, AbstractControl.class }
     )
 public class XpathWizard extends AbstractWizard
@@ -67,18 +68,19 @@ public class XpathWizard extends AbstractWizard
     {
         public OneLine(int count)
         {
-            this.btnXpath          = new Button("//div[" + count + "]");
-            this.btnSaveXpath      = new Button("//a[" + count + "]");
-            this.labelXpathCount   = new Label("" + count);
-            this.hbox = new HBox(this.btnXpath, this.btnSaveXpath, this.labelXpathCount);
+            this.btnXpath          = new Button(" ");
+            this.btnCopyToRelative = new Button("Rel");
+            this.labelXpathCount   = new Label(" ");
+            this.hbox = new HBox(this.btnXpath, this.btnCopyToRelative, this.labelXpathCount);
         }
         
         public Label  labelXpathCount;
         public Button btnXpath;
-        public Button btnSaveXpath;
+        public Button btnCopyToRelative;
         public HBox   hbox;
     }
     
+    private AppConnection   currentConnection   = null;
     private DictionaryFx    currentDictionary   = null;
     private Window          currentWindow       = null;
     private Section         currentSection      = null;
@@ -104,6 +106,7 @@ public class XpathWizard extends AbstractWizard
     {
         super.init(context, wizardManager, parameters);
         
+        this.currentConnection = super.get(AppConnection.class, parameters);
         this.currentDictionary = super.get(DictionaryFx.class, parameters);
         this.currentWindow     = super.get(Window.class, parameters);
         SectionKind kind       = super.get(SectionKind.class, parameters);
@@ -195,7 +198,12 @@ public class XpathWizard extends AbstractWizard
     @Override
     public boolean beforeRun()
     {
-//            DialogsHelper.showError("Some error message");
+        if (this.currentConnection == null)
+        {
+            DialogsHelper.showError("Esteblish connection at first");
+            return false;
+        }
+        
         return true;
     }
 
@@ -218,7 +226,7 @@ public class XpathWizard extends AbstractWizard
         
         for (int i = 0; i < this.lines.length; i++)
         {
-            this.lines[i].btnSaveXpath.setOnAction(ev -> 
+            this.lines[i].btnCopyToRelative.setOnAction(ev -> 
             {
                 String text = ((Button) ev.getSource()).getText();
                 this.cfRelativeFrom.setText(text);
