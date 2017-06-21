@@ -45,11 +45,11 @@ namespace mock_win
             }
         }
 
-        public static void createDialog()
+        public void createDialog()
         {
             Dialog form = new Dialog() { Left = 1000, Top = 300 };
             form.StartPosition = FormStartPosition.Manual;
-            form.Show();
+            form.Show(this);
         }
 
         private void fillContextMenu()
