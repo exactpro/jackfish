@@ -6,7 +6,7 @@
 //  information which is the property of Exactpro Systems, LLC or its licensors.
 ////////////////////////////////////////////////////////////////////////////////
 
-package com.exactprosystems.jf.api.common.exception;
+package com.exactprosystems.jf.common.utils;
 
 import java.util.Arrays;
 
