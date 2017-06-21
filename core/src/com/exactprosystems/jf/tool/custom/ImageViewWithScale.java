@@ -30,7 +30,6 @@ import java.io.IOException;
 import java.util.*;
 import java.util.List;
 import java.util.function.Consumer;
-import java.util.function.DoubleConsumer;
 import java.util.stream.Collectors;
 
 public class ImageViewWithScale extends BorderPane
@@ -63,7 +62,7 @@ public class ImageViewWithScale extends BorderPane
 	private Map<Rectangle, Set<Rectangle>> rectanglesMap = new HashMap<>();
 
 	private Consumer<Rectangle> clickConsumer;
-	private DoubleConsumer scaleConsumer; // TODO what for?
+
 	//endregion
 
 	public ImageViewWithScale()
@@ -181,11 +180,7 @@ public class ImageViewWithScale extends BorderPane
 	{
 		this.markedList.forEach(r -> r.setOpacity(TreeTableViewWithRectangles.TRANSPARENT_RECT));
 		hideRectangle();
-		if (rectangle == null || isRectEmpty(rectangle))
-		{
-			//do nothing
-		}
-		else
+		if (!isRectEmpty(rectangle))
 		{
 			CustomRectangle eq = new CustomRectangle(rectangle, this.scalePane.getScale());
 			if (this.markedList.contains(eq))
@@ -195,7 +190,6 @@ public class ImageViewWithScale extends BorderPane
 			}
 			else
 			{
-
 				if (this.rectangle != null)
 				{
 					this.rectangle.updateRectangle(rectangle, this.scalePane.getScale());
@@ -205,33 +199,30 @@ public class ImageViewWithScale extends BorderPane
 		}
 	}
 
-	public void displayMarkedRectangle(List<CustomRectangle> list)
-	{
-		this.markedList.stream()
-				.peek(r -> r.setVisible(false))
-				.forEach(r -> r.removeGroup(this.group));
-		this.markedList.clear();
-		list.stream()
-				.peek(r -> {
-					r.setGroup(this.group);
-					r.update(this.scalePane.getScale());
-					r.setTextVisible(r.isVisible() && this.cbIds.isSelected());
-				})
-				.forEach(r -> this.markedList.add(r));
-	}
+    public void displayMarkedRectangle(List<Rectangle> list)
+    {
+        double scale = this.scalePane.getScale();
+        
+        System.err.println(">> " + scale + " " + list);
+        
+        this.markedList.stream().peek(r -> r.setVisible(false)).forEach(r -> r.removeGroup(this.group));
+        this.markedList.clear();
 
-	public void setScaleConsumer(DoubleConsumer scaleConsumer)
-	{
-		this.scaleConsumer = scaleConsumer;
-	}
+        this.markedList = list.stream().map(r -> new CustomRectangle(r, scale)).collect(Collectors.toList());
+        this.markedList.forEach(r ->
+        {
+            r.setGroup(this.group);
+            r.setVisible(true);
+            r.update(scale);
+            r.setTextVisible(r.isVisible() && this.cbIds.isSelected());
+        });
+    }
 
 	public void removeMarkedRectangles(List<Rectangle> list)
 	{
 		List<CustomRectangle> rectangles = this.markedList.stream()
-				.filter(cr -> list.stream()
-						.map(r -> new CustomRectangle(r, this.scalePane.getScale()))
-						.anyMatch(c -> c.equals(cr))
-				)
+                .filter(cr -> list.stream().anyMatch(c -> cr.equals(c)))
+//				.filter(cr -> list.stream().map(r -> new CustomRectangle(r, this.scalePane.getScale())).anyMatch(c -> c.equals(cr)))
 				.peek(cr -> cr.setVisible(false))
 				.peek(cr -> cr.removeGroup(this.group))
 				.collect(Collectors.toList());
@@ -239,13 +230,18 @@ public class ImageViewWithScale extends BorderPane
 	}
 	//endregion
 
-	public void changeScale(double scale)
+	private void changeScale(double scale)
 	{
-		this.imageView.setFitHeight(scale * this.initial.height);
+        this.imageView.setFitHeight(scale * this.initial.height);
 		this.imageView.setFitWidth(scale * this.initial.width);
 		hideRectangle();
 		hideInspectRectangle();
-		Optional.ofNullable(this.scaleConsumer).ifPresent(c -> c.accept(scale));
+		
+		List<Rectangle> list = this.markedList.stream().map(r -> r.getRectangle()).collect(Collectors.toList());
+		
+//		List<Rectangle> list = new ArrayList<>(this.markedList); 
+		removeMarkedRectangles(list);
+		displayMarkedRectangle(list);
 	}
 
 	//region private methods
@@ -292,41 +288,45 @@ public class ImageViewWithScale extends BorderPane
 		this.inspectRectangle.setVisible(false);
 	}
 
-	private void listeners()
-	{
-		this.cbIds.selectedProperty().addListener((observable, oldValue, newValue) -> markedList.forEach(r -> r.setTextVisible(newValue)));
+    private void listeners()
+    {
+        this.cbIds.selectedProperty()
+                .addListener((observable, oldValue, newValue) -> markedList.forEach(r -> r.setTextVisible(newValue)));
 
-		this.group.setOnMouseMoved(event -> {
-			this.printMouseCoords(event);
-			this.printPixelColor(event);
-			if (needInspect)
-			{
-				moveOnImage(event.getX(), event.getY());
-			}
-		});
+        this.group.setOnMouseMoved(event ->
+        {
+            this.printMouseCoords(event);
+            this.printPixelColor(event);
+            if (needInspect)
+            {
+                moveOnImage(event.getX(), event.getY());
+            }
+        });
 
-		this.group.setOnMouseClicked(event -> {
-			if (needInspect)
-			{
-				clickOnImage(event.getX(), event.getY());
-			}
-		});
+        this.group.setOnMouseClicked(event ->
+        {
+            if (needInspect)
+            {
+                clickOnImage(event.getX(), event.getY());
+            }
+        });
 
-		this.btnInspect.selectedProperty().addListener((observable, oldValue, newValue) -> {
-			this.needInspect = newValue;
-			if (!newValue)
-			{
-				hideInspectRectangle();
-			}
-		});
-	}
+        this.btnInspect.selectedProperty().addListener((observable, oldValue, newValue) ->
+        {
+            this.needInspect = newValue;
+            if (!newValue)
+            {
+                hideInspectRectangle();
+            }
+        });
+    }
 
 	private void clickOnImage(double x, double y)
 	{
 		Rectangle rectangle = findRectangle(x, y);
-		if (rectangle != null)
+		if (rectangle != null && this.clickConsumer != null)
 		{
-			Optional.ofNullable(this.clickConsumer).ifPresent(c -> c.accept(rectangle));
+		    this.clickConsumer.accept(rectangle);
 		}
 		this.btnInspect.setSelected(false);
 	}
@@ -366,7 +366,7 @@ public class ImageViewWithScale extends BorderPane
 				.sorted(Comparator.comparingDouble(ImageViewWithScale::square))
 				.findFirst();
 
-		return inspected.isPresent() ? inspected.get() : null;
+		return inspected.orElse(null);
 	}
 
 	private javafx.scene.paint.Color getPixelColor(Point point)
@@ -440,7 +440,7 @@ public class ImageViewWithScale extends BorderPane
 
 	private boolean isRectEmpty(Rectangle rect)
 	{
-		return rect.height <= 0 && rect.width <= 0;
+		return rect == null || (rect.height <= 0 && rect.width <= 0);
 	}
 	//endregion
 

@@ -24,9 +24,11 @@ import java.awt.*;
 import java.util.Arrays;
 import java.util.stream.Stream;
 
-public class CustomRectangle
+public class CustomRectangle  extends Rectangle
 {
-	public enum LinePosition
+    private static final long serialVersionUID = -1717871114695561335L;
+
+    public enum LinePosition
 	{
 		TOP,
 		RIGHT,
@@ -60,19 +62,18 @@ public class CustomRectangle
 
 	public CustomRectangle()
 	{
-		this.rectangle = new Rectangle();
-
-		this.top = new Line();
-		this.left = new Line();
-		this.right = new Line();
-		this.bot = new Line();
-		this.text = new Text();
-
-		this.outLine = new Line();
-		this.outLine.getStyleClass().add(CssVariables.RECTANGLE_OUTLINE);
-		this.outLine.setStrokeWidth(LayoutExpressionBuilderController.OFFSET);
-		this.outLine.getStrokeDashArray().addAll(5.0, 5.0);
+        this.rectangle  = new Rectangle();
+        this.top        = new Line();
+        this.left       = new Line();
+        this.right      = new Line();
+        this.bot        = new Line();
+        this.text       = new Text();
+        this.outLine    = new Line();
+        this.outLine.getStyleClass().add(CssVariables.RECTANGLE_OUTLINE);
+        this.outLine.setStrokeWidth(LayoutExpressionBuilderController.OFFSET);
+        this.outLine.getStrokeDashArray().addAll(5.0, 5.0);
 	}
+
 
 	public void update(double scaleFactor)
 	{

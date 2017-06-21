@@ -52,7 +52,7 @@ public class TreeTableViewWithRectangles extends AnchorPane
 
 	private Consumer<List<Rectangle>> removeConsumer;
 	private List<Consumer<XpathTreeItem>> selectionConsumers = new ArrayList<>();
-	private Consumer<List<CustomRectangle>> markedRowsConsumer;
+	private Consumer<List<Rectangle>> markedRowsConsumer;
 
 	private Map<Rectangle, TreeItem<XpathTreeItem>> map = new HashMap<>();
 
@@ -203,7 +203,7 @@ public class TreeTableViewWithRectangles extends AnchorPane
 		this.selectionConsumers.add(consumer);
 	}
 
-	public void setDisplayMarkedRowsConsumer(Consumer<List<CustomRectangle>> markedRowsConsumer)
+	public void setDisplayMarkedRowsConsumer(Consumer<List<Rectangle>> markedRowsConsumer)
 	{
 		this.markedRowsConsumer = markedRowsConsumer;
 	}
@@ -592,7 +592,7 @@ public class TreeTableViewWithRectangles extends AnchorPane
 		Optional.ofNullable(this.markedRowsConsumer).ifPresent(c -> c.accept(rectanglesFromMarkedRows()));
 	}
 
-	public List<CustomRectangle> rectanglesFromMarkedRows()
+	public List<Rectangle> rectanglesFromMarkedRows()
 	{
 		return this.getMarkedRows()
 				.stream()
