@@ -161,7 +161,7 @@ public class WinAppFactory implements IApplicationFactory
 		info.addTypes(ControlKind.Tree,			ControlType.Tree.name());
 		info.addTypes(ControlKind.Tooltip,		ControlType.ToolTip.name());
 		info.addTypes(ControlKind.Spinner,		ControlType.Spinner.name());
-		info.addTypes(ControlKind.ProgressBar,	ControlType.ProgressBar.name());
+		info.addTypes(ControlKind.ProgressBar,	ControlType.ProgressBar.name(), ControlType.Pane.name());
 		info.addTypes(ControlKind.ScrollBar,	ControlType.ScrollBar.name());
 		info.addTypes(ControlKind.Slider,		ControlType.Slider.name());
 		info.addTypes(ControlKind.TreeItem,		ControlType.TreeItem.name());

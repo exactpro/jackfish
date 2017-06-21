@@ -891,9 +891,9 @@ public class MockApp
 		DefaultListModel<String> stringDefaultListModel = new DefaultListModel<>();
 		stringDefaultListModel.addElement("Green");
 		stringDefaultListModel.addElement("Yellow");
-		stringDefaultListModel.addElement("Red");
-		stringDefaultListModel.addElement("Blue");
 		stringDefaultListModel.addElement("Orange");
+		stringDefaultListModel.addElement("Blue");
+
 		JList<String> list = new JList<>(stringDefaultListModel);
 		String name = "List";
 		addListeners(list, name);

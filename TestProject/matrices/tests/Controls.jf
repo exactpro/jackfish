@@ -6,33 +6,33 @@ INIT;Test case;Never;;
     // {web,swing,win} or All
     #Id;#Global;#RawTable
     controls;1;Table
-    @;On;Before;getRowPar;getRow;colorPar;Name;getAttr;getAttrPar;getValue;get;setValue;text;getList;check;getListPar;getValuePar
-    0;x;'Do.move()';'\'tr_3_td_3\'';;'new Color(246,246,246)';Label;'CentralLabel';'\'CentralLabel\'';'CentralLabel';'CentralLabel';;;;'CentralLabel';'new ArrayList([\'Green\',\'Yellow\', \'Orange\',\'Blue\']),false';'\'CentralLabel\''
-    1;x;;'\'tr_3_td_3\'';;'new Color(246,246,246)';Button;'Button';'\'Button\'';'Button';'Button';;;;'Button';'new ArrayList([\'Green\',\'Yellow\', \'Orange\',\'Blue\']),false';'\'Button\''
-    2;x;;'\'tr_3_td_3\'';;'new Color(246,246,246)';TextBox;getExp(plugin,'TextBox','TextBox','Slider_click');'\'Slider_click\'';'';'';;'Green';;'';'new ArrayList([\'Green\',\'Yellow\', \'Orange\',\'Blue\']),false';'\'\''
-    3;x;;'\'tr_3_td_3\'';;'new Color(246,246,246)';Any;'Any';'\'Any\'';;;;;;true;'new ArrayList([\'Green\',\'Yellow\', \'Orange\',\'Blue\']),false';'\'\''
-    4;x;'Do.move()';'\'tr_3_td_3\'';;'new Color(246,246,246)';CheckBox;'CheckBox';'\'CheckBox\'';getExp(plugin,true,true,'On');'CheckBox';;;;true;'new ArrayList([\'Green\',\'Yellow\', \'Orange\',\'Blue\']),false';getExp(plugin,'\'true\'','\'true\'','\'On\'')
-    5;x;'Do.move()';'\'tr_3_td_3\'';;'new Color(246,246,246)';ToggleButton;'ToggleButton';'\'ToggleButton\'';getExp(plugin,true,true,'On');'ToggleButton';;;;true;'new ArrayList([\'Green\',\'Yellow\', \'Orange\',\'Blue\']),false';getExp(plugin,'\'true\'','\'true\'','\'On\'')
-    6;x;;'\'tr_3_td_3\'';;'new Color(246,246,246)';ComboBox;getExp(plugin,'ComboBox','ComboBox','Green');getExp(plugin,'\'ComboBox\'','\'ComboBox\'','\'Green\'');'Green';'Green';;'Green';'[Green, Yellow, Orange, Blue]';'Green';'new ArrayList([\'Green\',\'Yellow\', \'Orange\',\'Blue\']),false';'\'Green\''
-    7;x;;'\'tr_3_td_3\'';'{Head1=tr_3_td_1, Head2=tr_3_td_2, Head3=tr_3_td_3}';'new Color(246,246,246)';Table;getExp(plugin,'Table','Table','DataGridView');getExp(plugin,'\'Table\'','\'Table\'','\'DataGridView\'');'tr_2_td_2';;;getExp(plugin,'tr_2_td_2','Green','0');;'tr_2_td_2';'new ArrayList([\'Green\',\'Yellow\', \'Orange\',\'Blue\']),false';'\'tr_2_td_2\''
-    8;x;'Do.setValue(0)';'\'tr_3_td_3\'';;'new Color(246,246,246)';Slider;getExp(plugin,'Slider','Slider','');getExp(plugin,'\'Slider\'','\'Slider\'','\'\'');getExp(plugin,'',0,'0');;'Slider_30';;;getExp(plugin,'',0,'0');'new ArrayList([\'Green\',\'Yellow\', \'Orange\',\'Blue\']),false';getExp(plugin,'\'\'','0','0')
-    9;x;;'\'tr_3_td_3\'';;'new Color(246,246,246)';RadioButton;'RadioButton';'\'RadioButton\'';false;'Green';;;;false;'new ArrayList([\'Green\',\'Yellow\', \'Orange\',\'Blue\']),false';'\'false\''
-    10;x;;'\'tr_3_td_3\'';;'new Color(246,246,246)';ProgressBar;'ProgressBar';'\'ProgressBar\'';10;;;;;true;'new ArrayList([\'Green\',\'Yellow\', \'Orange\',\'Blue\']),false';'\'10\''
-    11;x;;'\'tr_3_td_3\'';;'new Color(246,246,246)';Panel;'Panel';'\'Panel\'';'Panel';;;'Panel';;true;'new ArrayList([\'Green\',\'Yellow\', \'Orange\',\'Blue\']),false';'\'Panel\''
-    12;x;'Do.select(\'Green\')';'\'tr_3_td_3\'';;'new Color(246,246,246)';List;'List';'\'List\'';getExp(plugin,'Coffee\nJuice\nTea\nBlack tea\nGreen tea\nMilk','Green','Green');;;;getExp(plugin,'[Coffee, Juice, Tea\nBlack tea\nGreen tea, Milk]','[Green, Yellow, Red, Blue, Orange]','');true;getExp(plugin,'new ArrayList([\'Coffee\',\'Juice\', \'Tea\nBlack tea\nGreen tea\',\'Milk\']),false','new ArrayList([\'Green\',\'Yellow\',\'Red\',\'Blue\',\'Orange\']),false','');getExp(plugin,'\'Coffee\nJuice\nTea\nBlack tea\nGreen tea\nMilk\'','\'Green\'','\'Green\'')
-    13;x;'Do.move()';'\'tr_3_td_3\'';;'new Color(246,246,246)';Dialog;'Dialog';'\'Dialog\'';;;;;;true;'new ArrayList([\'Green\',\'Yellow\', \'Orange\',\'Blue\']),false';'\'\''
-    14;x;'Do.move()';'\'tr_3_td_3\'';;'new Color(246,246,246)';Image;'Image';'\'Image\'';;;;;;true;'new ArrayList([\'Green\',\'Yellow\', \'Orange\',\'Blue\']),false';'\'\''
-    15;x;;'\'tr_3_td_3\'';;'new Color(246,246,246)';Wait;'Wait';'\'Wait\'';;;;;;true;'new ArrayList([\'Green\',\'Yellow\', \'Orange\',\'Blue\']),false';'\'\''
-    16;x;;'\'tr_3_td_3\'';;'new Color(246,246,246)';ScrollBar;'ScrollBar';'\'ScrollBar\'';0;;'ScrollBar_30';;;true;'new ArrayList([\'Green\',\'Yellow\', \'Orange\',\'Blue\']),false';'\'0\''
-    17;x;;'\'[JTree][Orange]\'';'{value=[JTree][Orange]}';'new Color(246,246,246)';Tree;'Tree';'\'Tree\'';;;;;;true;'new ArrayList([\'Green\',\'Yellow\', \'Orange\',\'Blue\']),false';'\'\''
-    18;x;;'\'[JTree][Orange]\'';;'new Color(246,246,246)';Splitter;'Splitter';'\'Splitter\'';125;;'Splitter_30';;;true;'new ArrayList([\'Green\',\'Yellow\', \'Orange\',\'Blue\']),false';'\'125\''
-    19;x;'Do.use(\'Menu2\').move()';'\'[JTree][Orange]\'';;'new Color(246,246,246)';Tooltip;;'\'Tooltip\'';'Tooltip';'Tooltip';;;;true;'new ArrayList([\'Green\',\'Yellow\', \'Orange\',\'Blue\']),false';'\'Tooltip\''
-    20;x;;'\'[JTree][Orange]\'';;'new Color(246,246,246)';Menu;'Menu';'\'Menu\'';;'Menu';;;;true;'new ArrayList([\'Green\',\'Yellow\', \'Orange\',\'Blue\']),false';'\'\''
-    21;x;'Do.use(\'Menu2\').click(200,10).click()';'\'[JTree][Orange]\'';;'new Color(246,246,246)';MenuItem;'MenuItem';'\'MenuItem\'';;'MenuItem';;;;true;'new ArrayList([\'Green\',\'Yellow\', \'Orange\',\'Blue\']),false';'\'\''
+    @;On;Before;getRowPar;getRow;colorPar;Name;toggle;getAttr;getAttrPar;getValue;get;setValue;text;getList;check;getListPar;getValuePar
+    0;x;'Do.move()';'\'tr_3_td_3\'';;'new Color(246,246,246)';Label;;'CentralLabel';'\'CentralLabel\'';'CentralLabel';'CentralLabel';;;;'CentralLabel';'new ArrayList([\'Green\',\'Yellow\', \'Orange\',\'Blue\']),false';'\'CentralLabel\''
+    1;x;;'\'tr_3_td_3\'';;'new Color(246,246,246)';Button;;'Button';'\'Button\'';'Button';'Button';;;;'Button';'new ArrayList([\'Green\',\'Yellow\', \'Orange\',\'Blue\']),false';'\'Button\''
+    2;x;;'\'tr_3_td_3\'';;'new Color(246,246,246)';TextBox;;getExp(plugin,'TextBox','TextBox','Slider_click');'\'Slider_click\'';'';'';;'Green';;'';'new ArrayList([\'Green\',\'Yellow\', \'Orange\',\'Blue\']),false';'\'\''
+    3;x;;'\'tr_3_td_3\'';;'new Color(246,246,246)';Any;;'Any';'\'Any\'';;;;;;true;'new ArrayList([\'Green\',\'Yellow\', \'Orange\',\'Blue\']),false';'\'\''
+    4;x;'Do.move()';'\'tr_3_td_3\'';;'new Color(246,246,246)';CheckBox;getExp(plugin,'true','true','On');'CheckBox';'\'CheckBox\'';getExp(plugin,true,true,'On');'CheckBox';;;;true;'new ArrayList([\'Green\',\'Yellow\', \'Orange\',\'Blue\']),false';getExp(plugin,'\'true\'','\'true\'','\'On\'')
+    5;x;'Do.move()';'\'tr_3_td_3\'';;'new Color(246,246,246)';ToggleButton;getExp(plugin,'true','true','On');'ToggleButton';'\'ToggleButton\'';getExp(plugin,true,true,'On');'ToggleButton';;;;true;'new ArrayList([\'Green\',\'Yellow\', \'Orange\',\'Blue\']),false';getExp(plugin,'\'true\'','\'true\'','\'On\'')
+    6;x;;'\'tr_3_td_3\'';;'new Color(246,246,246)';ComboBox;;getExp(plugin,'ComboBox','ComboBox','Green');getExp(plugin,'\'ComboBox\'','\'ComboBox\'','\'Green\'');'Green';'Green';;'Green';'[Green, Yellow, Orange, Blue]';'Green';'new ArrayList([\'Green\',\'Yellow\', \'Orange\',\'Blue\']),false';'\'Green\''
+    7;x;;'\'tr_3_td_3\'';'{Head1=tr_3_td_1, Head2=tr_3_td_2, Head3=tr_3_td_3}';'new Color(246,246,246)';Table;;getExp(plugin,'Table','Table','DataGridView');getExp(plugin,'\'Table\'','\'Table\'','\'DataGridView\'');'tr_2_td_2';;;getExp(plugin,'tr_2_td_2','Green','Green');;'tr_2_td_2';'new ArrayList([\'Green\',\'Yellow\', \'Orange\',\'Blue\']),false';'\'tr_2_td_2\''
+    8;x;'Do.setValue(0)';'\'tr_3_td_3\'';;'new Color(246,246,246)';Slider;;getExp(plugin,'Slider','Slider','');getExp(plugin,'\'Slider\'','\'Slider\'','\'\'');getExp(plugin,'',0,'0');;'Slider_30';;;getExp(plugin,'',0,'0');'new ArrayList([\'Green\',\'Yellow\', \'Orange\',\'Blue\']),false';getExp(plugin,'\'\'','0','0')
+    9;x;;'\'tr_3_td_3\'';;'new Color(246,246,246)';RadioButton;getExp(plugin,'true','true','True');getExp(plugin,'RadioButton','RadioButton','Green');getExp(plugin,'\'RadioButton\'','\'RadioButton\'','\'Green\'');getExp(plugin,'false','false','False');'Green';;;;false;'new ArrayList([\'Green\',\'Yellow\', \'Orange\',\'Blue\']),false';'\'false\''
+    10;x;;'\'tr_3_td_3\'';;'new Color(246,246,246)';ProgressBar;;getExp(plugin,'ProgressBar','ProgressBar','');getExp(plugin,'\'ProgressBar\'','\'ProgressBar\'','\'\'');10;;;;;true;'new ArrayList([\'Green\',\'Yellow\', \'Orange\',\'Blue\']),false';'\'10\''
+    11;x;;'\'tr_3_td_3\'';;'new Color(246,246,246)';Panel;;getExp(plugin,'Panel','Panel','');getExp(plugin,'\'Panel\'','\'Panel\'','\'\'');'Panel';;;getExp(plugin,'Panel','Panel','Green');;true;'new ArrayList([\'Green\',\'Yellow\', \'Orange\',\'Blue\']),false';'\'Panel\''
+    12;x;'Do.select(\'Green\')';'\'tr_3_td_3\'';;'new Color(246,246,246)';List;;getExp(plugin,'List','List','tab2');getExp(plugin,'\'List\'','\'List\'','\'tab2\'');getExp(plugin,'Coffee\nJuice\nTea\nBlack tea\nGreen tea\nMilk','Green','Green');;;;'[Green, Yellow, Orange, Blue]';true;'new ArrayList([\'Green\',\'Yellow\', \'Orange\',\'Blue\']),false';getExp(plugin,'\'Coffee\nYellow\nOrange\nBlue\'','\'Green\'','\'Green\'')
+    13;x;'Do.move()';'\'tr_3_td_3\'';;'new Color(246,246,246)';Dialog;;'Dialog';'\'Dialog\'';;;;;;true;'new ArrayList([\'Green\',\'Yellow\', \'Orange\',\'Blue\']),false';'\'\''
+    14;x;'Do.move()';'\'tr_3_td_3\'';;'new Color(246,246,246)';Image;;'Image';'\'Image\'';;;;;;true;'new ArrayList([\'Green\',\'Yellow\', \'Orange\',\'Blue\']),false';'\'\''
+    15;x;;'\'tr_3_td_3\'';;'new Color(246,246,246)';Wait;;'Wait';'\'Wait\'';;;;;;true;'new ArrayList([\'Green\',\'Yellow\', \'Orange\',\'Blue\']),false';'\'\''
+    16;x;;'\'tr_3_td_3\'';;'new Color(246,246,246)';ScrollBar;;'ScrollBar';'\'ScrollBar\'';0;;'ScrollBar_30';;;true;'new ArrayList([\'Green\',\'Yellow\', \'Orange\',\'Blue\']),false';'\'0\''
+    17;x;;'\'[JTree][Orange]\'';'{value=[JTree][Orange]}';'new Color(246,246,246)';Tree;;'Tree';'\'Tree\'';;;;;;true;'new ArrayList([\'Green\',\'Yellow\', \'Orange\',\'Blue\']),false';'\'\''
+    18;x;;'\'[JTree][Orange]\'';;'new Color(246,246,246)';Splitter;;'Splitter';'\'Splitter\'';125;;'Splitter_30';;;true;'new ArrayList([\'Green\',\'Yellow\', \'Orange\',\'Blue\']),false';'\'125\''
+    19;x;'Do.use(\'Menu2\').move()';'\'[JTree][Orange]\'';;'new Color(246,246,246)';Tooltip;;;'\'Tooltip\'';'Tooltip';'Tooltip';;;;true;'new ArrayList([\'Green\',\'Yellow\', \'Orange\',\'Blue\']),false';'\'Tooltip\''
+    20;x;;'\'[JTree][Orange]\'';;'new Color(246,246,246)';Menu;;'Menu';'\'Menu\'';;'Menu';;;;true;'new ArrayList([\'Green\',\'Yellow\', \'Orange\',\'Blue\']),false';'\'\''
+    21;x;'Do.use(\'Menu2\').click(200,10).click()';'\'[JTree][Orange]\'';;'new Color(246,246,246)';MenuItem;;'MenuItem';'\'MenuItem\'';;'MenuItem';;;;true;'new ArrayList([\'Green\',\'Yellow\', \'Orange\',\'Blue\']),false';'\'\''
     #EndRawTable
 
     #Action;$Table;$Expression
-    TableConsiderColumnsAs;controls;{'Before','getAttr','getValue','get','setValue','text','getList','check','getListPar','getValuePar','getAttrPar','colorPar','getRow','getRowPar'}
+    TableConsiderColumnsAs;controls;{'Before','getAttr','getValue','get','setValue','text','getList','check','getListPar','getValuePar','getAttrPar','colorPar','getRow','getRowPar','toggle'}
 
     #Id;#Global;#RawTable
     operations;1;Table
@@ -61,7 +61,7 @@ INIT;Test case;Never;;
     21;x;textXY;Do.text('Green',1,1).getValue(1,1);control.text;
     22;x;push;Do.push().use('pushLabel').getValue();control.Name + '_push';
     23;x;getList;Do.getList();control.getList;
-    24;x;Do.toggle;Do.toggle(true).toggle(false).toggle(true).getValue();getExp(plugin,true,true,'On');
+    24;x;Do.toggle;Do.toggle(true).toggle(false).toggle(true).getValue();control.toggle;
     25;x;Do.select(int);Do.select(0).getValue();control.getValue;
     26;x;Do.select(string);Do.select('Green').getValue();control.getValue;
     27;x;Do.count;Do.count();1;
@@ -88,7 +88,7 @@ INIT;Test case;Never;;
     48;x;Do.isVisible;Do.isVisible();true;
     49;x;Do.isEnabled;Do.use('notEnabledButton').isEnabled();false;
     50;x;Do.isVisible;Do.use('invisibleButton').isVisible();getExp(plugin,false,false,ErrorKind.ELEMENT_NOT_FOUND);
-    51;x;Do.script;Do.use('countButtonClear').click().script('counter = 99').use('countButton').click().use('countLabel').getValue();100;
+    51;x;Do.script;Do.use('countButtonClear').click().script('counter = 99').use('countButton').click().use('countLabel').getValue();getExp(plugin,100,ErrorKind.FEATURE_NOT_SUPPORTED,ErrorKind.FEATURE_NOT_SUPPORTED);
     52;x;Do.dragNDrop;Do.use('Slider').setValue(0).dragNdrop(10, 6, 'Slider', 395, 6).use('sliderLabel').getValue();'Slider_50';
     #EndRawTable
 

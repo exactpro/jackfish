@@ -861,13 +861,10 @@
     <value>Yellow</value>
   </data>
   <data name="List.Items2" xml:space="preserve">
-    <value>Red</value>
+    <value>Orange</value>
   </data>
   <data name="List.Items3" xml:space="preserve">
     <value>Blue</value>
-  </data>
-  <data name="List.Items4" xml:space="preserve">
-    <value>Orange</value>
   </data>
   <data name="List.Location" type="System.Drawing.Point, System.Drawing">
     <value>12, 569</value>
@@ -1001,27 +998,6 @@
   <metadata name="MenuMain.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>17, 17</value>
   </metadata>
-  <data name="Menu.Size" type="System.Drawing.Size, System.Drawing">
-    <value>50, 20</value>
-  </data>
-  <data name="Menu.Text" xml:space="preserve">
-    <value>Menu</value>
-  </data>
-  <data name="MenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>152, 22</value>
-  </data>
-  <data name="MenuItem.Text" xml:space="preserve">
-    <value>MenuItem</value>
-  </data>
-  <data name="Menu2.Size" type="System.Drawing.Size, System.Drawing">
-    <value>56, 20</value>
-  </data>
-  <data name="Menu2.Text" xml:space="preserve">
-    <value>Menu2</value>
-  </data>
-  <data name="Menu2.ToolTipText" xml:space="preserve">
-    <value>Tooltip</value>
-  </data>
   <data name="MenuMain.Location" type="System.Drawing.Point, System.Drawing">
     <value>0, 0</value>
   </data>
@@ -1046,8 +1022,14 @@
   <data name="&gt;&gt;MenuMain.ZOrder" xml:space="preserve">
     <value>36</value>
   </data>
+  <data name="Menu.Size" type="System.Drawing.Size, System.Drawing">
+    <value>50, 20</value>
+  </data>
+  <data name="Menu.Text" xml:space="preserve">
+    <value>Menu</value>
+  </data>
   <data name="optionsToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>152, 22</value>
+    <value>116, 22</value>
   </data>
   <data name="optionsToolStripMenuItem.Text" xml:space="preserve">
     <value>Options</value>
@@ -1089,28 +1071,43 @@
     <value>six</value>
   </data>
   <data name="toolStripSeparator1.Size" type="System.Drawing.Size, System.Drawing">
-    <value>149, 6</value>
+    <value>113, 6</value>
   </data>
   <data name="saveToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>152, 22</value>
+    <value>116, 22</value>
   </data>
   <data name="saveToolStripMenuItem.Text" xml:space="preserve">
     <value>Save</value>
   </data>
   <data name="openToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>152, 22</value>
+    <value>116, 22</value>
   </data>
   <data name="openToolStripMenuItem.Text" xml:space="preserve">
     <value>Open</value>
   </data>
   <data name="toolStripSeparator2.Size" type="System.Drawing.Size, System.Drawing">
-    <value>149, 6</value>
+    <value>113, 6</value>
   </data>
   <data name="exitToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>152, 22</value>
+    <value>116, 22</value>
   </data>
   <data name="exitToolStripMenuItem.Text" xml:space="preserve">
     <value>Exit</value>
+  </data>
+  <data name="Menu2.Size" type="System.Drawing.Size, System.Drawing">
+    <value>56, 20</value>
+  </data>
+  <data name="Menu2.Text" xml:space="preserve">
+    <value>Menu2</value>
+  </data>
+  <data name="Menu2.ToolTipText" xml:space="preserve">
+    <value>Tooltip</value>
+  </data>
+  <data name="MenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>129, 22</value>
+  </data>
+  <data name="MenuItem.Text" xml:space="preserve">
+    <value>MenuItem</value>
   </data>
   <data name="HScrollBar.Location" type="System.Drawing.Point, System.Drawing">
     <value>12, 695</value>
@@ -1362,7 +1359,7 @@
     <value>three</value>
   </data>
   <data name="showButton.Location" type="System.Drawing.Point, System.Drawing">
-    <value>338, 774</value>
+    <value>575, 772</value>
   </data>
   <data name="showButton.Size" type="System.Drawing.Size, System.Drawing">
     <value>75, 23</value>
@@ -1386,7 +1383,7 @@
     <value>14</value>
   </data>
   <data name="hideButton.Location" type="System.Drawing.Point, System.Drawing">
-    <value>419, 774</value>
+    <value>656, 772</value>
   </data>
   <data name="hideButton.Size" type="System.Drawing.Size, System.Drawing">
     <value>75, 23</value>
@@ -1656,7 +1653,7 @@
     <value>NoControl</value>
   </data>
   <data name="colorButton.Location" type="System.Drawing.Point, System.Drawing">
-    <value>550, 800</value>
+    <value>472, 770</value>
   </data>
   <data name="colorButton.Size" type="System.Drawing.Size, System.Drawing">
     <value>100, 25</value>

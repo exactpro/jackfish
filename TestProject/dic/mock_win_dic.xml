@@ -12,8 +12,7 @@
             <table id="Table1" uid="Table1" owner="owner" class="" name="" text="" addition="Many"/>
             <checkBox id="CheckBox" uid="CheckBox" owner="owner" class="" text="" addition="Many"/>
             <slider id="Slider" uid="Slider" owner="owner" class="" addition="Many"/>
-            <scrollBar id="ScrollBar" uid="HScrollBar" owner="owner" class="" addition="Many"/>
-            <scrollBar id="vScrollBar" uid="VScrollBar" owner="owner" class="" addition="Many"/>
+            <scrollBar id="ScrollBar" uid="" xpath=".//Pane[@uid=&amp;quot;HScrollBar&amp;quot;]" owner="owner" class="" addition="Many"/>
             <comboBox id="ComboBox" uid="ComboBox" owner="owner" class="" name="" action="" addition="Many"/>
             <radioButton id="RadioButton" xpath=".//RadioButton[contains(@uid,&amp;quot;Green&amp;quot;)]" owner="owner" class="" action="" text="" addition="Many"/>
             <tree id="Tree" uid="" xpath=".//Tree" owner="owner" class="" addition="Many"/>
@@ -22,10 +21,10 @@
             <checkBox id="ToggleButton" uid="ToggleButton" owner="owner" class="" name="" addition="Many"/>
             <progressBar id="ProgressBar" uid="ProgressBar" owner="owner" class="" name="" addition="Many"/>
             <panel id="Panel" uid="Panel" owner="owner" class="" name="" addition="Many"/>
-            <dialog id="DialogD" uid="" name="Save As" title="" addition="Many"/>
+            <dialog id="Dialog" uid="" xpath="" name="Dialog" title="" addition="Many"/>
             <listView id="List" uid="List" owner="owner" class="" addition="Many"/>
-            <menu id="Menu" uid="" xpath=".//MenuBar[@uid=&amp;quot;Menu&amp;quot;]" owner="owner" class="" name="" action="" text="" addition="Many"/>
-            <menuItem id="MenuItem" xpath=".//MenuItem[@name=&amp;quot;six&amp;quot;]" owner="owner" class="" name="" action="" text="" addition="Many"/>
+            <menu id="Menu" uid="" xpath=".//MenuItem[@name=&amp;quot;Menu&amp;quot;]" owner="owner" class="" name="" action="" text="" addition="Many"/>
+            <menuItem id="MenuItem" xpath=".//MenuItem[@name=&amp;quot;MenuItem&amp;quot;]" owner="owner" class="" name="" action="" text="" addition="Many"/>
             <treeItem id="TreeItem" owner="owner"/>
             <toolTip id="ToolTip" owner="owner" text="It&amp;#39;s some Tooltip!" addition="Many"/>
             <any id="Any" uid="Any" owner="owner" class="" name="" action="" text="" addition="Many"/>
@@ -46,7 +45,8 @@
             <label id="pushLabel" uid="pushLabel" name="" addition="Many"/>
             <label id="centralLabel" uid="CentralLabel" owner="owner" class="" name="" text="" addition="Many"/>
             <label id="checkedLabel" uid="checkedLabel" owner="" name=""/>
-            <menu id="Menu2" uid="" xpath="" owner="owner" class="" name="Menu2" action="" text=""/>
+            <menu id="Menu2" uid="" xpath=".//MenuItem[@name=&amp;quot;Menu2&amp;quot;]" owner="owner" class="" name="" action="" text=""/>
+            <image id="Image" uid="" owner="" addition="Many" weak="true"/>
         </run>
         <onClose/>
         <close/>

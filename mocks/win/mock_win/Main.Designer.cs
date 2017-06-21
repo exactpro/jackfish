@@ -362,8 +362,7 @@
             resources.GetString("List.Items"),
             resources.GetString("List.Items1"),
             resources.GetString("List.Items2"),
-            resources.GetString("List.Items3"),
-            resources.GetString("List.Items4")});
+            resources.GetString("List.Items3")});
             resources.ApplyResources(this.List, "List");
             this.List.Name = "List";
             this.List.SelectedIndexChanged += new System.EventHandler(this.ListView_SelectedIndexChanged);
