@@ -2,10 +2,10 @@
 {{`The tool can operate with all types of controls, which usually are used in applications. But every kind of application 
 has its own specific control set. For example in web applications there are not the such control as {{$ScrollBar$}}
 The such control is not allowed to use even in the related dictionary. If the such control is used for example 
-in dynamic locator the error with kind {{$CONTROL_NOT_SUPPORTED$}} will appear.`}}
+in dynamic locator the error with kind {{@CONTROL_NOT_SUPPORTED@}} will appear.`}}
 {{`Also not all operations can be applied to every control.   
 Due dynamic types of underlying expression language ({{$MVEL$}}) it is impossible to check operations before matrix starts.
-In case of using not permitted operation for a control the error with kind {{$OPERATION_NOT_ALLOWED$}} 
+In case of using not permitted operation for a control the error with kind {{@OPERATION_NOT_ALLOWED@}}
 will be generated.`}} 
 {{`The list of all controls and operations allowed for them you can find in the tables below. Mark "+" means that operations
 from the column allowed for control in the row. If this one is the operation by default the color of this mark is red.`}}

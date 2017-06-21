@@ -40,7 +40,7 @@ import com.exactprosystems.jf.functions.Table;
 				+ "replace columns of the system table: Matrix, TestCaseId, TestCase, StepIdentity, Step, Time, Result, Error, Screenshot.`}}",
 		examples 				= "{{#\n" +
 				"#Id;#TestCase;#Kind;#Depends;#For\n" +
-				"RT_USERVAL;ResultTableUserValue;Never;;\n" +
+				"RTUSERVAL;ResultTableUserValue;Never;;\n" +
 				"    #Action;UserValue\n" +
 				"    ResultTableUserValue;'value'\n" +
 				"    #Step;#Kind;#For;#Depends\n" +
