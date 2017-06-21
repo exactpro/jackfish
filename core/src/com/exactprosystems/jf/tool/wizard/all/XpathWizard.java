@@ -16,6 +16,7 @@ import com.exactprosystems.jf.api.app.Locator;
 import com.exactprosystems.jf.api.common.IContext;
 import com.exactprosystems.jf.api.error.JFRemoteException;
 import com.exactprosystems.jf.api.wizard.*;
+import com.exactprosystems.jf.common.utils.JfService;
 import com.exactprosystems.jf.common.utils.XpathUtils;
 import com.exactprosystems.jf.documents.guidic.Section;
 import com.exactprosystems.jf.documents.guidic.Window;
@@ -35,7 +36,6 @@ import com.exactprosystems.jf.tool.wizard.related.ImageAndOffset;
 import com.exactprosystems.jf.tool.wizard.related.XpathTreeItem;
 
 import javafx.concurrent.Service;
-import javafx.concurrent.Task;
 import javafx.geometry.Insets;
 import javafx.geometry.Orientation;
 import javafx.scene.control.Accordion;
@@ -52,7 +52,6 @@ import javafx.scene.layout.VBox;
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 import java.util.List;
-import java.util.concurrent.Executor;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.function.Supplier;
@@ -211,38 +210,6 @@ public class XpathWizard extends AbstractWizard
         };
     }
     
-    private static class JfService<T> extends Service<T>
-    {
-        private Supplier<T> resultSupplier;
-        
-        public JfService(Executor executor, Supplier<T> resultSupplier)
-        {
-            this.resultSupplier = resultSupplier;
-            setExecutor(executor);
-            
-        }
-        
-
-        @Override
-        protected Task<T> createTask()
-        {
-            return new Task<T>()
-            {
-                @Override
-                protected T call() throws Exception
-                {
-                    if (resultSupplier != null)
-                    {
-                        return resultSupplier.get();
-                    }
-                    return null;
-                }
-            };
-        }
-        
-    }
-    
-
     @Override
     public boolean beforeRun()
     {

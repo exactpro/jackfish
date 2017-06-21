@@ -15,7 +15,6 @@ import org.w3c.dom.Document;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 
-import javax.xml.xpath.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
