@@ -297,7 +297,7 @@ public class TexReportBuilder extends ReportBuilder
     protected void reportContent(ReportWriter writer, MatrixItem item, String beforeTestcase, Content content,
             String title) throws IOException
     {
-        writer.fwrite("\\tableofcontents").newline();
+        writer.fwrite("\\crule[BurntOrange]{\\textwidth}{3pt} \\newline \\tableofcontents").newline();
     }
 	
 	@Override
