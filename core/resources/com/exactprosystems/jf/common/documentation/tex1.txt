@@ -50,6 +50,9 @@
 %% example: \crule[COLORNAME]{width}{height}
 \newcommand{\superhyperlink}[1]{\hyperlink{#1}{#1}}
 \newcommand{\JackFishHuge}{\textbf{\Huge{JackFish}}}
+\newcommand{\UserGuide}{\textbf{\LARGE{User Guide}}}
+\newcommand{\DocInfo}{\textbf{\LARGE{Document Information}}}
+\newcommand{\Abbreviations}{\textbf{\Large{Abbreviations}}}
 
 \linespread{1.5}
 \parindent=0
@@ -66,3 +69,6 @@
 \begin{document}
 \newpage
 \thispagestyle{firstpage}
+\textcolor{white}{1}
+\vskip 2in
+

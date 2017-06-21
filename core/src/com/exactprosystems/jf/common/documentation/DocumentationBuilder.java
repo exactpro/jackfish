@@ -53,7 +53,7 @@ public class DocumentationBuilder
     {
         AbstractEvaluator evaluator = context.getEvaluator();
         
-        MatrixItem help = new HelpTextLine("\\JackFishHuge");
+        MatrixItem help = new HelpTextLine("{{``}}");
 
         String[][] table1 = new String[][]
                 {
@@ -76,13 +76,17 @@ public class DocumentationBuilder
         List<OperationKind> operations = Arrays.stream(OperationKind.values()).collect(Collectors.toList());
         int size = operations.size();
 
+        addTextLine(help, "\\JackFishHuge");
         addTextLine(help, "{{``}}");
         addPicture(help, "", 100, DocumentationBuilder.class.getResourceAsStream("BurntOrangeLine.png"));
-        addTable(help, "{{*User Guide*}}",              false,  table1, new int[] { 50, 50 },  evaluator);
-        addTextLine(help, "{{``}}");
+        addTable(help, "\\UserGuide",              false,  table1, new int[] { 50, 50 },  evaluator);
+        for (int i = 0; i < 5; i++){
+            addTextLine(help, "{{` `}}");
+        }
+
         addPicture(help, "", 100, DocumentationBuilder.class.getResourceAsStream("BurntOrangeLine.png"));
-        addTable(help, "{{*Document Information*}}",    false,  table2, new int[] { 25, 23, 23, 25 },  evaluator);
-        addTable(help, "{{*Abbreviations*}}",           false,  table3, new int[] { 50, 50 },  evaluator);
+        addTable(help, "\\DocInfo",    false,  table2, new int[] { 25, 23, 23, 25 },  evaluator);
+        addTable(help, "\\Abbreviations",           false,  table3, new int[] { 50, 50 },  evaluator);
         addTextLine(help, "{{&&}}");
         
         addContent(help, "{{*Table of contenst*}}", new Content());
