@@ -143,7 +143,7 @@ public class TexReportBuilder extends ReportBuilder
             case "4" + CM: return "}";
     
             // header 5
-			case OM + "5": return "\\\\crule[BurntOrange]{\\\\textwidth}{3pt} \\\\newline \\\\section{ ";
+			case OM + "5": return "\\\\crule[ExactColor]{\\\\textwidth}{3pt} \\\\newline \\\\section{ ";
 			case "5" + CM: return "}";
     
             // style for identifiers
@@ -297,7 +297,7 @@ public class TexReportBuilder extends ReportBuilder
     protected void reportContent(ReportWriter writer, MatrixItem item, String beforeTestcase, Content content,
             String title) throws IOException
     {
-        writer.fwrite("\\crule[BurntOrange]{\\textwidth}{3pt} \\newline {{\\hypersetup{linkcolor=black}\\tableofcontents}}").newline();
+        writer.fwrite("\\crule[ExactColor]{\\textwidth}{3pt} \\newline {{\\hypersetup{linkcolor=black}\\tableofcontents}}").newline();
     }
 	
 	@Override

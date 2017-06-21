@@ -14,7 +14,7 @@
 \usepackage{amsmath}
 \usepackage{graphicx}
 %% \usepackage[colorinlistoftodos]{todonotes}
-\usepackage[colorlinks=true, bookmarks=true, allcolors=blue, linktoc=all]{hyperref}
+\usepackage[colorlinks=true, bookmarks=true, allcolors=ExactLinkColor, linktoc=all]{hyperref}
 \usepackage{lastpage} %%can't use it? just install package texlive-latex-extra
 \usepackage{fancyhdr}
 \usepackage[usenames,dvipsnames,svgnames,table]{xcolor}
@@ -24,7 +24,7 @@
 
 \renewcommand{\headrulewidth}{0pt}
 \renewcommand{\footrulewidth}{1pt}
-\renewcommand{\footrule}{\hbox to\headwidth{\color{BurntOrange}\leaders\hrule height \footrulewidth\hfill}}
+\renewcommand{\footrule}{\hbox to\headwidth{\color{ExactColor}\leaders\hrule height \footrulewidth\hfill}}
 
 \setlength{\skip\footins}{1cm}
 \definecolor{urlcolor}{HTML}{799B03}
@@ -59,6 +59,8 @@
 
 %%color for code examples
 \definecolor{codecolor}{RGB}{0, 100, 0}
+\definecolor{ExactLinkColor}{RGB}{15, 15, 189}
+\definecolor{ExactColor}{RGB}{206, 105, 69}
 
 \usepackage{sectsty}
 \sectionfont{\fontsize{25}{10}\selectfont}
