@@ -18,7 +18,6 @@ import com.exactprosystems.jf.tool.custom.expfield.ExpressionField;
 import com.exactprosystems.jf.tool.custom.layout.CustomArrow;
 import com.exactprosystems.jf.tool.custom.layout.CustomGrid;
 import com.exactprosystems.jf.tool.custom.layout.CustomRectangle;
-import com.exactprosystems.jf.tool.custom.scale.IScaleListener;
 import com.exactprosystems.jf.tool.custom.scale.ScalePane;
 import javafx.beans.value.ChangeListener;
 import javafx.event.ActionEvent;
@@ -56,7 +55,7 @@ import java.util.ResourceBundle;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-public class LayoutWizardController implements Initializable, ContainingParent, IScaleListener
+public class LayoutWizardController implements Initializable, ContainingParent
 {
 	private static final Function<IControl, String> converter = IControl::getID;
 	public static final int BORDER_WIDTH = 4;
@@ -150,14 +149,6 @@ public class LayoutWizardController implements Initializable, ContainingParent, 
 		this.customGrid.setSize((int) width, (int) height);
 	}
 
-	//region IScaleListener
-	@Override
-	public void changeScale(double scale)
-	{
-		this.model.changeScale(scale);
-	}
-	//endregion
-
 	//endregion
 
 	public void displayWindow(IWindow window, List<IControl> checkedControls)
@@ -249,7 +240,8 @@ public class LayoutWizardController implements Initializable, ContainingParent, 
 		});
 		this.cbDialog.getSelectionModel().selectedItemProperty().addListener(this.windowChangeListener);
 
-		ScalePane scalePane = new ScalePane(this);
+		ScalePane scalePane = new ScalePane();
+		scalePane.setOnScaleChanged(this.model::changeScale);
 		scalePane.setMinHeight(30.0);
 		scalePane.setPrefHeight(30.0);
 		scalePane.setMaxHeight(30.0);

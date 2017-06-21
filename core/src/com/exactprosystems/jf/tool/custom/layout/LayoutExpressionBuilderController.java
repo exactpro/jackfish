@@ -19,7 +19,6 @@ import com.exactprosystems.jf.tool.CssVariables;
 import com.exactprosystems.jf.tool.custom.controls.field.CustomFieldWithButton;
 import com.exactprosystems.jf.tool.custom.controls.toggle.CustomToggleButton;
 import com.exactprosystems.jf.tool.custom.expfield.ExpressionField;
-import com.exactprosystems.jf.tool.custom.scale.IScaleListener;
 import com.exactprosystems.jf.tool.custom.scale.ScalePane;
 
 import javafx.event.ActionEvent;
@@ -54,7 +53,7 @@ import java.net.URL;
 import java.util.*;
 import java.util.List;
 
-public class LayoutExpressionBuilderController implements Initializable, ContainingParent, IScaleListener
+public class LayoutExpressionBuilderController implements Initializable, ContainingParent
 {
 	public static final int BORDER_WIDTH = 4;
 	public static final int OFFSET = BORDER_WIDTH / 2;
@@ -150,7 +149,6 @@ public class LayoutExpressionBuilderController implements Initializable, Contain
 		this.parent = parent;
 	}
 
-	@Override
 	public void changeScale(double scale)
 	{
 		this.model.changeScale(scale);
@@ -247,7 +245,8 @@ public class LayoutExpressionBuilderController implements Initializable, Contain
 		AnchorPane.setTopAnchor(this.mainScrollPane, 0.0);
 		AnchorPane.setRightAnchor(this.mainScrollPane, 0.0);
 		anchorPane.getChildren().add(this.mainScrollPane);
-		ScalePane scalePane = new ScalePane(this);
+		ScalePane scalePane = new ScalePane();
+		scalePane.setOnScaleChanged(this::changeScale);
 		scalePane.setSpacing(0.0);
 		anchorPane.getChildren().add(scalePane);
 		this.mainPane.setCenter(anchorPane);

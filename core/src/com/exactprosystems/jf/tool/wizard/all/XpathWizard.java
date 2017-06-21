@@ -94,11 +94,12 @@ public class XpathWizard extends AbstractWizard
     private AbstractControl                    currentControl    = null;
 
     private ExecutorService                    executor          = null;
-    private Service<Document>                  documentService   = null;
     private Service<ImageAndOffset>            imageService      = null;
+    private Service<Document>                  documentService   = null;
 
-    private Document                           document          = null;
-    private Node                               currentNode       = null;
+    private volatile ImageAndOffset            imageAndOffset    = null;
+    private volatile Document                  document          = null;
+    private volatile Node                      currentNode       = null;
 
     private SplitPane                          splitPane;
     private ImageViewWithScale                 imageViewWithScale;
@@ -227,26 +228,6 @@ public class XpathWizard extends AbstractWizard
             Locator elementLocator = this.currentControl.locator();
             IRemoteApplication service = this.currentConnection.getApplication().service();
             
-            // get XML document
-            this.documentService = new JfService<Document>(this.executor, 
-                    () -> Common.tryCatch(() -> service.getTree(selfLocator), "Error on document getting", null));
-            this.documentService.setOnSucceeded(event ->
-            {
-                this.document = (Document) event.getSource().getValue();
-                this.currentNode = XpathUtils.getFirst(this.document, "/*");
-                this.treeTableViewWithRectangles.displayDocument(this.document, 0, 0); // TODO why offsets are here?
-            });
-            this.documentService.setOnFailed(event ->
-            {
-                Throwable exception = event.getSource().getException();
-                String message = exception.getMessage();
-                if (exception.getCause() instanceof JFRemoteException)
-                {
-                    message = ((JFRemoteException) exception.getCause()).getErrorKind().toString();
-                }
-                DialogsHelper.showError(message);
-            });
-            
             // get picture
             this.imageService = new JfService<ImageAndOffset>(this.executor, 
                     () -> Common.tryCatch(() ->
@@ -262,11 +243,8 @@ public class XpathWizard extends AbstractWizard
     
             this.imageService.setOnSucceeded(event ->
             {
-                ImageAndOffset imageAndOffset = (ImageAndOffset) event.getSource().getValue();
-                // TODO offsets
-    //            xOffset = imageAndOffset.offsetX;
-    //            yOffset = imageAndOffset.offsetY;
-                this.imageViewWithScale.displayImage(imageAndOffset.image);
+                this.imageAndOffset = (ImageAndOffset) event.getSource().getValue();
+                this.imageViewWithScale.displayImage(this.imageAndOffset.image);
             });
     
             this.imageService.setOnFailed(event ->
@@ -280,6 +258,30 @@ public class XpathWizard extends AbstractWizard
                 DialogsHelper.showError(message);
             });
     
+            // get XML document
+            this.documentService = new JfService<Document>(this.executor, 
+                    () -> Common.tryCatch(() -> service.getTree(selfLocator), "Error on document getting", null));
+            this.documentService.setOnSucceeded(event ->
+            {
+                this.document = (Document) event.getSource().getValue();
+                this.currentNode = XpathUtils.getFirst(this.document, "/*");
+                if (this.imageAndOffset != null)
+                {
+                    this.treeTableViewWithRectangles.displayDocument(this.document, this.imageAndOffset.offsetX, this.imageAndOffset.offsetY);
+                }
+            });
+            this.documentService.setOnFailed(event ->
+            {
+                Throwable exception = event.getSource().getException();
+                String message = exception.getMessage();
+                if (exception.getCause() instanceof JFRemoteException)
+                {
+                    message = ((JFRemoteException) exception.getCause()).getErrorKind().toString();
+                }
+                DialogsHelper.showError(message);
+            });
+            
+            // start them
             this.imageService.start();
             this.documentService.start();
         }

@@ -4,7 +4,6 @@ import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.CssVariables;
 import com.exactprosystems.jf.tool.custom.layout.CustomRectangle;
 import com.exactprosystems.jf.tool.custom.layout.LayoutExpressionBuilderController;
-import com.exactprosystems.jf.tool.custom.scale.IScaleListener;
 import com.exactprosystems.jf.tool.custom.scale.ScalePane;
 import javafx.application.Platform;
 import javafx.geometry.Pos;
@@ -34,7 +33,7 @@ import java.util.function.Consumer;
 import java.util.function.DoubleConsumer;
 import java.util.stream.Collectors;
 
-public class ImageViewWithScale extends BorderPane implements IScaleListener
+public class ImageViewWithScale extends BorderPane
 {
 	private final static double WIDHT_COORDS = 120;
 
@@ -133,7 +132,7 @@ public class ImageViewWithScale extends BorderPane implements IScaleListener
 		this.inspectRectangle.addStyleClass(CssVariables.XPATH_INSPECT_RECTNAGLE);
 		this.inspectRectangle.setVisible(false);
 
-		this.scalePane.setListener(this);
+		this.scalePane.setOnScaleChanged(this::changeScale);
 		listeners();
 	}
 
@@ -244,7 +243,6 @@ public class ImageViewWithScale extends BorderPane implements IScaleListener
 	}
 	//endregion
 
-	@Override
 	public void changeScale(double scale)
 	{
 		this.scale = scale;

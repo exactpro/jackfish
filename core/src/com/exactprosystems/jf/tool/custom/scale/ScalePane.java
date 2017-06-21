@@ -13,29 +13,22 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
 
-import java.util.Optional;
+import java.util.function.Consumer;
 
 public class ScalePane extends HBox
 {
-	private double[] zooms = new double[]{0.25, 0.5, 0.75, 1, 1.5, 2, 2.5, 3, 4};
-	private double currentZoom = 1;
-	private int currentZoomPosition = 3;
-
-	private Label labelZoom;
-
-	private IScaleListener listener;
+    private static double[]  scales       = new double[] { 0.25, 0.5, 0.75, 1, 1.5, 2, 2.5, 3, 4 };
+    private static int       defaultIndex = 3;
+    private int              currentIndex = defaultIndex;
+    private Consumer<Double> scaleChanged;
+    private Label            labelZoom;
 
 	public ScalePane()
 	{
-		this(null);
-	}
-
-	public ScalePane(IScaleListener listener)
-	{
 		super();
+		
 		this.getStyleClass().addAll(CssVariables.SCALE_PANE);
 		this.setAlignment(Pos.CENTER_LEFT);
-		this.listener = listener;
 
 		Button btnZoomMinus = new Button();
 		btnZoomMinus.setId(CssVariables.SCALE_PANE_ZOOM_MINUS);
@@ -45,53 +38,63 @@ public class ScalePane extends HBox
 		btnZoomPlus.setId(CssVariables.SCALE_PANE_ZOOM_PLUS);
 		btnZoomPlus.getStyleClass().addAll(CssVariables.TRANSPARENT_BACKGROUND);
 
-		this.labelZoom = new Label("100%");
-		this.labelZoom.setOnMouseClicked(event -> {
+		this.labelZoom = new Label();
+		this.labelZoom.setOnMouseClicked(event -> 
+		{
 			if (event.getClickCount() == 2)
 			{
-				this.currentZoomPosition = 3;
-				this.currentZoom = zooms[this.currentZoomPosition];
-				this.labelZoom.setText("100%");
-				this.listener();
+				this.currentIndex = defaultIndex;
+	            displayScale();
+				this.onScaleChanged();
 			}
 		});
-
+        displayScale();
+		
 		btnZoomMinus.setOnAction(event ->
 		{
-			if (currentZoomPosition == 0)
+			if (currentIndex == 0)
 			{
 				return;
 			}
-			this.currentZoom = this.zooms[--this.currentZoomPosition];
+			--this.currentIndex;
 			displayScale();
-			listener();
+			onScaleChanged();
 		});
 
 		btnZoomPlus.setOnAction(event ->
 		{
-			if (this.currentZoomPosition == this.zooms.length - 1)
+			if (this.currentIndex == scales.length - 1)
 			{
 				return;
 			}
-			this.currentZoom = zooms[++this.currentZoomPosition];
+			++this.currentIndex;
 			displayScale();
-			listener();
+			onScaleChanged();
 		});
 		this.getChildren().addAll(btnZoomMinus, this.labelZoom, btnZoomPlus);
 	}
-
-	public void setListener(IScaleListener listener)
+	
+	public double getScale()
 	{
-		this.listener = listener;
+	    return scales[this.currentIndex];
 	}
 
-	private void listener()
+	public void setOnScaleChanged(Consumer<Double> scaleChanged)
 	{
-		Optional.ofNullable(this.listener).ifPresent(scale -> scale.changeScale(this.currentZoom));
+		this.scaleChanged = scaleChanged;
+	}
+	
+
+	private void onScaleChanged()
+	{
+	    if (this.scaleChanged != null)
+	    {
+	        this.scaleChanged.accept(getScale());
+	    }
 	}
 
 	private void displayScale()
 	{
-		this.labelZoom.setText(String.valueOf((int) (this.currentZoom * 100)) + "%");
+		this.labelZoom.setText(String.valueOf((int) (getScale() * 100)) + "%");
 	}
 }
