@@ -13,17 +13,19 @@ import com.exactprosystems.jf.api.app.IWindow.SectionKind;
 import com.exactprosystems.jf.api.common.Converter;
 import com.exactprosystems.jf.api.common.Str;
 import com.exactprosystems.jf.api.error.JFRemoteException;
+import com.exactprosystems.jf.common.utils.XpathUtils;
 import com.exactprosystems.jf.documents.guidic.*;
 import com.exactprosystems.jf.documents.guidic.Window;
 import com.exactprosystems.jf.documents.guidic.controls.AbstractControl;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.CssVariables;
 import com.exactprosystems.jf.tool.custom.ServiceLambdaBean;
-import com.exactprosystems.jf.tool.custom.xpath.ImageAndOffset;
-import com.exactprosystems.jf.tool.custom.xpath.TreeItemState;
 import com.exactprosystems.jf.tool.custom.xpath.XpathViewer;
 import com.exactprosystems.jf.tool.dictionary.DictionaryFx;
 import com.exactprosystems.jf.tool.helpers.DialogsHelper;
+import com.exactprosystems.jf.tool.wizard.related.ImageAndOffset;
+import com.exactprosystems.jf.tool.wizard.related.TreeItemState;
+
 import javafx.concurrent.Service;
 import javafx.concurrent.Task;
 import org.w3c.dom.Document;
@@ -124,7 +126,7 @@ public class DialogWizard
         {
             Rect        actualRectangle     = relativeRect(this.dialogRectangle, (Rectangle)node.getUserData(IRemoteApplication.rectangleName));
             String      actualName          = node.getNodeName();
-            String      actualPath          = XpathViewer.fullXpath("", this.rootNode, node, false, null, true);
+            String      actualPath          = XpathUtils.fullXpath("", this.rootNode, node, false, null, true);
             List<Attr>  actualAttr          = extractAttributes(node);
             
             Rect        expectedRectangle   = (Rect)info.get(ExtraInfo.rectangleName);
@@ -251,7 +253,7 @@ public class DialogWizard
 		Rectangle rec = (Rectangle)node.getUserData(IRemoteApplication.rectangleName);
 		Rect rectangle = relativeRect(this.dialogRectangle, rec);
 
-		info.set(ExtraInfo.xpathName, 		XpathViewer.fullXpath("", this.rootNode, node, false, null, true));
+		info.set(ExtraInfo.xpathName, 		XpathUtils.fullXpath("", this.rootNode, node, false, null, true));
 		info.set(ExtraInfo.nodeName, 		node.getNodeName());
 		info.set(ExtraInfo.rectangleName, 	rectangle);
 		List<Attr> attributes = extractAttributes(node);
@@ -497,7 +499,7 @@ public class DialogWizard
         String ownerPath = ".";
 
         List<String> parameters = allRealAttributes(node);
-        String relativePath = XpathViewer.fullXpath(ownerPath, this.rootNode, node, false, parameters, false);
+        String relativePath = XpathUtils.fullXpath(ownerPath, this.rootNode, node, false, parameters, false);
         Locator locator = new Locator().kind(kind).id(id).xpath(relativePath);
         
         if (tryLocator(locator, node) == 1)
@@ -510,7 +512,7 @@ public class DialogWizard
 	private Locator locatorByRelativeXpath(String id, ControlKind kind, Node node)
 	{
         String ownerPath = ".";
-        String xpath = XpathViewer.fullXpath(ownerPath, this.rootNode, node, false, null, true);
+        String xpath = XpathUtils.fullXpath(ownerPath, this.rootNode, node, false, null, true);
         String[] parts = xpath.split("/");
 
         Node parent = node; 
@@ -519,7 +521,7 @@ public class DialogWizard
             Locator relativeLocator = locatorByXpath(id, kind, parent);
             if (relativeLocator != null)
             {
-                String finalPath = XpathViewer.fullXpath(relativeLocator.getXpath(), parent, node, false, null, false);
+                String finalPath = XpathUtils.fullXpath(relativeLocator.getXpath(), parent, node, false, null, false);
                 
                 Locator finalLocator = new Locator().kind(kind).id(id).xpath(finalPath);
                 if (tryLocator(finalLocator, node) == 1)
@@ -672,7 +674,7 @@ public class DialogWizard
 		this.documentService.setOnSucceeded(event ->
 		{
 			this.document = (Document) event.getSource().getValue();
-			this.rootNode = XpathViewer.getFirst(this.document, "/*");
+			this.rootNode = XpathUtils.getFirst(this.document, "/*");
 			this.controller.displayTree(this.document, xOffset, yOffset);
 		});
 		this.imageService.setOnSucceeded(event ->

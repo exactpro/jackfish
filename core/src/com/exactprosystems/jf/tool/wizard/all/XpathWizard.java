@@ -10,38 +10,32 @@ package com.exactprosystems.jf.tool.wizard.all;
 
 import com.exactprosystems.jf.api.app.AppConnection;
 import com.exactprosystems.jf.api.app.IControl;
-import com.exactprosystems.jf.api.app.IGuiDictionary;
 import com.exactprosystems.jf.api.app.IRemoteApplication;
-import com.exactprosystems.jf.api.app.ISection;
-import com.exactprosystems.jf.api.app.IWindow;
 import com.exactprosystems.jf.api.app.IWindow.SectionKind;
 import com.exactprosystems.jf.api.app.Locator;
 import com.exactprosystems.jf.api.common.IContext;
 import com.exactprosystems.jf.api.error.JFRemoteException;
 import com.exactprosystems.jf.api.wizard.*;
+import com.exactprosystems.jf.common.utils.XpathUtils;
 import com.exactprosystems.jf.documents.guidic.Section;
 import com.exactprosystems.jf.documents.guidic.Window;
 import com.exactprosystems.jf.documents.guidic.controls.AbstractControl;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.Common.SpacerEnum;
-import com.exactprosystems.jf.tool.CssVariables;
 import com.exactprosystems.jf.tool.custom.ImageViewWithScale;
 import com.exactprosystems.jf.tool.custom.TreeTableViewWithRectangles;
 import com.exactprosystems.jf.tool.custom.controls.field.CustomFieldWithButton;
 import com.exactprosystems.jf.tool.custom.find.FindPanel;
 import com.exactprosystems.jf.tool.custom.find.IFind;
-import com.exactprosystems.jf.tool.custom.xpath.ImageAndOffset;
-import com.exactprosystems.jf.tool.custom.xpath.XpathTreeItem;
-import com.exactprosystems.jf.tool.custom.xpath.XpathViewer;
-import com.exactprosystems.jf.tool.custom.xpath.XpathViewerContentController;
 import com.exactprosystems.jf.tool.dictionary.DictionaryFx;
 import com.exactprosystems.jf.tool.helpers.DialogsHelper;
 import com.exactprosystems.jf.tool.wizard.AbstractWizard;
 import com.exactprosystems.jf.tool.wizard.CommandBuilder;
+import com.exactprosystems.jf.tool.wizard.related.ImageAndOffset;
+import com.exactprosystems.jf.tool.wizard.related.XpathTreeItem;
 
 import javafx.concurrent.Service;
 import javafx.concurrent.Task;
-import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.geometry.Orientation;
 import javafx.scene.control.Accordion;
@@ -55,15 +49,12 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import javafx.scene.text.Text;
-
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 import java.util.List;
 import java.util.concurrent.Executor;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.function.Function;
 import java.util.function.Supplier;
 
 import org.w3c.dom.Document;
@@ -275,7 +266,7 @@ public class XpathWizard extends AbstractWizard
             this.documentService.setOnSucceeded(event ->
             {
                 this.document = (Document) event.getSource().getValue();
-                this.currentNode = XpathViewer.getFirst(this.document, "/*");
+                this.currentNode = XpathUtils.getFirst(this.document, "/*");
                 this.treeTableViewWithRectangles.displayDocument(this.document, 0, 0); // TODO why offsets are here?
             });
             this.documentService.setOnFailed(event ->

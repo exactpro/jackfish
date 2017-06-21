@@ -2,16 +2,16 @@ package com.exactprosystems.jf.tool.custom;
 
 import com.exactprosystems.jf.api.app.IRemoteApplication;
 import com.exactprosystems.jf.api.common.Str;
+import com.exactprosystems.jf.common.utils.XpathUtils;
 import com.exactprosystems.jf.documents.matrix.parser.SearchHelper;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.CssVariables;
 import com.exactprosystems.jf.tool.custom.layout.CustomRectangle;
 import com.exactprosystems.jf.tool.custom.layout.LayoutExpressionBuilderController;
-import com.exactprosystems.jf.tool.custom.xpath.TreeItemState;
-import com.exactprosystems.jf.tool.custom.xpath.XpathItem;
-import com.exactprosystems.jf.tool.custom.xpath.XpathTreeItem;
-import com.exactprosystems.jf.tool.custom.xpath.XpathViewer;
 import com.exactprosystems.jf.tool.dictionary.dialog.ElementWizardBean;
+import com.exactprosystems.jf.tool.wizard.related.TreeItemState;
+import com.exactprosystems.jf.tool.wizard.related.XpathItem;
+import com.exactprosystems.jf.tool.wizard.related.XpathTreeItem;
 import com.sun.javafx.scene.control.skin.TreeTableViewSkin;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleObjectProperty;
@@ -444,7 +444,7 @@ public class TreeTableViewWithRectangles extends AnchorPane
 		IntStream.range(0, node.getChildNodes().getLength()).mapToObj(node.getChildNodes()::item).filter(item -> item.getNodeType() == org.w3c.dom.Node.ELEMENT_NODE).forEach(item -> displayTree(item, treeItem, xOffset, yOffset));
 		if (!isDocument)
 		{
-			treeItem.setValue(new XpathTreeItem(stringNode(node, XpathViewer.text(node)), node));
+			treeItem.setValue(new XpathTreeItem(stringNode(node, XpathUtils.text(node)), node));
 			Rectangle rec = (Rectangle) node.getUserData(IRemoteApplication.rectangleName);
 			if (rec != null)
 			{

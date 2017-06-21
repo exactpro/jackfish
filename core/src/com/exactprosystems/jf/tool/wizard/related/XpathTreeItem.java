@@ -1,4 +1,4 @@
-package com.exactprosystems.jf.tool.custom.xpath;
+package com.exactprosystems.jf.tool.wizard.related;
 
 import com.exactprosystems.jf.tool.CssVariables;
 import com.exactprosystems.jf.tool.dictionary.dialog.ElementWizardBean;

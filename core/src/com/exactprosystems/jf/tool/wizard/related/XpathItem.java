@@ -1,4 +1,4 @@
-package com.exactprosystems.jf.tool.custom.xpath;
+package com.exactprosystems.jf.tool.wizard.related;
 
 import com.exactprosystems.jf.api.app.IRemoteApplication;
 import javafx.geometry.Pos;

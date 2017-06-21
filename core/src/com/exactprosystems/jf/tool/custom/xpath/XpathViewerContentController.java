@@ -9,6 +9,8 @@ import com.exactprosystems.jf.tool.custom.TreeTableViewWithRectangles;
 import com.exactprosystems.jf.tool.custom.controls.field.CustomFieldWithButton;
 import com.exactprosystems.jf.tool.custom.find.FindPanel;
 import com.exactprosystems.jf.tool.custom.find.IFind;
+import com.exactprosystems.jf.tool.wizard.related.XpathTreeItem;
+
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.Event;

@@ -12,6 +12,10 @@ import java.util.Arrays;
 
 public class ArrayUtils
 {
+    private ArrayUtils()
+    {
+    }
+    
     public static <T> T[] concat(T[] first, T[] second)
     {
         T[] result = Arrays.copyOf(first, first.length + second.length);
