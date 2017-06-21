@@ -98,14 +98,38 @@ INIT;Test case;Never;;
 
 #Id;#TestCase;#Kind;#Depends;#For
 EXECUTE;;;;
+    #Id;#Global;#Let
+    adapter;1;parameter
+
+    #If
+    adapter == 'Web'
+        #Call;plugin
+        RUN;'Web'
+
+    #EndIf
+
+    #If
+    adapter == 'Swing'
+        #Call;plugin
+        RUN;'Swing'
+
+    #EndIf
+
+    #If
+    adapter == 'Win'
+        #Call;plugin
+        RUN;'Win'
+
+    #EndIf
+
     #Off;#Call;plugin
     1;RUN;'Web'
 
     #Off;#Call;plugin
     1;RUN;'Swing'
 
-    #Call;plugin
-    RUN;'Win'
+    #Off;#Call;plugin
+    1;RUN;'Win'
 
     #Id;#Action;$Decoraded
     RESTBL1;ResultTable;true

@@ -98,8 +98,14 @@ Test;Matrix;;;
 
 #Id;#TestCase;#Kind;#Depends;#For
 Test;Controls;;;
-    #Call;testName
-    runMatrix;'Controls'
+    #Call;testName;param
+    runControls;'Controls';'Web'
+
+    #Call;testName;param
+    runControls;'Controls';'Swing'
+
+    #Call;testName;param
+    runControls;'Controls';'Win'
 
 
 #Id;#TestCase;#Kind;#Depends;#For
@@ -149,6 +155,22 @@ REPORT;Cleanup;;;
     runMatrix;Running test;'controls'
         #Id;#Action;$Matrix
         MXRN1;MatrixRun;matrixTestsPath + testName +  '.jf'
+
+        #Id;#Action;$Matrix
+        MXWT1;MatrixWait;MXRN1.Out
+
+        #Id;#Action;$Decoraded;$Matrix
+        RESTBL2;ResultTable;true;MXRN1.Out
+
+        #Action;$UnitedTable;$MainTable
+        TableUnion;RESTBL2.Out;RESTBL1.Out
+
+    #EndSubCase
+
+    #Id;#SubCase;testName;param
+    runControls;Running test;'Controls';'Web'
+        #Id;#Action;$Matrix;$Parameter
+        MXRN1;MatrixRun;matrixTestsPath + testName +  '.jf';param
 
         #Id;#Action;$Matrix
         MXWT1;MatrixWait;MXRN1.Out
