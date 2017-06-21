@@ -52,7 +52,7 @@ public class WebAppFactory implements IApplicationFactory
 			ControlKind.Any, ControlKind.Wait, ControlKind.Button, ControlKind.CheckBox, ControlKind.ComboBox, ControlKind.Dialog,
 			ControlKind.Frame, ControlKind.Image, ControlKind.Label, ControlKind.ListView, ControlKind.Panel,
 			ControlKind.ProgressBar, ControlKind.RadioButton, ControlKind.Row, ControlKind.Slider,
-			ControlKind.Spinner, ControlKind.Table, ControlKind.TextBox, ControlKind.ToggleButton,
+			ControlKind.Table, ControlKind.TextBox, ControlKind.ToggleButton,
 		};
 
 	private IGuiDictionary dictionary = null;
@@ -200,9 +200,7 @@ public class WebAppFactory implements IApplicationFactory
 		info.addTypes(ControlKind.RadioButton,"input");
 		info.addTypes(ControlKind.Row,"tr");
 		info.addTypes(ControlKind.Slider,"div");
-		info.addTypes(ControlKind.Spinner,"*");
         info.addTypes(ControlKind.Table,"table");
-        //info.addTypes(ControlKind.TabPanel,"button");
         info.addTypes(ControlKind.TextBox,"input", "textarea");
 		info.addTypes(ControlKind.ToggleButton,"input");
 		info.addTypes(ControlKind.ListView,"ul");
