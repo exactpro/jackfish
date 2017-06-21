@@ -6,35 +6,35 @@ INIT;Test case;Never;;
     // {web,swing,win} or All
     #Id;#Global;#RawTable
     controls;1;Table
-    @;On;Before;getRowPar;getRow;colorPar;Name;toggle;getAttr;getAttrPar;getValue;get;setValue;text;getList;check;getListPar;getValuePar
-    0;;'Do.move()';'\'tr_3_td_3\'';;'new Color(246,246,246)';Label;;'CentralLabel';'\'CentralLabel\'';'CentralLabel';'CentralLabel';;;;'CentralLabel';'new ArrayList([\'Green\',\'Yellow\', \'Orange\',\'Blue\']),false';'\'CentralLabel\''
-    1;;;'\'tr_3_td_3\'';;'new Color(246,246,246)';Button;;'Button';'\'Button\'';'Button';'Button';;;;'Button';'new ArrayList([\'Green\',\'Yellow\', \'Orange\',\'Blue\']),false';'\'Button\''
-    2;;;'\'tr_3_td_3\'';;'new Color(246,246,246)';TextBox;;getExp(plugin,'TextBox','TextBox','Slider_click');'\'Slider_click\'';'';'';;'Green';;'';'new ArrayList([\'Green\',\'Yellow\', \'Orange\',\'Blue\']),false';'\'\''
-    3;;;'\'tr_3_td_3\'';;'new Color(246,246,246)';Any;;'Any';'\'Any\'';;;;;;true;'new ArrayList([\'Green\',\'Yellow\', \'Orange\',\'Blue\']),false';'\'\''
-    4;;'Do.move()';'\'tr_3_td_3\'';;'new Color(246,246,246)';CheckBox;getExp(plugin,'true','true','On');'CheckBox';'\'CheckBox\'';getExp(plugin,true,true,'On');'CheckBox';;;;true;'new ArrayList([\'Green\',\'Yellow\', \'Orange\',\'Blue\']),false';getExp(plugin,'\'true\'','\'true\'','\'On\'')
-    5;;'Do.move()';'\'tr_3_td_3\'';;'new Color(246,246,246)';ToggleButton;getExp(plugin,'true','true','On');'ToggleButton';'\'ToggleButton\'';getExp(plugin,true,true,'On');'ToggleButton';;;;true;'new ArrayList([\'Green\',\'Yellow\', \'Orange\',\'Blue\']),false';getExp(plugin,'\'true\'','\'true\'','\'On\'')
-    6;;;'\'tr_3_td_3\'';;'new Color(246,246,246)';ComboBox;;getExp(plugin,'ComboBox','ComboBox','Green');getExp(plugin,'\'ComboBox\'','\'ComboBox\'','\'Green\'');'Green';'Green';;'Green';'[Green, Yellow, Orange, Blue]';'Green';'new ArrayList([\'Green\',\'Yellow\', \'Orange\',\'Blue\']),false';'\'Green\''
-    7;;;'\'tr_3_td_3\'';'{Head1=tr_3_td_1, Head2=tr_3_td_2, Head3=tr_3_td_3}';'new Color(246,246,246)';Table;;getExp(plugin,'Table','Table','DataGridView');getExp(plugin,'\'Table\'','\'Table\'','\'DataGridView\'');'tr_2_td_2';;;getExp(plugin,'tr_2_td_2','Green','Green');;'tr_2_td_2';'new ArrayList([\'Green\',\'Yellow\', \'Orange\',\'Blue\']),false';'\'tr_2_td_2\''
-    8;;'Do.setValue(0)';'\'tr_3_td_3\'';;'new Color(246,246,246)';Slider;;getExp(plugin,'Slider','Slider','');getExp(plugin,'\'Slider\'','\'Slider\'','\'\'');getExp(plugin,'',0,'0');;'Slider_30';;;getExp(plugin,'',0,'0');'new ArrayList([\'Green\',\'Yellow\', \'Orange\',\'Blue\']),false';getExp(plugin,'\'\'','0','0')
-    9;;;'\'tr_3_td_3\'';;'new Color(246,246,246)';RadioButton;getExp(plugin,'true','true','True');getExp(plugin,'RadioButton','RadioButton','Green');getExp(plugin,'\'RadioButton\'','\'RadioButton\'','\'Green\'');getExp(plugin,'false','false','False');'Green';;;;false;'new ArrayList([\'Green\',\'Yellow\', \'Orange\',\'Blue\']),false';'\'false\''
-    10;;;'\'tr_3_td_3\'';;'new Color(246,246,246)';ProgressBar;;getExp(plugin,'ProgressBar','ProgressBar','');getExp(plugin,'\'ProgressBar\'','\'ProgressBar\'','\'\'');10;;;;;true;'new ArrayList([\'Green\',\'Yellow\', \'Orange\',\'Blue\']),false';'\'10\''
-    11;;;'\'tr_3_td_3\'';;'new Color(246,246,246)';Panel;;getExp(plugin,'Panel','Panel','');getExp(plugin,'\'Panel\'','\'Panel\'','\'\'');'Panel';;;getExp(plugin,'Panel','Panel','Green');;true;'new ArrayList([\'Green\',\'Yellow\', \'Orange\',\'Blue\']),false';'\'Panel\''
-    12;;'Do.select(\'Green\')';'\'tr_3_td_3\'';;'new Color(246,246,246)';List;;getExp(plugin,'List','List','tab2');getExp(plugin,'\'List\'','\'List\'','\'tab2\'');getExp(plugin,'Coffee\nJuice\nTea\nBlack tea\nGreen tea\nMilk','Green','Green');;;;'[Green, Yellow, Orange, Blue]';true;'new ArrayList([\'Green\',\'Yellow\', \'Orange\',\'Blue\']),false';getExp(plugin,'\'Green\nYellow\nOrange\nBlue\'','\'Green\'','\'Green\'')
-    13;;'Do.move()';'\'tr_3_td_3\'';;'new Color(246,246,246)';Dialog;;'Dialog';'\'Dialog\'';;;;;;true;'new ArrayList([\'Green\',\'Yellow\', \'Orange\',\'Blue\']),false';'\'\''
-    14;;'Do.move()';'\'tr_3_td_3\'';;'new Color(246,246,246)';Image;;'Image';'\'Image\'';;;;;;true;'new ArrayList([\'Green\',\'Yellow\', \'Orange\',\'Blue\']),false';'\'\''
-    15;;;'\'tr_3_td_3\'';;'new Color(246,246,246)';Wait;;'Wait';'\'Wait\'';;;;;;true;'new ArrayList([\'Green\',\'Yellow\', \'Orange\',\'Blue\']),false';'\'\''
-    16;;;'\'tr_3_td_3\'';;'new Color(246,246,246)';ScrollBar;;getExp(plugin,'ScrollBar','ScrollBar','Vertical Scroll Bar');getExp(plugin,'\'ScrollBar\'','\'ScrollBar\'','\'Vertical Scroll Bar\'');0;;'ScrollBar_30';;;true;'new ArrayList([\'Green\',\'Yellow\', \'Orange\',\'Blue\']),false';'\'0\''
-    17;;;'\'[JTree][Orange]\'';'{value=[JTree][Orange]}';'new Color(246,246,246)';Tree;;'Tree';'\'Tree\'';;;;;;true;'new ArrayList([\'Green\',\'Yellow\', \'Orange\',\'Blue\']),false';'\'\''
-    18;;;'\'[JTree][Orange]\'';;'new Color(246,246,246)';Splitter;;'Splitter';'\'Splitter\'';125;;'Splitter_30';;;true;'new ArrayList([\'Green\',\'Yellow\', \'Orange\',\'Blue\']),false';'\'125\''
-    19;;'Do.use(\'Menu2\').move()';'\'[JTree][Orange]\'';;'new Color(246,246,246)';Tooltip;;;'\'Tooltip\'';'Tooltip';'Tooltip';;;;true;'new ArrayList([\'Green\',\'Yellow\', \'Orange\',\'Blue\']),false';'\'Tooltip\''
-    20;;;'\'[JTree][Orange]\'';;'new Color(246,246,246)';Menu;;'Menu';'\'Menu\'';;'Menu';;;;true;'new ArrayList([\'Green\',\'Yellow\', \'Orange\',\'Blue\']),false';'\'\''
-    21;;'Do.use(\'Menu2\').click(200,10).click()';'\'[JTree][Orange]\'';;'new Color(246,246,246)';MenuItem;;'MenuItem';'\'MenuItem\'';;'MenuItem';;;;true;'new ArrayList([\'Green\',\'Yellow\', \'Orange\',\'Blue\']),false';'\'\''
-    22;x;'Do.select(\'Green\')';'\'[JTree][Orange]\'';;'new Color(246,246,246)';TabPanel;;getExp(plugin,'TabPanel','TabPanel','');getExp(plugin,'\'TabPanel\'','\'TabPanel\'','\'TabPanel\'');'Green';'TabPanel';;;'[Green, Yellow, Orange, Blue]';true;'new ArrayList([\'Green\',\'Yellow\', \'Orange\',\'Blue\']),false';'\'\''
-    23;x;;'\'[JTree][Orange]\'';;'new Color(246,246,246)';Spinner;;'Spinner';'\'Spinner\'';;'Spinner';;;;true;'new ArrayList([\'Green\',\'Yellow\', \'Orange\',\'Blue\']),false';'\'\''
+    @;On;Before;getRowPar;getRow;colorPar;Name;toggle;getAttr;getAttrPar;getValue;select;get;setValue;text;getList;check;getListPar;getValuePar
+    0;x;'Do.move()';'\'tr_3_td_3\'';;'new Color(246,246,246)';Label;;'CentralLabel';'\'CentralLabel\'';'CentralLabel';;'CentralLabel';;;;'CentralLabel';'new ArrayList([\'Green\',\'Yellow\', \'Orange\',\'Blue\']),false';'\'CentralLabel\''
+    1;x;;'\'tr_3_td_3\'';;'new Color(246,246,246)';Button;;'Button';'\'Button\'';'Button';;'Button';;;;'Button';'new ArrayList([\'Green\',\'Yellow\', \'Orange\',\'Blue\']),false';'\'Button\''
+    2;x;;'\'tr_3_td_3\'';;'new Color(246,246,246)';TextBox;;getExp(plugin,'TextBox','TextBox','Slider_click');'\'Slider_click\'';'';;'';;'Green';;'';'new ArrayList([\'Green\',\'Yellow\', \'Orange\',\'Blue\']),false';'\'\''
+    3;x;;'\'tr_3_td_3\'';;'new Color(246,246,246)';Any;;'Any';'\'Any\'';;;;;;;true;'new ArrayList([\'Green\',\'Yellow\', \'Orange\',\'Blue\']),false';'\'\''
+    4;x;'Do.move()';'\'tr_3_td_3\'';;'new Color(246,246,246)';CheckBox;getExp(plugin,'true','true','On');'CheckBox';'\'CheckBox\'';getExp(plugin,true,true,'On');;'CheckBox';;;;true;'new ArrayList([\'Green\',\'Yellow\', \'Orange\',\'Blue\']),false';getExp(plugin,'\'true\'','\'true\'','\'On\'')
+    5;x;'Do.move()';'\'tr_3_td_3\'';;'new Color(246,246,246)';ToggleButton;getExp(plugin,'true','true','On');'ToggleButton';'\'ToggleButton\'';getExp(plugin,true,true,'On');;'ToggleButton';;;;true;'new ArrayList([\'Green\',\'Yellow\', \'Orange\',\'Blue\']),false';getExp(plugin,'\'true\'','\'true\'','\'On\'')
+    6;x;;'\'tr_3_td_3\'';;'new Color(246,246,246)';ComboBox;;getExp(plugin,'ComboBox','ComboBox','Green');getExp(plugin,'\'ComboBox\'','\'ComboBox\'','\'Green\'');'Green';'Blue';'Green';;'Green';'[Green, Yellow, Orange, Blue]';'Green';'new ArrayList([\'Green\',\'Yellow\', \'Orange\',\'Blue\']),false';'\'Green\''
+    7;x;;'\'tr_3_td_3\'';'{Head1=tr_3_td_1, Head2=tr_3_td_2, Head3=tr_3_td_3}';'new Color(246,246,246)';Table;;getExp(plugin,'Table','Table','DataGridView');getExp(plugin,'\'Table\'','\'Table\'','\'DataGridView\'');'tr_2_td_2';;;;getExp(plugin,'tr_2_td_2','Green','Green');;'tr_2_td_2';'new ArrayList([\'Green\',\'Yellow\', \'Orange\',\'Blue\']),false';'\'tr_2_td_2\''
+    8;x;'Do.setValue(0)';'\'tr_3_td_3\'';;'new Color(246,246,246)';Slider;;getExp(plugin,'Slider','Slider','');getExp(plugin,'\'Slider\'','\'Slider\'','\'\'');getExp(plugin,'',0,'0');;;'Slider_30';;;getExp(plugin,'',0,'0');'new ArrayList([\'Green\',\'Yellow\', \'Orange\',\'Blue\']),false';getExp(plugin,'\'\'','0','0')
+    9;x;;'\'tr_3_td_3\'';;'new Color(246,246,246)';RadioButton;getExp(plugin,'true','true','True');getExp(plugin,'RadioButton','RadioButton','Green');getExp(plugin,'\'RadioButton\'','\'RadioButton\'','\'Green\'');getExp(plugin,'false','false','False');;'Green';;;;false;'new ArrayList([\'Green\',\'Yellow\', \'Orange\',\'Blue\']),false';'\'false\''
+    10;x;;'\'tr_3_td_3\'';;'new Color(246,246,246)';ProgressBar;;getExp(plugin,'ProgressBar','ProgressBar','');getExp(plugin,'\'ProgressBar\'','\'ProgressBar\'','\'\'');10;;;;;;true;'new ArrayList([\'Green\',\'Yellow\', \'Orange\',\'Blue\']),false';'\'10\''
+    11;x;;'\'tr_3_td_3\'';;'new Color(246,246,246)';Panel;;getExp(plugin,'Panel','Panel','');getExp(plugin,'\'Panel\'','\'Panel\'','\'\'');'Panel';;;;getExp(plugin,'Panel','Panel','Green');;true;'new ArrayList([\'Green\',\'Yellow\', \'Orange\',\'Blue\']),false';'\'Panel\''
+    12;x;'Do.select(\'Green\')';'\'tr_3_td_3\'';;'new Color(246,246,246)';List;;getExp(plugin,'List','List','tab2');getExp(plugin,'\'List\'','\'List\'','\'tab2\'');getExp(plugin,'Green\nYellow\nOrange\nBlue','Green','Green');getExp(plugin,'Green\nYellow\nOrange\nBlue','Blue','Blue');;;;'[Green, Yellow, Orange, Blue]';true;'new ArrayList([\'Green\',\'Yellow\', \'Orange\',\'Blue\']),false';getExp(plugin,'\'Green\nYellow\nOrange\nBlue\'','\'Green\'','\'Green\'')
+    13;x;'Do.move()';'\'tr_3_td_3\'';;'new Color(246,246,246)';Dialog;;'Dialog';'\'Dialog\'';;;;;;;true;'new ArrayList([\'Green\',\'Yellow\', \'Orange\',\'Blue\']),false';'\'\''
+    14;x;'Do.move()';'\'tr_3_td_3\'';;'new Color(246,246,246)';Image;;'Image';'\'Image\'';;;;;;;true;'new ArrayList([\'Green\',\'Yellow\', \'Orange\',\'Blue\']),false';'\'\''
+    15;x;;'\'tr_3_td_3\'';;'new Color(246,246,246)';Wait;;'Wait';'\'Wait\'';;;;;;;true;'new ArrayList([\'Green\',\'Yellow\', \'Orange\',\'Blue\']),false';'\'\''
+    16;x;;'\'tr_3_td_3\'';;'new Color(246,246,246)';ScrollBar;;getExp(plugin,'ScrollBar','ScrollBar','Vertical Scroll Bar');getExp(plugin,'\'ScrollBar\'','\'ScrollBar\'','\'Vertical Scroll Bar\'');0;;;'ScrollBar_30';;;true;'new ArrayList([\'Green\',\'Yellow\', \'Orange\',\'Blue\']),false';'\'0\''
+    17;x;;'\'[JTree][Orange]\'';'{value=[JTree][Orange]}';'new Color(246,246,246)';Tree;;'Tree';'\'Tree\'';;;;;;;true;'new ArrayList([\'Green\',\'Yellow\', \'Orange\',\'Blue\']),false';'\'\''
+    18;x;;'\'[JTree][Orange]\'';;'new Color(246,246,246)';Splitter;;'Splitter';'\'Splitter\'';125;;;'Splitter_30';;;true;'new ArrayList([\'Green\',\'Yellow\', \'Orange\',\'Blue\']),false';'\'125\''
+    19;x;'Do.use(\'Menu2\').move()';'\'[JTree][Orange]\'';;'new Color(246,246,246)';Tooltip;;;'\'Tooltip\'';'Tooltip';;'Tooltip';;;;true;'new ArrayList([\'Green\',\'Yellow\', \'Orange\',\'Blue\']),false';'\'Tooltip\''
+    20;x;;'\'[JTree][Orange]\'';;'new Color(246,246,246)';Menu;;'Menu';'\'Menu\'';;;'Menu';;;;true;'new ArrayList([\'Green\',\'Yellow\', \'Orange\',\'Blue\']),false';'\'\''
+    21;x;'Do.use(\'Menu2\').click(200,10).click()';'\'[JTree][Orange]\'';;'new Color(246,246,246)';MenuItem;;'MenuItem';'\'MenuItem\'';;;'MenuItem';;;;true;'new ArrayList([\'Green\',\'Yellow\', \'Orange\',\'Blue\']),false';'\'\''
+    22;x;'Do.select(\'Green\')';'\'[JTree][Orange]\'';;'new Color(246,246,246)';TabPanel;;getExp(plugin,'TabPanel','TabPanel','');getExp(plugin,'\'TabPanel\'','\'TabPanel\'','\'TabPanel\'');'Green';'Blue';'TabPanel';;;'[Green, Yellow, Orange, Blue]';true;'new ArrayList([\'Green\',\'Yellow\', \'Orange\',\'Blue\']),false';'\'\''
+    23;x;;'\'[JTree][Orange]\'';;'new Color(246,246,246)';Spinner;;'Spinner';'\'Spinner\'';;;'Spinner';;;;true;'new ArrayList([\'Green\',\'Yellow\', \'Orange\',\'Blue\']),false';'\'\''
     #EndRawTable
 
-    #Action;$Table;$Expression
-    TableConsiderColumnsAs;controls;{'Before','getAttr','getValue','get','setValue','text','getList','check','getListPar','getValuePar','getAttrPar','colorPar','getRow','getRowPar','toggle'}
+    #Action;#Table;#Expression
+    TableConsiderColumnsAs;controls;{'Before','getAttr','getValue','get','setValue','text','getList','check','getListPar','getValuePar','getAttrPar','colorPar','getRow','getRowPar','toggle','select'}
 
     #Id;#Global;#RawTable
     operations;1;Table
@@ -64,8 +64,8 @@ INIT;Test case;Never;;
     22;x;push;Do.push().use('pushLabel').getValue();control.Name + '_push';
     23;x;getList;Do.getList();control.getList;
     24;x;Do.toggle;Do.toggle(true).toggle(false).toggle(true).getValue();control.toggle;
-    25;x;Do.select(int);Do.select(0).getValue();control.getValue;
-    26;x;Do.select(string);Do.select('Blue').getValue();'Blue';
+    25;x;Do.select(string);Do.select('Blue').getValue();control.select;
+    26;x;Do.select(int);Do.select(0).getValue();control.getValue;
     27;x;Do.count;Do.count();1;
     28;x;Do.use;Do.use(0).count();1;
     29;x;Do.move;Do.move().use('moveLabel').getValue();control.Name + '_move';
@@ -94,73 +94,61 @@ INIT;Test case;Never;;
     52;x;Do.dragNDrop;Do.use('Slider').setValue(0).dragNdrop(10, 6, 'Slider', 395, 6).use('sliderLabel').getValue();'Slider_50';
     #EndRawTable
 
-    #Action;$Table;$Expression
+    #Action;#Table;#Expression
     TableConsiderColumnsAs;operations;{'Actual','Par'}
 
 
 #Id;#TestCase;#Kind;#Depends;#For
 EXECUTE;;;;
     #Id;#Global;#Let
-    adapter;1;'Win'
-
-    #Id;#Off;#Global;#Let
-    adapter;1;1;parameter
+    adapter;1;parameter
 
     #If
     adapter == 'Web'
-        #Call;plugin
+        #Call;#plugin
         RUN;'Web'
 
     #EndIf
 
     #If
     adapter == 'Swing'
-        #Call;plugin
+        #Call;#plugin
         RUN;'Swing'
 
     #EndIf
 
     #If
     adapter == 'Win'
-        #Call;plugin
+        #Call;#plugin
         RUN;'Win'
 
     #EndIf
 
-    #Off;#Call;plugin
-    1;RUN;'Web'
-
-    #Off;#Call;plugin
-    1;RUN;'Swing'
-
-    #Off;#Call;plugin
-    1;RUN;'Win'
-
-    #Id;#Action;$Decoraded
+    #Id;#Action;#Decoraded
     RESTBL1;ResultTable;true
 
-    #Action;$Table;$Title;$BeforeTestCase
+    #Action;#Table;#Title;#BeforeTestCase
     TableReport;RESTBL1.Out;'result';'INIT'
 
 
 #Id;#TestCase;#Kind;#Depends;#For
 SUBCASES;;;;
-    #Id;#SubCase;plugin
-    RUN;Run;'Win'
+    #Id;#SubCase;#plugin
+    RUN;Run;'Web'
         #Step;#Kind;#For;#Depends
         'start application';;;
-            #Id;#Action;Plugin;Control;Operation;Time;Expected;Actual;Result
+            #Id;#Action;#Plugin;#Control;#Operation;#Time;#Expected;#Actual;#Result
             TBL1;TableCreate;;;;;;;
 
             #Id;#Global;#Let
             table_result;1;TBL1.Out
 
-            #Action;$Table;$Colored
+            #Action;#Table;#Colored
             TableConsiderColumnsAs;table_result;'Result'
 
             #If
             plugin == 'Web'
-                #Id;#Action;$AppId;Browser;URL
+                #Id;#Action;#AppId;#Browser;#URL
                 APPSTR1;ApplicationStart;mockWebApp;mockWebBrowser;mockWebURL
 
                 #Id;#Global;#Let
@@ -170,7 +158,7 @@ SUBCASES;;;;
 
             #If
             plugin == 'Swing'
-                #Id;#Action;$AppId;Jar;Args;MainClass
+                #Id;#Action;#AppId;#Jar;#Args;#MainClass
                 APPSTR1;ApplicationStart;mockSwingApp;mockSwingJar;'';mockSwingClass
 
                 #Id;#Global;#Let
@@ -180,7 +168,7 @@ SUBCASES;;;;
 
             #If
             plugin == 'Win'
-                #Id;#Action;$AppId;Exec;WorkDir;Args
+                #Id;#Action;#AppId;#Exec;#WorkDir;#Args
                 APPSTR1;ApplicationStart;mockWinApp;mockWinExec;mockWinDir;''
 
                 #Id;#Global;#Let
@@ -247,19 +235,19 @@ SUBCASES;;;;
 
                     #EndIf
 
-                    #Id;#Action;$Dialog;$AppConnection;$Fields
+                    #Id;#Action;#Dialog;#AppConnection;#Fields
                     DLG;DialogFill;'Main';appCon;{control.Name : before}
 
-                    #Id;#Action;$Dialog;$AppConnection;$Fields
+                    #Id;#Action;#Dialog;#AppConnection;#Fields
                     DLG;DialogFill;'Main';appCon;{control.Name : op}
 
                     #Assert;#Message
                     evaluator.evaluate(field).toString() == operation.Actual.toString();
 
-                    #Action;$Table;Plugin;Control;Operation;Time;Expected;Actual;Result
+                    #Action;#Table;#Plugin;#Control;#Operation;#Time;#Expected;#Actual;#Result
                     TableAddValue;table_result;plugin;control.Name;operation.Name;DateTime.current().getTime() - startTime;evaluator.evaluate(field);operation.Actual;'OK'
 
-                    #Action;
+                    #Action;#
                     Print;control.Name + ' - ' + operation.Name + ' (' + (DateTime.current().getTime() - startTime) + ')'
 
                     #OnError
@@ -269,17 +257,17 @@ SUBCASES;;;;
                             ErrorKind.OPERATION_NOT_ALLOWED
                                 #If
                                 appCon.getDictionary().getWindow('Main').getControlForName(null, control.Name).getBindedClass().isAllowed(evaluator.evaluate(op).getOperationKind(0)) == false || appCon.getApplication().getFactory()isAllowed(appCon.getDictionary().getWindow('Main').getControlForName(null, control.Name).getBindedClass(), evaluator.evaluate(op).getOperationKind(0)) == false
-                                    #Action;$Table;Plugin;Control;Operation;Time;Expected;Actual;Result
+                                    #Action;#Table;#Plugin;#Control;#Operation;#Time;#Expected;#Actual;#Result
                                     TableAddValue;table_result;plugin;control.Name;operation.Name;DateTime.current().getTime() - startTime;'OPERATION IS NOT ALLOWED';'OPERATION IS NOT ALLOWED';'OK'
 
-                                    #Action;
+                                    #Action;#
                                     Print;control.Name + ' - ' + operation.Name + ' (' + (DateTime.current().getTime() - startTime) + ')'
 
                                 #Else
-                                    #Action;$Table;Plugin;Control;Operation;Time;Expected;Actual;Result
+                                    #Action;#Table;#Plugin;#Control;#Operation;#Time;#Expected;#Actual;#Result
                                     TableAddValue;table_result;plugin;control.Name;operation.Name;DateTime.current().getTime() - startTime;'OPERATION_CHECK_FAILED';'OPERATION_CHECK_FAILED';'FAILED'
 
-                                    #Action;
+                                    #Action;#
                                     Print;control.Name + ' - ' + operation.Name + ' (' + (DateTime.current().getTime() - startTime) + ')'
 
                                     #Id;#Let
@@ -295,12 +283,15 @@ SUBCASES;;;;
                             ErrorKind.FEATURE_NOT_SUPPORTED
                                 #If
                                 operation.Actual == ErrorKind.FEATURE_NOT_SUPPORTED
-                                    #Action;$Table;Plugin;Control;Operation;Time;Expected;Actual;Result
+                                    #Action;#Table;#Plugin;#Control;#Operation;#Time;#Expected;#Actual;#Result
                                     TableAddValue;table_result;plugin;control.Name;operation.Name;DateTime.current().getTime() - startTime;'FEATURE_NOT_SUPPORTED';'FEATURE_NOT_SUPPORTED';'OK'
 
                                 #Else
-                                    #Action;$Table;Plugin;Control;Operation;Time;Expected;Actual;Result
+                                    #Action;#Table;#Plugin;#Control;#Operation;#Time;#Expected;#Actual;#Result
                                     TableAddValue;table_result;plugin;control.Name;operation.Name;DateTime.current().getTime() - startTime;'FEATURE_NOT_SUPPORTED';'FEATURE_NOT_SUPPORTED';'FAILED'
+
+                                    #Id;#Let
+                                    failed;true
 
 
                                 #EndIf
@@ -312,17 +303,17 @@ SUBCASES;;;;
                             ErrorKind.CONTROL_NOT_SUPPORTED
                                 #If
                                 appCon.getApplication().getFactory().getInfo().isSupported(appCon.getDictionary().getWindow('Main').getControlForName(null, control.Name).getBindedClass()) == false
-                                    #Action;$Table;Plugin;Control;Operation;Time;Expected;Actual;Result
+                                    #Action;#Table;#Plugin;#Control;#Operation;#Time;#Expected;#Actual;#Result
                                     TableAddValue;table_result;plugin;control.Name;operation.Name;DateTime.current().getTime() - startTime;'ELEMENT IS NOT SUPPORTED';'ELEMENT IS NOT SUPPORTED';'OK'
 
-                                    #Action;
+                                    #Action;#
                                     Print;control.Name + ' - ' + operation.Name + ' (' + (DateTime.current().getTime() - startTime) + ')'
 
                                 #Else
-                                    #Action;$Table;Plugin;Control;Operation;Time;Expected;Actual;Result
+                                    #Action;#Table;#Plugin;#Control;#Operation;#Time;#Expected;#Actual;#Result
                                     TableAddValue;table_result;plugin;control.Name;operation.Name;DateTime.current().getTime() - startTime;'CONTROL_CHECK_FAILED';'CONTROL_CHECK_FAILED';'FAILED'
 
-                                    #Action;
+                                    #Action;#
                                     Print;control.Name + ' - ' + operation.Name + ' (' + (DateTime.current().getTime() - startTime) + ')'
 
                                     #Id;#Let
@@ -338,18 +329,21 @@ SUBCASES;;;;
                             ErrorKind.ELEMENT_NOT_FOUND
                                 #If
                                 operation.Actual == ErrorKind.ELEMENT_NOT_FOUND
-                                    #Action;$Table;Plugin;Control;Operation;Time;Expected;Actual;Result
+                                    #Action;#Table;#Plugin;#Control;#Operation;#Time;#Expected;#Actual;#Result
                                     TableAddValue;table_result;plugin;control.Name;operation.Name;DateTime.current().getTime() - startTime;'ELEMENT_NOT_FOUND';'ELEMENT_NOT_FOUND';'OK'
 
-                                    #Action;
+                                    #Action;#
                                     Print;control.Name + ' - ' + operation.Name + ' (' + (DateTime.current().getTime() - startTime) + ')'
 
                                 #Else
-                                    #Action;$Table;Plugin;Control;Operation;Time;Expected;Actual;Result
+                                    #Action;#Table;#Plugin;#Control;#Operation;#Time;#Expected;#Actual;#Result
                                     TableAddValue;table_result;plugin;control.Name;operation.Name;DateTime.current().getTime() - startTime;'ELEMENT_NOT_FOUND';'ELEMENT_NOT_FOUND';'FAILED'
 
-                                    #Action;
+                                    #Action;#
                                     Print;control.Name + ' - ' + operation.Name + ' (' + (DateTime.current().getTime() - startTime) + ')'
+
+                                    #Id;#Let
+                                    failed;true
 
 
                                 #EndIf
@@ -359,10 +353,10 @@ SUBCASES;;;;
 
                             #Case
                             ErrorKind.EXCEPTION
-                                #Action;$Table;Plugin;Control;Operation;Time;Expected;Actual;Result
+                                #Action;#Table;#Plugin;#Control;#Operation;#Time;#Expected;#Actual;#Result
                                 TableAddValue;table_result;plugin;control.Name;operation.Name;DateTime.current().getTime() - startTime;'EXCEPTION';'EXCEPTION';'FAILED'
 
-                                #Action;
+                                #Action;#
                                 Print;control.Name + ' - ' + operation.Name + ' (' + (DateTime.current().getTime() - startTime) + ')'
 
                                 #Id;#Let
@@ -372,10 +366,10 @@ SUBCASES;;;;
 
 
                             #Default
-                                #Action;$Table;Plugin;Control;Operation;Time;Expected;Actual;Result
+                                #Action;#Table;#Plugin;#Control;#Operation;#Time;#Expected;#Actual;#Result
                                 TableAddValue;table_result;plugin;control.Name;operation.Name;DateTime.current().getTime() - startTime;evaluator.evaluate(field);operation.Actual;'FAILED'
 
-                                #Action;
+                                #Action;#
                                 Print;control.Name + ' - ' + operation.Name + ' (' + (DateTime.current().getTime() - startTime) + ')'
 
                                 #Id;#Let
@@ -387,20 +381,28 @@ SUBCASES;;;;
 
                 #EndForEach
 
-                #Off;#Assert;#Message
-                1;failed == false;'control has failed operations'
+                #Assert;#Message
+                failed == false;'fail'
 
             #EndStep
+
+            #OnError
+                #Id;#Let
+                failedOwn;true
+
 
         #EndForEach
 
         #Step;#Kind;#For;#Depends
         'close application';;;
-            #Id;#Action;$AppConnection
+            #Id;#Action;#AppConnection
             APPSTP1;ApplicationStop;appCon
 
-            #Action;$Table;$Title;$BeforeTestCase
+            #Action;#Table;#Title;#BeforeTestCase
             TableReport;table_result;'Result';'INIT'
+
+            #Assert;#Message
+            failedOwn == false;'failedOwn'
 
         #EndStep
 
