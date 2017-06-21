@@ -13,14 +13,14 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
 
-import java.util.function.Consumer;
+import java.util.function.DoubleConsumer;
 
 public class ScalePane extends HBox
 {
     private static double[]  scales       = new double[] { 0.25, 0.5, 0.75, 1, 1.5, 2, 2.5, 3, 4 };
     private static int       defaultIndex = 3;
     private int              currentIndex = defaultIndex;
-    private Consumer<Double> scaleChanged;
+    private DoubleConsumer   scaleChanged;
     private Label            labelZoom;
 
 	public ScalePane()
@@ -79,7 +79,7 @@ public class ScalePane extends HBox
 	    return scales[this.currentIndex];
 	}
 
-	public void setOnScaleChanged(Consumer<Double> scaleChanged)
+	public void setOnScaleChanged(DoubleConsumer scaleChanged)
 	{
 		this.scaleChanged = scaleChanged;
 	}

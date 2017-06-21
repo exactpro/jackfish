@@ -41,25 +41,21 @@ public class ImageViewWithScale extends BorderPane
 	private final ScrollPane scrollPane;
 	private final AnchorPane anchorPane;
 	private final ScalePane scalePane;
-
 	private final HBox hBox;
 	private final ToggleButton btnInspect;
 	private final Label lblInspect;
 	private final Label lblColor;
 	private final javafx.scene.shape.Rectangle rectangleColor;
 	private final CheckBox cbIds;
-
 	private final Group group;
-
 	private ImageView imageView;
 	private CustomRectangle rectangle;
-	private boolean needInspect = false;
 	private CustomRectangle inspectRectangle;
 
+    private boolean needInspect = false;
 	private List<CustomRectangle> markedList = new ArrayList<>();
 
 	private Node waitingNode;
-	private double scale = 1.0;
 
 	private Dimension initial;
 	private BufferedImage image;
@@ -67,7 +63,7 @@ public class ImageViewWithScale extends BorderPane
 	private Map<Rectangle, Set<Rectangle>> rectanglesMap = new HashMap<>();
 
 	private Consumer<Rectangle> clickConsumer;
-	private DoubleConsumer scaleConsumer;
+	private DoubleConsumer scaleConsumer; // TODO what for?
 	//endregion
 
 	public ImageViewWithScale()
@@ -191,7 +187,7 @@ public class ImageViewWithScale extends BorderPane
 		}
 		else
 		{
-			CustomRectangle eq = new CustomRectangle(rectangle, this.scale);
+			CustomRectangle eq = new CustomRectangle(rectangle, this.scalePane.getScale());
 			if (this.markedList.contains(eq))
 			{
 				CustomRectangle customRectangle = this.markedList.get(this.markedList.indexOf(eq));
@@ -202,7 +198,7 @@ public class ImageViewWithScale extends BorderPane
 
 				if (this.rectangle != null)
 				{
-					this.rectangle.updateRectangle(rectangle, this.scale);
+					this.rectangle.updateRectangle(rectangle, this.scalePane.getScale());
 					this.rectangle.setVisible(true);
 				}
 			}
@@ -218,7 +214,7 @@ public class ImageViewWithScale extends BorderPane
 		list.stream()
 				.peek(r -> {
 					r.setGroup(this.group);
-					r.update(this.scale);
+					r.update(this.scalePane.getScale());
 					r.setTextVisible(r.isVisible() && this.cbIds.isSelected());
 				})
 				.forEach(r -> this.markedList.add(r));
@@ -233,7 +229,7 @@ public class ImageViewWithScale extends BorderPane
 	{
 		List<CustomRectangle> rectangles = this.markedList.stream()
 				.filter(cr -> list.stream()
-						.map(r -> new CustomRectangle(r, this.scale))
+						.map(r -> new CustomRectangle(r, this.scalePane.getScale()))
 						.anyMatch(c -> c.equals(cr))
 				)
 				.peek(cr -> cr.setVisible(false))
@@ -245,12 +241,11 @@ public class ImageViewWithScale extends BorderPane
 
 	public void changeScale(double scale)
 	{
-		this.scale = scale;
-		this.imageView.setFitHeight(this.scale * this.initial.height);
-		this.imageView.setFitWidth(this.scale * this.initial.width);
+		this.imageView.setFitHeight(scale * this.initial.height);
+		this.imageView.setFitWidth(scale * this.initial.width);
 		hideRectangle();
 		hideInspectRectangle();
-		Optional.ofNullable(this.scaleConsumer).ifPresent(c -> c.accept(this.scale));
+		Optional.ofNullable(this.scaleConsumer).ifPresent(c -> c.accept(scale));
 	}
 
 	//region private methods
@@ -347,14 +342,14 @@ public class ImageViewWithScale extends BorderPane
 
 	private void displayInspectRectangle(Rectangle rectangle)
 	{
-		this.inspectRectangle.updateRectangle(rectangle, this.scale);
+		this.inspectRectangle.updateRectangle(rectangle, this.scalePane.getScale());
 		this.inspectRectangle.setVisible(true);
 	}
 
 	private Rectangle findRectangle(double x, double y)
 	{
-		int intX = (int) (x / this.scale);
-		int intY = (int) (y / this.scale);
+		int intX = (int) (x / this.scalePane.getScale());
+		int intY = (int) (y / this.scalePane.getScale());
 
 		int sizeX = this.initial.getSize().width / 16;
 		int sizeY = this.initial.getSize().height / 16;
@@ -382,7 +377,7 @@ public class ImageViewWithScale extends BorderPane
 		}
 		try
 		{
-			point.setLocation(point.x / scale, point.y / scale);
+			point.setLocation(point.x / this.scalePane.getScale(), point.y / this.scalePane.getScale());
 			int color = this.image.getRGB(point.x, point.y);
 			int red = (color & 0x00ff0000) >> 16;
 			int green = (color & 0x0000ff00) >> 8;
@@ -408,7 +403,7 @@ public class ImageViewWithScale extends BorderPane
 	private void printMouseCoords(MouseEvent event)
 	{
 		Point point = getMouseCoords(event);
-		this.lblInspect.setText("X=" + (int) (point.x / this.scale) + " Y=" + (int) (point.y / this.scale));
+		this.lblInspect.setText("X=" + (int) (point.x / this.scalePane.getScale()) + " Y=" + (int) (point.y / this.scalePane.getScale()));
 	}
 
 	private void printPixelColor(MouseEvent event)
