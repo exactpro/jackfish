@@ -1366,7 +1366,7 @@ namespace UIAdapter
             }
         }
 
-        #endregion
+        #endregion`
 
         #region table methods
 
@@ -2167,7 +2167,7 @@ namespace UIAdapter
             while (child != null)
             {
                 var ct = child.Current.ControlType;
-                if (ct == ControlType.ListItem || ct == ControlType.DataItem)
+                if (ct == ControlType.ListItem || ct == ControlType.DataItem || ct == ControlType.TabItem)
                 {
                     listItems.Add(child);
                 }

@@ -424,6 +424,10 @@ public class WinOperationExecutorJNA implements OperationExecutor<UIProxyJNA>
 		try
 		{
 			List<UIProxyJNA> elementsList = findComponents(component, WindowTreeScope.Descendants, WindowProperty.LocalizedControlTypeProperty, "list item");
+			if(elementsList.isEmpty())
+			{
+				elementsList = findComponents(component, WindowTreeScope.Descendants, WindowProperty.LocalizedControlTypeProperty, "tab item");
+			}
 			this.driver.doPatternCall(elementsList.get(index), WindowPattern.SelectionItemPattern, "Select", null, -1);
 			return true;
 		}

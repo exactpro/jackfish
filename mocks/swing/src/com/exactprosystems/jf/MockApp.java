@@ -890,8 +890,10 @@ public class MockApp
 		JPanel panel = createPanel("panelTabPanel");
 		JTabbedPane tabPane = new JTabbedPane();
 		String name = "TabPanel";
-		tabPane.addTab("Yellow", new JLabel("tab1"));
-		tabPane.addTab("Orange", new JLabel("tab2"));
+		tabPane.addTab("Green", new JLabel("tab1"));
+		tabPane.addTab("Yellow", new JLabel("tab2"));
+		tabPane.addTab("Orange", new JLabel("tab3"));
+		tabPane.addTab("Blue", new JLabel("tab4"));
 		addListeners(tabPane, name);
 		tabPane.getModel().addChangeListener(e -> centralLabel.setText(name + "_" + tabPane.getTitleAt(tabPane.getSelectedIndex())));
 		panel.add(tabPane);

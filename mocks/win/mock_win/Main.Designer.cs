@@ -61,7 +61,6 @@
             this.header3 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.ProgressBar = new System.Windows.Forms.ProgressBar();
             this.Panel = new System.Windows.Forms.Panel();
-            this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.MenuMain = new System.Windows.Forms.MenuStrip();
             this.Menu = new System.Windows.Forms.ToolStripMenuItem();
             this.optionsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -78,8 +77,6 @@
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.Menu2 = new System.Windows.Forms.ToolStripMenuItem();
             this.MenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.HScrollBar = new System.Windows.Forms.HScrollBar();
-            this.VScrollBar = new System.Windows.Forms.VScrollBar();
             this.Splitter = new System.Windows.Forms.SplitContainer();
             this.label6 = new System.Windows.Forms.Label();
             this.label7 = new System.Windows.Forms.Label();
@@ -107,6 +104,13 @@
             this.Head1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Head2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Head3 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.listBox1 = new System.Windows.Forms.ListBox();
+            this.panel2 = new System.Windows.Forms.Panel();
+            this.panel3 = new System.Windows.Forms.Panel();
+            this.Spinner = new System.Windows.Forms.NumericUpDown();
+            this.doubleclickToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.tabPage3 = new System.Windows.Forms.TabPage();
+            this.tabPage4 = new System.Windows.Forms.TabPage();
             ((System.ComponentModel.ISupportInitialize)(this.Table1)).BeginInit();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.Slider)).BeginInit();
@@ -120,6 +124,7 @@
             this.Splitter.SuspendLayout();
             this.contextMenuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.Table)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.Spinner)).BeginInit();
             this.SuspendLayout();
             // 
             // Button
@@ -321,6 +326,8 @@
             // 
             this.TabPanel.Controls.Add(this.tabPage1);
             this.TabPanel.Controls.Add(this.tabPage2);
+            this.TabPanel.Controls.Add(this.tabPage3);
+            this.TabPanel.Controls.Add(this.tabPage4);
             resources.ApplyResources(this.TabPanel, "TabPanel");
             this.TabPanel.Name = "TabPanel";
             this.TabPanel.SelectedIndex = 0;
@@ -422,12 +429,6 @@
             this.Panel.MouseDown += new System.Windows.Forms.MouseEventHandler(this.CommonMouseDown);
             this.Panel.MouseMove += new System.Windows.Forms.MouseEventHandler(this.CommonMouseMove);
             // 
-            // groupBox1
-            // 
-            resources.ApplyResources(this.groupBox1, "groupBox1");
-            this.groupBox1.Name = "groupBox1";
-            this.groupBox1.TabStop = false;
-            // 
             // MenuMain
             // 
             this.MenuMain.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -450,6 +451,8 @@
             this.exitToolStripMenuItem});
             this.Menu.Name = "Menu";
             resources.ApplyResources(this.Menu, "Menu");
+            this.Menu.MouseDown += new System.Windows.Forms.MouseEventHandler(this.CommonMouseDown);
+            this.Menu.MouseMove += new System.Windows.Forms.MouseEventHandler(this.CommonMouseMove);
             // 
             // optionsToolStripMenuItem
             // 
@@ -531,19 +534,12 @@
             // 
             // MenuItem
             // 
+            this.MenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.doubleclickToolStripMenuItem});
             this.MenuItem.Name = "MenuItem";
             resources.ApplyResources(this.MenuItem, "MenuItem");
-            // 
-            // HScrollBar
-            // 
-            resources.ApplyResources(this.HScrollBar, "HScrollBar");
-            this.HScrollBar.Name = "HScrollBar";
-            this.HScrollBar.KeyDown += new System.Windows.Forms.KeyEventHandler(this.CommonKeyDown);
-            // 
-            // VScrollBar
-            // 
-            resources.ApplyResources(this.VScrollBar, "VScrollBar");
-            this.VScrollBar.Name = "VScrollBar";
+            this.MenuItem.MouseDown += new System.Windows.Forms.MouseEventHandler(this.CommonMouseDown);
+            this.MenuItem.MouseMove += new System.Windows.Forms.MouseEventHandler(this.CommonMouseMove);
             // 
             // Splitter
             // 
@@ -742,11 +738,162 @@
             resources.ApplyResources(this.Head3, "Head3");
             this.Head3.Name = "Head3";
             // 
+            // listBox1
+            // 
+            this.listBox1.FormattingEnabled = true;
+            this.listBox1.Items.AddRange(new object[] {
+            resources.GetString("listBox1.Items"),
+            resources.GetString("listBox1.Items1"),
+            resources.GetString("listBox1.Items2"),
+            resources.GetString("listBox1.Items3"),
+            resources.GetString("listBox1.Items4"),
+            resources.GetString("listBox1.Items5"),
+            resources.GetString("listBox1.Items6"),
+            resources.GetString("listBox1.Items7"),
+            resources.GetString("listBox1.Items8"),
+            resources.GetString("listBox1.Items9"),
+            resources.GetString("listBox1.Items10"),
+            resources.GetString("listBox1.Items11"),
+            resources.GetString("listBox1.Items12"),
+            resources.GetString("listBox1.Items13"),
+            resources.GetString("listBox1.Items14"),
+            resources.GetString("listBox1.Items15"),
+            resources.GetString("listBox1.Items16"),
+            resources.GetString("listBox1.Items17"),
+            resources.GetString("listBox1.Items18"),
+            resources.GetString("listBox1.Items19"),
+            resources.GetString("listBox1.Items20"),
+            resources.GetString("listBox1.Items21"),
+            resources.GetString("listBox1.Items22"),
+            resources.GetString("listBox1.Items23"),
+            resources.GetString("listBox1.Items24"),
+            resources.GetString("listBox1.Items25"),
+            resources.GetString("listBox1.Items26"),
+            resources.GetString("listBox1.Items27"),
+            resources.GetString("listBox1.Items28"),
+            resources.GetString("listBox1.Items29"),
+            resources.GetString("listBox1.Items30"),
+            resources.GetString("listBox1.Items31"),
+            resources.GetString("listBox1.Items32"),
+            resources.GetString("listBox1.Items33"),
+            resources.GetString("listBox1.Items34"),
+            resources.GetString("listBox1.Items35"),
+            resources.GetString("listBox1.Items36"),
+            resources.GetString("listBox1.Items37"),
+            resources.GetString("listBox1.Items38"),
+            resources.GetString("listBox1.Items39"),
+            resources.GetString("listBox1.Items40"),
+            resources.GetString("listBox1.Items41"),
+            resources.GetString("listBox1.Items42"),
+            resources.GetString("listBox1.Items43"),
+            resources.GetString("listBox1.Items44"),
+            resources.GetString("listBox1.Items45"),
+            resources.GetString("listBox1.Items46"),
+            resources.GetString("listBox1.Items47"),
+            resources.GetString("listBox1.Items48"),
+            resources.GetString("listBox1.Items49"),
+            resources.GetString("listBox1.Items50"),
+            resources.GetString("listBox1.Items51"),
+            resources.GetString("listBox1.Items52"),
+            resources.GetString("listBox1.Items53"),
+            resources.GetString("listBox1.Items54"),
+            resources.GetString("listBox1.Items55"),
+            resources.GetString("listBox1.Items56"),
+            resources.GetString("listBox1.Items57"),
+            resources.GetString("listBox1.Items58"),
+            resources.GetString("listBox1.Items59"),
+            resources.GetString("listBox1.Items60"),
+            resources.GetString("listBox1.Items61"),
+            resources.GetString("listBox1.Items62"),
+            resources.GetString("listBox1.Items63"),
+            resources.GetString("listBox1.Items64"),
+            resources.GetString("listBox1.Items65"),
+            resources.GetString("listBox1.Items66"),
+            resources.GetString("listBox1.Items67"),
+            resources.GetString("listBox1.Items68"),
+            resources.GetString("listBox1.Items69"),
+            resources.GetString("listBox1.Items70"),
+            resources.GetString("listBox1.Items71"),
+            resources.GetString("listBox1.Items72"),
+            resources.GetString("listBox1.Items73"),
+            resources.GetString("listBox1.Items74"),
+            resources.GetString("listBox1.Items75"),
+            resources.GetString("listBox1.Items76"),
+            resources.GetString("listBox1.Items77"),
+            resources.GetString("listBox1.Items78"),
+            resources.GetString("listBox1.Items79"),
+            resources.GetString("listBox1.Items80"),
+            resources.GetString("listBox1.Items81"),
+            resources.GetString("listBox1.Items82"),
+            resources.GetString("listBox1.Items83"),
+            resources.GetString("listBox1.Items84"),
+            resources.GetString("listBox1.Items85"),
+            resources.GetString("listBox1.Items86"),
+            resources.GetString("listBox1.Items87"),
+            resources.GetString("listBox1.Items88"),
+            resources.GetString("listBox1.Items89"),
+            resources.GetString("listBox1.Items90"),
+            resources.GetString("listBox1.Items91"),
+            resources.GetString("listBox1.Items92"),
+            resources.GetString("listBox1.Items93"),
+            resources.GetString("listBox1.Items94"),
+            resources.GetString("listBox1.Items95"),
+            resources.GetString("listBox1.Items96"),
+            resources.GetString("listBox1.Items97"),
+            resources.GetString("listBox1.Items98"),
+            resources.GetString("listBox1.Items99"),
+            resources.GetString("listBox1.Items100")});
+            resources.ApplyResources(this.listBox1, "listBox1");
+            this.listBox1.Name = "listBox1";
+            this.listBox1.RegionChanged += new System.EventHandler(this.listBox1_RegionChanged);
+            // 
+            // panel2
+            // 
+            this.panel2.BackColor = System.Drawing.SystemColors.ActiveCaption;
+            resources.ApplyResources(this.panel2, "panel2");
+            this.panel2.Name = "panel2";
+            this.panel2.MouseDown += new System.Windows.Forms.MouseEventHandler(this.CommonMouseDown);
+            this.panel2.MouseMove += new System.Windows.Forms.MouseEventHandler(this.CommonMouseMove);
+            // 
+            // panel3
+            // 
+            this.panel3.BackColor = System.Drawing.SystemColors.ActiveCaption;
+            resources.ApplyResources(this.panel3, "panel3");
+            this.panel3.Name = "panel3";
+            this.panel3.MouseDown += new System.Windows.Forms.MouseEventHandler(this.CommonMouseDown);
+            this.panel3.MouseMove += new System.Windows.Forms.MouseEventHandler(this.CommonMouseMove);
+            // 
+            // Spinner
+            // 
+            resources.ApplyResources(this.Spinner, "Spinner");
+            this.Spinner.Name = "Spinner";
+            // 
+            // doubleclickToolStripMenuItem
+            // 
+            this.doubleclickToolStripMenuItem.Name = "doubleclickToolStripMenuItem";
+            resources.ApplyResources(this.doubleclickToolStripMenuItem, "doubleclickToolStripMenuItem");
+            // 
+            // tabPage3
+            // 
+            resources.ApplyResources(this.tabPage3, "tabPage3");
+            this.tabPage3.Name = "tabPage3";
+            this.tabPage3.UseVisualStyleBackColor = true;
+            // 
+            // tabPage4
+            // 
+            resources.ApplyResources(this.tabPage4, "tabPage4");
+            this.tabPage4.Name = "tabPage4";
+            this.tabPage4.UseVisualStyleBackColor = true;
+            // 
             // Main
             // 
             resources.ApplyResources(this, "$this");
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ContextMenuStrip = this.contextMenuStrip1;
+            this.Controls.Add(this.Spinner);
+            this.Controls.Add(this.panel3);
+            this.Controls.Add(this.panel2);
+            this.Controls.Add(this.listBox1);
             this.Controls.Add(this.Table);
             this.Controls.Add(this.checkedLabel);
             this.Controls.Add(this.pushLabel);
@@ -764,9 +911,6 @@
             this.Controls.Add(this.ToggleButton);
             this.Controls.Add(this.Any);
             this.Controls.Add(this.Splitter);
-            this.Controls.Add(this.VScrollBar);
-            this.Controls.Add(this.HScrollBar);
-            this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.Panel);
             this.Controls.Add(this.ProgressBar);
             this.Controls.Add(this.Table3);
@@ -786,9 +930,12 @@
             this.KeyPreview = true;
             this.MainMenuStrip = this.MenuMain;
             this.Name = "Main";
+            this.Load += new System.EventHandler(this.Main_Load);
+            this.RightToLeftChanged += new System.EventHandler(this.Main_RightToLeftChanged);
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.GlobalKeyDown);
             this.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.GlobalKeyPress);
             this.KeyUp += new System.Windows.Forms.KeyEventHandler(this.GlobalKeyUp);
+            this.MouseDown += new System.Windows.Forms.MouseEventHandler(this.GlobalMouseDown);
             ((System.ComponentModel.ISupportInitialize)(this.Table1)).EndInit();
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
@@ -808,6 +955,7 @@
             this.Splitter.ResumeLayout(false);
             this.contextMenuStrip1.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.Table)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.Spinner)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -840,7 +988,6 @@
         private System.Windows.Forms.ColumnHeader header3;
         private System.Windows.Forms.ProgressBar ProgressBar;
         private System.Windows.Forms.Panel Panel;
-        private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.MenuStrip MenuMain;
         private System.Windows.Forms.ToolStripMenuItem Menu;
         private System.Windows.Forms.ToolStripMenuItem optionsToolStripMenuItem;
@@ -856,8 +1003,6 @@
         private System.Windows.Forms.ToolStripMenuItem fourToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem fiveToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem sixToolStripMenuItem;
-        private System.Windows.Forms.HScrollBar HScrollBar;
-        private System.Windows.Forms.VScrollBar VScrollBar;
         private System.Windows.Forms.SplitContainer Splitter;
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.Label label7;
@@ -892,6 +1037,13 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn Head1;
         private System.Windows.Forms.DataGridViewTextBoxColumn Head2;
         private System.Windows.Forms.DataGridViewTextBoxColumn Head3;
+        private System.Windows.Forms.ListBox listBox1;
+        private System.Windows.Forms.Panel panel2;
+        private System.Windows.Forms.Panel panel3;
+        private System.Windows.Forms.NumericUpDown Spinner;
+        private System.Windows.Forms.ToolStripMenuItem doubleclickToolStripMenuItem;
+        private System.Windows.Forms.TabPage tabPage3;
+        private System.Windows.Forms.TabPage tabPage4;
     }
 }
 

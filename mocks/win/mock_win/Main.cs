@@ -16,6 +16,7 @@ namespace mock_win
     {
         private int counter = 0;
         private int sliderValue = -99;
+        private int scrollBarValue = -99;
         Timer timer;
         Point mouseDownPos;
         long mouseTimeClick;
@@ -36,12 +37,23 @@ namespace mock_win
             this.timer.Enabled = true;
         }
 
+        private void Main_Load(object sender, EventArgs e)
+        {
+        }
+
         private void timer_Tick(object sender, EventArgs e)
         {
             if (Slider.Value != sliderValue)
             {
                 sliderValue = Slider.Value;
                 sliderLabel.Text = "Slider_" + Slider.Value;
+            }
+
+            Point point = new Point(10, 10);
+            if (listBox1.IndexFromPoint(point) != scrollBarValue)
+            {
+                scrollBarValue = listBox1.IndexFromPoint(point);
+                sliderLabel.Text = "ScrollBar_" + listBox1.IndexFromPoint(point);
             }
         }
 
@@ -109,9 +121,20 @@ namespace mock_win
 
         public void CommonMouseMove(object sender, MouseEventArgs e)
         {
-            Control control = (Control)sender;
+            String name = "";
+            if (sender is Control)
+            {
+                Control control = (Control)sender;
+                name = control.Name;
+            }
+            if (sender is ToolStripMenuItem)
+            {
+                ToolStripMenuItem menuItem = (ToolStripMenuItem)sender;
+                name = menuItem.Name;
+            }
+            
             string text;
-            switch (control.Name)
+            switch (name)
             {
                 case "CentralLabel":
                     text = "Label";
@@ -122,8 +145,12 @@ namespace mock_win
                 case "Orange":
                     text = "RadioButton";
                     break;
+                case "panel2":
+                case "panel3":
+                    text = "ScrollBar";
+                    break;
                 default:
-                    text = control.Name;
+                    text = name;
                     break;
             }
             moveLabel.Text = text + "_move";
@@ -222,11 +249,26 @@ namespace mock_win
             }
         }
 
+        private void GlobalMouseDown(object sender, MouseEventArgs e)
+        {
+ 
+        }
+
         public string writeControlNameOnCentralLabel(object sender)
         {
-            Control control = (Control)sender;
+            String name = "";
+            if (sender is Control)
+            {
+                Control control = (Control)sender;
+                name = control.Name;
+            }
+            if (sender is ToolStripMenuItem)
+            {
+                ToolStripMenuItem menuItem = (ToolStripMenuItem)sender;
+                name = menuItem.Name;
+            }
             string text;
-            switch (control.Name)
+            switch (name)
             {
                 case "CentralLabel":
                     text = "Label";
@@ -237,8 +279,12 @@ namespace mock_win
                 case "Orange":
                     text = "RadioButton";
                     break;
+                case "panel2":
+                case "panel3":
+                    text = "ScrollBar";
+                    break;
                 default:
-                    text = control.Name;
+                    text = name;
                     break;
             }
             return text;
@@ -373,6 +419,30 @@ namespace mock_win
         private void Table_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
 
+        }
+
+        private void hScrollBar1_Scroll(object sender, ScrollEventArgs e)
+        {
+            sliderLabel.Text = ((ScrollBar)sender).Value.ToString();
+        }
+
+        private void listBox1_MouseEnter(object sender, EventArgs e)
+        {
+            sliderLabel.Text = "Enter";
+        }
+
+        private void panel2_MouseEnter(object sender, EventArgs e)
+        {
+            moveLabel.Text = "ScrollBar_move";
+        }
+
+        private void listBox1_RegionChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void Main_RightToLeftChanged(object sender, EventArgs e)
+        {
         }
     }
 }

@@ -141,7 +141,7 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;Button.ZOrder" xml:space="preserve">
-    <value>35</value>
+    <value>36</value>
   </data>
   <data name="TextBox.Location" type="System.Drawing.Point, System.Drawing">
     <value>13, 76</value>
@@ -162,7 +162,7 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;TextBox.ZOrder" xml:space="preserve">
-    <value>34</value>
+    <value>35</value>
   </data>
   <data name="CheckBox.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -189,7 +189,7 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;CheckBox.ZOrder" xml:space="preserve">
-    <value>33</value>
+    <value>34</value>
   </data>
   <metadata name="name.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
@@ -225,7 +225,7 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;Table1.ZOrder" xml:space="preserve">
-    <value>32</value>
+    <value>33</value>
   </data>
   <metadata name="name.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
@@ -288,7 +288,7 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;CentralLabel.ZOrder" xml:space="preserve">
-    <value>31</value>
+    <value>32</value>
   </data>
   <data name="moveLabel.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -315,7 +315,7 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;moveLabel.ZOrder" xml:space="preserve">
-    <value>30</value>
+    <value>31</value>
   </data>
   <metadata name="Green.Locked" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
@@ -426,7 +426,7 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;panel1.ZOrder" xml:space="preserve">
-    <value>29</value>
+    <value>30</value>
   </data>
   <metadata name="Blue.Locked" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
@@ -529,7 +529,7 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;ComboBox.ZOrder" xml:space="preserve">
-    <value>28</value>
+    <value>29</value>
   </data>
   <data name="Slider.Location" type="System.Drawing.Point, System.Drawing">
     <value>13, 336</value>
@@ -553,7 +553,7 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;Slider.ZOrder" xml:space="preserve">
-    <value>27</value>
+    <value>28</value>
   </data>
   <data name="Tree.Location" type="System.Drawing.Point, System.Drawing">
     <value>12, 416</value>
@@ -633,7 +633,7 @@
 </value>
   </data>
   <data name="Tree.Size" type="System.Drawing.Size, System.Drawing">
-    <value>817, 97</value>
+    <value>817, 68</value>
   </data>
   <data name="Tree.TabIndex" type="System.Int32, mscorlib">
     <value>12</value>
@@ -648,107 +648,11 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;Tree.ZOrder" xml:space="preserve">
-    <value>26</value>
+    <value>27</value>
   </data>
   <metadata name="tabPage1.Locked" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
   </metadata>
-  <metadata name="tabPage2.Locked" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-    <value>True</value>
-  </metadata>
-  <data name="&gt;&gt;tabPage1.Name" xml:space="preserve">
-    <value>tabPage1</value>
-  </data>
-  <data name="&gt;&gt;tabPage1.Type" xml:space="preserve">
-    <value>System.Windows.Forms.TabPage, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;tabPage1.Parent" xml:space="preserve">
-    <value>TabPanel</value>
-  </data>
-  <data name="&gt;&gt;tabPage1.ZOrder" xml:space="preserve">
-    <value>0</value>
-  </data>
-  <data name="&gt;&gt;tabPage2.Name" xml:space="preserve">
-    <value>tabPage2</value>
-  </data>
-  <data name="&gt;&gt;tabPage2.Type" xml:space="preserve">
-    <value>System.Windows.Forms.TabPage, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;tabPage2.Parent" xml:space="preserve">
-    <value>TabPanel</value>
-  </data>
-  <data name="&gt;&gt;tabPage2.ZOrder" xml:space="preserve">
-    <value>1</value>
-  </data>
-  <data name="TabPanel.Location" type="System.Drawing.Point, System.Drawing">
-    <value>12, 519</value>
-  </data>
-  <data name="TabPanel.Size" type="System.Drawing.Size, System.Drawing">
-    <value>817, 45</value>
-  </data>
-  <data name="TabPanel.TabIndex" type="System.Int32, mscorlib">
-    <value>13</value>
-  </data>
-  <data name="&gt;&gt;TabPanel.Name" xml:space="preserve">
-    <value>TabPanel</value>
-  </data>
-  <data name="&gt;&gt;TabPanel.Type" xml:space="preserve">
-    <value>System.Windows.Forms.TabControl, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;TabPanel.Parent" xml:space="preserve">
-    <value>$this</value>
-  </data>
-  <data name="&gt;&gt;TabPanel.ZOrder" xml:space="preserve">
-    <value>25</value>
-  </data>
-  <metadata name="tabPage1.Locked" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-    <value>True</value>
-  </metadata>
-  <metadata name="label3.Locked" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-    <value>True</value>
-  </metadata>
-  <data name="&gt;&gt;label3.Name" xml:space="preserve">
-    <value>label3</value>
-  </data>
-  <data name="&gt;&gt;label3.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;label3.Parent" xml:space="preserve">
-    <value>tabPage1</value>
-  </data>
-  <data name="&gt;&gt;label3.ZOrder" xml:space="preserve">
-    <value>0</value>
-  </data>
-  <data name="tabPage1.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
-    <value>NoControl</value>
-  </data>
-  <data name="tabPage1.Location" type="System.Drawing.Point, System.Drawing">
-    <value>4, 22</value>
-  </data>
-  <data name="tabPage1.Padding" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>3, 3, 3, 3</value>
-  </data>
-  <data name="tabPage1.Size" type="System.Drawing.Size, System.Drawing">
-    <value>809, 19</value>
-  </data>
-  <data name="tabPage1.TabIndex" type="System.Int32, mscorlib">
-    <value>0</value>
-  </data>
-  <data name="tabPage1.Text" xml:space="preserve">
-    <value>Yellow</value>
-  </data>
-  <data name="&gt;&gt;tabPage1.Name" xml:space="preserve">
-    <value>tabPage1</value>
-  </data>
-  <data name="&gt;&gt;tabPage1.Type" xml:space="preserve">
-    <value>System.Windows.Forms.TabPage, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;tabPage1.Parent" xml:space="preserve">
-    <value>TabPanel</value>
-  </data>
-  <data name="&gt;&gt;tabPage1.ZOrder" xml:space="preserve">
-    <value>0</value>
-  </data>
   <metadata name="label3.Locked" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
   </metadata>
@@ -779,51 +683,39 @@
   <data name="&gt;&gt;label3.ZOrder" xml:space="preserve">
     <value>0</value>
   </data>
+  <data name="tabPage1.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="tabPage1.Location" type="System.Drawing.Point, System.Drawing">
+    <value>4, 22</value>
+  </data>
+  <data name="tabPage1.Padding" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>3, 3, 3, 3</value>
+  </data>
+  <data name="tabPage1.Size" type="System.Drawing.Size, System.Drawing">
+    <value>809, 48</value>
+  </data>
+  <data name="tabPage1.TabIndex" type="System.Int32, mscorlib">
+    <value>0</value>
+  </data>
+  <data name="tabPage1.Text" xml:space="preserve">
+    <value>Green</value>
+  </data>
+  <data name="&gt;&gt;tabPage1.Name" xml:space="preserve">
+    <value>tabPage1</value>
+  </data>
+  <data name="&gt;&gt;tabPage1.Type" xml:space="preserve">
+    <value>System.Windows.Forms.TabPage, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;tabPage1.Parent" xml:space="preserve">
+    <value>TabPanel</value>
+  </data>
+  <data name="&gt;&gt;tabPage1.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
   <metadata name="tabPage2.Locked" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
   </metadata>
-  <metadata name="label4.Locked" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-    <value>True</value>
-  </metadata>
-  <data name="&gt;&gt;label4.Name" xml:space="preserve">
-    <value>label4</value>
-  </data>
-  <data name="&gt;&gt;label4.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;label4.Parent" xml:space="preserve">
-    <value>tabPage2</value>
-  </data>
-  <data name="&gt;&gt;label4.ZOrder" xml:space="preserve">
-    <value>0</value>
-  </data>
-  <data name="tabPage2.Location" type="System.Drawing.Point, System.Drawing">
-    <value>4, 22</value>
-  </data>
-  <data name="tabPage2.Padding" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>3, 3, 3, 3</value>
-  </data>
-  <data name="tabPage2.Size" type="System.Drawing.Size, System.Drawing">
-    <value>809, 19</value>
-  </data>
-  <data name="tabPage2.TabIndex" type="System.Int32, mscorlib">
-    <value>1</value>
-  </data>
-  <data name="tabPage2.Text" xml:space="preserve">
-    <value>Orange</value>
-  </data>
-  <data name="&gt;&gt;tabPage2.Name" xml:space="preserve">
-    <value>tabPage2</value>
-  </data>
-  <data name="&gt;&gt;tabPage2.Type" xml:space="preserve">
-    <value>System.Windows.Forms.TabPage, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;tabPage2.Parent" xml:space="preserve">
-    <value>TabPanel</value>
-  </data>
-  <data name="&gt;&gt;tabPage2.ZOrder" xml:space="preserve">
-    <value>1</value>
-  </data>
   <metadata name="label4.Locked" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
   </metadata>
@@ -854,6 +746,102 @@
   <data name="&gt;&gt;label4.ZOrder" xml:space="preserve">
     <value>0</value>
   </data>
+  <data name="tabPage2.Location" type="System.Drawing.Point, System.Drawing">
+    <value>4, 22</value>
+  </data>
+  <data name="tabPage2.Padding" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>3, 3, 3, 3</value>
+  </data>
+  <data name="tabPage2.Size" type="System.Drawing.Size, System.Drawing">
+    <value>809, 48</value>
+  </data>
+  <data name="tabPage2.TabIndex" type="System.Int32, mscorlib">
+    <value>1</value>
+  </data>
+  <data name="tabPage2.Text" xml:space="preserve">
+    <value>Yellow</value>
+  </data>
+  <data name="&gt;&gt;tabPage2.Name" xml:space="preserve">
+    <value>tabPage2</value>
+  </data>
+  <data name="&gt;&gt;tabPage2.Type" xml:space="preserve">
+    <value>System.Windows.Forms.TabPage, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;tabPage2.Parent" xml:space="preserve">
+    <value>TabPanel</value>
+  </data>
+  <data name="&gt;&gt;tabPage2.ZOrder" xml:space="preserve">
+    <value>1</value>
+  </data>
+  <data name="tabPage3.Location" type="System.Drawing.Point, System.Drawing">
+    <value>4, 22</value>
+  </data>
+  <data name="tabPage3.Size" type="System.Drawing.Size, System.Drawing">
+    <value>809, 48</value>
+  </data>
+  <data name="tabPage3.TabIndex" type="System.Int32, mscorlib">
+    <value>2</value>
+  </data>
+  <data name="tabPage3.Text" xml:space="preserve">
+    <value>Orange</value>
+  </data>
+  <data name="&gt;&gt;tabPage3.Name" xml:space="preserve">
+    <value>tabPage3</value>
+  </data>
+  <data name="&gt;&gt;tabPage3.Type" xml:space="preserve">
+    <value>System.Windows.Forms.TabPage, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;tabPage3.Parent" xml:space="preserve">
+    <value>TabPanel</value>
+  </data>
+  <data name="&gt;&gt;tabPage3.ZOrder" xml:space="preserve">
+    <value>2</value>
+  </data>
+  <data name="tabPage4.Location" type="System.Drawing.Point, System.Drawing">
+    <value>4, 22</value>
+  </data>
+  <data name="tabPage4.Size" type="System.Drawing.Size, System.Drawing">
+    <value>809, 48</value>
+  </data>
+  <data name="tabPage4.TabIndex" type="System.Int32, mscorlib">
+    <value>3</value>
+  </data>
+  <data name="tabPage4.Text" xml:space="preserve">
+    <value>Blue</value>
+  </data>
+  <data name="&gt;&gt;tabPage4.Name" xml:space="preserve">
+    <value>tabPage4</value>
+  </data>
+  <data name="&gt;&gt;tabPage4.Type" xml:space="preserve">
+    <value>System.Windows.Forms.TabPage, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;tabPage4.Parent" xml:space="preserve">
+    <value>TabPanel</value>
+  </data>
+  <data name="&gt;&gt;tabPage4.ZOrder" xml:space="preserve">
+    <value>3</value>
+  </data>
+  <data name="TabPanel.Location" type="System.Drawing.Point, System.Drawing">
+    <value>12, 490</value>
+  </data>
+  <data name="TabPanel.Size" type="System.Drawing.Size, System.Drawing">
+    <value>817, 74</value>
+  </data>
+  <data name="TabPanel.TabIndex" type="System.Int32, mscorlib">
+    <value>13</value>
+  </data>
+  <data name="&gt;&gt;TabPanel.Name" xml:space="preserve">
+    <value>TabPanel</value>
+  </data>
+  <data name="&gt;&gt;TabPanel.Type" xml:space="preserve">
+    <value>System.Windows.Forms.TabControl, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;TabPanel.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;TabPanel.ZOrder" xml:space="preserve">
+    <value>26</value>
+  </data>
   <data name="List.Items" xml:space="preserve">
     <value>Green</value>
   </data>
@@ -870,7 +858,7 @@
     <value>12, 569</value>
   </data>
   <data name="List.Size" type="System.Drawing.Size, System.Drawing">
-    <value>817, 69</value>
+    <value>719, 69</value>
   </data>
   <data name="List.TabIndex" type="System.Int32, mscorlib">
     <value>14</value>
@@ -885,7 +873,7 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;List.ZOrder" xml:space="preserve">
-    <value>24</value>
+    <value>25</value>
   </data>
   <data name="Table3.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
     <value>On</value>
@@ -909,7 +897,7 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;Table3.ZOrder" xml:space="preserve">
-    <value>23</value>
+    <value>24</value>
   </data>
   <data name="header1.Text" xml:space="preserve">
     <value>Head1</value>
@@ -948,13 +936,13 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;ProgressBar.ZOrder" xml:space="preserve">
-    <value>22</value>
+    <value>23</value>
   </data>
   <data name="Panel.Location" type="System.Drawing.Point, System.Drawing">
     <value>12, 666</value>
   </data>
   <data name="Panel.Size" type="System.Drawing.Size, System.Drawing">
-    <value>373, 26</value>
+    <value>399, 43</value>
   </data>
   <data name="Panel.TabIndex" type="System.Int32, mscorlib">
     <value>17</value>
@@ -969,31 +957,7 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;Panel.ZOrder" xml:space="preserve">
-    <value>21</value>
-  </data>
-  <data name="groupBox1.Location" type="System.Drawing.Point, System.Drawing">
-    <value>391, 666</value>
-  </data>
-  <data name="groupBox1.Size" type="System.Drawing.Size, System.Drawing">
-    <value>434, 26</value>
-  </data>
-  <data name="groupBox1.TabIndex" type="System.Int32, mscorlib">
-    <value>18</value>
-  </data>
-  <data name="groupBox1.Text" xml:space="preserve">
-    <value>Group</value>
-  </data>
-  <data name="&gt;&gt;groupBox1.Name" xml:space="preserve">
-    <value>groupBox1</value>
-  </data>
-  <data name="&gt;&gt;groupBox1.Type" xml:space="preserve">
-    <value>System.Windows.Forms.GroupBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;groupBox1.Parent" xml:space="preserve">
-    <value>$this</value>
-  </data>
-  <data name="&gt;&gt;groupBox1.ZOrder" xml:space="preserve">
-    <value>20</value>
+    <value>22</value>
   </data>
   <metadata name="MenuMain.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>17, 17</value>
@@ -1002,7 +966,7 @@
     <value>0, 0</value>
   </data>
   <data name="MenuMain.Size" type="System.Drawing.Size, System.Drawing">
-    <value>865, 24</value>
+    <value>876, 24</value>
   </data>
   <data name="MenuMain.TabIndex" type="System.Int32, mscorlib">
     <value>19</value>
@@ -1020,7 +984,7 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;MenuMain.ZOrder" xml:space="preserve">
-    <value>36</value>
+    <value>37</value>
   </data>
   <data name="Menu.Size" type="System.Drawing.Size, System.Drawing">
     <value>50, 20</value>
@@ -1104,55 +1068,10 @@
     <value>Tooltip</value>
   </data>
   <data name="MenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>129, 22</value>
+    <value>152, 22</value>
   </data>
   <data name="MenuItem.Text" xml:space="preserve">
     <value>MenuItem</value>
-  </data>
-  <data name="HScrollBar.Location" type="System.Drawing.Point, System.Drawing">
-    <value>12, 695</value>
-  </data>
-  <data name="HScrollBar.Size" type="System.Drawing.Size, System.Drawing">
-    <value>817, 17</value>
-  </data>
-  <data name="HScrollBar.TabIndex" type="System.Int32, mscorlib">
-    <value>20</value>
-  </data>
-  <data name="&gt;&gt;HScrollBar.Name" xml:space="preserve">
-    <value>HScrollBar</value>
-  </data>
-  <data name="&gt;&gt;HScrollBar.Type" xml:space="preserve">
-    <value>System.Windows.Forms.HScrollBar, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;HScrollBar.Parent" xml:space="preserve">
-    <value>$this</value>
-  </data>
-  <data name="&gt;&gt;HScrollBar.ZOrder" xml:space="preserve">
-    <value>19</value>
-  </data>
-  <data name="VScrollBar.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
-    <value>NoControl</value>
-  </data>
-  <data name="VScrollBar.Location" type="System.Drawing.Point, System.Drawing">
-    <value>840, 29</value>
-  </data>
-  <data name="VScrollBar.Size" type="System.Drawing.Size, System.Drawing">
-    <value>20, 676</value>
-  </data>
-  <data name="VScrollBar.TabIndex" type="System.Int32, mscorlib">
-    <value>21</value>
-  </data>
-  <data name="&gt;&gt;VScrollBar.Name" xml:space="preserve">
-    <value>VScrollBar</value>
-  </data>
-  <data name="&gt;&gt;VScrollBar.Type" xml:space="preserve">
-    <value>System.Windows.Forms.VScrollBar, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;VScrollBar.Parent" xml:space="preserve">
-    <value>$this</value>
-  </data>
-  <data name="&gt;&gt;VScrollBar.ZOrder" xml:space="preserve">
-    <value>18</value>
   </data>
   <data name="Splitter.Location" type="System.Drawing.Point, System.Drawing">
     <value>12, 715</value>
@@ -1266,7 +1185,7 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;Splitter.ZOrder" xml:space="preserve">
-    <value>17</value>
+    <value>21</value>
   </data>
   <data name="Any.Location" type="System.Drawing.Point, System.Drawing">
     <value>12, 745</value>
@@ -1290,7 +1209,7 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;Any.ZOrder" xml:space="preserve">
-    <value>16</value>
+    <value>20</value>
   </data>
   <data name="ToggleButton.Appearance" type="System.Windows.Forms.Appearance, System.Windows.Forms">
     <value>Button</value>
@@ -1320,7 +1239,7 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;ToggleButton.ZOrder" xml:space="preserve">
-    <value>15</value>
+    <value>19</value>
   </data>
   <metadata name="saveFileDialog1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>229, 17</value>
@@ -1380,7 +1299,7 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;showButton.ZOrder" xml:space="preserve">
-    <value>14</value>
+    <value>18</value>
   </data>
   <data name="hideButton.Location" type="System.Drawing.Point, System.Drawing">
     <value>656, 772</value>
@@ -1407,7 +1326,7 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;hideButton.ZOrder" xml:space="preserve">
-    <value>13</value>
+    <value>17</value>
   </data>
   <data name="pressLabel.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -1437,7 +1356,7 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;pressLabel.ZOrder" xml:space="preserve">
-    <value>12</value>
+    <value>16</value>
   </data>
   <data name="downUpLabel.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -1467,7 +1386,7 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;downUpLabel.ZOrder" xml:space="preserve">
-    <value>11</value>
+    <value>15</value>
   </data>
   <data name="sliderLabel.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -1497,7 +1416,7 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;sliderLabel.ZOrder" xml:space="preserve">
-    <value>10</value>
+    <value>14</value>
   </data>
   <data name="countButtonClear.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
     <value>NoControl</value>
@@ -1524,7 +1443,7 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;countButtonClear.ZOrder" xml:space="preserve">
-    <value>9</value>
+    <value>13</value>
   </data>
   <data name="countButton.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
     <value>NoControl</value>
@@ -1551,7 +1470,7 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;countButton.ZOrder" xml:space="preserve">
-    <value>8</value>
+    <value>12</value>
   </data>
   <data name="countLabel.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -1581,7 +1500,7 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;countLabel.ZOrder" xml:space="preserve">
-    <value>7</value>
+    <value>11</value>
   </data>
   <data name="notEnabledButton.Enabled" type="System.Boolean, mscorlib">
     <value>False</value>
@@ -1611,7 +1530,7 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;notEnabledButton.ZOrder" xml:space="preserve">
-    <value>6</value>
+    <value>10</value>
   </data>
   <data name="invisibleButton.Enabled" type="System.Boolean, mscorlib">
     <value>False</value>
@@ -1644,7 +1563,7 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;invisibleButton.ZOrder" xml:space="preserve">
-    <value>5</value>
+    <value>9</value>
   </data>
   <data name="colorButton.Enabled" type="System.Boolean, mscorlib">
     <value>False</value>
@@ -1674,7 +1593,7 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;colorButton.ZOrder" xml:space="preserve">
-    <value>4</value>
+    <value>8</value>
   </data>
   <data name="pushLabel.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -1704,7 +1623,7 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;pushLabel.ZOrder" xml:space="preserve">
-    <value>3</value>
+    <value>7</value>
   </data>
   <data name="checkedLabel.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -1734,7 +1653,7 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;checkedLabel.ZOrder" xml:space="preserve">
-    <value>2</value>
+    <value>6</value>
   </data>
   <metadata name="Head1.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
@@ -1767,7 +1686,7 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;Table.ZOrder" xml:space="preserve">
-    <value>1</value>
+    <value>5</value>
   </data>
   <metadata name="Head1.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
@@ -1787,6 +1706,402 @@
   <data name="Head3.HeaderText" xml:space="preserve">
     <value>Head3</value>
   </data>
+  <data name="listBox1.Items" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="listBox1.Items1" xml:space="preserve">
+    <value>1</value>
+  </data>
+  <data name="listBox1.Items2" xml:space="preserve">
+    <value>2</value>
+  </data>
+  <data name="listBox1.Items3" xml:space="preserve">
+    <value>3</value>
+  </data>
+  <data name="listBox1.Items4" xml:space="preserve">
+    <value>4</value>
+  </data>
+  <data name="listBox1.Items5" xml:space="preserve">
+    <value>5</value>
+  </data>
+  <data name="listBox1.Items6" xml:space="preserve">
+    <value>6</value>
+  </data>
+  <data name="listBox1.Items7" xml:space="preserve">
+    <value>7</value>
+  </data>
+  <data name="listBox1.Items8" xml:space="preserve">
+    <value>8</value>
+  </data>
+  <data name="listBox1.Items9" xml:space="preserve">
+    <value>9</value>
+  </data>
+  <data name="listBox1.Items10" xml:space="preserve">
+    <value>10</value>
+  </data>
+  <data name="listBox1.Items11" xml:space="preserve">
+    <value>11</value>
+  </data>
+  <data name="listBox1.Items12" xml:space="preserve">
+    <value>12</value>
+  </data>
+  <data name="listBox1.Items13" xml:space="preserve">
+    <value>13</value>
+  </data>
+  <data name="listBox1.Items14" xml:space="preserve">
+    <value>14</value>
+  </data>
+  <data name="listBox1.Items15" xml:space="preserve">
+    <value>15</value>
+  </data>
+  <data name="listBox1.Items16" xml:space="preserve">
+    <value>16</value>
+  </data>
+  <data name="listBox1.Items17" xml:space="preserve">
+    <value>17</value>
+  </data>
+  <data name="listBox1.Items18" xml:space="preserve">
+    <value>18</value>
+  </data>
+  <data name="listBox1.Items19" xml:space="preserve">
+    <value>19</value>
+  </data>
+  <data name="listBox1.Items20" xml:space="preserve">
+    <value>20</value>
+  </data>
+  <data name="listBox1.Items21" xml:space="preserve">
+    <value>21</value>
+  </data>
+  <data name="listBox1.Items22" xml:space="preserve">
+    <value>22</value>
+  </data>
+  <data name="listBox1.Items23" xml:space="preserve">
+    <value>23</value>
+  </data>
+  <data name="listBox1.Items24" xml:space="preserve">
+    <value>24</value>
+  </data>
+  <data name="listBox1.Items25" xml:space="preserve">
+    <value>25</value>
+  </data>
+  <data name="listBox1.Items26" xml:space="preserve">
+    <value>26</value>
+  </data>
+  <data name="listBox1.Items27" xml:space="preserve">
+    <value>27</value>
+  </data>
+  <data name="listBox1.Items28" xml:space="preserve">
+    <value>28</value>
+  </data>
+  <data name="listBox1.Items29" xml:space="preserve">
+    <value>29</value>
+  </data>
+  <data name="listBox1.Items30" xml:space="preserve">
+    <value>30</value>
+  </data>
+  <data name="listBox1.Items31" xml:space="preserve">
+    <value>31</value>
+  </data>
+  <data name="listBox1.Items32" xml:space="preserve">
+    <value>32</value>
+  </data>
+  <data name="listBox1.Items33" xml:space="preserve">
+    <value>33</value>
+  </data>
+  <data name="listBox1.Items34" xml:space="preserve">
+    <value>34</value>
+  </data>
+  <data name="listBox1.Items35" xml:space="preserve">
+    <value>35</value>
+  </data>
+  <data name="listBox1.Items36" xml:space="preserve">
+    <value>36</value>
+  </data>
+  <data name="listBox1.Items37" xml:space="preserve">
+    <value>37</value>
+  </data>
+  <data name="listBox1.Items38" xml:space="preserve">
+    <value>38</value>
+  </data>
+  <data name="listBox1.Items39" xml:space="preserve">
+    <value>39</value>
+  </data>
+  <data name="listBox1.Items40" xml:space="preserve">
+    <value>40</value>
+  </data>
+  <data name="listBox1.Items41" xml:space="preserve">
+    <value>41</value>
+  </data>
+  <data name="listBox1.Items42" xml:space="preserve">
+    <value>42</value>
+  </data>
+  <data name="listBox1.Items43" xml:space="preserve">
+    <value>43</value>
+  </data>
+  <data name="listBox1.Items44" xml:space="preserve">
+    <value>44</value>
+  </data>
+  <data name="listBox1.Items45" xml:space="preserve">
+    <value>45</value>
+  </data>
+  <data name="listBox1.Items46" xml:space="preserve">
+    <value>46</value>
+  </data>
+  <data name="listBox1.Items47" xml:space="preserve">
+    <value>47</value>
+  </data>
+  <data name="listBox1.Items48" xml:space="preserve">
+    <value>48</value>
+  </data>
+  <data name="listBox1.Items49" xml:space="preserve">
+    <value>49</value>
+  </data>
+  <data name="listBox1.Items50" xml:space="preserve">
+    <value>50</value>
+  </data>
+  <data name="listBox1.Items51" xml:space="preserve">
+    <value>51</value>
+  </data>
+  <data name="listBox1.Items52" xml:space="preserve">
+    <value>52</value>
+  </data>
+  <data name="listBox1.Items53" xml:space="preserve">
+    <value>53</value>
+  </data>
+  <data name="listBox1.Items54" xml:space="preserve">
+    <value>54</value>
+  </data>
+  <data name="listBox1.Items55" xml:space="preserve">
+    <value>55</value>
+  </data>
+  <data name="listBox1.Items56" xml:space="preserve">
+    <value>56</value>
+  </data>
+  <data name="listBox1.Items57" xml:space="preserve">
+    <value>57</value>
+  </data>
+  <data name="listBox1.Items58" xml:space="preserve">
+    <value>58</value>
+  </data>
+  <data name="listBox1.Items59" xml:space="preserve">
+    <value>59</value>
+  </data>
+  <data name="listBox1.Items60" xml:space="preserve">
+    <value>60</value>
+  </data>
+  <data name="listBox1.Items61" xml:space="preserve">
+    <value>61</value>
+  </data>
+  <data name="listBox1.Items62" xml:space="preserve">
+    <value>62</value>
+  </data>
+  <data name="listBox1.Items63" xml:space="preserve">
+    <value>63</value>
+  </data>
+  <data name="listBox1.Items64" xml:space="preserve">
+    <value>64</value>
+  </data>
+  <data name="listBox1.Items65" xml:space="preserve">
+    <value>65</value>
+  </data>
+  <data name="listBox1.Items66" xml:space="preserve">
+    <value>66</value>
+  </data>
+  <data name="listBox1.Items67" xml:space="preserve">
+    <value>67</value>
+  </data>
+  <data name="listBox1.Items68" xml:space="preserve">
+    <value>68</value>
+  </data>
+  <data name="listBox1.Items69" xml:space="preserve">
+    <value>69</value>
+  </data>
+  <data name="listBox1.Items70" xml:space="preserve">
+    <value>70</value>
+  </data>
+  <data name="listBox1.Items71" xml:space="preserve">
+    <value>71</value>
+  </data>
+  <data name="listBox1.Items72" xml:space="preserve">
+    <value>72</value>
+  </data>
+  <data name="listBox1.Items73" xml:space="preserve">
+    <value>73</value>
+  </data>
+  <data name="listBox1.Items74" xml:space="preserve">
+    <value>74</value>
+  </data>
+  <data name="listBox1.Items75" xml:space="preserve">
+    <value>75</value>
+  </data>
+  <data name="listBox1.Items76" xml:space="preserve">
+    <value>76</value>
+  </data>
+  <data name="listBox1.Items77" xml:space="preserve">
+    <value>77</value>
+  </data>
+  <data name="listBox1.Items78" xml:space="preserve">
+    <value>78</value>
+  </data>
+  <data name="listBox1.Items79" xml:space="preserve">
+    <value>79</value>
+  </data>
+  <data name="listBox1.Items80" xml:space="preserve">
+    <value>80</value>
+  </data>
+  <data name="listBox1.Items81" xml:space="preserve">
+    <value>81</value>
+  </data>
+  <data name="listBox1.Items82" xml:space="preserve">
+    <value>82</value>
+  </data>
+  <data name="listBox1.Items83" xml:space="preserve">
+    <value>83</value>
+  </data>
+  <data name="listBox1.Items84" xml:space="preserve">
+    <value>84</value>
+  </data>
+  <data name="listBox1.Items85" xml:space="preserve">
+    <value>85</value>
+  </data>
+  <data name="listBox1.Items86" xml:space="preserve">
+    <value>86</value>
+  </data>
+  <data name="listBox1.Items87" xml:space="preserve">
+    <value>87</value>
+  </data>
+  <data name="listBox1.Items88" xml:space="preserve">
+    <value>88</value>
+  </data>
+  <data name="listBox1.Items89" xml:space="preserve">
+    <value>89</value>
+  </data>
+  <data name="listBox1.Items90" xml:space="preserve">
+    <value>90</value>
+  </data>
+  <data name="listBox1.Items91" xml:space="preserve">
+    <value>91</value>
+  </data>
+  <data name="listBox1.Items92" xml:space="preserve">
+    <value>92</value>
+  </data>
+  <data name="listBox1.Items93" xml:space="preserve">
+    <value>93</value>
+  </data>
+  <data name="listBox1.Items94" xml:space="preserve">
+    <value>94</value>
+  </data>
+  <data name="listBox1.Items95" xml:space="preserve">
+    <value>95</value>
+  </data>
+  <data name="listBox1.Items96" xml:space="preserve">
+    <value>96</value>
+  </data>
+  <data name="listBox1.Items97" xml:space="preserve">
+    <value>97</value>
+  </data>
+  <data name="listBox1.Items98" xml:space="preserve">
+    <value>98</value>
+  </data>
+  <data name="listBox1.Items99" xml:space="preserve">
+    <value>99</value>
+  </data>
+  <data name="listBox1.Items100" xml:space="preserve">
+    <value>100</value>
+  </data>
+  <data name="listBox1.Location" type="System.Drawing.Point, System.Drawing">
+    <value>738, 569</value>
+  </data>
+  <data name="listBox1.ScrollAlwaysVisible" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="listBox1.Size" type="System.Drawing.Size, System.Drawing">
+    <value>88, 69</value>
+  </data>
+  <data name="listBox1.TabIndex" type="System.Int32, mscorlib">
+    <value>42</value>
+  </data>
+  <data name="&gt;&gt;listBox1.Name" xml:space="preserve">
+    <value>listBox1</value>
+  </data>
+  <data name="&gt;&gt;listBox1.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ListBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;listBox1.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;listBox1.ZOrder" xml:space="preserve">
+    <value>4</value>
+  </data>
+  <data name="panel2.Location" type="System.Drawing.Point, System.Drawing">
+    <value>813, 603</value>
+  </data>
+  <data name="panel2.Size" type="System.Drawing.Size, System.Drawing">
+    <value>5, 5</value>
+  </data>
+  <data name="panel2.TabIndex" type="System.Int32, mscorlib">
+    <value>43</value>
+  </data>
+  <data name="&gt;&gt;panel2.Name" xml:space="preserve">
+    <value>panel2</value>
+  </data>
+  <data name="&gt;&gt;panel2.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Panel, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;panel2.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;panel2.ZOrder" xml:space="preserve">
+    <value>3</value>
+  </data>
+  <data name="panel3.Location" type="System.Drawing.Point, System.Drawing">
+    <value>808, 571</value>
+  </data>
+  <data name="panel3.Size" type="System.Drawing.Size, System.Drawing">
+    <value>5, 5</value>
+  </data>
+  <data name="panel3.TabIndex" type="System.Int32, mscorlib">
+    <value>44</value>
+  </data>
+  <data name="&gt;&gt;panel3.Name" xml:space="preserve">
+    <value>panel3</value>
+  </data>
+  <data name="&gt;&gt;panel3.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Panel, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;panel3.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;panel3.ZOrder" xml:space="preserve">
+    <value>2</value>
+  </data>
+  <data name="Spinner.Location" type="System.Drawing.Point, System.Drawing">
+    <value>749, 772</value>
+  </data>
+  <data name="Spinner.Size" type="System.Drawing.Size, System.Drawing">
+    <value>80, 20</value>
+  </data>
+  <data name="Spinner.TabIndex" type="System.Int32, mscorlib">
+    <value>46</value>
+  </data>
+  <data name="&gt;&gt;Spinner.Name" xml:space="preserve">
+    <value>Spinner</value>
+  </data>
+  <data name="&gt;&gt;Spinner.Type" xml:space="preserve">
+    <value>System.Windows.Forms.NumericUpDown, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;Spinner.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;Spinner.ZOrder" xml:space="preserve">
+    <value>1</value>
+  </data>
+  <data name="doubleclickToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>152, 22</value>
+  </data>
+  <data name="doubleclickToolStripMenuItem.Text" xml:space="preserve">
+    <value>doubleclick</value>
+  </data>
   <metadata name="$this.Localizable" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
   </metadata>
@@ -1797,7 +2112,7 @@
     <value>6, 13</value>
   </data>
   <data name="$this.ClientSize" type="System.Drawing.Size, System.Drawing">
-    <value>865, 834</value>
+    <value>876, 855</value>
   </data>
   <data name="$this.Location" type="System.Drawing.Point, System.Drawing">
     <value>70, 0</value>
@@ -1987,6 +2302,12 @@
   </data>
   <data name="&gt;&gt;Head3.Type" xml:space="preserve">
     <value>System.Windows.Forms.DataGridViewTextBoxColumn, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;doubleclickToolStripMenuItem.Name" xml:space="preserve">
+    <value>doubleclickToolStripMenuItem</value>
+  </data>
+  <data name="&gt;&gt;doubleclickToolStripMenuItem.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;$this.Name" xml:space="preserve">
     <value>Main</value>

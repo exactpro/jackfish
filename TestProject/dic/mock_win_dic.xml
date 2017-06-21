@@ -12,7 +12,7 @@
             <table id="Table1" uid="Table1" owner="owner" class="" name="" text="" addition="Many"/>
             <checkBox id="CheckBox" uid="CheckBox" owner="owner" class="" text="" addition="Many"/>
             <slider id="Slider" uid="Slider" owner="owner" class="" addition="Many"/>
-            <scrollBar id="ScrollBar" uid="" xpath=".//Pane[@uid=&amp;quot;HScrollBar&amp;quot;]" owner="owner" class="" addition="Many"/>
+            <scrollBar id="ScrollBar" uid="" xpath=".//ScrollBar[@uid=&amp;quot;Vertical ScrollBar&amp;quot;]" owner="owner" class="" addition="Many"/>
             <comboBox id="ComboBox" uid="ComboBox" owner="owner" class="" name="" action="" addition="Many"/>
             <radioButton id="RadioButton" xpath=".//RadioButton[contains(@uid,&amp;quot;Green&amp;quot;)]" owner="owner" class="" action="" text="" addition="Many"/>
             <tree id="Tree" uid="" xpath=".//Tree" owner="owner" class="" addition="Many"/>
@@ -26,7 +26,7 @@
             <menu id="Menu" uid="" xpath=".//MenuItem[@name=&amp;quot;Menu&amp;quot;]" owner="owner" class="" name="" action="" text="" addition="Many"/>
             <menuItem id="MenuItem" xpath=".//MenuItem[@name=&amp;quot;MenuItem&amp;quot;]" owner="owner" class="" name="" action="" text="" addition="Many"/>
             <treeItem id="TreeItem" owner="owner"/>
-            <toolTip id="ToolTip" owner="owner" text="It&amp;#39;s some Tooltip!" addition="Many"/>
+            <toolTip id="ToolTip" owner="owner" text="" addition="Many" weak="true"/>
             <any id="Any" uid="Any" owner="owner" class="" name="" action="" text="" addition="Many"/>
             <wait id="Wait" owner="owner" addition="Many"/>
             <label id="Label" uid="CentralLabel" owner="owner" class="" name="" text="" addition="Many"/>
@@ -47,6 +47,8 @@
             <label id="checkedLabel" uid="checkedLabel" owner="" name=""/>
             <menu id="Menu2" uid="" xpath=".//MenuItem[@name=&amp;quot;Menu2&amp;quot;]" owner="owner" class="" name="" action="" text=""/>
             <image id="Image" uid="" owner="" addition="Many" weak="true"/>
+            <splitter id="Splitter" owner="owner" class="" name="" addition="Many" weak="true"/>
+            <spinner id="Spinner" uid="Spinner" xpath=".//Spinner[@uid=&amp;quot;Spinner&amp;quot;]" owner="owner" class="" name="" addition="Many"/>
         </run>
         <onClose/>
         <close/>
