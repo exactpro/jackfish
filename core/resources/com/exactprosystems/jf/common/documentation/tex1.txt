@@ -32,7 +32,7 @@
 \fancypagestyle{allpages}{
     \fancyhf{}
     \rhead{\includegraphics[width=5cm, height=1.5cm]{header.png}}
-    \lhead{\textbf{CONFIDENTIAL} \newline}
+    \lhead{\hspace*{-3cm}\includegraphics[width=3cm, height=0.5cm]{rectangle.png} \newline \newline \textbf{CONFIDENTIAL}}
     \lfoot{JackFish. User Guide}
     \rfoot{\thepage\ of {\hypersetup{linkcolor=black}\pageref{LastPage}}}
 }
@@ -41,7 +41,7 @@
 {
    \fancyhf{}
    \rhead{\includegraphics[width=5cm, height=1.5cm]{header.png}}
-   \lhead{\crule[black]{3cm}{0.4cm} \newline \textbf{CONFIDENTIAL}}
+   \lhead{\hspace*{-3cm}\includegraphics[width=3cm, height=0.5cm]{rectangle.png} \newline \newline \textbf{CONFIDENTIAL}}
    \lfoot{\includegraphics[width=4cm, height=1.3cm]{footer.png} \newline \tiny{London Stock Exchange Group plc. Registered in England & Wales No 5369106. Registered office 10 Paternoster Square, London EC4M 7LS} }
 }
 

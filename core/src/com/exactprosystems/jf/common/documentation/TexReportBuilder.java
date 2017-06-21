@@ -143,7 +143,7 @@ public class TexReportBuilder extends ReportBuilder
             case "4" + CM: return "}";
     
             // header 5
-			case OM + "5": return "\\\\section{ ";
+			case OM + "5": return "\\\\crule[BurntOrange]{\\\\textwidth}{3pt} \\\\newline \\\\section{ ";
 			case "5" + CM: return "}";
     
             // style for identifiers
@@ -226,6 +226,13 @@ public class TexReportBuilder extends ReportBuilder
 			File header = new File(this.getReportDir() + File.separator + "header.png");
 			Files.deleteIfExists(header.toPath());
 			Files.copy(isHeader, header.toPath());
+		}
+
+		try (InputStream recIS = getClass().getResourceAsStream("Square.png"))
+		{
+			File rec = new File(this.getReportDir() + File.separator + "rectangle.png");
+			Files.deleteIfExists(rec.toPath());
+			Files.copy(recIS, rec.toPath());
 		}
 	}
 
