@@ -18,10 +18,10 @@
             <radioButton id="RadioButton" owner="owner" class="javax.swing.JRadioButton" action="Green" text="Green" addition="Many"/>
             <tree id="Tree" owner="owner" class="javax.swing.JTree" addition="Many"/>
             <tabPanel id="TabPanel" owner="owner" class="javax.swing.JTabbedPane" addition="Many"/>
-            <label id="centralLabel" owner="owner" class="javax.swing.JLabel" name="centralLabel" text="" addition="Many"/>
+            <label id="centralLabel" owner="owner" class="javax.swing.JLabel" name="CentralLabel" text="" addition="Many"/>
             <toggleButton id="ToggleButton" owner="owner" class="javax.swing.JToggleButton" name="ToggleButton" addition="Many"/>
             <frame id="Frame" owner="owner" class="javax.swing.JFrame" name="frame0" title="Mock swing app" addition="Many"/>
-            <label id="Label" owner="owner" class="javax.swing.JLabel" name="centralLabel" text="" addition="Many"/>
+            <label id="Label" owner="owner" class="javax.swing.JLabel" name="CentralLabel" text="" addition="Many"/>
             <progressBar id="ProgressBar" owner="owner" class="javax.swing.JProgressBar" name="ProgressBar" addition="Many"/>
             <panel id="Panel" owner="owner" class="javax.swing.JPanel" name="Panel" addition="Many"/>
             <dialog id="Dialog" title="Dialog" addition="Many"/>

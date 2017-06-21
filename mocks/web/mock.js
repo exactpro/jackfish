@@ -28,6 +28,7 @@ var onclick = function(element, name) {
 	element.onclick = function(e) {
 		document.getElementById("centralLabel").textContent = name + "_click";
 		document.getElementById("moveLabel").textContent = '';
+		document.getElementById('pushLabel').textContent = name + "_push";
 	}
 }
 var ondblclick = function(element, name) {

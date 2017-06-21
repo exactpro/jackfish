@@ -1577,6 +1577,7 @@ public class SeleniumOperationExecutor implements OperationExecutor<WebElement>
 			throw new Exception("Doesn't support");
 		}
 		Exception real = null;
+		double newValue = value - 50d;
 		int repeat = 1;
 		do
 		{
@@ -1587,12 +1588,12 @@ public class SeleniumOperationExecutor implements OperationExecutor<WebElement>
 				int width = component.getSize().getWidth();
 				if (height > width)
 				{
-					customAction.moveToElement(component, width / 2, (int) ((double) (value * ((double) height / 100)))).click().build().perform();
+					customAction.dragAndDropBy(component, width / 2, (int) (newValue * ((double) height / 100))).build().perform();
 				}
 				//horizontal slider
 				else
 				{
-					customAction.moveToElement(component, (int) ((double) (value * ((double) width / 100))), height / 2).click().build().perform();
+					customAction.dragAndDropBy(component, (int) ((newValue * ((double) width / 100))), height / 2).build().perform();
 				}
 
 				return true;

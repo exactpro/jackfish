@@ -27,6 +27,8 @@ public class MockApp
 	private JFrame frame2;
 	private JLabel centralLabel;
 	private JLabel pressLabel;
+	private JLabel pushLabel;
+	private JLabel checkedLabel;
 	private JLabel downUpLabel;
 	private JLabel moveLabel;
 	private JLabel sliderLabel;
@@ -48,15 +50,17 @@ public class MockApp
 		JMenuBar menuBar = createMenu();
 		this.frame.setJMenuBar(menuBar);
 		this.frame.setLayout(grid);
-		this.frame.setLocation(200, 200);
+		this.frame.setLocation(200 , 33);
 		this.frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 		this.centralLabel = new JLabel();
+		this.pushLabel = new JLabel();
+		this.checkedLabel = new JLabel();
 		this.pressLabel = new JLabel();
 		addListeners(this.centralLabel, "Label");
 		this.moveLabel = new JLabel();
 		this.downUpLabel = new JLabel();
 		this.sliderLabel = new JLabel();
-		createPanelCentralPanel(centralLabel, moveLabel, pressLabel, downUpLabel, sliderLabel);
+		createPanelCentralPanel(centralLabel, moveLabel, pressLabel, downUpLabel, sliderLabel, pushLabel, checkedLabel);
 
 		createPanelButton();
 		createPanelInput();
@@ -368,10 +372,11 @@ public class MockApp
 		return menuBar;
 	}
 
-	private void createPanelCentralPanel(JLabel centralLabel, JLabel moveLabel, JLabel pressLabel, JLabel downUpLabel, JLabel sliderLabel)
+	private void createPanelCentralPanel(JLabel centralLabel, JLabel moveLabel, JLabel pressLabel, JLabel downUpLabel,
+                                         JLabel sliderLabel, JLabel pushLabel, JLabel checkedLabel)
 	{
 		JPanel panel = createPanel("panelCentralLabel");
-		centralLabel.setName("centralLabel");
+		centralLabel.setName("CentralLabel");
 		centralLabel.setText("CentralLabel");
 		moveLabel.setName("moveLabel");
 		moveLabel.setText("Movelabel");
@@ -381,12 +386,18 @@ public class MockApp
 		downUpLabel.setText("DownUplabel");
 		sliderLabel.setName("sliderLabel");
 		sliderLabel.setText("sliderlabel");
+		pushLabel.setName("pushLabel");
+		pushLabel.setText("pushLabel");
+		checkedLabel.setName("checkedLabel");
+		checkedLabel.setText("checkedLabel");
 		panel.add(new JLabel());
 		panel.add(centralLabel);
 		panel.add(moveLabel);
 		panel.add(pressLabel);
 		panel.add(downUpLabel);
 		panel.add(sliderLabel);
+		panel.add(pushLabel);
+		panel.add(checkedLabel);
 	}
 
 	private void createPanelButton()
@@ -396,6 +407,7 @@ public class MockApp
 		String name = "Button";
 		JButton button = new JButton(name);
 		button.addActionListener(event -> centralLabel.setText("Button_click"));
+		button.addMouseListener(mouseListener(name));
 		addListeners(button, name);
 		panelButton.add(button);
 	}
@@ -1102,6 +1114,7 @@ public class MockApp
 				if (e.getClickCount() == 1)
 				{
 					centralLabel.setText(name + "_click");
+					pushLabel.setText(name + "_push");
 					moveLabel.setText("");
 					//					if (e.getX() < 10 && e.getY() < 10)
 					//					{
