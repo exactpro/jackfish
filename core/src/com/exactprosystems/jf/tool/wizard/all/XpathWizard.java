@@ -267,10 +267,7 @@ public class XpathWizard extends AbstractWizard
             IControl self = this.currentWindow.getSelfControl();
             Locator selfLocator = self == null ? null : self.locator();
             Locator elementLocator = this.currentControl.locator();
-            
-    
-            // TODO fill document and image here
-            final IRemoteApplication service = this.currentConnection.getApplication().service();
+            IRemoteApplication service = this.currentConnection.getApplication().service();
             
             // get XML document
             this.documentService = new JfService<Document>(this.executor, 
@@ -325,8 +322,8 @@ public class XpathWizard extends AbstractWizard
                 DialogsHelper.showError(message);
             });
     
-            this.documentService.start();
             this.imageService.start();
+            this.documentService.start();
         }
         catch (Exception e)
         {
