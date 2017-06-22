@@ -149,11 +149,18 @@ namespace mock_win
                 case "panel3":
                     text = "ScrollBar";
                     break;
+                case "tabPage1":
+                case "tabPage2":
+                case "tabPage3":
+                case "tabPage4":
+                    text = "TabPanel";
+                    break;
                 default:
                     text = name;
                     break;
             }
             moveLabel.Text = text + "_move";
+            Console.WriteLine(name);
         }
 
         private void CommonMouseDown(object sender, MouseEventArgs e)
@@ -282,6 +289,12 @@ namespace mock_win
                 case "panel2":
                 case "panel3":
                     text = "ScrollBar";
+                    break;
+                case "tabPage1":
+                case "tabPage2":
+                case "tabPage3":
+                case "tabPage4":
+                    text = "TabPanel";
                     break;
                 default:
                     text = name;

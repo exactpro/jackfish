@@ -29,11 +29,11 @@ INIT;Test case;Never;;
     19;x;'Do.use(\'Menu2\').move()';'\'[JTree][Orange]\'';;'new Color(246,246,246)';Tooltip;;;'\'Tooltip\'';'Tooltip';;'Tooltip';;;;true;'new ArrayList([\'Green\',\'Yellow\', \'Orange\',\'Blue\']),false';'\'Tooltip\''
     20;x;;'\'[JTree][Orange]\'';;'new Color(246,246,246)';Menu;;'Menu';'\'Menu\'';;;'Menu';;;;true;'new ArrayList([\'Green\',\'Yellow\', \'Orange\',\'Blue\']),false';'\'\''
     21;x;'Do.use(\'Menu2\').click(200,10).click()';'\'[JTree][Orange]\'';;'new Color(246,246,246)';MenuItem;;'MenuItem';'\'MenuItem\'';;;'MenuItem';;;;true;'new ArrayList([\'Green\',\'Yellow\', \'Orange\',\'Blue\']),false';'\'\''
-    22;x;'Do.select(\'Green\')';'\'[JTree][Orange]\'';;'new Color(246,246,246)';TabPanel;;getExp(plugin,'TabPanel','TabPanel','');getExp(plugin,'\'TabPanel\'','\'TabPanel\'','\'TabPanel\'');'Green';'Blue';'TabPanel';;;'[Green, Yellow, Orange, Blue]';true;'new ArrayList([\'Green\',\'Yellow\', \'Orange\',\'Blue\']),false';'\'\''
+    22;x;'Do.select(\'Green\')';'\'[JTree][Orange]\'';;'new Color(246,246,246)';TabPanel;;getExp(plugin,'TabPanel','TabPanel','');getExp(plugin,'\'TabPanel\'','\'TabPanel\'','\'Green\'');'Green';'Blue';'TabPanel';;;'[Green, Yellow, Orange, Blue]';true;'new ArrayList([\'Green\',\'Yellow\', \'Orange\',\'Blue\']),false';'\'Green\''
     23;x;;'\'[JTree][Orange]\'';;'new Color(246,246,246)';Spinner;;'Spinner';'\'Spinner\'';;;'Spinner';;;;true;'new ArrayList([\'Green\',\'Yellow\', \'Orange\',\'Blue\']),false';'\'\''
     #EndRawTable
 
-    #Action;#Table;#Expression
+    #Action;$Table;$Expression
     TableConsiderColumnsAs;controls;{'Before','getAttr','getValue','get','setValue','text','getList','check','getListPar','getValuePar','getAttrPar','colorPar','getRow','getRowPar','toggle','select'}
 
     #Id;#Global;#RawTable
@@ -46,7 +46,7 @@ INIT;Test case;Never;;
     4;x;Do.checkRegexp(false);Do.checkRegexp('\\w*',false);true;control.getValuePar
     5;x;Do.checkRegexp(x,y);Do.checkRegexp('\\w*',1,1);true;control.getValuePar
     6;x;Do.checkAttr;Do.checkAttr('name',par);true;control.getAttrPar
-    7;x;Do.checkAttrRegexp;Do.checkAttrRegexp('name','\\w*');true;control.getAttrPar
+    7;x;Do.checkAttrRegexp;Do.checkAttrRegexp('name','[a-zA-Z0-9_ ]*');true;control.getAttrPar
     8;x;Do.checkList;Do.checkList(par);true;control.getListPar
     9;x;Do.checkColor;Do.use('colorButton').checkColor(5,5,new Color(255,0,0));true;control.colorPar
     10;x;getAttr;Do.getAttr('name');control.getAttr;
@@ -94,7 +94,7 @@ INIT;Test case;Never;;
     52;x;Do.dragNDrop;Do.use('Slider').setValue(0).dragNdrop(10, 6, 'Slider', 395, 6).use('sliderLabel').getValue();'Slider_50';
     #EndRawTable
 
-    #Action;#Table;#Expression
+    #Action;$Table;$Expression
     TableConsiderColumnsAs;operations;{'Actual','Par'}
 
 
@@ -105,50 +105,50 @@ EXECUTE;;;;
 
     #If
     adapter == 'Web'
-        #Call;#plugin
+        #Call;plugin
         RUN;'Web'
 
     #EndIf
 
     #If
     adapter == 'Swing'
-        #Call;#plugin
+        #Call;plugin
         RUN;'Swing'
 
     #EndIf
 
     #If
     adapter == 'Win'
-        #Call;#plugin
+        #Call;plugin
         RUN;'Win'
 
     #EndIf
 
-    #Id;#Action;#Decoraded
+    #Id;#Action;$Decoraded
     RESTBL1;ResultTable;true
 
-    #Action;#Table;#Title;#BeforeTestCase
+    #Action;$Table;$Title;$BeforeTestCase
     TableReport;RESTBL1.Out;'result';'INIT'
 
 
 #Id;#TestCase;#Kind;#Depends;#For
 SUBCASES;;;;
-    #Id;#SubCase;#plugin
-    RUN;Run;'Web'
+    #Id;#SubCase;plugin
+    RUN;Run;'Win'
         #Step;#Kind;#For;#Depends
         'start application';;;
-            #Id;#Action;#Plugin;#Control;#Operation;#Time;#Expected;#Actual;#Result
+            #Id;#Action;Plugin;Control;Operation;Time;Expected;Actual;Result
             TBL1;TableCreate;;;;;;;
 
             #Id;#Global;#Let
             table_result;1;TBL1.Out
 
-            #Action;#Table;#Colored
+            #Action;$Table;$Colored
             TableConsiderColumnsAs;table_result;'Result'
 
             #If
             plugin == 'Web'
-                #Id;#Action;#AppId;#Browser;#URL
+                #Id;#Action;$AppId;Browser;URL
                 APPSTR1;ApplicationStart;mockWebApp;mockWebBrowser;mockWebURL
 
                 #Id;#Global;#Let
@@ -158,7 +158,7 @@ SUBCASES;;;;
 
             #If
             plugin == 'Swing'
-                #Id;#Action;#AppId;#Jar;#Args;#MainClass
+                #Id;#Action;$AppId;Jar;Args;MainClass
                 APPSTR1;ApplicationStart;mockSwingApp;mockSwingJar;'';mockSwingClass
 
                 #Id;#Global;#Let
@@ -168,7 +168,7 @@ SUBCASES;;;;
 
             #If
             plugin == 'Win'
-                #Id;#Action;#AppId;#Exec;#WorkDir;#Args
+                #Id;#Action;$AppId;Exec;WorkDir;Args
                 APPSTR1;ApplicationStart;mockWinApp;mockWinExec;mockWinDir;''
 
                 #Id;#Global;#Let
@@ -235,19 +235,19 @@ SUBCASES;;;;
 
                     #EndIf
 
-                    #Id;#Action;#Dialog;#AppConnection;#Fields
+                    #Id;#Action;$Dialog;$AppConnection;$Fields
                     DLG;DialogFill;'Main';appCon;{control.Name : before}
 
-                    #Id;#Action;#Dialog;#AppConnection;#Fields
+                    #Id;#Action;$Dialog;$AppConnection;$Fields
                     DLG;DialogFill;'Main';appCon;{control.Name : op}
 
                     #Assert;#Message
                     evaluator.evaluate(field).toString() == operation.Actual.toString();
 
-                    #Action;#Table;#Plugin;#Control;#Operation;#Time;#Expected;#Actual;#Result
+                    #Action;$Table;Plugin;Control;Operation;Time;Expected;Actual;Result
                     TableAddValue;table_result;plugin;control.Name;operation.Name;DateTime.current().getTime() - startTime;evaluator.evaluate(field);operation.Actual;'OK'
 
-                    #Action;#
+                    #Action;
                     Print;control.Name + ' - ' + operation.Name + ' (' + (DateTime.current().getTime() - startTime) + ')'
 
                     #OnError
@@ -257,17 +257,17 @@ SUBCASES;;;;
                             ErrorKind.OPERATION_NOT_ALLOWED
                                 #If
                                 appCon.getDictionary().getWindow('Main').getControlForName(null, control.Name).getBindedClass().isAllowed(evaluator.evaluate(op).getOperationKind(0)) == false || appCon.getApplication().getFactory()isAllowed(appCon.getDictionary().getWindow('Main').getControlForName(null, control.Name).getBindedClass(), evaluator.evaluate(op).getOperationKind(0)) == false
-                                    #Action;#Table;#Plugin;#Control;#Operation;#Time;#Expected;#Actual;#Result
+                                    #Action;$Table;Plugin;Control;Operation;Time;Expected;Actual;Result
                                     TableAddValue;table_result;plugin;control.Name;operation.Name;DateTime.current().getTime() - startTime;'OPERATION IS NOT ALLOWED';'OPERATION IS NOT ALLOWED';'OK'
 
-                                    #Action;#
+                                    #Action;
                                     Print;control.Name + ' - ' + operation.Name + ' (' + (DateTime.current().getTime() - startTime) + ')'
 
                                 #Else
-                                    #Action;#Table;#Plugin;#Control;#Operation;#Time;#Expected;#Actual;#Result
+                                    #Action;$Table;Plugin;Control;Operation;Time;Expected;Actual;Result
                                     TableAddValue;table_result;plugin;control.Name;operation.Name;DateTime.current().getTime() - startTime;'OPERATION_CHECK_FAILED';'OPERATION_CHECK_FAILED';'FAILED'
 
-                                    #Action;#
+                                    #Action;
                                     Print;control.Name + ' - ' + operation.Name + ' (' + (DateTime.current().getTime() - startTime) + ')'
 
                                     #Id;#Let
@@ -283,11 +283,11 @@ SUBCASES;;;;
                             ErrorKind.FEATURE_NOT_SUPPORTED
                                 #If
                                 operation.Actual == ErrorKind.FEATURE_NOT_SUPPORTED
-                                    #Action;#Table;#Plugin;#Control;#Operation;#Time;#Expected;#Actual;#Result
+                                    #Action;$Table;Plugin;Control;Operation;Time;Expected;Actual;Result
                                     TableAddValue;table_result;plugin;control.Name;operation.Name;DateTime.current().getTime() - startTime;'FEATURE_NOT_SUPPORTED';'FEATURE_NOT_SUPPORTED';'OK'
 
                                 #Else
-                                    #Action;#Table;#Plugin;#Control;#Operation;#Time;#Expected;#Actual;#Result
+                                    #Action;$Table;Plugin;Control;Operation;Time;Expected;Actual;Result
                                     TableAddValue;table_result;plugin;control.Name;operation.Name;DateTime.current().getTime() - startTime;'FEATURE_NOT_SUPPORTED';'FEATURE_NOT_SUPPORTED';'FAILED'
 
                                     #Id;#Let
@@ -303,17 +303,17 @@ SUBCASES;;;;
                             ErrorKind.CONTROL_NOT_SUPPORTED
                                 #If
                                 appCon.getApplication().getFactory().getInfo().isSupported(appCon.getDictionary().getWindow('Main').getControlForName(null, control.Name).getBindedClass()) == false
-                                    #Action;#Table;#Plugin;#Control;#Operation;#Time;#Expected;#Actual;#Result
+                                    #Action;$Table;Plugin;Control;Operation;Time;Expected;Actual;Result
                                     TableAddValue;table_result;plugin;control.Name;operation.Name;DateTime.current().getTime() - startTime;'ELEMENT IS NOT SUPPORTED';'ELEMENT IS NOT SUPPORTED';'OK'
 
-                                    #Action;#
+                                    #Action;
                                     Print;control.Name + ' - ' + operation.Name + ' (' + (DateTime.current().getTime() - startTime) + ')'
 
                                 #Else
-                                    #Action;#Table;#Plugin;#Control;#Operation;#Time;#Expected;#Actual;#Result
+                                    #Action;$Table;Plugin;Control;Operation;Time;Expected;Actual;Result
                                     TableAddValue;table_result;plugin;control.Name;operation.Name;DateTime.current().getTime() - startTime;'CONTROL_CHECK_FAILED';'CONTROL_CHECK_FAILED';'FAILED'
 
-                                    #Action;#
+                                    #Action;
                                     Print;control.Name + ' - ' + operation.Name + ' (' + (DateTime.current().getTime() - startTime) + ')'
 
                                     #Id;#Let
@@ -329,17 +329,17 @@ SUBCASES;;;;
                             ErrorKind.ELEMENT_NOT_FOUND
                                 #If
                                 operation.Actual == ErrorKind.ELEMENT_NOT_FOUND
-                                    #Action;#Table;#Plugin;#Control;#Operation;#Time;#Expected;#Actual;#Result
+                                    #Action;$Table;Plugin;Control;Operation;Time;Expected;Actual;Result
                                     TableAddValue;table_result;plugin;control.Name;operation.Name;DateTime.current().getTime() - startTime;'ELEMENT_NOT_FOUND';'ELEMENT_NOT_FOUND';'OK'
 
-                                    #Action;#
+                                    #Action;
                                     Print;control.Name + ' - ' + operation.Name + ' (' + (DateTime.current().getTime() - startTime) + ')'
 
                                 #Else
-                                    #Action;#Table;#Plugin;#Control;#Operation;#Time;#Expected;#Actual;#Result
+                                    #Action;$Table;Plugin;Control;Operation;Time;Expected;Actual;Result
                                     TableAddValue;table_result;plugin;control.Name;operation.Name;DateTime.current().getTime() - startTime;'ELEMENT_NOT_FOUND';'ELEMENT_NOT_FOUND';'FAILED'
 
-                                    #Action;#
+                                    #Action;
                                     Print;control.Name + ' - ' + operation.Name + ' (' + (DateTime.current().getTime() - startTime) + ')'
 
                                     #Id;#Let
@@ -353,10 +353,10 @@ SUBCASES;;;;
 
                             #Case
                             ErrorKind.EXCEPTION
-                                #Action;#Table;#Plugin;#Control;#Operation;#Time;#Expected;#Actual;#Result
+                                #Action;$Table;Plugin;Control;Operation;Time;Expected;Actual;Result
                                 TableAddValue;table_result;plugin;control.Name;operation.Name;DateTime.current().getTime() - startTime;'EXCEPTION';'EXCEPTION';'FAILED'
 
-                                #Action;#
+                                #Action;
                                 Print;control.Name + ' - ' + operation.Name + ' (' + (DateTime.current().getTime() - startTime) + ')'
 
                                 #Id;#Let
@@ -366,10 +366,10 @@ SUBCASES;;;;
 
 
                             #Default
-                                #Action;#Table;#Plugin;#Control;#Operation;#Time;#Expected;#Actual;#Result
+                                #Action;$Table;Plugin;Control;Operation;Time;Expected;Actual;Result
                                 TableAddValue;table_result;plugin;control.Name;operation.Name;DateTime.current().getTime() - startTime;evaluator.evaluate(field);operation.Actual;'FAILED'
 
-                                #Action;#
+                                #Action;
                                 Print;control.Name + ' - ' + operation.Name + ' (' + (DateTime.current().getTime() - startTime) + ')'
 
                                 #Id;#Let
@@ -395,10 +395,10 @@ SUBCASES;;;;
 
         #Step;#Kind;#For;#Depends
         'close application';;;
-            #Id;#Action;#AppConnection
+            #Id;#Action;$AppConnection
             APPSTP1;ApplicationStop;appCon
 
-            #Action;#Table;#Title;#BeforeTestCase
+            #Action;$Table;$Title;$BeforeTestCase
             TableReport;table_result;'Result';'INIT'
 
             #Assert;#Message

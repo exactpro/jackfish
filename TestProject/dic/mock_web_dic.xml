@@ -49,6 +49,8 @@
             <button id="colorButton" owner="owner" name="colorButton"/>
             <label id="pushLabel" uid="" name="pushLabel" addition="Many"/>
             <label id="checkedLabel" uid="" owner="" name="checkedLabel"/>
+            <tabPanel id="TabPanel" uid="" owner="owner" class="" addition="Many" weak="true"/>
+            <spinner id="Spinner" uid="" xpath="" owner="owner" class="" name="" addition="Many" weak="true"/>
         </run>
         <onClose/>
         <close>

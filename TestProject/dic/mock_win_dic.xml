@@ -24,7 +24,7 @@
             <dialog id="Dialog" uid="" xpath="" name="Dialog" title="" addition="Many"/>
             <listView id="List" uid="List" owner="owner" class="" addition="Many"/>
             <menu id="Menu" uid="" xpath=".//MenuItem[@name=&amp;quot;Menu&amp;quot;]" owner="owner" class="" name="" action="" text="" addition="Many"/>
-            <menuItem id="MenuItem" xpath=".//MenuItem[@name=&amp;quot;MenuItem&amp;quot;]" owner="owner" class="" name="" action="" text="" addition="Many"/>
+            <menuItem id="MenuItem" xpath=".//MenuItem[@name=&amp;quot;MenuItem&amp;quot;]" owner="owner" class="" name="MenuItem" action="" text="" addition="Many"/>
             <treeItem id="TreeItem" owner="owner"/>
             <toolTip id="ToolTip" owner="owner" text="" addition="Many" weak="true"/>
             <any id="Any" uid="Any" owner="owner" class="" name="" action="" text="" addition="Many"/>
