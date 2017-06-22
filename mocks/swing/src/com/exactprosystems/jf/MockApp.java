@@ -50,7 +50,7 @@ public class MockApp
 		JMenuBar menuBar = createMenu();
 		this.frame.setJMenuBar(menuBar);
 		this.frame.setLayout(grid);
-		this.frame.setLocation(200 , 33);
+		this.frame.setLocation(200 , 32);
 		this.frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 		this.centralLabel = new JLabel();
 		this.pushLabel = new JLabel();
