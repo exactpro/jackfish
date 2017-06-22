@@ -14,7 +14,6 @@ import com.exactprosystems.jf.common.documentation.DocumentationBuilder;
 import com.exactprosystems.jf.common.report.ReportBuilder;
 import com.exactprosystems.jf.common.report.ReportFactory;
 import com.exactprosystems.jf.common.report.TexReportFactory;
-import com.exactprosystems.jf.common.rtfhelp.RtfGenerator;
 import com.exactprosystems.jf.common.version.VersionInfo;
 import com.exactprosystems.jf.documents.ConsoleDocumentFactory;
 import com.exactprosystems.jf.documents.DocumentFactory;
@@ -351,7 +350,6 @@ public class MainRunner
 		if (line.hasOption(convertTo.getOpt()))
 		{
 			String newFolderName = line.getOptionValue(convertTo.getOpt());
-			// TODO
 			
 			List<String> matr = configuration.getMatricesValue().stream().map(a -> makeDirWithSubstitutions(a.get())).collect(Collectors.toList());
             List<String> libs = configuration.getLibrariesValue().stream().map(a -> makeDirWithSubstitutions(a.get())).collect(Collectors.toList());
@@ -590,27 +588,20 @@ public class MainRunner
 	
     private static void saveDocs(String dir) throws Exception
     {
-        if (VersionInfo.getVersion().endsWith("LocalBuild"))
+        DocumentFactory factory = new ConsoleDocumentFactory(VerboseLevel.Errors);
+        Configuration configuration = factory.createConfig(null); 
+        factory.setConfiguration(configuration);
+        Context context = factory.createContext();
+        ReportFactory reportFactory = new TexReportFactory();
+        if (!Files.exists(Paths.get(dir)))
         {
-            DocumentFactory factory = new ConsoleDocumentFactory(VerboseLevel.Errors);
-            Configuration configuration = factory.createConfig(null); 
-            factory.setConfiguration(configuration);
-            Context context = factory.createContext();
-            ReportFactory reportFactory = new TexReportFactory();
-            if (!Files.exists(Paths.get(dir)))
-            {
-				Files.createDirectories(Paths.get(dir));
-			}
-            ReportBuilder report = reportFactory.createReportBuilder(dir, "UserManual" + VersionInfo.getVersion() + ".tex", new Date());
-            MatrixItem help = DocumentationBuilder.createUserManual(report, context);
-            report.reportStarted(null, VersionInfo.getVersion());
-            help.execute(context, context.getMatrixListener(), context.getEvaluator(), report);
-            report.reportFinished(0, 0, null, null);
-        }
-        else
-        {
-            RtfGenerator.createRTF(true);
-        }
+			Files.createDirectories(Paths.get(dir));
+		}
+        ReportBuilder report = reportFactory.createReportBuilder(dir, "UserManual_v." + VersionInfo.getVersion() + ".tex", new Date());
+        MatrixItem help = DocumentationBuilder.createUserManual(report, context);
+        report.reportStarted(null, VersionInfo.getVersion());
+        help.execute(context, context.getMatrixListener(), context.getEvaluator(), report);
+        report.reportFinished(0, 0, null, null);
         System.out.println("Documentation has been created.");
     }
 	
