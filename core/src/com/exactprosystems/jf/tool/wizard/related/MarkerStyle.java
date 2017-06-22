@@ -4,14 +4,14 @@ import com.exactprosystems.jf.tool.CssVariables;
 
 import javafx.scene.paint.Color;
 
-public enum TreeItemState
+public enum MarkerStyle
 {
 	UPDATE    (CssVariables.Icons.REFRESH,        CssVariables.COLOR_UPDATE,      Color.web("#2687fb")),
 	ADD       (CssVariables.Icons.ADD_16_ICON,    CssVariables.COLOR_ADD,         Color.web("#2687fb")),
 	MARK      (CssVariables.Icons.MARK_ICON,      CssVariables.COLOR_MARK,        Color.web("#2a9635")),
 	QUESTION  (CssVariables.Icons.QUESTION_ICON,  CssVariables.COLOR_QUESTION,    Color.web("#f3c738"));
 
-	TreeItemState(String iconPath, String cssStyle, Color color)
+	MarkerStyle(String iconPath, String cssStyle, Color color)
 	{
 		this.iconPath = iconPath;
 		this.cssStyle = cssStyle;

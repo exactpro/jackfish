@@ -12,7 +12,7 @@ public class XpathTreeItem extends XpathItem
 {
 	private boolean markIsVisible = true;
 	private Set<BeanWithMark> set = new HashSet<>();
-	private TreeItemState currentState;
+	private MarkerStyle currentState;
 
 	public XpathTreeItem(HBox box, Node node)
 	{
@@ -23,11 +23,11 @@ public class XpathTreeItem extends XpathItem
 	{
 		if (currentState == null)
 		{
-			this.currentState = TreeItemState.ADD;
-			this.addRelation(null, TreeItemState.ADD);
+			this.currentState = MarkerStyle.ADD;
+			this.addRelation(null, MarkerStyle.ADD);
 			this.set.stream().map(BeanWithMark::getBean).filter(Objects::nonNull).forEach(b -> b.setStyleClass(null));
 		}
-		else if (currentState == TreeItemState.ADD || currentState == TreeItemState.UPDATE)
+		else if (currentState == MarkerStyle.ADD || currentState == MarkerStyle.UPDATE)
 		{
 			this.currentState = null;
 			this.set.stream().map(BeanWithMark::getBean).filter(Objects::nonNull).forEach(b -> b.setStyleClass(null));
@@ -35,13 +35,13 @@ public class XpathTreeItem extends XpathItem
 		}
 		else
 		{
-			this.currentState = TreeItemState.UPDATE;
+			this.currentState = MarkerStyle.UPDATE;
 			this.set.stream().map(BeanWithMark::getBean).filter(Objects::nonNull).forEach(b -> b.setStyleClass(CssVariables.COLOR_ADD));
 			this.set.forEach(b -> b.setState(this.currentState));
 		}
 	}
 
-	public void addRelation(ElementWizardBean bean, TreeItemState state)
+	public void addRelation(ElementWizardBean bean, MarkerStyle state)
 	{
 		if (bean != null && state != null)
 		{
@@ -67,7 +67,7 @@ public class XpathTreeItem extends XpathItem
 		return new ArrayList<>(set);
 	}
 
-	public TreeItemState getState()
+	public MarkerStyle getState()
 	{
 		return currentState;
 	}
@@ -85,9 +85,9 @@ public class XpathTreeItem extends XpathItem
 	public static class BeanWithMark
 	{
 		private ElementWizardBean bean;
-		private TreeItemState state;
+		private MarkerStyle state;
 
-		public BeanWithMark(ElementWizardBean bean, TreeItemState state)
+		public BeanWithMark(ElementWizardBean bean, MarkerStyle state)
 		{
 			this.bean = bean;
 			this.state = state;
@@ -103,12 +103,12 @@ public class XpathTreeItem extends XpathItem
 			this.bean = bean;
 		}
 
-		public TreeItemState getState()
+		public MarkerStyle getState()
 		{
 			return state;
 		}
 
-		public void setState(TreeItemState state)
+		public void setState(MarkerStyle state)
 		{
 			this.state = state;
 		}

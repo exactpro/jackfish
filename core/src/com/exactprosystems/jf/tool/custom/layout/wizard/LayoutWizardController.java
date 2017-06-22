@@ -14,10 +14,10 @@ import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.ContainingParent;
 import com.exactprosystems.jf.tool.CssVariables;
 import com.exactprosystems.jf.tool.custom.combobox.CheckedComboBox;
+import com.exactprosystems.jf.tool.custom.controls.rect.ScalableRectangle;
 import com.exactprosystems.jf.tool.custom.expfield.ExpressionField;
 import com.exactprosystems.jf.tool.custom.layout.CustomArrow;
 import com.exactprosystems.jf.tool.custom.layout.CustomGrid;
-import com.exactprosystems.jf.tool.custom.layout.CustomRectangle;
 import com.exactprosystems.jf.tool.custom.scale.ScalePane;
 import javafx.beans.value.ChangeListener;
 import javafx.event.ActionEvent;
@@ -89,8 +89,8 @@ public class LayoutWizardController implements Initializable, ContainingParent
 	private ScrollPane mainScrollPane;
 	private ImageView imageView;
 
-	private CustomRectangle vRectangle;
-	private CustomRectangle hRectangle;
+	private ScalableRectangle vRectangle;
+	private ScalableRectangle hRectangle;
 	private CustomGrid customGrid;
 	private CustomArrow customArrow;
 
@@ -190,21 +190,20 @@ public class LayoutWizardController implements Initializable, ContainingParent
 
 	public void displayRect(Rectangle rectangle, boolean isHorizontal)
 	{
-		CustomRectangle r = isHorizontal ? hRectangle : vRectangle;
+		ScalableRectangle r = isHorizontal ? hRectangle : vRectangle;
 		r.updateRectangle(rectangle.getX() + OFFSET, rectangle.getY() + OFFSET, rectangle.getWidth() - BORDER_WIDTH, rectangle.getHeight() - BORDER_WIDTH);
-		r.setInit(true);
 		r.setVisible(true);
 	}
 
 	public void hideRect(boolean isHorizontal)
 	{
-		CustomRectangle r = isHorizontal ? hRectangle : vRectangle;
+		ScalableRectangle r = isHorizontal ? hRectangle : vRectangle;
 		r.setVisible(false);
 	}
 
 	public void changeScaleRect(Rectangle rectangle, boolean isHorizontal)
 	{
-		CustomRectangle r = isHorizontal ? hRectangle : vRectangle;
+		ScalableRectangle r = isHorizontal ? hRectangle : vRectangle;
 		r.updateRectangle(rectangle.getX() + OFFSET, rectangle.getY() + OFFSET, rectangle.getWidth() - BORDER_WIDTH, rectangle.getHeight() - BORDER_WIDTH);
 	}
 
@@ -371,9 +370,9 @@ public class LayoutWizardController implements Initializable, ContainingParent
 		AnchorPane.setTopAnchor(progressIndicator, (double) 200);
 		AnchorPane.setLeftAnchor(progressIndicator, (double) 200);
 
-		this.vRectangle = new CustomRectangle();
+		this.vRectangle = new ScalableRectangle();
 		this.vRectangle.addStyleClass(CssVariables.SELF_CONTROL);
-		this.hRectangle = new CustomRectangle();
+		this.hRectangle = new ScalableRectangle();
 		this.hRectangle.addStyleClass(CssVariables.OTHER_CONTROL);
 		this.customArrow = new CustomArrow();
 		this.vRectangle.setWidthLine(BORDER_WIDTH);

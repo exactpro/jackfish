@@ -106,8 +106,8 @@ public class LayoutExpressionBuilderController implements Initializable, Contain
 	private LayoutExpressionBuilder model;
 
 	private CustomGrid customGrid;
-	private CustomRectangle selfRectangle;
-	private CustomRectangle otherRectangle;
+	private ScalableArrow selfRectangle;
+	private ScalableArrow otherRectangle;
 	private CustomArrow customArrow;
 
 	private ScrollPane mainScrollPane;
@@ -260,11 +260,10 @@ public class LayoutExpressionBuilderController implements Initializable, Contain
 
 	public void displayControl(Rectangle rectangle, boolean self)
 	{
-		CustomRectangle rect = self ? this.selfRectangle : this.otherRectangle;
+		ScalableArrow rect = self ? this.selfRectangle : this.otherRectangle;
 		String styleClass = self ? CssVariables.SELF_CONTROL : CssVariables.OTHER_CONTROL;
 		rect.addStyleClass(styleClass);
 		rect.updateRectangle(rectangle.getX() + OFFSET, rectangle.getY() + OFFSET, rectangle.getWidth() - BORDER_WIDTH, rectangle.getHeight() - BORDER_WIDTH);
-		rect.setInit(true);
 		rect.setVisible(true);
 	}
 
@@ -288,7 +287,6 @@ public class LayoutExpressionBuilderController implements Initializable, Contain
 	public void clearCanvas()
 	{
 		this.otherRectangle.setVisible(false);
-		this.otherRectangle.setInit(false);
 	}
 
 	public void displayArrow(int start, int end, int where, CustomArrow.ArrowDirection position)
@@ -418,8 +416,8 @@ public class LayoutExpressionBuilderController implements Initializable, Contain
 		AnchorPane.setTopAnchor(progressIndicator, (double) 200);
 		AnchorPane.setLeftAnchor(progressIndicator, (double) 200);
 
-		this.selfRectangle = new CustomRectangle();
-		this.otherRectangle = new CustomRectangle();
+		this.selfRectangle = new ScalableArrow();
+		this.otherRectangle = new ScalableArrow();
 		this.customArrow = new CustomArrow();
 		this.selfRectangle.setWidthLine(BORDER_WIDTH);
 		this.otherRectangle.setWidthLine(BORDER_WIDTH);

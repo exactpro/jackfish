@@ -2,7 +2,7 @@ package com.exactprosystems.jf.tool.custom;
 
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.CssVariables;
-import com.exactprosystems.jf.tool.custom.layout.CustomRectangle;
+import com.exactprosystems.jf.tool.custom.controls.rect.ScalableRectangle;
 import com.exactprosystems.jf.tool.custom.layout.LayoutExpressionBuilderController;
 import com.exactprosystems.jf.tool.custom.scale.ScalePane;
 import javafx.application.Platform;
@@ -48,11 +48,11 @@ public class ImageViewWithScale extends BorderPane
 	private final CheckBox cbIds;
 	private final Group group;
 	private ImageView imageView;
-	private CustomRectangle rectangle;
-	private CustomRectangle inspectRectangle;
+	private ScalableRectangle rectangle;
+	private ScalableRectangle inspectRectangle;
 
     private boolean needInspect = false;
-	private List<CustomRectangle> markedList = new ArrayList<>();
+	private List<ScalableRectangle> markedList = new ArrayList<>();
 
 	private Node waitingNode;
 
@@ -122,7 +122,7 @@ public class ImageViewWithScale extends BorderPane
 
 		addWaitingPane();
 
-		this.inspectRectangle = new CustomRectangle();
+		this.inspectRectangle = new ScalableRectangle();
 		this.inspectRectangle.setWidthLine(LayoutExpressionBuilderController.BORDER_WIDTH);
 		this.inspectRectangle.addStyleClass(CssVariables.XPATH_INSPECT_RECTNAGLE);
 		this.inspectRectangle.setVisible(false);
@@ -182,10 +182,10 @@ public class ImageViewWithScale extends BorderPane
 		hideRectangle();
 		if (!isRectEmpty(rectangle))
 		{
-			CustomRectangle eq = new CustomRectangle(rectangle, this.scalePane.getScale());
+			ScalableRectangle eq = new ScalableRectangle(rectangle, this.scalePane.getScale());
 			if (this.markedList.contains(eq))
 			{
-				CustomRectangle customRectangle = this.markedList.get(this.markedList.indexOf(eq));
+				ScalableRectangle customRectangle = this.markedList.get(this.markedList.indexOf(eq));
 				customRectangle.setOpacity(1.0);
 			}
 			else
@@ -208,7 +208,7 @@ public class ImageViewWithScale extends BorderPane
         this.markedList.stream().peek(r -> r.setVisible(false)).forEach(r -> r.removeGroup(this.group));
         this.markedList.clear();
 
-        this.markedList = list.stream().map(r -> new CustomRectangle(r, scale)).collect(Collectors.toList());
+        this.markedList = list.stream().map(r -> new ScalableRectangle(r, scale)).collect(Collectors.toList());
         this.markedList.forEach(r ->
         {
             r.setGroup(this.group);
@@ -220,7 +220,7 @@ public class ImageViewWithScale extends BorderPane
 
 	public void removeMarkedRectangles(List<Rectangle> list)
 	{
-		List<CustomRectangle> rectangles = this.markedList.stream()
+		List<ScalableRectangle> rectangles = this.markedList.stream()
                 .filter(cr -> list.stream().anyMatch(c -> cr.equals(c)))
 //				.filter(cr -> list.stream().map(r -> new CustomRectangle(r, this.scalePane.getScale())).anyMatch(c -> c.equals(cr)))
 				.peek(cr -> cr.setVisible(false))
@@ -267,7 +267,7 @@ public class ImageViewWithScale extends BorderPane
 		this.imageView.setImage(image);
 		this.group.getChildren().add(imageView);
 		this.imageView.setPreserveRatio(true);
-		this.rectangle = new CustomRectangle();
+		this.rectangle = new ScalableRectangle();
 		this.rectangle.addStyleClass(CssVariables.XPATH_RECTANGLE);
 		this.rectangle.setGroup(this.group);
 		this.rectangle.setWidthLine(LayoutExpressionBuilderController.BORDER_WIDTH);

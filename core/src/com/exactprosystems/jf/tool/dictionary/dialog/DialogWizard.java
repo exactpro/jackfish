@@ -24,7 +24,7 @@ import com.exactprosystems.jf.tool.custom.xpath.XpathViewer;
 import com.exactprosystems.jf.tool.dictionary.DictionaryFx;
 import com.exactprosystems.jf.tool.helpers.DialogsHelper;
 import com.exactprosystems.jf.tool.wizard.related.ImageAndOffset;
-import com.exactprosystems.jf.tool.wizard.related.TreeItemState;
+import com.exactprosystems.jf.tool.wizard.related.MarkerStyle;
 
 import javafx.concurrent.Service;
 import javafx.concurrent.Task;
@@ -212,7 +212,7 @@ public class DialogWizard
     }
     
     //----------------------------------------------------------------------------------------------
-	public void arrangeOne(Node node, ElementWizardBean bean, TreeItemState state) throws Exception
+	public void arrangeOne(Node node, ElementWizardBean bean, MarkerStyle state) throws Exception
 	{
 		switch (state)
 		{
@@ -866,12 +866,12 @@ public class DialogWizard
 
 		if (count == 1)
 		{
-			this.controller.displayFoundControl(found, bean, TreeItemState.MARK);
+			this.controller.displayFoundControl(found, bean, MarkerStyle.MARK);
 		}
 		else if (count > 1 || count == 0)
 		{
 			Node bestIndex = findBestIndex(bean);
-			this.controller.displayFoundControl(bestIndex, bean, TreeItemState.QUESTION);
+			this.controller.displayFoundControl(bestIndex, bean, MarkerStyle.QUESTION);
 		}
 		bean.setCount(count);
 	}

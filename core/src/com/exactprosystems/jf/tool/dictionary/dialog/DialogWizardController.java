@@ -23,7 +23,7 @@ import com.exactprosystems.jf.tool.custom.controls.field.CustomFieldWithButton;
 import com.exactprosystems.jf.tool.custom.find.FindPanel;
 import com.exactprosystems.jf.tool.custom.find.IFind;
 import com.exactprosystems.jf.tool.helpers.DialogsHelper;
-import com.exactprosystems.jf.tool.wizard.related.TreeItemState;
+import com.exactprosystems.jf.tool.wizard.related.MarkerStyle;
 import com.exactprosystems.jf.tool.wizard.related.XpathTreeItem;
 import com.sun.javafx.css.PseudoClassState;
 import javafx.application.Platform;
@@ -84,7 +84,7 @@ public class DialogWizardController implements Initializable, ContainingParent
 	public Button btnGenerateOnOpen;
 	public Button btnGenerateOnClose;
 
-	private Map<TreeItemState, CheckBox> counters = new HashMap<>();
+	private Map<MarkerStyle, CheckBox> counters = new HashMap<>();
 	
 	private DialogWizard model;
 	private Alert dialog;
@@ -98,10 +98,10 @@ public class DialogWizardController implements Initializable, ContainingParent
 	@Override
 	public void initialize(URL location, ResourceBundle resources)
 	{
-	    this.counters.put(TreeItemState.MARK,       this.cbMark);
-        this.counters.put(TreeItemState.ADD,        this.cbAdd);
-        this.counters.put(TreeItemState.UPDATE,     this.cbUpdate);
-        this.counters.put(TreeItemState.QUESTION,   this.cbQuestion);
+	    this.counters.put(MarkerStyle.MARK,       this.cbMark);
+        this.counters.put(MarkerStyle.ADD,        this.cbAdd);
+        this.counters.put(MarkerStyle.UPDATE,     this.cbUpdate);
+        this.counters.put(MarkerStyle.QUESTION,   this.cbQuestion);
 	    
 		this.imageViewWithScale = new ImageViewWithScale();
 		this.verSplitPane.getItems().add(0, this.imageViewWithScale);
@@ -316,7 +316,7 @@ public class DialogWizardController implements Initializable, ContainingParent
 		return null;
 	}
 
-	void displayFoundControl(Node node, ElementWizardBean bean, TreeItemState state)
+	void displayFoundControl(Node node, ElementWizardBean bean, MarkerStyle state)
 	{
 	    if (node == null || node instanceof Document)
 	    {
@@ -352,15 +352,15 @@ public class DialogWizardController implements Initializable, ContainingParent
 
 	public void updateCounters()
 	{
-	    Map<TreeItemState, AtomicInteger> values = new HashMap<>(); 
-	    values.put(TreeItemState.MARK,       new AtomicInteger(0));
-	    values.put(TreeItemState.ADD,        new AtomicInteger(0));
-	    values.put(TreeItemState.UPDATE,     new AtomicInteger(0));
-	    values.put(TreeItemState.QUESTION,   new AtomicInteger(0));
+	    Map<MarkerStyle, AtomicInteger> values = new HashMap<>(); 
+	    values.put(MarkerStyle.MARK,       new AtomicInteger(0));
+	    values.put(MarkerStyle.ADD,        new AtomicInteger(0));
+	    values.put(MarkerStyle.UPDATE,     new AtomicInteger(0));
+	    values.put(MarkerStyle.QUESTION,   new AtomicInteger(0));
 	    
 	    this.treeViewWithRectangles.passTree(i -> 
 	    { 
-	        TreeItemState state = i.getState();
+	        MarkerStyle state = i.getState();
 	        if (state != null)
 	        {
 	            values.get(state).addAndGet(i.getList().size());

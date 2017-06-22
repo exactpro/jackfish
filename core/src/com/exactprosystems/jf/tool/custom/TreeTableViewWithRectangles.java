@@ -6,10 +6,10 @@ import com.exactprosystems.jf.common.utils.XpathUtils;
 import com.exactprosystems.jf.documents.matrix.parser.SearchHelper;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.CssVariables;
-import com.exactprosystems.jf.tool.custom.layout.CustomRectangle;
+import com.exactprosystems.jf.tool.custom.controls.rect.ScalableRectangle;
 import com.exactprosystems.jf.tool.custom.layout.LayoutExpressionBuilderController;
 import com.exactprosystems.jf.tool.dictionary.dialog.ElementWizardBean;
-import com.exactprosystems.jf.tool.wizard.related.TreeItemState;
+import com.exactprosystems.jf.tool.wizard.related.MarkerStyle;
 import com.exactprosystems.jf.tool.wizard.related.XpathItem;
 import com.exactprosystems.jf.tool.wizard.related.XpathTreeItem;
 import com.sun.javafx.scene.control.skin.TreeTableViewSkin;
@@ -56,11 +56,11 @@ public class TreeTableViewWithRectangles extends AnchorPane
 
 	private Map<Rectangle, TreeItem<XpathTreeItem>> map = new HashMap<>();
 
-	private Map<TreeItemState, Boolean> stateMap = new HashMap<TreeItemState, Boolean>(){{
-		put(TreeItemState.ADD, true);
-		put(TreeItemState.MARK, true);
-		put(TreeItemState.QUESTION, true);
-		put(TreeItemState.UPDATE, true);
+	private Map<MarkerStyle, Boolean> stateMap = new HashMap<MarkerStyle, Boolean>(){{
+		put(MarkerStyle.ADD, true);
+		put(MarkerStyle.MARK, true);
+		put(MarkerStyle.QUESTION, true);
+		put(MarkerStyle.UPDATE, true);
 	}};
 
 	public TreeTableViewWithRectangles(Consumer<Void> updateCounters, Consumer<Void> refreshTable)
@@ -307,7 +307,7 @@ public class TreeTableViewWithRectangles extends AnchorPane
 		this.treeTableView.getSelectionModel().select(treeItem);
 	}
 
-	public void setState(TreeItemState state, boolean newValue)
+	public void setState(MarkerStyle state, boolean newValue)
 	{
 		this.stateMap.replace(state, newValue);
 		this.displayMarkedRows();
@@ -365,7 +365,7 @@ public class TreeTableViewWithRectangles extends AnchorPane
 			boolean prevStateIsSet = selectedItem.getValue().getState() != null;
 			clearRelation(bean);
 //			this.controller.changeStateCount(-1, prevStateIsSet ? selectedItem.getValue().getState() : TreeItemState.UPDATE);
-			selectedItem.getValue().addRelation(bean, TreeItemState.UPDATE);
+			selectedItem.getValue().addRelation(bean, MarkerStyle.UPDATE);
 //			this.controller.changeStateCount(1, selectedItem.getValue().getState());
 			this.updateCounters.accept(null);
 			this.refreshTable.accept(null);
@@ -598,11 +598,11 @@ public class TreeTableViewWithRectangles extends AnchorPane
 				.stream()
 				.map(markedRow -> {
 					XpathTreeItem value = markedRow.getValue();
-					TreeItemState state = value.getState();
+					MarkerStyle state = value.getState();
 					value.setMarkIsVisible(state == null ? true : stateMap.get(state));
 
 					Rectangle rectangle = value.getRectangle();
-					CustomRectangle customRectangle = new CustomRectangle(rectangle, 1.0);
+					ScalableRectangle customRectangle = new ScalableRectangle(rectangle, 1.0);
 					customRectangle.setOpacity(TRANSPARENT_RECT);
 					customRectangle.setWidthLine(LayoutExpressionBuilderController.BORDER_WIDTH);
 					customRectangle.setFill(value.getState().color());
@@ -611,16 +611,15 @@ public class TreeTableViewWithRectangles extends AnchorPane
 					List<XpathTreeItem.BeanWithMark> relatedList = value.getList();
 					if (!relatedList.isEmpty())
 					{
-						Text text = new Text();
-						String collect = relatedList.stream()
-								.map(XpathTreeItem.BeanWithMark::getBean)
-								.filter(Objects::nonNull)
-								.map(ElementWizardBean::getId)
-								.map(id -> Str.IsNullOrEmpty(id) || "null".equals(id) ? "" : id)
-								.collect(Collectors.joining(","));
-						text.setText(collect);
-						text.setFill(value.getState().color());
-						customRectangle.setText(text);
+                        String collect = relatedList.stream()
+                                .map(XpathTreeItem.BeanWithMark::getBean)
+                                .filter(Objects::nonNull)
+                                .map(ElementWizardBean::getId)
+                                .map(id -> Str.IsNullOrEmpty(id) || "null".equals(id) ? "" : id)
+                                .collect(Collectors.joining(","));
+
+                        customRectangle.setText(collect);
+					
 					}
 
 					return customRectangle;
@@ -701,7 +700,7 @@ public class TreeTableViewWithRectangles extends AnchorPane
 			setTooltip(null);
 			if (item != null && !empty)
 			{
-				TreeItemState icon = item.getState();
+				MarkerStyle icon = item.getState();
 				List<XpathTreeItem.BeanWithMark> list = item.getList();
 				if (!list.isEmpty())
 				{

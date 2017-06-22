@@ -8,70 +8,58 @@
 package com.exactprosystems.jf.tool.custom.layout;
 
 import com.exactprosystems.jf.tool.CssVariables;
+import com.exactprosystems.jf.tool.wizard.related.MarkerStyle;
 
 import javafx.animation.*;
-import javafx.event.EventHandler;
 import javafx.scene.Group;
 import javafx.scene.effect.ColorAdjust;
 import javafx.scene.effect.Effect;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
-import javafx.scene.shape.StrokeLineCap;
 import javafx.scene.text.Text;
 
 import java.awt.*;
-import java.util.Arrays;
+import java.util.Objects;
 import java.util.stream.Stream;
 
-public class CustomRectangle  extends Rectangle
+public class ScalableArrow  extends Rectangle
 {
     private static final long serialVersionUID = -1717871114695561335L;
 
-    public enum LinePosition
-	{
-		TOP,
-		RIGHT,
-		BOT,
-		LEFT
-	}
-
-	public static final Color DEFAULT_COLOR = Color.BLACK;
-
-	final private Rectangle rectangle;
+    private static final int OUTLINE_WIDTH = 2;
+    
+    private MarkerStyle state;
+	private Rectangle rectangle;
+	private double scale;
 
 	private Line top;
 	private Line left;
 	private Line right;
 	private Line bot;
-
 	private Line outLine;
-
 	private Text text;
-
-	private boolean isInit = false;
-	private boolean isVisible = false;
-
 	private Timeline timeline;
 
-	public CustomRectangle(Rectangle rectangle, double scaleFactor)
+	public ScalableArrow(Rectangle rectangle, double scaleFactor)
 	{
 		this();
 		updateRectangle(rectangle, scaleFactor);
 	}
 
-	public CustomRectangle()
+	public ScalableArrow()
 	{
+	    this.state = MarkerStyle.ADD;
         this.rectangle  = new Rectangle();
         this.top        = new Line();
         this.left       = new Line();
         this.right      = new Line();
         this.bot        = new Line();
-        this.text       = new Text();
         this.outLine    = new Line();
         this.outLine.getStyleClass().add(CssVariables.RECTANGLE_OUTLINE);
-        this.outLine.setStrokeWidth(LayoutExpressionBuilderController.OFFSET);
+        this.outLine.setStrokeWidth(OUTLINE_WIDTH);
         this.outLine.getStrokeDashArray().addAll(5.0, 5.0);
+        this.text       = new Text();
+        this.timeline   = new Timeline();
 	}
 
 
@@ -112,23 +100,6 @@ public class CustomRectangle  extends Rectangle
 		this.bot.setStartY(y + h);
 		this.bot.setEndX(x + w);
 		this.bot.setEndY(y + h);
-
-		this.isInit = true;
-	}
-
-	public boolean isInit()
-	{
-		return isInit;
-	}
-
-	public void setInit(boolean init)
-	{
-		isInit = init;
-	}
-
-	public void setLineStrokeCap(StrokeLineCap lineCap, LinePosition position)
-	{
-		getLineByPosition(position).setStrokeLineCap(lineCap);
 	}
 
 	public Rectangle getRectangle()
@@ -146,14 +117,10 @@ public class CustomRectangle  extends Rectangle
 		group.getChildren().removeAll(top, right, bot, left, outLine, this.text);
 	}
 
-	public void setText(Text text)
-	{
-		this.text = text;
-	}
-
 	public void setText(String text)
 	{
-		this.text = new Text(text);
+		this.text.setText(text);
+        this.text.setFill(this.state.color());
 	}
 
 	public void setTextVisible(boolean flag)
@@ -170,58 +137,30 @@ public class CustomRectangle  extends Rectangle
 
 	public void setVisible(boolean flag)
 	{
-		this.isVisible = flag;
-		Arrays.asList(top, left, bot, right).stream().forEach(line -> line.setVisible(flag));
-		this.outLine.setVisible(false);
+		Stream.of(top, left, bot, right).forEach(line -> line.setVisible(flag));
+		this.outLine.setVisible(flag);
 	}
 
 	public boolean isVisible()
 	{
-		return this.isVisible;
+	    return Stream.of(top, left, bot, right).allMatch(Line::isVisible) 
+	            && this.outLine.isVisible() 
+	            && this.text.isVisible();
 	}
 
 	public void setWidthLine(double width)
 	{
-		this.setWidthLine(width, width, width, width);
-	}
-
-	public void setWidthLine(double top, double right, double bot, double left)
-	{
-		this.top.setStrokeWidth(top);
-		this.right.setStrokeWidth(right);
-		this.bot.setStrokeWidth(bot);
-		this.left.setStrokeWidth(left);
-	}
-
-	public void setWidthLine(double width, LinePosition position)
-	{
-		getLineByPosition(position).setStrokeWidth(width);
+	    Stream.of(top, left, bot, right).forEach(l -> l.setStrokeWidth(width));
 	}
 
 	public void addStyleClass(String styleClass)
 	{
-		this.addStyleClass(styleClass, styleClass, styleClass, styleClass);
-	}
-
-	public void addStyleClass(String styleClassTop, String styleClassRight, String styleClassBot, String styleClassLeft)
-	{
-		this.top.getStyleClass().add(styleClassTop);
-		this.right.getStyleClass().add(styleClassRight);
-		this.bot.getStyleClass().add(styleClassBot);
-		this.left.getStyleClass().add(styleClassLeft);
+        Stream.of(top, left, bot, right).forEach(l -> l.getStyleClass().add(styleClass));
 	}
 
 	public void setFill(Color color)
 	{
-		this.top.setStroke(color);
-		this.right.setStroke(color);
-		this.bot.setStroke(color);
-		this.left.setStroke(color);
-	}
-
-	public void addStyleClass(String styleClass, LinePosition position)
-	{
-		this.getLineByPosition(position).getStyleClass().add(styleClass);
+        Stream.of(top, left, bot, right).forEach(l -> l.setStroke(color));
 	}
 
 	public void clearOutline()
@@ -229,9 +168,6 @@ public class CustomRectangle  extends Rectangle
 		this.outLine.setVisible(false);
 	}
 
-	/**
-	 * @param direction - arrow direction. if direction vertical outLine should be horizontal and contrariwise
-	 */
 	public void displayOutLine(int point, CustomArrow.ArrowDirection direction, int where, boolean isNeedCrossLine)
 	{
 		if (direction == CustomArrow.ArrowDirection.HORIZONTAL)
@@ -348,14 +284,6 @@ public class CustomRectangle  extends Rectangle
 		outLine.setVisible(true);
 	}
 
-	public boolean isSame(CustomRectangle other)
-	{
-		return this.top.getStartX() == other.top.getStartX()
-						&& this.top.getEndX() == other.top.getEndX()
-						&& this.left.getStartY() == other.left.getStartY()
-						&& this.left.getEndY() == other.left.getEndY();
-	}
-
 	public void setOpacity(double value)
 	{
 		Stream.of(top, left, bot, right, this.text, this.outLine).forEach(line -> line.setOpacity(value));
@@ -365,58 +293,25 @@ public class CustomRectangle  extends Rectangle
 	public boolean equals(Object o)
 	{
 		if (this == o)
+		{
 			return true;
+		}
 		if (o == null || getClass() != o.getClass())
+		{
 			return false;
-
-		CustomRectangle that = (CustomRectangle) o;
-
-		return rectangle.equals(that.rectangle);
+		}
+		return Objects.equals(this.rectangle, ((ScalableArrow)o).rectangle);
 	}
 
 	@Override
 	public int hashCode()
 	{
-		return rectangle.hashCode();
-	}
-
-	//============================================================
-	// events methods
-	//============================================================
-	public void setOnMouseExited(EventHandler<MouseEvent> handler, LinePosition position)
-	{
-		getLineByPosition(position).setOnMouseExited(handler);
-	}
-
-	public void setOnMouseEntered(EventHandler<MouseEvent> handler, LinePosition position)
-	{
-		getLineByPosition(position).setOnMouseEntered(handler);
-	}
-
-	public void setOnMouseClick(EventHandler<MouseEvent> handler, LinePosition position)
-	{
-		getLineByPosition(position).setOnMouseClicked(handler);
+		return this.rectangle.hashCode();
 	}
 
 	//============================================================
 	// private methods
 	//============================================================
-	private Line getLineByPosition(LinePosition position)
-	{
-		switch (position)
-		{
-			case TOP:
-				return this.top;
-			case RIGHT:
-				return this.right;
-			case BOT:
-				return this.bot;
-			case LEFT:
-				return this.left;
-		}
-		throw new RuntimeException("Unexpected position : " + position);
-	}
-
 	private boolean dotOnVerticalLine(Line line, int dot)
 	{
 		double min = Math.min(line.getStartY(), line.getEndY());
@@ -433,25 +328,13 @@ public class CustomRectangle  extends Rectangle
 
 	private void createTransition()
 	{
-		if (this.timeline != null)
-		{
-			this.timeline.stop();
-		}
-		Effect effect = this.text.getEffect();
+		this.timeline.stop();
 		ColorAdjust color = new ColorAdjust();
-		if (!(effect instanceof ColorAdjust))
-		{
-			this.text.setEffect(color);
-		}
-		else
-		{
-			color = ((ColorAdjust) effect);
-		}
+        this.text.setEffect(color);
 		color.setBrightness(0.0);
-		this.timeline = new Timeline(
-				new KeyFrame(javafx.util.Duration.seconds(0), new KeyValue(color.brightnessProperty(), color.brightnessProperty().getValue(), Interpolator.LINEAR)),
-				new KeyFrame(javafx.util.Duration.seconds(1), new KeyValue(color.brightnessProperty(), -1, Interpolator.LINEAR))
-		);
+		this.timeline.getKeyFrames().clear();
+        this.timeline.getKeyFrames().add(new KeyFrame(javafx.util.Duration.seconds(0), new KeyValue(color.brightnessProperty(), color.brightnessProperty().getValue(), Interpolator.LINEAR)));
+        this.timeline.getKeyFrames().add(new KeyFrame(javafx.util.Duration.seconds(1), new KeyValue(color.brightnessProperty(), -1, Interpolator.LINEAR)));
 		timeline.setAutoReverse(true);
 		timeline.setCycleCount(-1);
 	}
