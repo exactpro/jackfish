@@ -42,7 +42,7 @@ import com.exactprosystems.jf.sql.SqlConnection;
 				"SQLCNT1;SQLconnect;'username';'127.0.0.1:3306';'database';'MySQL';'password'\n" +
 				"#Id;#RawText;#Kind \n" +
 				"createTable;Text;None\n " +
-				"~;CREATE TABLE users (id INT(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY, \n" +
+				"~;CREATE TABLE users (id INT(6) PRIMARY KEY, \n" +
 				"name VARCHAR(30) NOT NULL,age int NOT NULL)\n" +
 				"#EndRawText\n" +
 				"#Id;#Action;#Query;#Connection\n" +

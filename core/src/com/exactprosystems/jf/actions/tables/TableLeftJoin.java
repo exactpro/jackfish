@@ -34,34 +34,31 @@ import com.exactprosystems.jf.functions.Table;
 				"{{`1. Create a table with columns Name and Language. Populate it with few rows.`}}"
 				+ "{{`2. Create a table with columns Name and CityId. Populate it with few rows.`}}"
 				+ "{{`3. Use Left Join choosing rows from the first table on condition: matching column Name. `}}"
-				+ "{{#\n"
-				+		"#TestCase;#Kind;#Depends;#For\n" +
-						";Never;;\n" +
-						"    #Id;#RawTable\n" +
-						"    City;Table\n" +
-						"    @;id;Name;Language\n" +
-						"    0;1;London;us\n" +
-						"    1;2;Moscow;ru\n" +
-						"    2;3;France;fr\n" +
-						"    #EndRawTable\n" +
+				+ "{{#\n"  +
+						"#Id;#RawTable\n" +
+						"City;Table\n" +
+						"@;id;Name;Language\n" +
+						"0;1;London;us\n" +
+						"1;2;Moscow;ru\n" +
+						"2;3;France;fr\n" +
+						"#EndRawTable\n" +
 						"\n" +
-						"    #Id;#RawTable\n" +
-						"    Person;Table\n" +
-						"    @;Name;CityId\n" +
-						"    0;Andrey;1\n" +
-						"    1;Victor;2\n" +
-						"    2;Aleksander;1\n" +
-						"    3;Valery;4\n" +
-						"    4;Kate;3\n" +
-						"    #EndRawTable\n" +
+						"#Id;#RawTable\n" +
+						"Person;Table\n" +
+						"@;Name;CityId\n" +
+						"0;Andrey;1\n" +
+						"1;Victor;2\n" +
+						"2;Aleksander;1\n" +
+						"3;Valery;4\n" +
+						"4;Kate;3\n" +
+						"#EndRawTable\n" +
 						"\n" +
-						"    #Id;#Action;$Condition;$LeftTable;$LeftAlias;$RightTable;$RightAlias;CityName;Language\n" +
-						"    TBLJN1;TableLeftJoin;'person.CityId == city.id';Person;'person';City;'city';'city.Name';'city.Language'\n" +
+						"#Id;#Action;$Condition;$LeftTable;$LeftAlias; \n $RightTable;$RightAlias;CityName;Language\n" +
+						"TBLJN1;TableLeftJoin;'person.CityId == city.id'; \n Person;'person';City;'city';'city.Name';'city.Language'\n" +
 						"\n" +
-						"    #Action;$Table;$Title\n" +
-						"    TableReport;TBLJN1.Out;'title'" +
-						"\n"
-				+ "#}}"
+						"#Action;$Table;$Title\n" +
+						"TableReport;TBLJN1.Out;'title'" +
+				"#}}"
 )
 public class TableLeftJoin extends AbstractAction
 {
