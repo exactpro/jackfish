@@ -465,7 +465,7 @@ public class DialogWizardController implements Initializable, ContainingParent
 								}
 								Thread.sleep(200);
 								Platform.runLater(() -> lblInfo.setText("Start updating item " + ++count[0] + " of " + sum));
-								Common.tryCatch(() -> model.arrangeOne(xpathTreeItem.getNode(), bean, beanWithMark.getState()), "Error on arrange one");
+								Common.tryCatch(() -> model.arrangeOne(xpathTreeItem.getNode(), bean, beanWithMark.getStyle()), "Error on arrange one");
 								Platform.runLater(() -> {
 									lblInfo.setText("End updating " + count[0] + " of " + sum);
 									progressBar.setProgress((double) count[0] / sum);
