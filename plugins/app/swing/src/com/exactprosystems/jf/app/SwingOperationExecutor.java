@@ -879,6 +879,7 @@ public class SwingOperationExecutor implements OperationExecutor<ComponentFixtur
 		{
 			case "JComboBox":	return ((JComboBox<?>) component).getModel();
 			case "JList":		return ((JList<?>) component).getModel();
+			case "JTabbedPane":	return new TabbedPaneModel((JTabbedPane) component);
 			default:			throw new Error("Element " + component.getName() + " does not have list model. Please try another element.");
 		}
 	}
