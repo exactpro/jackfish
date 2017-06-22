@@ -5,6 +5,8 @@ import com.exactprosystems.jf.tool.CssVariables;
 import com.exactprosystems.jf.tool.custom.controls.rect.ScalableRectangle;
 import com.exactprosystems.jf.tool.custom.layout.LayoutExpressionBuilderController;
 import com.exactprosystems.jf.tool.custom.scale.ScalePane;
+import com.exactprosystems.jf.tool.wizard.related.MarkerStyle;
+
 import javafx.application.Platform;
 import javafx.geometry.Pos;
 import javafx.scene.Group;
@@ -19,6 +21,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Region;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.StrokeType;
 import javafx.scene.text.Text;
 
 import javax.imageio.ImageIO;
@@ -49,7 +52,9 @@ public class ImageViewWithScale extends BorderPane
 	private final Group group;
 	private ImageView imageView;
 	private ScalableRectangle rectangle;
-	private ScalableRectangle inspectRectangle;
+//	private ScalableRectangle inspectRectangle;
+	
+	private javafx.scene.shape.Rectangle rec;
 
     private boolean needInspect = false;
 	private List<ScalableRectangle> markedList = new ArrayList<>();
@@ -122,12 +127,13 @@ public class ImageViewWithScale extends BorderPane
 
 		addWaitingPane();
 
-		this.inspectRectangle = new ScalableRectangle();
-		this.inspectRectangle.setWidthLine(LayoutExpressionBuilderController.BORDER_WIDTH);
-		this.inspectRectangle.addStyleClass(CssVariables.XPATH_INSPECT_RECTNAGLE);
-		this.inspectRectangle.setVisible(false);
+//		this.inspectRectangle = new ScalableRectangle();
+//		this.inspectRectangle.setWidthLine(LayoutExpressionBuilderController.BORDER_WIDTH);
+//		this.inspectRectangle.addStyleClass(CssVariables.XPATH_INSPECT_RECTNAGLE);
+//		this.inspectRectangle.setVisible(false);
 
-		this.scalePane.setOnScaleChanged(this::changeScale);
+//        this.scalePane.setOnScaleChanged(this::changeScale);
+		this.scalePane.setOnScaleChanged(s -> { this.group.setScaleX(s); this.group.setScaleY(s); });
 		listeners();
 	}
 
@@ -182,51 +188,51 @@ public class ImageViewWithScale extends BorderPane
 		hideRectangle();
 		if (!isRectEmpty(rectangle))
 		{
-			ScalableRectangle eq = new ScalableRectangle(rectangle, this.scalePane.getScale());
-			if (this.markedList.contains(eq))
-			{
-				ScalableRectangle customRectangle = this.markedList.get(this.markedList.indexOf(eq));
-				customRectangle.setOpacity(1.0);
-			}
-			else
-			{
-				if (this.rectangle != null)
-				{
-					this.rectangle.updateRectangle(rectangle, this.scalePane.getScale());
-					this.rectangle.setVisible(true);
-				}
-			}
+//			ScalableRectangle eq = new ScalableRectangle(rectangle, this.scalePane.getScale());
+//			if (this.markedList.contains(eq))
+//			{
+//				ScalableRectangle customRectangle = this.markedList.get(this.markedList.indexOf(eq));
+//				customRectangle.setOpacity(1.0);
+//			}
+//			else
+//			{
+//				if (this.rectangle != null)
+//				{
+//					this.rectangle.updateRectangle(rectangle, this.scalePane.getScale());
+//					this.rectangle.setVisible(true);
+//				}
+//			}
 		}
 	}
 
     public void displayMarkedRectangle(List<Rectangle> list)
     {
-        double scale = this.scalePane.getScale();
-        
-        System.err.println(">> " + scale + " " + list);
-        
-        this.markedList.stream().peek(r -> r.setVisible(false)).forEach(r -> r.removeGroup(this.group));
-        this.markedList.clear();
-
-        this.markedList = list.stream().map(r -> new ScalableRectangle(r, scale)).collect(Collectors.toList());
-        this.markedList.forEach(r ->
-        {
-            r.setGroup(this.group);
-            r.setVisible(true);
-            r.update(scale);
-            r.setTextVisible(r.isVisible() && this.cbIds.isSelected());
-        });
+//        double scale = this.scalePane.getScale();
+//        
+//        System.err.println(">> " + scale + " " + list);
+//        
+//        this.markedList.stream().peek(r -> r.setVisible(false)).forEach(r -> r.removeGroup(this.group));
+//        this.markedList.clear();
+//
+//        this.markedList = list.stream().map(r -> new ScalableRectangle(r, scale)).collect(Collectors.toList());
+//        this.markedList.forEach(r ->
+//        {
+//            r.setGroup(this.group);
+//            r.setVisible(true);
+//            r.update(scale);
+//            r.setTextVisible(r.isVisible() && this.cbIds.isSelected());
+//        });
     }
 
 	public void removeMarkedRectangles(List<Rectangle> list)
 	{
-		List<ScalableRectangle> rectangles = this.markedList.stream()
-                .filter(cr -> list.stream().anyMatch(c -> cr.equals(c)))
-//				.filter(cr -> list.stream().map(r -> new CustomRectangle(r, this.scalePane.getScale())).anyMatch(c -> c.equals(cr)))
-				.peek(cr -> cr.setVisible(false))
-				.peek(cr -> cr.removeGroup(this.group))
-				.collect(Collectors.toList());
-		this.markedList.removeAll(rectangles);
+//		List<ScalableRectangle> rectangles = this.markedList.stream()
+//                .filter(cr -> list.stream().anyMatch(c -> cr.equals(c)))
+////				.filter(cr -> list.stream().map(r -> new CustomRectangle(r, this.scalePane.getScale())).anyMatch(c -> c.equals(cr)))
+//				.peek(cr -> cr.setVisible(false))
+//				.peek(cr -> cr.removeGroup(this.group))
+//				.collect(Collectors.toList());
+//		this.markedList.removeAll(rectangles);
 	}
 	//endregion
 
@@ -237,11 +243,11 @@ public class ImageViewWithScale extends BorderPane
 		hideRectangle();
 		hideInspectRectangle();
 		
-		List<Rectangle> list = this.markedList.stream().map(r -> r.getRectangle()).collect(Collectors.toList());
+//		List<Rectangle> list = this.markedList.stream().map(r -> r.getRectangle()).collect(Collectors.toList());
 		
 //		List<Rectangle> list = new ArrayList<>(this.markedList); 
-		removeMarkedRectangles(list);
-		displayMarkedRectangle(list);
+//		removeMarkedRectangles(list);
+//		displayMarkedRectangle(list);
 	}
 
 	//region private methods
@@ -267,12 +273,17 @@ public class ImageViewWithScale extends BorderPane
 		this.imageView.setImage(image);
 		this.group.getChildren().add(imageView);
 		this.imageView.setPreserveRatio(true);
-		this.rectangle = new ScalableRectangle();
-		this.rectangle.addStyleClass(CssVariables.XPATH_RECTANGLE);
-		this.rectangle.setGroup(this.group);
-		this.rectangle.setWidthLine(LayoutExpressionBuilderController.BORDER_WIDTH);
-		this.rectangle.setVisible(false);
-		this.inspectRectangle.setGroup(this.group);
+		this.rectangle = new ScalableRectangle(new Rectangle(10, 10, 100, 100), MarkerStyle.ADD, 1.0);
+//		this.rectangle.addStyleClass(CssVariables.XPATH_RECTANGLE);
+//		this.rectangle.setGroup(this.group);
+//		this.rectangle.setWidthLine(LayoutExpressionBuilderController.BORDER_WIDTH);
+//		this.rectangle.setVisible(false);
+//		
+        this.group.getChildren().add(this.rectangle);
+
+        
+		
+//		this.inspectRectangle.setGroup(this.group);
 	}
 
 	private void hideRectangle()
@@ -285,7 +296,7 @@ public class ImageViewWithScale extends BorderPane
 
 	private void hideInspectRectangle()
 	{
-		this.inspectRectangle.setVisible(false);
+//		this.inspectRectangle.setVisible(false);
 	}
 
     private void listeners()
@@ -342,8 +353,8 @@ public class ImageViewWithScale extends BorderPane
 
 	private void displayInspectRectangle(Rectangle rectangle)
 	{
-		this.inspectRectangle.updateRectangle(rectangle, this.scalePane.getScale());
-		this.inspectRectangle.setVisible(true);
+//		this.inspectRectangle.updateRectangle(rectangle, this.scalePane.getScale());
+//		this.inspectRectangle.setVisible(true);
 	}
 
 	private Rectangle findRectangle(double x, double y)
@@ -416,14 +427,14 @@ public class ImageViewWithScale extends BorderPane
 	private Point getMouseCoords(MouseEvent event)
 	{
 		int x, y;
-		Rectangle rect = this.rectangle.getRectangle();
-		if(this.rectangle.isVisible())
-		{
-			Point mouseRelativeCoords = getMouseRelativeCoords(event.getX(), event.getY(), rect);
-			x = mouseRelativeCoords.x;
-			y = mouseRelativeCoords.y;
-		}
-		else
+//		Rectangle rect = this.rectangle.getRectangle();
+//		if(this.rectangle.isVisible())
+//		{
+//			Point mouseRelativeCoords = getMouseRelativeCoords(event.getX(), event.getY(), rect);
+//			x = mouseRelativeCoords.x;
+//			y = mouseRelativeCoords.y;
+//		}
+//		else
 		{
 			x = (int) event.getX();
 			y = (int) event.getY();

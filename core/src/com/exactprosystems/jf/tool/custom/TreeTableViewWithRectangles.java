@@ -592,39 +592,41 @@ public class TreeTableViewWithRectangles extends AnchorPane
 		Optional.ofNullable(this.markedRowsConsumer).ifPresent(c -> c.accept(rectanglesFromMarkedRows()));
 	}
 
-	public List<Rectangle> rectanglesFromMarkedRows()
+	public List<Rectangle> rectanglesFromMarkedRows() // TODO it is awful
 	{
-		return this.getMarkedRows()
-				.stream()
-				.map(markedRow -> {
-					XpathTreeItem value = markedRow.getValue();
-					MarkerStyle state = value.getState();
-					value.setMarkIsVisible(state == null ? true : stateMap.get(state));
-
-					Rectangle rectangle = value.getRectangle();
-					ScalableRectangle customRectangle = new ScalableRectangle(rectangle, 1.0);
-					customRectangle.setOpacity(TRANSPARENT_RECT);
-					customRectangle.setWidthLine(LayoutExpressionBuilderController.BORDER_WIDTH);
-					customRectangle.setFill(value.getState().color());
-					customRectangle.setVisible(value.isMarkVisible());
-
-					List<XpathTreeItem.BeanWithMark> relatedList = value.getList();
-					if (!relatedList.isEmpty())
-					{
-                        String collect = relatedList.stream()
-                                .map(XpathTreeItem.BeanWithMark::getBean)
-                                .filter(Objects::nonNull)
-                                .map(ElementWizardBean::getId)
-                                .map(id -> Str.IsNullOrEmpty(id) || "null".equals(id) ? "" : id)
-                                .collect(Collectors.joining(","));
-
-                        customRectangle.setText(collect);
-					
-					}
-
-					return customRectangle;
-				})
-				.collect(Collectors.toList());
+	    return Collections.emptyList();
+	    
+//		return this.getMarkedRows()
+//				.stream()
+//				.map(markedRow -> {
+//					XpathTreeItem value = markedRow.getValue();
+//					MarkerStyle state = value.getState();
+//					value.setMarkIsVisible(state == null ? true : stateMap.get(state));
+//
+//					Rectangle rectangle = value.getRectangle();
+//					ScalableRectangle customRectangle = new ScalableRectangle(rectangle, 1.0);
+//					customRectangle.setOpacity(TRANSPARENT_RECT);
+//					customRectangle.setWidthLine(LayoutExpressionBuilderController.BORDER_WIDTH);
+//					customRectangle.setFill(value.getState().color());
+//					customRectangle.setVisible(value.isMarkVisible());
+//
+//					List<XpathTreeItem.BeanWithMark> relatedList = value.getList();
+//					if (!relatedList.isEmpty())
+//					{
+//                        String collect = relatedList.stream()
+//                                .map(XpathTreeItem.BeanWithMark::getBean)
+//                                .filter(Objects::nonNull)
+//                                .map(ElementWizardBean::getId)
+//                                .map(id -> Str.IsNullOrEmpty(id) || "null".equals(id) ? "" : id)
+//                                .collect(Collectors.joining(","));
+//
+//                        customRectangle.setText(collect);
+//					
+//					}
+//
+//					return customRectangle;
+//				})
+//				.collect(Collectors.toList());
 	}
 	//endregion
 
