@@ -38,7 +38,7 @@ import java.util.List;
 				+ "Available if stated true in parameter wait.\n"
 				+ "One can get a text using Out.Text, to get ExitCode use Out.ExitCode, get PID use Out.PID.",
 		outputType				= ExecuteResult.class,
-		examples = "{{`1. Run system command “help”`}}"
+		examples = "{{`1. Run system command 'help'`}}"
 				+ "2. Check if you get an answer in the form of text when executing the current command.\n"
 				+ "{{#\n#Id;#Action;#Command\n"
 				+ "EXEC1;Execute;'help'\n"
