@@ -45,7 +45,7 @@ public class WinAppFactory implements IApplicationFactory
 			ControlKind.Any, ControlKind.Wait, ControlKind.Button, ControlKind.CheckBox, ControlKind.ComboBox, ControlKind.Dialog, ControlKind.Label, ControlKind.ListView, ControlKind.Menu, ControlKind.MenuItem, ControlKind.Panel,
 			ControlKind.ProgressBar, ControlKind.RadioButton, ControlKind.Row, ControlKind.ScrollBar, ControlKind.Slider,
 			ControlKind.Spinner, ControlKind.Table, ControlKind.TabPanel, ControlKind.TextBox, ControlKind.ToggleButton, 
-			ControlKind.Tree, ControlKind.TreeItem,
+			ControlKind.TreeItem,
 		};
 
 	private IGuiDictionary dictionary = null;
@@ -158,8 +158,6 @@ public class WinAppFactory implements IApplicationFactory
 		info.addTypes(ControlKind.Wait,			ControlType.Wait.name());
 		info.addTypes(ControlKind.ToggleButton,	ControlType.Button.name());
 		info.addTypes(ControlKind.ListView,		ControlType.List.name(), ControlType.DataGrid.name());
-		info.addTypes(ControlKind.Tree,			ControlType.Tree.name());
-		//info.addTypes(ControlKind.Spinner,		ControlType.Spinner.name());
 		info.addTypes(ControlKind.ProgressBar,	ControlType.ProgressBar.name(), ControlType.Pane.name());
 		info.addTypes(ControlKind.ScrollBar,	ControlType.ScrollBar.name());
 		info.addTypes(ControlKind.Slider,		ControlType.Slider.name());

@@ -49,13 +49,6 @@
             this.ComboBox = new System.Windows.Forms.ComboBox();
             this.Slider = new System.Windows.Forms.TrackBar();
             this.Tree = new System.Windows.Forms.TreeView();
-            this.TabPanel = new System.Windows.Forms.TabControl();
-            this.tabPage1 = new System.Windows.Forms.TabPage();
-            this.label3 = new System.Windows.Forms.Label();
-            this.tabPage2 = new System.Windows.Forms.TabPage();
-            this.label4 = new System.Windows.Forms.Label();
-            this.tabPage3 = new System.Windows.Forms.TabPage();
-            this.tabPage4 = new System.Windows.Forms.TabPage();
             this.List = new System.Windows.Forms.ListBox();
             this.Table3 = new System.Windows.Forms.ListView();
             this.header1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
@@ -111,12 +104,16 @@
             this.panel2 = new System.Windows.Forms.Panel();
             this.panel3 = new System.Windows.Forms.Panel();
             this.Spinner = new System.Windows.Forms.NumericUpDown();
+            this.TabPanel = new System.Windows.Forms.TabControl();
+            this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.label3 = new System.Windows.Forms.Label();
+            this.tabPage2 = new System.Windows.Forms.TabPage();
+            this.label4 = new System.Windows.Forms.Label();
+            this.tabPage3 = new System.Windows.Forms.TabPage();
+            this.tabPage4 = new System.Windows.Forms.TabPage();
             ((System.ComponentModel.ISupportInitialize)(this.Table1)).BeginInit();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.Slider)).BeginInit();
-            this.TabPanel.SuspendLayout();
-            this.tabPage1.SuspendLayout();
-            this.tabPage2.SuspendLayout();
             this.MenuMain.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.Splitter)).BeginInit();
             this.Splitter.Panel1.SuspendLayout();
@@ -125,6 +122,9 @@
             this.contextMenuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.Table)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.Spinner)).BeginInit();
+            this.TabPanel.SuspendLayout();
+            this.tabPage1.SuspendLayout();
+            this.tabPage2.SuspendLayout();
             this.SuspendLayout();
             // 
             // Button
@@ -322,66 +322,6 @@
             this.Tree.MouseDown += new System.Windows.Forms.MouseEventHandler(this.CommonMouseDown);
             this.Tree.MouseMove += new System.Windows.Forms.MouseEventHandler(this.CommonMouseMove);
             // 
-            // TabPanel
-            // 
-            this.TabPanel.Controls.Add(this.tabPage1);
-            this.TabPanel.Controls.Add(this.tabPage2);
-            this.TabPanel.Controls.Add(this.tabPage3);
-            this.TabPanel.Controls.Add(this.tabPage4);
-            resources.ApplyResources(this.TabPanel, "TabPanel");
-            this.TabPanel.Name = "TabPanel";
-            this.TabPanel.SelectedIndex = 0;
-            this.TabPanel.Selected += new System.Windows.Forms.TabControlEventHandler(this.TabPanel_Selected);
-            this.TabPanel.KeyDown += new System.Windows.Forms.KeyEventHandler(this.CommonKeyDown);
-            this.TabPanel.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.CommonKeyPress);
-            this.TabPanel.KeyUp += new System.Windows.Forms.KeyEventHandler(this.CommonKeyUp);
-            this.TabPanel.MouseDown += new System.Windows.Forms.MouseEventHandler(this.CommonMouseDown);
-            this.TabPanel.MouseMove += new System.Windows.Forms.MouseEventHandler(this.CommonMouseMove);
-            // 
-            // tabPage1
-            // 
-            this.tabPage1.Controls.Add(this.label3);
-            resources.ApplyResources(this.tabPage1, "tabPage1");
-            this.tabPage1.Name = "tabPage1";
-            this.tabPage1.UseVisualStyleBackColor = true;
-            this.tabPage1.MouseDown += new System.Windows.Forms.MouseEventHandler(this.CommonMouseDown);
-            this.tabPage1.MouseMove += new System.Windows.Forms.MouseEventHandler(this.CommonMouseMove);
-            // 
-            // label3
-            // 
-            resources.ApplyResources(this.label3, "label3");
-            this.label3.Name = "label3";
-            // 
-            // tabPage2
-            // 
-            this.tabPage2.Controls.Add(this.label4);
-            resources.ApplyResources(this.tabPage2, "tabPage2");
-            this.tabPage2.Name = "tabPage2";
-            this.tabPage2.UseVisualStyleBackColor = true;
-            this.tabPage2.MouseDown += new System.Windows.Forms.MouseEventHandler(this.CommonMouseDown);
-            this.tabPage2.MouseMove += new System.Windows.Forms.MouseEventHandler(this.CommonMouseMove);
-            // 
-            // label4
-            // 
-            resources.ApplyResources(this.label4, "label4");
-            this.label4.Name = "label4";
-            // 
-            // tabPage3
-            // 
-            resources.ApplyResources(this.tabPage3, "tabPage3");
-            this.tabPage3.Name = "tabPage3";
-            this.tabPage3.UseVisualStyleBackColor = true;
-            this.tabPage3.MouseDown += new System.Windows.Forms.MouseEventHandler(this.CommonMouseDown);
-            this.tabPage3.MouseMove += new System.Windows.Forms.MouseEventHandler(this.CommonMouseMove);
-            // 
-            // tabPage4
-            // 
-            resources.ApplyResources(this.tabPage4, "tabPage4");
-            this.tabPage4.Name = "tabPage4";
-            this.tabPage4.UseVisualStyleBackColor = true;
-            this.tabPage4.MouseDown += new System.Windows.Forms.MouseEventHandler(this.CommonMouseDown);
-            this.tabPage4.MouseMove += new System.Windows.Forms.MouseEventHandler(this.CommonMouseMove);
-            // 
             // List
             // 
             this.List.FormattingEnabled = true;
@@ -443,8 +383,8 @@
             // 
             // Panel
             // 
-            this.Panel.BackColor = System.Drawing.SystemColors.ControlLight;
             resources.ApplyResources(this.Panel, "Panel");
+            this.Panel.BackColor = System.Drawing.SystemColors.ControlLight;
             this.Panel.Name = "Panel";
             this.Panel.MouseDown += new System.Windows.Forms.MouseEventHandler(this.CommonMouseDown);
             this.Panel.MouseMove += new System.Windows.Forms.MouseEventHandler(this.CommonMouseMove);
@@ -462,6 +402,7 @@
             // 
             // Menu
             // 
+            resources.ApplyResources(this.Menu, "Menu");
             this.Menu.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.optionsToolStripMenuItem,
             this.toolStripSeparator1,
@@ -470,7 +411,6 @@
             this.toolStripSeparator2,
             this.exitToolStripMenuItem});
             this.Menu.Name = "Menu";
-            resources.ApplyResources(this.Menu, "Menu");
             this.Menu.MouseDown += new System.Windows.Forms.MouseEventHandler(this.CommonMouseDown);
             this.Menu.MouseMove += new System.Windows.Forms.MouseEventHandler(this.CommonMouseMove);
             // 
@@ -546,25 +486,25 @@
             // 
             // Menu2
             // 
+            resources.ApplyResources(this.Menu2, "Menu2");
             this.Menu2.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.MenuItem});
             this.Menu2.Name = "Menu2";
-            resources.ApplyResources(this.Menu2, "Menu2");
             this.Menu2.Click += new System.EventHandler(this.aboutToolStripMenuItem_Click);
             // 
             // MenuItem
             // 
+            resources.ApplyResources(this.MenuItem, "MenuItem");
             this.MenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.doubleclickToolStripMenuItem});
             this.MenuItem.Name = "MenuItem";
-            resources.ApplyResources(this.MenuItem, "MenuItem");
             this.MenuItem.MouseDown += new System.Windows.Forms.MouseEventHandler(this.CommonMouseDown);
             this.MenuItem.MouseMove += new System.Windows.Forms.MouseEventHandler(this.CommonMouseMove);
             // 
             // doubleclickToolStripMenuItem
             // 
-            this.doubleclickToolStripMenuItem.Name = "doubleclickToolStripMenuItem";
             resources.ApplyResources(this.doubleclickToolStripMenuItem, "doubleclickToolStripMenuItem");
+            this.doubleclickToolStripMenuItem.Name = "doubleclickToolStripMenuItem";
             // 
             // Splitter
             // 
@@ -893,6 +833,66 @@
             resources.ApplyResources(this.Spinner, "Spinner");
             this.Spinner.Name = "Spinner";
             // 
+            // TabPanel
+            // 
+            resources.ApplyResources(this.TabPanel, "TabPanel");
+            this.TabPanel.Controls.Add(this.tabPage1);
+            this.TabPanel.Controls.Add(this.tabPage2);
+            this.TabPanel.Controls.Add(this.tabPage3);
+            this.TabPanel.Controls.Add(this.tabPage4);
+            this.TabPanel.Name = "TabPanel";
+            this.TabPanel.SelectedIndex = 0;
+            this.TabPanel.Selected += new System.Windows.Forms.TabControlEventHandler(this.TabPanel_Selected);
+            this.TabPanel.KeyDown += new System.Windows.Forms.KeyEventHandler(this.CommonKeyDown);
+            this.TabPanel.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.CommonKeyPress);
+            this.TabPanel.KeyUp += new System.Windows.Forms.KeyEventHandler(this.CommonKeyUp);
+            this.TabPanel.MouseDown += new System.Windows.Forms.MouseEventHandler(this.CommonMouseDown);
+            this.TabPanel.MouseMove += new System.Windows.Forms.MouseEventHandler(this.CommonMouseMove);
+            // 
+            // tabPage1
+            // 
+            this.tabPage1.Controls.Add(this.label3);
+            resources.ApplyResources(this.tabPage1, "tabPage1");
+            this.tabPage1.Name = "tabPage1";
+            this.tabPage1.UseVisualStyleBackColor = true;
+            this.tabPage1.MouseDown += new System.Windows.Forms.MouseEventHandler(this.CommonMouseDown);
+            this.tabPage1.MouseMove += new System.Windows.Forms.MouseEventHandler(this.CommonMouseMove);
+            // 
+            // label3
+            // 
+            resources.ApplyResources(this.label3, "label3");
+            this.label3.Name = "label3";
+            // 
+            // tabPage2
+            // 
+            this.tabPage2.Controls.Add(this.label4);
+            resources.ApplyResources(this.tabPage2, "tabPage2");
+            this.tabPage2.Name = "tabPage2";
+            this.tabPage2.UseVisualStyleBackColor = true;
+            this.tabPage2.MouseDown += new System.Windows.Forms.MouseEventHandler(this.CommonMouseDown);
+            this.tabPage2.MouseMove += new System.Windows.Forms.MouseEventHandler(this.CommonMouseMove);
+            // 
+            // label4
+            // 
+            resources.ApplyResources(this.label4, "label4");
+            this.label4.Name = "label4";
+            // 
+            // tabPage3
+            // 
+            resources.ApplyResources(this.tabPage3, "tabPage3");
+            this.tabPage3.Name = "tabPage3";
+            this.tabPage3.UseVisualStyleBackColor = true;
+            this.tabPage3.MouseDown += new System.Windows.Forms.MouseEventHandler(this.CommonMouseDown);
+            this.tabPage3.MouseMove += new System.Windows.Forms.MouseEventHandler(this.CommonMouseMove);
+            // 
+            // tabPage4
+            // 
+            resources.ApplyResources(this.tabPage4, "tabPage4");
+            this.tabPage4.Name = "tabPage4";
+            this.tabPage4.UseVisualStyleBackColor = true;
+            this.tabPage4.MouseDown += new System.Windows.Forms.MouseEventHandler(this.CommonMouseDown);
+            this.tabPage4.MouseMove += new System.Windows.Forms.MouseEventHandler(this.CommonMouseMove);
+            // 
             // Main
             // 
             resources.ApplyResources(this, "$this");
@@ -948,11 +948,6 @@
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.Slider)).EndInit();
-            this.TabPanel.ResumeLayout(false);
-            this.tabPage1.ResumeLayout(false);
-            this.tabPage1.PerformLayout();
-            this.tabPage2.ResumeLayout(false);
-            this.tabPage2.PerformLayout();
             this.MenuMain.ResumeLayout(false);
             this.MenuMain.PerformLayout();
             this.Splitter.Panel1.ResumeLayout(false);
@@ -964,6 +959,11 @@
             this.contextMenuStrip1.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.Table)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.Spinner)).EndInit();
+            this.TabPanel.ResumeLayout(false);
+            this.tabPage1.ResumeLayout(false);
+            this.tabPage1.PerformLayout();
+            this.tabPage2.ResumeLayout(false);
+            this.tabPage2.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
