@@ -797,6 +797,7 @@ public class MockApp
 		JSpinner spinner = new JSpinner();
 		spinner.setName("Spinner");
 		spinner.addMouseListener(mouseListener(spinner.getName()));
+		addListeners(spinner,spinner.getName());
 		panel.add(spinner);
 	}
 
