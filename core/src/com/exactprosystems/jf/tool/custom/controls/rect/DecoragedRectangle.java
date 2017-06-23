@@ -16,13 +16,13 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.StrokeType;
 import javafx.scene.text.Text;
 
-public class ScalableRectangle  extends Rectangle
+public class DecoragedRectangle  extends Rectangle
 {
     private MarkerStyle style;
     private Text        text;
     private Timeline    timeline;
 
-	public ScalableRectangle(java.awt.Rectangle rectangle, MarkerStyle style, double scaleFactor)
+	public DecoragedRectangle(java.awt.Rectangle rectangle, MarkerStyle style, String text)
 	{
 		super(rectangle.getX(), rectangle.getY(), rectangle.getWidth(), rectangle.getHeight());
 		
@@ -35,22 +35,13 @@ public class ScalableRectangle  extends Rectangle
         setStroke(style.color());
         getStyleClass().add(style.getCssStyle());
         setStrokeWidth(4);
-        
-        createTransition();
-	}
 
-	public void update(double scaleFactor)
-	{
-	    setScaleX(scaleFactor);
-        setScaleY(scaleFactor);
-	}
-
-	public void setText(String text)
-	{
-		this.text.setText(text);
+        this.text.setText(text);
         this.text.setFill(this.style.color());
         this.text.setX(this.getX() + 5);
         this.text.setY(this.getY() + this.text.getFont().getSize());
+
+        createTransition();
 	}
 
 	public void setTextVisible(boolean flag)
@@ -65,6 +56,15 @@ public class ScalableRectangle  extends Rectangle
 		    this.timeline.stop();
 		}
 	}
+
+    public boolean matches(java.awt.Rectangle rectangle, MarkerStyle style)
+    {
+        return this.style == style 
+                && getX() == rectangle.getX() 
+                && getY() == rectangle.getY()
+                && getWidth() == rectangle.getWidth()
+                && getHeight() == rectangle.getHeight();
+    }
 
 	//============================================================
 	// private methods

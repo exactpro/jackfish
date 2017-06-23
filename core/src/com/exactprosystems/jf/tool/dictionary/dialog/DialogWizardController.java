@@ -110,15 +110,15 @@ public class DialogWizardController implements Initializable, ContainingParent
 		this.paneTreeView.setCenter(this.treeViewWithRectangles);
 
 		this.imageViewWithScale.setClickConsumer(this.treeViewWithRectangles::selectItem);
-		this.treeViewWithRectangles.addSelectionConsumer(xpathItem -> this.imageViewWithScale.displayRectangle(xpathItem == null ? null : xpathItem.getRectangle()));
+		this.treeViewWithRectangles.addSelectionConsumer(xpathItem -> this.imageViewWithScale.showRectangle(xpathItem == null ? null : xpathItem.getRectangle(), MarkerStyle.ADD, "" ));
 		this.treeViewWithRectangles.addSelectionConsumer(xpathTreeItem -> {
 			if (xpathTreeItem != null)
 			{
 				//TODO which bean we need select into table?
 			}
 		});
-		this.treeViewWithRectangles.setDisplayMarkedRowsConsumer(list -> this.imageViewWithScale.displayMarkedRectangle(list));
-		this.treeViewWithRectangles.removeConsumer(list -> this.imageViewWithScale.removeMarkedRectangles(list));
+		this.treeViewWithRectangles.setDisplayMarkedRowsConsumer(list -> list.forEach(l -> this.imageViewWithScale.showRectangle(l, MarkerStyle.ADD, "")));
+		this.treeViewWithRectangles.removeConsumer(list -> this.imageViewWithScale.hideAllRectangles());
 
 //		this.imageViewWithScale.setScaleConsumer(scale -> this.imageViewWithScale.displayMarkedRectangle(this.treeViewWithRectangles.rectanglesFromMarkedRows()));
 
@@ -185,8 +185,8 @@ public class DialogWizardController implements Initializable, ContainingParent
 		    {
     			this.treeViewWithRectangles.displayDocument(document, xOffset, yOffset);
     			this.model.findElements(this.tableView.getItems());
-    			BufferedImage image = this.imageViewWithScale.getImage();
-    			this.imageViewWithScale.setListRectangles(this.treeViewWithRectangles.buildMap(image.getWidth(), image.getHeight(), new Dimension(image.getWidth() / 16, image.getHeight() / 16)));
+//    			BufferedImage image = this.imageViewWithScale.getImage();
+//    			this.imageViewWithScale.setListRectangles(this.treeViewWithRectangles.buildMap(image.getWidth(), image.getHeight(), new Dimension(image.getWidth() / 16, image.getHeight() / 16)));
     			this.hBoxToolbar.getChildren().forEach(node -> node.setDisable(false));
     			this.tableView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) ->
     			{

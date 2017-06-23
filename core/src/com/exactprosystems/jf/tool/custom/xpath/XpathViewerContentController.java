@@ -9,6 +9,7 @@ import com.exactprosystems.jf.tool.custom.TreeTableViewWithRectangles;
 import com.exactprosystems.jf.tool.custom.controls.field.CustomFieldWithButton;
 import com.exactprosystems.jf.tool.custom.find.FindPanel;
 import com.exactprosystems.jf.tool.custom.find.IFind;
+import com.exactprosystems.jf.tool.wizard.related.MarkerStyle;
 import com.exactprosystems.jf.tool.wizard.related.XpathTreeItem;
 
 import javafx.application.Platform;
@@ -173,11 +174,11 @@ public class XpathViewerContentController implements Initializable, ContainingPa
 		if (document != null)
 		{
 			this.treeTableViewWithRectangles.displayDocument(document, xOffset, yOffset);
-			BufferedImage image = this.imageViewWithScale.getImage();
-			if (image != null)
-			{
-				this.imageViewWithScale.setListRectangles(this.treeTableViewWithRectangles.buildMap(image.getWidth(), image.getHeight(), new Dimension(image.getWidth() / 16, image.getHeight() / 16)));
-			}
+//			BufferedImage image = this.imageViewWithScale.getImage();
+//			if (image != null)
+//			{
+//				this.imageViewWithScale.setListRectangles(this.treeTableViewWithRectangles.buildMap(image.getWidth(), image.getHeight(), new Dimension(image.getWidth() / 16, image.getHeight() / 16)));
+//			}
 			String oldText = this.cfMainExpression.getText();
 			this.cfMainExpression.clear();
 			this.cfMainExpression.setText(oldText);
@@ -293,7 +294,7 @@ public class XpathViewerContentController implements Initializable, ContainingPa
 
 	public void displayRectangle(Rectangle rectangle)
 	{
-		this.imageViewWithScale.displayRectangle(rectangle);
+	    this.imageViewWithScale.showRectangle(rectangle, MarkerStyle.ADD, "some text"); // TODO 
 	}
 
 	// ============================================================

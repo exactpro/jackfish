@@ -6,7 +6,7 @@ import com.exactprosystems.jf.common.utils.XpathUtils;
 import com.exactprosystems.jf.documents.matrix.parser.SearchHelper;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.CssVariables;
-import com.exactprosystems.jf.tool.custom.controls.rect.ScalableRectangle;
+import com.exactprosystems.jf.tool.custom.controls.rect.DecoragedRectangle;
 import com.exactprosystems.jf.tool.custom.layout.LayoutExpressionBuilderController;
 import com.exactprosystems.jf.tool.dictionary.dialog.ElementWizardBean;
 import com.exactprosystems.jf.tool.wizard.related.MarkerStyle;
@@ -436,28 +436,52 @@ public class TreeTableViewWithRectangles extends AnchorPane
 		item.getChildren().forEach(this::expand);
 	}
 
-	private void displayTree(org.w3c.dom.Node node, TreeItem<XpathTreeItem> parent, int xOffset, int yOffset)
-	{
-		boolean isDocument = node.getNodeType() == org.w3c.dom.Node.DOCUMENT_NODE;
+    private void displayTree(org.w3c.dom.Node node, TreeItem<XpathTreeItem> parent, int xOffset, int yOffset)
+    {
+        boolean isDocument = node.getNodeType() == org.w3c.dom.Node.DOCUMENT_NODE;
 
-		TreeItem<XpathTreeItem> treeItem = isDocument ? parent : new TreeItem<>();
-		IntStream.range(0, node.getChildNodes().getLength()).mapToObj(node.getChildNodes()::item).filter(item -> item.getNodeType() == org.w3c.dom.Node.ELEMENT_NODE).forEach(item -> displayTree(item, treeItem, xOffset, yOffset));
-		if (!isDocument)
-		{
-			treeItem.setValue(new XpathTreeItem(stringNode(node, XpathUtils.text(node)), node));
-			Rectangle rec = (Rectangle) node.getUserData(IRemoteApplication.rectangleName);
-			if (rec != null)
-			{
-				rec.x -= xOffset;
-				rec.y -= yOffset;
+        TreeItem<XpathTreeItem> treeItem = isDocument ? parent : new TreeItem<>();
+        IntStream.range(0, node.getChildNodes().getLength()).mapToObj(node.getChildNodes()::item)
+                .filter(item -> item.getNodeType() == org.w3c.dom.Node.ELEMENT_NODE)
+                .forEach(item -> displayTree(item, treeItem, xOffset, yOffset));
+        if (!isDocument)
+        {
+            treeItem.setValue(new XpathTreeItem(stringNode(node, XpathUtils.text(node)), node));
+            Rectangle rec = (Rectangle) node.getUserData(IRemoteApplication.rectangleName);
+            if (rec != null)
+            {
+                rec.x -= xOffset;
+                rec.y -= yOffset;
 
-			}
-			this.map.put(rec, treeItem);
-			parent.getChildren().add(treeItem);
-		}
-	}
+            }
+            this.map.put(rec, treeItem);
+            parent.getChildren().add(treeItem);
+        }
+    }
 
-	private HBox stringNode(org.w3c.dom.Node node, String text)
+    // TODO
+    public void collectAllRectangles(List<Rectangle> collect, org.w3c.dom.Node node, int xOffset, int yOffset)
+    {
+        boolean isDocument = node.getNodeType() == org.w3c.dom.Node.DOCUMENT_NODE;
+        IntStream.range(0, node.getChildNodes().getLength()).mapToObj(node.getChildNodes()::item)
+                .filter(item -> item.getNodeType() == org.w3c.dom.Node.ELEMENT_NODE)
+                .forEach(item -> collectAllRectangles(collect, item, xOffset, yOffset));
+        if (!isDocument)
+        {
+            Rectangle rec = (Rectangle) node.getUserData(IRemoteApplication.rectangleName);
+            if (rec != null)
+            {
+                rec.x -= xOffset;
+                rec.y -= yOffset;
+
+            }
+            collect.add(rec);
+        }
+    }
+
+
+    
+    private HBox stringNode(org.w3c.dom.Node node, String text)
 	{
 		HBox box = new HBox();
 
