@@ -268,6 +268,8 @@ public class XpathWizard extends AbstractWizard
                 if (this.imageAndOffset != null)
                 {
                     this.treeTableViewWithRectangles.displayDocument(this.document, this.imageAndOffset.offsetX, this.imageAndOffset.offsetY);
+                    List<Rectangle> list = XpathUtils.collectAllRectangles(this.document, this.imageAndOffset.offsetX, this.imageAndOffset.offsetY);
+                    this.imageViewWithScale.setListForSearch(list);
                 }
             });
             this.documentService.setOnFailed(event ->

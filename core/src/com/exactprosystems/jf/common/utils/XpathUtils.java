@@ -8,6 +8,7 @@
 
 package com.exactprosystems.jf.common.utils;
 
+import java.awt.Rectangle;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -25,12 +26,37 @@ import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
+import com.exactprosystems.jf.api.app.IRemoteApplication;
+
 public class XpathUtils
 {
     private XpathUtils()
     {
     }
 
+    
+    public static List<Rectangle> collectAllRectangles(Node node, int xOffset, int yOffset)
+    {
+        List<Rectangle> collect = new ArrayList<>();
+        boolean isDocument = node.getNodeType() == Node.DOCUMENT_NODE;
+        IntStream.range(0, node.getChildNodes().getLength()).mapToObj(node.getChildNodes()::item)
+                .filter(item -> item.getNodeType() == Node.ELEMENT_NODE)
+                .forEach(item -> collect.addAll(collectAllRectangles(item, xOffset, yOffset)));
+        if (!isDocument)
+        {
+            Rectangle rec = (Rectangle) node.getUserData(IRemoteApplication.rectangleName);
+            if (rec != null)
+            {
+                rec.x -= xOffset;
+                rec.y -= yOffset;
+
+            }
+            collect.add(rec);
+        }
+        return collect;
+    }
+
+    
     public static String fullXpath(String relativeXpath, Node relative, Node node, boolean useText, List<String> parameters, boolean longPath)
     {
     	if (node == null)
