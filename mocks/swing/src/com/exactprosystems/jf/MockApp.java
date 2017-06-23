@@ -794,6 +794,10 @@ public class MockApp
 		editableComboBox.setName(editableName);
 		panel.add(editableComboBox);
 		panel.add(new JLabel());
+		JSpinner spinner = new JSpinner();
+		spinner.setName("Spinner");
+		spinner.addMouseListener(mouseListener(spinner.getName()));
+		panel.add(spinner);
 	}
 
 	private void createPanelRadioGroup()

@@ -824,6 +824,11 @@ public class SwingOperationExecutor implements OperationExecutor<ComponentFixtur
 				((JSplitPane) currentComponent).setDividerLocation(((int) value));
 				return true;
 			}
+			else if(currentComponent instanceof JSpinner)
+			{
+				((JSpinner) currentComponent).setValue(value);
+				return true;
+			}
 			return false;
 
 		}
@@ -1552,6 +1557,11 @@ public class SwingOperationExecutor implements OperationExecutor<ComponentFixtur
 					ret = (ComponentFixture<T>) new JSplitPaneFixture(this.currentRobot, (JSplitPane) component);
 					break;
 
+				case Spinner:
+					component = getComp(JSpinner.class, window, locator);
+					ret = (ComponentFixture<T>) new JSpinnerFixture(this.currentRobot, (JSpinner) component);
+					break;
+
 				case Table:
 					component = getComp(JTable.class, window, locator);
 					ret = (ComponentFixture<T>) new JTableFixture(this.currentRobot, (JTable) component);
@@ -1728,6 +1738,11 @@ public class SwingOperationExecutor implements OperationExecutor<ComponentFixtur
 		{
 			return ((JButton) currentComponent).getText();
 		}
+		else if(currentComponent instanceof JSpinner)
+		{
+			return String.valueOf(((JSpinner) currentComponent).getValue());
+		}
+
 		throw new OperationNotAllowedException(String.format("Component %s don't have value", currentComponent));
 	}
 	

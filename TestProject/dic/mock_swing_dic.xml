@@ -52,8 +52,9 @@
             <button id="notEnabledButton" name="notEnabledButton"/>
             <label id="sliderLabel" uid="" name="sliderLabel" addition="Many"/>
             <button id="colorButton" owner="owner" name="colorButton"/>
-            <label id="pushLabel" uid="" name="pushLabel" addition="Many"/>
-            <label id="checkedLabel" uid="" owner="" name="checkedLabel"/>
+            <label id="pushLabel" uid="" owner="owner" name="pushLabel" addition="Many"/>
+            <label id="checkedLabel" uid="" owner="owner" name="checkedLabel"/>
+            <spinner id="Spinner" owner="owner" name="Spinner"/>
         </run>
         <onClose/>
         <close/>

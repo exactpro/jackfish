@@ -33,7 +33,7 @@ INIT;Test case;Never;;
     20;x;'Do.use(\'Menu2\').click(200,10)';'\'[JTree][Orange]\'';;'new Color(246,246,246)';Menu;;'Menu';'\'Menu\'';;;'Menu';;;;true;'new ArrayList([\'Green\',\'Yellow\', \'Orange\',\'Blue\']),false';'\'\''
     21;x;'Do.use(\'Menu2\').click(200,10).click()';'\'[JTree][Orange]\'';;'new Color(246,246,246)';MenuItem;;'MenuItem';'\'MenuItem\'';;;'MenuItem';;;;true;'new ArrayList([\'Green\',\'Yellow\', \'Orange\',\'Blue\']),false';'\'\''
     22;x;'Do.use(\'TabPanel\').select(\'Green\')';'\'[JTree][Orange]\'';;'new Color(246,246,246)';TabPanel;;'TabPanel';'\'TabPanel\'';'Green';'Blue';'TabPanel';;;'[Green, Yellow, Orange, Blue]';true;'new ArrayList([\'Green\',\'Yellow\', \'Orange\',\'Blue\']),false';'\'Green\''
-    23;x;;'\'[JTree][Orange]\'';;'new Color(246,246,246)';Spinner;;'Spinner';'\'Spinner\'';;;'Spinner';;;;true;'new ArrayList([\'Green\',\'Yellow\', \'Orange\',\'Blue\']),false';'\'\''
+    23;x;;'\'[JTree][Orange]\'';;'new Color(246,246,246)';Spinner;;'Spinner';'\'Spinner\'';getExp(plugin,'',0,'0');;'Spinner';;;;true;'new ArrayList([\'Green\',\'Yellow\', \'Orange\',\'Blue\']),false';'\'0\''
     #EndRawTable
 
     #Action;$Table;$Expression
