@@ -143,8 +143,7 @@ public class XpathWizard extends AbstractWizard
         this.treeTableViewWithRectangles.hideFirstColumn();
 
         this.imageViewWithScale = new ImageViewWithScale();
-        this.imageViewWithScale.hideIds();
-        this.imageViewWithScale.setClickConsumer(this.treeTableViewWithRectangles::selectItem);
+        this.imageViewWithScale.setOnRectangleClick(rectangle -> this.treeTableViewWithRectangles.selectItem(rectangle));
         
         this.splitPane = new SplitPane(this.imageViewWithScale, this.treeTableViewWithRectangles);
         this.splitPane.setOrientation(Orientation.VERTICAL);

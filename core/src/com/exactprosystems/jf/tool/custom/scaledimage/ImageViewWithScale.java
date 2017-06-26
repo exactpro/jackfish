@@ -39,24 +39,25 @@ public class ImageViewWithScale extends BorderPane
 	//region fields
     private final ScrollPane                   scrollPane;
     private final AnchorPane                   anchorPane;
-    private final ScalePaneNew                    scalePane;
+    private final ScalePaneNew                 scalePane;
+    
     private final HBox                         hBox;
     private final ToggleButton                 btnInspect;
     private final Label                        lblInspect;
     private final Label                        lblColor;
-    private final javafx.scene.shape.Rectangle rectangleColor;
     private final CheckBox                     cbIds;
+
+    private final javafx.scene.shape.Rectangle rectangleColor;
     private final Group                        group;
     private ImageView                          imageView;
     private DecoragedRectangle                 rectangle;
-    // private ScalableRectangle inspectRectangle;
+    private DecoragedRectangle                 inspect;
 
-    private boolean                            needInspect  = false;
     private Node                               waitingNode;
     private Dimension                          initial;
     private BufferedImage                      image;
     private Map<Rectangle, Set<Rectangle>>     searchingMap = new HashMap<>();
-    private Consumer<Rectangle>                clickConsumer;
+    private Consumer<Rectangle>                onRectangleClick;
 
 	//endregion
 
@@ -140,22 +141,19 @@ public class ImageViewWithScale extends BorderPane
     
     public void setTextVisible(boolean value)
     {
-        
+        this.group.getChildren().filtered(d -> d instanceof DecoragedRectangle).forEach(d -> ((DecoragedRectangle)d).setTextVisible(value));
     }
     
     public void setListForSearch(List<Rectangle> list)
     {
         if (this.image != null)
         {
-            this.searchingMap = buildMap(image.getWidth(), image.getHeight(), new Dimension(image.getWidth() / 16, image.getHeight() / 16), list);
+            int width = image.getWidth();
+            int height = image.getHeight();
+            buildMap(width, height, new Dimension(width / 16, height / 16), list);
         }
     }
 	
-	public void hideIds()
-	{
-		this.hBox.getChildren().remove(this.cbIds);
-	}
-
 	public void displayImage(BufferedImage image)
 	{
 		this.image = image;
@@ -171,19 +169,9 @@ public class ImageViewWithScale extends BorderPane
 		});
 	}
 
-	public void replaceWaitingPane(Node node)
+	public void setOnRectangleClick(Consumer<Rectangle> onClick)
 	{
-		AnchorPane.setTopAnchor(node, 50.0);
-		AnchorPane.setLeftAnchor(node, 50.0);
-
-		this.anchorPane.getChildren().remove(this.waitingNode);
-		this.waitingNode = node;
-		this.anchorPane.getChildren().add(this.waitingNode);
-	}
-
-	public void setClickConsumer(Consumer<Rectangle> consumer)
-	{
-		this.clickConsumer = consumer;
+		this.onRectangleClick = onClick;
 	}
 
 	//endregion
@@ -217,9 +205,7 @@ public class ImageViewWithScale extends BorderPane
     private void listeners()
     {
         this.cbIds.selectedProperty()
-                .addListener((observable, oldValue, newValue) -> this.group.getChildren()
-                        .filtered(n -> (n instanceof DecoragedRectangle))
-                        .forEach(r -> ((DecoragedRectangle)r).setTextVisible(newValue)));
+                .addListener((observable, oldValue, newValue) -> setTextVisible(newValue)); 
 
         this.group.setOnMouseMoved(event ->
         {
@@ -227,53 +213,41 @@ public class ImageViewWithScale extends BorderPane
             printMouseCoords(point);
             printPixelColor(point);
 
-            if (needInspect)
+            if (this.btnInspect.selectedProperty().get())
             {
-                moveOnImage(event.getX(), event.getY());
+                double x = event.getX(); 
+                double y = event.getY();
+                Rectangle rectangle = findRectangle(x, y);
+                if (rectangle != null)
+                {
+                    showRectangle(rectangle, MarkerStyle.INSPECT, null);
+                }
             }
         });
 
         this.group.setOnMouseClicked(event ->
         {
-            if (needInspect)
+            if (this.btnInspect.selectedProperty().get())
             {
-                clickOnImage(event.getX(), event.getY());
+                double x = event.getX(); 
+                double y = event.getY();
+                Rectangle rectangle = findRectangle(x, y);
+                if (rectangle != null && this.onRectangleClick != null)
+                {
+                    this.onRectangleClick.accept(rectangle);
+                }
+                this.btnInspect.setSelected(false);
             }
-        });
-
-        this.btnInspect.selectedProperty().addListener((observable, oldValue, newValue) ->
-        {
-            this.needInspect = newValue;
         });
     }
 
-	private void clickOnImage(double x, double y)
-	{
-		Rectangle rectangle = findRectangle(x, y);
-		if (rectangle != null && this.clickConsumer != null)
-		{
-		    this.clickConsumer.accept(rectangle);
-		}
-		this.btnInspect.setSelected(false);
-	}
-
-	private void moveOnImage(double x, double y)
-	{
-		Rectangle rectangle = findRectangle(x, y);
-		if (rectangle != null)
-		{
-			displayInspectRectangle(rectangle);
-		}
-	}
-
-	private void displayInspectRectangle(Rectangle rectangle)
-	{
-//		this.inspectRectangle.updateRectangle(rectangle, this.scalePane.getScale());
-//		this.inspectRectangle.setVisible(true);
-	}
-
 	private Rectangle findRectangle(double x, double y)
 	{
+	    if (this.initial == null)
+	    {
+	        return null;
+	    }
+	    
 		int intX = (int) (x / this.scalePane.getScale());
 		int intY = (int) (y / this.scalePane.getScale());
 
@@ -355,11 +329,10 @@ public class ImageViewWithScale extends BorderPane
 	}
 
 	
-	private Map<Rectangle, Set<Rectangle>> buildMap(int width, int height, Dimension cellSize, List<Rectangle> list)
+	private void buildMap(int width, int height, Dimension cellSize, List<Rectangle> list)
     {
 	    System.err.println(">> " + list);
-	    
-        Map<Rectangle, Set<Rectangle>> map = new HashMap<>();
+	    this.searchingMap = new HashMap<>();
 
         int x = 0;
         while (x < width)
@@ -372,14 +345,13 @@ public class ImageViewWithScale extends BorderPane
                 list.stream().filter(r -> r.intersects(key)).forEach(r -> set.add(r));
                 if (set.size() > 0)
                 {
-                    map.put(key, set);
+                    this.searchingMap.put(key, set);
                 }
 
                 y += cellSize.height;
             }
             x += cellSize.width;
         }
-        return map;
     }
 
 	//endregion

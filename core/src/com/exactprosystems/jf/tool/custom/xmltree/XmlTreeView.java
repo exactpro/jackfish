@@ -34,6 +34,7 @@ import java.util.function.Consumer;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
 public class XmlTreeView extends AnchorPane
 {
@@ -54,16 +55,13 @@ public class XmlTreeView extends AnchorPane
 
 	private Map<Rectangle, TreeItem<XpathTreeItem>> map = new HashMap<>();
 
-	private Map<MarkerStyle, Boolean> stateMap = new HashMap<MarkerStyle, Boolean>(){{
-		put(MarkerStyle.ADD, true);
-		put(MarkerStyle.MARK, true);
-		put(MarkerStyle.QUESTION, true);
-		put(MarkerStyle.UPDATE, true);
-	}};
+	private Map<MarkerStyle, Boolean> stateMap;
 
 	public XmlTreeView(Consumer<Void> updateCounters, Consumer<Void> refreshTable)
 	{
 		super();
+
+		this.stateMap = Stream.of(MarkerStyle.values()).collect(Collectors.toMap(v -> v, v -> true));
 		this.updateCounters = updateCounters;
 		this.refreshTable = refreshTable;
 		this.treeTableView = new TreeTableView<>();
@@ -84,14 +82,15 @@ public class XmlTreeView extends AnchorPane
 		c0.setMinWidth(value);
 		c0.setCellFactory(p -> new XpathIconCell());
 		c0.setCellValueFactory(p -> new SimpleObjectProperty<>(p.getValue().getValue()));
+        this.treeTableView.getColumns().add(c0);
 
 		TreeTableColumn<XpathTreeItem, XpathTreeItem> c1 = new TreeTableColumn<>();
 		c1.setCellFactory(p -> new XpathTreeTableCell());
 		c1.setCellValueFactory(p -> new SimpleObjectProperty<>(p.getValue().getValue()));
+        c1.setPrefWidth(5000.0);
+        this.treeTableView.getColumns().add(c1);
 
-		this.treeTableView.getColumns().addAll(c0, c1);
-		c1.setPrefWidth(5000.0);
-		this.treeTableView.setColumnResizePolicy(TreeTableView.CONSTRAINED_RESIZE_POLICY);
+        this.treeTableView.setColumnResizePolicy(TreeTableView.CONSTRAINED_RESIZE_POLICY);
 		this.treeTableView.setTreeColumn(c1);
 
 		addWaitingPane();

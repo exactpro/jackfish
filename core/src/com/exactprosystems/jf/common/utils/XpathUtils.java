@@ -37,6 +37,8 @@ public class XpathUtils
     
     public static List<Rectangle> collectAllRectangles(Node node, int xOffset, int yOffset)
     {
+        System.err.println(">>> " + node + "  " + node.getUserData(IRemoteApplication.rectangleName));
+        
         List<Rectangle> collect = new ArrayList<>();
         boolean isDocument = node.getNodeType() == Node.DOCUMENT_NODE;
         IntStream.range(0, node.getChildNodes().getLength()).mapToObj(node.getChildNodes()::item)
@@ -50,8 +52,8 @@ public class XpathUtils
                 rec.x -= xOffset;
                 rec.y -= yOffset;
 
+                collect.add(rec);
             }
-            collect.add(rec);
         }
         return collect;
     }
