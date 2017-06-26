@@ -19,7 +19,7 @@ import com.exactprosystems.jf.tool.CssVariables;
 import com.exactprosystems.jf.tool.custom.controls.field.CustomFieldWithButton;
 import com.exactprosystems.jf.tool.custom.controls.toggle.CustomToggleButton;
 import com.exactprosystems.jf.tool.custom.expfield.ExpressionField;
-import com.exactprosystems.jf.tool.custom.scale.ScalePane;
+import com.exactprosystems.jf.tool.custom.scale.ScalePaneNew;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -245,7 +245,7 @@ public class LayoutExpressionBuilderController implements Initializable, Contain
 		AnchorPane.setTopAnchor(this.mainScrollPane, 0.0);
 		AnchorPane.setRightAnchor(this.mainScrollPane, 0.0);
 		anchorPane.getChildren().add(this.mainScrollPane);
-		ScalePane scalePane = new ScalePane();
+		ScalePaneNew scalePane = new ScalePaneNew();
 		scalePane.setOnScaleChanged(this::changeScale);
 		scalePane.setSpacing(0.0);
 		anchorPane.getChildren().add(scalePane);

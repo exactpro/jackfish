@@ -22,9 +22,9 @@ import com.exactprosystems.jf.tool.custom.TreeTableViewWithRectangles;
 import com.exactprosystems.jf.tool.custom.controls.field.CustomFieldWithButton;
 import com.exactprosystems.jf.tool.custom.find.FindPanel;
 import com.exactprosystems.jf.tool.custom.find.IFind;
+import com.exactprosystems.jf.tool.custom.xpath.TreeItemState;
+import com.exactprosystems.jf.tool.custom.xpath.XpathTreeItem;
 import com.exactprosystems.jf.tool.helpers.DialogsHelper;
-import com.exactprosystems.jf.tool.wizard.related.MarkerStyle;
-import com.exactprosystems.jf.tool.wizard.related.XpathTreeItem;
 import com.sun.javafx.css.PseudoClassState;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
@@ -66,886 +66,886 @@ import java.util.stream.Collectors;
 
 public class DialogWizardController implements Initializable, ContainingParent
 {
-	public Parent parent;
-	public SplitPane horSplitPane;
-	public SplitPane verSplitPane;
-	public TableView<ElementWizardBean> tableView;
-	public TextField tfDialogName;
-	public Label lblSelfId;
-	public BorderPane paneTreeView;
+    public Parent parent;
+    public SplitPane horSplitPane;
+    public SplitPane verSplitPane;
+    public TableView<ElementWizardBean> tableView;
+    public TextField tfDialogName;
+    public Label lblSelfId;
+    public BorderPane paneTreeView;
 
-	public CheckBox cbMark;
-	public CheckBox cbAdd;
-	public CheckBox cbUpdate;
-	public CheckBox cbQuestion;
-	
-	public FindPanel<TreeItem<XpathTreeItem>> findPanel;
-	public HBox hBoxToolbar;
-	public Button btnGenerateOnOpen;
-	public Button btnGenerateOnClose;
+    public CheckBox cbMark;
+    public CheckBox cbAdd;
+    public CheckBox cbUpdate;
+    public CheckBox cbQuestion;
+    
+    public FindPanel<TreeItem<XpathTreeItem>> findPanel;
+    public HBox hBoxToolbar;
+    public Button btnGenerateOnOpen;
+    public Button btnGenerateOnClose;
 
-	private Map<MarkerStyle, CheckBox> counters = new HashMap<>();
-	
-	private DialogWizard model;
-	private Alert dialog;
+    private Map<TreeItemState, CheckBox> counters = new HashMap<>();
+    
+    private DialogWizard model;
+    private Alert dialog;
 
-	private String windowName;
+    private String windowName;
 
-	private ImageViewWithScale imageViewWithScale;
-	private TreeTableViewWithRectangles treeViewWithRectangles;
+    private ImageViewWithScale imageViewWithScale;
+    private TreeTableViewWithRectangles treeViewWithRectangles;
 
-	//region Initializable
-	@Override
-	public void initialize(URL location, ResourceBundle resources)
-	{
-	    this.counters.put(MarkerStyle.MARK,       this.cbMark);
-        this.counters.put(MarkerStyle.ADD,        this.cbAdd);
-        this.counters.put(MarkerStyle.UPDATE,     this.cbUpdate);
-        this.counters.put(MarkerStyle.QUESTION,   this.cbQuestion);
-	    
-		this.imageViewWithScale = new ImageViewWithScale();
-		this.verSplitPane.getItems().add(0, this.imageViewWithScale);
+    //region Initializable
+    @Override
+    public void initialize(URL location, ResourceBundle resources)
+    {
+        this.counters.put(TreeItemState.MARK,       this.cbMark);
+        this.counters.put(TreeItemState.ADD,        this.cbAdd);
+        this.counters.put(TreeItemState.UPDATE,     this.cbUpdate);
+        this.counters.put(TreeItemState.QUESTION,   this.cbQuestion);
+        
+        this.imageViewWithScale = new ImageViewWithScale();
+        this.verSplitPane.getItems().add(0, this.imageViewWithScale);
 
-		this.treeViewWithRectangles = new TreeTableViewWithRectangles(v -> this.updateCounters(), v -> this.refreshTable());
-		this.paneTreeView.setCenter(this.treeViewWithRectangles);
+        this.treeViewWithRectangles = new TreeTableViewWithRectangles(v -> this.updateCounters(), v -> this.refreshTable());
+        this.paneTreeView.setCenter(this.treeViewWithRectangles);
 
-		this.imageViewWithScale.setClickConsumer(this.treeViewWithRectangles::selectItem);
-		this.treeViewWithRectangles.addSelectionConsumer(xpathItem -> this.imageViewWithScale.showRectangle(xpathItem == null ? null : xpathItem.getRectangle(), MarkerStyle.ADD, "" ));
-		this.treeViewWithRectangles.addSelectionConsumer(xpathTreeItem -> {
-			if (xpathTreeItem != null)
-			{
-				//TODO which bean we need select into table?
-			}
-		});
-		this.treeViewWithRectangles.setDisplayMarkedRowsConsumer(list -> list.forEach(l -> this.imageViewWithScale.showRectangle(l, MarkerStyle.ADD, "")));
-		this.treeViewWithRectangles.removeConsumer(list -> this.imageViewWithScale.hideAllRectangles());
+        this.imageViewWithScale.setClickConsumer(this.treeViewWithRectangles::selectItem);
+        this.treeViewWithRectangles.addSelectionConsumer(xpathItem -> this.imageViewWithScale.displayRectangle(xpathItem == null ? null : xpathItem.getRectangle()));
+        this.treeViewWithRectangles.addSelectionConsumer(xpathTreeItem -> {
+            if (xpathTreeItem != null)
+            {
+                //TODO which bean we need select into table?
+            }
+        });
+        this.treeViewWithRectangles.setDisplayMarkedRowsConsumer(list -> this.imageViewWithScale.displayMarkedRectangle(list));
+        this.treeViewWithRectangles.removeConsumer(list -> this.imageViewWithScale.removeMarkedRectangles(list));
 
-//		this.imageViewWithScale.setScaleConsumer(scale -> this.imageViewWithScale.displayMarkedRectangle(this.treeViewWithRectangles.rectanglesFromMarkedRows()));
+        this.imageViewWithScale.setScaleConsumer(scale -> this.imageViewWithScale.displayMarkedRectangle(this.treeViewWithRectangles.rectanglesFromMarkedRows()));
 
-		this.findPanel.getStyleClass().remove(CssVariables.FIND_PANEL);
-		this.findPanel.setListener(new IFind<TreeItem<XpathTreeItem>>()
-		{
-			@Override
-			public void find(TreeItem<XpathTreeItem> xpathItemTreeItem)
-			{
-				treeViewWithRectangles.selectAndScroll(xpathItemTreeItem);
-			}
+        this.findPanel.getStyleClass().remove(CssVariables.FIND_PANEL);
+        this.findPanel.setListener(new IFind<TreeItem<XpathTreeItem>>()
+        {
+            @Override
+            public void find(TreeItem<XpathTreeItem> xpathItemTreeItem)
+            {
+                treeViewWithRectangles.selectAndScroll(xpathItemTreeItem);
+            }
 
-			@Override
-			public List<TreeItem<XpathTreeItem>> findItem(String what, boolean matchCase, boolean wholeWord)
-			{
-				return treeViewWithRectangles.findItem(what, matchCase, wholeWord);
-			}
-		});
+            @Override
+            public List<TreeItem<XpathTreeItem>> findItem(String what, boolean matchCase, boolean wholeWord)
+            {
+                return treeViewWithRectangles.findItem(what, matchCase, wholeWord);
+            }
+        });
 
-		this.counters.forEach((k,v) -> v.selectedProperty().addListener((observable, oldValue, newValue) -> this.treeViewWithRectangles.setState(k, newValue)));
-	}
-	//endregion
+        this.counters.forEach((k,v) -> v.selectedProperty().addListener((observable, oldValue, newValue) -> this.treeViewWithRectangles.setState(k, newValue)));
+    }
+    //endregion
 
-	//region ContainingParent
-	@Override
-	public void setParent(Parent parent)
-	{
-		this.parent = parent;
-	}
-	//endregion
+    //region ContainingParent
+    @Override
+    public void setParent(Parent parent)
+    {
+        this.parent = parent;
+    }
+    //endregion
 
-	void init(DialogWizard model, String windowName)
-	{
-		this.windowName = windowName;
-		this.model = model;
-		this.tfDialogName.setText(windowName);
-		initDialog();
-		initTable();
-		this.tfDialogName.textProperty().addListener((observable, oldValue, newValue) -> this.model.changeDialogName(newValue));
-		this.hBoxToolbar.getChildren().forEach(node -> node.setDisable(true));
-	}
+    void init(DialogWizard model, String windowName)
+    {
+        this.windowName = windowName;
+        this.model = model;
+        this.tfDialogName.setText(windowName);
+        initDialog();
+        initTable();
+        this.tfDialogName.textProperty().addListener((observable, oldValue, newValue) -> this.model.changeDialogName(newValue));
+        this.hBoxToolbar.getChildren().forEach(node -> node.setDisable(true));
+    }
 
-	void show()
-	{
-		this.dialog.setOnShowing(e -> this.model.displayImageAndTree());
-		this.dialog.show();
-	}
+    void show()
+    {
+        this.dialog.setOnShowing(e -> this.model.displayImageAndTree());
+        this.dialog.show();
+    }
 
-	void close()
-	{
-		this.dialog.close();
-	}
+    void close()
+    {
+        this.dialog.close();
+    }
 
-	void displaySelf(IControl self)
-	{
-		this.lblSelfId.setText(self.getID());
-	}
+    void displaySelf(IControl self)
+    {
+        this.lblSelfId.setText(self.getID());
+    }
 
-	void displayTree(Document document, int xOffset, int yOffset)
-	{
-		if (document != null)
-		{
-		    Common.tryCatch(() -> 
-		    {
-    			this.treeViewWithRectangles.displayDocument(document, xOffset, yOffset);
-    			this.model.findElements(this.tableView.getItems());
-//    			BufferedImage image = this.imageViewWithScale.getImage();
-//    			this.imageViewWithScale.setListRectangles(this.treeViewWithRectangles.buildMap(image.getWidth(), image.getHeight(), new Dimension(image.getWidth() / 16, image.getHeight() / 16)));
-    			this.hBoxToolbar.getChildren().forEach(node -> node.setDisable(false));
-    			this.tableView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) ->
-    			{
-    				if (newValue != null)
-    				{
-    					this.treeViewWithRectangles.selectItem(newValue);
-    				}
-    			});
-		    }, "Error on display tree");
-		}
-	}
+    void displayTree(Document document, int xOffset, int yOffset)
+    {
+        if (document != null)
+        {
+            Common.tryCatch(() -> 
+            {
+                this.treeViewWithRectangles.displayDocument(document, xOffset, yOffset);
+                this.model.findElements(this.tableView.getItems());
+                BufferedImage image = this.imageViewWithScale.getImage();
+                this.imageViewWithScale.setListRectangles(this.treeViewWithRectangles.buildMap(image.getWidth(), image.getHeight(), new Dimension(image.getWidth() / 16, image.getHeight() / 16)));
+                this.hBoxToolbar.getChildren().forEach(node -> node.setDisable(false));
+                this.tableView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) ->
+                {
+                    if (newValue != null)
+                    {
+                        this.treeViewWithRectangles.selectItem(newValue);
+                    }
+                });
+            }, "Error on display tree");
+        }
+    }
 
-	void displayImage(BufferedImage image)
-	{
-		if (image != null)
-		{
-			this.imageViewWithScale.displayImage(image);
-		}
-	}
+    void displayImage(BufferedImage image)
+    {
+        if (image != null)
+        {
+            this.imageViewWithScale.displayImage(image);
+        }
+    }
 
-	void displayImageFailing(String message)
-	{
-		Text node = new Text();
-		node.setText("Exception :\n" + message);
-		node.setFill(Color.RED);
-		this.imageViewWithScale.replaceWaitingPane(node);
-	}
+    void displayImageFailing(String message)
+    {
+        Text node = new Text();
+        node.setText("Exception :\n" + message);
+        node.setFill(Color.RED);
+        this.imageViewWithScale.replaceWaitingPane(node);
+    }
 
-	void displayDocumentFailing(String message)
-	{
-		Text node = new Text();
-		node.setText("Exception :\n" + message);
-		node.setFill(Color.RED);
-		this.treeViewWithRectangles.replaceWaitingPane(node);
-	}
+    void displayDocumentFailing(String message)
+    {
+        Text node = new Text();
+        node.setText("Exception :\n" + message);
+        node.setFill(Color.RED);
+        this.treeViewWithRectangles.replaceWaitingPane(node);
+    }
 
-	void displayElements(List<ElementWizardBean> list)
-	{
-		this.tableView.getItems().setAll(list);
-	}
+    void displayElements(List<ElementWizardBean> list)
+    {
+        this.tableView.getItems().setAll(list);
+    }
 
-	void displayElement(ElementWizardBean bean)
-	{
-		int index = this.tableView.getItems().indexOf(bean);
-		if (index == -1)
-		{
-			this.tableView.getItems().add(bean);
-		}
-		else
-		{
-			this.tableView.getItems().set(index, bean);
-		}
-	}
+    void displayElement(ElementWizardBean bean)
+    {
+        int index = this.tableView.getItems().indexOf(bean);
+        if (index == -1)
+        {
+            this.tableView.getItems().add(bean);
+        }
+        else
+        {
+            this.tableView.getItems().set(index, bean);
+        }
+    }
 
-	List<ElementWizardBean> remove(ElementWizardBean bean)
-	{
-		this.tableView.getItems().remove(bean);
-		this.treeViewWithRectangles.removeBean(bean);
-		return this.tableView.getItems();
-	}
+    List<ElementWizardBean> remove(ElementWizardBean bean)
+    {
+        this.tableView.getItems().remove(bean);
+        this.treeViewWithRectangles.removeBean(bean);
+        return this.tableView.getItems();
+    }
 
-	AbstractControl editElement(AbstractControl abstractControl, List<String> values)
-	{
-		Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-		Common.addIcons(((Stage) dialog.getDialogPane().getScene().getWindow()));
-		alert.getDialogPane().getStylesheets().addAll(Common.currentThemesPaths());
-		alert.getDialogPane().setHeader(new Label());
-		alert.setTitle("Change element");
-		GridPane gridPane = new GridPane();
-		gridPane.setPrefWidth(800);
-		gridPane.setMaxWidth(Double.MAX_VALUE);
-		alert.getDialogPane().setContent(gridPane);
-		gridPane.getStyleClass().addAll(CssVariables.HGAP_MIN, CssVariables.VGAP_MIN);
+    AbstractControl editElement(AbstractControl abstractControl, List<String> values)
+    {
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        Common.addIcons(((Stage) dialog.getDialogPane().getScene().getWindow()));
+        alert.getDialogPane().getStylesheets().addAll(Common.currentThemesPaths());
+        alert.getDialogPane().setHeader(new Label());
+        alert.setTitle("Change element");
+        GridPane gridPane = new GridPane();
+        gridPane.setPrefWidth(800);
+        gridPane.setMaxWidth(Double.MAX_VALUE);
+        alert.getDialogPane().setContent(gridPane);
+        gridPane.getStyleClass().addAll(CssVariables.HGAP_MIN, CssVariables.VGAP_MIN);
 
-		//region create columns
-		ColumnConstraints c0 = new ColumnConstraints();
-		c0.setPercentWidth(15);
-		c0.setHalignment(HPos.RIGHT);
+        //region create columns
+        ColumnConstraints c0 = new ColumnConstraints();
+        c0.setPercentWidth(15);
+        c0.setHalignment(HPos.RIGHT);
 
-		ColumnConstraints c1 = new ColumnConstraints();
-		c1.setFillWidth(true);
-		c1.setPercentWidth(35);
-		c1.setHalignment(HPos.LEFT);
+        ColumnConstraints c1 = new ColumnConstraints();
+        c1.setFillWidth(true);
+        c1.setPercentWidth(35);
+        c1.setHalignment(HPos.LEFT);
 
 
-		ColumnConstraints c2 = new ColumnConstraints();
-		c2.setPercentWidth(15);
-		c2.setHalignment(HPos.RIGHT);
+        ColumnConstraints c2 = new ColumnConstraints();
+        c2.setPercentWidth(15);
+        c2.setHalignment(HPos.RIGHT);
 
-		ColumnConstraints c3 = new ColumnConstraints();
-		c3.setFillWidth(true);
-		c3.setPercentWidth(35);
-		c3.setHalignment(HPos.LEFT);
+        ColumnConstraints c3 = new ColumnConstraints();
+        c3.setFillWidth(true);
+        c3.setPercentWidth(35);
+        c3.setHalignment(HPos.LEFT);
 
-		gridPane.getColumnConstraints().addAll(c0, c1, c2, c3);
-		//endregion
+        gridPane.getColumnConstraints().addAll(c0, c1, c2, c3);
+        //endregion
 
-		int index = 0;
+        int index = 0;
 
-		addComboToLeftPane(gridPane, "Owner : ", abstractControl.getOwnerID(), newOwner -> Common.tryCatch(()->abstractControl.set(AbstractControl.ownerIdName, newOwner), "Error on set parameters"), index++, values);
-		addComboToLeftPane(gridPane, "Additional : ", abstractControl.getAddition(), newAdd -> Common.tryCatch(()->abstractControl.set(AbstractControl.additionName, newAdd), "Error on set parameters"), index++, Arrays.asList(Addition.values()));
-		addComboToLeftPane(gridPane, "Ref : ", abstractControl.getRefID(), refId -> Common.tryCatch(()->abstractControl.set(AbstractControl.refIdName, refId), "Error on set parameters"), index++,values);
-		addToLeftPane(gridPane, "Timeout : ", String.valueOf(abstractControl.getTimeout()), newTimeout -> Common.tryCatch(()->abstractControl.set(AbstractControl.timeoutName, newTimeout), "Error on set parameters"), index++);
-		addComboToLeftPane(gridPane, "Visibility : ", abstractControl.getVisibility(), newVis -> Common.tryCatch(()->abstractControl.set(AbstractControl.visibilityName, newVis), "Error on set parameters"),index++, Arrays.asList(Visibility.values()));
-		addToLeftPane(gridPane, "Columns : ", abstractControl.getColumns(), newColumns -> Common.tryCatch(() -> abstractControl.set(AbstractControl.columnsName, newColumns), "Error on set new columns"),index++ );
-		addCheckBoxToLeftPane(gridPane, "Weak", abstractControl.isWeak(), newWeak -> Common.tryCatch(() -> abstractControl.set(AbstractControl.weakName, newWeak), "Error on set new columns"),index++ );
-		index = 1;
+        addComboToLeftPane(gridPane, "Owner : ", abstractControl.getOwnerID(), newOwner -> Common.tryCatch(()->abstractControl.set(AbstractControl.ownerIdName, newOwner), "Error on set parameters"), index++, values);
+        addComboToLeftPane(gridPane, "Additional : ", abstractControl.getAddition(), newAdd -> Common.tryCatch(()->abstractControl.set(AbstractControl.additionName, newAdd), "Error on set parameters"), index++, Arrays.asList(Addition.values()));
+        addComboToLeftPane(gridPane, "Ref : ", abstractControl.getRefID(), refId -> Common.tryCatch(()->abstractControl.set(AbstractControl.refIdName, refId), "Error on set parameters"), index++,values);
+        addToLeftPane(gridPane, "Timeout : ", String.valueOf(abstractControl.getTimeout()), newTimeout -> Common.tryCatch(()->abstractControl.set(AbstractControl.timeoutName, newTimeout), "Error on set parameters"), index++);
+        addComboToLeftPane(gridPane, "Visibility : ", abstractControl.getVisibility(), newVis -> Common.tryCatch(()->abstractControl.set(AbstractControl.visibilityName, newVis), "Error on set parameters"),index++, Arrays.asList(Visibility.values()));
+        addToLeftPane(gridPane, "Columns : ", abstractControl.getColumns(), newColumns -> Common.tryCatch(() -> abstractControl.set(AbstractControl.columnsName, newColumns), "Error on set new columns"),index++ );
+        addCheckBoxToLeftPane(gridPane, "Weak", abstractControl.isWeak(), newWeak -> Common.tryCatch(() -> abstractControl.set(AbstractControl.weakName, newWeak), "Error on set new columns"),index++ );
+        index = 1;
 
-		addXpathToPane(gridPane, abstractControl.getXpath(), newId -> Common.tryCatch(() -> abstractControl.set(AbstractControl.xpathName, newId), "Error on set parameter"));
-		addToRightPane(gridPane, "UID : ", abstractControl.getUID(), newId -> Common.tryCatch(() -> abstractControl.set(AbstractControl.uidName, newId), "Error on set parameter"), index++);
-		addToRightPane(gridPane, "Class : ", abstractControl.getClazz(), newId -> Common.tryCatch(() -> abstractControl.set(AbstractControl.clazzName, newId), "Error on set parameter"), index++);
-		addToRightPane(gridPane, "Name : ", abstractControl.getName(), newId -> Common.tryCatch(() -> abstractControl.set(AbstractControl.nameName, newId), "Error on set parameter"), index++);
-		addToRightPane(gridPane, "Title : ", abstractControl.getTitle(), newId -> Common.tryCatch(() -> abstractControl.set(AbstractControl.titleName, newId), "Error on set parameter"), index++);
-		addToRightPane(gridPane, "Action : ", abstractControl.getAction(), newId -> Common.tryCatch(() -> abstractControl.set(AbstractControl.actionName, newId), "Error on set parameter"), index++);
-		addToRightPane(gridPane, "Text : ", abstractControl.getText(), newId -> Common.tryCatch(() -> abstractControl.set(AbstractControl.textName, newId), "Error on set parameter"), index++);
-		addToRightPane(gridPane, "Tooltip : ", abstractControl.getTooltip(), newId -> Common.tryCatch(() -> abstractControl.set(AbstractControl.tooltipName, newId), "Error on set parameter"), index++);
+        addXpathToPane(gridPane, abstractControl.getXpath(), newId -> Common.tryCatch(() -> abstractControl.set(AbstractControl.xpathName, newId), "Error on set parameter"));
+        addToRightPane(gridPane, "UID : ", abstractControl.getUID(), newId -> Common.tryCatch(() -> abstractControl.set(AbstractControl.uidName, newId), "Error on set parameter"), index++);
+        addToRightPane(gridPane, "Class : ", abstractControl.getClazz(), newId -> Common.tryCatch(() -> abstractControl.set(AbstractControl.clazzName, newId), "Error on set parameter"), index++);
+        addToRightPane(gridPane, "Name : ", abstractControl.getName(), newId -> Common.tryCatch(() -> abstractControl.set(AbstractControl.nameName, newId), "Error on set parameter"), index++);
+        addToRightPane(gridPane, "Title : ", abstractControl.getTitle(), newId -> Common.tryCatch(() -> abstractControl.set(AbstractControl.titleName, newId), "Error on set parameter"), index++);
+        addToRightPane(gridPane, "Action : ", abstractControl.getAction(), newId -> Common.tryCatch(() -> abstractControl.set(AbstractControl.actionName, newId), "Error on set parameter"), index++);
+        addToRightPane(gridPane, "Text : ", abstractControl.getText(), newId -> Common.tryCatch(() -> abstractControl.set(AbstractControl.textName, newId), "Error on set parameter"), index++);
+        addToRightPane(gridPane, "Tooltip : ", abstractControl.getTooltip(), newId -> Common.tryCatch(() -> abstractControl.set(AbstractControl.tooltipName, newId), "Error on set parameter"), index++);
 
-		Optional<ButtonType> buttonType = alert.showAndWait();
-		if (buttonType.isPresent())
-		{
-			ButtonType type = buttonType.get();
-			if (type == ButtonType.OK)
-			{
-				return abstractControl;
-			}
-		}
-		return null;
-	}
+        Optional<ButtonType> buttonType = alert.showAndWait();
+        if (buttonType.isPresent())
+        {
+            ButtonType type = buttonType.get();
+            if (type == ButtonType.OK)
+            {
+                return abstractControl;
+            }
+        }
+        return null;
+    }
 
-	void displayFoundControl(Node node, ElementWizardBean bean, MarkerStyle state)
-	{
-	    if (node == null || node instanceof Document)
-	    {
-	    	bean.setStyleClass(CssVariables.COLOR_NOT_FOUND);
-	    	refreshTable();
-	        return;
-	    }
-	    
-		TreeItem<XpathTreeItem> byNode = this.treeViewWithRectangles.findByNode(node);
-		XpathTreeItem value = byNode.getValue();
-		if (value != null)
-		{
-			value.clearRelation(bean);
-			value.addRelation(bean, state);
-			
-			this.treeViewWithRectangles.setState(state, this.counters.get(state).isSelected());
+    void displayFoundControl(Node node, ElementWizardBean bean, TreeItemState state)
+    {
+        if (node == null || node instanceof Document)
+        {
+            bean.setStyleClass(CssVariables.COLOR_NOT_FOUND);
+            refreshTable();
+            return;
+        }
+        
+        TreeItem<XpathTreeItem> byNode = this.treeViewWithRectangles.findByNode(node);
+        XpathTreeItem value = byNode.getValue();
+        if (value != null)
+        {
+            value.clearRelation(bean);
+            value.addRelation(bean, state);
+            
+            this.treeViewWithRectangles.setState(state, this.counters.get(state).isSelected());
             bean.setStyleClass(state.getCssStyle());
-		}
+        }
         updateCounters();
-		refreshTable();
-	}
+        refreshTable();
+    }
 
-	void displayOnButtons(boolean isOpenFilled, boolean isCloseFilled)
-	{
-		this.btnGenerateOnOpen.setStyle("-fx-background-color : " + (!isOpenFilled ? "rgba(0,255,0, 0.1)" : "rgba(255,0,0, 0.1)"));
-		this.btnGenerateOnClose.setStyle("-fx-background-color : " + (!isCloseFilled ? "rgba(0,255,0, 0.1)" : "rgba(255,0,0, 0.1)"));
-	}
+    void displayOnButtons(boolean isOpenFilled, boolean isCloseFilled)
+    {
+        this.btnGenerateOnOpen.setStyle("-fx-background-color : " + (!isOpenFilled ? "rgba(0,255,0, 0.1)" : "rgba(255,0,0, 0.1)"));
+        this.btnGenerateOnClose.setStyle("-fx-background-color : " + (!isCloseFilled ? "rgba(0,255,0, 0.1)" : "rgba(255,0,0, 0.1)"));
+    }
 
-	void clearAndAddRelation(ElementWizardBean bean)
-	{
-		this.treeViewWithRectangles.clearAndAddRelation(bean);
-	}
+    void clearAndAddRelation(ElementWizardBean bean)
+    {
+        this.treeViewWithRectangles.clearAndAddRelation(bean);
+    }
 
-	public void updateCounters()
-	{
-	    Map<MarkerStyle, AtomicInteger> values = new HashMap<>(); 
-	    values.put(MarkerStyle.MARK,       new AtomicInteger(0));
-	    values.put(MarkerStyle.ADD,        new AtomicInteger(0));
-	    values.put(MarkerStyle.UPDATE,     new AtomicInteger(0));
-	    values.put(MarkerStyle.QUESTION,   new AtomicInteger(0));
-	    
-	    this.treeViewWithRectangles.passTree(i -> 
-	    { 
-	        MarkerStyle state = i.getState();
-	        if (state != null)
-	        {
-	            values.get(state).addAndGet(i.getList().size());
-	        }
-	    });
-	    
-	    values.forEach((k,v) -> this.counters.get(k).setText("" + v.get()));
-	}
-	
-	private void clearCheckboxes()
-	{
-		this.counters.forEach((k,v) -> Platform.runLater(() -> v.setText("0")));
-	}
+    public void updateCounters()
+    {
+        Map<TreeItemState, AtomicInteger> values = new HashMap<>(); 
+        values.put(TreeItemState.MARK,       new AtomicInteger(0));
+        values.put(TreeItemState.ADD,        new AtomicInteger(0));
+        values.put(TreeItemState.UPDATE,     new AtomicInteger(0));
+        values.put(TreeItemState.QUESTION,   new AtomicInteger(0));
+        
+        this.treeViewWithRectangles.passTree(i -> 
+        { 
+            TreeItemState state = i.getState();
+            if (state != null)
+            {
+                values.get(state).addAndGet(i.getList().size());
+            }
+        });
+        
+        values.forEach((k,v) -> this.counters.get(k).setText("" + v.get()));
+    }
+    
+    private void clearCheckboxes()
+    {
+        this.counters.forEach((k,v) -> Platform.runLater(() -> v.setText("0")));
+    }
 
-	//region Action methods
-	public void cancel(ActionEvent actionEvent)
-	{
-		this.model.close(false, this.tableView.getItems());
-	}
+    //region Action methods
+    public void cancel(ActionEvent actionEvent)
+    {
+        this.model.close(false, this.tableView.getItems());
+    }
 
-	public void accept(ActionEvent actionEvent)
-	{
-		this.model.close(true, this.tableView.getItems());
-	}
+    public void accept(ActionEvent actionEvent)
+    {
+        this.model.close(true, this.tableView.getItems());
+    }
 
-	public void nextMark(ActionEvent actionEvent)
-	{
-		this.treeViewWithRectangles.nextMark();
-	}
+    public void nextMark(ActionEvent actionEvent)
+    {
+        this.treeViewWithRectangles.nextMark();
+    }
 
-	public void prevMark(ActionEvent actionEvent)
-	{
-		this.treeViewWithRectangles.prevMark();
-	}
+    public void prevMark(ActionEvent actionEvent)
+    {
+        this.treeViewWithRectangles.prevMark();
+    }
 
-	public void magic(ActionEvent actionEvent)
-	{
-		ExecutorService taskExecutor = Executors.newSingleThreadExecutor();
+    public void magic(ActionEvent actionEvent)
+    {
+        ExecutorService taskExecutor = Executors.newSingleThreadExecutor();
 
-		final List<XpathTreeItem> list = this.treeViewWithRectangles.getMarkedRows().stream().map(TreeItem::getValue).collect(Collectors.toList());
-		int sum = list.stream().mapToInt(x -> Math.max(1, x.getList().size())).sum();
-		if (sum == 0)
-		{
-			DialogsHelper.showInfo("Nothing to update");
-			return;
-		}
-		Dialog<String> dialog = new Dialog<>();
-		Common.addIcons(((Stage) dialog.getDialogPane().getScene().getWindow()));
-		dialog.setWidth(400.0);
+        final List<XpathTreeItem> list = this.treeViewWithRectangles.getMarkedRows().stream().map(TreeItem::getValue).collect(Collectors.toList());
+        int sum = list.stream().mapToInt(x -> Math.max(1, x.getList().size())).sum();
+        if (sum == 0)
+        {
+            DialogsHelper.showInfo("Nothing to update");
+            return;
+        }
+        Dialog<String> dialog = new Dialog<>();
+        Common.addIcons(((Stage) dialog.getDialogPane().getScene().getWindow()));
+        dialog.setWidth(400.0);
 
-		BorderPane borderPane = new BorderPane();
-		borderPane.setPrefWidth(400.0);
-		Label lblInfo = new Label();
-		ProgressBar progressBar = new ProgressBar();
-		progressBar.setMaxWidth(Double.MAX_VALUE);
-		progressBar.setProgress(0);
+        BorderPane borderPane = new BorderPane();
+        borderPane.setPrefWidth(400.0);
+        Label lblInfo = new Label();
+        ProgressBar progressBar = new ProgressBar();
+        progressBar.setMaxWidth(Double.MAX_VALUE);
+        progressBar.setProgress(0);
 
-		Button btnStop = new Button("Stop");
-		btnStop.setOnAction(e -> {
-			dialog.setResult("");
-			taskExecutor.shutdownNow();
-			dialog.close();
-		});
+        Button btnStop = new Button("Stop");
+        btnStop.setOnAction(e -> {
+            dialog.setResult("");
+            taskExecutor.shutdownNow();
+            dialog.close();
+        });
 
-		borderPane.setTop(lblInfo);
-		borderPane.setCenter(progressBar);
-		borderPane.setBottom(btnStop);
-		BorderPane.setAlignment(btnStop, Pos.CENTER_RIGHT);
-		BorderPane.setMargin(btnStop, new Insets(8, 0, 0, 0));
+        borderPane.setTop(lblInfo);
+        borderPane.setCenter(progressBar);
+        borderPane.setBottom(btnStop);
+        BorderPane.setAlignment(btnStop, Pos.CENTER_RIGHT);
+        BorderPane.setMargin(btnStop, new Insets(8, 0, 0, 0));
 
-		dialog.getDialogPane().setContent(borderPane);
-		dialog.getDialogPane().setHeader(new Label());
-		dialog.setTitle("Updating elements");
-		dialog.show();
+        dialog.getDialogPane().setContent(borderPane);
+        dialog.getDialogPane().setHeader(new Label());
+        dialog.setTitle("Updating elements");
+        dialog.show();
 
-		Service<Void> service = new Service<Void>()
-		{
-			@Override
-			protected Task<Void> createTask()
-			{
-				return new Task<Void>()
-				{
-					@Override
-					protected Void call() throws Exception
-					{
-						clearCheckboxes();
-						final int[] count = {0};
-						for (XpathTreeItem xpathTreeItem : list)
-						{
-							ArrayList<XpathTreeItem.BeanWithMark> newList = new ArrayList<>(xpathTreeItem.getList());
-							for (XpathTreeItem.BeanWithMark beanWithMark : newList)
-							{
-								xpathTreeItem.clearRelation(beanWithMark.getBean());
-								ElementWizardBean bean = beanWithMark.getBean();
-								if (bean != null)
-								{
-									if (bean.getAbstractControl().getAddition() == Addition.Many || Str.IsNullOrEmpty(bean.getAbstractControl().getOwnerID()))
-									{
-										bean.setStyleClass(CssVariables.COLOR_NOT_FINDING);
-										continue;
-									}
-								}
-								Thread.sleep(200);
-								Platform.runLater(() -> lblInfo.setText("Start updating item " + ++count[0] + " of " + sum));
-								Common.tryCatch(() -> model.arrangeOne(xpathTreeItem.getNode(), bean, beanWithMark.getStyle()), "Error on arrange one");
-								Platform.runLater(() -> {
-									lblInfo.setText("End updating " + count[0] + " of " + sum);
-									progressBar.setProgress((double) count[0] / sum);
-								});
-							}
-						}
-						return null;
-					}
-				};
-			}
-		};
-		service.setExecutor(taskExecutor);
-		service.setOnSucceeded(e -> {
-			Common.tryCatch(() -> Thread.sleep(200), "");
-			Common.tryCatch(() -> model.findElements(this.tableView.getItems()), "Error on find elements");
-			dialog.setResult("");
-			dialog.close();
-		});
-		service.start();
-	}
+        Service<Void> service = new Service<Void>()
+        {
+            @Override
+            protected Task<Void> createTask()
+            {
+                return new Task<Void>()
+                {
+                    @Override
+                    protected Void call() throws Exception
+                    {
+                        clearCheckboxes();
+                        final int[] count = {0};
+                        for (XpathTreeItem xpathTreeItem : list)
+                        {
+                            ArrayList<XpathTreeItem.BeanWithMark> newList = new ArrayList<>(xpathTreeItem.getList());
+                            for (XpathTreeItem.BeanWithMark beanWithMark : newList)
+                            {
+                                xpathTreeItem.clearRelation(beanWithMark.getBean());
+                                ElementWizardBean bean = beanWithMark.getBean();
+                                if (bean != null)
+                                {
+                                    if (bean.getAbstractControl().getAddition() == Addition.Many || Str.IsNullOrEmpty(bean.getAbstractControl().getOwnerID()))
+                                    {
+                                        bean.setStyleClass(CssVariables.COLOR_NOT_FINDING);
+                                        continue;
+                                    }
+                                }
+                                Thread.sleep(200);
+                                Platform.runLater(() -> lblInfo.setText("Start updating item " + ++count[0] + " of " + sum));
+                                Common.tryCatch(() -> model.arrangeOne(xpathTreeItem.getNode(), bean, beanWithMark.getState()), "Error on arrange one");
+                                Platform.runLater(() -> {
+                                    lblInfo.setText("End updating " + count[0] + " of " + sum);
+                                    progressBar.setProgress((double) count[0] / sum);
+                                });
+                            }
+                        }
+                        return null;
+                    }
+                };
+            }
+        };
+        service.setExecutor(taskExecutor);
+        service.setOnSucceeded(e -> {
+            Common.tryCatch(() -> Thread.sleep(200), "");
+            Common.tryCatch(() -> model.findElements(this.tableView.getItems()), "Error on find elements");
+            dialog.setResult("");
+            dialog.close();
+        });
+        service.start();
+    }
 
-	public void generateOnOpen(ActionEvent actionEvent)
-	{
-		Common.tryCatch(this.model::generateOnOpen, "Error on create onOpen");
-	}
+    public void generateOnOpen(ActionEvent actionEvent)
+    {
+        Common.tryCatch(this.model::generateOnOpen, "Error on create onOpen");
+    }
 
-	public void generateOnClose(ActionEvent actionEvent)
-	{
-		Common.tryCatch(this.model::generateOnClose, "Error on create onClose");
-	}
-	//endregion
+    public void generateOnClose(ActionEvent actionEvent)
+    {
+        Common.tryCatch(this.model::generateOnClose, "Error on create onClose");
+    }
+    //endregion
 
-	//region private methods
-	private void initDialog()
-	{
-		this.dialog = new Alert(Alert.AlertType.CONFIRMATION);
+    //region private methods
+    private void initDialog()
+    {
+        this.dialog = new Alert(Alert.AlertType.CONFIRMATION);
         Stage stage = ((Stage) this.dialog.getDialogPane().getScene().getWindow());
-		Common.addIcons(stage);
-		this.dialog.setResult(new ButtonType("", ButtonBar.ButtonData.CANCEL_CLOSE));
-		this.dialog.setResizable(true);
-		this.dialog.getDialogPane().getStylesheets().addAll(Common.currentThemesPaths());
-		this.dialog.setTitle("Dialog wizard " + this.windowName);
-		this.dialog.setWidth(1500.0);
-		this.dialog.setHeight(1000.0);
-		
+        Common.addIcons(stage);
+        this.dialog.setResult(new ButtonType("", ButtonBar.ButtonData.CANCEL_CLOSE));
+        this.dialog.setResizable(true);
+        this.dialog.getDialogPane().getStylesheets().addAll(Common.currentThemesPaths());
+        this.dialog.setTitle("Dialog wizard " + this.windowName);
+        this.dialog.setWidth(1500.0);
+        this.dialog.setHeight(1000.0);
+        
         stage.setMinWidth(1230);
-		stage.setMinHeight(725);
-		
-		Label header = new Label();
-		header.setMinHeight(0.0);
-		header.setPrefHeight(0.0);
-		header.setMaxHeight(0.0);
-		this.dialog.getDialogPane().setHeader(header);
-		this.dialog.getDialogPane().setContent(this.parent);
-		ButtonType buttonCreate = new ButtonType("", ButtonBar.ButtonData.OTHER);
-		this.dialog.getButtonTypes().setAll(buttonCreate);
-		Button button = (Button) this.dialog.getDialogPane().lookupButton(buttonCreate);
-		button.setPrefHeight(0.0);
-		button.setMaxHeight(0.0);
-		button.setMinHeight(0.0);
-		button.setVisible(false);
-	}
+        stage.setMinHeight(725);
+        
+        Label header = new Label();
+        header.setMinHeight(0.0);
+        header.setPrefHeight(0.0);
+        header.setMaxHeight(0.0);
+        this.dialog.getDialogPane().setHeader(header);
+        this.dialog.getDialogPane().setContent(this.parent);
+        ButtonType buttonCreate = new ButtonType("", ButtonBar.ButtonData.OTHER);
+        this.dialog.getButtonTypes().setAll(buttonCreate);
+        Button button = (Button) this.dialog.getDialogPane().lookupButton(buttonCreate);
+        button.setPrefHeight(0.0);
+        button.setMaxHeight(0.0);
+        button.setMinHeight(0.0);
+        button.setVisible(false);
+    }
 
-	private void initTable()
-	{
-		this.tableView.setEditable(true);
-		this.tableView.setRowFactory(row -> new CustomRowFactory());
-		TableColumn<ElementWizardBean, Integer> columnNumber = new TableColumn<>("#");
-		columnNumber.setCellValueFactory(new PropertyValueFactory<>("number"));
-		columnNumber.setCellFactory(e -> new TableCell<ElementWizardBean, Integer>()
-		{
-			@Override
-			protected void updateItem(Integer item, boolean empty)
-			{
-				super.updateItem(item, empty);
-				if (item != null && !empty)
-				{
-					setText(String.valueOf(item));
-					this.setAlignment(Pos.CENTER);
-				}
-				else
-				{
-					setText(null);
-				}
-			}
-		});
-		columnNumber.setPrefWidth(35);
-		columnNumber.setMaxWidth(35);
-		columnNumber.setMinWidth(35);
+    private void initTable()
+    {
+        this.tableView.setEditable(true);
+        this.tableView.setRowFactory(row -> new CustomRowFactory());
+        TableColumn<ElementWizardBean, Integer> columnNumber = new TableColumn<>("#");
+        columnNumber.setCellValueFactory(new PropertyValueFactory<>("number"));
+        columnNumber.setCellFactory(e -> new TableCell<ElementWizardBean, Integer>()
+        {
+            @Override
+            protected void updateItem(Integer item, boolean empty)
+            {
+                super.updateItem(item, empty);
+                if (item != null && !empty)
+                {
+                    setText(String.valueOf(item));
+                    this.setAlignment(Pos.CENTER);
+                }
+                else
+                {
+                    setText(null);
+                }
+            }
+        });
+        columnNumber.setPrefWidth(35);
+        columnNumber.setMaxWidth(35);
+        columnNumber.setMinWidth(35);
 
-		TableColumn<ElementWizardBean, String> columnId = new TableColumn<>("Id");
-		columnId.setCellValueFactory(new PropertyValueFactory<>("id"));
-		columnId.setEditable(true);
-		columnId.setCellFactory(e -> new TableCell<ElementWizardBean, String>()
-		{
-			private TextField textField;
+        TableColumn<ElementWizardBean, String> columnId = new TableColumn<>("Id");
+        columnId.setCellValueFactory(new PropertyValueFactory<>("id"));
+        columnId.setEditable(true);
+        columnId.setCellFactory(e -> new TableCell<ElementWizardBean, String>()
+        {
+            private TextField textField;
 
-			@Override
-			public void startEdit()
-			{
-				super.startEdit();
-				if (textField == null)
-				{
-					createTextField();
-				}
-				textField.setText(getString());
-				setGraphic(textField);
-				setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
-				Platform.runLater(textField::requestFocus);
-			}
+            @Override
+            public void startEdit()
+            {
+                super.startEdit();
+                if (textField == null)
+                {
+                    createTextField();
+                }
+                textField.setText(getString());
+                setGraphic(textField);
+                setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
+                Platform.runLater(textField::requestFocus);
+            }
 
-			@Override
-			public void cancelEdit()
-			{
-				super.cancelEdit();
-				setText(Str.asString(getItem()));
-				setContentDisplay(ContentDisplay.TEXT_ONLY);
-			}
+            @Override
+            public void cancelEdit()
+            {
+                super.cancelEdit();
+                setText(Str.asString(getItem()));
+                setContentDisplay(ContentDisplay.TEXT_ONLY);
+            }
 
-			@Override
-			protected void updateItem(String s, boolean b)
-			{
-				super.updateItem(s, b);
-				if (b || s == null)
-				{
-					setText(null);
-					setGraphic(null);
-				}
-				else
-				{
-					setText(getString());
-					setContentDisplay(ContentDisplay.TEXT_ONLY);
-				}
-			}
+            @Override
+            protected void updateItem(String s, boolean b)
+            {
+                super.updateItem(s, b);
+                if (b || s == null)
+                {
+                    setText(null);
+                    setGraphic(null);
+                }
+                else
+                {
+                    setText(getString());
+                    setContentDisplay(ContentDisplay.TEXT_ONLY);
+                }
+            }
 
-			private String getString()
-			{
-				return Str.asString(getItem());
-			}
+            private String getString()
+            {
+                return Str.asString(getItem());
+            }
 
-			private void createTextField()
-			{
-				textField = new TextField(getString());
-				textField.getStyleClass().add(CssVariables.TEXT_FIELD_VARIABLES);
-				textField.setMinWidth(this.getWidth() - this.getGraphicTextGap() * 2);
-				textField.setOnKeyPressed(t ->
-				{
-					if (t.getCode() == KeyCode.ENTER || t.getCode() == KeyCode.TAB)
-					{
-						commitEdit(textField.getText());
-					}
-					else if (t.getCode() == KeyCode.ESCAPE)
-					{
-						cancelEdit();
-					}
-				});
-				textField.focusedProperty().addListener((observable, oldValue, newValue) ->
-				{
-					if (!newValue && textField != null)
-					{
-						commitEdit(textField.getText());
-					}
-				});
-			}
-		});
+            private void createTextField()
+            {
+                textField = new TextField(getString());
+                textField.getStyleClass().add(CssVariables.TEXT_FIELD_VARIABLES);
+                textField.setMinWidth(this.getWidth() - this.getGraphicTextGap() * 2);
+                textField.setOnKeyPressed(t ->
+                {
+                    if (t.getCode() == KeyCode.ENTER || t.getCode() == KeyCode.TAB)
+                    {
+                        commitEdit(textField.getText());
+                    }
+                    else if (t.getCode() == KeyCode.ESCAPE)
+                    {
+                        cancelEdit();
+                    }
+                });
+                textField.focusedProperty().addListener((observable, oldValue, newValue) ->
+                {
+                    if (!newValue && textField != null)
+                    {
+                        commitEdit(textField.getText());
+                    }
+                });
+            }
+        });
 
-		columnId.setOnEditCommit(e ->
-		{
-			ElementWizardBean elementWizardBean = e.getRowValue();
-			if (elementWizardBean != null)
-			{
-				Common.tryCatch(() -> this.model.updateId(elementWizardBean, e.getNewValue()), "Error on update id");
-			}
-		});
-		columnId.setMinWidth(100.0);
+        columnId.setOnEditCommit(e ->
+        {
+            ElementWizardBean elementWizardBean = e.getRowValue();
+            if (elementWizardBean != null)
+            {
+                Common.tryCatch(() -> this.model.updateId(elementWizardBean, e.getNewValue()), "Error on update id");
+            }
+        });
+        columnId.setMinWidth(100.0);
 
-		TableColumn<ElementWizardBean, ControlKind> columnKind = new TableColumn<>("Kind");
-		columnKind.setCellValueFactory(new PropertyValueFactory<>("controlKind"));
-		columnKind.setOnEditCommit(e ->
-		{
-			ElementWizardBean rowValue = e.getRowValue();
-			if (rowValue != null)
-			{
-				Common.tryCatch(() -> this.model.updateControlKind(rowValue, e.getNewValue()), "Error on update control kind");
-			}
-		});
-		columnKind.setCellFactory(e -> new TableCell<ElementWizardBean, ControlKind>()
-		{
-			ChoiceBox<ControlKind> comboBox;
+        TableColumn<ElementWizardBean, ControlKind> columnKind = new TableColumn<>("Kind");
+        columnKind.setCellValueFactory(new PropertyValueFactory<>("controlKind"));
+        columnKind.setOnEditCommit(e ->
+        {
+            ElementWizardBean rowValue = e.getRowValue();
+            if (rowValue != null)
+            {
+                Common.tryCatch(() -> this.model.updateControlKind(rowValue, e.getNewValue()), "Error on update control kind");
+            }
+        });
+        columnKind.setCellFactory(e -> new TableCell<ElementWizardBean, ControlKind>()
+        {
+            ChoiceBox<ControlKind> comboBox;
 
-			@Override
-			protected void updateItem(ControlKind item, boolean empty)
-			{
-				super.updateItem(item, empty);
-				if (item != null && !empty)
-				{
-					setText(getString());
-					setContentDisplay(ContentDisplay.TEXT_ONLY);
-				}
-				else
-				{
-					setGraphic(null);
-					setText(null);
-				}
-			}
+            @Override
+            protected void updateItem(ControlKind item, boolean empty)
+            {
+                super.updateItem(item, empty);
+                if (item != null && !empty)
+                {
+                    setText(getString());
+                    setContentDisplay(ContentDisplay.TEXT_ONLY);
+                }
+                else
+                {
+                    setGraphic(null);
+                    setText(null);
+                }
+            }
 
-			@Override
-			public void startEdit()
-			{
-				super.startEdit();
-				createCB();
-				setGraphic(this.comboBox);
-				setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
-				this.comboBox.show();
-			}
+            @Override
+            public void startEdit()
+            {
+                super.startEdit();
+                createCB();
+                setGraphic(this.comboBox);
+                setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
+                this.comboBox.show();
+            }
 
-			@Override
-			public void cancelEdit()
-			{
-				super.cancelEdit();
-				setText(getString());
-				setContentDisplay(ContentDisplay.TEXT_ONLY);
-			}
+            @Override
+            public void cancelEdit()
+            {
+                super.cancelEdit();
+                setText(getString());
+                setContentDisplay(ContentDisplay.TEXT_ONLY);
+            }
 
-			private void createCB()
-			{
-				if (this.comboBox == null)
-				{
-					this.comboBox = new ChoiceBox<>(FXCollections.observableArrayList(ControlKind.values()));
-					this.comboBox.getSelectionModel().select(getItem());
-					this.comboBox.setOnAction(e -> commitEdit(this.comboBox.getSelectionModel().getSelectedItem()));
-					this.comboBox.showingProperty().addListener((observable, oldValue, newValue) ->
-					{
-						if (!newValue)
-						{
-							cancelEdit();
-						}
-					});
-				}
-			}
+            private void createCB()
+            {
+                if (this.comboBox == null)
+                {
+                    this.comboBox = new ChoiceBox<>(FXCollections.observableArrayList(ControlKind.values()));
+                    this.comboBox.getSelectionModel().select(getItem());
+                    this.comboBox.setOnAction(e -> commitEdit(this.comboBox.getSelectionModel().getSelectedItem()));
+                    this.comboBox.showingProperty().addListener((observable, oldValue, newValue) ->
+                    {
+                        if (!newValue)
+                        {
+                            cancelEdit();
+                        }
+                    });
+                }
+            }
 
-			private String getString()
-			{
-				return String.valueOf(getItem() == null ? "" : getItem().name());
-			}
-		});
-		columnKind.setPrefWidth(135);
-		columnKind.setMaxWidth(135);
-		columnKind.setMinWidth(135);
+            private String getString()
+            {
+                return String.valueOf(getItem() == null ? "" : getItem().name());
+            }
+        });
+        columnKind.setPrefWidth(135);
+        columnKind.setMaxWidth(135);
+        columnKind.setMinWidth(135);
 
-		int value = 50;
+        int value = 50;
 
-		TableColumn<ElementWizardBean, Boolean> columnIsXpath = new TableColumn<>("Xpath");
-		columnIsXpath.setCellValueFactory(new PropertyValueFactory<>("xpath"));
-		columnIsXpath.setCellFactory(e -> new TableCell<ElementWizardBean, Boolean>()
-		{
-			@Override
-			protected void updateItem(Boolean item, boolean empty)
-			{
-				super.updateItem(item, empty);
-				if (item != null && !empty)
-				{
-					this.setAlignment(Pos.CENTER);
-					setGraphic(item ? new ImageView(new Image(CssVariables.Icons.MARK_ICON)) : null);
-				}
-				else
-				{
-					setGraphic(null);
-				}
-			}
-		});
-		columnIsXpath.setPrefWidth(value);
-		columnIsXpath.setMaxWidth(value);
-		columnIsXpath.setMinWidth(value);
+        TableColumn<ElementWizardBean, Boolean> columnIsXpath = new TableColumn<>("Xpath");
+        columnIsXpath.setCellValueFactory(new PropertyValueFactory<>("xpath"));
+        columnIsXpath.setCellFactory(e -> new TableCell<ElementWizardBean, Boolean>()
+        {
+            @Override
+            protected void updateItem(Boolean item, boolean empty)
+            {
+                super.updateItem(item, empty);
+                if (item != null && !empty)
+                {
+                    this.setAlignment(Pos.CENTER);
+                    setGraphic(item ? new ImageView(new Image(CssVariables.Icons.MARK_ICON)) : null);
+                }
+                else
+                {
+                    setGraphic(null);
+                }
+            }
+        });
+        columnIsXpath.setPrefWidth(value);
+        columnIsXpath.setMaxWidth(value);
+        columnIsXpath.setMinWidth(value);
 
-		TableColumn<ElementWizardBean, Boolean> columnIsNew = new TableColumn<>("New");
-		columnIsNew.setCellValueFactory(new PropertyValueFactory<>("isNew"));
-		columnIsNew.setCellFactory(e -> new TableCell<ElementWizardBean, Boolean>()
-		{
-			@Override
-			protected void updateItem(Boolean item, boolean empty)
-			{
-				super.updateItem(item, empty);
-				if (item != null && !empty)
-				{
-					this.setAlignment(Pos.CENTER);
-					setGraphic(item ? new ImageView(new Image(CssVariables.Icons.MARK_ICON)) : null);
-				}
-				else
-				{
-					setGraphic(null);
-				}
-			}
-		});
-		columnIsNew.setPrefWidth(value);
-		columnIsNew.setMaxWidth(value);
-		columnIsNew.setMinWidth(value);
+        TableColumn<ElementWizardBean, Boolean> columnIsNew = new TableColumn<>("New");
+        columnIsNew.setCellValueFactory(new PropertyValueFactory<>("isNew"));
+        columnIsNew.setCellFactory(e -> new TableCell<ElementWizardBean, Boolean>()
+        {
+            @Override
+            protected void updateItem(Boolean item, boolean empty)
+            {
+                super.updateItem(item, empty);
+                if (item != null && !empty)
+                {
+                    this.setAlignment(Pos.CENTER);
+                    setGraphic(item ? new ImageView(new Image(CssVariables.Icons.MARK_ICON)) : null);
+                }
+                else
+                {
+                    setGraphic(null);
+                }
+            }
+        });
+        columnIsNew.setPrefWidth(value);
+        columnIsNew.setMaxWidth(value);
+        columnIsNew.setMinWidth(value);
 
-		TableColumn<ElementWizardBean, Integer> columnCount = new TableColumn<>("Count");
-		columnCount.setCellValueFactory(new PropertyValueFactory<>("count"));
-		columnCount.setCellFactory(e -> new TableCell<ElementWizardBean, Integer>()
-		{
-			@Override
-			protected void updateItem(Integer item, boolean empty)
-			{
-				super.updateItem(item, empty);
-				this.setAlignment(Pos.CENTER);
-				if (item != null && !empty)
-				{
-					setText(item.toString());
-				}
-				else
-				{
-					setText(null);
-				}
-			}
-		});
+        TableColumn<ElementWizardBean, Integer> columnCount = new TableColumn<>("Count");
+        columnCount.setCellValueFactory(new PropertyValueFactory<>("count"));
+        columnCount.setCellFactory(e -> new TableCell<ElementWizardBean, Integer>()
+        {
+            @Override
+            protected void updateItem(Integer item, boolean empty)
+            {
+                super.updateItem(item, empty);
+                this.setAlignment(Pos.CENTER);
+                if (item != null && !empty)
+                {
+                    setText(item.toString());
+                }
+                else
+                {
+                    setText(null);
+                }
+            }
+        });
 
-		columnCount.setPrefWidth(value);
-		columnCount.setMaxWidth(value);
-		columnCount.setMinWidth(value);
+        columnCount.setPrefWidth(value);
+        columnCount.setMaxWidth(value);
+        columnCount.setMinWidth(value);
 
-		TableColumn<ElementWizardBean, ElementWizardBean> columnOption = new TableColumn<>("Option");
-		columnOption.setCellValueFactory(new PropertyValueFactory<>("option"));
-		columnOption.setPrefWidth(100);
-		columnOption.setMaxWidth(100);
-		columnOption.setMinWidth(100);
-		columnOption.setCellFactory(e -> new TableCell<ElementWizardBean, ElementWizardBean>()
-		{
-			@Override
-			protected void updateItem(ElementWizardBean item, boolean empty)
-			{
-				super.updateItem(item, empty);
-				this.setAlignment(Pos.CENTER);
-				if (item != null && !empty)
-				{
-					HBox box = new HBox();
-					box.setAlignment(Pos.CENTER);
+        TableColumn<ElementWizardBean, ElementWizardBean> columnOption = new TableColumn<>("Option");
+        columnOption.setCellValueFactory(new PropertyValueFactory<>("option"));
+        columnOption.setPrefWidth(100);
+        columnOption.setMaxWidth(100);
+        columnOption.setMinWidth(100);
+        columnOption.setCellFactory(e -> new TableCell<ElementWizardBean, ElementWizardBean>()
+        {
+            @Override
+            protected void updateItem(ElementWizardBean item, boolean empty)
+            {
+                super.updateItem(item, empty);
+                this.setAlignment(Pos.CENTER);
+                if (item != null && !empty)
+                {
+                    HBox box = new HBox();
+                    box.setAlignment(Pos.CENTER);
 
-					Button btnEdit = new Button();
-					btnEdit.setId("btnEdit");
-					btnEdit.setTooltip(new Tooltip("Edit element"));
-					btnEdit.getStyleClass().add(CssVariables.TRANSPARENT_BACKGROUND);
-					btnEdit.setOnAction(e -> Common.tryCatch(() -> model.changeElement(item), "Error on change element"));
+                    Button btnEdit = new Button();
+                    btnEdit.setId("btnEdit");
+                    btnEdit.setTooltip(new Tooltip("Edit element"));
+                    btnEdit.getStyleClass().add(CssVariables.TRANSPARENT_BACKGROUND);
+                    btnEdit.setOnAction(e -> Common.tryCatch(() -> model.changeElement(item), "Error on change element"));
 
-					Button btnRemove = new Button();
-					btnRemove.setId("btnRemove");
-					btnRemove.setTooltip(new Tooltip("Remove element"));
-					btnRemove.getStyleClass().add(CssVariables.TRANSPARENT_BACKGROUND);
-					btnRemove.setOnAction(e -> model.removeElement(item));
+                    Button btnRemove = new Button();
+                    btnRemove.setId("btnRemove");
+                    btnRemove.setTooltip(new Tooltip("Remove element"));
+                    btnRemove.getStyleClass().add(CssVariables.TRANSPARENT_BACKGROUND);
+                    btnRemove.setOnAction(e -> model.removeElement(item));
 
-					Button btnRelation = new Button();
-					btnRelation.setId("btnRelation");
-					btnRelation.setTooltip(new Tooltip("Set relation"));
-					btnRelation.getStyleClass().add(CssVariables.TRANSPARENT_BACKGROUND);
-					btnRelation.setOnAction(e -> model.updateRelation(item));
-					box.getChildren().addAll(btnEdit, btnRelation, btnRemove);
-					setGraphic(box);
-				}
-				else
-				{
-					setGraphic(null);
-				}
-			}
-		});
+                    Button btnRelation = new Button();
+                    btnRelation.setId("btnRelation");
+                    btnRelation.setTooltip(new Tooltip("Set relation"));
+                    btnRelation.getStyleClass().add(CssVariables.TRANSPARENT_BACKGROUND);
+                    btnRelation.setOnAction(e -> model.updateRelation(item));
+                    box.getChildren().addAll(btnEdit, btnRelation, btnRemove);
+                    setGraphic(box);
+                }
+                else
+                {
+                    setGraphic(null);
+                }
+            }
+        });
 
-		columnId.prefWidthProperty().bind(this.tableView.widthProperty().subtract(35 + 135 + value * 3 + 100 + 2 + 16));
+        columnId.prefWidthProperty().bind(this.tableView.widthProperty().subtract(35 + 135 + value * 3 + 100 + 2 + 16));
 
-		this.tableView.getColumns().addAll(columnNumber, columnId, columnKind, columnIsXpath, columnIsNew, columnCount, columnOption);
-	}
+        this.tableView.getColumns().addAll(columnNumber, columnId, columnKind, columnIsXpath, columnIsNew, columnCount, columnOption);
+    }
 
-	private void addToRightPane(GridPane pane, String id, String value, Consumer<String> consumer, int index)
-	{
-		Label lbl = new Label(id);
-		CustomFieldWithButton tf = new CustomFieldWithButton(value);
-		tf.setMaxWidth(Double.MAX_VALUE);
-		tf.textProperty().addListener((observable, oldValue, newValue) -> consumer.accept(newValue));
-		GridPane.setFillWidth(tf, true);
-		pane.add(lbl, 2, index);
-		pane.add(tf, 3, index);
-	}
+    private void addToRightPane(GridPane pane, String id, String value, Consumer<String> consumer, int index)
+    {
+        Label lbl = new Label(id);
+        CustomFieldWithButton tf = new CustomFieldWithButton(value);
+        tf.setMaxWidth(Double.MAX_VALUE);
+        tf.textProperty().addListener((observable, oldValue, newValue) -> consumer.accept(newValue));
+        GridPane.setFillWidth(tf, true);
+        pane.add(lbl, 2, index);
+        pane.add(tf, 3, index);
+    }
 
-	private void addToLeftPane(GridPane pane, String id, String value, Consumer<String> consumer, int index)
-	{
-		Label lbl = new Label(id);
-		CustomFieldWithButton tf = new CustomFieldWithButton(value);
-		tf.setMaxWidth(Double.MAX_VALUE);
-		tf.textProperty().addListener((observable, oldValue, newValue) -> consumer.accept(newValue));
-		GridPane.setFillWidth(tf, true);
-		pane.add(lbl, 0, index);
-		pane.add(tf, 1, index);
-	}
+    private void addToLeftPane(GridPane pane, String id, String value, Consumer<String> consumer, int index)
+    {
+        Label lbl = new Label(id);
+        CustomFieldWithButton tf = new CustomFieldWithButton(value);
+        tf.setMaxWidth(Double.MAX_VALUE);
+        tf.textProperty().addListener((observable, oldValue, newValue) -> consumer.accept(newValue));
+        GridPane.setFillWidth(tf, true);
+        pane.add(lbl, 0, index);
+        pane.add(tf, 1, index);
+    }
 
-	private <T> void addComboToLeftPane(GridPane pane, String id, T value, Consumer<T> consumer, int index, List<T> values)
-	{
-		ChoiceBox<T> cb = new ChoiceBox<>();
-		cb.getItems().add(null);
-		cb.getItems().addAll(values);
-		cb.getSelectionModel().select(value);
-		cb.setMaxWidth(Double.MAX_VALUE);
-		cb.setOnAction(e -> consumer.accept(cb.getValue()));
-		Label lbl = new Label(id);
+    private <T> void addComboToLeftPane(GridPane pane, String id, T value, Consumer<T> consumer, int index, List<T> values)
+    {
+        ChoiceBox<T> cb = new ChoiceBox<>();
+        cb.getItems().add(null);
+        cb.getItems().addAll(values);
+        cb.getSelectionModel().select(value);
+        cb.setMaxWidth(Double.MAX_VALUE);
+        cb.setOnAction(e -> consumer.accept(cb.getValue()));
+        Label lbl = new Label(id);
 
-		pane.add(lbl, 0, index);
-		pane.add(cb, 1, index);
-	}
+        pane.add(lbl, 0, index);
+        pane.add(cb, 1, index);
+    }
 
-	private void addCheckBoxToLeftPane(GridPane pane, String id, boolean initValue, Consumer<Boolean> consumer, int index)
-	{
-		CheckBox checkBox = new CheckBox();
-		checkBox.setText(id);
-		checkBox.setSelected(initValue);
-		checkBox.selectedProperty().addListener((observable, oldValue, newValue) -> consumer.accept(newValue));
-		pane.add(checkBox, 1, index);
-	}
+    private void addCheckBoxToLeftPane(GridPane pane, String id, boolean initValue, Consumer<Boolean> consumer, int index)
+    {
+        CheckBox checkBox = new CheckBox();
+        checkBox.setText(id);
+        checkBox.setSelected(initValue);
+        checkBox.selectedProperty().addListener((observable, oldValue, newValue) -> consumer.accept(newValue));
+        pane.add(checkBox, 1, index);
+    }
 
-	private void addXpathToPane(GridPane pane, String value, Consumer<String> consumer)
-	{
-		Label lbl = new Label("Xpath : ");
-		HBox box = new HBox();
-		box.setAlignment(Pos.CENTER);
+    private void addXpathToPane(GridPane pane, String value, Consumer<String> consumer)
+    {
+        Label lbl = new Label("Xpath : ");
+        HBox box = new HBox();
+        box.setAlignment(Pos.CENTER);
 
-		CustomFieldWithButton tf = new CustomFieldWithButton(value);
-		tf.textProperty().addListener((observable, oldValue, newValue) -> consumer.accept(newValue));
-		HBox.setHgrow(tf, Priority.ALWAYS);
+        CustomFieldWithButton tf = new CustomFieldWithButton(value);
+        tf.textProperty().addListener((observable, oldValue, newValue) -> consumer.accept(newValue));
+        HBox.setHgrow(tf, Priority.ALWAYS);
 
-		Button btnXpath = new Button();
-		Common.customizeLabeled(btnXpath, CssVariables.TRANSPARENT_BACKGROUND, CssVariables.Icons.XPATH_TREE);
-		btnXpath.setOnAction(event ->
-		{
-			String newXpath = this.model.showXpathViewer(tf.getText());
-			if (newXpath != null)
-			{
-				tf.setText(newXpath);
-			}
-		});
-		box.getChildren().addAll(tf, btnXpath);
-		pane.add(lbl, 2, 0);
-		pane.add(box, 3, 0);
-	}
+        Button btnXpath = new Button();
+        Common.customizeLabeled(btnXpath, CssVariables.TRANSPARENT_BACKGROUND, CssVariables.Icons.XPATH_TREE);
+        btnXpath.setOnAction(event ->
+        {
+            String newXpath = this.model.showXpathViewer(tf.getText());
+            if (newXpath != null)
+            {
+                tf.setText(newXpath);
+            }
+        });
+        box.getChildren().addAll(tf, btnXpath);
+        pane.add(lbl, 2, 0);
+        pane.add(box, 3, 0);
+    }
 
-	public void refreshTable()
-	{
-		Platform.runLater(() -> {
-			this.tableView.getColumns().get(0).setVisible(false);
-			this.tableView.getColumns().get(0).setVisible(true);
-		});
-	}
-	//endregion
+    public void refreshTable()
+    {
+        Platform.runLater(() -> {
+            this.tableView.getColumns().get(0).setVisible(false);
+            this.tableView.getColumns().get(0).setVisible(true);
+        });
+    }
+    //endregion
 
-	private class CustomRowFactory extends TableRow<ElementWizardBean>
-	{
-		private final PseudoClass customSelected = PseudoClassState.getPseudoClass("customSelectedState");
-		private final PseudoClass selected = PseudoClassState.getPseudoClass("selected");
+    private class CustomRowFactory extends TableRow<ElementWizardBean>
+    {
+        private final PseudoClass customSelected = PseudoClassState.getPseudoClass("customSelectedState");
+        private final PseudoClass selected = PseudoClassState.getPseudoClass("selected");
 
-		public CustomRowFactory()
-		{
-			this.getStyleClass().addAll(CssVariables.CUSTOM_TABLE_ROW);
-			this.selectedProperty().addListener((observable, oldValue, newValue) -> {
-				this.pseudoClassStateChanged(customSelected, newValue);
-				this.pseudoClassStateChanged(selected, false); // remove selected pseudostate, cause this state change text color
-			});
-		}
+        public CustomRowFactory()
+        {
+            this.getStyleClass().addAll(CssVariables.CUSTOM_TABLE_ROW);
+            this.selectedProperty().addListener((observable, oldValue, newValue) -> {
+                this.pseudoClassStateChanged(customSelected, newValue);
+                this.pseudoClassStateChanged(selected, false); // remove selected pseudostate, cause this state change text color
+            });
+        }
 
-		@Override
-		protected void updateItem(ElementWizardBean item, boolean empty)
-		{
-			super.updateItem(item, empty);
-			this.getStyleClass().removeAll(
-					CssVariables.COLOR_MARK,
-					CssVariables.COLOR_QUESTION,
-					CssVariables.COLOR_NOT_FOUND,
-					CssVariables.COLOR_NOT_FINDING,
-					CssVariables.COLOR_ADD,
-					CssVariables.COLOR_UPDATE
-			);
-			if (item != null && !empty && item.getStyleClass() != null)
-			{
-				this.getStyleClass().add(item.getStyleClass());
-			}
-		}
-	}
+        @Override
+        protected void updateItem(ElementWizardBean item, boolean empty)
+        {
+            super.updateItem(item, empty);
+            this.getStyleClass().removeAll(
+                    CssVariables.COLOR_MARK,
+                    CssVariables.COLOR_QUESTION,
+                    CssVariables.COLOR_NOT_FOUND,
+                    CssVariables.COLOR_NOT_FINDING,
+                    CssVariables.COLOR_ADD,
+                    CssVariables.COLOR_UPDATE
+            );
+            if (item != null && !empty && item.getStyleClass() != null)
+            {
+                this.getStyleClass().add(item.getStyleClass());
+            }
+        }
+    }
 }

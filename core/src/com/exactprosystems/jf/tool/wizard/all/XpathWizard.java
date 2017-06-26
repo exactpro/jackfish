@@ -23,11 +23,11 @@ import com.exactprosystems.jf.documents.guidic.Window;
 import com.exactprosystems.jf.documents.guidic.controls.AbstractControl;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.Common.SpacerEnum;
-import com.exactprosystems.jf.tool.custom.ImageViewWithScale;
-import com.exactprosystems.jf.tool.custom.TreeTableViewWithRectangles;
 import com.exactprosystems.jf.tool.custom.controls.field.CustomFieldWithButton;
 import com.exactprosystems.jf.tool.custom.find.FindPanel;
 import com.exactprosystems.jf.tool.custom.find.IFind;
+import com.exactprosystems.jf.tool.custom.scaledimage.ImageViewWithScale;
+import com.exactprosystems.jf.tool.custom.xmltree.XmlTreeView;
 import com.exactprosystems.jf.tool.dictionary.DictionaryFx;
 import com.exactprosystems.jf.tool.helpers.DialogsHelper;
 import com.exactprosystems.jf.tool.wizard.AbstractWizard;
@@ -103,7 +103,7 @@ public class XpathWizard extends AbstractWizard
 
     private SplitPane                          splitPane;
     private ImageViewWithScale                 imageViewWithScale;
-    private TreeTableViewWithRectangles        treeTableViewWithRectangles;
+    private XmlTreeView        treeTableViewWithRectangles;
     private FindPanel<TreeItem<XpathTreeItem>> findPanel;
     private OneLine[]                          lines;
     private CheckBox                           useText;
@@ -139,7 +139,7 @@ public class XpathWizard extends AbstractWizard
         borderPane.setPrefSize(600.0, 800.0);
         borderPane.setMinSize(600.0, 800.0);
 
-        this.treeTableViewWithRectangles = new TreeTableViewWithRectangles(v->{}, v->{});
+        this.treeTableViewWithRectangles = new XmlTreeView(v->{}, v->{});
         this.treeTableViewWithRectangles.hideFirstColumn();
 
         this.imageViewWithScale = new ImageViewWithScale();
@@ -225,19 +225,15 @@ public class XpathWizard extends AbstractWizard
             
             IControl self = this.currentWindow.getSelfControl();
             Locator selfLocator = self == null ? null : self.locator();
-            Locator elementLocator = this.currentControl.locator();
             IRemoteApplication service = this.currentConnection.getApplication().service();
             
             // get picture
             this.imageService = new JfService<ImageAndOffset>(this.executor, 
                     () -> Common.tryCatch(() ->
                         {
-                            int offsetX, offsetY;
-                            Rectangle rectangle = service.getRectangle(selfLocator, elementLocator);
-                            offsetX = rectangle.x;
-                            offsetY = rectangle.y;
-                            BufferedImage image = service.getImage(selfLocator, elementLocator).getImage();
-                            return new ImageAndOffset(image, offsetX, offsetY);
+                            Rectangle rectangle = service.getRectangle(null, selfLocator);
+                            BufferedImage image = service.getImage(null, selfLocator).getImage();
+                            return new ImageAndOffset(image, rectangle.x, rectangle.y);
                         }, "Error on getting image", null));
     
     
