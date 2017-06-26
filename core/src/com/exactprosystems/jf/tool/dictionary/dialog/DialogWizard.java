@@ -13,19 +13,17 @@ import com.exactprosystems.jf.api.app.IWindow.SectionKind;
 import com.exactprosystems.jf.api.common.Converter;
 import com.exactprosystems.jf.api.common.Str;
 import com.exactprosystems.jf.api.error.JFRemoteException;
-import com.exactprosystems.jf.common.utils.XpathUtils;
 import com.exactprosystems.jf.documents.guidic.*;
 import com.exactprosystems.jf.documents.guidic.Window;
 import com.exactprosystems.jf.documents.guidic.controls.AbstractControl;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.CssVariables;
 import com.exactprosystems.jf.tool.custom.ServiceLambdaBean;
+import com.exactprosystems.jf.tool.custom.xpath.ImageAndOffset;
+import com.exactprosystems.jf.tool.custom.xpath.TreeItemState;
 import com.exactprosystems.jf.tool.custom.xpath.XpathViewer;
 import com.exactprosystems.jf.tool.dictionary.DictionaryFx;
 import com.exactprosystems.jf.tool.helpers.DialogsHelper;
-import com.exactprosystems.jf.tool.wizard.related.ImageAndOffset;
-import com.exactprosystems.jf.tool.wizard.related.MarkerStyle;
-
 import javafx.concurrent.Service;
 import javafx.concurrent.Task;
 import org.w3c.dom.Document;
@@ -46,7 +44,7 @@ import java.util.stream.IntStream;
 
 public class DialogWizard
 {
-    private static final int		MAX_TRIES = 128;
+    private static final int        MAX_TRIES = 128;
     
     private static ExecutorService  executor = Executors.newFixedThreadPool(1);
     private Window                  window;
@@ -69,24 +67,24 @@ public class DialogWizard
 
     private Consumer<IWindow>       consumer;
 
-	public DialogWizard(DictionaryFx dictionary, IWindow window, AppConnection appConnection) throws Exception
-	{
-		this.window = (Window)window;
-		this.appConnection = appConnection;
-		this.pluginInfo = appConnection.getApplication().getFactory().getInfo();
-		this.wizardSettings = new WizardSettings(dictionary.getFactory().getSettings());
-		this.matcher = new WizardMatcher(this.pluginInfo);
+    public DialogWizard(DictionaryFx dictionary, IWindow window, AppConnection appConnection) throws Exception
+    {
+        this.window = (Window)window;
+        this.appConnection = appConnection;
+        this.pluginInfo = appConnection.getApplication().getFactory().getInfo();
+        this.wizardSettings = new WizardSettings(dictionary.getFactory().getSettings());
+        this.matcher = new WizardMatcher(this.pluginInfo);
 
-		this.controller = Common.loadController(DialogWizard.class.getResource("DialogWizard.fxml"));
-		this.controller.init(this, this.window.getName());
-		this.selfControl = this.window.getSelfControl();
-		this.controller.displaySelf(selfControl);
+        this.controller = Common.loadController(DialogWizard.class.getResource("DialogWizard.fxml"));
+        this.controller.init(this, this.window.getName());
+        this.selfControl = this.window.getSelfControl();
+        this.controller.displaySelf(selfControl);
 
-		displayElements();
-		updateOnButtons();
-	}
+        displayElements();
+        updateOnButtons();
+    }
 
-	//----------------------------------------------------------------------------------------------
+    //----------------------------------------------------------------------------------------------
     // sophisticated functions
     //----------------------------------------------------------------------------------------------
     public Node findBestIndex(ElementWizardBean bean)
@@ -126,7 +124,7 @@ public class DialogWizard
         {
             Rect        actualRectangle     = relativeRect(this.dialogRectangle, (Rectangle)node.getUserData(IRemoteApplication.rectangleName));
             String      actualName          = node.getNodeName();
-            String      actualPath          = XpathUtils.fullXpath("", this.rootNode, node, false, null, true);
+            String      actualPath          = XpathViewer.fullXpath("", this.rootNode, node, false, null, true);
             List<Attr>  actualAttr          = extractAttributes(node);
             
             Rect        expectedRectangle   = (Rect)info.get(ExtraInfo.rectangleName);
@@ -212,95 +210,95 @@ public class DialogWizard
     }
     
     //----------------------------------------------------------------------------------------------
-	public void arrangeOne(Node node, ElementWizardBean bean, MarkerStyle state) throws Exception
-	{
-		switch (state)
-		{
-			case ADD:
-				Locator locator = compile(composeId(node), composeKind(node), node);
-				if (locator != null)
-				{
-					AbstractControl control = AbstractControl.create(locator, this.selfControl.getID());
-					updateExtraInfo(this.window, node, control);
-					this.window.addControl(SectionKind.Run, control);
-				}
-				displayElements();
-				break;
-
-			case UPDATE:
-				Locator locatorUpdate = compile(bean.getId(), bean.getControlKind(), node);
-				if (locatorUpdate != null)
-				{
-					AbstractControl control = AbstractControl.create(locatorUpdate, this.selfControl.getID());
-					updateExtraInfo(this.window, node, bean.getAbstractControl());
-					Section section = (Section)this.window.getSection(SectionKind.Run);
-					section.replaceControl(bean.getAbstractControl(), control);
-				}
-				displayElements();
-				break;
-			case MARK:
-				updateExtraInfo(this.window, node, bean.getAbstractControl());
-				break;
-
-			case QUESTION:
-				break;
-		}
-	}
-
-	private void updateExtraInfo(IWindow window, Node node, AbstractControl control) throws Exception
+    public void arrangeOne(Node node, ElementWizardBean bean, TreeItemState state) throws Exception
     {
-		ExtraInfo info = new ExtraInfo();
-		Rectangle rec = (Rectangle)node.getUserData(IRemoteApplication.rectangleName);
-		Rect rectangle = relativeRect(this.dialogRectangle, rec);
+        switch (state)
+        {
+            case ADD:
+                Locator locator = compile(composeId(node), composeKind(node), node);
+                if (locator != null)
+                {
+                    AbstractControl control = AbstractControl.create(locator, this.selfControl.getID());
+                    updateExtraInfo(this.window, node, control);
+                    this.window.addControl(SectionKind.Run, control);
+                }
+                displayElements();
+                break;
 
-		info.set(ExtraInfo.xpathName, 		XpathUtils.fullXpath("", this.rootNode, node, false, null, true));
-		info.set(ExtraInfo.nodeName, 		node.getNodeName());
-		info.set(ExtraInfo.rectangleName, 	rectangle);
-		List<Attr> attributes = extractAttributes(node);
-		if (!attributes.isEmpty())
-		{
-			info.set(ExtraInfo.attrName, attributes);
-		}
-		control.set(AbstractControl.infoName, info);
+            case UPDATE:
+                Locator locatorUpdate = compile(bean.getId(), bean.getControlKind(), node);
+                if (locatorUpdate != null)
+                {
+                    AbstractControl control = AbstractControl.create(locatorUpdate, this.selfControl.getID());
+                    updateExtraInfo(this.window, node, bean.getAbstractControl());
+                    Section section = (Section)this.window.getSection(SectionKind.Run);
+                    section.replaceControl(bean.getAbstractControl(), control);
+                }
+                displayElements();
+                break;
+            case MARK:
+                updateExtraInfo(this.window, node, bean.getAbstractControl());
+                break;
+
+            case QUESTION:
+                break;
+        }
     }
 
-	private List<Attr> extractAttributes(Node node)
-	{
-		List<Attr> attributes = new ArrayList<>();
-		NamedNodeMap attrs = node.getAttributes();
-		if (attrs != null)
-		{
-    		for (int index = 0; index < attrs.getLength(); index++)
-    		{
-    			Node attr = attrs.item(index);
-    			attributes.add(new Attr(attr.getNodeName(), attr.getNodeValue()));
-    		}
-		}
-		return attributes;
-	}
+    private void updateExtraInfo(IWindow window, Node node, AbstractControl control) throws Exception
+    {
+        ExtraInfo info = new ExtraInfo();
+        Rectangle rec = (Rectangle)node.getUserData(IRemoteApplication.rectangleName);
+        Rect rectangle = relativeRect(this.dialogRectangle, rec);
 
-	private Locator compile(String id, ControlKind kind, Node node)
-	{
-		// try many methods here
-		Locator locator = null;
-		
-		locator = locatorById(id, kind, node);
-		if (locator != null)
-		{
-			return locator;
-		}
+        info.set(ExtraInfo.xpathName,       XpathViewer.fullXpath("", this.rootNode, node, false, null, true));
+        info.set(ExtraInfo.nodeName,        node.getNodeName());
+        info.set(ExtraInfo.rectangleName,   rectangle);
+        List<Attr> attributes = extractAttributes(node);
+        if (!attributes.isEmpty())
+        {
+            info.set(ExtraInfo.attrName, attributes);
+        }
+        control.set(AbstractControl.infoName, info);
+    }
+
+    private List<Attr> extractAttributes(Node node)
+    {
+        List<Attr> attributes = new ArrayList<>();
+        NamedNodeMap attrs = node.getAttributes();
+        if (attrs != null)
+        {
+            for (int index = 0; index < attrs.getLength(); index++)
+            {
+                Node attr = attrs.item(index);
+                attributes.add(new Attr(attr.getNodeName(), attr.getNodeValue()));
+            }
+        }
+        return attributes;
+    }
+
+    private Locator compile(String id, ControlKind kind, Node node)
+    {
+        // try many methods here
+        Locator locator = null;
+        
+        locator = locatorById(id, kind, node);
+        if (locator != null)
+        {
+            return locator;
+        }
 
         locator = locatorByAttr(id, kind,  node);
-		if (locator != null)
-		{
-			return locator;
-		}
+        if (locator != null)
+        {
+            return locator;
+        }
 
         locator = locatorByXpath(id, kind,  node);
-		if (locator != null)
-		{
-			return locator;
-		}
+        if (locator != null)
+        {
+            return locator;
+        }
 
         locator = locatorByRelativeXpath(id, kind,  node);
         if (locator != null)
@@ -309,21 +307,21 @@ public class DialogWizard
         }
 
         return null; // can't compile the such locator
-	}
+    }
 
-	private String composeId(Node node)
-	{
+    private String composeId(Node node)
+    {
         String res = null;
-		if (node.hasAttributes())
-		{
-	        res = composeFromAttr(res, node, LocatorFieldKind.UID);
+        if (node.hasAttributes())
+        {
+            res = composeFromAttr(res, node, LocatorFieldKind.UID);
             res = composeFromAttr(res, node, LocatorFieldKind.NAME);
             res = composeFromAttr(res, node, LocatorFieldKind.TITLE);
             res = composeFromAttr(res, node, LocatorFieldKind.ACTION);
-		}
+        }
         res = composeFromText(res, node);
-		return res;
-	}
+        return res;
+    }
 
     private String composeFromAttr(String res, Node node, LocatorFieldKind kind)
     {
@@ -339,17 +337,17 @@ public class DialogWizard
         
         if (node.hasAttributes())
         {
-	        Node attrNode = node.getAttributes().getNamedItem(attrName);
-	        if (attrNode == null)
-	        {
-	        	return null;
-	        }
-	        		
-	        String attr = attrNode.getNodeValue();
-	        if (isStable(attr))
-	        {
-	        	return attr;
-	        }
+            Node attrNode = node.getAttributes().getNamedItem(attrName);
+            if (attrNode == null)
+            {
+                return null;
+            }
+                    
+            String attr = attrNode.getNodeValue();
+            if (isStable(attr))
+            {
+                return attr;
+            }
         }
         return null;
     }
@@ -369,11 +367,11 @@ public class DialogWizard
         return null;
     }
 
-	private ControlKind composeKind(Node node)
-	{
-		String name = node.getNodeName();
-		return this.pluginInfo.controlKindByNode(name);
-	}
+    private ControlKind composeKind(Node node)
+    {
+        String name = node.getNodeName();
+        return this.pluginInfo.controlKindByNode(name);
+    }
 
     private Locator locatorById(String id, ControlKind kind, Node node)
     {
@@ -402,44 +400,44 @@ public class DialogWizard
         return null;
     }
 
-	private Locator locatorByAttr(String id, ControlKind kind, Node node)
-	{
+    private Locator locatorByAttr(String id, ControlKind kind, Node node)
+    {
         List<Pair> list = allAttributes(node);
-		List<List<Pair>> cases = IntStream.range(1, 1 << list.size())
-			.boxed()
-			.sorted((a,b) -> Integer.bitCount(a) - Integer.bitCount(b))
-			.limit(MAX_TRIES)
-			.map(e -> shuffle(e, list))
-			.collect(Collectors.toList());
-		
-		for (List<Pair> caze : cases) 
-		{
-			Locator locator = new Locator().kind(kind).id(id);
-			caze.forEach(p -> locator.set(p.kind, p.value));
-			
-			if (tryLocator(locator, node) == 1) 
-			{
-				return locator;
-			}
-		}
+        List<List<Pair>> cases = IntStream.range(1, 1 << list.size())
+            .boxed()
+            .sorted((a,b) -> Integer.bitCount(a) - Integer.bitCount(b))
+            .limit(MAX_TRIES)
+            .map(e -> shuffle(e, list))
+            .collect(Collectors.toList());
+        
+        for (List<Pair> caze : cases) 
+        {
+            Locator locator = new Locator().kind(kind).id(id);
+            caze.forEach(p -> locator.set(p.kind, p.value));
+            
+            if (tryLocator(locator, node) == 1) 
+            {
+                return locator;
+            }
+        }
         
         return null;
-	}
-	
-	private static List<Pair> shuffle(int mask, List<Pair> source)
-	{
-		List<Pair> res = new ArrayList<>();
-		int oneBit = 0;
-		while((oneBit = Integer.lowestOneBit(mask)) != 0)
-		{
-			res.add(source.get(Integer.numberOfTrailingZeros(mask)));
-			mask ^= oneBit;
-		}
-		return res;
-	}
+    }
+    
+    private static List<Pair> shuffle(int mask, List<Pair> source)
+    {
+        List<Pair> res = new ArrayList<>();
+        int oneBit = 0;
+        while((oneBit = Integer.lowestOneBit(mask)) != 0)
+        {
+            res.add(source.get(Integer.numberOfTrailingZeros(mask)));
+            mask ^= oneBit;
+        }
+        return res;
+    }
 
-	private List<Pair>  allAttributes(Node node)
-	{
+    private List<Pair>  allAttributes(Node node)
+    {
         List<Pair> list = new ArrayList<>();
         addAttr(list, node, LocatorFieldKind.UID);
         addAttr(list, node, LocatorFieldKind.CLAZZ);
@@ -449,57 +447,57 @@ public class DialogWizard
         addAttr(list, node, LocatorFieldKind.TOOLTIP);
         addAttr(list, node, LocatorFieldKind.TEXT);
         return list;
-	}
-	
-	private static class Pair
-	{
-		public Pair(LocatorFieldKind kind, String value) 
-		{
-			this.kind = kind;
-			this.value = value;
-		}
-		
-		public LocatorFieldKind kind;
-		public String value;
-	}
-	
-	private void addAttr(List<Pair> list, Node node, LocatorFieldKind kind)
-	{
-		if (!node.hasAttributes())
-		{
-			return;
-		}
-		if (kind == LocatorFieldKind.TEXT)
-		{
-			String textContent = node.getTextContent();
-			if (isStable(textContent))
-			{
-				list.add(new Pair(kind, textContent));
-			}
-		}
-		String attrName = this.pluginInfo.attributeName(kind);
-		if (attrName == null)
-		{
-		    return;
-		}
-		Node attrNode = node.getAttributes().getNamedItem(attrName);
-		if (attrNode == null)
-		{
-			return;
-		}
-		String value = attrNode.getNodeValue();
-		if (isStable(value))
-		{
-			list.add(new Pair(kind, value));
-		}
-	}
-	
-	private Locator locatorByXpath(String id, ControlKind kind, Node node)
-	{
+    }
+    
+    private static class Pair
+    {
+        public Pair(LocatorFieldKind kind, String value) 
+        {
+            this.kind = kind;
+            this.value = value;
+        }
+        
+        public LocatorFieldKind kind;
+        public String value;
+    }
+    
+    private void addAttr(List<Pair> list, Node node, LocatorFieldKind kind)
+    {
+        if (!node.hasAttributes())
+        {
+            return;
+        }
+        if (kind == LocatorFieldKind.TEXT)
+        {
+            String textContent = node.getTextContent();
+            if (isStable(textContent))
+            {
+                list.add(new Pair(kind, textContent));
+            }
+        }
+        String attrName = this.pluginInfo.attributeName(kind);
+        if (attrName == null)
+        {
+            return;
+        }
+        Node attrNode = node.getAttributes().getNamedItem(attrName);
+        if (attrNode == null)
+        {
+            return;
+        }
+        String value = attrNode.getNodeValue();
+        if (isStable(value))
+        {
+            list.add(new Pair(kind, value));
+        }
+    }
+    
+    private Locator locatorByXpath(String id, ControlKind kind, Node node)
+    {
         String ownerPath = ".";
 
         List<String> parameters = allRealAttributes(node);
-        String relativePath = XpathUtils.fullXpath(ownerPath, this.rootNode, node, false, parameters, false);
+        String relativePath = XpathViewer.fullXpath(ownerPath, this.rootNode, node, false, parameters, false);
         Locator locator = new Locator().kind(kind).id(id).xpath(relativePath);
         
         if (tryLocator(locator, node) == 1)
@@ -507,12 +505,12 @@ public class DialogWizard
             return locator;
         }
         return null;
-	}
+    }
 
-	private Locator locatorByRelativeXpath(String id, ControlKind kind, Node node)
-	{
+    private Locator locatorByRelativeXpath(String id, ControlKind kind, Node node)
+    {
         String ownerPath = ".";
-        String xpath = XpathUtils.fullXpath(ownerPath, this.rootNode, node, false, null, true);
+        String xpath = XpathViewer.fullXpath(ownerPath, this.rootNode, node, false, null, true);
         String[] parts = xpath.split("/");
 
         Node parent = node; 
@@ -521,7 +519,7 @@ public class DialogWizard
             Locator relativeLocator = locatorByXpath(id, kind, parent);
             if (relativeLocator != null)
             {
-                String finalPath = XpathUtils.fullXpath(relativeLocator.getXpath(), parent, node, false, null, false);
+                String finalPath = XpathViewer.fullXpath(relativeLocator.getXpath(), parent, node, false, null, false);
                 
                 Locator finalLocator = new Locator().kind(kind).id(id).xpath(finalPath);
                 if (tryLocator(finalLocator, node) == 1)
@@ -532,7 +530,7 @@ public class DialogWizard
 
             parent = parent.getParentNode();
         }
-	    
+        
         Locator locator = new Locator().kind(kind).id(id).xpath(xpath);
         if (tryLocator(locator, node) == 1)
         {
@@ -540,49 +538,49 @@ public class DialogWizard
         }
 
         return null;
-	}
+    }
 
-	private List<String> allRealAttributes(Node node)
-	{
-	    List<String> res = new ArrayList<>();
-	    NamedNodeMap attributes = node.getAttributes();
-	    if (attributes != null)
-	    {
-	        for (int index = 0; index < attributes.getLength(); index++)
-	        {
-	            Node attr = attributes.item(index);
-	            res.add(attr.getNodeName());
-	        }
-	    }
+    private List<String> allRealAttributes(Node node)
+    {
+        List<String> res = new ArrayList<>();
+        NamedNodeMap attributes = node.getAttributes();
+        if (attributes != null)
+        {
+            for (int index = 0; index < attributes.getLength(); index++)
+            {
+                Node attr = attributes.item(index);
+                res.add(attr.getNodeName());
+            }
+        }
         return res;
-	}
-	
-	private int tryLocator(Locator locator, Node node)
-	{
-		if (locator == null)
-		{
-			return 0;
-		}
+    }
+    
+    private int tryLocator(Locator locator, Node node)
+    {
+        if (locator == null)
+        {
+            return 0;
+        }
 
-		try
+        try
         {
             List<Node> list = findAll(locator);
             if (list.size() != 1)
             {
-            	return list.size();
+                return list.size();
             }
 
             if (list.get(0) == node)
             {
-            	return 1;
+                return 1;
             }
         }
         catch (Exception e)
         {
             // nothing to do
         }
-		return 0;
-	}
+        return 0;
+    }
 
     private List<Node> findAll(Locator locator) throws Exception
     {
@@ -595,264 +593,264 @@ public class DialogWizard
         {
             return false;
         }
-		if (identifier.split(" ").length > 2)
-		{
-			return false;
-		}
-		return identifier.matches("^[a-zA-Z\\s]+$");
+        if (identifier.split(" ").length > 2)
+        {
+            return false;
+        }
+        return identifier.matches("^[a-zA-Z\\s]+$");
     }
-	
-	//----------------------------------------------------------------------------------------------
+    
+    //----------------------------------------------------------------------------------------------
 
 
-	public void show()
-	{
-		this.controller.show();
-	}
+    public void show()
+    {
+        this.controller.show();
+    }
 
-	public void setOnAccept(Consumer<IWindow> consumer)
-	{
-		this.consumer = consumer;
-	}
+    public void setOnAccept(Consumer<IWindow> consumer)
+    {
+        this.consumer = consumer;
+    }
 
-	void changeDialogName(String newName)
-	{
-		this.window.setName(newName);
-	}
+    void changeDialogName(String newName)
+    {
+        this.window.setName(newName);
+    }
 
-	void displayImageAndTree()
-	{
-		if (documentService != null)
-		{
-			this.documentService.cancel();
-		}
-		if (imageService != null)
-		{
-			this.imageService.cancel();
-		}
-		this.documentService = new Service<Document>()
-		{
-			@Override
-			protected Task<Document> createTask()
-			{
-				return new Task<Document>()
-				{
-					@Override
-					protected Document call() throws Exception
-					{
-						byte[] treeBytes = service().getTreeBytes(DialogWizard.this.selfControl.locator());
-						return Converter.convertByteArrayToXmlDocument(treeBytes);
-					}
-				};
-			}
-		};
+    void displayImageAndTree()
+    {
+        if (documentService != null)
+        {
+            this.documentService.cancel();
+        }
+        if (imageService != null)
+        {
+            this.imageService.cancel();
+        }
+        this.documentService = new Service<Document>()
+        {
+            @Override
+            protected Task<Document> createTask()
+            {
+                return new Task<Document>()
+                {
+                    @Override
+                    protected Document call() throws Exception
+                    {
+                        byte[] treeBytes = service().getTreeBytes(DialogWizard.this.selfControl.locator());
+                        return Converter.convertByteArrayToXmlDocument(treeBytes);
+                    }
+                };
+            }
+        };
 
-		this.imageService = new Service<ImageAndOffset>()
-		{
-			@Override
-			protected Task<ImageAndOffset> createTask()
-			{
-				return new Task<ImageAndOffset>()
-				{
-					@Override
-					protected ImageAndOffset call() throws Exception
-					{
-						int offsetX, offsetY;
-						Rectangle rectangle = service().getRectangle(null, DialogWizard.this.selfControl.locator());
-						dialogRectangle = rectangle;
-						offsetX = rectangle.x;
-						offsetY = rectangle.y;
-						BufferedImage image = service().getImage(null, DialogWizard.this.selfControl.locator()).getImage();
-						return new ImageAndOffset(image, offsetX, offsetY);
-					}
-				};
-			}
-		};
-		this.documentService.setExecutor(executor);
-		this.imageService.setExecutor(executor);
+        this.imageService = new Service<ImageAndOffset>()
+        {
+            @Override
+            protected Task<ImageAndOffset> createTask()
+            {
+                return new Task<ImageAndOffset>()
+                {
+                    @Override
+                    protected ImageAndOffset call() throws Exception
+                    {
+                        int offsetX, offsetY;
+                        Rectangle rectangle = service().getRectangle(null, DialogWizard.this.selfControl.locator());
+                        dialogRectangle = rectangle;
+                        offsetX = rectangle.x;
+                        offsetY = rectangle.y;
+                        BufferedImage image = service().getImage(null, DialogWizard.this.selfControl.locator()).getImage();
+                        return new ImageAndOffset(image, offsetX, offsetY);
+                    }
+                };
+            }
+        };
+        this.documentService.setExecutor(executor);
+        this.imageService.setExecutor(executor);
 
-		this.documentService.setOnSucceeded(event ->
-		{
-			this.document = (Document) event.getSource().getValue();
-			this.rootNode = XpathUtils.getFirst(this.document, "/*");
-			this.controller.displayTree(this.document, xOffset, yOffset);
-		});
-		this.imageService.setOnSucceeded(event ->
-		{
-			ImageAndOffset imageAndOffset = (ImageAndOffset) event.getSource().getValue();
-			xOffset = imageAndOffset.offsetX;
-			yOffset = imageAndOffset.offsetY;
-			this.controller.displayImage(imageAndOffset.image);
-		});
+        this.documentService.setOnSucceeded(event ->
+        {
+            this.document = (Document) event.getSource().getValue();
+            this.rootNode = XpathViewer.getFirst(this.document, "/*");
+            this.controller.displayTree(this.document, xOffset, yOffset);
+        });
+        this.imageService.setOnSucceeded(event ->
+        {
+            ImageAndOffset imageAndOffset = (ImageAndOffset) event.getSource().getValue();
+            xOffset = imageAndOffset.offsetX;
+            yOffset = imageAndOffset.offsetY;
+            this.controller.displayImage(imageAndOffset.image);
+        });
 
-		this.imageService.setOnFailed(event ->
-		{
-			Throwable exception = event.getSource().getException();
-			String message = exception.getMessage();
-			if (exception.getCause() instanceof JFRemoteException)
-			{
-				message = ((JFRemoteException) exception.getCause()).getErrorKind().toString();
-			}
-			this.controller.displayImageFailing(message);
-		});
+        this.imageService.setOnFailed(event ->
+        {
+            Throwable exception = event.getSource().getException();
+            String message = exception.getMessage();
+            if (exception.getCause() instanceof JFRemoteException)
+            {
+                message = ((JFRemoteException) exception.getCause()).getErrorKind().toString();
+            }
+            this.controller.displayImageFailing(message);
+        });
 
-		this.documentService.setOnFailed(event ->
-		{
-			Throwable exception = event.getSource().getException();
-			String message = exception.getMessage();
-			if (exception.getCause() instanceof JFRemoteException)
-			{
-				message = ((JFRemoteException) exception.getCause()).getErrorKind().toString();
-			}
-			this.controller.displayDocumentFailing(message);
-		});
-		this.imageService.start();
-		this.documentService.start();
-	}
+        this.documentService.setOnFailed(event ->
+        {
+            Throwable exception = event.getSource().getException();
+            String message = exception.getMessage();
+            if (exception.getCause() instanceof JFRemoteException)
+            {
+                message = ((JFRemoteException) exception.getCause()).getErrorKind().toString();
+            }
+            this.controller.displayDocumentFailing(message);
+        });
+        this.imageService.start();
+        this.documentService.start();
+    }
 
-	void close(boolean needAccept, List<ElementWizardBean> list)
-	{
-		if (needAccept)
-		{
-			Section section = (Section) this.window.getSection(IWindow.SectionKind.Run);
-			section.getControls().forEach(section::removeControl);
-			list.stream().map(ElementWizardBean::getAbstractControl).forEach(abstractControl -> Common.tryCatch(() -> section.addControl(abstractControl), "Error on add control"));
-			Optional.ofNullable(this.consumer).ifPresent(c -> c.accept(this.window));
-		}
-		this.controller.close();
-	}
+    void close(boolean needAccept, List<ElementWizardBean> list)
+    {
+        if (needAccept)
+        {
+            Section section = (Section) this.window.getSection(IWindow.SectionKind.Run);
+            section.getControls().forEach(section::removeControl);
+            list.stream().map(ElementWizardBean::getAbstractControl).forEach(abstractControl -> Common.tryCatch(() -> section.addControl(abstractControl), "Error on add control"));
+            Optional.ofNullable(this.consumer).ifPresent(c -> c.accept(this.window));
+        }
+        this.controller.close();
+    }
 
-	void updateId(ElementWizardBean bean, String newId) throws Exception
-	{
-		AbstractControl abstractControl = bean.getAbstractControl();
-		abstractControl.set(AbstractControl.idName, newId);
-		updateBean(abstractControl, bean);
-		this.controller.displayElement(bean);
-	}
+    void updateId(ElementWizardBean bean, String newId) throws Exception
+    {
+        AbstractControl abstractControl = bean.getAbstractControl();
+        abstractControl.set(AbstractControl.idName, newId);
+        updateBean(abstractControl, bean);
+        this.controller.displayElement(bean);
+    }
 
-	void updateControlKind(ElementWizardBean bean, ControlKind kind) throws Exception
-	{
-		AbstractControl oldControl = bean.getAbstractControl();
-		AbstractControl newControl = AbstractControl.createCopy(oldControl, kind);
+    void updateControlKind(ElementWizardBean bean, ControlKind kind) throws Exception
+    {
+        AbstractControl oldControl = bean.getAbstractControl();
+        AbstractControl newControl = AbstractControl.createCopy(oldControl, kind);
 
-		updateBean(newControl, bean);
-		updateCountElement(bean);
-		this.controller.displayElement(bean);
-	}
+        updateBean(newControl, bean);
+        updateCountElement(bean);
+        this.controller.displayElement(bean);
+    }
 
-	void changeElement(ElementWizardBean bean) throws Exception
-	{
-		List<String> list = this.window.getControls(null)
-				.stream()
-				.filter(c -> c.getID() != null && !c.getID().isEmpty())
-				.map(IControl::getID)
-				.collect(Collectors.toList());
-		AbstractControl newControl = this.controller.editElement(AbstractControl.createCopy(bean.getAbstractControl()), list);
-		if (newControl != null)
-		{
-			this.updateBean(newControl, bean);
-			this.updateCountElement(bean);
-			this.controller.displayElement(bean);
-		}
-	}
+    void changeElement(ElementWizardBean bean) throws Exception
+    {
+        List<String> list = this.window.getControls(null)
+                .stream()
+                .filter(c -> c.getID() != null && !c.getID().isEmpty())
+                .map(IControl::getID)
+                .collect(Collectors.toList());
+        AbstractControl newControl = this.controller.editElement(AbstractControl.createCopy(bean.getAbstractControl()), list);
+        if (newControl != null)
+        {
+            this.updateBean(newControl, bean);
+            this.updateCountElement(bean);
+            this.controller.displayElement(bean);
+        }
+    }
 
-	String showXpathViewer(String xpath)
-	{
-		ServiceLambdaBean serviceLambdaBean = new ServiceLambdaBean(
-				() -> this.service().getImage(null, this.selfControl.locator()).getImage(),
-				() -> this.service().getRectangle(null, this.selfControl.locator())
-		);
-		XpathViewer xpathViewer = new XpathViewer(this.selfControl.locator(), () -> this.document, serviceLambdaBean);
-		return xpathViewer.show(xpath, "Xpath builder", Common.currentThemesPaths(), false);
-	}
+    String showXpathViewer(String xpath)
+    {
+        ServiceLambdaBean serviceLambdaBean = new ServiceLambdaBean(
+                () -> this.service().getImage(null, this.selfControl.locator()).getImage(),
+                () -> this.service().getRectangle(null, this.selfControl.locator())
+        );
+        XpathViewer xpathViewer = new XpathViewer(this.selfControl.locator(), () -> this.document, serviceLambdaBean);
+        return xpathViewer.show(xpath, "Xpath builder", Common.currentThemesPaths(), false);
+    }
 
-	void removeElement(ElementWizardBean bean)
-	{
-		boolean needRemove = DialogsHelper.showQuestionDialog("Remove element", "Are you sure to remove this element?");
-		if (needRemove)
-		{
-			this.window.removeControl(bean.getAbstractControl());
-			List<ElementWizardBean> remove = this.controller.remove(bean);
-			for (int i = 0; i < remove.size(); i++)
-			{
-				ElementWizardBean bean1 = remove.get(i);
-				boolean isNew = bean1.getIsNew();
-				updateBean(bean1.getAbstractControl(), bean1);
-				bean1.setIsNew(isNew);
-				bean1.setNumber(i);
-				this.controller.displayElement(bean1);
-			}
-			this.controller.updateCounters();
-		}
-	}
+    void removeElement(ElementWizardBean bean)
+    {
+        boolean needRemove = DialogsHelper.showQuestionDialog("Remove element", "Are you sure to remove this element?");
+        if (needRemove)
+        {
+            this.window.removeControl(bean.getAbstractControl());
+            List<ElementWizardBean> remove = this.controller.remove(bean);
+            for (int i = 0; i < remove.size(); i++)
+            {
+                ElementWizardBean bean1 = remove.get(i);
+                boolean isNew = bean1.getIsNew();
+                updateBean(bean1.getAbstractControl(), bean1);
+                bean1.setIsNew(isNew);
+                bean1.setNumber(i);
+                this.controller.displayElement(bean1);
+            }
+            this.controller.updateCounters();
+        }
+    }
 
-	void updateRelation(ElementWizardBean bean)
-	{
-		this.controller.clearAndAddRelation(bean);
-	}
+    void updateRelation(ElementWizardBean bean)
+    {
+        this.controller.clearAndAddRelation(bean);
+    }
 
-	void findElements(List<ElementWizardBean> items) throws Exception
-	{
-		for (ElementWizardBean item : items)
-		{
-			updateCountElement(item);
-			this.controller.displayElement(item);
-		}
-	}
+    void findElements(List<ElementWizardBean> items) throws Exception
+    {
+        for (ElementWizardBean item : items)
+        {
+            updateCountElement(item);
+            this.controller.displayElement(item);
+        }
+    }
 
-	void generateOnOpen() throws Exception
-	{
-		AbstractControl onOpen = generate(Addition.WaitToAppear);
-		Section section = (Section) this.window.getSection(IWindow.SectionKind.OnOpen);
-		section.clearSection();
-		section.addControl(onOpen);
-		updateOnButtons();
-	}
+    void generateOnOpen() throws Exception
+    {
+        AbstractControl onOpen = generate(Addition.WaitToAppear);
+        Section section = (Section) this.window.getSection(IWindow.SectionKind.OnOpen);
+        section.clearSection();
+        section.addControl(onOpen);
+        updateOnButtons();
+    }
 
-	void generateOnClose() throws Exception
-	{
-		AbstractControl onClose = generate(Addition.WaitToDisappear);
-		Section section = (Section) this.window.getSection(IWindow.SectionKind.OnClose);
-		section.clearSection();
-		section.addControl(onClose);
-		updateOnButtons();
-	}
+    void generateOnClose() throws Exception
+    {
+        AbstractControl onClose = generate(Addition.WaitToDisappear);
+        Section section = (Section) this.window.getSection(IWindow.SectionKind.OnClose);
+        section.clearSection();
+        section.addControl(onClose);
+        updateOnButtons();
+    }
 
-	//region private methods
-	private void updateOnButtons()
-	{
-		boolean onOpenEmpty = this.window.getSection(IWindow.SectionKind.OnOpen).getControls().isEmpty();
-		boolean onCloseEmpty = this.window.getSection(IWindow.SectionKind.OnClose).getControls().isEmpty();
-		this.controller.displayOnButtons(onOpenEmpty, onCloseEmpty);
-	}
+    //region private methods
+    private void updateOnButtons()
+    {
+        boolean onOpenEmpty = this.window.getSection(IWindow.SectionKind.OnOpen).getControls().isEmpty();
+        boolean onCloseEmpty = this.window.getSection(IWindow.SectionKind.OnClose).getControls().isEmpty();
+        this.controller.displayOnButtons(onOpenEmpty, onCloseEmpty);
+    }
 
-	private AbstractControl generate(Addition addition) throws Exception
-	{
-		AbstractControl on = AbstractControl.create(ControlKind.Wait);
-		on.set(AbstractControl.refIdName, this.selfControl.getID());
-		on.set(AbstractControl.additionName, addition);
-		on.set(AbstractControl.timeoutName, 5000);
-		on.set(AbstractControl.idName, addition == Addition.WaitToAppear ? "waitOpen" : "waitClose");
-		return on;
-	}
+    private AbstractControl generate(Addition addition) throws Exception
+    {
+        AbstractControl on = AbstractControl.create(ControlKind.Wait);
+        on.set(AbstractControl.refIdName, this.selfControl.getID());
+        on.set(AbstractControl.additionName, addition);
+        on.set(AbstractControl.timeoutName, 5000);
+        on.set(AbstractControl.idName, addition == Addition.WaitToAppear ? "waitOpen" : "waitClose");
+        return on;
+    }
 
-	private IRemoteApplication service()
-	{
-		return this.appConnection.getApplication().service();
-	}
+    private IRemoteApplication service()
+    {
+        return this.appConnection.getApplication().service();
+    }
 
-	private void updateCountElement(ElementWizardBean bean) throws Exception
-	{
-		int count = 0;
-		Node found = null;
-		AbstractControl abstractControl = bean.getAbstractControl();
-		if (abstractControl.getAddition() == Addition.Many || Str.IsNullOrEmpty(abstractControl.getOwnerID()))
-		{
-			bean.setStyleClass(CssVariables.COLOR_NOT_FINDING);
-			return;
-		}
-		Locator locator = abstractControl.locator();
-		List<Node> nodeList;
+    private void updateCountElement(ElementWizardBean bean) throws Exception
+    {
+        int count = 0;
+        Node found = null;
+        AbstractControl abstractControl = bean.getAbstractControl();
+        if (abstractControl.getAddition() == Addition.Many || Str.IsNullOrEmpty(abstractControl.getOwnerID()))
+        {
+            bean.setStyleClass(CssVariables.COLOR_NOT_FINDING);
+            return;
+        }
+        Locator locator = abstractControl.locator();
+        List<Node> nodeList;
         try
         {
             nodeList = this.matcher.findAll(this.rootNode, locator);
@@ -864,42 +862,42 @@ public class DialogWizard
             // nothing to do
         }
 
-		if (count == 1)
-		{
-			this.controller.displayFoundControl(found, bean, MarkerStyle.MARK);
-		}
-		else if (count > 1 || count == 0)
-		{
-			Node bestIndex = findBestIndex(bean);
-			this.controller.displayFoundControl(bestIndex, bean, MarkerStyle.QUESTION);
-		}
-		bean.setCount(count);
-	}
+        if (count == 1)
+        {
+            this.controller.displayFoundControl(found, bean, TreeItemState.MARK);
+        }
+        else if (count > 1 || count == 0)
+        {
+            Node bestIndex = findBestIndex(bean);
+            this.controller.displayFoundControl(bestIndex, bean, TreeItemState.QUESTION);
+        }
+        bean.setCount(count);
+    }
 
-	private void displayElements()
-	{
-		int[] a = new int[]{0};
-		this.displayElements(entry -> this.create(a[0]++, entry, false));
-	}
+    private void displayElements()
+    {
+        int[] a = new int[]{0};
+        this.displayElements(entry -> this.create(a[0]++, entry, false));
+    }
 
-	private void displayElements(Function<AbstractControl, ElementWizardBean> mapFunction)
-	{
-		List<ElementWizardBean> list = this.window.getSection(SectionKind.Run).getControls().stream().map(iC -> ((AbstractControl) iC)).map(mapFunction).collect(Collectors.toList());
-		this.controller.displayElements(list);
-	}
+    private void displayElements(Function<AbstractControl, ElementWizardBean> mapFunction)
+    {
+        List<ElementWizardBean> list = this.window.getSection(SectionKind.Run).getControls().stream().map(iC -> ((AbstractControl) iC)).map(mapFunction).collect(Collectors.toList());
+        this.controller.displayElements(list);
+    }
 
-	private ElementWizardBean create(int number, AbstractControl control, boolean isNew)
-	{
-		return new ElementWizardBean(control, number, control.getID(), control.getBindedClass(), !Str.IsNullOrEmpty(control.getXpath()), isNew, 0);
-	}
+    private ElementWizardBean create(int number, AbstractControl control, boolean isNew)
+    {
+        return new ElementWizardBean(control, number, control.getID(), control.getBindedClass(), !Str.IsNullOrEmpty(control.getXpath()), isNew, 0);
+    }
 
-	private void updateBean(AbstractControl control, ElementWizardBean bean)
-	{
-		bean.setAbstractControl(control);
-		bean.setControlKind(control.getBindedClass());
-		bean.setId(control.getID());
-		bean.setIsNew(true);
-		bean.setXpath(!Str.IsNullOrEmpty(control.getXpath()));
-	}
-	//endregion
+    private void updateBean(AbstractControl control, ElementWizardBean bean)
+    {
+        bean.setAbstractControl(control);
+        bean.setControlKind(control.getBindedClass());
+        bean.setId(control.getID());
+        bean.setIsNew(true);
+        bean.setXpath(!Str.IsNullOrEmpty(control.getXpath()));
+    }
+    //endregion
 }
