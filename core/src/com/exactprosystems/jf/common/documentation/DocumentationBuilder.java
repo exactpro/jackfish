@@ -46,8 +46,11 @@ public class DocumentationBuilder
 {
     public static MatrixItem createHelp (ReportBuilder report, Context context) throws Exception
     {
-        //intro1
-        //intro2
+        AbstractEvaluator evaluator = context.getEvaluator();
+
+        MatrixItem help = new HelpTextLine("");
+        addContent(help, "", new Content());
+        return help;
         //mvel
         //controls
         //syntax
@@ -55,7 +58,6 @@ public class DocumentationBuilder
         //actions
         //other classes
         //todo content
-        return null;
     }
     
     public static MatrixItem createUserManual (ReportBuilder report, Context context) throws Exception

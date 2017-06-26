@@ -2,6 +2,7 @@ package com.exactprosystems.jf.common.report;
 
 import com.exactprosystems.jf.api.app.ImageWrapper;
 import com.exactprosystems.jf.charts.ChartBuilder;
+import com.exactprosystems.jf.common.version.VersionInfo;
 import com.exactprosystems.jf.documents.matrix.parser.items.MatrixItem;
 import com.exactprosystems.jf.functions.Content;
 
@@ -12,6 +13,11 @@ public class NewHelpBuilder extends ReportBuilder {
     public NewHelpBuilder(Date currentTime) throws IOException
     {
         super(".", "help", currentTime);
+    }
+
+    @Override
+    protected String postProcess(String source) {
+        return super.postProcess(source);
     }
 
     @Override
@@ -41,7 +47,7 @@ public class NewHelpBuilder extends ReportBuilder {
 
     @Override
     protected String generateReportName(String outputPath, String matrixName, String suffix, Date date) throws IOException {
-        return null;
+        return "";
     }
 
     @Override
@@ -56,7 +62,13 @@ public class NewHelpBuilder extends ReportBuilder {
 
     @Override
     protected void reportHeader(ReportWriter writer, Date date, String version) throws IOException {
-
+        writer.fwrite("<!DOCTYPE html>");
+        writer.fwrite("<html>");
+        writer.fwrite("<head>");
+        writer.fwrite("<title>Help</title>");
+        writer.fwrite("<meta http-equiv='Content-Type' content='text/html; charset=utf-8'>");
+        writer.fwrite("</head>");
+        writer.fwrite("<body>");
     }
 
     @Override
@@ -81,7 +93,8 @@ public class NewHelpBuilder extends ReportBuilder {
 
     @Override
     protected void reportFooter(ReportWriter writer, int failed, int passed, Date startTime, Date finishTime, String name, String reportName) throws IOException {
-
+        writer.fwrite("</body>");
+        writer.fwrite("</html>");
     }
 
     @Override

@@ -701,8 +701,8 @@ public abstract class DialogsHelper
 	{
 		try
 		{
-			NewHelpBuilder report = (NewHelpBuilder) new NewHelpBuilderFactory().createReportBuilder(null, null, new Date());
 			Context context = factory.createContext();
+			NewHelpBuilder report = (NewHelpBuilder) new NewHelpBuilderFactory().createReportBuilder(null, null, new Date());
 			DocumentationBuilder.createHelp(report, context);
 			displayHelp(report.getContent());
 		}
