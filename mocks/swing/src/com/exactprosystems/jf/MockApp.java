@@ -796,7 +796,7 @@ public class MockApp
 		panel.add(new JLabel());
 		JSpinner spinner = new JSpinner();
 		spinner.setName("Spinner");
-		spinner.addMouseListener(mouseListener(spinner.getName()));
+		spinner.getModel().addChangeListener(e -> sliderLabel.setText("Slider_" + String.valueOf(((Double) spinner.getValue()).intValue())));
 		addListeners(spinner,spinner.getName());
 		panel.add(spinner);
 	}
@@ -868,20 +868,14 @@ public class MockApp
 	{
 		JPanel panel = createPanel("panelTree");
 
-		DefaultMutableTreeNode root = new DefaultMutableTreeNode("JTree");
+		DefaultMutableTreeNode root = new DefaultMutableTreeNode("Green");
 		JTree tree = new JTree(root);
-		DefaultMutableTreeNode colorsRed = new DefaultMutableTreeNode("colors, red");
-		DefaultMutableTreeNode colors = new DefaultMutableTreeNode("colors");
+		DefaultMutableTreeNode yellow = new DefaultMutableTreeNode("Yellow");
 		DefaultMutableTreeNode orange = new DefaultMutableTreeNode("Orange");
-		DefaultMutableTreeNode red = new DefaultMutableTreeNode("red");
-		DefaultMutableTreeNode blue = new DefaultMutableTreeNode("blue");
-		DefaultMutableTreeNode green = new DefaultMutableTreeNode("green");
-		root.add(colorsRed);
+		DefaultMutableTreeNode blue = new DefaultMutableTreeNode("Blue");
+		root.add(yellow);
 		root.add(orange);
-		root.add(colors);
-		colors.add(red);
-		colors.add(blue);
-		colors.add(green);
+		root.add(blue);
 		tree.expandRow(0);
 
 		JScrollPane scrollPane = new JScrollPane(tree);

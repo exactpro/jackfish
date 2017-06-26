@@ -527,7 +527,11 @@ public class SwingOperationExecutor implements OperationExecutor<ComponentFixtur
 				JList<?> jList = component.targetCastedTo(JList.class);
 				jList.setSelectedIndex(index);
 			}
-
+			else if (component.target instanceof JTree)
+			{
+				JTree jTree = component.targetCastedTo(JTree.class);
+				jTree.setSelectionRow(index);
+			}
 			waitForIdle();
 			return true;
 		}
