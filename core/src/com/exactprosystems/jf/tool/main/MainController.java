@@ -531,6 +531,11 @@ public class MainController implements Initializable, ContainingParent
 		Common.tryCatch(() -> DialogsHelper.showActionsHelp(factory), "Error on show actions panel");
 	}
 
+    public void newShowActionsHelp(ActionEvent event)
+    {
+        Common.tryCatch(() -> DialogsHelper.newShowActionsHelp(factory), "Error on show actions panel");
+    }
+
 	public void showCalculator(ActionEvent event)
 	{
 		Common.tryCatch(model::showCalculator, "Error on show calculator");

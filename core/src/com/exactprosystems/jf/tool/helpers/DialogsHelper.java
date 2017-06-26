@@ -13,10 +13,9 @@ import com.exactprosystems.jf.api.common.Str;
 import com.exactprosystems.jf.api.common.Sys;
 import com.exactprosystems.jf.common.MatrixRunner;
 import com.exactprosystems.jf.common.Settings;
+import com.exactprosystems.jf.common.documentation.DocumentationBuilder;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
-import com.exactprosystems.jf.common.report.HelpBuilder;
-import com.exactprosystems.jf.common.report.HelpFactory;
-import com.exactprosystems.jf.common.report.ReportBuilder;
+import com.exactprosystems.jf.common.report.*;
 import com.exactprosystems.jf.common.version.VersionInfo;
 import com.exactprosystems.jf.documents.Document;
 import com.exactprosystems.jf.documents.DocumentFactory;
@@ -687,6 +686,24 @@ public abstract class DialogsHelper
 		{
 		    HelpBuilder report = (HelpBuilder) new HelpFactory().createReportBuilder(null, null, new Date());
 			report.helpCreate(report);
+			displayHelp(report.getContent());
+		}
+		catch (Exception e)
+		{
+			String message = "Error on .\n" + e.getMessage();
+			logger.error(message);
+			logger.error(e.getMessage(), e);
+			DialogsHelper.showError(message);
+		}
+	}
+
+	public static void newShowActionsHelp(DocumentFactory factory)
+	{
+		try
+		{
+			NewHelpBuilder report = (NewHelpBuilder) new NewHelpBuilderFactory().createReportBuilder(null, null, new Date());
+			Context context = factory.createContext();
+			DocumentationBuilder.createHelp(report, context);
 			displayHelp(report.getContent());
 		}
 		catch (Exception e)
