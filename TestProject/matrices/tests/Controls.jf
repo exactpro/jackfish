@@ -137,7 +137,7 @@ EXECUTE;;;;
 #Id;#TestCase;#Kind;#Depends;#For
 SUBCASES;;;;
     #Id;#SubCase;plugin
-    RUN;Run;'Swing'
+    RUN;Run;'Web'
         #Step;#Kind;#For;#Depends
         'start application';;;
             #Id;#Action;Plugin;Control;Operation;Time;Expected;Actual;Result
@@ -248,8 +248,17 @@ SUBCASES;;;;
 
                     #EndIf
 
+                    #Id;#Let
+                    map;new LinkedHashMap()
+
+                    #Let
+                    map.put('',before)
+
+                    #Let
+                    map.put(control.Name,op)
+
                     #Id;#Action;$Dialog;$AppConnection;$Fields
-                    DLG;DialogFill;'Main';appCon;{ '' : before, control.Name : op}
+                    DLG;DialogFill;'Main';appCon;map
 
                     #Assert;#Message
                     evaluator.evaluate(field).toString() == operation.Actual.toString();
