@@ -51,6 +51,7 @@
             <label id="checkedLabel" uid="" owner="" name="checkedLabel"/>
             <tabPanel id="TabPanel" uid="" owner="owner" class="" addition="Many" weak="true"/>
             <spinner id="Spinner" uid="" xpath="" owner="owner" class="" name="" addition="Many" weak="true"/>
+            <menu id="Menu2" xpath="//body" owner="" addition="Many" weak="true"/>
         </run>
         <onClose/>
         <close>

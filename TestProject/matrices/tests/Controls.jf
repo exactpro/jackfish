@@ -24,7 +24,7 @@ INIT;Test case;Never;;
     11;x;;'\'tr_3_td_3\'';;;'\'Menu2/MenuItem2/MenuItem3\'';'\'Menu2/MenuItem2/MenuItem3\'';;'new Color(246,246,246)';Panel;;'Panel';'\'Panel\'';'Panel';;;;'Panel';;true;'new ArrayList([\'Green\',\'Yellow\', \'Orange\',\'Blue\']),false';'\'Panel\'';'\'\''
     12;x;'Do.use(\'List\').select(\'Green\')';'\'tr_3_td_3\'';;;'\'Menu2/MenuItem2/MenuItem3\'';'\'Menu2/MenuItem2/MenuItem3\'';;'new Color(246,246,246)';List;;getExp(plugin,'List','List','tab2');getExp(plugin,'\'List\'','\'List\'','\'tab2\'');getExp(plugin,'Green\nYellow\nOrange\nBlue','Green','Green');getExp(plugin,'Green\nYellow\nOrange\nBlue','Blue','Blue');;;;'[Green, Yellow, Orange, Blue]';true;'new ArrayList([\'Green\',\'Yellow\', \'Orange\',\'Blue\']),false';getExp(plugin,'\'Green\nYellow\nOrange\nBlue\'','\'Green\'','\'Green\'');'Blue'
     13;x;'Do.use(\'Dialog\').move()';'\'tr_3_td_3\'';;;'\'Menu2/MenuItem2/MenuItem3\'';'\'Menu2/MenuItem2/MenuItem3\'';;'new Color(246,246,246)';Dialog;;'Dialog';'\'Dialog\'';;;;;;;true;'new ArrayList([\'Green\',\'Yellow\', \'Orange\',\'Blue\']),false';'\'\'';'\'\''
-    14;x;'Do.use(\'Image\').move()';'\'tr_3_td_3\'';;;'\'Menu2/MenuItem2/MenuItem3\'';'\'Menu2/MenuItem2/MenuItem3\'''\'Menu2/MenuItem2/MenuItem3\'';;'new Color(246,246,246)';Image;;'Image';'\'Image\'';;;;;;;true;'new ArrayList([\'Green\',\'Yellow\', \'Orange\',\'Blue\']),false';'\'\'';'\'\''
+    14;x;'Do.use(\'Image\').move()';'\'tr_3_td_3\'';;;'\'Menu2/MenuItem2/MenuItem3\'';'\'Menu2/MenuItem2/MenuItem3\'';;'new Color(246,246,246)';Image;;'Image';'\'Image\'';;;;;;;true;'new ArrayList([\'Green\',\'Yellow\', \'Orange\',\'Blue\']),false';'\'\'';'\'\''
     15;x;;'\'tr_3_td_3\'';;;'\'Menu2/MenuItem2/MenuItem3\'';'\'Menu2/MenuItem2/MenuItem3\'';;'new Color(246,246,246)';Wait;;'Wait';'\'Wait\'';;;;;;;true;'new ArrayList([\'Green\',\'Yellow\', \'Orange\',\'Blue\']),false';'\'\'';'\'\''
     16;x;;'\'tr_3_td_3\'';;;'\'Menu2/MenuItem2/MenuItem3\'';'\'Menu2/MenuItem2/MenuItem3\'';;'new Color(246,246,246)';ScrollBar;;getExp(plugin,'ScrollBar','ScrollBar','Vertical Scroll Bar');getExp(plugin,'\'ScrollBar\'','\'ScrollBar\'','\'Vertical Scroll Bar\'');0;;;'ScrollBar_30';;;true;'new ArrayList([\'Green\',\'Yellow\', \'Orange\',\'Blue\']),false';'\'0\'';'\'\''
     17;x;'Do.use(\'Tree\').select(\'[Green]\')';'\'[Green][Orange]\'';;;'\'Menu2/MenuItem2/MenuItem3\'';'\'Menu2/MenuItem2/MenuItem3\'';'{value=[Green][Orange]}';'new Color(246,246,246)';Tree;;'Tree';'\'Tree\'';'[Green]';'[Green, Blue]';;;;;true;'new ArrayList([\'Green\',\'Yellow\', \'Orange\',\'Blue\']),false';'\'\'';'[Green][Blue]'
@@ -137,7 +137,7 @@ EXECUTE;;;;
 #Id;#TestCase;#Kind;#Depends;#For
 SUBCASES;;;;
     #Id;#SubCase;plugin
-    RUN;Run;'Win'
+    RUN;Run;'Web'
         #Step;#Kind;#For;#Depends
         'start application';;;
             #Id;#Action;Plugin;Control;Operation;Time;Expected;Actual;Result
