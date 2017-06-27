@@ -8,6 +8,7 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Automation;
 using System.Windows.Forms;
 
 namespace mock_win
@@ -20,6 +21,13 @@ namespace mock_win
         Timer timer;
         Point mouseDownPos;
         long mouseTimeClick;
+        MenuItem menu;
+        MenuItem menuItem;
+        MenuItem menu2;
+        MenuItem menuItem2;
+        MenuItem menuItem3;
+        Point cursorOnMainPos;
+        bool flagClickMenuItem = false;
 
         public Main()
         {
@@ -30,15 +38,67 @@ namespace mock_win
             fillContextMenu();
             ComboBox.SelectedIndex = 0;
             createDialog();
+            createMenu();
 
             this.timer = new Timer();
             this.timer.Interval = 100;
             this.timer.Tick += new EventHandler(timer_Tick);
             this.timer.Enabled = true;
+
+            
         }
 
-        private void Main_Load(object sender, EventArgs e)
+        private void createMenu()
         {
+            MainMenu MainMenu = new MainMenu();
+            this.Menu = MainMenu;
+            menu = new MenuItem("Menu");
+            menu2 = new MenuItem("Menu2");
+            menuItem = new MenuItem("MenuItem");
+            menuItem2 = new MenuItem("MenuItem2");
+            menuItem3 = new MenuItem("MenuItem3");
+
+            menuItem.MenuItems.Add(menuItem2);
+            menuItem2.MenuItems.Add(menuItem3);
+
+            MainMenu.MenuItems.Add(menu);
+            MainMenu.MenuItems.Add(menu2);
+            MainMenu.MenuItems.Add(menuItem);
+
+            menu.Click += new EventHandler(MClick);
+            menu.Select += new EventHandler(MSelect);
+
+            menuItem.Click += new EventHandler(MClick);
+            menuItem.Select += new EventHandler(MSelect);
+
+            menuItem3.Select += new EventHandler(MSelect);
+            menuItem2.Select += new EventHandler(MSelect);
+        }
+
+        private void MSelect(object sender, EventArgs e)
+        {
+            selectLabel.Text = ((MenuItem)sender).Text+"_select";
+            moveLabel.Text = ((MenuItem)sender).Text + "_move";
+        }
+
+        private void MClick(object sender, EventArgs e)
+        {
+            Console.WriteLine("0");
+            long timeDif = DateTime.UtcNow.Ticks / TimeSpan.TicksPerMillisecond - mouseTimeClick;
+            mouseTimeClick = DateTime.UtcNow.Ticks / TimeSpan.TicksPerMillisecond;
+            CentralLabel.Text = ((MenuItem)sender).Text + "_click";
+
+            int dx = Cursor.Position.X - mouseDownPos.X;
+            int dy = Cursor.Position.Y - mouseDownPos.Y;
+            if (Math.Abs(dx) <= SystemInformation.DoubleClickSize.Width && Math.Abs(dy) <= SystemInformation.DoubleClickSize.Height)
+            {
+                if (timeDif <= 500)
+                {
+                    CentralLabel.Text = ((MenuItem)sender).Text + "_double_click";
+                }
+            }
+            mouseDownPos = Cursor.Position;
+            flagClickMenuItem = true;
         }
 
         private void timer_Tick(object sender, EventArgs e)
@@ -54,6 +114,18 @@ namespace mock_win
             {
                 scrollBarValue = listBox1.IndexFromPoint(point);
                 sliderLabel.Text = "ScrollBar_" + listBox1.IndexFromPoint(point);
+            }
+
+            if(Cursor.Position.X > Location.X + 7 &&
+               Cursor.Position.X < Location.X + 51 &&
+               Cursor.Position.Y > Location.Y + 29 &&
+               Cursor.Position.Y < Location.Y + 47)
+            {
+                if (cursorOnMainPos != Cursor.Position)
+                {
+                    cursorOnMainPos = Cursor.Position;
+                    moveLabel.Text = "Menu_move";
+                }
             }
         }
 
@@ -258,7 +330,21 @@ namespace mock_win
 
         private void GlobalMouseDown(object sender, MouseEventArgs e)
         {
- 
+            if (flagClickMenuItem)
+            {
+                long timeDif = DateTime.UtcNow.Ticks / TimeSpan.TicksPerMillisecond - mouseTimeClick;
+
+                int dx = Cursor.Position.X - mouseDownPos.X;
+                int dy = Cursor.Position.Y - mouseDownPos.Y;
+                if (Math.Abs(dx) <= SystemInformation.DoubleClickSize.Width && Math.Abs(dy) <= SystemInformation.DoubleClickSize.Height)
+                {
+                    if (timeDif <= 500)
+                    {
+                        CentralLabel.Text = "MenuItem_double_click";
+                    }
+                }
+                flagClickMenuItem = false;
+            }
         }
 
         public string writeControlNameOnCentralLabel(object sender)
@@ -455,6 +541,35 @@ namespace mock_win
         }
 
         private void Main_RightToLeftChanged(object sender, EventArgs e)
+        {
+        }
+
+        private void Menu2_DropDownOpening(object sender, EventArgs e)
+        {
+            Console.WriteLine("Menu2_DropDownOpening");
+        }
+
+        private void Menu2_DropDownOpened(object sender, EventArgs e)
+        {
+            Console.WriteLine("Menu2_DropDownOpened");
+        }
+
+        private void Menu2_DropDownItemClicked(object sender, ToolStripItemClickedEventArgs e)
+        {
+            Console.WriteLine("Menu2_DropDownItemClicked"); 
+        }
+
+        private void Menu2_DropDownClosed(object sender, EventArgs e)
+        {
+            Console.WriteLine("Menu2_DropDownClosed");
+        }
+
+        private void Menu2_DoubleClick(object sender, EventArgs e)
+        {
+            Console.WriteLine("Menu2_DoubleClick");
+        }
+
+        private void Spinner_ValueChanged(object sender, EventArgs e)
         {
         }
     }

@@ -34,19 +34,19 @@ namespace UIAdapterRunner
             //UIAdapter.Program.ListAll(getStringId(ref arr), (int)ControlKind.Button, null, null, null, "invisibleButton", null, null, false);
             //UIAdapter.Program.FindAllForLocator(arr, arr.Length, getStringId(ref arr), (int)UIAdapter.ControlKind.Button, "Button", null, null, null, null, null, false);
             //UIAdapter.Program.FindAllForLocator(arr, arr.Length, getStringId(ref arr), (int)UIAdapter.ControlKind.Button, "colorButton", null, null, null, null, null, false);
-            UIAdapter.Program.FindAllForLocator(arr, arr.Length, getStringId(ref arr), (int)UIAdapter.ControlKind.TabPanel, "TabPanel", null, null, null, null, null, false);
+            UIAdapter.Program.FindAllForLocator(arr, arr.Length, getStringId(ref arr), (int)ControlKind.MenuItem, null, ".//MenuItem[@name=\"Menu2\"]", null, null, null, null, false);
             //UIAdapter.Program.GetProperty(getStringId(ref arr), 30001);
             //UIAdapter.Program.getRectangle(getStringId(ref arr));
             //UIAdapter.Program.UpAndDown(getStringId(ref arr), "CONTROL", true);
             //int c = UIAdapter.Program.FindAll(arr, arr.Length, getStringId(ref arr), (int)TreeScope.Descendants, 30004, "list item");
 
-            UIAdapter.Program.getList(getStringId(ref arr));
+            //UIAdapter.Program.getList(getStringId(ref arr));
 
             //UIAdapter.Program.FindAll(arr, arr.Length, getStringId(ref arr), (int) TreeScope.Descendants, AutomationElementIdentifiers.NameProperty.Id, "sports");
 
             //UIAdapter.Program.DoPatternCall(getStringId(ref arr), 10003, "SetValue", "30.0", 2);
             //UIAdapter.Program.DoPatternCall(getStringId(ref arr), 10003, "Select", "30.0", 2);
-            //UIAdapter.Program.DoPatternCall(getStringId(ref arr), 10003, "Expand", "30.0", 2);
+            UIAdapter.Program.DoPatternCall(getStringId(ref arr), 10000, "Expand", "30.0", 0);
             //UIAdapter.Program.DoPatternCall(getStringId(ref arr), 10003, "Collapse", "30.0", 2);
         }
 

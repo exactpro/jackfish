@@ -534,35 +534,28 @@ public class WinOperationExecutorJNA implements OperationExecutor<UIProxyJNA>
 	{
 		try
 		{
-			String[] split = path.split("/");
-			logger.debug("path : " + path);
-
-			if (this.driver.elementAttribute(component, AttributeKind.TYPE_NAME).toLowerCase().contains("menu"))
+			List<String> split = new LinkedList<>(Arrays.asList(path.split("/")));
+			String attribute = this.driver.elementAttribute(component, AttributeKind.TYPE_NAME);
+			if (attribute.equalsIgnoreCase("menuitem") || attribute.equalsIgnoreCase("treeitem"))
 			{
-				for (int i = 0; i < split.length; i++) {
-					int[] itemId = findItem(component, split[i]);
-					this.driver.mouse(new UIProxyJNA(itemId), MouseAction.LeftClick, 5, 5);
-				}
-				return true;
-			}
-			else if (this.driver.elementAttribute(component, AttributeKind.TYPE_NAME).toLowerCase().contains("tree"))
-			{
-				for (int i = 0; i < split.length - 1; i++)
+				if(split.size() == 1)
 				{
-					int[] itemId = findItem(component, split[i]);
-					this.driver.doPatternCall(new UIProxyJNA(itemId), WindowPattern.ExpandCollapsePattern, "Expand", null, -1);
-				}
-
-				int[] itemId = findItem(component, split[split.length - 1]);
-				if (expandOrCollapse)
-				{
-					this.driver.doPatternCall(new UIProxyJNA(itemId), WindowPattern.ExpandCollapsePattern, "Expand", null, -1);
+					expandCollapse(component, expandOrCollapse);
+					return true;
 				}
 				else
 				{
-					this.driver.doPatternCall(new UIProxyJNA(itemId), WindowPattern.ExpandCollapsePattern, "Collapse", null, -1);
+					expandCollapse(component, true);
+					split.remove(0);
 				}
 			}
+
+			for (int i = 0; i < split.size() - 1; i++)
+			{
+				expandCollapse(new UIProxyJNA(findItem(component, split.get(i))), true);
+			}
+			expandCollapse(new UIProxyJNA(findItem(component, split.get(split.size() - 1))), expandOrCollapse);
+
 			return true;
 		}
 		catch (Exception e)
@@ -570,6 +563,18 @@ public class WinOperationExecutorJNA implements OperationExecutor<UIProxyJNA>
 			this.logger.error(String.format("fold(%s,%s,%b)", component, path, expandOrCollapse));
 			this.logger.error(e.getMessage(), e);
 			throw e;
+		}
+	}
+
+	private void expandCollapse(UIProxyJNA component, boolean expandOrCollapse) throws Exception
+	{
+		if (expandOrCollapse)
+		{
+			this.driver.doPatternCall(component, WindowPattern.ExpandCollapsePattern, "Expand", null, -1);
+		}
+		else
+		{
+			this.driver.doPatternCall(component, WindowPattern.ExpandCollapsePattern, "Collapse", null, -1);
 		}
 	}
 

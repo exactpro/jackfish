@@ -5,5 +5,8 @@
     <Setting Name="TabPanel" Type="System.String" Scope="User">
       <Value Profile="(Default)">TabPanel</Value>
     </Setting>
+    <Setting Name="dfdf" Type="System.Windows.Forms.ToolStripDropDownDirection" Scope="User">
+      <Value Profile="(Default)">BelowRight</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

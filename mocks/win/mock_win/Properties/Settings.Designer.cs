@@ -34,5 +34,17 @@ namespace mock_win.Properties {
                 this["TabPanel"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("BelowRight")]
+        public global::System.Windows.Forms.ToolStripDropDownDirection dfdf {
+            get {
+                return ((global::System.Windows.Forms.ToolStripDropDownDirection)(this["dfdf"]));
+            }
+            set {
+                this["dfdf"] = value;
+            }
+        }
     }
 }

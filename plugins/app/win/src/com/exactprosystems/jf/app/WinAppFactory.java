@@ -163,6 +163,8 @@ public class WinAppFactory implements IApplicationFactory
 		info.addTypes(ControlKind.Slider,		ControlType.Slider.name());
 		info.addTypes(ControlKind.TreeItem,		ControlType.TreeItem.name());
 
+		info.addExcludes(ControlKind.Menu,		OperationKind.KEY_DOWN, OperationKind.KEY_UP, OperationKind.PRESS, OperationKind.EXPAND, OperationKind.COLLAPSE);
+		info.addExcludes(ControlKind.MenuItem,	OperationKind.KEY_DOWN, OperationKind.KEY_UP, OperationKind.PRESS);
 		return info;
     }
 }

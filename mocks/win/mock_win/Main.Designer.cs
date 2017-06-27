@@ -56,33 +56,16 @@
             this.header3 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.ProgressBar = new System.Windows.Forms.ProgressBar();
             this.Panel = new System.Windows.Forms.Panel();
-            this.MenuMain = new System.Windows.Forms.MenuStrip();
-            this.Menu = new System.Windows.Forms.ToolStripMenuItem();
-            this.optionsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.oneToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.twoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.threeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.fourToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.fiveToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.sixToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
-            this.saveToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.openToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
-            this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.Menu2 = new System.Windows.Forms.ToolStripMenuItem();
-            this.MenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.doubleclickToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItem2 = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItem3 = new System.Windows.Forms.ToolStripMenuItem();
             this.Splitter = new System.Windows.Forms.SplitContainer();
             this.label6 = new System.Windows.Forms.Label();
             this.label7 = new System.Windows.Forms.Label();
             this.Any = new System.Windows.Forms.Button();
             this.ToggleButton = new System.Windows.Forms.CheckBox();
             this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
-            this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripMenuItem2 = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripMenuItem3 = new System.Windows.Forms.ToolStripMenuItem();
             this.showButton = new System.Windows.Forms.Button();
             this.hideButton = new System.Windows.Forms.Button();
             this.pressLabel = new System.Windows.Forms.Label();
@@ -111,15 +94,15 @@
             this.label4 = new System.Windows.Forms.Label();
             this.tabPage3 = new System.Windows.Forms.TabPage();
             this.tabPage4 = new System.Windows.Forms.TabPage();
+            this.selectLabel = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.Table1)).BeginInit();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.Slider)).BeginInit();
-            this.MenuMain.SuspendLayout();
+            this.contextMenuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.Splitter)).BeginInit();
             this.Splitter.Panel1.SuspendLayout();
             this.Splitter.Panel2.SuspendLayout();
             this.Splitter.SuspendLayout();
-            this.contextMenuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.Table)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.Spinner)).BeginInit();
             this.TabPanel.SuspendLayout();
@@ -389,122 +372,30 @@
             this.Panel.MouseDown += new System.Windows.Forms.MouseEventHandler(this.CommonMouseDown);
             this.Panel.MouseMove += new System.Windows.Forms.MouseEventHandler(this.CommonMouseMove);
             // 
-            // MenuMain
+            // contextMenuStrip1
             // 
-            this.MenuMain.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.Menu,
-            this.Menu2});
-            resources.ApplyResources(this.MenuMain, "MenuMain");
-            this.MenuMain.Name = "MenuMain";
-            this.MenuMain.ShowItemToolTips = true;
-            this.MenuMain.MouseDown += new System.Windows.Forms.MouseEventHandler(this.CommonMouseDown);
-            this.MenuMain.MouseMove += new System.Windows.Forms.MouseEventHandler(this.CommonMouseMove);
+            this.contextMenuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolStripMenuItem1,
+            this.toolStripMenuItem2,
+            this.toolStripMenuItem3});
+            this.contextMenuStrip1.Name = "contextMenuStrip1";
+            resources.ApplyResources(this.contextMenuStrip1, "contextMenuStrip1");
             // 
-            // Menu
+            // toolStripMenuItem1
             // 
-            resources.ApplyResources(this.Menu, "Menu");
-            this.Menu.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.optionsToolStripMenuItem,
-            this.toolStripSeparator1,
-            this.saveToolStripMenuItem,
-            this.openToolStripMenuItem,
-            this.toolStripSeparator2,
-            this.exitToolStripMenuItem});
-            this.Menu.Name = "Menu";
-            this.Menu.MouseDown += new System.Windows.Forms.MouseEventHandler(this.CommonMouseDown);
-            this.Menu.MouseMove += new System.Windows.Forms.MouseEventHandler(this.CommonMouseMove);
+            this.toolStripMenuItem1.Name = "toolStripMenuItem1";
+            resources.ApplyResources(this.toolStripMenuItem1, "toolStripMenuItem1");
+            this.toolStripMenuItem1.Click += new System.EventHandler(this.toolStripMenuItem1_Click);
             // 
-            // optionsToolStripMenuItem
+            // toolStripMenuItem2
             // 
-            this.optionsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.oneToolStripMenuItem,
-            this.twoToolStripMenuItem,
-            this.threeToolStripMenuItem});
-            this.optionsToolStripMenuItem.Name = "optionsToolStripMenuItem";
-            resources.ApplyResources(this.optionsToolStripMenuItem, "optionsToolStripMenuItem");
+            this.toolStripMenuItem2.Name = "toolStripMenuItem2";
+            resources.ApplyResources(this.toolStripMenuItem2, "toolStripMenuItem2");
             // 
-            // oneToolStripMenuItem
+            // toolStripMenuItem3
             // 
-            this.oneToolStripMenuItem.Name = "oneToolStripMenuItem";
-            resources.ApplyResources(this.oneToolStripMenuItem, "oneToolStripMenuItem");
-            // 
-            // twoToolStripMenuItem
-            // 
-            this.twoToolStripMenuItem.Name = "twoToolStripMenuItem";
-            resources.ApplyResources(this.twoToolStripMenuItem, "twoToolStripMenuItem");
-            // 
-            // threeToolStripMenuItem
-            // 
-            this.threeToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.fourToolStripMenuItem,
-            this.fiveToolStripMenuItem,
-            this.sixToolStripMenuItem});
-            this.threeToolStripMenuItem.Name = "threeToolStripMenuItem";
-            resources.ApplyResources(this.threeToolStripMenuItem, "threeToolStripMenuItem");
-            // 
-            // fourToolStripMenuItem
-            // 
-            this.fourToolStripMenuItem.Name = "fourToolStripMenuItem";
-            resources.ApplyResources(this.fourToolStripMenuItem, "fourToolStripMenuItem");
-            // 
-            // fiveToolStripMenuItem
-            // 
-            this.fiveToolStripMenuItem.Name = "fiveToolStripMenuItem";
-            resources.ApplyResources(this.fiveToolStripMenuItem, "fiveToolStripMenuItem");
-            // 
-            // sixToolStripMenuItem
-            // 
-            this.sixToolStripMenuItem.Name = "sixToolStripMenuItem";
-            resources.ApplyResources(this.sixToolStripMenuItem, "sixToolStripMenuItem");
-            this.sixToolStripMenuItem.Click += new System.EventHandler(this.sixToolStripMenuItem_Click);
-            // 
-            // toolStripSeparator1
-            // 
-            this.toolStripSeparator1.Name = "toolStripSeparator1";
-            resources.ApplyResources(this.toolStripSeparator1, "toolStripSeparator1");
-            // 
-            // saveToolStripMenuItem
-            // 
-            this.saveToolStripMenuItem.Name = "saveToolStripMenuItem";
-            resources.ApplyResources(this.saveToolStripMenuItem, "saveToolStripMenuItem");
-            this.saveToolStripMenuItem.Click += new System.EventHandler(this.saveToolStripMenuItem_Click);
-            // 
-            // openToolStripMenuItem
-            // 
-            this.openToolStripMenuItem.Name = "openToolStripMenuItem";
-            resources.ApplyResources(this.openToolStripMenuItem, "openToolStripMenuItem");
-            // 
-            // toolStripSeparator2
-            // 
-            this.toolStripSeparator2.Name = "toolStripSeparator2";
-            resources.ApplyResources(this.toolStripSeparator2, "toolStripSeparator2");
-            // 
-            // exitToolStripMenuItem
-            // 
-            this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
-            resources.ApplyResources(this.exitToolStripMenuItem, "exitToolStripMenuItem");
-            // 
-            // Menu2
-            // 
-            resources.ApplyResources(this.Menu2, "Menu2");
-            this.Menu2.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.MenuItem});
-            this.Menu2.Name = "Menu2";
-            this.Menu2.Click += new System.EventHandler(this.aboutToolStripMenuItem_Click);
-            // 
-            // MenuItem
-            // 
-            resources.ApplyResources(this.MenuItem, "MenuItem");
-            this.MenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.doubleclickToolStripMenuItem});
-            this.MenuItem.Name = "MenuItem";
-            this.MenuItem.MouseDown += new System.Windows.Forms.MouseEventHandler(this.CommonMouseDown);
-            this.MenuItem.MouseMove += new System.Windows.Forms.MouseEventHandler(this.CommonMouseMove);
-            // 
-            // doubleclickToolStripMenuItem
-            // 
-            resources.ApplyResources(this.doubleclickToolStripMenuItem, "doubleclickToolStripMenuItem");
-            this.doubleclickToolStripMenuItem.Name = "doubleclickToolStripMenuItem";
+            this.toolStripMenuItem3.Name = "toolStripMenuItem3";
+            resources.ApplyResources(this.toolStripMenuItem3, "toolStripMenuItem3");
             // 
             // Splitter
             // 
@@ -559,31 +450,6 @@
             this.ToggleButton.KeyUp += new System.Windows.Forms.KeyEventHandler(this.CommonKeyUp);
             this.ToggleButton.MouseDown += new System.Windows.Forms.MouseEventHandler(this.CommonMouseDown);
             this.ToggleButton.MouseMove += new System.Windows.Forms.MouseEventHandler(this.CommonMouseMove);
-            // 
-            // contextMenuStrip1
-            // 
-            this.contextMenuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.toolStripMenuItem1,
-            this.toolStripMenuItem2,
-            this.toolStripMenuItem3});
-            this.contextMenuStrip1.Name = "contextMenuStrip1";
-            resources.ApplyResources(this.contextMenuStrip1, "contextMenuStrip1");
-            // 
-            // toolStripMenuItem1
-            // 
-            this.toolStripMenuItem1.Name = "toolStripMenuItem1";
-            resources.ApplyResources(this.toolStripMenuItem1, "toolStripMenuItem1");
-            this.toolStripMenuItem1.Click += new System.EventHandler(this.toolStripMenuItem1_Click);
-            // 
-            // toolStripMenuItem2
-            // 
-            this.toolStripMenuItem2.Name = "toolStripMenuItem2";
-            resources.ApplyResources(this.toolStripMenuItem2, "toolStripMenuItem2");
-            // 
-            // toolStripMenuItem3
-            // 
-            this.toolStripMenuItem3.Name = "toolStripMenuItem3";
-            resources.ApplyResources(this.toolStripMenuItem3, "toolStripMenuItem3");
             // 
             // showButton
             // 
@@ -832,6 +698,7 @@
             // 
             resources.ApplyResources(this.Spinner, "Spinner");
             this.Spinner.Name = "Spinner";
+            this.Spinner.ValueChanged += new System.EventHandler(this.Spinner_ValueChanged);
             // 
             // TabPanel
             // 
@@ -893,11 +760,17 @@
             this.tabPage4.MouseDown += new System.Windows.Forms.MouseEventHandler(this.CommonMouseDown);
             this.tabPage4.MouseMove += new System.Windows.Forms.MouseEventHandler(this.CommonMouseMove);
             // 
+            // selectLabel
+            // 
+            resources.ApplyResources(this.selectLabel, "selectLabel");
+            this.selectLabel.Name = "selectLabel";
+            // 
             // Main
             // 
             resources.ApplyResources(this, "$this");
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ContextMenuStrip = this.contextMenuStrip1;
+            this.Controls.Add(this.selectLabel);
             this.Controls.Add(this.Spinner);
             this.Controls.Add(this.panel3);
             this.Controls.Add(this.panel2);
@@ -934,11 +807,8 @@
             this.Controls.Add(this.CheckBox);
             this.Controls.Add(this.TextBox);
             this.Controls.Add(this.Button);
-            this.Controls.Add(this.MenuMain);
             this.KeyPreview = true;
-            this.MainMenuStrip = this.MenuMain;
             this.Name = "Main";
-            this.Load += new System.EventHandler(this.Main_Load);
             this.RightToLeftChanged += new System.EventHandler(this.Main_RightToLeftChanged);
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.GlobalKeyDown);
             this.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.GlobalKeyPress);
@@ -948,15 +818,13 @@
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.Slider)).EndInit();
-            this.MenuMain.ResumeLayout(false);
-            this.MenuMain.PerformLayout();
+            this.contextMenuStrip1.ResumeLayout(false);
             this.Splitter.Panel1.ResumeLayout(false);
             this.Splitter.Panel1.PerformLayout();
             this.Splitter.Panel2.ResumeLayout(false);
             this.Splitter.Panel2.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.Splitter)).EndInit();
             this.Splitter.ResumeLayout(false);
-            this.contextMenuStrip1.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.Table)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.Spinner)).EndInit();
             this.TabPanel.ResumeLayout(false);
@@ -996,21 +864,6 @@
         private System.Windows.Forms.ColumnHeader header3;
         private System.Windows.Forms.ProgressBar ProgressBar;
         private System.Windows.Forms.Panel Panel;
-        private System.Windows.Forms.MenuStrip MenuMain;
-        private System.Windows.Forms.ToolStripMenuItem Menu;
-        private System.Windows.Forms.ToolStripMenuItem optionsToolStripMenuItem;
-        private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
-        private System.Windows.Forms.ToolStripMenuItem oneToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem twoToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem threeToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem saveToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem openToolStripMenuItem;
-        private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
-        private System.Windows.Forms.ToolStripMenuItem exitToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem Menu2;
-        private System.Windows.Forms.ToolStripMenuItem fourToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem fiveToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem sixToolStripMenuItem;
         private System.Windows.Forms.SplitContainer Splitter;
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.Label label7;
@@ -1031,7 +884,6 @@
         public System.Windows.Forms.Label pressLabel;
         public System.Windows.Forms.Label downUpLabel;
         public System.Windows.Forms.Label sliderLabel;
-        private System.Windows.Forms.ToolStripMenuItem MenuItem;
         private System.Windows.Forms.ListView Table3;
         private System.Windows.Forms.Button countButtonClear;
         private System.Windows.Forms.Button countButton;
@@ -1049,9 +901,9 @@
         private System.Windows.Forms.Panel panel2;
         private System.Windows.Forms.Panel panel3;
         private System.Windows.Forms.NumericUpDown Spinner;
-        private System.Windows.Forms.ToolStripMenuItem doubleclickToolStripMenuItem;
         private System.Windows.Forms.TabPage tabPage3;
         private System.Windows.Forms.TabPage tabPage4;
+        public System.Windows.Forms.Label selectLabel;
     }
 }
 

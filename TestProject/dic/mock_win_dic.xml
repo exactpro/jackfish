@@ -24,7 +24,7 @@
             <dialog id="Dialog" uid="" xpath="" name="Dialog" title="" addition="Many"/>
             <listView id="List" uid="List" owner="owner" class="" addition="Many"/>
             <menu id="Menu" uid="" xpath=".//MenuItem[@name=&amp;quot;Menu&amp;quot;]" owner="owner" class="" name="" action="" text="" addition="Many"/>
-            <menuItem id="MenuItem" xpath=".//MenuItem[@name=&amp;quot;Menu2&amp;quot;]//MenuItem[@name=&amp;quot;MenuItem&amp;quot;]" owner="owner" class="" name="" action="" text="" addition="Many"/>
+            <menuItem id="MenuItem" xpath=".//MenuItem[@name=&amp;quot;MenuItem&amp;quot;]" owner="owner" class="" name="" action="" text="" addition="Many"/>
             <treeItem id="TreeItem" owner="owner"/>
             <toolTip id="Tooltip" owner="owner" text="" addition="Many"/>
             <any id="Any" uid="Any" owner="owner" class="" name="" action="" text="" addition="Many"/>
@@ -49,6 +49,7 @@
             <image id="Image" uid="" owner="" addition="Many" weak="true"/>
             <splitter id="Splitter" owner="owner" class="" name="" addition="Many" weak="true"/>
             <spinner id="Spinner" uid="Spinner" xpath=".//Spinner[@uid=&amp;quot;Spinner&amp;quot;]" owner="owner" class="" name="" addition="Many"/>
+            <label id="selectLabel" uid="selectLabel" owner="" name=""/>
         </run>
         <onClose/>
         <close/>
