@@ -703,7 +703,11 @@ public abstract class DialogsHelper
 		{
 			Context context = factory.createContext();
 			NewHelpBuilder report = (NewHelpBuilder) new NewHelpBuilderFactory().createReportBuilder(null, null, new Date());
-			DocumentationBuilder.createHelp(report, context);
+			MatrixItem help = DocumentationBuilder.createHelp(report, context);
+			report.reportStarted(null, VersionInfo.getVersion());
+			help.execute(context, context.getMatrixListener(), context.getEvaluator(), report);
+			report.reportFinished(0, 0, null, null);
+			report.printOut();
 			displayHelp(report.getContent());
 		}
 		catch (Exception e)
