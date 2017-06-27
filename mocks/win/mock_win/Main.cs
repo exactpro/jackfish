@@ -28,6 +28,7 @@ namespace mock_win
         MenuItem menuItem3;
         Point cursorOnMainPos;
         bool flagClickMenuItem = false;
+        bool flagPopup = false;
 
         public Main()
         {
@@ -68,11 +69,25 @@ namespace mock_win
             menu.Click += new EventHandler(MClick);
             menu.Select += new EventHandler(MSelect);
 
-            menuItem.Click += new EventHandler(MClick);
             menuItem.Select += new EventHandler(MSelect);
+            menuItem.Popup += new EventHandler(MPopup);
 
             menuItem3.Select += new EventHandler(MSelect);
             menuItem2.Select += new EventHandler(MSelect);
+        }
+
+        private void MPopup(object sender, EventArgs e)
+        {
+            if (flagPopup)
+            {
+                CentralLabel.Text = ((MenuItem)sender).Text + "_double_click";
+                flagPopup = false;
+            }
+            else
+            {
+                CentralLabel.Text = ((MenuItem)sender).Text + "_click";
+                flagPopup = true;
+            }
         }
 
         private void MSelect(object sender, EventArgs e)
@@ -83,7 +98,6 @@ namespace mock_win
 
         private void MClick(object sender, EventArgs e)
         {
-            Console.WriteLine("0");
             long timeDif = DateTime.UtcNow.Ticks / TimeSpan.TicksPerMillisecond - mouseTimeClick;
             mouseTimeClick = DateTime.UtcNow.Ticks / TimeSpan.TicksPerMillisecond;
             CentralLabel.Text = ((MenuItem)sender).Text + "_click";
@@ -232,7 +246,6 @@ namespace mock_win
                     break;
             }
             moveLabel.Text = text + "_move";
-            Console.WriteLine(name);
         }
 
         private void CommonMouseDown(object sender, MouseEventArgs e)
@@ -271,7 +284,6 @@ namespace mock_win
                 CentralLabel.Text = text + "_rightClick";
             }
             mouseDownPos = e.Location;
-            Console.WriteLine(timeDif);
         }
 
         private void CommonKeyDown(object sender, KeyEventArgs e)
