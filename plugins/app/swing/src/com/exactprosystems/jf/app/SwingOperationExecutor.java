@@ -35,6 +35,7 @@ import org.fest.swing.util.Pair;
 import javax.swing.*;
 import javax.swing.text.JTextComponent;
 import javax.swing.tree.TreeNode;
+import javax.swing.tree.TreePath;
 import java.awt.*;
 import java.awt.event.FocusEvent;
 import java.awt.event.InputEvent;
@@ -645,16 +646,29 @@ public class SwingOperationExecutor implements OperationExecutor<ComponentFixtur
 			String[] split = path.split("/");
 			if (currentComponent instanceof JMenu)
 			{
-				logger.debug("path : " + path);
-				JMenu currentMenu = component.targetCastedTo(JMenu.class);
-				logger.debug("current menu : " + currentMenu.getText());
-				currentMenu.setPopupMenuVisible(true);
-				for (String pathItem : split)
+				if(expandOrCollapse)
 				{
-					currentMenu = expand(currentMenu, pathItem);
+					logger.debug("path : " + path);
+					JMenu currentMenu = component.targetCastedTo(JMenu.class);
+					logger.debug("current menu : " + currentMenu.getText());
+					currentMenu.setPopupMenuVisible(true);
+					for (String pathItem : split)
+					{
+						currentMenu = expand(currentMenu, pathItem);
+					}
+					currentMenu.setSelected(true);
+					return true;
+				}else
+				{
+					logger.debug("path : " + path);
+					JMenu currentMenu = component.targetCastedTo(JMenu.class);
+					logger.debug("current menu : " + currentMenu.getText());
+					for (String pathItem : split)
+					{
+						currentMenu = collapse(currentMenu, pathItem);
+					}
+					return true;
 				}
-				currentMenu.setSelected(true);
-				return true;
 			}
 			else if (currentComponent instanceof JTree)
 			{
@@ -667,6 +681,7 @@ public class SwingOperationExecutor implements OperationExecutor<ComponentFixtur
 				if (expandOrCollapse)
 				{
 					tree.expandPath(tree.getPathForRow(index));
+					tree.getSelectionModel().setSelectionPath(new TreePath(path));
 				}
 				else
 				{
@@ -1760,6 +1775,25 @@ public class SwingOperationExecutor implements OperationExecutor<ComponentFixtur
 				JMenu returnMenu = (JMenu) menuComponent;
 				logger.debug("found menu : " + returnMenu.getText());
 				returnMenu.setPopupMenuVisible(true);
+				logger.debug("Menu visible? : " + returnMenu.isPopupMenuVisible());
+				returnMenu.setSelected(true);
+				return returnMenu;
+			}
+		}
+		throw new WrongParameterException(String.format("Menu with name '%s' not found in menu '%s'", menuName, parent.getText()));
+	}
+
+	private JMenu collapse(JMenu parent, String menuName) throws RemoteException
+	{
+		for (int i = 0; i < parent.getItemCount(); i++)
+		{
+			Component menuComponent = parent.getMenuComponent(i);
+			if (menuComponent instanceof JMenu)
+			{
+				JMenu returnMenu = (JMenu) menuComponent;
+				logger.debug("found menu : " + returnMenu.getText());
+				returnMenu.setSelected(false);
+				returnMenu.setPopupMenuVisible(false);
 				logger.debug("Menu visible? : " + returnMenu.isPopupMenuVisible());
 				return returnMenu;
 			}

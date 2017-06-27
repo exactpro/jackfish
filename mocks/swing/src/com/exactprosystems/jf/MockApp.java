@@ -14,6 +14,8 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellEditor;
 import javax.swing.text.JTextComponent;
 import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.ExpandVetoException;
+import javax.swing.tree.TreePath;
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.image.BufferedImage;
@@ -28,6 +30,7 @@ public class MockApp
 	private JLabel centralLabel;
 	private JLabel pressLabel;
 	private JLabel pushLabel;
+	private JLabel selectLabel;
 	private JLabel checkedLabel;
 	private JLabel downUpLabel;
 	private JLabel moveLabel;
@@ -54,13 +57,14 @@ public class MockApp
 		this.frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 		this.centralLabel = new JLabel();
 		this.pushLabel = new JLabel();
+		this.selectLabel = new JLabel();
 		this.checkedLabel = new JLabel();
 		this.pressLabel = new JLabel();
 		addListeners(this.centralLabel, "Label");
 		this.moveLabel = new JLabel();
 		this.downUpLabel = new JLabel();
 		this.sliderLabel = new JLabel();
-		createPanelCentralPanel(centralLabel, moveLabel, pressLabel, downUpLabel, sliderLabel, pushLabel, checkedLabel);
+		createPanelCentralPanel(centralLabel, moveLabel, pressLabel, downUpLabel, sliderLabel, pushLabel, checkedLabel, selectLabel);
 
 		createPanelButton();
 		createPanelInput();
@@ -264,25 +268,35 @@ public class MockApp
 		JMenuBar menuBar = new JMenuBar();
 
 		String menuName = "Menu";
+		String menuItemName1 = "MenuItem";
+		String menuItemName2 = "MenuItem2";
+		String menuItemName3 = "MenuItem3";
 		JMenu menu = new JMenu(menuName);
+		JMenuItem menuItem1 = new JMenu(menuItemName1);
+		JMenuItem menuItem2 = new JMenu(menuItemName2);
+		JMenuItem menuItem3 = new JMenu(menuItemName3);
+		menu.add(menuItem1);
+		menuItem1.add(menuItem2);
+		menuItem2.add(menuItem3);
+		menuItem3.addChangeListener(e -> selectLabel.setText(menuItemName3 + "_select"));
 		menu.addMenuListener(new MenuListener()
 		{
 			@Override
 			public void menuSelected(MenuEvent e)
 			{
 				centralLabel.setText(menuName + "_click");
+				selectLabel.setText(menuName + "_select");
 			}
 
 			@Override
 			public void menuDeselected(MenuEvent e)
 			{
-
+				selectLabel.setText("selectLabel");
 			}
 
 			@Override
 			public void menuCanceled(MenuEvent e)
 			{
-
 			}
 		});
 		menu.addMenuKeyListener(new MenuKeyListener()
@@ -373,7 +387,7 @@ public class MockApp
 	}
 
 	private void createPanelCentralPanel(JLabel centralLabel, JLabel moveLabel, JLabel pressLabel, JLabel downUpLabel,
-                                         JLabel sliderLabel, JLabel pushLabel, JLabel checkedLabel)
+                                         JLabel sliderLabel, JLabel pushLabel, JLabel checkedLabel, JLabel selectLabel)
 	{
 		JPanel panel = createPanel("panelCentralLabel");
 		centralLabel.setName("CentralLabel");
@@ -388,6 +402,8 @@ public class MockApp
 		sliderLabel.setText("sliderlabel");
 		pushLabel.setName("pushLabel");
 		pushLabel.setText("pushLabel");
+		selectLabel.setName("selectLabel");
+		selectLabel.setText("selectLabel");
 		checkedLabel.setName("checkedLabel");
 		checkedLabel.setText("checkedLabel");
 		panel.add(new JLabel());
@@ -397,6 +413,7 @@ public class MockApp
 		panel.add(downUpLabel);
 		panel.add(sliderLabel);
 		panel.add(pushLabel);
+		panel.add(selectLabel);
 		panel.add(checkedLabel);
 	}
 
@@ -873,10 +890,30 @@ public class MockApp
 		DefaultMutableTreeNode yellow = new DefaultMutableTreeNode("Yellow");
 		DefaultMutableTreeNode orange = new DefaultMutableTreeNode("Orange");
 		DefaultMutableTreeNode blue = new DefaultMutableTreeNode("Blue");
+		DefaultMutableTreeNode colors = new DefaultMutableTreeNode("colors");
+		DefaultMutableTreeNode red = new DefaultMutableTreeNode("red");
 		root.add(yellow);
 		root.add(orange);
 		root.add(blue);
+		root.add(colors);
+		colors.add(red);
 		tree.expandRow(0);
+		tree.addTreeWillExpandListener(new TreeWillExpandListener() {
+			public void treeWillCollapse(TreeExpansionEvent treeExpansionEvent)
+					throws ExpandVetoException {
+
+				TreePath path = treeExpansionEvent.getPath();
+				selectLabel.setText("Collapse_" + String.valueOf(path));
+
+			}
+
+			public void treeWillExpand(TreeExpansionEvent treeExpansionEvent) throws ExpandVetoException {
+
+				TreePath path = treeExpansionEvent.getPath();
+				selectLabel.setText("Expand_" + String.valueOf(path));
+
+			}
+		});
 
 		JScrollPane scrollPane = new JScrollPane(tree);
 		addListeners(tree, "Tree");

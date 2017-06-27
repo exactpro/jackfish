@@ -28,7 +28,6 @@
             <listView id="List" owner="owner" class="javax.swing.JList" addition="Many"/>
             <menu id="Menu" owner="owner" class="javax.swing.JMenu" name="Menu" action="Menu" text="Menu" addition="Many"/>
             <menuItem id="MenuItem" owner="owner" class="javax.swing.JMenuItem" name="MenuItem" action="MenuItem" text="MenuItem" addition="Many"/>
-            <menu id="Menu" owner="owner" class="javax.swing.JMenu" action="Menu1" text="Menu1" addition="Many"/>
             <menu id="Menu1" owner="owner" class="javax.swing.JMenu" action="JMenu 1" text="JMenu 1"/>
             <image id="Image" xpath="" owner="owner" name="Image" addition="Many"/>
             <row id="Row" owner="owner"/>
@@ -55,6 +54,7 @@
             <label id="pushLabel" uid="" owner="owner" name="pushLabel" addition="Many"/>
             <label id="checkedLabel" uid="" owner="owner" name="checkedLabel"/>
             <spinner id="Spinner" owner="owner" name="Spinner"/>
+            <label id="selectLabel" owner="owner" name="selectLabel"/>
         </run>
         <onClose/>
         <close/>
