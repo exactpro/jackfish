@@ -74,7 +74,7 @@ public class NewHelpBuilder extends ReportBuilder {
 
     @Override
     protected String replaceMarker(String marker) {
-        return null; //todo
+        return HTMLhelper.htmlMarker(marker);
     }
 
     @Override

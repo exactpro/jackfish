@@ -126,27 +126,27 @@ public class TexReportBuilder extends ReportBuilder
 
         switch (marker)
         {
-            // header 1
-            case OM + "1": return "\\\\normalsize{";
-            case "1" + CM: return "}";
+			// header 1
+			case OM + "1": return "\\\\crule[ExactColor]{\\\\textwidth}{3pt} \\\\newline \\\\section{ ";
+			case "1" + CM: return "}";
 
 			// header 2
-			case OM + "2": return "\\\\large{";
+			case OM + "2": return "\\\\subsection{ ";
 			case "2" + CM: return "}";
-    
-            // header 3
+
+			// header 3
 			case OM + "3": return "\\\\subsubsection{ ";
 			case "3" + CM: return "}";
-    
+
             // header 4
-            case OM + "4": return "\\\\subsection{ ";
+            case OM + "4": return "\\\\normalsize{";
             case "4" + CM: return "}";
-    
-            // header 5
-			case OM + "5": return "\\\\crule[ExactColor]{\\\\textwidth}{3pt} \\\\newline \\\\section{ ";
+
+			// header 5
+			case OM + "5": return "\\\\large{";
 			case "5" + CM: return "}";
-    
-            // style for identifiers
+
+			// style for identifiers
             case OM + "$": return "{\\\\color{codecolor} \\\\verb+";
             case "$" + CM: return "+}";
 

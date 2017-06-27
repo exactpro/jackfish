@@ -49,8 +49,9 @@ public class DocumentationBuilder
         AbstractEvaluator evaluator = context.getEvaluator();
 
         MatrixItem help = new HelpTextLine("");
-        addContent(help, "", new Content());
-        return help;
+        //addContent(help, "", new Content());
+        //addText(help, DocumentationBuilder.class.getResourceAsStream("mvel.txt"));
+
         //mvel
         //controls
         //syntax
@@ -58,6 +59,7 @@ public class DocumentationBuilder
         //actions
         //other classes
         //todo content
+        return help;
     }
     
     public static MatrixItem createUserManual (ReportBuilder report, Context context) throws Exception
@@ -108,11 +110,11 @@ public class DocumentationBuilder
         addText(help, DocumentationBuilder.class.getResourceAsStream("intro2.txt"));
         addTextLine(help, "{{&&}}");
         
-        addTextLine(help, "{{5MVEL5}}");
+        addTextLine(help, "{{1MVEL1}}");
         addText(help, DocumentationBuilder.class.getResourceAsStream("mvel.txt"));
         addTextLine(help, "{{&&}}");
 
-        addTextLine(help, "{{5All controls5}}");
+        addTextLine(help, "{{1All controls1}}");
         addText(help, DocumentationBuilder.class.getResourceAsStream("controls.txt"));
         addTextLine(help, "{{&&}}");
         addAllControlsTable(help, "All controls", context, operations.subList(0, size/3), true, true);
@@ -122,7 +124,7 @@ public class DocumentationBuilder
         addAllControlsTable(help, "All controls - end", context, operations.subList(size*2/3, size), true, true);
         addTextLine(help, "{{&&}}");
 
-        addTextLine(help, "{{5Matrix syntax5}}");
+        addTextLine(help, "{{1Matrix syntax1}}");
         addAllItems(help);
         addTextLine(help, "{{&&}}");
 
@@ -283,7 +285,7 @@ public class DocumentationBuilder
     @SuppressWarnings("unchecked")
     public static void addAllItems(MatrixItem root) throws Exception
     {
-        MatrixItem item = new HelpTextLine("{{4Items4}}");
+        MatrixItem item = new HelpTextLine("{{2Items2}}");
         root.insert(root.count(), item);
 
         for (Class<?> clazz : Parser.knownItems)
@@ -312,7 +314,7 @@ public class DocumentationBuilder
     @SuppressWarnings("unchecked")
     public static void addAllActions(MatrixItem root)
     {
-        MatrixItem item = new HelpTextLine("{{5All actions by groups5}}");
+        MatrixItem item = new HelpTextLine("{{1All actions by groups1}}");
         root.insert(root.count(), item);
 
         Map<Class<?>, ActionGroups> map = new HashMap<>();
@@ -323,7 +325,7 @@ public class DocumentationBuilder
 
         for (ActionGroups groups : ActionGroups.values())
         {
-            MatrixItem groupItem = new HelpTextLine("{{4" + groups.toString() + "4}}");
+            MatrixItem groupItem = new HelpTextLine("{{2" + groups.toString() + "2}}");
             item.insert(item.count(), groupItem);
 
             for (Map.Entry<Class<?>, ActionGroups> entry : map.entrySet())

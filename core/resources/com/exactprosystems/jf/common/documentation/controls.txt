@@ -1,4 +1,4 @@
-{{1
+{{4
 {{`The tool can operate with all types of controls, which usually are used in applications. But every kind of application 
 has its own specific control set. For example in web applications there are not the such control as {{$ScrollBar$}}
 The such control is not allowed to use even in the related dictionary. If the such control is used for example 
@@ -19,5 +19,5 @@ This expression will be converted into 3 operations: left mouse click, delay 100
 All this operations will be performed one by one and if noone from them is not failed the whole operation is not failed too.
 Result of the last operation getValue() can be accessed in matrix by {{$DialogFill$}} action reference.
  `}}
-1}}
+4}}
 
