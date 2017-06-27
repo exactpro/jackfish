@@ -51,7 +51,7 @@ public class HelpClass extends MatrixItem
         Method[] methods = clazz.getDeclaredMethods();
         if (methods.length != 0)
         {
-            report.outLine(this, null, "{{`{{2Methods2}}`}}", null);
+            report.outLine(this, null, "{{`{{5Methods5}}`}}", null);
             for (Method method : methods)
             {
             	DescriptionAttribute methodAttribute = method.getAnnotation(DescriptionAttribute.class);
