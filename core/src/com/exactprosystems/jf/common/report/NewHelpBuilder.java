@@ -5,7 +5,8 @@ import com.exactprosystems.jf.charts.ChartBuilder;
 import com.exactprosystems.jf.documents.matrix.parser.items.MatrixItem;
 import com.exactprosystems.jf.functions.Content;
 
-import java.io.IOException;
+import java.io.*;
+import java.nio.file.*;
 import java.util.Date;
 
 public class NewHelpBuilder extends ReportBuilder {
@@ -177,5 +178,16 @@ public class NewHelpBuilder extends ReportBuilder {
     @Override
     protected void reportChart(ReportWriter writer, String title, String beforeTestCase, ChartBuilder chartBuilder) throws IOException {
         // ???
+    }
+
+    public void printOut() throws  IOException{
+        String content = this.getContent();
+        System.out.println(content.length());
+        File file = new File("New_Help.html");
+        Path path = file.toPath();
+        Files.deleteIfExists(path);
+        PrintWriter pw =  new PrintWriter(file);
+        pw.print(content);
+        pw.close();
     }
 }
