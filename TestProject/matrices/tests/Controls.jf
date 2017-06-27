@@ -137,7 +137,7 @@ EXECUTE;;;;
 #Id;#TestCase;#Kind;#Depends;#For
 SUBCASES;;;;
     #Id;#SubCase;controlName;operationName;startTime;pluginName;resultOperation
-    PRINT;Print_result;control.Name;operation.Name;startTime;plugin;'OK'
+    PRINT;Print_result;control.Name;operation.Name;startTime;plugin;'FAILED'
         #Id;#Let
         elapsedTime;' (' + (DateTime.current().getTime() - startTime) + ')'
 
@@ -147,7 +147,7 @@ SUBCASES;;;;
     #EndSubCase
 
     #Id;#SubCase;plugin
-    RUN;Run;'Web'
+    RUN;Run;'Swing'
         #Step;#Kind;#For;#Depends
         'start application';;;
             #Id;#Action;Plugin;Control;Operation;Time;Expected;Actual;Result

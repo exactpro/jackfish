@@ -19,6 +19,8 @@ import javax.swing.tree.TreePath;
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.image.BufferedImage;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.io.IOException;
 import java.util.EventObject;
@@ -279,6 +281,19 @@ public class MockApp
 		menuItem1.add(menuItem2);
 		menuItem2.add(menuItem3);
 		menuItem3.addChangeListener(e -> selectLabel.setText(menuItemName3 + "_select"));
+		menuItem3.addPropertyChangeListener(new PropertyChangeListener() {
+			@Override
+			public void propertyChange(PropertyChangeEvent evt) {
+				if(evt.getNewValue() != null)
+				{
+					selectLabel.setText(menuItemName3 + "_select");
+				}
+				else
+				{
+					selectLabel.setText(menuItemName2 + "_select");
+				}
+			}
+		});
 		menu.addMenuListener(new MenuListener()
 		{
 			@Override

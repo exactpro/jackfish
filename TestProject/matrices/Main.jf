@@ -104,8 +104,8 @@ Test;Controls;;;
     #Call;testName;param
     runControls;'Controls';'Swing'
 
-    #Off;#Call;testName;param
-    1;runControls;'Controls';'Win'
+    #Call;testName;param
+    runControls;'Controls';'Win'
 
 
 #Id;#TestCase;#Kind;#Depends;#For

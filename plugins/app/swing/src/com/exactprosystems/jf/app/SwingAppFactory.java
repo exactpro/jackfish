@@ -143,8 +143,7 @@ public class SwingAppFactory implements IApplicationFactory
 			info.addTypes(kind, "*");
 		}
 
-		info.addExcludes(ControlKind.MenuItem, OperationKind.EXPAND);
-		info.addExcludes(ControlKind.MenuItem, OperationKind.COLLAPSE);
+		info.addExcludes(ControlKind.MenuItem, OperationKind.EXPAND, OperationKind.COLLAPSE);
 
 		return info;
     }

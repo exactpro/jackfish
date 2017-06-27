@@ -646,28 +646,41 @@ public class SwingOperationExecutor implements OperationExecutor<ComponentFixtur
 			String[] split = path.split("/");
 			if (currentComponent instanceof JMenu)
 			{
-				if(expandOrCollapse)
+				logger.debug("path : " + path);
+				JMenu currentMenu = component.targetCastedTo(JMenu.class);
+				logger.debug("current menu : " + currentMenu.getText());
+
+				if(split.length == 1)
 				{
-					logger.debug("path : " + path);
-					JMenu currentMenu = component.targetCastedTo(JMenu.class);
-					logger.debug("current menu : " + currentMenu.getText());
+					if(expandOrCollapse)
+					{
+						currentMenu.setPopupMenuVisible(true);
+						currentMenu.setSelected(true);
+					}
+					else
+					{
+						currentMenu.setPopupMenuVisible(false);
+						currentMenu.setSelected(false);
+					}
+				}
+				else
+				{
 					currentMenu.setPopupMenuVisible(true);
-					for (String pathItem : split)
-					{
-						currentMenu = expand(currentMenu, pathItem);
-					}
 					currentMenu.setSelected(true);
-					return true;
-				}else
-				{
-					logger.debug("path : " + path);
-					JMenu currentMenu = component.targetCastedTo(JMenu.class);
-					logger.debug("current menu : " + currentMenu.getText());
-					for (String pathItem : split)
-					{
-						currentMenu = collapse(currentMenu, pathItem);
+					if (expandOrCollapse) {
+						for (String pathItem : split) {
+							currentMenu = expand(currentMenu, pathItem);
+						}
+						return true;
+					} else {
+						for (int i = 0; i < split.length; i++) {
+							currentMenu = expand(currentMenu, split[i]);
+						}
+						currentMenu.setSelected(false);
+						currentMenu.setSelected(true);
+						currentMenu.setPopupMenuVisible(false);
+						return true;
 					}
-					return true;
 				}
 			}
 			else if (currentComponent instanceof JTree)
@@ -1770,7 +1783,7 @@ public class SwingOperationExecutor implements OperationExecutor<ComponentFixtur
 		for (int i = 0; i < parent.getItemCount(); i++)
 		{
 			Component menuComponent = parent.getMenuComponent(i);
-			if (menuComponent instanceof JMenu)
+			if (menuComponent instanceof JMenu && ((JMenu) menuComponent).getText().equals(menuName))
 			{
 				JMenu returnMenu = (JMenu) menuComponent;
 				logger.debug("found menu : " + returnMenu.getText());
@@ -1788,11 +1801,11 @@ public class SwingOperationExecutor implements OperationExecutor<ComponentFixtur
 		for (int i = 0; i < parent.getItemCount(); i++)
 		{
 			Component menuComponent = parent.getMenuComponent(i);
-			if (menuComponent instanceof JMenu)
+			if (menuComponent instanceof JMenu && ((JMenu) menuComponent).getText().equals(menuName))
 			{
 				JMenu returnMenu = (JMenu) menuComponent;
 				logger.debug("found menu : " + returnMenu.getText());
-				returnMenu.setSelected(false);
+				returnMenu.setSelected(true);
 				returnMenu.setPopupMenuVisible(false);
 				logger.debug("Menu visible? : " + returnMenu.isPopupMenuVisible());
 				return returnMenu;
