@@ -136,6 +136,16 @@ EXECUTE;;;;
 
 #Id;#TestCase;#Kind;#Depends;#For
 SUBCASES;;;;
+    #Id;#SubCase;controlName;operationName;startTime;pluginName;resultOperation
+    PRINT;Print_result;control.Name;operation.Name;startTime;plugin;'OK'
+        #Id;#Let
+        elapsedTime;' (' + (DateTime.current().getTime() - startTime) + ')'
+
+        #Action;
+        Print;pluginName + ' - ' + controlName + ' - ' + resultOperation + ' - ' + operationName + elapsedTime
+
+    #EndSubCase
+
     #Id;#SubCase;plugin
     RUN;Run;'Web'
         #Step;#Kind;#For;#Depends
@@ -266,8 +276,8 @@ SUBCASES;;;;
                     #Action;$Table;Plugin;Control;Operation;Time;Expected;Actual;Result
                     TableAddValue;table_result;plugin;control.Name;operation.Name;DateTime.current().getTime() - startTime;evaluator.evaluate(field);operation.Actual;'OK'
 
-                    #Action;
-                    Print;control.Name + ' - ' + operation.Name + ' (' + (DateTime.current().getTime() - startTime) + ')'
+                    #Id;#Call;controlName;operationName;startTime;pluginName;resultOperation
+                    CALL_1;PRINT;control.Name;operation.Name;startTime;plugin;'OK'
 
                     #OnError
                         #Switch
@@ -279,15 +289,15 @@ SUBCASES;;;;
                                     #Action;$Table;Plugin;Control;Operation;Time;Expected;Actual;Result
                                     TableAddValue;table_result;plugin;control.Name;operation.Name;DateTime.current().getTime() - startTime;'OPERATION IS NOT ALLOWED';'OPERATION IS NOT ALLOWED';'OK'
 
-                                    #Action;
-                                    Print;control.Name + ' - ' + operation.Name + ' (' + (DateTime.current().getTime() - startTime) + ')'
+                                    #Id;#Call;controlName;operationName;startTime;pluginName;resultOperation
+                                    CALL_1;PRINT;control.Name;operation.Name;startTime;plugin;'OK'
 
                                 #Else
                                     #Action;$Table;Plugin;Control;Operation;Time;Expected;Actual;Result
                                     TableAddValue;table_result;plugin;control.Name;operation.Name;DateTime.current().getTime() - startTime;'OPERATION_CHECK_FAILED';'OPERATION_CHECK_FAILED';'FAILED'
 
-                                    #Action;
-                                    Print;control.Name + ' - ' + operation.Name + ' (' + (DateTime.current().getTime() - startTime) + ')'
+                                    #Id;#Call;controlName;operationName;startTime;pluginName;resultOperation
+                                    CALL_1;PRINT;control.Name;operation.Name;startTime;plugin;'FAILED'
 
                                     #Id;#Let
                                     failed;true
@@ -305,9 +315,15 @@ SUBCASES;;;;
                                     #Action;$Table;Plugin;Control;Operation;Time;Expected;Actual;Result
                                     TableAddValue;table_result;plugin;control.Name;operation.Name;DateTime.current().getTime() - startTime;'FEATURE_NOT_SUPPORTED';'FEATURE_NOT_SUPPORTED';'OK'
 
+                                    #Id;#Call;controlName;operationName;startTime;pluginName;resultOperation
+                                    CALL_1;PRINT;control.Name;operation.Name;startTime;plugin;'OK'
+
                                 #Else
                                     #Action;$Table;Plugin;Control;Operation;Time;Expected;Actual;Result
                                     TableAddValue;table_result;plugin;control.Name;operation.Name;DateTime.current().getTime() - startTime;'FEATURE_NOT_SUPPORTED';'FEATURE_NOT_SUPPORTED';'FAILED'
+
+                                    #Id;#Call;controlName;operationName;startTime;pluginName;resultOperation
+                                    CALL_1;PRINT;control.Name;operation.Name;startTime;plugin;'FAILED'
 
                                     #Id;#Let
                                     failed;true
@@ -325,15 +341,15 @@ SUBCASES;;;;
                                     #Action;$Table;Plugin;Control;Operation;Time;Expected;Actual;Result
                                     TableAddValue;table_result;plugin;control.Name;operation.Name;DateTime.current().getTime() - startTime;'ELEMENT IS NOT SUPPORTED';'ELEMENT IS NOT SUPPORTED';'OK'
 
-                                    #Action;
-                                    Print;control.Name + ' - ' + operation.Name + ' (' + (DateTime.current().getTime() - startTime) + ')'
+                                    #Id;#Call;controlName;operationName;startTime;pluginName;resultOperation
+                                    CALL_1;PRINT;control.Name;operation.Name;startTime;plugin;'OK'
 
                                 #Else
                                     #Action;$Table;Plugin;Control;Operation;Time;Expected;Actual;Result
                                     TableAddValue;table_result;plugin;control.Name;operation.Name;DateTime.current().getTime() - startTime;'CONTROL_CHECK_FAILED';'CONTROL_CHECK_FAILED';'FAILED'
 
-                                    #Action;
-                                    Print;control.Name + ' - ' + operation.Name + ' (' + (DateTime.current().getTime() - startTime) + ')'
+                                    #Id;#Call;controlName;operationName;startTime;pluginName;resultOperation
+                                    CALL_1;PRINT;control.Name;operation.Name;startTime;plugin;'FAILED'
 
                                     #Id;#Let
                                     failed;true
@@ -351,15 +367,15 @@ SUBCASES;;;;
                                     #Action;$Table;Plugin;Control;Operation;Time;Expected;Actual;Result
                                     TableAddValue;table_result;plugin;control.Name;operation.Name;DateTime.current().getTime() - startTime;'ELEMENT_NOT_FOUND';'ELEMENT_NOT_FOUND';'OK'
 
-                                    #Action;
-                                    Print;control.Name + ' - ' + operation.Name + ' (' + (DateTime.current().getTime() - startTime) + ')'
+                                    #Id;#Call;controlName;operationName;startTime;pluginName;resultOperation
+                                    CALL_1;PRINT;control.Name;operation.Name;startTime;plugin;'OK'
 
                                 #Else
                                     #Action;$Table;Plugin;Control;Operation;Time;Expected;Actual;Result
                                     TableAddValue;table_result;plugin;control.Name;operation.Name;DateTime.current().getTime() - startTime;'ELEMENT_NOT_FOUND';'ELEMENT_NOT_FOUND';'FAILED'
 
-                                    #Action;
-                                    Print;control.Name + ' - ' + operation.Name + ' (' + (DateTime.current().getTime() - startTime) + ')'
+                                    #Id;#Call;controlName;operationName;startTime;pluginName;resultOperation
+                                    CALL_1;PRINT;control.Name;operation.Name;startTime;plugin;'FAILED'
 
                                     #Id;#Let
                                     failed;true
@@ -375,8 +391,8 @@ SUBCASES;;;;
                                 #Action;$Table;Plugin;Control;Operation;Time;Expected;Actual;Result
                                 TableAddValue;table_result;plugin;control.Name;operation.Name;DateTime.current().getTime() - startTime;'EXCEPTION';'EXCEPTION';'FAILED'
 
-                                #Action;
-                                Print;control.Name + ' - ' + operation.Name + ' (' + (DateTime.current().getTime() - startTime) + ')'
+                                #Id;#Call;controlName;operationName;startTime;pluginName;resultOperation
+                                CALL_1;PRINT;control.Name;operation.Name;startTime;plugin;'FAILED'
 
                                 #Id;#Let
                                 failed;true
@@ -388,8 +404,8 @@ SUBCASES;;;;
                                 #Action;$Table;Plugin;Control;Operation;Time;Expected;Actual;Result
                                 TableAddValue;table_result;plugin;control.Name;operation.Name;DateTime.current().getTime() - startTime;evaluator.evaluate(field);operation.Actual;'FAILED'
 
-                                #Action;
-                                Print;control.Name + ' - ' + operation.Name + ' (' + (DateTime.current().getTime() - startTime) + ')'
+                                #Id;#Call;controlName;operationName;startTime;pluginName;resultOperation
+                                CALL_1;PRINT;control.Name;operation.Name;startTime;plugin;'FAILED'
 
                                 #Id;#Let
                                 failed;true
