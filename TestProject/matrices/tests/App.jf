@@ -1,4 +1,10 @@
 #TestCase;#Kind;#Depends;#For
+Prepare;;;
+    #Id;#Global;#Let
+    mockWebURL2;1;mockWebURL.replace('mock.','mock2.')
+
+
+#TestCase;#Kind;#Depends;#For
 Application Close Window;;;
     #Step;#Kind;#For;#Depends
     'positive testing';;;
@@ -16,7 +22,7 @@ Application Close Window;;;
     #Step;#Kind;#For;#Depends
     'positive testing with 2 tabs';;;
         #Id;#Let
-        newUrl;'https://www.google.ru'
+        newUrl;mockWebURL
 
         #Id;#Call
         app;appStart
@@ -34,7 +40,7 @@ Application Close Window;;;
         APPCW2;ApplicationCloseWindow;This.Result == Result.Passed;app
 
         #Id;#Action;$SoftCondition;Title;$AppConnection
-        APPSW1;ApplicationSwitchTo;true;'Google';app
+        APPSW1;ApplicationSwitchTo;true;'Mock html';app
 
         #Assert;#Message
         app.getApplication().service().titles().size() == 1;'Page count not expected'
@@ -102,7 +108,7 @@ Application Navigate;;;
     #Step;#Kind;#For;#Depends
     'Positive';;;
         #Id;#Action;Browser;URL;$AppId
-        APPSTR3;ApplicationStart;mockWebBrowser;'https://www.google.ru/';mockWebApp
+        APPSTR3;ApplicationStart;mockWebBrowser;mockWebURL2;mockWebApp
 
         #Id;#Action;Title;$AppConnection
         APPPAR1;ApplicationGetProperties;;APPSTR3.Out
@@ -111,7 +117,7 @@ Application Navigate;;;
         firstTitle;APPPAR1.Out.get('Title')
 
         #Id;#Action;URL;WhereOpen;$AppConnection
-        APPNI1;ApplicationNewInstance;'https://www.exactprosystems.com/';'OpenNewUrl';APPSTR3.Out
+        APPNI1;ApplicationNewInstance;mockWebURL;'OpenNewUrl';APPSTR3.Out
 
         #Action;$Time
         Wait;2500
@@ -306,13 +312,13 @@ Application GetProperties;;;
     #Step;#Kind;#For;#Depends
     'Positive';;;
         #Id;#Let
-        altURL;'https://www.google.ru'
+        altURL;mockWebURL
 
         #Id;#Action;Browser;URL;$AppId
         APPSTR3;ApplicationStart;mockWebBrowser;altURL;mockWebApp
 
         #Id;#Action;#Assert;URL;Title;$AppConnection
-        APPPAR1;ApplicationGetProperties;This.Result == Result.Passed && This.Out.get('Title').contains('Google') && This.Out.get('URL').contains(altURL);;;APPSTR3.Out
+        APPPAR1;ApplicationGetProperties;This.Result == Result.Passed && This.Out.get('Title').contains('Mock html') && This.Out.get('URL').contains('mocks/web/mock.html');;;APPSTR3.Out
 
         #Id;#Action;#Assert;new Date();new Date();$AppConnection
         APPPAR2;ApplicationGetProperties;This.Result == Result.Passed && This.Out.get('URL') == null && This.Out.get('Title') == null;;;APPSTR3.Out
@@ -419,7 +425,7 @@ Application New Instance;;;
     #Step;#Kind;#For;#Depends
     'Positive';;;
         #Id;#Let
-        newURL;'https://www.google.ru'
+        newURL;mockWebURL
 
         #Step;#Kind;#For;#Depends
         'open in current url';;;
@@ -436,7 +442,7 @@ Application New Instance;;;
             APPPAR4.Out.AllTitles.size() == 1;'Number of titiles is wroing ' + APPPAR4.Out.AllTitles
 
             #Assert;#Message
-            APPPAR4.Out.URL.contains(newURL);'Url is wrong ' + APPPAR4.Out.URL
+            APPPAR4.Out.URL.contains('mocks/web/mock.html');'Url is wrong ' + APPPAR4.Out.URL
 
             #Id;#Action;$AppConnection
             APPSTP3;ApplicationStop;CALL_3
@@ -449,13 +455,13 @@ Application New Instance;;;
             CALL_4;appStart
 
             #Id;#Action;WhereOpen;URL;$AppConnection
-            APPNI2;ApplicationNewInstance;'OpenInTab';newURL;CALL_4
+            APPNI2;ApplicationNewInstance;'OpenInTab';mockWebURL2;CALL_4
 
             #Action;$Time
             Wait;2000
 
             #Id;#Action;URL;Title;$AppConnection
-            APPSW1;ApplicationSwitchTo;newURL;'Google';CALL_4
+            APPSW1;ApplicationSwitchTo;newURL;'Mock html';CALL_4
 
             #Id;#Action;$AppConnection;URL;AllTitles
             APPPAR4;ApplicationGetProperties;CALL_4;;
@@ -483,7 +489,7 @@ Application New Instance;;;
             Wait;2000
 
             #Id;#Action;URL;Title;$AppConnection
-            APPSW1;ApplicationSwitchTo;newURL;'Google';CALL_5
+            APPSW1;ApplicationSwitchTo;newURL;'Mock html';CALL_5
 
             #Id;#Action;$AppConnection;URL
             APPPAR4;ApplicationGetProperties;CALL_5;
@@ -502,13 +508,13 @@ Application New Instance;;;
             CALL_4;appStart
 
             #Id;#Action;URL;$AppConnection
-            APPNI2;ApplicationNewInstance;newURL;CALL_4
+            APPNI2;ApplicationNewInstance;mockWebURL2;CALL_4
 
             #Action;$Time
             Wait;2000
 
             #Id;#Action;URL;Title;$AppConnection
-            APPSW1;ApplicationSwitchTo;newURL;'Google';CALL_4
+            APPSW1;ApplicationSwitchTo;newURL;'Mock html';CALL_4
 
             #Id;#Action;$AppConnection;URL;AllTitles
             APPPAR4;ApplicationGetProperties;CALL_4;;
@@ -530,13 +536,13 @@ Application New Instance;;;
             CALL_4;appStart
 
             #Id;#Action;URL;$AppConnection;Tab
-            APPNI2;ApplicationNewInstance;newURL;CALL_4;true
+            APPNI2;ApplicationNewInstance;mockWebURL2;CALL_4;true
 
             #Action;$Time
             Wait;2000
 
             #Id;#Action;URL;Title;$AppConnection
-            APPSW1;ApplicationSwitchTo;newURL;'Google';CALL_4
+            APPSW1;ApplicationSwitchTo;newURL;'Mock html';CALL_4
 
             #Id;#Action;$AppConnection;URL;AllTitles
             APPPAR4;ApplicationGetProperties;CALL_4;;
@@ -691,10 +697,10 @@ Application SwitchTo;;;
     #Step;#Kind;#For;#Depends
     'Positive';;;
         #Id;#Let
-        newURL;'https://www.google.ru'
+        newURL;mockWebURL
 
         #Id;#Let
-        title;'Google'
+        title;'Mock html'
 
         #Id;#Call
         CALL_1;appStart
@@ -719,7 +725,7 @@ Application SwitchTo;;;
         title;'Google'
 
         #Id;#Let
-        newURL;'https://www.google.ru'
+        newURL;mockWebURL2
 
         #Id;#Call
         CALL_1;appStart
