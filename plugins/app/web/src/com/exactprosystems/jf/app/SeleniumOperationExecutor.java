@@ -69,7 +69,7 @@ public class SeleniumOperationExecutor implements OperationExecutor<WebElement>
     @Override
     public boolean isAllowed(ControlKind kind, OperationKind operation)
     {
-        return true;
+		return this.info.isAllowed(kind, operation);
     }
 
 	@Override

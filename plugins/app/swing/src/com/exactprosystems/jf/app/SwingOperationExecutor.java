@@ -130,7 +130,7 @@ public class SwingOperationExecutor implements OperationExecutor<ComponentFixtur
     @Override
     public boolean isAllowed(ControlKind kind, OperationKind operation)
     {
-        return true;
+		return this.info.isAllowed(kind, operation);
     }
 
 	@Override
