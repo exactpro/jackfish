@@ -12,13 +12,17 @@ import java.awt.*;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.StringSelection;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.nio.file.Files;
 import java.nio.file.LinkOption;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.util.Arrays;
 
 public class Sys
 {
@@ -99,4 +103,23 @@ public class Sys
 	{
 		Files.move(Paths.get(pathFrom), Paths.get(pathTo), StandardCopyOption.ATOMIC_MOVE);
 	}
+	
+    @DescriptionAttribute(text = "Write data from byte array @buf to file @pathTo")
+    public static void writeFile(@FieldParameter(name = "buf") byte[] buf, @FieldParameter(name = "pathTo") String pathTo) throws IOException
+    {
+        try (InputStream in = new ByteArrayInputStream(buf))
+        {
+            Files.copy(in, Paths.get(pathTo), StandardCopyOption.REPLACE_EXISTING);
+        }
+    }
+	
+    @DescriptionAttribute(text = "Read data as byte array from file @pathFrom")
+    public static byte[] readFile(@FieldParameter(name = "pathFrom") String pathFrom) throws IOException
+    {
+        try (ByteArrayOutputStream out = new ByteArrayOutputStream())
+        {
+            Files.copy(Paths.get("test.dat"), out);
+            return out.toByteArray();
+        }
+    }
 }

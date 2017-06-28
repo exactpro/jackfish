@@ -13,6 +13,7 @@ import com.exactprosystems.jf.api.app.IControl;
 import com.exactprosystems.jf.api.app.IRemoteApplication;
 import com.exactprosystems.jf.api.app.IWindow.SectionKind;
 import com.exactprosystems.jf.api.app.Locator;
+import com.exactprosystems.jf.api.common.Converter;
 import com.exactprosystems.jf.api.common.IContext;
 import com.exactprosystems.jf.api.error.JFRemoteException;
 import com.exactprosystems.jf.api.wizard.*;
@@ -88,7 +89,6 @@ public class XpathWizard extends AbstractWizard
     }
     
     private AppConnection                      currentConnection = null;
-    private DictionaryFx                       currentDictionary = null;
     private Window                             currentWindow     = null;
     private Section                            currentSection    = null;
     private AbstractControl                    currentControl    = null;
@@ -103,7 +103,7 @@ public class XpathWizard extends AbstractWizard
 
     private SplitPane                          splitPane;
     private ImageViewWithScale                 imageViewWithScale;
-    private XmlTreeView        treeTableViewWithRectangles;
+    private XmlTreeView                        xmlTreeView;
     private FindPanel<TreeItem<XpathTreeItem>> findPanel;
     private OneLine[]                          lines;
     private CheckBox                           useText;
@@ -123,7 +123,6 @@ public class XpathWizard extends AbstractWizard
         super.init(context, wizardManager, parameters);
         
         this.currentConnection = super.get(AppConnection.class, parameters);
-        this.currentDictionary = super.get(DictionaryFx.class, parameters);
         this.currentWindow     = super.get(Window.class, parameters);
         SectionKind kind       = super.get(SectionKind.class, parameters);
         if (this.currentWindow != null && kind != null)
@@ -139,13 +138,13 @@ public class XpathWizard extends AbstractWizard
         borderPane.setPrefSize(600.0, 800.0);
         borderPane.setMinSize(600.0, 800.0);
 
-        this.treeTableViewWithRectangles = new XmlTreeView(v->{}, v->{});
-        this.treeTableViewWithRectangles.hideFirstColumn();
+        this.xmlTreeView = new XmlTreeView(v->{}, v->{});
+        this.xmlTreeView.hideFirstColumn();
 
         this.imageViewWithScale = new ImageViewWithScale();
-        this.imageViewWithScale.setOnRectangleClick(rectangle -> this.treeTableViewWithRectangles.selectItem(rectangle));
+        this.imageViewWithScale.setOnRectangleClick(rectangle -> this.xmlTreeView.selectItem(rectangle));
         
-        this.splitPane = new SplitPane(this.imageViewWithScale, this.treeTableViewWithRectangles);
+        this.splitPane = new SplitPane(this.imageViewWithScale, this.xmlTreeView);
         this.splitPane.setOrientation(Orientation.VERTICAL);
         
         this.findPanel = new FindPanel<>();
@@ -229,11 +228,11 @@ public class XpathWizard extends AbstractWizard
             // get picture
             this.imageService = new JfService<ImageAndOffset>(this.executor, 
                     () -> Common.tryCatch(() ->
-                        {
-                            Rectangle rectangle = service.getRectangle(null, selfLocator);
-                            BufferedImage image = service.getImage(null, selfLocator).getImage();
-                            return new ImageAndOffset(image, rectangle.x, rectangle.y);
-                        }, "Error on getting image", null));
+                    {
+                        Rectangle rectangle = service.getRectangle(null, selfLocator);
+                        BufferedImage image = service.getImage(null, selfLocator).getImage();
+                        return new ImageAndOffset(image, rectangle.x, rectangle.y);
+                    }, "Error on getting image", null));
     
     
             this.imageService.setOnSucceeded(event ->
@@ -255,14 +254,18 @@ public class XpathWizard extends AbstractWizard
     
             // get XML document
             this.documentService = new JfService<Document>(this.executor, 
-                    () -> Common.tryCatch(() -> service.getTree(selfLocator), "Error on document getting", null));
+                    () -> Common.tryCatch(() -> 
+                    { 
+                        byte[] treeBytes = service.getTreeBytes(selfLocator);
+                        return Converter.convertByteArrayToXmlDocument(treeBytes);
+                    }, "Error on document getting", null));
             this.documentService.setOnSucceeded(event ->
             {
                 this.document = (Document) event.getSource().getValue();
                 this.currentNode = XpathUtils.getFirst(this.document, "/*");
                 if (this.imageAndOffset != null)
                 {
-                    this.treeTableViewWithRectangles.displayDocument(this.document, this.imageAndOffset.offsetX, this.imageAndOffset.offsetY);
+                    this.xmlTreeView.displayDocument(this.document, this.imageAndOffset.offsetX, this.imageAndOffset.offsetY);
                     List<Rectangle> list = XpathUtils.collectAllRectangles(this.document, this.imageAndOffset.offsetX, this.imageAndOffset.offsetY);
                     this.imageViewWithScale.setListForSearch(list);
                 }
@@ -298,13 +301,13 @@ public class XpathWizard extends AbstractWizard
             @Override
             public void find(TreeItem<XpathTreeItem> xpathItemTreeItem)
             {
-                treeTableViewWithRectangles.selectAndScroll(xpathItemTreeItem);
+                xmlTreeView.selectAndScroll(xpathItemTreeItem);
             }
 
             @Override
             public List<TreeItem<XpathTreeItem>> findItem(String what, boolean matchCase, boolean wholeWord)
             {
-                return treeTableViewWithRectangles.findItem(what, matchCase, wholeWord);
+                return xmlTreeView.findItem(what, matchCase, wholeWord);
             }
         });
         

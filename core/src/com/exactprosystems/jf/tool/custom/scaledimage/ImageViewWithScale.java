@@ -331,7 +331,6 @@ public class ImageViewWithScale extends BorderPane
 	
 	private void buildMap(int width, int height, Dimension cellSize, List<Rectangle> list)
     {
-	    System.err.println(">> " + list);
 	    this.searchingMap = new HashMap<>();
 
         int x = 0;

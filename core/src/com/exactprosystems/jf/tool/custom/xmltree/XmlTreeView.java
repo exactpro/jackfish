@@ -256,22 +256,7 @@ public class XmlTreeView extends AnchorPane
 		{
 			return;
 		}
-
-		if (this.currentIndex == -1)
-		{
-			this.currentIndex = 0;
-		}
-		else
-		{
-			if (this.currentIndex >= markedRows.size() - 1)
-			{
-				this.currentIndex = 0;
-			}
-			else
-			{
-				this.currentIndex++;
-			}
-		}
+		this.currentIndex = Math.min(this.currentIndex + 1, markedRows.size() - 1);
 		TreeItem<XpathTreeItem> treeItem = markedRows.get(this.currentIndex);
 		scrollToElement(treeItem);
 		this.treeTableView.getSelectionModel().select(treeItem);
@@ -284,21 +269,7 @@ public class XmlTreeView extends AnchorPane
 		{
 			return;
 		}
-		if (this.currentIndex == -1)
-		{
-			this.currentIndex = markedRows.size() - 1;
-		}
-		else
-		{
-			if (this.currentIndex <= 0)
-			{
-				this.currentIndex = markedRows.size() - 1;
-			}
-			else
-			{
-				this.currentIndex--;
-			}
-		}
+        this.currentIndex = Math.max(this.currentIndex - 1, 0);
 		TreeItem<XpathTreeItem> treeItem = markedRows.get(this.currentIndex);
 		scrollToElement(treeItem);
 		this.treeTableView.getSelectionModel().select(treeItem);

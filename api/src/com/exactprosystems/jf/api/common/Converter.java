@@ -189,7 +189,7 @@ public class Converter
 		{
 			return null;
 		}
-
+		
 		Storable retValue = null;
 		try (InputStream in = blob.getBinaryStream(); 
 				ZipInputStream zis = new ZipInputStream(in))

@@ -122,7 +122,7 @@ public class FxDocumentFactory extends DocumentFactory
 	{
 		if (exception != null)
 		{
-			logger.error(">> " + exception.getMessage(), exception);
+			logger.error(exception.getMessage(), exception);
 			DialogsHelper.showError(exception.getMessage());
 		}
 	}
