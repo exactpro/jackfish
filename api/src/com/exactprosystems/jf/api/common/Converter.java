@@ -243,9 +243,16 @@ public class Converter
 
 	private static byte[] readAll(InputStream is) throws IOException
 	{
-        byte[] res = new byte[is.available()];
-        is.read(res);
-        return res;
+        ByteArrayOutputStream buffer = new ByteArrayOutputStream();
+        int nRead;
+        byte[] data = new byte[16384];
+
+        while ((nRead = is.read(data, 0, data.length)) != -1) 
+        {
+            buffer.write(data, 0, nRead);
+        }
+        buffer.flush();
+        return buffer.toByteArray();
 	}
 	
 
