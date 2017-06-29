@@ -463,11 +463,8 @@ Application New Instance;;;
             #Action;
             Print;newURL
 
-            #Id;#Action;Title;$AppConnection
-            APPSW1;ApplicationSwitchTo;'Mock html';CALL_4
-
-            #Id;#Off;#Action;URL;Title;$AppConnection
-            APPSW1;1;ApplicationSwitchTo;newURL;'Mock html';CALL_4
+            #Id;#Action;URL;Title;$AppConnection
+            APPSW1;ApplicationSwitchTo;newURL;'Mock html';CALL_4
 
             #Id;#Action;$AppConnection;URL;AllTitles
             APPPAR4;ApplicationGetProperties;CALL_4;;
