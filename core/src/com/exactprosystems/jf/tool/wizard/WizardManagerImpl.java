@@ -19,11 +19,7 @@ import com.exactprosystems.jf.documents.matrix.Matrix;
 import com.exactprosystems.jf.documents.matrix.parser.items.HelpItem;
 import com.exactprosystems.jf.documents.matrix.parser.items.MatrixItem;
 import com.exactprosystems.jf.tool.helpers.DialogsHelper;
-import com.exactprosystems.jf.tool.wizard.all.CodeExampleWizard;
-import com.exactprosystems.jf.tool.wizard.all.DictionaryWizard;
-import com.exactprosystems.jf.tool.wizard.all.GherkinWizard;
-import com.exactprosystems.jf.tool.wizard.all.SupportedControlWizard;
-import com.exactprosystems.jf.tool.wizard.all.XpathWizard;
+import com.exactprosystems.jf.tool.wizard.all.*;
 
 import org.apache.log4j.Logger;
 
@@ -55,7 +51,8 @@ public class WizardManagerImpl implements WizardManager
 			DictionaryWizard.class,
 			SupportedControlWizard.class,
 			CodeExampleWizard.class,
-			XpathWizard.class
+			XpathWizard.class,
+            LibraryWizard.class
 	);
     
     public WizardManagerImpl()
