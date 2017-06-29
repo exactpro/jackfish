@@ -4,8 +4,8 @@ Prepare;;;
     mockWebURL2;1;mockWebURL.replace('mock.','mock2.')
 
 
-#TestCase;#Kind;#Depends;#For
-Application Close Window;;;
+#Off;#TestCase;#Kind;#Depends;#For
+1;Application Close Window;;;
     #Step;#Kind;#For;#Depends
     'positive testing';;;
         #Id;#Call
@@ -61,8 +61,8 @@ Application Close Window;;;
     #EndStep
 
 
-#TestCase;#Kind;#Depends;#For
-Apllication Start;Never;;
+#Off;#TestCase;#Kind;#Depends;#For
+1;Apllication Start;Never;;
     #Step;#Kind;#For;#Depends
     'Negative testing with empty parameters';;;
         #Id;#Action;#Assert;$AppId;Browser;URL
@@ -103,8 +103,8 @@ Apllication Start;Never;;
     #EndStep
 
 
-#TestCase;#Kind;#Depends;#For
-Application Navigate;;;
+#Off;#TestCase;#Kind;#Depends;#For
+1;Application Navigate;;;
     #Step;#Kind;#For;#Depends
     'Positive';;;
         #Id;#Action;Browser;URL;$AppId
@@ -177,8 +177,8 @@ Application Navigate;;;
     #EndStep
 
 
-#TestCase;#Kind;#Depends;#For
-Application ConnectTo;;;
+#Off;#TestCase;#Kind;#Depends;#For
+1;Application ConnectTo;;;
     #If
     Sys.osName().startsWith('Win')
         #Step;#Kind;#For;#Depends
@@ -307,8 +307,8 @@ Application ConnectTo;;;
     #EndIf
 
 
-#TestCase;#Kind;#Depends;#For
-Application GetProperties;;;
+#Off;#TestCase;#Kind;#Depends;#For
+1;Application GetProperties;;;
     #Step;#Kind;#For;#Depends
     'Positive';;;
         #Id;#Let
@@ -345,8 +345,8 @@ Application GetProperties;;;
     #EndStep
 
 
-#TestCase;#Kind;#Depends;#For
-Application Move;;;
+#Off;#TestCase;#Kind;#Depends;#For
+1;Application Move;;;
     #If
     Sys.osName().startsWith('Win')
         #Step;#Kind;#For;#Depends
@@ -427,8 +427,8 @@ Application New Instance;;;
         #Id;#Let
         newURL;mockWebURL
 
-        #Step;#Kind;#For;#Depends
-        'open in current url';;;
+        #Off;#Step;#Kind;#For;#Depends
+        1;'open in current url';;;
             #Id;#Call
             CALL_3;appStart
 
@@ -460,6 +460,9 @@ Application New Instance;;;
             #Action;$Time
             Wait;2000
 
+            #Action;
+            Print;newURL
+
             #Id;#Action;URL;Title;$AppConnection
             APPSW1;ApplicationSwitchTo;newURL;'Mock html';CALL_4
 
@@ -477,8 +480,8 @@ Application New Instance;;;
 
         #EndStep
 
-        #Step;#Kind;#For;#Depends
-        'open in window';;;
+        #Off;#Step;#Kind;#For;#Depends
+        1;'open in window';;;
             #Id;#Call
             CALL_5;appStart
 
@@ -502,8 +505,8 @@ Application New Instance;;;
 
         #EndStep
 
-        #Step;#Kind;#For;#Depends
-        'open in new tab without parameter whereOpen';;;
+        #Off;#Step;#Kind;#For;#Depends
+        1;'open in new tab without parameter whereOpen';;;
             #Id;#Call
             CALL_4;appStart
 
@@ -530,8 +533,8 @@ Application New Instance;;;
 
         #EndStep
 
-        #Step;#Kind;#For;#Depends
-        'open in new tab with parameter Tab';;;
+        #Off;#Step;#Kind;#For;#Depends
+        1;'open in new tab with parameter Tab';;;
             #Id;#Call
             CALL_4;appStart
 
@@ -558,8 +561,8 @@ Application New Instance;;;
 
         #EndStep
 
-        #Step;#Kind;#For;#Depends
-        'open in url with paramneter url and Tab';;;
+        #Off;#Step;#Kind;#For;#Depends
+        1;'open in url with paramneter url and Tab';;;
             #Id;#Call
             CALL_3;appStart
 
@@ -582,8 +585,8 @@ Application New Instance;;;
 
     #EndStep
 
-    #Step;#Kind;#For;#Depends
-    'Negative';;;
+    #Off;#Step;#Kind;#For;#Depends
+    1;'Negative';;;
         #Id;#Call
         CALL_1;appStart
 
@@ -605,8 +608,8 @@ Application New Instance;;;
     #EndStep
 
 
-#TestCase;#Kind;#Depends;#For
-Application Refresh;;;
+#Off;#TestCase;#Kind;#Depends;#For
+1;Application Refresh;;;
     #Step;#Kind;#For;#Depends
     'Positive';;;
         #Id;#Let
@@ -640,8 +643,8 @@ Application Refresh;;;
     #EndStep
 
 
-#TestCase;#Kind;#Depends;#For
-Application Resize;;;
+#Off;#TestCase;#Kind;#Depends;#For
+1;Application Resize;;;
     #Step;#Kind;#For;#Depends
     'Positive';;;
         #Id;#Call
@@ -666,8 +669,8 @@ Application Resize;;;
     #EndStep
 
 
-#TestCase;#Kind;#Depends;#For
-Application Stop;;;
+#Off;#TestCase;#Kind;#Depends;#For
+1;Application Stop;;;
     #Step;#Kind;#For;#Depends
     'Positive';;;
         #Id;#Call
@@ -692,8 +695,8 @@ Application Stop;;;
     #EndStep
 
 
-#TestCase;#Kind;#Depends;#For
-Application SwitchTo;;;
+#Off;#TestCase;#Kind;#Depends;#For
+1;Application SwitchTo;;;
     #Step;#Kind;#For;#Depends
     'Positive';;;
         #Id;#Let
@@ -751,8 +754,8 @@ Application SwitchTo;;;
     #EndStep
 
 
-#TestCase;#Kind;#Depends;#For
-Application Resize;;;
+#Off;#TestCase;#Kind;#Depends;#For
+1;Application Resize;;;
     #Step;#Kind;#For;#Depends
     'Positive';;;
         #Id;#Let
