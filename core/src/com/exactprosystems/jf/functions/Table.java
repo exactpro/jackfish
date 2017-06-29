@@ -135,7 +135,15 @@ public class Table implements List<RowTable>, Mutable, Cloneable
 					if (type == Types.LONGVARBINARY || type == Types.BLOB || type == Types.VARBINARY)
 				    {
 				        value = set.getBlob(i + 1);
-	                    value = Converter.blobToStorable((Blob)value);
+				        if (value != null)
+				        {
+				            Object newValue = Converter.blobToStorable((Blob)value);
+				            if (newValue == null)
+				            {
+				                newValue = Converter.blobToByteArray((Blob)value); 
+				            }
+				            value = newValue;
+				        }
 				    }
 				    else
 				    {

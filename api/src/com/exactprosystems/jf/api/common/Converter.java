@@ -30,6 +30,8 @@ import java.io.InputStream;
 import java.lang.reflect.Array;
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.sql.Blob;
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -225,20 +227,25 @@ public class Converter
 		
 		return retValue;
 	}
+
+	// TODO 
+    public static byte[] blobToByteArray(Blob blob) throws Exception
+    {
+        if (blob == null)
+        {
+            return null;
+        }
+        
+        return readAll(blob.getBinaryStream());
+    }
+	
 	//endregion
 
 	private static byte[] readAll(InputStream is) throws IOException
 	{
-		ByteArrayOutputStream buffer = new ByteArrayOutputStream();
-		int nRead;
-		byte[] data = new byte[16384];
-
-		while ((nRead = is.read(data, 0, data.length)) != -1) 
-		{
-			buffer.write(data, 0, nRead);
-		}
-		buffer.flush();
-		return buffer.toByteArray();
+        byte[] res = new byte[is.available()];
+        is.read(res);
+        return res;
 	}
 	
 
