@@ -26,8 +26,6 @@ import java.util.*;
 
 public class Parser
 {
-    public static boolean useNewSyntax = false;
-    
 	// other syntax details
 	public static final String	error					= "error";
 	public static final String	err						= "err";

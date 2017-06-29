@@ -101,12 +101,6 @@ public class MainRunner
 					.withDescription("Specify the username which will be used when tool works with a git repository. ")
 					.create("username");
 
-			Option convertTo = OptionBuilder
-					.withArgName("file")
-					.hasArg()
-					.withDescription("Convert old matrices to the new format")
-					.create("convertTo");
-
 			Option saveDocs = OptionBuilder
 					.withArgName("dir")
 					.hasArg()
@@ -117,7 +111,6 @@ public class MainRunner
 			Option saveSchema 	= new Option("schema", 	"Save the config schema." );
 			Option help 		= new Option("help", 	"Print this message." );
 			Option versionOut 	= new Option("version", "Print version only.");
-            Option newSyntax    = new Option("new",     "Use new syntax for matrices." );
 			Option shortPaths 	= new Option("short", 	"Show only short paths in tracing." );
             Option console      = new Option("console",	"Do not open GUI. Batch mode.");
             Option forgetScreenPosition = new Option("forgetScreenPosition", "If this option is mentioned then just don't restore position and size from the previous run.");
@@ -136,11 +129,9 @@ public class MainRunner
 			options.addOption(saveDocs);
             options.addOption(saveSchema);
 			options.addOption(help);
-            options.addOption(newSyntax);
 			options.addOption(shortPaths);
             options.addOption(console);
             options.addOption(child);
-			options.addOption(convertTo);
 			options.addOption(forgetScreenPosition);
 
 			
@@ -197,11 +188,6 @@ public class MainRunner
 		    	System.exit(0);
 		    }
 		    
-		    if (line.hasOption(newSyntax.getOpt()) || line.hasOption(convertTo.getOpt()))
-		    {
-		        com.exactprosystems.jf.documents.matrix.parser.Parser.useNewSyntax = true;
-		    }
-		    
 			String verboseString = line.getOptionValue(traceLevel.getOpt());
 			VerboseLevel verboseLevel = VerboseLevel.All;
 			if (verboseString != null)
@@ -234,9 +220,9 @@ public class MainRunner
 					break;
 				}
 	
-				if (line.hasOption(console.getOpt()) || line.hasOption(convertTo.getOpt()))
+				if (line.hasOption(console.getOpt()))
 				{
-					runInConsoleMode(line, configString, verboseLevel, startAtName, inputName, outputName, shortPaths, convertTo);
+					runInConsoleMode(line, configString, verboseLevel, startAtName, inputName, outputName, shortPaths);
 				}
 				else
 				{
@@ -316,7 +302,7 @@ public class MainRunner
 
 	
 	private static void runInConsoleMode(CommandLine line, String configString, VerboseLevel verboseLevel, 
-			Option startAtName, Option inputName, Option outputName, Option shortPaths, Option convertTo) throws java.text.ParseException
+			Option startAtName, Option inputName, Option outputName, Option shortPaths) throws java.text.ParseException
 	{
 		printVersion();
 
@@ -347,26 +333,6 @@ public class MainRunner
 			System.exit(2);
 		}
 
-		if (line.hasOption(convertTo.getOpt()))
-		{
-			String newFolderName = line.getOptionValue(convertTo.getOpt());
-			
-			List<String> matr = configuration.getMatricesValue().stream().map(a -> makeDirWithSubstitutions(a.get())).collect(Collectors.toList());
-            List<String> libs = configuration.getLibrariesValue().stream().map(a -> makeDirWithSubstitutions(a.get())).collect(Collectors.toList());
-			
-			MatrixConverter matrixConverter = new MatrixConverter(matr, libs, newFolderName);
-			boolean start = matrixConverter.start();
-			if (!start)
-			{
-				System.out.println("Converting was failing. Check all problems and restart converting");
-			}
-			else
-			{
-				System.out.println(String.format("All matrix converted and saved to folder '%s'", newFolderName));
-			}
-			return;
-		}
-		
 		if (!line.hasOption(inputName.getOpt()))
 		{
 		    System.out.println(String.format("Error: need %s parameter.", inputName.getOpt()));
