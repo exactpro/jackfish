@@ -68,8 +68,6 @@ public class Parser
 				EndSubCase.class,
 				Call.class,
 				OnError.class,
-				ReportOff.class,
-				ReportOn.class,
 				Fail.class,
 				RawTable.class,
 				EndRawTable.class,

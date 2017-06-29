@@ -4,6 +4,7 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -196,7 +197,11 @@ public class DocumentationBuilder
     {
         try
         {
-            for (ControlKind controlKind : ControlKind.values())
+            List<ControlKind> fullList = Arrays.stream(ControlKind.values())
+                    .sorted((a,b) -> a.name().compareTo(b.name()))
+                    .collect(Collectors.toList());
+            
+            for (ControlKind controlKind : fullList)
             {
                 Class<?> controlClass = Class.forName(AbstractControl.class.getPackage().getName() + "." + controlKind.getClazz());
                 controlClass.getSimpleName();
@@ -223,7 +228,7 @@ public class DocumentationBuilder
                 table.considerAsColored(table.getHeader(i));
             }
 
-            for (ControlKind k : ControlKind.values())
+            for (ControlKind k : fullList)
             {
                 String[] arr = new String[operations.size() + 1];
                 
@@ -317,7 +322,7 @@ public class DocumentationBuilder
         MatrixItem item = new HelpTextLine("{{1All actions by groups1}}");
         root.insert(root.count(), item);
 
-        Map<Class<?>, ActionGroups> map = new HashMap<>();
+        Map<Class<?>, ActionGroups> map = new LinkedHashMap<>();
         for (Class<?> action : ActionsList.actions)
         {
             map.put(action, action.getAnnotation(ActionAttribute.class).group());
