@@ -26,7 +26,7 @@ import java.util.Map;
 		description 	= "This operator is used to describe one variant to compare with for an operator Switch.\n" +
 							"In each operator  Case is given one of the variants that equals the expression from the operator Switch",
 		examples 		= "(Example #1)\n" +
-				"Or the operator  Сase is performed, which value is true (Example #2)\n" +
+				"Or the operator Case is performed, which value is true (Example #2)\n" +
 				"After one of the blocks  case has been performed an operator  switch is being broken.\n" +
 				"Example #1:\n" +
 				"Variable a is transmitted into field  switch. The  Case will be performed which value matches a variable value.\n" +
