@@ -99,7 +99,7 @@ public class LibraryWizard extends AbstractWizard {
 
 
     private void changeSubId(String id) {
-       currentSubCase.setId(new MutableValue<>(id));
+       currentSubCase.setId(id);
     }
 
     private void moveToNameSpace() {

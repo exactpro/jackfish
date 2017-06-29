@@ -232,6 +232,11 @@ public abstract class MatrixItem implements IMatrixItem, Mutable, Cloneable
 		return this.id.get();
 	}
 
+	public final void setId(String id) 
+	{
+		this.id.set(id);
+	}
+
 	public final boolean isOff()
 	{
 		return isTrue(this.off.get());
@@ -1007,10 +1012,6 @@ public abstract class MatrixItem implements IMatrixItem, Mutable, Cloneable
 	//==============================================================================================
 	// define state of this item
 	private static final String VALID_IDENTIFIER_REGEXP = "^[a-zA-Z_$][a-zA-Z_$0-9]*$";
-
-	public void setId(MutableValue<String> id) {
-		this.id = id;
-	}
 
 	protected MutableValue<String> 		id;
 	protected MutableValue<Boolean> 	off;
