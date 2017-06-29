@@ -33,8 +33,8 @@ import java.util.Map;
 							" Nevertheless, the dependence can be set with the field Depends.  If TestCase from the parameter Depends is failed,the dependend one will be failed too.\n" +
 							"Each TestCase also contains Screenshot parameter which is used to specify when in the TestCase given a screenshot is made.  \n" +
 							"TestCase ID is used to shortly identify and link to it in the parameter BeforeTestCase of actions TableReport, TextReport etc.\n" +
-							"Each TestCase keeps the performed result in a separate line in a system table  (see action ResultTable). \n" +
-							" TestCase which has an action ResultTable is always Passed.\n" +
+							"Each TestCase keeps the performed result in a separate line in a system table (see action ResultTable).\n" +
+							"TestCase which has an action ResultTable is always Passed.\n" +
 							"EachTestCase introduces its name space, that means actions and variables from one TestCase aren't accessible from another one.\n" +
 							"To get the access  from the different TestCase is essentially to enter the parameter  Global for an action.(mark checkbox with G)",
 		examples 		= "{{#\n" +

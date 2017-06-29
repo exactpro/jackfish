@@ -26,10 +26,10 @@ import java.util.Map.Entry;
 		additionFieldsAllowed = false,
 		outputDescription 		= "A value that will be required. Otherwise, null, if a non-existent value was required.",
 		outputType				= Object.class,
-		examples 				= "Restore value with name Current time that was stored by action Store. Assign it to "
-				+ "the local variable “create date”.\n"
+		examples 				= "Restore value with name currentTime that was stored by action Store. Assign it to "
+				+ "the local variable createDate.\n"
 				+ "{{#\n#Action;#AsVar;#Name\n"
-				+ "Restore;'create date';'Current time'#}}",
+				+ "Restore;'createDate';'currentTime'#}}",
 		seeAlsoClass = {Store.class}
 )
 

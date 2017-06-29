@@ -36,7 +36,7 @@ import java.nio.file.Paths;
 		outputType 				= String.class,
 		examples 				= "{{`1. Connect to web application`}}"
 				+ "{{`2. Get the images of the whole application.`}}"
-				+ "{{`3. Save the file to the user’s home directory.`}}"
+				+ "{{`3. Save the file to the user's home directory.`}}"
 				+ "{{#\n" +
 				"#Id;#Action;#Browser;#URL;#AppId\n"
 				+ "APPSTR1;ApplicationStart;'Chrome';'https://google.com';'WEB'\n"
