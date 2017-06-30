@@ -10,6 +10,7 @@ package com.exactprosystems.jf.api.app;
 
 import java.io.Serializable;
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class PluginInfo implements Serializable
 {
@@ -72,12 +73,20 @@ public class PluginInfo implements Serializable
         controlInfo.addExcludes(operations);
     }
     
+    public Set<ControlKind> supportedControlKinds()
+    {
+        return this.controlMap.keySet().stream()
+                .sorted((c1,c2) -> c1.name().compareTo(c2.name()))
+                .collect(Collectors.toCollection(LinkedHashSet::new));
+    }
+    
     public boolean isSupported(ControlKind kind)
     {
         return controlMap.containsKey(kind);
     }
 
-    public boolean isAllowed(ControlKind kind, OperationKind operation) {
+    public boolean isAllowed(ControlKind kind, OperationKind operation) 
+    {
         return controlMap.containsKey(kind) && !controlMap.get(kind).getExcludes().contains(operation);
     }
 

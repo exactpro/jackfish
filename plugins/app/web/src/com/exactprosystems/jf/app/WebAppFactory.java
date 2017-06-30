@@ -13,7 +13,6 @@ import com.exactprosystems.jf.api.common.ParametersKind;
 
 import java.io.InputStream;
 import java.util.*;
-import java.util.stream.Collectors;
 
 public class WebAppFactory implements IApplicationFactory
 {
@@ -45,15 +44,44 @@ public class WebAppFactory implements IApplicationFactory
     public static final String   propertyRemoveCookie     = "RemoveCookie";
     public static final String   propertyRemoveAllCookies = "RemoveAllCookies";
 	
-	private static String[] empty = {  };
+	private static String[]      empty = {  };
 
-	private static ControlKind[] supportedControls = 
-		{ 
-			ControlKind.Any, ControlKind.Wait, ControlKind.Button, ControlKind.CheckBox, ControlKind.ComboBox, ControlKind.Dialog,
-			ControlKind.Frame, ControlKind.Image, ControlKind.Label, ControlKind.ListView, ControlKind.Panel,
-			ControlKind.ProgressBar, ControlKind.RadioButton, ControlKind.Row, ControlKind.Slider,
-			ControlKind.Table, ControlKind.TextBox, ControlKind.ToggleButton,
-		};
+    private static PluginInfo    info;
+
+    static
+    {
+        Map<LocatorFieldKind, String>   fieldMap = new HashMap<>();
+        
+        fieldMap.put(LocatorFieldKind.ACTION,       "action");
+        fieldMap.put(LocatorFieldKind.UID,          "id"); 
+        fieldMap.put(LocatorFieldKind.CLAZZ,        "class");
+        fieldMap.put(LocatorFieldKind.NAME,         "name");
+        fieldMap.put(LocatorFieldKind.TITLE,        "title");
+        fieldMap.put(LocatorFieldKind.TEXT,         "placeholder");
+        fieldMap.put(LocatorFieldKind.TOOLTIP,      "title");
+
+        PluginInfo info = new PluginInfo(fieldMap);
+
+        info.addTypes(ControlKind.Any, "*");
+        info.addTypes(ControlKind.Button, "button", "input", "a", "img");
+        info.addTypes(ControlKind.CheckBox, "button", "input");
+        info.addTypes(ControlKind.ComboBox,"select", "input");
+        info.addTypes(ControlKind.Dialog,"form");
+        info.addTypes(ControlKind.Frame,"form", "body", "frame", "iframe");
+        info.addTypes(ControlKind.Image,"img");
+        info.addTypes(ControlKind.Label,"label", "span");
+        info.addTypes(ControlKind.Panel,"div");
+        info.addTypes(ControlKind.ProgressBar,"progress");
+        info.addTypes(ControlKind.RadioButton,"input");
+        info.addTypes(ControlKind.Row,"tr");
+        info.addTypes(ControlKind.Slider,"div");
+        info.addTypes(ControlKind.Table,"table");
+        info.addTypes(ControlKind.TextBox,"input", "textarea");
+        info.addTypes(ControlKind.ToggleButton,"input");
+        info.addTypes(ControlKind.ListView,"ul");
+        info.addTypes(ControlKind.Wait,"*");
+
+    }
 
 	private IGuiDictionary dictionary = null;
 
@@ -139,9 +167,7 @@ public class WebAppFactory implements IApplicationFactory
     @Override
     public Set<ControlKind> supportedControlKinds()
     {
-        return Arrays.stream(supportedControls)
-                .sorted((c1,c2) -> c1.name().compareTo(c2.name()))
-                .collect(Collectors.toCollection(LinkedHashSet::new));
+        return info.supportedControlKinds();
     }
 
 	@Override
@@ -175,37 +201,6 @@ public class WebAppFactory implements IApplicationFactory
 	@Override
     public PluginInfo getInfo()
     {
-        Map<LocatorFieldKind, String>   fieldMap = new HashMap<>();
-        
-        fieldMap.put(LocatorFieldKind.ACTION,       "action");
-        fieldMap.put(LocatorFieldKind.UID,          "id"); 
-        fieldMap.put(LocatorFieldKind.CLAZZ,        "class");
-        fieldMap.put(LocatorFieldKind.NAME,         "name");
-        fieldMap.put(LocatorFieldKind.TITLE,        "title");
-        fieldMap.put(LocatorFieldKind.TEXT,         "placeholder");
-        fieldMap.put(LocatorFieldKind.TOOLTIP,      "title");
-
-		PluginInfo info = new PluginInfo(fieldMap);
-
-		info.addTypes(ControlKind.Any, "*");
-        info.addTypes(ControlKind.Button, "button", "input", "a", "img");
-        info.addTypes(ControlKind.CheckBox, "button", "input");
-		info.addTypes(ControlKind.ComboBox,"select", "input");
-		info.addTypes(ControlKind.Dialog,"form");
-		info.addTypes(ControlKind.Frame,"form", "body", "frame", "iframe");
-		info.addTypes(ControlKind.Image,"img");
-		info.addTypes(ControlKind.Label,"label", "span");
-		info.addTypes(ControlKind.Panel,"div");
-		info.addTypes(ControlKind.ProgressBar,"progress");
-		info.addTypes(ControlKind.RadioButton,"input");
-		info.addTypes(ControlKind.Row,"tr");
-		info.addTypes(ControlKind.Slider,"div");
-        info.addTypes(ControlKind.Table,"table");
-        info.addTypes(ControlKind.TextBox,"input", "textarea");
-		info.addTypes(ControlKind.ToggleButton,"input");
-		info.addTypes(ControlKind.ListView,"ul");
-        info.addTypes(ControlKind.Wait,"*");
-
 		return info;
     }
 }
