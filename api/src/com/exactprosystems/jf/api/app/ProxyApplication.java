@@ -171,7 +171,8 @@ public abstract class ProxyApplication implements IApplication
 	    	{
 				this.service.createLogger(remoteLog, remoteLogLevel, remoteLogPattern);
                 int pid = start ? this.service.run(parameters) : this.service.connect(parameters);
-                System.out.println("set info...");
+                System.out.println("factory = " + this.factory);
+                System.out.println("set info..." + this.factory.getInfo());
                 this.service.setPluginInfo(this.factory.getInfo());
                 return pid;
 	    	}
