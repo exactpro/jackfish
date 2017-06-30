@@ -232,6 +232,11 @@ public abstract class MatrixItem implements IMatrixItem, Mutable, Cloneable
 		return this.id.get();
 	}
 
+	public final void setId(String id) 
+	{
+		this.id.set(id);
+	}
+
 	public final boolean isOff()
 	{
 		return isTrue(this.off.get());
@@ -918,7 +923,7 @@ public abstract class MatrixItem implements IMatrixItem, Mutable, Cloneable
 
 	protected final void addParameter(List<String> firstLine, List<String> secondLine, TypeMandatory type, String parameter, String value)
 	{
-	    String prefix = Parser.useNewSyntax ? type.getPrefix() : Parser.systemPrefix; 
+	    String prefix = type.getPrefix(); 
 		firstLine.add(prefix + parameter);
 		if (value == null)
 		{
@@ -932,7 +937,7 @@ public abstract class MatrixItem implements IMatrixItem, Mutable, Cloneable
 
 	protected final void addParameter(List<String> firstLine, TypeMandatory type, String parameter)
 	{
-        String prefix = Parser.useNewSyntax ? type.getPrefix() : Parser.systemPrefix; 
+        String prefix = type.getPrefix(); 
 		firstLine.add(prefix + parameter);
 	}
 

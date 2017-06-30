@@ -118,7 +118,7 @@ public class Sys
     {
         try (ByteArrayOutputStream out = new ByteArrayOutputStream())
         {
-            Files.copy(Paths.get("test.dat"), out);
+            Files.copy(Paths.get(pathFrom), out);
             return out.toByteArray();
         }
     }

@@ -122,7 +122,6 @@ public class ActionsList
 		        TextSaveToFile.class,
 		        TextSetValue.class,
 		        Wait.class,
-				Vars.class,
 				XmlCreate.class,
 				XmlAddNode.class,
 				XmlChildren.class,
