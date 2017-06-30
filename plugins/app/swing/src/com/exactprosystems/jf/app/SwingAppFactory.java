@@ -13,7 +13,6 @@ import com.exactprosystems.jf.api.common.ParametersKind;
 
 import java.io.InputStream;
 import java.util.*;
-import java.util.stream.Collectors;
 
 public class SwingAppFactory implements IApplicationFactory
 {
@@ -30,16 +29,41 @@ public class SwingAppFactory implements IApplicationFactory
 
     public static final String propertyTitle    = "Title";
 
-	private static String[] empty = {  };
+	private static String[]    empty = {  };
 
 	private static ControlKind[] supportedControls = 
-		{ 
-			ControlKind.Any, ControlKind.Wait, ControlKind.Button, ControlKind.CheckBox, ControlKind.ComboBox, ControlKind.Dialog,
-			ControlKind.Frame, ControlKind.Label, ControlKind.ListView, ControlKind.Menu, ControlKind.MenuItem, ControlKind.Panel,
-			ControlKind.ProgressBar, ControlKind.RadioButton, ControlKind.ScrollBar, ControlKind.Slider, ControlKind.Splitter,
-			ControlKind.Spinner, ControlKind.Table, ControlKind.TabPanel, ControlKind.TextBox, ControlKind.ToggleButton, 
-			ControlKind.Tooltip, ControlKind.Tree,
-		};
+        { 
+            ControlKind.Any, ControlKind.Wait, ControlKind.Button, ControlKind.CheckBox, ControlKind.ComboBox, ControlKind.Dialog,
+            ControlKind.Frame, ControlKind.Label, ControlKind.ListView, ControlKind.Menu, ControlKind.MenuItem, ControlKind.Panel,
+            ControlKind.ProgressBar, ControlKind.RadioButton, ControlKind.ScrollBar, ControlKind.Slider, ControlKind.Splitter,
+            ControlKind.Spinner, ControlKind.Table, ControlKind.TabPanel, ControlKind.TextBox, ControlKind.ToggleButton, 
+            ControlKind.Tooltip, ControlKind.Tree,
+        };
+
+    
+	private static PluginInfo  info;
+    
+    static
+    {
+        Map<LocatorFieldKind, String> fieldMap = new HashMap<>();
+
+        fieldMap.put(LocatorFieldKind.UID,      null);
+        fieldMap.put(LocatorFieldKind.ACTION,   "action");
+        fieldMap.put(LocatorFieldKind.CLAZZ,    "class");
+        fieldMap.put(LocatorFieldKind.NAME,     "name");
+        fieldMap.put(LocatorFieldKind.TITLE,    "title");
+        fieldMap.put(LocatorFieldKind.TEXT,     null);
+        fieldMap.put(LocatorFieldKind.TOOLTIP,  "tooltip");
+
+        PluginInfo info = new PluginInfo(fieldMap);
+
+        for (ControlKind kind : supportedControls)
+        {
+            info.addTypes(kind, "*");
+        }
+
+        info.addExcludes(ControlKind.MenuItem, OperationKind.EXPAND, OperationKind.COLLAPSE);
+    }
 
 	private IGuiDictionary dictionary = null;
 
@@ -90,9 +114,7 @@ public class SwingAppFactory implements IApplicationFactory
     @Override
     public Set<ControlKind> supportedControlKinds()
     {
-        return Arrays.stream(supportedControls)
-                .sorted((c1,c2) -> c1.name().compareTo(c2.name()))
-                .collect(Collectors.toCollection(LinkedHashSet::new));
+        return info.supportedControlKinds();
     }
 
 	@Override
@@ -126,25 +148,6 @@ public class SwingAppFactory implements IApplicationFactory
     @Override
     public PluginInfo getInfo()
     {
-        Map<LocatorFieldKind, String> fieldMap = new HashMap<>();
-
-        fieldMap.put(LocatorFieldKind.UID,      null);
-        fieldMap.put(LocatorFieldKind.ACTION,   "action");
-        fieldMap.put(LocatorFieldKind.CLAZZ,    "class");
-        fieldMap.put(LocatorFieldKind.NAME,     "name");
-        fieldMap.put(LocatorFieldKind.TITLE,    "title");
-        fieldMap.put(LocatorFieldKind.TEXT,     null);
-        fieldMap.put(LocatorFieldKind.TOOLTIP,  "tooltip");
-
-		PluginInfo info = new PluginInfo(fieldMap);
-
-		for (ControlKind kind : supportedControls)
-		{
-			info.addTypes(kind, "*");
-		}
-
-		info.addExcludes(ControlKind.MenuItem, OperationKind.EXPAND, OperationKind.COLLAPSE);
-
 		return info;
     }
 }

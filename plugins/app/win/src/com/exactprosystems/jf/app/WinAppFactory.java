@@ -13,7 +13,6 @@ import com.exactprosystems.jf.api.common.ParametersKind;
 
 import java.io.InputStream;
 import java.util.*;
-import java.util.stream.Collectors;
 
 public class WinAppFactory implements IApplicationFactory
 {
@@ -38,16 +37,45 @@ public class WinAppFactory implements IApplicationFactory
 
 	public static final String      propertyWindowRectangle = "Rectangle";
     public static final String      propertyTitle           = "Title";
-	private static String[] empty = {  };
+	private static      String[]    empty = {  };
 
-	private static ControlKind[] supportedControls =
-		{ 
-			ControlKind.Any, ControlKind.Wait, ControlKind.Button, ControlKind.CheckBox, ControlKind.ComboBox, ControlKind.Dialog, ControlKind.Label, ControlKind.ListView, ControlKind.Menu, ControlKind.MenuItem, ControlKind.Panel,
-			ControlKind.ProgressBar, ControlKind.RadioButton, ControlKind.Row, ControlKind.ScrollBar, ControlKind.Slider,
-			ControlKind.Spinner, ControlKind.Table, ControlKind.TabPanel, ControlKind.TextBox, ControlKind.ToggleButton, 
-			ControlKind.TreeItem,
-		};
+	private static PluginInfo       info;
+	
+	static
+	{
+        Map<LocatorFieldKind, String> fieldMap = new LinkedHashMap<>();
+        fieldMap.put(LocatorFieldKind.UID,      AttributeKind.UID.name().toLowerCase());
+        fieldMap.put(LocatorFieldKind.CLAZZ,    AttributeKind.CLASS.name().toLowerCase());
+        fieldMap.put(LocatorFieldKind.NAME,     AttributeKind.NAME.name().toLowerCase());
+        fieldMap.put(LocatorFieldKind.TEXT,     AttributeKind.TEXT.name().toLowerCase());
+        
+        info = new PluginInfo(fieldMap);
+        info.addTypes(ControlKind.Any,          ControlType.Any.name());
+        info.addTypes(ControlKind.Button,       ControlType.Button.name(), ControlType.SplitButton.name(), ControlType.Hyperlink.name());
+        info.addTypes(ControlKind.CheckBox,     ControlType.CheckBox.name());
+        info.addTypes(ControlKind.ComboBox,     ControlType.ComboBox.name());
+        info.addTypes(ControlKind.Dialog,       ControlType.Window.name());
+        info.addTypes(ControlKind.Label,        ControlType.Text.name());
+        info.addTypes(ControlKind.MenuItem,     ControlType.MenuItem.name());
+        info.addTypes(ControlKind.Panel,        ControlType.Pane.name());
+        info.addTypes(ControlKind.RadioButton,  ControlType.RadioButton.name());
+        info.addTypes(ControlKind.Row,          ControlType.Custom.name());
+        info.addTypes(ControlKind.Table,        ControlType.Table.name(), ControlType.DataGrid.name());
+        info.addTypes(ControlKind.TabPanel,     ControlType.Tab.name());
+        info.addTypes(ControlKind.TextBox,      ControlType.Edit.name(), ControlType.Document.name());
+        info.addTypes(ControlKind.Menu,         ControlType.Menu.name());
+        info.addTypes(ControlKind.Wait,         ControlType.Wait.name());
+        info.addTypes(ControlKind.ToggleButton, ControlType.Button.name());
+        info.addTypes(ControlKind.ListView,     ControlType.List.name(), ControlType.DataGrid.name());
+        info.addTypes(ControlKind.ProgressBar,  ControlType.ProgressBar.name(), ControlType.Pane.name());
+        info.addTypes(ControlKind.ScrollBar,    ControlType.ScrollBar.name());
+        info.addTypes(ControlKind.Slider,       ControlType.Slider.name());
+        info.addTypes(ControlKind.TreeItem,     ControlType.TreeItem.name());
 
+        info.addExcludes(ControlKind.Menu,      OperationKind.KEY_DOWN, OperationKind.KEY_UP, OperationKind.PRESS, OperationKind.EXPAND, OperationKind.COLLAPSE);
+        info.addExcludes(ControlKind.MenuItem,  OperationKind.KEY_DOWN, OperationKind.KEY_UP, OperationKind.PRESS);
+	}
+	
 	private IGuiDictionary dictionary = null;
 
 	//----------------------------------------------------------------------------------------------
@@ -98,9 +126,7 @@ public class WinAppFactory implements IApplicationFactory
     @Override
     public Set<ControlKind> supportedControlKinds()
     {
-        return Arrays.stream(supportedControls)
-                .sorted((c1,c2) -> c1.name().compareTo(c2.name()))
-                .collect(Collectors.toCollection(LinkedHashSet::new));
+        return info.supportedControlKinds();
     }
 
 	@Override
@@ -134,37 +160,6 @@ public class WinAppFactory implements IApplicationFactory
 	@Override
     public PluginInfo getInfo()
     {
-		Map<LocatorFieldKind, String> fieldMap = new LinkedHashMap<>();
-		fieldMap.put(LocatorFieldKind.UID,		AttributeKind.UID.name().toLowerCase());
-		fieldMap.put(LocatorFieldKind.CLAZZ,	AttributeKind.CLASS.name().toLowerCase());
-		fieldMap.put(LocatorFieldKind.NAME,		AttributeKind.NAME.name().toLowerCase());
-		fieldMap.put(LocatorFieldKind.TEXT,		AttributeKind.TEXT.name().toLowerCase());
-    	
-		PluginInfo info = new PluginInfo(fieldMap);
-		info.addTypes(ControlKind.Any,			ControlType.Any.name());
-		info.addTypes(ControlKind.Button,		ControlType.Button.name(), ControlType.SplitButton.name(), ControlType.Hyperlink.name());
-		info.addTypes(ControlKind.CheckBox,		ControlType.CheckBox.name());
-		info.addTypes(ControlKind.ComboBox,		ControlType.ComboBox.name());
-		info.addTypes(ControlKind.Dialog,		ControlType.Window.name());
-		info.addTypes(ControlKind.Label,		ControlType.Text.name());
-		info.addTypes(ControlKind.MenuItem,		ControlType.MenuItem.name());
-		info.addTypes(ControlKind.Panel,		ControlType.Pane.name());
-		info.addTypes(ControlKind.RadioButton,	ControlType.RadioButton.name());
-		info.addTypes(ControlKind.Row,			ControlType.Custom.name());
-		info.addTypes(ControlKind.Table,		ControlType.Table.name(), ControlType.DataGrid.name());
-		info.addTypes(ControlKind.TabPanel,		ControlType.Tab.name());
-		info.addTypes(ControlKind.TextBox,		ControlType.Edit.name(), ControlType.Document.name());
-		info.addTypes(ControlKind.Menu,			ControlType.Menu.name());
-		info.addTypes(ControlKind.Wait,			ControlType.Wait.name());
-		info.addTypes(ControlKind.ToggleButton,	ControlType.Button.name());
-		info.addTypes(ControlKind.ListView,		ControlType.List.name(), ControlType.DataGrid.name());
-		info.addTypes(ControlKind.ProgressBar,	ControlType.ProgressBar.name(), ControlType.Pane.name());
-		info.addTypes(ControlKind.ScrollBar,	ControlType.ScrollBar.name());
-		info.addTypes(ControlKind.Slider,		ControlType.Slider.name());
-		info.addTypes(ControlKind.TreeItem,		ControlType.TreeItem.name());
-
-		info.addExcludes(ControlKind.Menu,		OperationKind.KEY_DOWN, OperationKind.KEY_UP, OperationKind.PRESS, OperationKind.EXPAND, OperationKind.COLLAPSE);
-		info.addExcludes(ControlKind.MenuItem,	OperationKind.KEY_DOWN, OperationKind.KEY_UP, OperationKind.PRESS);
 		return info;
     }
 }
