@@ -15,6 +15,7 @@ import com.exactprosystems.jf.documents.matrix.parser.items.NameSpace;
 import com.exactprosystems.jf.documents.matrix.parser.items.SubCase;
 import com.exactprosystems.jf.tool.matrix.MatrixFx;
 import com.exactprosystems.jf.tool.wizard.AbstractWizard;
+import com.exactprosystems.jf.tool.wizard.CommandBuilder;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.*;
@@ -44,10 +45,11 @@ public class LibraryWizard extends AbstractWizard {
 
     private List<String> commonFolder = new ArrayList<>();
 
+    ActionRequired actionRequired;
 
     private Set<File> allFiles = new HashSet<>();
-    private MatrixFx currentMatrix;
     private SubCase currentSubCase;
+
     private String oldSubId;
     private String newSubId;
     private String newNameSpaceName;
@@ -84,7 +86,7 @@ public class LibraryWizard extends AbstractWizard {
         pane.setVgap(10);
         pane.setHgap(5);
 
-        Button refresh = new Button("Refresh");
+        Button refresh = new Button("Get affected files");
         refresh.setOnAction(event -> commonFolder.forEach(s ->
         {
             ObservableList<String> objects = FXCollections.observableArrayList();
@@ -103,6 +105,7 @@ public class LibraryWizard extends AbstractWizard {
         pane.add(new Label("Matrices that will be affected: "), 0, 3, 2, 1);
         pane.add(listView, 0, 4, 2, 1);
         pane.add(refresh, 0, 5);
+        pane.add(new Label("Total: " + listView.getItems().size()), 1, 5);
 
         borderPane.setCenter(pane);
 
@@ -157,6 +160,8 @@ public class LibraryWizard extends AbstractWizard {
 
     @Override
     protected Supplier<List<WizardCommand>> getCommands() {
+        CommandBuilder builder = CommandBuilder.start();
+
         return null;
     }
 
@@ -164,7 +169,7 @@ public class LibraryWizard extends AbstractWizard {
     public void init(IContext context, WizardManager wizardManager, Object... parameters) {
         super.init(context, wizardManager, parameters);
 
-        this.currentMatrix = super.get(MatrixFx.class, parameters);
+        MatrixFx currentMatrix = super.get(MatrixFx.class, parameters);
         this.currentSubCase = super.get(SubCase.class, parameters);
         this.oldSubId = currentSubCase.getId();
         this.oldNameSpaceName = currentSubCase.getParent().getClass() == NameSpace.class ? currentSubCase.getParent().getId() : "";
@@ -174,6 +179,16 @@ public class LibraryWizard extends AbstractWizard {
                 map(a -> MainRunner.makeDirWithSubstitutions(a.get())).collect(Collectors.toList()));
         this.commonFolder.forEach(s -> getAllFiles(new File(s)));
 
+    }
+
+    enum ActionRequired{
+
+        ONLY_SUB,
+        SUB_NAMESPACE,
+        SUB_NAMESPACE_FILE,
+        SUB_FILE,
+        NAMESPACE,
+        NAMESPACE_FILE
     }
 
 }
