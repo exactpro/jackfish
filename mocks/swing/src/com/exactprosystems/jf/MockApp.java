@@ -280,40 +280,16 @@ public class MockApp
 		menu.add(menuItem1);
 		menuItem1.add(menuItem2);
 		menuItem2.add(menuItem3);
-		menuItem3.addChangeListener(e -> selectLabel.setText(menuItemName3 + "_select"));
-		menuItem3.addPropertyChangeListener(new PropertyChangeListener() {
-			@Override
-			public void propertyChange(PropertyChangeEvent evt) {
-				if(evt.getNewValue() != null)
-				{
-					selectLabel.setText(menuItemName3 + "_select");
-				}
-				else
-				{
-					selectLabel.setText(menuItemName2 + "_select");
-				}
-			}
-		});
-		menu.addMenuListener(new MenuListener()
-		{
-			@Override
-			public void menuSelected(MenuEvent e)
-			{
-				centralLabel.setText(menuName + "_click");
-				selectLabel.setText(menuName + "_select");
-			}
-
-			@Override
-			public void menuDeselected(MenuEvent e)
-			{
-				selectLabel.setText("selectLabel");
-			}
-
-			@Override
-			public void menuCanceled(MenuEvent e)
-			{
-			}
-		});
+		menuItem3.addPropertyChangeListener(evt -> {
+            if(evt.getNewValue() != null)
+            {
+                selectLabel.setText(menuItemName3 + "_select");
+            }
+            else
+            {
+                selectLabel.setText(menuItemName2 + "_select");
+            }
+        });
 		menu.addMenuKeyListener(new MenuKeyListener()
 		{
 			@Override

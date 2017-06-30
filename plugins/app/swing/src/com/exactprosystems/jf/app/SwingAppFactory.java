@@ -144,7 +144,6 @@ public class SwingAppFactory implements IApplicationFactory
 		}
 
 		info.addExcludes(ControlKind.MenuItem, OperationKind.EXPAND, OperationKind.COLLAPSE);
-		info.addExcludes(ControlKind.Menu, OperationKind.EXPAND, OperationKind.COLLAPSE);
 
 		return info;
     }

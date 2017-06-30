@@ -643,44 +643,40 @@ public class SwingOperationExecutor implements OperationExecutor<ComponentFixtur
 		{
 			this.currentRobot.waitForIdle();
 			Component currentComponent = component.component();
-			String[] split = path.split("/");
 			if (currentComponent instanceof JMenu)
 			{
-				logger.debug("path : " + path);
-				JMenu currentMenu = component.targetCastedTo(JMenu.class);
-				logger.debug("current menu : " + currentMenu.getText());
+				ArrayList<String> items = new ArrayList<>();
+				items.addAll(Arrays.asList(path.split("/")));
 
-				if(split.length == 1)
+				JMenu menu = (JMenu) currentComponent;
+				if(items.size() <= 1)
 				{
 					if(expandOrCollapse)
 					{
-						currentMenu.setPopupMenuVisible(true);
-						currentMenu.setSelected(true);
+						menu.doClick();
 					}
 					else
 					{
-						currentMenu.setPopupMenuVisible(false);
-						currentMenu.setSelected(false);
+						MenuSelectionManager.defaultManager().clearSelectedPath();
 					}
+					return true;
+				}
+
+				items.remove(0);
+				if(!expandOrCollapse)
+				{
+					items.remove(items.size() - 1);
+				}
+
+				menu = findMenu(menu, items);
+
+				if(menu != null)
+				{
+					menu.doClick();
 				}
 				else
 				{
-					currentMenu.setPopupMenuVisible(true);
-					currentMenu.setSelected(true);
-					if (expandOrCollapse) {
-						for (String pathItem : split) {
-							currentMenu = expand(currentMenu, pathItem);
-						}
-						return true;
-					} else {
-						for (int i = 0; i < split.length; i++) {
-							currentMenu = expand(currentMenu, split[i]);
-						}
-						currentMenu.setSelected(false);
-						currentMenu.setSelected(true);
-						currentMenu.setPopupMenuVisible(false);
-						return true;
-					}
+					throw new WrongParameterException("The menu element was not found in path '" + path + "'");
 				}
 			}
 			else if (currentComponent instanceof JTree)
@@ -714,6 +710,30 @@ public class SwingOperationExecutor implements OperationExecutor<ComponentFixtur
 			logger.error(e.getMessage(), e);
 			throw e;
 		}
+	}
+
+	private JMenu findMenu(JMenu menu, List<String> items)
+	{
+		if(items.isEmpty())
+		{
+			return menu;
+		}
+
+		boolean found = false;
+		for(String menuName : items)
+		{
+			found = false;
+			for(Component menuComponent : menu.getMenuComponents())
+			{
+				if (menuComponent instanceof JMenu && ((JMenu) menuComponent).getText().equals(menuName))
+				{
+					menu = (JMenu) menuComponent;
+					found = true;
+					break;
+				}
+			}
+		}
+		return found ? menu : null;
 	}
 
 	@Override
@@ -1778,42 +1798,6 @@ public class SwingOperationExecutor implements OperationExecutor<ComponentFixtur
 		throw new OperationNotAllowedException(String.format("Component %s don't have value", currentComponent));
 	}
 	
-	private JMenu expand(JMenu parent, String menuName) throws RemoteException
-	{
-		for (int i = 0; i < parent.getItemCount(); i++)
-		{
-			Component menuComponent = parent.getMenuComponent(i);
-			if (menuComponent instanceof JMenu && ((JMenu) menuComponent).getText().equals(menuName))
-			{
-				JMenu returnMenu = (JMenu) menuComponent;
-				logger.debug("found menu : " + returnMenu.getText());
-				returnMenu.setPopupMenuVisible(true);
-				logger.debug("Menu visible? : " + returnMenu.isPopupMenuVisible());
-				returnMenu.setSelected(true);
-				return returnMenu;
-			}
-		}
-		throw new WrongParameterException(String.format("Menu with name '%s' not found in menu '%s'", menuName, parent.getText()));
-	}
-
-	private JMenu collapse(JMenu parent, String menuName) throws RemoteException
-	{
-		for (int i = 0; i < parent.getItemCount(); i++)
-		{
-			Component menuComponent = parent.getMenuComponent(i);
-			if (menuComponent instanceof JMenu && ((JMenu) menuComponent).getText().equals(menuName))
-			{
-				JMenu returnMenu = (JMenu) menuComponent;
-				logger.debug("found menu : " + returnMenu.getText());
-				returnMenu.setSelected(true);
-				returnMenu.setPopupMenuVisible(false);
-				logger.debug("Menu visible? : " + returnMenu.isPopupMenuVisible());
-				return returnMenu;
-			}
-		}
-		throw new WrongParameterException(String.format("Menu with name '%s' not found in menu '%s'", menuName, parent.getText()));
-	}
-
 	@SuppressWarnings("unchecked")
 	private <T extends Component> T getComp(Class<T> type, ComponentFixture<?> window, Locator locator) throws RemoteException
 	{
