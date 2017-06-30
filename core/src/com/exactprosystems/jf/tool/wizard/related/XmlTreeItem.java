@@ -8,13 +8,13 @@ import org.w3c.dom.Node;
 
 import java.util.*;
 
-public class XpathTreeItem extends XpathItem
+public class XmlTreeItem extends XpathItem
 {
 	private boolean markIsVisible = true;
 	private Set<BeanWithMark> set = new HashSet<>();
 	private MarkerStyle currentStyle;
 
-	public XpathTreeItem(HBox box, Node node)
+	public XmlTreeItem(HBox box, Node node)
 	{
 		super(box, node);
 	}
@@ -67,14 +67,14 @@ public class XpathTreeItem extends XpathItem
 		return new ArrayList<>(set);
 	}
 
-	public MarkerStyle getState()
+	public MarkerStyle getStyle()
 	{
-		return currentStyle;
+		return this.currentStyle;
 	}
 
 	public boolean isMarkVisible()
 	{
-		return markIsVisible;
+		return this.markIsVisible;
 	}
 
 	public void setMarkIsVisible(boolean markIsVisible)

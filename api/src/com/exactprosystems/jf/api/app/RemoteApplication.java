@@ -478,30 +478,11 @@ public abstract class RemoteApplication implements IRemoteApplication
 	}
 
 	@Override
-	public Document getTree(Locator owner) throws RemoteException
-	{
-		try
-		{
-			return getTreeDerived(owner);
-		}
-		catch (RemoteException e)
-		{
-			throw e;
-		}
-		catch (Exception e)
-		{
-			String msg = String.format("Error getTree(%s)", owner);
-			throw new ProxyException(msg, e.getMessage(), e);
-		}
-	}
-
-	@Override
 	public byte[] getTreeBytes(Locator owner) throws RemoteException
 	{
 		try
 		{
 			Document tree = getTreeDerived(owner);
-
 			return Converter.convertXmlDocumentToZipByteArray(tree);
 		}
 		catch (RemoteException e)

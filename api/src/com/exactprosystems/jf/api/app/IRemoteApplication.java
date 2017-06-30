@@ -48,9 +48,7 @@ public interface IRemoteApplication extends Remote
 	CheckingLayoutResult 		checkLayout		(Locator owner, Locator element, Spec spec) throws RemoteException;
 	int 						closeAll		(Locator element, Collection<LocatorAndOperation> operations) throws RemoteException;
 	String 						closeWindow		() throws RemoteException;
-	Document 					getTree			(Locator owner) throws RemoteException;
-
-	byte[] getTreeBytes(Locator owner) throws RemoteException;
+	byte[]                      getTreeBytes    (Locator owner) throws RemoteException;
 
 	void                        startNewDialog  () throws RemoteException;
 	void 						moveWindow(int x, int y) throws RemoteException;

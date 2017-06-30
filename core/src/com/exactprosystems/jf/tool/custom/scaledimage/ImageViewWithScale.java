@@ -124,6 +124,8 @@ public class ImageViewWithScale extends BorderPane
 
 	public void showRectangle(java.awt.Rectangle rectangle, MarkerStyle style, String text)
 	{
+	    System.err.println(">> show rec=" + rectangle+" style="+style+" text="+text);
+	    
 	    DecoragedRectangle newRectangle = new DecoragedRectangle(rectangle, style, text);
 	    newRectangle.setTextVisible(this.cbIds.isSelected());
 	    this.group.getChildren().add(newRectangle);
@@ -131,6 +133,8 @@ public class ImageViewWithScale extends BorderPane
 	
     public void hideRectangle(java.awt.Rectangle rectangle, MarkerStyle style)
     {
+        System.err.println(">> hide rec=" + rectangle+" style="+style);
+
         this.group.getChildren().removeIf(d -> (d instanceof DecoragedRectangle) && (((DecoragedRectangle)d).matches(rectangle, style)));
     }
 	

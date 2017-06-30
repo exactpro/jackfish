@@ -34,7 +34,7 @@ import com.exactprosystems.jf.tool.helpers.DialogsHelper;
 import com.exactprosystems.jf.tool.wizard.AbstractWizard;
 import com.exactprosystems.jf.tool.wizard.CommandBuilder;
 import com.exactprosystems.jf.tool.wizard.related.ImageAndOffset;
-import com.exactprosystems.jf.tool.wizard.related.XpathTreeItem;
+import com.exactprosystems.jf.tool.wizard.related.XmlTreeItem;
 
 import javafx.concurrent.Service;
 import javafx.geometry.Insets;
@@ -104,7 +104,7 @@ public class XpathWizard extends AbstractWizard
     private SplitPane                          splitPane;
     private ImageViewWithScale                 imageViewWithScale;
     private XmlTreeView                        xmlTreeView;
-    private FindPanel<TreeItem<XpathTreeItem>> findPanel;
+    private FindPanel<TreeItem<XmlTreeItem>> findPanel;
     private OneLine[]                          lines;
     private CheckBox                           useText;
     private HBox                               hBoxCheckboxes;
@@ -139,7 +139,7 @@ public class XpathWizard extends AbstractWizard
         borderPane.setMinSize(600.0, 800.0);
 
         this.xmlTreeView = new XmlTreeView(v->{}, v->{});
-        this.xmlTreeView.hideFirstColumn();
+        this.xmlTreeView.setMarkersVisible(false);
 
         this.imageViewWithScale = new ImageViewWithScale();
         this.imageViewWithScale.setOnRectangleClick(rectangle -> this.xmlTreeView.selectItem(rectangle));
@@ -296,16 +296,16 @@ public class XpathWizard extends AbstractWizard
 
     private void initListeners()
     {
-        this.findPanel.setListener(new IFind<TreeItem<XpathTreeItem>>()
+        this.findPanel.setListener(new IFind<TreeItem<XmlTreeItem>>()
         {
             @Override
-            public void find(TreeItem<XpathTreeItem> xpathItemTreeItem)
+            public void find(TreeItem<XmlTreeItem> xpathItemTreeItem)
             {
                 xmlTreeView.selectAndScroll(xpathItemTreeItem);
             }
 
             @Override
-            public List<TreeItem<XpathTreeItem>> findItem(String what, boolean matchCase, boolean wholeWord)
+            public List<TreeItem<XmlTreeItem>> findItem(String what, boolean matchCase, boolean wholeWord)
             {
                 return xmlTreeView.findItem(what, matchCase, wholeWord);
             }
