@@ -49,18 +49,21 @@ public class WinOperationExecutorJNA implements OperationExecutor<UIProxyJNA>
     @Override
     public void setPluginInfo(PluginInfo info)
     {
+        logger.info(">> setPluginInfo   " + info);
         this.info = info;
     }
 
     @Override
     public boolean isAllowed(ControlKind kind, OperationKind operation)
     {
+        logger.info(">> isAllowed " + this.info);
 		return this.info.isAllowed(kind, operation);
     }
     
 	@Override
 	public boolean isSupported(ControlKind kind)
 	{
+        logger.info(">> isSupported " + this.info);
 		return this.info.isSupported(kind);
 	}
 

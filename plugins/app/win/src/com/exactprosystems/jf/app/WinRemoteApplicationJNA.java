@@ -63,6 +63,7 @@ public class WinRemoteApplicationJNA extends RemoteApplication
     @Override
     protected void setPluginInfoDerived(PluginInfo info) throws Exception
     {
+        logger.info(">> setPluginInfo " + info );
         this.info = info;
         this.operationExecutor.setPluginInfo(info);
 		this.driver.setPluginInfo(info);
