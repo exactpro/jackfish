@@ -11,6 +11,7 @@ import com.exactprosystems.jf.common.VerboseLevel;
 import com.exactprosystems.jf.documents.ConsoleDocumentFactory;
 import com.exactprosystems.jf.documents.matrix.Matrix;
 import com.exactprosystems.jf.documents.matrix.parser.items.Call;
+import com.exactprosystems.jf.documents.matrix.parser.items.MatrixItem;
 import com.exactprosystems.jf.documents.matrix.parser.items.NameSpace;
 import com.exactprosystems.jf.documents.matrix.parser.items.SubCase;
 import com.exactprosystems.jf.tool.matrix.MatrixFx;
@@ -44,8 +45,6 @@ import java.util.stream.Collectors;
 public class LibraryWizard extends AbstractWizard {
 
     private List<String> commonFolder = new ArrayList<>();
-
-    ActionRequired actionRequired;
 
     private Set<File> allFiles = new HashSet<>();
     private SubCase currentSubCase;
@@ -81,6 +80,10 @@ public class LibraryWizard extends AbstractWizard {
         TextField nameOfSub = new TextField(currentSubCase.getId());
         TextField nameOfNameSpace = new TextField(oldNameSpaceName);
         TextField nameOfaNewFile = new TextField();
+
+        nameOfSub.textProperty().addListener((observable, oldValue, newValue) -> this.newSubId = newValue);
+        nameOfNameSpace.textProperty().addListener((observable, oldValue, newValue) -> this.newNameSpaceName = newValue);
+        nameOfaNewFile.textProperty().addListener((observable, oldValue, newValue) -> this.newFileName = newValue);
 
         GridPane pane = new GridPane();
         pane.setVgap(10);
@@ -138,6 +141,33 @@ public class LibraryWizard extends AbstractWizard {
         return result;
     }
 
+    private ActionRequired getAction() {
+        if (newSubId != null && newNameSpaceName != null && newFileName != null)
+        {
+            return ActionRequired.SUB_NAMESPACE_FILE;
+        }
+        else if (newSubId != null && newNameSpaceName != null)
+        {
+            return ActionRequired.SUB_NAMESPACE;
+
+        }else if(newSubId != null && newFileName != null)
+        {
+            return ActionRequired.SUB_FILE;
+        }
+        else if (newSubId != null)
+        {
+            return ActionRequired.ONLY_SUB;
+
+        }else if(newNameSpaceName != null)
+        {
+            return ActionRequired.NAMESPACE;
+        }else
+        {
+            return ActionRequired.NAMESPACE_FILE;
+        }
+
+    }
+
 
     private void getAllFiles(File path) {
 
@@ -162,7 +192,34 @@ public class LibraryWizard extends AbstractWizard {
     protected Supplier<List<WizardCommand>> getCommands() {
         CommandBuilder builder = CommandBuilder.start();
 
+        makeRefactor().forEach(item -> {
+
+
+        });
+
         return null;
+    }
+
+    private List<MatrixItem> makeRefactor() {
+        List<MatrixItem> res = new LinkedList<>();
+
+        switch (getAction())
+        {
+            case ONLY_SUB:
+                break;
+            case NAMESPACE_FILE:
+                break;
+            case NAMESPACE:
+                break;
+            case SUB_FILE:
+                break;
+            case SUB_NAMESPACE:
+                break;
+            case SUB_NAMESPACE_FILE:
+                break;
+        }
+
+        return res;
     }
 
     @Override
@@ -182,7 +239,6 @@ public class LibraryWizard extends AbstractWizard {
     }
 
     enum ActionRequired{
-
         ONLY_SUB,
         SUB_NAMESPACE,
         SUB_NAMESPACE_FILE,
