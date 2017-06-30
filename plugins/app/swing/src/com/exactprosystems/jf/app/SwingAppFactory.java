@@ -55,7 +55,7 @@ public class SwingAppFactory implements IApplicationFactory
         fieldMap.put(LocatorFieldKind.TEXT,     null);
         fieldMap.put(LocatorFieldKind.TOOLTIP,  "tooltip");
 
-        PluginInfo info = new PluginInfo(fieldMap);
+        info = new PluginInfo(fieldMap);
 
         for (ControlKind kind : supportedControls)
         {

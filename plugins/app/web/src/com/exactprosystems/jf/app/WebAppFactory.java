@@ -60,7 +60,7 @@ public class WebAppFactory implements IApplicationFactory
         fieldMap.put(LocatorFieldKind.TEXT,         "placeholder");
         fieldMap.put(LocatorFieldKind.TOOLTIP,      "title");
 
-        PluginInfo info = new PluginInfo(fieldMap);
+        info = new PluginInfo(fieldMap);
 
         info.addTypes(ControlKind.Any, "*");
         info.addTypes(ControlKind.Button, "button", "input", "a", "img");
