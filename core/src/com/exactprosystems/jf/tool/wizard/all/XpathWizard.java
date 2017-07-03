@@ -16,14 +16,17 @@ import com.exactprosystems.jf.api.app.Locator;
 import com.exactprosystems.jf.api.common.Converter;
 import com.exactprosystems.jf.api.common.IContext;
 import com.exactprosystems.jf.api.error.JFRemoteException;
-import com.exactprosystems.jf.api.wizard.*;
+import com.exactprosystems.jf.api.wizard.WizardAttribute;
+import com.exactprosystems.jf.api.wizard.WizardCategory;
+import com.exactprosystems.jf.api.wizard.WizardCommand;
+import com.exactprosystems.jf.api.wizard.WizardManager;
 import com.exactprosystems.jf.common.utils.JfService;
 import com.exactprosystems.jf.common.utils.XpathUtils;
 import com.exactprosystems.jf.documents.guidic.Section;
 import com.exactprosystems.jf.documents.guidic.Window;
 import com.exactprosystems.jf.documents.guidic.controls.AbstractControl;
 import com.exactprosystems.jf.tool.Common;
-import com.exactprosystems.jf.tool.Common.SpacerEnum;
+import com.exactprosystems.jf.tool.CssVariables;
 import com.exactprosystems.jf.tool.custom.controls.field.CustomFieldWithButton;
 import com.exactprosystems.jf.tool.custom.find.FindPanel;
 import com.exactprosystems.jf.tool.custom.find.IFind;
@@ -35,30 +38,23 @@ import com.exactprosystems.jf.tool.wizard.AbstractWizard;
 import com.exactprosystems.jf.tool.wizard.CommandBuilder;
 import com.exactprosystems.jf.tool.wizard.related.ImageAndOffset;
 import com.exactprosystems.jf.tool.wizard.related.XmlTreeItem;
-
 import javafx.concurrent.Service;
-import javafx.geometry.Insets;
 import javafx.geometry.Orientation;
-import javafx.scene.control.Accordion;
+import javafx.geometry.Pos;
+import javafx.scene.control.*;
 import javafx.scene.control.Button;
-import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
-import javafx.scene.control.SplitPane;
-import javafx.scene.control.TitledPane;
-import javafx.scene.control.TreeItem;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
-import java.awt.Rectangle;
+import javafx.scene.layout.*;
+import org.w3c.dom.Document;
+import org.w3c.dom.Node;
+
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.function.Supplier;
-
-import org.w3c.dom.Document;
-import org.w3c.dom.Node;
+import java.util.stream.IntStream;
 
 @WizardAttribute(
         name 				= "Xpath wizard",
@@ -76,17 +72,44 @@ public class XpathWizard extends AbstractWizard
     {
         public OneLine(int count)
         {
-            this.btnXpath          = new Button(" ");
-            this.btnCopyToRelative = new Button("Rel");
-            this.labelXpathCount   = new Label(" ");
-            this.hbox = new HBox(this.btnXpath, this.btnCopyToRelative, this.labelXpathCount);
+            this.btnXpath          = new Button("");
+			this.btnXpath.setMaxWidth(Double.MAX_VALUE);
+			BorderPane.setAlignment(this.btnXpath, Pos.CENTER);
+			this.btnCopyToRelative = new Button("Rel");
+            this.labelXpathCount   = new Label("0");
+
+            this.borderPane = new BorderPane();
+			this.borderPane.setCenter(this.btnXpath);
+
+			HBox box = new HBox();
+			box.setAlignment(Pos.CENTER);
+			box.setPrefWidth(76.0);
+			box.setPrefHeight(29.0);
+			BorderPane.setAlignment(box, Pos.BOTTOM_LEFT);
+			box.getChildren().addAll(this.btnCopyToRelative, Common.createSpacer(Common.SpacerEnum.HorizontalMin), this.labelXpathCount);
+			borderPane.setRight(box);
         }
-        
-        public Label  labelXpathCount;
+
+        javafx.scene.Node getNode()
+		{
+			return this.borderPane;
+		}
+
+		public Label  labelXpathCount;
         public Button btnXpath;
         public Button btnCopyToRelative;
-        public HBox   hbox;
-    }
+		private BorderPane borderPane;
+	}
+
+	private static class OneMagicLine extends OneLine
+	{
+		public OneMagicLine(int count)
+		{
+			super(count);
+			this.btnCopyToRelative.setText("");
+			this.btnCopyToRelative.setId("btnWizard");
+		}
+	}
     
     private AppConnection                      currentConnection = null;
     private Window                             currentWindow     = null;
@@ -132,58 +155,141 @@ public class XpathWizard extends AbstractWizard
         this.currentControl    = super.get(AbstractControl.class, parameters);
     }
 
-    @Override
-    protected void initDialog(BorderPane borderPane)
-    {
-        borderPane.setPrefSize(600.0, 800.0);
-        borderPane.setMinSize(600.0, 800.0);
+	@Override
+	protected void initDialog(BorderPane borderPane)
+	{
+		borderPane.setPrefHeight(1000.0);
+		borderPane.setPrefWidth(1000.0);
 
-        this.xmlTreeView = new XmlTreeView(v->{}, v->{});
-        this.xmlTreeView.setMarkersVisible(false);
+		//region center
+		this.splitPane = new SplitPane();
+		this.splitPane.setOrientation(Orientation.VERTICAL);
+		this.splitPane.setDividerPositions(0.0);
+		this.splitPane.setOrientation(Orientation.VERTICAL);
+		this.splitPane.setPrefSize(160.0, 200.0);
+		BorderPane.setAlignment(this.splitPane, Pos.CENTER);
 
-        this.imageViewWithScale = new ImageViewWithScale();
-        this.imageViewWithScale.setOnRectangleClick(rectangle -> this.xmlTreeView.selectItem(rectangle));
-        
-        this.splitPane = new SplitPane(this.imageViewWithScale, this.xmlTreeView);
-        this.splitPane.setOrientation(Orientation.VERTICAL);
-        
-        this.findPanel = new FindPanel<>();
-        
-        TitledPane helper = new TitledPane();
-        helper.setText("Helper");
-        GridPane grid = new GridPane();
-        grid.setVgap(4);
-        grid.setPadding(new Insets(5, 5, 5, 5));
-        this.cfRelativeFrom = new CustomFieldWithButton();
-        HBox relative = new HBox(new Label("Relative "), this.cfRelativeFrom);
-        grid.add(relative, 0, 0);
-        this.useText = new CheckBox("use text()");
-        this.hBoxCheckboxes = new HBox(this.useText);
-        grid.add(this.hBoxCheckboxes, 0, 1);
-        
-        this.lines = new OneLine[4];
-        for (int i = 0; i < this.lines.length; i++)
-        {
-            this.lines[i] = new OneLine(i);
-            grid.add(this.lines[i].hbox, 0, 2 + i);
-        }
-        helper.setContent(grid);
-        Accordion accordion = new Accordion();
-        accordion.getPanes().add(helper);
-        
-        this.cfMainExpression = new CustomFieldWithButton("Enter xpath here");
-        this.lblFound = new Label("100");
-        HBox resultBox = new HBox(this.cfMainExpression, Common.createSpacer(SpacerEnum.VerticalMin), this.lblFound);
-        
-        VBox mainBox = new VBox(this.splitPane, this.findPanel, accordion);
-        
-        borderPane.setCenter(mainBox);
-        borderPane.setBottom(resultBox);
-        
-        initListeners();
-    }
+		GridPane gridPane = new GridPane();
+		ColumnConstraints c0 = new ColumnConstraints();
+		c0.setHgrow(Priority.SOMETIMES);
+		c0.setMinWidth(10.0);
 
-    @Override
+		gridPane.getColumnConstraints().addAll(c0);
+
+		RowConstraints r0 = new RowConstraints();
+		r0.setVgrow(Priority.SOMETIMES);
+		r0.setMinHeight(10.0);
+
+		RowConstraints r1 = new RowConstraints();
+		r1.setVgrow(Priority.SOMETIMES);
+		r1.setMinHeight(30.0);
+		r1.setMaxHeight(30.0);
+		r1.setPrefHeight(30.0);
+
+		gridPane.getRowConstraints().addAll(r0, r1);
+
+		this.findPanel = new FindPanel<>();
+		this.findPanel.getStyleClass().remove(CssVariables.FIND_PANEL);
+		gridPane.add(this.findPanel, 0, 1);
+
+		this.xmlTreeView = new XmlTreeView(v->{}, v->{});
+		this.xmlTreeView.setMarkersVisible(false);
+
+		this.imageViewWithScale = new ImageViewWithScale();
+		this.imageViewWithScale.setOnRectangleClick(rectangle -> this.xmlTreeView.selectItem(rectangle));
+
+		gridPane.add(this.xmlTreeView, 0, 0);
+		this.splitPane.getItems().addAll(this.imageViewWithScale, gridPane);
+
+
+		//endregion
+
+		//region bottom
+		BorderPane resultPane = new BorderPane();
+
+		this.cfMainExpression = new CustomFieldWithButton();
+		this.cfMainExpression.setPromptText("Enter xpath here");
+
+		this.lblFound = new Label("0");
+		this.lblFound.setPrefWidth(30);
+		BorderPane.setAlignment(this.lblFound, Pos.CENTER);
+		BorderPane.setAlignment(resultPane, Pos.CENTER);
+		resultPane.setCenter(this.cfMainExpression);
+		resultPane.setRight(this.lblFound);
+
+		Accordion accordion = new Accordion();
+		accordion.setRotate(180.0);
+		BorderPane.setAlignment(accordion, Pos.CENTER);
+
+		TitledPane titledPane = new TitledPane();
+		titledPane.setAnimated(false);
+		titledPane.setContentDisplay(ContentDisplay.CENTER);
+		titledPane.setExpanded(false);
+		titledPane.setRotate(180.0);
+		titledPane.setText("Helper");
+
+		GridPane gp = new GridPane();
+
+		ColumnConstraints cc0 = new ColumnConstraints();
+		cc0.setHgrow(Priority.SOMETIMES);
+		cc0.setPrefWidth(100.0);
+
+		gp.getColumnConstraints().addAll(cc0, new ColumnConstraints(), new ColumnConstraints());
+
+		Supplier<RowConstraints> supplier = () -> {
+			RowConstraints r = new RowConstraints();
+			r.setMinHeight(10.0);
+			r.setPrefHeight(30.0);
+			r.setVgrow(Priority.SOMETIMES);
+			return r;
+		};
+
+		IntStream.range(0, 7).forEach(i -> gp.getRowConstraints().addAll(supplier.get()));
+
+		BorderPane relativePane = new BorderPane();
+		GridPane.setColumnSpan(relativePane, 3);
+		Label lblRelative = new Label("Relative");
+		BorderPane.setAlignment(lblRelative, Pos.CENTER);
+		this.cfRelativeFrom = new CustomFieldWithButton();
+		relativePane.setCenter(this.cfRelativeFrom);
+		relativePane.setLeft(lblRelative);
+		gp.add(relativePane, 0, 0);
+
+		BorderPane chekboxPane = new BorderPane();
+		GridPane.setColumnSpan(chekboxPane, 3);
+		this.useText = new CheckBox("use text()");
+		BorderPane.setAlignment(this.useText, Pos.CENTER_LEFT);
+		chekboxPane.setLeft(this.useText);
+
+		this.hBoxCheckboxes = new HBox();
+		this.hBoxCheckboxes.setAlignment(Pos.CENTER_LEFT);
+		BorderPane.setAlignment(this.hBoxCheckboxes, Pos.CENTER);
+		chekboxPane.setCenter(this.hBoxCheckboxes);
+		gp.add(chekboxPane, 0, 1);
+
+		this.lines = new OneLine[5];
+		for (int i = 0; i < this.lines.length - 1; i++)
+		{
+			this.lines[i] = new OneLine(i);
+			gp.add(this.lines[i].getNode(), 0, 2 + i);
+		}
+		this.lines[4] = new OneMagicLine(4);
+		gp.add(this.lines[4].getNode(), 0, 6);
+
+		titledPane.setContent(gp);
+
+		accordion.getPanes().add(titledPane);
+
+		resultPane.setTop(accordion);
+		//endregion
+
+		borderPane.setBottom(resultPane);
+		borderPane.setCenter(this.splitPane);
+
+		initListeners();
+	}
+
+	@Override
     protected Supplier<List<WizardCommand>> getCommands()
     {
         AbstractControl copy = this.currentControl;
@@ -313,7 +419,7 @@ public class XpathWizard extends AbstractWizard
             }
         });
         
-        for (int i = 0; i < this.lines.length; i++)
+        for (int i = 0; i < this.lines.length - 1; i++)
         {
             this.lines[i].btnCopyToRelative.setOnAction(ev -> 
             {
@@ -326,5 +432,9 @@ public class XpathWizard extends AbstractWizard
                 this.cfMainExpression.setText(((Button) ev.getSource()).getText());
             });
         }
-    }
+		OneLine magicLine = lines[lines.length-1];
+        //TODO add listener
+		magicLine.btnCopyToRelative.setOnAction(e -> {});
+
+	}
 }
