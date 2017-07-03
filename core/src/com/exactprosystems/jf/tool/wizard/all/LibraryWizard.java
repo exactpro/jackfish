@@ -44,8 +44,10 @@ import java.util.stream.Collectors;
 
 public class LibraryWizard extends AbstractWizard {
 
+    private Map<ActionRequired, Supplier<List<WizardCommand>>> suppliers = new HashMap<>();
     private List<String> commonFolder = new ArrayList<>();
 
+    private Matrix currentMatrix;
     private Set<File> allFiles = new HashSet<>();
     private SubCase currentSubCase;
 
@@ -54,6 +56,8 @@ public class LibraryWizard extends AbstractWizard {
     private String newNameSpaceName;
     private String oldNameSpaceName;
     private String newFileName;
+
+
 
     @Override
     public boolean beforeRun() {
@@ -93,8 +97,8 @@ public class LibraryWizard extends AbstractWizard {
         refresh.setOnAction(event -> commonFolder.forEach(s ->
         {
             ObservableList<String> objects = FXCollections.observableArrayList();
-            Set<String> affectedObjects = getAffectedObjects(oldSubId, oldNameSpaceName);
-            objects.addAll(affectedObjects);
+            List<File> affectedObjects = getAffectedObjects(oldSubId, oldNameSpaceName);
+            objects.addAll(affectedObjects.stream().map(File::getName).collect(Collectors.toList()));
             listView.setItems(objects);
 
         }));
@@ -115,8 +119,8 @@ public class LibraryWizard extends AbstractWizard {
 
     }
 
-    private Set<String> getAffectedObjects(String subCase, String nameSpace) {
-        Set<String> result = new HashSet<>();
+    private List<File> getAffectedObjects(String subCase, String nameSpace) {
+        List<File> result = new LinkedList<>();
 
         allFiles.forEach(file ->
         {
@@ -128,7 +132,7 @@ public class LibraryWizard extends AbstractWizard {
                 {
                     if (item.getClass() == Call.class && (item.getItemName().contains(subCase) || item.getItemName().contains(nameSpace)))
                     {
-                        result.add(file.getName());
+                        result.add(file);
                     }
                 });
             } catch (Exception e)
@@ -190,43 +194,36 @@ public class LibraryWizard extends AbstractWizard {
 
     @Override
     protected Supplier<List<WizardCommand>> getCommands() {
-        CommandBuilder builder = CommandBuilder.start();
-
-        makeRefactor().forEach(item -> {
-
-
-        });
-
-        return null;
+        return suppliers.get(getAction());
     }
 
-    private List<MatrixItem> makeRefactor() {
-        List<MatrixItem> res = new LinkedList<>();
-
-        switch (getAction())
-        {
-            case ONLY_SUB:
-                break;
-            case NAMESPACE_FILE:
-                break;
-            case NAMESPACE:
-                break;
-            case SUB_FILE:
-                break;
-            case SUB_NAMESPACE:
-                break;
-            case SUB_NAMESPACE_FILE:
-                break;
-        }
-
-        return res;
-    }
+//    private List<MatrixItem> makeRefactor() {
+//        List<MatrixItem> res = new LinkedList<>();
+//
+//        switch (getAction())
+//        {
+//            case ONLY_SUB:
+//                break;
+//            case NAMESPACE_FILE:
+//                break;
+//            case NAMESPACE:
+//                break;
+//            case SUB_FILE:
+//                break;
+//            case SUB_NAMESPACE:
+//                break;
+//            case SUB_NAMESPACE_FILE:
+//                break;
+//        }
+//
+//        return res;
+//    }
 
     @Override
     public void init(IContext context, WizardManager wizardManager, Object... parameters) {
         super.init(context, wizardManager, parameters);
 
-        MatrixFx currentMatrix = super.get(MatrixFx.class, parameters);
+        this.currentMatrix = super.get(MatrixFx.class, parameters);
         this.currentSubCase = super.get(SubCase.class, parameters);
         this.oldSubId = currentSubCase.getId();
         this.oldNameSpaceName = currentSubCase.getParent().getClass() == NameSpace.class ? currentSubCase.getParent().getId() : "";
@@ -247,4 +244,106 @@ public class LibraryWizard extends AbstractWizard {
         NAMESPACE_FILE
     }
 
+    private Map<MatrixItem, String> getItemsFromMatrices() {
+        Map<MatrixItem, String> res = new HashMap<>();
+        List<File> affectedObjects = getAffectedObjects(oldSubId, oldNameSpaceName);
+        affectedObjects.forEach(s -> {
+
+            Matrix matrix = new Matrix(s.getName(), new ConsoleDocumentFactory(VerboseLevel.None));
+            try
+            {
+                matrix.load(new FileReader(s));
+                matrix.getRoot().bypass(item ->
+                {
+                    if (item.getClass() == Call.class && (item.getItemName().contains(oldSubId) || item.getItemName().contains(oldNameSpaceName)))
+                    {
+                        res.put(item, s.getAbsolutePath());
+                    }
+                });
+            } catch (Exception e)
+            {
+                e.printStackTrace();
+            }
+
+        });
+
+        return res;
+    }
+
+    {
+        suppliers.put(ActionRequired.ONLY_SUB, () ->{
+            CommandBuilder builder = CommandBuilder.start();
+
+            if (!currentMatrix.isLibrary())
+            {
+                currentSubCase.setId(newSubId);
+                currentMatrix.getRoot().bypass(item -> {
+                    if (item.getClass() == Call.class && ((Call) item).getName().equals(oldSubId))
+                    {
+                        MatrixItem newItem = CommandBuilder.create(currentMatrix, Call.class.getSimpleName(), null);
+                        ((Call) newItem).setName(newSubId);
+                        builder.removeMatrixItem(currentMatrix, item).addMatrixItem(currentMatrix, item.getParent(), item, item.getParent().index(item));
+                    }
+                });
+                builder.removeMatrixItem(currentMatrix, currentSubCase).addMatrixItem(currentMatrix, currentSubCase.getParent(),currentSubCase, currentSubCase.getParent().index(currentSubCase));
+                return builder.build();
+            }else
+            {
+
+                getItemsFromMatrices().forEach((item, s) ->
+                {
+                    Matrix matrix = item.getMatrix();
+                    MatrixItem newItem = CommandBuilder.create(matrix, Call.class.getSimpleName(), null);
+                    newItem.setId(item.getId());
+                    ((Call) newItem).setName(((Call) item).getName().replace(oldSubId, newSubId));
+                    builder.removeMatrixItem(matrix, item).addMatrixItem(matrix, item.getParent(), newItem, item.getParent().index(item));
+                    try
+                    {
+                        matrix.save(s);
+                    } catch (Exception e)
+                    {
+                        e.printStackTrace();
+                    }
+                });
+                currentSubCase.setId(newSubId);
+                builder.removeMatrixItem(currentMatrix, currentSubCase).addMatrixItem(currentMatrix, currentSubCase.getParent(), currentSubCase, currentSubCase.getParent().index(currentSubCase));
+                try
+                {
+                    currentMatrix.save(currentMatrix.getName());
+                } catch (Exception e)
+                {
+                    e.printStackTrace();
+                }
+                return builder.build();
+            }
+        });
+        suppliers.put(ActionRequired.SUB_NAMESPACE, () ->{
+            CommandBuilder builder = CommandBuilder.start();
+
+            getItemsFromMatrices().forEach((item, s) -> {
+                Matrix matrix = item.getMatrix();
+                MatrixItem newItem = CommandBuilder.create(matrix, Call.class.getSimpleName(), null);
+                newItem.setId(item.getId());
+                ((Call)newItem).setName(newNameSpaceName +"."+ newSubId);
+                builder.removeMatrixItem(matrix, item).addMatrixItem(matrix, item.getParent(), newItem, item.getParent().index(item));
+                try
+                {
+                    matrix.save(s);
+                } catch (Exception e)
+                {
+                    e.printStackTrace();
+                }
+            });
+            currentSubCase.setId(newSubId);
+            builder.removeMatrixItem(currentMatrix, currentSubCase).addMatrixItem(currentMatrix,currentSubCase.getParent(),currentSubCase,currentSubCase.getParent().index(currentSubCase));
+            try
+            {
+                currentMatrix.save(currentMatrix.getName());
+            } catch (Exception e)
+            {
+                e.printStackTrace();
+            }
+            return builder.build();
+        });
+    }
 }

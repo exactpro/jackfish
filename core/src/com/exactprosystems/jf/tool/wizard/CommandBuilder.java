@@ -35,7 +35,7 @@ public class CommandBuilder
         return this.commands;
     }
     
-    public CommandBuilder addMatrixItem(MatrixFx matrix, MatrixItem where, MatrixItem what, int index)
+    public CommandBuilder addMatrixItem(Matrix matrix, MatrixItem where, MatrixItem what, int index)
     {
         this.commands.add(context -> 
         {
@@ -45,7 +45,7 @@ public class CommandBuilder
         return this;
     }
     
-    public CommandBuilder removeMatrixItem(MatrixFx matrix, MatrixItem what)
+    public CommandBuilder removeMatrixItem(Matrix matrix, MatrixItem what)
     {
         this.commands.add(context -> 
         {

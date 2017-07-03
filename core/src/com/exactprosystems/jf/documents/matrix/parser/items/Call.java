@@ -141,6 +141,14 @@ public final class Call extends MatrixItem
 		return super.getItemName() + " " + this.name;
 	}
 
+	public String getName() {
+		return name.get();
+	}
+
+	public void setName(String name) {
+		this.name.set(name);
+	}
+
 	@Override
 	protected void initItSelf(Map<Tokens, String> systemParameters)
 	{
