@@ -18,13 +18,15 @@ import javafx.scene.text.Text;
 
 public class DecoragedRectangle  extends Rectangle
 {
-    private MarkerStyle style;
-    private Text        text;
-    private Timeline    timeline;
+    private MarkerStyle        style;
+    private Text               text;
+    private Timeline           timeline;
+    private java.awt.Rectangle baseRectangle;
 
 	public DecoragedRectangle(java.awt.Rectangle rectangle, MarkerStyle style, String text)
 	{
 		super(rectangle.getX(), rectangle.getY(), rectangle.getWidth(), rectangle.getHeight());
+		this.baseRectangle = rectangle;
 		
 	    this.style      = style;
         this.text       = new Text();
@@ -66,7 +68,16 @@ public class DecoragedRectangle  extends Rectangle
                 && getHeight() == rectangle.getHeight();
     }
 
-	//============================================================
+    public java.awt.Rectangle awtRectangle()
+    {
+        return this.baseRectangle;
+    }
+
+    public MarkerStyle getMarkerStyle()
+    {
+        return this.style;
+    }
+    //============================================================
 	// private methods
 	//============================================================
 	private void createTransition()
