@@ -1086,6 +1086,10 @@ public enum OperationKind
 
 	private static String pruneList(List<String> list)
 	{
+		if (list == null)
+		{
+			return null;
+		}
 		int maxCount = 4;
 		if (list.size() <= maxCount)
 		{

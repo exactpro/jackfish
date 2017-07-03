@@ -42,7 +42,8 @@ public abstract class ProxyApplication implements IApplication
     {
         this.process = null;
         int pid = this.service.connect(parameters);
-        return pid;
+		this.service.setPluginInfo(this.factory.getInfo());
+		return pid;
     }
 
 	@Override
