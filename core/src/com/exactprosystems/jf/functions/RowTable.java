@@ -67,7 +67,7 @@ public class RowTable implements Map<String, Object>, Cloneable
     {
         return map.entrySet()
                 .stream()
-                .collect(Collectors.toMap(e -> e.getKey().name, e -> e.getValue(), (k,v) -> k, LinkedHashMap::new));
+                .collect(Collectors.toMap(e -> e.getKey().name, e -> Str.asString(e.getValue()), (k,v) -> k, LinkedHashMap::new));
     }
     
     //==============================================================================================
