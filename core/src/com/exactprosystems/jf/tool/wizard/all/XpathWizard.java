@@ -104,7 +104,7 @@ public class XpathWizard extends AbstractWizard
     private SplitPane                          splitPane;
     private ImageViewWithScale                 imageViewWithScale;
     private XmlTreeView                        xmlTreeView;
-    private FindPanel<TreeItem<XmlTreeItem>> findPanel;
+    private FindPanel<TreeItem<XmlTreeItem>>   findPanel;
     private OneLine[]                          lines;
     private CheckBox                           useText;
     private HBox                               hBoxCheckboxes;
@@ -265,8 +265,10 @@ public class XpathWizard extends AbstractWizard
                 this.currentNode = XpathUtils.getFirst(this.document, "/*");
                 if (this.imageAndOffset != null)
                 {
-                    this.xmlTreeView.displayDocument(this.document, this.imageAndOffset.offsetX, this.imageAndOffset.offsetY);
-                    List<Rectangle> list = XpathUtils.collectAllRectangles(this.document, this.imageAndOffset.offsetX, this.imageAndOffset.offsetY);
+                    // TODO offsetts are applied here
+                    XpathUtils.applyOffset(this.document, this.imageAndOffset.offsetX, this.imageAndOffset.offsetY);                    
+                    this.xmlTreeView.displayDocument(this.document);
+                    List<Rectangle> list = XpathUtils.collectAllRectangles(this.document);
                     this.imageViewWithScale.setListForSearch(list);
                 }
             });

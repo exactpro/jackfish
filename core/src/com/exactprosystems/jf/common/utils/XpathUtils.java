@@ -34,14 +34,13 @@ public class XpathUtils
     {
     }
 
-    
-    public static List<Rectangle> collectAllRectangles(Node node, int xOffset, int yOffset)
+
+    public static void applyOffset(Node node, int xOffset, int yOffset)
     {
-        List<Rectangle> collect = new ArrayList<>();
         boolean isDocument = node.getNodeType() == Node.DOCUMENT_NODE;
         IntStream.range(0, node.getChildNodes().getLength()).mapToObj(node.getChildNodes()::item)
                 .filter(item -> item.getNodeType() == Node.ELEMENT_NODE)
-                .forEach(item -> collect.addAll(collectAllRectangles(item, xOffset, yOffset)));
+                .forEach(item -> applyOffset(item, xOffset, yOffset));
         if (!isDocument)
         {
             Rectangle rec = (Rectangle) node.getUserData(IRemoteApplication.rectangleName);
@@ -49,7 +48,24 @@ public class XpathUtils
             {
                 rec.x -= xOffset;
                 rec.y -= yOffset;
+                node.setUserData(IRemoteApplication.rectangleName, rec, null);
+            }
+        }
+    }
 
+    
+    public static List<Rectangle> collectAllRectangles(Node node)
+    {
+        List<Rectangle> collect = new ArrayList<>();
+        boolean isDocument = node.getNodeType() == Node.DOCUMENT_NODE;
+        IntStream.range(0, node.getChildNodes().getLength()).mapToObj(node.getChildNodes()::item)
+                .filter(item -> item.getNodeType() == Node.ELEMENT_NODE)
+                .forEach(item -> collect.addAll(collectAllRectangles(item)));
+        if (!isDocument)
+        {
+            Rectangle rec = (Rectangle) node.getUserData(IRemoteApplication.rectangleName);
+            if (rec != null)
+            {
                 collect.add(rec);
             }
         }

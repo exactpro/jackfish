@@ -129,12 +129,12 @@ public class XmlTreeView extends AnchorPane
 		this.treeTableView.getColumns().get(0).setVisible(value);
 	}
 
-	public void displayDocument(Document document, int xOffset, int yOffset)
+	public void displayDocument(Document document)
 	{
 		this.getChildren().remove(this.waitingNode);
 
 		this.treeTableView.setRoot(new TreeItem<>());
-		displayTree(document, this.treeTableView.getRoot(), xOffset, yOffset);
+		displayTree(document, this.treeTableView.getRoot());
 		expand(this.treeTableView.getRoot());
 		((MyCustomSkin) this.treeTableView.getSkin()).resizeColumnToFitContent(this.treeTableView.getColumns().get(1), -1);
 	}
@@ -336,49 +336,22 @@ public class XmlTreeView extends AnchorPane
 		item.getChildren().forEach(this::expand);
 	}
 
-    private void displayTree(org.w3c.dom.Node node, TreeItem<XmlTreeItem> parent, int xOffset, int yOffset)
+    private void displayTree(org.w3c.dom.Node node, TreeItem<XmlTreeItem> parent)
     {
         boolean isDocument = node.getNodeType() == org.w3c.dom.Node.DOCUMENT_NODE;
 
         TreeItem<XmlTreeItem> treeItem = isDocument ? parent : new TreeItem<>();
         IntStream.range(0, node.getChildNodes().getLength()).mapToObj(node.getChildNodes()::item)
                 .filter(item -> item.getNodeType() == org.w3c.dom.Node.ELEMENT_NODE)
-                .forEach(item -> displayTree(item, treeItem, xOffset, yOffset));
+                .forEach(item -> displayTree(item, treeItem));
         if (!isDocument)
         {
             treeItem.setValue(new XmlTreeItem(stringNode(node, XpathUtils.text(node)), node));
             Rectangle rec = (Rectangle) node.getUserData(IRemoteApplication.rectangleName);
-            if (rec != null)
-            {
-                rec.x -= xOffset;
-                rec.y -= yOffset;
-
-            }
             this.map.put(rec, treeItem);
             parent.getChildren().add(treeItem);
         }
     }
-
-    // TODO
-    public void collectAllRectangles(List<Rectangle> collect, org.w3c.dom.Node node, int xOffset, int yOffset)
-    {
-        boolean isDocument = node.getNodeType() == org.w3c.dom.Node.DOCUMENT_NODE;
-        IntStream.range(0, node.getChildNodes().getLength()).mapToObj(node.getChildNodes()::item)
-                .filter(item -> item.getNodeType() == org.w3c.dom.Node.ELEMENT_NODE)
-                .forEach(item -> collectAllRectangles(collect, item, xOffset, yOffset));
-        if (!isDocument)
-        {
-            Rectangle rec = (Rectangle) node.getUserData(IRemoteApplication.rectangleName);
-            if (rec != null)
-            {
-                rec.x -= xOffset;
-                rec.y -= yOffset;
-
-            }
-            collect.add(rec);
-        }
-    }
-
 
     
     private HBox stringNode(org.w3c.dom.Node node, String text)
