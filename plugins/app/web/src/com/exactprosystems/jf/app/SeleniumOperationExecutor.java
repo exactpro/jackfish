@@ -28,6 +28,7 @@ import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.safari.SafariDriver;
 import org.openqa.selenium.support.ui.Select;
 
+import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
@@ -37,7 +38,6 @@ import java.util.*;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicLong;
-import javax.imageio.ImageIO;
 
 public class SeleniumOperationExecutor implements OperationExecutor<WebElement>
 {
@@ -1666,7 +1666,7 @@ public class SeleniumOperationExecutor implements OperationExecutor<WebElement>
 			case "select":
 				return getListOfNamesFromListItems(new Select(component).getOptions());
 			default:
-				return null;
+				return new ArrayList<>();
 		}
 	}
 	

@@ -15,14 +15,10 @@ import com.exactprosystems.jf.api.error.app.ElementNotEnabled;
 import com.exactprosystems.jf.api.error.app.ElementNotFoundException;
 import com.exactprosystems.jf.api.error.app.OperationNotAllowedException;
 
-import java.awt.Color;
+import java.awt.*;
 import java.rmi.RemoteException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
+import java.util.*;
 import java.util.List;
-import java.util.Map;
-import java.util.Objects;
 import java.util.concurrent.atomic.AtomicLong;
 
 public enum OperationKind
@@ -345,8 +341,8 @@ public enum OperationKind
                 return true;
             }
             boolean res = true;
-            List<String> expectedCopy = expected == null ? new ArrayList<>() : new ArrayList<String>(expected); 
-            List<String> actualCopy   = actual   == null ? new ArrayList<>() : new ArrayList<String>(actual);
+            List<String> expectedCopy = expected == null ? new ArrayList<>() : new ArrayList<>(expected);
+            List<String> actualCopy   = actual   == null ? new ArrayList<>() : new ArrayList<>(actual);
             if (ignoreOrder)
             {
                 actualCopy.removeAll(expected);
@@ -354,12 +350,12 @@ public enum OperationKind
                 if (!actualCopy.isEmpty())
                 {
                     res = false;
-                    sb.append(" extra items in actual: ").append(Arrays.toString(actualCopy.toArray()));
+                    sb.append(" extra items in actual: ").append(OperationKind.pruneList(actualCopy));
                 }
                 if (!expectedCopy.isEmpty())
                 {
                     res = false;
-                    sb.append(" extra items in expected: ").append(Arrays.toString(expectedCopy.toArray()));
+                    sb.append(" extra items in expected: ").append(OperationKind.pruneList(expectedCopy));
                 }
             }
             else
@@ -377,7 +373,7 @@ public enum OperationKind
                 }
                 if (!res)
                 {
-                    sb.append("mismatched: " + Arrays.toString(diff.toArray()));
+                    sb.append("mismatched: " + OperationKind.pruneList(diff));
                 }
                 
             }
@@ -1074,7 +1070,7 @@ public enum OperationKind
 								part.y,
 								part.d,
 								part.b,
-								part.str, 
+								part.str,
 								part.text,
 								part.valueCondition,
 								part.colorCondition,
@@ -1084,8 +1080,19 @@ public enum OperationKind
 								part.locatorKind,
 								part.locator,
 								part.toAppear,
-								part.list
+								pruneList(part.list)
 							);
+	}
+
+	private static String pruneList(List<String> list)
+	{
+		int maxCount = 4;
+		if (list.size() <= maxCount)
+		{
+			return list.toString();
+		}
+		List<String> pruneList = list.subList(0, maxCount);
+		return pruneList.toString() + " and " + (list.size() - maxCount) + " more";
 	}
 	
 	public <T> boolean operate(Part part, OperationExecutor<T> executor, Holder<T> holder, OperationResult result) throws Exception
