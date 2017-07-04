@@ -217,7 +217,7 @@ public class DialogFill extends AbstractAction
 			Object obj = parameter.getValue();
 
 			IControl control;
-			if (name.isEmpty())
+			if (name.isEmpty() || name.contains("dummy_") || name.contains("Dummy_"))
 			{
 				control = AbstractControl.createDummy();
 			}
@@ -278,35 +278,35 @@ public class DialogFill extends AbstractAction
 				RemoteException t = (RemoteException) e.getCause();
 				String mes = message(id, window, run, control, null, t.getMessage());
 
+				ErrorKind errorKind = ErrorKind.EXCEPTION;
+				if (t instanceof ElementNotFoundException)
+				{
+					errorKind = ErrorKind.ELEMENT_NOT_FOUND;
+				}
+				else if (t instanceof OperationNotAllowedException)
+				{
+					errorKind = ErrorKind.OPERATION_NOT_ALLOWED;
+				}
+				else if (t instanceof ControlNotSupportedException)
+				{
+					errorKind = ErrorKind.CONTROL_NOT_SUPPORTED;
+				}
+				else if (t instanceof FeatureNotSupportedException)
+				{
+					errorKind = ErrorKind.FEATURE_NOT_SUPPORTED;
+				}
+				else if (t instanceof NullParameterException)
+				{
+					errorKind = ErrorKind.EMPTY_PARAMETER;
+				}
+
 				if (!this.stopOnFail)
 				{
-					//TODO which error kind we need place here?
-					errorsValue.put(name, new MatrixError(mes, ErrorKind.EXCEPTION, this.owner));
+					errorsValue.put(name, new MatrixError(mes, errorKind, this.owner));
 					allReportErrors += mes;
 				}
 				else
 				{
-					ErrorKind errorKind = ErrorKind.EXCEPTION;
-					if (t instanceof ElementNotFoundException)
-					{
-						errorKind = ErrorKind.ELEMENT_NOT_FOUND;
-					}
-					else if (t instanceof OperationNotAllowedException)
-					{
-						errorKind = ErrorKind.OPERATION_NOT_ALLOWED;
-					}
-					else if (t instanceof ControlNotSupportedException)
-					{
-						errorKind = ErrorKind.CONTROL_NOT_SUPPORTED;
-					}
-					else if (t instanceof FeatureNotSupportedException)
-					{
-						errorKind = ErrorKind.FEATURE_NOT_SUPPORTED;
-					}
-					else if (t instanceof NullParameterException)
-					{
-						errorKind = ErrorKind.EMPTY_PARAMETER;
-					}
 					errorsValue.put(name, new MatrixError(mes, errorKind, owner));
 					super.setErrors(errorsValue);
 					super.setError(mes, errorKind);

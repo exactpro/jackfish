@@ -1103,6 +1103,10 @@ public enum OperationKind
 	{
 		// check permissions for this part
 		Locator locator = holder.get(LocatorKind.Element);
+		if (!executor.isSupported(locator.getControlKind()))
+		{
+			throw new ControlNotSupportedException("Control \'" + locator.getControlKind() + "\' is not supported for current plugin");
+		}
 		if (locator.isDummy() && part.locator == null)
 		{
 			throw new OperationNotAllowedException("Can't use operate for dummy locator and dummy control");
@@ -1110,10 +1114,6 @@ public enum OperationKind
 		if (!locator.getControlKind().isAllowed(part.kind) || !executor.isAllowed(locator.getControlKind(), part.kind))
 		{
             throw new OperationNotAllowedException("Operation \'" + part.kind + "\' is not allowed for \'" + locator.getControlKind() + "\'");
-		}
-		if (!executor.isSupported(locator.getControlKind()))
-		{
-			throw new ControlNotSupportedException("Control \'" + locator.getControlKind() + "\' is not supported for current plugin");
 		}
 
 		// find it, if it needs
