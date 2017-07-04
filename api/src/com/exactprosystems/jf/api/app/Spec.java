@@ -8,6 +8,9 @@
 
 package com.exactprosystems.jf.api.app;
 
+import com.exactprosystems.jf.api.common.DescriptionAttribute;
+import com.exactprosystems.jf.api.common.FieldParameter;
+
 import java.awt.Color;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -63,450 +66,492 @@ public class Spec implements Iterable<Piece>, Serializable
 		
 		return result;
 	}
-	
-	
-	//------------------------------------------------------------------------------------------------------------------------------
-	// attributes
-	//------------------------------------------------------------------------------------------------------------------------------
-	public Spec text(String text)
+
+	//region attributes
+	@DescriptionAttribute(text = DoSpec.text)
+	public Spec text(@FieldParameter(name = "text") String text)
 	{
 		this.list.add(new Piece(PieceKind.TEXT).setName(text));
 		return this;
 	}
 
-	public Spec color(Color color)
+	@DescriptionAttribute(text = DoSpec.color)
+	public Spec color(@FieldParameter(name = "color") Color color)
 	{
 		this.list.add(new Piece(PieceKind.COLOR).setColor(color));
 		return this;
 	}
 
-	public Spec backColor(Color color)
+	@DescriptionAttribute(text = DoSpec.bgColor)
+	public Spec backColor(@FieldParameter(name = "color") Color color)
 	{
 		this.list.add(new Piece(PieceKind.BACK_COLOR).setColor(color));
 		return this;
 	}
 
-	public Spec attr(String name, String value)
+	@DescriptionAttribute(text = DoSpec.color)
+	public Spec attr(@FieldParameter(name = "name") String name, @FieldParameter(name = "value") String value)
 	{
 		this.list.add(new Piece(PieceKind.ATTR).setName(name).setText(value));
 		return this;
 	}
+	//endregion
 	
-	//------------------------------------------------------------------------------------------------------------------------------
-	// visible
-	//------------------------------------------------------------------------------------------------------------------------------
+	//region visible
+	@DescriptionAttribute(text = DoSpec.visible)
 	public Spec visible()
 	{
 		this.list.add(new Piece(PieceKind.VISIBLE));
 		return this;
 	}
 
+	@DescriptionAttribute(text = DoSpec.invisible)
 	public Spec invisible()
 	{
 		this.list.add(new Piece(PieceKind.INVISIBLE));
 		return this;
 	}
+	//endregion
 
-	//------------------------------------------------------------------------------------------------------------------------------
-	// count
-	//------------------------------------------------------------------------------------------------------------------------------
-	public Spec count(Number dist)
+	//region count
+	@DescriptionAttribute(text = DoSpec.count)
+	public Spec count(@FieldParameter(name = "count") Number count)
 	{
-		this.list.add(new Piece(PieceKind.COUNT).setRange(Range.EQUAL).setA(dist.longValue()));
+		this.list.add(new Piece(PieceKind.COUNT).setRange(Range.EQUAL).setA(count.longValue()));
 		return this;
 	}
 
-	public Spec count(CheckProvider func)
+	@DescriptionAttribute(text = DoSpec.countWithProvider)
+	public Spec count(@FieldParameter(name = "func") CheckProvider func)
 	{
 		this.list.add(func.provide(PieceKind.COUNT));
 		return this;
 	}
+	//endregion
 	
-	//------------------------------------------------------------------------------------------------------------------------------
-	// width
-	//------------------------------------------------------------------------------------------------------------------------------
-	public Spec width(Number dist)
+	//region width
+	@DescriptionAttribute(text = DoSpec.width)
+	public Spec width(@FieldParameter(name = "width") Number dist)
 	{
 		this.list.add(new Piece(PieceKind.WIDTH).setRange(Range.EQUAL).setA(dist.longValue()));
 		return this;
 	}
 
-	public Spec width(CheckProvider func)
+	@DescriptionAttribute(text = DoSpec.widthWithProvider)
+	public Spec width(@FieldParameter(name = "func") CheckProvider func)
 	{
 		this.list.add(func.provide(PieceKind.WIDTH));
 		return this;
 	}
+	//endregion
 	
-	//------------------------------------------------------------------------------------------------------------------------------
-	// height
-	//------------------------------------------------------------------------------------------------------------------------------
-	public Spec height(Number dist)
+	//region height
+	@DescriptionAttribute(text = DoSpec.height)
+	public Spec height(@FieldParameter(name="height") Number dist)
 	{
 		this.list.add(new Piece(PieceKind.HEIGHT).setRange(Range.EQUAL).setA(dist.longValue()));
 		return this;
 	}
 
-	public Spec height(CheckProvider func)
+	@DescriptionAttribute(text = DoSpec.heightWithProvider)
+	public Spec height(@FieldParameter(name = "func") CheckProvider func)
 	{
 		this.list.add(func.provide(PieceKind.HEIGHT));
 		return this;
 	}
-	
-	//------------------------------------------------------------------------------------------------------------------------------
-	// contains
-	//------------------------------------------------------------------------------------------------------------------------------
-	public Spec contains(String another)
+	//endregion
+
+	//region contains
+	@DescriptionAttribute(text = DoSpec.contains)
+	public Spec contains(@FieldParameter(name = "another") String another)
 	{
 		this.list.add(new Piece(PieceKind.CONTAINS).setName(another));
 		return this;
 	}
+	//endregion
 
-	//------------------------------------------------------------------------------------------------------------------------------
-	// left
-	//------------------------------------------------------------------------------------------------------------------------------
-	public Spec left(String another, Number dist)
+	//region left
+	@DescriptionAttribute(text = DoSpec.leftAnother)
+	public Spec left(@FieldParameter(name="another") String another, @FieldParameter(name="dist") Number dist)
 	{
 		this.list.add(new Piece(PieceKind.LEFT).setName(another).setRange(Range.EQUAL).setA(dist.longValue()));
 		return this;
 	}
 
-	public Spec left(String another, CheckProvider func)
+	@DescriptionAttribute(text = DoSpec.leftAnotherWithProvider)
+	public Spec left(@FieldParameter(name="another") String another, @FieldParameter(name = "func") CheckProvider func)
 	{
 		this.list.add(func.provide(PieceKind.LEFT).setName(another));
 		return this;
 	}
 
-	public Spec left(Locator locator, Number dist)
+	@DescriptionAttribute(text = DoSpec.leftLocator)
+	public Spec left(@FieldParameter(name="locator") Locator locator, @FieldParameter(name="dist") Number dist)
 	{
 		this.list.add(new Piece(PieceKind.LEFT).setLocator(null, locator).setRange(Range.EQUAL).setA(dist.longValue()));
 		return this;
 	}
 
-	public Spec left(Locator locator, CheckProvider func)
+	@DescriptionAttribute(text = DoSpec.leftLocatorWithProvider)
+	public Spec left(@FieldParameter(name="locator") Locator locator, @FieldParameter(name = "func") CheckProvider func)
 	{
 		this.list.add(func.provide(PieceKind.LEFT).setLocator(null, locator));
 		return this;
 	}
+	//endregion
 
-	//------------------------------------------------------------------------------------------------------------------------------
-	// right
-	//------------------------------------------------------------------------------------------------------------------------------
-	public Spec right(String another, Number dist)
+	//region right
+	@DescriptionAttribute(text = DoSpec.rightAnother)
+	public Spec right(@FieldParameter(name="another") String another, @FieldParameter(name="dist") Number dist)
 	{
 		this.list.add(new Piece(PieceKind.RIGHT).setName(another).setRange(Range.EQUAL).setA(dist.longValue()));
 		return this;
 	}
 
-	public Spec right(String another, CheckProvider func)
+	@DescriptionAttribute(text = DoSpec.rightAnotherWithProvider)
+	public Spec right(@FieldParameter(name="another") String another, @FieldParameter(name = "func") CheckProvider func)
 	{
 		this.list.add(func.provide(PieceKind.RIGHT).setName(another));
 		return this;
 	}
 
-	public Spec right(Locator locator, Number dist)
+	@DescriptionAttribute(text = DoSpec.rightLocator)
+	public Spec right(@FieldParameter(name="locator") Locator locator, @FieldParameter(name="dist") Number dist)
 	{
 		this.list.add(new Piece(PieceKind.RIGHT).setLocator(null, locator).setRange(Range.EQUAL).setA(dist.longValue()));
 		return this;
 	}
 
-	public Spec right(Locator locator, CheckProvider func)
+	@DescriptionAttribute(text = DoSpec.rightLocatorWithProvider)
+	public Spec right(@FieldParameter(name="locator") Locator locator, @FieldParameter(name = "func") CheckProvider func)
 	{
 		this.list.add(func.provide(PieceKind.RIGHT).setLocator(null, locator));
 		return this;
 	}
+	//endregion
 
-	//------------------------------------------------------------------------------------------------------------------------------
-	// top
-	//------------------------------------------------------------------------------------------------------------------------------
-	public Spec top(String another, Number dist)
+	//region top
+	@DescriptionAttribute(text = DoSpec.topAnother)
+	public Spec top(@FieldParameter(name="another") String another, @FieldParameter(name="dist") Number dist)
 	{
 		this.list.add(new Piece(PieceKind.TOP).setName(another).setRange(Range.EQUAL).setA(dist.longValue()));
 		return this;
 	}
 
-	public Spec top(String another, CheckProvider func)
+	@DescriptionAttribute(text = DoSpec.topAnotherWithProvider)
+	public Spec top(@FieldParameter(name="another") String another, @FieldParameter(name = "func") CheckProvider func)
 	{
 		this.list.add(func.provide(PieceKind.TOP).setName(another));
 		return this;
 	}
 
-	public Spec top(Locator locator, Number dist)
+	@DescriptionAttribute(text = DoSpec.topLocator)
+	public Spec top(@FieldParameter(name="locator") Locator locator, @FieldParameter(name="dist") Number dist)
 	{
 		this.list.add(new Piece(PieceKind.TOP).setLocator(null, locator).setRange(Range.EQUAL).setA(dist.longValue()));
 		return this;
 	}
 
-	public Spec top(Locator locator, CheckProvider func)
+	@DescriptionAttribute(text = DoSpec.topLocatorWithProvider)
+	public Spec top(@FieldParameter(name="locator") Locator locator, @FieldParameter(name = "func") CheckProvider func)
 	{
 		this.list.add(func.provide(PieceKind.TOP).setLocator(null, locator));
 		return this;
 	}
+	//endregion
 
-	//------------------------------------------------------------------------------------------------------------------------------
-	// bottom
-	//------------------------------------------------------------------------------------------------------------------------------
-	public Spec bottom(String another, Number dist)
+	//region bottom
+	@DescriptionAttribute(text = DoSpec.bottomAnother)
+	public Spec bottom(@FieldParameter(name="another") String another, @FieldParameter(name="dist") Number dist)
 	{
 		this.list.add(new Piece(PieceKind.BOTTOM).setName(another).setRange(Range.EQUAL).setA(dist.longValue()));
 		return this;
 	}
 
-	public Spec bottom(String another, CheckProvider func)
+	@DescriptionAttribute(text = DoSpec.bottomAnotherWithProvider)
+	public Spec bottom(@FieldParameter(name="another") String another, @FieldParameter(name = "func") CheckProvider func)
 	{
 		this.list.add(func.provide(PieceKind.BOTTOM).setName(another));
 		return this;
 	}
 
-	public Spec bottom(Locator locator, Number dist)
+	@DescriptionAttribute(text = DoSpec.bottomLocator)
+	public Spec bottom(@FieldParameter(name="locator") Locator locator, @FieldParameter(name="dist") Number dist)
 	{
 		this.list.add(new Piece(PieceKind.BOTTOM).setLocator(null, locator).setRange(Range.EQUAL).setA(dist.longValue()));
 		return this;
 	}
 
-	public Spec bottom(Locator locator, CheckProvider func)
+	@DescriptionAttribute(text = DoSpec.bottomLocatorWithProvider)
+	public Spec bottom(@FieldParameter(name="locator") Locator locator, @FieldParameter(name = "func") CheckProvider func)
 	{
 		this.list.add(func.provide(PieceKind.BOTTOM).setLocator(null, locator));
 		return this;
 	}
+	//endregion
 	
-	//------------------------------------------------------------------------------------------------------------------------------
-	// inLeft
-	//------------------------------------------------------------------------------------------------------------------------------
-	public Spec inLeft(String another, Number dist)
+	//region inLeft
+	@DescriptionAttribute(text = DoSpec.insideLeftAnother)
+	public Spec inLeft(@FieldParameter(name="another") String another, @FieldParameter(name="dist") Number dist)
 	{
 		this.list.add(new Piece(PieceKind.INSIDE_LEFT).setName(another).setRange(Range.EQUAL).setA(dist.longValue()));
 		return this;
 	}
 
-	public Spec inLeft(String another, CheckProvider func)
+	@DescriptionAttribute(text = DoSpec.insideLeftAnotherWithProvider)
+	public Spec inLeft(@FieldParameter(name="another") String another, @FieldParameter(name = "func") CheckProvider func)
 	{
 		this.list.add(func.provide(PieceKind.INSIDE_LEFT).setName(another));
 		return this;
 	}
 
-	public Spec inLeft(Locator locator, Number dist)
+	@DescriptionAttribute(text = DoSpec.insideLeftLocator)
+	public Spec inLeft(@FieldParameter(name="locator") Locator locator, @FieldParameter(name="dist") Number dist)
 	{
 		this.list.add(new Piece(PieceKind.INSIDE_LEFT).setLocator(null, locator).setRange(Range.EQUAL).setA(dist.longValue()));
 		return this;
 	}
 
-	public Spec inLeft(Locator locator, CheckProvider func)
+	@DescriptionAttribute(text = DoSpec.insideLeftLocatorWithProvider)
+	public Spec inLeft(@FieldParameter(name="locator") Locator locator, @FieldParameter(name = "func") CheckProvider func)
 	{
 		this.list.add(func.provide(PieceKind.INSIDE_LEFT).setLocator(null, locator));
 		return this;
 	}
+	//endregion
 
-	//------------------------------------------------------------------------------------------------------------------------------
-	// inRight
-	//------------------------------------------------------------------------------------------------------------------------------
-	public Spec inRight(String another, Number dist)
+	//region inRight
+	@DescriptionAttribute(text = DoSpec.insideRightAnother)
+	public Spec inRight(@FieldParameter(name="another") String another, @FieldParameter(name="dist") Number dist)
 	{
 		this.list.add(new Piece(PieceKind.INSIDE_RIGHT).setName(another).setRange(Range.EQUAL).setA(dist.longValue()));
 		return this;
 	}
 
-	public Spec inRight(String another, CheckProvider func)
+	@DescriptionAttribute(text = DoSpec.insideRightAnotherWithProvider)
+	public Spec inRight(@FieldParameter(name="another") String another, @FieldParameter(name = "func") CheckProvider func)
 	{
 		this.list.add(func.provide(PieceKind.INSIDE_RIGHT).setName(another));
 		return this;
 	}
 
-	public Spec inRight(Locator locator, Number dist)
+	@DescriptionAttribute(text = DoSpec.insideRightLocator)
+	public Spec inRight(@FieldParameter(name="locator") Locator locator, @FieldParameter(name="dist") Number dist)
 	{
 		this.list.add(new Piece(PieceKind.INSIDE_RIGHT).setLocator(null, locator).setRange(Range.EQUAL).setA(dist.longValue()));
 		return this;
 	}
 
-	public Spec inRight(Locator locator, CheckProvider func)
+	@DescriptionAttribute(text = DoSpec.insideRightLocatorWithProvider)
+	public Spec inRight(@FieldParameter(name="locator") Locator locator, @FieldParameter(name = "func") CheckProvider func)
 	{
 		this.list.add(func.provide(PieceKind.INSIDE_RIGHT).setLocator(null, locator));
 		return this;
 	}
+	//endregion
 
-	//------------------------------------------------------------------------------------------------------------------------------
-	// inTop
-	//------------------------------------------------------------------------------------------------------------------------------
-	public Spec inTop(String another, Number dist)
+	//region inTop
+	@DescriptionAttribute(text = DoSpec.insideTopAnother)
+	public Spec inTop(@FieldParameter(name="another") String another, @FieldParameter(name="dist") Number dist)
 	{
 		this.list.add(new Piece(PieceKind.INSIDE_TOP).setName(another).setRange(Range.EQUAL).setA(dist.longValue()));
 		return this;
 	}
 
-	public Spec inTop(String another, CheckProvider func)
+	@DescriptionAttribute(text = DoSpec.insideTopAnotherWithProvider)
+	public Spec inTop(@FieldParameter(name="another") String another, @FieldParameter(name = "func") CheckProvider func)
 	{
 		this.list.add(func.provide(PieceKind.INSIDE_TOP).setName(another));
 		return this;
 	}
 
-	public Spec inTop(Locator locator, Number dist)
+	@DescriptionAttribute(text = DoSpec.insideTopLocator)
+	public Spec inTop(@FieldParameter(name="locator") Locator locator, @FieldParameter(name="dist") Number dist)
 	{
 		this.list.add(new Piece(PieceKind.INSIDE_TOP).setLocator(null, locator).setRange(Range.EQUAL).setA(dist.longValue()));
 		return this;
 	}
 
-	public Spec inTop(Locator locator, CheckProvider func)
+	@DescriptionAttribute(text = DoSpec.insideTopLocatorWithProvider)
+	public Spec inTop(@FieldParameter(name="locator") Locator locator, @FieldParameter(name = "func") CheckProvider func)
 	{
 		this.list.add(func.provide(PieceKind.INSIDE_TOP).setLocator(null, locator));
 		return this;
 	}
+	//endregion
 
-	//------------------------------------------------------------------------------------------------------------------------------
-	// inBottom
-	//------------------------------------------------------------------------------------------------------------------------------
-	public Spec inBottom(String another, Number dist)
+	//region inBottom
+	@DescriptionAttribute(text = DoSpec.insideBottomAnother)
+	public Spec inBottom(@FieldParameter(name="another") String another, @FieldParameter(name="dist") Number dist)
 	{
 		this.list.add(new Piece(PieceKind.INSIDE_BOTTOM).setName(another).setRange(Range.EQUAL).setA(dist.longValue()));
 		return this;
 	}
 
-	public Spec inBottom(String another, CheckProvider func)
+	@DescriptionAttribute(text = DoSpec.insideBottomAnotherWithProvider)
+	public Spec inBottom(@FieldParameter(name="another") String another, @FieldParameter(name = "func") CheckProvider func)
 	{
 		this.list.add(func.provide(PieceKind.INSIDE_BOTTOM).setName(another));
 		return this;
 	}
 
-	public Spec inBottom(Locator locator, Number dist)
+	@DescriptionAttribute(text = DoSpec.insideBottomLocator)
+	public Spec inBottom(@FieldParameter(name="locator") Locator locator, @FieldParameter(name="dist") Number dist)
 	{
 		this.list.add(new Piece(PieceKind.INSIDE_BOTTOM).setLocator(null, locator).setRange(Range.EQUAL).setA(dist.longValue()));
 		return this;
 	}
 
-	public Spec inBottom(Locator locator, CheckProvider func)
+	@DescriptionAttribute(text = DoSpec.insideBottomLocatorWithProvider)
+	public Spec inBottom(@FieldParameter(name="locator") Locator locator, @FieldParameter(name = "func") CheckProvider func)
 	{
 		this.list.add(func.provide(PieceKind.INSIDE_BOTTOM).setLocator(null, locator));
 		return this;
 	}
+	//endregion
 
-	//------------------------------------------------------------------------------------------------------------------------------
-	// onLeft
-	//------------------------------------------------------------------------------------------------------------------------------
-	public Spec onLeft(String another, Number dist)
+	//region onLeft
+	@DescriptionAttribute(text = DoSpec.outsideLeftAnother)
+	public Spec onLeft(@FieldParameter(name="another") String another, @FieldParameter(name="dist") Number dist)
 	{
 		this.list.add(new Piece(PieceKind.ON_LEFT).setName(another).setRange(Range.EQUAL).setA(dist.longValue()));
 		return this;
 	}
 
-	public Spec onLeft(String another, CheckProvider func)
+	@DescriptionAttribute(text = DoSpec.outsideLeftAnotherWithProvider)
+	public Spec onLeft(@FieldParameter(name="another") String another, @FieldParameter(name = "func") CheckProvider func)
 	{
 		this.list.add(func.provide(PieceKind.ON_LEFT).setName(another));
 		return this;
 	}
 
-	public Spec onLeft(Locator locator, Number dist)
+	@DescriptionAttribute(text = DoSpec.outsideLeftLocator)
+	public Spec onLeft(@FieldParameter(name="locator") Locator locator, @FieldParameter(name="dist") Number dist)
 	{
 		this.list.add(new Piece(PieceKind.ON_LEFT).setLocator(null, locator).setRange(Range.EQUAL).setA(dist.longValue()));
 		return this;
 	}
 
-	public Spec onLeft(Locator locator, CheckProvider func)
+	@DescriptionAttribute(text = DoSpec.outsideLeftLocatorWithProvider)
+	public Spec onLeft(@FieldParameter(name="locator") Locator locator, @FieldParameter(name = "func") CheckProvider func)
 	{
 		this.list.add(func.provide(PieceKind.ON_LEFT).setLocator(null, locator));
 		return this;
 	}
+	//endregion
 
-	//------------------------------------------------------------------------------------------------------------------------------
-	// onRight
-	//------------------------------------------------------------------------------------------------------------------------------
-	public Spec onRight(String another, Number dist)
+	//region onRight
+	@DescriptionAttribute(text = DoSpec.outsideRightAnother)
+	public Spec onRight(@FieldParameter(name="another") String another, @FieldParameter(name="dist") Number dist)
 	{
 		this.list.add(new Piece(PieceKind.ON_RIGHT).setName(another).setRange(Range.EQUAL).setA(dist.longValue()));
 		return this;
 	}
 
-	public Spec onRight(String another, CheckProvider func)
+	@DescriptionAttribute(text = DoSpec.outsideRightAnotherWithProvider)
+	public Spec onRight(@FieldParameter(name="another") String another, @FieldParameter(name = "func") CheckProvider func)
 	{
 		this.list.add(func.provide(PieceKind.ON_RIGHT).setName(another));
 		return this;
 	}
 
-	public Spec onRight(Locator locator, Number dist)
+	@DescriptionAttribute(text = DoSpec.outsideRightLocator)
+	public Spec onRight(@FieldParameter(name="locator") Locator locator, @FieldParameter(name="dist") Number dist)
 	{
 		this.list.add(new Piece(PieceKind.ON_RIGHT).setLocator(null, locator).setRange(Range.EQUAL).setA(dist.longValue()));
 		return this;
 	}
 
-	public Spec onRight(Locator locator, CheckProvider func)
+	@DescriptionAttribute(text = DoSpec.outsideRightLocatorWithProvider)
+	public Spec onRight(@FieldParameter(name="locator") Locator locator, @FieldParameter(name = "func") CheckProvider func)
 	{
 		this.list.add(func.provide(PieceKind.ON_RIGHT).setLocator(null, locator));
 		return this;
 	}
+	//endregion
 
-	//------------------------------------------------------------------------------------------------------------------------------
-	// onTop
-	//------------------------------------------------------------------------------------------------------------------------------
-	public Spec onTop(String another, Number dist)
+	//region onTop
+	@DescriptionAttribute(text = DoSpec.outsideTopAnother)
+	public Spec onTop(@FieldParameter(name="another") String another, @FieldParameter(name="dist") Number dist)
 	{
 		this.list.add(new Piece(PieceKind.ON_TOP).setName(another).setRange(Range.EQUAL).setA(dist.longValue()));
 		return this;
 	}
 
-	public Spec onTop(String another, CheckProvider func)
+	@DescriptionAttribute(text = DoSpec.outsideTopAnotherWithProvider)
+	public Spec onTop(@FieldParameter(name="another") String another, @FieldParameter(name = "func") CheckProvider func)
 	{
 		this.list.add(func.provide(PieceKind.ON_TOP).setName(another));
 		return this;
 	}
 
-	public Spec onTop(Locator locator, Number dist)
+	@DescriptionAttribute(text = DoSpec.outsideTopLocator)
+	public Spec onTop(@FieldParameter(name="locator") Locator locator, @FieldParameter(name="dist") Number dist)
 	{
 		this.list.add(new Piece(PieceKind.ON_TOP).setLocator(null, locator).setRange(Range.EQUAL).setA(dist.longValue()));
 		return this;
 	}
 
-	public Spec onTop(Locator locator, CheckProvider func)
+	@DescriptionAttribute(text = DoSpec.outsideTopLocatorWithProvider)
+	public Spec onTop(@FieldParameter(name="locator") Locator locator, @FieldParameter(name = "func") CheckProvider func)
 	{
 		this.list.add(func.provide(PieceKind.ON_TOP).setLocator(null, locator));
 		return this;
 	}
+	//endregion
 
-	//------------------------------------------------------------------------------------------------------------------------------
-	// onBottom
-	//------------------------------------------------------------------------------------------------------------------------------
-	public Spec onBottom(String another, Number dist)
+	//region onBottom
+	@DescriptionAttribute(text = DoSpec.outsideBottomAnother)
+	public Spec onBottom(@FieldParameter(name="another") String another, @FieldParameter(name="dist") Number dist)
 	{
 		this.list.add(new Piece(PieceKind.ON_BOTTOM).setName(another).setRange(Range.EQUAL).setA(dist.longValue()));
 		return this;
 	}
 
-	public Spec onBottom(String another, CheckProvider func)
+	@DescriptionAttribute(text = DoSpec.outsideBottomAnotherWithProvider)
+	public Spec onBottom(@FieldParameter(name="another") String another, @FieldParameter(name = "func") CheckProvider func)
 	{
 		this.list.add(func.provide(PieceKind.ON_BOTTOM).setName(another));
 		return this;
 	}
 
-	public Spec onBottom(Locator locator, Number dist)
+	@DescriptionAttribute(text = DoSpec.outsideBottomLocator)
+	public Spec onBottom(@FieldParameter(name="locator") Locator locator, @FieldParameter(name="dist") Number dist)
 	{
 		this.list.add(new Piece(PieceKind.ON_BOTTOM).setLocator(null, locator).setRange(Range.EQUAL).setA(dist.longValue()));
 		return this;
 	}
 
-	public Spec onBottom(Locator locator, CheckProvider func)
+	@DescriptionAttribute(text = DoSpec.outsideBottomLocatorWithProvider)
+	public Spec onBottom(@FieldParameter(name="locator") Locator locator, @FieldParameter(name = "func") CheckProvider func)
 	{
 		this.list.add(func.provide(PieceKind.ON_BOTTOM).setLocator(null, locator));
 		return this;
 	}
+	//endregion
 	
 	//------------------------------------------------------------------------------------------------------------------------------
 	// lAlign
 	//------------------------------------------------------------------------------------------------------------------------------
-	public Spec lAlign(String another, Number dist)
+	public Spec lAlign(@FieldParameter(name="another") String another, @FieldParameter(name="dist") Number dist)
 	{
 		this.list.add(new Piece(PieceKind.LEFT_ALIGNED).setName(another).setRange(Range.EQUAL).setA(dist.longValue()));
 		return this;
 	}
 
-	public Spec lAlign(String another, CheckProvider func)
+	public Spec lAlign(@FieldParameter(name="another") String another, @FieldParameter(name = "func") CheckProvider func)
 	{
 		this.list.add(func.provide(PieceKind.LEFT_ALIGNED).setName(another));
 		return this;
 	}
 
-	public Spec lAlign(Locator locator, Number dist)
+	public Spec lAlign(@FieldParameter(name="locator") Locator locator, @FieldParameter(name="dist") Number dist)
 	{
 		this.list.add(new Piece(PieceKind.LEFT_ALIGNED).setLocator(null, locator).setRange(Range.EQUAL).setA(dist.longValue()));
 		return this;
 	}
 
-	public Spec lAlign(Locator locator, CheckProvider func)
+	public Spec lAlign(@FieldParameter(name="locator") Locator locator, @FieldParameter(name = "func") CheckProvider func)
 	{
 		this.list.add(func.provide(PieceKind.LEFT_ALIGNED).setLocator(null, locator));
 		return this;
@@ -515,25 +560,25 @@ public class Spec implements Iterable<Piece>, Serializable
 	//------------------------------------------------------------------------------------------------------------------------------
 	// rAlign
 	//------------------------------------------------------------------------------------------------------------------------------
-	public Spec rAlign(String another, Number dist)
+	public Spec rAlign(@FieldParameter(name="another") String another, @FieldParameter(name="dist") Number dist)
 	{
 		this.list.add(new Piece(PieceKind.RIGHT_ALIGNED).setName(another).setRange(Range.EQUAL).setA(dist.longValue()));
 		return this;
 	}
 
-	public Spec rAlign(String another, CheckProvider func)
+	public Spec rAlign(@FieldParameter(name="another") String another, @FieldParameter(name = "func") CheckProvider func)
 	{
 		this.list.add(func.provide(PieceKind.RIGHT_ALIGNED).setName(another));
 		return this;
 	}
 
-	public Spec rAlign(Locator locator, Number dist)
+	public Spec rAlign(@FieldParameter(name="locator") Locator locator, @FieldParameter(name="dist") Number dist)
 	{
 		this.list.add(new Piece(PieceKind.RIGHT_ALIGNED).setLocator(null, locator).setRange(Range.EQUAL).setA(dist.longValue()));
 		return this;
 	}
 
-	public Spec rAlign(Locator locator, CheckProvider func)
+	public Spec rAlign(@FieldParameter(name="locator") Locator locator, @FieldParameter(name = "func") CheckProvider func)
 	{
 		this.list.add(func.provide(PieceKind.RIGHT_ALIGNED).setLocator(null, locator));
 		return this;
@@ -542,25 +587,25 @@ public class Spec implements Iterable<Piece>, Serializable
 	//------------------------------------------------------------------------------------------------------------------------------
 	// tAlign
 	//------------------------------------------------------------------------------------------------------------------------------
-	public Spec tAlign(String another, Number dist)
+	public Spec tAlign(@FieldParameter(name="another") String another, @FieldParameter(name="dist") Number dist)
 	{
 		this.list.add(new Piece(PieceKind.TOP_ALIGNED).setName(another).setRange(Range.EQUAL).setA(dist.longValue()));
 		return this;
 	}
 
-	public Spec tAlign(String another, CheckProvider func)
+	public Spec tAlign(@FieldParameter(name="another") String another, @FieldParameter(name = "func") CheckProvider func)
 	{
 		this.list.add(func.provide(PieceKind.TOP_ALIGNED).setName(another));
 		return this;
 	}
 
-	public Spec tAlign(Locator locator, Number dist)
+	public Spec tAlign(@FieldParameter(name="locator") Locator locator, @FieldParameter(name="dist") Number dist)
 	{
 		this.list.add(new Piece(PieceKind.TOP_ALIGNED).setLocator(null, locator).setRange(Range.EQUAL).setA(dist.longValue()));
 		return this;
 	}
 
-	public Spec tAlign(Locator locator, CheckProvider func)
+	public Spec tAlign(@FieldParameter(name="locator") Locator locator, @FieldParameter(name = "func") CheckProvider func)
 	{
 		this.list.add(func.provide(PieceKind.TOP_ALIGNED).setLocator(null, locator));
 		return this;
@@ -569,90 +614,90 @@ public class Spec implements Iterable<Piece>, Serializable
 	//------------------------------------------------------------------------------------------------------------------------------
 	// bAlign
 	//------------------------------------------------------------------------------------------------------------------------------
-	public Spec bAlign(String another, Number dist)
+	public Spec bAlign(@FieldParameter(name="another") String another, @FieldParameter(name="dist") Number dist)
 	{
 		this.list.add(new Piece(PieceKind.BOTTOM_ALIGNED).setName(another).setRange(Range.EQUAL).setA(dist.longValue()));
 		return this;
 	}
 
-	public Spec bAlign(String another, CheckProvider func)
+	public Spec bAlign(@FieldParameter(name="another") String another, @FieldParameter(name = "func") CheckProvider func)
 	{
 		this.list.add(func.provide(PieceKind.BOTTOM_ALIGNED).setName(another));
 		return this;
 	}
 
-	public Spec bAlign(Locator locator, Number dist)
+	public Spec bAlign(@FieldParameter(name="locator") Locator locator, @FieldParameter(name="dist") Number dist)
 	{
 		this.list.add(new Piece(PieceKind.BOTTOM_ALIGNED).setLocator(null, locator).setRange(Range.EQUAL).setA(dist.longValue()));
 		return this;
 	}
 
-	public Spec bAlign(Locator locator, CheckProvider func)
+	public Spec bAlign(@FieldParameter(name="locator") Locator locator, @FieldParameter(name = "func") CheckProvider func)
 	{
 		this.list.add(func.provide(PieceKind.BOTTOM_ALIGNED).setLocator(null, locator));
 		return this;
 	}
 	
-	//------------------------------------------------------------------------------------------------------------------------------
-	// hCenter
-	//------------------------------------------------------------------------------------------------------------------------------
-	public Spec hCenter(String another, Number dist)
+	//region hCenter
+	@DescriptionAttribute(text = DoSpec.hCenterAnother)
+	public Spec hCenter(@FieldParameter(name="another") String another, @FieldParameter(name="dist") Number dist)
 	{
 		this.list.add(new Piece(PieceKind.HORIZONTAL_CENTERED).setName(another).setRange(Range.EQUAL).setA(dist.longValue()));
 		return this;
 	}
 
-	public Spec hCenter(String another, CheckProvider func)
+	@DescriptionAttribute(text = DoSpec.hCenterAnotherWithProvider)
+	public Spec hCenter(@FieldParameter(name="another") String another, @FieldParameter(name = "func") CheckProvider func)
 	{
 		this.list.add(func.provide(PieceKind.HORIZONTAL_CENTERED).setName(another));
 		return this;
 	}
 
-	public Spec hCenter(Locator locator, Number dist)
+	@DescriptionAttribute(text = DoSpec.hCenterLocator)
+	public Spec hCenter(@FieldParameter(name="locator") Locator locator, @FieldParameter(name="dist") Number dist)
 	{
 		this.list.add(new Piece(PieceKind.HORIZONTAL_CENTERED).setLocator(null, locator).setRange(Range.EQUAL).setA(dist.longValue()));
 		return this;
 	}
 
-	public Spec hCenter(Locator locator, CheckProvider func)
+	@DescriptionAttribute(text = DoSpec.hCenterLocatorWithProvider)
+	public Spec hCenter(@FieldParameter(name="locator") Locator locator, @FieldParameter(name = "func") CheckProvider func)
 	{
 		this.list.add(func.provide(PieceKind.HORIZONTAL_CENTERED).setLocator(null, locator));
 		return this;
 	}
+	//endregion
 	
-	//------------------------------------------------------------------------------------------------------------------------------
-	// vCenter
-	//------------------------------------------------------------------------------------------------------------------------------
-	public Spec vCenter(String another, Number dist)
+	//region vCenter
+	@DescriptionAttribute(text = DoSpec.vCenterAnother)
+	public Spec vCenter(@FieldParameter(name="another") String another, @FieldParameter(name="dist") Number dist)
 	{
 		this.list.add(new Piece(PieceKind.VERTICAL_CENTERED).setName(another).setRange(Range.EQUAL).setA(dist.longValue()));
 		return this;
 	}
 
-	public Spec vCenter(String another, CheckProvider func)
+	@DescriptionAttribute(text = DoSpec.vCenterAnotherWithProvider)
+	public Spec vCenter(@FieldParameter(name="another") String another, @FieldParameter(name = "func") CheckProvider func)
 	{
 		this.list.add(func.provide(PieceKind.VERTICAL_CENTERED).setName(another));
 		return this;
 	}
 
-	public Spec vCenter(Locator locator, Number dist)
+	@DescriptionAttribute(text = DoSpec.vCenterLocator)
+	public Spec vCenter(@FieldParameter(name="locator") Locator locator, @FieldParameter(name="dist") Number dist)
 	{
 		this.list.add(new Piece(PieceKind.VERTICAL_CENTERED).setLocator(null, locator).setRange(Range.EQUAL).setA(dist.longValue()));
 		return this;
 	}
 
-	public Spec vCenter(Locator locator, CheckProvider func)
+	@DescriptionAttribute(text = DoSpec.vCenterLocatorWithProvider)
+	public Spec vCenter(@FieldParameter(name="locator") Locator locator, @FieldParameter(name = "func") CheckProvider func)
 	{
 		this.list.add(func.provide(PieceKind.VERTICAL_CENTERED).setLocator(null, locator));
 		return this;
 	}
-	
-	
-	
-	
-	
-	
-	//------------------------------------------------------------------------------------------------------------------------------
+	//endregion
+
 	protected List<Piece> list;
 
 	private static final long	serialVersionUID	= -9155953771178401088L;
