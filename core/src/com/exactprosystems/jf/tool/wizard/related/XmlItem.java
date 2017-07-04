@@ -9,13 +9,13 @@ import org.w3c.dom.Node;
 import java.awt.*;
 import java.util.stream.Collectors;
 
-public class XpathItem
+public class XmlItem
 {
 	private HBox box;
 	private Node node;
 	private Rectangle rectangle;
 
-	public XpathItem(HBox box, Node node)
+	public XmlItem(HBox box, Node node)
 	{
 		this.box = box;
 		this.box.setAlignment(Pos.CENTER_LEFT);
@@ -44,9 +44,6 @@ public class XpathItem
 				.filter(node -> node instanceof Text)
 				.map(text -> ((Text) text).getText())
 				.collect(Collectors.joining());
-//		StringBuilder builder = new StringBuilder();
-//		this.box.getChildren().stream().filter(node -> node instanceof Text).forEach(text -> builder.append(((Text) text).getText()));
-//		return builder.toString();
 	}
 
 	@Override
@@ -57,7 +54,7 @@ public class XpathItem
 		if (o == null || getClass() != o.getClass())
 			return false;
 
-		XpathItem xpathItem = (XpathItem) o;
+		XmlItem xpathItem = (XmlItem) o;
 
 		if (box != null ? !box.equals(xpathItem.box) : xpathItem.box != null)
 			return false;

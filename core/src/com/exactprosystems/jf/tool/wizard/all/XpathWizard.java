@@ -127,7 +127,7 @@ public class XpathWizard extends AbstractWizard
     private SplitPane                          splitPane;
     private ImageViewWithScale                 imageViewWithScale;
     private XmlTreeView                        xmlTreeView;
-    private FindPanel<TreeItem<XmlTreeItem>>   findPanel;
+    private FindPanel<XmlTreeItem>             findPanel;
     private OneLine[]                          lines;
     private CheckBox                           useText;
     private HBox                               hBoxCheckboxes;
@@ -405,16 +405,16 @@ public class XpathWizard extends AbstractWizard
 
     private void initListeners()
     {
-        this.findPanel.setListener(new IFind<TreeItem<XmlTreeItem>>()
+        this.findPanel.setListener(new IFind<XmlTreeItem>()
         {
             @Override
-            public void find(TreeItem<XmlTreeItem> xpathItemTreeItem)
+            public void find(XmlTreeItem item)
             {
-                xmlTreeView.selectAndScroll(xpathItemTreeItem);
+                xmlTreeView.selectAndScroll(item);
             }
 
             @Override
-            public List<TreeItem<XmlTreeItem>> findItem(String what, boolean matchCase, boolean wholeWord)
+            public List<XmlTreeItem> findItem(String what, boolean matchCase, boolean wholeWord)
             {
                 return xmlTreeView.findItem(what, matchCase, wholeWord);
             }

@@ -7,9 +7,9 @@ import javafx.scene.control.TreeCell;
 
 import java.util.Optional;
 
-public class XpathCell extends TreeCell<XpathItem>
+public class XmlTreeCell extends TreeCell<XmlItem>
 {
-	public XpathCell()
+	public XmlTreeCell()
 	{
 		ContextMenu menu = new ContextMenu();
 		menu.setAutoHide(true);
@@ -22,7 +22,7 @@ public class XpathCell extends TreeCell<XpathItem>
 	}
 
 	@Override
-	protected void updateItem(XpathItem item, boolean empty)
+	protected void updateItem(XmlItem item, boolean empty)
 	{
 		super.updateItem(item, empty);
 		if (item != null)
