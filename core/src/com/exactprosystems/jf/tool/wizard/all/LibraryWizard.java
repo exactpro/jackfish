@@ -14,9 +14,11 @@ import com.exactprosystems.jf.documents.matrix.parser.items.Call;
 import com.exactprosystems.jf.documents.matrix.parser.items.MatrixItem;
 import com.exactprosystems.jf.documents.matrix.parser.items.NameSpace;
 import com.exactprosystems.jf.documents.matrix.parser.items.SubCase;
+import com.exactprosystems.jf.tool.helpers.DialogsHelper;
 import com.exactprosystems.jf.tool.matrix.MatrixFx;
 import com.exactprosystems.jf.tool.wizard.AbstractWizard;
 import com.exactprosystems.jf.tool.wizard.CommandBuilder;
+
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.*;
@@ -53,10 +55,13 @@ public class LibraryWizard extends AbstractWizard {
 
     private String oldSubId;
     private String newSubId;
-    private String newNameSpaceName;
+    private String newNameSpaceId;
     private String oldNameSpaceName;
     private String newFileName;
+    private NameSpace currentNameSpace;
 
+    private List<String> libsFolders;
+    private List<String> matricesFolders;
 
 
     @Override
@@ -86,7 +91,7 @@ public class LibraryWizard extends AbstractWizard {
         TextField nameOfaNewFile = new TextField();
 
         nameOfSub.textProperty().addListener((observable, oldValue, newValue) -> this.newSubId = newValue);
-        nameOfNameSpace.textProperty().addListener((observable, oldValue, newValue) -> this.newNameSpaceName = newValue);
+        nameOfNameSpace.textProperty().addListener((observable, oldValue, newValue) -> this.newNameSpaceId = newValue);
         nameOfaNewFile.textProperty().addListener((observable, oldValue, newValue) -> this.newFileName = newValue);
 
         GridPane pane = new GridPane();
@@ -98,7 +103,7 @@ public class LibraryWizard extends AbstractWizard {
         {
             ObservableList<String> objects = FXCollections.observableArrayList();
             List<File> affectedObjects = getAffectedObjects(oldSubId, oldNameSpaceName);
-            objects.addAll(affectedObjects.stream().map(File::getName).collect(Collectors.toList()));
+            objects.addAll(affectedObjects.stream().map(File::getName).distinct().collect(Collectors.toList()));
             listView.setItems(objects);
 
         }));
@@ -146,11 +151,11 @@ public class LibraryWizard extends AbstractWizard {
     }
 
     private ActionRequired getAction() {
-        if (newSubId != null && newNameSpaceName != null && newFileName != null)
+        if (newSubId != null && newNameSpaceId != null && newFileName != null)
         {
             return ActionRequired.SUB_NAMESPACE_FILE;
         }
-        else if (newSubId != null && newNameSpaceName != null)
+        else if (newSubId != null && newNameSpaceId != null)
         {
             return ActionRequired.SUB_NAMESPACE;
 
@@ -162,7 +167,7 @@ public class LibraryWizard extends AbstractWizard {
         {
             return ActionRequired.ONLY_SUB;
 
-        }else if(newNameSpaceName != null)
+        }else if(newNameSpaceId != null)
         {
             return ActionRequired.NAMESPACE;
         }else
@@ -225,13 +230,16 @@ public class LibraryWizard extends AbstractWizard {
 
         this.currentMatrix = super.get(MatrixFx.class, parameters);
         this.currentSubCase = super.get(SubCase.class, parameters);
+        this.currentNameSpace = super.get(NameSpace.class, parameters);
         this.oldSubId = currentSubCase.getId();
         this.oldNameSpaceName = currentSubCase.getParent().getClass() == NameSpace.class ? currentSubCase.getParent().getId() : "";
-        this.commonFolder.addAll(currentMatrix.getFactory().getConfiguration().getMatricesValue().stream().
-                map(a -> MainRunner.makeDirWithSubstitutions(a.get())).collect(Collectors.toList()));
-        this.commonFolder.addAll(currentMatrix.getFactory().getConfiguration().getLibrariesValue().stream().
-                map(a -> MainRunner.makeDirWithSubstitutions(a.get())).collect(Collectors.toList()));
-        this.commonFolder.forEach(s -> getAllFiles(new File(s)));
+        this.libsFolders = currentMatrix.getFactory().getConfiguration().getLibrariesValue().stream().
+                map(a -> MainRunner.makeDirWithSubstitutions(a.get())).collect(Collectors.toList());
+        this.matricesFolders = currentMatrix.getFactory().getConfiguration().getMatricesValue().stream().
+                map(a -> MainRunner.makeDirWithSubstitutions(a.get())).collect(Collectors.toList());
+        this.commonFolder.addAll(this.libsFolders);
+        this.commonFolder.addAll(this.matricesFolders);
+
 
     }
 
@@ -244,7 +252,7 @@ public class LibraryWizard extends AbstractWizard {
         NAMESPACE_FILE
     }
 
-    private Map<MatrixItem, String> getItemsFromMatrices() {
+    private Map<MatrixItem, String> getItemsFromMatrices(Class what) {
         Map<MatrixItem, String> res = new HashMap<>();
         List<File> affectedObjects = getAffectedObjects(oldSubId, oldNameSpaceName);
         affectedObjects.forEach(s -> {
@@ -255,7 +263,7 @@ public class LibraryWizard extends AbstractWizard {
                 matrix.load(new FileReader(s));
                 matrix.getRoot().bypass(item ->
                 {
-                    if (item.getClass() == Call.class && (item.getItemName().contains(oldSubId) || item.getItemName().contains(oldNameSpaceName)))
+                    if (item.getClass() == what && (item.getItemName().contains(oldSubId) || item.getItemName().contains(oldNameSpaceName)))
                     {
                         res.put(item, s.getAbsolutePath());
                     }
@@ -271,7 +279,8 @@ public class LibraryWizard extends AbstractWizard {
     }
 
     {
-        suppliers.put(ActionRequired.ONLY_SUB, () ->{
+        suppliers.put(ActionRequired.ONLY_SUB, () ->
+        {
             CommandBuilder builder = CommandBuilder.start();
 
             if (!currentMatrix.isLibrary())
@@ -286,11 +295,17 @@ public class LibraryWizard extends AbstractWizard {
                     }
                 });
                 builder.removeMatrixItem(currentMatrix, currentSubCase).addMatrixItem(currentMatrix, currentSubCase.getParent(),currentSubCase, currentSubCase.getParent().index(currentSubCase));
+                try
+                {
+                    currentMatrix.save(matricesFolders.get(0) + File.separator + currentMatrix.getName());
+                } catch (Exception e)
+                {
+                    e.printStackTrace();//todo logger
+                }
                 return builder.build();
             }else
             {
-
-                getItemsFromMatrices().forEach((item, s) ->
+                getItemsFromMatrices(Call.class).forEach((item, s) ->
                 {
                     Matrix matrix = item.getMatrix();
                     MatrixItem newItem = CommandBuilder.create(matrix, Call.class.getSimpleName(), null);
@@ -317,21 +332,22 @@ public class LibraryWizard extends AbstractWizard {
                 return builder.build();
             }
         });
-        suppliers.put(ActionRequired.SUB_NAMESPACE, () ->{
+        suppliers.put(ActionRequired.SUB_NAMESPACE, () ->
+        {
             CommandBuilder builder = CommandBuilder.start();
 
-            getItemsFromMatrices().forEach((item, s) -> {
+            getItemsFromMatrices(Call.class).forEach((item, s) -> {
                 Matrix matrix = item.getMatrix();
                 MatrixItem newItem = CommandBuilder.create(matrix, Call.class.getSimpleName(), null);
                 newItem.setId(item.getId());
-                ((Call)newItem).setName(newNameSpaceName +"."+ newSubId);
+                ((Call)newItem).setName(newNameSpaceId +"."+ newSubId);
                 builder.removeMatrixItem(matrix, item).addMatrixItem(matrix, item.getParent(), newItem, item.getParent().index(item));
                 try
                 {
                     matrix.save(s);
                 } catch (Exception e)
                 {
-                    e.printStackTrace();
+                    e.printStackTrace(); // todo logger
                 }
             });
             currentSubCase.setId(newSubId);
@@ -341,9 +357,113 @@ public class LibraryWizard extends AbstractWizard {
                 currentMatrix.save(currentMatrix.getName());
             } catch (Exception e)
             {
-                e.printStackTrace();
+                e.printStackTrace(); //todo logger
             }
             return builder.build();
         });
+
+        suppliers.put(ActionRequired.NAMESPACE, () ->{
+
+            CommandBuilder builder = CommandBuilder.start();
+            Map<MatrixItem, String> nameSpaces = getItemsFromMatrices(NameSpace.class);
+
+            nameSpaces.forEach((item, s) -> {
+                if (item.getId().equals(newNameSpaceId))
+                {
+                    Matrix matrix = item.getMatrix();
+                    builder.removeMatrixItem(currentMatrix, currentSubCase).addMatrixItem(matrix, item, currentSubCase, item.count() + 1);
+                    try
+                    {
+                        matrix.save(s);
+                        currentMatrix.save(currentMatrix.getName());
+                    } catch (Exception e)
+                    {
+                        e.printStackTrace();// todo logger
+                    }
+
+                }else if(currentMatrix.isLibrary())
+                {
+                    MatrixItem newNameSpace = CommandBuilder.create(currentMatrix, NameSpace.class.getSimpleName(), null);
+                    newNameSpace.setId(newNameSpaceId);
+
+                    try
+                    {
+                        currentMatrix.save(s);
+                    } catch (Exception e)
+                    {
+                        e.printStackTrace();//todo logger
+                    }
+                }else{
+                    DialogsHelper.showError("NameSpace can not be added into the matrix. Select exist namespace or fill new library field");
+                }
+            });
+
+            builder.removeMatrixItem(currentMatrix, currentSubCase);
+            return builder.build();
+
+        });
+
+        suppliers.put(ActionRequired.SUB_NAMESPACE_FILE, () -> {
+            CommandBuilder builder = CommandBuilder.start();
+
+            Matrix matrix = new Matrix(newFileName, new ConsoleDocumentFactory(VerboseLevel.None));
+            MatrixItem newItem = CommandBuilder.create(matrix, NameSpace.class.getSimpleName(), null);
+            newItem.setId(newNameSpaceId);
+            builder.removeMatrixItem(currentMatrix,currentSubCase);
+            currentSubCase.setId(newSubId);
+            builder.addMatrixItem(matrix, matrix.getRoot(), newItem, 0).addMatrixItem(matrix, newItem, currentSubCase, 0);
+
+            try
+            {
+                currentMatrix.save(currentMatrix.getName());
+                matrix.save(libsFolders.get(0) + File.separator + matrix.getName());
+            } catch (Exception e)
+            {
+                e.printStackTrace();// todo logger
+            }
+
+            return builder.build();
+
+        });
+
+        suppliers.put(ActionRequired.SUB_FILE, () ->{
+            CommandBuilder builder = CommandBuilder.start();
+
+            Matrix matrix = new Matrix(newFileName, new ConsoleDocumentFactory(VerboseLevel.None));
+            builder.removeMatrixItem(currentMatrix,currentSubCase);
+            currentSubCase.setId(newSubId);
+            builder.addMatrixItem(matrix, matrix.getRoot(), currentNameSpace, 0).addMatrixItem(matrix, currentNameSpace, currentSubCase, 0);
+
+            try
+            {
+                currentMatrix.save(currentMatrix.getName());
+                matrix.save(libsFolders.get(0) + File.separator + matrix.getName());
+            } catch (Exception e)
+            {
+                e.printStackTrace();// todo logger
+            }
+
+            return builder.build();
+
+        });
+
+        suppliers.put(ActionRequired.NAMESPACE_FILE, () ->{
+            CommandBuilder builder = CommandBuilder.start();
+
+            Matrix matrix = new Matrix(newFileName, new ConsoleDocumentFactory(VerboseLevel.None));
+            MatrixItem newItem = CommandBuilder.create(matrix, NameSpace.class.getSimpleName(), null);
+            newItem.setId(newNameSpaceId);
+            builder.addMatrixItem(matrix, matrix.getRoot(), newItem, matrix.getRoot().count() + 1).addMatrixItem(matrix, newItem, currentSubCase, 0);
+            try
+            {
+                matrix.save(libsFolders.get(0) + File.separator + newFileName);
+            } catch (Exception e)
+            {
+                e.printStackTrace(); //todo logger
+            }
+
+            return builder.build();
+        });
     }
+
 }
