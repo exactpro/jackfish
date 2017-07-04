@@ -30,6 +30,7 @@
     <import>org.mvel2</import>
     <import>com.exactprosystems.jf.api.client</import>
     <import>com.exactprosystems.jf.api.error</import>
+    <import>com.exactprosystems.jf.documents.matrix.parser.items</import>
     <vars>vars.ini</vars>
     <userVars>myVars/myVars.ini</userVars>
     <matrix>matrices</matrix>
