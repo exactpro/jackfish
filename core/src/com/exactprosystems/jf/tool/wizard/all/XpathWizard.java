@@ -236,7 +236,8 @@ public class XpathWizard extends AbstractWizard
 
 		gp.getColumnConstraints().addAll(cc0, new ColumnConstraints(), new ColumnConstraints());
 
-		Supplier<RowConstraints> supplier = () -> {
+		Supplier<RowConstraints> supplier = () -> 
+		{
 			RowConstraints r = new RowConstraints();
 			r.setMinHeight(10.0);
 			r.setPrefHeight(30.0);

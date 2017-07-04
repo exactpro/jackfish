@@ -215,18 +215,6 @@ public class XmlTreeView extends AnchorPane
 		return list.get(0);
 	}
 
-	public List<TreeItem<XmlTreeItem>> findByNodes(NodeList nodeList)
-	{
-		TreeItem<XmlTreeItem> root = this.treeTableView.getRoot();
-		List<TreeItem<XmlTreeItem>> list = new ArrayList<>();
-		byPass(root, list, xpathTreeItem -> xpathTreeItem != null
-				&& xpathTreeItem.getNode() != null
-				&& IntStream.range(0, nodeList.getLength())
-					.anyMatch(i -> nodeList.item(i).equals(xpathTreeItem.getNode()))
-		);
-		return list;
-	}
-
 	public List<TreeItem<XmlTreeItem>> findByNodes(List<org.w3c.dom.Node> nodes)
 	{
 		TreeItem<XmlTreeItem> root = this.treeTableView.getRoot();
