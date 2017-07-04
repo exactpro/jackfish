@@ -153,7 +153,12 @@ public class RowTable implements Map<String, Object>, Cloneable
         checkRow();
         for (Map.Entry<? extends String, ? extends Object> entry : m.entrySet())
         {
-            put(entry.getKey(), entry.getValue());
+			String key = entry.getKey();
+			if (!this.containsKey(key))
+			{
+				throw new WrongExpressionException(String.format("Can't find column with name '%s'", key));
+			}
+            put(key, entry.getValue());
         }
     }
 
