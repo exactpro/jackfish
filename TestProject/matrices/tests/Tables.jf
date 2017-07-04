@@ -3259,23 +3259,8 @@ TABLE_UNION;Test case;Never;;
         1;Carl;10;Female
         #EndRawTable
 
-        #Action;$UnitedTable;$MainTable
-        TableUnion;additional;main
-
-        #Action;$Table;$Title
-        TableReport;main;'dfdf'
-
-        #Id;#RawTable
-        expected;Table
-        @;Name;Age
-        0;Mike;42
-        1;Anna;21
-        2;Fred;28
-        3;Carl;10
-        #EndRawTable
-
-        #Id;#Action;$Expected;$Actual
-        TBLCMP1;TableCompareTwo;expected;main
+        #Action;#Assert;$UnitedTable;$MainTable
+        TableUnion;This.Kind == ErrorKind.EXCEPTION && This.Result == Result.Failed;additional;main
 
     #EndStep
 

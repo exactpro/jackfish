@@ -49,12 +49,12 @@ public class DocumentationBuilder
     {
         AbstractEvaluator evaluator = context.getEvaluator();
 
-        MatrixItem help = new HelpTextLine("");
-        //addContent(help, "", new Content());
-        //addText(help, DocumentationBuilder.class.getResourceAsStream("mvel.txt"));
+        List<OperationKind> operations = Arrays.stream(OperationKind.values()).collect(Collectors.toList());
 
-        //mvel
-        //controls
+        MatrixItem help = new HelpTextLine("");
+        addText(help, DocumentationBuilder.class.getResourceAsStream("mvel.txt"));
+        addAllControlsTable(help, "All controls", context, operations, true, true);
+
         //syntax
         //items
         //actions

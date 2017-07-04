@@ -1,6 +1,7 @@
 package com.exactprosystems.jf.common.report;
 
 import com.exactprosystems.jf.api.app.ImageWrapper;
+import com.exactprosystems.jf.api.common.Str;
 import com.exactprosystems.jf.charts.ChartBuilder;
 import com.exactprosystems.jf.documents.matrix.parser.items.MatrixItem;
 import com.exactprosystems.jf.functions.Content;
@@ -10,6 +11,8 @@ import java.nio.file.*;
 import java.util.Date;
 
 public class NewHelpBuilder extends ReportBuilder {
+
+    private static final long serialVersionUID = -5583389098545753476L;
 
     public NewHelpBuilder(Date currentTime) throws IOException
     {
@@ -74,7 +77,7 @@ public class NewHelpBuilder extends ReportBuilder {
 
     @Override
     protected String replaceMarker(String marker) {
-        return HTMLhelper.htmlMarker(marker);
+        return HTMLhelper.newHtmlMarker(marker);
     }
 
     @Override
@@ -97,11 +100,26 @@ public class NewHelpBuilder extends ReportBuilder {
     protected void reportHeader(ReportWriter writer, Date date, String version) throws IOException {
         writer.fwrite("<!DOCTYPE html>");
         writer.fwrite("<html>");
+        writer.fwrite("<script type='text/javascript'>\n<!--\n");
+        writer.include(getClass().getResourceAsStream("jquery-3.1.1.min.js"));
+        writer.fwrite("-->\n</script>\n");
+
+        writer.fwrite("<script type='text/javascript'>\n<!--\n");
+        writer.include(getClass().getResourceAsStream("bootstrap.min.js"));
+        writer.fwrite("-->\n</script>\n");
+
+        writer.fwrite("<style>\n" + "<!--\n");
+        writer.include(getClass().getResourceAsStream("bootstrap.min.css"));
+        writer.fwrite("-->\n" + "</style>\n");
+
+        writer.fwrite("<style>\n" + "<!--\n");
+        writer.include(getClass().getResourceAsStream("help.css"));
+        writer.fwrite("-->\n" + "</style>\n");
         writer.fwrite("<head>");
         writer.fwrite("<title>Help</title>");
         writer.fwrite("<meta http-equiv='Content-Type' content='text/html; charset=utf-8'>");
         writer.fwrite("</head>");
-        writer.fwrite("<body>");
+        writer.fwrite("<body>").newline();
     }
 
     @Override
@@ -162,12 +180,41 @@ public class NewHelpBuilder extends ReportBuilder {
 
     @Override
     protected void tableHeader(ReportWriter writer, ReportTable table, String tableTitle, String[] columns, int[] percents) throws IOException {
-        //todo https://www.w3schools.com/tags/att_col_width.asp
+        boolean columnWidth = percents.length != 0 && columns.length == percents.length;
+        if (!Str.IsNullOrEmpty(tableTitle)){
+            writer.fwrite("<h3>" + tableTitle + "</h3>").newline();
+        }
+        writer.fwrite("<table class='table table-bordered'>\n");
+        if (columnWidth){
+            writer.fwrite("<colgroup>");
+            for(int i = 0; i < percents.length; i++){
+                writer.fwrite("<col span=\"1\" style=\"width: " + percents[i] + "%;\">");
+            }
+            writer.fwrite("</colgroup>");
+        }
+        writer.fwrite("<thead>\n");
+        writer.fwrite("<tr>\n");
+        for (String column : columns)
+        {
+            writer.fwrite("<th>%s</th>", column);
+        }
+        writer.fwrite("</tr>\n");
+        writer.fwrite("</thead>\n");
     }
 
     @Override
     protected void tableRow(ReportWriter writer, ReportTable table, int quotes, Object... value) throws IOException {
-        //todo
+        if (value != null){
+            writer.fwrite("<tr>");
+            int count = 0;
+            for (Object obj : value)
+            {
+                writer.fwrite("<td>%s</td>", ReportHelper.objToString(obj, count >= quotes));
+                count++;
+            }
+            writer.fwrite("</tr>");
+            writer.fwrite("\n");
+        }
     }
 
     @Override

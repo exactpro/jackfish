@@ -8,6 +8,7 @@
 package com.exactprosystems.jf.tool.newconfig.nodes;
 
 import com.exactprosystems.jf.api.common.SerializablePair;
+import com.exactprosystems.jf.common.MainRunner;
 import com.exactprosystems.jf.common.MutableString;
 import com.exactprosystems.jf.documents.matrix.Matrix;
 import com.exactprosystems.jf.tool.Common;
@@ -78,7 +79,7 @@ public class LibraryTreeNode extends TreeNode
 			Menu addLibrary = new Menu("Add new library to", new ImageView(new Image(CssVariables.Icons.ADD_PARAMETER_ICON)));
 			this.model.getLibrariesValue()
 					.stream()
-					.map(MutableString::get)
+					.map(mutableString -> MainRunner.makeDirWithSubstitutions(mutableString.get()))
 					.map(Common::getRelativePath)
 					.map(MenuItem::new)
 					.peek(item -> item.setOnAction(
