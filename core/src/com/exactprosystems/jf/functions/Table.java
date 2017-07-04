@@ -15,6 +15,7 @@ import com.exactprosystems.jf.api.app.Mutable;
 import com.exactprosystems.jf.api.common.Converter;
 import com.exactprosystems.jf.api.common.Str;
 import com.exactprosystems.jf.api.conditions.Condition;
+import com.exactprosystems.jf.api.error.common.WrongExpressionException;
 import com.exactprosystems.jf.common.CommonHelper;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.report.ReportBuilder;
@@ -23,6 +24,7 @@ import com.exactprosystems.jf.common.report.ReportTable;
 import com.exactprosystems.jf.exceptions.ColumnIsPresentException;
 import com.exactprosystems.jf.sql.SqlConnection;
 import org.apache.log4j.Logger;
+
 import java.io.*;
 import java.sql.*;
 import java.util.*;
@@ -1308,7 +1310,10 @@ public class Table implements List<RowTable>, Mutable, Cloneable
 
 	protected Header headerByName(String name)
 	{
-	    return Arrays.stream(this.headers).filter(h -> h.name.equals(name)).findFirst().orElse(null);
+		return Arrays.stream(this.headers)
+				.filter(h -> h.name.equals(name))
+				.findFirst()
+				.orElseThrow(() -> new WrongExpressionException(String.format("Can't find column with name '%s'", name)));
 	}
 
 	private Map<Header, Object> convert(Object[] arr)
