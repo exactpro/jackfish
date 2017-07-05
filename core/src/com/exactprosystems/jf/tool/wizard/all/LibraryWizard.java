@@ -203,27 +203,6 @@ public class LibraryWizard extends AbstractWizard {
         return suppliers.get(getAction());
     }
 
-//    private List<MatrixItem> makeRefactor() {
-//        List<MatrixItem> res = new LinkedList<>();
-//
-//        switch (getAction())
-//        {
-//            case ONLY_SUB:
-//                break;
-//            case NAMESPACE_FILE:
-//                break;
-//            case NAMESPACE:
-//                break;
-//            case SUB_FILE:
-//                break;
-//            case SUB_NAMESPACE:
-//                break;
-//            case SUB_NAMESPACE_FILE:
-//                break;
-//        }
-//
-//        return res;
-//    }
 
     @Override
     public void init(IContext context, WizardManager wizardManager, Object... parameters) {
@@ -467,4 +446,33 @@ public class LibraryWizard extends AbstractWizard {
         });
     }
 
+    class Bean{
+
+        private final static String MOVE = "Move";
+        private final static String RENAME = "Rename";
+
+        File file;
+        Collection<String> changes;
+
+        public File getFile() {
+            return file;
+        }
+
+        public void setFile(File file) {
+            this.file = file;
+        }
+
+        public Collection<String> getChanges() {
+            return changes;
+        }
+
+        public void setChanges(Collection<String> changes) {
+            this.changes = changes;
+        }
+
+        public Bean(File file, Collection<String> changes) {
+            this.file = file;
+            this.changes = changes;
+        }
+    }
 }
