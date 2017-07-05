@@ -8,16 +8,7 @@
 
 package com.exactprosystems.jf.actions.app;
 
-import java.io.Serializable;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-
-import com.exactprosystems.jf.actions.AbstractAction;
-import com.exactprosystems.jf.actions.ActionAttribute;
-import com.exactprosystems.jf.actions.ActionFieldAttribute;
-import com.exactprosystems.jf.actions.ActionGroups;
-import com.exactprosystems.jf.actions.ReadableValue;
+import com.exactprosystems.jf.actions.*;
 import com.exactprosystems.jf.api.app.AppConnection;
 import com.exactprosystems.jf.api.app.IApplication;
 import com.exactprosystems.jf.api.app.IRemoteApplication;
@@ -30,6 +21,11 @@ import com.exactprosystems.jf.documents.matrix.parser.Parameter;
 import com.exactprosystems.jf.documents.matrix.parser.Parameters;
 import com.exactprosystems.jf.documents.matrix.parser.items.TypeMandatory;
 import com.exactprosystems.jf.functions.HelpKind;
+
+import java.io.Serializable;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 @ActionAttribute(
 		group 				= ActionGroups.App, 
@@ -92,19 +88,15 @@ public class ApplicationGetProperties extends AbstractAction
 		
 		for (Parameter parameter : parameters.select(TypeMandatory.Extra))
 		{
+			if (parameter.getValue() != null && !(parameter instanceof Serializable))
+			{
+				super.setError("Parameter " + parameter.getName() + " should be Serializable type or empty.", ErrorKind.WRONG_PARAMETERS);
+				return;
+			}
+			Serializable prop = (Serializable) parameter.getValue();
+			Serializable value = service.getProperty(parameter.getName(), prop);
 
-            if (parameter.getValue() == null || parameter.getValue() instanceof Serializable)
-            {
-                Serializable prop = parameter.getValue() == null ? null : (Serializable)parameter.getValue();
-                Serializable value = service.getProperty(parameter.getName(), prop);
-                
-                outValue.put(parameter.getName(), value);
-            }
-            else
-            {
-                super.setError("Parameter " + parameter.getName() + " should be Serializable type.", ErrorKind.WRONG_PARAMETERS);
-                return;
-            }
+			outValue.put(parameter.getName(), value);
 		}
 
 		super.setResult(outValue);
