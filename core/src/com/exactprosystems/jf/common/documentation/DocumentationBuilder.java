@@ -54,8 +54,8 @@ public class DocumentationBuilder
         MatrixItem help = new HelpTextLine("");
         addText(help, DocumentationBuilder.class.getResourceAsStream("mvel.txt"));
         addAllControlsTable(help, "All controls", context, operations, true, true);
-
-        //syntax
+        addAllItems(help);
+        addAllActions(help);
         //items
         //actions
         //other classes

@@ -16,6 +16,8 @@ import com.exactprosystems.jf.actions.ActionAttribute;
 import com.exactprosystems.jf.actions.ActionFieldAttribute;
 import com.exactprosystems.jf.api.error.ErrorKind;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
+import com.exactprosystems.jf.common.report.HTMLhelper;
+import com.exactprosystems.jf.common.report.NewHelpBuilder;
 import com.exactprosystems.jf.common.report.ReportBuilder;
 import com.exactprosystems.jf.common.report.ReportTable;
 import com.exactprosystems.jf.documents.config.Context;
@@ -55,7 +57,13 @@ public class HelpActionItem extends MatrixItem
             report.outLine(this, null, "{{`{{*Additional fields - No*}}`}}", null);
         }
         report.outLine(this, null, "{{`{{*Examples*}}`}}", null);
-        report.outLine(this, null, "{{`" + attr.examples() + "`}}", null);
+        if (report instanceof NewHelpBuilder){
+            report.outLine(this, null, "{{`" + HTMLhelper.htmlescape(attr.examples()) + "`}}", null);
+        }
+        else
+        {
+            report.outLine(this, null, "{{`" + attr.examples() + "`}}", null);
+        }
         if (attr.seeAlsoClass().length != 0)
         {
             report.outLine(this, null, "{{`{{*See also*}}`}}", null);

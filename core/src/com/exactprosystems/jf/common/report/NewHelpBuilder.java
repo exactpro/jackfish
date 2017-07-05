@@ -62,7 +62,7 @@ public class NewHelpBuilder extends ReportBuilder {
 
     @Override
     protected String decorateLink(String name, String link) {
-        return String.format("<a href=\"%s\">%s</a>", name, link);
+        return String.format("<a href=\"#%s\">%s</a>", name, link);
     }
 
     @Override
