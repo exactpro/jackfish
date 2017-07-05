@@ -7,7 +7,7 @@ INIT;Test case;Never;;
     getExp;1;def (pl, v1, v2, v3) {if(pl == 'Web') {return v1\u003b}if(pl == 'Swing') {return v2\u003b}if(pl == 'Win') {return v3\u003b}}\u003b
 
     #Id;#Global;#Let
-    getDelay;1;def (pl) {if(pl == 'Web') {return 10\u003b}if(pl == 'Swing') {return 1000\u003b}if(pl == 'Win') {return 10\u003b}}\u003b
+    getDelay;1;def (pl) {if(pl == 'Web') {return 10\u003b}if(pl == 'Swing') {return 1000\u003b}if(pl == 'Win') {return 1000\u003b}}\u003b
 
     // {web,swing,win} or All
     #Id;#Global;#RawTable
@@ -61,7 +61,7 @@ INIT;Test case;Never;;
     13;x;get;OperationKind.GET;Do.use(control);Do.use(control).get();control.get;
     14;x;click;OperationKind.CLICK;Do.use(control).click();Do.use('centralLabel').getValue();control.Name + '_click';
     15;x;doubleClick;OperationKind.CLICK_XY;Do.use(control).click(2,2,MouseAction.LeftDoubleClick);Do.use('centralLabel').getValue();control.Name + '_double_click';
-    16;x;clickXY;OperationKind.CLICK_XY;Do.use(control).click(2,2);Do.use('centralLabel').getValue();control.Name + '_click';
+    16;x;clickXY;OperationKind.CLICK_XY;Do.use(control).delay(amount).click(2,2);Do.use('centralLabel').getValue();control.Name + '_click';
     17;x;forech;OperationKind.FOREACH;Do.use(control).foreach(Do.click(2,2,MouseAction.LeftDoubleClick));Do.use('centralLabel').getValue();control.Name + '_double_click';
     18;x;setValue;OperationKind.SET;Do.use(control).setValue(30);Do.use('sliderLabel').getValue();control.setValue;
     19;x;text;OperationKind.TEXT;Do.use(control).text('Green');Do.use(control).getValue();control.text;
@@ -177,7 +177,7 @@ SUBCASES;;;;
     #EndSubCase
 
     #Id;#SubCase;plugin
-    RUN;Run;'Web'
+    RUN;Run;'Win'
         #Step;#Kind;#For;#Depends
         'start application';;;
             #Id;#Action;Plugin;Control;Operation;Expected;Actual;Result

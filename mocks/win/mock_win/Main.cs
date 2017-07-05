@@ -257,7 +257,7 @@ namespace mock_win
         {
             long timeDif = DateTime.UtcNow.Ticks / TimeSpan.TicksPerMillisecond - mouseTimeClick;
             mouseTimeClick = DateTime.UtcNow.Ticks / TimeSpan.TicksPerMillisecond;
-            pushLabel.Text = "";
+            pushLabel.Text = "pushLabel";
             if (e.Button == MouseButtons.Left)
             {
                 if (e.Clicks == 1)
