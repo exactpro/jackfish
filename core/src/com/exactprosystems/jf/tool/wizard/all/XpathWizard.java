@@ -127,7 +127,7 @@ public class XpathWizard extends AbstractWizard
     private SplitPane                          splitPane;
     private ImageViewWithScale                 imageViewWithScale;
     private XmlTreeView                        xmlTreeView;
-    private FindPanel<XmlTreeItem>             findPanel;
+    private FindPanel<org.w3c.dom.Node>        findPanel;
     private OneLine[]                          lines;
     private CheckBox                           useText;
     private HBox                               hBoxCheckboxes;
@@ -192,8 +192,9 @@ public class XpathWizard extends AbstractWizard
 		this.findPanel.getStyleClass().remove(CssVariables.FIND_PANEL);
 		gridPane.add(this.findPanel, 0, 1);
 
-		this.xmlTreeView = new XmlTreeView(v->{}, v->{});
-		this.xmlTreeView.setMarkersVisible(false);
+		this.xmlTreeView = new XmlTreeView();
+		
+		this.xmlTreeView.setMarkersVisible(true);
 
 		this.imageViewWithScale = new ImageViewWithScale();
 		this.imageViewWithScale.setOnRectangleClick(rectangle -> this.xmlTreeView.selectItem(rectangle));
@@ -405,16 +406,16 @@ public class XpathWizard extends AbstractWizard
 
     private void initListeners()
     {
-        this.findPanel.setListener(new IFind<XmlTreeItem>()
+        this.findPanel.setListener(new IFind<org.w3c.dom.Node>()
         {
             @Override
-            public void find(XmlTreeItem item)
+            public void find(org.w3c.dom.Node item)
             {
-                xmlTreeView.selectAndScroll(item);
+                xmlTreeView.select(item);
             }
 
             @Override
-            public List<XmlTreeItem> findItem(String what, boolean matchCase, boolean wholeWord)
+            public List<org.w3c.dom.Node> findItem(String what, boolean matchCase, boolean wholeWord)
             {
                 return xmlTreeView.findItem(what, matchCase, wholeWord);
             }
@@ -436,6 +437,15 @@ public class XpathWizard extends AbstractWizard
 		OneLine magicLine = lines[lines.length-1];
         //TODO add listener
 		magicLine.btnCopyToRelative.setOnAction(e -> {});
+		
+		this.xmlTreeView.setOnSelectionChanged((oldNode, newNode) -> 
+		{
+		    System.err.println(">> SelectionChanged " + oldNode + " " + newNode);
+		});
 
+		this.xmlTreeView.setOnMarkerChanged((node, oldMarker, newMarker) -> 
+		{
+            System.err.println(">> MarkerChanged " + node + " " + oldMarker + " " + newMarker);
+		});
 	}
 }

@@ -1,13 +1,16 @@
+////////////////////////////////////////////////////////////////////////////////
+//  Copyright (c) 2009-2015, Exactpro Systems, LLC
+//  Quality Assurance & Related Development for Innovative Trading Systems.
+//  All rights reserved.
+//  This is unpublished, licensed software, confidential and proprietary
+//  information which is the property of Exactpro Systems, LLC or its licensors.
+////////////////////////////////////////////////////////////////////////////////
+
 package com.exactprosystems.jf.tool.custom.xmltree;
 
-import com.exactprosystems.jf.api.app.IRemoteApplication;
-import com.exactprosystems.jf.api.common.Str;
-import com.exactprosystems.jf.common.utils.XpathUtils;
 import com.exactprosystems.jf.documents.matrix.parser.SearchHelper;
 import com.exactprosystems.jf.tool.CssVariables;
-import com.exactprosystems.jf.tool.dictionary.dialog.ElementWizardBean;
 import com.exactprosystems.jf.tool.wizard.related.MarkerStyle;
-import com.exactprosystems.jf.tool.wizard.related.XmlItem;
 import com.exactprosystems.jf.tool.wizard.related.XmlTreeItem;
 
 import javafx.application.Platform;
@@ -16,12 +19,8 @@ import javafx.event.EventTarget;
 import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.HBox;
 import javafx.scene.text.Text;
 import org.w3c.dom.Document;
-import org.w3c.dom.NamedNodeMap;
-import org.w3c.dom.NodeList;
-
 import java.awt.*;
 import java.util.*;
 import java.util.List;
@@ -35,27 +34,18 @@ public class XmlTreeView extends AnchorPane
 {
 	public static final double TRANSPARENT_RECT = 0.25;
 
-	final TreeTableView<XmlTreeItem> treeTableView;
+    private TreeTableView<XmlTreeItem> treeTableView;
+    private int                        currentIndex     = -1;
+    private BorderPane                 waitingNode;
+    private OnSelectionChangeListener  onSelectionChanged;
+    private OnMarkerChangeListener     onMarkerChanged;
+    private Map<MarkerStyle, Boolean>  stateMap;
 
-	private int currentIndex = -1;
-
-	private BorderPane waitingNode;
-
-	private Consumer<Void> updateCounters;
-
-	private Consumer<List<Rectangle>> removeConsumer;
-	private Consumer<XmlTreeItem> selectionConsumers;;
-
-	private Map<Rectangle, TreeItem<XmlTreeItem>> map = new HashMap<>();
-
-	private Map<MarkerStyle, Boolean> stateMap;
-
-	public XmlTreeView(Consumer<Void> updateCounters, Consumer<Void> refreshTable)
+	public XmlTreeView()
 	{
 		super();
 
 		this.stateMap = Stream.of(MarkerStyle.values()).collect(Collectors.toMap(v -> v, v -> true));
-		this.updateCounters = updateCounters;
 		this.treeTableView = new TreeTableView<>();
 		this.treeTableView.setSkin(new MyCustomSkin(this, this.treeTableView));
 		this.treeTableView.getStyleClass().add(CssVariables.EMPTY_HEADER_COLUMN);
@@ -89,7 +79,8 @@ public class XmlTreeView extends AnchorPane
 
 		this.treeTableView.getStyleClass().add(CssVariables.XPATH_TREE_VIEW);
 		this.treeTableView.setShowRoot(false);
-		this.treeTableView.setOnMouseClicked(e -> {
+		this.treeTableView.setOnMouseClicked(e -> 
+		{
 			EventTarget target = e.getTarget();
 			if (target instanceof XmlIconCell)
 			{
@@ -97,9 +88,13 @@ public class XmlTreeView extends AnchorPane
 				TreeItem<XmlTreeItem> treeItem = iconCell.getTreeTableRow().getTreeItem();
 				if (treeItem != null)
 				{
-					XmlTreeItem xpathTreeItem = treeItem.getValue();
-					xpathTreeItem.changeState();
-					this.updateCounters.accept(null);
+					XmlTreeItem xmlTreeItem = treeItem.getValue();
+					MarkerStyle oldValue = xmlTreeItem.getStyle();
+					MarkerStyle newValue = xmlTreeItem.changeState();
+					if (this.onMarkerChanged != null)
+					{
+					    this.onMarkerChanged.changed(xmlTreeItem.getNode(), oldValue, newValue);
+					}
 					refresh();
 				}
 			}
@@ -107,10 +102,35 @@ public class XmlTreeView extends AnchorPane
 		});
 
 		this.treeTableView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) ->
-				Optional.of(this.selectionConsumers).ifPresent(c -> c.accept(newValue == null ? null : newValue.getValue())));
+		{
+		    if (this.onSelectionChanged != null)
+		    {
+		        org.w3c.dom.Node oldNode = oldValue == null ? null : oldValue.getValue().getNode(); 
+                org.w3c.dom.Node newNode = newValue == null ? null : newValue.getValue().getNode(); 
+		        this.onSelectionChanged.changed(oldNode, newNode);
+		    }
+		});
+	
+        TreeTableColumn<XmlTreeItem, ?> column = this.treeTableView.getColumns().get(1);
+        double width = column.getWidth();
+        column.setPrefWidth(width);
+        column.setMaxWidth(width);
+        column.setMinWidth(width);
 	}
 
 	
+    //region set listeners
+    public void setOnSelectionChanged(OnSelectionChangeListener listener)
+    {
+        this.onSelectionChanged = listener;
+    }
+	
+    public void setOnMarkerChanged(OnMarkerChangeListener listener)
+    {
+        this.onMarkerChanged = listener;
+    }
+    //endregion
+    
 	//region public methods
 	public void setMarkersVisible(boolean value)
 	{
@@ -123,39 +143,56 @@ public class XmlTreeView extends AnchorPane
 
 		this.treeTableView.setRoot(new TreeItem<>());
 		displayTree(document, this.treeTableView.getRoot());
-		expand(this.treeTableView.getRoot());
+		expandTree(this.treeTableView.getRoot());
 		((MyCustomSkin) this.treeTableView.getSkin()).resizeColumnToFitContent(this.treeTableView.getColumns().get(1), -1);
 	}
 
-	public void addSelectionConsumer(Consumer<XmlTreeItem> consumer)
-	{
-		this.selectionConsumers = consumer;
-	}
 
+    public void select(org.w3c.dom.Node node)
+    {
+        TreeItem<XmlTreeItem> treeItem = findFirst(i -> i != null && i.getNode().equals(node));
+        if (treeItem != null)
+        {
+            this.treeTableView.getSelectionModel().select(treeItem);
+            this.scrollToElement(treeItem);
+        }
+    }
+
+    public void deselect()
+    {
+        this.treeTableView.getSelectionModel().clearSelection();
+    }
+    
+    public void setMarker(org.w3c.dom.Node node, MarkerStyle style)
+    {
+        TreeItem<XmlTreeItem> treeItem = findFirst(i -> i != null && i.getNode().equals(node));
+        if (treeItem != null)
+        {
+            treeItem.getValue().addRelation(null, style);
+            treeItem.getValue().setMarkIsVisible(true);
+        }
+    }
+    
+    public void removeMarkers(MarkerStyle state)
+    {
+        passTree(this.treeTableView.getRoot(), i -> i.clearRelation(null));
+    }
+	
 	public void selectItem(Rectangle rectangle)
 	{
-		TreeItem<XmlTreeItem> treeItem = this.map.get(rectangle);
-		if (treeItem != null)
-		{
-			this.treeTableView.getSelectionModel().select(treeItem);
-			this.scrollToElement(treeItem);
-		}
+	    TreeItem<XmlTreeItem> treeItem  = findFirst(i -> i != null && i.getRectangle() != null && i.getRectangle().equals(rectangle));
+        if (treeItem != null)
+        {
+            this.treeTableView.getSelectionModel().select(treeItem);
+            this.scrollToElement(treeItem);
+        }
 	}
 
-	public void selectAndScroll(XmlTreeItem treeItem)
+	public List<org.w3c.dom.Node> findItem(String what, boolean matchCase, boolean wholeWord)
 	{
-		this.treeTableView.getSelectionModel().clearSelection();
-		
-//		this.treeTableView.getSelectionModel().select(treeItem);
-//		scrollToElement(treeItem);
-	}
-
-	public List<XmlTreeItem> findItem(String what, boolean matchCase, boolean wholeWord)
-	{
-		ArrayList<XmlTreeItem> res = new ArrayList<>();
-//		TreeItem<XmlTreeItem> root = this.treeTableView.getRoot();
-//		addItems(res, root, what, matchCase, wholeWord);
-		return res;
+        List<org.w3c.dom.Node> list = findAll(i -> i != null &&  matches(i.getText(), what, matchCase, wholeWord))
+                .stream().map(i -> i.getValue().getNode()).collect(Collectors.toList());
+	    return list;
 	}
 
 	public void selectNextMark()
@@ -190,26 +227,6 @@ public class XmlTreeView extends AnchorPane
 		this.refresh();
 	}
 
-    public void select(org.w3c.dom.Node node)
-    {
-    }
-
-    public void deselect()
-    {
-    }
-    
-    public void setMarker(org.w3c.dom.Node node, MarkerStyle state)
-    {
-    }
-	
-    public void removeMarkers(MarkerStyle state)
-    {
-    }
-	
-	
-	
-	
-	
 	public void refresh()
 	{
 		Platform.runLater(() -> 
@@ -218,73 +235,12 @@ public class XmlTreeView extends AnchorPane
 			this.treeTableView.getColumns().get(0).setVisible(true);
 		});
 	}
-
-	public void clearAndAddRelation(ElementWizardBean bean)
-	{
-		TreeItem<XmlTreeItem> selectedItem = this.treeTableView.getSelectionModel().getSelectedItem();
-		if (selectedItem == null)
-		{
-			this.treeTableView.getSelectionModel().selectFirst();
-		}
-		if (selectedItem != null)
-		{
-			boolean prevStateIsSet = selectedItem.getValue().getStyle() != null;
-			clearRelation(bean);
-//			this.controller.changeStateCount(-1, prevStateIsSet ? selectedItem.getValue().getState() : TreeItemState.UPDATE);
-			selectedItem.getValue().addRelation(bean, MarkerStyle.UPDATE);
-//			this.controller.changeStateCount(1, selectedItem.getValue().getState());
-			this.updateCounters.accept(null);
-		}
-		refresh();
-	}
-
-	public void removeBean(ElementWizardBean bean)
-	{
-		List<TreeItem<XmlTreeItem>> list = new ArrayList<>();
-		byPass(this.treeTableView.getRoot(), list, xpathTreeItem -> xpathTreeItem != null && xpathTreeItem.contains(bean));
-		Optional.ofNullable(this.removeConsumer).ifPresent(c -> c.accept(
-				list.stream()
-					.map(TreeItem::getValue)
-					.filter(Objects::nonNull)
-					.map(XmlItem::getRectangle)
-					.collect(Collectors.toList())
-		));
-		list.forEach(e -> e.getValue().clearRelation(bean));
-		refresh();
-	}
-
-	public void removeConsumer(Consumer<List<Rectangle>> consumer)
-	{
-		this.removeConsumer = consumer;
-	}
-
 	//endregion
 
 	//region private methods
-    private TreeItem<XmlTreeItem> findByNode(org.w3c.dom.Node node)
-    {
-        TreeItem<XmlTreeItem> root = this.treeTableView.getRoot();
-        List<TreeItem<XmlTreeItem>> list = new ArrayList<>();
-        byPass(root, list, xpathTreeItem -> xpathTreeItem != null && xpathTreeItem.getNode() != null && xpathTreeItem.getNode().equals(node));
-        return list.get(0);
-    }
-    
-    private void clearRelation(ElementWizardBean bean)
-    {
-        List<TreeItem<XmlTreeItem>> list = new ArrayList<>();
-        byPass(this.treeTableView.getRoot(), list, x -> x != null && x.contains(bean));
-        list.forEach(item -> item.getValue().clearRelation(bean));
-    }
-
 	private List<TreeItem<XmlTreeItem>> getMarkedTreeItems()
 	{
-        List<TreeItem<XmlTreeItem>> list = new ArrayList<>();
-        byPass(this.treeTableView.getRoot(), list);
-
-        return list
-				.stream()
-				.filter(treeItem -> treeItem.getValue().isMarkVisible())
-				.collect(Collectors.toList());
+        return findAll(treeItem -> treeItem.isMarkVisible());
 	}
 
 	private void addWaitingPane()
@@ -298,10 +254,10 @@ public class XmlTreeView extends AnchorPane
 		this.getChildren().add(this.waitingNode);
 	}
 
-	private void expand(TreeItem<XmlTreeItem> item)
+	private void expandTree(TreeItem<XmlTreeItem> item)
 	{
 		item.setExpanded(true);
-		item.getChildren().forEach(this::expand);
+		item.getChildren().forEach(this::expandTree);
 	}
 
     private void displayTree(org.w3c.dom.Node node, TreeItem<XmlTreeItem> parent)
@@ -315,13 +271,9 @@ public class XmlTreeView extends AnchorPane
         if (!isDocument)
         {
             treeItem.setValue(new XmlTreeItem(node));
-            Rectangle rec = (Rectangle) node.getUserData(IRemoteApplication.rectangleName);
-            this.map.put(rec, treeItem);
             parent.getChildren().add(treeItem);
         }
     }
-
-    
 
 	private void scrollToElement(TreeItem<XmlTreeItem> xpathItemTreeItem)
 	{
@@ -339,58 +291,43 @@ public class XmlTreeView extends AnchorPane
 		}
 	}
 
-//	private void passTree(Rectangle keyRectangle, Set<Rectangle> set, TreeItem<XmlTreeItem> item)
-//	{
-//		XmlTreeItem xpath = item.getValue();
-//		if (xpath != null)
-//		{
-//			Rectangle rec = xpath.getRectangle();
-//
-//			if (rec != null && rec.intersects(keyRectangle))
-//			{
-//				set.add(rec);
-//			}
-//		}
-//		item.getChildren().forEach(child -> passTree(keyRectangle, set, child));
-//	}
-
-//	private void addItems(List<XmlTreeItem> list, XmlTreeItem current, String what, boolean matchCase, boolean wholeWord)
-//	{
-//		Optional.ofNullable(current).ifPresent(value -> {
-//			if (matches(value.getText(), what, matchCase, wholeWord))
-//			{
-//				list.add(current);
-//			}
-//		});
-//		Optional.ofNullable(current.getChildren()).ifPresent(childer -> childer.forEach(item -> addItems(list, item, what, matchCase, wholeWord)));
-//	}
-
 	private boolean matches(String text, String what, boolean matchCase, boolean wholeWord)
 	{
 		return Arrays.stream(what.split("\\s")).filter(s -> !SearchHelper.matches(text, s, matchCase, wholeWord)).count() == 0;
 	}
 
-	private void byPass(TreeItem<XmlTreeItem> treeItem, List<TreeItem<XmlTreeItem>> list)
-	{
-		XmlTreeItem value = treeItem.getValue();
-		if (value != null && value.getStyle() != null)
-		{
-			list.add(treeItem);
-		}
-		treeItem.getChildren().forEach(child -> byPass(child, list));
-	}
+    private TreeItem<XmlTreeItem>  findFirst(Predicate<XmlTreeItem> predicate)
+    {
+        List<TreeItem<XmlTreeItem>> list = findAll(predicate);
+        if (!list.isEmpty())
+        {
+            return list.get(0);
+        }
+        return null;
+    }
 
-	private void byPass(TreeItem<XmlTreeItem> treeItem, List<TreeItem<XmlTreeItem>> list, Predicate<XmlTreeItem> predicate)
-	{
-		if (treeItem == null)
-		{
-			return;
-		}
-		XmlTreeItem value = treeItem.getValue();
-		if (predicate.test(value))
-		{
-			list.add(treeItem);
-		}
-		treeItem.getChildren().forEach(child -> byPass(child, list, predicate));
-	}
+    private List<TreeItem<XmlTreeItem>>  findAll(Predicate<XmlTreeItem> predicate)
+    {
+        return findAll(this.treeTableView.getRoot(), predicate);
+    }
+
+    private List<TreeItem<XmlTreeItem>>  findAll(TreeItem<XmlTreeItem> treeItem, Predicate<XmlTreeItem> predicate)
+    {
+        List<TreeItem<XmlTreeItem>> list = new ArrayList<>();
+        XmlTreeItem value = treeItem.getValue();
+        if (predicate.test(value))
+        {
+            list.add(treeItem);
+        }
+        treeItem.getChildren().forEach(child -> list.addAll(findAll(child, predicate)));
+        return list;
+    }
+    
+    private void  passTree(TreeItem<XmlTreeItem> treeItem, Consumer<XmlTreeItem> consumer)
+    {
+        List<TreeItem<XmlTreeItem>> list = new ArrayList<>();
+        XmlTreeItem value = treeItem.getValue();
+        consumer.accept(value);
+        treeItem.getChildren().forEach(child -> passTree(child, consumer));
+    }
 }

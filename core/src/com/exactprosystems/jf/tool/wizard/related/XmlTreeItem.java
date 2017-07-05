@@ -38,7 +38,7 @@ public class XmlTreeItem extends XmlItem
 //		super(box, node);
 //	}
 
-	public void changeState()
+	public MarkerStyle changeState()
 	{
 		if (this.currentStyle == null)
 		{
@@ -58,6 +58,7 @@ public class XmlTreeItem extends XmlItem
 			this.set.stream().map(BeanWithMark::getBean).filter(Objects::nonNull).forEach(b -> b.setStyleClass(CssVariables.COLOR_ADD));
 			this.set.forEach(b -> b.setStyle(this.currentStyle));
 		}
+		return this.currentStyle;
 	}
 
 	public void addRelation(ElementWizardBean bean, MarkerStyle state)

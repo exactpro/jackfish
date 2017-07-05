@@ -36,10 +36,11 @@ class MyCustomSkin extends TreeTableViewSkin<XmlTreeItem>
 	public void resizeColumnToFitContent(TreeTableColumn<XmlTreeItem, ?> tc, int maxRows)
 	{
 		super.resizeColumnToFitContent(tc, maxRows);
-		TreeTableColumn<XmlTreeItem, ?> column = this.xmlTreeView.treeTableView.getColumns().get(1);
-		double width = column.getWidth();
-		column.setPrefWidth(width);
-		column.setMaxWidth(width);
-		column.setMinWidth(width);
+		
+//		TreeTableColumn<XmlTreeItem, ?> column = this.xmlTreeView.treeTableView.getColumns().get(1);
+//		double width = column.getWidth();
+//		column.setPrefWidth(width);
+//		column.setMaxWidth(width);
+//		column.setMinWidth(width);
 	}
 }
