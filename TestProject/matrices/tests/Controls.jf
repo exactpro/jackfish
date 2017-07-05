@@ -167,9 +167,9 @@ SUBCASES;;;;
     #EndSubCase
 
     #Id;#SubCase;controlName;operationName;operationKind;expected;actual;pluginName;result
-    PRINT;Print_result;control.Name;operation.Name;operation.Kind;expected;actual;plugin;'Failed'
-        #Action;
-        Print;pluginName + ' - ' + controlName + ' - ' + result + ' - ' + operationName
+    PRINT;Print_result;control.Name;operation.Name;operation.Kind;expected;actual;plugin;'Passed'
+        #Off;#Action;
+        1;Print;pluginName + ' - ' + controlName + ' - ' + result + ' - ' + operationName
 
         #Action;$Table;Plugin;Control;Operation;Expected;Actual;Result
         TableAddValue;table_result;pluginName;controlName;operationName;expected;actual;result
@@ -177,11 +177,11 @@ SUBCASES;;;;
     #EndSubCase
 
     #Id;#SubCase;plugin
-    RUN;Run;'Swing'
+    RUN;Run;'Web'
         #Step;#Kind;#For;#Depends
         'start application';;;
-            #Id;#Action;Plugin;Control;Operation;Time;Expected;Actual;Result
-            TBL1;TableCreate;;;;;;;
+            #Id;#Action;Plugin;Control;Operation;Expected;Actual;Result
+            TBL1;TableCreate;;;;;;
 
             #Id;#Global;#Let
             table_result;1;TBL1.Out
@@ -224,8 +224,14 @@ SUBCASES;;;;
 
         #EndStep
 
+        #Id;#Let
+        num;0
+
         #ForEach;#In
         control;controls
+            #Id;#Let
+            num;num + 1
+
             #If
             control.On.equals('')
                 #Continue
@@ -234,6 +240,9 @@ SUBCASES;;;;
 
             #Step;#Kind;#For;#Depends
             plugin + ' - '+ control.Name;;;
+                #Id;#Global;#Let
+                failedList;1;''
+
                 #Id;#Let
                 startTime;DateTime.current().getTime()
 
@@ -430,6 +439,9 @@ SUBCASES;;;;
                         #EndIf
 
                         #Id;#Let
+                        failedList;failedList + operation.Name + ', '
+
+                        #Id;#Let
                         failed;true
 
                         #Continue
@@ -438,10 +450,26 @@ SUBCASES;;;;
                 #EndForEach
 
                 #Id;#Let
-                elapsedTime;' (' + (DateTime.current().getTime() - startTime) + ')'
+                elapsedTime;DateTime.current().getTime() - startTime
+
+                #Id;#Let
+                resultControl;'Passed'
+
+                #If
+                failed
+                    #Id;#Let
+                    failed_func;def (str) {String s = str.substring(0, str.length()-2)\u003bString s2 = ' - ' + s\u003breturn s2\u003b}\u003b
+
+                    #Id;#Let
+                    failedList;failed_func(failedList)
+
+                    #Id;#Let
+                    resultControl;'Failed'
+
+                #EndIf
 
                 #Action;
-                Print;'Lead time: ' + elapsedTime + ' ms for control: ' + control.Name 
+                Print;resultControl + ' - ' + plugin + ' #' + num +  ' ' + control.Name + ' (' + elapsedTime + ' ms' + ')' + failedList
 
                 #Assert;#Message
                 failed == false;'fail'
@@ -462,6 +490,18 @@ SUBCASES;;;;
 
             #Action;$Table;$Title;$BeforeTestCase
             TableReport;table_result;'Result';'INIT'
+
+            #If
+            failedOwn
+                #Action;
+                Print;'Summary: ' + plugin + ' - Failed'
+
+            #Else
+                #Action;
+                Print;'Summary: ' + plugin + ' - Passed'
+
+
+            #EndIf
 
             #Assert;#Message
             failedOwn == false;'failedOwn'

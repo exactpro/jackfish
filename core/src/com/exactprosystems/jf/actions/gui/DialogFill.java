@@ -217,6 +217,7 @@ public class DialogFill extends AbstractAction
 			Object obj = parameter.getValue();
 
 			IControl control;
+			//TODO think about it
 			if (name.isEmpty() || name.contains("dummy_") || name.contains("Dummy_"))
 			{
 				control = AbstractControl.createDummy();
