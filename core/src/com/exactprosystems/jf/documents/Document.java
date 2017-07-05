@@ -11,8 +11,6 @@ package com.exactprosystems.jf.documents;
 import com.exactprosystems.jf.api.app.Mutable;
 import com.exactprosystems.jf.common.ChangeListener;
 import com.exactprosystems.jf.common.Settings;
-import com.exactprosystems.jf.documents.config.Configuration;
-
 import java.io.Reader;
 
 public interface Document extends Mutable

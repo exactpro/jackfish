@@ -4,6 +4,7 @@ import com.exactprosystems.jf.api.app.IControl;
 import com.exactprosystems.jf.api.common.Sys;
 import com.exactprosystems.jf.api.wizard.WizardCommand;
 import com.exactprosystems.jf.documents.Document;
+import com.exactprosystems.jf.documents.DocumentFactory;
 import com.exactprosystems.jf.documents.guidic.GuiDictionary;
 import com.exactprosystems.jf.documents.guidic.Section;
 import com.exactprosystems.jf.documents.matrix.Matrix;

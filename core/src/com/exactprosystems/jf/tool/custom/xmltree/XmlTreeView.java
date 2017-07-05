@@ -44,7 +44,7 @@ public class XmlTreeView extends AnchorPane
 	private Consumer<Void> updateCounters;
 
 	private Consumer<List<Rectangle>> removeConsumer;
-	private List<Consumer<XmlTreeItem>> selectionConsumers = new ArrayList<>();
+	private Consumer<XmlTreeItem> selectionConsumers;;
 
 	private Map<Rectangle, TreeItem<XmlTreeItem>> map = new HashMap<>();
 
@@ -107,9 +107,7 @@ public class XmlTreeView extends AnchorPane
 		});
 
 		this.treeTableView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) ->
-				this.selectionConsumers.stream()
-						.filter(Objects::nonNull)
-						.forEach(c -> c.accept(newValue == null ? null : newValue.getValue())));
+				Optional.of(this.selectionConsumers).ifPresent(c -> c.accept(newValue == null ? null : newValue.getValue())));
 	}
 
 	
@@ -131,7 +129,7 @@ public class XmlTreeView extends AnchorPane
 
 	public void addSelectionConsumer(Consumer<XmlTreeItem> consumer)
 	{
-		this.selectionConsumers.add(consumer);
+		this.selectionConsumers = consumer;
 	}
 
 	public void selectItem(Rectangle rectangle)
