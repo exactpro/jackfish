@@ -66,6 +66,7 @@ public class LibraryWizard extends AbstractWizard {
 
     @Override
     public boolean beforeRun() {
+        commonFolder.forEach(s -> getAllFiles(new File(s)));
         return true;
     }
 
@@ -291,13 +292,13 @@ public class LibraryWizard extends AbstractWizard {
                     {
                         MatrixItem newItem = CommandBuilder.create(currentMatrix, Call.class.getSimpleName(), null);
                         ((Call) newItem).setName(newSubId);
-                        builder.removeMatrixItem(currentMatrix, item).addMatrixItem(currentMatrix, item.getParent(), item, item.getParent().index(item));
+                        builder.removeMatrixItem(currentMatrix, item).addMatrixItem(currentMatrix, item.getParent(), newItem, item.getParent().index(item));
                     }
                 });
                 builder.removeMatrixItem(currentMatrix, currentSubCase).addMatrixItem(currentMatrix, currentSubCase.getParent(),currentSubCase, currentSubCase.getParent().index(currentSubCase));
                 try
                 {
-                    currentMatrix.save(matricesFolders.get(0) + File.separator + currentMatrix.getName());
+                    currentMatrix.save(currentMatrix.getName());
                 } catch (Exception e)
                 {
                     e.printStackTrace();//todo logger

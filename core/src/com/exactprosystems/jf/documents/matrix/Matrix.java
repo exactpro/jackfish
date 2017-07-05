@@ -27,6 +27,7 @@ import com.exactprosystems.jf.documents.matrix.parser.Parser;
 import com.exactprosystems.jf.documents.matrix.parser.Result;
 import com.exactprosystems.jf.documents.matrix.parser.items.MatrixItem;
 import com.exactprosystems.jf.documents.matrix.parser.items.MatrixRoot;
+import com.exactprosystems.jf.documents.matrix.parser.items.NameSpace;
 import com.exactprosystems.jf.documents.matrix.parser.items.TestCase;
 import com.exactprosystems.jf.documents.matrix.parser.listeners.IMatrixListener;
 import org.apache.log4j.Logger;
@@ -195,9 +196,18 @@ public class Matrix extends AbstractDocument implements IMatrix
 
 		this.root = new MatrixRoot(getName());
 		this.root.init(this, this);
-		TestCase item = new TestCase("Test case");
-		item.createId();
-		this.root.insert(0, item);
+
+		if (this.isLibrary())
+		{
+			NameSpace item = new NameSpace();
+			this.root.insert(0, item);
+		}
+		else
+		{
+			TestCase item = new TestCase("Test case");
+			item.createId();
+			this.root.insert(0, item);
+		}
 	}
 
 	@Override

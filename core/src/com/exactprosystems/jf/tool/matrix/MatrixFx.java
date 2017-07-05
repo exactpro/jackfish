@@ -84,13 +84,6 @@ public class MatrixFx extends Matrix
 		super.create();
 	}
 
-	public void createLibrary() throws Exception
-	{
-		getRoot().get(0).remove();
-		NameSpace nameSpace = new NameSpace();
-		getRoot().insert(0, nameSpace);
-	}
-
 	@Override
 	public void load(Reader reader) throws Exception
 	{

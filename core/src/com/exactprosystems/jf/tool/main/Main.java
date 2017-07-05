@@ -527,12 +527,8 @@ public class Main extends Application
 		checkConfig();
         Context context = factory.createContext();
         MatrixRunner runner = context.createRunner(newName(Matrix.class), null, new Date(), null);
-		Matrix doc = this.factory.createMatrix(fullPath, runner);
+		Matrix doc = this.factory.createLibrary(fullPath, runner);
 		doc.create();
-		if (doc instanceof MatrixFx)
-		{
-			((MatrixFx)doc).createLibrary();
-		}
 		Settings.SettingsValue copyright = settings.getValueOrDefault(Settings.GLOBAL_NS, "Main", "copyright", "");
 		String text = copyright.getValue().replaceAll("\\\\n", System.lineSeparator());
 		doc.addCopyright(text);
