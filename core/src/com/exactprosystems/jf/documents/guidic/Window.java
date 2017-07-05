@@ -268,6 +268,7 @@ public class Window implements IWindow, Mutable
 		for (String fieldName : params)
 		{
 			boolean found = false;
+			//TODO think about it
 			if (fieldName.isEmpty() || fieldName.contains("dummy_") || fieldName.contains("Dummy_"))
 			{
 				continue;
