@@ -22,6 +22,7 @@ import com.exactprosystems.jf.common.version.VersionInfo;
 import com.exactprosystems.jf.documents.AbstractDocument;
 import com.exactprosystems.jf.documents.DocumentFactory;
 import com.exactprosystems.jf.documents.DocumentInfo;
+import com.exactprosystems.jf.documents.DocumentKind;
 import com.exactprosystems.jf.documents.config.Context;
 import com.exactprosystems.jf.documents.matrix.parser.Parser;
 import com.exactprosystems.jf.documents.matrix.parser.Result;
@@ -42,7 +43,12 @@ import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
 
-@DocumentInfo(newName = "NewMatrix", extentioin = "jf", description = "Matrix")
+@DocumentInfo(
+        kind = DocumentKind.MATRIX,
+        newName = "NewMatrix", 
+        extentioin = "jf", 
+        description = "Matrix"
+)
 public class Matrix extends AbstractDocument implements IMatrix
 {
 	public static final String EMPTY_STRING = "<empty>";

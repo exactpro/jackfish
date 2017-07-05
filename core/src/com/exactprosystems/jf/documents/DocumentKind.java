@@ -8,17 +8,18 @@
 
 package com.exactprosystems.jf.documents;
 
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
-
-@Target(ElementType.TYPE)
-@Retention(RetentionPolicy.RUNTIME)
-public @interface DocumentInfo
+public enum DocumentKind
 {
-    DocumentKind kind();
-	String newName();
-	String extentioin();
-	String description();
+	MATRIX, LIBRARY, GUI_DICTIONARY, MESSAGE_DICIONARY, SYSTEM_VARS, CONFIGURATION, PLAIN_TEXT, CSV;
+	
+    public static <T extends Document> DocumentKind byDocument(T doc)
+    {
+        DocumentInfo attr = doc.getClass().getAnnotation(DocumentInfo.class);
+        if (attr != null)
+        {
+            return attr.kind();
+        }
+        return null;
+	}
+	
 }

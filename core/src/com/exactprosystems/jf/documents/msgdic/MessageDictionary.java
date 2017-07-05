@@ -17,6 +17,8 @@ import com.exactprosystems.jf.common.xml.schema.Xsd;
 import com.exactprosystems.jf.documents.AbstractDocument;
 import com.exactprosystems.jf.documents.DocumentFactory;
 import com.exactprosystems.jf.documents.DocumentInfo;
+import com.exactprosystems.jf.documents.DocumentKind;
+
 import javax.xml.XMLConstants;
 import javax.xml.bind.*;
 import javax.xml.bind.annotation.*;
@@ -44,6 +46,7 @@ import java.util.List;
         )
 
 @DocumentInfo(
+        kind = DocumentKind.MESSAGE_DICIONARY,
 		newName = "NewDictionary", 
 		extentioin = "xml", 
 		description = "Message dictionary"

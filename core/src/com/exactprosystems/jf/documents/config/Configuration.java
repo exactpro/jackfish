@@ -39,6 +39,7 @@ import com.exactprosystems.jf.documents.AbstractDocument;
 import com.exactprosystems.jf.documents.Document;
 import com.exactprosystems.jf.documents.DocumentFactory;
 import com.exactprosystems.jf.documents.DocumentInfo;
+import com.exactprosystems.jf.documents.DocumentKind;
 import com.exactprosystems.jf.documents.matrix.Matrix;
 import com.exactprosystems.jf.documents.matrix.parser.Result;
 import com.exactprosystems.jf.documents.matrix.parser.items.MatrixItem;
@@ -53,7 +54,7 @@ import com.exactprosystems.jf.documents.vars.SystemVars;
 import com.exactprosystems.jf.functions.Table;
 import com.exactprosystems.jf.service.ServicePool;
 import com.exactprosystems.jf.sql.DataBasePool;
-import com.exactprosystems.jf.tool.main.DocumentKind;
+
 import org.apache.log4j.Logger;
 
 import javax.xml.XMLConstants;
@@ -83,6 +84,7 @@ import java.util.stream.Collectors;
 @XmlAccessorType(XmlAccessType.NONE)
 
 @DocumentInfo(
+        kind = DocumentKind.CONFIGURATION,
 		newName = "NewConfiguration",
 		extentioin = "xml",
 		description = "Jackfish configuration"

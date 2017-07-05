@@ -8,6 +8,7 @@
 
 package com.exactprosystems.jf.documents;
 
+// TODO move this class to common exception package
 public class EmptyConfigurationException extends Exception
 {
 	private static final long	serialVersionUID	= 3131082006845739736L;

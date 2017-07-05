@@ -18,6 +18,7 @@ import com.exactprosystems.jf.common.xml.schema.Xsd;
 import com.exactprosystems.jf.documents.AbstractDocument;
 import com.exactprosystems.jf.documents.DocumentFactory;
 import com.exactprosystems.jf.documents.DocumentInfo;
+import com.exactprosystems.jf.documents.DocumentKind;
 import com.exactprosystems.jf.documents.guidic.controls.AbstractControl;
 import com.exactprosystems.jf.documents.matrix.parser.items.MutableArrayList;
 
@@ -42,6 +43,7 @@ import java.util.List;
 @XmlRootElement(name = "dictionary")
 
 @DocumentInfo(
+        kind = DocumentKind.GUI_DICTIONARY,
 		newName = "NewDictionary", 
 		extentioin = "xml", 
 		description = "Gui dictionary"

@@ -128,7 +128,7 @@ public class WizardManagerImpl implements WizardManager
 
 
     @Override
-    public void runWizard(Class<? extends Wizard> wizard, IContext context, Object... parameters)
+    public void runWizard(Class<? extends Wizard> wizard, Context context, Object... parameters)
     {
         if (wizard == null)
         {

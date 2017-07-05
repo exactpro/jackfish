@@ -1,8 +1,8 @@
 package com.exactprosystems.jf.tool.custom.wizard;
 
-import com.exactprosystems.jf.api.common.IContext;
 import com.exactprosystems.jf.api.wizard.WizardManager;
 import com.exactprosystems.jf.common.utils.ArrayUtils;
+import com.exactprosystems.jf.documents.config.Context;
 import com.exactprosystems.jf.api.wizard.Wizard;
 import com.exactprosystems.jf.tool.CssVariables;
 import com.exactprosystems.jf.tool.helpers.DialogsHelper;
@@ -22,7 +22,7 @@ public class WizardButton extends Button
 		this.getStyleClass().addAll(CssVariables.TRANSPARENT_BACKGROUND);
 	}
 
-	public void initButton(IContext context, WizardManager manager, Supplier<Object[]> criteriesSupplier, Supplier<Object[]> parameterSupplier)
+	public void initButton(Context context, WizardManager manager, Supplier<Object[]> criteriesSupplier, Supplier<Object[]> parameterSupplier)
 	{
 	    this.setOnAction(e ->
 	    {

@@ -12,12 +12,19 @@ import com.exactprosystems.jf.common.CommonHelper;
 import com.exactprosystems.jf.documents.AbstractDocument;
 import com.exactprosystems.jf.documents.DocumentFactory;
 import com.exactprosystems.jf.documents.DocumentInfo;
+import com.exactprosystems.jf.documents.DocumentKind;
+
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
 import java.io.*;
 
-@DocumentInfo(newName = "Text", extentioin = "txt", description = "Plain text")
+@DocumentInfo(
+        kind = DocumentKind.PLAIN_TEXT,
+        newName = "Text", 
+        extentioin = "txt", 
+        description = "Plain text"
+)
 public class PlainText extends AbstractDocument
 {
 	public PlainText(String fileName, DocumentFactory factory)

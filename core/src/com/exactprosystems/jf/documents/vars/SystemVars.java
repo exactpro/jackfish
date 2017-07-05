@@ -14,6 +14,7 @@ import com.exactprosystems.jf.common.evaluator.LinkedProperties;
 import com.exactprosystems.jf.documents.AbstractDocument;
 import com.exactprosystems.jf.documents.DocumentFactory;
 import com.exactprosystems.jf.documents.DocumentInfo;
+import com.exactprosystems.jf.documents.DocumentKind;
 import com.exactprosystems.jf.documents.matrix.parser.Parameter;
 import com.exactprosystems.jf.documents.matrix.parser.Parameters;
 
@@ -25,7 +26,9 @@ import java.util.List;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
-@DocumentInfo(newName = "NewVars",
+@DocumentInfo(
+        kind = DocumentKind.SYSTEM_VARS,
+        newName = "NewVars",
 		extentioin = "ini",
 		description = "System variables"
 )

@@ -3,17 +3,18 @@ package com.exactprosystems.jf.tool.wizard;
 import com.exactprosystems.jf.api.app.IControl;
 import com.exactprosystems.jf.api.common.Sys;
 import com.exactprosystems.jf.api.wizard.WizardCommand;
+import com.exactprosystems.jf.common.CommonHelper;
 import com.exactprosystems.jf.documents.Document;
-import com.exactprosystems.jf.documents.DocumentFactory;
-import com.exactprosystems.jf.documents.guidic.GuiDictionary;
+import com.exactprosystems.jf.documents.DocumentKind;
+import com.exactprosystems.jf.documents.config.Context;
 import com.exactprosystems.jf.documents.guidic.Section;
 import com.exactprosystems.jf.documents.matrix.Matrix;
 import com.exactprosystems.jf.documents.matrix.parser.Parser;
 import com.exactprosystems.jf.documents.matrix.parser.items.MatrixItem;
 import com.exactprosystems.jf.tool.Common;
-import com.exactprosystems.jf.tool.matrix.MatrixFx;
 import org.apache.log4j.Logger;
 
+import java.io.Reader;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -73,11 +74,31 @@ public class CommandBuilder
 		return this;
 	}
 
+    public CommandBuilder loadDocument(DocumentKind kind, String name)
+    {
+        this.commands.add(context -> 
+        {
+            Common.tryCatch(() -> 
+            { 
+                try (Reader reader = CommonHelper.readerFromFileName(name))
+                {
+                    Document doc = context.getFactory().createDocument(kind, name);
+                    doc.load(reader);
+                }
+            }, "Error on load " + name);
+        });
+        return this;
+    }
+
 	public CommandBuilder saveDocument(Document doc)
 	{
 		this.commands.add(context -> 
 		{
-			Common.tryCatch(() -> doc.save(doc.getName()), "Error on save " + doc.getName());
+			Common.tryCatch(() -> 
+			{ 
+			    doc.save(doc.getName());
+			    doc.close(context.getFactory().getSettings());
+			}, "Error on save " + doc.getName());
 		});
 		return this;
 	}

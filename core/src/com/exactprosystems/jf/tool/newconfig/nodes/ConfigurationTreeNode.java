@@ -7,13 +7,14 @@
 ////////////////////////////////////////////////////////////////////////////////
 package com.exactprosystems.jf.tool.newconfig.nodes;
 
+import com.exactprosystems.jf.documents.DocumentKind;
 import com.exactprosystems.jf.documents.config.Configuration;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.CssVariables;
 import com.exactprosystems.jf.tool.newconfig.ConfigurationFx;
 import com.exactprosystems.jf.tool.newconfig.ConfigurationTreeView;
 import com.exactprosystems.jf.tool.newconfig.TablePair;
-import com.exactprosystems.jf.tool.main.DocumentKind;
+
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;

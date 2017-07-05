@@ -11,6 +11,7 @@ package com.exactprosystems.jf.documents;
 import com.exactprosystems.jf.actions.ReadableValue;
 import com.exactprosystems.jf.api.common.IMatrixRunner;
 import com.exactprosystems.jf.api.wizard.WizardManager;
+import com.exactprosystems.jf.common.CommonHelper;
 import com.exactprosystems.jf.common.MatrixRunner;
 import com.exactprosystems.jf.common.Settings;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
@@ -28,6 +29,7 @@ import com.exactprosystems.jf.functions.HelpKind;
 import com.exactprosystems.jf.functions.Notifier;
 import com.exactprosystems.jf.functions.Table;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -81,7 +83,30 @@ public abstract class DocumentFactory
 		return null;
 	}
 	
-	public final Configuration 		createConfig(String fileName)
+    public final Document           createDocument(DocumentKind kind, String fileName)
+    {
+        try
+        {
+            switch (kind)
+            {
+                case CONFIGURATION:     return createConfig(fileName);
+                case MATRIX:            return createMatrix(fileName, createContext(). createRunner(fileName,  CommonHelper.readerFromFileName(fileName), new Date(), null));            
+                case LIBRARY:           return createLibrary(fileName, null);
+                case GUI_DICTIONARY:    return createAppDictionary(fileName);
+                case MESSAGE_DICIONARY: return createClientDictionary(fileName);
+                case SYSTEM_VARS:       return createVars(fileName);
+                case CSV:               return createCsv(fileName);
+                case PLAIN_TEXT:        return createPlainText(fileName);
+            }
+        }
+        catch (Exception e)
+        {
+            error(e);
+        }
+        return null;
+    }
+
+    public final Configuration 		createConfig(String fileName)
 	{
 		try
 		{
