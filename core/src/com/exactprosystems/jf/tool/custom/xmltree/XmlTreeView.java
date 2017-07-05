@@ -325,9 +325,8 @@ public class XmlTreeView extends AnchorPane
     
     private void  passTree(TreeItem<XmlTreeItem> treeItem, Consumer<XmlTreeItem> consumer)
     {
-        List<TreeItem<XmlTreeItem>> list = new ArrayList<>();
         XmlTreeItem value = treeItem.getValue();
         consumer.accept(value);
-        treeItem.getChildren().forEach(child -> passTree(child, consumer));
+        treeItem.getChildren().stream().filter(Objects::nonNull).forEach(child -> passTree(child, consumer));
     }
 }
