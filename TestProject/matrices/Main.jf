@@ -152,7 +152,7 @@ REPORT;Cleanup;;;
     TBLSLCT1.Out.size() == 0;'There are fails in the tests'
 
     #Id;#SubCase;testName
-    runMatrix;Running test;'controls'
+    runMatrix;Running test;'System'
         #Id;#Action;$Matrix
         MXRN1;MatrixRun;matrixTestsPath + testName +  '.jf'
 
@@ -161,6 +161,23 @@ REPORT;Cleanup;;;
 
         #Id;#Action;$Decoraded;$Matrix
         RESTBL2;ResultTable;true;MXRN1.Out
+
+        #Id;#Let
+        removedColumns;[]
+
+        #For;#From;#To;#Step
+        i;0;RESTBL2.Out.getHeaderSize() - 1;1
+            #If
+            !RESTBL1.Out.columnIsPresent(RESTBL2.Out.getHeader(i))
+                #Let
+                removedColumns.add(RESTBL2.Out.getHeader(i))
+
+            #EndIf
+
+        #EndFor
+
+        #Action;$Table;$Columns
+        TableRemoveColumns;RESTBL2.Out;removedColumns.toArray()
 
         #Action;$UnitedTable;$MainTable
         TableUnion;RESTBL2.Out;RESTBL1.Out
