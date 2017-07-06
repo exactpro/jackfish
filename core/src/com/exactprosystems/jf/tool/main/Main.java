@@ -536,7 +536,10 @@ public class Main extends Application
 		{
 			new File(fullPath).createNewFile();
 		}
-		doc.save(fullPath);
+		if (!fullPath.equals(newName(Matrix.class)))
+		{
+			doc.save(fullPath);
+		}
 		doc.display();
 	}
 
