@@ -22,14 +22,8 @@ import javafx.scene.text.Text;
 
 public class XmlTreeTableCell extends TreeTableCell<XmlItem, XmlItem>
 {
-    private HBox box;
-
-	public XmlTreeTableCell(org.w3c.dom.Node node)
+	public XmlTreeTableCell()
 	{
-        this.box = stringNode(node, XpathUtils.text(node));
-        this.box.setAlignment(Pos.CENTER_LEFT);
-	    
-	    
 		ContextMenu menu = new ContextMenu();
 		menu.setAutoHide(true);
 
@@ -46,7 +40,10 @@ public class XmlTreeTableCell extends TreeTableCell<XmlItem, XmlItem>
 		super.updateItem(item, empty);
 		if (item != null && !empty)
 		{
-			setGraphic(this.box);
+		    org.w3c.dom.Node node = item.getNode();
+		    HBox box = stringNode(node, XpathUtils.text(node));
+	        box.setAlignment(Pos.CENTER_LEFT);
+			setGraphic(box);
 		}
 		else
 		{

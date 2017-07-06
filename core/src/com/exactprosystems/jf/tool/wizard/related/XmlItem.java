@@ -13,13 +13,13 @@ public class XmlItem
 {
 	private Node node;
 	private Rectangle rectangle;
-    private MarkerStyle currentStyle;
+    private MarkerStyle style;
 
 	public XmlItem(Node node)
 	{
 		this.node = node;
 		this.rectangle = (Rectangle)node.getUserData(IRemoteApplication.rectangleName);
-		this.currentStyle = null;
+		this.style = null;
 	}
 
 	public Node getNode()
@@ -34,7 +34,7 @@ public class XmlItem
 
     public MarkerStyle getStyle()
     {
-        return this.currentStyle;
+        return this.style;
     }
 
 	public String getText()
@@ -42,34 +42,29 @@ public class XmlItem
 		return XpathUtils.text(this.node);
 	}
 	
-    public MarkerStyle changeState()
+    public void setStyle(MarkerStyle style)
     {
-        if (this.currentStyle == null)
+        this.style = style;
+    }
+
+    public MarkerStyle changeStyle()
+    {
+        if (this.style == null)
         {
-            this.currentStyle = MarkerStyle.ADD;
-            this.addRelation(MarkerStyle.ADD);
+            this.style = MarkerStyle.ADD;
+            this.setStyle(MarkerStyle.ADD);
         }
-        else if (this.currentStyle == MarkerStyle.ADD || currentStyle == MarkerStyle.UPDATE)
+        else if (this.style == MarkerStyle.ADD || style == MarkerStyle.UPDATE)
         {
-            this.currentStyle = null;
+            this.style = null;
         }
         else
         {
-            this.currentStyle = MarkerStyle.UPDATE;
+            this.style = MarkerStyle.UPDATE;
         }
-        return this.currentStyle;
+        return this.style;
     }
 	
-    public void addRelation(MarkerStyle state)
-    {
-        this.currentStyle = state;
-    }
-
-    public void clearRelation(ElementWizardBean bean)
-    {
-        this.currentStyle = null;
-    }
-
 	@Override
 	public boolean equals(Object o)
 	{

@@ -67,7 +67,7 @@ public class XmlTreeView extends AnchorPane
         this.treeTableView.getColumns().add(c0);
 
 		TreeTableColumn<XmlItem, XmlItem> c1 = new TreeTableColumn<>();
-		c1.setCellFactory(p -> new XmlTreeTableCell(null)); // TODO !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+		c1.setCellFactory(p -> new XmlTreeTableCell());
 		c1.setCellValueFactory(p -> new SimpleObjectProperty<>(p.getValue().getValue()));
         c1.setPrefWidth(5000.0);
         this.treeTableView.getColumns().add(c1);
@@ -90,7 +90,7 @@ public class XmlTreeView extends AnchorPane
 				{
 					XmlItem XmlItem = treeItem.getValue();
 					MarkerStyle oldValue = XmlItem.getStyle();
-					MarkerStyle newValue = XmlItem.changeState();
+					MarkerStyle newValue = XmlItem.changeStyle();
 					if (this.onMarkerChanged != null)
 					{
 					    this.onMarkerChanged.changed(XmlItem.getNode(), oldValue, newValue);
@@ -168,13 +168,13 @@ public class XmlTreeView extends AnchorPane
         TreeItem<XmlItem> treeItem = findFirst(i -> i != null && i.getNode().equals(node));
         if (treeItem != null)
         {
-            treeItem.getValue().addRelation(style);
+            treeItem.getValue().setStyle(style);
         }
     }
     
     public void removeMarkers(MarkerStyle state)
     {
-        passTree(this.treeTableView.getRoot(), i -> i.clearRelation(null));
+        passTree(this.treeTableView.getRoot(), i -> i.setStyle(null));
     }
 	
 	public void selectItem(Rectangle rectangle)
