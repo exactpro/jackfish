@@ -1,9 +1,15 @@
+////////////////////////////////////////////////////////////////////////////////
+//  Copyright (c) 2009-2015, Exactpro Systems, LLC
+//  Quality Assurance & Related Development for Innovative Trading Systems.
+//  All rights reserved.
+//  This is unpublished, licensed software, confidential and proprietary
+//  information which is the property of Exactpro Systems, LLC or its licensors.
+////////////////////////////////////////////////////////////////////////////////
+
 package com.exactprosystems.jf.tool.wizard.related;
 
 import com.exactprosystems.jf.api.app.IRemoteApplication;
 import com.exactprosystems.jf.common.utils.XpathUtils;
-import com.exactprosystems.jf.tool.dictionary.dialog.ElementWizardBean;
-
 import org.w3c.dom.Node;
 
 import java.awt.*;
@@ -65,6 +71,12 @@ public class XmlItem
         return this.style;
     }
 	
+    @Override
+    public String toString()
+    {
+        return getClass().getSimpleName() + "{" + this.node + ":" + this.rectangle + ":" + this.style + "}";
+    }
+    
 	@Override
 	public boolean equals(Object o)
 	{

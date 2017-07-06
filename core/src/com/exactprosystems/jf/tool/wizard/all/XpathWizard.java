@@ -437,14 +437,30 @@ public class XpathWizard extends AbstractWizard
         //TODO add listener
 		magicLine.btnCopyToRelative.setOnAction(e -> {});
 		
-		this.xmlTreeView.setOnSelectionChanged((oldNode, newNode) -> 
+		this.xmlTreeView.setOnSelectionChanged((oldItem, newItem) -> 
 		{
-		    System.err.println(">> SelectionChanged " + oldNode + " " + newNode);
+		    if (oldItem != null)
+		    {
+		        System.err.println(">> hide " + oldItem);
+		        this.imageViewWithScale.hideRectangle(oldItem.getRectangle(), oldItem.getStyle());
+		    }
+		    
+		    if (newItem != null)
+		    {
+                System.err.println(">> show " + newItem);
+		        this.imageViewWithScale.showRectangle(newItem.getRectangle(), newItem.getStyle(), newItem.getText());
+		    }
 		});
 
-		this.xmlTreeView.setOnMarkerChanged((node, oldMarker, newMarker) -> 
+		this.xmlTreeView.setOnMarkerChanged((item, oldMarker, newMarker) -> 
 		{
-            System.err.println(">> MarkerChanged " + node + " " + oldMarker + " " + newMarker);
+		    if (item != null)
+		    {
+                System.err.println(">> hide " + item);
+                this.imageViewWithScale.hideRectangle(item.getRectangle(), item.getStyle());
+                System.err.println(">> show " + item);
+                this.imageViewWithScale.showRectangle(item.getRectangle(), item.getStyle(), item.getText());
+		    }
 		});
 	}
 }

@@ -8,10 +8,10 @@
 
 package com.exactprosystems.jf.tool.custom.xmltree;
 
-import org.w3c.dom.Node;
+import com.exactprosystems.jf.tool.wizard.related.XmlItem;
 
 @FunctionalInterface
 public interface OnSelectionChangeListener
 {
-    void changed(Node oldValue, Node newValue);
+    void changed(XmlItem oldValue, XmlItem newValue);
 }

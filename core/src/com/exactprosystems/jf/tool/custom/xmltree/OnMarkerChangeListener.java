@@ -8,13 +8,12 @@
 
 package com.exactprosystems.jf.tool.custom.xmltree;
 
-import org.w3c.dom.Node;
-
 import com.exactprosystems.jf.tool.wizard.related.MarkerStyle;
+import com.exactprosystems.jf.tool.wizard.related.XmlItem;
 
 @FunctionalInterface
 public interface OnMarkerChangeListener
 {
-    void changed(Node selection, MarkerStyle oldValue, MarkerStyle newValue);
+    void changed(XmlItem item, MarkerStyle oldValue, MarkerStyle newValue);
 
 }

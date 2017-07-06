@@ -47,7 +47,7 @@ public class XmlTreeView extends AnchorPane
 
 		this.stateMap = Stream.of(MarkerStyle.values()).collect(Collectors.toMap(v -> v, v -> true));
 		this.treeTableView = new TreeTableView<>();
-		this.treeTableView.setSkin(new MyCustomSkin(this, this.treeTableView));
+		this.treeTableView.setSkin(new MyCustomSkin(this.treeTableView));
 		this.treeTableView.getStyleClass().add(CssVariables.EMPTY_HEADER_COLUMN);
 
 		AnchorPane.setTopAnchor(this.treeTableView, 0.0);
@@ -88,12 +88,12 @@ public class XmlTreeView extends AnchorPane
 				TreeItem<XmlItem> treeItem = iconCell.getTreeTableRow().getTreeItem();
 				if (treeItem != null)
 				{
-					XmlItem XmlItem = treeItem.getValue();
-					MarkerStyle oldValue = XmlItem.getStyle();
-					MarkerStyle newValue = XmlItem.changeStyle();
+					XmlItem item = treeItem.getValue();
+					MarkerStyle oldValue = item.getStyle();
+					MarkerStyle newValue = item.changeStyle();
 					if (this.onMarkerChanged != null)
 					{
-					    this.onMarkerChanged.changed(XmlItem.getNode(), oldValue, newValue);
+					    this.onMarkerChanged.changed(item, oldValue, newValue);
 					}
 					refresh();
 				}
@@ -105,9 +105,9 @@ public class XmlTreeView extends AnchorPane
 		{
 		    if (this.onSelectionChanged != null)
 		    {
-		        org.w3c.dom.Node oldNode = oldValue == null ? null : oldValue.getValue().getNode(); 
-                org.w3c.dom.Node newNode = newValue == null ? null : newValue.getValue().getNode(); 
-		        this.onSelectionChanged.changed(oldNode, newNode);
+		        XmlItem oldItem = oldValue == null ? null : oldValue.getValue(); 
+		        XmlItem newItem = newValue == null ? null : newValue.getValue(); 
+		        this.onSelectionChanged.changed(oldItem, newItem);
 		    }
 		});
 	

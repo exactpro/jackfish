@@ -6,6 +6,7 @@ import javafx.scene.paint.Color;
 
 public enum MarkerStyle
 {
+    SELECT    (CssVariables.Icons.REFRESH,        CssVariables.COLOR_NOT_FOUND,   Color.web("#2687fb")), // TODO tune it
     INSPECT   (CssVariables.Icons.REFRESH,        CssVariables.COLOR_NOT_FOUND,   Color.web("#2687fb")), // TODO tune it
 	UPDATE    (CssVariables.Icons.REFRESH,        CssVariables.COLOR_UPDATE,      Color.web("#2687fb")),
 	ADD       (CssVariables.Icons.ADD_16_ICON,    CssVariables.COLOR_ADD,         Color.web("#2687fb")),

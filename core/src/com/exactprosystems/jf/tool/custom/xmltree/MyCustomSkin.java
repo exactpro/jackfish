@@ -1,3 +1,11 @@
+////////////////////////////////////////////////////////////////////////////////
+//  Copyright (c) 2009-2015, Exactpro Systems, LLC
+//  Quality Assurance & Related Development for Innovative Trading Systems.
+//  All rights reserved.
+//  This is unpublished, licensed software, confidential and proprietary
+//  information which is the property of Exactpro Systems, LLC or its licensors.
+////////////////////////////////////////////////////////////////////////////////
+
 package com.exactprosystems.jf.tool.custom.xmltree;
 
 import com.exactprosystems.jf.tool.wizard.related.XmlItem;
@@ -8,15 +16,9 @@ import javafx.scene.control.TreeTableView;
 
 class MyCustomSkin extends TreeTableViewSkin<XmlItem>
 {
-	/**
-     * 
-     */
-    private final XmlTreeView xmlTreeView;
-
-    public MyCustomSkin(XmlTreeView xmlTreeView, TreeTableView<XmlItem> treeTableView)
+    public MyCustomSkin(TreeTableView<XmlItem> treeTableView)
 	{
 		super(treeTableView);
-        this.xmlTreeView = xmlTreeView;
 	}
 
 	public void show(int index)
@@ -36,11 +38,5 @@ class MyCustomSkin extends TreeTableViewSkin<XmlItem>
 	public void resizeColumnToFitContent(TreeTableColumn<XmlItem, ?> tc, int maxRows)
 	{
 		super.resizeColumnToFitContent(tc, maxRows);
-		
-//		TreeTableColumn<XmlTreeItem, ?> column = this.xmlTreeView.treeTableView.getColumns().get(1);
-//		double width = column.getWidth();
-//		column.setPrefWidth(width);
-//		column.setMaxWidth(width);
-//		column.setMinWidth(width);
 	}
 }
