@@ -753,7 +753,7 @@ namespace UIAdapter
                 {
                     element.SetFocus();
                 }
-                else
+                else if (handler.Current.IsKeyboardFocusable)
                 {
                     handler.SetFocus();
                 }
