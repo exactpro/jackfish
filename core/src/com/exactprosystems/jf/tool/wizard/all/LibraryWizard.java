@@ -20,6 +20,7 @@ import com.exactprosystems.jf.tool.helpers.DialogsHelper;
 import com.exactprosystems.jf.tool.matrix.MatrixFx;
 import com.exactprosystems.jf.tool.wizard.AbstractWizard;
 import com.exactprosystems.jf.tool.wizard.CommandBuilder;
+import com.exactprosystems.jf.tool.wizard.related.refactor.Refactor;
 
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
@@ -66,7 +67,7 @@ public class LibraryWizard extends AbstractWizard {
     private List<String> libsFolders;
     private List<String> matricesFolders;
 
-    private List<ChangeBean> beans;
+    private List<Refactor> beans;
 
 
     @Override
@@ -116,7 +117,7 @@ public class LibraryWizard extends AbstractWizard {
 
         Button refresh = new Button("Get affected files");
         refresh.setOnAction(event -> {
-            List<ChangeBean> list = new LinkedList<>();
+            List<Refactor> list = new LinkedList<>();
             List<File> affectedFiles = getAffectedFiles(oldSubId, oldNameSpaceId);
 //            if ()
 
@@ -236,31 +237,5 @@ public class LibraryWizard extends AbstractWizard {
         });
 
         return res;
-    }
-
-    class ChangeBean {
-        private File file;
-        private List<WizardCommand> commands;
-
-        public File getFile() {
-            return file;
-        }
-
-        public void setFile(File file) {
-            this.file = file;
-        }
-
-        public List<WizardCommand> getCommands() {
-            return commands;
-        }
-
-        public void setCommands(List<WizardCommand> commands) {
-            this.commands = commands;
-        }
-
-        public ChangeBean(File file, List<WizardCommand> commands) {
-            this.file = file;
-            this.commands = commands;
-        }
     }
 }
