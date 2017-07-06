@@ -92,8 +92,9 @@ public class NewHelpBuilder extends ReportBuilder {
 
     @Override
     protected void putMark(ReportWriter writer, String mark) throws IOException {
-        writer.fwrite("<a name=\"%s\"></a>", mark);
-        writer.fwrite("<br>");
+        String[] s = mark.split("\\.");
+        String correctMark = s[s.length -1];
+        writer.fwrite("<a id=\"%s\"></a><br>", correctMark).newline();
     }
 
     @Override
