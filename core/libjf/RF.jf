@@ -19,25 +19,25 @@ RF;RegressionFramework
         table != null && table instanceof Table;'The parameter table should be Table'
 
         #Assert;#Message
-        table.columnIsPresent('Off');'Table shoud contain the column Off'
+        table.columnIsPresent('Off');'Table should contain the column Off'
 
         #Assert;#Message
-        table.columnIsPresent('Scenario');'Table shoud contain the column Scenario'
+        table.columnIsPresent('Scenario');'Table should contain the column Scenario'
 
         #Assert;#Message
-        table.columnIsPresent('TestSet');'Table shoud contain the column TestSet'
+        table.columnIsPresent('TestSet');'Table should contain the column TestSet'
 
         #Assert;#Message
-        table.columnIsPresent('Start');'Table shoud contain the column Start'
+        table.columnIsPresent('Start');'Table should contain the column Start'
 
         #Assert;#Message
-        table.columnIsPresent('Finish');'Table shoud contain the column Finish'
+        table.columnIsPresent('Finish');'Table should contain the column Finish'
 
         #Assert;#Message
-        table.columnIsPresent('Performer');'Table shoud contain the column Performer'
+        table.columnIsPresent('Performer');'Table should contain the column Performer'
 
         #Assert;#Message
-        table.columnIsPresent('Priority');'Table shoud contain the column Priority'
+        table.columnIsPresent('Priority');'Table should contain the column Priority'
 
         #Id;#Call
         SQL;Connect
@@ -199,6 +199,9 @@ RF;RegressionFramework
 
         #Assert;#Message
         failedCount == 0;'Regression failed'
+
+        #Return
+        runId
 
     #EndSubCase
 
