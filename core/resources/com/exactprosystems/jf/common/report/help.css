@@ -182,3 +182,22 @@ ins .active{
 .YELLOW {
 	color: yellow;
 }
+
+.rotate {
+  text-align: left;
+  white-space: nowrap;
+  vertical-align: bottom;
+  margin-left: 1px;
+  margin-right: 1px;
+  margin-top: 120px;
+  margin-buttom: -10px;
+  width: 2em;
+  height: 7em
+}
+.rotate div {
+     -moz-transform: rotate(-90.0deg);  /* FF3.5+ */
+       -o-transform: rotate(-90.0deg);  /* Opera 10.5 */
+  -webkit-transform: rotate(-90.0deg);  /* Saf3.1+, Chrome */
+             filter:  progid:DXImageTransform.Microsoft.BasicImage(rotation=0.083);  /* IE6,IE7 */
+         -ms-filter: "progid:DXImageTransform.Microsoft.BasicImage(rotation=0.083)"; /* IE8 */
+}

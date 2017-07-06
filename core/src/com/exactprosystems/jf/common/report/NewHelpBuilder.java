@@ -103,11 +103,11 @@ public class NewHelpBuilder extends ReportBuilder {
         writer.fwrite("<html>");
         writer.fwrite("<script type='text/javascript'>\n<!--\n");
         writer.include(getClass().getResourceAsStream("jquery-3.1.1.min.js"));
-        writer.fwrite("-->\n</script>\n");
+        writer.fwrite("-->\n</script>\n").newline();
 
         writer.fwrite("<script type='text/javascript'>\n<!--\n");
         writer.include(getClass().getResourceAsStream("bootstrap.min.js"));
-        writer.fwrite("-->\n</script>\n");
+        writer.fwrite("-->\n</script>\n").newline();
 
 
         //todo change or remove this script after create content
@@ -125,15 +125,16 @@ public class NewHelpBuilder extends ReportBuilder {
                 "\t})\n" +
                 "}\n" +
                 "})})").newline();
-        writer.fwrite("-->\n</script>\n");
+        writer.fwrite("-->\n</script>\n").newline();
 
         writer.fwrite("<style>\n" + "<!--\n");
         writer.include(getClass().getResourceAsStream("bootstrap.min.css"));
-        writer.fwrite("-->\n" + "</style>\n");
+        writer.fwrite("-->\n" + "</style>\n").newline();
 
         writer.fwrite("<style>\n" + "<!--\n");
         writer.include(getClass().getResourceAsStream("help.css"));
-        writer.fwrite("-->\n" + "</style>\n");
+        writer.fwrite("-->\n" + "</style>\n").newline();
+
         writer.fwrite("<head>");
         writer.fwrite("<title>Help</title>");
         writer.fwrite("<meta http-equiv='Content-Type' content='text/html; charset=utf-8'>");
