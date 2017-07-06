@@ -62,7 +62,7 @@ public class NewHelpBuilder extends ReportBuilder {
 
     @Override
     protected String decorateLink(String name, String link) {
-        return String.format("<a href=\"#%s\">%s</a>", name, link);
+        return String.format("<a href='#%s'>%s</a>", name, link);
     }
 
     @Override
@@ -94,7 +94,7 @@ public class NewHelpBuilder extends ReportBuilder {
     protected void putMark(ReportWriter writer, String mark) throws IOException {
         String[] s = mark.split("\\.");
         String correctMark = s[s.length -1];
-        writer.fwrite("<a id=\"%s\"></a><br>", correctMark).newline();
+        writer.fwrite("<div id=\"%s\">", correctMark);
     }
 
     @Override
@@ -109,6 +109,24 @@ public class NewHelpBuilder extends ReportBuilder {
         writer.include(getClass().getResourceAsStream("bootstrap.min.js"));
         writer.fwrite("-->\n</script>\n");
 
+
+        //todo change or remove this script after create content
+        writer.fwrite("<script type='text/javascript'>\n<!--\n");
+        writer.fwrite(
+                "$(document).ready(function () {" +
+                "$.each($(\"a[href^='#']\"),function(i,val) {\n" +
+                "var hr = $(val).attr('href');\n" +
+                "var id = hr.substring(1);\n" +
+                "if (id !== \"\") {\n" +
+                "\t$(val).click(function(event) {\n" +
+                "\t\t$('html, body').animate({\n" +
+                "\t\t\tscrollTop: $(document.getElementById($(val).attr(\"href\").substring(1))).offset().top-50\n" +
+                "\t\t}, 500);\n" +
+                "\t})\n" +
+                "}\n" +
+                "})})").newline();
+        writer.fwrite("-->\n</script>\n");
+
         writer.fwrite("<style>\n" + "<!--\n");
         writer.include(getClass().getResourceAsStream("bootstrap.min.css"));
         writer.fwrite("-->\n" + "</style>\n");
@@ -121,6 +139,7 @@ public class NewHelpBuilder extends ReportBuilder {
         writer.fwrite("<meta http-equiv='Content-Type' content='text/html; charset=utf-8'>");
         writer.fwrite("</head>");
         writer.fwrite("<body>").newline();
+
     }
 
     @Override
