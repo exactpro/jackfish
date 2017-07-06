@@ -1,19 +1,19 @@
 package com.exactprosystems.jf.tool.custom.xmltree;
 
-import com.exactprosystems.jf.tool.wizard.related.XmlTreeItem;
+import com.exactprosystems.jf.tool.wizard.related.XmlItem;
 import com.sun.javafx.scene.control.skin.TreeTableViewSkin;
 
 import javafx.scene.control.TreeTableColumn;
 import javafx.scene.control.TreeTableView;
 
-class MyCustomSkin extends TreeTableViewSkin<XmlTreeItem>
+class MyCustomSkin extends TreeTableViewSkin<XmlItem>
 {
 	/**
      * 
      */
     private final XmlTreeView xmlTreeView;
 
-    public MyCustomSkin(XmlTreeView xmlTreeView, TreeTableView<XmlTreeItem> treeTableView)
+    public MyCustomSkin(XmlTreeView xmlTreeView, TreeTableView<XmlItem> treeTableView)
 	{
 		super(treeTableView);
         this.xmlTreeView = xmlTreeView;
@@ -33,7 +33,7 @@ class MyCustomSkin extends TreeTableViewSkin<XmlTreeItem>
 	}
 
 	@Override
-	public void resizeColumnToFitContent(TreeTableColumn<XmlTreeItem, ?> tc, int maxRows)
+	public void resizeColumnToFitContent(TreeTableColumn<XmlItem, ?> tc, int maxRows)
 	{
 		super.resizeColumnToFitContent(tc, maxRows);
 		

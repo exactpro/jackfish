@@ -1,31 +1,25 @@
 package com.exactprosystems.jf.tool.wizard.related;
 
 import com.exactprosystems.jf.api.app.IRemoteApplication;
-import javafx.geometry.Pos;
-import javafx.scene.layout.HBox;
-import javafx.scene.text.Text;
+import com.exactprosystems.jf.common.utils.XpathUtils;
+import com.exactprosystems.jf.tool.dictionary.dialog.ElementWizardBean;
+
 import org.w3c.dom.Node;
 
 import java.awt.*;
-import java.util.stream.Collectors;
+import java.util.Objects;
 
 public class XmlItem
 {
-	private HBox box;
 	private Node node;
 	private Rectangle rectangle;
+    private MarkerStyle currentStyle;
 
-	public XmlItem(HBox box, Node node)
+	public XmlItem(Node node)
 	{
-		this.box = box;
-		this.box.setAlignment(Pos.CENTER_LEFT);
 		this.node = node;
 		this.rectangle = (Rectangle)node.getUserData(IRemoteApplication.rectangleName);
-	}
-
-	public HBox getBox()
-	{
-		return this.box;
+		this.currentStyle = null;
 	}
 
 	public Node getNode()
@@ -38,13 +32,43 @@ public class XmlItem
 		return this.rectangle;
 	}
 
+    public MarkerStyle getStyle()
+    {
+        return this.currentStyle;
+    }
+
 	public String getText()
 	{
-		return this.box.getChildren().stream()
-				.filter(node -> node instanceof Text)
-				.map(text -> ((Text) text).getText())
-				.collect(Collectors.joining());
+		return XpathUtils.text(this.node);
 	}
+	
+    public MarkerStyle changeState()
+    {
+        if (this.currentStyle == null)
+        {
+            this.currentStyle = MarkerStyle.ADD;
+            this.addRelation(MarkerStyle.ADD);
+        }
+        else if (this.currentStyle == MarkerStyle.ADD || currentStyle == MarkerStyle.UPDATE)
+        {
+            this.currentStyle = null;
+        }
+        else
+        {
+            this.currentStyle = MarkerStyle.UPDATE;
+        }
+        return this.currentStyle;
+    }
+	
+    public void addRelation(MarkerStyle state)
+    {
+        this.currentStyle = state;
+    }
+
+    public void clearRelation(ElementWizardBean bean)
+    {
+        this.currentStyle = null;
+    }
 
 	@Override
 	public boolean equals(Object o)
@@ -54,19 +78,14 @@ public class XmlItem
 		if (o == null || getClass() != o.getClass())
 			return false;
 
-		XmlItem xpathItem = (XmlItem) o;
-
-		if (box != null ? !box.equals(xpathItem.box) : xpathItem.box != null)
-			return false;
-		return !(node != null ? !node.equals(xpathItem.node) : xpathItem.node != null);
-
+		XmlItem other = (XmlItem) o;
+		
+		return Objects.equals(this.node, other.node);
 	}
 
 	@Override
 	public int hashCode()
 	{
-		int result = box != null ? box.hashCode() : 0;
-		result = 31 * result + (node != null ? node.hashCode() : 0);
-		return result;
+	    return Objects.hashCode(this.node);
 	}
 }

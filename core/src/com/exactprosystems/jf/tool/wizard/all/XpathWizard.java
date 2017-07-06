@@ -37,7 +37,6 @@ import com.exactprosystems.jf.tool.helpers.DialogsHelper;
 import com.exactprosystems.jf.tool.wizard.AbstractWizard;
 import com.exactprosystems.jf.tool.wizard.CommandBuilder;
 import com.exactprosystems.jf.tool.wizard.related.ImageAndOffset;
-import com.exactprosystems.jf.tool.wizard.related.XmlTreeItem;
 import javafx.concurrent.Service;
 import javafx.geometry.Orientation;
 import javafx.geometry.Pos;

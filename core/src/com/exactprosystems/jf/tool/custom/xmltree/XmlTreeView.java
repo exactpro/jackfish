@@ -11,7 +11,7 @@ package com.exactprosystems.jf.tool.custom.xmltree;
 import com.exactprosystems.jf.documents.matrix.parser.SearchHelper;
 import com.exactprosystems.jf.tool.CssVariables;
 import com.exactprosystems.jf.tool.wizard.related.MarkerStyle;
-import com.exactprosystems.jf.tool.wizard.related.XmlTreeItem;
+import com.exactprosystems.jf.tool.wizard.related.XmlItem;
 
 import javafx.application.Platform;
 import javafx.beans.property.SimpleObjectProperty;
@@ -34,12 +34,12 @@ public class XmlTreeView extends AnchorPane
 {
 	public static final double TRANSPARENT_RECT = 0.25;
 
-    private TreeTableView<XmlTreeItem> treeTableView;
-    private int                        currentIndex     = -1;
-    private BorderPane                 waitingNode;
-    private OnSelectionChangeListener  onSelectionChanged;
-    private OnMarkerChangeListener     onMarkerChanged;
-    private Map<MarkerStyle, Boolean>  stateMap;
+    private TreeTableView<XmlItem>    treeTableView;
+    private int                       currentIndex     = -1;
+    private BorderPane                waitingNode;
+    private OnSelectionChangeListener onSelectionChanged;
+    private OnMarkerChangeListener    onMarkerChanged;
+    private Map<MarkerStyle, Boolean> stateMap;
 
 	public XmlTreeView()
 	{
@@ -57,7 +57,7 @@ public class XmlTreeView extends AnchorPane
 
 		this.getChildren().add(this.treeTableView);
 
-		TreeTableColumn<XmlTreeItem, XmlTreeItem> c0 = new TreeTableColumn<>();
+		TreeTableColumn<XmlItem, XmlItem> c0 = new TreeTableColumn<>();
 		int value = 30;
 		c0.setPrefWidth(value);
 		c0.setMaxWidth(value);
@@ -66,8 +66,8 @@ public class XmlTreeView extends AnchorPane
 		c0.setCellValueFactory(p -> new SimpleObjectProperty<>(p.getValue().getValue()));
         this.treeTableView.getColumns().add(c0);
 
-		TreeTableColumn<XmlTreeItem, XmlTreeItem> c1 = new TreeTableColumn<>();
-		c1.setCellFactory(p -> new XmlTreeTableCell());
+		TreeTableColumn<XmlItem, XmlItem> c1 = new TreeTableColumn<>();
+		c1.setCellFactory(p -> new XmlTreeTableCell(null)); // TODO !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 		c1.setCellValueFactory(p -> new SimpleObjectProperty<>(p.getValue().getValue()));
         c1.setPrefWidth(5000.0);
         this.treeTableView.getColumns().add(c1);
@@ -85,15 +85,15 @@ public class XmlTreeView extends AnchorPane
 			if (target instanceof XmlIconCell)
 			{
 				XmlIconCell iconCell = (XmlIconCell) target;
-				TreeItem<XmlTreeItem> treeItem = iconCell.getTreeTableRow().getTreeItem();
+				TreeItem<XmlItem> treeItem = iconCell.getTreeTableRow().getTreeItem();
 				if (treeItem != null)
 				{
-					XmlTreeItem xmlTreeItem = treeItem.getValue();
-					MarkerStyle oldValue = xmlTreeItem.getStyle();
-					MarkerStyle newValue = xmlTreeItem.changeState();
+					XmlItem XmlItem = treeItem.getValue();
+					MarkerStyle oldValue = XmlItem.getStyle();
+					MarkerStyle newValue = XmlItem.changeState();
 					if (this.onMarkerChanged != null)
 					{
-					    this.onMarkerChanged.changed(xmlTreeItem.getNode(), oldValue, newValue);
+					    this.onMarkerChanged.changed(XmlItem.getNode(), oldValue, newValue);
 					}
 					refresh();
 				}
@@ -111,7 +111,7 @@ public class XmlTreeView extends AnchorPane
 		    }
 		});
 	
-        TreeTableColumn<XmlTreeItem, ?> column = this.treeTableView.getColumns().get(1);
+        TreeTableColumn<XmlItem, ?> column = this.treeTableView.getColumns().get(1);
         double width = column.getWidth();
         column.setPrefWidth(width);
         column.setMaxWidth(width);
@@ -150,7 +150,7 @@ public class XmlTreeView extends AnchorPane
 
     public void select(org.w3c.dom.Node node)
     {
-        TreeItem<XmlTreeItem> treeItem = findFirst(i -> i != null && i.getNode().equals(node));
+        TreeItem<XmlItem> treeItem = findFirst(i -> i != null && i.getNode().equals(node));
         if (treeItem != null)
         {
             this.treeTableView.getSelectionModel().select(treeItem);
@@ -165,11 +165,10 @@ public class XmlTreeView extends AnchorPane
     
     public void setMarker(org.w3c.dom.Node node, MarkerStyle style)
     {
-        TreeItem<XmlTreeItem> treeItem = findFirst(i -> i != null && i.getNode().equals(node));
+        TreeItem<XmlItem> treeItem = findFirst(i -> i != null && i.getNode().equals(node));
         if (treeItem != null)
         {
-            treeItem.getValue().addRelation(null, style);
-            treeItem.getValue().setMarkIsVisible(true);
+            treeItem.getValue().addRelation(style);
         }
     }
     
@@ -180,7 +179,7 @@ public class XmlTreeView extends AnchorPane
 	
 	public void selectItem(Rectangle rectangle)
 	{
-	    TreeItem<XmlTreeItem> treeItem  = findFirst(i -> i != null && i.getRectangle() != null && i.getRectangle().equals(rectangle));
+	    TreeItem<XmlItem> treeItem  = findFirst(i -> i != null && i.getRectangle() != null && i.getRectangle().equals(rectangle));
         if (treeItem != null)
         {
             this.treeTableView.getSelectionModel().select(treeItem);
@@ -197,26 +196,26 @@ public class XmlTreeView extends AnchorPane
 
 	public void selectNextMark()
 	{
-		List<TreeItem<XmlTreeItem>> markedRows = getMarkedTreeItems();
+		List<TreeItem<XmlItem>> markedRows = getMarkedTreeItems();
 		if (markedRows.isEmpty())
 		{
 			return;
 		}
 		this.currentIndex = Math.min(this.currentIndex + 1, markedRows.size() - 1);
-		TreeItem<XmlTreeItem> treeItem = markedRows.get(this.currentIndex);
+		TreeItem<XmlItem> treeItem = markedRows.get(this.currentIndex);
 		scrollToElement(treeItem);
 		this.treeTableView.getSelectionModel().select(treeItem);
 	}
 
 	public void selectPrevMark()
 	{
-		List<TreeItem<XmlTreeItem>> markedRows = getMarkedTreeItems();
+		List<TreeItem<XmlItem>> markedRows = getMarkedTreeItems();
 		if (markedRows.isEmpty())
 		{
 			return;
 		}
         this.currentIndex = Math.max(this.currentIndex - 1, 0);
-		TreeItem<XmlTreeItem> treeItem = markedRows.get(this.currentIndex);
+		TreeItem<XmlItem> treeItem = markedRows.get(this.currentIndex);
 		scrollToElement(treeItem);
 		this.treeTableView.getSelectionModel().select(treeItem);
 	}
@@ -238,9 +237,9 @@ public class XmlTreeView extends AnchorPane
 	//endregion
 
 	//region private methods
-	private List<TreeItem<XmlTreeItem>> getMarkedTreeItems()
+	private List<TreeItem<XmlItem>> getMarkedTreeItems()
 	{
-        return findAll(treeItem -> treeItem.isMarkVisible());
+        return findAll(treeItem -> treeItem.getStyle() != null);
 	}
 
 	private void addWaitingPane()
@@ -254,30 +253,30 @@ public class XmlTreeView extends AnchorPane
 		this.getChildren().add(this.waitingNode);
 	}
 
-	private void expandTree(TreeItem<XmlTreeItem> item)
+	private void expandTree(TreeItem<XmlItem> item)
 	{
 		item.setExpanded(true);
 		item.getChildren().forEach(this::expandTree);
 	}
 
-    private void displayTree(org.w3c.dom.Node node, TreeItem<XmlTreeItem> parent)
+    private void displayTree(org.w3c.dom.Node node, TreeItem<XmlItem> parent)
     {
         boolean isDocument = node.getNodeType() == org.w3c.dom.Node.DOCUMENT_NODE;
 
-        TreeItem<XmlTreeItem> treeItem = isDocument ? parent : new TreeItem<>();
+        TreeItem<XmlItem> treeItem = isDocument ? parent : new TreeItem<>();
         IntStream.range(0, node.getChildNodes().getLength()).mapToObj(node.getChildNodes()::item)
                 .filter(item -> item.getNodeType() == org.w3c.dom.Node.ELEMENT_NODE)
                 .forEach(item -> displayTree(item, treeItem));
         if (!isDocument)
         {
-            treeItem.setValue(new XmlTreeItem(node));
+            treeItem.setValue(new XmlItem(node));
             parent.getChildren().add(treeItem);
         }
     }
 
-	private void scrollToElement(TreeItem<XmlTreeItem> xpathItemTreeItem)
+	private void scrollToElement(TreeItem<XmlItem> xpathItemTreeItem)
 	{
-		TreeItem<XmlTreeItem> parent = xpathItemTreeItem.getParent();
+		TreeItem<XmlItem> parent = xpathItemTreeItem.getParent();
 		while (parent != null)
 		{
 			parent.setExpanded(true);
@@ -296,9 +295,9 @@ public class XmlTreeView extends AnchorPane
 		return Arrays.stream(what.split("\\s")).filter(s -> !SearchHelper.matches(text, s, matchCase, wholeWord)).count() == 0;
 	}
 
-    private TreeItem<XmlTreeItem>  findFirst(Predicate<XmlTreeItem> predicate)
+    private TreeItem<XmlItem>  findFirst(Predicate<XmlItem> predicate)
     {
-        List<TreeItem<XmlTreeItem>> list = findAll(predicate);
+        List<TreeItem<XmlItem>> list = findAll(predicate);
         if (!list.isEmpty())
         {
             return list.get(0);
@@ -306,15 +305,15 @@ public class XmlTreeView extends AnchorPane
         return null;
     }
 
-    private List<TreeItem<XmlTreeItem>>  findAll(Predicate<XmlTreeItem> predicate)
+    private List<TreeItem<XmlItem>>  findAll(Predicate<XmlItem> predicate)
     {
         return findAll(this.treeTableView.getRoot(), predicate);
     }
 
-    private List<TreeItem<XmlTreeItem>>  findAll(TreeItem<XmlTreeItem> treeItem, Predicate<XmlTreeItem> predicate)
+    private List<TreeItem<XmlItem>>  findAll(TreeItem<XmlItem> treeItem, Predicate<XmlItem> predicate)
     {
-        List<TreeItem<XmlTreeItem>> list = new ArrayList<>();
-        XmlTreeItem value = treeItem.getValue();
+        List<TreeItem<XmlItem>> list = new ArrayList<>();
+        XmlItem value = treeItem.getValue();
         if (predicate.test(value))
         {
             list.add(treeItem);
@@ -323,9 +322,9 @@ public class XmlTreeView extends AnchorPane
         return list;
     }
     
-    private void  passTree(TreeItem<XmlTreeItem> treeItem, Consumer<XmlTreeItem> consumer)
+    private void  passTree(TreeItem<XmlItem> treeItem, Consumer<XmlItem> consumer)
     {
-        XmlTreeItem value = treeItem.getValue();
+        XmlItem value = treeItem.getValue();
         consumer.accept(value);
         treeItem.getChildren().stream().filter(Objects::nonNull).forEach(child -> passTree(child, consumer));
     }
