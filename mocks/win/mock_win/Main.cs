@@ -21,10 +21,10 @@ namespace mock_win
         Timer timer;
         Point mouseDownPos;
         long mouseTimeClick;
-        MenuItem menu;
         MenuItem menuItem;
         MenuItem menu2;
         MenuItem menuItem2;
+        MenuItem menuSpace;
         MenuItem menuItem3;
         Point cursorOnMainPos;
         bool flagClickMenuItem = false;
@@ -37,7 +37,7 @@ namespace mock_win
             fillTable1();
             fillListView();
             fillContextMenu();
-            ComboBox.SelectedIndex = 0;
+            ComboBox.SelectedIndex = 0;  
             createDialog();
             createMenu();
 
@@ -46,28 +46,69 @@ namespace mock_win
             this.timer.Tick += new EventHandler(timer_Tick);
             this.timer.Enabled = true;
 
-            
+            this.Spinner.MouseMove += new MouseEventHandler(CommonMouseMove);
+
+            Tree.AfterExpand += Tree_AfterExpand;
+            Tree.BeforeExpand += Tree_BeforeExpand;
+            Tree.AfterCollapse += Tree_AfterCollapse;
+            Tree.BeforeCollapse += Tree_BeforeCollapse;
         }
+
+        private void Tree_BeforeCollapse(object sender, TreeViewCancelEventArgs e)
+        {
+            if (e.Node.Text == "colors")
+            {
+                selectLabel.Text = "colors_collapse";
+            }
+        }
+
+        private void Tree_BeforeExpand(object sender, TreeViewCancelEventArgs e)
+        {
+            if (e.Node.Text == "colors")
+            {
+                selectLabel.Text = "colors_expand";
+            }
+        }
+
+        private void Tree_AfterCollapse(object sender, TreeViewEventArgs e)
+        {
+            if (e.Node.Text == "colors")
+            {
+                selectLabel.Text = "colors_collapse";
+            }
+        }
+
+        private void Tree_AfterExpand(object sender, TreeViewEventArgs e)
+        {
+            if (e.Node.Text == "colors")
+            {
+                selectLabel.Text = "colors_expand";
+            }
+        }
+
+        //private void TreeViewItem_Expanded(object sender, RoutedEventArgs e)
+        //{
+        //    TreeViewItem tvi = e.OriginalSource as TreeViewItem;
+        //    if (tvi != null)
+        //    {
+        //        MessageBox.Show(string.Format("TreeNode '{0}' was expanded", tvi.Header));
+        //    }
+        //}
 
         private void createMenu()
         {
-            MainMenu MainMenu = new MainMenu();
-            this.Menu = MainMenu;
-            menu = new MenuItem("Menu");
             menu2 = new MenuItem("Menu2");
             menuItem = new MenuItem("MenuItem");
+            menuSpace = new MenuItem("                                                                                                                                                                                                                                       ");
             menuItem2 = new MenuItem("MenuItem2");
             menuItem3 = new MenuItem("MenuItem3");
 
             menuItem.MenuItems.Add(menuItem2);
             menuItem2.MenuItems.Add(menuItem3);
 
-            MainMenu.MenuItems.Add(menu);
-            MainMenu.MenuItems.Add(menu2);
-            MainMenu.MenuItems.Add(menuItem);
+            this.Menu = new MainMenu(new MenuItem[] { menu2, menuItem, menuSpace });
 
-            menu.Click += new EventHandler(MClick);
-            menu.Select += new EventHandler(MSelect);
+            menuSpace.Click += new EventHandler(MClick);
 
             menuItem.Select += new EventHandler(MSelect);
             menuItem.Popup += new EventHandler(MPopup);
@@ -100,7 +141,7 @@ namespace mock_win
         {
             long timeDif = DateTime.UtcNow.Ticks / TimeSpan.TicksPerMillisecond - mouseTimeClick;
             mouseTimeClick = DateTime.UtcNow.Ticks / TimeSpan.TicksPerMillisecond;
-            CentralLabel.Text = ((MenuItem)sender).Text + "_click";
+            CentralLabel.Text = "Menu_click";
 
             int dx = Cursor.Position.X - mouseDownPos.X;
             int dy = Cursor.Position.Y - mouseDownPos.Y;
@@ -108,7 +149,7 @@ namespace mock_win
             {
                 if (timeDif <= 500)
                 {
-                    CentralLabel.Text = ((MenuItem)sender).Text + "_double_click";
+                    CentralLabel.Text = "Menu_double_click";
                 }
             }
             mouseDownPos = Cursor.Position;
@@ -130,15 +171,22 @@ namespace mock_win
                 sliderLabel.Text = "ScrollBar_" + listBox1.IndexFromPoint(point);
             }
 
-            if(Cursor.Position.X > Location.X + 7 &&
-               Cursor.Position.X < Location.X + 51 &&
-               Cursor.Position.Y > Location.Y + 29 &&
-               Cursor.Position.Y < Location.Y + 47)
+            moveUponRect(new Point(7,29), new Point(51,47), "Menu");
+            moveUponRect(new Point(52, 29), new Point(127, 47), "MenuItem");
+            moveUponRect(new Point(128, 29), new Point(600, 47), "Menu");
+        }
+
+        private void moveUponRect(Point leftUp, Point rightDown, string text)
+        {
+            if (Cursor.Position.X > Location.X + leftUp.X &&
+               Cursor.Position.X < Location.X + rightDown.X &&
+               Cursor.Position.Y > Location.Y + leftUp.Y &&
+               Cursor.Position.Y < Location.Y + rightDown.Y)
             {
                 if (cursorOnMainPos != Cursor.Position)
                 {
                     cursorOnMainPos = Cursor.Position;
-                    moveLabel.Text = "Menu_move";
+                    moveLabel.Text = text + "_move";
                 }
             }
         }

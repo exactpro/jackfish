@@ -699,6 +699,10 @@
             resources.ApplyResources(this.Spinner, "Spinner");
             this.Spinner.Name = "Spinner";
             this.Spinner.ValueChanged += new System.EventHandler(this.Spinner_ValueChanged);
+            this.Spinner.KeyDown += new System.Windows.Forms.KeyEventHandler(this.CommonKeyDown);
+            this.Spinner.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.CommonKeyPress);
+            this.Spinner.KeyUp += new System.Windows.Forms.KeyEventHandler(this.CommonKeyUp);
+            this.Spinner.MouseDown += new System.Windows.Forms.MouseEventHandler(this.CommonMouseDown);
             // 
             // TabPanel
             // 

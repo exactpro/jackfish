@@ -426,10 +426,19 @@ public class WinOperationExecutorJNA implements OperationExecutor<UIProxyJNA>
 	{
 		try
 		{
-			List<UIProxyJNA> elementsList = findComponents(component, WindowTreeScope.Descendants, WindowProperty.LocalizedControlTypeProperty, "list item");
-			if(elementsList.isEmpty())
+			List<UIProxyJNA> elementsList = Collections.emptyList();
+			String attribute = this.driver.elementAttribute(component, AttributeKind.TYPE_NAME);
+			if (attribute.equalsIgnoreCase("list"))
+			{
+				elementsList = findComponents(component, WindowTreeScope.Descendants, WindowProperty.LocalizedControlTypeProperty, "list item");
+			}
+			if (attribute.equalsIgnoreCase("tab"))
 			{
 				elementsList = findComponents(component, WindowTreeScope.Descendants, WindowProperty.LocalizedControlTypeProperty, "tab item");
+			}
+			if (attribute.equalsIgnoreCase("tree"))
+			{
+				elementsList = findComponents(component, WindowTreeScope.Descendants, WindowProperty.LocalizedControlTypeProperty, "tree item");
 			}
 			this.driver.doPatternCall(elementsList.get(index), WindowPattern.SelectionItemPattern, "Select", null, -1);
 			return true;
@@ -446,7 +455,25 @@ public class WinOperationExecutorJNA implements OperationExecutor<UIProxyJNA>
 	{
 		try
 		{
-			int[] itemId = findItem(component, selectedText);
+			int[] itemId;
+			String attribute = this.driver.elementAttribute(component, AttributeKind.TYPE_NAME);
+			if (attribute.equalsIgnoreCase("tree"))
+			{
+				List<String> split = new LinkedList<>(Arrays.asList(selectedText.split("/")));
+				itemId = component.getId();
+				for (int i = 0; i < split.size(); i++)
+				{
+					itemId = findItem(new UIProxyJNA(itemId), split.get(i));
+					if(i != split.size() - 1)
+					{
+						expandCollapse(new UIProxyJNA(itemId), true);
+					}
+				}
+			}
+			else
+			{
+				itemId = findItem(component, selectedText);
+			}
 			this.driver.doPatternCall(new UIProxyJNA(itemId), WindowPattern.SelectionItemPattern, "Select", null, -1);
 			return true;
 		}

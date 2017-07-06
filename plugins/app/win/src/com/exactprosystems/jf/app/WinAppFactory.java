@@ -63,7 +63,7 @@ public class WinAppFactory implements IApplicationFactory
         info.addTypes(ControlKind.Table,        ControlType.Table.name(), ControlType.DataGrid.name());
         info.addTypes(ControlKind.TabPanel,     ControlType.Tab.name());
         info.addTypes(ControlKind.TextBox,      ControlType.Edit.name(), ControlType.Document.name());
-        info.addTypes(ControlKind.Menu,         ControlType.Menu.name());
+        info.addTypes(ControlKind.Menu,         ControlType.Menu.name(), ControlType.MenuBar.name());
         info.addTypes(ControlKind.Wait,         ControlType.Wait.name());
         info.addTypes(ControlKind.ToggleButton, ControlType.Button.name());
         info.addTypes(ControlKind.ListView,     ControlType.List.name(), ControlType.DataGrid.name());
@@ -71,6 +71,8 @@ public class WinAppFactory implements IApplicationFactory
         info.addTypes(ControlKind.ScrollBar,    ControlType.ScrollBar.name());
         info.addTypes(ControlKind.Slider,       ControlType.Slider.name());
         info.addTypes(ControlKind.TreeItem,     ControlType.TreeItem.name());
+        info.addTypes(ControlKind.Tree,     	ControlType.Tree.name());
+        info.addTypes(ControlKind.Spinner,     	ControlType.Spinner.name());
 
         info.addExcludes(ControlKind.Menu,      OperationKind.KEY_DOWN, OperationKind.KEY_UP, OperationKind.PRESS, OperationKind.EXPAND, OperationKind.COLLAPSE);
         info.addExcludes(ControlKind.MenuItem,  OperationKind.KEY_DOWN, OperationKind.KEY_UP, OperationKind.PRESS);

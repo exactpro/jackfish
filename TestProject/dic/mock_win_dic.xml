@@ -1,54 +1,52 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <dictionary>
     <window name="Main">
-        <self>
-            <any id="owner" uid="" xpath="/Window" name=""/>
-        </self>
+        <self/>
         <onOpen/>
         <run>
-            <button id="Button" uid="Button" owner="owner" class="" name="" text="" addition="Many"/>
-            <textBox id="TextBox" uid="TextBox" owner="owner" class="" name="" text="" addition="Many"/>
-            <table id="Table" uid="Table" owner="owner" class="" name="" text="" addition="Many"/>
-            <table id="Table1" uid="Table1" owner="owner" class="" name="" text="" addition="Many"/>
-            <checkBox id="CheckBox" uid="CheckBox" owner="owner" class="" text="" addition="Many"/>
-            <slider id="Slider" uid="Slider" owner="owner" class="" addition="Many"/>
-            <scrollBar id="ScrollBar" uid="" xpath=".//ScrollBar[@uid=&amp;quot;Vertical ScrollBar&amp;quot;]" owner="owner" class="" addition="Many"/>
-            <comboBox id="ComboBox" uid="ComboBox" owner="owner" class="" name="" action="" addition="Many"/>
-            <radioButton id="RadioButton" xpath=".//RadioButton[contains(@uid,&amp;quot;Green&amp;quot;)]" owner="owner" class="" action="" text="" addition="Many"/>
-            <tree id="Tree" uid="" xpath=".//Tree" owner="owner" class="" addition="Many"/>
-            <tabPanel id="TabPanel" uid="TabPanel" owner="owner" class="" addition="Many"/>
-            <label id="moveLabel" uid="moveLabel" owner="owner" class="" name="" text="" addition="Many"/>
-            <checkBox id="ToggleButton" uid="ToggleButton" owner="owner" class="" name="" addition="Many"/>
-            <progressBar id="ProgressBar" uid="ProgressBar" owner="owner" class="" name="" addition="Many"/>
-            <panel id="Panel" uid="Panel" owner="owner" class="" name="" addition="Many"/>
+            <button id="Button" uid="" class="" name="Button" text="" addition="Many"/>
+            <textBox id="TextBox" uid="TextBox" class="" name="" text="" addition="Many"/>
+            <table id="Table" uid="Table" class="" name="" text="" addition="Many"/>
+            <table id="Table1" uid="Table1" class="" name="" text="" addition="Many"/>
+            <checkBox id="CheckBox" uid="CheckBox" class="" text="" addition="Many"/>
+            <slider id="Slider" uid="Slider" class="" addition="Many"/>
+            <scrollBar id="ScrollBar" uid="Vertical ScrollBar" xpath="" class="" addition="Many"/>
+            <comboBox id="ComboBox" uid="ComboBox" class="" name="" action="" addition="Many"/>
+            <radioButton id="RadioButton" uid="Green" xpath="" class="" action="" text="" addition="Many"/>
+            <tree id="Tree" uid="Tree" xpath="" class="" addition="Many"/>
+            <tabPanel id="TabPanel" uid="TabPanel" class="" addition="Many"/>
+            <label id="moveLabel" uid="moveLabel" class="" name="" text="" addition="Many"/>
+            <checkBox id="ToggleButton" uid="ToggleButton" class="" name="" addition="Many"/>
+            <progressBar id="ProgressBar" uid="ProgressBar" class="" name="" addition="Many"/>
+            <panel id="Panel" uid="Panel" class="" name="" addition="Many"/>
             <dialog id="Dialog" uid="" xpath="" name="Dialog" title="" addition="Many"/>
-            <listView id="List" uid="List" owner="owner" class="" addition="Many"/>
-            <menu id="Menu" uid="" xpath=".//MenuItem[@name=&amp;quot;Menu&amp;quot;]" owner="owner" class="" name="" action="" text="" addition="Many"/>
-            <menuItem id="MenuItem" xpath=".//MenuItem[@name=&amp;quot;MenuItem&amp;quot;]" owner="owner" class="" name="" action="" text="" addition="Many"/>
-            <treeItem id="TreeItem" owner="owner"/>
-            <toolTip id="Tooltip" owner="owner" text="" addition="Many"/>
-            <any id="Any" uid="Any" owner="owner" class="" name="" action="" text="" addition="Many"/>
-            <wait id="Wait" owner="owner" addition="Many"/>
-            <label id="Label" uid="CentralLabel" owner="owner" class="" name="" text="" addition="Many"/>
-            <button id="DialogCloseButton" owner="owner" name="Close"/>
-            <button id="buttonShowArea" owner="owner" name="showButton" addition="Many"/>
-            <button id="buttonHideArea" owner="owner" name="hideButton" addition="Many"/>
+            <listView id="List" uid="List" class="" addition="Many"/>
+            <menu id="Menu" uid="Main" xpath="" class="" name="Application" action="" text="" addition="Many"/>
+            <menuItem id="MenuItem" xpath="" class="" name="MenuItem" action="" text="" addition="Many"/>
+            <treeItem id="TreeItem"/>
+            <toolTip id="Tooltip" text="" addition="Many"/>
+            <any id="Any" uid="Any" class="" name="" action="" text="" addition="Many"/>
+            <wait id="Wait" addition="Many"/>
+            <label id="Label" uid="CentralLabel" class="" name="" text="" addition="Many"/>
+            <button id="DialogCloseButton" name="Close"/>
+            <button id="buttonShowArea" name="showButton" addition="Many"/>
+            <button id="buttonHideArea" name="hideButton" addition="Many"/>
             <button id="countButton" owner="" name="countButton"/>
             <button id="countButtonClear" owner="" name="countButtonClear"/>
             <label id="countLabel" uid="countLabel" owner="" name=""/>
             <label id="pressLabel" uid="pressLabel" owner="" name=""/>
             <label id="downUpLabel" uid="downUpLabel" owner="" name=""/>
             <button id="invisibleButton" name="invisibleButton" visibility="Visible"/>
-            <button id="notEnabledButton" owner="owner" name="notEnabledButton"/>
+            <button id="notEnabledButton" name="notEnabledButton"/>
             <label id="sliderLabel" uid="sliderLabel" name="" addition="Many"/>
-            <button id="colorButton" owner="owner" name="colorButton"/>
+            <button id="colorButton" name="colorButton"/>
             <label id="pushLabel" uid="pushLabel" name="" addition="Many"/>
-            <label id="centralLabel" uid="CentralLabel" owner="owner" class="" name="" text="" addition="Many"/>
+            <label id="centralLabel" uid="CentralLabel" class="" name="" text="" addition="Many"/>
             <label id="checkedLabel" uid="checkedLabel" owner="" name=""/>
-            <menu id="Menu2" uid="" xpath=".//MenuItem[@name=&amp;quot;Menu2&amp;quot;]" owner="owner" class="" name="" action="" text=""/>
             <image id="Image" uid="" owner="" addition="Many" weak="true"/>
-            <splitter id="Splitter" owner="owner" class="" name="" addition="Many" weak="true"/>
-            <spinner id="Spinner" uid="Spinner" xpath=".//Spinner[@uid=&amp;quot;Spinner&amp;quot;]" owner="owner" class="" name="" addition="Many"/>
+            <menuItem id="Menu2" uid="" xpath="" class="" name="Menu2" action="" text=""/>
+            <splitter id="Splitter" class="" name="" addition="Many" weak="true"/>
+            <spinner id="Spinner" uid="Spinner" xpath="" class="" name="" addition="Many"/>
             <label id="selectLabel" uid="selectLabel" owner="" name=""/>
         </run>
         <onClose/>
@@ -279,20 +277,6 @@
         <onClose/>
         <close/>
     </window>
-    <window name="DialogForTestWaitWithRef">
-        <self/>
-        <onOpen>
-            <wait owner="owner" ref="buttonShowArea" addition="WaitToAppear" timeout="5000"/>
-        </onOpen>
-        <run>
-            <button id="buttonShowArea" owner="owner" name="showButton"/>
-            <button id="buttonHideArea" owner="owner" name="hideButton"/>
-        </run>
-        <onClose>
-            <wait owner="owner" ref="buttonHideArea" addition="WaitToDisappear" timeout="5000"/>
-        </onClose>
-        <close/>
-    </window>
     <window name="DialogForTestWaitWithoutRef">
         <self/>
         <onOpen>
@@ -304,6 +288,20 @@
         </run>
         <onClose>
             <wait uid="" owner="owner" name="hideButton" addition="WaitToDisappear" timeout="5000"/>
+        </onClose>
+        <close/>
+    </window>
+    <window name="DialogForTestWaitWithRef">
+        <self/>
+        <onOpen>
+            <wait owner="owner" ref="buttonShowArea" addition="WaitToAppear" timeout="5000"/>
+        </onOpen>
+        <run>
+            <button id="buttonShowArea" owner="owner" name="showButton"/>
+            <button id="buttonHideArea" owner="owner" name="hideButton"/>
+        </run>
+        <onClose>
+            <wait owner="owner" ref="buttonHideArea" addition="WaitToDisappear" timeout="5000"/>
         </onClose>
         <close/>
     </window>
