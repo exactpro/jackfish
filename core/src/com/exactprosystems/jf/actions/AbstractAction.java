@@ -25,6 +25,7 @@ import com.exactprosystems.jf.functions.HelpKind;
 import com.exactprosystems.jf.documents.matrix.parser.listeners.IMatrixListener;
 import org.apache.log4j.Logger;
 
+import javax.lang.model.type.NullType;
 import java.lang.reflect.Field;
 import java.util.*;
 import java.util.Map.Entry;
@@ -212,7 +213,13 @@ public abstract class AbstractAction implements Cloneable
 
     public final String actionSuffix()
     {
-        return this.getClass().getAnnotation(ActionAttribute.class).suffix();
+
+		ActionAttribute annotation = this.getClass().getAnnotation(ActionAttribute.class);
+		if (annotation.outputType() == NullType.class)
+		{
+			return "";
+		}
+		return annotation.suffix();
     }
     
     public final boolean isAdditionFieldAllowed()

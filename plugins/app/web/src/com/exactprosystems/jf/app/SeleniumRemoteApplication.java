@@ -162,38 +162,46 @@ public class SeleniumRemoteApplication extends RemoteApplication
     @Override
     public void setProperty(String name, Serializable prop) throws RemoteException
     {
-        if (this.driver != null)
-        {
-            switch (name)
-            {
-                case WebAppFactory.propertyAddCookie:
-                    if (prop instanceof CookieBean)
-                    {
-                        CookieBean bean = (CookieBean)prop;
-                        Cookie cookie = new Cookie.Builder(bean.name, bean.value)
-                        .path(bean.path)
-                        .domain(bean.domain)
-                        .expiresOn(bean.expiry)
-                        .isSecure(bean.isSecure)
-                        .isHttpOnly(bean.isHttpOnly)
-                        .build();
-                        this.driver.manage().addCookie(cookie);
-                    }
-                    break;
-                   
-                case WebAppFactory.propertyRemoveCookie:
-                    this.driver.manage().deleteCookieNamed(prop.toString());
-                    break;
-            
-                case WebAppFactory.propertyRemoveAllCookies:
-                    this.driver.manage().deleteAllCookies();
-                    break;
-                    
-                case WebAppFactory.propertyUrlName:
-                    this.driver.get(prop.toString());
-                    break;
-            }
-        }
+		try
+		{
+			if (this.driver != null)
+			{
+				switch (name)
+				{
+					case WebAppFactory.propertyAddCookie:
+						if (prop instanceof CookieBean)
+						{
+							CookieBean bean = (CookieBean)prop;
+							Cookie cookie = new Cookie.Builder(bean.name, bean.value)
+									.path(bean.path)
+									.domain(bean.domain)
+									.expiresOn(bean.expiry)
+									.isSecure(bean.isSecure)
+									.isHttpOnly(bean.isHttpOnly)
+									.build();
+							this.driver.manage().addCookie(cookie);
+						}
+						break;
+
+					case WebAppFactory.propertyRemoveCookie:
+						this.driver.manage().deleteCookieNamed(prop.toString());
+						break;
+
+					case WebAppFactory.propertyRemoveAllCookies:
+						this.driver.manage().deleteAllCookies();
+						break;
+
+					case WebAppFactory.propertyUrlName:
+						this.driver.get(prop.toString());
+						break;
+				}
+			}
+		}
+		catch (Exception e)
+		{
+			logger.error(e.getMessage(), e);
+			throw e;
+		}
     }
 
 	

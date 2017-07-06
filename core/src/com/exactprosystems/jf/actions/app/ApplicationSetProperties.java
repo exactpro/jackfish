@@ -8,16 +8,7 @@
 
 package com.exactprosystems.jf.actions.app;
 
-import java.io.Serializable;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-
-import com.exactprosystems.jf.actions.AbstractAction;
-import com.exactprosystems.jf.actions.ActionAttribute;
-import com.exactprosystems.jf.actions.ActionFieldAttribute;
-import com.exactprosystems.jf.actions.ActionGroups;
-import com.exactprosystems.jf.actions.ReadableValue;
+import com.exactprosystems.jf.actions.*;
 import com.exactprosystems.jf.api.app.AppConnection;
 import com.exactprosystems.jf.api.app.IApplication;
 import com.exactprosystems.jf.api.app.IRemoteApplication;
@@ -30,6 +21,9 @@ import com.exactprosystems.jf.documents.matrix.parser.Parameter;
 import com.exactprosystems.jf.documents.matrix.parser.Parameters;
 import com.exactprosystems.jf.documents.matrix.parser.items.TypeMandatory;
 import com.exactprosystems.jf.functions.HelpKind;
+
+import java.io.Serializable;
+import java.util.List;
 
 @ActionAttribute(
 		group 				= ActionGroups.App, 
@@ -92,9 +86,13 @@ public class ApplicationSetProperties extends AbstractAction
 		        Serializable prop = (Serializable)parameter.getValue();
     			service.setProperty(parameter.getName(), prop);
 		    }
-		    else
+		    else if (parameter.getValue() == null)
+			{
+				service.setProperty(parameter.getName(), null);
+			}
+			else
 		    {
-		        super.setError("Parameter " + parameter.getName() + " should be Serializable type.", ErrorKind.WRONG_PARAMETERS);
+		        super.setError("Parameter " + parameter.getName() + " should be Serializable type or empty.", ErrorKind.WRONG_PARAMETERS);
 		        return;
 		    }
 		}
