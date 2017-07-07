@@ -46,5 +46,17 @@ namespace mock_win.Properties {
                 this["dfdf"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("30")]
+        public decimal eee {
+            get {
+                return ((decimal)(this["eee"]));
+            }
+            set {
+                this["eee"] = value;
+            }
+        }
     }
 }

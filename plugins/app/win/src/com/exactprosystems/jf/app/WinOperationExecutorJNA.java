@@ -428,7 +428,7 @@ public class WinOperationExecutorJNA implements OperationExecutor<UIProxyJNA>
 		{
 			List<UIProxyJNA> elementsList = Collections.emptyList();
 			String attribute = this.driver.elementAttribute(component, AttributeKind.TYPE_NAME);
-			if (attribute.equalsIgnoreCase("list"))
+			if (attribute.equalsIgnoreCase("list") || attribute.equalsIgnoreCase("combobox"))
 			{
 				elementsList = findComponents(component, WindowTreeScope.Descendants, WindowProperty.LocalizedControlTypeProperty, "list item");
 			}

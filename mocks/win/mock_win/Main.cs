@@ -9,6 +9,7 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Automation;
+using System.Windows.Automation.Provider;
 using System.Windows.Forms;
 
 namespace mock_win
@@ -25,10 +26,12 @@ namespace mock_win
         MenuItem menu2;
         MenuItem menuItem2;
         MenuItem menuSpace;
+        MenuItem menuSpace1;
         MenuItem menuItem3;
         Point cursorOnMainPos;
         bool flagClickMenuItem = false;
         bool flagPopup = false;
+        MySpin mySpinner;
 
         public Main()
         {
@@ -40,74 +43,104 @@ namespace mock_win
             ComboBox.SelectedIndex = 0;  
             createDialog();
             createMenu();
+            createSpinner();
 
             this.timer = new Timer();
             this.timer.Interval = 100;
             this.timer.Tick += new EventHandler(timer_Tick);
             this.timer.Enabled = true;
 
-            this.Spinner.MouseMove += new MouseEventHandler(CommonMouseMove);
-
-            Tree.AfterExpand += Tree_AfterExpand;
-            Tree.BeforeExpand += Tree_BeforeExpand;
-            Tree.AfterCollapse += Tree_AfterCollapse;
-            Tree.BeforeCollapse += Tree_BeforeCollapse;
+            //this.Spinner.MouseMove += new MouseEventHandler(CommonMouseMove);
+            this.Spinner.IsAccessible = true;
         }
 
-        private void Tree_BeforeCollapse(object sender, TreeViewCancelEventArgs e)
+        private void createSpinner()
         {
-            if (e.Node.Text == "colors")
+            mySpinner = new MySpin();
+            mySpinner.ValueChanged += new EventHandler(this.Spinner_ValueChanged);
+            mySpinner.KeyDown += new KeyEventHandler(this.CommonKeyDown);
+            mySpinner.KeyPress += new KeyPressEventHandler(this.CommonKeyPress);
+            mySpinner.KeyUp += new KeyEventHandler(this.CommonKeyUp);
+            mySpinner.MouseDown += new MouseEventHandler(this.CommonMouseDown);
+            Controls.Add(mySpinner);
+        }
+
+        public class MySpin : NumericUpDown, I​Range​Value​Provider
+        {
+            public MySpin()
             {
-                selectLabel.Text = "colors_collapse";
+                this.AccessibleName = "Spinner";
+            }
+
+            public bool IsReadOnly
+            {
+                get
+                {
+                    return false;
+                }
+            }
+
+            public double LargeChange
+            {
+                get
+                {
+                    return 1;
+                }
+            }
+
+            public double SmallChange
+            {
+                get
+                {
+                    return 1;
+                }
+            }
+
+            double IRangeValueProvider.Maximum
+            {
+                get
+                {
+                    return 150;
+                }
+            }
+
+            double IRangeValueProvider.Minimum
+            {
+                get
+                {
+                    return 0;
+                }
+            }
+
+            double IRangeValueProvider.Value
+            {
+                get
+                {
+                    return Convert.ToDouble(this.Value);
+                }
+            }
+
+            public void SetValue(double value)
+            {
+                this.Value = Convert.ToDecimal(value);
             }
         }
-
-        private void Tree_BeforeExpand(object sender, TreeViewCancelEventArgs e)
-        {
-            if (e.Node.Text == "colors")
-            {
-                selectLabel.Text = "colors_expand";
-            }
-        }
-
-        private void Tree_AfterCollapse(object sender, TreeViewEventArgs e)
-        {
-            if (e.Node.Text == "colors")
-            {
-                selectLabel.Text = "colors_collapse";
-            }
-        }
-
-        private void Tree_AfterExpand(object sender, TreeViewEventArgs e)
-        {
-            if (e.Node.Text == "colors")
-            {
-                selectLabel.Text = "colors_expand";
-            }
-        }
-
-        //private void TreeViewItem_Expanded(object sender, RoutedEventArgs e)
-        //{
-        //    TreeViewItem tvi = e.OriginalSource as TreeViewItem;
-        //    if (tvi != null)
-        //    {
-        //        MessageBox.Show(string.Format("TreeNode '{0}' was expanded", tvi.Header));
-        //    }
-        //}
 
         private void createMenu()
         {
             menu2 = new MenuItem("Menu2");
             menuItem = new MenuItem("MenuItem");
-            menuSpace = new MenuItem("                                                                                                                                                                                                                                       ");
+            menuSpace = new MenuItem("                                                                     ");
+            menuSpace1 = new MenuItem("                                                                    ");
             menuItem2 = new MenuItem("MenuItem2");
             menuItem3 = new MenuItem("MenuItem3");
 
             menuItem.MenuItems.Add(menuItem2);
             menuItem2.MenuItems.Add(menuItem3);
 
-            this.Menu = new MainMenu(new MenuItem[] { menu2, menuItem, menuSpace });
+            this.Menu = new MainMenu(new MenuItem[] { menu2, menuItem, menuSpace1, menuSpace });
 
+            menu2.Click += new EventHandler(MClick);
             menuSpace.Click += new EventHandler(MClick);
 
             menuItem.Select += new EventHandler(MSelect);
@@ -171,17 +204,28 @@ namespace mock_win
                 sliderLabel.Text = "ScrollBar_" + listBox1.IndexFromPoint(point);
             }
 
-            moveUponRect(new Point(7,29), new Point(51,47), "Menu");
-            moveUponRect(new Point(52, 29), new Point(127, 47), "MenuItem");
-            moveUponRect(new Point(128, 29), new Point(600, 47), "Menu");
+            if(Tree.Nodes.Find("red", true)[0].IsVisible == true)
+            {
+                selectLabel.Text = "colors_expand";
+            }
+            else
+            {
+                selectLabel.Text = "colors_collapse";
+            }
+
+            moveUponRect(new Point(Location.X + 7, Location.Y + 29), new Point(Location.X + 51, Location.Y + 47), "Menu");
+            moveUponRect(new Point(Location.X + 52, Location.Y + 29), new Point(Location.X + 127, Location.Y + 47), "MenuItem");
+            moveUponRect(new Point(Location.X + 128, Location.Y + 29), new Point(Location.X + 600, Location.Y + 47), "Menu");
+            moveUponRect(new Point(Spinner.Location.X + Location.X + 7, Location.Y + Spinner.Location.Y + 47)
+                , new Point(Spinner.Location.X + Location.X + 7 + Spinner.Size.Width, Spinner.Location.Y + Location.Y + 47 + Spinner.Size.Height), "Spinner");
         }
 
         private void moveUponRect(Point leftUp, Point rightDown, string text)
         {
-            if (Cursor.Position.X > Location.X + leftUp.X &&
-               Cursor.Position.X < Location.X + rightDown.X &&
-               Cursor.Position.Y > Location.Y + leftUp.Y &&
-               Cursor.Position.Y < Location.Y + rightDown.Y)
+            if (Cursor.Position.X > leftUp.X &&
+               Cursor.Position.X < rightDown.X &&
+               Cursor.Position.Y > leftUp.Y &&
+               Cursor.Position.Y < rightDown.Y)
             {
                 if (cursorOnMainPos != Cursor.Position)
                 {
@@ -631,6 +675,16 @@ namespace mock_win
 
         private void Spinner_ValueChanged(object sender, EventArgs e)
         {
+        }
+
+        private void dateTimePicker1_ValueChanged(object sender, EventArgs e)
+        {
+            Console.WriteLine("cahnge");
+        }
+
+        private void dateTimePicker1_RegionChanged(object sender, EventArgs e)
+        {
+            Console.WriteLine("range");
         }
     }
 }
