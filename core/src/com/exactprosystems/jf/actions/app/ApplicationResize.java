@@ -8,13 +8,10 @@
 
 package com.exactprosystems.jf.actions.app;
 
-import com.exactprosystems.jf.actions.AbstractAction;
-import com.exactprosystems.jf.actions.ActionAttribute;
-import com.exactprosystems.jf.actions.ActionFieldAttribute;
-import com.exactprosystems.jf.actions.ActionGroups;
-import com.exactprosystems.jf.actions.DefaultValuePool;
+import com.exactprosystems.jf.actions.*;
 import com.exactprosystems.jf.api.app.AppConnection;
 import com.exactprosystems.jf.api.app.IApplication;
+import com.exactprosystems.jf.api.error.ErrorKind;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.report.ReportBuilder;
 import com.exactprosystems.jf.documents.config.Context;
@@ -68,16 +65,74 @@ public class ApplicationResize extends AbstractAction
 	protected Boolean normal;
 
 	@Override
-	public void doRealAction(Context context, ReportBuilder report, Parameters parameters, AbstractEvaluator evaluator) throws Exception 
+	public void doRealAction(Context context, ReportBuilder report, Parameters parameters, AbstractEvaluator evaluator) throws Exception
 	{
+		if (this.minimize == null && this.maximize == null && this.normal == null && this.width == null && this.height == null)
+		{
+			setError("The must be filled", ErrorKind.WRONG_PARAMETERS);
+			return;
+		}
+		if (checkBoolean(maximizeName, this.maximize, parameters)
+				|| checkBoolean(minimizeName, this.minimize, parameters)
+				|| checkBoolean(normalName, this.normal, parameters)
+				)
+		{
+			return;
+		}
+
+		if (checkInt(widthName, this.width, parameters) || checkInt(heightName, this.height, parameters))
+		{
+			return;
+		}
+
+		if ((this.maximize != null && this.maximize == this.minimize)
+				|| (this.normal != null && this.maximize == this.normal)
+				|| (this.minimize != null && this.minimize == this.normal))
+		{
+			setError(String.format("Need set on the parameters [%s,%s,%s]", maximizeName, minimizeName, normalName), ErrorKind.WRONG_PARAMETERS);
+			return;
+		}
+
+		if ((this.maximize != null || this.minimize != null || this.normal != null) && (this.height != null || this.width != null))
+		{
+			setError("Need set state or width, but no both together", ErrorKind.WRONG_PARAMETERS);
+			return;
+		}
+
+		if ((this.height == null && this.width != null) || (this.height != null && this.width == null))
+		{
+			setError("Need set both the parameters " + widthName + " and " + heightName, ErrorKind.WRONG_PARAMETERS);
+			return;
+		}
+
 		IApplication app = connection.getApplication();
 		app.service().resize(
-				this.height 	== null ? 0 : this.height.intValue(), 
-				this.width 		== null ? 0 : this.width.intValue(), 
-				this.maximize 	== null ? false : this.maximize.booleanValue(),
-				this.minimize 	== null ? false : this.minimize.booleanValue(),
-				this.normal 	== null ? false : this.normal.booleanValue()
+				this.height 	== null ? 0 : this.height,
+				this.width 		== null ? 0 : this.width,
+				this.maximize 	== null ? false : this.maximize,
+				this.minimize 	== null ? false : this.minimize,
+				this.normal 	== null ? false : this.normal
 		);
 		super.setResult(null);
+	}
+
+	private boolean checkBoolean(String keyName, Object value, Parameters parameters)
+	{
+		return check(keyName, value, parameters, "Parameter " + keyName + " must be true or false");
+	}
+
+	private boolean checkInt(String keyName, Object value, Parameters parameters)
+	{
+		return check(keyName, value, parameters, "Parameter " + keyName + " must be from 0 to " + Integer.MAX_VALUE);
+	}
+
+	private boolean check(String keyName, Object value, Parameters parameters, String message)
+	{
+		if (parameters.getByName(keyName) != null && value == null)
+		{
+			setError(message, ErrorKind.WRONG_PARAMETERS);
+			return true;
+		}
+		return false;
 	}
 }
