@@ -180,7 +180,7 @@ public class XpathWizard extends AbstractWizard
 
 		this.xmlTreeView = new XmlTreeView();
 		
-		this.xmlTreeView.setMarkersVisible(true);
+		this.xmlTreeView.setMarkersVisible(false);
 
 		this.imageViewWithScale = new ImageViewWithScale();
 		this.imageViewWithScale.setOnRectangleClick(rectangle -> this.xmlTreeView.selectItem(rectangle));
@@ -308,14 +308,14 @@ public class XpathWizard extends AbstractWizard
     {
         try
         {
-            if (this.currentConnection == null)
+            if (this.currentConnection == null && !this.currentConnection.isGood())
             {
-                DialogsHelper.showError("Esteblish connection at first");
+                DialogsHelper.showError("Application is not started.\nStart it before call the wizard.");
                 return false;
             }
             
             IControl self = this.currentWindow.getSelfControl();
-            WizardHelper.init(this.currentConnection, self, 
+            WizardHelper.gainImageAndDocument(this.currentConnection, self, 
             (image, doc) ->
             {
                 this.imageViewWithScale.displayImage(image);
@@ -398,15 +398,6 @@ public class XpathWizard extends AbstractWizard
                 {
                     this.imageViewWithScale.showRectangle(newItem.getRectangle(), newMarker, newItem.getText(), true);
                 }
-		    }
-		});
-
-		this.xmlTreeView.setOnMarkerChanged((item, oldMarker, newMarker, selected) -> 
-		{
-		    if (item != null)
-		    {
-                this.imageViewWithScale.hideRectangle(item.getRectangle(), oldMarker);
-                this.imageViewWithScale.showRectangle(item.getRectangle(), newMarker, item.getText(), selected);
 		    }
 		});
 	}

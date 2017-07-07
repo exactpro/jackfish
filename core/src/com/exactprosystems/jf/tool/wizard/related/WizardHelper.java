@@ -33,7 +33,7 @@ public class WizardHelper
     {
     }
 
-    public static void init(AppConnection currentConnection, IControl self,
+    public static void gainImageAndDocument(AppConnection currentConnection, IControl self,
             BiConsumer<BufferedImage, Document> onSuccess, Consumer<Throwable> onError)
     {
         Thread thread = new Thread(() ->
