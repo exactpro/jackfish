@@ -111,13 +111,13 @@ public class XmlTreeView extends AnchorPane
 		    {
 		        // not selected
 		        XmlItem oldItem = oldValue == null ? null : oldValue.getValue(); 
-                MarkerStyle oldStyle = selectionStyle(oldItem);
+                MarkerStyle oldMarker = selectionStyle(oldItem);
 		        
 		        // selected
 		        XmlItem newItem = newValue == null ? null : newValue.getValue();
-                MarkerStyle newStyle = selectionStyle(newItem);
+                MarkerStyle newMarker = selectionStyle(newItem);
 		        
-		        this.onSelectionChanged.changed(oldItem, oldStyle, newItem, newStyle);
+		        this.onSelectionChanged.changed(oldItem, oldMarker, newItem, newMarker);
 		    }
 		});
 	

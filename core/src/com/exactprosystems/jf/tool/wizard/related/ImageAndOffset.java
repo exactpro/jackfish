@@ -2,6 +2,7 @@ package com.exactprosystems.jf.tool.wizard.related;
 
 import java.awt.image.BufferedImage;
 
+@Deprecated
 public class ImageAndOffset
 {
 	public ImageAndOffset(BufferedImage image, int offsetX, int offsetY)

@@ -14,6 +14,7 @@ import java.util.function.Supplier;
 import javafx.concurrent.Service;
 import javafx.concurrent.Task;
 
+@Deprecated
 public class JfService<T> extends Service<T>
 {
     private Supplier<T> resultSupplier;

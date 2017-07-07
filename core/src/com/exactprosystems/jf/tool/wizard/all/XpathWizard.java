@@ -10,17 +10,13 @@ package com.exactprosystems.jf.tool.wizard.all;
 
 import com.exactprosystems.jf.api.app.AppConnection;
 import com.exactprosystems.jf.api.app.IControl;
-import com.exactprosystems.jf.api.app.IRemoteApplication;
 import com.exactprosystems.jf.api.app.IWindow.SectionKind;
-import com.exactprosystems.jf.api.app.Locator;
-import com.exactprosystems.jf.api.common.Converter;
 import com.exactprosystems.jf.api.common.IContext;
 import com.exactprosystems.jf.api.error.JFRemoteException;
 import com.exactprosystems.jf.api.wizard.WizardAttribute;
 import com.exactprosystems.jf.api.wizard.WizardCategory;
 import com.exactprosystems.jf.api.wizard.WizardCommand;
 import com.exactprosystems.jf.api.wizard.WizardManager;
-import com.exactprosystems.jf.common.utils.JfService;
 import com.exactprosystems.jf.common.utils.XpathUtils;
 import com.exactprosystems.jf.documents.guidic.Section;
 import com.exactprosystems.jf.documents.guidic.Window;
@@ -36,8 +32,8 @@ import com.exactprosystems.jf.tool.dictionary.DictionaryFx;
 import com.exactprosystems.jf.tool.helpers.DialogsHelper;
 import com.exactprosystems.jf.tool.wizard.AbstractWizard;
 import com.exactprosystems.jf.tool.wizard.CommandBuilder;
-import com.exactprosystems.jf.tool.wizard.related.ImageAndOffset;
-import javafx.concurrent.Service;
+import com.exactprosystems.jf.tool.wizard.related.WizardHelper;
+
 import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
@@ -48,10 +44,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 
 import java.awt.*;
-import java.awt.image.BufferedImage;
 import java.util.List;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 import java.util.function.Supplier;
 import java.util.stream.IntStream;
 
@@ -115,11 +108,6 @@ public class XpathWizard extends AbstractWizard
     private Section                            currentSection    = null;
     private AbstractControl                    currentControl    = null;
 
-    private ExecutorService                    executor          = null;
-    private Service<ImageAndOffset>            imageService      = null;
-    private Service<Document>                  documentService   = null;
-
-    private volatile ImageAndOffset            imageAndOffset    = null;
     private volatile Document                  document          = null;
     private volatile Node                      currentNode       = null;
 
@@ -136,7 +124,6 @@ public class XpathWizard extends AbstractWizard
 
     public XpathWizard()
     {
-        this.executor = Executors.newFixedThreadPool(1);
     }
 
     @Override
@@ -301,7 +288,7 @@ public class XpathWizard extends AbstractWizard
         }
         catch (Exception e)
         {
-            e.printStackTrace();
+            DialogsHelper.showError(e.getMessage());
         }
         
         AbstractControl replace = copy;
@@ -321,7 +308,6 @@ public class XpathWizard extends AbstractWizard
     {
         try
         {
-                
             if (this.currentConnection == null)
             {
                 DialogsHelper.showError("Esteblish connection at first");
@@ -329,70 +315,25 @@ public class XpathWizard extends AbstractWizard
             }
             
             IControl self = this.currentWindow.getSelfControl();
-            Locator selfLocator = self == null ? null : self.locator();
-            IRemoteApplication service = this.currentConnection.getApplication().service();
-            
-            // get picture
-            this.imageService = new JfService<ImageAndOffset>(this.executor, 
-                    () -> Common.tryCatch(() ->
-                    {
-                        Rectangle rectangle = service.getRectangle(null, selfLocator);
-                        BufferedImage image = service.getImage(null, selfLocator).getImage();
-                        return new ImageAndOffset(image, rectangle.x, rectangle.y);
-                    }, "Error on getting image", null));
-    
-    
-            this.imageService.setOnSucceeded(event ->
+            WizardHelper.init(this.currentConnection, self, 
+            (image, doc) ->
             {
-                this.imageAndOffset = (ImageAndOffset) event.getSource().getValue();
-                this.imageViewWithScale.displayImage(this.imageAndOffset.image);
-            });
-    
-            this.imageService.setOnFailed(event ->
+                this.imageViewWithScale.displayImage(image);
+
+                this.document = doc;
+                this.xmlTreeView.displayDocument(this.document);
+                List<Rectangle> list = XpathUtils.collectAllRectangles(this.document);
+                this.imageViewWithScale.setListForSearch(list);
+            }, 
+            ex ->
             {
-                Throwable exception = event.getSource().getException();
-                String message = exception.getMessage();
-                if (exception.getCause() instanceof JFRemoteException)
+                String message = ex.getMessage();
+                if (ex.getCause() instanceof JFRemoteException)
                 {
-                    message = ((JFRemoteException) exception.getCause()).getErrorKind().toString();
+                    message = ((JFRemoteException) ex.getCause()).getErrorKind().toString();
                 }
                 DialogsHelper.showError(message);
             });
-    
-            // get XML document
-            this.documentService = new JfService<Document>(this.executor, 
-                    () -> Common.tryCatch(() -> 
-                    { 
-                        byte[] treeBytes = service.getTreeBytes(selfLocator);
-                        return Converter.convertByteArrayToXmlDocument(treeBytes);
-                    }, "Error on document getting", null));
-            this.documentService.setOnSucceeded(event ->
-            {
-                this.document = (Document) event.getSource().getValue();
-                this.currentNode = XpathUtils.getFirst(this.document, "/*");
-                if (this.imageAndOffset != null)
-                {
-                    // TODO offsetts are applied here
-                    XpathUtils.applyOffset(this.document, this.imageAndOffset.offsetX, this.imageAndOffset.offsetY);                    
-                    this.xmlTreeView.displayDocument(this.document);
-                    List<Rectangle> list = XpathUtils.collectAllRectangles(this.document);
-                    this.imageViewWithScale.setListForSearch(list);
-                }
-            });
-            this.documentService.setOnFailed(event ->
-            {
-                Throwable exception = event.getSource().getException();
-                String message = exception.getMessage();
-                if (exception.getCause() instanceof JFRemoteException)
-                {
-                    message = ((JFRemoteException) exception.getCause()).getErrorKind().toString();
-                }
-                DialogsHelper.showError(message);
-            });
-            
-            // start them
-            this.imageService.start();
-            this.documentService.start();
         }
         catch (Exception e)
         {
@@ -440,11 +381,11 @@ public class XpathWizard extends AbstractWizard
 		    // TODO
 		});
 		
-		this.xmlTreeView.setOnSelectionChanged((oldItem, oldStyle, newItem, newStyle) -> 
+		this.xmlTreeView.setOnSelectionChanged((oldItem, oldMarker, newItem, newMarker) -> 
 		{
 		    if (oldItem != null)
 		    {
-		        this.imageViewWithScale.hideRectangle(oldItem.getRectangle(), oldStyle);
+		        this.imageViewWithScale.hideRectangle(oldItem.getRectangle(), oldMarker);
                 if (oldItem.getStyle() != null)
                 {
                     this.imageViewWithScale.showRectangle(oldItem.getRectangle(), oldItem.getStyle(), oldItem.getText(), false);
@@ -453,9 +394,9 @@ public class XpathWizard extends AbstractWizard
 		    
 		    if (newItem != null)
 		    {
-                if (newStyle != null)
+                if (newMarker != null)
                 {
-                    this.imageViewWithScale.showRectangle(newItem.getRectangle(), newStyle, newItem.getText(), true);
+                    this.imageViewWithScale.showRectangle(newItem.getRectangle(), newMarker, newItem.getText(), true);
                 }
 		    }
 		});
