@@ -31,7 +31,7 @@ namespace mock_win
         Point cursorOnMainPos;
         bool flagClickMenuItem = false;
         bool flagPopup = false;
-        MySpin mySpinner;
+        //MySpin mySpinner;
 
         public Main()
         {
@@ -56,74 +56,13 @@ namespace mock_win
 
         private void createSpinner()
         {
-            mySpinner = new MySpin();
-            mySpinner.ValueChanged += new EventHandler(this.Spinner_ValueChanged);
-            mySpinner.KeyDown += new KeyEventHandler(this.CommonKeyDown);
-            mySpinner.KeyPress += new KeyPressEventHandler(this.CommonKeyPress);
-            mySpinner.KeyUp += new KeyEventHandler(this.CommonKeyUp);
-            mySpinner.MouseDown += new MouseEventHandler(this.CommonMouseDown);
-            Controls.Add(mySpinner);
-        }
-
-        public class MySpin : NumericUpDown, I​Range​Value​Provider
-        {
-            public MySpin()
-            {
-                this.AccessibleName = "Spinner";
-            }
-
-            public bool IsReadOnly
-            {
-                get
-                {
-                    return false;
-                }
-            }
-
-            public double LargeChange
-            {
-                get
-                {
-                    return 1;
-                }
-            }
-
-            public double SmallChange
-            {
-                get
-                {
-                    return 1;
-                }
-            }
-
-            double IRangeValueProvider.Maximum
-            {
-                get
-                {
-                    return 150;
-                }
-            }
-
-            double IRangeValueProvider.Minimum
-            {
-                get
-                {
-                    return 0;
-                }
-            }
-
-            double IRangeValueProvider.Value
-            {
-                get
-                {
-                    return Convert.ToDouble(this.Value);
-                }
-            }
-
-            public void SetValue(double value)
-            {
-                this.Value = Convert.ToDecimal(value);
-            }
+            //mySpinner = new MySpin();
+            //mySpinner.ValueChanged += new EventHandler(this.Spinner_ValueChanged);
+            //mySpinner.KeyDown += new KeyEventHandler(this.CommonKeyDown);
+            //mySpinner.KeyPress += new KeyPressEventHandler(this.CommonKeyPress);
+            //mySpinner.KeyUp += new KeyEventHandler(this.CommonKeyUp);
+            //mySpinner.MouseDown += new MouseEventHandler(this.CommonMouseDown);
+            //Controls.Add(mySpinner);
         }
 
         private void createMenu()

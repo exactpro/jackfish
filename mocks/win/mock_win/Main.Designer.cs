@@ -95,7 +95,6 @@
             this.tabPage3 = new System.Windows.Forms.TabPage();
             this.tabPage4 = new System.Windows.Forms.TabPage();
             this.selectLabel = new System.Windows.Forms.Label();
-            this.dateTimePicker1 = new System.Windows.Forms.DateTimePicker();
             ((System.ComponentModel.ISupportInitialize)(this.Table1)).BeginInit();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.Slider)).BeginInit();
@@ -785,21 +784,11 @@
             resources.ApplyResources(this.selectLabel, "selectLabel");
             this.selectLabel.Name = "selectLabel";
             // 
-            // dateTimePicker1
-            // 
-            this.dateTimePicker1.Format = System.Windows.Forms.DateTimePickerFormat.Time;
-            //resources.ApplyResources(this.dateTimePicker1, "dateTimePicker1");
-            this.dateTimePicker1.Name = "dateTimePicker1";
-            this.dateTimePicker1.ShowUpDown = true;
-            this.dateTimePicker1.ValueChanged += new System.EventHandler(this.dateTimePicker1_ValueChanged);
-            this.dateTimePicker1.RegionChanged += new System.EventHandler(this.dateTimePicker1_RegionChanged);
-            // 
             // Main
             // 
             resources.ApplyResources(this, "$this");
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ContextMenuStrip = this.contextMenuStrip1;
-            this.Controls.Add(this.dateTimePicker1);
             this.Controls.Add(this.selectLabel);
             this.Controls.Add(this.Spinner);
             this.Controls.Add(this.panel3);
@@ -934,7 +923,6 @@
         private System.Windows.Forms.TabPage tabPage4;
         public System.Windows.Forms.Label selectLabel;
         public System.Windows.Forms.NumericUpDown Spinner;
-        private System.Windows.Forms.DateTimePicker dateTimePicker1;
     }
 }
 
