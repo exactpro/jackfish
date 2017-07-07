@@ -3,6 +3,7 @@ package com.exactprosystems.jf.common.report;
 import com.exactprosystems.jf.api.app.ImageWrapper;
 import com.exactprosystems.jf.api.common.Str;
 import com.exactprosystems.jf.charts.ChartBuilder;
+import com.exactprosystems.jf.common.version.VersionInfo;
 import com.exactprosystems.jf.documents.matrix.parser.items.MatrixItem;
 import com.exactprosystems.jf.functions.Content;
 
@@ -100,47 +101,47 @@ public class NewHelpBuilder extends ReportBuilder {
     @Override
     protected void reportHeader(ReportWriter writer, Date date, String version) throws IOException {
         writer.fwrite("<!DOCTYPE html>");
-        writer.fwrite("<html>");
+        writer.fwrite("<html>\n" + "<head>\n" + "<title>Help</title>\n" + "<meta http-equiv='Content-Type' content='text/html; charset=utf-8'>\n");
+
         writer.fwrite("<script type='text/javascript'>\n<!--\n");
         writer.include(getClass().getResourceAsStream("jquery-3.1.1.min.js"));
-        writer.fwrite("-->\n</script>\n").newline();
+        writer.fwrite("-->\n</script>\n");
 
         writer.fwrite("<script type='text/javascript'>\n<!--\n");
         writer.include(getClass().getResourceAsStream("bootstrap.min.js"));
-        writer.fwrite("-->\n</script>\n").newline();
-
-
-        //todo change or remove this script after create content
-        writer.fwrite("<script type='text/javascript'>\n<!--\n");
-        writer.fwrite(
-                "$(document).ready(function () {" +
-                "$.each($(\"a[href^='#']\"),function(i,val) {\n" +
-                "var hr = $(val).attr('href');\n" +
-                "var id = hr.substring(1);\n" +
-                "if (id !== \"\") {\n" +
-                "\t$(val).click(function(event) {\n" +
-                "\t\t$('html, body').animate({\n" +
-                "\t\t\tscrollTop: $(document.getElementById($(val).attr(\"href\").substring(1))).offset().top-50\n" +
-                "\t\t}, 500);\n" +
-                "\t})\n" +
-                "}\n" +
-                "})})").newline();
-        writer.fwrite("-->\n</script>\n").newline();
+        writer.fwrite("-->\n</script>\n");
 
         writer.fwrite("<style>\n" + "<!--\n");
         writer.include(getClass().getResourceAsStream("bootstrap.min.css"));
-        writer.fwrite("-->\n" + "</style>\n").newline();
+        writer.fwrite("-->\n" + "</style>\n");
 
         writer.fwrite("<style>\n" + "<!--\n");
         writer.include(getClass().getResourceAsStream("help.css"));
-        writer.fwrite("-->\n" + "</style>\n").newline();
+        writer.fwrite("-->\n" + "</style>\n");
 
-        writer.fwrite("<head>");
-        writer.fwrite("<title>Help</title>");
-        writer.fwrite("<meta http-equiv='Content-Type' content='text/html; charset=utf-8'>");
-        writer.fwrite("</head>");
-        writer.fwrite("<body>").newline();
+        writer.fwrite("</head>\n" + "<body>\n"
+                + "<div class='searchDiv'>\n"
+                + "<span class='searchControls'>\n"
+                + "<input class='searchInput' type='text' placeholder='Search'/\n>"
+                + "<button class='noNactiveBtn' id='btnPrev'>&#923;</button>\n"
+                + "<button class='noNactiveBtn' id='btnNext'>V</button>\n"
+                + "</span>\n"
+                + "<label class='searchLabel'></label\n>");
+        writer.fwrite("<td><h0>Version <td>%s</h0></td>\n", VersionInfo.getVersion());
+        writer.fwrite("</div>");
 
+        writer.fwrite("<div class='container-fluid'>\n");
+        writer.fwrite("<div class='row'>\n");
+
+        //menu
+        writer.fwrite("<div class='col-sm-3 menuCont'>\n");
+        writer.fwrite("<div class='mainMenu'>\n");
+        writer.fwrite("<ul class='nav nav-pills nav-stacked'>\n");
+        writer.fwrite("<p>Content</p>\n");
+        writer.fwrite("</ul>\n</div>\n");
+        writer.fwrite("</div>\n");
+
+        writer.fwrite("<div class='col-sm-9 helpViewer'>\n");
     }
 
     @Override
@@ -165,7 +166,13 @@ public class NewHelpBuilder extends ReportBuilder {
 
     @Override
     protected void reportFooter(ReportWriter writer, int failed, int passed, Date startTime, Date finishTime, String name, String reportName) throws IOException {
-        writer.fwrite("</body>");
+        writer.fwrite("</div>\n");
+        writer.fwrite("</div>\n");
+        writer.fwrite("</div>\n");
+        writer.fwrite("<script type='text/javascript'>\n<!--\n");
+        writer.include(getClass().getResourceAsStream("help.js"));
+        writer.fwrite("-->\n</script>\n");
+        writer.fwrite("</body>\n");
         writer.fwrite("</html>");
     }
 
