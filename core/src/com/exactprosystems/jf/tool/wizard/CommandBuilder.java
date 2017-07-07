@@ -37,6 +37,15 @@ public class CommandBuilder
         return this.commands;
     }
     
+    public CommandBuilder print(String message)
+    {
+        this.commands.add(context -> 
+        {
+        	context.getOut().println(message);
+        });
+        return this;
+    }
+
     public CommandBuilder addMatrixItem(Matrix matrix, MatrixItem where, MatrixItem what, int index)
     {
         this.commands.add(context -> 

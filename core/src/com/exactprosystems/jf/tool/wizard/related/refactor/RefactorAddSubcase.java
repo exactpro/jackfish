@@ -16,17 +16,24 @@ import com.exactprosystems.jf.documents.matrix.parser.items.SubCase;
 import com.exactprosystems.jf.tool.matrix.MatrixFx;
 import com.exactprosystems.jf.tool.wizard.CommandBuilder;
 
-public class RefactorAddSubcase
+public class RefactorAddSubcase extends Refactor
 {
 	private List<WizardCommand> command;
 
 	public RefactorAddSubcase(MatrixFx matrix, MatrixItem where, SubCase subcase)
 	{
-		this.command = CommandBuilder.start().addMatrixItem(matrix, where, subcase, 0).build();
+//		this.command = CommandBuilder.start().addMatrixItem(matrix, where, subcase, 0).build();
+		this.command = CommandBuilder.start().print("" + matrix + " " + where + " " + subcase).build();
 	}
 	
 	public List<WizardCommand> getCommands()
 	{
 		return this.command;
+	}
+
+	@Override
+	public String toString()
+	{
+		return "Add SubCase";
 	}
 }

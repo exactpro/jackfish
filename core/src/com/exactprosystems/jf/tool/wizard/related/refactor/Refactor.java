@@ -8,18 +8,14 @@
 
 package com.exactprosystems.jf.tool.wizard.related.refactor;
 
-import java.io.File;
 import java.util.List;
 
 import com.exactprosystems.jf.api.wizard.WizardCommand;
 
 public abstract class Refactor
 {
-	private File file;
-
-	public Refactor(File file)
+	public Refactor()
 	{
-		this.file = file;
 	}
 	
 	public abstract List<WizardCommand> getCommands();

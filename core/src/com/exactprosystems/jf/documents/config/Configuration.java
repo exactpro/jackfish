@@ -29,6 +29,7 @@ import com.exactprosystems.jf.common.MainRunner;
 import com.exactprosystems.jf.common.MatrixRunner;
 import com.exactprosystems.jf.common.MutableString;
 import com.exactprosystems.jf.common.Settings;
+import com.exactprosystems.jf.common.VerboseLevel;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.evaluator.MvelEvaluator;
 import com.exactprosystems.jf.common.report.HTMLReportFactory;
@@ -36,6 +37,7 @@ import com.exactprosystems.jf.common.report.ReportFactory;
 import com.exactprosystems.jf.common.version.VersionInfo;
 import com.exactprosystems.jf.common.xml.schema.Xsd;
 import com.exactprosystems.jf.documents.AbstractDocument;
+import com.exactprosystems.jf.documents.ConsoleDocumentFactory;
 import com.exactprosystems.jf.documents.Document;
 import com.exactprosystems.jf.documents.DocumentFactory;
 import com.exactprosystems.jf.documents.DocumentInfo;
@@ -77,8 +79,10 @@ import java.math.MathContext;
 import java.time.Instant;
 import java.util.*;
 import java.util.List;
+import java.util.function.Consumer;
 import java.util.regex.Matcher;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @XmlRootElement(name="configuration")
 @XmlAccessorType(XmlAccessType.NONE)
@@ -796,6 +800,55 @@ public class Configuration extends AbstractDocument
 	}
 
 	//------------------------------------------------------------------------------------------------------------------
+	public void forEach(Consumer<Document> applier, DocumentKind... kinds)
+	{
+		DocumentFactory consoleFactory = new ConsoleDocumentFactory(VerboseLevel.None);
+		for (DocumentKind kind : kinds)
+		{
+			switch (kind)
+			{
+			case CONFIGURATION:
+				applier.accept(this);
+				break;
+				
+			case SYSTEM_VARS:
+				this.systemVars.forEach(applier);
+				break;
+				
+			case GUI_DICTIONARY:
+				this.appDictionariesValue.forEach(ms ->
+				{
+					File folderFile = new File(MainRunner.makeDirWithSubstitutions(ms.get()));
+					applyToAll(folderFile, kind, consoleFactory, applier);
+				});
+				break;
+				
+			case MESSAGE_DICIONARY:
+				this.clientDictionariesValue.forEach(ms ->
+				{
+					File folderFile = new File(MainRunner.makeDirWithSubstitutions(ms.get()));
+					applyToAll(folderFile, kind, consoleFactory, applier);
+				});
+				break;
+				
+			case LIBRARY:
+				this.libs.values().forEach(applier);
+				break;
+				
+			case MATRIX:
+				this.matricesValue.forEach(ms -> 
+				{
+					File folderFile = new File(MainRunner.makeDirWithSubstitutions(ms.get()));
+					applyToAll(folderFile, kind, consoleFactory, applier);
+				});
+				break;
+
+			default:
+
+			}
+		}
+	}
+	
 	public SqlEntry getSqlEntry(String name) throws Exception
 	{
 		return getEntry(name, this.sqlEntriesValue);
@@ -1003,6 +1056,31 @@ public class Configuration extends AbstractDocument
 
 		this.changed = false;
 	}
+    
+	private void applyToAll(File path, DocumentKind kind, DocumentFactory factory, Consumer<Document> applier)
+	{
+		if (path.isDirectory())
+		{
+			File[] files = path.listFiles();
+			if (files != null)
+			{
+				Arrays.stream(files).forEach(file -> applyToAll(file, kind, factory, applier));
+			}
+		} else
+		{
+			try (Reader reader = CommonHelper.readerFromFile(path))
+			{
+				Document doc = factory.createDocument(kind, path.getName());
+				doc.load(reader);
+				applier.accept(doc);
+			} 
+			catch (Exception e)
+			{
+				logger.error(e.getMessage(), e);
+			}
+		}
+	}
+	
 
 	private static final Class<?>[] jaxbContextClasses =
 		{
@@ -1036,4 +1114,5 @@ public class Configuration extends AbstractDocument
 	protected boolean valid = false;
 
 	private static final Logger logger = Logger.getLogger(Configuration.class);
+
 }

@@ -12,15 +12,25 @@ import java.io.File;
 import java.util.List;
 
 import com.exactprosystems.jf.api.wizard.WizardCommand;
+import com.exactprosystems.jf.tool.wizard.CommandBuilder;
 
-public abstract class RefactorRemoveSubcase
+public class RefactorRemoveSubcase   extends Refactor
 {
-	private File file;
+	private List<WizardCommand> command;
 
 	public RefactorRemoveSubcase(File file)
 	{
-		this.file = file;
+		this.command = CommandBuilder.start().print(file.getName()).build();
 	}
 	
-	public abstract List<WizardCommand> getCommands();
+	public List<WizardCommand> getCommands()
+	{
+		return this.command;
+	}
+
+	@Override
+	public String toString()
+	{
+		return "Remove SubCase";
+	}
 }

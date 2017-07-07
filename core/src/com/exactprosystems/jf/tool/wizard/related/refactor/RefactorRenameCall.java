@@ -8,19 +8,28 @@
 
 package com.exactprosystems.jf.tool.wizard.related.refactor;
 
-import java.io.File;
 import java.util.List;
 
 import com.exactprosystems.jf.api.wizard.WizardCommand;
+import com.exactprosystems.jf.tool.wizard.CommandBuilder;
 
-public abstract class RefactorRenameCall
+public class RefactorRenameCall  extends Refactor
 {
-	private File file;
+	private List<WizardCommand> command;
 
-	public RefactorRenameCall(File file)
+	public RefactorRenameCall(String name)
 	{
-		this.file = file;
+		this.command = CommandBuilder.start().print(name).print(name + " 1").print(name + " 2").build();
 	}
 	
-	public abstract List<WizardCommand> getCommands();
+	public List<WizardCommand> getCommands()
+	{
+		return this.command;
+	}
+	
+	@Override
+	public String toString()
+	{
+		return "Rename Call";
+	}
 }
