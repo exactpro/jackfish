@@ -30,8 +30,6 @@ public abstract class AbstractControl implements IControl, Mutable
 
 	public static final String idName				= "id";
 	public static final String uidName				= "uid";
-	@Deprecated
-	public static final String absoluteXpathName	= "useAbsoluteXpath";
 	public static final String ownerIdName			= "owner";
     public static final String refIdName            = "ref";
     public static final String xpathName            = "xpath";
@@ -60,10 +58,6 @@ public abstract class AbstractControl implements IControl, Mutable
 
 	@XmlAttribute(name = xpathName)
 	protected String xpath;
-
-	@Deprecated
-	@XmlAttribute(name = absoluteXpathName)
-	protected Boolean absoluteXpath;
 
 	@XmlAttribute(name = ownerIdName)
 	protected String ownerId;
@@ -581,7 +575,6 @@ public abstract class AbstractControl implements IControl, Mutable
 		this.tooltip = xmlToText(this.tooltip);
 		this.expression = xmlToText(this.expression);
 		this.columns = xmlToText(this.columns);
-        this.absoluteXpath = null;
 		
 		if (!Str.IsNullOrEmpty(this.ownerId) && !Str.IsNullOrEmpty(this.xpath))
 		{
@@ -617,7 +610,6 @@ public abstract class AbstractControl implements IControl, Mutable
 		this.weak = booleanToXml(this.weak);
 		this.useNumericHeader = booleanToXml(this.useNumericHeader);
 		this.timeout = integerToXml(this.timeout);
-		this.absoluteXpath = null;
 	}
 
 	private String xmlToText(String source)

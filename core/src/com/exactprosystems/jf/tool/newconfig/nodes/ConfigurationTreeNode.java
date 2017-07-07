@@ -90,7 +90,6 @@ public class ConfigurationTreeNode extends TreeNode
 		list.add(TablePair.TablePairBuilder.create(Configuration.version, this.model.getVersionStr()).edit(true).build());
 		list.add(TablePair.TablePairBuilder.create(Configuration.matrix, this.model.matrixToString()).tooltipSeparator(ConfigurationFx.SEPARATOR).edit(false).build());
 		list.add(TablePair.TablePairBuilder.create(Configuration.library, this.model.libraryToString()).tooltipSeparator(ConfigurationFx.SEPARATOR).edit(false).build());
-		list.add(TablePair.TablePairBuilder.create("gitRemotePath", this.model.gitRemotePath()).edit(true).build());
 		list.add(TablePair.TablePairBuilder.create("appDictionaries", this.model.getAppDictionaries()).tooltipSeparator(ConfigurationFx.SEPARATOR).edit(false).build());
 		list.add(TablePair.TablePairBuilder.create("clientDictionaries", this.model.getClientDictionaries()).tooltipSeparator(ConfigurationFx.SEPARATOR).edit(false).build());
 		return list;

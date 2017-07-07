@@ -12,7 +12,6 @@
 					<xs:element name="dateTime" type="mutableString" minOccurs="0"/>
 					<xs:element name="formats" type="mutableString" minOccurs="0" maxOccurs="unbounded"/>
 					<xs:element name="reports" type="mutableString" minOccurs="0"/>
-					<xs:element name="git" type="mutableString" minOccurs="0"/>
 					<xs:element name="version" type="mutableString" minOccurs="0"/>
 					<xs:element name="import" type="mutableString" minOccurs="0" maxOccurs="unbounded"/>
 					<xs:element name="vars" type="mutableString" minOccurs="0"/>

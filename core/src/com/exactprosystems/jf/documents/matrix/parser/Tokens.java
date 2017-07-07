@@ -37,10 +37,6 @@ public enum Tokens
 	Continue,
 	Return,
 	OnError,
-	@Deprecated
-	ReportOn,
-	@Deprecated
-	ReportOff,
 	Fail,
 	RawTable,
 	EndRawTable,

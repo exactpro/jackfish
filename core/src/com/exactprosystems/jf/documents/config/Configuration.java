@@ -113,8 +113,6 @@ public class Configuration extends AbstractDocument
 	public static final String clientDict			= "clientDict";
 	public static final String library 				= "library";
 	public static final String userVars 			= "userVars";
-	@Deprecated
-	public static final String git 					= "git";
     public static final String version              = "version";
 
 	//region Global handlers
@@ -224,10 +222,6 @@ public class Configuration extends AbstractDocument
 	@XmlElement(name = reports)
 	protected MutableString reportsValue;
 
-	@XmlElement(name = git)
-	@Deprecated
-	protected MutableString gitValue;
-
     @XmlElement(name = version)
     protected MutableString versionValue;
 
@@ -278,7 +272,6 @@ public class Configuration extends AbstractDocument
 		this.dateTimeValue				= new MutableString();
 		this.formatsValue				= new MutableArrayList<MutableString>();
 		this.reportsValue				= new MutableString();
-		this.gitValue					= new MutableString();
         this.versionValue               = new MutableString();
 
 		this.globalHandlerValue			= new GlobalHandler();

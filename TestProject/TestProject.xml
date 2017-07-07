@@ -12,7 +12,6 @@
     <formats>HH:mm:ss Z</formats>
     <formats>HH:mm:ss:SSS</formats>
     <reports>reports</reports>
-    <git></git>
     <version></version>
     <import>com.exactprosystems.jf.common.parser</import>
     <import>java.math</import>

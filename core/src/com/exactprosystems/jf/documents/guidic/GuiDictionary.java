@@ -275,19 +275,6 @@ public class GuiDictionary extends AbstractDocument implements IGuiDictionary
 		}
 	}
 
-	@Deprecated // TODO check it
-	public void addDescription(ReportTable info, Window.SectionKind kind)
-	{
-		for (Window window : this.windows)
-		{
-			List<String> names = window.getSection(kind).getControlsNames();
-			if (names.size() > 0)
-			{
-				info.addValues(window.getName(), names.toArray());
-			}
-		}
-	}
-	
 	@XmlElement(name = "window")
 	protected MutableArrayList<Window> windows;
 	

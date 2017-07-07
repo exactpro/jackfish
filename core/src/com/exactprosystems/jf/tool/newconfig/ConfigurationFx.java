@@ -7,7 +7,6 @@
 ////////////////////////////////////////////////////////////////////////////////
 package com.exactprosystems.jf.tool.newconfig;
 
-import com.exactprosystems.jf.api.app.ControlKind;
 import com.exactprosystems.jf.api.app.IApplicationFactory;
 import com.exactprosystems.jf.api.client.IClientFactory;
 import com.exactprosystems.jf.api.client.IClientsPool;
@@ -50,7 +49,6 @@ import javafx.stage.Stage;
 
 import javax.xml.bind.annotation.XmlRootElement;
 import java.io.File;
-import java.io.InputStream;
 import java.io.Reader;
 import java.nio.file.*;
 import java.util.*;
@@ -115,12 +113,6 @@ public class ConfigurationFx extends Configuration
 	public String libraryToString()
 	{
 		return super.librariesValue.stream().map(MutableString::get).collect(Collectors.joining(SEPARATOR));
-	}
-
-	@Deprecated
-	public String gitRemotePath()
-	{
-		return super.gitValue.get();
 	}
 
     public String getVersionStr()

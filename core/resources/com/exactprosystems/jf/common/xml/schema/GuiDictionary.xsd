@@ -141,7 +141,6 @@
     <xs:attribute name="id" type="xs:string"/>
     <xs:attribute name="uid" type="xs:string"/>
     <xs:attribute name="xpath" type="xs:string"/>
-    <xs:attribute name="useAbsoluteXpath" type="xs:boolean"/>
     <xs:attribute name="owner" type="xs:string"/>
     <xs:attribute name="ref" type="xs:string"/>
     <xs:attribute name="class" type="xs:string"/>
