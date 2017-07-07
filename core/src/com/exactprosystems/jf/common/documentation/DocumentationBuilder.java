@@ -41,32 +41,36 @@ import com.exactprosystems.jf.documents.matrix.parser.items.MatrixItem;
 import com.exactprosystems.jf.documents.matrix.parser.items.MatrixItemAttribute;
 import com.exactprosystems.jf.documents.matrix.parser.items.TempItem;
 import com.exactprosystems.jf.functions.Content;
+import com.exactprosystems.jf.functions.ContentItem;
 import com.exactprosystems.jf.functions.Table;
 
 public class DocumentationBuilder
 {
     public static MatrixItem createHelp (ReportBuilder report, Context context) throws Exception
     {
-        AbstractEvaluator evaluator = context.getEvaluator();
+        /*1 - content in all parts of help +
+        * 2 - func for controls +
+        * 3 - func for items as section and for each item
+        * 4 - func for actions as section, actions group, each action*/
 
+        AbstractEvaluator evaluator = context.getEvaluator();
+        Content content = new Content();
         List<OperationKind> operations = Arrays.stream(OperationKind.values()).collect(Collectors.toList());
 
         MatrixItem help = new HelpTextLine("");
         addText(help, DocumentationBuilder.class.getResourceAsStream("mvel.txt"));
-        addAllControlsTable(help, "All controls", context, operations, true, true);
-        addAllItems(help);
-        addAllActions(help);
-        //items
-        //actions
-        //other classes
-        //todo content
+        addAllControlsTable(help, "All controls", context, operations, true, true, content);
+        addAllItems(help, content);
+        addAllActions(help, content);
+        addContent(help, "", content);
+
         return help;
     }
     
     public static MatrixItem createUserManual (ReportBuilder report, Context context) throws Exception
     {
         AbstractEvaluator evaluator = context.getEvaluator();
-        
+        Content content = new Content();
         MatrixItem help = new HelpTextLine("{{``}}");
 
         String[][] table1 = new String[][]
@@ -118,18 +122,18 @@ public class DocumentationBuilder
         addTextLine(help, "{{1All controls1}}");
         addText(help, DocumentationBuilder.class.getResourceAsStream("controls.txt"));
         addTextLine(help, "{{&&}}");
-        addAllControlsTable(help, "All controls", context, operations.subList(0, size/3), true, true);
+        addAllControlsTable(help, "All controls", context, operations.subList(0, size/3), true, true, content);
         addTextLine(help, "{{&&}}");
-        addAllControlsTable(help, "All controls - continue", context, operations.subList(size/3, size*2/3), true, true);
+        addAllControlsTable(help, "All controls - continue", context, operations.subList(size/3, size*2/3), true, true, content);
         addTextLine(help, "{{&&}}");
-        addAllControlsTable(help, "All controls - end", context, operations.subList(size*2/3, size), true, true);
+        addAllControlsTable(help, "All controls - end", context, operations.subList(size*2/3, size), true, true, content);
         addTextLine(help, "{{&&}}");
 
         addTextLine(help, "{{1Matrix syntax1}}");
-        addAllItems(help);
+        addAllItems(help, content);
         addTextLine(help, "{{&&}}");
 
-        addAllActions(help);
+        addAllActions(help, content);
         addTextLine(help, "{{&&}}");
 
         //todo
@@ -193,10 +197,15 @@ public class DocumentationBuilder
         root.insert(root.count(), text);
     }
     
-    public static void addAllControlsTable(MatrixItem root, String title, Context context, List<OperationKind> operations, boolean rotate, boolean bordered) throws Exception
+    public static void addAllControlsTable(MatrixItem root, String title, Context context, List<OperationKind> operations, boolean rotate, boolean bordered, Content content) throws Exception
     {
         try
         {
+            //todo
+            content.add(new ContentItem(
+                    String.format("<li role='presentation'>\n<a href='#%s'>%s</a>\n</li>\n", title.trim(), title)
+            ));
+
             List<ControlKind> fullList = Arrays.stream(ControlKind.values())
                     .sorted((a,b) -> a.name().compareTo(b.name()))
                     .collect(Collectors.toList());
@@ -288,8 +297,10 @@ public class DocumentationBuilder
     }
 
     @SuppressWarnings("unchecked")
-    public static void addAllItems(MatrixItem root) throws Exception
+    public static void addAllItems(MatrixItem root, Content content) throws Exception
     {
+        content.add(new ContentItem(sectionTitleForContent("Matrix syntax")));
+
         MatrixItem item = new HelpTextLine("{{2Items2}}");
         root.insert(root.count(), item);
 
@@ -311,16 +322,18 @@ public class DocumentationBuilder
             {
                 continue;
             }
-
+            content.add(new ContentItem(contentForItems(null)));
             item.insert(item.count(), new HelpItem((Class<? extends MatrixItem>) clazz));
         }
     }
     
     @SuppressWarnings("unchecked")
-    public static void addAllActions(MatrixItem root)
+    public static void addAllActions(MatrixItem root, Content content)
     {
         MatrixItem item = new HelpTextLine("{{1All actions by groups1}}");
         root.insert(root.count(), item);
+
+        content.add(new ContentItem(sectionTitleForContent("All actions by groups")));
 
         Map<Class<?>, ActionGroups> map = new LinkedHashMap<>();
         for (Class<?> action : ActionsList.actions)
@@ -346,6 +359,31 @@ public class DocumentationBuilder
                     groupItem.insert(groupItem.count(), new HelpActionItem((Class<? extends AbstractAction>) entry.getKey()));
                 }
             }
+        }
+    }
+
+
+
+    //todo rewrite
+    private static String sectionTitleForContent(String s){
+        return String.format("<li role='presentation' class='mParent' id='%s'>\n", s) +
+            String.format("<a href='#'>%s<span class='caret'></span></a>\n</li>\n", s) +
+            String.format("<ul class='nav nav-pills nav-stacked deepNav navChild' id='%s_child'></ul>\n", s);
+    }
+
+    private static String contentForItems(MatrixItem item){ //todo check for actions
+        boolean hasChildren = item.count() > 0;
+        String itemName = item.getItemName();
+        String idOfItem = itemName.replace(" ", "");
+        if (hasChildren)
+        {
+            return String.format("<li role='presentation' class='mParent' id='%s'>\n", idOfItem) +
+                String.format("<a href='#'>%s<span class='caret'></span></a>\n</li>\n", itemName) +
+                String.format("<ul class='nav nav-pills nav-stacked deepNav navChild' id='%s_child'></ul>",idOfItem);
+        }
+        else
+        {
+            return String.format("<li role='presentation'><a href='#%s'>%s</a>\n</li>\n", item.getClass(), item.getClass());
         }
     }
 

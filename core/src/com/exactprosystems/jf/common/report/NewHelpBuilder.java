@@ -6,10 +6,13 @@ import com.exactprosystems.jf.charts.ChartBuilder;
 import com.exactprosystems.jf.common.version.VersionInfo;
 import com.exactprosystems.jf.documents.matrix.parser.items.MatrixItem;
 import com.exactprosystems.jf.functions.Content;
+import com.exactprosystems.jf.functions.ContentItem;
 
 import java.io.*;
 import java.nio.file.*;
 import java.util.Date;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class NewHelpBuilder extends ReportBuilder {
 
@@ -137,7 +140,7 @@ public class NewHelpBuilder extends ReportBuilder {
         writer.fwrite("<div class='col-sm-3 menuCont'>\n");
         writer.fwrite("<div class='mainMenu'>\n");
         writer.fwrite("<ul class='nav nav-pills nav-stacked'>\n");
-        writer.fwrite("<p>Content</p>\n");
+        writer.fwrite("<p>Content</p>\n"); //todo
         writer.fwrite("</ul>\n</div>\n");
         writer.fwrite("</div>\n");
 
@@ -188,7 +191,27 @@ public class NewHelpBuilder extends ReportBuilder {
 
     @Override
     protected void reportContent(ReportWriter writer, MatrixItem item, String beforeTestcase, Content content, String title) throws IOException {
-        //todo
+        //todo parser?
+        StringBuffer sb = new StringBuffer();
+        for (ContentItem ci : content){
+            sb.append(ci.toString());
+        }
+        System.out.println(sb.toString());
+
+        /*String reg = "((\\{\\{[1|2|3])|([1|2|3]\\}\\}))";
+        StringBuffer sb = new StringBuffer();
+
+        Pattern patt = Pattern.compile(reg);
+        Matcher m = null;
+        for (ContentItem ci : content){
+            m = patt.matcher(ci.toString());
+            while (m.find())
+            {
+                String text = m.group(1);
+                String replace = replaceMarker(text);
+                sb.append(replace);
+            }
+        }*/
     }
 
     @Override
@@ -210,6 +233,7 @@ public class NewHelpBuilder extends ReportBuilder {
     protected void tableHeader(ReportWriter writer, ReportTable table, String tableTitle, String[] columns, int[] percents) throws IOException {
         boolean columnWidth = percents.length != 0 && columns.length == percents.length;
         if (!Str.IsNullOrEmpty(tableTitle)){
+            writer.fwrite("<div id=\"%s\"></div>", tableTitle.trim());
             writer.fwrite("<h3>" + tableTitle + "</h3>").newline();
         }
         writer.fwrite("<table class='table table-bordered'>\n");
