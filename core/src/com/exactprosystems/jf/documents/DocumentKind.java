@@ -14,12 +14,16 @@ public enum DocumentKind
 	
     public static <T extends Document> DocumentKind byDocument(T doc)
     {
-        DocumentInfo attr = doc.getClass().getAnnotation(DocumentInfo.class);
-        if (attr != null)
+        Class<?> aClass = doc.getClass();
+        DocumentInfo attr = aClass.getAnnotation(DocumentInfo.class);
+
+        while (attr == null && aClass != null)
         {
-            return attr.kind();
+            attr = aClass.getAnnotation(DocumentInfo.class);
+            aClass = aClass.getSuperclass();
         }
-        return null;
+
+        return attr.kind();
 	}
-	
+
 }
