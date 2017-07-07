@@ -14,6 +14,6 @@ import com.exactprosystems.jf.tool.wizard.related.XmlItem;
 @FunctionalInterface
 public interface OnMarkerChangeListener
 {
-    void changed(XmlItem item, MarkerStyle oldValue, MarkerStyle newValue);
+    void changed(XmlItem item, MarkerStyle oldValue, MarkerStyle newValue, boolean selected);
 
 }

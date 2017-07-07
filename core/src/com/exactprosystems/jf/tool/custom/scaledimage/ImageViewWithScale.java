@@ -120,12 +120,13 @@ public class ImageViewWithScale extends BorderPane
 		listeners();
 	}
 
-	public void showRectangle(java.awt.Rectangle rectangle, MarkerStyle style, String text)
+	public void showRectangle(java.awt.Rectangle rectangle, MarkerStyle style, String text, boolean selected)
 	{
 //	    System.err.println(">> show rec=" + rectangle+" style="+style+" text="+text);
 	    
 	    DecoragedRectangle newRectangle = new DecoragedRectangle(rectangle, style, text);
 	    newRectangle.setTextVisible(this.cbIds.isSelected());
+	    newRectangle.setOpacity(selected ? 1.0 : 0.5);
 	    this.group.getChildren().add(newRectangle);
 	}
 	
@@ -230,7 +231,7 @@ public class ImageViewWithScale extends BorderPane
                 if (rectangle != null)
                 {
                     hideAllRectangles(MarkerStyle.INSPECT);
-                    showRectangle(rectangle, MarkerStyle.INSPECT, null);
+                    showRectangle(rectangle, MarkerStyle.INSPECT, null, true);
                 }
             }
         });

@@ -93,7 +93,11 @@ public class XmlTreeView extends AnchorPane
 					MarkerStyle newValue = item.changeStyle();
 					if (this.onMarkerChanged != null)
 					{
-					    this.onMarkerChanged.changed(item, oldValue, newValue);
+	                    TreeItem<XmlItem> selectedItem = this.treeTableView.getSelectionModel().selectedItemProperty().get();
+	                    boolean selected = selectedItem != null && selectedItem.getValue() == item;
+	                    oldValue = oldValue == null && selected ? MarkerStyle.SELECT : oldValue; 
+	                    newValue = newValue == null && selected ? MarkerStyle.SELECT : newValue; 
+					    this.onMarkerChanged.changed(item, oldValue, newValue, selected);
 					}
 					refresh();
 				}
@@ -105,9 +109,15 @@ public class XmlTreeView extends AnchorPane
 		{
 		    if (this.onSelectionChanged != null)
 		    {
+		        // not selected
 		        XmlItem oldItem = oldValue == null ? null : oldValue.getValue(); 
-		        XmlItem newItem = newValue == null ? null : newValue.getValue(); 
-		        this.onSelectionChanged.changed(oldItem, newItem);
+                MarkerStyle oldStyle = selectionStyle(oldItem);
+		        
+		        // selected
+		        XmlItem newItem = newValue == null ? null : newValue.getValue();
+                MarkerStyle newStyle = selectionStyle(newItem);
+		        
+		        this.onSelectionChanged.changed(oldItem, oldStyle, newItem, newStyle);
 		    }
 		});
 	
@@ -118,6 +128,19 @@ public class XmlTreeView extends AnchorPane
         column.setMinWidth(width);
 	}
 
+	private MarkerStyle selectionStyle (XmlItem item)
+	{
+	    if (item == null)
+	    {
+	        return null;
+	    }
+	    MarkerStyle style = item.getStyle();
+	    if (style == null)
+	    {
+	        style = MarkerStyle.SELECT;
+	    }
+	    return style;
+	}
 	
     //region set listeners
     public void setOnSelectionChanged(OnSelectionChangeListener listener)

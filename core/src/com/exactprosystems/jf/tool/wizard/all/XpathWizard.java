@@ -434,32 +434,38 @@ public class XpathWizard extends AbstractWizard
             });
         }
 		OneLine magicLine = lines[lines.length-1];
-        //TODO add listener
-		magicLine.btnCopyToRelative.setOnAction(e -> {});
+
+		magicLine.btnCopyToRelative.setOnAction(e -> 
+		{
+		    // TODO
+		});
 		
-		this.xmlTreeView.setOnSelectionChanged((oldItem, newItem) -> 
+		this.xmlTreeView.setOnSelectionChanged((oldItem, oldStyle, newItem, newStyle) -> 
 		{
 		    if (oldItem != null)
 		    {
-		        System.err.println(">> hide " + oldItem);
-		        this.imageViewWithScale.hideRectangle(oldItem.getRectangle(), oldItem.getStyle());
+		        this.imageViewWithScale.hideRectangle(oldItem.getRectangle(), oldStyle);
+                if (oldItem.getStyle() != null)
+                {
+                    this.imageViewWithScale.showRectangle(oldItem.getRectangle(), oldItem.getStyle(), oldItem.getText(), false);
+                }
 		    }
 		    
 		    if (newItem != null)
 		    {
-                System.err.println(">> show " + newItem);
-		        this.imageViewWithScale.showRectangle(newItem.getRectangle(), newItem.getStyle(), newItem.getText());
+                if (newStyle != null)
+                {
+                    this.imageViewWithScale.showRectangle(newItem.getRectangle(), newStyle, newItem.getText(), true);
+                }
 		    }
 		});
 
-		this.xmlTreeView.setOnMarkerChanged((item, oldMarker, newMarker) -> 
+		this.xmlTreeView.setOnMarkerChanged((item, oldMarker, newMarker, selected) -> 
 		{
 		    if (item != null)
 		    {
-                System.err.println(">> hide " + item);
-                this.imageViewWithScale.hideRectangle(item.getRectangle(), item.getStyle());
-                System.err.println(">> show " + item);
-                this.imageViewWithScale.showRectangle(item.getRectangle(), item.getStyle(), item.getText());
+                this.imageViewWithScale.hideRectangle(item.getRectangle(), oldMarker);
+                this.imageViewWithScale.showRectangle(item.getRectangle(), newMarker, item.getText(), selected);
 		    }
 		});
 	}

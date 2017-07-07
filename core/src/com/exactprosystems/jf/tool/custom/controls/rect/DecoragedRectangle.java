@@ -28,18 +28,22 @@ public class DecoragedRectangle  extends Rectangle
 		super(rectangle.getX(), rectangle.getY(), rectangle.getWidth(), rectangle.getHeight());
 		this.baseRectangle = rectangle;
 		
-	    this.style      = style == null ? MarkerStyle.SELECT : style; 
+	    this.style      = style; 
         this.text       = new Text();
         this.timeline   = new Timeline();
 
         setStrokeType(StrokeType.OUTSIDE);
         setFill(Color.TRANSPARENT);
-        setStroke(this.style.color());
-        getStyleClass().add(this.style.getCssStyle());
         setStrokeWidth(4);
 
+        if (this.style != null)
+        {
+            setStroke(this.style.color());
+            getStyleClass().add(this.style.getCssStyle());
+            this.text.setFill(this.style.color());
+        }
+
         this.text.setText(text);
-        this.text.setFill(this.style.color());
         this.text.setX(this.getX() + 5);
         this.text.setY(this.getY() + this.text.getFont().getSize());
 

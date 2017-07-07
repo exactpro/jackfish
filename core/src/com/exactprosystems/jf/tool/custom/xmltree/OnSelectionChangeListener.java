@@ -8,10 +8,11 @@
 
 package com.exactprosystems.jf.tool.custom.xmltree;
 
+import com.exactprosystems.jf.tool.wizard.related.MarkerStyle;
 import com.exactprosystems.jf.tool.wizard.related.XmlItem;
 
 @FunctionalInterface
 public interface OnSelectionChangeListener
 {
-    void changed(XmlItem oldValue, XmlItem newValue);
+    void changed(XmlItem oldValue, MarkerStyle oldStyle, XmlItem newValue, MarkerStyle newStyle);
 }
