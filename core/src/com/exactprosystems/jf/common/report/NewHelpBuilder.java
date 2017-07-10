@@ -25,6 +25,13 @@ public class NewHelpBuilder extends ReportBuilder {
 
     @Override
     protected String postProcess(String source) {
+        String regexp = "((\\{\\{[1|2|3|4|5|$|#|@|\\^|`|_|*|/|&|=|-])(.*?)([1|2|3|4|5|$|#|@|\\^|`|_|*|/|&|=|-]\\}\\}))";
+        Pattern p = Pattern.compile(regexp);
+        Matcher m = p.matcher(source);
+        while(m.find())
+        {
+            //System.out.println(m.group(1));
+        }
         return super.postProcess(source);
     }
 
@@ -196,7 +203,7 @@ public class NewHelpBuilder extends ReportBuilder {
         for (ContentItem ci : content){
             sb.append(ci.toString());
         }
-        System.out.println(sb.toString());
+        //System.out.println(sb.toString());
     }
 
     @Override
