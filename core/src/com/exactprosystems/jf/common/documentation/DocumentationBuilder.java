@@ -3,7 +3,6 @@ package com.exactprosystems.jf.common.documentation;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -48,11 +47,6 @@ public class DocumentationBuilder
 {
     public static MatrixItem createHelp (ReportBuilder report, Context context) throws Exception
     {
-        /*1 - content in all parts of help +
-        * 2 - func for controls +
-        * 3 - func for items as section and for each item
-        * 4 - func for actions as section, actions group, each action*/
-
         AbstractEvaluator evaluator = context.getEvaluator();
         Content content = new Content();
         List<OperationKind> operations = Arrays.stream(OperationKind.values()).collect(Collectors.toList());
@@ -203,7 +197,7 @@ public class DocumentationBuilder
         {
             //todo
             content.add(new ContentItem(
-                    String.format("<li role='presentation'>\n<a href='#%s'>%s</a>\n</li>\n", title.trim(), title)
+                    String.format("<li role='presentation'>\n<a href='#%s'>%s</a>\n</li>\n", title.replaceAll("\\s+","").toLowerCase(), title)
             ));
 
             List<ControlKind> fullList = Arrays.stream(ControlKind.values())
@@ -299,7 +293,7 @@ public class DocumentationBuilder
     @SuppressWarnings("unchecked")
     public static void addAllItems(MatrixItem root, Content content) throws Exception
     {
-        content.add(new ContentItem(sectionTitleForContent("Matrix syntax")));
+        content.add(new ContentItem(addPartOfContent("Matrix syntax", true)));
 
         MatrixItem item = new HelpTextLine("{{2Items2}}");
         root.insert(root.count(), item);
@@ -322,9 +316,10 @@ public class DocumentationBuilder
             {
                 continue;
             }
-            //content.add(new ContentItem(contentForItems(null)));
+            content.add(new ContentItem(addPartOfContent(clazz.getSimpleName(), false)));
             item.insert(item.count(), new HelpItem((Class<? extends MatrixItem>) clazz));
         }
+        content.add(new ContentItem(addEndParentPartOfContent()));
     }
     
     @SuppressWarnings("unchecked")
@@ -333,7 +328,7 @@ public class DocumentationBuilder
         MatrixItem item = new HelpTextLine("{{1All actions by groups1}}");
         root.insert(root.count(), item);
 
-        content.add(new ContentItem(sectionTitleForContent("All actions by groups")));
+        content.add(new ContentItem(addPartOfContent("All actions by groups", true)));
 
         Map<Class<?>, ActionGroups> map = new LinkedHashMap<>();
         for (Class<?> action : ActionsList.actions)
@@ -343,7 +338,7 @@ public class DocumentationBuilder
 
         for (ActionGroups groups : ActionGroups.values())
         {
-            content.add(new ContentItem(sectionTitleForContent(groups.toString())));
+            content.add(new ContentItem(addPartOfContent(groups.toString(), true)));
             MatrixItem groupItem = new HelpTextLine("{{2" + groups.toString() + "2}}");
             item.insert(item.count(), groupItem);
 
@@ -357,35 +352,31 @@ public class DocumentationBuilder
                 
                 if (entry.getValue() == groups)
                 {
+                    content.add(new ContentItem(addPartOfContent(entry.getKey().getSimpleName(), false)));
                     groupItem.insert(groupItem.count(), new HelpActionItem((Class<? extends AbstractAction>) entry.getKey()));
                 }
             }
+            content.add(new ContentItem(addEndParentPartOfContent()));
         }
+        content.add(new ContentItem(addEndParentPartOfContent()));
     }
 
 
 
-    //todo rewrite
-    private static String sectionTitleForContent(String s){
-        return String.format("<li role='presentation' class='mParent' id='%s'>\n", s) +
+
+    //only for NewHelpBuilder
+    private static String addPartOfContent(String s, boolean hasChildren){
+        if(hasChildren){
+            return String.format("<li role='presentation' class='mParent' id='%s'>\n", s) +
             String.format("<a href='#'>%s<span class='caret'></span></a>\n</li>\n", s) +
-            String.format("<ul class='nav nav-pills nav-stacked deepNav navChild' id='%s_child'></ul>\n", s);
+            String.format("<ul class='nav nav-pills nav-stacked deepNav navChild' id='%s_child'>\n",s);
+        } else {
+            return String.format("<li role='presentation'>\n<a href='#%s'>%s</a>\n", s, s);
+        }
     }
 
-    private static String contentForItems(MatrixItem item){ //todo check for actions
-        boolean hasChildren = item.count() > 0;
-        String itemName = item.getItemName();
-        String idOfItem = itemName.replace(" ", "");
-        if (hasChildren)
-        {
-            return String.format("<li role='presentation' class='mParent' id='%s'>\n", idOfItem) +
-                String.format("<a href='#'>%s<span class='caret'></span></a>\n</li>\n", itemName) +
-                String.format("<ul class='nav nav-pills nav-stacked deepNav navChild' id='%s_child'></ul>",idOfItem);
-        }
-        else
-        {
-            return String.format("<li role='presentation'><a href='#%s'>%s</a>\n</li>\n", item.getClass(), item.getClass());
-        }
+    private static String addEndParentPartOfContent(){
+        return "</ul>\n";
     }
 
 }
