@@ -197,21 +197,6 @@ public class NewHelpBuilder extends ReportBuilder {
             sb.append(ci.toString());
         }
         System.out.println(sb.toString());
-
-        /*String reg = "((\\{\\{[1|2|3])|([1|2|3]\\}\\}))";
-        StringBuffer sb = new StringBuffer();
-
-        Pattern patt = Pattern.compile(reg);
-        Matcher m = null;
-        for (ContentItem ci : content){
-            m = patt.matcher(ci.toString());
-            while (m.find())
-            {
-                String text = m.group(1);
-                String replace = replaceMarker(text);
-                sb.append(replace);
-            }
-        }*/
     }
 
     @Override
@@ -233,7 +218,7 @@ public class NewHelpBuilder extends ReportBuilder {
     protected void tableHeader(ReportWriter writer, ReportTable table, String tableTitle, String[] columns, int[] percents) throws IOException {
         boolean columnWidth = percents.length != 0 && columns.length == percents.length;
         if (!Str.IsNullOrEmpty(tableTitle)){
-            writer.fwrite("<div id=\"%s\"></div>", tableTitle.trim());
+            writer.fwrite("<div id=\"%s\"></div>", tableTitle.replaceAll("\\s+","").toLowerCase());
             writer.fwrite("<h3>" + tableTitle + "</h3>").newline();
         }
         writer.fwrite("<table class='table table-bordered'>\n");
