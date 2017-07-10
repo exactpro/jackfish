@@ -1071,6 +1071,10 @@ public class Configuration extends AbstractDocument
 			try
 			{
 				Document doc = factory.createDocument(kind, Common.getRelativePath(path.getAbsolutePath()));
+                try (Reader reader = CommonHelper.readerFromFileName(doc.getName()))
+                {
+                    doc.load(reader);
+                }
 				applier.accept(doc);
 			} 
 			catch (Exception e)

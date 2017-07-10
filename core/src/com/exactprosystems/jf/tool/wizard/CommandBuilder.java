@@ -17,6 +17,7 @@ import org.apache.log4j.Logger;
 import java.io.Reader;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
@@ -103,18 +104,29 @@ public class CommandBuilder
 		return this;
 	}
 	
-    public CommandBuilder loadDocument(DocumentKind kind, String name)
+    public CommandBuilder createDocument(DocumentKind kind, String name)
     {
         this.commands.add(context -> 
         {
             Common.tryCatch(() -> 
             { 
-                try (Reader reader = CommonHelper.readerFromFileName(name))
+                Document doc = context.getFactory().createDocument(kind, name);
+            }, "Error on create " + name + " of kind " + kind);
+        });
+        return this;
+    }
+
+    public CommandBuilder loadDocument(Document doc)
+    {
+        this.commands.add(context -> 
+        {
+            Common.tryCatch(() -> 
+            { 
+                try (Reader reader = CommonHelper.readerFromFileName(doc.getName()))
                 {
-                    Document doc = context.getFactory().createDocument(kind, name);
                     doc.load(reader);
                 }
-            }, "Error on load " + name);
+            }, "Error on load " + doc.getName());
         });
         return this;
     }

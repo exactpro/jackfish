@@ -15,22 +15,17 @@ import com.exactprosystems.jf.api.wizard.WizardAttribute;
 import com.exactprosystems.jf.api.wizard.WizardCategory;
 import com.exactprosystems.jf.api.wizard.WizardCommand;
 import com.exactprosystems.jf.api.wizard.WizardManager;
-
 import com.exactprosystems.jf.documents.config.Configuration;
 import com.exactprosystems.jf.documents.matrix.Matrix;
 import com.exactprosystems.jf.documents.matrix.parser.items.Call;
-import com.exactprosystems.jf.documents.matrix.parser.items.MatrixItem;
 import com.exactprosystems.jf.documents.matrix.parser.items.NameSpace;
 import com.exactprosystems.jf.documents.matrix.parser.items.SubCase;
 import com.exactprosystems.jf.documents.DocumentKind;
-import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.custom.controls.field.CustomFieldWithButton;
 import com.exactprosystems.jf.tool.helpers.DialogsHelper;
-import com.exactprosystems.jf.tool.helpers.DialogsHelper.OpenSaveMode;
 import com.exactprosystems.jf.tool.matrix.MatrixFx;
 import com.exactprosystems.jf.tool.wizard.AbstractWizard;
 import com.exactprosystems.jf.tool.wizard.related.refactor.Refactor;
-import com.exactprosystems.jf.tool.wizard.related.refactor.RefactorAddSubcase;
 import com.exactprosystems.jf.tool.wizard.related.refactor.RefactorEmpty;
 import com.exactprosystems.jf.tool.wizard.related.refactor.RefactorRenameCall;
 
@@ -42,22 +37,21 @@ import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Priority;
 
-import java.io.File;
 import java.util.*;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 @WizardAttribute(
-        name                = "Library wizard", 
+        name                = "Refactor wizard", 
         pictureName         = "GherkinWizard.jpg", 
         category            = WizardCategory.MATRIX, 
-        shortDescription    = "This wizard helps refactor libraries and  matrix.", 
-        experimental        = true, 
+        shortDescription    = "This wizard helps to manage SubCases.", 
+        experimental        = false, 
         strongCriteries     = true, 
         criteries           = { MatrixFx.class, SubCase.class }, 
         detailedDescription = ""
 )
-public class LibraryWizard extends AbstractWizard
+public class RefactorWizard extends AbstractWizard
 {
     private MatrixFx              currentMatrix;
     private SubCase               currentSubCase;
@@ -66,11 +60,9 @@ public class LibraryWizard extends AbstractWizard
     private ListView<Refactor>    listView;
     private TextField             prevSubcase;
     private TextField             prevNamespace;
-    private TextField             prevFile;
 
     private TextField             nextSubcase;
     private CustomFieldWithButton nextNamespace;
-    private CustomFieldWithButton nextFile;
 
     private boolean               success = false;
 
@@ -92,17 +84,15 @@ public class LibraryWizard extends AbstractWizard
 
         String subcase = this.currentSubCase.getId();
         String namespace = this.currentNameSpace == null ? "" : this.currentNameSpace.getId();
-        String file = Common.getRelativePath(this.currentSubCase.getMatrix().getName());
         
         this.prevSubcase    = new TextField(subcase);
         this.prevSubcase.setDisable(true);
         this.prevNamespace  = new TextField(namespace);
         this.prevNamespace.setDisable(true);
-        this.prevFile       = new TextField(file);
-        this.prevFile.setDisable(true);
 
         this.nextSubcase    = new TextField(subcase);
         this.nextNamespace  = new CustomFieldWithButton(namespace);
+        this.nextNamespace.setEditable(false);
         this.nextNamespace.setButtonText("≡");
         this.nextNamespace.setHandler(e -> 
         {
@@ -111,17 +101,6 @@ public class LibraryWizard extends AbstractWizard
             ReadableValue value = new ReadableValue(currentText);
             value = DialogsHelper.selectFromList("Namespases", value, list);
             this.nextNamespace.setText(value.getValue());
-        });
-        
-        this.nextFile       = new CustomFieldWithButton(file);
-        this.nextFile.setButtonText("…");
-        this.nextFile.setHandler(e ->
-        {
-            File f = DialogsHelper.showOpenSaveDialog("Choose file to open", "All files", "*.*", OpenSaveMode.OpenFile);
-            if (f != null)
-            {
-                this.nextFile.setText(Common.getRelativePath(f.getAbsolutePath()));
-            }
         });
         
         GridPane pane = new GridPane();
@@ -139,16 +118,12 @@ public class LibraryWizard extends AbstractWizard
 
         pane.add(new Label("SubCase:"), 0, 0);
         pane.add(new Label("NameSpace:"), 0, 1);
-        pane.add(new Label("File:"), 0, 2);
         pane.add(this.prevSubcase, 1, 0);
         pane.add(this.prevNamespace, 1, 1);
-        pane.add(this.prevFile, 1, 2);
         pane.add(new Label("==>"), 2, 0);
         pane.add(new Label("==>"), 2, 1);
-        pane.add(new Label("==>"), 2, 2);
         pane.add(this.nextSubcase, 3, 0);
         pane.add(this.nextNamespace, 3, 1);
-        pane.add(this.nextFile, 3, 2);
         pane.add(refresh, 0, 3);
         pane.add(new Label("Affected files: "), 1, 3, 2, 1);
         pane.add(this.listView, 0, 4, 4, 1);
@@ -170,7 +145,7 @@ public class LibraryWizard extends AbstractWizard
     	    DialogsHelper.showError("Wrong parameters.");
     	}
 
-        return () ->
+    	return () ->
         {
         	return list;
         };
@@ -204,15 +179,13 @@ public class LibraryWizard extends AbstractWizard
 
         String oldSubcase   = this.prevSubcase.getText();
         String oldNamespace = this.prevNamespace.getText();
-        String oldFile      = this.prevFile.getText();
         String newSubcase   = this.nextSubcase.getText();
         String newNamespace = this.nextNamespace.getText();
-        String newFile      = this.nextFile.getText();
         
         String oldCallPoint = (oldNamespace.isEmpty() ? "" : (oldNamespace + ".")) + oldSubcase;
         String newCallPoint = (newNamespace.isEmpty() ? "" : (newNamespace + ".")) + newSubcase;
         
-        if (Str.areEqual(oldSubcase, newSubcase) && Str.areEqual(oldNamespace, newNamespace) && Str.areEqual(oldFile, newFile))
+        if (Str.areEqual(oldSubcase, newSubcase) && Str.areEqual(oldNamespace, newNamespace))
         {
             items.add(new RefactorEmpty("No changes needed."));
             this.success = false;
@@ -224,6 +197,9 @@ public class LibraryWizard extends AbstractWizard
         if (oldNamespace.isEmpty())
         {
             // don't need to scan all files
+            List<Call> calls = findCalls(this.currentMatrix, oldCallPoint);
+            items.add(new RefactorRenameCall(this.currentMatrix, newCallPoint, calls.stream()
+                    .map(c -> c.getNumber()).collect(Collectors.toList())));
         }
         else
         {
@@ -234,9 +210,6 @@ public class LibraryWizard extends AbstractWizard
                 Matrix matrix = (Matrix)d;
                 // try to find ...
                 List<Call> calls = findCalls(matrix, oldCallPoint);
-                
-                System.err.println(">> " + matrix + " " + oldCallPoint + " " + calls);
-                
                 if (calls.size() > 0)
                 {
                     if (onlyCheck)
@@ -254,11 +227,6 @@ public class LibraryWizard extends AbstractWizard
             }, DocumentKind.LIBRARY, DocumentKind.MATRIX);
 
         }        
-        
-        
-//        list.add(new RefactorAddSubcase(this.currentMatrix, this.currentNameSpace, this.currentSubCase));
-//        list.add(new RefactorRenameCall("Rename Call1"));
-//        list.add(new RefactorRenameCall("Rename Call2"));
     }
     
     private List<Call> findCalls(Matrix matrix, String name)

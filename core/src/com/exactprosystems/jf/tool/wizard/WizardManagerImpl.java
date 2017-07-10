@@ -52,7 +52,7 @@ public class WizardManagerImpl implements WizardManager
 			SupportedControlWizard.class,
 			CodeExampleWizard.class,
 			XpathWizard.class,
-            LibraryWizard.class
+            RefactorWizard.class
 	);
     
     public WizardManagerImpl()
