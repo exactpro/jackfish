@@ -29,14 +29,21 @@ namespace UIAdapter
                     Condition by = WinMatcher.Conditions(controlKind, Uid, Xpath, Clazz, Name, Title, Text);
                     if (!many)
                     {
+                        AutomationElement firstElement;
                         Program.logger.All("Start find in descedants " + DateTime.Now.ToString(), -1);
-                        AutomationElement firstElement = owner.FindFirst(TreeScope.Descendants, by);
+                        firstElement = owner.FindFirst(TreeScope.Descendants, by);
                         Program.logger.All("End   find in descedants " + DateTime.Now.ToString(), -1);
                         if (firstElement == null)
                         {
                             if (controlKind == ControlKind.Wait)
                             {
                                 return null;
+                            }
+                            if (isMatches(owner, Uid, Clazz, Name))
+                            {
+                                ret = new AutomationElement[1];
+                                ret[0] = owner;
+                                return ret;
                             }
                             String msg = String.Format("Element not found\ncontrolKind {0}\nuid {1}\nxpath{2}\nclazz{3}\nname{4}\ntitle{5}\ntext{6}", controlKind, Uid, Xpath, Clazz, Name, Title, Text);
                             Program.logger.All(msg, 0);
@@ -45,7 +52,6 @@ namespace UIAdapter
                         ret = new AutomationElement[1];
                         ret[0] = firstElement;
                         return ret;
-
                     }
                     else
                     {
@@ -81,6 +87,18 @@ namespace UIAdapter
                 Program.logger.All("Tut u nas exception : " + e.InnerException.Message, -1);
                 throw e.InnerException;
             }
+        }
+
+        private static bool isMatches(AutomationElement owner, string uid, string clazz, string name)
+        {
+            AutomationElement.AutomationElementInformation info = owner.Current;
+            if ((uid != null && uid != info.AutomationId) ||
+                (clazz != null && clazz != info.ClassName) ||
+                (name != null && name != info.Name))
+            {
+                return false;
+            }
+            return true;
         }
 
         public static void ClearCache()

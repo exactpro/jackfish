@@ -40,6 +40,7 @@ public abstract class Condition implements ICondition, Serializable
 		put(RegexpCondition.class, 		"$");
 		put(StringCondition.class,		"S");
 		put(TrueCondition.class,		"T");
+		put(FalseCondition.class,		"F");
 
 	}};
 
@@ -106,6 +107,18 @@ public abstract class Condition implements ICondition, Serializable
 	public static NotCondition not(Condition cond)
 	{
 		return new NotCondition(cond);
+	}
+
+	@DescriptionAttribute(text = "creates instance of TrueCondition.")
+	public static TrueCondition True()
+	{
+		return new TrueCondition();
+	}
+
+	@DescriptionAttribute(text = "creates instance of FalseCondition.")
+	public static FalseCondition False()
+	{
+		return new FalseCondition();
 	}
 
     @DescriptionAttribute(text = "creates instance of StringCondition. Parameter @name will be passed to constructor.")

@@ -1102,14 +1102,32 @@ public class WinOperationExecutorJNA implements OperationExecutor<UIProxyJNA>
 	{
 		try
 		{
-			String result = this.driver.getRowIndexes(component, useNumericHeader, valueCondition, columnsToString(columns));
-			if (result.isEmpty()) {
-				return new ArrayList<>();
-			}
 			List<String> returnedList = new ArrayList<>();
-			String[] indexes = result.split(SEPARATOR_CELL);
-			Collections.addAll(returnedList, indexes);
-			return returnedList;
+			String attribute = this.driver.elementAttribute(component, AttributeKind.TYPE_NAME);
+			if (attribute.equalsIgnoreCase("tree"))
+			{
+				List<UIProxyJNA> elementsList = findComponents(component, WindowTreeScope.Descendants, WindowProperty.LocalizedControlTypeProperty, "tree item");
+				Map<String, Object> values = new HashMap<>();
+				for (int i = 0; i < elementsList.size(); i++) {
+					values.clear();
+					values.put(valueCondition.getName(), this.driver.elementAttribute(elementsList.get(i), AttributeKind.NAME));
+					if(valueCondition.isMatched(values))
+					{
+						returnedList.add(String.valueOf(i));
+					}
+				}
+				return returnedList;
+			}
+			else
+			{
+				String result = this.driver.getRowIndexes(component, useNumericHeader, valueCondition, columnsToString(columns));
+				if (result.isEmpty()) {
+					return new ArrayList<>();
+				}
+				String[] indexes = result.split(SEPARATOR_CELL);
+				Collections.addAll(returnedList, indexes);
+				return returnedList;
+			}
 		}
 		catch (RemoteException e)
 		{

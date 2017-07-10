@@ -786,4 +786,37 @@ namespace UIAdapter.Cond
             return GetType().Name + "[name=" + GetName() + "]";
         }
     }
+
+    public class FalseCondtion : Condition
+    {
+        public FalseCondtion()
+            : this(null)
+        {
+        }
+
+        public FalseCondtion(String name)
+            : base(name)
+        {
+        }
+
+        protected override void Init(params string[] args)
+        {
+            if (args.Length != 1)
+            {
+                throw new Exception("Wrong args nubmer: " + args.Length);
+            }
+            SetName(args[0]);
+            throw new NotImplementedException();
+        }
+
+        public override bool IsMatched(Dictionary<string, object> dic)
+        {
+            return false;
+        }
+
+        public override string ToString()
+        {
+            return GetType().Name + "[name=" + GetName() + "]";
+        }
+    }
 }

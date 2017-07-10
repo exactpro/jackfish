@@ -31,6 +31,7 @@ namespace mock_win
         Point cursorOnMainPos;
         bool flagClickMenuItem = false;
         bool flagPopup = false;
+        bool redExpanded = false;
         //MySpin mySpinner;
 
         public Main()
@@ -143,13 +144,21 @@ namespace mock_win
                 sliderLabel.Text = "ScrollBar_" + listBox1.IndexFromPoint(point);
             }
 
-            if(Tree.Nodes.Find("red", true)[0].IsVisible == true)
+            if (Tree.Nodes.Find("red", true)[0].IsVisible)
             {
-                selectLabel.Text = "colors_expand";
+                if (!redExpanded)
+                { 
+                    redExpanded = true;
+                    selectLabel.Text = "colors_expand";
+                }
             }
             else
             {
-                selectLabel.Text = "colors_collapse";
+                if (redExpanded)
+                {
+                    redExpanded = false;
+                    selectLabel.Text = "colors_collapse";
+                }
             }
 
             moveUponRect(new Point(Location.X + 7, Location.Y + 29), new Point(Location.X + 51, Location.Y + 47), "Menu");
