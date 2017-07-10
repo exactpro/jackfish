@@ -399,7 +399,7 @@ public class SeleniumRemoteApplication extends RemoteApplication
 				this.driver.navigate().back();
 				break;
 			case FORWARD:
-				this.driver.navigate().back();
+				this.driver.navigate().forward();
 				break;
 		}
 	}

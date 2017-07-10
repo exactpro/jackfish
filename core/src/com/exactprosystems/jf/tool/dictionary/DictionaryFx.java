@@ -24,14 +24,13 @@ import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.dictionary.DictionaryFxController.Result;
 import com.exactprosystems.jf.tool.dictionary.dialog.DialogWizard;
 import com.exactprosystems.jf.tool.helpers.DialogsHelper;
-
 import javafx.concurrent.Task;
 import javafx.scene.control.ButtonType;
 
 import javax.xml.bind.annotation.XmlRootElement;
-
 import java.io.File;
 import java.io.Reader;
+import java.io.Serializable;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -42,13 +41,13 @@ public class DictionaryFx extends GuiDictionary
 {
 	private static final String DIALOG_DICTIONARY_SETTINGS = "DictionarySettings";
 	private static AbstractControl copyControl;
-	private static Window copyWindow;
+	private static Window          copyWindow;
 	private boolean isControllerInit = false;
-	private String currentAdapterStore;
-	private String currentAdapter;
+	private String                 currentAdapterStore;
+	private String                 currentAdapter;
 	private DictionaryFxController controller;
-	private AbstractEvaluator evaluator;
-	private ApplicationConnector applicationConnector;
+	private AbstractEvaluator      evaluator;
+	private ApplicationConnector   applicationConnector;
 
 	public DictionaryFx(String fileName, DocumentFactory factory) throws Exception
 	{
@@ -215,7 +214,7 @@ public class DictionaryFx extends GuiDictionary
 
 	public void elementChanged(IWindow window, IWindow.SectionKind sectionKind, IControl control) throws Exception
 	{
-	    ((AbstractControl)control).correctAllXml();
+		((AbstractControl) control).correctAllXml();
 		displayElementInfo(window, sectionKind, control);
 	}
 
@@ -360,9 +359,9 @@ public class DictionaryFx extends GuiDictionary
 							}
 							else
 							{
-					            Locator owner = getLocator(window.getOwnerControl(control));
-					            Locator locator = getLocator(control);
-								
+								Locator owner = getLocator(window.getOwnerControl(control));
+								Locator locator = getLocator(control);
+
 								Collection<String> all = applicationConnector.getAppConnection().getApplication().service().findAll(owner, locator);
 
 								Result result = null;
@@ -428,15 +427,16 @@ public class DictionaryFx extends GuiDictionary
 			DialogsHelper.showError("Self control is null.\nFill the self control before call the wizard");
 			return;
 		}
-        if (Str.IsNullOrEmpty(selfControl.getID()))
-        {
-            DialogsHelper.showError("Self should have ID.");
-            return;
-        }
+		if (Str.IsNullOrEmpty(selfControl.getID()))
+		{
+			DialogsHelper.showError("Self should have ID.");
+			return;
+		}
 		Window copyWindow = Window.createCopy(((Window) window));
 		copyWindow.setName(window.getName());
 		DialogWizard wizard = new DialogWizard(this, copyWindow, this.applicationConnector.getAppConnection());
-		wizard.setOnAccept(w -> Common.tryCatch(() -> {
+		wizard.setOnAccept(w -> Common.tryCatch(() ->
+		{
 			int index = this.indexOf(window);
 			this.removeWindow(window);
 			this.addWindow(index, copyWindow);
@@ -574,20 +574,20 @@ public class DictionaryFx extends GuiDictionary
 		}
 	}
 
-    public boolean checkDialogName(IWindow currentWindow, String name)
-    {
-        long count = super.windows.stream().filter(w -> !Objects.equals(currentWindow, w) && Objects.equals(w.getName(), name)).count();
-        return count == 0;
-    }
+	public boolean checkDialogName(IWindow currentWindow, String name)
+	{
+		long count = super.windows.stream().filter(w -> !Objects.equals(currentWindow, w) && Objects.equals(w.getName(), name)).count();
+		return count == 0;
+	}
 
 	public boolean checkNewId(IWindow currentWindow, IControl currentControl, String id)
 	{
-	    if (Str.IsNullOrEmpty(id))
-	    {
-	        return true;
-	    }
-		List<IControl> all = currentWindow.allMatched((s, c) ->  !Objects.equals(currentControl, c) && Objects.equals(c.getID(), id) );
-		return all.isEmpty(); 
+		if (Str.IsNullOrEmpty(id))
+		{
+			return true;
+		}
+		List<IControl> all = currentWindow.allMatched((s, c) -> !Objects.equals(currentControl, c) && Objects.equals(c.getID(), id));
+		return all.isEmpty();
 	}
 
 	public void elementMove(IWindow window, IWindow.SectionKind section, IControl control, Integer newIndex) throws Exception
@@ -627,15 +627,15 @@ public class DictionaryFx extends GuiDictionary
 			{
 				AbstractControl copy = AbstractControl.createCopy(control);
 				Object oldValue = copy.get(parameter);
-				Command undo = () -> Common.tryCatch(() -> 
+				Command undo = () -> Common.tryCatch(() ->
 				{
-				    ((AbstractControl) control).set(parameter, trimIfString(oldValue));
-                    displayElement(window, sectionKind, control);
+					((AbstractControl) control).set(parameter, trimIfString(oldValue));
+					displayElement(window, sectionKind, control);
 				}, "");
-				Command redo = () -> Common.tryCatch(() -> 
+				Command redo = () -> Common.tryCatch(() ->
 				{
-				    ((AbstractControl) control).set(parameter, trimIfString(value)); 
-                    displayElement(window, sectionKind, control);
+					((AbstractControl) control).set(parameter, trimIfString(value));
+					displayElement(window, sectionKind, control);
 				}, "");
 				addCommand(undo, redo);
 				super.changed(true);
@@ -653,7 +653,7 @@ public class DictionaryFx extends GuiDictionary
 			{
 				if (oldControl.getBindedClass() != newControl.getBindedClass())
 				{
-                    Section section = (Section) window.getSection(sectionKind);
+					Section section = (Section) window.getSection(sectionKind);
 					section.replaceControl(newControl, control);
 					displayElement(window, sectionKind, control);
 				}
@@ -715,9 +715,11 @@ public class DictionaryFx extends GuiDictionary
 	public void stopApplication() throws Exception
 	{
 		this.applicationConnector.stopApplication();
-        displayApplicationControl(null);
+		displayApplicationControl(null);
 	}
 
+
+	//region Do tab
 	public void sendKeys(String text, IControl control, IWindow window) throws Exception
 	{
 		this.operate(Do.text(text), window, control);
@@ -726,6 +728,12 @@ public class DictionaryFx extends GuiDictionary
 	public void click(IControl control, IWindow window) throws Exception
 	{
 		this.operate(Do.click(), window, control);
+	}
+
+	public void getValue(IControl control, IWindow window) throws Exception
+	{
+		Optional<OperationResult> operate = this.operate(Do.getValue(), window, control);
+		operate.ifPresent(opResult -> this.controller.println(opResult.humanablePresentation()));
 	}
 
 	public void find(IControl control, IWindow window) throws Exception
@@ -781,7 +789,9 @@ public class DictionaryFx extends GuiDictionary
 			this.controller.println("Entered string is not Operation or Spec" + obj);
 		}
 	}
+	//endregion
 
+	//region Switch tab
 	public void switchTo(String selectedItem) throws Exception
 	{
 		if (isApplicationRun())
@@ -789,15 +799,6 @@ public class DictionaryFx extends GuiDictionary
 		    Map<String, String> map = new HashMap<>();
 		    map.put("Title", selectedItem);
 			this.applicationConnector.getAppConnection().getApplication().service().switchTo(map, true);
-		}
-	}
-
-	public void refresh() throws Exception
-	{
-		if (isApplicationRun())
-		{
-			this.applicationConnector.getAppConnection().getApplication().service().refresh();
-			displayApplicationControl(null);
 		}
 	}
 
@@ -816,6 +817,127 @@ public class DictionaryFx extends GuiDictionary
 			this.applicationConnector.getAppConnection().getApplication().service().switchToFrame(null);
 		}
 	}
+	//endregion
+
+	//region Navigate tab
+	public void navigateBack() throws Exception
+	{
+		if (isApplicationRun())
+		{
+			this.applicationConnector.getAppConnection().getApplication().service().navigate(NavigateKind.BACK);
+		}
+	}
+
+	public void navigateForward() throws Exception
+	{
+		if (isApplicationRun())
+		{
+			this.applicationConnector.getAppConnection().getApplication().service().navigate(NavigateKind.FORWARD);
+		}
+	}
+
+	public void refresh() throws Exception
+	{
+		if (isApplicationRun())
+		{
+			this.applicationConnector.getAppConnection().getApplication().service().refresh();
+			displayApplicationControl(null);
+		}
+	}
+
+	public void closeWindow() throws Exception
+	{
+		if (isApplicationRun())
+		{
+			String s = this.applicationConnector.getAppConnection().getApplication().service().closeWindow();
+			if (Str.areEqual(s, ""))
+			{
+				throw new Exception("Can not close the window");
+			}
+		}
+	}
+	//endregion
+
+	//region NewInstance tab
+	public void newInstance(Map<String, String> parameters) throws Exception
+	{
+		if (isApplicationRun())
+		{
+			Map<String, String> evaluatedMap = new HashMap<>();
+
+			for (Map.Entry<String, String> entry : parameters.entrySet())
+			{
+				evaluatedMap.put(entry.getKey(), String.valueOf(this.evaluator.evaluate(entry.getValue())));
+			}
+			this.applicationConnector.getAppConnection().getApplication().service().newInstance(evaluatedMap);
+		}
+	}
+	//endregion
+
+	//region Change tab
+	public void moveTo(int x, int y) throws Exception
+	{
+		if (isApplicationRun())
+		{
+			this.applicationConnector.getAppConnection().getApplication().service().moveWindow(x, y);
+		}
+	}
+
+	public void resize(boolean min, boolean max, boolean normal, int h, int w) throws Exception
+	{
+		if (isApplicationRun())
+		{
+			this.applicationConnector.getAppConnection().getApplication().service().resize(h, w, max, min, normal);
+		}
+	}
+	//endregion
+
+	//region Properties tab
+	public void getProperty(String propertyName, Object propValue) throws Exception
+	{
+		if (isApplicationRun())
+		{
+			Serializable property = null;
+			if (propValue instanceof Serializable)
+			{
+				property = this.applicationConnector.getAppConnection().getApplication().service().getProperty(propertyName, (Serializable) propValue);
+			}
+			else if (propValue == null)
+			{
+				property = this.applicationConnector.getAppConnection().getApplication().service().getProperty(propertyName, null);
+			}
+			else
+			{
+				throw new Exception("You must set only Serializable or null value");
+			}
+
+			Optional.ofNullable(property)
+					.map(Serializable::toString)
+					.ifPresent(this.controller::println);
+		}
+	}
+
+	public void setProperty(String propertyName, Object value) throws Exception
+	{
+		if (isApplicationRun())
+		{
+			if (value instanceof Serializable)
+			{
+				this.applicationConnector.getAppConnection().getApplication().service().setProperty(propertyName, (Serializable) value);
+			}
+			else if (value == null)
+			{
+				this.applicationConnector.getAppConnection().getApplication().service().setProperty(propertyName, null);
+			}
+			else
+			{
+				throw new Exception("You must set only Serializable or null value");
+			}
+		}
+	}
+
+	//endregion
+
 
 	//------------------------------------------------------------------------------------------------------------------
 	// private methods
@@ -831,7 +953,12 @@ public class DictionaryFx extends GuiDictionary
     
 	private boolean isApplicationRun()
 	{
-		return this.applicationConnector != null && this.applicationConnector.getAppConnection() != null && this.applicationConnector.getAppConnection().isGood();
+		boolean isRun = this.applicationConnector != null && this.applicationConnector.getAppConnection() != null && this.applicationConnector.getAppConnection().isGood();
+		if (!isRun)
+		{
+			DialogsHelper.showInfo("Start a application before doing any actions");
+		}
+		return isRun;
 	}
 
 	private Optional<OperationResult> operate(Operation operation, IWindow window, IControl control) throws Exception
@@ -846,7 +973,6 @@ public class DictionaryFx extends GuiDictionary
 			OperationResult result = abstractControl.operate(this.applicationConnector.getAppConnection().getApplication().service(), window, operation);
 			return Optional.of(result);
 		}
-		DialogsHelper.showError("Start a application before doing the operation");
 		return Optional.empty();
 	}
 

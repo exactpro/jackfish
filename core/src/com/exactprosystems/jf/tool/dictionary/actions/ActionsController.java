@@ -9,17 +9,20 @@
 package com.exactprosystems.jf.tool.dictionary.actions;
 
 import com.exactprosystems.jf.api.app.ImageWrapper;
+import com.exactprosystems.jf.api.common.Str;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.ContainingParent;
 import com.exactprosystems.jf.tool.CssVariables;
 import com.exactprosystems.jf.tool.custom.BorderWrapper;
 import com.exactprosystems.jf.tool.custom.expfield.ExpressionField;
+import com.exactprosystems.jf.tool.custom.number.NumberTextField;
 import com.exactprosystems.jf.tool.dictionary.ApplicationStatus;
 import com.exactprosystems.jf.tool.dictionary.DictionaryFx;
 import com.exactprosystems.jf.tool.dictionary.element.ElementInfoController;
 import com.exactprosystems.jf.tool.dictionary.navigation.NavigationController;
 import com.exactprosystems.jf.tool.helpers.DialogsHelper;
+import com.exactprosystems.jf.tool.helpers.ExpressionFieldsPane;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
@@ -38,9 +41,9 @@ import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.net.URL;
-import java.util.Collection;
-import java.util.Optional;
-import java.util.ResourceBundle;
+import java.util.*;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 import static com.exactprosystems.jf.tool.Common.logger;
 import static com.exactprosystems.jf.tool.Common.tryCatch;
@@ -48,8 +51,7 @@ import static com.exactprosystems.jf.tool.Common.tryCatch;
 public class ActionsController implements Initializable, ContainingParent
 {
 	public Label					imageArea;
-	public GridPane					elementActionsGrid;
-	
+
 	public ComboBox<String>			comboBoxApps;
 	public ComboBox<String>         comboBoxAppsStore;
 	public Button					btnStartApplication;
@@ -59,7 +61,25 @@ public class ActionsController implements Initializable, ContainingParent
 	public ComboBox<String>			comboBoxWindows;
 
 	public GridPane					mainGrid;
-	public HBox						hBoxDoIt;
+	public GridPane doGridPane;
+	public NumberTextField                ntfMoveToX;
+	public NumberTextField                ntfMoveToY;
+	public ToggleGroup                    groupSection;
+	public RadioButton                    rbMin;
+	public RadioButton                    rbMax;
+	public RadioButton                    rbNormal;
+	public RadioButton                    rbSize;
+	public NumberTextField                ntfResizeH;
+	public NumberTextField                ntfResizeW;
+	public ExpressionField                efGetProperty;
+	public ExpressionField                efSetProperty;
+	public GridPane                       propGridPane;
+	public ComboBox<String>               cbGetProperty;
+	public ComboBox<String>               cbSetProperty;
+	public ListView<ExpressionFieldsPane> listView;
+	public Button btnNewInstance;
+
+
 	private ExpressionField			expressionField;
 	private Parent					pane;
 
@@ -80,18 +100,24 @@ public class ActionsController implements Initializable, ContainingParent
 		comboBoxWindows.setOnShowing(event -> tryCatch(() -> this.model.displayTitles(), "Error on update titles"));
 		comboBoxAppsStore.setOnShowing(event -> tryCatch(() -> this.model.displayStores(), "Error on update titles"));
 		Platform.runLater(() -> ((BorderPane) this.pane).setCenter(BorderWrapper.wrap(this.mainGrid).title("Actions").color(Common.currentTheme().getReverseColor()).build()));
+		setDisable(true);
+		this.groupSection.selectedToggleProperty().addListener((observable, oldValue, newValue) -> setDisable(!(newValue != null && newValue == this.rbSize)));
+
 	}
 
-	public void init(DictionaryFx model, GridPane gridPane, AbstractEvaluator evaluator, NavigationController navigation, 
-			ElementInfoController info)
+	private void setDisable(boolean value)
+	{
+		this.ntfResizeH.setDisable(value);
+		this.ntfResizeW.setDisable(value);
+	}
+
+	public void init(DictionaryFx model, GridPane gridPane, AbstractEvaluator evaluator, NavigationController navigation, ElementInfoController info)
 	{
 		this.model = model;
 		this.navigation = navigation;
 		this.info = info;
-
 		this.expressionField = new ExpressionField(evaluator);
-		this.hBoxDoIt = new HBox();
-		this.hBoxDoIt.getChildren().add(0, this.expressionField);
+		this.doGridPane.add(this.expressionField, 0, 1, 2, 1);
 		HBox.setHgrow(this.expressionField, Priority.ALWAYS);
 		this.expressionField.setHelperForExpressionField(null, null);
 
@@ -112,14 +138,27 @@ public class ActionsController implements Initializable, ContainingParent
 
 		gridPane.add(this.pane, 0, 1);
 		GridPane.setColumnSpan(this.pane, 2);
+
+		this.efGetProperty = new ExpressionField(evaluator);
+		this.efGetProperty.setHelperForExpressionField(null, null);
+
+		this.efSetProperty = new ExpressionField(evaluator);
+		this.efSetProperty.setHelperForExpressionField(null, null);
+
+		this.propGridPane.add(this.efGetProperty, 1, 0);
+		this.propGridPane.add(this.efSetProperty, 1, 1);
+		this.btnNewInstance.setDisable(true);
 	}
 
-	// ------------------------------------------------------------------------------------------------------------------
-	// Event handlers
-	// ------------------------------------------------------------------------------------------------------------------
+	//region Do tab
 	public void sendKeysAction(ActionEvent actionEvent)
 	{
 		tryCatch(() -> this.navigation.sendKeys(this.tfSendKeys.getText()), "Error on send keys");
+	}
+
+	public void doIt(ActionEvent actionEvent)
+	{
+		tryCatch(() -> this.navigation.doIt(this.expressionField.getEvaluatedValue()), "Error on operate");
 	}
 
 	public void clickAction(ActionEvent actionEvent)
@@ -132,15 +171,38 @@ public class ActionsController implements Initializable, ContainingParent
 		tryCatch(() -> this.navigation.find(), "Error on find");
 	}
 
-	public void doIt(ActionEvent actionEvent)
+	public void getValue(ActionEvent actionEvent)
 	{
-		tryCatch(() -> this.navigation.doIt(this.expressionField.getEvaluatedValue()), "Error on operate");
+		tryCatch(() -> this.navigation.getValue(), "Error on get value");
 	}
-	
-	
+	//endregion
+
+	//region Switch tab
 	public void changeWindow(ActionEvent actionEvent)
 	{
 		tryCatch(() -> this.model.switchTo(currentWindow()), "Error on switch window");
+	}
+
+	public void switchToParent(ActionEvent actionEvent)
+	{
+		tryCatch(() -> this.model.switchToParent(), "Error on switch to current");
+	}
+
+	public void switchToCurrent(ActionEvent actionEvent)
+	{
+		tryCatch(() -> this.navigation.switchToCurrent(), "Error on switch to current");
+	}
+	//endregion
+
+	//region Navigate tab
+	public void navigateBack(ActionEvent event)
+	{
+		tryCatch(() -> this.model.navigateBack(), "Error on navigate back");
+	}
+
+	public void navigateForward(ActionEvent event)
+	{
+		tryCatch(() -> this.model.navigateForward(), "Error on navigate forward");
 	}
 
 	public void refresh(ActionEvent actionEvent)
@@ -148,15 +210,60 @@ public class ActionsController implements Initializable, ContainingParent
 		tryCatch(() -> this.model.refresh(), "Error on refresh");
 	}
 
-	public void switchToCurrent(ActionEvent actionEvent)
+	public void closeWindow(ActionEvent event)
 	{
-		tryCatch(() -> this.navigation.switchToCurrent(), "Error on switch to current");
+		tryCatch(() -> this.model.closeWindow(), "Error on close window");
+	}
+	//endregion
+
+	//region NewInstance tab
+	public void newInstance(ActionEvent event)
+	{
+		//TODO think about it;
+		tryCatch(() -> {
+			Map<String, String> parameters = this.listView.getItems()
+					.stream()
+					.collect(Collectors.toMap(e -> e.getKey().getText(), e -> Str.IsNullOrEmpty(e.getValue().getText()) ? null : e.getValue().getText()));
+			this.model.newInstance(parameters);
+		}, "Error on new instance");
+
+	}
+	//endregion
+
+	//region Change
+	public void moveTo(ActionEvent e)
+	{
+		tryCatch(() -> this.model.moveTo(this.ntfMoveToX.getValue(), this.ntfMoveToY.getValue()), "Error on move to");
 	}
 
-	public void switchToParent(ActionEvent actionEvent)
+	public void resize(ActionEvent e)
 	{
-		tryCatch(() -> this.model.switchToParent(), "Error on switch to current");
+		Function<Toggle, Boolean> getBool = toggle -> this.groupSection.getSelectedToggle() == toggle;
+		int h = this.groupSection.getSelectedToggle() == this.rbSize ? this.ntfResizeH.getValue() : 0;
+		int w = this.groupSection.getSelectedToggle() == this.rbSize ? this.ntfResizeW.getValue() : 0;
+
+		tryCatch(() -> this.model.resize(
+				 getBool.apply(this.rbMin)
+				,getBool.apply(this.rbMax)
+				,getBool.apply(this.rbNormal)
+				, h ,w
+		), "Error on resize");
 	}
+	//endregion
+
+	//region Property tab
+
+	public void getProperty(ActionEvent event)
+	{
+		tryCatch(() -> this.model.getProperty(this.cbGetProperty.getSelectionModel().getSelectedItem(), this.efGetProperty.getEvaluatedValue()), "Error on get property");
+	}
+
+	public void setProperty(ActionEvent event)
+	{
+		tryCatch(() -> this.model.setProperty(this.cbSetProperty.getSelectionModel().getSelectedItem(), this.efSetProperty.getEvaluatedValue()), "Error on set property");
+	}
+
+	//endregion
 
 	public void startApplication(ActionEvent actionEvent)
 	{
@@ -181,6 +288,34 @@ public class ActionsController implements Initializable, ContainingParent
 	// ------------------------------------------------------------------------------------------------------------------
 	// display* methods
 	// ------------------------------------------------------------------------------------------------------------------
+	public void displayProperties(List<String> getProperties, List<String> setProperties)
+	{
+		this.cbGetProperty.getItems().setAll(getProperties);
+		this.cbGetProperty.getSelectionModel().selectFirst();
+
+		this.cbSetProperty.getItems().setAll(setProperties);
+		this.cbSetProperty.getSelectionModel().selectFirst();
+	}
+
+	public void displayParameters(List<String> names)
+	{
+		if (names == null)
+		{
+			this.listView.getItems().clear();
+			this.btnNewInstance.setDisable(true);
+		}
+		else
+		{
+			this.listView.getItems().setAll(
+					names.stream()
+							.map(name -> new ExpressionFieldsPane(name, "", null))
+							.collect(Collectors.toList()
+							)
+			);
+			this.btnNewInstance.setDisable(false);
+		}
+	}
+
 	public void displayImage(ImageWrapper imageWrapper)
 	{
 		Platform.runLater(() ->

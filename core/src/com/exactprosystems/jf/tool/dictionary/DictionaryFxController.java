@@ -12,8 +12,8 @@ import com.exactprosystems.jf.api.app.AppConnection;
 import com.exactprosystems.jf.api.app.IControl;
 import com.exactprosystems.jf.api.app.IWindow;
 import com.exactprosystems.jf.api.app.IWindow.SectionKind;
-import com.exactprosystems.jf.api.wizard.WizardManager;
 import com.exactprosystems.jf.api.app.ImageWrapper;
+import com.exactprosystems.jf.api.common.ParametersKind;
 import com.exactprosystems.jf.common.Settings;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.documents.config.Configuration;
@@ -34,7 +34,10 @@ import javafx.scene.Parent;
 import javafx.scene.control.SplitPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
+
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.ResourceBundle;
 
@@ -165,6 +168,20 @@ public class DictionaryFxController implements Initializable, ContainingParent
 	{
 		this.navigationController.setAppConnection(appConnection);
 		this.actionsController.displayApplicationStatus(status, throwable);
+		if (appConnection != null)
+		{
+			String[] getProps = appConnection.getApplication().getFactory().wellKnownParameters(ParametersKind.GET_PROPERTY);
+			String[] setProps = appConnection.getApplication().getFactory().wellKnownParameters(ParametersKind.SET_PROPERTY);
+			this.actionsController.displayProperties(Arrays.asList(getProps), Arrays.asList(setProps));
+
+			String[] params = appConnection.getApplication().getFactory().wellKnownParameters(ParametersKind.NEW_INSTANCE);
+			this.actionsController.displayParameters(Arrays.asList(params));
+		}
+		else
+		{
+			this.actionsController.displayProperties(new ArrayList<>(), new ArrayList<>());
+			this.actionsController.displayParameters(null);
+		}
 	}
 
 	public void displayTitles(Collection<String> titles)

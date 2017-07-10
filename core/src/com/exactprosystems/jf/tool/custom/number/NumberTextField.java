@@ -8,6 +8,7 @@
 
 package com.exactprosystems.jf.tool.custom.number;
 
+import com.exactprosystems.jf.api.common.Str;
 import com.exactprosystems.jf.tool.Common;
 import javafx.scene.control.TextField;
 
@@ -24,7 +25,7 @@ public class NumberTextField extends TextField
 
 	public NumberTextField(int startValue)
 	{
-		this(startValue, Integer.MIN_VALUE, Integer.MAX_VALUE);
+		this(startValue, 0, Integer.MAX_VALUE);
 	}
 
 	public NumberTextField(int startValue, int minValue, int maxValue)
@@ -33,6 +34,15 @@ public class NumberTextField extends TextField
 		this.minValue = minValue;
 		this.maxValue = maxValue;
 		this.setText(checkRange(startValue));
+		this.focusedProperty().addListener((observable, oldValue, newValue) -> {
+			if (oldValue && !newValue)
+			{
+				if (Str.IsNullOrEmpty(this.getText()))
+				{
+					this.setValue(this.minValue);
+				}
+			}
+		});
 		this.textProperty().addListener((observableValue, s, t1) -> {
 			if (!t1.isEmpty())
 			{
