@@ -69,7 +69,7 @@ public class ApplicationResize extends AbstractAction
 	{
 		if (this.minimize == null && this.maximize == null && this.normal == null && this.width == null && this.height == null)
 		{
-			setError("The must be filled", ErrorKind.WRONG_PARAMETERS);
+			setError("No one resizing parameter is filled.", ErrorKind.WRONG_PARAMETERS);
 			return;
 		}
 		if (checkBoolean(maximizeName, this.maximize, parameters)
