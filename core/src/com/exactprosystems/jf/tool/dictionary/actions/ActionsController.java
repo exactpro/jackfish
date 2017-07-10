@@ -90,6 +90,7 @@ public class ActionsController implements Initializable, ContainingParent
 		this.info = info;
 
 		this.expressionField = new ExpressionField(evaluator);
+		this.hBoxDoIt = new HBox();
 		this.hBoxDoIt.getChildren().add(0, this.expressionField);
 		HBox.setHgrow(this.expressionField, Priority.ALWAYS);
 		this.expressionField.setHelperForExpressionField(null, null);

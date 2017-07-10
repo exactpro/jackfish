@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import com.exactprosystems.jf.tool.custom.controls.field.*?>
+<?import java.lang.*?>
 <?import com.exactprosystems.jf.tool.*?>
 <?import com.exactprosystems.jf.tool.custom.controls.field.CustomFieldWithButton?>
 <?import javafx.scene.control.*?>
@@ -32,18 +34,13 @@
 			<children>
 				<VBox alignment="TOP_CENTER" GridPane.halignment="CENTER">
 					<children>
-						<GridPane fx:id="elementActionsGrid" hgap="4" maxHeight="220" minHeight="220" prefHeight="220" vgap="4" VBox.vgrow="SOMETIMES">
+						<GridPane fx:id="elementActionsGrid" hgap="4" maxHeight="220" minHeight="94.0" prefHeight="94.0" prefWidth="370.0" vgap="4">
 							<columnConstraints>
 								<ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
 								<ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
                         <ColumnConstraints />
 							</columnConstraints>
 							<rowConstraints>
-								<RowConstraints minHeight="30.0" prefHeight="30.0" vgrow="SOMETIMES" />
-								<RowConstraints minHeight="30.0" prefHeight="30.0" vgrow="SOMETIMES" />
-								<RowConstraints minHeight="30.0" prefHeight="30.0" vgrow="SOMETIMES" />
-								<RowConstraints minHeight="30.0" prefHeight="30.0" vgrow="SOMETIMES" />
-								<RowConstraints minHeight="30.0" prefHeight="30.0" vgrow="SOMETIMES" />
 								<RowConstraints minHeight="30.0" prefHeight="30.0" vgrow="SOMETIMES" />
 								<RowConstraints minHeight="30.0" prefHeight="30.0" vgrow="SOMETIMES" />
 							</rowConstraints>
@@ -54,69 +51,214 @@
 										<Label />
 										<Button id="dictionaryBtnStartApplication" fx:id="btnStartApplication" mnemonicParsing="false" onAction="#startApplication" styleClass="$transparentBackground">
 											<tooltip>
-												<Tooltip text="Start the selected application"/>
+												<Tooltip text="Start the selected application" />
 											</tooltip>
 										</Button>
 										<Label />
-										<Button id="dictionaryBtnConnectApplication" fx:id="btnConnectApplication" mnemonicParsing="false" onAction="#connectApplication"
-												styleClass="$transparentBackground">
+										<Button id="dictionaryBtnConnectApplication" fx:id="btnConnectApplication" mnemonicParsing="false" onAction="#connectApplication" styleClass="$transparentBackground">
 											<tooltip>
-												<Tooltip text="Connect the selected application"/>
+												<Tooltip text="Connect the selected application" />
 											</tooltip>
 										</Button>
 										<Label />
 										<Button id="dictionaryBtnStopApplication" fx:id="btnStop" mnemonicParsing="false" onAction="#stopConnection" styleClass="$transparentBackground">
 											<tooltip>
-												<Tooltip text="Stop the selected application"/>
+												<Tooltip text="Stop the selected application" />
 											</tooltip>
 										</Button>
 									</children>
 								</HBox>
 								<Label text="Stored connection:" GridPane.halignment="LEFT" GridPane.rowIndex="1" />
 								<ComboBox fx:id="comboBoxAppsStore" maxWidth="1.7976931348623157E308" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.halignment="CENTER" GridPane.rowIndex="1" />
-								<HBox fx:id="hBoxDoIt" alignment="CENTER" prefHeight="100.0" prefWidth="200.0" GridPane.columnSpan="2" GridPane.rowIndex="3">
-									<children>
-										<Label />
-									</children>
-								</HBox>
-								<HBox alignment="CENTER" GridPane.columnSpan="2" GridPane.rowIndex="2">
-									<children>
-										<CustomFieldWithButton fx:id="tfSendKeys" onAction="#sendKeysAction" GridPane.columnSpan="2" GridPane.rowIndex="2" HBox.hgrow="ALWAYS" />
-										<Label />
-									</children>
-								</HBox>
-								<Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#sendKeysAction" text="Send keys" GridPane.columnIndex="2" GridPane.rowIndex="2" />
-								<Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#doIt" text="Do it" GridPane.columnIndex="2" GridPane.rowIndex="3" />
-								<HBox alignment="CENTER" GridPane.rowIndex="4">
-									<children>
-										<Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#clickAction" text="Click" GridPane.rowIndex="4" HBox.hgrow="ALWAYS" />
-										<Label />
-									</children>
-								</HBox>
-								<HBox alignment="CENTER" GridPane.columnIndex="1" GridPane.rowIndex="4">
-									<children>
-										<Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#findAction" text="Find" GridPane.columnIndex="1" GridPane.rowIndex="4" HBox.hgrow="ALWAYS" />
-										<Label />
-									</children>
-								</HBox>
-								<Button maxWidth="114.0" minWidth="114.0" mnemonicParsing="false" onAction="#refresh" text="Refresh" GridPane.columnIndex="2" GridPane.rowIndex="4" />
-								<HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" GridPane.columnSpan="3" GridPane.rowIndex="5">
-									<children>
-										<Label text="Switch to:" />
-										<Label minWidth="4.0" />
-										<ComboBox fx:id="comboBoxWindows" maxWidth="1.7976931348623157E308" onAction="#changeWindow" prefWidth="150.0" HBox.hgrow="ALWAYS" />
-									</children>
-								</HBox>
-								<HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" GridPane.columnSpan="3" GridPane.rowIndex="6">
-									<children>
-										<Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#switchToCurrent" text="Switch to current" HBox.hgrow="ALWAYS" />
-										<Label maxWidth="4.0" minWidth="4.0" />
-										<Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#switchToParent" text="Switch to parent" HBox.hgrow="ALWAYS" />
-									</children>
-								</HBox>
 								<Label maxWidth="1.7976931348623157E308" text="Application plugin:" />
 							</children>
 						</GridPane>
+                  <TabPane prefHeight="200.0" prefWidth="200.0" tabClosingPolicy="UNAVAILABLE" VBox.vgrow="ALWAYS">
+                    <tabs>
+                      <Tab closable="false" text="Do">
+                           <content>
+                              <GridPane>
+                                <columnConstraints>
+                                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                    <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                </columnConstraints>
+                                <rowConstraints>
+                                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                </rowConstraints>
+                                 <children>
+      										<CustomFieldWithButton fx:id="tfSendKeys" onAction="#sendKeysAction" GridPane.columnSpan="2" />
+            								<Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#sendKeysAction" text="Send keys" GridPane.columnIndex="2" />
+            								<Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#doIt" text="Do it" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+      										<Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#findAction" text="Find" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+      										<Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#clickAction" text="Click" GridPane.rowIndex="2" />
+                                    <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" text="Get value" GridPane.columnIndex="2" GridPane.rowIndex="2" />
+                                 </children>
+                              </GridPane>
+                           </content></Tab>
+                      <Tab closable="false" text="Switch">
+                           <content>
+                              <VBox>
+                                 <children>
+            								<HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
+            									<children>
+            										<Label text="Switch to:" />
+            										<Label minWidth="4.0" />
+            										<ComboBox fx:id="comboBoxWindows" maxWidth="1.7976931348623157E308" onAction="#changeWindow" prefWidth="150.0" HBox.hgrow="ALWAYS" />
+            									</children>
+            								</HBox>
+            								<HBox alignment="CENTER" prefHeight="107.0" prefWidth="370.0">
+            									<children>
+            										<Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#switchToCurrent" text="Switch to current" HBox.hgrow="ALWAYS" />
+            										<Label maxWidth="4.0" minWidth="4.0" />
+            										<Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#switchToParent" text="Switch to parent" HBox.hgrow="ALWAYS" />
+            									</children>
+            								</HBox>
+                                 </children>
+                              </VBox>
+                           </content></Tab>
+                        <Tab text="Navigate">
+                           <content>
+                              <GridPane>
+                                <columnConstraints>
+                                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                </columnConstraints>
+                                <rowConstraints>
+                                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                </rowConstraints>
+                                 <children>
+                                    <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" text="Back" />
+                                    <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" text="Forward" GridPane.columnIndex="1" />
+                                    <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" text="Refresh" GridPane.columnSpan="2" GridPane.rowIndex="1" />
+                                    <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" text="Close window" GridPane.columnSpan="2" GridPane.rowIndex="2" />
+                                 </children>
+                              </GridPane>
+                           </content>
+                        </Tab>
+                        <Tab text="New">
+                           <content>
+                              <GridPane>
+                                <columnConstraints>
+                                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                </columnConstraints>
+                                <rowConstraints>
+                                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                </rowConstraints>
+                                 <children>
+                                    <Label text="parameter1" />
+                                    <Label text="Parameter2" GridPane.rowIndex="1" />
+                                    <TextField promptText="value1" GridPane.columnIndex="1" />
+                                    <TextField promptText="value2" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                                    <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" text="New Instance" GridPane.columnSpan="2" GridPane.rowIndex="2" />
+                                 </children>
+                              </GridPane>
+                           </content>
+                        </Tab>
+                        <Tab text="Change">
+                           <content>
+                              <GridPane>
+                                <columnConstraints>
+                                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                </columnConstraints>
+                                <rowConstraints>
+                                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                </rowConstraints>
+                                 <children>
+                                    <GridPane>
+                                      <columnConstraints>
+                                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="20.0" prefWidth="100.0" />
+                                          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="5.0" prefWidth="100.0" />
+                                          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="5.0" prefWidth="100.0" />
+                                          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                      </columnConstraints>
+                                      <rowConstraints>
+                                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                      </rowConstraints>
+                                       <children>
+                                          <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" text="Move" GridPane.columnSpan="5" GridPane.rowIndex="1" />
+                                          <Label text="Move to " />
+                                          <Label text="X:" GridPane.columnIndex="1" />
+                                          <Label text="Y:" GridPane.columnIndex="3" />
+                                          <TextField GridPane.columnIndex="2" />
+                                          <TextField GridPane.columnIndex="4" />
+                                       </children>
+                                    </GridPane>
+                                    <GridPane GridPane.rowIndex="1">
+                                      <columnConstraints>
+                                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                      </columnConstraints>
+                                      <rowConstraints>
+                                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                      </rowConstraints>
+                                       <children>
+                                          <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" text="Resize" GridPane.columnSpan="3" GridPane.rowIndex="2" />
+                                          <RadioButton mnemonicParsing="false" text="Min" />
+                                          <RadioButton mnemonicParsing="false" text="Max" GridPane.columnIndex="1" />
+                                          <RadioButton mnemonicParsing="false" text="Normal" GridPane.columnIndex="2" />
+                                          <GridPane GridPane.columnSpan="3" GridPane.rowIndex="1">
+                                            <columnConstraints>
+                                              <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="20.0" prefWidth="100.0" />
+                                                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="5.0" prefWidth="100.0" />
+                                                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="5.0" prefWidth="100.0" />
+                                              <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                            </columnConstraints>
+                                            <rowConstraints>
+                                              <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                            </rowConstraints>
+                                             <children>
+                                                <Label text="H:" GridPane.columnIndex="1" />
+                                                <Label text="W:" GridPane.columnIndex="3" />
+                                                <TextField GridPane.columnIndex="2" />
+                                                <TextField GridPane.columnIndex="4" />
+                                                <RadioButton mnemonicParsing="false" text="Size" />
+                                             </children>
+                                          </GridPane>
+                                       </children>
+                                    </GridPane>
+                                 </children>
+                              </GridPane>
+                           </content>
+                        </Tab>
+                        <Tab text="Props">
+                           <content>
+                              <GridPane>
+                                <columnConstraints>
+                                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                    <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                </columnConstraints>
+                                <rowConstraints>
+                                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                </rowConstraints>
+                                 <children>
+                                    <ComboBox prefWidth="150.0" />
+                                    <ComboBox prefWidth="150.0" GridPane.rowIndex="1" />
+                                    <TextField GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                                    <Button mnemonicParsing="false" text="Get prop" GridPane.columnIndex="2" />
+                                    <Button mnemonicParsing="false" text="Set prop" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+                                 </children>
+                              </GridPane>
+                           </content>
+                        </Tab>
+                    </tabs>
+                  </TabPane>
 					</children>
 				</VBox>
 				<VBox alignment="CENTER" GridPane.columnIndex="1" GridPane.halignment="CENTER">
