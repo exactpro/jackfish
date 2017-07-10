@@ -38,7 +38,7 @@ public class Store extends AbstractAction
 	@ActionFieldAttribute(name = nameName, mandatory = true, description = "The name of the saved object.")
 	protected String name = null;
 
-	@ActionFieldAttribute(name = valueName, mandatory = true, description = "The object that needs to be stored.")
+	@ActionFieldAttribute(name = valueName, mandatory = false, description = "The object that needs to be stored.")
 	protected Object value = null;
 
 	@Override

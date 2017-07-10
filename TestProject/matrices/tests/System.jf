@@ -481,6 +481,18 @@ STORE;Store;Never;;
     #Assert;#Message
     RST3.Out == 300;'Should be 200'
 
+    #Action;$Name;$Value
+    Store;'removedValue';'value'
+
+    #Action;#Assert;$Name
+    Restore;This.Out == 'value';'removedValue'
+
+    #Action;$Name
+    Store;'removedValue'
+
+    #Action;#Assert;$Name
+    Restore;This.Out == null;'removedValue'
+
     // =====================================================================
     // Negative tests
     #Action;#Assert;$Value;$Name
