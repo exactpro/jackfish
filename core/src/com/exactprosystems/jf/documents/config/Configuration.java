@@ -56,6 +56,7 @@ import com.exactprosystems.jf.documents.vars.SystemVars;
 import com.exactprosystems.jf.functions.Table;
 import com.exactprosystems.jf.service.ServicePool;
 import com.exactprosystems.jf.sql.DataBasePool;
+import com.exactprosystems.jf.tool.Common;
 
 import org.apache.log4j.Logger;
 
@@ -299,7 +300,7 @@ public class Configuration extends AbstractDocument
 		this.databases 					= new DataBasePool(factory);
 
 		this.libs 						= new HashMap<String, Matrix>();
-		this.documentsActuality 				= new HashMap<String, Date>();
+		this.documentsActuality 		= new HashMap<String, Date>();
 		this.systemVars					= new HashSet<SystemVars>();
 	}
 
@@ -505,8 +506,6 @@ public class Configuration extends AbstractDocument
 			{
 				File[] libFiles = folderFile.listFiles((dir, name) -> name != null && name.endsWith(matrixExt));
 
-				List<String> nameSpaces = new ArrayList<>();
-
 				for (File libFile : libFiles)
 				{
 					Date fileTime = new Date(libFile.lastModified());
@@ -538,7 +537,6 @@ public class Configuration extends AbstractDocument
 							for (String ns : namespaces)
 							{
 								this.libs.put(ns, matrix);
-								nameSpaces.add(ns);
 							}
 						}
 					}
@@ -803,6 +801,8 @@ public class Configuration extends AbstractDocument
 	public void forEach(Consumer<Document> applier, DocumentKind... kinds)
 	{
 		DocumentFactory consoleFactory = new ConsoleDocumentFactory(VerboseLevel.None);
+		consoleFactory.setConfiguration(this);
+		
 		for (DocumentKind kind : kinds)
 		{
 			switch (kind)
@@ -1068,10 +1068,9 @@ public class Configuration extends AbstractDocument
 			}
 		} else
 		{
-			try (Reader reader = CommonHelper.readerFromFile(path))
+			try
 			{
-				Document doc = factory.createDocument(kind, path.getName());
-				doc.load(reader);
+				Document doc = factory.createDocument(kind, Common.getRelativePath(path.getAbsolutePath()));
 				applier.accept(doc);
 			} 
 			catch (Exception e)

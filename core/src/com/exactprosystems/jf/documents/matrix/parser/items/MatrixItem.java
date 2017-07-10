@@ -34,6 +34,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 public abstract class MatrixItem implements IMatrixItem, Mutable, Cloneable
@@ -621,6 +623,30 @@ public abstract class MatrixItem implements IMatrixItem, Mutable, Cloneable
 		this.parent = null;
 	}
 
+    public final Optional<MatrixItem> find(Predicate<MatrixItem> predicate)
+    {
+        if (predicate.test(this))
+        {
+            return Optional.ofNullable(this);
+        }
+        for (MatrixItem item : this.children)
+        {
+            Optional<MatrixItem> found = item.find(predicate);
+            if (found.isPresent())
+            {
+                return found;
+            }
+        }
+        return Optional.ofNullable(null);
+    }
+	
+    public final List<MatrixItem> findAll(Predicate<MatrixItem> predicate)
+    {
+        List<MatrixItem> list = new ArrayList<>();
+        findAll(list, predicate);
+        return list;
+    }
+
 	public final MatrixItem find(boolean everyWhere, Class<?> clazz, String id)
 	{
 		for (MatrixItem item : this.children)
@@ -1001,6 +1027,18 @@ public abstract class MatrixItem implements IMatrixItem, Mutable, Cloneable
             {
                 row.put(Context.screenshotColumn,    screenshot);
             }
+        }
+    }
+
+    private void findAll(List<MatrixItem> list, Predicate<MatrixItem> predicate)
+    {
+        if (predicate.test(this))
+        {
+            list.add(this);
+        }
+        for (MatrixItem item : this.children)
+        {
+            item.findAll(list, predicate);
         }
     }
 

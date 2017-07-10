@@ -10,7 +10,6 @@ package com.exactprosystems.jf.tool.matrix.params;
 
 import com.exactprosystems.jf.actions.AbstractAction;
 import com.exactprosystems.jf.actions.ReadableValue;
-import com.exactprosystems.jf.actions.gui.DialogFill;
 import com.exactprosystems.jf.api.common.DateTime;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.documents.config.Context;
@@ -281,32 +280,6 @@ public class ParametersPane extends CustomScrollPane
 					switch (howHelp)
 					{
 						case BuildQuery:
-							break;
-
-						case BuildLayoutExpression:
-							expressionField.setFirstActionListener(str ->
-							{
-								String expression = this.parameters.getExpression(DialogFill.dialogName);
-								String dialogName = null;
-								try
-								{
-									dialogName = String.valueOf(evaluator.evaluate(expression));
-								}
-								catch (Exception e)
-								{
-								}
-								try
-								{
-									//TODO think about it
-//									LayoutExpressionBuilder viewer = new LayoutExpressionBuilder(par.getName(), expressionField.getText(), this.matrixItem.getParent().getMatrix().getDefaultApplicationConnection(), dialogName, evaluator);
-//									return viewer.show("Layout expression for " + par.getName(), false);
-								}
-								catch (Exception e)
-								{
-									DialogsHelper.showError(e.getMessage());
-								}
-								return expressionField.getText();
-							});
 							break;
 
 						case ChooseDateTime:

@@ -1,39 +1,39 @@
-#Action;#connection
+#Action;connection
 Print;parameter.Socket
 
-#Action;#value
-Vars;parameter.Reader.readLine()
+#Id;#Let
+value;parameter.Reader.readLine()
 
-#Action;#value
+#Action;value
 Print;value
 
 #Switch
 value
     #Case
     '0'
-        #Global;#Action;#dummy
-        1;Vars;'zero'
+        #Id;#Let
+        dummy;'zero'
 
 
     #Case
     '1'
-        #Global;#Action;#dummy
-        1;Vars;'one'
+        #Id;#Let
+        dummy;'one'
 
 
     #Case
     '2'
-        #Global;#Action;#dummy
-        1;Vars;'two'
+        #Id;#Let
+        dummy;'two'
 
 
     #Default
-        #Global;#Action;#dummy
-        1;Vars;'unknown'
+        #Id;#Let
+        dummy;'unknown'
 
 
 #EndSwitch
 
-#Action;#dummy;#send;#flush
+#Action;dummy;send;flush
 Print;dummy;parameter.Writer.write(dummy + '\n');parameter.Writer.flush()
 

@@ -17,6 +17,8 @@ import org.apache.log4j.Logger;
 import java.io.Reader;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Consumer;
+import java.util.function.Supplier;
 
 public class CommandBuilder
 {
@@ -64,7 +66,25 @@ public class CommandBuilder
         });
         return this;
     }
-    
+
+    public CommandBuilder handleMatrixItem(MatrixItem item, Consumer<MatrixItem> consumer)
+    {
+        this.commands.add(context -> 
+        {
+            consumer.accept(item);
+        });
+        return this;
+    }
+
+    public CommandBuilder findAndHandleMatrixItem(Matrix matrix, int number, Consumer<MatrixItem> consumer)
+    {
+        this.commands.add(context -> 
+        {
+            matrix.getRoot().find(i -> i.getNumber() == number).ifPresent(i -> consumer.accept(i));
+        });
+        return this;
+    }
+
 	public CommandBuilder clipboard(String string)
 	{
         this.commands.add(context -> 
@@ -82,7 +102,7 @@ public class CommandBuilder
 		});
 		return this;
 	}
-
+	
     public CommandBuilder loadDocument(DocumentKind kind, String name)
     {
         this.commands.add(context -> 
@@ -132,5 +152,6 @@ public class CommandBuilder
         }
         return null;
     }
+
 
 }

@@ -8,39 +8,28 @@
 
 package com.exactprosystems.jf.tool.wizard.related.refactor;
 
+import java.util.Collections;
 import java.util.List;
 
 import com.exactprosystems.jf.api.wizard.WizardCommand;
-import com.exactprosystems.jf.documents.matrix.Matrix;
-import com.exactprosystems.jf.documents.matrix.parser.items.Call;
-import com.exactprosystems.jf.tool.wizard.CommandBuilder;
 
-public class RefactorRenameCall  extends Refactor
+public class RefactorEmpty  extends Refactor
 {
-	private List<WizardCommand> command;
-	private int size;
-
-	public RefactorRenameCall(Matrix matrix, String newName, List<Integer> calls)
+    private String message;
+    
+	public RefactorEmpty(String message)
 	{
-	    this.size = calls.size();
-	    CommandBuilder builder = CommandBuilder.start();
-	    
-	    calls.forEach(c -> 
-	    {
-	        builder.findAndHandleMatrixItem(matrix, c, i -> ((Call)i).setName(newName));
-	    });
-	    
-		this.command = builder.build();
+		this.message = message;
 	}
 	
 	public List<WizardCommand> getCommands()
 	{
-		return this.command;
+		return Collections.emptyList();
 	}
 	
 	@Override
 	public String toString()
 	{
-		return "Rename Call : " + this.size;
+		return this.message;
 	}
 }

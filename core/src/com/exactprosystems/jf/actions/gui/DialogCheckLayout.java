@@ -83,7 +83,7 @@ public class DialogCheckLayout extends AbstractAction
 			case connectionName:
 				return null;
 		}
-		return HelpKind.BuildLayoutExpression;
+		return null;
 	}
 
 	@Override

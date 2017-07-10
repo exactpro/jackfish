@@ -8,22 +8,33 @@
 
 package com.exactprosystems.jf.tool.wizard.all;
 
+import com.exactprosystems.jf.actions.ReadableValue;
 import com.exactprosystems.jf.api.common.IContext;
+import com.exactprosystems.jf.api.common.Str;
 import com.exactprosystems.jf.api.wizard.WizardAttribute;
 import com.exactprosystems.jf.api.wizard.WizardCategory;
 import com.exactprosystems.jf.api.wizard.WizardCommand;
 import com.exactprosystems.jf.api.wizard.WizardManager;
 
 import com.exactprosystems.jf.documents.config.Configuration;
+import com.exactprosystems.jf.documents.matrix.Matrix;
+import com.exactprosystems.jf.documents.matrix.parser.items.Call;
+import com.exactprosystems.jf.documents.matrix.parser.items.MatrixItem;
 import com.exactprosystems.jf.documents.matrix.parser.items.NameSpace;
 import com.exactprosystems.jf.documents.matrix.parser.items.SubCase;
 import com.exactprosystems.jf.documents.DocumentKind;
+import com.exactprosystems.jf.tool.Common;
+import com.exactprosystems.jf.tool.custom.controls.field.CustomFieldWithButton;
+import com.exactprosystems.jf.tool.helpers.DialogsHelper;
+import com.exactprosystems.jf.tool.helpers.DialogsHelper.OpenSaveMode;
 import com.exactprosystems.jf.tool.matrix.MatrixFx;
 import com.exactprosystems.jf.tool.wizard.AbstractWizard;
 import com.exactprosystems.jf.tool.wizard.related.refactor.Refactor;
 import com.exactprosystems.jf.tool.wizard.related.refactor.RefactorAddSubcase;
+import com.exactprosystems.jf.tool.wizard.related.refactor.RefactorEmpty;
 import com.exactprosystems.jf.tool.wizard.related.refactor.RefactorRenameCall;
 
+import javafx.collections.ObservableList;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
@@ -31,8 +42,10 @@ import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Priority;
 
+import java.io.File;
 import java.util.*;
 import java.util.function.Supplier;
+import java.util.stream.Collectors;
 
 @WizardAttribute(
         name                = "Library wizard", 
@@ -46,14 +59,20 @@ import java.util.function.Supplier;
 )
 public class LibraryWizard extends AbstractWizard
 {
-    private MatrixFx         currentMatrix;
-    private SubCase          currentSubCase;
-    private NameSpace        currentNameSpace;
+    private MatrixFx              currentMatrix;
+    private SubCase               currentSubCase;
+    private NameSpace             currentNameSpace;
 
-    private ListView<Refactor> listView;
-    private TextField nameOfSub;
-    private TextField nameOfNameSpace;
-    private TextField nameOfaNewFile;
+    private ListView<Refactor>    listView;
+    private TextField             prevSubcase;
+    private TextField             prevNamespace;
+    private TextField             prevFile;
+
+    private TextField             nextSubcase;
+    private CustomFieldWithButton nextNamespace;
+    private CustomFieldWithButton nextFile;
+
+    private boolean               success = false;
 
     @Override
     public boolean beforeRun()
@@ -64,20 +83,46 @@ public class LibraryWizard extends AbstractWizard
     @Override
     protected void initDialog(BorderPane borderPane)
     {
-
-        borderPane.setPrefWidth(630);
+        borderPane.setMinWidth(750);
+        borderPane.setPrefWidth(750);
         this.listView = new ListView<>();
         this.listView.setEditable(false);
         this.listView.setMinHeight(400);
         this.listView.setMaxHeight(600);
 
-        Label label1 = new Label("SubCase: " + this.currentSubCase);
-        Label label2 = new Label("NameSpace: " + this.currentNameSpace);
-        Label label3 = new Label("Library file: ");
+        String subcase = this.currentSubCase.getId();
+        String namespace = this.currentNameSpace == null ? "" : this.currentNameSpace.getId();
+        String file = Common.getRelativePath(this.currentSubCase.getMatrix().getName());
+        
+        this.prevSubcase    = new TextField(subcase);
+        this.prevSubcase.setDisable(true);
+        this.prevNamespace  = new TextField(namespace);
+        this.prevNamespace.setDisable(true);
+        this.prevFile       = new TextField(file);
+        this.prevFile.setDisable(true);
 
-        this.nameOfSub          = new TextField(this.currentSubCase.getId());
-        this.nameOfNameSpace    = new TextField(this.currentNameSpace == null ? "" : this.currentNameSpace.getId());
-        this.nameOfaNewFile     = new TextField(this.currentSubCase.getMatrix().getName());
+        this.nextSubcase    = new TextField(subcase);
+        this.nextNamespace  = new CustomFieldWithButton(namespace);
+        this.nextNamespace.setButtonText("≡");
+        this.nextNamespace.setHandler(e -> 
+        {
+            String currentText = this.nextNamespace.getText();
+            List<ReadableValue> list = getNamespaces();
+            ReadableValue value = new ReadableValue(currentText);
+            value = DialogsHelper.selectFromList("Namespases", value, list);
+            this.nextNamespace.setText(value.getValue());
+        });
+        
+        this.nextFile       = new CustomFieldWithButton(file);
+        this.nextFile.setButtonText("…");
+        this.nextFile.setHandler(e ->
+        {
+            File f = DialogsHelper.showOpenSaveDialog("Choose file to open", "All files", "*.*", OpenSaveMode.OpenFile);
+            if (f != null)
+            {
+                this.nextFile.setText(Common.getRelativePath(f.getAbsolutePath()));
+            }
+        });
         
         GridPane pane = new GridPane();
         ColumnConstraints columnConstraints = new ColumnConstraints();
@@ -90,42 +135,40 @@ public class LibraryWizard extends AbstractWizard
         pane.setHgap(4);
 
         Button refresh = new Button("Scan");
-        refresh.setOnAction(event ->
-        {
-        	Configuration config = super.context.getConfiguration();
-            config.forEach(d -> System.err.println(d), DocumentKind.LIBRARY, DocumentKind.MATRIX);
+        refresh.setOnAction(event -> scanChangeds() );
 
-        	
-        	this.listView.getItems().clear();
-        	this.listView.getItems().add(new RefactorAddSubcase(this.currentMatrix, this.currentNameSpace, this.currentSubCase));
-        	this.listView.getItems().add(new RefactorRenameCall("Rename Call1"));
-        	this.listView.getItems().add(new RefactorRenameCall("Rename Call2"));
-        	this.listView.getItems().add(new RefactorRenameCall("Rename Call3"));
-        	this.listView.getItems().add(new RefactorRenameCall("Rename Call4"));
-            // TODO
-
-        });
-
-        pane.add(label1, 0, 0);
-        pane.add(label2, 0, 1);
-        pane.add(label3, 0, 2);
-        pane.add(this.nameOfSub, 1, 0);
-        pane.add(this.nameOfNameSpace, 1, 1);
-        pane.add(this.nameOfaNewFile, 1, 2);
+        pane.add(new Label("SubCase:"), 0, 0);
+        pane.add(new Label("NameSpace:"), 0, 1);
+        pane.add(new Label("File:"), 0, 2);
+        pane.add(this.prevSubcase, 1, 0);
+        pane.add(this.prevNamespace, 1, 1);
+        pane.add(this.prevFile, 1, 2);
+        pane.add(new Label("==>"), 2, 0);
+        pane.add(new Label("==>"), 2, 1);
+        pane.add(new Label("==>"), 2, 2);
+        pane.add(this.nextSubcase, 3, 0);
+        pane.add(this.nextNamespace, 3, 1);
+        pane.add(this.nextFile, 3, 2);
         pane.add(refresh, 0, 3);
         pane.add(new Label("Affected files: "), 1, 3, 2, 1);
-        pane.add(this.listView, 0, 4, 2, 1);
+        pane.add(this.listView, 0, 4, 4, 1);
 
         borderPane.setCenter(pane);
         BorderPane.setAlignment(pane, Pos.CENTER);
-
     }
 
     @Override
     protected Supplier<List<WizardCommand>> getCommands()
     {
     	List<WizardCommand> list = new ArrayList<>();
-    	this.listView.getItems().forEach(i -> list.addAll(i.getCommands()));
+    	if (this.success)
+    	{
+	       this.listView.getItems().forEach(i -> list.addAll(i.getCommands()));
+    	}
+    	else
+    	{
+    	    DialogsHelper.showError("Wrong parameters.");
+    	}
 
         return () ->
         {
@@ -142,4 +185,86 @@ public class LibraryWizard extends AbstractWizard
         this.currentSubCase = super.get(SubCase.class, parameters);
         this.currentNameSpace = (NameSpace)this.currentSubCase.findParent(NameSpace.class);
     }
+    
+    private List<ReadableValue> getNamespaces()
+    {
+        return super.context.getConfiguration()
+                .getLibs()
+                .keySet()
+                .stream()
+                .map(ReadableValue::new)
+                .collect(Collectors.toList());
+    }
+    
+    private void scanChangeds()
+    {
+        this.success = true;
+        ObservableList<Refactor> items = this.listView.getItems();
+        items.clear();
+
+        String oldSubcase   = this.prevSubcase.getText();
+        String oldNamespace = this.prevNamespace.getText();
+        String oldFile      = this.prevFile.getText();
+        String newSubcase   = this.nextSubcase.getText();
+        String newNamespace = this.nextNamespace.getText();
+        String newFile      = this.nextFile.getText();
+        
+        String oldCallPoint = (oldNamespace.isEmpty() ? "" : (oldNamespace + ".")) + oldSubcase;
+        String newCallPoint = (newNamespace.isEmpty() ? "" : (newNamespace + ".")) + newSubcase;
+        
+        if (Str.areEqual(oldSubcase, newSubcase) && Str.areEqual(oldNamespace, newNamespace) && Str.areEqual(oldFile, newFile))
+        {
+            items.add(new RefactorEmpty("No changes needed."));
+            this.success = false;
+            return;
+        }
+        
+        Configuration config = super.context.getConfiguration();
+
+        if (oldNamespace.isEmpty())
+        {
+            // don't need to scan all files
+        }
+        else
+        {
+            // scan everything
+            boolean onlyCheck = newNamespace.isEmpty();
+            config.forEach(d ->
+            {
+                Matrix matrix = (Matrix)d;
+                // try to find ...
+                List<Call> calls = findCalls(matrix, oldCallPoint);
+                
+                System.err.println(">> " + matrix + " " + oldCallPoint + " " + calls);
+                
+                if (calls.size() > 0)
+                {
+                    if (onlyCheck)
+                    {
+                        items.add(new RefactorEmpty(matrix.getName() + " contains " + calls.size() + " reference(s)"));
+                        this.success = false;
+                    }
+                    else
+                    {
+                        items.add(new RefactorRenameCall(matrix, newCallPoint, calls.stream()
+                                .map(c -> c.getNumber()).collect(Collectors.toList())));
+                    }
+                }
+
+            }, DocumentKind.LIBRARY, DocumentKind.MATRIX);
+
+        }        
+        
+        
+//        list.add(new RefactorAddSubcase(this.currentMatrix, this.currentNameSpace, this.currentSubCase));
+//        list.add(new RefactorRenameCall("Rename Call1"));
+//        list.add(new RefactorRenameCall("Rename Call2"));
+    }
+    
+    private List<Call> findCalls(Matrix matrix, String name)
+    {
+        return matrix.getRoot().findAll(i -> i instanceof Call && ((Call)i).getName().equals(name))
+                .stream().map(i -> (Call)i).collect(Collectors.toList()); 
+    }
+    
 }

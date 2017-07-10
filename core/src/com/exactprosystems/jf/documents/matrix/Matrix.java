@@ -383,7 +383,6 @@ public class Matrix extends AbstractDocument implements IMatrix
 	}
 
 	// ==============================================================================================================================
-
 	public final List<MatrixItem> find(final String what, final boolean caseSensitive, final boolean wholeWord)
 	{
 		final List<MatrixItem> res = new ArrayList<>();

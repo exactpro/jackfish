@@ -13,7 +13,6 @@ public enum HelpKind
     ChooseFromList          ("≡"), 
     BuildQuery              ("S"), 
     BuildXPath              ("X"), 
-    BuildLayoutExpression   ("↔")
     ;
     
     HelpKind (String label)

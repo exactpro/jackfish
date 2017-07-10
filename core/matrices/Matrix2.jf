@@ -1,8 +1,8 @@
 #Action;#Time
 Wait;2000;
 
-#Global;#Action;#f
-1;Vars;123
+#Global;#Id;#Let
+1;f;123
 
 #Action;#Time
 Wait;2000;
