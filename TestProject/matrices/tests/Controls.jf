@@ -181,7 +181,7 @@ SUBCASES;;;;
     #EndSubCase
 
     #Id;#SubCase;plugin
-    RUN;Run;'Swing'
+    RUN;Run;'Win'
         #Step;#Kind;#For;#Depends
         'start application';;;
             #Id;#Action;Plugin;Control;Operation;Expected;Actual;Result
@@ -312,7 +312,7 @@ SUBCASES;;;;
 
                     #EndIf
 
-                    // // this has to remove after controls will be completed successfully
+                    // // TODO: this has to remove after controls will be completed successfully
                     #If
                     !operation.Operation.contains('control')
                         #Id;#Let
@@ -320,7 +320,7 @@ SUBCASES;;;;
 
                     #EndIf
 
-                    // // this has to remove after controls will be completed successfully
+                    // // TODO: this has to remove after controls will be completed successfully
                     #If
                     !operation.After.contains('control')
                         #Id;#Let
@@ -381,6 +381,15 @@ SUBCASES;;;;
 
                 #RepOff;#ForEach;#In
                 1;operation;operations
+                    #If
+                    plugin.equals('Win') && operation.Kind == OperationKind.SET
+                        #Action;
+                        Print;'TODO: operation \'setValue\' for \'Spinner\' in \'Win\' pluggin was skipped'
+
+                        #Continue
+
+                    #EndIf
+
                     #If
                     operation.On.equals('')
                         #Continue

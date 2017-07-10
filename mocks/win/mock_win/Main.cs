@@ -44,26 +44,13 @@ namespace mock_win
             ComboBox.SelectedIndex = 0;  
             createDialog();
             createMenu();
-            createSpinner();
 
             this.timer = new Timer();
             this.timer.Interval = 100;
             this.timer.Tick += new EventHandler(timer_Tick);
             this.timer.Enabled = true;
 
-            //this.Spinner.MouseMove += new MouseEventHandler(CommonMouseMove);
             this.Spinner.IsAccessible = true;
-        }
-
-        private void createSpinner()
-        {
-            //mySpinner = new MySpin();
-            //mySpinner.ValueChanged += new EventHandler(this.Spinner_ValueChanged);
-            //mySpinner.KeyDown += new KeyEventHandler(this.CommonKeyDown);
-            //mySpinner.KeyPress += new KeyPressEventHandler(this.CommonKeyPress);
-            //mySpinner.KeyUp += new KeyEventHandler(this.CommonKeyUp);
-            //mySpinner.MouseDown += new MouseEventHandler(this.CommonMouseDown);
-            //Controls.Add(mySpinner);
         }
 
         private void createMenu()
