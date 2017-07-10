@@ -252,7 +252,15 @@ namespace UIAdapter
 
                 process = Process.Start(startInfo);
                 process.Refresh();
-                process.WaitForInputIdle();
+                try
+                {
+                    process.WaitForInputIdle();
+                }
+                catch (Exception e)
+                {
+                    logger.All(e.Message);
+                }
+                
                 Thread.Sleep(1000);
                 UpdateHandler();
                 frameWorkId = handler.Current.FrameworkId;
@@ -2380,6 +2388,8 @@ namespace UIAdapter
                 int MAXTIME = 60000; // wait 60 second before throw exception
                 int TIMEWAIT = 100;
                 IntPtr mainWindowHandle = process.MainWindowHandle;
+                logger.All("Current process name : " + process.ProcessName);
+
                 while (mainWindowHandle.Equals(IntPtr.Zero))
                 {
                     if (runningTime > MAXTIME)
@@ -2387,9 +2397,11 @@ namespace UIAdapter
                         throw new Exception("Could not find window still 60 seconds");
                     }
                     List<Process> children = GetChildProcesses(process);
+                    logger.All("Child count : " + children.Count);
                     bool isExit = false;
                     foreach (Process p in children)
                     {
+                        logger.All("Process name : " + p.ProcessName + " and windowHandle : " + p.MainWindowHandle);
                         if (!p.MainWindowHandle.Equals(IntPtr.Zero))
                         {
                             isExit = true;
@@ -2404,6 +2416,7 @@ namespace UIAdapter
                     Thread.Sleep(TIMEWAIT);
                     runningTime += TIMEWAIT;
                     bool idle = process.WaitForInputIdle();
+                    logger.All("idle : " + idle + " and refresh...");
                     process.Refresh();
                 }
                 handler = AutomationElement.FromHandle(mainWindowHandle);
