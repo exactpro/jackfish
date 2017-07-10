@@ -322,7 +322,7 @@ public class DocumentationBuilder
             {
                 continue;
             }
-            content.add(new ContentItem(contentForItems(null)));
+            //content.add(new ContentItem(contentForItems(null)));
             item.insert(item.count(), new HelpItem((Class<? extends MatrixItem>) clazz));
         }
     }
@@ -343,6 +343,7 @@ public class DocumentationBuilder
 
         for (ActionGroups groups : ActionGroups.values())
         {
+            content.add(new ContentItem(sectionTitleForContent(groups.toString())));
             MatrixItem groupItem = new HelpTextLine("{{2" + groups.toString() + "2}}");
             item.insert(item.count(), groupItem);
 
