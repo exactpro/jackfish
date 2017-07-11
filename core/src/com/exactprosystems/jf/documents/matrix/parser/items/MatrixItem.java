@@ -306,17 +306,6 @@ public abstract class MatrixItem implements IMatrixItem, Mutable, Cloneable
 	
     public Object get(Tokens key)
     {
-
-//        protected MutableValue<String>            id;
-//        protected MutableValue<Boolean>           off;
-//        protected MutableValue<Boolean>           repOff;
-//        protected MutableValue<Boolean>           global;
-//        protected MutableValue<Boolean>           ignoreErr;
-//        protected MutableArrayList<CommentString> comments;
-//        protected Parameters                      parameters;
-//        protected MutableArrayList<MatrixItem>    children;
-        // TODO
-        
         switch (key)
         {
         case Id:

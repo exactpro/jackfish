@@ -17,6 +17,7 @@ import com.exactprosystems.jf.api.wizard.WizardCommand;
 import com.exactprosystems.jf.api.wizard.WizardManager;
 import com.exactprosystems.jf.documents.config.Configuration;
 import com.exactprosystems.jf.documents.matrix.Matrix;
+import com.exactprosystems.jf.documents.matrix.parser.Tokens;
 import com.exactprosystems.jf.documents.matrix.parser.items.Call;
 import com.exactprosystems.jf.documents.matrix.parser.items.NameSpace;
 import com.exactprosystems.jf.documents.matrix.parser.items.SubCase;
@@ -27,7 +28,7 @@ import com.exactprosystems.jf.tool.matrix.MatrixFx;
 import com.exactprosystems.jf.tool.wizard.AbstractWizard;
 import com.exactprosystems.jf.tool.wizard.related.refactor.Refactor;
 import com.exactprosystems.jf.tool.wizard.related.refactor.RefactorEmpty;
-import com.exactprosystems.jf.tool.wizard.related.refactor.RefactorRenameCall;
+import com.exactprosystems.jf.tool.wizard.related.refactor.RefactorSetField;
 
 import javafx.collections.ObservableList;
 import javafx.geometry.Pos;
@@ -189,9 +190,16 @@ public class RefactorWizard extends AbstractWizard
         {
             Configuration config = super.context.getConfiguration();
     
-            if (Str.areEqual(oldSubcase, newSubcase))
+            if (!Str.areEqual(oldSubcase, newSubcase))
             {
-//                items.add(new RefactorRenameCall(matrix, newName, calls));
+                // at first rename this subcase
+                items.add(new RefactorSetField(this.currentMatrix, Tokens.Id, newSubcase, Arrays.asList(this.currentSubCase.getNumber())));
+            }
+            
+            if (!Str.areEqual(oldNamespace, newNamespace))
+            {
+                // ... and move it to another namespace / file
+                
             }
             
             
@@ -199,7 +207,7 @@ public class RefactorWizard extends AbstractWizard
             {
                 // don't need to scan all files
                 List<Call> calls = findCalls(this.currentMatrix, oldCallPoint);
-                items.add(new RefactorRenameCall(this.currentMatrix, newCallPoint, calls.stream()
+                items.add(new RefactorSetField(this.currentMatrix, Tokens.Call, newCallPoint, calls.stream()
                         .map(c -> c.getNumber()).collect(Collectors.toList())));
             }
             else
@@ -220,7 +228,7 @@ public class RefactorWizard extends AbstractWizard
                         }
                         else
                         {
-                            items.add(new RefactorRenameCall(matrix, newCallPoint, calls.stream()
+                            items.add(new RefactorSetField(matrix, Tokens.Call, newCallPoint, calls.stream()
                                     .map(c -> c.getNumber()).collect(Collectors.toList())));
                         }
                     }
@@ -237,7 +245,7 @@ public class RefactorWizard extends AbstractWizard
     
     private List<Call> findCalls(Matrix matrix, String name)
     {
-        return matrix.getRoot().findAll(i -> i instanceof Call && ((Call)i).getName().equals(name))
+        return matrix.getRoot().findAll(i -> i instanceof Call && i.get(Tokens.Call).equals(name))
                 .stream().map(i -> (Call)i).collect(Collectors.toList()); 
     }
     

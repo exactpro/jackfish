@@ -88,6 +88,38 @@ public final class TestCase extends MatrixItem
     }
 
 	
+    @Override
+    public Object get(Tokens key)
+    {
+        switch (key)
+        {
+        case TestCase:
+            return this.name.get();
+        case Kind:
+            return this.kind.get();
+        case Depends:
+            return this.depends.get();
+        default:
+            return super.get(key);
+        }
+    }
+    
+    @Override
+    public void set(Tokens key, Object value)
+    {
+        switch (key)
+        {
+        case TestCase:
+            this.name.set((String)value);
+        case Kind:
+            this.kind.set((String)value);
+        case Depends:
+            this.depends.set((String)value);
+        default:
+            super.set(key, value);
+        }
+    }
+	
 	//==============================================================================================
 	// Interface Mutable
 	//==============================================================================================
