@@ -11,6 +11,7 @@ package com.exactprosystems.jf.tool.dictionary.actions;
 import com.exactprosystems.jf.api.app.ImageWrapper;
 import com.exactprosystems.jf.api.common.Str;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
+import com.exactprosystems.jf.documents.matrix.parser.listeners.ListProvider;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.ContainingParent;
 import com.exactprosystems.jf.tool.CssVariables;
@@ -84,6 +85,7 @@ public class ActionsController implements Initializable, ContainingParent
 	private Parent					pane;
 
 	private DictionaryFx			model;
+	private AbstractEvaluator		evaluator;
 	private NavigationController 	navigation; 
 	private ElementInfoController 	info;
 
@@ -114,6 +116,7 @@ public class ActionsController implements Initializable, ContainingParent
 	public void init(DictionaryFx model, GridPane gridPane, AbstractEvaluator evaluator, NavigationController navigation, ElementInfoController info)
 	{
 		this.model = model;
+		this.evaluator = evaluator;
 		this.navigation = navigation;
 		this.info = info;
 		this.expressionField = new ExpressionField(evaluator);
@@ -237,14 +240,15 @@ public class ActionsController implements Initializable, ContainingParent
 
 	public void resize(ActionEvent e)
 	{
-		Function<Toggle, Boolean> getBool = toggle -> this.groupSection.getSelectedToggle() == toggle;
-		int h = this.groupSection.getSelectedToggle() == this.rbSize ? this.ntfResizeH.getValue() : 0;
-		int w = this.groupSection.getSelectedToggle() == this.rbSize ? this.ntfResizeW.getValue() : 0;
+		Toggle selectedToggle = this.groupSection.getSelectedToggle();
+
+		int h = selectedToggle == this.rbSize ? this.ntfResizeH.getValue() : 0;
+		int w = selectedToggle == this.rbSize ? this.ntfResizeW.getValue() : 0;
 
 		tryCatch(() -> this.model.resize(
-				 getBool.apply(this.rbMin)
-				,getBool.apply(this.rbMax)
-				,getBool.apply(this.rbNormal)
+				  this.rbMin == selectedToggle
+				, this.rbMax == selectedToggle
+				, this.rbNormal == selectedToggle
 				, h ,w
 		), "Error on resize");
 	}
@@ -296,7 +300,7 @@ public class ActionsController implements Initializable, ContainingParent
 		this.cbSetProperty.getSelectionModel().selectFirst();
 	}
 
-	public void displayParameters(List<String> names)
+	public void displayParameters(List<String> names, Function<String, ListProvider> function)
 	{
 		if (names == null)
 		{
@@ -307,7 +311,7 @@ public class ActionsController implements Initializable, ContainingParent
 		{
 			this.listView.getItems().setAll(
 					names.stream()
-							.map(name -> new ExpressionFieldsPane(name, "", null))
+							.map(name -> new ExpressionFieldsPane(name, "", this.evaluator, function.apply(name)))
 							.collect(Collectors.toList()
 							)
 			);

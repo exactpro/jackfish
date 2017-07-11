@@ -8,6 +8,7 @@
 
 package com.exactprosystems.jf.tool.dictionary;
 
+import com.exactprosystems.jf.actions.ReadableValue;
 import com.exactprosystems.jf.api.app.*;
 import com.exactprosystems.jf.api.app.IWindow.SectionKind;
 import com.exactprosystems.jf.api.common.Str;
@@ -19,6 +20,7 @@ import com.exactprosystems.jf.documents.guidic.GuiDictionary;
 import com.exactprosystems.jf.documents.guidic.Section;
 import com.exactprosystems.jf.documents.guidic.Window;
 import com.exactprosystems.jf.documents.guidic.controls.AbstractControl;
+import com.exactprosystems.jf.documents.matrix.parser.listeners.ListProvider;
 import com.exactprosystems.jf.tool.ApplicationConnector;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.dictionary.DictionaryFxController.Result;
@@ -701,14 +703,14 @@ public class DictionaryFx extends GuiDictionary
 		{
 			this.applicationConnector.setIdAppEntry(null);
 			this.applicationConnector.setAppConnection(null);
-			this.controller.displayApplicationStatus(ApplicationStatus.Disconnected, null, null);
+			this.controller.displayApplicationStatus(ApplicationStatus.Disconnected, null, null, key -> null);
 		}
 		else
 		{
 			AppConnection appConnection = (AppConnection) getFactory().getConfiguration().getStoreMap().get(idAppStore);
 			this.applicationConnector.setIdAppEntry(appConnection.getId());
 			this.applicationConnector.setAppConnection(appConnection);
-			this.controller.displayApplicationStatus(ApplicationStatus.ConnectingFromStore, null, appConnection);
+			this.controller.displayApplicationStatus(ApplicationStatus.ConnectingFromStore, null, appConnection, key -> getListProvider(appConnection, key));
 		}
 	}
 
@@ -1104,7 +1106,26 @@ public class DictionaryFx extends GuiDictionary
 
 	private void displayApplicationStatus(ApplicationStatus status, AppConnection appConnection, Throwable throwable)
 	{
-		this.controller.displayApplicationStatus(status, throwable, appConnection);
+		this.controller.displayApplicationStatus(status, throwable, appConnection, key -> {
+			if (appConnection != null)
+			{
+				return getListProvider(appConnection, key);
+			}
+			return null;
+		});
+	}
+
+	private ListProvider getListProvider(AppConnection appConnection, String key)
+	{
+		IApplicationFactory factory = appConnection.getApplication().getFactory();
+		if (factory.canFillParameter(key))
+		{
+			return () -> Arrays.stream(factory.listForParameter(key))
+					.map(this.evaluator::createString)
+					.map(ReadableValue::new)
+					.collect(Collectors.toList());
+		}
+		return null;
 	}
 
 	private void displayApplicationControl(String title) throws Exception

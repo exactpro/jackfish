@@ -7,6 +7,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 package com.exactprosystems.jf.tool;
 
+import com.exactprosystems.jf.actions.ReadableValue;
 import com.exactprosystems.jf.api.app.AppConnection;
 import com.exactprosystems.jf.api.app.IApplicationFactory;
 import com.exactprosystems.jf.api.app.IApplicationPool;
@@ -20,9 +21,11 @@ import com.exactprosystems.jf.tool.helpers.DialogsHelper;
 import javafx.concurrent.Task;
 import javafx.scene.control.ButtonType;
 
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 public class ApplicationConnector
 {
@@ -128,7 +131,17 @@ public class ApplicationConnector
 		Settings settings = this.factory.getSettings();
 		final Map<String, String> parameters = settings.getMapValues(Settings.APPLICATION + idAppEntry, parametersName, strings);
 
-		ButtonType desision = DialogsHelper.showParametersDialog(title + idAppEntry, parameters, evaluator);
+		ButtonType desision = DialogsHelper.showParametersDialog(title + idAppEntry, parameters, evaluator, str ->
+		{
+			if (appFactory.canFillParameter(str))
+			{
+				return () -> Arrays.stream(appFactory.listForParameter(str))
+						.map(evaluator::createString)
+						.map(ReadableValue::new)
+						.collect(Collectors.toList());
+			}
+			return null;
+		});
 
 		if (desision == ButtonType.CANCEL)
 		{
