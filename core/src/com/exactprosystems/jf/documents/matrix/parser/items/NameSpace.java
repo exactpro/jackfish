@@ -112,6 +112,30 @@ public final class NameSpace extends MatrixItem
 		return this.name.get();
 	}
 
+    @Override
+    public Object get(Tokens key)
+    {
+        switch (key)
+        {
+        case NameSpace:
+            return this.name.get();
+        default:
+            return super.get(key);
+        }
+    }
+    
+    @Override
+    public void set(Tokens key, Object value)
+    {
+        switch (key)
+        {
+        case NameSpace:
+            this.name.set((String)value);
+        default:
+            super.set(key, value);
+        }
+    }
+	
 	// ==============================================================================================
 	// Protected members should be overridden
 	// ==============================================================================================

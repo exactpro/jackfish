@@ -111,6 +111,30 @@ public final class Call extends MatrixItem
 
 		return layout;
 	}
+	
+    @Override
+    public Object get(Tokens key)
+    {
+        switch (key)
+        {
+        case Call:
+            return this.name.get();
+        default:
+            return super.get(key);
+        }
+    }
+	
+	@Override
+	public void set(Tokens key, Object value)
+	{
+        switch (key)
+        {
+        case Call:
+            this.name.set((String)value);
+        default:
+            super.set(key, value);
+        }
+	}
 
 	//==============================================================================================
 	// Interface Mutable
@@ -139,16 +163,6 @@ public final class Call extends MatrixItem
 	public String getItemName()
 	{
 		return super.getItemName() + " " + this.name;
-	}
-
-	public String getName() 
-	{
-		return name.get();
-	}
-
-	public void setName(String name) 
-	{
-		this.name.set(name);
 	}
 
 	@Override

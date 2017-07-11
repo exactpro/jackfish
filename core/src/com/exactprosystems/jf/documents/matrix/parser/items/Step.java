@@ -111,6 +111,35 @@ public class Step extends MatrixItem
                 || SearchHelper.matches(this.identify.getExpression(), what, caseSensitive, wholeWord);
 	}
 
+	
+    @Override
+    public Object get(Tokens key)
+    {
+        switch (key)
+        {
+        case Kind:
+            return this.kind.get();
+        case Depends:
+            return this.depends.get();
+        default:
+            return super.get(key);
+        }
+    }
+    
+    @Override
+    public void set(Tokens key, Object value)
+    {
+        switch (key)
+        {
+        case Kind:
+            this.kind.set((String)value);
+        case Depends:
+            this.depends.set((String)value);
+        default:
+            super.set(key, value);
+        }
+    }
+    
 	//==============================================================================================
 	// Interface Mutable
 	//==============================================================================================

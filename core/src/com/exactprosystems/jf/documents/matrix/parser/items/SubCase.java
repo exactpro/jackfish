@@ -119,6 +119,30 @@ public final class SubCase extends MatrixItem
 		}
 
 	}
+	
+    @Override
+    public Object get(Tokens key)
+    {
+        switch (key)
+        {
+        case SubCase:
+            return this.name.get();
+        default:
+            return super.get(key);
+        }
+    }
+    
+    @Override
+    public void set(Tokens key, Object value)
+    {
+        switch (key)
+        {
+        case SubCase:
+            this.name.set((String)value);
+        default:
+            super.set(key, value);
+        }
+    }
 
 	// ==============================================================================================
 	// Protected members should be overridden
