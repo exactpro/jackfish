@@ -220,11 +220,23 @@
 
 }
 .matrixFinishedOk {
-	-fx-background-color : derived(#4A6E3A, 90%);
+	-fx-background-color : derived(rgb(74, 110, 58), 90%);
 
 }
 .matrixFinishedBad {
-	-fx-background-color : derived(#cd5c5c, 50%);
+	-fx-background-color : derived(rgb(205, 92, 92), 50%);
+
+}
+.itemPassed {
+	-fx-background-color : rgb(74, 110, 58,0.2)
+
+}
+.itemFailed {
+	-fx-background-color : rgb(205, 92, 92, 0.2)
+
+}
+.itemExecuting {
+	-fx-background-color : rgb(42, 117, 150, 0.1)
 
 }
 

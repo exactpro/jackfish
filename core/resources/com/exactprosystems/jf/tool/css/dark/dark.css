@@ -311,22 +311,33 @@ Text {
 .tab:hover.executingTab,
 .tab:selected.executingTab,
 .executingTab {
-	-fx-background-color : #5D53A2;
+	-fx-background-color : rgb(93, 83, 162);
 
 }
 .tab:hover.matrixFinishedOk,
 .tab:selected.matrixFinishedOk,
 .matrixFinishedOk {
-	-fx-background-color : #4A6E3A;
+	-fx-background-color : rgb(74, 110, 58);
 
 }
 .tab:hover.matrixFinishedBad,
 .tab:selected.matrixFinishedBad,
 .matrixFinishedBad {
-	-fx-background-color : derived(#cd5c5c, 50%);
+	-fx-background-color : derived(rgb(205, 92, 92), 50%);
 
 }
+.itemPassed {
+	-fx-background-color : rgb(74, 110, 58,0.2)
 
+}
+.itemFailed {
+	-fx-background-color : rgb(205, 92, 92, 0.2)
+
+}
+.itemExecuting {
+	-fx-background-color : rgb(93, 83, 162, 0.2)
+
+}
 .simpleItem {
 	-fx-border-color : lightgray;
 	-fx-border-width : 1 0 1 0;

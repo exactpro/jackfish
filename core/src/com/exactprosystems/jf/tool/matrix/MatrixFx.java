@@ -25,10 +25,7 @@ import com.exactprosystems.jf.documents.matrix.parser.Parameter;
 import com.exactprosystems.jf.documents.matrix.parser.Parameters;
 import com.exactprosystems.jf.documents.matrix.parser.Parser;
 import com.exactprosystems.jf.documents.matrix.parser.Tokens;
-import com.exactprosystems.jf.documents.matrix.parser.items.MatrixItem;
-import com.exactprosystems.jf.documents.matrix.parser.items.NameSpace;
-import com.exactprosystems.jf.documents.matrix.parser.items.TempItem;
-import com.exactprosystems.jf.documents.matrix.parser.items.TypeMandatory;
+import com.exactprosystems.jf.documents.matrix.parser.items.*;
 import com.exactprosystems.jf.documents.matrix.parser.listeners.IMatrixListener;
 import com.exactprosystems.jf.functions.Text;
 import com.exactprosystems.jf.tool.Common;
@@ -94,7 +91,6 @@ public class MatrixFx extends Matrix
 	public void save(String fileName) throws Exception
 	{
 		super.save(fileName);
-
 		if (this.controller != null)
 		{
 			this.controller.save(getName());
@@ -663,6 +659,10 @@ public class MatrixFx extends Matrix
         this.controller.showWatcher(this, (Context)getMatrixRunner().getContext());
 	}
 
+	void clearExecutingState()
+	{
+		this.getRoot().bypass(item -> item.changeExecutingState(MatrixItemExecutingState.None));
+	}
 	//==============================================================================================================================
 	private void init(DocumentFactory factory) throws Exception
 	{

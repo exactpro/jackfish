@@ -209,6 +209,7 @@ public final class TestCase extends MatrixItem
 	@Override
 	protected ReturnAndResult executeItSelf(long start, Context context, IMatrixListener listener, AbstractEvaluator evaluator, ReportBuilder report, Parameters parameters)
 	{
+		super.changeExecutingState(MatrixItemExecutingState.Executing);
         Variables locals = evaluator.createLocals(); 
 		ReturnAndResult ret = null;
 		Table table = context.getTable();
@@ -247,6 +248,7 @@ public final class TestCase extends MatrixItem
 	            {
 	                ret = new ReturnAndResult(start, Result.Failed, "Fail due the TestCase " + this.depends.get() + " is failed", ErrorKind.FAIL, this);
 	                updateTable(table, position, row, ret, ret.getError());
+	                super.changeExecutingState(MatrixItemExecutingState.Failed);
 	                return ret;
 	            }
 	        }
@@ -286,13 +288,14 @@ public final class TestCase extends MatrixItem
 		{
 		    logger.error(e.getMessage(), e);
             updateTable(table, position, row, ret, new MatrixError(e.getMessage(), ErrorKind.EXCEPTION, this));
+            changeExecutingState(MatrixItemExecutingState.Failed);
             return new ReturnAndResult(start, Result.Failed, e.getMessage(), ErrorKind.EXCEPTION, this);
 		}
 		finally
 		{
 		    evaluator.setLocals(locals);
 		}
-
+		super.changeExecutingState(ret.getResult().isFail() ? MatrixItemExecutingState.Failed : MatrixItemExecutingState.Passed);
 		return ret;
 	}
 
