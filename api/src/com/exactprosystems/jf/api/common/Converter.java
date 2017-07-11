@@ -23,15 +23,10 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import java.awt.*;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.lang.reflect.Array;
 import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.sql.Blob;
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -184,16 +179,16 @@ public class Converter
 
 		return new SerialBlob(outputStream.toByteArray());
 	}
-	
+
 	public static Storable blobToStorable(Blob blob) throws Exception
 	{
 		if (blob == null)
 		{
 			return null;
 		}
-		
+
 		Storable retValue = null;
-		try (InputStream in = blob.getBinaryStream(); 
+		try (InputStream in = blob.getBinaryStream();
 				ZipInputStream zis = new ZipInputStream(in))
 		{
 			ZipEntry nextEntry = null;
@@ -215,16 +210,16 @@ public class Converter
 						throw new Exception("Wrong structure");
 					}
 				}
-				
+
 				retValue.addFile(name, readAll(zis));
 				zis.closeEntry();
 			}
 		}
 		catch (Exception e)
-		{ 
+		{
 			e.printStackTrace();
 		}
-		
+
 		return retValue;
 	}
 
@@ -235,10 +230,30 @@ public class Converter
         {
             return null;
         }
-        
+
         return readAll(blob.getBinaryStream());
     }
-	
+
+    public static Blob serializableToBlob(Serializable object) throws Exception
+	{
+		try(ByteArrayOutputStream baos = new ByteArrayOutputStream();
+			ObjectOutputStream oos = new ObjectOutputStream(baos))
+		{
+			oos.writeObject(object);
+			return new SerialBlob(baos.toByteArray());
+		}
+
+	}
+
+	public static Serializable byteArrayToObject(byte[] array) throws Exception
+	{
+		try(ByteArrayInputStream is = new ByteArrayInputStream(array);
+			ObjectInputStream ois = new ObjectInputStream(is))
+		{
+			return (Serializable) ois.readObject();
+		}
+	}
+
 	//endregion
 
 	private static byte[] readAll(InputStream is) throws IOException
@@ -247,14 +262,13 @@ public class Converter
         int nRead;
         byte[] data = new byte[16384];
 
-        while ((nRead = is.read(data, 0, data.length)) != -1) 
+        while ((nRead = is.read(data, 0, data.length)) != -1)
         {
             buffer.write(data, 0, nRead);
         }
         buffer.flush();
         return buffer.toByteArray();
 	}
-	
 
 	public static void setFormats(Collection<String> formats)
 	{

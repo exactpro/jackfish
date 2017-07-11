@@ -539,11 +539,6 @@ public class TreeTableViewWithRectangles extends AnchorPane
         {
             Rectangle rec = xpath.getRectangle();
 
-            if (rec != null)
-            {
-                System.err.println(rec.intersects(keyRectangle) + " " + rec + " " + keyRectangle);
-            }
-            
             if (rec != null && rec.intersects(keyRectangle))
             {
                 set.add(rec);
