@@ -219,7 +219,6 @@ public class ActionsController implements Initializable, ContainingParent
 	//region NewInstance tab
 	public void newInstance(ActionEvent event)
 	{
-		//TODO think about it;
 		tryCatch(() -> {
 			Map<String, String> parameters = this.listView.getItems()
 					.stream()

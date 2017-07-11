@@ -77,7 +77,7 @@
 							</children>
 						</GridPane>
 						<Label id="$verMax"/>
-						<TabPane prefHeight="200.0" prefWidth="200.0" tabClosingPolicy="UNAVAILABLE" VBox.vgrow="ALWAYS">
+						<TabPane id="actionsTab" prefHeight="200.0" prefWidth="200.0" tabClosingPolicy="UNAVAILABLE" VBox.vgrow="ALWAYS">
 							<tabs>
 								<Tab text="Do">
 									<content>
@@ -180,7 +180,7 @@
 										</VBox>
 									</content>
 								</Tab>
-								<Tab text="Change">
+								<Tab text="Pos&amp;Size">
 									<content>
 										<VBox>
 											<children>
