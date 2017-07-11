@@ -185,48 +185,54 @@ public class RefactorWizard extends AbstractWizard
         String oldCallPoint = (oldNamespace.isEmpty() ? "" : (oldNamespace + ".")) + oldSubcase;
         String newCallPoint = (newNamespace.isEmpty() ? "" : (newNamespace + ".")) + newSubcase;
         
-        if (Str.areEqual(oldSubcase, newSubcase) && Str.areEqual(oldNamespace, newNamespace))
+        if (!Str.areEqual(oldCallPoint, newCallPoint))
+        {
+            Configuration config = super.context.getConfiguration();
+    
+            if (Str.areEqual(oldSubcase, newSubcase))
+            {
+//                items.add(new RefactorRenameCall(matrix, newName, calls));
+            }
+            
+            
+            if (oldNamespace.isEmpty())
+            {
+                // don't need to scan all files
+                List<Call> calls = findCalls(this.currentMatrix, oldCallPoint);
+                items.add(new RefactorRenameCall(this.currentMatrix, newCallPoint, calls.stream()
+                        .map(c -> c.getNumber()).collect(Collectors.toList())));
+            }
+            else
+            {
+                // scan everything
+                boolean onlyCheck = newNamespace.isEmpty();
+                config.forEach(d ->
+                {
+                    Matrix matrix = (Matrix)d;
+                    // try to find ...
+                    List<Call> calls = findCalls(matrix, oldCallPoint);
+                    if (calls.size() > 0)
+                    {
+                        if (onlyCheck)
+                        {
+                            items.add(new RefactorEmpty(matrix.getName() + " contains " + calls.size() + " reference(s)"));
+                            this.success = false;
+                        }
+                        else
+                        {
+                            items.add(new RefactorRenameCall(matrix, newCallPoint, calls.stream()
+                                    .map(c -> c.getNumber()).collect(Collectors.toList())));
+                        }
+                    }
+                }, DocumentKind.LIBRARY, DocumentKind.MATRIX);
+            }
+        }        
+
+        if (items.size() == 0)
         {
             items.add(new RefactorEmpty("No changes needed."));
             this.success = false;
-            return;
         }
-        
-        Configuration config = super.context.getConfiguration();
-
-        if (oldNamespace.isEmpty())
-        {
-            // don't need to scan all files
-            List<Call> calls = findCalls(this.currentMatrix, oldCallPoint);
-            items.add(new RefactorRenameCall(this.currentMatrix, newCallPoint, calls.stream()
-                    .map(c -> c.getNumber()).collect(Collectors.toList())));
-        }
-        else
-        {
-            // scan everything
-            boolean onlyCheck = newNamespace.isEmpty();
-            config.forEach(d ->
-            {
-                Matrix matrix = (Matrix)d;
-                // try to find ...
-                List<Call> calls = findCalls(matrix, oldCallPoint);
-                if (calls.size() > 0)
-                {
-                    if (onlyCheck)
-                    {
-                        items.add(new RefactorEmpty(matrix.getName() + " contains " + calls.size() + " reference(s)"));
-                        this.success = false;
-                    }
-                    else
-                    {
-                        items.add(new RefactorRenameCall(matrix, newCallPoint, calls.stream()
-                                .map(c -> c.getNumber()).collect(Collectors.toList())));
-                    }
-                }
-
-            }, DocumentKind.LIBRARY, DocumentKind.MATRIX);
-
-        }        
     }
     
     private List<Call> findCalls(Matrix matrix, String name)
