@@ -206,8 +206,10 @@ public class RefactorWizard extends AbstractWizard
                 items.add(new RefactorRemoveItem(this.currentMatrix, this.currentSubCase));
                 
                 Matrix newLib = config.getLib(newNamespace);
+                System.err.println(">> " + newLib.getClass());
+                
                 Optional<MatrixItem> namespace =  newLib.getRoot().find(i -> i instanceof NameSpace && Objects.equals(i.get(Tokens.Id), newNamespace));
-                items.add(new RefactorAddItem(newLib, namespace.get(), this.currentSubCase, 0)); // TODO
+                items.add(new RefactorAddItem(newLib, namespace.get(), this.currentSubCase, 0)); 
             }
             
             

@@ -192,12 +192,18 @@ public class MatrixFx extends Matrix
 		Command undo = () ->
 		{
 			super.remove(what);
-			this.controller.remove(what);
+			if (this.controller != null)
+			{
+			    this.controller.remove(what);
+			}
 		};
 		Command redo = () ->
 		{
 			super.insert(item, index, what);
-			this.controller.display(what, true);
+            if (this.controller != null)
+            {
+                this.controller.display(what, true);
+            }
 		};
 		if (!(what instanceof TempItem))
 		{
@@ -250,7 +256,10 @@ public class MatrixFx extends Matrix
 		}
 		finally
 		{
-			this.controller.remove(tempItem);
+            if (this.controller != null)
+            {
+                this.controller.remove(tempItem);
+            }
 			tempItem.remove();
 			enumerate();
 		}
@@ -267,11 +276,17 @@ public class MatrixFx extends Matrix
 			int index = super.getIndex(item);
 			Command undo = () -> {
 				super.insert(parent, index, item);
-				this.controller.display(item, false);
+	            if (this.controller != null)
+	            {
+	                this.controller.display(item, false);
+	            }
 			};
 			Command redo = () -> {
 				super.remove(item);
-				this.controller.remove(item);
+	            if (this.controller != null)
+	            {
+	                this.controller.remove(item);
+	            }
 			};
 			addCommand(undo, redo);
 			super.changed(true);
@@ -323,7 +338,10 @@ public class MatrixFx extends Matrix
 				collect.sort(Comparator.comparingInt(Temp::getIndex));
 				collect.forEach(temp -> {
 					super.insert(temp.getParent(), temp.getIndex(), temp.getItem());
-					this.controller.display(temp.getItem(), false);
+		            if (this.controller != null)
+		            {
+		                this.controller.display(temp.getItem(), false);
+		            }
 				});
 				enumerate();
 			};
@@ -331,7 +349,10 @@ public class MatrixFx extends Matrix
 			{
 				items.forEach(item -> {
 					super.remove(item);
-					this.controller.remove(item);
+		            if (this.controller != null)
+		            {
+		                this.controller.remove(item);
+		            }
 				});
 				enumerate();
 			};
@@ -551,13 +572,16 @@ public class MatrixFx extends Matrix
 		insert(to.getParent(), index == -1 ? 0 : index, from.clone());
 		remove(from);
 		enumerate();
-		this.controller.refresh();
+        refresh();
 		super.changed(true);
 	}
 
 	public void setCurrent(MatrixItem item, boolean needExpand)
 	{
-		this.controller.setCurrent(item, needExpand);
+        if (this.controller != null)
+        {
+            this.controller.setCurrent(item, needExpand);
+        }
 	}
 
 	public void breakPoint(List<MatrixItem> items)
@@ -604,7 +628,10 @@ public class MatrixFx extends Matrix
 			getFactory().getConfiguration().getRunnerListener().subscribe(getMatrixRunner());
 			if (!getMatrixRunner().isRunning())
 			{
-				this.controller.displayBeforeStart("Matrix will start at " + this.startDate);
+	            if (this.controller != null)
+	            {
+	                this.controller.displayBeforeStart("Matrix will start at " + this.startDate);
+	            }
 			}
 			getMatrixRunner().start();
 		}
@@ -615,8 +642,11 @@ public class MatrixFx extends Matrix
 		if (getMatrixRunner() != null)
 		{
 		    getMatrixRunner().stop();
-			this.controller.refresh();
-			this.controller.displayAfterStopped("Matrix stopped");
+            refresh();
+            if (this.controller != null)
+            {
+    			this.controller.displayAfterStopped("Matrix stopped");
+            }
 		}
 	}
 
@@ -650,13 +680,19 @@ public class MatrixFx extends Matrix
 		if (getMatrixRunner() != null && getMatrixRunner().getReportName() != null)
 		{
 			File file = new File(getMatrixRunner().getReportName());
-			this.controller.showResult(file, this.getName());
+            if (this.controller != null)
+            {
+                this.controller.showResult(file, this.getName());
+            }
 		}
 	}
 
 	public void showWatch()
 	{
-        this.controller.showWatcher(this, (Context)getMatrixRunner().getContext());
+        if (this.controller != null)
+        {
+            this.controller.showWatcher(this, (Context)getMatrixRunner().getContext());
+        }
 	}
 
 	void clearExecutingState()
@@ -719,7 +755,7 @@ public class MatrixFx extends Matrix
 			insert(parent, index + i, item);
 		}
 		enumerate();
-		this.controller.refresh();
+        refresh();
 		super.changed(true);
 	}
 
@@ -805,7 +841,7 @@ public class MatrixFx extends Matrix
 				}
 			});
 			enumerate();
-			this.controller.refresh();
+			refresh();
 		}
 	}
 
@@ -824,6 +860,14 @@ public class MatrixFx extends Matrix
 				logger.error(e.getMessage(), e);
 			}
 		}
+	}
+	
+	private void refresh()
+	{
+        if (this.controller != null)
+        {
+            this.controller.refresh();
+        }
 	}
 
 	private boolean isControllerInit = false;
