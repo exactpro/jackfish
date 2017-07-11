@@ -4,5 +4,6 @@ public enum MatrixItemExecutingState
 {
 	None,
 	Failed,
-	Passed
+	Passed,
+	Executing
 }

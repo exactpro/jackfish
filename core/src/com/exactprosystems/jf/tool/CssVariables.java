@@ -69,6 +69,7 @@ public class CssVariables
 	public static final String	MATRIX_FINISHED_BAD			= "matrixFinishedBad";
 	public static final String	ITEM_PASSED					= "itemPassed";
 	public static final String	ITEM_FAILED					= "itemFailed";
+	public static final String	ITEM_EXECUTING				= "itemExecuting";
 
 	public static final String	ITEM_OFF_TRUE				= "trueOffItem";
 	public static final String SIMPLE_ITEM = "simpleItem";

@@ -43,7 +43,7 @@ public class MatrixTreeRow extends TreeTableRow<MatrixItem>
 	{
 		super.updateItem(item, empty);
 		this.getStyleClass().removeAll(CssVariables.SIMPLE_ITEM, CssVariables.ITEM_OFF_TRUE);
-		this.getStyleClass().removeAll(CssVariables.ITEM_PASSED, CssVariables.ITEM_FAILED);
+		this.getStyleClass().removeAll(CssVariables.ITEM_PASSED, CssVariables.ITEM_FAILED, CssVariables.ITEM_EXECUTING);
 		if (item != null)
 		{
 			if (item instanceof End)
@@ -65,6 +65,7 @@ public class MatrixTreeRow extends TreeTableRow<MatrixItem>
 			{
 				case Failed: this.getStyleClass().add(CssVariables.ITEM_FAILED); break;
 				case Passed: this.getStyleClass().add(CssVariables.ITEM_PASSED); break;
+				case Executing: this.getStyleClass().add(CssVariables.ITEM_EXECUTING); break;
 			}
 			this.getStyleClass().add(CssVariables.SIMPLE_ITEM);
 			if (!item.canExecute())

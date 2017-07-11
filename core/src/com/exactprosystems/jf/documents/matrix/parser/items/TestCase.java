@@ -209,6 +209,7 @@ public final class TestCase extends MatrixItem
 	@Override
 	protected ReturnAndResult executeItSelf(long start, Context context, IMatrixListener listener, AbstractEvaluator evaluator, ReportBuilder report, Parameters parameters)
 	{
+		super.changeExecutingState(MatrixItemExecutingState.Executing);
         Variables locals = evaluator.createLocals(); 
 		ReturnAndResult ret = null;
 		Table table = context.getTable();

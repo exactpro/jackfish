@@ -235,6 +235,10 @@
 	-fx-background-color : rgb(205, 92, 92, 0.2)
 
 }
+.itemExecuting {
+	-fx-background-color : rgb(42, 117, 150, 0.1)
+
+}
 
 .boldLabel {
 	-fx-font-weight : bold;

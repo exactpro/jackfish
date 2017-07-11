@@ -311,7 +311,7 @@ Text {
 .tab:hover.executingTab,
 .tab:selected.executingTab,
 .executingTab {
-	-fx-background-color : #5D53A2;
+	-fx-background-color : rgb(93, 83, 162);
 
 }
 .tab:hover.matrixFinishedOk,
@@ -332,6 +332,10 @@ Text {
 }
 .itemFailed {
 	-fx-background-color : rgb(205, 92, 92, 0.2)
+
+}
+.itemExecuting {
+	-fx-background-color : rgb(93, 83, 162, 0.2)
 
 }
 .simpleItem {
