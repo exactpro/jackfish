@@ -56,13 +56,20 @@ namespace UIAdapter
                     else
                     {
                         AutomationElementCollection col = owner.FindAll(TreeScope.Descendants, by);
-                        ret = new AutomationElement[col.Count];
-                        int i = 0;
-                        foreach (AutomationElement e in col)
+                        if (col.Count == 0 && isMatches(owner, Uid, Clazz, Name))
                         {
-                            ret[i++] = e;
+                            return new AutomationElement[] { owner };
                         }
-                        return ret;
+                        else
+                        {
+                            ret = new AutomationElement[col.Count];
+                            int i = 0;
+                            foreach (AutomationElement e in col)
+                            {
+                                ret[i++] = e;
+                            }
+                            return ret;
+                        }
                     }
                 }
                 return ret;
@@ -92,6 +99,10 @@ namespace UIAdapter
         private static bool isMatches(AutomationElement owner, string uid, string clazz, string name)
         {
             AutomationElement.AutomationElementInformation info = owner.Current;
+            if (uid == null && clazz == null && name == null)
+            {
+                return false;
+            }
             if ((uid != null && uid != info.AutomationId) ||
                 (clazz != null && clazz != info.ClassName) ||
                 (name != null && name != info.Name))

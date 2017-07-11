@@ -11,7 +11,7 @@ Test;MatrixItems;;;
     runMatrix;'MatrixItems'
 
 
-//
+// 
 #Id;#TestCase;#Kind;#Depends;#For
 Test;EventHandlers;;;
     #Call;testName
@@ -109,6 +109,12 @@ Test;Controls;;;
 
 
 #Id;#TestCase;#Kind;#Depends;#For
+Test;Matchers;;;
+    #Call;testName
+    runMatrix;'Matchers'
+
+
+#Id;#TestCase;#Kind;#Depends;#For
 Test;Check plugin independs matrix;;;
     #Call;testName
     runMatrix;'PluginIndepends'
@@ -138,7 +144,7 @@ Test;Test RF.jf;;;
     runMatrix;'TestRF'
 
 
-//
+// 
 #Id;#TestCase;#Kind;#Depends;#For
 REPORT;Cleanup;;;
     #Action;$Table;$Title;$BeforeTestCase
@@ -152,7 +158,7 @@ REPORT;Cleanup;;;
     TBLSLCT1.Out.size() == 0;'There are fails in the tests'
 
     #Id;#SubCase;testName
-    runMatrix;Running test;'System'
+    runMatrix;Running test;'Matchers'
         #Id;#Action;$Matrix
         MXRN1;MatrixRun;matrixTestsPath + testName +  '.jf'
 

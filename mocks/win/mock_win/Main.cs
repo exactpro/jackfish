@@ -14,7 +14,7 @@ using System.Windows.Forms;
 
 namespace mock_win
 {
-    public partial class Main : Form
+    public partial class MockWin : Form
     {
         private int counter = 0;
         private int sliderValue = -99;
@@ -34,7 +34,7 @@ namespace mock_win
         bool redExpanded = false;
         //MySpin mySpinner;
 
-        public Main()
+        public MockWin()
         {
             InitializeComponent();
             fillTable();

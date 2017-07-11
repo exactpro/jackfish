@@ -19,28 +19,28 @@ namespace mock_win
 
         private void Dialog_KeyDown(object sender, KeyEventArgs e)
         {
-            ((Main)Application.OpenForms[1]).GlobalKeyDown(sender, e);
+            ((MockWin)Application.OpenForms[1]).GlobalKeyDown(sender, e);
         }
 
         private void Dialog_KeyPress(object sender, KeyPressEventArgs e)
         {
-            ((Main)Application.OpenForms[1]).GlobalKeyPress(sender, e);
+            ((MockWin)Application.OpenForms[1]).GlobalKeyPress(sender, e);
         }
 
         private void Dialog_KeyUp(object sender, KeyEventArgs e)
         {
-            ((Main)Application.OpenForms[1]).GlobalKeyUp(sender, e);
+            ((MockWin)Application.OpenForms[1]).GlobalKeyUp(sender, e);
         }
 
         private void Dialog_MouseDown(object sender, MouseEventArgs e)
         {
-            string text = ((Main)Application.OpenForms[1]).writeControlNameOnCentralLabel(sender);
-            ((Main)Application.OpenForms[1]).writeTextOncentralLabelMouse(text, e);
+            string text = ((MockWin)Application.OpenForms[1]).writeControlNameOnCentralLabel(sender);
+            ((MockWin)Application.OpenForms[1]).writeTextOncentralLabelMouse(text, e);
         }
 
         private void Dialog_MouseMove(object sender, MouseEventArgs e)
         {
-            ((Main)Application.OpenForms[1]).CommonMouseMove(sender, e);
+            ((MockWin)Application.OpenForms[1]).CommonMouseMove(sender, e);
         }
     }
 }

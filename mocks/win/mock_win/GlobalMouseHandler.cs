@@ -14,9 +14,9 @@ namespace mock_win
         private const int WM_MOUSEMOVE = 0x200;
         private const int WM_KEYDOWN = 0x100;
         private const int WM_KEYUP = 0x101;
-        private Main main;
+        private MockWin main;
 
-        public GlobalMouseHandler(Main m)
+        public GlobalMouseHandler(MockWin m)
         {
             this.main = m;
         }

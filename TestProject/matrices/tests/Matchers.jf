@@ -1,0 +1,111 @@
+#Id;#TestCase;#Kind;#Depends;#For
+INIT;;;;
+    #Call;plugin
+    RUN;'Web'
+
+    #Call;plugin
+    RUN;'Swing'
+
+    #Call;plugin
+    RUN;'Win'
+
+    #Id;#Action;$Decoraded
+    RESTBL1;ResultTable;true
+
+    #Action;$Table;$Title;$BeforeTestCase
+    TableReport;RESTBL1.Out;'result';'INIT'
+
+
+#Id;#TestCase;#Kind;#Depends;#For
+SUBCASES;;;;
+    #Id;#SubCase;plugin
+    CLOSE;close;plugin
+        #Id;#Action;$AppConnection
+        APPSTP1;ApplicationStop;appCon
+
+        #Action;$Table;$Title;$BeforeTestCase
+        TableReport;table_result;'Result';'INIT'
+
+    #EndSubCase
+
+    #Id;#SubCase;plugin
+    START;start;plugin
+        #Id;#Action;Plugin;Control;Operation;Expected;Actual;Result
+        TBL1;TableCreate;;;;;;
+
+        #Id;#Global;#Let
+        table_result;1;TBL1.Out
+
+        #If
+        plugin == 'Web'
+            #Id;#Action;$AppId;Browser;URL
+            APPSTR1;ApplicationStart;mockWebApp;mockWebBrowser;mockWebURL
+
+            #Id;#Global;#Let
+            appCon;1;APPSTR1.Out
+
+        #EndIf
+
+        #If
+        plugin == 'Swing'
+            #Id;#Action;$AppId;Jar;Args;MainClass
+            APPSTR1;ApplicationStart;mockSwingApp;mockSwingJar;'';mockSwingClass
+
+            #Id;#Global;#Let
+            appCon;1;APPSTR1.Out
+
+        #EndIf
+
+        #If
+        plugin == 'Win'
+            #Id;#Action;$AppId;Exec;WorkDir;Args
+            APPSTR1;ApplicationStart;mockWinApp;mockWinExec;mockWinDir;''
+
+            #Id;#Global;#Let
+            appCon;1;APPSTR1.Out
+
+        #EndIf
+
+        #Id;#Global;#Let
+        failed;1;false
+
+    #EndSubCase
+
+    #Id;#SubCase;plugin
+    RUN;Run;'Win'
+        #Call;plugin
+        START;plugin
+
+        #Step;#Kind;#For;#Depends
+        '\'' + plugin + '\' plugin';;;
+            #Id;#Let
+            map;new LinkedHashMap()
+
+            #For;#From;#To;#Step
+            control;1;3;1
+                #For;#From;#To;#Step
+                owner;0;3;1
+                    #Let
+                    map.put('Button' + control + owner , 'Do.get()')
+
+                #EndFor
+
+            #EndFor
+
+            #Id;#IgnoreErr;#Action;$Dialog;$AppConnection;$Fields
+            DLG;1;DialogFill;'Matchers';appCon;map
+
+            #Action;
+            Print;plugin + ' matcher - ' + DLG.Out
+
+            #Assert;#Message
+            DLG.Out != null && DLG.Errors == null;
+
+        #EndStep
+
+        #Call;plugin
+        CLOSE;plugin
+
+    #EndSubCase
+
+

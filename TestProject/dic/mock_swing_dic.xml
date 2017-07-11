@@ -150,15 +150,6 @@
         <onClose/>
         <close/>
     </window>
-    <window name="NewWindow">
-        <self/>
-        <onOpen/>
-        <run>
-            <any/>
-        </run>
-        <onClose/>
-        <close/>
-    </window>
     <window name="DialogForTestWaitWithRef">
         <self>
             <panel id="owner" uid="" name="panelWithHiddenArea"/>
@@ -189,6 +180,30 @@
         <onClose>
             <wait owner="owner" name="hideButton" addition="WaitToDisappear" timeout="5000"/>
         </onClose>
+        <close/>
+    </window>
+    <window name="Matchers">
+        <self>
+            <frame id="Owner1" xpath="//JFrame[@name=&amp;quot;frame0&amp;quot;]"/>
+            <frame id="Owner2" uid="" xpath="" name="frame0"/>
+            <frame id="Owner3" uid="" xpath="" class="javax.swing.JFrame" name="" title="Mock swing app"/>
+        </self>
+        <onOpen/>
+        <run>
+            <button id="Button10" uid="" name="Button"/>
+            <button id="Button11" uid="" owner="Owner1" name="Button"/>
+            <button id="Button12" uid="" owner="Owner2" name="Button"/>
+            <button id="Button13" uid="" owner="Owner3" name="Button"/>
+            <button id="Button20" uid="" xpath="//JButton[@name=&amp;quot;Button&amp;quot;]" name="" text=""/>
+            <button id="Button21" uid="" xpath=".//JButton[@name=&amp;quot;Button&amp;quot;]" owner="Owner1" name="" text=""/>
+            <button id="Button22" uid="" xpath=".//JButton[@name=&amp;quot;Button&amp;quot;]" owner="Owner2" name="" text=""/>
+            <button id="Button23" uid="" xpath=".//JButton[@name=&amp;quot;Button&amp;quot;]" owner="Owner3" name="" text=""/>
+            <button id="Button30" uid="" class="javax.swing.JButton" name="" title="" action="Button" text="Button" tooltip="Button"/>
+            <button id="Button31" uid="" owner="Owner1" class="javax.swing.JButton" name="" title="" action="Button" text="Button" tooltip="Button"/>
+            <button id="Button32" uid="" owner="Owner2" class="javax.swing.JButton" name="" title="" action="Button" text="Button" tooltip="Button"/>
+            <button id="Button33" uid="" owner="Owner3" class="javax.swing.JButton" name="" title="" action="Button" text="Button" tooltip="Button"/>
+        </run>
+        <onClose/>
         <close/>
     </window>
 </dictionary>

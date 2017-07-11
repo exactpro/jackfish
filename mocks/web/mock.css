@@ -101,6 +101,10 @@ a.down {
 #navbar li:hover { background-color: #f90; }
 #navbar ul li:hover { background-color: #666; }
 
+.bodyClass {
+    color: black;
+}
+
 .editableBox {
     width: 275px;
     height: 30px;

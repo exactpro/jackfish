@@ -187,4 +187,28 @@
         <onClose/>
         <close/>
     </window>
+    <window name="Matchers">
+        <self>
+            <any id="Owner1" xpath="//body"/>
+            <any id="Owner2" uid="bodyId" xpath="" name=""/>
+            <any id="Owner3" uid="" xpath="" class="bodyClass" name="bodyName" title="bodyTitle" text=""/>
+        </self>
+        <onOpen/>
+        <run>
+            <button id="Button10" uid="button" name=""/>
+            <button id="Button11" uid="button" owner="Owner1" name=""/>
+            <button id="Button12" uid="button" owner="Owner2" name=""/>
+            <button id="Button13" uid="button" owner="Owner3" name=""/>
+            <button id="Button20" uid="" xpath="//button[@name=&amp;quot;Button&amp;quot;]" name="" text=""/>
+            <button id="Button21" uid="" xpath=".//button[@name=&amp;quot;Button&amp;quot;]" owner="Owner1" name="" text=""/>
+            <button id="Button22" uid="" xpath=".//button[@name=&amp;quot;Button&amp;quot;]" owner="Owner2" name="" text=""/>
+            <button id="Button23" uid="" xpath=".//button[@name=&amp;quot;Button&amp;quot;]" owner="Owner3" name="" text=""/>
+            <button id="Button30" uid="" class="" name="Button" title="Button" action="" text="Button" tooltip=""/>
+            <button id="Button31" uid="" owner="Owner1" class="" name="Button" title="Button" action="" text="Button" tooltip=""/>
+            <button id="Button32" uid="" owner="Owner2" class="" name="Button" title="Button" action="" text="Button" tooltip=""/>
+            <button id="Button33" uid="" owner="Owner3" class="" name="Button" title="Button" action="" text="Button" tooltip=""/>
+        </run>
+        <onClose/>
+        <close/>
+    </window>
 </dictionary>

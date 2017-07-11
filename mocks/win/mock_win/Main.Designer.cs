@@ -1,6 +1,6 @@
 ﻿namespace mock_win
 {
-    partial class Main
+    partial class MockWin
     {
         /// <summary>
         /// Required designer variable.
@@ -29,7 +29,7 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Main));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MockWin));
             this.Button = new System.Windows.Forms.Button();
             this.TextBox = new System.Windows.Forms.TextBox();
             this.CheckBox = new System.Windows.Forms.CheckBox();
@@ -784,7 +784,7 @@
             resources.ApplyResources(this.selectLabel, "selectLabel");
             this.selectLabel.Name = "selectLabel";
             // 
-            // Main
+            // MockWin
             // 
             resources.ApplyResources(this, "$this");
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -827,7 +827,7 @@
             this.Controls.Add(this.TextBox);
             this.Controls.Add(this.Button);
             this.KeyPreview = true;
-            this.Name = "Main";
+            this.Name = "MockWin";
             this.RightToLeftChanged += new System.EventHandler(this.Main_RightToLeftChanged);
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.GlobalKeyDown);
             this.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.GlobalKeyPress);

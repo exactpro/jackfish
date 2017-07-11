@@ -411,9 +411,9 @@ public class MockApp
 	private void createPanelButton()
 	{
 		JPanel panelButton = createPanel("panelButton");
-
 		String name = "Button";
 		JButton button = new JButton(name);
+		button.setToolTipText("Button");
 		button.addActionListener(event -> centralLabel.setText("Button_click"));
 		button.addMouseListener(mouseListener(name));
 		addListeners(button, name);

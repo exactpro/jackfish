@@ -52,231 +52,6 @@
         <onClose/>
         <close/>
     </window>
-    <window name="Main_wizard">
-        <self>
-            <any id="owner" xpath="/Window"/>
-        </self>
-        <onOpen/>
-        <run>
-            <checkBox id="CheckBox" xpath=".//Window[@uid=&amp;quot;Main&amp;quot;]/CheckBox[1]" owner="owner" rows="" header="" columns="">
-                <info>
-                    <xpath>/Window/CheckBox[1]</xpath>
-                    <rectangle x1="0.022701475595913734" y1="0.5097799511002445" x2="0.9500567536889898" y2="0.5378973105134475"/>
-                    <node>CheckBox</node>
-                    <attr name="class">WindowsForms10.BUTTON.app.0.141b42a_r14_ad1</attr>
-                    <attr name="enabled">True</attr>
-                    <attr name="name">Press_me</attr>
-                    <attr name="uid">checkBox2</attr>
-                    <attr name="visible">True</attr>
-                </info>
-            </checkBox>
-            <table id="Table" xpath=".//Window[@uid=&amp;quot;Main&amp;quot;]/DataGrid" owner="owner" rows="" header="" columns="">
-                <info>
-                    <xpath>/Window/DataGrid</xpath>
-                    <rectangle x1="0.4608399545970488" y1="0.19070904645476772" x2="0.9500567536889898" y2="0.3740831295843521"/>
-                    <node>DataGrid</node>
-                    <attr name="class">WindowsForms10.SysListView32.app.0.141b42a_r14_ad1</attr>
-                    <attr name="enabled">True</attr>
-                    <attr name="uid">listView1</attr>
-                    <attr name="visible">True</attr>
-                </info>
-            </table>
-            <slider id="Slider" xpath=".//Window[@uid=&amp;quot;Main&amp;quot;]/Slider" owner="owner" rows="" header="" columns="">
-                <info>
-                    <xpath>/Window/Slider</xpath>
-                    <rectangle x1="0.022701475595913734" y1="0.4474327628361858" x2="0.4460839954597049" y2="0.5024449877750611"/>
-                    <node>Slider</node>
-                    <attr name="class">WindowsForms10.msctls_trackbar32.app.0.141b42a_r14_ad1</attr>
-                    <attr name="enabled">True</attr>
-                    <attr name="uid">trackBar1</attr>
-                    <attr name="visible">True</attr>
-                </info>
-            </slider>
-            <comboBox id="ComboBox" xpath=".//Window[@uid=&amp;quot;Main&amp;quot;]/ComboBox" owner="owner" rows="" header="" columns="">
-                <info>
-                    <xpath>/Window/ComboBox</xpath>
-                    <rectangle x1="0.022701475595913734" y1="0.4132029339853301" x2="0.4460839954597049" y2="0.4388753056234719"/>
-                    <node>ComboBox</node>
-                    <attr name="class">WindowsForms10.COMBOBOX.app.0.141b42a_r14_ad1</attr>
-                    <attr name="enabled">True</attr>
-                    <attr name="uid">comboBox1</attr>
-                    <attr name="visible">True</attr>
-                </info>
-            </comboBox>
-            <radioButton id="Blue" owner="owner" name="Blue" rows="" header="" columns="">
-                <info>
-                    <xpath>/Window/Pane[5]/RadioButton[1]</xpath>
-                    <rectangle x1="0.337116912599319" y1="0.38508557457212717" x2="0.3893303064699205" y2="0.4058679706601467"/>
-                    <node>RadioButton</node>
-                    <attr name="class">WindowsForms10.BUTTON.app.0.141b42a_r14_ad1</attr>
-                    <attr name="enabled">True</attr>
-                    <attr name="name">Blue</attr>
-                    <attr name="uid">rb4</attr>
-                    <attr name="visible">True</attr>
-                </info>
-            </radioButton>
-            <label id="moveLabel" uid="moveLabel" owner="owner" rows="" header="" columns="">
-                <info>
-                    <xpath>/Window/Text[1]</xpath>
-                    <rectangle x1="0.64472190692395" y1="0.07212713936430318" x2="0.7627695800227015" y2="0.08801955990220049"/>
-                    <node>Text</node>
-                    <attr name="class">WindowsForms10.STATIC.app.0.141b42a_r14_ad1</attr>
-                    <attr name="enabled">True</attr>
-                    <attr name="name">DataGridView_move</attr>
-                    <attr name="uid">moveLabel</attr>
-                    <attr name="visible">True</attr>
-                </info>
-            </label>
-            <label id="centralLabel" uid="centralLabel" owner="owner" rows="" header="" columns="">
-                <info>
-                    <xpath>/Window/Text[2]</xpath>
-                    <rectangle x1="0.29284903518728717" y1="0.07212713936430318" x2="0.40635641316685583" y2="0.08801955990220049"/>
-                    <node>Text</node>
-                    <attr name="class">WindowsForms10.STATIC.app.0.141b42a_r14_ad1</attr>
-                    <attr name="enabled">True</attr>
-                    <attr name="name">DataGridView_click</attr>
-                    <attr name="uid">centralLabel</attr>
-                    <attr name="visible">True</attr>
-                </info>
-            </label>
-            <textBox id="TextBox" xpath=".//Window[@uid=&amp;quot;Main&amp;quot;]/Edit" owner="owner" rows="" header="" columns="">
-                <info>
-                    <xpath>/Window/Edit</xpath>
-                    <rectangle x1="0.02383654937570942" y1="0.1295843520782396" x2="0.9500567536889898" y2="0.15403422982885084"/>
-                    <node>Edit</node>
-                    <attr name="class">WindowsForms10.EDIT.app.0.141b42a_r14_ad1</attr>
-                    <attr name="enabled">True</attr>
-                    <attr name="name">DataGridView_click</attr>
-                    <attr name="uid">textBox1</attr>
-                    <attr name="visible">True</attr>
-                </info>
-            </textBox>
-            <button id="Button" xpath=".//Window[@uid=&amp;quot;Main&amp;quot;]/Button[2]" owner="owner" rows="" header="" columns="">
-                <info>
-                    <xpath>/Window/Button[2]</xpath>
-                    <rectangle x1="0.022701475595913734" y1="0.09290953545232274" x2="0.9500567536889898" y2="0.12102689486552567"/>
-                    <node>Button</node>
-                    <attr name="class">WindowsForms10.BUTTON.app.0.141b42a_r14_ad1</attr>
-                    <attr name="enabled">True</attr>
-                    <attr name="name">button1</attr>
-                    <attr name="uid">button1</attr>
-                    <attr name="visible">True</attr>
-                </info>
-            </button>
-            <progressBar xpath=".//Window[@uid=&amp;quot;Main&amp;quot;]/ProgressBar" owner="owner" rows="" header="" columns="">
-                <info>
-                    <xpath>/Window/ProgressBar</xpath>
-                    <rectangle x1="0.022701475595913734" y1="0.823960880195599" x2="0.9500567536889898" y2="0.8447432762836186"/>
-                    <node>ProgressBar</node>
-                    <attr name="class">WindowsForms10.msctls_progress32.app.0.141b42a_r14_ad1</attr>
-                    <attr name="enabled">True</attr>
-                    <attr name="uid">progressBar1</attr>
-                    <attr name="visible">True</attr>
-                </info>
-            </progressBar>
-            <listView xpath=".//Window[@uid=&amp;quot;Main&amp;quot;]/List" owner="owner" rows="" header="" columns="">
-                <info>
-                    <xpath>/Window/List</xpath>
-                    <rectangle x1="0.022701475595913734" y1="0.7322738386308069" x2="0.9500567536889898" y2="0.8166259168704156"/>
-                    <node>List</node>
-                    <attr name="class">WindowsForms10.LISTBOX.app.0.141b42a_r14_ad1</attr>
-                    <attr name="enabled">True</attr>
-                    <attr name="name">tab2</attr>
-                    <attr name="uid">listBox1</attr>
-                    <attr name="visible">True</attr>
-                </info>
-            </listView>
-            <tabPanel xpath=".//Window[@uid=&amp;quot;Main&amp;quot;]/Tab" owner="owner" rows="" header="" columns="">
-                <info>
-                    <xpath>/Window/Tab</xpath>
-                    <rectangle x1="0.022701475595913734" y1="0.6711491442542787" x2="0.9500567536889898" y2="0.726161369193154"/>
-                    <node>Tab</node>
-                    <attr name="class">WindowsForms10.SysTabControl32.app.0.141b42a_r14_ad1</attr>
-                    <attr name="enabled">True</attr>
-                    <attr name="uid">tabControl1</attr>
-                    <attr name="visible">True</attr>
-                </info>
-            </tabPanel>
-            <tree xpath=".//Window[@uid=&amp;quot;Main&amp;quot;]/Tree" owner="owner" rows="" header="" columns="">
-                <info>
-                    <xpath>/Window/Tree</xpath>
-                    <rectangle x1="0.022701475595913734" y1="0.5452322738386308" x2="0.9500567536889898" y2="0.6638141809290954"/>
-                    <node>Tree</node>
-                    <attr name="class">WindowsForms10.SysTreeView32.app.0.141b42a_r14_ad1</attr>
-                    <attr name="enabled">True</attr>
-                    <attr name="uid">treeView1</attr>
-                    <attr name="visible">True</attr>
-                </info>
-            </tree>
-            <button id="Any" owner="owner" name="Any" rows="" header="" columns="">
-                <info>
-                    <xpath>/Window/Button[1]</xpath>
-                    <rectangle x1="0.022701475595913734" y1="0.9474327628361858" x2="0.9500567536889898" y2="0.9755501222493888"/>
-                    <node>Button</node>
-                    <attr name="class">WindowsForms10.BUTTON.app.0.141b42a_r14_ad1</attr>
-                    <attr name="enabled">True</attr>
-                    <attr name="name">Any</attr>
-                    <attr name="uid">button3</attr>
-                    <attr name="visible">True</attr>
-                </info>
-            </button>
-            <panel id="vScroll" xpath=".//Window[@uid=&amp;quot;Main&amp;quot;]/Pane[2]" owner="owner" rows="" header="" columns="">
-                <info>
-                    <xpath>/Window/Pane[2]</xpath>
-                    <rectangle x1="0.9625425652667423" y1="0.07212713936430318" x2="0.985244040862656" y2="0.8985330073349633"/>
-                    <node>Pane</node>
-                    <attr name="class">WindowsForms10.SCROLLBAR.app.0.141b42a_r14_ad1</attr>
-                    <attr name="enabled">True</attr>
-                    <attr name="name">panel</attr>
-                    <attr name="uid">vScrollBar1</attr>
-                    <attr name="visible">True</attr>
-                </info>
-            </panel>
-            <panel id="hScroll" xpath=".//Window[@uid=&amp;quot;Main&amp;quot;]/Pane[3]" owner="owner" rows="" header="" columns="">
-                <info>
-                    <xpath>/Window/Pane[3]</xpath>
-                    <rectangle x1="0.022701475595913734" y1="0.8863080684596577" x2="0.9500567536889898" y2="0.9070904645476773"/>
-                    <node>Pane</node>
-                    <attr name="class">WindowsForms10.SCROLLBAR.app.0.141b42a_r14_ad1</attr>
-                    <attr name="enabled">True</attr>
-                    <attr name="name">panel</attr>
-                    <attr name="uid">hScrollBar1</attr>
-                    <attr name="visible">True</attr>
-                </info>
-            </panel>
-        </run>
-        <onClose/>
-        <close/>
-    </window>
-    <window name="NewWindow">
-        <self>
-            <any id="qweqw" xpath="//Window"/>
-        </self>
-        <onOpen/>
-        <run/>
-        <onClose/>
-        <close/>
-    </window>
-    <window name="sdfsd">
-        <self>
-            <any/>
-        </self>
-        <onOpen/>
-        <run/>
-        <onClose/>
-        <close/>
-    </window>
-    <window name="SilverLight">
-        <self>
-            <any id="owner" xpath="//Pane[@class=&amp;quot;Internet Explorer_Server&amp;quot; and @name=&amp;quot;SilverLightMock&amp;quot;]" name=""/>
-        </self>
-        <onOpen/>
-        <run>
-            <comboBox id="autocompleteBox" xpath=".//ComboBox[@uid=&amp;quot;autocompleteBox&amp;quot;]" owner="owner"/>
-        </run>
-        <onClose/>
-        <close/>
-    </window>
     <window name="DialogForTestWaitWithoutRef">
         <self/>
         <onOpen>
@@ -303,6 +78,30 @@
         <onClose>
             <wait owner="owner" ref="buttonHideArea" addition="WaitToDisappear" timeout="5000"/>
         </onClose>
+        <close/>
+    </window>
+    <window name="Matchers">
+        <self>
+            <dialog id="Owner1" xpath="/Window"/>
+            <dialog id="Owner2" uid="MockWin" xpath="" name=""/>
+            <dialog id="Owner3" uid="" xpath="" class="WindowsForms10.Window.8.app.0.141b42a_r12_ad1" name="MockWin"/>
+        </self>
+        <onOpen/>
+        <run>
+            <button id="Button10" uid="Button" name=""/>
+            <button id="Button11" uid="Button" owner="Owner1" name=""/>
+            <button id="Button12" uid="Button" owner="Owner2" name=""/>
+            <button id="Button13" uid="Button" owner="Owner3" name=""/>
+            <button id="Button20" uid="" xpath="//Button[@uid=&amp;quot;Button&amp;quot;]" name="" text=""/>
+            <button id="Button21" uid="" xpath=".//Button[@uid=&amp;quot;Button&amp;quot;]" owner="Owner1" name="" text=""/>
+            <button id="Button22" uid="" xpath=".//Button[@uid=&amp;quot;Button&amp;quot;]" owner="Owner2" name="" text=""/>
+            <button id="Button23" uid="" xpath=".//Button[@uid=&amp;quot;Button&amp;quot;]" owner="Owner3" name="" text=""/>
+            <button id="Button30" uid="" class="WindowsForms10.BUTTON.app.0.141b42a_r12_ad1" name="Button" text=""/>
+            <button id="Button31" uid="" owner="Owner1" class="WindowsForms10.BUTTON.app.0.141b42a_r12_ad1" name="Button" text=""/>
+            <button id="Button32" uid="" owner="Owner2" class="WindowsForms10.BUTTON.app.0.141b42a_r12_ad1" name="Button" text=""/>
+            <button id="Button33" uid="" owner="Owner3" class="WindowsForms10.BUTTON.app.0.141b42a_r12_ad1" name="Button" text=""/>
+        </run>
+        <onClose/>
         <close/>
     </window>
 </dictionary>

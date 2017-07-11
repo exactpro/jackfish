@@ -16,7 +16,7 @@ namespace mock_win
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new Main());
+            Application.Run(new MockWin());
         }
     }
 }
