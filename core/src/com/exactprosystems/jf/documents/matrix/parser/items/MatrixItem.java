@@ -304,6 +304,11 @@ public abstract class MatrixItem implements IMatrixItem, Mutable, Cloneable
 		return this.matrixItemState;
 	}
 
+	public MatrixItemExecutingState getExecutingState()
+	{
+		return this.executingState;
+	}
+
     //==========================================================================================================================
 	// Public members
 	//==========================================================================================================================
@@ -726,6 +731,11 @@ public abstract class MatrixItem implements IMatrixItem, Mutable, Cloneable
 		this.matrixItemState = state;
 	}
 
+	public final void changeExecutingState(MatrixItemExecutingState state)
+	{
+		this.executingState = state;
+	}
+
 	public final boolean matches(String what, boolean caseSensitive, boolean wholeWord)
 	{
 		if (Str.IsNullOrEmpty(what))
@@ -1068,6 +1078,7 @@ public abstract class MatrixItem implements IMatrixItem, Mutable, Cloneable
 	protected MatrixItem parent;
 	protected ReturnAndResult result;
 	protected boolean breakPoint;
-	protected MatrixItemState matrixItemState = MatrixItemState.None;
-	protected ImageWrapper screenshot = null;
+	protected MatrixItemState          matrixItemState = MatrixItemState.None;
+	protected MatrixItemExecutingState executingState  = MatrixItemExecutingState.None;
+	protected ImageWrapper             screenshot      = null;
 }

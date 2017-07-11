@@ -153,6 +153,8 @@ public class MatrixFxController implements Initializable, ContainingParent, IMat
 	{
 		Platform.runLater(() ->
 		{
+			this.model.clearExecutingState();
+			this.refresh();
 			CustomTab tab1 = checkDocument(matrix);
 			String format = String.format("Matrix '%s' started...", matrix.getName());
 			if (this.listView != null)
@@ -202,7 +204,7 @@ public class MatrixFxController implements Initializable, ContainingParent, IMat
 			{
 				DialogsHelper.showInfo(format);
 			}
-			this.tree.refresh();
+			this.refresh();
 		});
 	}
 
@@ -234,7 +236,7 @@ public class MatrixFxController implements Initializable, ContainingParent, IMat
 	@Override
 	public void finished(Matrix matrix, MatrixItem item, Result result)
 	{
-		this.refreshTreeIfToogle();
+		refresh();
 	}
 
 	@Override
@@ -304,6 +306,8 @@ public class MatrixFxController implements Initializable, ContainingParent, IMat
 	{
 		this.tab.getStyleClass().removeAll(CssVariables.MATRIX_FINISHED_OK, CssVariables.MATRIX_FINISHED_BAD);
 		this.tab.saved(name);
+		this.model.clearExecutingState();
+		this.refresh();
 	}
 
 	public void showResult(File file, String matrixName)
@@ -426,7 +430,7 @@ public class MatrixFxController implements Initializable, ContainingParent, IMat
 	private void mark(boolean flag)
 	{
 		tryCatch(() -> this.model.markFirstLevel(flag), "Error on marking all items");
-		this.tree.refresh();
+		refresh();
 	}
 
 	// ------------------------------------------------------------------------------------------------------------------
