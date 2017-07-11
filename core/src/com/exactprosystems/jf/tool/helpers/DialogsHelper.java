@@ -24,6 +24,7 @@ import com.exactprosystems.jf.documents.config.Configuration;
 import com.exactprosystems.jf.documents.config.Context;
 import com.exactprosystems.jf.documents.matrix.Matrix;
 import com.exactprosystems.jf.documents.matrix.parser.items.MatrixItem;
+import com.exactprosystems.jf.documents.matrix.parser.listeners.ListProvider;
 import com.exactprosystems.jf.functions.HelpKind;
 import com.exactprosystems.jf.functions.Notifier;
 import com.exactprosystems.jf.functions.Table;
@@ -95,7 +96,7 @@ public abstract class DialogsHelper
 		SaveFile
 	}
 
-	public static ButtonType showParametersDialog(String title, final Map<String, String> parameters, AbstractEvaluator evaluator)
+	public static ButtonType showParametersDialog(String title, final Map<String, String> parameters, AbstractEvaluator evaluator, Function<String, ListProvider> function)
 	{
 		Dialog<ButtonType> dialog = new Dialog<>();
 		Common.addIcons(((Stage) dialog.getDialogPane().getScene().getWindow()));
@@ -106,7 +107,7 @@ public abstract class DialogsHelper
 		dialog.getDialogPane().getButtonTypes().addAll(btnYes);
 		ListView<ExpressionFieldsPane> listView = new ListView<>();
 		dialog.getDialogPane().setContent(listView);
-		parameters.entrySet().forEach(entry -> listView.getItems().addAll(new ExpressionFieldsPane(entry.getKey(), entry.getValue(), evaluator)));
+		parameters.forEach((key, value) -> listView.getItems().addAll(new ExpressionFieldsPane(key, value, evaluator, function.apply(key))));
 		dialog.getDialogPane().getStylesheets().addAll(Common.currentThemesPaths());
 		Optional<ButtonType> buttonType = dialog.showAndWait();
 		if (buttonType.isPresent())

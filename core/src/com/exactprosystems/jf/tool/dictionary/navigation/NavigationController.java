@@ -295,6 +295,11 @@ public class NavigationController implements Initializable, ContainingParent
 		this.model.sendKeys(text, currentElement(), currentWindow());
 	}
 
+	public void getValue() throws Exception
+	{
+		this.model.getValue(currentElement(), currentWindow());
+	}
+
 	public void click() throws Exception
 	{
 		this.model.click(currentElement(), currentWindow());

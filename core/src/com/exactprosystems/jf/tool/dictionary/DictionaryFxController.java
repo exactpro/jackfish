@@ -8,15 +8,13 @@
 
 package com.exactprosystems.jf.tool.dictionary;
 
-import com.exactprosystems.jf.api.app.AppConnection;
-import com.exactprosystems.jf.api.app.IControl;
-import com.exactprosystems.jf.api.app.IWindow;
+import com.exactprosystems.jf.api.app.*;
 import com.exactprosystems.jf.api.app.IWindow.SectionKind;
-import com.exactprosystems.jf.api.wizard.WizardManager;
-import com.exactprosystems.jf.api.app.ImageWrapper;
+import com.exactprosystems.jf.api.common.ParametersKind;
 import com.exactprosystems.jf.common.Settings;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.documents.config.Configuration;
+import com.exactprosystems.jf.documents.matrix.parser.listeners.ListProvider;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.ContainingParent;
 import com.exactprosystems.jf.tool.custom.console.ConsoleText;
@@ -34,9 +32,13 @@ import javafx.scene.Parent;
 import javafx.scene.control.SplitPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
+
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.ResourceBundle;
+import java.util.function.Function;
 
 public class DictionaryFxController implements Initializable, ContainingParent
 {
@@ -161,10 +163,25 @@ public class DictionaryFxController implements Initializable, ContainingParent
 		this.actionsController.displayImage(imageWrapper);
 	}
 
-	public void displayApplicationStatus(ApplicationStatus status, Throwable throwable, AppConnection appConnection)
+	public void displayApplicationStatus(ApplicationStatus status, Throwable throwable, AppConnection appConnection, Function<String, ListProvider> function)
 	{
 		this.navigationController.setAppConnection(appConnection);
 		this.actionsController.displayApplicationStatus(status, throwable);
+		if (appConnection != null)
+		{
+			IApplicationFactory factory = appConnection.getApplication().getFactory();
+			String[] getProps = factory.wellKnownParameters(ParametersKind.GET_PROPERTY);
+			String[] setProps = factory.wellKnownParameters(ParametersKind.SET_PROPERTY);
+			this.actionsController.displayProperties(Arrays.asList(getProps), Arrays.asList(setProps));
+
+			String[] params = factory.wellKnownParameters(ParametersKind.NEW_INSTANCE);
+			this.actionsController.displayParameters(Arrays.asList(params), function);
+		}
+		else
+		{
+			this.actionsController.displayProperties(new ArrayList<>(), new ArrayList<>());
+			this.actionsController.displayParameters(null, function);
+		}
 	}
 
 	public void displayTitles(Collection<String> titles)

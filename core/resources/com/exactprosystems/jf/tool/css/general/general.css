@@ -101,6 +101,11 @@
 
 }
 
+#actionsTab .tab-header-area .tab-header-background {
+	-fx-background-color : transparent;
+
+}
+
 .dialog-pane > .button-bar > .container {
 	-fx-spacing : sizeMax;
 

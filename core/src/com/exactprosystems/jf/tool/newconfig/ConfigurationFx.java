@@ -675,7 +675,7 @@ public class ConfigurationFx extends Configuration
 			final Map<String, String> parameters = settings.getMapValues(Settings.SERVICE + idEntry, parametersName, strings);
 
 			AbstractEvaluator evaluator = createEvaluator();
-			ButtonType buttonType = DialogsHelper.showParametersDialog(title + idEntry, parameters, evaluator);
+			ButtonType buttonType = DialogsHelper.showParametersDialog(title + idEntry, parameters, evaluator, key -> null);
 			if (buttonType == ButtonType.CANCEL)
 			{
 				return;
