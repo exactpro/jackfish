@@ -1,7 +1,7 @@
 #Id;#NameSpace
 LIB_2;Standart libraries
     #Id;#SubCase;str
-    qqq;name;
+    qqq1;name;
         #Return
         str.toUpperCase()
 

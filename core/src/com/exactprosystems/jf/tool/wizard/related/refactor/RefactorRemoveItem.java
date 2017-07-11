@@ -11,19 +11,24 @@ package com.exactprosystems.jf.tool.wizard.related.refactor;
 import java.util.List;
 
 import com.exactprosystems.jf.api.wizard.WizardCommand;
+import com.exactprosystems.jf.documents.matrix.Matrix;
 import com.exactprosystems.jf.documents.matrix.parser.items.MatrixItem;
-import com.exactprosystems.jf.documents.matrix.parser.items.SubCase;
-import com.exactprosystems.jf.tool.matrix.MatrixFx;
+import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.wizard.CommandBuilder;
 
-public class RefactorAddSubcase extends Refactor
+public class RefactorRemoveItem   extends Refactor
 {
 	private List<WizardCommand> command;
+    private String message;
 
-	public RefactorAddSubcase(MatrixFx matrix, MatrixItem where, SubCase subcase)
+	public RefactorRemoveItem(Matrix matrix, MatrixItem item)
 	{
-//		this.command = CommandBuilder.start().addMatrixItem(matrix, where, subcase, 0).build();
-		this.command = CommandBuilder.start().print("" + matrix + " " + where + " " + subcase).build();
+        this.message = "Remove '" + item +  "' from '" + Common.getRelativePath(matrix.getName()) + "'";
+        CommandBuilder builder = CommandBuilder.start();
+        builder.loadDocument(matrix);
+        builder.removeMatrixItem(matrix, item);
+        builder.saveDocument(matrix);
+        this.command = builder.build();
 	}
 	
 	public List<WizardCommand> getCommands()
@@ -34,6 +39,6 @@ public class RefactorAddSubcase extends Refactor
 	@Override
 	public String toString()
 	{
-		return "Add SubCase";
+		return this.message;
 	}
 }

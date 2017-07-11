@@ -19,6 +19,7 @@ import com.exactprosystems.jf.documents.config.Configuration;
 import com.exactprosystems.jf.documents.matrix.Matrix;
 import com.exactprosystems.jf.documents.matrix.parser.Tokens;
 import com.exactprosystems.jf.documents.matrix.parser.items.Call;
+import com.exactprosystems.jf.documents.matrix.parser.items.MatrixItem;
 import com.exactprosystems.jf.documents.matrix.parser.items.NameSpace;
 import com.exactprosystems.jf.documents.matrix.parser.items.SubCase;
 import com.exactprosystems.jf.documents.DocumentKind;
@@ -27,7 +28,9 @@ import com.exactprosystems.jf.tool.helpers.DialogsHelper;
 import com.exactprosystems.jf.tool.matrix.MatrixFx;
 import com.exactprosystems.jf.tool.wizard.AbstractWizard;
 import com.exactprosystems.jf.tool.wizard.related.refactor.Refactor;
+import com.exactprosystems.jf.tool.wizard.related.refactor.RefactorAddItem;
 import com.exactprosystems.jf.tool.wizard.related.refactor.RefactorEmpty;
+import com.exactprosystems.jf.tool.wizard.related.refactor.RefactorRemoveItem;
 import com.exactprosystems.jf.tool.wizard.related.refactor.RefactorSetField;
 
 import javafx.collections.ObservableList;
@@ -44,13 +47,14 @@ import java.util.stream.Collectors;
 
 @WizardAttribute(
         name                = "Refactor wizard", 
-        pictureName         = "GherkinWizard.jpg", 
+        pictureName         = "RefactorWizard.jpg", 
         category            = WizardCategory.MATRIX, 
         shortDescription    = "This wizard helps to manage SubCases.", 
         experimental        = false, 
         strongCriteries     = true, 
         criteries           = { MatrixFx.class, SubCase.class }, 
-        detailedDescription = ""
+        detailedDescription = "When it is needed to chahge name of Subcase it may affect on matrixes which use it."
+                + "This wizard can help accurately to do it. You may change not only name of Subcase but also its namespace."
 )
 public class RefactorWizard extends AbstractWizard
 {
@@ -199,7 +203,11 @@ public class RefactorWizard extends AbstractWizard
             if (!Str.areEqual(oldNamespace, newNamespace))
             {
                 // ... and move it to another namespace / file
+                items.add(new RefactorRemoveItem(this.currentMatrix, this.currentSubCase));
                 
+                Matrix newLib = config.getLib(newNamespace);
+                Optional<MatrixItem> namespace =  newLib.getRoot().find(i -> i instanceof NameSpace && Objects.equals(i.get(Tokens.Id), newNamespace));
+                items.add(new RefactorAddItem(newLib, namespace.get(), this.currentSubCase, 0)); // TODO
             }
             
             

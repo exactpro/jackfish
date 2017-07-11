@@ -13,18 +13,18 @@ import java.util.List;
 import com.exactprosystems.jf.api.wizard.WizardCommand;
 import com.exactprosystems.jf.documents.matrix.Matrix;
 import com.exactprosystems.jf.documents.matrix.parser.Tokens;
+import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.wizard.CommandBuilder;
 
 public class RefactorSetField  extends Refactor
 {
 	private List<WizardCommand> command;
-	private String file;
-	private int size;
+	private String message;
 
 	public RefactorSetField(Matrix matrix, Tokens token, String value, List<Integer> itemIds)
 	{
-	    this.file = matrix.getName();
-	    this.size = itemIds.size();
+        int size = itemIds.size();
+        this.message = "Set field '" + token + "' to '" + value + "' in '" + Common.getRelativePath(matrix.getName()) + "' : " + size;
 	    CommandBuilder builder = CommandBuilder.start();
         builder.loadDocument(matrix);
 	    itemIds.forEach(c -> 
@@ -43,6 +43,6 @@ public class RefactorSetField  extends Refactor
 	@Override
 	public String toString()
 	{
-		return this.file + " : " + this.size;
+	    return this.message;
 	}
 }
