@@ -227,6 +227,7 @@ public class Step extends MatrixItem
     @Override
 	protected ReturnAndResult executeItSelf(long start, Context context, IMatrixListener listener, AbstractEvaluator evaluator, ReportBuilder report, Parameters parameters)
 	{
+		super.changeExecutingState(MatrixItemExecutingState.Executing);
         Variables locals = evaluator.createLocals(); 
 		ReturnAndResult ret = null;
 		Table table = context.getTable();
@@ -267,6 +268,7 @@ public class Step extends MatrixItem
             {
                 ret = new ReturnAndResult(start, Result.StepFailed, this.identify.getValueAsString(), ErrorKind.WRONG_PARAMETERS, this);
                 updateTable(table, position, row, ret, ret.getError());
+                super.changeExecutingState(MatrixItemExecutingState.Failed);
                 return ret;
             }
             Object identifyValue = this.identify.getValue();
@@ -282,6 +284,7 @@ public class Step extends MatrixItem
                 {
                     ret = new ReturnAndResult(start, Result.StepFailed, "Fail due the Step " + this.depends.get() + " is failed", ErrorKind.FAIL, this);
                     updateTable(table, position, row, ret, ret.getError());
+					super.changeExecutingState(MatrixItemExecutingState.Failed);
                     return ret;
                 }
             }
@@ -324,13 +327,14 @@ public class Step extends MatrixItem
 		{
 			logger.error(e.getMessage(), e);
 			updateTable(table, position, row, ret, new MatrixError(e.getMessage(), ErrorKind.EXCEPTION, this));
+			super.changeExecutingState(MatrixItemExecutingState.Failed);
 			return new ReturnAndResult(start, Result.StepFailed, e.getMessage(), ErrorKind.EXCEPTION, this);
 		}
 		finally
 		{
 		    evaluator.setLocals(locals);
 		}
-
+		super.changeExecutingState(ret.getResult().isFail() ? MatrixItemExecutingState.Failed : MatrixItemExecutingState.Passed);
 		return ret.getResult() == Result.Failed ? new ReturnAndResult(start, ret, Result.StepFailed): ret;
 	}
 

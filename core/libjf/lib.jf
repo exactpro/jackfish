@@ -3,7 +3,7 @@ LIB;Standart libraries
     #Id;#SubCase;str
     callLibFromLib2;;
         #Id;#Call;str
-        CALL_1;LIB_2.callFromLib13;str
+        CALL_1;LIB_2.name;str
 
         #Return
         CALL_1
