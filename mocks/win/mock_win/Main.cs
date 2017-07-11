@@ -46,7 +46,7 @@ namespace mock_win
             createMenu();
 
             this.timer = new Timer();
-            this.timer.Interval = 100;
+            this.timer.Interval = 50;
             this.timer.Tick += new EventHandler(timer_Tick);
             this.timer.Enabled = true;
 

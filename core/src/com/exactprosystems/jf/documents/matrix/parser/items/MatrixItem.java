@@ -304,6 +304,60 @@ public abstract class MatrixItem implements IMatrixItem, Mutable, Cloneable
 		return this.matrixItemState;
 	}
 
+    public Object get(Tokens key)
+    {
+
+//        protected MutableValue<String>            id;
+//        protected MutableValue<Boolean>           off;
+//        protected MutableValue<Boolean>           repOff;
+//        protected MutableValue<Boolean>           global;
+//        protected MutableValue<Boolean>           ignoreErr;
+//        protected MutableArrayList<CommentString> comments;
+//        protected Parameters                      parameters;
+//        protected MutableArrayList<MatrixItem>    children;
+        // TODO
+
+        switch (key)
+        {
+        case Id:
+            return this.id.get();
+        case Off:
+            return this.off.get();
+        case RepOff:
+            return this.repOff.get();
+        case Global:
+            return this.global.get();
+        case IgnoreErr:
+            return this.ignoreErr.get();
+        default:
+            return null;
+        }
+    }
+
+    public void set(Tokens key, Object value)
+    {
+        switch (key)
+        {
+        case Id:
+            this.id.set((String)value);
+            break;
+        case Off:
+            this.off.set((Boolean)value);
+            break;
+        case RepOff:
+            this.repOff.set((Boolean)value);
+            break;
+        case Global:
+            this.global.set((Boolean)value);
+            break;
+        case IgnoreErr:
+            this.ignoreErr.set((Boolean)value);
+            break;
+        default:
+            break;
+        }
+    }
+
 	public MatrixItemExecutingState getExecutingState()
 	{
 		return this.executingState;
@@ -1061,24 +1115,24 @@ public abstract class MatrixItem implements IMatrixItem, Mutable, Cloneable
 	// define state of this item
 	private static final String VALID_IDENTIFIER_REGEXP = "^[a-zA-Z_$][a-zA-Z_$0-9]*$";
 
-	protected MutableValue<String> 		id;
-	protected MutableValue<Boolean> 	off;
-    protected MutableValue<Boolean>     repOff;
-	protected MutableValue<Boolean>  	global;
-	protected MutableValue<Boolean>  	ignoreErr;
-	protected MutableArrayList<CommentString> comments;
-    protected Parameters parameters;
-	protected MutableArrayList<MatrixItem> children;
+    protected MutableValue<String>            id;
+    protected MutableValue<Boolean>           off;
+    protected MutableValue<Boolean>           repOff;
+    protected MutableValue<Boolean>           global;
+    protected MutableValue<Boolean>           ignoreErr;
+    protected MutableArrayList<CommentString> comments;
+    protected Parameters                      parameters;
+    protected MutableArrayList<MatrixItem>    children;
 
-	// do not define state
-	protected Object layout;
-    protected Matrix source;
-    protected Matrix owner;
-    protected int number;
-	protected MatrixItem parent;
-	protected ReturnAndResult result;
-	protected boolean breakPoint;
-	protected MatrixItemState          matrixItemState = MatrixItemState.None;
-	protected MatrixItemExecutingState executingState  = MatrixItemExecutingState.None;
-	protected ImageWrapper             screenshot      = null;
+    // do not define state
+    protected Object                          layout;
+    protected Matrix                          source;
+    protected Matrix                          owner;
+    protected int                             number;
+    protected MatrixItem                      parent;
+    protected ReturnAndResult                 result;
+    protected boolean                         breakPoint;
+    protected MatrixItemState                 matrixItemState         = MatrixItemState.None;
+	protected MatrixItemExecutingState        executingState  = MatrixItemExecutingState.None;
+    protected ImageWrapper                    screenshot              = null;
 }

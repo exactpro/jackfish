@@ -382,7 +382,7 @@ SUBCASES;;;;
                 #RepOff;#ForEach;#In
                 1;operation;operations
                     #If
-                    plugin.equals('Win') && operation.Kind == OperationKind.SET
+                    plugin.equals('Win') && operation.Kind == OperationKind.SET && control.Name.equals('Spinner')
                         #Action;
                         Print;'TODO: operation \'setValue\' for \'Spinner\' in \'Win\' pluggin was skipped'
 
