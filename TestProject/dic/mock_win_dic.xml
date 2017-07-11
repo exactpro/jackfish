@@ -21,7 +21,7 @@
             <panel id="Panel" uid="Panel" class="" name="" addition="Many"/>
             <dialog id="Dialog" uid="" xpath="" name="Dialog" title="" addition="Many"/>
             <listView id="List" uid="List" class="" addition="Many"/>
-            <menu id="Menu" uid="Main" xpath="" class="" name="Application" action="" text="" addition="Many"/>
+            <menu id="Menu" uid="MockWin" xpath="" class="" name="Application" action="" text="" addition="Many"/>
             <menuItem id="MenuItem" xpath="" class="" name="MenuItem" action="" text="" addition="Many"/>
             <treeItem id="TreeItem"/>
             <toolTip id="Tooltip" text="" addition="Many"/>
