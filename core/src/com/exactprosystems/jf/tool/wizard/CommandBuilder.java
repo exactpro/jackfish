@@ -53,6 +53,7 @@ public class CommandBuilder
     {
         this.commands.add(context -> 
         {
+            System.err.println("## ++ " + matrix + " " + what + " " + where + " " + index);
             matrix.insert(where, index, what);
             where.init(matrix, matrix);
         });
@@ -63,7 +64,10 @@ public class CommandBuilder
     {
         this.commands.add(context -> 
         {
+            System.err.println("## -- " + matrix + " " + what + " ##=" + matrix.hashCode());
+            matrix.getRoot().bypass(System.err::println);
             matrix.remove(what);
+            matrix.getRoot().bypass(System.err::println);
         });
         return this;
     }
@@ -137,6 +141,7 @@ public class CommandBuilder
 		{
 			Common.tryCatch(() -> 
 			{ 
+	            System.err.println("## save " + " ##=" + doc.hashCode());
 			    doc.save(doc.getName());
 			    doc.close(context.getFactory().getSettings());
 			}, "Error on save " + doc.getName());

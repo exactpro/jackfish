@@ -666,7 +666,10 @@ public abstract class MatrixItem implements IMatrixItem, Mutable, Cloneable
 		if (this.parent != null)
 		{
 			int index = this.parent.index(this);
+            System.err.println(">>>> " + parent + " " + index);
+            System.err.println(">>>> ###=" + parent.getMatrix().hashCode() + " " + index + " size = " + parent.children.size());
 			parent.children.remove(index);
+            System.err.println(">>>> after " + " size = " + parent.children.size());
 		}
 		this.parent = null;
 	}
