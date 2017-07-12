@@ -5,99 +5,99 @@ INIT;Setup;;;
 
 
 // 
-#Id;#TestCase;#Kind;#Depends;#For
-Test;MatrixItems;;;
+#Id;#Off;#TestCase;#Kind;#Depends;#For
+Test;1;MatrixItems;;;
     #Call;testName
     runMatrix;'MatrixItems'
 
 
 // 
-#Id;#TestCase;#Kind;#Depends;#For
-Test;EventHandlers;;;
+#Id;#Off;#TestCase;#Kind;#Depends;#For
+Test;1;EventHandlers;;;
     #Call;testName
     runMatrix;'EventHandlers'
 
 
-#Id;#TestCase;#Kind;#Depends;#For
-Test;Basic;;;
+#Id;#Off;#TestCase;#Kind;#Depends;#For
+Test;1;Basic;;;
     #Call;testName
     runMatrix;'Basic'
 
 
-#Id;#TestCase;#Kind;#Depends;#For
-Test;GUI;;;
+#Id;#Off;#TestCase;#Kind;#Depends;#For
+Test;1;GUI;;;
     #Call;testName
     runMatrix;'GUI'
 
 
-#Id;#TestCase;#Kind;#Depends;#For
-Test;System;;;
+#Id;#Off;#TestCase;#Kind;#Depends;#For
+Test;1;System;;;
     #Call;testName
     runMatrix;'System'
 
 
-#Id;#TestCase;#Kind;#Depends;#For
-Test;Report;;;
+#Id;#Off;#TestCase;#Kind;#Depends;#For
+Test;1;Report;;;
     #Call;testName
     runMatrix;'Report'
 
 
-#Id;#TestCase;#Kind;#Depends;#For
-Test;App;;;
+#Id;#Off;#TestCase;#Kind;#Depends;#For
+Test;1;App;;;
     #Call;testName
     runMatrix;'App'
 
 
-#Id;#TestCase;#Kind;#Depends;#For
-Test;Messages;;;
+#Id;#Off;#TestCase;#Kind;#Depends;#For
+Test;1;Messages;;;
     #Call;testName
     runMatrix;'Messages'
 
 
-#Id;#TestCase;#Kind;#Depends;#For
-Test;Clients;;;
+#Id;#Off;#TestCase;#Kind;#Depends;#For
+Test;1;Clients;;;
     #Call;testName
     runMatrix;'Clients'
 
 
-#Id;#TestCase;#Kind;#Depends;#For
-Test;Services;;;
+#Id;#Off;#TestCase;#Kind;#Depends;#For
+Test;1;Services;;;
     #Call;testName
     runMatrix;'Services'
 
 
-#Id;#TestCase;#Kind;#Depends;#For
-Test;Tables;;;
+#Id;#Off;#TestCase;#Kind;#Depends;#For
+Test;1;Tables;;;
     #Call;testName
     runMatrix;'Tables'
 
 
-#Id;#TestCase;#Kind;#Depends;#For
-Test;Text;;;
+#Id;#Off;#TestCase;#Kind;#Depends;#For
+Test;1;Text;;;
     #Call;testName
     runMatrix;'Text'
 
 
-#Id;#TestCase;#Kind;#Depends;#For
-Test;XML;;;
+#Id;#Off;#TestCase;#Kind;#Depends;#For
+Test;1;XML;;;
     #Call;testName
     runMatrix;'XML'
 
 
-#Id;#TestCase;#Kind;#Depends;#For
-Test;SQL;;;
+#Id;#Off;#TestCase;#Kind;#Depends;#For
+Test;1;SQL;;;
     #Call;testName
     runMatrix;'SQL'
 
 
-#Id;#TestCase;#Kind;#Depends;#For
-Test;Matrix;;;
+#Id;#Off;#TestCase;#Kind;#Depends;#For
+Test;1;Matrix;;;
     #Call;testName
     runMatrix;'Matrix'
 
 
-#Id;#TestCase;#Kind;#Depends;#For
-Test;Controls;;;
+#Id;#Off;#TestCase;#Kind;#Depends;#For
+Test;1;Controls;;;
     #Call;testName;param
     runControls;'Controls';'Web'
 
@@ -114,32 +114,32 @@ Test;Matchers;;;
     runMatrix;'Matchers'
 
 
-#Id;#TestCase;#Kind;#Depends;#For
-Test;Check plugin independs matrix;;;
+#Id;#Off;#TestCase;#Kind;#Depends;#For
+Test;1;Check plugin independs matrix;;;
     #Call;testName
     runMatrix;'PluginIndepends'
 
 
-#Id;#TestCase;#Kind;#Depends;#For
-Test;Check web plugin;;;
+#Id;#Off;#TestCase;#Kind;#Depends;#For
+Test;1;Check web plugin;;;
     #Call;testName
     runMatrix;'WebPlugin'
 
 
-#Id;#TestCase;#Kind;#Depends;#For
-Test;Check swing plugin;;;
+#Id;#Off;#TestCase;#Kind;#Depends;#For
+Test;1;Check swing plugin;;;
     #Call;testName
     runMatrix;'SwingPlugin'
 
 
-#Id;#TestCase;#Kind;#Depends;#For
-Test;Check win plugin;;;
+#Id;#Off;#TestCase;#Kind;#Depends;#For
+Test;1;Check win plugin;;;
     #Call;testName
     runMatrix;'WinPlugin'
 
 
-#Id;#TestCase;#Kind;#Depends;#For
-Test;Test RF.jf;;;
+#Id;#Off;#TestCase;#Kind;#Depends;#For
+Test;1;Test RF.jf;;;
     #Call;testName
     runMatrix;'TestRF'
 
@@ -191,7 +191,7 @@ REPORT;Cleanup;;;
     #EndSubCase
 
     #Id;#SubCase;testName;param
-    runControls;Running test;'Controls';'Web'
+    runControls;Running test;'Controls';'Win'
         #Id;#Action;$Matrix;$Parameter
         MXRN1;MatrixRun;matrixTestsPath + testName +  '.jf';param
 

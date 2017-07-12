@@ -84,7 +84,7 @@
         <self>
             <dialog id="Owner1" xpath="/Window"/>
             <dialog id="Owner2" uid="MockWin" xpath="" name=""/>
-            <dialog id="Owner3" uid="" xpath="" class="WindowsForms10.Window.8.app.0.141b42a_r12_ad1" name="MockWin"/>
+            <dialog id="Owner3" uid="" xpath="" class="" name="MockWin"/>
         </self>
         <onOpen/>
         <run>
@@ -96,10 +96,10 @@
             <button id="Button21" uid="" xpath=".//Button[@uid=&amp;quot;Button&amp;quot;]" owner="Owner1" name="" text=""/>
             <button id="Button22" uid="" xpath=".//Button[@uid=&amp;quot;Button&amp;quot;]" owner="Owner2" name="" text=""/>
             <button id="Button23" uid="" xpath=".//Button[@uid=&amp;quot;Button&amp;quot;]" owner="Owner3" name="" text=""/>
-            <button id="Button30" uid="" class="WindowsForms10.BUTTON.app.0.141b42a_r12_ad1" name="Button" text=""/>
-            <button id="Button31" uid="" owner="Owner1" class="WindowsForms10.BUTTON.app.0.141b42a_r12_ad1" name="Button" text=""/>
-            <button id="Button32" uid="" owner="Owner2" class="WindowsForms10.BUTTON.app.0.141b42a_r12_ad1" name="Button" text=""/>
-            <button id="Button33" uid="" owner="Owner3" class="WindowsForms10.BUTTON.app.0.141b42a_r12_ad1" name="Button" text=""/>
+            <button id="Button30" uid="" class="" name="Button" text=""/>
+            <button id="Button31" uid="" owner="Owner1" class="" name="Button" text=""/>
+            <button id="Button32" uid="" owner="Owner2" class="" name="Button" text=""/>
+            <button id="Button33" uid="" owner="Owner3" class="" name="Button" text=""/>
         </run>
         <onClose/>
         <close/>
