@@ -51,11 +51,14 @@ public class DocumentationBuilder
         Content content = new Content();
         List<OperationKind> operations = Arrays.stream(OperationKind.values()).collect(Collectors.toList());
 
-        MatrixItem help = new HelpTextLine("");
-        addText(help, DocumentationBuilder.class.getResourceAsStream("mvel.txt"));
-        addAllControlsTable(help, "All controls", context, operations, true, true, content);
+        MatrixItem help = new HelpTextLine("", content);
+        content.add(new ContentItem(addPartOfContent("MVEL", true)));
+        addText(help, DocumentationBuilder.class.getResourceAsStream("mvel.txt"), content);
+        content.add(new ContentItem(addEndParentPartOfContent()));
+
+        /*addAllControlsTable(help, "All controls", context, operations, true, true, content);
         addAllItems(help, content);
-        addAllActions(help, content);
+        addAllActions(help, content);*/
         addContent(help, "", content);
 
         return help;
@@ -65,7 +68,7 @@ public class DocumentationBuilder
     {
         AbstractEvaluator evaluator = context.getEvaluator();
         Content content = new Content();
-        MatrixItem help = new HelpTextLine("{{``}}");
+        MatrixItem help = new HelpTextLine("{{``}}", content);
 
         String[][] table1 = new String[][]
                 {
@@ -88,47 +91,47 @@ public class DocumentationBuilder
         List<OperationKind> operations = Arrays.stream(OperationKind.values()).collect(Collectors.toList());
         int size = operations.size();
 
-        addTextLine(help, "\\JackFishHuge");
-        addTextLine(help, "{{``}}");
+        addTextLine(help, "\\JackFishHuge", content);
+        addTextLine(help, "{{``}}", content);
         addPicture(help, "", 100, DocumentationBuilder.class.getResourceAsStream("BurntOrangeLine.png"));
         addTable(help, "\\UserGuide",              false,  table1, new int[] { 50, 50 },  evaluator);
         for (int i = 0; i < 5; i++){
-            addTextLine(help, "{{` `}}");
+            addTextLine(help, "{{` `}}", content);
         }
 
         addPicture(help, "", 100, DocumentationBuilder.class.getResourceAsStream("BurntOrangeLine.png"));
         addTable(help, "\\DocInfo",    false,  table2, new int[] { 25, 23, 23, 25 },  evaluator);
         addTable(help, "\\Abbreviations",           false,  table3, new int[] { 50, 50 },  evaluator);
-        addTextLine(help, "{{&&}}");
+        addTextLine(help, "{{&&}}", content);
         
         addContent(help, "{{*Table of contenst*}}", new Content());
-        addTextLine(help, "{{&&}}");
+        addTextLine(help, "{{&&}}", content);
 
-        addText(help, DocumentationBuilder.class.getResourceAsStream("intro1.txt"));
+        addText(help, DocumentationBuilder.class.getResourceAsStream("intro1.txt"), content);
         addPicture(help, "Architecture", 80, DocumentationBuilder.class.getResourceAsStream("Intro.png"));
-        addText(help, DocumentationBuilder.class.getResourceAsStream("intro2.txt"));
-        addTextLine(help, "{{&&}}");
+        addText(help, DocumentationBuilder.class.getResourceAsStream("intro2.txt"), content);
+        addTextLine(help, "{{&&}}", content);
         
-        addTextLine(help, "{{1MVEL1}}");
-        addText(help, DocumentationBuilder.class.getResourceAsStream("mvel.txt"));
-        addTextLine(help, "{{&&}}");
+        addTextLine(help, "{{1MVEL1}}", content);
+        addText(help, DocumentationBuilder.class.getResourceAsStream("mvel.txt"), content);
+        addTextLine(help, "{{&&}}", content);
 
-        addTextLine(help, "{{1All controls1}}");
-        addText(help, DocumentationBuilder.class.getResourceAsStream("controls.txt"));
-        addTextLine(help, "{{&&}}");
+        addTextLine(help, "{{1All controls1}}", content);
+        addText(help, DocumentationBuilder.class.getResourceAsStream("controls.txt"), content);
+        addTextLine(help, "{{&&}}", content);
         addAllControlsTable(help, "All controls", context, operations.subList(0, size/3), true, true, content);
-        addTextLine(help, "{{&&}}");
+        addTextLine(help, "{{&&}}", content);
         addAllControlsTable(help, "All controls - continue", context, operations.subList(size/3, size*2/3), true, true, content);
-        addTextLine(help, "{{&&}}");
+        addTextLine(help, "{{&&}}", content);
         addAllControlsTable(help, "All controls - end", context, operations.subList(size*2/3, size), true, true, content);
-        addTextLine(help, "{{&&}}");
+        addTextLine(help, "{{&&}}", content);
 
-        addTextLine(help, "{{1Matrix syntax1}}");
+        addTextLine(help, "{{1Matrix syntax1}}", content);
         addAllItems(help, content);
-        addTextLine(help, "{{&&}}");
+        addTextLine(help, "{{&&}}", content);
 
         addAllActions(help, content);
-        addTextLine(help, "{{&&}}");
+        addTextLine(help, "{{&&}}", content);
 
         //todo
 //        addClass(help, Do.class);
@@ -161,13 +164,14 @@ public class DocumentationBuilder
     
     public static MatrixItem createHelpForPlugin(ReportBuilder report, Context context, String title, IApplicationFactory applicationFactory) throws Exception
     {
+        Content content = new Content();
         InputStream stream = applicationFactory.getHelp();
-        MatrixItem help = new HelpTextLine("{{`{{*" + title + "*}}`}}"); 
-        addText(help, stream);
-        addTextLine(help, "{{`{{*Supported controls*}}`}}");
+        MatrixItem help = new HelpTextLine("{{`{{*" + title + "*}}`}}", content);
+        addText(help, stream, content);
+        addTextLine(help, "{{`{{*Supported controls*}}`}}", content);
         Set<ControlKind> controls = applicationFactory.supportedControlKinds();
         String s = controls.stream().map(c -> "{{@" + c.getClazz() + "@}}").collect(Collectors.joining(", "));
-        addTextLine(help, "{{`" + s + "`}}");
+        addTextLine(help, "{{`" + s + "`}}", content);
         
         return help;
     }
@@ -272,15 +276,15 @@ public class DocumentationBuilder
         }
     }
     
-    public static void addTextLine(MatrixItem root, String str) throws Exception
+    public static void addTextLine(MatrixItem root, String str, Content content) throws Exception
     {
-        MatrixItem line = new HelpTextLine(str);
+        MatrixItem line = new HelpTextLine(str, content);
         root.insert(root.count(), line);
     }
     
-    public static void addText(MatrixItem root, InputStream stream) throws Exception
+    public static void addText(MatrixItem root, InputStream stream, Content content) throws Exception
     {
-        MatrixItem text = new HelpText(stream);
+        MatrixItem text = new HelpText(stream, content);
         root.insert(root.count(), text);
     }
     
@@ -295,7 +299,7 @@ public class DocumentationBuilder
     {
         content.add(new ContentItem(addPartOfContent("Matrix syntax", true)));
 
-        MatrixItem item = new HelpTextLine("{{2Items2}}");
+        MatrixItem item = new HelpTextLine("{{2Items2}}", content);
         root.insert(root.count(), item);
 
         for (Class<?> clazz : Parser.knownItems)
@@ -325,7 +329,7 @@ public class DocumentationBuilder
     @SuppressWarnings("unchecked")
     public static void addAllActions(MatrixItem root, Content content)
     {
-        MatrixItem item = new HelpTextLine("{{1All actions by groups1}}");
+        MatrixItem item = new HelpTextLine("{{1All actions by groups1}}", content);
         root.insert(root.count(), item);
 
         content.add(new ContentItem(addPartOfContent("All actions by groups", true)));
@@ -339,7 +343,7 @@ public class DocumentationBuilder
         for (ActionGroups groups : ActionGroups.values())
         {
             content.add(new ContentItem(addPartOfContent(groups.toString(), true)));
-            MatrixItem groupItem = new HelpTextLine("{{2" + groups.toString() + "2}}");
+            MatrixItem groupItem = new HelpTextLine("{{2" + groups.toString() + "2}}", content);
             item.insert(item.count(), groupItem);
 
             for (Map.Entry<Class<?>, ActionGroups> entry : map.entrySet())

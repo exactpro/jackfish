@@ -44,7 +44,7 @@ public class HelpActionItem extends MatrixItem
         ActionAttribute attr = clazz.getAnnotation(ActionAttribute.class);
 
         report.itemIntermediate(item);
-        report.putMark(this.actionClazz.getCanonicalName());
+        report.putMark(this.actionClazz.getSimpleName());
         report.outLine(this, null, "{{`{{3" + "Action " + this.actionClazz.getSimpleName() + "3}}`}}", null);
         report.outLine(this, null, "{{`" + attr.generalDescription() + "`}}", null);
         if (attr.additionFieldsAllowed())

@@ -24,18 +24,6 @@ public class NewHelpBuilder extends ReportBuilder {
     }
 
     @Override
-    protected String postProcess(String source) {
-        String regexp = "((\\{\\{[1|2|3|4|5|$|#|@|\\^|`|_|*|/|&|=|-])(.*?)([1|2|3|4|5|$|#|@|\\^|`|_|*|/|&|=|-]\\}\\}))";
-        Pattern p = Pattern.compile(regexp);
-        Matcher m = p.matcher(source);
-        while(m.find())
-        {
-            //System.out.println(m.group(1));
-        }
-        return super.postProcess(source);
-    }
-
-    @Override
     protected String decorateStyle(String value, String style) {
         String rgbColor;
         switch (style){
@@ -103,9 +91,7 @@ public class NewHelpBuilder extends ReportBuilder {
 
     @Override
     protected void putMark(ReportWriter writer, String mark) throws IOException {
-        String[] s = mark.split("\\.");
-        String correctMark = s[s.length -1];
-        writer.fwrite("<div id=\"%s\">", correctMark);
+        writer.fwrite("<div id=\"%s\"></div>", mark);
     }
 
     @Override
@@ -203,7 +189,7 @@ public class NewHelpBuilder extends ReportBuilder {
         for (ContentItem ci : content){
             sb.append(ci.toString());
         }
-        //System.out.println(sb.toString());
+        System.out.println(sb.toString());
     }
 
     @Override
@@ -228,7 +214,7 @@ public class NewHelpBuilder extends ReportBuilder {
             writer.fwrite("<div id=\"%s\"></div>", tableTitle.replaceAll("\\s+","").toLowerCase());
             writer.fwrite("<h3>" + tableTitle + "</h3>").newline();
         }
-        writer.fwrite("<table class='table table-bordered'>\n");
+        writer.fwrite("<table class='table table-bordered table-condensed'>\n");
         if (columnWidth){
             writer.fwrite("<colgroup>");
             for(int i = 0; i < percents.length; i++){
