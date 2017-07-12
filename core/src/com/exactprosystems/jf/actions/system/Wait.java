@@ -17,6 +17,7 @@ import com.exactprosystems.jf.api.error.ErrorKind;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.report.ReportBuilder;
 import com.exactprosystems.jf.documents.config.Context;
+import com.exactprosystems.jf.documents.matrix.Matrix;
 import com.exactprosystems.jf.documents.matrix.parser.Parameters;
 import com.exactprosystems.jf.functions.HelpKind;
 
@@ -71,7 +72,9 @@ public class Wait extends AbstractAction
 	private void sleepUpTo(Context context, long finish)
     {
 	    long current;
-	    while ((current = System.currentTimeMillis()) < finish)
+		long diff = finish - System.currentTimeMillis();
+		Matrix matrix = super.owner.getMatrix();
+		while ((current = System.currentTimeMillis()) < finish)
 	    {
 	        if (context.isStop())
 	        {
@@ -79,7 +82,10 @@ public class Wait extends AbstractAction
 	        }
             try
             {
-                Thread.sleep(Math.min(100, finish - current));
+				context.getFactory().showWaits(diff, matrix);
+				long min = Math.min(100, finish - current);
+				diff -= min;
+				Thread.sleep(min);
             }
             catch (InterruptedException e)
             {

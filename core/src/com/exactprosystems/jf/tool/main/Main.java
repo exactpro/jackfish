@@ -98,6 +98,7 @@ public class Main extends Application
 
 	private boolean isFromInit = true;
 	private List<Document> needDisplayDoc = new ArrayList<>();
+	private boolean showWaits = false;
 
 	public static String getConfigName()
 	{
@@ -776,6 +777,16 @@ public class Main extends Application
 	public void store() throws Exception
 	{
 		new StoreVariable(this.config).show();
+	}
+
+	public void showWaits(boolean flag)
+	{
+		this.showWaits = flag;
+	}
+
+	public boolean isShowWaits()
+	{
+		return this.showWaits;
 	}
 
 	//region Files

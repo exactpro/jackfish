@@ -72,7 +72,8 @@ public class CssVariables
 	public static final String	ITEM_EXECUTING				= "itemExecuting";
 
 	public static final String	ITEM_OFF_TRUE				= "trueOffItem";
-	public static final String SIMPLE_ITEM = "simpleItem";
+	public static final String	SIMPLE_ITEM					= "simpleItem";
+	public static final String	WAIT_LABEL					= "waitsLabel";
 
 	public static final String	OBLIQUE_LABEL				= "obliqueLabel";
 	public static final String	BOLD_LABEL					= "boldLabel";

@@ -88,6 +88,7 @@
 									<items>
 										<MenuItem fx:id="matrixStart" mnemonicParsing="false" onAction="#startMatrix" text="Start"/>
 										<MenuItem fx:id="matrixStop" mnemonicParsing="false" onAction="#stopMatrix" text="Stop"/>
+										<CheckMenuItem fx:id="matrixShowWait" mnemonicParsing="false" text="Show waits"/>
 										<SeparatorMenuItem mnemonicParsing="false"/>
 										<MenuItem fx:id="matrixSchedule" id="matrixSchedule" mnemonicParsing="false" onAction="#matrixSchedule" text="Matrix schedule"/>
 									</items>

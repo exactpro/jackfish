@@ -25,7 +25,10 @@ import com.exactprosystems.jf.documents.matrix.parser.Parameter;
 import com.exactprosystems.jf.documents.matrix.parser.Parameters;
 import com.exactprosystems.jf.documents.matrix.parser.Parser;
 import com.exactprosystems.jf.documents.matrix.parser.Tokens;
-import com.exactprosystems.jf.documents.matrix.parser.items.*;
+import com.exactprosystems.jf.documents.matrix.parser.items.MatrixItem;
+import com.exactprosystems.jf.documents.matrix.parser.items.MatrixItemExecutingState;
+import com.exactprosystems.jf.documents.matrix.parser.items.TempItem;
+import com.exactprosystems.jf.documents.matrix.parser.items.TypeMandatory;
 import com.exactprosystems.jf.documents.matrix.parser.listeners.IMatrixListener;
 import com.exactprosystems.jf.functions.Text;
 import com.exactprosystems.jf.tool.Common;
@@ -358,6 +361,14 @@ public class MatrixFx extends Matrix
 			};
 			addCommand(undo, redo);
 			super.changed(true);
+		}
+	}
+
+	public void displayTimer(long ms, boolean needShow)
+	{
+		if (this.isControllerInit)
+		{
+			this.controller.displayTimer(ms, needShow);
 		}
 	}
 

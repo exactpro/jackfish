@@ -239,6 +239,11 @@
 	-fx-background-color : rgb(42, 117, 150, 0.1)
 
 }
+.waitsLabel {
+	-fx-text-fill : gold;
+	-fx-opacity : 0.5;
+	-fx-font-size : 72px;
+}
 
 .boldLabel {
 	-fx-font-weight : bold;

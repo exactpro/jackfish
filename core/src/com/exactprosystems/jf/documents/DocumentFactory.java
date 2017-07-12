@@ -219,6 +219,8 @@ public abstract class DocumentFactory
 
 	public abstract void 					popup(String message, Notifier notifier);
 
+	public abstract void					showWaits(long ms, Matrix matrix);
+
 	public abstract Object					input(AbstractEvaluator evaluator, String title, Object defaultValue, HelpKind helpKind, List<ReadableValue> dataSource, int timeout);
 
     public abstract boolean                 editTable(AbstractEvaluator evaluator, String title, Table table, Map<String, Boolean> columns);

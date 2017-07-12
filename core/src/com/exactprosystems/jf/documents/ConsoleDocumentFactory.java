@@ -132,8 +132,14 @@ public class ConsoleDocumentFactory extends DocumentFactory
 	{
 		System.out.printf("[%s] %s %n", notifier, message);
 	}
-	
-    @Override
+
+	@Override
+	public void showWaits(long ms, Matrix matrix)
+	{
+		//nothing
+	}
+
+	@Override
     public boolean editTable(AbstractEvaluator evaluator, String title, Table table, Map<String, Boolean> columns)
     {
         return true;

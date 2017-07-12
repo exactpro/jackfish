@@ -67,6 +67,7 @@ public class MatrixFxController implements Initializable, ContainingParent, IMat
 	public SplitPane					splitPane;
 	public GridPane						gridPane;
 	public HBox							hBox;
+	public Label						lblTimer;
 
 	private WatcherFx					watcher	= null;
 	private FindPanel<MatrixItem>		findPanel;
@@ -436,6 +437,31 @@ public class MatrixFxController implements Initializable, ContainingParent, IMat
 	// ------------------------------------------------------------------------------------------------------------------
 	// display* methods
 	// ------------------------------------------------------------------------------------------------------------------
+	void displayTimer(long ms, boolean needShow)
+	{
+		Platform.runLater(() -> {
+			if (!needShow || ms < 1000)
+			{
+				this.lblTimer.setVisible(false);
+				return;
+			}
+			this.lblTimer.setVisible(true);
+			this.lblTimer.setText(createText(ms));
+		});
+	}
+
+	private String createText(long time)
+	{
+		time = time / 1000;
+		long hours = time / 3600;
+		long minutes = (time % 3600) / 60;
+		long seconds = time % 60;
+		return String.format("%s:%s:%s", hours < 10 ? "0" + hours : hours
+				, minutes < 10 ? "0" + minutes : minutes
+				, seconds < 10 ? "0" + seconds : seconds
+		);
+	}
+
 	public void displayBeforeStart(String msg)
 	{
 		Platform.runLater(() ->

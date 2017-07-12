@@ -133,7 +133,16 @@ public class FxDocumentFactory extends DocumentFactory
 		DialogsHelper.showNotifier(message, notifier);
 	}
 
-    @Override
+	@Override
+	public void showWaits(long ms, Matrix matrix)
+	{
+		if (matrix instanceof MatrixFx)
+		{
+			((MatrixFx) matrix).displayTimer(ms, this.mainModel.isShowWaits());
+		}
+	}
+
+	@Override
     public boolean editTable(AbstractEvaluator evaluator, String title, Table table, Map<String, Boolean> columns)
     {
         Boolean result = DialogsHelper.showUserTable(evaluator, title, table, columns);

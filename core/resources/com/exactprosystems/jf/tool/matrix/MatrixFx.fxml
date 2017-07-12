@@ -9,19 +9,20 @@
   -->
 
 <?import com.exactprosystems.jf.tool.CssVariables?>
-<?import javafx.geometry.*?>
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<BorderPane xmlns="http://javafx.com/javafx/8.0.112" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.exactprosystems.jf.tool.matrix.MatrixFxController">
+<StackPane prefHeight="582.0" prefWidth="964.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.exactprosystems.jf.tool.matrix.MatrixFxController">
 	<fx:define>
 		<CssVariables fx:id="transparentBackground" fx:constant="TRANSPARENT_BACKGROUND"/>
 	</fx:define>
-	<center>
+	<children>
 		<ScrollPane fitToHeight="true" fitToWidth="true">
 			<content>
-				<SplitPane fx:id="splitPane" orientation="VERTICAL" dividerPositions="0.85">
+				<SplitPane fx:id="splitPane" orientation="VERTICAL">
 					<items>
-						<GridPane fx:id="gridPane" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="500.0" prefWidth="1230.0">
+						<GridPane fx:id="gridPane" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="500.0"
+								  prefWidth="1230.0">
 							<columnConstraints>
 								<ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
 								<ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="50.0" prefWidth="100.0"/>
@@ -33,7 +34,8 @@
 								<RowConstraints/>
 							</rowConstraints>
 							<children>
-								<ScrollPane fx:id="mainScrollPane" fitToHeight="true" fitToWidth="true" prefViewportHeight="519.0" prefViewportWidth="916.0" GridPane.columnSpan="2" GridPane.rowSpan="2">
+								<ScrollPane fx:id="mainScrollPane" fitToHeight="true" fitToWidth="true" prefViewportHeight="519.0" prefViewportWidth="916.0" GridPane.columnSpan="2"
+											GridPane.rowSpan="2">
 									<content>
 									</content>
 								</ScrollPane>
@@ -96,7 +98,8 @@
 										</BorderPane>
 										<BorderPane prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="2">
 											<center>
-												<ComboBox fx:id="cbDefaultClient" maxWidth="1.7976931348623157E308" onAction="#changeDefaultClient" prefHeight="25.0" BorderPane.alignment="CENTER_LEFT"/>
+												<ComboBox fx:id="cbDefaultClient" maxWidth="1.7976931348623157E308" onAction="#changeDefaultClient" prefHeight="25.0"
+														  BorderPane.alignment="CENTER_LEFT"/>
 											</center>
 											<left>
 												<Label text="Default client" BorderPane.alignment="CENTER_LEFT">
@@ -115,5 +118,10 @@
 				</SplitPane>
 			</content>
 		</ScrollPane>
-	</center>
-</BorderPane>
+		<Label fx:id="lblTimer" StackPane.alignment="CENTER" mouseTransparent="true" visible="false">
+			<styleClass>
+				<CssVariables fx:constant="WAIT_LABEL"/>
+			</styleClass>
+		</Label>
+	</children>
+</StackPane>

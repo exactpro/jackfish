@@ -112,6 +112,7 @@ public class MainController implements Initializable, ContainingParent
 	public MenuItem				matrixSchedule;
 	public MenuItem matrixStart;
 	public MenuItem matrixStop;
+	public CheckMenuItem matrixShowWait;
 
 	public MenuItem				gitCommit;
 	public MenuItem				gitPush;
@@ -801,6 +802,19 @@ public class MainController implements Initializable, ContainingParent
 			{
 				this.position = currentPosition;
 				this.splitPane.setDividerPositions(0.0);
+			}
+		});
+
+		this.matrixShowWait.selectedProperty().addListener((observable, oldValue, newValue) -> {
+			if (newValue && !oldValue)
+			{
+				this.model.showWaits(true);
+				this.matrixShowWait.setText("Hide waits");
+			}
+			else if (!newValue && oldValue)
+			{
+				this.model.showWaits(false);
+				this.matrixShowWait.setText("Show waits");
 			}
 		});
 	}
