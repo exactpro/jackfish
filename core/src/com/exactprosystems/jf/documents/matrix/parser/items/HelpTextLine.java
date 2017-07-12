@@ -16,12 +16,14 @@ import com.exactprosystems.jf.documents.matrix.parser.Parameters;
 import com.exactprosystems.jf.documents.matrix.parser.Result;
 import com.exactprosystems.jf.documents.matrix.parser.ReturnAndResult;
 import com.exactprosystems.jf.documents.matrix.parser.listeners.IMatrixListener;
+import com.exactprosystems.jf.functions.Content;
 
 public class HelpTextLine extends MatrixItem
 {
-	public HelpTextLine(String name)
+	public HelpTextLine(String name, Content content)
 	{
 		this.str = name;
+		this.content = content;
 	}
 
 	@Override
@@ -46,4 +48,6 @@ public class HelpTextLine extends MatrixItem
 	}
 
 	private String str = null;
+	private Content content = null;
+
 }

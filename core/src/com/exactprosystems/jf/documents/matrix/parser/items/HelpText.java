@@ -16,6 +16,7 @@ import java.util.regex.Pattern;
 
 import com.exactprosystems.jf.api.error.ErrorKind;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
+import com.exactprosystems.jf.common.report.NewHelpBuilder;
 import com.exactprosystems.jf.common.report.ReportBuilder;
 import com.exactprosystems.jf.common.report.ReportTable;
 import com.exactprosystems.jf.documents.config.Context;
@@ -23,13 +24,16 @@ import com.exactprosystems.jf.documents.matrix.parser.Parameters;
 import com.exactprosystems.jf.documents.matrix.parser.Result;
 import com.exactprosystems.jf.documents.matrix.parser.ReturnAndResult;
 import com.exactprosystems.jf.documents.matrix.parser.listeners.IMatrixListener;
+import com.exactprosystems.jf.functions.Content;
+import com.exactprosystems.jf.functions.ContentItem;
 
 
 public class HelpText extends MatrixItem
 {
-    public HelpText(InputStream stream)
+    public HelpText(InputStream stream, Content content)
     {
         this.stream = stream;
+        this.content = content;
     }
 
     @Override
@@ -55,7 +59,7 @@ public class HelpText extends MatrixItem
             
             String source = sb.toString();
             
-            String reg = "((\\{\\{[=|-]).*?([=|-]\\}\\}))";
+            String reg = "((\\{\\{[=|-|1|2]).*?([2|1|=|-]\\}\\}))";
             
             Pattern patt = Pattern.compile(reg, Pattern.DOTALL);
             String[] parts = patt.split(source);
@@ -68,7 +72,23 @@ public class HelpText extends MatrixItem
             {
                 String text = m.group(2);
                 boolean bordered = text.contains("=");
-                
+
+                /*if (report instanceof NewHelpBuilder){
+                    String foundedText = m.group();
+                    boolean isSection = foundedText.contains("{{1") && foundedText.contains("1}}");
+                    boolean isSubSection = foundedText.contains("{{2") && foundedText.contains("2}}");
+                    if (isSection | isSubSection ){
+                        report.outLine(this, null, foundedText, null);
+                        String mark = foundedText.replace("{{1", "").replace("1}}", "")
+                                .replace("{{2", "").replace("2}}", "");
+
+                        content.add(new ContentItem(
+                                String.format("<li role='presentation'>\n<a href='#%s'>%s</a>\n", mark.replaceAll("\\s+", "").toLowerCase(), mark))
+                        );
+                        report.putMark(mark.replaceAll("\\s+", "").toLowerCase());
+                    }
+                }*/
+
                 String strTable = m.group();
                 String[] lines = strTable.split("``");
                 ReportTable table = null;
@@ -110,4 +130,5 @@ public class HelpText extends MatrixItem
     }
     
     private InputStream stream = null;
+    private Content content = null;
 }
