@@ -318,14 +318,15 @@ public class DialogFill extends AbstractAction
 			}
 			catch (Exception e)
 			{
-				logger.error(e.getMessage(), e);
+				String msg = e.getMessage();
+				logger.error(msg, e);
 				if (this.stopOnFail)
 				{
 
-					String message = message(id, window, run, control, null, e.getMessage());
+					String message = message(id, window, run, control, null, msg);
 					errorsValue.put(name, new MatrixError(message, ErrorKind.EXCEPTION, owner));
 					super.setErrors(errorsValue);
-					super.setError(message, ErrorKind.EXCEPTION);
+					super.setError(msg.length() > 35 ? message.split(" ")[0] + msg.substring(0, 35) + " ... See log for more details" : message, ErrorKind.EXCEPTION);
 					return;
 				}
 				else
