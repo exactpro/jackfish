@@ -1,3 +1,11 @@
+////////////////////////////////////////////////////////////////////////////////
+//  Copyright (c) 2009-2015, Exactpro Systems, LLC
+//  Quality Assurance & Related Development for Innovative Trading Systems.
+//  All rights reserved.
+//  This is unpublished, licensed software, confidential and proprietary
+//  information which is the property of Exactpro Systems, LLC or its licensors.
+////////////////////////////////////////////////////////////////////////////////
+
 package com.exactprosystems.jf.tool.wizard;
 
 import com.exactprosystems.jf.api.app.IControl;
@@ -6,7 +14,6 @@ import com.exactprosystems.jf.api.wizard.WizardCommand;
 import com.exactprosystems.jf.common.CommonHelper;
 import com.exactprosystems.jf.documents.Document;
 import com.exactprosystems.jf.documents.DocumentKind;
-import com.exactprosystems.jf.documents.config.Context;
 import com.exactprosystems.jf.documents.guidic.Section;
 import com.exactprosystems.jf.documents.matrix.Matrix;
 import com.exactprosystems.jf.documents.matrix.parser.Parser;
@@ -17,9 +24,7 @@ import org.apache.log4j.Logger;
 import java.io.Reader;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.function.Consumer;
-import java.util.function.Supplier;
 
 public class CommandBuilder
 {
@@ -53,7 +58,6 @@ public class CommandBuilder
     {
         this.commands.add(context -> 
         {
-            System.err.println("## ++ " + matrix + " " + what + " " + where + " " + index);
             matrix.insert(where, index, what);
             where.init(matrix, matrix);
         });
@@ -64,10 +68,7 @@ public class CommandBuilder
     {
         this.commands.add(context -> 
         {
-            System.err.println("## -- " + matrix + " " + what + " ##=" + matrix.hashCode());
-            matrix.getRoot().bypass(System.err::println);
             matrix.remove(what);
-            matrix.getRoot().bypass(System.err::println);
         });
         return this;
     }
@@ -141,7 +142,6 @@ public class CommandBuilder
 		{
 			Common.tryCatch(() -> 
 			{ 
-	            System.err.println("## save " + " ##=" + doc.hashCode());
 			    doc.save(doc.getName());
 			    doc.close(context.getFactory().getSettings());
 			}, "Error on save " + doc.getName());

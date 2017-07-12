@@ -25,7 +25,6 @@ public class RefactorAddItem extends Refactor
 	{
         this.message = "Add '" + item +  "' to '" + Common.getRelativePath(matrix.getName()) + "'";
         CommandBuilder builder = CommandBuilder.start();
-        builder.loadDocument(matrix);
         builder.addMatrixItem(matrix, where, item, index);
         builder.saveDocument(matrix);
         this.command = builder.build();
