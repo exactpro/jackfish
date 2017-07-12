@@ -657,6 +657,7 @@ public class MatrixFx extends Matrix
             if (this.controller != null)
             {
     			this.controller.displayAfterStopped("Matrix stopped");
+    			this.controller.displayTimer(0, false);
             }
 		}
 	}
