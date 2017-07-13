@@ -24,16 +24,12 @@ import com.exactprosystems.jf.documents.matrix.parser.Parameters;
 import com.exactprosystems.jf.documents.matrix.parser.Result;
 import com.exactprosystems.jf.documents.matrix.parser.ReturnAndResult;
 import com.exactprosystems.jf.documents.matrix.parser.listeners.IMatrixListener;
-import com.exactprosystems.jf.functions.Content;
-import com.exactprosystems.jf.functions.ContentItem;
-
 
 public class HelpText extends MatrixItem
 {
-    public HelpText(InputStream stream, Content content)
+    public HelpText(InputStream stream)
     {
         this.stream = stream;
-        this.content = content;
     }
 
     @Override
@@ -65,9 +61,8 @@ public class HelpText extends MatrixItem
             String[] parts = patt.split(source);
 
             int counter = 0;
-            checkText(parts[counter++], this.content, report);
-            //report.outLine(this, null, parts[counter++], null);
-            
+            checkText(parts[counter++],  report);
+
             Matcher m = patt.matcher(source);
             while (m.find())
             {
@@ -99,13 +94,11 @@ public class HelpText extends MatrixItem
                 }
                 report.itemIntermediate(this);
 
-                checkText(parts[counter++], this.content, report);
-                //report.outLine(this, null, parts[counter++], null);
+                checkText(parts[counter++],  report);
             }
             if (counter < parts.length)
             {
-                checkText(parts[counter++], this.content, report);
-                //report.outLine(this, null, parts[counter++], null);
+                checkText(parts[counter++],  report);
             }
         }
         catch (Exception e)
@@ -116,7 +109,7 @@ public class HelpText extends MatrixItem
         return new ReturnAndResult(start, Result.Passed); 
     }
 
-    private void checkText(String text, Content content, ReportBuilder report){
+    private void checkText(String text, ReportBuilder report){
         if(report instanceof NewHelpBuilder) {
             boolean isSection = text.contains("{{1") && text.contains("1}}");
             boolean isSubSection = text.contains("{{2") && text.contains("2}}");
@@ -132,10 +125,7 @@ public class HelpText extends MatrixItem
                     String mark = foundedText.replace("{{1", "").replace("1}}", "")
                             .replace("{{2", "").replace("2}}", "");
 
-                    content.add(new ContentItem(
-                            String.format("<li role='presentation'>\n<a href='#%s'>%s</a>\n", mark.replaceAll("\\s+", "").toLowerCase(), mark))
-                    );
-
+                    report.putMark(mark.replaceAll("\\s+", "").toLowerCase());
                     report.outLine(this, null, m.group(), null);
                     report.outLine(this, null, split[counter++], null);
                 }
@@ -151,5 +141,4 @@ public class HelpText extends MatrixItem
     }
     
     private InputStream stream = null;
-    private Content content = null;
 }

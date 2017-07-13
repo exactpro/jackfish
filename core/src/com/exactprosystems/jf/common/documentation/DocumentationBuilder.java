@@ -1,12 +1,17 @@
 package com.exactprosystems.jf.common.documentation;
 
+import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import com.exactprosystems.jf.actions.AbstractAction;
@@ -47,12 +52,12 @@ public class DocumentationBuilder
 {
     public static MatrixItem createHelp (ReportBuilder report, Context context) throws Exception
     {
-        AbstractEvaluator evaluator = context.getEvaluator();
         Content content = new Content();
         List<OperationKind> operations = Arrays.stream(OperationKind.values()).collect(Collectors.toList());
 
-        MatrixItem help = new HelpTextLine("", content);
+        MatrixItem help = new HelpTextLine("");
         content.add(new ContentItem(addPartOfContent("MVEL", true)));
+        addPartOfContent(DocumentationBuilder.class.getResourceAsStream("mvel.txt"), content);
         addText(help, DocumentationBuilder.class.getResourceAsStream("mvel.txt"), content);
         content.add(new ContentItem(addEndParentPartOfContent()));
 
@@ -68,7 +73,7 @@ public class DocumentationBuilder
     {
         AbstractEvaluator evaluator = context.getEvaluator();
         Content content = new Content();
-        MatrixItem help = new HelpTextLine("{{``}}", content);
+        MatrixItem help = new HelpTextLine("{{``}}");
 
         String[][] table1 = new String[][]
                 {
@@ -133,9 +138,6 @@ public class DocumentationBuilder
         addAllActions(help, content);
         addTextLine(help, "{{&&}}", content);
 
-        //todo
-//        addClass(help, Do.class);
-        
         return help;
     }
         
@@ -166,7 +168,7 @@ public class DocumentationBuilder
     {
         Content content = new Content();
         InputStream stream = applicationFactory.getHelp();
-        MatrixItem help = new HelpTextLine("{{`{{*" + title + "*}}`}}", content);
+        MatrixItem help = new HelpTextLine("{{`{{*" + title + "*}}`}}");
         addText(help, stream, content);
         addTextLine(help, "{{`{{*Supported controls*}}`}}", content);
         Set<ControlKind> controls = applicationFactory.supportedControlKinds();
@@ -278,13 +280,13 @@ public class DocumentationBuilder
     
     public static void addTextLine(MatrixItem root, String str, Content content) throws Exception
     {
-        MatrixItem line = new HelpTextLine(str, content);
+        MatrixItem line = new HelpTextLine(str);
         root.insert(root.count(), line);
     }
     
     public static void addText(MatrixItem root, InputStream stream, Content content) throws Exception
     {
-        MatrixItem text = new HelpText(stream, content);
+        MatrixItem text = new HelpText(stream);
         root.insert(root.count(), text);
     }
     
@@ -299,7 +301,7 @@ public class DocumentationBuilder
     {
         content.add(new ContentItem(addPartOfContent("Matrix syntax", true)));
 
-        MatrixItem item = new HelpTextLine("{{2Items2}}", content);
+        MatrixItem item = new HelpTextLine("{{2Items2}}");
         root.insert(root.count(), item);
 
         for (Class<?> clazz : Parser.knownItems)
@@ -329,7 +331,7 @@ public class DocumentationBuilder
     @SuppressWarnings("unchecked")
     public static void addAllActions(MatrixItem root, Content content)
     {
-        MatrixItem item = new HelpTextLine("{{1All actions by groups1}}", content);
+        MatrixItem item = new HelpTextLine("{{1All actions by groups1}}");
         root.insert(root.count(), item);
 
         content.add(new ContentItem(addPartOfContent("All actions by groups", true)));
@@ -343,7 +345,7 @@ public class DocumentationBuilder
         for (ActionGroups groups : ActionGroups.values())
         {
             content.add(new ContentItem(addPartOfContent(groups.toString(), true)));
-            MatrixItem groupItem = new HelpTextLine("{{2" + groups.toString() + "2}}", content);
+            MatrixItem groupItem = new HelpTextLine("{{2" + groups.toString() + "2}}");
             item.insert(item.count(), groupItem);
 
             for (Map.Entry<Class<?>, ActionGroups> entry : map.entrySet())
@@ -381,6 +383,31 @@ public class DocumentationBuilder
 
     private static String addEndParentPartOfContent(){
         return "</ul>\n";
+    }
+
+    private static void addPartOfContent(InputStream is, Content content) throws IOException{
+        StringBuilder sb = new StringBuilder();
+        try ( BufferedReader reader = new BufferedReader(new InputStreamReader(is)) )
+        {
+            String line;
+            while ((line = reader.readLine()) != null)
+            {
+                sb.append(line).append("\n");
+            }
+        }
+        String text = sb.toString();
+        String reg = "((\\{\\{[1|2]).*?([2|1]\\}\\}))";
+        Pattern patt = Pattern.compile(reg, Pattern.DOTALL);
+        Matcher m = patt.matcher(text);
+        while (m.find()) {
+            String foundedText = m.group();
+            String mark = foundedText.replace("{{1", "").replace("1}}", "")
+                    .replace("{{2", "").replace("2}}", "");
+
+            content.add(new ContentItem(
+                    String.format("<li role='presentation'>\n<a href='#%s'>%s</a>\n", mark.replaceAll("\\s+", "").toLowerCase(), mark))
+            );
+        }
     }
 
 }
