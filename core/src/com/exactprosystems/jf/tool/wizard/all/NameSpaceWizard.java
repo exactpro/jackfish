@@ -17,6 +17,7 @@ import com.exactprosystems.jf.api.wizard.WizardManager;
 import com.exactprosystems.jf.documents.config.Configuration;
 import com.exactprosystems.jf.documents.matrix.Matrix;
 import com.exactprosystems.jf.documents.matrix.parser.Tokens;
+import com.exactprosystems.jf.documents.matrix.parser.items.Call;
 import com.exactprosystems.jf.documents.matrix.parser.items.MatrixItem;
 import com.exactprosystems.jf.documents.matrix.parser.items.NameSpace;
 import com.exactprosystems.jf.documents.matrix.parser.items.SubCase;
@@ -27,9 +28,10 @@ import com.exactprosystems.jf.tool.wizard.AbstractWizard;
 import com.exactprosystems.jf.tool.wizard.related.refactor.Refactor;
 import com.exactprosystems.jf.tool.wizard.related.refactor.RefactorAddItem;
 import com.exactprosystems.jf.tool.wizard.related.refactor.RefactorRemoveItem;
+import com.exactprosystems.jf.tool.wizard.related.refactor.RefactorSetField;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
-import javafx.geometry.Orientation;
+import javafx.collections.ObservableList;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.CheckBoxListCell;
@@ -47,7 +49,7 @@ import java.util.stream.Collectors;
         pictureName = "NameSpaceWizard.jpg",
         category = WizardCategory.MATRIX,
         shortDescription = "This wizard helps to move SubCases between NameSpaces",
-        experimental = false,
+        experimental = true,
         strongCriteries = true,
         criteries = {MatrixFx.class, NameSpace.class},
         detailedDescription = "When it's need to move several SubCases to another known NameSpace."
@@ -56,15 +58,21 @@ public class NameSpaceWizard extends AbstractWizard {
 
 
     private MatrixFx currentMatrix;
-    private List<SubCase> currentSubCases;
     private NameSpace currentNameSpace;
 
-    private ListView<Item> listView;
+    private ListView<Item> listView = new ListView<>();
+    private ListView<Refactor> listView2 = new ListView<>();
     private CustomFieldWithButton nextNamespace;
 
 
     @Override
     public boolean beforeRun() {
+
+        for (int i = 0; i < currentNameSpace.count(); i++)
+        {
+            this.listView.getItems().add(new Item((SubCase) this.currentNameSpace.get(i),false));
+        }
+
         return true;
     }
 
@@ -73,10 +81,11 @@ public class NameSpaceWizard extends AbstractWizard {
 
         borderPane.setMinWidth(400);
         borderPane.setPrefWidth(400);
-        this.listView = new ListView<>();
+
         this.listView.setEditable(false);
-        this.listView.setMinHeight(400);
+        this.listView.setMinHeight(300);
         this.listView.setMaxHeight(600);
+        listView2.setMaxHeight(300);
 
         String namespace = this.currentNameSpace == null ? "" : this.currentNameSpace.getId();
 
@@ -92,12 +101,6 @@ public class NameSpaceWizard extends AbstractWizard {
             this.nextNamespace.setText(value.getValue());
         });
 
-        currentSubCases.forEach(subCase ->
-        {
-            Item item = new Item(subCase, false);
-            listView.getItems().add(item);
-        });
-
         listView.setCellFactory(CheckBoxListCell.forListView(Item::onProperty));
 
 
@@ -111,9 +114,15 @@ public class NameSpaceWizard extends AbstractWizard {
         pane.setVgap(8);
         pane.setHgap(4);
 
-        pane.add(this.listView, 0, 0,1,3);
-        pane.add(new Label("Move to: "),2,0);
-        pane.add(this.nextNamespace,2,1);
+        Button refresh = new Button("Scan");
+        refresh.setOnAction(event -> createCommands(this.listView, this.nextNamespace));
+
+        pane.add(this.listView, 0, 0, 1, 2);
+        pane.add(new Label("Move to: "), 2, 0);
+        pane.add(this.nextNamespace, 2, 1);
+        pane.add(refresh,0,2);
+        pane.add(this.listView2,0,3,3,1);
+        pane.setGridLinesVisible(true);
 
 
         borderPane.setCenter(pane);
@@ -132,15 +141,27 @@ public class NameSpaceWizard extends AbstractWizard {
         List<Refactor> res = new LinkedList<>();
         Configuration config = super.context.getConfiguration();
         String newNamespace = field.getText();
+        ObservableList<Refactor> items = listView2.getItems();
+        items.clear();
 
-        list.getItems().forEach(item ->{
+        list.getItems().forEach(item ->
+        {
             if (item.isOn())
             {
+                String oldSubName = currentNameSpace.getId() + "." + item.getName();
+                String newSubName = newNamespace + "." + item.getName();
+
                 res.add(new RefactorRemoveItem(currentMatrix, item.getSub()));
 
                 Matrix newLib = config.getLib(newNamespace);
                 Optional<MatrixItem> namespace = newLib.getRoot().find(i -> i instanceof NameSpace && Objects.equals(i.get(Tokens.Id), newNamespace));
                 res.add(new RefactorAddItem(newLib, namespace.get(), item.getSub(), 0));
+
+                List<Call> calls = findCalls(this.currentMatrix, oldSubName);
+                RefactorSetField refactorSetField = new RefactorSetField(this.currentMatrix, Tokens.Call, newSubName, calls.stream()
+                        .map(MatrixItem::getNumber).collect(Collectors.toList()));
+                res.add(refactorSetField);
+                items.add(refactorSetField);
             }
         });
 
@@ -154,12 +175,7 @@ public class NameSpaceWizard extends AbstractWizard {
 
         this.currentMatrix = super.get(MatrixFx.class, parameters);
         this.currentNameSpace = super.get(NameSpace.class, parameters);
-        int count = this.currentNameSpace.count();
-        this.currentSubCases = new ArrayList<>();
-        for (int i = 0; i < count; i++)
-        {
-            this.currentSubCases.add((SubCase) this.currentNameSpace.get(i));
-        }
+
     }
 
     private List<ReadableValue> getNamespaces() {
@@ -172,20 +188,24 @@ public class NameSpaceWizard extends AbstractWizard {
     }
 
 
+    private List<Call> findCalls(Matrix matrix, String name)
+    {
+        return matrix.getRoot().findAll(i -> i instanceof Call && i.get(Tokens.Call).equals(name))
+                .stream().map(i -> (Call)i).collect(Collectors.toList());
+    }
+
     public static class Item {
         private SubCase sub;
+        private final BooleanProperty on = new SimpleBooleanProperty();
 
         public SubCase getSub() {
             return sub;
         }
 
-        private final BooleanProperty on = new SimpleBooleanProperty();
-
         private Item(SubCase sub, boolean on) {
             this.sub = sub;
             setOn(on);
         }
-
 
         public final String getName() {
             return this.sub.getId();
