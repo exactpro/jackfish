@@ -15,11 +15,13 @@ import com.exactprosystems.jf.documents.matrix.parser.DisplayDriver;
 import com.exactprosystems.jf.documents.matrix.parser.Result;
 import com.exactprosystems.jf.documents.matrix.parser.items.MatrixItem;
 import com.exactprosystems.jf.documents.matrix.parser.listeners.IMatrixListener;
+import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.ContainingParent;
 import com.exactprosystems.jf.tool.CssVariables;
 import com.exactprosystems.jf.tool.custom.console.ConsoleText;
 import com.exactprosystems.jf.tool.custom.console.CustomListView;
 import com.exactprosystems.jf.tool.custom.date.CustomDateTimePicker;
+import com.exactprosystems.jf.tool.custom.expfield.ExpressionField;
 import com.exactprosystems.jf.tool.custom.find.FindPanel;
 import com.exactprosystems.jf.tool.custom.find.IFind;
 import com.exactprosystems.jf.tool.custom.tab.CustomTab;
@@ -35,11 +37,13 @@ import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.Initializable;
+import javafx.geometry.Orientation;
 import javafx.scene.Parent;
 import javafx.scene.control.*;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
 
 import java.io.File;
 import java.net.URL;
@@ -68,6 +72,8 @@ public class MatrixFxController implements Initializable, ContainingParent, IMat
 	public GridPane						gridPane;
 	public HBox							hBox;
 	public Label						lblTimer;
+	public HBox bottomBox;
+	private ExpressionField efParameter;
 
 	private WatcherFx					watcher	= null;
 	private FindPanel<MatrixItem>		findPanel;
@@ -302,6 +308,16 @@ public class MatrixFxController implements Initializable, ContainingParent, IMat
 		console.setConsole(this.listView);
 		CustomTabPane.getInstance().addTab(this.tab);
 		CustomTabPane.getInstance().selectTab(this.tab);
+
+		this.efParameter = new ExpressionField(context.getEvaluator());
+		HBox.setHgrow(this.efParameter, Priority.ALWAYS);
+		this.efParameter.setStretchable(false);
+		this.efParameter.setPromptText("Parameter for start");
+		this.efParameter.setMaxWidth(250.0);
+		this.efParameter.setPrefWidth(250.0);
+		this.efParameter.setMinWidth(250.0);
+		this.efParameter.setHelperForExpressionField("Parameter for start", this.model);
+		this.bottomBox.getChildren().addAll(this.efParameter, Common.createSpacer(SpacerEnum.HorizontalMin), new Separator(Orientation.VERTICAL));
 		initializeButtons(context.getFactory().getSettings());
 		initShortcuts(context.getFactory().getSettings());
 	}
@@ -349,6 +365,11 @@ public class MatrixFxController implements Initializable, ContainingParent, IMat
 	public void coloring()
 	{
 		// this.driver.coloring();
+	}
+
+	public Object getParameter() throws Exception
+	{
+		return this.efParameter.getEvaluatedValue();
 	}
 
 	// ------------------------------------------------------------------------------------------------------------------

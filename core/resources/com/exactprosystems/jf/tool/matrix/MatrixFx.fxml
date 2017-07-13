@@ -15,6 +15,7 @@
 <StackPane prefHeight="582.0" prefWidth="964.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.exactprosystems.jf.tool.matrix.MatrixFxController">
 	<fx:define>
 		<CssVariables fx:id="transparentBackground" fx:constant="TRANSPARENT_BACKGROUND"/>
+		<CssVariables fx:id="horMin" fx:constant="HORIZONTAL_MIN"/>
 	</fx:define>
 	<children>
 		<ScrollPane fitToHeight="true" fitToWidth="true">
@@ -25,7 +26,7 @@
 								  prefWidth="1230.0">
 							<columnConstraints>
 								<ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
-								<ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="50.0" prefWidth="100.0"/>
+								<ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="40.0" prefWidth="100.0"/>
 							</columnConstraints>
 							<rowConstraints>
 								<RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
@@ -74,44 +75,31 @@
 										<Insets bottom="10.0" left="10.0" right="10.0" top="10.0"/>
 									</padding>
 								</HBox>
-								<GridPane GridPane.rowIndex="2">
-									<columnConstraints>
-										<ColumnConstraints hgrow="SOMETIMES" maxWidth="330" minWidth="10.0" prefWidth="100.0"/>
-										<ColumnConstraints hgrow="SOMETIMES" maxWidth="16.0" minWidth="0.0" percentWidth="2.0" prefWidth="0.0"/>
-										<ColumnConstraints hgrow="SOMETIMES" maxWidth="313.0" minWidth="10.0" prefWidth="313.0"/>
-									</columnConstraints>
-									<rowConstraints>
-										<RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
-									</rowConstraints>
+								<HBox fx:id="bottomBox" alignment="CENTER_LEFT" GridPane.rowIndex="2">
 									<children>
-										<BorderPane prefHeight="43.0">
-											<left>
-												<Label text="Default app" BorderPane.alignment="CENTER">
-													<padding>
-														<Insets left="4.0" right="4.0"/>
-													</padding>
-												</Label>
-											</left>
-											<center>
-												<ComboBox fx:id="cbDefaultApp" maxWidth="1.7976931348623157E308" onAction="#changeDefaultApp" BorderPane.alignment="CENTER_LEFT"/>
-											</center>
-										</BorderPane>
-										<BorderPane prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="2">
-											<center>
-												<ComboBox fx:id="cbDefaultClient" maxWidth="1.7976931348623157E308" onAction="#changeDefaultClient" prefHeight="25.0"
-														  BorderPane.alignment="CENTER_LEFT"/>
-											</center>
-											<left>
-												<Label text="Default client" BorderPane.alignment="CENTER_LEFT">
-													<padding>
-														<Insets right="4.0"/>
-													</padding>
-												</Label>
-											</left>
-										</BorderPane>
-										<Separator orientation="VERTICAL" prefHeight="35.0" prefWidth="0.0" GridPane.columnIndex="1" GridPane.halignment="CENTER"/>
+										<Label id="$horMin"/>
+										<Label text="Default app">
+											<padding>
+												<Insets left="4.0" right="4.0"/>
+											</padding>
+										</Label>
+										<Label id="$horMin"/>
+										<ComboBox fx:id="cbDefaultApp" maxWidth="250.0" onAction="#changeDefaultApp" HBox.hgrow="ALWAYS"/>
+										<Label id="$horMin"/>
+										<Separator orientation="VERTICAL" prefHeight="35.0" prefWidth="0.0"/>
+										<Label id="$horMin"/>
+										<Label text="Default client" BorderPane.alignment="CENTER_LEFT">
+											<padding>
+												<Insets right="4.0"/>
+											</padding>
+										</Label>
+										<Label id="$horMin"/>
+										<ComboBox fx:id="cbDefaultClient" maxWidth="250.0" onAction="#changeDefaultClient" prefHeight="25.0" HBox.hgrow="ALWAYS"/>
+										<Label id="$horMin"/>
+										<Separator orientation="VERTICAL" prefHeight="35.0" prefWidth="0.0"/>
+										<Label id="$horMin"/>
 									</children>
-								</GridPane>
+								</HBox>
 							</children>
 						</GridPane>
 					</items>

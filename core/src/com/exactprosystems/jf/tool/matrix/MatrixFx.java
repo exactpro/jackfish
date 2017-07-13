@@ -13,6 +13,7 @@ import com.exactprosystems.jf.actions.ReadableValue;
 import com.exactprosystems.jf.api.common.IMatrixRunner;
 import com.exactprosystems.jf.api.common.Str;
 import com.exactprosystems.jf.api.common.Sys;
+import com.exactprosystems.jf.common.MatrixRunner;
 import com.exactprosystems.jf.common.Settings;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.report.ReportBuilder;
@@ -639,11 +640,13 @@ public class MatrixFx extends Matrix
 			getFactory().getConfiguration().getRunnerListener().subscribe(getMatrixRunner());
 			if (!getMatrixRunner().isRunning())
 			{
+				getMatrixRunner().setGlobalVariable(MatrixRunner.parameterName, this.controller == null ? null : this.controller.getParameter());
 	            if (this.controller != null)
 	            {
 	                this.controller.displayBeforeStart("Matrix will start at " + this.startDate);
 	            }
 			}
+
 			getMatrixRunner().start();
 		}
 	}
