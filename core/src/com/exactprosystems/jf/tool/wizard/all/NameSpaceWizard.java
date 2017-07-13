@@ -106,18 +106,14 @@ public class NameSpaceWizard extends AbstractWizard {
         columnConstraints.setMaxWidth(250);
         columnConstraints.setHgrow(Priority.SOMETIMES);
         ColumnConstraints columnConstraints1 = new ColumnConstraints();
-        columnConstraints1.setHgrow(Priority.SOMETIMES);
+        columnConstraints1.setHgrow(Priority.NEVER);
         pane.getColumnConstraints().addAll(columnConstraints, columnConstraints1);
         pane.setVgap(8);
         pane.setHgap(4);
 
-        Separator separator = new Separator();
-        separator.setOrientation(Orientation.VERTICAL);
-
-
-        pane.add(this.listView, 0, 0);
-        pane.add(separator,1,0);
-        pane.add(this.nextNamespace,2,0);
+        pane.add(this.listView, 0, 0,1,3);
+        pane.add(new Label("Move to: "),2,0);
+        pane.add(this.nextNamespace,2,1);
 
 
         borderPane.setCenter(pane);
