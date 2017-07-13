@@ -56,9 +56,9 @@ public class DocumentationBuilder
         addText(help, DocumentationBuilder.class.getResourceAsStream("mvel.txt"), content);
         content.add(new ContentItem(addEndParentPartOfContent()));
 
-        /*addAllControlsTable(help, "All controls", context, operations, true, true, content);
+        addAllControlsTable(help, "All controls", context, operations, true, true, content);
         addAllItems(help, content);
-        addAllActions(help, content);*/
+        addAllActions(help, content);
         addContent(help, "", content);
 
         return help;

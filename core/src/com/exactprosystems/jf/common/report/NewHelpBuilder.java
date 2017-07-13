@@ -133,7 +133,7 @@ public class NewHelpBuilder extends ReportBuilder {
         writer.fwrite("<div class='col-sm-3 menuCont'>\n");
         writer.fwrite("<div class='mainMenu'>\n");
         writer.fwrite("<ul class='nav nav-pills nav-stacked'>\n");
-        writer.fwrite("<p>Content</p>\n"); //todo
+        writer.fwrite("<div class='contentPart'></div>\n");
         writer.fwrite("</ul>\n</div>\n");
         writer.fwrite("</div>\n");
 
@@ -189,6 +189,11 @@ public class NewHelpBuilder extends ReportBuilder {
         for (ContentItem ci : content){
             sb.append(ci.toString());
         }
+        /*writer.fwrite("<script type='text/javascript'>\n" +
+                "<!--\n" +
+                "document.getElementById('contentPart').innerHTML = '%s'\n" +
+                "-->\n" +
+                "</script>\n", sb.toString());*/
         System.out.println(sb.toString());
     }
 

@@ -59,35 +59,20 @@ public class HelpText extends MatrixItem
             
             String source = sb.toString();
             
-            String reg = "((\\{\\{[=|-|1|2]).*?([2|1|=|-]\\}\\}))";
+            String reg = "((\\{\\{[=|-]).*?([=|-]\\}\\}))";
             
             Pattern patt = Pattern.compile(reg, Pattern.DOTALL);
             String[] parts = patt.split(source);
 
             int counter = 0;
-            report.outLine(this, null, parts[counter++], null);
+            checkText(parts[counter++], this.content, report);
+            //report.outLine(this, null, parts[counter++], null);
             
             Matcher m = patt.matcher(source);
             while (m.find())
             {
                 String text = m.group(2);
                 boolean bordered = text.contains("=");
-
-                /*if (report instanceof NewHelpBuilder){
-                    String foundedText = m.group();
-                    boolean isSection = foundedText.contains("{{1") && foundedText.contains("1}}");
-                    boolean isSubSection = foundedText.contains("{{2") && foundedText.contains("2}}");
-                    if (isSection | isSubSection ){
-                        report.outLine(this, null, foundedText, null);
-                        String mark = foundedText.replace("{{1", "").replace("1}}", "")
-                                .replace("{{2", "").replace("2}}", "");
-
-                        content.add(new ContentItem(
-                                String.format("<li role='presentation'>\n<a href='#%s'>%s</a>\n", mark.replaceAll("\\s+", "").toLowerCase(), mark))
-                        );
-                        report.putMark(mark.replaceAll("\\s+", "").toLowerCase());
-                    }
-                }*/
 
                 String strTable = m.group();
                 String[] lines = strTable.split("``");
@@ -113,12 +98,14 @@ public class HelpText extends MatrixItem
                     }
                 }
                 report.itemIntermediate(this);
-                
-                report.outLine(this, null, parts[counter++], null);
+
+                checkText(parts[counter++], this.content, report);
+                //report.outLine(this, null, parts[counter++], null);
             }
             if (counter < parts.length)
             {
-                report.outLine(this, null, parts[counter++], null);
+                checkText(parts[counter++], this.content, report);
+                //report.outLine(this, null, parts[counter++], null);
             }
         }
         catch (Exception e)
@@ -127,6 +114,40 @@ public class HelpText extends MatrixItem
             return new ReturnAndResult(start, Result.Failed, e.getMessage(), ErrorKind.EXCEPTION, this);
         }
         return new ReturnAndResult(start, Result.Passed); 
+    }
+
+    private void checkText(String text, Content content, ReportBuilder report){
+        if(report instanceof NewHelpBuilder) {
+            boolean isSection = text.contains("{{1") && text.contains("1}}");
+            boolean isSubSection = text.contains("{{2") && text.contains("2}}");
+            if (isSection | isSubSection) {
+                String reg = "((\\{\\{[1|2]).*?([2|1]\\}\\}))";
+                Pattern patt = Pattern.compile(reg, Pattern.DOTALL);
+                String[] split = patt.split(text);
+                int counter = 0;
+                report.outLine(this, null, split[counter++], null);
+                Matcher m = patt.matcher(text);
+                while (m.find()) {
+                    String foundedText = m.group();
+                    String mark = foundedText.replace("{{1", "").replace("1}}", "")
+                            .replace("{{2", "").replace("2}}", "");
+
+                    content.add(new ContentItem(
+                            String.format("<li role='presentation'>\n<a href='#%s'>%s</a>\n", mark.replaceAll("\\s+", "").toLowerCase(), mark))
+                    );
+
+                    report.outLine(this, null, m.group(), null);
+                    report.outLine(this, null, split[counter++], null);
+                }
+                if (counter < split.length) {
+                    report.outLine(this, null, split[counter++], null);
+                }
+            } else {
+                report.outLine(this, null, text, null);
+            }
+        } else {
+            report.outLine(this, null, text, null);
+        }
     }
     
     private InputStream stream = null;
