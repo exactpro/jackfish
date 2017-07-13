@@ -8,7 +8,6 @@
 
 package com.exactprosystems.jf.tool.wizard;
 
-import com.exactprosystems.jf.api.common.IContext;
 import com.exactprosystems.jf.api.wizard.*;
 import com.exactprosystems.jf.common.VerboseLevel;
 import com.exactprosystems.jf.common.version.VersionInfo;
@@ -52,7 +51,8 @@ public class WizardManagerImpl implements WizardManager
 			SupportedControlWizard.class,
 			CodeExampleWizard.class,
 			XpathWizard.class,
-            RefactorWizard.class
+            RefactorWizard.class,
+            NameSpaceWizard.class
 	);
     
     public WizardManagerImpl()
