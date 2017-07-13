@@ -81,6 +81,9 @@ public class MatrixFxController implements Initializable, ContainingParent, IMat
 	private boolean						ok;
 	private String						exceptionMessage;
 
+	private static final int MIN_TIME_FOR_SHOW_WAITS = 5000;
+	private static final int MIN_TIME_FOR_HIDE_WAITS = 1000;
+
 	// ==============================================================================================================================
 	// interface Initializable
 	// ==============================================================================================================================
@@ -440,7 +443,11 @@ public class MatrixFxController implements Initializable, ContainingParent, IMat
 	void displayTimer(long ms, boolean needShow)
 	{
 		Platform.runLater(() -> {
-			if (!needShow || ms < 1000)
+			if (ms < MIN_TIME_FOR_SHOW_WAITS && !lblTimer.isVisible())
+			{
+				return;
+			}
+			if (!needShow || ms < MIN_TIME_FOR_HIDE_WAITS)
 			{
 				this.lblTimer.setVisible(false);
 				return;

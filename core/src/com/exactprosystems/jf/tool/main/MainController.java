@@ -805,18 +805,7 @@ public class MainController implements Initializable, ContainingParent
 			}
 		});
 
-		this.matrixShowWait.selectedProperty().addListener((observable, oldValue, newValue) -> {
-			if (newValue && !oldValue)
-			{
-				this.model.showWaits(true);
-				this.matrixShowWait.setText("Hide waits");
-			}
-			else if (!newValue && oldValue)
-			{
-				this.model.showWaits(false);
-				this.matrixShowWait.setText("Show waits");
-			}
-		});
+		this.matrixShowWait.selectedProperty().addListener((observable, oldValue, newValue) -> this.model.showWaits(newValue && !oldValue));
 	}
 
 	private void openLogs()
