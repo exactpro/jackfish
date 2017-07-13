@@ -484,7 +484,7 @@ public class MatrixFxController implements Initializable, ContainingParent, IMat
 		long hours = time / 3600;
 		long minutes = (time % 3600) / 60;
 		long seconds = time % 60;
-		return String.format("%s:%s:%s", hours < 10 ? "0" + hours : hours
+		return String.format("Wait %s:%s:%s", hours < 10 ? "0" + hours : hours
 				, minutes < 10 ? "0" + minutes : minutes
 				, seconds < 10 ? "0" + seconds : seconds
 		);

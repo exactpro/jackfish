@@ -98,7 +98,7 @@ public class Main extends Application
 
 	private boolean isFromInit = true;
 	private List<Document> needDisplayDoc = new ArrayList<>();
-	private boolean showWaits = false;
+	private boolean showWaits = true;
 
 	public static String getConfigName()
 	{

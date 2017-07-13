@@ -240,7 +240,7 @@
 
 }
 .waitsLabel {
-	-fx-text-fill : gold;
+	-fx-text-fill : orange;
 	-fx-opacity : 0.5;
 	-fx-font-size : 72px;
 }
