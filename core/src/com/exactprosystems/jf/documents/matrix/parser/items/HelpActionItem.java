@@ -96,10 +96,7 @@ public class HelpActionItem extends MatrixItem
         // Output
         table = report.addTable("{{*Output:*}}", null, true, false, new int[] { 30, 70 }, "Result type", "Description");
         table.addValues(attr.outputType().getSimpleName(), attr.outputDescription());
-        if (report instanceof NewHelpBuilder)
-        {
-            report.outLine(this, null, "</div>", null);
-        }
+
     }
 
 
