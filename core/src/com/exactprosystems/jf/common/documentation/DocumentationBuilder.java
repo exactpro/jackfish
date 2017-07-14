@@ -63,7 +63,7 @@ public class DocumentationBuilder
 
         addAllControlsTable(help, "All controls", context, operations, true, true, content);
         addAllItems(help, content);
-        /*addAllActions(help, content);*/
+        addAllActions(help, content);
         addContent(help, "", content);
 
         return help;
