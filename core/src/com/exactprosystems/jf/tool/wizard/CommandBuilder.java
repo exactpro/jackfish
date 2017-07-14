@@ -14,6 +14,7 @@ import com.exactprosystems.jf.api.wizard.WizardCommand;
 import com.exactprosystems.jf.common.CommonHelper;
 import com.exactprosystems.jf.documents.Document;
 import com.exactprosystems.jf.documents.DocumentKind;
+import com.exactprosystems.jf.documents.config.Configuration;
 import com.exactprosystems.jf.documents.guidic.Section;
 import com.exactprosystems.jf.documents.matrix.Matrix;
 import com.exactprosystems.jf.documents.matrix.parser.Parser;
@@ -44,7 +45,13 @@ public class CommandBuilder
     {
         return this.commands;
     }
-    
+
+    public CommandBuilder refreshConfig(Configuration config)
+    {
+        this.commands.add(context -> Common.tryCatch(config::refresh, "Error on refresh config"));
+        return this;
+    }
+
     public CommandBuilder print(String message)
     {
         this.commands.add(context -> 

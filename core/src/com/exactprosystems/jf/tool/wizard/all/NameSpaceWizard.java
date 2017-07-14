@@ -26,6 +26,7 @@ import com.exactprosystems.jf.tool.custom.controls.field.CustomFieldWithButton;
 import com.exactprosystems.jf.tool.helpers.DialogsHelper;
 import com.exactprosystems.jf.tool.matrix.MatrixFx;
 import com.exactprosystems.jf.tool.wizard.AbstractWizard;
+import com.exactprosystems.jf.tool.wizard.CommandBuilder;
 import com.exactprosystems.jf.tool.wizard.related.refactor.Refactor;
 import com.exactprosystems.jf.tool.wizard.related.refactor.RefactorAddItem;
 import com.exactprosystems.jf.tool.wizard.related.refactor.RefactorRemoveItem;
@@ -80,13 +81,15 @@ public class NameSpaceWizard extends AbstractWizard {
     @Override
     protected void initDialog(BorderPane borderPane) {
 
-        borderPane.setMinWidth(450);
-        borderPane.setPrefWidth(450);
+        borderPane.setMinWidth(550);
+        borderPane.setPrefWidth(600);
+        borderPane.setPrefHeight(500);
 
         this.listView.setEditable(false);
         this.listView.setMinHeight(200);
         this.listView.setMaxHeight(600);
-        listView2.setMaxHeight(300);
+        this.listView2.setMaxHeight(300);
+        this.listView2.setMinHeight(200);
 
         String namespace = this.currentNameSpace == null ? "" : this.currentNameSpace.getId();
 
@@ -113,18 +116,24 @@ public class NameSpaceWizard extends AbstractWizard {
         columnConstraints1.setHgrow(Priority.SOMETIMES);
         ColumnConstraints columnConstraints2 = new ColumnConstraints();
         columnConstraints2.setHgrow(Priority.SOMETIMES);
-        pane.getColumnConstraints().addAll(columnConstraints, columnConstraints1, columnConstraints2);
+        ColumnConstraints columnConstraints3 = new ColumnConstraints();
+        columnConstraints3.setHgrow(Priority.SOMETIMES);
+        pane.getColumnConstraints().addAll(columnConstraints, columnConstraints1, columnConstraints2,columnConstraints3);
         pane.setVgap(4);
         pane.setHgap(4);
 
         Button refresh = new Button("Scan");
         refresh.setOnAction(event -> createCommands());
 
-        pane.add(listView, 0, 0, 3, 1);
-        pane.add(new Label("Where to move: "), 0, 1);
-        pane.add(nextNamespace, 1, 1);
-        pane.add(refresh, 2, 1);
-        pane.add(listView2, 0, 2, 3, 1);
+        pane.add(listView, 0, 0, 7, 1);
+        pane.add(new Label(),0,1);
+        pane.add(new Label("Where to move: "), 1, 1);
+        GridPane.setFillWidth(nextNamespace, false);
+        pane.add(nextNamespace, 2, 1);
+        pane.add(new Label(),4,1);
+        pane.add(refresh, 5, 1);
+        pane.add(new Label(),6,1);
+        pane.add(listView2, 0, 2, 7, 1);
         pane.setGridLinesVisible(false);
 
         borderPane.setCenter(pane);
@@ -136,6 +145,10 @@ public class NameSpaceWizard extends AbstractWizard {
     protected Supplier<List<WizardCommand>> getCommands() {
         List<WizardCommand> res = new LinkedList<>();
         this.listView2.getItems().forEach(i -> res.addAll(i.getCommands()));
+        res.addAll(CommandBuilder.start()
+                .refreshConfig(context.getConfiguration())
+                .build()
+        );
         return () -> res;
     }
 

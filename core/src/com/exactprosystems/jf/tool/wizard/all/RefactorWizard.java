@@ -27,6 +27,7 @@ import com.exactprosystems.jf.tool.custom.controls.field.CustomFieldWithButton;
 import com.exactprosystems.jf.tool.helpers.DialogsHelper;
 import com.exactprosystems.jf.tool.matrix.MatrixFx;
 import com.exactprosystems.jf.tool.wizard.AbstractWizard;
+import com.exactprosystems.jf.tool.wizard.CommandBuilder;
 import com.exactprosystems.jf.tool.wizard.related.refactor.Refactor;
 import com.exactprosystems.jf.tool.wizard.related.refactor.RefactorAddItem;
 import com.exactprosystems.jf.tool.wizard.related.refactor.RefactorEmpty;
@@ -144,16 +145,16 @@ public class RefactorWizard extends AbstractWizard
     	if (this.success)
     	{
 	       this.listView.getItems().forEach(i -> list.addAll(i.getCommands()));
-    	}
+	       list.addAll(CommandBuilder.start()
+                   .refreshConfig(context.getConfiguration())
+                   .build());
+        }
     	else
     	{
     	    DialogsHelper.showError("Wrong parameters.");
     	}
 
-    	return () ->
-        {
-        	return list;
-        };
+    	return () -> list;
     }
 
     @Override
