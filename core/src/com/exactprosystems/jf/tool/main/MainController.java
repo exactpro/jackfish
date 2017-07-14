@@ -527,11 +527,6 @@ public class MainController implements Initializable, ContainingParent
 		Common.tryCatch(DialogsHelper::showAboutProgram, "Error on show about program");
 	}
 
-	public void showActionsHelp(ActionEvent event)
-	{
-		Common.tryCatch(() -> DialogsHelper.showActionsHelp(factory), "Error on show actions panel");
-	}
-
     public void newShowActionsHelp(ActionEvent event)
     {
         Common.tryCatch(() -> DialogsHelper.newShowActionsHelp(factory), "Error on show actions panel");

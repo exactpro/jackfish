@@ -681,23 +681,6 @@ public abstract class DialogsHelper
 		dialog.show();
 	}
 
-	public static void showActionsHelp(DocumentFactory factory)
-	{
-		try
-		{
-		    HelpBuilder report = (HelpBuilder) new HelpFactory().createReportBuilder(null, null, new Date());
-			report.helpCreate(report);
-			displayHelp(report.getContent());
-		}
-		catch (Exception e)
-		{
-			String message = "Error on .\n" + e.getMessage();
-			logger.error(message);
-			logger.error(e.getMessage(), e);
-			DialogsHelper.showError(message);
-		}
-	}
-
 	public static void newShowActionsHelp(DocumentFactory factory)
 	{
 		try
@@ -708,7 +691,7 @@ public abstract class DialogsHelper
 			report.reportStarted(null, VersionInfo.getVersion());
 			help.execute(context, context.getMatrixListener(), context.getEvaluator(), report);
 			report.reportFinished(0, 0, null, null);
-			report.printOut();
+			//report.printOut();
 			displayHelp(report.getContent());
 		}
 		catch (Exception e)
