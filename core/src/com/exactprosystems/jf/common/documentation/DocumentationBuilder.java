@@ -370,7 +370,6 @@ public class DocumentationBuilder
 
 
 
-    //only for NewHelpBuilder
     private static String addPartOfContent(String s, boolean hasChildren){
         if(hasChildren){
             return String.format("<li role='presentation' class='mParent' id='%s'>\n", s) +

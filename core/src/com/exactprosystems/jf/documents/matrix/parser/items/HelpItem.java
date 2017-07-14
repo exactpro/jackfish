@@ -13,7 +13,7 @@ import java.util.stream.Collectors;
 import com.exactprosystems.jf.api.error.ErrorKind;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.report.HTMLhelper;
-import com.exactprosystems.jf.common.report.NewHelpBuilder;
+import com.exactprosystems.jf.common.report.HelpBuilder;
 import com.exactprosystems.jf.common.report.ReportBuilder;
 import com.exactprosystems.jf.documents.config.Context;
 import com.exactprosystems.jf.documents.matrix.parser.Parameters;
@@ -51,7 +51,7 @@ public class HelpItem extends MatrixItem
         report.outLine(this, null, "{{`{{3" + this.itemClazz.getSimpleName() + "3}}`}}", null);
         report.outLine(this, null, "{{`" + attribute.description() + "`}}", null);
         report.outLine(this, null, "{{`{{*Examples*}}`}}", null);
-        if (report instanceof NewHelpBuilder){
+        if (report instanceof HelpBuilder){
             report.outLine(this, null, "{{`" + HTMLhelper.htmlescape(attribute.examples()) + "`}}", null);
         }
         else

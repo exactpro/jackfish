@@ -14,11 +14,11 @@ import java.util.Date;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class NewHelpBuilder extends ReportBuilder {
+public class HelpBuilder extends ReportBuilder {
 
     private static final long serialVersionUID = -5583389098545753476L;
 
-    public NewHelpBuilder(Date currentTime) throws IOException
+    public HelpBuilder(Date currentTime) throws IOException
     {
         super(".", "help", currentTime);
     }

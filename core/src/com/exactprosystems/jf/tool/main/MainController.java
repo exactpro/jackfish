@@ -125,7 +125,7 @@ public class MainController implements Initializable, ContainingParent
 	public MenuItem				gitChangeCredential;
 
 	public Menu					menuHelp;
-	public MenuItem				helpNewActionsHelp;
+	public MenuItem				helpActionsHelp;
 	public MenuItem				helpAboutProgram;
 
 	public Button				btnOpenMatrix;
@@ -209,7 +209,7 @@ public class MainController implements Initializable, ContainingParent
 			this.matrixSchedule.setGraphic(new ImageView(new Image(CssVariables.Icons.SCHEDULER_MATRIX_ICON)));
 
 			this.editSettings.setGraphic(new ImageView(new Image(CssVariables.Icons.SHOW_SETTINGS_ICON)));
-			this.helpNewActionsHelp.setGraphic(new ImageView(new Image(CssVariables.Icons.ACTIONS_HELP_ICON)));
+			this.helpActionsHelp.setGraphic(new ImageView(new Image(CssVariables.Icons.ACTIONS_HELP_ICON)));
 
 			this.helpAboutProgram.setGraphic(new ImageView(new Image(CssVariables.Icons.ABOUT_PROGRAM_ICON)));
 
@@ -521,9 +521,9 @@ public class MainController implements Initializable, ContainingParent
 		Common.tryCatch(DialogsHelper::showAboutProgram, "Error on show about program");
 	}
 
-    public void newShowActionsHelp(ActionEvent event)
+    public void showActionsHelp(ActionEvent event)
     {
-        Common.tryCatch(() -> DialogsHelper.newShowActionsHelp(factory), "Error on show actions panel");
+        Common.tryCatch(() -> DialogsHelper.showActionsHelp(factory), "Error on show actions panel");
     }
 
 	public void showCalculator(ActionEvent event)

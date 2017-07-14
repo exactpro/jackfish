@@ -681,12 +681,12 @@ public abstract class DialogsHelper
 		dialog.show();
 	}
 
-	public static void newShowActionsHelp(DocumentFactory factory)
+	public static void showActionsHelp(DocumentFactory factory)
 	{
 		try
 		{
 			Context context = factory.createContext();
-			NewHelpBuilder report = (NewHelpBuilder) new NewHelpBuilderFactory().createReportBuilder(null, null, new Date());
+			HelpBuilder report = (HelpBuilder) new HelpBuilderFactory().createReportBuilder(null, null, new Date());
 			MatrixItem help = DocumentationBuilder.createHelp(report, context);
 			report.reportStarted(null, VersionInfo.getVersion());
 			help.execute(context, context.getMatrixListener(), context.getEvaluator(), report);

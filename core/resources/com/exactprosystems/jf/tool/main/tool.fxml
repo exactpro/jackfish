@@ -113,7 +113,7 @@
 								</Menu>
 								<Menu mnemonicParsing="false" text="Help" fx:id="menuHelp">
 									<items>
-										<MenuItem fx:id="helpNewActionsHelp" id="helpNewActionsHelp" mnemonicParsing="false" onAction="#newShowActionsHelp" text="Actions help"/>
+										<MenuItem fx:id="helpActionsHelp" id="helpActionsHelp" mnemonicParsing="false" onAction="#showActionsHelp" text="Actions help"/>
 										<SeparatorMenuItem mnemonicParsing="false"/>
 										<MenuItem fx:id="helpAboutProgram" id="helpAboutProgram" mnemonicParsing="false" onAction="#showAboutProgram" text="About program"/>
 									</items>

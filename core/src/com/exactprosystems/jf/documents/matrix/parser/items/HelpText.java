@@ -16,7 +16,7 @@ import java.util.regex.Pattern;
 
 import com.exactprosystems.jf.api.error.ErrorKind;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
-import com.exactprosystems.jf.common.report.NewHelpBuilder;
+import com.exactprosystems.jf.common.report.HelpBuilder;
 import com.exactprosystems.jf.common.report.ReportBuilder;
 import com.exactprosystems.jf.common.report.ReportTable;
 import com.exactprosystems.jf.documents.config.Context;
@@ -110,7 +110,7 @@ public class HelpText extends MatrixItem
     }
 
     private void checkText(String text, ReportBuilder report){
-        if(report instanceof NewHelpBuilder) {
+        if(report instanceof HelpBuilder) {
             boolean isSection = text.contains("{{1") && text.contains("1}}");
             boolean isSubSection = text.contains("{{2") && text.contains("2}}");
             if (isSection | isSubSection) {
