@@ -14,6 +14,7 @@ import com.exactprosystems.jf.api.wizard.WizardAttribute;
 import com.exactprosystems.jf.api.wizard.WizardCategory;
 import com.exactprosystems.jf.api.wizard.WizardCommand;
 import com.exactprosystems.jf.api.wizard.WizardManager;
+import com.exactprosystems.jf.documents.DocumentKind;
 import com.exactprosystems.jf.documents.config.Configuration;
 import com.exactprosystems.jf.documents.matrix.Matrix;
 import com.exactprosystems.jf.documents.matrix.parser.Tokens;
@@ -119,11 +120,11 @@ public class NameSpaceWizard extends AbstractWizard {
         Button refresh = new Button("Scan");
         refresh.setOnAction(event -> createCommands());
 
-        pane.add(listView,0,0,3,1);
-        pane.add(new Label("Where to move: "),0,1);
-        pane.add(nextNamespace, 1,1);
-        pane.add(refresh,2,1);
-        pane.add(listView2,0,2,3,1);
+        pane.add(listView, 0, 0, 3, 1);
+        pane.add(new Label("Where to move: "), 0, 1);
+        pane.add(nextNamespace, 1, 1);
+        pane.add(refresh, 2, 1);
+        pane.add(listView2, 0, 2, 3, 1);
         pane.setGridLinesVisible(false);
 
         borderPane.setCenter(pane);
@@ -157,10 +158,16 @@ public class NameSpaceWizard extends AbstractWizard {
                 Optional<MatrixItem> namespace = newLib.getRoot().find(i -> i instanceof NameSpace && Objects.equals(i.get(Tokens.Id), newNamespace));
                 items.add(new RefactorAddItem(newLib, namespace.get(), item.getSub(), 0));
 
-                List<Call> calls = findCalls(this.currentMatrix, oldSubName);
-                RefactorSetField refactorSetField = new RefactorSetField(this.currentMatrix, Tokens.Call, newSubName, calls.stream()
-                        .map(MatrixItem::getNumber).collect(Collectors.toList()));
-                items.add(refactorSetField);
+                config.forEach(document ->
+                {
+                    List<Call> calls = findCalls((Matrix) document, oldSubName);
+                    if (calls.size() > 0)
+                    {
+                        items.add(new RefactorSetField((Matrix) document, Tokens.Call, newSubName, calls.stream()
+                                .map(c -> c.getNumber()).collect(Collectors.toList())));
+                    }
+
+                }, DocumentKind.LIBRARY, DocumentKind.MATRIX);
             }
         });
     }
