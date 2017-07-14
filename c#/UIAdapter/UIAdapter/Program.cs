@@ -761,40 +761,45 @@ namespace UIAdapter
                 {
                     element.SetFocus();
                 }
-                else if (handler.Current.IsKeyboardFocusable)
+                else
                 {
-                    handler.SetFocus();
-                }
-
-                //toFront();
-                //old implementtation. remote it if all works
-                /*
-                if (1 > 2) 
-                {
-                    string keyPress = addModifiers(KeyboardNew.getKey(key.ToUpper()));
-                    logger.All("Send keys : " + keyPress);
-                    try
+                    AutomationElement parent = getFocusableParent(element);
+                    if (parent != null)
                     {
-                        SendKeys.Send(keyPress);
+                        parent.SetFocus();
                     }
-                    catch (InvalidOperationException e)
+                    else
                     {
-                        SendKeys.SendWait(keyPress);
+                        SetLastErrorNumber(4);
+                        throw new Exception("There aren't any focusable elements");
                     }
-                    
-                    logger.All("method sendKeys", getMilis() - startMethod);
                 }
-                 * */
-                //new implementation via WindowsInputSimulation
-                {
-                    VirtualKeyCode keyCode = KeyboardVirtual.getVirtualKeyCode(key);
-
-                    SimulateKeyPress(keyCode);
-                }
+                VirtualKeyCode keyCode = KeyboardVirtual.getVirtualKeyCode(key);
+                SimulateKeyPress(keyCode);
             }
             catch (Exception e)
             {
                 MakeError(e);
+            }
+        }
+
+        private static AutomationElement getFocusableParent(AutomationElement element)
+        {
+            AutomationElement elementParent;
+            elementParent = TreeWalker.ControlViewWalker.GetParent(element);
+
+            if (elementParent == null)
+            {
+                return null;
+            }
+
+            if (elementParent.Current.IsKeyboardFocusable)
+            {
+                return elementParent;
+            }
+            else
+            {
+                return getFocusableParent(elementParent);
             }
         }
 
@@ -841,40 +846,6 @@ namespace UIAdapter
         {
             KeyDown(keyCode);
             KeyUp(keyCode);
-            /*
-            
-            var down = new INPUT();
-            down.Type = (UInt32)InputType.KEYBOARD;
-            down.Data.Keyboard = new KEYBDINPUT();
-            down.Data.Keyboard.Vk = (UInt16)keyCode;
-            // Scan Code here, was 0
-            down.Data.Keyboard.Scan = (ushort)Win32.UnsafeNativeMethods.MapVirtualKey((UInt16)keyCode, 0);
-            down.Data.Keyboard.Flags = 0;
-            down.Data.Keyboard.Time = 0;
-            down.Data.Keyboard.ExtraInfo = IntPtr.Zero;
-
-            var up = new INPUT();
-            up.Type = (UInt32)InputType.KEYBOARD;
-            up.Data.Keyboard = new KEYBDINPUT();
-            up.Data.Keyboard.Vk = (UInt16)keyCode;
-            // Scan Code here, was 0
-            up.Data.Keyboard.Scan = (ushort)Win32.UnsafeNativeMethods.MapVirtualKey((UInt16)keyCode, 0);
-            up.Data.Keyboard.Flags = (UInt32)KeyboardFlag.KEYUP;
-            up.Data.Keyboard.Time = 0;
-            up.Data.Keyboard.ExtraInfo = IntPtr.Zero;
-
-            INPUT[] inputList = new INPUT[2];
-            inputList[0] = down;
-            inputList[1] = up;
-
-            var numberOfSuccessfulSimulatedInputs = Win32.UnsafeNativeMethods.SendInput(2,
-                 inputList, Marshal.SizeOf(typeof(INPUT)));
-            if (numberOfSuccessfulSimulatedInputs == 0)
-                throw new Exception(
-                string.Format("The key press simulation for {0} was not successful.",
-                keyCode));
-             
-             */
         }
 
         [DllExport("upAndDown", CallingConvention.Cdecl)]
@@ -896,7 +867,16 @@ namespace UIAdapter
                 }
                 else
                 {
-                    handler.SetFocus();
+                    AutomationElement parent = getFocusableParent(element);
+                    if (parent != null)
+                    {
+                        parent.SetFocus();
+                    }
+                    else
+                    {
+                        SetLastErrorNumber(4);
+                        throw new Exception("There aren't any focusable elements");
+                    }
                 }
 
                 VirtualKeyCode keyCode = 0x00;
