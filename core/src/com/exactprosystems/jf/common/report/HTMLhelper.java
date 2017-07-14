@@ -211,8 +211,8 @@ public class HTMLhelper
 			case "@" + CM: return "</a>";
 
 			// text 90 degrees rotated
-			case OM + "^": return "<div class='rotate'>";
-			case "^" + CM: return "</div>";
+			case OM + "^": return "<div class='rotate'><div>";
+			case "^" + CM: return "</div></div>";
 
 			// paragraph
 			case OM + "`": return "<p>";
