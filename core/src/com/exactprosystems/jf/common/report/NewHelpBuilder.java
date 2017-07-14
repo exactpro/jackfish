@@ -91,7 +91,7 @@ public class NewHelpBuilder extends ReportBuilder {
 
     @Override
     protected void putMark(ReportWriter writer, String mark) throws IOException {
-        writer.fwrite("<div id=\"%s\"></div>", mark);
+        writer.newline().fwrite("<div id=\"%s\"></div>", mark).newline();
     }
 
     @Override
@@ -214,7 +214,7 @@ public class NewHelpBuilder extends ReportBuilder {
     protected void tableHeader(ReportWriter writer, ReportTable table, String tableTitle, String[] columns, int[] percents) throws IOException {
         boolean columnWidth = percents.length != 0 && columns.length == percents.length;
         if (!Str.IsNullOrEmpty(tableTitle)){
-            writer.fwrite("<div id=\"%s\"></div>", tableTitle.replaceAll("\\s+","").toLowerCase());
+            writer.newline().fwrite("<div id=\"%s\"></div>", tableTitle.replaceAll("\\s+","").toLowerCase());
             writer.fwrite("<h3>" + tableTitle + "</h3>").newline();
         }
         writer.fwrite("<table class='table table-bordered table-condensed'>\n");
@@ -252,7 +252,7 @@ public class NewHelpBuilder extends ReportBuilder {
 
     @Override
     protected void tableFooter(ReportWriter writer, ReportTable table) throws IOException {
-        writer.fwrite("</table>");
+        writer.fwrite("</table>").newline();
     }
 
     @Override

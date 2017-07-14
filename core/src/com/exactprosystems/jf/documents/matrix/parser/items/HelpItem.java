@@ -64,10 +64,7 @@ public class HelpItem extends MatrixItem
             String s = Arrays.stream(attribute.seeAlsoClass()).map(c -> report.decorateLink(c.getSimpleName(), c.getSimpleName())).collect(Collectors.joining(", "));
             report.outLine(this, null, "{{`" + s + "`}}", null);
         }
-        if (report instanceof NewHelpBuilder)
-        {
-            report.outLine(this, null, "</div>", null);
-        }
+
     }
 
 
