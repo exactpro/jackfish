@@ -70,7 +70,7 @@ public class NameSpaceWizard extends AbstractWizard {
 
         for (int i = 0; i < currentNameSpace.count(); i++)
         {
-            this.listView.getItems().add(new Item((SubCase) this.currentNameSpace.get(i),false));
+            this.listView.getItems().add(new Item((SubCase) this.currentNameSpace.get(i), false));
         }
 
         return true;
@@ -79,11 +79,11 @@ public class NameSpaceWizard extends AbstractWizard {
     @Override
     protected void initDialog(BorderPane borderPane) {
 
-        borderPane.setMinWidth(400);
-        borderPane.setPrefWidth(400);
+        borderPane.setMinWidth(450);
+        borderPane.setPrefWidth(450);
 
         this.listView.setEditable(false);
-        this.listView.setMinHeight(300);
+        this.listView.setMinHeight(200);
         this.listView.setMaxHeight(600);
         listView2.setMaxHeight(300);
 
@@ -109,21 +109,22 @@ public class NameSpaceWizard extends AbstractWizard {
         columnConstraints.setMaxWidth(250);
         columnConstraints.setHgrow(Priority.SOMETIMES);
         ColumnConstraints columnConstraints1 = new ColumnConstraints();
-        columnConstraints1.setHgrow(Priority.NEVER);
-        pane.getColumnConstraints().addAll(columnConstraints, columnConstraints1);
-        pane.setVgap(8);
+        columnConstraints1.setHgrow(Priority.SOMETIMES);
+        ColumnConstraints columnConstraints2 = new ColumnConstraints();
+        columnConstraints2.setHgrow(Priority.SOMETIMES);
+        pane.getColumnConstraints().addAll(columnConstraints, columnConstraints1, columnConstraints2);
+        pane.setVgap(4);
         pane.setHgap(4);
 
         Button refresh = new Button("Scan");
-        refresh.setOnAction(event -> createCommands(this.listView, this.nextNamespace));
+        refresh.setOnAction(event -> createCommands());
 
-        pane.add(this.listView, 0, 0, 1, 2);
-        pane.add(new Label("Move to: "), 2, 0);
-        pane.add(this.nextNamespace, 2, 1);
-        pane.add(refresh,0,2);
-        pane.add(this.listView2,0,3,3,1);
-        pane.setGridLinesVisible(true);
-
+        pane.add(listView,0,0,3,1);
+        pane.add(new Label("Where to move: "),0,1);
+        pane.add(nextNamespace, 1,1);
+        pane.add(refresh,2,1);
+        pane.add(listView2,0,2,3,1);
+        pane.setGridLinesVisible(false);
 
         borderPane.setCenter(pane);
         BorderPane.setAlignment(pane, Pos.CENTER);
@@ -133,40 +134,35 @@ public class NameSpaceWizard extends AbstractWizard {
     @Override
     protected Supplier<List<WizardCommand>> getCommands() {
         List<WizardCommand> res = new LinkedList<>();
-        createCommands(this.listView, this.nextNamespace).forEach(i -> res.addAll(i.getCommands()));
+        this.listView2.getItems().forEach(i -> res.addAll(i.getCommands()));
         return () -> res;
     }
 
-    private List<Refactor> createCommands(ListView<Item> list, TextField field) {
-        List<Refactor> res = new LinkedList<>();
+    private void createCommands() {
         Configuration config = super.context.getConfiguration();
-        String newNamespace = field.getText();
+        String newNamespace = this.nextNamespace.getText();
         ObservableList<Refactor> items = listView2.getItems();
         items.clear();
 
-        list.getItems().forEach(item ->
+        this.listView.getItems().forEach(item ->
         {
             if (item.isOn())
             {
                 String oldSubName = currentNameSpace.getId() + "." + item.getName();
                 String newSubName = newNamespace + "." + item.getName();
 
-                res.add(new RefactorRemoveItem(currentMatrix, item.getSub()));
+                items.add(new RefactorRemoveItem(currentMatrix, item.getSub()));
 
                 Matrix newLib = config.getLib(newNamespace);
                 Optional<MatrixItem> namespace = newLib.getRoot().find(i -> i instanceof NameSpace && Objects.equals(i.get(Tokens.Id), newNamespace));
-                res.add(new RefactorAddItem(newLib, namespace.get(), item.getSub(), 0));
+                items.add(new RefactorAddItem(newLib, namespace.get(), item.getSub(), 0));
 
                 List<Call> calls = findCalls(this.currentMatrix, oldSubName);
                 RefactorSetField refactorSetField = new RefactorSetField(this.currentMatrix, Tokens.Call, newSubName, calls.stream()
                         .map(MatrixItem::getNumber).collect(Collectors.toList()));
-                res.add(refactorSetField);
                 items.add(refactorSetField);
             }
         });
-
-        return res;
-
     }
 
     @Override
@@ -188,10 +184,9 @@ public class NameSpaceWizard extends AbstractWizard {
     }
 
 
-    private List<Call> findCalls(Matrix matrix, String name)
-    {
+    private List<Call> findCalls(Matrix matrix, String name) {
         return matrix.getRoot().findAll(i -> i instanceof Call && i.get(Tokens.Call).equals(name))
-                .stream().map(i -> (Call)i).collect(Collectors.toList());
+                .stream().map(i -> (Call) i).collect(Collectors.toList());
     }
 
     public static class Item {
@@ -228,5 +223,4 @@ public class NameSpaceWizard extends AbstractWizard {
             return getName();
         }
     }
-
 }
