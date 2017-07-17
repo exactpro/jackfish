@@ -166,7 +166,6 @@ public class DocumentationBuilder
     
     public static MatrixItem createHelpForPlugin(ReportBuilder report, Context context, String title, IApplicationFactory applicationFactory) throws Exception
     {
-        Content content = new Content();
         InputStream stream = applicationFactory.getHelp();
         MatrixItem help = new HelpTextLine("{{`{{*" + title + "*}}`}}");
         addText(help, stream);
