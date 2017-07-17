@@ -26,6 +26,7 @@ import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.safari.SafariDriver;
+import org.openqa.selenium.support.ui.Quotes;
 import org.openqa.selenium.support.ui.Select;
 
 import javax.imageio.ImageIO;
@@ -1091,6 +1092,15 @@ public class SeleniumOperationExecutor implements OperationExecutor<WebElement>
 			case "select":
 				new Select(component).selectByIndex(index);
 				return true;
+			case "ul" :
+				List<WebElement> lis = component.findElements(By.xpath("child::li"));
+				if (index > lis.size())
+				{
+					throw new RemoteException("Can't select element by index " + index + " ,because found " + lis.size() + " elements");
+				}
+				lis.get(index).click();
+				return true;
+
 			default:
 				return true;
 		}
@@ -1099,12 +1109,19 @@ public class SeleniumOperationExecutor implements OperationExecutor<WebElement>
 	@Override
 	public boolean select(WebElement component, String selectedText) throws Exception
 	{
-		//TODO think about it
 		scrollToElement(component);
 		switch (component.getTagName())
 		{
 			case "select":
 				new Select(component).selectByVisibleText(selectedText);
+				return true;
+			case "ul" :
+				List<WebElement> lis = component.findElements(By.xpath(".//li[normalize-space(.) = " + Quotes.escape(selectedText) + "]"));
+				if (lis.size() != 1)
+				{
+					throw new RemoteException("Found " + lis.size() + " elements instead of 1");
+				}
+				lis.get(0).click();
 				return true;
 			default:
 				return true;
