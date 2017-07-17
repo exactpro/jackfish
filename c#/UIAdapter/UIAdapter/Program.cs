@@ -768,11 +768,6 @@ namespace UIAdapter
                     {
                         parent.SetFocus();
                     }
-                    else
-                    {
-                        SetLastErrorNumber(4);
-                        throw new Exception("There aren't any focusable elements");
-                    }
                 }
                 VirtualKeyCode keyCode = KeyboardVirtual.getVirtualKeyCode(key);
                 SimulateKeyPress(keyCode);
@@ -871,11 +866,6 @@ namespace UIAdapter
                     if (parent != null)
                     {
                         parent.SetFocus();
-                    }
-                    else
-                    {
-                        SetLastErrorNumber(4);
-                        throw new Exception("There aren't any focusable elements");
                     }
                 }
 
