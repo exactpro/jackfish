@@ -1,17 +1,10 @@
 package com.exactprosystems.jf.tool.custom.xmltree;
 
-import java.awt.MouseInfo;
-import java.util.Optional;
-import java.util.stream.IntStream;
-
-import org.w3c.dom.NamedNodeMap;
-
 import com.exactprosystems.jf.api.common.Str;
 import com.exactprosystems.jf.common.utils.XpathUtils;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.CssVariables;
 import com.exactprosystems.jf.tool.wizard.related.XmlItem;
-
 import javafx.geometry.Pos;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
@@ -19,6 +12,11 @@ import javafx.scene.control.SeparatorMenuItem;
 import javafx.scene.control.TreeTableCell;
 import javafx.scene.layout.HBox;
 import javafx.scene.text.Text;
+import org.w3c.dom.NamedNodeMap;
+
+import java.awt.*;
+import java.util.Optional;
+import java.util.stream.IntStream;
 
 public class XmlTreeTableCell extends TreeTableCell<XmlItem, XmlItem>
 {
@@ -43,6 +41,10 @@ public class XmlTreeTableCell extends TreeTableCell<XmlItem, XmlItem>
 		    org.w3c.dom.Node node = item.getNode();
 		    HBox box = stringNode(node, XpathUtils.text(node));
 	        box.setAlignment(Pos.CENTER_LEFT);
+			if (item.isHighlight())
+			{
+				box.getStyleClass().addAll(CssVariables.XPATH_FIND_TREE_ITEM);
+			}
 			setGraphic(box);
 		}
 		else

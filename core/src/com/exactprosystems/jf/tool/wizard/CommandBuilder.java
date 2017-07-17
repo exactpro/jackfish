@@ -16,10 +16,12 @@ import com.exactprosystems.jf.documents.Document;
 import com.exactprosystems.jf.documents.DocumentKind;
 import com.exactprosystems.jf.documents.config.Configuration;
 import com.exactprosystems.jf.documents.guidic.Section;
+import com.exactprosystems.jf.documents.guidic.Window;
 import com.exactprosystems.jf.documents.matrix.Matrix;
 import com.exactprosystems.jf.documents.matrix.parser.Parser;
 import com.exactprosystems.jf.documents.matrix.parser.items.MatrixItem;
 import com.exactprosystems.jf.tool.Common;
+import com.exactprosystems.jf.tool.dictionary.DictionaryFx;
 import org.apache.log4j.Logger;
 
 import java.io.Reader;
@@ -113,6 +115,12 @@ public class CommandBuilder
 		{ 
 		    section.replaceControl(oldControl, newControl);
 		});
+		return this;
+	}
+
+	public CommandBuilder displayControl(DictionaryFx dictionaryFx, Window window, Section section, IControl control)
+	{
+		this.commands.add(context -> Common.tryCatch(() -> dictionaryFx.displayElement(window, section.getSectionKind(), control), "Error on show element"));
 		return this;
 	}
 	

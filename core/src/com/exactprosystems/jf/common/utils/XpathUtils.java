@@ -8,32 +8,26 @@
 
 package com.exactprosystems.jf.common.utils;
 
-import java.awt.Rectangle;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
-
-import javax.xml.xpath.XPath;
-import javax.xml.xpath.XPathConstants;
-import javax.xml.xpath.XPathExpression;
-import javax.xml.xpath.XPathExpressionException;
-import javax.xml.xpath.XPathFactory;
-
+import com.exactprosystems.jf.api.app.IRemoteApplication;
 import org.w3c.dom.Document;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-import com.exactprosystems.jf.api.app.IRemoteApplication;
+import javax.xml.xpath.*;
+import java.awt.*;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 public class XpathUtils
 {
     private XpathUtils()
     {
     }
-
 
     public static void applyOffset(Node node, int xOffset, int yOffset)
     {
@@ -53,7 +47,6 @@ public class XpathUtils
         }
     }
 
-    
     public static List<Rectangle> collectAllRectangles(Node node)
     {
         List<Rectangle> collect = new ArrayList<>();
@@ -72,7 +65,6 @@ public class XpathUtils
         return collect;
     }
 
-    
     public static String fullXpath(String relativeXpath, Node relative, Node node, boolean useText, List<String> parameters, boolean longPath)
     {
     	if (node == null)
@@ -250,4 +242,17 @@ public class XpathUtils
     	}
     	return false;
     }
+
+	public static List<String> getAllNodeAttribute(Node node)
+	{
+		ArrayList<String> params = new ArrayList<>();
+		NamedNodeMap attributes = node.getAttributes();
+		Optional.ofNullable(attributes)
+				.ifPresent(attr -> IntStream.range(0, attr.getLength())
+						.mapToObj(attr::item)
+						.map(Node::getNodeName)
+						.forEach(params::add)
+				);
+		return params;
+	}
 }

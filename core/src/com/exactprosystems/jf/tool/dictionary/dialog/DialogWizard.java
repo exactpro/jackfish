@@ -13,6 +13,7 @@ import com.exactprosystems.jf.api.app.IWindow.SectionKind;
 import com.exactprosystems.jf.api.common.Converter;
 import com.exactprosystems.jf.api.common.Str;
 import com.exactprosystems.jf.api.error.JFRemoteException;
+import com.exactprosystems.jf.common.utils.XpathUtils;
 import com.exactprosystems.jf.documents.guidic.*;
 import com.exactprosystems.jf.documents.guidic.Window;
 import com.exactprosystems.jf.documents.guidic.controls.AbstractControl;
@@ -496,8 +497,8 @@ public class DialogWizard
     {
         String ownerPath = ".";
 
-        List<String> parameters = allRealAttributes(node);
-        String relativePath = XpathViewer.fullXpath(ownerPath, this.rootNode, node, false, parameters, false);
+		List<String> parameters = XpathUtils.getAllNodeAttribute(node);
+		String relativePath = XpathViewer.fullXpath(ownerPath, this.rootNode, node, false, parameters, false);
         Locator locator = new Locator().kind(kind).id(id).xpath(relativePath);
         
         if (tryLocator(locator, node) == 1)
@@ -540,21 +541,6 @@ public class DialogWizard
         return null;
     }
 
-    private List<String> allRealAttributes(Node node)
-    {
-        List<String> res = new ArrayList<>();
-        NamedNodeMap attributes = node.getAttributes();
-        if (attributes != null)
-        {
-            for (int index = 0; index < attributes.getLength(); index++)
-            {
-                Node attr = attributes.item(index);
-                res.add(attr.getNodeName());
-            }
-        }
-        return res;
-    }
-    
     private int tryLocator(Locator locator, Node node)
     {
         if (locator == null)

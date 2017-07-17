@@ -13,6 +13,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
 
+import java.util.Optional;
 import java.util.function.DoubleConsumer;
 
 public class ScalePaneNew extends HBox
@@ -87,10 +88,7 @@ public class ScalePaneNew extends HBox
 
 	private void onScaleChanged()
 	{
-	    if (this.scaleChanged != null)
-	    {
-	        this.scaleChanged.accept(getScale());
-	    }
+		Optional.ofNullable(this.scaleChanged).ifPresent(lis -> lis.accept(getScale()));
 	}
 
 	private void displayScale()

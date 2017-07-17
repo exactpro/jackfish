@@ -16,19 +16,25 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.StrokeType;
 import javafx.scene.text.Text;
 
-public class DecoragedRectangle  extends Rectangle
+public class DecoratedRectangle extends Rectangle
 {
     private MarkerStyle        style;
     private Text               text;
     private Timeline           timeline;
     private java.awt.Rectangle baseRectangle;
 
-	public DecoragedRectangle(java.awt.Rectangle rectangle, MarkerStyle style, String text)
+	public DecoratedRectangle(java.awt.Rectangle rectangle, MarkerStyle style, String text, double scale)
 	{
-		super(rectangle.getX(), rectangle.getY(), rectangle.getWidth(), rectangle.getHeight());
+		super();
 		this.baseRectangle = rectangle;
-		
-	    this.style      = style; 
+		java.awt.Rectangle displayRectangle = changeRectangle(this.baseRectangle, scale);
+
+		setX(displayRectangle.getX());
+		setY(displayRectangle.getY());
+		setWidth(displayRectangle.getWidth());
+		setHeight(displayRectangle.getHeight());
+
+		this.style      = style;
         this.text       = new Text();
         this.timeline   = new Timeline();
 
@@ -38,7 +44,6 @@ public class DecoragedRectangle  extends Rectangle
 
         if (this.style != null)
         {
-            setStroke(this.style.color());
             getStyleClass().add(this.style.getCssStyle());
             this.text.setFill(this.style.color());
         }
@@ -66,10 +71,10 @@ public class DecoragedRectangle  extends Rectangle
     public boolean matches(java.awt.Rectangle rectangle, MarkerStyle style)
     {
         return this.style == style 
-                && getX() == rectangle.getX() 
-                && getY() == rectangle.getY()
-                && getWidth() == rectangle.getWidth()
-                && getHeight() == rectangle.getHeight();
+                && this.baseRectangle.getX() == rectangle.getX()
+                && this.baseRectangle.getY() == rectangle.getY()
+                && this.baseRectangle.getWidth() == rectangle.getWidth()
+                && this.baseRectangle.getHeight() == rectangle.getHeight();
     }
 
     public java.awt.Rectangle awtRectangle()
@@ -94,5 +99,15 @@ public class DecoragedRectangle  extends Rectangle
         this.timeline.getKeyFrames().add(new KeyFrame(javafx.util.Duration.seconds(1), new KeyValue(color.brightnessProperty(), -1, Interpolator.LINEAR)));
 		timeline.setAutoReverse(true);
 		timeline.setCycleCount(-1);
+	}
+
+	private java.awt.Rectangle changeRectangle(java.awt.Rectangle rect, double scale)
+	{
+		return new java.awt.Rectangle(
+				(int) (rect.x * scale)
+				, (int) (rect.y * scale)
+				, (int) (rect.width * scale)
+				, (int) (rect.height * scale)
+		);
 	}
 }

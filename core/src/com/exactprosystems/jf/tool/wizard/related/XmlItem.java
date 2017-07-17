@@ -20,6 +20,7 @@ public class XmlItem
 	private Node node;
 	private Rectangle rectangle;
     private MarkerStyle style;
+    private boolean highlight;
 
 	public XmlItem(Node node)
 	{
@@ -70,6 +71,16 @@ public class XmlItem
         }
         return this.style;
     }
+
+	public void highlight(boolean flag)
+	{
+		this.highlight = flag;
+	}
+
+	public boolean isHighlight()
+	{
+		return this.highlight;
+	}
 	
     @Override
     public String toString()

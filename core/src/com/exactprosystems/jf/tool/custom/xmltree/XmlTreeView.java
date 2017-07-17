@@ -12,15 +12,19 @@ import com.exactprosystems.jf.documents.matrix.parser.SearchHelper;
 import com.exactprosystems.jf.tool.CssVariables;
 import com.exactprosystems.jf.tool.wizard.related.MarkerStyle;
 import com.exactprosystems.jf.tool.wizard.related.XmlItem;
-
 import javafx.application.Platform;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.event.EventTarget;
-import javafx.scene.control.*;
+import javafx.scene.control.ProgressIndicator;
+import javafx.scene.control.TreeItem;
+import javafx.scene.control.TreeTableColumn;
+import javafx.scene.control.TreeTableView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.text.Text;
 import org.w3c.dom.Document;
+import org.w3c.dom.Node;
+
 import java.awt.*;
 import java.util.*;
 import java.util.List;
@@ -253,9 +257,36 @@ public class XmlTreeView extends AnchorPane
 	{
 		Platform.runLater(() -> 
 		{
-			this.treeTableView.getColumns().get(0).setVisible(false);
-			this.treeTableView.getColumns().get(0).setVisible(true);
+			this.treeTableView.getColumns().get(1).setVisible(false);
+			this.treeTableView.getColumns().get(1).setVisible(true);
 		});
+	}
+
+	public void highlightNodes(List<Node> nodes)
+	{
+		List<TreeItem<XmlItem>> list = findAll(xmlItem -> {
+			boolean isNull = xmlItem == null;
+			if (isNull)
+			{
+				return false;
+			}
+			xmlItem.highlight(false);
+			return nodes.stream().anyMatch(node -> xmlItem.getNode() == node);
+		});
+
+		list.stream()
+				.filter(Objects::nonNull)
+				.map(TreeItem::getValue)
+				.filter(Objects::nonNull)
+				.forEach(item -> item.highlight(true));
+		if (!list.isEmpty())
+		{
+			TreeItem<XmlItem> firstFound = list.get(0);
+			this.treeTableView.getSelectionModel().clearSelection();
+			this.treeTableView.getSelectionModel().select(firstFound);
+			this.scrollToElement(firstFound);
+		}
+		this.refresh();
 	}
 	//endregion
 

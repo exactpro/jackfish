@@ -2,7 +2,7 @@ package com.exactprosystems.jf.tool.custom.scaledimage;
 
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.CssVariables;
-import com.exactprosystems.jf.tool.custom.controls.rect.DecoragedRectangle;
+import com.exactprosystems.jf.tool.custom.controls.rect.DecoratedRectangle;
 import com.exactprosystems.jf.tool.custom.scale.ScalePaneNew;
 import com.exactprosystems.jf.tool.wizard.related.MarkerStyle;
 
@@ -116,15 +116,18 @@ public class ImageViewWithScale extends BorderPane
 
 		addWaitingPane();
 
-		this.scalePane.setOnScaleChanged(s -> { this.group.setScaleX(s); this.group.setScaleY(s); });
+		this.scalePane.setOnScaleChanged(s -> {
+			this.imageView.setFitHeight(s * this.initial.height);
+			this.imageView.setFitWidth(s * this.initial.width);
+			hideAllRectangles(null);
+		});
 		listeners();
 	}
 
+	//region public methods
 	public void showRectangle(java.awt.Rectangle rectangle, MarkerStyle style, String text, boolean selected)
 	{
-//	    System.err.println(">> show rec=" + rectangle+" style="+style+" text="+text);
-	    
-	    DecoragedRectangle newRectangle = new DecoragedRectangle(rectangle, style, text);
+	    DecoratedRectangle newRectangle = new DecoratedRectangle(rectangle, style, text, this.scalePane.getScale());
 	    newRectangle.setTextVisible(this.cbIds.isSelected());
 	    newRectangle.setOpacity(selected ? 1.0 : 0.5);
 	    this.group.getChildren().add(newRectangle);
@@ -132,26 +135,24 @@ public class ImageViewWithScale extends BorderPane
 	
     public void hideRectangle(java.awt.Rectangle rectangle, MarkerStyle style)
     {
-//        System.err.println(">> hide rec=" + rectangle+" style="+style);
-
-        this.group.getChildren().removeIf(d -> (d instanceof DecoragedRectangle) && (((DecoragedRectangle)d).matches(rectangle, style)));
+        this.group.getChildren().removeIf(d -> (d instanceof DecoratedRectangle) && (((DecoratedRectangle)d).matches(rectangle, style)));
     }
 	
     public void hideAllRectangles(MarkerStyle style)
     {
         if (style == null)
         {
-            this.group.getChildren().removeIf(d -> (d instanceof DecoragedRectangle));
+            this.group.getChildren().removeIf(d -> (d instanceof DecoratedRectangle));
         }
         else
         {
-            this.group.getChildren().removeIf(d -> (d instanceof DecoragedRectangle) && (((DecoragedRectangle)d).getMarkerStyle() == style));
+            this.group.getChildren().removeIf(d -> (d instanceof DecoratedRectangle) && (((DecoratedRectangle)d).getMarkerStyle() == style));
         }
     }
     
     public void setTextVisible(boolean value)
     {
-        this.group.getChildren().filtered(d -> d instanceof DecoragedRectangle).forEach(d -> ((DecoragedRectangle)d).setTextVisible(value));
+        this.group.getChildren().filtered(d -> d instanceof DecoratedRectangle).forEach(d -> ((DecoratedRectangle)d).setTextVisible(value));
     }
     
     public void setListForSearch(List<Rectangle> list)
@@ -186,7 +187,6 @@ public class ImageViewWithScale extends BorderPane
 
 	//endregion
 
-
 	//region private methods
 	private void addWaitingPane()
 	{
@@ -214,8 +214,7 @@ public class ImageViewWithScale extends BorderPane
 
     private void listeners()
     {
-        this.cbIds.selectedProperty()
-                .addListener((observable, oldValue, newValue) -> setTextVisible(newValue)); 
+        this.cbIds.selectedProperty().addListener((observable, oldValue, newValue) -> setTextVisible(newValue));
 
         this.group.setOnMouseMoved(event ->
         {
