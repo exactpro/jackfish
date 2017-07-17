@@ -174,6 +174,8 @@ public class NameSpaceWizard extends AbstractWizard {
                 config.forEach(document ->
                 {
                     List<Call> calls = findCalls((Matrix) document, oldSubName);
+                    calls.addAll(findCalls((currentMatrix), item.getName()));
+
                     if (calls.size() > 0)
                     {
                         items.add(new RefactorSetField((Matrix) document, Tokens.Call, newSubName, calls.stream()

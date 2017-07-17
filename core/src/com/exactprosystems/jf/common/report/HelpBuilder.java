@@ -7,12 +7,12 @@ import com.exactprosystems.jf.common.version.VersionInfo;
 import com.exactprosystems.jf.documents.matrix.parser.items.MatrixItem;
 import com.exactprosystems.jf.functions.Content;
 import com.exactprosystems.jf.functions.ContentItem;
+import com.exactprosystems.jf.tool.Common;
+import com.exactprosystems.jf.tool.settings.Theme;
 
 import java.io.*;
 import java.nio.file.*;
 import java.util.Date;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class HelpBuilder extends ReportBuilder {
 
@@ -112,7 +112,14 @@ public class HelpBuilder extends ReportBuilder {
         writer.fwrite("-->\n" + "</style>\n");
 
         writer.fwrite("<style>\n" + "<!--\n");
-        writer.include(getClass().getResourceAsStream("help.css"));
+        if (Common.currentTheme().equals(Theme.WHITE))
+        {
+            writer.include(getClass().getResourceAsStream("white-help.css"));
+        }else
+        {
+            writer.include(getClass().getResourceAsStream("dark-help.css"));
+
+        }
         writer.fwrite("-->\n" + "</style>\n");
 
         writer.fwrite("</head>\n" + "<body>\n"

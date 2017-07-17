@@ -8,6 +8,9 @@
 
 package com.exactprosystems.jf.common.report;
 
+import com.exactprosystems.jf.tool.Common;
+import com.exactprosystems.jf.tool.settings.Theme;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -175,6 +178,8 @@ public class HTMLhelper
 
 	public static String newHtmlMarker(String marker)
 	{
+		boolean theme = Common.currentTheme().equals(Theme.WHITE);
+
 		if (marker == null)
 		{
 			return "";
@@ -199,15 +204,15 @@ public class HTMLhelper
 			case "4" + CM: return "</h4>";
 
 			// style for identifiers
-			case OM + "$": return "<font color=\"#006400\">";
+			case OM + "$": return "<font color=\""+(theme?"#006400":"#ffe30f")+"\">";
 			case "$" + CM: return "</font>";
 
 			// style for code
-			case OM + "#": return "<pre style='padding-left: 10px; color:#006400; margin: 10px; border-left: 1px solid #CCC;'><code>";
+			case OM + "#": return "<pre style='padding-left: 10px; color:" + (theme?"#006400":"#ffe30f") + "; margin: 10px; border-left: 1px solid #CCC;'><code>";
 			case "#" + CM: return "</code></pre>";
 
 			// style for references
-			case OM + "@": return "<a style='color:Blue'>";
+			case OM + "@": return "<a style='color:#00bfff'>";
 			case "@" + CM: return "</a>";
 
 			// text 90 degrees rotated

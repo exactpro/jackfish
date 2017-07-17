@@ -13,6 +13,8 @@ import com.exactprosystems.jf.charts.ChartBuilder;
 import com.exactprosystems.jf.common.report.ReportBuilder.ImageReportMode;
 import com.exactprosystems.jf.documents.matrix.parser.items.MatrixItem;
 import com.exactprosystems.jf.functions.Content;
+import com.exactprosystems.jf.tool.Common;
+import com.exactprosystems.jf.tool.settings.Theme;
 
 import java.io.IOException;
 import java.util.Date;
@@ -41,7 +43,7 @@ public class ContextHelpBuilder extends ReportBuilder
 	@Override
 	protected String replaceMarker(String marker)
 	{
-		return HTMLhelper.htmlMarker(marker);
+		return HTMLhelper.newHtmlMarker(marker);
 	}
 
     @Override
@@ -89,8 +91,13 @@ public class ContextHelpBuilder extends ReportBuilder
                 "<meta http-equiv='Content-Type' content='text/html; charset=utf-8'>\n");
 
         writer.fwrite("<style>\n" + "<!--\n");
-        writer.include(getClass().getResourceAsStream("help.css"));
-        writer.fwrite("-->\n" + "</style>\n");
+		if (Common.currentTheme().equals(Theme.WHITE))
+		{
+			writer.include(getClass().getResourceAsStream("white-help.css"));
+		}else{
+			writer.include(getClass().getResourceAsStream("dark-help.css"));
+		}
+		writer.fwrite("-->\n" + "</style>\n");
         
         writer.fwrite(
                 "</head>\n" +

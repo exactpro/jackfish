@@ -1,0 +1,229 @@
+body {
+    display: block;
+    margin-top: 16px;
+    background-color: #656565;
+    color: white;
+}
+
+a {
+    color: white;
+}
+
+pre {
+    background-color: #424242;
+}
+
+#btnNext{
+    margin-left: -5px;
+}
+
+a:focus, a:hover{
+
+    color: white;
+}
+
+.nav>li>a:focus, .nav>li>a:hover{
+
+    text-decoration: none;
+    background-color: #424242;
+}
+
+.nav-pills>li.active>a, .nav-pills>li.active>a:focus, .nav-pills>li.active>a:hover{
+    background-color: #424242;
+}
+
+.activeBtn{
+	color:black;
+}
+
+.noNactiveBtn{
+	color:grey;
+}
+
+#btnPrev{
+	margin-left: -1px;
+    padding-left: 6px;
+}
+
+h0{
+	float: right;
+	padding-top: 4px;
+}
+
+ul.nav > ul > li > a {
+    padding-left: 30px;
+}
+
+.deepNav > li > a {
+    padding-left: 45px !important;
+}
+
+.deepNav > ul > li > a {
+    padding-left: 60px !important;
+}
+
+.navChild {
+    display: none;
+}
+
+.activeChild {
+    text-decoration: none;
+    background-color: #eee;
+}
+
+.mainMenu {
+    position: fixed;
+    width: 100%;
+    overflow: auto;
+    top: 35px;
+    bottom: 0px;
+}
+
+.mActive > a {
+    padding-left: 18px;
+    font-weight: 700;
+    border-radius: 0px !important;
+    background-color: transparent;
+    border-left: 2px solid #337ab7;
+}
+
+.bigTable {
+    width: 100%;
+    overflow: auto;
+}
+
+.bigTable tr > th:first-child {
+    border-left: 0;
+}
+
+.co-1, .co-2 {
+    position: relative;
+    float: left;
+    min-height: 1px;
+}
+
+.co-2 {
+    width: 83.33333333%;
+}
+
+.co-1 {
+    width: 16.66666667%;
+}
+
+.table-striped > tbody > tr:nth-of-type(odd) {
+    background-color: #ececec !important;
+}
+
+.searchDiv {
+	position: fixed;
+	float: left;
+	z-index : 999;
+	background-color : #535353;
+	padding:5px;
+	width: 100%;
+	top: 0px;
+}
+
+.searchInput {
+	display:inline-block;
+	padding-left: 5px;
+	padding-bottom: 3px;
+	padding-top: 2px;
+
+}
+
+
+.searchLabel {
+	width:200px;
+	position : absolute;
+	padding-left: 10px;
+    padding-top: 3px;
+    font-weight: normal !important;
+}
+
+.foundElement {
+	background-color : gold;
+}
+
+ins{
+	text-decoration: none;
+	background-color : gold;
+}
+
+ins .active{
+	background-color : #ff9632;
+}
+
+.currentFoundElement {
+	background-color : #ff9632;
+}
+
+#doublescroll {
+    overflow: auto;
+    overflow-y: hidden;
+}
+
+#doublescroll table {
+    margin: 0;
+    padding: 1em;
+    white-space: nowrap;
+}
+
+.BLACK {
+	color: black;
+}
+.BLUE {
+	color: blue;
+}
+.CYAN {
+	color: 	#00FFFF;
+}
+.DARK_GRAY {
+	color: 	#A9A9A9;
+}
+.GRAY {
+	color: gray;
+}
+.GREEN {
+	color: green;
+}
+.LIGHT_GRAY {
+	color: #D3D3D3;
+}
+.MAGENTA {
+	color: 	#FF00FF;
+}
+.ORANGE {
+	color: orange;
+}
+.PINK {
+	color: 	#FFC0CB;
+}
+.RED {
+	color: red;
+}
+.WHITE {
+	color: white;
+}
+.YELLOW {
+	color: yellow;
+}
+
+.rotate {
+  text-align: left;
+  white-space: nowrap;
+  vertical-align: bottom;
+  margin-left: 1px;
+  margin-right: 1px;
+  margin-top: 120px;
+  margin-buttom: -10px;
+  width: 2em;
+  height: 7em
+}
+.rotate div {
+     -moz-transform: rotate(-90.0deg);  /* FF3.5+ */
+       -o-transform: rotate(-90.0deg);  /* Opera 10.5 */
+  -webkit-transform: rotate(-90.0deg);  /* Saf3.1+, Chrome */
+             filter:  progid:DXImageTransform.Microsoft.BasicImage(rotation=0.083);  /* IE6,IE7 */
+         -ms-filter: "progid:DXImageTransform.Microsoft.BasicImage(rotation=0.083)"; /* IE8 */
+}
