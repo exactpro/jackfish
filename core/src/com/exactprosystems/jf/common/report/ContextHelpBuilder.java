@@ -53,7 +53,7 @@ public class ContextHelpBuilder extends ReportBuilder
 	@Override
 	protected String decorateLink(String name, String link)
 	{
-		return "";
+		return name;
 	}
 
 	@Override
