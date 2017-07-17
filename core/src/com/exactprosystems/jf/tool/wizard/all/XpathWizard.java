@@ -47,6 +47,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 
 import java.awt.*;
+import java.util.Arrays;
 import java.util.List;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
@@ -158,6 +159,10 @@ public class XpathWizard extends AbstractWizard
 		}
 		this.currentControl = super.get(AbstractControl.class, parameters);
 		this.ownerControl = this.currentWindow.getControlForName(null, this.currentControl.getOwnerID());
+		if (this.ownerControl == null)
+		{
+			this.ownerControl = this.currentWindow.getSelfControl();
+		}
 	}
 
 	@Override
@@ -386,10 +391,24 @@ public class XpathWizard extends AbstractWizard
 			}
 		});
 
-		IntStream.range(0, this.lines.length - 1)
-				.mapToObj(i -> this.lines[i])
+		Arrays.stream(this.lines)
 				.forEach(oneLine -> {
 					oneLine.btnCopyToRelative.setOnAction(ev -> this.cfRelativeFrom.setText(oneLine.btnXpath.getText()));
+					if (oneLine instanceof OneMagicLine)
+					{
+						oneLine.btnCopyToRelative.setOnAction(e -> {
+							Node root = this.document;
+							if (this.ownerControl != null)
+							{
+								root = XpathUtils.getFirst(this.document, "/*");
+							}
+							String bestXpath = this.findBestXpath(this.currentNode, root);
+							if (bestXpath != null)
+							{
+								oneLine.btnXpath.setText(bestXpath);
+							}
+						});
+					}
 					oneLine.btnXpath.setOnAction(ev -> this.cfMainExpression.setText(((Button) ev.getSource()).getText()));
 					oneLine.labelXpathCount.textProperty().addListener((observable, oldValue, newValue) -> {
 						Label lbl = oneLine.labelXpathCount;
@@ -402,13 +421,6 @@ public class XpathWizard extends AbstractWizard
 						oneLine.btnCopyToRelative.setDisable(!foundOneElement);
 					});
 				});
-		OneLine magicLine = lines[lines.length - 1];
-
-		magicLine.btnCopyToRelative.setOnAction(e ->
-		{
-			//TODO do it
-		});
-
 		this.xmlTreeView.setOnSelectionChanged((oldItem, oldMarker, newItem, newMarker) ->
 		{
 			if (oldItem != null)
@@ -542,6 +554,18 @@ public class XpathWizard extends AbstractWizard
 			this.xmlTreeView.highlightNodes(nodes);
 			this.lblFound.setText("" + nodes.size());
 		}
+	}
+
+	private String findBestXpath(Node node, Node owner)
+	{
+		if (node == null)
+		{
+			return null;
+		}
+		//TODO think about it;
+
+
+		return null;
 	}
 	//endregion
 }

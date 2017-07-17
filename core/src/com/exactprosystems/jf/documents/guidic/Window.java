@@ -310,7 +310,7 @@ public class Window implements IWindow, Mutable
 	}
 
 	@Override
-	public IControl getSelfControl() throws Exception
+	public IControl getSelfControl()
 	{
 		if (this.self != null)
 		{
