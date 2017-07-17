@@ -8,9 +8,7 @@
 
 package com.exactprosystems.jf.tool.wizard.all;
 
-import com.exactprosystems.jf.api.app.AppConnection;
-import com.exactprosystems.jf.api.app.IControl;
-import com.exactprosystems.jf.api.app.IRemoteApplication;
+import com.exactprosystems.jf.api.app.*;
 import com.exactprosystems.jf.api.app.IWindow.SectionKind;
 import com.exactprosystems.jf.api.common.IContext;
 import com.exactprosystems.jf.api.common.Str;
@@ -30,7 +28,9 @@ import com.exactprosystems.jf.tool.custom.find.FindPanel;
 import com.exactprosystems.jf.tool.custom.find.IFind;
 import com.exactprosystems.jf.tool.custom.scaledimage.ImageViewWithScale;
 import com.exactprosystems.jf.tool.custom.xmltree.XmlTreeView;
+import com.exactprosystems.jf.tool.custom.xpath.XpathViewer;
 import com.exactprosystems.jf.tool.dictionary.DictionaryFx;
+import com.exactprosystems.jf.tool.dictionary.dialog.WizardMatcher;
 import com.exactprosystems.jf.tool.helpers.DialogsHelper;
 import com.exactprosystems.jf.tool.wizard.AbstractWizard;
 import com.exactprosystems.jf.tool.wizard.CommandBuilder;
@@ -120,6 +120,8 @@ public class XpathWizard extends AbstractWizard
 	}
 
 	private AppConnection   currentConnection = null;
+	private WizardMatcher	wizardMatcher	  = null;
+	private PluginInfo		pluginInfo		  = null;
 	private DictionaryFx	currentDictionary = null;
 	private Window          currentWindow     = null;
 	private Section         currentSection    = null;
@@ -163,6 +165,8 @@ public class XpathWizard extends AbstractWizard
 		{
 			this.ownerControl = this.currentWindow.getSelfControl();
 		}
+		this.pluginInfo = this.currentConnection.getApplication().getFactory().getInfo();
+		this.wizardMatcher = new WizardMatcher(this.pluginInfo);
 	}
 
 	@Override
@@ -406,6 +410,13 @@ public class XpathWizard extends AbstractWizard
 							if (bestXpath != null)
 							{
 								oneLine.btnXpath.setText(bestXpath);
+								Node rootNode = this.document;
+								if (this.ownerControl != null)
+								{
+									rootNode = getFirst(this.document, "/*");
+								}
+								List<Node> evaluate = evaluate(rootNode, bestXpath);
+								oneLine.labelXpathCount.setText(evaluate == null ? "" : "" + evaluate.size());
 							}
 						});
 					}
@@ -562,10 +573,105 @@ public class XpathWizard extends AbstractWizard
 		{
 			return null;
 		}
-		//TODO think about it;
+		Locator locator;
+		ControlKind kind = composeKind(node);
+		locator = this.locatorByXpath(node, owner, kind);
+		if (locator != null)
+		{
+			return locator.getXpath();
+		}
+		locator = this.locatorByRelativeXpath(node, owner, kind);
+		if (locator != null)
+		{
+			return locator.getXpath();
+		}
+		return null;
+	}
 
+	private Locator locatorByXpath(Node node, Node owner, ControlKind kind)
+	{
+		String ownerPath = ".";
+
+		List<String> parameters = XpathUtils.getAllNodeAttribute(node);
+		String relativePath = XpathViewer.fullXpath(ownerPath, owner, node, false, parameters, false);
+		Locator locator = new Locator().kind(kind).xpath(relativePath);
+
+		if (tryLocator(locator, node, owner) == 1)
+		{
+			return locator;
+		}
+		return null;
+	}
+
+	private Locator locatorByRelativeXpath(Node node, Node owner, ControlKind kind)
+	{
+		String ownerPath = ".";
+		String xpath = XpathViewer.fullXpath(ownerPath, owner, node, false, null, true);
+		String[] parts = xpath.split("/");
+
+		Node parent = node;
+		for (int level = 0; level < parts.length; level++)
+		{
+			Locator relativeLocator = locatorByXpath(node, owner, kind);
+			if (relativeLocator != null)
+			{
+				String finalPath = XpathViewer.fullXpath(relativeLocator.getXpath(), parent, node, false, null, false);
+
+				Locator finalLocator = new Locator().kind(kind).xpath(finalPath);
+				if (tryLocator(finalLocator, node, owner) == 1)
+				{
+					return finalLocator;
+				}
+			}
+
+			parent = parent.getParentNode();
+		}
+
+		Locator locator = new Locator().kind(kind).xpath(xpath);
+		if (tryLocator(locator, node, owner) == 1)
+		{
+			return locator;
+		}
 
 		return null;
+	}
+
+	private int tryLocator(Locator locator, Node node, Node owner)
+	{
+		if (locator == null)
+		{
+			return 0;
+		}
+
+		try
+		{
+			List<Node> list = findAll(locator, owner);
+			if (list.size() != 1)
+			{
+				return list.size();
+			}
+
+			if (list.get(0) == node)
+			{
+				return 1;
+			}
+		}
+		catch (Exception e)
+		{
+			// nothing to do
+		}
+		return 0;
+	}
+
+	private List<Node> findAll(Locator locator, Node owner) throws Exception
+	{
+		return this.wizardMatcher.findAll(owner, locator);
+	}
+
+	private ControlKind composeKind(Node node)
+	{
+		String name = node.getNodeName();
+		return this.pluginInfo.controlKindByNode(name);
 	}
 	//endregion
 }
