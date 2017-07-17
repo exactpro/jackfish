@@ -293,6 +293,7 @@ public class CssVariables
 		public static final String DELETE_ICON = THEME_IMAGES_DIR + "/delete.png";
 		public static final String PASTE_ICON = THEME_IMAGES_DIR + "/paste.png";
 		public static final String COPY_ICON = THEME_IMAGES_DIR + "/copy.png";
+		public static final String CUT_ICON = THEME_IMAGES_DIR + "/cut.png";
 		public static final String HELP_ICON = THEME_IMAGES_DIR + "/help.png";
 		public static final String ADD_BEFORE_ICON = THEME_IMAGES_DIR + "/addBefore.png";
 		public static final String BREAK_POINT_ICON = THEME_IMAGES_DIR + "/breakPoint.png";

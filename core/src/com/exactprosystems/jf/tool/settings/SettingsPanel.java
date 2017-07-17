@@ -43,6 +43,7 @@ public class SettingsPanel
 			Settings.SHOW_ALL,
 			Settings.DELETE_ITEM,
 			Settings.COPY_ITEMS,
+			Settings.CUT_ITEMS,
 			Settings.PASTE_ITEMS
 	).collect(Collectors.toList());
 

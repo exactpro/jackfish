@@ -66,6 +66,7 @@ public class Settings
 	public static final String SHOW_ALL			= "ShowAll";
 	public static final String DELETE_ITEM		= "DeleteItem";
 	public static final String COPY_ITEMS		= "CopyItems";
+	public static final String CUT_ITEMS		= "CutItems";
 	public static final String PASTE_ITEMS		= "PasteItems";
 
 	//matrix actions shortcuts
@@ -330,8 +331,9 @@ public class Settings
 
 					//Matrix navigation
 					ADD_ITEMS, "Insert",
-					ALL_PARAMETERS, "Ctrl+X",
+					ALL_PARAMETERS, "Ctrl+D",
 					COPY_ITEMS, "Ctrl+C",
+					CUT_ITEMS, "Ctrl+X",
 					PASTE_ITEMS, "Ctrl+V",
 					HELP,"Ctrl+F1",
 					DELETE_ITEM,"Delete",
@@ -630,6 +632,7 @@ public class Settings
 				SHOW_ALL,
 				DELETE_ITEM,
 				COPY_ITEMS,
+				CUT_ITEMS,
 				PASTE_ITEMS,
 				START_MATRIX,
 				STOP_MATRIX,

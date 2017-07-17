@@ -78,6 +78,11 @@ public class MatrixContextMenu extends ContextMenu
 		copy.setAccelerator(Common.getShortcut(settings, Settings.COPY_ITEMS));
 		copy.setOnAction(event -> copyItems(matrix, tree));
 
+		//TODO add icon
+		MenuItem cut = new MenuItem("Cut", new ImageView(new Image(CssVariables.Icons.CUT_ICON)));
+		cut.setAccelerator(Common.getShortcut(settings, Settings.CUT_ITEMS));
+		cut.setOnAction(event -> cutItems(matrix, tree));
+
 		MenuItem pasteBefore = new MenuItem("Paste", new ImageView(new Image(CssVariables.Icons.PASTE_ICON)));
 		pasteBefore.setAccelerator(Common.getShortcut(settings, Settings.PASTE_ITEMS));
 		pasteBefore.setOnAction(event -> pasteItems(matrix, tree));
@@ -94,7 +99,7 @@ public class MatrixContextMenu extends ContextMenu
 		parAdd.setAccelerator(Common.getShortcut(settings, Settings.ADD_PARAMETER));
 		parAdd.setOnAction(event -> addParameter(matrix, tree));
 
-		getItems().addAll(breakPoint, new SeparatorMenuItem(), parAdd, new SeparatorMenuItem(), copy, pasteBefore, new SeparatorMenuItem(), addBefore,
+		getItems().addAll(breakPoint, new SeparatorMenuItem(), parAdd, new SeparatorMenuItem(), copy, cut, pasteBefore, new SeparatorMenuItem(), addBefore,
 				deleteItem, gotoItem, new SeparatorMenuItem(), menuWizard, new SeparatorMenuItem(), help);
 		this.setOnShown(event ->
 		{
@@ -158,6 +163,10 @@ public class MatrixContextMenu extends ContextMenu
 			{
 				copyItems(matrix, treeView);
 			}
+			else if (SettingsPanel.match(settings, keyEvent, Settings.CUT_ITEMS))
+			{
+				cutItems(matrix, treeView);
+			}
 			else if (SettingsPanel.match(settings, keyEvent, Settings.PASTE_ITEMS))
 			{
 				pasteItems(matrix, treeView);
@@ -219,6 +228,12 @@ public class MatrixContextMenu extends ContextMenu
 	private void copyItems(MatrixFx matrix, MatrixTreeView tree)
 	{
 		Common.tryCatch(() -> matrix.copy(tree.currentItems()), "Error on copy");
+	}
+
+	private void cutItems(MatrixFx matrix, MatrixTreeView tree)
+	{
+		this.copyItems(matrix, tree);
+		this.deleteCurrentItems(matrix, tree);
 	}
 
 	private void pasteItems(MatrixFx matrix, MatrixTreeView tree)
