@@ -51,7 +51,7 @@ import java.util.stream.Collectors;
         pictureName = "NameSpaceWizard.jpg",
         category = WizardCategory.MATRIX,
         shortDescription = "This wizard helps to move SubCases between NameSpaces",
-        experimental = true,
+        experimental = false,
         strongCriteries = true,
         criteries = {MatrixFx.class, NameSpace.class},
         detailedDescription = "When it's need to move several SubCases to another known NameSpace."
