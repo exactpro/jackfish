@@ -122,7 +122,8 @@ public class ContextHelpBuilder extends ReportBuilder
     @Override
     protected void reportItemHeader(ReportWriter writer, MatrixItem item, Integer id) throws IOException
     {
-        writer.fwrite("<h2>%s</h2>\n", postProcess(item.getItemName()));
+		//do u want to change this function? check help for plugins
+        //writer.fwrite("<h2>%s</h2>\n", postProcess(item.getItemName()));
     }
 
 	@Override
