@@ -49,6 +49,7 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
@@ -502,6 +503,7 @@ public class DialogWizardController implements Initializable, ContainingParent
     private void initDialog()
     {
         this.dialog = new Alert(Alert.AlertType.CONFIRMATION);
+        this.dialog.initModality(Modality.NONE);
         Stage stage = ((Stage) this.dialog.getDialogPane().getScene().getWindow());
         Common.addIcons(stage);
         this.dialog.setResult(new ButtonType("", ButtonBar.ButtonData.CANCEL_CLOSE));

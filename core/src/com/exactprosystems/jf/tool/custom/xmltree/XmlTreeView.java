@@ -382,4 +382,6 @@ public class XmlTreeView extends AnchorPane
         consumer.accept(value);
         treeItem.getChildren().stream().filter(Objects::nonNull).forEach(child -> passTree(child, consumer));
     }
+
+    //endregion
 }

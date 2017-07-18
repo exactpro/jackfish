@@ -26,11 +26,11 @@ import javafx.scene.control.Dialog;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.*;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
+import org.apache.log4j.Logger;
 
 import java.util.Date;
-
-import org.apache.log4j.Logger;
 
 public class WizardDialog extends Dialog<Boolean>
 {
@@ -41,6 +41,7 @@ public class WizardDialog extends Dialog<Boolean>
 	public WizardDialog(Wizard wizard, Context context)
 	{
 		super();
+		this.initModality(Modality.NONE);
 		this.wizard = wizard;
 		this.setTitle(wizard.manager().nameOf(wizard.getClass()));
 		this.setResizable(true);

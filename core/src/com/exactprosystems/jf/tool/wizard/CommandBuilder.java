@@ -9,6 +9,7 @@
 package com.exactprosystems.jf.tool.wizard;
 
 import com.exactprosystems.jf.api.app.IControl;
+import com.exactprosystems.jf.api.app.IWindow;
 import com.exactprosystems.jf.api.common.Sys;
 import com.exactprosystems.jf.api.wizard.WizardCommand;
 import com.exactprosystems.jf.common.CommonHelper;
@@ -121,6 +122,26 @@ public class CommandBuilder
 	public CommandBuilder displayControl(DictionaryFx dictionaryFx, Window window, Section section, IControl control)
 	{
 		this.commands.add(context -> Common.tryCatch(() -> dictionaryFx.displayElement(window, section.getSectionKind(), control), "Error on show element"));
+		return this;
+	}
+
+	public CommandBuilder replaceWindow(DictionaryFx dictionaryFx, Window oldWindow, Window newWindow)
+	{
+		this.commands.add(context ->
+		{
+			int index = dictionaryFx.indexOf(oldWindow);
+			dictionaryFx.removeWindow(oldWindow);
+			dictionaryFx.addWindow(index, newWindow);
+		});
+		return this;
+	}
+
+	public CommandBuilder displayWindow(DictionaryFx dictionaryFx, Window window)
+	{
+		this.commands.add(context ->
+				Common.tryCatch(
+						() -> dictionaryFx.displayElement(window, IWindow.SectionKind.Run, window.getFirstControl(IWindow.SectionKind.Run)), "Error on display window")
+		);
 		return this;
 	}
 	

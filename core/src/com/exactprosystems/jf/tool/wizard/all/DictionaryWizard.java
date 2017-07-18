@@ -8,35 +8,30 @@
 
 package com.exactprosystems.jf.tool.wizard.all;
 
-import com.exactprosystems.jf.api.app.AppConnection;
-import com.exactprosystems.jf.api.app.ControlKind;
-import com.exactprosystems.jf.api.app.IControl;
-import com.exactprosystems.jf.api.app.IWindow;
+import com.exactprosystems.jf.api.app.*;
 import com.exactprosystems.jf.api.common.IContext;
-import com.exactprosystems.jf.api.common.Str;
 import com.exactprosystems.jf.api.error.JFRemoteException;
 import com.exactprosystems.jf.api.wizard.WizardAttribute;
 import com.exactprosystems.jf.api.wizard.WizardCategory;
 import com.exactprosystems.jf.api.wizard.WizardCommand;
 import com.exactprosystems.jf.api.wizard.WizardManager;
 import com.exactprosystems.jf.common.utils.XpathUtils;
+import com.exactprosystems.jf.documents.guidic.Section;
 import com.exactprosystems.jf.documents.guidic.Window;
+import com.exactprosystems.jf.documents.guidic.controls.AbstractControl;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.CssVariables;
+import com.exactprosystems.jf.tool.custom.elementstable.ElementsTable;
+import com.exactprosystems.jf.tool.custom.elementstable.TableBean;
 import com.exactprosystems.jf.tool.custom.find.FindPanel;
 import com.exactprosystems.jf.tool.custom.find.IFind;
 import com.exactprosystems.jf.tool.custom.scaledimage.ImageViewWithScale;
 import com.exactprosystems.jf.tool.custom.xmltree.XmlTreeView;
 import com.exactprosystems.jf.tool.dictionary.DictionaryFx;
-import com.exactprosystems.jf.tool.dictionary.dialog.ElementWizardBean;
 import com.exactprosystems.jf.tool.helpers.DialogsHelper;
 import com.exactprosystems.jf.tool.wizard.AbstractWizard;
 import com.exactprosystems.jf.tool.wizard.CommandBuilder;
 import com.exactprosystems.jf.tool.wizard.related.WizardHelper;
-import com.sun.javafx.css.PseudoClassState;
-import javafx.application.Platform;
-import javafx.collections.FXCollections;
-import javafx.css.PseudoClass;
 import javafx.geometry.HPos;
 import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
@@ -45,17 +40,16 @@ import javafx.scene.control.Button;
 import javafx.scene.control.*;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
-import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.image.ImageView;
-import javafx.scene.input.KeyCode;
 import javafx.scene.layout.*;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 
 import java.awt.*;
+import java.util.Collection;
 import java.util.List;
 import java.util.function.Function;
 import java.util.function.Supplier;
+import java.util.stream.Collectors;
 
 @WizardAttribute(
         name 				= "Test dictionary wizard",
@@ -72,6 +66,7 @@ public class DictionaryWizard extends AbstractWizard
 	private AppConnection currentConnection = null;
 	private DictionaryFx  currentDictionary = null;
 	private Window        currentWindow     = null;
+	private Window        copyWindow        = null;
 
 	private volatile Document document    = null;
 	private volatile Node     currentNode = null;
@@ -85,7 +80,7 @@ public class DictionaryWizard extends AbstractWizard
 	private Label                        lblSelfId;
 	private javafx.scene.control.Button  btnGenerateOnOpen;
 	private javafx.scene.control.Button  btnGenerateOnClose;
-	private TableView<ElementWizardBean> tableView;
+	private ElementsTable				 tableView;
 	private Button btnWizard;
 	private Button btnNextMark;
 	private Button btnPrevMark;
@@ -99,6 +94,7 @@ public class DictionaryWizard extends AbstractWizard
 	{
 	}
 
+	//region AbstractWizard methods
 	@Override
 	public void init(IContext context, WizardManager wizardManager, Object... parameters)
 	{
@@ -107,6 +103,15 @@ public class DictionaryWizard extends AbstractWizard
 		this.currentConnection = super.get(AppConnection.class, parameters);
 		this.currentDictionary = super.get(DictionaryFx.class, parameters);
 		this.currentWindow = super.get(Window.class, parameters);
+		try
+		{
+			this.copyWindow = Window.createCopy(this.currentWindow);
+			this.copyWindow.setName(this.currentWindow.getName());
+		}
+		catch (Exception e)
+		{
+			//TODO AB. I have no idea, that we need do on a exception.
+		}
 	}
 
 	@Override
@@ -177,7 +182,7 @@ public class DictionaryWizard extends AbstractWizard
 		GridPane.setHalignment(lblDialog, HPos.RIGHT);
 
 		this.tfDialogName = new TextField();
-		this.tfDialogName.setText(this.currentWindow.getName());
+		this.tfDialogName.setText(this.copyWindow.getName());
 		gridPane.add(this.tfDialogName, 1, 0);
 
 		Label lblSelf = new Label("Self id : ");
@@ -185,7 +190,7 @@ public class DictionaryWizard extends AbstractWizard
 		GridPane.setHalignment(lblSelf, HPos.RIGHT);
 
 		this.lblSelfId = new Label();
-		Common.tryCatch(() -> this.lblSelfId.setText(this.currentWindow.getSelfControl().getID()), "Error on set self id");
+		Common.tryCatch(() -> this.lblSelfId.setText(this.copyWindow.getSelfControl().getID()), "Error on set self id");
 		gridPane.add(this.lblSelfId, 3, 0);
 		GridPane.setHalignment(this.lblSelfId, HPos.LEFT);
 		this.lblSelfId.getStyleClass().add(CssVariables.BOLD_LABEL);
@@ -202,8 +207,7 @@ public class DictionaryWizard extends AbstractWizard
 
 		vBox.getChildren().addAll(Common.createSpacer(Common.SpacerEnum.VerticalMid), gridPane, Common.createSpacer(Common.SpacerEnum.VerticalMid));
 
-		this.tableView = new TableView<>();
-		initTable();
+		this.tableView = new ElementsTable();
 		BorderPane.setAlignment(this.tableView, Pos.CENTER);
 		bp.setCenter(this.tableView);
 
@@ -304,17 +308,18 @@ public class DictionaryWizard extends AbstractWizard
 		borderPane.setCenter(this.centralSplitPane);
 		initListeners();
 		updateOnButtons();
+		displayElements();
 	}
 
 	@Override
 	protected Supplier<List<WizardCommand>> getCommands()
 	{
-		return () ->
-		{
-			List<WizardCommand> commands = CommandBuilder.start().build();
-
-			return commands;
-		};
+		return () -> CommandBuilder
+				.start()
+				//TODO uncomment the lines below
+//				.replaceWindow(this.currentDictionary, this.currentWindow, this.copyWindow)
+//				.displayWindow(this.currentDictionary, this.copyWindow)
+				.build();
 	}
 
 	@Override
@@ -355,7 +360,9 @@ public class DictionaryWizard extends AbstractWizard
 
 		return true;
 	}
+	//endregion
 
+	//region private methods
 	private void initListeners()
 	{
 		this.findPanel.setListener(new IFind<org.w3c.dom.Node>()
@@ -402,376 +409,59 @@ public class DictionaryWizard extends AbstractWizard
 			}
 		});
 
-		//TODO add listeners to :
-		this.btnNextMark.setOnAction(e ->
-		{
-		});
-		this.btnPrevMark.setOnAction(e ->
-		{
-		});
+		this.btnNextMark.setOnAction(e -> this.xmlTreeView.selectNextMark());
+		this.btnPrevMark.setOnAction(e -> this.xmlTreeView.selectPrevMark());
+
 		this.btnWizard.setOnAction(e ->
 		{
-		});
-		this.btnGenerateOnClose.setOnAction(e ->
-		{
-		});
-		this.btnGenerateOnOpen.setOnAction(e ->
-		{
-		});
-	}
-
-	private void initTable()
-	{
-		this.tableView.setEditable(true);
-		this.tableView.setRowFactory(row -> new CustomRowFactory());
-		TableColumn<ElementWizardBean, Integer> columnNumber = new TableColumn<>("#");
-		columnNumber.setCellValueFactory(new PropertyValueFactory<>("number"));
-		columnNumber.setCellFactory(e -> new TableCell<ElementWizardBean, Integer>()
-		{
-			@Override
-			protected void updateItem(Integer item, boolean empty)
-			{
-				super.updateItem(item, empty);
-				if (item != null && !empty)
-				{
-					setText(String.valueOf(item));
-					this.setAlignment(Pos.CENTER);
-				}
-				else
-				{
-					setText(null);
-				}
-			}
-		});
-		columnNumber.setPrefWidth(35);
-		columnNumber.setMaxWidth(35);
-		columnNumber.setMinWidth(35);
-
-		TableColumn<ElementWizardBean, String> columnId = new TableColumn<>("Id");
-		columnId.setCellValueFactory(new PropertyValueFactory<>("id"));
-		columnId.setEditable(true);
-		columnId.setCellFactory(e -> new TableCell<ElementWizardBean, String>()
-		{
-			private TextField textField;
-
-			@Override
-			public void startEdit()
-			{
-				super.startEdit();
-				if (textField == null)
-				{
-					createTextField();
-				}
-				textField.setText(getString());
-				setGraphic(textField);
-				setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
-				Platform.runLater(textField::requestFocus);
-			}
-
-			@Override
-			public void cancelEdit()
-			{
-				super.cancelEdit();
-				setText(Str.asString(getItem()));
-				setContentDisplay(ContentDisplay.TEXT_ONLY);
-			}
-
-			@Override
-			protected void updateItem(String s, boolean b)
-			{
-				super.updateItem(s, b);
-				if (b || s == null)
-				{
-					setText(null);
-					setGraphic(null);
-				}
-				else
-				{
-					setText(getString());
-					setContentDisplay(ContentDisplay.TEXT_ONLY);
-				}
-			}
-
-			private String getString()
-			{
-				return Str.asString(getItem());
-			}
-
-			private void createTextField()
-			{
-				textField = new TextField(getString());
-				textField.getStyleClass().add(CssVariables.TEXT_FIELD_VARIABLES);
-				textField.setMinWidth(this.getWidth() - this.getGraphicTextGap() * 2);
-				textField.setOnKeyPressed(t ->
-				{
-					if (t.getCode() == KeyCode.ENTER || t.getCode() == KeyCode.TAB)
-					{
-						commitEdit(textField.getText());
-					}
-					else if (t.getCode() == KeyCode.ESCAPE)
-					{
-						cancelEdit();
-					}
-				});
-				textField.focusedProperty().addListener((observable, oldValue, newValue) ->
-				{
-					if (!newValue && textField != null)
-					{
-						commitEdit(textField.getText());
-					}
-				});
-			}
+			//TODO
 		});
 
-		columnId.setOnEditCommit(e ->
-		{
-			ElementWizardBean elementWizardBean = e.getRowValue();
-			if (elementWizardBean != null)
-			{
-//				TODO
-//				Common.tryCatch(() -> this.model.updateId(elementWizardBean, e.getNewValue()), "Error on update id");
-			}
-		});
-		columnId.setMinWidth(100.0);
-
-		TableColumn<ElementWizardBean, ControlKind> columnKind = new TableColumn<>("Kind");
-		columnKind.setCellValueFactory(new PropertyValueFactory<>("controlKind"));
-		columnKind.setOnEditCommit(e ->
-		{
-			ElementWizardBean rowValue = e.getRowValue();
-			if (rowValue != null)
-			{
-				//				TODO
-//				Common.tryCatch(() -> this.model.updateControlKind(rowValue, e.getNewValue()), "Error on update control kind");
-			}
-		});
-		columnKind.setCellFactory(e -> new TableCell<ElementWizardBean, ControlKind>()
-		{
-			ChoiceBox<ControlKind> comboBox;
-
-			@Override
-			protected void updateItem(ControlKind item, boolean empty)
-			{
-				super.updateItem(item, empty);
-				if (item != null && !empty)
-				{
-					setText(getString());
-					setContentDisplay(ContentDisplay.TEXT_ONLY);
-				}
-				else
-				{
-					setGraphic(null);
-					setText(null);
-				}
-			}
-
-			@Override
-			public void startEdit()
-			{
-				super.startEdit();
-				createCB();
-				setGraphic(this.comboBox);
-				setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
-				this.comboBox.show();
-			}
-
-			@Override
-			public void cancelEdit()
-			{
-				super.cancelEdit();
-				setText(getString());
-				setContentDisplay(ContentDisplay.TEXT_ONLY);
-			}
-
-			private void createCB()
-			{
-				if (this.comboBox == null)
-				{
-					this.comboBox = new ChoiceBox<>(FXCollections.observableArrayList(ControlKind.values()));
-					this.comboBox.getSelectionModel().select(getItem());
-					this.comboBox.setOnAction(e -> commitEdit(this.comboBox.getSelectionModel().getSelectedItem()));
-					this.comboBox.showingProperty().addListener((observable, oldValue, newValue) ->
-					{
-						if (!newValue)
-						{
-							cancelEdit();
-						}
-					});
-				}
-			}
-
-			private String getString()
-			{
-				return String.valueOf(getItem() == null ? "" : getItem().name());
-			}
-		});
-		columnKind.setPrefWidth(135);
-		columnKind.setMaxWidth(135);
-		columnKind.setMinWidth(135);
-
-		int value = 50;
-
-		TableColumn<ElementWizardBean, Boolean> columnIsXpath = new TableColumn<>("Xpath");
-		columnIsXpath.setCellValueFactory(new PropertyValueFactory<>("xpath"));
-		columnIsXpath.setCellFactory(e -> new TableCell<ElementWizardBean, Boolean>()
-		{
-			@Override
-			protected void updateItem(Boolean item, boolean empty)
-			{
-				super.updateItem(item, empty);
-				if (item != null && !empty)
-				{
-					this.setAlignment(Pos.CENTER);
-					setGraphic(item ? new ImageView(new javafx.scene.image.Image(CssVariables.Icons.MARK_ICON)) : null);
-				}
-				else
-				{
-					setGraphic(null);
-				}
-			}
-		});
-		columnIsXpath.setPrefWidth(value);
-		columnIsXpath.setMaxWidth(value);
-		columnIsXpath.setMinWidth(value);
-
-		TableColumn<ElementWizardBean, Boolean> columnIsNew = new TableColumn<>("New");
-		columnIsNew.setCellValueFactory(new PropertyValueFactory<>("isNew"));
-		columnIsNew.setCellFactory(e -> new TableCell<ElementWizardBean, Boolean>()
-		{
-			@Override
-			protected void updateItem(Boolean item, boolean empty)
-			{
-				super.updateItem(item, empty);
-				if (item != null && !empty)
-				{
-					this.setAlignment(Pos.CENTER);
-					setGraphic(item ? new ImageView(new javafx.scene.image.Image(CssVariables.Icons.MARK_ICON)) : null);
-				}
-				else
-				{
-					setGraphic(null);
-				}
-			}
-		});
-		columnIsNew.setPrefWidth(value);
-		columnIsNew.setMaxWidth(value);
-		columnIsNew.setMinWidth(value);
-
-		TableColumn<ElementWizardBean, Integer> columnCount = new TableColumn<>("Count");
-		columnCount.setCellValueFactory(new PropertyValueFactory<>("count"));
-		columnCount.setCellFactory(e -> new TableCell<ElementWizardBean, Integer>()
-		{
-			@Override
-			protected void updateItem(Integer item, boolean empty)
-			{
-				super.updateItem(item, empty);
-				this.setAlignment(Pos.CENTER);
-				if (item != null && !empty)
-				{
-					setText(item.toString());
-				}
-				else
-				{
-					setText(null);
-				}
-			}
-		});
-
-		columnCount.setPrefWidth(value);
-		columnCount.setMaxWidth(value);
-		columnCount.setMinWidth(value);
-
-		TableColumn<ElementWizardBean, ElementWizardBean> columnOption = new TableColumn<>("Option");
-		columnOption.setCellValueFactory(new PropertyValueFactory<>("option"));
-		columnOption.setPrefWidth(100);
-		columnOption.setMaxWidth(100);
-		columnOption.setMinWidth(100);
-		columnOption.setCellFactory(e -> new TableCell<ElementWizardBean, ElementWizardBean>()
-		{
-			@Override
-			protected void updateItem(ElementWizardBean item, boolean empty)
-			{
-				super.updateItem(item, empty);
-				this.setAlignment(Pos.CENTER);
-				if (item != null && !empty)
-				{
-					HBox box = new HBox();
-					box.setAlignment(Pos.CENTER);
-
-					Button btnEdit = new Button();
-					btnEdit.setId("btnEdit");
-					btnEdit.setTooltip(new Tooltip("Edit element"));
-					btnEdit.getStyleClass().add(CssVariables.TRANSPARENT_BACKGROUND);
-					//TODO
-//					btnEdit.setOnAction(e -> Common.tryCatch(() -> model.changeElement(item), "Error on change element"));
-
-					Button btnRemove = new Button();
-					btnRemove.setId("btnRemove");
-					btnRemove.setTooltip(new Tooltip("Remove element"));
-					btnRemove.getStyleClass().add(CssVariables.TRANSPARENT_BACKGROUND);
-					//TODO
-//					btnRemove.setOnAction(e -> model.removeElement(item));
-
-					Button btnRelation = new Button();
-					btnRelation.setId("btnRelation");
-					btnRelation.setTooltip(new Tooltip("Set relation"));
-					btnRelation.getStyleClass().add(CssVariables.TRANSPARENT_BACKGROUND);
-					//TODO
-//					btnRelation.setOnAction(e -> model.updateRelation(item));
-					box.getChildren().addAll(btnEdit, btnRelation, btnRemove);
-					setGraphic(box);
-				}
-				else
-				{
-					setGraphic(null);
-				}
-			}
-		});
-
-		columnId.prefWidthProperty().bind(this.tableView.widthProperty().subtract(35 + 135 + value * 3 + 100 + 2 + 16));
-
-		this.tableView.getColumns().addAll(columnNumber, columnId, columnKind, columnIsXpath, columnIsNew, columnCount, columnOption);
-	}
-
-	private class CustomRowFactory extends TableRow<ElementWizardBean>
-	{
-		private final PseudoClass customSelected = PseudoClassState.getPseudoClass("customSelectedState");
-		private final PseudoClass selected       = PseudoClassState.getPseudoClass("selected");
-
-		public CustomRowFactory()
-		{
-			this.getStyleClass().addAll(CssVariables.CUSTOM_TABLE_ROW);
-			this.selectedProperty().addListener((observable, oldValue, newValue) -> {
-				this.pseudoClassStateChanged(customSelected, newValue);
-				this.pseudoClassStateChanged(selected, false); // remove selected pseudostate, cause this state change text color
-			});
-		}
-
-		@Override
-		protected void updateItem(ElementWizardBean item, boolean empty)
-		{
-			super.updateItem(item, empty);
-			this.getStyleClass().removeAll(
-					CssVariables.COLOR_MARK,
-					CssVariables.COLOR_QUESTION,
-					CssVariables.COLOR_NOT_FOUND,
-					CssVariables.COLOR_NOT_FINDING,
-					CssVariables.COLOR_ADD,
-					CssVariables.COLOR_UPDATE
-			);
-			if (item != null && !empty && item.getStyleClass() != null)
-			{
-				this.getStyleClass().add(item.getStyleClass());
-			}
-		}
+		this.btnGenerateOnOpen.setOnAction(e -> Common.tryCatch(() -> {
+			AbstractControl onOpen = generate(Addition.WaitToAppear);
+			Section section = (Section) this.copyWindow.getSection(IWindow.SectionKind.OnOpen);
+			section.clearSection();
+			section.addControl(onOpen);
+			updateOnButtons();
+		}, "Error on generate onOpen"));
+		this.btnGenerateOnClose.setOnAction(e ->Common.tryCatch(() -> {
+			AbstractControl onOpen = generate(Addition.WaitToDisappear);
+			Section section = (Section) this.copyWindow.getSection(IWindow.SectionKind.OnClose);
+			section.clearSection();
+			section.addControl(onOpen);
+			updateOnButtons();
+		}, "Error on generate onClose"));
 	}
 
 	private void updateOnButtons()
 	{
-		boolean onOpenEmpty = this.currentWindow.getSection(IWindow.SectionKind.OnOpen).getControls().isEmpty();
-		boolean onCloseEmpty = this.currentWindow.getSection(IWindow.SectionKind.OnClose).getControls().isEmpty();
+		boolean onOpenEmpty = this.copyWindow.getSection(IWindow.SectionKind.OnOpen).getControls().isEmpty();
+		boolean onCloseEmpty = this.copyWindow.getSection(IWindow.SectionKind.OnClose).getControls().isEmpty();
 
 		this.btnGenerateOnOpen.setStyle("-fx-background-color : " + (!onOpenEmpty ? "rgba(0,255,0, 0.1)" : "rgba(255,0,0, 0.1)"));
 		this.btnGenerateOnClose.setStyle("-fx-background-color : " + (!onCloseEmpty ? "rgba(0,255,0, 0.1)" : "rgba(255,0,0, 0.1)"));
 	}
+
+	private AbstractControl generate(Addition addition) throws Exception
+	{
+		AbstractControl on = AbstractControl.create(ControlKind.Wait);
+		on.set(AbstractControl.refIdName, this.copyWindow.getSelfControl().getID());
+		on.set(AbstractControl.additionName, addition);
+		on.set(AbstractControl.timeoutName, 5000);
+		on.set(AbstractControl.idName, addition == Addition.WaitToAppear ? "waitOpen" : "waitClose");
+		return on;
+	}
+
+	private void displayElements()
+	{
+		Collection<IControl> controls = this.copyWindow.getControls(IWindow.SectionKind.Run);
+		this.tableView.getItems().addAll(
+				controls
+						.stream()
+						.map(c -> (AbstractControl)c)
+						.map(TableBean::new)
+						.collect(Collectors.toList())
+		);
+	}
+	//endregion
 }
