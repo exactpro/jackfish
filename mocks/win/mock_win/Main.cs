@@ -148,8 +148,8 @@ namespace mock_win
                 }
             }
 
-            moveUponRect(new Point(Location.X + 7, Location.Y + 29), new Point(Location.X + 51, Location.Y + 47), "Menu");
-            moveUponRect(new Point(Location.X + 52, Location.Y + 29), new Point(Location.X + 127, Location.Y + 47), "MenuItem");
+            moveUponRect(new Point(Location.X + 7, Location.Y + 29), new Point(Location.X + 47, Location.Y + 47), "Menu");
+            moveUponRect(new Point(Location.X + 48, Location.Y + 29), new Point(Location.X + 127, Location.Y + 47), "MenuItem");
             moveUponRect(new Point(Location.X + 128, Location.Y + 29), new Point(Location.X + 600, Location.Y + 47), "Menu");
             moveUponRect(new Point(Spinner.Location.X + Location.X + 7, Location.Y + Spinner.Location.Y + 47)
                 , new Point(Spinner.Location.X + Location.X + 7 + Spinner.Size.Width, Spinner.Location.Y + Location.Y + 47 + Spinner.Size.Height), "Spinner");
