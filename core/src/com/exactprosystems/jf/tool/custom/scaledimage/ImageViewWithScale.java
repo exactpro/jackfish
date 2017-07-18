@@ -5,12 +5,13 @@ import com.exactprosystems.jf.tool.CssVariables;
 import com.exactprosystems.jf.tool.custom.controls.rect.DecoratedRectangle;
 import com.exactprosystems.jf.tool.custom.scale.ScalePaneNew;
 import com.exactprosystems.jf.tool.wizard.related.MarkerStyle;
-
 import javafx.application.Platform;
 import javafx.geometry.Pos;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.control.*;
+import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
@@ -21,15 +22,13 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 
 import javax.imageio.ImageIO;
-
-import java.awt.Dimension;
-import java.awt.Point;
-import java.awt.Rectangle;
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.*;
+import java.util.List;
 import java.util.function.Consumer;
 
 public class ImageViewWithScale extends BorderPane
@@ -115,10 +114,17 @@ public class ImageViewWithScale extends BorderPane
 		);
 
 		addWaitingPane();
-
 		this.scalePane.setOnScaleChanged(s -> {
-			this.imageView.setFitHeight(s * this.initial.height);
-			this.imageView.setFitWidth(s * this.initial.width);
+			this.group.setScaleX(s);
+			this.group.setScaleY(s);
+
+			Platform.runLater(() -> {
+				this.group.setTranslateX(0);
+				this.group.setTranslateY(0);
+				this.group.setTranslateX(this.group.getBoundsInParent().getMinX() * -1);
+				this.group.setTranslateY(this.group.getBoundsInParent().getMinY() * -1);
+
+			});
 			hideAllRectangles(null);
 		});
 		listeners();
@@ -127,7 +133,7 @@ public class ImageViewWithScale extends BorderPane
 	//region public methods
 	public void showRectangle(java.awt.Rectangle rectangle, MarkerStyle style, String text, boolean selected)
 	{
-	    DecoratedRectangle newRectangle = new DecoratedRectangle(rectangle, style, text, this.scalePane.getScale());
+	    DecoratedRectangle newRectangle = new DecoratedRectangle(rectangle, style, text);
 	    newRectangle.setTextVisible(this.cbIds.isSelected());
 	    newRectangle.setOpacity(selected ? 1.0 : 0.5);
 	    this.group.getChildren().add(newRectangle);
@@ -266,8 +272,8 @@ public class ImageViewWithScale extends BorderPane
 	        return null;
 	    }
 	    
-		int intX = (int) (x / this.scalePane.getScale());
-		int intY = (int) (y / this.scalePane.getScale());
+		int intX = (int) x;
+		int intY = (int) y;
 
 		int sizeX = this.initial.getSize().width / 16;
 		int sizeY = this.initial.getSize().height / 16;
@@ -295,7 +301,6 @@ public class ImageViewWithScale extends BorderPane
 		}
 		try
 		{
-			point.setLocation(point.x / this.scalePane.getScale(), point.y / this.scalePane.getScale());
 			int color = this.image.getRGB(point.x, point.y);
 			int red = (color & 0x00ff0000) >> 16;
 			int green = (color & 0x0000ff00) >> 8;
@@ -311,7 +316,7 @@ public class ImageViewWithScale extends BorderPane
 
 	private void printMouseCoords(Point point)
 	{
-		this.lblInspect.setText("X=" + (int) (point.x / this.scalePane.getScale()) + " Y=" + (int) (point.y / this.scalePane.getScale()));
+		this.lblInspect.setText("X=" + point.x + " Y=" + point.y);
 	}
 
 	private void printPixelColor(Point point)

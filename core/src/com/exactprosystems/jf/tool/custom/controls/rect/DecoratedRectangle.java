@@ -23,17 +23,10 @@ public class DecoratedRectangle extends Rectangle
     private Timeline           timeline;
     private java.awt.Rectangle baseRectangle;
 
-	public DecoratedRectangle(java.awt.Rectangle rectangle, MarkerStyle style, String text, double scale)
+	public DecoratedRectangle(java.awt.Rectangle rectangle, MarkerStyle style, String text)
 	{
-		super();
+		super(rectangle.getX(), rectangle.getY(), rectangle.getWidth(), rectangle.getHeight());
 		this.baseRectangle = rectangle;
-		java.awt.Rectangle displayRectangle = changeRectangle(this.baseRectangle, scale);
-
-		setX(displayRectangle.getX());
-		setY(displayRectangle.getY());
-		setWidth(displayRectangle.getWidth());
-		setHeight(displayRectangle.getHeight());
-
 		this.style      = style;
         this.text       = new Text();
         this.timeline   = new Timeline();
@@ -99,15 +92,5 @@ public class DecoratedRectangle extends Rectangle
         this.timeline.getKeyFrames().add(new KeyFrame(javafx.util.Duration.seconds(1), new KeyValue(color.brightnessProperty(), -1, Interpolator.LINEAR)));
 		timeline.setAutoReverse(true);
 		timeline.setCycleCount(-1);
-	}
-
-	private java.awt.Rectangle changeRectangle(java.awt.Rectangle rect, double scale)
-	{
-		return new java.awt.Rectangle(
-				(int) (rect.x * scale)
-				, (int) (rect.y * scale)
-				, (int) (rect.width * scale)
-				, (int) (rect.height * scale)
-		);
 	}
 }

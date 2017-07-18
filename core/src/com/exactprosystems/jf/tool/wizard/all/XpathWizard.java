@@ -165,13 +165,14 @@ public class XpathWizard extends AbstractWizard
 		{
 			this.ownerControl = this.currentWindow.getSelfControl();
 		}
-		this.pluginInfo = this.currentConnection.getApplication().getFactory().getInfo();
-		this.wizardMatcher = new WizardMatcher(this.pluginInfo);
 	}
 
 	@Override
 	protected void initDialog(BorderPane borderPane)
 	{
+		this.pluginInfo = this.currentConnection.getApplication().getFactory().getInfo();
+		this.wizardMatcher = new WizardMatcher(this.pluginInfo);
+
 		borderPane.setPrefHeight(1000.0);
 		borderPane.setPrefWidth(1000.0);
 
@@ -429,7 +430,6 @@ public class XpathWizard extends AbstractWizard
 						{
 							lbl.getStyleClass().add(CssVariables.FOUND_ONE_ELEMENT);
 						}
-						oneLine.btnCopyToRelative.setDisable(!foundOneElement);
 					});
 				});
 		this.xmlTreeView.setOnSelectionChanged((oldItem, oldMarker, newItem, newMarker) ->
@@ -541,6 +541,9 @@ public class XpathWizard extends AbstractWizard
 		List<Node> nodes4 = evaluate(rootNode, xpath4);
 		this.lines[i].btnXpath.setText(xpath4);
 		this.lines[i++].labelXpathCount.setText(nodes4 == null ? "" : "" + nodes4.size());
+
+		this.lines[i].btnXpath.setText("");
+		this.lines[i++].labelXpathCount.setText("" + 0);
 
 		if (this.currentNode != null)
 		{
