@@ -34,7 +34,7 @@ INIT;Test case;Never;;
     18;x;'Do.use(\'Splitter\').setValue(125)';'\'[JTree][Orange]\'';;;'\'Menu2/MenuItem2/MenuItem3\'';'\'Menu2/MenuItem2/MenuItem3\'';;'new Color(246,246,246)';Splitter;;'Splitter';'\'Splitter\'';125;;;;'Splitter_30';;;true;'new ArrayList([\'Green\',\'Yellow\', \'Orange\',\'Blue\']),false';'\'125\'';'\'\''
     19;x;'Do.use(\'Menu2\').move()';'\'[JTree][Orange]\'';;;'\'Menu2/MenuItem2/MenuItem3\'';'\'Menu2/MenuItem2/MenuItem3\'';;'new Color(246,246,246)';Tooltip;;;'\'Tooltip\'';'Tooltip';;;'Tooltip';;;;true;'new ArrayList([\'Green\',\'Yellow\', \'Orange\',\'Blue\']),false';'\'Tooltip\'';'\'\''
     20;x;'Do.use(\'Menu2\').click(200,10)';'\'[JTree][Orange]\'';'MenuItem3_select';'MenuItem2_select';'\'Menu/MenuItem/MenuItem2\'';'\'Menu/MenuItem/MenuItem2\'';;'new Color(246,246,246)';Menu;;getExp(plugin,'','Menu','Application');getExp(plugin,'\'\'','\'Menu\'','\'Application\'');;;;getExp(plugin,'','Menu','Application');;;;true;'new ArrayList([\'Green\',\'Yellow\', \'Orange\',\'Blue\']),false';'\'\'';'\'\''
-    21;x;'Do.use(\'Menu2\').click(200,10).click()';'\'[JTree][Orange]\'';'MenuItem3_select';'MenuItem2_select';'\'MenuItem/MenuItem2\'';'\'MenuItem/MenuItem2\'';;'new Color(246,246,246)';MenuItem;;'MenuItem';'\'MenuItem\'';;;;'MenuItem';;;;true;'new ArrayList([\'Green\',\'Yellow\', \'Orange\',\'Blue\']),false';'\'\'';'\'\''
+    21;x;'Do.use(\'Menu2\').click(200,10)';'\'[JTree][Orange]\'';'MenuItem3_select';'MenuItem2_select';'\'MenuItem/MenuItem2\'';'\'MenuItem/MenuItem2\'';;'new Color(246,246,246)';MenuItem;;'MenuItem';'\'MenuItem\'';;;;'MenuItem';;;;true;'new ArrayList([\'Green\',\'Yellow\', \'Orange\',\'Blue\']),false';'\'\'';'\'\''
     22;x;'Do.use(\'TabPanel\').select(\'Green\')';'\'[JTree][Orange]\'';;;'\'Menu2/MenuItem2/MenuItem3\'';'\'Menu2/MenuItem2/MenuItem3\'';;'new Color(246,246,246)';TabPanel;;'TabPanel';'\'TabPanel\'';'Green';'Green';'Blue';'TabPanel';;;'[Green, Yellow, Orange, Blue]';true;'new ArrayList([\'Green\',\'Yellow\', \'Orange\',\'Blue\']),false';'\'Green\'';'Blue'
     23;x;;'\'[JTree][Orange]\'';;;'\'Menu2/MenuItem2/MenuItem3\'';'\'Menu2/MenuItem2/MenuItem3\'';;'new Color(246,246,246)';Spinner;;'Spinner';'\'Spinner\'';getExp(plugin,'',0,'0');;;'Spinner';'Slider_30';;;true;'new ArrayList([\'Green\',\'Yellow\', \'Orange\',\'Blue\']),false';'\'0\'';'\'\''
     #EndRawTable
@@ -86,8 +86,8 @@ INIT;Test case;Never;;
     38;x;getTable;OperationKind.GET_TABLE;Do.use(control);Do.use(control).getTable();'Table [Head1, Head2, Head3]:3';
     39;x;expand;OperationKind.EXPAND;Do.use(control).expand(par);Do.use('selectLabel').getValue();control.expand;control.expandPar
     40;x;collapse;OperationKind.COLLAPSE;Do.use(control).collapse(par);Do.use('selectLabel').getValue();control.collapse;control.collapsePar
-    41;x;wait;OperationKind.WAIT;Do.use('buttonShowArea').click().wait('buttonHideArea', 10000, true);Do.use('buttonHideArea').getAttr('name').click().delay(100);'hideButton';
-    42;x;delay;OperationKind.DELAY;Do.use('buttonShowArea').click().delay(100);Do.use('buttonHideArea').getAttr('name').click().delay(100);'hideButton';
+    41;x;wait;OperationKind.WAIT;Do.use('buttonShowArea').click().wait('buttonHideArea', 10000, true);Do.use('buttonHideArea').getAttr('name').click();'hideButton';
+    42;x;delay;OperationKind.DELAY;Do.use('buttonShowArea').click().delay(100);Do.use('buttonHideArea').getAttr('name').click();'hideButton';
     43;x;repeat;OperationKind.REPEAT;Do.use('countButtonClear').click().use('countButton').repeat(2, Do.click());Do.use('countLabel').getValue();2;
     44;x;press;OperationKind.PRESS;Do.use(control).press(Keyboard.ESCAPE);Do.use('pressLabel').getValue();control.Name + '_press_Escape';
     45;x;keyDown;OperationKind.KEY_DOWN;Do.use(control).keyDown(Keyboard.CONTROL);Do.use('downUpLabel').getValue();control.Name + '_down_Control';
