@@ -367,6 +367,12 @@ public abstract class ReportBuilder implements Storable
 		reportChart(this.writer, title, beforeTestCase, chartBuilder);
 	}
 
+	public void steps(int failed, int passed)
+	{
+		this.failedStepsCount = failed;
+		this.passedStepsCount = passed;
+	}
+
 
 	protected String postProcess(String source)
 	{
@@ -554,6 +560,9 @@ public abstract class ReportBuilder implements Storable
 			return ++this.uniqCount;
 		}
 	}
+
+	int failedStepsCount = -1;
+	int passedStepsCount = -1;
 
 	private boolean reportIsOn;
 	

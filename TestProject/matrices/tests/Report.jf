@@ -1,6 +1,3 @@
-#Id;#TestCase;#Kind;#Depends;#For
-prepare;;;;
-
 #TestCase;#Kind;#Depends;#For
 All negiteve testing with invalid parameters;;;
     #Action;#Assert;$Type;$Table;$Title
@@ -59,6 +56,12 @@ All negiteve testing with invalid parameters;;;
 
     #Action;#Assert;$Name
     ReportName;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;
+
+    #Action;#Assert;$FailedSteps;$PassedSteps;$Name
+    ReportName;This.Result == Result.Failed && This.Kind == ErrorKind.EXPRESSION_ERROR;sdf2;sdf;'test'
+
+    #Action;#Assert;$FailedSteps;$PassedSteps;$Name
+    ReportName;This.Result == Result.Failed && This.Kind == ErrorKind.WRONG_PARAMETERS;'sdf2';'sdf';'test'
 
     #Action;#Assert;$Report
     ReportShow;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;
@@ -209,14 +212,18 @@ Check Report with many parameters inside table;Never;;
 
 #TestCase;#Kind;#Depends;#For
 Check ReportName;Never;;
+    #Id;#Let
+    failed;666
+
+    #Id;#Let
+    passed;777
+
     #Id;#RawText;#Kind
     TEXT1;Text;Matrix
     ~;"#TestCase;#Kind;#Depends;#For"
     ~;"Test case;Never;;"
-    ~;"    #Action;$Name"
-    ~;"    ReportName;'report name'"
-    ~;""
-    ~;""
+    ~;"    #Action;$PassedSteps;$FailedSteps;$Name"
+    ~;"    ReportName;777;666;'report name'"
     #EndRawText
 
     #Id;#Call;rawText
@@ -229,7 +236,10 @@ Check ReportName;Never;;
     appCon;testLib.runBrowser;pathToReport
 
     #Id;#Let
-    locator;new Locator().kind(ControlKind.Any).visibility(Visibility.Visible).xpath('.//span[@id=\'name\']/span[.=\'report name\']')
+    locator;new Locator().kind(ControlKind.Any).visibility(Visibility.Visible).xpath('.//span[@id=\'name\']')
+
+    #Id;#Action;$Dialog;$AppConnection;Executed;Passed;Failed
+    DLGFLL4;DialogFill;'DialogForTestReport';appCon;Do.check('Executed : ' + (passed+failed));Do.check('Passed : ' + passed);Do.check('Failed : ' + failed)
 
     // check that report contains 'report name'
     #Id;#Action;#Assert;$Dialog;$AppConnection;MockElement

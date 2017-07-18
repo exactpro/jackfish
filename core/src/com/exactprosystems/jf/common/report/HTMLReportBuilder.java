@@ -213,6 +213,9 @@ public class HTMLReportBuilder extends ReportBuilder
 	@Override
 	protected void reportFooter(ReportWriter writer, int failed, int passed, Date startTime, Date finishTime, String name, String reportName) throws IOException
 	{
+		int passedStepsCount = super.passedStepsCount;
+		int failedStepsCount = super.failedStepsCount;
+
 		writer.fwrite("</tbody>");
 		writer.fwrite("</table>");
 		writer.fwrite("<script type='text/javascript'>\n" +
@@ -228,10 +231,10 @@ public class HTMLReportBuilder extends ReportBuilder
 						"$(info).find('#reportName').html('%s')\n" +
 						"-->\n" +
 						"</script>\n",
-				passed + failed,
-				passed,
-				failed,
-				startTime, startTime, 
+				passedStepsCount != -1 ? passedStepsCount + failedStepsCount : passed + failed,
+				passedStepsCount != -1 ? passedStepsCount : passed,
+				failedStepsCount != -1 ? failedStepsCount : failed,
+				startTime, startTime,
 				finishTime, finishTime,
 				Str.asString(name),
 				reportName
