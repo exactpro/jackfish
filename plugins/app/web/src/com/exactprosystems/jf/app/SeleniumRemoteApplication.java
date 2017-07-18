@@ -17,6 +17,8 @@ import com.exactprosystems.jf.api.error.app.TimeoutException;
 import com.exactprosystems.jf.app.WebAppFactory.WhereToOpen;
 import org.apache.log4j.*;
 import org.openqa.selenium.*;
+import org.openqa.selenium.Dimension;
+import org.openqa.selenium.Point;
 import org.openqa.selenium.chrome.ChromeDriverService;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.firefox.GeckoDriverService;
@@ -31,10 +33,12 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
-import java.io.File;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.io.Serializable;
 import java.rmi.RemoteException;
 import java.util.*;
+import java.util.List;
 import java.util.Map.Entry;
 import java.util.stream.Collectors;
 
@@ -619,9 +623,8 @@ public class SeleniumRemoteApplication extends RemoteApplication
 
 				if (element == null)
 				{
-					File screenshot = this.driver.getScreenshotAs(OutputType.FILE);
-					BufferedImage fullImg = ImageIO.read(screenshot);
-					return new ImageWrapper(fullImg);
+					BufferedImage fullImage = getImage();
+					return new ImageWrapper(fullImage);
 				}
 
 				WebElement component = this.operationExecutor.find(owner, element);
@@ -657,9 +660,7 @@ public class SeleniumRemoteApplication extends RemoteApplication
 					throw new Exception("Element out of screen");
 				}
 
-				File image = driver.getScreenshotAs(OutputType.FILE);
-				BufferedImage bufferedImage = ImageIO.read(image);
-
+				BufferedImage bufferedImage = getImage();
 				BufferedImage subimage = bufferedImage.getSubimage(returnRectangle.x, returnRectangle.y, returnRectangle.width, returnRectangle.height);
 				return new ImageWrapper(subimage);
 			}
@@ -680,6 +681,15 @@ public class SeleniumRemoteApplication extends RemoteApplication
 		}
 		while (++repeat < repeatLimit);
 		throw real;
+	}
+
+	private BufferedImage getImage() throws IOException
+	{
+		byte[] bytes = this.driver.getScreenshotAs(OutputType.BYTES);
+		try (ByteArrayInputStream bais = new ByteArrayInputStream(bytes))
+		{
+			return ImageIO.read(bais);
+		}
 	}
 
 	private String msgElementNotLonger(int repeat)
