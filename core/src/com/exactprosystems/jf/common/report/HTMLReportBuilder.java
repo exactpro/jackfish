@@ -12,6 +12,7 @@ import com.exactprosystems.jf.api.app.ImageWrapper;
 import com.exactprosystems.jf.api.common.DateTime;
 import com.exactprosystems.jf.api.common.Str;
 import com.exactprosystems.jf.charts.ChartBuilder;
+import com.exactprosystems.jf.common.version.VersionInfo;
 import com.exactprosystems.jf.documents.config.Configuration;
 import com.exactprosystems.jf.documents.matrix.parser.Result;
 import com.exactprosystems.jf.documents.matrix.parser.items.CommentString;
@@ -117,7 +118,10 @@ public class HTMLReportBuilder extends ReportBuilder
 	@Override
 	protected void putMark(ReportWriter writer, String mark) throws IOException
 	{
-		writer.fwrite(String.format("<div id=\"TC_%s\" ></div>", mark));
+		if (!Str.IsNullOrEmpty(mark))
+		{
+			writer.fwrite(String.format("<div id=\"TC_%s\" ></div>", mark));
+		}
 	}
 
 	@Override
@@ -140,13 +144,15 @@ public class HTMLReportBuilder extends ReportBuilder
 		writer.fwrite(
 				"<html>\n" +
 				"<head>\n" +
+				"<script type=\"text/javascript\">\n" +
+				"    var timerStart = Date.now();\n" +
+				"</script>" +
 				"<title>Report</title>\n" +
 				"<meta http-equiv='Content-Type' content='text/html; charset=utf-8'>\n");
 
 		writer.fwrite(
 				"<script type='text/javascript'>\n" +
 				"<!--\n");
-		//TODO replace to new jquery
 		writer.include(getClass().getResourceAsStream("jquery-1.8.3.min.js"));
 		writer.include(getClass().getResourceAsStream("reports.js"));
 		writer.fwrite(
@@ -173,7 +179,7 @@ public class HTMLReportBuilder extends ReportBuilder
 				"</head>\n" +
 				"<body>\n" +
 				"<h1>EXECUTION REPORT</h1>\n" +
-				"<table class='table'>\n");
+				"<table id='tableInfo' class='table'>\n");
 
 		writer.fwrite("<tr><td><span id='name'></span>\n");
 		writer.fwrite("<tr><td>Version <td>%s\n", Str.asString(version));
@@ -195,9 +201,12 @@ public class HTMLReportBuilder extends ReportBuilder
 		writer.fwrite("</td>");
 		writer.fwrite("</tr>");
 		writer.fwrite("</table>\n");
-
 		writer.fwrite("<table class='table repLog table-bordered'>\n");
-//		writer.fwrite(createColgroup());
+		writer.fwrite(
+				  "<script type='text/javascript'>\n"
+				+ "    $('.repLog').hide();\n"
+				+ "</script>\n"
+		);
 		writer.fwrite("<tbody>");
 	}
 
@@ -208,13 +217,15 @@ public class HTMLReportBuilder extends ReportBuilder
 		writer.fwrite("</table>");
 		writer.fwrite("<script type='text/javascript'>\n" +
 						"<!--\n" +
-						"document.getElementById('exec').innerHTML = '<span> %d </span>'\n" +
-						"document.getElementById('pass').innerHTML = '<span> %d </span>'\n" +
-						"document.getElementById('fail').innerHTML = '<span> %d </span>'\n" +
-						"document.getElementById('startTime').innerHTML = '<span>%tF %tT</span>'\n" +
-						"document.getElementById('finishTime').innerHTML = '<span>%tF %tT</span>'\n" +
-						"document.getElementById('name').innerHTML = '<span>%s</span>'\n" +
-						"document.getElementById('reportName').innerHTML = '<span>%s</span>'\n" +
+						"$('.repLog').show();\n" +
+						"var info = $('#tableInfo');\n" +
+						"$(info).find('#exec').html(%d)\n" +
+						"$(info).find('#pass').html(%d)\n" +
+						"$(info).find('#fail').html(%d)\n" +
+						"$(info).find('#startTime').html('%tF %tT')\n" +
+						"$(info).find('#finishTime').html('%tF %tT')\n" +
+						"$(info).find('#name').html('%s')\n" +
+						"$(info).find('#reportName').html('%s')\n" +
 						"-->\n" +
 						"</script>\n",
 				passed + failed,
@@ -226,6 +237,22 @@ public class HTMLReportBuilder extends ReportBuilder
 				reportName
 		);
 
+		if (VersionInfo.isDevVersion())
+		{
+			writer.fwrite(
+					" <script type=\"text/javascript\">\n"
+					+ " 	$(document).ready(function() {\n"
+					+ " 		var el = document.createElement('p');\n"
+					+ " 		el.innerText = \"Time until DOMready          : \" + (Date.now()-timerStart);\n"
+					+ " 		document.body.insertBefore(el, document.body.firstChild);\n"
+					+ " 	});\n"
+					+ " 	$(window).load(function() {\n"
+					+ " 		var el = document.createElement('p');\n"
+					+ " 		el.innerText = \"Time until everything loaded : \"+ (Date.now()-timerStart);\n"
+					+ " 		document.body.insertBefore(el, document.body.firstChild);\n"
+					+ " 	});\n"
+					+ " </script>");
+		}
 		writer.fwrite("</body>\n");
 		writer.fwrite("</html>");
 	}
@@ -317,27 +344,14 @@ public class HTMLReportBuilder extends ReportBuilder
 		writer.fwrite("<td><a href='javascript:void(0)' class='showBody'>%s</a></td>", item.getItemName());
 		writer.fwrite("<td id='hs_%s'> </td>", id);
 		writer.fwrite("<td id='time_%s'> </td>", id);
-		writer.fwrite("<td id='scr_%s'> </td>", id);
+		writer.fwrite("<td id='src_%s'> </td>", id);
 		writer.fwrite("</tr>");
 		//endregion
 
 		writer.fwrite("<tr>");
 		writer.fwrite("<td colspan='%s' class='parTd'>", this.columnCount);
 		writer.fwrite("<table class='table table-bordered innerTable'>");
-//		writer.fwrite(createColgroup());
 		writer.fwrite("<tbody>");
-	}
-
-	private String createColgroup()
-	{
-		return "<colgroup>\n" +
-				"  <col width='5%'>\n" +
-				"  <col width='10%'>\n" +
-				"  <col width='40%'>\n" +
-				"  <col width='15%'>\n" +
-				"  <col width='15%'>\n" +
-				"  <col width='15%'>\n" +
-				"</colgroup>\n";
 	}
 
 	@Override
@@ -350,13 +364,15 @@ public class HTMLReportBuilder extends ReportBuilder
 
 		//region javascript insert
 		writer.fwrite("<script type='text/javascript'>\n");
-		writer.fwrite("$('#tr_%s').addClass('%s');\n", id, styleClass);
-		writer.fwrite("$('#hs_%s').html('<strong class=\"text-%s\">%s</strong>');\n", id, styleClass, result);
-		writer.fwrite("$('#time_%s').html('%s ms');\n", id, time <= 1 ? "< 1" : time);
+
+		writer.fwrite("var owner = $('#tr_%s');\n", id);
+		writer.fwrite("$(owner).addClass('%s')\n", styleClass);
+		writer.fwrite("$(owner).find('#hs_%s').html('<strong class=\"text-%s\">%s</strong>')\n", id, styleClass, result);
+		writer.fwrite("$(owner).find('#time_%s').html('%s ms');\n", id, time <= 1 ? "< 1" : time);
 		if (screenshot != null)
 		{
 			String link = decorateLink(screenshot.getDescription(), getImageDir() + "/" + screenshot.getName(getReportDir()));
-			writer.fwrite("$('#scr_%s').html('%s');\n",id,link);
+			writer.fwrite("$(owner).find('#src_%s').html('%s');\n", id, link);
 		}
 		writer.fwrite("</script>\n");
 		//endregion
