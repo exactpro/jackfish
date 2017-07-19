@@ -26,7 +26,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.stream.Collectors;
 
-public class HTMLReportBuilder extends ReportBuilder 
+public class HTMLReportBuilder extends ReportBuilder
 {
 	private static final long serialVersionUID = 8277698425881479782L;
 
@@ -34,6 +34,8 @@ public class HTMLReportBuilder extends ReportBuilder
 	private static final String reportExt = ".html";
 	private static final DateFormat dateTimeFormatter = new SimpleDateFormat("yyyyMMdd_HHmmss_");
 	private final int columnCount = 7;
+
+	private StringWriter jsWriter = new StringWriter();
 
 	public HTMLReportBuilder()
 	{
@@ -43,6 +45,7 @@ public class HTMLReportBuilder extends ReportBuilder
 	public HTMLReportBuilder(String outputPath, String matrixName, Date currentTime) throws IOException
 	{
 		super(outputPath, matrixName, currentTime);
+
 	}
 
 	@Override
@@ -60,50 +63,48 @@ public class HTMLReportBuilder extends ReportBuilder
 	@Override
 	protected String decorateLink(String name, String link)
 	{
-		String res = String.format("<a href=\"%s\" target=\"_blank\">%s</a>",
+		return String.format("<a href=\"%s\" target=\"_blank\">%s</a>",
 				link,
 				name);
-		return res;
 	}
 
 	@Override
 	protected String decorateExpandingBlock(String name, String content)
 	{
-		String res = String.format("<a href=\"\" onclick=\"obj=this.parentNode.childNodes[1].style; "
-				+ "obj.display=(obj.display!='block')?'block':'none'; return false;\">%s</a>"
-				+ "<div style='display: none;'>%s</div>",				
+		return String.format("<a href=\"\" onclick=\"obj=this.parentNode.childNodes[1].style; "
+						+ "obj.display=(obj.display!='block')?'block':'none'; return false;\">%s</a>"
+						+ "<div style='display: none;'>%s</div>",
 				name,
 				content);
+	}
+
+	@Override
+	protected String decorateGroupCell(String content, int level, boolean isNode)
+	{
+		String res = null;
+		if (isNode)
+		{
+			res = String.format("<a href=\"javascript:void(0)\" indent-level=\"%d\" class=\"group\">%s</a>",
+					level,
+					content);
+		}
+		else
+		{
+			res = String.format("<span indent-level=\"%d\" class=\"group\">%s</span>",
+					level,
+					content);
+		}
 		return res;
 	}
 
-    @Override
-    protected String decorateGroupCell(String content, int level, boolean isNode)
-    {
-        String res = null;
-        if (isNode)
-        {
-            res = String.format("<a href=\"javascript:void(0)\" indent-level=\"%d\" class=\"group\">%s</a>",               
-                    level,
-                    content);
-        }
-        else
-        {
-            res = String.format("<span indent-level=\"%d\" class=\"group\">%s</span>",               
-                    level,
-                    content);
-        }
-        return res;
-    }
-
-    @Override
+	@Override
 	protected String replaceMarker(String marker)
 	{
 		return HTMLhelper.htmlMarker(marker);
 	}
 
 	@Override
-	protected String generateReportName(String outputPath, String matrixName, String suffix, Date date) 
+	protected String generateReportName(String outputPath, String matrixName, String suffix, Date date)
 	{
 		if (matrixName.toLowerCase().endsWith(Configuration.matrixExt))
 		{
@@ -114,7 +115,7 @@ public class HTMLReportBuilder extends ReportBuilder
 			return outputPath + File.separator + dateTimeFormatter.format(date) + matrixName + suffix + reportExt;
 		}
 	}
-	
+
 	@Override
 	protected void putMark(ReportWriter writer, String mark) throws IOException
 	{
@@ -141,45 +142,29 @@ public class HTMLReportBuilder extends ReportBuilder
 	@Override
 	protected void reportHeader(ReportWriter writer, Date date, String version) throws IOException
 	{
+		this.jsWriter.fwrite("<script type='text/javascript'>\n");
 		writer.fwrite(
-				"<html>\n" +
-				"<head>\n" +
-				"<script type=\"text/javascript\">\n" +
-				"    var timerStart = Date.now();\n" +
-				"</script>" +
-				"<title>Report</title>\n" +
-				"<meta http-equiv='Content-Type' content='text/html; charset=utf-8'>\n");
+				 "<html>\n"
+				+ "<head>\n"
+				+ "<script type='text/javascript'>\n"
+				+ "    var timerStart = Date.now();\n"
+				+ "</script>"
+				+ "<title>Report</title>\n"
+				+ "<meta http-equiv='Content-Type' content='text/html; charset=utf-8'>\n");
 
-		writer.fwrite(
-				"<script type='text/javascript'>\n" +
-				"<!--\n");
-		writer.include(getClass().getResourceAsStream("jquery-1.8.3.min.js"));
-		writer.include(getClass().getResourceAsStream("reports.js"));
-		writer.fwrite(
-				"-->\n" +
-				"</script>\n");
-
-		writer.fwrite("<script>\n");
-		writer.include(getClass().getResourceAsStream("d3.min.js"));
-		writer.fwrite("</script>\n");
-
-		writer.fwrite("<script>\n");
-		writer.include(getClass().getResourceAsStream("charts.js"));
-		writer.fwrite("</script>\n");
-
-		writer.fwrite(
-				"<style>\n" +
-				"<!--\n");
+		this.jsWriter.include(getClass().getResourceAsStream("jquery-1.8.3.min.js"));
+		this.jsWriter.include(getClass().getResourceAsStream("reports.js"));
+		this.jsWriter.include(getClass().getResourceAsStream("d3.min.js"));
+		this.jsWriter.include(getClass().getResourceAsStream("charts.js"));
+		writer.fwrite("<style>\n");
 		writer.include(getClass().getResourceAsStream("style.css"));
+		writer.fwrite("</style>\n");
+
 		writer.fwrite(
-				"-->\n" +
-				"</style>\n");
-		
-		writer.fwrite(
-				"</head>\n" +
-				"<body>\n" +
-				"<h1>EXECUTION REPORT</h1>\n" +
-				"<table id='tableInfo' class='table'>\n");
+				  "</head>\n"
+				+ "<body>\n"
+				+ "<h1>EXECUTION REPORT</h1>\n"
+				+ "<table id='tableInfo' class='table'>\n");
 
 		writer.fwrite("<tr><td><span id='name'></span>\n");
 		writer.fwrite("<tr><td>Version <td>%s\n", Str.asString(version));
@@ -202,9 +187,10 @@ public class HTMLReportBuilder extends ReportBuilder
 		writer.fwrite("</tr>");
 		writer.fwrite("</table>\n");
 		writer.fwrite("<table class='table repLog table-bordered'>\n");
+		//hide main table for improve speed
 		writer.fwrite(
 				  "<script type='text/javascript'>\n"
-				+ "    $('.repLog').hide();\n"
+				+ "    document.getElementsByClassName('repLog')[0].style.display = 'none'"
 				+ "</script>\n"
 		);
 		writer.fwrite("<tbody>");
@@ -218,19 +204,15 @@ public class HTMLReportBuilder extends ReportBuilder
 
 		writer.fwrite("</tbody>");
 		writer.fwrite("</table>");
-		writer.fwrite("<script type='text/javascript'>\n" +
-						"<!--\n" +
-						"$('.repLog').show();\n" +
-						"var info = $('#tableInfo');\n" +
-						"$(info).find('#exec').html(%d)\n" +
-						"$(info).find('#pass').html(%d)\n" +
-						"$(info).find('#fail').html(%d)\n" +
-						"$(info).find('#startTime').html('%tF %tT')\n" +
-						"$(info).find('#finishTime').html('%tF %tT')\n" +
-						"$(info).find('#name').html('%s')\n" +
-						"$(info).find('#reportName').html('%s')\n" +
-						"-->\n" +
-						"</script>\n",
+		this.jsWriter.fwrite(
+				  "var info = $('#tableInfo');\n"
+				+ "$(info).find('#exec').html(%d)\n"
+				+ "$(info).find('#pass').html(%d)\n"
+				+ "$(info).find('#fail').html(%d)\n"
+				+ "$(info).find('#startTime').html('%tF %tT')\n"
+				+ "$(info).find('#finishTime').html('%tF %tT')\n"
+				+ "$(info).find('#name').html('%s')\n"
+				+ "$(info).find('#reportName').html('%s')\n",
 				passedStepsCount != -1 ? passedStepsCount + failedStepsCount : passed + failed,
 				passedStepsCount != -1 ? passedStepsCount : passed,
 				failedStepsCount != -1 ? failedStepsCount : failed,
@@ -240,24 +222,28 @@ public class HTMLReportBuilder extends ReportBuilder
 				reportName
 		);
 
+		//this is debug info about how long loading the page
 		if (VersionInfo.isDevVersion())
 		{
-			writer.fwrite(
-					" <script type=\"text/javascript\">\n"
-					+ " 	$(document).ready(function() {\n"
-					+ " 		var el = document.createElement('p');\n"
-					+ " 		el.innerText = \"Time until DOMready          : \" + (Date.now()-timerStart);\n"
-					+ " 		document.body.insertBefore(el, document.body.firstChild);\n"
-					+ " 	});\n"
-					+ " 	$(window).load(function() {\n"
-					+ " 		var el = document.createElement('p');\n"
-					+ " 		el.innerText = \"Time until everything loaded : \"+ (Date.now()-timerStart);\n"
-					+ " 		document.body.insertBefore(el, document.body.firstChild);\n"
-					+ " 	});\n"
-					+ " </script>");
+			this.jsWriter.fwrite(
+					  "$(document).ready(function() {\n"
+					+ "		var el = document.createElement('p');\n"
+					+ "		el.innerText = \"Time until DOMready          : \" + (Date.now()-timerStart);\n"
+					+ "		document.body.insertBefore(el, document.body.firstChild);\n"
+					+ "	});\n"
+					+ "	$(window).load(function() {\n"
+					+ "		var el = document.createElement('p');\n"
+					+ "		el.innerText = \"Time until everything loaded : \"+ (Date.now()-timerStart);\n"
+					+ "		document.body.insertBefore(el, document.body.firstChild);\n"
+					+ "		$('.repLog').show();\n"
+					+ "	});\n");
 		}
+
+		this.jsWriter.fwrite("</script>");
+		writer.fwrite(this.jsWriter.toString());
 		writer.fwrite("</body>\n");
 		writer.fwrite("</html>");
+		this.jsWriter.close();
 	}
 	//endregion
 
@@ -267,8 +253,7 @@ public class HTMLReportBuilder extends ReportBuilder
 	{
 		writer.fwrite("<tr><td width='200'><a href='#' class='showSource'>Matrix <span class='caret'></span>  </a><td><span id='reportName'>%s</span>\n", matrixName);
 		writer.fwrite("<tr class='matrixSource'><td colspan='2'>\n");
-		writer.fwrite("<script>\n");
-		writer.fwrite("function copyToClipboard(elem) {\n"
+		this.jsWriter.fwrite("function copyToClipboard(elem) {\n"
 				+ "var clone = $('#copy').clone();\n"
 				+ "$('#copy').remove();\n"
 				+ "    var targetId = '_hiddenCopyText_';\n"
@@ -300,7 +285,6 @@ public class HTMLReportBuilder extends ReportBuilder
 				+ "    $('pre').prepend(clone); \n"
 				+ "    return succeed;\n"
 				+ "  }");
-		writer.fwrite("</script>\n");
 		writer.fwrite("<pre id='matrixSource'>");
 		writer.fwrite("<button id=\"copy\" onclick=\"copyToClipboard(document.getElementById('matrixSource'))\" class='btn btn-default copyMatrix'>Copy</button>\n");
 	}
@@ -322,7 +306,7 @@ public class HTMLReportBuilder extends ReportBuilder
 	@Override
 	protected void reportItemHeader(ReportWriter writer, MatrixItem item, Integer id) throws IOException
 	{
-        String itemId = Str.asString(item.getId());
+		String itemId = Str.asString(item.getId());
 
 		//region display header
 
@@ -330,9 +314,9 @@ public class HTMLReportBuilder extends ReportBuilder
 		if (!collect.isEmpty())
 		{
 			writer.fwrite(
-					"<tr class='comment'><td colspan='%s'>\n" +
-					"%s"+
-					"</td></tr>\n"
+					  "<tr class='comment'><td colspan='%s'>\n"
+					+ "%s"
+					+ "</td></tr>\n"
 					,this.columnCount, collect
 			);
 		}
@@ -365,20 +349,15 @@ public class HTMLReportBuilder extends ReportBuilder
 		writer.fwrite("</tbody>");
 		writer.fwrite("</table>");
 
-		//region javascript insert
-		writer.fwrite("<script type='text/javascript'>\n");
-
-		writer.fwrite("var owner = $('#tr_%s');\n", id);
-		writer.fwrite("$(owner).addClass('%s')\n", styleClass);
-		writer.fwrite("$(owner).find('#hs_%s').html('<strong class=\"text-%s\">%s</strong>')\n", id, styleClass, result);
-		writer.fwrite("$(owner).find('#time_%s').html('%s ms');\n", id, time <= 1 ? "< 1" : time);
+		this.jsWriter.fwrite("var owner = $('#tr_%s');\n", id);
+		this.jsWriter.fwrite("$(owner).addClass('%s')\n", styleClass);
+		this.jsWriter.fwrite("$(owner).find('#hs_%s').html('<strong class=\"text-%s\">%s</strong>')\n", id, styleClass, result);
+		this.jsWriter.fwrite("$(owner).find('#time_%s').html('%s ms');\n", id, time <= 1 ? "< 1" : time);
 		if (screenshot != null)
 		{
 			String link = decorateLink(screenshot.getDescription(), getImageDir() + "/" + screenshot.getName(getReportDir()));
-			writer.fwrite("$(owner).find('#src_%s').html('%s');\n", id, link);
+			this.jsWriter.fwrite("$(owner).find('#src_%s').html('%s');\n", id, link);
 		}
-		writer.fwrite("</script>\n");
-		//endregion
 
 		writer.fwrite("</td>");
 		writer.fwrite("</tr>");
@@ -389,31 +368,29 @@ public class HTMLReportBuilder extends ReportBuilder
 	{
 		if (beforeTestcase != null)
 		{
-			writer.fwrite(
-					"<div class='movable' data-moveto='%s' >\n",
+			writer.fwrite("<div class='movable' data-moveto='%s' >\n",
 					beforeTestcase);
 		}
-		writer.fwrite(
-				"<span class='tableTitle'>%s</span><br>",
+		writer.fwrite("<span class='tableTitle'>%s</span><br>",
 				this.postProcess(title));
 
 		switch (reportMode)
-        {
-        case AsEmbeddedImage:
-            writer.fwrite("<img src='data:image/jpeg;base64,%s' class='img'/><br>", embedded);
-            break;
+		{
+			case AsEmbeddedImage:
+				writer.fwrite("<img src='data:image/jpeg;base64,%s' class='img'/><br>", embedded);
+				break;
 
-        case AsImage:
-            writer.fwrite("<img src='%s' class='img'/><br>", fileName);
-            break;
+			case AsImage:
+				writer.fwrite("<img src='%s' class='img'/><br>", fileName);
+				break;
 
-        case AsLink:
-            writer.fwrite("<a href=" + fileName+ ">Image</a><br>");
-            break;
+			case AsLink:
+				writer.fwrite("<a href=" + fileName+ ">Image</a><br>");
+				break;
 
-        default:
-            break;
-        }
+			default:
+				break;
+		}
 
 		if (beforeTestcase != null)
 		{
@@ -421,15 +398,13 @@ public class HTMLReportBuilder extends ReportBuilder
 		}
 	}
 
-    @Override
-    protected void reportContent(ReportWriter writer, MatrixItem item, String beforeTestcase, Content content,
-            String title) throws IOException
-    {
-        // TODO Auto-generated method stub
-        
-    }
+	@Override
+	protected void reportContent(ReportWriter writer, MatrixItem item, String beforeTestcase, Content content, String title) throws IOException
+	{
 
-    @Override
+	}
+
+	@Override
 	protected void reportItemLine(ReportWriter writer, MatrixItem item, String beforeTestcase, String string, String labelId) throws IOException
 	{
 		if (labelId == null)
@@ -457,42 +432,42 @@ public class HTMLReportBuilder extends ReportBuilder
 		{
 			writer.fwrite("<div class='movable' data-moveto='%s' >\n",table.getBeforeTestcase());
 		}
-        writer.fwrite("<span>%s</span>", this.postProcess(tableTitle));
-        if (table.isBordered())
-        {
-            writer.fwrite("<table width='100%%' class='table table-bordered'>\n");
-        }
-        else
-        {
-            writer.fwrite("<table width='100%%' class='table'>\n");
-        }
+		writer.fwrite("<span>%s</span>", this.postProcess(tableTitle));
+		if (table.isBordered())
+		{
+			writer.fwrite("<table width='100%%' class='table table-bordered'>\n");
+		}
+		else
+		{
+			writer.fwrite("<table width='100%%' class='table'>\n");
+		}
 
 		//region display headers
 		writer.fwrite("<thead>\n");
-        for (int i = 0; i < columns.length; i++)
-        {
-            int percent = (percents == null || percents.length <= i) ? 0 : percents[i]; 
-        	if (percent <= 0)
-        	{
-        		writer.fwrite("<th>%s</th>", columns[i]);
-        	}
-        	else
-        	{
-        		writer.fwrite("<th width='%d%%'>%s</th>", percent, columns[i]);
-        	}
-        }
-        writer.fwrite("</thead>\n");
+		for (int i = 0; i < columns.length; i++)
+		{
+			int percent = (percents == null || percents.length <= i) ? 0 : percents[i];
+			if (percent <= 0)
+			{
+				writer.fwrite("<th>%s</th>", columns[i]);
+			}
+			else
+			{
+				writer.fwrite("<th width='%d%%'>%s</th>", percent, columns[i]);
+			}
+		}
+		writer.fwrite("</thead>\n");
 		//endregion
 
 		writer.fwrite("<tbody>\n");
 
 	}
-	
+
 	@Override
 	protected void tableRow(ReportWriter writer, ReportTable table, int quotes, Object ... value) throws IOException
 	{
 		if (value != null)
-        {
+		{
 			writer.fwrite("<tr>");
 			int count = 0;
 			for (Object obj : value)
@@ -509,14 +484,14 @@ public class HTMLReportBuilder extends ReportBuilder
 				count++;
 			}
 			writer.fwrite("</tr>");
-            writer.fwrite("\n");
-        }
+			writer.fwrite("\n");
+		}
 	}
 
 	@Override
 	protected void tableFooter(ReportWriter writer, ReportTable table) throws IOException
 	{
-        writer.fwrite("</tbody>\n");
+		writer.fwrite("</tbody>\n");
 		writer.fwrite("</table>\n");
 		if (table.getBeforeTestcase() != null)
 		{
@@ -531,12 +506,10 @@ public class HTMLReportBuilder extends ReportBuilder
 	{
 		if (beforeTestCase != null)
 		{
-			writer.fwrite(
-					"<div class='movable' data-moveto='%s' >\n",
+			writer.fwrite("<div class='movable' data-moveto='%s' >\n",
 					beforeTestCase);
 		}
-		writer.fwrite(
-				"<span class='tableTitle'>%s</span><br>",
+		writer.fwrite("<span class='tableTitle'>%s</span><br>",
 				this.postProcess(title));
 
 		chartBuilder.report(writer, ++chartCount);
@@ -545,6 +518,6 @@ public class HTMLReportBuilder extends ReportBuilder
 		{
 			writer.fwrite("</div>\n");
 		}
-		
+
 	}
 }

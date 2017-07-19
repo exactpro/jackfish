@@ -8,12 +8,12 @@
 
 package com.exactprosystems.jf.common.report;
 
+import org.apache.log4j.Logger;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-
-import org.apache.log4j.Logger;
 
 class StringWriter extends  ReportWriter  
 {
