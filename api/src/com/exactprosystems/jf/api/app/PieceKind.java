@@ -1047,7 +1047,7 @@ public enum PieceKind implements Measure
 		boolean res = piece.range.func(value, piece.a, piece.b);
 		if (!res)
 		{
-			result.error(piece, "Expected = " + value + " actual = " + piece.range.toString("" + piece.a, "" + piece.b));
+			result.error(piece, "Actual = " + value + " Expected = " + piece.range.toString("" + piece.a, "" + piece.b));
 		}
 	}
 

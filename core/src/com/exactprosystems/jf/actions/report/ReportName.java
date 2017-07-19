@@ -29,14 +29,26 @@ import com.exactprosystems.jf.documents.matrix.parser.Parameters;
 public class ReportName extends AbstractAction 
 {
 	public final static String nameName = "Name";
+	public final static String failedStepsName = "FailedSteps";
+	public final static String passedStepsName = "PassedSteps";
 
 	@ActionFieldAttribute(name = nameName, mandatory = true, description = "Text that will be added to the name of the report.")
 	protected String name 		= "";
+
+	@ActionFieldAttribute(name = failedStepsName, mandatory = false, description = "Failed steps count that will be added to the report.")
+	protected Integer failedSteps;
+
+	@ActionFieldAttribute(name = passedStepsName, mandatory = false, description = "Passed steps count that will be added to the report.")
+	protected Integer passedSteps;
 	
 	@Override
 	public void doRealAction(Context context, ReportBuilder report, Parameters parameters, AbstractEvaluator evaluator) throws Exception
 	{
 		report.setName(this.name);
+		if (this.failedSteps != null && this.passedSteps != null)
+		{
+			report.steps(this.failedSteps, this.passedSteps);
+		}
 		super.setResult(null);
 	}
 }
