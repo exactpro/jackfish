@@ -168,7 +168,7 @@ Check summary;;;
     RF.repSummary;
 
     #Id;#Call;callName
-    reportPath;findReport;'Consolidated Umbrella Report '
+    reportPath;findReport;'Consolidated Report '
 
     #Id;#Call;pathToReport
     app;testLib.runBrowser;reportPath
