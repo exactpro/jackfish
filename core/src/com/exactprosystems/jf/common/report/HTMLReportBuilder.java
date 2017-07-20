@@ -154,11 +154,15 @@ public class HTMLReportBuilder extends ReportBuilder
 
 		this.jsWriter.include(getClass().getResourceAsStream("jquery-1.8.3.min.js"));
 		this.jsWriter.include(getClass().getResourceAsStream("reports.js"));
-		this.jsWriter.include(getClass().getResourceAsStream("d3.min.js"));
-		this.jsWriter.include(getClass().getResourceAsStream("charts.js"));
 		writer.fwrite("<style>\n");
 		writer.include(getClass().getResourceAsStream("style.css"));
 		writer.fwrite("</style>\n");
+
+		writer.fwrite("<script>");
+		writer.include(getClass().getResourceAsStream("charts.js"));
+		writer.include(getClass().getResourceAsStream("d3.min.js"));
+		writer.fwrite("</script>");
+
 
 		writer.fwrite(
 				  "</head>\n"
