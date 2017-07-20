@@ -496,6 +496,7 @@ public class Table implements List<RowTable>, Mutable, Cloneable
 	@Override
 	public RowTable get(int index)
 	{
+		checkRange(index);
 		return new RowTable(this, index);
 	}
 
@@ -1228,6 +1229,14 @@ public class Table implements List<RowTable>, Mutable, Cloneable
     }
 
 	//region private methods
+	private void checkRange(int index)
+	{
+		if (index >= this.innerList.size())
+		{
+			throw new IndexOutOfBoundsException("Index : " + index + " , Size : " + this.innerList.size());
+		}
+	}
+
 	private String[] convertHeaders(Map<String, String> parameters, String[] headers, boolean withNumbers)
 	{
 		if (parameters.isEmpty())
