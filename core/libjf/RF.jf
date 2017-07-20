@@ -398,7 +398,7 @@ RF;RegressionFramework
         times;timesFromDate;SQL;date
 
         #Id;#Let
-        title;'Consolidated Umbrella Report '  + Str.asString(runId.name) + (date == null ? '' : (' on ' +DateTime.strDate(date)))
+        title;'Consolidated Report '  + Str.asString(runId.name) + (date == null ? '' : (' on ' +DateTime.strDate(date)))
 
         #Switch
         _rf_dialect
