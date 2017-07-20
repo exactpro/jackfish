@@ -152,13 +152,14 @@ public class HTMLReportBuilder extends ReportBuilder
 				+ "<title>Report</title>\n"
 				+ "<meta http-equiv='Content-Type' content='text/html; charset=utf-8'>\n");
 
-		this.jsWriter.include(getClass().getResourceAsStream("jquery-1.8.3.min.js"));
-		this.jsWriter.include(getClass().getResourceAsStream("reports.js"));
+
 		writer.fwrite("<style>\n");
 		writer.include(getClass().getResourceAsStream("style.css"));
 		writer.fwrite("</style>\n");
 
 		writer.fwrite("<script>");
+		writer.include(getClass().getResourceAsStream("jquery-1.8.3.min.js"));
+		writer.include(getClass().getResourceAsStream("reports.js"));
 		writer.include(getClass().getResourceAsStream("charts.js"));
 		writer.include(getClass().getResourceAsStream("d3.min.js"));
 		writer.fwrite("</script>");
@@ -241,7 +242,10 @@ public class HTMLReportBuilder extends ReportBuilder
 					+ "		document.body.insertBefore(el, document.body.firstChild);\n"
 					+ "	});\n");
 		}
-		this.jsWriter.fwrite("$('.repLog').show();");
+		this.jsWriter.fwrite(
+				  "$(window).load(function() {\n"
+				+ "    $('.repLog').show();\n"
+				+ "});");
 		this.jsWriter.fwrite("</script>");
 		writer.fwrite(this.jsWriter.toString());
 		writer.fwrite("</body>\n");
