@@ -871,7 +871,7 @@ report chart Pie chart;;;
 #TestCase;#Kind;#Depends;#For
 subcases;;;
     #Id;#SubCase;rawText
-    runMatrix;returned value - path to report;TEXT
+    runMatrix;returned value - path to report;TEXT1
         #Id;#Action;$Text
         MXRN1;MatrixRunFromText;rawText
 
