@@ -21,6 +21,7 @@ public class XmlItem
 	private Rectangle rectangle;
     private MarkerStyle style;
     private boolean highlight;
+    private boolean visible = true;
 
 	public XmlItem(Node node)
 	{
@@ -71,6 +72,16 @@ public class XmlItem
         }
         return this.style;
     }
+
+	public void setVisible(boolean flag)
+	{
+		this.visible = flag;
+	}
+
+	public boolean isVisible()
+	{
+		return visible;
+	}
 
 	public void highlight(boolean flag)
 	{

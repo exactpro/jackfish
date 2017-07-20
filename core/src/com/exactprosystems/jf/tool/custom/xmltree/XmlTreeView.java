@@ -95,6 +95,7 @@ public class XmlTreeView extends AnchorPane
 					XmlItem item = treeItem.getValue();
 					MarkerStyle oldValue = item.getStyle();
 					MarkerStyle newValue = item.changeStyle();
+					item.setVisible(newValue == null ? true : this.stateMap.get(newValue));
 					if (this.onMarkerChanged != null)
 					{
 	                    TreeItem<XmlItem> selectedItem = this.treeTableView.getSelectionModel().selectedItemProperty().get();
@@ -249,6 +250,13 @@ public class XmlTreeView extends AnchorPane
 
 	public void setMarkersVisible(MarkerStyle state, boolean visible)
 	{
+		findAll(treeItem -> {
+			if (treeItem != null && treeItem.getStyle() == state)
+			{
+				treeItem.setVisible(visible);
+			}
+			return true;
+		});
 		this.stateMap.replace(state, visible);
 		this.refresh();
 	}

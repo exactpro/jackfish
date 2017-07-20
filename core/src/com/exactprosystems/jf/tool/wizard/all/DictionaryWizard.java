@@ -10,6 +10,7 @@ package com.exactprosystems.jf.tool.wizard.all;
 
 import com.exactprosystems.jf.api.app.*;
 import com.exactprosystems.jf.api.common.IContext;
+import com.exactprosystems.jf.api.common.Str;
 import com.exactprosystems.jf.api.error.JFRemoteException;
 import com.exactprosystems.jf.api.wizard.WizardAttribute;
 import com.exactprosystems.jf.api.wizard.WizardCategory;
@@ -28,9 +29,11 @@ import com.exactprosystems.jf.tool.custom.find.IFind;
 import com.exactprosystems.jf.tool.custom.scaledimage.ImageViewWithScale;
 import com.exactprosystems.jf.tool.custom.xmltree.XmlTreeView;
 import com.exactprosystems.jf.tool.dictionary.DictionaryFx;
+import com.exactprosystems.jf.tool.dictionary.dialog.WizardMatcher;
 import com.exactprosystems.jf.tool.helpers.DialogsHelper;
 import com.exactprosystems.jf.tool.wizard.AbstractWizard;
 import com.exactprosystems.jf.tool.wizard.CommandBuilder;
+import com.exactprosystems.jf.tool.wizard.related.MarkerStyle;
 import com.exactprosystems.jf.tool.wizard.related.WizardHelper;
 import javafx.geometry.HPos;
 import javafx.geometry.Orientation;
@@ -67,6 +70,8 @@ public class DictionaryWizard extends AbstractWizard
 	private DictionaryFx  currentDictionary = null;
 	private Window        currentWindow     = null;
 	private Window        copyWindow        = null;
+
+	private WizardMatcher matcher			= null;
 
 	private volatile Document document    = null;
 	private volatile Node     currentNode = null;
@@ -306,6 +311,7 @@ public class DictionaryWizard extends AbstractWizard
 
 		this.centralSplitPane.getItems().addAll(topSplitPane, paneTreeView);
 		borderPane.setCenter(this.centralSplitPane);
+
 		initListeners();
 		updateOnButtons();
 		displayElements();
@@ -342,6 +348,7 @@ public class DictionaryWizard extends AbstractWizard
 				this.xmlTreeView.displayDocument(this.document);
 				List<Rectangle> list = XpathUtils.collectAllRectangles(this.document);
 				this.imageViewWithScale.setListForSearch(list);
+				findElements();
 			}, ex ->
 			{
 				String message = ex.getMessage();
@@ -351,6 +358,7 @@ public class DictionaryWizard extends AbstractWizard
 				}
 				DialogsHelper.showError(message);
 			});
+			this.matcher = new WizardMatcher(this.currentConnection.getApplication().getFactory().getInfo());
 		}
 		catch (Exception e)
 		{
@@ -406,14 +414,15 @@ public class DictionaryWizard extends AbstractWizard
 			{
 				this.imageViewWithScale.hideRectangle(item.getRectangle(), oldMarker);
 				this.imageViewWithScale.showRectangle(item.getRectangle(), newMarker, item.getText(), selected);
+
+				this.updateMarkers(oldMarker, newMarker);
 			}
 		});
 
 		this.btnNextMark.setOnAction(e -> this.xmlTreeView.selectNextMark());
 		this.btnPrevMark.setOnAction(e -> this.xmlTreeView.selectPrevMark());
 
-		this.btnWizard.setOnAction(e ->
-		{
+		this.btnWizard.setOnAction(e -> {
 			//TODO
 		});
 
@@ -431,6 +440,13 @@ public class DictionaryWizard extends AbstractWizard
 			section.addControl(onOpen);
 			updateOnButtons();
 		}, "Error on generate onClose"));
+
+		this.tfDialogName.textProperty().addListener((observable, oldValue, newValue) -> this.copyWindow.setName(newValue));
+
+		this.cbAdd.selectedProperty().addListener((observable, oldValue, newValue) -> this.xmlTreeView.setMarkersVisible(MarkerStyle.ADD, newValue));
+		this.cbUpdate.selectedProperty().addListener((observable, oldValue, newValue) -> this.xmlTreeView.setMarkersVisible(MarkerStyle.UPDATE, newValue));
+		this.cbMark.selectedProperty().addListener((observable, oldValue, newValue) -> this.xmlTreeView.setMarkersVisible(MarkerStyle.MARK, newValue));
+		this.cbQuestion.selectedProperty().addListener((observable, oldValue, newValue) -> this.xmlTreeView.setMarkersVisible(MarkerStyle.QUESTION, newValue));
 	}
 
 	private void updateOnButtons()
@@ -440,6 +456,33 @@ public class DictionaryWizard extends AbstractWizard
 
 		this.btnGenerateOnOpen.setStyle("-fx-background-color : " + (!onOpenEmpty ? "rgba(0,255,0, 0.1)" : "rgba(255,0,0, 0.1)"));
 		this.btnGenerateOnClose.setStyle("-fx-background-color : " + (!onCloseEmpty ? "rgba(0,255,0, 0.1)" : "rgba(255,0,0, 0.1)"));
+	}
+
+	private void updateMarkers(MarkerStyle oldValue, MarkerStyle newValue)
+	{
+		CheckBox cbOld = checkBoxByMarkedStyle(oldValue);
+		if (cbOld != null)
+		{
+			cbOld.setText(String.valueOf(Integer.parseInt(cbOld.getText()) - 1));
+		}
+
+		CheckBox cbNew = checkBoxByMarkedStyle(newValue);
+		if (cbNew != null)
+		{
+			cbNew.setText(String.valueOf(Integer.parseInt(cbNew.getText()) + 1));
+		}
+	}
+
+	private CheckBox checkBoxByMarkedStyle(MarkerStyle style)
+	{
+		switch (style)
+		{
+			case UPDATE: return this.cbUpdate;
+			case ADD: return this.cbAdd;
+			case MARK: return this.cbMark;
+			case QUESTION: return this.cbQuestion;
+		}
+		return null;
 	}
 
 	private AbstractControl generate(Addition addition) throws Exception
@@ -456,12 +499,68 @@ public class DictionaryWizard extends AbstractWizard
 	{
 		Collection<IControl> controls = this.copyWindow.getControls(IWindow.SectionKind.Run);
 		this.tableView.getItems().addAll(
-				controls
-						.stream()
+				controls.stream()
 						.map(c -> (AbstractControl)c)
 						.map(TableBean::new)
 						.collect(Collectors.toList())
 		);
 	}
+
+	private void findElements()
+	{
+		this.copyWindow.getControls(IWindow.SectionKind.Run).stream()
+				.map(control -> (AbstractControl) control)
+				.forEach(this::findElement);
+	}
+
+	private void findElement(AbstractControl control)
+	{
+		int count = 0;
+		Node found = null;
+		if (control.getAddition() == Addition.Many || Str.IsNullOrEmpty(control.getOwnerID()))
+		{
+			return;
+		}
+		else
+		{
+			Locator locator = control.locator();
+			List<Node> nodeList;
+			try
+			{
+				nodeList = this.matcher.findAll(this.document, locator);
+				count = nodeList.size();
+				found = count > 0 ? nodeList.get(0) : null;
+			}
+			catch (Exception e)
+			{
+				//noting to do
+			}
+			if (count == 1)
+			{
+				this.updateElement(control, found, count, MarkerStyle.MARK);
+			}
+			else
+			{
+				Node bestIndex = findBestIndex(control);
+				this.updateElement(control, bestIndex, count, MarkerStyle.QUESTION);
+			}
+		}
+	}
+
+	private void updateElement(AbstractControl control, Node node, int count, MarkerStyle style)
+	{
+		//TODO implement it. Move it on ElementsTable
+		this.tableView.getItems().stream().filter(tb -> tb.getAbstractControl() == control).findFirst().ifPresent(tb -> tb.setCount(count));
+		this.tableView.refresh();
+
+	}
+
+	private Node findBestIndex(AbstractControl control)
+	{
+		//TODO implement it
+		return null;
+	}
+
+
 	//endregion
 }

@@ -28,7 +28,7 @@ public class XmlIconCell extends TreeTableCell<XmlItem, XmlItem>
 		{
 			MarkerStyle icon = item.getStyle();
 			this.imageView.setImage(icon == null ? null : new Image(icon.getIconPath()));
-			this.imageView.setOpacity(item.getStyle() != null ? 1.0 : 0.4);
+			this.imageView.setOpacity(item.isVisible() ? 1.0 : 0.4);
 			setGraphic(this.imageView);
 		}
 		else
