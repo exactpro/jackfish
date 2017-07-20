@@ -235,10 +235,9 @@ public class HTMLReportBuilder extends ReportBuilder
 					+ "		var el = document.createElement('p');\n"
 					+ "		el.innerText = \"Time until everything loaded : \"+ (Date.now()-timerStart);\n"
 					+ "		document.body.insertBefore(el, document.body.firstChild);\n"
-					+ "		$('.repLog').show();\n"
 					+ "	});\n");
 		}
-
+		this.jsWriter.fwrite("$('.repLog').show();");
 		this.jsWriter.fwrite("</script>");
 		writer.fwrite(this.jsWriter.toString());
 		writer.fwrite("</body>\n");
