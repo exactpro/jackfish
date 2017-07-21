@@ -9,6 +9,7 @@
 package com.exactprosystems.jf.common.utils;
 
 import com.exactprosystems.jf.api.app.IRemoteApplication;
+import com.exactprosystems.jf.documents.guidic.Attr;
 import com.exactprosystems.jf.api.common.Str;
 import org.w3c.dom.Document;
 import org.w3c.dom.NamedNodeMap;
@@ -21,6 +22,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -280,6 +282,31 @@ public class XpathUtils
 			mask ^= oneBit;
 		}
 		return res;
+	}
+
+
+	public static void passTree(Node node, Consumer<Node> func)
+	{
+		func.accept(node);
+		IntStream.range(0, node.getChildNodes().getLength())
+				.mapToObj(node.getChildNodes()::item)
+				.filter(item -> item.getNodeType() == Node.ELEMENT_NODE)
+				.forEach(item -> passTree(item, func));
+	}
+
+	public static List<Attr> extractAttributes(Node node)
+	{
+		List<Attr> attributes = new ArrayList<>();
+		NamedNodeMap attrs = node.getAttributes();
+		if (attrs != null)
+		{
+			for (int index = 0; index < attrs.getLength(); index++)
+			{
+				Node attr = attrs.item(index);
+				attributes.add(new Attr(attr.getNodeName(), attr.getNodeValue()));
+			}
+		}
+		return attributes;
 	}
 
 }

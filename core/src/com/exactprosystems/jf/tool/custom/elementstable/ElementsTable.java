@@ -1,26 +1,42 @@
 package com.exactprosystems.jf.tool.custom.elementstable;
 
+import com.exactprosystems.jf.api.app.Addition;
 import com.exactprosystems.jf.api.app.ControlKind;
+import com.exactprosystems.jf.api.app.Visibility;
 import com.exactprosystems.jf.api.common.Str;
+import com.exactprosystems.jf.documents.guidic.controls.AbstractControl;
+import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.CssVariables;
+import com.exactprosystems.jf.tool.custom.controls.field.CustomFieldWithButton;
 import com.sun.javafx.css.PseudoClassState;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.css.PseudoClass;
+import javafx.geometry.HPos;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
+import javafx.scene.layout.ColumnConstraints;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
+import javafx.stage.Stage;
+import org.w3c.dom.Node;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
+import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
 public class ElementsTable extends TableView<TableBean>
 {
-	private Consumer<TableBean> removeConsumer;
-	private Consumer<TableBean> updateConsumer;
+	private Consumer<AbstractControl>   removeConsumer;
+	private Consumer<AbstractControl>   updateConsumer;
+	private BiConsumer<AbstractControl, Node> editConsumer;
 
 	public ElementsTable()
 	{
@@ -272,21 +288,20 @@ public class ElementsTable extends TableView<TableBean>
 					btnEdit.setId("btnEdit");
 					btnEdit.setTooltip(new Tooltip("Edit element"));
 					btnEdit.getStyleClass().add(CssVariables.TRANSPARENT_BACKGROUND);
-					//TODO
-					//					btnEdit.setOnAction(e -> Common.tryCatch(() -> model.changeElement(item), "Error on change element"));
+					btnEdit.setOnAction(e -> Common.tryCatch(() -> editElement(item), "Error on edit element"));
 
 					Button btnRemove = new Button();
 					btnRemove.setId("btnRemove");
 					btnRemove.setTooltip(new Tooltip("Remove element"));
 					btnRemove.getStyleClass().add(CssVariables.TRANSPARENT_BACKGROUND);
-					btnRemove.setOnAction(e -> Optional.ofNullable(removeConsumer).ifPresent(c -> c.accept(item)));
+					btnRemove.setOnAction(e -> Optional.ofNullable(removeConsumer).ifPresent(c -> c.accept(item.getAbstractControl())));
 
 					Button btnRelation = new Button();
 					btnRelation.setId("btnRelation");
 					btnRelation.setTooltip(new Tooltip("Set relation"));
 					btnRelation.getStyleClass().add(CssVariables.TRANSPARENT_BACKGROUND);
-					btnRelation.setOnAction(e -> Optional.ofNullable(updateConsumer).ifPresent(c -> c.accept(item)));
-					box.getChildren().addAll(btnRelation, btnRemove);
+					btnRelation.setOnAction(e -> Optional.ofNullable(updateConsumer).ifPresent(c -> c.accept(item.getAbstractControl())));
+					box.getChildren().addAll(btnEdit, btnRelation, btnRemove);
 					setGraphic(box);
 				}
 				else
@@ -300,14 +315,171 @@ public class ElementsTable extends TableView<TableBean>
 		this.getColumns().addAll(columnId, columnKind, columnIsXpath, columnIsNew, columnCount, columnOption);
 	}
 
-	public void remove(Consumer<TableBean> consumer)
+	public void remove(Consumer<AbstractControl> consumer)
 	{
 		this.removeConsumer = consumer;
 	}
 
-	public void update(Consumer<TableBean> consumer)
+	public void update(Consumer<AbstractControl> consumer)
 	{
 		this.updateConsumer = consumer;
+	}
+
+	public void edit(BiConsumer<AbstractControl, Node> consumer)
+	{
+		this.editConsumer = consumer;
+	}
+
+	public void updateElement(AbstractControl control, Node node, int count, String style, boolean isNew)
+	{
+		this.getItems().stream().filter(tb -> tb.getAbstractControl() == control).findFirst().ifPresent(tableBean -> {
+			tableBean.setCount(count);
+			tableBean.setIsNew(isNew);
+			tableBean.setNode(node);
+			tableBean.setStyle(style);
+		});
+		this.refresh();
+	}
+
+	private void editElement(TableBean bean) throws Exception
+	{
+		AbstractControl newControl = this.editElement(AbstractControl.createCopy(bean.getAbstractControl()));
+		if (newControl != null)
+		{
+			bean.setAbstractControl(newControl);
+			Optional.ofNullable(this.editConsumer).ifPresent(c -> c.accept(newControl, bean.getNode()));
+			this.refresh();
+		}
+
+	}
+
+	private AbstractControl editElement(AbstractControl abstractControl)
+	{
+		Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+		Common.addIcons(((Stage) alert.getDialogPane().getScene().getWindow()));
+		alert.getDialogPane().getStylesheets().addAll(Common.currentThemesPaths());
+		alert.getDialogPane().setHeader(new Label());
+		alert.setTitle("Change element");
+		GridPane gridPane = new GridPane();
+		gridPane.setPrefWidth(800);
+		gridPane.setMaxWidth(Double.MAX_VALUE);
+		alert.getDialogPane().setContent(gridPane);
+		gridPane.getStyleClass().addAll(CssVariables.HGAP_MIN, CssVariables.VGAP_MIN);
+
+		//region create columns
+		ColumnConstraints c0 = new ColumnConstraints();
+		c0.setPercentWidth(15);
+		c0.setHalignment(HPos.RIGHT);
+
+		ColumnConstraints c1 = new ColumnConstraints();
+		c1.setFillWidth(true);
+		c1.setPercentWidth(35);
+		c1.setHalignment(HPos.LEFT);
+
+
+		ColumnConstraints c2 = new ColumnConstraints();
+		c2.setPercentWidth(15);
+		c2.setHalignment(HPos.RIGHT);
+
+		ColumnConstraints c3 = new ColumnConstraints();
+		c3.setFillWidth(true);
+		c3.setPercentWidth(35);
+		c3.setHalignment(HPos.LEFT);
+
+		gridPane.getColumnConstraints().addAll(c0, c1, c2, c3);
+		//endregion
+
+		int index = 0;
+
+		addComboToLeftPane(gridPane, "Owner : ", abstractControl.getOwnerID(), newOwner -> Common.tryCatch(()->abstractControl.set(AbstractControl.ownerIdName, newOwner), "Error on set parameters"), index++, new ArrayList<>());
+		addComboToLeftPane(gridPane, "Additional : ", abstractControl.getAddition(), newAdd -> Common.tryCatch(()->abstractControl.set(AbstractControl.additionName, newAdd), "Error on set parameters"), index++, Arrays.asList(
+				Addition.values()));
+		addComboToLeftPane(gridPane, "Ref : ", abstractControl.getRefID(), refId -> Common.tryCatch(()->abstractControl.set(AbstractControl.refIdName, refId), "Error on set parameters"), index++, new ArrayList<>());
+		addToLeftPane(gridPane, "Timeout : ", String.valueOf(abstractControl.getTimeout()), newTimeout -> Common.tryCatch(()->abstractControl.set(AbstractControl.timeoutName, newTimeout), "Error on set parameters"), index++);
+		addComboToLeftPane(gridPane, "Visibility : ", abstractControl.getVisibility(), newVis -> Common.tryCatch(()->abstractControl.set(AbstractControl.visibilityName, newVis), "Error on set parameters"),index++, Arrays.asList(
+				Visibility.values()));
+		addToLeftPane(gridPane, "Columns : ", abstractControl.getColumns(), newColumns -> Common.tryCatch(() -> abstractControl.set(AbstractControl.columnsName, newColumns), "Error on set new columns"),index++ );
+		addCheckBoxToLeftPane(gridPane, "Weak", abstractControl.isWeak(), newWeak -> Common.tryCatch(() -> abstractControl.set(AbstractControl.weakName, newWeak), "Error on set new columns"),index++ );
+		index = 1;
+
+		addXpathToPane(gridPane, abstractControl.getXpath(), newId -> Common.tryCatch(() -> abstractControl.set(AbstractControl.xpathName, newId), "Error on set parameter"));
+		addToRightPane(gridPane, "UID : ", abstractControl.getUID(), newId -> Common.tryCatch(() -> abstractControl.set(AbstractControl.uidName, newId), "Error on set parameter"), index++);
+		addToRightPane(gridPane, "Class : ", abstractControl.getClazz(), newId -> Common.tryCatch(() -> abstractControl.set(AbstractControl.clazzName, newId), "Error on set parameter"), index++);
+		addToRightPane(gridPane, "Name : ", abstractControl.getName(), newId -> Common.tryCatch(() -> abstractControl.set(AbstractControl.nameName, newId), "Error on set parameter"), index++);
+		addToRightPane(gridPane, "Title : ", abstractControl.getTitle(), newId -> Common.tryCatch(() -> abstractControl.set(AbstractControl.titleName, newId), "Error on set parameter"), index++);
+		addToRightPane(gridPane, "Action : ", abstractControl.getAction(), newId -> Common.tryCatch(() -> abstractControl.set(AbstractControl.actionName, newId), "Error on set parameter"), index++);
+		addToRightPane(gridPane, "Text : ", abstractControl.getText(), newId -> Common.tryCatch(() -> abstractControl.set(AbstractControl.textName, newId), "Error on set parameter"), index++);
+		addToRightPane(gridPane, "Tooltip : ", abstractControl.getTooltip(), newId -> Common.tryCatch(() -> abstractControl.set(AbstractControl.tooltipName, newId), "Error on set parameter"), index++);
+
+		Optional<ButtonType> buttonType = alert.showAndWait();
+		if (buttonType.isPresent())
+		{
+			ButtonType type = buttonType.get();
+			if (type == ButtonType.OK)
+			{
+				return abstractControl;
+			}
+		}
+		return null;
+	}
+
+	private void addToRightPane(GridPane pane, String id, String value, Consumer<String> consumer, int index)
+	{
+		Label lbl = new Label(id);
+		CustomFieldWithButton tf = new CustomFieldWithButton(value);
+		tf.setMaxWidth(Double.MAX_VALUE);
+		tf.textProperty().addListener((observable, oldValue, newValue) -> consumer.accept(newValue));
+		GridPane.setFillWidth(tf, true);
+		pane.add(lbl, 2, index);
+		pane.add(tf, 3, index);
+	}
+
+	private void addToLeftPane(GridPane pane, String id, String value, Consumer<String> consumer, int index)
+	{
+		Label lbl = new Label(id);
+		CustomFieldWithButton tf = new CustomFieldWithButton(value);
+		tf.setMaxWidth(Double.MAX_VALUE);
+		tf.textProperty().addListener((observable, oldValue, newValue) -> consumer.accept(newValue));
+		GridPane.setFillWidth(tf, true);
+		pane.add(lbl, 0, index);
+		pane.add(tf, 1, index);
+	}
+
+	private <T> void addComboToLeftPane(GridPane pane, String id, T value, Consumer<T> consumer, int index, List<T> values)
+	{
+		ChoiceBox<T> cb = new ChoiceBox<>();
+		cb.getItems().add(null);
+		cb.getItems().addAll(values);
+		cb.getSelectionModel().select(value);
+		cb.setMaxWidth(Double.MAX_VALUE);
+		cb.setOnAction(e -> consumer.accept(cb.getValue()));
+		Label lbl = new Label(id);
+
+		pane.add(lbl, 0, index);
+		pane.add(cb, 1, index);
+	}
+
+	private void addCheckBoxToLeftPane(GridPane pane, String id, boolean initValue, Consumer<Boolean> consumer, int index)
+	{
+		CheckBox checkBox = new CheckBox();
+		checkBox.setText(id);
+		checkBox.setSelected(initValue);
+		checkBox.selectedProperty().addListener((observable, oldValue, newValue) -> consumer.accept(newValue));
+		pane.add(checkBox, 1, index);
+	}
+
+	private void addXpathToPane(GridPane pane, String value, Consumer<String> consumer)
+	{
+		Label lbl = new Label("Xpath : ");
+		HBox box = new HBox();
+		box.setAlignment(Pos.CENTER);
+
+		CustomFieldWithButton tf = new CustomFieldWithButton(value);
+		tf.textProperty().addListener((observable, oldValue, newValue) -> consumer.accept(newValue));
+		HBox.setHgrow(tf, Priority.ALWAYS);
+		box.getChildren().addAll(tf);
+		pane.add(lbl, 2, 0);
+		pane.add(box, 3, 0);
 	}
 
 	private class CustomRowFactory extends TableRow<TableBean>
@@ -336,11 +508,10 @@ public class ElementsTable extends TableView<TableBean>
 					CssVariables.COLOR_ADD,
 					CssVariables.COLOR_UPDATE
 			);
-			//TODO add
-//			if (item != null && !empty && item.getStyleClass() != null)
-//			{
-//				this.getStyleClass().add(item.getStyleClass());
-//			}
+			if (item != null && !empty && item.getStyle() != null)
+			{
+				this.getStyleClass().add(item.getStyle());
+			}
 		}
 	}
 }
