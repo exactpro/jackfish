@@ -712,10 +712,13 @@ public class DisplayDriverFx implements DisplayDriver
 			return;
 		}
 		TreeItem<MatrixItem> treeItem = this.treeView.find(item);
-		TreeItem<MatrixItem> parent = treeItem.getParent();
-		if (parent != null)
+		if (treeItem != null)
 		{
-			parent.getChildren().remove(treeItem);
+			TreeItem<MatrixItem> parent = treeItem.getParent();
+			if (parent != null)
+			{
+				parent.getChildren().remove(treeItem);
+			}
 		}
 	}
 
