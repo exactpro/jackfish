@@ -1047,7 +1047,7 @@ namespace UIAdapter
                         logger.All("GetWindowRect : " + f);
                         logger.All(String.Format("Window has left {0}, top {1}, right {2}, bottom {3}", rect.Left, rect.Top, rect.Right, rect.Bottom));
                         bool f1;
-                        if ("Move".Equals(method))
+                        if (method.ToUpper().Equals("MOVE"))
                         {
                             int w = Math.Abs(rect.Left - rect.Right);
                             int h = Math.Abs(rect.Top - rect.Bottom);
@@ -1078,6 +1078,29 @@ namespace UIAdapter
                             }
                         }
                     }
+                    else if (elementPattern is ExpandCollapsePattern)
+                    {
+                        ExpandCollapsePattern expandCollapsePattern = elementPattern as ExpandCollapsePattern;
+                        switch (expandCollapsePattern.Current.ExpandCollapseState)
+                        {
+                            case ExpandCollapseState.Collapsed:
+                                if (method.ToUpper().Equals("EXPAND"))
+                                {
+                                    expandCollapsePattern.Expand();
+                                }
+                                break;
+                            case ExpandCollapseState.Expanded:
+                                
+                                if (method.ToUpper().Equals("COLLAPSE"))
+                                {
+                                    expandCollapsePattern.Collapse();
+                                }
+                                break;
+                            default:
+                                break;
+                        }
+                        return null;
+                    }
 
                     MethodInfo info = elementPattern.GetType().GetMethod(method);
                     object res = info.Invoke(elementPattern, args);
@@ -1096,6 +1119,25 @@ namespace UIAdapter
                 MakeError(e, System.Reflection.MethodBase.GetCurrentMethod().ToString());
             }
             return null;
+        }
+
+        [DllExport("getXMLFromTree", CallingConvention.Cdecl)]
+        public static string getXMLFromTree(String inid)
+        {
+            int[] id = stringToIntArray(inid);
+            AutomationElement element = FindByRuntimeId(id);
+
+            XmlDocument doc = new XmlDocument();
+            List<AutomationElement> expandedElements = new List<AutomationElement>();
+            WinMatcher.BuildDomForTree(doc, doc, element, expandedElements, 0, cacheRuntimeId);
+
+            for (int i = expandedElements.Count - 1; i >= 0; i--)
+            {
+                ExpandCollapsePattern pattern = (ExpandCollapsePattern) expandedElements[i].GetCurrentPattern(ExpandCollapsePattern.Pattern);
+                pattern.Collapse();
+            }
+
+            return ConvertString.replaceNonASCIIToUnicode(doc.InnerXml);
         }
 
         [DllExport("setText", CallingConvention.Cdecl)]

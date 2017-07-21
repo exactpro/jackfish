@@ -17,9 +17,19 @@ public class UIProxyJNA
 	public static final String SEPARATOR = ",";
 	private int[] id;
 
+	public UIProxyJNA()
+	{
+		this.id = null;
+	}
+
 	public UIProxyJNA(int[] id)
 	{
 		this.id = id;
+	}
+
+	public UIProxyJNA(String stringId)
+	{
+		this.id = stringToIntArray(stringId);
 	}
 
 	public int[] getId()
@@ -41,6 +51,21 @@ public class UIProxyJNA
 			sep = SEPARATOR;
 		}
 		return b.toString();
+	}
+
+	private static int[] stringToIntArray(String s)
+	{
+		if (s == null)
+		{
+			return null;
+		}
+		String[] temp = s.split(SEPARATOR);
+		int[] id = new int[temp.length];
+		for (int i = 0; i < temp.length; ++i)
+		{
+			id[i] = Integer.parseInt(temp[i]);
+		}
+		return id;
 	}
 
 	@Override

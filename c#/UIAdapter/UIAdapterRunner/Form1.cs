@@ -30,11 +30,11 @@ namespace UIAdapterRunner
             //int i = UIAdapter.Program.FindAllForLocator(arr, arr.Length, null, 0, null, "/Window", null, null, null, null, false);
             //int i = UIAdapter.Program.FindAllForLocator(arr, arr.Length, null, (int)ControlKind.Any, "Main", null, null, "MockWin", null, null, false);
             //UIAdapter.Program.FindAllForLocator(arr, arr.Length, getStringId(ref arr), (int)ControlKind.Menu, null, null, null, "Menu", null, null, true);
-            int b = UIAdapter.Program.FindAllForLocator(arr, arr.Length, null, (int)ControlKind.Button, null, null, null, "Button", null, null, true);
-            int m = UIAdapter.Program.FindAllForLocator(arr, arr.Length, null, (int)ControlKind.Menu, null, null, null, "Menu", null, null, true);
+            UIAdapter.Program.FindAllForLocator(arr, arr.Length, null, (int)ControlKind.Tree, null, null, null, "Tree", null, null, true);
+            UIAdapter.Program.getXMLFromTree(getStringId(ref arr));
+            //int m = UIAdapter.Program.FindAllForLocator(arr, arr.Length, null, (int)ControlKind.Menu, null, null, null, "Menu", null, null, true);
             //string s = UIAdapter.Program.ListAll(getStringId(ref arr), (int)ControlKind.Menu, null, null, null, "Menu", null, null, true);
             //string s = UIAdapter.Program.ListAll(getStringId(ref arr), (int)ControlKind.Menu, null, null, null, "Menu", null, null, true);
-            Console.WriteLine(arr);
             // silverlight example
             //UIAdapter.Program.FindAllForLocator(arr, arr.Length, null, 0, null, "//Pane[@class=\"Internet Explorer_Server\" and @name=\"SilverLightMock\"]", null, null, null, null, false);
 

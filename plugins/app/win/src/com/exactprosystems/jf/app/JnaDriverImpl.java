@@ -208,6 +208,17 @@ public JnaDriverImpl(Logger logger) throws Exception
 
 	//endregion
 
+	public String getXMLFromTree(UIProxyJNA element) throws Exception
+	{
+		long start = System.currentTimeMillis();
+		String result = ConvertString.replaceUnicodeSubStringsToCharSymbols(this.jnaDriver.getXMLFromTree(element.getIdString()));
+		this.logger.info(String.format("getXMLFromTree(%s) = %s, time (ms) : %d", element, result,
+				System.currentTimeMillis() - start));
+		checkCSharpTimes();
+		checkError();
+		return result;
+	}
+
 	public String elementAttribute(UIProxyJNA element, AttributeKind kind) throws Exception
 	{
 		long start = System.currentTimeMillis();

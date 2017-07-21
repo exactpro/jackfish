@@ -14,10 +14,7 @@ import com.exactprosystems.jf.api.common.Str;
 import com.exactprosystems.jf.api.error.app.ElementNotFoundException;
 import com.exactprosystems.jf.api.error.app.FeatureNotSupportedException;
 import org.apache.log4j.*;
-import org.w3c.dom.DOMException;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
+import org.w3c.dom.*;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -385,7 +382,7 @@ public class WinRemoteApplicationJNA extends RemoteApplication
 		try
 		{
 			List<String> res = new ArrayList<>();
-			UIProxyJNA ownerId = new UIProxyJNA(null);
+			UIProxyJNA ownerId = new UIProxyJNA();
 			if (owner != null)
 			{
 				ownerId = this.operationExecutor.find(null, owner);
@@ -399,6 +396,51 @@ public class WinRemoteApplicationJNA extends RemoteApplication
 			{
 				res.add(split[i]);
 			}
+
+			if (element.getControlKind() == ControlKind.Tree)
+			{
+				StringBuilder stringBuilder = new StringBuilder();
+				UIProxyJNA component = this.operationExecutor.find(owner,element);
+				Document doc = this.operationExecutor.convertTreeToXMLDoc(component);
+				NodeList list = doc.getElementsByTagName("item");
+				for (int i = 0; i < list.getLength(); i++) {
+					Element item = (Element) list.item(i);
+					StringBuilder indent = new StringBuilder();
+
+					int level = Integer.parseInt(item.getAttribute("level"));
+					for (int j = 0; j < level; j++) {
+						indent.append("     |     ");
+					}
+
+					stringBuilder
+							.append('\n')
+							.append(indent)
+							.append("<")
+							.append(item.getTagName())
+							.append(" id=")
+							.append(item.getAttribute("id"));
+
+					if(!item.getAttribute("uid").isEmpty())
+					{
+						stringBuilder
+							.append(" uid=")
+							.append(item.getAttribute("uid"));
+					}
+
+					if(!item.getAttribute("name").isEmpty())
+					{
+						stringBuilder
+							.append(" name=")
+							.append(item.getAttribute("name"));
+					}
+
+					stringBuilder
+							.append("/>");
+				}
+
+				res.add(stringBuilder.toString());
+			}
+
 			return res;
 		}
 		catch (RemoteException e)
@@ -599,12 +641,12 @@ public class WinRemoteApplicationJNA extends RemoteApplication
 		{
 			int length = 100;
 			int[] arr = new int[length];
-			int res = this.driver.findAll(arr, new UIProxyJNA(null), WindowTreeScope.Element, WindowProperty.NameProperty, this.driver.title());
+			int res = this.driver.findAll(arr, new UIProxyJNA(), WindowTreeScope.Element, WindowProperty.NameProperty, this.driver.title());
 			if (res > length)
 			{
 				length = res;
 				arr = new int[length];
-				this.driver.findAll(arr, new UIProxyJNA(null), WindowTreeScope.Element, WindowProperty.NameProperty, this.driver.title());
+				this.driver.findAll(arr, new UIProxyJNA(), WindowTreeScope.Element, WindowProperty.NameProperty, this.driver.title());
 			}
 			if (arr[0] > 1)
 			{
@@ -743,7 +785,7 @@ public class WinRemoteApplicationJNA extends RemoteApplication
 	{
 		int length = 100;
 		int[] arr = new int[length];
-		int defaultValue = driver.findAll(arr, new UIProxyJNA(null), WindowTreeScope.Element, WindowProperty.NameProperty, this.driver.title());
+		int defaultValue = driver.findAll(arr, new UIProxyJNA(), WindowTreeScope.Element, WindowProperty.NameProperty, this.driver.title());
 		if (defaultValue == 0)
 		{
 			return null;

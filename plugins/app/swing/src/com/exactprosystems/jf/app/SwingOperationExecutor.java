@@ -31,11 +31,19 @@ import org.fest.swing.finder.WindowFinder;
 import org.fest.swing.fixture.*;
 import org.fest.swing.timing.Pause;
 import org.fest.swing.util.Pair;
+import org.w3c.dom.*;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import sun.reflect.generics.tree.Tree;
 
 import javax.swing.*;
-import javax.swing.text.JTextComponent;
+import javax.swing.text.*;
+import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.xpath.*;
 import java.awt.*;
 import java.awt.event.FocusEvent;
 import java.awt.event.InputEvent;
@@ -548,6 +556,38 @@ public class SwingOperationExecutor implements OperationExecutor<ComponentFixtur
 		}
 	}
 
+	Document convertTreeToXMLDoc(JTree tree) throws ParserConfigurationException, XPathExpressionException
+	{
+		Document doc = DocumentBuilderFactory.newInstance().newDocumentBuilder().newDocument();
+		TreeNode treeNode = (TreeNode) tree.getModel().getRoot();
+		Node root = doc.getDocumentElement();
+		createDom(doc, treeNode, root, 0);
+		return doc;
+	}
+
+	private void createDom(Document doc, TreeNode treeNode, Node current, int level)
+	{
+		Element node = doc.createElement("item");
+		node.setAttribute("id", String.valueOf(doc.getElementsByTagName("item").getLength()));
+		node.setAttribute("name", treeNode.toString());
+		node.setAttribute("level", String.valueOf(level));
+		node.setUserData("path", new TreePath(((DefaultMutableTreeNode) treeNode).getPath()), null);
+
+		node.setIdAttribute("id", true);
+
+		if(current != null) {
+			current.appendChild(node);
+		} else {
+			doc.appendChild(node);
+		}
+
+		Enumeration kiddies = treeNode.children();
+		level++;
+		while (kiddies.hasMoreElements()) {
+			createDom(doc, (TreeNode) kiddies.nextElement(), node, level);
+		}
+	}
+
 	@Override
 	public boolean select(ComponentFixture<Component> component, String selectedText) throws Exception
 	{
@@ -614,11 +654,13 @@ public class SwingOperationExecutor implements OperationExecutor<ComponentFixtur
 			else if (component.target instanceof JTree)
 			{
 				JTree tree = component.targetCastedTo(JTree.class);
-				int index = findIndex(tree, selectedText);
-				if (index == -1) {
-					throw new WrongParameterException("Path '" + selectedText + "' is not found in the tree.");
+				NodeList nodes = findNodesInTreeByXpath(convertTreeToXMLDoc(tree), selectedText);
+				TreePath[] rows = new TreePath[nodes.getLength()];
+				for (int i = 0; i < nodes.getLength(); i++) {
+					rows[i] = (TreePath) nodes.item(i).getUserData("path");
+					tree.expandPath(rows[i]);
 				}
-				tree.setSelectionRow(index);
+				tree.setSelectionPaths(rows);
 			}
 
 			waitForIdle();
@@ -634,6 +676,16 @@ public class SwingOperationExecutor implements OperationExecutor<ComponentFixtur
 			logger.error(e.getMessage(), e);
 			throw e;
 		}
+	}
+
+	private NodeList findNodesInTreeByXpath(Document document, String selectedText) throws XPathExpressionException
+	{
+		XPathFactory xPathfactory = XPathFactory.newInstance();
+		XPath xpath = xPathfactory.newXPath();
+		XPathExpression expr = xpath.compile(selectedText);
+
+		Object result = expr.evaluate(document, XPathConstants.NODESET);
+		return (NodeList) result;
 	}
 
 	@Override
@@ -682,19 +734,23 @@ public class SwingOperationExecutor implements OperationExecutor<ComponentFixtur
 			else if (currentComponent instanceof JTree)
 			{
 				JTree tree = component.targetCastedTo(JTree.class);
-				int index = findIndex(tree, path);
-				if (index == -1)
+				NodeList nodes = findNodesInTreeByXpath(convertTreeToXMLDoc(tree), path);
+				if (nodes.getLength() == 0)
 				{
 					throw new WrongParameterException("Path '" + path + "' is not found in the tree.");
 				}
-				if (expandOrCollapse)
+				TreePath[] rows = new TreePath[nodes.getLength()];
+				for (int i = nodes.getLength() - 1; i >= 0; i--)
 				{
-					tree.expandPath(tree.getPathForRow(index));
-					tree.getSelectionModel().setSelectionPath(new TreePath(path));
-				}
-				else
-				{
-					tree.collapsePath(tree.getPathForRow(index));
+					rows[i] = (TreePath) nodes.item(i).getUserData("path");
+					if (expandOrCollapse)
+					{
+						tree.expandPath(rows[i]);
+					}
+					else
+					{
+						tree.collapsePath(rows[i]);
+					}
 				}
 			}
 
@@ -1300,7 +1356,7 @@ public class SwingOperationExecutor implements OperationExecutor<ComponentFixtur
 				if (index == -1) {
 					throw new WrongParameterException("Path '" + path + "' is not found in the tree.");
 				}
-				ret.put("value", JTreeToPathsList((JTree)component.target).get(index));
+				ret.put("value", convertJTreeToPathsList((JTree)component.target).get(index));
 				return ret;
 			}
 			return null;
@@ -1380,7 +1436,7 @@ public class SwingOperationExecutor implements OperationExecutor<ComponentFixtur
 			}
 			if(component.target instanceof JTree)
 			{
-				ret.put("value", JTreeToPathsList((JTree)component.target).get(i));
+				ret.put("value", convertJTreeToPathsList((JTree)component.target).get(i));
 			}
 			return ret;
 		}
@@ -2085,7 +2141,7 @@ public class SwingOperationExecutor implements OperationExecutor<ComponentFixtur
 		return null;
 	}
 
-	List<String> JTreeToPathsList(JTree tree)
+	List<String> convertJTreeToPathsList(JTree tree)
 	{
 		int i = 0;
 		List<String> result = new ArrayList<>();
@@ -2112,7 +2168,7 @@ public class SwingOperationExecutor implements OperationExecutor<ComponentFixtur
 
 	private int findIndex(JTree tree, String path)
 	{
-		List<String> rows = JTreeToPathsList(tree);
+		List<String> rows = convertJTreeToPathsList(tree);
 		for (int i = 0; i < rows.size(); i++) {
 			if(path.equals(rows.get(i)))
 			{

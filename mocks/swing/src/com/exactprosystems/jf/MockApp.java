@@ -881,13 +881,21 @@ public class MockApp
 		DefaultMutableTreeNode yellow = new DefaultMutableTreeNode("Yellow");
 		DefaultMutableTreeNode orange = new DefaultMutableTreeNode("Orange");
 		DefaultMutableTreeNode blue = new DefaultMutableTreeNode("Blue");
+		DefaultMutableTreeNode blue2 = new DefaultMutableTreeNode("Blue");
+		DefaultMutableTreeNode blue3 = new DefaultMutableTreeNode("Blue");
+		DefaultMutableTreeNode blue4 = new DefaultMutableTreeNode("Blue");
 		DefaultMutableTreeNode colors = new DefaultMutableTreeNode("colors");
+		DefaultMutableTreeNode colors2 = new DefaultMutableTreeNode("colors2");
 		DefaultMutableTreeNode red = new DefaultMutableTreeNode("red");
 		root.add(yellow);
 		root.add(orange);
 		root.add(blue);
 		root.add(colors);
 		colors.add(red);
+		colors.add(blue2);
+		root.add(colors2);
+		colors2.add(blue3);
+		blue3.add(blue4);
 		tree.expandRow(0);
 		tree.addTreeWillExpandListener(new TreeWillExpandListener() {
 			public void treeWillCollapse(TreeExpansionEvent treeExpansionEvent)

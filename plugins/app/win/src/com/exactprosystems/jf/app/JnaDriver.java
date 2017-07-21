@@ -75,6 +75,8 @@ public interface JnaDriver extends Library {
     String elementIsVisible(String idString);
 
     String getRectangle(String idString);
+
+    String getXMLFromTree(String idString);
     //endregion
 
 }

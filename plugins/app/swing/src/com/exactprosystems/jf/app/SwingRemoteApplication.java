@@ -23,6 +23,9 @@ import org.fest.swing.core.ComponentMatcher;
 import org.fest.swing.core.Robot;
 import org.fest.swing.fixture.ComponentFixture;
 import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 import javax.swing.*;
 import java.awt.*;
@@ -333,24 +336,42 @@ public class SwingRemoteApplication extends RemoteApplication
 			
 			for (ComponentFixture<Component> component : components)
 			{
-			    StringBuilder sb = new StringBuilder("" + component.target);
+			    StringBuilder stringBuilder = new StringBuilder("" + component.target);
 				if (component.target instanceof JComboBox)
 				{
 					JComboBox<?> combobox = (JComboBox<?>)component.target;
 					for (int i = 0; i < combobox.getModel().getSize(); i++)
 					{
-						sb.append('\n').append("value=" + combobox.getModel().getElementAt(i));
+						stringBuilder.append('\n').append("value=" + combobox.getModel().getElementAt(i));
 					}
 				}
 				if (component.target instanceof JTree)
 				{
 					JTree tree = (JTree)component.target;
-					for (String val : operationExecutor.JTreeToPathsList(tree))
-					{
-					    sb.append('\n').append(val);
+					Document doc = operationExecutor.convertTreeToXMLDoc(tree);
+					NodeList list = doc.getElementsByTagName("item");
+					for (int i = 0; i < list.getLength(); i++) {
+						Element item = (Element) list.item(i);
+						StringBuilder indent = new StringBuilder();
+
+						int level = Integer.parseInt(item.getAttribute("level"));
+						for (int j = 0; j < level; j++) {
+							indent.append("     |     ");
+						}
+
+						stringBuilder
+								.append('\n')
+								.append(indent)
+								.append("<")
+								.append(item.getTagName())
+								.append(" id=")
+								.append(item.getAttribute("id"))
+								.append(" name=")
+								.append(item.getAttribute("name"))
+								.append("/>");
 					}
 				}
-                res.add(sb.toString());
+                res.add(stringBuilder.toString());
 			}
 			return res;
 		}

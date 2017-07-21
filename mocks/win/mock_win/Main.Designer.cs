@@ -298,7 +298,8 @@
             resources.ApplyResources(this.Tree, "Tree");
             this.Tree.Name = "Tree";
             this.Tree.Nodes.AddRange(new System.Windows.Forms.TreeNode[] {
-            ((System.Windows.Forms.TreeNode)(resources.GetObject("Tree.Nodes")))});
+            ((System.Windows.Forms.TreeNode)(resources.GetObject("Tree.Nodes"))),
+            ((System.Windows.Forms.TreeNode)(resources.GetObject("Tree.Nodes1")))});
             this.Tree.KeyDown += new System.Windows.Forms.KeyEventHandler(this.CommonKeyDown);
             this.Tree.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.CommonKeyPress);
             this.Tree.KeyUp += new System.Windows.Forms.KeyEventHandler(this.CommonKeyUp);

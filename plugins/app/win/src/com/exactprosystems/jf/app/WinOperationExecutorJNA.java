@@ -17,8 +17,15 @@ import com.exactprosystems.jf.api.error.app.FeatureNotSupportedException;
 import com.exactprosystems.jf.api.error.app.OperationNotAllowedException;
 import com.exactprosystems.jf.api.error.app.WrongParameterException;
 import org.apache.log4j.Logger;
+import org.w3c.dom.Document;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+import org.xml.sax.InputSource;
 
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.xpath.*;
 import java.awt.*;
+import java.io.StringReader;
 import java.rmi.RemoteException;
 import java.util.*;
 import java.util.List;
@@ -59,7 +66,7 @@ public class WinOperationExecutorJNA implements OperationExecutor<UIProxyJNA>
         logger.info(">> isAllowed " + this.info);
 		return this.info.isAllowed(kind, operation);
     }
-    
+
 	@Override
 	public boolean isSupported(ControlKind kind)
 	{
@@ -124,7 +131,7 @@ public class WinOperationExecutorJNA implements OperationExecutor<UIProxyJNA>
 	{
 		return null;
 	}
-	
+
 	@Override
 	public List<UIProxyJNA> findAll(ControlKind controlKind, UIProxyJNA window, Locator locator) throws Exception
 	{
@@ -133,7 +140,7 @@ public class WinOperationExecutorJNA implements OperationExecutor<UIProxyJNA>
 			int length = 100;
 			int[] result = new int[length];
 			boolean many = locator.getAddition() != null && locator.getAddition() == Addition.Many;
-			UIProxyJNA owner = window == null ? new UIProxyJNA(null) : window;
+			UIProxyJNA owner = window == null ? new UIProxyJNA() : window;
 			int count = this.driver.findAllForLocator(result, owner, controlKind, locator.getUid(),	locator.getXpath(),	locator.getClazz(),	locator.getName(), locator.getTitle(), locator.getText(), many);
 			if (count > length)
 			{
@@ -173,7 +180,7 @@ public class WinOperationExecutorJNA implements OperationExecutor<UIProxyJNA>
 	{
 		try
 		{
-			UIProxyJNA ownerElement = new UIProxyJNA(null);
+			UIProxyJNA ownerElement = new UIProxyJNA();
 			if (owner != null)
 			{
 				List<UIProxyJNA> allOwners = findAll(null, owner);
@@ -448,33 +455,58 @@ public class WinOperationExecutorJNA implements OperationExecutor<UIProxyJNA>
 			return true;
 		}
 	}
-		
-		
+
+	Document convertTreeToXMLDoc(UIProxyJNA component) throws Exception {
+		String xmlStr = this.driver.getXMLFromTree(component);
+		return DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(new InputSource(new StringReader(xmlStr)));
+	}
+
+	private NodeList findNodesInTreeByXpath(Document document, String selectedText) throws XPathExpressionException
+	{
+		XPathFactory xPathfactory = XPathFactory.newInstance();
+		XPath xpath = xPathfactory.newXPath();
+		XPathExpression expr = xpath.compile(selectedText);
+
+		Object result = expr.evaluate(document, XPathConstants.NODESET);
+		return (NodeList) result;
+	}
+
+	private void makePath(List<String> path, Node item) {
+		if(Integer.parseInt(item .getAttributes().getNamedItem("id").getNodeValue()) != 0)
+		{
+			path.add(0, item.getAttributes().getNamedItem("runtimeId").getNodeValue());
+			makePath(path, item.getParentNode());
+		}
+	}
+
 	@Override
 	public boolean select(UIProxyJNA component, String selectedText) throws Exception
 	{
 		try
 		{
-			int[] itemId;
 			String attribute = this.driver.elementAttribute(component, AttributeKind.TYPE_NAME);
 			if (attribute.equalsIgnoreCase("tree"))
 			{
-				List<String> split = new LinkedList<>(Arrays.asList(selectedText.split("/")));
-				itemId = component.getId();
-				for (int i = 0; i < split.size(); i++)
+				NodeList nodes = findNodesInTreeByXpath(convertTreeToXMLDoc(component), selectedText);
+				for (int i = 0; i < nodes.getLength(); i++)
 				{
-					itemId = findItem(new UIProxyJNA(itemId), split.get(i));
-					if(i != split.size() - 1)
+					List<String> path = new ArrayList<>();
+					makePath(path, nodes.item(i));
+					for(int j=0; j < path.size() - 1; j++)
 					{
-						expandCollapse(new UIProxyJNA(itemId), true);
+						expandCollapse(new UIProxyJNA(path.get(j)), true);
+					}
+					if(!path.isEmpty())
+					{
+						this.driver.doPatternCall(new UIProxyJNA(path.get(path.size() - 1)), WindowPattern.SelectionItemPattern, "Select", null, -1);
 					}
 				}
 			}
 			else
 			{
-				itemId = findItem(component, selectedText);
+				int[] itemId = findItem(component, selectedText);
+				this.driver.doPatternCall(new UIProxyJNA(itemId), WindowPattern.SelectionItemPattern, "Select", null, -1);
 			}
-			this.driver.doPatternCall(new UIProxyJNA(itemId), WindowPattern.SelectionItemPattern, "Select", null, -1);
 			return true;
 		}
 		catch (WrongParameterException ignore)
@@ -564,11 +596,41 @@ public class WinOperationExecutorJNA implements OperationExecutor<UIProxyJNA>
 	{
 		try
 		{
-			List<String> split = new LinkedList<>(Arrays.asList(path.split("/")));
 			String attribute = this.driver.elementAttribute(component, AttributeKind.TYPE_NAME);
-			if (attribute.equalsIgnoreCase("menuitem") || attribute.equalsIgnoreCase("treeitem"))
+			if(attribute.equalsIgnoreCase("tree"))
 			{
-				if(split.size() == 1)
+				NodeList nodes = findNodesInTreeByXpath(convertTreeToXMLDoc(component), path);
+				if (nodes.getLength() == 0) {
+					throw new WrongParameterException("Path '" + path + "' is not found in the tree.");
+				}
+
+				for (int i = nodes.getLength() - 1; i >= 0; i--)
+				{
+					List<String> pathsList = new ArrayList<>();
+					makePath(pathsList, nodes.item(i));
+					for (int j = 0; j < pathsList.size() - 1; j++)
+					{
+						expandCollapse(new UIProxyJNA(pathsList.get(j)), true);
+					}
+
+					if(!pathsList.isEmpty())
+					{
+						if (expandOrCollapse)
+						{
+							expandCollapse(new UIProxyJNA(pathsList.get(pathsList.size() - 1)), true);
+						}
+						else
+						{
+							expandCollapse(new UIProxyJNA(pathsList.get(pathsList.size() - 1)), false);
+						}
+					}
+				}
+			}
+
+			if (attribute.equalsIgnoreCase("menuitem"))
+			{
+				List<String> split = new LinkedList<>(Arrays.asList(path.split("/")));
+				if (split.size() == 1)
 				{
 					expandCollapse(component, expandOrCollapse);
 					return true;
@@ -578,13 +640,13 @@ public class WinOperationExecutorJNA implements OperationExecutor<UIProxyJNA>
 					expandCollapse(component, true);
 					split.remove(0);
 				}
-			}
 
-			for (int i = 0; i < split.size() - 1; i++)
-			{
-				expandCollapse(new UIProxyJNA(findItem(component, split.get(i))), true);
+				for (int i = 0; i < split.size() - 1; i++)
+				{
+					expandCollapse(new UIProxyJNA(findItem(component, split.get(i))), true);
+				}
+				expandCollapse(new UIProxyJNA(findItem(component, split.get(split.size() - 1))), expandOrCollapse);
 			}
-			expandCollapse(new UIProxyJNA(findItem(component, split.get(split.size() - 1))), expandOrCollapse);
 
 			return true;
 		}
