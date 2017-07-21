@@ -345,7 +345,7 @@ public class DialogWizard
             }
                     
             String attr = attrNode.getNodeValue();
-            if (isStable(attr))
+            if (XpathUtils.isStable(attr))
             {
                 return attr;
             }
@@ -361,7 +361,7 @@ public class DialogWizard
         }
         
         String text = node.getTextContent();
-        if (isStable(text))
+        if (XpathUtils.isStable(text))
         {
             return text;
         }
@@ -388,7 +388,7 @@ public class DialogWizard
             if (nodeId != null)
             {
                 String uid = nodeId.getNodeValue();
-                if (isStable(uid))
+                if (XpathUtils.isStable(uid))
                 {
                     Locator locator = new Locator().kind(kind).id(id).uid(uid);
                     if (tryLocator(locator, node) == 1)
@@ -408,7 +408,7 @@ public class DialogWizard
             .boxed()
             .sorted((a,b) -> Integer.bitCount(a) - Integer.bitCount(b))
             .limit(MAX_TRIES)
-            .map(e -> shuffle(e, list))
+            .map(e -> XpathUtils.shuffle(e, list))
             .collect(Collectors.toList());
         
         for (List<Pair> caze : cases) 
@@ -423,18 +423,6 @@ public class DialogWizard
         }
         
         return null;
-    }
-    
-    private static List<Pair> shuffle(int mask, List<Pair> source)
-    {
-        List<Pair> res = new ArrayList<>();
-        int oneBit = 0;
-        while((oneBit = Integer.lowestOneBit(mask)) != 0)
-        {
-            res.add(source.get(Integer.numberOfTrailingZeros(mask)));
-            mask ^= oneBit;
-        }
-        return res;
     }
 
     private List<Pair>  allAttributes(Node node)
@@ -471,7 +459,7 @@ public class DialogWizard
         if (kind == LocatorFieldKind.TEXT)
         {
             String textContent = node.getTextContent();
-            if (isStable(textContent))
+            if (XpathUtils.isStable(textContent))
             {
                 list.add(new Pair(kind, textContent));
             }
@@ -487,7 +475,7 @@ public class DialogWizard
             return;
         }
         String value = attrNode.getNodeValue();
-        if (isStable(value))
+        if (XpathUtils.isStable(value))
         {
             list.add(new Pair(kind, value));
         }
@@ -571,19 +559,6 @@ public class DialogWizard
     private List<Node> findAll(Locator locator) throws Exception
     {
         return this.matcher.findAll(this.rootNode, locator);
-    }
-
-    private boolean isStable(String identifier)
-    {
-        if (Str.IsNullOrEmpty(identifier))
-        {
-            return false;
-        }
-        if (identifier.split(" ").length > 2)
-        {
-            return false;
-        }
-        return identifier.matches("^[a-zA-Z\\s]+$");
     }
     
     //----------------------------------------------------------------------------------------------

@@ -9,6 +9,7 @@
 package com.exactprosystems.jf.common.utils;
 
 import com.exactprosystems.jf.api.app.IRemoteApplication;
+import com.exactprosystems.jf.api.common.Str;
 import org.w3c.dom.Document;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
@@ -255,4 +256,30 @@ public class XpathUtils
 				);
 		return params;
 	}
+
+	public static boolean isStable(String identifier)
+	{
+		if (Str.IsNullOrEmpty(identifier))
+		{
+			return false;
+		}
+		if (identifier.split(" ").length > 2)
+		{
+			return false;
+		}
+		return identifier.matches("^[a-zA-Z\\s]+$");
+	}
+
+	public static <T> List<T> shuffle(int mask, List<T> source)
+	{
+		List<T> res = new ArrayList<T>();
+		int oneBit = 0;
+		while((oneBit = Integer.lowestOneBit(mask)) != 0)
+		{
+			res.add(source.get(Integer.numberOfTrailingZeros(mask)));
+			mask ^= oneBit;
+		}
+		return res;
+	}
+
 }
