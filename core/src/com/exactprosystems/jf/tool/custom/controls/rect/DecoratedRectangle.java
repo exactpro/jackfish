@@ -37,8 +37,15 @@ public class DecoratedRectangle extends Rectangle
 
         if (this.style != null)
         {
-            getStyleClass().add(this.style.getCssStyle());
-            this.text.setFill(this.style.color());
+			if (this.style.color() == null)
+			{
+				this.getStyleClass().setAll(this.style.getCssStyle());
+			}
+			else
+			{
+				this.setStroke(this.style.color());
+				this.text.setFill(this.style.color());
+			}
         }
 
         this.text.setText(text);
@@ -69,6 +76,15 @@ public class DecoratedRectangle extends Rectangle
                 && this.baseRectangle.getWidth() == rectangle.getWidth()
                 && this.baseRectangle.getHeight() == rectangle.getHeight();
     }
+
+	public boolean matches(java.awt.Rectangle rectangle, Color color)
+	{
+		return this.getStroke() == color
+				&& this.baseRectangle.getX() == rectangle.getX()
+				&& this.baseRectangle.getY() == rectangle.getY()
+				&& this.baseRectangle.getWidth() == rectangle.getWidth()
+				&& this.baseRectangle.getHeight() == rectangle.getHeight();
+	}
 
     public java.awt.Rectangle awtRectangle()
     {

@@ -22,6 +22,7 @@ import javafx.scene.control.TreeTableView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.text.Text;
+import javafx.util.Pair;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 
@@ -175,7 +176,6 @@ public class XmlTreeView extends AnchorPane
 		((MyCustomSkin) this.treeTableView.getSkin()).resizeColumnToFitContent(this.treeTableView.getColumns().get(1), -1);
 	}
 
-
     public void select(org.w3c.dom.Node node)
     {
         TreeItem<XmlItem> treeItem = findFirst(i -> i != null && i.getNode().equals(node));
@@ -196,7 +196,9 @@ public class XmlTreeView extends AnchorPane
         TreeItem<XmlItem> treeItem = findFirst(i -> i != null && i.getNode().equals(node));
         if (treeItem != null)
         {
+        	Optional.ofNullable(this.onMarkerChanged).ifPresent(c -> c.changed(treeItem.getValue(), treeItem.getValue().getStyle(), style, false));
             treeItem.getValue().setStyle(style);
+            this.refresh();
         }
     }
     
@@ -296,12 +298,28 @@ public class XmlTreeView extends AnchorPane
 		}
 		this.refresh();
 	}
+
+	public int getMarkedRowCount()
+	{
+		return getMarkedTreeItems().size();
+	}
+
+	public List<Pair<Node, MarkerStyle>> getMarkedItems()
+	{
+		List<TreeItem<XmlItem>> list = getMarkedTreeItems();
+		return list.stream()
+				.filter(Objects::nonNull)
+				.map(TreeItem::getValue)
+				.filter(Objects::nonNull)
+				.map(xmlItem -> new Pair<>(xmlItem.getNode(), xmlItem.getStyle()))
+				.collect(Collectors.toList());
+	}
 	//endregion
 
 	//region private methods
 	private List<TreeItem<XmlItem>> getMarkedTreeItems()
 	{
-        return findAll(treeItem -> treeItem.getStyle() != null);
+        return findAll(treeItem -> treeItem != null && treeItem.getStyle() != null);
 	}
 
 	private void addWaitingPane()

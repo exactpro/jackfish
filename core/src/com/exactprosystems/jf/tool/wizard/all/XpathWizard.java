@@ -443,7 +443,7 @@ public class XpathWizard extends AbstractWizard
 		{
 			if (oldItem != null)
 			{
-				this.imageViewWithScale.hideRectangle(oldItem.getRectangle(), oldMarker);
+				this.imageViewWithScale.hideRectangle(oldItem.getRectangle(), oldMarker.color());
 				if (oldItem.getStyle() != null)
 				{
 					this.imageViewWithScale.showRectangle(oldItem.getRectangle(), oldItem.getStyle(), oldItem.getText(), false);

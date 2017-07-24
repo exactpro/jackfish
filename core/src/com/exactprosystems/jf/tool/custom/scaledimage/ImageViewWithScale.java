@@ -143,6 +143,22 @@ public class ImageViewWithScale extends BorderPane
     {
         this.group.getChildren().removeIf(d -> (d instanceof DecoratedRectangle) && (((DecoratedRectangle)d).matches(rectangle, style)));
     }
+
+    public void hideRectangle(java.awt.Rectangle rectangle, Color color)
+	{
+		this.group.getChildren().removeIf(d -> (d instanceof DecoratedRectangle) && (((DecoratedRectangle)d).matches(rectangle, color)));
+	}
+
+	public void visibleRectangle(MarkerStyle style, boolean visible)
+	{
+		if (style.color() != null)
+		{
+			this.group.getChildren()
+					.stream()
+					.filter(d -> (d instanceof DecoratedRectangle) && (((DecoratedRectangle)d).getMarkerStyle() == style))
+					.forEach(d -> d.setVisible(visible));
+		}
+	}
 	
     public void hideAllRectangles(MarkerStyle style)
     {

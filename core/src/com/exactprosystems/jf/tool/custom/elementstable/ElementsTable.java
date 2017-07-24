@@ -8,6 +8,8 @@ import com.exactprosystems.jf.documents.guidic.controls.AbstractControl;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.CssVariables;
 import com.exactprosystems.jf.tool.custom.controls.field.CustomFieldWithButton;
+import com.exactprosystems.jf.tool.helpers.DialogsHelper;
+import com.exactprosystems.jf.tool.wizard.related.MarkerStyle;
 import com.sun.javafx.css.PseudoClassState;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
@@ -31,11 +33,12 @@ import java.util.List;
 import java.util.Optional;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
+import java.util.stream.Collectors;
 
 public class ElementsTable extends TableView<TableBean>
 {
-	private Consumer<AbstractControl>   removeConsumer;
-	private Consumer<AbstractControl>   updateConsumer;
+	private BiConsumer<AbstractControl, Node>   removeConsumer;
+	private BiConsumer<AbstractControl, Node>   updateConsumer;
 	private BiConsumer<AbstractControl, Node> editConsumer;
 
 	public ElementsTable()
@@ -294,13 +297,20 @@ public class ElementsTable extends TableView<TableBean>
 					btnRemove.setId("btnRemove");
 					btnRemove.setTooltip(new Tooltip("Remove element"));
 					btnRemove.getStyleClass().add(CssVariables.TRANSPARENT_BACKGROUND);
-					btnRemove.setOnAction(e -> Optional.ofNullable(removeConsumer).ifPresent(c -> c.accept(item.getAbstractControl())));
+					btnRemove.setOnAction(e -> {
+						boolean needRemove = DialogsHelper.showQuestionDialog("Remove element", "Are you sure to remove this element?");
+						if (needRemove)
+						{
+							Optional.ofNullable(removeConsumer).ifPresent(c -> c.accept(item.getAbstractControl(), item.getNode()));
+							getItems().remove(item);
+						}
+					});
 
 					Button btnRelation = new Button();
 					btnRelation.setId("btnRelation");
 					btnRelation.setTooltip(new Tooltip("Set relation"));
 					btnRelation.getStyleClass().add(CssVariables.TRANSPARENT_BACKGROUND);
-					btnRelation.setOnAction(e -> Optional.ofNullable(updateConsumer).ifPresent(c -> c.accept(item.getAbstractControl())));
+					btnRelation.setOnAction(e -> Optional.ofNullable(updateConsumer).ifPresent(c -> c.accept(item.getAbstractControl(), item.getNode())));
 					box.getChildren().addAll(btnEdit, btnRelation, btnRemove);
 					setGraphic(box);
 				}
@@ -315,12 +325,12 @@ public class ElementsTable extends TableView<TableBean>
 		this.getColumns().addAll(columnId, columnKind, columnIsXpath, columnIsNew, columnCount, columnOption);
 	}
 
-	public void remove(Consumer<AbstractControl> consumer)
+	public void remove(BiConsumer<AbstractControl, Node> consumer)
 	{
 		this.removeConsumer = consumer;
 	}
 
-	public void update(Consumer<AbstractControl> consumer)
+	public void update(BiConsumer<AbstractControl, Node> consumer)
 	{
 		this.updateConsumer = consumer;
 	}
@@ -341,6 +351,41 @@ public class ElementsTable extends TableView<TableBean>
 		this.refresh();
 	}
 
+	public void updateControl(Node node, AbstractControl control)
+	{
+		this.getItems().stream().filter(tb -> tb.getNode() == node).findFirst().ifPresent(tb -> {
+			tb.setAbstractControl(control);
+			this.refresh();
+		});
+	}
+
+	public void updateStyle(Node node, String style)
+	{
+		this.getItems().stream().filter(tb -> tb.getNode() == node).findFirst().ifPresent(tb -> {
+			tb.setStyle(style);
+			this.refresh();
+		});
+	}
+
+	public void clearRelation(Node node)
+	{
+		this.getItems().stream().filter(tb -> tb.getNode() == node).findFirst().ifPresent(tb -> {
+			tb.setNode(null);
+			this.refresh();
+		});
+	}
+
+	public AbstractControl controlByNode(Node node)
+	{
+		return this.getItems().stream().filter(tb -> tb.getNode() == node).findFirst().map(TableBean::getAbstractControl).orElse(null);
+	}
+
+	public List<AbstractControl> getControls()
+	{
+		return this.getItems().stream().map(TableBean::getAbstractControl).collect(Collectors.toList());
+	}
+
+	//region private methods
 	private void editElement(TableBean bean) throws Exception
 	{
 		AbstractControl newControl = this.editElement(AbstractControl.createCopy(bean.getAbstractControl()));
@@ -500,18 +545,12 @@ public class ElementsTable extends TableView<TableBean>
 		protected void updateItem(TableBean item, boolean empty)
 		{
 			super.updateItem(item, empty);
-			this.getStyleClass().removeAll(
-					CssVariables.COLOR_MARK,
-					CssVariables.COLOR_QUESTION,
-					CssVariables.COLOR_NOT_FOUND,
-					CssVariables.COLOR_NOT_FINDING,
-					CssVariables.COLOR_ADD,
-					CssVariables.COLOR_UPDATE
-			);
+			this.getStyleClass().removeAll(Arrays.stream(MarkerStyle.values()).map(MarkerStyle::getCssStyle).collect(Collectors.toList()));
 			if (item != null && !empty && item.getStyle() != null)
 			{
 				this.getStyleClass().add(item.getStyle());
 			}
 		}
 	}
+	//endregion
 }

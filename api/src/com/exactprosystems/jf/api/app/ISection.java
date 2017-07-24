@@ -18,7 +18,7 @@ public interface ISection
 {
 	boolean 				hasReferences(IControl control);
 	Collection<IControl> 	getControls();
-	void 					addControl(IControl control) throws Exception;
+	void 					addControl(IControl control);
 	void 					addControl(int index, IControl control) throws Exception;
 	IControl 				getFirstControl();
 	IControl 				getControlById(String name);
