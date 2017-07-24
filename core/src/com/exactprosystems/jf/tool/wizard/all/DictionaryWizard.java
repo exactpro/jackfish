@@ -17,7 +17,7 @@ import com.exactprosystems.jf.api.wizard.WizardCategory;
 import com.exactprosystems.jf.api.wizard.WizardCommand;
 import com.exactprosystems.jf.api.wizard.WizardManager;
 import com.exactprosystems.jf.common.utils.XpathUtils;
-import com.exactprosystems.jf.documents.guidic.Section;
+import com.exactprosystems.jf.documents.guidic.*;
 import com.exactprosystems.jf.documents.guidic.Window;
 import com.exactprosystems.jf.documents.guidic.controls.AbstractControl;
 import com.exactprosystems.jf.tool.Common;
@@ -28,8 +28,10 @@ import com.exactprosystems.jf.tool.custom.find.FindPanel;
 import com.exactprosystems.jf.tool.custom.find.IFind;
 import com.exactprosystems.jf.tool.custom.scaledimage.ImageViewWithScale;
 import com.exactprosystems.jf.tool.custom.xmltree.XmlTreeView;
+import com.exactprosystems.jf.tool.custom.xpath.XpathViewer;
 import com.exactprosystems.jf.tool.dictionary.DictionaryFx;
 import com.exactprosystems.jf.tool.dictionary.dialog.WizardMatcher;
+import com.exactprosystems.jf.tool.dictionary.dialog.WizardSettings;
 import com.exactprosystems.jf.tool.helpers.DialogsHelper;
 import com.exactprosystems.jf.tool.wizard.AbstractWizard;
 import com.exactprosystems.jf.tool.wizard.CommandBuilder;
@@ -48,11 +50,13 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 
 import java.awt.*;
-import java.util.Collection;
+import java.awt.geom.Point2D;
+import java.util.*;
 import java.util.List;
 import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 @WizardAttribute(
         name 				= "Test dictionary wizard",
@@ -66,6 +70,8 @@ import java.util.stream.Collectors;
     )
 public class DictionaryWizard extends AbstractWizard
 {
+	private static final int        MAX_TRIES = 128;
+
 	private AppConnection currentConnection = null;
 	private DictionaryFx  currentDictionary = null;
 	private Window        currentWindow     = null;
@@ -75,6 +81,11 @@ public class DictionaryWizard extends AbstractWizard
 
 	private volatile Document document    = null;
 	private volatile Node     currentNode = null;
+	private Rectangle               dialogRectangle;
+	private WizardSettings wizardSettings = null;
+	private PluginInfo pluginInfo = null;
+
+	private Node rootNode = null;
 
 	private SplitPane                   centralSplitPane   = null;
 	private ImageViewWithScale          imageViewWithScale = null;
@@ -320,11 +331,9 @@ public class DictionaryWizard extends AbstractWizard
 	@Override
 	protected Supplier<List<WizardCommand>> getCommands()
 	{
-		return () -> CommandBuilder
-				.start()
-				//TODO uncomment the lines below
-//				.replaceWindow(this.currentDictionary, this.currentWindow, this.copyWindow)
-//				.displayWindow(this.currentDictionary, this.copyWindow)
+		return () -> CommandBuilder.start()
+				.replaceWindow(this.currentDictionary, this.currentWindow, this.copyWindow)
+				.displayWindow(this.currentDictionary, this.copyWindow)
 				.build();
 	}
 
@@ -345,6 +354,7 @@ public class DictionaryWizard extends AbstractWizard
 				this.imageViewWithScale.displayImage(image);
 
 				this.document = doc;
+				this.rootNode = XpathUtils.getFirst(this.document, "/*");
 				this.xmlTreeView.displayDocument(this.document);
 				List<Rectangle> list = XpathUtils.collectAllRectangles(this.document);
 				this.imageViewWithScale.setListForSearch(list);
@@ -358,7 +368,10 @@ public class DictionaryWizard extends AbstractWizard
 				}
 				DialogsHelper.showError(message);
 			});
-			this.matcher = new WizardMatcher(this.currentConnection.getApplication().getFactory().getInfo());
+			this.dialogRectangle = this.currentConnection.getApplication().service().getRectangle(null, Optional.ofNullable(this.copyWindow.getSelfControl()).map(IControl::locator).orElse(null));
+			this.wizardSettings = new WizardSettings(this.currentDictionary.getFactory().getSettings());
+			this.pluginInfo = this.currentConnection.getApplication().getFactory().getInfo();
+			this.matcher = new WizardMatcher(this.pluginInfo);
 		}
 		catch (Exception e)
 		{
@@ -414,7 +427,6 @@ public class DictionaryWizard extends AbstractWizard
 			{
 				this.imageViewWithScale.hideRectangle(item.getRectangle(), oldMarker);
 				this.imageViewWithScale.showRectangle(item.getRectangle(), newMarker, item.getText(), selected);
-
 				this.updateMarkers(oldMarker, newMarker);
 			}
 		});
@@ -447,6 +459,13 @@ public class DictionaryWizard extends AbstractWizard
 		this.cbUpdate.selectedProperty().addListener((observable, oldValue, newValue) -> this.xmlTreeView.setMarkersVisible(MarkerStyle.UPDATE, newValue));
 		this.cbMark.selectedProperty().addListener((observable, oldValue, newValue) -> this.xmlTreeView.setMarkersVisible(MarkerStyle.MARK, newValue));
 		this.cbQuestion.selectedProperty().addListener((observable, oldValue, newValue) -> this.xmlTreeView.setMarkersVisible(MarkerStyle.QUESTION, newValue));
+
+		this.btnWizard.setOnAction(event -> this.magic());
+
+		this.tableView.edit((ac,node) -> {
+			this.clearRelation(node);
+			this.findElement(ac, true);
+		});
 	}
 
 	private void updateOnButtons()
@@ -475,6 +494,10 @@ public class DictionaryWizard extends AbstractWizard
 
 	private CheckBox checkBoxByMarkedStyle(MarkerStyle style)
 	{
+		if (style == null)
+		{
+			return null;
+		}
 		switch (style)
 		{
 			case UPDATE: return this.cbUpdate;
@@ -510,16 +533,16 @@ public class DictionaryWizard extends AbstractWizard
 	{
 		this.copyWindow.getControls(IWindow.SectionKind.Run).stream()
 				.map(control -> (AbstractControl) control)
-				.forEach(this::findElement);
+				.forEach(ac -> this.findElement(ac, false));
 	}
 
-	private void findElement(AbstractControl control)
+	private void findElement(AbstractControl control, boolean isNew)
 	{
 		int count = 0;
 		Node found = null;
 		if (control.getAddition() == Addition.Many || Str.IsNullOrEmpty(control.getOwnerID()))
 		{
-			return;
+			this.updateElement(control, null, 0, CssVariables.COLOR_NOT_FINDING, isNew);
 		}
 		else
 		{
@@ -535,32 +558,583 @@ public class DictionaryWizard extends AbstractWizard
 			{
 				//noting to do
 			}
+			MarkerStyle style;
 			if (count == 1)
 			{
-				this.updateElement(control, found, count, MarkerStyle.MARK);
+				style = MarkerStyle.MARK;
 			}
 			else
 			{
-				Node bestIndex = findBestIndex(control);
-				this.updateElement(control, bestIndex, count, MarkerStyle.QUESTION);
+				found = findBestIndex(control);
+				style = MarkerStyle.QUESTION;
 			}
+
+			this.updateElement(control, found, count, style.getCssStyle(), isNew);
+			this.xmlTreeView.setMarker(found, style);
+			this.updateMarkers(null, style);
 		}
 	}
 
-	private void updateElement(AbstractControl control, Node node, int count, MarkerStyle style)
+	private void updateElement(AbstractControl control, Node node, int count, String style, boolean isNew)
 	{
-		//TODO implement it. Move it on ElementsTable
-		this.tableView.getItems().stream().filter(tb -> tb.getAbstractControl() == control).findFirst().ifPresent(tb -> tb.setCount(count));
-		this.tableView.refresh();
-
+		this.tableView.updateElement(control, node, count, style, isNew);
 	}
 
+	//region sophisticated functions
 	private Node findBestIndex(AbstractControl control)
 	{
-		//TODO implement it
+		if (control == null)
+		{
+			return null;
+		}
+		ControlKind kind = control.getBindedClass();
+		ExtraInfo info = (ExtraInfo) control.getInfo();
+
+		Map<Double, Node> candidates = new HashMap<>();
+
+		XpathUtils.passTree(this.rootNode, node -> candidates.put(similarityFactor(node, kind, info), node));
+		Double maxKey = candidates.keySet().stream().max(Double::compare).orElse(Double.MIN_VALUE);
+		return maxKey > this.wizardSettings.getThreshold() ? candidates.get(maxKey) : null;
+	}
+
+	private double similarityFactor(Node node, ControlKind kind, ExtraInfo info)
+	{
+		if (node == null || this.dialogRectangle == null || kind == null || info == null)
+		{
+			return 0.0;
+		}
+
+		try
+		{
+			Rect actualRectangle     		= relativeRect(this.dialogRectangle, (Rectangle)node.getUserData(IRemoteApplication.rectangleName));
+			String      actualName          = node.getNodeName();
+			String      actualPath          = XpathViewer.fullXpath("", this.rootNode, node, false, null, true);
+			List<Attr>  actualAttr          = XpathUtils.extractAttributes(node);
+
+			Rect        expectedRectangle   = (Rect)info.get(ExtraInfo.rectangleName);
+			String      expectedName        = (String) info.get(ExtraInfo.nodeName);
+			String      expectedPath        = (String) info.get(ExtraInfo.xpathName);
+			List<Attr>  expectedAttr        = (List<Attr>) info.get(ExtraInfo.attrName);
+
+			double sum = 0.0;
+			// name
+			sum += normalize(Str.areEqual(actualName, expectedName) ? 1.0 : 0.0, WizardSettings.Kind.TYPE);
+
+			// position
+			Point2D actualPos   = actualRectangle.center();
+			Point2D expectedPos = expectedRectangle.center();
+			double distance =  Math.sqrt( Math.pow(actualPos.getX() - expectedPos.getX(), 2) + Math.pow(actualPos.getY() - expectedPos.getY(), 2));
+			sum += normalize(1 / (1 + Math.abs(distance)), WizardSettings.Kind.POSITION);
+
+			// size
+			double different = actualRectangle.square() - expectedRectangle.square();
+			sum += normalize(1 / (1 + Math.abs(different)), WizardSettings.Kind.SIZE);
+
+			// path
+			String[] actualPathDim = Str.asString(actualPath).split("/");
+			String[] expectedPathDim = Str.asString(expectedPath).split("/");
+			int count = 0;
+			for (int i = expectedPathDim.length - 1; i >= 0; i--)
+			{
+				int ind = actualPathDim.length - expectedPathDim.length + i;
+				if (ind < 0)
+				{
+					break;
+				}
+				count += (Str.areEqual(expectedPathDim[i], actualPathDim[ind]) ? 1 : 0);
+			}
+			sum += normalize(count / expectedPathDim.length, WizardSettings.Kind.PATH);
+
+			// attributes
+			double attrFactor = 0.0;
+			if (actualAttr != null && expectedAttr != null && expectedAttr.size() > 0)
+			{
+				Set<Attr> s1 = new HashSet<>(actualAttr);
+				Set<Attr> s2 = new HashSet<>(expectedAttr);
+				s2.retainAll(s1);
+
+				attrFactor = (double)s2.size() / (double)expectedAttr.size();
+			}
+			sum += normalize(attrFactor, WizardSettings.Kind.PATH);
+
+			sum *= wizardSettings.scale();
+
+			return sum;
+		}
+		catch (Exception e)
+		{
+			return 0.0;
+		}
+	}
+
+	private Rect relativeRect(Rectangle relative, Rectangle rect)
+	{
+		if (relative == null || rect == null)
+		{
+			return new Rect();
+		}
+
+		if (relative.height == 0 || relative.width == 0)
+		{
+			return new Rect();
+		}
+
+		double scaleX = 1 / relative.getWidth();
+		double scaleY = 1 / relative.getHeight();
+
+		return new Rect(rect.getX() * scaleX, rect.getY() * scaleY, (rect.getX() + rect.getWidth()) * scaleX, (rect.getY() + rect.getHeight()) * scaleY);
+	}
+
+	private double normalize(double value, WizardSettings.Kind kind)
+	{
+		double min = this.wizardSettings.getMin(kind);
+		double max = this.wizardSettings.getMax(kind);
+
+		return min + (max - min)*value;
+	}
+	//endregion
+
+	private void arrangeOne(Node node, AbstractControl control, MarkerStyle style) throws Exception
+	{
+		switch (style)
+		{
+			case ADD:
+				Locator locator = compile(composeId(node), composeKind(node), node);
+				if (locator != null)
+				{
+					AbstractControl copyControl = AbstractControl.create(locator, this.copyWindow.getSelfControl().getID());
+					updateExtraInfo(node, copyControl);
+					this.copyWindow.addControl(IWindow.SectionKind.Run, control);
+				}
+				displayElements();
+				break;
+
+			case UPDATE:
+				Locator locatorUpdate = compile(control.getID(), control.getBindedClass(), node);
+				if (locatorUpdate != null)
+				{
+					AbstractControl copyControl = AbstractControl.create(locatorUpdate, this.copyWindow.getSelfControl().getID());
+					updateExtraInfo(node, copyControl);
+					Section section = (Section)this.copyWindow.getSection(IWindow.SectionKind.Run);
+					section.replaceControl(control, copyControl);
+				}
+				//TODO
+//				displayElements();
+				break;
+			case MARK:
+				updateExtraInfo(node, control);
+				break;
+
+			case QUESTION:
+				break;
+		}
+	}
+
+	public void magic()
+	{
+		/*
+		TODO
+		ExecutorService taskExecutor = Executors.newSingleThreadExecutor();
+
+		final List<XpathTreeItem> list = this.treeViewWithRectangles.getMarkedRows().stream().map(TreeItem::getValue).collect(Collectors.toList());
+		int sum = list.stream().mapToInt(x -> Math.max(1, x.getList().size())).sum();
+		if (sum == 0)
+		{
+			DialogsHelper.showInfo("Nothing to update");
+			return;
+		}
+		Dialog<String> dialog = new Dialog<>();
+		Common.addIcons(((Stage) dialog.getDialogPane().getScene().getWindow()));
+		dialog.setWidth(400.0);
+
+		BorderPane borderPane = new BorderPane();
+		borderPane.setPrefWidth(400.0);
+		Label lblInfo = new Label();
+		ProgressBar progressBar = new ProgressBar();
+		progressBar.setMaxWidth(Double.MAX_VALUE);
+		progressBar.setProgress(0);
+
+		Button btnStop = new Button("Stop");
+		btnStop.setOnAction(e -> {
+			dialog.setResult("");
+			taskExecutor.shutdownNow();
+			dialog.close();
+		});
+
+		borderPane.setTop(lblInfo);
+		borderPane.setCenter(progressBar);
+		borderPane.setBottom(btnStop);
+		BorderPane.setAlignment(btnStop, Pos.CENTER_RIGHT);
+		BorderPane.setMargin(btnStop, new Insets(8, 0, 0, 0));
+
+		dialog.getDialogPane().setContent(borderPane);
+		dialog.getDialogPane().setHeader(new Label());
+		dialog.setTitle("Updating elements");
+		dialog.show();
+
+		Service<Void> service = new Service<Void>()
+		{
+			@Override
+			protected Task<Void> createTask()
+			{
+				return new Task<Void>()
+				{
+					@Override
+					protected Void call() throws Exception
+					{
+						clearCheckboxes();
+						final int[] count = {0};
+						for (XpathTreeItem xpathTreeItem : list)
+						{
+							ArrayList<XpathTreeItem.BeanWithMark> newList = new ArrayList<>(xpathTreeItem.getList());
+							for (XpathTreeItem.BeanWithMark beanWithMark : newList)
+							{
+								xpathTreeItem.clearRelation(beanWithMark.getBean());
+								ElementWizardBean bean = beanWithMark.getBean();
+								if (bean != null)
+								{
+									if (bean.getAbstractControl().getAddition() == Addition.Many || Str.IsNullOrEmpty(bean.getAbstractControl().getOwnerID()))
+									{
+										bean.setStyleClass(CssVariables.COLOR_NOT_FINDING);
+										continue;
+									}
+								}
+								Thread.sleep(200);
+								Platform.runLater(() -> lblInfo.setText("Start updating item " + ++count[0] + " of " + sum));
+								Common.tryCatch(() -> arrangeOne(xpathTreeItem.getNode(), bean, beanWithMark.getState()), "Error on arrange one");
+								Platform.runLater(() -> {
+									lblInfo.setText("End updating " + count[0] + " of " + sum);
+									progressBar.setProgress((double) count[0] / sum);
+								});
+							}
+						}
+						return null;
+					}
+				};
+			}
+		};
+		service.setExecutor(taskExecutor);
+		service.setOnSucceeded(e -> {
+			Common.tryCatch(() -> Thread.sleep(200), "");
+			Common.tryCatch(() -> model.findElements(this.tableView.getItems()), "Error on find elements");
+			dialog.setResult("");
+			dialog.close();
+		});
+		service.start();
+		*/
+	}
+
+	//region createLocator
+	private void updateExtraInfo(Node node, AbstractControl control) throws Exception
+	{
+		ExtraInfo info = new ExtraInfo();
+		Rectangle rec = (Rectangle)node.getUserData(IRemoteApplication.rectangleName);
+		Rect rectangle = relativeRect(this.dialogRectangle, rec);
+
+		info.set(ExtraInfo.xpathName,       XpathViewer.fullXpath("", this.rootNode, node, false, null, true));
+		info.set(ExtraInfo.nodeName,        node.getNodeName());
+		info.set(ExtraInfo.rectangleName,   rectangle);
+		List<Attr> attributes = XpathUtils.extractAttributes(node);
+		if (!attributes.isEmpty())
+		{
+			info.set(ExtraInfo.attrName, attributes);
+		}
+		control.set(AbstractControl.infoName, info);
+	}
+
+	private ControlKind composeKind(Node node)
+	{
+		String name = node.getNodeName();
+		return this.pluginInfo.controlKindByNode(name);
+	}
+
+	private String composeId(Node node)
+	{
+		String res = null;
+		if (node.hasAttributes())
+		{
+			res = composeFromAttr(res, node, LocatorFieldKind.UID);
+			res = composeFromAttr(res, node, LocatorFieldKind.NAME);
+			res = composeFromAttr(res, node, LocatorFieldKind.TITLE);
+			res = composeFromAttr(res, node, LocatorFieldKind.ACTION);
+		}
+		res = composeFromText(res, node);
+		return res;
+	}
+
+	private String composeFromAttr(String res, Node node, LocatorFieldKind kind)
+	{
+		if (res != null)
+		{
+			return res;
+		}
+		String attrName = this.pluginInfo.attributeName(kind);
+		if (attrName == null)
+		{
+			return null;
+		}
+
+		if (node.hasAttributes())
+		{
+			Node attrNode = node.getAttributes().getNamedItem(attrName);
+			if (attrNode == null)
+			{
+				return null;
+			}
+
+			String attr = attrNode.getNodeValue();
+			if (XpathUtils.isStable(attr))
+			{
+				return attr;
+			}
+		}
 		return null;
 	}
 
+	private String composeFromText(String res, Node node)
+	{
+		if (res != null)
+		{
+			return res;
+		}
 
+		String text = node.getTextContent();
+		if (XpathUtils.isStable(text))
+		{
+			return text;
+		}
+		return null;
+	}
+
+	private Locator compile(String id, ControlKind kind, Node node)
+	{
+		// try many methods here
+		Locator locator = null;
+
+		locator = locatorById(id, kind, node);
+		if (locator != null)
+		{
+			return locator;
+		}
+
+		locator = locatorByAttr(id, kind,  node);
+		if (locator != null)
+		{
+			return locator;
+		}
+
+		locator = locatorByXpath(id, kind,  node);
+		if (locator != null)
+		{
+			return locator;
+		}
+
+		locator = locatorByRelativeXpath(id, kind,  node);
+		if (locator != null)
+		{
+			return locator;
+		}
+
+		return null; // can't compile the such locator
+	}
+
+	private Locator locatorById(String id, ControlKind kind, Node node)
+	{
+		if (node.hasAttributes())
+		{
+			String idName = this.pluginInfo.attributeName(LocatorFieldKind.UID);
+			if (idName == null)
+			{
+				return null;
+			}
+
+			Node nodeId = node.getAttributes().getNamedItem(idName);
+			if (nodeId != null)
+			{
+				String uid = nodeId.getNodeValue();
+				if (XpathUtils.isStable(uid))
+				{
+					Locator locator = new Locator().kind(kind).id(id).uid(uid);
+					if (tryLocator(locator, node) == 1)
+					{
+						return locator;
+					}
+				}
+			}
+		}
+		return null;
+	}
+
+	private Locator locatorByAttr(String id, ControlKind kind, Node node)
+	{
+		List<Pair> list = allAttributes(node);
+		List<List<Pair>> cases = IntStream.range(1, 1 << list.size())
+				.boxed()
+				.sorted(Comparator.comparingInt(Integer::bitCount))
+				.limit(MAX_TRIES)
+				.map(e -> XpathUtils.shuffle(e, list))
+				.collect(Collectors.toList());
+
+		for (List<Pair> caze : cases)
+		{
+			Locator locator = new Locator().kind(kind).id(id);
+			caze.forEach(p -> locator.set(p.kind, p.value));
+
+			if (tryLocator(locator, node) == 1)
+			{
+				return locator;
+			}
+		}
+
+		return null;
+	}
+
+	private List<Pair>  allAttributes(Node node)
+	{
+		List<Pair> list = new ArrayList<>();
+		addAttr(list, node, LocatorFieldKind.UID);
+		addAttr(list, node, LocatorFieldKind.CLAZZ);
+		addAttr(list, node, LocatorFieldKind.NAME);
+		addAttr(list, node, LocatorFieldKind.TITLE);
+		addAttr(list, node, LocatorFieldKind.ACTION);
+		addAttr(list, node, LocatorFieldKind.TOOLTIP);
+		addAttr(list, node, LocatorFieldKind.TEXT);
+		return list;
+	}
+
+	private void addAttr(List<Pair> list, Node node, LocatorFieldKind kind)
+	{
+		if (!node.hasAttributes())
+		{
+			return;
+		}
+		if (kind == LocatorFieldKind.TEXT)
+		{
+			String textContent = node.getTextContent();
+			if (XpathUtils.isStable(textContent))
+			{
+				list.add(new Pair(kind, textContent));
+			}
+		}
+		String attrName = this.pluginInfo.attributeName(kind);
+		if (attrName == null)
+		{
+			return;
+		}
+		Node attrNode = node.getAttributes().getNamedItem(attrName);
+		if (attrNode == null)
+		{
+			return;
+		}
+		String value = attrNode.getNodeValue();
+		if (XpathUtils.isStable(value))
+		{
+			list.add(new Pair(kind, value));
+		}
+	}
+
+	private static class Pair
+	{
+		public Pair(LocatorFieldKind kind, String value)
+		{
+			this.kind = kind;
+			this.value = value;
+		}
+
+		public LocatorFieldKind kind;
+		public String value;
+	}
+
+	private Locator locatorByXpath(String id, ControlKind kind, Node node)
+	{
+		String ownerPath = ".";
+
+		List<String> parameters = XpathUtils.getAllNodeAttribute(node);
+		String relativePath = XpathViewer.fullXpath(ownerPath, this.rootNode, node, false, parameters, false);
+		Locator locator = new Locator().kind(kind).id(id).xpath(relativePath);
+
+		if (tryLocator(locator, node) == 1)
+		{
+			return locator;
+		}
+		return null;
+	}
+
+	private Locator locatorByRelativeXpath(String id, ControlKind kind, Node node)
+	{
+		String ownerPath = ".";
+		String xpath = XpathViewer.fullXpath(ownerPath, this.rootNode, node, false, null, true);
+		String[] parts = xpath.split("/");
+
+		Node parent = node;
+		for (int level = 0; level < parts.length; level++)
+		{
+			Locator relativeLocator = locatorByXpath(id, kind, parent);
+			if (relativeLocator != null)
+			{
+				String finalPath = XpathViewer.fullXpath(relativeLocator.getXpath(), parent, node, false, null, false);
+
+				Locator finalLocator = new Locator().kind(kind).id(id).xpath(finalPath);
+				if (tryLocator(finalLocator, node) == 1)
+				{
+					return finalLocator;
+				}
+			}
+
+			parent = parent.getParentNode();
+		}
+
+		Locator locator = new Locator().kind(kind).id(id).xpath(xpath);
+		if (tryLocator(locator, node) == 1)
+		{
+			return locator;
+		}
+
+		return null;
+	}
+
+	private int tryLocator(Locator locator, Node node)
+	{
+		if (locator == null)
+		{
+			return 0;
+		}
+
+		try
+		{
+			List<Node> list = findAll(locator);
+			if (list.size() != 1)
+			{
+				return list.size();
+			}
+
+			if (list.get(0) == node)
+			{
+				return 1;
+			}
+		}
+		catch (Exception e)
+		{
+			// nothing to do
+		}
+		return 0;
+	}
+
+	private List<Node> findAll(Locator locator) throws Exception
+	{
+		return this.matcher.findAll(this.rootNode, locator);
+	}
+	//endregion
+
+	private void clearRelation(Node node)
+	{
+		this.xmlTreeView.setMarker(node, null);
+		this.xmlTreeView.refresh();
+	}
+
+	private void updateRelation(AbstractControl control, Node node)
+	{
+
+	}
 	//endregion
 }

@@ -67,8 +67,8 @@ import static com.exactprosystems.jf.common.utils.XpathUtils.*;
         pictureName 		= "DictionaryWizard.png",
         category 			= WizardCategory.GUI_DICTIONARY,
         shortDescription 	= "This wizard help to build xpath expression to find an element on screen.",
-        detailedDescription = "Here you descrioption might be",
-        experimental 		= true,
+        detailedDescription = "Here you description might be",
+        experimental 		= false,
         strongCriteries 	= true,
         criteries 			= { DictionaryFx.class, Window.class, SectionKind.class, AbstractControl.class }
     )
