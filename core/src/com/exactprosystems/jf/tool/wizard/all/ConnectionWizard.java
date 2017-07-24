@@ -29,7 +29,7 @@ import java.util.function.Supplier;
         pictureName = "ConnectionWizard.jpg",
         category = WizardCategory.OTHER,
         shortDescription = "This wizard helps to move SubCases between NameSpaces",
-        experimental = false,
+        experimental = true,
         strongCriteries = true,
         criteries = {ApplicationPool.class, AppEntry.class},
         detailedDescription = "When it's need to create and store connection"
