@@ -42,7 +42,7 @@ public class TabConsole extends PrintStream
 	    }
 	    else
 	    {
-	        Platform.runLater(() -> listView.getItems().add(ConsoleText.defaultText(s)));
+			listView.getItems().add(ConsoleText.defaultText(s));
 	    }
 	}
 
@@ -55,8 +55,8 @@ public class TabConsole extends PrintStream
         }
         else
         {
-    		Platform.runLater(() -> listView.getItems().add(ConsoleText.defaultText(x)));
-        }
+			listView.getItems().add(ConsoleText.defaultText(x));
+		}
 	}
 
 	public void setConsole(CustomListView<MatrixItem> listView)
