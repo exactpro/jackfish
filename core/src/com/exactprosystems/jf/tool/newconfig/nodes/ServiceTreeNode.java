@@ -8,6 +8,7 @@
 package com.exactprosystems.jf.tool.newconfig.nodes;
 
 import com.exactprosystems.jf.api.common.SerializablePair;
+import com.exactprosystems.jf.api.service.ServiceConnection;
 import com.exactprosystems.jf.api.service.ServiceStatus;
 import com.exactprosystems.jf.documents.config.Configuration;
 import com.exactprosystems.jf.documents.config.ServiceEntry;
@@ -27,14 +28,18 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 public class ServiceTreeNode extends TreeNode
 {
 	private ConfigurationFx model;
 	private TreeItem<TreeNode> treeItem;
 
+	private static final String ALL = "All";
+
 	private static final SerializablePair<String, String> ADD_NEW_SERVICE = new SerializablePair<>("Add new service", CssVariables.Icons.ADD_PARAMETER_ICON);
 	private static final SerializablePair<String, String> TEST_VERSION = new SerializablePair<>("Test versions", null);
+	private static final SerializablePair<String, String> CLOSE_SERVICES = new SerializablePair<>("Stop services", null);
 	private static final SerializablePair<String, String> REMOVE = new SerializablePair<>("Remove", CssVariables.Icons.REMOVE_PARAMETER_ICON);
 	private static final SerializablePair<String, String> START_SERVICE = new SerializablePair<>("Start service", CssVariables.Icons.REFRESH);
 	private static final SerializablePair<String, String> STOP_SERVICE = new SerializablePair<>("Stop service", CssVariables.Icons.REFRESH);
@@ -54,12 +59,41 @@ public class ServiceTreeNode extends TreeNode
 						.ifPresent(res -> Common.tryCatch(() -> this.model.addNewServiceEntry(res), "Error on add new service")));
 		menu.getItems().addAll(
 				ConfigurationTreeView.createItem(TEST_VERSION, () -> this.model.testServiceVersion(), "Error on test service version"),
+				ConfigurationTreeView.createMenu(CLOSE_SERVICES, ConfigurationTreeView.createItem(ALL, null, () -> this.model.stopAllServices(), "Error on stop all services")),
 				ConfigurationTreeView.createDisabledItem(REMOVE),
 				ConfigurationTreeView.createDisabledItem(START_SERVICE),
 				ConfigurationTreeView.createDisabledItem(STOP_SERVICE),
 				ConfigurationTreeView.createDisabledItem(ADD_ALL_KNOWN_PARAMS)
 		);
 		return Optional.of(menu);
+	}
+
+	@Override
+	public void onContextMenuShowing(ContextMenu contextMenu)
+	{
+		contextMenu.getItems()
+				.stream()
+				.filter(item -> item.getText().equals(CLOSE_SERVICES.getKey()))
+				.findFirst()
+				.map(item -> (Menu)item)
+				.ifPresent(menu -> {
+					List<ServiceConnection> connections = this.model.getServicesPool().getConnections();
+					if (connections.size() > 0)
+					{
+						menu.getItems().removeIf(menuItem -> !menuItem.getText().equals(ALL));
+						menu.getItems().add(new SeparatorMenuItem());
+						menu.getItems().addAll(connections
+								.stream()
+								.map(connection -> ConfigurationTreeView.createItem(
+										connection.toString()
+										, null
+										, () -> this.model.stopService(connection)
+										, "Error on stop application. See log for details"
+								))
+								.collect(Collectors.toList())
+						);
+					}
+				});
 	}
 
 	@Override
@@ -100,6 +134,7 @@ public class ServiceTreeNode extends TreeNode
 			menu.getItems().addAll(
 					ConfigurationTreeView.createDisabledItem(ADD_NEW_SERVICE),
 					ConfigurationTreeView.createDisabledItem(TEST_VERSION),
+					ConfigurationTreeView.createDisabledMenu(CLOSE_SERVICES),
 					ConfigurationTreeView.createItem(REMOVE, () -> model.removeServiceEntry(getEntry()), String.format("Error on remove entry '%s'", getEntry().toString())),
 					ConfigurationTreeView.createItem(ADD_ALL_KNOWN_PARAMS,() -> model.addAllServiceParams(getEntry()), String.format("Error on add all parameters for entry '%s'", getEntry()))
 			);

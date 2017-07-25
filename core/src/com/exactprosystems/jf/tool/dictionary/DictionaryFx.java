@@ -1020,7 +1020,7 @@ public class DictionaryFx extends GuiDictionary
 		this.controller.displayTitle(name);
 	}
 
-	private void displayDialog(IWindow window, Collection<IWindow> windows)
+	public void displayDialog(IWindow window, Collection<IWindow> windows)
 	{
 		this.controller.displayDialog(window, windows);
 	}

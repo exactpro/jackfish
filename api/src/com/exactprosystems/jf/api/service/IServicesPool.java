@@ -17,7 +17,7 @@ import java.util.Map;
 public interface IServicesPool  extends IPool
 {
 	List<String> servicesNames();
-	
+	List<ServiceConnection> getConnections();
 	IServiceFactory loadServiceFactory(String id) throws Exception;
 	ServiceConnection loadService(String id) throws Exception;
 	void startService(IContext context, ServiceConnection connection, Map<String, Object> params) throws Exception;

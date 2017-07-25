@@ -37,15 +37,18 @@ import com.exactprosystems.jf.tool.wizard.AbstractWizard;
 import com.exactprosystems.jf.tool.wizard.CommandBuilder;
 import com.exactprosystems.jf.tool.wizard.related.MarkerStyle;
 import com.exactprosystems.jf.tool.wizard.related.WizardHelper;
-import javafx.geometry.HPos;
-import javafx.geometry.Orientation;
-import javafx.geometry.Pos;
-import javafx.geometry.VPos;
+import javafx.application.Platform;
+import javafx.concurrent.Service;
+import javafx.concurrent.Task;
+import javafx.geometry.*;
+import javafx.geometry.Insets;
 import javafx.scene.control.Button;
 import javafx.scene.control.*;
+import javafx.scene.control.Dialog;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.*;
+import javafx.stage.Stage;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 
@@ -53,13 +56,14 @@ import java.awt.*;
 import java.awt.geom.Point2D;
 import java.util.*;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 
 @WizardAttribute(
-        name 				= "Test dictionary wizard",
+        name 				= "Dialog wizard",
         pictureName 		= "DictionaryWizard.png",
         category 			= WizardCategory.GUI_DICTIONARY,
         shortDescription 	= "This wizard is only for test purpose.",
@@ -70,8 +74,6 @@ import java.util.stream.IntStream;
     )
 public class DictionaryWizard extends AbstractWizard
 {
-	private static final int        MAX_TRIES = 128;
-
 	private AppConnection currentConnection = null;
 	private DictionaryFx  currentDictionary = null;
 	private Window        currentWindow     = null;
@@ -81,7 +83,7 @@ public class DictionaryWizard extends AbstractWizard
 
 	private volatile Document document    = null;
 	private volatile Node     currentNode = null;
-	private Rectangle               dialogRectangle;
+	private Rectangle dialogRectangle;
 	private WizardSettings wizardSettings = null;
 	private PluginInfo pluginInfo = null;
 
@@ -96,7 +98,7 @@ public class DictionaryWizard extends AbstractWizard
 	private Label                        lblSelfId;
 	private javafx.scene.control.Button  btnGenerateOnOpen;
 	private javafx.scene.control.Button  btnGenerateOnClose;
-	private ElementsTable				 tableView;
+	private ElementsTable				  tableView;
 	private Button btnWizard;
 	private Button btnNextMark;
 	private Button btnPrevMark;
@@ -126,7 +128,7 @@ public class DictionaryWizard extends AbstractWizard
 		}
 		catch (Exception e)
 		{
-			//TODO AB. I have no idea, that we need do on a exception.
+			//AB. I have no idea, that we need do on a exception.
 		}
 	}
 
@@ -325,12 +327,16 @@ public class DictionaryWizard extends AbstractWizard
 
 		initListeners();
 		updateOnButtons();
-		displayElements();
+		addElementsIntoTable();
 	}
 
 	@Override
 	protected Supplier<List<WizardCommand>> getCommands()
 	{
+		ISection section = this.copyWindow.getSection(IWindow.SectionKind.Run);
+		section.getControls().forEach(((Section) section)::removeControl);
+		this.tableView.getControls().forEach(section::addControl);
+
 		return () -> CommandBuilder.start()
 				.replaceWindow(this.currentDictionary, this.currentWindow, this.copyWindow)
 				.displayWindow(this.currentDictionary, this.copyWindow)
@@ -358,7 +364,7 @@ public class DictionaryWizard extends AbstractWizard
 				this.xmlTreeView.displayDocument(this.document);
 				List<Rectangle> list = XpathUtils.collectAllRectangles(this.document);
 				this.imageViewWithScale.setListForSearch(list);
-				findElements();
+				Platform.runLater(() -> findElements(false));
 			}, ex ->
 			{
 				String message = ex.getMessage();
@@ -405,7 +411,7 @@ public class DictionaryWizard extends AbstractWizard
 		{
 			if (oldItem != null)
 			{
-				this.imageViewWithScale.hideRectangle(oldItem.getRectangle(), oldMarker);
+				this.imageViewWithScale.hideRectangle(oldItem.getRectangle(), oldMarker.color());
 				if (oldItem.getStyle() != null)
 				{
 					this.imageViewWithScale.showRectangle(oldItem.getRectangle(), oldItem.getStyle(), oldItem.getText(), false);
@@ -425,18 +431,19 @@ public class DictionaryWizard extends AbstractWizard
 		{
 			if (item != null)
 			{
-				this.imageViewWithScale.hideRectangle(item.getRectangle(), oldMarker);
+				this.imageViewWithScale.hideRectangle(item.getRectangle(), oldMarker == null ? null : oldMarker.color());
 				this.imageViewWithScale.showRectangle(item.getRectangle(), newMarker, item.getText(), selected);
+				this.tableView.updateStyle(item.getNode(), newMarker.getCssStyle());
+				if (newMarker != MarkerStyle.UPDATE)
+				{
+					this.tableView.clearRelation(item.getNode());
+				}
 				this.updateMarkers(oldMarker, newMarker);
 			}
 		});
 
 		this.btnNextMark.setOnAction(e -> this.xmlTreeView.selectNextMark());
 		this.btnPrevMark.setOnAction(e -> this.xmlTreeView.selectPrevMark());
-
-		this.btnWizard.setOnAction(e -> {
-			//TODO
-		});
 
 		this.btnGenerateOnOpen.setOnAction(e -> Common.tryCatch(() -> {
 			AbstractControl onOpen = generate(Addition.WaitToAppear);
@@ -455,12 +462,20 @@ public class DictionaryWizard extends AbstractWizard
 
 		this.tfDialogName.textProperty().addListener((observable, oldValue, newValue) -> this.copyWindow.setName(newValue));
 
-		this.cbAdd.selectedProperty().addListener((observable, oldValue, newValue) -> this.xmlTreeView.setMarkersVisible(MarkerStyle.ADD, newValue));
-		this.cbUpdate.selectedProperty().addListener((observable, oldValue, newValue) -> this.xmlTreeView.setMarkersVisible(MarkerStyle.UPDATE, newValue));
-		this.cbMark.selectedProperty().addListener((observable, oldValue, newValue) -> this.xmlTreeView.setMarkersVisible(MarkerStyle.MARK, newValue));
-		this.cbQuestion.selectedProperty().addListener((observable, oldValue, newValue) -> this.xmlTreeView.setMarkersVisible(MarkerStyle.QUESTION, newValue));
+		this.cbAdd.selectedProperty().addListener((observable, oldValue, newValue) -> this.changeCheckBox(MarkerStyle.ADD, newValue));
+		this.cbUpdate.selectedProperty().addListener((observable, oldValue, newValue) -> this.changeCheckBox(MarkerStyle.UPDATE, newValue));
+		this.cbMark.selectedProperty().addListener((observable, oldValue, newValue) -> this.changeCheckBox(MarkerStyle.MARK, newValue));
+		this.cbQuestion.selectedProperty().addListener((observable, oldValue, newValue) -> this.changeCheckBox(MarkerStyle.QUESTION, newValue));
 
 		this.btnWizard.setOnAction(event -> this.magic());
+
+		this.tableView.remove((ac, node) -> {
+			this.clearRelation(node);
+		});
+
+		this.tableView.update((ac,node) -> {
+			this.xmlTreeView.setMarker(node, MarkerStyle.UPDATE);
+		});
 
 		this.tableView.edit((ac,node) -> {
 			this.clearRelation(node);
@@ -518,10 +533,10 @@ public class DictionaryWizard extends AbstractWizard
 		return on;
 	}
 
-	private void displayElements()
+	private void addElementsIntoTable()
 	{
 		Collection<IControl> controls = this.copyWindow.getControls(IWindow.SectionKind.Run);
-		this.tableView.getItems().addAll(
+		this.tableView.getItems().setAll(
 				controls.stream()
 						.map(c -> (AbstractControl)c)
 						.map(TableBean::new)
@@ -529,11 +544,9 @@ public class DictionaryWizard extends AbstractWizard
 		);
 	}
 
-	private void findElements()
+	private void findElements(boolean isNew)
 	{
-		this.copyWindow.getControls(IWindow.SectionKind.Run).stream()
-				.map(control -> (AbstractControl) control)
-				.forEach(ac -> this.findElement(ac, false));
+		this.tableView.getControls().forEach(ac -> this.findElement(ac, isNew));
 	}
 
 	private void findElement(AbstractControl control, boolean isNew)
@@ -571,7 +584,6 @@ public class DictionaryWizard extends AbstractWizard
 
 			this.updateElement(control, found, count, style.getCssStyle(), isNew);
 			this.xmlTreeView.setMarker(found, style);
-			this.updateMarkers(null, style);
 		}
 	}
 
@@ -704,9 +716,12 @@ public class DictionaryWizard extends AbstractWizard
 				{
 					AbstractControl copyControl = AbstractControl.create(locator, this.copyWindow.getSelfControl().getID());
 					updateExtraInfo(node, copyControl);
-					this.copyWindow.addControl(IWindow.SectionKind.Run, control);
+					TableBean e = new TableBean(copyControl);
+					e.setStyle(CssVariables.FOUND_ONE_ELEMENT);
+					e.setCount(1);
+					e.setId(copyControl.getID());
+					this.tableView.getItems().add(e);
 				}
-				displayElements();
 				break;
 
 			case UPDATE:
@@ -715,11 +730,8 @@ public class DictionaryWizard extends AbstractWizard
 				{
 					AbstractControl copyControl = AbstractControl.create(locatorUpdate, this.copyWindow.getSelfControl().getID());
 					updateExtraInfo(node, copyControl);
-					Section section = (Section)this.copyWindow.getSection(IWindow.SectionKind.Run);
-					section.replaceControl(control, copyControl);
+					this.tableView.updateControl(node, copyControl);
 				}
-				//TODO
-//				displayElements();
 				break;
 			case MARK:
 				updateExtraInfo(node, control);
@@ -730,14 +742,10 @@ public class DictionaryWizard extends AbstractWizard
 		}
 	}
 
-	public void magic()
+	private void magic()
 	{
-		/*
-		TODO
 		ExecutorService taskExecutor = Executors.newSingleThreadExecutor();
-
-		final List<XpathTreeItem> list = this.treeViewWithRectangles.getMarkedRows().stream().map(TreeItem::getValue).collect(Collectors.toList());
-		int sum = list.stream().mapToInt(x -> Math.max(1, x.getList().size())).sum();
+		int sum = this.xmlTreeView.getMarkedRowCount();
 		if (sum == 0)
 		{
 			DialogsHelper.showInfo("Nothing to update");
@@ -784,30 +792,28 @@ public class DictionaryWizard extends AbstractWizard
 					{
 						clearCheckboxes();
 						final int[] count = {0};
-						for (XpathTreeItem xpathTreeItem : list)
+
+						for (javafx.util.Pair<Node, MarkerStyle> pair : xmlTreeView.getMarkedItems())
 						{
-							ArrayList<XpathTreeItem.BeanWithMark> newList = new ArrayList<>(xpathTreeItem.getList());
-							for (XpathTreeItem.BeanWithMark beanWithMark : newList)
+							Node node = pair.getKey();
+							MarkerStyle style = pair.getValue();
+							AbstractControl control = tableView.controlByNode(node);
+
+							if (control != null && (control.getAddition() == Addition.Many || Str.IsNullOrEmpty(control.getOwnerID())))
 							{
-								xpathTreeItem.clearRelation(beanWithMark.getBean());
-								ElementWizardBean bean = beanWithMark.getBean();
-								if (bean != null)
-								{
-									if (bean.getAbstractControl().getAddition() == Addition.Many || Str.IsNullOrEmpty(bean.getAbstractControl().getOwnerID()))
-									{
-										bean.setStyleClass(CssVariables.COLOR_NOT_FINDING);
-										continue;
-									}
-								}
-								Thread.sleep(200);
-								Platform.runLater(() -> lblInfo.setText("Start updating item " + ++count[0] + " of " + sum));
-								Common.tryCatch(() -> arrangeOne(xpathTreeItem.getNode(), bean, beanWithMark.getState()), "Error on arrange one");
-								Platform.runLater(() -> {
-									lblInfo.setText("End updating " + count[0] + " of " + sum);
-									progressBar.setProgress((double) count[0] / sum);
-								});
+								updateElement(control, null, 0, CssVariables.COLOR_NOT_FINDING, false);
+								continue;
 							}
+
+							Thread.sleep(200);
+							Platform.runLater(() -> lblInfo.setText("Start updating item " + ++count[0] + " of " + sum));
+							Common.tryCatch(() -> arrangeOne(node, control, style), "Error on arrange one");
+							Platform.runLater(() -> {
+								lblInfo.setText("End updating " + count[0] + " of " + sum);
+								progressBar.setProgress((double) count[0] / sum);
+							});
 						}
+						Platform.runLater(() -> xmlTreeView.refresh());
 						return null;
 					}
 				};
@@ -816,12 +822,11 @@ public class DictionaryWizard extends AbstractWizard
 		service.setExecutor(taskExecutor);
 		service.setOnSucceeded(e -> {
 			Common.tryCatch(() -> Thread.sleep(200), "");
-			Common.tryCatch(() -> model.findElements(this.tableView.getItems()), "Error on find elements");
+			Common.tryCatch(() -> findElements(true), "Error on find elements");
 			dialog.setResult("");
 			dialog.close();
 		});
 		service.start();
-		*/
 	}
 
 	//region createLocator
@@ -908,189 +913,17 @@ public class DictionaryWizard extends AbstractWizard
 
 	private Locator compile(String id, ControlKind kind, Node node)
 	{
-		// try many methods here
-		Locator locator = null;
-
-		locator = locatorById(id, kind, node);
+		Locator locator = XpathUtils.FindLocator
+				.start(this::tryLocator, id, kind, node, this.pluginInfo)
+				.findById()
+				.findByAttrs()
+				.findByXpath(this.rootNode)
+				.build();
 		if (locator != null)
 		{
 			return locator;
 		}
-
-		locator = locatorByAttr(id, kind,  node);
-		if (locator != null)
-		{
-			return locator;
-		}
-
-		locator = locatorByXpath(id, kind,  node);
-		if (locator != null)
-		{
-			return locator;
-		}
-
-		locator = locatorByRelativeXpath(id, kind,  node);
-		if (locator != null)
-		{
-			return locator;
-		}
-
 		return null; // can't compile the such locator
-	}
-
-	private Locator locatorById(String id, ControlKind kind, Node node)
-	{
-		if (node.hasAttributes())
-		{
-			String idName = this.pluginInfo.attributeName(LocatorFieldKind.UID);
-			if (idName == null)
-			{
-				return null;
-			}
-
-			Node nodeId = node.getAttributes().getNamedItem(idName);
-			if (nodeId != null)
-			{
-				String uid = nodeId.getNodeValue();
-				if (XpathUtils.isStable(uid))
-				{
-					Locator locator = new Locator().kind(kind).id(id).uid(uid);
-					if (tryLocator(locator, node) == 1)
-					{
-						return locator;
-					}
-				}
-			}
-		}
-		return null;
-	}
-
-	private Locator locatorByAttr(String id, ControlKind kind, Node node)
-	{
-		List<Pair> list = allAttributes(node);
-		List<List<Pair>> cases = IntStream.range(1, 1 << list.size())
-				.boxed()
-				.sorted(Comparator.comparingInt(Integer::bitCount))
-				.limit(MAX_TRIES)
-				.map(e -> XpathUtils.shuffle(e, list))
-				.collect(Collectors.toList());
-
-		for (List<Pair> caze : cases)
-		{
-			Locator locator = new Locator().kind(kind).id(id);
-			caze.forEach(p -> locator.set(p.kind, p.value));
-
-			if (tryLocator(locator, node) == 1)
-			{
-				return locator;
-			}
-		}
-
-		return null;
-	}
-
-	private List<Pair>  allAttributes(Node node)
-	{
-		List<Pair> list = new ArrayList<>();
-		addAttr(list, node, LocatorFieldKind.UID);
-		addAttr(list, node, LocatorFieldKind.CLAZZ);
-		addAttr(list, node, LocatorFieldKind.NAME);
-		addAttr(list, node, LocatorFieldKind.TITLE);
-		addAttr(list, node, LocatorFieldKind.ACTION);
-		addAttr(list, node, LocatorFieldKind.TOOLTIP);
-		addAttr(list, node, LocatorFieldKind.TEXT);
-		return list;
-	}
-
-	private void addAttr(List<Pair> list, Node node, LocatorFieldKind kind)
-	{
-		if (!node.hasAttributes())
-		{
-			return;
-		}
-		if (kind == LocatorFieldKind.TEXT)
-		{
-			String textContent = node.getTextContent();
-			if (XpathUtils.isStable(textContent))
-			{
-				list.add(new Pair(kind, textContent));
-			}
-		}
-		String attrName = this.pluginInfo.attributeName(kind);
-		if (attrName == null)
-		{
-			return;
-		}
-		Node attrNode = node.getAttributes().getNamedItem(attrName);
-		if (attrNode == null)
-		{
-			return;
-		}
-		String value = attrNode.getNodeValue();
-		if (XpathUtils.isStable(value))
-		{
-			list.add(new Pair(kind, value));
-		}
-	}
-
-	private static class Pair
-	{
-		public Pair(LocatorFieldKind kind, String value)
-		{
-			this.kind = kind;
-			this.value = value;
-		}
-
-		public LocatorFieldKind kind;
-		public String value;
-	}
-
-	private Locator locatorByXpath(String id, ControlKind kind, Node node)
-	{
-		String ownerPath = ".";
-
-		List<String> parameters = XpathUtils.getAllNodeAttribute(node);
-		String relativePath = XpathViewer.fullXpath(ownerPath, this.rootNode, node, false, parameters, false);
-		Locator locator = new Locator().kind(kind).id(id).xpath(relativePath);
-
-		if (tryLocator(locator, node) == 1)
-		{
-			return locator;
-		}
-		return null;
-	}
-
-	private Locator locatorByRelativeXpath(String id, ControlKind kind, Node node)
-	{
-		String ownerPath = ".";
-		String xpath = XpathViewer.fullXpath(ownerPath, this.rootNode, node, false, null, true);
-		String[] parts = xpath.split("/");
-
-		Node parent = node;
-		for (int level = 0; level < parts.length; level++)
-		{
-			Locator relativeLocator = locatorByXpath(id, kind, parent);
-			if (relativeLocator != null)
-			{
-				String finalPath = XpathViewer.fullXpath(relativeLocator.getXpath(), parent, node, false, null, false);
-
-				Locator finalLocator = new Locator().kind(kind).id(id).xpath(finalPath);
-				if (tryLocator(finalLocator, node) == 1)
-				{
-					return finalLocator;
-				}
-			}
-
-			parent = parent.getParentNode();
-		}
-
-		Locator locator = new Locator().kind(kind).id(id).xpath(xpath);
-		if (tryLocator(locator, node) == 1)
-		{
-			return locator;
-		}
-
-		return null;
 	}
 
 	private int tryLocator(Locator locator, Node node)
@@ -1126,15 +959,26 @@ public class DictionaryWizard extends AbstractWizard
 	}
 	//endregion
 
+	private void clearCheckboxes()
+	{
+		Platform.runLater(() -> {
+			this.cbQuestion.setText("0");
+			this.cbMark.setText("0");
+			this.cbUpdate.setText("0");
+			this.cbAdd.setText("0");
+		});
+	}
+
 	private void clearRelation(Node node)
 	{
 		this.xmlTreeView.setMarker(node, null);
 		this.xmlTreeView.refresh();
 	}
 
-	private void updateRelation(AbstractControl control, Node node)
+	private void changeCheckBox(MarkerStyle style, boolean newValue)
 	{
-
+		this.xmlTreeView.setMarkersVisible(style, newValue);
+		this.imageViewWithScale.visibleRectangle(style, newValue);
 	}
 	//endregion
 }

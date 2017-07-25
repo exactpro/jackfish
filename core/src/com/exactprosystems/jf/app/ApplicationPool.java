@@ -18,7 +18,6 @@ import com.exactprosystems.jf.documents.config.AppEntry;
 import com.exactprosystems.jf.documents.config.Configuration;
 import com.exactprosystems.jf.documents.config.Parameter;
 import com.exactprosystems.jf.documents.guidic.GuiDictionary;
-
 import org.apache.log4j.Logger;
 
 import java.io.IOException;
@@ -37,7 +36,7 @@ public class ApplicationPool implements IApplicationPool
 	{
 		this.factory = factory;
 		this.appFactories = new ConcurrentHashMap<>();
-		this.connections = new ConcurrentSkipListSet<>((o1, o2) -> Integer.compare(o1.getPort(), o2.getPort()));
+		this.connections = new ConcurrentSkipListSet<>(Comparator.comparingInt(AppConnection::getPort));
 	}
 
 	//----------------------------------------------------------------------------------------------
@@ -205,7 +204,12 @@ public class ApplicationPool implements IApplicationPool
         }
     }
 
-	
+	@Override
+	public List<AppConnection> getConnections()
+	{
+		return new ArrayList<>(this.connections);
+	}
+
 	@Override
 	public void stopApplication(AppConnection connection) throws Exception
 	{

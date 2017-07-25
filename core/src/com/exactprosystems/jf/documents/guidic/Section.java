@@ -120,7 +120,7 @@ public class Section implements ISection, Mutable
 	}
 
 	@Override
-	public void addControl(IControl control) throws Exception
+	public void addControl(IControl control)
 	{
 		addControl(this.controls.size(), control);
 	}

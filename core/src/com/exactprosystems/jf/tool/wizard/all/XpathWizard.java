@@ -28,7 +28,6 @@ import com.exactprosystems.jf.tool.custom.find.FindPanel;
 import com.exactprosystems.jf.tool.custom.find.IFind;
 import com.exactprosystems.jf.tool.custom.scaledimage.ImageViewWithScale;
 import com.exactprosystems.jf.tool.custom.xmltree.XmlTreeView;
-import com.exactprosystems.jf.tool.custom.xpath.XpathViewer;
 import com.exactprosystems.jf.tool.dictionary.DictionaryFx;
 import com.exactprosystems.jf.tool.dictionary.dialog.WizardMatcher;
 import com.exactprosystems.jf.tool.helpers.DialogsHelper;
@@ -44,16 +43,9 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.*;
 import org.w3c.dom.Document;
-import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
 
-import javax.xml.xpath.XPath;
-import javax.xml.xpath.XPathConstants;
-import javax.xml.xpath.XPathExpression;
-import javax.xml.xpath.XPathFactory;
 import java.awt.*;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.function.Supplier;
@@ -443,7 +435,7 @@ public class XpathWizard extends AbstractWizard
 		{
 			if (oldItem != null)
 			{
-				this.imageViewWithScale.hideRectangle(oldItem.getRectangle(), oldMarker);
+				this.imageViewWithScale.hideRectangle(oldItem.getRectangle(), oldMarker.color());
 				if (oldItem.getStyle() != null)
 				{
 					this.imageViewWithScale.showRectangle(oldItem.getRectangle(), oldItem.getStyle(), oldItem.getText(), false);
@@ -579,75 +571,11 @@ public class XpathWizard extends AbstractWizard
 
 	private String findBestXpath(Node node, Node owner)
 	{
-		if (node == null)
-		{
-			return null;
-		}
-		Locator locator;
-		ControlKind kind = composeKind(node);
-		String str = xpathByAttr(node, owner);
-        if (str != null)
-        {
-            return str;
-        }
-		locator = this.locatorByXpath(node, owner, kind);
+		Locator locator = FindLocator.start((l, n) -> this.tryLocator(l, n, owner), "", composeKind(node), node, this.pluginInfo).findByXpath(owner).build();
 		if (locator != null)
 		{
 			return locator.getXpath();
 		}
-		locator = this.locatorByRelativeXpath(node, owner, kind);
-		if (locator != null)
-		{
-			return locator.getXpath();
-		}
-		return null;
-	}
-
-	private Locator locatorByXpath(Node node, Node owner, ControlKind kind)
-	{
-		String ownerPath = ".";
-
-		List<String> parameters = XpathUtils.getAllNodeAttribute(node);
-		String relativePath = XpathViewer.fullXpath(ownerPath, owner, node, false, parameters, false);
-		Locator locator = new Locator().kind(kind).xpath(relativePath);
-
-		if (tryLocator(locator, node, owner) == 1)
-		{
-			return locator;
-		}
-		return null;
-	}
-
-	private Locator locatorByRelativeXpath(Node node, Node owner, ControlKind kind)
-	{
-		String ownerPath = ".";
-		String xpath = XpathViewer.fullXpath(ownerPath, owner, node, false, null, true);
-		String[] parts = xpath.split("/");
-
-		Node parent = node;
-		for (int level = 0; level < parts.length; level++)
-		{
-			Locator relativeLocator = locatorByXpath(node, owner, kind);
-			if (relativeLocator != null)
-			{
-				String finalPath = XpathViewer.fullXpath(relativeLocator.getXpath(), parent, node, false, null, false);
-
-				Locator finalLocator = new Locator().kind(kind).xpath(finalPath);
-				if (tryLocator(finalLocator, node, owner) == 1)
-				{
-					return finalLocator;
-				}
-			}
-
-			parent = parent.getParentNode();
-		}
-
-		Locator locator = new Locator().kind(kind).xpath(xpath);
-		if (tryLocator(locator, node, owner) == 1)
-		{
-			return locator;
-		}
-
 		return null;
 	}
 
@@ -689,84 +617,4 @@ public class XpathWizard extends AbstractWizard
 		return this.pluginInfo.controlKindByNode(name);
 	}
 	//endregion
-
-    private String xpathByAttr(Node node, Node owner) {
-        String result = null;
-        try {
-            if (owner.equals(node.getParentNode())) {
-                if (checkXpath("./" + node.getNodeName(), owner) != null) {
-                    return "./" + node.getNodeName();
-                }
-            }
-        } catch (Exception e) {
-
-        }
-
-        List<Pair> list = new ArrayList<>();
-        NamedNodeMap attrs = node.getAttributes();
-        for (int i = 0; i < attrs.getLength(); i++) {
-            if (XpathUtils.isStable(attrs.item(i).getNodeValue()) && attrs.item(i) != null) {
-                list.add(
-                        new Pair(attrs.item(i).getNodeName(), attrs.item(i).getNodeValue())
-                );
-            }
-        }
-
-        List<List<Pair>> cases = IntStream.range(1, 1 << list.size())
-                .boxed()
-                .sorted((a, b) -> Integer.bitCount(a) - Integer.bitCount(b))
-                .limit(128)
-                .map(e -> XpathUtils.shuffle(e, list))
-                .collect(Collectors.toList());
-
-        for (List<Pair> pair : cases) {
-            try {
-                result = findAll(owner, pair, node);
-                if (result != null) {
-                    break;
-                }
-            } catch (Exception e) {
-
-            }
-        }
-        return result;
-    }
-
-    private static class Pair {
-        public Pair(String kind, String value) {
-            this.kind = kind;
-            this.value = value;
-        }
-
-        public String kind;
-        public String value;
-    }
-
-    private String findAll(Node owner, List<Pair> pairs, Node node) throws Exception {
-        StringBuilder sb = new StringBuilder();
-        sb.append(".//").append(node.getNodeName()).append("[");
-        String params = pairs.stream().map(p -> "@" + p.kind + "=" + "\"" + p.value + "\"").collect(Collectors.joining(" and "));
-        sb.append(params).append("]");
-
-        return checkXpath(sb.toString(), owner);
-    }
-
-    private String checkXpath(String str, Node owner) throws Exception {
-        XPath xpath = XPathFactory.newInstance().newXPath();
-        XPathExpression compile = xpath.compile(str);
-        NodeList nodeList = (NodeList) compile.evaluate(owner, XPathConstants.NODESET);
-        List<Node> list = IntStream.range(0, nodeList.getLength())
-                .mapToObj(nodeList::item)
-                .filter(n ->
-                {
-                    Boolean visible = (Boolean) n.getUserData(IRemoteApplication.visibleName);
-                    return visible != null && visible.booleanValue();
-                })
-                .collect(Collectors.toList());
-        if (list.size() == 1) {
-            return str;
-        } else {
-            return null;
-        }
-    }
 }

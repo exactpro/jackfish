@@ -732,6 +732,23 @@ public class ConfigurationFx extends Configuration
 			this.controller.displayService(getServiceEntries(), getStatuses(getServiceEntries()));
 		}
 	}
+
+	public void stopService(ServiceConnection connection) throws Exception
+	{
+		boolean b = this.serviceConnectionMap.entrySet().removeIf(entry -> entry.getValue().equals(connection));
+		if (b)
+		{
+			getServicesPool().stopService(connection);
+			this.controller.displayService(getServiceEntries(), getStatuses(getServiceEntries()));
+		}
+	}
+
+	public void stopAllServices() throws Exception
+	{
+		this.serviceConnectionMap.clear();
+		getServicesPool().stopAllServices();
+		this.controller.displayService(getServiceEntries(), getStatuses(getServiceEntries()));
+	}
 	//endregion
 
 	//region application

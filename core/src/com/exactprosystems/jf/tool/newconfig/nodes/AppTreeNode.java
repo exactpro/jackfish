@@ -7,6 +7,8 @@
 ////////////////////////////////////////////////////////////////////////////////
 package com.exactprosystems.jf.tool.newconfig.nodes;
 
+import com.exactprosystems.jf.api.app.AppConnection;
+import com.exactprosystems.jf.api.app.IApplicationPool;
 import com.exactprosystems.jf.api.common.SerializablePair;
 import com.exactprosystems.jf.api.wizard.Wizard;
 import com.exactprosystems.jf.api.wizard.WizardManager;
@@ -19,10 +21,7 @@ import com.exactprosystems.jf.tool.newconfig.ConfigurationFx;
 import com.exactprosystems.jf.tool.newconfig.ConfigurationTreeView;
 import com.exactprosystems.jf.tool.newconfig.TablePair;
 import javafx.scene.Node;
-import javafx.scene.control.ContextMenu;
-import javafx.scene.control.Menu;
-import javafx.scene.control.MenuItem;
-import javafx.scene.control.TreeItem;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.text.Text;
 
@@ -40,8 +39,11 @@ public class AppTreeNode extends TreeNode
 	private TreeItem<TreeNode> appTreeItem;
 	private AppDictionaryTreeNode appDictionaryTreeNode;
 
+	private static final String ALL = "All";
+
 	private static final SerializablePair<String, String> ADD_NEW_APP = new SerializablePair<>("Add new app", CssVariables.Icons.ADD_PARAMETER_ICON);
 	private static final SerializablePair<String, String> TEST_VERSION = new SerializablePair<>("Test versions", null);
+	private static final SerializablePair<String, String> CLOSE_APPS = new SerializablePair<>("Stop apps", null);
 	private static final SerializablePair<String, String> REFRESH = new SerializablePair<>("Refresh", CssVariables.Icons.REFRESH);
 	private static final SerializablePair<String, String> EXCLUDE_APP_DIC_FOLDER = new SerializablePair<>("Exclude app dictionary folder", CssVariables.Icons.REMOVE_PARAMETER_ICON);
 	private static final SerializablePair<String, String> OPEN_DICTIONARY = new SerializablePair<>("Open dictionary", CssVariables.Icons.APP_DICTIONARY_ICON);
@@ -66,6 +68,7 @@ public class AppTreeNode extends TreeNode
 						.ifPresent(res -> Common.tryCatch(() -> this.model.addNewAppEntry(res), "Error on add new application")));
 		menu.getItems().addAll(
 				ConfigurationTreeView.createItem(TEST_VERSION, () -> this.model.testAppVersion(), "Error on test app version"),
+				ConfigurationTreeView.createMenu(CLOSE_APPS, ConfigurationTreeView.createItem(ALL, null, () -> this.model.getApplicationPool().stopAllApplications(), "Error on close all application")),
 				ConfigurationTreeView.createDisabledItem(REFRESH),
 				ConfigurationTreeView.createDisabledItem(EXCLUDE_APP_DIC_FOLDER),
 				ConfigurationTreeView.createDisabledItem(OPEN_DICTIONARY),
@@ -75,6 +78,36 @@ public class AppTreeNode extends TreeNode
 				ConfigurationTreeView.createDisabledItem("Git", null)
 		);
 		return Optional.of(menu);
+	}
+
+	@Override
+	public void onContextMenuShowing(ContextMenu contextMenu)
+	{
+		contextMenu.getItems()
+				.stream()
+				.filter(item -> item.getText().equals(CLOSE_APPS.getKey()))
+				.findFirst()
+				.map(item -> (Menu) item)
+				.ifPresent(menu -> {
+					IApplicationPool applicationPool = this.model.getApplicationPool();
+					List<AppConnection> connections = applicationPool.getConnections();
+					if (connections.size() > 0)
+					{
+						menu.getItems().removeIf(menuItem -> !menuItem.getText().equals(ALL));
+						menu.getItems().add(new SeparatorMenuItem());
+						menu.getItems().addAll(connections
+								.stream()
+								.map(appConnection -> ConfigurationTreeView.createItem(
+										appConnection.toString()
+										, null
+										, () -> applicationPool.stopApplication(appConnection)
+										, "Error on stop application. See log for details"
+								))
+								.collect(Collectors.toList())
+						);
+					}
+				});
+
 	}
 
 	@Override
@@ -162,6 +195,7 @@ public class AppTreeNode extends TreeNode
 			menu.getItems().addAll(
 					ConfigurationTreeView.createDisabledItem(ADD_NEW_APP),
 					ConfigurationTreeView.createDisabledItem(TEST_VERSION),
+					ConfigurationTreeView.createDisabledMenu(CLOSE_APPS),
 					ConfigurationTreeView.createDisabledItem(REFRESH),
 					ConfigurationTreeView.createDisabledItem(EXCLUDE_APP_DIC_FOLDER),
 					ConfigurationTreeView.createItem(OPEN_DICTIONARY, () -> model.openAppsDictionary(getEntry()), "Error on open dictionary"),
@@ -241,6 +275,7 @@ public class AppTreeNode extends TreeNode
 			ret.getItems().addAll(
 					ConfigurationTreeView.createDisabledItem(ADD_NEW_APP),
 					ConfigurationTreeView.createDisabledItem(TEST_VERSION),
+					ConfigurationTreeView.createDisabledMenu(CLOSE_APPS),
 					ConfigurationTreeView.createItem(REFRESH, () -> this.model.updateAppDictionaries(), "Error on refresh app dictionaries"),
 					ConfigurationTreeView.createDisabledItem(EXCLUDE_APP_DIC_FOLDER),
 					ConfigurationTreeView.createDisabledItem(OPEN_DICTIONARY),
@@ -260,6 +295,7 @@ public class AppTreeNode extends TreeNode
 				menu.getItems().addAll(
 						ConfigurationTreeView.createDisabledItem(ADD_NEW_APP),
 						ConfigurationTreeView.createDisabledItem(TEST_VERSION),
+						ConfigurationTreeView.createDisabledMenu(CLOSE_APPS),
 						ConfigurationTreeView.createDisabledItem(REFRESH),
 						ConfigurationTreeView.createItem(EXCLUDE_APP_DIC_FOLDER, () -> model.excludeAppDictionaryFolder(file.getName()), "Error on excluded matrix directory"),
 						ConfigurationTreeView.createDisabledItem(OPEN_DICTIONARY),
@@ -274,6 +310,7 @@ public class AppTreeNode extends TreeNode
 				menu.getItems().addAll(
 						ConfigurationTreeView.createDisabledItem(ADD_NEW_APP),
 						ConfigurationTreeView.createDisabledItem(TEST_VERSION),
+						ConfigurationTreeView.createDisabledMenu(CLOSE_APPS),
 						ConfigurationTreeView.createDisabledItem(REFRESH),
 						ConfigurationTreeView.createDisabledItem(EXCLUDE_APP_DIC_FOLDER),
 						ConfigurationTreeView.createItem(OPEN_DICTIONARY, () -> this.model.openAppsDictionary(file), "Error on open app dictionary"),

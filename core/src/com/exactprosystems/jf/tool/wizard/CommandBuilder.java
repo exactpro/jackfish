@@ -129,6 +129,7 @@ public class CommandBuilder
 	{
 		this.commands.add(context ->
 		{
+			//TODO think about why index is -1 after second open wizard
 			int index = dictionaryFx.indexOf(oldWindow);
 			dictionaryFx.removeWindow(oldWindow);
 			dictionaryFx.addWindow(index, newWindow);
@@ -138,10 +139,10 @@ public class CommandBuilder
 
 	public CommandBuilder displayWindow(DictionaryFx dictionaryFx, Window window)
 	{
-		this.commands.add(context ->
-				Common.tryCatch(
-						() -> dictionaryFx.displayElement(window, IWindow.SectionKind.Run, window.getFirstControl(IWindow.SectionKind.Run)), "Error on display window")
-		);
+		this.commands.add(context -> Common.tryCatch(() -> {
+			dictionaryFx.displayDialog(window, dictionaryFx.getWindows());
+			dictionaryFx.displayElement(window, IWindow.SectionKind.Run, window.getFirstControl(IWindow.SectionKind.Run));
+		}, "Error on display window"));
 		return this;
 	}
 	
@@ -206,5 +207,10 @@ public class CommandBuilder
         return null;
     }
 
+    public CommandBuilder storeGlobal(String name, Object value, Configuration config) {
 
+        this.commands.add(context -> config.storeGlobal(name, value));
+
+        return this;
+    }
 }
