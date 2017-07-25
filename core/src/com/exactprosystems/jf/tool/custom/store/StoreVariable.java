@@ -37,6 +37,11 @@ public class StoreVariable
 		this.config.storeMap(convert(list));
 	}
 
+	public void remove(String name)
+	{
+		this.config.storeGlobal(name, null);
+	}
+
 	public void show()
 	{
 		this.controller.show();

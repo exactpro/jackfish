@@ -45,7 +45,8 @@ public abstract class AbstractWizard implements Wizard
 	        Supplier<List<WizardCommand> > resultSupplier = getCommands();
 	        return WizardResult.submit(resultSupplier.get());
 	    }
-	    
+	    onRefused();
+
 		return  WizardResult.deny();
 	}
 
@@ -77,6 +78,6 @@ public abstract class AbstractWizard implements Wizard
 	protected abstract void initDialog(BorderPane borderPane);
 
     protected abstract Supplier<List<WizardCommand> > getCommands();
-    
-    
+
+	protected void onRefused() {}
 }

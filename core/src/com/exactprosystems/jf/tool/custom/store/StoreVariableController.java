@@ -7,6 +7,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 package com.exactprosystems.jf.tool.custom.store;
 
+import com.exactprosystems.jf.actions.system.Store;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.ContainingParent;
 import com.exactprosystems.jf.tool.CssVariables;
@@ -31,6 +32,7 @@ public class StoreVariableController implements Initializable, ContainingParent
 	public TableColumn<StoreBean, String> columnName;
 	public TableColumn<StoreBean, String> columnType;
 	public TableColumn<StoreBean, Region> columnValue;
+	public TableColumn<StoreBean, StoreBean> columnRemove;
 
 	private Parent parent;
 	private StoreVariable model;
@@ -60,6 +62,25 @@ public class StoreVariableController implements Initializable, ContainingParent
 				}
 			}
 		});
+		this.columnRemove.setCellValueFactory(param -> new SimpleObjectProperty<>(param.getValue()));
+		this.columnRemove.setCellFactory(param -> new TableCell<StoreBean, StoreBean>() {
+			private final Button deleteButton = new Button("Remove");
+
+			@Override
+			protected void updateItem(StoreBean bean, boolean empty) {
+				super.updateItem(bean, empty);
+
+				if (bean == null) {
+					setGraphic(null);
+					return;
+				}
+
+				setGraphic(deleteButton);
+				deleteButton.setOnAction(
+						event -> remove(bean)
+				);
+			}
+		});
 		this.tableView.setRowFactory(param -> new TableRowFactory());
 	}
 
@@ -68,6 +89,11 @@ public class StoreVariableController implements Initializable, ContainingParent
 	{
 		this.parent = parent;
 	}
+
+    private void remove(StoreBean bean) {
+	    this.tableView.getItems().remove(bean);
+        this.model.remove(bean.name);
+    }
 
 	public void init(StoreVariable model, List<StoreBean> list)
 	{

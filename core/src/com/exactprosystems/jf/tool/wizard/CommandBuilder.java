@@ -207,5 +207,10 @@ public class CommandBuilder
         return null;
     }
 
+    public CommandBuilder storeGlobal(String name, Object value, Configuration config) {
 
+        this.commands.add(context -> config.storeGlobal(name, value));
+
+        return this;
+    }
 }
