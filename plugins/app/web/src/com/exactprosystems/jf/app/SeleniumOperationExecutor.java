@@ -1686,8 +1686,13 @@ public class SeleniumOperationExecutor implements OperationExecutor<WebElement>
 				return new ArrayList<>();
 		}
 	}
-	
-	//region private methods
+
+    @Override
+    public org.w3c.dom.Document getTree(WebElement component) throws Exception {
+        return null;
+    }
+
+    //region private methods
 	private String getElementString(WebElement element)
 	{
 		String s = element.getAttribute("outerHTML");

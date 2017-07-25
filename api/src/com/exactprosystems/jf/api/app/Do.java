@@ -271,6 +271,13 @@ public class Do
 		return new Operation().getAttr(name);
 	}
 
+	static final String getTree = "Get tree of current tree component. See @Tree";
+	@DescriptionAttribute(text = Do.getTree)
+	public static Operation getTree()
+	{
+		return new Operation().getTree();
+	}
+
 	static final String getTable = "Get table of current table component. See @Table";
 	@DescriptionAttribute(text = Do.getTable)
 	public static Operation getTable()

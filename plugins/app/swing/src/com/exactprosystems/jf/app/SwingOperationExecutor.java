@@ -34,7 +34,6 @@ import org.fest.swing.util.Pair;
 import org.w3c.dom.*;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-import sun.reflect.generics.tree.Tree;
 
 import javax.swing.*;
 import javax.swing.text.*;
@@ -556,35 +555,34 @@ public class SwingOperationExecutor implements OperationExecutor<ComponentFixtur
 		}
 	}
 
-	Document convertTreeToXMLDoc(JTree tree) throws ParserConfigurationException, XPathExpressionException
+	private Document convertTreeToXMLDoc(JTree tree) throws ParserConfigurationException, XPathExpressionException
 	{
 		Document doc = DocumentBuilderFactory.newInstance().newDocumentBuilder().newDocument();
 		TreeNode treeNode = (TreeNode) tree.getModel().getRoot();
 		Node root = doc.getDocumentElement();
-		createDom(doc, treeNode, root, 0);
+		createDom(doc, treeNode, root);
 		return doc;
 	}
 
-	private void createDom(Document doc, TreeNode treeNode, Node current, int level)
+	private void createDom(Document doc, TreeNode treeNode, Node current)
 	{
 		Element node = doc.createElement("item");
-		node.setAttribute("id", String.valueOf(doc.getElementsByTagName("item").getLength()));
 		node.setAttribute("name", treeNode.toString());
-		node.setAttribute("level", String.valueOf(level));
 		node.setUserData("path", new TreePath(((DefaultMutableTreeNode) treeNode).getPath()), null);
 
-		node.setIdAttribute("id", true);
-
-		if(current != null) {
+		if(current != null)
+		{
 			current.appendChild(node);
-		} else {
+		}
+		else
+		{
 			doc.appendChild(node);
 		}
 
 		Enumeration kiddies = treeNode.children();
-		level++;
-		while (kiddies.hasMoreElements()) {
-			createDom(doc, (TreeNode) kiddies.nextElement(), node, level);
+		while (kiddies.hasMoreElements())
+		{
+			createDom(doc, (TreeNode) kiddies.nextElement(), node);
 		}
 	}
 
@@ -976,6 +974,11 @@ public class SwingOperationExecutor implements OperationExecutor<ComponentFixtur
 	public List<String> getList(ComponentFixture<Component> fixture) throws Exception {
 			ListModel<?> model = getListModelFromComponentOrError(fixture.target);
 			return getListOfNamesFromListItems(model);
+	}
+
+	@Override
+	public Document getTree(ComponentFixture<Component> component) throws Exception {
+		return convertTreeToXMLDoc((JTree)component.target);
 	}
 
 	private List<String> getListOfNamesFromListItems(ListModel<?> model) {

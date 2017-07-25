@@ -934,6 +934,23 @@ public enum OperationKind
 		}
 	},
 
+	GET_TREE("getTree")
+	{
+		@Override
+		protected String formulaTemplate(Part part)
+		{
+			return ".getTree()";
+		}
+
+		@Override
+		public <T> boolean operateDerived(Part part, OperationExecutor<T> executor, Holder<T> holder, OperationResult result) throws Exception
+		{
+			result.setXml(executor.getTree(holder.getValue()));
+			return true;
+		}
+	},
+
+
 	GET_TABLE("getTable")
 	{
 		@Override

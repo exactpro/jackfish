@@ -8,9 +8,22 @@
 
 package com.exactprosystems.jf.api.app;
 
+import com.sun.org.apache.xml.internal.serialize.OutputFormat;
+import com.sun.org.apache.xml.internal.serialize.XMLSerializer;
+import org.w3c.dom.Document;
+
+import javax.xml.transform.OutputKeys;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
 import java.awt.Color;
 import java.awt.Rectangle;
+import java.io.IOException;
 import java.io.Serializable;
+import java.io.StringWriter;
+import java.io.Writer;
+import java.rmi.server.ExportException;
 import java.util.*;
 
 public class OperationResult implements Serializable
@@ -29,6 +42,7 @@ public class OperationResult implements Serializable
 	private Map<String, ValueAndColor>	colorMap			= null;
 	private String[][]					array				= null;
 	private Rectangle 					rectangle 			= null;
+	private Document					xml 				= null;
 
 	
 	public void setBool(Boolean bool)
@@ -73,6 +87,10 @@ public class OperationResult implements Serializable
 	{
 		this.colorMap = new LinkedHashMap<>();
 		this.colorMap.putAll(colorMap);
+	}
+
+	public void setXml(Document xml) {
+		this.xml = xml;
 	}
 
 	public void setArray(String[][] a)
@@ -138,7 +156,10 @@ public class OperationResult implements Serializable
 		{
 			return this.rectangle;
 		}
-		
+		if (this.xml != null)
+		{
+			return this.xml;
+		}
 		return null;
 	}
 	
@@ -192,6 +213,10 @@ public class OperationResult implements Serializable
 		{
 			builder.append(" array [").append(Arrays.deepToString(this.array)).append("];");
 		}
+		if (this.xml != null)
+		{
+			builder.append(xmlToString(this.xml));
+		}
 		if (builder.toString().isEmpty())
 		{
 			return "" + this.text;
@@ -203,6 +228,22 @@ public class OperationResult implements Serializable
 		return builder.toString();
 	}
 
+	private static String xmlToString(Document doc) {
+		OutputFormat format = new OutputFormat();
+		format.setIndenting(true);
+		format.setIndent(10);
+		format.setLineWidth(Integer.MAX_VALUE);
+
+		Writer outxml = new StringWriter();
+		XMLSerializer serializer = new XMLSerializer(outxml, format);
+		try {
+			serializer.serialize(doc);
+		}
+		catch (Exception e){
+
+		}
+		return outxml.toString();
+	}
 
 	@Override
 	public String toString()

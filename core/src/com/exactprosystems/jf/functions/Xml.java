@@ -12,6 +12,8 @@ import com.exactprosystems.jf.api.common.Str;
 import com.exactprosystems.jf.common.report.HTMLhelper;
 import com.exactprosystems.jf.common.report.ReportBuilder;
 import com.exactprosystems.jf.common.report.ReportTable;
+import com.sun.org.apache.xml.internal.serialize.OutputFormat;
+import com.sun.org.apache.xml.internal.serialize.XMLSerializer;
 import org.w3c.dom.*;
 import org.xml.sax.InputSource;
 
@@ -19,18 +21,17 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathConstants;
+import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.Map.Entry;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
@@ -211,7 +212,7 @@ public class Xml
 	{
 		return Xml.class.getSimpleName() + this.node.toString();
 	}
-	
+
 	public void setText(String text) throws Exception
 	{
 		if (this.node.getNodeType() == Node.DOCUMENT_NODE)
@@ -253,6 +254,20 @@ public class Xml
 		return null;
 	}
 
+	public Map<String,String> getAllAttributes() throws Exception
+	{
+		Map<String,String> attributes = new HashMap<>();
+		if (this.node instanceof Element)
+		{
+			NamedNodeMap attrs = this.node.getAttributes();
+			for (int i = 0; i < attrs.getLength(); i++)
+			{
+				attributes.put(attrs.item(i).getNodeName(), attrs.item(i).getNodeValue());
+			}
+			return attributes;
+		}
+		return null;
+	}
 	
 	public void report(ReportBuilder report, String beforeTestcase, String title) throws Exception
 	{
@@ -386,6 +401,23 @@ public class Xml
 			return new Xml(res);
 		}
 		
+		return null;
+	}
+
+	public List<Xml> findNodesByXpath(String xpath) throws Exception
+	{
+		XPath xPath = XPathFactory.newInstance().newXPath();
+		NodeList res = (NodeList) xPath.evaluate(xpath, this.node, XPathConstants.NODESET);
+
+		if (res != null)
+		{
+			ArrayList<Xml> list = new ArrayList<>();
+			for (int i = 0; i < res.getLength(); i++) {
+				list.add(new Xml(res.item(i)));
+			}
+			return list;
+		}
+
 		return null;
 	}
 

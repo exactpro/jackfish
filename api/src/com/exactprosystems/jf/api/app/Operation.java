@@ -366,6 +366,12 @@ public class Operation implements Iterable<Part>, Serializable
 		return this;
 	}
 
+	@DescriptionAttribute(text = Do.getTree)
+	public Operation getTree() {
+		this.list.add(new Part(OperationKind.GET_TREE));
+		return this;
+	}
+
 	@DescriptionAttribute(text = Do.getRow)
 	public Operation getRow(@FieldParameter(name = "valueCondition") ICondition valueCondition, @FieldParameter(name = "colorCondition") ICondition colorCondition)
 	{

@@ -1128,14 +1128,7 @@ namespace UIAdapter
             AutomationElement element = FindByRuntimeId(id);
 
             XmlDocument doc = new XmlDocument();
-            List<AutomationElement> expandedElements = new List<AutomationElement>();
-            WinMatcher.BuildDomForTree(doc, doc, element, expandedElements, 0, cacheRuntimeId);
-
-            for (int i = expandedElements.Count - 1; i >= 0; i--)
-            {
-                ExpandCollapsePattern pattern = (ExpandCollapsePattern) expandedElements[i].GetCurrentPattern(ExpandCollapsePattern.Pattern);
-                pattern.Collapse();
-            }
+            WinMatcher.BuildDomForTree(doc, doc, element, cacheRuntimeId);
 
             return ConvertString.replaceNonASCIIToUnicode(doc.InnerXml);
         }

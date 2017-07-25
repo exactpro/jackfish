@@ -18,6 +18,7 @@ import com.exactprosystems.jf.api.error.app.OperationNotAllowedException;
 import com.exactprosystems.jf.api.error.app.WrongParameterException;
 import org.apache.log4j.Logger;
 import org.w3c.dom.Document;
+import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
@@ -42,6 +43,8 @@ public class WinOperationExecutorJNA implements OperationExecutor<UIProxyJNA>
 	private static final String SEPARATOR_COMMA = ",";
 	private static final String EMPTY_CELL = "EMPTY_CELL_EMPTY";
 	private static final String EMPTY_HEADER_CELL = "EMPTY_HEADER_CELL_EMPTY";
+	private static final String RUNTIME_ID_ATTRIBUTE = "runtimeId";
+	private static final String STATE = "state";
 
 	private Logger logger;
 	private JnaDriverImpl driver;
@@ -471,14 +474,6 @@ public class WinOperationExecutorJNA implements OperationExecutor<UIProxyJNA>
 		return (NodeList) result;
 	}
 
-	private void makePath(List<String> path, Node item) {
-		if(Integer.parseInt(item .getAttributes().getNamedItem("id").getNodeValue()) != 0)
-		{
-			path.add(0, item.getAttributes().getNamedItem("runtimeId").getNodeValue());
-			makePath(path, item.getParentNode());
-		}
-	}
-
 	@Override
 	public boolean select(UIProxyJNA component, String selectedText) throws Exception
 	{
@@ -490,16 +485,8 @@ public class WinOperationExecutorJNA implements OperationExecutor<UIProxyJNA>
 				NodeList nodes = findNodesInTreeByXpath(convertTreeToXMLDoc(component), selectedText);
 				for (int i = 0; i < nodes.getLength(); i++)
 				{
-					List<String> path = new ArrayList<>();
-					makePath(path, nodes.item(i));
-					for(int j=0; j < path.size() - 1; j++)
-					{
-						expandCollapse(new UIProxyJNA(path.get(j)), true);
-					}
-					if(!path.isEmpty())
-					{
-						this.driver.doPatternCall(new UIProxyJNA(path.get(path.size() - 1)), WindowPattern.SelectionItemPattern, "Select", null, -1);
-					}
+					String runtimeId = nodes.item(i).getAttributes().getNamedItem(RUNTIME_ID_ATTRIBUTE).getNodeValue();
+					this.driver.doPatternCall(new UIProxyJNA(runtimeId), WindowPattern.SelectionItemPattern, "Select", null, -1);
 				}
 			}
 			else
@@ -599,32 +586,41 @@ public class WinOperationExecutorJNA implements OperationExecutor<UIProxyJNA>
 			String attribute = this.driver.elementAttribute(component, AttributeKind.TYPE_NAME);
 			if(attribute.equalsIgnoreCase("tree"))
 			{
-				NodeList nodes = findNodesInTreeByXpath(convertTreeToXMLDoc(component), path);
-				if (nodes.getLength() == 0) {
-					throw new WrongParameterException("Path '" + path + "' is not found in the tree.");
-				}
-
-				for (int i = nodes.getLength() - 1; i >= 0; i--)
+				boolean doNext;
+				do
 				{
-					List<String> pathsList = new ArrayList<>();
-					makePath(pathsList, nodes.item(i));
-					for (int j = 0; j < pathsList.size() - 1; j++)
+					doNext = false;
+					NodeList nodes = findNodesInTreeByXpath(convertTreeToXMLDoc(component), path);
+					if (nodes.getLength() == 0)
 					{
-						expandCollapse(new UIProxyJNA(pathsList.get(j)), true);
+						throw new WrongParameterException("Path '" + path + "' is not found in the tree.");
 					}
 
-					if(!pathsList.isEmpty())
+					for (int i = nodes.getLength() - 1; i >= 0; i--)
 					{
-						if (expandOrCollapse)
+						Node stateAttr = nodes.item(i).getAttributes().getNamedItem(STATE);
+						if(stateAttr != null)
 						{
-							expandCollapse(new UIProxyJNA(pathsList.get(pathsList.size() - 1)), true);
-						}
-						else
-						{
-							expandCollapse(new UIProxyJNA(pathsList.get(pathsList.size() - 1)), false);
+							String runtimeId = nodes.item(i).getAttributes().getNamedItem(RUNTIME_ID_ATTRIBUTE).getNodeValue();
+							if (expandOrCollapse)
+							{
+								if("Collapsed".equalsIgnoreCase(stateAttr.getNodeValue()))
+								{
+									expandCollapse(new UIProxyJNA(runtimeId), true);
+									doNext = true;
+								}
+							}
+							else
+							{
+								if("Expanded".equalsIgnoreCase(stateAttr.getNodeValue()))
+								{
+									expandCollapse(new UIProxyJNA(runtimeId), false);
+									doNext = true;
+								}
+							}
 						}
 					}
-				}
+				} while (doNext);
 			}
 
 			if (attribute.equalsIgnoreCase("menuitem"))
@@ -799,7 +795,29 @@ public class WinOperationExecutorJNA implements OperationExecutor<UIProxyJNA>
         }
 	}
 
-	@Override
+    @Override
+    public Document getTree(UIProxyJNA component) throws Exception
+	{
+		Document document = convertTreeToXMLDoc(component);
+
+		NodeList nodes = findNodesInTreeByXpath(document, "//*");
+		for (int i = nodes.getLength() - 1; i >= 0; i--)
+		{
+			NamedNodeMap attributes = nodes.item(i).getAttributes();
+			if(attributes.getNamedItem(RUNTIME_ID_ATTRIBUTE) != null)
+			{
+				attributes.removeNamedItem(RUNTIME_ID_ATTRIBUTE);
+			}
+			if(attributes.getNamedItem(STATE) != null)
+			{
+				attributes.removeNamedItem(STATE);
+			}
+		}
+
+		return document;
+    }
+
+    @Override
 	public String getValue(UIProxyJNA component) throws Exception
 	{
 		try

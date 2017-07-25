@@ -295,7 +295,7 @@ namespace UIAdapter
         }
 
         // for XPathBuilder
-        public static void BuildDomForTree(XmlDocument document, XmlNode current, AutomationElement element, List<AutomationElement> expandedElements, int level, Dictionary<int[], AutomationElement> cacheRuntimeId)
+        public static void BuildDomForTree(XmlDocument document, XmlNode current, AutomationElement element, Dictionary<int[], AutomationElement> cacheRuntimeId)
         {
             if (element == null)
             {
@@ -304,38 +304,30 @@ namespace UIAdapter
 
             int[] runtimeId = element.GetRuntimeId();
             XmlElement node = document.CreateElement("item");
-            node.SetAttribute("id", document.GetElementsByTagName("item").Count.ToString());
             node.SetAttribute(Program.pluginInfo.attributeName(LocatorFieldKind.UID), element.Current.AutomationId);
-            node.SetAttribute(Program.pluginInfo.attributeName(LocatorFieldKind.CLAZZ), element.Current.ClassName);
             node.SetAttribute(Program.pluginInfo.attributeName(LocatorFieldKind.NAME).ToLower(), element.Current.Name);
-            node.SetAttribute("level", level.ToString());
             node.SetAttribute(RUNTIME_ID_ATTRIBUTE, string.Join(SEPARATOR, runtimeId));
+
+            object obj;
+            if (element.TryGetCurrentPattern(ExpandCollapsePattern.Pattern, out obj))
+            {
+                var valPattern = (ExpandCollapsePattern)obj;
+                node.SetAttribute("state", valPattern.Current.ExpandCollapseState.ToString());
+            }
 
             if (!cacheRuntimeId.ContainsKey(runtimeId))
             {
                 cacheRuntimeId.Add(runtimeId, element);
             }
 
-            object obj;
-            if (element.TryGetCurrentPattern(ExpandCollapsePattern.Pattern, out obj))
-            {
-                var valPattern = (ExpandCollapsePattern)obj;
-                ExpandCollapseState state = valPattern.Current.ExpandCollapseState;
-                if (state == ExpandCollapseState.Collapsed)
-                {
-                    valPattern.Expand();
-                    expandedElements.Add(element);
-                }
-            }
             if (Tag(element).ToUpper().Equals("TREEITEM") || Tag(element).ToUpper().Equals("TREE"))
             {
                 current.AppendChild(node);
             }
             var col = element.FindAll(TreeScope.Children, Condition.TrueCondition);
-            level++;
             foreach (AutomationElement e in col)
             {
-                BuildDomForTree(document, node, e, expandedElements, level, cacheRuntimeId);
+                BuildDomForTree(document, node, e, cacheRuntimeId);
             }
         }
 

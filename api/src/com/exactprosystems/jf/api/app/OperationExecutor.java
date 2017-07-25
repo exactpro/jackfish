@@ -9,6 +9,7 @@
 package com.exactprosystems.jf.api.app;
 
 import com.exactprosystems.jf.api.client.ICondition;
+import org.w3c.dom.Document;
 
 import java.awt.Color;
 import java.awt.Rectangle;
@@ -45,6 +46,7 @@ public interface OperationExecutor<T>
 	boolean 					setValue		(T component, double value																								) throws Exception;
 	String						getValue		(T component																											) throws Exception;
 	List<String>				getList			(T component																											) throws Exception;
+	Document					getTree			(T component																											) throws Exception;
 	String						get				(T component																											) throws Exception;
 	String						getAttr			(T component, String name																								) throws Exception;
 	String						script			(T component, String script																								) throws Exception;

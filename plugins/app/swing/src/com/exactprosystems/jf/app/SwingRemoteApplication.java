@@ -345,32 +345,6 @@ public class SwingRemoteApplication extends RemoteApplication
 						stringBuilder.append('\n').append("value=" + combobox.getModel().getElementAt(i));
 					}
 				}
-				if (component.target instanceof JTree)
-				{
-					JTree tree = (JTree)component.target;
-					Document doc = operationExecutor.convertTreeToXMLDoc(tree);
-					NodeList list = doc.getElementsByTagName("item");
-					for (int i = 0; i < list.getLength(); i++) {
-						Element item = (Element) list.item(i);
-						StringBuilder indent = new StringBuilder();
-
-						int level = Integer.parseInt(item.getAttribute("level"));
-						for (int j = 0; j < level; j++) {
-							indent.append("     |     ");
-						}
-
-						stringBuilder
-								.append('\n')
-								.append(indent)
-								.append("<")
-								.append(item.getTagName())
-								.append(" id=")
-								.append(item.getAttribute("id"))
-								.append(" name=")
-								.append(item.getAttribute("name"))
-								.append("/>");
-					}
-				}
                 res.add(stringBuilder.toString());
 			}
 			return res;

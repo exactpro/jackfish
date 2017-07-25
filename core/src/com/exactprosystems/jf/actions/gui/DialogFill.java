@@ -16,6 +16,7 @@ import com.exactprosystems.jf.api.error.ErrorKind;
 import com.exactprosystems.jf.api.error.app.*;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.report.ReportBuilder;
+import com.exactprosystems.jf.documents.Document;
 import com.exactprosystems.jf.documents.config.Context;
 import com.exactprosystems.jf.documents.guidic.controls.AbstractControl;
 import com.exactprosystems.jf.documents.matrix.parser.Parameter;
@@ -24,6 +25,7 @@ import com.exactprosystems.jf.functions.HelpKind;
 import com.exactprosystems.jf.documents.matrix.parser.items.MatrixError;
 import com.exactprosystems.jf.documents.matrix.parser.items.TypeMandatory;
 import com.exactprosystems.jf.functions.Table;
+import com.exactprosystems.jf.functions.Xml;
 
 import java.rmi.RemoteException;
 import java.rmi.ServerException;
@@ -250,10 +252,13 @@ public class DialogFill extends AbstractAction
 				if (res.isOk())
 				{
 					Object value = res.getValue();
+					if (value instanceof org.w3c.dom.Document)
+					{
+						value = new Xml((org.w3c.dom.Document)value);
+					}
 					if (value instanceof String[][])
 					{
 						value = new Table((String[][]) value, evaluator);
-
 					}
 					outValue.put(name, value);
 				}
