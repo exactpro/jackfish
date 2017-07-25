@@ -61,7 +61,6 @@ import java.util.concurrent.Executors;
 import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 
 @WizardAttribute(
         name 				= "Dialog wizard",
@@ -75,8 +74,6 @@ import java.util.stream.IntStream;
     )
 public class DictionaryWizard extends AbstractWizard
 {
-	private static final int        MAX_TRIES = 128;
-
 	private AppConnection currentConnection = null;
 	private DictionaryFx  currentDictionary = null;
 	private Window        currentWindow     = null;
@@ -745,7 +742,7 @@ public class DictionaryWizard extends AbstractWizard
 		}
 	}
 
-	public void magic()
+	private void magic()
 	{
 		ExecutorService taskExecutor = Executors.newSingleThreadExecutor();
 		int sum = this.xmlTreeView.getMarkedRowCount();
@@ -916,189 +913,17 @@ public class DictionaryWizard extends AbstractWizard
 
 	private Locator compile(String id, ControlKind kind, Node node)
 	{
-		// try many methods here
-		Locator locator = null;
-
-		locator = locatorById(id, kind, node);
+		Locator locator = XpathUtils.FindLocator
+				.start(this::tryLocator, id, kind, node, this.pluginInfo)
+				.findById()
+				.findByAttrs()
+				.findByXpath(this.rootNode)
+				.build();
 		if (locator != null)
 		{
 			return locator;
 		}
-
-		locator = locatorByAttr(id, kind,  node);
-		if (locator != null)
-		{
-			return locator;
-		}
-
-		locator = locatorByXpath(id, kind,  node);
-		if (locator != null)
-		{
-			return locator;
-		}
-
-		locator = locatorByRelativeXpath(id, kind,  node);
-		if (locator != null)
-		{
-			return locator;
-		}
-
 		return null; // can't compile the such locator
-	}
-
-	private Locator locatorById(String id, ControlKind kind, Node node)
-	{
-		if (node.hasAttributes())
-		{
-			String idName = this.pluginInfo.attributeName(LocatorFieldKind.UID);
-			if (idName == null)
-			{
-				return null;
-			}
-
-			Node nodeId = node.getAttributes().getNamedItem(idName);
-			if (nodeId != null)
-			{
-				String uid = nodeId.getNodeValue();
-				if (XpathUtils.isStable(uid))
-				{
-					Locator locator = new Locator().kind(kind).id(id).uid(uid);
-					if (tryLocator(locator, node) == 1)
-					{
-						return locator;
-					}
-				}
-			}
-		}
-		return null;
-	}
-
-	private Locator locatorByAttr(String id, ControlKind kind, Node node)
-	{
-		List<Pair> list = allAttributes(node);
-		List<List<Pair>> cases = IntStream.range(1, 1 << list.size())
-				.boxed()
-				.sorted(Comparator.comparingInt(Integer::bitCount))
-				.limit(MAX_TRIES)
-				.map(e -> XpathUtils.shuffle(e, list))
-				.collect(Collectors.toList());
-
-		for (List<Pair> caze : cases)
-		{
-			Locator locator = new Locator().kind(kind).id(id);
-			caze.forEach(p -> locator.set(p.kind, p.value));
-
-			if (tryLocator(locator, node) == 1)
-			{
-				return locator;
-			}
-		}
-
-		return null;
-	}
-
-	private List<Pair>  allAttributes(Node node)
-	{
-		List<Pair> list = new ArrayList<>();
-		addAttr(list, node, LocatorFieldKind.UID);
-		addAttr(list, node, LocatorFieldKind.CLAZZ);
-		addAttr(list, node, LocatorFieldKind.NAME);
-		addAttr(list, node, LocatorFieldKind.TITLE);
-		addAttr(list, node, LocatorFieldKind.ACTION);
-		addAttr(list, node, LocatorFieldKind.TOOLTIP);
-		addAttr(list, node, LocatorFieldKind.TEXT);
-		return list;
-	}
-
-	private void addAttr(List<Pair> list, Node node, LocatorFieldKind kind)
-	{
-		if (!node.hasAttributes())
-		{
-			return;
-		}
-		if (kind == LocatorFieldKind.TEXT)
-		{
-			String textContent = node.getTextContent();
-			if (XpathUtils.isStable(textContent))
-			{
-				list.add(new Pair(kind, textContent));
-			}
-		}
-		String attrName = this.pluginInfo.attributeName(kind);
-		if (attrName == null)
-		{
-			return;
-		}
-		Node attrNode = node.getAttributes().getNamedItem(attrName);
-		if (attrNode == null)
-		{
-			return;
-		}
-		String value = attrNode.getNodeValue();
-		if (XpathUtils.isStable(value))
-		{
-			list.add(new Pair(kind, value));
-		}
-	}
-
-	private static class Pair
-	{
-		public Pair(LocatorFieldKind kind, String value)
-		{
-			this.kind = kind;
-			this.value = value;
-		}
-
-		public LocatorFieldKind kind;
-		public String value;
-	}
-
-	private Locator locatorByXpath(String id, ControlKind kind, Node node)
-	{
-		String ownerPath = ".";
-
-		List<String> parameters = XpathUtils.getAllNodeAttribute(node);
-		String relativePath = XpathViewer.fullXpath(ownerPath, this.rootNode, node, false, parameters, false);
-		Locator locator = new Locator().kind(kind).id(id).xpath(relativePath);
-
-		if (tryLocator(locator, node) == 1)
-		{
-			return locator;
-		}
-		return null;
-	}
-
-	private Locator locatorByRelativeXpath(String id, ControlKind kind, Node node)
-	{
-		String ownerPath = ".";
-		String xpath = XpathViewer.fullXpath(ownerPath, this.rootNode, node, false, null, true);
-		String[] parts = xpath.split("/");
-
-		Node parent = node;
-		for (int level = 0; level < parts.length; level++)
-		{
-			Locator relativeLocator = locatorByXpath(id, kind, parent);
-			if (relativeLocator != null)
-			{
-				String finalPath = XpathViewer.fullXpath(relativeLocator.getXpath(), parent, node, false, null, false);
-
-				Locator finalLocator = new Locator().kind(kind).id(id).xpath(finalPath);
-				if (tryLocator(finalLocator, node) == 1)
-				{
-					return finalLocator;
-				}
-			}
-
-			parent = parent.getParentNode();
-		}
-
-		Locator locator = new Locator().kind(kind).id(id).xpath(xpath);
-		if (tryLocator(locator, node) == 1)
-		{
-			return locator;
-		}
-
-		return null;
 	}
 
 	private int tryLocator(Locator locator, Node node)

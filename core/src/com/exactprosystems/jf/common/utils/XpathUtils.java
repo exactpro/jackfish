@@ -8,9 +8,10 @@
 
 package com.exactprosystems.jf.common.utils;
 
-import com.exactprosystems.jf.api.app.IRemoteApplication;
-import com.exactprosystems.jf.documents.guidic.Attr;
+import com.exactprosystems.jf.api.app.*;
 import com.exactprosystems.jf.api.common.Str;
+import com.exactprosystems.jf.documents.guidic.Attr;
+import com.exactprosystems.jf.tool.custom.xpath.XpathViewer;
 import org.w3c.dom.Document;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
@@ -18,11 +19,10 @@ import org.w3c.dom.NodeList;
 
 import javax.xml.xpath.*;
 import java.awt.*;
-import java.util.ArrayList;
-import java.util.Iterator;
+import java.util.*;
 import java.util.List;
-import java.util.Optional;
 import java.util.function.Consumer;
+import java.util.function.ToIntBiFunction;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -309,4 +309,317 @@ public class XpathUtils
 		return attributes;
 	}
 
+	public static class FindLocator
+	{
+		private static final int        MAX_TRIES = 128;
+
+		private boolean findById;
+		private boolean findByAttrs;
+		private boolean findByXpath;
+
+		private ToIntBiFunction<Locator, Node> findFunction;
+		private String id;
+		private ControlKind kind;
+		private Node node;
+
+		private PluginInfo pluginInfo;
+
+		private Node owner;
+
+		private FindLocator(ToIntBiFunction<Locator,Node> findFunction, String id, ControlKind kind, Node node, PluginInfo pluginInfo)
+		{
+			this.findFunction = findFunction;
+			this.id = id;
+			this.kind = kind;
+			this.node = node;
+			this.pluginInfo = pluginInfo;
+		}
+
+		public static FindLocator start(ToIntBiFunction<Locator,Node> findFunction, String id, ControlKind kind, Node node, PluginInfo pluginInfo)
+		{
+			return new FindLocator(findFunction, id, kind, node, pluginInfo);
+		}
+
+		public FindLocator findById()
+		{
+			this.findById = true;
+			this.pluginInfo = pluginInfo;
+			return this;
+		}
+
+		public FindLocator findByAttrs()
+		{
+			this.findByAttrs = true;
+			return this;
+		}
+
+		public FindLocator findByXpath(Node owner)
+		{
+			this.owner = owner;
+			this.findByXpath = true;
+			return this;
+		}
+
+		public Locator build()
+		{
+			Locator locator = null;
+			if (this.findById)
+			{
+				locator = this.locatorById();
+				if (locator != null)
+				{
+					return locator;
+				}
+			}
+			if (this.findByAttrs)
+			{
+				locator = locatorByAttrs();
+				if (locator != null)
+				{
+					return locator;
+				}
+			}
+			if (this.findByXpath)
+			{
+				locator = locatorByExtendAttrs();
+				if (locator != null)
+				{
+					return locator;
+				}
+				locator = locatorByXpath(this.node);
+				if (locator != null)
+				{
+					return locator;
+				}
+				locator = locatorByRelativeXpath();
+				if (locator != null)
+				{
+					return locator;
+				}
+			}
+			return null;
+		}
+
+		//region private methods
+		private Locator locatorById()
+		{
+			if (this.node.hasAttributes())
+			{
+				String idName = this.pluginInfo.attributeName(LocatorFieldKind.UID);
+				if (idName == null)
+				{
+					return null;
+				}
+
+				Node nodeId = this.node.getAttributes().getNamedItem(idName);
+				if (nodeId != null)
+				{
+					String uid = nodeId.getNodeValue();
+					if (XpathUtils.isStable(uid))
+					{
+						Locator locator = new Locator().kind(kind).id(id).uid(uid);
+						if (tryLocator(locator, node) == 1)
+						{
+							return locator;
+						}
+					}
+				}
+			}
+			return null;
+		}
+
+		//region attrs
+		private Locator locatorByAttrs()
+		{
+			List<Pair> list = allAttributes(node);
+			List<List<Pair>> cases = IntStream.range(1, 1 << list.size())
+					.boxed()
+					.sorted(Comparator.comparingInt(Integer::bitCount))
+					.limit(MAX_TRIES)
+					.map(e -> XpathUtils.shuffle(e, list))
+					.collect(Collectors.toList());
+
+			for (List<Pair> caze : cases)
+			{
+				Locator locator = new Locator().kind(kind).id(id);
+				caze.forEach(p -> locator.set(p.kind, p.value));
+
+				if (tryLocator(locator, node) == 1)
+				{
+					return locator;
+				}
+			}
+
+			return null;
+		}
+
+		private List<Pair> allAttributes(Node node)
+		{
+			List<Pair> list = new ArrayList<>();
+			addAttr(list, node, LocatorFieldKind.UID);
+			addAttr(list, node, LocatorFieldKind.CLAZZ);
+			addAttr(list, node, LocatorFieldKind.NAME);
+			addAttr(list, node, LocatorFieldKind.TITLE);
+			addAttr(list, node, LocatorFieldKind.ACTION);
+			addAttr(list, node, LocatorFieldKind.TOOLTIP);
+			addAttr(list, node, LocatorFieldKind.TEXT);
+			return list;
+		}
+
+		private void addAttr(List<Pair> list, Node node, LocatorFieldKind kind)
+		{
+			if (!node.hasAttributes())
+			{
+				return;
+			}
+			if (kind == LocatorFieldKind.TEXT)
+			{
+				String textContent = node.getTextContent();
+				if (XpathUtils.isStable(textContent))
+				{
+					list.add(new Pair(kind, textContent));
+				}
+			}
+			String attrName = this.pluginInfo.attributeName(kind);
+			if (attrName == null)
+			{
+				return;
+			}
+			Node attrNode = node.getAttributes().getNamedItem(attrName);
+			if (attrNode == null)
+			{
+				return;
+			}
+			String value = attrNode.getNodeValue();
+			if (XpathUtils.isStable(value))
+			{
+				list.add(new Pair(kind, value));
+			}
+		}
+
+		private static class Pair
+		{
+			public Pair(LocatorFieldKind kind, String value)
+			{
+				this.kind = kind;
+				this.value = value;
+			}
+
+			public LocatorFieldKind kind;
+			public String value;
+		}
+		//endregion
+
+		//region xpath
+		private Locator locatorByExtendAttrs()
+		{
+			Locator locator = new Locator().kind(this.kind).id(this.id).xpath("./" + this.node.getNodeName());
+			if (tryLocator(locator, this.node) == 1)
+			{
+				return locator;
+			}
+
+			List<StringPair> list = IntStream.range(0, node.getAttributes().getLength())
+					.mapToObj(this.node.getAttributes()::item)
+					.filter(attr -> XpathUtils.isStable(attr.getNodeName()) && XpathUtils.isStable(attr.getNodeValue()))
+					.map(attr -> new StringPair(attr.getNodeName(), attr.getNodeValue()))
+					.collect(Collectors.toList());
+
+			List<List<StringPair>> pairList = IntStream.range(1, 1 << list.size())
+					.boxed()
+					.sorted(Comparator.comparingInt(Integer::bitCount))
+					.limit(MAX_TRIES)
+					.map(i -> XpathUtils.shuffle(i, list))
+					.collect(Collectors.toList());
+
+			for (List<StringPair> pair : pairList)
+			{
+				locator = new Locator().kind(this.kind).id(this.id).xpath(createXpath(pair));
+				if (tryLocator(locator, node) == 1)
+				{
+					return locator;
+				}
+			}
+			return null;
+		}
+
+		private String createXpath(List<StringPair> list)
+		{
+			return list.stream()
+					.map(pair -> "contains("+pair.key + ","+pair.value+")")
+					.collect(Collectors.joining(" and ", ".//"+this.node.getNodeName()+"[", "]"));
+		}
+
+		private static class StringPair
+		{
+			String value;
+			String key;
+
+			public StringPair(String value, String key)
+			{
+				this.value = value;
+				this.key = key;
+			}
+		}
+
+		private Locator locatorByXpath(Node node)
+		{
+			String ownerPath = ".";
+
+			List<String> parameters = XpathUtils.getAllNodeAttribute(node);
+			String relativePath = XpathUtils.fullXpath(ownerPath, this.owner, node, false, parameters, false);
+			Locator locator = new Locator().kind(kind).id(id).xpath(relativePath);
+
+			if (tryLocator(locator, node) == 1)
+			{
+				return locator;
+			}
+			return null;
+		}
+
+		private Locator locatorByRelativeXpath()
+		{
+			String ownerPath = ".";
+			String xpath = XpathViewer.fullXpath(ownerPath, this.owner, node, false, null, true);
+			String[] parts = xpath.split("/");
+
+			Node parent = node;
+			for (int level = 0; level < parts.length; level++)
+			{
+				Locator relativeLocator = locatorByXpath(parent);
+				if (relativeLocator != null)
+				{
+					String finalPath = XpathViewer.fullXpath(relativeLocator.getXpath(), parent, node, false, null, false);
+
+					Locator finalLocator = new Locator().kind(kind).id(id).xpath(finalPath);
+					if (tryLocator(finalLocator, node) == 1)
+					{
+						return finalLocator;
+					}
+				}
+
+				parent = parent.getParentNode();
+			}
+
+			Locator locator = new Locator().kind(kind).id(id).xpath(xpath);
+			if (tryLocator(locator, node) == 1)
+			{
+				return locator;
+			}
+
+			return null;
+		}
+		//endregion
+
+		private int tryLocator(Locator locator, Node node)
+		{
+			if (locator == null)
+			{
+				return 0;
+			}
+			return this.findFunction.applyAsInt(locator, node);
+		}
+		//endregion
+
+	}
 }
