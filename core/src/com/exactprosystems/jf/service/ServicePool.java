@@ -17,12 +17,12 @@ import com.exactprosystems.jf.documents.config.Configuration;
 import com.exactprosystems.jf.documents.config.Entry;
 import com.exactprosystems.jf.documents.config.Parameter;
 import com.exactprosystems.jf.documents.config.ServiceEntry;
-
 import org.apache.log4j.Logger;
 
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.*;
+import java.util.concurrent.ConcurrentSkipListSet;
 import java.util.stream.Collectors;
 
 public class ServicePool implements IServicesPool
@@ -32,7 +32,7 @@ public class ServicePool implements IServicesPool
 		this.factory = factory;
 		this.serviceFactories = new HashMap<>();
 		this.serviceStatusMap = new HashMap<>();
-		this.connections = new HashSet<>();
+		this.connections = new ConcurrentSkipListSet<>(Comparator.comparingInt(ServiceConnection::hashCode));
 	}
 
 	@Override
@@ -61,6 +61,12 @@ public class ServicePool implements IServicesPool
 				.map(Entry::toString)
 				.filter(Objects::nonNull)
 				.collect(Collectors.toList());
+	}
+
+	@Override
+	public List<ServiceConnection> getConnections()
+	{
+		return new ArrayList<>(this.connections);
 	}
 
 	@Override
