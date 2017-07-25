@@ -161,26 +161,23 @@ public class MatrixFxController implements Initializable, ContainingParent, IMat
 	@Override
 	public void matrixStarted(final Matrix matrix)
 	{
-		Platform.runLater(() ->
+		this.model.clearExecutingState();
+		this.refresh();
+		CustomTab tab1 = checkDocument(matrix);
+		String format = String.format("Matrix '%s' started...", matrix.getName());
+		if (this.listView != null)
 		{
-			this.model.clearExecutingState();
-			this.refresh();
-			CustomTab tab1 = checkDocument(matrix);
-			String format = String.format("Matrix '%s' started...", matrix.getName());
-			if (this.listView != null)
-			{
-				this.listView.getItems().clear();
-				this.listView.getItems().add(ConsoleText.defaultText(format));
-				Optional.ofNullable(tab1).ifPresent(t -> {
-					t.getStyleClass().removeAll(CssVariables.MATRIX_FINISHED_OK, CssVariables.MATRIX_FINISHED_BAD);
-					t.getStyleClass().add(CssVariables.EXECUTING_TAB);
-				});
-			}
-			else
-			{
-				DialogsHelper.showInfo(format);
-			}
+		this.listView.getItems().clear();
+		this.listView.getItems().add(ConsoleText.defaultText(format));
+		Optional.ofNullable(tab1).ifPresent(t -> {
+		t.getStyleClass().removeAll(CssVariables.MATRIX_FINISHED_OK, CssVariables.MATRIX_FINISHED_BAD);
+		t.getStyleClass().add(CssVariables.EXECUTING_TAB);
 		});
+		}
+		else
+		{
+		DialogsHelper.showInfo(format);
+		}
 	}
 
 	@Override
@@ -199,23 +196,21 @@ public class MatrixFxController implements Initializable, ContainingParent, IMat
 	@Override
 	public void matrixFinished(final Matrix matrix, final int passed, final int failed)
 	{
-		Platform.runLater(() ->
+		String format = String.format("Matrix '%s' finished.", matrix.getName());
+		if (this.listView != null)
 		{
-			String format = String.format("Matrix '%s' finished.", matrix.getName());
-			if (this.listView != null)
-			{
-				this.listView.getItems().add(ConsoleText.defaultText(format));
-				Optional.ofNullable(this.tab).ifPresent(t -> {
-					t.getStyleClass().remove(CssVariables.EXECUTING_TAB);
-					t.getStyleClass().add(failed == 0 ? CssVariables.MATRIX_FINISHED_OK : CssVariables.MATRIX_FINISHED_BAD);
-				});
-			}
-			else
-			{
-				DialogsHelper.showInfo(format);
-			}
-			this.refresh();
-		});
+			this.listView.getItems().add(ConsoleText.defaultText(format));
+			Optional.ofNullable(this.tab).ifPresent(t -> {
+				t.getStyleClass().remove(CssVariables.EXECUTING_TAB);
+				t.getStyleClass().add(failed == 0 ? CssVariables.MATRIX_FINISHED_OK : CssVariables.MATRIX_FINISHED_BAD);
+			});
+		}
+		else
+		{
+			DialogsHelper.showInfo(format);
+		}
+		this.refresh();
+		this.model.disableButtons(false);
 	}
 
 	@Override
@@ -254,6 +249,7 @@ public class MatrixFxController implements Initializable, ContainingParent, IMat
 	{
 		try
 		{
+			this.model.disableButtons(false);
 			this.model.pausedMatrix(matrix);
 			this.refreshTreeIfToogle();
 			Optional.ofNullable(this.watcher).ifPresent(WatcherFx::update);
@@ -383,16 +379,19 @@ public class MatrixFxController implements Initializable, ContainingParent, IMat
 	public void stopMatrix(ActionEvent event)
 	{
 		tryCatch(this.model::stopMatrix, "Error on stopping matrix");
+		this.model.disableButtons(false);
 	}
 
 	public void startMatrix(ActionEvent event)
 	{
 		tryCatch(this.model::startMatrix, "Error on starting matrix. See the matrix output for details.");
+		this.model.disableButtons(true);
 	}
 
 	public void pauseMatrix(ActionEvent event)
 	{
 		tryCatch(this.model::pauseMatrix, "Error on pausing matrix");
+		this.model.disableButtons(false);
 	}
 
 	public void stepMatrix(ActionEvent event)
@@ -492,16 +491,13 @@ public class MatrixFxController implements Initializable, ContainingParent, IMat
 
 	public void displayBeforeStart(String msg)
 	{
-		Platform.runLater(() ->
-		{
-			this.listView.getItems().clear();
-			this.listView.getItems().add(ConsoleText.defaultText(msg));
-		});
+		this.listView.getItems().clear();
+		this.listView.getItems().add(ConsoleText.defaultText(msg));
 	}
 
 	public void displayAfterStopped(String msg)
 	{
-		Platform.runLater(() -> this.listView.getItems().add(ConsoleText.defaultText(msg)));
+		this.listView.getItems().add(ConsoleText.defaultText(msg));
 	}
 
 	public void refresh()
@@ -630,5 +626,10 @@ public class MatrixFxController implements Initializable, ContainingParent, IMat
 			this.toggleTracing.setTooltip(new Tooltip("Color off"));
 			this.toggleTracing.getStyleClass().add(CssVariables.TOGGLE_BUTTON_WITHOUT_BORDER);
 		}, "Error on setting tooltip or images"));
+	}
+
+	void disableButtons(boolean isOn) {
+		this.btnStartMatrix.disableProperty().setValue(isOn);
+		this.btnStepMatrix.disableProperty().setValue(isOn);
 	}
 }

@@ -885,6 +885,10 @@ public class MatrixFx extends Matrix
         }
 	}
 
+	void disableButtons(boolean isOn) {
+		this.controller.disableButtons(isOn);
+	}
+
 	private boolean isControllerInit = false;
 	private MatrixFxController 		controller;
 	private Date 					startDate = new Date();
