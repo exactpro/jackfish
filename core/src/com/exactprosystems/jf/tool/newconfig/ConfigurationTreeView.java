@@ -18,6 +18,7 @@ import javafx.event.EventHandler;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.control.Dialog;
+import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -46,9 +47,10 @@ public class ConfigurationTreeView extends TreeView<TreeNode>
 					.map(TreeNode::contextMenu)
 					.filter(Optional::isPresent)
 					.map(Optional::get)
-					.ifPresent(
-							menu -> menu.show(this.getScene().getWindow(), MouseInfo.getPointerInfo().getLocation().x,
-									MouseInfo.getPointerInfo().getLocation().y));
+					.ifPresent(menu -> {
+						menu.setOnShowing(e -> value.onContextMenuShowing(menu));
+						menu.show(this.getScene().getWindow(), MouseInfo.getPointerInfo().getLocation().x, MouseInfo.getPointerInfo().getLocation().y);
+					});
 
 		});
 		this.setOnMouseClicked(event ->
@@ -154,6 +156,24 @@ public class ConfigurationTreeView extends TreeView<TreeNode>
 		menu.getItems().addAll(itemClone, itemPull, itemCommit, itemPush, itemReset, itemIgnore);
 		contextMenu.getItems().add(menu);
 		return contextMenu;
+	}
+
+	public static Menu createMenu(SerializablePair<String, String> pair, MenuItem ... items)
+	{
+		Menu menu = new Menu(pair.getKey());
+		if (pair.getValue() != null)
+		{
+			menu.setGraphic(new ImageView(new Image(pair.getValue())));
+		}
+		menu.getItems().setAll(items);
+		return menu;
+	}
+
+	public static Menu createDisabledMenu(SerializablePair<String, String> pair)
+	{
+		Menu menu = createMenu(pair);
+		menu.setDisable(true);
+		return menu;
 	}
 
 	public static MenuItem createItem(String name, String image, Common.Function fn, String error)

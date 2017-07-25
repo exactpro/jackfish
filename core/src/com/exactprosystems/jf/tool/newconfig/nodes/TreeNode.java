@@ -30,6 +30,11 @@ public abstract class TreeNode
 		return Optional.empty();
 	}
 
+	public void onContextMenuShowing(ContextMenu contextMenu)
+	{
+
+	}
+
 	public abstract Node getView();
 
 	public abstract Optional<Image> icon();

@@ -25,6 +25,7 @@ public interface IApplicationPool extends IPool
 	AppConnection 		connectToApplication(String id, Map<String, String> args) throws Exception;
 	AppConnection 		startApplication(String id, Map<String, String> params) throws Exception;
     void                reconnectToApplication(AppConnection connection, Map<String, String> args) throws Exception;
+    List<AppConnection> getConnections();
 	void 				stopApplication(AppConnection connection) throws Exception;
 	void 				stopAllApplications() throws Exception;
 }

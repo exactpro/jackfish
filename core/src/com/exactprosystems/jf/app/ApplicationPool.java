@@ -205,7 +205,12 @@ public class ApplicationPool implements IApplicationPool
         }
     }
 
-	
+	@Override
+	public List<AppConnection> getConnections()
+	{
+		return new ArrayList<>(this.connections);
+	}
+
 	@Override
 	public void stopApplication(AppConnection connection) throws Exception
 	{
