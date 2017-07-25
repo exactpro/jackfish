@@ -30,7 +30,7 @@ INIT;Test case;Never;;
     14;x;'Do.use(\'Image\').move()';'\'tr_3_td_3\'';;;'\'Menu2/MenuItem2/MenuItem3\'';'\'Menu2/MenuItem2/MenuItem3\'';;'new Color(246,246,246)';Image;;'Image';'\'Image\'';;;;;;;;true;'new ArrayList([\'Green\',\'Yellow\', \'Orange\',\'Blue\']),false';'\'\'';'\'\''
     15;x;;'\'tr_3_td_3\'';;;'\'Menu2/MenuItem2/MenuItem3\'';'\'Menu2/MenuItem2/MenuItem3\'';;'new Color(246,246,246)';Wait;;'Wait';'\'Wait\'';;;;;;;;true;'new ArrayList([\'Green\',\'Yellow\', \'Orange\',\'Blue\']),false';'\'\'';'\'\''
     16;x;;'\'tr_3_td_3\'';;;'\'Menu2/MenuItem2/MenuItem3\'';'\'Menu2/MenuItem2/MenuItem3\'';;'new Color(246,246,246)';ScrollBar;;getExp(plugin,'ScrollBar','ScrollBar','Vertical Scroll Bar');getExp(plugin,'\'ScrollBar\'','\'ScrollBar\'','\'Vertical Scroll Bar\'');0;;;;'ScrollBar_30';;;true;'new ArrayList([\'Green\',\'Yellow\', \'Orange\',\'Blue\']),false';'\'0\'';'\'\''
-    17;x;getExp(plugin,'\'\'','Do.use(\'Tree\').select(\'[Green]\')','Do.use(\'Tree\').select(\'Green\')');getExp(plugin,'\'\'','\'[Green][Orange]\'','\'Orange\'');getExp(plugin,'','Expand_[Green, colors]','colors_expand');getExp(plugin,'','Collapse_[Green, colors]','colors_collapse');getExp(plugin,'\'\'','\'[Green][colors]\'','\'Green/colors\'');getExp(plugin,'\'\'','\'[Green][colors]\'','\'Green/colors\'');getExp(plugin,'','{value=[Green][Orange]}','Orange');'new Color(246,246,246)';Tree;;'Tree';'\'Tree\'';getExp(plugin,'','[Green]','Green');getExp(plugin,'','[Green]','YellowOrangeBluecolors');getExp(plugin,'','[Green, Blue]','Blue');;;;;true;'new ArrayList([\'Green\',\'Yellow\', \'Orange\',\'Blue\']),false';'\'\'';getExp(plugin,'','[Green][Blue]','Green/Blue')
+    17;x;getExp(plugin,'\'\'','Do.use(\'Tree\').expand(\'//item[@name=\\\'Green\\\']\').select(\'//item[@name=\\\'Green\\\']\')','Do.use(\'Tree\').expand(\'//item[@name=\\\'Green\\\']\').select(\'//item[@name=\\\'Green\\\']\')');'\'tr_3_td_3\'';getExp(plugin,'','Expand_[Green, colors]','colors_expand');getExp(plugin,'','Collapse_[Green, colors]','colors_collapse');getExp(plugin,'\'\'','\'//item[@name=\\\'colors\\\']\'','\'//item[@name=\\\'colors\\\']\'');getExp(plugin,'\'\'','\'//item[@name=\\\'colors\\\']\'','\'//item[@name=\\\'colors\\\']\'');;'new Color(246,246,246)';Tree;;'Tree';'\'Tree\'';getExp(plugin,'','[Green]','YellowOrangeBluecolorscolors2');getExp(plugin,'','Green','YellowOrangeBluecolors');getExp(plugin,'','[Green, Blue]','Blue');;;;;true;'new ArrayList([\'Green\',\'Yellow\', \'Orange\',\'Blue\']),false';'\'\'';getExp(plugin,'','\'//item[@name=\\\'Blue\\\']\'','\'//item[@name=\\\'Blue\\\']\'')
     18;x;'Do.use(\'Splitter\').setValue(125)';'\'[JTree][Orange]\'';;;'\'Menu2/MenuItem2/MenuItem3\'';'\'Menu2/MenuItem2/MenuItem3\'';;'new Color(246,246,246)';Splitter;;'Splitter';'\'Splitter\'';125;;;;'Splitter_30';;;true;'new ArrayList([\'Green\',\'Yellow\', \'Orange\',\'Blue\']),false';'\'125\'';'\'\''
     19;x;'Do.use(\'Menu2\').move()';'\'[JTree][Orange]\'';;;'\'Menu2/MenuItem2/MenuItem3\'';'\'Menu2/MenuItem2/MenuItem3\'';;'new Color(246,246,246)';Tooltip;;;'\'Tooltip\'';'Tooltip';;;'Tooltip';;;;true;'new ArrayList([\'Green\',\'Yellow\', \'Orange\',\'Blue\']),false';'\'Tooltip\'';'\'\''
     20;x;'Do.use(\'Menu2\').click(200,10)';'\'[JTree][Orange]\'';'MenuItem3_select';'MenuItem2_select';'\'Menu/MenuItem/MenuItem2\'';'\'Menu/MenuItem/MenuItem2\'';;'new Color(246,246,246)';Menu;;getExp(plugin,'','Menu','Application');getExp(plugin,'\'\'','\'Menu\'','\'Application\'');;;;getExp(plugin,'','Menu','Application');;;;true;'new ArrayList([\'Green\',\'Yellow\', \'Orange\',\'Blue\']),false';'\'\'';'\'\''
@@ -40,7 +40,7 @@ INIT;Test case;Never;;
     #EndRawTable
 
     #Action;$Table;$Expression
-    TableConsiderColumnsAs;controls;{'Before','getAttr','getValue','get','setValue','text','getList','check','getListPar','getValuePar','getAttrPar','colorPar','getRow','getRowPar','toggle','select','selectInt','expandPar','collapsePar','expandPar','collapsePar','expand','collapse'}
+    TableConsiderColumnsAs;controls;{'Before','getAttr','getValue','get','setValue','text','getList','check','getListPar','getValuePar','getAttrPar','colorPar','getRow','getRowPar','toggle','select','selectInt','selectPar','expandPar','collapsePar','expandPar','collapsePar','expand','collapse'}
 
     #Id;#Global;#RawTable
     operations;1;Table
@@ -71,7 +71,7 @@ INIT;Test case;Never;;
     23;x;getList;OperationKind.GET_LIST;Do.use(control);Do.use(control).getList();control.getList;
     24;x;toggle;OperationKind.TOGGLE;Do.use(control).toggle(true).toggle(false).toggle(true);Do.use(control).getValue();control.toggle;
     25;x;selectSTRING;OperationKind.SELECT;Do.use(control).select(par).delay(amount);Do.use(control).getValue();control.select;control.selectPar
-    26;x;selectINT;OperationKind.SELECT;Do.use(control).select(0).delay(amount);Do.use(control).getValue();control.selectInt;
+    26;x;selectINT;OperationKind.SELECT_BY_INDEX;Do.use(control).select(0).delay(amount);Do.use(control).getValue();control.selectInt;
     27;x;count;OperationKind.COUNT;Do.use(control);Do.use(control).count();1;
     28;x;use;OperationKind.USE;Do.use(control);Do.use(control).use(0).count();1;
     29;x;move;OperationKind.MOVE;Do.use(control).move();Do.use('moveLabel').getValue();control.Name + '_move';
@@ -181,7 +181,7 @@ SUBCASES;;;;
     #EndSubCase
 
     #Id;#SubCase;plugin
-    RUN;Run;'Web'
+    RUN;Run;'Win'
         #Step;#Kind;#For;#Depends
         'start application';;;
             #Id;#Action;Plugin;Control;Operation;Expected;Actual;Result
