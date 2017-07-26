@@ -396,51 +396,6 @@ public class WinRemoteApplicationJNA extends RemoteApplication
 			{
 				res.add(split[i]);
 			}
-
-			if (element.getControlKind() == ControlKind.Tree)
-			{
-				StringBuilder stringBuilder = new StringBuilder();
-				UIProxyJNA component = this.operationExecutor.find(owner,element);
-				Document doc = this.operationExecutor.convertTreeToXMLDoc(component);
-				NodeList list = doc.getElementsByTagName("item");
-				for (int i = 0; i < list.getLength(); i++) {
-					Element item = (Element) list.item(i);
-					StringBuilder indent = new StringBuilder();
-
-					int level = Integer.parseInt(item.getAttribute("level"));
-					for (int j = 0; j < level; j++) {
-						indent.append("     |     ");
-					}
-
-					stringBuilder
-							.append('\n')
-							.append(indent)
-							.append("<")
-							.append(item.getTagName())
-							.append(" id=")
-							.append(item.getAttribute("id"));
-
-					if(!item.getAttribute("uid").isEmpty())
-					{
-						stringBuilder
-							.append(" uid=")
-							.append(item.getAttribute("uid"));
-					}
-
-					if(!item.getAttribute("name").isEmpty())
-					{
-						stringBuilder
-							.append(" name=")
-							.append(item.getAttribute("name"));
-					}
-
-					stringBuilder
-							.append("/>");
-				}
-
-				res.add(stringBuilder.toString());
-			}
-
 			return res;
 		}
 		catch (RemoteException e)
