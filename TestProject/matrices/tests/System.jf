@@ -562,7 +562,7 @@ WAIT;Wait;Never;;
     delay;finish - start
 
     #Assert;#Message
-    delay < 10;'Proper delay'
+    delay < 15;'Proper delay'
 
     // =====================================================================
     // Negative tests
