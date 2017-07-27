@@ -15,6 +15,7 @@ import com.exactprosystems.jf.tool.helpers.DialogsHelper;
 import com.exactprosystems.jf.tool.wizard.AbstractWizard;
 import com.exactprosystems.jf.tool.wizard.CommandBuilder;
 import javafx.application.Platform;
+import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
@@ -40,12 +41,13 @@ public class ConnectionWizard extends AbstractWizard {
     private Configuration configuration;
     private TextField name;
     private Label status;
+    private AppEntry appEntry;
 
     @Override
     protected void initDialog(BorderPane borderPane) {
 
-        borderPane.setPrefWidth(400);
-        borderPane.setMinWidth(400);
+        borderPane.setPrefWidth(350);
+        borderPane.setMinWidth(350);
 
         this.status = new Label();
         this.name = new TextField();
@@ -97,17 +99,20 @@ public class ConnectionWizard extends AbstractWizard {
             }
         }));
 
+        GridPane.setHalignment(connect, HPos.CENTER);
+
         GridPane grid = new GridPane();
         grid.add(start, 0, 0);
         grid.add(connect, 1, 0);
         grid.add(stop, 2, 0);
-        grid.add(new Label("Connection name: "), 0, 1);
-        grid.add(name, 1, 1);
-        grid.add(nameCheck, 2, 1);
-        grid.add(new Label("Status: "), 0, 2);
-        grid.add(status, 1, 2);
+        grid.add(new Label("Status: "), 0, 1);
+        grid.add(status, 1, 1);
+        grid.add(nameCheck, 2, 2);
+        grid.add(new Label("Store as: "), 0, 2);
+        grid.add(name, 1, 2);
+        grid.add(new Label("Current application : " + this.appEntry.toString()), 0, 3,2,1);
         grid.setHgap(5);
-        grid.setVgap(5);
+        grid.setVgap(15);
 
         borderPane.setCenter(grid);
         BorderPane.setMargin(grid, new Insets(90, 0, 0, 5));
@@ -149,7 +154,7 @@ public class ConnectionWizard extends AbstractWizard {
     public void init(IContext context, WizardManager wizardManager, Object... parameters) {
         super.init(context, wizardManager, parameters);
 
-        AppEntry appEntry = get(AppEntry.class, parameters);
+        this.appEntry= get(AppEntry.class, parameters);
         this.configuration = ((Context) context).getFactory().getConfiguration();
         this.connector = new ApplicationConnector(((Context) context).getFactory());
         this.connector.setIdAppEntry(appEntry.toString());
@@ -159,7 +164,6 @@ public class ConnectionWizard extends AbstractWizard {
     protected void onRefused() {
         if (isConnected)
         {
-            this.connector.notify();
             Common.tryCatch(this.connector::stopApplication, "Error on close wizard");
         }
     }
