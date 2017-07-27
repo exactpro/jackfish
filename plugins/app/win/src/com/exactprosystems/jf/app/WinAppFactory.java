@@ -71,6 +71,7 @@ public class WinAppFactory implements IApplicationFactory
         info.addTypes(ControlKind.ScrollBar,    ControlType.ScrollBar.name());
         info.addTypes(ControlKind.Slider,       ControlType.Slider.name());
         info.addTypes(ControlKind.Tree,     	ControlType.Tree.name());
+		info.addTypes(ControlKind.TreeItem,     ControlType.TreeItem.name());
         info.addTypes(ControlKind.Spinner,     	ControlType.Spinner.name());
 
         info.addExcludes(ControlKind.Menu,      OperationKind.KEY_DOWN, OperationKind.KEY_UP, OperationKind.PRESS, OperationKind.EXPAND, OperationKind.COLLAPSE);
