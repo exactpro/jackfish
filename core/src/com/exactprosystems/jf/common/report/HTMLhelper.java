@@ -114,72 +114,7 @@ public class HTMLhelper
 	
 	public static String htmlMarker(String marker)
 	{
-		if (marker == null)
-		{
-			return "";
-		}
-		
-		switch (marker)
-		{
-		    // header 1 (min level)
-			case OM + "1": return "<h1>";
-			case "1" + CM: return "</h1>";	
-
-            // header 2
-			case OM + "2": return "<h2>";
-			case "2" + CM: return "</h2>";	
-
-            // header 3
-			case OM + "3": return "<h3>";
-			case "3" + CM: return "</h3>";	
-
-            // header 4 (max level)
-			case OM + "4": return "<h4>";
-			case "4" + CM: return "</h4>";	
-
-			// style for identifiers
-			case OM + "$": return "<b style='color:#8e44ad'><i>";		
-			case "$" + CM: return "</i></b>";		
-
-			// style for code
-			case OM + "#": return "<pre style='padding-left: 10px; color:#16a085; margin: 10px; border-left: 1px solid #CCC;'><code>";	
-			case "#" + CM: return "</code></pre>";	
-			
-			// style for references
-			case OM + "@": return "<a style='color:Blue'>";
-			case "@" + CM: return "</a>";
-
-            // text 90 degrees rotated
-            case OM + "^": return "<div class='rotatedDiv'><div class='rotate'><span>";
-            case "^" + CM: return "<span></div></div>";
-
-            // paragraph
-			case OM + "`": return "<p>";
-			case "`" + CM: return "</p>";
-
-            // new page
-            case OM + "&": return "<p>";
-            case "&" + CM: return "</p>";
-
-            // underscored
-			case OM + "_": return "<u>";
-			case "_" + CM: return "</u>";
-
-			// bolder
-			case OM + "*": return "<b>";
-            case "*" + CM: return "</b>";
-
-            // italic
-            case OM + "/": return "<i>";
-            case "/" + CM: return "</i>";
-		}
-		return "";
-	}
-
-	public static String newHtmlMarker(String marker)
-	{
 		boolean theme = Common.currentTheme().equals(Theme.WHITE);
-
 		if (marker == null)
 		{
 			return "";

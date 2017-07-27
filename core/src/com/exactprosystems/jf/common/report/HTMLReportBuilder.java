@@ -48,10 +48,11 @@ public class HTMLReportBuilder extends ReportBuilder
 
 	}
 
+
 	@Override
-	protected String postProcess(String result)
+	protected Marker getMarker()
 	{
-		return super.postProcess(result);
+		return new Marker.HTMLMaker(true);
 	}
 
 	@Override
