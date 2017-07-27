@@ -60,7 +60,7 @@ import static com.exactprosystems.jf.common.utils.XpathUtils.*;
         category 			= WizardCategory.GUI_DICTIONARY,
         shortDescription 	= "This wizard help to build xpath expression to find an element on screen.",
         detailedDescription = "Here you description might be",
-        experimental 		= false,
+        experimental 		= true,
         strongCriteries 	= true,
         criteries 			= { DictionaryFx.class, Window.class, SectionKind.class, AbstractControl.class }
     )

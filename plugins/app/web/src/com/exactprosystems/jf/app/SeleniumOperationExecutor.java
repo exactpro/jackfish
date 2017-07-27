@@ -1227,231 +1227,228 @@ public class SeleniumOperationExecutor implements OperationExecutor<WebElement>
 				switch (key)
 				{
 					case ESCAPE:
-						this.customAction.sendKeys(Keys.ESCAPE).perform();
+						this.customAction.sendKeys(Keys.chord(modifers,Keys.ESCAPE)).perform();
 						break;
 					case F1:
-						this.customAction.sendKeys(Keys.F1).perform();
+						this.customAction.sendKeys(Keys.chord(modifers,Keys.F1)).perform();
 						break;
 					case F2:
-						this.customAction.sendKeys(Keys.F2).perform();
+						this.customAction.sendKeys(Keys.chord(modifers,Keys.F2)).perform();
 						break;
 					case F3:
-						this.customAction.sendKeys(Keys.F3).perform();
+						this.customAction.sendKeys(Keys.chord(modifers,Keys.F3)).perform();
 						break;
 					case F4:
-						this.customAction.sendKeys(Keys.F4).perform();
+						this.customAction.sendKeys(Keys.chord(modifers,Keys.F4)).perform();
 						break;
 					case F5:
-						this.customAction.sendKeys(Keys.F5).perform();
+						this.customAction.sendKeys(Keys.chord(modifers,Keys.F5)).perform();
 						break;
 					case F6:
-						this.customAction.sendKeys(Keys.F6).perform();
+						this.customAction.sendKeys(Keys.chord(modifers,Keys.F6)).perform();
 						break;
 					case F7:
-						this.customAction.sendKeys(Keys.F7).perform();
+						this.customAction.sendKeys(Keys.chord(modifers,Keys.F7)).perform();
 						break;
 					case F8:
-						this.customAction.sendKeys(Keys.F8).perform();
+						this.customAction.sendKeys(Keys.chord(modifers,Keys.F8)).perform();
 						break;
 					case F9:
-						this.customAction.sendKeys(Keys.F9).perform();
+						this.customAction.sendKeys(Keys.chord(modifers,Keys.F9)).perform();
 						break;
 					case F10:
-						this.customAction.sendKeys(Keys.F10).perform();
+						this.customAction.sendKeys(Keys.chord(modifers,Keys.F10)).perform();
 						break;
 					case F11:
-						this.customAction.sendKeys(Keys.F11).perform();
+						this.customAction.sendKeys(Keys.chord(modifers,Keys.F11)).perform();
 						break;
 					case F12:
-						this.customAction.sendKeys(Keys.F12).perform();
+						this.customAction.sendKeys(Keys.chord(modifers,Keys.F12)).perform();
 						break;
 
 					case DIG1:
-						this.customAction.sendKeys(Keys.NUMPAD1).perform();
+						this.customAction.sendKeys(Keys.chord(modifers,Keys.NUMPAD1)).perform();
 						break;
 					case DIG2:
-						this.customAction.sendKeys(Keys.NUMPAD2).perform();
+						this.customAction.sendKeys(Keys.chord(modifers,Keys.NUMPAD2)).perform();
 						break;
 					case DIG3:
-						this.customAction.sendKeys(Keys.NUMPAD3).perform();
+						this.customAction.sendKeys(Keys.chord(modifers,Keys.NUMPAD3)).perform();
 						break;
 					case DIG4:
-						this.customAction.sendKeys(Keys.NUMPAD4).perform();
+						this.customAction.sendKeys(Keys.chord(modifers,Keys.NUMPAD4)).perform();
 						break;
 					case DIG5:
-						this.customAction.sendKeys(Keys.NUMPAD5).perform();
+						this.customAction.sendKeys(Keys.chord(modifers,Keys.NUMPAD5)).perform();
 						break;
 					case DIG6:
-						this.customAction.sendKeys(Keys.NUMPAD6).perform();
+						this.customAction.sendKeys(Keys.chord(modifers,Keys.NUMPAD6)).perform();
 						break;
 					case DIG7:
-						this.customAction.sendKeys(Keys.NUMPAD7).perform();
+						this.customAction.sendKeys(Keys.chord(modifers,Keys.NUMPAD7)).perform();
 						break;
 					case DIG8:
-						this.customAction.sendKeys(Keys.NUMPAD8).perform();
+						this.customAction.sendKeys(Keys.chord(modifers,Keys.NUMPAD8)).perform();
 						break;
 					case DIG9:
-						this.customAction.sendKeys(Keys.NUMPAD9).perform();
+						this.customAction.sendKeys(Keys.chord(modifers,Keys.NUMPAD9)).perform();
 						break;
 					case DIG0:
-						this.customAction.sendKeys(Keys.NUMPAD0).perform();
+						this.customAction.sendKeys(Keys.chord(modifers,Keys.NUMPAD0)).perform();
 						break;
 					case BACK_SPACE:
-						this.customAction.sendKeys(Keys.BACK_SPACE).perform();
+						this.customAction.sendKeys(Keys.chord(modifers,Keys.BACK_SPACE)).perform();
 						break;
 					case INSERT:
-						this.customAction.sendKeys(Keys.INSERT).perform();
+						this.customAction.sendKeys(Keys.chord(modifers,Keys.INSERT)).perform();
 						break;
 					case HOME:
-						this.customAction.sendKeys(Keys.HOME).perform();
+						this.customAction.sendKeys(Keys.chord(modifers,Keys.HOME)).perform();
 						break;
 					case PAGE_UP:
-						this.customAction.sendKeys(Keys.PAGE_UP).perform();
+						this.customAction.sendKeys(Keys.chord(modifers,Keys.PAGE_UP)).perform();
 						break;
 
 					case TAB:
-						this.customAction.sendKeys(Keys.TAB).perform();
+						this.customAction.sendKeys(Keys.chord(modifers,Keys.TAB)).perform();
 						break;
 					case Q:
-						this.customAction.sendKeys("q").perform();
+						this.customAction.sendKeys(Keys.chord(modifers,"q")).perform();
 						break;
 					case W:
-						this.customAction.sendKeys("w").perform();
+						this.customAction.sendKeys(Keys.chord(modifers,"w")).perform();
 						break;
 					case E:
-						this.customAction.sendKeys("e").perform();
+						this.customAction.sendKeys(Keys.chord(modifers,"e")).perform();
 						break;
 					case R:
-						this.customAction.sendKeys("r").perform();
+						this.customAction.sendKeys(Keys.chord(modifers,"r")).perform();
 						break;
 					case T:
-						this.customAction.sendKeys("t").perform();
+						this.customAction.sendKeys(Keys.chord(modifers,"t")).perform();
 						break;
 					case Y:
-						this.customAction.sendKeys("y").perform();
+						this.customAction.sendKeys(Keys.chord(modifers,"y")).perform();
 						break;
 					case U:
-						this.customAction.sendKeys("u").perform();
+						this.customAction.sendKeys(Keys.chord(modifers,"u")).perform();
 						break;
 					case I:
-						this.customAction.sendKeys("i").perform();
+						this.customAction.sendKeys(Keys.chord(modifers,"i")).perform();
 						break;
 					case O:
-						this.customAction.sendKeys("o").perform();
+						this.customAction.sendKeys(Keys.chord(modifers,"o")).perform();
 						break;
 					case P:
-						this.customAction.sendKeys("p").perform();
+						this.customAction.sendKeys(Keys.chord(modifers,"p")).perform();
 						break;
 					case SLASH:
 						break;
 					case BACK_SLASH:
 						break;
 					case DELETE:
-						this.customAction.sendKeys(Keys.DELETE).perform();
+						this.customAction.sendKeys(Keys.chord(modifers,Keys.DELETE)).perform();
 						break;
 					case END:
-						this.customAction.sendKeys(Keys.END).perform();
+						this.customAction.sendKeys(Keys.chord(modifers,Keys.END)).perform();
 						break;
 					case PAGE_DOWN:
-						this.customAction.sendKeys(Keys.PAGE_DOWN).perform();
+						this.customAction.sendKeys(Keys.chord(modifers,Keys.PAGE_DOWN)).perform();
 						break;
 
 					case CAPS_LOCK:
 						break;
 					case A:
-						this.customAction.sendKeys("a").perform();
+						this.customAction.sendKeys(Keys.chord(modifers,"a")).perform();
 						break;
 					case S:
-						this.customAction.sendKeys("s").perform();
+						this.customAction.sendKeys(Keys.chord(modifers,"s")).perform();
 						break;
 					case D:
-						this.customAction.sendKeys("d").perform();
+						this.customAction.sendKeys(Keys.chord(modifers,"d")).perform();
 						break;
 					case F:
-						this.customAction.sendKeys("f").perform();
+						this.customAction.sendKeys(Keys.chord(modifers,"f")).perform();
 						break;
 					case G:
-						this.customAction.sendKeys("g").perform();
+						this.customAction.sendKeys(Keys.chord(modifers,"g")).perform();
 						break;
 					case H:
-						this.customAction.sendKeys("h").perform();
+						this.customAction.sendKeys(Keys.chord(modifers,"h")).perform();
 						break;
 					case J:
-						this.customAction.sendKeys("j").perform();
+						this.customAction.sendKeys(Keys.chord(modifers,"j")).perform();
 						break;
 					case K:
-						this.customAction.sendKeys("k").perform();
+						this.customAction.sendKeys(Keys.chord(modifers,"k")).perform();
 						break;
 					case L:
-						this.customAction.sendKeys("l").perform();
+						this.customAction.sendKeys(Keys.chord(modifers,"l")).perform();
 						break;
 					case SEMICOLON:
-						this.customAction.sendKeys(Keys.SEMICOLON).perform();
+						this.customAction.sendKeys(Keys.chord(modifers,Keys.SEMICOLON)).perform();
 						break;
 					case QUOTE:
 						break;
 					case DOUBLE_QUOTE:
 						break;
 					case ENTER:
-						this.customAction.sendKeys(Keys.ENTER).perform();
+						this.customAction.sendKeys(Keys.chord(modifers,Keys.ENTER)).perform();
 						break;
 
 					case SHIFT:
-						this.customAction.sendKeys(Keys.SHIFT).perform();
 						break;
 					case Z:
-						this.customAction.sendKeys("z").perform();
+						this.customAction.sendKeys(Keys.chord(modifers,"z")).perform();
 						break;
 					case X:
-						this.customAction.sendKeys("x").perform();
+						this.customAction.sendKeys(Keys.chord(modifers,"x")).perform();
 						break;
 					case C:
-						this.customAction.sendKeys("c").perform();
+						this.customAction.sendKeys(Keys.chord(modifers,"c")).perform();
 						break;
 					case V:
-						this.customAction.sendKeys("v").perform();
+						this.customAction.sendKeys(Keys.chord(modifers,"v")).perform();
 						break;
 					case B:
-						this.customAction.sendKeys("b").perform();
+						this.customAction.sendKeys(Keys.chord(modifers,"b")).perform();
 						break;
 					case N:
-						this.customAction.sendKeys("n").perform();
+						this.customAction.sendKeys(Keys.chord(modifers,"n")).perform();
 						break;
 					case M:
-						this.customAction.sendKeys("m").perform();
+						this.customAction.sendKeys(Keys.chord(modifers,"m")).perform();
 						break;
 					case DOT:
-						this.customAction.sendKeys(Keys.DECIMAL).perform();
+						this.customAction.sendKeys(Keys.chord(modifers,Keys.DECIMAL)).perform();
 						break;
 					case UP:
-						this.customAction.sendKeys(Keys.UP).perform();
+						this.customAction.sendKeys(Keys.chord(modifers,Keys.UP)).perform();
 						break;
 
 					case CONTROL:
-						this.customAction.sendKeys(Keys.CONTROL).perform();
 						break;
 					case ALT:
-						this.customAction.sendKeys(Keys.ALT).perform();
 						break;
 					case SPACE:
-						this.customAction.sendKeys(Keys.SPACE).perform();
+						this.customAction.sendKeys(Keys.chord(modifers,Keys.SPACE)).perform();
 						break;
 					case LEFT:
-						this.customAction.sendKeys(Keys.LEFT).perform();
+						this.customAction.sendKeys(Keys.chord(modifers,Keys.LEFT)).perform();
 						break;
 					case DOWN:
-						this.customAction.sendKeys(Keys.DOWN).perform();
+						this.customAction.sendKeys(Keys.chord(modifers,Keys.DOWN)).perform();
 						break;
 
 					case RIGHT:
-						this.customAction.sendKeys(Keys.RIGHT).perform();
+						this.customAction.sendKeys(Keys.chord(modifers,Keys.RIGHT)).perform();
 						break;
 
 					case PLUS:
-						this.customAction.sendKeys(Keys.ADD).perform();
+						this.customAction.sendKeys(Keys.chord(modifers,Keys.ADD)).perform();
 						break;
 					case MINUS:
-						this.customAction.sendKeys(Keys.SUBTRACT).perform();
+						this.customAction.sendKeys(Keys.chord(modifers,Keys.SUBTRACT)).perform();
 						break;
 					case UNDERSCORE:
 						this.customAction.sendKeys(Keys.chord(Keys.SHIFT, "-")).perform();
@@ -1461,55 +1458,55 @@ public class SeleniumOperationExecutor implements OperationExecutor<WebElement>
 						//todo nothing, because Keys dosen't contains numlock key
 						break;
 					case NUM_DIVIDE:
-						this.customAction.sendKeys(Keys.DIVIDE).perform();
+						this.customAction.sendKeys(Keys.chord(modifers,Keys.DIVIDE)).perform();
 						break;
 					case NUM_SEPARATOR:
-						this.customAction.sendKeys(Keys.SEPARATOR).perform();
+						this.customAction.sendKeys(Keys.chord(modifers,Keys.SEPARATOR)).perform();
 						break;
 					case NUM_MULTIPLY:
-						this.customAction.sendKeys(Keys.MULTIPLY).perform();
+						this.customAction.sendKeys(Keys.chord(modifers,Keys.MULTIPLY)).perform();
 						break;
 					case NUM_MINUS:
-						this.customAction.sendKeys(Keys.SUBTRACT).perform();
+						this.customAction.sendKeys(Keys.chord(modifers,Keys.SUBTRACT)).perform();
 						break;
 					case NUM_DIG7:
-						this.customAction.sendKeys(Keys.NUMPAD7).perform();
+						this.customAction.sendKeys(Keys.chord(modifers,Keys.NUMPAD7)).perform();
 						break;
 					case NUM_DIG8:
-						this.customAction.sendKeys(Keys.NUMPAD8).perform();
+						this.customAction.sendKeys(Keys.chord(modifers,Keys.NUMPAD8)).perform();
 						break;
 					case NUM_DIG9:
-						this.customAction.sendKeys(Keys.NUMPAD9).perform();
+						this.customAction.sendKeys(Keys.chord(modifers,Keys.NUMPAD9)).perform();
 						break;
 					case NUM_PLUS:
-						this.customAction.sendKeys(Keys.ADD).perform();
+						this.customAction.sendKeys(Keys.chord(modifers,Keys.ADD)).perform();
 						break;
 					case NUM_DIG4:
-						this.customAction.sendKeys(Keys.NUMPAD4).perform();
+						this.customAction.sendKeys(Keys.chord(modifers,Keys.NUMPAD4)).perform();
 						break;
 					case NUM_DIG5:
-						this.customAction.sendKeys(Keys.NUMPAD5).perform();
+						this.customAction.sendKeys(Keys.chord(modifers,Keys.NUMPAD5)).perform();
 						break;
 					case NUM_DIG6:
-						this.customAction.sendKeys(Keys.NUMPAD6).perform();
+						this.customAction.sendKeys(Keys.chord(modifers,Keys.NUMPAD6)).perform();
 						break;
 					case NUM_DIG1:
-						this.customAction.sendKeys(Keys.NUMPAD1).perform();
+						this.customAction.sendKeys(Keys.chord(modifers,Keys.NUMPAD1)).perform();
 						break;
 					case NUM_DIG2:
-						this.customAction.sendKeys(Keys.NUMPAD2).perform();
+						this.customAction.sendKeys(Keys.chord(modifers,Keys.NUMPAD2)).perform();
 						break;
 					case NUM_DIG3:
-						this.customAction.sendKeys(Keys.NUMPAD3).perform();
+						this.customAction.sendKeys(Keys.chord(modifers,Keys.NUMPAD3)).perform();
 						break;
 					case NUM_DIG0:
-						this.customAction.sendKeys(Keys.NUMPAD0).perform();
+						this.customAction.sendKeys(Keys.chord(modifers,Keys.NUMPAD0)).perform();
 						break;
 					case NUM_DOT:
-						this.customAction.sendKeys(Keys.DECIMAL).perform();
+						this.customAction.sendKeys(Keys.chord(modifers,Keys.DECIMAL)).perform();
 						break;
 					case NUM_ENTER:
-						this.customAction.sendKeys(Keys.ENTER).perform();
+						this.customAction.sendKeys(Keys.chord(modifers,Keys.ENTER)).perform();
 						break;
 					default:
 						return false;
@@ -1526,62 +1523,34 @@ public class SeleniumOperationExecutor implements OperationExecutor<WebElement>
 		throw real;
 	}
 
-	// MODIFIER_KEYS = new Keys[]{Keys.SHIFT, Keys.CONTROL, Keys.ALT, Keys.META, Keys.COMMAND, Keys.LEFT_ALT, Keys.LEFT_CONTROL, Keys.LEFT_SHIFT};
-	// if key not equals modifier keys will throw exception. See org.openqa.selenium.interactions.internal.SingleKeyEvent
 	@Override
 	public boolean upAndDown(WebElement component, Keyboard key, boolean down) throws Exception
 	{
 		scrollToElement(component);
 		if(!down)
 		{
-			if(modifers != Keys.NULL)
-			{
-				modifers = Keys.NULL;
-				switch (key)
-				{
-					case SHIFT:
-						this.customAction.keyUp(Keys.SHIFT).perform();
-						break;
-					case CONTROL:
-						this.customAction.keyUp(Keys.CONTROL).perform();
-						break;
-					case ALT:
-						this.customAction.keyUp(Keys.ALT).perform();
-						break;
-				}
-			}
+			modifers = Keys.NULL;
 		}
 		else
 		{
 			switch (key)
 			{
 				case SHIFT:
-					if(modifers != Keys.SHIFT)
-					{
-						modifers = Keys.SHIFT;
-						this.customAction.keyDown(Keys.SHIFT).perform();
-					}
+					modifers = Keys.SHIFT;
 					break;
 
 				case CONTROL:
-					if(modifers != Keys.CONTROL)
-					{
-						modifers = Keys.CONTROL;
-						this.customAction.keyDown(Keys.CONTROL).perform();
-					}
+					modifers = Keys.CONTROL;
 					break;
 
 				case ALT:
-					if(modifers != Keys.ALT)
-					{
-						modifers = Keys.ALT;
-						this.customAction.keyDown(Keys.ALT).perform();
-					}
+					modifers = Keys.ALT;
 					break;
 
 				default:
 					return false;
 			}
+
 		}
 		return true;
 	}
