@@ -14,7 +14,6 @@ import com.exactprosystems.jf.charts.ChartBuilder;
 import com.exactprosystems.jf.documents.matrix.parser.items.MatrixItem;
 import com.exactprosystems.jf.documents.matrix.parser.items.MatrixRoot;
 import com.exactprosystems.jf.functions.Content;
-
 import org.apache.log4j.Logger;
 
 import java.io.*;
@@ -380,7 +379,11 @@ public abstract class ReportBuilder implements Storable
 		{
 			return null;
 		}
-		
+		if (getMarker() != null)
+		{
+			return getMarker().process(source);
+		}
+
         String reg = "((\\{\\{[1|2|3|4|5|$|#|@|\\^|`|_|*|/|&|=|-])|([1|2|3|4|5|$|#|@|\\^|`|_|*|/|&|=|-]\\}\\}))";
 
 		Pattern patt = Pattern.compile(reg);
@@ -396,7 +399,12 @@ public abstract class ReportBuilder implements Storable
 		
 		return sb.toString();
 	}
-	
+
+	protected Marker getMarker()
+	{
+		return null;
+	}
+
 	public String decorateStyle(Object value, String style)
 	{
 		if (value == null)

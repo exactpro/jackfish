@@ -10,7 +10,6 @@ package com.exactprosystems.jf.common.report;
 
 import com.exactprosystems.jf.api.app.ImageWrapper;
 import com.exactprosystems.jf.charts.ChartBuilder;
-import com.exactprosystems.jf.common.report.ReportBuilder.ImageReportMode;
 import com.exactprosystems.jf.documents.matrix.parser.items.MatrixItem;
 import com.exactprosystems.jf.functions.Content;
 import com.exactprosystems.jf.tool.Common;
@@ -29,21 +28,21 @@ public class ContextHelpBuilder extends ReportBuilder
     }
 
 	@Override
-	protected String postProcess(String result)
-	{
-		return super.postProcess(result);
-	}
-
-	@Override
 	protected String decorateStyle(String value, String style)
 	{
 		return HTMLhelper.htmlMarker(value);
 	}
 
 	@Override
+	protected Marker getMarker()
+	{
+		return new Marker.HTMLMaker(Theme.WHITE.equals(Common.currentTheme()));
+	}
+
+	@Override
 	protected String replaceMarker(String marker)
 	{
-		return HTMLhelper.newHtmlMarker(marker);
+		return HTMLhelper.htmlMarker(marker);
 	}
 
     @Override
