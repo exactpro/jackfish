@@ -74,7 +74,8 @@ public class StoreVariableController implements Initializable, ContainingParent
 					setGraphic(null);
 					return;
 				}
-
+				deleteButton.setId("dictionaryBtnDeleteDialog");
+				deleteButton.getStyleClass().add("$transparentBackground");
 				setGraphic(deleteButton);
 				deleteButton.setOnAction(
 						event -> remove(bean)
