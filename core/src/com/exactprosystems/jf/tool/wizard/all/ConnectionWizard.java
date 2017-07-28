@@ -51,6 +51,7 @@ public class ConnectionWizard extends AbstractWizard {
 
         this.status = new Label();
         this.name = new TextField();
+        name.tooltipProperty().set(new Tooltip("Enter name of var here"));
         Button start = new Button("Start");
         start.setOnAction(e -> {
             try
@@ -64,6 +65,7 @@ public class ConnectionWizard extends AbstractWizard {
                 DialogsHelper.showError(e1.getMessage());
             }
         });
+        start.setId("dictionaryBtnStartApplication");
         Button connect = new Button("Connect");
         connect.setOnAction(e -> {
             try
@@ -78,13 +80,14 @@ public class ConnectionWizard extends AbstractWizard {
                 DialogsHelper.showError(e1.getMessage());
             }
         });
+        connect.setId("dictionaryBtnConnectApplication");
         Button stop = new Button("Stop");
         stop.setOnAction(e -> Common.tryCatch(() ->
                 {
                     connector.stopApplication();
                     this.isConnected = false;
                 },"Error on application stop"));
-
+        stop.setId("dictionaryBtnStopApplication");
         Label nameCheck = new Label();
         name.textProperty().addListener(event -> configuration.getStoreMap().forEach((s, o) -> {
             if (s.equals(name.getText()))

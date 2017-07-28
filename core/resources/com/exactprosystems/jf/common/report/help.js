@@ -128,7 +128,7 @@ function markAllElements(array, str) {
         elem.innerHTML = this.innerHTML.replace(re, '<ins>$1</ins>');
     });
     allIns = $('ins');
-    $('.searchLabel').text(allIns.length);
+    $('.searchLabel').text('1 of '+allIns.length);
     scrollToElem(allIns[0]);
     currentIndex++;
     $(allIns[0]).toggleClass('currentFoundElement');
