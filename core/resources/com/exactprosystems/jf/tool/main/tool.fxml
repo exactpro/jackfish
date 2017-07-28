@@ -78,6 +78,8 @@
 								</Menu>
 								<Menu mnemonicParsing="false" text="View">
 									<items>
+										<MenuItem fx:id="viewSearch" mnemonicParsing="false" onAction="#search" text="Search"/>
+										<SeparatorMenuItem/>
 										<MenuItem mnemonicParsing="false" onAction="#openMainLog" text="Logs"/>
 										<MenuItem fx:id="viewStore" mnemonicParsing="false" onAction="#showStore" text="Store"/>
 										<SeparatorMenuItem/>

@@ -850,6 +850,11 @@ public class ConfigurationFx extends Configuration
 
 	//endregion
 
+	public void scrollToFile(File file)
+	{
+		this.controller.scrollToFile(file);
+	}
+
 	public void updateHandlerValue(HandlerKind kind, String newValue) throws Exception
 	{
 		this.getGlobalHandler().setHandler(kind, newValue);
@@ -883,7 +888,6 @@ public class ConfigurationFx extends Configuration
 		}
 		catch (Exception e)
 		{
-			e.printStackTrace();
 
 		}
 		return "";

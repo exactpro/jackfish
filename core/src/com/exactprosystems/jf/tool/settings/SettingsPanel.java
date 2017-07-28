@@ -24,7 +24,10 @@ import java.util.stream.Stream;
 public class SettingsPanel
 {
 
-	public static final List<String> otherList = Stream.of(Settings.SHOW_ALL_TABS).collect(Collectors.toList());
+	public static final List<String> otherList = Stream.of(
+			Settings.SHOW_ALL_TABS
+			, Settings.SEARCH
+	).collect(Collectors.toList());
 
 	public static final List<String> docsList = Stream.of(
 			Settings.SAVE_DOCUMENT,

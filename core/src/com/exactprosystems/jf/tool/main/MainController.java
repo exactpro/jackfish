@@ -105,7 +105,9 @@ public class MainController implements Initializable, ContainingParent
 	public MenuItem				editRedo;
 
 	public MenuItem editSettings;
-	public MenuItem				viewStore;
+
+	public MenuItem viewSearch;
+	public MenuItem viewStore;
 	public MenuItem viewShowTabs;
 
 	public Menu					menuMatrix;
@@ -217,6 +219,7 @@ public class MainController implements Initializable, ContainingParent
 			this.fileSaveAs.setAccelerator(Common.getShortcut(settings, Settings.SAVE_DOCUMENT_AS));
 
 			this.viewShowTabs.setAccelerator(Common.getShortcut(settings, Settings.SHOW_ALL_TABS));
+			this.viewSearch.setAccelerator(Common.getShortcut(settings, Settings.SEARCH));
 
 			this.matrixStart.setAccelerator(Common.getShortcut(settings, Settings.START_MATRIX));
 			this.matrixStop.setAccelerator(Common.getShortcut(settings, Settings.STOP_MATRIX));
@@ -496,6 +499,11 @@ public class MainController implements Initializable, ContainingParent
 	//endregion
 
 	//region other events
+	public void search(ActionEvent actionEvent)
+	{
+		Common.tryCatch(this.model::search, "Error on show search");
+	}
+
 	public void showStore(ActionEvent actionEvent)
 	{
 		Common.tryCatch(this.model::store, "Error on show store");
@@ -631,6 +639,10 @@ public class MainController implements Initializable, ContainingParent
 			{
 				showAboutProgram(null);
 			}
+			else if (SettingsPanel.match(settings, keyEvent, Settings.SEARCH))
+			{
+				search(null);
+			}
 			else if (SettingsPanel.match(settings, keyEvent, Settings.SHOW_ALL_TABS))
 			{
 				showAllTabs();
@@ -751,6 +763,11 @@ public class MainController implements Initializable, ContainingParent
 	Point getPosition()
 	{
 		return new Point((int) this.stage.getX(), (int) this.stage.getY());
+	}
+
+	void showInTree(File file)
+	{
+
 	}
 
 	//region Private methods

@@ -10,10 +10,7 @@ package com.exactprosystems.jf.tool.main;
 
 import com.exactprosystems.jf.api.common.Str;
 import com.exactprosystems.jf.api.wizard.WizardManager;
-import com.exactprosystems.jf.common.CommonHelper;
-import com.exactprosystems.jf.common.MainRunner;
-import com.exactprosystems.jf.common.MatrixRunner;
-import com.exactprosystems.jf.common.Settings;
+import com.exactprosystems.jf.common.*;
 import com.exactprosystems.jf.common.Settings.SettingsValue;
 import com.exactprosystems.jf.common.version.VersionInfo;
 import com.exactprosystems.jf.documents.*;
@@ -45,6 +42,7 @@ import com.exactprosystems.jf.tool.helpers.DialogsHelper.OpenSaveMode;
 import com.exactprosystems.jf.tool.matrix.MatrixFx;
 import com.exactprosystems.jf.tool.newconfig.ConfigurationFx;
 import com.exactprosystems.jf.tool.newconfig.wizard.WizardConfiguration;
+import com.exactprosystems.jf.tool.search.Search;
 import com.exactprosystems.jf.tool.settings.Theme;
 import com.exactprosystems.jf.tool.wizard.WizardManagerImpl;
 import com.jcraft.jsch.JSch;
@@ -774,9 +772,32 @@ public class Main extends Application
 		this.controller.showCalculator(this.config.createEvaluator());
 	}
 
+	void search() throws Exception
+	{
+		checkConfig();
+		new Search(this
+				, this.config.getMatricesValue().stream().map(MutableString::get).map(File::new).collect(Collectors.toList())
+				, this.config.getLibrariesValue().stream().map(MutableString::get).map(File::new).collect(Collectors.toList())
+				, this.config.getAppDictionariesValue().stream().map(MutableString::get).map(File::new).collect(Collectors.toList())
+		).show();
+	}
+
 	public void store() throws Exception
 	{
 		new StoreVariable(this.config).show();
+	}
+
+	public void showIntoConfiguration(File file)
+	{
+		if (!file.getAbsolutePath().contains(new File("").getAbsolutePath()))
+		{
+			DialogsHelper.showInfo("Can't scroll to out of project scope");
+			return;
+		}
+		if (this.config instanceof ConfigurationFx)
+		{
+			((ConfigurationFx) this.config).scrollToFile(file);
+		}
 	}
 
 	public void showWaits(boolean flag)

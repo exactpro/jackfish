@@ -6,9 +6,9 @@ import com.exactprosystems.jf.documents.config.*;
 import com.exactprosystems.jf.documents.matrix.Matrix;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.ContainingParent;
+import com.exactprosystems.jf.tool.custom.CustomTreeViewSkin;
 import com.exactprosystems.jf.tool.helpers.DialogsHelper;
 import com.exactprosystems.jf.tool.newconfig.nodes.*;
-
 import javafx.fxml.Initializable;
 import javafx.geometry.Orientation;
 import javafx.scene.Parent;
@@ -18,7 +18,10 @@ import javafx.scene.layout.BorderPane;
 
 import java.io.File;
 import java.net.URL;
-import java.util.*;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
+import java.util.ResourceBundle;
 import java.util.stream.Collectors;
 
 public class ConfigurationFxController implements Initializable, ContainingParent
@@ -149,6 +152,27 @@ public class ConfigurationFxController implements Initializable, ContainingParen
 	public void successfulSave()
 	{
 		DialogsHelper.showSuccess("Config successfully saved");
+	}
+
+	public void scrollToFile(File file)
+	{
+		byPass(this.treeView.getRoot(), file);
+	}
+
+	private void byPass(TreeItem<TreeNode> root, File file)
+	{
+		TreeNode value = root.getValue();
+		if (value instanceof FileTreeNode)
+		{
+			File rootFile = ((FileTreeNode) value).getFile();
+
+			if (ConfigurationFx.path(file).equals(ConfigurationFx.path(rootFile)))
+			{
+				((CustomTreeViewSkin<TreeNode>) this.treeView.getSkin()).scrollAndSelect(root);
+				return;
+			}
+		}
+		root.getChildren().forEach(item -> byPass(item, file));
 	}
 
 	private void initTreeView()

@@ -49,6 +49,7 @@ public class Settings
 	//region Shortcuts
 	//other shortcuts
 	public static final String SHOW_ALL_TABS	= "ShowAllTabs";
+	public static final String SEARCH			= "Search";
 
 	//document shortcuts
 	public static final String SAVE_DOCUMENT	= "SaveDocument";
@@ -276,6 +277,7 @@ public class Settings
 	{
 		File file = new File(fileName);
 		Settings settings = null;
+		Settings defaultSettings = defaultSettings();
 		if (file.exists())
 		{
 			try(Reader reader = CommonHelper.readerFromFile(file))
@@ -290,16 +292,19 @@ public class Settings
 			}
 			catch (Exception e)
 			{
-				settings = new Settings();
+				settings = defaultSettings;
 			}
 		}
 		else
 		{
-			settings = new Settings();
+			settings = defaultSettings;
 		}
-
-		settings.fileName = fileName;
-		return settings;
+		Settings finalSettings = settings;
+		defaultSettings.values.stream()
+				.filter(sv -> !finalSettings.values.contains(sv))
+				.forEach(finalSettings.values::add);
+		finalSettings.fileName = fileName;
+		return finalSettings;
 	}
 
 	//region default settings
@@ -353,7 +358,8 @@ public class Settings
 					FIND_ON_MATRIX,"Ctrl+F",
 
 					//Other
-					SHOW_ALL_TABS,"Ctrl+E"
+					SHOW_ALL_TABS,"Ctrl+E",
+					SEARCH, "Ctrl+Shift+F"
 			));
 
 			DEFAULT_SETTINGS.setMapValues(GLOBAL_NS, LOGS_NAME, mapOf(
