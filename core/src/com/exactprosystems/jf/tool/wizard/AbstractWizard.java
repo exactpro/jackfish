@@ -38,7 +38,7 @@ public abstract class AbstractWizard implements Wizard
 	{
 	    WizardDialog dialog = new WizardDialog(this, this.context);
 	    initDialog(dialog.getPane());
-	    dialog.expandTitle(getTitle());;
+	    dialog.expandTitle(getTitle());
 	    boolean succeed = dialog.showAndWait().orElse(false);
 
 	    if (succeed)

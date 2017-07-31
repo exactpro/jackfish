@@ -126,7 +126,6 @@ public class ConnectionWizard extends AbstractWizard {
         grid.add(status, 1, 1);
         grid.add(new Label("Store as: "), 0, 2);
         grid.add(name, 1, 2,2,1);
-        grid.add(new Label("Current application : " + this.appEntry.toString()), 0, 3,2,1);
         grid.setHgap(5);
         grid.setVgap(15);
         grid.getColumnConstraints().addAll(colContr1, colContr2, colContr3);
