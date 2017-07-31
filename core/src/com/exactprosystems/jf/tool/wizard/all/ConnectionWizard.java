@@ -16,7 +16,6 @@ import com.exactprosystems.jf.tool.wizard.AbstractWizard;
 import com.exactprosystems.jf.tool.wizard.CommandBuilder;
 import javafx.application.Platform;
 import javafx.geometry.HPos;
-import javafx.geometry.Insets;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
@@ -46,12 +45,15 @@ public class ConnectionWizard extends AbstractWizard {
     @Override
     protected void initDialog(BorderPane borderPane) {
 
-        borderPane.setPrefWidth(350);
-        borderPane.setMinWidth(350);
+        borderPane.setPrefWidth(345);
+        borderPane.setMinWidth(345);
+        borderPane.setPrefHeight(150);
+        borderPane.setMinHeight(150);
+        borderPane.setMaxHeight(150);
 
         this.status = new Label();
         this.name = new TextField();
-        name.tooltipProperty().set(new Tooltip("Enter name of var here"));
+        this.name.tooltipProperty().set(new Tooltip("Enter name of var here"));
         Button start = new Button("Start");
         start.setOnAction(e -> {
             try
@@ -65,7 +67,6 @@ public class ConnectionWizard extends AbstractWizard {
                 DialogsHelper.showError(e1.getMessage());
             }
         });
-        start.setId("dictionaryBtnStartApplication");
         Button connect = new Button("Connect");
         connect.setOnAction(e -> {
             try
@@ -80,14 +81,13 @@ public class ConnectionWizard extends AbstractWizard {
                 DialogsHelper.showError(e1.getMessage());
             }
         });
-        connect.setId("dictionaryBtnConnectApplication");
+
         Button stop = new Button("Stop");
         stop.setOnAction(e -> Common.tryCatch(() ->
                 {
                     connector.stopApplication();
                     this.isConnected = false;
                 },"Error on application stop"));
-        stop.setId("dictionaryBtnStopApplication");
         Label nameCheck = new Label();
         name.textProperty().addListener(event -> configuration.getStoreMap().forEach((s, o) -> {
             if (s.equals(name.getText()))
@@ -102,7 +102,15 @@ public class ConnectionWizard extends AbstractWizard {
             }
         }));
 
+        start.setId("dictionaryBtnStartApplication");
+        start.getStyleClass().add("transparentBackground");
+        connect.setId("dictionaryBtnConnectApplication");
+        connect.getStyleClass().add("transparentBackground");
+        stop.getStyleClass().add("transparentBackground");
+        stop.setId("dictionaryBtnStopApplication");
+
         GridPane.setHalignment(connect, HPos.CENTER);
+        GridPane.setHalignment(stop, HPos.RIGHT);
 
         GridPane grid = new GridPane();
         grid.add(start, 0, 0);
@@ -118,7 +126,7 @@ public class ConnectionWizard extends AbstractWizard {
         grid.setVgap(15);
 
         borderPane.setCenter(grid);
-        BorderPane.setMargin(grid, new Insets(90, 0, 0, 5));
+//        BorderPane.setMargin(grid, new Insets(90, 0, 0, 5));
 
         connector.setApplicationListener((status1, connection, throwable) -> {
             switch (status1)

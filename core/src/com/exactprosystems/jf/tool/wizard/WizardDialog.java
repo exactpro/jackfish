@@ -54,10 +54,10 @@ public class WizardDialog extends Dialog<Boolean>
             this.setResult(false);
             this.close();
         });
-		stage.setMinHeight(350.0);
-		stage.setMinWidth(350.0);
+		stage.setMinHeight(200.0);
+		stage.setMinWidth(200.0);
 
-		this.getDialogPane().setMinSize(300.0, 300.0);
+		this.getDialogPane().setMinSize(200.0, 200.0);
 
 		createContent(context);
 	}
