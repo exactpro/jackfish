@@ -18,6 +18,7 @@ import com.exactprosystems.jf.documents.matrix.parser.Result;
 import com.exactprosystems.jf.documents.matrix.parser.items.CommentString;
 import com.exactprosystems.jf.documents.matrix.parser.items.MatrixItem;
 import com.exactprosystems.jf.functions.Content;
+import com.exactprosystems.jf.tool.Common;
 
 import java.io.File;
 import java.io.IOException;
@@ -333,8 +334,8 @@ public class HTMLReportBuilder extends ReportBuilder
 		writer.fwrite(
 				  "<th scope='row'>\n"
 				+ "  <a href='javascript:void(0)' source='%s'>%03d</a>\n"
-				+ "</th>\n",
-				item.getSource().getName(), item.getNumber()); // TODO change to getSource()
+				+ "</th>\n"
+				, Common.getRelativePath(item.getSource().getName()), item.getNumber()); // TODO change to getSource()
 		writer.fwrite("<td>%s</td>", itemId);
 		writer.fwrite("<td><a href='javascript:void(0)' class='showBody'>%s</a></td>", item.getItemName());
 		writer.fwrite("<td id='hs_%s'> </td>", id);
