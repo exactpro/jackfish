@@ -46,13 +46,18 @@ import java.util.stream.Collectors;
 
 @WizardAttribute(
         name = "NameSpace wizard",
-        pictureName = "NameSpaceWizard.jpg",
+        pictureName = "NameSpaceWizard.png",
         category = WizardCategory.MATRIX,
         shortDescription = "This wizard helps to move SubCases between NameSpaces",
         experimental = false,
         strongCriteries = true,
         criteries = {MatrixFx.class, NameSpace.class},
-        detailedDescription = "When it's need to move several SubCases to another known NameSpace."
+        detailedDescription = "{{`Wizard moves SubCases from one NameSpace to another and brings changes to the all affected matrices`}}"
+                +"{{`Simply choose SubCases that you want to move.`}}"
+                +"{{`Than choose another NameSpace in dropbox and press Scan(important).`}}"
+                +"{{`After you will see the list of changes in section below.`}}"
+                +"{{`Press accept to apply changes.`}}"
+                +"{{`Better make backup of your files before.`}}"
 )
 public class NameSpaceWizard extends AbstractWizard {
 

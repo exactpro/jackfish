@@ -25,13 +25,18 @@ import java.util.function.Supplier;
 
 @WizardAttribute(
         name = "Connection wizard",
-        pictureName = "ConnectionWizard.jpg",
+        pictureName = "ConnectionWizard.png",
         category = WizardCategory.OTHER,
         shortDescription = "This wizard helps to move SubCases between NameSpaces",
         experimental = false,
         strongCriteries = true,
         criteries = {ApplicationPool.class, AppEntry.class},
-        detailedDescription = "When it's need to create and storeGlobal connection"
+        detailedDescription = "{{`Wizard creates a connection and save in to the Store (View->Store).`}}"
+                + "{{`You can use saved connection in dictionary and matrices.`}}"
+                + "{{`On the top side of the Wizard are located known button for start, connect and stop an application.`}}"
+                + "{{`Under the buttons is the connection status indicator.`}}"
+                + "{{`Under the indicator you can see the textfield for name of variable for the created connection.`}}"
+
 )
 public class ConnectionWizard extends AbstractWizard {
 
@@ -53,7 +58,8 @@ public class ConnectionWizard extends AbstractWizard {
 
         this.status = new Label();
         this.name = new TextField();
-        this.name.tooltipProperty().set(new Tooltip("Enter name of var here"));
+        Tooltip nameOfVar = new Tooltip("Enter name of var here");
+        this.name.tooltipProperty().set(nameOfVar);
         Button start = new Button("Start");
         start.setOnAction(e -> {
             try
@@ -88,17 +94,16 @@ public class ConnectionWizard extends AbstractWizard {
                     connector.stopApplication();
                     this.isConnected = false;
                 },"Error on application stop"));
-        Label nameCheck = new Label();
         name.textProperty().addListener(event -> configuration.getStoreMap().forEach((s, o) -> {
             if (s.equals(name.getText()))
             {
-                nameCheck.setTextFill(Color.RED);
-                nameCheck.setText("Already exist");
+                name.setStyle("-fx-text-fill: red");
+                name.setTooltip(new Tooltip("Variable with name " + name.getText() + " already exist"));
             }
             else
             {
-                nameCheck.setText("Ok");
-                nameCheck.setTextFill(Color.GREEN);
+                name.setStyle("-fx-text-fill: green");
+                name.setTooltip(nameOfVar);
             }
         }));
 
@@ -109,8 +114,9 @@ public class ConnectionWizard extends AbstractWizard {
         stop.getStyleClass().add("transparentBackground");
         stop.setId("dictionaryBtnStopApplication");
 
-        GridPane.setHalignment(connect, HPos.CENTER);
-        GridPane.setHalignment(stop, HPos.RIGHT);
+        ColumnConstraints colContr1 = new ColumnConstraints(50,100,150,Priority.ALWAYS, HPos.CENTER, true);
+        ColumnConstraints colContr2 = new ColumnConstraints(50,100,150,Priority.ALWAYS, HPos.CENTER, true);
+        ColumnConstraints colContr3 = new ColumnConstraints(50,100,150,Priority.ALWAYS, HPos.CENTER, true);
 
         GridPane grid = new GridPane();
         grid.add(start, 0, 0);
@@ -118,15 +124,13 @@ public class ConnectionWizard extends AbstractWizard {
         grid.add(stop, 2, 0);
         grid.add(new Label("Status: "), 0, 1);
         grid.add(status, 1, 1);
-        grid.add(nameCheck, 2, 2);
         grid.add(new Label("Store as: "), 0, 2);
-        grid.add(name, 1, 2);
+        grid.add(name, 1, 2,2,1);
         grid.add(new Label("Current application : " + this.appEntry.toString()), 0, 3,2,1);
         grid.setHgap(5);
         grid.setVgap(15);
-
+        grid.getColumnConstraints().addAll(colContr1, colContr2, colContr3);
         borderPane.setCenter(grid);
-//        BorderPane.setMargin(grid, new Insets(90, 0, 0, 5));
 
         connector.setApplicationListener((status1, connection, throwable) -> {
             switch (status1)
