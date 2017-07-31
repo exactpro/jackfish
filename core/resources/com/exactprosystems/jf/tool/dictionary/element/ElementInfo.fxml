@@ -125,12 +125,7 @@
 						<CustomFieldWithButton id="tooltip" fx:id="tfTooltip" GridPane.columnIndex="1" GridPane.rowIndex="7" />
 						<CustomFieldWithButton id="columns" fx:id="tfColumns" GridPane.columnIndex="1" GridPane.rowIndex="9" />
 						<CustomFieldWithButton id="expression" fx:id="tfExpression" GridPane.columnIndex="1" GridPane.rowIndex="10" />
-						<HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="1">
-							<children>
-								<CustomFieldWithButton id="xpath" fx:id="tfXpath" HBox.hgrow="ALWAYS" />
-								<Button alignment="CENTER" mnemonicParsing="false" onAction="#showTree" id="dictionaryBtnXpathHelper" fx:id="xpathHelper" styleClass="$transparentBackground"/>
-							</children>
-						</HBox>
+						<CustomFieldWithButton id="xpath" fx:id="tfXpath" GridPane.columnIndex="1"/>
 					</children>
 					<columnConstraints>
 						<ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" maxWidth="80" minWidth="80.0" prefWidth="80.0" />

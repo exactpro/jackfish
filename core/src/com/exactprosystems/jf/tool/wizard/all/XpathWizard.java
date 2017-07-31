@@ -29,7 +29,7 @@ import com.exactprosystems.jf.tool.custom.find.IFind;
 import com.exactprosystems.jf.tool.custom.scaledimage.ImageViewWithScale;
 import com.exactprosystems.jf.tool.custom.xmltree.XmlTreeView;
 import com.exactprosystems.jf.tool.dictionary.DictionaryFx;
-import com.exactprosystems.jf.tool.dictionary.dialog.WizardMatcher;
+import com.exactprosystems.jf.tool.wizard.WizardMatcher;
 import com.exactprosystems.jf.tool.helpers.DialogsHelper;
 import com.exactprosystems.jf.tool.wizard.AbstractWizard;
 import com.exactprosystems.jf.tool.wizard.CommandBuilder;
@@ -60,7 +60,7 @@ import static com.exactprosystems.jf.common.utils.XpathUtils.*;
         category 			= WizardCategory.GUI_DICTIONARY,
         shortDescription 	= "This wizard help to build xpath expression to find an element on screen.",
         detailedDescription = "Here you description might be",
-        experimental 		= true,
+        experimental 		= false,
         strongCriteries 	= true,
         criteries 			= { DictionaryFx.class, Window.class, SectionKind.class, AbstractControl.class }
     )
@@ -435,7 +435,7 @@ public class XpathWizard extends AbstractWizard
 		{
 			if (oldItem != null)
 			{
-				this.imageViewWithScale.hideRectangle(oldItem.getRectangle(), oldMarker.color());
+				this.imageViewWithScale.hideRectangle(oldItem.getRectangle(), oldMarker);
 				if (oldItem.getStyle() != null)
 				{
 					this.imageViewWithScale.showRectangle(oldItem.getRectangle(), oldItem.getStyle(), oldItem.getText(), false);

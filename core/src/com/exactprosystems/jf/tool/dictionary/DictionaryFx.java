@@ -24,7 +24,6 @@ import com.exactprosystems.jf.documents.matrix.parser.listeners.ListProvider;
 import com.exactprosystems.jf.tool.ApplicationConnector;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.dictionary.DictionaryFxController.Result;
-import com.exactprosystems.jf.tool.dictionary.dialog.DialogWizard;
 import com.exactprosystems.jf.tool.helpers.DialogsHelper;
 import javafx.concurrent.Task;
 import javafx.scene.control.ButtonType;
@@ -414,69 +413,6 @@ public class DictionaryFx extends GuiDictionary
 			displayElement(window, section, window.getFirstControl(section));
 		}, "");
 		addCommand(undo, redo);
-	}
-
-	public void openDialogWizard(IWindow window) throws Exception
-	{
-		if (!isApplicationRun())
-		{
-			DialogsHelper.showError("Application not starting.\nStart application before call the wizard");
-			return;
-		}
-		IControl selfControl = window.getSelfControl();
-		if (selfControl == null)
-		{
-			DialogsHelper.showError("Self control is null.\nFill the self control before call the wizard");
-			return;
-		}
-		if (Str.IsNullOrEmpty(selfControl.getID()))
-		{
-			DialogsHelper.showError("Self should have ID.");
-			return;
-		}
-		Window copyWindow = Window.createCopy(((Window) window));
-		copyWindow.setName(window.getName());
-		DialogWizard wizard = new DialogWizard(this, copyWindow, this.applicationConnector.getAppConnection());
-		wizard.setOnAccept(w -> Common.tryCatch(() ->
-		{
-			int index = this.indexOf(window);
-			this.removeWindow(window);
-			this.addWindow(index, copyWindow);
-			this.displayDialog(copyWindow, getWindows());
-			this.displayElement(copyWindow, SectionKind.Run, copyWindow.getFirstControl(SectionKind.Run));
-
-		}, "Error on hiding wizard"));
-		Task<Integer> task = new Task<Integer>()
-		{
-			@Override
-			protected Integer call() throws Exception
-			{
-				DialogsHelper.showInfo("Start found self control...\nPlease, wait");
-				controller.setDisableWizardButton(true);
-				Locator owner = getLocator(copyWindow.getOwnerControl(selfControl));
-				Locator locator = getLocator(selfControl);
-				IRemoteApplication service = applicationConnector.getAppConnection().getApplication().service();
-				Collection<String> all = service.findAll(owner, locator);
-				return all.size();
-			}
-		};
-		task.setOnSucceeded(e ->
-		{
-			controller.setDisableWizardButton(false);
-			Integer count = (Integer) e.getSource().getValue();
-			if (count == 0)
-			{
-				DialogsHelper.showError("Self control not found");
-				return;
-			}
-			if (count != 1)
-			{
-				DialogsHelper.showError("Found " + count + " instead of 1.");
-				return;
-			}
-			wizard.show();
-		});
-		new Thread(task).start();
 	}
 
 	//------------------------------------------------------------------------------------------------------------------

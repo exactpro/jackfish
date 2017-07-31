@@ -5,7 +5,7 @@
 //  This is unpublished, licensed software, confidential and proprietary
 //  information which is the property of Exactpro Systems, LLC or its licensors.
 ////////////////////////////////////////////////////////////////////////////////
-package com.exactprosystems.jf.tool.custom.scale;
+package com.exactprosystems.jf.tool.custom.scaledimage;
 
 import com.exactprosystems.jf.tool.CssVariables;
 import javafx.geometry.Pos;
@@ -16,7 +16,7 @@ import javafx.scene.layout.HBox;
 import java.util.Optional;
 import java.util.function.DoubleConsumer;
 
-public class ScalePaneNew extends HBox
+public class ScalePane extends HBox
 {
     private static double[]  scales       = new double[] { 0.25, 0.5, 0.75, 1, 1.5, 2, 2.5, 3, 4 };
     private static int       defaultIndex = 3;
@@ -24,7 +24,7 @@ public class ScalePaneNew extends HBox
     private DoubleConsumer   scaleChanged;
     private Label            labelZoom;
 
-	public ScalePaneNew()
+	public ScalePane()
 	{
 		super();
 		

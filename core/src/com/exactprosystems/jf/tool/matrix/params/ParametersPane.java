@@ -20,7 +20,6 @@ import com.exactprosystems.jf.documents.matrix.parser.items.ActionItem;
 import com.exactprosystems.jf.documents.matrix.parser.items.MatrixItem;
 import com.exactprosystems.jf.documents.matrix.parser.items.TypeMandatory;
 import com.exactprosystems.jf.functions.HelpKind;
-import com.exactprosystems.jf.functions.Xml;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.CssVariables;
 import com.exactprosystems.jf.tool.DragDetector;
@@ -28,7 +27,6 @@ import com.exactprosystems.jf.tool.custom.expfield.ExpressionField;
 import com.exactprosystems.jf.tool.custom.scroll.CustomScrollPane;
 import com.exactprosystems.jf.tool.custom.treetable.MatrixContextMenu;
 import com.exactprosystems.jf.tool.custom.treetable.MatrixParametersContextMenu;
-import com.exactprosystems.jf.tool.custom.xpath.XpathViewer;
 import com.exactprosystems.jf.tool.helpers.DialogsHelper;
 import com.exactprosystems.jf.tool.helpers.DialogsHelper.OpenSaveMode;
 import com.exactprosystems.jf.tool.matrix.MatrixFx;
@@ -349,32 +347,6 @@ public class ParametersPane extends CustomScrollPane
 
 						case ChooseFromList:
 							expressionField.setChooserForExpressionField(par.getName(), () -> actionItem.listToFillParameter(this.context, par.getName()));
-							break;
-
-						case BuildXPath:
-							expressionField.setFirstActionListener(str ->
-							{
-								for (int i = 0; i < this.parameters.size(); i++)
-								{
-									Parameter next = this.parameters.getByIndex(i);
-									Object obj = evaluator.tryEvaluate(next.getExpression());
-									if (obj instanceof Xml)
-									{
-										Xml xml = (Xml) obj;
-										Object value = evaluator.tryEvaluate(par.getExpression());
-										String initial = value == null ? null : String.valueOf(value);
-										XpathViewer viewer = new XpathViewer(null, xml::getDocument, null);
-										String res = viewer.show(initial, "Xpath for " + par.getName(), themePaths, false);
-										if (res != null)
-										{
-											res = evaluator.createString(res);
-										}
-
-										return res;
-									}
-								}
-								return str;
-							});
 							break;
 
 						default:

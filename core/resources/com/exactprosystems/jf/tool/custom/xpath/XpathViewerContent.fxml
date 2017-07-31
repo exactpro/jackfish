@@ -3,7 +3,7 @@
 <?import com.exactprosystems.jf.tool.CssVariables?>
 <?import com.exactprosystems.jf.tool.custom.controls.field.CustomFieldWithButton?>
 <?import com.exactprosystems.jf.tool.custom.find.FindPanel?>
-<?import com.exactprosystems.jf.tool.custom.scale.ScalePane?>
+<?import com.exactprosystems.jf.tool.custom.scaledimage.ScalePane?>
 <?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.Group?>

@@ -28,10 +28,9 @@ import com.exactprosystems.jf.tool.custom.find.FindPanel;
 import com.exactprosystems.jf.tool.custom.find.IFind;
 import com.exactprosystems.jf.tool.custom.scaledimage.ImageViewWithScale;
 import com.exactprosystems.jf.tool.custom.xmltree.XmlTreeView;
-import com.exactprosystems.jf.tool.custom.xpath.XpathViewer;
 import com.exactprosystems.jf.tool.dictionary.DictionaryFx;
-import com.exactprosystems.jf.tool.dictionary.dialog.WizardMatcher;
-import com.exactprosystems.jf.tool.dictionary.dialog.WizardSettings;
+import com.exactprosystems.jf.tool.wizard.WizardMatcher;
+import com.exactprosystems.jf.tool.wizard.WizardSettings;
 import com.exactprosystems.jf.tool.helpers.DialogsHelper;
 import com.exactprosystems.jf.tool.wizard.AbstractWizard;
 import com.exactprosystems.jf.tool.wizard.CommandBuilder;
@@ -68,7 +67,7 @@ import java.util.stream.Collectors;
         category 			= WizardCategory.GUI_DICTIONARY,
         shortDescription 	= "This wizard is only for test purpose.",
         detailedDescription = "Here you descrioption might be",
-        experimental 		= true,
+        experimental 		= false,
         strongCriteries 	= true,
         criteries 			= { DictionaryFx.class, Window.class }
     )
@@ -412,6 +411,7 @@ public class DictionaryWizard extends AbstractWizard
 			if (oldItem != null)
 			{
 				this.imageViewWithScale.hideRectangle(oldItem.getRectangle(), oldMarker.color());
+				this.imageViewWithScale.hideRectangle(oldItem.getRectangle(), oldMarker);
 				if (oldItem.getStyle() != null)
 				{
 					this.imageViewWithScale.showRectangle(oldItem.getRectangle(), oldItem.getStyle(), oldItem.getText(), false);
@@ -432,9 +432,10 @@ public class DictionaryWizard extends AbstractWizard
 			if (item != null)
 			{
 				this.imageViewWithScale.hideRectangle(item.getRectangle(), oldMarker == null ? null : oldMarker.color());
+				this.imageViewWithScale.hideRectangle(item.getRectangle(), oldMarker);
 				this.imageViewWithScale.showRectangle(item.getRectangle(), newMarker, item.getText(), selected);
-				this.tableView.updateStyle(item.getNode(), newMarker.getCssStyle());
-				if (newMarker != MarkerStyle.UPDATE)
+				this.tableView.updateStyle(item.getNode(), newMarker == null ? null : newMarker.getCssStyle());
+				if (newMarker == MarkerStyle.ADD)
 				{
 					this.tableView.clearRelation(item.getNode());
 				}
@@ -495,9 +496,9 @@ public class DictionaryWizard extends AbstractWizard
 	private void updateMarkers(MarkerStyle oldValue, MarkerStyle newValue)
 	{
 		CheckBox cbOld = checkBoxByMarkedStyle(oldValue);
-		if (cbOld != null)
+		if (cbOld != null && oldValue != newValue)
 		{
-			cbOld.setText(String.valueOf(Integer.parseInt(cbOld.getText()) - 1));
+			cbOld.setText(String.valueOf(Math.max(Integer.parseInt(cbOld.getText()) - 1, 0)));
 		}
 
 		CheckBox cbNew = checkBoxByMarkedStyle(newValue);
@@ -620,7 +621,7 @@ public class DictionaryWizard extends AbstractWizard
 		{
 			Rect actualRectangle     		= relativeRect(this.dialogRectangle, (Rectangle)node.getUserData(IRemoteApplication.rectangleName));
 			String      actualName          = node.getNodeName();
-			String      actualPath          = XpathViewer.fullXpath("", this.rootNode, node, false, null, true);
+			String      actualPath          = XpathUtils.fullXpath("", this.rootNode, node, false, null, true);
 			List<Attr>  actualAttr          = XpathUtils.extractAttributes(node);
 
 			Rect        expectedRectangle   = (Rect)info.get(ExtraInfo.rectangleName);
@@ -720,6 +721,7 @@ public class DictionaryWizard extends AbstractWizard
 					e.setStyle(CssVariables.FOUND_ONE_ELEMENT);
 					e.setCount(1);
 					e.setId(copyControl.getID());
+					e.setNode(node);
 					this.tableView.getItems().add(e);
 				}
 				break;
@@ -836,7 +838,7 @@ public class DictionaryWizard extends AbstractWizard
 		Rectangle rec = (Rectangle)node.getUserData(IRemoteApplication.rectangleName);
 		Rect rectangle = relativeRect(this.dialogRectangle, rec);
 
-		info.set(ExtraInfo.xpathName,       XpathViewer.fullXpath("", this.rootNode, node, false, null, true));
+		info.set(ExtraInfo.xpathName,       XpathUtils.fullXpath("", this.rootNode, node, false, null, true));
 		info.set(ExtraInfo.nodeName,        node.getNodeName());
 		info.set(ExtraInfo.rectangleName,   rectangle);
 		List<Attr> attributes = XpathUtils.extractAttributes(node);

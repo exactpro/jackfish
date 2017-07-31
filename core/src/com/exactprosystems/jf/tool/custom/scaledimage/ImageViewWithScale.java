@@ -3,7 +3,6 @@ package com.exactprosystems.jf.tool.custom.scaledimage;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.CssVariables;
 import com.exactprosystems.jf.tool.custom.controls.rect.DecoratedRectangle;
-import com.exactprosystems.jf.tool.custom.scale.ScalePaneNew;
 import com.exactprosystems.jf.tool.wizard.related.MarkerStyle;
 import javafx.application.Platform;
 import javafx.geometry.Pos;
@@ -36,9 +35,9 @@ public class ImageViewWithScale extends BorderPane
 	private final static double WIDHT_COORDS = 120;
 
 	//region fields
-    private final ScrollPane                   scrollPane;
-    private final AnchorPane                   anchorPane;
-    private final ScalePaneNew                 scalePane;
+    private final ScrollPane scrollPane;
+    private final AnchorPane anchorPane;
+    private final ScalePane  scalePane;
     
     private final HBox                         hBox;
     private final ToggleButton                 btnInspect;
@@ -63,7 +62,7 @@ public class ImageViewWithScale extends BorderPane
 		super();
 		this.scrollPane = new ScrollPane();
 		this.anchorPane = new AnchorPane();
-		this.scalePane = new ScalePaneNew();
+		this.scalePane = new ScalePane();
 		this.hBox = new HBox();
 		this.group = new Group();
 		this.btnInspect = new ToggleButton();

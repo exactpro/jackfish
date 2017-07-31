@@ -58,10 +58,7 @@ public class DictionaryFxController implements Initializable, ContainingParent
 		
 		private Color color;
 	} 
-	
-	
 
-	
 	public CustomListView<String>	listView;
 	public SplitPane				splitPane;
 	public GridPane					mainGridPane;
@@ -202,10 +199,5 @@ public class DictionaryFxController implements Initializable, ContainingParent
 	public void showInfo(String info)
 	{
 		DialogsHelper.showInfo(info);
-	}
-
-	public void setDisableWizardButton(boolean flag)
-	{
-		this.navigationController.setDisableWizardButton(flag);
 	}
 }

@@ -11,7 +11,6 @@ package com.exactprosystems.jf.common.utils;
 import com.exactprosystems.jf.api.app.*;
 import com.exactprosystems.jf.api.common.Str;
 import com.exactprosystems.jf.documents.guidic.Attr;
-import com.exactprosystems.jf.tool.custom.xpath.XpathViewer;
 import org.w3c.dom.Document;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
@@ -580,7 +579,7 @@ public class XpathUtils
 		private Locator locatorByRelativeXpath()
 		{
 			String ownerPath = ".";
-			String xpath = XpathViewer.fullXpath(ownerPath, this.owner, node, false, null, true);
+			String xpath = XpathUtils.fullXpath(ownerPath, this.owner, node, false, null, true);
 			String[] parts = xpath.split("/");
 
 			Node parent = node;
@@ -589,7 +588,7 @@ public class XpathUtils
 				Locator relativeLocator = locatorByXpath(parent);
 				if (relativeLocator != null)
 				{
-					String finalPath = XpathViewer.fullXpath(relativeLocator.getXpath(), parent, node, false, null, false);
+					String finalPath = XpathUtils.fullXpath(relativeLocator.getXpath(), parent, node, false, null, false);
 
 					Locator finalLocator = new Locator().kind(kind).id(id).xpath(finalPath);
 					if (tryLocator(finalLocator, node) == 1)

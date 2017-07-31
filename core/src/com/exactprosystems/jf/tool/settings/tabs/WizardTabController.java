@@ -2,7 +2,7 @@ package com.exactprosystems.jf.tool.settings.tabs;
 
 import com.exactprosystems.jf.common.Settings;
 import com.exactprosystems.jf.tool.ContainingParent;
-import com.exactprosystems.jf.tool.dictionary.dialog.WizardSettings;
+import com.exactprosystems.jf.tool.wizard.WizardSettings;
 import com.exactprosystems.jf.tool.settings.SettingsPanel;
 import javafx.event.ActionEvent;
 import javafx.fxml.Initializable;

@@ -1,4 +1,4 @@
-package com.exactprosystems.jf.tool.custom.wizard;
+package com.exactprosystems.jf.tool.wizard;
 
 import com.exactprosystems.jf.api.wizard.WizardManager;
 import com.exactprosystems.jf.common.utils.ArrayUtils;

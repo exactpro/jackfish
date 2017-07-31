@@ -63,7 +63,6 @@ public class ElementInfoController implements Initializable, ContainingParent
 	public CustomFieldWithButton tfTitle;
 	public CustomFieldWithButton tfExpression;
 	public TextField tfTimeout;
-	public Button xpathHelper;
 	public GridPane mainGrid;
 	public Button btnGoToOwner;
 	public GridPane fieldGrid;
@@ -166,14 +165,6 @@ public class ElementInfoController implements Initializable, ContainingParent
 		}, "Error on clearing " + actionEvent); 
 	}
 
-	public void showTree(ActionEvent actionEvent)
-	{
-		tryCatch(() -> 
-		{
-			this.navigation.chooseXpath(currentOwner(), tfXpath.getText());
-		}, "Error on show tree");
-	}
-	
 	// ------------------------------------------------------------------------------------------------------------------
 	// display* methods
 	// ------------------------------------------------------------------------------------------------------------------

@@ -15,7 +15,7 @@ import com.exactprosystems.jf.documents.matrix.parser.ScreenshotKind;
 import com.exactprosystems.jf.documents.matrix.parser.Tokens;
 import com.exactprosystems.jf.documents.matrix.parser.items.MutableArrayList;
 import com.exactprosystems.jf.tool.Common;
-import com.exactprosystems.jf.tool.dictionary.dialog.WizardSettings;
+import com.exactprosystems.jf.tool.wizard.WizardSettings;
 import javafx.scene.input.KeyCombination;
 import org.apache.log4j.Logger;
 

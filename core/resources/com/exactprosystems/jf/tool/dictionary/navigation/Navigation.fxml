@@ -52,11 +52,6 @@
 							</tooltip>
 						</Button>
 						<Label id="$horMin"/>
-						<Button id="btnWizard" fx:id="btnShowWizard" mnemonicParsing="false" onAction="#openWizard" styleClass="$transparentBackground">
-							<tooltip>
-								<Tooltip text="Open dialog wizard"/>
-							</tooltip>
-						</Button>
 					</children>
 				</HBox>
 			</children>

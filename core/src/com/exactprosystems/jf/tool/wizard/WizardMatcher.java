@@ -6,28 +6,21 @@
 //  information which is the property of Exactpro Systems, LLC or its licensors.
 ////////////////////////////////////////////////////////////////////////////////
 
-package com.exactprosystems.jf.tool.dictionary.dialog;
+package com.exactprosystems.jf.tool.wizard;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
+import com.exactprosystems.jf.api.app.*;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpression;
 import javax.xml.xpath.XPathFactory;
-
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
-
-import com.exactprosystems.jf.api.app.ControlKind;
-import com.exactprosystems.jf.api.app.IRemoteApplication;
-import com.exactprosystems.jf.api.app.Locator;
-import com.exactprosystems.jf.api.app.LocatorFieldKind;
-import com.exactprosystems.jf.api.app.PluginInfo;
-import com.exactprosystems.jf.api.app.Visibility;
+import java.util.Collections;
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 public class WizardMatcher
 {

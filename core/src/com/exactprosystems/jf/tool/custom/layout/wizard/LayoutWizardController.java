@@ -18,7 +18,7 @@ import com.exactprosystems.jf.tool.custom.expfield.ExpressionField;
 import com.exactprosystems.jf.tool.custom.layout.CustomArrow;
 import com.exactprosystems.jf.tool.custom.layout.CustomGrid;
 import com.exactprosystems.jf.tool.custom.layout.ScalableArrow;
-import com.exactprosystems.jf.tool.custom.scale.ScalePaneNew;
+import com.exactprosystems.jf.tool.custom.scaledimage.ScalePane;
 import javafx.beans.value.ChangeListener;
 import javafx.event.ActionEvent;
 import javafx.fxml.Initializable;
@@ -239,7 +239,7 @@ public class LayoutWizardController implements Initializable, ContainingParent
 		});
 		this.cbDialog.getSelectionModel().selectedItemProperty().addListener(this.windowChangeListener);
 
-		ScalePaneNew scalePane = new ScalePaneNew();
+		ScalePane scalePane = new ScalePane();
 		scalePane.setOnScaleChanged(this.model::changeScale);
 		scalePane.setMinHeight(30.0);
 		scalePane.setPrefHeight(30.0);

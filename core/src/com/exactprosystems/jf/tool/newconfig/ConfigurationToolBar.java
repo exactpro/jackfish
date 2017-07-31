@@ -4,7 +4,7 @@ import com.exactprosystems.jf.api.wizard.WizardManager;
 import com.exactprosystems.jf.common.version.VersionInfo;
 import com.exactprosystems.jf.documents.config.Context;
 import com.exactprosystems.jf.tool.Common;
-import com.exactprosystems.jf.tool.custom.wizard.WizardButton;
+import com.exactprosystems.jf.tool.wizard.WizardButton;
 
 import javafx.scene.control.RadioMenuItem;
 import javafx.scene.control.SplitMenuButton;

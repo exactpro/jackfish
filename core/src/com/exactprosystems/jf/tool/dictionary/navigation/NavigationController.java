@@ -8,27 +8,26 @@
 
 package com.exactprosystems.jf.tool.dictionary.navigation;
 
-import com.exactprosystems.jf.api.app.*;
+import com.exactprosystems.jf.api.app.AppConnection;
+import com.exactprosystems.jf.api.app.ControlKind;
+import com.exactprosystems.jf.api.app.IControl;
+import com.exactprosystems.jf.api.app.IWindow;
 import com.exactprosystems.jf.api.app.IWindow.SectionKind;
-import com.exactprosystems.jf.api.common.Converter;
 import com.exactprosystems.jf.api.common.Str;
 import com.exactprosystems.jf.api.wizard.WizardManager;
 import com.exactprosystems.jf.common.Settings;
-import com.exactprosystems.jf.common.version.VersionInfo;
 import com.exactprosystems.jf.documents.config.Context;
 import com.exactprosystems.jf.documents.guidic.controls.AbstractControl;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.ContainingParent;
 import com.exactprosystems.jf.tool.CssVariables;
 import com.exactprosystems.jf.tool.custom.BorderWrapper;
-import com.exactprosystems.jf.tool.custom.ServiceLambdaBean;
 import com.exactprosystems.jf.tool.custom.tab.CustomTab;
-import com.exactprosystems.jf.tool.custom.wizard.WizardButton;
-import com.exactprosystems.jf.tool.custom.xpath.XpathViewer;
 import com.exactprosystems.jf.tool.dictionary.DictionaryFx;
 import com.exactprosystems.jf.tool.dictionary.DictionaryFxController;
 import com.exactprosystems.jf.tool.dictionary.FindListView;
 import com.exactprosystems.jf.tool.helpers.DialogsHelper;
+import com.exactprosystems.jf.tool.wizard.WizardButton;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.event.ActionEvent;
@@ -77,7 +76,6 @@ public class NavigationController implements Initializable, ContainingParent
 	public Button btnCopyDialog;
 	public Button btnPasteDialog;
 	public Button btnTestWindow;
-	public Button btnShowWizard;
     public WizardButton btnWindowWizardManager;
     public WizardButton btnElementWizardManager;
 
@@ -116,11 +114,9 @@ public class NavigationController implements Initializable, ContainingParent
 		this.vBoxWindow.getChildren().add(0, this.listViewWindow);
 
 		this.btnWindowWizardManager = new WizardButton();
-		this.btnWindowWizardManager.setVisible(VersionInfo.isDevVersion());
         this.hBoxWindow.getChildren().add(this.btnWindowWizardManager);
 		
         this.btnElementWizardManager = new WizardButton();
-        this.btnElementWizardManager.setVisible(VersionInfo.isDevVersion());
         this.hBoxElement.getChildren().add(this.btnElementWizardManager);
 		
 		this.listViewElement = new FindListView<>((e, s) -> (!Str.IsNullOrEmpty(e.control.getID()) && e.control.getID().toUpperCase().contains(s.toUpperCase()) || (e.control.getBindedClass().getClazz().toUpperCase()
@@ -205,16 +201,6 @@ public class NavigationController implements Initializable, ContainingParent
 	public void pasteDialog(ActionEvent actionEvent)
 	{
 		tryCatch(() -> this.model.dialogPaste(currentSection()), "Error on paste dialog");
-	}
-
-	public void openWizard(ActionEvent actionEvent)
-	{
-		tryCatch(() -> this.model.openDialogWizard(currentWindow()), "Error on open dialog wizard");
-	}
-
-	public void setDisableWizardButton(boolean flag)
-	{
-		this.btnShowWizard.setDisable(flag);
 	}
 	// ------------------------------------------------------------------------------------------------------------------
 
@@ -319,51 +305,11 @@ public class NavigationController implements Initializable, ContainingParent
 	{
 		this.model.doIt(obj, currentElement(), currentWindow());
 	}
-	
-	public void chooseXpath(IControl selectedOwner, String xpath) throws Exception
-	{
-		if (this.appConnection != null)
-		{
-			Locator owner = null;
-			if (selectedOwner != null)
-			{
-	            owner = selectedOwner.locator();
-			}
-			IRemoteApplication service = this.appConnection.getApplication().service();
-			service.startNewDialog();
-
-			Locator finalOwner = owner;
-			XpathViewer xpathViewer = new XpathViewer(owner, () -> {
-				byte[] treeBytes = service.getTreeBytes(finalOwner);
-				return Converter.convertByteArrayToXmlDocument(treeBytes);
-			}, new ServiceLambdaBean(
-					() -> service.getImage(null, finalOwner).getImage(),
-					() -> service.getRectangle(null, finalOwner))
-			);
-			String id = currentElement().getID();
-			String result = xpathViewer.show(xpath, "Xpath for " + (id == null ? "empty" : id), Common.currentThemesPaths(), this.fullScreen);
-			this.model.parameterSet(currentWindow(), currentSection(), currentElement(), AbstractControl.xpathName, result);
-
-			//			Document document = service.getTree(owner);
-//			byte[] treeBytes = service.getTreeBytes(owner);
-//			Document document = Converter.convertByteArrayToXmlDocument(treeBytes);
-//			if (document != null)
-//			{
-//				XpathViewer viewer = new XpathViewer(owner, document, service);
-//				String id = currentElement().getID();
-//
-//				String result = viewer.show(xpath, "Xpath for " + (id == null ? "empty" : id), Common.currentThemesPaths(), this.fullScreen);
-//		        this.model.parameterSet(currentWindow(), currentSection(), currentElement(), AbstractControl.xpathName, result);
-//			}
-		}
-	}
-
 
 	public boolean checkNewId(String id)
 	{
 		return this.model.checkNewId(currentWindow(), currentElement(), id);
 	}
-
 
 	// ------------------------------------------------------------------------------------------------------------------
 	// display* methods
