@@ -1,9 +1,13 @@
 #Id;#NameSpace
 LIB;Standart libraries
+    #Id;#SubCase
+    qqq11111;This is test subcase
+    #EndSubCase
+
     #Id;#SubCase;str
     callLibFromLib2;;
         #Id;#Call;str
-        CALL_1;LIB_2.name;str
+        CALL_1;LIB.qqq1;str
 
         #Return
         CALL_1

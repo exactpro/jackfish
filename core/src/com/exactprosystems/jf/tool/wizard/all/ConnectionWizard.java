@@ -152,6 +152,12 @@ public class ConnectionWizard extends AbstractWizard {
     }
 
     @Override
+    public String getTitle()
+    {
+        return this.appEntry.toString();
+    }
+    
+    @Override
     protected Supplier<List<WizardCommand>> getCommands() {
 
         return () -> {

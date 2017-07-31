@@ -8,6 +8,7 @@
 
 package com.exactprosystems.jf.tool.wizard;
 
+import com.exactprosystems.jf.api.common.Str;
 import com.exactprosystems.jf.api.wizard.Wizard;
 import com.exactprosystems.jf.common.documentation.DocumentationBuilder;
 import com.exactprosystems.jf.common.report.ContextHelpFactory;
@@ -43,7 +44,7 @@ public class WizardDialog extends Dialog<Boolean>
 		super();
 		this.initModality(Modality.NONE);
 		this.wizard = wizard;
-		this.setTitle(wizard.manager().nameOf(wizard.getClass()));
+		expandTitle(null);
 		this.setResizable(true);
 		this.initOwner(Common.node);
 		this.getDialogPane().getStylesheets().addAll(Common.currentThemesPaths());
@@ -62,11 +63,21 @@ public class WizardDialog extends Dialog<Boolean>
 		createContent(context);
 	}
 
+	public void expandTitle(String str)
+	{
+	    String title = this.wizard.manager().nameOf(this.wizard.getClass());
+	    if (!Str.IsNullOrEmpty(str))
+	    {
+	        title += ": " + str;
+	    }
+        this.setTitle(title);
+	}
+	
 	public BorderPane getPane()
 	{
 		return this.borderPane;
 	}
-
+	
 	// region private methods
 	private void createContent(Context context)
 	{
