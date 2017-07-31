@@ -15,6 +15,7 @@ import com.exactprosystems.jf.tool.custom.date.CustomDateTimePicker;
 import com.exactprosystems.jf.tool.custom.number.NumberTextField;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.fxml.Initializable;
+import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.control.*;
 import javafx.scene.layout.Region;
@@ -63,24 +64,30 @@ public class StoreVariableController implements Initializable, ContainingParent
 			}
 		});
 		this.columnRemove.setCellValueFactory(param -> new SimpleObjectProperty<>(param.getValue()));
-		this.columnRemove.setCellFactory(param -> new TableCell<StoreBean, StoreBean>() {
-			private final Button deleteButton = new Button("Remove");
 
-			@Override
-			protected void updateItem(StoreBean bean, boolean empty) {
-				super.updateItem(bean, empty);
+		this.columnRemove.setCellFactory(param -> {
+			TableCell<StoreBean, StoreBean> tableCell = new TableCell<StoreBean, StoreBean>() {
+				private final Button deleteButton = new Button();
 
-				if (bean == null) {
-					setGraphic(null);
-					return;
+				@Override
+				protected void updateItem(StoreBean bean, boolean empty) {
+					super.updateItem(bean, empty);
+
+					if (bean == null)
+					{
+						setGraphic(null);
+						return;
+					}
+					deleteButton.setId("dictionaryBtnDeleteDialog");
+					deleteButton.getStyleClass().add("transparentBackground");
+					setGraphic(deleteButton);
+					deleteButton.setOnAction(
+							event -> remove(bean)
+					);
 				}
-				deleteButton.setId("dictionaryBtnDeleteDialog");
-				deleteButton.getStyleClass().add("$transparentBackground");
-				setGraphic(deleteButton);
-				deleteButton.setOnAction(
-						event -> remove(bean)
-				);
-			}
+			};
+			tableCell.setAlignment(Pos.CENTER);
+			return tableCell;
 		});
 		this.tableView.setRowFactory(param -> new TableRowFactory());
 	}
