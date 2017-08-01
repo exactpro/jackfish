@@ -8,13 +8,9 @@
 
 package com.exactprosystems.jf.documents.matrix.parser.items;
 
-import java.io.IOException;
-import java.io.InputStream;
-
 import com.exactprosystems.jf.api.error.ErrorKind;
 import com.exactprosystems.jf.api.wizard.Wizard;
 import com.exactprosystems.jf.api.wizard.WizardManager;
-import com.exactprosystems.jf.common.documentation.DocumentationBuilder;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.report.ReportBuilder;
 import com.exactprosystems.jf.common.report.ReportBuilder.ImageReportMode;
@@ -23,6 +19,9 @@ import com.exactprosystems.jf.documents.matrix.parser.Parameters;
 import com.exactprosystems.jf.documents.matrix.parser.Result;
 import com.exactprosystems.jf.documents.matrix.parser.ReturnAndResult;
 import com.exactprosystems.jf.documents.matrix.parser.listeners.IMatrixListener;
+
+import java.io.IOException;
+import java.io.InputStream;
 
 public class HelpWizardItem extends MatrixItem
 {
@@ -59,8 +58,8 @@ public class HelpWizardItem extends MatrixItem
         }
         
         report.outLine(this, null, "{{`" + shortDescription + "`}}", null);
-        report.outImage(this, null, null, bytes, "{{* View example *}}", -1, ImageReportMode.AsEmbeddedImage); 
-        report.outLine(this, null, detailedDescription, null);
+        report.outImage(this, null, null, bytes, "{{* View example *}}", -1, ImageReportMode.AsEmbeddedImage);
+		report.outLine(this, null, "{{`" + detailedDescription + "`}}", null);
     }
 
 

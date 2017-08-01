@@ -75,12 +75,6 @@ public class HelpBuilder extends ReportBuilder {
     }
 
 	@Override
-	protected Marker getMarker()
-	{
-		return new Marker.HTMLMaker(Theme.WHITE.equals(Common.currentTheme()));
-	}
-
-	@Override
     protected String replaceMarker(String marker)
 	{
         return HTMLhelper.htmlMarker(marker);
