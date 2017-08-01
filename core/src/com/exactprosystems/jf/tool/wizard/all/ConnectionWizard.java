@@ -27,7 +27,7 @@ import java.util.function.Supplier;
         name = "Connection wizard",
         pictureName = "ConnectionWizard.png",
         category = WizardCategory.OTHER,
-        shortDescription = "Wizard creates a connection and save in to the Store (View->Store).",
+        shortDescription = "Wizard creates a connection and saves it into the Store (View->Store).",
         experimental = false,
         strongCriteries = true,
         criteries = {ApplicationPool.class, AppEntry.class},
