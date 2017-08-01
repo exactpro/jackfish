@@ -1,6 +1,5 @@
 package com.exactprosystems.jf.tool.search;
 
-import com.exactprosystems.jf.api.common.Str;
 import com.exactprosystems.jf.documents.DocumentInfo;
 import com.exactprosystems.jf.documents.guidic.GuiDictionary;
 import com.exactprosystems.jf.documents.matrix.Matrix;
@@ -8,11 +7,13 @@ import com.exactprosystems.jf.documents.vars.SystemVars;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.ContainingParent;
 import com.exactprosystems.jf.tool.CssVariables;
+import com.exactprosystems.jf.tool.custom.BorderWrapper;
 import com.exactprosystems.jf.tool.custom.controls.field.CustomFieldWithButton;
 import com.exactprosystems.jf.tool.helpers.DialogsHelper;
 import javafx.event.ActionEvent;
 import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
@@ -35,33 +36,42 @@ public class SearchController implements Initializable, ContainingParent
 {
 	private final Object lock = new Object();
 
-	public Parent                 parent;
-	public ProgressIndicator      progress;
-	public CheckBox               cbMatchCase;
-	public CheckBox               cbRegexp;
-	public CheckBox               cbFileMask;
-	public TextField              tfFileMask;
-	public CustomFieldWithButton  tfFind;
-	public ComboBox<Search.Scope> cbScope;
-	public Button                 btnFind;
-	public CustomFieldWithButton  cfDirectory;
+	private Parent parent;
+
+	public GridPane              scopePane;
+	public GridPane              mainGridPane;
+	public ComboBox<String>      cbFileMask;
+	public ComboBox<String>      cbFind;
+	public CheckBox              cbCaseSensitive;
+	public CheckBox              cbRegexp;
+	public CheckBox              cbWholeWord;
+	public CheckBox              cbMatrix;
+	public CheckBox              cbLibs;
+	public CheckBox              cbGuiDic;
+	public CheckBox              cbClientDic;
+	public CheckBox              cbVariables;
+	public CheckBox              cbFiles;
+	public CustomFieldWithButton cfDirectory;
+	public Label                 lblMatches;
+	public Button                btnFind;
 	public ListView<SearchResult> lvResult;
-	public CheckBox               cbFileName;
-	public Label                  lblMatches;
+	public HBox hBoxSearching;
 
 	private Search model;
-	private Alert alert;
+	private Alert  alert;
 
 	//region Initializable
 	@Override
 	public void initialize(URL location, ResourceBundle resources)
 	{
-		this.cbScope.getItems().addAll(Search.Scope.values());
-		this.cbScope.getSelectionModel().selectFirst();
+		Node scope = BorderWrapper.wrap(this.scopePane).title("Scope").color(Common.currentTheme().getReverseColor()).outerPadding(4).innerPadding(4).build();
+		this.mainGridPane.add(scope, 0, 4);
+
+		this.cbFileMask.getItems().add(Search.ALL_FILES);
+		this.cbFileMask.getSelectionModel().selectFirst();
 
 		this.cfDirectory.setButtonText("...");
-		this.cfDirectory.setHandler(str ->
-		{
+		this.cfDirectory.setHandler(str -> {
 			File file = DialogsHelper.showDirChooseDialog("Choose start directory");
 			Optional.ofNullable(file).map(File::getAbsolutePath).map(Common::getRelativePath).ifPresent(this.cfDirectory::setText);
 		});
@@ -84,6 +94,17 @@ public class SearchController implements Initializable, ContainingParent
 		this.lvResult.setCellFactory(e -> new SearchResultCell(model));
 	}
 
+	void updateFromSettings(List<String> masks, List<String> texts)
+	{
+		String oldMask = this.cbFileMask.getSelectionModel().getSelectedItem();
+		this.cbFileMask.getItems().setAll(masks);
+		this.cbFileMask.getSelectionModel().select(oldMask);
+
+		String oldText = this.cbFind.getSelectionModel().getSelectedItem();
+		this.cbFind.getItems().setAll(texts);
+		this.cbFind.getSelectionModel().select(oldText);
+	}
+
 	void show()
 	{
 		this.alert = new Alert(Alert.AlertType.INFORMATION);
@@ -96,19 +117,30 @@ public class SearchController implements Initializable, ContainingParent
 		DialogPane dp = this.alert.getDialogPane();
 		dp.setContent(this.parent);
 		this.alert.setOnHiding(event -> this.model.alertClose());
+		this.alert.setTitle("Search");
 		this.alert.show();
-		Common.setFocused(this.tfFind);
+		Node node = this.alert.getDialogPane().lookupButton(ButtonType.OK);
+		if (node != null)
+		{
+			((Button) node).setDefaultButton(false);
+		}
+		Common.setFocused(this.cbFind.getEditor());
 	}
 
 	public void find(ActionEvent actionEvent)
 	{
 		this.model.find(
-				this.tfFind.getText()
-				, this.cbFileName.isSelected()
-				, this.cbMatchCase.isSelected()
+				this.cbFileMask.getEditor().getText()
+				, this.cbFind.getEditor().getText()
+				, this.cbCaseSensitive.isSelected()
+				, this.cbWholeWord.isSelected()
 				, this.cbRegexp.isSelected()
-				, this.cbFileMask.isSelected() ? this.tfFileMask.getText() : null
-				, this.cbScope.getSelectionModel().getSelectedItem()
+				, this.cbMatrix.isSelected()
+				, this.cbLibs.isSelected()
+				, this.cbGuiDic.isSelected()
+				, this.cbClientDic.isSelected()
+				, this.cbVariables.isSelected()
+				, this.cbFiles.isSelected()
 				, this.cfDirectory.getText()
 		);
 	}
@@ -119,7 +151,7 @@ public class SearchController implements Initializable, ContainingParent
 		{
 			return;
 		}
-		synchronized (lock)
+		synchronized (this.lock)
 		{
 			this.lvResult.getItems().addAll(list);
 		}
@@ -127,14 +159,16 @@ public class SearchController implements Initializable, ContainingParent
 
 	void startFind()
 	{
-		this.progress.setVisible(true);
-		this.lvResult.getItems().clear();
+		this.btnFind.setDisable(true);
 		this.lblMatches.setText("Searching...");
+		this.hBoxSearching.setVisible(true);
+		this.lvResult.getItems().clear();
 	}
 
 	void finishFind()
 	{
-		this.progress.setVisible(false);
+		this.hBoxSearching.setVisible(false);
+		this.btnFind.setDisable(false);
 	}
 
 	void displayMatches()
@@ -147,50 +181,24 @@ public class SearchController implements Initializable, ContainingParent
 	//region private methods
 	private void listeners()
 	{
-		Arrays.asList(this.cbFileName, this.cbMatchCase, this.cbRegexp, this.cbFileMask).forEach(cb -> cb.setOnKeyPressed(e -> this.consumeEvent(e, evt -> {})));
+		Arrays.asList(this.cbCaseSensitive, this.cbRegexp, this.cbWholeWord, this.cbMatrix, this.cbLibs, this.cbGuiDic,this.cbClientDic,this.cbVariables, this.cbFiles)
+				.forEach(cb -> cb.setOnKeyPressed(e -> this.consumeEvent(e, evt -> {})));
 
-		this.tfFileMask.disableProperty().bind(this.cbFileMask.selectedProperty().not());
-		this.cbFileMask.selectedProperty().addListener((observable, oldValue, newValue) -> {
-			if (newValue && !oldValue)
-			{
-				Common.setFocused(this.tfFileMask);
-			}
-		});
-
-		this.cbScope.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-			this.cfDirectory.setVisible(newValue == Search.Scope.Directory);
-			if (Str.IsNullOrEmpty(this.cfDirectory.getText()))
-			{
-				this.cfDirectory.setText("./");
-			}
-		});
-
+		this.cfDirectory.disableProperty().bind(this.cbFiles.selectedProperty().not());
 
 		this.lvResult.setOnKeyPressed(event -> {
 			if (event.getCode() == KeyCode.ESCAPE)
 			{
 				this.alert.hide();
 			}
-			else if (event.getCode() == KeyCode.UP)
-			{
-				if (this.lvResult.getSelectionModel().getSelectedIndex() == 0)
-				{
-					Common.setFocused(this.tfFind);
-				}
-			}
 		});
 
-		this.tfFind.setOnKeyPressed(event -> {
-			this.consumeEvent(event, e -> this.find(null));
+		this.cbFind.getEditor().setOnKeyPressed(event -> this.consumeEvent(event, e -> this.find(null)));
+		this.cbFind.setOnKeyPressed(event -> this.consumeEvent(event, e -> this.find(null)));
 
-			if (event.getCode() == KeyCode.DOWN)
-			{
-				Common.setFocused(this.lvResult);
-				this.lvResult.getSelectionModel().selectFirst();
-			}
-		});
+		this.cbFileMask.getEditor().setOnKeyPressed(e -> this.consumeEvent(e, ev -> this.find(null)));
+		this.cbFileMask.setOnKeyPressed(event -> this.consumeEvent(event, e -> this.find(null)));
 
-		this.tfFileMask.setOnKeyPressed(event -> this.consumeEvent(event, e -> this.find(null)));
 		this.cfDirectory.setOnKeyPressed(event -> this.consumeEvent(event, e -> this.find(null)));
 	}
 

@@ -24,24 +24,14 @@ import com.exactprosystems.jf.api.error.ErrorKind;
 import com.exactprosystems.jf.api.service.IServicesPool;
 import com.exactprosystems.jf.app.ApplicationPool;
 import com.exactprosystems.jf.client.ClientsPool;
-import com.exactprosystems.jf.common.CommonHelper;
-import com.exactprosystems.jf.common.MainRunner;
-import com.exactprosystems.jf.common.MatrixRunner;
-import com.exactprosystems.jf.common.MutableString;
-import com.exactprosystems.jf.common.Settings;
-import com.exactprosystems.jf.common.VerboseLevel;
+import com.exactprosystems.jf.common.*;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.evaluator.MvelEvaluator;
 import com.exactprosystems.jf.common.report.HTMLReportFactory;
 import com.exactprosystems.jf.common.report.ReportFactory;
 import com.exactprosystems.jf.common.version.VersionInfo;
 import com.exactprosystems.jf.common.xml.schema.Xsd;
-import com.exactprosystems.jf.documents.AbstractDocument;
-import com.exactprosystems.jf.documents.ConsoleDocumentFactory;
-import com.exactprosystems.jf.documents.Document;
-import com.exactprosystems.jf.documents.DocumentFactory;
-import com.exactprosystems.jf.documents.DocumentInfo;
-import com.exactprosystems.jf.documents.DocumentKind;
+import com.exactprosystems.jf.documents.*;
 import com.exactprosystems.jf.documents.matrix.Matrix;
 import com.exactprosystems.jf.documents.matrix.parser.Result;
 import com.exactprosystems.jf.documents.matrix.parser.items.MatrixItem;
@@ -57,7 +47,6 @@ import com.exactprosystems.jf.functions.Table;
 import com.exactprosystems.jf.service.ServicePool;
 import com.exactprosystems.jf.sql.DataBasePool;
 import com.exactprosystems.jf.tool.Common;
-
 import org.apache.log4j.Logger;
 
 import javax.xml.XMLConstants;
@@ -83,7 +72,6 @@ import java.util.List;
 import java.util.function.Consumer;
 import java.util.regex.Matcher;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 @XmlRootElement(name="configuration")
 @XmlAccessorType(XmlAccessType.NONE)
@@ -357,6 +345,11 @@ public class Configuration extends AbstractDocument
 	public MutableString getVars()
 	{
 		return this.varsValue;
+	}
+
+	public MutableArrayList<MutableString> getUserVars()
+	{
+		return this.userVarsValue;
 	}
 
 	public GlobalHandler getGlobalHandler()

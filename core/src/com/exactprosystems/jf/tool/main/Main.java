@@ -775,11 +775,22 @@ public class Main extends Application
 	void search() throws Exception
 	{
 		checkConfig();
-		new Search(this
-				, this.config.getMatricesValue().stream().map(MutableString::get).map(File::new).collect(Collectors.toList())
-				, this.config.getLibrariesValue().stream().map(MutableString::get).map(File::new).collect(Collectors.toList())
-				, this.config.getAppDictionariesValue().stream().map(MutableString::get).map(File::new).collect(Collectors.toList())
+		List<File> vars = new ArrayList<>();
+		vars.add(new File(this.config.getVars().get()));
+		vars.addAll(convert(this.config.getUserVars()));
+
+		new Search(this, this.settings
+				, convert(this.config.getMatricesValue())
+				, convert(this.config.getLibrariesValue())
+				, convert(this.config.getAppDictionariesValue())
+				, convert(this.config.getClientDictionariesValue())
+				, vars
 		).show();
+	}
+
+	private List<File> convert(List<MutableString> list)
+	{
+		return list.stream().map(MutableString::get).map(File::new).collect(Collectors.toList());
 	}
 
 	public void store() throws Exception

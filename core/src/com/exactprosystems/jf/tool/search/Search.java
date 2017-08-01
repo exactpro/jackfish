@@ -1,5 +1,7 @@
 package com.exactprosystems.jf.tool.search;
 
+import com.exactprosystems.jf.api.common.Str;
+import com.exactprosystems.jf.common.Settings;
 import com.exactprosystems.jf.documents.matrix.parser.SearchHelper;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.main.Main;
@@ -9,10 +11,7 @@ import javafx.concurrent.Task;
 import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -23,33 +22,31 @@ import java.util.stream.Stream;
 
 public class Search
 {
-	enum Scope
-	{
-		Project,
-		Matrices,
-		Libraries,
-		GuiDictionaries,
-		MatricesAndLibraries,
-		Directory
-	}
-
 	private SearchController controller;
-	private Main model;
-	private List<File> matrixDirs;
-	private List<File> libsDirs;
-	private List<File> guiDirs;
+	private Main             model;
+	private Settings         settings;
+	private List<File>       matrixDirs;
+	private List<File>       libsDirs;
+	private List<File>       guiDirs;
+	private List<File>       clientDirs;
+	private List<File>       variableFiles;
+
+	static final String ALL_FILES = "*.*";
 
 	private final ExecutorService executor = Executors.newFixedThreadPool(4);
 
-	public Search(Main model, List<File> matrixes, List<File> libs, List<File> guiDic)
+	public Search(Main model, Settings settings, List<File> matrixes, List<File> libs, List<File> guiDic, List<File> clientDirs, List<File> variableFiles)
 	{
 		this.model = model;
+		this.settings = settings;
 		this.matrixDirs = matrixes;
 		this.libsDirs = libs;
 		this.guiDirs = guiDic;
+		this.clientDirs = clientDirs;
+		this.variableFiles = variableFiles;
 		this.controller = Common.loadController(this.getClass().getResource("Search.fxml"));
 		this.controller.init(this);
-
+		this.updateFromSettings();
 	}
 
 	public void show()
@@ -57,45 +54,56 @@ public class Search
 		this.controller.show();
 	}
 
-	void find(String what, boolean isFileName, boolean isMatchCase, boolean isRegexp, String fileMask, Scope scope, String dir)
+	void find(String fileMask, String containingText, boolean caseSens, boolean wholeWord, boolean regexp, boolean matrix, boolean libs, boolean gui, boolean clients, boolean vars, boolean files, String dirPath)
 	{
 		this.controller.startFind();
-		String res = checkParams(what, isRegexp, fileMask);
+		String res = checkParams(containingText, regexp, fileMask);
 		if (res != null)
 		{
 			this.controller.displayResult(Collections.singletonList(new SearchResult.FailedSearchResult(res)));
 			this.controller.finishFind();
 			return;
 		}
-		switch (scope)
+
+		saveMaskAndText(containingText, fileMask);
+
+		List<File> listFiles = new ArrayList<>();
+		if (matrix)
 		{
-			case Project:
-				byPassDir(new File(new File("").getAbsolutePath()), what, isMatchCase, isRegexp, fileMask, isFileName);
-				break;
-
-			case Matrices:
-				this.matrixDirs.forEach(root -> byPassDir(root, what, isMatchCase, isRegexp, fileMask, isFileName));
-				break;
-
-			case Libraries:
-				this.libsDirs.forEach(root -> byPassDir(root, what, isMatchCase, isRegexp, fileMask, isFileName));
-				break;
-
-			case MatricesAndLibraries:
-				List<File> matricesAndLibs = new ArrayList<>();
-				matricesAndLibs.addAll(this.libsDirs);
-				matricesAndLibs.addAll(this.matrixDirs);
-				matricesAndLibs.forEach(root -> byPassDir(root, what, isMatchCase, isRegexp, fileMask, isFileName));
-				break;
-
-			case GuiDictionaries:
-				this.guiDirs.forEach(root -> byPassDir(root, what, isMatchCase, isRegexp, fileMask, isFileName));
-				break;
-
-			case Directory:
-				byPassDir(new File(dir), what, isMatchCase, isRegexp, fileMask, isFileName);
-				break;
+			listFiles.addAll(this.matrixDirs);
 		}
+		if (libs)
+		{
+			listFiles.addAll(this.libsDirs);
+		}
+		if (gui)
+		{
+			listFiles.addAll(this.guiDirs);
+		}
+		if (clients)
+		{
+			listFiles.addAll(this.clientDirs);
+		}
+		if (vars)
+		{
+			listFiles.addAll(this.variableFiles);
+		}
+		if (files)
+		{
+			if (Str.IsNullOrEmpty(dirPath))
+			{
+				dirPath = "./";
+			}
+			listFiles.add(new File(dirPath));
+		}
+
+		if (Str.IsNullOrEmpty(fileMask))
+		{
+			fileMask = ALL_FILES;
+		}
+
+		String finalFileMask = fileMask;
+		listFiles.forEach(file -> byPassDir(file, containingText, caseSens, regexp, wholeWord, finalFileMask));
 		DummySearchService dummySearchService = new DummySearchService();
 		dummySearchService.setExecutor(executor);
 		dummySearchService.setOnSucceeded(event -> {
@@ -141,41 +149,49 @@ public class Search
 	}
 
 	//region private methods
-	private void byPassDir(File root, String what, boolean isMatchCase, boolean isRegexp, String fileMask, boolean isFileName)
+
+	private void updateFromSettings()
+	{
+		this.controller.updateFromSettings(
+				this.settings.getValues(Settings.SETTINGS, Settings.SEARCH + Settings.MASK).stream().map(Settings.SettingsValue::getKey).collect(Collectors.toList())
+				, this.settings.getValues(Settings.SETTINGS, Settings.SEARCH + Settings.TEXT).stream().map(Settings.SettingsValue::getKey).collect(Collectors.toList())
+		);
+	}
+
+	private void saveMaskAndText(String containingText, String fileMask)
+	{
+		if (!Str.IsNullOrEmpty(containingText))
+		{
+			this.settings.setValue(Settings.SETTINGS, Settings.SEARCH + Settings.TEXT, containingText, 10, containingText);
+		}
+		if (!Str.IsNullOrEmpty(fileMask) && !fileMask.equals(ALL_FILES))
+		{
+			this.settings.setValue(Settings.SETTINGS, Settings.SEARCH + Settings.MASK, fileMask, 10, fileMask);
+		}
+		try
+		{
+			this.settings.saveIfNeeded();
+		}
+		catch (Exception e)
+		{
+			;
+		}
+		updateFromSettings();
+	}
+
+	private void byPassDir(File root, String what, boolean isCaseSens, boolean isRegexp, boolean wholeWord, String fileMask)
 	{
 		if (root.isDirectory())
 		{
 			File[] list = root.listFiles();
 			if (list != null)
 			{
-				Arrays.stream(list).forEach(file -> byPassDir(file, what, isMatchCase, isRegexp, fileMask, isFileName));
+				Arrays.stream(list).forEach(file -> byPassDir(file, what, isCaseSens, isRegexp, wholeWord, fileMask));
 			}
 		}
 		else
 		{
-			SearchService service;
-			if (isFileName)
-			{
-				service = new SearchOnlyFileService(root, isMatchCase, isRegexp, what, fileMask);
-			}
-			else
-			{
-				if (fileMask == null)
-				{
-					service = new SearchService(root, isMatchCase, isRegexp, what);
-				}
-				else
-				{
-					if (root.getName().matches(this.filePattern(fileMask)))
-					{
-						service = new SearchService(root, isMatchCase, isRegexp, what);
-					}
-					else
-					{
-						service = new DummySearchService();
-					}
-				}
-			}
+			SearchService service = new SearchService(root, isCaseSens, isRegexp, wholeWord, what, fileMask);
 			service.setOnSucceeded(event -> this.controller.displayResult(((List<SearchResult>) event.getSource().getValue())));
 			service.setExecutor(executor);
 			service.start();
@@ -216,17 +232,21 @@ public class Search
 
 	private class SearchService extends Service<List<SearchResult>>
 	{
-		protected final File file;
-		protected final boolean isMatchCase;
-		protected final boolean isRegexp;
-		protected final String what;
+		private final File    file;
+		private final boolean isMatchCase;
+		private final boolean isRegexp;
+		private final boolean isWholeWord;
+		private final String  what;
+		private final String  fileMask;
 
-		SearchService(File file, boolean isMatchCase, boolean isRegexp, String what)
+		SearchService(File file, boolean isMatchCase, boolean isRegexp, boolean isWholeWord, String what, String fileMask)
 		{
 			this.file = file;
 			this.isMatchCase = isMatchCase;
 			this.isRegexp = isRegexp;
+			this.isWholeWord = isWholeWord;
 			this.what = what;
+			this.fileMask = fileMask;
 		}
 
 		@Override
@@ -239,12 +259,20 @@ public class Search
 				{
 					AtomicInteger atomicInteger = new AtomicInteger(0);
 
-					try(Stream<String> stream = Files.lines(Paths.get(file.getAbsolutePath())))
+					if (!file.getName().matches(filePattern(fileMask)))
 					{
-						return stream.peek(s -> atomicInteger.incrementAndGet())
-								.filter(SearchService.this::processLine)
-								.map(s -> new SearchResult(file, atomicInteger.get()))
-								.collect(Collectors.toList());
+						return null;
+					}
+
+					if (Str.IsNullOrEmpty(what))
+					{
+						return Collections.singletonList(new SearchResult(file, 0));
+					}
+
+					try (Stream<String> stream = Files.lines(Paths.get(file.getAbsolutePath())))
+					{
+						return stream.peek(s -> atomicInteger.incrementAndGet()).filter(SearchService.this::processLine).map(s -> new SearchResult(file, atomicInteger.get())).collect(
+								Collectors.toList());
 					}
 				}
 			};
@@ -258,56 +286,8 @@ public class Search
 			}
 			else
 			{
-				return SearchHelper.matches(line, this.what, this.isMatchCase, false);
+				return SearchHelper.matches(line, this.what, this.isMatchCase, this.isWholeWord);
 			}
-		}
-	}
-
-	private class SearchOnlyFileService extends SearchService
-	{
-		private String fileMask;
-
-		SearchOnlyFileService(File file, boolean isMatchCase, boolean isRegexp, String what, String fileMask)
-		{
-			super(file, isMatchCase, isRegexp, what);
-			this.fileMask = fileMask;
-		}
-
-		@Override
-		protected Task<List<SearchResult>> createTask()
-		{
-			return new Task<List<SearchResult>>()
-			{
-				@Override
-				protected List<SearchResult> call() throws Exception
-				{
-					if (isRegexp)
-					{
-						if (file.getName().matches(filePattern(what)))
-						{
-							return Collections.singletonList(new SearchResult(file, 0));
-						}
-					}
-					else
-					{
-						if (file.getName().contains(what))
-						{
-							if (fileMask != null)
-							{
-								if (file.getName().matches(filePattern(fileMask)))
-								{
-									return Collections.singletonList(new SearchResult(file, 0));
-								}
-							}
-							else
-							{
-								return Collections.singletonList(new SearchResult(file, 0));
-							}
-						}
-					}
-					return null;
-				}
-			};
 		}
 	}
 
@@ -315,7 +295,7 @@ public class Search
 	{
 		DummySearchService()
 		{
-			super(null, false, false, null);
+			super(null, false, false, false, null, null);
 		}
 
 		@Override
@@ -326,6 +306,7 @@ public class Search
 				@Override
 				protected List<SearchResult> call() throws Exception
 				{
+					Thread.sleep(500);
 					return null;
 				}
 			};

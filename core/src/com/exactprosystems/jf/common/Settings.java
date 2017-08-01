@@ -121,6 +121,11 @@ public class Settings
 	public static final String 	MAIN_NS 			= "MAIN";
 	public static final String	MATRIX_TOOLBAR		= "MATRIX_TOOLBAR";
 
+	//region Search
+	public static final String TEXT = "searchText";
+	public static final String MASK = "fileMask";
+	//endregion
+
 	private static final Class<?>[] jaxbContextClasses = { Settings.class, SettingsValue.class };
 
 	static

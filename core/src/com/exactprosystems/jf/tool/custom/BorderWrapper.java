@@ -20,10 +20,10 @@ import java.util.List;
 
 public final class BorderWrapper
 {
-	private final double outerPad = 16;
-	private final double innerPad = 16;
-	private final double radius = 5;
-	private final double thick = 1;
+	private double outerPad = 16;
+	private double innerPad = 16;
+	private double radius = 5;
+	private double thick = 1;
 	private BorderStrokeStyle strokeStyle = BorderStrokeStyle.SOLID;
 
 	private Color color = Color.DARKGRAY;
@@ -45,6 +45,18 @@ public final class BorderWrapper
 	public BorderWrapper color(Color color)
 	{
 		this.color = color;
+		return this;
+	}
+
+	public BorderWrapper outerPadding(double value)
+	{
+		this.outerPad = value;
+		return this;
+	}
+
+	public BorderWrapper innerPadding(double value)
+	{
+		this.innerPad = value;
 		return this;
 	}
 
