@@ -1,11 +1,4 @@
 #Id;#NameSpace
 LIB_2;Standart libraries
-    #Id;#SubCase;str
-    qqq1;name;
-        #Return
-        str.toUpperCase()
-
-    #EndSubCase
-
 #EndNameSpace
 

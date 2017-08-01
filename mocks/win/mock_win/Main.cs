@@ -32,11 +32,12 @@ namespace mock_win
         bool flagClickMenuItem = false;
         bool flagPopup = false;
         bool redExpanded = false;
-        //MySpin mySpinner;
+        string NEWLINE = "\r\n";
 
         public MockWin()
         {
             InitializeComponent();
+            setSize();
             fillTable();
             fillTable1();
             fillListView();
@@ -51,6 +52,12 @@ namespace mock_win
             this.timer.Enabled = true;
 
             this.Spinner.IsAccessible = true;
+        }
+
+        private void setSize()
+        {
+            Size sizeM = new Size(100, 25);
+            this.Button.SetBounds(0, 0, sizeM.Width, sizeM.Height);
         }
 
         private void createMenu()
@@ -349,6 +356,7 @@ namespace mock_win
             {
                 downUpLabel.Text = moveLabel.Text.Split('_')[0] + "_down_Control";
             }
+            protocolText.Text += moveLabel.Text.Split('_')[0] + "_down_" + e.KeyValue + NEWLINE;
         }
 
         public void GlobalKeyUp(object sender, KeyEventArgs e)
@@ -357,6 +365,7 @@ namespace mock_win
             {
                 downUpLabel.Text = moveLabel.Text.Split('_')[0] + "_up_Control";
             }
+            protocolText.Text += moveLabel.Text.Split('_')[0] + "_up_" + e.KeyValue + NEWLINE;
         }
 
         public void GlobalKeyPress(object sender, KeyPressEventArgs e)
@@ -365,6 +374,7 @@ namespace mock_win
             {
                 pressLabel.Text = moveLabel.Text.Split('_')[0] + "_press_Escape";
             }
+            protocolText.Text += moveLabel.Text.Split('_')[0] + "_press_" + (int)e.KeyChar + NEWLINE;
         }
 
         private void GlobalMouseDown(object sender, MouseEventArgs e)
@@ -620,6 +630,16 @@ namespace mock_win
         private void dateTimePicker1_RegionChanged(object sender, EventArgs e)
         {
             Console.WriteLine("range");
+        }
+
+        private void button1_MouseClick(object sender, MouseEventArgs e)
+        {
+
+        }
+
+        private void protocolClear_Click(object sender, EventArgs e)
+        {
+            protocolText.Clear();
         }
     }
 }

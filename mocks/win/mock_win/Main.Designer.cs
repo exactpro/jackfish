@@ -95,6 +95,8 @@
             this.tabPage3 = new System.Windows.Forms.TabPage();
             this.tabPage4 = new System.Windows.Forms.TabPage();
             this.selectLabel = new System.Windows.Forms.Label();
+            this.protocolText = new System.Windows.Forms.TextBox();
+            this.protocolClear = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.Table1)).BeginInit();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.Slider)).BeginInit();
@@ -785,11 +787,26 @@
             resources.ApplyResources(this.selectLabel, "selectLabel");
             this.selectLabel.Name = "selectLabel";
             // 
+            // protocolText
+            // 
+            resources.ApplyResources(this.protocolText, "protocolText");
+            this.protocolText.Name = "protocolText";
+            // 
+            // protocolClear
+            // 
+            resources.ApplyResources(this.protocolClear, "protocolClear");
+            this.protocolClear.Name = "protocolClear";
+            this.protocolClear.UseVisualStyleBackColor = true;
+            this.protocolClear.Click += new System.EventHandler(this.protocolClear_Click);
+            this.protocolClear.MouseClick += new System.Windows.Forms.MouseEventHandler(this.button1_MouseClick);
+            // 
             // MockWin
             // 
             resources.ApplyResources(this, "$this");
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ContextMenuStrip = this.contextMenuStrip1;
+            this.Controls.Add(this.protocolClear);
+            this.Controls.Add(this.protocolText);
             this.Controls.Add(this.selectLabel);
             this.Controls.Add(this.Spinner);
             this.Controls.Add(this.panel3);
@@ -924,6 +941,8 @@
         private System.Windows.Forms.TabPage tabPage4;
         public System.Windows.Forms.Label selectLabel;
         public System.Windows.Forms.NumericUpDown Spinner;
+        private System.Windows.Forms.TextBox protocolText;
+        public System.Windows.Forms.Button protocolClear;
     }
 }
 

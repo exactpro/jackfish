@@ -19,8 +19,6 @@ import javax.swing.tree.TreePath;
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.image.BufferedImage;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.io.IOException;
 import java.util.EventObject;
@@ -37,36 +35,120 @@ public class MockApp
 	private JLabel downUpLabel;
 	private JLabel moveLabel;
 	private JLabel sliderLabel;
-	private JTextField textField;
 	private JFrame frame3;
 	private boolean firstRun;
 	private int counter;
+	private static final String NEWLINE = "\r\n";
+
+	private JButton button;
+	private JTextField textField;
+	private JCheckBox checkBox;
+	private JButton any;
+	private JToggleButton toggleButton;
+	private JComboBox<String> comboBox;
+	private JSpinner spinner;
+	private JTable table;
+	private JPanel tablePanel;
+	private JRadioButton buttonGreen;
+	private JRadioButton buttonYellow;
+	private JRadioButton buttonOrange;
+	private JRadioButton buttonBlue;
+	private JPanel panel;
+	private JProgressBar progressBar;
+	private JScrollBar scrollBar;
+	private JList<String> list;
+	private JTabbedPane tabPane;
+	private JScrollPane treePanel;
+	private JSplitPane splitPane;
+	private JLabel imageLabel;
+	private JSlider slider;
+	private JPanel showHidePanel;
+	private JTextArea protocolText;
+	private JButton protocolClear;
+	private JPanel disabledComponentsPanel;
+	private JPanel panelRepeat;
+	private JPanel panelVisibleEnabled;
+	private JButton colorButton;
 
 	public static void main(String[] args)
 	{
 		SwingUtilities.invokeLater(MockApp::new);
 	}
 
+	private void setSizeForAllControls()
+	{
+		// visibility
+
+		Dimension sizeS = new Dimension(25, 25);
+		Dimension sizeM = new Dimension(100, 25);
+		Dimension sizeL = new Dimension(250, 75);
+
+		// other
+		this.slider.setBounds		(0, 							300, 				this.frame.getWidth()-15, sizeM.height);
+
+		this.pressLabel.setBounds	(0,							sizeM.height*7,	sizeL.width, sizeM.height);
+		this.pushLabel.setBounds	(0,							sizeM.height*8,	sizeL.width, sizeM.height);
+		this.selectLabel.setBounds	(0,							sizeM.height*9,	sizeL.width, sizeM.height);
+		this.checkedLabel.setBounds	(sizeL.width,					sizeM.height*7,	sizeL.width, sizeM.height);
+		this.downUpLabel.setBounds	(sizeL.width,					sizeM.height*8,	sizeL.width, sizeM.height);
+		this.moveLabel.setBounds	(sizeL.width,					sizeM.height*9,	sizeL.width, sizeM.height);
+		this.sliderLabel.setBounds	(sizeL.width,					sizeM.height*10,	sizeL.width, sizeM.height);
+
+		this.showHidePanel.setBounds(0,							sizeM.height*16,	sizeL.width, sizeM.height*2);
+		this.disabledComponentsPanel.setBounds(0,					sizeM.height*18,	sizeL.width, sizeM.height*2);
+		this.panelRepeat.setBounds	(0,							sizeM.height*20,	sizeL.width, sizeM.height);
+		this.panelVisibleEnabled.setBounds	(0,					sizeM.height*21,	sizeL.width, sizeM.height);
+
+		this.colorButton.setBounds	(342,							715,				sizeM.width, sizeM.height);
+
+		// first column
+		this.centralLabel.setBounds	(0, 							0, 				sizeM.width*2 + sizeS.width, sizeM.height);
+		this.imageLabel.setBounds	(sizeM.width*2 + sizeS.width,	0,				sizeS.width, sizeS.height);
+		this.tablePanel.setBounds	(0,							sizeM.height, 		sizeL.width, sizeL.height);
+		this.tabPane.setBounds		(0,							sizeM.height*4,	sizeL.width, sizeM.height*2);
+		this.splitPane.setBounds	(0,							sizeM.height*6,	sizeL.width, sizeM.height);
+
+		// second column
+		this.treePanel.setBounds	(sizeL.width,					0,				sizeM.width, sizeL.height*2);
+
+		// third column
+		this.button.setBounds		(sizeL.width + sizeM.width, 	0, 				sizeM.width, sizeM.height);
+		this.any.setBounds			(sizeL.width + sizeM.width,	sizeM.height, 		sizeM.width, sizeM.height);
+		this.toggleButton.setBounds	(sizeL.width + sizeM.width,	sizeM.height*2, 	sizeM.width, sizeM.height);
+		this.textField.setBounds	(sizeL.width + sizeM.width,	sizeM.height*3, 	sizeM.width, sizeM.height);
+		this.panel.setBounds		(sizeL.width + sizeM.width,	sizeM.height*4, 	sizeM.width, sizeM.height);
+		this.progressBar.setBounds	(sizeL.width + sizeM.width,	sizeM.height*5,	sizeM.width, sizeM.height);
+		this.scrollBar.setBounds	(sizeL.width + sizeM.width,	sizeM.height*6,	sizeM.width, sizeM.height);
+		this.spinner.setBounds		(sizeL.width + sizeM.width,	sizeM.height*7,	sizeM.width, sizeM.height);
+		this.comboBox.setBounds		(sizeL.width + sizeM.width,	sizeM.height*8, 	sizeM.width, sizeM.height);
+
+		// four column
+		this.buttonGreen.setBounds	(sizeL.width + sizeM.width*2,	0, 				sizeM.width, sizeM.height);
+		this.buttonYellow.setBounds	(sizeL.width + sizeM.width*2,	sizeM.height, 		sizeM.width, sizeM.height);
+		this.buttonOrange.setBounds	(sizeL.width + sizeM.width*2,	sizeM.height*2, 	sizeM.width, sizeM.height);
+		this.buttonBlue.setBounds	(sizeL.width + sizeM.width*2,	sizeM.height*3, 	sizeM.width, sizeM.height);
+		this.checkBox.setBounds		(sizeL.width + sizeM.width*2,	sizeM.height*4, 	sizeM.width, sizeM.height);
+		this.list.setBounds			(sizeL.width + sizeM.width*2,	sizeM.height*5,	sizeM.width, sizeL.height);
+
+		// five column
+		this.protocolText.setBounds	(sizeL.width + sizeM.width*3,	0,				sizeL.width, sizeL.height*3);
+		this.protocolClear.setBounds(sizeL.width + sizeM.width*4 + sizeS.width,	sizeL.height*3,	sizeM.width, sizeM.height);
+	}
+
 	public MockApp()
 	{
 		this.frame = new JFrame("Mock swing app");
 		addListeners(frame, "Frame", false);
-		LayoutManager grid = new BoxLayout(this.frame.getContentPane(), BoxLayout.PAGE_AXIS);
+		//LayoutManager grid = new BoxLayout(this.frame.getContentPane(), BoxLayout.PAGE_AXIS);
 		JMenuBar menuBar = createMenu();
 		this.frame.setJMenuBar(menuBar);
-		this.frame.setLayout(grid);
+		this.frame.setLayout(null);
+//		JPanel mainPanel = new JPanel();
+//		mainPanel.setLayout(null);
+//		this.frame.add(mainPanel);
 		this.frame.setLocation(200 , 32);
 		this.frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-		this.centralLabel = new JLabel();
-		this.pushLabel = new JLabel();
-		this.selectLabel = new JLabel();
-		this.checkedLabel = new JLabel();
-		this.pressLabel = new JLabel();
-		addListeners(this.centralLabel, "Label");
-		this.moveLabel = new JLabel();
-		this.downUpLabel = new JLabel();
-		this.sliderLabel = new JLabel();
-		createPanelCentralPanel(centralLabel, moveLabel, pressLabel, downUpLabel, sliderLabel, pushLabel, checkedLabel, selectLabel);
+		createPanelCentralPanel();
 
 		createPanelButton();
 		createPanelInput();
@@ -92,48 +174,73 @@ public class MockApp
 		createPanelRepeat();
 		createPanelVisibleEnabled();
 		createPanelColorAndRect();
+		createPanelSpinner();
+		createProtocol();
 
 		this.frame.setSize(new Dimension(800, 800));
 		this.frame.setVisible(true);
+		setSizeForAllControls();
 
 		// frame two
 //		this.frame2 = new JFrame("Mock swing app additional frame");
 //		this.frame2.setLocation(1000, 200);
 //		this.frame2.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-//		this.frame2.setSize(new Dimension(1100,700));
+//		this.frame2.setSizeForAllControls(new Dimension(1100,700));
 //		this.frame2.setVisible(true);
 //		allEvents(createPanelFrame2());
 		//createAndShowGui();
 	}
 
+	private void createProtocol() {
+		this.protocolText = new JTextArea();
+		this.protocolClear = new JButton("Clear");
+		this.protocolText.setName("protocolText");
+		this.protocolClear.setName("protocolClear");
+
+		this.protocolClear.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				protocolText.setText("");
+			}
+		});
+
+		this.frame.add(this.protocolText);
+		this.frame.add(this.protocolClear);
+	}
+
+	private void createPanelSpinner() {
+		this.spinner = new JSpinner();
+		this.spinner.setName("Spinner");
+		this.spinner.getModel().addChangeListener(e -> sliderLabel.setText("Slider_" + String.valueOf(Integer.valueOf((Integer) this.spinner.getValue()))));
+		addListeners(this.spinner, this.spinner.getName());
+		this.frame.add(this.spinner);
+	}
+
 	private void createPanelColorAndRect() {
-		JPanel panel = new JPanel(new FlowLayout());
-		panel.setName("panelVisibleEnabled");
-		JButton colorButton = new JButton("#red");
-		colorButton.setPreferredSize(new Dimension(100, 25));
-		colorButton.setBackground(Color.RED);
-		colorButton.setForeground(Color.WHITE);
-		colorButton.setName("colorButton");
-		panel.add(colorButton);
-		this.frame.getContentPane().add(panel);
+		this.colorButton = new JButton("#red");
+		this.colorButton.setPreferredSize(new Dimension(100, 25));
+		this.colorButton.setBackground(Color.RED);
+		this.colorButton.setForeground(Color.WHITE);
+		this.colorButton.setName("colorButton");
+		this.frame.add(this.colorButton);
 	}
 
 	private void createPanelVisibleEnabled() {
-		JPanel panel = createPanel("panelVisibleEnabled");
+		this.panelVisibleEnabled = createPanel("panelVisibleEnabled");
 		JButton notEnabledButton = new JButton("notEnabledButton");
 		notEnabledButton.setName("notEnabledButton");
 		notEnabledButton.setEnabled(false);
 		JButton invisibleButton = new JButton("invisibleButton");
 		invisibleButton.setName("invisibleButton");
 		invisibleButton.setVisible(false);
-		panel.add(notEnabledButton);
-		panel.add(invisibleButton);
+		this.panelVisibleEnabled.add(notEnabledButton);
+		this.panelVisibleEnabled.add(invisibleButton);
 	}
 
 	private void createPanelRepeat()
 	{
 		counter = 0;
-		JPanel panel = createPanel("panelRepeat");
+		this.panelRepeat = createPanel("panelRepeat");
 		JButton countButtonClear = new JButton("Clear");
 		countButtonClear.setName("countButtonClear");
 		JButton countButton = new JButton("+1");
@@ -156,9 +263,10 @@ public class MockApp
 			}
 		});
 
-		panel.add(countButtonClear);
-		panel.add(countButton);
-		panel.add(countLabel);
+		this.panelRepeat.add(countButtonClear);
+		this.panelRepeat.add(countButton);
+		this.panelRepeat.add(countLabel);
+		this.frame.add(this.panelRepeat);
 	}
 
 	private void createAndShowGui() {
@@ -226,7 +334,7 @@ public class MockApp
 	}
 
 	private void createPanelWithDisableComponents() {
-		JPanel panel = new JPanel();
+		this.disabledComponentsPanel = new JPanel();
 		// disabled
 		JLabel label = new JLabel("Panel");
 		JComboBox<String> comboBox = new JComboBox<>(new String[]{"Green", "Yellow", "Orange", "Blue"});
@@ -236,17 +344,17 @@ public class MockApp
 		comboBox.setEnabled(false);
 		checkBox.setEnabled(false);
 		textField.setEnabled(false);
-		panel.add(label);
-		panel.add(comboBox);
-		panel.add(checkBox);
-		panel.add(textField);
+		this.disabledComponentsPanel.add(label);
+		this.disabledComponentsPanel.add(comboBox);
+		this.disabledComponentsPanel.add(checkBox);
+		this.disabledComponentsPanel.add(textField);
 
-		createPanel("panelPanel").add(panel);
+		this.frame.add(this.disabledComponentsPanel);
 	}
 
 	private void createPanelWithHiddenArea()
 	{
-		JPanel panel = new JPanel();
+		this.showHidePanel = new JPanel();
 		JPanel hiddenPanel = new JPanel();
 
 		JButton buttonShowArea = new JButton("Show area");
@@ -255,14 +363,14 @@ public class MockApp
 		buttonHideArea.setName("hideButton");
 
 		hiddenPanel.add(buttonHideArea);
-		panel.add(buttonShowArea);
-		panel.add(hiddenPanel);
+		this.showHidePanel.add(buttonShowArea);
+		this.showHidePanel.add(hiddenPanel);
 
 		hiddenPanel.setVisible(false);
 
 		buttonShowArea.addActionListener(event -> hiddenPanel.setVisible(true));
 		buttonHideArea.addActionListener(event -> hiddenPanel.setVisible(false));
-		createPanel("panelWithHiddenArea").add(panel);
+		this.frame.add(this.showHidePanel);
 	}
 
 	private JMenuBar createMenu()
@@ -299,6 +407,7 @@ public class MockApp
 				{
 					downUpLabel.setText(menuName + "_up_Control");
 				}
+				protocolText.append(menuName + "_up_" + e.getKeyCode() + NEWLINE);
 			}
 
 			@Override
@@ -312,12 +421,13 @@ public class MockApp
 				{
 					pressLabel.setText(menuName + "_press_Escape");
 				}
+				protocolText.append(menuName + "_down_" + e.getKeyCode() + NEWLINE);
 			}
 
 			@Override
 			public void menuKeyTyped(MenuKeyEvent e)
 			{
-
+				protocolText.append(menuName + "_press_" + (int)e.getKeyChar() + NEWLINE);
 			}
 		});
 		addListeners(menu, menuName);
@@ -335,6 +445,7 @@ public class MockApp
 				{
 					downUpLabel.setText(menuItemName + "_up_Control");
 				}
+				protocolText.append(menuName + "_up_" + e.getKeyCode() + NEWLINE);
 			}
 
 			@Override
@@ -348,12 +459,13 @@ public class MockApp
 				{
 					pressLabel.setText(menuItemName + "_press_Escape");
 				}
+				protocolText.append(menuName + "_down_" + e.getKeyCode() + NEWLINE);
 			}
 
 			@Override
 			public void menuKeyTyped(MenuKeyEvent e)
 			{
-
+				protocolText.append(menuName + "_press_" + (int)e.getKeyChar() + NEWLINE);
 			}
 		});
 		JMenu jMenu = new JMenu("Menu2");
@@ -377,47 +489,54 @@ public class MockApp
 		return menuBar;
 	}
 
-	private void createPanelCentralPanel(JLabel centralLabel, JLabel moveLabel, JLabel pressLabel, JLabel downUpLabel,
-                                         JLabel sliderLabel, JLabel pushLabel, JLabel checkedLabel, JLabel selectLabel)
+	private void createPanelCentralPanel()
 	{
-		JPanel panel = createPanel("panelCentralLabel");
-		centralLabel.setName("CentralLabel");
-		centralLabel.setText("CentralLabel");
-		moveLabel.setName("moveLabel");
-		moveLabel.setText("Movelabel");
-		pressLabel.setName("pressLabel");
-		pressLabel.setText("Presslabel");
-		downUpLabel.setName("downUpLabel");
-		downUpLabel.setText("DownUplabel");
-		sliderLabel.setName("sliderLabel");
-		sliderLabel.setText("sliderlabel");
-		pushLabel.setName("pushLabel");
-		pushLabel.setText("pushLabel");
-		selectLabel.setName("selectLabel");
-		selectLabel.setText("selectLabel");
-		checkedLabel.setName("checkedLabel");
-		checkedLabel.setText("checkedLabel");
-		panel.add(new JLabel());
-		panel.add(centralLabel);
-		panel.add(moveLabel);
-		panel.add(pressLabel);
-		panel.add(downUpLabel);
-		panel.add(sliderLabel);
-		panel.add(pushLabel);
-		panel.add(selectLabel);
-		panel.add(checkedLabel);
+		this.centralLabel = new JLabel();
+		this.pushLabel = new JLabel();
+		this.selectLabel = new JLabel();
+		this.checkedLabel = new JLabel();
+		this.pressLabel = new JLabel();
+		this.moveLabel = new JLabel();
+		this.downUpLabel = new JLabel();
+		this.sliderLabel = new JLabel();
+		addListeners(this.centralLabel, "Label");
+
+		this.centralLabel.setName("CentralLabel");
+		this.centralLabel.setText("CentralLabel");
+		this.moveLabel.setName("moveLabel");
+		this.moveLabel.setText("Movelabel");
+		this.pressLabel.setName("pressLabel");
+		this.pressLabel.setText("Presslabel");
+		this.downUpLabel.setName("downUpLabel");
+		this.downUpLabel.setText("DownUplabel");
+		this.sliderLabel.setName("sliderLabel");
+		this.sliderLabel.setText("sliderlabel");
+		this.pushLabel.setName("pushLabel");
+		this.pushLabel.setText("pushLabel");
+		this.selectLabel.setName("selectLabel");
+		this.selectLabel.setText("selectLabel");
+		this.checkedLabel.setName("checkedLabel");
+		this.checkedLabel.setText("checkedLabel");
+		this.frame.add(new JLabel());
+		this.frame.add(this.centralLabel);
+		this.frame.add(this.moveLabel);
+		this.frame.add(this.pressLabel);
+		this.frame.add(this.downUpLabel);
+		this.frame.add(this.sliderLabel);
+		this.frame.add(this.pushLabel);
+		this.frame.add(this.selectLabel);
+		this.frame.add(this.checkedLabel);
 	}
 
 	private void createPanelButton()
 	{
-		JPanel panelButton = createPanel("panelButton");
 		String name = "Button";
-		JButton button = new JButton(name);
-		button.setToolTipText("Button");
-		button.addActionListener(event -> centralLabel.setText("Button_click"));
-		button.addMouseListener(mouseListener(name));
-		addListeners(button, name);
-		panelButton.add(button);
+		this.button = new JButton(name);
+		this.button.setToolTipText("Button");
+		this.button.addActionListener(event -> centralLabel.setText("Button_click"));
+		this.button.addMouseListener(mouseListener(name));
+		addListeners(this.button, name);
+		this.frame.add(this.button);
 	}
 
 	private JTextArea createPanelFrame2()
@@ -499,8 +618,6 @@ public class MockApp
 
 	private void createPanelInput()
 	{
-		JPanel inputPanel = createPanel("panelInput");
-
 		textField = new JTextField();
 		textField.setOpaque(true);
 		String name = "TextBox";
@@ -523,20 +640,16 @@ public class MockApp
 			{
 			}
 		});
-		inputPanel.add(textField);
-		textField.setSize(100, 10);
-		inputPanel.add(textField);
+		this.frame.add(textField);
 	}
 
 	private void createPanelCheckbox()
 	{
-		JPanel panel = createPanel("panelCheckbox");
-
 		String name = "CheckBox";
-		JCheckBox checkBox = new JCheckBox(name,true);
-		checkBox.addActionListener(event -> centralLabel.setText(checkBox.isSelected() ? "checked" : "unchecked"));
-		addListeners(checkBox, name);
-		checkBox.addItemListener(e -> {
+		this.checkBox = new JCheckBox(name,true);
+		this.checkBox.addActionListener(event -> centralLabel.setText(checkBox.isSelected() ? "checked" : "unchecked"));
+		addListeners(this.checkBox, name);
+		this.checkBox.addItemListener(e -> {
 			if (e.getStateChange() == ItemEvent.SELECTED)
 			{
 				centralLabel.setText("CheckBox_checked");
@@ -546,13 +659,12 @@ public class MockApp
 				centralLabel.setText("CheckBox_unchecked");
 			}
 		});
-		panel.add(checkBox);
+		this.frame.add(this.checkBox);
 	}
 
 	private void createPanelTable()
 	{
-		JPanel panelTable = createPanel("panelTable");
-		JTable table = new JTable(new DefaultTableModel(new Object[][]
+		this.table = new JTable(new DefaultTableModel(new Object[][]
 				{
 						{"tr_1_td_1", "tr_1_td_2", "tr_1_td_3"},
 						{"tr_2_td_1", "tr_2_td_2", "tr_2_td_3"},
@@ -565,10 +677,8 @@ public class MockApp
 				return super.isCellEditable(row, column) && row == 1 && column == 1;
 			}
 		});
-		table.setName("Table");
-		JScrollPane scrollPane = new JScrollPane(table);
-
-		table.addMouseListener(new MouseAdapter()
+		this.table.setName("Table");
+		this.table.addMouseListener(new MouseAdapter()
 		{
 			@Override
 			public void mouseClicked(MouseEvent e)
@@ -588,15 +698,7 @@ public class MockApp
 				}
 			}
 		});
-//		for (int c = 0; c < table.getColumnCount(); c++)
-//		{
-//			if (c != 1)
-//			{
-//				Class<?> col_class = table.getColumnClass(c);
-//				table.setDefaultEditor(col_class, null);        // remove editor
-//			}
-//		}
-		table.setCellEditor(new TableCellEditor()
+		this.table.setCellEditor(new TableCellEditor()
 		{
 			@Override
 			public Component getTableCellEditorComponent(JTable table, Object value, boolean isSelected, int row, int column)
@@ -646,7 +748,7 @@ public class MockApp
 
 			}
 		});
-		table.addMouseListener(new MouseAdapter()
+		this.table.addMouseListener(new MouseAdapter()
 		{
 			@Override
 			public void mouseClicked(MouseEvent e)
@@ -658,18 +760,16 @@ public class MockApp
 				{
 					if (e.getClickCount() == 2)
 					{
-//						centralLabel.setText("Table_double_click_" + row + "_" + column);
 						centralLabel.setText("Table_double_click");
 					}
 					else
 					{
-//						centralLabel.setText("Table_click_" + row + "_" + column);
 						centralLabel.setText("Table_click");
 					}
 				}
 			}
 		});
-		table.addMouseMotionListener(new MouseMotionListener()
+		this.table.addMouseMotionListener(new MouseMotionListener()
 		{
 			@Override
 			public void mouseDragged(MouseEvent e)
@@ -684,13 +784,18 @@ public class MockApp
 				int column = table.columnAtPoint(e.getPoint());
 				if (row > -1 && column > -1)
 				{
-//					centralLabel.setText("Table_move_" + row + "_" + column);
 					moveLabel.setText("Table_move");
 				}
 			}
 		});
-		table.addKeyListener(keyListener("Table"));
-		panelTable.add(scrollPane);
+		this.table.addKeyListener(keyListener("Table"));
+
+		this.tablePanel = new JPanel();
+		this.tablePanel.setLayout(new BorderLayout());
+		this.tablePanel.add(table.getTableHeader(), BorderLayout.PAGE_START);
+		this.tablePanel.add(table, BorderLayout.CENTER);
+		this.tablePanel.add(this.table);
+		this.frame.add(tablePanel);
 	}
 
 	private void createPanelTable1()
@@ -754,27 +859,23 @@ public class MockApp
 
 	private void createPanelSlider()
 	{
-		JPanel panel = createPanel("panelSlider");
-		JSlider slider = new JSlider(JSlider.HORIZONTAL);
+		this.slider = new JSlider(JSlider.HORIZONTAL);
 		String name = "Slider";
-		slider.setValue(0);
-		addListeners(slider, name);
-		slider.getModel().addChangeListener(e -> sliderLabel.setText("Slider_" + String.valueOf(slider.getValue())));
-
-		panel.add(slider);
+		this.slider.setValue(0);
+		addListeners(this.slider, name);
+		this.slider.getModel().addChangeListener(e -> sliderLabel.setText("Slider_" + String.valueOf(this.slider.getValue())));
+		this.frame.add(this.slider);
 	}
 
 	private void createPanelCombobox()
 	{
-		JPanel panel = createPanel("panelCombobox", 3);
-		JComboBox<String> comboBox = new JComboBox<>(new String[]{"Green", "Yellow", "Orange", "Blue"});
-		comboBox.setEditable(true);
+		this.comboBox = new JComboBox<>(new String[]{"Green", "Yellow", "Orange", "Blue"});
+		this.comboBox.setEditable(true);
 		String name = "ComboBox";
-		comboBox.getModel().setSelectedItem("Green");
-		addListeners(comboBox, name);
-		comboBox.addActionListener(event -> centralLabel.setText("ComboBox_" + comboBox.getSelectedItem().toString()));
-		panel.add(comboBox);
-		panel.add(new JLabel());
+		this.comboBox.getModel().setSelectedItem("Green");
+		addListeners(this.comboBox, name);
+		this.comboBox.addActionListener(event -> centralLabel.setText("ComboBox_" + this.comboBox.getSelectedItem().toString()));
+		this.frame.add(this.comboBox);
 
 		JComboBox<String> editableComboBox = new JComboBox<>(new String[]{"", "One", "Two", "Three"});
 		editableComboBox.setEditable(true);
@@ -800,60 +901,61 @@ public class MockApp
 		});
 
 		editableComboBox.setName(editableName);
-		panel.add(editableComboBox);
-		panel.add(new JLabel());
-		JSpinner spinner = new JSpinner();
-		spinner.setName("Spinner");
-		spinner.getModel().addChangeListener(e -> sliderLabel.setText("Slider_" + String.valueOf(((Double) spinner.getValue()).intValue())));
-		addListeners(spinner,spinner.getName());
-		panel.add(spinner);
+		this.frame.add(editableComboBox);
 	}
 
 	private void createPanelRadioGroup()
 	{
-		JPanel panel = createPanel("panelRadiogroup", 2);
 		ButtonGroup group = new ButtonGroup();
-		JRadioButton buttonGreen = new JRadioButton("Green");
-		JRadioButton buttonYellow = new JRadioButton("Yellow");
-		JRadioButton buttonOrange = new JRadioButton("Orange");
-		JRadioButton buttonBlue = new JRadioButton("Blue");
+		buttonGreen = new JRadioButton("Green");
+		buttonYellow = new JRadioButton("Yellow");
+		buttonOrange = new JRadioButton("Orange");
+		buttonBlue = new JRadioButton("Blue");
 		String name = "RadioButton";
 		addListeners(buttonGreen, name);
 		buttonYellow.addItemListener(event -> centralLabel.setText(name + "1_" + (buttonYellow.isSelected() ? "checked" : "unchecked")));
-		panel.add(buttonGreen);
-		panel.add(buttonYellow);
-		panel.add(buttonOrange);
-		panel.add(buttonBlue);
 		group.add(buttonGreen);
 		group.add(buttonYellow);
 		group.add(buttonOrange);
 		group.add(buttonBlue);
+		this.frame.add(buttonGreen);
+		this.frame.add(buttonYellow);
+		this.frame.add(buttonOrange);
+		this.frame.add(buttonBlue);
 	}
 
 	private void createPanelToggleButton()
 	{
-		JPanel panel = createPanel("panelToggleButton");
-		JToggleButton toggleButton = new JToggleButton("ToggleButton", true);
+		this.toggleButton = new JToggleButton("ToggleButton", true);
 		String name = "ToggleButton";
-		addListeners(toggleButton, name);
-		toggleButton.addItemListener(event -> centralLabel.setText(name + "_" + (toggleButton.isSelected() ? "checked" : "unchecked")));
-		panel.add(toggleButton);
+		addListeners(this.toggleButton, name);
+		this.toggleButton.addItemListener(event -> centralLabel.setText(name + "_" + (this.toggleButton.isSelected() ? "checked" : "unchecked")));
+		this.frame.add(this.toggleButton);
 	}
 
 	private void createPanelImage()
 	{
 		String pathname = new File("").getAbsolutePath() + "/../mocks/swing/ide.png";
-		JPanel panel = createPanel("panelImage");
-		panel.add(new JLabel(pathname));
+		//for debug String pathname = new File("").getAbsolutePath() + "\\ide.png";
 		try {
 			BufferedImage img = ImageIO.read(new File(pathname));
 			ImageIcon icon = new ImageIcon(img);
-			JLabel label = new JLabel(icon);
-			addListeners(label, "Image");
-			panel.add(label);
+			this.imageLabel = new JLabel(icon);
 		} catch (IOException e) {
-			e.printStackTrace();
+			this.imageLabel = new JLabel();
+			imageLabel.setOpaque(true);
+			imageLabel.setBackground(Color.PINK);
 		}
+		addListeners(this.imageLabel, "Image");
+		this.imageLabel.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				if(e.getButton() == MouseEvent.BUTTON2) {
+					textField.setText(pathname);
+				}
+			}
+		});
+		this.frame.add(this.imageLabel);
 	}
 
 	private void addListeners(Component component, String name)
@@ -874,8 +976,6 @@ public class MockApp
 
 	private void createPanelTree()
 	{
-		JPanel panel = createPanel("panelTree");
-
 		DefaultMutableTreeNode root = new DefaultMutableTreeNode("Green");
 		JTree tree = new JTree(root);
 		DefaultMutableTreeNode yellow = new DefaultMutableTreeNode("Yellow");
@@ -893,7 +993,7 @@ public class MockApp
 		root.add(colors);
 		colors.add(red);
 		colors.add(blue2);
-		root.add(colors2);
+		//root.add(colors2);
 		colors2.add(blue3);
 		blue3.add(blue4);
 		tree.expandRow(0);
@@ -913,58 +1013,54 @@ public class MockApp
 
 			}
 		});
-
-		JScrollPane scrollPane = new JScrollPane(tree);
+		this.treePanel = new JScrollPane(tree);
 		addListeners(tree, "Tree");
-		tree.getSelectionModel().addTreeSelectionListener(listener -> System.out.println(listener.getPath()));
-		panel.add(scrollPane);
+		this.frame.add(this.treePanel);
 	}
 
 	private void createTabPanel()
 	{
-		JPanel panel = createPanel("panelTabPanel");
-		JTabbedPane tabPane = new JTabbedPane();
+		this.tabPane = new JTabbedPane();
 		String name = "TabPanel";
-		tabPane.addTab("Green", new JLabel("tab1"));
-		tabPane.addTab("Yellow", new JLabel("tab2"));
-		tabPane.addTab("Orange", new JLabel("tab3"));
-		tabPane.addTab("Blue", new JLabel("tab4"));
-		addListeners(tabPane, name);
-		tabPane.getModel().addChangeListener(e -> centralLabel.setText(name + "_" + tabPane.getTitleAt(tabPane.getSelectedIndex())));
-		panel.add(tabPane);
+		this.tabPane.addTab("Green", new JLabel("tab1"));
+		this.tabPane.addTab("Yellow", new JLabel("tab2"));
+		this.tabPane.addTab("Orange", new JLabel("tab3"));
+		this.tabPane.addTab("Blue", new JLabel("tab4"));
+		addListeners(this.tabPane, name);
+		this.tabPane.getModel().addChangeListener(e -> centralLabel.setText(name + "_" + this.tabPane.getTitleAt(this.tabPane.getSelectedIndex())));
+		this.frame.add(this.tabPane);
 	}
 
 	private void createPanelListView()
 	{
-		JPanel panel = createPanel("panelListView");
 		DefaultListModel<String> stringDefaultListModel = new DefaultListModel<>();
 		stringDefaultListModel.addElement("Green");
 		stringDefaultListModel.addElement("Yellow");
 		stringDefaultListModel.addElement("Orange");
 		stringDefaultListModel.addElement("Blue");
 
-		JList<String> list = new JList<>(stringDefaultListModel);
+		this.list = new JList<>(stringDefaultListModel);
 		String name = "List";
-		addListeners(list, name);
-		list.getSelectionModel().addListSelectionListener(l -> centralLabel.setText(name + "_" + list.getSelectedValue()));
-		panel.add(list);
+		addListeners(this.list, name);
+		this.list.getSelectionModel().addListSelectionListener(l -> centralLabel.setText(name + "_" + this.list.getSelectedValue()));
+		this.frame.add(this.list);
 	}
 
 	private void createPanelProgressBar()
 	{
-		JProgressBar bar = new JProgressBar(JProgressBar.HORIZONTAL);
-		addListeners(bar, "ProgressBar");
-		bar.setValue(10);
-
-		createPanel("panelProgressBar").add(bar);
+		this.progressBar = new JProgressBar(JProgressBar.HORIZONTAL);
+		addListeners(this.progressBar, "ProgressBar");
+		this.progressBar.setValue(10);
+		this.frame.add(this.progressBar);
 	}
 
 	private void createPanelPanel()
 	{
-		JPanel panel = new JPanel();
-		panel.add(new JLabel("Panel"));
-		addListeners(panel, "Panel");
-		createPanel("panelPanel").add(panel);
+		this.panel = new JPanel();
+		this.panel.add(new JLabel("Panel"));
+		this.panel.setBackground(Color.PINK);
+		addListeners(this.panel, "Panel");
+		this.frame.add(this.panel);
 	}
 
 	private void createPanelDialog()
@@ -983,41 +1079,39 @@ public class MockApp
 
 	private void createPanelScrollBar()
 	{
-		JScrollBar bar = new JScrollBar(Adjustable.HORIZONTAL);
+		this.scrollBar = new JScrollBar(Adjustable.HORIZONTAL);
 		String name = "ScrollBar";
-		addListeners(bar, name);
-		bar.getModel().addChangeListener(event -> sliderLabel.setText("ScrollBar_" + String.valueOf(bar.getValue())));
-		createPanel("panelScrollBar").add(bar);
+		addListeners(this.scrollBar, name);
+		this.scrollBar.getModel().addChangeListener(event -> sliderLabel.setText("ScrollBar_" + String.valueOf(this.scrollBar.getValue())));
+		this.frame.add(this.scrollBar);
 	}
 
 	private void createPanelSplitPane()
 	{
-		JPanel panel = createPanel("panelSplitPane");
 		String name = "Splitter";
-		JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, true);
-		splitPane.addPropertyChangeListener(evt -> {
+		this.splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, true);
+		this.splitPane.addPropertyChangeListener(evt -> {
 			if (evt.getPropertyName().equals(JSplitPane.DIVIDER_LOCATION_PROPERTY))
 			{
 				if(firstRun)
 				{
-					sliderLabel.setText(name + "_" + splitPane.getDividerLocation());
+					sliderLabel.setText(name + "_" + this.splitPane.getDividerLocation());
 				}
 				firstRun = true;
 			}
 		});
-		splitPane.setLeftComponent(new JLabel("LEFT COMPONENT"));
-		splitPane.setRightComponent(new JLabel("RIGHT COMPONENT"));
-		addListeners(splitPane, name);
-		panel.add(splitPane);
+		this.splitPane.setLeftComponent(new JLabel("LEFT COMPONENT"));
+		this.splitPane.setRightComponent(new JLabel("RIGHT COMPONENT"));
+		addListeners(this.splitPane, name);
+		this.frame.add(this.splitPane);
 	}
 
 	private void createPanelAny()
 	{
-		JPanel panelButton = createPanel("panelAny");
 		String name = "Any";
-		JButton button = new JButton(name);
-		addListeners(button, name);
-		panelButton.add(button);
+		this.any = new JButton(name);
+		addListeners(this.any, name);
+		this.frame.add(this.any);
 	}
 
 	private JPanel createPanel(String name)
@@ -1050,6 +1144,7 @@ public class MockApp
 				{
 					pressLabel.setText(name + "_press_Escape");
 				}
+				protocolText.append(name + "_down_" + e.getKeyCode() + NEWLINE);
 			}
 
 			@Override
@@ -1064,6 +1159,13 @@ public class MockApp
 				{
 					centralLabel.setText(name + "_up_Control");
 				}
+				protocolText.append(name + "_up_" + e.getKeyCode() + NEWLINE);
+			}
+
+			@Override
+			public void keyTyped(KeyEvent e)
+			{
+				protocolText.append(name + "_press_" + (int)e.getKeyChar() + NEWLINE);
 			}
 		};
 	}

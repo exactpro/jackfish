@@ -335,8 +335,8 @@ public class SwingOperationExecutor implements OperationExecutor<ComponentFixtur
 			int keyCode = getKeyCode(key);
 			int modifiers = getModifierKeysArePressed();
 			events.add(new KeyEvent(target, KeyEvent.KEY_PRESSED, System.currentTimeMillis(), modifiers, keyCode, (char) keyCode));
-			events.add(new KeyEvent(target, KeyEvent.KEY_RELEASED, System.currentTimeMillis(), modifiers, keyCode, (char) keyCode));
 			events.add(new KeyEvent(target, KeyEvent.KEY_TYPED, System.currentTimeMillis(), modifiers, KeyEvent.VK_UNDEFINED, (char) keyCode));
+			events.add(new KeyEvent(target, KeyEvent.KEY_RELEASED, System.currentTimeMillis(), modifiers, keyCode, (char) keyCode));
 			SwingUtilities.invokeLater(new Runnable()
 			{
 				@Override
@@ -927,12 +927,12 @@ public class SwingOperationExecutor implements OperationExecutor<ComponentFixtur
 			}
 			else if (currentComponent instanceof JSplitPane)
 			{
-				((JSplitPane) currentComponent).setDividerLocation(((int) value));
+				((JSplitPane) currentComponent).setDividerLocation((int) value);
 				return true;
 			}
 			else if(currentComponent instanceof JSpinner)
 			{
-				((JSpinner) currentComponent).setValue(value);
+				((JSpinner) currentComponent).setValue((int) value);
 				return true;
 			}
 			return false;

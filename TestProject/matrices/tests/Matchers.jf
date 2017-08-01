@@ -1,4 +1,30 @@
 #Id;#TestCase;#Kind;#Depends;#For
+EXPECTED;;;;
+    #Id;#Global;#RawTable
+    table;1;Table
+    @;name;operation;result
+    0;Button10;Do.get();'Button'
+    1;Button11;Do.get();'Button'
+    2;Button12;Do.get();'Button'
+    3;Button13;Do.get();'Button'
+    4;Button20;Do.get();'Button'
+    5;Button21;Do.get();'Button'
+    6;Button22;Do.get();'Button'
+    7;Button23;Do.get();'Button'
+    8;Button30;Do.get();'Button'
+    9;Button31;Do.get();'Button'
+    10;Button32;Do.get();'Button'
+    11;Button33;Do.get();'Button'
+    12;ButtonMany;Do.count();2
+    13;ButtonManyNotPass;Do.count();1
+    14;ButtonManyNotFail;Do.count();ErrorKind.ELEMENT_NOT_FOUND
+    #EndRawTable
+
+    #Action;$Table;$Expression
+    TableConsiderColumnsAs;table;'result'
+
+
+#Id;#TestCase;#Kind;#Depends;#For
 INIT;;;;
     #Call;plugin
     RUN;'Web'
@@ -72,7 +98,7 @@ SUBCASES;;;;
     #EndSubCase
 
     #Id;#SubCase;plugin
-    RUN;Run;'Win'
+    RUN;Run;'Web'
         #Call;plugin
         START;plugin
 
@@ -81,25 +107,37 @@ SUBCASES;;;;
             #Id;#Let
             map;new LinkedHashMap()
 
-            #For;#From;#To;#Step
-            control;1;3;1
-                #For;#From;#To;#Step
-                owner;0;3;1
-                    #Let
-                    map.put('Button' + control + owner , 'Do.get()')
+            #ForEach;#In
+            row;table
+                #Let
+                map.put(row.name, row.operation)
 
-                #EndFor
-
-            #EndFor
+            #EndForEach
 
             #Id;#IgnoreErr;#Action;$Dialog;$AppConnection;$Fields
             DLG;1;DialogFill;'Matchers';appCon;map
 
+            #Id;#Let
+            resultMap;new LinkedHashMap()
+
+            #Let
+            resultMap.putAll(DLG.Out)
+
+            #Let
+            resultMap.putAll(DLG.Errors)
+
+            #ForEach;#In
+            row;table
+                #Assert;#Message
+                resul;
+
+                #Let
+
+
+            #EndForEach
+
             #Action;
             Print;plugin + ' matcher - ' + DLG.Out
-
-            #Assert;#Message
-            DLG.Out != null && DLG.Errors == null;
 
         #EndStep
 

@@ -60,7 +60,7 @@ public class HelpWizardItem extends MatrixItem
         
         report.outLine(this, null, "{{`" + shortDescription + "`}}", null);
         report.outImage(this, null, null, bytes, "{{* View example *}}", -1, ImageReportMode.AsEmbeddedImage); 
-        report.outLine(this, null, "{{`" + detailedDescription + "`}}", null);
+        report.outLine(this, null, detailedDescription, null);
     }
 
 

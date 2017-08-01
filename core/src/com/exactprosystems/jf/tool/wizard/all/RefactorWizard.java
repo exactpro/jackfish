@@ -54,8 +54,13 @@ import java.util.stream.Collectors;
         experimental        = false, 
         strongCriteries     = true, 
         criteries           = { MatrixFx.class, SubCase.class }, 
-        detailedDescription = "When it is needed to chahge name of Subcase it may affect on matrixes which use it."
-                + "This wizard can help accurately to do it. You may change not only name of Subcase but also its namespace."
+        detailedDescription = "{{`The wizard needs for move SubCases from one NameSpace to another.`}}"
+                + "{{`On the top of the wizard you can see information about ID of the current SubCase and NameSpace. And text fields for a new ID.`}}"
+                + "{{`Press Scan button to see which files will be affected.`}}"
+                + "{{`The wizard serves for move SubCase from one NameSpace to another and bring changes to the all affected matrices.`}}"
+                + "{{`For rename of a SubCase just type new ID in the text field.`}}"
+                + "{{`For move a SubCase select another NameSpace in the combobox.`}}"
+                + "{{`You can both rename and move SubCase at once.`}}"
 )
 public class RefactorWizard extends AbstractWizard
 {

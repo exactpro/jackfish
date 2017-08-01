@@ -38,6 +38,7 @@ public abstract class AbstractWizard implements Wizard
 	{
 	    WizardDialog dialog = new WizardDialog(this, this.context);
 	    initDialog(dialog.getPane());
+	    dialog.expandTitle(getTitle());
 	    boolean succeed = dialog.showAndWait().orElse(false);
 
 	    if (succeed)
@@ -75,7 +76,12 @@ public abstract class AbstractWizard implements Wizard
 		return (T) res;
 	}
 	
-	protected abstract void initDialog(BorderPane borderPane);
+    protected abstract void initDialog(BorderPane borderPane);
+
+    protected String getTitle() 
+    {
+        return "";
+    }
 
     protected abstract Supplier<List<WizardCommand> > getCommands();
 
