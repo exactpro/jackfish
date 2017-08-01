@@ -62,15 +62,68 @@ import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 @WizardAttribute(
-        name 				= "Dialog wizard",
+        name 				= "Dictionary wizard",
         pictureName 		= "DictionaryWizard.png",
         category 			= WizardCategory.GUI_DICTIONARY,
-        shortDescription 	= "This wizard is only for test purpose.",
-        detailedDescription = "Here you descrioption might be",
+        shortDescription 	= "The wizard helps to fill dialogs with elements and find them after they were changed.",
         experimental 		= false,
         strongCriteries 	= true,
-        criteries 			= { DictionaryFx.class, Window.class }
-    )
+        criteries 			= { DictionaryFx.class, Window.class },
+		detailedDescription = "To open the wizard, you need :`}}"
+				+ "{{`1. Start application.`}}"
+				+ "{{`2. Fill self section with valid self control (self control must be found in your application in usual way)`}}"
+				+ "{{` `}}"
+				+ "{{`All changes applying only for press button Accept. If you do some changes and clicking button Refuse - nothing happens.`}}"
+				+ "{{` `}}"
+				+ "{{`After opening the wizard, wizard start to load and displaying image and tree from the application. `}}"
+				+ "{{`After successful displaying tree, wizard start to find elements from section Run and display these elements on tree via special icons.`}}"
+				+ "{{` `}}"
+				+ "{{`Image pane ( top left pane) possibilities :`}}"
+				+ "{{`   1. Zoom in/out.`}}"
+				+ "{{`   2. Inspect element (like on xpath builder)`}}"
+				+ "{{`   3. Show/hide id's of found elements.`}}"
+				+ "{{`   4. Show mouse coordinates and pixel color under cursor.`}}"
+				+ "{{` `}}"
+				+ "{{`Table (top right pane) possibilities`}}"
+				+ "{{`   1. Change name of current dialog.`}}"
+				+ "{{`   2. Create and recreate element on sections OnClose and OnOpen.`}}"
+				+ "{{`          If button OnClose/OnOpen is red/green, this means, that section OnClose/OnOpen is empty/not empty. `}}"
+				+ "{{`          When you press OnClose/OnOpen button, this button redraw to green and element on section OnClose/OnOpen wil`}}"
+				+ "{{`		   replaced to element with control Wait, ref to self, addition WaitToDisappear/WaitToAppear and default timeout to 5000ms.`}}"
+				+ "{{`   3. Table with columns and rows.`}}"
+				+ "{{`        Column # - serial number of a element.`}}"
+				+ "{{`        Column Id - id of a element. You can change with field after double clicking.`}}"
+				+ "{{`        Column Kind - control of a element. You can change this field after double clicking.`}}"
+				+ "{{`        Xpath - this column shows you,that element is described via xpath or other fields. `}}"
+				+ "{{`        New - this column shows you, that element is new or not.`}}"
+				+ "{{`        Count - this column shows you the number of items found.`}}"
+				+ "{{`        Options - column with button.`}}"
+				+ "{{`            The first button - edit. You can change element on popup window.`}}"
+				+ "{{`            The second button - update relation ( see below).`}}"
+				+ "{{`            The third button - remove this element from dictionary.`}}"
+				+ "{{` `}}"
+				+ "{{`Tree pane ( bottom pane) possibilities`}}"
+				+ "{{`    1. Magic button - see below.`}}"
+				+ "{{`    2. NextMark/PreviousMark - jump on the marks."
+				+ "{{`	  3. Checkboxes with states and count - If the checkbox is selected, rectangles ( for current state) on image will displaying`}}"
+				+ "{{`Otherwise rectangles will hiding. Number of these checkboxes shows, how many elements with state are presented.`}}"
+				+ "{{`    4. Find panel - like on xpath builder.`}}"
+				+ "{{` `}}"
+				+ "{{`Avaliable states :`}}"
+				+ "{{`    1. Mark`}}"
+				+ "{{`    2. Question`}}"
+				+ "{{`    3. Add`}}"
+				+ "{{`    4. Update`}}"
+				+ "{{`    `}}"
+				+ "{{`State Mark means, that element found successful and count of items found - 1.`}}"
+				+ "{{`State Question means, that element not found, but we try to find element via some information ( via sophistic algoritm), that was grabbed from last found. This info save to dictionary on tag info.`}}"
+				+ "{{`For founding we evaluate some functions with weight. These weight you may set on SettingsPanel -> Wizard tab.`}}"
+				+ "{{`State Add means, that on next push Magic button, we found this element, fill fields ( text, uid and etc) or xpath.`}}"
+				+ "{{`State Update means, that we just update element.`}}"
+				+ "{{` `}}"
+				+ "{{`For adding new element, just click on left column in tree pane, state will changed to Add.`}}"
+				+ "{{`If component has states Mark or Question, after pressing on this icon, state will changing to update. If you click again, state set to empty and relation for element in table will loose."
+)
 public class DictionaryWizard extends AbstractWizard
 {
 	private AppConnection currentConnection = null;

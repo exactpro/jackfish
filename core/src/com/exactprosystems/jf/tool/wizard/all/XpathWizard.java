@@ -56,14 +56,19 @@ import static com.exactprosystems.jf.common.utils.XpathUtils.*;
 
 @WizardAttribute(
         name 				= "Xpath wizard",
-        pictureName 		= "DictionaryWizard.png",
+        pictureName 		= "XpathWizard.png",
         category 			= WizardCategory.GUI_DICTIONARY,
         shortDescription 	= "This wizard help to build xpath expression to find an element on screen.",
-        detailedDescription = "Here you description might be",
         experimental 		= false,
         strongCriteries 	= true,
-        criteries 			= { DictionaryFx.class, Window.class, SectionKind.class, AbstractControl.class }
-    )
+        criteries 			= { DictionaryFx.class, Window.class, SectionKind.class, AbstractControl.class },
+		detailedDescription = "{{`The wizard has a screenshot of an application in the top and a tree of elements in the bottom.`}}"
+				+ "{{`For select an element you can use selector (next to zoom button) for selecting items on the image or use elements tree.`}}"
+				+ "{{`On the bottom of the wizard is Helper which helps to make xpath for an element.`}}"
+				+ "{{`On the right bottom corner of the Helper is \"magic\" button which creates the best xpath for the current control.`}}"
+				+ "{{`On press accept button xpath will be bound with current control.`}}"
+				+ "{{`On press refuse button xpath nothing will happen.`}}"
+)
 public class XpathWizard extends AbstractWizard
 {
 	private static class OneLine

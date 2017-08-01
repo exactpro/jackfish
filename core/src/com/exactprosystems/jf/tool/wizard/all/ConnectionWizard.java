@@ -97,7 +97,7 @@ public class ConnectionWizard extends AbstractWizard {
             if (s.equals(name.getText()))
             {
                 name.setStyle("-fx-text-fill: red");
-                name.setTooltip(new Tooltip("Variable with name " + name.getText() + " already exist"));
+                name.setTooltip(new Tooltip("Variable with name '" + name.getText() + "' already exist"));
             }
             else
             {
