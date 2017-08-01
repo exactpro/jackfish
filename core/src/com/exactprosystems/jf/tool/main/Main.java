@@ -779,13 +779,7 @@ public class Main extends Application
 		vars.add(new File(this.config.getVars().get()));
 		vars.addAll(convert(this.config.getUserVars()));
 
-		new Search(this, this.settings
-				, convert(this.config.getMatricesValue())
-				, convert(this.config.getLibrariesValue())
-				, convert(this.config.getAppDictionariesValue())
-				, convert(this.config.getClientDictionariesValue())
-				, vars
-		).show();
+		new Search(this, this.config, this.settings).show();
 	}
 
 	private List<File> convert(List<MutableString> list)

@@ -2,6 +2,8 @@ package com.exactprosystems.jf.tool.search;
 
 import com.exactprosystems.jf.api.common.Str;
 import com.exactprosystems.jf.common.Settings;
+import com.exactprosystems.jf.documents.DocumentKind;
+import com.exactprosystems.jf.documents.config.Configuration;
 import com.exactprosystems.jf.documents.matrix.parser.SearchHelper;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.main.Main;
@@ -11,7 +13,8 @@ import javafx.concurrent.Task;
 import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.*;
+import java.util.Collections;
+import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -24,26 +27,19 @@ public class Search
 {
 	private SearchController controller;
 	private Main             model;
+	private Configuration    configuration;
 	private Settings         settings;
-	private List<File>       matrixDirs;
-	private List<File>       libsDirs;
-	private List<File>       guiDirs;
-	private List<File>       clientDirs;
-	private List<File>       variableFiles;
 
 	static final String ALL_FILES = "*.*";
 
 	private final ExecutorService executor = Executors.newFixedThreadPool(4);
 
-	public Search(Main model, Settings settings, List<File> matrixes, List<File> libs, List<File> guiDic, List<File> clientDirs, List<File> variableFiles)
+	public Search(Main model, Configuration configuration, Settings settings)
 	{
 		this.model = model;
+		this.configuration = configuration;
 		this.settings = settings;
-		this.matrixDirs = matrixes;
-		this.libsDirs = libs;
-		this.guiDirs = guiDic;
-		this.clientDirs = clientDirs;
-		this.variableFiles = variableFiles;
+
 		this.controller = Common.loadController(this.getClass().getResource("Search.fxml"));
 		this.controller.init(this);
 		this.updateFromSettings();
@@ -54,56 +50,31 @@ public class Search
 		this.controller.show();
 	}
 
-	void find(String fileMask, String containingText, boolean caseSens, boolean wholeWord, boolean regexp, boolean matrix, boolean libs, boolean gui, boolean clients, boolean vars, boolean files, String dirPath)
+	void find(String fileMask, String text, boolean caseSens, boolean wholeWord, boolean regexp, DocumentKind[] kinds)
 	{
 		this.controller.startFind();
-		String res = checkParams(containingText, regexp, fileMask);
+		String res = checkParams(text, regexp, fileMask);
 		if (res != null)
 		{
 			this.controller.displayResult(Collections.singletonList(new SearchResult.FailedSearchResult(res)));
 			this.controller.finishFind();
 			return;
 		}
+		if (kinds.length == 0)
+		{
+			this.controller.displayResult(Collections.singletonList(new SearchResult.FailedSearchResult("Select one or more scopes")));
+			this.controller.finishFind();
+			return;
+		}
+		saveMaskAndText(text, fileMask);
 
-		saveMaskAndText(containingText, fileMask);
+		this.configuration.forEachFile(file -> {
+			SearchService service = new SearchService(file, caseSens, regexp, wholeWord, text, fileMask);
+			service.setOnSucceeded(event -> this.controller.displayResult(((List<SearchResult>) event.getSource().getValue())));
+			service.setExecutor(executor);
+			service.start();
+		}, kinds);
 
-		List<File> listFiles = new ArrayList<>();
-		if (matrix)
-		{
-			listFiles.addAll(this.matrixDirs);
-		}
-		if (libs)
-		{
-			listFiles.addAll(this.libsDirs);
-		}
-		if (gui)
-		{
-			listFiles.addAll(this.guiDirs);
-		}
-		if (clients)
-		{
-			listFiles.addAll(this.clientDirs);
-		}
-		if (vars)
-		{
-			listFiles.addAll(this.variableFiles);
-		}
-		if (files)
-		{
-			if (Str.IsNullOrEmpty(dirPath))
-			{
-				dirPath = "./";
-			}
-			listFiles.add(new File(dirPath));
-		}
-
-		if (Str.IsNullOrEmpty(fileMask))
-		{
-			fileMask = ALL_FILES;
-		}
-
-		String finalFileMask = fileMask;
-		listFiles.forEach(file -> byPassDir(file, containingText, caseSens, regexp, wholeWord, finalFileMask));
 		DummySearchService dummySearchService = new DummySearchService();
 		dummySearchService.setExecutor(executor);
 		dummySearchService.setOnSucceeded(event -> {
@@ -177,25 +148,6 @@ public class Search
 			;
 		}
 		updateFromSettings();
-	}
-
-	private void byPassDir(File root, String what, boolean isCaseSens, boolean isRegexp, boolean wholeWord, String fileMask)
-	{
-		if (root.isDirectory())
-		{
-			File[] list = root.listFiles();
-			if (list != null)
-			{
-				Arrays.stream(list).forEach(file -> byPassDir(file, what, isCaseSens, isRegexp, wholeWord, fileMask));
-			}
-		}
-		else
-		{
-			SearchService service = new SearchService(root, isCaseSens, isRegexp, wholeWord, what, fileMask);
-			service.setOnSucceeded(event -> this.controller.displayResult(((List<SearchResult>) event.getSource().getValue())));
-			service.setExecutor(executor);
-			service.start();
-		}
 	}
 
 	private String checkParams(String what, boolean isRegexp, String fileMask)

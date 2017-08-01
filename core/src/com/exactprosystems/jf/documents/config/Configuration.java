@@ -833,6 +833,9 @@ public class Configuration extends AbstractDocument
                 });
                 break;
 
+            case PLAIN_TEXT:
+            	applyToAllFile(new File("./"), applier);
+            	break;
             default:
 
             }

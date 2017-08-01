@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import com.exactprosystems.jf.tool.*?>
-<?import com.exactprosystems.jf.tool.custom.controls.field.CustomFieldWithButton?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <VBox alignment="CENTER_RIGHT" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="624.0" prefWidth="989.0" xmlns="http://javafx.com/javafx/8"
@@ -15,99 +14,104 @@
 		<CssVariables fx:id="horMid" fx:constant="HORIZONTAL_MID"/>
 		<CssVariables fx:id="horMax" fx:constant="HORIZONTAL_MAX"/>
 
+		<CssVariables fx:id="vgapMax" fx:constant="VGAP_MAX"/>
+
 		<CssVariables fx:id="transparentBackground" fx:constant="TRANSPARENT_BACKGROUND"/>
 	</fx:define>
 	<children>
 		<HBox alignment="BOTTOM_RIGHT" prefHeight="100.0" prefWidth="200.0" VBox.vgrow="ALWAYS">
 			<children>
 				<Label id="$horMin"/>
-				<GridPane fx:id="mainGridPane" HBox.hgrow="ALWAYS">
+				<GridPane fx:id="mainGridPane" styleClass="$vgapMax" HBox.hgrow="ALWAYS">
 					<columnConstraints>
 						<ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
 						<ColumnConstraints/>
 					</columnConstraints>
 					<rowConstraints>
-						<RowConstraints maxHeight="36.0" minHeight="0.0" prefHeight="0.0" vgrow="SOMETIMES"/>
-						<RowConstraints maxHeight="36.0" minHeight="0.0" prefHeight="0.0" vgrow="SOMETIMES"/>
-						<RowConstraints maxHeight="36.0" minHeight="0.0" prefHeight="0.0" vgrow="SOMETIMES"/>
-						<RowConstraints maxHeight="36.0" minHeight="0.0" prefHeight="0.0" vgrow="SOMETIMES"/>
-						<RowConstraints maxHeight="100.0" minHeight="100.0" prefHeight="0.0" vgrow="SOMETIMES"/>
-						<RowConstraints maxHeight="36.0" minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
-						<RowConstraints maxHeight="36.0" minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
-						<RowConstraints minHeight="0.0" prefHeight="0.0" vgrow="SOMETIMES"/>
+						<RowConstraints maxHeight="150.0" minHeight="150.0" prefHeight="150.0" vgrow="SOMETIMES"/>
+						<RowConstraints maxHeight="100.0" minHeight="100.0" prefHeight="100.0" vgrow="SOMETIMES"/>
+						<RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
 					</rowConstraints>
 					<children>
-						<ListView fx:id="lvResult" prefHeight="200.0" prefWidth="200.0" GridPane.columnSpan="2" GridPane.rowIndex="7"/>
-						<Label text="File mask : "/>
-						<ComboBox fx:id="cbFileMask" editable="true" maxWidth="1.7976931348623157E308" prefWidth="150.0" GridPane.rowIndex="1"/>
-						<HBox alignment="CENTER_LEFT" GridPane.rowIndex="2">
+						<VBox fx:id="maskPane" alignment="CENTER" maxHeight="108.0" minHeight="108.0" prefHeight="108.0" prefWidth="100.0">
 							<children>
-								<Label text="Containing text :" GridPane.rowIndex="2"/>
-								<Label id="$horMid"/>
-								<ComboBox fx:id="cbFind" editable="true" maxWidth="1.7976931348623157E308" HBox.hgrow="ALWAYS"/>
-							</children>
-						</HBox>
-						<HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0" GridPane.rowIndex="3">
-							<children>
-								<CheckBox fx:id="cbCaseSensitive" text="Case sensitive"/>
-								<Label id="$horMax"/>
-								<CheckBox fx:id="cbWholeWord" mnemonicParsing="false" text="Whole word"/>
-								<Label id="$horMax"/>
-								<CheckBox fx:id="cbRegexp" text="Re_gexp"/>
-							</children>
-						</HBox>
-						<GridPane fx:id="scopePane" GridPane.rowIndex="4">
-							<columnConstraints>
-								<ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="16.0" prefWidth="100.0"/>
-								<ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="16.0" prefWidth="100.0"/>
-								<ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="16.0" prefWidth="100.0"/>
-								<ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
-							</columnConstraints>
-							<rowConstraints>
-								<RowConstraints maxHeight="36.0" minHeight="36.0" prefHeight="36.0" vgrow="SOMETIMES"/>
-								<RowConstraints maxHeight="36.0" minHeight="36.0" prefHeight="36.0" vgrow="SOMETIMES"/>
-							</rowConstraints>
-							<children>
-								<CheckBox fx:id="cbMatrix" mnemonicParsing="false" text="Matrices"/>
-								<CheckBox fx:id="cbLibs" mnemonicParsing="false" text="Libraries" GridPane.rowIndex="1"/>
-								<CheckBox fx:id="cbGuiDic" mnemonicParsing="false" text="Gui dictionaries" GridPane.columnIndex="1"/>
-								<CheckBox fx:id="cbClientDic" mnemonicParsing="false" text="Client dictionaries" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
-								<CheckBox fx:id="cbVariables" mnemonicParsing="false" text="System variables" GridPane.columnIndex="2"/>
-								<CheckBox fx:id="cbFiles" mnemonicParsing="false" text="Files :" GridPane.columnIndex="2" GridPane.rowIndex="1"/>
-								<HBox alignment="CENTER" GridPane.columnIndex="3" GridPane.rowIndex="1">
+								<ComboBox fx:id="cbFileMask" editable="true" maxWidth="1.7976931348623157E308" prefWidth="150.0" VBox.vgrow="ALWAYS"/>
+								<GridPane>
+									<columnConstraints>
+										<ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="16.0" prefWidth="100.0"/>
+										<ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="16.0" prefWidth="100.0"/>
+										<ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="16.0" prefWidth="100.0"/>
+										<ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
+									</columnConstraints>
+									<rowConstraints>
+										<RowConstraints maxHeight="36.0" minHeight="36.0" prefHeight="36.0" vgrow="SOMETIMES"/>
+										<RowConstraints maxHeight="36.0" minHeight="36.0" prefHeight="36.0" vgrow="SOMETIMES"/>
+									</rowConstraints>
 									<children>
-										<Label id="$horMid"/>
-										<CustomFieldWithButton fx:id="cfDirectory" text="./" HBox.hgrow="ALWAYS"/>
-										<Label id="$horMid"/>
+										<CheckBox fx:id="cbMatrix" mnemonicParsing="false" text="Matrices"/>
+										<CheckBox fx:id="cbLibs" mnemonicParsing="false" text="Libraries" GridPane.rowIndex="1"/>
+										<CheckBox fx:id="cbGuiDic" mnemonicParsing="false" text="Gui dictionaries" GridPane.columnIndex="1"/>
+										<CheckBox fx:id="cbClientDic" mnemonicParsing="false" text="Client dictionaries" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+										<CheckBox fx:id="cbVariables" mnemonicParsing="false" text="System variables" GridPane.columnIndex="2"/>
+										<CheckBox fx:id="cbInsideProject" mnemonicParsing="false" text="Inside project" GridPane.columnIndex="2" GridPane.rowIndex="1"/>
+									</children>
+								</GridPane>
+							</children>
+						</VBox>
+						<VBox fx:id="textPane" alignment="CENTER" maxHeight="72.0" minHeight="72.0" prefHeight="72.0" prefWidth="100.0" GridPane.rowIndex="1">
+							<children>
+								<HBox alignment="CENTER_LEFT" maxHeight="36.0" minHeight="36.0" prefHeight="36.0">
+									<children>
+										<ComboBox fx:id="cbFind" editable="true" maxWidth="1.7976931348623157E308" HBox.hgrow="ALWAYS"/>
+									</children>
+								</HBox>
+								<HBox alignment="CENTER_LEFT" maxHeight="36.0" minHeight="36.0" prefHeight="36.0">
+									<children>
+										<CheckBox fx:id="cbCaseSensitive" text="Case sensitive"/>
+										<Label id="$horMax"/>
+										<CheckBox fx:id="cbWholeWord" mnemonicParsing="false" text="Whole word"/>
+										<Label id="$horMax"/>
+										<CheckBox fx:id="cbRegexp" text="Re_gexp"/>
 									</children>
 								</HBox>
 							</children>
-						</GridPane>
-						<BorderPane prefHeight="200.0" prefWidth="200.0" GridPane.rowIndex="6">
-							<right>
-								<HBox alignment="CENTER_RIGHT" prefHeight="36.0" prefWidth="381.0" BorderPane.alignment="CENTER">
+						</VBox>
+						<VBox prefHeight="200.0" prefWidth="100.0" GridPane.rowIndex="2">
+							<children>
+								<Label id="$horMax"/>
+								<VBox fx:id="resultsPane" prefHeight="200.0" prefWidth="100.0" VBox.vgrow="ALWAYS">
 									<children>
-										<BorderPane>
-											<center>
-												<Label fx:id="lblMatches" alignment="CENTER_RIGHT" maxWidth="200.0" prefWidth="200.0" BorderPane.alignment="CENTER_RIGHT"/>
-											</center>
+										<BorderPane maxHeight="36.0" prefHeight="36.0" prefWidth="200.0">
+											<right>
+												<HBox alignment="CENTER_RIGHT" prefHeight="36.0" prefWidth="381.0" BorderPane.alignment="CENTER">
+													<children>
+														<BorderPane>
+															<center>
+																<Label fx:id="lblMatches" alignment="CENTER_RIGHT" maxWidth="200.0" prefWidth="200.0" BorderPane.alignment="CENTER_RIGHT"/>
+															</center>
+														</BorderPane>
+														<Label id="$horMid"/>
+														<Button id="matrixBtnFind" fx:id="btnFind" mnemonicParsing="false" onAction="#find" styleClass="$transparentBackground" GridPane.columnIndex="3"
+																GridPane.halignment="RIGHT"/>
+													</children>
+												</HBox>
+											</right>
+											<left>
+												<HBox fx:id="hBoxSearching" alignment="CENTER" visible="false">
+													<children>
+														<ProgressIndicator maxHeight="36.0" maxWidth="36.0" minHeight="36.0" minWidth="36.0" prefHeight="36.0" prefWidth="36.0"
+																		   BorderPane.alignment="CENTER"/>
+														<Label id="$horMid"/>
+														<Label text="Searching..."/>
+													</children>
+												</HBox>
+											</left>
 										</BorderPane>
-										<Label id="$horMid"/>
-										<Button id="matrixBtnFind" fx:id="btnFind" mnemonicParsing="false" onAction="#find" styleClass="$transparentBackground" GridPane.columnIndex="3"
-												GridPane.halignment="RIGHT"/>
+										<ListView fx:id="lvResult" prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS"/>
 									</children>
-								</HBox>
-							</right>
-							<left>
-								<HBox fx:id="hBoxSearching" alignment="CENTER" visible="false">
-									<children>
-										<ProgressIndicator maxHeight="36.0" maxWidth="36.0" minHeight="36.0" minWidth="36.0" prefHeight="36.0" prefWidth="36.0" BorderPane.alignment="CENTER"/>
-										<Label id="$horMid"/>
-										<Label text="Searching..."/>
-									</children>
-								</HBox>
-							</left>
-						</BorderPane>
+								</VBox>
+							</children>
+						</VBox>
 					</children>
 				</GridPane>
 				<Label id="$horMin"/>

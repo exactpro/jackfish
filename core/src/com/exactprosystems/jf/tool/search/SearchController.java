@@ -1,6 +1,7 @@
 package com.exactprosystems.jf.tool.search;
 
 import com.exactprosystems.jf.documents.DocumentInfo;
+import com.exactprosystems.jf.documents.DocumentKind;
 import com.exactprosystems.jf.documents.guidic.GuiDictionary;
 import com.exactprosystems.jf.documents.matrix.Matrix;
 import com.exactprosystems.jf.documents.vars.SystemVars;
@@ -8,8 +9,6 @@ import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.ContainingParent;
 import com.exactprosystems.jf.tool.CssVariables;
 import com.exactprosystems.jf.tool.custom.BorderWrapper;
-import com.exactprosystems.jf.tool.custom.controls.field.CustomFieldWithButton;
-import com.exactprosystems.jf.tool.helpers.DialogsHelper;
 import javafx.event.ActionEvent;
 import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
@@ -26,9 +25,9 @@ import javafx.stage.StageStyle;
 
 import java.io.File;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.function.Consumer;
 
@@ -38,24 +37,26 @@ public class SearchController implements Initializable, ContainingParent
 
 	private Parent parent;
 
-	public GridPane              scopePane;
-	public GridPane              mainGridPane;
-	public ComboBox<String>      cbFileMask;
-	public ComboBox<String>      cbFind;
-	public CheckBox              cbCaseSensitive;
-	public CheckBox              cbRegexp;
-	public CheckBox              cbWholeWord;
-	public CheckBox              cbMatrix;
-	public CheckBox              cbLibs;
-	public CheckBox              cbGuiDic;
-	public CheckBox              cbClientDic;
-	public CheckBox              cbVariables;
-	public CheckBox              cbFiles;
-	public CustomFieldWithButton cfDirectory;
-	public Label                 lblMatches;
-	public Button                btnFind;
+	public GridPane               mainGridPane;
+	public ComboBox<String>       cbFileMask;
+	public ComboBox<String>       cbFind;
+	public CheckBox               cbCaseSensitive;
+	public CheckBox               cbRegexp;
+	public CheckBox               cbWholeWord;
+	public CheckBox               cbMatrix;
+	public CheckBox               cbLibs;
+	public CheckBox               cbGuiDic;
+	public CheckBox               cbClientDic;
+	public CheckBox               cbVariables;
+	public CheckBox               cbInsideProject;
+	public Label                  lblMatches;
+	public Button                 btnFind;
 	public ListView<SearchResult> lvResult;
-	public HBox hBoxSearching;
+	public HBox                   hBoxSearching;
+
+	public VBox     textPane;
+	public VBox     resultsPane;
+	public VBox     maskPane;
 
 	private Search model;
 	private Alert  alert;
@@ -64,17 +65,17 @@ public class SearchController implements Initializable, ContainingParent
 	@Override
 	public void initialize(URL location, ResourceBundle resources)
 	{
-		Node scope = BorderWrapper.wrap(this.scopePane).title("Scope").color(Common.currentTheme().getReverseColor()).outerPadding(4).innerPadding(4).build();
-		this.mainGridPane.add(scope, 0, 4);
+		Node fileMask = BorderWrapper.wrap(this.maskPane).title("File mask and scope").color(Common.currentTheme().getReverseColor()).outerPadding(4).innerPadding(4).build();
+		this.mainGridPane.add(fileMask, 0, 0);
+
+		Node textPane = BorderWrapper.wrap(this.textPane).title("Containing text").color(Common.currentTheme().getReverseColor()).outerPadding(4).innerPadding(4).build();
+		this.mainGridPane.add(textPane, 0, 1);
+
+		Node results = BorderWrapper.wrap(this.resultsPane).title("Results").color(Common.currentTheme().getReverseColor()).outerPadding(4).innerPadding(4).build();
+		this.mainGridPane.add(results, 0, 2);
 
 		this.cbFileMask.getItems().add(Search.ALL_FILES);
 		this.cbFileMask.getSelectionModel().selectFirst();
-
-		this.cfDirectory.setButtonText("...");
-		this.cfDirectory.setHandler(str -> {
-			File file = DialogsHelper.showDirChooseDialog("Choose start directory");
-			Optional.ofNullable(file).map(File::getAbsolutePath).map(Common::getRelativePath).ifPresent(this.cfDirectory::setText);
-		});
 
 		this.listeners();
 	}
@@ -111,9 +112,8 @@ public class SearchController implements Initializable, ContainingParent
 		this.alert.getDialogPane().getScene().getStylesheets().addAll(Common.currentThemesPaths());
 		this.alert.getDialogPane().setHeader(new Label());
 		Common.addIcons(((Stage) this.alert.getDialogPane().getScene().getWindow()));
-		this.alert.getDialogPane().setBorder(new Border(new BorderStroke(Common.currentTheme().getReverseColor(), BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderStroke.THIN)));
 		this.alert.initModality(Modality.APPLICATION_MODAL);
-		this.alert.initStyle(StageStyle.UNDECORATED);
+		this.alert.initStyle(StageStyle.UTILITY);
 		DialogPane dp = this.alert.getDialogPane();
 		dp.setContent(this.parent);
 		this.alert.setOnHiding(event -> this.model.alertClose());
@@ -129,20 +129,29 @@ public class SearchController implements Initializable, ContainingParent
 
 	public void find(ActionEvent actionEvent)
 	{
-		this.model.find(
-				this.cbFileMask.getEditor().getText()
-				, this.cbFind.getEditor().getText()
-				, this.cbCaseSensitive.isSelected()
-				, this.cbWholeWord.isSelected()
-				, this.cbRegexp.isSelected()
-				, this.cbMatrix.isSelected()
-				, this.cbLibs.isSelected()
-				, this.cbGuiDic.isSelected()
-				, this.cbClientDic.isSelected()
-				, this.cbVariables.isSelected()
-				, this.cbFiles.isSelected()
-				, this.cfDirectory.getText()
+		List<DocumentKind> kinds = new ArrayList<>();
+		add(this.cbMatrix, DocumentKind.MATRIX, kinds);
+		add(this.cbLibs, DocumentKind.LIBRARY, kinds);
+		add(this.cbGuiDic, DocumentKind.GUI_DICTIONARY, kinds);
+		add(this.cbClientDic, DocumentKind.MESSAGE_DICIONARY, kinds);
+		add(this.cbVariables, DocumentKind.SYSTEM_VARS, kinds);
+		add(this.cbInsideProject, DocumentKind.PLAIN_TEXT, kinds);
+
+		this.model.find(this.cbFileMask.getEditor().getText(), this.cbFind.getEditor().getText()
+				, this.cbCaseSensitive.isSelected(), this.cbWholeWord.isSelected(), this.cbRegexp.isSelected()
+				, kinds.toArray(new DocumentKind[kinds.size()])
 		);
+//		this.model.find(this.cbFileMask.getEditor().getText(), this.cbFind.getEditor().getText(), this.cbCaseSensitive.isSelected(), this.cbWholeWord.isSelected(), this.cbRegexp.isSelected(),
+//				this.cbMatrix.isSelected(), this.cbLibs.isSelected(), this.cbGuiDic.isSelected(), this.cbClientDic.isSelected(), this.cbVariables.isSelected(), this.cbInsideProject.isSelected(),
+//				this.cfDirectory.getText());
+	}
+
+	private void add(CheckBox cb, DocumentKind kind, List<DocumentKind> kinds)
+	{
+		if (cb.isSelected())
+		{
+			kinds.add(kind);
+		}
 	}
 
 	void displayResult(List<SearchResult> list)
@@ -167,6 +176,7 @@ public class SearchController implements Initializable, ContainingParent
 
 	void finishFind()
 	{
+		this.lblMatches.setText("");
 		this.hBoxSearching.setVisible(false);
 		this.btnFind.setDisable(false);
 	}
@@ -181,10 +191,8 @@ public class SearchController implements Initializable, ContainingParent
 	//region private methods
 	private void listeners()
 	{
-		Arrays.asList(this.cbCaseSensitive, this.cbRegexp, this.cbWholeWord, this.cbMatrix, this.cbLibs, this.cbGuiDic,this.cbClientDic,this.cbVariables, this.cbFiles)
+		Arrays.asList(this.cbCaseSensitive, this.cbRegexp, this.cbWholeWord, this.cbMatrix, this.cbLibs, this.cbGuiDic, this.cbClientDic, this.cbVariables, this.cbInsideProject)
 				.forEach(cb -> cb.setOnKeyPressed(e -> this.consumeEvent(e, evt -> {})));
-
-		this.cfDirectory.disableProperty().bind(this.cbFiles.selectedProperty().not());
 
 		this.lvResult.setOnKeyPressed(event -> {
 			if (event.getCode() == KeyCode.ESCAPE)
@@ -198,8 +206,6 @@ public class SearchController implements Initializable, ContainingParent
 
 		this.cbFileMask.getEditor().setOnKeyPressed(e -> this.consumeEvent(e, ev -> this.find(null)));
 		this.cbFileMask.setOnKeyPressed(event -> this.consumeEvent(event, e -> this.find(null)));
-
-		this.cfDirectory.setOnKeyPressed(event -> this.consumeEvent(event, e -> this.find(null)));
 	}
 
 	private void consumeEvent(KeyEvent event, Consumer<KeyEvent> consumer)
@@ -214,6 +220,7 @@ public class SearchController implements Initializable, ContainingParent
 	private class SearchResultCell extends ListCell<SearchResult>
 	{
 		private Search model;
+
 		SearchResultCell(Search model)
 		{
 			this.model = model;
@@ -234,49 +241,50 @@ public class SearchController implements Initializable, ContainingParent
 
 				HBox box = new HBox();
 				box.setAlignment(Pos.CENTER_RIGHT);
-
 				File file = item.getFile();
-
-				Button btnShowInTree = new Button();
-				btnShowInTree.getStyleClass().add(CssVariables.TRANSPARENT_BACKGROUND);
-				btnShowInTree.setId("dictionaryBtnXpathHelper");
-				btnShowInTree.setTooltip(new Tooltip("Scroll from configuration"));
-				btnShowInTree.setOnAction(e -> this.model.scrollFromConfig(file));
-
-
-				SplitMenuButton btnOpenAs = new SplitMenuButton();
-				btnOpenAs.setText("Open");
-				BorderPane.setAlignment(text, Pos.CENTER_LEFT);
-				MenuItem asPlainText = new MenuItem("As plain text");
-				asPlainText.setOnAction(e -> this.model.openAsPlainText(file));
-				btnOpenAs.getItems().add(asPlainText);
-
-				if (file.getName().endsWith("." + Matrix.class.getAnnotation(DocumentInfo.class).extentioin()))
+				if (file != null)
 				{
-					MenuItem asMatrix = new MenuItem("As matrix");
-					asMatrix.setOnAction(e -> this.model.openAsMatrix(file));
-					btnOpenAs.getItems().add(asMatrix);
-				}
-				else if (file.getName().endsWith("." + GuiDictionary.class.getAnnotation(DocumentInfo.class).extentioin()))
-				{
-					MenuItem asGuiDic = new MenuItem("As gui dic");
-					asGuiDic.setOnAction(e -> this.model.openAsGuiDic(file));
-					btnOpenAs.getItems().add(asGuiDic);
-				}
-				else if (file.getName().endsWith("." + SystemVars.class.getAnnotation(DocumentInfo.class).extentioin()))
-				{
-					MenuItem asVars = new MenuItem("As vars");
-					asVars.setOnAction(e -> this.model.openAsVars(file));
-					btnOpenAs.getItems().add(asVars);
-				}
-				else if (file.getName().endsWith(".html"))
-				{
-					MenuItem asReport = new MenuItem("As report");
-					asReport.setOnAction(e -> this.model.openAsHtml(file));
-					btnOpenAs.getItems().add(asReport);
+					Button btnShowInTree = new Button();
+					btnShowInTree.getStyleClass().add(CssVariables.TRANSPARENT_BACKGROUND);
+					btnShowInTree.setId("dictionaryBtnXpathHelper");
+					btnShowInTree.setTooltip(new Tooltip("Scroll from configuration"));
+					btnShowInTree.setOnAction(e -> this.model.scrollFromConfig(file));
+
+
+					SplitMenuButton btnOpenAs = new SplitMenuButton();
+					btnOpenAs.setText("Open");
+					BorderPane.setAlignment(text, Pos.CENTER_LEFT);
+					MenuItem asPlainText = new MenuItem("As plain text");
+					asPlainText.setOnAction(e -> this.model.openAsPlainText(file));
+					btnOpenAs.getItems().add(asPlainText);
+
+					if (file.getName().endsWith("." + Matrix.class.getAnnotation(DocumentInfo.class).extentioin()))
+					{
+						MenuItem asMatrix = new MenuItem("As matrix");
+						asMatrix.setOnAction(e -> this.model.openAsMatrix(file));
+						btnOpenAs.getItems().add(asMatrix);
+					}
+					else if (file.getName().endsWith("." + GuiDictionary.class.getAnnotation(DocumentInfo.class).extentioin()))
+					{
+						MenuItem asGuiDic = new MenuItem("As gui dic");
+						asGuiDic.setOnAction(e -> this.model.openAsGuiDic(file));
+						btnOpenAs.getItems().add(asGuiDic);
+					}
+					else if (file.getName().endsWith("." + SystemVars.class.getAnnotation(DocumentInfo.class).extentioin()))
+					{
+						MenuItem asVars = new MenuItem("As vars");
+						asVars.setOnAction(e -> this.model.openAsVars(file));
+						btnOpenAs.getItems().add(asVars);
+					}
+					else if (file.getName().endsWith(".html"))
+					{
+						MenuItem asReport = new MenuItem("As report");
+						asReport.setOnAction(e -> this.model.openAsHtml(file));
+						btnOpenAs.getItems().add(asReport);
+					}
+					box.getChildren().addAll(btnOpenAs, btnShowInTree);
 				}
 
-				box.getChildren().addAll(btnOpenAs, btnShowInTree);
 				pane.setCenter(text);
 				pane.setRight(box);
 				setGraphic(pane);
