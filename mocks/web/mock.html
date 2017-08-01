@@ -83,6 +83,10 @@
 		}
 	};
 
+	var clearProtocol = function() {
+		document.getElementById('protocolText').value = "";
+	};
+
 	$(document).ready(function(e) {
 		$("#hideButton").hide();
 	});
@@ -96,10 +100,21 @@
 		$('#countLabel').html(counter);
 	}
 
-	document.onkeydown = function(evt) {
-		evt = evt || window.event;
+	var NEWLINE = "\n";
+
+	var getControlName = function() {
 		var a = $('#moveLabel').text();
 		a = a.substring(0,a.length-5);
+		return a;
+	}
+
+	document.onkeypress = function(evt) {
+		var x = evt.which || evt.keyCode;
+		document.getElementById('protocolText').value += getControlName() + "_press_" + x + NEWLINE;
+	}
+
+	document.onkeydown = function(evt) {
+		evt = evt || window.event;
 		if (evt.keyCode == 27) {
 			var a = $('#moveLabel').text();
 			a = a.substring(0,a.length-5);
@@ -108,15 +123,19 @@
     	if (evt.keyCode == 17) {
 			$('#downUpLabel').html(a + "_down_Control");
     	}
+
+    	var x = evt.which || evt.keyCode;
+    	document.getElementById('protocolText').value += getControlName() + "_down_" + x + NEWLINE;
 	};
 
 	document.onkeyup = function(evt) {
 		evt = evt || window.event;
-		var a = $('#moveLabel').text();
-		a = a.substring(0,a.length-5);
     	if (evt.keyCode == 17) {
 			$('#downUpLabel').html(a + "_up_Control");
     	}
+
+    	var x = evt.which || evt.keyCode;
+    	document.getElementById('protocolText').value += getControlName() + "_up_" + x + NEWLINE;
 	};
 
 	</script>
@@ -141,8 +160,10 @@
 </div>
 
 <div id="divButton">
-	<button id="button" class="add_listener" kindname="Button" func="123456" name="Button" title="Button">Button</button>
+	<button id="button" class="add_listener" kindname="Button" func="123456" name="Button" title="Button" >Button</button>
+	<!--style="position: absolute; top: 0; left: 0; width:100; height: 25;"-->
 </div>
+
 
 <div id="divInput">
 	<input id="input" class="add_listener" onkeyup="textBoxKeyUp(event,this)" onkeydown="textBoxKeyDown(event,this)" kindname="TextBox" func="123" name="TextBox"/>
@@ -355,6 +376,9 @@
 <div id="divRectAndColor">
 	<button name="colorButton" id="colorButton" style="position: absolute; top: 800; left: 550; width:100; height: 25; color: #fff; background-color: red">#red</button>
 </div>
+
+<textarea id="protocolText" name="protocolText" cols="40" rows="5" style="position: absolute; top: 500; left: 500; width:300; height: 200;"></textarea>
+<button id="protocolClear" name="protocolClear" onclick="clearProtocol()" style="position: absolute; top: 700; left: 700; width:100; height: 25;" >Clear</button>
 
 </body>
 </html>

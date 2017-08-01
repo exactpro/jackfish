@@ -48,6 +48,8 @@
             <splitter id="Splitter" class="" name="" addition="Many" weak="true"/>
             <spinner id="Spinner" uid="Spinner" xpath="" class="" name="" addition="Many"/>
             <label id="selectLabel" uid="selectLabel" owner="" name=""/>
+            <textBox id="protocolText" uid="protocolText" owner=""/>
+            <button id="protocolClear" uid="protocolClear" owner=""/>
         </run>
         <onClose/>
         <close/>
@@ -100,6 +102,22 @@
             <button id="Button31" uid="" owner="Owner1" class="" name="Button" text=""/>
             <button id="Button32" uid="" owner="Owner2" class="" name="Button" text=""/>
             <button id="Button33" uid="" owner="Owner3" class="" name="Button" text=""/>
+            <button id="ButtonMany" uid="" xpath="//Button[@name=&amp;quot;Any&amp;quot; or @name=&amp;quot;Button&amp;quot;]" class="" name="" text="" addition="Many"/>
+            <button id="ButtonManyNotPass" uid="" class="" name="Button" text=""/>
+            <button id="ButtonManyNotFail" uid="" xpath="//Button[@name=&amp;quot;Any&amp;quot; or @name=&amp;quot;Button&amp;quot;]" class="" name="" text=""/>
+            <button id="ButtonNormal" uid="" class="" name="Button" text=""/>
+            <button id="ButtonNormalVisible" uid="" class="" name="Button" text="" visibility="Visible"/>
+            <button id="ButtonNormalEnable" uid="" class="" name="Button" text="" visibility="Enable"/>
+            <button id="ButtonNotEnabled" uid="" class="" name="notEnabledButton" text=""/>
+            <button id="ButtonNotEnabledVisible" uid="" class="" name="notEnabledButton" text="" visibility="Visible"/>
+            <button id="ButtonNotEnabledEnabled" uid="" class="" name="notEnabledButton" text="" visibility="Enable"/>
+            <label id="matchersLabel" uid="matchersLabel" name=""/>
+            <button id="matchersButtonClear" owner="Owner1" name="matchersButtonClear"/>
+            <button id="invisibleButton" uid="" class="" name="invisibleButton" text=""/>
+            <button id="invisibleButtonVisible" uid="" class="" name="invisibleButton" text="" visibility="Visible"/>
+            <button id="invisibleButtonEnabled" uid="" class="" name="invisibleButton" text="" visibility="Enable"/>
+            <button id="ButtonWeak" uid="" class="" name="Button" text="" weak="true"/>
+            <button id="ButtonWeakNot" uid="" class="" name="Button" text=""/>
         </run>
         <onClose/>
         <close/>
