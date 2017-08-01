@@ -791,6 +791,57 @@ public class Configuration extends AbstractDocument
 	}
 
 	//------------------------------------------------------------------------------------------------------------------
+    public void forEachFile(Consumer<File> applier, DocumentKind... kinds)
+    {
+        for (DocumentKind kind : kinds)
+        {
+            switch (kind)
+            {
+            case CONFIGURATION:
+                applier.accept(new File(this.getName()));
+                break;
+                
+            case SYSTEM_VARS:
+                this.systemVars.stream().map(v -> new File(v.getName())).forEach(applier);
+                break;
+                
+            case GUI_DICTIONARY:
+                this.appDictionariesValue.forEach(ms ->
+                {
+                    File folderFile = new File(MainRunner.makeDirWithSubstitutions(ms.get()));
+                    applyToAllFile(folderFile, applier);
+                });
+                break;
+                
+            case MESSAGE_DICIONARY:
+                this.clientDictionariesValue.forEach(ms ->
+                {
+                    File folderFile = new File(MainRunner.makeDirWithSubstitutions(ms.get()));
+                    applyToAllFile(folderFile, applier);
+                });
+                break;
+                
+            case LIBRARY:
+                this.libs.values().stream().map(v -> new File(v.getName())).forEach(applier);
+                break;
+                
+            case MATRIX:
+                this.matricesValue.forEach(ms -> 
+                {
+                    File folderFile = new File(MainRunner.makeDirWithSubstitutions(ms.get()));
+                    applyToAllFile(folderFile, applier);
+                });
+                break;
+
+            default:
+
+            }
+        }
+        
+    }
+
+	
+	
 	public void forEach(Consumer<Document> applier, DocumentKind... kinds)
 	{
 		DocumentFactory consoleFactory = new ConsoleDocumentFactory(VerboseLevel.None);
@@ -1077,6 +1128,20 @@ public class Configuration extends AbstractDocument
 		}
 	}
 	
+    private void applyToAllFile(File path, Consumer<File> applier)
+    {
+        if (path.isDirectory())
+        {
+            File[] files = path.listFiles();
+            if (files != null)
+            {
+                Arrays.stream(files).forEach(file -> applyToAllFile(file, applier));
+            }
+        } else
+        {
+            applier.accept(path);
+        }
+    }
 
 	private static final Class<?>[] jaxbContextClasses =
 		{
