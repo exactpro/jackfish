@@ -68,8 +68,8 @@ public class Search
 		}
 		saveMaskAndText(text, fileMask);
 
-		this.configuration.forEachFile(file -> {
-			SearchService service = new SearchService(file, caseSens, regexp, wholeWord, text, fileMask);
+		this.configuration.forEachFile((file,kind) -> {
+			SearchService service = new SearchService(file, caseSens, regexp, wholeWord, text, fileMask, kind);
 			service.setOnSucceeded(event -> this.controller.displayResult(((List<SearchResult>) event.getSource().getValue())));
 			service.setExecutor(executor);
 			service.start();
@@ -190,8 +190,9 @@ public class Search
 		private final boolean isWholeWord;
 		private final String  what;
 		private final String  fileMask;
+		private final DocumentKind kind;
 
-		SearchService(File file, boolean isMatchCase, boolean isRegexp, boolean isWholeWord, String what, String fileMask)
+		SearchService(File file, boolean isMatchCase, boolean isRegexp, boolean isWholeWord, String what, String fileMask, DocumentKind kind)
 		{
 			this.file = file;
 			this.isMatchCase = isMatchCase;
@@ -199,6 +200,7 @@ public class Search
 			this.isWholeWord = isWholeWord;
 			this.what = what;
 			this.fileMask = fileMask;
+			this.kind = kind;
 		}
 
 		@Override
@@ -218,13 +220,15 @@ public class Search
 
 					if (Str.IsNullOrEmpty(what))
 					{
-						return Collections.singletonList(new SearchResult(file, 0));
+						return Collections.singletonList(new SearchResult(file, 0, kind));
 					}
 
 					try (Stream<String> stream = Files.lines(Paths.get(file.getAbsolutePath())))
 					{
-						return stream.peek(s -> atomicInteger.incrementAndGet()).filter(SearchService.this::processLine).map(s -> new SearchResult(file, atomicInteger.get())).collect(
-								Collectors.toList());
+						return stream.peek(s -> atomicInteger.incrementAndGet())
+								.filter(SearchService.this::processLine)
+								.map(s -> new SearchResult(file, atomicInteger.get(), kind))
+								.collect(Collectors.toList());
 					}
 				}
 			};
@@ -247,7 +251,7 @@ public class Search
 	{
 		DummySearchService()
 		{
-			super(null, false, false, false, null, null);
+			super(null, false, false, false, null, null, null);
 		}
 
 		@Override

@@ -1,16 +1,13 @@
 package com.exactprosystems.jf.tool.search;
 
-import com.exactprosystems.jf.documents.DocumentInfo;
 import com.exactprosystems.jf.documents.DocumentKind;
-import com.exactprosystems.jf.documents.guidic.GuiDictionary;
-import com.exactprosystems.jf.documents.matrix.Matrix;
-import com.exactprosystems.jf.documents.vars.SystemVars;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.ContainingParent;
 import com.exactprosystems.jf.tool.CssVariables;
 import com.exactprosystems.jf.tool.custom.BorderWrapper;
 import javafx.event.ActionEvent;
 import javafx.fxml.Initializable;
+import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Parent;
@@ -21,7 +18,6 @@ import javafx.scene.layout.*;
 import javafx.scene.text.TextAlignment;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import javafx.stage.StageStyle;
 
 import java.io.File;
 import java.net.URL;
@@ -111,9 +107,8 @@ public class SearchController implements Initializable, ContainingParent
 		this.alert = new Alert(Alert.AlertType.INFORMATION);
 		this.alert.getDialogPane().getScene().getStylesheets().addAll(Common.currentThemesPaths());
 		this.alert.getDialogPane().setHeader(new Label());
+		this.alert.initModality(Modality.WINDOW_MODAL);
 		Common.addIcons(((Stage) this.alert.getDialogPane().getScene().getWindow()));
-		this.alert.initModality(Modality.APPLICATION_MODAL);
-		this.alert.initStyle(StageStyle.UTILITY);
 		DialogPane dp = this.alert.getDialogPane();
 		dp.setContent(this.parent);
 		this.alert.setOnHiding(event -> this.model.alertClose());
@@ -238,6 +233,7 @@ public class SearchController implements Initializable, ContainingParent
 				text.setAlignment(Pos.CENTER_LEFT);
 				text.setTextAlignment(TextAlignment.LEFT);
 				HBox.setHgrow(text, Priority.ALWAYS);
+				BorderPane.setAlignment(text, Pos.CENTER_LEFT);
 
 				HBox box = new HBox();
 				box.setAlignment(Pos.CENTER_RIGHT);
@@ -250,39 +246,48 @@ public class SearchController implements Initializable, ContainingParent
 					btnShowInTree.setTooltip(new Tooltip("Scroll from configuration"));
 					btnShowInTree.setOnAction(e -> this.model.scrollFromConfig(file));
 
+					Button btnOpenAsPlainText = new Button();
+					btnOpenAsPlainText.setId("btnOpenAsPlainText");
+					btnOpenAsPlainText.getStyleClass().addAll(CssVariables.TRANSPARENT_BACKGROUND);
+					btnOpenAsPlainText.setTooltip(new Tooltip("Open as plain text"));
+					btnOpenAsPlainText.setOnAction(e -> this.model.openAsPlainText(file));
 
-					SplitMenuButton btnOpenAs = new SplitMenuButton();
-					btnOpenAs.setText("Open");
-					BorderPane.setAlignment(text, Pos.CENTER_LEFT);
-					MenuItem asPlainText = new MenuItem("As plain text");
-					asPlainText.setOnAction(e -> this.model.openAsPlainText(file));
-					btnOpenAs.getItems().add(asPlainText);
+					boolean needAdd = true;
+					Consumer<File> consumer = null;
 
-					if (file.getName().endsWith("." + Matrix.class.getAnnotation(DocumentInfo.class).extentioin()))
+					switch (item.getKind())
 					{
-						MenuItem asMatrix = new MenuItem("As matrix");
-						asMatrix.setOnAction(e -> this.model.openAsMatrix(file));
-						btnOpenAs.getItems().add(asMatrix);
+						case MATRIX:
+						case LIBRARY:
+							consumer = this.model::openAsMatrix;
+							break;
+						case GUI_DICTIONARY:
+							consumer = this.model::openAsGuiDic;
+							break;
+						case SYSTEM_VARS:
+							consumer = this.model::openAsVars;
+							break;
+						default:
+							if (file.getName().endsWith(".html"))
+							{
+								consumer = this.model::openAsHtml;
+							}
+							else
+							{
+								needAdd = false;
+							}
 					}
-					else if (file.getName().endsWith("." + GuiDictionary.class.getAnnotation(DocumentInfo.class).extentioin()))
+					if (needAdd)
 					{
-						MenuItem asGuiDic = new MenuItem("As gui dic");
-						asGuiDic.setOnAction(e -> this.model.openAsGuiDic(file));
-						btnOpenAs.getItems().add(asGuiDic);
+						Button btnOpenAsDocument = new Button();
+						btnOpenAsDocument.getStyleClass().addAll(CssVariables.TRANSPARENT_BACKGROUND);
+						btnOpenAsDocument.setId("btnOpenAsDocument");
+						btnOpenAsDocument.setTooltip(new Tooltip("Open as document"));
+						Consumer<File> finalConsumer = consumer;
+						btnOpenAsDocument.setOnAction(e -> finalConsumer.accept(file));
+						box.getChildren().addAll(btnOpenAsDocument, Common.createSpacer(Common.SpacerEnum.HorizontalMin));
 					}
-					else if (file.getName().endsWith("." + SystemVars.class.getAnnotation(DocumentInfo.class).extentioin()))
-					{
-						MenuItem asVars = new MenuItem("As vars");
-						asVars.setOnAction(e -> this.model.openAsVars(file));
-						btnOpenAs.getItems().add(asVars);
-					}
-					else if (file.getName().endsWith(".html"))
-					{
-						MenuItem asReport = new MenuItem("As report");
-						asReport.setOnAction(e -> this.model.openAsHtml(file));
-						btnOpenAs.getItems().add(asReport);
-					}
-					box.getChildren().addAll(btnOpenAs, btnShowInTree);
+					box.getChildren().addAll(btnOpenAsPlainText, new Separator(Orientation.VERTICAL), btnShowInTree);
 				}
 
 				pane.setCenter(text);

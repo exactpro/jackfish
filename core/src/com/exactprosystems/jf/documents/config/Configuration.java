@@ -69,6 +69,7 @@ import java.math.MathContext;
 import java.time.Instant;
 import java.util.*;
 import java.util.List;
+import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.regex.Matcher;
 import java.util.stream.Collectors;
@@ -791,25 +792,25 @@ public class Configuration extends AbstractDocument
 	}
 
 	//------------------------------------------------------------------------------------------------------------------
-    public void forEachFile(Consumer<File> applier, DocumentKind... kinds)
+    public void forEachFile(BiConsumer<File, DocumentKind> applier, DocumentKind... kinds)
     {
         for (DocumentKind kind : kinds)
         {
             switch (kind)
             {
             case CONFIGURATION:
-                applier.accept(new File(this.getName()));
+                applier.accept(new File(this.getName()), kind);
                 break;
                 
             case SYSTEM_VARS:
-                this.systemVars.stream().map(v -> new File(v.getName())).forEach(applier);
+                this.systemVars.stream().map(v -> new File(v.getName())).forEach(file -> applier.accept(file, kind));
                 break;
                 
             case GUI_DICTIONARY:
                 this.appDictionariesValue.forEach(ms ->
                 {
                     File folderFile = new File(MainRunner.makeDirWithSubstitutions(ms.get()));
-                    applyToAllFile(folderFile, applier);
+                    applyToAllFile(folderFile, applier, kind);
                 });
                 break;
                 
@@ -817,24 +818,24 @@ public class Configuration extends AbstractDocument
                 this.clientDictionariesValue.forEach(ms ->
                 {
                     File folderFile = new File(MainRunner.makeDirWithSubstitutions(ms.get()));
-                    applyToAllFile(folderFile, applier);
+                    applyToAllFile(folderFile, applier, kind);
                 });
                 break;
                 
             case LIBRARY:
-                this.libs.values().stream().map(v -> new File(v.getName())).forEach(applier);
+                this.libs.values().stream().map(v -> new File(v.getName())).forEach(file -> applier.accept(file, kind));
                 break;
                 
             case MATRIX:
                 this.matricesValue.forEach(ms -> 
                 {
                     File folderFile = new File(MainRunner.makeDirWithSubstitutions(ms.get()));
-                    applyToAllFile(folderFile, applier);
+                    applyToAllFile(folderFile, applier, kind);
                 });
                 break;
 
             case PLAIN_TEXT:
-            	applyToAllFile(new File("./"), applier);
+            	applyToAllFile(new File("."), applier, kind);
             	break;
             default:
 
@@ -1131,18 +1132,18 @@ public class Configuration extends AbstractDocument
 		}
 	}
 	
-    private void applyToAllFile(File path, Consumer<File> applier)
+    private void applyToAllFile(File path, BiConsumer<File, DocumentKind> applier, DocumentKind kind)
     {
         if (path.isDirectory())
         {
             File[] files = path.listFiles();
             if (files != null)
             {
-                Arrays.stream(files).forEach(file -> applyToAllFile(file, applier));
+                Arrays.stream(files).forEach(file -> applyToAllFile(file, applier, kind));
             }
         } else
         {
-            applier.accept(path);
+            applier.accept(path, kind);
         }
     }
 

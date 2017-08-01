@@ -1,5 +1,6 @@
 package com.exactprosystems.jf.tool.search;
 
+import com.exactprosystems.jf.documents.DocumentKind;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.newconfig.ConfigurationFx;
 
@@ -9,16 +10,23 @@ class SearchResult
 {
 	private File file;
 	private int lineNumber;
+	private DocumentKind kind;
 
-	public SearchResult(File file, int lineNumber)
+	public SearchResult(File file, int lineNumber, DocumentKind kind)
 	{
 		this.file = file;
 		this.lineNumber = lineNumber;
+		this.kind = kind;
 	}
 
 	public File getFile()
 	{
 		return file;
+	}
+
+	public DocumentKind getKind()
+	{
+		return kind;
 	}
 
 	public int getLineNumber()
@@ -29,7 +37,7 @@ class SearchResult
 	@Override
 	public String toString()
 	{
-		return "File : " + Common.getRelativePath(file.getPath()) + " : " + lineNumber;
+		return Common.getRelativePath(file.getPath()) + " : " + lineNumber;
 	}
 
 	@Override
@@ -67,7 +75,7 @@ class SearchResult
 
 		public FailedSearchResult(String failMessage)
 		{
-			super(null, 0);
+			super(null, 0, null);
 			this.failMessage = failMessage;
 		}
 
