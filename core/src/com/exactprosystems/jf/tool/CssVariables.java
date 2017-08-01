@@ -265,6 +265,11 @@ public class CssVariables
 		public static final String NOTIFICATION_PIN_TRUE = THEME_IMAGES_DIR + "/pinTrue.png";
 		public static final String NOTIFICATION_PIN_FALSE = THEME_IMAGES_DIR + "/pinFalse.png";
 
+		public static final String NAME_ASCENDING = THEME_IMAGES_DIR + "/nameAsc.png";
+		public static final String NAME_DESCENDING = THEME_IMAGES_DIR + "/nameDesc.png";
+		public static final String DATE_ASCENDING = THEME_IMAGES_DIR + "/dateAsc.png";
+		public static final String DATE_DESCENDING = THEME_IMAGES_DIR + "/dateDesc.png";
+
 		public static final String CONFIGURATION_ICON = THEME_IMAGES_DIR + "/configurationIcon.png";
 		public static final String EVALUATOR_ICON = THEME_IMAGES_DIR + "/evaluatorIcon.png";
 		public static final String FORMAT_ICON = THEME_IMAGES_DIR + "/formatIcon.png";

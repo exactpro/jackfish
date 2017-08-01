@@ -488,6 +488,10 @@
 	-fx-graphic : url('icons/wizard.png')
 
 }
+#btnSmallWizard {
+	-fx-graphic : url('icons/wizardSmall.png')
+
+}
 
 /*Scale pane*/
 .scalePane {

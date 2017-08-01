@@ -14,6 +14,18 @@ import java.util.function.Supplier;
 
 public class WizardButton extends Button
 {
+	public static WizardButton smallButton()
+	{
+		WizardButton button = new WizardButton();
+		button.setId("btnSmallWizard");
+		return button;
+	}
+
+	public static WizardButton normalButton()
+	{
+		return new WizardButton();
+	}
+
 	public WizardButton()
 	{
 		super();
