@@ -27,12 +27,11 @@ import java.util.function.Supplier;
         name = "Connection wizard",
         pictureName = "ConnectionWizard.png",
         category = WizardCategory.OTHER,
-        shortDescription = "This wizard helps to move SubCases between NameSpaces",
+        shortDescription = "Wizard creates a connection and save in to the Store (View->Store).",
         experimental = false,
         strongCriteries = true,
         criteries = {ApplicationPool.class, AppEntry.class},
-        detailedDescription = "{{`Wizard creates a connection and save in to the Store (View->Store).`}}"
-                + "{{`You can use saved connection in dictionary and matrices.`}}"
+        detailedDescription = "{{`You can use saved connection in dictionary and matrices.`}}"
                 + "{{`On the top side of the Wizard are located known button for start, connect and stop an application.`}}"
                 + "{{`Under the buttons is the connection status indicator.`}}"
                 + "{{`Under the indicator you can see the textfield for name of variable for the created connection.`}}"
