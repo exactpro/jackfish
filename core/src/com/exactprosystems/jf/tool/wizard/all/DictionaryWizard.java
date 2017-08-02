@@ -422,7 +422,8 @@ public class DictionaryWizard extends AbstractWizard
 				String message = ex.getMessage();
 				if (ex.getCause() instanceof JFRemoteException)
 				{
-					message = ((JFRemoteException) ex.getCause()).getErrorKind().toString();
+					JFRemoteException cause = (JFRemoteException) ex.getCause();
+					message = cause.getErrorKind().toString() + ": " + cause.getMessage();
 				}
 				DialogsHelper.showError(message);
 			});
