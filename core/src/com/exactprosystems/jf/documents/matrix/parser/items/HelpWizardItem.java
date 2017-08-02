@@ -41,6 +41,7 @@ public class HelpWizardItem extends MatrixItem
     {
         String picture = this.manager.pictureOf(this.wizardClazz);
         String shortDescription = this.manager.shortDescriptionOf(this.wizardClazz);
+        String category = this.manager.categoryOf(this.wizardClazz).toString();
         String detailedDescription = this.manager.detailedDescriptionOf(this.wizardClazz);
         
         report.itemIntermediate(this);
@@ -58,6 +59,7 @@ public class HelpWizardItem extends MatrixItem
         }
         
         report.outLine(this, null, "{{`" + shortDescription + "`}}", null);
+        report.outLine(this, null, "{{`{{*Wizard category: *}} " + category + "`}}", null);
         report.outImage(this, null, null, bytes, "{{* View example *}}", -1, ImageReportMode.AsEmbeddedImage);
 		report.outLine(this, null, "{{`" + detailedDescription + "`}}", null);
     }
