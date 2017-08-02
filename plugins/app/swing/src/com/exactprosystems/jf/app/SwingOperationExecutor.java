@@ -335,7 +335,11 @@ public class SwingOperationExecutor implements OperationExecutor<ComponentFixtur
 			int keyCode = getKeyCode(key);
 			int modifiers = getModifierKeysArePressed();
 			events.add(new KeyEvent(target, KeyEvent.KEY_PRESSED, System.currentTimeMillis(), modifiers, keyCode, (char) keyCode));
-			events.add(new KeyEvent(target, KeyEvent.KEY_TYPED, System.currentTimeMillis(), modifiers, KeyEvent.VK_UNDEFINED, (char) keyCode));
+			if (this.isControlDown){
+				events.add(new KeyEvent(target, KeyEvent.KEY_TYPED, System.currentTimeMillis(), modifiers, KeyEvent.VK_UNDEFINED, (char) getKeyCodeWithControl(key)));
+			} else {
+				events.add(new KeyEvent(target, KeyEvent.KEY_TYPED, System.currentTimeMillis(), modifiers, KeyEvent.VK_UNDEFINED, (char) keyCode));
+			}
 			events.add(new KeyEvent(target, KeyEvent.KEY_RELEASED, System.currentTimeMillis(), modifiers, keyCode, (char) keyCode));
 			SwingUtilities.invokeLater(new Runnable()
 			{
@@ -2333,6 +2337,7 @@ public class SwingOperationExecutor implements OperationExecutor<ComponentFixtur
 			case X: return 24;
 			case Y: return 25;
 			case Z: return 26;
+			case UNDERSCORE: return 31;
 			case SPACE: return 32;
 			case DELETE: return 127;
 			default:
