@@ -2,22 +2,22 @@
 EXPECTED;;;;
     #Id;#Global;#RawTable
     table;1;Table
-    @;name;operation;result
-    0;Button10;Do.get();'Button'
-    1;Button11;Do.get();'Button'
-    2;Button12;Do.get();'Button'
-    3;Button13;Do.get();'Button'
-    4;Button20;Do.get();'Button'
-    5;Button21;Do.get();'Button'
-    6;Button22;Do.get();'Button'
-    7;Button23;Do.get();'Button'
-    8;Button30;Do.get();'Button'
-    9;Button31;Do.get();'Button'
-    10;Button32;Do.get();'Button'
-    11;Button33;Do.get();'Button'
-    12;ButtonMany;Do.count();2
-    13;ButtonManyNotPass;Do.count();1
-    14;ButtonManyNotFail;Do.count();ErrorKind.ELEMENT_NOT_FOUND
+    @;On;name;operation;result
+    0;x;Button10;Do.get();'Button'
+    1;x;Button11;Do.get();'Button'
+    2;x;Button12;Do.get();'Button'
+    3;x;Button13;Do.get();'Button'
+    4;x;Button20;Do.get();'Button'
+    5;x;Button21;Do.get();'Button'
+    6;x;Button22;Do.get();'Button'
+    7;x;Button23;Do.get();'Button'
+    8;x;Button30;Do.get();'Button'
+    9;x;Button31;Do.get();'Button'
+    10;x;Button32;Do.get();'Button'
+    11;x;Button33;Do.get();'Button'
+    12;;ButtonMany;Do.count();2
+    13;;ButtonManyNotPass;Do.count();1
+    14;;ButtonManyNotFail;Do.count();ErrorKind.ELEMENT_NOT_FOUND
     #EndRawTable
 
     #Action;$Table;$Expression
@@ -98,7 +98,7 @@ SUBCASES;;;;
     #EndSubCase
 
     #Id;#SubCase;plugin
-    RUN;Run;'Web'
+    RUN;Run;'Win'
         #Call;plugin
         START;plugin
 
@@ -114,8 +114,8 @@ SUBCASES;;;;
 
             #EndForEach
 
-            #Id;#IgnoreErr;#Action;$Dialog;$AppConnection;$Fields
-            DLG;1;DialogFill;'Matchers';appCon;map
+            #Id;#IgnoreErr;#Action;$Dialog;$AppConnection;$Fields;$StopOnFail
+            DLG;1;DialogFill;'Matchers';appCon;map;false
 
             #Id;#Let
             resultMap;new LinkedHashMap()
@@ -128,16 +128,18 @@ SUBCASES;;;;
 
             #ForEach;#In
             row;table
+                #Id;#Let
+                expected;row.result
+
+                #Id;#Let
+                actual;resultMap.get(row.name)
+
                 #Assert;#Message
-                resul;
+                expected.toString() == actual.toString();expected.toString() + ' not equal ' + actual.toString()
 
-                #Let
-
+                #OnError
 
             #EndForEach
-
-            #Action;
-            Print;plugin + ' matcher - ' + DLG.Out
 
         #EndStep
 
