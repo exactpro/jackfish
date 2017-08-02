@@ -248,6 +248,8 @@ public class CssVariables
 		public static final String UNSUPPORT_ENTRY_ICON = IMAGES_DIR + "/unsupportIcon.png";
 		public static final String SUPPORT_ENTRY_ICON = IMAGES_DIR + "/supportIcon.png";
 
+		public static final String WIZARD_SMALL = IMAGES_DIR + "/wizardSmall.png";
+
 		//endregion
 
 		//region Theme dependence icons

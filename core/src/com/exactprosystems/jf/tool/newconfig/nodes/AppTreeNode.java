@@ -20,6 +20,7 @@ import com.exactprosystems.jf.tool.helpers.DialogsHelper;
 import com.exactprosystems.jf.tool.newconfig.ConfigurationFx;
 import com.exactprosystems.jf.tool.newconfig.ConfigurationTreeView;
 import com.exactprosystems.jf.tool.newconfig.TablePair;
+import com.exactprosystems.jf.tool.wizard.WizardButton;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
@@ -179,7 +180,7 @@ public class AppTreeNode extends TreeNode
 		{
 			ContextMenu menu = new ContextMenu();
 
-			Menu menuWizard = new Menu("Wizard");
+			Menu menuWizard = WizardButton.createMenu();
 			WizardManager manager = model.getFactory().getWizardManager();
 			Object[] criteries = new Object[]{ model.getApplicationPool(), this.getEntry()};
 

@@ -27,6 +27,7 @@ import com.exactprosystems.jf.tool.custom.grideditor.SpreadsheetView;
 import com.exactprosystems.jf.tool.helpers.DialogsHelper;
 import com.exactprosystems.jf.tool.matrix.MatrixFx;
 import com.exactprosystems.jf.tool.settings.SettingsPanel;
+import com.exactprosystems.jf.tool.wizard.WizardButton;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -49,12 +50,13 @@ public class MatrixContextMenu extends ContextMenu
 {
 	private boolean fold = false;
 
-	private Menu menuWizard = new Menu("Wizard");
+	private Menu menuWizard = WizardButton.createMenu();
 	private Context context;
 
 	public MatrixContextMenu(Context context, MatrixFx matrix, MatrixTreeView tree, Settings settings)
 	{
 		super();
+		this.menuWizard.setGraphic(new ImageView(new Image(CssVariables.Icons.WIZARD_SMALL)));
 		this.context = context;
 
 		SettingsValue foldSetting = settings.getValueOrDefault(Settings.GLOBAL_NS, Settings.MATRIX_NAME, Settings.MATRIX_FOLD_ITEMS, "false");

@@ -1,13 +1,16 @@
 package com.exactprosystems.jf.tool.wizard;
 
+import com.exactprosystems.jf.api.wizard.Wizard;
 import com.exactprosystems.jf.api.wizard.WizardManager;
 import com.exactprosystems.jf.common.utils.ArrayUtils;
 import com.exactprosystems.jf.documents.config.Context;
-import com.exactprosystems.jf.api.wizard.Wizard;
 import com.exactprosystems.jf.tool.CssVariables;
 import com.exactprosystems.jf.tool.helpers.DialogsHelper;
 import javafx.scene.control.Button;
+import javafx.scene.control.Menu;
 import javafx.scene.control.Tooltip;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 
 import java.util.List;
 import java.util.function.Supplier;
@@ -24,6 +27,13 @@ public class WizardButton extends Button
 	public static WizardButton normalButton()
 	{
 		return new WizardButton();
+	}
+
+	public static Menu createMenu()
+	{
+		Menu menu = new Menu("Wizard");
+		menu.setGraphic(new ImageView(new Image(CssVariables.Icons.WIZARD_SMALL)));
+		return menu;
 	}
 
 	public WizardButton()
