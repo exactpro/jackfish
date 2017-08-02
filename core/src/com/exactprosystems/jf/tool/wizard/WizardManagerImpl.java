@@ -53,7 +53,8 @@ public class WizardManagerImpl implements WizardManager
 			XpathWizard.class,
             RefactorWizard.class,
             NameSpaceWizard.class,
-            ConnectionWizard.class
+            ConnectionWizard.class,
+            DialogFillWizard.class
 	);
     
     public WizardManagerImpl()
