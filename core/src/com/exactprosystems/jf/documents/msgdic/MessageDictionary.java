@@ -18,6 +18,7 @@ import com.exactprosystems.jf.documents.AbstractDocument;
 import com.exactprosystems.jf.documents.DocumentFactory;
 import com.exactprosystems.jf.documents.DocumentInfo;
 import com.exactprosystems.jf.documents.DocumentKind;
+import org.apache.log4j.Logger;
 
 import javax.xml.XMLConstants;
 import javax.xml.bind.*;
@@ -28,9 +29,6 @@ import javax.xml.transform.Source;
 import javax.xml.transform.stream.StreamSource;
 import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
-
-import org.apache.log4j.Logger;
-
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -46,7 +44,7 @@ import java.util.List;
         )
 
 @DocumentInfo(
-        kind = DocumentKind.MESSAGE_DICIONARY,
+        kind = DocumentKind.MESSAGE_DICTIONARY,
 		newName = "NewDictionary", 
 		extentioin = "xml", 
 		description = "Message dictionary"

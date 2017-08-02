@@ -47,6 +47,7 @@ import com.exactprosystems.jf.functions.Table;
 import com.exactprosystems.jf.service.ServicePool;
 import com.exactprosystems.jf.sql.DataBasePool;
 import com.exactprosystems.jf.tool.Common;
+import com.exactprosystems.jf.tool.newconfig.ConfigurationFx;
 import org.apache.log4j.Logger;
 
 import javax.xml.XMLConstants;
@@ -71,8 +72,11 @@ import java.util.*;
 import java.util.List;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
+import java.util.function.Function;
+import java.util.function.Predicate;
 import java.util.regex.Matcher;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @XmlRootElement(name="configuration")
 @XmlAccessorType(XmlAccessType.NONE)
@@ -794,55 +798,75 @@ public class Configuration extends AbstractDocument
 	//------------------------------------------------------------------------------------------------------------------
     public void forEachFile(BiConsumer<File, DocumentKind> applier, DocumentKind... kinds)
     {
-        for (DocumentKind kind : kinds)
-        {
-            switch (kind)
-            {
-            case CONFIGURATION:
-                applier.accept(new File(this.getName()), kind);
-                break;
+		for (DocumentKind kind : kinds)
+		{
+			switch (kind)
+			{
+				case CONFIGURATION:
+					applier.accept(new File(this.getName()), kind);
+					break;
                 
-            case SYSTEM_VARS:
-                this.systemVars.stream().map(v -> new File(v.getName())).forEach(file -> applier.accept(file, kind));
-                break;
+				case SYSTEM_VARS:
+					this.systemVars.stream().map(v -> new File(v.getName())).forEach(file -> applier.accept(file, kind));
+					break;
                 
-            case GUI_DICTIONARY:
-                this.appDictionariesValue.forEach(ms ->
-                {
-                    File folderFile = new File(MainRunner.makeDirWithSubstitutions(ms.get()));
-                    applyToAllFile(folderFile, applier, kind);
-                });
-                break;
+				case GUI_DICTIONARY:
+					this.appDictionariesValue.forEach(ms ->
+					{
+						File folderFile = new File(MainRunner.makeDirWithSubstitutions(ms.get()));
+						applyToAllFile(folderFile, applier, kind);
+					});
+					break;
                 
-            case MESSAGE_DICIONARY:
-                this.clientDictionariesValue.forEach(ms ->
-                {
-                    File folderFile = new File(MainRunner.makeDirWithSubstitutions(ms.get()));
-                    applyToAllFile(folderFile, applier, kind);
-                });
-                break;
+				case MESSAGE_DICTIONARY:
+					this.clientDictionariesValue.forEach(ms ->
+					{
+						File folderFile = new File(MainRunner.makeDirWithSubstitutions(ms.get()));
+						applyToAllFile(folderFile, applier, kind);
+					});
+					break;
                 
-            case LIBRARY:
-                this.libs.values().stream().map(v -> new File(v.getName())).forEach(file -> applier.accept(file, kind));
-                break;
+				case LIBRARY:
+					this.libs.values().stream().map(v -> new File(v.getName())).forEach(file -> applier.accept(file, kind));
+					break;
                 
-            case MATRIX:
-                this.matricesValue.forEach(ms -> 
-                {
-                    File folderFile = new File(MainRunner.makeDirWithSubstitutions(ms.get()));
-                    applyToAllFile(folderFile, applier, kind);
-                });
-                break;
+				case MATRIX:
+					this.matricesValue.forEach(ms ->
+					{
+						File folderFile = new File(MainRunner.makeDirWithSubstitutions(ms.get()));
+						applyToAllFile(folderFile, applier, kind);
+					});
+					break;
 
-            case PLAIN_TEXT:
-            	applyToAllFile(new File("."), applier, kind);
-            	break;
-            default:
+				case REPORTS:
+					applyToAllFile(new File(this.reportsValue.get()), applier, kind);
+					break;
 
-            }
-        }
+				case PLAIN_TEXT:
+					List<File> excludeFiles = new ArrayList<>();
+					excludeFiles.add(new File(this.getName()));
+
+					excludeFiles.addAll(files(this.systemVars.stream(), SystemVars::getName));
+					excludeFiles.addAll(files(this.appDictionariesValue.stream(), ms -> MainRunner.makeDirWithSubstitutions(ms.get())));
+					excludeFiles.addAll(files(this.clientDictionariesValue.stream(), ms -> MainRunner.makeDirWithSubstitutions(ms.get())));
+					excludeFiles.addAll(files(this.libs.values().stream(), Matrix::getName));
+					excludeFiles.addAll(files(this.matricesValue.stream(), ms -> MainRunner.makeDirWithSubstitutions(ms.get())));
+					excludeFiles.add(new File(this.reportsValue.get()));
+					List<String> ex = excludeFiles.stream().map(ConfigurationFx::path).collect(Collectors.toList());
+					applyToAllFile(new File("."), applier, DocumentKind.PLAIN_TEXT, file -> ex.contains(ConfigurationFx.path(file)));
+					break;
+
+				default:
+
+			}
+		}
         
-    }
+	}
+
+	private <T> List<File> files(Stream<T> stream, Function<T, String> map)
+	{
+		return stream.map(map).map(File::new).collect(Collectors.toList());
+	}
 
 	
 	
@@ -871,7 +895,7 @@ public class Configuration extends AbstractDocument
 				});
 				break;
 				
-			case MESSAGE_DICIONARY:
+			case MESSAGE_DICTIONARY:
 				this.clientDictionariesValue.forEach(ms ->
 				{
 					File folderFile = new File(MainRunner.makeDirWithSubstitutions(ms.get()));
@@ -1133,19 +1157,29 @@ public class Configuration extends AbstractDocument
 	}
 	
     private void applyToAllFile(File path, BiConsumer<File, DocumentKind> applier, DocumentKind kind)
-    {
-        if (path.isDirectory())
-        {
-            File[] files = path.listFiles();
-            if (files != null)
-            {
-                Arrays.stream(files).forEach(file -> applyToAllFile(file, applier, kind));
-            }
-        } else
-        {
-            applier.accept(path, kind);
-        }
-    }
+	{
+		this.applyToAllFile(path, applier, kind, file -> false);
+	}
+
+	private void applyToAllFile(File path, BiConsumer<File, DocumentKind> applier, DocumentKind kind, Predicate<File> filter)
+	{
+		if (filter.test(path))
+		{
+			return;
+		}
+		if (path.isDirectory())
+		{
+			File[] files = path.listFiles();
+			if (files != null)
+			{
+				Arrays.stream(files).forEach(file -> applyToAllFile(file, applier, kind, filter));
+			}
+		}
+		else
+		{
+			applier.accept(path, kind);
+		}
+	}
 
 	private static final Class<?>[] jaxbContextClasses =
 		{

@@ -93,7 +93,7 @@ public abstract class DocumentFactory
                 case MATRIX:            return createMatrix(fileName, createContext(). createRunner(fileName,  CommonHelper.readerFromFileName(fileName), new Date(), null));            
                 case LIBRARY:           return createLibrary(fileName, null);
                 case GUI_DICTIONARY:    return createAppDictionary(fileName);
-                case MESSAGE_DICIONARY: return createClientDictionary(fileName);
+                case MESSAGE_DICTIONARY: return createClientDictionary(fileName);
                 case SYSTEM_VARS:       return createVars(fileName);
                 case CSV:               return createCsv(fileName);
                 case PLAIN_TEXT:        return createPlainText(fileName);

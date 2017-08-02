@@ -5,18 +5,21 @@ import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.newconfig.ConfigurationFx;
 
 import java.io.File;
+import java.util.List;
 
 class SearchResult
 {
-	private File file;
+	protected File file;
 	private int lineNumber;
 	private DocumentKind kind;
+	private String line;
 
-	public SearchResult(File file, int lineNumber, DocumentKind kind)
+	public SearchResult(File file, int lineNumber, DocumentKind kind, String line)
 	{
 		this.file = file;
 		this.lineNumber = lineNumber;
 		this.kind = kind;
+		this.line = line;
 	}
 
 	public File getFile()
@@ -29,9 +32,9 @@ class SearchResult
 		return kind;
 	}
 
-	public int getLineNumber()
+	public String getLine()
 	{
-		return lineNumber;
+		return line;
 	}
 
 	@Override
@@ -75,7 +78,7 @@ class SearchResult
 
 		public FailedSearchResult(String failMessage)
 		{
-			super(null, 0, null);
+			super(null, 0, null, null);
 			this.failMessage = failMessage;
 		}
 
@@ -83,6 +86,33 @@ class SearchResult
 		public String toString()
 		{
 			return this.failMessage;
+		}
+	}
+
+	static class AggregateSearchResult extends SearchResult
+	{
+		private List<SearchResult> results;
+
+		public AggregateSearchResult(File file,  DocumentKind kind, List<SearchResult> results)
+		{
+			super(file, 0, kind, null);
+			this.results = results;
+		}
+
+		public List<SearchResult> getResults()
+		{
+			return results;
+		}
+
+		public boolean isEmpty()
+		{
+			return this.results == null || this.results.isEmpty();
+		}
+
+		@Override
+		public String toString()
+		{
+			return Common.getRelativePath(file.getPath()) + " ( " + this.results.size() + " )";
 		}
 	}
 }

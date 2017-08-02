@@ -7,17 +7,23 @@ import com.exactprosystems.jf.documents.config.Configuration;
 import com.exactprosystems.jf.documents.matrix.parser.SearchHelper;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.main.Main;
+import com.exactprosystems.jf.tool.search.results.AggregateResult;
+import com.exactprosystems.jf.tool.search.results.FailedResult;
+import com.exactprosystems.jf.tool.search.results.SingleResult;
 import javafx.concurrent.Service;
 import javafx.concurrent.Task;
+import javafx.util.Pair;
 
 import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
 import java.util.stream.Collectors;
@@ -56,13 +62,13 @@ public class Search
 		String res = checkParams(text, regexp, fileMask);
 		if (res != null)
 		{
-			this.controller.displayResult(Collections.singletonList(new SearchResult.FailedSearchResult(res)));
+			this.controller.displayFailedResult(new FailedResult(res));
 			this.controller.finishFind();
 			return;
 		}
 		if (kinds.length == 0)
 		{
-			this.controller.displayResult(Collections.singletonList(new SearchResult.FailedSearchResult("Select one or more scopes")));
+			this.controller.displayFailedResult(new FailedResult("Select one or more scopes"));
 			this.controller.finishFind();
 			return;
 		}
@@ -70,7 +76,7 @@ public class Search
 
 		this.configuration.forEachFile((file,kind) -> {
 			SearchService service = new SearchService(file, caseSens, regexp, wholeWord, text, fileMask, kind);
-			service.setOnSucceeded(event -> this.controller.displayResult(((List<SearchResult>) event.getSource().getValue())));
+			service.setOnSucceeded(event -> this.controller.displayResult(((AggregateResult) event.getSource().getValue())));
 			service.setExecutor(executor);
 			service.start();
 		}, kinds);
@@ -89,32 +95,32 @@ public class Search
 		executor.shutdownNow();
 	}
 
-	void scrollFromConfig(File file)
+	public void scrollFromConfig(File file)
 	{
 		this.model.showIntoConfiguration(file);
 	}
 
-	void openAsPlainText(File file)
+	public void openAsPlainText(File file)
 	{
 		Common.tryCatch(() -> this.model.loadPlainText(file.getAbsolutePath()), "Error on opem plain text");
 	}
 
-	void openAsMatrix(File file)
+	public void openAsMatrix(File file)
 	{
 		Common.tryCatch(() -> this.model.loadMatrix(file.getAbsolutePath()), "Error on opem plain text");
 	}
 
-	void openAsGuiDic(File file)
+	public void openAsGuiDic(File file)
 	{
 		Common.tryCatch(() -> this.model.loadDictionary(file.getAbsolutePath(), null), "Error on opem plain text");
 	}
 
-	void openAsVars(File file)
+	public void openAsVars(File file)
 	{
 		Common.tryCatch(() -> this.model.loadSystemVars(file.getAbsolutePath()), "Error on opem plain text");
 	}
 
-	void openAsHtml(File file)
+	public void openAsHtml(File file)
 	{
 		Common.tryCatch(() -> this.model.openReport(file), "Error on open file");
 	}
@@ -182,7 +188,7 @@ public class Search
 		return pattern.replace(".", "\\.").replace("?", ".?").replace("*", ".*");
 	}
 
-	private class SearchService extends Service<List<SearchResult>>
+	private class SearchService extends Service<AggregateResult>
 	{
 		private final File    file;
 		private final boolean isMatchCase;
@@ -204,45 +210,62 @@ public class Search
 		}
 
 		@Override
-		protected Task<List<SearchResult>> createTask()
+		protected Task<AggregateResult> createTask()
 		{
-			return new Task<List<SearchResult>>()
+			return new Task<AggregateResult>()
 			{
 				@Override
-				protected List<SearchResult> call() throws Exception
+				protected AggregateResult call() throws Exception
 				{
 					AtomicInteger atomicInteger = new AtomicInteger(0);
 
-					if (!file.getName().matches(filePattern(fileMask)))
+					String fileName = file.getName();
+					if (!fileName.matches(filePattern(fileMask)))
 					{
 						return null;
 					}
 
 					if (Str.IsNullOrEmpty(what))
 					{
-						return Collections.singletonList(new SearchResult(file, 0, kind));
+						return new AggregateResult(Search.this, Collections.singletonList(new SingleResult(fileName, null, 0, null)), file, kind);
 					}
 
 					try (Stream<String> stream = Files.lines(Paths.get(file.getAbsolutePath())))
 					{
-						return stream.peek(s -> atomicInteger.incrementAndGet())
-								.filter(SearchService.this::processLine)
-								.map(s -> new SearchResult(file, atomicInteger.get(), kind))
+						List<SingleResult> collect = stream.peek(s -> atomicInteger.incrementAndGet())
+								.map(String::trim)
+								.map(SearchService.this::processLineNew)
+								.filter(Objects::nonNull)
+								.map(pair -> new SingleResult(fileName, pair.getKey(), atomicInteger.get(), pair.getValue()))
 								.collect(Collectors.toList());
+						return new AggregateResult(Search.this, collect, file, kind);
 					}
 				}
 			};
 		}
 
-		private boolean processLine(String line)
+		//key - line of a text, value - matches string
+		private Pair<String, String> processLineNew(String line)
 		{
 			if (this.isRegexp)
 			{
-				return line.matches(this.what);
+				Pattern pattern = Pattern.compile("(" + this.what + ")");
+				Matcher matcher = pattern.matcher(line);
+				if (matcher.find())
+				{
+					String find = matcher.group();
+					return new Pair<>(line, find);
+				}
+				return null;
 			}
 			else
 			{
-				return SearchHelper.matches(line, this.what, this.isMatchCase, this.isWholeWord);
+				boolean matches = SearchHelper.matches(line, this.what, this.isMatchCase, this.isWholeWord);
+				if (matches)
+				{
+					return new Pair<>(line, this.what);
+				}
+				return null;
 			}
 		}
 	}
@@ -255,12 +278,12 @@ public class Search
 		}
 
 		@Override
-		protected Task<List<SearchResult>> createTask()
+		protected Task<AggregateResult> createTask()
 		{
-			return new Task<List<SearchResult>>()
+			return new Task<AggregateResult>()
 			{
 				@Override
-				protected List<SearchResult> call() throws Exception
+				protected AggregateResult call() throws Exception
 				{
 					Thread.sleep(500);
 					return null;

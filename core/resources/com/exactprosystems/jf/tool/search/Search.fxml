@@ -41,6 +41,7 @@
 										<ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="16.0" prefWidth="100.0"/>
 										<ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="16.0" prefWidth="100.0"/>
 										<ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="16.0" prefWidth="100.0"/>
+										<ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="16.0" prefWidth="100.0"/>
 										<ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
 									</columnConstraints>
 									<rowConstraints>
@@ -53,7 +54,8 @@
 										<CheckBox fx:id="cbGuiDic" mnemonicParsing="false" text="Gui dictionaries" GridPane.columnIndex="1"/>
 										<CheckBox fx:id="cbClientDic" mnemonicParsing="false" text="Client dictionaries" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
 										<CheckBox fx:id="cbVariables" mnemonicParsing="false" text="System variables" GridPane.columnIndex="2"/>
-										<CheckBox fx:id="cbInsideProject" mnemonicParsing="false" text="Inside project" GridPane.columnIndex="2" GridPane.rowIndex="1"/>
+										<CheckBox fx:id="cbOtherFiles" mnemonicParsing="false" text="Other files" GridPane.columnIndex="3"/>
+										<CheckBox fx:id="cbReports" mnemonicParsing="false" text="Reports" GridPane.columnIndex="2" GridPane.rowIndex="1"/>
 									</children>
 								</GridPane>
 							</children>
@@ -107,7 +109,12 @@
 												</HBox>
 											</left>
 										</BorderPane>
-										<ListView fx:id="lvResult" prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS"/>
+										<TreeView fx:id="tvResults" prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS"/>
+										<ScrollPane fitToHeight="true" fitToWidth="true" maxHeight="44.0" minHeight="44.0" prefHeight="44.0" prefWidth="200.0" vbarPolicy="NEVER">
+											<content>
+												<HBox fx:id="hBoxResult" alignment="CENTER_LEFT"/>
+											</content>
+										</ScrollPane>
 									</children>
 								</VBox>
 							</children>

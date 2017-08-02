@@ -10,7 +10,7 @@ package com.exactprosystems.jf.documents;
 
 public enum DocumentKind
 {
-	MATRIX, LIBRARY, GUI_DICTIONARY, MESSAGE_DICIONARY, SYSTEM_VARS, CONFIGURATION, PLAIN_TEXT, CSV;
+	MATRIX, LIBRARY, GUI_DICTIONARY, MESSAGE_DICTIONARY, SYSTEM_VARS, CONFIGURATION, PLAIN_TEXT, CSV, REPORTS;
 	
     public static <T extends Document> DocumentKind byDocument(T doc)
     {
