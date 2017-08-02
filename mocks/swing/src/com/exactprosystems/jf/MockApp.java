@@ -355,6 +355,7 @@ public class MockApp
 	private void createPanelWithHiddenArea()
 	{
 		this.showHidePanel = new JPanel();
+		this.showHidePanel.setName("panelWithHiddenArea");
 		JPanel hiddenPanel = new JPanel();
 
 		JButton buttonShowArea = new JButton("Show area");
