@@ -9,7 +9,6 @@
 package com.exactprosystems.jf.functions;
 
 import com.exactprosystems.jf.api.app.Mutable;
-import com.exactprosystems.jf.common.ChangeListener;
 import com.exactprosystems.jf.common.CommonHelper;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.report.ReportBuilder;
@@ -18,6 +17,7 @@ import org.apache.log4j.Logger;
 
 import java.io.*;
 import java.util.*;
+import java.util.function.Consumer;
 
 public class Text implements List<String>, Mutable, Cloneable
 {
@@ -57,7 +57,7 @@ public class Text implements List<String>, Mutable, Cloneable
 		this.changed = false;
 	}
 
-	public void setChangeListener(ChangeListener changeListener)
+	public void setChangeListener(Consumer<Boolean> changeListener)
 	{
 		this.changeListener = changeListener;
 	}
@@ -248,7 +248,7 @@ public class Text implements List<String>, Mutable, Cloneable
 	private void changed(boolean flag)
 	{
 		this.changed = true;
-		Optional.ofNullable(this.changeListener).ifPresent(c -> c.change(this.changed));
+		Optional.ofNullable(this.changeListener).ifPresent(c -> c.accept(this.changed));
 	}
 
 	@Override
@@ -315,7 +315,7 @@ public class Text implements List<String>, Mutable, Cloneable
 	}
 	
 	private boolean changed;
-	private ChangeListener changeListener;
+	private Consumer<Boolean> changeListener;
 	private List<String> list;
 	private static final Logger logger = Logger.getLogger(Text.class);
 }

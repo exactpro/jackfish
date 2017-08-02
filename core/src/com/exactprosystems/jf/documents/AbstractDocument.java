@@ -8,13 +8,13 @@
 
 package com.exactprosystems.jf.documents;
 
-import com.exactprosystems.jf.common.ChangeListener;
 import com.exactprosystems.jf.common.Settings;
 import com.exactprosystems.jf.common.undoredo.ActionTrackProvider;
 import com.exactprosystems.jf.common.undoredo.Command;
-import java.io.File;
 import java.io.Reader;
+import java.util.Objects;
 import java.util.Optional;
+import java.util.function.Consumer;
 
 public abstract class AbstractDocument implements Document
 {
@@ -28,10 +28,7 @@ public abstract class AbstractDocument implements Document
 	@Override
 	public int hashCode()
 	{
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((this.name == null) ? 0 : this.name.hashCode());
-		return result;
+		return Objects.hashCode(this.name);
 	}
 
 	@Override
@@ -50,18 +47,7 @@ public abstract class AbstractDocument implements Document
 			return false;
 		}
 		AbstractDocument other = (AbstractDocument) obj;
-		if (this.name == null)
-		{
-			if (other.name != null)
-			{
-				return false;
-			}
-		}
-		else if (!new File(this.name).getAbsolutePath().equals(new File(other.name).getAbsolutePath()))
-		{
-			return false;
-		}
-		return true;
+		return Objects.equals(this.name, other.name);
 	}
 
 	@Override
@@ -95,26 +81,6 @@ public abstract class AbstractDocument implements Document
 	}
 	
 	@Override
-	public void undo()
-	{
-		if (this.provider.undo())
-		{
-			changed(true);
-			afterRedoUndo();
-		}
-	}
-
-	@Override
-	public void redo()
-	{
-		if (this.provider.redo())
-		{
-			changed(true);
-			afterRedoUndo();
-		}
-	}
-
-	@Override
 	public void display() throws Exception
 	{
 	}
@@ -125,6 +91,35 @@ public abstract class AbstractDocument implements Document
 		Optional.ofNullable(getFactory().getConfiguration()).ifPresent(c -> c.unregister(this));
 	}
 	
+    @Override
+    public void addCommand(Command undo, Command redo)
+    {
+        redo.execute();
+        this.provider.addCommand(undo, redo);
+        afterRedoUndo();
+        this.changed(true);
+    }
+    
+    @Override
+    public void undo()
+    {
+        if (this.provider.undo())
+        {
+            changed(true);
+            afterRedoUndo();
+        }
+    }
+
+    @Override
+    public void redo()
+    {
+        if (this.provider.redo())
+        {
+            changed(true);
+            afterRedoUndo();
+        }
+    }
+
 	@Override
 	public String getName()
 	{
@@ -138,39 +133,33 @@ public abstract class AbstractDocument implements Document
 		this.provider.clear();
 	}
 
+    @Override
+    public DocumentFactory getFactory()
+    {
+        return this.factory;
+    }
+
+    
 	@Override
-	public void setOnChange(ChangeListener listener)
+	public void setOnChange(Consumer<Boolean> listener)
 	{
 		this.listener = listener;
 	}
 
-	@Override
-	public DocumentFactory getFactory()
-	{
-		return this.factory;
-	}
+
 	
-	
-	public void changed(boolean flag)
+	protected void changed(boolean flag)
 	{
-		Optional.ofNullable(listener).ifPresent(l -> l.change(flag));
+		Optional.ofNullable(listener).ifPresent(l -> l.accept(flag));
 	}
 	
 	protected void afterRedoUndo()
 	{
 	}
 	
-	public void addCommand(Command undo, Command redo)
-	{
-		redo.execute();
-		this.provider.addCommand(undo, redo);
-		afterRedoUndo();
-		this.changed(true);
-	}
-
 	protected 	DocumentFactory 	factory;
 	private 	boolean 			hasName = false;
 	private 	String 				name;
 	private 	ActionTrackProvider provider = new ActionTrackProvider();
-	private 	ChangeListener 		listener;
+	private 	Consumer<Boolean>   listener;
 }

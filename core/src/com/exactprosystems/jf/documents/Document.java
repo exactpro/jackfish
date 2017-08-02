@@ -9,9 +9,11 @@
 package com.exactprosystems.jf.documents;
 
 import com.exactprosystems.jf.api.app.Mutable;
-import com.exactprosystems.jf.common.ChangeListener;
 import com.exactprosystems.jf.common.Settings;
+import com.exactprosystems.jf.common.undoredo.Command;
+
 import java.io.Reader;
+import java.util.function.Consumer;
 
 public interface Document extends Mutable
 {
@@ -31,11 +33,14 @@ public interface Document extends Mutable
 	
 	void save(String fileName) throws Exception;
 
-	void undo();
+    void addCommand(Command undo, Command redo);
+
+    void undo();
 
 	void redo();
 
     String getName();
     
-	void setOnChange(ChangeListener listener);
+    
+	void setOnChange(Consumer<Boolean> listener);
 }
