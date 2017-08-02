@@ -53,9 +53,9 @@ public class ConfigurationToolBar extends ToolBar
 	}
 
 	//region private methods
-	private RadioButton create(CompareEnum compareEnum, ToggleGroup group, CompareEnum initEnum)
+	private ToggleButton create(CompareEnum compareEnum, ToggleGroup group, CompareEnum initEnum)
 	{
-		RadioButton radioButton = new RadioButton();
+		ToggleButton radioButton = new ToggleButton();
 		radioButton.setToggleGroup(group);
 		radioButton.setUserData(compareEnum);
 		radioButton.setGraphic(imageByEnum(compareEnum));
