@@ -147,7 +147,7 @@ public class SearchController implements Initializable, ContainingParent
 		{
 			((Button) node).setDefaultButton(false);
 		}
-		Common.setFocused(this.cbFind.getEditor());
+		Common.setFocused(this.cbFileMask.getEditor());
 	}
 
 	public void find(ActionEvent actionEvent)

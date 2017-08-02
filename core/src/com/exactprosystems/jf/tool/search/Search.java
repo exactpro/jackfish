@@ -247,9 +247,14 @@ public class Search
 		//key - line of a text, value - matches string
 		private Pair<String, String> processLineNew(String line)
 		{
+			String matchCase = "(?i)";
+			if (this.isMatchCase)
+			{
+				matchCase = "";
+			}
 			if (this.isRegexp)
 			{
-				Pattern pattern = Pattern.compile("(" + this.what + ")");
+				Pattern pattern = Pattern.compile(matchCase + "(" + this.what + ")");
 				Matcher matcher = pattern.matcher(line);
 				if (matcher.find())
 				{
@@ -258,9 +263,20 @@ public class Search
 				}
 				return null;
 			}
+			else if (this.isWholeWord)
+			{
+				Pattern pattern = Pattern.compile(matchCase + "(\\b(" + this.what + ")\\b?)");
+				Matcher matcher = pattern.matcher(line);
+				if (matcher.find())
+				{
+					String find = matcher.group(2);
+					return new Pair<>(line, find);
+				}
+				return null;
+			}
 			else
 			{
-				boolean matches = SearchHelper.matches(line, this.what, this.isMatchCase, this.isWholeWord);
+				boolean matches = SearchHelper.matches(line, this.what, this.isMatchCase, false);
 				if (matches)
 				{
 					return new Pair<>(line, this.what);
