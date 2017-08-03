@@ -3,26 +3,23 @@ package com.exactprosystems.jf.tool.search;
 import com.exactprosystems.jf.documents.DocumentKind;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.ContainingParent;
-import com.exactprosystems.jf.tool.CssVariables;
 import com.exactprosystems.jf.tool.custom.BorderWrapper;
 import com.exactprosystems.jf.tool.search.results.AbstractResult;
 import com.exactprosystems.jf.tool.search.results.AggregateResult;
 import com.exactprosystems.jf.tool.search.results.FailedResult;
 import javafx.event.ActionEvent;
 import javafx.fxml.Initializable;
-import javafx.geometry.Orientation;
-import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
-import javafx.scene.layout.*;
-import javafx.scene.text.TextAlignment;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
-import java.io.File;
 import java.net.URL;
 import java.util.*;
 import java.util.function.Consumer;
@@ -332,94 +329,4 @@ public class SearchController implements Initializable, ContainingParent
 			}
 		}
 	}
-
-	private class SearchResultCell extends ListCell<SearchResult>
-	{
-		private Search model;
-
-		SearchResultCell(Search model)
-		{
-			this.model = model;
-		}
-
-		@Override
-		protected void updateItem(SearchResult item, boolean empty)
-		{
-			super.updateItem(item, empty);
-			if (item != null && !empty)
-			{
-				BorderPane pane = new BorderPane();
-
-				Label text = new Label(item.toString());
-				text.setAlignment(Pos.CENTER_LEFT);
-				text.setTextAlignment(TextAlignment.LEFT);
-				HBox.setHgrow(text, Priority.ALWAYS);
-				BorderPane.setAlignment(text, Pos.CENTER_LEFT);
-
-				HBox box = new HBox();
-				box.setAlignment(Pos.CENTER_RIGHT);
-				File file = item.getFile();
-				if (file != null)
-				{
-					Button btnShowInTree = new Button();
-					btnShowInTree.getStyleClass().add(CssVariables.TRANSPARENT_BACKGROUND);
-					btnShowInTree.setId("dictionaryBtnXpathHelper");
-					btnShowInTree.setTooltip(new Tooltip("Scroll from configuration"));
-					btnShowInTree.setOnAction(e -> this.model.scrollFromConfig(file));
-
-					Button btnOpenAsPlainText = new Button();
-					btnOpenAsPlainText.setId("btnOpenAsPlainText");
-					btnOpenAsPlainText.getStyleClass().addAll(CssVariables.TRANSPARENT_BACKGROUND);
-					btnOpenAsPlainText.setTooltip(new Tooltip("Open as plain text"));
-					btnOpenAsPlainText.setOnAction(e -> this.model.openAsPlainText(file));
-
-					boolean needAdd = true;
-					Consumer<File> consumer = null;
-
-					switch (item.getKind())
-					{
-						case MATRIX:
-						case LIBRARY:
-							consumer = this.model::openAsMatrix;
-							break;
-						case GUI_DICTIONARY:
-							consumer = this.model::openAsGuiDic;
-							break;
-						case SYSTEM_VARS:
-							consumer = this.model::openAsVars;
-							break;
-						case REPORTS:
-							if (file.getName().endsWith(".html"))
-							{
-								consumer = this.model::openAsHtml;
-							}
-							break;
-						default:
-							needAdd = false;
-					}
-					if (needAdd)
-					{
-						Button btnOpenAsDocument = new Button();
-						btnOpenAsDocument.getStyleClass().addAll(CssVariables.TRANSPARENT_BACKGROUND);
-						btnOpenAsDocument.setId("btnOpenAsDocument");
-						btnOpenAsDocument.setTooltip(new Tooltip("Open as document"));
-						Consumer<File> finalConsumer = consumer;
-						btnOpenAsDocument.setOnAction(e -> finalConsumer.accept(file));
-						box.getChildren().addAll(btnOpenAsDocument, Common.createSpacer(Common.SpacerEnum.HorizontalMin));
-					}
-					box.getChildren().addAll(btnOpenAsPlainText, new Separator(Orientation.VERTICAL), btnShowInTree);
-				}
-
-				pane.setCenter(text);
-				pane.setRight(box);
-				setGraphic(pane);
-
-			}
-			else
-			{
-				setGraphic(null);
-			}
-		}
-	}
-	//endregion
 }

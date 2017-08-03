@@ -296,6 +296,10 @@ public class Search
 			}
 			List<Pair<Integer, Integer>> list = new ArrayList<>();
 			String patString = "(" + this.what + ")";
+			if (!this.isRegexp)
+			{
+				patString = "(" + Matcher.quoteReplacement(this.what) + ")";
+			}
 			if (this.isWholeWord)
 			{
 				patString = "\\b(" + this.what + ")\\b";
