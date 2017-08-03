@@ -116,12 +116,10 @@
 	document.onkeydown = function(evt) {
 		evt = evt || window.event;
 		if (evt.keyCode == 27) {
-			var a = $('#moveLabel').text();
-			a = a.substring(0,a.length-5);
-			$('#pressLabel').html(a + "_press_Escape");
+			$('#pressLabel').html(getControlName() + "_press_Escape");
     	}
     	if (evt.keyCode == 17) {
-			$('#downUpLabel').html(a + "_down_Control");
+			$('#downUpLabel').html(getControlName() + "_down_Control");
     	}
 
     	var x = evt.which || evt.keyCode;
@@ -131,7 +129,7 @@
 	document.onkeyup = function(evt) {
 		evt = evt || window.event;
     	if (evt.keyCode == 17) {
-			$('#downUpLabel').html(a + "_up_Control");
+			$('#downUpLabel').html(getControlName() + "_up_Control");
     	}
 
     	var x = evt.which || evt.keyCode;
