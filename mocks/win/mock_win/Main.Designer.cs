@@ -80,9 +80,6 @@
             this.pushLabel = new System.Windows.Forms.Label();
             this.checkedLabel = new System.Windows.Forms.Label();
             this.Table = new System.Windows.Forms.DataGridView();
-            this.Head1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Head2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Head3 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.listBox1 = new System.Windows.Forms.ListBox();
             this.panel2 = new System.Windows.Forms.Panel();
             this.panel3 = new System.Windows.Forms.Panel();
@@ -97,6 +94,9 @@
             this.selectLabel = new System.Windows.Forms.Label();
             this.protocolText = new System.Windows.Forms.TextBox();
             this.protocolClear = new System.Windows.Forms.Button();
+            this.Head1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Head2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Head3 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             ((System.ComponentModel.ISupportInitialize)(this.Table1)).BeginInit();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.Slider)).BeginInit();
@@ -557,21 +557,6 @@
             this.Table.MouseDown += new System.Windows.Forms.MouseEventHandler(this.CommonMouseDown);
             this.Table.MouseMove += new System.Windows.Forms.MouseEventHandler(this.CommonMouseMove);
             // 
-            // Head1
-            // 
-            resources.ApplyResources(this.Head1, "Head1");
-            this.Head1.Name = "Head1";
-            // 
-            // Head2
-            // 
-            resources.ApplyResources(this.Head2, "Head2");
-            this.Head2.Name = "Head2";
-            // 
-            // Head3
-            // 
-            resources.ApplyResources(this.Head3, "Head3");
-            this.Head3.Name = "Head3";
-            // 
             // listBox1
             // 
             this.listBox1.FormattingEnabled = true;
@@ -800,6 +785,22 @@
             this.protocolClear.Click += new System.EventHandler(this.protocolClear_Click);
             this.protocolClear.MouseClick += new System.Windows.Forms.MouseEventHandler(this.button1_MouseClick);
             // 
+            // Head1
+            // 
+            resources.ApplyResources(this.Head1, "Head1");
+            this.Head1.Name = "Head1";
+            // 
+            // Head2
+            // 
+            resources.ApplyResources(this.Head2, "Head2");
+            this.Head2.Name = "Head2";
+            // 
+            // Head3
+            // 
+            resources.ApplyResources(this.Head3, "Head3");
+            this.Head3.Name = "Head3";
+            this.Head3.ReadOnly = true;
+            // 
             // MockWin
             // 
             resources.ApplyResources(this, "$this");
@@ -931,9 +932,6 @@
         public System.Windows.Forms.Label pushLabel;
         public System.Windows.Forms.Label checkedLabel;
         private System.Windows.Forms.DataGridView Table;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Head1;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Head2;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Head3;
         private System.Windows.Forms.ListBox listBox1;
         private System.Windows.Forms.Panel panel2;
         private System.Windows.Forms.Panel panel3;
@@ -943,6 +941,9 @@
         public System.Windows.Forms.NumericUpDown Spinner;
         private System.Windows.Forms.TextBox protocolText;
         public System.Windows.Forms.Button protocolClear;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Head1;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Head2;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Head3;
     }
 }
 

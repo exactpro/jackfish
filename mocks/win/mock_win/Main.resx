@@ -704,7 +704,7 @@
     <value>On</value>
   </data>
   <data name="Table3.Location" type="System.Drawing.Point, System.Drawing">
-    <value>391, 281</value>
+    <value>390, 336</value>
   </data>
   <data name="Table3.Size" type="System.Drawing.Size, System.Drawing">
     <value>438, 48</value>
@@ -1393,12 +1393,21 @@
   <metadata name="Head1.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
   </metadata>
+  <data name="Head1.HeaderText" xml:space="preserve">
+    <value>Head1</value>
+  </data>
   <metadata name="Head2.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
   </metadata>
+  <data name="Head2.HeaderText" xml:space="preserve">
+    <value>Head2</value>
+  </data>
   <metadata name="Head3.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
   </metadata>
+  <data name="Head3.HeaderText" xml:space="preserve">
+    <value>Head3</value>
+  </data>
   <data name="Table.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
     <value>NoControl</value>
   </data>
@@ -1406,7 +1415,7 @@
     <value>391, 126</value>
   </data>
   <data name="Table.Size" type="System.Drawing.Size, System.Drawing">
-    <value>438, 150</value>
+    <value>438, 203</value>
   </data>
   <data name="Table.TabIndex" type="System.Int32, mscorlib">
     <value>38</value>
@@ -1422,24 +1431,6 @@
   </data>
   <data name="&gt;&gt;Table.ZOrder" xml:space="preserve">
     <value>8</value>
-  </data>
-  <metadata name="Head1.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-    <value>True</value>
-  </metadata>
-  <data name="Head1.HeaderText" xml:space="preserve">
-    <value>Head1</value>
-  </data>
-  <metadata name="Head2.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-    <value>True</value>
-  </metadata>
-  <data name="Head2.HeaderText" xml:space="preserve">
-    <value>Head2</value>
-  </data>
-  <metadata name="Head3.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-    <value>True</value>
-  </metadata>
-  <data name="Head3.HeaderText" xml:space="preserve">
-    <value>Head3</value>
   </data>
   <data name="listBox1.Items" xml:space="preserve">
     <value>0</value>
@@ -2018,7 +2009,7 @@
     <value>3, 3, 3, 3</value>
   </data>
   <data name="tabPage2.Size" type="System.Drawing.Size, System.Drawing">
-    <value>557, 48</value>
+    <value>288, 122</value>
   </data>
   <data name="tabPage2.TabIndex" type="System.Int32, mscorlib">
     <value>1</value>
@@ -2075,7 +2066,7 @@
     <value>4, 22</value>
   </data>
   <data name="tabPage3.Size" type="System.Drawing.Size, System.Drawing">
-    <value>557, 48</value>
+    <value>288, 122</value>
   </data>
   <data name="tabPage3.TabIndex" type="System.Int32, mscorlib">
     <value>2</value>
@@ -2099,7 +2090,7 @@
     <value>4, 22</value>
   </data>
   <data name="tabPage4.Size" type="System.Drawing.Size, System.Drawing">
-    <value>557, 48</value>
+    <value>288, 122</value>
   </data>
   <data name="tabPage4.TabIndex" type="System.Int32, mscorlib">
     <value>3</value>
@@ -2177,7 +2168,7 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;protocolText.ZOrder" xml:space="preserve">
-    <value>1</value>
+    <value>2</value>
   </data>
   <data name="protocolClear.AccessibleName" xml:space="preserve">
     <value>protocolClear</value>
@@ -2207,7 +2198,7 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;protocolClear.ZOrder" xml:space="preserve">
-    <value>0</value>
+    <value>1</value>
   </data>
   <metadata name="$this.Localizable" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
