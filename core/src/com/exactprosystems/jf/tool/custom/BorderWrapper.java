@@ -86,7 +86,7 @@ public final class BorderWrapper
 				null,
 				BorderStrokeStyle.NONE,
 				null,
-				new BorderWidths(innerPad, outerPad, outerPad, outerPad),
+				new BorderWidths(innerPad, innerPad, innerPad, innerPad),
 				Insets.EMPTY);
 
 		borders.add(new StrokeBorder(null, outerPadding));

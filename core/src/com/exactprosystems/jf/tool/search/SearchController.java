@@ -67,13 +67,13 @@ public class SearchController implements Initializable, ContainingParent
 	@Override
 	public void initialize(URL location, ResourceBundle resources)
 	{
-		Node fileMask = BorderWrapper.wrap(this.maskPane).title("File mask and scope").color(Common.currentTheme().getReverseColor()).outerPadding(4).innerPadding(4).build();
+		Node fileMask = BorderWrapper.wrap(this.maskPane).title("File mask and scope").color(Common.currentTheme().getReverseColor()).outerPadding(8).innerPadding(8).build();
 		this.mainGridPane.add(fileMask, 0, 0);
 
-		Node textPane = BorderWrapper.wrap(this.textPane).title("Containing text").color(Common.currentTheme().getReverseColor()).outerPadding(4).innerPadding(4).build();
+		Node textPane = BorderWrapper.wrap(this.textPane).title("Containing text").color(Common.currentTheme().getReverseColor()).outerPadding(8).innerPadding(8).build();
 		this.mainGridPane.add(textPane, 0, 1);
 
-		Node results = BorderWrapper.wrap(this.resultsPane).title("Results").color(Common.currentTheme().getReverseColor()).outerPadding(4).innerPadding(4).build();
+		Node results = BorderWrapper.wrap(this.resultsPane).title("Results").color(Common.currentTheme().getReverseColor()).outerPadding(8).innerPadding(8).build();
 		this.mainGridPane.add(results, 0, 2);
 
 		this.cbFileMask.getItems().add(Search.ALL_FILES);
