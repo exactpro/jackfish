@@ -224,6 +224,14 @@ public class SearchController implements Initializable, ContainingParent
 
 		this.cbFileMask.getEditor().setOnKeyPressed(e -> this.consumeEvent(e, ev -> this.find(null)));
 		this.cbFileMask.setOnKeyPressed(event -> this.consumeEvent(event, e -> this.find(null)));
+
+		this.cbRegexp.selectedProperty().addListener((observable, oldValue, newValue) -> {
+			this.cbWholeWord.setDisable(newValue);
+			if (newValue)
+			{
+				this.cbWholeWord.setSelected(false);
+			}
+		});
 	}
 
 	private void consumeEvent(KeyEvent event, Consumer<KeyEvent> consumer)

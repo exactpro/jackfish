@@ -17,6 +17,7 @@ import javafx.util.Pair;
 import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
@@ -234,7 +235,7 @@ public class Search
 					{
 						List<SingleResult> collect = stream.peek(s -> atomicInteger.incrementAndGet())
 								.map(String::trim)
-								.map(SearchService.this::processLineNew)
+								.map(SearchService.this::processLine)
 								.filter(Objects::nonNull)
 								.map(pair -> new SingleResult(fileName, pair.getKey(), atomicInteger.get(), pair.getValue()))
 								.collect(Collectors.toList());
@@ -247,14 +248,14 @@ public class Search
 		//key - line of a text, value - matches string
 		private Pair<String, String> processLineNew(String line)
 		{
-			String matchCase = "(?i)";
+			int caseInsensitive = 0;
 			if (this.isMatchCase)
 			{
-				matchCase = "";
+				caseInsensitive = Pattern.CASE_INSENSITIVE;
 			}
 			if (this.isRegexp)
 			{
-				Pattern pattern = Pattern.compile(matchCase + "(" + this.what + ")");
+				Pattern pattern = Pattern.compile("(" + this.what + ")", caseInsensitive);
 				Matcher matcher = pattern.matcher(line);
 				if (matcher.find())
 				{
@@ -265,7 +266,7 @@ public class Search
 			}
 			else if (this.isWholeWord)
 			{
-				Pattern pattern = Pattern.compile(matchCase + "(\\b(" + this.what + ")\\b?)");
+				Pattern pattern = Pattern.compile("(\\b(" + this.what + ")\\b?)", caseInsensitive);
 				Matcher matcher = pattern.matcher(line);
 				if (matcher.find())
 				{
@@ -283,6 +284,33 @@ public class Search
 				}
 				return null;
 			}
+		}
+
+		//string - is line, list - indexes of found substrings
+		private Pair<String, List<Pair<Integer, Integer>>> processLine(String line)
+		{
+			int caseInsensitive = 0;
+			if (!this.isMatchCase)
+			{
+				caseInsensitive = Pattern.CASE_INSENSITIVE;
+			}
+			List<Pair<Integer, Integer>> list = new ArrayList<>();
+			String patString = "(" + this.what + ")";
+			if (this.isWholeWord)
+			{
+				patString = "\\b(" + this.what + ")\\b";
+			}
+			Pattern compile = Pattern.compile(patString, caseInsensitive);
+			Matcher matcher = compile.matcher(line);
+			while (matcher.find())
+			{
+				list.add(new Pair<>(matcher.start(1), matcher.end(1)));
+			}
+			if (list.isEmpty())
+			{
+				return null;
+			}
+			return new Pair<>(line, list);
 		}
 	}
 

@@ -1,25 +1,28 @@
 package com.exactprosystems.jf.tool.search.results;
 
-import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
+import javafx.util.Pair;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class SingleResult extends AbstractResult
 {
-	private String line;
-	private int lineNumber;
-	private String matchesLine;
-	private String fileName;
+	private String                       line;
+	private int                          lineNumber;
+	private List<Pair<Integer, Integer>> matches;
+	private String                       fileName;
 
-	public SingleResult(String fileName, String line, int lineNumber, String matchesLine)
+	public SingleResult(String fileName, String line, int lineNumber, List<Pair<Integer, Integer>> matches)
 	{
 		this.line = line;
-		this.lineNumber = lineNumber;
-		this.matchesLine = matchesLine;
 		this.fileName = fileName;
+		this.lineNumber = lineNumber;
+		this.matches = matches;
 	}
 
 	@Override
@@ -32,32 +35,43 @@ public class SingleResult extends AbstractResult
 	public Node help()
 	{
 		HBox box = new HBox();
-		int index;
-		String str = this.line;
-		while ((index = str.indexOf(this.matchesLine)) > -1)
+		if (this.matches == null || this.matches.isEmpty())
 		{
-			String s = str.substring(0, index);
-			Text t1 = new Text(s);
-			if (s.equals(this.matchesLine))
+			box.getChildren().addAll(new Text(this.line));
+		}
+		else
+		{
+			int lastIndex = 0;
+			ArrayList<Pair<Integer, Integer>> pairs = new ArrayList<>(this.matches);
+			Pair<Integer, Integer> firstPair = pairs.get(0);
+			int startIndex = 0;
+			if (firstPair.getKey() == 0)
 			{
-				t1.setFill(Color.DARKORANGE);
+				Text t = new Text(this.line.substring(0, firstPair.getValue()));
+				t.setFill(Color.DARKORANGE);
+				box.getChildren().add(t);
+				startIndex = 1;
+				lastIndex = firstPair.getValue();
 			}
+			for (int i = startIndex; i < this.matches.size(); i++)
+			{
+				Pair<Integer, Integer> pair = this.matches.get(i);
 
-			String s1 = str.substring(index, index + this.matchesLine.length());
-			Text t2 = new Text(s1);
-			if (s1.equals(this.matchesLine))
-			{
-				t2.setFill(Color.DARKORANGE);
+				box.getChildren().add(new Text(this.line.substring(lastIndex, pair.getKey())));
+
+				Text colorText = new Text(this.line.substring(pair.getKey(), pair.getValue()));
+				colorText.setFill(Color.DARKORANGE);
+
+				box.getChildren().add(colorText);
+
+				lastIndex = pair.getValue();
 			}
-			box.getChildren().addAll(t1, t2);
-			str = str.substring(index + this.matchesLine.length());
+			if (lastIndex != this.line.length())
+			{
+				box.getChildren().add(new Text(this.line.substring(lastIndex)));
+			}
 		}
-		if (!str.isEmpty())
-		{
-			Text t1 = new Text(str);
-			box.getChildren().add(t1);
-		}
-		box.setAlignment(Pos.CENTER_LEFT);
+
 		return box;
 	}
 }
