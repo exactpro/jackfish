@@ -37,7 +37,6 @@ import com.exactprosystems.jf.tool.custom.browser.ReportBrowser;
 import com.exactprosystems.jf.tool.custom.date.DateTimePicker;
 import com.exactprosystems.jf.tool.custom.date.DateTimePickerSkin;
 import com.exactprosystems.jf.tool.custom.helper.HelperFx;
-import com.exactprosystems.jf.tool.dictionary.DictionaryFx;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -887,26 +886,6 @@ public abstract class DialogsHelper
 				contextMenu.hide();
 			}
 		});
-	}
-
-	public static boolean showDialogFillDialog(DictionaryFx dic) { //todo another name
-		Dialog<ButtonType> dialog = new Alert(Alert.AlertType.CONFIRMATION);
-
-		ComboBox<String> comboBoxAppsStore = new ComboBox<>();
-		comboBoxAppsStore.setOnShowing(event -> tryCatch(dic::displayStores, "Error on update titles"));
-//		comboBoxAppsStore.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) ->
-//		{
-//			if(newValue != null)
-//			{
-//				dic.setCurrentAdapterStore(newValue);
-//				String selectedItem = comboBoxAppsStore.getSelectionModel().getSelectedItem();
-//				tryCatch(() -> dic.connectToApplicationFromStore(selectedItem), "Error on connect application");
-//			}
-//		});
-
-		dialog.getDialogPane().setContent(comboBoxAppsStore);
-
-		return dialog.showAndWait().filter(bt -> bt.getButtonData().equals(ButtonBar.ButtonData.OK_DONE)).isPresent();
 	}
 
 	private static String getCurrentDir()
