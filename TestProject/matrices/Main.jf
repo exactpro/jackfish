@@ -119,8 +119,8 @@ Test;Keys;;;
     #Off;#Call;testName
     1;runMatrix;'KeysFirefox'
 
-    #Off;#Call;testName
-    1;runMatrix;'KeysSwing'
+    #Call;testName
+    runMatrix;'KeysSwing'
 
     #Call;testName
     runMatrix;'KeysWin'
