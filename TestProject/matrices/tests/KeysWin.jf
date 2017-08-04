@@ -1,10 +1,10 @@
 #Id;#TestCase;#Kind;#Depends;#For
 INIT;start;;;
     #Id;#Global;#Let
-    plugin;1;'Chrome'
+    plugin;1;'Win'
 
     #Id;#Global;#Let
-    getNewLine;1;def (pl) {if(pl == 'InternetExplorer') {return '\n'\u003b}if(pl == 'Firefox') {return '\n'\u003b}if(pl == 'Chrome') {return '\n'\u003b}if(pl == 'Swing') {return '\r\n'\u003b}if(pl == 'Win') {return '\r\n'\u003b}}\u003b
+    getNewLine;1;def (pl) {if(pl == 'Web') {return '\n'\u003b}if(pl == 'Swing') {return '\r\n'\u003b}if(pl == 'Win') {return '\r\n'\u003b}}\u003b
 
     #If
     plugin == 'Chrome'
@@ -70,20 +70,13 @@ testcases;Never;;
 
     #EndStep
 
-    #Off;#Step;#Kind;#For;#Depends
-    1;'CtrlT - open new tab';;;
-        #Id;#Action;$Dialog;$AppConnection;TextBox
-        DLGFLL1;DialogFill;'Main';appCon;Do.keyDown(Keyboard.CONTROL).press(Keyboard.T).keyUp(Keyboard.CONTROL)
-
-    #EndStep
-
     #Step;#Kind;#For;#Depends
     'CtrlA';;;
         #Id;#Action;$Dialog;$AppConnection;protocolClear;TextBox;protocolText
         DLGFLL1;DialogFill;'Main';appCon;Do.click();Do.text('',true).click().move().keyDown(Keyboard.CONTROL).press(Keyboard.A).keyUp(Keyboard.CONTROL).getValue();Do.getValue()
 
         #Id;#Let
-        expected;'TextBox_down_17' + getNewLine(plugin) +'TextBox_down_65' + getNewLine(plugin) + 'TextBox_up_65' + getNewLine(plugin) + 'TextBox_up_17' + getNewLine(plugin)
+        expected;'TextBox_down_17' + getNewLine(plugin) +'TextBox_down_65' + getNewLine(plugin) + 'TextBox_press_1' + getNewLine(plugin) + 'TextBox_up_65' + getNewLine(plugin) + 'TextBox_up_17' + getNewLine(plugin)
 
         #Assert;#Message
         DLGFLL1.Out.protocolText == expected;DLGFLL1.Out.protocolText + ' != ' + expected
@@ -96,7 +89,7 @@ testcases;Never;;
         DLGFLL1;DialogFill;'Main';appCon;Do.click();Do.text('',true).click().move().keyDown(Keyboard.CONTROL).keyDown(Keyboard.SHIFT).press(Keyboard.A).keyUp(Keyboard.SHIFT).keyUp(Keyboard.CONTROL).getValue();Do.getValue()
 
         #Id;#Let
-        expected;'TextBox_down_17' + getNewLine(plugin) + 'TextBox_down_16' + getNewLine(plugin) + 'TextBox_down_65' + getNewLine(plugin) + 'TextBox_up_65' + getNewLine(plugin) + 'TextBox_up_16' + getNewLine(plugin) + 'TextBox_up_17' + getNewLine(plugin)
+        expected;'TextBox_down_17' + getNewLine(plugin) + 'TextBox_down_16' + getNewLine(plugin) + 'TextBox_down_65' + getNewLine(plugin) + 'TextBox_press_1' + getNewLine(plugin) + 'TextBox_up_65' + getNewLine(plugin) + 'TextBox_up_16' + getNewLine(plugin) + 'TextBox_up_17' + getNewLine(plugin)
 
         #Assert;#Message
         DLGFLL1.Out.protocolText == expected;DLGFLL1.Out.protocolText + ' != ' + expected
@@ -109,10 +102,20 @@ testcases;Never;;
         DLGFLL1;DialogFill;'Main';appCon;Do.click();Do.text('',true).click().move().keyDown(Keyboard.CONTROL).keyDown(Keyboard.SHIFT).keyDown(Keyboard.ALT).press(Keyboard.A).keyUp(Keyboard.ALT).keyUp(Keyboard.SHIFT).keyUp(Keyboard.CONTROL).getValue();Do.getValue()
 
         #Id;#Let
-        expected;'TextBox_down_17' + getNewLine(plugin) + 'TextBox_down_16' + getNewLine(plugin) + 'TextBox_down_18' + getNewLine(plugin) + 'TextBox_down_65' + getNewLine(plugin) + 'TextBox_up_65' + getNewLine(plugin) + 'TextBox_up_16' + getNewLine(plugin) + 'TextBox_up_17' + getNewLine(plugin) + 'TextBox_up_18' + getNewLine(plugin)
+        expected;'TextBox_down_17' + getNewLine(plugin) + 'TextBox_down_16' + getNewLine(plugin) + 'TextBox_down_18' + getNewLine(plugin) + 'TextBox_down_65' + getNewLine(plugin) + 'TextBox_up_65' + getNewLine(plugin) + 'TextBox_up_18' + getNewLine(plugin) + 'TextBox_up_16' + getNewLine(plugin) + 'TextBox_up_17' + getNewLine(plugin)
 
         #Assert;#Message
         DLGFLL1.Out.protocolText == expected;DLGFLL1.Out.protocolText + ' != ' + expected
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'CapsLock';;;
+        #Id;#Action;$Dialog;$AppConnection;protocolClear;TextBox;protocolText
+        DLGFLL1;DialogFill;'Main';appCon;Do.click();Do.text('',true).click().move().press(Keyboard.A).press(Keyboard.CAPS_LOCK).press(Keyboard.A).press(Keyboard.CAPS_LOCK).press(Keyboard.A).getValue();Do.getValue()
+
+        #Assert;#Message
+        DLGFLL1.Out.TextBox == 'aAa';DLGFLL1.Out.TextBox + ' != ' + 'aAa'
 
     #EndStep
 

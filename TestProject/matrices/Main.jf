@@ -109,6 +109,24 @@ Test;Controls;;;
 
 
 #Id;#TestCase;#Kind;#Depends;#For
+Test;Keys;;;
+    #Call;testName
+    runMatrix;'KeysChrome'
+
+    #Off;#Call;testName
+    1;runMatrix;'KeysInternetExplorer'
+
+    #Off;#Call;testName
+    1;runMatrix;'KeysFirefox'
+
+    #Off;#Call;testName
+    1;runMatrix;'KeysSwing'
+
+    #Call;testName
+    runMatrix;'KeysWin'
+
+
+#Id;#TestCase;#Kind;#Depends;#For
 Test;Matchers;;;
     #Call;testName
     runMatrix;'Matchers'
@@ -165,7 +183,7 @@ REPORT;Cleanup;;;
     TBLSLCT1.Out.size() == 0;'There are fails in the tests'
 
     #Id;#SubCase;testName
-    runMatrix;Running test;'TestRF'
+    runMatrix;Running test;'KeysWin'
         #Id;#Action;$Matrix
         MXRN1;MatrixRun;matrixTestsPath + testName +  '.jf'
 
