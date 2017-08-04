@@ -122,4 +122,11 @@ public class Sys
             return out.toByteArray();
         }
     }
+    
+    @DescriptionAttribute(text = "Returns path to JF folder.") 
+    public static String jfDir()
+    {
+//        return MainRunner.makeDirWithSubstitutions("${JF}"); // TODO it should work after moving all api into core
+        return ".";
+    }
 }
