@@ -1,5 +1,6 @@
 package com.exactprosystems.jf.tool.wizard.all;
 
+import com.exactprosystems.jf.actions.gui.DialogFill;
 import com.exactprosystems.jf.api.app.*;
 import com.exactprosystems.jf.api.common.IContext;
 import com.exactprosystems.jf.api.wizard.WizardAttribute;
@@ -7,7 +8,10 @@ import com.exactprosystems.jf.api.wizard.WizardCategory;
 import com.exactprosystems.jf.api.wizard.WizardCommand;
 import com.exactprosystems.jf.api.wizard.WizardManager;
 import com.exactprosystems.jf.documents.config.Context;
+import com.exactprosystems.jf.documents.matrix.parser.Parameters;
+import com.exactprosystems.jf.documents.matrix.parser.Tokens;
 import com.exactprosystems.jf.documents.matrix.parser.items.MatrixItem;
+import com.exactprosystems.jf.documents.matrix.parser.items.TypeMandatory;
 import com.exactprosystems.jf.tool.ApplicationConnector;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.dictionary.DictionaryFx;
@@ -48,8 +52,8 @@ public class DialogFillWizard extends AbstractWizard {
     private String currentAdapterStore;
     private ApplicationConnector appConnector;
     private Collection<IWindow> windows;
-    private String selectedDialog;
-    private IWindow currentDialod;
+    private IWindow currentDialog;
+    private Map<IControl, String> values;
 
 
     @Override
@@ -66,17 +70,9 @@ public class DialogFillWizard extends AbstractWizard {
     @Override
     protected void initDialog(BorderPane borderPane) {
 
-        borderPane.prefHeight(600);
-        borderPane.minHeight(600);
-        borderPane.maxHeight(600);
-        borderPane.prefWidth(600);
-        borderPane.maxWidth(600);
-        borderPane.minWidth(600);
 
         this.storedConnections = new ComboBox<>();
         this.dialogs = new ComboBox<>();
-        Button scan = new Button("Scan");
-        TreeView<String> treeView = new TreeView<>();
         GridPane grid = new GridPane();
 
 
@@ -92,20 +88,18 @@ public class DialogFillWizard extends AbstractWizard {
             this.dialogs.getItems().addAll(windows.stream().map(Object::toString).collect(Collectors.toList()));
         });
 
-
-
         dialogs.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-            this.currentDialod = this.dictionary.getWindows().stream().filter(iWindow -> iWindow.getName().equals(newValue)).findFirst().get();
-            this.selectedDialog = this.currentDialod.getName();
-            this.textBoxes = currentDialod.getControls(IWindow.SectionKind.Run).stream().filter(iControl -> iControl.getBindedClass().equals(ControlKind.TextBox)).collect(Collectors.toList());
-//            treeView.getRoot().getChildren().addAll(this.textBoxes.stream().map(iControl -> new TreeItem<>(iControl.getID())).collect(Collectors.toList()));
-            getLocatorsValues(this.textBoxes);
+            this.currentDialog = this.dictionary.getWindows().stream().filter(iWindow -> iWindow.getName().equals(newValue)).findFirst().get();
+            this.textBoxes = currentDialog.getControls(IWindow.SectionKind.Run).stream().filter(iControl -> iControl.getBindedClass().equals(ControlKind.TextBox)).collect(Collectors.toList());
+            this.values = getLocatorsValues(this.textBoxes);
         });
 
 
-        ColumnConstraints col1 = new ColumnConstraints(300, 300, 300, Priority.SOMETIMES, HPos.LEFT, true);
-        ColumnConstraints col2 = new ColumnConstraints(300, 300, 300, Priority.SOMETIMES, HPos.LEFT, true);
+        ColumnConstraints col1 = new ColumnConstraints(200, 150, 300, Priority.SOMETIMES, HPos.LEFT, true);
+        ColumnConstraints col2 = new ColumnConstraints(200, 150, 300, Priority.SOMETIMES, HPos.LEFT, true);
 
+        GridPane.setFillWidth(storedConnections,true);
+        GridPane.setFillWidth(dialogs,true);
         grid.setVgap(10);
         grid.setHgap(10);
         grid.getColumnConstraints().addAll(col1, col2);
@@ -114,11 +108,10 @@ public class DialogFillWizard extends AbstractWizard {
         grid.add(storedConnections, 1, 0);
         grid.add(new Label("Select dialog: "), 0, 1);
         grid.add(dialogs, 1, 1);
-        grid.add(scan, 0, 2);
-        grid.add(treeView, 0, 3, 2, 1);
 
         borderPane.setCenter(grid);
     }
+
 
 
     private void setCurrentAdapterStore(String newValue) {
@@ -129,8 +122,20 @@ public class DialogFillWizard extends AbstractWizard {
     protected Supplier<List<WizardCommand>> getCommands() {
         return () -> {
             CommandBuilder builder = CommandBuilder.start();
+            this.values.forEach((key, value) -> {
+                MatrixItem matrixItem = createItem(key, "'" + value + "'");
+                builder.addMatrixItem(this.currentMatrix, this.currentMatrix.getRoot(), matrixItem, 0);
+            });
             return builder.build();
         };
+    }
+
+    private MatrixItem createItem(IControl key, String value) {
+        MatrixItem matrixItem = CommandBuilder.create(this.currentMatrix, Tokens.Action.get(), DialogFill.class.getSimpleName());
+        Parameters params = new Parameters();
+        params.add(key.getID(),value, TypeMandatory.Extra);
+        Common.tryCatch(() -> matrixItem.init(this.currentMatrix, new ArrayList<>(), new HashMap<>(), params), "Error on parameters create");
+        return matrixItem;
     }
 
     @Override
@@ -174,14 +179,12 @@ public class DialogFillWizard extends AbstractWizard {
         {
             this.appConnector.setIdAppEntry(null);
             this.appConnector.setAppConnection(null);
-//            this.controller.displayApplicationStatus(ApplicationStatus.Disconnected, null, null, key -> null); todo does it need?
         }
         else
         {
             AppConnection appConnection = (AppConnection) this.dictionary.getFactory().getConfiguration().getStoreMap().get(idAppStore);
             this.appConnector.setIdAppEntry(appConnection.getId());
             this.appConnector.setAppConnection(appConnection);
-//            this.controller.displayApplicationStatus(ApplicationStatus.ConnectingFromStore, null, appConnection, key -> getListProvider(appConnection, key)); todo does it need?
         }
     }
 
@@ -190,7 +193,8 @@ public class DialogFillWizard extends AbstractWizard {
         IRemoteApplication service = this.appConnector.getAppConnection().getApplication().service();
 
         return controls.stream().collect(Collectors.toMap(o -> o, iControl ->
-                Common.tryCatch(() -> String.valueOf(iControl.operate(service, this.currentDialod, Do.getValue()).getValue()), "Error", null)));
+                Common.tryCatch(() -> String.valueOf(iControl.operate(service, this.currentDialog, Do.getValue())
+                        .getValue()), "Error on get values from controls", null)));
 
 
     }
