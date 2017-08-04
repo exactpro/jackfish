@@ -550,6 +550,11 @@ public class MatrixFx extends Matrix
 
 	public void copy(List<MatrixItem> list) throws Exception
 	{
+		if (list == null || list.stream().map(MatrixItem::getParent).distinct().count() != 1)
+		{
+			DialogsHelper.showInfo("Only neighbors can be copied");
+			return;
+		}
 		Parser parser = new Parser();
 		String string = parser.itemsToString(list.toArray(new MatrixItem[0]));
 		Sys.copyToClipboard(string);
