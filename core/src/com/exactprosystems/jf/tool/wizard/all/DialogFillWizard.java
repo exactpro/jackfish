@@ -63,6 +63,7 @@ public class DialogFillWizard extends AbstractWizard {
         this.dictionary = (DictionaryFx) this.currentMatrix.getDefaultApp().getDictionary();
         this.appConnector = new ApplicationConnector(((Context) context).getFactory());
         this.windows = dictionary.getWindows();
+//        this.currentItem =
 
 
     }
@@ -192,9 +193,13 @@ public class DialogFillWizard extends AbstractWizard {
 
         IRemoteApplication service = this.appConnector.getAppConnection().getApplication().service();
 
-        return controls.stream().collect(Collectors.toMap(o -> o, iControl ->
-                Common.tryCatch(() -> String.valueOf(iControl.operate(service, this.currentDialog, Do.getValue())
-                        .getValue()), "Error on get values from controls", null)));
+        Map<IControl, String> map = new HashMap<>();
+        for (IControl o : controls)
+        {
+            map.put(o, Common.tryCatch(() -> String.valueOf(o.operate(service, this.currentDialog, Do.getValue())
+                    .getValue()), "Error on get values from controls", ""));
+        }
+        return map;
 
 
     }
