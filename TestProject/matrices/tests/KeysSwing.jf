@@ -42,11 +42,11 @@ INIT;start;;;
 testcases;Never;;
     #Off;#Step;#Kind;#For;#Depends
     1;'a';;;
-        #Id;#Let
-        result;'TextBox_down_65' + getNewLine(plugin) + 'TextBox_press_97' + getNewLine(plugin) + 'TextBox_up_65'
-
         #Id;#Action;$Dialog;$AppConnection;protocolClear;TextBox;protocolText
         DLGFLL1;DialogFill;'Main';appCon;Do.click();Do.text('',true).click().press(Keyboard.A).getValue();Do.getValue()
+
+        #Id;#Let
+        result;'TextBox_down_65' + getNewLine(plugin) + 'TextBox_press_97' + getNewLine(plugin) + 'TextBox_up_65' + getNewLine(plugin)
 
         #Assert;#Message
         DLGFLL1.Out.TextBox == 'a';DLGFLL1.Out.TextBox + ' != a'
@@ -56,13 +56,13 @@ testcases;Never;;
 
     #EndStep
 
-    #Off;#Step;#Kind;#For;#Depends
-    1;'A';;;
-        #Id;#Let
-        result;'TextBox_down_65' + getNewLine(plugin) + 'TextBox_press_65' + getNewLine(plugin) + 'TextBox_up_65'
-
+    #Step;#Kind;#For;#Depends
+    'A';;;
         #Id;#Action;$Dialog;$AppConnection;protocolClear;TextBox;protocolText
         DLGFLL1;DialogFill;'Main';appCon;Do.click();Do.text('',true).click().keyDown(Keyboard.SHIFT).press(Keyboard.A).keyUp(Keyboard.SHIFT).getValue();Do.getValue()
+
+        #Id;#Let
+        result;'TextBox_down_16' + getNewLine(plugin) + 'TextBox_down_65' + getNewLine(plugin) + 'TextBox_press_65' + getNewLine(plugin) + 'TextBox_up_65' + getNewLine(plugin) + 'TextBox_up_16' + getNewLine(plugin)
 
         #Assert;#Message
         DLGFLL1.Out.TextBox == 'A';DLGFLL1.Out.TextBox + ' != A'
@@ -74,78 +74,60 @@ testcases;Never;;
 
     #Step;#Kind;#For;#Depends
     'CtrlC CtrlV';;;
-        #Id;#Let
-        result;'TextBox_down_17' + getNewLine(plugin) + 'TextBox_down_65' + getNewLine(plugin) + 'TextBox_press_1' + getNewLine(plugin) + 'TextBox_up_65' + getNewLine(plugin) + 'TextBox_down_67' + getNewLine(plugin) + 'TextBox_press_3' + getNewLine(plugin) + 'TextBox_up_67' + getNewLine(plugin) + 'TextBox_down_86' + getNewLine(plugin) + 'TextBox_press_22' + getNewLine(plugin) + 'TextBox_up_86' + getNewLine(plugin) + 'TextBox_up_17'
-
-        #Id;#Action;$Dialog;$AppConnection;protocolClear;TextBox;protocolText
-        DLGFLL1;DialogFill;'Main';appCon;Do.click();Do.text('V',true).keyDown(Keyboard.CONTROL).press(Keyboard.A).press(Keyboard.C).click().press(Keyboard.V).keyUp(Keyboard.CONTROL).getValue();Do.getValue()
+        #Id;#Action;$Dialog;$AppConnection;TextBox
+        DLGFLL1;DialogFill;'Main';appCon;Do.text('V',true).keyDown(Keyboard.CONTROL).press(Keyboard.A).press(Keyboard.C).click().press(Keyboard.V).keyUp(Keyboard.CONTROL).getValue()
 
         #Assert;#Message
         DLGFLL1.Out.TextBox == 'VV';DLGFLL1.Out.TextBox + ' != VV'
-
-        #Assert;#Message
-        DLGFLL1.Out.protocolText == result;DLGFLL1.Out.protocolText + ' != ' + result
 
     #EndStep
 
     #Step;#Kind;#For;#Depends
     'CtrlA';;;
-        #Id;#Let
-        result;'TextBox_down_17' + getNewLine(plugin) + 'TextBox_down_65' + getNewLine(plugin) + 'TextBox_press_1' + getNewLine(plugin) + 'TextBox_up_65' + getNewLine(plugin) + 'TextBox_up_17'
-
         #Id;#Action;$Dialog;$AppConnection;protocolClear;TextBox;protocolText
-        DLGFLL1;DialogFill;'Main';appCon;Do.click();Do.text('',true).click().keyDown(Keyboard.CONTROL).press(Keyboard.A).keyUp(Keyboard.CONTROL).getValue();Do.getValue()
+        DLGFLL1;DialogFill;'Main';appCon;Do.click();Do.text('',true).click().move().keyDown(Keyboard.CONTROL).press(Keyboard.A).keyUp(Keyboard.CONTROL).getValue();Do.getValue()
 
-        #Off;#Assert;#Message
-        1;DLGFLL1.Out.TextBox == 'A';DLGFLL1.Out.TextBox + ' != A'
+        #Id;#Let
+        expected;'TextBox_down_17' + getNewLine(plugin) +'TextBox_down_65' + getNewLine(plugin) + 'TextBox_press_1' + getNewLine(plugin) + 'TextBox_up_65' + getNewLine(plugin) + 'TextBox_up_17' + getNewLine(plugin)
 
         #Assert;#Message
-        DLGFLL1.Out.protocolText == result;DLGFLL1.Out.protocolText + ' != ' + result
+        DLGFLL1.Out.protocolText == expected;DLGFLL1.Out.protocolText + ' != ' + expected
 
     #EndStep
 
     #Step;#Kind;#For;#Depends
     'CtrlShiftA';;;
-        #Id;#Let
-        result;'TextBox_down_17' + getNewLine(plugin) + 'TextBox_down_16' + getNewLine(plugin) + 'TextBox_down_65' + getNewLine(plugin) + 'TextBox_press_1' + getNewLine(plugin) + 'TextBox_up_65' + getNewLine(plugin) + 'TextBox_up_16' + getNewLine(plugin) + 'TextBox_up_17'
-
         #Id;#Action;$Dialog;$AppConnection;protocolClear;TextBox;protocolText
-        DLGFLL1;DialogFill;'Main';appCon;Do.click();Do.text('',true).click().keyDown(Keyboard.CONTROL).keyDown(Keyboard.SHIFT).press(Keyboard.A).keyUp(Keyboard.SHIFT).keyUp(Keyboard.CONTROL).getValue();Do.getValue()
+        DLGFLL1;DialogFill;'Main';appCon;Do.click();Do.text('',true).click().move().keyDown(Keyboard.CONTROL).keyDown(Keyboard.SHIFT).press(Keyboard.A).keyUp(Keyboard.SHIFT).keyUp(Keyboard.CONTROL).getValue();Do.getValue()
 
-        #Off;#Assert;#Message
-        1;DLGFLL1.Out.TextBox == 'A';DLGFLL1.Out.TextBox + ' != A'
+        #Id;#Let
+        expected;'TextBox_down_17' + getNewLine(plugin) + 'TextBox_down_16' + getNewLine(plugin) + 'TextBox_down_65' + getNewLine(plugin) + 'TextBox_press_1' + getNewLine(plugin) + 'TextBox_up_65' + getNewLine(plugin) + 'TextBox_up_16' + getNewLine(plugin) + 'TextBox_up_17' + getNewLine(plugin)
 
         #Assert;#Message
-        DLGFLL1.Out.protocolText == result;DLGFLL1.Out.protocolText + ' != ' + result
+        DLGFLL1.Out.protocolText == expected;DLGFLL1.Out.protocolText + ' != ' + expected
 
     #EndStep
 
     #Step;#Kind;#For;#Depends
-    'ShiftCtrlAltA';;;
-        #Id;#Let
-        result;'TextBox_down_16' + getNewLine(plugin) + 'TextBox_down_17' + getNewLine(plugin) + 'TextBox_down_18' + getNewLine(plugin) + 'TextBox_down_65' + getNewLine(plugin) + 'TextBox_press_1' + getNewLine(plugin) + 'TextBox_up_65' + getNewLine(plugin) + 'TextBox_up_18' + getNewLine(plugin) + 'TextBox_up_17' + getNewLine(plugin) + 'TextBox_up_16'
-
+    'CtrlShiftAltA';;;
         #Id;#Action;$Dialog;$AppConnection;protocolClear;TextBox;protocolText
-        DLGFLL1;DialogFill;'Main';Do.click();appCon;Do.text('',true).click().keyDown(Keyboard.SHIFT).keyDown(Keyboard.CONTROL).keyDown(Keyboard.ALT).press(Keyboard.A).keyUp(Keyboard.ALT).keyUp(Keyboard.CONTROL).keyUp(Keyboard.SHIFT).getValue();Do.getValue()
+        DLGFLL1;DialogFill;'Main';appCon;Do.click();Do.text('',true).click().move().keyDown(Keyboard.CONTROL).keyDown(Keyboard.SHIFT).keyDown(Keyboard.ALT).press(Keyboard.A).keyUp(Keyboard.ALT).keyUp(Keyboard.SHIFT).keyUp(Keyboard.CONTROL).getValue();Do.getValue()
 
-        #Off;#Assert;#Message
-        1;DLGFLL1.Out.TextBox == 'A';DLGFLL1.Out.TextBox + ' != A'
+        #Id;#Let
+        expected;'TextBox_down_17' + getNewLine(plugin) + 'TextBox_down_16' + getNewLine(plugin) + 'TextBox_down_18' + getNewLine(plugin) + 'TextBox_down_65' + getNewLine(plugin) + 'TextBox_press_1' + getNewLine(plugin) + 'TextBox_up_65' + getNewLine(plugin) + 'TextBox_up_18' + getNewLine(plugin) + 'TextBox_up_16' + getNewLine(plugin) + 'TextBox_up_17' + getNewLine(plugin)
 
         #Assert;#Message
-        DLGFLL1.Out.protocolText == result;DLGFLL1.Out.protocolText + ' != ' + result
+        DLGFLL1.Out.protocolText == expected;DLGFLL1.Out.protocolText + ' != ' + expected
 
     #EndStep
 
-    #Step;#Kind;#For;#Depends
-    'Caps';;;
-        #Id;#Let
-        result;'TextBox_down_20' + getNewLine(plugin) + 'TextBox_up_20'
-
+    #Off;#Step;#Kind;#For;#Depends
+    1;'CapsLock';;;
         #Id;#Action;$Dialog;$AppConnection;protocolClear;TextBox;protocolText
-        DLGFLL1;DialogFill;'Main';Do.click();appCon;Do.text('',true).click().keyDown(Keyboard.CAPS_LOCK).keyUp(Keyboard.CAPS_LOCK).getValue();Do.getValue()
+        DLGFLL1;DialogFill;'Main';appCon;Do.click();Do.text('',true).click().move().press(Keyboard.A).press(Keyboard.CAPS_LOCK).press(Keyboard.A).press(Keyboard.CAPS_LOCK).press(Keyboard.A).getValue();Do.getValue()
 
         #Assert;#Message
-        DLGFLL1.Out.protocolText == result;DLGFLL1.Out.protocolText + ' != ' + result
+        DLGFLL1.Out.TextBox == 'aAa';DLGFLL1.Out.TextBox + ' != ' + 'aAa'
 
     #EndStep
 
