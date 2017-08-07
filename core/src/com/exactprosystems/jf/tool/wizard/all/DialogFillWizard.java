@@ -25,6 +25,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Priority;
+import javafx.util.Callback;
 
 import java.util.*;
 import java.util.function.Supplier;
@@ -53,7 +54,9 @@ public class DialogFillWizard extends AbstractWizard {
     private ApplicationConnector appConnector;
     private Collection<IWindow> windows;
     private IWindow currentDialog;
-    private Map<IControl, String> values;
+    private Map<String, String> values;
+    private MatrixItem currentItem;
+    private boolean oneDialogFill;
 
 
     @Override
@@ -63,13 +66,34 @@ public class DialogFillWizard extends AbstractWizard {
         this.dictionary = (DictionaryFx) this.currentMatrix.getDefaultApp().getDictionary();
         this.appConnector = new ApplicationConnector(((Context) context).getFactory());
         this.windows = dictionary.getWindows();
-//        this.currentItem =
+        this.currentItem = get(MatrixItem.class, parameters);
 
 
     }
 
     @Override
     protected void initDialog(BorderPane borderPane) {
+
+        TreeView<Bean> treeView = new TreeView<>();
+        treeView.setCellFactory(new Callback<TreeView<Bean>, TreeCell<Bean>>() {
+            @Override
+            public TreeCell<Bean> call(TreeView<Bean> param) {
+                return null;
+            }
+        });
+
+        Button scan = new Button("Scan");
+        scan.setOnAction(event -> {
+            if (oneDialogFill)
+            {
+                MatrixItem matrixItem = CommandBuilder.create(this.currentMatrix, Tokens.Action.get(), DialogFill.class.getSimpleName());
+                Bean bean = new Bean(matrixItem, getLocatorsValues(this.textBoxes));
+                TreeItem<Bean> beanTreeItem = new TreeItem<>(bean);
+                treeView.getRoot().setValue(bean);
+
+            }
+            });
+
 
 
         this.storedConnections = new ComboBox<>();
@@ -109,6 +133,8 @@ public class DialogFillWizard extends AbstractWizard {
         grid.add(storedConnections, 1, 0);
         grid.add(new Label("Select dialog: "), 0, 1);
         grid.add(dialogs, 1, 1);
+        grid.add(scan, 0, 2, 2, 1);
+        grid.add(treeView, 0, 3, 2, 1);
 
         borderPane.setCenter(grid);
     }
@@ -125,16 +151,16 @@ public class DialogFillWizard extends AbstractWizard {
             CommandBuilder builder = CommandBuilder.start();
             this.values.forEach((key, value) -> {
                 MatrixItem matrixItem = createItem(key, "'" + value + "'");
-                builder.addMatrixItem(this.currentMatrix, this.currentMatrix.getRoot(), matrixItem, 0);
+                builder.addMatrixItem(this.currentMatrix, this.currentItem, matrixItem, 0);
             });
             return builder.build();
         };
     }
 
-    private MatrixItem createItem(IControl key, String value) {
+    private MatrixItem createItem(String key, String value) {
         MatrixItem matrixItem = CommandBuilder.create(this.currentMatrix, Tokens.Action.get(), DialogFill.class.getSimpleName());
         Parameters params = new Parameters();
-        params.add(key.getID(),value, TypeMandatory.Extra);
+        params.add(key,value, TypeMandatory.Extra);
         Common.tryCatch(() -> matrixItem.init(this.currentMatrix, new ArrayList<>(), new HashMap<>(), params), "Error on parameters create");
         return matrixItem;
     }
@@ -189,18 +215,46 @@ public class DialogFillWizard extends AbstractWizard {
         }
     }
 
-    private Map<IControl, String> getLocatorsValues(Collection<IControl> controls) {
+    private Map<String, String> getLocatorsValues(Collection<IControl> controls) {
 
         IRemoteApplication service = this.appConnector.getAppConnection().getApplication().service();
 
-        Map<IControl, String> map = new HashMap<>();
+        Map<String, String> map = new HashMap<>();
         for (IControl o : controls)
         {
-            map.put(o, Common.tryCatch(() -> String.valueOf(o.operate(service, this.currentDialog, Do.getValue())
+            map.put(o.getID(), Common.tryCatch(() -> String.valueOf(o.operate(service, this.currentDialog, Do.getValue())
                     .getValue()), "Error on get values from controls", ""));
         }
         return map;
+    }
 
+    private class Bean {
+        private MatrixItem item;
+        private Map<String, String> values;
+
+        public Bean(MatrixItem item, Map<String, String> values) {
+            this.item = item;
+            this.values = values;
+        }
+
+        public MatrixItem getMatrixItem() {
+            return item;
+        }
+
+        public void setItem(MatrixItem item) {
+            this.item = item;
+        }
+
+        public Map<String, String> getValues() {
+            return values;
+        }
+
+        public void setValues(Map<String, String> values) {
+            this.values = values;
+        }
+    }
+
+    private void createCommands() {
 
     }
 }
