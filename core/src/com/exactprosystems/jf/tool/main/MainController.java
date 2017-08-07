@@ -267,7 +267,6 @@ public class MainController implements Initializable, ContainingParent
 		this.settings = settings;
 		this.stage = stage;
 		this.runnerScheduler = (RunnerScheduler) factory.getRunnerListener();
-		CustomTabPane.getInstance().setSettings(this.settings);
 		this.stage.setOnCloseRequest(windowEvent ->
 		{
 			if (!this.model.closeApplication())

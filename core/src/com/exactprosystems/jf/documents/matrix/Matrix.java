@@ -15,7 +15,6 @@ import com.exactprosystems.jf.api.common.IMatrixRunner;
 import com.exactprosystems.jf.api.common.Str;
 import com.exactprosystems.jf.common.CommonHelper;
 import com.exactprosystems.jf.common.MatrixRunner;
-import com.exactprosystems.jf.common.Settings;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.report.ReportBuilder;
 import com.exactprosystems.jf.common.version.VersionInfo;
@@ -223,9 +222,9 @@ public class Matrix extends AbstractDocument implements IMatrix
 	}
 	
     @Override
-    public void close(Settings settings) throws Exception
+    public void close() throws Exception
     {
-        super.close(settings);
+        super.close();
         
         if (this.runner != null)
         {

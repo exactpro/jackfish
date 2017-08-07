@@ -8,7 +8,6 @@
 
 package com.exactprosystems.jf.tool.systemvars;
 
-import com.exactprosystems.jf.common.Settings;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.undoredo.Command;
 import com.exactprosystems.jf.documents.DocumentFactory;
@@ -91,9 +90,9 @@ public class SystemVarsFx extends SystemVars
 
 
 	@Override
-	public void close(Settings settings) throws Exception
+	public void close() throws Exception
 	{
-		super.close(settings);
+		super.close();
 		this.controller.close();
 	}
 

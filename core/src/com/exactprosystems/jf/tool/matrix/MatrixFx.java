@@ -145,10 +145,10 @@ public class MatrixFx extends Matrix
 	}
 
 	@Override
-	public void close(Settings settings) throws Exception
+	public void close() throws Exception
 	{
-		super.close(settings);
-		storeSettings(settings);
+		super.close();
+		storeSettings(getFactory().getSettings());
 		if (this.controller != null)
 		{
 		    this.controller.close();

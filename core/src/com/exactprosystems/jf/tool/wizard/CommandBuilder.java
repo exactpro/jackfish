@@ -180,7 +180,7 @@ public class CommandBuilder
 			Common.tryCatch(() -> 
 			{ 
 			    doc.save(doc.getName());
-			    doc.close(context.getFactory().getSettings());
+			    doc.close();
 			}, "Error on save " + doc.getName());
 		});
 		return this;

@@ -280,7 +280,7 @@ public class Main extends Application
 			{
 				if (this.config.canClose())
 				{
-					this.config.close(this.factory.getSettings());
+					this.config.close();
 					setConfiguration(null);
 				}
 				else
@@ -317,7 +317,7 @@ public class Main extends Application
 			{
 				if (this.config.canClose())
 				{
-					this.config.close(this.factory.getSettings());
+					this.config.close();
 					setConfiguration(null);
 				}
 				else
@@ -749,7 +749,7 @@ public class Main extends Application
 			{
 				if (this.config.canClose())
 				{
-					this.config.close(this.factory.getSettings());
+					this.config.close();
 					setConfiguration(null);
 					saveDimensionAndPosition();
 					this.controller.close();
@@ -1014,6 +1014,8 @@ public class Main extends Application
 		}
 	}
 
+	
+	// TODO can it be removed?
 	private CredentialsProvider getCredentialsProvider()
 	{
 		checkCredential();
