@@ -1,7 +1,7 @@
 package com.exactprosystems.jf.tool.wizard;
 
-import com.exactprosystems.jf.api.wizard.Wizard;
-import com.exactprosystems.jf.api.wizard.WizardManager;
+import com.exactprosystems.jf.api2.wizard.Wizard;
+import com.exactprosystems.jf.api2.wizard.WizardManager;
 import com.exactprosystems.jf.common.utils.ArrayUtils;
 import com.exactprosystems.jf.documents.config.Context;
 import com.exactprosystems.jf.tool.CssVariables;

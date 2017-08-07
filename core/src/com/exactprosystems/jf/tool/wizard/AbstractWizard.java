@@ -9,10 +9,10 @@
 package com.exactprosystems.jf.tool.wizard;
 
 import com.exactprosystems.jf.api.common.IContext;
-import com.exactprosystems.jf.api.wizard.Wizard;
-import com.exactprosystems.jf.api.wizard.WizardCommand;
-import com.exactprosystems.jf.api.wizard.WizardManager;
-import com.exactprosystems.jf.api.wizard.WizardResult;
+import com.exactprosystems.jf.api2.wizard.Wizard;
+import com.exactprosystems.jf.api2.wizard.WizardCommand;
+import com.exactprosystems.jf.api2.wizard.WizardManager;
+import com.exactprosystems.jf.api2.wizard.WizardResult;
 import com.exactprosystems.jf.documents.config.Context;
 
 import javafx.scene.layout.BorderPane;

@@ -9,8 +9,8 @@
 package com.exactprosystems.jf.tool.main;
 
 import com.exactprosystems.jf.api.common.Str;
-import com.exactprosystems.jf.api.wizard.WizardCategory;
-import com.exactprosystems.jf.api.wizard.WizardManager;
+import com.exactprosystems.jf.api2.wizard.WizardCategory;
+import com.exactprosystems.jf.api2.wizard.WizardManager;
 import com.exactprosystems.jf.common.Settings;
 import com.exactprosystems.jf.common.Settings.SettingsValue;
 import com.exactprosystems.jf.common.documentation.DocumentationBuilder;

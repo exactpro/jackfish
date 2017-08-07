@@ -6,7 +6,7 @@
 //  information which is the property of Exactpro Systems, LLC or its licensors.
 ////////////////////////////////////////////////////////////////////////////////
 
-package com.exactprosystems.jf.api.wizard;
+package com.exactprosystems.jf.api2.wizard;
 
 public enum WizardCategory
 {

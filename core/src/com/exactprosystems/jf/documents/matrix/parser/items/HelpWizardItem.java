@@ -9,8 +9,8 @@
 package com.exactprosystems.jf.documents.matrix.parser.items;
 
 import com.exactprosystems.jf.api.error.ErrorKind;
-import com.exactprosystems.jf.api.wizard.Wizard;
-import com.exactprosystems.jf.api.wizard.WizardManager;
+import com.exactprosystems.jf.api2.wizard.Wizard;
+import com.exactprosystems.jf.api2.wizard.WizardManager;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.report.ReportBuilder;
 import com.exactprosystems.jf.common.report.ReportBuilder.ImageReportMode;

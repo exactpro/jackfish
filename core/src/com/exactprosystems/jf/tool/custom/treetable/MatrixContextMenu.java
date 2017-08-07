@@ -9,8 +9,8 @@
 package com.exactprosystems.jf.tool.custom.treetable;
 
 import com.exactprosystems.jf.actions.AbstractAction;
-import com.exactprosystems.jf.api.wizard.Wizard;
-import com.exactprosystems.jf.api.wizard.WizardManager;
+import com.exactprosystems.jf.api2.wizard.Wizard;
+import com.exactprosystems.jf.api2.wizard.WizardManager;
 import com.exactprosystems.jf.common.Settings;
 import com.exactprosystems.jf.common.Settings.SettingsValue;
 import com.exactprosystems.jf.common.documentation.DocumentationBuilder;

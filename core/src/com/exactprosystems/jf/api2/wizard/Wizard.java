@@ -6,12 +6,14 @@
 //  information which is the property of Exactpro Systems, LLC or its licensors.
 ////////////////////////////////////////////////////////////////////////////////
 
-package com.exactprosystems.jf.api.wizard;
+package com.exactprosystems.jf.api2.wizard;
 
-import com.exactprosystems.jf.documents.config.Context;
+import com.exactprosystems.jf.api.common.IContext;
 
-@FunctionalInterface
-public interface WizardCommand
+public interface Wizard
 {
-    void apply(Context context);
+	WizardManager manager();
+    void init(IContext context, WizardManager wizardManager, Object... parameters);
+    boolean beforeRun();
+    WizardResult run();
 }

@@ -9,7 +9,6 @@ pluginRepositories {
 }
 
 include	'core',
-		'api',				//api
 							//app plugins
 		'plugins:app:web',
 		'plugins:app:swing:netx',

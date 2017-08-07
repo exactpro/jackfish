@@ -11,7 +11,7 @@ package com.exactprosystems.jf.tool.wizard.related.refactor;
 import java.util.Collections;
 import java.util.List;
 
-import com.exactprosystems.jf.api.wizard.WizardCommand;
+import com.exactprosystems.jf.api2.wizard.WizardCommand;
 
 public class RefactorEmpty  extends Refactor
 {

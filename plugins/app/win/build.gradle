@@ -5,8 +5,7 @@ ext.javaVersion = 1.7;
 archivesBaseName = 'jackfish-app-win'
 
 dependencies {
-	compile project(':api')
-
+	compile project(':core')
 	compile group: 'log4j', name: 'log4j', version: '1.2.17'
 	compile group: 'net.java.dev.jna', name: 'jna', version: '4.2.2'
 
