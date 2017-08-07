@@ -528,7 +528,7 @@ public class Configuration extends AbstractDocument
 						List<String> namespaces = matrix.listOfIds(NameSpace.class);
 						if (namespaces.isEmpty())
 						{
-							matrix.close();
+							matrix.close(this.getFactory().getSettings());
 						}
 						else
 						{
@@ -681,11 +681,10 @@ public class Configuration extends AbstractDocument
     }
 
     @Override
-	public void close() throws Exception
+	public void close(Settings settings) throws Exception
 	{
-		super.close();
-		Settings settings = getFactory().getSettings();
-		
+		super.close(settings);
+
 		Set<Document> copy;
 		synchronized (this.subordinates)
 		{
@@ -706,7 +705,7 @@ public class Configuration extends AbstractDocument
 				{
 					settings.setValue(Settings.MAIN_NS, Settings.OPENED, doc.getName(), kind.toString());
 				}
-				doc.close();
+				doc.close(settings);
 			}
 			catch (Exception e)
 			{

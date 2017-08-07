@@ -9,6 +9,7 @@ pluginRepositories {
 }
 
 include	'core',
+		'api',				//api
 							//app plugins
 		'plugins:app:web',
 		'plugins:app:swing:netx',
@@ -18,7 +19,7 @@ include	'core',
 		'mocks:swing',
 		'mocks:win',
 							//UIAdapter
-		'csharp:UIAdapter',
+		'c#:UIAdapter',
 							//clients
 		'plugins:client:dts',
 		'plugins:client:fix',

@@ -8,6 +8,7 @@
 
 package com.exactprosystems.jf.documents;
 
+import com.exactprosystems.jf.common.Settings;
 import com.exactprosystems.jf.common.undoredo.ActionTrackProvider;
 import com.exactprosystems.jf.common.undoredo.Command;
 import java.io.Reader;
@@ -85,7 +86,7 @@ public abstract class AbstractDocument implements Document
 	}
 
 	@Override
-	public void close() throws Exception
+	public void close(Settings settings) throws Exception
 	{
 		Optional.ofNullable(getFactory().getConfiguration()).ifPresent(c -> c.unregister(this));
 	}

@@ -1,5 +1,6 @@
 package com.exactprosystems.jf.tool.custom.tab;
 
+import com.exactprosystems.jf.common.Settings;
 import com.exactprosystems.jf.documents.Document;
 import com.exactprosystems.jf.tool.CssVariables;
 import javafx.beans.property.ObjectProperty;
@@ -15,6 +16,8 @@ import java.util.List;
 public class CustomTabPane extends TabPane
 {
 	private static CustomTabPane INSTANCE;
+
+	private Settings settings;
 
 	static final String TAB_DRAG_KEY = "tab";
 
@@ -76,6 +79,11 @@ public class CustomTabPane extends TabPane
 		});
 	}
 
+	public void setSettings(Settings settings)
+	{
+		this.settings = settings;
+	}
+
 	public void addTab(CustomTab tab)
 	{
 		this.getTabs().add(tab);
@@ -93,7 +101,7 @@ public class CustomTabPane extends TabPane
 
 	public CustomTab createTab(Document doc)
 	{
-		return new CustomTab(doc, this);
+		return new CustomTab(doc, this.settings, this);
 	}
 
 	ObjectProperty<Tab> draggingTabProperty()
@@ -112,7 +120,7 @@ public class CustomTabPane extends TabPane
 		int size = this.getTabs().size();
 		for (int i = 0; i < size + 1; i++)
 		{
-			CustomTab.TempCustomTab myTab = new CustomTab.TempCustomTab(null, this);
+			CustomTab.TempCustomTab myTab = new CustomTab.TempCustomTab(null, null, this);
 			this.tempTabList.add(myTab);
 			this.getTabs().add(i * 2, myTab);
 		}

@@ -10,7 +10,7 @@ package com.exactprosystems.jf.tool.wizard.related.refactor;
 
 import java.util.List;
 
-import com.exactprosystems.jf.api2.wizard.WizardCommand;
+import com.exactprosystems.jf.api.wizard.WizardCommand;
 import com.exactprosystems.jf.documents.matrix.Matrix;
 import com.exactprosystems.jf.documents.matrix.parser.items.MatrixItem;
 import com.exactprosystems.jf.tool.Common;

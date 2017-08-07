@@ -1,10 +1,10 @@
 package com.exactprosystems.jf.tool.wizard.all;
 
 import com.exactprosystems.jf.api.common.IContext;
-import com.exactprosystems.jf.api2.wizard.WizardAttribute;
-import com.exactprosystems.jf.api2.wizard.WizardCategory;
-import com.exactprosystems.jf.api2.wizard.WizardCommand;
-import com.exactprosystems.jf.api2.wizard.WizardManager;
+import com.exactprosystems.jf.api.wizard.WizardAttribute;
+import com.exactprosystems.jf.api.wizard.WizardCategory;
+import com.exactprosystems.jf.api.wizard.WizardCommand;
+import com.exactprosystems.jf.api.wizard.WizardManager;
 import com.exactprosystems.jf.app.ApplicationPool;
 import com.exactprosystems.jf.documents.config.AppEntry;
 import com.exactprosystems.jf.documents.config.Configuration;

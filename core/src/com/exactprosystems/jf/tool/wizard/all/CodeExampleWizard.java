@@ -9,7 +9,7 @@
 package com.exactprosystems.jf.tool.wizard.all;
 
 import com.exactprosystems.jf.api.common.IContext;
-import com.exactprosystems.jf.api2.wizard.*;
+import com.exactprosystems.jf.api.wizard.*;
 import com.exactprosystems.jf.documents.matrix.parser.Parser;
 import com.exactprosystems.jf.documents.matrix.parser.items.MatrixItem;
 import com.exactprosystems.jf.tool.matrix.MatrixFx;

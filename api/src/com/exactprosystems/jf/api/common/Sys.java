@@ -24,8 +24,6 @@ import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.Arrays;
 
-import com.exactprosystems.jf.common.MainRunner;
-
 public class Sys
 {
 	@DescriptionAttribute(text = "Returns PID of current process (the tool itself).")
@@ -128,6 +126,7 @@ public class Sys
     @DescriptionAttribute(text = "Returns path to JF folder.") 
     public static String jfDir()
     {
-        return MainRunner.makeDirWithSubstitutions("${JF}");
+//        return MainRunner.makeDirWithSubstitutions("${JF}"); // TODO it should work after moving all api into core
+        return ".";
     }
 }

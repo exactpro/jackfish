@@ -8,7 +8,7 @@
 
 package com.exactprosystems.jf.tool.wizard;
 
-import com.exactprosystems.jf.api2.wizard.*;
+import com.exactprosystems.jf.api.wizard.*;
 import com.exactprosystems.jf.common.VerboseLevel;
 import com.exactprosystems.jf.common.version.VersionInfo;
 import com.exactprosystems.jf.documents.ConsoleDocumentFactory;

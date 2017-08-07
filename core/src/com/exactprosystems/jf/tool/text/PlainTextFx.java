@@ -8,6 +8,7 @@
 
 package com.exactprosystems.jf.tool.text;
 
+import com.exactprosystems.jf.common.Settings;
 import com.exactprosystems.jf.common.highlighter.Highlighter;
 import com.exactprosystems.jf.common.highlighter.StyleWithRange;
 import com.exactprosystems.jf.documents.DocumentFactory;
@@ -77,9 +78,9 @@ public class PlainTextFx extends PlainText
 	}
 
 	@Override
-	public void close() throws Exception
+	public void close(Settings settings) throws Exception
 	{
-		super.close();
+		super.close(settings);
 		this.controller.close();
 	}
 	//endregion

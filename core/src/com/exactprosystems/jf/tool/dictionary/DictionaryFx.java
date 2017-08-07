@@ -135,14 +135,14 @@ public class DictionaryFx extends GuiDictionary
 	}
 
 	@Override
-	public void close() throws Exception
+	public void close(Settings settings) throws Exception
 	{
-		super.close();
+		super.close(settings);
 
 		this.controller.close();
 
 		stopApplication();
-		storeSettings(getFactory().getSettings());
+		storeSettings(settings);
 	}
 
 	//------------------------------------------------------------------------------------------------------------------
@@ -968,6 +968,7 @@ public class DictionaryFx extends GuiDictionary
 
 	private void displayElementInfo(IWindow window, IWindow.SectionKind sectionKind, IControl control) throws Exception
 	{
+		Collection<IControl> controls = null;
 		Collection<IControl> owners = null;
 		Collection<IControl> rows = null;
 		IControl owner = null;

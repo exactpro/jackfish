@@ -9,7 +9,7 @@
 package com.exactprosystems.jf.tool.wizard;
 
 import com.exactprosystems.jf.api.common.Str;
-import com.exactprosystems.jf.api2.wizard.Wizard;
+import com.exactprosystems.jf.api.wizard.Wizard;
 import com.exactprosystems.jf.common.documentation.DocumentationBuilder;
 import com.exactprosystems.jf.common.report.ContextHelpFactory;
 import com.exactprosystems.jf.common.report.ReportBuilder;

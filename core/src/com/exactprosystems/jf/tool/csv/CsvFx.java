@@ -8,6 +8,7 @@
 
 package com.exactprosystems.jf.tool.csv;
 
+import com.exactprosystems.jf.common.Settings;
 import com.exactprosystems.jf.documents.DocumentFactory;
 import com.exactprosystems.jf.documents.csv.Csv;
 import com.exactprosystems.jf.tool.Common;
@@ -86,9 +87,9 @@ public class CsvFx extends Csv
     }
     
 	@Override
-	public void close() throws Exception
+	public void close(Settings settings) throws Exception
 	{
-		super.close();
+		super.close(settings);
 		this.controller.close();
 	}
 

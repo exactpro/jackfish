@@ -9,6 +9,7 @@
 package com.exactprosystems.jf.tool.custom.tab;
 
 import com.exactprosystems.jf.common.CommonHelper;
+import com.exactprosystems.jf.common.Settings;
 import com.exactprosystems.jf.documents.Document;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.CssVariables;
@@ -30,6 +31,7 @@ import javafx.scene.input.TransferMode;
 import javafx.scene.layout.HBox;
 import javafx.scene.text.Text;
 
+import java.io.FileReader;
 import java.io.Reader;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -42,16 +44,18 @@ public class CustomTab extends Tab implements AutoCloseable
 	private Text				text;
 	private Document			document;
 	private FileWatcher			watcher;
+	private Settings			settings;
 	private final AtomicBoolean	warningIsShow;
 
 	private CustomTabPane tabPane;
 	private HBox view;
 
-	public CustomTab(Document document, CustomTabPane tabPane)
+	public CustomTab(Document document, Settings settings, CustomTabPane tabPane)
 	{
 		super();
 		this.tabPane = tabPane;
 		this.warningIsShow = new AtomicBoolean(false);
+		this.settings = settings;
 		this.document = document;
 
 		init();
@@ -191,7 +195,7 @@ public class CustomTab extends Tab implements AutoCloseable
 	{
 		if (this.document.canClose())
 		{
-			this.document.close();
+			this.document.close(settings);
 		}
 	}
 
@@ -217,9 +221,9 @@ public class CustomTab extends Tab implements AutoCloseable
 
 	public static class TempCustomTab extends CustomTab
 	{
-		public TempCustomTab(Document document, CustomTabPane pane)
+		public TempCustomTab(Document document, Settings settings,CustomTabPane pane)
 		{
-			super(document, pane);
+			super(document, settings, pane);
 			this.getStyleClass().addAll(CssVariables.TEMP_CUSTOM_TAB);
 		}
 

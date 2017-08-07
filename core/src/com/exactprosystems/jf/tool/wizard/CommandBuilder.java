@@ -11,7 +11,7 @@ package com.exactprosystems.jf.tool.wizard;
 import com.exactprosystems.jf.api.app.IControl;
 import com.exactprosystems.jf.api.app.IWindow;
 import com.exactprosystems.jf.api.common.Sys;
-import com.exactprosystems.jf.api2.wizard.WizardCommand;
+import com.exactprosystems.jf.api.wizard.WizardCommand;
 import com.exactprosystems.jf.common.CommonHelper;
 import com.exactprosystems.jf.documents.Document;
 import com.exactprosystems.jf.documents.DocumentKind;
@@ -180,7 +180,7 @@ public class CommandBuilder
 			Common.tryCatch(() -> 
 			{ 
 			    doc.save(doc.getName());
-			    doc.close();
+			    doc.close(context.getFactory().getSettings());
 			}, "Error on save " + doc.getName());
 		});
 		return this;

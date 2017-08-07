@@ -5,7 +5,7 @@ ext.javaVersion = 1.7
 archivesBaseName = 'jackfish-app-web'
 
 dependencies {
-	compile project(':core')
+	compile project(':api')
 	compile ('org.seleniumhq.selenium:selenium-java:2.53.1') {
 		exclude group: 'xerces'
 	}

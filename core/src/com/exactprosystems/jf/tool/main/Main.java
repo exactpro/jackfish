@@ -9,7 +9,7 @@
 package com.exactprosystems.jf.tool.main;
 
 import com.exactprosystems.jf.api.common.Str;
-import com.exactprosystems.jf.api2.wizard.WizardManager;
+import com.exactprosystems.jf.api.wizard.WizardManager;
 import com.exactprosystems.jf.common.*;
 import com.exactprosystems.jf.common.Settings.SettingsValue;
 import com.exactprosystems.jf.common.version.VersionInfo;
@@ -280,7 +280,7 @@ public class Main extends Application
 			{
 				if (this.config.canClose())
 				{
-					this.config.close();
+					this.config.close(this.factory.getSettings());
 					setConfiguration(null);
 				}
 				else
@@ -317,7 +317,7 @@ public class Main extends Application
 			{
 				if (this.config.canClose())
 				{
-					this.config.close();
+					this.config.close(this.factory.getSettings());
 					setConfiguration(null);
 				}
 				else
@@ -749,7 +749,7 @@ public class Main extends Application
 			{
 				if (this.config.canClose())
 				{
-					this.config.close();
+					this.config.close(this.factory.getSettings());
 					setConfiguration(null);
 					saveDimensionAndPosition();
 					this.controller.close();
@@ -1014,8 +1014,6 @@ public class Main extends Application
 		}
 	}
 
-	
-	// TODO can it be removed?
 	private CredentialsProvider getCredentialsProvider()
 	{
 		checkCredential();

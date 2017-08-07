@@ -214,10 +214,10 @@ public class ConfigurationFx extends Configuration
 	}
 
 	@Override
-	public void close() throws Exception
+	public void close(Settings settings) throws Exception
 	{
-		storeSettings(getFactory().getSettings());
-		super.close();
+		storeSettings(settings);
+		super.close(settings);
 
 		if (this.model != null)
 		{
