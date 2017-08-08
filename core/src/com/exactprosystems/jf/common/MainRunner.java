@@ -18,10 +18,11 @@ import com.exactprosystems.jf.common.version.VersionInfo;
 import com.exactprosystems.jf.documents.ConsoleDocumentFactory;
 import com.exactprosystems.jf.documents.DocumentFactory;
 import com.exactprosystems.jf.documents.config.Configuration;
+import com.exactprosystems.jf.documents.config.ConfigurationBean;
 import com.exactprosystems.jf.documents.config.Context;
-import com.exactprosystems.jf.documents.guidic.GuiDictionary;
+import com.exactprosystems.jf.documents.guidic.GuiDictionaryBean;
 import com.exactprosystems.jf.documents.matrix.parser.items.MatrixItem;
-import com.exactprosystems.jf.documents.msgdic.MessageDictionary;
+import com.exactprosystems.jf.documents.msgdic.MessageDictionaryBean;
 import com.exactprosystems.jf.tool.main.Main;
 import com.exactprosystems.jf.tool.main.Preloader;
 import com.sun.javafx.application.LauncherImpl;
@@ -46,7 +47,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class MainRunner
 {
@@ -160,9 +160,9 @@ public class MainRunner
 
             if (line.hasOption(saveSchema.getOpt()))
 		    {
-				saveSchema(Configuration.class, 		"schema_conf.xsd");
-				saveSchema(MessageDictionary.class, 	"schema_mess.xsd");
-				saveSchema(GuiDictionary.class, 		"schema_gui.xsd");
+				saveSchema(ConfigurationBean.class, 		"schema_conf.xsd");
+				saveSchema(MessageDictionaryBean.class, 	"schema_mess.xsd");
+				saveSchema(GuiDictionaryBean.class, 		"schema_gui.xsd");
 				
 		    	System.exit(0);
 		    }

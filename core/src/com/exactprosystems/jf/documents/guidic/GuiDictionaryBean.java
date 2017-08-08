@@ -15,19 +15,15 @@ import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 
 import com.exactprosystems.jf.api.app.Addition;
+import com.exactprosystems.jf.api.app.Mutable;
 import com.exactprosystems.jf.documents.guidic.controls.AbstractControl;
 import com.exactprosystems.jf.documents.matrix.parser.items.MutableArrayList;
 
 @XmlAccessorType(XmlAccessType.NONE)
 @XmlType(name = "GuiDictionary", propOrder = { "windows" })
 @XmlRootElement(name = "dictionary")
-public class GuiDictionaryBean
+public class GuiDictionaryBean implements Mutable
 {
-    public GuiDictionaryBean()
-    {
-        this.windows = new MutableArrayList<>();
-    }
-
     @XmlElement(name = "window")
     protected MutableArrayList<Window> windows;
 
@@ -42,4 +38,33 @@ public class GuiDictionaryBean
             Attr.class,
             Addition.class,
         };
+
+    public GuiDictionaryBean()
+    {
+        this.windows = new MutableArrayList<>();
+    }
+
+    @Override
+    public boolean isChanged()
+    {
+        for (Window window : this.windows)
+        {
+            if (window.isChanged())
+            {
+                return true;
+            }
+        }
+        return this.windows.isChanged();
+    }
+
+    @Override
+    public void saved()
+    {
+        for (Window window : this.windows)
+        {
+            window.saved();
+        }
+        this.windows.saved();
+    }
+
 }

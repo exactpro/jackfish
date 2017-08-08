@@ -120,7 +120,7 @@ public class GuiDictionary extends AbstractDocument implements IGuiDictionary
         Marshaller marshaller = jaxbContext.createMarshaller();
         marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
         marshaller.setListener(new DictionaryMarshallerListener());
-        marshaller.marshal(this, file);
+        marshaller.marshal(this.bean, file);
     }
 
     //------------------------------------------------------------------------------------------------------------------
@@ -180,24 +180,13 @@ public class GuiDictionary extends AbstractDocument implements IGuiDictionary
 	@Override
 	public boolean isChanged()
 	{
-		for (Window window : this.bean.windows)
-		{
-			if (window.isChanged())
-			{
-				return true;
-			}
-		}
-		return this.bean.windows.isChanged();
+		return this.bean.isChanged();
 	}
 	
 	@Override
 	public void saved()
 	{
-		for (Window window : this.bean.windows)
-		{
-			window.saved();
-		}
-		this.bean.windows.saved();
+		this.bean.saved();
 	}
 
     //------------------------------------------------------------------------------------------------------------------

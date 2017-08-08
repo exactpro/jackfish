@@ -55,10 +55,6 @@ import javax.xml.bind.JAXBContext;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.UnmarshalException;
 import javax.xml.bind.Unmarshaller;
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.transform.Source;
 import javax.xml.transform.stream.StreamSource;
 import javax.xml.validation.Schema;
@@ -77,9 +73,6 @@ import java.util.function.Predicate;
 import java.util.regex.Matcher;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-
-@XmlRootElement(name="configuration")
-@XmlAccessorType(XmlAccessType.NONE)
 
 @DocumentInfo(
         kind = DocumentKind.CONFIGURATION,
@@ -203,88 +196,37 @@ public class Configuration extends AbstractDocument
 	public static final MutableString DEFAULT_DATE = new MutableString("dd.MM.yyyy");
 	public static final MutableString DEFAULT_DATE_TIME = new MutableString("dd.MM.yyyy HH:mm:ss.SSS");
 
-	//endregion
+    protected ConfigurationBean       bean;
 
-	@XmlElement(name = time)
-	protected MutableString timeValue;
+    protected String                  reportFactoryValue = HTMLReportFactory.class.getSimpleName();
+    protected String                  evaluatorValue     = MvelEvaluator.class.getSimpleName();
+    protected Map<File, Long>         timestampMap       = new HashMap<>();
+    protected RunnerListener          runnerListener     = new DummyRunnerListener();
+    protected boolean                 changed;
+    protected ReportFactory           reportFactoryObj;
+    protected Map<String, Matrix>     libs;
+    protected Map<String, Date>       documentsActuality;
+    protected Map<String, Object>     globals;
+    protected Set<SystemVars>         systemVars;
+    protected ClientsPool             clients;
+    protected ServicePool             services;
+    protected ApplicationPool         applications;
+    protected DataBasePool            databases;
+    protected Date                    lastUpdate         = new Date();
+    protected final List<Document>    subordinates       = new ArrayList<>();
+    protected boolean                 valid              = false;
 
-	@XmlElement(name = date)
-	protected MutableString dateValue;
+    private static final Logger logger = Logger.getLogger(Configuration.class);
 
-	@XmlElement(name = dateTime)
-	protected MutableString dateTimeValue;
-
-	@XmlElement(name = formats)
-	protected MutableArrayList<MutableString> formatsValue;
-
-	@XmlElement(name = reports)
-	protected MutableString reportsValue;
-
-    @XmlElement(name = version)
-    protected MutableString versionValue;
-
-	@XmlElement(name = imports)
-	protected MutableArrayList<MutableString> importsValue;
-
-	@XmlElement(name = vars)
-	protected MutableString varsValue;
-
-	@XmlElement(name = userVars)
-	protected MutableArrayList<MutableString> userVarsValue;
-
-	@XmlElement(name = matrix)
-	protected MutableArrayList<MutableString> matricesValue;
-
-	@XmlElement(name = appDict)
-	protected MutableArrayList<MutableString> appDictionariesValue;
-
-	@XmlElement(name = clientDict)
-	protected MutableArrayList<MutableString> clientDictionariesValue;
-
-	@XmlElement(name = library)
-	protected MutableArrayList<MutableString> librariesValue;
-
-	@XmlElement(name = globalHandler)
-	public GlobalHandler globalHandlerValue;
-
-	@XmlElement(name = sqlEntry)
-	public MutableArrayList<SqlEntry> sqlEntriesValue;
-
-	@XmlElement(name = clientEntry)
-	public MutableArrayList<ClientEntry> clientEntriesValue;
-
-	@XmlElement(name = serviceEntry)
-	public MutableArrayList<ServiceEntry> serviceEntriesValue;
-
-	@XmlElement(name = appEntry)
-	public MutableArrayList<AppEntry> appEntriesValue;
+    //endregion
 
 	public Configuration(String fileName, DocumentFactory factory)
 	{
 		super(fileName, factory);
+		
+		this.bean                       = new ConfigurationBean(); 
 
 		this.changed 					= false;
-
-		this.timeValue					= new MutableString();
-		this.dateValue					= new MutableString();
-		this.dateTimeValue				= new MutableString();
-		this.formatsValue				= new MutableArrayList<MutableString>();
-		this.reportsValue				= new MutableString();
-        this.versionValue               = new MutableString();
-
-		this.globalHandlerValue			= new GlobalHandler();
-
-		this.sqlEntriesValue 			= new MutableArrayList<SqlEntry>();
-		this.clientEntriesValue			= new MutableArrayList<ClientEntry>();
-		this.serviceEntriesValue		= new MutableArrayList<ServiceEntry>();
-		this.appEntriesValue 			= new MutableArrayList<AppEntry>();
-		this.importsValue				= new MutableArrayList<MutableString>();
-		this.varsValue					= new MutableString();
-		this.userVarsValue				= new MutableArrayList<MutableString>();
-		this.matricesValue				= new MutableArrayList<MutableString>();
-		this.appDictionariesValue		= new MutableArrayList<MutableString>();
-		this.clientDictionariesValue	= new MutableArrayList<MutableString>();
-		this.librariesValue				= new MutableArrayList<MutableString>();
 
 		this.globals 					= new HashMap<String, Object>();
 		this.clients 					= new ClientsPool(factory);
@@ -306,60 +248,65 @@ public class Configuration extends AbstractDocument
 	{
 		Configuration config = new Configuration(pathToConfig, factory);
 
-		config.varsValue = new MutableString("vars.ini");
-		config.timeValue = DEFAULT_TIME;
-		config.dateValue = DEFAULT_DATE;
-		config.dateTimeValue = DEFAULT_DATE_TIME;
-		config.importsValue = DEFAULT_IMPORTS;
-		config.formatsValue = DEFAULT_FORMATS;
-		config.matricesValue.add(new MutableString(MATRIX_FOLDER));
-		config.librariesValue.add(new MutableString(LIBRARY_FOLDER));
-		config.userVarsValue.add(new MutableString(USER_VARS_FOLDER + File.separator + USER_VARS_FILE));
-		config.reportsValue.set(REPORTS_FOLDER);
-		config.clientDictionariesValue.add(new MutableString(CLIENT_DIC_FOLDER));
-		config.appDictionariesValue.add(new MutableString(APP_DIC_FOLDER));
+		config.bean.varsValue = new MutableString("vars.ini");
+		config.bean.timeValue = DEFAULT_TIME;
+		config.bean.dateValue = DEFAULT_DATE;
+		config.bean.dateTimeValue = DEFAULT_DATE_TIME;
+		config.bean.importsValue = DEFAULT_IMPORTS;
+		config.bean.formatsValue = DEFAULT_FORMATS;
+		config.bean.matricesValue.add(new MutableString(MATRIX_FOLDER));
+		config.bean.librariesValue.add(new MutableString(LIBRARY_FOLDER));
+		config.bean.userVarsValue.add(new MutableString(USER_VARS_FOLDER + File.separator + USER_VARS_FILE));
+		config.bean.reportsValue.set(REPORTS_FOLDER);
+		config.bean.clientDictionariesValue.add(new MutableString(CLIENT_DIC_FOLDER));
+		config.bean.appDictionariesValue.add(new MutableString(APP_DIC_FOLDER));
 
 		return config;
 	}
 
 	public MutableString getTime()
 	{
-		return this.timeValue;
+		return this.bean.timeValue;
 	}
 
 	public MutableString getDate()
 	{
-		return this.dateValue;
+		return this.bean.dateValue;
 	}
 
 	public MutableString getDateTime()
 	{
-		return this.dateTimeValue;
+		return this.bean.dateTimeValue;
 	}
 
 	public MutableString getReports()
 	{
-		return this.reportsValue;
+		return this.bean.reportsValue;
 	}
 
     public MutableString getVersion()
     {
-        return this.versionValue;
+        return this.bean.versionValue;
     }
 
 	public MutableString getVars()
 	{
-		return this.varsValue;
+		return this.bean.varsValue;
 	}
 
+    public MutableArrayList<MutableString> getImports()
+    {
+        return this.bean.importsValue;
+    }
+    
 	public MutableArrayList<MutableString> getUserVars()
 	{
-		return this.userVarsValue;
+		return this.bean.userVarsValue;
 	}
 
 	public GlobalHandler getGlobalHandler()
 	{
-		return globalHandlerValue;
+		return this.bean.globalHandlerValue;
 	}
 
 	public void addSubcaseFromLibs(List<ReadableValue> list)
@@ -386,24 +333,29 @@ public class Configuration extends AbstractDocument
 		}
 	}
 
+    public MutableArrayList<MutableString> getFormatsValue()
+    {
+        return this.bean.formatsValue;
+    }
+
 	public MutableArrayList<MutableString> getAppDictionariesValue()
 	{
-		return appDictionariesValue;
+		return this.bean.appDictionariesValue;
 	}
 
 	public MutableArrayList<MutableString> getClientDictionariesValue()
 	{
-		return clientDictionariesValue;
+		return this.bean.clientDictionariesValue;
 	}
 
 	public MutableArrayList<MutableString> getLibrariesValue()
 	{
-		return librariesValue;
+		return this.bean.librariesValue;
 	}
 
 	public MutableArrayList<MutableString> getMatricesValue()
 	{
-		return matricesValue;
+		return this.bean.matricesValue;
 	}
 
 	public IClientsPool getClientPool()
@@ -458,7 +410,7 @@ public class Configuration extends AbstractDocument
 
 		AbstractEvaluator evaluator	= objectFromClassName(this.evaluatorValue, AbstractEvaluator.class);
 		evaluator.addImports(toStringList(DEFAULT_IMPORTS));
-		evaluator.addImports(toStringList(this.importsValue));
+		evaluator.addImports(toStringList(this.bean.importsValue));
 
 		for (SystemVars vars : this.systemVars)
 		{
@@ -492,12 +444,12 @@ public class Configuration extends AbstractDocument
 	protected void refreshLibs()
 	{
 		IMatrixListener checker = new MatrixListener();
-		if (this.librariesValue == null)
+		if (this.bean.librariesValue == null)
 		{
 			return;
 		}
 
-		for (MutableString folder : this.librariesValue)
+		for (MutableString folder : this.bean.librariesValue)
 		{
 			File folderFile = new File(MainRunner.makeDirWithSubstitutions(folder.get()));
 			if (folderFile.exists() && folderFile.isDirectory())
@@ -557,8 +509,8 @@ public class Configuration extends AbstractDocument
 		{
 			this.systemVars.clear();
 
-			setUserVariablesFromMask(this.varsValue.get());
-			for (MutableString userVars : this.userVarsValue)
+			setUserVariablesFromMask(this.bean.varsValue.get());
+			for (MutableString userVars : this.bean.userVarsValue)
 			{
 				setUserVariablesFromMask(userVars.get());
 			}
@@ -574,7 +526,7 @@ public class Configuration extends AbstractDocument
 
 	protected void refreshAppDictionaries()
 	{
-		for (AppEntry entry : this.appEntriesValue)
+		for (AppEntry entry : this.bean.appEntriesValue)
 		{
 			String name = entry.entryNameValue;
 			String dicPath = entry.appDicPathValue;
@@ -626,8 +578,8 @@ public class Configuration extends AbstractDocument
     	{
 			this.valid = false;
 
-	        jaxbContextClasses[0] = this.getClass();
-	        JAXBContext jaxbContext = JAXBContext.newInstance(jaxbContextClasses);
+//	        ConfigurationBean.jaxbContextClasses[0] = this.getClass();
+	        JAXBContext jaxbContext = JAXBContext.newInstance(ConfigurationBean.jaxbContextClasses);
 
 
 	        SchemaFactory schemaFactory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
@@ -645,15 +597,12 @@ public class Configuration extends AbstractDocument
 				return false;
 			});
 
-	        Configuration config = (Configuration) unmarshaller.unmarshal(reader);
-	        config.factory = getFactory();
-
-	        setAll(config);
-
+	        this.bean = (ConfigurationBean) unmarshaller.unmarshal(reader);
+            this.changed = false;
 			this.reportFactoryObj		= objectFromClassName(reportFactoryValue, ReportFactory.class);
 
-			DateTime.setFormats(this.timeValue.get(), this.dateValue.get(), this.dateTimeValue.get());
-			Converter.setFormats(toStringList(this.formatsValue));
+			DateTime.setFormats(this.bean.timeValue.get(), this.bean.dateValue.get(), this.bean.dateTimeValue.get());
+			Converter.setFormats(toStringList(this.bean.formatsValue));
 
 			refresh();
 
@@ -726,11 +675,11 @@ public class Configuration extends AbstractDocument
 
         try(OutputStream os = new FileOutputStream(new File(fileName)))
         {
-            JAXBContext jaxbContext = JAXBContext.newInstance(jaxbContextClasses);
+            JAXBContext jaxbContext = JAXBContext.newInstance(ConfigurationBean.jaxbContextClasses);
 
             Marshaller marshaller = jaxbContext.createMarshaller();
             marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
-            marshaller.marshal(this, os);
+            marshaller.marshal(this.bean, os);
 
 			saved();
         }
@@ -752,23 +701,7 @@ public class Configuration extends AbstractDocument
 			return true;
 		}
 
-		return this.timeValue.isChanged()
-				|| this.dateValue.isChanged()
-				|| this.dateTimeValue.isChanged()
-				|| this.formatsValue.isChanged()
-                || this.versionValue.isChanged()
-				|| this.reportsValue.isChanged()
-				|| this.sqlEntriesValue.isChanged()
-				|| this.clientEntriesValue.isChanged()
-				|| this.serviceEntriesValue.isChanged()
-				|| this.appEntriesValue.isChanged()
-				|| this.importsValue.isChanged()
-				|| this.varsValue.isChanged()
-				|| this.userVarsValue.isChanged()
-				|| this.matricesValue.isChanged()
-				|| this.appDictionariesValue.isChanged()
-				|| this.clientDictionariesValue.isChanged()
-				|| this.librariesValue.isChanged();
+		return this.bean.isChanged();
 	}
 
 	@Override
@@ -776,24 +709,8 @@ public class Configuration extends AbstractDocument
 	{
 		super.saved();
 
+		this.bean.saved();
 		this.changed = false;
-		this.timeValue.saved();
-		this.dateValue.saved();
-		this.dateTimeValue.saved();
-		this.formatsValue.saved();
-        this.versionValue.saved();
-		this.reportsValue.saved();
-		this.appEntriesValue.saved();
-		this.clientEntriesValue.saved();
-		this.serviceEntriesValue.saved();
-		this.sqlEntriesValue.saved();
-		this.importsValue.saved();
-		this.varsValue.saved();
-		this.userVarsValue.saved();
-		this.matricesValue.saved();
-		this.appDictionariesValue.saved();
-		this.clientDictionariesValue.saved();
-		this.librariesValue.saved();
 	}
 
 	//------------------------------------------------------------------------------------------------------------------
@@ -812,7 +729,7 @@ public class Configuration extends AbstractDocument
 					break;
                 
 				case GUI_DICTIONARY:
-					this.appDictionariesValue.forEach(ms ->
+					this.bean.appDictionariesValue.forEach(ms ->
 					{
 						File folderFile = new File(MainRunner.makeDirWithSubstitutions(ms.get()));
 						applyToAllFile(folderFile, applier, kind);
@@ -820,7 +737,7 @@ public class Configuration extends AbstractDocument
 					break;
                 
 				case MESSAGE_DICTIONARY:
-					this.clientDictionariesValue.forEach(ms ->
+					this.bean.clientDictionariesValue.forEach(ms ->
 					{
 						File folderFile = new File(MainRunner.makeDirWithSubstitutions(ms.get()));
 						applyToAllFile(folderFile, applier, kind);
@@ -832,7 +749,7 @@ public class Configuration extends AbstractDocument
 					break;
                 
 				case MATRIX:
-					this.matricesValue.forEach(ms ->
+					this.bean.matricesValue.forEach(ms ->
 					{
 						File folderFile = new File(MainRunner.makeDirWithSubstitutions(ms.get()));
 						applyToAllFile(folderFile, applier, kind);
@@ -840,7 +757,7 @@ public class Configuration extends AbstractDocument
 					break;
 
 				case REPORTS:
-					applyToAllFile(new File(this.reportsValue.get()), applier, kind);
+					applyToAllFile(new File(this.bean.reportsValue.get()), applier, kind);
 					break;
 
 				case PLAIN_TEXT:
@@ -848,11 +765,11 @@ public class Configuration extends AbstractDocument
 					excludeFiles.add(new File(this.getName()));
 
 					excludeFiles.addAll(files(this.systemVars.stream(), SystemVars::getName));
-					excludeFiles.addAll(files(this.appDictionariesValue.stream(), ms -> MainRunner.makeDirWithSubstitutions(ms.get())));
-					excludeFiles.addAll(files(this.clientDictionariesValue.stream(), ms -> MainRunner.makeDirWithSubstitutions(ms.get())));
+					excludeFiles.addAll(files(this.bean.appDictionariesValue.stream(), ms -> MainRunner.makeDirWithSubstitutions(ms.get())));
+					excludeFiles.addAll(files(this.bean.clientDictionariesValue.stream(), ms -> MainRunner.makeDirWithSubstitutions(ms.get())));
 					excludeFiles.addAll(files(this.libs.values().stream(), Matrix::getName));
-					excludeFiles.addAll(files(this.matricesValue.stream(), ms -> MainRunner.makeDirWithSubstitutions(ms.get())));
-					excludeFiles.add(new File(this.reportsValue.get()));
+					excludeFiles.addAll(files(this.bean.matricesValue.stream(), ms -> MainRunner.makeDirWithSubstitutions(ms.get())));
+					excludeFiles.add(new File(this.bean.reportsValue.get()));
 					List<String> ex = excludeFiles.stream().map(ConfigurationFx::path).collect(Collectors.toList());
 					applyToAllFile(new File("."), applier, DocumentKind.PLAIN_TEXT, file -> ex.contains(ConfigurationFx.path(file)));
 					break;
@@ -889,7 +806,7 @@ public class Configuration extends AbstractDocument
 				break;
 				
 			case GUI_DICTIONARY:
-				this.appDictionariesValue.forEach(ms ->
+				this.bean.appDictionariesValue.forEach(ms ->
 				{
 					File folderFile = new File(MainRunner.makeDirWithSubstitutions(ms.get()));
 					applyToAll(folderFile, kind, consoleFactory, applier);
@@ -897,7 +814,7 @@ public class Configuration extends AbstractDocument
 				break;
 				
 			case MESSAGE_DICTIONARY:
-				this.clientDictionariesValue.forEach(ms ->
+				this.bean.clientDictionariesValue.forEach(ms ->
 				{
 					File folderFile = new File(MainRunner.makeDirWithSubstitutions(ms.get()));
 					applyToAll(folderFile, kind, consoleFactory, applier);
@@ -909,7 +826,7 @@ public class Configuration extends AbstractDocument
 				break;
 				
 			case MATRIX:
-				this.matricesValue.forEach(ms -> 
+				this.bean.matricesValue.forEach(ms -> 
 				{
 					File folderFile = new File(MainRunner.makeDirWithSubstitutions(ms.get()));
 					applyToAll(folderFile, kind, consoleFactory, applier);
@@ -924,37 +841,37 @@ public class Configuration extends AbstractDocument
 	
 	public SqlEntry getSqlEntry(String name) throws Exception
 	{
-		return getEntry(name, this.sqlEntriesValue);
+		return getEntry(name, this.bean.sqlEntriesValue);
 	}
 
 	public List<SqlEntry> getSqlEntries()
 	{
-		return this.sqlEntriesValue;
+		return this.bean.sqlEntriesValue;
 	}
 
 	public ClientEntry getClientEntry(String name) throws Exception
 	{
-		return getEntry(name, this.clientEntriesValue);
+		return getEntry(name, this.bean.clientEntriesValue);
 	}
 
 	public List<ClientEntry> getClientEntries()
 	{
-		return this.clientEntriesValue;
+		return this.bean.clientEntriesValue;
 	}
 
 	public ServiceEntry getServiceEntry(String name) throws Exception
 	{
-		return getEntry(name, this.serviceEntriesValue);
+		return getEntry(name, this.bean.serviceEntriesValue);
 	}
 
 	public List<ServiceEntry> getServiceEntries()
 	{
-		return this.serviceEntriesValue;
+		return this.bean.serviceEntriesValue;
 	}
 
 	public AppEntry getAppEntry(String name) throws Exception
 	{
-		return getEntry(name, this.appEntriesValue);
+		return getEntry(name, this.bean.appEntriesValue);
 	}
 
 
@@ -965,7 +882,7 @@ public class Configuration extends AbstractDocument
 
 	public List<AppEntry> getAppEntries()
 	{
-		return this.appEntriesValue;
+		return this.bean.appEntriesValue;
 	}
 
 	public final ReportFactory getReportFactory()
@@ -975,17 +892,17 @@ public class Configuration extends AbstractDocument
 
 	public final Collection<String> getClients() throws Exception
 	{
-		return this.clientEntriesValue.stream().map(entry -> entry.toString()).collect(Collectors.toList());
+		return this.bean.clientEntriesValue.stream().map(entry -> entry.toString()).collect(Collectors.toList());
 	}
 
 	public final Collection<String> getServices() throws Exception
 	{
-		return this.serviceEntriesValue.stream().map(entry -> entry.toString()).collect(Collectors.toList());
+		return this.bean.serviceEntriesValue.stream().map(entry -> entry.toString()).collect(Collectors.toList());
 	}
 
 	public final Collection<String> getApplications() throws Exception
 	{
-		return this.appEntriesValue.stream().map(entry -> entry.toString()).collect(Collectors.toList());
+		return this.bean.appEntriesValue.stream().map(entry -> entry.toString()).collect(Collectors.toList());
 	}
 
 	public Matrix getLib(String name)
@@ -1106,30 +1023,6 @@ public class Configuration extends AbstractDocument
 		}
 	}
 
-    private void setAll(Configuration config)
-	{
-		this.timeValue.set(config.timeValue);
-		this.dateValue.set(config.dateValue);
-		this.dateTimeValue.set(config.dateTimeValue);
-		this.formatsValue.from(config.formatsValue);
-        this.versionValue.set(config.versionValue);
-		this.globalHandlerValue.setValue(config.globalHandlerValue);
-		this.reportsValue.set(config.reportsValue);
-		this.appEntriesValue.from(config.appEntriesValue);
-		this.clientEntriesValue.from(config.clientEntriesValue);
-		this.serviceEntriesValue.from(config.serviceEntriesValue);
-		this.sqlEntriesValue.from(config.sqlEntriesValue);
-		this.importsValue.from(config.importsValue);
-		this.varsValue.set(config.varsValue);
-		this.userVarsValue.from(config.userVarsValue);
-		this.matricesValue.from(config.matricesValue);
-		this.appDictionariesValue.from(config.appDictionariesValue);
-		this.clientDictionariesValue.from(config.clientDictionariesValue);
-		this.librariesValue.from(config.librariesValue);
-
-		this.changed = false;
-	}
-    
 	private void applyToAll(File path, DocumentKind kind, DocumentFactory factory, Consumer<Document> applier)
 	{
 		if (path.isDirectory())
@@ -1181,38 +1074,4 @@ public class Configuration extends AbstractDocument
 			applier.accept(path, kind);
 		}
 	}
-
-	private static final Class<?>[] jaxbContextClasses =
-		{
-			Configuration.class,
-			SqlEntry.class,
-			ClientEntry.class,
-			ServiceEntry.class,
-			AppEntry.class,
-			GlobalHandler.class,
-		};
-
-	protected String 				reportFactoryValue = HTMLReportFactory.class.getSimpleName();
-	protected String 				evaluatorValue = MvelEvaluator.class.getSimpleName();
-	protected Map<File, Long> 		timestampMap 	= new HashMap<>();
-	protected RunnerListener 		runnerListener 	= new DummyRunnerListener();
-	protected boolean 				changed;
-	protected ReportFactory			reportFactoryObj;
-	protected Map<String, Matrix>	libs;
-	protected Map<String, Date>		documentsActuality;
-	protected Map<String, Object>	globals;
-	protected Set<SystemVars>		systemVars;
-
-	protected ClientsPool			clients;
-	protected ServicePool			services;
-	protected ApplicationPool		applications;
-	protected DataBasePool			databases;
-	protected Date                  lastUpdate = new Date();
-
-	protected final List<Document> 	subordinates = new ArrayList<>();
-
-	protected boolean valid = false;
-
-	private static final Logger logger = Logger.getLogger(Configuration.class);
-
 }

@@ -107,32 +107,32 @@ public class ConfigurationFx extends Configuration
 	//region Utilities methods toString
 	public String matrixToString()
 	{
-		return super.matricesValue.stream().map(MutableString::get).collect(Collectors.joining(SEPARATOR));
+		return getMatricesValue().stream().map(MutableString::get).collect(Collectors.joining(SEPARATOR));
 	}
 
 	public String libraryToString()
 	{
-		return super.librariesValue.stream().map(MutableString::get).collect(Collectors.joining(SEPARATOR));
+		return getLibrariesValue().stream().map(MutableString::get).collect(Collectors.joining(SEPARATOR));
 	}
 
     public String getVersionStr()
     {
-        return super.versionValue.get();
+        return getVersion().get();
     }
 
 	public String getReportPath()
 	{
-		return super.reportsValue.get();
+		return getReports().get();
 	}
 
 	public String getAppDictionaries()
 	{
-		return super.appDictionariesValue.stream().map(MutableString::get).collect(Collectors.joining(SEPARATOR));
+		return getAppDictionariesValue().stream().map(MutableString::get).collect(Collectors.joining(SEPARATOR));
 	}
 
 	public String getClientDictionaries()
 	{
-		return this.clientDictionariesValue.stream().map(MutableString::get).collect(Collectors.joining(SEPARATOR));
+		return getClientDictionariesValue().stream().map(MutableString::get).collect(Collectors.joining(SEPARATOR));
 	}
 	//endregion
 
@@ -296,17 +296,17 @@ public class ConfigurationFx extends Configuration
 	//region evaluator
 	public void addNewEvaluatorImport(String newImport) throws Exception
 	{
-		this.addString(newImport, super.importsValue, this::displayEvaluator);
+		this.addString(newImport, getImports(), this::displayEvaluator);
 	}
 
 	public void removeImport(String evaluatorImport) throws Exception
 	{
-		this.removeString(evaluatorImport, super.importsValue, this::displayEvaluator);
+		this.removeString(evaluatorImport, getImports(), this::displayEvaluator);
 	}
 
 	public void replaceEvaluatorImport(String oldEvaluator, String newEvaluator) throws Exception
 	{
-		this.replaceString(oldEvaluator, newEvaluator, super.importsValue, this::displayEvaluator, false);
+		this.replaceString(oldEvaluator, newEvaluator, getImports(), this::displayEvaluator, false);
 	}
 	//endregion
 
@@ -334,17 +334,17 @@ public class ConfigurationFx extends Configuration
 
 	public void addNewAdditionalFormat(String newFormat) throws Exception
 	{
-		this.addString(newFormat, super.formatsValue, this::displayFormat);
+		this.addString(newFormat, getFormatsValue(), this::displayFormat);
 	}
 
 	public void removeAdditionalFormat(String removeFormat) throws Exception
 	{
-		this.removeString(removeFormat, super.formatsValue, this::displayFormat);
+		this.removeString(removeFormat, getFormatsValue(), this::displayFormat);
 	}
 
 	public void replaceAdditionalFormat(String oldFormat, String newFormat) throws Exception
 	{
-		this.replaceString(oldFormat, newFormat, super.formatsValue, this::displayFormat, false);
+		this.replaceString(oldFormat, newFormat, getFormatsValue(), this::displayFormat, false);
 	}
 
 	//endregion
@@ -352,7 +352,7 @@ public class ConfigurationFx extends Configuration
 	//region matrix
 	public void excludeMatrixDirectory(String file)
 	{
-		excludeFile(file, super.matricesValue, this::displayMatrix);
+		excludeFile(file, getMatricesValue(), this::displayMatrix);
 	}
 
 	public void renameMatrix(File file) throws Exception
@@ -436,7 +436,7 @@ public class ConfigurationFx extends Configuration
 	//region library
 	public void excludeLibraryDirectory(String file)
 	{
-		excludeFile(file, super.librariesValue, this::displayLibrary);
+		excludeFile(file, getLibrariesValue(), this::displayLibrary);
 	}
 
 	public void openLibrary(String path) throws Exception
@@ -497,26 +497,26 @@ public class ConfigurationFx extends Configuration
 
 	public void excludeVarsFile(String file)
 	{
-		excludeFile(file, super.userVarsValue, this::displayVars);
+		excludeFile(file, getUserVars(), this::displayVars);
 	}
 
 	public void addUserVarsFile(File file)
 	{
-		addFile(Common.getRelativePath(path(file)), super.userVarsValue, this::displayVars);
+		addFile(Common.getRelativePath(path(file)), getUserVars(), this::displayVars);
 	}
 	//endregion
 
 	//region report
 	public void setReportFolder(String file) throws Exception
 	{
-		String lastFile = super.reportsValue.get();
+		String lastFile = getReports().get();
 		Command undo = () -> {
-			super.reportsValue.set(lastFile);
+		    getReports().set(lastFile);
 			this.displayReport();
 			this.displayFileSystem();
 		};
 		Command redo = () -> {
-			super.reportsValue.set(file);
+		    getReports().set(file);
 			this.displayReport();
 			this.displayFileSystem();
 		};
@@ -536,7 +536,7 @@ public class ConfigurationFx extends Configuration
 
 	public void clearReportFolder() throws Exception
 	{
-		File reportFolder = new File(super.reportsValue.get());
+		File reportFolder = new File(getReports().get());
 		Optional.ofNullable(reportFolder.listFiles()).ifPresent(files -> removeFilesFromFileSystem(Arrays.asList(files), this::displayReport));
 	}
 
@@ -604,12 +604,12 @@ public class ConfigurationFx extends Configuration
 
 	public void excludeClientDictionaryFolder(String file) throws Exception
 	{
-		this.excludeFile(file, super.clientDictionariesValue, this::displayClient);
+		this.excludeFile(file, getClientDictionariesValue(), this::displayClient);
 	}
 
 	public void useAsClientDictionaryFolder(String file) throws Exception
 	{
-		this.addFile(file, super.clientDictionariesValue, this::displayClient);
+		this.addFile(file, getClientDictionariesValue(), this::displayClient);
 	}
 
 	public void openClientDictionary(ClientEntry entry) throws Exception
@@ -807,12 +807,12 @@ public class ConfigurationFx extends Configuration
 
 	public void excludeAppDictionaryFolder(String file) throws Exception
 	{
-		this.excludeFile(file, super.appDictionariesValue, this::displayApp);
+		this.excludeFile(file, getAppDictionariesValue(), this::displayApp);
 	}
 
 	public void useAsAppDictionaryFolder(String file) throws Exception
 	{
-		this.addFile(file, super.appDictionariesValue, this::displayApp);
+		this.addFile(file, getAppDictionariesValue(), this::displayApp);
 	}
 
 	public void updateAppDictionaries()
@@ -825,17 +825,17 @@ public class ConfigurationFx extends Configuration
 	//region file system
 	public void useAsMatrix(String file)
 	{
-		addFile(file, this.matricesValue, this::displayMatrix);
+		addFile(file, getMatricesValue(), this::displayMatrix);
 	}
 
 	public void useAsLibrary(String file)
 	{
-		addFile(file, super.librariesValue, this::displayLibrary);
+		addFile(file, getLibrariesValue(), this::displayLibrary);
 	}
 
 	public void addAsVars(String file)
 	{
-		addFile(file, super.userVarsValue, this::displayLibrary);
+		addFile(file, getUserVars(), this::displayLibrary);
 	}
 
 	public void openCsv(File file) throws Exception
@@ -1291,17 +1291,17 @@ public class ConfigurationFx extends Configuration
 	//region display methods
 	private void displayEvaluator()
 	{
-		this.controller.displayEvaluator(toStringList(super.importsValue));
+		this.controller.displayEvaluator(toStringList(getImports()));
 	}
 
 	private void displayFormat()
 	{
-		this.controller.displayFormat(super.timeValue.get(), super.dateValue.get(), super.dateTimeValue.get(), toStringList(super.formatsValue));
+		this.controller.displayFormat(getTime().get(), getDate().get(), getDateTime().get(), toStringList(getFormatsValue()));
 	}
 
 	private void displayMatrix()
 	{
-		this.controller.displayMatrix(toStringList(this.matricesValue));
+		this.controller.displayMatrix(toStringList(getMatricesValue()));
 	}
 
 	private void displayLibrary()
@@ -1311,14 +1311,14 @@ public class ConfigurationFx extends Configuration
 
 	private void displayVars()
 	{
-		List<String> varsList = toStringList(super.userVarsValue);
-		varsList.add(super.varsValue.get());
+		List<String> varsList = toStringList(getUserVars());
+		varsList.add(getVars().get());
 		this.controller.displayVars(varsList);
 	}
 
 	private void displayReport()
 	{
-		this.controller.displayReport(super.reportsValue.get());
+		this.controller.displayReport(getReports().get());
 	}
 
 	private void displaySql()
@@ -1349,13 +1349,13 @@ public class ConfigurationFx extends Configuration
 	private void displayFileSystem()
 	{
 		List<String> ignoreFiles = new ArrayList<>();
-		ignoreFiles.addAll(toStringList(super.appDictionariesValue));
-		ignoreFiles.addAll(toStringList(super.clientDictionariesValue));
-		ignoreFiles.addAll(toStringList(super.matricesValue));
-		ignoreFiles.addAll(toStringList(super.librariesValue));
-		ignoreFiles.add(super.varsValue.get());
-		ignoreFiles.addAll(toStringList(super.userVarsValue));
-		ignoreFiles.add(super.reportsValue.get());
+		ignoreFiles.addAll(toStringList(getAppDictionariesValue()));
+		ignoreFiles.addAll(toStringList(getClientDictionariesValue()));
+		ignoreFiles.addAll(toStringList(getMatricesValue()));
+		ignoreFiles.addAll(toStringList(getLibrariesValue()));
+		ignoreFiles.add(getVars().get());
+		ignoreFiles.addAll(toStringList(getUserVars()));
+		ignoreFiles.add(getReports().get());
 
 		this.controller.displayFileSystem(ignoreFiles);
 	}
