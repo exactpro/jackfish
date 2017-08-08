@@ -54,7 +54,6 @@ public class DialogFillWizard extends AbstractWizard {
     private ApplicationConnector appConnector;
     private Collection<IWindow> windows;
     private IWindow currentDialog;
-    private Map<String, String> values;
     private MatrixItem currentItem;
     private ListView<Bean> beanListView;
 
@@ -93,8 +92,6 @@ public class DialogFillWizard extends AbstractWizard {
 
         dialogs.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             this.currentDialog = this.dictionary.getWindows().stream().filter(iWindow -> iWindow.getName().equals(newValue)).findFirst().get();
-            Collection<IControl> textBoxes = currentDialog.getControls(IWindow.SectionKind.Run).stream().filter(iControl -> iControl.getBindedClass().equals(ControlKind.TextBox)).collect(Collectors.toList());
-            this.values = getLocatorsValues(textBoxes);
         });
 
         ColumnConstraints col1 = new ColumnConstraints(200, 150, 300, Priority.SOMETIMES, HPos.LEFT, true);
@@ -201,10 +198,14 @@ public class DialogFillWizard extends AbstractWizard {
     }
 
     private void createBeans() {
-        if (this.values != null)
+
+        Collection<IControl> textBoxes = currentDialog.getControls(IWindow.SectionKind.Run).stream().filter(iControl -> iControl.getBindedClass().equals(ControlKind.TextBox)).collect(Collectors.toList());
+        Map<String, String> values = getLocatorsValues(textBoxes);
+        if (values != null)
         {
+            this.beanListView.getItems().clear();
             String apostr = "'";
-            this.values.forEach((k, v) -> {
+            values.forEach((k, v) -> {
                 MatrixItem matrixItem = createItem(k, apostr + v + apostr);
                 this.beanListView.getItems().add(new Bean(matrixItem, k, v));
             });
