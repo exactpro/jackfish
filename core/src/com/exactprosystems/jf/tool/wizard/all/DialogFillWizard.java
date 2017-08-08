@@ -3,6 +3,7 @@ package com.exactprosystems.jf.tool.wizard.all;
 import com.exactprosystems.jf.actions.gui.DialogFill;
 import com.exactprosystems.jf.api.app.*;
 import com.exactprosystems.jf.api.common.IContext;
+
 import com.exactprosystems.jf.api.wizard.WizardAttribute;
 import com.exactprosystems.jf.api.wizard.WizardCategory;
 import com.exactprosystems.jf.api.wizard.WizardCommand;
@@ -25,9 +26,9 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Priority;
-import javafx.util.Callback;
 
 import java.util.*;
+
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
@@ -35,28 +36,27 @@ import static com.exactprosystems.jf.tool.Common.tryCatch;
 
 
 @WizardAttribute(
-        name = "DialogFill wizard",
-        pictureName = "DialogFillWizard.jpg",
-        category = WizardCategory.MATRIX,
-        shortDescription = "This wizard creates DialogFills.",
+        name                = "DialogFill wizard",
+        pictureName         = "DialogFillWizard.jpg",
+        category            = WizardCategory.MATRIX,
+        shortDescription    = "This wizard creates DialogFills.",
         detailedDescription = "This wizard creates DialogFills.",
-        experimental = true,
-        strongCriteries = true,
-        criteries = {MatrixItem.class, MatrixFx.class}
+        experimental        = true,
+        strongCriteries     = true,
+        criteries           = {MatrixItem.class, MatrixFx.class}
 )
 public class DialogFillWizard extends AbstractWizard {
     private MatrixFx currentMatrix;
     private DictionaryFx dictionary;
     private ComboBox<String> storedConnections;
     private ComboBox<String> dialogs;
-    private Collection<IControl> textBoxes;
     private String currentAdapterStore;
     private ApplicationConnector appConnector;
     private Collection<IWindow> windows;
     private IWindow currentDialog;
     private Map<String, String> values;
     private MatrixItem currentItem;
-    private boolean oneDialogFill;
+    private ListView<Bean> beanListView;
 
 
     @Override
@@ -67,39 +67,17 @@ public class DialogFillWizard extends AbstractWizard {
         this.appConnector = new ApplicationConnector(((Context) context).getFactory());
         this.windows = dictionary.getWindows();
         this.currentItem = get(MatrixItem.class, parameters);
-
-
     }
 
     @Override
     protected void initDialog(BorderPane borderPane) {
 
-        TreeView<Bean> treeView = new TreeView<>();
-        treeView.setCellFactory(new Callback<TreeView<Bean>, TreeCell<Bean>>() {
-            @Override
-            public TreeCell<Bean> call(TreeView<Bean> param) {
-                return null;
-            }
-        });
-
+        this.beanListView = new ListView<>();
         Button scan = new Button("Scan");
-        scan.setOnAction(event -> {
-            if (oneDialogFill)
-            {
-                MatrixItem matrixItem = CommandBuilder.create(this.currentMatrix, Tokens.Action.get(), DialogFill.class.getSimpleName());
-                Bean bean = new Bean(matrixItem, getLocatorsValues(this.textBoxes));
-                TreeItem<Bean> beanTreeItem = new TreeItem<>(bean);
-                treeView.getRoot().setValue(bean);
-
-            }
-            });
-
-
-
+        scan.setOnAction(event -> createBeans());
         this.storedConnections = new ComboBox<>();
         this.dialogs = new ComboBox<>();
         GridPane grid = new GridPane();
-
 
         this.storedConnections.setOnShowing(event -> tryCatch(this::displayStores, "Error on update titles"));
         this.storedConnections.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
@@ -115,16 +93,15 @@ public class DialogFillWizard extends AbstractWizard {
 
         dialogs.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             this.currentDialog = this.dictionary.getWindows().stream().filter(iWindow -> iWindow.getName().equals(newValue)).findFirst().get();
-            this.textBoxes = currentDialog.getControls(IWindow.SectionKind.Run).stream().filter(iControl -> iControl.getBindedClass().equals(ControlKind.TextBox)).collect(Collectors.toList());
-            this.values = getLocatorsValues(this.textBoxes);
+            Collection<IControl> textBoxes = currentDialog.getControls(IWindow.SectionKind.Run).stream().filter(iControl -> iControl.getBindedClass().equals(ControlKind.TextBox)).collect(Collectors.toList());
+            this.values = getLocatorsValues(textBoxes);
         });
-
 
         ColumnConstraints col1 = new ColumnConstraints(200, 150, 300, Priority.SOMETIMES, HPos.LEFT, true);
         ColumnConstraints col2 = new ColumnConstraints(200, 150, 300, Priority.SOMETIMES, HPos.LEFT, true);
 
-        GridPane.setFillWidth(storedConnections,true);
-        GridPane.setFillWidth(dialogs,true);
+        GridPane.setFillWidth(storedConnections, true);
+        GridPane.setFillWidth(dialogs, true);
         grid.setVgap(10);
         grid.setHgap(10);
         grid.getColumnConstraints().addAll(col1, col2);
@@ -134,12 +111,10 @@ public class DialogFillWizard extends AbstractWizard {
         grid.add(new Label("Select dialog: "), 0, 1);
         grid.add(dialogs, 1, 1);
         grid.add(scan, 0, 2, 2, 1);
-        grid.add(treeView, 0, 3, 2, 1);
+        grid.add(this.beanListView, 0, 3, 2, 1);
 
         borderPane.setCenter(grid);
     }
-
-
 
     private void setCurrentAdapterStore(String newValue) {
         this.currentAdapterStore = newValue;
@@ -149,10 +124,7 @@ public class DialogFillWizard extends AbstractWizard {
     protected Supplier<List<WizardCommand>> getCommands() {
         return () -> {
             CommandBuilder builder = CommandBuilder.start();
-            this.values.forEach((key, value) -> {
-                MatrixItem matrixItem = createItem(key, "'" + value + "'");
-                builder.addMatrixItem(this.currentMatrix, this.currentItem, matrixItem, 0);
-            });
+            this.beanListView.getItems().forEach(bean -> builder.addMatrixItem(this.currentMatrix, this.currentItem, bean.getItem(), 0));
             return builder.build();
         };
     }
@@ -160,7 +132,7 @@ public class DialogFillWizard extends AbstractWizard {
     private MatrixItem createItem(String key, String value) {
         MatrixItem matrixItem = CommandBuilder.create(this.currentMatrix, Tokens.Action.get(), DialogFill.class.getSimpleName());
         Parameters params = new Parameters();
-        params.add(key,value, TypeMandatory.Extra);
+        params.add(key, value, TypeMandatory.Extra);
         Common.tryCatch(() -> matrixItem.init(this.currentMatrix, new ArrayList<>(), new HashMap<>(), params), "Error on parameters create");
         return matrixItem;
     }
@@ -228,16 +200,29 @@ public class DialogFillWizard extends AbstractWizard {
         return map;
     }
 
+    private void createBeans() {
+        if (this.values != null)
+        {
+            String apostr = "'";
+            this.values.forEach((k, v) -> {
+                MatrixItem matrixItem = createItem(k, apostr + v + apostr);
+                this.beanListView.getItems().add(new Bean(matrixItem, k, v));
+            });
+        }
+    }
+
     private class Bean {
         private MatrixItem item;
-        private Map<String, String> values;
+        private String controlName;
+        private String controlValue;
 
-        public Bean(MatrixItem item, Map<String, String> values) {
-            this.item = item;
-            this.values = values;
+        @Override
+        public String toString() {
+            return "TextBox id = '" + controlName +
+                    "'  value = '" + controlValue + "'";
         }
 
-        public MatrixItem getMatrixItem() {
+        public MatrixItem getItem() {
             return item;
         }
 
@@ -245,16 +230,10 @@ public class DialogFillWizard extends AbstractWizard {
             this.item = item;
         }
 
-        public Map<String, String> getValues() {
-            return values;
+        public Bean(MatrixItem item, String controlName, String controlValue) {
+            this.item = item;
+            this.controlName = controlName;
+            this.controlValue = controlValue;
         }
-
-        public void setValues(Map<String, String> values) {
-            this.values = values;
-        }
-    }
-
-    private void createCommands() {
-
     }
 }
