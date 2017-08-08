@@ -1,14 +1,18 @@
-#Action;#Time
-Wait;2000
+#Off;#Action;$Time
+1;Wait;2000
 
-#Global;#Id;#Let
-1;f;5
+#Id;#Off;#Global;#Let
+f;1;1;5
 
-#Action;#Name
-ReportName;'This is Matrix1 ' + f
+#Off;#Action;$Name
+1;ReportName;'This is Matrix1 ' + f
 
-#Action;#Time
-Wait;2001
+#Off;#Action;$Time
+1;Wait;2001
 
-#Action;#Str;#f
-Print;'m1';f + 1
+#Off;#Action;$Str;f
+1;Print;'m1';f + 1
+
+#Action;
+Print;Sys.jfDir()
+

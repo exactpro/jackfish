@@ -10,6 +10,7 @@ package com.exactprosystems.jf.common;
 
 import com.exactprosystems.jf.api.common.DateTime;
 import com.exactprosystems.jf.api.common.Str;
+import com.exactprosystems.jf.api.common.Sys;
 import com.exactprosystems.jf.common.documentation.DocumentationBuilder;
 import com.exactprosystems.jf.common.report.ReportBuilder;
 import com.exactprosystems.jf.common.report.ReportFactory;
@@ -259,10 +260,10 @@ public class MainRunner
 			File file = new File(fileName);
 			Path cwd = Paths.get("").toAbsolutePath();
 			File parentDir = file.getParentFile();
+            Sys.jfDir = cwd.toAbsolutePath().toString();
 			if (parentDir != null)
 			{
 				Path newCwd = parentDir.toPath();
-				
 				if (!cwd.equals(newCwd))
 				{
 					return newCwd;

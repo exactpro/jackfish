@@ -22,10 +22,12 @@ import java.nio.file.Files;
 import java.nio.file.LinkOption;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
-import java.util.Arrays;
 
 public class Sys
 {
+    @HideAttribute
+    public static String jfDir = ".";
+    
 	@DescriptionAttribute(text = "Returns PID of current process (the tool itself).")
 	public static int currentProcessId()
 	{
@@ -126,7 +128,6 @@ public class Sys
     @DescriptionAttribute(text = "Returns path to JF folder.") 
     public static String jfDir()
     {
-//        return MainRunner.makeDirWithSubstitutions("${JF}"); // TODO it should work after moving all api into core
-        return ".";
+        return jfDir;
     }
 }
