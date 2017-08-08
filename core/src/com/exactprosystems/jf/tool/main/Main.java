@@ -280,7 +280,7 @@ public class Main extends Application
 			{
 				if (this.config.canClose())
 				{
-					this.config.close(this.factory.getSettings());
+					this.config.close();
 					setConfiguration(null);
 				}
 				else
@@ -317,7 +317,7 @@ public class Main extends Application
 			{
 				if (this.config.canClose())
 				{
-					this.config.close(this.factory.getSettings());
+					this.config.close();
 					setConfiguration(null);
 				}
 				else
@@ -749,7 +749,7 @@ public class Main extends Application
 			{
 				if (this.config.canClose())
 				{
-					this.config.close(this.factory.getSettings());
+					this.config.close();
 					setConfiguration(null);
 					saveDimensionAndPosition();
 					this.controller.close();
@@ -998,6 +998,7 @@ public class Main extends Application
 		}
 	}
 
+	// TODO is it steel needed?
 	private Git git() throws Exception
 	{
 		setSSH();
@@ -1014,6 +1015,7 @@ public class Main extends Application
 		}
 	}
 
+    // TODO is it steel needed?
 	private CredentialsProvider getCredentialsProvider()
 	{
 		checkCredential();
