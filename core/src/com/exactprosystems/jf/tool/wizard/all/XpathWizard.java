@@ -352,7 +352,12 @@ public class XpathWizard extends AbstractWizard
 				return false;
 			}
 
-			IControl self = this.currentWindow.getSelfControl();
+			IControl self = null;
+			if (!this.currentSection.getSectionKind().equals(SectionKind.Self))
+			{
+				self = this.currentWindow.getSelfControl();
+			}
+
 			WizardHelper.gainImageAndDocument(this.currentConnection, self, (image, doc) ->
 			{
 				this.imageViewWithScale.displayImage(image);
