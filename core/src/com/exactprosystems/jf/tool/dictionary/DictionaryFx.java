@@ -400,14 +400,14 @@ public class DictionaryFx extends GuiDictionary
 		}
 		Command undo = () -> Common.tryCatch(() ->
 		{
-			super.windows.remove(newIndex.intValue());
+			super.getWindows().remove(newIndex.intValue());
 			this.addWindow(lastIndex, (Window) window);
 			this.displayDialog(window, getWindows());
 			displayElement(window, section, window.getFirstControl(section));
 		}, "");
 		Command redo = () -> Common.tryCatch(() ->
 		{
-			super.windows.remove(lastIndex);
+			super.getWindows().remove(lastIndex);
 			this.addWindow(newIndex, (Window) window);
 			this.displayDialog(window, getWindows());
 			displayElement(window, section, window.getFirstControl(section));
@@ -514,7 +514,7 @@ public class DictionaryFx extends GuiDictionary
 
 	public boolean checkDialogName(IWindow currentWindow, String name)
 	{
-		long count = super.windows.stream().filter(w -> !Objects.equals(currentWindow, w) && Objects.equals(w.getName(), name)).count();
+		long count = super.getWindows().stream().filter(w -> !Objects.equals(currentWindow, w) && Objects.equals(w.getName(), name)).count();
 		return count == 0;
 	}
 

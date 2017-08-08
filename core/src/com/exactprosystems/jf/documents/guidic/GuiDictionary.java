@@ -8,23 +8,18 @@
 
 package com.exactprosystems.jf.documents.guidic;
 
-import com.exactprosystems.jf.api.app.Addition;
 import com.exactprosystems.jf.api.app.IGuiDictionary;
 import com.exactprosystems.jf.api.app.IWindow;
 import com.exactprosystems.jf.api.common.Str;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
-import com.exactprosystems.jf.common.report.ReportTable;
 import com.exactprosystems.jf.common.xml.schema.Xsd;
 import com.exactprosystems.jf.documents.AbstractDocument;
 import com.exactprosystems.jf.documents.DocumentFactory;
 import com.exactprosystems.jf.documents.DocumentInfo;
 import com.exactprosystems.jf.documents.DocumentKind;
-import com.exactprosystems.jf.documents.guidic.controls.AbstractControl;
-import com.exactprosystems.jf.documents.matrix.parser.items.MutableArrayList;
 
 import javax.xml.XMLConstants;
 import javax.xml.bind.*;
-import javax.xml.bind.annotation.*;
 import javax.xml.transform.Source;
 import javax.xml.transform.stream.StreamSource;
 import javax.xml.validation.Schema;
@@ -38,18 +33,16 @@ import java.util.Iterator;
 import java.util.List;
 
 
-@XmlAccessorType(XmlAccessType.NONE)
-@XmlType(name = "GuiDictionary", propOrder = { "windows" })
-@XmlRootElement(name = "dictionary")
-
 @DocumentInfo(
         kind = DocumentKind.GUI_DICTIONARY,
-		newName = "NewDictionary", 
-		extentioin = "xml", 
-		description = "Gui dictionary"
+        newName = "NewDictionary",
+        extentioin = "xml",
+        description = "Gui dictionary"
 )
 public class GuiDictionary extends AbstractDocument implements IGuiDictionary
 {
+    private GuiDictionaryBean bean;
+    
 	public GuiDictionary()
 	{
 		this(null, null);
@@ -58,8 +51,7 @@ public class GuiDictionary extends AbstractDocument implements IGuiDictionary
 	public GuiDictionary(String fileName, DocumentFactory factory)
 	{
 		super(fileName, factory);
-
-		this.windows = new MutableArrayList<>();
+		this.bean = new GuiDictionaryBean();
 	}
 
     //------------------------------------------------------------------------------------------------------------------
@@ -81,7 +73,7 @@ public class GuiDictionary extends AbstractDocument implements IGuiDictionary
 		{
 			super.load(reader);
 
-			JAXBContext jaxbContext = JAXBContext.newInstance(jaxbContextClasses);
+			JAXBContext jaxbContext = JAXBContext.newInstance(GuiDictionaryBean.jaxbContextClasses);
 
 			SchemaFactory schemaFactory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
 			Source schemaFile = new StreamSource(Xsd.class.getResourceAsStream("GuiDictionary.xsd"));
@@ -102,11 +94,7 @@ public class GuiDictionary extends AbstractDocument implements IGuiDictionary
 
 			unmarshaller.setListener(new DictionaryUnmarshallerListener());
 
-			GuiDictionary dictionary = (GuiDictionary) unmarshaller.unmarshal(reader);
-			dictionary.factory = getFactory();
-
-			this.windows.clear();
-			this.windows.addAll(dictionary.windows);
+			this.bean = (GuiDictionaryBean) unmarshaller.unmarshal(reader);
 		}
 		catch (UnmarshalException e)
 		{
@@ -127,7 +115,7 @@ public class GuiDictionary extends AbstractDocument implements IGuiDictionary
 
     	File file = new File(fileName);
 
-        JAXBContext jaxbContext = JAXBContext.newInstance(jaxbContextClasses);
+        JAXBContext jaxbContext = JAXBContext.newInstance(GuiDictionaryBean.jaxbContextClasses);
 
         Marshaller marshaller = jaxbContext.createMarshaller();
         marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
@@ -142,7 +130,7 @@ public class GuiDictionary extends AbstractDocument implements IGuiDictionary
     public Collection<IWindow> getWindows()
     {
     	List<IWindow> result = new ArrayList<IWindow>();
-    	for (IWindow window : this.windows)
+    	for (IWindow window : this.bean.windows)
     	{
     		result.add(window);
     	}
@@ -152,7 +140,7 @@ public class GuiDictionary extends AbstractDocument implements IGuiDictionary
 	@Override
 	public boolean containsWindow(String dialogName)
 	{
-		for (Window window : this.windows)
+		for (Window window : this.bean.windows)
 		{
 			if (Str.areEqual(dialogName, window.getName()))
 			{
@@ -165,7 +153,7 @@ public class GuiDictionary extends AbstractDocument implements IGuiDictionary
 	@Override
 	public IWindow getWindow(String name)
 	{
-    	Iterator<Window> iterator = this.windows.iterator();
+    	Iterator<Window> iterator = this.bean.windows.iterator();
     	while (iterator.hasNext())
     	{
     		Window window = iterator.next();
@@ -180,11 +168,11 @@ public class GuiDictionary extends AbstractDocument implements IGuiDictionary
 	@Override
 	public IWindow getFirstWindow()
 	{
-		if (this.windows == null || this.windows.isEmpty())
+		if (this.bean.windows == null || this.bean.windows.isEmpty())
 		{
 			return null;
 		}
-		return this.windows.get(0);
+		return this.bean.windows.get(0);
 	}
 	//------------------------------------------------------------------------------------------------------------------
 	// interface Mutable
@@ -192,30 +180,30 @@ public class GuiDictionary extends AbstractDocument implements IGuiDictionary
 	@Override
 	public boolean isChanged()
 	{
-		for (Window window : this.windows)
+		for (Window window : this.bean.windows)
 		{
 			if (window.isChanged())
 			{
 				return true;
 			}
 		}
-		return this.windows.isChanged();
+		return this.bean.windows.isChanged();
 	}
 	
 	@Override
 	public void saved()
 	{
-		for (Window window : this.windows)
+		for (Window window : this.bean.windows)
 		{
 			window.saved();
 		}
-		this.windows.saved();
+		this.bean.windows.saved();
 	}
 
     //------------------------------------------------------------------------------------------------------------------
 	public void evaluateAll(AbstractEvaluator evaluator)
 	{
-		for (Window window : this.windows)
+		for (Window window : this.bean.windows)
 		{
 			window.evaluateAll(evaluator);
 		}
@@ -223,17 +211,17 @@ public class GuiDictionary extends AbstractDocument implements IGuiDictionary
 	
 	public void addWindow(Window window)
     {
-        this.windows.add(window);
+        this.bean.windows.add(window);
     }
 
 	public void addWindow(int index, Window window)
 	{
-		this.windows.add(index, window);
+		this.bean.windows.add(index, window);
 	}
 
     public void removeWindowByName(String name)
     {
-    	Iterator<Window> iterator = this.windows.iterator();
+    	Iterator<Window> iterator = this.bean.windows.iterator();
     	while (iterator.hasNext())
     	{
     		Window window = iterator.next();
@@ -247,7 +235,7 @@ public class GuiDictionary extends AbstractDocument implements IGuiDictionary
 
 	public int indexOf(IWindow window)
 	{
-		Iterator<Window> iterator = this.windows.iterator();
+		Iterator<Window> iterator = this.bean.windows.iterator();
 		int res = 0;
 		while (iterator.hasNext())
 		{
@@ -263,7 +251,7 @@ public class GuiDictionary extends AbstractDocument implements IGuiDictionary
 
 	public void removeWindow(IWindow window)
 	{
-		Iterator<Window> iterator = this.windows.iterator();
+		Iterator<Window> iterator = this.bean.windows.iterator();
 		while (iterator.hasNext())
 		{
 			Window next = iterator.next();
@@ -274,19 +262,4 @@ public class GuiDictionary extends AbstractDocument implements IGuiDictionary
 			}
 		}
 	}
-
-	@XmlElement(name = "window")
-	protected MutableArrayList<Window> windows;
-	
-	private static final Class<?>[] jaxbContextClasses = 
-		{ 
-			GuiDictionary.class,
-			Window.class,
-			Section.class, 
-			AbstractControl.class, 
-			ExtraInfo.class,
-			Rect.class,
-			Attr.class,
-			Addition.class,
-		};
 }
