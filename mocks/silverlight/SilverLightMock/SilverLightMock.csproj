@@ -95,6 +95,9 @@
     <Compile Include="SampleData\TableData\TableData.xaml.cs">
       <DependentUpon>TableData.xaml</DependentUpon>
     </Compile>
+    <Compile Include="SampleData\TreeViewDataSource\TreeViewDataSource.xaml.cs">
+      <DependentUpon>TreeViewDataSource.xaml</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <ApplicationDefinition Include="App.xaml">
@@ -117,12 +120,17 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Page Include="SampleData\TreeViewDataSource\TreeViewDataSource.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <None Include="Properties\AppManifest.xml" />
     <None Include="SampleData\ComboBoxData\ComboBoxData.xsd" />
     <None Include="SampleData\MultySelectData\MultySelectData.xsd" />
     <None Include="SampleData\TableData\TableData.xsd" />
+    <None Include="SampleData\TreeViewDataSource\TreeViewDataSource.xsd" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="SampleData\TableData\TableData_Files\image01.png" />

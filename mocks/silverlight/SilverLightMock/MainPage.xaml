@@ -325,20 +325,31 @@
                 <TextBlock Text="{Binding Name}"/>
             </StackPanel>
         </DataTemplate>
+        <sdk:HierarchicalDataTemplate x:Key="ItemTemplate2" ItemsSource="{Binding Collection}">
+            <StackPanel>
+                <TextBlock Text="{Binding Property1}"/>
+                <CheckBox IsChecked="{Binding Property2, Mode=TwoWay}"/>
+            </StackPanel>
+        </sdk:HierarchicalDataTemplate>
     </UserControl.Resources>
 
 
     <Grid x:Name="LayoutRoot" Background="White" DataContext="{Binding Source={StaticResource ComboBoxData}}">
-        <sdk:Label x:Name="labelSimple" HorizontalAlignment="Left" Height="16" Margin="10,10,0,0" VerticalAlignment="Top" Width="101" Content="Simple combobox"/>
-        <ComboBox x:Name="comboboxSimple" Height="15" Margin="116,10,164,0" VerticalAlignment="Top" d:LayoutOverrides="LeftPosition, RightPosition">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="40*"/>
+            <ColumnDefinition Width="31*"/>
+            <ColumnDefinition Width="29*"/>
+        </Grid.ColumnDefinitions>
+        <sdk:Label x:Name="labelSimple" Height="16" Margin="10,10,72,0" VerticalAlignment="Top" Content="Simple combobox" d:LayoutOverrides="LeftMargin, RightMargin, TopMargin, BottomMargin"/>
+        <ComboBox x:Name="comboboxSimple" Height="15" Margin="0,10,41,0" VerticalAlignment="Top" d:LayoutOverrides="LeftMargin, RightMargin, TopMargin, BottomMargin" HorizontalAlignment="Right" Width="26">
             <ComboBoxItem x:Name="First" Content="First"/>
             <ComboBoxItem x:Name="Second" Content="Second"/>
         </ComboBox>
-        <sdk:Label x:Name="labelData" HorizontalAlignment="Left" Height="16" Margin="10,29,0,0" VerticalAlignment="Top" Width="101" Content="With data"/>
-        <ComboBox x:Name="comboboxWithData" Height="15" Margin="116,30,164,0" VerticalAlignment="Top" ItemTemplate="{StaticResource ItemTemplate}" ItemsSource="{Binding Collection}" d:LayoutOverrides="LeftPosition, RightPosition"/>
-        <sdk:Label x:Name="labelCheckboxes" HorizontalAlignment="Left" Height="16" Margin="10,50,0,0" VerticalAlignment="Top" Width="101" Content="With checkboxes"/>
-        <ComboBox x:Name="comboboxCheckboxes" Height="15" Margin="116,50,164,0" VerticalAlignment="Top" ItemTemplate="{StaticResource ItemTemplate1}" d:LayoutOverrides="LeftPosition, RightPosition" Style="{StaticResource MultiSelComboBoxStyle}" DataContext="{Binding Source={StaticResource MultySelectData}}" ItemsSource="{Binding Collection}"/>
-        <sdk:DataGrid Margin="10,80,40,62" d:LayoutOverrides="LeftPosition, RightPosition, TopPosition, BottomPosition" AutoGenerateColumns="False" DataContext="{Binding Source={StaticResource TableData}}" ItemsSource="{Binding Collection}">
+        <sdk:Label x:Name="labelData" Height="16" Margin="10,29,72,0" VerticalAlignment="Top" Content="With data" d:LayoutOverrides="LeftMargin, RightMargin, TopMargin, BottomMargin"/>
+        <ComboBox x:Name="comboboxWithData" Height="15" Margin="0,30,41,0" VerticalAlignment="Top" ItemTemplate="{StaticResource ItemTemplate}" ItemsSource="{Binding Collection}" d:LayoutOverrides="LeftMargin, RightMargin, TopMargin, BottomMargin" HorizontalAlignment="Right" Width="26"/>
+        <sdk:Label x:Name="labelCheckboxes" Height="16" Margin="10,50,72,0" VerticalAlignment="Top" Content="With checkboxes" d:LayoutOverrides="LeftMargin, RightMargin, TopMargin, BottomMargin"/>
+        <ComboBox x:Name="comboboxCheckboxes" Height="15" Margin="0,50,41,0" VerticalAlignment="Top" ItemTemplate="{StaticResource ItemTemplate1}" d:LayoutOverrides="LeftMargin, RightMargin, TopMargin, BottomMargin" Style="{StaticResource MultiSelComboBoxStyle}" DataContext="{Binding Source={StaticResource MultySelectData}}" ItemsSource="{Binding Collection}" HorizontalAlignment="Right" Width="26"/>
+        <sdk:DataGrid Margin="10,80,40,62" d:LayoutOverrides="LeftMargin, RightMargin, TopMargin, BottomMargin, LeftPosition, RightPosition, TopPosition, BottomPosition" AutoGenerateColumns="False" DataContext="{Binding Source={StaticResource TableData}}" ItemsSource="{Binding Collection}">
             <sdk:DataGrid.Columns>
                 <sdk:DataGridCheckBoxColumn Binding="{Binding Boolean}" Header="Boolean"/>
                 <sdk:DataGridTextColumn Binding="{Binding Image}" Header="Image"/>
@@ -346,6 +357,18 @@
                 <sdk:DataGridTextColumn Binding="{Binding String}" Header="String"/>
             </sdk:DataGrid.Columns>
         </sdk:DataGrid>
-        <sdk:AutoCompleteBox HorizontalAlignment="Left" Height="28" Margin="10,243,0,0" VerticalAlignment="Top" Width="120" x:Name="autocompleteBox" IsDropDownOpen="True" ItemsSource="{Binding Collection, Source={StaticResource ComboBoxData}}" FilterMode="None" ItemTemplate="{StaticResource ItemTemplate}"/>
+        <sdk:AutoCompleteBox Height="28" Margin="10,0,53,29" VerticalAlignment="Bottom" x:Name="autocompleteBox" IsDropDownOpen="True" ItemsSource="{Binding Collection, Source={StaticResource ComboBoxData}}" FilterMode="None" ItemTemplate="{StaticResource ItemTemplate}" d:LayoutOverrides="LeftMargin, RightMargin, TopMargin, BottomMargin"/>
+        <sdk:TreeView x:Name="treeView" Grid.Column="1" Margin="10,80,10,62">
+            <sdk:TreeViewItem Header="Green" Height="200" Margin="0" Width="200" IsExpanded="True">
+                <sdk:TreeViewItem Header="Yellow" Height="23" Margin="0,0,-15,0" Width="200"/>
+                <sdk:TreeViewItem Header="Orange" Height="25" Margin="0,0,-15,0" Width="200"/>
+                <sdk:TreeViewItem Header="Blue" Height="27" Margin="0,0,-15,0" Width="200"/>
+                <sdk:TreeViewItem Header="colors" Height="93" Margin="0,0,2,0" IsExpanded="True">
+                    <sdk:TreeViewItem Header="red" Height="21" Margin="0,0,-15,0" Width="200"/>
+                    <sdk:TreeViewItem Header="Blue" Height="23" Margin="0,0,-15,0" Width="200"/>
+                </sdk:TreeViewItem>
+            </sdk:TreeViewItem>
+        </sdk:TreeView>
+        <sdk:TreeView x:Name="treeView1" Grid.Column="2" Margin="11,80,10,62" DataContext="{Binding Source={StaticResource TreeViewDataSource}}" ItemsSource="{Binding Collection}" ItemTemplate="{StaticResource ItemTemplate2}"/>
     </Grid>
 </UserControl>

@@ -304,8 +304,45 @@ namespace UIAdapter
 
             int[] runtimeId = element.GetRuntimeId();
             XmlElement node = document.CreateElement("item");
+            if (element.Current.FrameworkId.ToUpper().Contains("SILVER"))
+            {
+                if (Tag(element).ToUpper().Equals("TREEITEM"))
+                {
+                    AutomationElement header = null;
+                    var ch = element.FindAll(TreeScope.Children, Condition.TrueCondition);
+                    foreach (AutomationElement e in ch)
+                    {
+                        if (e.Current.AutomationId.ToUpper().Contains("HEADER"))
+                        {
+                            header = e;
+                            break;
+                        }
+                    }
+
+                    if (header != null)
+                    {
+                        TreeWalker walker = TreeWalker.RawViewWalker;
+                        var child = walker.GetFirstChild(header);
+                        while (child != null)
+                        {
+                            if (Tag(child).ToUpper().Equals("TEXT"))
+                            {
+                                node.SetAttribute(Program.pluginInfo.attributeName(LocatorFieldKind.NAME).ToLower(), child.Current.Name);
+                                break;
+                            }
+                            else
+                            {
+                                child = walker.GetNextSibling(child);
+                            }
+                        }
+                    }
+                }
+            }
+            else
+            {
+                node.SetAttribute(Program.pluginInfo.attributeName(LocatorFieldKind.NAME).ToLower(), element.Current.Name);
+            }
             node.SetAttribute(Program.pluginInfo.attributeName(LocatorFieldKind.UID), element.Current.AutomationId);
-            node.SetAttribute(Program.pluginInfo.attributeName(LocatorFieldKind.NAME).ToLower(), element.Current.Name);
             node.SetAttribute(RUNTIME_ID_ATTRIBUTE, string.Join(SEPARATOR, runtimeId));
 
             object obj;
