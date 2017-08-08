@@ -19,7 +19,7 @@ include	'core',
 		'mocks:swing',
 		'mocks:win',
 							//UIAdapter
-		'c#:UIAdapter',
+		'csharp:UIAdapter',
 							//clients
 		'plugins:client:dts',
 		'plugins:client:fix',
