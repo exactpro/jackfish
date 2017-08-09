@@ -114,7 +114,7 @@ public class CustomTab extends Tab implements AutoCloseable
 				}
 			}
 		};
-		this.watcher.saved(this.document.getName());
+		this.watcher.saved(this.document.getNameProperty().get());
 		this.crossButton.setDisable(true);
 		this.crossButton.setVisible(false);
 		this.setOnSelectionChanged(arg0 ->
@@ -166,12 +166,12 @@ public class CustomTab extends Tab implements AutoCloseable
 	{
 		Platform.runLater(() ->
 		{
-			ButtonType desision = DialogsHelper.showFileChangedDialog(this.document.getName());
+			ButtonType desision = DialogsHelper.showFileChangedDialog(this.document.getNameProperty().get());
 			if (desision == ButtonType.OK)
 			{
 				Common.tryCatch(() ->
 				{
-					try (Reader reader = CommonHelper.readerFromFileName(this.document.getName()))
+					try (Reader reader = CommonHelper.readerFromFileName(this.document.getNameProperty().get()))
 					{
 						this.document.load(reader);
 					}
@@ -179,7 +179,7 @@ public class CustomTab extends Tab implements AutoCloseable
 					this.document.saved();
 				}, "Error on reload");
 			}
-			saved(this.document.getName());
+			saved(this.document.getNameProperty().get());
 			synchronized (warningIsShow)
 			{
 				warningIsShow.set(false);

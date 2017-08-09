@@ -268,7 +268,7 @@ public final class TestCase extends MatrixItem
 	        
 	        if (row != null)
 			{
-				row.put(Context.matrixColumn, 			this.owner.getName());
+				row.put(Context.matrixColumn, 			this.owner.getNameProperty().get());
 				row.put(Context.testCaseIdColumn, 		this.getId());
 				row.put(Context.testCaseColumn, 		this);
 			}

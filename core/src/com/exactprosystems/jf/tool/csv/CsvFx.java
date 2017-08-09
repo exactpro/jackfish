@@ -37,7 +37,7 @@ public class CsvFx extends Csv
 		super.display();
 		
 		initController();
-		this.controller.displayTitle(Common.getSimpleTitle(getName()));
+		this.controller.displayTitle(Common.getSimpleTitle(getNameProperty().get()));
 		this.controller.displayTable(this.provider);
 	}
 
@@ -64,10 +64,10 @@ public class CsvFx extends Csv
 
 		if (isChanged())
 		{
-			ButtonType desision = DialogsHelper.showSaveFileDialog(this.getName());
+			ButtonType desision = DialogsHelper.showSaveFileDialog(getNameProperty().get());
 			if (desision == ButtonType.YES)
 			{
-				save(getName());
+				save(getNameProperty().get());
 			}
 			if (desision == ButtonType.CANCEL)
 			{
@@ -82,7 +82,7 @@ public class CsvFx extends Csv
     public void save(String fileName) throws Exception
     {
     	super.save(fileName);
-		this.controller.saved(getName());
+		this.controller.saved(getNameProperty().get());
     }
     
 	@Override

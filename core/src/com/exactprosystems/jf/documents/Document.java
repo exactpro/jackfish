@@ -18,9 +18,6 @@ public interface Document extends Mutable
 {
     DocumentFactory getFactory();
 
-    @Deprecated
-	boolean hasName();
-	
 	void load(Reader reader) throws Exception;
 
 	void create() throws Exception;
@@ -42,7 +39,4 @@ public interface Document extends Mutable
 	MutableValue<String> getNameProperty();
 	
 	MutableValue<Boolean> getChangedProperty();
-	
-	@Deprecated
-    String getName();
 }

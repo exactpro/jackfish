@@ -164,11 +164,11 @@ public class CommandBuilder
         {
             Common.tryCatch(() -> 
             { 
-                try (Reader reader = CommonHelper.readerFromFileName(doc.getName()))
+                try (Reader reader = CommonHelper.readerFromFileName(doc.getNameProperty().get()))
                 {
                     doc.load(reader);
                 }
-            }, "Error on load " + doc.getName());
+            }, "Error on load " + doc.getNameProperty().get());
         });
         return this;
     }
@@ -179,9 +179,9 @@ public class CommandBuilder
 		{
 			Common.tryCatch(() -> 
 			{ 
-			    doc.save(doc.getName());
+			    doc.save(doc.getNameProperty().get());
 			    doc.close();
-			}, "Error on save " + doc.getName());
+			}, "Error on save " + doc.getNameProperty().get());
 		});
 		return this;
 	}

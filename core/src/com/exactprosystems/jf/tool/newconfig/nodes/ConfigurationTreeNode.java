@@ -67,7 +67,7 @@ public class ConfigurationTreeNode extends TreeNode
 	public Node getView()
 	{
 		HBox box = new HBox();
-		String name = this.model.getName();
+		String name = this.model.getNameProperty().get();
 		String fullPath = ConfigurationFx.path(name);
 		if (name.equals(fullPath))
 		{

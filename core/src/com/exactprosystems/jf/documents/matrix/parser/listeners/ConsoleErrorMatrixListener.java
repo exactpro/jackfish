@@ -20,7 +20,7 @@ public class ConsoleErrorMatrixListener extends MatrixListener
 		
 		if (item != null)
 		{
-            System.out.println(String.format("%s[%3d] %s %s", matrix.getName(), item.getNumber(), item.getPath(), message));
+            System.out.println(String.format("%s[%3d] %s %s", matrix.getNameProperty().get(), item.getNumber(), item.getPath(), message));
 		}
 		else
 		{

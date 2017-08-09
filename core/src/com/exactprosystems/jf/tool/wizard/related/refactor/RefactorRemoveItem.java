@@ -23,7 +23,7 @@ public class RefactorRemoveItem   extends Refactor
 
 	public RefactorRemoveItem(Matrix matrix, MatrixItem item)
 	{
-        this.message = "Remove " + item + " '" + item.getId() +  "' from '" + Common.getRelativePath(matrix.getName()) + "'";
+        this.message = "Remove " + item + " '" + item.getId() +  "' from '" + Common.getRelativePath(matrix.getNameProperty().get()) + "'";
         CommandBuilder builder = CommandBuilder.start();
         builder.removeMatrixItem(matrix, item);
         builder.saveDocument(matrix);

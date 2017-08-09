@@ -199,10 +199,10 @@ public class ConfigurationFx extends Configuration
 		}
 		if (isChanged())
 		{
-			ButtonType desision = DialogsHelper.showSaveFileDialog(this.getName());
+			ButtonType desision = DialogsHelper.showSaveFileDialog(getNameProperty().get());
 			if (desision == ButtonType.YES)
 			{
-				save(getName());
+				save(getNameProperty().get());
 			}
 			if (desision == ButtonType.CANCEL)
 			{
@@ -458,10 +458,10 @@ public class ConfigurationFx extends Configuration
 	{
 		Map<String, Matrix> libs = super.libs;
 		Matrix matrix = libs.get(namespace);
-		File file = new File(matrix.getName());
+		File file = new File(matrix.getNameProperty().get());
 		List<String> collect = libs.entrySet()
 				.stream()
-				.filter(e -> new File(e.getValue().getName()).getAbsolutePath().equals(file.getAbsolutePath()))
+				.filter(e -> new File(e.getValue().getNameProperty().get()).getAbsolutePath().equals(file.getAbsolutePath()))
 				.map(Map.Entry::getKey)
 				.collect(Collectors.toList());
 		boolean needRemove = true;
@@ -475,7 +475,7 @@ public class ConfigurationFx extends Configuration
 		}
 		if (needRemove)
 		{
-			File removeFile = new File(libs.get(collect.get(0)).getName());
+			File removeFile = new File(libs.get(collect.get(0)).getNameProperty().get());
 			collect.forEach(super.libs::remove);
 			removeFileFromFileSystem(removeFile, this::updateLibraries);
 		}

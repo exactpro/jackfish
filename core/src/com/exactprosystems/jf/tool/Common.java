@@ -183,7 +183,7 @@ public abstract class Common
 		return CustomTabPane.getInstance().getTabs()
 				.stream()
 				.map(t -> (CustomTab) t)
-				.filter(tab -> tab.getDocument().getName().equals(fileName))
+				.filter(tab -> tab.getDocument().getNameProperty().get().equals(fileName))
 				.findFirst()
 				.orElse(null);
 	}
@@ -193,7 +193,7 @@ public abstract class Common
 		return CustomTabPane.getInstance().getTabs()
 				.stream()
 				.map(t -> (CustomTab) t)
-				.filter(tab -> new File(tab.getDocument().getName()).getAbsolutePath().equals(file.getAbsolutePath()))
+				.filter(tab -> new File(tab.getDocument().getNameProperty().get()).getAbsolutePath().equals(file.getAbsolutePath()))
 				.findFirst()
 				.orElse(null);
 	}

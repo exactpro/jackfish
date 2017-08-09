@@ -60,7 +60,7 @@ public class GuiDictionary extends AbstractDocument implements IGuiDictionary
 	@Override
 	public String toString()
 	{
-		return getClass().getSimpleName() + " <" + getName() + ">";
+		return getClass().getSimpleName() + " <" + getNameProperty() + ">";
 	}
 
     //------------------------------------------------------------------------------------------------------------------

@@ -85,7 +85,7 @@ public class MatrixRunner implements IMatrixRunner, AutoCloseable
 
 	public String matrix()
 	{
-		return this.matrix.getName();
+		return this.matrix.getNameProperty().get();
 	}
 
 	@Override

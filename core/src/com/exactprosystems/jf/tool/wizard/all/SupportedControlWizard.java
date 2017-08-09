@@ -182,7 +182,7 @@ public class SupportedControlWizard extends AbstractWizard
 			}
 		});
 
-		TreeItem<SimpleBean> root = new TreeItem<>(new SimpleBean("Dictionary : " + this.dictionary.getName()));
+		TreeItem<SimpleBean> root = new TreeItem<>(new SimpleBean("Dictionary : " + this.dictionary.getNameProperty()));
 		root.setExpanded(true);
 		this.treeView.setRoot(root);
 

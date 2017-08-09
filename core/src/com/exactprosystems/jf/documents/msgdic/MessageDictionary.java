@@ -142,7 +142,7 @@ public class MessageDictionary extends AbstractDocument implements IMessageDicti
     @Override
     public String getFilePath()
     {
-        return getName();
+        return getNameProperty().get();
     }
 
 	@Override
@@ -231,7 +231,7 @@ public class MessageDictionary extends AbstractDocument implements IMessageDicti
 	@Override
 	public String toString()
 	{
-		return getClass().getSimpleName() + ":" + this.bean.name + " <" + getName() + ">";
+		return getClass().getSimpleName() + ":" + this.bean.name + " <" + getNameProperty() + ">";
 	}
 	
 	public void set(String name, Object value) throws Exception

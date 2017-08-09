@@ -748,7 +748,7 @@ public class MainController implements Initializable, ContainingParent
 		Optional<Tab> first = this.customTabPane.getTabs().stream().filter(f ->
 		{
 			Document document = ((CustomTab) f).getDocument();
-			return Str.areEqual(new File(document.getName()).getAbsolutePath(), file.getAbsolutePath());
+			return Str.areEqual(new File(document.getNameProperty().get()).getAbsolutePath(), file.getAbsolutePath());
 		}).findFirst();
 		first.ifPresent(this.customTabPane.getSelectionModel()::select);
 		return first.isPresent();

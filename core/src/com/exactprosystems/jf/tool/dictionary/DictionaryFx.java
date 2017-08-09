@@ -72,7 +72,7 @@ public class DictionaryFx extends GuiDictionary
 
 		initController();
 
-		displayTitle(getName());
+		displayTitle(getNameProperty().get());
 
 		IWindow window = getFirstWindow();
 		displayDialog(window, getWindows());
@@ -105,8 +105,8 @@ public class DictionaryFx extends GuiDictionary
 		super.save(fileName);
 		if (this.controller != null)
 		{
-			this.controller.saved(getName());
-			displayTitle(getName());
+			this.controller.saved(getNameProperty().get());
+			displayTitle(getNameProperty().get());
 		}
 	}
 
@@ -120,10 +120,10 @@ public class DictionaryFx extends GuiDictionary
 
 		if (isChanged())
 		{
-			ButtonType desision = DialogsHelper.showSaveFileDialog(this.getName());
+			ButtonType desision = DialogsHelper.showSaveFileDialog(getNameProperty().get());
 			if (desision == ButtonType.YES)
 			{
-				save(getName());
+				save(getNameProperty().get());
 			}
 			if (desision == ButtonType.CANCEL)
 			{
@@ -1063,7 +1063,7 @@ public class DictionaryFx extends GuiDictionary
 
 	private void storeSettings(Settings settings) throws Exception
 	{
-		String absolutePath = new File(this.getName()).getAbsolutePath();
+		String absolutePath = new File(getNameProperty().get()).getAbsolutePath();
 		String idAppEntry = this.currentAdapter;
 		if (!Str.IsNullOrEmpty(idAppEntry))
 		{
@@ -1078,7 +1078,7 @@ public class DictionaryFx extends GuiDictionary
 
 	private void restoreSettings(Settings settings)
 	{
-		String absolutePath = new File(this.getName()).getAbsolutePath();
+		String absolutePath = new File(getNameProperty().get()).getAbsolutePath();
 		Settings.SettingsValue value = settings.getValue(Settings.MAIN_NS, DIALOG_DICTIONARY_SETTINGS, absolutePath);
 		Optional.ofNullable(value).ifPresent(s -> {
 			String idApp = s.getValue();

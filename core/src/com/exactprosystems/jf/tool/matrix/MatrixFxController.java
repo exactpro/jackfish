@@ -164,7 +164,7 @@ public class MatrixFxController implements Initializable, ContainingParent, IMat
 		this.model.clearExecutingState();
 		this.refresh();
 		CustomTab tab1 = checkDocument(matrix);
-		String format = String.format("Matrix '%s' started...", matrix.getName());
+		String format = String.format("Matrix '%s' started...", matrix.getNameProperty().get());
 		if (this.listView != null)
 		{
 		this.listView.getItems().clear();
@@ -196,7 +196,7 @@ public class MatrixFxController implements Initializable, ContainingParent, IMat
 	@Override
 	public void matrixFinished(final Matrix matrix, final int passed, final int failed)
 	{
-		String format = String.format("Matrix '%s' finished.", matrix.getName());
+		String format = String.format("Matrix '%s' finished.", matrix.getNameProperty().get());
 		if (this.listView != null)
 		{
 			this.listView.getItems().add(ConsoleText.defaultText(format));
@@ -256,7 +256,7 @@ public class MatrixFxController implements Initializable, ContainingParent, IMat
 			TreeItem<MatrixItem> treeItem = this.tree.find(item);
 			if (treeItem == null)
 			{
-				DialogsHelper.showInfo(String.format("Matrix paused on \'%s\' in file \'%s\'", item, matrix.getName()));
+				DialogsHelper.showInfo(String.format("Matrix paused on \'%s\' in file \'%s\'", item, matrix.getNameProperty().get()));
 				Optional.ofNullable(this.listView).ifPresent(lv -> lv.getItems().add(ConsoleText.pausedItem(String.format("Paused on %s", item), null)));
 			}
 			else

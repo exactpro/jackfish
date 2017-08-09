@@ -42,7 +42,7 @@ public class PlainTextFx extends PlainText
 
 		initController();
 		this.controller.updateText(this.property.get());
-		this.controller.displayTitle(Common.getSimpleTitle(getName()));
+		this.controller.displayTitle(Common.getSimpleTitle(getNameProperty().get()));
 	}
 
 	@Override
@@ -55,10 +55,10 @@ public class PlainTextFx extends PlainText
 
 		if (isChanged())
 		{
-			ButtonType desision = DialogsHelper.showSaveFileDialog(this.getName());
+			ButtonType desision = DialogsHelper.showSaveFileDialog(getNameProperty().get());
 			if (desision == ButtonType.YES)
 			{
-				save(getName());
+				save(getNameProperty().get());
 			}
 			if (desision == ButtonType.CANCEL)
 			{
@@ -73,7 +73,7 @@ public class PlainTextFx extends PlainText
 	public void save(String fileName) throws Exception
 	{
 		super.save(fileName);
-		this.controller.saved(getName());
+		this.controller.saved(getNameProperty().get());
 	}
 
 	@Override

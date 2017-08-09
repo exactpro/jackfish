@@ -53,7 +53,7 @@ public class SystemVarsFx extends SystemVars
 		
 		initController();
 	
-		this.controller.displayTitle(Common.getSimpleTitle(getName()));
+		this.controller.displayTitle(Common.getSimpleTitle(getNameProperty().get()));
 		this.controller.displayNewParameters(evaluateData());
 	}
 
@@ -61,7 +61,7 @@ public class SystemVarsFx extends SystemVars
 	public void save(String fileName) throws Exception
 	{
 		super.save(fileName);
-		this.controller.saved(getName());
+		this.controller.saved(getNameProperty().get());
 	}
 
 	@Override
@@ -74,10 +74,10 @@ public class SystemVarsFx extends SystemVars
 		
 		if (isChanged())
 		{
-			ButtonType desision = DialogsHelper.showSaveFileDialog(this.getName());
+			ButtonType desision = DialogsHelper.showSaveFileDialog(getNameProperty().get());
 			if (desision == ButtonType.YES)
 			{
-				save(getName());
+				save(getNameProperty().get());
 			}
 			if (desision == ButtonType.CANCEL)
 			{

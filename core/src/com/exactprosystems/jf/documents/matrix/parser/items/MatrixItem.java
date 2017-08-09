@@ -1039,7 +1039,7 @@ public abstract class MatrixItem implements IMatrixItem, Mutable, Cloneable
     {
         if (showPopups)
 		{
-        	String str = this.getMatrix().getName() + "\n" + this.getItemName() + "\n" + message; 
+        	String str = this.getMatrix().getNameProperty().get() + "\n" + this.getItemName() + "\n" + message; 
 			context.getFactory().popup(str, notifier);
 		}
 	}

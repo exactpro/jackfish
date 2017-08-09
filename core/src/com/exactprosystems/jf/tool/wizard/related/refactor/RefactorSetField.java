@@ -24,7 +24,7 @@ public class RefactorSetField  extends Refactor
 	public RefactorSetField(Matrix matrix, Tokens token, String value, List<Integer> itemIds)
 	{
         int size = itemIds.size();
-        this.message = "Set field '" + token + "' to '" + value + "' in '" + Common.getRelativePath(matrix.getName()) + "' : " + size;
+        this.message = "Set field '" + token + "' to '" + value + "' in '" + Common.getRelativePath(matrix.getNameProperty().get()) + "' : " + size;
 	    CommandBuilder builder = CommandBuilder.start();
         builder.loadDocument(matrix);
 	    itemIds.forEach(c -> 

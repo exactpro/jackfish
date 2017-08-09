@@ -688,9 +688,9 @@ public class DisplayDriverFx implements DisplayDriver
 		{
 			try
 			{
-			    MatrixRunner runner = context.createRunner(matrix.getName(), null, new Date(), null); 
-				matrixFx = context.getFactory().createMatrix(matrix.getName(), runner);
-				matrixFx.load(new FileReader(matrix.getName()));
+			    MatrixRunner runner = context.createRunner(matrix.getNameProperty().get(), null, new Date(), null); 
+				matrixFx = context.getFactory().createMatrix(matrix.getNameProperty().get(), runner);
+				matrixFx.load(new FileReader(matrix.getNameProperty().get()));
 				matrixFx.display();
 			}
 			catch (Exception e)

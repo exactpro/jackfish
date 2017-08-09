@@ -12,6 +12,7 @@ import java.util.Objects;
 import java.util.function.BiConsumer;
 
 import com.exactprosystems.jf.api.app.Mutable;
+import com.exactprosystems.jf.documents.AbstractDocument;
 
 public class MutableValue<T> implements Mutable, Getter<T>, Setter<T>, Cloneable
 {
@@ -29,6 +30,32 @@ public class MutableValue<T> implements Mutable, Getter<T>, Setter<T>, Cloneable
 		this();
 		this.value = value;
 	}
+	
+	@Override
+	public int hashCode()
+	{
+	    return Objects.hashCode(this.value);
+	}
+	
+    @Override
+    public boolean equals(Object obj)
+    {
+        if (this == obj)
+        {
+            return true;
+        }
+        if (obj == null)
+        {
+            return false;
+        }
+        if (!(obj instanceof MutableValue))
+        {
+            return false;
+        }
+        MutableValue<?> other = (MutableValue<?>) obj;
+        return Objects.equals(this.value, other.value);
+    }
+	
 	
 	@Override
 	public void set(T value)

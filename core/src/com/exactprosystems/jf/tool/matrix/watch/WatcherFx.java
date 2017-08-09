@@ -34,7 +34,7 @@ public class WatcherFx
 	public WatcherFx(Window owner, MatrixFx matrixFx, Context context) throws IOException
 	{
 		this.matrix = matrixFx;
-		this.dialog = new File(this.matrix.getName()).getAbsolutePath();
+		this.dialog = new File(this.matrix.getNameProperty().get()).getAbsolutePath();
 		this.context = context;
 		this.controller = Common.loadController(WatcherFx.class.getResource("WatcherFx.fxml"));
 		controller.init(owner, this, context.getEvaluator(), this.matrix);
@@ -51,7 +51,7 @@ public class WatcherFx
 
 	public void show()
 	{
-		this.controller.show(matrix.getName());
+		this.controller.show(matrix.getNameProperty().get());
 	}
 
 	public boolean isShow()

@@ -72,7 +72,7 @@ public class Matrix extends AbstractDocument implements IMatrix
 		this.buffer = new StringBuilder();
 		this.matrixListener = matrixListener;
 
-		if (getName() != null)
+		if (!getNameProperty().isNullOrEmpty())
 		{
 			if (!matrixListener.isOk())
 			{
@@ -98,12 +98,12 @@ public class Matrix extends AbstractDocument implements IMatrix
 	@Override
 	public String toString()
 	{
-		return getName();
+		return getNameProperty().toString();
 	}
 	
      public Matrix makeCopy() throws Exception
       {
-          Matrix copy = new Matrix(getName(), getFactory(), this.runner, this.matrixListener, this.isLibrary);
+          Matrix copy = new Matrix(getNameProperty().get(), getFactory(), this.runner, this.matrixListener, this.isLibrary);
           copy.root = this.root.clone();
           copy.root.init(copy, copy);
           copy.buffer = new StringBuilder(this.buffer);
@@ -176,7 +176,7 @@ public class Matrix extends AbstractDocument implements IMatrix
 	public void load(Reader reader) throws Exception
 	{
 		super.load(reader);
-		this.root = new MatrixRoot(getName());
+		this.root = new MatrixRoot(getNameProperty().get());
 		try (BufferedReader rawReader = new BufferedReader(reader))
 		{
 			this.buffer.delete(0, this.buffer.length());
@@ -199,7 +199,7 @@ public class Matrix extends AbstractDocument implements IMatrix
 	{
 		super.create();
 
-		this.root = new MatrixRoot(getName());
+		this.root = new MatrixRoot(getNameProperty().get());
 		this.root.init(this, this);
 
 		if (this.isLibrary())
@@ -238,7 +238,7 @@ public class Matrix extends AbstractDocument implements IMatrix
 		super.save(fileName);
 		if (getMatrixRunner() != null)
 		{
-			getMatrixRunner().setMatrixFile(getName());
+			getMatrixRunner().setMatrixFile(getNameProperty().get());
 		}
 		
 		try (Writer rawWriter = CommonHelper.writerToFileName(fileName))
@@ -263,12 +263,6 @@ public class Matrix extends AbstractDocument implements IMatrix
 		super.saved();
 		this.root.saved();
 	}
-
-//	@Override // TODO remove
-//	public void changed(boolean flag)
-//	{
-//		super.changed(flag);
-//	}
 
 	// ==============================================================================================================================
 

@@ -69,9 +69,9 @@ public class CsvFxController implements Initializable, ContainingParent
 		Common.tryCatch(() -> 
 		{
 			this.model.setDelimiter(cbDelimiter.getSelectionModel().getSelectedItem().getValue().charAt(0));
-			if (this.model.hasName())
+			if (!this.model.getNameProperty().isNullOrEmpty())
 			{
-				this.model.load(new FileReader(this.model.getName()));
+				this.model.load(new FileReader(this.model.getNameProperty().get()));
 				this.model.display();
 			}
 		}, "Error on set delimiter");

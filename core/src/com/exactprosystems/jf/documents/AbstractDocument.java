@@ -24,25 +24,17 @@ public abstract class AbstractDocument implements Document
     private MutableValue<String>  nameProperty;
     private MutableValue<Boolean> changedProperty;
 
-    @Deprecated
-    private boolean               hasName  = false;
-    @Deprecated
-    private String                name;
-
     public AbstractDocument(String fileName, DocumentFactory factory)
 	{
 		this.factory = factory;
 		this.nameProperty = new MutableValue<>(fileName);
 		this.changedProperty = new MutableValue<>(false);
-		
-		this.name = fileName;
-		this.hasName = true;
 	}
 	
 	@Override
 	public int hashCode()
 	{
-		return Objects.hashCode(this.name);
+		return this.getNameProperty().hashCode();
 	}
 
 	@Override
@@ -61,39 +53,28 @@ public abstract class AbstractDocument implements Document
 			return false;
 		}
 		AbstractDocument other = (AbstractDocument) obj;
-		return Objects.equals(this.name, other.name);
+		return Objects.equals(this.getNameProperty(), other.getNameProperty());
 	}
 
-	@Override
-	public boolean hasName()
-	{
-		return this.hasName;
-	}
-	
 	@Override
 	public void create() throws Exception
 	{
 		DocumentInfo annotation = getClass().getAnnotation(DocumentInfo.class);
 		if (annotation != null)
 		{
-			this.name = annotation.newName();
 			this.nameProperty.set(annotation.newName());
 		}
-		this.hasName = false;
 	}
 	
 	@Override
 	public void load(Reader reader) throws Exception
 	{
-		this.hasName = true;
 	}
 	
 	@Override
 	public void save(String fileName) throws Exception
 	{
-		this.name = fileName;
         this.nameProperty.set(fileName);
-		this.hasName = true;
 	}
 	
 	@Override
@@ -148,13 +129,6 @@ public abstract class AbstractDocument implements Document
         return this.changedProperty;
     }
 
-    @Deprecated
-	@Override
-	public String getName()
-	{
-		return this.name;
-	}
-	
 	@Override
 	public void saved()
 	{

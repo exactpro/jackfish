@@ -70,7 +70,7 @@ public class MatrixFx extends Matrix
 
 		initController();
 
-		this.controller.displayTitle(getName());
+		this.controller.displayTitle(getNameProperty().get());
 
 		displayGuiDictionaries();
 		displayClientDictionaries();
@@ -97,8 +97,8 @@ public class MatrixFx extends Matrix
 		super.save(fileName);
 		if (this.controller != null)
 		{
-			this.controller.save(getName());
-			this.controller.displayTitle(getName());
+			this.controller.save(getNameProperty().get());
+			this.controller.displayTitle(getNameProperty().get());
 		}
 	}
 
@@ -115,13 +115,13 @@ public class MatrixFx extends Matrix
 			ButtonType decision;
 			while (true)
 			{
-				decision = DialogsHelper.showSaveFileDialog(this.getName());
-				if (decision == ButtonType.YES && super.hasName())
+				decision = DialogsHelper.showSaveFileDialog(getNameProperty().get());
+				if (decision == ButtonType.YES && !getNameProperty().isNullOrEmpty())
 				{
-					save(getName());
+					save(getNameProperty().get());
 					break;
 				}
-				if (decision == ButtonType.YES && !super.hasName())
+				if (decision == ButtonType.YES && getNameProperty().isNullOrEmpty())
 				{
 					File file = DialogsHelper.showSaveAsDialog(this);
 					if (file != null)
@@ -699,7 +699,7 @@ public class MatrixFx extends Matrix
 			File file = new File(getMatrixRunner().getReportName());
             if (this.controller != null)
             {
-                this.controller.showResult(file, this.getName());
+                this.controller.showResult(file, getNameProperty().get());
             }
 		}
 	}
@@ -785,7 +785,7 @@ public class MatrixFx extends Matrix
 				breakPoints.add(item.getNumber());
 			}
 		});
-		String absolutePathMatrix = new File(this.getName()).getAbsolutePath();
+		String absolutePathMatrix = new File(getNameProperty().get()).getAbsolutePath();
 		if (breakPoints.isEmpty())
 		{
 			//if matrix was present and don't have breakpoint - remove it;
@@ -809,7 +809,7 @@ public class MatrixFx extends Matrix
 
 	private void restoreSettings(Settings settings)
 	{
-		Settings.SettingsValue breakPoints = settings.getValue(Settings.MAIN_NS, DIALOG_BREAKPOINT, new File(this.getName()).getAbsolutePath());
+		Settings.SettingsValue breakPoints = settings.getValue(Settings.MAIN_NS, DIALOG_BREAKPOINT, new File(getNameProperty().get()).getAbsolutePath());
 		Optional.ofNullable(breakPoints).ifPresent(setting -> {
 			List<Integer> list = Arrays.stream(setting.getValue().split(DELIMITER)).mapToInt(Integer::valueOf).mapToObj(i -> i).collect(Collectors.toList());
 
@@ -821,7 +821,7 @@ public class MatrixFx extends Matrix
 			});
 		});
 
-		Settings.SettingsValue defaults = settings.getValue(Settings.MAIN_NS, DIALOG_DEFAULTS, new File(this.getName()).getAbsolutePath());
+		Settings.SettingsValue defaults = settings.getValue(Settings.MAIN_NS, DIALOG_DEFAULTS, new File(getNameProperty().get()).getAbsolutePath());
 		if (Objects.isNull(defaults))
 		{
 			this.controller.setDefaultApp(this.defaultAppId);

@@ -238,7 +238,7 @@ public class RefactorWizard extends AbstractWizard
                     {
                         if (onlyCheck)
                         {
-                            items.add(new RefactorEmpty(matrix.getName() + " contains " + calls.size() + " reference(s)"));
+                            items.add(new RefactorEmpty(matrix.getNameProperty().get() + " contains " + calls.size() + " reference(s)"));
                             this.success = false;
                         }
                         else

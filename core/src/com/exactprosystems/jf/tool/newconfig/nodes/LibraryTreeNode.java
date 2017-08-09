@@ -115,7 +115,7 @@ public class LibraryTreeNode extends TreeNode
 	public void display(Map<String, Matrix> map)
 	{
 		this.treeItem.getChildren().clear();
-		map.entrySet().stream().map(entry -> new TreeNodeLib(entry.getValue(), entry.getKey(), ConfigurationFx.path(entry.getValue().getName()))).map(lib -> {
+		map.entrySet().stream().map(entry -> new TreeNodeLib(entry.getValue(), entry.getKey(), ConfigurationFx.path(entry.getValue().getNameProperty().get()))).map(lib -> {
 			TreeItem<TreeNode> treeItem = new TreeItem<>();
 			treeItem.setValue(lib);
 			return treeItem;
@@ -140,7 +140,7 @@ public class LibraryTreeNode extends TreeNode
 		{
 			HBox box = new HBox();
 			Text textNamespace = new Text("<" + this.namespace + "> ");
-			Text textName = new Text(new File(this.lib.getName()).getName());
+			Text textName = new Text(new File(this.lib.getNameProperty().get()).getName());
 			box.getChildren().addAll(textNamespace, textName);
 			return box;
 		}

@@ -498,7 +498,7 @@ public class Configuration extends AbstractDocument
 			}
 			else
 			{
-				this.libs.entrySet().removeIf(entry -> entry.getValue().getName().contains(folderFile.getAbsolutePath()));
+				this.libs.entrySet().removeIf(entry -> entry.getValue().getNameProperty().get().contains(folderFile.getAbsolutePath()));
 			}
 		}
 	}
@@ -651,9 +651,9 @@ public class Configuration extends AbstractDocument
 			try
 			{
 				DocumentKind kind = DocumentKind.byDocument(doc);
-				if (doc.hasName())
+				if (!doc.getNameProperty().isNullOrEmpty())
 				{
-					settings.setValue(Settings.MAIN_NS, Settings.OPENED, doc.getName(), kind.toString());
+					settings.setValue(Settings.MAIN_NS, Settings.OPENED, doc.getNameProperty().get(), kind.toString());
 				}
 				doc.close();
 			}
@@ -721,11 +721,11 @@ public class Configuration extends AbstractDocument
 			switch (kind)
 			{
 				case CONFIGURATION:
-					applier.accept(new File(this.getName()), kind);
+					applier.accept(new File(this.getNameProperty().get()), kind);
 					break;
                 
 				case SYSTEM_VARS:
-					this.systemVars.stream().map(v -> new File(v.getName())).forEach(file -> applier.accept(file, kind));
+					this.systemVars.stream().map(v -> new File(v.getNameProperty().get())).forEach(file -> applier.accept(file, kind));
 					break;
                 
 				case GUI_DICTIONARY:
@@ -745,7 +745,7 @@ public class Configuration extends AbstractDocument
 					break;
                 
 				case LIBRARY:
-					this.libs.values().stream().map(v -> new File(v.getName())).forEach(file -> applier.accept(file, kind));
+					this.libs.values().stream().map(v -> new File(v.getNameProperty().get())).forEach(file -> applier.accept(file, kind));
 					break;
                 
 				case MATRIX:
@@ -762,12 +762,12 @@ public class Configuration extends AbstractDocument
 
 				case PLAIN_TEXT:
 					List<File> excludeFiles = new ArrayList<>();
-					excludeFiles.add(new File(this.getName()));
+					excludeFiles.add(new File(this.getNameProperty().get()));
 
-					excludeFiles.addAll(files(this.systemVars.stream(), SystemVars::getName));
+					excludeFiles.addAll(files(this.systemVars.stream(), ms -> ms.getNameProperty().get()));
 					excludeFiles.addAll(files(this.bean.appDictionariesValue.stream(), ms -> MainRunner.makeDirWithSubstitutions(ms.get())));
 					excludeFiles.addAll(files(this.bean.clientDictionariesValue.stream(), ms -> MainRunner.makeDirWithSubstitutions(ms.get())));
-					excludeFiles.addAll(files(this.libs.values().stream(), Matrix::getName));
+					excludeFiles.addAll(files(this.libs.values().stream(), ms -> getNameProperty().get()));
 					excludeFiles.addAll(files(this.bean.matricesValue.stream(), ms -> MainRunner.makeDirWithSubstitutions(ms.get())));
 					excludeFiles.add(new File(this.bean.reportsValue.get()));
 					List<String> ex = excludeFiles.stream().map(ConfigurationFx::path).collect(Collectors.toList());
@@ -1037,7 +1037,7 @@ public class Configuration extends AbstractDocument
 			try
 			{
 				Document doc = factory.createDocument(kind, Common.getRelativePath(path.getAbsolutePath()));
-                try (Reader reader = CommonHelper.readerFromFileName(doc.getName()))
+                try (Reader reader = CommonHelper.readerFromFileName(doc.getNameProperty().get()))
                 {
                     doc.load(reader);
                 }

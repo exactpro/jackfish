@@ -357,7 +357,7 @@ public class Main extends Application
 	{
 		if (this.config != null)
 		{
-			this.config.save(this.config.getName());
+			this.config.save(this.config.getNameProperty().get());
 		}
 	}
 	//endregion
@@ -577,16 +577,16 @@ public class Main extends Application
 		File file = DialogsHelper.showSaveAsDialog(document);
 		if (file != null)
 		{
-			String lastName = document.getName();
+			String lastName = document.getNameProperty().get();
 			String newName = file.getPath();
 
 			document.save(file.getPath());
 			document.saved();
-			DialogsHelper.showInfo(document.getName() + " is saved successfully.");
+			DialogsHelper.showInfo(document.getNameProperty().get() + " is saved successfully.");
 			if (document instanceof Matrix)
 			{
 				this.settings.remove(Settings.MAIN_NS, DocumentKind.MATRIX.name(), new File(lastName).getName());
-				this.settings.setValue(Settings.MAIN_NS, DocumentKind.MATRIX.name(), new File(document.getName()).getName(), newName);
+				this.settings.setValue(Settings.MAIN_NS, DocumentKind.MATRIX.name(), new File(document.getNameProperty().get()).getName(), newName);
 				this.settings.saveIfNeeded();
 				this.controller.updateFileLastMatrix(this.settings.getValues(Settings.MAIN_NS, DocumentKind.MATRIX.name()));
 			}
@@ -600,15 +600,15 @@ public class Main extends Application
 			return;
 		}
 
-		if (document.getName() == null || !(new File(document.getName()).exists()) || !document.hasName())
+		if (document.getNameProperty().isNullOrEmpty() || !(new File(document.getNameProperty().get()).exists()))
 		{
 			documentSaveAs(document);
 		}
 		else
 		{
-			document.save(document.getName());
+			document.save(document.getNameProperty().get());
 			document.saved();
-			DialogsHelper.showInfo(document.getName() + " is saved successfully.");
+			DialogsHelper.showInfo(document.getNameProperty().get() + " is saved successfully.");
 		}
 	}
 
@@ -643,12 +643,12 @@ public class Main extends Application
 		sb.append(" ").append(VersionInfo.getVersion());
 		if (this.config != null)
         {
-            sb.append(" [ ").append(this.config.getName().replace(".xml", "")).append(" ]");
+            sb.append(" [ ").append(this.config.getNameProperty().get().replace(".xml", "")).append(" ]");
         }
 
 		if (document != null)
 		{
-			File file = new File(document.getName());
+			File file = new File(document.getNameProperty().get());
 			String absolutePath = file.getAbsolutePath();
 			sb.append(" [ ").append(absolutePath).append(" ]");
 		}
@@ -849,7 +849,7 @@ public class Main extends Application
 
 	private String checkName(String name)
 	{
-		List<String> names = this.config.getSubordinates().stream().map(Document::getName).collect(Collectors.toList());
+		List<String> names = this.config.getSubordinates().stream().map(e -> e.getNameProperty().get()).collect(Collectors.toList());
 
 		String temp = name;
 		int index = 0;
@@ -906,7 +906,7 @@ public class Main extends Application
 				logger.error(e.getMessage(), e);
 				DialogsHelper.showError(e.getMessage());
 
-				doc = this.factory.createPlainText(doc.getName());
+				doc = this.factory.createPlainText(doc.getNameProperty().get());
 				try (Reader reader = CommonHelper.readerFromFile(file))
 				{
 					doc.load(reader);
@@ -919,7 +919,7 @@ public class Main extends Application
 			doc.saved();
 			SettingsValue maxSettings = this.settings.getValueOrDefault(Settings.GLOBAL_NS, Settings.SETTINGS, Settings.MAX_LAST_COUNT, "3");
 			int max = Integer.parseInt(maxSettings.getValue());
-			this.settings.setValue(Settings.MAIN_NS, kind.toString(), new File(doc.getName()).getName(), max, doc.getName());
+			this.settings.setValue(Settings.MAIN_NS, kind.toString(), new File(doc.getNameProperty().get()).getName(), max, doc.getNameProperty().get());
 			this.settings.saveIfNeeded();
 			if (kind == DocumentKind.MATRIX)
 			{

@@ -253,7 +253,7 @@ public class Step extends MatrixItem
 
             if (row != null)
 			{
-				row.put(Context.matrixColumn, 			this.owner.getName());
+				row.put(Context.matrixColumn, 			this.owner.getNameProperty().get());
 				MatrixItem parent = findParent(TestCase.class);
 				if (parent instanceof TestCase)
 				{
