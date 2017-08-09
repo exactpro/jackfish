@@ -160,7 +160,14 @@ public class Operation implements Iterable<Part>, Serializable
 		return this;
 	}
 
-	@DescriptionAttribute(text = Do.setValue)
+    @DescriptionAttribute(text = Do.apply)
+    public Operation apply(String path, Operation operation)
+    {
+        this.list.add(new Part(OperationKind.APPLY).setStr(path).setOperation(operation));
+        return this;
+    }
+
+    @DescriptionAttribute(text = Do.setValue)
 	public Operation setValue(@FieldParameter(name = "value") double value)
 	{
 		this.list.add(new Part(OperationKind.SET).setValue(value));

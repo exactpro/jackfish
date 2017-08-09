@@ -269,6 +269,24 @@ public class WinOperationExecutorJNA implements OperationExecutor<UIProxyJNA>
 	}
 
 	@Override
+	public List<UIProxyJNA> findByXpath(UIProxyJNA component, String path) throws Exception
+	{
+		String attribute = this.driver.elementAttribute(component, AttributeKind.TYPE_NAME);
+		List<UIProxyJNA> returnedList = new ArrayList<>();
+		if (attribute.equalsIgnoreCase("tree"))
+		{
+			NodeList nodes = findNodesInTreeByXpath(convertTreeToXMLDoc(component), path);
+			for (int i = 0; i < nodes.getLength(); i++)
+			{
+				String runtimeId = nodes.item(i).getAttributes().getNamedItem(RUNTIME_ID_ATTRIBUTE).getNodeValue();
+				returnedList.add(new UIProxyJNA(runtimeId));
+			}
+			return returnedList;
+		}
+		return Collections.emptyList();
+	}
+
+	@Override
 	public UIProxyJNA lookAtTable(UIProxyJNA table, Locator additional, Locator header, int x, int y) throws Exception
 	{
 		throw new FeatureNotSupportedException("lookAtTable");
@@ -752,7 +770,7 @@ public class WinOperationExecutorJNA implements OperationExecutor<UIProxyJNA>
 		}
 	}
 
-	@Override
+    @Override
 	public boolean setValue(UIProxyJNA component, double value) throws Exception
 	{
 		try

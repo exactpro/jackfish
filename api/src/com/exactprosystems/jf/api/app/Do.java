@@ -62,6 +62,13 @@ public class Do
 	{
 		return new Operation().use(i);
 	}
+
+	static final String apply = "Apply @operation for element which found by xpath.";
+	@DescriptionAttribute(text = Do.apply)
+	public static Operation apply(@FieldParameter(name = "path") String path, @FieldParameter(name = "operation") Operation operation)
+	{
+		return new Operation().apply(path, operation);
+	}
 	//endregion
 
 	//region Checking operations

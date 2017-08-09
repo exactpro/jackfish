@@ -271,7 +271,13 @@ public class SwingOperationExecutor implements OperationExecutor<ComponentFixtur
 		}
 	}
 
-	@Override
+    @Override
+    public List<ComponentFixture<Component>> findByXpath(ComponentFixture<Component> component, String path) throws Exception
+	{
+		return Collections.emptyList();
+    }
+
+    @Override
 	public ComponentFixture<Component> lookAtTable(ComponentFixture<Component> component, Locator additional, Locator header, int x, int y) throws Exception
 	{
 		throw new FeatureNotSupportedException("lookAtTable");
@@ -579,6 +585,7 @@ public class SwingOperationExecutor implements OperationExecutor<ComponentFixtur
 		Element node = doc.createElement("item");
 		node.setAttribute("name", treeNode.toString());
 		node.setUserData("path", new TreePath(((DefaultMutableTreeNode) treeNode).getPath()), null);
+		node.setUserData("node", treeNode, null);
 
 		if(current != null)
 		{

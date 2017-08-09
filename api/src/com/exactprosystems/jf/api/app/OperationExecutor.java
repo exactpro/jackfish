@@ -29,6 +29,7 @@ public interface OperationExecutor<T>
 	List<T> 					findAll			(ControlKind controlKind, T window, Locator locator																		) throws Exception;
 	List<T> 					findAll			(Locator owner, Locator element																							) throws Exception;
 	T 							find			(Locator owner, Locator element																							) throws Exception;
+	List<T> 					findByXpath		(T element, String path																									) throws Exception;
 	T							lookAtTable		(T table, Locator additional, Locator header, int x, int y																) throws Exception;
 	boolean						elementIsEnabled(T component                                                                                                            ) throws Exception;
     boolean                     elementIsVisible(T component                                                                                                            ) throws Exception;

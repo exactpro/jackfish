@@ -814,7 +814,13 @@ public class SeleniumOperationExecutor implements OperationExecutor<WebElement>
 		throw real;
 	}
 
-	@Override
+    @Override
+    public List<WebElement> findByXpath(WebElement element, String path) throws Exception
+	{
+        return Collections.emptyList();
+    }
+
+    @Override
 	public WebElement lookAtTable(WebElement tableComp, Locator additional, Locator header, int x, int y) throws Exception
 	{
 		Exception real = null;
