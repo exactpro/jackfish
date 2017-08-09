@@ -517,7 +517,7 @@ WAIT;Wait;Never;;
     delay;finish - start
 
     #Assert;#Message
-    delay >= 100 && delay < 110;'Proper delay'
+    delay >= 100 && delay < 140;'Proper delay'
 
     #Id;#Let
     start;System.currentTimeMillis()
