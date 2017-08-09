@@ -329,7 +329,6 @@ public class ConfigurationFx extends Configuration
 //			displayFormat();
 //		};
 //		addCommand(undo, redo);
-		super.changed(true);
 	}
 
 	public void addNewAdditionalFormat(String newFormat) throws Exception
@@ -521,7 +520,6 @@ public class ConfigurationFx extends Configuration
 			this.displayFileSystem();
 		};
 		super.addCommand(undo, redo);
-		super.changed(true);
 	}
 
 	public void openReport(File file) throws Exception
@@ -877,7 +875,6 @@ public class ConfigurationFx extends Configuration
 			Common.tryCatch(() -> entry.set(key, newValue), "");
 		};
 		addCommand(undo, redo);
-		super.changed(true);
 	}
 
 	public static String path(File file)
@@ -958,7 +955,6 @@ public class ConfigurationFx extends Configuration
 			func.display();
 		};
 		addCommand(undo, redo);
-		super.changed(true);
 	}
 
 	private <T extends Entry> void removeEntry(Class<T> clazz, List<T> list, String name, Map<String, SupportedEntry> supportedMap, DisplayFunction func) throws Exception
@@ -987,7 +983,6 @@ public class ConfigurationFx extends Configuration
 			func.display();
 		};
 		addCommand(undo, redo);
-		super.changed(true);
 	}
 
 	private void addAllKnowParameters(Entry entry, List<Parameter> parameters, String[] strings, DisplayFunction func) throws Exception
@@ -1026,7 +1021,6 @@ public class ConfigurationFx extends Configuration
 			}, "");
 		};
 		addCommand(undo, redo);
-		super.changed(true);
 	}
 
 	private void removeString(String value, List<MutableString> list, DisplayFunction displayFunction)
@@ -1048,7 +1042,6 @@ public class ConfigurationFx extends Configuration
 			this.displayFileSystem();
 		};
 		super.addCommand(undo, redo);
-		super.changed(true);
 	}
 
 	private void excludeFile(String filePath, List<MutableString> list, DisplayFunction displayFunction)
@@ -1070,7 +1063,6 @@ public class ConfigurationFx extends Configuration
 			this.displayFileSystem();
 		};
 		super.addCommand(undo, redo);
-		super.changed(true);
 	}
 
 	private void addString(String file, List<MutableString> list, DisplayFunction displayFunction)
@@ -1091,7 +1083,6 @@ public class ConfigurationFx extends Configuration
 			displayFunction.display();
 		};
 		super.addCommand(undo, redo);
-		super.changed(true);
 	}
 
 	private void addFile(String filePath, List<MutableString> list, DisplayFunction displayFunction)
@@ -1114,7 +1105,6 @@ public class ConfigurationFx extends Configuration
 			this.displayFileSystem();
 		};
 		super.addCommand(undo, redo);
-		super.changed(true);
 	}
 
 	private void replaceString(String oldValue, String newValue, List<MutableString> list, DisplayFunction displayFunction, boolean needUpdateFileSystem)
@@ -1147,7 +1137,6 @@ public class ConfigurationFx extends Configuration
 			}
 		};
 		super.addCommand(undo, redo);
-		super.changed(true);
 	}
 
 	private File createNewFile(File parentFolder, String nameOfFile, String ext) throws Exception

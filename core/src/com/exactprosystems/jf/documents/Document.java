@@ -10,14 +10,15 @@ package com.exactprosystems.jf.documents;
 
 import com.exactprosystems.jf.api.app.Mutable;
 import com.exactprosystems.jf.common.undoredo.Command;
+import com.exactprosystems.jf.documents.matrix.parser.MutableValue;
 
 import java.io.Reader;
-import java.util.function.Consumer;
 
 public interface Document extends Mutable
 {
     DocumentFactory getFactory();
 
+    @Deprecated
 	boolean hasName();
 	
 	void load(Reader reader) throws Exception;
@@ -38,8 +39,10 @@ public interface Document extends Mutable
 
 	void redo();
 
+	MutableValue<String> getNameProperty();
+	
+	MutableValue<Boolean> getChangedProperty();
+	
+	@Deprecated
     String getName();
-    
-    
-	void setOnChange(Consumer<Boolean> listener);
 }

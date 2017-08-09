@@ -9,12 +9,17 @@
 package com.exactprosystems.jf.documents.matrix.parser;
 
 import java.util.Objects;
+import java.util.function.BiConsumer;
 
 import com.exactprosystems.jf.api.app.Mutable;
 
 public class MutableValue<T> implements Mutable, Getter<T>, Setter<T>, Cloneable
 {
-	public MutableValue()
+    private T value = null;
+    private boolean changed = false; 
+    private BiConsumer<T, T> changeListener = null;
+
+    public MutableValue()
 	{
 		this.changed = false;
 	}
@@ -29,6 +34,10 @@ public class MutableValue<T> implements Mutable, Getter<T>, Setter<T>, Cloneable
 	public void set(T value)
 	{
 		this.changed = this.changed || !Objects.equals(this.value, value);
+		if (this.changeListener != null)
+		{
+		    this.changeListener.accept(this.value, value);
+		}
 		this.value = value;
 	}
 	
@@ -67,12 +76,13 @@ public class MutableValue<T> implements Mutable, Getter<T>, Setter<T>, Cloneable
 		return "" + (this.value == null ? "" : this.value.toString());
 	}
 	
+	public void setOnChangeListener(BiConsumer<T, T> listener)
+	{
+	    this.changeListener = listener;
+	}
+	
 	public boolean isNullOrEmpty()
 	{
 		return this.value == null || ("" + this.value).isEmpty(); 
 	}
-
-	private T value = null;
-	
-	private boolean changed = false; 
 }

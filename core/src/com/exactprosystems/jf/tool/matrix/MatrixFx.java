@@ -212,7 +212,6 @@ public class MatrixFx extends Matrix
 		if (!(what instanceof TempItem))
 		{
 			addCommand(undo, redo);
-			super.changed(true);
 		}
 		else
 		{
@@ -268,7 +267,7 @@ public class MatrixFx extends Matrix
 			enumerate();
 		}
 
-		super.changed(true);
+		super.getChangedProperty().set(true);
 	}
 
 	@Override
@@ -293,7 +292,6 @@ public class MatrixFx extends Matrix
 	            }
 			};
 			addCommand(undo, redo);
-			super.changed(true);
 		}
 	}
 
@@ -361,7 +359,6 @@ public class MatrixFx extends Matrix
 				enumerate();
 			};
 			addCommand(undo, redo);
-			super.changed(true);
 		}
 	}
 
@@ -590,7 +587,7 @@ public class MatrixFx extends Matrix
 		remove(from);
 		enumerate();
         refresh();
-		super.changed(true);
+		super.getChangedProperty().set(true);
 	}
 
 	public void setCurrent(MatrixItem item, boolean needExpand)
@@ -776,7 +773,7 @@ public class MatrixFx extends Matrix
 		}
 		enumerate();
         refresh();
-		super.changed(true);
+		super.getChangedProperty().set(true);
 	}
 
 	private void storeSettings(Settings settings) throws Exception

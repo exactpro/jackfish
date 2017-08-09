@@ -36,7 +36,7 @@ public class PlainText extends AbstractDocument
 			public void set(String arg0)
 			{
 				super.set(arg0);
-				changed(true);
+				getChangedProperty().set(true);
 				isChanged = true;
 			}
 		};

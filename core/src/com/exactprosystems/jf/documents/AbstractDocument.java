@@ -10,16 +10,31 @@ package com.exactprosystems.jf.documents;
 
 import com.exactprosystems.jf.common.undoredo.ActionTrackProvider;
 import com.exactprosystems.jf.common.undoredo.Command;
+import com.exactprosystems.jf.documents.matrix.parser.MutableValue;
+
 import java.io.Reader;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.function.Consumer;
 
 public abstract class AbstractDocument implements Document
 {
-	public AbstractDocument(String fileName, DocumentFactory factory)
+    protected DocumentFactory     factory;
+    private ActionTrackProvider   provider = new ActionTrackProvider();
+
+    private MutableValue<String>  nameProperty;
+    private MutableValue<Boolean> changedProperty;
+
+    @Deprecated
+    private boolean               hasName  = false;
+    @Deprecated
+    private String                name;
+
+    public AbstractDocument(String fileName, DocumentFactory factory)
 	{
 		this.factory = factory;
+		this.nameProperty = new MutableValue<>(fileName);
+		this.changedProperty = new MutableValue<>(false);
+		
 		this.name = fileName;
 		this.hasName = true;
 	}
@@ -62,6 +77,7 @@ public abstract class AbstractDocument implements Document
 		if (annotation != null)
 		{
 			this.name = annotation.newName();
+			this.nameProperty.set(annotation.newName());
 		}
 		this.hasName = false;
 	}
@@ -76,6 +92,7 @@ public abstract class AbstractDocument implements Document
 	public void save(String fileName) throws Exception
 	{
 		this.name = fileName;
+        this.nameProperty.set(fileName);
 		this.hasName = true;
 	}
 	
@@ -96,7 +113,7 @@ public abstract class AbstractDocument implements Document
         redo.execute();
         this.provider.addCommand(undo, redo);
         afterRedoUndo();
-        this.changed(true);
+        this.changedProperty.set(true);
     }
     
     @Override
@@ -104,7 +121,7 @@ public abstract class AbstractDocument implements Document
     {
         if (this.provider.undo())
         {
-            changed(true);
+            this.changedProperty.set(true);
             afterRedoUndo();
         }
     }
@@ -114,11 +131,24 @@ public abstract class AbstractDocument implements Document
     {
         if (this.provider.redo())
         {
-            changed(true);
+            this.changedProperty.set(true);
             afterRedoUndo();
         }
     }
 
+    @Override
+    public MutableValue<String> getNameProperty()
+    {
+        return this.nameProperty;
+    }
+    
+    @Override
+    public MutableValue<Boolean> getChangedProperty()
+    {
+        return this.changedProperty;
+    }
+
+    @Deprecated
 	@Override
 	public String getName()
 	{
@@ -128,7 +158,7 @@ public abstract class AbstractDocument implements Document
 	@Override
 	public void saved()
 	{
-		changed(false);
+	    this.changedProperty.set(false);
 		this.provider.clear();
 	}
 
@@ -138,27 +168,7 @@ public abstract class AbstractDocument implements Document
         return this.factory;
     }
 
-    
-	@Override
-	public void setOnChange(Consumer<Boolean> listener)
-	{
-		this.listener = listener;
-	}
-
-
-	
-	protected void changed(boolean flag)
-	{
-		Optional.ofNullable(listener).ifPresent(l -> l.accept(flag));
-	}
-	
 	protected void afterRedoUndo()
 	{
 	}
-	
-	protected 	DocumentFactory 	factory;
-	private 	boolean 			hasName = false;
-	private 	String 				name;
-	private 	ActionTrackProvider provider = new ActionTrackProvider();
-	private 	Consumer<Boolean>   listener;
 }

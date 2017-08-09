@@ -50,7 +50,7 @@ public class RawText extends MatrixItem
 	{
 		super();
 		this.text = new Text();
-		this.text.setChangeListener(flag -> this.owner.changed(flag));
+		this.text.setChangeListener(flag -> this.owner.getChangedProperty().set(flag));
 		this.description = new MutableValue<>();
 		this.highlighterMutableValue = new MutableValue<>(Highlighter.None.name());
 	}
@@ -146,7 +146,7 @@ public class RawText extends MatrixItem
 		if (this.firstUsing)
 		{
 			this.text = new Text();
-			this.text.setChangeListener(flag -> Optional.ofNullable(this.owner).ifPresent(own -> own.changed(flag)));
+			this.text.setChangeListener(flag -> Optional.ofNullable(this.owner).ifPresent(own -> own.getChangedProperty().set(flag)));
 			this.firstUsing = false;
 		    this.text.add(extractData(str));
 

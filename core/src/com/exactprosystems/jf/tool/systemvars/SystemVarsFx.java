@@ -110,7 +110,6 @@ public class SystemVarsFx extends SystemVars
 			getParameterByIndex(index).setName(newValue);
 		};
 		addCommand(undo, redo);
-		super.changed(true);
 	}
 
 	public void updateExpressionRow(int index, String newValue)
@@ -125,7 +124,6 @@ public class SystemVarsFx extends SystemVars
 			getParameterByIndex(index).setExpression(newValue); 
 		};
 		addCommand(undo, redo);
-		super.changed(true);
 	}
 
 	void updateDescriptionRow(int index, String newValue)
@@ -140,7 +138,6 @@ public class SystemVarsFx extends SystemVars
 			getParameterByIndex(index).setDescription(newValue);
 		};
 		addCommand(undo, redo);
-		super.changed(true);
 	}
 
 	public void addNewVariable() throws Exception
@@ -154,7 +151,6 @@ public class SystemVarsFx extends SystemVars
 			this.getParameters().add("name", "'expression'"); 
 		};
 		addCommand(undo, redo);
-		super.changed(true);
 	}
 
 	public void removeParameters(List<Parameter> parameters)
@@ -176,7 +172,6 @@ public class SystemVarsFx extends SystemVars
 			}
 		};
 		addCommand(undo, redo);
-		super.changed(true);
 	}
 
 	//----------------------------------------------------------------------------------------------

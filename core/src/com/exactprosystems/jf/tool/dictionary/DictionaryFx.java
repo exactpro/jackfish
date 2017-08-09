@@ -245,7 +245,6 @@ public class DictionaryFx extends GuiDictionary
 		}, "");
 
 		addCommand(undo, redo);
-		super.changed(true);
 	}
 
 	public void dialogDelete(IWindow window, IWindow.SectionKind sectionKind) throws Exception
@@ -277,7 +276,6 @@ public class DictionaryFx extends GuiDictionary
 			}, "");
 
 			addCommand(undo, redo);
-			super.changed(true);
 		}
 	}
 
@@ -308,7 +306,6 @@ public class DictionaryFx extends GuiDictionary
 				displayElement(clone, sectionKind, clone.getFirstControl(sectionKind));
 			}, "");
 			addCommand(undo, redo);
-			super.changed(true);
 		}
 	}
 
@@ -334,7 +331,6 @@ public class DictionaryFx extends GuiDictionary
 			};
 
 			addCommand(undo, redo);
-			super.changed(true);
 		}
 	}
 
@@ -435,7 +431,6 @@ public class DictionaryFx extends GuiDictionary
 				displayElement(window, sectionKind, control);
 			}, "");
 			addCommand(undo, redo);
-			super.changed(true);
 		}
 
 	}
@@ -476,7 +471,6 @@ public class DictionaryFx extends GuiDictionary
 				}, "");
 			};
 			addCommand(undo, redo);
-			super.changed(true);
 		}
 	}
 
@@ -508,7 +502,6 @@ public class DictionaryFx extends GuiDictionary
 			}, "");
 
 			addCommand(undo, redo);
-			super.changed(true);
 		}
 	}
 
@@ -576,7 +569,6 @@ public class DictionaryFx extends GuiDictionary
 					displayElement(window, sectionKind, control);
 				}, "");
 				addCommand(undo, redo);
-				super.changed(true);
 			}
 		}, "Cannot set field '" + parameter + "' to value '" + value + "'");
 	}
@@ -606,7 +598,6 @@ public class DictionaryFx extends GuiDictionary
 				}
 			}, "");
 			addCommand(undo, redo);
-			super.changed(true);
 		}
 	}
 

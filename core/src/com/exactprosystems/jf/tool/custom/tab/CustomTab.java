@@ -126,7 +126,7 @@ public class CustomTab extends Tab implements AutoCloseable
 				Common.tryCatch(CustomTab.this::reload, "Error on reload");
 			}
 		});
-		this.document.setOnChange(flag ->
+		this.document.getChangedProperty().setOnChangeListener((oldFlag, flag) ->
 		{
 			String text = this.text.getText();
 			if (flag)
