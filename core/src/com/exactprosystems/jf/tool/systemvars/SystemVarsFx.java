@@ -36,15 +36,12 @@ public class SystemVarsFx extends SystemVars
 	//==============================================================================================================================
 	// AbstractDocument
 	//==============================================================================================================================
-	@Override
-	protected void afterRedoUndo() 
-	{
-		super.afterRedoUndo();
-
-		AbstractEvaluator evaluator = getFactory().createEvaluator();
-		this.getParameters().evaluateAll(evaluator);
-		this.controller.displayNewParameters(getParameterList());
-	}
+    @Override
+    protected void afterRedoUndo()
+    {
+        super.afterRedoUndo();
+        this.controller.displayNewParameters(evaluateData());
+    }
 	
 	@Override
 	public void display() throws Exception
@@ -186,13 +183,11 @@ public class SystemVarsFx extends SystemVars
 		}
 	}
 	
-	private ArrayList<Parameter> evaluateData() throws Exception
+	private ArrayList<Parameter> evaluateData()
 	{
 		AbstractEvaluator evaluator = getFactory().createEvaluator();
-		
 		ArrayList<Parameter> res = new ArrayList<>();
-		List<Parameter> variables = this.getParameterList();
-		variables.forEach(p -> 
+		getParameters().forEach(p -> 
 		{
 			p.evaluate(evaluator);
 			res.add(p);

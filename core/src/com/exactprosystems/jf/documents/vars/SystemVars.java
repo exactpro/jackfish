@@ -21,9 +21,7 @@ import com.exactprosystems.jf.documents.matrix.parser.Parameters;
 import java.io.BufferedReader;
 import java.io.FileWriter;
 import java.io.Reader;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 @DocumentInfo(
@@ -34,7 +32,9 @@ import java.util.stream.Collectors;
 )
 public class SystemVars extends AbstractDocument
 {
-	public SystemVars(String fileName, DocumentFactory factory)
+    private Parameters parameters;
+
+    public SystemVars(String fileName, DocumentFactory factory)
 	{
 		super(fileName, factory);
 
@@ -88,22 +88,23 @@ public class SystemVars extends AbstractDocument
 		return true;
 	}
 
-	@Override
-	public void save(String fileName) throws Exception
-	{
-		super.save(fileName);
+    @Override
+    public void save(String fileName) throws Exception
+    {
+        super.save(fileName);
 
-		LinkedProperties prop = new LinkedProperties();
-		this.parameters.forEach(parameter -> {
-			String name = "";
-			if (!Str.IsNullOrEmpty(parameter.getDescription()))
-			{
-				name = "#" + parameter.getDescription()+System.lineSeparator();
-			}
-			prop.put(name + parameter.getName(), parameter.getExpression());
-		});
-		prop.store(new FileWriter(fileName), null);
-	}
+        LinkedProperties prop = new LinkedProperties();
+        this.parameters.forEach(parameter ->
+        {
+            String name = "";
+            if (!Str.IsNullOrEmpty(parameter.getDescription()))
+            {
+                name = "#" + parameter.getDescription() + System.lineSeparator();
+            }
+            prop.put(name + parameter.getName(), parameter.getExpression());
+        });
+        prop.store(new FileWriter(fileName), null);
+    }
 
 	//------------------------------------------------------------------------------------------------------------------
 	// interface Mutable
@@ -135,13 +136,6 @@ public class SystemVars extends AbstractDocument
 		return this.parameters;
 	}
 
-	public List<Parameter> getParameterList()
-	{
-		ArrayList<Parameter> res = new ArrayList<>();
-		parameters.forEach((Consumer<? super Parameter>) res::add);
-		return res;
-	}
-
 	public void injectVariables(AbstractEvaluator evaluator) throws Exception
 	{
 		for (Parameter entry : this.parameters)
@@ -154,6 +148,4 @@ public class SystemVars extends AbstractDocument
 		}
 
 	}
-
-	private Parameters parameters;
 }
