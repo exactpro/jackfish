@@ -68,13 +68,13 @@ public class DialogFillWizard extends AbstractWizard {
     private Collection<IWindow> windows;
     private IWindow currentDialog;
     private MatrixItem currentItem;
-    private ListView<Bean> beanListView;
+    private ListView<String> resultListView;
     private AppConnection appConnection;
     private ImageViewWithScale imageViewWithScale;
     private Document document;
     private WizardMatcher matcher;
     private ListView<ControlItem> textBoxes;
-
+    private Bean bean;
 
 
     @Override
@@ -92,11 +92,20 @@ public class DialogFillWizard extends AbstractWizard {
 
         this.imageViewWithScale = new ImageViewWithScale();
         this.textBoxes = new ListView<>();
+        this.resultListView = new ListView<>();
 
-
-        this.beanListView = new ListView<>();
         Button scan = new Button("Scan");
-        scan.setOnAction(event -> createBeans());
+        scan.setOnAction(event -> {
+            clear();
+            this.textBoxes.getItems().forEach(controlItem -> {
+                if (controlItem.isOn())
+                {
+                    fillBean(controlItem.getControl());
+                }
+            });
+            this.bean.getControlNamesValues().forEach((s, s2) -> this.resultListView.getItems().add(s + " : " + s2));
+        });
+
         this.storedConnections = new ComboBox<>();
         this.dialogs = new ComboBox<>();
         GridPane grid = new GridPane();
@@ -116,6 +125,8 @@ public class DialogFillWizard extends AbstractWizard {
         this.dialogs.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             this.currentDialog = this.dictionary.getWindows().stream().filter(iWindow -> iWindow.getName().equals(newValue)).findFirst().get();
             this.dialogs.valueProperty().set(newValue);
+            this.dialogs.getSelectionModel().select(newValue);
+
             onDialogSelected();
         });
         this.textBoxes.setCellFactory(CheckBoxListCell.forListView(ControlItem::onProperty));
@@ -136,9 +147,14 @@ public class DialogFillWizard extends AbstractWizard {
         grid.add(dialogs, 3, 0);
         grid.add(this.textBoxes, 0, 1);
         grid.add(scan, 0, 2);
-        grid.add(this.beanListView, 0, 3);
+        grid.add(this.resultListView, 0, 3);
         grid.add(this.imageViewWithScale, 1, 1, 3, 3);
         borderPane.setCenter(grid);
+    }
+
+    private void clear() {
+        this.resultListView.getItems().clear();
+        this.bean.clear();
     }
 
     private void setCurrentAdapterStore(String newValue) {
@@ -149,28 +165,19 @@ public class DialogFillWizard extends AbstractWizard {
     protected Supplier<List<WizardCommand>> getCommands() {
         return () -> {
             CommandBuilder builder = CommandBuilder.start();
-            this.beanListView.getItems().forEach(bean -> builder.addMatrixItem(this.currentMatrix, this.currentItem, bean.getItem(), 0));
-            return builder.build();
+            return builder.addMatrixItem(this.currentMatrix, this.currentItem, this.bean.getItem(), 0).build();
         };
-    }
-
-    private MatrixItem createItem(String key, String value) {
-        MatrixItem matrixItem = CommandBuilder.create(this.currentMatrix, Tokens.Action.get(), DialogFill.class.getSimpleName());
-        Parameters params = new Parameters();
-        params.add(key, value, TypeMandatory.Extra);
-        Common.tryCatch(() -> matrixItem.init(this.currentMatrix, new ArrayList<>(), new HashMap<>(), params), "Error on parameters create");
-        return matrixItem;
     }
 
     @Override
     public boolean beforeRun() {
 
+        this.bean = new Bean();
 
         return true;
     }
 
-    private void displayStores() throws Exception
-    {
+    private void displayStores() throws Exception {
         Map<String, Object> storeMap = this.dictionary.getFactory().getConfiguration().getStoreMap();
         Collection<String> stories = new ArrayList<>();
         if (!storeMap.isEmpty())
@@ -200,74 +207,31 @@ public class DialogFillWizard extends AbstractWizard {
         });
     }
 
-    private void connectToApplicationFromStore(String idAppStore)
-    {
+    private void connectToApplicationFromStore(String idAppStore) {
         if (idAppStore != null && !idAppStore.isEmpty())
         {
             this.appConnection = (AppConnection) this.dictionary.getFactory().getConfiguration().getStoreMap().get(idAppStore);
         }
     }
 
-    private Map<String, String> getLocatorsValues(Collection<IControl> controls) {
-
+    private void fillBean(IControl control) {
+        String apostr = "'";
         IRemoteApplication service = this.appConnection.getApplication().service();
 
-        Map<String, String> map = new HashMap<>();
-        for (IControl o : controls)
-        {
-            map.put(o.getID(), Common.tryCatch(() -> String.valueOf(o.operate(service, this.currentDialog, Do.getValue())
-                    .getValue()), "Error on get values from controls.", ""));
-        }
-        return map;
+        String name = control.getID();
+        String value = Common.tryCatch(() -> String.valueOf(control.operate(service, this.currentDialog, Do.getValue())
+                .getValue()), "Error on get values from controls.", "");
+
+        Parameters params = new Parameters();
+        params.add(name, value, TypeMandatory.Extra);
+        Common.tryCatch(() -> this.bean.getItem().init(this.currentMatrix, new ArrayList<>(), new HashMap<>(), params), "Error on parameters create");
+        this.bean.add(name, apostr + value + apostr);
+
     }
 
-    private void createBeans() {
-
-        Collection<IControl> textBoxes = currentDialog.getControls(IWindow.SectionKind.Run).stream()
-                .filter(iControl -> iControl.getBindedClass().equals(ControlKind.TextBox)).collect(Collectors.toList());
-
-        Map<String, String> values = getLocatorsValues(textBoxes);
-        if (values != null)
-        {
-            this.beanListView.getItems().clear();
-            String apostr = "'";
-            values.forEach((k, v) -> {
-                MatrixItem matrixItem = createItem(k, apostr + v + apostr);
-                this.beanListView.getItems().add(new Bean(matrixItem, k, v));
-            });
-        }
-    }
-
-    private class Bean {
-        private MatrixItem item;
-        private String controlName;
-        private String controlValue;
-
-        @Override
-        public String toString() {
-            return "TextBox id = '" + controlName +
-                    "'  value = '" + controlValue + "'";
-        }
-
-        public MatrixItem getItem() {
-            return item;
-        }
-
-        public void setItem(MatrixItem item) {
-            this.item = item;
-        }
-
-        public Bean(MatrixItem item, String controlName, String controlValue) {
-            this.item = item;
-            this.controlName = controlName;
-            this.controlValue = controlValue;
-        }
-    }
-
-    private void onDialogSelected()
-    {
+    private void onDialogSelected() {
         List<ControlItem> collect = currentDialog.getControls(IWindow.SectionKind.Run).stream()
-                .filter(iControl -> iControl.getBindedClass().equals(ControlKind.TextBox)).map(iControl -> new ControlItem(iControl,false)).collect(Collectors.toList());
+                .filter(iControl -> iControl.getBindedClass().equals(ControlKind.TextBox)).map(iControl -> new ControlItem(iControl, false)).collect(Collectors.toList());
         ObservableList<ControlItem> objects = FXCollections.observableArrayList(collect);
         this.textBoxes.getItems().clear();
         this.textBoxes.getItems().addAll(objects);
@@ -302,7 +266,7 @@ public class DialogFillWizard extends AbstractWizard {
             return this.control;
         }
 
-        private ControlItem (IControl control, boolean on) {
+        private ControlItem(IControl control, boolean on) {
             this.control = control;
             setOn(on);
         }
@@ -327,6 +291,37 @@ public class DialogFillWizard extends AbstractWizard {
         @Override
         public String toString() {
             return getName();
+        }
+    }
+
+    private class Bean {
+        private MatrixItem item;
+        private Map<String, String> controlNamesValues;
+
+        public Bean() {
+
+            this.item = CommandBuilder.create(currentMatrix, Tokens.Action.get(), DialogFill.class.getSimpleName());
+            this.controlNamesValues = new HashMap<>();
+        }
+
+        public MatrixItem getItem() {
+            return item;
+        }
+
+        public void setItem(MatrixItem item) {
+            this.item = item;
+        }
+
+        public Map<String, String> getControlNamesValues() {
+            return controlNamesValues;
+        }
+
+        public void add(String k, String v) {
+            this.controlNamesValues.put(k, v);
+        }
+
+        public void clear() {
+            this.controlNamesValues.clear();
         }
     }
 }
