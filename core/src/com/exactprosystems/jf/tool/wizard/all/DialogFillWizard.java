@@ -22,6 +22,7 @@ import com.exactprosystems.jf.tool.matrix.MatrixFx;
 import com.exactprosystems.jf.tool.wizard.AbstractWizard;
 import com.exactprosystems.jf.tool.wizard.CommandBuilder;
 import com.exactprosystems.jf.tool.wizard.WizardMatcher;
+import com.exactprosystems.jf.tool.wizard.related.MarkerStyle;
 import com.exactprosystems.jf.tool.wizard.related.WizardHelper;
 import javafx.application.Platform;
 import javafx.beans.property.BooleanProperty;
@@ -87,6 +88,12 @@ public class DialogFillWizard extends AbstractWizard {
 
     }
 
+    private void find(Locator owner, Locator element) {
+        IRemoteApplication service = this.appConnection.getApplication().service();
+        Rectangle rectangle = Common.tryCatch(() -> service.getRectangle(owner, element), "Error on get image", null);
+        this.imageViewWithScale.showRectangle(rectangle, MarkerStyle.MARK,"",true);
+    }
+
     @Override
     protected void initDialog(BorderPane borderPane) {
 
@@ -101,6 +108,9 @@ public class DialogFillWizard extends AbstractWizard {
                 if (controlItem.isOn())
                 {
                     fillBean(controlItem.getControl());
+                    Locator ownerLocator = Common.tryCatch(() -> this.currentDialog.getOwnerControl(controlItem.control).locator(),"Error on get owner", null);
+                    Locator elementLocator = controlItem.getControl().locator();
+                    find(ownerLocator, elementLocator);
                 }
             });
             this.bean.getControlNamesValues().forEach((s, s2) -> this.resultListView.getItems().add(s + " : " + s2));
