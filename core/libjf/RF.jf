@@ -189,7 +189,7 @@ RF;RegressionFramework
         #EndForEach
 
         #Id;#Action;$Query;$Connection;ScenarioId
-        SQLSLCT18;SQLselect;'SELECT * FROM regression.details where step != \'null\' and scenario_id = ?';SQL;scenarioId
+        SQLSLCT18;SQLselect;'SELECT * FROM details where step != \'null\' and scenario_id = ?';SQL;scenarioId
 
         #Id;#Action;$Table;result
         TBLSLCT1;TableSelect;SQLSLCT18.Out;'Passed'
