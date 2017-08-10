@@ -26,6 +26,7 @@ import com.exactprosystems.jf.tool.wizard.related.WizardHelper;
 import javafx.application.Platform;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.value.ChangeListener;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.HPos;
@@ -74,6 +75,7 @@ public class DialogFillWizard extends AbstractWizard {
     private Document document;
     private ListView<ControlItem> textBoxes;
     private Map<String, String> controlNamesAndValues;
+    private IRemoteApplication service;
 
 
     @Override
@@ -83,12 +85,6 @@ public class DialogFillWizard extends AbstractWizard {
         this.currentItem = get(MatrixItem.class, parameters);
         this.controlNamesAndValues = new HashMap<>();
 
-    }
-
-    private void find(Locator owner, Locator element) {
-        IRemoteApplication service = this.appConnection.getApplication().service();
-        Rectangle rectangle = Common.tryCatch(() -> service.getRectangle(owner, element), "Error on get image", null);
-        this.imageViewWithScale.showRectangle(rectangle, MarkerStyle.MARK,"",true);
     }
 
     @Override
@@ -105,10 +101,7 @@ public class DialogFillWizard extends AbstractWizard {
             this.textBoxes.getItems().forEach(controlItem -> {
                 if (controlItem.isOn())
                 {
-                    fillBean(controlItem.getControl());
-                    Locator ownerLocator = Common.tryCatch(() -> this.currentDialog.getOwnerControl(controlItem.control).locator(),"Error on get owner", null);
-                    Locator elementLocator = controlItem.getControl().locator();
-                    find(ownerLocator, elementLocator);
+                    fillNamesAndValues(controlItem.getControl());
                 }
             });
             this.controlNamesAndValues.forEach((s, s2) -> this.resultListView.getItems().add(s + " : " + s2));
@@ -141,6 +134,7 @@ public class DialogFillWizard extends AbstractWizard {
             onDialogSelected();
         });
         this.textBoxes.setCellFactory(CheckBoxListCell.forListView(ControlItem::onProperty));
+
 
         ColumnConstraints col1 = new ColumnConstraints(300, 300, 300, Priority.SOMETIMES, HPos.LEFT, true);
         ColumnConstraints col2 = new ColumnConstraints(300, 300, 300, Priority.SOMETIMES, HPos.CENTER, true);
@@ -187,8 +181,8 @@ public class DialogFillWizard extends AbstractWizard {
     }
 
     private Rectangle getItemRectangle(Locator owner, Locator element) {
-        IRemoteApplication service = this.appConnection.getApplication().service();
-        return Common.tryCatch(() -> service.getRectangle(owner, element), "Error on get rectangle", null);
+
+        return Common.tryCatch(() -> this.service.getRectangle(owner, element), "Error on get rectangle", null);
     }
 
     private void displayStores() throws Exception {
@@ -225,15 +219,15 @@ public class DialogFillWizard extends AbstractWizard {
         if (idAppStore != null && !idAppStore.isEmpty())
         {
             this.appConnection = (AppConnection) this.currentMatrix.getFactory().getConfiguration().getStoreMap().get(idAppStore);
+            this.service = this.appConnection.getApplication().service();
         }
     }
 
-    private void fillBean(IControl control) {
+    private void fillNamesAndValues(IControl control) {
         String apostr = "'";
-        IRemoteApplication service = this.appConnection.getApplication().service();
 
         String name = control.getID();
-        String value = Common.tryCatch(() -> String.valueOf(control.operate(service, this.currentDialog, Do.getValue())
+        String value = Common.tryCatch(() -> String.valueOf(control.operate(this.service, this.currentDialog, Do.getValue())
                 .getValue()), "Error on get values from controls.", "");
 
         this.controlNamesAndValues.put(name,apostr + value + apostr);
@@ -249,12 +243,30 @@ public class DialogFillWizard extends AbstractWizard {
         return matrixItem;
     }
 
+    private ChangeListener<Boolean> getListenerForControlItems(ControlItem item) {
+        return (observable, wasSelected, isSelected) -> {
+            Rectangle rectangle = item.getRectangle();
+
+            if (isSelected)
+            {
+                this.imageViewWithScale.showRectangle(rectangle, MarkerStyle.MARK,"",true);
+            }
+            else
+            {
+                this.imageViewWithScale.hideRectangle(rectangle,MarkerStyle.MARK);
+            }
+        };
+    }
+
     private void onDialogSelected() {
         List<ControlItem> collect = currentDialog.getControls(IWindow.SectionKind.Run).stream()
-                .filter(iControl -> iControl.getBindedClass().equals(ControlKind.TextBox)).map(iControl -> new ControlItem(iControl, false)).collect(Collectors.toList());
+                .filter(iControl -> iControl.getBindedClass().equals(ControlKind.TextBox))
+                        .map(iControl -> new ControlItem(iControl, false)).collect(Collectors.toList());
+
         ObservableList<ControlItem> objects = FXCollections.observableArrayList(collect);
         this.textBoxes.getItems().clear();
         this.textBoxes.getItems().addAll(objects);
+        this.textBoxes.getItems().forEach(controlItem -> controlItem.onProperty().addListener(getListenerForControlItems(controlItem)));
 
         IControl selfControl = Common.tryCatch(() -> this.currentDialog.getSelfControl(), "Error on get self", null);
         WizardHelper.gainImageAndDocument(this.appConnection, selfControl, (image, doc) ->
@@ -264,17 +276,19 @@ public class DialogFillWizard extends AbstractWizard {
             List<Rectangle> list = XpathUtils.collectAllRectangles(this.document);
             this.imageViewWithScale.setListForSearch(list);
             this.imageViewWithScale.setOnRectangleClick(rectangle -> this.textBoxes.getItems().forEach(controlItem -> {
-                Locator ownerLocator = Common.tryCatch(() -> {
-                    IControl ownerControl = this.currentDialog.getOwnerControl(controlItem.control);
-                    return ownerControl == null ? null : ownerControl.locator();
-                },"Error on get owner", null);
 
-                Locator elementLocator = controlItem.getControl().locator();
-                Rectangle itemRectangle = getItemRectangle(ownerLocator, elementLocator);
+                Rectangle itemRectangle = controlItem.getRectangle();
                 if (rectangle.equals(itemRectangle))
                 {
-                    controlItem.setOn(true);
-                    this.imageViewWithScale.showRectangle(rectangle, MarkerStyle.MARK,"",true);
+                    controlItem.toggle();
+                    if (controlItem.isOn())
+                    {
+                        this.imageViewWithScale.showRectangle(rectangle, MarkerStyle.MARK,"",true);
+                    }
+                    else
+                    {
+                        this.imageViewWithScale.hideRectangle(rectangle, MarkerStyle.MARK);
+                    }
                 }
             }));
         }, ex ->
@@ -290,6 +304,9 @@ public class DialogFillWizard extends AbstractWizard {
 
     private class ControlItem {
         private IControl control;
+        private Rectangle rectangle;
+
+
         private final BooleanProperty on = new SimpleBooleanProperty();
 
         public IControl getControl() {
@@ -299,6 +316,12 @@ public class DialogFillWizard extends AbstractWizard {
         private ControlItem(IControl control, boolean on) {
             this.control = control;
             setOn(on);
+            Locator ownerLocator = Common.tryCatch(() -> {
+                IControl ownerControl = currentDialog.getOwnerControl(this.control);
+                return ownerControl == null ? null : ownerControl.locator();
+            }, "Error on get owner", null);
+
+            this.rectangle = getItemRectangle(ownerLocator, this.control.locator());
         }
 
         public final String getName() {
@@ -325,6 +348,10 @@ public class DialogFillWizard extends AbstractWizard {
 
         public void toggle() {
             this.setOn(!isOn());
+        }
+
+        public Rectangle getRectangle() {
+            return rectangle;
         }
     }
 }
