@@ -93,25 +93,11 @@ public class DialogFillWizard extends AbstractWizard {
         this.imageViewWithScale = new ImageViewWithScale();
         this.textBoxes = new ListView<>();
         this.resultListView = new ListView<>();
-
-
-        Button scan = new Button("Scan");
-        scan.setOnAction(event -> {
-            clear();
-            this.textBoxes.getItems().forEach(controlItem -> {
-                if (controlItem.isOn())
-                {
-                    fillNamesAndValues(controlItem.getControl());
-                }
-            });
-            this.controlNamesAndValues.forEach((s, s2) -> this.resultListView.getItems().add(s + " : " + s2));
-        });
-
-        this.storedConnections = new ComboBox<>();
-        this.storedConnections.setPrefWidth(300);
         this.dialogs = new ComboBox<>();
         this.dialogs.setPrefWidth(300);
         GridPane grid = new GridPane();
+        this.storedConnections = new ComboBox<>();
+        this.storedConnections.setPrefWidth(300);
 
         this.storedConnections.setOnShowing(event -> tryCatch(this::displayStores, "Error on update titles"));
         this.storedConnections.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
@@ -126,6 +112,18 @@ public class DialogFillWizard extends AbstractWizard {
             }
         });
 
+        Button scan = new Button("Scan");
+        scan.setOnAction(event -> {
+            clear();
+            this.textBoxes.getItems().forEach(controlItem -> {
+                if (controlItem.isOn())
+                {
+                    fillNamesAndValues(controlItem.getControl());
+                }
+            });
+            this.controlNamesAndValues.forEach((s, s2) -> this.resultListView.getItems().add(s + " : " + s2));
+        });
+
         this.dialogs.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             this.currentDialog = this.dictionary.getWindows().stream().filter(iWindow -> iWindow.getName().equals(newValue)).findFirst().get();
             this.dialogs.valueProperty().set(newValue);
@@ -134,7 +132,6 @@ public class DialogFillWizard extends AbstractWizard {
             onDialogSelected();
         });
         this.textBoxes.setCellFactory(CheckBoxListCell.forListView(ControlItem::onProperty));
-
 
         ColumnConstraints col1 = new ColumnConstraints(300, 300, 300, Priority.SOMETIMES, HPos.LEFT, true);
         ColumnConstraints col2 = new ColumnConstraints(300, 300, 300, Priority.SOMETIMES, HPos.CENTER, true);
@@ -260,7 +257,6 @@ public class DialogFillWizard extends AbstractWizard {
 
     private void onDialogSelected() {
         List<ControlItem> collect = currentDialog.getControls(IWindow.SectionKind.Run).stream()
-                .filter(iControl -> iControl.getBindedClass().equals(ControlKind.TextBox))
                         .map(iControl -> new ControlItem(iControl, false)).collect(Collectors.toList());
 
         ObservableList<ControlItem> objects = FXCollections.observableArrayList(collect);
