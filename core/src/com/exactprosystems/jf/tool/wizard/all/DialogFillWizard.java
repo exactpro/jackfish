@@ -221,13 +221,16 @@ public class DialogFillWizard extends AbstractWizard {
     }
 
     private void fillNamesAndValues(IControl control) {
-        String apostr = "'";
-
         String name = control.getID();
-        String value = Common.tryCatch(() -> String.valueOf(control.operate(this.service, this.currentDialog, Do.getValue())
-                .getValue()), "Error on get values from controls.", "");
+        String value = "";
+        if (control.getBindedClass().isAllowed(OperationKind.GET_VALUE))
+        {
+            value = Common.tryCatch(() -> String.valueOf(control.operate(this.service, this.currentDialog, Do.getValue())
+                    .getValue()), "Error on get values from controls.", "");
+        }
 
-        this.controlNamesAndValues.put(name,apostr + value + apostr);
+        String action = getDefaultAction(control, value);
+        this.controlNamesAndValues.put(name,action);
 
     }
 
@@ -243,7 +246,10 @@ public class DialogFillWizard extends AbstractWizard {
     private ChangeListener<Boolean> getListenerForControlItems(ControlItem item) {
         return (observable, wasSelected, isSelected) -> {
             Rectangle rectangle = item.getRectangle();
-
+            if (rectangle == null)
+            {
+                return;
+            }
             if (isSelected)
             {
                 this.imageViewWithScale.showRectangle(rectangle, MarkerStyle.MARK,"",true);
@@ -302,7 +308,6 @@ public class DialogFillWizard extends AbstractWizard {
         private IControl control;
         private Rectangle rectangle;
 
-
         private final BooleanProperty on = new SimpleBooleanProperty();
 
         public IControl getControl() {
@@ -349,5 +354,48 @@ public class DialogFillWizard extends AbstractWizard {
         public Rectangle getRectangle() {
             return rectangle;
         }
+    }
+    private String getDefaultAction(IControl control, String value) {
+        String apostr = "'";
+        String endOfTheAction = "()";
+        String res = "";
+        String doo = "Do.";
+        String setNum = "(" + value + ")";
+        String setStr = "(" + apostr + value + apostr + ")";
+        switch (control.getBindedClass())
+        {
+            case Any:
+            case Dialog:
+            case Frame:
+            case Image:
+            case Label:
+            case ListView:
+            case MenuItem:
+            case Menu:
+            case Panel:
+            case ScrollBar:
+            case Table:
+            case Button:
+            case Tooltip:
+            case Row:
+                res = doo + control.getBindedClass().defaultOperation().toString() + endOfTheAction;
+                break;
+            case CheckBox:
+                res = value;
+                break;
+            case Slider:
+            case Spinner:
+            case Splitter:
+            case ToggleButton:
+            case RadioButton:
+                res = doo + control.getBindedClass().defaultOperation().toString() + setNum;
+                break;
+            case TextBox:
+            case ComboBox:
+            case TabPanel:
+                res = doo + control.getBindedClass().defaultOperation().toString() + setStr;
+        }
+
+        return res;
     }
 }
