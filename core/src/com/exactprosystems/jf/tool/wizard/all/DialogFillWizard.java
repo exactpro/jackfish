@@ -80,8 +80,6 @@ public class DialogFillWizard extends AbstractWizard {
     public void init(IContext context, WizardManager wizardManager, Object... parameters) {
         super.init(context, wizardManager, parameters);
         this.currentMatrix = super.get(MatrixFx.class, parameters);
-        this.dictionary = (DictionaryFx) this.currentMatrix.getDefaultApp().getDictionary();
-        this.windows = dictionary.getWindows();
         this.currentItem = get(MatrixItem.class, parameters);
         this.controlNamesAndValues = new HashMap<>();
 
@@ -117,7 +115,9 @@ public class DialogFillWizard extends AbstractWizard {
         });
 
         this.storedConnections = new ComboBox<>();
+        this.storedConnections.setPrefWidth(300);
         this.dialogs = new ComboBox<>();
+        this.dialogs.setPrefWidth(300);
         GridPane grid = new GridPane();
 
         this.storedConnections.setOnShowing(event -> tryCatch(this::displayStores, "Error on update titles"));
@@ -126,10 +126,11 @@ public class DialogFillWizard extends AbstractWizard {
             {
                 this.setCurrentAdapterStore(newValue);
                 this.connectToApplicationFromStore(this.currentAdapterStore);
+                this.dictionary = (DictionaryFx) this.appConnection.getDictionary();
+                this.dialogs.getItems().clear();
+                this.windows = dictionary.getWindows();
+                this.dialogs.getItems().addAll(windows.stream().map(Object::toString).collect(Collectors.toList()));
             }
-            this.dialogs.getItems().clear();
-            this.windows = dictionary.getWindows();
-            this.dialogs.getItems().addAll(windows.stream().map(Object::toString).collect(Collectors.toList()));
         });
 
         this.dialogs.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
@@ -155,10 +156,10 @@ public class DialogFillWizard extends AbstractWizard {
         grid.add(storedConnections, 1, 0);
         grid.add(new Label("Select dialog: "), 2, 0);
         grid.add(dialogs, 3, 0);
-        grid.add(this.textBoxes, 0, 1);
-        grid.add(scan, 0, 2);
-        grid.add(this.resultListView, 0, 3);
-        grid.add(this.imageViewWithScale, 1, 1, 3, 3);
+        grid.add(this.textBoxes, 3, 1);
+        grid.add(scan, 3, 2);
+        grid.add(this.resultListView, 3, 3);
+        grid.add(this.imageViewWithScale, 0, 1, 3, 3);
         borderPane.setCenter(grid);
     }
 
@@ -191,7 +192,7 @@ public class DialogFillWizard extends AbstractWizard {
     }
 
     private void displayStores() throws Exception {
-        Map<String, Object> storeMap = this.dictionary.getFactory().getConfiguration().getStoreMap();
+        Map<String, Object> storeMap = this.currentMatrix.getFactory().getConfiguration().getStoreMap();
         Collection<String> stories = new ArrayList<>();
         if (!storeMap.isEmpty())
         {
@@ -223,7 +224,7 @@ public class DialogFillWizard extends AbstractWizard {
     private void connectToApplicationFromStore(String idAppStore) {
         if (idAppStore != null && !idAppStore.isEmpty())
         {
-            this.appConnection = (AppConnection) this.dictionary.getFactory().getConfiguration().getStoreMap().get(idAppStore);
+            this.appConnection = (AppConnection) this.currentMatrix.getFactory().getConfiguration().getStoreMap().get(idAppStore);
         }
     }
 
@@ -262,18 +263,20 @@ public class DialogFillWizard extends AbstractWizard {
             this.document = doc;
             List<Rectangle> list = XpathUtils.collectAllRectangles(this.document);
             this.imageViewWithScale.setListForSearch(list);
-            this.imageViewWithScale.setOnRectangleClick(rectangle -> {
-                this.textBoxes.getItems().forEach(controlItem -> {
-                    Locator ownerLocator = Common.tryCatch(() -> this.currentDialog.getOwnerControl(controlItem.control).locator(),"Error on get owner", null);
-                    Locator elementLocator = controlItem.getControl().locator();
-                    Rectangle itemRectangle = getItemRectangle(ownerLocator, elementLocator);
-                    if (rectangle.equals(itemRectangle))
-                    {
-                        controlItem.setOn(true);
-                        this.imageViewWithScale.showRectangle(rectangle, MarkerStyle.MARK,"",true);
-                    }
-                });
-            });
+            this.imageViewWithScale.setOnRectangleClick(rectangle -> this.textBoxes.getItems().forEach(controlItem -> {
+                Locator ownerLocator = Common.tryCatch(() -> {
+                    IControl ownerControl = this.currentDialog.getOwnerControl(controlItem.control);
+                    return ownerControl == null ? null : ownerControl.locator();
+                },"Error on get owner", null);
+
+                Locator elementLocator = controlItem.getControl().locator();
+                Rectangle itemRectangle = getItemRectangle(ownerLocator, elementLocator);
+                if (rectangle.equals(itemRectangle))
+                {
+                    controlItem.setOn(true);
+                    this.imageViewWithScale.showRectangle(rectangle, MarkerStyle.MARK,"",true);
+                }
+            }));
         }, ex ->
         {
             String message = ex.getMessage();
