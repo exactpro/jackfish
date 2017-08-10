@@ -8,9 +8,10 @@
 
 package com.exactprosystems.jf.documents.matrix.parser;
 
- import com.exactprosystems.jf.api.app.Mutable;
+import com.exactprosystems.jf.api.app.Mutable;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.documents.matrix.parser.items.MatrixItem;
+import com.exactprosystems.jf.documents.matrix.parser.items.MutableArrayList;
 import com.exactprosystems.jf.documents.matrix.parser.items.TypeMandatory;
 import com.exactprosystems.jf.documents.matrix.parser.listeners.IMatrixListener;
 
@@ -19,15 +20,15 @@ import java.util.stream.Collectors;
 
  public class Parameters implements Iterable<Parameter>, Map<String, Object>, Mutable, Cloneable
 {
-	public Parameters()
+    private MutableArrayList<Parameter>  parameters;
+
+     public Parameters()
 	{
-		this.changed = false;
-		this.parameters = new ArrayList<>();
+		this.parameters = new MutableArrayList<>();
 	}
 
 	public void setValue(Parameters value)
 	{
-		this.changed = true;
 		this.parameters.clear();
 		this.parameters.addAll(value.parameters);
 	}
@@ -59,8 +60,7 @@ import java.util.stream.Collectors;
 	public Parameters clone() throws CloneNotSupportedException
 	{
 		Parameters clone = ((Parameters) super.clone());
-		clone.changed = false;
-		clone.parameters = new ArrayList<>(parameters.size());
+		clone.parameters = new MutableArrayList<>(parameters.size());
 		for (Parameter parameter : parameters)
 		{
 			clone.parameters.add(parameter.clone());
@@ -74,26 +74,14 @@ import java.util.stream.Collectors;
 	@Override
 	public final boolean isChanged()
 	{
-		if (this.changed)
-		{
-			return true;
-		}
-		for (Parameter parameter : this.parameters)
-		{
-			if (parameter.isChanged())
-			{
-				return true;
-			}
-		}
-		return false;
+	    return this.parameters.isChanged();
 	}
 	
 	
 	@Override
 	public final void saved()
 	{
-		this.changed = false;
-		this.parameters.forEach(Parameter::saved);
+		this.parameters.saved();
 	}
 	
 	//------------------------------------------------------------------------------------------------------------------
@@ -183,7 +171,6 @@ import java.util.stream.Collectors;
 	@Override
 	public void clear()
 	{
-		this.changed = this.changed || !this.parameters.isEmpty();
 		this.parameters.clear();
 	}
 
@@ -258,8 +245,7 @@ import java.util.stream.Collectors;
 			return;
 		}
 
-		Parameter removed = this.parameters.remove(index);
-		this.changed = this.changed || removed != null;
+		this.parameters.remove(index);
 	}
 
 	public String getExpression(String parameterName)
@@ -343,7 +329,6 @@ import java.util.stream.Collectors;
 	
 	public void add(String name, String expression, TypeMandatory mandatory)
 	{
-		this.changed = true;
 		Parameter par = new Parameter(name, expression);
 		par.setType(mandatory);
 		this.parameters.add(par);
@@ -369,7 +354,6 @@ import java.util.stream.Collectors;
 	public void insert(int index, String name, String expression, TypeMandatory type)
 	{
 		if (index == -1) return;
-		this.changed = true;
 		Parameter element = new Parameter(name, expression);
 		element.setType(type);
 		this.parameters.add(Math.min(index, this.parameters.size()), element);
@@ -388,7 +372,6 @@ import java.util.stream.Collectors;
 	public void moveLeft(int index)
 	{
 		if (index == -1) return;
-		this.changed = true;
 		boolean flag = index == 0;
 		Parameter parameter = this.parameters.get(index);
 		this.parameters.remove(index);
@@ -405,7 +388,6 @@ import java.util.stream.Collectors;
 	public void moveRight(int index)
 	{
 		if (index == -1) return;
-		this.changed = true;
 		boolean flag = index == this.parameters.size() -1 ;
 		Parameter parameter = this.parameters.get(index);
 		this.parameters.remove(index);
@@ -466,8 +448,5 @@ import java.util.stream.Collectors;
 		}
 		return false;
 	}
-	
-	private ArrayList<Parameter> parameters;
-	
-	private boolean changed;
+
 }

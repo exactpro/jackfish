@@ -34,15 +34,8 @@ public class SystemVarsFx extends SystemVars
 	}
 
 	//==============================================================================================================================
-	// AbstractDocument
+	// Document
 	//==============================================================================================================================
-    @Override
-    protected void afterRedoUndo()
-    {
-        super.afterRedoUndo();
-        this.controller.displayNewParameters(evaluateData());
-    }
-	
 	@Override
 	public void display() throws Exception
 	{
@@ -50,7 +43,6 @@ public class SystemVarsFx extends SystemVars
 		
 		initController();
 	
-		this.controller.displayTitle(Common.getSimpleTitle(getNameProperty().get()));
 		this.controller.displayNewParameters(evaluateData());
 	}
 
@@ -58,7 +50,6 @@ public class SystemVarsFx extends SystemVars
 	public void save(String fileName) throws Exception
 	{
 		super.save(fileName);
-		this.controller.saved(getNameProperty().get());
 	}
 
 	@Override
@@ -171,6 +162,16 @@ public class SystemVarsFx extends SystemVars
 		addCommand(undo, redo);
 	}
 
+    //==============================================================================================================================
+    // AbstractDocument
+    //==============================================================================================================================
+    @Override
+    protected void afterRedoUndo()
+    {
+        super.afterRedoUndo();
+        this.controller.displayNewParameters(evaluateData());
+    }
+    
 	//----------------------------------------------------------------------------------------------
 	private void initController()
 	{

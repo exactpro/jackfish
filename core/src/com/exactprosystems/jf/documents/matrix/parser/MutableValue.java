@@ -12,7 +12,6 @@ import java.util.Objects;
 import java.util.function.BiConsumer;
 
 import com.exactprosystems.jf.api.app.Mutable;
-import com.exactprosystems.jf.documents.AbstractDocument;
 
 public class MutableValue<T> implements Mutable, Getter<T>, Setter<T>, Cloneable
 {

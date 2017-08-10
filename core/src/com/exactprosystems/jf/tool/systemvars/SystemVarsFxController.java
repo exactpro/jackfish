@@ -32,13 +32,12 @@ import static com.exactprosystems.jf.tool.Common.tryCatch;
 
 public class SystemVarsFxController implements Initializable, ContainingParent
 {
-	public GridPane grid;
-	public CustomTable<Parameter> tableView;
+    public GridPane               grid;
+    public CustomTable<Parameter> tableView;
 
-	private Parent pane;
-	private SystemVarsFx model;
-	private CustomTab tab;
-
+    private Parent                pane;
+    private SystemVarsFx          model;
+    private CustomTab             tab;
 
 	//----------------------------------------------------------------------------------------------
 	// Event handlers
@@ -58,7 +57,7 @@ public class SystemVarsFxController implements Initializable, ContainingParent
 		this.tableView = new CustomTable<>(true);
 		MenuItem itemAdd = new MenuItem("Add new variable");
 		itemAdd.setOnAction(this::addNewVar);
-		this.tableView.getContextMenu().getItems().add(0,itemAdd);
+		this.tableView.getContextMenu().getItems().add(0, itemAdd);
 		this.grid.add(this.tableView, 0, 0);
 	}
 
@@ -79,17 +78,23 @@ public class SystemVarsFxController implements Initializable, ContainingParent
 		this.model = model;
 		this.tab = CustomTabPane.getInstance().createTab(model);
 		this.tab.setContent(this.pane);
+		this.tab.setTitle(this.model.getNameProperty().get());
 		this.tableView.setListener(this.model::removeParameters);
 		createTable();
 		CustomTabPane.getInstance().addTab(this.tab);
 		CustomTabPane.getInstance().selectTab(this.tab);
+		
+        this.model.getNameProperty().setOnChangeListener((o, n) ->
+        {
+            Platform.runLater(() ->
+            {
+                this.tab.setTitle(n);
+                this.tab.saved(n);
+            });
+        });
+        
 	}
 	
-	public void saved(String name)
-	{
-		this.tab.saved(name);
-	}
-
 	public void close() throws Exception
 	{
 		this.tab.close();
@@ -105,11 +110,6 @@ public class SystemVarsFxController implements Initializable, ContainingParent
 			this.tableView.setItems(FXCollections.observableList(data));
 			this.tableView.update();
 		});
-	}
-
-	public void displayTitle(String title)
-	{
-		Platform.runLater(() -> this.tab.setTitle(title));
 	}
 
 	// ------------------------------------------------------------------------------------------------------------------
