@@ -56,20 +56,14 @@ public enum OperationKind
 		@Override
 		public <T> boolean operateDerived(Part part, OperationExecutor<T> executor, Holder<T> holder, OperationResult result) throws Exception
 		{
-			Locator locator;
-			if (holder.get(LocatorKind.Element).getControlKind() == ControlKind.Tree)
-			{
-				locator = new Locator().kind(ControlKind.TreeItem);
-			}
-			else
-			{
-				locator = new Locator().kind(ControlKind.Any);
-			}
-
 			List<T> elements = executor.findByXpath(holder.getValue(), part.str);
-			for (T element : elements)
+			if(!elements.isEmpty())
 			{
-				part.operation.operate(executor, locator, element);
+				Locator locator = new Locator().kind(ControlKind.Any);
+				for (T element : elements)
+				{
+					part.operation.operate(executor, locator, element);
+				}
 			}
 			return true;
 		}
