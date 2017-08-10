@@ -21,7 +21,6 @@ import com.exactprosystems.jf.tool.helpers.DialogsHelper;
 import com.exactprosystems.jf.tool.matrix.MatrixFx;
 import com.exactprosystems.jf.tool.wizard.AbstractWizard;
 import com.exactprosystems.jf.tool.wizard.CommandBuilder;
-import com.exactprosystems.jf.tool.wizard.WizardMatcher;
 import com.exactprosystems.jf.tool.wizard.related.MarkerStyle;
 import com.exactprosystems.jf.tool.wizard.related.WizardHelper;
 import javafx.application.Platform;
@@ -73,9 +72,8 @@ public class DialogFillWizard extends AbstractWizard {
     private AppConnection appConnection;
     private ImageViewWithScale imageViewWithScale;
     private Document document;
-    private WizardMatcher matcher;
     private ListView<ControlItem> textBoxes;
-    private Bean bean;
+    private Map<String, String> controlNamesAndValues;
 
 
     @Override
@@ -85,6 +83,7 @@ public class DialogFillWizard extends AbstractWizard {
         this.dictionary = (DictionaryFx) this.currentMatrix.getDefaultApp().getDictionary();
         this.windows = dictionary.getWindows();
         this.currentItem = get(MatrixItem.class, parameters);
+        this.controlNamesAndValues = new HashMap<>();
 
     }
 
@@ -101,6 +100,7 @@ public class DialogFillWizard extends AbstractWizard {
         this.textBoxes = new ListView<>();
         this.resultListView = new ListView<>();
 
+
         Button scan = new Button("Scan");
         scan.setOnAction(event -> {
             clear();
@@ -113,7 +113,7 @@ public class DialogFillWizard extends AbstractWizard {
                     find(ownerLocator, elementLocator);
                 }
             });
-            this.bean.getControlNamesValues().forEach((s, s2) -> this.resultListView.getItems().add(s + " : " + s2));
+            this.controlNamesAndValues.forEach((s, s2) -> this.resultListView.getItems().add(s + " : " + s2));
         });
 
         this.storedConnections = new ComboBox<>();
@@ -164,7 +164,7 @@ public class DialogFillWizard extends AbstractWizard {
 
     private void clear() {
         this.resultListView.getItems().clear();
-        this.bean.clear();
+        this.controlNamesAndValues.clear();
     }
 
     private void setCurrentAdapterStore(String newValue) {
@@ -175,16 +175,19 @@ public class DialogFillWizard extends AbstractWizard {
     protected Supplier<List<WizardCommand>> getCommands() {
         return () -> {
             CommandBuilder builder = CommandBuilder.start();
-            return builder.addMatrixItem(this.currentMatrix, this.currentItem, this.bean.getItem(), 0).build();
+            return builder.addMatrixItem(this.currentMatrix, this.currentItem, createItem(this.controlNamesAndValues), 0).build();
         };
     }
 
     @Override
     public boolean beforeRun() {
 
-        this.bean = new Bean();
-
         return true;
+    }
+
+    private Rectangle getItemRectangle(Locator owner, Locator element) {
+        IRemoteApplication service = this.appConnection.getApplication().service();
+        return Common.tryCatch(() -> service.getRectangle(owner, element), "Error on get rectangle", null);
     }
 
     private void displayStores() throws Exception {
@@ -232,11 +235,17 @@ public class DialogFillWizard extends AbstractWizard {
         String value = Common.tryCatch(() -> String.valueOf(control.operate(service, this.currentDialog, Do.getValue())
                 .getValue()), "Error on get values from controls.", "");
 
-        Parameters params = new Parameters();
-        params.add(name, value, TypeMandatory.Extra);
-        Common.tryCatch(() -> this.bean.getItem().init(this.currentMatrix, new ArrayList<>(), new HashMap<>(), params), "Error on parameters create");
-        this.bean.add(name, apostr + value + apostr);
+        this.controlNamesAndValues.put(name,apostr + value + apostr);
 
+    }
+
+    private MatrixItem createItem(Map<String, String> map) {
+        MatrixItem matrixItem = CommandBuilder.create(currentMatrix, Tokens.Action.get(), DialogFill.class.getSimpleName());
+        Parameters params = new Parameters();
+        map.forEach((name, value) -> params.add(name, value, TypeMandatory.Extra));
+
+        Common.tryCatch(() -> matrixItem.init(this.currentMatrix, new ArrayList<>(), new HashMap<>(), params), "Error on parameters create");
+        return matrixItem;
     }
 
     private void onDialogSelected() {
@@ -250,12 +259,20 @@ public class DialogFillWizard extends AbstractWizard {
         WizardHelper.gainImageAndDocument(this.appConnection, selfControl, (image, doc) ->
         {
             this.imageViewWithScale.displayImage(image);
-
             this.document = doc;
             List<Rectangle> list = XpathUtils.collectAllRectangles(this.document);
             this.imageViewWithScale.setListForSearch(list);
             this.imageViewWithScale.setOnRectangleClick(rectangle -> {
-
+                this.textBoxes.getItems().forEach(controlItem -> {
+                    Locator ownerLocator = Common.tryCatch(() -> this.currentDialog.getOwnerControl(controlItem.control).locator(),"Error on get owner", null);
+                    Locator elementLocator = controlItem.getControl().locator();
+                    Rectangle itemRectangle = getItemRectangle(ownerLocator, elementLocator);
+                    if (rectangle.equals(itemRectangle))
+                    {
+                        controlItem.setOn(true);
+                        this.imageViewWithScale.showRectangle(rectangle, MarkerStyle.MARK,"",true);
+                    }
+                });
             });
         }, ex ->
         {
@@ -302,36 +319,9 @@ public class DialogFillWizard extends AbstractWizard {
         public String toString() {
             return getName();
         }
-    }
 
-    private class Bean {
-        private MatrixItem item;
-        private Map<String, String> controlNamesValues;
-
-        public Bean() {
-
-            this.item = CommandBuilder.create(currentMatrix, Tokens.Action.get(), DialogFill.class.getSimpleName());
-            this.controlNamesValues = new HashMap<>();
-        }
-
-        public MatrixItem getItem() {
-            return item;
-        }
-
-        public void setItem(MatrixItem item) {
-            this.item = item;
-        }
-
-        public Map<String, String> getControlNamesValues() {
-            return controlNamesValues;
-        }
-
-        public void add(String k, String v) {
-            this.controlNamesValues.put(k, v);
-        }
-
-        public void clear() {
-            this.controlNamesValues.clear();
+        public void toggle() {
+            this.setOn(!isOn());
         }
     }
 }
