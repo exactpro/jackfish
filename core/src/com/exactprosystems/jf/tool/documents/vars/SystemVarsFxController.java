@@ -6,7 +6,7 @@
 //  information which is the property of Exactpro Systems, LLC or its licensors.
 ////////////////////////////////////////////////////////////////////////////////
 
-package com.exactprosystems.jf.tool.systemvars;
+package com.exactprosystems.jf.tool.documents.vars;
 
 import com.exactprosystems.jf.common.Settings;
 import com.exactprosystems.jf.documents.matrix.parser.Parameter;

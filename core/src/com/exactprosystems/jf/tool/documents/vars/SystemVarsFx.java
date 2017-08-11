@@ -6,7 +6,7 @@
 //  information which is the property of Exactpro Systems, LLC or its licensors.
 ////////////////////////////////////////////////////////////////////////////////
 
-package com.exactprosystems.jf.tool.systemvars;
+package com.exactprosystems.jf.tool.documents.vars;
 
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.undoredo.Command;
@@ -14,6 +14,7 @@ import com.exactprosystems.jf.documents.DocumentFactory;
 import com.exactprosystems.jf.documents.matrix.parser.Parameter;
 import com.exactprosystems.jf.documents.vars.SystemVars;
 import com.exactprosystems.jf.tool.Common;
+import com.exactprosystems.jf.tool.documents.FxDocumentFactory;
 import com.exactprosystems.jf.tool.helpers.DialogsHelper;
 import javafx.scene.control.ButtonType;
 import javafx.util.Pair;
@@ -180,7 +181,7 @@ public class SystemVarsFx extends SystemVars
 	{
 		if (!this.isControllerInit)
 		{
-			this.controller = Common.loadController(SystemVarsFx.class.getResource("SystemVarsFx.fxml"));
+			this.controller = Common.loadController(FxDocumentFactory.class.getResource("SystemVarsFx.fxml"));
 			this.controller.init(this, getFactory().getSettings());
 			getFactory().getConfiguration().register(this);
 			this.isControllerInit = true;

@@ -14,7 +14,7 @@
    information which is the property of Exactpro Systems, LLC or its licensors.
   -->
 
-<GridPane fx:id="grid" prefHeight="428.0" prefWidth="504.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.exactprosystems.jf.tool.systemvars.SystemVarsFxController">
+<GridPane fx:id="grid" prefHeight="428.0" prefWidth="504.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.exactprosystems.jf.tool.documents.vars.SystemVarsFxController">
    <columnConstraints>
       <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0"/>
    </columnConstraints>

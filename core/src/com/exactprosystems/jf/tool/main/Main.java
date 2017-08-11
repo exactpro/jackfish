@@ -23,6 +23,7 @@ import com.exactprosystems.jf.documents.text.PlainText;
 import com.exactprosystems.jf.documents.vars.SystemVars;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.custom.store.StoreVariable;
+import com.exactprosystems.jf.tool.documents.FxDocumentFactory;
 import com.exactprosystems.jf.tool.git.CredentialBean;
 import com.exactprosystems.jf.tool.git.CredentialDialog;
 import com.exactprosystems.jf.tool.git.GitBean;
