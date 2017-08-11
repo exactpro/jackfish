@@ -122,9 +122,8 @@ public class ElementsTable extends TableView<TableBean>
 		});
 
 		columnId.setOnEditCommit(e ->
-		{
-			//TODO
-		});
+				Common.tryCatch(() -> e.getRowValue().getAbstractControl().set("id", e.getNewValue()), ""));
+
 		columnId.setMinWidth(100.0);
 
 		TableColumn<TableBean, ControlKind> columnKind = new TableColumn<>("Kind");
