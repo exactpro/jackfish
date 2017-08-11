@@ -41,6 +41,8 @@ public class SystemVarsFx extends SystemVars
 	{
 		super.display();
 		
+		getParameters().fire();
+		
 		initController();
 	
 		this.controller.displayNewParameters(evaluateData());

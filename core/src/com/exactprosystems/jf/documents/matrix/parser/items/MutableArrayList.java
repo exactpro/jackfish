@@ -180,6 +180,11 @@ public class MutableArrayList<T extends Mutable> extends ArrayList<T> implements
 	}
 
     //==============================================================================================
+    public void fire()
+    {
+        onChange(size(), size());
+    }
+	
     public void setOnChangeListener(BiConsumer<Integer, Integer> listener)
     {
         this.changeListener = listener;
