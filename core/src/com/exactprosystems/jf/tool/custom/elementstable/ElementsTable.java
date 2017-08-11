@@ -130,7 +130,8 @@ public class ElementsTable extends TableView<TableBean>
 		columnKind.setCellValueFactory(new PropertyValueFactory<>("controlKind"));
 		columnKind.setOnEditCommit(e ->
 		{
-			//TODO
+			AbstractControl newControl = Common.tryCatch(() -> AbstractControl.createCopy(e.getRowValue().getAbstractControl(), e.getNewValue()),"",null);
+			e.getRowValue().setAbstractControl(newControl);
 		});
 		columnKind.setCellFactory(e -> new TableCell<TableBean, ControlKind>()
 		{
