@@ -87,16 +87,43 @@ public abstract class DocumentFactory
     {
         try
         {
+            if (kind != DocumentKind.CONFIGURATION)
+            {
+                checkConfiguration();
+            }
             switch (kind)
             {
-                case CONFIGURATION:     return createConfig(fileName);
-                case MATRIX:            return createMatrix(fileName, createContext(). createRunner(fileName,  CommonHelper.readerFromFileName(fileName), new Date(), null));            
-                case LIBRARY:           return createLibrary(fileName, null);
-                case GUI_DICTIONARY:    return createAppDictionary(fileName);
-                case MESSAGE_DICTIONARY: return createClientDictionary(fileName);
-                case SYSTEM_VARS:       return createVars(fileName);
-                case CSV:               return createCsv(fileName);
-                case PLAIN_TEXT:        return createPlainText(fileName);
+                case CONFIGURATION:     
+                    return createConfig(fileName, this.settings); 
+                    // createConfig(fileName);
+                    
+                case MATRIX:            
+                    return  createMatrix(fileName, this.configuration, createContext().createRunner(fileName,  CommonHelper.readerFromFileName(fileName), new Date(), null), createMatrixListener());
+                    //createMatrix(fileName, createContext().createRunner(fileName,  CommonHelper.readerFromFileName(fileName), new Date(), null));            
+                
+                case LIBRARY:           
+                    return  createLibrary(fileName, this.configuration, null, createMatrixListener());
+                    // createLibrary(fileName, null);
+                
+                case GUI_DICTIONARY:    
+                    return createAppDictionary(fileName, this.configuration);
+                    // createAppDictionary(fileName);
+                
+                case MESSAGE_DICTIONARY: 
+                    return createClientDictionary(fileName, this.configuration);
+                    //createClientDictionary(fileName);
+                
+                case SYSTEM_VARS:       
+                    return createVars(fileName, this.configuration);
+                    // createVars(fileName);
+                
+                case CSV:               
+                    return createCsv(fileName, this.configuration);
+                    // createCsv(fileName);
+                
+                case PLAIN_TEXT:        
+                    return createPlainText(fileName, this.configuration);
+                    // createPlainText(fileName);
             }
         }
         catch (Exception e)
@@ -225,7 +252,8 @@ public abstract class DocumentFactory
 
     public abstract boolean                 editTable(AbstractEvaluator evaluator, String title, Table table, Map<String, Boolean> columns);
 
-	protected abstract void					error(Exception exeption);
+
+    protected abstract void					error(Exception exeption);
 
 	protected abstract Context 				createContext(Configuration configuration, IMatrixListener matrixListener) throws Exception;
 
