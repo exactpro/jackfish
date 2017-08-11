@@ -80,6 +80,9 @@
             this.pushLabel = new System.Windows.Forms.Label();
             this.checkedLabel = new System.Windows.Forms.Label();
             this.Table = new System.Windows.Forms.DataGridView();
+            this.Head1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Head2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Head3 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.listBox1 = new System.Windows.Forms.ListBox();
             this.panel2 = new System.Windows.Forms.Panel();
             this.panel3 = new System.Windows.Forms.Panel();
@@ -94,9 +97,6 @@
             this.selectLabel = new System.Windows.Forms.Label();
             this.protocolText = new System.Windows.Forms.TextBox();
             this.protocolClear = new System.Windows.Forms.Button();
-            this.Head1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Head2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Head3 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             ((System.ComponentModel.ISupportInitialize)(this.Table1)).BeginInit();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.Slider)).BeginInit();
@@ -300,8 +300,7 @@
             resources.ApplyResources(this.Tree, "Tree");
             this.Tree.Name = "Tree";
             this.Tree.Nodes.AddRange(new System.Windows.Forms.TreeNode[] {
-            ((System.Windows.Forms.TreeNode)(resources.GetObject("Tree.Nodes"))),
-            ((System.Windows.Forms.TreeNode)(resources.GetObject("Tree.Nodes1")))});
+            ((System.Windows.Forms.TreeNode)(resources.GetObject("Tree.Nodes")))});
             this.Tree.KeyDown += new System.Windows.Forms.KeyEventHandler(this.CommonKeyDown);
             this.Tree.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.CommonKeyPress);
             this.Tree.KeyUp += new System.Windows.Forms.KeyEventHandler(this.CommonKeyUp);
@@ -557,6 +556,22 @@
             this.Table.MouseDown += new System.Windows.Forms.MouseEventHandler(this.CommonMouseDown);
             this.Table.MouseMove += new System.Windows.Forms.MouseEventHandler(this.CommonMouseMove);
             // 
+            // Head1
+            // 
+            resources.ApplyResources(this.Head1, "Head1");
+            this.Head1.Name = "Head1";
+            // 
+            // Head2
+            // 
+            resources.ApplyResources(this.Head2, "Head2");
+            this.Head2.Name = "Head2";
+            // 
+            // Head3
+            // 
+            resources.ApplyResources(this.Head3, "Head3");
+            this.Head3.Name = "Head3";
+            this.Head3.ReadOnly = true;
+            // 
             // listBox1
             // 
             this.listBox1.FormattingEnabled = true;
@@ -784,22 +799,6 @@
             this.protocolClear.UseVisualStyleBackColor = true;
             this.protocolClear.Click += new System.EventHandler(this.protocolClear_Click);
             this.protocolClear.MouseClick += new System.Windows.Forms.MouseEventHandler(this.button1_MouseClick);
-            // 
-            // Head1
-            // 
-            resources.ApplyResources(this.Head1, "Head1");
-            this.Head1.Name = "Head1";
-            // 
-            // Head2
-            // 
-            resources.ApplyResources(this.Head2, "Head2");
-            this.Head2.Name = "Head2";
-            // 
-            // Head3
-            // 
-            resources.ApplyResources(this.Head3, "Head3");
-            this.Head3.Name = "Head3";
-            this.Head3.ReadOnly = true;
             // 
             // MockWin
             // 
