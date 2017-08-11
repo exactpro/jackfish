@@ -93,6 +93,15 @@ public class SystemVarsFxController implements Initializable, ContainingParent
             });
         });
         
+        this.model.getParameters().setOnChangeListener((o,n) ->
+        {
+            Platform.runLater(() -> 
+            {
+                this.tableView.setItems(FXCollections.observableList(this.model.getParameters()));
+                this.tableView.update();
+            });
+        });
+        
 	}
 	
 	public void close() throws Exception
@@ -106,10 +115,10 @@ public class SystemVarsFxController implements Initializable, ContainingParent
 	// ------------------------------------------------------------------------------------------------------------------
 	public void displayNewParameters(List<Parameter> data)
 	{
-		Platform.runLater(() -> {
-			this.tableView.setItems(FXCollections.observableList(data));
-			this.tableView.update();
-		});
+//		Platform.runLater(() -> {
+//			this.tableView.setItems(FXCollections.observableList(data));
+//			this.tableView.update();
+//		});
 	}
 
 	// ------------------------------------------------------------------------------------------------------------------

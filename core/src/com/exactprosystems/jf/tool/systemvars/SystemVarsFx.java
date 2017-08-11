@@ -41,9 +41,10 @@ public class SystemVarsFx extends SystemVars
 	{
 		super.display();
 		
-		getParameters().fire();
+        initController();
+
+        getParameters().fire();
 		
-		initController();
 	
 		this.controller.displayNewParameters(evaluateData());
 	}
@@ -171,7 +172,7 @@ public class SystemVarsFx extends SystemVars
     protected void afterRedoUndo()
     {
         super.afterRedoUndo();
-        this.controller.displayNewParameters(evaluateData());
+//        this.controller.displayNewParameters(evaluateData());
     }
     
 	//----------------------------------------------------------------------------------------------

@@ -80,6 +80,7 @@ public abstract class AbstractDocument implements Document
 	@Override
 	public void display() throws Exception
 	{
+	    this.nameProperty.fire();
 	}
 
 	@Override
