@@ -92,11 +92,7 @@ public final class Call extends MatrixItem
 				}
 				else
 				{
-					try
-					{
-						driver.setupCall(this, res, this.ref.getParameters().clone());
-					}
-					catch (CloneNotSupportedException e) {}
+					driver.setupCall(this, res, this.ref.getParameters().clone());
 				}
 				return res;
 			},

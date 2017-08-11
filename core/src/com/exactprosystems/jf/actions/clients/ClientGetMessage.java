@@ -118,7 +118,7 @@ public class ClientGetMessage extends AbstractAction
 		IClient client = this.connection.getClient();
 		ClientHelper.errorIfDisable(client.getClass(), Possibility.Receiving);
 
-		MapMessage ret = client.getMessage(parameters.select(TypeMandatory.Extra), this.messageType, this.conditions, this.timeout, this.remove);
+		MapMessage ret = client.getMessage(parameters.select(TypeMandatory.Extra).makeCopy(), this.messageType, this.conditions, this.timeout, this.remove);
 
 		if (ret != null)
 		{

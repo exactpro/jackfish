@@ -93,7 +93,7 @@ public class ApplicationSwitchTo extends AbstractAction
 			
 		}
 	    Map<String, String> map = new HashMap<>();
-	    parameters.select(TypeMandatory.Extra).forEach((k,v) -> map.put(k, String.valueOf(v)));
+	    parameters.select(TypeMandatory.Extra).makeCopy().forEach((k,v) -> map.put(k, String.valueOf(v)));
 	    
 		IApplication app = this.connection.getApplication();
 		String res = app.service().switchTo(map, this.softCondition);

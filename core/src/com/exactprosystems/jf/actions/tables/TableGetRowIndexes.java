@@ -69,7 +69,7 @@ public class TableGetRowIndexes extends AbstractAction
 	{
 		Parameters extra = parameters.select(TypeMandatory.Extra);
 
-		Condition[] conditions = Condition.convertToCondition(extra);
+		Condition[] conditions = Condition.convertToCondition(extra.makeCopy());
 		List<Integer> indexes = this.table.findAllIndexes(conditions);
 		
 		super.setResult(indexes);

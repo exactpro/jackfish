@@ -215,7 +215,7 @@ public final class SubCase extends MatrixItem
 		try
 		{
 		    evaluator.getLocals().clear();
-			evaluator.getLocals().set(parameters);
+			evaluator.getLocals().set(parameters.makeCopy());
 
 			reportParameters(report, parameters);
 			report.itemIntermediate(this);

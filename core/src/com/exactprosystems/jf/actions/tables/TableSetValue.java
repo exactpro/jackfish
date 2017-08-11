@@ -78,7 +78,7 @@ public class TableSetValue extends AbstractAction
 			return;
 		}
 
-		this.table.setValue(this.index, params);
+		this.table.setValue(this.index, params.makeCopy());
 		super.setResult(null);
 	}
 }

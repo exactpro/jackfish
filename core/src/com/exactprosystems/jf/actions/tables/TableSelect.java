@@ -85,7 +85,7 @@ public class TableSelect extends AbstractAction
 	{
 		Parameters extra = parameters.select(TypeMandatory.Extra);
 
-		Condition[] conditions = Condition.convertToCondition(extra);
+		Condition[] conditions = Condition.convertToCondition(extra.makeCopy());
 		Table newTable = this.table.select(conditions);
 		
 		super.setResult(newTable);

@@ -197,7 +197,7 @@ public final class NameSpace extends MatrixItem
 		{
 			report.itemIntermediate(this);
 
-            evaluator.getLocals().set(parameters);
+            evaluator.getLocals().set(parameters.makeCopy());
 			ReturnAndResult res = executeChildren(start, context, listener, evaluator, report, new Class<?>[] { OnError.class });
 
 			return res;

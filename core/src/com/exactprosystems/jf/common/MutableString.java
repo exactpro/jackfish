@@ -18,6 +18,7 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.XmlValue;
 
+// TODO to be replaced with MutableValue<String>
 @XmlAccessorType(XmlAccessType.NONE)
 public class MutableString implements Mutable
 {

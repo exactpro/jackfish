@@ -59,7 +59,7 @@ public class MessageCheck extends AbstractAction
 			return;
 		}
 		
-		Map<String, String> diff = ClientHelper.difference(this.actual, Condition.convertToCondition(parameters.select(TypeMandatory.Extra))); 
+		Map<String, String> diff = ClientHelper.difference(this.actual, Condition.convertToCondition(parameters.select(TypeMandatory.Extra).makeCopy())); 
 		
 		if (diff == null)
 		{

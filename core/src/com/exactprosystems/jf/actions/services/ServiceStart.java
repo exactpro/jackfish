@@ -92,7 +92,7 @@ public class ServiceStart extends AbstractAction
 		try
 		{
 			IServicesPool servicesPool = context.getConfiguration().getServicesPool();
-			servicesPool.startService(context, this.connection, parameters.select(TypeMandatory.Extra));
+			servicesPool.startService(context, this.connection, parameters.select(TypeMandatory.Extra).makeCopy());
 			super.setResult(null);
 		}
 		catch (Exception e)

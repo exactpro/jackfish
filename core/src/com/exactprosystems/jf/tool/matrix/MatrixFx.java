@@ -504,21 +504,17 @@ public class MatrixFx extends Matrix
 
 	public void setupCall(MatrixItem item, String reference, Parameters parameters)
 	{
-		try
+		int number = item.getNumber();
+		Parameters last = item.getParameters().clone();
+		Command undo = () ->
 		{
-			int number = item.getNumber();
-			Parameters last = item.getParameters().clone();
-			Command undo = () ->
-			{
-				findAndCallParameters(number, par -> par.setValue(last), -1);
-			};
-			Command redo = () ->
-			{
-				findAndCallParameters(number, par -> par.setValue(parameters), -1);
-			};
-			addCommand(undo, redo);
-		} catch (CloneNotSupportedException e)
-		{ }
+			findAndCallParameters(number, par -> par.setValue(last), -1);
+		};
+		Command redo = () ->
+		{
+			findAndCallParameters(number, par -> par.setValue(parameters), -1);
+		};
+		addCommand(undo, redo);
 	}
 
 

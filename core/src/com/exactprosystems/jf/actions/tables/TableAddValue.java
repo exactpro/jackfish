@@ -72,7 +72,7 @@ public class TableAddValue extends AbstractAction
             }
         }
 	    
-		table.addValue(index, params);
+		table.addValue(index, params.makeCopy());
 		super.setResult(null);
 	}
 }

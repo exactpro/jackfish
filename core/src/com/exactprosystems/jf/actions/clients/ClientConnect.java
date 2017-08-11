@@ -78,7 +78,7 @@ public class ClientConnect extends AbstractAction
 	public void doRealAction(Context context, ReportBuilder report, Parameters parameters, AbstractEvaluator evaluator) throws Exception
 	{
 		IClient client = this.connection.getClient();
-		boolean res = client.connect(context, this.socket, parameters.select(TypeMandatory.Extra));
+		boolean res = client.connect(context, this.socket, parameters.select(TypeMandatory.Extra).makeCopy());
 		if (res)
 		{
 			super.setResult(null);

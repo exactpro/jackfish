@@ -103,7 +103,7 @@ public class ClientCountMessages extends AbstractAction
 		IClient client = this.connection.getClient();
 		ClientHelper.errorIfDisable(client.getClass(), Possibility.Receiving);
 		Integer ret = null;
-		Map<String, Object> additional = parameters.select(TypeMandatory.Extra);
+		Map<String, Object> additional = parameters.select(TypeMandatory.Extra).makeCopy();
 
 		if (!Str.areEqual(this.messageType, "*") || this.conditions != null || additional != null)
 		{

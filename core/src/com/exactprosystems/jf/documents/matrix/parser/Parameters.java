@@ -8,7 +8,6 @@
 
 package com.exactprosystems.jf.documents.matrix.parser;
 
-import com.exactprosystems.jf.api.app.Mutable;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.documents.matrix.parser.items.MatrixItem;
 import com.exactprosystems.jf.documents.matrix.parser.items.MutableArrayList;
@@ -16,27 +15,30 @@ import com.exactprosystems.jf.documents.matrix.parser.items.TypeMandatory;
 import com.exactprosystems.jf.documents.matrix.parser.listeners.IMatrixListener;
 
  import java.util.*;
+import java.util.Map.Entry;
 import java.util.stream.Collectors;
 
- public class Parameters implements Iterable<Parameter>, Map<String, Object>, Mutable, Cloneable
-{
-    private MutableArrayList<Parameter>  parameters;
+import org.apache.log4j.Logger;
 
-     public Parameters()
+ public class Parameters extends MutableArrayList<Parameter> implements Cloneable//, Map<String, Object>
+{
+    private static final long serialVersionUID = -4631358668566907225L;
+    private static final Logger logger = Logger.getLogger(Parameters.class);
+    
+    public Parameters()
 	{
-		this.parameters = new MutableArrayList<>();
 	}
 
 	public void setValue(Parameters value)
 	{
-		this.parameters.clear();
-		this.parameters.addAll(value.parameters);
+		clear();
+		addAll(value);
 	}
 
 	public Map<String, Object> makeCopy()
 	{
 		Map<String, Object> result = new LinkedHashMap<>();
-		result.putAll(this);
+		forEach(e -> result.put(e.getName(), e.getValue()));
 		return result;
 	}
 	
@@ -49,7 +51,7 @@ import java.util.stream.Collectors;
 
 		Set<TypeMandatory> set = new HashSet<>(Arrays.asList(types));
 		Parameters result = new Parameters();
-		result.parameters.addAll(this.parameters.stream().filter(param -> set.contains(param.type)).collect(Collectors.toList()));
+		result.addAll(stream().filter(param -> set.contains(param.type)).collect(Collectors.toList()));
 		return result;
 	}
 
@@ -57,56 +59,27 @@ import java.util.stream.Collectors;
 	// implements Cloneable
 	//------------------------------------------------------------------------------------------------------------------
 	@Override
-	public Parameters clone() throws CloneNotSupportedException
+	public Parameters clone()
 	{
 		Parameters clone = ((Parameters) super.clone());
-		clone.parameters = new MutableArrayList<>(parameters.size());
-		for (Parameter parameter : parameters)
+		clone = new Parameters();
+		for (Parameter parameter : this)
 		{
-			clone.parameters.add(parameter.clone());
+			try
+            {
+                clone.add(parameter.clone());
+            }
+            catch (CloneNotSupportedException e)
+            {
+                logger.error(e.getMessage(), e);
+            }
 		}
 		return clone;
 	}
 
-	//------------------------------------------------------------------------------------------------------------------
-	// interface Mutable
-	//------------------------------------------------------------------------------------------------------------------
-	@Override
-	public final boolean isChanged()
-	{
-	    return this.parameters.isChanged();
-	}
-	
-	
-	@Override
-	public final void saved()
-	{
-		this.parameters.saved();
-	}
-	
-	//------------------------------------------------------------------------------------------------------------------
-	// interface Iterable
-	//------------------------------------------------------------------------------------------------------------------
-	@Override
-	public Iterator<Parameter> iterator()
-	{
-		return this.parameters.iterator();
-	}
-	
-
-	//------------------------------------------------------------------------------------------------------------------
-	// interface Map
-	//------------------------------------------------------------------------------------------------------------------
-	@Override
-	public boolean isEmpty()
-	{
-		return this.parameters.isEmpty();
-	}
-
-	@Override
 	public boolean containsKey(Object key)
 	{
-		for (Parameter parameter : this.parameters)
+		for (Parameter parameter : this)
 		{
 			if (parameter.getName() != null && parameter.getName().equals(key))
 			{
@@ -117,24 +90,9 @@ import java.util.stream.Collectors;
 		return false;
 	}
 
-	@Override
-	public boolean containsValue(Object value)
+	public Object get(String key)
 	{
-		for (Parameter parameter : this.parameters)
-		{
-			if (parameter.getValue() != null && parameter.getValue().equals(value))
-			{
-				return true;
-			}
-		}
-		
-		return false;
-	}
-
-	@Override
-	public Object get(Object key)
-	{
-		List<Object> result = this.parameters.stream()
+		List<Object> result = stream()
 				.filter(parameter -> parameter.getName() != null && parameter.getName().equals(key))
 				.map(Parameter::getValue)
 				.collect(Collectors.toList());
@@ -147,59 +105,30 @@ import java.util.stream.Collectors;
 		}
 	}
 
-	@Deprecated
-	@Override
-	public Object put(String key, Object value)
-	{
-		throw new RuntimeException("put is not allowed for " + this.getClass());
-	}
-
-	@Deprecated
-	@Override
-	public Object remove(Object key)
-	{
-		throw new RuntimeException("remove is not allowed for " + this.getClass());
-	}
-
-	@Deprecated
-	@Override
-	public void putAll(Map<? extends String, ? extends Object> m)
-	{
-		throw new RuntimeException("putAll is not allowed for " + this.getClass());
-	}
-
-	@Override
-	public void clear()
-	{
-		this.parameters.clear();
-	}
-
-	@Override
 	public Set<String> keySet()
 	{
-		return this.parameters.stream().map(Parameter::getName).collect(Collectors.toCollection(LinkedHashSet::new));
+		return stream().map(Parameter::getName).collect(Collectors.toCollection(LinkedHashSet::new));
 	}
 
-	@Override
 	public Collection<Object> values()
 	{
-		return this.parameters.stream().map(Parameter::getValue).collect(Collectors.toList());
+		return stream().map(Parameter::getValue).collect(Collectors.toList());
 	}
 
-	@Override
 	public Set<Entry<String, Object>> entrySet()
 	{
-		return this.parameters.stream().map(parameter -> new ParametersEntry<>(parameter.getName(), parameter.getValue())).collect(Collectors.toCollection(LinkedHashSet::new));
+		return stream().map(parameter -> new ParametersEntry<>(parameter.getName(), parameter.getValue()))
+		        .collect(Collectors.toCollection(LinkedHashSet::new));
 	}
 
 	public Parameter getByIndex(int index)
 	{
-		return this.parameters.get(index);
+		return get(index);
 	}
 	
 	public Parameter getByName(String name)
 	{
-		Optional<Parameter> first = this.parameters.stream().filter(param -> param.getName() != null && param.getName().equals(name)).findFirst();
+		Optional<Parameter> first = stream().filter(param -> param.getName() != null && param.getName().equals(name)).findFirst();
 		if (first.isPresent())
 		{
 			return first.get();
@@ -210,7 +139,7 @@ import java.util.stream.Collectors;
 	public int getIndex(Parameter parameter)
 	{
 		int count = 0;
-		for (Parameter par : this.parameters)
+		for (Parameter par : this)
 		{
 			if (par == parameter)
 			{
@@ -223,12 +152,12 @@ import java.util.stream.Collectors;
 	
 	public void set (int index, String name, String expression, TypeMandatory type)
 	{
-		if (index < 0 || index >= this.parameters.size())
+		if (index < 0 || index >= size())
 		{
 			return;
 		}
 		
-		Parameter param = this.parameters.get(index);
+		Parameter param = get(index);
 		if (param != null)
 		{
 			param.reset();
@@ -238,19 +167,9 @@ import java.util.stream.Collectors;
 		}
 	}
 	
-	public void remove (int index)
-	{
-		if (index < 0 || index >= this.parameters.size())
-		{
-			return;
-		}
-
-		this.parameters.remove(index);
-	}
-
 	public String getExpression(String parameterName)
 	{
-		Optional<Parameter> first = this.parameters.stream().filter(param -> param.getName() != null && param.getName().equals(parameterName)).findFirst();
+		Optional<Parameter> first = stream().filter(param -> param.getName() != null && param.getName().equals(parameterName)).findFirst();
 		if (first.isPresent())
 		{
 			return first.get().getExpression();
@@ -263,8 +182,8 @@ import java.util.stream.Collectors;
 		Parameters newParameters = new Parameters();
 		for (int i = 0; i < expectedParameters.size(); i++)
 		{
-			Parameter parameter = expectedParameters.parameters.get(i);
-			if (this.containsKey(parameter.getName()))
+			Parameter parameter = expectedParameters.get(i);
+			if (containsKey(parameter.getName()))
 			{
 				parameter.setExpression(this.getExpression(parameter.getName()));
 			}
@@ -311,10 +230,10 @@ import java.util.stream.Collectors;
 	{
 		StringBuilder sb = new StringBuilder(getClass().getSimpleName());
 		sb.append(":");
-		sb.append(this.parameters.size());
+		sb.append(size());
 		sb.append("\n{");
 		String comma = "\n";
-		for (Parameter p : this.parameters)
+		for (Parameter p : this)
 		{
 			sb.append(comma);
 			sb.append(p.toString());
@@ -331,7 +250,7 @@ import java.util.stream.Collectors;
 	{
 		Parameter par = new Parameter(name, expression);
 		par.setType(mandatory);
-		this.parameters.add(par);
+		add(par);
 	}
 	
     public void add(String name, String expression)
@@ -342,13 +261,16 @@ import java.util.stream.Collectors;
 	public void replaceIfExists(Parameter parameter)
 	{
 		String name = parameter.getName();
-		this.parameters.stream().filter(p -> p.getName() != null && p.getName().equals(name)).findFirst().ifPresent(p -> {
-			p.setAll(parameter);
-			p.expression = parameter.expression;
-			p.value = parameter.value;
-			p.isValid = parameter.isValid;
-			p.type = parameter.type;
-		});
+		stream().filter(p -> p.getName() != null && p.getName().equals(name))
+		    .findFirst()
+		    .ifPresent(p -> 
+    		{
+    			p.setAll(parameter);
+    			p.expression = parameter.expression;
+    			p.value = parameter.value;
+    			p.isValid = parameter.isValid;
+    			p.type = parameter.type;
+    		});
 	}
 	
 	public void insert(int index, String name, String expression, TypeMandatory type)
@@ -356,12 +278,12 @@ import java.util.stream.Collectors;
 		if (index == -1) return;
 		Parameter element = new Parameter(name, expression);
 		element.setType(type);
-		this.parameters.add(Math.min(index, this.parameters.size()), element);
+		add(Math.min(index, size()), element);
 	}
 
 	public boolean canRemove(int index)
 	{
-		return index >= 0 && index <= this.parameters.size() - 1 && !this.parameters.get(index).getType().equals(TypeMandatory.Mandatory);
+		return index >= 0 && index <= size() - 1 && !get(index).getType().equals(TypeMandatory.Mandatory);
 	}
 
 	public boolean canMove(int index)
@@ -373,52 +295,47 @@ import java.util.stream.Collectors;
 	{
 		if (index == -1) return;
 		boolean flag = index == 0;
-		Parameter parameter = this.parameters.get(index);
-		this.parameters.remove(index);
+		Parameter parameter = get(index);
+		remove(index);
 		if (flag)
 		{
-			this.parameters.add(parameter);
+			add(parameter);
 		}
 		else
 		{
-			this.parameters.add(index - 1, parameter);
+			add(index - 1, parameter);
 		}
 	}
 
 	public void moveRight(int index)
 	{
 		if (index == -1) return;
-		boolean flag = index == this.parameters.size() -1 ;
-		Parameter parameter = this.parameters.get(index);
-		this.parameters.remove(index);
+		boolean flag = index == size() -1 ;
+		Parameter parameter = get(index);
+		remove(index);
 		if (flag)
 		{
-			this.parameters.add(0,parameter);
+			add(0,parameter);
 		}
 		else
 		{
-			this.parameters.add(index + 1, parameter);
+			add(index + 1, parameter);
 		}
 	}
 	
-	public int size()
-	{
-		return this.parameters.size();
-	}
-
 	public void setType(int index, TypeMandatory type)
 	{
-		this.parameters.get(index).setType(type);
+		get(index).setType(type);
 	}
 
 	public void resetAll()
 	{
-		this.parameters.forEach(Parameter::reset);
+		forEach(Parameter::reset);
 	}
 	
 	public void prepareAndCheck(AbstractEvaluator evaluator, IMatrixListener listener, MatrixItem item)
 	{
-		for (Parameter param : this.parameters)
+		for (Parameter param : this)
 		{
 			param.prepareAndCheck(evaluator, listener, item);
 		}
@@ -428,7 +345,7 @@ import java.util.stream.Collectors;
 	{
 		boolean result = true;
 		
-		for (Parameter param : this.parameters)
+		for (Parameter param : this)
 		{
 			boolean resOne = param.evaluate(evaluator);
 			result = result && resOne; 
