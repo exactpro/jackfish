@@ -51,8 +51,8 @@ public class PlainText extends AbstractDocument
 	@Override
 	public void save(String fileName) throws Exception
 	{
-		super.save(fileName);
 		write(fileName);
+		super.save(fileName);
 		saved();
 	}
 
