@@ -602,7 +602,7 @@ public class Configuration extends AbstractDocument
 			DateTime.setFormats(this.bean.timeValue.get(), this.bean.dateValue.get(), this.bean.dateTimeValue.get());
 			Converter.setFormats(toStringList(this.bean.formatsValue));
 
-			refresh();
+//			refresh();
 
 			this.valid = true;
     	}

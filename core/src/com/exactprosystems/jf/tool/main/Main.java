@@ -275,8 +275,9 @@ public class Main extends Application
             if (config instanceof ConfigurationFx)
             {
                 setConfiguration(config);
-                ((ConfigurationFx) config).setPane(pane);
-            }
+				((ConfigurationFx) config).setPane(pane);
+				config.refresh();
+			}
 		}
 	}
 
