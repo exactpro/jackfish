@@ -41,11 +41,10 @@ import com.exactprosystems.jf.tool.matrix.MatrixListenerFx;
 import com.exactprosystems.jf.tool.matrix.schedule.RunnerScheduler;
 import com.exactprosystems.jf.tool.msgdictionary.MessageDictionaryFx;
 import com.exactprosystems.jf.tool.newconfig.ConfigurationFx;
-import com.exactprosystems.jf.tool.text.PlainTextFx;
-
+import com.exactprosystems.jf.tool.documents.text.PlainTextFx;
+import com.exactprosystems.jf.tool.documents.text.PlainTextFxController;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
-
 import org.apache.log4j.Logger;
 
 import java.io.File;
@@ -73,13 +72,17 @@ public class FxDocumentFactory extends DocumentFactory
 	    {
 	        controller = loadController(SystemVarsFx.class, SystemVarsFxController.class);
 	        controller.init(doc);
-			AbstractDocumentController<? extends Document> finalController = controller;
-			doc.onClose(d -> finalController.close());
+
 	        System.err.println(">> " + controller.getClass());
 	    }
-	    
-        getConfiguration().register(doc);
-	    
+		if (doc instanceof PlainTextFx)
+		{
+			controller = loadController(PlainTextFx.class, PlainTextFxController.class);
+			controller.init(doc);
+		}
+		getConfiguration().register(doc);
+		AbstractDocumentController<? extends Document> finalController = controller;
+		doc.onClose(d -> finalController.close());
 	    super.showDocument(doc);
 	}
 	

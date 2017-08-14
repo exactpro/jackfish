@@ -13,9 +13,7 @@ import com.exactprosystems.jf.documents.AbstractDocument;
 import com.exactprosystems.jf.documents.DocumentFactory;
 import com.exactprosystems.jf.documents.DocumentInfo;
 import com.exactprosystems.jf.documents.DocumentKind;
-
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
+import com.exactprosystems.jf.documents.matrix.parser.MutableValue;
 
 import java.io.*;
 
@@ -30,16 +28,7 @@ public class PlainText extends AbstractDocument
 	public PlainText(String fileName, DocumentFactory factory)
 	{
 		super(fileName, factory);
-		this.property = new SimpleStringProperty("")
-		{
-			@Override
-			public void set(String arg0)
-			{
-				super.set(arg0);
-				getChangedProperty().set(true);
-				isChanged = true;
-			}
-		};
+		this.property = new MutableValue<>("");
 	}
 
 	// ==============================================================================================================================
@@ -50,6 +39,7 @@ public class PlainText extends AbstractDocument
 	{
 		super.load(reader);
 		this.property.set(read(reader));
+		this.property.saved();
 	}
 
 	@Override
@@ -63,13 +53,18 @@ public class PlainText extends AbstractDocument
 	{
 		super.save(fileName);
 		write(fileName);
-		this.isChanged = false;
+		saved();
 	}
 
 	@Override
 	public boolean isChanged()
 	{
-		return this.isChanged;
+		return this.property.isChanged();
+	}
+
+	public MutableValue<String> getProperty()
+	{
+		return this.property;
 	}
 
 	// ------------------------------------------------------------------------------------------------------------------
@@ -100,7 +95,5 @@ public class PlainText extends AbstractDocument
 		}
 	}
 
-	protected StringProperty			property;		// TODO we need our own string holder 
-
-	protected boolean					isChanged				= false;
+	protected MutableValue<String>		property;
 }

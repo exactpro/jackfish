@@ -38,7 +38,7 @@ public abstract class AbstractDocumentController<T extends Document> implements 
     @SuppressWarnings("unchecked")
     protected void init(Document model)
     {
-        this.model = (T)model;
+        this.model = (T) model;
     }
     
     protected abstract void close();

@@ -6,19 +6,18 @@
 //  information which is the property of Exactpro Systems, LLC or its licensors.
 ////////////////////////////////////////////////////////////////////////////////
 
-package com.exactprosystems.jf.tool.text;
+package com.exactprosystems.jf.tool.documents.text;
 
 import com.exactprosystems.jf.common.highlighter.Highlighter;
 import com.exactprosystems.jf.common.highlighter.StyleWithRange;
 import com.exactprosystems.jf.documents.DocumentFactory;
+import com.exactprosystems.jf.documents.matrix.parser.MutableValue;
 import com.exactprosystems.jf.documents.text.PlainText;
-import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.helpers.DialogsHelper;
 import javafx.scene.control.ButtonType;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -30,7 +29,7 @@ public class PlainTextFx extends PlainText
 	public PlainTextFx(String fileName, DocumentFactory factory, Highlighter highlighter)
 	{
 		super(fileName, factory);
-		this.initHighlighter = highlighter;
+		this.highlighter = new MutableValue<>(highlighter);
 		resetMatcher("", false, false);
 	}
 
@@ -39,10 +38,8 @@ public class PlainTextFx extends PlainText
 	public void display() throws Exception
 	{
 		super.display();
-
-		initController();
-		this.controller.updateText(this.property.get());
-		this.controller.displayTitle(Common.getSimpleTitle(getNameProperty().get()));
+		this.property.fire();
+		this.highlighter.fire();
 	}
 
 	@Override
@@ -69,21 +66,14 @@ public class PlainTextFx extends PlainText
 		return true;
 	}
 
-	@Override
-	public void save(String fileName) throws Exception
-	{
-		super.save(fileName);
-		this.controller.saved(getNameProperty().get());
-	}
-
-	@Override
-	public void close() throws Exception
-	{
-		super.close();
-		this.controller.close();
-	}
 	//endregion
 
+	public MutableValue<Highlighter> getHighlighter()
+	{
+		return highlighter;
+	}
+
+	//region Works with highlight
 	List<StyleWithRange> findAll(AtomicInteger atomicInteger)
 	{
 		ArrayList<StyleWithRange> list = new ArrayList<>();
@@ -144,38 +134,22 @@ public class PlainTextFx extends PlainText
 
 	void replaceAll(String replaceTo)
 	{
-		try
-		{
-			String newString = this.matcher.reset(this.property.get()).replaceAll(replaceTo);
-			this.property.setValue(newString);
-			this.controller.updateText(super.property.get());
-		}
-		catch (Exception e)
-		{
-			;
-		}
+		String newString = this.matcher.reset(this.property.get()).replaceAll(replaceTo);
+		this.property.set(newString);
 	}
 
 	void replaceCurrent(String replacement)
 	{
-		try
+		int start = this.matcher.start();
+		Matcher matcher = this.matcher.reset(this.property.get());
+		boolean find = matcher.find(start);
+		if (find)
 		{
-			int start = this.matcher.start();
-			Matcher matcher = this.matcher.reset(this.property.get());
-			boolean find = matcher.find(start);
-			if (find)
-			{
-				StringBuffer sb = new StringBuffer();
-				matcher.appendReplacement(sb, replacement);
-				matcher.appendTail(sb);
-				String newString = sb.toString();
-				this.property.setValue(newString);
-				this.controller.updateText(super.property.get());
-			}
-		}
-		catch (Exception e)
-		{
-			;
+			StringBuffer sb = new StringBuffer();
+			matcher.appendReplacement(sb, replacement);
+			matcher.appendTail(sb);
+			String newString = sb.toString();
+			this.property.set(newString);
 		}
 	}
 
@@ -189,30 +163,16 @@ public class PlainTextFx extends PlainText
 		this.matcher = pattern.matcher(this.property.get());
 		this.lastPos = 0;
 	}
+	//endregion
 
 	//region private methods
 	private int getLength()
 	{
 		return super.property.get().length();
 	}
-
-	private void initController()
-	{
-		if (!this.isControllerInit)
-		{
-			this.controller = Common.loadController(PlainTextFxController.class.getResource("PlainTextFx.fxml"));
-			this.controller.displayText(super.property.get(), super.property::set);
-			this.controller.init(this, getFactory().getSettings(), this.initHighlighter);
-			Optional.ofNullable(getFactory().getConfiguration()).ifPresent(c -> c.register(this));
-			this.isControllerInit = true;
-		}
-	}
 	//endregion
 
-	private Highlighter initHighlighter;
-	private Matcher matcher;
+	private MutableValue<Highlighter> highlighter;
+	private Matcher                   matcher;
 	private int lastPos = 0;
-	private boolean isControllerInit = false;
-
-	private PlainTextFxController controller;
 }

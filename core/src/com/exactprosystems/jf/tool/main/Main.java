@@ -459,7 +459,7 @@ public class Main extends Application
 		Optional<File> optional = chooseFile(PlainText.class, filePath, DialogsHelper.OpenSaveMode.OpenFile);
 		if (optional.isPresent())
 		{
-			loadDocument(optional.get(), DocumentKind.PLAIN_TEXT);
+			loadDocument2(optional.get(), DocumentKind.PLAIN_TEXT);
 		}
 	}
 
@@ -532,7 +532,9 @@ public class Main extends Application
 	public void newPlainText() throws Exception
 	{
 		checkConfig();
-		createDocument(this.factory.createDocument(DocumentKind.PLAIN_TEXT, newName(PlainText.class)));
+		Document doc = this.factory.createDocument(DocumentKind.PLAIN_TEXT, newName(PlainText.class));
+		doc.create();
+		this.factory.showDocument(doc);
 	}
 
 	public void newCsv() throws Exception
