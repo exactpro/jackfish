@@ -468,9 +468,7 @@ public class Configuration extends AbstractDocument
 
 					try (Reader reader = CommonHelper.readerFromFile(libFile))
 					{
-						Context context = getFactory().createContext();
-						MatrixRunner runner = context.createRunner(libFile.getName(), null, new Date(), null);
-						Matrix matrix = getFactory().createLibrary(libFile.getAbsolutePath(), runner);
+						Matrix matrix = (Matrix) getFactory().createDocument(DocumentKind.LIBRARY, libFile.getAbsolutePath());
 						if (!checker.isOk())
 						{
 							logger.error("Library load error: [" + libFile.getName() + "] " + checker.getExceptionMessage());
@@ -1016,7 +1014,7 @@ public class Configuration extends AbstractDocument
 		{
 			try (Reader reader = CommonHelper.readerFromFile(file))
 			{
-				SystemVars vars = getFactory().createVars(userVariablesFileName);
+				SystemVars vars = (SystemVars) getFactory().createDocument(DocumentKind.SYSTEM_VARS, userVariablesFileName);
 				vars.load(reader);
 				this.systemVars.add(vars);
 			}

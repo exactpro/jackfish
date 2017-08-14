@@ -8,27 +8,20 @@
 
 package com.exactprosystems.jf.tool.documents.vars;
 
-import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.undoredo.Command;
 import com.exactprosystems.jf.documents.DocumentFactory;
 import com.exactprosystems.jf.documents.matrix.parser.Parameter;
 import com.exactprosystems.jf.documents.vars.SystemVars;
-import com.exactprosystems.jf.tool.Common;
-import com.exactprosystems.jf.tool.documents.FxDocumentFactory;
 import com.exactprosystems.jf.tool.helpers.DialogsHelper;
 import javafx.scene.control.ButtonType;
 import javafx.util.Pair;
 
-import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
 public class SystemVarsFx extends SystemVars
 {
-	private SystemVarsFxController controller;
-	private boolean isControllerInit = false;
-
 	public SystemVarsFx(String fileName, DocumentFactory factory) throws Exception
 	{
 		super(fileName, factory);
@@ -41,13 +34,9 @@ public class SystemVarsFx extends SystemVars
 	public void display() throws Exception
 	{
 		super.display();
-		
-        initController();
 
-        getParameters().fire();
-		
-	
-		this.controller.displayNewParameters(evaluateData());
+		getParameters().fire();
+		System.err.println(">> " + getNameProperty().get());
 	}
 
 	@Override
@@ -81,15 +70,7 @@ public class SystemVarsFx extends SystemVars
 	}
 
 
-	@Override
-	public void close() throws Exception
-	{
-		super.close();
-		this.controller.close();
-	}
-
 	//----------------------------------------------------------------------------------------------
-
 	public void updateNameRow(int index, String newValue)
 	{
 		String lastName = getParameterByIndex(index).getName();
@@ -173,32 +154,7 @@ public class SystemVarsFx extends SystemVars
     protected void afterRedoUndo()
     {
         super.afterRedoUndo();
-//        this.controller.displayNewParameters(evaluateData());
     }
-    
-	//----------------------------------------------------------------------------------------------
-	private void initController()
-	{
-		if (!this.isControllerInit)
-		{
-			this.controller = Common.loadController(FxDocumentFactory.class.getResource("SystemVarsFx.fxml"));
-			this.controller.init(this, getFactory().getSettings());
-			getFactory().getConfiguration().register(this);
-			this.isControllerInit = true;
-		}
-	}
-	
-	private ArrayList<Parameter> evaluateData()
-	{
-		AbstractEvaluator evaluator = getFactory().createEvaluator();
-		ArrayList<Parameter> res = new ArrayList<>();
-		getParameters().forEach(p -> 
-		{
-			p.evaluate(evaluator);
-			res.add(p);
-		});
-		return res;
-	}
 	
 	private Parameter getParameterByIndex(int index)
 	{

@@ -9,6 +9,7 @@ package com.exactprosystems.jf.tool.custom.browser;
 
 import com.exactprosystems.jf.api.common.Sys;
 import com.exactprosystems.jf.common.MatrixRunner;
+import com.exactprosystems.jf.documents.DocumentKind;
 import com.exactprosystems.jf.documents.config.Context;
 import com.exactprosystems.jf.documents.matrix.parser.items.MatrixItem;
 import com.exactprosystems.jf.tool.Common;
@@ -216,8 +217,7 @@ public class ReportBrowser extends BorderPane
 								else
 								{
 									Common.tryCatch(() -> {
-										MatrixRunner runner = context.createRunner(matrixSourcePath, null, new Date(), null);
-										matrix[0] = (MatrixFx) context.getFactory().createMatrix(matrixSourcePath, runner);
+										matrix[0] = (MatrixFx) context.getFactory().createDocument(DocumentKind.MATRIX, matrixSourcePath);
 										matrix[0].load(new FileReader(matrixSourcePath));
 										matrix[0].display();
 									}, "Error on load matrix");

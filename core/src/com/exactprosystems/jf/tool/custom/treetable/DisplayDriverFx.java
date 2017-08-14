@@ -15,6 +15,7 @@ import com.exactprosystems.jf.common.MatrixRunner;
 import com.exactprosystems.jf.common.Settings;
 import com.exactprosystems.jf.common.highlighter.Highlighter;
 import com.exactprosystems.jf.common.undoredo.Command;
+import com.exactprosystems.jf.documents.DocumentKind;
 import com.exactprosystems.jf.documents.config.Context;
 import com.exactprosystems.jf.documents.matrix.Matrix;
 import com.exactprosystems.jf.documents.matrix.parser.*;
@@ -688,8 +689,7 @@ public class DisplayDriverFx implements DisplayDriver
 		{
 			try
 			{
-			    MatrixRunner runner = context.createRunner(matrix.getNameProperty().get(), null, new Date(), null); 
-				matrixFx = context.getFactory().createMatrix(matrix.getNameProperty().get(), runner);
+				matrixFx = (Matrix) context.getFactory().createDocument(DocumentKind.MATRIX, matrix.getNameProperty().get());
 				matrixFx.load(new FileReader(matrix.getNameProperty().get()));
 				matrixFx.display();
 			}

@@ -18,6 +18,7 @@ import com.exactprosystems.jf.common.report.TexReportFactory;
 import com.exactprosystems.jf.common.version.VersionInfo;
 import com.exactprosystems.jf.documents.ConsoleDocumentFactory;
 import com.exactprosystems.jf.documents.DocumentFactory;
+import com.exactprosystems.jf.documents.DocumentKind;
 import com.exactprosystems.jf.documents.config.Configuration;
 import com.exactprosystems.jf.documents.config.ConfigurationBean;
 import com.exactprosystems.jf.documents.config.Context;
@@ -308,7 +309,7 @@ public class MainRunner
 		printVersion();
 
 		DocumentFactory factory = new ConsoleDocumentFactory(verboseLevel);
-		Configuration configuration = factory.createConfig(configString); 
+		Configuration configuration = (Configuration) factory.createDocument(DocumentKind.CONFIGURATION, configString); 
 		factory.setConfiguration(configuration);
 		
 		if (!Str.IsNullOrEmpty(configString))
@@ -556,7 +557,7 @@ public class MainRunner
     private static void saveDocs(String dir) throws Exception
     {
         DocumentFactory factory = new ConsoleDocumentFactory(VerboseLevel.Errors);
-        Configuration configuration = factory.createConfig(null); 
+        Configuration configuration = (Configuration) factory.createDocument(DocumentKind.CONFIGURATION, null); 
         factory.setConfiguration(configuration);
         Context context = factory.createContext();
         ReportFactory reportFactory = new TexReportFactory();

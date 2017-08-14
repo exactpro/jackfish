@@ -22,6 +22,7 @@ import com.exactprosystems.jf.common.report.ContextHelpBuilder;
 import com.exactprosystems.jf.common.report.ReportBuilder;
 import com.exactprosystems.jf.documents.ConsoleDocumentFactory;
 import com.exactprosystems.jf.documents.DocumentFactory;
+import com.exactprosystems.jf.documents.DocumentKind;
 import com.exactprosystems.jf.documents.config.Configuration;
 import com.exactprosystems.jf.documents.config.Context;
 import com.exactprosystems.jf.documents.matrix.parser.Parameter;
@@ -61,7 +62,7 @@ public class JackFishSimpleFacadeImpl implements IJackFishSimpleFacade {
 	public synchronized void init(InputStream configStream) throws Exception {
 		DocumentFactory factory = new ConsoleDocumentFactory(VerboseLevel.Errors);
 
-		Configuration cfg = factory.createConfig("config");
+		Configuration cfg = (Configuration) factory.createDocument(DocumentKind.CONFIGURATION, "config");
 
 		factory.setConfiguration(cfg);
 

@@ -152,7 +152,7 @@ public class CustomTab extends Tab implements AutoCloseable
 	}
 
 	@Override
-	public void close() throws Exception
+	public void close()
 	{
 		this.watcher.close();
 	}
@@ -245,7 +245,7 @@ public class CustomTab extends Tab implements AutoCloseable
 		}
 
 		@Override
-		public void close() throws Exception
+		public void close()
 		{
 
 		}

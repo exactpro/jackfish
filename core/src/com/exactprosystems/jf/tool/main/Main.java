@@ -193,33 +193,7 @@ public class Main extends Application
 					File file = new File(filePath);
 					try
 					{
-						switch (kind)
-						{
-							case MATRIX:
-							    Context context = factory.createContext();
-							    MatrixRunner runner = context.createRunner(filePath, null, new Date(), null);
-								needDisplayDoc.add(loadDocument(file, factory.createMatrix(filePath, runner), kind));
-								break;
-
-							case GUI_DICTIONARY:
-								needDisplayDoc.add(loadDocument(file, factory.createAppDictionary(filePath), kind));
-								break;
-
-							case SYSTEM_VARS:
-								needDisplayDoc.add(loadDocument(file, factory.createVars(filePath), kind));
-								break;
-
-							case PLAIN_TEXT:
-								needDisplayDoc.add(loadDocument(file, factory.createPlainText(filePath), kind));
-								break;
-
-							case CSV:
-								needDisplayDoc.add(loadDocument(file, factory.createCsv(filePath), kind));
-								break;
-
-							default:
-								break;
-						}
+                        needDisplayDoc.add(loadDocument(file, kind));
 					}
 					catch (FileNotFoundException e)
 					{
@@ -297,14 +271,12 @@ public class Main extends Application
 				this.controller.close();
 			}
 
-			Configuration config = this.factory.createConfig(file.getPath());
-			if (config instanceof ConfigurationFx)
-			{
-				setConfiguration(config);
-				((ConfigurationFx) config).setPane(pane);
-			}
-
-			loadDocument(file, config, DocumentKind.CONFIGURATION);
+			Configuration config = (Configuration)loadDocument(file, DocumentKind.CONFIGURATION);
+            if (config instanceof ConfigurationFx)
+            {
+                setConfiguration(config);
+                ((ConfigurationFx) config).setPane(pane);
+            }
 		}
 	}
 
@@ -455,7 +427,7 @@ public class Main extends Application
 		Optional<File> optional = chooseFile(GuiDictionary.class, filePath, DialogsHelper.OpenSaveMode.OpenFile);
 		if (optional.isPresent())
 		{
-			loadDocument(optional.get(), this.factory.createAppDictionary(optional.get().getPath()), DocumentKind.GUI_DICTIONARY);
+			loadDocument(optional.get(), DocumentKind.GUI_DICTIONARY);
 		}
 	}
 
@@ -465,19 +437,18 @@ public class Main extends Application
 		Optional<File> optional = chooseFile(Matrix.class, filePath, DialogsHelper.OpenSaveMode.OpenFile);
 		if (optional.isPresent())
 		{
-            Context context = factory.createContext();
-            MatrixRunner runner = context.createRunner(optional.get().getPath(), null, new Date(), null);
-			loadDocument(optional.get(), this.factory.createMatrix(optional.get().getPath(), runner), DocumentKind.MATRIX);
+			loadDocument(optional.get(), DocumentKind.MATRIX);
 		}
 	}
 
+	// TODO it is new approach
 	public void loadSystemVars(String filePath) throws Exception
 	{
 		checkConfig();
 		Optional<File> optional = chooseFile(SystemVars.class, filePath, DialogsHelper.OpenSaveMode.OpenFile);
 		if (optional.isPresent())
 		{
-			loadDocument(optional.get(), this.factory.createVars(optional.get().getPath()), DocumentKind.SYSTEM_VARS);
+			loadDocument2(optional.get(), DocumentKind.SYSTEM_VARS);
 		}
 	}
 
@@ -487,7 +458,7 @@ public class Main extends Application
 		Optional<File> optional = chooseFile(PlainText.class, filePath, DialogsHelper.OpenSaveMode.OpenFile);
 		if (optional.isPresent())
 		{
-			loadDocument(optional.get(), this.factory.createPlainText(optional.get().getPath()), DocumentKind.PLAIN_TEXT);
+			loadDocument(optional.get(), DocumentKind.PLAIN_TEXT);
 		}
 	}
 
@@ -497,7 +468,7 @@ public class Main extends Application
 		Optional<File> optional = chooseFile(Csv.class, filePath, DialogsHelper.OpenSaveMode.OpenFile);
 		if (optional.isPresent())
 		{
-			loadDocument(optional.get(), this.factory.createCsv(optional.get().getPath()), DocumentKind.CSV);
+			loadDocument(optional.get(), DocumentKind.CSV);
 		}
 	}
 	//endregion
@@ -506,15 +477,13 @@ public class Main extends Application
 	public void newDictionary() throws Exception
 	{
 		checkConfig();
-		createDocument(this.factory.createAppDictionary(newName(GuiDictionary.class)));
+		createDocument(this.factory.createDocument(DocumentKind.GUI_DICTIONARY, newName(GuiDictionary.class)));
 	}
 
 	public void newMatrix() throws Exception
 	{
 		checkConfig();
-        Context context = factory.createContext();
-        MatrixRunner runner = context.createRunner(newName(Matrix.class), null, new Date(), null);
-		Matrix doc = this.factory.createMatrix(newName(Matrix.class), runner);
+		Matrix doc = (Matrix) this.factory.createDocument(DocumentKind.MATRIX, newName(Matrix.class));
 		doc.create();
 		Settings.SettingsValue copyright = settings.getValueOrDefault(Settings.GLOBAL_NS, "Main", "copyright", "");
 		String text = copyright.getValue().replaceAll("\\\\n", System.lineSeparator());
@@ -525,9 +494,7 @@ public class Main extends Application
 	public void newLibrary(String fullPath) throws Exception
 	{
 		checkConfig();
-        Context context = factory.createContext();
-        MatrixRunner runner = context.createRunner(newName(Matrix.class), null, new Date(), null);
-		Matrix doc = this.factory.createLibrary(fullPath, runner);
+		Matrix doc = (Matrix) this.factory.createDocument(DocumentKind.LIBRARY, fullPath);
 		doc.create();
 		Settings.SettingsValue copyright = settings.getValueOrDefault(Settings.GLOBAL_NS, "Main", "copyright", "");
 		String text = copyright.getValue().replaceAll("\\\\n", System.lineSeparator());
@@ -548,22 +515,29 @@ public class Main extends Application
 		newLibrary(newName(Matrix.class));
 	}
 
-	public void newSystemVars() throws Exception
-	{
-		checkConfig();
-		createDocument(this.factory.createVars(newName(SystemVars.class)));
-	}
+	// TODO it is new approach
+    public void newSystemVars() throws Exception
+    {
+        checkConfig();
+
+        Document doc = this.factory.createDocument(DocumentKind.SYSTEM_VARS, newName(SystemVars.class));
+        doc.create();
+        this.factory.showDocument(doc);
+//        doc.display();
+
+        // createDocument(this.factory.createVars(newName(SystemVars.class)));
+    }
 
 	public void newPlainText() throws Exception
 	{
 		checkConfig();
-		createDocument(this.factory.createPlainText(newName(PlainText.class)));
+		createDocument(this.factory.createDocument(DocumentKind.PLAIN_TEXT, newName(PlainText.class)));
 	}
 
 	public void newCsv() throws Exception
 	{
 		checkConfig();
-		createDocument(this.factory.createCsv(newName(Csv.class)));
+		createDocument(this.factory.createDocument(DocumentKind.CSV, newName(Csv.class)));
 	}
 	//endregion
 
@@ -885,8 +859,65 @@ public class Main extends Application
 		return this.controller.checkFile(file) ? Optional.empty() : Optional.ofNullable(file);
 	}
 
-	private Document loadDocument(File file, Document doc, DocumentKind kind) throws Exception
+    private Document loadDocument2(File file, DocumentKind kind) throws Exception
+    {
+        Document doc = this.factory.createDocument(kind, file.getPath());
+        
+        if (doc == null)
+        {
+            return null;
+        }
+        if (!file.exists())
+        {
+            DialogsHelper.showError(String.format("File with name %s not found", file.getAbsoluteFile()));
+            throw new FileNotFoundException();
+        }
+        try
+        {
+            try (Reader reader = CommonHelper.readerFromFile(file))
+            {
+                doc.load(reader);
+            }
+            catch (Exception e)
+            {
+                logger.error(e.getMessage(), e);
+                DialogsHelper.showError(e.getMessage());
+
+                doc = this.factory.createDocument(DocumentKind.PLAIN_TEXT, doc.getNameProperty().get());
+                try (Reader reader = CommonHelper.readerFromFile(file))
+                {
+                    doc.load(reader);
+                }
+            }
+            if (!isFromInit)
+            {
+                this.factory.showDocument(doc);
+            }
+            doc.saved();
+            SettingsValue maxSettings = this.settings.getValueOrDefault(Settings.GLOBAL_NS, Settings.SETTINGS, Settings.MAX_LAST_COUNT, "3");
+            int max = Integer.parseInt(maxSettings.getValue());
+            this.settings.setValue(Settings.MAIN_NS, kind.toString(), new File(doc.getNameProperty().get()).getName(), max, doc.getNameProperty().get());
+            this.settings.saveIfNeeded();
+            if (kind == DocumentKind.MATRIX)
+            {
+                this.controller.updateFileLastMatrix(this.settings.getValues(Settings.MAIN_NS, kind.toString()));
+            }
+            return doc;
+        }
+        catch (Exception e)
+        {
+            logger.error(e.getMessage(), e);
+            DialogsHelper.showError("Error on load " + doc.getClass().getSimpleName() + "'" + file + "'");
+        }
+
+        return null;
+    }
+
+    @Deprecated
+	private Document loadDocument(File file, DocumentKind kind) throws Exception
 	{
+        Document doc = this.factory.createDocument(kind, file.getPath());
+        
 		if (doc == null)
 		{
 			return null;
@@ -907,7 +938,7 @@ public class Main extends Application
 				logger.error(e.getMessage(), e);
 				DialogsHelper.showError(e.getMessage());
 
-				doc = this.factory.createPlainText(doc.getNameProperty().get());
+				doc = this.factory.createDocument(DocumentKind.PLAIN_TEXT, doc.getNameProperty().get());
 				try (Reader reader = CommonHelper.readerFromFile(file))
 				{
 					doc.load(reader);

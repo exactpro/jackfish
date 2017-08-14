@@ -14,6 +14,7 @@ import com.exactprosystems.jf.common.CommonHelper;
 import com.exactprosystems.jf.common.MainRunner;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.documents.DocumentFactory;
+import com.exactprosystems.jf.documents.DocumentKind;
 import com.exactprosystems.jf.documents.config.AppEntry;
 import com.exactprosystems.jf.documents.config.Configuration;
 import com.exactprosystems.jf.documents.config.Parameter;
@@ -259,7 +260,7 @@ public class ApplicationPool implements IApplicationPool
         GuiDictionary dictionary = null;
         if (!Str.IsNullOrEmpty(dictionaryName))
         {
-            dictionary = this.factory.createAppDictionary(dictionaryName);
+            dictionary = (GuiDictionary) this.factory.createDocument(DocumentKind.GUI_DICTIONARY, dictionaryName);
             try (Reader reader = CommonHelper.readerFromFileName(dictionaryName))
             {
                 dictionary.load(reader);

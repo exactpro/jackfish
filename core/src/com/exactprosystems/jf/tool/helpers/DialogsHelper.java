@@ -20,6 +20,7 @@ import com.exactprosystems.jf.common.version.VersionInfo;
 import com.exactprosystems.jf.documents.Document;
 import com.exactprosystems.jf.documents.DocumentFactory;
 import com.exactprosystems.jf.documents.DocumentInfo;
+import com.exactprosystems.jf.documents.DocumentKind;
 import com.exactprosystems.jf.documents.config.Configuration;
 import com.exactprosystems.jf.documents.config.Context;
 import com.exactprosystems.jf.documents.matrix.Matrix;
@@ -760,9 +761,7 @@ public abstract class DialogsHelper
 					String name = reportBrowser.getMatrix();
 					if (name != null && !name.isEmpty())
 					{
-                        Context context = factory.createContext();
-                        MatrixRunner runner = context.createRunner(matrName[0], null, new Date(), null);
-						Matrix matrix = factory.createMatrix(matrName[0], runner);
+                        Matrix matrix = (Matrix) factory.createDocument(DocumentKind.MATRIX, matrName[0]);
 						matrix.load(new StringReader(name));
 						matrix.display();
 					}

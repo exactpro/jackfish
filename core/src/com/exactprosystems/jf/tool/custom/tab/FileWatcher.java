@@ -26,7 +26,7 @@ public abstract class FileWatcher implements AutoCloseable
 	}
 
 	@Override
-	public final void close() throws Exception
+	public final void close()
 	{
 		if (this.timer != null)
 		{

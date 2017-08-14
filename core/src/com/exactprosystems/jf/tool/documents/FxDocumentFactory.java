@@ -14,6 +14,7 @@ import com.exactprosystems.jf.api.wizard.WizardManager;
 import com.exactprosystems.jf.common.Settings;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.highlighter.Highlighter;
+import com.exactprosystems.jf.documents.Document;
 import com.exactprosystems.jf.documents.DocumentFactory;
 import com.exactprosystems.jf.documents.config.Configuration;
 import com.exactprosystems.jf.documents.config.Context;
@@ -32,6 +33,7 @@ import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.csv.CsvFx;
 import com.exactprosystems.jf.tool.dictionary.DictionaryFx;
 import com.exactprosystems.jf.tool.documents.vars.SystemVarsFx;
+import com.exactprosystems.jf.tool.documents.vars.SystemVarsFxController;
 import com.exactprosystems.jf.tool.helpers.DialogsHelper;
 import com.exactprosystems.jf.tool.main.Main;
 import com.exactprosystems.jf.tool.matrix.MatrixFx;
@@ -40,9 +42,15 @@ import com.exactprosystems.jf.tool.matrix.schedule.RunnerScheduler;
 import com.exactprosystems.jf.tool.msgdictionary.MessageDictionaryFx;
 import com.exactprosystems.jf.tool.newconfig.ConfigurationFx;
 import com.exactprosystems.jf.tool.text.PlainTextFx;
+
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+
 import org.apache.log4j.Logger;
 
 import java.io.File;
+import java.io.IOException;
+import java.net.URL;
 import java.util.List;
 import java.util.Map;
 
@@ -56,6 +64,41 @@ public class FxDocumentFactory extends DocumentFactory
 		this.wizardManager = wizardManager;
 		this.runnerListener = new RunnerScheduler(this);
 	}
+	
+	@Override
+	public void showDocument(Document doc) throws Exception
+	{
+	    AbstactDocumentController<? extends Document> controller = null;
+	    
+	    if (doc instanceof SystemVarsFx)
+	    {
+	        controller = loadController(SystemVarsFx.class, SystemVarsFxController.class);
+	        controller.init((SystemVarsFx)doc);
+	        
+	        System.err.println(">> " + controller.getClass());
+	    }
+	    
+        getConfiguration().register(doc);
+	    
+	    super.showDocument(doc);
+	}
+	
+   private static <V extends Document, T extends AbstactDocumentController<V> > T loadController(Class<V> docClass, Class<T> controlllerClass) throws Exception
+    {
+        ControllerInfo info = controlllerClass.getAnnotation(ControllerInfo.class);
+        if (info == null)
+        {
+            throw new Exception("ControllerInfo attribute is not found for " + controlllerClass);
+        }
+
+        URL resource = FxDocumentFactory.class.getResource(info.resourceName());
+        FXMLLoader loader = new FXMLLoader(resource);
+        Parent parent = loader.load();
+        T controller = loader.getController();
+        controller.setParent(parent);
+        return controller;
+    }
+
 	
 	@Override
 	protected Context createContext(Configuration configuration, IMatrixListener matrixListener) throws Exception

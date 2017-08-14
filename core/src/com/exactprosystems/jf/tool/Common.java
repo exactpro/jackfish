@@ -16,9 +16,13 @@ import com.exactprosystems.jf.common.Settings;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.highlighter.StyleWithRange;
 import com.exactprosystems.jf.documents.Document;
+import com.exactprosystems.jf.documents.guidic.controls.AbstractControl;
 import com.exactprosystems.jf.tool.custom.label.CommentsLabel;
 import com.exactprosystems.jf.tool.custom.tab.CustomTab;
 import com.exactprosystems.jf.tool.custom.tab.CustomTabPane;
+import com.exactprosystems.jf.tool.documents.AbstactDocumentController;
+import com.exactprosystems.jf.tool.documents.ControllerInfo;
+import com.exactprosystems.jf.tool.documents.FxDocumentFactory;
 import com.exactprosystems.jf.tool.helpers.DialogsHelper;
 import com.exactprosystems.jf.tool.settings.Theme;
 import javafx.application.Platform;
@@ -133,6 +137,8 @@ public abstract class Common
 		return node != null && node.isFocused();
 	}
 
+	
+	@Deprecated
 	public static <T extends ContainingParent> T loadController(URL resource)
 	{
 		try

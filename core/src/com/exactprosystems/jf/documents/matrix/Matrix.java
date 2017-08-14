@@ -84,6 +84,12 @@ public class Matrix extends AbstractDocument implements IMatrix
 		}
 	}
 
+	@Deprecated 
+	public void setRunner(MatrixRunner runner) // TODO should be removed when it will be created inside
+	{
+	    this.runner = runner;
+	}
+	
 	public void setListener(IMatrixListener listener)
 	{
 		this.matrixListener = listener;

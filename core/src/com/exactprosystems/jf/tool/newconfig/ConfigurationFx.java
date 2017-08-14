@@ -404,10 +404,8 @@ public class ConfigurationFx extends Configuration
 
 	public void addNewMatrix(File parentFolder, String fileName) throws Exception
 	{
-        Context context = factory.createContext();
-        MatrixRunner runner = context.createRunner(fileName, null, new Date(), null);
 		File file = createNewFile(parentFolder, fileName, Configuration.matrixExt);
-		Matrix matrix = getFactory().createMatrix(path(file), runner);
+		Matrix matrix = (Matrix)getFactory().createDocument(DocumentKind.MATRIX, path(file));
 		matrix.create();
 		matrix.display();
 		matrix.save(path(file));

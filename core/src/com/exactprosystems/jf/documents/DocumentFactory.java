@@ -133,116 +133,123 @@ public abstract class DocumentFactory
         return null;
     }
 
-    public final Configuration 		createConfig(String fileName)
-	{
-		try
-		{
-			return createConfig(fileName, this.settings);
-		}
-		catch (Exception e)
-		{
-			error(e);
-		}
-		return null;
-	}
+    public void showDocument(Document doc) throws Exception
+    {
+        doc.display();
+    }
 
-	public final Matrix 				createLibrary(String fileName, MatrixRunner runner)
-	{
-		try
-		{
-			checkConfiguration();
-			return createLibrary(fileName, this.configuration, runner, createMatrixListener());
-		}
-		catch (Exception e)
-		{
-			error(e);
-		}
-		return null;
-	}
-
-	public final Matrix 				createMatrix(String fileName, MatrixRunner runner)
-	{
-		try
-		{
-			checkConfiguration();
-			return createMatrix(fileName, this.configuration, runner, createMatrixListener());
-		}
-		catch (Exception e)
-		{
-			error(e);
-		}
-		return null;
-	}
-
-	public final MessageDictionary 	createClientDictionary(String fileName)
-	{
-		try
-		{
-			checkConfiguration();
-			return createClientDictionary(fileName, this.configuration);
-		}
-		catch (Exception e)
-		{
-			error(e);
-		}
-		return null;
-	}
-
-	public final GuiDictionary 		createAppDictionary(String fileName)
-	{
-		try
-		{
-			checkConfiguration();
-			return createAppDictionary(fileName, this.configuration);
-		}
-		catch (Exception e)
-		{
-			error(e);
-		}
-		return null;
-	}
-
-	public final Csv 					createCsv(String fileName)
-	{
-		try
-		{
-			checkConfiguration();
-			return createCsv(fileName, this.configuration);
-		}
-		catch (Exception e)
-		{
-			error(e);
-		}
-		return null;
-	}
-
-	public final PlainText 			createPlainText(String fileName)
-	{
-		try
-		{
-			checkConfiguration();
-			return createPlainText(fileName, this.configuration); 
-		}
-		catch (Exception e)
-		{
-			error(e);
-		}
-		return null;
-	}
-
-	public final SystemVars 			createVars(String fileName)
-	{
-		try
-		{
-			checkConfiguration();
-			return createVars(fileName, this.configuration);
-		}
-		catch (Exception e)
-		{
-			error(e);
-		}
-		return null;
-	}
+    
+    
+//    public final Configuration 		createConfig(String fileName)
+//	{
+//		try
+//		{
+//			return createConfig(fileName, this.settings);
+//		}
+//		catch (Exception e)
+//		{
+//			error(e);
+//		}
+//		return null;
+//	}
+//
+//	public final Matrix 				createLibrary(String fileName, MatrixRunner runner)
+//	{
+//		try
+//		{
+//			checkConfiguration();
+//			return createLibrary(fileName, this.configuration, runner, createMatrixListener());
+//		}
+//		catch (Exception e)
+//		{
+//			error(e);
+//		}
+//		return null;
+//	}
+//
+//	public final Matrix 				createMatrix(String fileName, MatrixRunner runner)
+//	{
+//		try
+//		{
+//			checkConfiguration();
+//			return createMatrix(fileName, this.configuration, runner, createMatrixListener());
+//		}
+//		catch (Exception e)
+//		{
+//			error(e);
+//		}
+//		return null;
+//	}
+//
+//	public final MessageDictionary 	createClientDictionary(String fileName)
+//	{
+//		try
+//		{
+//			checkConfiguration();
+//			return createClientDictionary(fileName, this.configuration);
+//		}
+//		catch (Exception e)
+//		{
+//			error(e);
+//		}
+//		return null;
+//	}
+//
+//	public final GuiDictionary 		createAppDictionary(String fileName)
+//	{
+//		try
+//		{
+//			checkConfiguration();
+//			return createAppDictionary(fileName, this.configuration);
+//		}
+//		catch (Exception e)
+//		{
+//			error(e);
+//		}
+//		return null;
+//	}
+//
+//	public final Csv 					createCsv(String fileName)
+//	{
+//		try
+//		{
+//			checkConfiguration();
+//			return createCsv(fileName, this.configuration);
+//		}
+//		catch (Exception e)
+//		{
+//			error(e);
+//		}
+//		return null;
+//	}
+//
+//	public final PlainText 			createPlainText(String fileName)
+//	{
+//		try
+//		{
+//			checkConfiguration();
+//			return createPlainText(fileName, this.configuration); 
+//		}
+//		catch (Exception e)
+//		{
+//			error(e);
+//		}
+//		return null;
+//	}
+//
+//	public final SystemVars 			createVars(String fileName)
+//	{
+//		try
+//		{
+//			checkConfiguration();
+//			return createVars(fileName, this.configuration);
+//		}
+//		catch (Exception e)
+//		{
+//			error(e);
+//		}
+//		return null;
+//	}
 
 	public abstract void 					popup(String message, Notifier notifier);
 

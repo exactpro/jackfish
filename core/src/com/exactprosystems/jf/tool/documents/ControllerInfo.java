@@ -6,12 +6,17 @@
 //  information which is the property of Exactpro Systems, LLC or its licensors.
 ////////////////////////////////////////////////////////////////////////////////
 
-package com.exactprosystems.jf.tool;
+package com.exactprosystems.jf.tool.documents;
 
-import javafx.scene.Parent;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
-@Deprecated
-public interface ContainingParent
+
+@Target(ElementType.TYPE)
+@Retention(RetentionPolicy.RUNTIME)
+public @interface ControllerInfo
 {
-	void setParent(Parent parent);
+    String resourceName();
 }

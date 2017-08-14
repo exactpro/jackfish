@@ -8,35 +8,36 @@
 
 package com.exactprosystems.jf.tool.documents.vars;
 
-import com.exactprosystems.jf.common.Settings;
+import com.exactprosystems.jf.documents.Document;
 import com.exactprosystems.jf.documents.matrix.parser.Parameter;
-import com.exactprosystems.jf.tool.ContainingParent;
 import com.exactprosystems.jf.tool.CssVariables;
 import com.exactprosystems.jf.tool.custom.tab.CustomTab;
 import com.exactprosystems.jf.tool.custom.tab.CustomTabPane;
 import com.exactprosystems.jf.tool.custom.table.CustomTable;
+import com.exactprosystems.jf.tool.documents.AbstactDocumentController;
+import com.exactprosystems.jf.tool.documents.ControllerInfo;
+
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
-import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.TableRow;
 import javafx.scene.layout.GridPane;
 
-import java.net.URL;
-import java.util.List;
-import java.util.ResourceBundle;
-
 import static com.exactprosystems.jf.tool.Common.tryCatch;
 
-public class SystemVarsFxController implements Initializable, ContainingParent
+import java.net.URL;
+import java.util.ResourceBundle;
+
+
+@ControllerInfo (resourceName = "SystemVarsFx.fxml")
+public class SystemVarsFxController extends AbstactDocumentController<SystemVarsFx>
 {
     public GridPane               grid;
     public CustomTable<Parameter> tableView;
 
     private Parent                pane;
-    private SystemVarsFx          model;
     private CustomTab             tab;
 
 	//----------------------------------------------------------------------------------------------
@@ -47,36 +48,33 @@ public class SystemVarsFxController implements Initializable, ContainingParent
 		tryCatch(this.model::addNewVariable, "Error on adding new var");
 	}
 
-
-	//----------------------------------------------------------------------------------------------
-	// Interface Initializable
-	//----------------------------------------------------------------------------------------------
-	@Override
-	public void initialize(URL url, ResourceBundle resourceBundle)
-	{
-		this.tableView = new CustomTable<>(true);
-		MenuItem itemAdd = new MenuItem("Add new variable");
-		itemAdd.setOnAction(this::addNewVar);
-		this.tableView.getContextMenu().getItems().add(0, itemAdd);
-		this.grid.add(this.tableView, 0, 0);
-	}
-
-	//----------------------------------------------------------------------------------------------
-	// Interface ContainingParent
-	//----------------------------------------------------------------------------------------------
-	@Override
-	public void setParent(Parent parent)
-	{
-		this.pane = parent;
-	}
-
 	//----------------------------------------------------------------------------------------------
 	// Public methods
 	//----------------------------------------------------------------------------------------------
-	public void init(SystemVarsFx model, Settings settings)
+    @Override
+    public void initialize(URL location, ResourceBundle resources)
+    {
+        System.err.println(">> initalize " + location + " " + resources);
+        
+        super.initialize(location, resources);
+        
+        this.tableView = new CustomTable<>(true);
+        MenuItem itemAdd = new MenuItem("Add new variable");
+        itemAdd.setOnAction(this::addNewVar);
+        this.tableView.getContextMenu().getItems().add(0, itemAdd);
+        this.grid.add(this.tableView, 0, 0);
+
+        System.err.println(">> initalize done!!!");
+    }
+	
+	@Override
+	public void init(Document model)
 	{
-		this.model = model;
-		this.tab = CustomTabPane.getInstance().createTab(model);
+        System.err.println(">> init " + model);
+
+        super.init(model);
+
+        this.tab = CustomTabPane.getInstance().createTab(model);
 		this.tab.setContent(this.pane);
 		this.tab.setTitle(this.model.getNameProperty().get());
 		this.tableView.setListener(this.model::removeParameters);
@@ -97,29 +95,21 @@ public class SystemVarsFxController implements Initializable, ContainingParent
         {
             Platform.runLater(() -> 
             {
+                System.err.println(">>>> data changed");
                 this.tableView.setItems(FXCollections.observableList(this.model.getParameters()));
                 this.tableView.update();
             });
         });
         
+        System.err.println(">> init done!!! ");
 	}
 	
-	public void close() throws Exception
+	protected void close()
 	{
 		this.tab.close();
 		CustomTabPane.getInstance().removeTab(this.tab);
 	}
 
-	// ------------------------------------------------------------------------------------------------------------------
-	// display* methods
-	// ------------------------------------------------------------------------------------------------------------------
-	public void displayNewParameters(List<Parameter> data)
-	{
-//		Platform.runLater(() -> {
-//			this.tableView.setItems(FXCollections.observableList(data));
-//			this.tableView.update();
-//		});
-	}
 
 	// ------------------------------------------------------------------------------------------------------------------
 	private void createTable()

@@ -13,6 +13,7 @@ import com.exactprosystems.jf.api.common.IMatrixRunner;
 import com.exactprosystems.jf.api.common.MatrixState;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.report.ReportBuilder;
+import com.exactprosystems.jf.documents.DocumentKind;
 import com.exactprosystems.jf.documents.config.Configuration;
 import com.exactprosystems.jf.documents.config.Context;
 import com.exactprosystems.jf.documents.matrix.Matrix;
@@ -304,9 +305,11 @@ public class MatrixRunner implements IMatrixRunner, AutoCloseable
 		this.matrixFile = new File(name);
 	}
 
+	@Deprecated
 	private void loadFromReader(Context context, Reader reader) throws Exception
 	{
-		this.matrix = context.getFactory().createMatrix(this.matrixFile.getAbsolutePath(), this);
+		this.matrix = (Matrix) context.getFactory().createDocument(DocumentKind.MATRIX, this.matrixFile.getAbsolutePath());
+		this.matrix.setRunner(this);
 		this.context.getConfiguration().getRunnerListener().subscribe(this);
 		changeState(MatrixState.Error);
 	    this.matrix.load(reader);
