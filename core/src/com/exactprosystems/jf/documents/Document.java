@@ -13,6 +13,7 @@ import com.exactprosystems.jf.common.undoredo.Command;
 import com.exactprosystems.jf.documents.matrix.parser.MutableValue;
 
 import java.io.Reader;
+import java.util.function.Consumer;
 
 public interface Document extends Mutable
 {
@@ -27,6 +28,8 @@ public interface Document extends Mutable
 	boolean canClose() throws Exception;
 
 	void close() throws Exception;
+
+	void onClose(Consumer<Document> consumer);
 	
 	void save(String fileName) throws Exception;
 

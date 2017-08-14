@@ -72,8 +72,9 @@ public class FxDocumentFactory extends DocumentFactory
 	    if (doc instanceof SystemVarsFx)
 	    {
 	        controller = loadController(SystemVarsFx.class, SystemVarsFxController.class);
-	        controller.init((SystemVarsFx)doc);
-	        
+	        controller.init(doc);
+			AbstractDocumentController<? extends Document> finalController = controller;
+			doc.onClose(d -> finalController.close());
 	        System.err.println(">> " + controller.getClass());
 	    }
 	    

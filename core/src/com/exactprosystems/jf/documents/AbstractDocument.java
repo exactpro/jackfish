@@ -15,6 +15,7 @@ import com.exactprosystems.jf.documents.matrix.parser.MutableValue;
 import java.io.Reader;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.function.Consumer;
 
 public abstract class AbstractDocument implements Document
 {
@@ -23,6 +24,8 @@ public abstract class AbstractDocument implements Document
 
     private MutableValue<String>  nameProperty;
     private MutableValue<Boolean> changedProperty;
+
+    private Consumer<Document>    closeConsumer;
 
     public AbstractDocument(String fileName, DocumentFactory factory)
 	{
@@ -87,9 +90,16 @@ public abstract class AbstractDocument implements Document
 	public void close() throws Exception
 	{
 		Optional.ofNullable(getFactory().getConfiguration()).ifPresent(c -> c.unregister(this));
+		Optional.ofNullable(this.closeConsumer).ifPresent(consumer -> consumer.accept(this));
 	}
-	
-    @Override
+
+	@Override
+	public final void onClose(Consumer<Document> consumer)
+	{
+		this.closeConsumer = consumer;
+	}
+
+	@Override
     public void addCommand(Command undo, Command redo)
     {
         redo.execute();
