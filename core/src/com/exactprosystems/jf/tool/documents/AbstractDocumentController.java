@@ -8,21 +8,20 @@
 
 package com.exactprosystems.jf.tool.documents;
 
-import java.net.URL;
-import java.util.ResourceBundle;
-
 import com.exactprosystems.jf.documents.Document;
 import com.exactprosystems.jf.tool.ContainingParent;
-
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 
-public abstract class AbstactDocumentController<T extends Document> implements Initializable, ContainingParent
+import java.net.URL;
+import java.util.ResourceBundle;
+
+public abstract class AbstractDocumentController<T extends Document> implements Initializable, ContainingParent
 {
     protected T model;
     protected Parent parent;
 
-    public AbstactDocumentController()
+    public AbstractDocumentController()
     {
     }
     

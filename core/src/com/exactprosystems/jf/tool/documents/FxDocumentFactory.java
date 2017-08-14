@@ -49,7 +49,6 @@ import javafx.scene.Parent;
 import org.apache.log4j.Logger;
 
 import java.io.File;
-import java.io.IOException;
 import java.net.URL;
 import java.util.List;
 import java.util.Map;
@@ -68,7 +67,7 @@ public class FxDocumentFactory extends DocumentFactory
 	@Override
 	public void showDocument(Document doc) throws Exception
 	{
-	    AbstactDocumentController<? extends Document> controller = null;
+	    AbstractDocumentController<? extends Document> controller = null;
 	    
 	    if (doc instanceof SystemVarsFx)
 	    {
@@ -83,7 +82,7 @@ public class FxDocumentFactory extends DocumentFactory
 	    super.showDocument(doc);
 	}
 	
-   private static <V extends Document, T extends AbstactDocumentController<V> > T loadController(Class<V> docClass, Class<T> controlllerClass) throws Exception
+   private static <V extends Document, T extends AbstractDocumentController<V>> T loadController(Class<V> docClass, Class<T> controlllerClass) throws Exception
     {
         ControllerInfo info = controlllerClass.getAnnotation(ControllerInfo.class);
         if (info == null)
