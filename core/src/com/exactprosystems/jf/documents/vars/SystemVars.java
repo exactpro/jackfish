@@ -79,6 +79,7 @@ public class SystemVars extends AbstractDocument
 					lastDescription = null;
 				}
 			}
+			this.parameters.evaluateAll(this.getFactory().createEvaluator());
 		}
 	}
 
@@ -105,6 +106,12 @@ public class SystemVars extends AbstractDocument
         });
         prop.store(new FileWriter(fileName), null);
     }
+
+	@Override
+	protected void afterRedoUndo()
+	{
+		this.parameters.evaluateAll(this.getFactory().createEvaluator());
+	}
 
 	//------------------------------------------------------------------------------------------------------------------
 	// interface Mutable
