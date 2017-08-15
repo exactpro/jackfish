@@ -42,8 +42,7 @@ public class Csv extends AbstractDocument
 	public void load(Reader reader) throws Exception
 	{
 		super.load(reader);
-
-		this.table = new Table(reader, tableDelimiter, null);
+		this.table.fillFromTable(new Table(reader, this.tableDelimiter, null));
 	}
 
 	@Override
@@ -55,8 +54,8 @@ public class Csv extends AbstractDocument
 	@Override
 	public void save(String fileName) throws Exception
 	{
-		super.save(fileName);
 		this.table.save(fileName, tableDelimiter, false, false);
+		super.save(fileName);
 	}
 
 	// ------------------------------------------------------------------------------------------------------------------

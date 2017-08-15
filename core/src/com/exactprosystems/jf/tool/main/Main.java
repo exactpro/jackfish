@@ -469,7 +469,7 @@ public class Main extends Application
 		Optional<File> optional = chooseFile(Csv.class, filePath, DialogsHelper.OpenSaveMode.OpenFile);
 		if (optional.isPresent())
 		{
-			loadDocument(optional.get(), DocumentKind.CSV);
+			loadDocument2(optional.get(), DocumentKind.CSV);
 		}
 	}
 	//endregion
@@ -517,17 +517,14 @@ public class Main extends Application
 	}
 
 	// TODO it is new approach
-    public void newSystemVars() throws Exception
-    {
-        checkConfig();
+	public void newSystemVars() throws Exception
+	{
+		checkConfig();
 
-        Document doc = this.factory.createDocument(DocumentKind.SYSTEM_VARS, newName(SystemVars.class));
-        doc.create();
-        this.factory.showDocument(doc);
-//        doc.display();
-
-        // createDocument(this.factory.createVars(newName(SystemVars.class)));
-    }
+		Document doc = this.factory.createDocument(DocumentKind.SYSTEM_VARS, newName(SystemVars.class));
+		doc.create();
+		this.factory.showDocument(doc);
+	}
 
 	public void newPlainText() throws Exception
 	{
@@ -540,7 +537,9 @@ public class Main extends Application
 	public void newCsv() throws Exception
 	{
 		checkConfig();
-		createDocument(this.factory.createDocument(DocumentKind.CSV, newName(Csv.class)));
+		Document doc = this.factory.createDocument(DocumentKind.CSV, newName(Csv.class));
+		doc.create();
+		this.factory.showDocument(doc);
 	}
 	//endregion
 

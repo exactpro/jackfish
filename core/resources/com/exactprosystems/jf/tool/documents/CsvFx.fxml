@@ -14,7 +14,7 @@
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
-<BorderPane prefHeight="428.0" prefWidth="504.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.exactprosystems.jf.tool.csv.CsvFxController">
+<BorderPane prefHeight="428.0" prefWidth="504.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.exactprosystems.jf.tool.documents.csv.CsvFxController">
 	<top>
 		<ToolBar fx:id="toolBar">
 			<Label text="Delimiter"/>

@@ -491,6 +491,16 @@ public class TableDataProvider implements DataProvider<String>
 
 	//endregion
 
+	public void fire()
+	{
+		this.table.fire();
+	}
+
+	public void setOnChangeListener(BiConsumer<Integer, Integer> consumer)
+	{
+		this.table.setOnChangeListener(consumer);
+	}
+
 	public void setTable(Table table)
 	{
 		this.table = table;

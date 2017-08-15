@@ -30,8 +30,11 @@ import com.exactprosystems.jf.functions.HelpKind;
 import com.exactprosystems.jf.functions.Notifier;
 import com.exactprosystems.jf.functions.Table;
 import com.exactprosystems.jf.tool.Common;
-import com.exactprosystems.jf.tool.csv.CsvFx;
 import com.exactprosystems.jf.tool.dictionary.DictionaryFx;
+import com.exactprosystems.jf.tool.documents.csv.CsvFx;
+import com.exactprosystems.jf.tool.documents.csv.CsvFxController;
+import com.exactprosystems.jf.tool.documents.text.PlainTextFx;
+import com.exactprosystems.jf.tool.documents.text.PlainTextFxController;
 import com.exactprosystems.jf.tool.documents.vars.SystemVarsFx;
 import com.exactprosystems.jf.tool.documents.vars.SystemVarsFxController;
 import com.exactprosystems.jf.tool.helpers.DialogsHelper;
@@ -41,8 +44,6 @@ import com.exactprosystems.jf.tool.matrix.MatrixListenerFx;
 import com.exactprosystems.jf.tool.matrix.schedule.RunnerScheduler;
 import com.exactprosystems.jf.tool.msgdictionary.MessageDictionaryFx;
 import com.exactprosystems.jf.tool.newconfig.ConfigurationFx;
-import com.exactprosystems.jf.tool.documents.text.PlainTextFx;
-import com.exactprosystems.jf.tool.documents.text.PlainTextFxController;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import org.apache.log4j.Logger;
@@ -72,12 +73,15 @@ public class FxDocumentFactory extends DocumentFactory
 	    {
 	        controller = loadController(SystemVarsFx.class, SystemVarsFxController.class);
 	        controller.init(doc);
-
-	        System.err.println(">> " + controller.getClass());
 	    }
 		if (doc instanceof PlainTextFx)
 		{
 			controller = loadController(PlainTextFx.class, PlainTextFxController.class);
+			controller.init(doc);
+		}
+		if (doc instanceof CsvFx)
+		{
+			controller = loadController(CsvFx.class, CsvFxController.class);
 			controller.init(doc);
 		}
 		getConfiguration().register(doc);
