@@ -12,6 +12,7 @@ import com.exactprosystems.jf.api.app.IApplicationFactory;
 import com.exactprosystems.jf.api.client.IClientFactory;
 import com.exactprosystems.jf.api.common.IMatrix;
 import com.exactprosystems.jf.api.common.MatrixConnection;
+import com.exactprosystems.jf.api.common.MatrixState;
 import com.exactprosystems.jf.api.common.Str;
 import com.exactprosystems.jf.common.CommonHelper;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
@@ -22,6 +23,7 @@ import com.exactprosystems.jf.documents.DocumentFactory;
 import com.exactprosystems.jf.documents.DocumentInfo;
 import com.exactprosystems.jf.documents.DocumentKind;
 import com.exactprosystems.jf.documents.config.Context;
+import com.exactprosystems.jf.documents.matrix.parser.MutableValue;
 import com.exactprosystems.jf.documents.matrix.parser.Parser;
 import com.exactprosystems.jf.documents.matrix.parser.Result;
 import com.exactprosystems.jf.documents.matrix.parser.items.MatrixItem;
@@ -49,22 +51,18 @@ import java.util.concurrent.atomic.AtomicInteger;
 )
 public class Matrix extends AbstractDocument implements IMatrix
 {
-    public static final String  EMPTY_STRING = "<empty>";
-    private static final Logger logger       = Logger.getLogger(Matrix.class);
+    public static final String        EMPTY_STRING   = "<empty>";
+    private static final Logger       logger         = Logger.getLogger(Matrix.class);
 
-    private IClientFactory      defaultClient;
-    private IApplicationFactory defaultApp;
+    private IClientFactory            defaultClient;
+    private IApplicationFactory       defaultApp;
 
-    private boolean             isLibrary;
-    private int                 count        = 0;
-    private MatrixItem          root         = null;
-    private IMatrixListener     matrixListener;
-    private MatrixEngine        runner;
-
-	public Matrix(String matrixName, DocumentFactory factory) throws Exception 
-	{
-		this(matrixName, factory, null, true);
-	}
+    private boolean                   isLibrary;
+    private int                       count          = 0;
+    private MatrixItem                root           = null;
+    private IMatrixListener           matrixListener = null;
+    private MatrixEngine              engine         = null;
+    private MutableValue<MatrixState> stateProperty  = new MutableValue<>(MatrixState.Created);
 
 	public Matrix(String matrixName, DocumentFactory factory, IMatrixListener matrixListener, boolean isLibrary) throws Exception
 	{
@@ -72,7 +70,7 @@ public class Matrix extends AbstractDocument implements IMatrix
 
         if (!isLibrary)
         {
-            this.runner = new MatrixEngine(factory.createContext(), this);
+            this.engine = new MatrixEngine(factory.createContext(), this);
         }
         
 		this.isLibrary = isLibrary;
@@ -93,7 +91,12 @@ public class Matrix extends AbstractDocument implements IMatrix
 
 	public MatrixEngine getEngine()
 	{
-	    return this.runner;
+	    return this.engine;
+	}
+	
+	public MutableValue<MatrixState> getStateProperty()
+	{
+	    return this.stateProperty;
 	}
 	
 	public void setListener(IMatrixListener listener)
@@ -231,9 +234,9 @@ public class Matrix extends AbstractDocument implements IMatrix
     {
         super.close();
         
-        if (this.runner != null)
+        if (this.engine != null)
         {
-            this.runner.close();
+            this.engine.close();
         }
     }
 
@@ -247,6 +250,14 @@ public class Matrix extends AbstractDocument implements IMatrix
 			Parser parser = new Parser();
 			parser.saveMatrix(this.root, rawWriter);
 		}
+	}
+	
+	@Override
+	public void display() throws Exception
+	{
+	    super.display();
+	    
+	    this.stateProperty.fire();
 	}
 
 	// ==============================================================================================================================
@@ -374,6 +385,14 @@ public class Matrix extends AbstractDocument implements IMatrix
 	    
 	    return res;
 	}
+
+    public void stop()
+    {
+        if (getEngine() != null)
+        {
+            getEngine().stop();
+        }
+    }
 	
 	// ==============================================================================================================================
 	public final List<MatrixItem> find(final String what, final boolean caseSensitive, final boolean wholeWord)

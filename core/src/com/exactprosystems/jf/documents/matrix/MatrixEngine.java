@@ -173,10 +173,7 @@ public class MatrixEngine implements AutoCloseable
 				this.thread = null;
 			}
 		}
-		if (this.matrix != null)
-		{
-			this.matrix.getRoot().bypass(item -> item.changeState(item.isBreakPoint() ? MatrixItemState.BreakPoint : MatrixItemState.None));
-		}
+		this.matrix.getRoot().bypass(item -> item.changeState(item.isBreakPoint() ? MatrixItemState.BreakPoint : MatrixItemState.None));
 	}
 	
 	public void pause()
@@ -205,14 +202,7 @@ public class MatrixEngine implements AutoCloseable
 
 	private void changeState(MatrixState newState)
     {
-		if (this.matrix == null)
-		{
-			return;
-		}
-		int total = this.matrix.count(null); 
-		int done = this.matrix.currentItem();
-		this.context.getConfiguration().getRunnerListener().stateChange(this, newState, done, total);
-		
+	    this.matrix.getStateProperty().set(newState);
 		if (newState == MatrixState.Finished)
 		{
 			try
