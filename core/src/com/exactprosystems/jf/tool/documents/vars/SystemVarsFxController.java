@@ -12,11 +12,9 @@ import com.exactprosystems.jf.documents.Document;
 import com.exactprosystems.jf.documents.matrix.parser.Parameter;
 import com.exactprosystems.jf.tool.CssVariables;
 import com.exactprosystems.jf.tool.custom.tab.CustomTab;
-import com.exactprosystems.jf.tool.custom.tab.CustomTabPane;
 import com.exactprosystems.jf.tool.custom.table.CustomTable;
 import com.exactprosystems.jf.tool.documents.AbstractDocumentController;
 import com.exactprosystems.jf.tool.documents.ControllerInfo;
-import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.scene.control.MenuItem;
@@ -29,77 +27,44 @@ import java.util.ResourceBundle;
 import static com.exactprosystems.jf.tool.Common.tryCatch;
 
 
-@ControllerInfo (resourceName = "SystemVarsFx.fxml")
+@ControllerInfo(resourceName = "SystemVarsFx.fxml")
 public class SystemVarsFxController extends AbstractDocumentController<SystemVarsFx>
 {
-    public GridPane               grid;
-    public CustomTable<Parameter> tableView;
+	public GridPane               grid;
+	public CustomTable<Parameter> tableView;
 
-    private CustomTab             tab;
-
-	//----------------------------------------------------------------------------------------------
-	// Event handlers
-	//----------------------------------------------------------------------------------------------
 	public void addNewVar(ActionEvent event)
 	{
 		tryCatch(this.model::addNewVariable, "Error on adding new var");
 	}
 
-	//----------------------------------------------------------------------------------------------
-	// Public methods
-	//----------------------------------------------------------------------------------------------
-    @Override
-    public void initialize(URL location, ResourceBundle resources)
-    {
-        super.initialize(location, resources);
-        
-        this.tableView = new CustomTable<>(true);
-        MenuItem itemAdd = new MenuItem("Add new variable");
-        itemAdd.setOnAction(this::addNewVar);
-        this.tableView.getContextMenu().getItems().add(0, itemAdd);
-        this.grid.add(this.tableView, 0, 0);
-    }
+	@Override
+	public void initialize(URL location, ResourceBundle resources)
+	{
+		super.initialize(location, resources);
+
+		this.tableView = new CustomTable<>(true);
+		MenuItem itemAdd = new MenuItem("Add new variable");
+		itemAdd.setOnAction(this::addNewVar);
+		this.tableView.getContextMenu().getItems().add(0, itemAdd);
+		this.grid.add(this.tableView, 0, 0);
+	}
 
 	@Override
-	public void init(Document model)
+	public void init(Document model, CustomTab customTab)
 	{
-        super.init(model);
+		super.init(model, customTab);
 
-        this.tab = CustomTabPane.getInstance().createTab(model);
-		this.tab.setContent(this.parent);
-		this.tab.setTitle(this.model.getNameProperty().get());
 		this.tableView.setListener(this.model::removeParameters);
 		createTable();
-		CustomTabPane.getInstance().addTab(this.tab);
-		CustomTabPane.getInstance().selectTab(this.tab);
-		
-        this.model.getNameProperty().setOnChangeListener((o, n) ->
-        {
-            Platform.runLater(() ->
-            {
-                this.tab.setTitle(n);
-                this.tab.saved(n);
-            });
-        });
-        
-        this.model.getParameters().setOnChangeListener((o,n) ->
-        {
-            Platform.runLater(() -> 
-            {
-                this.tableView.setItems(FXCollections.observableList(this.model.getParameters()));
-                this.tableView.update();
-            });
-        });
-	}
-	
-	protected void close()
-	{
-		this.tab.close();
-		CustomTabPane.getInstance().removeTab(this.tab);
+
+		this.model.getParameters().setOnChangeListener((o, n) -> {
+			this.tableView.setItems(FXCollections.observableList(this.model.getParameters()));
+			this.tableView.update();
+		});
 	}
 
 
-	// ------------------------------------------------------------------------------------------------------------------
 	private void createTable()
 	{
 		this.tableView.completeFirstColumn("Name", "name", true, false);
@@ -112,12 +77,12 @@ public class SystemVarsFxController extends AbstractDocumentController<SystemVar
 		this.tableView.setRowFactory((v) -> new ColorRow());
 		this.tableView.setSortable(false);
 	}
-	
+
 	private int current()
 	{
 		return this.tableView.getSelectionModel().getSelectedIndex();
 	}
-	
+
 	private class ColorRow extends TableRow<Parameter>
 	{
 		@Override

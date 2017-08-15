@@ -10,7 +10,10 @@ package com.exactprosystems.jf.tool.main;
 
 import com.exactprosystems.jf.api.common.Str;
 import com.exactprosystems.jf.api.wizard.WizardManager;
-import com.exactprosystems.jf.common.*;
+import com.exactprosystems.jf.common.CommonHelper;
+import com.exactprosystems.jf.common.MainRunner;
+import com.exactprosystems.jf.common.MutableString;
+import com.exactprosystems.jf.common.Settings;
 import com.exactprosystems.jf.common.Settings.SettingsValue;
 import com.exactprosystems.jf.common.version.VersionInfo;
 import com.exactprosystems.jf.documents.*;
@@ -23,6 +26,7 @@ import com.exactprosystems.jf.documents.text.PlainText;
 import com.exactprosystems.jf.documents.vars.SystemVars;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.custom.store.StoreVariable;
+import com.exactprosystems.jf.tool.custom.tab.CustomTab;
 import com.exactprosystems.jf.tool.documents.FxDocumentFactory;
 import com.exactprosystems.jf.tool.git.CredentialBean;
 import com.exactprosystems.jf.tool.git.CredentialDialog;
@@ -699,6 +703,11 @@ public class Main extends Application
 	}
 
 	//endregion
+
+	public CustomTab createCustomTab(Document document)
+	{
+		return this.controller.createTab(document);
+	}
 
 	public void clearFileLastOpenMatrix() throws Exception
 	{

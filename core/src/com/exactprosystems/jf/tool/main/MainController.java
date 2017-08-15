@@ -624,6 +624,14 @@ public class MainController implements Initializable, ContainingParent
 	}
 	//endregion
 
+	public CustomTab createTab(Document document)
+	{
+		CustomTab tab = this.customTabPane.createTab(document);
+		this.customTabPane.addTab(tab);
+		this.customTabPane.selectTab(tab);
+		return tab;
+	}
+
 	// TODO remake shortcuts over Menu.setAccelerator()
 	public void initShortcuts()
 	{

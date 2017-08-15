@@ -16,7 +16,6 @@ import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.custom.grideditor.DataProvider;
 import com.exactprosystems.jf.tool.custom.grideditor.SpreadsheetView;
 import com.exactprosystems.jf.tool.custom.tab.CustomTab;
-import com.exactprosystems.jf.tool.custom.tab.CustomTabPane;
 import com.exactprosystems.jf.tool.documents.AbstractDocumentController;
 import com.exactprosystems.jf.tool.documents.ControllerInfo;
 import javafx.event.ActionEvent;
@@ -35,16 +34,8 @@ public class CsvFxController extends AbstractDocumentController<CsvFx>
 	public ToolBar                 toolBar;
 	public ComboBox<ReadableValue> cbDelimiter;
 
-	private CustomTab            tab;
 	private DataProvider<String> provider;
 
-	// ----------------------------------------------------------------------------------------------
-	// Event handlers
-	// ----------------------------------------------------------------------------------------------
-
-	// ----------------------------------------------------------------------------------------------
-	// Interface Initializable
-	// ----------------------------------------------------------------------------------------------
 	@Override
 	public void initialize(URL url, ResourceBundle resourceBundle)
 	{
@@ -59,9 +50,6 @@ public class CsvFxController extends AbstractDocumentController<CsvFx>
 		this.cbDelimiter.getSelectionModel().select(1);
 	}
 
-	//============================================================
-	// events methods
-	//============================================================
 	public void setDelimiter(ActionEvent event)
 	{
 		Common.tryCatch(() -> {
@@ -74,18 +62,10 @@ public class CsvFxController extends AbstractDocumentController<CsvFx>
 		}, "Error on set delimiter");
 	}
 
-	// ----------------------------------------------------------------------------------------------
-	// Public methods
-	// ----------------------------------------------------------------------------------------------
-	public void init(Document model)
+	public void init(Document model, CustomTab customTab)
 	{
-		super.init(model);
+		super.init(model, customTab);
 
-		this.model.getNameProperty().setOnChangeListener((o, n) ->
-		{
-			this.tab.setTitle(n);
-			this.tab.saved(n);
-		});
 		this.model.getProvider().setOnChangeListener((o,n) ->
 		{
 			this.provider = this.model.getProvider();
@@ -93,20 +73,5 @@ public class CsvFxController extends AbstractDocumentController<CsvFx>
 			this.provider.displayFunction(this.view::display);
 			((BorderPane) this.parent).setCenter(this.view);
 		});
-		this.tab = CustomTabPane.getInstance().createTab(model);
-		this.tab.setContent(this.parent);
-		CustomTabPane.getInstance().addTab(tab);
-		CustomTabPane.getInstance().selectTab(tab);
-	}
-
-	public void saved(String name)
-	{
-		this.tab.saved(name);
-	}
-
-	public void close()
-	{
-		this.tab.close();
-		CustomTabPane.getInstance().removeTab(this.tab);
 	}
 }

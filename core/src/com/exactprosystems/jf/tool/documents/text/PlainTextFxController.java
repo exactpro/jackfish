@@ -15,7 +15,6 @@ import com.exactprosystems.jf.common.highlighter.StyleWithRange;
 import com.exactprosystems.jf.documents.Document;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.custom.tab.CustomTab;
-import com.exactprosystems.jf.tool.custom.tab.CustomTabPane;
 import com.exactprosystems.jf.tool.documents.AbstractDocumentController;
 import com.exactprosystems.jf.tool.documents.ControllerInfo;
 import javafx.event.ActionEvent;
@@ -47,13 +46,11 @@ public class PlainTextFxController extends AbstractDocumentController<PlainTextF
 	public  Label                 lblFindCount;
 	private StyleClassedTextArea  textArea;
 
-	private CustomTab    tab;
 	private Subscription lastSubscription;
 
 	private Supplier<StyleSpans<Collection<String>>> lastFindSupplier = () -> null;
 	private int                                      lastDifference   = 0;
 
-	//region Interface Initializible
 	@Override
 	public void initialize(URL url, ResourceBundle resourceBundle)
 	{
@@ -98,17 +95,9 @@ public class PlainTextFxController extends AbstractDocumentController<PlainTextF
 		this.tfFind.textProperty().addListener((observable, oldValue, newValue) -> this.model.resetMatcher(this.tfFind.getText(), this.cbMatchCase.isSelected(), this.cbRegexp.isSelected()));
 	}
 
-	//endregion
-
-	public void init(Document model)
+	public void init(Document model, CustomTab customTab)
 	{
-		super.init(model);
-
-		this.model.getNameProperty().setOnChangeListener((o, n) ->
-		{
-			this.tab.setTitle(n);
-			this.tab.saved(n);
-		});
+		super.init(model, customTab);
 
 		this.textArea.richChanges().addObserver(change -> {
 			this.model.getProperty().set(this.textArea.getText());
@@ -121,16 +110,6 @@ public class PlainTextFxController extends AbstractDocumentController<PlainTextF
 
 		SettingsValue value = model.getFactory().getSettings().getValueOrDefault(Settings.GLOBAL_NS, Settings.SETTINGS, Settings.FONT, "Monospaced$16");
 		this.textArea.setFont(Common.fontFromString(value.getValue()));
-		this.tab = CustomTabPane.getInstance().createTab(model);
-		this.tab.setContent(this.parent);
-		CustomTabPane.getInstance().addTab(this.tab);
-		CustomTabPane.getInstance().selectTab(this.tab);
-	}
-
-	public void close()
-	{
-		this.tab.close();
-		CustomTabPane.getInstance().removeTab(this.tab);
 	}
 
 	public void findAll(ActionEvent actionEvent)

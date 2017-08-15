@@ -23,6 +23,8 @@ public class CustomTabPane extends TabPane
 
 	private List<Tab> tempTabList = new ArrayList<>();
 
+	//TODO remove it
+	@Deprecated
 	public static CustomTabPane getInstance()
 	{
 		if (INSTANCE == null)
