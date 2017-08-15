@@ -10,7 +10,6 @@ package com.exactprosystems.jf.documents;
 
 import com.exactprosystems.jf.actions.ReadableValue;
 import com.exactprosystems.jf.api.wizard.WizardManager;
-import com.exactprosystems.jf.common.CommonHelper;
 import com.exactprosystems.jf.common.Settings;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.documents.config.Configuration;
@@ -26,7 +25,6 @@ import com.exactprosystems.jf.functions.HelpKind;
 import com.exactprosystems.jf.functions.Notifier;
 import com.exactprosystems.jf.functions.Table;
 
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 

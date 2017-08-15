@@ -10,6 +10,7 @@ package com.exactprosystems.jf.documents.matrix;
 
 import com.exactprosystems.jf.api.common.MatrixConnection;
 import com.exactprosystems.jf.documents.matrix.parser.Result;
+import com.exactprosystems.jf.functions.Table;
 
 public class MatrixConnectionImpl implements MatrixConnection
 {
@@ -82,5 +83,10 @@ public class MatrixConnectionImpl implements MatrixConnection
     public String getImagesDirPath()
     {
         return this.matrix.getEngine() == null ? null : this.matrix.getEngine().getImagesDirPath();
+    }
+
+    public Table getTable()
+    {
+        return this.matrix.getEngine() == null ? null : this.matrix.getEngine().getTable();
     }
 }
