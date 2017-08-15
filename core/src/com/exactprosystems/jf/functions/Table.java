@@ -31,6 +31,7 @@ import java.util.*;
 import java.util.Date;
 import java.util.Map.Entry;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.function.BiConsumer;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -52,6 +53,8 @@ public class Table implements List<RowTable>, Mutable, Cloneable
 
 	private boolean changed;
 	private static final Logger logger = Logger.getLogger(Table.class);
+
+	private BiConsumer<Integer,Integer> onChangeConsumer;
 	//endregion
 
 	public static class TableCompareResult
@@ -228,6 +231,16 @@ public class Table implements List<RowTable>, Mutable, Cloneable
 		return clone;
 	}
 	//endregion
+
+	public void setOnChangeListener(BiConsumer<Integer, Integer> consumer)
+	{
+		this.onChangeConsumer = consumer;
+	}
+
+	public void fire()
+	{
+		Optional.ofNullable(this.onChangeConsumer).ifPresent(c -> c.accept(this.size(), this.size()));
+	}
 
 	public static TableCompareResult extendEquals(ReportBuilder report, Table differences, Table actual, Table expected, String[] exclude, 
 	        boolean ignoreRowsOrder, boolean compareValues)

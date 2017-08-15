@@ -12,6 +12,7 @@ import javafx.collections.ObservableList;
 import java.awt.*;
 import java.util.List;
 import java.util.Map;
+import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
 public interface DataProvider<T>
@@ -53,6 +54,10 @@ public interface DataProvider<T>
 	ObservableList<String> getRowHeaders();
 
 	ObservableList<String> getColumnHeaders();
+
+	void fire();
+
+	void setOnChangeListener(BiConsumer<Integer, Integer> consumer);
 
 	void display();
 

@@ -6,21 +6,20 @@
 //information which is the property of Exactpro Systems, LLC or its licensors.
 ////////////////////////////////////////////////////////////////////////////////
 
-package com.exactprosystems.jf.tool.csv;
+package com.exactprosystems.jf.tool.documents.csv;
 
 import com.exactprosystems.jf.actions.ReadableValue;
-import com.exactprosystems.jf.common.Settings;
+import com.exactprosystems.jf.documents.Document;
+import com.exactprosystems.jf.documents.DocumentInfo;
+import com.exactprosystems.jf.documents.csv.Csv;
 import com.exactprosystems.jf.tool.Common;
-import com.exactprosystems.jf.tool.ContainingParent;
 import com.exactprosystems.jf.tool.custom.grideditor.DataProvider;
 import com.exactprosystems.jf.tool.custom.grideditor.SpreadsheetView;
 import com.exactprosystems.jf.tool.custom.tab.CustomTab;
-
 import com.exactprosystems.jf.tool.custom.tab.CustomTabPane;
-import javafx.application.Platform;
+import com.exactprosystems.jf.tool.documents.AbstractDocumentController;
+import com.exactprosystems.jf.tool.documents.ControllerInfo;
 import javafx.event.ActionEvent;
-import javafx.fxml.Initializable;
-import javafx.scene.Parent;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.ToolBar;
 import javafx.scene.layout.BorderPane;
@@ -29,17 +28,15 @@ import java.io.FileReader;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-public class CsvFxController implements Initializable, ContainingParent
+@ControllerInfo(resourceName = "CsvFx.fxml")
+public class CsvFxController extends AbstractDocumentController<CsvFx>
 {
-//	public BorderPane				borderPane;
-	public SpreadsheetView 			view;
-	public ToolBar					toolBar;
-	public ComboBox<ReadableValue>	cbDelimiter;
+	public SpreadsheetView         view;
+	public ToolBar                 toolBar;
+	public ComboBox<ReadableValue> cbDelimiter;
 
-	private BorderPane				pane;
-	private CsvFx					model;
-	private CustomTab				tab;
-	private DataProvider<String>	provider;
+	private CustomTab            tab;
+	private DataProvider<String> provider;
 
 	// ----------------------------------------------------------------------------------------------
 	// Event handlers
@@ -51,14 +48,15 @@ public class CsvFxController implements Initializable, ContainingParent
 	@Override
 	public void initialize(URL url, ResourceBundle resourceBundle)
 	{
-		cbDelimiter.getItems().addAll(
+		super.initialize(url, resourceBundle);
+		this.cbDelimiter.getItems().addAll(
 				new ReadableValue(",", "comma"),
 				new ReadableValue(";", "semicolon"),
 				new ReadableValue(":", "colon"),
 				new ReadableValue("-", "dash"),
 				new ReadableValue("\t", "tab")
 		);
-		cbDelimiter.getSelectionModel().select(1);
+		this.cbDelimiter.getSelectionModel().select(1);
 	}
 
 	//============================================================
@@ -66,10 +64,9 @@ public class CsvFxController implements Initializable, ContainingParent
 	//============================================================
 	public void setDelimiter(ActionEvent event)
 	{
-		Common.tryCatch(() -> 
-		{
+		Common.tryCatch(() -> {
 			this.model.setDelimiter(cbDelimiter.getSelectionModel().getSelectedItem().getValue().charAt(0));
-			if (!this.model.getNameProperty().isNullOrEmpty())
+			if (!this.model.getNameProperty().get().startsWith(Csv.class.getAnnotation(DocumentInfo.class).newName()))
 			{
 				this.model.load(new FileReader(this.model.getNameProperty().get()));
 				this.model.display();
@@ -78,23 +75,26 @@ public class CsvFxController implements Initializable, ContainingParent
 	}
 
 	// ----------------------------------------------------------------------------------------------
-	// Interface ContainingParent
-	// ----------------------------------------------------------------------------------------------
-	@Override
-	public void setParent(Parent parent)
-	{
-		this.pane = (BorderPane) parent;
-	}
-
-	// ----------------------------------------------------------------------------------------------
 	// Public methods
 	// ----------------------------------------------------------------------------------------------
-	public void init(CsvFx model, Settings settings)
+	public void init(Document model)
 	{
-		this.model = model;
+		super.init(model);
 
+		this.model.getNameProperty().setOnChangeListener((o, n) ->
+		{
+			this.tab.setTitle(n);
+			this.tab.saved(n);
+		});
+		this.model.getProvider().setOnChangeListener((o,n) ->
+		{
+			this.provider = this.model.getProvider();
+			this.view = new SpreadsheetView(this.provider);
+			this.provider.displayFunction(this.view::display);
+			((BorderPane) this.parent).setCenter(this.view);
+		});
 		this.tab = CustomTabPane.getInstance().createTab(model);
-		this.tab.setContent(this.pane);
+		this.tab.setContent(this.parent);
 		CustomTabPane.getInstance().addTab(tab);
 		CustomTabPane.getInstance().selectTab(tab);
 	}
@@ -104,28 +104,9 @@ public class CsvFxController implements Initializable, ContainingParent
 		this.tab.saved(name);
 	}
 
-	public void close() throws Exception
+	public void close()
 	{
 		this.tab.close();
 		CustomTabPane.getInstance().removeTab(this.tab);
-	}
-
-	// ------------------------------------------------------------------------------------------------------------------
-	// display* methods
-	// ------------------------------------------------------------------------------------------------------------------
-	public void displayTitle(String title)
-	{
-		Platform.runLater(() -> this.tab.setTitle(title));
-	}
-
-	public void displayTable(DataProvider<String> provider)
-	{
-		Platform.runLater(() ->
-		{
-			this.provider = provider;
-			this.view = new SpreadsheetView(this.provider);
-			this.provider.displayFunction(this.view::display);
-			this.pane.setCenter(this.view);
-		});
 	}
 }

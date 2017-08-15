@@ -92,8 +92,6 @@ public class SystemVars extends AbstractDocument
     @Override
     public void save(String fileName) throws Exception
     {
-        super.save(fileName);
-
         LinkedProperties prop = new LinkedProperties();
         this.parameters.forEach(parameter ->
         {
@@ -105,7 +103,8 @@ public class SystemVars extends AbstractDocument
             prop.put(name + parameter.getName(), parameter.getExpression());
         });
         prop.store(new FileWriter(fileName), null);
-    }
+		super.save(fileName);
+	}
 
 	@Override
 	protected void afterRedoUndo()
