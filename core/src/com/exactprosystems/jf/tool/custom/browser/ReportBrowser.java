@@ -8,9 +8,9 @@
 package com.exactprosystems.jf.tool.custom.browser;
 
 import com.exactprosystems.jf.api.common.Sys;
-import com.exactprosystems.jf.common.MatrixRunner;
 import com.exactprosystems.jf.documents.DocumentKind;
 import com.exactprosystems.jf.documents.config.Context;
+import com.exactprosystems.jf.documents.matrix.MatrixRunner;
 import com.exactprosystems.jf.documents.matrix.parser.items.MatrixItem;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.CssVariables;

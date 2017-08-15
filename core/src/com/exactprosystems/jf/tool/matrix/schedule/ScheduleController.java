@@ -8,8 +8,8 @@
 
 package com.exactprosystems.jf.tool.matrix.schedule;
 
-import com.exactprosystems.jf.api.common.IMatrixRunner;
 import com.exactprosystems.jf.api.common.MatrixState;
+import com.exactprosystems.jf.documents.matrix.MatrixRunner;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.ContainingParent;
 import com.exactprosystems.jf.tool.custom.date.CustomDateTimePicker;
@@ -32,6 +32,7 @@ import java.util.List;
 import java.util.ResourceBundle;
 import java.util.stream.Collectors;
 
+@SuppressWarnings("deprecation")
 public class ScheduleController implements Initializable, ContainingParent
 {
 	public Button btnStart;
@@ -90,12 +91,13 @@ public class ScheduleController implements Initializable, ContainingParent
 			}
 		});
 
-		columnMatrixName.setCellValueFactory(param -> new SimpleObjectProperty<>(param.getValue().getRunner().getMatrixName()));
-		columnMatrixName.prefWidthProperty().bind(this.tableView.widthProperty().subtract(widthCheckBox + widthDate + widthState + widthDone + 2));
-
-		columnStartDate.setCellValueFactory(param -> new SimpleObjectProperty<>(param.getValue().getRunner().getStartTime()));
-		columnStartDate.prefWidthProperty().bind(new SimpleObjectProperty<>(widthDate));
-		columnStartDate.setEditable(true);
+		// TODO fix it
+//		columnMatrixName.setCellValueFactory(param -> new SimpleObjectProperty<>(param.getValue().getRunner().getMatrixName()));
+//		columnMatrixName.prefWidthProperty().bind(this.tableView.widthProperty().subtract(widthCheckBox + widthDate + widthState + widthDone + 2));
+//
+//		columnStartDate.setCellValueFactory(param -> new SimpleObjectProperty<>(param.getValue().getRunner().getStartTime()));
+//		columnStartDate.prefWidthProperty().bind(new SimpleObjectProperty<>(widthDate));
+//		columnStartDate.setEditable(true);
 		columnStartDate.setCellFactory(param -> new TableCell<RunnerWithState, Date>()
 		{
 			@Override
@@ -143,7 +145,8 @@ public class ScheduleController implements Initializable, ContainingParent
 					}
 				}
 				RunnerWithState runner = (RunnerWithState) getTableRow().getItem();
-				runner.getRunner().setStartTime(newValue);
+				// TODO fix it
+//				runner.getRunner().setStartTime(newValue);
 			}
 
 			@Override
@@ -196,17 +199,17 @@ public class ScheduleController implements Initializable, ContainingParent
 		this.dialog.showAndWait();
 	}
 
-	void displayRunner(IMatrixRunner runner)
+	void displayRunner(MatrixRunner runner)
 	{
         this.tableView.getItems().add(new RunnerWithState(runner));
 	}
 
-	void removeRunner(IMatrixRunner runner)
+	void removeRunner(MatrixRunner runner)
 	{
 		this.tableView.getItems().removeIf(e -> e.runner == runner); 
 	}
 
-	void displayState(IMatrixRunner runner, MatrixState state, int done, int total)
+	void displayState(MatrixRunner runner, MatrixState state, int done, int total)
 	{
 		this.tableView.getItems().stream().filter(r -> r.getRunner().equals(runner)).findFirst().ifPresent(runnerWithState -> {
 			runnerWithState.setState(state);
@@ -257,7 +260,7 @@ public class ScheduleController implements Initializable, ContainingParent
 		});
 	}
 
-	private List<IMatrixRunner> getSelected()
+	private List<MatrixRunner> getSelected()
 	{
 		return this.tableView.getItems()
 				.stream()
@@ -272,10 +275,10 @@ public class ScheduleController implements Initializable, ContainingParent
 	private class RunnerWithState {
 		private String executed;
 		private boolean checked;
-		private IMatrixRunner runner;
+		private MatrixRunner runner;
 		private MatrixState state;
 
-		public RunnerWithState(IMatrixRunner runner)
+		public RunnerWithState(MatrixRunner runner)
 		{
 			this.runner = runner;
 		}
@@ -285,7 +288,7 @@ public class ScheduleController implements Initializable, ContainingParent
 			this.state = state;
 		}
 
-		public IMatrixRunner getRunner()
+		public MatrixRunner getRunner()
 		{
 			return runner;
 		}

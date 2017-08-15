@@ -13,8 +13,8 @@ import com.exactprosystems.jf.actions.ActionAttribute;
 import com.exactprosystems.jf.actions.ActionFieldAttribute;
 import com.exactprosystems.jf.actions.ActionGroups;
 import com.exactprosystems.jf.actions.DefaultValuePool;
+import com.exactprosystems.jf.api.common.MatrixConnection;
 import com.exactprosystems.jf.api.error.ErrorKind;
-import com.exactprosystems.jf.common.MatrixRunner;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.report.ReportBuilder;
 import com.exactprosystems.jf.documents.config.Context;
@@ -39,7 +39,7 @@ public class MatrixWait extends AbstractAction
 
     @ActionFieldAttribute(name = matrixName, mandatory = true, description = "A special object that connects to the"
             + " matrix which is run.")
-    protected MatrixRunner     matrix     = null;
+    protected MatrixConnection    matrix     = null;
 
     @ActionFieldAttribute(name = timeName, mandatory = false, def = DefaultValuePool.Long0, description = "Matrix timeout per millisecond."
             + "If the matrix doesn't stop during the specified timeout, an action is failed."
@@ -53,7 +53,7 @@ public class MatrixWait extends AbstractAction
     {
         if(this.time == null)
         {
-            super.setError("Column '" + this.timeName + "' can't be empty.", ErrorKind.EMPTY_PARAMETER);
+            super.setError("Column '" + timeName + "' can't be empty.", ErrorKind.EMPTY_PARAMETER);
             return;
         }
 

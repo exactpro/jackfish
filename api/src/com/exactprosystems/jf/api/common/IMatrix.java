@@ -18,6 +18,4 @@ public interface IMatrix
 	
 	void 					setDefaultClient(String id);
 	IClientFactory 			getDefaultClient();
-
-	IMatrixRunner           getMatrixRunner();
 }

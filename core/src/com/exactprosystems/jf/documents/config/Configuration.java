@@ -41,7 +41,6 @@ import com.exactprosystems.jf.documents.matrix.parser.items.SubCase;
 import com.exactprosystems.jf.documents.matrix.parser.listeners.DummyRunnerListener;
 import com.exactprosystems.jf.documents.matrix.parser.listeners.IMatrixListener;
 import com.exactprosystems.jf.documents.matrix.parser.listeners.MatrixListener;
-import com.exactprosystems.jf.documents.matrix.parser.listeners.RunnerListener;
 import com.exactprosystems.jf.documents.vars.SystemVars;
 import com.exactprosystems.jf.functions.Table;
 import com.exactprosystems.jf.service.ServicePool;

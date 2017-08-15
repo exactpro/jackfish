@@ -9,8 +9,11 @@ package com.exactprosystems.jf.documents.matrix.parser.items;
 
 import com.exactprosystems.jf.actions.ActionsList;
 import com.exactprosystems.jf.documents.config.Context;
+import com.exactprosystems.jf.documents.guidic.controls.Table;
 import com.exactprosystems.jf.documents.matrix.parser.DisplayDriver;
+import com.exactprosystems.jf.documents.matrix.parser.Parser;
 import com.exactprosystems.jf.documents.matrix.parser.Tokens;
+import com.exactprosystems.jf.functions.Text;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -48,7 +51,49 @@ public class TempItem extends MatrixItem
 		driver.showAutoCompleteBox(this, layout, 0, 0, list, s -> {
 			if (!isInit)
 			{
-				getMatrix().replace(this, s);
+		        MatrixItem parent = this.getParent();
+		        int index = parent.index(this);
+		        MatrixItem newItem = null;
+		        try
+		        {
+		            if (Tokens.containsIgnoreCase(s))
+		            {
+		                if (s.equalsIgnoreCase(Tokens.RawTable.get()))
+		                {
+		                    newItem = Parser.createItem(Tokens.RawTable.get(), Table.class.getSimpleName());
+		                }
+		                else if (s.equalsIgnoreCase(Tokens.RawMessage.get()))
+		                {
+		                    newItem = Parser.createItem(Tokens.RawMessage.get(), "none");
+		                }
+		                else if (s.equalsIgnoreCase(Tokens.RawText.get()))
+		                {
+		                    newItem = Parser.createItem(Tokens.RawText.get(), Text.class.getSimpleName());
+		                }
+		                else
+		                {
+		                    newItem = Parser.createItem(s, null);
+		                }
+		            }
+		            else
+		            {
+		                newItem = Parser.createItem(Tokens.Action.get(), s);
+		            }
+		            newItem.init(getMatrix(), getMatrix());
+		            newItem.createId();
+		            this.getParent().insert(index, newItem);
+		        }
+		        catch (Exception e)
+		        {
+		            //          DialogsHelper.showError(e.getMessage());
+		        }
+		        finally
+		        {
+		            this.remove();
+		            getMatrix().enumerate();
+		        }
+
+		        getMatrix().getChangedProperty().set(true);
 				this.isInit = true;
 			}
 		});

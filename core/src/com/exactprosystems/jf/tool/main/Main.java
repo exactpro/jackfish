@@ -661,19 +661,9 @@ public class Main extends Application
 	{
         Reader reader = CommonHelper.readerFromFile(file);
         Context context = this.factory.createContext();
-        MatrixRunner runner = context.createRunner(file.getPath(), reader, null, null);
-        runner.setOnFinished(mr -> 
-        {
-            try
-            {
-                runner.close();
-            }
-            catch (Exception e)
-            {
-                logger.error(e.getMessage(), e);
-            }
-        });
-        runner.start();
+        Matrix matrix = (Matrix) context.getFactory().createDocument(DocumentKind.MATRIX, file.getPath());
+        matrix.load(reader);
+        matrix.start(new Date(), null);
 	}
 
 	public void stopMatrix(Document document) throws Exception

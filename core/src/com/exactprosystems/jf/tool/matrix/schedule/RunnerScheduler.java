@@ -8,13 +8,12 @@
 
 package com.exactprosystems.jf.tool.matrix.schedule;
 
-import com.exactprosystems.jf.api.common.IMatrixRunner;
 import com.exactprosystems.jf.api.common.MatrixState;
 import com.exactprosystems.jf.common.CommonHelper;
-import com.exactprosystems.jf.common.MatrixRunner;
 import com.exactprosystems.jf.documents.DocumentFactory;
+import com.exactprosystems.jf.documents.RunnerListener;
 import com.exactprosystems.jf.documents.config.Context;
-import com.exactprosystems.jf.documents.matrix.parser.listeners.RunnerListener;
+import com.exactprosystems.jf.documents.matrix.MatrixRunner;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.custom.tab.CustomTab;
 import com.exactprosystems.jf.tool.documents.FxDocumentFactory;
@@ -33,7 +32,7 @@ public class RunnerScheduler implements RunnerListener
 {
 	private static final Logger logger = Logger.getLogger(RunnerScheduler.class);
 	private ScheduleController controller;
-	private ConcurrentHashMap<IMatrixRunner, Boolean> map;
+	private ConcurrentHashMap<MatrixRunner, Boolean> map;
 	private DocumentFactory factory;
 
 	public RunnerScheduler(FxDocumentFactory fxDocumentFactory) throws Exception
@@ -54,7 +53,7 @@ public class RunnerScheduler implements RunnerListener
 
 	//region Interface RunnerListener
 	@Override
-	public void subscribe(IMatrixRunner runner)
+	public void subscribe(MatrixRunner runner)
 	{
 		if (this.map.containsKey(runner))
 		{
@@ -67,7 +66,7 @@ public class RunnerScheduler implements RunnerListener
 	}
 
 	@Override
-	public void unsubscribe(IMatrixRunner runner)
+	public void unsubscribe(MatrixRunner runner)
 	{
 		Boolean remove = this.map.remove(runner);
 		remove = remove == null ? true : remove;
@@ -76,77 +75,84 @@ public class RunnerScheduler implements RunnerListener
 	}
 
 	@Override
-	public void stateChange(IMatrixRunner matrixRunner, MatrixState state, int done, int total)
+	public void stateChange(MatrixRunner matrixRunner, MatrixState state, int done, int total)
 	{
 		this.controller.displayState(matrixRunner, state, done, total);
 	}
 	//endregion
 
-	void startSelected(List<IMatrixRunner> collect)
+	void startSelected(List<MatrixRunner> collect)
 	{
-		this.map.keySet().stream()
-				.filter(collect::contains)
-				.forEach(runner -> Common.tryCatch(runner::start, "Error on start runner"));
+	    // TODO remade it
+//		this.map.keySet().stream()
+//				.filter(collect::contains)
+//				.forEach(runner -> Common.tryCatch(runner::start, "Error on start runner"));
 	}
 
-	void stopSelected(List<IMatrixRunner> collect)
+	void stopSelected(List<MatrixRunner> collect)
 	{
 		this.map.keySet().stream()
 				.filter(collect::contains)
 				.forEach(runner -> Common.tryCatch(runner::stop, "Error on start runner"));
 	}
 
-	void destroySelected(List<IMatrixRunner> collect)
+	void destroySelected(List<MatrixRunner> collect)
 	{
-		this.map.keySet().stream().filter(collect::contains).forEach(runner -> Common.tryCatch(((MatrixRunner)runner)::close, "Error on start runner"));
+		this.map.keySet().stream().filter(collect::contains).forEach(runner -> Common.tryCatch(runner::close, "Error on start runner"));
 	}
 
-	void showSelected(List<IMatrixRunner> collect)
+	void showSelected(List<MatrixRunner> collect)
 	{
-		this.map.keySet().stream()
-				.filter(collect::contains)
-				.forEach(runner -> Common.tryCatch(() ->
-		{
-			((MatrixRunner)runner).process((matrix, context, report, startTime) ->
-			{
-				CustomTab tab = Common.checkDocument(matrix);
-				if (tab == null)
-				{
-					try
-					{
-						unsubscribe(runner);
-						matrix.load(new FileReader(runner.getMatrixName()));
-						matrix.display();
-					}
-					catch (Exception e)
-					{
-						DialogsHelper.showError("Couldn't open the matrix " + matrix);
-						return false;
-					}
-				}
-				return true;
-			});
-
-		}, "Error on start runner"));
+	    // TODO remade it
+	    
+//		this.map.keySet().stream()
+//				.filter(collect::contains)
+//				.forEach(runner -> Common.tryCatch(() ->
+//		{
+//			((MatrixRunner)runner).process((matrix, context, report, startTime) ->
+//			{
+//				CustomTab tab = Common.checkDocument(matrix);
+//				if (tab == null)
+//				{
+//					try
+//					{
+//						unsubscribe(runner);
+//						matrix.load(new FileReader(runner.getMatrixName()));
+//						matrix.display();
+//					}
+//					catch (Exception e)
+//					{
+//						DialogsHelper.showError("Couldn't open the matrix " + matrix);
+//						return false;
+//					}
+//				}
+//				return true;
+//			});
+//
+//		}, "Error on start runner"));
 	}
 
 	void loadSeveral()
 	{
-		List<File> files = DialogsHelper.showMultipleDialog("Choose matrices", "jf files (*.jf)", "*.jf");
-		if (files != null)
-		{
-			files.stream()
-				.filter(Objects::nonNull)
-				.forEach(file -> Common.tryCatch(() ->
-				{
-					try(Reader reader = CommonHelper.readerFromFile(file))
-					{
-						Context context = this.factory.createContext();
-						MatrixRunner runner = context.createRunner(file.getPath(), reader, null, null);
-						//	                this.map.put(runner, Boolean.TRUE);
-						this.subscribe(runner);
-		    	    }
-				}, "Error on create new runner"));
-		}
+	    // TODO remade it
+//		List<File> files = DialogsHelper.showMultipleDialog("Choose matrices", "jf files (*.jf)", "*.jf");
+//		if (files != null)
+//		{
+//			files.stream()
+//				.filter(Objects::nonNull)
+//				.forEach(file -> Common.tryCatch(() ->
+//				{
+//					try(Reader reader = CommonHelper.readerFromFile(file))
+//					{
+//						Context context = this.factory.createContext();
+//						
+//						
+//						
+//						MatrixRunner runner = context.createRunner(file.getPath(), reader, null, null);
+//						//	                this.map.put(runner, Boolean.TRUE);
+//						this.subscribe(runner);
+//		    	    }
+//				}, "Error on create new runner"));
+//		}
 	}
 }

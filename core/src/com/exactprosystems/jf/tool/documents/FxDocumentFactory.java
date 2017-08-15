@@ -9,20 +9,19 @@
 package com.exactprosystems.jf.tool.documents;
 
 import com.exactprosystems.jf.actions.ReadableValue;
-import com.exactprosystems.jf.api.common.IMatrixRunner;
 import com.exactprosystems.jf.api.wizard.WizardManager;
 import com.exactprosystems.jf.common.Settings;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.highlighter.Highlighter;
 import com.exactprosystems.jf.documents.Document;
 import com.exactprosystems.jf.documents.DocumentFactory;
+import com.exactprosystems.jf.documents.RunnerListener;
 import com.exactprosystems.jf.documents.config.Configuration;
 import com.exactprosystems.jf.documents.config.Context;
 import com.exactprosystems.jf.documents.csv.Csv;
 import com.exactprosystems.jf.documents.guidic.GuiDictionary;
 import com.exactprosystems.jf.documents.matrix.Matrix;
 import com.exactprosystems.jf.documents.matrix.parser.listeners.IMatrixListener;
-import com.exactprosystems.jf.documents.matrix.parser.listeners.RunnerListener;
 import com.exactprosystems.jf.documents.msgdic.MessageDictionary;
 import com.exactprosystems.jf.documents.text.PlainText;
 import com.exactprosystems.jf.documents.vars.SystemVars;
@@ -52,6 +51,7 @@ import java.net.URL;
 import java.util.List;
 import java.util.Map;
 
+@SuppressWarnings("deprecation")
 public class FxDocumentFactory extends DocumentFactory
 {
 	public FxDocumentFactory(Main mainModel, WizardManager wizardManager) throws Exception
@@ -117,15 +117,15 @@ public class FxDocumentFactory extends DocumentFactory
 	}
 
 	@Override
-	protected Matrix createLibrary(String fileName, Configuration configuration, IMatrixRunner runner, IMatrixListener matrixListener) throws Exception
+	protected Matrix createLibrary(String fileName, Configuration configuration, IMatrixListener matrixListener) throws Exception
 	{
-		return new MatrixFx(fileName, this, runner, matrixListener, true);
+		return new MatrixFx(fileName, this, matrixListener, true);
 	}
 
 	@Override
-	protected Matrix createMatrix(String fileName, Configuration configuration, IMatrixRunner runner, IMatrixListener matrixListener) throws Exception
+	protected Matrix createMatrix(String fileName, Configuration configuration, IMatrixListener matrixListener) throws Exception
 	{
-		return new MatrixFx(fileName, this, runner, matrixListener, false);
+		return new MatrixFx(fileName, this, matrixListener, false);
 	}
 
 	@Override

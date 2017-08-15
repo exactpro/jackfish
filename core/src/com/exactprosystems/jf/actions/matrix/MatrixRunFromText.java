@@ -13,12 +13,14 @@ import com.exactprosystems.jf.actions.ActionAttribute;
 import com.exactprosystems.jf.actions.ActionFieldAttribute;
 import com.exactprosystems.jf.actions.ActionGroups;
 import com.exactprosystems.jf.actions.DefaultValuePool;
+import com.exactprosystems.jf.api.common.MatrixConnection;
 import com.exactprosystems.jf.api.error.common.MatrixException;
 import com.exactprosystems.jf.common.CommonHelper;
-import com.exactprosystems.jf.common.MatrixRunner;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.report.ReportBuilder;
+import com.exactprosystems.jf.documents.DocumentKind;
 import com.exactprosystems.jf.documents.config.Context;
+import com.exactprosystems.jf.documents.matrix.Matrix;
 import com.exactprosystems.jf.documents.matrix.parser.Parameters;
 import com.exactprosystems.jf.functions.HelpKind;
 import com.exactprosystems.jf.functions.Text;
@@ -37,7 +39,7 @@ import java.util.Date;
 				+ "This object is required for {{@MatrixWait@}} action to wait when the started matrix stops."
 				+ "With the help of this object property one can access information about the number of"
 				+ " successfully run and failed test cases of the started matrix. ",
-		outputType				= MatrixRunner.class,
+		outputType				= MatrixConnection.class,
 		examples = "{{#\n" +
 				"#Id;#Action;#Text\n" +
 				"MXRN1;MatrixRunFromText;Text\n" +
@@ -73,17 +75,19 @@ public class MatrixRunFromText extends AbstractAction
 	@Override
 	public void doRealAction(Context context, ReportBuilder report, Parameters parameters, AbstractEvaluator evaluator) throws Exception 
 	{
-		try (Context newContext = context.getFactory().createContext(); Reader reader = CommonHelper.readerFromString(this.text.toString()))
-		{
-			MatrixRunner runner = newContext.createRunner("new", reader, this.at, this.parameter);
-			newContext.setOut(context.getOut());
-			runner.setStartTime(this.at);
-			runner.start();
-			super.setResult(runner);
-		}
-		catch (MatrixException matrixException)
-		{
-			super.setError(matrixException.getMessage(), matrixException.getErrorKind());
-		}
+        try(Context newContext = context.getFactory().createContext();
+                Reader reader = CommonHelper.readerFromString(this.text.toString()) )
+        {
+            Matrix matrix = (Matrix)context.getFactory().createDocument(DocumentKind.MATRIX, "new");
+            matrix.load(reader);
+            newContext.setOut(context.getOut());
+            MatrixConnection connection = matrix.start(this.at, this.parameter); 
+            super.setResult(connection);
+            super.setResult(connection);
+        }
+        catch (MatrixException matrixException)
+        {
+            super.setError(matrixException.getMessage(), matrixException.getErrorKind());
+        }
 	}
 }

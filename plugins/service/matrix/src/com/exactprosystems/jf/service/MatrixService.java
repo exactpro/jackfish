@@ -9,7 +9,7 @@
 package com.exactprosystems.jf.service;
 
 import com.exactprosystems.jf.api.common.IContext;
-import com.exactprosystems.jf.api.common.IMatrixRunner;
+import com.exactprosystems.jf.api.common.MatrixConnection;
 import com.exactprosystems.jf.api.common.Str;
 import com.exactprosystems.jf.api.service.AbstractTcpServer;
 import com.exactprosystems.jf.api.service.Connection;
@@ -50,11 +50,12 @@ public class MatrixService  extends AbstractTcpServer
 
 		try (	Reader matrixReader 	= new FileReader(this.onConnected) )
 		{
-			IMatrixRunner runner = context.createRunner(this.onConnected, matrixReader, new Date(), connection);
-			
-			runner.start();
-			runner.join(0);
-			runner.stop();
+		    // TODO remade it
+//            Matrix doc = (Matrix)documentFactory.createDocument(DocumentKind.MATRIX, this.onConnected);
+//            doc.load(matrixReader);
+//            
+//            MatrixConnection matrixConnection = doc.start(new Date(), connection);
+//            matrixConnection.join(0);
 		}
 		catch (Exception e)
 		{

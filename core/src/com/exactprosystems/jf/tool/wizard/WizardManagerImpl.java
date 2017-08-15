@@ -9,14 +9,8 @@
 package com.exactprosystems.jf.tool.wizard;
 
 import com.exactprosystems.jf.api.wizard.*;
-import com.exactprosystems.jf.common.VerboseLevel;
 import com.exactprosystems.jf.common.version.VersionInfo;
-import com.exactprosystems.jf.documents.ConsoleDocumentFactory;
-import com.exactprosystems.jf.documents.DocumentFactory;
 import com.exactprosystems.jf.documents.config.Context;
-import com.exactprosystems.jf.documents.matrix.Matrix;
-import com.exactprosystems.jf.documents.matrix.parser.items.HelpItem;
-import com.exactprosystems.jf.documents.matrix.parser.items.MatrixItem;
 import com.exactprosystems.jf.tool.helpers.DialogsHelper;
 import com.exactprosystems.jf.tool.wizard.all.*;
 
@@ -28,21 +22,6 @@ import java.util.stream.Collectors;
 
 public class WizardManagerImpl implements WizardManager
 {
-    public static void main(String[] args)
-    {
-        DocumentFactory factory = new ConsoleDocumentFactory(VerboseLevel.All);
-        Context context = factory.createContext();
-        WizardManagerImpl manager = new WizardManagerImpl();
-        
-        Matrix matrix = new Matrix("Matrix", factory);
-        MatrixItem item = new HelpItem(HelpItem.class);
-        
-        List<Class<? extends Wizard>> list = manager.suitableWizards(item, matrix);
-        Class<? extends Wizard> wizard = list.get(0);
-        manager.runWizard(wizard, context, item, matrix);
-    }
-
-    
     private static final Logger logger = Logger.getLogger(WizardManagerImpl.class);
 
     private static List<Class<? extends Wizard>> knownWizards = Arrays.asList(

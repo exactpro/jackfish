@@ -9,6 +9,7 @@
 package com.exactprosystems.jf.common;
 
 import com.exactprosystems.jf.api.common.DateTime;
+import com.exactprosystems.jf.api.common.MatrixConnection;
 import com.exactprosystems.jf.api.common.Str;
 import com.exactprosystems.jf.api.common.Sys;
 import com.exactprosystems.jf.common.documentation.DocumentationBuilder;
@@ -23,6 +24,7 @@ import com.exactprosystems.jf.documents.config.Configuration;
 import com.exactprosystems.jf.documents.config.ConfigurationBean;
 import com.exactprosystems.jf.documents.config.Context;
 import com.exactprosystems.jf.documents.guidic.GuiDictionaryBean;
+import com.exactprosystems.jf.documents.matrix.Matrix;
 import com.exactprosystems.jf.documents.matrix.parser.items.MatrixItem;
 import com.exactprosystems.jf.documents.msgdic.MessageDictionaryBean;
 import com.exactprosystems.jf.tool.main.Main;
@@ -426,13 +428,14 @@ public class MainRunner
 		{
 			logger.info(String.format("Processing '%s' start at '%s'", matrix.getName(), startAt.toString()));
 
-			try(    Reader reader = CommonHelper.readerFromFile(matrix);
-			        Context	context = factory.createContext();
-			        MatrixRunner runner = context.createRunner(matrix.getPath(), reader, startAt, null) )
+			try(    Reader reader = CommonHelper.readerFromFile(matrix) )
 			{
-				runner.start();
-				runner.join(0);
-				return runner.failed() == 0;
+			    Matrix doc = (Matrix)factory.createDocument(DocumentKind.MATRIX, matrix.getPath());
+			    doc.load(reader);
+			    
+			    MatrixConnection connection = doc.start(startAt, null);
+			    connection.join(0);
+				return connection.failed() == 0;
 			}
 			catch (Exception e)
 			{

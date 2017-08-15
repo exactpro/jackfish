@@ -9,7 +9,6 @@
 package com.exactprosystems.jf.documents;
 
 import com.exactprosystems.jf.actions.ReadableValue;
-import com.exactprosystems.jf.api.common.IMatrixRunner;
 import com.exactprosystems.jf.api.wizard.WizardManager;
 import com.exactprosystems.jf.common.Settings;
 import com.exactprosystems.jf.common.VerboseLevel;
@@ -24,7 +23,6 @@ import com.exactprosystems.jf.documents.matrix.parser.listeners.ConsoleMatrixLis
 import com.exactprosystems.jf.documents.matrix.parser.listeners.DummyRunnerListener;
 import com.exactprosystems.jf.documents.matrix.parser.listeners.IMatrixListener;
 import com.exactprosystems.jf.documents.matrix.parser.listeners.MatrixListener;
-import com.exactprosystems.jf.documents.matrix.parser.listeners.RunnerListener;
 import com.exactprosystems.jf.documents.msgdic.MessageDictionary;
 import com.exactprosystems.jf.documents.text.PlainText;
 import com.exactprosystems.jf.documents.vars.SystemVars;
@@ -57,15 +55,15 @@ public class ConsoleDocumentFactory extends DocumentFactory
 	}
 
 	@Override
-	protected Matrix createLibrary(String fileName, Configuration configuration, IMatrixRunner runner, IMatrixListener matrixListener) throws Exception
+	protected Matrix createLibrary(String fileName, Configuration configuration, IMatrixListener matrixListener) throws Exception
 	{
-		return new Matrix(fileName, this, runner, matrixListener, true);
+		return new Matrix(fileName, this, matrixListener, true);
 	}
 
 	@Override
-	protected Matrix createMatrix(String fileName, Configuration configuration, IMatrixRunner runner, IMatrixListener matrixListener) throws Exception
+	protected Matrix createMatrix(String fileName, Configuration configuration, IMatrixListener matrixListener) throws Exception
 	{
-		return new Matrix(fileName, this, runner, matrixListener, false);
+		return new Matrix(fileName, this, matrixListener, false);
 	}
 
 	@Override

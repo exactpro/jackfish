@@ -10,28 +10,24 @@ package com.exactprosystems.jf.tool.matrix;
 
 import com.exactprosystems.jf.actions.AbstractAction;
 import com.exactprosystems.jf.actions.ReadableValue;
-import com.exactprosystems.jf.api.common.IMatrixRunner;
 import com.exactprosystems.jf.api.common.Str;
 import com.exactprosystems.jf.api.common.Sys;
-import com.exactprosystems.jf.common.MatrixRunner;
 import com.exactprosystems.jf.common.Settings;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.report.ReportBuilder;
 import com.exactprosystems.jf.common.undoredo.Command;
 import com.exactprosystems.jf.documents.DocumentFactory;
 import com.exactprosystems.jf.documents.config.Context;
-import com.exactprosystems.jf.documents.guidic.controls.Table;
 import com.exactprosystems.jf.documents.matrix.Matrix;
+import com.exactprosystems.jf.documents.matrix.MatrixRunner;
 import com.exactprosystems.jf.documents.matrix.parser.Parameter;
 import com.exactprosystems.jf.documents.matrix.parser.Parameters;
 import com.exactprosystems.jf.documents.matrix.parser.Parser;
-import com.exactprosystems.jf.documents.matrix.parser.Tokens;
 import com.exactprosystems.jf.documents.matrix.parser.items.MatrixItem;
 import com.exactprosystems.jf.documents.matrix.parser.items.MatrixItemExecutingState;
 import com.exactprosystems.jf.documents.matrix.parser.items.TempItem;
 import com.exactprosystems.jf.documents.matrix.parser.items.TypeMandatory;
 import com.exactprosystems.jf.documents.matrix.parser.listeners.IMatrixListener;
-import com.exactprosystems.jf.functions.Text;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.helpers.DialogsHelper;
 import javafx.scene.control.ButtonType;
@@ -54,9 +50,9 @@ public class MatrixFx extends Matrix
 	public static final String DIALOG_BREAKPOINT = "BreakPointMatrix";
 	public static final String DIALOG_DEFAULTS = "DefaultsAppAndClient";
 
-	public MatrixFx(String matrixName, DocumentFactory factory, IMatrixRunner runner, IMatrixListener matrixListener, boolean isLibrary) throws Exception
+	public MatrixFx(String matrixName, DocumentFactory factory, IMatrixListener matrixListener, boolean isLibrary) throws Exception
 	{
-		super(matrixName, factory, runner, matrixListener, isLibrary);
+		super(matrixName, factory, matrixListener, isLibrary);
 		init(factory);
 	}
 
@@ -217,57 +213,6 @@ public class MatrixFx extends Matrix
 		{
 			redo.execute();
 		}
-	}
-
-	public void replace(MatrixItem tempItem, String newItemName)
-	{
-		MatrixItem parent = tempItem.getParent();
-		int index = parent.index(tempItem);
-		MatrixItem newItem = null;
-		try
-		{
-			if (Tokens.containsIgnoreCase(newItemName))
-			{
-				if (newItemName.equalsIgnoreCase(Tokens.RawTable.get()))
-				{
-					newItem = Parser.createItem(Tokens.RawTable.get(), Table.class.getSimpleName());
-				}
-				else if (newItemName.equalsIgnoreCase(Tokens.RawMessage.get()))
-				{
-					newItem = Parser.createItem(Tokens.RawMessage.get(), "none");
-				}
-				else if (newItemName.equalsIgnoreCase(Tokens.RawText.get()))
-				{
-					newItem = Parser.createItem(Tokens.RawText.get(), Text.class.getSimpleName());
-				}
-				else
-				{
-					newItem = Parser.createItem(newItemName, null);
-				}
-			}
-			else
-			{
-				newItem = Parser.createItem(Tokens.Action.get(), newItemName);
-			}
-			newItem.init(this, this);
-			newItem.createId();
-			insert(tempItem.getParent(), index, newItem);
-		}
-		catch (Exception e)
-		{
-			//			DialogsHelper.showError(e.getMessage());
-		}
-		finally
-		{
-            if (this.controller != null)
-            {
-                this.controller.remove(tempItem);
-            }
-			tempItem.remove();
-			enumerate();
-		}
-
-		super.getChangedProperty().set(true);
 	}
 
 	@Override
@@ -625,35 +570,30 @@ public class MatrixFx extends Matrix
 	public void setStartTime(Date date)
 	{
 		this.startDate = date;
-        if (getMatrixRunner() != null)
-        {
-            getMatrixRunner().setStartTime(date);
-        }
 	}
 
 	public void startMatrix() throws Exception
 	{
-		if (getMatrixRunner() != null)
+		if (getEngine() != null)
 		{
-			getFactory().getConfiguration().getRunnerListener().subscribe(getMatrixRunner());
-			if (!getMatrixRunner().isRunning())
+			getFactory().getConfiguration().getRunnerListener().subscribe(getEngine());
+			if (!getEngine().isRunning())
 			{
-				getMatrixRunner().setGlobalVariable(MatrixRunner.parameterName, this.controller == null ? null : this.controller.getParameter());
 	            if (this.controller != null)
 	            {
 	                this.controller.displayBeforeStart("Matrix will start at " + this.startDate);
 	            }
 			}
 
-			getMatrixRunner().start();
+			getEngine().start(this.startDate, this.controller.getParameter());
 		}
 	}
 
 	public void stopMatrix() throws Exception
 	{
-		if (getMatrixRunner() != null)
+		if (getEngine() != null)
 		{
-		    getMatrixRunner().stop();
+		    getEngine().stop();
             refresh();
             if (this.controller != null)
             {
@@ -665,34 +605,34 @@ public class MatrixFx extends Matrix
 
 	public void pauseMatrix() throws Exception
 	{
-		if (getMatrixRunner() != null)
+		if (getEngine() != null)
 		{
-		    getMatrixRunner().pause();
+		    getEngine().pause();
 		}
 	}
 
 	public void pausedMatrix(Matrix matrix) throws Exception
 	{
 		//TODO this is awesome code. We need check binding Matrix, MatrixRunner and Context
-		if (matrix == this && getMatrixRunner() != null)
+		if (matrix == this && getEngine() != null)
 		{
-			getMatrixRunner().pause();
+		    getEngine().pause();
 		}
 	}
 
 	public void stepMatrix() throws Exception
 	{
-		if (getMatrixRunner() != null)
+		if (getEngine() != null)
 		{
-		    getMatrixRunner().step();
+		    getEngine().step();
 		}
 	}
 
 	public void showResult() throws Exception
 	{
-		if (getMatrixRunner() != null && getMatrixRunner().getReportName() != null)
+		if (getEngine() != null && getEngine().getReportName() != null)
 		{
-			File file = new File(getMatrixRunner().getReportName());
+			File file = new File(getEngine().getReportName());
             if (this.controller != null)
             {
                 this.controller.showResult(file, getNameProperty().get());
@@ -704,7 +644,7 @@ public class MatrixFx extends Matrix
 	{
         if (this.controller != null)
         {
-            this.controller.showWatcher(this, (Context)getMatrixRunner().getContext());
+            this.controller.showWatcher(this, getEngine().getContext());
         }
 	}
 
@@ -719,8 +659,7 @@ public class MatrixFx extends Matrix
 		
 		if (!isLibrary())
 		{
-			getMatrixRunner().setStartTime(this.startDate);
-			getMatrixRunner().getContext().setOut(this.console);
+		    getEngine().getContext().setOut(this.console);
 		}
 
 		super.saved();
@@ -733,7 +672,7 @@ public class MatrixFx extends Matrix
 			getFactory().getConfiguration().register(this);
 
 			this.controller = Common.loadController(MatrixFx.class.getResource("MatrixFx.fxml"));
-            this.controller.init(this, (Context)getMatrixRunner().getContext(), this.console); 
+            this.controller.init(this, (Context)getEngine().getContext(), this.console); 
 			setListener(this.controller);
 			this.isControllerInit = true;
 		}
@@ -743,7 +682,7 @@ public class MatrixFx extends Matrix
 	{
 		ArrayList<String> result = new ArrayList<>();
 		result.add(EMPTY_STRING);
-        Context context = (Context) getMatrixRunner().getContext();
+        Context context = (Context) getEngine().getContext();
 		result.addAll(context.getConfiguration().getApplicationPool().appNames().stream().collect(Collectors.toList()));
 		this.controller.displayAppList(result);
 	}
@@ -752,7 +691,7 @@ public class MatrixFx extends Matrix
 	{
 		ArrayList<String> result = new ArrayList<>();
 		result.add(EMPTY_STRING);
-		Context context = (Context) getMatrixRunner().getContext();
+		Context context = (Context) getEngine().getContext();
 		result.addAll(context.getConfiguration().getClientPool().clientNames().stream().collect(Collectors.toList()));
 		this.controller.displayClientList(result);
 	}

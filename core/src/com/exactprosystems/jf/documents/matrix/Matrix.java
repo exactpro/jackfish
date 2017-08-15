@@ -11,10 +11,9 @@ package com.exactprosystems.jf.documents.matrix;
 import com.exactprosystems.jf.api.app.IApplicationFactory;
 import com.exactprosystems.jf.api.client.IClientFactory;
 import com.exactprosystems.jf.api.common.IMatrix;
-import com.exactprosystems.jf.api.common.IMatrixRunner;
+import com.exactprosystems.jf.api.common.MatrixConnection;
 import com.exactprosystems.jf.api.common.Str;
 import com.exactprosystems.jf.common.CommonHelper;
-import com.exactprosystems.jf.common.MatrixRunner;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.report.ReportBuilder;
 import com.exactprosystems.jf.common.version.VersionInfo;
@@ -50,26 +49,34 @@ import java.util.concurrent.atomic.AtomicInteger;
 )
 public class Matrix extends AbstractDocument implements IMatrix
 {
-	public static final String EMPTY_STRING = "<empty>";
+    public static final String  EMPTY_STRING = "<empty>";
+    private static final Logger logger       = Logger.getLogger(Matrix.class);
 
-	public Matrix(String matrixName, DocumentFactory factory) {
-		super(matrixName, factory);
-		this.root = new MatrixRoot(matrixName);
-		this.buffer = new StringBuilder();
+    private IClientFactory      defaultClient;
+    private IApplicationFactory defaultApp;
+
+    private boolean             isLibrary;
+    private int                 count        = 0;
+    private MatrixItem          root         = null;
+    private IMatrixListener     matrixListener;
+    private MatrixRunner        runner;
+
+	public Matrix(String matrixName, DocumentFactory factory) throws Exception 
+	{
+		this(matrixName, factory, null, true);
 	}
 
-	public Matrix(String matrixName, DocumentFactory factory, IMatrixRunner runner, IMatrixListener matrixListener, boolean isLibrary) throws Exception
+	public Matrix(String matrixName, DocumentFactory factory, IMatrixListener matrixListener, boolean isLibrary) throws Exception
 	{
 		super(matrixName, factory); 
+
+        if (!isLibrary)
+        {
+            this.runner = new MatrixRunner(factory.createContext(), this);
+        }
         
-		this.runner = (MatrixRunner)runner;
-		if (this.runner != null)
-		{
-		    this.runner.setMatrix(this);
-		}
 		this.isLibrary = isLibrary;
 		this.root = new MatrixRoot(matrixName);
-		this.buffer = new StringBuilder();
 		this.matrixListener = matrixListener;
 
 		if (!getNameProperty().isNullOrEmpty())
@@ -84,10 +91,9 @@ public class Matrix extends AbstractDocument implements IMatrix
 		}
 	}
 
-	@Deprecated 
-	public void setRunner(MatrixRunner runner) // TODO should be removed when it will be created inside
+	public MatrixRunner getEngine()
 	{
-	    this.runner = runner;
+	    return this.runner;
 	}
 	
 	public void setListener(IMatrixListener listener)
@@ -109,10 +115,9 @@ public class Matrix extends AbstractDocument implements IMatrix
 	
      public Matrix makeCopy() throws Exception
       {
-          Matrix copy = new Matrix(getNameProperty().get(), getFactory(), this.runner, this.matrixListener, this.isLibrary);
+          Matrix copy = new Matrix(getNameProperty().get(), getFactory(), this.matrixListener, this.isLibrary);
           copy.root = this.root.clone();
           copy.root.init(copy, copy);
-          copy.buffer = new StringBuilder(this.buffer);
           copy.enumerate();
           return copy;
       }
@@ -169,12 +174,6 @@ public class Matrix extends AbstractDocument implements IMatrix
 		return this.defaultClient;
 	}
 
-	@Override
-	public IMatrixRunner getMatrixRunner()
-	{
-	    return this.runner;
-	}
-	
 	// ==============================================================================================================================
 	// AbstractDocument
 	// ==============================================================================================================================
@@ -183,15 +182,15 @@ public class Matrix extends AbstractDocument implements IMatrix
 	{
 		super.load(reader);
 		this.root = new MatrixRoot(getNameProperty().get());
+		StringBuffer buffer = new StringBuffer();
 		try (BufferedReader rawReader = new BufferedReader(reader))
 		{
-			this.buffer.delete(0, this.buffer.length());
 			String line = null;
 			while ((line = rawReader.readLine()) != null)
 			{
-				this.buffer.append(line).append('\n');
+				buffer.append(line).append('\n');
 			}
-			Reader stringReader = CommonHelper.readerFromString(this.buffer.toString());
+			Reader stringReader = CommonHelper.readerFromString(buffer.toString());
 
 			Parser parser = new Parser();
 			this.root = parser.readMatrix(this.root, stringReader);
@@ -242,10 +241,6 @@ public class Matrix extends AbstractDocument implements IMatrix
 	public void save(String fileName) throws Exception
 	{
 		super.save(fileName);
-		if (getMatrixRunner() != null)
-		{
-			getMatrixRunner().setMatrixFile(getNameProperty().get());
-		}
 		
 		try (Writer rawWriter = CommonHelper.writerToFileName(fileName))
 		{
@@ -272,19 +267,12 @@ public class Matrix extends AbstractDocument implements IMatrix
 
 	// ==============================================================================================================================
 
-	public char[] getMatrixBuffer()
+	public char[] getMatrixBuffer() throws Exception
 	{
-		try
-		{
-			Parser parser = new Parser();
-			StringWriter stringWriter = new StringWriter();
-			parser.saveMatrix(this.root, stringWriter);
-			return stringWriter.getBuffer().toString().toCharArray();
-		}
-		catch (Exception e)
-		{
-			return this.buffer.toString().toCharArray();
-		}
+		Parser parser = new Parser();
+		StringWriter stringWriter = new StringWriter();
+		parser.saveMatrix(this.root, stringWriter);
+		return stringWriter.getBuffer().toString().toCharArray();
 	}
 
 	// ==============================================================================================================================
@@ -376,12 +364,17 @@ public class Matrix extends AbstractDocument implements IMatrix
 		}
 	}
 
-	public void replace(MatrixItem old, String value)
+	public MatrixConnection start(Date time, Object parameter) throws Exception
 	{
-	    // FIXME WTF?
-
+	    MatrixConnection res = new MatrixConnectionImpl(this);
+	    if (getEngine() != null)
+	    {
+	        getEngine().start(time, parameter);
+	    }
+	    
+	    return res;
 	}
-
+	
 	// ==============================================================================================================================
 	public final List<MatrixItem> find(final String what, final boolean caseSensitive, final boolean wholeWord)
 	{
@@ -412,7 +405,7 @@ public class Matrix extends AbstractDocument implements IMatrix
 		return 0;
 	}
 
-	public boolean checkMatrix(Context context, AbstractEvaluator evaluator, StringBuilder error)
+	protected boolean checkMatrix(Context context, AbstractEvaluator evaluator, StringBuilder error)
 	{
 		this.matrixListener.reset(this);
 		this.root.check(context, evaluator, this.matrixListener);
@@ -427,7 +420,7 @@ public class Matrix extends AbstractDocument implements IMatrix
 		return true;
 	}
 	
-	public void start(Context context, AbstractEvaluator evaluator, ReportBuilder report)
+	protected void start(Context context, AbstractEvaluator evaluator, ReportBuilder report)
 	{
 		assert (context != null);
 		assert (evaluator != null);
@@ -473,15 +466,4 @@ public class Matrix extends AbstractDocument implements IMatrix
 		this.matrixListener.matrixFinished(this, countResult(Result.Passed), countResult(Result.Failed));
 	}
 
-	private IClientFactory		defaultClient;
-	private IApplicationFactory	defaultApp;
-
-	private boolean				isLibrary;
-	private int					count   = 0;
-	private MatrixItem			root	= null;
-	private StringBuilder		buffer;
-	private IMatrixListener		matrixListener;
-    private MatrixRunner        runner;
-
-	private static final Logger	logger	= Logger.getLogger(Matrix.class);
 }
