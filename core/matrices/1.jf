@@ -1,0 +1,49 @@
+#TestCase;#Kind;#Depends;#For
+Test case;Never;;
+#Id;#Action;do;scenario;title;result;responsible;comment;blocked
+table_;TableCreate;;;;;;;
+
+#Id;#Let
+    table;table_.Out
+#For;#From;#To;#Step
+    i;1;500;1
+        #Action;$Table;do
+        TableAddValue;table;i
+#EndFor
+#Id;#Let
+    tableTmp;table.clone()
+#Id;#Let
+    fileStories;[]
+#ForEach;#In
+    r;table
+        #Id;#Action;$Table;scenario
+        select;TableSelect;tableTmp;r.scenario
+
+
+// Break if equal
+        #If
+        select.Out.size() > 0
+            #Id;#Let
+            list;select.Out[0].keySet()
+
+
+
+
+
+#ForEach;#In
+            field;list
+                #Id;#Let
+                a;r[field] != select.Out[0][field]
+
+
+
+
+#EndForEach
+
+
+
+
+#EndIf
+
+
+#EndForEach
