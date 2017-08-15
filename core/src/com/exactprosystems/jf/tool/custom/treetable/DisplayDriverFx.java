@@ -17,7 +17,7 @@ import com.exactprosystems.jf.common.undoredo.Command;
 import com.exactprosystems.jf.documents.DocumentKind;
 import com.exactprosystems.jf.documents.config.Context;
 import com.exactprosystems.jf.documents.matrix.Matrix;
-import com.exactprosystems.jf.documents.matrix.MatrixRunner;
+import com.exactprosystems.jf.documents.matrix.MatrixEngine;
 import com.exactprosystems.jf.documents.matrix.parser.*;
 import com.exactprosystems.jf.documents.matrix.parser.items.ActionItem;
 import com.exactprosystems.jf.documents.matrix.parser.items.CommentString;

@@ -13,7 +13,7 @@ import com.exactprosystems.jf.common.CommonHelper;
 import com.exactprosystems.jf.documents.DocumentFactory;
 import com.exactprosystems.jf.documents.RunnerListener;
 import com.exactprosystems.jf.documents.config.Context;
-import com.exactprosystems.jf.documents.matrix.MatrixRunner;
+import com.exactprosystems.jf.documents.matrix.MatrixEngine;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.custom.tab.CustomTab;
 import com.exactprosystems.jf.tool.documents.FxDocumentFactory;
@@ -32,7 +32,7 @@ public class RunnerScheduler implements RunnerListener
 {
 	private static final Logger logger = Logger.getLogger(RunnerScheduler.class);
 	private ScheduleController controller;
-	private ConcurrentHashMap<MatrixRunner, Boolean> map;
+	private ConcurrentHashMap<MatrixEngine, Boolean> map;
 	private DocumentFactory factory;
 
 	public RunnerScheduler(FxDocumentFactory fxDocumentFactory) throws Exception
@@ -53,7 +53,7 @@ public class RunnerScheduler implements RunnerListener
 
 	//region Interface RunnerListener
 	@Override
-	public void subscribe(MatrixRunner runner)
+	public void subscribe(MatrixEngine runner)
 	{
 		if (this.map.containsKey(runner))
 		{
@@ -66,7 +66,7 @@ public class RunnerScheduler implements RunnerListener
 	}
 
 	@Override
-	public void unsubscribe(MatrixRunner runner)
+	public void unsubscribe(MatrixEngine runner)
 	{
 		Boolean remove = this.map.remove(runner);
 		remove = remove == null ? true : remove;
@@ -75,13 +75,13 @@ public class RunnerScheduler implements RunnerListener
 	}
 
 	@Override
-	public void stateChange(MatrixRunner matrixRunner, MatrixState state, int done, int total)
+	public void stateChange(MatrixEngine matrixRunner, MatrixState state, int done, int total)
 	{
 		this.controller.displayState(matrixRunner, state, done, total);
 	}
 	//endregion
 
-	void startSelected(List<MatrixRunner> collect)
+	void startSelected(List<MatrixEngine> collect)
 	{
 	    // TODO remade it
 //		this.map.keySet().stream()
@@ -89,19 +89,19 @@ public class RunnerScheduler implements RunnerListener
 //				.forEach(runner -> Common.tryCatch(runner::start, "Error on start runner"));
 	}
 
-	void stopSelected(List<MatrixRunner> collect)
+	void stopSelected(List<MatrixEngine> collect)
 	{
 		this.map.keySet().stream()
 				.filter(collect::contains)
 				.forEach(runner -> Common.tryCatch(runner::stop, "Error on start runner"));
 	}
 
-	void destroySelected(List<MatrixRunner> collect)
+	void destroySelected(List<MatrixEngine> collect)
 	{
 		this.map.keySet().stream().filter(collect::contains).forEach(runner -> Common.tryCatch(runner::close, "Error on start runner"));
 	}
 
-	void showSelected(List<MatrixRunner> collect)
+	void showSelected(List<MatrixEngine> collect)
 	{
 	    // TODO remade it
 	    

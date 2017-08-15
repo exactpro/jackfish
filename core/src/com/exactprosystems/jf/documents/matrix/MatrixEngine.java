@@ -23,17 +23,17 @@ import java.io.File;
 import java.sql.Blob;
 import java.util.Date;
 
-public class MatrixRunner implements AutoCloseable
+public class MatrixEngine implements AutoCloseable
 {
     public static final String  parameterName = "parameter";
-    private static final Logger logger        = Logger.getLogger(MatrixRunner.class);
+    private static final Logger logger        = Logger.getLogger(MatrixEngine.class);
 
     private Matrix              matrix        = null;
     private Context             context       = null;
     private ReportBuilder       report        = null;
     private Thread              thread        = null;
 
-	protected MatrixRunner(Context context, Matrix matrix)
+	protected MatrixEngine(Context context, Matrix matrix)
 	{
 		this.context = context;
 		this.matrix = matrix;

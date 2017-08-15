@@ -2,7 +2,7 @@ package com.exactprosystems.jf.documents.matrix.parser.listeners;
 
 import com.exactprosystems.jf.api.common.MatrixState;
 import com.exactprosystems.jf.documents.RunnerListener;
-import com.exactprosystems.jf.documents.matrix.MatrixRunner;
+import com.exactprosystems.jf.documents.matrix.MatrixEngine;
 
 import org.apache.log4j.Logger;
 
@@ -16,19 +16,19 @@ public class DummyRunnerListener implements RunnerListener
 	}
 
 	@Override
-	public void subscribe(MatrixRunner runner)
+	public void subscribe(MatrixEngine runner)
 	{
 		logger.trace(String.format("Matrix runner %s subscribe", runner));
 	}
 
 	@Override
-	public void unsubscribe(MatrixRunner runner)
+	public void unsubscribe(MatrixEngine runner)
 	{
 		logger.trace(String.format("Matrix runner %s unsubscribe", runner));
 	}
 
 	@Override
-	public void stateChange(MatrixRunner runner, MatrixState state, int done, int total)
+	public void stateChange(MatrixEngine runner, MatrixState state, int done, int total)
 	{
 		logger.trace(String.format("Matrix runner %s change state to %s", runner, state));
 	}

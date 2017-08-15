@@ -9,11 +9,11 @@
 package com.exactprosystems.jf.documents;
 
 import com.exactprosystems.jf.api.common.MatrixState;
-import com.exactprosystems.jf.documents.matrix.MatrixRunner;
+import com.exactprosystems.jf.documents.matrix.MatrixEngine;
 
 public interface RunnerListener
 {
-	void subscribe(MatrixRunner runner);
-	void unsubscribe(MatrixRunner runner);
-	void stateChange(MatrixRunner runner, MatrixState state, int done, int total);
+	void subscribe(MatrixEngine runner);
+	void unsubscribe(MatrixEngine runner);
+	void stateChange(MatrixEngine runner, MatrixState state, int done, int total);
 }

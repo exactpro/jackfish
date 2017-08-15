@@ -9,7 +9,7 @@
 package com.exactprosystems.jf.tool.matrix.schedule;
 
 import com.exactprosystems.jf.api.common.MatrixState;
-import com.exactprosystems.jf.documents.matrix.MatrixRunner;
+import com.exactprosystems.jf.documents.matrix.MatrixEngine;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.ContainingParent;
 import com.exactprosystems.jf.tool.custom.date.CustomDateTimePicker;
@@ -199,17 +199,17 @@ public class ScheduleController implements Initializable, ContainingParent
 		this.dialog.showAndWait();
 	}
 
-	void displayRunner(MatrixRunner runner)
+	void displayRunner(MatrixEngine runner)
 	{
         this.tableView.getItems().add(new RunnerWithState(runner));
 	}
 
-	void removeRunner(MatrixRunner runner)
+	void removeRunner(MatrixEngine runner)
 	{
 		this.tableView.getItems().removeIf(e -> e.runner == runner); 
 	}
 
-	void displayState(MatrixRunner runner, MatrixState state, int done, int total)
+	void displayState(MatrixEngine runner, MatrixState state, int done, int total)
 	{
 		this.tableView.getItems().stream().filter(r -> r.getRunner().equals(runner)).findFirst().ifPresent(runnerWithState -> {
 			runnerWithState.setState(state);
@@ -260,7 +260,7 @@ public class ScheduleController implements Initializable, ContainingParent
 		});
 	}
 
-	private List<MatrixRunner> getSelected()
+	private List<MatrixEngine> getSelected()
 	{
 		return this.tableView.getItems()
 				.stream()
@@ -275,10 +275,10 @@ public class ScheduleController implements Initializable, ContainingParent
 	private class RunnerWithState {
 		private String executed;
 		private boolean checked;
-		private MatrixRunner runner;
+		private MatrixEngine runner;
 		private MatrixState state;
 
-		public RunnerWithState(MatrixRunner runner)
+		public RunnerWithState(MatrixEngine runner)
 		{
 			this.runner = runner;
 		}
@@ -288,7 +288,7 @@ public class ScheduleController implements Initializable, ContainingParent
 			this.state = state;
 		}
 
-		public MatrixRunner getRunner()
+		public MatrixEngine getRunner()
 		{
 			return runner;
 		}

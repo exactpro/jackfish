@@ -59,7 +59,7 @@ public class Matrix extends AbstractDocument implements IMatrix
     private int                 count        = 0;
     private MatrixItem          root         = null;
     private IMatrixListener     matrixListener;
-    private MatrixRunner        runner;
+    private MatrixEngine        runner;
 
 	public Matrix(String matrixName, DocumentFactory factory) throws Exception 
 	{
@@ -72,7 +72,7 @@ public class Matrix extends AbstractDocument implements IMatrix
 
         if (!isLibrary)
         {
-            this.runner = new MatrixRunner(factory.createContext(), this);
+            this.runner = new MatrixEngine(factory.createContext(), this);
         }
         
 		this.isLibrary = isLibrary;
@@ -91,7 +91,7 @@ public class Matrix extends AbstractDocument implements IMatrix
 		}
 	}
 
-	public MatrixRunner getEngine()
+	public MatrixEngine getEngine()
 	{
 	    return this.runner;
 	}

@@ -31,7 +31,7 @@ import com.exactprosystems.jf.documents.DocumentKind;
 import com.exactprosystems.jf.documents.RunnerListener;
 import com.exactprosystems.jf.documents.config.*;
 import com.exactprosystems.jf.documents.matrix.Matrix;
-import com.exactprosystems.jf.documents.matrix.MatrixRunner;
+import com.exactprosystems.jf.documents.matrix.MatrixEngine;
 import com.exactprosystems.jf.documents.matrix.parser.items.MatrixItem;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.SupportedEntry;
