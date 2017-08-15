@@ -63,7 +63,7 @@ public class DateTime extends Date
 	{
 		Calendar c = new GregorianCalendar();
 		c.setTime(this);
-		c.set(Calendar.HOUR, hours);
+		c.set(Calendar.HOUR_OF_DAY, hours);
 		c.set(Calendar.MINUTE, minutes);
 		c.set(Calendar.SECOND, seconds);
 		setDate(c.getTime());
