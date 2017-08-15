@@ -10,6 +10,7 @@ package com.exactprosystems.jf.tool.documents;
 
 import com.exactprosystems.jf.documents.Document;
 import com.exactprosystems.jf.tool.ContainingParent;
+import com.exactprosystems.jf.tool.custom.tab.CustomTab;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 
@@ -18,28 +19,40 @@ import java.util.ResourceBundle;
 
 public abstract class AbstractDocumentController<T extends Document> implements Initializable, ContainingParent
 {
-    protected T model;
-    protected Parent parent;
+	protected CustomTab customTab;
+	protected T         model;
+	protected Parent    parent;
 
-    public AbstractDocumentController()
-    {
-    }
-    
-    public void setParent(Parent parent)
-    {
-        this.parent = parent;
-    }
+	public AbstractDocumentController()
+	{
+	}
 
-    @Override
-    public void initialize(URL location, ResourceBundle resources)
-    {
-    }
-    
-    @SuppressWarnings("unchecked")
-    protected void init(Document model)
-    {
-        this.model = (T) model;
-    }
-    
-    protected abstract void close();
+	public void setParent(Parent parent)
+	{
+		this.parent = parent;
+	}
+
+	@Override
+	public void initialize(URL location, ResourceBundle resources)
+	{
+	}
+
+	@SuppressWarnings("unchecked")
+	protected void init(Document model, CustomTab customTab)
+	{
+		this.model = (T) model;
+		this.customTab = customTab;
+		this.customTab.setContent(this.parent);
+		this.model.getNameProperty().setOnChangeListener((o, n) ->
+		{
+			this.customTab.setTitle(n);
+			this.customTab.saved(n);
+		});
+	}
+
+	protected void close()
+	{
+		this.customTab.close();
+		this.customTab.getTabPane().getTabs().remove(this.customTab);
+	}
 }

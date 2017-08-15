@@ -72,18 +72,16 @@ public class FxDocumentFactory extends DocumentFactory
 	    if (doc instanceof SystemVarsFx)
 	    {
 	        controller = loadController(SystemVarsFx.class, SystemVarsFxController.class);
-	        controller.init(doc);
 	    }
 		if (doc instanceof PlainTextFx)
 		{
 			controller = loadController(PlainTextFx.class, PlainTextFxController.class);
-			controller.init(doc);
 		}
 		if (doc instanceof CsvFx)
 		{
 			controller = loadController(CsvFx.class, CsvFxController.class);
-			controller.init(doc);
 		}
+		controller.init(doc, this.mainModel.createCustomTab(doc));
 		getConfiguration().register(doc);
 		AbstractDocumentController<? extends Document> finalController = controller;
 		doc.onClose(d -> finalController.close());

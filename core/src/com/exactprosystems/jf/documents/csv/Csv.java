@@ -28,11 +28,12 @@ public class Csv extends AbstractDocument
 	{
 		super(fileName, factory);
 
-		this.table = new Table(new String[][] 
-				{ 
-					new String[] { "<none>" }, 
-					new String[] { "" 		}, 
+		this.table = new Table(new String[][]
+				{
+					new String[] { "<none>" },
+					new String[] { "" 		},
 				}, null);
+		this.table.saved();
 	}
 
 	// ==============================================================================================================================
@@ -43,6 +44,7 @@ public class Csv extends AbstractDocument
 	{
 		super.load(reader);
 		this.table.fillFromTable(new Table(reader, this.tableDelimiter, null));
+		this.table.saved();
 	}
 
 	@Override
