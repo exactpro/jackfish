@@ -51,18 +51,18 @@ import java.util.concurrent.atomic.AtomicInteger;
 )
 public class Matrix extends AbstractDocument implements IMatrix
 {
-    public static final String        EMPTY_STRING   = "<empty>";
-    private static final Logger       logger         = Logger.getLogger(Matrix.class);
+    public static final String           EMPTY_STRING     = "<empty>";
+    private static final Logger          logger           = Logger.getLogger(Matrix.class);
 
-    private IClientFactory            defaultClient;
-    private IApplicationFactory       defaultApp;
+    private IClientFactory               defaultClient;
+    private IApplicationFactory          defaultApp;
 
-    private boolean                   isLibrary;
-    private int                       count          = 0;
-    private MatrixItem                root           = null;
-    private IMatrixListener           matrixListener = null;
-    private MatrixEngine              engine         = null;
-    private MutableValue<MatrixState> stateProperty  = new MutableValue<>(MatrixState.Created);
+    private boolean                      isLibrary;
+    private int                          count            = 0;
+    private MatrixItem                   root             = null;
+    private IMatrixListener              matrixListener   = null;
+    private MatrixEngine                 engine           = null;
+    private MutableValue<MatrixState>    stateProperty    = new MutableValue<>(MatrixState.Created);
 
 	public Matrix(String matrixName, DocumentFactory factory, IMatrixListener matrixListener, boolean isLibrary) throws Exception
 	{
