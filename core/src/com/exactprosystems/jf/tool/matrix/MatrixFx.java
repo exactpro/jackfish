@@ -575,7 +575,6 @@ public class MatrixFx extends Matrix
 	{
 		if (getEngine() != null)
 		{
-			getFactory().getConfiguration().getRunnerListener().subscribe(getEngine());
 			if (!getEngine().isRunning())
 			{
 	            if (this.controller != null)

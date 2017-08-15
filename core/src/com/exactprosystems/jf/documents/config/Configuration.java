@@ -38,7 +38,6 @@ import com.exactprosystems.jf.documents.matrix.parser.items.MatrixItem;
 import com.exactprosystems.jf.documents.matrix.parser.items.MutableArrayList;
 import com.exactprosystems.jf.documents.matrix.parser.items.NameSpace;
 import com.exactprosystems.jf.documents.matrix.parser.items.SubCase;
-import com.exactprosystems.jf.documents.matrix.parser.listeners.DummyRunnerListener;
 import com.exactprosystems.jf.documents.matrix.parser.listeners.IMatrixListener;
 import com.exactprosystems.jf.documents.matrix.parser.listeners.MatrixListener;
 import com.exactprosystems.jf.documents.vars.SystemVars;
@@ -200,7 +199,6 @@ public class Configuration extends AbstractDocument
     protected String                  reportFactoryValue = HTMLReportFactory.class.getSimpleName();
     protected String                  evaluatorValue     = MvelEvaluator.class.getSimpleName();
     protected Map<File, Long>         timestampMap       = new HashMap<>();
-    protected RunnerListener          runnerListener     = new DummyRunnerListener();
     protected boolean                 changed;
     protected ReportFactory           reportFactoryObj;
     protected Map<String, Matrix>     libs;
@@ -869,12 +867,6 @@ public class Configuration extends AbstractDocument
 	public AppEntry getAppEntry(String name) throws Exception
 	{
 		return getEntry(name, this.bean.appEntriesValue);
-	}
-
-
-	public RunnerListener getRunnerListener()
-	{
-		return this.runnerListener;
 	}
 
 	public List<AppEntry> getAppEntries()

@@ -20,7 +20,6 @@ import com.exactprosystems.jf.documents.guidic.GuiDictionary;
 import com.exactprosystems.jf.documents.matrix.Matrix;
 import com.exactprosystems.jf.documents.matrix.parser.listeners.ConsoleErrorMatrixListener;
 import com.exactprosystems.jf.documents.matrix.parser.listeners.ConsoleMatrixListener;
-import com.exactprosystems.jf.documents.matrix.parser.listeners.DummyRunnerListener;
 import com.exactprosystems.jf.documents.matrix.parser.listeners.IMatrixListener;
 import com.exactprosystems.jf.documents.matrix.parser.listeners.MatrixListener;
 import com.exactprosystems.jf.documents.msgdic.MessageDictionary;
@@ -150,16 +149,16 @@ public class ConsoleDocumentFactory extends DocumentFactory
 	}
 
 	@Override
-	public RunnerListener getRunnerListener()
-	{
-		return new DummyRunnerListener();
-	}
-
-	@Override
 	public WizardManager getWizardManager()
 	{
 		//TODO implement empty wizard manager
 		return null;
+	}
+
+	@Override
+	public void showMatrixScheduler()
+	{
+
 	}
 
 	private VerboseLevel verboseLevel;

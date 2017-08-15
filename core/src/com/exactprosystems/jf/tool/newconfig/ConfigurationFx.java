@@ -28,10 +28,8 @@ import com.exactprosystems.jf.common.undoredo.Command;
 import com.exactprosystems.jf.documents.Document;
 import com.exactprosystems.jf.documents.DocumentFactory;
 import com.exactprosystems.jf.documents.DocumentKind;
-import com.exactprosystems.jf.documents.RunnerListener;
 import com.exactprosystems.jf.documents.config.*;
 import com.exactprosystems.jf.documents.matrix.Matrix;
-import com.exactprosystems.jf.documents.matrix.MatrixEngine;
 import com.exactprosystems.jf.documents.matrix.parser.items.MatrixItem;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.SupportedEntry;
@@ -50,7 +48,9 @@ import javafx.stage.Stage;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.io.File;
 import java.io.Reader;
-import java.nio.file.*;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -75,21 +75,16 @@ public class ConfigurationFx extends Configuration
 	//region Constructors
 	public ConfigurationFx() throws Exception
 	{
-		this(null, null, null, null);
+		this(null, null, null);
 	}
 
-	public ConfigurationFx(DocumentFactory factory, String fileName, RunnerListener runnerListener, Main model) throws Exception
+	public ConfigurationFx(DocumentFactory factory, String fileName, Main model) throws Exception
 	{
 		super(fileName, factory);
 
 		this.supportedClients = new HashMap<>();
 		this.supportedApps = new HashMap<>();
 		this.supportedServices = new HashMap<>();
-
-		if (runnerListener != null)
-		{
-			super.runnerListener = runnerListener;
-		}
 
 		this.model = model;
 	}

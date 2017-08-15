@@ -15,7 +15,6 @@ import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.highlighter.Highlighter;
 import com.exactprosystems.jf.documents.Document;
 import com.exactprosystems.jf.documents.DocumentFactory;
-import com.exactprosystems.jf.documents.RunnerListener;
 import com.exactprosystems.jf.documents.config.Configuration;
 import com.exactprosystems.jf.documents.config.Context;
 import com.exactprosystems.jf.documents.csv.Csv;
@@ -104,7 +103,6 @@ public class FxDocumentFactory extends DocumentFactory
         return controller;
     }
 
-	
 	@Override
 	protected Context createContext(Configuration configuration, IMatrixListener matrixListener) throws Exception
 	{
@@ -115,7 +113,7 @@ public class FxDocumentFactory extends DocumentFactory
 	@Override
 	protected Configuration createConfig(String fileName, Settings settings) throws Exception
 	{
-		return new ConfigurationFx(this, fileName, this.runnerListener, this.mainModel);
+		return new ConfigurationFx(this, fileName, this.mainModel);
 	}
 
 	@Override
@@ -206,10 +204,9 @@ public class FxDocumentFactory extends DocumentFactory
 		return value;
 	}
 
-	@Override
-	public RunnerListener getRunnerListener()
+	public void showMatrixScheduler()
 	{
-		return this.runnerListener;
+		this.runnerListener.show(Common.node);
 	}
 
 	@Override
@@ -218,7 +215,7 @@ public class FxDocumentFactory extends DocumentFactory
 		return this.wizardManager;
 	}
 
-	private RunnerListener runnerListener;
+	private RunnerScheduler runnerListener;
 	
 	private Main mainModel;
 	private WizardManager wizardManager;

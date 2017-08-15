@@ -32,7 +32,6 @@ import com.exactprosystems.jf.tool.custom.tab.CustomTabPane;
 import com.exactprosystems.jf.tool.custom.treetable.MatrixTreeView;
 import com.exactprosystems.jf.tool.helpers.DialogsHelper;
 import com.exactprosystems.jf.tool.matrix.MatrixFx;
-import com.exactprosystems.jf.tool.matrix.schedule.RunnerScheduler;
 import com.exactprosystems.jf.tool.settings.SettingsPanel;
 import javafx.application.Platform;
 import javafx.collections.MapChangeListener;
@@ -150,8 +149,6 @@ public class MainController implements Initializable, ContainingParent
 
 	private volatile boolean	starting	= true;
 
-	private RunnerScheduler		runnerScheduler;
-
 	private double				position	= INIT_VALUE;
 
 	@Override
@@ -266,7 +263,6 @@ public class MainController implements Initializable, ContainingParent
 		this.model = model;
 		this.settings = settings;
 		this.stage = stage;
-		this.runnerScheduler = (RunnerScheduler) factory.getRunnerListener();
 		this.stage.setOnCloseRequest(windowEvent ->
 		{
 			if (!this.model.closeApplication())
@@ -410,7 +406,7 @@ public class MainController implements Initializable, ContainingParent
 
 	public void matrixSchedule(ActionEvent event)
 	{
-		Common.tryCatch(() -> this.runnerScheduler.show(this.customTabPane.getScene().getWindow()), "Error on schedule");
+		this.factory.showMatrixScheduler();
 	}
 
 	public void runFromFile(ActionEvent actionEvent)

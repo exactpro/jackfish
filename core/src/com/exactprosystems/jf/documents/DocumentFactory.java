@@ -28,6 +28,7 @@ import com.exactprosystems.jf.functions.Table;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 public abstract class DocumentFactory
 {
@@ -109,14 +110,11 @@ public abstract class DocumentFactory
                     return createConfig(fileName, this.settings); 
                     
                 case MATRIX:            
-                    Matrix matrix = createMatrix(fileName, this.configuration, createMatrixListener());
-                    matrix.getStateProperty().setOnChangeListener((oldState, newState) -> 
-                    {
-                        if (this.listener != null)
-                        {
-                            this.listener.changed(matrix, oldState, newState);
-                        }
-                    });
+					Matrix matrix = createMatrix(fileName, this.configuration, createMatrixListener());
+					matrix.getStateProperty().setOnChangeListener((oldState, newState) ->
+					{
+						Optional.ofNullable(this.listener).ifPresent(l -> l.changed(matrix, oldState, newState));
+					});
                     return matrix;
                 
                 case LIBRARY:           
@@ -150,6 +148,8 @@ public abstract class DocumentFactory
         doc.display();
     }
 
+	public abstract void showMatrixScheduler();
+
 
 	public abstract void 					popup(String message, Notifier notifier);
 
@@ -181,8 +181,6 @@ public abstract class DocumentFactory
 	protected abstract SystemVars 			createVars(String fileName, Configuration configuration) throws Exception;
 
 	protected abstract IMatrixListener 		createMatrixListener();
-	
-	public abstract RunnerListener          getRunnerListener();
 
 	public abstract WizardManager			getWizardManager();
 	

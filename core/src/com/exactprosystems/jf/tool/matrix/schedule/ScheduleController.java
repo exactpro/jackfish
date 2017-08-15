@@ -9,14 +9,12 @@
 package com.exactprosystems.jf.tool.matrix.schedule;
 
 import com.exactprosystems.jf.api.common.MatrixState;
-import com.exactprosystems.jf.documents.matrix.MatrixEngine;
+import com.exactprosystems.jf.documents.matrix.Matrix;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.ContainingParent;
-import com.exactprosystems.jf.tool.custom.date.CustomDateTimePicker;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.event.ActionEvent;
-import javafx.event.Event;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
 import javafx.scene.Parent;
@@ -29,35 +27,35 @@ import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.stream.Collectors;
 
 @SuppressWarnings("deprecation")
 public class ScheduleController implements Initializable, ContainingParent
 {
-	public Button btnStart;
-	public Button btnStop;
-	public Button btnDestroy;
-	public Button btnShowSelected;
-	public Button btnLoadSeveral;
-	private Parent parent;
-	private RunnerScheduler model;
-	private Dialog<?> dialog;
-	public TableView<RunnerWithState> tableView;
+	public Button                     btnStart;
+	public Button                     btnStop;
+	public Button                     btnDestroy;
+	public Button                     btnShowSelected;
+	public Button                     btnLoadSeveral;
+	private Parent                    parent;
+	private RunnerScheduler           model;
+	private Dialog<?>                 dialog;
+	public TableView<MatrixWithState> tableView;
 
-	public TableColumn<RunnerWithState, String> columnMatrixName;
-	public TableColumn<RunnerWithState, Date> columnStartDate;
-	public TableColumn<RunnerWithState, MatrixState> columnState;
-	public TableColumn<RunnerWithState, RunnerWithState> columnCheckBox;
-	public TableColumn<RunnerWithState, String> columnDone;
+	public TableColumn<MatrixWithState, String>          columnMatrixName;
+	public TableColumn<MatrixWithState, Date>            columnStartDate;
+	public TableColumn<MatrixWithState, MatrixState>     columnState;
+	public TableColumn<MatrixWithState, MatrixWithState> columnCheckBox;
+	public TableColumn<MatrixWithState, String>          columnDone;
 
-	public static final SimpleDateFormat formatter = new SimpleDateFormat(Common.DATE_TIME_PATTERN);
+	private static final SimpleDateFormat formatter = new SimpleDateFormat(Common.DATE_TIME_PATTERN);
 
 	private static final int widthCheckBox	= 30;
 	private static final int widthDate		= 160;
 	private static final int widthState		= 70;
 	private static final int widthDone		= 90;
-
 
 	@Override
 	public void initialize(URL url, ResourceBundle resourceBundle)
@@ -70,12 +68,12 @@ public class ScheduleController implements Initializable, ContainingParent
 		columnCheckBox.setGraphic(box);
 		columnCheckBox.setCellValueFactory(param -> new SimpleObjectProperty<>(param.getValue()));
 		columnCheckBox.prefWidthProperty().bind(new SimpleObjectProperty<>(widthCheckBox));
-		columnCheckBox.setCellFactory(p -> new TableCell<RunnerWithState, RunnerWithState>()
+		columnCheckBox.setCellFactory(p -> new TableCell<MatrixWithState, MatrixWithState>()
 		{
 			private CheckBox box = new CheckBox();
 
 			@Override
-			protected void updateItem(RunnerWithState item, boolean empty)
+			protected void updateItem(MatrixWithState item, boolean empty)
 			{
 				super.updateItem(item, empty);
 				if (item != null)
@@ -91,14 +89,13 @@ public class ScheduleController implements Initializable, ContainingParent
 			}
 		});
 
-		// TODO fix it
-//		columnMatrixName.setCellValueFactory(param -> new SimpleObjectProperty<>(param.getValue().getRunner().getMatrixName()));
-//		columnMatrixName.prefWidthProperty().bind(this.tableView.widthProperty().subtract(widthCheckBox + widthDate + widthState + widthDone + 2));
-//
-//		columnStartDate.setCellValueFactory(param -> new SimpleObjectProperty<>(param.getValue().getRunner().getStartTime()));
-//		columnStartDate.prefWidthProperty().bind(new SimpleObjectProperty<>(widthDate));
-//		columnStartDate.setEditable(true);
-		columnStartDate.setCellFactory(param -> new TableCell<RunnerWithState, Date>()
+		columnMatrixName.setCellValueFactory(param -> new SimpleObjectProperty<>(param.getValue().getMatrix().getNameProperty().get()));
+		columnMatrixName.prefWidthProperty().bind(this.tableView.widthProperty().subtract(widthCheckBox + widthDate + widthState + widthDone + 2));
+
+		columnStartDate.setCellValueFactory(param -> new SimpleObjectProperty<>(param.getValue().date));
+		columnStartDate.prefWidthProperty().bind(new SimpleObjectProperty<>(widthDate));
+		columnStartDate.setEditable(true);
+		columnStartDate.setCellFactory(param -> new TableCell<MatrixWithState, Date>()
 		{
 			@Override
 			protected void updateItem(Date item, boolean empty)
@@ -114,52 +111,6 @@ public class ScheduleController implements Initializable, ContainingParent
 					setGraphic(null);
 					setText(null);
 				}
-			}
-
-			@Override
-			public void startEdit()
-			{
-				super.startEdit();
-				TableColumn<RunnerWithState, Date> tableColumn = getTableColumn();
-				if (tableColumn.isEditable())
-				{
-					CustomDateTimePicker picker = createPicker();
-					setGraphic(picker);
-					setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
-					Platform.runLater(picker::requestFocus);
-				}
-			}
-
-
-			@Override
-			public void commitEdit(Date newValue)
-			{
-				if (!isEditing() && !newValue.equals(getItem()))
-				{
-					TableView<RunnerWithState> table = getTableView();
-					if (table != null)
-					{
-						TableColumn<RunnerWithState, Date> column = getTableColumn();
-						TableColumn.CellEditEvent<RunnerWithState, Date> event = new TableColumn.CellEditEvent<>(table, new TablePosition<>(table, getIndex(), column), TableColumn.editCommitEvent(), newValue);
-						Event.fireEvent(column, event);
-					}
-				}
-				RunnerWithState runner = (RunnerWithState) getTableRow().getItem();
-				// TODO fix it
-//				runner.getRunner().setStartTime(newValue);
-			}
-
-			@Override
-			public void cancelEdit()
-			{
-				super.cancelEdit();
-				setText(formatter.format(getItem()));
-				setContentDisplay(ContentDisplay.TEXT_ONLY);
-			}
-
-			private CustomDateTimePicker createPicker()
-			{
-				return new CustomDateTimePicker(getItem(), this::commitEdit);
 			}
 		});
 
@@ -199,23 +150,30 @@ public class ScheduleController implements Initializable, ContainingParent
 		this.dialog.showAndWait();
 	}
 
-	void displayRunner(MatrixEngine runner)
+	void displayState(Matrix matrix, MatrixState state, int done, int total)
 	{
-        this.tableView.getItems().add(new RunnerWithState(runner));
-	}
-
-	void removeRunner(MatrixEngine runner)
-	{
-		this.tableView.getItems().removeIf(e -> e.runner == runner); 
-	}
-
-	void displayState(MatrixEngine runner, MatrixState state, int done, int total)
-	{
-		this.tableView.getItems().stream().filter(r -> r.getRunner().equals(runner)).findFirst().ifPresent(runnerWithState -> {
-			runnerWithState.setState(state);
-			runnerWithState.setChecked(runnerWithState.isChecked());
-			runnerWithState.setExecuted(done + " / " + total);
-		});
+		switch (state)
+		{
+			case Created:
+				this.addMatrix(matrix);
+				break;
+			case Running:
+				changeDate(matrix);
+				changeState(matrix, state, done, total);
+				break;
+			case Waiting:
+				clearDate(matrix);
+				changeState(matrix, state, done, total);
+				break;
+			case Pausing:
+			case Stopped:
+			case Finished:
+				changeState(matrix, state, done, total);
+				break;
+			case Destroyed:
+				this.removeMatrix(matrix);
+				break;
+		}
 		refresh();
 	}
 
@@ -252,6 +210,12 @@ public class ScheduleController implements Initializable, ContainingParent
 	//endregion
 
 	//region private methods
+
+	private Optional<MatrixWithState> getFirst(Matrix matrix)
+	{
+		return this.tableView.getItems().stream().filter(m -> m.matrix.equals(matrix)).findFirst();
+	}
+
 	private void refresh()
 	{
 		Platform.runLater(() -> {
@@ -260,27 +224,66 @@ public class ScheduleController implements Initializable, ContainingParent
 		});
 	}
 
-	private List<MatrixEngine> getSelected()
+	private List<Matrix> getSelected()
 	{
 		return this.tableView.getItems()
 				.stream()
-				.filter(RunnerWithState::isChecked)
-				.map(RunnerWithState::getRunner)
+				.filter(MatrixWithState::isChecked)
+				.map(MatrixWithState::getMatrix)
 				.collect(Collectors.toList());
 	}
 
+	private void addMatrix(Matrix matrix)
+	{
+		MatrixWithState matrixWithState = new MatrixWithState(matrix);
+		matrixWithState.state = MatrixState.Created;
+		if (!this.getFirst(matrix).isPresent())
+		{
+			this.tableView.getItems().add(matrixWithState);
+		}
+	}
+
+	private void removeMatrix(Matrix matrix)
+	{
+		this.tableView.getItems().removeIf(e -> e.matrix == matrix);
+	}
+
+	private void changeDate(Matrix matrix)
+	{
+		final Date date = new Date();
+		this.tableView.getItems().stream()
+				.filter(m -> m.matrix == matrix && m.date == null)
+				.findFirst()
+				.ifPresent(m -> m.date = date);
+	}
+
+	private void changeState(Matrix matrix, MatrixState state, int done, int total)
+	{
+		getFirst(matrix).ifPresent(matrixWithState -> {
+			matrixWithState.state = state;
+			matrixWithState.checked = matrixWithState.isChecked();
+			matrixWithState.executed = done + " / " + total;
+		});
+	}
+
+	private void clearDate(Matrix matrix)
+	{
+		getFirst(matrix).ifPresent(m -> m.date = null);
+	}
 
 	//endregion
 
-	private class RunnerWithState {
-		private String executed;
-		private boolean checked;
-		private MatrixEngine runner;
+	private class MatrixWithState
+	{
+		private String      executed;
+		private boolean     checked;
+		private Matrix      matrix;
 		private MatrixState state;
+		private Date		date;
 
-		public RunnerWithState(MatrixEngine runner)
+		public MatrixWithState(Matrix matrix)
 		{
-			this.runner = runner;
+			this.matrix = matrix;
 		}
 
 		public void setState(MatrixState state)
@@ -288,9 +291,9 @@ public class ScheduleController implements Initializable, ContainingParent
 			this.state = state;
 		}
 
-		public MatrixEngine getRunner()
+		public Matrix getMatrix()
 		{
-			return runner;
+			return matrix;
 		}
 
 		public MatrixState getState()
@@ -318,16 +321,26 @@ public class ScheduleController implements Initializable, ContainingParent
 			this.executed = executed;
 		}
 
+		public Date getDate()
+		{
+			return date;
+		}
+
+		public void setDate(Date date)
+		{
+			this.date = date;
+		}
+
 		@Override
 		public boolean equals(Object o)
 		{
-			return this == o || !(o == null || getClass() != o.getClass()) && runner.equals(((RunnerWithState) o).runner);
+			return this == o || !(o == null || getClass() != o.getClass()) && matrix.equals(((MatrixWithState) o).matrix);
 		}
 
 		@Override
 		public int hashCode()
 		{
-			return runner.hashCode();
+			return matrix.hashCode();
 		}
 	}
 }

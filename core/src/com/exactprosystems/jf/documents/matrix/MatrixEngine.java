@@ -67,7 +67,6 @@ public class MatrixEngine implements AutoCloseable
 		{
 			stop();
 			changeState(MatrixState.Destroyed);
-			this.context.getConfiguration().getRunnerListener().unsubscribe(this);
 			this.context.close();
 		}
 		catch (Exception e)

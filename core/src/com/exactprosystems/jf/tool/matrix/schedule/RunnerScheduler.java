@@ -9,38 +9,31 @@
 package com.exactprosystems.jf.tool.matrix.schedule;
 
 import com.exactprosystems.jf.api.common.MatrixState;
-import com.exactprosystems.jf.common.CommonHelper;
 import com.exactprosystems.jf.documents.DocumentFactory;
-import com.exactprosystems.jf.documents.RunnerListener;
-import com.exactprosystems.jf.documents.config.Context;
-import com.exactprosystems.jf.documents.matrix.MatrixEngine;
+import com.exactprosystems.jf.documents.DocumentKind;
+import com.exactprosystems.jf.documents.matrix.Matrix;
+import com.exactprosystems.jf.documents.matrix.parser.Result;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.custom.tab.CustomTab;
-import com.exactprosystems.jf.tool.documents.FxDocumentFactory;
 import com.exactprosystems.jf.tool.helpers.DialogsHelper;
 import javafx.stage.Window;
-import org.apache.log4j.Logger;
 
 import java.io.File;
 import java.io.FileReader;
-import java.io.Reader;
 import java.util.List;
 import java.util.Objects;
-import java.util.concurrent.ConcurrentHashMap;
 
-public class RunnerScheduler implements RunnerListener
+public class RunnerScheduler implements DocumentFactory.MatrixStateChanged
 {
-	private static final Logger logger = Logger.getLogger(RunnerScheduler.class);
 	private ScheduleController controller;
-	private ConcurrentHashMap<MatrixEngine, Boolean> map;
 	private DocumentFactory factory;
 
-	public RunnerScheduler(FxDocumentFactory fxDocumentFactory) throws Exception
+	public RunnerScheduler(DocumentFactory factory) throws Exception
 	{
-		this.map = new ConcurrentHashMap<>();
 		this.controller = Common.loadController(RunnerScheduler.class.getResource("Schedule.fxml"));
 		this.controller.init(this);
-		this.factory = fxDocumentFactory;
+		this.factory = factory;
+		this.factory.setMatrixChangeLlistener(this);
 	}
 
 	public void show(Window window)
@@ -51,108 +44,57 @@ public class RunnerScheduler implements RunnerListener
 		}
 	}
 
-	//region Interface RunnerListener
 	@Override
-	public void subscribe(MatrixEngine runner)
+	public void changed(Matrix matrix, MatrixState oldState, MatrixState newState)
 	{
-		if (this.map.containsKey(runner))
+		int done = matrix.countResult(Result.Passed);
+		int total = matrix.currentItem();
+		this.controller.displayState(matrix, newState, done, total);
+	}
+
+	void startSelected(List<Matrix> collect)
+	{
+		collect.forEach(matrix -> Common.tryCatch(() -> matrix.start(null, null), "Error on start matrix"));
+	}
+
+	void stopSelected(List<Matrix> collect)
+	{
+		collect.forEach(matrix -> Common.tryCatch(matrix::stop, "Error on start matrix"));
+	}
+
+	void destroySelected(List<Matrix> collect)
+	{
+		collect.forEach(runner -> Common.tryCatch(runner::close, "Error on start runner"));
+	}
+
+	void showSelected(List<Matrix> collect)
+	{
+		collect.forEach(matrix -> Common.tryCatch(() ->
 		{
-			return;
-		}
-		Boolean sub = this.map.put(runner, Boolean.TRUE);
-		sub = sub == null ? true : sub;
-		logger.trace(String.format("MatrixRunner %s subscribe %s", runner.toString(), (sub ? "" : "un") + "successful"));
-		this.controller.displayRunner(runner);
-	}
-
-	@Override
-	public void unsubscribe(MatrixEngine runner)
-	{
-		Boolean remove = this.map.remove(runner);
-		remove = remove == null ? true : remove;
-		logger.trace(String.format("MatrixRunner %s subscribe %s", runner.toString(), (remove ? "" : "un") + "successful"));
-		this.controller.removeRunner(runner);
-	}
-
-	@Override
-	public void stateChange(MatrixEngine matrixRunner, MatrixState state, int done, int total)
-	{
-		this.controller.displayState(matrixRunner, state, done, total);
-	}
-	//endregion
-
-	void startSelected(List<MatrixEngine> collect)
-	{
-	    // TODO remade it
-//		this.map.keySet().stream()
-//				.filter(collect::contains)
-//				.forEach(runner -> Common.tryCatch(runner::start, "Error on start runner"));
-	}
-
-	void stopSelected(List<MatrixEngine> collect)
-	{
-		this.map.keySet().stream()
-				.filter(collect::contains)
-				.forEach(runner -> Common.tryCatch(runner::stop, "Error on start runner"));
-	}
-
-	void destroySelected(List<MatrixEngine> collect)
-	{
-		this.map.keySet().stream().filter(collect::contains).forEach(runner -> Common.tryCatch(runner::close, "Error on start runner"));
-	}
-
-	void showSelected(List<MatrixEngine> collect)
-	{
-	    // TODO remade it
-	    
-//		this.map.keySet().stream()
-//				.filter(collect::contains)
-//				.forEach(runner -> Common.tryCatch(() ->
-//		{
-//			((MatrixRunner)runner).process((matrix, context, report, startTime) ->
-//			{
-//				CustomTab tab = Common.checkDocument(matrix);
-//				if (tab == null)
-//				{
-//					try
-//					{
-//						unsubscribe(runner);
-//						matrix.load(new FileReader(runner.getMatrixName()));
-//						matrix.display();
-//					}
-//					catch (Exception e)
-//					{
-//						DialogsHelper.showError("Couldn't open the matrix " + matrix);
-//						return false;
-//					}
-//				}
-//				return true;
-//			});
-//
-//		}, "Error on start runner"));
+			CustomTab tab = Common.checkDocument(matrix);
+			if (tab == null)
+			{
+				try
+				{
+					matrix.load(new FileReader(matrix.getNameProperty().get()));
+					matrix.display();
+				}
+				catch (Exception e)
+				{
+					DialogsHelper.showError("Couldn't open the matrix " + matrix);
+				}
+			}
+		}, "Error on start matrix"));
 	}
 
 	void loadSeveral()
 	{
-	    // TODO remade it
-//		List<File> files = DialogsHelper.showMultipleDialog("Choose matrices", "jf files (*.jf)", "*.jf");
-//		if (files != null)
-//		{
-//			files.stream()
-//				.filter(Objects::nonNull)
-//				.forEach(file -> Common.tryCatch(() ->
-//				{
-//					try(Reader reader = CommonHelper.readerFromFile(file))
-//					{
-//						Context context = this.factory.createContext();
-//						
-//						
-//						
-//						MatrixRunner runner = context.createRunner(file.getPath(), reader, null, null);
-//						//	                this.map.put(runner, Boolean.TRUE);
-//						this.subscribe(runner);
-//		    	    }
-//				}, "Error on create new runner"));
-//		}
+		List<File> files = DialogsHelper.showMultipleDialog("Choose matrices", "jf files (*.jf)", "*.jf");
+		if (files != null)
+		{
+			files.stream()
+					.filter(Objects::nonNull)
+					.forEach(file -> ((Matrix) this.factory.createDocument(DocumentKind.MATRIX, Common.getRelativePath(file.getAbsolutePath()))).getStateProperty().fire());
+		}
 	}
 }
