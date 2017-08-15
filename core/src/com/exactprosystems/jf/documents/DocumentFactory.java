@@ -9,6 +9,7 @@
 package com.exactprosystems.jf.documents;
 
 import com.exactprosystems.jf.actions.ReadableValue;
+import com.exactprosystems.jf.api.common.MatrixState;
 import com.exactprosystems.jf.api.wizard.WizardManager;
 import com.exactprosystems.jf.common.Settings;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
@@ -30,6 +31,17 @@ import java.util.Map;
 
 public abstract class DocumentFactory
 {
+    protected Configuration         configuration;
+    protected Settings              settings;
+    protected MatrixStateChanged    listener;
+
+    @FunctionalInterface
+    public static interface MatrixStateChanged
+    {
+        void changed(Matrix matrix, MatrixState oldState, MatrixState newState);
+    }
+    
+    
 	public DocumentFactory()
 	{
 		this.settings = Settings.load(Settings.SettingsPath);
@@ -48,6 +60,11 @@ public abstract class DocumentFactory
 	public final Settings getSettings()
 	{
 		return this.settings;
+	}
+	
+	public final void setMatrixChangeLlistener(MatrixStateChanged listener)
+	{
+	    this.listener = listener;
 	}
 
 	public final AbstractEvaluator createEvaluator()
@@ -92,7 +109,15 @@ public abstract class DocumentFactory
                     return createConfig(fileName, this.settings); 
                     
                 case MATRIX:            
-                    return  createMatrix(fileName, this.configuration, createMatrixListener());
+                    Matrix matrix = createMatrix(fileName, this.configuration, createMatrixListener());
+                    matrix.getStateProperty().setOnChangeListener((oldState, newState) -> 
+                    {
+                        if (this.listener != null)
+                        {
+                            this.listener.changed(matrix, oldState, newState);
+                        }
+                    });
+                    return matrix;
                 
                 case LIBRARY:           
                     return  createLibrary(fileName, this.configuration, createMatrixListener());
@@ -168,8 +193,4 @@ public abstract class DocumentFactory
 			throw new EmptyConfigurationException();
 		}
 	}
-
-	protected Configuration 		configuration;
-
-	protected Settings 				settings;
 }
