@@ -39,7 +39,7 @@ import com.exactprosystems.jf.tool.helpers.DialogsHelper;
 import com.exactprosystems.jf.tool.main.Main;
 import com.exactprosystems.jf.tool.matrix.MatrixFx;
 import com.exactprosystems.jf.tool.matrix.MatrixListenerFx;
-import com.exactprosystems.jf.tool.matrix.schedule.RunnerScheduler;
+import com.exactprosystems.jf.tool.matrix.schedule.MatrixScheduler;
 import com.exactprosystems.jf.tool.msgdictionary.MessageDictionaryFx;
 import com.exactprosystems.jf.tool.newconfig.ConfigurationFx;
 import javafx.fxml.FXMLLoader;
@@ -60,7 +60,7 @@ public class FxDocumentFactory extends DocumentFactory
 
 		this.mainModel = mainModel;
 		this.wizardManager = wizardManager;
-		this.runnerListener = new RunnerScheduler(this);
+		this.runnerListener = new MatrixScheduler(this);
 	}
 	
 	@Override
@@ -215,7 +215,7 @@ public class FxDocumentFactory extends DocumentFactory
 		return this.wizardManager;
 	}
 
-	private RunnerScheduler runnerListener;
+	private MatrixScheduler runnerListener;
 	
 	private Main mainModel;
 	private WizardManager wizardManager;

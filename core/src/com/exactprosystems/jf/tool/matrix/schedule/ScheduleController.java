@@ -34,15 +34,15 @@ import java.util.stream.Collectors;
 @SuppressWarnings("deprecation")
 public class ScheduleController implements Initializable, ContainingParent
 {
-	public Button                     btnStart;
-	public Button                     btnStop;
-	public Button                     btnDestroy;
-	public Button                     btnShowSelected;
-	public Button                     btnLoadSeveral;
-	private Parent                    parent;
-	private RunnerScheduler           model;
-	private Dialog<?>                 dialog;
-	public TableView<MatrixWithState> tableView;
+	public  Button                     btnStart;
+	public  Button                     btnStop;
+	public  Button                     btnDestroy;
+	public  Button                     btnShowSelected;
+	public  Button                     btnLoadSeveral;
+	private Parent                     parent;
+	private MatrixScheduler            model;
+	private Dialog<?>                  dialog;
+	public  TableView<MatrixWithState> tableView;
 
 	public TableColumn<MatrixWithState, String>          columnMatrixName;
 	public TableColumn<MatrixWithState, Date>            columnStartDate;
@@ -127,7 +127,7 @@ public class ScheduleController implements Initializable, ContainingParent
 		this.parent = parent;
 	}
 
-	public void init(RunnerScheduler runnerScheduler)
+	public void init(MatrixScheduler runnerScheduler)
 	{
 		this.model = runnerScheduler;
 	}
