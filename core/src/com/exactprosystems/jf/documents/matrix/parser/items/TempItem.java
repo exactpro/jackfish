@@ -82,6 +82,7 @@ public class TempItem extends MatrixItem
 		            newItem.init(getMatrix(), getMatrix());
 		            newItem.createId();
 		            this.getParent().insert(index, newItem);
+		            newItem.display(driver, context);
 		        }
 		        catch (Exception e)
 		        {
@@ -90,6 +91,7 @@ public class TempItem extends MatrixItem
 		        finally
 		        {
 		            this.remove();
+		            driver.deleteItem(this);
 		            getMatrix().enumerate();
 		        }
 
