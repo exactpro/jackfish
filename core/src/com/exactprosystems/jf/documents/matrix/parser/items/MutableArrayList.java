@@ -125,7 +125,7 @@ public class MutableArrayList<T extends Mutable> extends ArrayList<T> implements
 	{
         int before = size();
         int index = super.indexOf(o);
-        boolean res = index > 0;
+        boolean res = index >= 0;
         T value = null;
         if (res)
         {
