@@ -587,7 +587,7 @@ public class MatrixFx extends Matrix
 		}
 	}
 
-	public void stopMatrix() throws Exception
+	public void stop()
 	{
 		if (getEngine() != null)
 		{
