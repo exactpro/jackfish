@@ -673,7 +673,7 @@ public class Main extends Application
 	{
 		if (document instanceof MatrixFx)
 		{
-			((MatrixFx) document).stopMatrix();
+			((MatrixFx) document).stop();
 		}
 	}
 

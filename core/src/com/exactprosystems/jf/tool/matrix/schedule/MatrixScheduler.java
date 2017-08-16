@@ -23,14 +23,14 @@ import java.io.FileReader;
 import java.util.List;
 import java.util.Objects;
 
-public class RunnerScheduler implements DocumentFactory.MatrixStateChanged
+public class MatrixScheduler implements DocumentFactory.MatrixStateChanged
 {
 	private ScheduleController controller;
 	private DocumentFactory factory;
 
-	public RunnerScheduler(DocumentFactory factory) throws Exception
+	public MatrixScheduler(DocumentFactory factory) throws Exception
 	{
-		this.controller = Common.loadController(RunnerScheduler.class.getResource("Schedule.fxml"));
+		this.controller = Common.loadController(MatrixScheduler.class.getResource("Schedule.fxml"));
 		this.controller.init(this);
 		this.factory = factory;
 		this.factory.setMatrixChangeLlistener(this);

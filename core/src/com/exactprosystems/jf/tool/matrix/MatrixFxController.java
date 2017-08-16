@@ -378,7 +378,7 @@ public class MatrixFxController implements Initializable, ContainingParent, IMat
 
 	public void stopMatrix(ActionEvent event)
 	{
-		tryCatch(this.model::stopMatrix, "Error on stopping matrix");
+		tryCatch(this.model::stop, "Error on stopping matrix");
 		this.model.disableButtons(false);
 	}
 
@@ -582,7 +582,7 @@ public class MatrixFxController implements Initializable, ContainingParent, IMat
 				}
 				else if (SettingsPanel.match(settings, keyEvent, Settings.STOP_MATRIX))
 				{
-					model.stopMatrix();
+					model.stop();
 				}
 				else if (SettingsPanel.match(settings, keyEvent, Settings.PAUSE_MATRIX))
 				{
