@@ -8,6 +8,8 @@
 
 package com.exactprosystems.jf.api.common;
 
+import java.util.Date;
+
 import com.exactprosystems.jf.api.app.IApplicationFactory;
 import com.exactprosystems.jf.api.client.IClientFactory;
 
@@ -18,4 +20,7 @@ public interface IMatrix
 	
 	void 					setDefaultClient(String id);
 	IClientFactory 			getDefaultClient();
+
+    MatrixConnection        start(Date time, Object parameter) throws Exception;
+    void                    stop();
 }

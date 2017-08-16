@@ -9,7 +9,6 @@
 package com.exactprosystems.jf.documents;
 
 import com.exactprosystems.jf.actions.ReadableValue;
-import com.exactprosystems.jf.api.common.IDocumentFactory;
 import com.exactprosystems.jf.api.common.MatrixState;
 import com.exactprosystems.jf.api.wizard.WizardManager;
 import com.exactprosystems.jf.common.Settings;
@@ -31,7 +30,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-public abstract class DocumentFactory // implements IDocumentFactory
+public abstract class DocumentFactory 
 {
     protected Configuration         configuration;
     protected Settings              settings;

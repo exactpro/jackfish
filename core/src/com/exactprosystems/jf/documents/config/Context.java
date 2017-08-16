@@ -10,6 +10,7 @@ package com.exactprosystems.jf.documents.config;
 
 import com.exactprosystems.jf.actions.ReadableValue;
 import com.exactprosystems.jf.api.common.IContext;
+import com.exactprosystems.jf.api.common.MatrixConnection;
 import com.exactprosystems.jf.api.common.Str;
 import com.exactprosystems.jf.api.error.ErrorKind;
 import com.exactprosystems.jf.api.error.common.WrongSubcaseNameException;
@@ -17,6 +18,7 @@ import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.evaluator.Variables;
 import com.exactprosystems.jf.common.report.ReportBuilder;
 import com.exactprosystems.jf.documents.DocumentFactory;
+import com.exactprosystems.jf.documents.DocumentKind;
 import com.exactprosystems.jf.documents.matrix.Matrix;
 import com.exactprosystems.jf.documents.matrix.MatrixEngine;
 import com.exactprosystems.jf.documents.matrix.parser.Parameter;
@@ -83,13 +85,22 @@ public class Context implements IContext, AutoCloseable
 	{
 		return this.getFactory().createContext();
 	}
-	//endregion
 
+    @Override
 	public IContext setOut(PrintStream out)
 	{
 		this.outStream = out;
 		return this;
 	}
+
+    @Override
+    public MatrixConnection startMatrix(String fileName, Reader reader, Object parameter) throws Exception
+    {
+        Matrix matrix = (Matrix) getFactory().createDocument(DocumentKind.MATRIX, fileName);
+        matrix.load(reader);
+        return matrix.start(new Date(), parameter);
+    }
+    //endregion
 
     public void reset() throws Exception
     {

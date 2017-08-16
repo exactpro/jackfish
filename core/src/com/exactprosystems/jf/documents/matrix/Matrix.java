@@ -177,6 +177,27 @@ public class Matrix extends AbstractDocument implements IMatrix
 		return this.defaultClient;
 	}
 
+    @Override
+    public MatrixConnection start(Date time, Object parameter) throws Exception
+    {
+        MatrixConnection res = new MatrixConnectionImpl(this);
+        if (getEngine() != null)
+        {
+            getEngine().start(time, parameter);
+        }
+        
+        return res;
+    }
+
+    @Override
+    public void stop()
+    {
+        if (getEngine() != null)
+        {
+            getEngine().stop();
+        }
+    }
+
 	// ==============================================================================================================================
 	// AbstractDocument
 	// ==============================================================================================================================
@@ -374,25 +395,6 @@ public class Matrix extends AbstractDocument implements IMatrix
 			item.remove();
 		}
 	}
-
-	public MatrixConnection start(Date time, Object parameter) throws Exception
-	{
-	    MatrixConnection res = new MatrixConnectionImpl(this);
-	    if (getEngine() != null)
-	    {
-	        getEngine().start(time, parameter);
-	    }
-	    
-	    return res;
-	}
-
-    public void stop()
-    {
-        if (getEngine() != null)
-        {
-            getEngine().stop();
-        }
-    }
 	
 	// ==============================================================================================================================
 	public final List<MatrixItem> find(final String what, final boolean caseSensitive, final boolean wholeWord)

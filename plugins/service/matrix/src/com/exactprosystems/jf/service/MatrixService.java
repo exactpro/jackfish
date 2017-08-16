@@ -50,12 +50,8 @@ public class MatrixService  extends AbstractTcpServer
 
 		try (	Reader matrixReader 	= new FileReader(this.onConnected) )
 		{
-		    // TODO remade it
-//            Matrix doc = (Matrix)documentFactory.createDocument(DocumentKind.MATRIX, this.onConnected);
-//            doc.load(matrixReader);
-//            
-//            MatrixConnection matrixConnection = doc.start(new Date(), connection);
-//            matrixConnection.join(0);
+            MatrixConnection matrixConnection = context.startMatrix(this.onConnected, matrixReader, connection);
+            matrixConnection.join(0);
 		}
 		catch (Exception e)
 		{

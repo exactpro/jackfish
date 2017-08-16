@@ -9,10 +9,13 @@
 package com.exactprosystems.jf.api.common;
 
 import java.io.PrintStream;
+import java.io.Reader;
 
 public interface IContext
 {
 	IContext setOut(PrintStream console);
 
 	IContext createCopy();
+
+    MatrixConnection startMatrix(String string, Reader reader, Object parameter)  throws Exception;
 }
