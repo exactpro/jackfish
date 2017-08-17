@@ -49,7 +49,7 @@ public class WinAppFactory implements IApplicationFactory
         fieldMap.put(LocatorFieldKind.NAME,     AttributeKind.NAME.name().toLowerCase());
         fieldMap.put(LocatorFieldKind.TEXT,     AttributeKind.TEXT.name().toLowerCase());
         
-        info = new PluginInfo(fieldMap);
+        info = new PluginInfo(fieldMap, new ArrayList<>());
         info.addTypes(ControlKind.Any,          ControlType.Any.name());
         info.addTypes(ControlKind.Button,       ControlType.Button.name(), ControlType.SplitButton.name(), ControlType.Hyperlink.name());
         info.addTypes(ControlKind.CheckBox,     ControlType.CheckBox.name());

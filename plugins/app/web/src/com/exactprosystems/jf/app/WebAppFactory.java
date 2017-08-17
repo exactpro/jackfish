@@ -60,7 +60,8 @@ public class WebAppFactory implements IApplicationFactory
         fieldMap.put(LocatorFieldKind.TEXT,         "placeholder");
         fieldMap.put(LocatorFieldKind.TOOLTIP,      "title");
 
-        info = new PluginInfo(fieldMap);
+		List<String> notStableList = Arrays.asList("value", "maxlength", "style");
+		info = new PluginInfo(fieldMap, notStableList);
 
         info.addTypes(ControlKind.Any, "*");
         info.addTypes(ControlKind.Button, "button", "input", "a", "img");

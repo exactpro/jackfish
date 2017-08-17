@@ -18,12 +18,14 @@ public class PluginInfo implements Serializable
 
     private Map<ControlKind, ControlInfo>   controlMap;
     private Map<LocatorFieldKind, String>   fieldMap;
+    private List<String> notStableList;
 
-    public PluginInfo(Map<LocatorFieldKind, String> fieldMap)
+    public PluginInfo(Map<LocatorFieldKind, String> fieldMap, List<String> notStableList)
     {
         this.controlMap = new EnumMap<>(ControlKind.class);
         this.fieldMap = fieldMap;
-    }
+		this.notStableList = notStableList;
+	}
 
     public Set<String> nodeByControlKind(ControlKind kind)
     {
@@ -79,8 +81,13 @@ public class PluginInfo implements Serializable
                 .sorted((c1,c2) -> c1.name().compareTo(c2.name()))
                 .collect(Collectors.toCollection(LinkedHashSet::new));
     }
-    
-    public boolean isSupported(ControlKind kind)
+
+	public boolean isStable(String text)
+	{
+		return !this.notStableList.contains(text);
+	}
+
+	public boolean isSupported(ControlKind kind)
     {
         return controlMap.containsKey(kind);
     }
