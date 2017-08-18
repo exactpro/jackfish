@@ -16,10 +16,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
-import java.util.zip.Deflater;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipInputStream;
-import java.util.zip.ZipOutputStream;
+import java.util.zip.*;
 
 
 public class Zip
@@ -54,12 +51,20 @@ public class Zip
                 zis.closeEntry();
             }
         }
+        /*Path pathToFile = Paths.get(path);
+        try(ZipFile zf = new ZipFile(pathToFile.toFile());){
+            while(zf.entries().hasMoreElements()){
+                zf.entries().
+            }
+        }
+*/
         
         return this;
     }
 
     @DescriptionAttribute(text = "Saves the archive to @path.")
-    public Zip save(String path) throws IOException //https://stackoverflow.com/questions/10103861/adding-files-to-zip-file
+    public Zip save(String path) throws IOException, DataFormatException
+    //https://stackoverflow.com/questions/10103861/adding-files-to-zip-file
     {
         File file = new File(path);
         Path pathToFile = Paths.get(path);
@@ -69,19 +74,15 @@ public class Zip
         if(!pathToFile.toFile().exists()){
             Files.createFile(pathToFile);
         }
-        ZipOutputStream zipOut = null;
 
-        try{
-            zipOut = new ZipOutputStream(new FileOutputStream(file));
+        try(ZipOutputStream zipOut = new ZipOutputStream(new FileOutputStream(file))){
             zipOut.setLevel(Deflater.DEFAULT_COMPRESSION);
             for(Map.Entry<String, byte[]> entry: this.entries.entrySet()){
                 zipOut.putNextEntry(new ZipEntry(entry.getKey()));
-                zipOut.write(entry.getValue());
+                zipOut.write(decompress(entry.getValue()));
                 zipOut.closeEntry();
             }
             zipOut.flush();
-        } finally {
-            zipOut.close();
         }
 
         return this;
@@ -92,38 +93,42 @@ public class Zip
     {
         //https://stackoverflow.com/questions/23612864/create-a-zip-file-in-memory
         File file = new File(path);
-        String fileName = file.getName();
-
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        ZipOutputStream zos = new ZipOutputStream(baos);
 
         if (file.isFile() && file.exists()){
-            try (BufferedReader br = new BufferedReader(new FileReader(fileName))) {
-                ZipEntry ze = new ZipEntry(fileName);
-                zos.putNextEntry(ze);
-                String line;
-                while ((line = br.readLine()) != null) {
-                    zos.write(line.getBytes());
-                }
-                zos.closeEntry();
-            } finally {
-                //zos.flush();
-                zos.close();
-            }
-            this.entries.put(fileName, baos.toByteArray());
+            this.entries.put(file.getName(), compress(getBytesFromFile(file)));
         }
         if (file.isDirectory()){
-            //don't support yet
+            //not support yet
         }
 
         return this;
     }
 
+    @DescriptionAttribute(text = "Remove element from Zip by name")
+    public Zip remove(String name)
+    {
+        this.entries.entrySet().removeIf(e-> e.getKey() == name );
+        return this;
+    }
+
     @DescriptionAttribute(text = "Extracts one file with @name from zip archive to @path.")
-    public Zip extract(String name, String path) throws IOException
+    public Zip extract(String name, String path) throws IOException, DataFormatException
     {
         if (this.entries.containsKey(name)) {
-            Files.write(Paths.get(path), this.entries.get(name));
+            File file = new File(path);
+            Path pathToFile = Paths.get(path);
+            if(!pathToFile.getParent().toFile().exists()){
+                Files.createDirectories(pathToFile.getParent());
+            }
+            if(!pathToFile.toFile().exists()){
+                Files.createFile(pathToFile);
+            }
+
+            try(FileOutputStream fos = new FileOutputStream(file)){
+                byte[] preparedBytes = decompress(this.entries.get(name));
+                fos.write(preparedBytes);
+                fos.close();
+            }
         }
         return this;
     }
@@ -133,5 +138,38 @@ public class Zip
     {
         return this.entries.keySet().stream().collect(Collectors.toList());
                 
+    }
+
+    private byte[] getBytesFromFile(File file) throws IOException{
+        String separator = System.lineSeparator();
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        try (BufferedReader br = new BufferedReader(new FileReader(file))) {
+
+            String line;
+            while ((line = br.readLine()) != null) {
+                baos.write(line.getBytes());
+                baos.write(separator.getBytes());
+            }
+        }
+        return baos.toByteArray();
+    }
+
+    private byte[] compress(byte[] input){
+        byte[] output = new byte[input.length];
+        Deflater compresser = new Deflater();
+        compresser.setInput(input);
+        compresser.finish();
+        int compressedDataLength = compresser.deflate(output);
+        compresser.end();
+        return output;
+    }
+
+    private byte[] decompress(byte[] input) throws DataFormatException {
+        Inflater decompresser = new Inflater();
+        decompresser.setInput(input, 0, input.length);
+        byte[] result = new byte[input.length];
+        int resultLength = decompresser.inflate(result);
+        decompresser.end();
+        return result;
     }
 }
