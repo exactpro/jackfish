@@ -502,24 +502,22 @@ public class MatrixFxController implements Initializable, ContainingParent, IMat
 
 	public void refresh()
 	{
-		Platform.runLater(() -> this.tree.refresh() );
+		this.tree.refresh();
 	}
 
 	public void refreshParameters(MatrixItem item, int selectIndex)
 	{
-		Platform.runLater(() -> this.tree.refreshParameters(item, selectIndex));
+		this.tree.refreshParameters(item, selectIndex);
 	}
 
 	public void setCurrent(MatrixItem item, boolean needExpand)
 	{
-		Platform.runLater(() -> {
-			TreeItem<MatrixItem> treeItem = this.tree.find(item);
-			if (treeItem == null)
-			{
-				treeItem = this.tree.find(this.tree.getRoot(), matrixItem -> item.getId().equals(matrixItem.getId()));
-			}
-			this.tree.setCurrent(treeItem, needExpand);
-		} );
+		TreeItem<MatrixItem> treeItem = this.tree.find(item);
+		if (treeItem == null)
+		{
+			treeItem = this.tree.find(this.tree.getRoot(), matrixItem -> item.getId().equals(matrixItem.getId()));
+		}
+		this.tree.setCurrent(treeItem, needExpand);
 	}
 
 	public void remove(MatrixItem item)
