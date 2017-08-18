@@ -8,59 +8,54 @@
 
 package com.exactprosystems.jf.tool.matrix;
 
-import com.exactprosystems.jf.documents.matrix.parser.items.MatrixItem;
-import com.exactprosystems.jf.tool.custom.console.ConsoleText;
-import com.exactprosystems.jf.tool.custom.console.CustomListView;
-
-import javafx.application.Platform;
-
 import java.io.OutputStream;
 import java.io.PrintStream;
+import java.util.function.Consumer;
 
 public class TabConsole extends PrintStream
 {
-	public CustomListView<MatrixItem> listView; // TODO
+	private Consumer<String> consumer;
 
 	public TabConsole(OutputStream out)
 	{
 		super(out);
 	}
-	
+
 	public TabConsole makeCopy()
 	{
-	    TabConsole res = new TabConsole(this.out);
-	    res.listView = this.listView;
-	    return res;
+		TabConsole res = new TabConsole(this.out);
+		res.consumer = this.consumer;
+		return res;
 	}
 
 	@Override
 	public void print(final String s)
 	{
-	    if (this.listView == null)
-	    {
-	        super.print(s);
-	    }
-	    else
-	    {
-			listView.getItems().add(ConsoleText.defaultText(s));
-	    }
+		if (this.consumer == null)
+		{
+			super.print(s);
+		}
+		else
+		{
+			this.consumer.accept(s);
+		}
 	}
 
 	@Override
 	public void println(final String x)
 	{
-        if (this.listView == null)
-        {
-            super.print(x);
-        }
-        else
-        {
-			listView.getItems().add(ConsoleText.defaultText(x));
+		if (this.consumer == null)
+		{
+			super.println(x);
+		}
+		else
+		{
+			this.consumer.accept(x);
 		}
 	}
 
-	public void setConsole(CustomListView<MatrixItem> listView)
+	public void setConsumer(Consumer<String> consumer)
 	{
-		this.listView = listView;
+		this.consumer = consumer;
 	}
 }

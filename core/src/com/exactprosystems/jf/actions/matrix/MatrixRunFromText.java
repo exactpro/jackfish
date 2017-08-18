@@ -75,14 +75,12 @@ public class MatrixRunFromText extends AbstractAction
 	@Override
 	public void doRealAction(Context context, ReportBuilder report, Parameters parameters, AbstractEvaluator evaluator) throws Exception 
 	{
-        try(Context newContext = context.getFactory().createContext();
-                Reader reader = CommonHelper.readerFromString(this.text.toString()) )
+        try(Reader reader = CommonHelper.readerFromString(this.text.toString()))
         {
             Matrix matrix = (Matrix)context.getFactory().createDocument(DocumentKind.MATRIX, "new");
             matrix.load(reader);
-            newContext.setOut(context.getOut());
-            MatrixConnection connection = matrix.start(this.at, this.parameter); 
-            super.setResult(connection);
+			matrix.setOut(context.getOut());
+            MatrixConnection connection = matrix.start(this.at, this.parameter);
             super.setResult(connection);
         }
         catch (MatrixException matrixException)

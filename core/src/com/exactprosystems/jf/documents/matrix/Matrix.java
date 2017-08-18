@@ -33,10 +33,7 @@ import com.exactprosystems.jf.documents.matrix.parser.items.TestCase;
 import com.exactprosystems.jf.documents.matrix.parser.listeners.IMatrixListener;
 import org.apache.log4j.Logger;
 
-import java.io.BufferedReader;
-import java.io.Reader;
-import java.io.StringWriter;
-import java.io.Writer;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -92,6 +89,11 @@ public class Matrix extends AbstractDocument implements IMatrix
 	public MatrixEngine getEngine()
 	{
 	    return this.engine;
+	}
+
+	public void setOut(PrintStream out)
+	{
+		Optional.ofNullable(this.engine).ifPresent(e -> e.getContext().setOut(out));
 	}
 	
 	public MutableValue<MatrixState> getStateProperty()
