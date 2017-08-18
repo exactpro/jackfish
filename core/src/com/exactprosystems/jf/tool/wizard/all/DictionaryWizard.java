@@ -906,8 +906,7 @@ public class DictionaryWizard extends AbstractWizard
 
 	private ControlKind composeKind(Node node)
 	{
-		String name = node.getNodeName();
-		return this.pluginInfo.controlKindByNode(name);
+		return this.pluginInfo.controlKindByNode(node);
 	}
 
 	private String composeId(Node node)

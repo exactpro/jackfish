@@ -623,8 +623,7 @@ public class XpathWizard extends AbstractWizard
 
 	private ControlKind composeKind(Node node)
 	{
-		String name = node.getNodeName();
-		return this.pluginInfo.controlKindByNode(name);
+		return this.pluginInfo.controlKindByNode(node);
 	}
 	//endregion
 }

@@ -8,11 +8,13 @@
 
 package com.exactprosystems.jf.api.app;
 
+import org.w3c.dom.Node;
+
 import java.io.Serializable;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class PluginInfo implements Serializable
+public abstract class PluginInfo implements Serializable
 {
     private static final long serialVersionUID = -1595364917643729823L;
 
@@ -40,19 +42,30 @@ public class PluginInfo implements Serializable
         return this.controlMap.get(kind).getTypes();
     }
 
-    public ControlKind controlKindByNode(String node)
+    public ControlKind controlKindByNode(Node node)
     {
         if (this.controlMap == null)
         {
             return ControlKind.Any;
         }
-        Optional<ControlKind> optional = this.controlMap.entrySet()
+		String nodeName = node.getNodeName();
+		List<ControlKind> list = this.controlMap.entrySet()
         		.stream()
-        		.filter(e -> e.getValue().getTypes().stream().anyMatch(s -> s.equals(node)))
+        		.filter(e -> e.getValue().getTypes().stream().anyMatch(s -> s.equals(nodeName)))
         		.map(Map.Entry::getKey)
-        		.findFirst();
-        return optional.orElse(ControlKind.Any);
-    }
+				.collect(Collectors.toList());
+		if (list.size() == 0)
+		{
+			return ControlKind.Any;
+		}
+		if (list.size() == 1)
+		{
+			return list.get(0);
+		}
+		return derivedControlKindByNode(node);
+	}
+
+	protected abstract ControlKind derivedControlKindByNode(Node node);
 
     public String attributeName(LocatorFieldKind kind)
     {

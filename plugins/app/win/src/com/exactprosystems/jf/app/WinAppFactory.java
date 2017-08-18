@@ -10,6 +10,7 @@ package com.exactprosystems.jf.app;
 
 import com.exactprosystems.jf.api.app.*;
 import com.exactprosystems.jf.api.common.ParametersKind;
+import org.w3c.dom.Node;
 
 import java.io.InputStream;
 import java.util.*;
@@ -49,7 +50,7 @@ public class WinAppFactory implements IApplicationFactory
         fieldMap.put(LocatorFieldKind.NAME,     AttributeKind.NAME.name().toLowerCase());
         fieldMap.put(LocatorFieldKind.TEXT,     AttributeKind.TEXT.name().toLowerCase());
         
-        info = new PluginInfo(fieldMap, new ArrayList<>());
+        info = new WinPluginInfo(fieldMap, new ArrayList<>());
         info.addTypes(ControlKind.Any,          ControlType.Any.name());
         info.addTypes(ControlKind.Button,       ControlType.Button.name(), ControlType.SplitButton.name(), ControlType.Hyperlink.name());
         info.addTypes(ControlKind.CheckBox,     ControlType.CheckBox.name());
@@ -164,4 +165,18 @@ public class WinAppFactory implements IApplicationFactory
     {
 		return info;
     }
+
+	private static class WinPluginInfo extends PluginInfo
+	{
+		WinPluginInfo(Map<LocatorFieldKind, String> fieldMap, List<String> notStableList)
+		{
+			super(fieldMap, notStableList);
+		}
+
+		@Override
+		public ControlKind derivedControlKindByNode(Node node)
+		{
+			return ControlKind.Any;
+		}
+	}
 }
