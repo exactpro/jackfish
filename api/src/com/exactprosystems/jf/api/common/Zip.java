@@ -9,12 +9,8 @@
 package com.exactprosystems.jf.api.common;
 
 import java.io.*;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.nio.file.*;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.zip.*;
 
@@ -38,33 +34,36 @@ public class Zip
     @DescriptionAttribute(text = "Loads an archive from @path.")
     public Zip load(String path) throws IOException
     {
-        
-        try (InputStream in = new FileInputStream(path);
-                ZipInputStream zis = new ZipInputStream(in))
-        {
-            
-            ZipEntry nextEntry = null;
-            while((nextEntry = zis.getNextEntry()) != null)
-            {
-                String name = nextEntry.getName();
+        File file = new File(path);
+        if(file.isFile() && file.exists()){
+            try(ZipFile zf = new ZipFile(file)){
+                Enumeration<? extends ZipEntry> enumeration = zf.entries();
+                ZipEntry entry;
+                while(enumeration.hasMoreElements()){
+                    entry = enumeration.nextElement();
+                    if (!entry.isDirectory()){
+                        InputStream is = zf.getInputStream(entry);
+                        ByteArrayOutputStream buffer = new ByteArrayOutputStream();
 
-                zis.closeEntry();
+                        int nRead;
+                        byte[] data = new byte[16384];
+
+                        while ((nRead = is.read(data, 0, data.length)) != -1) {
+                            buffer.write(data, 0, nRead);
+                        }
+                        buffer.flush();
+
+                        this.entries.put(entry.getName(), compress(buffer.toByteArray()));
+                    }
+                }
             }
         }
-        /*Path pathToFile = Paths.get(path);
-        try(ZipFile zf = new ZipFile(pathToFile.toFile());){
-            while(zf.entries().hasMoreElements()){
-                zf.entries().
-            }
-        }
-*/
         
         return this;
     }
 
     @DescriptionAttribute(text = "Saves the archive to @path.")
     public Zip save(String path) throws IOException, DataFormatException
-    //https://stackoverflow.com/questions/10103861/adding-files-to-zip-file
     {
         File file = new File(path);
         Path pathToFile = Paths.get(path);
@@ -91,15 +90,19 @@ public class Zip
     @DescriptionAttribute(text = "Adds one file into zip archive from @path.")
     public Zip add(String path) throws IOException
     {
-        //https://stackoverflow.com/questions/23612864/create-a-zip-file-in-memory
         File file = new File(path);
 
         if (file.isFile() && file.exists()){
             this.entries.put(file.getName(), compress(getBytesFromFile(file)));
         }
-        if (file.isDirectory()){
-            //not support yet
-        }
+        /*if (file.isDirectory() && file.exists()){
+            File[] files = file.listFiles();
+            for (File f : files){
+                if(f.isFile()){
+                    this.entries.put(f.getName(), compress(getBytesFromFile(f)));
+                }
+            }
+        }*/
 
         return this;
     }
@@ -107,7 +110,7 @@ public class Zip
     @DescriptionAttribute(text = "Remove element from Zip by name")
     public Zip remove(String name)
     {
-        this.entries.entrySet().removeIf(e-> e.getKey() == name );
+        this.entries.entrySet().removeIf(e-> e.getKey().equals(name));
         return this;
     }
 
