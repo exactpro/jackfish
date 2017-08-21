@@ -24,7 +24,6 @@ import javafx.collections.ListChangeListener;
 import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.GridPane;
-import org.apache.log4j.Logger;
 
 import java.util.List;
 import java.util.Objects;
@@ -38,10 +37,9 @@ public class MatrixTreeView extends TreeTableView<MatrixItem>
 {
 	private MatrixFx matrix;
 
-	private final static Logger logger = Logger.getLogger(MatrixTreeView.class);
-
 	private boolean isTracing;
 	private boolean needExpand;
+	private long lastTime = 0;
 
 	public MatrixTreeView()
 	{
@@ -119,11 +117,15 @@ public class MatrixTreeView extends TreeTableView<MatrixItem>
 
 	public void refresh()
 	{
-		Platform.runLater(() -> Optional.ofNullable(this.getColumns().get(0)).ifPresent(col ->
+		long current = System.currentTimeMillis();
+		if (Math.abs(current - lastTime) > 199)
 		{
-			col.setVisible(false);
-			col.setVisible(true);
-		}));
+			Optional.ofNullable(this.getColumns().get(0)).ifPresent(col -> Platform.runLater(() ->{
+				col.setVisible(false);
+				col.setVisible(true);
+			}));
+			lastTime = current;
+		}
 	}
 
 	public void refreshParameters(MatrixItem item, int selectedIndex)

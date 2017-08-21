@@ -670,7 +670,7 @@ public class MatrixFx extends Matrix
 			getFactory().getConfiguration().register(this);
 
 			this.controller = Common.loadController(MatrixFx.class.getResource("MatrixFx.fxml"));
-            this.controller.init(this, (Context)getEngine().getContext(), this.console); 
+            this.controller.init(this, getEngine().getContext(), this.console);
 			setListener(this.controller);
 			this.isControllerInit = true;
 		}

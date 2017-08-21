@@ -89,12 +89,11 @@ public class MatrixRun extends AbstractAction
 	@Override
 	public void doRealAction(Context context, ReportBuilder report, Parameters parameters, AbstractEvaluator evaluator) throws Exception 
 	{
-        try(Context newContext = context.getFactory().createContext();
-                Reader reader = CommonHelper.readerFromFileName(this.matrix) )
+        try(Reader reader = CommonHelper.readerFromFileName(this.matrix))
         {
             Matrix matrix = (Matrix)context.getFactory().createDocument(DocumentKind.MATRIX, this.matrix);
             matrix.load(reader);
-            newContext.setOut(context.getOut());
+            matrix.setOut(context.getOut());
             MatrixConnection connection = matrix.start(this.at, this.parameter); 
             super.setResult(connection);
         }

@@ -61,22 +61,4 @@ public class ConsoleText<T> extends Text
 	{
 		return this.getText();
 	}
-
-	@Override
-	public boolean equals(Object o)
-	{
-		if (this == o)
-			return true;
-		if (o == null || getClass() != o.getClass())
-			return false;
-		ConsoleText<?> that = (ConsoleText<?>) o;
-		return that.getText().equals(this.getText());
-
-	}
-
-	@Override
-	public int hashCode()
-	{
-		return item != null ? item.hashCode() : 0;
-	}
 }

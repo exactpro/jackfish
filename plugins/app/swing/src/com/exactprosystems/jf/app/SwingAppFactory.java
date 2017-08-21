@@ -10,7 +10,9 @@ package com.exactprosystems.jf.app;
 
 import com.exactprosystems.jf.api.app.*;
 import com.exactprosystems.jf.api.common.ParametersKind;
+import org.w3c.dom.Node;
 
+import javax.swing.*;
 import java.io.InputStream;
 import java.util.*;
 
@@ -55,12 +57,32 @@ public class SwingAppFactory implements IApplicationFactory
         fieldMap.put(LocatorFieldKind.TEXT,     null);
         fieldMap.put(LocatorFieldKind.TOOLTIP,  "tooltip");
 
-        info = new PluginInfo(fieldMap);
+        info = new SwingPluginInfo(fieldMap, new ArrayList<>());
 
-        for (ControlKind kind : supportedControls)
-        {
-            info.addTypes(kind, "*");
-        }
+		info.addTypes(ControlKind.Any, "*");
+		info.addTypes(ControlKind.Button, JButton.class.getSimpleName());
+		info.addTypes(ControlKind.CheckBox, JCheckBox.class.getSimpleName());
+		info.addTypes(ControlKind.ComboBox, JComboBox.class.getSimpleName());
+		info.addTypes(ControlKind.Dialog, JDialog.class.getSimpleName());
+		info.addTypes(ControlKind.Frame, JFrame.class.getSimpleName());
+		info.addTypes(ControlKind.Label, JLabel.class.getSimpleName());
+		info.addTypes(ControlKind.ListView, JList.class.getSimpleName());
+		info.addTypes(ControlKind.Menu, JMenu.class.getSimpleName());
+		info.addTypes(ControlKind.MenuItem, JMenuItem.class.getSimpleName());
+		info.addTypes(ControlKind.Panel, JPanel.class.getSimpleName());
+		info.addTypes(ControlKind.ProgressBar, JProgressBar.class.getSimpleName());
+		info.addTypes(ControlKind.RadioButton, JRadioButton.class.getSimpleName());
+		info.addTypes(ControlKind.ScrollBar, JScrollBar.class.getSimpleName());
+		info.addTypes(ControlKind.Slider, JSlider.class.getSimpleName());
+		info.addTypes(ControlKind.Splitter, JSplitPane.class.getSimpleName());
+		info.addTypes(ControlKind.Spinner, JSpinner.class.getSimpleName());
+		info.addTypes(ControlKind.Table, JTable.class.getSimpleName());
+		info.addTypes(ControlKind.TabPanel, JTabbedPane.class.getSimpleName());
+		info.addTypes(ControlKind.TextBox, JTextField.class.getSimpleName(), JTextArea.class.getSimpleName());
+		info.addTypes(ControlKind.ToggleButton, JToggleButton.class.getSimpleName());
+		info.addTypes(ControlKind.Tooltip, JToolTip.class.getSimpleName());
+		info.addTypes(ControlKind.Tree, JTree.class.getSimpleName());
+		info.addTypes(ControlKind.Wait,"*");
 
         info.addExcludes(ControlKind.MenuItem, OperationKind.EXPAND, OperationKind.COLLAPSE);
         info.addExcludes(ControlKind.Tree, OperationKind.APPLY);
@@ -151,4 +173,18 @@ public class SwingAppFactory implements IApplicationFactory
     {
 		return info;
     }
+
+    private static class SwingPluginInfo extends PluginInfo
+	{
+		SwingPluginInfo(Map<LocatorFieldKind, String> fieldMap, List<String> notStableList)
+		{
+			super(fieldMap, notStableList);
+		}
+
+		@Override
+		public ControlKind derivedControlKindByNode(Node node)
+		{
+			return ControlKind.Any;
+		}
+	}
 }

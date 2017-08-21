@@ -17,10 +17,10 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 import javax.xml.xpath.*;
-import java.awt.*;
+import java.awt.Rectangle;
 import java.util.*;
-import java.util.List;
 import java.util.function.Consumer;
+import java.util.function.Predicate;
 import java.util.function.ToIntBiFunction;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -67,7 +67,7 @@ public class XpathUtils
         return collect;
     }
 
-    public static String fullXpath(String relativeXpath, Node relative, Node node, boolean useText, List<String> parameters, boolean longPath)
+    public static String fullXpath(String relativeXpath, Node relative, Node node, boolean useText, List<String> parameters, boolean longPath, Predicate<String> predicate)
     {
     	if (node == null)
     	{
@@ -78,26 +78,31 @@ public class XpathUtils
     	{
     		if (!longPath)
     		{
-    			return "/" + XpathUtils.xpath(node.getParentNode(), node, useText, parameters);
+    			return "/" + XpathUtils.xpath(node.getParentNode(), node, useText, parameters, predicate);
     		}
-    		return XpathUtils.xpath(null, node, useText, parameters);
+    		return XpathUtils.xpath(null, node, useText, parameters, predicate);
     	}
     	else
     	{
     		Node common = XpathUtils.commonAncestor(relative, node);
     		Node current = relative;
-    		String backPath = "";
+    		StringBuilder backPath = new StringBuilder();
     		while (current != null && !current.equals(common))
     		{
     			current = current.getParentNode();
-    			backPath += "/..";
+    			backPath.append("/..");
     		}
-    
+
     		if (!longPath)
     		{
-    			return relativeXpath + backPath + "/" + XpathUtils.xpath(node.getParentNode(), node, useText, parameters);
-    		}
-    		return relativeXpath + backPath + XpathUtils.xpath(common, node, useText, parameters);
+				String prefix = relativeXpath + backPath;
+				if (prefix.length() < 3)
+				{
+					prefix += "/";
+				}
+				return prefix + XpathUtils.xpath(node.getParentNode(), node, useText, parameters, predicate);
+			}
+    		return relativeXpath + backPath + XpathUtils.xpath(common, node, useText, parameters, predicate);
     	}
     }
 
@@ -121,7 +126,7 @@ public class XpathUtils
     	return null;
     }
 
-    public static String xpath(Node parent, Node node, boolean useText, List<String> parameters)
+    public static String xpath(Node parent, Node node, boolean useText, List<String> parameters, Predicate<String> predicate)
     {
     	if (node instanceof Document)
     	{
@@ -131,8 +136,8 @@ public class XpathUtils
     	{
     		return "";
     	}
-    	return xpath(parent, node.getParentNode(), false, null) + "/" + node.getNodeName() + (parameters != null && !parameters.isEmpty() || useText ?
-    			"[" + XpathUtils.getParameters(node, useText, parameters) + "]" : (XpathUtils.hasSiblings(node) ? "[" + XpathUtils.getIndexNode(node) + "]" : ""));
+    	return xpath(parent, node.getParentNode(), false, null, predicate) + "/" + node.getNodeName() + (parameters != null && !parameters.isEmpty() || useText ?
+    			"[" + XpathUtils.getParameters(node, useText, parameters, predicate) + "]" : (XpathUtils.hasSiblings(node) ? "[" + XpathUtils.getIndexNode(node) + "]" : ""));
     }
 
     public static Node getFirst(Node node, String xpathStr)
@@ -165,7 +170,7 @@ public class XpathUtils
 
     public static List<Node> ancestors(Node node)
     {
-    	List<Node> res = new ArrayList<Node>();
+    	List<Node> res = new ArrayList<>();
     	Node current = node;
     	while (current != null)
     	{
@@ -175,17 +180,25 @@ public class XpathUtils
     	return res;
     }
 
-    public static String getParameters(Node node, boolean useText, List<String> parameters)
+    public static String getParameters(Node node, boolean useText, List<String> parameters, Predicate<String> predicate)
     {
     	String res = "";
     	NamedNodeMap attr = node.getAttributes();
     	if (attr != null)
     	{
-    		res = parameters.stream().filter(p -> attr.getNamedItem(p) != null).map(p -> "@" + attr.getNamedItem(p)).collect(Collectors.joining(" and "));
+    		res = parameters.stream()
+					.filter(p -> attr.getNamedItem(p) != null)
+					.filter(p -> predicate == null || XpathUtils.isStable(attr.getNamedItem(p).getNodeValue(), predicate))
+					.map(p -> "contains(@" + p + ",\"" + attr.getNamedItem(p).getNodeValue()+"\")")
+					.collect(Collectors.joining(" and "));
     	}
     	if (useText)
     	{
-    		res = res + (res.isEmpty() ? "" : " and ") + "contains(text(), \"" + text(node) + "\")";
+			String text = text(node);
+			if (isStable(text, predicate))
+			{
+				res = res + (res.isEmpty() ? "" : " and ") + "contains(text(), \"" + text + "\")";
+			}
     	}
     	return res;
     }
@@ -258,17 +271,21 @@ public class XpathUtils
 		return params;
 	}
 
-	public static boolean isStable(String identifier)
+	public static boolean isStable(String identifier, Predicate<String> predicate)
 	{
 		if (Str.IsNullOrEmpty(identifier))
 		{
 			return false;
 		}
-		if (identifier.split(" ").length > 2)
+		if (identifier.split(" ").length > 3)
 		{
 			return false;
 		}
-		return identifier.matches("^[a-zA-Z\\s]+$");
+		if (!identifier.matches("^[a-zA-Z\\s]+$"))
+		{
+			return false;
+		}
+		return predicate == null || predicate.test(identifier);
 	}
 
 	public static <T> List<T> shuffle(int mask, List<T> source)
@@ -310,7 +327,8 @@ public class XpathUtils
 
 	public static class FindLocator
 	{
-		private static final int        MAX_TRIES = 128;
+		private static final int MAX_TRIES = 128;
+		private static final int MAX_CHILD_DEEP = 4;
 
 		private boolean findById;
 		private boolean findByAttrs;
@@ -380,7 +398,7 @@ public class XpathUtils
 			}
 			if (this.findByXpath)
 			{
-				locator = locatorByExtendAttrs();
+				locator = locatorByExtendAttrs(this.node);
 				if (locator != null)
 				{
 					return locator;
@@ -390,13 +408,28 @@ public class XpathUtils
 				{
 					return locator;
 				}
+				String tempXpath = null;
+				Locator tempLocator = locatorByRelativeXpathWithSibling(this.node);
+				if (tempLocator != null)
+				{
+					tempXpath = tempLocator.getXpath();
+				}
 				locator = locatorByRelativeXpath();
 				if (locator != null)
 				{
+					if (tempXpath != null && xpathWeight(tempXpath) < xpathWeight(locator.getXpath()))
+					{
+						return tempLocator;
+					}
 					return locator;
 				}
 			}
 			return null;
+		}
+
+		private static long xpathWeight(String xpath)
+		{
+			return Arrays.stream(xpath.split("/")).filter(s -> !s.isEmpty()).count();
 		}
 
 		//region private methods
@@ -414,7 +447,7 @@ public class XpathUtils
 				if (nodeId != null)
 				{
 					String uid = nodeId.getNodeValue();
-					if (XpathUtils.isStable(uid))
+					if (XpathUtils.isStable(uid, this.pluginInfo::isStable))
 					{
 						Locator locator = new Locator().kind(kind).id(id).uid(uid);
 						if (tryLocator(locator, node) == 1)
@@ -456,12 +489,12 @@ public class XpathUtils
 		{
 			List<Pair> list = new ArrayList<>();
 			addAttr(list, node, LocatorFieldKind.UID);
-			addAttr(list, node, LocatorFieldKind.CLAZZ);
 			addAttr(list, node, LocatorFieldKind.NAME);
 			addAttr(list, node, LocatorFieldKind.TITLE);
 			addAttr(list, node, LocatorFieldKind.ACTION);
 			addAttr(list, node, LocatorFieldKind.TOOLTIP);
 			addAttr(list, node, LocatorFieldKind.TEXT);
+			addAllClasses(list, node);
 			return list;
 		}
 
@@ -474,9 +507,9 @@ public class XpathUtils
 			if (kind == LocatorFieldKind.TEXT)
 			{
 				String textContent = node.getTextContent();
-				if (XpathUtils.isStable(textContent))
+				if (XpathUtils.isStable(textContent,this.pluginInfo::isStable))
 				{
-					list.add(new Pair(kind, textContent));
+					list.add(new Pair(kind, textContent.trim()));
 				}
 			}
 			String attrName = this.pluginInfo.attributeName(kind);
@@ -490,10 +523,33 @@ public class XpathUtils
 				return;
 			}
 			String value = attrNode.getNodeValue();
-			if (XpathUtils.isStable(value))
+			if (XpathUtils.isStable(value,this.pluginInfo::isStable))
 			{
 				list.add(new Pair(kind, value));
 			}
+		}
+
+		private void addAllClasses(List<Pair> list, Node node)
+		{
+			if (!node.hasAttributes())
+			{
+				return;
+			}
+			String attrName = this.pluginInfo.attributeName(LocatorFieldKind.CLAZZ);
+			if (Str.IsNullOrEmpty(attrName))
+			{
+				return;
+			}
+			Node attrNode = node.getAttributes().getNamedItem(attrName);
+			if (attrNode == null)
+			{
+				return;
+			}
+			String value = attrNode.getNodeValue();
+			Arrays.stream(value.split("\\s+"))
+					.filter(clazz -> XpathUtils.isStable(clazz, this.pluginInfo::isStable))
+					.map(clazz -> new Pair(LocatorFieldKind.CLAZZ, clazz))
+					.forEach(list::add);
 		}
 
 		private static class Pair
@@ -510,20 +566,28 @@ public class XpathUtils
 		//endregion
 
 		//region xpath
-		private Locator locatorByExtendAttrs()
+		private Locator locatorByExtendAttrs(Node node)
 		{
-			Locator locator = new Locator().kind(this.kind).id(this.id).xpath("./" + this.node.getNodeName());
-			if (tryLocator(locator, this.node) == 1)
+			Locator locator = new Locator().kind(this.kind).id(this.id).xpath("./" + node.getNodeName());
+			if (tryLocator(locator, node) == 1)
 			{
 				return locator;
 			}
 
+			//create all pairs
 			List<StringPair> list = IntStream.range(0, node.getAttributes().getLength())
-					.mapToObj(this.node.getAttributes()::item)
-					.filter(attr -> XpathUtils.isStable(attr.getNodeName()) && XpathUtils.isStable(attr.getNodeValue()))
-					.map(attr -> new StringPair(attr.getNodeName(), attr.getNodeValue()))
+					.mapToObj(node.getAttributes()::item)
+					.filter(attr -> XpathUtils.isStable(attr.getNodeName(), this.pluginInfo::isStable) && XpathUtils.isStable(attr.getNodeValue(), this.pluginInfo::isStable))
+					.map(attr -> new StringPair("@" + attr.getNodeName(), attr.getNodeValue()))
 					.collect(Collectors.toList());
 
+			String textContent = node.getTextContent();
+			if (isStable(textContent, this.pluginInfo::isStable))
+			{
+				list.add(new StringPair(".", textContent));
+			}
+
+			//shuffle all pair
 			List<List<StringPair>> pairList = IntStream.range(1, 1 << list.size())
 					.boxed()
 					.sorted(Comparator.comparingInt(Integer::bitCount))
@@ -531,22 +595,46 @@ public class XpathUtils
 					.map(i -> XpathUtils.shuffle(i, list))
 					.collect(Collectors.toList());
 
-			for (List<StringPair> pair : pairList)
+			//create xpath on pairs
+			List<String> xpaths = pairList.stream()
+					.map(l -> this.createXpaths(l, node))
+					.flatMap(List::stream)
+					.distinct()
+					.sorted(Comparator.comparingInt(String::length).thenComparing(String::compareTo))
+					.collect(Collectors.toList());
+
+			for (String xpath : xpaths)
 			{
-				locator = new Locator().kind(this.kind).id(this.id).xpath(createXpath(pair));
+				locator = new Locator().kind(this.kind).id(this.id).xpath(xpath);
 				if (tryLocator(locator, node) == 1)
 				{
 					return locator;
 				}
 			}
+
 			return null;
 		}
 
-		private String createXpath(List<StringPair> list)
+		private List<String> createXpaths(List<StringPair> list, Node node)
 		{
-			return list.stream()
-					.map(pair -> "contains("+pair.key + ","+pair.value+")")
-					.collect(Collectors.joining(" and ", ".//"+this.node.getNodeName()+"[", "]"));
+			List<String> collect = list.stream()
+					.map(StringPair::list)
+					.flatMap(Arrays::stream)
+					.collect(Collectors.toList());
+
+			List<List<String>> xpathCollect = IntStream.range(1, 1 << collect.size())
+					.boxed()
+					.sorted(Comparator.comparingInt(Integer::bitCount))
+					.limit(MAX_TRIES)
+					.map(i -> XpathUtils.shuffle(i, collect))
+					.collect(Collectors.toList());
+
+			final String nodeName = node.getNodeName();
+			return xpathCollect.stream()
+					.map(c -> c.stream().collect(Collectors.joining(" and ")))
+					.filter(s -> !(s.matches(".*?contains\\((@\\w+|\\.),\"([\\w\\s]+)\"\\).+?(\\1)=\"(\\2)\".*?") || s.matches(".*?(@\\w+|\\.)=\"([\\w\\s]+)\".+?contains\\((\\1),\"(\\2)\"\\).*?")))
+					.map(s -> ".//" + nodeName + "[" + s + "]")
+					.collect(Collectors.toList());
 		}
 
 		private static class StringPair
@@ -554,19 +642,33 @@ public class XpathUtils
 			String value;
 			String key;
 
-			public StringPair(String value, String key)
+			public StringPair(String key, String value)
 			{
 				this.value = value;
 				this.key = key;
+			}
+
+			public String[] list()
+			{
+				return new String[]{
+						String.format("contains(%s,\"%s\")", this.key,this.value.trim())
+						, String.format("%s=\"%s\"", this.key,this.value.trim())
+				};
+			}
+
+			@Override
+			public String toString()
+			{
+				return this.key + " : " + this.value;
 			}
 		}
 
 		private Locator locatorByXpath(Node node)
 		{
-			String ownerPath = ".";
+			String ownerPath = "./";
 
 			List<String> parameters = XpathUtils.getAllNodeAttribute(node);
-			String relativePath = XpathUtils.fullXpath(ownerPath, this.owner, node, false, parameters, false);
+			String relativePath = XpathUtils.fullXpath(ownerPath, this.owner, node, false, parameters, false, this.pluginInfo::isStable);
 			Locator locator = new Locator().kind(kind).id(id).xpath(relativePath);
 
 			if (tryLocator(locator, node) == 1)
@@ -579,16 +681,20 @@ public class XpathUtils
 		private Locator locatorByRelativeXpath()
 		{
 			String ownerPath = ".";
-			String xpath = XpathUtils.fullXpath(ownerPath, this.owner, node, false, null, true);
+			String xpath = XpathUtils.fullXpath(ownerPath, this.owner, node, false, null, true, this.pluginInfo::isStable);
 			String[] parts = xpath.split("/");
 
 			Node parent = node;
 			for (int level = 0; level < parts.length; level++)
 			{
-				Locator relativeLocator = locatorByXpath(parent);
-				if (relativeLocator != null)
+				Locator locator = locatorByExtendAttrs(parent);
+				if (locator == null)
 				{
-					String finalPath = XpathUtils.fullXpath(relativeLocator.getXpath(), parent, node, false, null, false);
+					locator = locatorByXpath(parent);
+				}
+				if (locator != null)
+				{
+					String finalPath = XpathUtils.fullXpath(locator.getXpath(), parent, node, false, null, true, this.pluginInfo::isStable);
 
 					Locator finalLocator = new Locator().kind(kind).id(id).xpath(finalPath);
 					if (tryLocator(finalLocator, node) == 1)
@@ -608,6 +714,87 @@ public class XpathUtils
 
 			return null;
 		}
+
+		private Locator locatorByRelativeXpathWithSibling(Node node)
+		{
+			//check siblings
+			NodeList childNodes = node.getParentNode().getChildNodes();
+			List<Node> siblings = IntStream.range(0, childNodes.getLength())
+					.mapToObj(childNodes::item)
+					.collect(Collectors.toList());
+			List<Locator> locators = new ArrayList<>();
+
+			checkLocatorWithRelation(siblings, node, locators);
+			Optional<Locator> max = locators.stream().max(Comparator.comparingLong(l -> xpathWeight(l.getXpath())));
+			if (max.isPresent())
+			{
+				locators.clear();
+				return max.get();
+			}
+
+			List<Node> list = new ArrayList<>();
+
+			collectChild(node.getParentNode(), list, 0);
+			checkLocatorWithRelation(list, node, locators);
+
+			list.clear();
+
+			int deep = 0;
+			Node parent = node.getParentNode();
+			while (deep++ < MAX_CHILD_DEEP && parent != null)
+			{
+				parent = parent.getParentNode();
+			}
+
+			collectChild(parent, list, MAX_CHILD_DEEP - deep);
+			checkLocatorWithRelation(list, node, locators);
+			return locators.stream().max(Comparator.comparingLong(l -> xpathWeight(l.getXpath()))).orElse(null);
+		}
+
+		private void checkLocatorWithRelation(List<Node> nodes, Node node, List<Locator> locators)
+		{
+			for (Node childItem : nodes)
+			{
+				if (!childItem.hasAttributes())
+				{
+					continue;
+				}
+				Locator locator = locatorByExtendAttrs(childItem);
+				if (locator == null)
+				{
+					locator = locatorByXpath(childItem);
+				}
+				if (locator != null)
+				{
+					String finalPath = XpathUtils.fullXpath(locator.getXpath(), childItem, node, false, null, true, this.pluginInfo::isStable);
+
+					Locator finalLocator = new Locator().kind(kind).id(id).xpath(finalPath);
+					if (tryLocator(finalLocator, node) == 1)
+					{
+						locators.add(finalLocator);
+					}
+				}
+			}
+		}
+
+		private void collectChild(Node node, List<Node> list, int deep)
+		{
+			if (deep > MAX_CHILD_DEEP)
+			{
+				return;
+			}
+			if (node == null || !node.hasChildNodes())
+			{
+				return;
+			}
+			NodeList child = node.getChildNodes();
+			IntStream.range(0, child.getLength())
+					.mapToObj(child::item)
+					.peek(childNode -> collectChild(childNode, list, deep + 1))
+					.forEach(list::add);
+
+		}
+
 		//endregion
 
 		private int tryLocator(Locator locator, Node node)

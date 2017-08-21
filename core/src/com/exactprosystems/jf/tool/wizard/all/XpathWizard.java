@@ -529,10 +529,10 @@ public class XpathWizard extends AbstractWizard
 			relativeNode = getFirst(this.document, relativeXpath);
 		}
 
-		String xpath1 = fullXpath(relativePath, relativeNode, currentNode, false, null, true);
-		String xpath2 = fullXpath(relativePath, relativeNode, currentNode, useText, parameters, true);
-		String xpath3 = fullXpath(relativePath, relativeNode, currentNode, false, null, false);
-		String xpath4 = fullXpath(relativePath, relativeNode, currentNode, useText, parameters, false);
+		String xpath1 = fullXpath(relativePath, relativeNode, currentNode, false, null, true, null);
+		String xpath2 = fullXpath(relativePath, relativeNode, currentNode, useText, parameters, true, null);
+		String xpath3 = fullXpath(relativePath, relativeNode, currentNode, false, null, false, null);
+		String xpath4 = fullXpath(relativePath, relativeNode, currentNode, useText, parameters, false, null);
 
 		int i = 0;
 		this.lines[i].btnXpath.setText(xpath1);
@@ -623,8 +623,7 @@ public class XpathWizard extends AbstractWizard
 
 	private ControlKind composeKind(Node node)
 	{
-		String name = node.getNodeName();
-		return this.pluginInfo.controlKindByNode(name);
+		return this.pluginInfo.controlKindByNode(node);
 	}
 	//endregion
 }

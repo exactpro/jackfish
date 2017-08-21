@@ -10,6 +10,7 @@ package com.exactprosystems.jf.app;
 
 import com.exactprosystems.jf.api.app.*;
 import com.exactprosystems.jf.api.common.ParametersKind;
+import org.w3c.dom.Node;
 
 import java.io.InputStream;
 import java.util.*;
@@ -60,7 +61,8 @@ public class WebAppFactory implements IApplicationFactory
         fieldMap.put(LocatorFieldKind.TEXT,         "placeholder");
         fieldMap.put(LocatorFieldKind.TOOLTIP,      "title");
 
-        info = new PluginInfo(fieldMap);
+		List<String> notStableList = Arrays.asList("value", "maxlength", "style", "size");
+		info = new WebPluginInfo(fieldMap, notStableList);
 
         info.addTypes(ControlKind.Any, "*");
         info.addTypes(ControlKind.Button, "button", "input", "a", "img");
@@ -203,4 +205,46 @@ public class WebAppFactory implements IApplicationFactory
     {
 		return info;
     }
+
+	private static class WebPluginInfo extends PluginInfo
+	{
+		public WebPluginInfo(Map<LocatorFieldKind, String> fieldMap, List<String> notStableList)
+		{
+			super(fieldMap, notStableList);
+		}
+
+		@Override
+		public ControlKind derivedControlKindByNode(Node node)
+		{
+			String nodeName = node.getNodeName();
+			switch (nodeName)
+			{
+				case "img" : return ControlKind.Button;
+				case "button" : return ControlKind.Button;
+				case "input" :
+					Node type = node.getAttributes().getNamedItem("type");
+					if (type != null)
+					{
+						String nodeValue = type.getNodeValue();
+						switch (nodeValue)
+						{
+							case "button" :
+							case "reset":
+							case "submit":
+								return ControlKind.Button;
+							case "checkbox" : return ControlKind.CheckBox;
+							case "image" : return ControlKind.Button;
+							case "radio" : return ControlKind.RadioButton;
+							default:
+								return ControlKind.TextBox;
+						}
+					}
+					return ControlKind.TextBox;
+
+				case "form" : return ControlKind.Dialog;
+				case "div" : return ControlKind.Panel;
+			}
+			return ControlKind.Any;
+		}
+	}
 }

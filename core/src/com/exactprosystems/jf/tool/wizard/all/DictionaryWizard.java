@@ -400,6 +400,7 @@ public class DictionaryWizard extends AbstractWizard
 	{
 		try
 		{
+			//TODO add check that self is present and that self id not empty
 			if (this.currentConnection == null || !this.currentConnection.isGood())
 			{
 				DialogsHelper.showError("Application is not started.\nStart it before call the wizard.");
@@ -618,7 +619,7 @@ public class DictionaryWizard extends AbstractWizard
 			List<Node> nodeList;
 			try
 			{
-				nodeList = this.matcher.findAll(this.document, locator);
+				nodeList = this.matcher.findAll(this.rootNode, locator);
 				count = nodeList.size();
 				found = count > 0 ? nodeList.get(0) : null;
 			}
@@ -675,7 +676,7 @@ public class DictionaryWizard extends AbstractWizard
 		{
 			Rect actualRectangle     		= relativeRect(this.dialogRectangle, (Rectangle)node.getUserData(IRemoteApplication.rectangleName));
 			String      actualName          = node.getNodeName();
-			String      actualPath          = XpathUtils.fullXpath("", this.rootNode, node, false, null, true);
+			String      actualPath          = XpathUtils.fullXpath("", this.rootNode, node, false, null, true, this.pluginInfo::isStable);
 			List<Attr>  actualAttr          = XpathUtils.extractAttributes(node);
 
 			Rect        expectedRectangle   = (Rect)info.get(ExtraInfo.rectangleName);
@@ -892,7 +893,7 @@ public class DictionaryWizard extends AbstractWizard
 		Rectangle rec = (Rectangle)node.getUserData(IRemoteApplication.rectangleName);
 		Rect rectangle = relativeRect(this.dialogRectangle, rec);
 
-		info.set(ExtraInfo.xpathName,       XpathUtils.fullXpath("", this.rootNode, node, false, null, true));
+		info.set(ExtraInfo.xpathName,       XpathUtils.fullXpath("", this.rootNode, node, false, null, true, this.pluginInfo::isStable));
 		info.set(ExtraInfo.nodeName,        node.getNodeName());
 		info.set(ExtraInfo.rectangleName,   rectangle);
 		List<Attr> attributes = XpathUtils.extractAttributes(node);
@@ -905,8 +906,7 @@ public class DictionaryWizard extends AbstractWizard
 
 	private ControlKind composeKind(Node node)
 	{
-		String name = node.getNodeName();
-		return this.pluginInfo.controlKindByNode(name);
+		return this.pluginInfo.controlKindByNode(node);
 	}
 
 	private String composeId(Node node)
@@ -920,7 +920,7 @@ public class DictionaryWizard extends AbstractWizard
 			res = composeFromAttr(res, node, LocatorFieldKind.ACTION);
 		}
 		res = composeFromText(res, node);
-		return res;
+		return res == null ? null : res.trim();
 	}
 
 	private String composeFromAttr(String res, Node node, LocatorFieldKind kind)
@@ -944,7 +944,7 @@ public class DictionaryWizard extends AbstractWizard
 			}
 
 			String attr = attrNode.getNodeValue();
-			if (XpathUtils.isStable(attr))
+			if (XpathUtils.isStable(attr, this.pluginInfo::isStable))
 			{
 				return attr;
 			}
@@ -960,7 +960,7 @@ public class DictionaryWizard extends AbstractWizard
 		}
 
 		String text = node.getTextContent();
-		if (XpathUtils.isStable(text))
+		if (XpathUtils.isStable(text, this.pluginInfo::isStable))
 		{
 			return text;
 		}
