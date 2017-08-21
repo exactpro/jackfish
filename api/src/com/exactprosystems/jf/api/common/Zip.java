@@ -118,19 +118,21 @@ public class Zip
     public Zip extract(String name, String path) throws IOException, DataFormatException
     {
         if (this.entries.containsKey(name)) {
-            File file = new File(path);
-            Path pathToFile = Paths.get(path);
-            if(!pathToFile.getParent().toFile().exists()){
-                Files.createDirectories(pathToFile.getParent());
-            }
-            if(!pathToFile.toFile().exists()){
-                Files.createFile(pathToFile);
-            }
+            Path p = Paths.get(path);
+            if(p.toFile().isDirectory()){
+                Path pathToFile = p.resolve(name);
+                if(!pathToFile.getParent().toFile().exists()){
+                    Files.createDirectories(pathToFile.getParent());
+                }
+                if(!pathToFile.toFile().exists()){
+                    Files.createFile(pathToFile);
+                }
 
-            try(FileOutputStream fos = new FileOutputStream(file)){
-                byte[] preparedBytes = decompress(this.entries.get(name));
-                fos.write(preparedBytes);
-                fos.close();
+                try(FileOutputStream fos = new FileOutputStream(pathToFile.toFile())){
+                    byte[] preparedBytes = decompress(this.entries.get(name));
+                    fos.write(preparedBytes);
+                    fos.close();
+                }
             }
         }
         return this;
