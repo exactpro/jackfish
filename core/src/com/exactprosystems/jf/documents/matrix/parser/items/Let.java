@@ -58,7 +58,7 @@ public class Let extends MatrixItem
 	public MatrixItem clone() throws CloneNotSupportedException
 	{
 		Let clone = (Let) super.clone();
-		clone.value = value;
+		clone.value = value.clone();
 		return clone;
 	}
 

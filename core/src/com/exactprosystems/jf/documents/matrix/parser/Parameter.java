@@ -68,7 +68,7 @@ public class Parameter implements Mutable, Cloneable, Setter<String>, Getter<Str
 		clone.type = type;
 		clone.name = name;
 		clone.expression = expression;
-		clone.compiled = compiled;
+		clone.compiled = null;
 		clone.changed = changed;
 		clone.description = description;
 
