@@ -1,0 +1,72 @@
+#Id;#TestCase;#Kind;#Depends;#For
+vars;;;;
+    #Id;#Global;#Let
+    file1;1;
+
+    #Id;#Global;#Let
+    file1Name;1;
+
+    #Id;#Global;#Let
+    extractPath;1;
+
+    #Id;#Global;#Let
+    file2;1;
+
+    // This archive should contains 1 text file
+    #Id;#Global;#Let
+    loadZip;1;
+
+    #Id;#Global;#Let
+    saveZip;1;
+
+    #If
+    File(extractPath + File.pathSeparator + file1Name).exists() == true
+        #Assert;#Message
+        File(extractPath + File.pathSeparator + file1Name).delete() == true;
+
+    #EndIf
+
+    #If
+    File(saveZip).exists() == true
+        #Assert;#Message
+        File(saveZip).delete() == true;
+
+    #EndIf
+
+
+#TestCase;#Kind;#Depends;#For
+Test case;Never;;
+    #Id;#Let
+    zip;Zip.create()
+
+    #Assert;#Message
+    zip.names().size() == 0;'Not empty entries'
+
+    #Assert;#Message
+    zip.load(loadZip).names().size() == 1;'Error loading zip archive'
+
+    #Assert;#Message
+    zip.add(file1).names().size() == 2;'Wrong size of messages after adding file1'
+
+    #Assert;#Message
+    zip.add(file2).names().size() == 3;'Wrong size of messages after adding file2'
+
+    #Assert;#Message
+    zip.extract(file1Name, extractPath).names().size() == 3;
+
+    #Assert;#Message
+    File(extractPath + File.pathSeparator + file1Name).exists() == true;'File not exist'
+
+    #Assert;#Message
+    zip.remove(file1Name).names().size() == 2;'Wrong size of messages after remove file1'
+
+    #Assert;#Message
+    zip.remove('NonExistFile').names().size() == 2;
+
+    #Assert;#Message
+    zip.save(saveZip).names().size() == 2;
+
+    #Assert;#Message
+    File(saveZip).exists() == true;'File not exist'
+
+

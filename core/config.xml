@@ -92,7 +92,7 @@
         </parameters>
         <clientJar>${JF}/clients/sfclient.jar</clientJar>
         <clientLimit>0</clientLimit>
-        <clientDictionary>dic/clients/FIX50.LSE.xml</clientDictionary>
+        <clientDictionary>dic/clients/FIX50.xml</clientDictionary>
     </clientEntry>
     <clientEntry>
         <name>TestClient</name>

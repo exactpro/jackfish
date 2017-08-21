@@ -40,7 +40,7 @@ public class ActionTrackProvider
 		{
 			try 
 			{
-				command.undo().execute();
+				command.undo.execute();
 			} 
 			catch (Exception e) 
 			{
@@ -58,7 +58,7 @@ public class ActionTrackProvider
 		{
 			try 
 			{
-				command.redo().execute();
+				command.redo.execute();
 			} 
 			catch (Exception e) 
 			{
@@ -71,23 +71,13 @@ public class ActionTrackProvider
 
 	private class DoubleCommand
 	{
-		private Command undo;
-		private Command redo;
+	    public Command undo;
+	    public Command redo;
 
 		public DoubleCommand(Command undo, Command redo)
 		{
 			this.undo = undo;
 			this.redo = redo;
-		}
-
-		public Command undo()
-		{
-			return undo;
-		}
-
-		public Command redo()
-		{
-			return redo;
 		}
 	}
 }
