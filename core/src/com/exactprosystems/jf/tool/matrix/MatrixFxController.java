@@ -301,7 +301,7 @@ public class MatrixFxController implements Initializable, ContainingParent, IMat
 		this.tree.init(model, settings, rowContextMenu);
 		this.tab = CustomTabPane.getInstance().createTab(model);
 		this.tab.setContent(this.pane);
-		console.setConsumer(s -> this.listView.getItems().add(ConsoleText.defaultText(s)));
+		console.setConsumer(s -> Platform.runLater(() -> this.listView.getItems().add(ConsoleText.defaultText(s))));
 		CustomTabPane.getInstance().addTab(this.tab);
 		CustomTabPane.getInstance().selectTab(this.tab);
 
