@@ -79,7 +79,13 @@ public class MatrixConnectionImpl implements MatrixConnection
         return this.matrix.getEngine() == null ? null : this.matrix.getEngine().getReportName();
     }
 
-    @Override
+	@Override
+	public void close() throws Exception
+	{
+		this.matrix.close();
+	}
+
+	@Override
     public String getImagesDirPath()
     {
         return this.matrix.getEngine() == null ? null : this.matrix.getEngine().getImagesDirPath();

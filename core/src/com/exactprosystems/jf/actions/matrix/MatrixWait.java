@@ -64,7 +64,8 @@ public class MatrixWait extends AbstractAction
         else
         {
             this.matrix.join(this.time);
-            super.setResult(null);
+			this.matrix.close();
+			super.setResult(null);
         }
     }
 }

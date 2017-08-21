@@ -70,14 +70,13 @@ public class ScheduleController implements Initializable, ContainingParent
 		columnCheckBox.prefWidthProperty().bind(new SimpleObjectProperty<>(widthCheckBox));
 		columnCheckBox.setCellFactory(p -> new TableCell<MatrixWithState, MatrixWithState>()
 		{
-			private CheckBox box = new CheckBox();
-
 			@Override
 			protected void updateItem(MatrixWithState item, boolean empty)
 			{
 				super.updateItem(item, empty);
 				if (item != null)
 				{
+					CheckBox box = new CheckBox();
 					box.setSelected(item.isChecked());
 					box.selectedProperty().addListener((observable, oldValue, newValue) -> item.setChecked(newValue));
 					setGraphic(box);
@@ -158,17 +157,18 @@ public class ScheduleController implements Initializable, ContainingParent
 				this.addMatrix(matrix);
 				break;
 			case Running:
-				changeDate(matrix);
-				changeState(matrix, state, done, total);
+				this.changeDate(matrix);
+				this.changeState(matrix, state, done, total);
 				break;
 			case Waiting:
-				clearDate(matrix);
-				changeState(matrix, state, done, total);
+				this.addMatrix(matrix);
+				this.clearDate(matrix);
+				this.changeState(matrix, state, done, total);
 				break;
 			case Pausing:
 			case Stopped:
 			case Finished:
-				changeState(matrix, state, done, total);
+				this.changeState(matrix, state, done, total);
 				break;
 			case Destroyed:
 				this.removeMatrix(matrix);
@@ -213,7 +213,7 @@ public class ScheduleController implements Initializable, ContainingParent
 
 	private Optional<MatrixWithState> getFirst(Matrix matrix)
 	{
-		return this.tableView.getItems().stream().filter(m -> m.matrix.equals(matrix)).findFirst();
+		return this.tableView.getItems().stream().filter(m -> m.matrix == matrix).findFirst();
 	}
 
 	private void refresh()
@@ -226,11 +226,8 @@ public class ScheduleController implements Initializable, ContainingParent
 
 	private List<Matrix> getSelected()
 	{
-		return this.tableView.getItems()
-				.stream()
-				.filter(MatrixWithState::isChecked)
-				.map(MatrixWithState::getMatrix)
-				.collect(Collectors.toList());
+		List<Matrix> collect = this.tableView.getItems().stream().filter(MatrixWithState::isChecked).map(MatrixWithState::getMatrix).collect(Collectors.toList());
+		return collect;
 	}
 
 	private void addMatrix(Matrix matrix)

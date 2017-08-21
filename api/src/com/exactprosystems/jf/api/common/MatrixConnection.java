@@ -24,5 +24,7 @@ public interface MatrixConnection
 
     String getReportName();
 
+	void close() throws Exception;
+
     String getImagesDirPath();
 }
