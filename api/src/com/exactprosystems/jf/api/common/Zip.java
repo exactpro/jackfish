@@ -84,12 +84,14 @@ public class Zip
     }
     
     @DescriptionAttribute(text = "Adds one file into zip archive from @path.")
-    public Zip add(String path) throws IOException
+    public Zip add(String path) throws Exception
     {
         File file = new File(path);
 
         if (file.isFile() && file.exists()){
             this.entries.put(file.getName(), compress(getBytesFromFile(file)));
+        } else {
+            throw new Exception("File " + file.getName() + " is not exist or it is directory");
         }
         return this;
     }
