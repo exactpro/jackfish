@@ -9,6 +9,7 @@
 package com.exactprosystems.jf.app;
 
 import com.exactprosystems.jf.api.app.*;
+import com.exactprosystems.jf.api.common.SerializablePair;
 import com.exactprosystems.jf.api.common.Str;
 import com.exactprosystems.jf.common.CommonHelper;
 import com.exactprosystems.jf.common.MainRunner;
@@ -21,10 +22,7 @@ import com.exactprosystems.jf.documents.config.Parameter;
 import com.exactprosystems.jf.documents.guidic.GuiDictionary;
 import org.apache.log4j.Logger;
 
-import java.io.IOException;
 import java.io.Reader;
-import java.net.DatagramSocket;
-import java.net.ServerSocket;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.*;
@@ -116,7 +114,6 @@ public class ApplicationPool implements IApplicationPool
 
 			// prepare initial parameters
 			AppEntry entry = parametersEntry(id);
-			int port = firstFreePort(entry);
 
 			Map<String, String> driverParameters = getDriverParameters(entry);
 			final IApplicationFactory applicationFactory = loadFactory(id, entry);
@@ -126,9 +123,10 @@ public class ApplicationPool implements IApplicationPool
 			String jarPath = MainRunner.makeDirWithSubstitutions(entry.get(Configuration.appJar)); 
 			String work = MainRunner.makeDirWithSubstitutions(entry.get(Configuration.appWorkDir));
 
-			int pid = application.connect(port, jarPath, work, remoteClassName, driverParameters, parameters);
+			Integer startPort = Integer.parseInt(entry.get(Configuration.appStartPort));
+			SerializablePair<Integer, Integer> pair = application.connect(startPort, jarPath, work, remoteClassName, driverParameters, parameters);
 
-			return new AppConnection(application, id, port, applicationFactory, pid);
+			return new AppConnection(application, id, pair.getValue(), applicationFactory, pair.getKey());
 		}
 		catch (InterruptedException e)
 		{
@@ -155,8 +153,7 @@ public class ApplicationPool implements IApplicationPool
 			
 			// prepare initial parameters
 			AppEntry entry = parametersEntry(id);
-			int port = firstFreePort(entry);
-			
+
 			Map<String, String> driverParameters = getDriverParameters(entry);
 			final IApplicationFactory applicationFactory = loadFactory(id, entry);
 			final IApplication application = applicationFactory.createApplication();
@@ -164,11 +161,12 @@ public class ApplicationPool implements IApplicationPool
 			String remoteClassName = applicationFactory.getRemoteClassName();
 			String jarPath = MainRunner.makeDirWithSubstitutions(entry.get(Configuration.appJar));
 			String work = MainRunner.makeDirWithSubstitutions(entry.get(Configuration.appWorkDir));
-			
-			int pid = application.start(port, jarPath, work, remoteClassName, driverParameters, parameters);
-			AppConnection connection = new AppConnection(application, id, port, applicationFactory, pid);
+
+			Integer startPort = Integer.parseInt(entry.get(Configuration.appStartPort));
+			SerializablePair<Integer, Integer> pair = application.start(startPort, jarPath, work, remoteClassName, driverParameters, parameters);
+			AppConnection connection = new AppConnection(application, id, pair.getValue(), applicationFactory, pair.getKey());
+
 			this.connections.add(connection);
-			
 			return connection;
 		}
 		catch (InterruptedException e)
@@ -329,29 +327,6 @@ public class ApplicationPool implements IApplicationPool
 		return applicationFactory;
 	}
 	
-	private int firstFreePort(AppEntry entry) throws Exception
-	{
-		String startPortStr = entry.get(Configuration.appStartPort);
-		int startPort = Integer.parseInt(startPortStr);
-		int port = 0;
-		boolean ok = false;
-		for (int count = 0; count <= 1000; count++)
-		{
-			port = startPort + count;
-			if (available(port))
-			{
-				ok = true;
-				break;
-			}
-		}
-		if (!ok)
-		{
-			throw new Exception("No one free port in range " + startPort + "-" + (startPort + 1000));
-		}
-		
-		return port;
-	}
-	
 	private Map<String, String> getDriverParameters(AppEntry entry) throws Exception
 	{
 		List<Parameter> list = entry.getParameters();
@@ -365,29 +340,6 @@ public class ApplicationPool implements IApplicationPool
 		return driverParameters;
 	}
 
-	private static boolean available(int port)
-	{
-		try (ServerSocket ss = new ServerSocket(port))
-		{
-			ss.setReuseAddress(true);
-		}
-		catch (IOException e)
-		{
-			return false;
-		}
-
-		try (DatagramSocket ds = new DatagramSocket(port))
-		{
-			ds.setReuseAddress(true);
-		}
-		catch (IOException e)
-		{
-			return false;
-		}
-
-		return true;
-	}
-	
 	private DocumentFactory factory;
 
 	private Map<String, IApplicationFactory> appFactories;

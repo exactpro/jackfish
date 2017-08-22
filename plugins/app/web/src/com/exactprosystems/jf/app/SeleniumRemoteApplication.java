@@ -19,6 +19,7 @@ import org.apache.log4j.*;
 import org.openqa.selenium.*;
 import org.openqa.selenium.Dimension;
 import org.openqa.selenium.Point;
+import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeDriverService;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.firefox.GeckoDriverService;
@@ -40,6 +41,8 @@ import java.rmi.RemoteException;
 import java.util.*;
 import java.util.List;
 import java.util.Map.Entry;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.stream.Collectors;
 
 public class SeleniumRemoteApplication extends RemoteApplication
@@ -347,6 +350,21 @@ public class SeleniumRemoteApplication extends RemoteApplication
 		}
 		
 		return -1;
+	}
+
+	public static void main(String[] args)
+	{
+		ExecutorService executorService = Executors.newFixedThreadPool(3);
+		System.setProperty(ChromeDriverService.CHROME_DRIVER_EXE_PROPERTY, "/home/andrey.bystrov/Projects/JackFish/core/apps/unix/chromedriver-linux-2.28-x64.");
+
+		for (int i = 0; i < 10; i++)
+		{
+			Runnable runnable = () -> {
+				ChromeDriver chromeDriver = new ChromeDriver(ChromeDriverService.createDefaultService());
+				chromeDriver.get("http://ya.ru");
+			};
+			executorService.submit(runnable);
+		}
 	}
 
 	@Override

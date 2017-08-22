@@ -14,17 +14,22 @@ import com.exactprosystems.jf.api.error.app.ElementNotFoundException;
 import com.exactprosystems.jf.api.error.app.ProxyException;
 import org.w3c.dom.Document;
 
-import java.awt.*;
+import java.awt.Rectangle;
+import java.io.IOException;
+import java.net.DatagramSocket;
+import java.net.ServerSocket;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.*;
-import java.util.List;
 
 public abstract class RemoteApplication implements IRemoteApplication
 {
+	public static final String CONNECTED_PORT_DELIMITER = ":";
+	public static final String CONNECTED_PORT = "connectedPort" + CONNECTED_PORT_DELIMITER;
+
 	public static void main(String[] args)
 	{
 		try
@@ -39,10 +44,10 @@ public abstract class RemoteApplication implements IRemoteApplication
 			String portSt = removeExtraQuotes(args[1]);
 			String[] argsApp = Arrays.copyOfRange(args, 2, args.length);
 			
-			int port = Integer.parseInt(portSt);
+			int startPort = Integer.parseInt(portSt);
 
 			System.err.println(time() + " mainClass  = " + mainClassName);
-			System.err.println(time() + " port       = " + portSt);
+			System.err.println(time() + " startPort  = " + portSt);
 			System.err.println(time() + " other args = " + Arrays.toString(argsApp));
 			
 
@@ -54,7 +59,10 @@ public abstract class RemoteApplication implements IRemoteApplication
 			
 			System.err.println(time() + " Registering remote stub...");
 			Remote stub = UnicastRemoteObject.exportObject(service, 0);
+			int port = firstFreePort(startPort);
 			final Registry registry = LocateRegistry.createRegistry(port);
+			System.out.println(CONNECTED_PORT + port);
+			System.err.println(time() + " Connected port : " + port);
 			registry.rebind(IApplication.serviceName, stub);
 			System.err.println(time() + " ... registering complete");
 		}
@@ -62,7 +70,52 @@ public abstract class RemoteApplication implements IRemoteApplication
 		{
 			e.printStackTrace();
 		}
-	}	
+	}
+
+	private static int firstFreePort(int startPort) throws Exception
+	{
+		System.err.println(time() + "free port thread " + Thread.currentThread());
+		int port = 0;
+		boolean ok = false;
+		for (int count = 0; count <= 1000; count++)
+		{
+			port = startPort + count;
+			if (available(port))
+			{
+				ok = true;
+				break;
+			}
+		}
+		if (!ok)
+		{
+			throw new Exception("No one free port in range " + startPort + "-" + (startPort + 1000));
+		}
+
+		return port;
+	}
+
+	private static boolean available(int port)
+	{
+		try (ServerSocket ss = new ServerSocket(port))
+		{
+			ss.setReuseAddress(true);
+		}
+		catch (IOException e)
+		{
+			return false;
+		}
+
+		try (DatagramSocket ds = new DatagramSocket(port))
+		{
+			ds.setReuseAddress(true);
+		}
+		catch (IOException e)
+		{
+			return false;
+		}
+
+		return true;
+	}
 	
 
 	private static String time()

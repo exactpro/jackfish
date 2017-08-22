@@ -8,7 +8,11 @@
 
 package com.exactprosystems.jf.api.app;
 
+import com.exactprosystems.jf.api.common.SerializablePair;
+
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.InputStreamReader;
 import java.lang.ProcessBuilder.Redirect;
 import java.rmi.RemoteException;
 import java.rmi.ServerException;
@@ -47,18 +51,18 @@ public abstract class ProxyApplication implements IApplication
     }
 
 	@Override
-	public int connect(int port, String jar, String work, String remoteClassName, Map<String, String> driverParameters, Map<String, String> parameters) throws Exception
+	public SerializablePair<Integer, Integer> connect(int startPort, String jar, String work, String remoteClassName, Map<String, String> driverParameters, Map<String, String> parameters) throws Exception
 	{
-		return startOrConnect(false, port, jar, work, remoteClassName, driverParameters, parameters);
+		return startOrConnect(false, startPort, jar, work, remoteClassName, driverParameters, parameters);
 	}
 
 	@Override
-	public int start(int port, String jar, String work, String remoteClassName, Map<String, String> driverParameters, Map<String, String> parameters) throws Exception
+	public SerializablePair<Integer, Integer> start(int startPort, String jar, String work, String remoteClassName, Map<String, String> driverParameters, Map<String, String> parameters) throws Exception
 	{
-		return startOrConnect(true, port, jar, work, remoteClassName, driverParameters, parameters);
+		return startOrConnect(true, startPort, jar, work, remoteClassName, driverParameters, parameters);
 	}
 
-	public int startOrConnect(boolean start, int port, String jar, String work, String remoteClassName, Map<String, String> driverParameters, Map<String, String> parameters) throws Exception
+	public SerializablePair<Integer,Integer> startOrConnect(boolean start, int startPort, String jar, String work, String remoteClassName, Map<String, String> driverParameters, Map<String, String> parameters) throws Exception
 	{
 		String fileSeparator 	= System.getProperty("file.separator");
 		
@@ -106,7 +110,7 @@ public abstract class ProxyApplication implements IApplication
 		add(commandLine, classPath.toString());
 		add(commandLine, RemoteApplication.class.getName());
 		add(commandLine, remoteClassName);
-		add(commandLine, String.valueOf(port));
+		add(commandLine, String.valueOf(startPort));
 		
 		System.out.println(commandLine);
 
@@ -114,18 +118,32 @@ public abstract class ProxyApplication implements IApplication
 		//java -cp jar.jar:another1.jar:another2.jar com.exactprosystems.jf.api.app.RemoteApplication remoteClassName port
 		//		classpath								mainclass										arguments
 		// launch the process
-		Redirect output = Redirect.appendTo(new File("remote_out.txt"));
-		
+		Redirect errOutput = Redirect.appendTo(new File("remote_out.txt"));
+
 		ProcessBuilder builder = new ProcessBuilder(commandLine);
 		builder
-			.redirectOutput(output)
-			.redirectError(output)
+			.redirectError(errOutput)
 			.directory(workDir);
-		
-		
+
+
 		this.process = builder.start();
-		
-	    Thread.sleep(1000);
+
+		int port = 0;
+		try(BufferedReader reader = new BufferedReader(new InputStreamReader(this.process.getInputStream())))
+		{
+			String outPort;
+			while ((outPort = reader.readLine()) != null)
+			{
+				if (outPort.startsWith(RemoteApplication.CONNECTED_PORT))
+				{
+					port = Integer.parseInt(outPort.split(RemoteApplication.CONNECTED_PORT_DELIMITER)[1]);
+					break;
+				}
+			}
+		}
+
+
+		Thread.sleep(1000);
 
 		String remoteLog 		= driverParameters.get(remoteLogName);
 		String remoteLogLevel 	= driverParameters.get(remoteLogLevelName);
@@ -173,7 +191,7 @@ public abstract class ProxyApplication implements IApplication
 				this.service.createLogger(remoteLog, remoteLogLevel, remoteLogPattern);
                 int pid = start ? this.service.run(parameters) : this.service.connect(parameters);
                 this.service.setPluginInfo(this.factory.getInfo());
-                return pid;
+                return new SerializablePair<>(pid, port);
 	    	}
 	    	catch (ServerException se) {
 				tryStop();

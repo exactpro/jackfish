@@ -9,6 +9,7 @@
 package com.exactprosystems.jf.app;
 
 import com.exactprosystems.jf.api.app.ProxyApplication;
+import com.exactprosystems.jf.api.common.SerializablePair;
 import com.exactprosystems.jf.api.common.Str;
 
 import java.util.Arrays;
@@ -28,19 +29,21 @@ public class ProxyWebApp extends ProxyApplication
     }
 
 	@Override
-	public int connect(int port, String jar, String work, String remoteClassName, Map<String, String> driverParameters, Map<String, String> parameters) throws Exception
+	public SerializablePair<Integer, Integer> connect(int startPort, String jar, String work, String remoteClassName, Map<String, String> driverParameters, Map<String, String> parameters) throws Exception
 	{
-		System.out.println("WebApp.start() " +port + "  " + Arrays.toString(parameters.values().toArray()));
+		System.out.println("WebApp.start() " + startPort + "  " + Arrays.toString(parameters.values().toArray()));
 		tune(driverParameters, parameters);
-		return super.connect(port, jar, work, remoteClassName, driverParameters, parameters);
+		return super.connect(startPort, jar, work, remoteClassName, driverParameters, parameters);
 	}
 
 	@Override
-	public int start(int port, String jar, String work, String remoteClassName, Map<String, String> driverParameters, Map<String, String> parameters) throws Exception
+	public SerializablePair<Integer, Integer> start(int startPort, String jar, String work, String remoteClassName, Map<String, String> driverParameters, Map<String, String> parameters) throws Exception
 	{
-		System.out.println("WebApp.start() " +port + "  " + Arrays.toString(parameters.values().toArray()));
+
 		tune(driverParameters, parameters);
-		return super.start(port, jar, work, remoteClassName, driverParameters, parameters);
+		SerializablePair<Integer, Integer> start = super.start(startPort, jar, work, remoteClassName, driverParameters, parameters);
+		System.out.println("WebApp.start() " + start.getValue() + "  " + Arrays.toString(parameters.values().toArray()));
+		return start;
 	}
 
 	@Override

@@ -9,6 +9,7 @@
 package com.exactprosystems.jf.app;
 
 import com.exactprosystems.jf.api.app.ProxyApplication;
+import com.exactprosystems.jf.api.common.SerializablePair;
 import com.exactprosystems.jf.api.common.Str;
 
 import java.util.Arrays;
@@ -32,19 +33,19 @@ public class ProxyWinGuiApp extends ProxyApplication
     }
 
 	@Override
-	public int connect(int port, String jar, String work, String remoteClassName, Map<String, String> driverParameters, Map<String, String> parameters) throws Exception
+	public SerializablePair<Integer, Integer> connect(int startPort, String jar, String work, String remoteClassName, Map<String, String> driverParameters, Map<String, String> parameters) throws Exception
 	{
-		System.out.println("WinGuiApp.connect() " +port + "  " + Arrays.toString(parameters.values().toArray()));
+		System.out.println("WinGuiApp.connect() " + startPort + "  " + Arrays.toString(parameters.values().toArray()));
 		tune(driverParameters, parameters);
-		return super.connect(port, jar, work, remoteClassName, driverParameters, parameters);
+		return super.connect(startPort, jar, work, remoteClassName, driverParameters, parameters);
 	}
 
 	@Override
-	public int start(int port, String jar, String work, String remoteClassName, Map<String, String> driverParameters, Map<String, String> parameters) throws Exception
+	public SerializablePair<Integer, Integer> start(int startPort, String jar, String work, String remoteClassName, Map<String, String> driverParameters, Map<String, String> parameters) throws Exception
 	{
-		System.out.println("WinGuiApp.start() " +port + "  " + Arrays.toString(parameters.values().toArray()));
+		System.out.println("WinGuiApp.start() " + startPort + "  " + Arrays.toString(parameters.values().toArray()));
 		tune(driverParameters, parameters);
-		return super.start(port, jar, work, remoteClassName, driverParameters, parameters);
+		return super.start(startPort, jar, work, remoteClassName, driverParameters, parameters);
 	}
 
 	@Override

@@ -8,6 +8,8 @@
 
 package com.exactprosystems.jf.api.app;
 
+import com.exactprosystems.jf.api.common.SerializablePair;
+
 import java.util.Map;
 
 public interface IApplication
@@ -17,8 +19,16 @@ public interface IApplication
 	void 				init(IApplicationPool pool, IApplicationFactory factory) throws Exception;
 
     int                 reconnect(Map<String, String> parameters) throws Exception;
-	int					connect(int port, String jar, String work, String remoteClassName, Map<String, String> driverParameters, Map<String, String> parameters) throws Exception;
-	int 				start(int port, String jar, String work, String remoteClassName, Map<String, String> driverParameters, Map<String, String> parameters) throws Exception;
+    /**
+	 * key   : pid <br>
+	 * value : port
+     */
+	SerializablePair<Integer, Integer> connect(int startPort, String jar, String work, String remoteClassName, Map<String, String> driverParameters, Map<String, String> parameters) throws Exception;
+	/**
+	 * key   : pid <br>
+	 * value : port
+	 */
+	SerializablePair<Integer, Integer> start(int startPort, String jar, String work, String remoteClassName, Map<String, String> driverParameters, Map<String, String> parameters) throws Exception;
 	void 				stop(boolean needKill) throws Exception;
 
 	IRemoteApplication 	service();
