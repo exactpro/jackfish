@@ -306,7 +306,7 @@ public class MainRunner
 
 	
 	private static void runInConsoleMode(CommandLine line, String configString, VerboseLevel verboseLevel, 
-			Option startAtName, Option inputName, Option outputName, Option shortPaths) throws java.text.ParseException
+			Option startAtName, Option inputName, Option outputName, Option shortPaths) throws Exception
 	{
 		printVersion();
 
@@ -343,6 +343,8 @@ public class MainRunner
 		    return;
 		}
 		
+		configuration.refresh();
+
 		String input = line.getOptionValue(inputName.getOpt());
 		String outputString = line.getOptionValue(outputName.getOpt());
 		if (outputString != null)

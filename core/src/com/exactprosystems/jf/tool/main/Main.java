@@ -453,7 +453,7 @@ public class Main extends Application
 		Optional<File> optional = chooseFile(SystemVars.class, filePath, DialogsHelper.OpenSaveMode.OpenFile);
 		if (optional.isPresent())
 		{
-			loadDocument2(optional.get(), DocumentKind.SYSTEM_VARS);
+			loadDocument(optional.get(), DocumentKind.SYSTEM_VARS);
 		}
 	}
 
@@ -463,7 +463,7 @@ public class Main extends Application
 		Optional<File> optional = chooseFile(PlainText.class, filePath, DialogsHelper.OpenSaveMode.OpenFile);
 		if (optional.isPresent())
 		{
-			loadDocument2(optional.get(), DocumentKind.PLAIN_TEXT);
+			loadDocument(optional.get(), DocumentKind.PLAIN_TEXT);
 		}
 	}
 
@@ -473,7 +473,7 @@ public class Main extends Application
 		Optional<File> optional = chooseFile(Csv.class, filePath, DialogsHelper.OpenSaveMode.OpenFile);
 		if (optional.isPresent())
 		{
-			loadDocument2(optional.get(), DocumentKind.CSV);
+			loadDocument(optional.get(), DocumentKind.CSV);
 		}
 	}
 	//endregion
@@ -860,7 +860,7 @@ public class Main extends Application
 		return this.controller.checkFile(file) ? Optional.empty() : Optional.ofNullable(file);
 	}
 
-    private Document loadDocument2(File file, DocumentKind kind) throws Exception
+    private Document loadDocument(File file, DocumentKind kind) throws Exception
     {
         Document doc = this.factory.createDocument(kind, file.getPath());
         
@@ -892,7 +892,15 @@ public class Main extends Application
             }
             if (!isFromInit)
             {
-                this.factory.showDocument(doc);
+                // TODO replace this branches to one when all documents use new approach
+                if (doc instanceof SystemVars || doc instanceof PlainText || doc instanceof Csv)
+                {
+                    this.factory.showDocument(doc);
+                }
+                else
+                {
+                    doc.display();
+                }
             }
             doc.saved();
             SettingsValue maxSettings = this.settings.getValueOrDefault(Settings.GLOBAL_NS, Settings.SETTINGS, Settings.MAX_LAST_COUNT, "3");
@@ -913,61 +921,6 @@ public class Main extends Application
 
         return null;
     }
-
-    @Deprecated
-	private Document loadDocument(File file, DocumentKind kind) throws Exception
-	{
-        Document doc = this.factory.createDocument(kind, file.getPath());
-        
-		if (doc == null)
-		{
-			return null;
-		}
-		if (!file.exists())
-		{
-			DialogsHelper.showError(String.format("File with name %s not found", file.getAbsoluteFile()));
-			throw new FileNotFoundException();
-		}
-		try
-		{
-			try (Reader reader = CommonHelper.readerFromFile(file))
-			{
-				doc.load(reader);
-			}
-			catch (Exception e)
-			{
-				logger.error(e.getMessage(), e);
-				DialogsHelper.showError(e.getMessage());
-
-				doc = this.factory.createDocument(DocumentKind.PLAIN_TEXT, doc.getNameProperty().get());
-				try (Reader reader = CommonHelper.readerFromFile(file))
-				{
-					doc.load(reader);
-				}
-			}
-			if (!isFromInit)
-			{
-				doc.display();
-			}
-			doc.saved();
-			SettingsValue maxSettings = this.settings.getValueOrDefault(Settings.GLOBAL_NS, Settings.SETTINGS, Settings.MAX_LAST_COUNT, "3");
-			int max = Integer.parseInt(maxSettings.getValue());
-			this.settings.setValue(Settings.MAIN_NS, kind.toString(), new File(doc.getNameProperty().get()).getName(), max, doc.getNameProperty().get());
-			this.settings.saveIfNeeded();
-			if (kind == DocumentKind.MATRIX)
-			{
-				this.controller.updateFileLastMatrix(this.settings.getValues(Settings.MAIN_NS, kind.toString()));
-			}
-			return doc;
-		}
-		catch (Exception e)
-		{
-			logger.error(e.getMessage(), e);
-			DialogsHelper.showError("Error on load " + doc.getClass().getSimpleName() + "'" + file + "'");
-		}
-
-		return null;
-	}
 
 	public void removeMatrixFromSettings(String key) throws Exception
 	{

@@ -36,7 +36,6 @@ public class SystemVarsFx extends SystemVars
 		super.display();
 
 		getParameters().fire();
-		System.err.println(">> " + getNameProperty().get());
 	}
 
 	@Override
