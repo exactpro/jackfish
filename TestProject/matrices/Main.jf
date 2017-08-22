@@ -162,6 +162,12 @@ Test;Test RF.jf;;;
     runMatrix;'TestRF'
 
 
+#Id;#TestCase;#Kind;#Depends;#For
+Test;Zip;;;
+    #Call;testName
+    runMatrix;'Zip'
+
+
 // 
 #Id;#TestCase;#Kind;#Depends;#For
 REPORT;Cleanup;;;
