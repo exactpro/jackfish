@@ -65,16 +65,12 @@ public class Zip
     @DescriptionAttribute(text = "Saves the archive to @path.")
     public Zip save(String path) throws IOException, DataFormatException
     {
-        File file = new File(path);
-        Path pathToFile = Paths.get(path);
-        if(!pathToFile.getParent().toFile().exists()){
-            Files.createDirectories(pathToFile.getParent());
-        }
-        if(!pathToFile.toFile().exists()){
-            Files.createFile(pathToFile);
-        }
+        Path pathToFile = Paths.get(path).toAbsolutePath();
+        File file = new File(pathToFile.toString());
 
-        try(ZipOutputStream zipOut = new ZipOutputStream(new FileOutputStream(file))){
+        try(ZipOutputStream zipOut = new ZipOutputStream(
+                file.exists() ? new FileOutputStream(file) : new FileOutputStream(path)
+        )){
             zipOut.setLevel(Deflater.DEFAULT_COMPRESSION);
             for(Map.Entry<String, byte[]> entry: this.entries.entrySet()){
                 zipOut.putNextEntry(new ZipEntry(entry.getKey()));
@@ -95,15 +91,6 @@ public class Zip
         if (file.isFile() && file.exists()){
             this.entries.put(file.getName(), compress(getBytesFromFile(file)));
         }
-        /*if (file.isDirectory() && file.exists()){
-            File[] files = file.listFiles();
-            for (File f : files){
-                if(f.isFile()){
-                    this.entries.put(f.getName(), compress(getBytesFromFile(f)));
-                }
-            }
-        }*/
-
         return this;
     }
 
@@ -114,16 +101,13 @@ public class Zip
         return this;
     }
 
-    @DescriptionAttribute(text = "Extracts one file with @name from zip archive to @path.")
-    public Zip extract(String name, String path) throws IOException, DataFormatException
+    @DescriptionAttribute(text = "Extracts one file with @name from zip archive to @path (directory).")
+    public Zip extract(String name, String path) throws Exception
     {
         if (this.entries.containsKey(name)) {
-            Path p = Paths.get(path);
-            if(p.toFile().isDirectory()){
+            Path p = Paths.get(path).toAbsolutePath();
+            if(new File(p.toString()).isDirectory()){
                 Path pathToFile = p.resolve(name);
-                if(!pathToFile.getParent().toFile().exists()){
-                    Files.createDirectories(pathToFile.getParent());
-                }
                 if(!pathToFile.toFile().exists()){
                     Files.createFile(pathToFile);
                 }
@@ -133,7 +117,11 @@ public class Zip
                     fos.write(preparedBytes);
                     fos.close();
                 }
+            } else {
+                throw new Exception("Path " + path + " is not exist or it's file");
             }
+        } else {
+            throw new Exception("Zip not contains file " + name);
         }
         return this;
     }

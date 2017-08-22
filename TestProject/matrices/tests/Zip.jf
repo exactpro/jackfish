@@ -1,35 +1,42 @@
 #Id;#TestCase;#Kind;#Depends;#For
 vars;;;;
     #Id;#Global;#Let
-    file1;1;
+    file1;1;'testdata/zip/1.txt'
 
     #Id;#Global;#Let
-    file1Name;1;
+    file1Name;1;'1.txt'
 
     #Id;#Global;#Let
-    extractPath;1;
+    extractPath;1;'testdata/zip/temp/'
 
     #Id;#Global;#Let
-    file2;1;
+    file2;1;'testdata/zip/2.txt'
 
     // This archive should contains 1 text file
     #Id;#Global;#Let
-    loadZip;1;
+    loadZip;1;'testdata/zip/load.zip'
 
     #Id;#Global;#Let
-    saveZip;1;
+    saveZip;1;extractPath + 'newzip.zip'
 
     #If
-    File(extractPath + File.pathSeparator + file1Name).exists() == true
+    new File(extractPath).exists() == false
         #Assert;#Message
-        File(extractPath + File.pathSeparator + file1Name).delete() == true;
+        new File(extractPath).mkdir() == true;'Cant create temp dir'
 
     #EndIf
 
     #If
-    File(saveZip).exists() == true
+    new File(saveZip).exists() == true
         #Assert;#Message
-        File(saveZip).delete() == true;
+        new File(saveZip).delete() == true;'Error while removing temp file'
+
+    #EndIf
+
+    #If
+    new File(extractPath + file1Name).exists() == true
+        #Assert;#Message
+        new File(extractPath + file1Name).delete() == true;'Error while removing temp file'
 
     #EndIf
 
@@ -46,27 +53,78 @@ Test case;Never;;
     zip.load(loadZip).names().size() == 1;'Error loading zip archive'
 
     #Assert;#Message
+    zip.load(loadZip).names().contains('load.txt') == true;'Error loading zip archive'
+
+    #Assert;#Message
     zip.add(file1).names().size() == 2;'Wrong size of messages after adding file1'
+
+    #Assert;#Message
+    zip.load(loadZip).names().contains('1.txt') == true;'Not contain file 1.txt'
 
     #Assert;#Message
     zip.add(file2).names().size() == 3;'Wrong size of messages after adding file2'
 
     #Assert;#Message
+    zip.load(loadZip).names().contains('2.txt') == true;'Not contain file 2.txt'
+
+    #Assert;#Message
     zip.extract(file1Name, extractPath).names().size() == 3;
 
     #Assert;#Message
-    File(extractPath + File.pathSeparator + file1Name).exists() == true;'File not exist'
+    new File(extractPath + file1Name).exists() == true;'File not exist'
+
+    // 
+    #Id;#Step;#Kind;#For;#Depends
+    Extract file to not exist directory;;;;
+        #Let
+        zip.extract(file1Name, 'any/path/to/file')
+
+        #OnError
+            #Assert;#Message
+            err.Kind == ErrorKind.EXCEPTION;
+
+
+    #EndStep
+
+    // 
+    #Id;#Step;#Kind;#For;#Depends
+    Extract not exist file;;;;
+        #Let
+        zip.extract('anyFile', extractPath)
+
+        #OnError
+            #Assert;#Message
+            err.Kind == ErrorKind.EXCEPTION;
+
+
+    #EndStep
 
     #Assert;#Message
     zip.remove(file1Name).names().size() == 2;'Wrong size of messages after remove file1'
 
     #Assert;#Message
-    zip.remove('NonExistFile').names().size() == 2;
+    zip.names().contains('1.txt') == false;'Entry 1.txt does not removed'
+
+    #Assert;#Message
+    zip.remove('NotExistFile').names().size() == 2;'Wrong count of entries'
 
     #Assert;#Message
     zip.save(saveZip).names().size() == 2;
 
     #Assert;#Message
-    File(saveZip).exists() == true;'File not exist'
+    new File(saveZip).exists() == true;'File not exist'
+
+    // 
+    #Id;#Step;#Kind;#For;#Depends
+    Save zip to not exist directory;;;;
+        #Let
+        zip.save('any/path/to/file')
+
+        #OnError
+            #Assert;#Message
+            err.Kind == ErrorKind.EXCEPTION;
+
+
+    #EndStep
 
 

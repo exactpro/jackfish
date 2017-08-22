@@ -1,0 +1,7 @@
+This
+is
+test
+file1
+for Zip
+Please don't remove this file if You don't want get any errors while running tests.
+Thx!
