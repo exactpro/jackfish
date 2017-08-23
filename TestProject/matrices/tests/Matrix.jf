@@ -31,11 +31,8 @@ MATRIX_WAIT;Test case;Never;;
         #Assert;#Message
         MXRN1.Out.passed == 0 && MXRN1.Out.failed == 0;
 
-        #Action;$Matrix;$Time
-        MatrixWait;MXRN1.Out;1000
-
-        #Assert;#Message
-        MXRN1.Out.passed == 0 && MXRN1.Out.failed == 0;
+        #Action;#Assert;$Matrix;$Time
+        MatrixWait;This.Kind == ErrorKind.TIMEOUT && This.Result == Result.Failed;MXRN1.Out;1000
 
     #EndStep
 
@@ -316,9 +313,11 @@ MATRIX_RUN_FROM_TEXT;Test case;Never;;
 
         #Id;#RawText;#Kind
         TEXT1;Text;Matrix
-        ~;"// "
         ~;"#TestCase;#Kind;#Depends;#For"
         ~;"Test case;Never;;"
+        ~;"    #Action;$Name;$Value"
+        ~;"    Store;'startTime';DateTime.current()"
+        ~;""
         ~;"    #Id;#Let"
         ~;"    a;5"
         ~;""
@@ -329,14 +328,20 @@ MATRIX_RUN_FROM_TEXT;Test case;Never;;
         ~;"    Print;a + b"
         #EndRawText
 
+        #Id;#Let
+        initDate;DateTime.date(yearsCurrent, monthsCurrent, daysCurrent,  hours, minutes, seconds)
+
         #Id;#Action;$Text;$At
-        MXRN1;MatrixRunFromText;TEXT1;DateTime.date(yearsCurrent, monthsCurrent, daysCurrent,  hours, minutes, seconds)
+        MXRN1;MatrixRunFromText;TEXT1;initDate
 
         #Action;$Matrix
         MatrixWait;MXRN1.Out
 
+        #Action;$Name;$AsVar
+        Restore;'startTime';'startTime'
+
         #Assert;#Message
-        hours == DateTime.getHours(MXRN1.Out.getStartTime()) && minutes == DateTime.getMinutes(MXRN1.Out.getStartTime()) && seconds == DateTime.getSeconds(MXRN1.Out.getStartTime());
+        initDate.hours() == startTime.hours() && initDate.minutes() == startTime.minutes() && initDate.seconds() == startTime.seconds();
 
     #EndStep
 
@@ -360,14 +365,20 @@ MATRIX_RUN_FROM_TEXT;Test case;Never;;
         #Id;#Let
         daysCurrent;DateTime.getDays(new Date())
 
+        #Id;#Let
+        initDate;DateTime.date(yearsCurrent, monthsCurrent, daysCurrent,  hoursCurrent, minutesCurrent, secondsCurrent)
+
         #Action;'matrix is going to start'
-        Print;DateTime.date(yearsCurrent, monthsCurrent, daysCurrent,  hoursCurrent, minutesCurrent, secondsCurrent)
+        Print;initDate
 
         #Id;#RawText;#Kind
         TEXT1;Text;Matrix
         ~;"// "
         ~;"#TestCase;#Kind;#Depends;#For"
         ~;"Test case;Never;;"
+        ~;"    #Action;$Name;$Value"
+        ~;"    Store;'startTime';DateTime.current()"
+        ~;""
         ~;"    #Action;'matrix start fact'"
         ~;"    Print;new Date()"
         #EndRawText
@@ -378,8 +389,11 @@ MATRIX_RUN_FROM_TEXT;Test case;Never;;
         #Action;$Matrix
         MatrixWait;MXRN1.Out
 
+        #Action;$Name;$AsVar
+        Restore;'startTime';'startTime'
+
         #Assert;#Message
-        hoursCurrent == DateTime.getHours(MXRN1.Out.getStartTime()) && minutesCurrent == DateTime.getMinutes(MXRN1.Out.getStartTime());
+        Math.abs(initDate.getTime() - startTime.getTime()) < 1 * 1000;
 
     #EndStep
 
@@ -429,26 +443,38 @@ MATRIX_RUN_FROM_TEXT;Test case;Never;;
 
         #EndIf
 
+        #Id;#Let
+        initDate;DateTime.date(yearsCurrent, monthsCurrent, daysCurrent,  hours, minutes, secondsCurrent)
+
         #Action;'matrix is going to start'
-        Print;DateTime.date(yearsCurrent, monthsCurrent, daysCurrent,  hours, minutes, secondsCurrent)
+        Print;initDate
+
+        #Id;#Let
+        currentDate;DateTime.current()
 
         #Id;#RawText;#Kind
         TEXT1;Text;Matrix
         ~;"// "
         ~;"#TestCase;#Kind;#Depends;#For"
         ~;"Test case;Never;;"
+        ~;"    #Action;$Name;$Value"
+        ~;"    Store;'startTime';DateTime.current()"
+        ~;""
         ~;"    #Action;'matrix start fact'"
         ~;"    Print;new Date()"
         #EndRawText
 
         #Id;#Action;$Text;$At
-        MXRN1;MatrixRunFromText;TEXT1;DateTime.date(yearsCurrent, monthsCurrent, daysCurrent,  hours, minutes, secondsCurrent)
+        MXRN1;MatrixRunFromText;TEXT1;initDate
 
         #Action;$Matrix
         MatrixWait;MXRN1.Out
 
+        #Action;$Name;$AsVar
+        Restore;'startTime';'startTime'
+
         #Assert;#Message
-        hours == DateTime.getHours(MXRN1.Out.getStartTime()) && minutes == DateTime.getMinutes(MXRN1.Out.getStartTime());
+        Math.abs(currentDate.getTime() - startTime.getTime()) < 1 * 1000;
 
     #EndStep
 
@@ -631,14 +657,20 @@ MATRIX_RUN;Test case;Never;;
 
         #EndIf
 
+        #Id;#Let
+        initDate;DateTime.date(yearsCurrent, monthsCurrent, daysCurrent,  hours, minutes, seconds)
+
         #Id;#Action;$Matrix;$At
-        MXRN1;MatrixRun;'testdata/matrixrun/passed.jf';DateTime.date(yearsCurrent, monthsCurrent, daysCurrent,  hours, minutes, seconds)
+        MXRN1;MatrixRun;'testdata/matrixrun/passed.jf';initDate
 
         #Action;$Matrix
         MatrixWait;MXRN1.Out
 
+        #Action;$Name;$AsVar
+        Restore;'startTime';'startTime'
+
         #Assert;#Message
-        hours == DateTime.getHours(MXRN1.Out.getStartTime()) && minutes == DateTime.getMinutes(MXRN1.Out.getStartTime()) && seconds == DateTime.getSeconds(MXRN1.Out.getStartTime());
+        initDate.hours() == startTime.hours() && initDate.minutes() == startTime.minutes() && initDate.seconds() == startTime.seconds();
 
     #EndStep
 
@@ -662,8 +694,11 @@ MATRIX_RUN;Test case;Never;;
         #Id;#Let
         daysCurrent;DateTime.getDays(new Date())
 
+        #Id;#Let
+        initDate;DateTime.date(yearsCurrent, monthsCurrent, daysCurrent,  hoursCurrent, minutesCurrent, secondsCurrent)
+
         #Action;'matrix is going to start'
-        Print;DateTime.date(yearsCurrent, monthsCurrent, daysCurrent,  hoursCurrent, minutesCurrent, secondsCurrent)
+        Print;initDate
 
         #Id;#Action;$Matrix;$At
         MXRN1;MatrixRun;'testdata/matrixrun/printdate.jf';
@@ -671,8 +706,11 @@ MATRIX_RUN;Test case;Never;;
         #Action;$Matrix
         MatrixWait;MXRN1.Out
 
+        #Action;$Name;$AsVar
+        Restore;'startTime';'startTime'
+
         #Assert;#Message
-        hoursCurrent == DateTime.getHours(MXRN1.Out.getStartTime()) && minutesCurrent == DateTime.getMinutes(MXRN1.Out.getStartTime());
+        initDate.hours() == startTime.hours() && initDate.minutes() == startTime.minutes() && initDate.seconds() == startTime.seconds();
 
     #EndStep
 
@@ -722,8 +760,14 @@ MATRIX_RUN;Test case;Never;;
 
         #EndIf
 
+        #Id;#Let
+        initDate;DateTime.date(yearsCurrent, monthsCurrent, daysCurrent,  hours, minutes, secondsCurrent)
+
         #Action;'matrix is going to start'
-        Print;DateTime.date(yearsCurrent, monthsCurrent, daysCurrent,  hours, minutes, secondsCurrent)
+        Print;initDate
+
+        #Id;#Let
+        currentDate;DateTime.current()
 
         #Id;#Action;$Matrix;$At
         MXRN1;MatrixRun;'testdata/matrixrun/printdate.jf';DateTime.date(yearsCurrent, monthsCurrent, daysCurrent,  hours, minutes, secondsCurrent)
@@ -731,8 +775,11 @@ MATRIX_RUN;Test case;Never;;
         #Action;$Matrix
         MatrixWait;MXRN1.Out
 
+        #Action;$Name;$AsVar
+        Restore;'startTime';'startTime'
+
         #Assert;#Message
-        hours == DateTime.getHours(MXRN1.Out.getStartTime()) && minutes == DateTime.getMinutes(MXRN1.Out.getStartTime());
+        currentDate.hours() == startTime.hours() && currentDate.minutes() == startTime.minutes() && currentDate.seconds() == startTime.seconds();
 
     #EndStep
 

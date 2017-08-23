@@ -32,13 +32,10 @@ public class MatrixConnectionImpl implements MatrixConnection
     }
     
     @Override
-    public void join(long time) throws Exception
-    {
-        if (this.matrix.getEngine() != null)
-        {
-            this.matrix.getEngine().join(time);
-        }
-    }
+    public boolean join(long time) throws Exception
+	{
+		return this.matrix.getEngine() == null || this.matrix.getEngine().join(time);
+	}
 
     @Override
     public void stop()

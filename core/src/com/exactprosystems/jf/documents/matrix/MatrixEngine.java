@@ -130,7 +130,7 @@ public class MatrixEngine implements AutoCloseable
 		this.thread.start();
 	}
 	
-	public void join(long time) throws Exception
+	public boolean join(long time) throws Exception
 	{
 		if (this.thread != null)
 		{
@@ -144,13 +144,16 @@ public class MatrixEngine implements AutoCloseable
 				{
 					this.thread.join();
 				}
+				boolean joinSuccess = !this.thread.isAlive();
 				close();
+				return joinSuccess;
 			}
 			catch (InterruptedException e)
 			{
 				logger.error(e.getMessage(), e);
 			}
 		}
+		return true;
 	}
 	
 	public void stop()

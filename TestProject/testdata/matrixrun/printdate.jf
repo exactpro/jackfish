@@ -1,6 +1,9 @@
 // 
 #TestCase;#Kind;#Depends;#For
 Test case;Never;;
+    #Action;$Name;$Value
+    Store;'startTime';DateTime.current()
+
     #Action;'matrix start fact'
     Print;new Date()
 

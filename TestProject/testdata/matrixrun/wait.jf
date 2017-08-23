@@ -1,6 +1,6 @@
 // 
-#TestCase;#Kind;#Depends;#For
-Test case;Never;;
+#Id;#TestCase;#Kind;#Depends;#For
+testCaseFromWait;Test case;Never;;
     #Action;$Time
     Wait;3000
 

@@ -63,9 +63,15 @@ public class MatrixWait extends AbstractAction
         }
         else
         {
-            this.matrix.join(this.time);
-			this.matrix.close();
-			super.setResult(null);
+			boolean join = this.matrix.join(this.time);
+			if (!join)
+			{
+				super.setError("The matrix doesn't finish during " + this.time + " ms", ErrorKind.TIMEOUT);
+			}
+			else
+			{
+				super.setResult(null);
+			}
         }
     }
 }
