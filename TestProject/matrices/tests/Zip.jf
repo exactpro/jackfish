@@ -15,10 +15,6 @@ vars;;;;
     #Id;#Global;#Let
     file2Name;1;'2.txt'
 
-    // This archive should contains 1 text file
-    #Id;#Global;#Let
-    loadZip;1;'testdata/zip/load.zip'
-
     #Id;#Global;#Let
     saveZip;1;extractPath + 'newzip.zip'
 
@@ -140,6 +136,19 @@ Test case;Never;;
     Save zip to not exist directory;;;;
         #Let
         zip.save('any/path/to/file')
+
+        #OnError
+            #Assert;#Message
+            err.Kind == ErrorKind.EXCEPTION;
+
+
+    #EndStep
+
+    //
+    #Id;#Step;#Kind;#For;#Depends
+    Load zip from non exist file;;;;
+        #Let
+        zip.load('any/path/to/file')
 
         #OnError
             #Assert;#Message
