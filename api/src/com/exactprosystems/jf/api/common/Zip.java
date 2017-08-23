@@ -32,10 +32,10 @@ public class Zip
     }
     
     @DescriptionAttribute(text = "Loads an archive from @path.")
-    public Zip load(String path) throws IOException
+    public Zip load(String path) throws Exception
     {
         File file = new File(path);
-        if(file.isFile() && file.exists()){
+        if(file.isFile()){
             try(ZipFile zf = new ZipFile(file)){
                 Enumeration<? extends ZipEntry> enumeration = zf.entries();
                 ZipEntry entry;
@@ -57,6 +57,8 @@ public class Zip
                     }
                 }
             }
+        } else {
+            throw new Exception(file.getName() + " is not exists or not a file");
         }
         
         return this;
