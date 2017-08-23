@@ -12,6 +12,8 @@ import com.exactprosystems.jf.api.common.MatrixConnection;
 import com.exactprosystems.jf.documents.matrix.parser.Result;
 import com.exactprosystems.jf.functions.Table;
 
+import java.sql.Blob;
+
 public class MatrixConnectionImpl implements MatrixConnection
 {
     private Matrix matrix; 
@@ -47,6 +49,16 @@ public class MatrixConnectionImpl implements MatrixConnection
     }
 
     @Override
+	public Blob reportAsBlob() throws Exception
+	{
+		if (this.matrix.getEngine() != null)
+		{
+			return this.matrix.getEngine().reportAsBlob();
+		}
+		return null;
+	}
+
+    @Override
     public int passed()
     {
         return this.matrix.countResult(Result.Passed); 
@@ -61,7 +73,7 @@ public class MatrixConnectionImpl implements MatrixConnection
     @Override
     public boolean isRunning()
     {
-        return this.matrix.getEngine() == null ? false : this.matrix.getEngine().isRunning();
+        return this.matrix.getEngine() != null && this.matrix.getEngine().isRunning();
     }
 
     @Override

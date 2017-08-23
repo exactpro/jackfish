@@ -8,13 +8,15 @@
 
 package com.exactprosystems.jf.api.common;
 
+import java.sql.Blob;
+
 public interface MatrixConnection
 {
-    void join(long time) throws Exception;
-    
+    boolean join(long time) throws Exception;
     void stop();
 
-    int passed();
+	Blob reportAsBlob() throws Exception;
+	int passed();
 
     int failed();
 
