@@ -22,6 +22,7 @@ import java.rmi.Remote;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
+import java.rmi.server.ExportException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.*;
 
@@ -58,9 +59,32 @@ public abstract class RemoteApplication implements IRemoteApplication
 			services.add(service); // to keep strong reference from GC
 			
 			System.err.println(time() + " Registering remote stub...");
-			Remote stub = UnicastRemoteObject.exportObject(service, 0);
-			int port = firstFreePort(startPort);
-			final Registry registry = LocateRegistry.createRegistry(port);
+
+			int port = -1;
+			Remote stub = null;
+			Registry registry = null;
+			Exception lastException = null;
+
+			for (int attempt = 0; attempt < 10; attempt++)
+			{
+				try
+				{
+					stub = UnicastRemoteObject.exportObject(service, 0);
+					port = firstFreePort(startPort);
+					registry = LocateRegistry.createRegistry(port);
+					break;
+				}
+				catch (ExportException e)
+				{
+					//save the exception and throw, if needed
+					lastException = e;
+				}
+			}
+
+			if (port == -1 || registry == null || stub == null)
+			{
+				throw lastException;
+			}
 			System.out.println(CONNECTED_PORT + port);
 			System.err.println(time() + " Connected port : " + port);
 			registry.rebind(IApplication.serviceName, stub);
@@ -74,7 +98,6 @@ public abstract class RemoteApplication implements IRemoteApplication
 
 	private static int firstFreePort(int startPort) throws Exception
 	{
-		System.err.println(time() + "free port thread " + Thread.currentThread());
 		int port = 0;
 		boolean ok = false;
 		for (int count = 0; count <= 1000; count++)
@@ -116,7 +139,6 @@ public abstract class RemoteApplication implements IRemoteApplication
 
 		return true;
 	}
-	
 
 	private static String time()
     {

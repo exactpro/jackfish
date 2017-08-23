@@ -660,7 +660,7 @@ public class Configuration extends AbstractDocument
 		settings.saveIfNeeded();
 
 		this.services.stopAllServices();
-		this.applications.stopAllApplications();
+		this.applications.stopAllApplications(true);
     }
 
     @Override

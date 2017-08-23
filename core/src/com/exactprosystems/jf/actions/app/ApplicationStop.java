@@ -8,13 +8,8 @@
 
 package com.exactprosystems.jf.actions.app;
 
-import com.exactprosystems.jf.actions.AbstractAction;
-import com.exactprosystems.jf.actions.ActionAttribute;
-import com.exactprosystems.jf.actions.ActionFieldAttribute;
-import com.exactprosystems.jf.actions.ActionGroups;
-import com.exactprosystems.jf.actions.DefaultValuePool;
+import com.exactprosystems.jf.actions.*;
 import com.exactprosystems.jf.api.app.AppConnection;
-import com.exactprosystems.jf.api.app.IApplication;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.report.ReportBuilder;
 import com.exactprosystems.jf.documents.config.Context;
@@ -50,9 +45,8 @@ public class ApplicationStop extends AbstractAction
 	@Override
 	public void doRealAction(Context context, ReportBuilder report, Parameters parameters, AbstractEvaluator evaluator) throws Exception 
 	{
-		boolean kill = needKill.booleanValue();
-		IApplication app = this.connection.getApplication();
-		app.stop(kill);
+		boolean kill = needKill;
+		context.getConfiguration().getApplicationPool().stopApplication(this.connection, kill);
 		super.setResult(null);
 	}
 }

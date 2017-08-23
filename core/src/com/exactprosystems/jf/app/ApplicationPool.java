@@ -210,7 +210,7 @@ public class ApplicationPool implements IApplicationPool
 	}
 
 	@Override
-	public void stopApplication(AppConnection connection) throws Exception
+	public void stopApplication(AppConnection connection, boolean needKill) throws Exception
 	{
 		try
 		{
@@ -221,7 +221,7 @@ public class ApplicationPool implements IApplicationPool
 			
 			IApplication app = connection.getApplication();
             this.connections.remove(connection);
-			app.stop(false);
+			app.stop(needKill);
 		}
 		catch (Exception e)
 		{
@@ -232,14 +232,14 @@ public class ApplicationPool implements IApplicationPool
 	}
 
 	@Override
-	public void stopAllApplications() throws Exception
+	public void stopAllApplications(boolean needKill) throws Exception
 	{
 		//java.util.ConcurrentModificationException
 		for (AppConnection connection : this.connections.toArray(new AppConnection[] {}))
 		{
 			try
 			{
-				stopApplication(connection);
+				stopApplication(connection, needKill);
 			}
 			catch (Exception e)
 			{
