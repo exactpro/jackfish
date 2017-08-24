@@ -1,4 +1,10 @@
 #Id;#TestCase;#Kind;#Depends;#For
+util;;;;
+    #Id;#Global;#Let
+    compareTime;1;def (a,b) { return Math.abs(a.getTime() - b.getTime()) < 2*1000 }
+
+
+#Id;#TestCase;#Kind;#Depends;#For
 MATRIX_WAIT;Test case;Never;;
     #Step;#Kind;#For;#Depends
     'matrix field does not filled';;;
@@ -341,7 +347,7 @@ MATRIX_RUN_FROM_TEXT;Test case;Never;;
         Restore;'startTime';'startTime'
 
         #Assert;#Message
-        initDate.hours() == startTime.hours() && initDate.minutes() == startTime.minutes() && initDate.seconds() == startTime.seconds();
+        compareTime(initDate, startTime);
 
     #EndStep
 
@@ -393,7 +399,7 @@ MATRIX_RUN_FROM_TEXT;Test case;Never;;
         Restore;'startTime';'startTime'
 
         #Assert;#Message
-        Math.abs(initDate.getTime() - startTime.getTime()) < 1 * 1000;
+        Math.abs(initDate.getTime() - startTime.getTime()) < 2 * 1000;
 
     #EndStep
 
@@ -474,7 +480,7 @@ MATRIX_RUN_FROM_TEXT;Test case;Never;;
         Restore;'startTime';'startTime'
 
         #Assert;#Message
-        Math.abs(currentDate.getTime() - startTime.getTime()) < 1 * 1000;
+        compareTime(currentDate, startTime);
 
     #EndStep
 
@@ -670,7 +676,7 @@ MATRIX_RUN;Test case;Never;;
         Restore;'startTime';'startTime'
 
         #Assert;#Message
-        initDate.hours() == startTime.hours() && initDate.minutes() == startTime.minutes() && initDate.seconds() == startTime.seconds();
+        compareTime(initDate, startTime);
 
     #EndStep
 
@@ -710,7 +716,7 @@ MATRIX_RUN;Test case;Never;;
         Restore;'startTime';'startTime'
 
         #Assert;#Message
-        initDate.hours() == startTime.hours() && initDate.minutes() == startTime.minutes() && initDate.seconds() == startTime.seconds();
+        compareTime(initDate, startTime);
 
     #EndStep
 
@@ -779,7 +785,7 @@ MATRIX_RUN;Test case;Never;;
         Restore;'startTime';'startTime'
 
         #Assert;#Message
-        currentDate.hours() == startTime.hours() && currentDate.minutes() == startTime.minutes() && currentDate.seconds() == startTime.seconds();
+        compareTime(currentDate, startTime);
 
     #EndStep
 
