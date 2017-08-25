@@ -43,7 +43,7 @@ simple examples;;;;
 
     // Add files from some archive(which contains file load.txt) to zip. Also you can check zip contains load.txt
     #Assert;#Message
-    zip.load('path/to/archive').names().contains('load.txt') = true;
+    zip.load('path/to/archive').names().contains('load.txt') == true;
 
     // Now You can extract file load.txt from zip to predetermined place (folder which should be exists)
     #Assert;#Message
