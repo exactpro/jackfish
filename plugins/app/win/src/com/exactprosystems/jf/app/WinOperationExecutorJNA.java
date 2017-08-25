@@ -456,17 +456,17 @@ public class WinOperationExecutorJNA implements OperationExecutor<UIProxyJNA>
 		{
 			List<UIProxyJNA> elementsList = Collections.emptyList();
 			String attribute = this.driver.elementAttribute(component, AttributeKind.TYPE_NAME);
-			if (attribute.equalsIgnoreCase("list") || attribute.equalsIgnoreCase("combobox"))
+			if (attribute.equalsIgnoreCase(ControlType.List.getName()) || attribute.equalsIgnoreCase(ControlType.ComboBox.getName()))
 			{
-				elementsList = findComponents(component, WindowTreeScope.Descendants, WindowProperty.LocalizedControlTypeProperty, "list item");
+				elementsList = findComponents(component, WindowTreeScope.Descendants, WindowProperty.LocalizedControlTypeProperty, ControlType.ListItem.getName().toLowerCase());
 			}
-			if (attribute.equalsIgnoreCase("tab"))
+			if (attribute.equalsIgnoreCase(ControlType.Tab.getName()))
 			{
-				elementsList = findComponents(component, WindowTreeScope.Descendants, WindowProperty.LocalizedControlTypeProperty, "tab item");
+				elementsList = findComponents(component, WindowTreeScope.Descendants, WindowProperty.LocalizedControlTypeProperty, ControlType.TabItem.getName().toLowerCase());
 			}
-			if (attribute.equalsIgnoreCase("tree"))
+			if (attribute.equalsIgnoreCase(ControlType.Tree.getName()))
 			{
-				elementsList = findComponents(component, WindowTreeScope.Descendants, WindowProperty.LocalizedControlTypeProperty, "tree item");
+				elementsList = findComponents(component, WindowTreeScope.Descendants, WindowProperty.LocalizedControlTypeProperty, ControlType.TreeItem.getName().toLowerCase());
 			}
 			this.driver.doPatternCall(elementsList.get(index), WindowPattern.SelectionItemPattern, "Select", null, -1);
 			return true;
