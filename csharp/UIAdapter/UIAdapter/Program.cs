@@ -573,7 +573,13 @@ namespace UIAdapter
                 else
                 {
                     AutomationProperty property = AutomationProperty.LookupById((int)propertyId);
-                    condition = new PropertyCondition(property, value);
+                    object objValue = value;
+                    //30003 - it's ControlTypeProperty
+                    if (propertyId == 30003)
+                    {
+                        objValue = ControlType.LookupById(Int32.Parse(value));
+                    }
+                    condition = new PropertyCondition(property, objValue);
                 }
 
                 long startUI = getMilis();

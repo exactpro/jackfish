@@ -458,15 +458,15 @@ public class WinOperationExecutorJNA implements OperationExecutor<UIProxyJNA>
 			String attribute = this.driver.elementAttribute(component, AttributeKind.TYPE_NAME);
 			if (attribute.equalsIgnoreCase(ControlType.List.getName()) || attribute.equalsIgnoreCase(ControlType.ComboBox.getName()))
 			{
-				elementsList = findComponents(component, WindowTreeScope.Descendants, WindowProperty.LocalizedControlTypeProperty, ControlType.ListItem.getName().toLowerCase());
+				elementsList = findComponents(component, WindowTreeScope.Descendants, WindowProperty.ControlTypeProperty, "" + ControlType.ListItem.getId());
 			}
 			if (attribute.equalsIgnoreCase(ControlType.Tab.getName()))
 			{
-				elementsList = findComponents(component, WindowTreeScope.Descendants, WindowProperty.LocalizedControlTypeProperty, ControlType.TabItem.getName().toLowerCase());
+				elementsList = findComponents(component, WindowTreeScope.Descendants, WindowProperty.ControlTypeProperty, "" + ControlType.TabItem.getId());
 			}
 			if (attribute.equalsIgnoreCase(ControlType.Tree.getName()))
 			{
-				elementsList = findComponents(component, WindowTreeScope.Descendants, WindowProperty.LocalizedControlTypeProperty, ControlType.TreeItem.getName().toLowerCase());
+				elementsList = findComponents(component, WindowTreeScope.Descendants, WindowProperty.ControlTypeProperty, "" + ControlType.TreeItem.getId());
 			}
 			this.driver.doPatternCall(elementsList.get(index), WindowPattern.SelectionItemPattern, "Select", null, -1);
 			return true;
@@ -1202,9 +1202,9 @@ public class WinOperationExecutorJNA implements OperationExecutor<UIProxyJNA>
 		{
 			List<String> returnedList = new ArrayList<>();
 			String attribute = this.driver.elementAttribute(component, AttributeKind.TYPE_NAME);
-			if (attribute.equalsIgnoreCase("tree"))
+			if (attribute.equalsIgnoreCase(ControlType.Tree.getName()))
 			{
-				List<UIProxyJNA> elementsList = findComponents(component, WindowTreeScope.Descendants, WindowProperty.LocalizedControlTypeProperty, "tree item");
+				List<UIProxyJNA> elementsList = findComponents(component, WindowTreeScope.Descendants, WindowProperty.ControlTypeProperty, "" + ControlType.TreeItem.getId());
 				Map<String, Object> values = new HashMap<>();
 				for (int i = 0; i < elementsList.size(); i++) {
 					values.clear();
