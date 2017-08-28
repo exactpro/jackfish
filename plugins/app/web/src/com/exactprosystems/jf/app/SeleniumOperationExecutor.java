@@ -9,12 +9,12 @@
 package com.exactprosystems.jf.app;
 
 import com.exactprosystems.jf.api.app.*;
-import com.exactprosystems.jf.api.app.Keyboard;
 import com.exactprosystems.jf.api.client.ICondition;
 import com.exactprosystems.jf.api.common.Converter;
 import com.exactprosystems.jf.api.common.Str;
 import com.exactprosystems.jf.api.error.app.ElementNotFoundException;
 import com.exactprosystems.jf.api.error.app.TooManyElementsException;
+import com.exactprosystems.jf.api.error.app.WrongParameterException;
 import org.apache.log4j.Logger;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -25,7 +25,7 @@ import org.openqa.selenium.Dimension;
 import org.openqa.selenium.Point;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
-import org.openqa.selenium.interactions.*;
+import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.safari.SafariDriver;
 import org.openqa.selenium.support.ui.Quotes;
 import org.openqa.selenium.support.ui.Select;
@@ -261,6 +261,35 @@ public class SeleniumOperationExecutor implements OperationExecutor<WebElement>
 		}
 		while (++repeat < repeatLimit);
 		throw real;
+	}
+
+	@Override
+	public boolean scrollTo(WebElement component, int index) throws Exception
+	{
+		scrollToElement(component);
+		switch (component.getTagName())
+		{
+			case "combobox":
+				List<WebElement> options = component.findElements(By.xpath("child::option"));
+				checkScroll(options, index);
+				driver.executeScript("arguments[0].scrollIntoViewIfNeeded()", options.get(index));
+				return true;
+
+			case "ul":
+				List<WebElement> lis = component.findElements(By.xpath("child::li"));
+				checkScroll(lis, index);
+				driver.executeScript("arguments[0].scrollIntoViewIfNeeded()", lis.get(index));
+				return true;
+		}
+		return true;
+	}
+
+	private void checkScroll(List<WebElement> list, int index) throws Exception
+	{
+		if (index > list.size() || index < 0)
+		{
+			throw new WrongParameterException("Cant scroll to index " + index + ". Child size : " + list.size());
+		}
 	}
 
 	//region public table methods

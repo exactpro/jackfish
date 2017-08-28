@@ -611,6 +611,13 @@ public class Operation implements Iterable<Part>, Serializable
 		return this;
 	}
 
+	@DescriptionAttribute(text = Do.scrollToIndex)
+	public Operation scrollTo(@FieldParameter(name = "index") int index)
+	{
+		this.list.add(new Part(OperationKind.SCROLL_TO).setInt(index));
+		return this;
+	}
+
 	@DescriptionAttribute(text = Do.delay)
 	public Operation delay(@FieldParameter(name = "ms") int ms)
 	{

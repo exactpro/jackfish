@@ -12,10 +12,7 @@ import com.exactprosystems.jf.api.client.ICondition;
 import com.exactprosystems.jf.api.common.Converter;
 import com.exactprosystems.jf.api.common.Str;
 import com.exactprosystems.jf.api.conditions.Condition;
-import com.exactprosystems.jf.api.error.app.ElementNotFoundException;
-import com.exactprosystems.jf.api.error.app.FeatureNotSupportedException;
-import com.exactprosystems.jf.api.error.app.OperationNotAllowedException;
-import com.exactprosystems.jf.api.error.app.WrongParameterException;
+import com.exactprosystems.jf.api.error.app.*;
 import org.apache.log4j.Logger;
 import org.w3c.dom.Document;
 import org.w3c.dom.NamedNodeMap;
@@ -1097,6 +1094,64 @@ public class WinOperationExecutorJNA implements OperationExecutor<UIProxyJNA>
 			this.logger.error(e.getMessage(), e);
 			throw e;
 		}
+	}
+
+	@Override
+	public boolean scrollTo(UIProxyJNA component, int index) throws Exception
+	{
+		try
+		{
+			List<UIProxyJNA> elementsList = Collections.emptyList();
+			String attribute = this.driver.elementAttribute(component, AttributeKind.TYPE_NAME);
+			if (attribute.equalsIgnoreCase(ControlType.List.getName()) || attribute.equalsIgnoreCase(ControlType.ComboBox.getName()))
+			{
+				elementsList = findComponents(component, WindowTreeScope.Children, WindowProperty.ControlTypeProperty, "" + ControlType.ListItem.getId());
+			}
+			if (attribute.equalsIgnoreCase(ControlType.Tab.getName()))
+			{
+				elementsList = findComponents(component, WindowTreeScope.Children, WindowProperty.ControlTypeProperty, "" + ControlType.TabItem.getId());
+			}
+			if (attribute.equalsIgnoreCase(ControlType.Tree.getName()))
+			{
+				elementsList = findComponents(component, WindowTreeScope.Descendants, WindowProperty.ControlTypeProperty, "" + ControlType.TreeItem.getId());
+			}
+			if (index > elementsList.size() || index < 0)
+			{
+				throw new WrongParameterException("Cant scroll to index " + index + ". Child size : " + elementsList.size());
+			}
+
+			UIProxyJNA element = elementsList.get(index);
+			checkPatternIsAvailable(element, WindowPattern.ScrollItemPattern);
+			this.driver.doPatternCall(element, WindowPattern.ScrollItemPattern, "ScrollIntoView", null, -1);
+			return true;
+		}
+		catch(WrongParameterException ignored)
+		{
+			return true;
+		}
+	}
+
+	private void checkPatternIsAvailable(UIProxyJNA element, WindowPattern pattern) throws Exception
+	{
+		int length = 100;
+		int[] arr = new int[length];
+		int count = this.driver.getPatterns(arr, element);
+		if (count > length)
+		{
+			length = count;
+			arr = new int[length];
+			count = this.driver.getPatterns(arr, element);
+		}
+
+		int patternsCount = count;
+		int[] patterns = new int[patternsCount];
+		System.arraycopy(arr, 0, patterns, 0, patternsCount);
+
+		Arrays.stream(patterns)
+				.mapToObj(WindowPattern::byId)
+				.filter(wp -> wp == pattern)
+				.findFirst()
+				.orElseThrow(() -> new ControlNotSupportedException("Can't scroll, because ScrollItemPattern is not available"));
 	}
 
 	@Override

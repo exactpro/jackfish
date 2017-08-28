@@ -1271,6 +1271,41 @@ public class SwingOperationExecutor implements OperationExecutor<ComponentFixtur
 	}
 
 	@Override
+	public boolean scrollTo(ComponentFixture<Component> component, int index) throws Exception
+	{
+		try
+		{
+			if (!component.component().isEnabled())
+			{
+				throw new OperationNotAllowedException("Component " + component + " is disabled.");
+			}
+			if (component.component() instanceof JComboBox)
+			{
+				JComboBox comboBox = component.targetCastedTo(JComboBox.class);
+				//TODO what we need do to scroll to need item?
+			}
+			else if (component.target instanceof JList)
+			{
+				JList<?> jList = component.targetCastedTo(JList.class);
+				jList.ensureIndexIsVisible(index);
+			}
+			else if (component.target instanceof JTree)
+			{
+				JTree jTree = component.targetCastedTo(JTree.class);
+				jTree.scrollRowToVisible(index);
+			}
+			waitForIdle();
+			return true;
+		}
+		catch (Exception e)
+		{
+			logger.error(String.format("scrollTo(%s,%d)", component, index));
+			logger.error(e.getMessage(), e);
+			throw e;
+		}
+	}
+
+	@Override
 	public boolean tableIsContainer()
 	{
 		return false;

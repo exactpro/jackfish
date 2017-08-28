@@ -464,6 +464,13 @@ public class Do
 	{
 		return new Operation().dragNdropFromCenterOfElement(another, x2, y2);
 	}
+
+	static final String scrollToIndex = "Scroll list/combobox/tree to selected index";
+	@DescriptionAttribute(text = Do.scrollToIndex)
+	public static Operation scrollTo(@FieldParameter(name = "index") int index)
+	{
+		return new Operation().scrollTo(index);
+	}
 	//endregion
 
 	//region Operations with locators

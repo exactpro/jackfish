@@ -974,7 +974,6 @@ public enum OperationKind
 		}
 	},
 
-
 	GET_TABLE("getTable")
 	{
 		@Override
@@ -1058,6 +1057,7 @@ public enum OperationKind
 			return true;
 		}
 	},
+
 	GET_TABLE_SIZE("getTableSize")
 	{
 		@Override
@@ -1075,7 +1075,7 @@ public enum OperationKind
 			return true;
 		}
 	}, 
-	
+
 	NONE("none") 
 	{
         @Override
@@ -1085,11 +1085,29 @@ public enum OperationKind
             return false;
         }
     }, 
-	;
 
-	
-	
-	
+	SCROLL_TO("scrollTo")
+	{
+		@Override
+		protected <T> boolean operateDerived(Part part, OperationExecutor<T> executor, Holder<T> holder, OperationResult result) throws Exception
+		{
+			return executor.scrollTo(holder.getValue(), part.i);
+		}
+
+		@Override
+		protected String formulaTemplate(Part part)
+		{
+			return ".scrollTo(%2$d)";
+		}
+
+		@Override
+		protected boolean checkEnabled()
+		{
+			return true;
+		}
+	}
+
+	;
 
 	OperationKind(String name)
 	{
