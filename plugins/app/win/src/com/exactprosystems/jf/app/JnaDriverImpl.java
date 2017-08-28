@@ -386,10 +386,10 @@ public JnaDriverImpl(Logger logger) throws Exception
 		return res;
 	}
 
-	public String getList(UIProxyJNA element) throws Exception
+	public String getList(UIProxyJNA element, boolean onlyVisible) throws Exception
 	{
 		long start = System.currentTimeMillis();
-		String result = ConvertString.replaceUnicodeSubStringsToCharSymbols(this.jnaDriver.getList(element.getIdString()));
+		String result = ConvertString.replaceUnicodeSubStringsToCharSymbols(this.jnaDriver.getList(element.getIdString(), onlyVisible));
 		this.logger.info(String.format("getList(%s) = %s, time (ms) : %d", element, result, System.currentTimeMillis() - start));
 		checkCSharpTimes();
 		checkError();

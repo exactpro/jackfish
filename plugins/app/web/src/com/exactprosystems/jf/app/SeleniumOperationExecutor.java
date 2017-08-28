@@ -1382,26 +1382,34 @@ public class SeleniumOperationExecutor implements OperationExecutor<WebElement>
 		throw real;
 	}
 
-	private List<String> getListOfNamesFromListItems(List<WebElement> list)
+	private List<String> getListOfNamesFromListItems(List<WebElement> list, boolean onlyVisible)
 	{
 		ArrayList<String> resultList = new ArrayList<>();
 		for (WebElement element : list)
 		{
-			resultList.add(element.getText());
+			boolean needAdd = true;
+			if (onlyVisible)
+			{
+				needAdd = element.isDisplayed();
+			}
+			if (needAdd)
+			{
+				resultList.add(element.getText());
+			}
 		}
 		return resultList;
 	}
 
 	@Override
-	public List<String> getList(WebElement component) throws Exception {
+	public List<String> getList(WebElement component, boolean onlyVisible) throws Exception {
 		scrollToElement(component);
 		switch (component.getTagName())
 		{
 			case "ul":
 			case "ol":
-				return getListOfNamesFromListItems(component.findElements(By.xpath("li")));
+				return getListOfNamesFromListItems(component.findElements(By.xpath("li")), onlyVisible);
 			case "select":
-				return getListOfNamesFromListItems(new Select(component).getOptions());
+				return getListOfNamesFromListItems(new Select(component).getOptions(), onlyVisible);
 			default:
 				return new ArrayList<>();
 		}

@@ -185,7 +185,9 @@ public enum OperationKind
 		@Override
 		public <T> boolean operateDerived(Part part, OperationExecutor<T> executor, Holder<T> holder, OperationResult result) throws Exception
 		{
-			result.setList(executor.getList(holder.getList()));
+			Locator locator = holder.get(LocatorKind.Element);
+			boolean onlyVisible = locator != null && locator.getVisibility() == Visibility.Visible;
+			result.setList(executor.getList(holder.getList(), onlyVisible));
 			return true;
 		}
 	},
@@ -341,7 +343,9 @@ public enum OperationKind
         @Override
         public <T> boolean operateDerived(Part part, OperationExecutor<T> executor, Holder<T> holder, OperationResult result) throws Exception
         {
-            List<String> list = executor.getList(holder.getValue());
+			Locator locator = holder.get(LocatorKind.Element);
+			boolean onlyVisible = locator != null && locator.getVisibility() == Visibility.Visible;
+            List<String> list = executor.getList(holder.getValue(), onlyVisible);
             StringBuilder sb = new StringBuilder();
             boolean res = compareTwoLists(part.list, list, part.b, sb);
             if (!res)

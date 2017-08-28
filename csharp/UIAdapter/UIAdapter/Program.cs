@@ -338,7 +338,7 @@ namespace UIAdapter
 
         #region find methods
         [DllExport("getList", CallingConvention.Cdecl)]
-        public static string getList(string elementId)
+        public static string getList(string elementId, Boolean onlyVisible)
         {
             try
             {
@@ -346,7 +346,7 @@ namespace UIAdapter
 
                 AutomationElement owner = findOwner(elementId);
                 logger.All("Fount element runtimeId : " + string.Join(",",owner.GetRuntimeId()));
-                List<AutomationElement> listItems = getListItems(owner);
+                List<AutomationElement> listItems = getListItems(owner, onlyVisible);
                 List<string> namesList = getNamesOfListItems(listItems);
                 //TODO check if we have comboBox with checkboxes
                 
@@ -404,10 +404,18 @@ namespace UIAdapter
                     String result = "";
                     foreach (AutomationElement item in checkboxes)
                     {
-                        string toggleString = "";
-                        togglePattern = (TogglePattern)item.GetCurrentPattern(TogglePattern.Pattern);
-                        toggleString = togglePattern.Current.ToggleState == ToggleState.On ? "+" : "-";
-                        result += toggleString + item.Current.Name + SEPARATOR_COMMA;
+                        bool needAdd = true;
+                        if (onlyVisible)
+                        {
+                            needAdd = !item.Current.IsOffscreen;
+                        }
+                        if (needAdd)
+                        {
+                            string toggleString = "";
+                            togglePattern = (TogglePattern)item.GetCurrentPattern(TogglePattern.Pattern);
+                            toggleString = togglePattern.Current.ToggleState == ToggleState.On ? "+" : "-";
+                            result += toggleString + item.Current.Name + SEPARATOR_COMMA;
+                        }
                     }
                     logger.All("method GetList", getMilis() - startMethod);
                     return ConvertString.replaceNonASCIIToUnicode(result);
@@ -2178,7 +2186,7 @@ namespace UIAdapter
 
         #region private methods
 
-        private static List<AutomationElement> getListItems(AutomationElement element)
+        private static List<AutomationElement> getListItems(AutomationElement element, bool onlyVisible)
         {
             TreeWalker walkerContent = TreeWalker.ContentViewWalker;
             AutomationElement child = walkerContent.GetFirstChild(element);
@@ -2188,7 +2196,15 @@ namespace UIAdapter
                 var ct = child.Current.ControlType;
                 if (ct == ControlType.ListItem || ct == ControlType.DataItem || ct == ControlType.TabItem)
                 {
-                    listItems.Add(child);
+                    bool needAdd = true;
+                    if (onlyVisible)
+                    {
+                        needAdd = !child.Current.IsOffscreen;
+                    }
+                    if (needAdd)
+                    {
+                        listItems.Add(child);
+                    }
                 }
                 child = walkerContent.GetNextSibling(child);
             }

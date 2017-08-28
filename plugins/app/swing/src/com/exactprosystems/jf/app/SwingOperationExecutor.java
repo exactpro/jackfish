@@ -988,7 +988,7 @@ public class SwingOperationExecutor implements OperationExecutor<ComponentFixtur
 	}
 
 	@Override
-	public List<String> getList(ComponentFixture<Component> fixture) throws Exception {
+	public List<String> getList(ComponentFixture<Component> fixture, boolean onlyVisible) throws Exception {
 			ListModel<?> model = getListModelFromComponentOrError(fixture.target);
 			return getListOfNamesFromListItems(model);
 	}

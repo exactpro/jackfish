@@ -788,11 +788,11 @@ public class WinOperationExecutorJNA implements OperationExecutor<UIProxyJNA>
 	}
 
 	@Override
-	public List<String> getList(UIProxyJNA component) throws Exception
+	public List<String> getList(UIProxyJNA component, boolean onlyVisible) throws Exception
     {
         try
         {
-            String result = this.driver.getList(component);
+            String result = this.driver.getList(component, onlyVisible);
 			if (result.isEmpty()) {
 				return new ArrayList<>();
 			}
