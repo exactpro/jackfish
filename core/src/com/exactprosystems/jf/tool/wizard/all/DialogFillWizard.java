@@ -34,6 +34,10 @@ import javafx.scene.control.*;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.cell.CheckBoxListCell;
+import javafx.scene.input.ClipboardContent;
+import javafx.scene.input.DragEvent;
+import javafx.scene.input.Dragboard;
+import javafx.scene.input.TransferMode;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
@@ -60,8 +64,7 @@ import static com.exactprosystems.jf.tool.Common.tryCatch;
         strongCriteries     = true,
         criteries           = {MatrixItem.class, MatrixFx.class}
 )
-public class DialogFillWizard extends AbstractWizard
-{
+public class DialogFillWizard extends AbstractWizard {
     private MatrixFx currentMatrix;
     private DictionaryFx dictionary;
     private ComboBox<String> storedConnections;
@@ -74,14 +77,15 @@ public class DialogFillWizard extends AbstractWizard
     private AppConnection appConnection;
     private ImageViewWithScale imageViewWithScale;
     private Document document;
-    private ListView<ControlItem> textBoxes;
+    private ListView<ControlItem> controls;
     private Map<String, String> controlNamesAndValues;
     private IRemoteApplication service;
+    private int dialogXOffset;
+    private int dialogYOffset;
 
 
     @Override
-    public void init(IContext context, WizardManager wizardManager, Object... parameters)
-    {
+    public void init(IContext context, WizardManager wizardManager, Object... parameters) {
         super.init(context, wizardManager, parameters);
         this.currentMatrix = super.get(MatrixFx.class, parameters);
         this.currentItem = get(MatrixItem.class, parameters);
@@ -90,12 +94,12 @@ public class DialogFillWizard extends AbstractWizard
     }
 
     @Override
-    protected void initDialog(BorderPane borderPane)
-    {
+    protected void initDialog(BorderPane borderPane) {
 
         this.imageViewWithScale = new ImageViewWithScale();
-        this.textBoxes = new ListView<>();
-        this.resultListView = new ListView<>();
+        this.controls = new ListView<>();
+        ObservableList<String> objects = FXCollections.observableArrayList();
+        this.resultListView = new ListView<>(objects);
         this.dialogs = new ComboBox<>();
         this.dialogs.setPrefWidth(300);
         GridPane grid = new GridPane();
@@ -115,10 +119,12 @@ public class DialogFillWizard extends AbstractWizard
             }
         });
 
+        this.resultListView.setCellFactory(param -> new MyCell());
+
         Button scan = new Button("Scan");
         scan.setOnAction(event -> {
             clear();
-            this.textBoxes.getItems().forEach(controlItem -> {
+            this.controls.getItems().forEach(controlItem -> {
                 if (controlItem.isOn())
                 {
                     fillNamesAndValues(controlItem.getControl());
@@ -134,7 +140,7 @@ public class DialogFillWizard extends AbstractWizard
 
             onDialogSelected();
         });
-        this.textBoxes.setCellFactory(CheckBoxListCell.forListView(ControlItem::onProperty));
+        this.controls.setCellFactory(CheckBoxListCell.forListView(ControlItem::onProperty));
 
         ColumnConstraints col1 = new ColumnConstraints(300, 300, 300, Priority.SOMETIMES, HPos.LEFT, true);
         ColumnConstraints col2 = new ColumnConstraints(300, 300, 300, Priority.SOMETIMES, HPos.CENTER, true);
@@ -150,42 +156,43 @@ public class DialogFillWizard extends AbstractWizard
         grid.add(storedConnections, 1, 0);
         grid.add(new Label("Select dialog: "), 2, 0);
         grid.add(dialogs, 3, 0);
-        grid.add(this.textBoxes, 3, 1);
+        grid.add(this.controls, 3, 1);
         grid.add(scan, 3, 2);
         grid.add(this.resultListView, 3, 3);
         grid.add(this.imageViewWithScale, 0, 1, 3, 3);
         borderPane.setCenter(grid);
     }
 
-    private void clear()
-    {
+    private void clear() {
         this.resultListView.getItems().clear();
         this.controlNamesAndValues.clear();
     }
 
-    private void setCurrentAdapterStore(String newValue)
-    {
+    private void setCurrentAdapterStore(String newValue) {
         this.currentAdapterStore = newValue;
     }
 
     @Override
-    protected Supplier<List<WizardCommand>> getCommands()
-    {
+    protected Supplier<List<WizardCommand>> getCommands() {
         return () -> {
             CommandBuilder builder = CommandBuilder.start();
-            return builder.addMatrixItem(this.currentMatrix, this.currentItem, createItem(this.controlNamesAndValues), 0).build();
+            return builder.addMatrixItem(this.currentMatrix, this.currentItem, createItem(this.resultListView.getItems()
+                    .stream()
+                    .collect(Collectors.toMap(o -> o.split(" : ")[0]
+                            , o -> o.split(" : ")[1]
+                            , (u,v) -> u
+                            , LinkedHashMap::new))
+            ), 0).build();
+
         };
     }
 
     @Override
-    public boolean beforeRun()
-    {
-
+    public boolean beforeRun() {
         return true;
     }
 
-    private Rectangle getItemRectangle(Locator owner, Locator element)
-    {
+    private Rectangle getItemRectangle(Locator owner, Locator element) {
 
         return Common.tryCatch(() -> this.service.getRectangle(owner, element), "Error on get rectangle", null);
     }
@@ -209,8 +216,7 @@ public class DialogFillWizard extends AbstractWizard
         this.displayStoreActionControl(stories, this.currentAdapterStore);
     }
 
-    private void displayStoreActionControl(Collection<String> stories, String lastSelectedStore)
-    {
+    private void displayStoreActionControl(Collection<String> stories, String lastSelectedStore) {
         Platform.runLater(() ->
         {
             if (stories != null)
@@ -221,8 +227,7 @@ public class DialogFillWizard extends AbstractWizard
         });
     }
 
-    private void connectToApplicationFromStore(String idAppStore)
-    {
+    private void connectToApplicationFromStore(String idAppStore) {
         if (idAppStore != null && !idAppStore.isEmpty())
         {
             this.appConnection = (AppConnection) this.currentMatrix.getFactory().getConfiguration().getStoreMap().get(idAppStore);
@@ -230,8 +235,7 @@ public class DialogFillWizard extends AbstractWizard
         }
     }
 
-    private void fillNamesAndValues(IControl control)
-    {
+    private void fillNamesAndValues(IControl control) {
         String name = control.getID();
         String value = "";
         if (control.getBindedClass().isAllowed(OperationKind.GET_VALUE))
@@ -242,11 +246,9 @@ public class DialogFillWizard extends AbstractWizard
 
         String action = getDefaultAction(control, value);
         this.controlNamesAndValues.put(name, action);
-
     }
 
-    private MatrixItem createItem(Map<String, String> map)
-    {
+    private MatrixItem createItem(Map<String, String> map) {
         MatrixItem matrixItem = CommandBuilder.create(currentMatrix, Tokens.Action.get(), DialogFill.class.getSimpleName());
         Parameters params = new Parameters();
         map.forEach((name, value) -> params.add(name, value, TypeMandatory.Extra));
@@ -255,8 +257,7 @@ public class DialogFillWizard extends AbstractWizard
         return matrixItem;
     }
 
-    private ChangeListener<Boolean> getListenerForControlItems(ControlItem item)
-    {
+    private ChangeListener<Boolean> getListenerForControlItems(ControlItem item) {
         return (observable, wasSelected, isSelected) -> {
             Rectangle rectangle = item.getRectangle();
             if (rectangle == null)
@@ -274,24 +275,29 @@ public class DialogFillWizard extends AbstractWizard
         };
     }
 
-    private void onDialogSelected()
-    {
+    private void onDialogSelected() {
+        IControl selfControl = Common.tryCatch(() -> this.currentDialog.getSelfControl(), "Error on get self", null);
+
+        Rectangle selfRectangle = Common.tryCatch(() -> this.service.getRectangle(selfControl.locator(), selfControl.locator()), "Error on get self Rectangle", null);
+
+        this.dialogXOffset = selfRectangle.x;
+        this.dialogYOffset = selfRectangle.y;
+
         List<ControlItem> collect = currentDialog.getControls(IWindow.SectionKind.Run).stream()
                 .map(iControl -> new ControlItem(iControl, false)).collect(Collectors.toList());
 
         ObservableList<ControlItem> objects = FXCollections.observableArrayList(collect);
-        this.textBoxes.getItems().clear();
-        this.textBoxes.getItems().addAll(objects);
-        this.textBoxes.getItems().forEach(controlItem -> controlItem.onProperty().addListener(getListenerForControlItems(controlItem)));
+        this.controls.getItems().clear();
+        this.controls.getItems().addAll(objects);
+        this.controls.getItems().forEach(controlItem -> controlItem.onProperty().addListener(getListenerForControlItems(controlItem)));
 
-        IControl selfControl = Common.tryCatch(() -> this.currentDialog.getSelfControl(), "Error on get self", null);
         WizardHelper.gainImageAndDocument(this.appConnection, selfControl, (image, doc) ->
         {
             this.imageViewWithScale.displayImage(image);
             this.document = doc;
             List<Rectangle> list = XpathUtils.collectAllRectangles(this.document);
             this.imageViewWithScale.setListForSearch(list);
-            this.imageViewWithScale.setOnRectangleClick(rectangle -> this.textBoxes.getItems().forEach(controlItem -> {
+            this.imageViewWithScale.setOnRectangleClick(rectangle -> this.controls.getItems().forEach(controlItem -> {
 
                 Rectangle itemRectangle = controlItem.getRectangle();
                 if (rectangle.equals(itemRectangle))
@@ -318,58 +324,46 @@ public class DialogFillWizard extends AbstractWizard
         });
     }
 
-    private class ControlItem
-    {
+    private class ControlItem {
         private IControl control;
 
         private final BooleanProperty on = new SimpleBooleanProperty();
 
-        public IControl getControl()
-        {
+        public IControl getControl() {
             return this.control;
         }
 
-        private ControlItem(IControl control, boolean on)
-        {
+        private ControlItem(IControl control, boolean on) {
             this.control = control;
             setOn(on);
-
         }
 
-        public final String getName()
-        {
-
+        public final String getName() {
             return this.control.getID();
         }
 
-        public final BooleanProperty onProperty()
-        {
+        public final BooleanProperty onProperty() {
             return this.on;
         }
 
-        public final boolean isOn()
-        {
+        public final boolean isOn() {
             return this.onProperty().get();
         }
 
-        public final void setOn(final boolean on)
-        {
+        public final void setOn(final boolean on) {
             this.onProperty().set(on);
         }
 
         @Override
-        public String toString()
-        {
+        public String toString() {
             return getName();
         }
 
-        public void toggle()
-        {
+        public void toggle() {
             this.setOn(!isOn());
         }
 
-        public Rectangle getRectangle()
-        {
+        public Rectangle getRectangle() {
             Rectangle res = null;
             if (this.control.getBindedClass().isAllowed(OperationKind.IS_VISIBLE))
             {
@@ -378,19 +372,23 @@ public class DialogFillWizard extends AbstractWizard
                     return ownerControl == null ? null : ownerControl.locator();
                 }, "Error on get owner", null);
 
-                res =  getItemRectangle(ownerLocator, this.control.locator());
+                res = getItemRectangle(ownerLocator, this.control.locator());
+                if (res != null)
+                {
+                    res.setRect(res.x - dialogXOffset, res.y - dialogYOffset, res.width, res.height);
+                }
             }
 
             return res;
         }
     }
 
-    private String getDefaultAction(IControl control, String value)
-    {
+    private String getDefaultAction(IControl control, String value) {
         String apostr = "'";
         String endOfTheAction = "()";
         String res = "";
-        String doo = "Do.";
+        //cause do is a key word
+        String dO = "Do.";
         String setNum = "(" + value + ")";
         String setStr = "(" + apostr + value + apostr + ")";
         switch (control.getBindedClass())
@@ -409,7 +407,7 @@ public class DialogFillWizard extends AbstractWizard
             case Button:
             case Tooltip:
             case Row:
-                res = doo + control.getBindedClass().defaultOperation().toString() + endOfTheAction;
+                res = dO + control.getBindedClass().defaultOperation().toString() + endOfTheAction;
                 break;
             case CheckBox:
                 res = value;
@@ -419,14 +417,114 @@ public class DialogFillWizard extends AbstractWizard
             case Splitter:
             case ToggleButton:
             case RadioButton:
-                res = doo + control.getBindedClass().defaultOperation().toString() + setNum;
+                res = dO + control.getBindedClass().defaultOperation().toString() + setNum;
                 break;
             case TextBox:
             case ComboBox:
             case TabPanel:
-                res = doo + control.getBindedClass().defaultOperation().toString() + setStr;
+                res = dO + control.getBindedClass().defaultOperation().toString() + setStr;
         }
 
         return res;
+    }
+
+    private class MyCell extends ListCell<String> {
+
+        public MyCell() {
+
+//            setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
+//            setAlignment(Pos.CENTER);
+
+            setOnDragDetected(event -> {
+                if (getItem() == null) {
+                    return;
+                }
+
+                ObservableList<String> items = getListView().getItems();
+
+                Dragboard dragboard = startDragAndDrop(TransferMode.MOVE);
+                ClipboardContent content = new ClipboardContent();
+                content.putString(getItem());
+
+                String s = getListView().getItems().get(items.indexOf(getItem()));
+                dragboard.setDragView(new Label(s).snapshot(null,null));
+
+                dragboard.setContent(content);
+
+                event.consume();
+            });
+
+            setOnDragOver(event -> {
+                if (event.getGestureSource() != this &&
+                        event.getDragboard().hasString())
+                {
+                    event.acceptTransferModes(TransferMode.MOVE);
+                }
+
+                event.consume();
+            });
+
+//            setOnDragEntered(event -> {
+//                if (event.getGestureSource() != this &&
+//                        event.getDragboard().hasString())
+//                {
+//                    setOpacity(0.3);
+//                }
+//            });
+//
+//            setOnDragExited(event -> {
+//                if (event.getGestureSource() != this &&
+//                        event.getDragboard().hasString())
+//                {
+//                    setOpacity(1);
+//                }
+//            });
+
+            setOnDragDropped(event -> {
+                if (getItem() == null)
+                {
+                    return;
+                }
+
+                Dragboard db = event.getDragboard();
+                boolean success = false;
+
+                if (db.hasString())
+                {
+
+                    ObservableList<String> items = getListView().getItems();
+                    int draggedIdx = items.indexOf(db.getString());
+                    int thisIdx = items.indexOf(getItem());
+
+                    items.set(draggedIdx, getItem());
+                    items.set(thisIdx, db.getString());
+
+                    List<String> itemscopy = new ArrayList<>(getListView().getItems());
+                    getListView().getItems().setAll(itemscopy);
+
+                    success = true;
+                }
+                event.setDropCompleted(success);
+
+                event.consume();
+            });
+
+            setOnDragDone(DragEvent::consume);
+        }
+
+        @Override
+        protected void updateItem(String item, boolean empty) {
+            super.updateItem(item, empty);
+
+            if (empty || item == null)
+            {
+                setGraphic(null);
+            }
+            else
+            {
+                setText(item);
+            }
+        }
+
     }
 }
