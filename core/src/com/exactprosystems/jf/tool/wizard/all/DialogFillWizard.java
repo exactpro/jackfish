@@ -48,6 +48,7 @@ import java.awt.*;
 import java.util.*;
 
 import java.util.List;
+import java.util.function.Predicate;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
@@ -65,23 +66,23 @@ import static com.exactprosystems.jf.tool.Common.tryCatch;
         criteries           = {MatrixItem.class, MatrixFx.class}
 )
 public class DialogFillWizard extends AbstractWizard {
-    private MatrixFx currentMatrix;
-    private DictionaryFx dictionary;
-    private ComboBox<String> storedConnections;
-    private ComboBox<String> dialogs;
-    private String currentAdapterStore;
-    private Collection<IWindow> windows;
-    private IWindow currentDialog;
-    private MatrixItem currentItem;
-    private ListView<String> resultListView;
-    private AppConnection appConnection;
-    private ImageViewWithScale imageViewWithScale;
-    private Document document;
+    private MatrixFx              currentMatrix;
+    private DictionaryFx          dictionary;
+    private ComboBox<String>      storedConnections;
+    private ComboBox<String>      dialogs;
+    private String                currentAdapterStore;
+    private Collection<IWindow>   windows;
+    private IWindow               currentDialog;
+    private MatrixItem            currentItem;
+    private ListView<String>      resultListView;
+    private AppConnection         appConnection;
+    private ImageViewWithScale    imageViewWithScale;
+    private Document              document;
     private ListView<ControlItem> controls;
-    private Map<String, String> controlNamesAndValues;
-    private IRemoteApplication service;
-    private int dialogXOffset;
-    private int dialogYOffset;
+    private Map<String, String>   controlNamesAndValues;
+    private IRemoteApplication    service;
+    private int                   dialogXOffset;
+    private int                   dialogYOffset;
 
 
     @Override
@@ -176,13 +177,15 @@ public class DialogFillWizard extends AbstractWizard {
     protected Supplier<List<WizardCommand>> getCommands() {
         return () -> {
             CommandBuilder builder = CommandBuilder.start();
-            return builder.addMatrixItem(this.currentMatrix, this.currentItem, createItem(this.resultListView.getItems()
-                    .stream()
-                    .collect(Collectors.toMap(o -> o.split(" : ")[0]
-                            , o -> o.split(" : ")[1]
-                            , (u,v) -> u
-                            , LinkedHashMap::new))
-            ), 0).build();
+            Map<String, String> map = new LinkedHashMap<>();
+            for (String o : this.resultListView.getItems())
+            {
+                if (map.put(o.split(" : ")[0], o.split(" : ")[1]) != null)
+                {
+                    throw new IllegalStateException("Duplicate key");
+                }
+            }
+            return builder.addMatrixItem(this.currentMatrix, this.currentItem, createItem(map),0).build();
 
         };
     }
@@ -283,7 +286,23 @@ public class DialogFillWizard extends AbstractWizard {
         this.dialogXOffset = selfRectangle.x;
         this.dialogYOffset = selfRectangle.y;
 
-        List<ControlItem> collect = currentDialog.getControls(IWindow.SectionKind.Run).stream()
+        Predicate<IControl> predicate = (IControl control) -> {
+            switch (control.getBindedClass())
+            {
+                case TextBox:
+                case Button:
+                case CheckBox:
+                case RadioButton:
+                case Label:
+                case TabPanel:
+                case Spinner:
+                    return true;
+                default:
+                    return false;
+            }
+        };
+
+        List<ControlItem> collect = currentDialog.getControls(IWindow.SectionKind.Run).stream().filter(predicate)
                 .map(iControl -> new ControlItem(iControl, false)).collect(Collectors.toList());
 
         ObservableList<ControlItem> objects = FXCollections.observableArrayList(collect);
@@ -393,28 +412,14 @@ public class DialogFillWizard extends AbstractWizard {
         String setStr = "(" + apostr + value + apostr + ")";
         switch (control.getBindedClass())
         {
-            case Any:
-            case Dialog:
-            case Frame:
-            case Image:
             case Label:
-            case ListView:
-            case MenuItem:
-            case Menu:
-            case Panel:
-            case ScrollBar:
-            case Table:
             case Button:
-            case Tooltip:
-            case Row:
                 res = dO + control.getBindedClass().defaultOperation().toString() + endOfTheAction;
                 break;
             case CheckBox:
                 res = value;
                 break;
-            case Slider:
             case Spinner:
-            case Splitter:
             case ToggleButton:
             case RadioButton:
                 res = dO + control.getBindedClass().defaultOperation().toString() + setNum;
