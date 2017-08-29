@@ -916,7 +916,7 @@ public class DictionaryFx extends GuiDictionary
 					setIsWorking(true);
 					Map<String, String> map = new HashMap<>();
 					map.put("Title", selectedItem);
-					this.applicationConnector.getAppConnection().getApplication().service().switchTo(map, true);
+					this.applicationConnector.getAppConnection().getApplication().service().switchTo(map, false);
 				} catch(Exception e){
 					throw new Exception(e);
 				} finally {
