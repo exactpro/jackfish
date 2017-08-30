@@ -12,6 +12,7 @@ import static com.exactprosystems.jf.actions.gui.Helper.message;
 import com.exactprosystems.jf.actions.*;
 import com.exactprosystems.jf.api.app.*;
 import com.exactprosystems.jf.api.app.IWindow.SectionKind;
+import com.exactprosystems.jf.api.common.Str;
 import com.exactprosystems.jf.api.error.ErrorKind;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.report.ReportBuilder;
@@ -95,7 +96,7 @@ public class DialogSwitchToWindow extends AbstractAction
 		
 		if (this.dialog == null)
 		{
-			service.switchToFrame(null);
+			service.switchToFrame(null, null);
 		}
 		else
 		{
@@ -118,7 +119,12 @@ public class DialogSwitchToWindow extends AbstractAction
 				super.setError(message(id, window, SectionKind.Self, null, null, "Self control is not found."), ErrorKind.ELEMENT_NOT_FOUND);
 				return;
 			}
-			service.switchToFrame(element.locator());
+			Locator owner = null;
+			if(!Str.IsNullOrEmpty(element.getOwnerID()))
+			{
+				owner = window.getControlForName(null, element.getOwnerID()).locator();
+			}
+			service.switchToFrame(owner, element.locator());
 		}
 
 		this.setResult(null);

@@ -331,7 +331,7 @@ public class WinRemoteApplicationJNA extends RemoteApplication
 	}
 
 	@Override
-	protected void switchToFrameDerived(Locator owner) throws Exception
+	protected void switchToFrameDerived(Locator owner, Locator element) throws Exception
 	{
 		throw new FeatureNotSupportedException("switchToFrame");
 	}

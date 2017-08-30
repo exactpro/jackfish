@@ -553,7 +553,7 @@ public class SeleniumRemoteApplication extends RemoteApplication
 	}
 
 	@Override
-	protected void switchToFrameDerived(Locator owner) throws Exception
+	protected void switchToFrameDerived(Locator owner, Locator element) throws Exception
 	{
 		Exception real = null;
 		int repeat = 1;
@@ -561,13 +561,13 @@ public class SeleniumRemoteApplication extends RemoteApplication
 		{
 			try
 			{
-				if (owner == null)
+				if (element == null)
 				{
 					this.driver.switchTo().defaultContent();
 				}
 				else
 				{
-					WebElement component = this.operationExecutor.find(null, owner);
+					WebElement component = this.operationExecutor.find(owner, element);
 					this.driver.switchTo().frame(component);
 				}
 				return;

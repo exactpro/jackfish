@@ -402,6 +402,14 @@ public class DictionaryFx extends GuiDictionary
 		}
 	}
 
+	private void switchFunction(Function a) throws Exception
+	{
+		if (isApplicationRun())
+		{
+			a.call();
+		}
+	}
+
 	public void dialogMove(IWindow window, IWindow.SectionKind section, Integer newIndex) throws Exception
 	{
 
@@ -736,28 +744,33 @@ public class DictionaryFx extends GuiDictionary
 	//region Switch tab
 	public void switchTo(String selectedItem) throws Exception
 	{
-		if (isApplicationRun())
+		switchFunction(() ->
 		{
 			Map<String, String> map = new HashMap<>();
 			map.put("Title", selectedItem);
 			this.applicationConnector.getAppConnection().getApplication().service().switchTo(map, true);
-		}
+		});
 	}
 
-	public void switchToCurrent(IControl control) throws Exception
+	public void switchToCurrent(IControl control, IWindow window) throws Exception
 	{
-		if (isApplicationRun())
+		switchFunction(() ->
 		{
-			this.applicationConnector.getAppConnection().getApplication().service().switchToFrame(control.locator());
-		}
+			if (control != null)
+			{
+				Locator owner = null;
+				if(!Str.IsNullOrEmpty(control.getOwnerID()) && window != null)
+				{
+					owner = window.getControlForName(null, control.getOwnerID()).locator();
+				}
+				this.applicationConnector.getAppConnection().getApplication().service().switchToFrame(owner, control.locator());
+			}
+		});
 	}
 
 	public void switchToParent() throws Exception
 	{
-		if (isApplicationRun())
-		{
-			this.applicationConnector.getAppConnection().getApplication().service().switchToFrame(null);
-		}
+		switchFunction(() -> this.applicationConnector.getAppConnection().getApplication().service().switchToFrame(null, null));
 	}
 	//endregion
 

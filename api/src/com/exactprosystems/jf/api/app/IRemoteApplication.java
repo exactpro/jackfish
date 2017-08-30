@@ -39,7 +39,7 @@ public interface IRemoteApplication extends Remote
 	Collection<String> 			titles			() throws RemoteException;
 	void 						newInstance		(Map<String, String> args) throws Exception;
 	String 						switchTo		(Map<String, String> criteria, boolean softCondition) throws RemoteException;
-	void 						switchToFrame	(Locator owner) throws RemoteException;
+	void 						switchToFrame	(Locator owner, Locator element) throws RemoteException;
 	void 						resize			(int height, int width, boolean maximize, boolean minimize, boolean normal) throws RemoteException;
 	ImageWrapper 				getImage		(Locator owner, Locator element) throws RemoteException;
 	Rectangle 					getRectangle	(Locator owner, Locator element) throws RemoteException;
