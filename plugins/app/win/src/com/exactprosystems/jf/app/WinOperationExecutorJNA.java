@@ -141,12 +141,12 @@ public class WinOperationExecutorJNA implements OperationExecutor<UIProxyJNA>
 			int[] result = new int[length];
 			boolean many = locator.getAddition() != null && locator.getAddition() == Addition.Many;
 			UIProxyJNA owner = window == null ? new UIProxyJNA() : window;
-			int count = this.driver.findAllForLocator(result, owner, controlKind, locator.getUid(),	locator.getXpath(),	locator.getClazz(),	locator.getName(), locator.getTitle(), locator.getText(), many);
+			int count = this.driver.findAllForLocator(result, owner, controlKind, locator.getUid(),	locator.getXpath(),	locator.getClazz(),	locator.getName(), locator.getTitle(), locator.getText(), many, locator.getVisibility() == Visibility.Visible);
 			if (count > length)
 			{
 				length = count;
 				result = new int[length];
-				this.driver.findAllForLocator(result, owner, locator.getControlKind(), locator.getUid(), locator.getXpath(), locator.getClazz(), locator.getName(), locator.getTitle(), locator.getText(), many);
+				this.driver.findAllForLocator(result, owner, locator.getControlKind(), locator.getUid(), locator.getXpath(), locator.getClazz(), locator.getName(), locator.getTitle(), locator.getText(), many, locator.getVisibility() == Visibility.Visible);
 			}
 			int foundElementCount = result[0];
 			List<UIProxyJNA> returnedList = new ArrayList<>();
@@ -198,13 +198,13 @@ public class WinOperationExecutorJNA implements OperationExecutor<UIProxyJNA>
 			int length = 100;
 			int[] result = new int[length];
 			int count = this.driver.findAllForLocator(result, ownerElement, element.getControlKind(), element.getUid(),
-					element.getXpath(), element.getClazz(), element.getName(), element.getTitle(), element.getText(), many);
+					element.getXpath(), element.getClazz(), element.getName(), element.getTitle(), element.getText(), many, element.getVisibility() == Visibility.Visible);
 			if (count > length)
 			{
 				length = count;
 				result = new int[length];
 				this.driver.findAllForLocator(result, ownerElement, element.getControlKind(), element.getUid(),
-						element.getXpath(), element.getClazz(), element.getName(), element.getTitle(), element.getText(), many);
+						element.getXpath(), element.getClazz(), element.getName(), element.getTitle(), element.getText(), many, element.getVisibility() == Visibility.Visible);
 			}
 			int foundElementCount = result[0];
 			List<UIProxyJNA> returnedList = new ArrayList<>();

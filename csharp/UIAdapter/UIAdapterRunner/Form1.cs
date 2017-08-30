@@ -31,7 +31,7 @@ namespace UIAdapterRunner
             //int i = UIAdapter.Program.FindAllForLocator(arr, arr.Length, null, (int)ControlKind.Any, "Main", null, null, "MockWin", null, null, false);
             //UIAdapter.Program.FindAllForLocator(arr, arr.Length, getStringId(ref arr), (int)ControlKind.Menu, null, null, null, "Menu", null, null, true);
             //UIAdapter.Program.FindAllForLocator(arr, arr.Length, null, (int)ControlKind.Tree, null, null, null, "Tree", null, null, true);
-            UIAdapter.Program.FindAllForLocator(arr, arr.Length, null, (int)ControlKind.Tree, "treeView1", null, null, null, null, null, true);
+            UIAdapter.Program.FindAllForLocator(arr, arr.Length, null, (int)ControlKind.Tree, "treeView1", null, null, null, null, null, true, true);
             UIAdapter.Program.getXMLFromTree(getStringId(ref arr));
             //int m = UIAdapter.Program.FindAllForLocator(arr, arr.Length, null, (int)ControlKind.Menu, null, null, null, "Menu", null, null, true);
             //string s = UIAdapter.Program.ListAll(getStringId(ref arr), (int)ControlKind.Menu, null, null, null, "Menu", null, null, true);

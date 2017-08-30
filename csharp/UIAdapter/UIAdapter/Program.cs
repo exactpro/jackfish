@@ -435,7 +435,7 @@ namespace UIAdapter
         }
 
         [DllExport("listAll", CallingConvention.Cdecl)]
-        public static string ListAll(string OwnerId, int controlkindId, string Uid, string Xpath, string Clazz, string Name, string Title, string Text, Boolean many)
+        public static string ListAll(string OwnerId, int controlkindId, string Uid, string Xpath, string Clazz, string Name, string Title, string Text, Boolean many, Boolean addInvisible)
         {
             try
             {
@@ -448,11 +448,15 @@ namespace UIAdapter
                 AutomationElement window = findOwner(OwnerId);
                 ControlKind controlKind = (ControlKind)controlkindId;
                 logger.All("Start get all components");
-                AutomationElement[] elements = GetAllComponents(controlKind, window, Uid, Xpath, Clazz, Name, Title, Text, many);
-                logger.All("End get all components");
+                AutomationElement[] elements = GetAllComponents(controlKind, window, Uid, Xpath, Clazz, Name, Title, Text, many, addInvisible);
+                logger.All("End get all components. Found : " + elements.Length);
                 StringBuilder result = new StringBuilder();
                 foreach (AutomationElement element in elements)
                 {
+                    if (element.Current.IsOffscreen)
+                    {
+                        continue;
+                    }
                     result.AppendLine("====================================================================================================");
                     result.AppendLine("Found:        " + element);
                     result.AppendLine("AutomationId: " + element.Current.AutomationId);
@@ -501,9 +505,8 @@ namespace UIAdapter
         }
 
         [DllExport("findAllForLocator", CallingConvention.Cdecl)]
-        public static int FindAllForLocator([In, Out, MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 1)] int[] arr, int len, String oId, int controlkindId, string Uid, string Xpath, string Clazz, string Name, string Title, string Text, Boolean many)
+        public static int FindAllForLocator([In, Out, MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 1)] int[] arr, int len, String oId, int controlkindId, string Uid, string Xpath, string Clazz, string Name, string Title, string Text, Boolean many, Boolean addInvisible)
         {
-            //logger.All("len="+len+" oId="+" controlkindId="+" Uid="+Uid+" Xpath="+Xpath+" Clazz="+Clazz+" Name="+Name+" Title="+Title+" Text="+Text+" many="+many);
             try
             {
                 long startMethod = getMilis();
@@ -517,7 +520,7 @@ namespace UIAdapter
                 AutomationElement[] found = null;
                 try
                 {
-                    found = GetAllComponents(controlKind, owner, Uid, Xpath, Clazz, Name, Title, Text, many);
+                    found = GetAllComponents(controlKind, owner, Uid, Xpath, Clazz, Name, Title, Text, many, addInvisible);
                 }
                 catch (ElementNotAvailableException ex)
                 {
@@ -532,8 +535,9 @@ namespace UIAdapter
                 {
                     return 0;
                 }
-
-                int[][] res = found.Cast<AutomationElement>().Select(e => e.GetRuntimeId()).ToArray();
+                logger.All("Before size : " + found.Length);
+                int[][] res = found.Cast<AutomationElement>().Where(el => el.Current.IsOffscreen ? addInvisible : true).Select(e => e.GetRuntimeId()).ToArray();
+                logger.All("After size : " + res.Length);
                 int countOfElement = res.Length + 1;
                 foreach (int[] r in res)
                 {
@@ -2327,7 +2331,7 @@ namespace UIAdapter
             return ret;
         }
 
-        private static AutomationElement[] GetAllComponents(ControlKind controlKind, AutomationElement window, string Uid, string Xpath, string Clazz, string Name, string Title, string Text, Boolean many)
+        private static AutomationElement[] GetAllComponents(ControlKind controlKind, AutomationElement window, string Uid, string Xpath, string Clazz, string Name, string Title, string Text, Boolean many, Boolean addIvisible)
         {
             long startUI = getMilis();
             SimpleLocator locator = new SimpleLocator(controlKind, Uid, Xpath, Clazz, Name, Title, Text, many);
@@ -2339,7 +2343,9 @@ namespace UIAdapter
             }
             else
             {
+                logger.All("Start found components");
                 ret = WinMatcher.Find(window, controlKind, Uid, Xpath, Clazz, Name, Title, Text, many, maxTimeout);
+                logger.All("Found : " + ret.Length);
                 if (ret != null) //TODO this rigth only for ControlKind.Wait
                 {
                     cacheLocators.Add(locator, ret);

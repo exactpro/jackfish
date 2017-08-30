@@ -161,7 +161,7 @@ public JnaDriverImpl(Logger logger) throws Exception
 
 	//region find methods
 
-	public String listAll(UIProxyJNA owner, ControlKind kind, String uid, String xpath, String clazz, String name, String title, String text, boolean many) throws Exception
+	public String listAll(UIProxyJNA owner, ControlKind kind, String uid, String xpath, String clazz, String name, String title, String text, boolean many, boolean addVisible) throws Exception
 	{
 		long start = System.currentTimeMillis();
 		xpath = ConvertString.replaceNonASCIISymbolsToUnicodeSubString(xpath);
@@ -169,15 +169,15 @@ public JnaDriverImpl(Logger logger) throws Exception
 		title = ConvertString.replaceNonASCIISymbolsToUnicodeSubString(title);
 		text = ConvertString.replaceNonASCIISymbolsToUnicodeSubString(text);
 
-		String result = this.jnaDriver.listAll(owner.getIdString(), kind.ordinal(), uid, xpath, clazz, name, title, text, many);
-		this.logger.info(String.format("listAll(%s,%s,%s,%s,%s,%s,%s,%s,%b), time (ms) : %d", owner, kind, uid, xpath, clazz, name, title, text, many, 
+		String result = this.jnaDriver.listAll(owner.getIdString(), kind.ordinal(), uid, xpath, clazz, name, title, text, many, addVisible);
+		this.logger.info(String.format("listAll(%s,%s,%s,%s,%s,%s,%s,%s,%b,%b), time (ms) : %d", owner, kind, uid, xpath, clazz, name, title, text, many, addVisible,
 				System.currentTimeMillis() - start));
 		checkCSharpTimes();
 		checkError();
 		return result;
 	}
 
-	public int findAllForLocator(int[] arr, UIProxyJNA owner, ControlKind kind, String uid, String xpath, String clazz, String name, String title, String text, boolean many) throws Exception
+	public int findAllForLocator(int[] arr, UIProxyJNA owner, ControlKind kind, String uid, String xpath, String clazz, String name, String title, String text, boolean many, boolean addVisible) throws Exception
 	{
 		long start = System.currentTimeMillis();
 		xpath = ConvertString.replaceNonASCIISymbolsToUnicodeSubString(xpath);
@@ -185,7 +185,7 @@ public JnaDriverImpl(Logger logger) throws Exception
 		title = ConvertString.replaceNonASCIISymbolsToUnicodeSubString(title);
 		text = ConvertString.replaceNonASCIISymbolsToUnicodeSubString(text);
 
-		int result = this.jnaDriver.findAllForLocator(arr, arr.length, owner.getIdString(), kind.ordinal(), uid, xpath, clazz, name, title, text, many);
+		int result = this.jnaDriver.findAllForLocator(arr, arr.length, owner.getIdString(), kind.ordinal(), uid, xpath, clazz, name, title, text, many,addVisible);
 		this.logger.info(String.format("findAllForLocator(%s,%d,%s,%s,%s,%s,%s,%s,%s,%s,%b) = %d, time (ms) : %d", Arrays.toString(arr), arr.length, owner, kind, uid, xpath, clazz, name, title, text, many, result,
 				System.currentTimeMillis() - start));
 		checkCSharpTimes();
