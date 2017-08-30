@@ -5,6 +5,7 @@ import com.exactprosystems.jf.api.app.*;
 import com.exactprosystems.jf.api.common.IContext;
 
 import com.exactprosystems.jf.api.error.JFRemoteException;
+import com.exactprosystems.jf.api.error.app.TooManyElementsException;
 import com.exactprosystems.jf.api.wizard.WizardAttribute;
 import com.exactprosystems.jf.api.wizard.WizardCategory;
 import com.exactprosystems.jf.api.wizard.WizardCommand;
@@ -42,9 +43,11 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Priority;
+import javafx.scene.text.Text;
 import org.w3c.dom.Document;
 
 import java.awt.*;
+import java.rmi.RemoteException;
 import java.util.*;
 
 import java.util.List;
@@ -101,6 +104,7 @@ public class DialogFillWizard extends AbstractWizard {
         this.controls = new ListView<>();
         ObservableList<String> objects = FXCollections.observableArrayList();
         this.resultListView = new ListView<>(objects);
+        this.resultListView.tooltipProperty().set(new Tooltip("Use drag and drop to reorder elements"));
         this.dialogs = new ComboBox<>();
         this.dialogs.setPrefWidth(300);
         GridPane grid = new GridPane();
@@ -197,7 +201,22 @@ public class DialogFillWizard extends AbstractWizard {
 
     private Rectangle getItemRectangle(Locator owner, Locator element) {
 
-        return Common.tryCatch(() -> this.service.getRectangle(owner, element), "Error on get rectangle", null);
+        Rectangle rectangle = null;
+
+        try
+        {
+            rectangle = this.service.getRectangle(owner, element);
+        }
+        catch (TooManyElementsException e)
+        {
+            DialogsHelper.showError("Too many elements found");
+        }
+        catch (RemoteException e)
+        {
+            DialogsHelper.showError(e.getMessage());
+        }
+
+        return rectangle;
     }
 
     private void displayStores() throws Exception {
@@ -262,6 +281,7 @@ public class DialogFillWizard extends AbstractWizard {
 
     private ChangeListener<Boolean> getListenerForControlItems(ControlItem item) {
         return (observable, wasSelected, isSelected) -> {
+
             Rectangle rectangle = item.getRectangle();
             if (rectangle == null)
             {
@@ -280,13 +300,18 @@ public class DialogFillWizard extends AbstractWizard {
 
     private void onDialogSelected() {
         IControl selfControl = Common.tryCatch(() -> this.currentDialog.getSelfControl(), "Error on get self", null);
-
         Rectangle selfRectangle = Common.tryCatch(() -> this.service.getRectangle(selfControl.locator(), selfControl.locator()), "Error on get self Rectangle", null);
 
         this.dialogXOffset = selfRectangle.x;
         this.dialogYOffset = selfRectangle.y;
 
         Predicate<IControl> predicate = (IControl control) -> {
+            Addition addition = control.getAddition();
+
+            if (addition != null && addition.equals(Addition.Many))
+            {
+                return false;
+            }
             switch (control.getBindedClass())
             {
                 case TextBox:
@@ -382,7 +407,7 @@ public class DialogFillWizard extends AbstractWizard {
             this.setOn(!isOn());
         }
 
-        public Rectangle getRectangle() {
+        public Rectangle getRectangle() {//todo owner and self controls can be used
             Rectangle res = null;
             if (this.control.getBindedClass().isAllowed(OperationKind.IS_VISIBLE))
             {
@@ -452,7 +477,7 @@ public class DialogFillWizard extends AbstractWizard {
                 content.putString(getItem());
 
                 String s = getListView().getItems().get(items.indexOf(getItem()));
-                dragboard.setDragView(new Label(s).snapshot(null,null));
+                dragboard.setDragView(new Text(s).snapshot(null,null));
 
                 dragboard.setContent(content);
 
@@ -469,21 +494,21 @@ public class DialogFillWizard extends AbstractWizard {
                 event.consume();
             });
 
-//            setOnDragEntered(event -> {
-//                if (event.getGestureSource() != this &&
-//                        event.getDragboard().hasString())
-//                {
-//                    setOpacity(0.3);
-//                }
-//            });
-//
-//            setOnDragExited(event -> {
-//                if (event.getGestureSource() != this &&
-//                        event.getDragboard().hasString())
-//                {
-//                    setOpacity(1);
-//                }
-//            });
+            setOnDragEntered(event -> {
+                if (event.getGestureSource() != this &&
+                        event.getDragboard().hasString())
+                {
+                    setOpacity(0.3);
+                }
+            });
+
+            setOnDragExited(event -> {
+                if (event.getGestureSource() != this &&
+                        event.getDragboard().hasString())
+                {
+                    setOpacity(1);
+                }
+            });
 
             setOnDragDropped(event -> {
                 if (getItem() == null)
