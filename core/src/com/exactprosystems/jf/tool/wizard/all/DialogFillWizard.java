@@ -35,10 +35,7 @@ import javafx.scene.control.*;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.cell.CheckBoxListCell;
-import javafx.scene.input.ClipboardContent;
-import javafx.scene.input.DragEvent;
-import javafx.scene.input.Dragboard;
-import javafx.scene.input.TransferMode;
+import javafx.scene.input.*;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
@@ -77,12 +74,11 @@ public class DialogFillWizard extends AbstractWizard {
     private Collection<IWindow>   windows;
     private IWindow               currentDialog;
     private MatrixItem            currentItem;
-    private ListView<String>      resultListView;
+    private ListView<ResultBean>  resultListView;
     private AppConnection         appConnection;
     private ImageViewWithScale    imageViewWithScale;
     private Document              document;
     private ListView<ControlItem> controls;
-    private Map<String, String>   controlNamesAndValues;
     private IRemoteApplication    service;
     private int                   dialogXOffset;
     private int                   dialogYOffset;
@@ -93,7 +89,6 @@ public class DialogFillWizard extends AbstractWizard {
         super.init(context, wizardManager, parameters);
         this.currentMatrix = super.get(MatrixFx.class, parameters);
         this.currentItem = get(MatrixItem.class, parameters);
-        this.controlNamesAndValues = new HashMap<>();
 
     }
 
@@ -102,8 +97,7 @@ public class DialogFillWizard extends AbstractWizard {
 
         this.imageViewWithScale = new ImageViewWithScale();
         this.controls = new ListView<>();
-        ObservableList<String> objects = FXCollections.observableArrayList();
-        this.resultListView = new ListView<>(objects);
+        this.resultListView = new ListView<>(FXCollections.observableArrayList());
         this.resultListView.tooltipProperty().set(new Tooltip("Use drag and drop to reorder elements"));
         this.dialogs = new ComboBox<>();
         this.dialogs.setPrefWidth(300);
@@ -135,7 +129,6 @@ public class DialogFillWizard extends AbstractWizard {
                     fillNamesAndValues(controlItem.getControl());
                 }
             });
-            this.controlNamesAndValues.forEach((s, s2) -> this.resultListView.getItems().add(s + " : " + s2));
         });
 
         this.dialogs.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
@@ -170,7 +163,6 @@ public class DialogFillWizard extends AbstractWizard {
 
     private void clear() {
         this.resultListView.getItems().clear();
-        this.controlNamesAndValues.clear();
     }
 
     private void setCurrentAdapterStore(String newValue) {
@@ -181,16 +173,7 @@ public class DialogFillWizard extends AbstractWizard {
     protected Supplier<List<WizardCommand>> getCommands() {
         return () -> {
             CommandBuilder builder = CommandBuilder.start();
-            Map<String, String> map = new LinkedHashMap<>();
-            for (String o : this.resultListView.getItems())
-            {
-                if (map.put(o.split(" : ")[0], o.split(" : ")[1]) != null)
-                {
-                    throw new IllegalStateException("Duplicate key");
-                }
-            }
-            return builder.addMatrixItem(this.currentMatrix, this.currentItem, createItem(map),0).build();
-
+            return builder.addMatrixItem(this.currentMatrix, this.currentItem, createItem(resultListView.getItems()),0).build();
         };
     }
 
@@ -266,14 +249,15 @@ public class DialogFillWizard extends AbstractWizard {
                     .getValue()), "Error on get values from controls.", "");
         }
 
-        String action = getDefaultAction(control, value);
-        this.controlNamesAndValues.put(name, action);
+        String operation = getDefaultAction(control, value);
+        this.resultListView.getItems().add(new ResultBean(name, operation));
     }
 
-    private MatrixItem createItem(Map<String, String> map) {
+
+    private MatrixItem createItem(List<ResultBean> beans) {
         MatrixItem matrixItem = CommandBuilder.create(currentMatrix, Tokens.Action.get(), DialogFill.class.getSimpleName());
         Parameters params = new Parameters();
-        map.forEach((name, value) -> params.add(name, value, TypeMandatory.Extra));
+        beans.forEach(bean -> params.add(bean.getControlName(), bean.getOperation(), TypeMandatory.Extra));
 
         Common.tryCatch(() -> matrixItem.init(this.currentMatrix, new ArrayList<>(), new HashMap<>(), params), "Error on parameters create");
         return matrixItem;
@@ -407,13 +391,13 @@ public class DialogFillWizard extends AbstractWizard {
             this.setOn(!isOn());
         }
 
-        public Rectangle getRectangle() {//todo owner and self controls can be used
+        public Rectangle getRectangle() {
             Rectangle res = null;
             if (this.control.getBindedClass().isAllowed(OperationKind.IS_VISIBLE))
             {
                 Locator ownerLocator = Common.tryCatch(() -> {
                     IControl ownerControl = currentDialog.getOwnerControl(this.control);
-                    return ownerControl == null ? null : ownerControl.locator();
+                    return ownerControl == null ? currentDialog.getSelfControl().locator() : ownerControl.locator();
                 }, "Error on get owner", null);
 
                 res = getItemRectangle(ownerLocator, this.control.locator());
@@ -458,25 +442,23 @@ public class DialogFillWizard extends AbstractWizard {
         return res;
     }
 
-    private class MyCell extends ListCell<String> {
+    private class MyCell extends ListCell<ResultBean> {
 
         public MyCell() {
 
-//            setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
-//            setAlignment(Pos.CENTER);
+            setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
 
             setOnDragDetected(event -> {
                 if (getItem() == null) {
                     return;
                 }
-
-                ObservableList<String> items = getListView().getItems();
+                ObservableList<ResultBean> items = getListView().getItems();
 
                 Dragboard dragboard = startDragAndDrop(TransferMode.MOVE);
                 ClipboardContent content = new ClipboardContent();
-                content.putString(getItem());
+                content.putString(String.valueOf(items.indexOf(getItem())));
 
-                String s = getListView().getItems().get(items.indexOf(getItem()));
+                String s = getItem().toString();
                 dragboard.setDragView(new Text(s).snapshot(null,null));
 
                 dragboard.setContent(content);
@@ -521,15 +503,17 @@ public class DialogFillWizard extends AbstractWizard {
 
                 if (db.hasString())
                 {
+                    ObservableList<ResultBean> items = getListView().getItems();
 
-                    ObservableList<String> items = getListView().getItems();
-                    int draggedIdx = items.indexOf(db.getString());
-                    int thisIdx = items.indexOf(getItem());
+                    int where = items.indexOf(getItem());
+                    int from = Integer.parseInt(db.getString());
 
-                    items.set(draggedIdx, getItem());
-                    items.set(thisIdx, db.getString());
+                    ResultBean what = items.get(from);
 
-                    List<String> itemscopy = new ArrayList<>(getListView().getItems());
+                    items.set(from, getItem());
+                    items.set(where, what);
+
+                    List<ResultBean> itemscopy = new ArrayList<>(getListView().getItems());
                     getListView().getItems().setAll(itemscopy);
 
                     success = true;
@@ -543,7 +527,7 @@ public class DialogFillWizard extends AbstractWizard {
         }
 
         @Override
-        protected void updateItem(String item, boolean empty) {
+        protected void updateItem(ResultBean item, boolean empty) {
             super.updateItem(item, empty);
 
             if (empty || item == null)
@@ -552,9 +536,32 @@ public class DialogFillWizard extends AbstractWizard {
             }
             else
             {
-                setText(item);
+                setGraphic(new Text(item.toString()));
             }
         }
 
+    }
+
+    class ResultBean {
+        String controlName;
+        String operation;
+
+        public ResultBean(String controlName, String operation) {
+            this.controlName = controlName;
+            this.operation = operation;
+        }
+
+        public String getControlName() {
+            return controlName;
+        }
+
+        public String getOperation() {
+            return operation;
+        }
+
+        @Override
+        public String toString() {
+            return controlName + " : " + operation;
+        }
     }
 }
