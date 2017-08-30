@@ -5,7 +5,6 @@ import com.exactprosystems.jf.api.app.*;
 import com.exactprosystems.jf.api.common.IContext;
 
 import com.exactprosystems.jf.api.error.JFRemoteException;
-import com.exactprosystems.jf.api.error.app.TooManyElementsException;
 import com.exactprosystems.jf.api.wizard.WizardAttribute;
 import com.exactprosystems.jf.api.wizard.WizardCategory;
 import com.exactprosystems.jf.api.wizard.WizardCommand;
@@ -22,6 +21,7 @@ import com.exactprosystems.jf.tool.helpers.DialogsHelper;
 import com.exactprosystems.jf.tool.matrix.MatrixFx;
 import com.exactprosystems.jf.tool.wizard.AbstractWizard;
 import com.exactprosystems.jf.tool.wizard.CommandBuilder;
+import com.exactprosystems.jf.tool.wizard.WizardMatcher;
 import com.exactprosystems.jf.tool.wizard.related.MarkerStyle;
 import com.exactprosystems.jf.tool.wizard.related.WizardHelper;
 import javafx.application.Platform;
@@ -42,9 +42,9 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Priority;
 import javafx.scene.text.Text;
 import org.w3c.dom.Document;
+import org.w3c.dom.Node;
 
 import java.awt.*;
-import java.rmi.RemoteException;
 import java.util.*;
 
 import java.util.List;
@@ -82,6 +82,7 @@ public class DialogFillWizard extends AbstractWizard {
     private IRemoteApplication    service;
     private int                   dialogXOffset;
     private int                   dialogYOffset;
+    private WizardMatcher wizardMatcher;
 
 
     @Override
@@ -182,26 +183,6 @@ public class DialogFillWizard extends AbstractWizard {
         return true;
     }
 
-    private Rectangle getItemRectangle(Locator owner, Locator element) {
-
-        Rectangle rectangle = null;
-
-        try
-        {
-            rectangle = this.service.getRectangle(owner, element);
-        }
-        catch (TooManyElementsException e)
-        {
-            DialogsHelper.showError("Too many elements found");
-        }
-        catch (RemoteException e)
-        {
-            DialogsHelper.showError(e.getMessage());
-        }
-
-        return rectangle;
-    }
-
     private void displayStores() throws Exception {
         Map<String, Object> storeMap = this.currentMatrix.getFactory().getConfiguration().getStoreMap();
         Collection<String> stories = new ArrayList<>();
@@ -266,7 +247,7 @@ public class DialogFillWizard extends AbstractWizard {
     private ChangeListener<Boolean> getListenerForControlItems(ControlItem item) {
         return (observable, wasSelected, isSelected) -> {
 
-            Rectangle rectangle = item.getRectangle();
+            Rectangle rectangle = item.getRectangle(wizardMatcher);
             if (rectangle == null)
             {
                 return;
@@ -284,10 +265,14 @@ public class DialogFillWizard extends AbstractWizard {
 
     private void onDialogSelected() {
         IControl selfControl = Common.tryCatch(() -> this.currentDialog.getSelfControl(), "Error on get self", null);
-        Rectangle selfRectangle = Common.tryCatch(() -> this.service.getRectangle(selfControl.locator(), selfControl.locator()), "Error on get self Rectangle", null);
+        if (selfControl != null)
+        {
+            Rectangle selfRectangle = Common.tryCatch(() -> this.service.getRectangle(selfControl.locator(), selfControl.locator()), "Error on get self Rectangle", null);
 
-        this.dialogXOffset = selfRectangle.x;
-        this.dialogYOffset = selfRectangle.y;
+            this.dialogXOffset = selfRectangle.x;
+            this.dialogYOffset = selfRectangle.y;
+        }
+
 
         Predicate<IControl> predicate = (IControl control) -> {
             Addition addition = control.getAddition();
@@ -323,11 +308,16 @@ public class DialogFillWizard extends AbstractWizard {
         {
             this.imageViewWithScale.displayImage(image);
             this.document = doc;
+
             List<Rectangle> list = XpathUtils.collectAllRectangles(this.document);
             this.imageViewWithScale.setListForSearch(list);
+
+            PluginInfo info = this.appConnection.getApplication().getFactory().getInfo();
+            this.wizardMatcher = new WizardMatcher(info);
+
             this.imageViewWithScale.setOnRectangleClick(rectangle -> this.controls.getItems().forEach(controlItem -> {
 
-                Rectangle itemRectangle = controlItem.getRectangle();
+                Rectangle itemRectangle = controlItem.getRectangle(wizardMatcher);
                 if (rectangle.equals(itemRectangle))
                 {
                     controlItem.toggle();
@@ -391,23 +381,13 @@ public class DialogFillWizard extends AbstractWizard {
             this.setOn(!isOn());
         }
 
-        public Rectangle getRectangle() {
-            Rectangle res = null;
-            if (this.control.getBindedClass().isAllowed(OperationKind.IS_VISIBLE))
-            {
-                Locator ownerLocator = Common.tryCatch(() -> {
-                    IControl ownerControl = currentDialog.getOwnerControl(this.control);
-                    return ownerControl == null ? currentDialog.getSelfControl().locator() : ownerControl.locator();
-                }, "Error on get owner", null);
+        public Rectangle getRectangle(WizardMatcher wizardMatcher) {
 
-                res = getItemRectangle(ownerLocator, this.control.locator());
-                if (res != null)
-                {
-                    res.setRect(res.x - dialogXOffset, res.y - dialogYOffset, res.width, res.height);
-                }
-            }
+            return Common.tryCatch(() -> {
+                List<Node> all = wizardMatcher.findAll(document, this.control.locator());
+                return ((Rectangle) all.get(0).getUserData(IRemoteApplication.rectangleName));
+            },"Error on get rectangle",null);
 
-            return res;
         }
     }
 
