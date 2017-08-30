@@ -80,9 +80,7 @@ public class DialogFillWizard extends AbstractWizard {
     private Document              document;
     private ListView<ControlItem> controls;
     private IRemoteApplication    service;
-    private int                   dialogXOffset;
-    private int                   dialogYOffset;
-    private WizardMatcher wizardMatcher;
+    private WizardMatcher         wizardMatcher;
 
 
     @Override
@@ -265,14 +263,7 @@ public class DialogFillWizard extends AbstractWizard {
 
     private void onDialogSelected() {
         IControl selfControl = Common.tryCatch(() -> this.currentDialog.getSelfControl(), "Error on get self", null);
-        if (selfControl != null)
-        {
-            Rectangle selfRectangle = Common.tryCatch(() -> this.service.getRectangle(selfControl.locator(), selfControl.locator()), "Error on get self Rectangle", null);
-
-            this.dialogXOffset = selfRectangle.x;
-            this.dialogYOffset = selfRectangle.y;
-        }
-
+        Rectangle selfRectangle = Common.tryCatch(() -> this.service.getRectangle(selfControl.locator(), selfControl.locator()), "Error on get self Rectangle", null);
 
         Predicate<IControl> predicate = (IControl control) -> {
             Addition addition = control.getAddition();
