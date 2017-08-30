@@ -22,6 +22,8 @@ import java.util.*;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 import java.util.function.ToIntBiFunction;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -429,7 +431,15 @@ public class XpathUtils
 
 		private static long xpathWeight(String xpath)
 		{
-			return Arrays.stream(xpath.split("/")).filter(s -> !s.isEmpty()).count();
+			long slashCount = Arrays.stream(xpath.split("/")).filter(s -> !s.isEmpty()).count();
+			Pattern pattern = Pattern.compile("(\\[\\d+\\])");
+			Matcher matcher = pattern.matcher(xpath);
+			int i = 0;
+			while (matcher.find())
+			{
+				i++;
+			}
+			return slashCount + 1000 * i;
 		}
 
 		//region private methods
@@ -575,7 +585,7 @@ public class XpathUtils
 			}
 
 			//create all pairs
-			List<StringPair> list = IntStream.range(0, node.getAttributes().getLength())
+			List<StringPair> list = IntStream.range(0, node.hasAttributes() ? node.getAttributes().getLength() : 0)
 					.mapToObj(node.getAttributes()::item)
 					.filter(attr -> XpathUtils.isStable(attr.getNodeName(), this.pluginInfo::isStable) && XpathUtils.isStable(attr.getNodeValue(), this.pluginInfo::isStable))
 					.map(attr -> new StringPair("@" + attr.getNodeName(), attr.getNodeValue()))
