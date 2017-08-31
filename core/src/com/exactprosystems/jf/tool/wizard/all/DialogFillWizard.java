@@ -1,5 +1,7 @@
 package com.exactprosystems.jf.tool.wizard.all;
 
+import com.exactprosystems.jf.actions.ActionAttribute;
+import com.exactprosystems.jf.actions.ActionFieldAttribute;
 import com.exactprosystems.jf.actions.gui.DialogFill;
 import com.exactprosystems.jf.api.app.*;
 import com.exactprosystems.jf.api.common.IContext;
@@ -28,9 +30,11 @@ import javafx.application.Platform;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.HPos;
+import javafx.scene.Group;
 import javafx.scene.control.*;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -45,12 +49,16 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 
 import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Field;
 import java.util.*;
 
 import java.util.List;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static com.exactprosystems.jf.tool.Common.tryCatch;
 
@@ -65,22 +73,23 @@ import static com.exactprosystems.jf.tool.Common.tryCatch;
         strongCriteries     = true,
         criteries           = {MatrixItem.class, MatrixFx.class}
 )
-public class DialogFillWizard extends AbstractWizard {
-    private MatrixFx              currentMatrix;
-    private DictionaryFx          dictionary;
-    private ComboBox<String>      storedConnections;
-    private ComboBox<String>      dialogs;
-    private String                currentAdapterStore;
-    private Collection<IWindow>   windows;
-    private IWindow               currentDialog;
-    private MatrixItem            currentItem;
-    private ListView<ResultBean>  resultListView;
-    private AppConnection         appConnection;
-    private ImageViewWithScale    imageViewWithScale;
-    private Document              document;
-    private ListView<ControlItem> controls;
-    private IRemoteApplication    service;
-    private WizardMatcher         wizardMatcher;
+public class DialogFillWizard extends AbstractWizard
+{
+    private MatrixFx                 currentMatrix;
+    private DictionaryFx             dictionary;
+    private ComboBox<ConnectionBean> storedConnections;
+    private ComboBox<IWindow>        dialogs;
+    private IWindow                  currentDialog;
+    private MatrixItem               currentItem;
+    private ListView<ResultBean>     resultListView;
+    private AppConnection            appConnection;
+    private ImageViewWithScale       imageViewWithScale;
+    private Document                 document;
+    private ListView<ControlItem>    controls;
+    private IRemoteApplication       service;
+    private WizardMatcher            wizardMatcher;
+    private Text                     text;
+    private GridPane                 grid;
 
 
     @Override
@@ -89,34 +98,37 @@ public class DialogFillWizard extends AbstractWizard {
         super.init(context, wizardManager, parameters);
         this.currentMatrix = super.get(MatrixFx.class, parameters);
         this.currentItem = get(MatrixItem.class, parameters);
-
     }
 
     @Override
     protected void initDialog(BorderPane borderPane)
     {
-
+        grid = new GridPane();
         this.imageViewWithScale = new ImageViewWithScale();
         this.controls = new ListView<>();
+        this.controls.setOnKeyPressed(event ->
+        {
+            if (event.getCode() == KeyCode.SPACE)
+            {
+                this.controls.getSelectionModel().getSelectedItem().toggle();
+            }
+        });
         this.resultListView = new ListView<>(FXCollections.observableArrayList());
         this.resultListView.tooltipProperty().set(new Tooltip("Use drag and drop to reorder elements"));
         this.dialogs = new ComboBox<>();
         this.dialogs.setPrefWidth(300);
-        GridPane grid = new GridPane();
         this.storedConnections = new ComboBox<>();
         this.storedConnections.setPrefWidth(300);
 
         this.storedConnections.setOnShowing(event -> tryCatch(this::displayStores, "Error on update titles"));
         this.storedConnections.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) ->
         {
-            if (newValue != null)
+            this.connectToApplicationFromStore(newValue);
+            if (this.appConnection != null)
             {
-                this.setCurrentAdapterStore(newValue);
-                this.connectToApplicationFromStore(this.currentAdapterStore);
-                this.dictionary = (DictionaryFx) this.appConnection.getDictionary();
-                this.dialogs.getItems().clear();
-                this.windows = dictionary.getWindows();
-                this.dialogs.getItems().addAll(windows.stream().map(Object::toString).collect(Collectors.toList()));
+            this.dictionary = (DictionaryFx) this.appConnection.getDictionary();
+            this.dialogs.getItems().clear();
+            this.dialogs.getItems().setAll(dictionary.getWindows());
             }
         });
 
@@ -125,7 +137,7 @@ public class DialogFillWizard extends AbstractWizard {
         Button scan = new Button("Scan");
         scan.setOnAction(event ->
         {
-            clear();
+            this.resultListView.getItems().clear();
             this.controls.getItems().forEach(controlItem ->
             {
                 if (controlItem.isOn())
@@ -137,7 +149,7 @@ public class DialogFillWizard extends AbstractWizard {
 
         this.dialogs.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) ->
         {
-            this.currentDialog = this.dictionary.getWindows().stream().filter(iWindow -> iWindow.getName().equals(newValue)).findFirst().get();
+            this.currentDialog = newValue;
             this.dialogs.valueProperty().set(newValue);
             this.dialogs.getSelectionModel().select(newValue);
 
@@ -145,7 +157,7 @@ public class DialogFillWizard extends AbstractWizard {
         });
         this.controls.setCellFactory(CheckBoxListCell.forListView(ControlItem::onProperty));
 
-        ColumnConstraints col1 = new ColumnConstraints(300, 300, 300, Priority.SOMETIMES, HPos.LEFT, true);
+        ColumnConstraints col1 = new ColumnConstraints(300, 300, 300, Priority.SOMETIMES, HPos.CENTER, true);
         ColumnConstraints col2 = new ColumnConstraints(300, 300, 300, Priority.SOMETIMES, HPos.CENTER, true);
         ColumnConstraints col3 = new ColumnConstraints(300, 300, 300, Priority.SOMETIMES, HPos.CENTER, true);
 
@@ -155,26 +167,20 @@ public class DialogFillWizard extends AbstractWizard {
         grid.setHgap(10);
         grid.getColumnConstraints().addAll(col1, col2, col3);
 
+        text = new Text("Please select stored connection and dialog");
+
         grid.add(new Label("Select stored connection: "), 0, 0);
-        grid.add(storedConnections, 1, 0);
+        grid.add(this.storedConnections, 1, 0);
         grid.add(new Label("Select dialog: "), 2, 0);
-        grid.add(dialogs, 3, 0);
+        grid.add(this.dialogs, 3, 0);
         grid.add(this.controls, 3, 1);
         grid.add(scan, 3, 2);
         grid.add(this.resultListView, 3, 3);
-        grid.add(this.imageViewWithScale, 0, 1, 3, 3);
+        grid.add(text, 0, 1, 3, 3);
+
         borderPane.setCenter(grid);
     }
 
-    private void clear()
-    {
-        this.resultListView.getItems().clear();
-    }
-
-    private void setCurrentAdapterStore(String newValue)
-    {
-        this.currentAdapterStore = newValue;
-    }
 
     @Override
     protected Supplier<List<WizardCommand>> getCommands()
@@ -194,41 +200,29 @@ public class DialogFillWizard extends AbstractWizard {
 
     private void displayStores() throws Exception
     {
+        ObservableList<ConnectionBean> items = this.storedConnections.getItems();
         Map<String, Object> storeMap = this.currentMatrix.getFactory().getConfiguration().getStoreMap();
-        Collection<String> stories = new ArrayList<>();
-        if (!storeMap.isEmpty())
+        Collection<ConnectionBean> connections = storeMap.entrySet().stream().filter(entry ->
+                entry.getValue() instanceof AppConnection).map(entry -> new ConnectionBean(entry.getKey(), (AppConnection) entry.getValue())).collect(Collectors.toList());
+        items.setAll(connections);
+
+        List<ConnectionBean> connectionsFromPool = new ArrayList<>();
+        for (ConnectionBean connectionBean : items)
         {
-            stories.add("");
-            storeMap.forEach((s, o) ->
-            {
-                if (o instanceof AppConnection)
-                {
-                    stories.add(s);
-                }
-            });
+            connectionsFromPool = this.currentMatrix.getFactory().getConfiguration().getApplicationPool()
+                    .getConnections().stream().filter(connection -> !connection.equals(connectionBean.getConnection()))
+                    .map(connection -> new ConnectionBean(connection.getId(), connection)).collect(Collectors.toList());
+
         }
-        this.currentAdapterStore = storedConnections.getSelectionModel().getSelectedItem();
-
-        this.displayStoreActionControl(stories, this.currentAdapterStore);
+        items.addAll(connectionsFromPool);
     }
 
-    private void displayStoreActionControl(Collection<String> stories, String lastSelectedStore)
+    private void connectToApplicationFromStore(ConnectionBean bean)
     {
-        Platform.runLater(() ->
+        if (bean != null)
         {
-            if (stories != null)
-            {
-                storedConnections.getItems().setAll(stories);
-            }
-            storedConnections.getSelectionModel().select(lastSelectedStore);
-        });
-    }
-
-    private void connectToApplicationFromStore(String idAppStore)
-    {
-        if (idAppStore != null && !idAppStore.isEmpty())
-        {
-            this.appConnection = (AppConnection) this.currentMatrix.getFactory().getConfiguration().getStoreMap().get(idAppStore);
+            this.appConnection = this.storedConnections.getItems().stream().filter(connectionBean -> connectionBean.equals(bean))
+                    .map(ConnectionBean::getConnection).findFirst().orElse(null);
             this.service = this.appConnection.getApplication().service();
         }
     }
@@ -251,10 +245,12 @@ public class DialogFillWizard extends AbstractWizard {
     private MatrixItem createItem(List<ResultBean> beans)
     {
         MatrixItem matrixItem = CommandBuilder.create(currentMatrix, Tokens.Action.get(), DialogFill.class.getSimpleName());
-        Parameters params = new Parameters();
-        beans.forEach(bean -> params.add(bean.getControlName(), bean.getOperation(), TypeMandatory.Extra));
+        if (matrixItem != null)
+        {
+            beans.forEach(bean -> matrixItem.getParameters().add(bean.getControlName(), bean.getOperation(), TypeMandatory.Extra));
+            matrixItem.createId();
+        }
 
-        Common.tryCatch(() -> matrixItem.init(this.currentMatrix, new ArrayList<>(), new HashMap<>(), params), "Error on parameters create");
         return matrixItem;
     }
 
@@ -281,8 +277,11 @@ public class DialogFillWizard extends AbstractWizard {
 
     private void onDialogSelected()
     {
+        if (this.currentDialog == null)
+        {
+            return;
+        }
         IControl selfControl = Common.tryCatch(() -> this.currentDialog.getSelfControl(), "Error on get self", null);
-        Rectangle selfRectangle = Common.tryCatch(() -> this.service.getRectangle(selfControl.locator(), selfControl.locator()), "Error on get self Rectangle", null);
 
         Predicate<IControl> predicate = (IControl control) ->
         {
@@ -314,6 +313,9 @@ public class DialogFillWizard extends AbstractWizard {
         this.controls.getItems().clear();
         this.controls.getItems().addAll(objects);
         this.controls.getItems().forEach(controlItem -> controlItem.onProperty().addListener(getListenerForControlItems(controlItem)));
+        this.grid.getChildren().remove(text);
+        this.grid.getChildren().remove(this.imageViewWithScale);
+        this.grid.add(this.imageViewWithScale, 0, 1, 3, 3);
 
         WizardHelper.gainImageAndDocument(this.appConnection, selfControl, (image, doc) ->
         {
@@ -404,13 +406,11 @@ public class DialogFillWizard extends AbstractWizard {
 
         public Rectangle getRectangle(WizardMatcher wizardMatcher)
         {
-
             return Common.tryCatch(() ->
             {
                 List<Node> all = wizardMatcher.findAll(document, this.control.locator());
                 return ((Rectangle) all.get(0).getUserData(IRemoteApplication.rectangleName));
             }, "Error on get rectangle", null);
-
         }
     }
 
@@ -418,32 +418,31 @@ public class DialogFillWizard extends AbstractWizard {
     {
         String apostr = "'";
         String endOfTheAction = "()";
-        String res = "";
-        //cause do is a key word
-        String dO = "Do.";
+        StringBuilder res = new StringBuilder();
+        String dO = Do.class.getSimpleName() + ".";
         String setNum = "(" + value + ")";
         String setStr = "(" + apostr + value + apostr + ")";
         switch (control.getBindedClass())
         {
             case Label:
             case Button:
-                res = dO + control.getBindedClass().defaultOperation().toString() + endOfTheAction;
+                res.append(dO).append(control.getBindedClass().defaultOperation().toString()).append(endOfTheAction);
                 break;
             case CheckBox:
-                res = value;
+                res.append(value);
                 break;
             case Spinner:
             case ToggleButton:
             case RadioButton:
-                res = dO + control.getBindedClass().defaultOperation().toString() + setNum;
+                res.append(dO).append(control.getBindedClass().defaultOperation().toString()).append(setNum);
                 break;
             case TextBox:
             case ComboBox:
             case TabPanel:
-                res = dO + control.getBindedClass().defaultOperation().toString() + setStr;
+                res.append(dO).append(control.getBindedClass().defaultOperation().toString()).append(setStr);
         }
 
-        return res;
+        return res.toString();
     }
 
     private class MyCell extends ListCell<ResultBean>
@@ -516,14 +515,13 @@ public class DialogFillWizard extends AbstractWizard {
                 if (db.hasString())
                 {
                     ObservableList<ResultBean> items = getListView().getItems();
-
-                    int where = items.indexOf(getItem());
                     int from = Integer.parseInt(db.getString());
+                    int where = items.indexOf(getItem());
 
                     ResultBean what = items.get(from);
 
-                    items.set(from, getItem());
-                    items.set(where, what);
+                    items.remove(what);
+                    items.add(where,what);
 
                     List<ResultBean> itemscopy = new ArrayList<>(getListView().getItems());
                     getListView().getItems().setAll(itemscopy);
@@ -560,7 +558,7 @@ public class DialogFillWizard extends AbstractWizard {
         String controlName;
         String operation;
 
-        public ResultBean(String controlName, String operation)
+        private ResultBean(String controlName, String operation)
         {
             this.controlName = controlName;
             this.operation = operation;
@@ -580,6 +578,34 @@ public class DialogFillWizard extends AbstractWizard {
         public String toString()
         {
             return controlName + " : " + operation;
+        }
+    }
+
+    class ConnectionBean
+    {
+        private String name;
+        private AppConnection connection;
+
+        private ConnectionBean(String name, AppConnection connection)
+        {
+            this.name = name;
+            this.connection = connection;
+        }
+
+        public String getName()
+        {
+            return name;
+        }
+
+        public AppConnection getConnection()
+        {
+            return connection;
+        }
+
+        @Override
+        public String toString()
+        {
+            return getName();
         }
     }
 }
