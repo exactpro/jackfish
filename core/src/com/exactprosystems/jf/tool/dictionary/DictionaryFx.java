@@ -149,21 +149,24 @@ public class DictionaryFx extends GuiDictionary
 	//------------------------------------------------------------------------------------------------------------------
 	public void displayStores() throws Exception
 	{
-		Map<String, Object> storeMap = getFactory().getConfiguration().getStoreMap();
-		Collection<String> stories = new ArrayList<>();
-		if (!storeMap.isEmpty())
+		checkIsWorking(() ->
 		{
-			stories.add("");
-			storeMap.forEach((s, o) ->
+			Map<String, Object> storeMap = getFactory().getConfiguration().getStoreMap();
+			Collection<String> stories = new ArrayList<>();
+			if (!storeMap.isEmpty())
 			{
-				if (o instanceof AppConnection)
+				stories.add("");
+				storeMap.forEach((s, o) ->
 				{
-					stories.add(s);
-				}
-			});
-		}
+					if (o instanceof AppConnection)
+					{
+						stories.add(s);
+					}
+				});
+			}
 
-		this.controller.displayStoreActionControl(stories, this.currentAdapterStore);
+			this.controller.displayStoreActionControl(stories, this.currentAdapterStore);
+		});
 	}
 
 	public void displayTitles() throws Exception
@@ -224,60 +227,68 @@ public class DictionaryFx extends GuiDictionary
 	//------------------------------------------------------------------------------------------------------------------
 	public void dialogNew(IWindow.SectionKind sectionKind) throws Exception
 	{
-		String nameNewWindow = "NewWindow";
-
-		Window window = new Window(nameNewWindow);
-		window.correctAll();
-
-		Command undo = () -> Common.tryCatch(() ->
+		checkIsWorking(() ->
 		{
-			removeWindow(window);
-			Collection<IWindow> windows = getWindows();
-			IWindow oldWindow = (IWindow) windows.toArray()[windows.size() - 1];
-			displayDialog(oldWindow, windows);
-			displayElement(oldWindow, sectionKind, oldWindow.getFirstControl(sectionKind));
-		}, "");
+			String nameNewWindow = "NewWindow";
 
-		Command redo = () -> Common.tryCatch(() ->
-		{
-			addWindow(window);
-			displayDialog(window, getWindows());
-			displayElement(window, sectionKind, null);
-		}, "");
-
-		addCommand(undo, redo);
-	}
-
-	public void dialogDelete(IWindow window, IWindow.SectionKind sectionKind) throws Exception
-	{
-		if (window != null)
-		{
-			int indexOf = indexOf(window);
+			Window window = new Window(nameNewWindow);
+			window.correctAll();
 
 			Command undo = () -> Common.tryCatch(() ->
 			{
-				addWindow(indexOf, (Window) window);
-				displayDialog(window, getWindows());
-				displayElement(window, sectionKind, window.getFirstControl(sectionKind));
+				removeWindow(window);
+				Collection<IWindow> windows = getWindows();
+				IWindow oldWindow = (IWindow) windows.toArray()[windows.size() - 1];
+				displayDialog(oldWindow, windows);
+				displayElement(oldWindow, sectionKind, oldWindow.getFirstControl(sectionKind));
 			}, "");
 
 			Command redo = () -> Common.tryCatch(() ->
 			{
-				removeWindow(window);
-				IWindow anotherWindow = getFirstWindow();
-				displayDialog(anotherWindow, getWindows());
-				if (anotherWindow != null)
-				{
-					displayElement(anotherWindow, sectionKind, anotherWindow.getFirstControl(sectionKind));
-				}
-				else
-				{
-					clearElements(sectionKind);
-				}
+				addWindow(window);
+				displayDialog(window, getWindows());
+				displayElement(window, sectionKind, null);
 			}, "");
 
 			addCommand(undo, redo);
-		}
+		});
+	}
+
+	public void dialogDelete(IWindow window, IWindow.SectionKind sectionKind) throws Exception
+	{
+		checkIsWorking(() ->
+		{
+			if (window != null)
+			{
+				int indexOf = indexOf(window);
+
+				Command undo = () -> Common.tryCatch(() ->
+				{
+					addWindow(indexOf, (Window) window);
+					displayDialog(window, getWindows());
+					displayElement(window, sectionKind, window.getFirstControl(sectionKind));
+				}, "");
+
+				Command redo = () -> Common.tryCatch(() ->
+				{
+					removeWindow(window);
+					IWindow anotherWindow = getFirstWindow();
+					displayDialog(anotherWindow, getWindows());
+					if (anotherWindow != null)
+					{
+						displayElement(anotherWindow, sectionKind, anotherWindow.getFirstControl(sectionKind));
+					}
+					else
+					{
+						clearElements(sectionKind);
+					}
+				}, "");
+
+				addCommand(undo, redo);
+			}
+		});
+
+
 	}
 
 	public void dialogCopy(IWindow window) throws Exception
@@ -309,104 +320,92 @@ public class DictionaryFx extends GuiDictionary
 
 	public void dialogRename(IWindow window, String name) throws Exception
 	{
-		String oldName = window.getName();
-		if (oldName.equals(name))
+		checkIsWorking(() ->
 		{
-			return;
-		}
-		Command undo = () ->
-		{
-			window.setName(oldName);
-			displayDialog(window, getWindows());
-		};
+			String oldName = window.getName();
+			if (oldName.equals(name))
+			{
+				return;
+			}
+			Command undo = () ->
+			{
+				window.setName(oldName);
+				displayDialog(window, getWindows());
+			};
 
-		Command redo = () ->
-		{
-			window.setName(name);
-			displayDialog(window, getWindows());
-		};
+			Command redo = () ->
+			{
+				window.setName(name);
+				displayDialog(window, getWindows());
+			};
 
-		addCommand(undo, redo);
+			addCommand(undo, redo);
+		});
 	}
 
 	public void dialogTest(IWindow window, List<IControl> controls) throws Exception
 	{
-		if (isApplicationRun())
+		checkIsWorking(() ->
 		{
-			call(() ->
-				{
-					Set<ControlKind> supported = this.applicationConnector.getAppConnection().getApplication().getFactory().supportedControlKinds();
+			Set<ControlKind> supported = this.applicationConnector.getAppConnection().getApplication().getFactory().supportedControlKinds();
 
-					Thread thread = new Thread(new Task<Void>() {
-						@Override
-						protected Void call() throws Exception {
+			Thread thread = new Thread(new Task<Void>() {
+				@Override
+				protected Void call() throws Exception {
 
-							controls.forEach(control ->
-							{
-								try {
-									if (!supported.contains(control.getBindedClass())) {
-										controller.displayTestingControl(control, "Not allowed", Result.NOT_ALLOWED);
-									} else {
-										Locator owner = getLocator(window.getOwnerControl(control));
-										Locator locator = getLocator(control);
+					controls.forEach(control ->
+					{
+						try {
+							if (!supported.contains(control.getBindedClass())) {
+								controller.displayTestingControl(control, "Not allowed", Result.NOT_ALLOWED);
+							} else {
+								Locator owner = getLocator(window.getOwnerControl(control));
+								Locator locator = getLocator(control);
 
-										Collection<String> all = applicationConnector.getAppConnection().getApplication().service().findAll(owner, locator);
+								Collection<String> all = applicationConnector.getAppConnection().getApplication().service().findAll(owner, locator);
 
-										Result result = null;
-										if (all.size() == 1 || (Addition.Many.equals(control.getAddition()) && all.size() > 0)) {
-											result = Result.PASSED;
-										} else {
-											result = Result.FAILED;
-										}
-
-										controller.displayTestingControl(control, String.valueOf(all.size()), result);
-									}
-								} catch (Exception e) {
-									controller.displayTestingControl(control, "Error", Result.FAILED);
+								Result result = null;
+								if (all.size() == 1 || (Addition.Many.equals(control.getAddition()) && all.size() > 0)) {
+									result = Result.PASSED;
+								} else {
+									result = Result.FAILED;
 								}
-							});
-							return null;
+
+								controller.displayTestingControl(control, String.valueOf(all.size()), result);
+							}
+						} catch (Exception e) {
+							controller.displayTestingControl(control, "Error", Result.FAILED);
 						}
 					});
-					thread.setName("Test dialog, thread id : " + thread.getId());
-					thread.start();
-					thread.join();
+					return null;
 				}
-			);
-		}
+			});
+			thread.setName("Test dialog, thread id : " + thread.getId());
+			thread.start();
+			thread.join();
+		});
 	}
 
-	@FunctionalInterface
-	interface Function
-	{
-		void call() throws Exception;
-	}
-
-	private void call(Function a) throws Exception
-	{
-		if (getIsWorking())
-		{
-			showNotification();
-		}
-		else
-		{
-			setIsWorking(true);
-			try
-			{
-				a.call();
-			}
-			finally
-			{
-				setIsWorking(false);
-			}
-		}
-	}
-
-	private void switchFunction(Function a) throws Exception
+	private void checkIsWorking(Common.Function a) throws Exception
 	{
 		if (isApplicationRun())
 		{
-			a.call();
+			if (getIsWorking())
+			{
+				showNotification();
+			}
+			else
+			{
+				setIsWorking(true);
+				try
+				{
+					a.call();
+				}
+				finally
+				{
+					setIsWorking(false);
+				}
+			}
 		}
 	}
 
@@ -626,12 +625,15 @@ public class DictionaryFx extends GuiDictionary
 
 	public void parameterGoToOwner(IWindow window, IControl owner) throws Exception
 	{
-		if (owner != null)
+		checkIsWorking(() ->
 		{
-			SectionKind sectionKind = owner.getSection().getSectionKind();
-			displaySection(sectionKind);
-			displayElement(window, sectionKind, owner);
-		}
+			if (owner != null)
+			{
+				SectionKind sectionKind = owner.getSection().getSectionKind();
+				displaySection(sectionKind);
+				displayElement(window, sectionKind, owner);
+			}
+		});
 	}
 
 	//------------------------------------------------------------------------------------------------------------------
@@ -674,17 +676,17 @@ public class DictionaryFx extends GuiDictionary
 	//region Do tab
 	public void sendKeys(String text, IControl control, IWindow window) throws Exception
 	{
-		call(() -> this.operate(Do.text(text), window, control));
+		checkIsWorking(() -> this.operate(Do.text(text), window, control));
 	}
 
 	public void click(IControl control, IWindow window) throws Exception
 	{
-		call(() -> this.operate(Do.click(), window, control));
+		checkIsWorking(() -> this.operate(Do.click(), window, control));
 	}
 
 	public void getValue(IControl control, IWindow window) throws Exception
 	{
-		call(() ->
+		checkIsWorking(() ->
 		{
 			Optional<OperationResult> operate = this.operate(Do.getValue(), window, control);
 			operate.ifPresent(opResult -> this.controller.println(opResult.humanablePresentation()));
@@ -693,7 +695,7 @@ public class DictionaryFx extends GuiDictionary
 
 	public void find(IControl control, IWindow window) throws Exception
 	{
-		call(() ->
+		checkIsWorking(() ->
 		{
 			displayImage(null);
 			if (isApplicationRun())
@@ -714,7 +716,7 @@ public class DictionaryFx extends GuiDictionary
 
 	public void doIt(Object obj, IControl control, IWindow window) throws Exception
 	{
-		call(() ->
+		checkIsWorking(() ->
 		{
 			if (obj instanceof Operation) {
 				Operation operation = (Operation) obj;
@@ -744,7 +746,7 @@ public class DictionaryFx extends GuiDictionary
 	//region Switch tab
 	public void switchTo(String selectedItem) throws Exception
 	{
-		switchFunction(() ->
+		checkIsWorking(() ->
 		{
 			Map<String, String> map = new HashMap<>();
 			map.put("Title", selectedItem);
@@ -754,7 +756,7 @@ public class DictionaryFx extends GuiDictionary
 
 	public void switchToCurrent(IControl control, IWindow window) throws Exception
 	{
-		switchFunction(() ->
+		checkIsWorking(() ->
 		{
 			if (control != null)
 			{
@@ -770,125 +772,125 @@ public class DictionaryFx extends GuiDictionary
 
 	public void switchToParent() throws Exception
 	{
-		switchFunction(() -> this.applicationConnector.getAppConnection().getApplication().service().switchToFrame(null, null));
+		checkIsWorking(() -> this.applicationConnector.getAppConnection().getApplication().service().switchToFrame(null, null));
 	}
 	//endregion
 
 	//region Navigate tab
 	public void navigateBack() throws Exception
 	{
-		if (isApplicationRun())
-		{
-			this.applicationConnector.getAppConnection().getApplication().service().navigate(NavigateKind.BACK);
-		}
+		checkIsWorking(() ->
+			this.applicationConnector.getAppConnection().getApplication().service().navigate(NavigateKind.BACK)
+		);
 	}
 
 	public void navigateForward() throws Exception
 	{
-		if (isApplicationRun())
-		{
-			this.applicationConnector.getAppConnection().getApplication().service().navigate(NavigateKind.FORWARD);
-		}
+		checkIsWorking(() ->
+			this.applicationConnector.getAppConnection().getApplication().service().navigate(NavigateKind.FORWARD)
+		);
 	}
 
 	public void refresh() throws Exception
 	{
-		if (isApplicationRun())
-		{
-			this.applicationConnector.getAppConnection().getApplication().service().refresh();
-			displayApplicationControl(null);
-		}
+		checkIsWorking(() ->
+			{
+				this.applicationConnector.getAppConnection().getApplication().service().refresh();
+				displayApplicationControl(null);
+			}
+		);
 	}
 
 	public void closeWindow() throws Exception
 	{
-		if (isApplicationRun())
-		{
-			String s = this.applicationConnector.getAppConnection().getApplication().service().closeWindow();
-			if (Str.areEqual(s, ""))
+		checkIsWorking(() ->
 			{
-				throw new Exception("Can not close the window");
+				String s = this.applicationConnector.getAppConnection().getApplication().service().closeWindow();
+				if (Str.areEqual(s, "")) {
+					throw new Exception("Can not close the window");
+				}
 			}
-		}
+		);
 	}
 	//endregion
 
 	//region NewInstance tab
 	public void newInstance(Map<String, String> parameters) throws Exception
 	{
-		if (isApplicationRun())
-		{
-			Map<String, String> evaluatedMap = new HashMap<>();
-
-			for (Map.Entry<String, String> entry : parameters.entrySet())
+		checkIsWorking(() ->
 			{
-				evaluatedMap.put(entry.getKey(), String.valueOf(this.evaluator.evaluate(entry.getValue())));
+				Map<String, String> evaluatedMap = new HashMap<>();
+
+				for (Map.Entry<String, String> entry : parameters.entrySet())
+				{
+					evaluatedMap.put(entry.getKey(), String.valueOf(this.evaluator.evaluate(entry.getValue())));
+				}
+				this.applicationConnector.getAppConnection().getApplication().service().newInstance(evaluatedMap);
 			}
-			this.applicationConnector.getAppConnection().getApplication().service().newInstance(evaluatedMap);
-		}
+		);
 	}
 	//endregion
 
 	//region Change tab
 	public void moveTo(int x, int y) throws Exception
 	{
-		if (isApplicationRun())
-		{
-			this.applicationConnector.getAppConnection().getApplication().service().moveWindow(x, y);
-		}
+		checkIsWorking(() ->
+			this.applicationConnector.getAppConnection().getApplication().service().moveWindow(x, y)
+		);
 	}
 
 	public void resize(boolean min, boolean max, boolean normal, int h, int w) throws Exception
 	{
-		if (isApplicationRun())
-		{
-			this.applicationConnector.getAppConnection().getApplication().service().resize(h, w, max, min, normal);
-		}
+		checkIsWorking(() ->
+			this.applicationConnector.getAppConnection().getApplication().service().resize(h, w, max, min, normal)
+		);
 	}
 	//endregion
 
 	//region Properties tab
 	public void getProperty(String propertyName, Object propValue) throws Exception
 	{
-		if (isApplicationRun())
-		{
-			Serializable property = null;
-			if (propValue instanceof Serializable)
+		checkIsWorking(() ->
 			{
-				property = this.applicationConnector.getAppConnection().getApplication().service().getProperty(propertyName, (Serializable) propValue);
-			}
-			else if (propValue == null)
-			{
-				property = this.applicationConnector.getAppConnection().getApplication().service().getProperty(propertyName, null);
-			}
-			else
-			{
-				throw new Exception("You must set only Serializable or null value");
-			}
+				Serializable property = null;
+				if (propValue instanceof Serializable)
+				{
+					property = this.applicationConnector.getAppConnection().getApplication().service().getProperty(propertyName, (Serializable) propValue);
+				}
+				else if (propValue == null)
+				{
+					property = this.applicationConnector.getAppConnection().getApplication().service().getProperty(propertyName, null);
+				}
+				else
+				{
+					throw new Exception("You must set only Serializable or null value");
+				}
 
-			Optional.ofNullable(property)
-					.map(Serializable::toString)
-					.ifPresent(this.controller::println);
-		}
+				Optional.ofNullable(property)
+						.map(Serializable::toString)
+						.ifPresent(this.controller::println);
+			}
+		);
 	}
 
 	public void setProperty(String propertyName, Object value) throws Exception
 	{
-		if (isApplicationRun())
-		{
-			if (value instanceof Serializable)
+		checkIsWorking(() ->
 			{
-				this.applicationConnector.getAppConnection().getApplication().service().setProperty(propertyName, (Serializable) value);
+				if (value instanceof Serializable)
+				{
+					this.applicationConnector.getAppConnection().getApplication().service().setProperty(propertyName, (Serializable) value);
+				}
+				else if (value == null)
+				{
+					this.applicationConnector.getAppConnection().getApplication().service().setProperty(propertyName, null);
+				}
+				else
+				{
+					throw new Exception("You must set only Serializable or null value");
+				}
 			}
-			else if (value == null)
-			{
-				this.applicationConnector.getAppConnection().getApplication().service().setProperty(propertyName, null);
-			}
-			else
-			{
-				throw new Exception("You must set only Serializable or null value");
-			}
-		}
+		);
 	}
 
 	//endregion
