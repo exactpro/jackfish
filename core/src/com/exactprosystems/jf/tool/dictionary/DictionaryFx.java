@@ -309,27 +309,25 @@ public class DictionaryFx extends GuiDictionary
 
 	public void dialogRename(IWindow window, String name) throws Exception
 	{
-		checkIsWorking(() ->
+		String oldName = window.getName();
+		if (oldName.equals(name))
 		{
-			String oldName = window.getName();
-			if (oldName.equals(name))
-			{
-				return;
-			}
-			Command undo = () ->
-			{
-				window.setName(oldName);
-				displayDialog(window, getWindows());
-			};
+			return;
+		}
+		Command undo = () ->
+		{
+			window.setName(oldName);
+			displayDialog(window, getWindows());
+		};
 
-			Command redo = () ->
-			{
-				window.setName(name);
-				displayDialog(window, getWindows());
-			};
+		Command redo = () ->
+		{
+			window.setName(name);
+			displayDialog(window, getWindows());
+		};
 
-			addCommand(undo, redo);
-		});
+		addCommand(undo, redo);
+
 	}
 
 	public void dialogTest(IWindow window, List<IControl> controls) throws Exception
