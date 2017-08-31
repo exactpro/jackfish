@@ -74,6 +74,8 @@
 										<CheckBox fx:id="cbWholeWord" mnemonicParsing="false" text="Whole word"/>
 										<Label id="$horMax"/>
 										<CheckBox fx:id="cbRegexp" text="Re_gexp"/>
+										<Label id="$horMax"/>
+										<CheckBox fx:id="cbMultiLine" text="Multi line"/>
 									</children>
 								</HBox>
 							</children>
@@ -110,7 +112,7 @@
 											</left>
 										</BorderPane>
 										<TreeView fx:id="tvResults" prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS"/>
-										<ScrollPane fitToHeight="true" fitToWidth="true" maxHeight="44.0" minHeight="44.0" prefHeight="44.0" prefWidth="200.0" vbarPolicy="NEVER">
+										<ScrollPane fitToHeight="true" fitToWidth="true" maxHeight="88.0" minHeight="88.0" prefHeight="88.0" prefWidth="200.0" vbarPolicy="NEVER">
 											<content>
 												<HBox fx:id="hBoxResult" alignment="CENTER_LEFT"/>
 											</content>

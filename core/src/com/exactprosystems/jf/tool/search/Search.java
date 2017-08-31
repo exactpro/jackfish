@@ -4,7 +4,6 @@ import com.exactprosystems.jf.api.common.Str;
 import com.exactprosystems.jf.common.Settings;
 import com.exactprosystems.jf.documents.DocumentKind;
 import com.exactprosystems.jf.documents.config.Configuration;
-import com.exactprosystems.jf.documents.matrix.parser.SearchHelper;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.main.Main;
 import com.exactprosystems.jf.tool.search.results.AggregateResult;
@@ -17,10 +16,7 @@ import javafx.util.Pair;
 import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -57,7 +53,7 @@ public class Search
 		this.controller.show();
 	}
 
-	void find(String fileMask, String text, boolean caseSens, boolean wholeWord, boolean regexp, DocumentKind[] kinds)
+	void find(String fileMask, String text, boolean caseSens, boolean wholeWord, boolean regexp, boolean multiLine, DocumentKind[] kinds)
 	{
 		this.controller.startFind();
 		String res = checkParams(text, regexp, fileMask);
@@ -76,7 +72,7 @@ public class Search
 		saveMaskAndText(text, fileMask);
 
 		this.configuration.forEachFile((file,kind) -> {
-			SearchService service = new SearchService(file, caseSens, regexp, wholeWord, text, fileMask, kind);
+			SearchService service = new SearchService(file, caseSens, regexp, wholeWord, multiLine, text, fileMask, kind);
 			service.setOnSucceeded(event -> this.controller.displayResult(((AggregateResult) event.getSource().getValue())));
 			service.setExecutor(executor);
 			service.start();
@@ -195,16 +191,18 @@ public class Search
 		private final boolean isMatchCase;
 		private final boolean isRegexp;
 		private final boolean isWholeWord;
+		private final boolean isMultiLine;
 		private final String  what;
 		private final String  fileMask;
 		private final DocumentKind kind;
 
-		SearchService(File file, boolean isMatchCase, boolean isRegexp, boolean isWholeWord, String what, String fileMask, DocumentKind kind)
+		SearchService(File file, boolean isMatchCase, boolean isRegexp, boolean isWholeWord, boolean multiLine, String what, String fileMask, DocumentKind kind)
 		{
 			this.file = file;
 			this.isMatchCase = isMatchCase;
 			this.isRegexp = isRegexp;
 			this.isWholeWord = isWholeWord;
+			this.isMultiLine = multiLine;
 			this.what = what;
 			this.fileMask = fileMask;
 			this.kind = kind;
@@ -231,68 +229,55 @@ public class Search
 						return new AggregateResult(Search.this, Collections.singletonList(new SingleResult(fileName, null, 0, null)), file, kind);
 					}
 
-					try (Stream<String> stream = Files.lines(Paths.get(file.getAbsolutePath())))
+					List<SingleResult> collect;
+
+					if (isMultiLine)
 					{
-						List<SingleResult> collect = stream.peek(s -> atomicInteger.incrementAndGet())
-								.map(String::trim)
-								.map(SearchService.this::processLine)
-								.filter(Objects::nonNull)
-								.map(pair -> new SingleResult(fileName, pair.getKey(), atomicInteger.get(), pair.getValue()))
+						List<String> strings = Files.readAllLines(Paths.get(file.getAbsolutePath()));
+						String str = strings.stream().collect(Collectors.joining(System.lineSeparator()));
+						Pair<String, List<Pair<Integer, Integer>>> pair = processLine(str);
+						if (pair == null)
+						{
+							return null;
+						}
+						String line = pair.getKey();
+						collect = pair.getValue().stream()
+								.map(Arrays::asList)
+								.peek(p -> atomicInteger.set(indexOf(str, p.get(0).getKey())))
+								.map(list -> new SingleResult(fileName, line, atomicInteger.get(), list))
 								.collect(Collectors.toList());
-						return new AggregateResult(Search.this, collect, file, kind);
 					}
+					else
+					{
+						try (Stream<String> stream = Files.lines(Paths.get(file.getAbsolutePath())))
+						{
+							collect = stream
+									.peek(s -> atomicInteger.incrementAndGet())
+									.map(String::trim)
+									.map(SearchService.this::processLine)
+									.filter(Objects::nonNull)
+									.map(pair -> new SingleResult(fileName, pair.getKey(), atomicInteger.get(), pair.getValue()))
+									.collect(Collectors.toList());
+						}
+					}
+
+					return new AggregateResult(Search.this, collect, file, kind);
 				}
 			};
 		}
 
-		//key - line of a text, value - matches string
-		private Pair<String, String> processLineNew(String line)
-		{
-			int caseInsensitive = 0;
-			if (this.isMatchCase)
-			{
-				caseInsensitive = Pattern.CASE_INSENSITIVE;
-			}
-			if (this.isRegexp)
-			{
-				Pattern pattern = Pattern.compile("(" + this.what + ")", caseInsensitive);
-				Matcher matcher = pattern.matcher(line);
-				if (matcher.find())
-				{
-					String find = matcher.group();
-					return new Pair<>(line, find);
-				}
-				return null;
-			}
-			else if (this.isWholeWord)
-			{
-				Pattern pattern = Pattern.compile("(\\b(" + this.what + ")\\b?)", caseInsensitive);
-				Matcher matcher = pattern.matcher(line);
-				if (matcher.find())
-				{
-					String find = matcher.group(2);
-					return new Pair<>(line, find);
-				}
-				return null;
-			}
-			else
-			{
-				boolean matches = SearchHelper.matches(line, this.what, this.isMatchCase, false);
-				if (matches)
-				{
-					return new Pair<>(line, this.what);
-				}
-				return null;
-			}
-		}
-
-		//string - is line, list - indexes of found substrings
+		//string - is line, list - indexes of found substrings ( key - start, end - finish)
 		private Pair<String, List<Pair<Integer, Integer>>> processLine(String line)
 		{
 			int caseInsensitive = 0;
+			int multiLine = 0;
 			if (!this.isMatchCase)
 			{
 				caseInsensitive = Pattern.CASE_INSENSITIVE;
+			}
+			if (this.isMultiLine)
+			{
+				multiLine = Pattern.MULTILINE;
 			}
 			List<Pair<Integer, Integer>> list = new ArrayList<>();
 			String patString = "(" + this.what + ")";
@@ -304,7 +289,7 @@ public class Search
 			{
 				patString = "\\b(" + this.what + ")\\b";
 			}
-			Pattern compile = Pattern.compile(patString, caseInsensitive);
+			Pattern compile = Pattern.compile(patString, caseInsensitive | multiLine);
 			Matcher matcher = compile.matcher(line);
 			while (matcher.find())
 			{
@@ -316,13 +301,22 @@ public class Search
 			}
 			return new Pair<>(line, list);
 		}
+
+		private int indexOf(String str, int index)
+		{
+			return (int) str.substring(0, index)
+					.chars()
+					.mapToObj(c -> Character.toString((char) c))
+					.filter(System.lineSeparator()::equals)
+					.count() + 1;
+		}
 	}
 
 	private class DummySearchService extends SearchService
 	{
 		DummySearchService()
 		{
-			super(null, false, false, false, null, null, null);
+			super(null, false, false, false, false, null, null, null);
 		}
 
 		@Override

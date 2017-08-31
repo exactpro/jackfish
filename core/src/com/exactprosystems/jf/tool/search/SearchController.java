@@ -36,6 +36,7 @@ public class SearchController implements Initializable, ContainingParent
 	public ComboBox<String>       cbFind;
 	public CheckBox               cbCaseSensitive;
 	public CheckBox               cbRegexp;
+	public CheckBox               cbMultiLine;
 	public CheckBox               cbWholeWord;
 	public CheckBox               cbMatrix;
 	public CheckBox               cbLibs;
@@ -101,7 +102,7 @@ public class SearchController implements Initializable, ContainingParent
 		this.model = model;
 		this.tvResults.setRoot(new TreeItem<>());
 		this.tvResults.setShowRoot(false);
-		this.tvResults.setCellFactory(param -> new SearchResultCellItem(model));
+		this.tvResults.setCellFactory(param -> new SearchResultCellItem());
 		this.tvResults.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
 			this.hBoxResult.getChildren().clear();
 			if (newValue != null)
@@ -150,7 +151,7 @@ public class SearchController implements Initializable, ContainingParent
 	public void find(ActionEvent actionEvent)
 	{
 		this.model.find(this.cbFileMask.getEditor().getText(), this.cbFind.getEditor().getText()
-				, this.cbCaseSensitive.isSelected(), this.cbWholeWord.isSelected(), this.cbRegexp.isSelected()
+				, this.cbCaseSensitive.isSelected(), this.cbWholeWord.isSelected(), this.cbRegexp.isSelected(), this.cbMultiLine.isSelected()
 				, this.map.entrySet().stream()
 						.filter(entry -> entry.getKey().isSelected())
 						.map(Map.Entry::getValue)
@@ -207,7 +208,7 @@ public class SearchController implements Initializable, ContainingParent
 	private void listeners()
 	{
 		this.map.keySet().forEach(cb -> cb.setOnKeyPressed(e -> this.consumeEvent(e, evt -> {})));
-		Arrays.asList(this.cbCaseSensitive, this.cbRegexp, this.cbWholeWord).forEach(cb -> cb.setOnKeyPressed(e -> this.consumeEvent(e, evt -> {})));
+		Arrays.asList(this.cbCaseSensitive, this.cbRegexp, this.cbWholeWord, this.cbMultiLine).forEach(cb -> cb.setOnKeyPressed(e -> this.consumeEvent(e, evt -> {})));
 
 		this.tvResults.setOnKeyPressed(event -> {
 			if (event.getCode() == KeyCode.ESCAPE)
@@ -229,6 +230,13 @@ public class SearchController implements Initializable, ContainingParent
 				this.cbWholeWord.setSelected(false);
 			}
 		});
+		this.cbMultiLine.selectedProperty().addListener((observable, oldValue, newValue) -> {
+			this.cbRegexp.setDisable(newValue);
+			if (newValue)
+			{
+				this.cbRegexp.setSelected(true);
+			}
+		});
 	}
 
 	private void consumeEvent(KeyEvent event, Consumer<KeyEvent> consumer)
@@ -242,91 +250,16 @@ public class SearchController implements Initializable, ContainingParent
 
 	private class SearchResultCellItem extends TreeCell<AbstractResult>
 	{
-		private Search model;
-
-		public SearchResultCellItem(Search model)
+		public SearchResultCellItem()
 		{
-			this.model = model;
 		}
 
 		@Override
 		protected void updateItem(AbstractResult item, boolean empty)
 		{
 			super.updateItem(item,empty);
-			if (item != null && !empty)
-			{
-				setGraphic(item.toView());
+			setGraphic(item != null && !empty ? item.toView() : null);
 
-//				BorderPane pane = new BorderPane();
-//
-//				Label text = new Label(item.toString());
-//				text.setAlignment(Pos.CENTER_LEFT);
-//				text.setTextAlignment(TextAlignment.LEFT);
-//				HBox.setHgrow(text, Priority.ALWAYS);
-//				BorderPane.setAlignment(text, Pos.CENTER_LEFT);
-//
-//				HBox box = new HBox();
-//				box.setAlignment(Pos.CENTER_RIGHT);
-//				File file = item.getFile();
-//				if (file != null && item instanceof SearchResult.AggregateSearchResult)
-//				{
-//					Button btnShowInTree = new Button();
-//					btnShowInTree.getStyleClass().add(CssVariables.TRANSPARENT_BACKGROUND);
-//					btnShowInTree.setId("dictionaryBtnXpathHelper");
-//					btnShowInTree.setTooltip(new Tooltip("Scroll from configuration"));
-//					btnShowInTree.setOnAction(e -> this.model.scrollFromConfig(file));
-//
-//					Button btnOpenAsPlainText = new Button();
-//					btnOpenAsPlainText.setId("btnOpenAsPlainText");
-//					btnOpenAsPlainText.getStyleClass().addAll(CssVariables.TRANSPARENT_BACKGROUND);
-//					btnOpenAsPlainText.setTooltip(new Tooltip("Open as plain text"));
-//					btnOpenAsPlainText.setOnAction(e -> this.model.openAsPlainText(file));
-//
-//					boolean needAdd = true;
-//					Consumer<File> consumer = null;
-//
-//					switch (item.getKind())
-//					{
-//						case MATRIX:
-//						case LIBRARY:
-//							consumer = this.model::openAsMatrix;
-//							break;
-//						case GUI_DICTIONARY:
-//							consumer = this.model::openAsGuiDic;
-//							break;
-//						case SYSTEM_VARS:
-//							consumer = this.model::openAsVars;
-//							break;
-//						case REPORTS:
-//							if (file.getName().endsWith(".html"))
-//							{
-//								consumer = this.model::openAsHtml;
-//							}
-//							break;
-//						default:
-//							needAdd = false;
-//					}
-//					if (needAdd)
-//					{
-//						Button btnOpenAsDocument = new Button();
-//						btnOpenAsDocument.getStyleClass().addAll(CssVariables.TRANSPARENT_BACKGROUND);
-//						btnOpenAsDocument.setId("btnOpenAsDocument");
-//						btnOpenAsDocument.setTooltip(new Tooltip("Open as document"));
-//						Consumer<File> finalConsumer = consumer;
-//						btnOpenAsDocument.setOnAction(e -> finalConsumer.accept(file));
-//						box.getChildren().addAll(btnOpenAsDocument, Common.createSpacer(Common.SpacerEnum.HorizontalMin));
-//					}
-//					box.getChildren().addAll(btnOpenAsPlainText, new Separator(Orientation.VERTICAL), btnShowInTree);
-//				}
-//
-//				pane.setCenter(text);
-//				pane.setRight(box);
-//				setGraphic(pane);
-			}
-			else
-			{
-				setGraphic(null);
-			}
 		}
 	}
 }
