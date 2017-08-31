@@ -52,7 +52,7 @@ public class WizardButton extends Button
 	        List<Class<? extends Wizard>> suitable  = manager.suitableWizards(criteries);
 	        if (suitable.isEmpty())
 	        {
-	            DialogsHelper.showInfo("No one wizard is accesible here");
+	            DialogsHelper.showInfo("No one wizard is accessible here");
 	            return;
 	        }
 	        Class<? extends Wizard> wizardClass = DialogsHelper.selectFromList("Choose wizard", null, suitable, wizard ->  manager.nameOf(wizard));
