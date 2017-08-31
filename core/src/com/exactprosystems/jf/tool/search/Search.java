@@ -277,7 +277,7 @@ public class Search
 			}
 			if (this.isMultiLine)
 			{
-				multiLine = Pattern.MULTILINE;
+				multiLine = Pattern.MULTILINE | Pattern.DOTALL;
 			}
 			List<Pair<Integer, Integer>> list = new ArrayList<>();
 			String patString = "(" + this.what + ")";

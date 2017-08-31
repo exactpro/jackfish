@@ -78,6 +78,8 @@ public class SingleResult extends AbstractResult
 				{
 					String nextLine = lines[nextLineIndex] + "\n";
 					int endMax = Math.max(end - 1, 0);
+
+					endMax = Math.min(endMax, nextLine.length());
 					String s2 = nextLine.substring(0, endMax);
 					String s3 = nextLine.substring(endMax);
 					HBox hb1 = new HBox();
