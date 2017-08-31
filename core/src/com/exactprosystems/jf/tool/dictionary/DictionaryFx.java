@@ -227,68 +227,60 @@ public class DictionaryFx extends GuiDictionary
 	//------------------------------------------------------------------------------------------------------------------
 	public void dialogNew(IWindow.SectionKind sectionKind) throws Exception
 	{
-		checkIsWorking(() ->
+		String nameNewWindow = "NewWindow";
+
+		Window window = new Window(nameNewWindow);
+		window.correctAll();
+
+		Command undo = () -> Common.tryCatch(() ->
 		{
-			String nameNewWindow = "NewWindow";
+			removeWindow(window);
+			Collection<IWindow> windows = getWindows();
+			IWindow oldWindow = (IWindow) windows.toArray()[windows.size() - 1];
+			displayDialog(oldWindow, windows);
+			displayElement(oldWindow, sectionKind, oldWindow.getFirstControl(sectionKind));
+		}, "");
 
-			Window window = new Window(nameNewWindow);
-			window.correctAll();
+		Command redo = () -> Common.tryCatch(() ->
+		{
+			addWindow(window);
+			displayDialog(window, getWindows());
+			displayElement(window, sectionKind, null);
+		}, "");
 
-			Command undo = () -> Common.tryCatch(() ->
-			{
-				removeWindow(window);
-				Collection<IWindow> windows = getWindows();
-				IWindow oldWindow = (IWindow) windows.toArray()[windows.size() - 1];
-				displayDialog(oldWindow, windows);
-				displayElement(oldWindow, sectionKind, oldWindow.getFirstControl(sectionKind));
-			}, "");
-
-			Command redo = () -> Common.tryCatch(() ->
-			{
-				addWindow(window);
-				displayDialog(window, getWindows());
-				displayElement(window, sectionKind, null);
-			}, "");
-
-			addCommand(undo, redo);
-		});
+		addCommand(undo, redo);
 	}
 
 	public void dialogDelete(IWindow window, IWindow.SectionKind sectionKind) throws Exception
 	{
-		checkIsWorking(() ->
+		if (window != null)
 		{
-			if (window != null)
+			int indexOf = indexOf(window);
+
+			Command undo = () -> Common.tryCatch(() ->
 			{
-				int indexOf = indexOf(window);
+				addWindow(indexOf, (Window) window);
+				displayDialog(window, getWindows());
+				displayElement(window, sectionKind, window.getFirstControl(sectionKind));
+			}, "");
 
-				Command undo = () -> Common.tryCatch(() ->
+			Command redo = () -> Common.tryCatch(() ->
+			{
+				removeWindow(window);
+				IWindow anotherWindow = getFirstWindow();
+				displayDialog(anotherWindow, getWindows());
+				if (anotherWindow != null)
 				{
-					addWindow(indexOf, (Window) window);
-					displayDialog(window, getWindows());
-					displayElement(window, sectionKind, window.getFirstControl(sectionKind));
-				}, "");
-
-				Command redo = () -> Common.tryCatch(() ->
+					displayElement(anotherWindow, sectionKind, anotherWindow.getFirstControl(sectionKind));
+				}
+				else
 				{
-					removeWindow(window);
-					IWindow anotherWindow = getFirstWindow();
-					displayDialog(anotherWindow, getWindows());
-					if (anotherWindow != null)
-					{
-						displayElement(anotherWindow, sectionKind, anotherWindow.getFirstControl(sectionKind));
-					}
-					else
-					{
-						clearElements(sectionKind);
-					}
-				}, "");
+					clearElements(sectionKind);
+				}
+			}, "");
 
-				addCommand(undo, redo);
-			}
-		});
-
-
+			addCommand(undo, redo);
+		}
 	}
 
 	public void dialogCopy(IWindow window) throws Exception
@@ -407,6 +399,31 @@ public class DictionaryFx extends GuiDictionary
 				}
 			}
 		}
+	}
+
+	public <T> T tryOrDefault(Common.SupplierWithException<T> func, T defaultValue) throws Exception
+	{
+		if (isApplicationRun())
+		{
+			if (getIsWorking())
+			{
+				showNotification();
+				return defaultValue;
+			}
+			else
+			{
+				setIsWorking(true);
+				try
+				{
+					func.get();
+				}
+				finally
+				{
+					setIsWorking(false);
+				}
+			}
+		}
+		return defaultValue;
 	}
 
 	public void dialogMove(IWindow window, IWindow.SectionKind section, Integer newIndex) throws Exception
@@ -695,22 +712,19 @@ public class DictionaryFx extends GuiDictionary
 
 	public void find(IControl control, IWindow window) throws Exception
 	{
+		displayImage(null);
 		checkIsWorking(() ->
 		{
-			displayImage(null);
-			if (isApplicationRun())
+			Locator owner = getLocator(window.getOwnerControl(control));
+			Locator locator = getLocator(control);
+			IRemoteApplication service = this.applicationConnector.getAppConnection().getApplication().service();
+			Collection<String> all = service.findAll(owner, locator);
+			for (String str : all)
 			{
-				Locator owner = getLocator(window.getOwnerControl(control));
-				Locator locator = getLocator(control);
-				IRemoteApplication service = this.applicationConnector.getAppConnection().getApplication().service();
-				Collection<String> all = service.findAll(owner, locator);
-				for (String str : all)
-				{
-					this.controller.println(str);
-				}
-				ImageWrapper imageWrapper = service.getImage(owner, locator);
-				displayImage(imageWrapper);
+				this.controller.println(str);
 			}
+			ImageWrapper imageWrapper = service.getImage(owner, locator);
+			displayImage(imageWrapper);
 		});
 	}
 
@@ -920,32 +934,30 @@ public class DictionaryFx extends GuiDictionary
 
 	private Optional<OperationResult> operate(Operation operation, IWindow window, IControl control) throws Exception
 	{
-		if (isApplicationRun())
-		{
-			IControl owner = window.getOwnerControl(control);
-			IControl rows = window.getRowsControl(control);
-			IControl header = window.getHeaderControl(control);
+		return tryOrDefault(() ->
+			{IControl owner = window.getOwnerControl(control);
+				IControl rows = window.getRowsControl(control);
+				IControl header = window.getHeaderControl(control);
 
-			AbstractControl abstractControl = AbstractControl.createCopy(control, owner, rows, header);
-			OperationResult result = abstractControl.operate(this.applicationConnector.getAppConnection().getApplication().service(), window, operation);
-			return Optional.of(result);
-		}
-		return Optional.empty();
+				AbstractControl abstractControl = AbstractControl.createCopy(control, owner, rows, header);
+				OperationResult result = abstractControl.operate(this.applicationConnector.getAppConnection().getApplication().service(), window, operation);
+				return Optional.of(result);
+			}, Optional.empty()
+		);
 	}
 
 	private Optional<CheckingLayoutResult> check(Spec spec, IWindow window, IControl control) throws Exception
 	{
-		if (isApplicationRun())
-		{
-			IControl owner = window.getOwnerControl(control);
-			IControl rows = window.getRowsControl(control);
-			IControl header = window.getHeaderControl(control);
+		return tryOrDefault(() ->
+			{IControl owner = window.getOwnerControl(control);
+				IControl rows = window.getRowsControl(control);
+				IControl header = window.getHeaderControl(control);
 
-			AbstractControl abstractControl = AbstractControl.createCopy(control, owner, rows, header);
-			CheckingLayoutResult result = abstractControl.checkLayout(this.applicationConnector.getAppConnection().getApplication().service(), window, spec);
-			return Optional.of(result);
-		}
-		return Optional.empty();
+				AbstractControl abstractControl = AbstractControl.createCopy(control, owner, rows, header);
+				CheckingLayoutResult result = abstractControl.checkLayout(this.applicationConnector.getAppConnection().getApplication().service(), window, spec);
+				return Optional.of(result);
+			}, Optional.empty()
+		);
 	}
 
 	private void initController() throws Exception
