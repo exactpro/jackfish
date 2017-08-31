@@ -158,6 +158,8 @@ public class DictionaryWizard extends AbstractWizard
 	private CheckBox cbAdd;
 	private CheckBox cbMark;
 	private CheckBox cbQuestion;
+
+	private WizardHelper wizardHelper = null;
 	
 
 	public DictionaryWizard()
@@ -396,19 +398,37 @@ public class DictionaryWizard extends AbstractWizard
 	}
 
 	@Override
+	protected void onRefused()
+	{
+		super.onRefused();
+		Optional.ofNullable(this.wizardHelper).ifPresent(WizardHelper::stop);
+	}
+
+	@Override
 	public boolean beforeRun()
 	{
 		try
 		{
-			//TODO add check that self is present and that self id not empty
+			IControl self = this.currentWindow.getSelfControl();
+			if (self == null)
+			{
+				DialogsHelper.showError("Self control not found");
+				return false;
+			}
+			if (self.getID().isEmpty())
+			{
+				DialogsHelper.showError("Self control is empty");
+				return false;
+			}
+
 			if (this.currentConnection == null || !this.currentConnection.isGood())
 			{
 				DialogsHelper.showError("Application is not started.\nStart it before call the wizard.");
 				return false;
 			}
 
-			IControl self = this.currentWindow.getSelfControl();
-			WizardHelper.gainImageAndDocument(this.currentConnection, self, (image, doc) ->
+
+			this.wizardHelper = new WizardHelper(this.currentConnection, self, (image, doc) ->
 			{
 				this.imageViewWithScale.displayImage(image);
 
@@ -418,7 +438,8 @@ public class DictionaryWizard extends AbstractWizard
 				List<Rectangle> list = XpathUtils.collectAllRectangles(this.document);
 				this.imageViewWithScale.setListForSearch(list);
 				Platform.runLater(() -> findElements(false));
-			}, ex ->
+			},
+			ex ->
 			{
 				String message = ex.getMessage();
 				if (ex.getCause() instanceof JFRemoteException)
@@ -428,6 +449,7 @@ public class DictionaryWizard extends AbstractWizard
 				}
 				DialogsHelper.showError(message);
 			});
+			this.wizardHelper.start();
 			this.dialogRectangle = this.currentConnection.getApplication().service().getRectangle(null, Optional.ofNullable(this.copyWindow.getSelfControl()).map(IControl::locator).orElse(null));
 			this.wizardSettings = new WizardSettings(this.currentDictionary.getFactory().getSettings());
 			this.pluginInfo = this.currentConnection.getApplication().getFactory().getInfo();

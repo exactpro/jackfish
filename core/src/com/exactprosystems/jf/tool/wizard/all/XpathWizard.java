@@ -48,6 +48,7 @@ import org.w3c.dom.Node;
 import java.awt.*;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -131,6 +132,8 @@ public class XpathWizard extends AbstractWizard
 	private Section         currentSection    = null;
 	private AbstractControl currentControl    = null;
 	private IControl		ownerControl	  = null;
+
+	private WizardHelper	wizardHelper	  = null;
 
 	private volatile Document document    = null;
 	private volatile Node     currentNode = null;
@@ -342,6 +345,13 @@ public class XpathWizard extends AbstractWizard
 	}
 
 	@Override
+	protected void onRefused()
+	{
+		super.onRefused();
+		Optional.ofNullable(this.wizardHelper).ifPresent(WizardHelper::stop);
+	}
+
+	@Override
 	public boolean beforeRun()
 	{
 		try
@@ -358,7 +368,7 @@ public class XpathWizard extends AbstractWizard
 				self = this.currentWindow.getSelfControl();
 			}
 
-			WizardHelper.gainImageAndDocument(this.currentConnection, self, (image, doc) ->
+			this.wizardHelper = new WizardHelper(this.currentConnection, self, (image,doc) ->
 			{
 				this.imageViewWithScale.displayImage(image);
 
@@ -367,7 +377,8 @@ public class XpathWizard extends AbstractWizard
 				List<Rectangle> list = XpathUtils.collectAllRectangles(this.document);
 				this.imageViewWithScale.setListForSearch(list);
 				Platform.runLater(() -> this.applyXpath(this.cfMainExpression.getText()));
-			}, ex ->
+			},
+			ex ->
 			{
 				String message = ex.getMessage();
 				if (ex.getCause() instanceof JFRemoteException)
@@ -376,6 +387,7 @@ public class XpathWizard extends AbstractWizard
 				}
 				DialogsHelper.showError(message);
 			});
+			this.wizardHelper.start();
 		}
 		catch (Exception e)
 		{

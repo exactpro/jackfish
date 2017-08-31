@@ -17,22 +17,84 @@ import com.exactprosystems.jf.common.utils.XpathUtils;
 
 import javafx.application.Platform;
 
+import javafx.concurrent.Service;
+import javafx.concurrent.Task;
+import javafx.util.Pair;
 import org.apache.log4j.Logger;
 import org.w3c.dom.Document;
 
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
+import java.util.Optional;
+import java.util.concurrent.Executors;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
 public class WizardHelper
 {
     private static final Logger logger = Logger.getLogger(WizardHelper.class);
-    
-    private WizardHelper()
-    {
-    }
 
+	private final Service<Pair<BufferedImage, Document>> service;
+
+	public WizardHelper(AppConnection currentConnection, IControl self, BiConsumer<BufferedImage, Document> onSuccess, Consumer<Throwable> onError)
+	{
+		this.service = new Service<Pair<BufferedImage, Document>>()
+		{
+			@Override
+			protected Task<Pair<BufferedImage, Document>> createTask()
+			{
+				return new Task<Pair<BufferedImage, Document>>()
+				{
+					@Override
+					protected Pair<BufferedImage, Document> call() throws Exception
+					{
+						Locator selfLocator = self == null ? null : self.locator();
+						IRemoteApplication service = currentConnection.getApplication().service();
+
+						// get picture
+						Rectangle rectangle = service.getRectangle(null, selfLocator);
+						BufferedImage image = service.getImage(null, selfLocator).getImage();
+
+						// get XML document
+						byte[] treeBytes = service.getTreeBytes(selfLocator);
+						Document document = Converter.convertByteArrayToXmlDocument(treeBytes);
+						if (rectangle != null)
+						{
+							XpathUtils.applyOffset(document, rectangle.x, rectangle.y);
+						}
+						return new Pair<>(image, document);
+					}
+				};
+			}
+		};
+
+		this.service.setOnSucceeded(event ->
+		{
+			Pair<BufferedImage, Document> value = (Pair<BufferedImage, Document>) event.getSource().getValue();
+			Optional.ofNullable(onSuccess).ifPresent(c -> Platform.runLater(() -> c.accept(value.getKey(), value.getValue())));
+		});
+
+		this.service.setOnFailed(event ->
+		{
+			Throwable exception = event.getSource().getException();
+			logger.error(exception.getMessage(), exception);
+			Optional.ofNullable(onError).ifPresent(oe -> Platform.runLater(() -> oe.accept(exception)));
+		});
+
+		this.service.setExecutor(Executors.newSingleThreadExecutor());
+	}
+
+	public void start()
+	{
+		this.service.start();
+	}
+
+	public void stop()
+	{
+		this.service.cancel();
+	}
+
+    @Deprecated
     public static void gainImageAndDocument(AppConnection currentConnection, IControl self,
             BiConsumer<BufferedImage, Document> onSuccess, Consumer<Throwable> onError)
     {
@@ -77,4 +139,6 @@ public class WizardHelper
         });
         thread.start();
     }
+
+
 }
