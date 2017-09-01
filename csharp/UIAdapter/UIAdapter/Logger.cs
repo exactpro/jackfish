@@ -143,15 +143,6 @@ namespace UIAdapter.Logger
                 w.Write(bytes, 0, bytes.Length);
                 w.Flush();
             }
-            //long s = Program.getMilis();
-            //File.AppendAllText(@"C:\Users\user_adm\Desktop\myLog.txt", line);
-            //MessageBox.Show("Time : " + (Program.getMilis() - s));
-            //lock (fileStream)
-            //{
-            //    byte[] bytes = new UTF8Encoding(true).GetBytes(line);
-            //    fileStream.Write(bytes, 0, bytes.Length);
-            //    fileStream.Flush();
-            //}
         }
 
         public void Dispose()

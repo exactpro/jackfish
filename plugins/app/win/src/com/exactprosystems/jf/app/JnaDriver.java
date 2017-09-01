@@ -4,16 +4,10 @@ import com.sun.jna.Library;
 
 public interface JnaDriver extends Library {
 	//region util methods
-	@Deprecated
-	String lastError();
 
+	String lastError();
 	int lastErrorNumber();
 
-	@Deprecated
-	String methodTime();
-
-	@Deprecated
-	String uiAutomationTime();
 	String getFrameworkId();
 	void maxTimeout(int timeout);
 	void setPluginInfo(String pluginInfo);
@@ -70,11 +64,6 @@ public interface JnaDriver extends Library {
 	String getRowByIndex(String tableId, boolean useNumericHeader, int index);
 	String getTable(String tableId, boolean useNumericHeader);
 	int getTableSize(String tableId);
-
-    String elementIsEnabled(String idString);
-    String elementIsVisible(String idString);
-
-    String getRectangle(String idString);
 
     String getXMLFromTree(String idString);
     //endregion

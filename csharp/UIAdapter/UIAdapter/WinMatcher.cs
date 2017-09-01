@@ -19,7 +19,7 @@ namespace UIAdapter
                 {
                     long start = Program.getMilis();
                     ret = WinMatcher.FindByXpath(owner, controlKind, Uid, Xpath, Clazz, Name, Title, Text);
-                    Program.logger.All("find elements by xpath", Program.getMilis() - start);
+                    Program.logger.All("find elements by xpath. Found : " + ret.Length, Program.getMilis() - start);
                 }
                 else
                 {
@@ -30,24 +30,28 @@ namespace UIAdapter
                     if (!many)
                     {
                         AutomationElement firstElement;
-                        Program.logger.All("Start find in descedants " + DateTime.Now.ToString(), -1);
+                        long findInDescedants = Program.getMilis();
+                        Program.logger.All("Start find first in descedants ");
                         firstElement = owner.FindFirst(TreeScope.Descendants, by);
-                        Program.logger.All("End   find in descedants " + DateTime.Now.ToString(), -1);
+                        Program.logger.All("End find first in descedants. Found : " + ret.Length, Program.getMilis() - findInDescedants);
                         if (firstElement == null)
                         {
                             if (controlKind == ControlKind.Wait)
                             {
                                 return null;
                             }
+                            //TODO we realy need this check?
                             if (isMatches(owner, Uid, Clazz, Name))
                             {
                                 ret = new AutomationElement[1];
                                 ret[0] = owner;
                                 return ret;
                             }
-                            String msg = String.Format("Element not found\ncontrolKind {0}\nuid {1}\nxpath{2}\nclazz{3}\nname{4}\ntitle{5}\ntext{6}", controlKind, Uid, Xpath, Clazz, Name, Title, Text);
-                            Program.logger.All(msg, 0);
-                            throw new Exception("Element not found");
+                            String msg = String.Format("Element not found. controlKind : {0} , uid : {1} , xpath : {2}, clazz : {3}, name : {4}, title : {5}, text : {6}"
+                                , controlKind, Uid, Xpath, Clazz, Name, Title, Text
+                            );
+                            Program.logger.Error(msg, 0);
+                            throw new Exception(msg);
                         }
                         ret = new AutomationElement[1];
                         ret[0] = firstElement;
@@ -55,8 +59,10 @@ namespace UIAdapter
                     }
                     else
                     {
+                        long findAllInDescedants = Program.getMilis();
                         AutomationElementCollection col = owner.FindAll(TreeScope.Descendants, by);
-                        if (col.Count == 0 && isMatches(owner, Uid, Clazz, Name))
+                        Program.logger.All("End find in descedants ( many branch). Found : " + col.Count, Program.getMilis() - findAllInDescedants);
+                        if (col.Count == 0 && isMatches(owner, Uid, Clazz, Name)) 
                         {
                             return new AutomationElement[] { owner };
                         }
@@ -76,9 +82,9 @@ namespace UIAdapter
             });
             try
             {
-                Program.logger.All("Start found component during " + maxTimeout + " ms", -1);
+                Program.logger.All("Start found component during " + maxTimeout + " ms");
                 bool res = task.Wait(maxTimeout);
-                Program.logger.All("Result is " + res, -1);
+                Program.logger.All("Finish found components. Result is " + res);
                 if (res)
                 {
                     return task.Result;
@@ -91,7 +97,7 @@ namespace UIAdapter
             }
             catch (AggregateException e)
             {
-                Program.logger.All("Tut u nas exception : " + e.InnerException.Message, -1);
+                Program.logger.Error("Exception from task : " + e.InnerException.Message);
                 throw e.InnerException;
             }
         }
@@ -181,7 +187,7 @@ namespace UIAdapter
             start = Program.getMilis();
             XmlElement root = document.DocumentElement;
             XmlNodeList list = root.SelectNodes(Xpath);
-            Program.logger.All("find by xpath", Program.getMilis() - start);
+            Program.logger.All("find by xpath. Found : " + list.Count, Program.getMilis() - start);
             AutomationElement[] ret = new AutomationElement[list.Count];
             for (int i = 0; i < ret.Length; i++)
             {
@@ -197,33 +203,6 @@ namespace UIAdapter
                 return Xpath;
             }
             String[] ar = Program.pluginInfo.nodeByKind(controlKind);
-            /*
-            switch (controlKind)
-            {
-                case ControlKind.Button: ar = new string[] { "Button", "SplitButton" }; break;
-                case ControlKind.CheckBox: ar = new string[] { "CheckBox" }; break;
-                case ControlKind.ComboBox: ar = new string[] { "ComboBox" }; break;
-                case ControlKind.Dialog: ar = new string[] { "Window" }; break;
-                case ControlKind.Frame: ar = new string[] { "Window" }; break;
-                case ControlKind.Label: ar = new string[] { "Text" }; break;
-                case ControlKind.MenuItem: ar = new string[] { "MenuItem" }; break;
-                case ControlKind.Panel: ar = new string[] { "Pane" }; break;
-                case ControlKind.RadioGroup: ar = new string[] { "RadioButton" }; break;
-                case ControlKind.Row: ar = new string[] { "Custom" }; break;
-                case ControlKind.Table: ar = new string[] { "DataGrid", "Table" }; break;
-                case ControlKind.TabPanel: ar = new string[] { "Tab" }; break;
-                case ControlKind.TextBox: ar = new string[] { "Edit", "Document" }; break;
-                case ControlKind.ToggleButton: ar = new string[] { "Button" }; break;
-                case ControlKind.ListView: ar = new string[] { "List" }; break;
-                case ControlKind.Tree: ar = new string[] { "Tree" }; break;
-                case ControlKind.Tooltip: ar = new string[] { "ToolTip" }; break;
-                case ControlKind.Image: ar = new string[] { "Image" }; break;
-                case ControlKind.ProgressBar: ar = new string[] { "ProgressBar" }; break;
-                case ControlKind.ScrollBar: ar = new string[] { "ScrollBar" }; break;
-                case ControlKind.Slider: ar = new string[] { "Slider" }; break;
-                default: ar = new string[] { "*" }; break;
-            }
-            */
             if (ar == null || ar.Length == 0)
             {
                 return null;
@@ -254,7 +233,8 @@ namespace UIAdapter
             {
                 foreach (var part in clazz.Split(new char[] { ' ' }))
                 {
-                    b.Append(separator); separator = " and ";
+                    b.Append(separator);
+                    separator = " and ";
                     if (part.StartsWith("!"))
                     {
                         b.Append("not (contains(@class,'").Append(part.Substring(1)).Append("'))");
@@ -426,8 +406,7 @@ namespace UIAdapter
         private static string Tag(AutomationElement e)
         {
             string name = e.Current.ControlType.ProgrammaticName;
-            string simpleName = name.Substring(name.IndexOf('.') + 1);
-            return simpleName;
+            return name.Substring(name.IndexOf('.') + 1);
         }
 
         public class XmlElementWithObject : XmlElement
@@ -454,6 +433,5 @@ namespace UIAdapter
         private readonly static string SEPARATOR = ",";
 
         private static Dictionary<int[], XmlDocument> cacheDoms = new Dictionary<int[], XmlDocument>(new Program.DictionaryMatcher());
-
     }
 }

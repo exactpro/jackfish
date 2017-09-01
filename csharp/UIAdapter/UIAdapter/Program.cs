@@ -54,24 +54,6 @@ namespace UIAdapter
 
         #endregion
 
-        [Obsolete]
-        [DllExport("methodTime", CallingConvention.Cdecl)]
-        public static string MethodTime()
-        {
-            string res = methodTime;
-            methodTime = null;
-            return res;
-        }
-
-        [Obsolete]
-        [DllExport("uiAutomationTime", CallingConvention.Cdecl)]
-        public static string UIAutomationTime()
-        {
-            var res = uiAutomationTime;
-            uiAutomationTime = null;
-            return res;
-        }
-
         [DllExport("getFrameworkId", CallingConvention.Cdecl)]
         public static string GetFrameworId()
         {
@@ -118,7 +100,6 @@ namespace UIAdapter
         [DllExport("connect", CallingConvention.Cdecl)]
         public static int Connect(string title, int height, int width, int pid, int controlKind, int timeout, bool alwaysToFront)
         {
-            //logger.All("title=" + title + " height=" + height + " width=" + width + " pid=" + pid + " controlKind=" + controlKind + " timeout=" + timeout);
             Task<int> task = Task<int>.Factory.StartNew(() =>
             {
                 handler = null;
@@ -127,12 +108,10 @@ namespace UIAdapter
 
                 int runningTime = 0;
                 int TIMEWAIT = 100;
-                bool flag = true;
-                while (flag)
+                while (true)
                 {
                     if (runningTime > timeout)
                     {
-                        flag = false;
                         throw new Exception("Could not find window still " + timeout + " ms");
                     }
                     Thread.Sleep(TIMEWAIT);
@@ -141,7 +120,7 @@ namespace UIAdapter
                     try
                     {
                         long startMethod = getMilis();
-                        long startUIAutomation = getMilis();
+
                         ControlType findType = ControlType.Window;
                         if (controlKind != Int32.MinValue)
                         {
@@ -149,7 +128,7 @@ namespace UIAdapter
                             findType = dic.FirstOrDefault(x => x.Value.Equals(kind)).Key;
                         }
                         AutomationElementCollection collection = AutomationElement.RootElement.FindAll(TreeScope.Children, new PropertyCondition(AutomationElement.ControlTypeProperty, findType));
-                        logger.All("AutomationElement.RootElement.FindAll(TreeScope.Children, new PropertyCondition(AutomationElement.ControlTypeProperty, " + findType.ProgrammaticName + "))", (getMilis() - startUIAutomation));
+                        logger.All("find all by findType : " + findType.ProgrammaticName);
 
                         foreach (AutomationElement e in collection)
                         {
@@ -188,18 +167,17 @@ namespace UIAdapter
                         };
 
                         List<AutomationElement> list = collection.Cast<AutomationElement>().Where(el => predicate(el)).ToList();
-                        if (list.Count() == 0)
+                        if (list.Count == 0)
                         {
                             continue;
                         }
-                        if (list.Count() > 1)
+                        if (list.Count > 1)
                         {
-                            throw new Exception("Found " + list.Count() + " windows instead 1 with parameters title=" + title + " , h = " + height + " , w = " + width);
+                            throw new Exception("Found " + list.Count + " windows instead 1 with parameters title=" + title + " , h = " + height + " , w = " + width);
                         }
                         handler = list.Single();
                         frameWorkId = handler.Current.FrameworkId;
                         logger.All("method Connect", getMilis() - startMethod);
-                        flag = false;
                         return handler.Current.ProcessId;
                     }
                     catch (Exception e)
@@ -208,7 +186,6 @@ namespace UIAdapter
                         throw e;
                     }
                 }
-                return -1;
             }
             );
             try
@@ -440,6 +417,7 @@ namespace UIAdapter
             try
             {
                 long startMethod = getMilis();
+                
                 Xpath = ConvertString.replaceUnicodeSubStringToChar(Xpath);
                 Name = ConvertString.replaceUnicodeSubStringToChar(Name);
                 Title = ConvertString.replaceUnicodeSubStringToChar(Title);
@@ -461,7 +439,7 @@ namespace UIAdapter
                     result.AppendLine("Found:        " + element);
                     result.AppendLine("AutomationId: " + element.Current.AutomationId);
                     result.AppendLine("Class name:   " + element.Current.ClassName);
-                    result.AppendLine("Control type: " + element.Current.ControlType.LocalizedControlType);
+                    result.AppendLine("Control type: " + element.Current.ControlType.ProgrammaticName);
                     result.AppendLine("Name:         " + element.Current.Name);
                     result.AppendLine("Hwnd:         " + element.Current.NativeWindowHandle);
 
@@ -474,7 +452,7 @@ namespace UIAdapter
                     result.AppendLine("Properties:");
                     foreach (var property in element.GetSupportedProperties())
                     {
-                        //TODO we need this try for password field
+                        //we need this try for password field
                         try
                         {
                             var obj = element.GetCurrentPropertyValue(property);
@@ -510,11 +488,12 @@ namespace UIAdapter
             try
             {
                 long startMethod = getMilis();
+                
                 Xpath = ConvertString.replaceUnicodeSubStringToChar(Xpath);
                 Name = ConvertString.replaceUnicodeSubStringToChar(Name);
                 Title = ConvertString.replaceUnicodeSubStringToChar(Title);
                 Text = ConvertString.replaceUnicodeSubStringToChar(Text);
-
+                
                 AutomationElement owner = findOwner(oId);
                 ControlKind controlKind = (ControlKind)controlkindId;
                 AutomationElement[] found = null;
@@ -536,6 +515,7 @@ namespace UIAdapter
                     return 0;
                 }
                 logger.All("Before size : " + found.Length);
+                //remove all not visible elements
                 int[][] res = found.Cast<AutomationElement>().Where(el => el.Current.IsOffscreen ? addInvisible : true).Select(e => e.GetRuntimeId()).ToArray();
                 logger.All("After size : " + res.Length);
                 int countOfElement = res.Length + 1;
@@ -558,7 +538,7 @@ namespace UIAdapter
                         arr[currentPosition++] = i;
                     }
                 }
-                logger.All("find all for locator", getMilis() - startMethod);
+                logger.All("find all for locator, size : " + res.Length, getMilis() - startMethod);
                 return countOfElement;
             }
             catch (Exception e)
@@ -586,8 +566,8 @@ namespace UIAdapter
                 {
                     AutomationProperty property = AutomationProperty.LookupById((int)propertyId);
                     object objValue = value;
-                    //30003 - it's ControlTypeProperty
-                    if (propertyId == 30003)
+                    
+                    if (propertyId == AutomationElement.ControlTypeProperty.Id)
                     {
                         objValue = ControlType.LookupById(Int32.Parse(value));
                     }
@@ -596,7 +576,7 @@ namespace UIAdapter
 
                 long startUI = getMilis();
                 AutomationElementCollection found = owner.FindAll(treeScope, condition);
-                logger.All("findAll by scope and condition", getMilis() - startUI);
+                logger.All("findAll by scope and condition. Size : " + found.Count, getMilis() - startUI);
                 if (found == null)
                 {
                     return 0;
@@ -978,6 +958,13 @@ namespace UIAdapter
             }
         }
 
+        /**
+	    * if @param c == -1 -> arg is null;
+	    * if @param c == 0 -> arg is array of string with separator %
+	    * if @param c == 1 -> arg is array of int with separator %
+	    * if @param c == 2 -> arg is array of double with separator %
+	    * if @param c == 3 -> arg is array of WindowVisualState with separator %
+	    */
         [DllExport("doPatternCall", CallingConvention.Cdecl)]
         public static string DoPatternCall(String inid, int patternId, string method, string arg, int c)
         {
@@ -986,17 +973,15 @@ namespace UIAdapter
                 long startMethod = getMilis();
                 int[] id = stringToIntArray(inid);
                 object[] args = null;
-                //if c == -1 - is string arg is null;
+
                 if (c == -1)
                 {
                     args = null;
                 }
-                //simple strings
-                if (c == 0)
+                else if (c == 0)
                 {
                     args = arg.Split(new char[] { '%' });
                 }
-                //only int32    
                 else if (c == 1)
                 {
                     string[] a = arg.Split(new char[] { '%' });
@@ -1006,7 +991,6 @@ namespace UIAdapter
                         args[i] = Int32.Parse(a[i]);
                     }
                 }
-                //double
                 else if (c == 2)
                 {
                     string[] a = arg.Split(new char[] { '%' });
@@ -1016,7 +1000,6 @@ namespace UIAdapter
                         args[i] = Double.Parse(a[i]);
                     }
                 }
-                //WindowVisualState
                 else if (c == 3)
                 {
                     string[] a = arg.Split(new char[] { '%' });
@@ -1084,7 +1067,7 @@ namespace UIAdapter
                     else if (elementPattern is WindowPattern)
                     {
                         //args not null if we try to change visual state of window.
-                        //args is null if we try to close window.
+                        //args is null if we try to close window. We use MethodInvoke for call this method
                         if (args != null)
                         {
                             WindowPattern windowPattern = elementPattern as WindowPattern;
@@ -1114,8 +1097,6 @@ namespace UIAdapter
                                     expandCollapsePattern.Collapse();
                                 }
                                 break;
-                            default:
-                                break;
                         }
                         return null;
                     }
@@ -1134,7 +1115,7 @@ namespace UIAdapter
             }
             catch (Exception e)
             {
-                MakeError(e, System.Reflection.MethodBase.GetCurrentMethod().ToString());
+                MakeError(e, MethodBase.GetCurrentMethod().ToString());
             }
             return null;
         }
@@ -1166,38 +1147,8 @@ namespace UIAdapter
             }
             catch (Exception e)
             {
-                MakeError(e, System.Reflection.MethodBase.GetCurrentMethod().ToString());
+                MakeError(e, MethodBase.GetCurrentMethod().ToString());
             }
-        }
-
-        [DllExport("getRectangle", CallingConvention.Cdecl)]
-        public static string getRectangle(String inid)
-        {
-            long startMethod = getMilis();
-            int[] id = stringToIntArray(inid);
-            UpdateHandler();
-            AutomationElement element = FindByRuntimeId(id);
-            AutomationElement titleBar = handler.FindFirst(TreeScope.Descendants, new PropertyCondition(AutomationElement.AutomationIdProperty, "TitleBar"));
-            Rect handlerRect = handler.Current.BoundingRectangle;
-            Rect elementRect = element.Current.BoundingRectangle;
-            Rect titleBarRect;
-            Rect finalRect;
-            double left;
-            double top;
-            if (titleBar != null)
-            {
-                titleBarRect = titleBar.Current.BoundingRectangle;
-                left = elementRect.Left - titleBarRect.Left;
-                top = elementRect.Top - titleBarRect.Top - titleBarRect.Height;
-            }
-            else
-            {
-                left = elementRect.Left;
-                top = elementRect.Top;
-            }
-
-            finalRect = new Rect(left, top, elementRect.Width, elementRect.Height);
-            return finalRect.ToString();
         }
 
         [DllExport("getProperty", CallingConvention.Cdecl)]
@@ -1389,13 +1340,10 @@ namespace UIAdapter
                 AutomationElement table = FindByRuntimeId(tableRuntimeId);
                 AbstractTable abstractTable = TableFactory.createTable(table);
                 return ConvertString.replaceNonASCIIToUnicode(abstractTable.GetValueRowCell(abstractTable.FindCell(column, row)));
-                //var cell = findCell(table, column, row);
-                //bool isWin32 = cell.Current.FrameworkId.ToUpper().Equals("WIN32");
-                //return isSilverlightApp(table) || isWin32 ? cell.Current.Name : "" + cell.GetCurrentPropertyValue(VALUE_PROPERTY);
             }
             catch (Exception e)
             {
-                MakeError(e, System.Reflection.MethodBase.GetCurrentMethod().ToString());
+                MakeError(e, MethodBase.GetCurrentMethod().ToString());
             }
             return "";
         }
@@ -1407,13 +1355,12 @@ namespace UIAdapter
             {
                 int[] tableRuntimeId = stringToIntArray(tableId);
                 AutomationElement table = FindByRuntimeId(tableRuntimeId);
-                //var cell = findCell(table, column, row);
                 var cell = TableFactory.createTable(table).FindCell(column, row);
                 MouseToElement(cell, mouseAction, int.MinValue, int.MinValue);
             }
             catch (Exception e)
             {
-                MakeError(e, System.Reflection.MethodBase.GetCurrentMethod().ToString());
+                MakeError(e, MethodBase.GetCurrentMethod().ToString());
             }
         }
 
@@ -1426,13 +1373,12 @@ namespace UIAdapter
 
                 int[] tableRuntimeId = stringToIntArray(tableId);
                 AutomationElement table = FindByRuntimeId(tableRuntimeId);
-                //var cell = findCell(table, column, row);
                 var cell = TableFactory.createTable(table).FindCell(column, row);
                 SetTextToElement(cell, text);
             }
             catch (Exception e)
             {
-                MakeError(e, System.Reflection.MethodBase.GetCurrentMethod().ToString());
+                MakeError(e, MethodBase.GetCurrentMethod().ToString());
             }
         }
 
@@ -1447,47 +1393,6 @@ namespace UIAdapter
                 int[] tableRuntimeId = stringToIntArray(tableId);
                 AutomationElement table = FindByRuntimeId(tableRuntimeId);
                 return ConvertString.replaceNonASCIIToUnicode(TableFactory.createTable(table).GetRowByIndex(index));
-                //TreeWalker walker = TreeWalker.RawViewWalker;
-                //AutomationElement findRow = walker.GetFirstChild(table);
-                //int rows = -1;
-                //bool isSilverLight = isSilverlightApp(findRow);
-                //if (isSilverLight)
-                //{
-                //    AutomationElement rowPresented = walker.GetFirstChild(table);
-                //    while (!rowPresented.Current.ClassName.ToUpper().Contains("ROWSPRESENTER"))
-                //    {
-                //        rowPresented = walker.GetNextSibling(rowPresented);
-                //    }
-                //    findRow = walker.GetFirstChild(rowPresented);
-                //    rows = 0;
-                //}
-                //if (findRow == null)
-                //{
-                //    return "";
-                //}
-                //Predicate<AutomationElement> isGoodRow = (r) =>
-                //    {
-                //        if (isSilverLight)
-                //        {
-                //            return true;
-                //        }
-                //        return !r.Current.Name.ToUpper().Contains("SCROLL");
-                //    };
-                //while (rows != index)
-                //{
-                //    logger.All("FindRow.current.name : " + findRow.Current.Name + "\n and index : " + rows + "\n is GoodRow : " + isGoodRow);
-                //    bool isGood = isGoodRow(findRow);
-                //    if (isGood)
-                //    {
-                //        rows += 1;
-                //    }
-                //    findRow = walker.GetNextSibling(findRow);
-                //}
-                //logger.All("finded row : " + rowToString(findRow), -1);
-                //AutomationElement header = findHeader(table);
-                //StringBuilder builder = new StringBuilder();
-                //builder.Append(headerToString(header, useNumericHeader, null)).Append(SEPARATOR_ROWS).Append(rowToString(findRow));
-                //return builder.ToString();
             }
             catch (Exception e)
             {
@@ -1504,37 +1409,6 @@ namespace UIAdapter
                 int[] tableRuntimeId = stringToIntArray(tableId);
                 AutomationElement table = FindByRuntimeId(tableRuntimeId);
                 return TableFactory.createTable(table).GetTableSize();
-                //TreeWalker walker = TreeWalker.RawViewWalker;
-                //AutomationElement findRow = walker.GetFirstChild(table);
-                //bool isSilver = isSilverlightApp(findRow);
-                //if (isSilver)
-                //{
-                //    AutomationElement rowPresented = walker.GetFirstChild(table);
-                //    while (!rowPresented.Current.ClassName.ToUpper().Contains("ROWSPRESENTER"))
-                //    {
-                //        rowPresented = walker.GetNextSibling(rowPresented);
-                //    }
-                //    findRow = walker.GetFirstChild(rowPresented);
-                //}
-                //Predicate<AutomationElement> isGoodRow = (row) =>
-                //{
-                //    if (isSilver)
-                //    {
-                //        return true;
-                //    }
-                //    return !row.Current.Name.ToUpper().Contains("SCROLL");
-                //};
-
-                //int i = 0;
-                //while (findRow != null)
-                //{
-                //    if (isGoodRow(findRow))
-                //    {
-                //        i++;
-                //    }
-                //    findRow = walker.GetNextSibling(findRow);
-                //}
-                //return i;
             }
             catch (Exception e)
             {
@@ -1548,85 +1422,11 @@ namespace UIAdapter
         {
             try
             {
-                //logger.All("tableId=" + tableId + " useNumericHeader=" + useNumericHeader + " condition=" + condition + " columns=" + columns);
                 columns = ConvertString.replaceUnicodeSubStringToChar(columns);
                 long start = getMilis();
                 int[] tableRuntimeId = stringToIntArray(tableId);
                 AutomationElement table = FindByRuntimeId(tableRuntimeId);
                 return ConvertString.replaceNonASCIIToUnicode(TableFactory.createTable(table).GetRow(condition, columns));
-
-                //long t1 = getMilis();
-                //AutomationElement header = findHeader(table);
-                //logger.All("Find header time ", getMilis() - t1);
-                //String headerToStr = headerToString(header, useNumericHeader, columns);
-                //StringBuilder builder = new StringBuilder().Append(headerToStr);
-
-                //TreeWalker walker = TreeWalker.RawViewWalker;
-                //AutomationElement findRow = walker.GetFirstChild(table);
-
-                //logger.All("Get row, Condition : " + condition, -1);
-                //t1 = getMilis();
-                //bool isSilverLight = isSilverlightApp(findRow);
-                //if (!isSilverLight)
-                //{
-                //    while (findRow.Current.Name.ToUpper().Contains("SCROLL"))
-                //    {
-                //        findRow = walker.GetNextSibling(findRow);
-                //    }
-                //}
-                //else
-                //{
-                //    AutomationElement rowPresented = walker.GetFirstChild(table);
-                //    while (!rowPresented.Current.ClassName.ToUpper().Contains("ROWSPRESENTER"))
-                //    {
-                //        rowPresented = walker.GetNextSibling(rowPresented);
-                //    }
-                //    findRow = walker.GetFirstChild(rowPresented);
-                //}
-                //logger.All("Find first row time ", getMilis() - t1);
-                //Cond.Condition cond = null;
-                //Dictionary<string, int> indexes = new Dictionary<string,int>();
-                //if (!string.IsNullOrEmpty(condition))
-                //{
-                //    cond = Cond.Condition.Deserialize(condition);
-                //    HashSet<string> names = cond.GetNames();
-
-                //    string[] headerCells = headerToStr.Split(new char[] { SEPARATOR_CELL[0] }, StringSplitOptions.RemoveEmptyEntries);
-                //    for (int i = 0; i < headerCells.Length; i++)
-                //    {
-                //        if (names.Contains(headerCells[i]))
-                //        {
-                //            indexes.Add(headerCells[i], i);
-                //        }
-                //    }
-                //}
-                ////indexes found right
-                //Predicate<AutomationElement> predicate = (fr) =>
-                //{
-                //    if (isSilverLight)
-                //    {
-                //        return true;
-                //    }
-                //    string currentName = fr.Current.Name.ToUpper();
-                //    return !currentName.Contains("TOP ROW") && !currentName.Contains("SCROLL");
-                //};
-                //while (findRow != null)
-                //{
-                //    if (predicate(findRow))
-                //    {
-                //        if (rowMatchesNew(findRow, indexes, cond))
-                //        {
-                //            builder.Append(SEPARATOR_ROWS).Append(rowToString(findRow));
-                //            logger.All(String.Format("getRow(id={0}, use = {1}, cond = {2}", tableId, useNumericHeader, condition), getMilis() - start);
-                //            return builder.ToString();
-                //        }
-                //    }
-                //    t1 = getMilis();
-                //    findRow = walker.GetNextSibling(findRow);
-                //    logger.All("Get next sibling for row time : ", getMilis() - t1);
-                //}
-                //logger.All(String.Format("getRow(id={0}, use = {1}, cond = {2}, row = {3}", tableId, useNumericHeader, condition, builder.ToString()), getMilis() - start);
-                //return builder.ToString();
             }
             catch (Exception e)
             {
@@ -1645,75 +1445,6 @@ namespace UIAdapter
                 int[] tableRuntimeId = stringToIntArray(tableId);
                 AutomationElement table = FindByRuntimeId(tableRuntimeId);
                 return ConvertString.replaceNonASCIIToUnicode(TableFactory.createTable(table).GetRowIndexes(condition, columns));
-
-                //AutomationElement header = findHeader(table);
-                //String headerToStr = headerToString(header, useNumericHeader, columns);
-                //StringBuilder builder = new StringBuilder();//.Append(headerToStr);
-
-                //TreeWalker walker = TreeWalker.RawViewWalker;
-                //AutomationElement findRow = walker.GetFirstChild(table);
-                //bool isSilver = isSilverlightApp(findRow);
-
-                //if (!isSilver)
-                //{
-                //    while (findRow.Current.Name.ToUpper().Contains("SCROLL"))
-                //    {
-                //        findRow = walker.GetNextSibling(findRow);
-                //    }
-                //}
-                //else
-                //{
-                //    AutomationElement rowPresented = walker.GetFirstChild(table);
-                //    while (!rowPresented.Current.ClassName.ToUpper().Contains("ROWSPRESENTER"))
-                //    {
-                //        rowPresented = walker.GetNextSibling(rowPresented);
-                //    }
-                //    findRow = walker.GetFirstChild(rowPresented);
-                //}
-
-                //Cond.Condition cond = null;
-                //Dictionary<string, int> indexes = new Dictionary<string, int>();
-                //if (!string.IsNullOrEmpty(condition))
-                //{
-                //    cond = Cond.Condition.Deserialize(condition);
-                //    HashSet<string> names = cond.GetNames();
-
-                //    string[] headerCells = headerToStr.Split(new char[] { SEPARATOR_CELL[0] }, StringSplitOptions.RemoveEmptyEntries);
-                //    for (int i = 0; i < headerCells.Length; i++)
-                //    {
-                //        if (names.Contains(headerCells[i]))
-                //        {
-                //            indexes.Add(headerCells[i], i);
-                //        }
-                //    }
-                //}
-
-                //int findedIndex = 0;
-                //string sep = "";
-                //Predicate<AutomationElement> predicate = (fr) =>
-                //{
-                //    if (isSilver)
-                //    {
-                //        return true;
-                //    }
-                //    string currentName = fr.Current.Name.ToUpper();
-                //    return !currentName.Contains("TOP ROW") && !currentName.Contains("SCROLL") && !currentName.Equals("HEADER");
-                //};
-                //while (findRow != null)
-                //{
-                //    if (predicate(findRow))
-                //    {
-                //        if (rowMatchesNew(findRow, indexes, cond))
-                //        {
-                //            builder.Append(sep).Append(findedIndex);
-                //            sep = SEPARATOR_CELL;
-                //        }
-                //        findedIndex++;
-                //    }
-                //    findRow = walker.GetNextSibling(findRow);
-                //}
-                //logger.All(String.Format("getRow(id={0}, use = {1}, cond = {2}", tableId, useNumericHeader, condition), getMilis() - start);
-                //return builder.ToString();
             }
             catch (Exception e)
             {
@@ -1731,43 +1462,6 @@ namespace UIAdapter
                 int[] tableRuntimeId = stringToIntArray(tableId);
                 AutomationElement table = FindByRuntimeId(tableRuntimeId);
                 return ConvertString.replaceNonASCIIToUnicode(TableFactory.createTable(table).GetTable());
-
-                //AutomationElement header = findHeader(table);
-                //StringBuilder builder = new StringBuilder();
-                //builder.Append(headerToString(header, useNumericHeader, null));
-
-                //bool isSilver = isSilverlightApp(table);
-
-
-                //TreeWalker walker = TreeWalker.RawViewWalker;
-                //AutomationElement findRow = walker.GetFirstChild(table);
-                //if (isSilver)
-                //{
-                //    AutomationElement rowPresented = walker.GetFirstChild(table);
-                //    while (!rowPresented.Current.ClassName.ToUpper().Contains("ROWSPRESENTER"))
-                //    {
-                //        rowPresented = walker.GetNextSibling(rowPresented);
-                //    }
-                //    findRow = walker.GetFirstChild(rowPresented);
-                //}
-
-                //Predicate<AutomationElement> isGoodRow = (fr) =>
-                //{
-                //    if (isSilver)
-                //    {
-                //        return true;
-                //    }
-                //    return !fr.Current.Name.ToUpper().Contains("TOP ROW") && !findRow.Current.Name.ToUpper().Contains("SCROLL");
-                //};
-                //while (findRow != null)
-                //{
-                //    if (isGoodRow(findRow))
-                //    {
-                //        builder.Append(SEPARATOR_ROWS).Append(rowToString(findRow));
-                //    }
-                //    findRow = walker.GetNextSibling(findRow);
-                //}
-                //return builder.ToString();
             }
             catch (Exception e)
             {
@@ -1776,395 +1470,7 @@ namespace UIAdapter
             return null;
         }
 
-        #region private methods
-        private static AutomationElement findCell(AutomationElement table, int column, int row)
-        {
-            long start = getMilis();
-
-            if (row < 0)
-            {
-                return findHeaderCell(findHeader(table), column);
-            }
-
-            TreeWalker walker = TreeWalker.RawViewWalker;
-            AutomationElement findRow = walker.GetFirstChild(table);
-            int rows = -1;
-            bool isSilverLight = isSilverlightApp(findRow);
-            if (isSilverLight)
-            {
-                AutomationElement rowPresented = walker.GetFirstChild(table);
-                while (!rowPresented.Current.ClassName.ToUpper().Contains("ROWSPRESENTER"))
-                {
-                    rowPresented = walker.GetNextSibling(rowPresented);
-                }
-                findRow = walker.GetFirstChild(rowPresented);
-                rows = 0;
-            }
-
-            Predicate<AutomationElement> isGoodRow = (r) =>
-            {
-                if (isSilverLight)
-                {
-                    return true;
-                }
-                return !r.Current.Name.ToUpper().Contains("SCROLL");
-            };
-            while (rows != row)
-            {
-                if (findRow == null)
-                {
-                    throw new Exception(String.Format("Invalid row index {0}", row));
-                }
-
-                findRow = walker.GetNextSibling(findRow);
-                if (isGoodRow(findRow))
-                {
-                    rows += 1;
-                }
-            }
-
-            if (findRow == null)
-            {
-                throw new Exception(String.Format("Row with number {0} not found", row));
-            }
-            int cells = 0;
-            AutomationElement findCell = walker.GetFirstChild(findRow);
-            Predicate<AutomationElement> cellPredicate = (c) =>
-            {
-                if (isSilverLight)
-                {
-                    return true;
-                }
-                return !c.Current.ControlType.LocalizedControlType.ToUpper().Contains("HEADER");
-            };
-            //TODO incorrect behaviour
-            while (cells != column)
-            {
-                if (findCell == null)
-                {
-                    throw new Exception(String.Format("Invalid column index {0}", column));
-                }
-                if (cellPredicate(findCell))
-                {
-                    cells += 1;
-                }
-                findCell = walker.GetNextSibling(findCell);
-            }
-
-            logger.All("find all cell in table", (getMilis() - start));
-            return findCell;
-        }
-
-        private static AutomationElement findHeader(AutomationElement table)
-        {
-            TreeWalker walker = TreeWalker.RawViewWalker;
-            AutomationElement header = walker.GetFirstChild(table);
-            bool isWin32 = handler.Current.FrameworkId.ToUpper().Equals("WIN32");
-            bool isSilverLight = isSilverlightApp(header);
-            Predicate<AutomationElement> isHeader = (hh) =>
-            {
-                if (isSilverLight)
-                {
-                    return hh.Current.ControlType.LocalizedControlType.ToUpper().Contains("HEADER");
-                }
-                else if (isWin32)
-                {
-                    return hh.Current.ControlType.Equals(ControlType.Header);
-                }
-                else
-                {
-                    return hh.Current.Name.ToUpper().Contains("TOP ROW");
-                }
-            };
-            while (header != null && !isHeader(header))
-            {
-                header = walker.GetNextSibling(header);
-            }
-            logger.All(String.Format("find header : class {0}\nlocalControlType {1}", header.Current.ClassName, header.Current.LocalizedControlType), -1);
-            return header;
-        }
-
-        private static AutomationElement findHeaderCell(AutomationElement header, int column)
-        {
-            TreeWalker cellWalker = TreeWalker.RawViewWalker;
-            AutomationElement cell = cellWalker.GetFirstChild(header);
-            bool isSilverLight = isSilverlightApp(header);
-            Predicate<AutomationElement> findFirstCell = (c) =>
-            {
-                if (isSilverLight)
-                {
-                    return false;
-                }
-                return c.Current.Name.ToUpper().Contains("TOP LEFT HEADER CELL");
-            };
-            while (findFirstCell(cell))
-            {
-                cell = cellWalker.GetNextSibling(cell);
-            }
-            for (int i = 0; i < column; i++)
-            {
-                if (cell != null)
-                {
-                    cell = cellWalker.GetNextSibling(cell);
-                }
-                else
-                {
-                    throw new Exception(String.Format("Invalid column index {0}", column));
-                }
-            }
-            return cell;
-        }
-
-        private static string headerToString(AutomationElement header, Boolean useNumericHeader, String columns)
-        {
-            string[] columnsArray = null;
-            if (!String.IsNullOrEmpty(columns))
-            {
-                columnsArray = columns.Split(new char[] { SEPARATOR_CELL[0] }, StringSplitOptions.RemoveEmptyEntries);
-            }
-            TreeWalker walker = TreeWalker.RawViewWalker;
-            AutomationElement firstCell = walker.GetFirstChild(header);
-            StringBuilder b = new StringBuilder();
-            string sep = "";
-            bool isSilverLight = isSilverlightApp(firstCell);
-            logger.All("Is silverlight ? : " + isSilverLight);
-            Predicate<AutomationElement> findFirstCell = (fc) =>
-            {
-                if (isSilverLight)
-                {
-                    return false;
-                }
-                return fc.Current.Name.ToUpper().Contains("TOP LEFT HEADER");
-            };
-            while (findFirstCell(firstCell))
-            {
-                firstCell = walker.GetNextSibling(firstCell);
-            }
-            int i = 0;
-            TreeWalker rawWalker = TreeWalker.RawViewWalker;
-            while (firstCell != null)
-            {
-                String value;
-                if (isSilverLight)
-                {
-                    AutomationElement cell = rawWalker.GetFirstChild(firstCell);
-                    value = firstCell.Current.Name;
-
-                    if (cell != null)
-                    {
-                        value = cell.Current.Name;
-                        TreeWalker tw = TreeWalker.RawViewWalker;
-                        AutomationElement sib = tw.GetNextSibling(cell);
-                        while (sib != null)
-                        {
-                            value += sib.Current.Name;
-                            sib = tw.GetNextSibling(sib);
-                        }
-                    }
-                }
-                else if (firstCell.Current.ControlType.Equals(ControlType.HeaderItem))
-                {
-                    value = firstCell.Current.Name;
-                }
-                else
-                {
-                    value = "" + firstCell.GetCurrentPropertyValue(VALUE_PROPERTY);
-                }
-                logger.All("firstCell value = " + value, -1);
-
-                b.Append(sep).Append(getValueFromArray(columnsArray, i, value));
-                sep = SEPARATOR_CELL;
-                firstCell = walker.GetNextSibling(firstCell);
-                i++;
-            }
-            return b.ToString();
-        }
-
-        private static string getValueFromArray(string[] array, int index, string defaultValue)
-        {
-            if (array == null)
-            {
-                return defaultValue;
-            }
-            if (index >= array.Length)
-            {
-                return "" + index;
-            }
-            return array[index];
-
-        }
-
-        private static string rowToString(AutomationElement row)
-        {
-            TreeWalker walker = TreeWalker.RawViewWalker;
-            AutomationElement firstCell = walker.GetFirstChild(row);
-
-            StringBuilder b = new StringBuilder();
-            string sep = "";
-            bool isSilverLight = isSilverlightApp(row);
-            Predicate<AutomationElement> cellIsGood = (c) =>
-            {
-                if (isSilverLight)
-                {
-                    return c.Current.IsKeyboardFocusable && !c.Current.ControlType.LocalizedControlType.ToUpper().Contains("HEADER");
-                }
-                return !c.Current.ControlType.LocalizedControlType.ToUpper().Contains("HEADER");
-            };
-            bool isWin32 = handler.Current.FrameworkId.ToUpper().Equals("WIN32");
-            while (firstCell != null)
-            {
-                if (cellIsGood(firstCell))
-                {
-                    var cellValue = "";
-                    if (isSilverLight || isWin32)
-                    {
-                        var name = firstCell.Current.Name;
-                        cellValue = name;
-                        if (String.IsNullOrEmpty(name))
-                        {
-                            try
-                            {
-                                cellValue = TreeWalker.RawViewWalker.GetFirstChild(firstCell).Current.Name;
-                            }
-                            catch (Exception e)
-                            { }
-                        }
-                        if (String.IsNullOrEmpty(cellValue))
-                        {
-                            cellValue = EMPTY_CELL;
-                        }
-                    }
-                    else
-                    {
-                        cellValue = "" + firstCell.GetCurrentPropertyValue(VALUE_PROPERTY);
-                        //cellValue = firstCell.Current.Name;
-                    }
-                    logger.All("finded cell : " + cellValue, -1);
-                    b.Append(sep).Append(cellValue);
-                    sep = SEPARATOR_CELL;
-                }
-                firstCell = walker.GetNextSibling(firstCell);
-            }
-            string r = b.ToString();
-            logger.All("row to string result\n" + r, -1);
-            return r;
-        }
-
-        private static Boolean rowMatchesNew(AutomationElement element, Dictionary<string, int> indexes, Cond.Condition condition)
-        {
-            long t1 = getMilis();
-            logger.All("Header : " + String.Join(" ", indexes), -1);
-            Dictionary<string, object> row = rowToDictionary(element, indexes);
-            logger.All("Row to matched : " + String.Join(" ", row), -1);
-            bool res = condition.IsMatched(row);
-            logger.All("Row matches res : " + res + " new time : ", getMilis() - t1);
-            return res;
-        }
-
-        //TODO need review
-        private static Dictionary<string, object> rowToDictionary(AutomationElement row, Dictionary<string, int> indexes)
-        {
-            TreeWalker walker = TreeWalker.RawViewWalker;
-            AutomationElement firstCell = walker.GetFirstChild(row);
-            Dictionary<string, object> res = new Dictionary<string, object>();
-            var iterator = indexes.GetEnumerator();
-            bool isSilverLight = isSilverlightApp(row);
-            Predicate<AutomationElement> cellIsGood = (c) =>
-            {
-                if (isSilverLight)
-                {
-                    return c.Current.IsKeyboardFocusable && !c.Current.ControlType.LocalizedControlType.ToUpper().Contains("HEADER");
-                }
-                if (c.Current.ControlType == ControlType.Header)
-                {
-                    return false;
-                }
-                return !c.Current.ControlType.LocalizedControlType.ToUpper().Contains("HEADER");
-            };
-            bool isWin32 = handler.Current.FrameworkId.ToUpper().Equals("WIN32");
-            bool next = iterator.MoveNext();
-            for (int count = 0; firstCell != null && next; firstCell = walker.GetNextSibling(firstCell))
-            {
-                bool flag = cellIsGood(firstCell);
-                if (flag)
-                {
-                    var currentKey = iterator.Current.Key;
-                    if (iterator.Current.Value == count++)
-                    {
-                        next = iterator.MoveNext();
-                    }
-                    else
-                    {
-                        continue;
-                    }
-                    object cellValue = "";
-                    if (isSilverLight || isWin32)
-                    {
-                        var name = firstCell.Current.Name;
-                        cellValue = name;
-                        if (String.IsNullOrEmpty(name))
-                        {
-                            try
-                            {
-                                cellValue = TreeWalker.RawViewWalker.GetFirstChild(firstCell).Current.Name;
-                            }
-                            catch (Exception e)
-                            { }
-                        }
-                    }
-                    else
-                    {
-                        //cellValue = "" + firstCell.GetCurrentPropertyValue(VALUE_PROPERTY);
-                        //cellValue = "" + firstCell.Current.Name;
-                        object pattern;
-                        if (firstCell.TryGetCurrentPattern(ValuePattern.Pattern, out pattern))
-                        {
-                            cellValue = "" + ((ValuePattern)pattern).Current.Value;
-                        }
-                    }
-                    res.Add(currentKey, cellValue);
-
-                    logger.All("finded cell : " + cellValue, -1);
-                }
-            }
-            logger.All("row to dictionary result\n", -1);
-
-            return res;
-        }
-
-        private static String cellName(AutomationElement row, int index)
-        {
-            TreeWalker walker = TreeWalker.RawViewWalker;
-            AutomationElement findCell = walker.GetFirstChild(row);
-            bool isWin32 = findCell.Current.FrameworkId.ToUpper().Equals("WIN32");
-            bool isSilverLight = isSilverlightApp(row);
-            Predicate<AutomationElement> cellPredicate = (c) =>
-            {
-                if (isSilverLight || isWin32)
-                {
-                    return true;
-                }
-                return !c.Current.ControlType.LocalizedControlType.ToUpper().Contains("HEADER");
-            };
-            int cells = 0;
-            while (cells != index)
-            {
-                if (findCell == null)
-                {
-                    throw new Exception(String.Format("Invalid column index {0}", index));
-                }
-                if (cellPredicate(findCell))
-                {
-                    cells += 1;
-                }
-                findCell = walker.GetNextSibling(findCell);
-            }
-            return isSilverLight || isWin32 ? findCell.Current.Name : "" + findCell.GetCurrentPropertyValue(VALUE_PROPERTY);
-        }
-
-        #endregion
-
-        #endregion
+       #endregion
 
         #region private methods
 
@@ -2230,6 +1536,7 @@ namespace UIAdapter
                     if (element.TryGetCurrentPattern(ValuePattern.Pattern, out obj))
                     {
                         var vp = (ValuePattern)obj;
+                        //TODO need add check that !vp.Current.IsReadOnly ???
                         vp.SetValue(text);
                     }
                 }
@@ -2240,6 +1547,7 @@ namespace UIAdapter
                 if (element.TryGetCurrentPattern(ValuePattern.Pattern, out obj))
                 {
                     var vp = (ValuePattern)obj;
+                    //TODO need add check that !vp.Current.IsReadOnly ???
                     vp.SetValue(text);
                 }
             }
@@ -2412,7 +1720,7 @@ namespace UIAdapter
                     bool isExit = false;
                     foreach (Process p in children)
                     {
-                        logger.All("Process name : " + p.ProcessName + " and windowHandle : " + p.MainWindowHandle);
+                        logger.All("Child process name : " + p.ProcessName + " and windowHandle : " + p.MainWindowHandle);
                         if (!p.MainWindowHandle.Equals(IntPtr.Zero))
                         {
                             isExit = true;
@@ -2464,24 +1772,6 @@ namespace UIAdapter
             MakeError(e, "");
         }
 
-        [Obsolete]
-        private static void MakeMethodTime(string methodName, long milis)
-        {
-            methodTime = methodName + " : " + milis + " ms";
-        }
-
-        [Obsolete]
-        public static void MakeUIAutomationTime(string methodName)
-        {
-            MakeUIAutomationTime(methodName, -1);
-        }
-
-        [Obsolete]
-        public static void MakeUIAutomationTime(string methodName, long milis)
-        {
-            uiAutomationTime += methodName + " : " + milis + " ms\n";
-        }
-
         public static long getMilis()
         {
             TimeSpan ts = (DateTime.UtcNow - new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc));
@@ -2516,12 +1806,6 @@ namespace UIAdapter
                     innerException = innerException.InnerException;
                 }
             }
-        }
-
-        [Obsolete]
-        private static bool isSilverlightApp(AutomationElement e)
-        {
-            return e.Current.FrameworkId.ToUpper().Contains("SILVER");
         }
 
         private static AutomationElement findOwner(string ownerId)
@@ -2633,6 +1917,7 @@ namespace UIAdapter
 
             public int GetHashCode(int[] o)
             {
+                //TODO need review this hashCode function
                 int x = o[0];
                 for (int i = 1; i < o.Length; i++)
                 {

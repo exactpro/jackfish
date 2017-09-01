@@ -17,11 +17,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 
-
-/*
-	TODO  we need do all operations inside this class.
-	for example recall some methods, if returned length > initial length
-*/
 public class JnaDriverImpl
 {
 	private final Logger logger;
@@ -166,22 +161,6 @@ public class JnaDriverImpl
 	//endregion
 
 	//region find methods
-
-	public String listAll(UIProxyJNA owner, ControlKind kind, String uid, String xpath, String clazz, String name, String title, String text, boolean many, boolean addVisible) throws Exception
-	{
-		long start = time();
-		xpath = ConvertString.replaceNonASCIISymbolsToUnicodeSubString(xpath);
-		name = ConvertString.replaceNonASCIISymbolsToUnicodeSubString(name);
-		title = ConvertString.replaceNonASCIISymbolsToUnicodeSubString(title);
-		text = ConvertString.replaceNonASCIISymbolsToUnicodeSubString(text);
-
-		String result = this.jnaDriver.listAll(owner.getIdString(), kind.ordinal(), uid, xpath, clazz, name, title, text, many, addVisible);
-		this.logger.info(String.format("listAll(%s,%s,%s,%s,%s,%s,%s,%s,%b,%b), time (ms) : %d"
-				, owner, kind, uid, xpath, clazz, name, title, text, many, addVisible, time() - start)
-		);
-		checkError();
-		return result;
-	}
 
 	public List<String> listAll(UIProxyJNA owner,  Locator locator) throws Exception
 	{

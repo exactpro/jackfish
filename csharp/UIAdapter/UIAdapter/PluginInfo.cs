@@ -24,7 +24,7 @@ namespace UIAdapter
              * DON'T DELETE NEXT LINE. NEVER. 
              * It's not joke. 
              * Because if you will delete next row, parsing will failing.
-             * I'm understang, that variable q never used.
+             * I'm understand, that variable q never used.
              * Just don't delete line
              */ 
             var q = ControlType.Button.Id;
