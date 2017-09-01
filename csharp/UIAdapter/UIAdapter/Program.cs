@@ -1170,28 +1170,6 @@ namespace UIAdapter
             }
         }
 
-        [DllExport("elementIsEnabled", CallingConvention.Cdecl)]
-        public static string ElementIsEnabled(String inid)
-        {
-            long startMethod = getMilis();
-            int[] id = stringToIntArray(inid);
-            UpdateHandler();
-            AutomationElement element = FindByRuntimeId(id);
-            logger.All("method elementIsEnabled", getMilis() - startMethod);
-            return element.GetCurrentPropertyValue(AutomationElement.IsEnabledProperty).ToString();
-        }
-
-        [DllExport("elementIsVisible", CallingConvention.Cdecl)]
-        public static string ElementIsVisible(String inid)
-        {
-            long startMethod = getMilis();
-            int[] id = stringToIntArray(inid);
-            UpdateHandler();
-            AutomationElement element = FindByRuntimeId(id);
-            logger.All("method elementIsEnabled", getMilis() - startMethod);
-            return "" + !element.Current.IsOffscreen;
-        }
-
         [DllExport("getRectangle", CallingConvention.Cdecl)]
         public static string getRectangle(String inid)
         {

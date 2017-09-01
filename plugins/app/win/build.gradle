@@ -1,6 +1,8 @@
 description = 'Plugin for testing win based application'
 ext.jarName = 'win.jar'
-ext.javaVersion = 1.7;
+ext.javaVersion = 1.7
+sourceCompatibility = 1.7
+
 
 archivesBaseName = 'jackfish-app-win'
 

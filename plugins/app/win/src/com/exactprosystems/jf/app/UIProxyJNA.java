@@ -15,6 +15,7 @@ public class UIProxyJNA
 	public static final UIProxyJNA DUMMY = new UIProxyJNA(new int[0]);
 
 	public static final String SEPARATOR = ",";
+
 	private int[] id;
 
 	public UIProxyJNA()
@@ -30,11 +31,6 @@ public class UIProxyJNA
 	public UIProxyJNA(String stringId)
 	{
 		this.id = stringToIntArray(stringId);
-	}
-
-	public int[] getId()
-	{
-		return id;
 	}
 
 	public String getIdString()

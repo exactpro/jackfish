@@ -50,7 +50,7 @@ public class WinAppFactory implements IApplicationFactory
         fieldMap.put(LocatorFieldKind.NAME,     AttributeKind.NAME.name().toLowerCase());
         fieldMap.put(LocatorFieldKind.TEXT,     AttributeKind.TEXT.name().toLowerCase());
         
-        info = new WinPluginInfo(fieldMap, new ArrayList<>());
+        info = new WinPluginInfo(fieldMap, new ArrayList<String>());
         info.addTypes(ControlKind.Any,          ControlType.Any.name());
         info.addTypes(ControlKind.Button,       ControlType.Button.name(), ControlType.SplitButton.name(), ControlType.Hyperlink.name());
         info.addTypes(ControlKind.CheckBox,     ControlType.CheckBox.name());
@@ -81,9 +81,7 @@ public class WinAppFactory implements IApplicationFactory
 	
 	private IGuiDictionary dictionary = null;
 
-	//----------------------------------------------------------------------------------------------
-	// IFactory
-	//----------------------------------------------------------------------------------------------
+	//region IFactory
 	@Override
 	public String[] wellKnownParameters(ParametersKind kind)
 	{
@@ -93,8 +91,8 @@ public class WinAppFactory implements IApplicationFactory
 			case START:		     return new String[] { execName, workDirName, argsName, alwaysToFront };
 			case CONNECT:        return new String[] { mainWindowName, mainWindowHeight, mainWindowWidth, pidName, controlKindName, connectionTimeout, alwaysToFront };
 			case GET_PROPERTY:   return new String[] { propertyWindowRectangle, propertyTitle }; 
-            case SET_PROPERTY:   return new String[] { propertyTitle }; 
-			default:		     return empty;	
+            case SET_PROPERTY:   return empty;
+			default:		     return empty;
 		}
 	}
 	
@@ -110,15 +108,15 @@ public class WinAppFactory implements IApplicationFactory
 		return empty;
 	}
 
-	//----------------------------------------------------------------------------------------------
-	// IApplicationFactory
-	//----------------------------------------------------------------------------------------------
+	//endregion
 
-    @Override
-    public void init(IGuiDictionary dictionary)
-    {
-        this.dictionary = dictionary;
-    }
+	//region IApplicationFactory
+
+	@Override
+	public void init(IGuiDictionary dictionary)
+	{
+		this.dictionary = dictionary;
+	}
 
 	@Override
 	public InputStream getHelp()
@@ -126,11 +124,11 @@ public class WinAppFactory implements IApplicationFactory
 		return WinAppFactory.class.getResourceAsStream(helpFileName);
 	}
 
-    @Override
-    public Set<ControlKind> supportedControlKinds()
-    {
-        return info.supportedControlKinds();
-    }
+	@Override
+	public Set<ControlKind> supportedControlKinds()
+	{
+		return info.supportedControlKinds();
+	}
 
 	@Override
 	public IApplication createApplication() throws Exception
@@ -151,20 +149,24 @@ public class WinAppFactory implements IApplicationFactory
 	}
 
 	@Override
-	public boolean isAllowed(ControlKind kind, OperationKind operation) {
+	public boolean isAllowed(ControlKind kind, OperationKind operation)
+	{
 		return getInfo().isAllowed(kind, operation);
 	}
 
 	@Override
-	public boolean isSupported(ControlKind kind) {
+	public boolean isSupported(ControlKind kind)
+	{
 		return getInfo().isSupported(kind);
 	}
 
 	@Override
-    public PluginInfo getInfo()
-    {
+	public PluginInfo getInfo()
+	{
 		return info;
-    }
+	}
+
+	//endregion
 
 	private static class WinPluginInfo extends PluginInfo
 	{

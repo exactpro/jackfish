@@ -45,9 +45,16 @@ public interface OperationExecutor<T>
 	boolean						text			(T component, String text, boolean clear																				) throws Exception;
 	boolean						wait			(Locator locator, int ms, boolean toAppear, AtomicLong atomicLong														) throws Exception;
 	boolean 					setValue		(T component, double value																								) throws Exception;
+
+	/**
+	 * @return value of component (e.g true/false for checkbox)
+	 */
 	String						getValue		(T component																											) throws Exception;
 	List<String>				getList			(T component, boolean onlyVisible																						) throws Exception;
 	Document					getTree			(T component																											) throws Exception;
+	/**
+	 * @return text from component
+	 */
 	String						get				(T component																											) throws Exception;
 	String						getAttr			(T component, String name																								) throws Exception;
 	String						script			(T component, String script																								) throws Exception;

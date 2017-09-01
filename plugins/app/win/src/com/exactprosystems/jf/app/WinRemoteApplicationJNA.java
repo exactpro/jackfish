@@ -32,7 +32,6 @@ public class WinRemoteApplicationJNA extends RemoteApplication
 	private Logger logger;
 	private JnaDriverImpl driver;
 	private WinOperationExecutorJNA operationExecutor;
-	private PluginInfo info;
 
 	@Override
 	protected void createLoggerDerived(String logName, String serverLogLevel, String serverLogPattern) throws Exception
@@ -57,44 +56,42 @@ public class WinRemoteApplicationJNA extends RemoteApplication
 		}
 	}
 
-    @Override
-    protected void setPluginInfoDerived(PluginInfo info) throws Exception
-    {
-        logger.info(">> setPluginInfo " + info );
-        this.info = info;
-        this.operationExecutor.setPluginInfo(info);
+	@Override
+	protected void setPluginInfoDerived(PluginInfo info) throws Exception
+	{
+		this.operationExecutor.setPluginInfo(info);
 		this.driver.setPluginInfo(info);
 	}
 
 	@Override
 	public Serializable getProperty(String name, Serializable prop) throws RemoteException
 	{
-		switch (name) {
-			case WinAppFactory.propertyWindowRectangle :
-				try
-				{
-					return this.getRectangleDerived(null, null);
-				}
-				catch (RemoteException e)
-				{
-					throw e;
-				}
-				catch (Exception e)
-				{
-					throw new RemoteException(e.getMessage(), e.getCause());
-				}
+		try
+		{
+			switch (name)
+			{
+				case WinAppFactory.propertyWindowRectangle : return this.getRectangleDerived(null, null);
+				case WinAppFactory.propertyTitle : return this.driver.title();
 
-            case WinAppFactory.propertyTitle :
-                throw new FeatureNotSupportedException("getProperty");
-
+				default: return null;
+			}
 		}
-		return null;
+		catch (RemoteException e)
+		{
+			throw e;
+		}
+		catch (Exception e)
+		{
+			this.logger.error(e.getMessage(), e);
+			throw new RemoteException(e.getMessage(), e.getCause());
+		}
 	}
 
-    @Override
-    public void setProperty(String name, Serializable prop) throws RemoteException
-    {
-    }
+	@Override
+	public void setProperty(String name, Serializable prop) throws RemoteException
+	{
+
+	}
 
 	@Override
 	protected int connectDerived(Map<String, String> args) throws Exception
@@ -102,47 +99,12 @@ public class WinRemoteApplicationJNA extends RemoteApplication
 		try
 		{
 			String title = args.get(WinAppFactory.mainWindowName);
-			int height = Integer.MIN_VALUE;
-			int width = Integer.MIN_VALUE;
-			String heightStr = args.get(WinAppFactory.mainWindowHeight);
-			if (!Str.IsNullOrEmpty(heightStr) && !heightStr.equalsIgnoreCase("null"))
-			{
-				try
-				{
-					height = Integer.valueOf(heightStr);
-				}
-				catch (NumberFormatException e)
-				{
-					throw new Exception("Parameter " + WinAppFactory.mainWindowHeight + " must be from 0 to " + Integer.MAX_VALUE + " or empty/null");
-				}
-			}
 
-			String widthStr = args.get(WinAppFactory.mainWindowWidth);
-			if (!Str.IsNullOrEmpty(widthStr) && !widthStr.equalsIgnoreCase("null"))
-			{
-				try
-				{
-					width = Integer.valueOf(widthStr);
-				}
-				catch (NumberFormatException e)
-				{
-					throw new Exception("Parameter " + WinAppFactory.mainWindowWidth + " must be from 0 to " + Integer.MAX_VALUE + " or empty/null");
-				}
-			}
+			int height = checkInt(args.get(WinAppFactory.mainWindowHeight), WinAppFactory.mainWindowHeight);
+			int width = checkInt(args.get(WinAppFactory.mainWindowWidth), WinAppFactory.mainWindowWidth);
+			int pid = checkInt(args.get(WinAppFactory.pidName), WinAppFactory.pidName);
+			int timeout = checkInt(args.get(WinAppFactory.connectionTimeout), WinAppFactory.connectionTimeout, 5000);
 
-			int pid = Integer.MIN_VALUE;
-			String pidStr = args.get(WinAppFactory.pidName);
-			if (!Str.IsNullOrEmpty(pidStr) && !pidStr.equalsIgnoreCase("null"))
-			{
-				try
-				{
-					pid = Integer.valueOf(pidStr);
-				}
-				catch (NumberFormatException e)
-				{
-					throw new Exception("Parameter " + WinAppFactory.pidName + " must be from 0 to " + Integer.MAX_VALUE + " or empty/null");
-				}
-			}
 			ControlKind controlKind = null;
 			String controlKindStr = args.get(WinAppFactory.controlKindName);
 			if (!Str.IsNullOrEmpty(controlKindStr) && !controlKindStr.equals("null"))
@@ -154,20 +116,6 @@ public class WinRemoteApplicationJNA extends RemoteApplication
 				catch (IllegalArgumentException e)
 				{
 					throw new Exception("Parameter " + WinAppFactory.controlKindName + " must be only of " + Arrays.toString(ControlKind.values()) + " or empty/null");
-				}
-			}
-
-			int timeout = 5000;
-			String timeoutString = args.get(WinAppFactory.connectionTimeout);
-			if (!Str.IsNullOrEmpty(timeoutString) && !timeoutString.equals("null"))
-			{
-				try
-				{
-					timeout = Integer.valueOf(timeoutString);
-				}
-				catch (NumberFormatException e)
-				{
-					throw new Exception("Parameter " + WinAppFactory.connectionTimeout + " must be from 0 to " + Integer.MAX_VALUE + " or empty/null");
 				}
 			}
 
@@ -246,18 +194,7 @@ public class WinRemoteApplicationJNA extends RemoteApplication
 	private void setMaxTimeout(JnaDriverImpl driver, String maxTimeout) throws Exception
 	{
 		this.logger.debug("Max timeout : " + maxTimeout);
-		if (!Str.IsNullOrEmpty(maxTimeout))
-		{
-			try
-			{
-				int timeout = Integer.parseInt(maxTimeout);
-				driver.maxTimeout(timeout);
-			}
-			catch (NumberFormatException e)
-			{
-				throw new Exception("Parameter " + WinAppFactory.maxTimeout + " must be from 0 to " + Integer.MAX_VALUE + " or empty/null");
-			}
-		}
+		driver.maxTimeout(checkInt(maxTimeout, WinAppFactory.maxTimeout, 10000));
 	}
 
 	@Override
@@ -319,9 +256,7 @@ public class WinRemoteApplicationJNA extends RemoteApplication
 	@Override
 	protected Collection<String> titlesDerived() throws Exception
 	{
-		ArrayList<String> list = new ArrayList<>();
-		list.add(this.driver.title());
-		return list;
+		return Collections.singletonList(this.driver.title());
 	}
 
 	@Override
@@ -341,7 +276,6 @@ public class WinRemoteApplicationJNA extends RemoteApplication
 	{
 		try
 		{
-			//TODO it's right that we found main window? mb just get it on c# side and call patterns?
 			UIProxyJNA currentWindow = currentWindow();
 			if (currentWindow == null)
 			{
@@ -387,16 +321,8 @@ public class WinRemoteApplicationJNA extends RemoteApplication
 			{
 				ownerId = this.operationExecutor.find(null, owner);
 			}
-			boolean many = element.getAddition() != null && element.getAddition() == Addition.Many;
-			String result = this.driver.listAll(ownerId, element.getControlKind(), element.getUid(), element.getXpath(), element
-					.getClazz(), element.getName(), element.getTitle(), element.getText(), many, element.getVisibility() == Visibility.Visible);
-			//TODO see Program.cs method listAll. Or may be split via long string ====== ?
-			String[] split = result.split("#####");
-			for(int i = 0; i < split.length && !split[i].isEmpty(); i++)
-			{
-				res.add(split[i]);
-			}
-			return res;
+			return this.driver.listAll(ownerId, element);
+
 		}
 		catch (RemoteException e)
 		{
@@ -430,18 +356,7 @@ public class WinRemoteApplicationJNA extends RemoteApplication
 			{
 				uiProxyJNA = this.operationExecutor.find(owner, element);
 			}
-			int length = 100 * 100;
-			int[] arr = new int[length];
-			int count = this.driver.getImage(arr, uiProxyJNA);
-			if (count > length)
-			{
-				length = count;
-				arr = new int[length];
-				this.driver.getImage(arr, uiProxyJNA);
-			}
-			int[] result = new int[arr.length - 2];
-			System.arraycopy(arr, 2, result, 0, arr.length - 2);
-			return new ImageWrapper(arr[0], arr[1], result);
+			return this.driver.getImage(uiProxyJNA);
 		}
 		catch (RemoteException e)
 		{
@@ -591,36 +506,14 @@ public class WinRemoteApplicationJNA extends RemoteApplication
 	@Override
 	protected Document getTreeDerived(Locator owner) throws Exception
 	{
-		UIProxyJNA parent;
-		if (owner == null)
-		{
-			int length = 100;
-			int[] arr = new int[length];
-			int res = this.driver.findAll(arr, new UIProxyJNA(), WindowTreeScope.Element, WindowProperty.NameProperty, this.driver.title());
-			if (res > length)
-			{
-				length = res;
-				arr = new int[length];
-				this.driver.findAll(arr, new UIProxyJNA(), WindowTreeScope.Element, WindowProperty.NameProperty, this.driver.title());
-			}
-			if (arr[0] > 1)
-			{
-				throw new Exception("Found more that one main windows : " + arr[0]);
-			}
-			int[] windowRuntimeId = new int[arr[1]];
-			System.arraycopy(arr, 2, windowRuntimeId, 0, arr[1]);
-			parent = new UIProxyJNA(windowRuntimeId);
-		}
-		else
-		{
-			parent = this.operationExecutor.find(null, owner);
-		}
+		UIProxyJNA parent = owner == null ? currentWindow() : this.operationExecutor.find(null, owner);
 		long start = System.currentTimeMillis();
 		Document doc = createDoc(parent);
 		this.logger.info("BUILD TREE TIME (MS) : " + (System.currentTimeMillis() - start));
 		return doc;
 	}
 
+	//region private method
 	private Document createDoc(UIProxyJNA owner) throws Exception
 	{
 		DocumentBuilderFactory builderFactory = DocumentBuilderFactory.newInstance();
@@ -753,4 +646,29 @@ public class WinRemoteApplicationJNA extends RemoteApplication
 		System.arraycopy(arr, 2, windowRuntimeId, 0, arr[1]);
 		return new UIProxyJNA(windowRuntimeId);
 	}
+
+	private int checkInt(String str, String parameterName) throws Exception
+	{
+		return this.checkInt(str, parameterName, Integer.MIN_VALUE);
+	}
+
+	private int checkInt(String str, String parameterName, int defValue) throws Exception
+	{
+		int value = defValue;
+		if (!Str.IsNullOrEmpty(str) && !str.equalsIgnoreCase("null"))
+		{
+			try
+			{
+				value = Integer.valueOf(str);
+			}
+			catch (NumberFormatException e)
+			{
+				throw new Exception(String.format("Parameter %s must be from 0 to %s or empty/null", parameterName, Integer.MAX_VALUE));
+			}
+		}
+		return value;
+	}
+
+	//endregion
+
 }
