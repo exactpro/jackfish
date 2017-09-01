@@ -1,7 +1,5 @@
 package com.exactprosystems.jf.tool.wizard.all;
 
-import com.exactprosystems.jf.actions.ActionAttribute;
-import com.exactprosystems.jf.actions.ActionFieldAttribute;
 import com.exactprosystems.jf.actions.gui.DialogFill;
 import com.exactprosystems.jf.api.app.*;
 import com.exactprosystems.jf.api.common.IContext;
@@ -12,7 +10,6 @@ import com.exactprosystems.jf.api.wizard.WizardCategory;
 import com.exactprosystems.jf.api.wizard.WizardCommand;
 import com.exactprosystems.jf.api.wizard.WizardManager;
 import com.exactprosystems.jf.common.utils.XpathUtils;
-import com.exactprosystems.jf.documents.matrix.parser.Parameters;
 import com.exactprosystems.jf.documents.matrix.parser.Tokens;
 import com.exactprosystems.jf.documents.matrix.parser.items.MatrixItem;
 import com.exactprosystems.jf.documents.matrix.parser.items.TypeMandatory;
@@ -26,15 +23,12 @@ import com.exactprosystems.jf.tool.wizard.CommandBuilder;
 import com.exactprosystems.jf.tool.wizard.WizardMatcher;
 import com.exactprosystems.jf.tool.wizard.related.MarkerStyle;
 import com.exactprosystems.jf.tool.wizard.related.WizardHelper;
-import javafx.application.Platform;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.HPos;
-import javafx.scene.Group;
 import javafx.scene.control.*;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -49,23 +43,19 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 
 import java.awt.*;
-import java.awt.image.BufferedImage;
-import java.lang.annotation.Annotation;
-import java.lang.reflect.Field;
 import java.util.*;
 
 import java.util.List;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import static com.exactprosystems.jf.tool.Common.tryCatch;
 
 
 @WizardAttribute(
         name                = "DialogFill wizard",
-        pictureName         = "DialogFillWizard.jpg",
+        pictureName         = "DialogFillWizard.png",
         category            = WizardCategory.MATRIX,
         shortDescription    = "This wizard creates DialogFills.",
         detailedDescription = "{{`First of all you need to select one of your stored connection `}}"
@@ -75,7 +65,7 @@ import static com.exactprosystems.jf.tool.Common.tryCatch;
                 + "{{`You can select controls from list and image both.`}}"
                 + "{{`After 'Scan' button was pressed you will see list of controls and their values in bottom-right corner.`}}"
                 + "{{`On press 'Accept' button in matrix will be created DialogFill with selected controls and already filled 'Do' actions.`}}"
-                + "{{`Wizard works only with next kind of control: TextBox, Button, CheckBox, RadioButton, Label, Spinner.`}}",
+                + "{{`Wizard works only with next kind of control: TextBox, Button, CheckBox, RadioButton, Label, Spinner and elements with 'Many' addition`}}",
         experimental        = false,
         strongCriteries     = true,
         criteries           = {MatrixItem.class, MatrixFx.class}
@@ -213,15 +203,30 @@ public class DialogFillWizard extends AbstractWizard
                 entry.getValue() instanceof AppConnection).map(entry -> new ConnectionBean(entry.getKey(), (AppConnection) entry.getValue())).collect(Collectors.toList());
         items.setAll(connections);
 
-        List<ConnectionBean> connectionsFromPool = new ArrayList<>();
-        for (ConnectionBean connectionBean : items)
-        {
-            connectionsFromPool = this.currentMatrix.getFactory().getConfiguration().getApplicationPool()
-                    .getConnections().stream().filter(connection -> !connection.equals(connectionBean.getConnection()))
-                    .map(connection -> new ConnectionBean(connection.getId(), connection)).collect(Collectors.toList());
+        items.addAll(getConnectionsFromPool(items));
+    }
 
+    private List<ConnectionBean> getConnectionsFromPool(List<ConnectionBean> beans)
+    {
+        List<ConnectionBean> result = new ArrayList<>();
+        List<AppConnection> appConnections = this.currentMatrix.getFactory().getConfiguration().getApplicationPool().getConnections();
+
+        if (beans.size() == 0)
+        {
+            return appConnections.stream().map(connection -> new ConnectionBean("", connection)).collect(Collectors.toList());
         }
-        items.addAll(connectionsFromPool);
+        for (AppConnection connection : this.currentMatrix.getFactory().getConfiguration().getApplicationPool().getConnections())
+        {
+            for (ConnectionBean item : beans)
+            {
+                if (!item.getConnection().equals(connection))
+                {
+                    result.add(new ConnectionBean(item.connection.getId(), item.connection));
+                }
+            }
+        }
+
+        return result;
     }
 
     private void connectToApplicationFromStore(ConnectionBean bean)
@@ -256,16 +261,22 @@ public class DialogFillWizard extends AbstractWizard
         {
             beans.forEach(bean -> matrixItem.getParameters().add(bean.getControlName(), bean.getOperation(), TypeMandatory.Extra));
             matrixItem.createId();
+            matrixItem.getParameters().getByName("Dialog").setExpression(surWithApostr(this.currentDialog.getName()));
+            matrixItem.getParameters().getByName("AppConnection").setExpression(surWithApostr(this.appConnection.getId()));
         }
 
         return matrixItem;
+    }
+
+    private String surWithApostr(String s)
+    {
+        return "'" + s + "'";
     }
 
     private ChangeListener<Boolean> getListenerForControlItems(ControlItem item)
     {
         return (observable, wasSelected, isSelected) ->
         {
-
             Rectangle rectangle = item.getRectangle(wizardMatcher);
             if (rectangle == null)
             {
