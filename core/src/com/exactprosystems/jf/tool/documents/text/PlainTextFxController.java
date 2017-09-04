@@ -23,6 +23,7 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import org.fxmisc.richtext.*;
+import org.fxmisc.richtext.model.*;
 import org.reactfx.Subscription;
 
 import java.net.URL;
@@ -108,8 +109,8 @@ public class PlainTextFxController extends AbstractDocumentController<PlainTextF
 
 		this.textArea.replaceText(this.model.getProperty().get());
 
-		SettingsValue value = model.getFactory().getSettings().getValueOrDefault(Settings.GLOBAL_NS, Settings.SETTINGS, Settings.FONT, "Monospaced$16");
-		this.textArea.setFont(Common.fontFromString(value.getValue()));
+		this.textArea.setStyle("-fx-font-size: 16;");
+		this.textArea.setStyle("-fx-font-family: \"Courier New\";");
 	}
 
 	public void findAll(ActionEvent actionEvent)
