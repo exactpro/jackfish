@@ -396,31 +396,6 @@ public class DictionaryFx extends GuiDictionary
 		}
 	}
 
-	public <T> T tryOrDefault(Common.SupplierWithException<T> func, T defaultValue) throws Exception
-	{
-		if (isApplicationRun())
-		{
-			if (getIsWorking())
-			{
-				showNotification();
-				return defaultValue;
-			}
-			else
-			{
-				setIsWorking(true);
-				try
-				{
-					func.get();
-				}
-				finally
-				{
-					setIsWorking(false);
-				}
-			}
-		}
-		return defaultValue;
-	}
-
 	public void dialogMove(IWindow window, IWindow.SectionKind section, Integer newIndex) throws Exception
 	{
 
@@ -929,30 +904,32 @@ public class DictionaryFx extends GuiDictionary
 
 	private Optional<OperationResult> operate(Operation operation, IWindow window, IControl control) throws Exception
 	{
-		return tryOrDefault(() ->
-			{IControl owner = window.getOwnerControl(control);
-				IControl rows = window.getRowsControl(control);
-				IControl header = window.getHeaderControl(control);
+		if (isApplicationRun())
+		{
+			IControl owner = window.getOwnerControl(control);
+			IControl rows = window.getRowsControl(control);
+			IControl header = window.getHeaderControl(control);
 
-				AbstractControl abstractControl = AbstractControl.createCopy(control, owner, rows, header);
-				OperationResult result = abstractControl.operate(this.applicationConnector.getAppConnection().getApplication().service(), window, operation);
-				return Optional.of(result);
-			}, Optional.empty()
-		);
+			AbstractControl abstractControl = AbstractControl.createCopy(control, owner, rows, header);
+			OperationResult result = abstractControl.operate(this.applicationConnector.getAppConnection().getApplication().service(), window, operation);
+			return Optional.of(result);
+		}
+		return Optional.empty();
 	}
 
 	private Optional<CheckingLayoutResult> check(Spec spec, IWindow window, IControl control) throws Exception
 	{
-		return tryOrDefault(() ->
-			{IControl owner = window.getOwnerControl(control);
-				IControl rows = window.getRowsControl(control);
-				IControl header = window.getHeaderControl(control);
+		if (isApplicationRun())
+		{
+			IControl owner = window.getOwnerControl(control);
+			IControl rows = window.getRowsControl(control);
+			IControl header = window.getHeaderControl(control);
 
-				AbstractControl abstractControl = AbstractControl.createCopy(control, owner, rows, header);
-				CheckingLayoutResult result = abstractControl.checkLayout(this.applicationConnector.getAppConnection().getApplication().service(), window, spec);
-				return Optional.of(result);
-			}, Optional.empty()
-		);
+			AbstractControl abstractControl = AbstractControl.createCopy(control, owner, rows, header);
+			CheckingLayoutResult result = abstractControl.checkLayout(this.applicationConnector.getAppConnection().getApplication().service(), window, spec);
+			return Optional.of(result);
+		}
+		return Optional.empty();
 	}
 
 	private void initController() throws Exception

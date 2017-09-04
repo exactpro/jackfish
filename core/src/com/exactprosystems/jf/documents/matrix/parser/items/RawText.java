@@ -228,7 +228,7 @@ public class RawText extends MatrixItem
 			this.text.report(report, null, this.description.get());
 			Variables vars = isGlobal() ? evaluator.getGlobals() : evaluator.getLocals();
 			
-			ReturnAndResult ret = new ReturnAndResult(start, Result.Passed, this.text);
+			ReturnAndResult ret = new ReturnAndResult(start, Result.Passed, new Text(this.text));
 
 			if (super.getId() != null && !super.getId().isEmpty())
 			{

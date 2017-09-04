@@ -48,6 +48,12 @@ public class MapMessage implements Map<String, Object>, Serializable, Mutable, C
 		this.source = source;
 	}
 
+	public MapMessage(String source, MapMessage message)
+	{
+		this(source);
+		this.fields.putAll(message.fields);
+	}
+
 	//==============================================================================================
 	// Interface Mutable
 	//==============================================================================================
