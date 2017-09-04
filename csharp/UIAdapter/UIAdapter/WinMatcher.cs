@@ -33,18 +33,17 @@ namespace UIAdapter
                         long findInDescedants = Program.getMilis();
                         Program.logger.All("Start find first in descedants ");
                         firstElement = owner.FindFirst(TreeScope.Descendants, by);
-                        Program.logger.All("End find first in descedants. Found : " + ret.Length, Program.getMilis() - findInDescedants);
                         if (firstElement == null)
                         {
                             if (controlKind == ControlKind.Wait)
                             {
                                 return null;
                             }
-                            //TODO we realy need this check?
                             if (isMatches(owner, Uid, Clazz, Name))
                             {
                                 ret = new AutomationElement[1];
                                 ret[0] = owner;
+                                Program.logger.All("End find first in descedants. Found : " + ret.Length, Program.getMilis() - findInDescedants);
                                 return ret;
                             }
                             String msg = String.Format("Element not found. controlKind : {0} , uid : {1} , xpath : {2}, clazz : {3}, name : {4}, title : {5}, text : {6}"
@@ -55,6 +54,7 @@ namespace UIAdapter
                         }
                         ret = new AutomationElement[1];
                         ret[0] = firstElement;
+                        Program.logger.All("End find first in descedants. Found : " + ret.Length, Program.getMilis() - findInDescedants);
                         return ret;
                     }
                     else
