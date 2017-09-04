@@ -7,15 +7,11 @@
 
 package com.exactprosystems.jf.functions;
 
-import java.util.Collection;
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Set;
-import java.util.stream.Collectors;
-
 import com.exactprosystems.jf.api.common.Str;
 import com.exactprosystems.jf.api.error.common.WrongExpressionException;
+
+import java.util.*;
+import java.util.stream.Collectors;
 
 
 public class CopyRowTable extends RowTable implements Cloneable
@@ -35,7 +31,7 @@ public class CopyRowTable extends RowTable implements Cloneable
 	public CopyRowTable()
 	{
 	    super(null, 0);
-	    this.source = new LinkedHashMap<String, Object>();
+	    this.source = new LinkedHashMap<>();
 	    
 	}
 	
@@ -44,7 +40,7 @@ public class CopyRowTable extends RowTable implements Cloneable
         this.source = this.source.entrySet()
                 .stream()
                 .filter(e -> names.contains(e.getKey()))
-                .collect(Collectors.toMap(k -> k.getKey(), v -> Str.asString(v.getValue()), (k, v) -> k, LinkedHashMap::new));
+                .collect(Collectors.toMap(Entry::getKey, v -> Str.asString(v.getValue()), (k, v) -> k, LinkedHashMap::new));
     }
 
     @Override
@@ -59,24 +55,81 @@ public class CopyRowTable extends RowTable implements Cloneable
         return Objects.hashCode(this.source);
     }
 
-    @Override
-    public boolean equals(Object obj)
-    {
-        if (this == obj)
-        {
-            return true;
-        }
-        if (obj == null)
-        {
-            return false;
-        }
-        if (getClass() != obj.getClass())
-        {
-            return false;
-        }
-        CopyRowTable other = (CopyRowTable) obj;
-        boolean res = Objects.equals(this.source, other.source);
-        return res;
+	@Override
+	public boolean equals(Object obj)
+	{
+		if (this == obj)
+		{
+			return true;
+		}
+		if (obj == null)
+		{
+			return false;
+		}
+		if (getClass() != obj.getClass())
+		{
+			return false;
+		}
+		CopyRowTable other = (CopyRowTable) obj;
+
+		Map<String, Object> otherSource = other.source;
+		if (this.source == otherSource)
+		{
+			return true;
+		}
+
+		if (this.source.size() != otherSource.size())
+		{
+			return false;
+		}
+
+		Iterator<Entry<String, Object>> thisIterator = this.entrySet().iterator();
+		try
+		{
+			while (thisIterator.hasNext())
+			{
+				Entry<String, Object> next = thisIterator.next();
+				String key = next.getKey();
+				Object thisValue = next.getValue();
+
+				if (!otherSource.containsKey(key))
+				{
+					return false;
+				}
+
+				if (thisValue == null)
+				{
+					if (otherSource.get(key) != null)
+					{
+						return false;
+					}
+				}
+				else
+				{
+					Object otherValue = otherSource.get(key);
+					if (thisValue.getClass().isArray() && otherValue.getClass().isArray())
+					{
+						boolean equals = Arrays.equals((Object[]) thisValue, (Object[]) otherValue);
+						if (!equals)
+						{
+							return false;
+						}
+					}
+					else
+					{
+						if (!Objects.equals(thisValue, otherValue))
+						{
+							return false;
+						}
+					}
+				}
+			}
+		}
+		catch (Exception e)
+		{
+			return false;
+		}
+		return true;
     }
 
     //==============================================================================================

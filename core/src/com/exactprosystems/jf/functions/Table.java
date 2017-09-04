@@ -726,6 +726,7 @@ public class Table implements List<RowTable>, Mutable, Cloneable
 		Statement statement = null;
 		try
 		{
+			//TODO add check, that map.get(key) may be Blob or something else
 			statement = connection.getConnection().createStatement();
 			Header[] headers = this.headers;
 			int i = 0;
