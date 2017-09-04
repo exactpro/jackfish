@@ -41,6 +41,12 @@ public class Text implements List<String>, Mutable, Cloneable
 			read(reader);
 		}
 	}
+
+	public Text(Text text)
+	{
+		this();
+		this.list.addAll(text.list);
+	}
 	
 	//==============================================================================================
 	// Interface Mutable
