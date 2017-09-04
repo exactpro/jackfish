@@ -9,7 +9,6 @@
 package com.exactprosystems.jf.tool.documents.text;
 
 import com.exactprosystems.jf.common.Settings;
-import com.exactprosystems.jf.common.Settings.SettingsValue;
 import com.exactprosystems.jf.common.highlighter.Highlighter;
 import com.exactprosystems.jf.common.highlighter.StyleWithRange;
 import com.exactprosystems.jf.documents.Document;
@@ -23,8 +22,11 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.text.Font;
-import org.fxmisc.richtext.*;
-import org.fxmisc.richtext.model.*;
+import org.fxmisc.richtext.LineNumberFactory;
+import org.fxmisc.richtext.StyleClassedTextArea;
+import org.fxmisc.richtext.model.StyleSpan;
+import org.fxmisc.richtext.model.StyleSpans;
+import org.fxmisc.richtext.model.StyleSpansBuilder;
 import org.reactfx.Subscription;
 
 import java.net.URL;
@@ -109,7 +111,7 @@ public class PlainTextFxController extends AbstractDocumentController<PlainTextF
 		this.model.getHighlighter().setOnChangeListener((o, n) -> this.cbHighlighting.getSelectionModel().select(n));
 
 		this.textArea.replaceText(this.model.getProperty().get());
-		SettingsValue value = model.getFactory().getSettings().getValueOrDefault(Settings.GLOBAL_NS, Settings.SETTINGS, Settings.FONT, "Monospaced$16");
+		Settings.SettingsValue value = model.getFactory().getSettings().getValueOrDefault(Settings.GLOBAL_NS, Settings.SETTINGS, Settings.FONT, "Monospaced$16");
 		Font font = Common.fontFromString(value.getValue());
 		this.textArea.setStyle("-fx-font-size: " + font.getSize() + "; -fx-font-family: \"" + font.getFamily() + "\";");
 	}
