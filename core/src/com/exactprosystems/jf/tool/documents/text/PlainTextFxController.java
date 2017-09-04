@@ -109,8 +109,7 @@ public class PlainTextFxController extends AbstractDocumentController<PlainTextF
 
 		this.textArea.replaceText(this.model.getProperty().get());
 
-		this.textArea.setStyle("-fx-font-size: 16;");
-		this.textArea.setStyle("-fx-font-family: \"Courier New\";");
+		this.textArea.setStyle("-fx-font-size: 16; -fx-font-family: \"Monospaced\";");
 	}
 
 	public void findAll(ActionEvent actionEvent)
