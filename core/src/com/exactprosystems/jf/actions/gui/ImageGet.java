@@ -94,7 +94,10 @@ public class ImageGet extends AbstractAction
 
 			case nameName:
 				Helper.extraParameters(list, super.owner.getMatrix(), this.connection, Str.asString(parameters.get(dialogName)), true);
+				break;
+
 			default:
+				break;
 		}
 	}
 

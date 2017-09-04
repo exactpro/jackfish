@@ -94,11 +94,14 @@ public class DialogCheckLayout extends AbstractAction
 			case dialogName:
 				Helper.dialogsNames(context, super.owner.getMatrix(), this.connection, list);
 				break;
-				
+
 			case doNotCloseName:
 			case doNotOpenName:
 				list.add(ReadableValue.TRUE);
 				list.add(ReadableValue.FALSE);
+				break;
+
+			default:
 				break;
 		}
 	}
@@ -182,7 +185,7 @@ public class DialogCheckLayout extends AbstractAction
 			IControl control = sectionRun.getControlByIdAndValue(name, obj);
 			if (control == null)
 			{
-				super.setError(message(id, window, run, control, null, "is not allowed"), ErrorKind.LOCATOR_NOT_FOUND);
+				super.setError(message(id, window, run, null, null, "control with name '" + name + "' not found in the dictionary"), ErrorKind.LOCATOR_NOT_FOUND);
 				return;
 			}
 

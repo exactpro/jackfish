@@ -8,11 +8,7 @@
 
 package com.exactprosystems.jf.actions.clients;
 
-import com.exactprosystems.jf.actions.AbstractAction;
-import com.exactprosystems.jf.actions.ActionAttribute;
-import com.exactprosystems.jf.actions.ActionFieldAttribute;
-import com.exactprosystems.jf.actions.ActionGroups;
-import com.exactprosystems.jf.actions.ReadableValue;
+import com.exactprosystems.jf.actions.*;
 import com.exactprosystems.jf.api.client.ClientConnection;
 import com.exactprosystems.jf.api.client.ClientHelper;
 import com.exactprosystems.jf.api.client.MapMessage;
@@ -30,7 +26,6 @@ import com.exactprosystems.jf.functions.HelpKind;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 
 @ActionAttribute(
 		group					= ActionGroups.Clients,
@@ -64,6 +59,7 @@ public class ClientCheckMessage extends AbstractAction
 	public final static String actualName = "ActualMessage";
 	public final static String expectedMessageTypeName 	= "ExpectedMessageType";
 
+	//TODO think about remove it
 	@ActionFieldAttribute(name = connectionName, mandatory = true, description = "The connection with the client, which is derived from the action ClientLoad." )
 	protected ClientConnection	connection	= null;
 
@@ -123,12 +119,12 @@ public class ClientCheckMessage extends AbstractAction
 			{
 				table.addValues(MapMessage.messageTypeName, "" + this.messageType + " is not " + this.actual.getMessageType());
 			}
-			
-			for (Entry<String, String> entry : diff.entrySet())
+
+			if (diff != null)
 			{
-				table.addValues(entry.getKey(), entry.getValue());
+				diff.forEach((key, value) -> table.addValues(key, value));
 			}
-			
+
 			super.setError("The message does not match.", ErrorKind.NOT_EQUAL);
 		}
 	}

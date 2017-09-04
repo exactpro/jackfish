@@ -88,6 +88,9 @@ public class ClientSendMapMessage extends AbstractAction
 			case messageName:
 				Helper.messageTypes(list, this.owner.getMatrix(), context, parameters, null, connectionName);
 				break;
+
+			default:
+				break;
 		}
 	}
 

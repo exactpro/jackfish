@@ -16,20 +16,22 @@ import com.exactprosystems.jf.api.error.ErrorKind;
 import com.exactprosystems.jf.api.error.app.*;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.report.ReportBuilder;
-import com.exactprosystems.jf.documents.Document;
 import com.exactprosystems.jf.documents.config.Context;
 import com.exactprosystems.jf.documents.guidic.controls.AbstractControl;
 import com.exactprosystems.jf.documents.matrix.parser.Parameter;
 import com.exactprosystems.jf.documents.matrix.parser.Parameters;
-import com.exactprosystems.jf.functions.HelpKind;
 import com.exactprosystems.jf.documents.matrix.parser.items.MatrixError;
 import com.exactprosystems.jf.documents.matrix.parser.items.TypeMandatory;
+import com.exactprosystems.jf.functions.HelpKind;
 import com.exactprosystems.jf.functions.Table;
 import com.exactprosystems.jf.functions.Xml;
 
 import java.rmi.RemoteException;
 import java.rmi.ServerException;
-import java.util.*;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import static com.exactprosystems.jf.actions.gui.Helper.message;
 
@@ -126,12 +128,15 @@ public class DialogFill extends AbstractAction
 			case dialogName:
 				Helper.dialogsNames(context, super.owner.getMatrix(), this.connection, list);
 				break;
-				
+
 			case doNotCloseName:
 			case doNotOpenName:
 			case stopOnFailName:
 				list.add(ReadableValue.TRUE);
 				list.add(ReadableValue.FALSE);
+				break;
+
+			default:
 				break;
 		}
 	}
@@ -230,7 +235,7 @@ public class DialogFill extends AbstractAction
 			}
 			if (control == null)
 			{
-				String message = message(id, window, run, control, null, "is not allowed");
+				String message = message(id, window, run, null, null, "control with name '" + name + "' not found in the dictionary");
 				errorsValue.put(name, new MatrixError(message, ErrorKind.LOCATOR_NOT_FOUND, this.owner));
 				super.setErrors(errorsValue);
 				super.setError(message, ErrorKind.LOCATOR_NOT_FOUND);

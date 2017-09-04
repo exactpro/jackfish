@@ -19,12 +19,10 @@ import com.exactprosystems.jf.common.report.ReportTable;
 import com.exactprosystems.jf.documents.config.Context;
 import com.exactprosystems.jf.documents.matrix.parser.Parameter;
 import com.exactprosystems.jf.documents.matrix.parser.Parameters;
-import com.exactprosystems.jf.functions.HelpKind;
 import com.exactprosystems.jf.documents.matrix.parser.items.TypeMandatory;
+import com.exactprosystems.jf.functions.HelpKind;
 
-import java.util.Arrays;
 import java.util.Collection;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -175,8 +173,8 @@ public class DialogValidate extends AbstractAction
             IControl control  = sectionRun.getControlById(parameter.getName());
             if (control == null)
             {
-                super.setError(message(id, window, run, control, null, "is not found in the dictionary"), ErrorKind.LOCATOR_NOT_FOUND);
-                return;
+				super.setError(message(id, window, run, null, null, "control with name '" + parameter.getName() + "' not found in the dictionry"), ErrorKind.LOCATOR_NOT_FOUND);
+				return;
             }
 
             int expectedSize = ((Number)parameter.getValue()).intValue();

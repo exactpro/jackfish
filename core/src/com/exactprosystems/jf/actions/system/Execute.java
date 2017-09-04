@@ -25,6 +25,7 @@ import com.exactprosystems.jf.functions.HelpKind;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.InputStreamReader;
+import java.nio.charset.Charset;
 import java.util.List;
 
 @ActionAttribute(
@@ -109,7 +110,7 @@ public class Execute extends AbstractAction
 		
 		if (this.wait)
 		{
-		    try(BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream())))
+		    try(BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream(), Charset.defaultCharset())))
 		    {
 			    String line = "";			
 			    while ((line = reader.readLine()) != null) 
@@ -117,7 +118,7 @@ public class Execute extends AbstractAction
 			    	sb.append(line + "\n");
 			    }		
 		    }
-		    try(BufferedReader reader = new BufferedReader(new InputStreamReader(process.getErrorStream())))
+		    try(BufferedReader reader = new BufferedReader(new InputStreamReader(process.getErrorStream(), Charset.defaultCharset())))
 		    {
 			    String line = "";			
 			    while ((line = reader.readLine()) != null) 

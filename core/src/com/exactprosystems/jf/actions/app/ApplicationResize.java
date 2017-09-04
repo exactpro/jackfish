@@ -34,6 +34,7 @@ import com.exactprosystems.jf.documents.matrix.parser.Parameters;
 				"#}}",
 		seeAlsoClass = {ApplicationStart.class, ApplicationConnectTo.class}
 	)
+//TODO replace max/min/normal to enum
 public class ApplicationResize extends AbstractAction
 {
 	public final static String connectionName 	= "AppConnection";
@@ -72,10 +73,7 @@ public class ApplicationResize extends AbstractAction
 			setError("No one resizing parameter is filled.", ErrorKind.WRONG_PARAMETERS);
 			return;
 		}
-		if (checkBoolean(maximizeName, this.maximize, parameters)
-				|| checkBoolean(minimizeName, this.minimize, parameters)
-				|| checkBoolean(normalName, this.normal, parameters)
-				)
+		if (checkBoolean(maximizeName, this.maximize, parameters) || checkBoolean(minimizeName, this.minimize, parameters) || checkBoolean(normalName, this.normal, parameters))
 		{
 			return;
 		}
@@ -85,9 +83,11 @@ public class ApplicationResize extends AbstractAction
 			return;
 		}
 
-		if ((this.maximize != null && this.maximize == this.minimize)
-				|| (this.normal != null && this.maximize == this.normal)
-				|| (this.minimize != null && this.minimize == this.normal))
+		boolean max = this.maximize == null ? false : this.maximize;
+		boolean min = this.minimize == null ? false : this.minimize;
+		boolean nor = this.normal == null ? false : this.normal;
+
+		if ((max == min) || (max == nor) || (min == nor))
 		{
 			setError(String.format("Need set on the parameters [%s,%s,%s]", maximizeName, minimizeName, normalName), ErrorKind.WRONG_PARAMETERS);
 			return;
@@ -109,9 +109,7 @@ public class ApplicationResize extends AbstractAction
 		app.service().resize(
 				this.height 	== null ? 0 : this.height,
 				this.width 		== null ? 0 : this.width,
-				this.maximize 	== null ? false : this.maximize,
-				this.minimize 	== null ? false : this.minimize,
-				this.normal 	== null ? false : this.normal
+				max, min, nor
 		);
 		super.setResult(null);
 	}

@@ -7,8 +7,6 @@
 ////////////////////////////////////////////////////////////////////////////////
 package com.exactprosystems.jf.actions.gui;
 
-import static com.exactprosystems.jf.actions.gui.Helper.message;
-
 import com.exactprosystems.jf.actions.*;
 import com.exactprosystems.jf.api.app.*;
 import com.exactprosystems.jf.api.app.IWindow.SectionKind;
@@ -21,6 +19,8 @@ import com.exactprosystems.jf.documents.matrix.parser.Parameters;
 import com.exactprosystems.jf.functions.HelpKind;
 
 import java.util.List;
+
+import static com.exactprosystems.jf.actions.gui.Helper.message;
 
 @ActionAttribute(
 		group 					= ActionGroups.GUI,
@@ -75,6 +75,9 @@ public class DialogSwitchToWindow extends AbstractAction
 		{
 			case dialogName:
 				Helper.dialogsNames(context, super.owner.getMatrix(), this.connection, list);
+				break;
+
+			default:
 				break;
 		}
 	}

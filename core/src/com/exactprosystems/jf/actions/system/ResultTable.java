@@ -8,24 +8,7 @@
 
 package com.exactprosystems.jf.actions.system;
 
-import java.io.File;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Set;
-import java.util.function.Function;
-
-import com.exactprosystems.jf.actions.AbstractAction;
-import com.exactprosystems.jf.actions.ActionAttribute;
-import com.exactprosystems.jf.actions.ActionFieldAttribute;
-import com.exactprosystems.jf.actions.ActionGroups;
-import com.exactprosystems.jf.actions.DefaultValuePool;
-import com.exactprosystems.jf.actions.ReadableValue;
+import com.exactprosystems.jf.actions.*;
 import com.exactprosystems.jf.api.app.ImageWrapper;
 import com.exactprosystems.jf.api.common.Str;
 import com.exactprosystems.jf.api.error.ErrorKind;
@@ -35,10 +18,17 @@ import com.exactprosystems.jf.documents.config.Context;
 import com.exactprosystems.jf.documents.matrix.MatrixConnectionImpl;
 import com.exactprosystems.jf.documents.matrix.parser.Parameters;
 import com.exactprosystems.jf.documents.matrix.parser.Result;
-import com.exactprosystems.jf.functions.HelpKind;
 import com.exactprosystems.jf.documents.matrix.parser.items.MatrixError;
+import com.exactprosystems.jf.functions.HelpKind;
 import com.exactprosystems.jf.functions.RowTable;
 import com.exactprosystems.jf.functions.Table;
+
+import java.io.File;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.*;
+import java.util.Map.Entry;
+import java.util.function.Function;
 
 @ActionAttribute(
 		group 					= ActionGroups.System, 
@@ -141,9 +131,13 @@ public class ResultTable extends AbstractAction
 				if (matrix != null)
 				{
 					Path path = Paths.get(matrix.toString());
-					String shortName = path.getFileName().toString();
-					String matrixStr = report.decorateExpandingBlock(shortName, matrix.toString());
-					replace(row, Context.matrixColumn, 		e -> matrixStr);
+					Path pathName = path.getFileName();
+					if (pathName != null)
+					{
+						String shortName = pathName.toString();
+						String matrixStr = report.decorateExpandingBlock(shortName, matrix.toString());
+						replace(row, Context.matrixColumn, 		e -> matrixStr);
+					}
 				}
 				
 				Result res = (Result)row.get(Context.resultColumn);
