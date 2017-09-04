@@ -221,11 +221,11 @@ Application stop;;;
 
 #TestCase;#Kind;#Depends;#For
 Application get properties;;;
-    #Id;#Action;$AppId;WorkDir;Exec
-    app;ApplicationStart;'WIN';mockWinDir;mockWinExec
+    #Id;#Global;#Action;$AppId;WorkDir;Exec
+    appGP;1;ApplicationStart;'WIN';mockWinDir;mockWinExec
 
     #Id;#Action;$AppConnection;Rectangle
-    APPPAR2;ApplicationGetProperties;app.Out;
+    APPPAR2;ApplicationGetProperties;appGP.Out;
 
     #Id;#Let
     width;APPPAR2.Out.Rectangle.width
@@ -239,10 +239,16 @@ Application get properties;;;
     #Assert;#Message
     height > 800 && height < 1000;'Height is  wrong ' + height
 
-    #Id;#Action;#Assert;$AppConnection;Title
-    APPPAR3;ApplicationGetProperties;This.Result == Result.Failed && This.Kind == ErrorKind.EXCEPTION;app.Out;
+    #Id;#Action;$AppConnection;Title
+    APPPAR3;ApplicationGetProperties;appGP.Out;
 
+    #Assert;#Message
+    APPPAR3.Result == Result.Passed;
+
+
+#TestCase;#Kind;#Depends;#For
+Application get properties (close app);;;
     #Id;#Action;$AppConnection
-    APPSTP5;ApplicationStop;app.Out
+    APPSTP5;ApplicationStop;appGP.Out
 
 
