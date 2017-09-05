@@ -51,7 +51,7 @@ public class GridCellEditor
 		this.spreadsheetCellEditor = spreadsheetCellEditor;
 	}
 
-	public void endEdit(boolean commitValue)
+	public void endEdit(boolean commitValue, int column, int row)
 	{
 		if (commitValue && editing)
 		{
@@ -60,8 +60,8 @@ public class GridCellEditor
 			{
 				String value = modelCell.getCellType().convertValue(spreadsheetCellEditor.getControlValue());
 				// We update the value
-				view.getProvider().setCellValue(modelCell.getColumn(), modelCell.getRow(), value);
 				editing = false;
+				view.getProvider().setCellValue(modelCell.getColumn(), modelCell.getRow(), value);
 				modelCell.setItem(value);
 				viewCell.updateItem(modelCell, false);
 				viewCell.commitEdit(modelCell);
@@ -71,7 +71,7 @@ public class GridCellEditor
 				//We select the cell below if "enter" was typed.
 				if (KeyCode.ENTER.equals(lastKeyPressed))
 				{
-					handle.getView().getSelectionModel().clearAndSelectNextCell();
+					handle.getView().getSelectionModel().clearAndSelectNextCell(column, row);
 				}
 				else if (KeyCode.TAB.equals(lastKeyPressed))
 				{
@@ -215,7 +215,7 @@ public class GridCellEditor
 		{
 			if (!isFocus)
 			{
-				endEdit(true);
+				endEdit(true, modelCell.getColumn(), modelCell.getRow());
 			}
 		}
 	};
@@ -225,7 +225,7 @@ public class GridCellEditor
 		@Override
 		public void invalidated(Observable observable)
 		{
-			endEdit(true);
+			endEdit(true, modelCell.getColumn(), modelCell.getRow());
 		}
 	};
 }

@@ -274,8 +274,62 @@ public class SwingOperationExecutor implements OperationExecutor<ComponentFixtur
     @Override
     public List<ComponentFixture<Component>> findByXpath(ComponentFixture<Component> component, String path) throws Exception
 	{
-		return Collections.emptyList();
+		JTree tree = component.targetCastedTo(JTree.class);
+		NodeList nodes = findNodesInTreeByXpath(convertTreeToXMLDoc(tree), path);
+		if(nodes.getLength() != 0)
+		{
+			List<ComponentFixture<Component>> list = new ArrayList<>();
+			for (int i = 0; i < nodes.getLength(); i++)
+			{
+				JTreeItem treeItem = new JTreeItem(tree, (TreePath) nodes.item(i).getUserData("path"));
+				if(treeItem.isVisible())
+				{
+					list.add(new JTreeItemFixture(this.currentRobot, treeItem));
+				}
+			}
+			return list;
+		}
+		else
+		{
+			return Collections.emptyList();
+		}
     }
+
+    private class JTreeItemFixture extends ComponentFixture<Component>
+	{
+		JTreeItemFixture(Robot robot, JTreeItem target)
+		{
+			super(robot, target);
+		}
+	}
+
+	private class JTreeItem extends JComponent
+	{
+		JTree tree;
+		TreePath path;
+
+		JTreeItem(JTree tree, TreePath path)
+		{
+			this.tree = tree;
+			this.path = path;
+		}
+
+		JTree getTree()
+		{
+			return tree;
+		}
+
+		TreePath getPath()
+		{
+			return path;
+		}
+
+		@Override
+		public boolean isVisible()
+		{
+			return this.tree.isVisible(this.path);
+		}
+	}
 
     @Override
 	public ComponentFixture<Component> lookAtTable(ComponentFixture<Component> component, Locator additional, Locator header, int x, int y) throws Exception
@@ -300,7 +354,7 @@ public class SwingOperationExecutor implements OperationExecutor<ComponentFixtur
 	{
 		try
 		{
-			final Component target = component.target;
+			Component target = component.target;
 			if (target instanceof JComponent)
 			{
 				Scrolling.scrollToVisible(this.currentRobot, ((JComponent) target));
@@ -313,6 +367,14 @@ public class SwingOperationExecutor implements OperationExecutor<ComponentFixtur
 			if (target instanceof JTree && y != Integer.MIN_VALUE)
 			{
 				point = scrollToRow(((JTree) target), y);
+			}
+			if (target instanceof JTreeItem)
+			{
+				JTreeItem treeItem = (JTreeItem) target;
+				Pair<Rectangle, Point> pointPair = new JTreeLocation().pathBoundsAndCoordinates(treeItem.getTree(), treeItem.getPath());
+				point = pointPair.ii;
+				executeAction(action, treeItem.getTree(), point.x, point.y);
+				return true;
 			}
 
 			executeAction(action, target, point.x, point.y);
@@ -2339,6 +2401,10 @@ public class SwingOperationExecutor implements OperationExecutor<ComponentFixtur
 		else if (component instanceof JTree)
 		{
 			return (ComponentFixture<T>) new JTreeFixture(this.currentRobot, (JTree) component);
+		}
+		else if (component instanceof JTreeItem)
+		{
+			return (ComponentFixture<T>) new JTreeItemFixture(this.currentRobot, (JTreeItem) component);
 		}
 		else if (component instanceof JSplitPane)
 		{
