@@ -161,7 +161,8 @@ public class TableViewSpanSelectionModel extends TableView.TableViewSelectionMod
 	@Override
 	public void select(int row, TableColumn<ObservableList<SpreadsheetCell>, ?> column)
 	{
-		if (row < 0 || row >= getItemCount())
+		int rowCount = this.spreadsheetView.getProvider().rowCount();
+		if (row < 0 || row >= rowCount)
 		{
 			return;
 		}
@@ -528,6 +529,7 @@ public class TableViewSpanSelectionModel extends TableView.TableViewSelectionMod
 		List<TablePosition<ObservableList<SpreadsheetCell>, ?>> previousSelection = new ArrayList<>(selectedCellsMap.getSelectedCells());
 
 		clearSelection();
+		old = null;
 
 		select(row, column);
 

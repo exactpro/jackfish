@@ -139,13 +139,12 @@ public class SpreadsheetViewSelectionModel
 		}
 	}
 
-	public void clearAndSelectNextCell()
+	public void clearAndSelectNextCell(int column, int row)
 	{
-		TablePosition<ObservableList<SpreadsheetCell>, ?> position = getFocusedCell();
-		int nextRow = FocusModelListener.getNextRowNumber(position, selectionModel.getTableView());
+		int nextRow = row + 1;
 		if (nextRow < spv.getProvider().rowCount())
 		{
-			clearAndSelect(nextRow, spv.getColumns().get(position.getColumn()));
+			clearAndSelect(nextRow, spv.getColumns().get(column));
 		}
 	}
 }

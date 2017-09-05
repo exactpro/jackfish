@@ -689,7 +689,7 @@ public class SpreadsheetView extends Control
 				}
 				else
 				{
-					getSelectionModel().clearAndSelectNextCell();
+					getSelectionModel().clearAndSelectNextCell(position.getColumn(), position.getRow());
 				}
 				keyEvent.consume();
 			}
