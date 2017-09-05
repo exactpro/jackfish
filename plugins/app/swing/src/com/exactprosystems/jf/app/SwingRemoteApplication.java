@@ -23,9 +23,6 @@ import org.fest.swing.core.ComponentMatcher;
 import org.fest.swing.core.Robot;
 import org.fest.swing.fixture.ComponentFixture;
 import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
 
 import javax.swing.*;
 import java.awt.*;
@@ -272,7 +269,7 @@ public class SwingRemoteApplication extends RemoteApplication
 	}
 
 	@Override
-	protected void resizeDerived(int height, int width, boolean maximize, boolean minimize, boolean normal) throws Exception
+	protected void resizeDerived(Resize resize, int height, int width, boolean maximize, boolean minimize, boolean normal) throws Exception
 	{
 		try
 		{
@@ -280,6 +277,27 @@ public class SwingRemoteApplication extends RemoteApplication
 			if (component instanceof JFrame)
 			{
 				JFrame frame = (JFrame)component;
+				if (resize != null)
+				{
+					switch (resize)
+					{
+						case Maximize:
+							logger.debug("Change state to maximized");
+							frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
+							logger.debug("Current state is " + frame.getExtendedState());
+							return;
+						case Minimize:
+							logger.debug("Change state to minimize");
+							frame.setExtendedState(JFrame.ICONIFIED);
+							logger.debug("Current state is " + frame.getExtendedState());
+							return;
+						case Normal:
+							logger.debug("Change state to normal");
+							frame.setExtendedState(JFrame.NORMAL);
+							logger.debug("Current state is " + frame.getExtendedState());
+							return;
+					}
+				}
 				if (normal)
 				{
 					logger.debug("Change state to normal");

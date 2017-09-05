@@ -121,12 +121,9 @@ public class DialogFillWizard extends AbstractWizard
         this.storedConnections.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) ->
         {
             this.connectToApplicationFromStore(newValue);
-            if (this.appConnection != null)
-            {
             this.dictionary = (DictionaryFx) this.appConnection.getDictionary();
             this.dialogs.getItems().clear();
             this.dialogs.getItems().setAll(dictionary.getWindows());
-            }
         });
 
         this.resultListView.setCellFactory(param -> new MyCell());
@@ -458,12 +455,14 @@ public class DialogFillWizard extends AbstractWizard
             case ComboBox:
             case TabPanel:
                 res.append(dO).append(control.getBindedClass().defaultOperation().toString()).append(setStr);
+            default:
+                return res.toString();
         }
 
         return res.toString();
     }
 
-    private class MyCell extends ListCell<ResultBean>
+    private static class MyCell extends ListCell<ResultBean>
     {
 
         public MyCell()
@@ -571,7 +570,7 @@ public class DialogFillWizard extends AbstractWizard
 
     }
 
-    class ResultBean
+    static class ResultBean
     {
         String controlName;
         String operation;
@@ -599,7 +598,7 @@ public class DialogFillWizard extends AbstractWizard
         }
     }
 
-    class ConnectionBean
+    static class ConnectionBean
     {
         private String name;
         private AppConnection connection;

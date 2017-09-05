@@ -9,6 +9,7 @@
 package com.exactprosystems.jf.tool.dictionary.actions;
 
 import com.exactprosystems.jf.api.app.ImageWrapper;
+import com.exactprosystems.jf.api.app.Resize;
 import com.exactprosystems.jf.api.common.Str;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.documents.matrix.parser.listeners.ListProvider;
@@ -104,6 +105,10 @@ public class ActionsController implements Initializable, ContainingParent
 		Platform.runLater(() -> ((BorderPane) this.pane).setCenter(BorderWrapper.wrap(this.mainGrid).title("Actions").color(Common.currentTheme().getReverseColor()).build()));
 		setDisable(true);
 		this.groupSection.selectedToggleProperty().addListener((observable, oldValue, newValue) -> setDisable(!(newValue != null && newValue == this.rbSize)));
+		this.rbMin.setUserData(Resize.Minimize);
+		this.rbMax.setUserData(Resize.Maximize);
+		this.rbNormal.setUserData(Resize.Normal);
+		this.rbSize.setUserData(null);
 
 	}
 
@@ -245,12 +250,8 @@ public class ActionsController implements Initializable, ContainingParent
 		int h = selectedToggle == this.rbSize ? this.ntfResizeH.getValue() : 0;
 		int w = selectedToggle == this.rbSize ? this.ntfResizeW.getValue() : 0;
 
-		tryCatch(() -> this.model.resize(
-				  this.rbMin == selectedToggle
-				, this.rbMax == selectedToggle
-				, this.rbNormal == selectedToggle
-				, h ,w
-		), "Error on resize");
+		Resize resize = ((Resize) selectedToggle.getUserData());
+		tryCatch(() -> this.model.resize(resize , h ,w), "Error on resize");
 	}
 	//endregion
 
