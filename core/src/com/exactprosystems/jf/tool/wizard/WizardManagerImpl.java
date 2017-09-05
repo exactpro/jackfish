@@ -30,10 +30,11 @@ public class WizardManagerImpl implements WizardManager
 			SupportedControlWizard.class,
 			CodeExampleWizard.class,
 			XpathWizard.class,
-            RefactorWizard.class,
-            NameSpaceWizard.class,
-            ConnectionWizard.class,
-            DialogFillWizard.class
+			RefactorWizard.class,
+			AutomateConvertWizard.class,
+			NameSpaceWizard.class,
+			ConnectionWizard.class,
+			DialogFillWizard.class
 	);
     
     public WizardManagerImpl()

@@ -19,6 +19,7 @@ import com.exactprosystems.jf.documents.config.Configuration;
 import com.exactprosystems.jf.documents.guidic.Section;
 import com.exactprosystems.jf.documents.guidic.Window;
 import com.exactprosystems.jf.documents.matrix.Matrix;
+import com.exactprosystems.jf.documents.matrix.parser.Parameter;
 import com.exactprosystems.jf.documents.matrix.parser.Parser;
 import com.exactprosystems.jf.documents.matrix.parser.items.MatrixItem;
 import com.exactprosystems.jf.tool.Common;
@@ -27,8 +28,11 @@ import org.apache.log4j.Logger;
 
 import java.io.Reader;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
 import java.util.function.Consumer;
+import java.util.stream.IntStream;
 
 public class CommandBuilder
 {
@@ -191,6 +195,34 @@ public class CommandBuilder
 		return this.commands.isEmpty();
 	}
 
+	public CommandBuilder removeParameters(MatrixItem item, int[] indexes)
+	{
+		this.commands.add(context ->
+		{
+			Integer[] array = new Integer[indexes.length];
+			IntStream.range(0, indexes.length)
+					.forEach(i -> array[i] = indexes[i]);
+			Arrays.sort(array, Comparator.reverseOrder());
+			Arrays.stream(array).mapToInt(i -> i).forEach(item.getParameters()::remove);
+		});
+		return this;
+	}
+
+	public CommandBuilder addParameter(MatrixItem item, Parameter parameter, int index)
+	{
+		this.commands.add(context ->
+		{
+			if (index == -1)
+			{
+				item.getParameters().add(parameter);
+			}
+			else
+			{
+				item.getParameters().add(index, parameter);
+			}
+		});
+		return this;
+	}
 
     public static MatrixItem create(Matrix matrix, String itemName, String actionName)
     {

@@ -133,7 +133,7 @@ public class ApplicationResize extends AbstractAction
 
 			if (this.resize != null && (this.height != null || this.width != null))
 			{
-				setError("Need set state or width, but no both together", ErrorKind.WRONG_PARAMETERS);
+				setError("Need set resize or dimension, but no both together", ErrorKind.WRONG_PARAMETERS);
 				return;
 			}
 
@@ -179,7 +179,7 @@ public class ApplicationResize extends AbstractAction
 
 			if ((this.maximize != null || this.minimize != null || this.normal != null) && (this.height != null || this.width != null))
 			{
-				setError("Need set resize or dimension, but no both together", ErrorKind.WRONG_PARAMETERS);
+				setError("Need set state or dimension, but no both together", ErrorKind.WRONG_PARAMETERS);
 				return;
 			}
 

@@ -360,8 +360,8 @@ Application Move;;;
             #Id;#Action;Exec;WorkDir;$AppId
             APPSTR1;ApplicationStart;'C:/Windows/notepad.exe';'C:/Windows';mockWinApp
 
-            #Id;#Action;$Normal;$AppConnection
-            APPSZ1;ApplicationResize;true;APPSTR1.Out
+            #Id;#Action;$AppConnection;$Resize
+            APPSZ1;ApplicationResize;APPSTR1.Out;Resize.Normal
 
             #Id;#Let
             x;APPSTR1.Out.getApplication.service().getRectangle(null,null).x
@@ -645,6 +645,7 @@ Application Refresh;;;
 
 #TestCase;#Kind;#Depends;#For
 Application Resize;;;
+    // 
     #Step;#Kind;#For;#Depends
     'Positive';;;
         #Id;#Call
@@ -658,6 +659,7 @@ Application Resize;;;
 
     #EndStep
 
+    // TODO remove this step on build 4.5.9
     #Step;#Kind;#For;#Depends
     'Negative';;;
         #Id;#Action;#Assert;$AppConnection
@@ -685,7 +687,33 @@ Application Resize;;;
         ApplicationResize;This.Kind == ErrorKind.WRONG_PARAMETERS;CALL_7;true;true
 
         #Action;#Assert;$AppConnection;$Minimize;$Height
-        ApplicationResize;This.Kind == ErrorKind.WRONG_PARAMETERS;CALL_7;true;10
+		ApplicationResize;This.Kind == ErrorKind.WRONG_PARAMETERS;CALL_7;true;10
+
+        #Action;$AppConnection
+        ApplicationStop;CALL_7
+
+    #EndStep
+
+    // 
+    #Step;#Kind;#For;#Depends
+    'Negative';;;
+        #Id;#Action;#Assert;$AppConnection
+        APPSZ2;ApplicationResize;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;
+
+        #Id;#Action;#Assert;$AppConnection
+        APPSZ3;ApplicationResize;This.Result == Result.Failed && This.Kind == ErrorKind.WRONG_PARAMETERS;new Date()
+
+        #Id;#Call
+        CALL_7;appStart
+
+        #Action;#Assert;$AppConnection
+        ApplicationResize;This.Kind == ErrorKind.WRONG_PARAMETERS;CALL_7
+
+        #Action;#Assert;$AppConnection;$Resize
+        ApplicationResize;This.Kind == ErrorKind.WRONG_PARAMETERS;CALL_7;
+
+        #Action;#Assert;$AppConnection;$Height;$Resize
+        ApplicationResize;This.Kind == ErrorKind.WRONG_PARAMETERS;CALL_7;10;Resize.Maximize
 
         #Action;$AppConnection
         ApplicationStop;CALL_7
