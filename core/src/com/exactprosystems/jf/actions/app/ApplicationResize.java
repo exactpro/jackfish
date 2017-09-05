@@ -83,11 +83,9 @@ public class ApplicationResize extends AbstractAction
 			return;
 		}
 
-		boolean max = this.maximize == null ? false : this.maximize;
-		boolean min = this.minimize == null ? false : this.minimize;
-		boolean nor = this.normal == null ? false : this.normal;
-
-		if ((max == min) || (max == nor) || (min == nor))
+		if ((this.maximize != null && this.maximize == this.minimize)
+				|| (this.normal != null && this.maximize == this.normal)
+				|| (this.minimize != null && this.minimize == this.normal))
 		{
 			setError(String.format("Need set on the parameters [%s,%s,%s]", maximizeName, minimizeName, normalName), ErrorKind.WRONG_PARAMETERS);
 			return;
@@ -109,7 +107,9 @@ public class ApplicationResize extends AbstractAction
 		app.service().resize(
 				this.height 	== null ? 0 : this.height,
 				this.width 		== null ? 0 : this.width,
-				max, min, nor
+				this.maximize 	== null ? false : this.maximize,
+				this.minimize 	== null ? false : this.minimize,
+				this.normal 	== null ? false : this.normal
 		);
 		super.setResult(null);
 	}
