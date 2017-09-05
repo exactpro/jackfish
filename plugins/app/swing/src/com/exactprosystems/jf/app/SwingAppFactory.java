@@ -85,7 +85,6 @@ public class SwingAppFactory implements IApplicationFactory
 		info.addTypes(ControlKind.Wait,"*");
 
         info.addExcludes(ControlKind.MenuItem, OperationKind.EXPAND, OperationKind.COLLAPSE);
-        info.addExcludes(ControlKind.Tree, OperationKind.APPLY);
     }
 
 	private IGuiDictionary dictionary = null;
