@@ -487,8 +487,17 @@ public class SeleniumRemoteApplication extends RemoteApplication
 	}
 
 	@Override
-	protected void resizeDerived(int height, int width, boolean maximize, boolean minimize, boolean normal) throws Exception
+	protected void resizeDerived(Resize resize, int height, int width, boolean maximize, boolean minimize, boolean normal) throws Exception
 	{
+		if (resize != null)
+		{
+			switch (resize)
+			{
+				case Maximize: this.driver.manage().window().maximize(); return;
+				case Minimize: throw new UnsupportedOperationException();
+				case Normal: return;
+			}
+		}
 		if (maximize)
 		{
 			this.driver.manage().window().maximize();

@@ -272,7 +272,7 @@ public class WinRemoteApplicationJNA extends RemoteApplication
 	}
 
 	@Override
-	protected void resizeDerived(int height, int width, boolean maximize, boolean minimize, boolean normal) throws Exception
+	protected void resizeDerived(Resize resize, int height, int width, boolean maximize, boolean minimize, boolean normal) throws Exception
 	{
 		try
 		{
@@ -280,6 +280,15 @@ public class WinRemoteApplicationJNA extends RemoteApplication
 			if (currentWindow == null)
 			{
 				throw new ElementNotFoundException("Current window not found");
+			}
+			if (resize != null)
+			{
+				switch (resize)
+				{
+					case Maximize: this.driver.doPatternCall(currentWindow, WindowPattern.WindowPattern, "SetWindowVisualState", "Maximized", 3);return;
+					case Minimize: this.driver.doPatternCall(currentWindow, WindowPattern.WindowPattern, "SetWindowVisualState", "Minimized", 3);return;
+					case Normal: this.driver.doPatternCall(currentWindow, WindowPattern.WindowPattern, "SetWindowVisualState", "Normal", 3); return;
+				}
 			}
 			if (normal)
 			{

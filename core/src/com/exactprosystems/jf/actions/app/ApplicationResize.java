@@ -11,11 +11,16 @@ package com.exactprosystems.jf.actions.app;
 import com.exactprosystems.jf.actions.*;
 import com.exactprosystems.jf.api.app.AppConnection;
 import com.exactprosystems.jf.api.app.IApplication;
+import com.exactprosystems.jf.api.app.Resize;
 import com.exactprosystems.jf.api.error.ErrorKind;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.report.ReportBuilder;
 import com.exactprosystems.jf.documents.config.Context;
 import com.exactprosystems.jf.documents.matrix.parser.Parameters;
+import com.exactprosystems.jf.functions.HelpKind;
+
+import java.util.Arrays;
+import java.util.List;
 
 @ActionAttribute(
 		group					= ActionGroups.App,
@@ -34,12 +39,13 @@ import com.exactprosystems.jf.documents.matrix.parser.Parameters;
 				"#}}",
 		seeAlsoClass = {ApplicationStart.class, ApplicationConnectTo.class}
 	)
-//TODO replace max/min/normal to enum
+
 public class ApplicationResize extends AbstractAction
 {
 	public final static String connectionName 	= "AppConnection";
 	public final static String heightName 		= "Height";
 	public final static String widthName 		= "Width";
+	public final static String resizeName		= "Resize";
 	public final static String minimizeName 	= "Minimize";
 	public final static String maximizeName 	= "Maximize";
 	public final static String normalName		= "Normal";
@@ -56,62 +62,142 @@ public class ApplicationResize extends AbstractAction
 	@ActionFieldAttribute(name = widthName, mandatory = false, def = DefaultValuePool.Null, description = "The window width is changed to the specified width." )
 	protected Integer width;
 
+	@ActionFieldAttribute(name = resizeName, mandatory = false, def = DefaultValuePool.Null, description = "Type of resizing. Must be Resize.Maximize, Resize.Minimize or Resize.Normal")
+	protected Resize resize;
+
+	@Deprecated
 	@ActionFieldAttribute(name = minimizeName, mandatory = false, def = DefaultValuePool.Null, description = "If the parameter value is true, it sets the minimum size of the window." )
 	protected Boolean minimize;
 
+	@Deprecated
 	@ActionFieldAttribute(name = maximizeName, mandatory = false, def = DefaultValuePool.Null, description = "If the parameter value is true, it sets the maximum size of the window." )
 	protected Boolean maximize;
 
+	@Deprecated
 	@ActionFieldAttribute(name = normalName, mandatory = false, def = DefaultValuePool.Null, description = "If the parameter value is true, it sets normal size of the window.")
 	protected Boolean normal;
 
 	@Override
+	protected HelpKind howHelpWithParameterDerived(Context context, Parameters parameters, String fieldName) throws Exception
+	{
+		switch (fieldName)
+		{
+			case resizeName :
+				return HelpKind.ChooseFromList;
+
+			default:
+				break;
+		}
+		return super.howHelpWithParameterDerived(context, parameters, fieldName);
+	}
+
+	@Override
+	protected void listToFillParameterDerived(List<ReadableValue> list, Context context, String parameterToFill, Parameters parameters) throws Exception
+	{
+		switch (parameterToFill)
+		{
+			case resizeName :
+				Arrays.stream(Resize.values())
+						.map(r -> Resize.class.getSimpleName()+"."+r.name())
+						.map(ReadableValue::new)
+						.forEach(list::add);
+				break;
+
+			default:
+				break;
+		}
+		super.listToFillParameterDerived(list, context, parameterToFill, parameters);
+	}
+
+	@Override
 	public void doRealAction(Context context, ReportBuilder report, Parameters parameters, AbstractEvaluator evaluator) throws Exception
 	{
-		if (this.minimize == null && this.maximize == null && this.normal == null && this.width == null && this.height == null)
+		//TODO remove 'else' branch ( and line 'if (resize != null)' , when all users change their matrix. Since 4.5.7 build. Remove on 4.5.9 build.
+		if (this.resize != null)
 		{
-			setError("No one resizing parameter is filled.", ErrorKind.WRONG_PARAMETERS);
-			return;
-		}
-		if (checkBoolean(maximizeName, this.maximize, parameters) || checkBoolean(minimizeName, this.minimize, parameters) || checkBoolean(normalName, this.normal, parameters))
-		{
-			return;
-		}
+			if (this.resize == null && this.width == null && this.height == null)
+			{
+				setError("No one resizing parameter is filled.", ErrorKind.WRONG_PARAMETERS);
+				return;
+			}
+			if (checkInt(widthName, this.width, parameters) || checkInt(heightName, this.height, parameters))
+			{
+				return;
+			}
 
-		if (checkInt(widthName, this.width, parameters) || checkInt(heightName, this.height, parameters))
-		{
-			return;
-		}
+			if (parameters.getByName(resizeName) != null && this.resize == null)
+			{
+				setError("Parameter " + resizeName + " must be Resize.Maximize, Resize.Minimize or Resize.Normal", ErrorKind.WRONG_PARAMETERS);
+				return;
+			}
 
-		if ((this.maximize != null && this.maximize == this.minimize)
-				|| (this.normal != null && this.maximize == this.normal)
-				|| (this.minimize != null && this.minimize == this.normal))
-		{
-			setError(String.format("Need set on the parameters [%s,%s,%s]", maximizeName, minimizeName, normalName), ErrorKind.WRONG_PARAMETERS);
-			return;
-		}
+			if (this.resize != null && (this.height != null || this.width != null))
+			{
+				setError("Need set state or width, but no both together", ErrorKind.WRONG_PARAMETERS);
+				return;
+			}
 
-		if ((this.maximize != null || this.minimize != null || this.normal != null) && (this.height != null || this.width != null))
-		{
-			setError("Need set state or width, but no both together", ErrorKind.WRONG_PARAMETERS);
-			return;
+			if ((this.height == null && this.width != null) || (this.height != null && this.width == null))
+			{
+				setError("Need set both the parameters " + widthName + " and " + heightName, ErrorKind.WRONG_PARAMETERS);
+				return;
+			}
+			IApplication app = connection.getApplication();
+			app.service().resize(
+					this.resize
+					, this.height 	== null ? 0 : this.height
+					, this.width 		== null ? 0 : this.width
+					, this.maximize 	== null ? false : this.maximize
+					, this.minimize 	== null ? false : this.minimize
+					, this.normal 	== null ? false : this.normal);
+			super.setResult(null);
 		}
-
-		if ((this.height == null && this.width != null) || (this.height != null && this.width == null))
+		else
 		{
-			setError("Need set both the parameters " + widthName + " and " + heightName, ErrorKind.WRONG_PARAMETERS);
-			return;
-		}
+			if (this.minimize == null && this.maximize == null && this.normal == null && this.width == null && this.height == null)
+			{
+				setError("No one resizing parameter is filled.", ErrorKind.WRONG_PARAMETERS);
+				return;
+			}
+			if (checkBoolean(maximizeName, this.maximize, parameters) || checkBoolean(minimizeName, this.minimize, parameters) || checkBoolean(normalName, this.normal, parameters))
+			{
+				return;
+			}
 
-		IApplication app = connection.getApplication();
-		app.service().resize(
-				this.height 	== null ? 0 : this.height,
-				this.width 		== null ? 0 : this.width,
-				this.maximize 	== null ? false : this.maximize,
-				this.minimize 	== null ? false : this.minimize,
-				this.normal 	== null ? false : this.normal
-		);
-		super.setResult(null);
+			if (checkInt(widthName, this.width, parameters) || checkInt(heightName, this.height, parameters))
+			{
+				return;
+			}
+
+			if ((this.maximize != null && this.maximize == this.minimize)
+					|| (this.normal != null && this.maximize == this.normal)
+					|| (this.minimize != null && this.minimize == this.normal))
+			{
+				setError(String.format("Need set on the parameters [%s,%s,%s]", maximizeName, minimizeName, normalName), ErrorKind.WRONG_PARAMETERS);
+				return;
+			}
+
+			if ((this.maximize != null || this.minimize != null || this.normal != null) && (this.height != null || this.width != null))
+			{
+				setError("Need set resize or dimension, but no both together", ErrorKind.WRONG_PARAMETERS);
+				return;
+			}
+
+			if ((this.height == null && this.width != null) || (this.height != null && this.width == null))
+			{
+				setError("Need set both the parameters " + widthName + " and " + heightName, ErrorKind.WRONG_PARAMETERS);
+				return;
+			}
+
+			IApplication app = connection.getApplication();
+			app.service().resize(null
+					, this.height 	== null ? 0 : this.height
+					, this.width 		== null ? 0 : this.width
+					, this.maximize 	== null ? false : this.maximize
+					, this.minimize 	== null ? false : this.minimize
+					, this.normal 	== null ? false : this.normal);
+			super.setResult(null);
+		}
 	}
 
 	private boolean checkBoolean(String keyName, Object value, Parameters parameters)

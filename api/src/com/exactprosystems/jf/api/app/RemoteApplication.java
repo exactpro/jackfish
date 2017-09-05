@@ -397,11 +397,11 @@ public abstract class RemoteApplication implements IRemoteApplication
 	}
 
 	@Override
-	public final void resize(int height, int width, boolean maximize, boolean minimize, boolean normal) throws RemoteException
+	public final void resize(Resize resize, int height, int width, boolean maximize, boolean minimize, boolean normal) throws RemoteException
 	{
 		try 
 		{
-			resizeDerived(height, width, maximize, minimize, normal);
+			resizeDerived(resize, height, width, maximize, minimize, normal);
 		}
 		catch (RemoteException e)
 		{
@@ -409,7 +409,7 @@ public abstract class RemoteApplication implements IRemoteApplication
 		}
 		catch (Exception e)
 		{
-			String msg = String.format("Error resize(%d, %d, %b, %b)", height, width, maximize, minimize);
+			String msg = String.format("Error resize(%s, %d, %d, %b, %b)", resize, height, width, maximize, minimize);
 			throw new ProxyException(msg, e.getMessage(), e);
 		}
 	}
@@ -631,7 +631,7 @@ public abstract class RemoteApplication implements IRemoteApplication
 
 	protected abstract void switchToFrameDerived(Locator owner, Locator element) throws Exception;
 
-	protected abstract void resizeDerived(int height, int width, boolean maximize, boolean minimize, boolean normal) throws Exception;
+	protected abstract void resizeDerived(Resize resize, int height, int width, boolean maximize, boolean minimize, boolean normal) throws Exception;
 
 	protected abstract Collection<String> findAllDerived(Locator owner, Locator element) throws Exception;
 	

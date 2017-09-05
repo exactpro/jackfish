@@ -10,8 +10,6 @@ package com.exactprosystems.jf.api.app;
 
 import com.exactprosystems.jf.api.common.SerializablePair;
 
-import org.w3c.dom.Document;
-
 import java.awt.*;
 import java.io.Serializable;
 import java.rmi.Remote;
@@ -40,7 +38,7 @@ public interface IRemoteApplication extends Remote
 	void 						newInstance		(Map<String, String> args) throws Exception;
 	String 						switchTo		(Map<String, String> criteria, boolean softCondition) throws RemoteException;
 	void 						switchToFrame	(Locator owner, Locator element) throws RemoteException;
-	void 						resize			(int height, int width, boolean maximize, boolean minimize, boolean normal) throws RemoteException;
+	void 						resize			(Resize resize, int height, int width, boolean maximize, boolean minimize,boolean normal) throws RemoteException;
 	ImageWrapper 				getImage		(Locator owner, Locator element) throws RemoteException;
 	Rectangle 					getRectangle	(Locator owner, Locator element) throws RemoteException;
 	Collection<String> 			findAll			(Locator owner, Locator element) throws RemoteException;
