@@ -109,7 +109,10 @@ public class CopyRowTable extends RowTable implements Cloneable
 					Object otherValue = otherSource.get(key);
 					if (thisValue.getClass().isArray() && otherValue.getClass().isArray())
 					{
-						boolean equals = Arrays.equals((Object[]) thisValue, (Object[]) otherValue);
+						//Create object[] and place there thisValue and otherValue to compare arrays of any type
+						Object[] arr1 = {thisValue};
+						Object[] arr2 = {otherValue};
+						boolean equals = Arrays.deepEquals(arr1, arr2);
 						if (!equals)
 						{
 							return false;
