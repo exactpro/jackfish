@@ -360,6 +360,21 @@ public class SwingOperationExecutor implements OperationExecutor<ComponentFixtur
 				Scrolling.scrollToVisible(this.currentRobot, ((JComponent) target));
 			}
 			Point point = new Point(x, y);
+			if (target instanceof JTreeItem)
+			{
+				JTreeItem treeItem = (JTreeItem) target;
+				Pair<Rectangle, Point> pointPair = new JTreeLocation().pathBoundsAndCoordinates(treeItem.getTree(), treeItem.getPath());
+				if(isCoordsDidNotIntroduce(x,y))
+				{
+					executeAction(action, treeItem.getTree(), pointPair.ii.x, pointPair.ii.y);
+				}
+				else
+				{
+					executeAction(action, treeItem.getTree(), pointPair.ii.x - pointPair.i.width/2 + point.x, pointPair.ii.y - pointPair.i.height/2 + point.y);
+				}
+				return true;
+			}
+
 			if (isCoordsDidNotIntroduce(x,y))
 			{
 				point = AWT.visibleCenterOf(target);
@@ -367,14 +382,6 @@ public class SwingOperationExecutor implements OperationExecutor<ComponentFixtur
 			if (target instanceof JTree && y != Integer.MIN_VALUE)
 			{
 				point = scrollToRow(((JTree) target), y);
-			}
-			if (target instanceof JTreeItem)
-			{
-				JTreeItem treeItem = (JTreeItem) target;
-				Pair<Rectangle, Point> pointPair = new JTreeLocation().pathBoundsAndCoordinates(treeItem.getTree(), treeItem.getPath());
-				point = pointPair.ii;
-				executeAction(action, treeItem.getTree(), point.x, point.y);
-				return true;
 			}
 
 			executeAction(action, target, point.x, point.y);
@@ -1337,10 +1344,6 @@ public class SwingOperationExecutor implements OperationExecutor<ComponentFixtur
 	{
 		try
 		{
-			if (!component.component().isEnabled())
-			{
-				throw new OperationNotAllowedException("Component " + component + " is disabled.");
-			}
 			if (component.component() instanceof JComboBox)
 			{
 				JComboBox comboBox = component.targetCastedTo(JComboBox.class);

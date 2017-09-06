@@ -185,7 +185,7 @@ public class MockApp
 //		this.frame2 = new JFrame("Mock swing app additional frame");
 //		this.frame2.setLocation(1000, 200);
 //		this.frame2.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-//		this.frame2.setSizeForAllControls(new Dimension(1100,700));
+//		this.frame2.setSize(new Dimension(1100,700));
 //		this.frame2.setVisible(true);
 //		allEvents(createPanelFrame2());
 		//createAndShowGui();
@@ -1242,28 +1242,12 @@ public class MockApp
 				{
 					centralLabel.setText(name + "_double_click");
 					moveLabel.setText("");
-					//					if (e.getX() < 10 && e.getY() < 10)
-					//					{
-					//						centralLabel.setText(name + "_double_click_" + e.getX() + "_" + e.getY());
-					//					}
-					//					else
-					//					{
-					//						centralLabel.setText(name + "_double_click");
-					//					}
 				}
 				if (e.getClickCount() == 1)
 				{
 					centralLabel.setText(name + "_click");
 					pushLabel.setText(name + "_push");
 					moveLabel.setText("");
-					//					if (e.getX() < 10 && e.getY() < 10)
-					//					{
-					//						centralLabel.setText(name + "_click" + e.getX() + "_" + e.getY());
-					//					}
-					//					else
-					//					{
-					//						centralLabel.setText(name + "_click");
-					//					}
 				}
 			}
 		};
