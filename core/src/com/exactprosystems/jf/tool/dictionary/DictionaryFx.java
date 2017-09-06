@@ -336,31 +336,41 @@ public class DictionaryFx extends GuiDictionary
 		{
 			Set<ControlKind> supported = this.applicationConnector.getAppConnection().getApplication().getFactory().supportedControlKinds();
 
-			Thread thread = new Thread(new Task<Void>() {
+			Thread thread = new Thread(new Task<Void>()
+			{
 				@Override
-				protected Void call() throws Exception {
-
+				protected Void call() throws Exception
+				{
 					controls.forEach(control ->
 					{
-						try {
-							if (!supported.contains(control.getBindedClass())) {
+						try
+						{
+							if (!supported.contains(control.getBindedClass()))
+							{
 								controller.displayTestingControl(control, "Not allowed", Result.NOT_ALLOWED);
-							} else {
+							}
+							else
+							{
 								Locator owner = getLocator(window.getOwnerControl(control));
 								Locator locator = getLocator(control);
 
 								Collection<String> all = applicationConnector.getAppConnection().getApplication().service().findAll(owner, locator);
 
 								Result result = null;
-								if (all.size() == 1 || (Addition.Many.equals(control.getAddition()) && all.size() > 0)) {
+								if (all.size() == 1 || (Addition.Many.equals(control.getAddition()) && all.size() > 0))
+								{
 									result = Result.PASSED;
-								} else {
+								}
+								else
+								{
 									result = Result.FAILED;
 								}
 
 								controller.displayTestingControl(control, String.valueOf(all.size()), result);
 							}
-						} catch (Exception e) {
+						}
+						catch (Exception e)
+						{
 							controller.displayTestingControl(control, "Error", Result.FAILED);
 						}
 					});
