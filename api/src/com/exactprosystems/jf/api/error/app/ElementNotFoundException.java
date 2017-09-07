@@ -38,6 +38,6 @@ public class ElementNotFoundException extends JFRemoteException
 	@Override
 	public ErrorKind getErrorKind()
 	{
-		return ErrorKind.LOCATOR_NOT_FOUND;
+		return ErrorKind.ELEMENT_NOT_FOUND;
 	}
 }

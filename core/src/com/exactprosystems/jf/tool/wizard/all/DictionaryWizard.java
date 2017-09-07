@@ -35,7 +35,7 @@ import com.exactprosystems.jf.tool.helpers.DialogsHelper;
 import com.exactprosystems.jf.tool.wizard.AbstractWizard;
 import com.exactprosystems.jf.tool.wizard.CommandBuilder;
 import com.exactprosystems.jf.tool.wizard.related.MarkerStyle;
-import com.exactprosystems.jf.tool.wizard.related.WizardHelper;
+import com.exactprosystems.jf.tool.wizard.related.WizardLoader;
 import javafx.application.Platform;
 import javafx.concurrent.Service;
 import javafx.concurrent.Task;
@@ -159,7 +159,7 @@ public class DictionaryWizard extends AbstractWizard
 	private CheckBox cbMark;
 	private CheckBox cbQuestion;
 
-	private WizardHelper wizardHelper = null;
+	private WizardLoader wizardHelper = null;
 	
 
 	public DictionaryWizard()
@@ -401,7 +401,7 @@ public class DictionaryWizard extends AbstractWizard
 	protected void onRefused()
 	{
 		super.onRefused();
-		Optional.ofNullable(this.wizardHelper).ifPresent(WizardHelper::stop);
+		Optional.ofNullable(this.wizardHelper).ifPresent(WizardLoader::stop);
 	}
 
 	@Override
@@ -428,7 +428,7 @@ public class DictionaryWizard extends AbstractWizard
 			}
 
 
-			this.wizardHelper = new WizardHelper(this.currentConnection, self, (image, doc) ->
+			this.wizardHelper = new WizardLoader(this.currentConnection, self, (image, doc) ->
 			{
 				this.imageViewWithScale.displayImage(image);
 

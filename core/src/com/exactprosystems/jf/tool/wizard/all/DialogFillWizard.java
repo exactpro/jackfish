@@ -22,7 +22,8 @@ import com.exactprosystems.jf.tool.wizard.CommandBuilder;
 import com.exactprosystems.jf.tool.wizard.WizardMatcher;
 import com.exactprosystems.jf.tool.wizard.related.ConnectionBean;
 import com.exactprosystems.jf.tool.wizard.related.MarkerStyle;
-import com.exactprosystems.jf.tool.wizard.related.WizardHelper;
+import com.exactprosystems.jf.tool.wizard.related.WizardCommonHelper;
+import com.exactprosystems.jf.tool.wizard.related.WizardLoader;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.value.ChangeListener;
@@ -42,9 +43,7 @@ import org.w3c.dom.Node;
 
 import java.awt.Rectangle;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
-import java.util.Map;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
@@ -193,36 +192,7 @@ public class DialogFillWizard extends AbstractWizard
 
     private void displayStores() throws Exception
     {
-        ObservableList<ConnectionBean> items = this.storedConnections.getItems();
-        Map<String, Object> storeMap = this.currentMatrix.getFactory().getConfiguration().getStoreMap();
-        Collection<ConnectionBean> connections = storeMap.entrySet().stream().filter(entry ->
-                entry.getValue() instanceof AppConnection).map(entry -> new ConnectionBean(entry.getKey(), (AppConnection) entry.getValue())).collect(Collectors.toList());
-        items.setAll(connections);
-
-        items.addAll(getConnectionsFromPool(items));
-    }
-
-    private List<ConnectionBean> getConnectionsFromPool(List<ConnectionBean> beans)
-    {
-        List<ConnectionBean> result = new ArrayList<>();
-        List<AppConnection> appConnections = this.currentMatrix.getFactory().getConfiguration().getApplicationPool().getConnections();
-
-        if (beans.size() == 0)
-        {
-            return appConnections.stream().map(connection -> new ConnectionBean("", connection)).collect(Collectors.toList());
-        }
-        for (AppConnection connection : this.currentMatrix.getFactory().getConfiguration().getApplicationPool().getConnections())
-        {
-            for (ConnectionBean item : beans)
-            {
-                if (!item.getConnection().equals(connection))
-                {
-					result.add(new ConnectionBean(item.getConnection().getId(), item.getConnection()));
-				}
-            }
-        }
-
-        return result;
+		this.storedConnections.getItems().setAll(WizardCommonHelper.getAllConnections(this.currentMatrix.getFactory().getConfiguration()));
     }
 
     private void connectToApplicationFromStore(ConnectionBean bean)
@@ -331,7 +301,7 @@ public class DialogFillWizard extends AbstractWizard
         this.grid.getChildren().remove(this.imageViewWithScale);
         this.grid.add(this.imageViewWithScale, 0, 1, 3, 3);
 
-        WizardHelper.gainImageAndDocument(this.appConnection, selfControl, (image, doc) ->
+        WizardLoader.gainImageAndDocument(this.appConnection, selfControl, (image, doc) ->
         {
             this.imageViewWithScale.displayImage(image);
             this.document = doc;

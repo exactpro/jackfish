@@ -14,10 +14,7 @@ import com.exactprosystems.jf.api.app.IRemoteApplication;
 import com.exactprosystems.jf.api.app.Locator;
 import com.exactprosystems.jf.api.common.Converter;
 import com.exactprosystems.jf.common.utils.XpathUtils;
-
 import javafx.application.Platform;
-
-import javafx.concurrent.Service;
 import javafx.concurrent.Task;
 import javafx.util.Pair;
 import org.apache.log4j.Logger;
@@ -31,15 +28,15 @@ import java.util.concurrent.Executors;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
-public class WizardHelper
+public class WizardLoader
 {
-    private static final Logger logger = Logger.getLogger(WizardHelper.class);
+    private static final Logger logger = Logger.getLogger(WizardLoader.class);
 
 	private Task<Pair<BufferedImage, Document>> task;
 
 	private ExecutorService exec = Executors.newSingleThreadExecutor();
 
-	public WizardHelper(AppConnection currentConnection, IControl self, BiConsumer<BufferedImage, Document> onSuccess, Consumer<Throwable> onError)
+	public WizardLoader(AppConnection currentConnection, IControl self, BiConsumer<BufferedImage, Document> onSuccess, Consumer<Throwable> onError)
 	{
 		this.task =  new Task<Pair<BufferedImage, Document>>()
         {

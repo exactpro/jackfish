@@ -34,7 +34,7 @@ import com.exactprosystems.jf.tool.helpers.DialogsHelper;
 import com.exactprosystems.jf.tool.wizard.AbstractWizard;
 import com.exactprosystems.jf.tool.wizard.CommandBuilder;
 import com.exactprosystems.jf.tool.wizard.related.MarkerStyle;
-import com.exactprosystems.jf.tool.wizard.related.WizardHelper;
+import com.exactprosystems.jf.tool.wizard.related.WizardLoader;
 import javafx.application.Platform;
 import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
@@ -133,7 +133,7 @@ public class XpathWizard extends AbstractWizard
 	private AbstractControl currentControl    = null;
 	private IControl		ownerControl	  = null;
 
-	private WizardHelper	wizardHelper	  = null;
+	private WizardLoader wizardHelper = null;
 
 	private volatile Document document    = null;
 	private volatile Node     currentNode = null;
@@ -348,7 +348,7 @@ public class XpathWizard extends AbstractWizard
 	protected void onRefused()
 	{
 		super.onRefused();
-		Optional.ofNullable(this.wizardHelper).ifPresent(WizardHelper::stop);
+		Optional.ofNullable(this.wizardHelper).ifPresent(WizardLoader::stop);
 	}
 
 	@Override
@@ -368,7 +368,7 @@ public class XpathWizard extends AbstractWizard
 				self = this.currentWindow.getSelfControl();
 			}
 
-			this.wizardHelper = new WizardHelper(this.currentConnection, self, (image,doc) ->
+			this.wizardHelper = new WizardLoader(this.currentConnection, self, (image, doc) ->
 			{
 				this.imageViewWithScale.displayImage(image);
 

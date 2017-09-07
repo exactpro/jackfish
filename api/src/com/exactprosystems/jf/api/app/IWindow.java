@@ -41,7 +41,7 @@ public interface IWindow
 	IControl 			getReferenceControl(IControl control);
 	IControl			getRowsControl(IControl control) throws Exception;
 	IControl			getHeaderControl(IControl control) throws Exception;
-	IControl 			getSelfControl() throws Exception;
+	IControl 			getSelfControl();
 
 	void 				checkParams(Collection<String> set) throws Exception;
 	boolean 			containsControl(String controlName) throws Exception;
