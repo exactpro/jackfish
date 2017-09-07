@@ -16,7 +16,7 @@ import javax.swing.*;
 import java.io.InputStream;
 import java.util.*;
 
-public class SwingAppFactory implements IApplicationFactory
+public class SwingAppFactory extends AbstractApplicationFactory
 {
     public static final String helpFileName     = "help.txt";
 

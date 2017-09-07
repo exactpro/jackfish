@@ -15,7 +15,7 @@ import org.w3c.dom.Node;
 import java.io.InputStream;
 import java.util.*;
 
-public class WebAppFactory implements IApplicationFactory
+public class WebAppFactory extends AbstractApplicationFactory
 {
     public static final String  helpFileName          = "help.txt";
 

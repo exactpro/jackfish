@@ -16,7 +16,10 @@ import java.util.Set;
 public interface IApplicationFactory  extends IFactory
 {
     void                init(IGuiDictionary dictionary);
-    
+
+    String 				createHelp();
+
+    @Deprecated
 	InputStream		    getHelp();
 	Set<ControlKind> 	supportedControlKinds();
 
