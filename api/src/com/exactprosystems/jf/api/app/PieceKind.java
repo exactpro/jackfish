@@ -213,12 +213,6 @@ public enum PieceKind implements Measure
 		}
 
 		@Override
-		protected boolean selfNeedOne()
-		{
-			return false;
-		}
-
-		@Override
 		protected boolean othersNeed()
 		{
 			return false;
@@ -261,12 +255,6 @@ public enum PieceKind implements Measure
 		protected String formulaTemplate()
 		{
 			return ".%1$s()";
-		}
-
-		@Override
-		protected boolean selfNeedOne()
-		{
-			return false;
 		}
 
 		@Override
