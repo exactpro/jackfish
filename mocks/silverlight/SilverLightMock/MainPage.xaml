@@ -343,7 +343,6 @@
         <sdk:Label x:Name="labelSimple" Height="16" Margin="10,10,72,0" VerticalAlignment="Top" Content="Simple combobox" d:LayoutOverrides="LeftMargin, RightMargin, TopMargin, BottomMargin"/>
         <ComboBox x:Name="comboboxSimple" Height="15" Margin="0,10,41,0" VerticalAlignment="Top" d:LayoutOverrides="LeftMargin, RightMargin, TopMargin, BottomMargin" HorizontalAlignment="Right" Width="26">
             <ComboBoxItem x:Name="First" Content="First"/>
-            <ComboBoxItem x:Name="Second" Content="Second"/>
         </ComboBox>
         <sdk:Label x:Name="labelData" Height="16" Margin="10,29,72,0" VerticalAlignment="Top" Content="With data" d:LayoutOverrides="LeftMargin, RightMargin, TopMargin, BottomMargin"/>
         <ComboBox x:Name="comboboxWithData" Height="15" Margin="0,30,41,0" VerticalAlignment="Top" ItemTemplate="{StaticResource ItemTemplate}" ItemsSource="{Binding Collection}" d:LayoutOverrides="LeftMargin, RightMargin, TopMargin, BottomMargin" HorizontalAlignment="Right" Width="26"/>
@@ -370,5 +369,9 @@
             </sdk:TreeViewItem>
         </sdk:TreeView>
         <sdk:TreeView x:Name="treeView1" Grid.Column="2" Margin="11,80,10,62" DataContext="{Binding Source={StaticResource TreeViewDataSource}}" ItemsSource="{Binding Collection}" ItemTemplate="{StaticResource ItemTemplate2}"/>
+        <ComboBox x:Name="comboboxSimple2" Height="15" Margin="0,10,15,0" VerticalAlignment="Top" HorizontalAlignment="Right" Width="26" d:LayoutOverrides="TopMargin, BottomMargin">
+            <ComboBoxItem x:Name="Second" Content="Second"/>
+            <ComboBoxItem x:Name="Third" Content="Third"/>
+        </ComboBox>
     </Grid>
 </UserControl>

@@ -334,13 +334,20 @@ namespace UIAdapter
                     return ConvertString.replaceNonASCIIToUnicode(result);
                 }
                 bool isCheckboxes = TableFactory.GetFrameworkId(owner).Equals("Silverlight");
-                string firstElement = namesList[0];
-                for (int i = 1; i < namesList.Count; i++)
+                if (namesList.Count == 1)
                 {
-                    if (!namesList[i].Equals(firstElement))
+                    isCheckboxes = false;
+                }
+                else
+                {
+                    string firstElement = namesList[0];
+                    for (int i = 1; i < namesList.Count; i++)
                     {
-                        isCheckboxes = false;
-                        break;
+                        if (!namesList[i].Equals(firstElement))
+                        {
+                            isCheckboxes = false;
+                            break;
+                        }
                     }
                 }
 
