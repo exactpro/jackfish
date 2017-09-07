@@ -85,6 +85,7 @@ public class WizardDialog extends Dialog<Boolean>
 
 		BorderPane borderPane = new BorderPane();
 		ScrollPane scrollPane = new ScrollPane(this.borderPane);
+		scrollPane.setStyle("-fx-background-color:transparent;");
 		scrollPane.setFitToHeight(true);
 		scrollPane.setFitToWidth(true);
 		this.getDialogPane().setContent(borderPane);

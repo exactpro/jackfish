@@ -3,7 +3,6 @@ package com.exactprosystems.jf.tool.wizard.all;
 import com.exactprosystems.jf.actions.gui.DialogFill;
 import com.exactprosystems.jf.api.app.*;
 import com.exactprosystems.jf.api.common.IContext;
-
 import com.exactprosystems.jf.api.error.JFRemoteException;
 import com.exactprosystems.jf.api.wizard.WizardAttribute;
 import com.exactprosystems.jf.api.wizard.WizardCategory;
@@ -21,6 +20,7 @@ import com.exactprosystems.jf.tool.matrix.MatrixFx;
 import com.exactprosystems.jf.tool.wizard.AbstractWizard;
 import com.exactprosystems.jf.tool.wizard.CommandBuilder;
 import com.exactprosystems.jf.tool.wizard.WizardMatcher;
+import com.exactprosystems.jf.tool.wizard.related.ConnectionBean;
 import com.exactprosystems.jf.tool.wizard.related.MarkerStyle;
 import com.exactprosystems.jf.tool.wizard.related.WizardHelper;
 import javafx.beans.property.BooleanProperty;
@@ -30,8 +30,6 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.HPos;
 import javafx.scene.control.*;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
 import javafx.scene.control.cell.CheckBoxListCell;
 import javafx.scene.input.*;
 import javafx.scene.layout.BorderPane;
@@ -42,10 +40,11 @@ import javafx.scene.text.Text;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 
-import java.awt.*;
-import java.util.*;
-
+import java.awt.Rectangle;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
@@ -218,8 +217,8 @@ public class DialogFillWizard extends AbstractWizard
             {
                 if (!item.getConnection().equals(connection))
                 {
-                    result.add(new ConnectionBean(item.connection.getId(), item.connection));
-                }
+					result.add(new ConnectionBean(item.getConnection().getId(), item.getConnection()));
+				}
             }
         }
 
@@ -595,34 +594,6 @@ public class DialogFillWizard extends AbstractWizard
         public String toString()
         {
             return controlName + " : " + operation;
-        }
-    }
-
-    static class ConnectionBean
-    {
-        private String name;
-        private AppConnection connection;
-
-        private ConnectionBean(String name, AppConnection connection)
-        {
-            this.name = name;
-            this.connection = connection;
-        }
-
-        public String getName()
-        {
-            return name;
-        }
-
-        public AppConnection getConnection()
-        {
-            return connection;
-        }
-
-        @Override
-        public String toString()
-        {
-            return getName();
         }
     }
 }

@@ -34,7 +34,8 @@ public class WizardManagerImpl implements WizardManager
 			AutomateConvertWizard.class,
 			NameSpaceWizard.class,
 			ConnectionWizard.class,
-			DialogFillWizard.class
+			DialogFillWizard.class,
+			LayoutWizard.class
 	);
     
     public WizardManagerImpl()
