@@ -22,6 +22,7 @@ import com.exactprosystems.jf.documents.matrix.parser.Parameter;
 import com.exactprosystems.jf.documents.matrix.parser.Parameters;
 import com.exactprosystems.jf.functions.HelpKind;
 import com.exactprosystems.jf.documents.matrix.parser.items.TypeMandatory;
+import com.exactprosystems.jf.functions.Table;
 
 import java.util.*;
 
@@ -54,7 +55,8 @@ public class DialogCheckLayout extends AbstractAction
 	public final static String	dialogName		= "Dialog";
 	public final static String	doNotOpenName	= "DoNotOpen";
 	public final static String	doNotCloseName	= "DoNotClose";
-	public static final String	fieldsName		= "Fields";
+	public final static String	fieldsName		= "Fields";
+	public final static String  tableName		= "Table";
 
 	@ActionFieldAttribute(name = connectionName, mandatory = true, description = "The application connection.")
 	protected AppConnection		connection		= null;
@@ -70,6 +72,9 @@ public class DialogCheckLayout extends AbstractAction
 
 	@ActionFieldAttribute(name = fieldsName, mandatory = false, def = DefaultValuePool.Null, description = "Map of control name : control operation.")
 	protected Map<String, Object> fields;
+
+	@ActionFieldAttribute(name = tableName, mandatory = false, def = DefaultValuePool.Null, description = "Table with DoSpec operations")
+	protected Table table;
 
 	@Override
 	protected HelpKind howHelpWithParameterDerived(Context context, Parameters parameters, String fieldName)
@@ -138,11 +143,23 @@ public class DialogCheckLayout extends AbstractAction
 
 		logger.debug("Check the addition parameters");
 		Parameters controlMap;
-		if (this.fields != null)
+		if (this.table != null)
 		{
 			controlMap = new Parameters();
-			Parameters finalControlMap = controlMap;
-			this.fields.entrySet().forEach(entry -> finalControlMap.add(entry.getKey(), "" + entry.getValue()));
+			table.forEach(rowTable -> rowTable.forEach((k, v) ->
+			{
+				if (!k.isEmpty())
+				{
+					controlMap.add(k, String.valueOf(v));
+				}
+			}));
+
+			controlMap.evaluateAll(context.getEvaluator());
+		}
+		else if (this.fields != null)
+		{
+			controlMap = new Parameters();
+			this.fields.forEach((key, value) -> controlMap.add(key, "" + value));
 			controlMap.evaluateAll(context.getEvaluator());
 		}
 		else
