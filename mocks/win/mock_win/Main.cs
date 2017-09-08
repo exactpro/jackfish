@@ -42,7 +42,8 @@ namespace mock_win
             fillTable1();
             fillListView();
             fillContextMenu();
-            ComboBox.SelectedIndex = 0;  
+            ComboBox.SelectedIndex = 0;
+            CentralLabel.Text = "CentralLabel";
             createDialog();
             createMenu();
 
@@ -52,6 +53,14 @@ namespace mock_win
             this.timer.Enabled = true;
 
             this.Spinner.IsAccessible = true;
+            List.ScrollPositionChange += ScrollChangePosition;
+            ComboBox.ScrollPositionChange += ScrollChangePosition;
+            Tree.ScrollPositionChange += ScrollChangePosition;
+        }
+
+        private void ScrollChangePosition(Control sender)
+        {
+            protocolText.Text += sender.Name + "_scroll" + NEWLINE;
         }
 
         private void setSize()
@@ -122,7 +131,7 @@ namespace mock_win
             mouseDownPos = Cursor.Position;
             flagClickMenuItem = true;
         }
-
+        
         private void timer_Tick(object sender, EventArgs e)
         {
             if (Slider.Value != sliderValue)
@@ -131,11 +140,10 @@ namespace mock_win
                 sliderLabel.Text = "Slider_" + Slider.Value;
             }
 
-            Point point = new Point(10, 10);
-            if (listBox1.IndexFromPoint(point) != scrollBarValue)
+            if (listBox1.TopIndex != scrollBarValue)
             {
-                scrollBarValue = listBox1.IndexFromPoint(point);
-                sliderLabel.Text = "ScrollBar_" + listBox1.IndexFromPoint(point);
+                scrollBarValue = listBox1.TopIndex;
+                sliderLabel.Text = "ScrollBar_" + listBox1.TopIndex;
             }
 
             if (Tree.Nodes.Find("red", true)[0].IsVisible)
@@ -522,11 +530,6 @@ namespace mock_win
 
         }
 
-        private void ComboBox_SelectedIndexChanged(object sender, EventArgs e)
-        {
-
-        }
-
         private void countButton_Click(object sender, EventArgs e)
         {
             counter++;
@@ -640,6 +643,21 @@ namespace mock_win
         private void protocolClear_Click(object sender, EventArgs e)
         {
             protocolText.Clear();
+        }
+
+        private void List_RegionChanged(object sender, EventArgs e)
+        {
+            
+        }
+
+        private void List_DrawItem(object sender, DrawItemEventArgs e)
+        {
+            
+        }
+
+        private void List_MeasureItem(object sender, MeasureItemEventArgs e)
+        {
+            
         }
     }
 }

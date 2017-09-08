@@ -10,7 +10,7 @@
             <table id="Table1" uid="Table1" class="" name="" text="" addition="Many"/>
             <checkBox id="CheckBox" uid="CheckBox" class="" text="" addition="Many"/>
             <slider id="Slider" uid="Slider" class="" addition="Many"/>
-            <scrollBar id="ScrollBar" uid="Vertical ScrollBar" xpath="" class="" addition="Many"/>
+            <scrollBar id="ScrollBar" uid="Vertical ScrollBar" xpath="" class="" name="ScrollBar" addition="Many"/>
             <comboBox id="ComboBox" uid="ComboBox" class="" name="" action="" addition="Many"/>
             <radioButton id="RadioButton" uid="Green" xpath="" class="" action="" text="" addition="Many"/>
             <tree id="Tree" uid="Tree" xpath="" class="" addition="Many"/>
@@ -49,7 +49,7 @@
             <spinner id="Spinner" uid="Spinner" xpath="" class="" name="" addition="Many"/>
             <label id="selectLabel" uid="selectLabel" owner="" name=""/>
             <textBox id="protocolText" uid="protocolText" owner=""/>
-            <button id="protocolClear" uid="protocolClear" owner=""/>
+            <button id="protocolClear" uid="protocolClear" xpath="" owner=""/>
         </run>
         <onClose/>
         <close/>
@@ -118,6 +118,23 @@
             <button id="invisibleButtonEnabled" uid="" class="" name="invisibleButton" text="" visibility="Enable"/>
             <button id="ButtonWeak" uid="" class="" name="Button" text="" weak="true"/>
             <button id="ButtonWeakNot" uid="" class="" name="Button" text=""/>
+            <listView id="ListBoxVisibility" uid="listBox1" class="" name="" text="" visibility="Visible"/>
+            <listView id="ListBoxNormal" uid="listBox1" class="" name="" text=""/>
+            <comboBox id="ComboBoxNormal" uid="ComboBox" class="" name="" action="" addition="Many"/>
+            <comboBox id="ComboBoxVisibility" uid="ComboBox" class="" name="" action="" addition="Many" visibility="Visible"/>
+        </run>
+        <onClose/>
+        <close/>
+    </window>
+    <window name="SilverLight">
+        <self/>
+        <onOpen/>
+        <run>
+            <comboBox id="combo" xpath="//ComboBox[contains(@class,&amp;quot;AutoCompleteBox&amp;quot;) and contains(@uid,&amp;quot;autocompleteBox&amp;quot;)]"/>
+            <comboBox id="combo2" xpath="//ComboBox[contains(@class,&amp;quot;ComboBox&amp;quot;) and contains(@uid,&amp;quot;comboboxWithData&amp;quot;)]"/>
+            <comboBox id="combo" uid="comboboxSimple" xpath="" class=""/>
+            <comboBox id="combo3" uid="comboboxSimple2" xpath="" class=""/>
+            <comboBox id="comboCheckBoxes" uid="comboboxCheckboxes" xpath="" class=""/>
         </run>
         <onClose/>
         <close/>

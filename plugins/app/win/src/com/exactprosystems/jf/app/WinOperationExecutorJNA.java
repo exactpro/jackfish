@@ -965,17 +965,29 @@ public class WinOperationExecutorJNA implements OperationExecutor<UIProxyJNA>
 		{
 			List<UIProxyJNA> elementsList = Collections.emptyList();
 			String attribute = this.driver.elementAttribute(component, AttributeKind.TYPE_NAME);
-			if (attribute.equalsIgnoreCase(ControlType.List.getName()) || attribute.equalsIgnoreCase(ControlType.ComboBox.getName()))
+			if (attribute.equalsIgnoreCase(ControlType.ComboBox.getName()))
 			{
-				elementsList = findComponents(component, WindowTreeScope.Children, WindowProperty.ControlTypeProperty, "" + ControlType.ListItem.getId());
+				elementsList = findComponents(component, WindowTreeScope.Children, WindowProperty.ControlTypeProperty, Integer.toString(ControlType.List.getId()));
+				if(elementsList.isEmpty())
+				{
+					elementsList = findComponents(component, WindowTreeScope.Children, WindowProperty.ControlTypeProperty, Integer.toString(ControlType.ListItem.getId()));
+				}
+				else
+				{
+					elementsList = findComponents(elementsList.get(0), WindowTreeScope.Children, WindowProperty.ControlTypeProperty, Integer.toString(ControlType.ListItem.getId()));
+				}
+			}
+			if (attribute.equalsIgnoreCase(ControlType.List.getName()))
+			{
+				elementsList = findComponents(component, WindowTreeScope.Children, WindowProperty.ControlTypeProperty, Integer.toString(ControlType.ListItem.getId()));
 			}
 			if (attribute.equalsIgnoreCase(ControlType.Tab.getName()))
 			{
-				elementsList = findComponents(component, WindowTreeScope.Children, WindowProperty.ControlTypeProperty, "" + ControlType.TabItem.getId());
+				elementsList = findComponents(component, WindowTreeScope.Children, WindowProperty.ControlTypeProperty, Integer.toString(ControlType.TabItem.getId()));
 			}
 			if (attribute.equalsIgnoreCase(ControlType.Tree.getName()))
 			{
-				elementsList = findComponents(component, WindowTreeScope.Descendants, WindowProperty.ControlTypeProperty, "" + ControlType.TreeItem.getId());
+				elementsList = findComponents(component, WindowTreeScope.Descendants, WindowProperty.ControlTypeProperty, Integer.toString(ControlType.TreeItem.getId()));
 			}
 			if (index > elementsList.size() || index < 0)
 			{
@@ -983,8 +995,10 @@ public class WinOperationExecutorJNA implements OperationExecutor<UIProxyJNA>
 			}
 
 			UIProxyJNA element = elementsList.get(index);
-			checkPatternIsAvailable(element, WindowPattern.ScrollItemPattern);
-			this.driver.doPatternCall(element, WindowPattern.ScrollItemPattern, "ScrollIntoView", null, -1);
+			if(checkPatternIsAvailable(element, WindowPattern.ScrollItemPattern))
+			{
+				this.driver.doPatternCall(element, WindowPattern.ScrollItemPattern, "ScrollIntoView", null, -1);
+			}
 			return true;
 		}
 		catch(WrongParameterException ignored)
@@ -993,13 +1007,10 @@ public class WinOperationExecutorJNA implements OperationExecutor<UIProxyJNA>
 		}
 	}
 
-	private void checkPatternIsAvailable(UIProxyJNA element, WindowPattern pattern) throws Exception
+	private boolean checkPatternIsAvailable(UIProxyJNA element, WindowPattern pattern) throws Exception
 	{
 		List<WindowPattern> availablePatterns = this.driver.getAvailablePatterns(element);
-		if (!availablePatterns.contains(pattern))
-		{
-			throw new ControlNotSupportedException("Can't scroll, because ScrollItemPattern is not available");
-		}
+		return availablePatterns.contains(pattern);
 	}
 
 	@Override
