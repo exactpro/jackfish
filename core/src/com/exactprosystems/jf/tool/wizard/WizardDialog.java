@@ -42,7 +42,7 @@ public class WizardDialog extends Dialog<Boolean>
 	public WizardDialog(Wizard wizard, Context context)
 	{
 		super();
-		this.initModality(Modality.NONE);
+		this.initModality(Modality.WINDOW_MODAL);
 		this.wizard = wizard;
 		expandTitle(null);
 		this.setResizable(true);
