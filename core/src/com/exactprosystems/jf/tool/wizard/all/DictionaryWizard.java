@@ -431,7 +431,8 @@ public class DictionaryWizard extends AbstractWizard
 			this.wizardHelper = new WizardLoader(this.currentConnection, self, (image, doc) ->
 			{
 				this.imageViewWithScale.displayImage(image);
-
+				this.dialogRectangle = Common.tryCatch(() -> this.currentConnection.getApplication().service().getRectangle(null, Optional.ofNullable(this.copyWindow.getSelfControl()).map(IControl::locator).orElse(null)),
+						"DictionaryWizard exception", new Rectangle(0, 0, 0, 0));
 				this.document = doc;
 				this.rootNode = XpathUtils.getFirst(this.document, "/*");
 				this.xmlTreeView.displayDocument(this.document);
@@ -450,7 +451,7 @@ public class DictionaryWizard extends AbstractWizard
 				DialogsHelper.showError(message);
 			});
 			this.wizardHelper.start();
-			this.dialogRectangle = this.currentConnection.getApplication().service().getRectangle(null, Optional.ofNullable(this.copyWindow.getSelfControl()).map(IControl::locator).orElse(null));
+
 			this.wizardSettings = new WizardSettings(this.currentDictionary.getFactory().getSettings());
 			this.pluginInfo = this.currentConnection.getApplication().getFactory().getInfo();
 			this.matcher = new WizardMatcher(this.pluginInfo);

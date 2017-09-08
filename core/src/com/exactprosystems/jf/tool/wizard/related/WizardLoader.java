@@ -25,6 +25,7 @@ import java.awt.image.BufferedImage;
 import java.util.Optional;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
@@ -82,7 +83,14 @@ public class WizardLoader
 
 	public void stop()
 	{
-		this.exec.shutdownNow();
+        this.exec.shutdown();
+        try {
+            if (!this.exec.awaitTermination(800, TimeUnit.MILLISECONDS)) {
+                this.exec.shutdownNow();
+            }
+        } catch (InterruptedException e) {
+            this.exec.shutdownNow();
+        }
     }
 
     @Deprecated
