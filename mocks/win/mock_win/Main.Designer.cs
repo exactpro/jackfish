@@ -46,10 +46,7 @@
             this.panel1 = new System.Windows.Forms.Panel();
             this.Blue = new System.Windows.Forms.RadioButton();
             this.Orange = new System.Windows.Forms.RadioButton();
-            this.ComboBox = new System.Windows.Forms.ComboBox();
             this.Slider = new System.Windows.Forms.TrackBar();
-            this.Tree = new System.Windows.Forms.TreeView();
-            this.List = new System.Windows.Forms.ListBox();
             this.Table3 = new System.Windows.Forms.ListView();
             this.header1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.header2 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
@@ -97,6 +94,9 @@
             this.selectLabel = new System.Windows.Forms.Label();
             this.protocolText = new System.Windows.Forms.TextBox();
             this.protocolClear = new System.Windows.Forms.Button();
+            this.ComboBox = new mock_win.CustomComboBox();
+            this.Tree = new mock_win.CustomTreeView();
+            this.List = new mock_win.CustomListBox();
             ((System.ComponentModel.ISupportInitialize)(this.Table1)).BeginInit();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.Slider)).BeginInit();
@@ -263,25 +263,6 @@
             this.Orange.MouseDown += new System.Windows.Forms.MouseEventHandler(this.CommonMouseDown);
             this.Orange.MouseMove += new System.Windows.Forms.MouseEventHandler(this.CommonMouseMove);
             // 
-            // ComboBox
-            // 
-            this.ComboBox.FormattingEnabled = true;
-            this.ComboBox.Items.AddRange(new object[] {
-            resources.GetString("ComboBox.Items"),
-            resources.GetString("ComboBox.Items1"),
-            resources.GetString("ComboBox.Items2"),
-            resources.GetString("ComboBox.Items3")});
-            resources.ApplyResources(this.ComboBox, "ComboBox");
-            this.ComboBox.Name = "ComboBox";
-            this.ComboBox.SelectedIndexChanged += new System.EventHandler(this.ComboBox_SelectedIndexChanged);
-            this.ComboBox.SelectedValueChanged += new System.EventHandler(this.ComboBox_SelectedValueChanged);
-            this.ComboBox.TextChanged += new System.EventHandler(this.ComboBox_TextValueChanged);
-            this.ComboBox.KeyDown += new System.Windows.Forms.KeyEventHandler(this.CommonKeyDown);
-            this.ComboBox.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.CommonKeyPress);
-            this.ComboBox.KeyUp += new System.Windows.Forms.KeyEventHandler(this.CommonKeyUp);
-            this.ComboBox.MouseDown += new System.Windows.Forms.MouseEventHandler(this.CommonMouseDown);
-            this.ComboBox.MouseMove += new System.Windows.Forms.MouseEventHandler(this.CommonMouseMove);
-            // 
             // Slider
             // 
             resources.ApplyResources(this.Slider, "Slider");
@@ -294,37 +275,6 @@
             this.Slider.KeyUp += new System.Windows.Forms.KeyEventHandler(this.CommonKeyUp);
             this.Slider.MouseDown += new System.Windows.Forms.MouseEventHandler(this.CommonMouseDown);
             this.Slider.MouseMove += new System.Windows.Forms.MouseEventHandler(this.CommonMouseMove);
-            // 
-            // Tree
-            // 
-            resources.ApplyResources(this.Tree, "Tree");
-            this.Tree.Name = "Tree";
-            this.Tree.Nodes.AddRange(new System.Windows.Forms.TreeNode[] {
-            ((System.Windows.Forms.TreeNode)(resources.GetObject("Tree.Nodes")))});
-            this.Tree.KeyDown += new System.Windows.Forms.KeyEventHandler(this.CommonKeyDown);
-            this.Tree.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.CommonKeyPress);
-            this.Tree.KeyUp += new System.Windows.Forms.KeyEventHandler(this.CommonKeyUp);
-            this.Tree.MouseDown += new System.Windows.Forms.MouseEventHandler(this.CommonMouseDown);
-            this.Tree.MouseMove += new System.Windows.Forms.MouseEventHandler(this.CommonMouseMove);
-            // 
-            // List
-            // 
-            this.List.FormattingEnabled = true;
-            this.List.Items.AddRange(new object[] {
-            resources.GetString("List.Items"),
-            resources.GetString("List.Items1"),
-            resources.GetString("List.Items2"),
-            resources.GetString("List.Items3")});
-            resources.ApplyResources(this.List, "List");
-            this.List.Name = "List";
-            this.List.SelectedIndexChanged += new System.EventHandler(this.ListView_SelectedIndexChanged);
-            this.List.DisplayMemberChanged += new System.EventHandler(this.ListView_SelectedIndexChanged);
-            this.List.SelectedValueChanged += new System.EventHandler(this.ListView_SelectedIndexChanged);
-            this.List.KeyDown += new System.Windows.Forms.KeyEventHandler(this.CommonKeyDown);
-            this.List.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.CommonKeyPress);
-            this.List.KeyUp += new System.Windows.Forms.KeyEventHandler(this.CommonKeyUp);
-            this.List.MouseMove += new System.Windows.Forms.MouseEventHandler(this.CommonMouseMove);
-            this.List.MouseUp += new System.Windows.Forms.MouseEventHandler(this.CommonMouseDown);
             // 
             // Table3
             // 
@@ -574,6 +524,7 @@
             // 
             // listBox1
             // 
+            resources.ApplyResources(this.listBox1, "listBox1");
             this.listBox1.FormattingEnabled = true;
             this.listBox1.Items.AddRange(new object[] {
             resources.GetString("listBox1.Items"),
@@ -677,7 +628,6 @@
             resources.GetString("listBox1.Items98"),
             resources.GetString("listBox1.Items99"),
             resources.GetString("listBox1.Items100")});
-            resources.ApplyResources(this.listBox1, "listBox1");
             this.listBox1.Name = "listBox1";
             this.listBox1.RegionChanged += new System.EventHandler(this.listBox1_RegionChanged);
             // 
@@ -800,6 +750,59 @@
             this.protocolClear.Click += new System.EventHandler(this.protocolClear_Click);
             this.protocolClear.MouseClick += new System.Windows.Forms.MouseEventHandler(this.button1_MouseClick);
             // 
+            // ComboBox
+            // 
+            resources.ApplyResources(this.ComboBox, "ComboBox");
+            this.ComboBox.DropDownHeight = 40;
+            this.ComboBox.FormattingEnabled = true;
+            this.ComboBox.Items.AddRange(new object[] {
+            resources.GetString("ComboBox.Items"),
+            resources.GetString("ComboBox.Items1"),
+            resources.GetString("ComboBox.Items2"),
+            resources.GetString("ComboBox.Items3")});
+            this.ComboBox.Name = "ComboBox";
+            this.ComboBox.SelectedIndexChanged += new System.EventHandler(this.ComboBox_SelectedIndexChanged);
+            this.ComboBox.SelectedValueChanged += new System.EventHandler(this.ComboBox_SelectedValueChanged);
+            this.ComboBox.TextChanged += new System.EventHandler(this.ComboBox_TextValueChanged);
+            this.ComboBox.KeyDown += new System.Windows.Forms.KeyEventHandler(this.CommonKeyDown);
+            this.ComboBox.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.CommonKeyPress);
+            this.ComboBox.KeyUp += new System.Windows.Forms.KeyEventHandler(this.CommonKeyUp);
+            this.ComboBox.MouseDown += new System.Windows.Forms.MouseEventHandler(this.CommonMouseDown);
+            this.ComboBox.MouseMove += new System.Windows.Forms.MouseEventHandler(this.CommonMouseMove);
+            // 
+            // Tree
+            // 
+            resources.ApplyResources(this.Tree, "Tree");
+            this.Tree.Name = "Tree";
+            this.Tree.Nodes.AddRange(new System.Windows.Forms.TreeNode[] {
+            ((System.Windows.Forms.TreeNode)(resources.GetObject("Tree.Nodes")))});
+            this.Tree.KeyDown += new System.Windows.Forms.KeyEventHandler(this.CommonKeyDown);
+            this.Tree.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.CommonKeyPress);
+            this.Tree.KeyUp += new System.Windows.Forms.KeyEventHandler(this.CommonKeyUp);
+            this.Tree.MouseDown += new System.Windows.Forms.MouseEventHandler(this.CommonMouseDown);
+            this.Tree.MouseMove += new System.Windows.Forms.MouseEventHandler(this.CommonMouseMove);
+            // 
+            // List
+            // 
+            this.List.FormattingEnabled = true;
+            this.List.Items.AddRange(new object[] {
+            resources.GetString("List.Items"),
+            resources.GetString("List.Items1"),
+            resources.GetString("List.Items2"),
+            resources.GetString("List.Items3")});
+            resources.ApplyResources(this.List, "List");
+            this.List.Name = "List";
+            this.List.MeasureItem += new System.Windows.Forms.MeasureItemEventHandler(this.List_MeasureItem);
+            this.List.SelectedIndexChanged += new System.EventHandler(this.ListView_SelectedIndexChanged);
+            this.List.DisplayMemberChanged += new System.EventHandler(this.ListView_SelectedIndexChanged);
+            this.List.SelectedValueChanged += new System.EventHandler(this.ListView_SelectedIndexChanged);
+            this.List.RegionChanged += new System.EventHandler(this.List_RegionChanged);
+            this.List.KeyDown += new System.Windows.Forms.KeyEventHandler(this.CommonKeyDown);
+            this.List.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.CommonKeyPress);
+            this.List.KeyUp += new System.Windows.Forms.KeyEventHandler(this.CommonKeyUp);
+            this.List.MouseMove += new System.Windows.Forms.MouseEventHandler(this.CommonMouseMove);
+            this.List.MouseUp += new System.Windows.Forms.MouseEventHandler(this.CommonMouseDown);
+            // 
             // MockWin
             // 
             resources.ApplyResources(this, "$this");
@@ -887,15 +890,15 @@
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.RadioButton Blue;
         private System.Windows.Forms.RadioButton Orange;
-        private System.Windows.Forms.ComboBox ComboBox;
+        private CustomComboBox ComboBox;
         private System.Windows.Forms.TrackBar Slider;
-        private System.Windows.Forms.TreeView Tree;
+        private CustomTreeView Tree;
         private System.Windows.Forms.TabControl TabPanel;
         private System.Windows.Forms.TabPage tabPage1;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.TabPage tabPage2;
         private System.Windows.Forms.Label label4;
-        private System.Windows.Forms.ListBox List;
+        private CustomListBox List;
         private System.Windows.Forms.ColumnHeader header1;
         private System.Windows.Forms.ColumnHeader header2;
         private System.Windows.Forms.ColumnHeader header3;
