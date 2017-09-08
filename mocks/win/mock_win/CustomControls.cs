@@ -11,101 +11,88 @@ namespace mock_win
     {
         public delegate void ScrollEventHandler(Control sender);
         public event ScrollEventHandler ScrollPositionChange;
-        bool scroll = false;
-
-        protected override void WndProc(ref Message m)
-        {
-            base.WndProc(ref m);
-            if (m.Msg == 0x115)
-            {
-                if (scroll)
-                {
-                    ScrollPositionChange(this);
-                }
-                scroll = !scroll;
-            }
-        }
-
-        //public delegate void TopIndexHandler(Control sender, string topIndex);
-        //public event TopIndexHandler TopIndexChanged;
-
-        //Timer timer;
-        //private int topIndex_now;
-        //private string topIndexName;
-        //Point point;
-
-        //public CustomListBox()
+        
+        //bool scroll = false;
+        //protected override void WndProc(ref Message m)
         //{
-        //    this.timer = new Timer();
-        //    this.timer.Interval = 10;
-        //    this.timer.Tick += Timer_Tick;
-        //    this.timer.Enabled = true;
-        //    this.point = new Point(10, 10);
-        //}
-
-        //private void Timer_Tick(object sender, EventArgs e)
-        //{
-        //    if (topIndex_now != this.TopIndex)
+        //    base.WndProc(ref m);
+        //    if (m.Msg == 0x115)
         //    {
-        //        topIndex_now = this.TopIndex;
-        //        TopIndexChanged(this, this.Items[this.TopIndex].ToString());
+        //        if (scroll)
+        //        {
+        //            ScrollPositionChange(this);
+        //        }
+        //        scroll = !scroll;
         //    }
         //}
+
+        Timer timer;
+        private int topIndex_now;
+
+        public CustomListBox()
+        {
+            this.timer = new Timer();
+            this.timer.Interval = 10;
+            this.timer.Tick += Timer_Tick;
+            this.timer.Enabled = true;
+        }
+
+        private void Timer_Tick(object sender, EventArgs e)
+        {
+            if (topIndex_now != this.TopIndex)
+            {
+                topIndex_now = this.TopIndex;
+                ScrollPositionChange(this);
+            }
+        }
     }
 
     class CustomTreeView : TreeView
     {
         public delegate void ScrollEventHandler(Control sender);
         public event ScrollEventHandler ScrollPositionChange;
-        bool scroll = false;
 
-        protected override void WndProc(ref Message m)
+        //bool scroll = false;
+        //protected override void WndProc(ref Message m)
+        //{
+        //    base.WndProc(ref m);
+        //    if (m.Msg == 0x115)
+        //    {
+        //        if (scroll)
+        //        {
+        //            ScrollPositionChange(this);
+        //        }
+        //        scroll = !scroll;
+        //    }
+        //}
+
+        Timer timer;
+        private string topIndexName = "";
+
+        public CustomTreeView()
         {
-            base.WndProc(ref m);
-            if (m.Msg == 0x115)
-            {
-                if (scroll)
-                {
-                    ScrollPositionChange(this);
-                }
-                scroll = !scroll;
-            }
+            this.timer = new Timer();
+            this.timer.Interval = 10;
+            this.timer.Tick += Timer_Tick;
+            this.timer.Enabled = true;
         }
 
-        //public delegate void TopIndexHandler(Control sender, string topIndex);
-        //public event TopIndexHandler TopIndexChanged;
-
-        //Timer timer;
-        //private int topIndex_now = -99;
-        //private string topIndexName;
-        //Point point;
-
-        //public CustomTreeView()
-        //{
-        //    this.timer = new Timer();
-        //    this.timer.Interval = 10;
-        //    this.timer.Tick += Timer_Tick;
-        //    this.timer.Enabled = true;
-        //    this.point = new Point(10, 10);
-        //}
-
-        //private void Timer_Tick(object sender, EventArgs e)
-        //{
-        //    //if (topIndexName != this.TopNode.Text)
-        //    //{
-        //    //    topIndexName = this.TopNode.Text;
-        //    //    TopIndexChanged(this, topIndexName);
-        //    //}
-        //}
+        private void Timer_Tick(object sender, EventArgs e)
+        {
+            //if (topIndexName != this.TopNode.Text)
+            //{
+            //    topIndexName = this.TopNode.Text;
+            //    ScrollPositionChange(this);
+            //}
+        }
     }
 
     class CustomComboBox : ComboBox
     {
         public delegate void ScrollEventHandler(Control sender);
         public event ScrollEventHandler ScrollPositionChange;
-        bool scroll = false;
-        bool droppedBefore = false;
 
+        bool scroll = false;
         protected override void WndProc(ref Message m)
         {
             base.WndProc(ref m);

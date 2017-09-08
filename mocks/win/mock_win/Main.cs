@@ -42,7 +42,8 @@ namespace mock_win
             fillTable1();
             fillListView();
             fillContextMenu();
-            ComboBox.SelectedIndex = 0;  
+            ComboBox.SelectedIndex = 0;
+            CentralLabel.Text = "CentralLabel";
             createDialog();
             createMenu();
 
@@ -525,11 +526,6 @@ namespace mock_win
         }
 
         private void Table_SelectedIndexChanged(object sender, EventArgs e)
-        {
-
-        }
-
-        private void ComboBox_SelectedIndexChanged(object sender, EventArgs e)
         {
 
         }

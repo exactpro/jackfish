@@ -761,7 +761,6 @@
             resources.GetString("ComboBox.Items2"),
             resources.GetString("ComboBox.Items3")});
             this.ComboBox.Name = "ComboBox";
-            this.ComboBox.SelectedIndexChanged += new System.EventHandler(this.ComboBox_SelectedIndexChanged);
             this.ComboBox.SelectedValueChanged += new System.EventHandler(this.ComboBox_SelectedValueChanged);
             this.ComboBox.TextChanged += new System.EventHandler(this.ComboBox_TextValueChanged);
             this.ComboBox.KeyDown += new System.Windows.Forms.KeyEventHandler(this.CommonKeyDown);
