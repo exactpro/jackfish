@@ -324,7 +324,7 @@ public class Window implements IWindow, Mutable
 	}
 	
 	@Override
-	public IControl getOwnerControl(IControl control) throws Exception
+	public IControl getOwnerControl(IControl control)
 	{
 		if (control != null && control.getOwnerID() != null && !control.getOwnerID().isEmpty())
 		{

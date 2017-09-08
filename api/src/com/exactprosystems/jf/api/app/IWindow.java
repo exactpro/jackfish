@@ -37,7 +37,7 @@ public interface IWindow
 	Collection<IControl> getControls(SectionKind kind);
 	IControl 			getFirstControl(SectionKind kind) throws Exception;
 	IControl 			getControlForName(SectionKind kind, String name);
-	IControl 			getOwnerControl(IControl control) throws Exception;
+	IControl 			getOwnerControl(IControl control);
 	IControl 			getReferenceControl(IControl control);
 	IControl			getRowsControl(IControl control) throws Exception;
 	IControl			getHeaderControl(IControl control) throws Exception;

@@ -1,9 +1,6 @@
 package com.exactprosystems.jf.tool.wizard.all;
 
-import com.exactprosystems.jf.api.app.AppConnection;
-import com.exactprosystems.jf.api.app.IControl;
-import com.exactprosystems.jf.api.app.IWindow;
-import com.exactprosystems.jf.api.app.PluginInfo;
+import com.exactprosystems.jf.api.app.*;
 import com.exactprosystems.jf.api.common.IContext;
 import com.exactprosystems.jf.api.common.Str;
 import com.exactprosystems.jf.api.error.JFRemoteException;
@@ -11,10 +8,12 @@ import com.exactprosystems.jf.api.wizard.WizardAttribute;
 import com.exactprosystems.jf.api.wizard.WizardCategory;
 import com.exactprosystems.jf.api.wizard.WizardCommand;
 import com.exactprosystems.jf.api.wizard.WizardManager;
+import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.utils.XpathUtils;
 import com.exactprosystems.jf.documents.matrix.Matrix;
 import com.exactprosystems.jf.documents.matrix.parser.items.MatrixItem;
 import com.exactprosystems.jf.functions.Table;
+import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.CssVariables;
 import com.exactprosystems.jf.tool.custom.scaledimage.ImageViewWithScale;
 import com.exactprosystems.jf.tool.helpers.DialogsHelper;
@@ -27,18 +26,18 @@ import com.exactprosystems.jf.tool.wizard.related.WizardLoader;
 import javafx.application.Platform;
 import javafx.concurrent.Task;
 import javafx.geometry.HPos;
+import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
 import javafx.scene.text.Text;
 
 import java.awt.Rectangle;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.function.Consumer;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -60,6 +59,7 @@ public class LayoutWizard extends AbstractWizard
 	private AppConnection appConnection;
 	private WizardMatcher wizardMatcher;
 	private WizardLoader wizardLoader;
+	private IWindow currentWindow;
 	private ExecutorService executor;
 
 	private Table table;
@@ -73,9 +73,17 @@ public class LayoutWizard extends AbstractWizard
 	private ImageViewWithScale imageViewWithScale;
 	private ListView<IControlWithCheck> lvControls;
 
-	private Button btnCheckTable;
-	private GridPane checkGrid;
-	private Button btnScan;
+	private Button            btnCheckTable;
+	private GridPane          checkGrid;
+	private Button            btnScan;
+	private BorderPane        bpView;
+	private AbstractEvaluator evaluator;
+
+	private CheckBox cbNumber;
+	private CheckBox cbLess;
+	private CheckBox cbGreat;
+	private CheckBox cbAbout;
+	private CheckBox cbBetween;
 
 	//region AbstractWizard methods
 	@Override
@@ -84,6 +92,7 @@ public class LayoutWizard extends AbstractWizard
 		super.init(context, wizardManager, parameters);
 		this.matrix = super.get(MatrixFx.class, parameters);
 		this.item = super.get(MatrixItem.class, parameters);
+		this.evaluator = this.matrix.getFactory().createEvaluator();
 	}
 
 	@Override
@@ -172,7 +181,24 @@ public class LayoutWizard extends AbstractWizard
 
 			HBox box = new HBox();
 			HBox cbBoxes = new HBox();
-			//TODO fill cbBoxes
+
+			this.cbNumber = new CheckBox("Number");
+			this.cbAbout = new CheckBox("About");
+			this.cbLess = new CheckBox("Less");
+			this.cbGreat = new CheckBox("Great");
+			this.cbBetween = new CheckBox("Between");
+
+			cbBoxes.getChildren().addAll(
+					  this.cbNumber
+					, Common.createSpacer(Common.SpacerEnum.HorizontalMin)
+					, this.cbAbout
+					, Common.createSpacer(Common.SpacerEnum.HorizontalMin)
+					, this.cbLess
+					, Common.createSpacer(Common.SpacerEnum.HorizontalMin)
+					, this.cbGreat
+					, Common.createSpacer(Common.SpacerEnum.HorizontalMin)
+					, this.cbBetween
+			);
 
 			box.getChildren().addAll(cbBoxes, this.btnScan);
 			HBox.setHgrow(cbBoxes, Priority.ALWAYS);
@@ -198,6 +224,8 @@ public class LayoutWizard extends AbstractWizard
 
 			this.main.add(this.btnCheckTable, 0, 4);
 
+			this.bpView = new BorderPane();
+			this.main.add(this.bpView, 1, 3);
 		}
 		//endregion
 
@@ -290,6 +318,7 @@ public class LayoutWizard extends AbstractWizard
 					DialogsHelper.showError(message);
 				});
 				this.wizardLoader.start();
+				this.currentWindow = newValue;
 			}
 			else
 			{
@@ -307,6 +336,7 @@ public class LayoutWizard extends AbstractWizard
 			DialogsHelper.showInfo("Select");
 			return;
 		}
+		clearTable();
 		this.btnScan.setDisable(true);
 
 		VBox box = new VBox();
@@ -362,27 +392,308 @@ public class LayoutWizard extends AbstractWizard
 					r0.setVgrow(Priority.ALWAYS);
 
 					ColumnConstraints c0 = new ColumnConstraints();
+					c0.setHalignment(HPos.CENTER);
 					c0.setPercentWidth(-1);
 					c0.setHgrow(Priority.ALWAYS);
 
 					this.checkGrid.getColumnConstraints().add(c0);
 					this.checkGrid.getRowConstraints().add(r0);
-					Platform.runLater(() -> this.checkGrid.add(new Text("" + i), i, i));
 				});
+
+		Platform.runLater(() -> IntStream.rangeClosed(1, collect.size())
+				.forEach(i ->
+				{
+					this.checkGrid.add(new Text(collect.get(i - 1).getID()), 0, i);
+					this.checkGrid.add(new Text(collect.get(i - 1).getID()), i, 0);
+				}));
+
+		for (int i = 0; i < collect.size(); i++)
+		{
+			for (int j = 0; j < collect.size(); j++)
+			{
+				int finalJ = j;
+				int finalI = i;
+				Platform.runLater(() -> this.checkGrid.add(this.createRelation(collect.get(finalI), collect.get(finalJ)), finalI + 1, finalJ + 1));
+			}
+		}
 
 		this.btnCheckTable.setDisable(true);
 		Thread.sleep(500);
+	}
+
+	private RelationButton createRelation(IControl top, IControl left)
+	{
+		RelationButton btn = new RelationButton(createFormula(top, left), top, left);
+		btn.setOnAction(e -> this.bpView.setCenter(btn.createView()));
+		return btn;
+	}
+
+	private IRemoteApplication service()
+	{
+		return this.appConnection.getApplication().service();
+	}
+
+	private Spec createFormula(IControl top, IControl left)
+	{
+		Rectangle topRectangle = null;
+		Rectangle leftRectangle = null;
+
+		try
+		{
+			IControl topOwner = this.currentWindow.getOwnerControl(top);
+			topRectangle = service().getRectangle(topOwner == null ? null : topOwner.locator(), top.locator());
+
+			if (top == left)
+			{
+				leftRectangle = new Rectangle(topRectangle);
+			}
+			else
+			{
+				IControl leftOwner = this.currentWindow.getOwnerControl(left);
+				leftRectangle = service().getRectangle(leftOwner == null ? null : leftOwner.locator(), left.locator());
+			}
+		}
+		catch (Exception e)
+		{
+			//TODO what we need return??
+			return Spec.create().invisible();
+		}
+		//same control
+		if (top == left)
+		{
+			Spec spec = Spec.create()
+					.visible()
+					.count(1);
+			addSpecs(topRectangle.getHeight(), spec::height, spec::height);
+			addSpecs(topRectangle.getWidth(), spec::width, spec::width);
+
+			return spec;
+		}
+		return Spec.create();
+	}
+
+	private void addSpecs(Number n, Consumer<Number> c0, Consumer<CheckProvider> c1)
+	{
+		if (this.cbNumber.isSelected())
+		{
+			c0.accept(n);
+		}
+		if (this.cbAbout.isSelected())
+		{
+			c1.accept(DoSpec.about(n));
+		}
+		if (this.cbLess.isSelected())
+		{
+			c1.accept(DoSpec.less(n.longValue() + 1));
+		}
+		if (this.cbGreat.isSelected())
+		{
+			c1.accept(DoSpec.great(n.longValue() - 1));
+		}
+		if (this.cbBetween.isSelected())
+		{
+			c1.accept(DoSpec.between(0, n.longValue() * 2));
+		}
 	}
 
 	private void clearTable()
 	{
 		this.checkGrid.getRowConstraints().clear();
 		this.checkGrid.getColumnConstraints().clear();
-		this.checkGrid.getChildren().removeIf(node -> node instanceof Text);
+		this.checkGrid.getChildren().removeIf(node -> node instanceof RelationButton || node instanceof Text);
 	}
 
 	//region private classes
-	private static class IControlWithCheck
+	private class RelationButton extends Button
+	{
+		private Spec formula;
+		private String topName;
+		private String leftName;
+		private IControl control;
+		private VBox boxWithFields;
+
+		public RelationButton(Spec formula, IControl topControl, IControl leftControl)
+		{
+			super();
+			this.setMaxHeight(Double.MAX_VALUE);
+			this.setMaxWidth(Double.MAX_VALUE);
+
+			this.topName = topControl.getID();
+			this.leftName = leftControl.getID();
+			this.formula = formula;
+			this.control = topControl;
+		}
+
+		public Node createView()
+		{
+			VBox main = new VBox();
+
+			this.boxWithFields = new VBox();
+
+			ScrollPane sp = new ScrollPane();
+
+			main.getChildren().add(new Text(String.format("Relation %s -> %s", topName, leftName)));
+			main.getChildren().add(new Separator(Orientation.HORIZONTAL));
+			main.getChildren().add(new Text(DoSpec.class.getSimpleName()));
+			Iterator<Piece> iterator = this.formula.iterator();
+			Consumer<OneRow> removeAll = this.boxWithFields.getChildren()::removeAll;
+			iterator.forEachRemaining(piece -> this.boxWithFields.getChildren().add(new OneRow(piece.toString(), evaluator, removeAll)));
+
+			Button btnAdd = new Button();
+			btnAdd.setId("cbAdd");
+			btnAdd.getStyleClass().add(CssVariables.TRANSPARENT_BACKGROUND);
+			this.boxWithFields.getChildren().add(btnAdd);
+			btnAdd.setOnAction(e -> this.boxWithFields.getChildren().add(this.boxWithFields.getChildren().size() - 1, new OneRow("", evaluator, removeAll)));
+
+			sp.setFitToHeight(true);
+			sp.setFitToWidth(true);
+			sp.setContent(this.boxWithFields);
+			main.getChildren().add(sp);
+			VBox.setVgrow(sp, Priority.ALWAYS);
+
+			Button btnCheck = new Button("Check");
+			Button btnSave = new Button("Save");
+			HBox hBox = new HBox();
+			hBox.setAlignment(Pos.CENTER_RIGHT);
+			btnSave.setOnAction(e -> this.save());
+			btnCheck.setOnAction(e -> {
+				List<String> check = this.check();
+				if (check == null)
+				{
+					//all ok
+				}
+				//TODO where place check result???
+				System.out.println(check);
+			});
+			hBox.getChildren().addAll(btnSave, Common.createSpacer(Common.SpacerEnum.HorizontalMid), btnCheck);
+			main.getChildren().addAll(Common.createSpacer(Common.SpacerEnum.VerticalMid), hBox);
+			return main;
+		}
+
+		private void save()
+		{
+			Spec func = this.create(piece -> DialogsHelper.showError(String.format("Can't save, because %s is invalid doSpec function", piece)));
+			if (func != null)
+			{
+				this.formula = func;
+			}
+		}
+
+		public List<String> check()
+		{
+			Spec func = this.create(piece -> DialogsHelper.showError(String.format("Can't check, because %s is invalid doSpec function", piece)));
+			if (func != null)
+			{
+				try
+				{
+					CheckingLayoutResult res = this.control.checkLayout(service(), currentWindow, func);
+					if (!res.isOk())
+					{
+						return res.getErrors();
+					}
+				}
+				catch (Exception e)
+				{
+					return Collections.singletonList(e.getMessage());
+				}
+			}
+			return null;
+		}
+
+		private Spec create(Consumer<String> errorConsumer)
+		{
+			List<String> pieces = this.boxWithFields.getChildren()
+					.stream()
+					.filter(node -> node instanceof OneRow)
+					.map(node -> (OneRow) node)
+					.map(OneRow::getValue)
+					.collect(Collectors.toList());
+
+			StringBuilder doSpecString = new StringBuilder(DoSpec.class.getSimpleName());
+			Spec func = null;
+			for (String piece : pieces)
+			{
+				if (piece.isEmpty())
+				{
+					continue;
+				}
+				doSpecString.append(piece);
+				boolean needStop = false;
+				try
+				{
+					Object evaluate = evaluator.evaluate(doSpecString.toString());
+					if (!(evaluate instanceof Spec))
+					{
+						needStop = true;
+					}
+					else
+					{
+						func = (Spec) evaluate;
+					}
+				}
+				catch (Exception e)
+				{
+					needStop = true;
+				}
+				if (needStop)
+				{
+					errorConsumer.accept(piece);
+					return null;
+				}
+			}
+			return func;
+		}
+	}
+
+	private static class OneRow extends HBox
+	{
+		private TextField field;
+
+		OneRow(String formula, AbstractEvaluator evaluator, Consumer<OneRow> handler)
+		{
+			this.setAlignment(Pos.CENTER_LEFT);
+			this.field = new TextField(formula);
+			HBox.setHgrow(this.field, Priority.ALWAYS);
+			this.field.textProperty().addListener((observable, oldValue, newValue) -> {
+				if (!Str.IsNullOrEmpty(newValue))
+				{
+					this.field.getStyleClass().removeAll(CssVariables.INCORRECT_FIELD);
+					try
+					{
+						Object evaluate = evaluator.evaluate(DoSpec.class.getSimpleName() + newValue);
+						if (!(evaluate instanceof Spec))
+						{
+							this.field.getStyleClass().add(CssVariables.INCORRECT_FIELD);
+						}
+					}
+					catch (Exception e)
+					{
+						this.field.getStyleClass().add(CssVariables.INCORRECT_FIELD);
+					}
+				}
+			});
+			this.field.setMaxWidth(Double.MAX_VALUE);
+			this.getChildren().add(this.field);
+
+			Button btnRemove = new Button();
+			btnRemove.getStyleClass().add(CssVariables.TRANSPARENT_BACKGROUND);
+			btnRemove.setId("btnRemove");
+			btnRemove.setOnAction(e -> handler.accept(this));
+			this.getChildren().add(btnRemove);
+		}
+
+		public void requestFocus()
+		{
+			Common.setFocused(field);
+		}
+
+		public String getValue()
+		{
+			return this.field.getText();
+		}
+	}
+
+	private class IControlWithCheck
 	{
 		private IControl control;
 		private boolean isChecked;
@@ -398,7 +709,7 @@ public class LayoutWizard extends AbstractWizard
 		}
 	}
 
-	private static class CheckedCell extends ListCell<IControlWithCheck>
+	private class CheckedCell extends ListCell<IControlWithCheck>
 	{
 		private CheckBox checkBox = new CheckBox();
 
