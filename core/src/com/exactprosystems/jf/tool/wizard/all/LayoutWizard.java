@@ -21,17 +21,24 @@ import com.exactprosystems.jf.tool.matrix.MatrixFx;
 import com.exactprosystems.jf.tool.wizard.AbstractWizard;
 import com.exactprosystems.jf.tool.wizard.WizardMatcher;
 import com.exactprosystems.jf.tool.wizard.related.ConnectionBean;
+import com.exactprosystems.jf.tool.wizard.related.MarkerStyle;
 import com.exactprosystems.jf.tool.wizard.related.WizardCommonHelper;
 import com.exactprosystems.jf.tool.wizard.related.WizardLoader;
 import javafx.application.Platform;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
+import javafx.concurrent.Service;
 import javafx.concurrent.Task;
 import javafx.geometry.HPos;
 import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.*;
+import javafx.scene.control.cell.CheckBoxListCell;
+import javafx.scene.input.KeyCode;
 import javafx.scene.layout.*;
 import javafx.scene.text.Text;
+import org.w3c.dom.Document;
 
 import java.awt.Rectangle;
 import java.util.*;
@@ -85,6 +92,8 @@ public class LayoutWizard extends AbstractWizard
 	private CheckBox cbAbout;
 	private CheckBox cbBetween;
 
+	private HBox boxWithCheckBoxes;
+
 	//region AbstractWizard methods
 	@Override
 	public void init(IContext context, WizardManager wizardManager, Object... parameters)
@@ -117,7 +126,14 @@ public class LayoutWizard extends AbstractWizard
 		this.cbDialogs.setDisable(true);
 		this.imageViewWithScale = new ImageViewWithScale();
 		this.lvControls = new ListView<>();
-		this.lvControls.setCellFactory(p -> new CheckedCell());
+		this.lvControls.setOnKeyPressed(event -> {
+			IControlWithCheck selectedItem = this.lvControls.getSelectionModel().getSelectedItem();
+			if (selectedItem != null && event.getCode() == KeyCode.SPACE)
+			{
+				selectedItem.toggle();
+			}
+		});
+		this.lvControls.setCellFactory(CheckBoxListCell.forListView(IControlWithCheck::onProperty));
 		this.btnScan = new Button("Scan");
 		this.btnCheckTable = new Button("Check table");
 		this.btnCheckTable.setDisable(true);
@@ -179,7 +195,7 @@ public class LayoutWizard extends AbstractWizard
 			r0.setPrefHeight(32.0);
 			this.main.getRowConstraints().addAll(r0);
 
-			HBox box = new HBox();
+			this.boxWithCheckBoxes = new HBox();
 			HBox cbBoxes = new HBox();
 
 			this.cbNumber = new CheckBox("Number");
@@ -200,10 +216,10 @@ public class LayoutWizard extends AbstractWizard
 					, this.cbBetween
 			);
 
-			box.getChildren().addAll(cbBoxes, this.btnScan);
+			this.boxWithCheckBoxes.getChildren().addAll(cbBoxes, this.btnScan);
 			HBox.setHgrow(cbBoxes, Priority.ALWAYS);
-			box.setAlignment(Pos.CENTER_LEFT);
-			this.main.add(box, 0, 2, 2, 1);
+			this.boxWithCheckBoxes.setAlignment(Pos.CENTER_LEFT);
+			this.main.add(this.boxWithCheckBoxes, 0, 2, 2, 1);
 		}
 		//endregion
 
@@ -233,12 +249,15 @@ public class LayoutWizard extends AbstractWizard
 
 		this.cbConnections.getItems().setAll(WizardCommonHelper.getAllConnections(this.matrix.getFactory().getConfiguration()));
 
+		this.btnScan.setDisable(true);
+		this.boxWithCheckBoxes.setDisable(true);
 		listeners();
 	}
 
 	@Override
 	protected Supplier<List<WizardCommand>> getCommands()
 	{
+		//TODO implement
 		return ArrayList::new;
 	}
 
@@ -249,6 +268,22 @@ public class LayoutWizard extends AbstractWizard
 	}
 	//endregion
 
+	private IRemoteApplication service()
+	{
+		return this.appConnection.getApplication().service();
+	}
+
+	private void hideTableAndView()
+	{
+		this.checkGrid.getRowConstraints().clear();
+		this.checkGrid.getColumnConstraints().clear();
+		this.checkGrid.getChildren().removeIf(node -> node instanceof RelationButton || node instanceof Text);
+
+		this.checkGrid.setVisible(false);
+		this.bpView.getChildren().clear();
+	}
+
+	//region private scan functions
 	private void listeners()
 	{
 		this.cbConnections.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) ->
@@ -267,9 +302,10 @@ public class LayoutWizard extends AbstractWizard
 			}
 		});
 
-		this.cbDialogs.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) ->
+		this.cbDialogs.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newDialog) ->
 		{
-			if (newValue != null)
+			hideTableAndView();
+			if (newDialog != null)
 			{
 				boolean removeIf = this.main.getChildren().removeIf(node -> node == this.waitText);
 				if (removeIf)
@@ -277,36 +313,60 @@ public class LayoutWizard extends AbstractWizard
 					this.main.add(this.imageViewWithScale, 0, 1);
 				}
 				this.lvControls.getItems().clear();
-				this.wizardLoader = new WizardLoader(this.appConnection, newValue.getSelfControl(), (image, doc) ->
+
+				PluginInfo info = this.appConnection.getApplication().getFactory().getInfo();
+				this.wizardMatcher = new WizardMatcher(info);
+
+				this.wizardLoader = new WizardLoader(this.appConnection, newDialog.getSelfControl(), (image, doc) ->
 				{
-					Collection<IControl> controls = newValue.getControls(IWindow.SectionKind.Run);
-					this.lvControls.getItems().setAll(controls.stream().filter(c -> !Str.IsNullOrEmpty(c.getID())).map(IControlWithCheck::new).collect(Collectors.toList()));
+					Collection<IControl> controls = newDialog.getControls(IWindow.SectionKind.Run);
+					this.lvControls.getItems().setAll(
+							controls.stream()
+									.filter(c -> !Str.IsNullOrEmpty(c.getID()))
+									.map(c -> new IControlWithCheck(c, doc))
+									.collect(Collectors.toList())
+					);
+
+					this.lvControls.getItems().forEach(ic -> ic.onProperty().addListener((observable1, oldValue1, newValue) ->
+					{
+						Rectangle rectangle = ic.getRectangle();
+						if (rectangle == null)
+						{
+							return;
+						}
+						if (newValue)
+						{
+							this.imageViewWithScale.showRectangle(rectangle, MarkerStyle.MARK, "", true);
+						}
+						else
+						{
+							this.imageViewWithScale.hideRectangle(rectangle, MarkerStyle.MARK);
+						}
+					}));
 
 					this.imageViewWithScale.displayImage(image);
 
 					List<Rectangle> list = XpathUtils.collectAllRectangles(doc);
 					this.imageViewWithScale.setListForSearch(list);
 
-					PluginInfo info = this.appConnection.getApplication().getFactory().getInfo();
-					this.wizardMatcher = new WizardMatcher(info);
 
-					//TODO remake and uncomment it
-//					this.imageViewWithScale.setOnRectangleClick(rectangle -> this.controls.getItems().forEach(controlItem ->
-//					{
-//						Rectangle itemRectangle = controlItem.getRectangle(wizardMatcher);
-//						if (rectangle.equals(itemRectangle))
-//						{
-//							controlItem.toggle();
-//							if (controlItem.isOn())
-//							{
-//								this.imageViewWithScale.showRectangle(rectangle, MarkerStyle.MARK, "", true);
-//							}
-//							else
-//							{
-//								this.imageViewWithScale.hideRectangle(rectangle, MarkerStyle.MARK);
-//							}
-//						}
-//					}));
+					this.imageViewWithScale.setOnRectangleClick(rectangle -> this.lvControls.getItems()
+							.stream()
+							.filter(entry -> rectangle.equals(entry.getRectangle()))
+							.findFirst()
+							.map(IControlWithCheck::toggle)
+							.ifPresent(isToggle ->
+							{
+								if (isToggle)
+								{
+									this.imageViewWithScale.showRectangle(rectangle, MarkerStyle.MARK, "", true);
+								}
+								else
+								{
+									this.imageViewWithScale.hideRectangle(rectangle, MarkerStyle.MARK);
+								}
+								this.lvControls.refresh();
+							}));
 				}
 				, ex ->
 				{
@@ -318,7 +378,9 @@ public class LayoutWizard extends AbstractWizard
 					DialogsHelper.showError(message);
 				});
 				this.wizardLoader.start();
-				this.currentWindow = newValue;
+				this.currentWindow = newDialog;
+				this.btnScan.setDisable(false);
+				this.boxWithCheckBoxes.setDisable(false);
 			}
 			else
 			{
@@ -331,12 +393,12 @@ public class LayoutWizard extends AbstractWizard
 
 	private void scan()
 	{
-		if (this.lvControls.getItems().stream().noneMatch(c -> c.isChecked))
+		if (this.lvControls.getItems().stream().noneMatch(c -> c.onProperty().getValue()))
 		{
-			DialogsHelper.showInfo("Select");
+			DialogsHelper.showInfo("Select more than zero elements from listView above");
 			return;
 		}
-		clearTable();
+		hideTableAndView();
 		this.btnScan.setDisable(true);
 
 		VBox box = new VBox();
@@ -350,16 +412,23 @@ public class LayoutWizard extends AbstractWizard
 		this.main.add(box, 0, 3);
 
 		this.executor = Executors.newSingleThreadExecutor();
-		Task<Void> task = new Task<Void>()
+		this.btnCheckTable.setDisable(true);
+		Service<List<RelationButton>> service = new Service<List<RelationButton>>()
 		{
 			@Override
-			protected Void call() throws Exception
+			protected Task<List<RelationButton>> createTask()
 			{
-				scan0();
-				return null;
+				return new Task<List<RelationButton>>()
+				{
+					@Override
+					protected List<RelationButton> call() throws Exception
+					{
+						return scan0();
+					}
+				};
 			}
 		};
-		task.setOnSucceeded(e ->
+		service.setOnSucceeded(e ->
 		{
 			this.btnScan.setDisable(false);
 			this.btnCheckTable.setDisable(false);
@@ -367,9 +436,17 @@ public class LayoutWizard extends AbstractWizard
 			this.checkGrid.setGridLinesVisible(true);
 			this.checkGrid.setVisible(true);
 
-			//TODO implement
+			List<RelationButton> list = (List<RelationButton>) e.getSource().getValue();
+
+			//list.size always is n^2
+			int collectSqrt = (int)Math.sqrt(list.size());
+			for (int i = 0; i < list.size(); i++)
+			{
+				RelationButton relationButton = list.get(i);
+				this.checkGrid.add(relationButton, i / collectSqrt + 1, i % collectSqrt + 1);
+			}
 		});
-		task.setOnFailed(e ->
+		service.setOnFailed(e ->
 		{
 			this.btnScan.setDisable(false);
 			this.btnCheckTable.setDisable(true);
@@ -379,12 +456,18 @@ public class LayoutWizard extends AbstractWizard
 			e.getSource().getException().printStackTrace();
 
 		});
-		executor.submit(task);
+		service.setExecutor(executor);
+		service.start();
 	}
 
-	private void scan0() throws Exception
+	private List<RelationButton> scan0() throws Exception
 	{
-		List<IControl> collect = this.lvControls.getItems().stream().filter(c -> c.isChecked).map(c -> c.control).collect(Collectors.toList());
+		List<IControl> collect = this.lvControls.getItems()
+				.stream()
+				.filter(c -> c.onProperty().getValue())
+				.map(c -> c.control)
+				.collect(Collectors.toList());
+
 		IntStream.range(0, collect.size() +1)
 				.forEach(i -> {
 					RowConstraints r0 = new RowConstraints();
@@ -403,22 +486,21 @@ public class LayoutWizard extends AbstractWizard
 		Platform.runLater(() -> IntStream.rangeClosed(1, collect.size())
 				.forEach(i ->
 				{
-					this.checkGrid.add(new Text(collect.get(i - 1).getID()), 0, i);
-					this.checkGrid.add(new Text(collect.get(i - 1).getID()), i, 0);
+					String id = collect.get(i - 1).getID();
+					this.checkGrid.add(new Text(id), 0, i);
+					this.checkGrid.add(new Text(id), i, 0);
 				}));
 
-		for (int i = 0; i < collect.size(); i++)
+		List<RelationButton> list = new ArrayList<>();
+
+		for (IControl top : collect)
 		{
-			for (int j = 0; j < collect.size(); j++)
+			for (IControl left : collect)
 			{
-				int finalJ = j;
-				int finalI = i;
-				Platform.runLater(() -> this.checkGrid.add(this.createRelation(collect.get(finalI), collect.get(finalJ)), finalI + 1, finalJ + 1));
+				list.add(this.createRelation(top, left));
 			}
 		}
-
-		this.btnCheckTable.setDisable(true);
-		Thread.sleep(500);
+		return list;
 	}
 
 	private RelationButton createRelation(IControl top, IControl left)
@@ -426,11 +508,6 @@ public class LayoutWizard extends AbstractWizard
 		RelationButton btn = new RelationButton(createFormula(top, left), top, left);
 		btn.setOnAction(e -> this.bpView.setCenter(btn.createView()));
 		return btn;
-	}
-
-	private IRemoteApplication service()
-	{
-		return this.appConnection.getApplication().service();
 	}
 
 	private Spec createFormula(IControl top, IControl left)
@@ -496,12 +573,7 @@ public class LayoutWizard extends AbstractWizard
 		}
 	}
 
-	private void clearTable()
-	{
-		this.checkGrid.getRowConstraints().clear();
-		this.checkGrid.getColumnConstraints().clear();
-		this.checkGrid.getChildren().removeIf(node -> node instanceof RelationButton || node instanceof Text);
-	}
+	//endregion
 
 	//region private classes
 	private class RelationButton extends Button
@@ -520,7 +592,7 @@ public class LayoutWizard extends AbstractWizard
 
 			this.topName = topControl.getID();
 			this.leftName = leftControl.getID();
-			this.formula = formula;
+			setFormula(formula);
 			this.control = topControl;
 		}
 
@@ -575,10 +647,13 @@ public class LayoutWizard extends AbstractWizard
 			Spec func = this.create(piece -> DialogsHelper.showError(String.format("Can't save, because %s is invalid doSpec function", piece)));
 			if (func != null)
 			{
-				this.formula = func;
+				setFormula(func);
 			}
 		}
 
+		/**
+		 * @return null if all ok, otherwise list of errors
+		 */
 		public List<String> check()
 		{
 			Spec func = this.create(piece -> DialogsHelper.showError(String.format("Can't check, because %s is invalid doSpec function", piece)));
@@ -643,6 +718,12 @@ public class LayoutWizard extends AbstractWizard
 			}
 			return func;
 		}
+
+		private void setFormula(Spec formula)
+		{
+			this.formula = formula;
+			//TODO add icons on button ( icon of pieces)
+		}
 	}
 
 	private static class OneRow extends HBox
@@ -696,38 +777,39 @@ public class LayoutWizard extends AbstractWizard
 	private class IControlWithCheck
 	{
 		private IControl control;
-		private boolean isChecked;
+		private final BooleanProperty on = new SimpleBooleanProperty(false);
+		private Rectangle rectangle;
 
-		public IControlWithCheck(IControl control)
+		public IControlWithCheck(IControl control, Document doc)
 		{
 			this.control = control;
+			this.rectangle = Common.tryCatch(() ->
+			{
+				List<org.w3c.dom.Node> all = wizardMatcher.findAll(doc, this.control.locator());
+				return ((Rectangle) all.get(0).getUserData(IRemoteApplication.rectangleName));
+			}, "", null);
 		}
 
-		public void setChecked(boolean checked)
+		final BooleanProperty onProperty()
 		{
-			isChecked = checked;
+			return this.on;
 		}
-	}
 
-	private class CheckedCell extends ListCell<IControlWithCheck>
-	{
-		private CheckBox checkBox = new CheckBox();
+		public boolean toggle()
+		{
+			this.on.set(!this.on.getValue());
+			return this.on.getValue();
+		}
+
+		public Rectangle getRectangle()
+		{
+			return this.rectangle;
+		}
 
 		@Override
-		protected void updateItem(IControlWithCheck item, boolean empty)
+		public String toString()
 		{
-			super.updateItem(item, empty);
-			if (item != null && !empty)
-			{
-				this.checkBox.setSelected(item.isChecked);
-				this.checkBox.selectedProperty().addListener((observable, oldValue, newValue) -> item.setChecked(newValue));
-				this.checkBox.setText(item.control.getID());
-				this.setGraphic(this.checkBox);
-			}
-			else
-			{
-				setGraphic(null);
-			}
+			return this.control.getID();
 		}
 	}
 	//endregion
