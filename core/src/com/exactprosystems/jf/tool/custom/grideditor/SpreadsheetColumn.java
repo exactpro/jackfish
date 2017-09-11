@@ -9,6 +9,8 @@ package com.exactprosystems.jf.tool.custom.grideditor;
 
 import com.exactprosystems.jf.api.common.Str;
 import javafx.beans.Observable;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
 import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
@@ -111,12 +113,6 @@ public final class SpreadsheetColumn {
 				this.column.setGraphic(null);
 				isColumnEditable = false;
 			}
-			if (e1.getCode().equals(KeyCode.TAB) || e1.getCode().equals(KeyCode.ENTER))
-			{
-				this.spreadsheetView.renameColumn(this, tf.getText());
-				this.column.setGraphic(null);
-				isColumnEditable = false;
-			}
 		});
 		tf.focusedProperty().addListener((observable, oldValue1, newValue) -> {
 			if (!newValue && oldValue1)
@@ -124,6 +120,12 @@ public final class SpreadsheetColumn {
 				if (this.column.getGraphic() != null)
 				{
 					this.spreadsheetView.renameColumn(this, oldValue);
+					this.column.setGraphic(null);
+					isColumnEditable = false;
+				}
+				if (!tf.isFocused())
+				{
+					this.spreadsheetView.renameColumn(this, tf.getText());
 					this.column.setGraphic(null);
 					isColumnEditable = false;
 				}
