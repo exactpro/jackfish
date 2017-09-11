@@ -50,6 +50,7 @@ public class DictionaryFx extends GuiDictionary
 	private AbstractEvaluator      evaluator;
 	private ApplicationConnector   applicationConnector;
 	private volatile boolean isWorking = false;
+	private boolean 			   isFinding;
 
 	public DictionaryFx(String fileName, DocumentFactory factory) throws Exception
 	{
@@ -341,6 +342,7 @@ public class DictionaryFx extends GuiDictionary
 				@Override
 				protected Void call() throws Exception
 				{
+					setIsFinding(true);
 					controls.forEach(control ->
 					{
 						try
@@ -374,12 +376,12 @@ public class DictionaryFx extends GuiDictionary
 							controller.displayTestingControl(control, "Error", Result.FAILED);
 						}
 					});
+					setIsFinding(false);
 					return null;
 				}
 			});
 			thread.setName("Test dialog, thread id : " + thread.getId());
 			thread.start();
-			thread.join();
 		});
 	}
 
@@ -404,6 +406,14 @@ public class DictionaryFx extends GuiDictionary
 				}
 			}
 		}
+	}
+
+	private void setIsFinding(boolean bol) {
+		this.isFinding = bol;
+	}
+
+	public boolean isFinding() {
+		return this.isFinding;
 	}
 
 	public void dialogMove(IWindow window, IWindow.SectionKind section, Integer newIndex) throws Exception

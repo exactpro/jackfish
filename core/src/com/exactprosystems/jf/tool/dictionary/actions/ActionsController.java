@@ -161,27 +161,36 @@ public class ActionsController implements Initializable, ContainingParent
 	//region Do tab
 	public void sendKeysAction(ActionEvent actionEvent)
 	{
-		tryCatch(() -> this.navigation.sendKeys(this.tfSendKeys.getText()), "Error on send keys");
+		makeDo(() -> this.navigation.sendKeys(this.tfSendKeys.getText()), "Error on send keys");
 	}
 
 	public void doIt(ActionEvent actionEvent)
 	{
-		tryCatch(() -> this.navigation.doIt(this.expressionField.getEvaluatedValue()), "Error on operate");
+		makeDo(() -> this.navigation.doIt(this.expressionField.getEvaluatedValue()), "Error on operate");
 	}
 
 	public void clickAction(ActionEvent actionEvent)
 	{
-		tryCatch(() -> this.navigation.click(), "Error on click");
+		makeDo(() -> this.navigation.click(), "Error on click");
 	}
 
 	public void findAction(ActionEvent actionEvent)
 	{
-		tryCatch(() -> this.navigation.find(), "Error on find");
+		makeDo(() -> this.navigation.find(), "Error on find");
 	}
 
 	public void getValue(ActionEvent actionEvent)
 	{
-		tryCatch(() -> this.navigation.getValue(), "Error on get value");
+		makeDo(() -> this.navigation.getValue(), "Error on get value");
+	}
+
+	//Using wrapping method because of IEDriver(IEDriver not support fails on multiple invokes)
+	private void makeDo(Common.Function func, String message) {
+		if (!this.model.isFinding()) {
+			Common.tryCatch(func, message);
+		}else{
+			DialogsHelper.showInfo("Please wait until the end of the check");
+		}
 	}
 	//endregion
 
