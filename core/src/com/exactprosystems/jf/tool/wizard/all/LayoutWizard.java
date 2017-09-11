@@ -1,5 +1,6 @@
 package com.exactprosystems.jf.tool.wizard.all;
 
+import com.exactprosystems.jf.actions.gui.DialogCheckLayout;
 import com.exactprosystems.jf.api.app.*;
 import com.exactprosystems.jf.api.common.IContext;
 import com.exactprosystems.jf.api.common.Str;
@@ -11,7 +12,11 @@ import com.exactprosystems.jf.api.wizard.WizardManager;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.utils.XpathUtils;
 import com.exactprosystems.jf.documents.matrix.Matrix;
+import com.exactprosystems.jf.documents.matrix.parser.Parameters;
+import com.exactprosystems.jf.documents.matrix.parser.Tokens;
 import com.exactprosystems.jf.documents.matrix.parser.items.MatrixItem;
+import com.exactprosystems.jf.documents.matrix.parser.items.RawTable;
+import com.exactprosystems.jf.documents.matrix.parser.items.TypeMandatory;
 import com.exactprosystems.jf.functions.Table;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.CssVariables;
@@ -19,6 +24,7 @@ import com.exactprosystems.jf.tool.custom.scaledimage.ImageViewWithScale;
 import com.exactprosystems.jf.tool.helpers.DialogsHelper;
 import com.exactprosystems.jf.tool.matrix.MatrixFx;
 import com.exactprosystems.jf.tool.wizard.AbstractWizard;
+import com.exactprosystems.jf.tool.wizard.CommandBuilder;
 import com.exactprosystems.jf.tool.wizard.WizardMatcher;
 import com.exactprosystems.jf.tool.wizard.related.ConnectionBean;
 import com.exactprosystems.jf.tool.wizard.related.MarkerStyle;
@@ -36,18 +42,24 @@ import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.CheckBoxListCell;
 import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.*;
 import javafx.scene.text.Text;
 import org.w3c.dom.Document;
 
+import java.awt.Dimension;
 import java.awt.Rectangle;
+import java.awt.Toolkit;
 import java.util.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.function.BiConsumer;
 import java.util.function.Consumer;
+import java.util.function.Predicate;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
 @WizardAttribute(
 		name = "LayoutWizard",
@@ -61,13 +73,15 @@ import java.util.stream.IntStream;
 )
 public class LayoutWizard extends AbstractWizard
 {
-	private Matrix matrix;
-	private MatrixItem item;
-	private AppConnection appConnection;
-	private WizardMatcher wizardMatcher;
-	private WizardLoader wizardLoader;
-	private IWindow currentWindow;
-	private ExecutorService executor;
+	private Matrix          matrix;
+	private MatrixItem      item;
+	private AppConnection   appConnection;
+	private WizardMatcher   wizardMatcher;
+	private WizardLoader    wizardLoader;
+	private IWindow         currentWindow;
+	private ExecutorService scanExecutor;
+	private ExecutorService checkTableExecutor;
+	private ExecutorService checkRelationExecutor;
 
 	private Table table;
 
@@ -79,8 +93,10 @@ public class LayoutWizard extends AbstractWizard
 
 	private ImageViewWithScale imageViewWithScale;
 	private ListView<IControlWithCheck> lvControls;
+	private TextArea errorArea;
 
 	private Button            btnCheckTable;
+	private ProgressIndicator piCheckTable;
 	private GridPane          checkGrid;
 	private Button            btnScan;
 	private BorderPane        bpView;
@@ -91,6 +107,7 @@ public class LayoutWizard extends AbstractWizard
 	private CheckBox cbGreat;
 	private CheckBox cbAbout;
 	private CheckBox cbBetween;
+	private ToggleGroup toggleGroup = new ToggleGroup();
 
 	private HBox boxWithCheckBoxes;
 
@@ -108,18 +125,31 @@ public class LayoutWizard extends AbstractWizard
 	protected void onRefused()
 	{
 		Optional.ofNullable(this.wizardLoader).ifPresent(WizardLoader::stop);
-		Optional.ofNullable(this.executor).ifPresent(ExecutorService::shutdownNow);
+		Optional.ofNullable(this.scanExecutor).ifPresent(WizardCommonHelper::shutdownExec);
+		Optional.ofNullable(this.checkTableExecutor).ifPresent(WizardCommonHelper::shutdownExec);
+		Optional.ofNullable(this.checkRelationExecutor).ifPresent(WizardCommonHelper::shutdownExec);
+
 		super.onRefused();
 	}
 
+	/*
+	main pane
+	1 row - combobox x2 ( app and dialogs)  32.0 px
+	2 row - image and listview (elements)	(height - 32 * 2 - 4 * 8 - 48) / 2  // 32 - 1 and 3 rows, 8 - grid gap
+	3 row - checkboxes and btn scan			32.0 px
+	4 row - grid and view					(height - 32 * 2 - 4 * 8 - 48) / 2
+	5 row - errors ( if presents)			96px
+	*/
 	@Override
 	protected void initDialog(BorderPane borderPane)
 	{
-		borderPane.setMinHeight(800.0);
-		borderPane.setPrefHeight(800.0);
+		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+		double height = screenSize.getHeight() - 150;
+		borderPane.setMinHeight(height);
+		borderPane.setPrefHeight(height);
 
-		borderPane.setMinWidth(1000.0);
-		borderPane.setPrefWidth(1000.0);
+		borderPane.setMinWidth(Math.min(1000.0, screenSize.width));
+		borderPane.setPrefWidth(Math.min(1000.0, screenSize.width));
 
 		this.cbConnections = new ComboBox<>();
 		this.cbDialogs = new ComboBox<>();
@@ -137,6 +167,12 @@ public class LayoutWizard extends AbstractWizard
 		this.btnScan = new Button("Scan");
 		this.btnCheckTable = new Button("Check table");
 		this.btnCheckTable.setDisable(true);
+		this.btnCheckTable.setOnAction(e -> this.checkTable());
+		this.piCheckTable = new ProgressIndicator(ProgressIndicator.INDETERMINATE_PROGRESS);
+		this.piCheckTable.setMinSize(32.0, 32.0);
+		this.piCheckTable.setPrefSize(32.0, 32.0);
+		this.piCheckTable.setMaxSize(32.0, 32.0);
+		this.piCheckTable.setVisible(false);
 		this.waitText = new Text("Select connection and dialog");
 
 		this.main = new GridPane();
@@ -152,19 +188,28 @@ public class LayoutWizard extends AbstractWizard
 		c1.setPercentWidth(30.0);
 		this.main.getColumnConstraints().addAll(c0, c1);
 
+		final double smallRow = 32.0;
+		final double errorRow = 96.0;
+		Supplier<RowConstraints> createSmallRow = () -> {
+			RowConstraints r0 = new RowConstraints();
+			r0.setMinHeight(smallRow);
+			r0.setMaxHeight(smallRow);
+			r0.setPrefHeight(smallRow);
+			return r0;
+		};
+
+		Supplier<RowConstraints> createBigRow = () -> {
+			RowConstraints r1 = new RowConstraints();
+			r1.setMinHeight((height - smallRow * 2 - 4 * 8 - errorRow) / 2);
+			r1.setPrefHeight((height - smallRow * 2 - 4 * 8 - errorRow) / 2);
+			r1.setVgrow(Priority.SOMETIMES);
+			r1.setPercentHeight(-1);
+			return r1;
+		};
+
 		//region image and lv
 		{
-			RowConstraints r0 = new RowConstraints();
-			r0.setMinHeight(32.0);
-			r0.setMaxHeight(32.0);
-			r0.setPrefHeight(32.0);
-
-			RowConstraints r1 = new RowConstraints();
-			r1.setMinHeight((800 - 32 * 3 - 4 * 8) / 2);
-			r1.setPrefHeight((800 - 32 * 3 - 4 * 8) / 2);
-			r1.setVgrow(Priority.SOMETIMES);
-
-			this.main.getRowConstraints().addAll(r0, r1);
+			this.main.getRowConstraints().addAll(createSmallRow.get(), createBigRow.get());
 
 			HBox connectionBox = new HBox();
 			connectionBox.getChildren().addAll(new Label("Connection : "), this.cbConnections);
@@ -189,32 +234,19 @@ public class LayoutWizard extends AbstractWizard
 
 		//region scan and checkboxes
 		{
-			RowConstraints r0 = new RowConstraints();
-			r0.setMinHeight(32.0);
-			r0.setMaxHeight(32.0);
-			r0.setPrefHeight(32.0);
-			this.main.getRowConstraints().addAll(r0);
+			this.main.getRowConstraints().addAll(createSmallRow.get());
 
 			this.boxWithCheckBoxes = new HBox();
 			HBox cbBoxes = new HBox();
 
 			this.cbNumber = new CheckBox("Number");
+			this.cbNumber.setSelected(true); // default value
 			this.cbAbout = new CheckBox("About");
 			this.cbLess = new CheckBox("Less");
 			this.cbGreat = new CheckBox("Great");
 			this.cbBetween = new CheckBox("Between");
 
-			cbBoxes.getChildren().addAll(
-					  this.cbNumber
-					, Common.createSpacer(Common.SpacerEnum.HorizontalMin)
-					, this.cbAbout
-					, Common.createSpacer(Common.SpacerEnum.HorizontalMin)
-					, this.cbLess
-					, Common.createSpacer(Common.SpacerEnum.HorizontalMin)
-					, this.cbGreat
-					, Common.createSpacer(Common.SpacerEnum.HorizontalMin)
-					, this.cbBetween
-			);
+			cbBoxes.getChildren().addAll(this.cbNumber, Common.createSpacer(Common.SpacerEnum.HorizontalMin), this.cbAbout, Common.createSpacer(Common.SpacerEnum.HorizontalMin), this.cbLess, Common.createSpacer(Common.SpacerEnum.HorizontalMin), this.cbGreat, Common.createSpacer(Common.SpacerEnum.HorizontalMin), this.cbBetween);
 
 			this.boxWithCheckBoxes.getChildren().addAll(cbBoxes, this.btnScan);
 			HBox.setHgrow(cbBoxes, Priority.ALWAYS);
@@ -225,23 +257,32 @@ public class LayoutWizard extends AbstractWizard
 
 		//region table
 		{
-			RowConstraints r0 = new RowConstraints();
-			r0.setPercentHeight(-1);
-			r0.setMinHeight((800 - 32 * 3 - 4 * 8) / 2);
-			r0.setPrefHeight((800 - 32 * 3 - 4 * 8) / 2);
-			r0.setVgrow(Priority.SOMETIMES);
-
-			RowConstraints r1 = new RowConstraints();
-			r1.setMinHeight(32.0);
-			r1.setMaxHeight(32.0);
-			r1.setPrefHeight(32.0);
-
-			this.main.getRowConstraints().addAll(r0, r1);
-
-			this.main.add(this.btnCheckTable, 0, 4);
+			this.main.getRowConstraints().addAll(createBigRow.get());
+			VBox pane = new VBox();
+			pane.setAlignment(Pos.CENTER);
+			pane.getChildren().addAll(this.btnCheckTable, this.piCheckTable);
+			this.checkGrid.add(pane, 0, 0);
 
 			this.bpView = new BorderPane();
 			this.main.add(this.bpView, 1, 3);
+		}
+		//endregion
+
+		//region errors
+		{
+			RowConstraints r0 = new RowConstraints();
+			r0.setMinHeight(errorRow - 4 * 8);
+			r0.setPrefHeight(errorRow  - 4 * 8);
+			r0.setVgrow(Priority.SOMETIMES);
+			r0.setPercentHeight(-1);
+
+			this.errorArea = new TextArea();
+			this.errorArea.setEditable(false);
+
+			this.main.getRowConstraints().addAll(r0);
+
+			this.main.add(this.errorArea, 0, 4, 2, 1);
+
 		}
 		//endregion
 
@@ -251,14 +292,43 @@ public class LayoutWizard extends AbstractWizard
 
 		this.btnScan.setDisable(true);
 		this.boxWithCheckBoxes.setDisable(true);
+		hideTableAndView();
 		listeners();
 	}
 
 	@Override
 	protected Supplier<List<WizardCommand>> getCommands()
 	{
+		ArrayList<Spec> list = new ArrayList<>();
+		this.forEachRelationButton(rb -> list.add(rb.formula));
+
+		ArrayList<String> headers = new ArrayList<>();
+		this.<TopText>forEach(node -> node instanceof TopText, topText -> headers.add(topText.getText()));
+
+		String[][] lines = new String[headers.size() + 1][headers.size() + 1];
+		lines[0][0] = "";
+		for (int i = 1; i < lines[0].length; i++)
+		{
+			String header = headers.get(i - 1);
+			lines[0][i] = header;
+			lines[i][0] = header;
+		}
+		Iterator<Spec> iterator = list.iterator();
+		for (int i = 1; i < lines.length; i++)
+		{
+			for (int j = 1; j < lines[i].length; j++)
+			{
+				lines[j][i] = iterator.next().toString();
+			}
+		}
 		//TODO implement
-		return ArrayList::new;
+		CommandBuilder builder = CommandBuilder.start();
+		MatrixItem rowTable = createRawTable(lines);
+		MatrixItem dialogCheckLayout = createDialogCheckLayout(rowTable.getId());
+		int index = this.item.getParent().index(this.item);
+		builder.addMatrixItem(this.matrix, this.item.getParent(), rowTable, index);
+		builder.addMatrixItem(this.matrix, this.item.getParent(), dialogCheckLayout, index + 1);
+		return builder::build;
 	}
 
 	@Override
@@ -275,12 +345,42 @@ public class LayoutWizard extends AbstractWizard
 
 	private void hideTableAndView()
 	{
+		this.errorArea.setText("");
 		this.checkGrid.getRowConstraints().clear();
 		this.checkGrid.getColumnConstraints().clear();
 		this.checkGrid.getChildren().removeIf(node -> node instanceof RelationButton || node instanceof Text);
 
 		this.checkGrid.setVisible(false);
 		this.bpView.getChildren().clear();
+	}
+
+	private MatrixItem createRawTable(String[][] lines)
+	{
+		MatrixItem rawTable = CommandBuilder.create(this.matrix, RawTable.class.getSimpleName(), Table.class.getSimpleName());
+		Stream.of(lines).forEach(rawTable::processRawData);
+		rawTable.createId();
+		return rawTable;
+	}
+
+	private MatrixItem createDialogCheckLayout(String tableId)
+	{
+		MatrixItem dcl = CommandBuilder.create(this.matrix, Tokens.Action.get(), DialogCheckLayout.class.getSimpleName());
+		Parameters parameters = new Parameters();
+		parameters.add(DialogCheckLayout.connectionName, "", TypeMandatory.Mandatory);
+		parameters.add(DialogCheckLayout.dialogName, evaluator.createString(this.cbDialogs.getSelectionModel().getSelectedItem().getName()), TypeMandatory.Mandatory);
+		parameters.add(DialogCheckLayout.tableName, tableId + ".Out", TypeMandatory.NotMandatory);
+		try
+		{
+			//TODO review it
+			dcl.addKnownParameters();
+			dcl.init(this.matrix, null, new HashMap<>(), parameters);
+			dcl.createId();
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+		}
+		return dcl;
 	}
 
 	//region private scan functions
@@ -324,6 +424,7 @@ public class LayoutWizard extends AbstractWizard
 							controls.stream()
 									.filter(c -> !Str.IsNullOrEmpty(c.getID()))
 									.map(c -> new IControlWithCheck(c, doc))
+									.filter(c -> Objects.nonNull(c.getRectangle()))
 									.collect(Collectors.toList())
 					);
 
@@ -348,7 +449,6 @@ public class LayoutWizard extends AbstractWizard
 
 					List<Rectangle> list = XpathUtils.collectAllRectangles(doc);
 					this.imageViewWithScale.setListForSearch(list);
-
 
 					this.imageViewWithScale.setOnRectangleClick(rectangle -> this.lvControls.getItems()
 							.stream()
@@ -399,7 +499,6 @@ public class LayoutWizard extends AbstractWizard
 			return;
 		}
 		hideTableAndView();
-		this.btnScan.setDisable(true);
 
 		VBox box = new VBox();
 		box.setAlignment(Pos.CENTER);
@@ -411,8 +510,18 @@ public class LayoutWizard extends AbstractWizard
 		this.checkGrid.setVisible(false);
 		this.main.add(box, 0, 3);
 
-		this.executor = Executors.newSingleThreadExecutor();
-		this.btnCheckTable.setDisable(true);
+		Optional.ofNullable(this.scanExecutor).ifPresent(WizardCommonHelper::shutdownExec);
+		this.scanExecutor = Executors.newSingleThreadExecutor();
+		Consumer<Boolean> setDisable = flag ->
+		{
+			this.btnCheckTable.setDisable(flag);
+			this.cbConnections.setDisable(flag);
+			this.cbDialogs.setDisable(flag);
+			this.btnScan.setDisable(flag);
+		};
+		setDisable.accept(true);
+
+		errorArea.setText("");
 		Service<List<RelationButton>> service = new Service<List<RelationButton>>()
 		{
 			@Override
@@ -430,8 +539,7 @@ public class LayoutWizard extends AbstractWizard
 		};
 		service.setOnSucceeded(e ->
 		{
-			this.btnScan.setDisable(false);
-			this.btnCheckTable.setDisable(false);
+			setDisable.accept(false);
 			this.main.getChildren().removeIf(node -> node == box);
 			this.checkGrid.setGridLinesVisible(true);
 			this.checkGrid.setVisible(true);
@@ -448,15 +556,13 @@ public class LayoutWizard extends AbstractWizard
 		});
 		service.setOnFailed(e ->
 		{
-			this.btnScan.setDisable(false);
-			this.btnCheckTable.setDisable(true);
+			setDisable.accept(false);
 			this.main.getChildren().removeIf(node -> node == box);
 			this.checkGrid.setVisible(false);
-			//TODO implement
-			e.getSource().getException().printStackTrace();
 
+			this.errorArea.setText(e.getSource().getException().getMessage());
 		});
-		service.setExecutor(executor);
+		service.setExecutor(scanExecutor);
 		service.start();
 	}
 
@@ -487,7 +593,7 @@ public class LayoutWizard extends AbstractWizard
 				.forEach(i ->
 				{
 					String id = collect.get(i - 1).getID();
-					this.checkGrid.add(new Text(id), 0, i);
+					this.checkGrid.add(new TopText(id), 0, i);
 					this.checkGrid.add(new Text(id), i, 0);
 				}));
 
@@ -506,47 +612,80 @@ public class LayoutWizard extends AbstractWizard
 	private RelationButton createRelation(IControl top, IControl left)
 	{
 		RelationButton btn = new RelationButton(createFormula(top, left), top, left);
+		btn.setToggleGroup(this.toggleGroup);
 		btn.setOnAction(e -> this.bpView.setCenter(btn.createView()));
 		return btn;
 	}
 
-	private Spec createFormula(IControl top, IControl left)
+	private Spec createFormula(IControl topControl, IControl leftControl)
 	{
-		Rectangle topRectangle = null;
-		Rectangle leftRectangle = null;
+		String leftId = leftControl.getID();
+		Rectangle top = null;
+		Rectangle left = null;
 
 		try
 		{
-			IControl topOwner = this.currentWindow.getOwnerControl(top);
-			topRectangle = service().getRectangle(topOwner == null ? null : topOwner.locator(), top.locator());
+			IControl topOwner = this.currentWindow.getOwnerControl(topControl);
+			top = service().getRectangle(topOwner == null ? null : topOwner.locator(), topControl.locator());
 
-			if (top == left)
+			if (topControl == leftControl)
 			{
-				leftRectangle = new Rectangle(topRectangle);
+				left = new Rectangle(top);
 			}
 			else
 			{
-				IControl leftOwner = this.currentWindow.getOwnerControl(left);
-				leftRectangle = service().getRectangle(leftOwner == null ? null : leftOwner.locator(), left.locator());
+				IControl leftOwner = this.currentWindow.getOwnerControl(leftControl);
+				left = service().getRectangle(leftOwner == null ? null : leftOwner.locator(), leftControl.locator());
 			}
 		}
 		catch (Exception e)
 		{
+			e.printStackTrace();
 			//TODO what we need return??
 			return Spec.create().invisible();
 		}
 		//same control
-		if (top == left)
+		Spec spec = Spec.create();
+		if (topControl == leftControl)
 		{
-			Spec spec = Spec.create()
-					.visible()
-					.count(1);
-			addSpecs(topRectangle.getHeight(), spec::height, spec::height);
-			addSpecs(topRectangle.getWidth(), spec::width, spec::width);
+			spec.visible().count(1);
+			addSpecs(top.getHeight(), spec::height, spec::height);
+			addSpecs(top.getWidth(), spec::width, spec::width);
 
 			return spec;
 		}
-		return Spec.create();
+		else
+		{
+			//check full contains
+			if (!(top.x > left.x || (top.x + top.width) < (left.x + left.width) || top.y > left.y || (top.y + top.height) < (left.y + left.height)))
+			{
+				spec.contains(leftId);
+			}
+
+			addSpecsAnother(PieceKind.LEFT, top, left, leftId, spec::left, spec::left);
+			addSpecsAnother(PieceKind.RIGHT, top, left, leftId, spec::right, spec::right);
+			addSpecsAnother(PieceKind.TOP, top, left, leftId, spec::top, spec::top);
+			addSpecsAnother(PieceKind.BOTTOM, top, left, leftId, spec::bottom, spec::bottom);
+
+			addSpecsAnother(PieceKind.INSIDE_LEFT, top, left, leftId, spec::inLeft, spec::inLeft);
+			addSpecsAnother(PieceKind.INSIDE_RIGHT, top, left, leftId, spec::inRight, spec::inRight);
+			addSpecsAnother(PieceKind.INSIDE_TOP, top, left, leftId, spec::inTop, spec::inTop);
+			addSpecsAnother(PieceKind.INSIDE_BOTTOM, top, left, leftId, spec::inBottom, spec::inBottom);
+
+			addSpecsAnother(PieceKind.ON_LEFT, top, left, leftId, spec::onLeft, spec::onLeft);
+			addSpecsAnother(PieceKind.ON_RIGHT, top, left, leftId, spec::onRight, spec::onRight);
+			addSpecsAnother(PieceKind.ON_TOP, top, left, leftId, spec::onTop, spec::onTop);
+			addSpecsAnother(PieceKind.ON_BOTTOM, top, left, leftId, spec::onBottom, spec::onBottom);
+
+			addSpecsAnother(PieceKind.LEFT_ALIGNED, top, left, leftId, spec::lAlign, spec::lAlign);
+			addSpecsAnother(PieceKind.RIGHT_ALIGNED, top, left, leftId, spec::rAlign, spec::rAlign);
+			addSpecsAnother(PieceKind.TOP_ALIGNED, top, left, leftId, spec::tAlign, spec::tAlign);
+			addSpecsAnother(PieceKind.BOTTOM_ALIGNED, top, left, leftId, spec::bAlign, spec::bAlign);
+
+			addSpecsAnother(PieceKind.HORIZONTAL_CENTERED, top, left, leftId, spec::hCenter, spec::hCenter);
+			addSpecsAnother(PieceKind.VERTICAL_CENTERED, top, left, leftId, spec::vCenter, spec::vCenter);
+		}
+		return spec;
 	}
 
 	private void addSpecs(Number n, Consumer<Number> c0, Consumer<CheckProvider> c1)
@@ -573,10 +712,129 @@ public class LayoutWizard extends AbstractWizard
 		}
 	}
 
+	private void addSpecsAnother(Number n, String another, BiConsumer<String, Number> c0, BiConsumer<String, CheckProvider> c1)
+	{
+		if (this.cbNumber.isSelected())
+		{
+			c0.accept(another, n);
+		}
+		if (this.cbAbout.isSelected())
+		{
+			c1.accept(another, DoSpec.about(n));
+		}
+		if (this.cbLess.isSelected())
+		{
+			c1.accept(another, DoSpec.less(n.longValue() + 1));
+		}
+		if (this.cbGreat.isSelected())
+		{
+			c1.accept(another, DoSpec.great(n.longValue() - 1));
+		}
+		if (this.cbBetween.isSelected())
+		{
+			c1.accept(another, DoSpec.between(0, n.longValue() * 2));
+		}
+	}
+
+	private void addSpecsAnother(PieceKind kind, Rectangle top, Rectangle left, String leftId, BiConsumer<String, Number> c0, BiConsumer<String, CheckProvider> c1)
+	{
+		int distance;
+		if ((distance = kind.distance(top, left)) > 0)
+		{
+			addSpecsAnother(distance, leftId, c0, c1);
+		}
+	}
+
+	private void checkTable()
+	{
+		Consumer<Boolean> setDisable = flag ->
+		{
+			this.bpView.setDisable(flag);
+			this.cbDialogs.setDisable(flag);
+			this.cbConnections.setDisable(flag);
+			this.btnScan.setDisable(flag);
+			this.piCheckTable.setVisible(flag);
+			this.btnCheckTable.setDisable(flag);
+			forEachRelationButton(rb -> rb.setDisable(flag));
+		};
+		setDisable.accept(true);
+		Optional.ofNullable(this.checkTableExecutor).ifPresent(WizardCommonHelper::shutdownExec);
+		this.checkRelationExecutor = Executors.newSingleThreadExecutor();
+		Service<List<String>> service = new Service<List<String>>()
+		{
+			@Override
+			protected Task<List<String>> createTask()
+			{
+				return new Task<List<String>>()
+				{
+					@Override
+					protected List<String> call() throws Exception
+					{
+						ArrayList<String> list = new ArrayList<>();
+						errorArea.setText("Checking...");
+						forEachRelationButton(rb -> {
+							List<String> check = rb.check();
+							Optional.ofNullable(check).ifPresent(list::addAll);
+						});
+						return list;
+					}
+				};
+			}
+		};
+		service.setOnSucceeded(event ->
+		{
+			setDisable.accept(false);
+			List<String> value = ((List<String>) event.getSource().getValue());
+			if (value.isEmpty())
+			{
+				//all ok
+				this.errorArea.setText("All ok");
+			}
+			else
+			{
+				this.errorArea.setText(value.stream().collect(Collectors.joining(System.lineSeparator())));
+			}
+
+		});
+		service.setOnFailed(event ->
+		{
+			setDisable.accept(false);
+			this.errorArea.setText(event.getSource().getException().getMessage());
+			event.getSource().getException().printStackTrace();
+		});
+		service.setExecutor(this.checkRelationExecutor);
+		service.start();
+	}
+
+	private void forEachRelationButton(Consumer<RelationButton> consumer)
+	{
+		this.checkGrid.getChildren().stream()
+				.filter(node -> node instanceof RelationButton)
+				.map(node -> (RelationButton)node)
+				.forEach(consumer);
+	}
+
+	private <T extends Node> void forEach(Predicate<Node> predicate, Consumer<T> consumer)
+	{
+		this.checkGrid.getChildren().stream()
+				.filter(predicate)
+				.map(node -> (T) node)
+				.forEach(consumer);
+	}
+
+
 	//endregion
 
 	//region private classes
-	private class RelationButton extends Button
+	private class TopText extends Text
+	{
+		public TopText(String text)
+		{
+			super(text);
+		}
+	}
+
+	private class RelationButton extends ToggleButton
 	{
 		private Spec formula;
 		private String topName;
@@ -607,15 +865,48 @@ public class LayoutWizard extends AbstractWizard
 			main.getChildren().add(new Text(String.format("Relation %s -> %s", topName, leftName)));
 			main.getChildren().add(new Separator(Orientation.HORIZONTAL));
 			main.getChildren().add(new Text(DoSpec.class.getSimpleName()));
-			Iterator<Piece> iterator = this.formula.iterator();
-			Consumer<OneRow> removeAll = this.boxWithFields.getChildren()::removeAll;
-			iterator.forEachRemaining(piece -> this.boxWithFields.getChildren().add(new OneRow(piece.toString(), evaluator, removeAll)));
 
 			Button btnAdd = new Button();
+
+			Iterator<Piece> iterator = this.formula.iterator();
+			Consumer<OneRow> removeAll = this.boxWithFields.getChildren()::removeAll;
+			BiConsumer<KeyEvent, OneRow> keyConsumer = (keyEvent, oneRow) ->
+			{
+				KeyCode keyCode = keyEvent.getCode();
+				if (keyCode == KeyCode.DOWN || (keyCode == KeyCode.ENTER && !keyEvent.isShiftDown()) || (keyCode == KeyCode.TAB && !keyEvent.isShiftDown()))
+				{
+					int i = this.boxWithFields.getChildren().indexOf(oneRow);
+					if (i == this.boxWithFields.getChildren().size() - 2)
+					{
+						btnAdd.fire();
+					}
+					else
+					{
+						this.boxWithFields.getChildren().get(i + 1).requestFocus();
+					}
+				}
+				else if (keyCode == KeyCode.UP || (keyCode == KeyCode.TAB && keyEvent.isShiftDown()) || (keyCode == KeyCode.TAB || keyEvent.isShiftDown()))
+				{
+					int i = this.boxWithFields.getChildren().indexOf(oneRow);
+					if (i > 0)
+					{
+						this.boxWithFields.getChildren().get(i - 1).requestFocus();
+					}
+				}
+			};
+			Consumer<String> addNew = str -> {
+				OneRow oneRow = new OneRow(str, evaluator, removeAll, keyConsumer);
+				int index = Math.max(0, this.boxWithFields.getChildren().size() - 1);
+				this.boxWithFields.getChildren().add(index, oneRow);
+				oneRow.requestFocus();
+			};
+
+			iterator.forEachRemaining(piece -> addNew.accept(piece.toString()));
+
 			btnAdd.setId("cbAdd");
 			btnAdd.getStyleClass().add(CssVariables.TRANSPARENT_BACKGROUND);
 			this.boxWithFields.getChildren().add(btnAdd);
-			btnAdd.setOnAction(e -> this.boxWithFields.getChildren().add(this.boxWithFields.getChildren().size() - 1, new OneRow("", evaluator, removeAll)));
+			btnAdd.setOnAction(e -> addNew.accept(""));
 
 			sp.setFitToHeight(true);
 			sp.setFitToWidth(true);
@@ -625,19 +916,75 @@ public class LayoutWizard extends AbstractWizard
 
 			Button btnCheck = new Button("Check");
 			Button btnSave = new Button("Save");
+			HBox checkBox = new HBox();
+			checkBox.setAlignment(Pos.CENTER_RIGHT);
+			checkBox.getChildren().add(btnCheck);
+			HBox.setHgrow(checkBox, Priority.ALWAYS);
+
+			ProgressIndicator indicator = new ProgressIndicator(ProgressIndicator.INDETERMINATE_PROGRESS);
+			indicator.setMinSize(32, 32);
+			indicator.setPrefSize(32, 32);
+			indicator.setMaxSize(32, 32);
+			checkBox.getChildren().add(indicator);
+			indicator.setVisible(false);
 			HBox hBox = new HBox();
-			hBox.setAlignment(Pos.CENTER_RIGHT);
+			hBox.setAlignment(Pos.CENTER_LEFT);
 			btnSave.setOnAction(e -> this.save());
+			Consumer<Boolean> setDisable = flag -> {
+				indicator.setVisible(flag);
+
+				this.boxWithFields.setDisable(flag);
+				btnSave.setDisable(flag);
+				btnCheck.setDisable(flag);
+				indicator.setVisible(flag);
+				forEachRelationButton(rb -> rb.setDisable(flag));
+			};
 			btnCheck.setOnAction(e -> {
-				List<String> check = this.check();
-				if (check == null)
+				setDisable.accept(true);
+				errorArea.setText("Checking...");
+				Service<List<String>> service = new Service<List<String>>()
 				{
-					//all ok
-				}
-				//TODO where place check result???
-				System.out.println(check);
+					@Override
+					protected Task<List<String>> createTask()
+					{
+						return new Task<List<String>>()
+						{
+							@Override
+							protected List<String> call() throws Exception
+							{
+								return checkView();
+							}
+						};
+					}
+				};
+				Optional.ofNullable(checkRelationExecutor).ifPresent(WizardCommonHelper::shutdownExec);
+				checkRelationExecutor = Executors.newSingleThreadExecutor();
+				service.setExecutor(checkRelationExecutor);
+				service.setOnSucceeded(ev ->
+				{
+					setDisable.accept(false);
+
+					List<String> res = (List<String>) ev.getSource().getValue();
+					if (res == null)
+					{
+						errorArea.setText("All ok");
+					}
+					else
+					{
+						errorArea.setText(res.stream().collect(Collectors.joining(System.lineSeparator())));
+					}
+				});
+				service.setOnFailed(ev ->
+				{
+					Throwable exception = ev.getSource().getException();
+					exception.printStackTrace();
+					setDisable.accept(true);
+					errorArea.setText(exception.getMessage());
+				});
+				service.start();
 			});
-			hBox.getChildren().addAll(btnSave, Common.createSpacer(Common.SpacerEnum.HorizontalMid), btnCheck);
+
+			hBox.getChildren().addAll(btnSave, Common.createSpacer(Common.SpacerEnum.HorizontalMid), checkBox);
 			main.getChildren().addAll(Common.createSpacer(Common.SpacerEnum.VerticalMid), hBox);
 			return main;
 		}
@@ -654,7 +1001,7 @@ public class LayoutWizard extends AbstractWizard
 		/**
 		 * @return null if all ok, otherwise list of errors
 		 */
-		public List<String> check()
+		public List<String> checkView()
 		{
 			Spec func = this.create(piece -> DialogsHelper.showError(String.format("Can't check, because %s is invalid doSpec function", piece)));
 			if (func != null)
@@ -671,6 +1018,26 @@ public class LayoutWizard extends AbstractWizard
 				{
 					return Collections.singletonList(e.getMessage());
 				}
+			}
+			return null;
+		}
+
+		/**
+		 * @return null if all ok, otherwise list of errors
+		 */
+		public List<String> check()
+		{
+			try
+			{
+				CheckingLayoutResult res = this.control.checkLayout(service(), currentWindow, this.formula);
+				if (!res.isOk())
+				{
+					return res.getErrors();
+				}
+			}
+			catch (Exception e)
+			{
+				return Collections.singletonList(e.getMessage());
 			}
 			return null;
 		}
@@ -730,7 +1097,7 @@ public class LayoutWizard extends AbstractWizard
 	{
 		private TextField field;
 
-		OneRow(String formula, AbstractEvaluator evaluator, Consumer<OneRow> handler)
+		OneRow(String formula, AbstractEvaluator evaluator, Consumer<OneRow> handler, BiConsumer<KeyEvent, OneRow> consumer)
 		{
 			this.setAlignment(Pos.CENTER_LEFT);
 			this.field = new TextField(formula);
@@ -761,11 +1128,12 @@ public class LayoutWizard extends AbstractWizard
 			btnRemove.setId("btnRemove");
 			btnRemove.setOnAction(e -> handler.accept(this));
 			this.getChildren().add(btnRemove);
+			this.field.setOnKeyPressed(e -> consumer.accept(e, this));
 		}
 
 		public void requestFocus()
 		{
-			Common.setFocused(field);
+			Common.setFocused(this.field, 30);
 		}
 
 		public String getValue()
@@ -783,11 +1151,15 @@ public class LayoutWizard extends AbstractWizard
 		public IControlWithCheck(IControl control, Document doc)
 		{
 			this.control = control;
-			this.rectangle = Common.tryCatch(() ->
+			try
 			{
 				List<org.w3c.dom.Node> all = wizardMatcher.findAll(doc, this.control.locator());
-				return ((Rectangle) all.get(0).getUserData(IRemoteApplication.rectangleName));
-			}, "", null);
+				this.rectangle = ((Rectangle) all.get(0).getUserData(IRemoteApplication.rectangleName));
+			}
+			catch (Exception e)
+			{
+				this.rectangle = null;
+			}
 		}
 
 		final BooleanProperty onProperty()

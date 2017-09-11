@@ -47,7 +47,8 @@ import static com.exactprosystems.jf.actions.gui.Helper.message;
 				"A name of the element is set as a name of the parameter. Elements of the form are processed according to this action. " +
 				"If an element is not virtual (for example, Wait), it should be found on the screen, then its' sequence that was set by the parameter is processed. " +
 				"Action DoSpec is specified in the parameter. For example, DoSpec top('Element1', 10) means that Element1 is10px higher than the known one.",
-		additionFieldsAllowed 	= true 
+		additionFieldsAllowed 	= true,
+		suffix = "DLGCL"
 	)
 public class DialogCheckLayout extends AbstractAction
 {

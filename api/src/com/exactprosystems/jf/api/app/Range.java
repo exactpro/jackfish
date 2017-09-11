@@ -84,7 +84,7 @@ public enum Range
 		@Override
 		public boolean func(long x, long a, long b)
 		{
-			return x/10*9 < a && a < x/10*11;
+			return x / 10. * 9 < a && a < x / 10. * 11;
 		}
 
 		@Override

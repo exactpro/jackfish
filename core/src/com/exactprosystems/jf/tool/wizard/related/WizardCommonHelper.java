@@ -5,6 +5,8 @@ import com.exactprosystems.jf.documents.config.Configuration;
 
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 public class WizardCommonHelper
@@ -30,6 +32,25 @@ public class WizardCommonHelper
 				.forEach(list::add);
 
 		return list;
+	}
+
+	public static void shutdownExec(ExecutorService exec)
+	{
+		if (exec != null)
+		{
+			exec.shutdown();
+			try
+			{
+				if (!exec.awaitTermination(800, TimeUnit.MILLISECONDS))
+				{
+					exec.shutdownNow();
+				}
+			}
+			catch (InterruptedException e)
+			{
+				exec.shutdownNow();
+			}
+		}
 	}
 
 }

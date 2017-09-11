@@ -226,12 +226,12 @@ public class CommandBuilder
 
     public static MatrixItem create(Matrix matrix, String itemName, String actionName)
     {
-        try
+		try
         {
-            MatrixItem res = Parser.createItem(itemName, actionName);
-            res.init(matrix, matrix);
-            return res;
-        }
+			MatrixItem res = Parser.createItem(itemName, actionName);
+			res.init(matrix, matrix);
+			return res;
+		}
         catch (Exception e)
         {
             logger.error(e.getMessage(), e);
