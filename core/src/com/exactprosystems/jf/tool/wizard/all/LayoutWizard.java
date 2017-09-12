@@ -112,6 +112,8 @@ public class LayoutWizard extends AbstractWizard
 
 	private HBox boxWithCheckBoxes;
 
+	private Map<PieceKind, String> map = new HashMap<>(); //TODO remake this map to <PieceKind, Icon>
+
 	//region AbstractWizard methods
 	@Override
 	public void init(IContext context, WizardManager wizardManager, Object... parameters)
@@ -299,6 +301,8 @@ public class LayoutWizard extends AbstractWizard
 		this.boxWithCheckBoxes.setDisable(true);
 		hideTableAndView();
 		listeners();
+
+		fillMap();
 	}
 
 	@Override
@@ -342,6 +346,27 @@ public class LayoutWizard extends AbstractWizard
 		return true;
 	}
 	//endregion
+
+	private void fillMap()
+	{
+		this.addToMap("V", PieceKind.VISIBLE); 					// v - visible
+		this.addToMap("C", PieceKind.COUNT);   					// c - count
+		this.addToMap("S", PieceKind.WIDTH, PieceKind.HEIGHT);	// S - size
+		this.addToMap("C", PieceKind.CONTAINS);					// c - contains
+		this.addToMap("D", PieceKind.LEFT, PieceKind.RIGHT, PieceKind.TOP, PieceKind.BOTTOM); // D - distance
+		this.addToMap("I", PieceKind.INSIDE_LEFT, PieceKind.INSIDE_RIGHT, PieceKind.INSIDE_TOP, PieceKind.INSIDE_BOTTOM); // I - inside
+		this.addToMap("O", PieceKind.ON_LEFT, PieceKind.ON_RIGHT, PieceKind.ON_TOP, PieceKind.ON_BOTTOM); // O - on
+		this.addToMap("A", PieceKind.LEFT_ALIGNED, PieceKind.RIGHT_ALIGNED, PieceKind.TOP_ALIGNED, PieceKind.BOTTOM_ALIGNED); //A - align
+		this.addToMap("R", PieceKind.HORIZONTAL_CENTERED, PieceKind.VERTICAL_CENTERED); // R - centeRed
+	}
+
+	private void addToMap(String word, PieceKind ... kinds)
+	{
+		for (PieceKind kind : kinds)
+		{
+			map.put(kind, word);
+		}
+	}
 
 	private IRemoteApplication service()
 	{
@@ -815,7 +840,7 @@ public class LayoutWizard extends AbstractWizard
 		};
 		setDisable.accept(true);
 		Optional.ofNullable(this.checkTableExecutor).ifPresent(WizardCommonHelper::shutdownExec);
-		this.checkRelationExecutor = Executors.newSingleThreadExecutor();
+		this.checkTableExecutor = Executors.newSingleThreadExecutor();
 		Service<List<String>> service = new Service<List<String>>()
 		{
 			@Override
@@ -849,7 +874,7 @@ public class LayoutWizard extends AbstractWizard
 			this.displayErrors(event.getSource().getException().getMessage());
 			event.getSource().getException().printStackTrace();
 		});
-		service.setExecutor(this.checkRelationExecutor);
+		service.setExecutor(this.checkTableExecutor);
 		service.start();
 	}
 
@@ -1133,8 +1158,15 @@ public class LayoutWizard extends AbstractWizard
 
 		private void setFormula(Spec formula)
 		{
-			this.formula = formula;
 			//TODO add icons on button ( icon of pieces)
+			this.formula = formula;
+			Iterator<Piece> iterator = this.formula.iterator();
+			Set<String> set = new HashSet<>();
+			iterator.forEachRemaining(piece ->
+			{
+				set.add(map.get(piece.getKind()));
+			});
+			this.setText(set.stream().collect(Collectors.joining("")));
 		}
 	}
 

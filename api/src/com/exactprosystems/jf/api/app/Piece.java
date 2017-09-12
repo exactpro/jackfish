@@ -8,10 +8,10 @@
 
 package com.exactprosystems.jf.api.app;
 
+import com.exactprosystems.jf.api.app.IWindow.SectionKind;
+
 import java.awt.Color;
 import java.io.Serializable;
-
-import com.exactprosystems.jf.api.app.IWindow.SectionKind;
 
 
 public class Piece implements Serializable
@@ -48,7 +48,10 @@ public class Piece implements Serializable
 		}
 	}
 
-	
+	public PieceKind getKind()
+	{
+		return kind;
+	}
 
 	public Piece setRange(Range range)
 	{
