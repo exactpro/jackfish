@@ -233,6 +233,15 @@ public class ImageViewWithScale extends BorderPane
 		this.imageView.setPreserveRatio(true);
 	}
 
+	public void removeCurrentImage()
+	{
+		if(this.group.getChildren().remove(this.imageView))
+		{
+			addWaitingPane();
+		}
+
+	}
+
     private void listeners()
     {
         this.cbIds.selectedProperty().addListener((observable, oldValue, newValue) -> setTextVisible(newValue));
