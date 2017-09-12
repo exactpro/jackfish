@@ -147,13 +147,10 @@ public class DialogCheckLayout extends AbstractAction
 		if (this.table != null)
 		{
 			controlMap = new Parameters();
-			table.forEach(rowTable -> rowTable.forEach((k, v) ->
-			{
-				if (!k.isEmpty())
-				{
-					controlMap.add(k, String.valueOf(v));
-				}
-			}));
+			this.table.stream()
+					.flatMap(row -> row.entrySet().stream())
+					.filter(entry -> !Str.IsNullOrEmpty(entry.getKey()))
+					.forEach(entry -> controlMap.add(entry.getKey(), Str.asString(entry.getValue())));
 
 			controlMap.evaluateAll(context.getEvaluator());
 		}

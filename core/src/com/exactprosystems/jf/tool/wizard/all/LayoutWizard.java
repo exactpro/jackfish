@@ -330,7 +330,6 @@ public class LayoutWizard extends AbstractWizard
 				lines[j][i] = iterator.next().toString();
 			}
 		}
-		//TODO implement
 		CommandBuilder builder = CommandBuilder.start();
 		MatrixItem rowTable = createRawTable(lines);
 		MatrixItem dialogCheckLayout = createDialogCheckLayout(rowTable.getId());
@@ -398,18 +397,17 @@ public class LayoutWizard extends AbstractWizard
 		Parameters parameters = new Parameters();
 		parameters.add(DialogCheckLayout.connectionName, "", TypeMandatory.Mandatory);
 		parameters.add(DialogCheckLayout.dialogName, evaluator.createString(this.cbDialogs.getSelectionModel().getSelectedItem().getName()), TypeMandatory.Mandatory);
-		parameters.add(DialogCheckLayout.tableName, tableId + ".Out", TypeMandatory.NotMandatory);
+		parameters.add(DialogCheckLayout.tableName, tableId, TypeMandatory.NotMandatory);
+		dcl.addKnownParameters();
 		try
 		{
-			//TODO review it
-			dcl.addKnownParameters();
 			dcl.init(this.matrix, null, new HashMap<>(), parameters);
-			dcl.createId();
 		}
 		catch (Exception e)
 		{
-			e.printStackTrace();
+			;
 		}
+		dcl.createId();
 		return dcl;
 	}
 
@@ -721,8 +719,6 @@ public class LayoutWizard extends AbstractWizard
 		}
 		catch (Exception e)
 		{
-			e.printStackTrace();
-			//TODO what we need return??
 			return Spec.create().invisible();
 		}
 		//same control
