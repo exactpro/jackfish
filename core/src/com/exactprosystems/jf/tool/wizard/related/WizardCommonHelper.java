@@ -25,12 +25,6 @@ public class WizardCommonHelper
 				.map(entry -> new ConnectionBean(entry.getKey(), ((AppConnection) entry.getValue())))
 				.collect(Collectors.toList());
 
-		//get connection from pool
-		config.getApplicationPool().getConnections().stream()
-				.filter(appCon -> list.stream().map(ConnectionBean::getConnection).noneMatch(appCon::equals))
-				.map(appCon -> new ConnectionBean(appCon.getId(), appCon))
-				.forEach(list::add);
-
 		return list;
 	}
 

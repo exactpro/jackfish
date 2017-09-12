@@ -547,7 +547,7 @@ WAIT;Wait;Never;;
     delay;finish - start
 
     #Assert;#Message
-    delay < 15;'Proper delay'
+    delay < 50;'Proper delay'
 
     #Id;#Let
     start;System.currentTimeMillis()
@@ -562,7 +562,7 @@ WAIT;Wait;Never;;
     delay;finish - start
 
     #Assert;#Message
-    delay < 15;'Proper delay'
+    delay < 100;'Proper delay'
 
     // =====================================================================
     // Negative tests

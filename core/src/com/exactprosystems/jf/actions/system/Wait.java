@@ -55,6 +55,11 @@ public class Wait extends AbstractAction
 	{
         if (this.timeout != null)
 		{
+			if(this.timeout <= 0)
+			{
+				super.setResult(null);
+				return;
+			}
 		    sleepUpTo(context, System.currentTimeMillis() + this.timeout);
 			super.setResult(null);
 		}

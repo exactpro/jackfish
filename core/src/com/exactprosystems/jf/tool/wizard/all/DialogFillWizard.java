@@ -263,8 +263,11 @@ public class DialogFillWizard extends AbstractWizard
     {
         if (this.currentDialog == null)
         {
+            this.imageViewWithScale.removeCurrentImage();
             return;
         }
+
+        this.imageViewWithScale.removeCurrentImage();
         IControl selfControl = Common.tryCatch(() -> this.currentDialog.getSelfControl(), "Error on get self", null);
 
         Predicate<IControl> predicate = (IControl control) ->
