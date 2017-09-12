@@ -664,8 +664,11 @@ public class DictionaryFx extends GuiDictionary
 
 	public void stopApplication() throws Exception
 	{
-		this.applicationConnector.stopApplication();
-		displayApplicationControl(null);
+		if (!getFactory().getConfiguration().getStoreMap().values().contains(this.applicationConnector.getAppConnection()))
+		{
+			this.applicationConnector.stopApplication();
+			displayApplicationControl(null);
+		}
 	}
 
 
