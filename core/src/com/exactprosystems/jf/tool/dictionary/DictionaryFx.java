@@ -342,7 +342,7 @@ public class DictionaryFx extends GuiDictionary
 				@Override
 				protected Void call() throws Exception
 				{
-					setIsFinding(true);
+					isFinding = true;
 					controls.forEach(control ->
 					{
 						try
@@ -376,7 +376,7 @@ public class DictionaryFx extends GuiDictionary
 							controller.displayTestingControl(control, "Error", Result.FAILED);
 						}
 					});
-					setIsFinding(false);
+					isFinding = false;
 					return null;
 				}
 			});
@@ -389,7 +389,7 @@ public class DictionaryFx extends GuiDictionary
 	{
 		if (isApplicationRun())
 		{
-			if (getIsWorking())
+			if (getIsWorking() || isFinding)
 			{
 				showNotification();
 			}
@@ -406,14 +406,6 @@ public class DictionaryFx extends GuiDictionary
 				}
 			}
 		}
-	}
-
-	private void setIsFinding(boolean bol) {
-		this.isFinding = bol;
-	}
-
-	public boolean isFinding() {
-		return this.isFinding;
 	}
 
 	public void dialogMove(IWindow window, IWindow.SectionKind section, Integer newIndex) throws Exception
