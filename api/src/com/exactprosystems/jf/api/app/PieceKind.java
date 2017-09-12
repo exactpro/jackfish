@@ -311,7 +311,11 @@ public enum PieceKind implements Measure
 		@Override
 		protected <T> void performDerived(Piece piece, OperationExecutor<T> executor, List<T> self, List<T> others, CheckingLayoutResult result) throws Exception
 		{
-			result.set(piece.range.func(self.size(), piece.a, piece.b));
+			boolean func = piece.range.func(self.size(), piece.a, piece.b);
+			if (!func)
+			{
+				result.error(piece, "Actual = " + self.size() + " Expected = " + piece.range.toString("" + piece.a, "" + piece.b));
+			}
 		}
 
 		@Override

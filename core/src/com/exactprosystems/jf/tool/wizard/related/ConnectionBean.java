@@ -26,6 +26,7 @@ public class ConnectionBean
 	@Override
 	public String toString()
 	{
-		return getName();
+		return this.name + " [ " + this.connection.toString() + " ]";
 	}
+
 }

@@ -227,8 +227,8 @@ public class DialogFillWizard extends AbstractWizard
         {
             beans.forEach(bean -> matrixItem.getParameters().add(bean.getControlName(), bean.getOperation(), TypeMandatory.Extra));
             matrixItem.createId();
-            matrixItem.getParameters().getByName("Dialog").setExpression(surWithApostr(this.currentDialog.getName()));
-            matrixItem.getParameters().getByName("AppConnection").setExpression(surWithApostr(this.appConnection.getId()));
+            matrixItem.getParameters().getByName(DialogFill.dialogName).setExpression(surWithApostr(this.currentDialog.getName()));
+            matrixItem.getParameters().getByName(DialogFill.connectionName).setExpression(surWithApostr(this.appConnection.getId()));
         }
 
         return matrixItem;

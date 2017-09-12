@@ -44,6 +44,7 @@ import javafx.scene.control.cell.CheckBoxListCell;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.*;
+import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import org.w3c.dom.Document;
 
@@ -180,7 +181,11 @@ public class LayoutWizard extends AbstractWizard
 
 		this.checkGrid = new GridPane();
 		this.checkGrid.setGridLinesVisible(true);
-		this.main.add(this.checkGrid, 0, 3);
+		ScrollPane sp = new ScrollPane();
+		sp.setContent(this.checkGrid);
+		sp.setFitToWidth(true);
+		sp.setFitToHeight(true);
+		this.main.add(sp, 0, 3);
 
 		ColumnConstraints c0 = new ColumnConstraints();
 		c0.setPercentWidth(70.0);
@@ -258,7 +263,7 @@ public class LayoutWizard extends AbstractWizard
 		//region table
 		{
 			this.main.getRowConstraints().addAll(createBigRow.get());
-			VBox pane = new VBox();
+			HBox pane = new HBox();
 			pane.setAlignment(Pos.CENTER);
 			pane.getChildren().addAll(this.btnCheckTable, this.piCheckTable);
 			this.checkGrid.add(pane, 0, 0);
@@ -345,7 +350,7 @@ public class LayoutWizard extends AbstractWizard
 
 	private void hideTableAndView()
 	{
-		this.errorArea.setText("");
+		this.errorArea.clear();
 		this.checkGrid.getRowConstraints().clear();
 		this.checkGrid.getColumnConstraints().clear();
 		this.checkGrid.getChildren().removeIf(node -> node instanceof RelationButton || node instanceof Text);
@@ -383,6 +388,40 @@ public class LayoutWizard extends AbstractWizard
 		return dcl;
 	}
 
+	//region work with console
+	private void displayResults(List<String> errorList)
+	{
+		if (errorList == null || errorList.isEmpty())
+		{
+			removeAndSet(CssVariables.EVALUATE_SUCCESS);
+			this.errorArea.setText("All ok");
+		}
+		else
+		{
+			removeAndSet(CssVariables.COMPILE_FAILED);
+			this.errorArea.setText(errorList.stream().collect(Collectors.joining(System.lineSeparator())));
+		}
+	}
+
+	private void displayErrors(String error)
+	{
+		removeAndSet(CssVariables.COMPILE_FAILED);
+		this.errorArea.setText(error);
+	}
+
+	private void checking()
+	{
+		removeAndSet(CssVariables.EVALUATE_FAILED);
+		this.errorArea.setText("Checking...");
+	}
+
+	private void removeAndSet(String styleClass)
+	{
+		this.errorArea.getStyleClass().removeAll(CssVariables.COMPILE_FAILED, CssVariables.EVALUATE_FAILED, CssVariables.EVALUATE_SUCCESS);
+		this.errorArea.getStyleClass().addAll(styleClass);
+	}
+	//endregion
+
 	//region private scan functions
 	private void listeners()
 	{
@@ -407,6 +446,7 @@ public class LayoutWizard extends AbstractWizard
 			hideTableAndView();
 			if (newDialog != null)
 			{
+				this.imageViewWithScale.removeCurrentImage();
 				boolean removeIf = this.main.getChildren().removeIf(node -> node == this.waitText);
 				if (removeIf)
 				{
@@ -518,10 +558,11 @@ public class LayoutWizard extends AbstractWizard
 			this.cbConnections.setDisable(flag);
 			this.cbDialogs.setDisable(flag);
 			this.btnScan.setDisable(flag);
+			this.boxWithCheckBoxes.setDisable(flag);
 		};
 		setDisable.accept(true);
 
-		errorArea.setText("");
+		errorArea.clear();
 		Service<List<RelationButton>> service = new Service<List<RelationButton>>()
 		{
 			@Override
@@ -559,8 +600,7 @@ public class LayoutWizard extends AbstractWizard
 			setDisable.accept(false);
 			this.main.getChildren().removeIf(node -> node == box);
 			this.checkGrid.setVisible(false);
-
-			this.errorArea.setText(e.getSource().getException().getMessage());
+			displayErrors(e.getSource().getException().getMessage());
 		});
 		service.setExecutor(scanExecutor);
 		service.start();
@@ -574,16 +614,32 @@ public class LayoutWizard extends AbstractWizard
 				.map(c -> c.control)
 				.collect(Collectors.toList());
 
+		String longestId = collect.stream().map(IControl::getID).filter(id -> !Str.IsNullOrEmpty(id)).max(Comparator.comparingInt(String::length)).orElse("");
+
 		IntStream.range(0, collect.size() +1)
 				.forEach(i -> {
 					RowConstraints r0 = new RowConstraints();
 					r0.setPercentHeight(-1);
 					r0.setVgrow(Priority.ALWAYS);
+					r0.setMaxHeight(32.0);
 
 					ColumnConstraints c0 = new ColumnConstraints();
 					c0.setHalignment(HPos.CENTER);
 					c0.setPercentWidth(-1);
-					c0.setHgrow(Priority.ALWAYS);
+					if (i > 0)
+					{
+						String id = collect.get(i - 1).getID();
+						double computeWidth = Common.computeTextWidth(Font.getDefault(), id, 0.0D);
+						c0.setMinWidth(Math.max(100, computeWidth));
+						c0.setPrefWidth(Math.max(100, computeWidth));
+					}
+					else
+					{
+						//first column
+						double computeWidth = Common.computeTextWidth(Font.getDefault(), longestId, 0.0D);
+						c0.setMinWidth(Math.max(150.0, computeWidth));
+						c0.setPrefWidth(Math.max(150.0, computeWidth));
+					}
 
 					this.checkGrid.getColumnConstraints().add(c0);
 					this.checkGrid.getRowConstraints().add(r0);
@@ -771,7 +827,7 @@ public class LayoutWizard extends AbstractWizard
 					protected List<String> call() throws Exception
 					{
 						ArrayList<String> list = new ArrayList<>();
-						errorArea.setText("Checking...");
+						checking();
 						forEachRelationButton(rb -> {
 							List<String> check = rb.check();
 							Optional.ofNullable(check).ifPresent(list::addAll);
@@ -785,21 +841,12 @@ public class LayoutWizard extends AbstractWizard
 		{
 			setDisable.accept(false);
 			List<String> value = ((List<String>) event.getSource().getValue());
-			if (value.isEmpty())
-			{
-				//all ok
-				this.errorArea.setText("All ok");
-			}
-			else
-			{
-				this.errorArea.setText(value.stream().collect(Collectors.joining(System.lineSeparator())));
-			}
-
+			this.displayResults(value);
 		});
 		service.setOnFailed(event ->
 		{
 			setDisable.accept(false);
-			this.errorArea.setText(event.getSource().getException().getMessage());
+			this.displayErrors(event.getSource().getException().getMessage());
 			event.getSource().getException().printStackTrace();
 		});
 		service.setExecutor(this.checkRelationExecutor);
@@ -862,7 +909,9 @@ public class LayoutWizard extends AbstractWizard
 
 			ScrollPane sp = new ScrollPane();
 
-			main.getChildren().add(new Text(String.format("Relation %s -> %s", topName, leftName)));
+			Text e1 = new Text(String.format("Relation %s -> %s", topName, leftName));
+			e1.setWrappingWidth(this.getScene().getWindow().getWidth() * 0.25);
+			main.getChildren().add(e1);
 			main.getChildren().add(new Separator(Orientation.HORIZONTAL));
 			main.getChildren().add(new Text(DoSpec.class.getSimpleName()));
 
@@ -894,19 +943,22 @@ public class LayoutWizard extends AbstractWizard
 					}
 				}
 			};
-			Consumer<String> addNew = str -> {
+			BiConsumer<String, Boolean> addNew = (str,flag) -> {
 				OneRow oneRow = new OneRow(str, evaluator, removeAll, keyConsumer);
 				int index = Math.max(0, this.boxWithFields.getChildren().size() - 1);
 				this.boxWithFields.getChildren().add(index, oneRow);
-				oneRow.requestFocus();
+				if (flag)
+				{
+					oneRow.requestFocus();
+				}
 			};
 
-			iterator.forEachRemaining(piece -> addNew.accept(piece.toString()));
+			iterator.forEachRemaining(piece -> addNew.accept(piece.toString(), false));
 
 			btnAdd.setId("cbAdd");
 			btnAdd.getStyleClass().add(CssVariables.TRANSPARENT_BACKGROUND);
 			this.boxWithFields.getChildren().add(btnAdd);
-			btnAdd.setOnAction(e -> addNew.accept(""));
+			btnAdd.setOnAction(e -> addNew.accept("", true));
 
 			sp.setFitToHeight(true);
 			sp.setFitToWidth(true);
@@ -941,7 +993,7 @@ public class LayoutWizard extends AbstractWizard
 			};
 			btnCheck.setOnAction(e -> {
 				setDisable.accept(true);
-				errorArea.setText("Checking...");
+				checking();
 				Service<List<String>> service = new Service<List<String>>()
 				{
 					@Override
@@ -965,21 +1017,14 @@ public class LayoutWizard extends AbstractWizard
 					setDisable.accept(false);
 
 					List<String> res = (List<String>) ev.getSource().getValue();
-					if (res == null)
-					{
-						errorArea.setText("All ok");
-					}
-					else
-					{
-						errorArea.setText(res.stream().collect(Collectors.joining(System.lineSeparator())));
-					}
+					displayResults(res);
 				});
 				service.setOnFailed(ev ->
 				{
 					Throwable exception = ev.getSource().getException();
 					exception.printStackTrace();
 					setDisable.accept(true);
-					errorArea.setText(exception.getMessage());
+					displayErrors(exception.getMessage());
 				});
 				service.start();
 			});
