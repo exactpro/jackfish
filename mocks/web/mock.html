@@ -136,6 +136,15 @@
     	document.getElementById('protocolText').value += getControlName() + "_up_" + x + NEWLINE;
 	};
 
+	var scrollFire = function(element) {
+		var name = element.name;
+		if(name == null)
+		{
+			name = element.title;
+		}
+		document.getElementById('protocolText').value += name + "_scroll" + NEWLINE;
+	}
+
 	</script>
 </head>
 <body id="bodyId" name="bodyName" class="bodyClass" title="bodyTitle" text="bodyText" onload="addAllListeners()">
@@ -285,8 +294,8 @@
 
 <div id="divCombobox">
 	<label id="labelCombobox">Combobox example</label>
-	<select id="combobox" name="ComboBox" class="add_listener" kindname="ComboBox" func="123456" onchange="changeCombobox(this)">
-		<option value="Green">Green</option>
+	<select id="combobox" name="ComboBox" class="add_listener" kindname="ComboBox" func="123456" onchange="changeCombobox(this)" size="3" onscroll="scrollFire(this)">
+		<option value="Green" selected>Green</option>
 		<option value="Yellow">Yellow</option>
 		<option value="Orange">Orange</option>
 		<option value="Blue">Blue</option>
@@ -306,7 +315,7 @@
 
 <div id="divUL">
 	<label id="labelUL">List UL Example</label>
-	<ul id="List" name="List" class="add_listener" kindname="List" func="123456">
+	<ul id="List" title="List" name="List" class="add_listener" kindname="List" func="123456" style="width: 300px; height: 50px; overflow: auto"	onscroll="scrollFire(this)">
 		<li>Green</li>
 		<li>Yellow</li>
 		<li>Orange</li>

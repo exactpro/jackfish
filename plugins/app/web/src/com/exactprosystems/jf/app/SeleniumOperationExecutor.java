@@ -269,19 +269,21 @@ public class SeleniumOperationExecutor implements OperationExecutor<WebElement>
 		scrollToElement(component);
 		switch (component.getTagName())
 		{
-			case "combobox":
+			case "select":
 				List<WebElement> options = component.findElements(By.xpath("child::option"));
 				checkScroll(options, index);
-				driver.executeScript("arguments[0].scrollIntoViewIfNeeded()", options.get(index));
+				driver.executeScript("arguments[0].scrollIntoView()", options.get(index));
 				return true;
 
 			case "ul":
-				List<WebElement> lis = component.findElements(By.xpath("child::li"));
-				checkScroll(lis, index);
-				driver.executeScript("arguments[0].scrollIntoViewIfNeeded()", lis.get(index));
+				List<WebElement> list = component.findElements(By.xpath("child::li"));
+				checkScroll(list, index);
+				driver.executeScript("arguments[0].scrollIntoView()", list.get(index));
+				return true;
+
+			default:
 				return true;
 		}
-		return true;
 	}
 
 	private void checkScroll(List<WebElement> list, int index) throws Exception

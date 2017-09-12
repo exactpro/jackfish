@@ -11,20 +11,6 @@ namespace mock_win
     {
         public delegate void ScrollEventHandler(Control sender);
         public event ScrollEventHandler ScrollPositionChange;
-        
-        //bool scroll = false;
-        //protected override void WndProc(ref Message m)
-        //{
-        //    base.WndProc(ref m);
-        //    if (m.Msg == 0x115)
-        //    {
-        //        if (scroll)
-        //        {
-        //            ScrollPositionChange(this);
-        //        }
-        //        scroll = !scroll;
-        //    }
-        //}
 
         Timer timer;
         private int topIndex_now;
@@ -52,22 +38,8 @@ namespace mock_win
         public delegate void ScrollEventHandler(Control sender);
         public event ScrollEventHandler ScrollPositionChange;
 
-        //bool scroll = false;
-        //protected override void WndProc(ref Message m)
-        //{
-        //    base.WndProc(ref m);
-        //    if (m.Msg == 0x115)
-        //    {
-        //        if (scroll)
-        //        {
-        //            ScrollPositionChange(this);
-        //        }
-        //        scroll = !scroll;
-        //    }
-        //}
-
         Timer timer;
-        private string topIndexName = "";
+        String previewTopNodeText = "Green";
 
         public CustomTreeView()
         {
@@ -79,11 +51,14 @@ namespace mock_win
 
         private void Timer_Tick(object sender, EventArgs e)
         {
-            //if (topIndexName != this.TopNode.Text)
-            //{
-            //    topIndexName = this.TopNode.Text;
-            //    ScrollPositionChange(this);
-            //}
+            if (this.TopNode != null)
+            {
+                if (previewTopNodeText != this.TopNode.Text)
+                {
+                    previewTopNodeText = this.TopNode.Text;
+                    ScrollPositionChange(this);
+                }
+            }
         }
     }
 
@@ -91,50 +66,27 @@ namespace mock_win
     {
         public delegate void ScrollEventHandler(Control sender);
         public event ScrollEventHandler ScrollPositionChange;
+        public int skip = -1;
+        public bool scroll = false;
 
-        bool scroll = false;
         protected override void WndProc(ref Message m)
         {
             base.WndProc(ref m);
-            if (m.Msg == 0x134) //https://wiki.winehq.org/List_Of_Windows_Messages
+            if (m.Msg == 308)
             {
-                if (scroll)
+                if (skip == 0)
                 {
-                    ScrollPositionChange(this);
+                    if (!scroll)
+                    {
+                        ScrollPositionChange(this);
+                    }
+                    scroll = !scroll;
                 }
-                scroll = !scroll;
+                if (skip > 0)
+                {
+                    skip -= 1;
+                }
             }
         }
-
-        //public delegate void TopIndexHandler(Control sender, string topIndex);
-        //public event TopIndexHandler TopIndexChanged;
-
-        //Point point;
-        //Timer timer;
-        //private int topIndex_now = -99;
-        //private string topIndexName;
-
-        //public CustomComboBox()
-        //{
-        //    this.timer = new Timer();
-        //    this.timer.Interval = 10;
-        //    this.timer.Tick += Timer_Tick;
-        //    this.timer.Enabled = true;
-        //    this.point = new Point(10, 10);
-        //}
-
-        //private void Timer_Tick(object sender, EventArgs e)
-        //{
-        //    if (this.DroppedDown)
-        //    {
-        //        var v = this.DisplayMember;
-        //        this.GetChildAtPoint(new Point(10, 10));
-        //    }
-        //    //if (topIndexName != this.GetChildAtPoint(point).Text)
-        //    //{
-        //    //    topIndexName = this.GetChildAtPoint(point).Text;
-        //    //    TopIndexChanged(this, topIndexName);
-        //    //}
-        //}
     }
 }

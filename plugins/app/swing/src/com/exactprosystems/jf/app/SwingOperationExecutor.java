@@ -364,6 +364,7 @@ public class SwingOperationExecutor implements OperationExecutor<ComponentFixtur
 			{
 				JTreeItem treeItem = (JTreeItem) target;
 				Pair<Rectangle, Point> pointPair = new JTreeLocation().pathBoundsAndCoordinates(treeItem.getTree(), treeItem.getPath());
+				treeItem.getTree().scrollPathToVisible(treeItem.getPath());
 				if(isCoordsDidNotIntroduce(x,y))
 				{
 					executeAction(action, treeItem.getTree(), pointPair.ii.x, pointPair.ii.y);
@@ -378,10 +379,6 @@ public class SwingOperationExecutor implements OperationExecutor<ComponentFixtur
 			if (isCoordsDidNotIntroduce(x,y))
 			{
 				point = AWT.visibleCenterOf(target);
-			}
-			if (target instanceof JTree && y != Integer.MIN_VALUE)
-			{
-				point = scrollToRow(((JTree) target), y);
 			}
 
 			executeAction(action, target, point.x, point.y);
@@ -1344,12 +1341,7 @@ public class SwingOperationExecutor implements OperationExecutor<ComponentFixtur
 	{
 		try
 		{
-			if (component.component() instanceof JComboBox)
-			{
-				JComboBox comboBox = component.targetCastedTo(JComboBox.class);
-				//TODO what we need do to scroll to need item?
-			}
-			else if (component.target instanceof JList)
+			if (component.target instanceof JList)
 			{
 				JList<?> jList = component.targetCastedTo(JList.class);
 				jList.ensureIndexIsVisible(index);

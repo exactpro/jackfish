@@ -85,6 +85,7 @@ public class SwingAppFactory extends AbstractApplicationFactory
 		info.addTypes(ControlKind.Wait,"*");
 
         info.addExcludes(ControlKind.MenuItem, OperationKind.EXPAND, OperationKind.COLLAPSE);
+        info.addExcludes(ControlKind.ComboBox, OperationKind.SCROLL_TO);
     }
 
 	private IGuiDictionary dictionary = null;

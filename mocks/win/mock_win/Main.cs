@@ -55,7 +55,20 @@ namespace mock_win
             this.Spinner.IsAccessible = true;
             List.ScrollPositionChange += ScrollChangePosition;
             ComboBox.ScrollPositionChange += ScrollChangePosition;
+            ComboBox.DropDown += ComboBox_DropDown;
             Tree.ScrollPositionChange += ScrollChangePosition;
+        }
+
+        private void ComboBox_DropDown(object sender, EventArgs e)
+        {
+            if (ComboBox.SelectedIndex == -1)
+            {
+                ComboBox.skip = ComboBox.Items.Count - 1;
+            }
+            else
+            {
+                ComboBox.skip = ComboBox.Items.Count;
+            }
         }
 
         private void ScrollChangePosition(Control sender)

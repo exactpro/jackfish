@@ -56,7 +56,7 @@ public class MockApp
 	private JPanel panel;
 	private JProgressBar progressBar;
 	private JScrollBar scrollBar;
-	private JList<String> list;
+	private JScrollPane listPanel;
 	private JTabbedPane tabPane;
 	private JScrollPane treePanel;
 	private JSplitPane splitPane;
@@ -109,7 +109,7 @@ public class MockApp
 		this.splitPane.setBounds	(0,							sizeM.height*6,	sizeL.width, sizeM.height);
 
 		// second column
-		this.treePanel.setBounds	(sizeL.width,					0,				sizeM.width, sizeL.height*2);
+		this.treePanel.setBounds	(sizeL.width,					0,				sizeM.width, sizeL.height);
 
 		// third column
 		this.button.setBounds		(sizeL.width + sizeM.width, 	0, 				sizeM.width, sizeM.height);
@@ -128,7 +128,7 @@ public class MockApp
 		this.buttonOrange.setBounds	(sizeL.width + sizeM.width*2,	sizeM.height*2, 	sizeM.width, sizeM.height);
 		this.buttonBlue.setBounds	(sizeL.width + sizeM.width*2,	sizeM.height*3, 	sizeM.width, sizeM.height);
 		this.checkBox.setBounds		(sizeL.width + sizeM.width*2,	sizeM.height*4, 	sizeM.width, sizeM.height);
-		this.list.setBounds			(sizeL.width + sizeM.width*2,	sizeM.height*5,	sizeM.width, sizeL.height);
+		this.listPanel.setBounds	(sizeL.width + sizeM.width*2,	sizeM.height*5,	sizeM.width, sizeM.height*2);
 
 		// five column
 		this.protocolText.setBounds	(sizeL.width + sizeM.width*3,	0,				sizeL.width, sizeL.height*3);
@@ -876,6 +876,7 @@ public class MockApp
 		this.comboBox.getModel().setSelectedItem("Green");
 		addListeners(this.comboBox, name);
 		this.comboBox.addActionListener(event -> centralLabel.setText("ComboBox_" + this.comboBox.getSelectedItem().toString()));
+		this.comboBox.addMouseWheelListener(e -> protocolText.append(name + "_scroll" + NEWLINE));
 		this.frame.add(this.comboBox);
 
 		JComboBox<String> editableComboBox = new JComboBox<>(new String[]{"", "One", "Two", "Three"});
@@ -1015,7 +1016,9 @@ public class MockApp
 			}
 		});
 		this.treePanel = new JScrollPane(tree);
-		addListeners(tree, "Tree");
+		String name = "Tree";
+		addListeners(tree, name);
+		this.treePanel.getVerticalScrollBar().addAdjustmentListener(e -> protocolText.append(name + "_scroll" + NEWLINE));
 		this.frame.add(this.treePanel);
 	}
 
@@ -1040,11 +1043,13 @@ public class MockApp
 		stringDefaultListModel.addElement("Orange");
 		stringDefaultListModel.addElement("Blue");
 
-		this.list = new JList<>(stringDefaultListModel);
+		JList<String> list = new JList<>(stringDefaultListModel);
 		String name = "List";
-		addListeners(this.list, name);
-		this.list.getSelectionModel().addListSelectionListener(l -> centralLabel.setText(name + "_" + this.list.getSelectedValue()));
-		this.frame.add(this.list);
+		this.listPanel = new JScrollPane(list);
+		addListeners(list, name);
+		list.getSelectionModel().addListSelectionListener(l -> centralLabel.setText(name + "_" + list.getSelectedValue()));
+		this.listPanel.getVerticalScrollBar().addAdjustmentListener(e -> protocolText.append(name + "_scroll" + NEWLINE));
+		this.frame.add(this.listPanel);
 	}
 
 	private void createPanelProgressBar()
