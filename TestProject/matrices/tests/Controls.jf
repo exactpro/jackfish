@@ -113,10 +113,7 @@ INIT;Test case;Never;;
 #Id;#TestCase;#Kind;#Depends;#For
 EXECUTE;;;;
     #Id;#Global;#Let
-    adapter;1;'Win'
-
-    #Id;#Off;#Global;#Let
-    adapter;1;1;parameter
+    adapter;1;parameter
 
     #If
     adapter == 'Web'
