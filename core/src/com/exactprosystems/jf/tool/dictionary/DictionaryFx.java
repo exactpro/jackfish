@@ -50,7 +50,6 @@ public class DictionaryFx extends GuiDictionary
 	private AbstractEvaluator      evaluator;
 	private ApplicationConnector   applicationConnector;
 	private volatile boolean isWorking = false;
-	private boolean 			   isFinding;
 
 	public DictionaryFx(String fileName, DocumentFactory factory) throws Exception
 	{
@@ -333,56 +332,54 @@ public class DictionaryFx extends GuiDictionary
 
 	public void dialogTest(IWindow window, List<IControl> controls) throws Exception
 	{
-		checkIsWorking(() ->
-		{
-			Set<ControlKind> supported = this.applicationConnector.getAppConnection().getApplication().getFactory().supportedControlKinds();
 
-			Thread thread = new Thread(new Task<Void>()
+		Set<ControlKind> supported = this.applicationConnector.getAppConnection().getApplication().getFactory().supportedControlKinds();
+
+		Thread thread = new Thread(new Task<Void>()
+		{
+			@Override
+			protected Void call() throws Exception
 			{
-				@Override
-				protected Void call() throws Exception
+				checkIsWorking(() -> controls.forEach(control ->
 				{
-					setIsFinding(true);
-					controls.forEach(control ->
+					try
 					{
-						try
+						if (!supported.contains(control.getBindedClass()))
 						{
-							if (!supported.contains(control.getBindedClass()))
+							controller.displayTestingControl(control, "Not allowed", Result.NOT_ALLOWED);
+						}
+						else
+						{
+							Locator owner = getLocator(window.getOwnerControl(control));
+							Locator locator = getLocator(control);
+
+							Collection<String> all = applicationConnector.getAppConnection().getApplication().service().findAll(owner, locator);
+
+							Result result = null;
+							if (all.size() == 1 || (Addition.Many.equals(control.getAddition()) && all.size() > 0))
 							{
-								controller.displayTestingControl(control, "Not allowed", Result.NOT_ALLOWED);
+								result = Result.PASSED;
 							}
 							else
 							{
-								Locator owner = getLocator(window.getOwnerControl(control));
-								Locator locator = getLocator(control);
-
-								Collection<String> all = applicationConnector.getAppConnection().getApplication().service().findAll(owner, locator);
-
-								Result result = null;
-								if (all.size() == 1 || (Addition.Many.equals(control.getAddition()) && all.size() > 0))
-								{
-									result = Result.PASSED;
-								}
-								else
-								{
-									result = Result.FAILED;
-								}
-
-								controller.displayTestingControl(control, String.valueOf(all.size()), result);
+								result = Result.FAILED;
 							}
+
+							controller.displayTestingControl(control, String.valueOf(all.size()), result);
 						}
-						catch (Exception e)
-						{
-							controller.displayTestingControl(control, "Error", Result.FAILED);
-						}
-					});
-					setIsFinding(false);
-					return null;
-				}
-			});
-			thread.setName("Test dialog, thread id : " + thread.getId());
-			thread.start();
+					}
+					catch (Exception e)
+					{
+						controller.displayTestingControl(control, "Error", Result.FAILED);
+					}
+				}));
+
+				return null;
+			}
 		});
+		thread.setName("Test dialog, thread id : " + thread.getId());
+		thread.start();
+
 	}
 
 	private void checkIsWorking(Common.Function a) throws Exception
@@ -406,14 +403,6 @@ public class DictionaryFx extends GuiDictionary
 				}
 			}
 		}
-	}
-
-	private void setIsFinding(boolean bol) {
-		this.isFinding = bol;
-	}
-
-	public boolean isFinding() {
-		return this.isFinding;
 	}
 
 	public void dialogMove(IWindow window, IWindow.SectionKind section, Integer newIndex) throws Exception

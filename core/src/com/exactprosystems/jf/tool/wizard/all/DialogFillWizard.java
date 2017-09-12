@@ -11,6 +11,7 @@ import com.exactprosystems.jf.api.wizard.WizardManager;
 import com.exactprosystems.jf.common.utils.XpathUtils;
 import com.exactprosystems.jf.documents.matrix.parser.Tokens;
 import com.exactprosystems.jf.documents.matrix.parser.items.MatrixItem;
+import com.exactprosystems.jf.documents.matrix.parser.items.MatrixItemAttribute;
 import com.exactprosystems.jf.documents.matrix.parser.items.TypeMandatory;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.custom.scaledimage.ImageViewWithScale;
@@ -85,6 +86,7 @@ public class DialogFillWizard extends AbstractWizard
     private WizardMatcher            wizardMatcher;
     private Text                     text;
     private GridPane                 grid;
+    private boolean                  isAbleHasChild;
 
 
     @Override
@@ -93,6 +95,7 @@ public class DialogFillWizard extends AbstractWizard
         super.init(context, wizardManager, parameters);
         this.currentMatrix = super.get(MatrixFx.class, parameters);
         this.currentItem = get(MatrixItem.class, parameters);
+        this.isAbleHasChild = currentItem.getClass().getAnnotation(MatrixItemAttribute.class).hasChildren();
     }
 
     @Override
@@ -180,7 +183,7 @@ public class DialogFillWizard extends AbstractWizard
         return () ->
         {
             CommandBuilder builder = CommandBuilder.start();
-            return builder.addMatrixItem(this.currentMatrix, this.currentItem, createItem(resultListView.getItems()), 0).build();
+            return builder.addMatrixItem(this.currentMatrix, isAbleHasChild ? this.currentItem : currentMatrix.getRoot(), createItem(resultListView.getItems()), 0).build();
         };
     }
 
