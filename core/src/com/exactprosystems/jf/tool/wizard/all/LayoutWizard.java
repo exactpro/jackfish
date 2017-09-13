@@ -64,13 +64,28 @@ import java.util.stream.Stream;
 
 @WizardAttribute(
 		name = "LayoutWizard",
-		pictureName = "AutomateConverterWizard.png",
+		pictureName = "LayoutWizard.png",
 		category = WizardCategory.MATRIX,
-		shortDescription = "Short description",
+		shortDescription = "This wizard creates RawTable and action DialogCheckLayout",
 		strongCriteries = true,
 		experimental = true,
 		criteries = {MatrixFx.class, MatrixItem.class},
-		detailedDescription = "Detailed description"
+		detailedDescription = "{{`First of all user need to select one of stored connection and dialog in it.`}}"
+				+ "{{`For store connection user may use {{$ConnectionWizard$}} or store the connection inside a matrix.`}}"
+				+ "{{`In top left corner will appear image of selected dialog.`}}"
+				+ "{{`User need select one or more controls from list and image both.`}}"
+				+ "{{`After it, user need select of or more checkboxes below image.`}}"
+				+ "{{`CheckBox {{$Number$}} - will generate DoSpec function with number. E.g. {{$DoSpec.width(10)$}}.`}}"
+				+ "{{`CheckBox {{$About$}} - will generate DoSpec function with function about. Boundary values from 90% to 110%. E.g. {{$DoSpec.width(about(10))$}}.`}}"
+				+ "{{`CheckBox {{$Less$}} - will generate DoSpec function with function less. E.g. {{$DoSpec.width(less(11))$}}.`}}"
+				+ "{{`CheckBox {{$Great$}} - will generate DoSpec function with function great. E.g. {{$DoSpec.width(great(9))$}}.`}}"
+				+ "{{`CheckBox {{$Between$}} - will generate DoSpec function with function great.Boundary values from 0% to 200% E.g. {{$DoSpec.width(between(0, 20))$}}.`}}"
+				+ "{{`For selected controls will create table with relation between controls.`}}"
+				+ "{{`User can see created relation by pushing a toggle button at intersection controls.`}}"
+				+ "{{`User can edit created relation ( add/remove/edit functions) and {{$save$}} it or {{$check$}}.`}}"
+				+ "{{`User can check whole table by pushing button {{$Check$}} table into the table.`}}"
+				+ "{{`On area below table user can see result of checking`}}"
+				+ "{{`After press button Accept, on matrix will generated 2 items - {{$RowTable$}} with relations and action {{$DialogCheckLayout$}} with link on the RowTable`}}"
 )
 public class LayoutWizard extends AbstractWizard
 {
