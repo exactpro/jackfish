@@ -9,8 +9,6 @@ package com.exactprosystems.jf.tool.custom.grideditor;
 
 import com.exactprosystems.jf.api.common.Str;
 import javafx.beans.Observable;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
 import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
@@ -68,6 +66,22 @@ public final class SpreadsheetColumn {
 		MenuItem addColumnAfter = new MenuItem("Add column after");
 		addColumnAfter.setOnAction(e -> this.spreadsheetView.addColumn(this.spreadsheetView.getColumns().indexOf(this) + 1));
 
+		MenuItem moveLeftColumn = new MenuItem("Move left this column");
+		moveLeftColumn.setOnAction(e ->
+			{
+				int currentColumn = this.spreadsheetView.getColumns().indexOf(this);
+				this.spreadsheetView.swapColumns(currentColumn, currentColumn -1);
+			}
+		);
+
+		MenuItem moveRightColumn = new MenuItem("Move right this column");
+		moveRightColumn.setOnAction(e ->
+			{
+				int currentColumn = this.spreadsheetView.getColumns().indexOf(this);
+				this.spreadsheetView.swapColumns(currentColumn, currentColumn +1);
+			}
+		);
+
 		MenuItem removeColumn = new MenuItem("Remove columns");
 		removeColumn.setOnAction(e -> this.spreadsheetView.removeColumns(
 				this.spreadsheetView.getSelectionModel()
@@ -88,7 +102,7 @@ public final class SpreadsheetColumn {
 		MenuItem switchOnColumn = new MenuItem("Switch on");
 		switchOnColumn.setOnAction(e -> this.spreadsheetView.switchColumn(true, this.spreadsheetView.getColumns().indexOf(this)));
 
-		contextMenu.getItems().addAll(addColumnBefore,addColumnAfter, removeColumn, renameColumn, switchOffColumn, switchOnColumn);
+		contextMenu.getItems().addAll(addColumnBefore,addColumnAfter, removeColumn, renameColumn, switchOffColumn, switchOnColumn, moveLeftColumn, moveRightColumn);
 		return contextMenu;
     }
 

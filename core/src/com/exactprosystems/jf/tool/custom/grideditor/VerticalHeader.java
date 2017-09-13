@@ -465,13 +465,19 @@ public class VerticalHeader extends StackPane
 		MenuItem addRowBefore = new MenuItem("Add before row " + row);
 		addRowBefore.setOnAction(e -> this.spreadsheetView.addRowBefore(row));
 
-		MenuItem addRowAfter = new MenuItem("Add after after " + row);
+		MenuItem addRowAfter = new MenuItem("Add after row " + row);
 		addRowAfter.setOnAction(e -> this.spreadsheetView.addRowAfter(row));
+
+		MenuItem moveUpRow = new MenuItem("Move up this row");
+		moveUpRow.setOnAction(e -> this.spreadsheetView.swapRows(row, row - 1));
+
+		MenuItem moveDownRow = new MenuItem("Move down this row");
+		moveDownRow.setOnAction(e -> this.spreadsheetView.swapRows(row, row + 1));
 
 		MenuItem removeRow = new MenuItem("Remove rows");
 		removeRow.setOnAction(e -> this.spreadsheetView.removeRows(this.spreadsheetView.getSelectionModel().getSelectedCells().stream().map(TablePositionBase::getRow).distinct().collect(Collectors.toList())));
 
-		contextMenu.getItems().addAll(addRowBefore, addRowAfter, removeRow);
+		contextMenu.getItems().addAll(addRowBefore, addRowAfter, moveUpRow, moveDownRow, removeRow);
 		return contextMenu;
 	}
 
