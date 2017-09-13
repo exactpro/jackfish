@@ -232,6 +232,12 @@ public class SpreadsheetView extends Control
 		this.providerProperty().get().addNewColumn(index);
 	}
 
+	public void swapColumns(int current, int swapTo)
+	{
+		this.providerProperty().get().swapColumns(current, swapTo);
+		this.setDataProvider(this.providerProperty().get());
+	}
+
 	public void removeColumns(List<Integer> columns)
 	{
 		this.providerProperty().get().removeColumns(columns.toArray(new Integer[columns.size()]));
@@ -268,6 +274,12 @@ public class SpreadsheetView extends Control
 	public void removeRows(List<Integer> rows)
 	{
 		this.providerProperty().get().removeRows(rows.toArray(new Integer[rows.size()]));
+	}
+
+	public void swapRows(int current, int swapTo)
+	{
+		this.providerProperty().get().swapRows(current, swapTo);
+		this.setDataProvider(this.providerProperty().get());
 	}
 
 	public void extentionView(ObservableList<ObservableList<String>> initial, Direction direction, RectangleSelection.GridRange range)
@@ -573,6 +585,22 @@ public class SpreadsheetView extends Control
 		MenuItem addRowAfter = new MenuItem("Add after");
 		addRowAfter.setOnAction(e -> addRowAfter(this.getSelectionModel().getSelectedCells().get(0).getRow()));
 
+		MenuItem moveUpRow = new MenuItem("Move up this row");
+		moveUpRow.setOnAction(e ->
+				{
+					int currentRow = this.getSelectionModel().getSelectedCells().get(0).getRow();
+					swapRows(currentRow, currentRow - 1);
+				}
+		);
+
+		MenuItem moveDownRow = new MenuItem("Move down this row");
+		moveDownRow.setOnAction(e ->
+				{
+					int currentRow = this.getSelectionModel().getSelectedCells().get(0).getRow();
+					swapRows(currentRow, currentRow + 1);
+				}
+		);
+
 		MenuItem removeRow = new MenuItem("Remove rows");
 		removeRow.setOnAction(e -> removeRows(this.getSelectionModel().getSelectedCells().stream().map(TablePositionBase::getRow).distinct().collect(Collectors.toList())));
 
@@ -587,7 +615,7 @@ public class SpreadsheetView extends Control
 
 		MenuItem pasteWithHeader = new MenuItem("Paste with header");
 		pasteWithHeader.setOnAction(event -> paste(true));
-		contextMenu.getItems().addAll(addRowBefore, addRowAfter, removeRow, new SeparatorMenuItem(), copyItems, copyWithHeader, pasteItems, pasteWithHeader);
+		contextMenu.getItems().addAll(addRowBefore, addRowAfter, removeRow, moveUpRow, moveDownRow, new SeparatorMenuItem(), copyItems, copyWithHeader, pasteItems, pasteWithHeader);
 		return contextMenu;
 	}
 

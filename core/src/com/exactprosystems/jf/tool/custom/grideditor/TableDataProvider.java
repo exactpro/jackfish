@@ -10,8 +10,7 @@ package com.exactprosystems.jf.tool.custom.grideditor;
 import com.exactprosystems.jf.api.common.Str;
 import com.exactprosystems.jf.api.common.Sys;
 import com.exactprosystems.jf.common.undoredo.Command;
-import com.exactprosystems.jf.functions.RowTable;
-import com.exactprosystems.jf.functions.Table;
+import com.exactprosystems.jf.functions.*;
 import com.exactprosystems.jf.tool.helpers.DialogsHelper;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -487,6 +486,51 @@ public class TableDataProvider implements DataProvider<String>
 		this.undoRedoFunction.accept(undo, redo);
 	}
 
+	@Override
+	public void swapRows(int currentRowNumber, int swapTo)
+	{
+		if(swapTo > (this.rowCount() - 1) || swapTo < 0)
+		{
+			return;
+		}
+
+		Command undo = () -> display();
+
+		Command redo = () ->
+		{
+			swap(this.table, currentRowNumber, swapTo);
+			display();
+		};
+
+		this.undoRedoFunction.accept(undo, redo);
+	}
+
+	@Override
+	public void swapColumns(int current, int swapTo)
+	{
+		if(swapTo > columnCount() - 1 || swapTo < 0)
+		{
+			return;
+		}
+
+		Command undo = () -> display();
+
+		Command redo = () ->
+		{
+			List<String> headers = Arrays.asList(this.table.getHeadersAsStringArray());
+			String currentColumnName = headers.get(current);
+			String swapColumnName = headers.get(swapTo);
+			this.table.forEach(rt ->swapMap(rt, currentColumnName, swapColumnName));
+			this.table.setHeader(swapTo, "SomeSuspiciousNameForColumn");
+			this.table.setHeader(current, swapColumnName);
+			this.table.setHeader(swapTo, currentColumnName);
+
+			display();
+		};
+
+		this.undoRedoFunction.accept(undo, redo);
+	}
+
 	//endregion
 
 	//endregion
@@ -514,5 +558,21 @@ public class TableDataProvider implements DataProvider<String>
 	public void displayFunction(Consumer<DataProvider<String>> displayFunction)
 	{
 		this.displayFunction = displayFunction;
+	}
+
+	private static <T> void swap(List<T> table, int current, int swapTo)
+	{
+		T bot = table.get(swapTo);
+		table.add(current, bot);
+		T rowTable = table.remove(current + 1);
+		table.add(swapTo + 1, rowTable);
+		table.remove(swapTo);
+	}
+
+	private static void swapMap(Map<String, Object> map, String current, String swapTo)
+	{
+		Object s = map.get(swapTo);
+		map.put(swapTo, map.remove(current));
+		map.replace(current, s);
 	}
 }

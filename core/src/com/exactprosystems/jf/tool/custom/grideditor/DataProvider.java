@@ -62,4 +62,8 @@ public interface DataProvider<T>
 	void display();
 
 	void displayFunction(Consumer<DataProvider<T>> displayFunction);
+
+	void swapRows(int current, int swapTo);
+
+	void swapColumns(int current, int swapTo);
 }

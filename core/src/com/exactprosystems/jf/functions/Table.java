@@ -1242,6 +1242,14 @@ public class Table implements List<RowTable>, Mutable, Cloneable
         this.headers[index].name = s.trim();
     }
 
+	public String[] getHeadersAsStringArray() {
+		String[] strArr = new String[this.headers.length];
+		for(int i = 0; i < this.headers.length; i++) {
+			strArr[i] = String.valueOf(this.headers[i]);
+		}
+		return strArr;
+	}
+
 	//region private methods
 	private void checkRange(int index)
 	{
