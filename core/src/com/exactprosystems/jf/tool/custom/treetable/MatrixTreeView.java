@@ -21,6 +21,7 @@ import com.sun.javafx.scene.control.skin.TreeTableViewSkin;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.ListChangeListener;
+import javafx.scene.AccessibleAttribute;
 import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.GridPane;
@@ -371,7 +372,21 @@ public class MatrixTreeView extends TreeTableView<MatrixItem>
 		this.getColumns().add(iconColumn);
 		this.getColumns().add(gridColumn);
 		gridColumn.setMaxWidth(Double.MAX_VALUE);
+		this.setColumnResizePolicy(param -> true);
 		gridColumn.prefWidthProperty().bind(this.widthProperty().subtract(numberColumn.getWidth() + iconColumn.getWidth() + offColumn.getWidth() + reportOffColumn.getWidth()).subtract(2));
+
+		ScrollBar vsb = ((MatrixTreeViewSkin) this.getSkin()).getVSB();
+		vsb.visibleProperty().addListener((observable, oldValue, newValue) ->
+		{
+			if (newValue && !oldValue)
+			{
+				gridColumn.prefWidthProperty().bind(this.widthProperty().subtract(numberColumn.getWidth() + iconColumn.getWidth() + offColumn.getWidth() + reportOffColumn.getWidth()).subtract(18));
+			}
+			else if (!newValue && oldValue)
+			{
+				gridColumn.prefWidthProperty().bind(this.widthProperty().subtract(numberColumn.getWidth() + iconColumn.getWidth() + offColumn.getWidth() + reportOffColumn.getWidth()).subtract(2));
+			}
+		});
 	}
 
 	public void scrollTo(int index)
@@ -402,6 +417,12 @@ public class MatrixTreeView extends TreeTableView<MatrixItem>
 		public void show(int index)
 		{
 			Platform.runLater(() -> flow.show(index));
+		}
+
+		public ScrollBar getVSB()
+		{
+			ScrollBar scrollBar = (ScrollBar) super.queryAccessibleAttribute(AccessibleAttribute.VERTICAL_SCROLLBAR);
+			return scrollBar;
 		}
 	}
 }
