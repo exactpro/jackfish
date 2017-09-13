@@ -7,6 +7,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 package com.exactprosystems.jf.tool.custom.grideditor;
 
+import com.exactprosystems.jf.api.common.DateTime;
 import com.exactprosystems.jf.api.common.Str;
 import com.exactprosystems.jf.api.common.Sys;
 import com.exactprosystems.jf.common.undoredo.Command;
@@ -494,7 +495,11 @@ public class TableDataProvider implements DataProvider<String>
 			return;
 		}
 
-		Command undo = () -> display();
+		Command undo = () ->
+		{
+			swap(this.table, currentRowNumber, swapTo);
+			display();
+		};
 
 		Command redo = () ->
 		{
@@ -513,17 +518,15 @@ public class TableDataProvider implements DataProvider<String>
 			return;
 		}
 
-		Command undo = () -> display();
+		Command undo = () ->
+		{
+			swapColumn(current, swapTo);
+			display();
+		};
 
 		Command redo = () ->
 		{
-			List<String> headers = Arrays.asList(this.table.getHeadersAsStringArray());
-			String currentColumnName = headers.get(current);
-			String swapColumnName = headers.get(swapTo);
-			this.table.forEach(rt ->swapMap(rt, currentColumnName, swapColumnName));
-			this.table.setHeader(swapTo, "SomeSuspiciousNameForColumn");
-			this.table.setHeader(current, swapColumnName);
-			this.table.setHeader(swapTo, currentColumnName);
+			swapColumn(current, swapTo);
 
 			display();
 		};
@@ -574,5 +577,16 @@ public class TableDataProvider implements DataProvider<String>
 		Object s = map.get(swapTo);
 		map.put(swapTo, map.remove(current));
 		map.replace(current, s);
+	}
+
+	private void swapColumn(int current, int swapTo)
+	{
+		List<String> headers = Arrays.asList(this.table.getHeadersAsStringArray());
+		String currentColumnName = headers.get(current);
+		String swapColumnName = headers.get(swapTo);
+		this.table.forEach(rt -> swapMap(rt, currentColumnName, swapColumnName));
+		this.table.setHeader(swapTo, String.format("SomeSuspiciousNameForColumn_%s", new DateTime().toString()));
+		this.table.setHeader(current, swapColumnName);
+		this.table.setHeader(swapTo, currentColumnName);
 	}
 }
