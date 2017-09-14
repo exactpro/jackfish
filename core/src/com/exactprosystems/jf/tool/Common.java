@@ -573,4 +573,9 @@ public abstract class Common
 		helper.setText(DEFAULT_TEXT);
 		return d;
 	}
+
+	public static ResourceBundle bundle()
+	{
+		return ResourceBundle.getBundle("com/exactprosystems/jf/ToolResourceBundle");
+	}
 }

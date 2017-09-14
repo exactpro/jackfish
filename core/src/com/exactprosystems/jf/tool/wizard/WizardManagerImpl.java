@@ -16,9 +16,12 @@ import com.exactprosystems.jf.tool.wizard.all.*;
 
 import org.apache.log4j.Logger;
 
+import java.text.MessageFormat;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import static com.exactprosystems.jf.tool.Common.*;
 
 public class WizardManagerImpl implements WizardManager
 {
@@ -135,7 +138,7 @@ public class WizardManagerImpl implements WizardManager
                 {
                     List<WizardCommand> commands = result.commands();
                     commands.forEach(c -> c.apply(context));
-					DialogsHelper.showSuccess("Wizard {" + this.nameOf(wizard) + "} success");
+					DialogsHelper.showSuccess(MessageFormat.format(bundle().getString("WizardSuccess_1"), this.nameOf(wizard)));
 				}
             }
         }
