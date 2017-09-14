@@ -121,6 +121,12 @@ public final class SpreadsheetColumn {
 			{
 				//nothing
 			}
+			if (e1.getCode().equals(KeyCode.TAB) || e1.getCode().equals(KeyCode.ENTER))
+			{
+				this.spreadsheetView.renameColumn(this, tf.getText());
+				this.column.setGraphic(null);
+				isColumnEditable = false;
+			}
 			if (e1.getCode().equals(KeyCode.ESCAPE))
 			{
 				this.spreadsheetView.renameColumn(this, oldValue);
