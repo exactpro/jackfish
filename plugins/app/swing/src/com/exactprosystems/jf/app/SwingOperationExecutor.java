@@ -163,28 +163,22 @@ public class SwingOperationExecutor implements OperationExecutor<ComponentFixtur
 	}
 
 	@Override
-	public Color getColor(String color) throws Exception
+	public Color getColor(ComponentFixture<Component> component, boolean isForeground) throws Exception
 	{
 		try
 		{
-			if (color == null)
+			if (isForeground)
 			{
-				return null;
+				return component.target.getForeground();
 			}
-
-			if (color.equalsIgnoreCase("transparent"))
+			else
 			{
-				return new Color(255, 255, 255, 0);
+				return component.target.getBackground();
 			}
-			StringBuilder colorSB = new StringBuilder(color);
-			colorSB.delete(0, 5);
-			colorSB.deleteCharAt(colorSB.length() - 1);
-			String[] colors = colorSB.toString().split(", ");
-			return new Color(Integer.parseInt(colors[0]), Integer.parseInt(colors[1]), Integer.parseInt(colors[2]), Integer.parseInt(colors[3]));
 		}
 		catch (Throwable e)
 		{
-			logger.error(String.format("getColor(%s)", color));
+			logger.error(String.format("getColor(%s, %s)", component, isForeground));
 			logger.error(e.getMessage(), e);
 			throw e;
 		}

@@ -116,7 +116,7 @@ public class WinOperationExecutorJNA implements OperationExecutor<UIProxyJNA>
 	}
 
 	@Override
-	public Color getColor(String color) throws Exception
+	public Color getColor(UIProxyJNA component, boolean isForeground) throws Exception
 	{
 		return null;
 	}

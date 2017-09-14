@@ -23,9 +23,8 @@ public interface OperationExecutor<T>
     boolean                     isAllowed       (ControlKind kind, OperationKind operation);
     boolean						isSupported		(ControlKind kind);
 	Rectangle					getRectangle	(T component) throws Exception;
-	
-	Color 						getColor		(String color) throws Exception;
 
+	Color						getColor		(T component, boolean isForeground																						)throws Exception;
 	List<T> 					findAll			(ControlKind controlKind, T window, Locator locator																		) throws Exception;
 	List<T> 					findAll			(Locator owner, Locator element																							) throws Exception;
 	T 							find			(Locator owner, Locator element																							) throws Exception;

@@ -98,10 +98,9 @@ public class SeleniumOperationExecutor implements OperationExecutor<WebElement>
 		}
 	}
 
-	@Override
-	public Color getColor(String color) throws Exception
+	private Color translateColor(String color) throws Exception
 	{
-		if (color == null)
+		if (Str.IsNullOrEmpty(color))
 		{
 			return null;
 		}
@@ -115,6 +114,34 @@ public class SeleniumOperationExecutor implements OperationExecutor<WebElement>
 		colorSB.deleteCharAt(colorSB.length() - 1);
 		String[] colors = colorSB.toString().split(", ");
 		return new Color(Integer.parseInt(colors[0]), Integer.parseInt(colors[1]), Integer.parseInt(colors[2]), Integer.parseInt(colors[3]));
+	}
+
+	@Override
+	public Color getColor(WebElement component, boolean isForeground) throws Exception
+	{
+		Exception real = null;
+		int repeat = 1;
+		do
+		{
+			try
+			{
+				if (isForeground)
+				{
+					return translateColor(String.valueOf(this.driver.executeScript("return window.getComputedStyle(arguments[0]).color", component)));
+				}
+				else
+				{
+					return translateColor(String.valueOf(this.driver.executeScript("return window.getComputedStyle(arguments[0]).backgroundColor", component)));
+				}
+			}
+			catch (StaleElementReferenceException e)
+			{
+				real = e;
+				logger.debug("Element is no longer attached to the DOM. Try in SeleniumOperationExecutor : " + repeat);
+			}
+		}
+		while (++repeat < repeatLimit);
+		throw real;
 	}
 
 	//region table is container
@@ -1852,7 +1879,7 @@ public class SeleniumOperationExecutor implements OperationExecutor<WebElement>
 					String value = cell.getText();
 					String colorFG = cell.getCssValue("color");
 					String colorBG = cell.getCssValue("background-color");
-					res.put(name, new ValueAndColor(value, getColor(colorFG), getColor(colorBG)));
+					res.put(name, new ValueAndColor(value, translateColor(colorFG), translateColor(colorBG)));
 				}
 
 				return res;
