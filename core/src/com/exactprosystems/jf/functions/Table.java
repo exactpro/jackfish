@@ -1194,7 +1194,7 @@ public class Table implements List<RowTable>, Mutable, Cloneable
         {
             Header header = iterator.next();
             String next = header.name;
-            if (strings.contains(next)) // TODO why isn't equals() ?
+            if (strings.contains(next))
             {
                 this.innerList.forEach(row -> row.remove(header));
                 iterator.remove();

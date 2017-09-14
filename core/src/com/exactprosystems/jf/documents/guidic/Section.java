@@ -88,7 +88,6 @@ public class Section implements ISection, Mutable
 		return newSection;
 	}
 
-	// TODO need to add throwing exceptions when we can't find elements
 	//------------------------------------------------------------------------------------------------------------------
     // interface ISection
     //------------------------------------------------------------------------------------------------------------------

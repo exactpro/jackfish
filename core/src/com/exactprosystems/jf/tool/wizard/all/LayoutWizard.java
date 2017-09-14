@@ -173,6 +173,7 @@ public class LayoutWizard extends AbstractWizard
 		this.cbDialogs = new ComboBox<>();
 		this.cbDialogs.setDisable(true);
 		this.imageViewWithScale = new ImageViewWithScale();
+		this.imageViewWithScale.addShowGrid();
 		this.lvControls = new ListView<>();
 		this.lvControls.setOnKeyPressed(event -> {
 			IControlWithCheck selectedItem = this.lvControls.getSelectionModel().getSelectedItem();

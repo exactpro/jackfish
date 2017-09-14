@@ -14,6 +14,14 @@ import java.awt.*;
 import java.util.Collections;
 import java.util.List;
 
+/**
+ * Example<br>
+ * <br>
+ * $self<br>
+ * DoSpec.left(10, 'other')<br>
+ * <br>
+ * This means, that self element on left on other element on 10px<br>
+ */
 public enum PieceKind implements Measure
 {
 	TEXT("text")
@@ -28,12 +36,6 @@ public enum PieceKind implements Measure
 		public boolean useRange()
 		{
 			return false;
-		}
-
-		@Override
-		public Arrow arrow()
-		{
-			return null;
 		}
 
 		@Override
@@ -76,12 +78,6 @@ public enum PieceKind implements Measure
 		}
 
 		@Override
-		public Arrow arrow()
-		{
-			return null;
-		}
-
-		@Override
 		protected boolean othersNeed()
 		{
 			return false;
@@ -115,12 +111,6 @@ public enum PieceKind implements Measure
 		}
 
 		@Override
-		public Arrow arrow()
-		{
-			return null;
-		}
-
-		@Override
 		protected boolean othersNeed()
 		{
 			return false;
@@ -151,12 +141,6 @@ public enum PieceKind implements Measure
 		public boolean useRange()
 		{
 			return false;
-		}
-
-		@Override
-		public Arrow arrow()
-		{
-			return null;
 		}
 
 		@Override
@@ -201,12 +185,6 @@ public enum PieceKind implements Measure
 		}
 
 		@Override
-		public Arrow arrow()
-		{
-			return null;
-		}
-
-		@Override
 		protected String formulaTemplate()
 		{
 			return ".%1$s()";
@@ -246,12 +224,6 @@ public enum PieceKind implements Measure
 		}
 
 		@Override
-		public Arrow arrow()
-		{
-			return null;
-		}
-
-		@Override
 		protected String formulaTemplate()
 		{
 			return ".%1$s()";
@@ -288,12 +260,6 @@ public enum PieceKind implements Measure
 		public boolean useRange()
 		{
 			return true;
-		}
-
-		@Override
-		public Arrow arrow()
-		{
-			return null;
 		}
 
 		@Override
@@ -349,12 +315,6 @@ public enum PieceKind implements Measure
 		}
 
 		@Override
-		public Arrow arrow()
-		{
-			return Arrow.WIDTH;
-		}
-
-		@Override
 		protected String formulaTemplate()
 		{
 			return ".%1$s(%3$s)";
@@ -397,12 +357,6 @@ public enum PieceKind implements Measure
 		}
 
 		@Override
-		public Arrow arrow()
-		{
-			return Arrow.HEIGHT;
-		}
-
-		@Override
 		protected String formulaTemplate()
 		{
 			return ".%1$s(%3$s)";
@@ -439,12 +393,6 @@ public enum PieceKind implements Measure
 		public boolean useRange()
 		{
 			return false;
-		}
-
-		@Override
-		public Arrow arrow()
-		{
-			return null;
 		}
 
 		@Override
@@ -486,15 +434,9 @@ public enum PieceKind implements Measure
 		}
 
 		@Override
-		public Arrow arrow()
-		{
-			return Arrow.LEFT_RIGHT;
-		}
-
-		@Override
 		public int distance(Rectangle s, Rectangle o)
 		{
-			return s.x - (o.x + o.width);
+			return o.x - (s.x + s.width);
 		}
 	},
 
@@ -511,15 +453,9 @@ public enum PieceKind implements Measure
 		}
 
 		@Override
-		public Arrow arrow()
-		{
-			return Arrow.RIGHT_LEFT;
-		}
-
-		@Override
 		public int distance(Rectangle s, Rectangle o)
 		{
-			return o.x - (s.x + s.width);
+			return s.x - (o.x + o.width);
 		}
 	},
 
@@ -536,15 +472,9 @@ public enum PieceKind implements Measure
 		}
 
 		@Override
-		public Arrow arrow()
-		{
-			return Arrow.TOP_BOTTOM;
-		}
-
-		@Override
 		public int distance(Rectangle s, Rectangle o)
 		{
-			return s.y - (o.y + o.height);
+			return o.y - (s.y + s.height);
 		}
 	},
 
@@ -561,15 +491,9 @@ public enum PieceKind implements Measure
 		}
 
 		@Override
-		public Arrow arrow()
-		{
-			return Arrow.BOTTOM_TOP;
-		}
-
-		@Override
 		public int distance(Rectangle s, Rectangle o)
 		{
-			return o.y - (s.y + s.height);
+			return s.y - (o.y + o.height);
 		}
 	},
 
@@ -583,12 +507,6 @@ public enum PieceKind implements Measure
 		protected <T> void performDerived(Piece piece, OperationExecutor<T> executor, List<T> self, List<T> others, CheckingLayoutResult result) throws Exception
 		{
 			check(piece, executor, self, others, result, this);
-		}
-
-		@Override
-		public Arrow arrow()
-		{
-			return Arrow.LEFT_LEFT;
 		}
 
 		@Override
@@ -611,12 +529,6 @@ public enum PieceKind implements Measure
 		}
 
 		@Override
-		public Arrow arrow()
-		{
-			return Arrow.RIGHT_RIGHT;
-		}
-
-		@Override
 		public int distance(Rectangle s, Rectangle o)
 		{
 			return (o.x + o.width) - (s.x + s.width);
@@ -633,12 +545,6 @@ public enum PieceKind implements Measure
 		protected <T> void performDerived(Piece piece, OperationExecutor<T> executor, List<T> self, List<T> others, CheckingLayoutResult result) throws Exception
 		{
 			check(piece, executor, self, others, result, this);
-		}
-
-		@Override
-		public Arrow arrow()
-		{
-			return Arrow.TOP_TOP;
 		}
 
 		@Override
@@ -661,12 +567,6 @@ public enum PieceKind implements Measure
 		}
 
 		@Override
-		public Arrow arrow()
-		{
-			return Arrow.BOTTOM_BOTTOM;
-		}
-
-		@Override
 		public int distance(Rectangle s, Rectangle o)
 		{
 			return (o.y + o.height) - (s.y + s.height);
@@ -683,12 +583,6 @@ public enum PieceKind implements Measure
 		protected <T> void performDerived(Piece piece, OperationExecutor<T> executor, List<T> self, List<T> others, CheckingLayoutResult result) throws Exception
 		{
 			check(piece, executor, self, others, result, this);
-		}
-
-		@Override
-		public Arrow arrow()
-		{
-			return Arrow.LEFT_LEFT;
 		}
 
 		@Override
@@ -711,12 +605,6 @@ public enum PieceKind implements Measure
 		}
 
 		@Override
-		public Arrow arrow()
-		{
-			return Arrow.RIGHT_RIGHT;
-		}
-
-		@Override
 		public int distance(Rectangle s, Rectangle o)
 		{
 			return -INSIDE_RIGHT.distance(s, o);
@@ -733,12 +621,6 @@ public enum PieceKind implements Measure
 		protected <T> void performDerived(Piece piece, OperationExecutor<T> executor, List<T> self, List<T> others, CheckingLayoutResult result) throws Exception
 		{
 			check(piece, executor, self, others, result, this);
-		}
-
-		@Override
-		public Arrow arrow()
-		{
-			return Arrow.TOP_TOP;
 		}
 
 		@Override
@@ -761,12 +643,6 @@ public enum PieceKind implements Measure
 		}
 
 		@Override
-		public Arrow arrow()
-		{
-			return Arrow.BOTTOM_BOTTOM;
-		}
-
-		@Override
 		public int distance(Rectangle s, Rectangle o)
 		{
 			return -INSIDE_BOTTOM.distance(s, o);
@@ -783,12 +659,6 @@ public enum PieceKind implements Measure
 		protected <T> void performDerived(Piece piece, OperationExecutor<T> executor, List<T> self, List<T> others, CheckingLayoutResult result) throws Exception
 		{
 			check(piece, executor, self, others, result, this);
-		}
-
-		@Override
-		public Arrow arrow()
-		{
-			return Arrow.LEFT_LEFT;
 		}
 
 		@Override
@@ -811,12 +681,6 @@ public enum PieceKind implements Measure
 		}
 
 		@Override
-		public Arrow arrow()
-		{
-			return Arrow.RIGHT_RIGHT;
-		}
-
-		@Override
 		public int distance(Rectangle s, Rectangle o)
 		{
 			return -INSIDE_RIGHT.distance(s, o);
@@ -833,12 +697,6 @@ public enum PieceKind implements Measure
 		protected <T> void performDerived(Piece piece, OperationExecutor<T> executor, List<T> self, List<T> others, CheckingLayoutResult result) throws Exception
 		{
 			check(piece, executor, self, others, result, this);
-		}
-
-		@Override
-		public Arrow arrow()
-		{
-			return Arrow.TOP_TOP;
 		}
 
 		@Override
@@ -861,12 +719,6 @@ public enum PieceKind implements Measure
 		}
 
 		@Override
-		public Arrow arrow()
-		{
-			return Arrow.BOTTOM_BOTTOM;
-		}
-
-		@Override
 		public int distance(Rectangle s, Rectangle o)
 		{
 			return -INSIDE_BOTTOM.distance(s, o);
@@ -883,12 +735,6 @@ public enum PieceKind implements Measure
 		protected <T> void performDerived(Piece piece, OperationExecutor<T> executor, List<T> self, List<T> others, CheckingLayoutResult result) throws Exception
 		{
 			check(piece, executor, self, others, result, this);
-		}
-
-		@Override
-		public Arrow arrow()
-		{
-			return Arrow.H_CENTERS;
 		}
 
 		@Override
@@ -911,12 +757,6 @@ public enum PieceKind implements Measure
 		}
 
 		@Override
-		public Arrow arrow()
-		{
-			return Arrow.V_CENTERS;
-		}
-
-		@Override
 		public int distance(Rectangle s, Rectangle o)
 		{
 			return (s.y + s.height / 2) - (o.y + o.height / 2);
@@ -936,11 +776,13 @@ public enum PieceKind implements Measure
 	}
 
 
+	//TODO delete
 	public boolean useName()
 	{
 		return true;
 	}
 
+	//TODO delete
 	public boolean useRange()
 	{
 		return true;
@@ -984,8 +826,6 @@ public enum PieceKind implements Measure
 		return 0;
 	}
 
-	public abstract Arrow arrow();
-
 	public static PieceKind findByName(String name)
 	{
 		for (PieceKind kind : values())
@@ -997,7 +837,6 @@ public enum PieceKind implements Measure
 		}
 		return null;
 	}
-
 
 	protected boolean selfNeedOne()
 	{

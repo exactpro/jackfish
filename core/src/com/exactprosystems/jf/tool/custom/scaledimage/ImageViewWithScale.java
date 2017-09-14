@@ -9,8 +9,6 @@ import javafx.geometry.Pos;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.control.*;
-import javafx.scene.control.Label;
-import javafx.scene.control.ScrollPane;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
@@ -21,13 +19,14 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 
 import javax.imageio.ImageIO;
-import java.awt.*;
+import java.awt.Dimension;
+import java.awt.Point;
+import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.*;
-import java.util.List;
 import java.util.function.Consumer;
 
 public class ImageViewWithScale extends BorderPane
@@ -47,6 +46,8 @@ public class ImageViewWithScale extends BorderPane
 
     private final javafx.scene.shape.Rectangle rectangleColor;
     private final Group                        group;
+    private final CheckBox                     cbCustomGrid;
+    private final CustomGrid                   customGrid;
     private ImageView                          imageView;
 
     private Node                               waitingNode;
@@ -76,6 +77,12 @@ public class ImageViewWithScale extends BorderPane
 		this.rectangleColor.setWidth(12.0);
 		this.rectangleColor.setHeight(12.0);
 		this.cbIds = new CheckBox("Id's");
+
+		this.cbCustomGrid = new CheckBox("Grid");
+		this.cbCustomGrid.setDisable(true);
+
+		this.customGrid = new CustomGrid();
+		this.customGrid.setGroup(this.group);
 
 		Label lblColorName = new Label("Pixel color :");
 
@@ -122,6 +129,10 @@ public class ImageViewWithScale extends BorderPane
 				this.group.setTranslateY(0);
 				this.group.setTranslateX(this.group.getBoundsInParent().getMinX() * -1);
 				this.group.setTranslateY(this.group.getBoundsInParent().getMinY() * -1);
+
+				this.anchorPane.setPrefSize(this.initial.width * s, this.initial.height * s);
+				this.anchorPane.setMinSize(this.initial.width * s, this.initial.height * s);
+				this.anchorPane.setMaxSize(this.initial.width * s, this.initial.height * s);
 
 			});
 			hideAllRectangles(null);
@@ -195,8 +206,10 @@ public class ImageViewWithScale extends BorderPane
 			this.anchorPane.getChildren().remove(this.waitingNode);
 
 			this.initial = new Dimension(image.getWidth(), image.getHeight()); // TODO think about
-			this.scrollPane.setMaxHeight(Region.USE_COMPUTED_SIZE);
-			this.scrollPane.setMaxWidth(Region.USE_COMPUTED_SIZE);
+			this.scrollPane.setMaxSize(Region.USE_COMPUTED_SIZE, Region.USE_COMPUTED_SIZE);
+			this.scrollPane.setMaxSize(Region.USE_COMPUTED_SIZE, Region.USE_COMPUTED_SIZE);
+			this.cbCustomGrid.setDisable(false);
+			this.customGrid.setSize(this.image.getWidth(), this.image.getHeight());
 			Common.tryCatch(() -> createCanvas(image), "Error on create canvas");
 		});
 	}
@@ -206,6 +219,10 @@ public class ImageViewWithScale extends BorderPane
 		this.onRectangleClick = onClick;
 	}
 
+	public void addShowGrid()
+	{
+		this.hBox.getChildren().addAll(Common.createSpacer(Common.SpacerEnum.HorizontalMid), this.cbCustomGrid);
+	}
 	//endregion
 
 	//region private methods
@@ -244,6 +261,17 @@ public class ImageViewWithScale extends BorderPane
 
     private void listeners()
     {
+    	this.cbCustomGrid.selectedProperty().addListener((observable, oldValue, newValue) ->
+		{
+			if (newValue)
+			{
+				this.customGrid.show();
+			}
+			else
+			{
+				this.customGrid.hide();
+			}
+		});
         this.cbIds.selectedProperty().addListener((observable, oldValue, newValue) -> setTextVisible(newValue));
 
         this.group.setOnMouseMoved(event ->

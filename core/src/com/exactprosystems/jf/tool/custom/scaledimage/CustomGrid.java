@@ -5,7 +5,7 @@
 //  This is unpublished, licensed software, confidential and proprietary
 //  information which is the property of Exactpro Systems, LLC or its licensors.
 ////////////////////////////////////////////////////////////////////////////////
-package com.exactprosystems.jf.tool.custom.layout;
+package com.exactprosystems.jf.tool.custom.scaledimage;
 
 import javafx.scene.Group;
 import javafx.scene.paint.Color;
