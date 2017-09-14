@@ -103,7 +103,7 @@ INIT;Test case;Never;;
     52;x;dragNDrop;OperationKind.DRAG_N_DROP;;Do.use('Slider').setValue(0).dragNdrop(10, 6, 'Slider', 395, 6);Do.use('sliderLabel').getValue();'Slider_50';
     53;x;getTree;OperationKind.GET_TREE;;Do.use(control);Do.use(control).getTree();'Xml[#document: null]';
     54;x;apply;OperationKind.APPLY;;Do.use(control).apply('//item[@name=\'colors\']',Do.click(-10,10,MouseAction.LeftClick));Do.use('selectLabel').getValue();control.expand;
-    55;x;scrollTo;OperationKind.SCROLL_TO;Do.use(control).click(210,5,MouseAction.LeftClick);Do.use(control).scrollTo(3);Do.use('protocolText').getValue();control.scrollTo;
+    55;x;scrollTo;OperationKind.SCROLL_TO;Do.use(control).click(210,5,MouseAction.LeftClick);Do.use(control).scrollTo(3).delay(amount);Do.use('protocolText').getValue();control.scrollTo;
     #EndRawTable
 
     #Action;$Table;$Expression
