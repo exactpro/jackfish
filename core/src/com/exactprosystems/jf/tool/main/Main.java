@@ -140,6 +140,9 @@ public class Main extends Application
 			DialogsHelper.showError("Settings are invalid. Using empty settings.");
 			this.settings = new Settings();
 		}
+
+		Locale.setDefault(new Locale(this.settings.getValue(Settings.GLOBAL_NS, Settings.SETTINGS, Settings.LANGUAGE).getValue()));
+
 		Settings.SettingsValue theme = this.settings.getValueOrDefault(Settings.GLOBAL_NS, Settings.SETTINGS, Settings.THEME, Theme.WHITE.name());
 		Common.setTheme(Theme.valueOf(theme.getValue().toUpperCase()));
 

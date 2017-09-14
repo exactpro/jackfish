@@ -89,6 +89,7 @@ public class Settings
 	public static final String	USE_FULL_SCREEN	= "useFullScreen";
 	public static final String	USE_FULLSCREEN_XPATH = "useFullScreenXpath";
 	public static final String	COPYRIGHT = "copyright";
+	public static final String	LANGUAGE = "language";
 	//endregion
 
 	//region Logs
@@ -328,6 +329,7 @@ public class Settings
 					USE_FULL_SCREEN,"false",
 					USE_EXTERNAL_REPORT_VIEWER, "false",
 					USE_FULLSCREEN_XPATH,"false",
+					LANGUAGE,"en",
 					COPYRIGHT,"",
 					FONT, "System$13"
 			));

@@ -50,6 +50,7 @@ import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 import static com.exactprosystems.jf.tool.Common.tryCatch;
+import static com.exactprosystems.jf.tool.Common.*;
 
 
 @WizardAttribute(
@@ -111,13 +112,13 @@ public class DialogFillWizard extends AbstractWizard
             }
         });
         this.resultListView = new ListView<>(FXCollections.observableArrayList());
-        this.resultListView.tooltipProperty().set(new Tooltip("Use drag and drop to reorder elements"));
+        this.resultListView.tooltipProperty().set(new Tooltip(bundle().getString("ResultListTooltip")));
         this.dialogs = new ComboBox<>();
         this.dialogs.setPrefWidth(300);
         this.storedConnections = new ComboBox<>();
         this.storedConnections.setPrefWidth(300);
 
-        this.storedConnections.setOnShowing(event -> tryCatch(this::displayStores, "Error on update titles"));
+        this.storedConnections.setOnShowing(event -> tryCatch(this::displayStores, bundle().getString("ErrorOnDisplayStoredConn")));
         this.storedConnections.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) ->
         {
             this.connectToApplicationFromStore(newValue);
@@ -128,7 +129,7 @@ public class DialogFillWizard extends AbstractWizard
 
         this.resultListView.setCellFactory(param -> new MyCell());
 
-        Button scan = new Button("Scan");
+        Button scan = new Button(bundle().getString("Scan"));
         scan.setOnAction(event ->
         {
             this.resultListView.getItems().clear();
@@ -161,11 +162,11 @@ public class DialogFillWizard extends AbstractWizard
         grid.setHgap(10);
         grid.getColumnConstraints().addAll(col1, col2, col3);
 
-        text = new Text("Please select stored connection and dialog");
+        text = new Text(bundle().getString("SelectConnectionInfo"));
 
-        grid.add(new Label("Select stored connection: "), 0, 0);
+        grid.add(new Label(bundle().getString("SelectStoredConn")), 0, 0);
         grid.add(this.storedConnections, 1, 0);
-        grid.add(new Label("Select dialog: "), 2, 0);
+        grid.add(new Label(bundle().getString("SelectDialog")), 2, 0);
         grid.add(this.dialogs, 3, 0);
         grid.add(this.controls, 3, 1);
         grid.add(scan, 3, 2);
@@ -214,7 +215,7 @@ public class DialogFillWizard extends AbstractWizard
         if (control.getBindedClass().isAllowed(OperationKind.GET_VALUE))
         {
             value = Common.tryCatch(() -> String.valueOf(control.operate(this.service, this.currentDialog, Do.getValue())
-                    .getValue()), "Error on get values from controls.", "");
+                    .getValue()), bundle().getString("ErrorOnGetControlsValues"), "");
         }
 
         String operation = getDefaultAction(control, value);
@@ -270,7 +271,7 @@ public class DialogFillWizard extends AbstractWizard
         }
 
         this.imageViewWithScale.removeCurrentImage();
-        IControl selfControl = Common.tryCatch(() -> this.currentDialog.getSelfControl(), "Error on get self", null);
+        IControl selfControl = Common.tryCatch(() -> this.currentDialog.getSelfControl(), bundle().getString("ErrorOnGetSelf"), null);
 
         Predicate<IControl> predicate = (IControl control) ->
         {
@@ -399,7 +400,7 @@ public class DialogFillWizard extends AbstractWizard
             {
                 List<Node> all = wizardMatcher.findAll(document, this.control.locator());
                 return ((Rectangle) all.get(0).getUserData(IRemoteApplication.rectangleName));
-            }, "Error on get rectangle", null);
+            }, bundle().getString("ErrorOnGetRectangle"), null);
         }
     }
 
