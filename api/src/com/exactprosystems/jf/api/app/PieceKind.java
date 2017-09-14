@@ -92,7 +92,15 @@ public enum PieceKind implements Measure
 		@Override
 		protected <T> void performDerived(Piece piece, OperationExecutor<T> executor, List<T> self, List<T> others, CheckingLayoutResult result) throws Exception
 		{
-			result.set(!self.isEmpty() && self.get(0) != null); 	// FIXME
+			Color color = null;
+			if (!self.isEmpty() && self.get(0) != null)
+			{
+				color = executor.getColor(self.get(0), true);
+			}
+			if (!piece.color.equals(color))
+			{
+				result.error(piece, "Actual = " + piece.color + " Expected = " + color);
+			}
 		}
 	},
 
@@ -125,7 +133,15 @@ public enum PieceKind implements Measure
 		@Override
 		protected <T> void performDerived(Piece piece, OperationExecutor<T> executor, List<T> self, List<T> others, CheckingLayoutResult result) throws Exception
 		{
-			result.set(!self.isEmpty() && self.get(0) != null);  // FIXME
+			Color color = null;
+			if (!self.isEmpty() && self.get(0) != null)
+			{
+				color = executor.getColor(self.get(0), false);
+			}
+			if (!piece.color.equals(color))
+			{
+				result.error(piece, "Actual = " + piece.color + " Expected = " + color);
+			}
 		} 
 	},
 
