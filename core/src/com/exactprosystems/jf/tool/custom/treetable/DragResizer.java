@@ -39,7 +39,8 @@ public class DragResizer
 
 		region.setOnMousePressed(resizer::mousePressed);
 		region.setOnMouseDragged(resizer::mouseDragged);
-		region.setOnMouseMoved(resizer::mouseOver);
+//		region.setOnMouseMoved(resizer::mouseOver);
+		region.addEventFilter(MouseEvent.MOUSE_MOVED, resizer::mouseOver);
 		region.setOnMouseReleased(resizer::mouseReleased);
 		region.setOnMouseExited(resizer::mouseExited);
 		region.getStyleClass().add(CssVariables.RESIZABLE_REGION);
