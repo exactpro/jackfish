@@ -21,8 +21,6 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.openqa.selenium.*;
-import org.openqa.selenium.Dimension;
-import org.openqa.selenium.Point;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.interactions.Actions;
@@ -31,15 +29,16 @@ import org.openqa.selenium.support.ui.Quotes;
 import org.openqa.selenium.support.ui.Select;
 
 import javax.imageio.ImageIO;
-import java.awt.*;
+import java.awt.Color;
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.rmi.RemoteException;
 import java.util.*;
-import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicLong;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class SeleniumOperationExecutor implements OperationExecutor<WebElement>
 {
@@ -109,11 +108,18 @@ public class SeleniumOperationExecutor implements OperationExecutor<WebElement>
 		{
 			return new Color(255, 255, 255, 0);
 		}
-		StringBuilder colorSB = new StringBuilder(color);
-		colorSB.delete(0, 5);
-		colorSB.deleteCharAt(colorSB.length() - 1);
-		String[] colors = colorSB.toString().split(", ");
-		return new Color(Integer.parseInt(colors[0]), Integer.parseInt(colors[1]), Integer.parseInt(colors[2]), Integer.parseInt(colors[3]));
+		Pattern rgbPattern = Pattern.compile("rgb[a]?\\((\\d+), (\\d+), (\\d+)(, (\\d+))?\\)");
+		Matcher matcher = rgbPattern.matcher(color);
+		if (matcher.find())
+		{
+			String alpha = matcher.group(5);
+			if (alpha != null)
+			{
+				return new Color(Integer.valueOf(matcher.group(1)), Integer.valueOf(matcher.group(2)), Integer.valueOf(matcher.group(3)), Integer.valueOf(alpha));
+			}
+			return new Color(Integer.valueOf(matcher.group(1)), Integer.valueOf(matcher.group(2)), Integer.valueOf(matcher.group(3)));
+		}
+		return new Color(255, 255, 255, 0);
 	}
 
 	@Override
@@ -127,11 +133,11 @@ public class SeleniumOperationExecutor implements OperationExecutor<WebElement>
 			{
 				if (isForeground)
 				{
-					return translateColor(String.valueOf(this.driver.executeScript("return window.getComputedStyle(arguments[0]).color", component)));
+					return translateColor(component.getCssValue("color"));
 				}
 				else
 				{
-					return translateColor(String.valueOf(this.driver.executeScript("return window.getComputedStyle(arguments[0]).backgroundColor", component)));
+					return translateColor(component.getCssValue("backgroundColor"));
 				}
 			}
 			catch (StaleElementReferenceException e)
