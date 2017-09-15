@@ -19,20 +19,20 @@ public abstract class Marker
 
 	private enum Keys
 	{
-		A("$", true, "Use it if You want to put some part of code inside current text. Color of inserted code depends on JF color theme: dark or white.", "Simple example: \\{\\{\\/////$int i = 0$}}", "Simple example: {{$int i = 0$}}"),
-		B("#", false, "Put some code into container. Used for highlighting big part of code.  Color of inserted code depends on JF color theme: dark or white.", "", "Simple example: {{#int i = 0#}}"),
-		C("@", false, "Set blue color (#00bfff) for determined text.", "", "{{@Blue@}} word"),
-		D("^", true, "Rotate determined text by 90 degrees.", "", "{{^rotate^}}"),
-		E("`", false, "Put text in new paragraph.", "", "Old paragraph. {{`New paragraph`}}"),
-		F("_", false, "Underline some part of text.", "", "{{_Underlined_}} word"),
-		G("*", true, "Highlight some part of text as bolder.", "", "{{*Bolder*}} word"),
-		H("/", false, "Highlight some part of text as italic.", "", "{{/Italic/}} word"),
-		I("&", false, "Put text in new paragraph.", "", "Old paragraph. {{`New paragraph`}}"),
-		M("1", false, "Set current text as name of caption first level.", "", "{{1Caption1}}"),
-		N("2", false, "Set current text as name of caption second level.", "", "{{2Caption2}}"),
-		O("3", false, "Set current text as name of caption third level.", "", "{{3Caption3}}"),
-		P("4", false, "Set current text as name of caption fourth level.", "", "{{4Caption4}}"),
-		Q("5", false, "Set current text as name of caption fifth level.", "", "{{5Caption5}}");
+		A("$", true, "Use it if You want to put some part of code inside current text. Color of inserted code depends on JF color theme: dark or white.", "Simple example: &#123;&#123;&#36;int i = 0&#36;&#125;&#125;", "Simple example: {{$int i = 0$}}"),
+		B("#", false, "Put some code into container. Used for highlighting big part of code.  Color of inserted code depends on JF color theme: dark or white.", "Simple example: &#123;&#123;&#35;int i = 0&#35;&#125;&#125;", "Simple example: {{#int i = 0#}}"),
+		C("@", false, "Set blue color (#00bfff) for determined text.", "&#123;&#123;&#64;Blue&#64;&#125;&#125; word", "{{@Blue@}} word"),
+		D("^", true, "Rotate determined text by 90 degrees.", "&#123;&#123;&#94;rotate&#94;&#125;&#125;", "{{^rotate^}}"),
+		E("`", false, "Put text in new paragraph.", "Old paragraph. &#123;&#123;&#96;New paragraph&#96;&#125;&#125;", "Old paragraph. {{`New paragraph`}}"),
+		F("_", false, "Underline some part of text.", "&#123;&#123;&#95;Underlined&#95;&#125;&#125; word", "{{_Underlined_}} word"),
+		G("*", true, "Highlight some part of text as bolder.", "&#123;&#123;&#42;Bolder&#42;&#125;&#125; word", "{{*Bolder*}} word"),
+		H("/", false, "Highlight some part of text as italic.", "&#123;&#123;&#47;Italic&#47;&#125;&#125; word", "{{/Italic/}} word"),
+		I("&", false, "Put text in new paragraph.", "Old paragraph. &#123;&#123;&#38;New paragraph&#38;&#125;&#125;", "Old paragraph. {{`New paragraph`}}"),
+		M("1", false, "Set current text as name of caption first level.", "&#123;&#123;1Caption1&#125;&#125;", "{{1Caption1}}"),
+		N("2", false, "Set current text as name of caption second level.", "&#123;&#123;2Caption2&#125;&#125;", "{{2Caption2}}"),
+		O("3", false, "Set current text as name of caption third level.", "&#123;&#123;3Caption3&#125;&#125;", "{{3Caption3}}"),
+		P("4", false, "Set current text as name of caption fourth level.", "&#123;&#123;4Caption4&#125;&#125;", "{{4Caption4}}"),
+		Q("5", false, "Set current text as name of caption fifth level.", "&#123;&#123;5Caption5&#125;&#125;", "{{5Caption5}}");
 		String  key;
 		boolean needEscape;
 		String description;

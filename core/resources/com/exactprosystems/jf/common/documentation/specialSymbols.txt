@@ -1,4 +1,5 @@
 {{1Special Symbols1}}
 Via using special frame around necessary part of text You can set format for text.
-Different symbols set different format for determined text. For example, if You will used '{{*' and '*}}' frame around text 'Hello, world!' you will get bolder text '{{*Hello, world!*}}'.
+All patterns contains &#123;&#123; + some special symbol, text, again special symbol and &#125;&#125;.
+Different symbols set different format for determined text. For example, if You will use &#123;&#123;&#42; and &#42;&#125;&#125; frame around text 'Hello, world!' you will get bolder text '{{*Hello, world!*}}'.
 Lower You can find table contains all available symbols and their functions with examples.
