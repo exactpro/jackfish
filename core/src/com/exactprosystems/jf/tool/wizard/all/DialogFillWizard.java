@@ -45,12 +45,13 @@ import org.w3c.dom.Node;
 import java.awt.Rectangle;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
+import static com.exactprosystems.jf.tool.Common.bundle;
 import static com.exactprosystems.jf.tool.Common.tryCatch;
-import static com.exactprosystems.jf.tool.Common.*;
 
 
 @WizardAttribute(
@@ -87,6 +88,7 @@ public class DialogFillWizard extends AbstractWizard
     private Text                     text;
     private GridPane                 grid;
     private boolean                  isAbleHasChild;
+    private WizardLoader			 wizardLoader;
 
 
     @Override
@@ -176,8 +178,14 @@ public class DialogFillWizard extends AbstractWizard
         borderPane.setCenter(grid);
     }
 
+	@Override
+	protected void onRefused()
+	{
+		Optional.ofNullable(this.wizardLoader).ifPresent(WizardLoader::stop);
+		super.onRefused();
+	}
 
-    @Override
+	@Override
     protected Supplier<List<WizardCommand>> getCommands()
     {
         return () ->
@@ -306,45 +314,45 @@ public class DialogFillWizard extends AbstractWizard
         this.grid.getChildren().remove(text);
         this.grid.getChildren().remove(this.imageViewWithScale);
         this.grid.add(this.imageViewWithScale, 0, 1, 3, 3);
+		this.wizardLoader = new WizardLoader(this.appConnection, selfControl, (image, doc) ->
+		{
+			this.imageViewWithScale.displayImage(image);
+			this.document = doc;
 
-        WizardLoader.gainImageAndDocument(this.appConnection, selfControl, (image, doc) ->
-        {
-            this.imageViewWithScale.displayImage(image);
-            this.document = doc;
+			List<Rectangle> list = XpathUtils.collectAllRectangles(this.document);
+			this.imageViewWithScale.setListForSearch(list);
 
-            List<Rectangle> list = XpathUtils.collectAllRectangles(this.document);
-            this.imageViewWithScale.setListForSearch(list);
+			PluginInfo info = this.appConnection.getApplication().getFactory().getInfo();
+			this.wizardMatcher = new WizardMatcher(info);
 
-            PluginInfo info = this.appConnection.getApplication().getFactory().getInfo();
-            this.wizardMatcher = new WizardMatcher(info);
+			this.imageViewWithScale.setOnRectangleClick(rectangle -> this.controls.getItems().forEach(controlItem ->
+			{
 
-            this.imageViewWithScale.setOnRectangleClick(rectangle -> this.controls.getItems().forEach(controlItem ->
-            {
-
-                Rectangle itemRectangle = controlItem.getRectangle(wizardMatcher);
-                if (rectangle.equals(itemRectangle))
-                {
-                    controlItem.toggle();
-                    if (controlItem.isOn())
-                    {
-                        this.imageViewWithScale.showRectangle(rectangle, MarkerStyle.MARK, "", true);
-                    }
-                    else
-                    {
-                        this.imageViewWithScale.hideRectangle(rectangle, MarkerStyle.MARK);
-                    }
-                }
-            }));
-        }, ex ->
-        {
-            String message = ex.getMessage();
-            if (ex.getCause() instanceof JFRemoteException)
-            {
-                message = ((JFRemoteException) ex.getCause()).getErrorKind().toString();
-            }
-            DialogsHelper.showError(message);
-        });
-    }
+				Rectangle itemRectangle = controlItem.getRectangle(wizardMatcher);
+				if (rectangle.equals(itemRectangle))
+				{
+					controlItem.toggle();
+					if (controlItem.isOn())
+					{
+						this.imageViewWithScale.showRectangle(rectangle, MarkerStyle.MARK, "", true);
+					}
+					else
+					{
+						this.imageViewWithScale.hideRectangle(rectangle, MarkerStyle.MARK);
+					}
+				}
+			}));
+		}, ex ->
+		{
+			String message = ex.getMessage();
+			if (ex.getCause() instanceof JFRemoteException)
+			{
+				message = ((JFRemoteException) ex.getCause()).getErrorKind().toString();
+			}
+			DialogsHelper.showError(message);
+		});
+		this.wizardLoader.start();
+	}
 
     private class ControlItem
     {
