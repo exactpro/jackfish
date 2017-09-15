@@ -33,7 +33,6 @@ import com.exactprosystems.jf.tool.wizard.related.WizardLoader;
 import javafx.application.Platform;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
-import javafx.concurrent.Service;
 import javafx.concurrent.Task;
 import javafx.geometry.HPos;
 import javafx.geometry.Orientation;
@@ -52,8 +51,6 @@ import java.awt.Dimension;
 import java.awt.Rectangle;
 import java.awt.Toolkit;
 import java.util.*;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
@@ -62,7 +59,7 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
-import static com.exactprosystems.jf.tool.Common.*;
+import static com.exactprosystems.jf.tool.Common.bundle;
 
 @WizardAttribute(
 		name = "LayoutWizard",
@@ -97,15 +94,14 @@ public class LayoutWizard extends AbstractWizard
 	private WizardMatcher   wizardMatcher;
 	private WizardLoader    wizardLoader;
 	private IWindow         currentWindow;
-	private ExecutorService scanExecutor;
-	private ExecutorService checkTableExecutor;
-	private ExecutorService checkRelationExecutor;
 
-	private Table table;
+	private Task<List<RelationButton>> scanTask;
+	private Task<List<String>> checkTableTask;
+	private Task<List<String>> checkRelationTask;
 
 	private GridPane main;
 	private Text waitText;
-	
+
 	private ComboBox<ConnectionBean> cbConnections;
 	private ComboBox<IWindow>        cbDialogs;
 
@@ -145,9 +141,9 @@ public class LayoutWizard extends AbstractWizard
 	protected void onRefused()
 	{
 		Optional.ofNullable(this.wizardLoader).ifPresent(WizardLoader::stop);
-		Optional.ofNullable(this.scanExecutor).ifPresent(WizardCommonHelper::shutdownExec);
-		Optional.ofNullable(this.checkTableExecutor).ifPresent(WizardCommonHelper::shutdownExec);
-		Optional.ofNullable(this.checkRelationExecutor).ifPresent(WizardCommonHelper::shutdownExec);
+		Optional.ofNullable(this.scanTask).ifPresent(Task::cancel);
+		Optional.ofNullable(this.checkTableTask).ifPresent(Task::cancel);
+		Optional.ofNullable(this.checkRelationTask).ifPresent(Task::cancel);
 
 		super.onRefused();
 	}
@@ -549,7 +545,7 @@ public class LayoutWizard extends AbstractWizard
 								this.lvControls.refresh();
 							}));
 				}
-				, ex ->
+						, ex ->
 				{
 					String message = ex.getMessage();
 					if (ex.getCause() instanceof JFRemoteException)
@@ -591,8 +587,17 @@ public class LayoutWizard extends AbstractWizard
 		this.checkGrid.setVisible(false);
 		this.main.add(box, 0, 3);
 
-		Optional.ofNullable(this.scanExecutor).ifPresent(WizardCommonHelper::shutdownExec);
-		this.scanExecutor = Executors.newSingleThreadExecutor();
+		Optional.ofNullable(this.scanTask).ifPresent(Task::cancel);
+
+		this.scanTask = new Task<List<RelationButton>>()
+		{
+			@Override
+			protected List<RelationButton> call() throws Exception
+			{
+				return scan0();
+			}
+		};
+
 		Consumer<Boolean> setDisable = flag ->
 		{
 			this.btnCheckTable.setDisable(flag);
@@ -604,22 +609,7 @@ public class LayoutWizard extends AbstractWizard
 		setDisable.accept(true);
 
 		errorArea.clear();
-		Service<List<RelationButton>> service = new Service<List<RelationButton>>()
-		{
-			@Override
-			protected Task<List<RelationButton>> createTask()
-			{
-				return new Task<List<RelationButton>>()
-				{
-					@Override
-					protected List<RelationButton> call() throws Exception
-					{
-						return scan0();
-					}
-				};
-			}
-		};
-		service.setOnSucceeded(e ->
+		this.scanTask.setOnSucceeded(e ->
 		{
 			setDisable.accept(false);
 			this.main.getChildren().removeIf(node -> node == box);
@@ -636,15 +626,14 @@ public class LayoutWizard extends AbstractWizard
 				this.checkGrid.add(relationButton, i / collectSqrt + 1, i % collectSqrt + 1);
 			}
 		});
-		service.setOnFailed(e ->
+		this.scanTask.setOnFailed(e ->
 		{
 			setDisable.accept(false);
 			this.main.getChildren().removeIf(node -> node == box);
 			this.checkGrid.setVisible(false);
 			displayErrors(e.getSource().getException().getMessage());
 		});
-		service.setExecutor(scanExecutor);
-		service.start();
+		new Thread(this.scanTask).start();
 	}
 
 	private List<RelationButton> scan0() throws Exception
@@ -700,6 +689,10 @@ public class LayoutWizard extends AbstractWizard
 		{
 			for (IControl left : collect)
 			{
+				if (this.scanTask.isCancelled())
+				{
+					return Collections.emptyList();
+				}
 				list.add(this.createRelation(top, left));
 			}
 		}
@@ -717,8 +710,8 @@ public class LayoutWizard extends AbstractWizard
 	private Spec createFormula(IControl topControl, IControl leftControl)
 	{
 		String leftId = leftControl.getID();
-		Rectangle top = null;
-		Rectangle left = null;
+		Rectangle top;
+		Rectangle left;
 
 		try
 		{
@@ -853,43 +846,34 @@ public class LayoutWizard extends AbstractWizard
 			forEachRelationButton(rb -> rb.setDisable(flag));
 		};
 		setDisable.accept(true);
-		Optional.ofNullable(this.checkTableExecutor).ifPresent(WizardCommonHelper::shutdownExec);
-		this.checkTableExecutor = Executors.newSingleThreadExecutor();
-		Service<List<String>> service = new Service<List<String>>()
+		Optional.ofNullable(this.checkTableTask).ifPresent(Task::cancel);
+		this.checkTableTask = new Task<List<String>>()
 		{
 			@Override
-			protected Task<List<String>> createTask()
+			protected List<String> call() throws Exception
 			{
-				return new Task<List<String>>()
-				{
-					@Override
-					protected List<String> call() throws Exception
-					{
-						ArrayList<String> list = new ArrayList<>();
-						checking();
-						forEachRelationButton(rb -> {
-							List<String> check = rb.check();
-							Optional.ofNullable(check).ifPresent(list::addAll);
-						});
-						return list;
-					}
-				};
+				ArrayList<String> list = new ArrayList<>();
+				checking();
+				forEachRelationButton(rb -> {
+					List<String> check = rb.checkFormula();
+					Optional.ofNullable(check).ifPresent(list::addAll);
+				}, rb -> this.isCancelled());
+				return list;
 			}
 		};
-		service.setOnSucceeded(event ->
+		this.checkTableTask.setOnSucceeded(event ->
 		{
 			setDisable.accept(false);
-			List<String> value = ((List<String>) event.getSource().getValue());
-			this.displayResults(value);
+			this.displayResults(this.checkTableTask.getValue());
 		});
-		service.setOnFailed(event ->
+		this.checkTableTask.setOnFailed(event ->
 		{
 			setDisable.accept(false);
 			this.displayErrors(event.getSource().getException().getMessage());
 			event.getSource().getException().printStackTrace();
 		});
-		service.setExecutor(this.checkTableExecutor);
-		service.start();
+
+		new Thread(this.checkTableTask).start();
 	}
 
 	private void forEachRelationButton(Consumer<RelationButton> consumer)
@@ -898,6 +882,15 @@ public class LayoutWizard extends AbstractWizard
 				.filter(node -> node instanceof RelationButton)
 				.map(node -> (RelationButton)node)
 				.forEach(consumer);
+	}
+
+	private void forEachRelationButton(Consumer<RelationButton> consumer, Predicate<RelationButton> predicate)
+	{
+		boolean anyMatch = this.checkGrid.getChildren().stream()
+				.filter(node -> node instanceof RelationButton)
+				.map(node -> (RelationButton)node)
+				.peek(consumer)
+				.anyMatch(predicate);
 	}
 
 	private <T extends Node> void forEach(Predicate<Node> predicate, Consumer<T> consumer)
@@ -1033,39 +1026,30 @@ public class LayoutWizard extends AbstractWizard
 			btnCheck.setOnAction(e -> {
 				setDisable.accept(true);
 				checking();
-				Service<List<String>> service = new Service<List<String>>()
+				Optional.ofNullable(checkRelationTask).ifPresent(Task::cancel);
+				checkRelationTask = new Task<List<String>>()
 				{
 					@Override
-					protected Task<List<String>> createTask()
+					protected List<String> call() throws Exception
 					{
-						return new Task<List<String>>()
-						{
-							@Override
-							protected List<String> call() throws Exception
-							{
-								return checkView();
-							}
-						};
+						return checkView();
 					}
 				};
-				Optional.ofNullable(checkRelationExecutor).ifPresent(WizardCommonHelper::shutdownExec);
-				checkRelationExecutor = Executors.newSingleThreadExecutor();
-				service.setExecutor(checkRelationExecutor);
-				service.setOnSucceeded(ev ->
+				checkRelationTask.setOnSucceeded(ev ->
 				{
 					setDisable.accept(false);
 
-					List<String> res = (List<String>) ev.getSource().getValue();
+					List<String> res = checkRelationTask.getValue();
 					displayResults(res);
 				});
-				service.setOnFailed(ev ->
+				checkRelationTask.setOnFailed(ev ->
 				{
 					Throwable exception = ev.getSource().getException();
 					exception.printStackTrace();
 					setDisable.accept(true);
 					displayErrors(exception.getMessage());
 				});
-				service.start();
+				new Thread(checkRelationTask).start();
 			});
 
 			hBox.getChildren().addAll(btnSave, Common.createSpacer(Common.SpacerEnum.HorizontalMid), checkBox);
@@ -1109,7 +1093,7 @@ public class LayoutWizard extends AbstractWizard
 		/**
 		 * @return null if all ok, otherwise list of errors
 		 */
-		public List<String> check()
+		public List<String> checkFormula()
 		{
 			try
 			{
@@ -1126,6 +1110,9 @@ public class LayoutWizard extends AbstractWizard
 			return null;
 		}
 
+		/**
+		 * @return null if task is canceled or pieces is empty. Otherwise Spec instance.
+		 */
 		private Spec create(Consumer<String> errorConsumer)
 		{
 			List<String> pieces = this.boxWithFields.getChildren()
@@ -1142,6 +1129,10 @@ public class LayoutWizard extends AbstractWizard
 				if (piece.isEmpty())
 				{
 					continue;
+				}
+				if (checkRelationTask.isCancelled())
+				{
+					return null;
 				}
 				doSpecString.append(piece);
 				boolean needStop = false;

@@ -896,6 +896,7 @@ public class MainController implements Initializable, ContainingParent
 				{
 					logger.error("Error on update RAM");
 					logger.error(e.getMessage(), e);
+					return;
 				}
 			}
 		};
