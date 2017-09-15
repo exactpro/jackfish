@@ -22,7 +22,6 @@ import com.exactprosystems.jf.tool.wizard.related.refactor.Refactor;
 import com.exactprosystems.jf.tool.wizard.related.refactor.RefactorAddParameter;
 import com.exactprosystems.jf.tool.wizard.related.refactor.RefactorRemoveParameters;
 import javafx.collections.ObservableList;
-import javafx.concurrent.Service;
 import javafx.concurrent.Task;
 import javafx.geometry.HPos;
 import javafx.geometry.Pos;
@@ -32,8 +31,9 @@ import javafx.scene.layout.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
+import java.util.Optional;
+import java.util.function.BooleanSupplier;
+import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 @WizardAttribute(
@@ -57,8 +57,7 @@ public class AutomateConvertWizard extends AbstractWizard
 	private ListView<Refactor>  listView;
 	private ComboBox<Converter> comboBox;
 
-	private ExecutorService executor = Executors.newSingleThreadExecutor();
-	private Service<List<Refactor>> service;
+	private Task<List<Refactor>> task;
 
 	private final List<Converter> CONVERTER_LIST = Arrays.asList(
 			new ApplicationResizeConverter()
@@ -117,50 +116,38 @@ public class AutomateConvertWizard extends AbstractWizard
 			Converter converter = this.comboBox.getSelectionModel().getSelectedItem();
 			if (converter != null)
 			{
-				if (this.service != null)
+				if (this.task != null)
 				{
-					this.service.cancel();
-					if (this.executor != null)
-					{
-						this.executor.shutdownNow();
-					}
-					this.executor = null;
-					this.service = null;
+					this.task.cancel();
 				}
-				this.listView.getItems().clear();
-
-				this.service= new Service<List<Refactor>>()
+				Consumer<Boolean> setDisable = flag ->
+				{
+					progressBox.setVisible(flag);
+					btnScan.setDisable(flag);
+				};
+				this.task = new Task<List<Refactor>>()
 				{
 					@Override
-					protected Task<List<Refactor>> createTask()
+					protected List<Refactor> call() throws Exception
 					{
-						return new Task<List<Refactor>>()
-						{
-							@Override
-							protected List<Refactor> call() throws Exception
-							{
-								progressBox.setVisible(true);
-								btnScan.setDisable(true);
-								return converter.scan();
-							}
-						};
+						setDisable.accept(true);
+						return converter.scan(this::isCancelled);
 					}
 				};
-				this.service.setOnSucceeded(event ->
+				this.listView.getItems().clear();
+
+				this.task.setOnSucceeded(event ->
 				{
-					this.listView.getItems().setAll(((List<Refactor>) event.getSource().getValue()));
-					progressBox.setVisible(false);
-					btnScan.setDisable(false);
+					this.listView.getItems().setAll(this.task.getValue());
+					setDisable.accept(false);
 				});
-				this.service.setOnFailed(event ->
+				this.task.setOnFailed(event ->
 				{
 					DialogsHelper.showError(event.getSource().getException().getMessage());
-					progressBox.setVisible(false);
-					btnScan.setDisable(false);
+					setDisable.accept(false);
 				});
-				this.executor = Executors.newSingleThreadExecutor();
-				this.service.setExecutor(executor);
-				this.service.start();
+				this.task.setOnCancelled(event -> setDisable.accept(false));
+				new Thread(this.task).start();
 			}
 		});
 
@@ -207,17 +194,14 @@ public class AutomateConvertWizard extends AbstractWizard
 	@Override
 	protected void onRefused()
 	{
-		if (this.service != null && this.service.isRunning() && this.executor != null)
-		{
-			this.executor.shutdownNow();
-		}
+		Optional.ofNullable(this.task).ifPresent(Task::cancel);
 		super.onRefused();
 	}
 
 	interface Converter
 	{
 		String shortDescription();
-		List<Refactor> scan();
+		List<Refactor> scan(BooleanSupplier stopSupplier);
 	}
 
 	private class ApplicationResizeConverter implements Converter
@@ -246,15 +230,23 @@ public class AutomateConvertWizard extends AbstractWizard
 		}
 
 		@Override
-		public List<Refactor> scan()
+		public List<Refactor> scan(BooleanSupplier stopSupplier)
 		{
 			List<Refactor> list = new ArrayList<>();
 			configuration.forEach(document ->
 			{
+				if (stopSupplier.getAsBoolean())
+				{
+					return;
+				}
 				Matrix matrix = (Matrix) document;
 				MatrixItem root = matrix.getRoot();
 				root.bypass(item ->
 				{
+					if (stopSupplier.getAsBoolean())
+					{
+						return;
+					}
 					if (item instanceof ActionItem)
 					{
 						ActionItem actionItem = (ActionItem) item;
@@ -287,7 +279,6 @@ public class AutomateConvertWizard extends AbstractWizard
 								parameter.setType(TypeMandatory.NotMandatory);
 								list.add(new RefactorAddParameter(item, parameter, -1));
 							}
-
 						}
 					}
 				});
