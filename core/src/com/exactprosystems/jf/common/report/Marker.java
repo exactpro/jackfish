@@ -1,8 +1,6 @@
 package com.exactprosystems.jf.common.report;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -21,27 +19,33 @@ public abstract class Marker
 
 	private enum Keys
 	{
-		A("$", true),
-		B("#", false),
-		C("@", false),
-		D("^", true),
-		E("`", false),
-		F("_", false),
-		G("*", true),
-		H("/", false),
-		I("&", false),
-		M("1", false),
-		N("2", false),
-		O("3", false),
-		P("4", false),
-		Q("5", false),;
+		A("$", true, "Use it if You want to put some part of code inside current text. Color of inserted code depends on JF color theme: dark or white.", "Simple example: \\{\\{\\/////$int i = 0$}}", "Simple example: {{$int i = 0$}}"),
+		B("#", false, "Put some code into container. Used for highlighting big part of code.  Color of inserted code depends on JF color theme: dark or white.", "", "Simple example: {{#int i = 0#}}"),
+		C("@", false, "Set blue color (#00bfff) for determined text.", "", "{{@Blue@}} word"),
+		D("^", true, "Rotate determined text by 90 degrees.", "", "{{^rotate^}}"),
+		E("`", false, "Put text in new paragraph.", "", "Old paragraph. {{`New paragraph`}}"),
+		F("_", false, "Underline some part of text.", "", "{{_Underlined_}} word"),
+		G("*", true, "Highlight some part of text as bolder.", "", "{{*Bolder*}} word"),
+		H("/", false, "Highlight some part of text as italic.", "", "{{/Italic/}} word"),
+		I("&", false, "Put text in new paragraph.", "", "Old paragraph. {{`New paragraph`}}"),
+		M("1", false, "Set current text as name of caption first level.", "", "{{1Caption1}}"),
+		N("2", false, "Set current text as name of caption second level.", "", "{{2Caption2}}"),
+		O("3", false, "Set current text as name of caption third level.", "", "{{3Caption3}}"),
+		P("4", false, "Set current text as name of caption fourth level.", "", "{{4Caption4}}"),
+		Q("5", false, "Set current text as name of caption fifth level.", "", "{{5Caption5}}");
 		String  key;
 		boolean needEscape;
+		String description;
+		String example;
+		String exampleResult;
 
-		Keys(String key, boolean needEscape)
+		Keys(String key, boolean needEscape, String description, String example, String exampleResult)
 		{
 			this.key = key;
 			this.needEscape = needEscape;
+			this.description = description;
+			this.example = example;
+			this.exampleResult = exampleResult;
 		}
 
 		String groupName()
@@ -137,6 +141,18 @@ public abstract class Marker
 			}
 			return group;
 		}
+
+		public List<String[]> keysDescriptions()
+		{
+			List<String[]> result = new ArrayList<>();
+
+			for (Keys k: Keys.values())
+			{
+				result.add(new String[] {k.key, k.description, k.example, k.exampleResult});
+			}
+
+			return result;
+		}
 	}
 
 	/*
@@ -206,5 +222,4 @@ public abstract class Marker
 			this.end = end;
 		}
 	}
-
 }

@@ -26,33 +26,25 @@ import com.exactprosystems.jf.api.wizard.Wizard;
 import com.exactprosystems.jf.api.wizard.WizardManager;
 import com.exactprosystems.jf.common.ControlsAttributes;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
+import com.exactprosystems.jf.common.report.Marker;
 import com.exactprosystems.jf.common.report.ReportBuilder;
 import com.exactprosystems.jf.common.version.VersionInfo;
 import com.exactprosystems.jf.documents.config.Context;
 import com.exactprosystems.jf.documents.guidic.controls.AbstractControl;
 import com.exactprosystems.jf.documents.matrix.parser.Parser;
-import com.exactprosystems.jf.documents.matrix.parser.items.ActionItem;
-import com.exactprosystems.jf.documents.matrix.parser.items.HelpActionItem;
-import com.exactprosystems.jf.documents.matrix.parser.items.HelpClass;
-import com.exactprosystems.jf.documents.matrix.parser.items.HelpTable;
-import com.exactprosystems.jf.documents.matrix.parser.items.HelpContent;
-import com.exactprosystems.jf.documents.matrix.parser.items.HelpItem;
-import com.exactprosystems.jf.documents.matrix.parser.items.HelpPicture;
-import com.exactprosystems.jf.documents.matrix.parser.items.HelpText;
-import com.exactprosystems.jf.documents.matrix.parser.items.HelpTextLine;
-import com.exactprosystems.jf.documents.matrix.parser.items.HelpWizardItem;
-import com.exactprosystems.jf.documents.matrix.parser.items.MatrixItem;
-import com.exactprosystems.jf.documents.matrix.parser.items.MatrixItemAttribute;
-import com.exactprosystems.jf.documents.matrix.parser.items.TempItem;
+import com.exactprosystems.jf.documents.matrix.parser.items.*;
 import com.exactprosystems.jf.functions.Content;
 import com.exactprosystems.jf.functions.ContentItem;
 import com.exactprosystems.jf.functions.Table;
+import com.exactprosystems.jf.tool.Common;
+import com.exactprosystems.jf.tool.settings.Theme;
 
 public class DocumentationBuilder
 {
     public static MatrixItem createHelp (ReportBuilder report, Context context) throws Exception
     {
         Content content = new Content();
+        AbstractEvaluator evaluator = context.getEvaluator();
         List<OperationKind> operations = Arrays.stream(OperationKind.values()).collect(Collectors.toList());
 
         MatrixItem help = new HelpTextLine("");
@@ -64,8 +56,10 @@ public class DocumentationBuilder
         addAllControlsTable(help, "All controls", context, operations, true, true, content);
         addAllItems(help, content);
         addAllActions(help, content);
+        addPartOfContent(DocumentationBuilder.class.getResourceAsStream("specialSymbols.txt"), content);
+        addText(help, DocumentationBuilder.class.getResourceAsStream("specialSymbols.txt"));
+        addSpecialSymbols(help, evaluator);
         addContent(help, "", content);
-
         return help;
     }
     
@@ -194,6 +188,19 @@ public class DocumentationBuilder
         Table table = new Table(content, evaluator);
         MatrixItem text = new HelpTable(title, table, bordered, widths);
         root.insert(root.count(), text);
+    }
+
+    private static void addSpecialSymbols(MatrixItem root, AbstractEvaluator evaluator) throws Exception
+    {
+        String[] headers = new String[] {"Symbol", "Description", "Example", "Example result"};
+        int[] width = new int[] {15, 35, 25, 25};
+        Table table = new Table(headers, evaluator);
+        for (String[] element : new Marker.HTMLMaker(Common.currentTheme().equals(Theme.WHITE)).keysDescriptions())
+        {
+            table.addValue(element);
+        }
+        MatrixItem tableItem = new HelpTable("", table, true, width);
+        root.insert(root.count(), tableItem);
     }
     
     public static void addAllControlsTable(MatrixItem root, String title, Context context, List<OperationKind> operations, boolean rotate, boolean bordered, Content content) throws Exception
@@ -365,9 +372,6 @@ public class DocumentationBuilder
         }
         content.add(new ContentItem(addEndParentPartOfContent()));
     }
-
-
-
 
     private static String addPartOfContent(String s, boolean hasChildren){
         if(hasChildren){
