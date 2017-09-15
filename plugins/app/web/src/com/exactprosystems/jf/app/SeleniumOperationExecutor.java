@@ -1429,7 +1429,7 @@ public class SeleniumOperationExecutor implements OperationExecutor<WebElement>
 			}
 			if (needAdd)
 			{
-				resultList.add(element.getText());
+				resultList.add(element.getText().trim());
 			}
 		}
 		return resultList;
