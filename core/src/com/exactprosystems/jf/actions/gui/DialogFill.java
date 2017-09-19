@@ -182,7 +182,18 @@ public class DialogFill extends AbstractAction
 			controlMap = new Parameters();
 			Parameters finalControlMap = controlMap;
 			this.fields.forEach((key, value) -> finalControlMap.add(key, "" + value));
-			controlMap.forEach(p -> p.setValue(this.fields.get(p.getName())));
+			for (Parameter parameter : controlMap)
+			{
+				Object o = this.fields.get(parameter.getName());
+				if (o instanceof Operation)
+				{
+					parameter.setValue(o);
+				}
+				else
+				{
+					parameter.evaluate(evaluator);
+				}
+			}
 		}
 		else
 		{
