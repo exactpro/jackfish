@@ -168,6 +168,12 @@ Test;Zip;;;
     runMatrix;'Zip'
 
 
+#Id;#TestCase;#Kind;#Depends;#For
+Test;checlLayout;;;
+    #Call;testName
+    runMatrix;'CheckLayout'
+
+
 // 
 #Id;#TestCase;#Kind;#Depends;#For
 REPORT;Cleanup;;;

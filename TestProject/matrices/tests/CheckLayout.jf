@@ -1,0 +1,210 @@
+#TestCase;#Kind;#Depends;#For
+Prepare;Never;;
+    #Id;#Global;#Let
+    dialog;1;'DialogCheckLayout'
+
+    #Off;#Step;#Kind;#For;#Depends
+    1;'load from store';;;
+        #Global;#Action;$Name;$AsVar
+        1;Restore;'app';'app'
+
+        #If
+        app == null
+            #Id;#Action;$AppId;Browser;URL
+            APPSTR1;ApplicationStart;mockWebApp;mockWebBrowser;mockLayoutURL
+
+            #Action;$Name;$Value
+            Store;'app';APPSTR1.Out
+
+            #Id;#Global;#Let
+            app;1;APPSTR1.Out
+
+        #EndIf
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'load application';;;
+        #Id;#Action;$AppId;Browser;URL
+        APPSTR1;ApplicationStart;mockWebApp;mockWebBrowser;mockLayoutURL
+
+        #Id;#Global;#Let
+        app;1;APPSTR1.Out
+
+    #EndStep
+
+    #Id;#SubCase;map;failedMap
+    check;;{'selfLeft' : DoSpec.left('otherLeft',about(35))};{'selfLeft' : DoSpec.left('otherLeft',about(39))}
+        #Action;$Dialog;$AppConnection;$Fields
+        DialogCheckLayout;dialog;app;map
+
+        #Action;#Assert;$Dialog;$AppConnection;$Fields
+        DialogCheckLayout;This.Result ==  Result.Failed && This.Kind == ErrorKind.NOT_EQUAL;dialog;app;failedMap
+
+    #EndSubCase
+
+
+#TestCase;#Kind;#Depends;#For
+checkText;;;
+    #Id;#Call;map;failedMap
+    CALL_1;check;{'checkText' : DoSpec.text('text')};{'checkText' : DoSpec.text('asd')}
+
+
+#TestCase;#Kind;#Depends;#For
+checkColor;;;
+    #Id;#Call;map;failedMap
+    CALL_1;check;{'checkColor' : DoSpec.color(new Color(0,0,255,1))};{'checkColor' : DoSpec.color(Color.RED)}
+
+
+#TestCase;#Kind;#Depends;#For
+check visible;;;
+    #Call;map;failedMap
+    check;{'visible' : DoSpec.visible()};{'visible' : DoSpec.invisible()}
+
+
+#TestCase;#Kind;#Depends;#For
+check count;;;
+    #Call;map;failedMap
+    check;{'count' : DoSpec.count(3)};{'count' : DoSpec.count(4)}
+
+
+#TestCase;#Kind;#Depends;#For
+checkBackColor;;;
+    #Call;map;failedMap
+    check;{'checkBackcolor' : DoSpec.backColor(new Color(255,0,0,1))};{'checkBackcolor' : DoSpec.backColor(new Color(0,55,0,1))}
+
+
+#TestCase;#Kind;#Depends;#For
+check attr;;;
+    #Call;map;failedMap
+    check;{'checkAttr' : DoSpec.attr('attr', 'attr')};{'checkAttr' : DoSpec.attr('attr', 'attrasd')}
+
+
+#TestCase;#Kind;#Depends;#For
+check tAligned/bAligned;;;
+    #Call;map;failedMap
+    check;{'selfTAligned' : DoSpec.tAlign('otherTAligned', 0)};{'selfTAligned' : DoSpec.tAlign('otherTAligned', 10)}
+
+    #Call;map;failedMap
+    check;{'selfTAligned' : DoSpec.bAlign('otherTAligned', 0)};{'selfTAligned' : DoSpec.bAlign('otherTAligned', 10)}
+
+
+#TestCase;#Kind;#Depends;#For
+check contains;;;
+    #Call;map;failedMap
+    check;{'selfContains' : DoSpec.contains('otherContains')};{'otherContains' : DoSpec.contains('selfContains')}
+
+
+#TestCase;#Kind;#Depends;#For
+check left;;;
+    #Call;map;failedMap
+    check;{'selfLeft' : DoSpec.left('otherLeft',35)};{'selfLeft' : DoSpec.left('otherLeft',25)}
+
+
+#TestCase;#Kind;#Depends;#For
+check right;;;
+    #Call;map;failedMap
+    check;{'selfRight' : DoSpec.right('otherRight', 35)};{'selfRight' : DoSpec.right('otherRight', 25)}
+
+
+#TestCase;#Kind;#Depends;#For
+check top;;;
+    #Call;map;failedMap
+    check;{'selfTop' : DoSpec.top('otherTop', 32)};{'selfTop' : DoSpec.top('otherTop', -32)}
+
+
+#TestCase;#Kind;#Depends;#For
+check bottom;;;
+    #Call;map;failedMap
+    check;{'selfBottom' : DoSpec.bottom('otherBottom', 32)};{'selfBottom' : DoSpec.bottom('otherBottom', -32)}
+
+
+#TestCase;#Kind;#Depends;#For
+check inTop;;;
+    #Call;map;failedMap
+    check;{'selfInTop' : DoSpec.inTop('otherInTop', 25)};{'selfInTop' : DoSpec.inTop('otherInTop', 125)}
+
+
+#TestCase;#Kind;#Depends;#For
+check inBottom;;;
+    #Call;map;failedMap
+    check;{'selfInBottom' : DoSpec.inBottom('otherInBottom', 25)};{'selfInBottom' : DoSpec.inBottom('otherInBottom', -25)}
+
+
+#TestCase;#Kind;#Depends;#For
+check OnTop;;;
+    #Call;map;failedMap
+    check;{'selfOnTop' : DoSpec.onTop('otherOnTop', 25)};{'selfOnTop' : DoSpec.onTop('otherOnTop', 24)}
+
+
+#TestCase;#Kind;#Depends;#For
+check onBottom;;;
+    #Call;map;failedMap
+    check;{'selfOnBottom' : DoSpec.onBottom('otherOnBottom', 50)};{'selfOnBottom' : DoSpec.onBottom('otherOnBottom', -50)}
+
+
+#TestCase;#Kind;#Depends;#For
+check lAlign/rAlign;;;
+    #Call;map;failedMap
+    check;{'selfLAligned' : DoSpec.lAlign('otherLAligned', 0)};{'selfLAligned' : DoSpec.lAlign('otherLAligned', 10)}
+
+    #Call;map;failedMap
+    check;{'selfLAligned' : DoSpec.rAlign('otherLAligned', 0)};{'selfLAligned' : DoSpec.rAlign('otherLAligned', 10)}
+
+
+#TestCase;#Kind;#Depends;#For
+checkInLeft;;;
+    #Call;map;failedMap
+    check;{'selfInLeft' : DoSpec.inLeft('otherInLeft', 25)};{'selfInLeft' : DoSpec.inLeft('otherInLeft', -25)}
+
+
+#TestCase;#Kind;#Depends;#For
+checkInLeft;;;
+    #Call;map;failedMap
+    check;{'selfInRight' : DoSpec.inRight('otherInRight', 10)};{'selfInRight' : DoSpec.inRight('otherInRight', -10)}
+
+
+#TestCase;#Kind;#Depends;#For
+check onLeft;;;
+    #Call;map;failedMap
+    check;{'selfOnLeft' : DoSpec.onLeft('otherOnLeft', 25)};{'selfOnLeft' : DoSpec.onLeft('otherOnLeft', 26)}
+
+
+#TestCase;#Kind;#Depends;#For
+check onRight;;;
+    #Call;map;failedMap
+    check;{'selfOnRight' : DoSpec.onRight('otherOnRight', 65)};{'selfOnRight' : DoSpec.onRight('otherOnRight',-65)}
+
+
+#TestCase;#Kind;#Depends;#For
+test Table;;;
+    #Id;#RawTable
+    DATA1;Table
+    @;;selfContains;otherContains;selfLeft;selfTop;otherBottom;selfBottom
+    0;selfContains;DoSpec.visible().count(1).height(150).width(150);DoSpec.inLeft('selfContains',25).inRight('selfContains',50).inTop('selfContains',25).inBottom('selfContains',50);DoSpec.right('selfContains',176).inLeft('selfContains',326).onRight('selfContains',326).rAlign('selfContains',326).hCenter('selfContains',326);DoSpec.bottom('selfContains',96).inRight('selfContains',150).inTop('selfContains',246).onLeft('selfContains',150).onBottom('selfContains',246).lAlign('selfContains',150).bAlign('selfContains',246).vCenter('selfContains',246);DoSpec.bottom('selfContains',96).inLeft('selfContains',26).inTop('selfContains',246).onRight('selfContains',26).onBottom('selfContains',246).rAlign('selfContains',26).bAlign('selfContains',246).hCenter('selfContains',26).vCenter('selfContains',246);DoSpec.bottom('selfContains',278).inLeft('selfContains',26).inTop('selfContains',428).onRight('selfContains',26).onBottom('selfContains',428).rAlign('selfContains',26).bAlign('selfContains',428).hCenter('selfContains',26).vCenter('selfContains',428)
+    1;otherContains;DoSpec.contains('otherContains').onLeft('otherContains',25).onRight('otherContains',50).onTop('otherContains',25).onBottom('otherContains',50).lAlign('otherContains',25).rAlign('otherContains',50).tAlign('otherContains',25).bAlign('otherContains',50).hCenter('otherContains',13).vCenter('otherContains',13);DoSpec.visible().count(1).height(75).width(75);DoSpec.right('otherContains',226).inLeft('otherContains',301).onRight('otherContains',376).onTop('otherContains',25).onBottom('otherContains',50).rAlign('otherContains',376).tAlign('otherContains',25).bAlign('otherContains',50).hCenter('otherContains',339).vCenter('otherContains',13);DoSpec.left('otherContains',25).bottom('otherContains',146).inRight('otherContains',100).inTop('otherContains',221).onLeft('otherContains',175).onBottom('otherContains',296).lAlign('otherContains',175).bAlign('otherContains',296).vCenter('otherContains',259);DoSpec.bottom('otherContains',146).inLeft('otherContains',1).inTop('otherContains',221).onRight('otherContains',76).onBottom('otherContains',296).rAlign('otherContains',76).bAlign('otherContains',296).hCenter('otherContains',39).vCenter('otherContains',259);DoSpec.bottom('otherContains',328).inLeft('otherContains',1).inTop('otherContains',403).onRight('otherContains',76).onBottom('otherContains',478).rAlign('otherContains',76).bAlign('otherContains',478).hCenter('otherContains',39).vCenter('otherContains',441)
+    2;selfLeft;DoSpec.left('selfLeft',176).inRight('selfLeft',326).onLeft('selfLeft',326).lAlign('selfLeft',326);DoSpec.left('selfLeft',226).inRight('selfLeft',376).inTop('selfLeft',25).inBottom('selfLeft',50).onLeft('selfLeft',301).lAlign('selfLeft',301);DoSpec.visible().count(1).height(150).width(150);DoSpec.left('selfLeft',326).bottom('selfLeft',96).inRight('selfLeft',476).inTop('selfLeft',246).onLeft('selfLeft',476).onBottom('selfLeft',246).lAlign('selfLeft',476).bAlign('selfLeft',246).vCenter('selfLeft',246);DoSpec.left('selfLeft',150).bottom('selfLeft',96).inRight('selfLeft',300).inTop('selfLeft',246).onLeft('selfLeft',300).onBottom('selfLeft',246).lAlign('selfLeft',300).bAlign('selfLeft',246).vCenter('selfLeft',246);DoSpec.left('selfLeft',150).bottom('selfLeft',278).inRight('selfLeft',300).inTop('selfLeft',428).onLeft('selfLeft',300).onBottom('selfLeft',428).lAlign('selfLeft',300).bAlign('selfLeft',428).vCenter('selfLeft',428)
+    3;selfTop;DoSpec.top('selfTop',96).inLeft('selfTop',150).inBottom('selfTop',246).onRight('selfTop',150).onTop('selfTop',246).rAlign('selfTop',150).tAlign('selfTop',246).hCenter('selfTop',150);DoSpec.right('selfTop',25).top('selfTop',146).inLeft('selfTop',175).inBottom('selfTop',296).onRight('selfTop',100).onTop('selfTop',221).rAlign('selfTop',100).tAlign('selfTop',221).hCenter('selfTop',137);DoSpec.right('selfTop',326).top('selfTop',96).inLeft('selfTop',476).inBottom('selfTop',246).onRight('selfTop',476).onTop('selfTop',246).rAlign('selfTop',476).tAlign('selfTop',246).hCenter('selfTop',476);DoSpec.visible().count(1).height(150).width(150);DoSpec.right('selfTop',26).inLeft('selfTop',176).onRight('selfTop',176).rAlign('selfTop',176).hCenter('selfTop',176);DoSpec.right('selfTop',26).bottom('selfTop',32).inLeft('selfTop',176).inTop('selfTop',182).onRight('selfTop',176).onBottom('selfTop',182).rAlign('selfTop',176).bAlign('selfTop',182).hCenter('selfTop',176).vCenter('selfTop',182)
+    4;otherBottom;DoSpec.top('otherBottom',96).inRight('otherBottom',26).inBottom('otherBottom',246).onLeft('otherBottom',26).onTop('otherBottom',246).lAlign('otherBottom',26).tAlign('otherBottom',246);DoSpec.top('otherBottom',146).inRight('otherBottom',76).inBottom('otherBottom',296).onLeft('otherBottom',1).onTop('otherBottom',221).lAlign('otherBottom',1).tAlign('otherBottom',221);DoSpec.right('otherBottom',150).top('otherBottom',96).inLeft('otherBottom',300).inBottom('otherBottom',246).onRight('otherBottom',300).onTop('otherBottom',246).rAlign('otherBottom',300).tAlign('otherBottom',246).hCenter('otherBottom',300);DoSpec.left('otherBottom',26).inRight('otherBottom',176).onLeft('otherBottom',176).lAlign('otherBottom',176);DoSpec.visible().count(1).height(150).width(150);DoSpec.bottom('otherBottom',32).inTop('otherBottom',182).onBottom('otherBottom',182).bAlign('otherBottom',182).vCenter('otherBottom',182)
+    5;selfBottom;DoSpec.top('selfBottom',278).inRight('selfBottom',26).inBottom('selfBottom',428).onLeft('selfBottom',26).onTop('selfBottom',428).lAlign('selfBottom',26).tAlign('selfBottom',428);DoSpec.top('selfBottom',328).inRight('selfBottom',76).inBottom('selfBottom',478).onLeft('selfBottom',1).onTop('selfBottom',403).lAlign('selfBottom',1).tAlign('selfBottom',403);DoSpec.right('selfBottom',150).top('selfBottom',278).inLeft('selfBottom',300).inBottom('selfBottom',428).onRight('selfBottom',300).onTop('selfBottom',428).rAlign('selfBottom',300).tAlign('selfBottom',428).hCenter('selfBottom',300);DoSpec.left('selfBottom',26).top('selfBottom',32).inRight('selfBottom',176).inBottom('selfBottom',182).onLeft('selfBottom',176).onTop('selfBottom',182).lAlign('selfBottom',176).tAlign('selfBottom',182);DoSpec.top('selfBottom',32).inBottom('selfBottom',182).onTop('selfBottom',182).tAlign('selfBottom',182);DoSpec.visible().count(1).height(150).width(150)
+    #EndRawTable
+
+    #Action;$AppConnection;$Dialog;$Table
+    DialogCheckLayout;app;'DialogCheckLayout';DATA1
+
+
+#TestCase;#Kind;#Depends;#For
+test ranges;;;
+    #Call;map;failedMap
+    check;{'selfLeft' : DoSpec.left('otherLeft',less(36))};{'selfLeft' : DoSpec.left('otherLeft',less(34))}
+
+    #Call;map;failedMap
+    check;{'selfLeft' : DoSpec.left('otherLeft',great(34))};{'selfLeft' : DoSpec.left('otherLeft',great(36))}
+
+    #Call;map;failedMap
+    check;{'selfLeft' : DoSpec.left('otherLeft',between(31, 38))};{'selfLeft' : DoSpec.left('otherLeft',between(38, 39))}
+
+    #Call;map;failedMap
+    check;{'selfLeft' : DoSpec.left('otherLeft',about(35))};{'selfLeft' : DoSpec.left('otherLeft',about(39))}
+
+
