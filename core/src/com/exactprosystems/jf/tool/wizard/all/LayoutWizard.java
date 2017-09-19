@@ -329,7 +329,7 @@ public class LayoutWizard extends AbstractWizard
 		this.<TopText>forEach(node -> node instanceof TopText, topText -> headers.add(topText.getText()));
 
 		String[][] lines = new String[headers.size() + 1][headers.size() + 1];
-		lines[0][0] = "";
+		lines[0][0] = this.cbDialogs.getSelectionModel().getSelectedItem().getName();
 		for (int i = 1; i < lines[0].length; i++)
 		{
 			String header = headers.get(i - 1);
