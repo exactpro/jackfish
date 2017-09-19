@@ -746,6 +746,7 @@ public class SeleniumOperationExecutor implements OperationExecutor<WebElement>
 			throw new Exception("Element out of screen");
 		}
 
+		//TODO FIX it. remake to OutputType.BYTES
 		File image = driver.getScreenshotAs(OutputType.FILE);
 		BufferedImage bufferedImage = ImageIO.read(image);
 

@@ -158,7 +158,7 @@ public class DialogCheckLayout extends AbstractAction
 		{
 			controlMap = new Parameters();
 			this.fields.forEach((key, value) -> controlMap.add(key, "" + value));
-			controlMap.evaluateAll(context.getEvaluator());
+			controlMap.forEach(p -> p.setValue(this.fields.get(p.getName())));
 		}
 		else
 		{

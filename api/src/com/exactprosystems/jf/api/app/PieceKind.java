@@ -24,6 +24,9 @@ import java.util.List;
  */
 public enum PieceKind implements Measure
 {
+	/**
+	 * check text of self
+	 */
 	TEXT("text")
 	{
 		@Override
@@ -47,7 +50,7 @@ public enum PieceKind implements Measure
 		@Override
 		protected String formulaTemplate()
 		{
-			return ".%1$s(%2$s)"; 
+			return ".%1$s(%4$s)";
  		}
 
 		@Override
@@ -58,11 +61,18 @@ public enum PieceKind implements Measure
 			{
 				text = executor.get(self.get(0));
 			}
-			
-			result.set(Str.areEqual(text, piece.name)); 
+
+			boolean isEquals = Str.areEqual(text, piece.text);
+			if (!isEquals)
+			{
+				result.error(piece, "Actual = " + piece.text + " Expected = " + text);
+			}
 		}
 	},
 
+	/**
+	 * check color of self
+	 */
 	COLOR("color")
 	{
 		@Override
@@ -86,7 +96,7 @@ public enum PieceKind implements Measure
 		@Override
 		protected String formulaTemplate()
 		{
-			return ".%1$s(%5$s)";
+			return ".%1$s(%6$s)";
 		}
 
 		@Override
@@ -104,6 +114,9 @@ public enum PieceKind implements Measure
 		}
 	},
 
+	/**
+	 * check background color of self element
+	 */
 	BACK_COLOR("backColor")
 	{
 		@Override
@@ -127,7 +140,7 @@ public enum PieceKind implements Measure
 		@Override
 		protected String formulaTemplate()
 		{
-			return ".%1$s(%5$s)";
+			return ".%1$s(%6$s)";
 		}
 
 		@Override
@@ -145,6 +158,9 @@ public enum PieceKind implements Measure
 		} 
 	},
 
+	/**
+	 * check attribute with name
+	 */
 	ATTR("attr")
 	{
 		@Override
@@ -168,7 +184,7 @@ public enum PieceKind implements Measure
 		@Override
 		protected String formulaTemplate()
 		{
-			return ".%1$s(%2$s, %4$s)";
+			return ".%1$s(%4$s, %5$s)";
 		}
 
 		@Override
@@ -177,15 +193,17 @@ public enum PieceKind implements Measure
 			String text = null;
 			if(!self.isEmpty() && self.get(0) != null)
 			{
-				text = executor.getAttr(self.get(0), piece.name);
+				text = executor.getAttr(self.get(0), piece.text);
 			}
 			
-			result.set(Str.areEqual(text, piece.text)); 
+			result.set(Str.areEqual(text, piece.text2));
 		}
 	},
 
 
-
+	/**
+	 * check that element is visible
+	 */
 	VISIBLE("visible")
 	{
 		@Override
@@ -225,6 +243,9 @@ public enum PieceKind implements Measure
 		}
 	},
 
+	/**
+	 * check that element is invisible
+	 */
 	INVISIBLE("invisible")
 	{
 		@Override
@@ -264,6 +285,9 @@ public enum PieceKind implements Measure
 		}
 	},
 
+	/**
+	 * check count of elements
+	 */
 	COUNT("count")
 	{
 		@Override
@@ -438,8 +462,14 @@ public enum PieceKind implements Measure
 	},
 
 	/**
-	 * If self rectangle on left on other rectangle, distance will be positive.
-	 * We need calculate distance between left line self control and right line other control
+	 * If self rectangle on left on other rectangle, distance will be positive.<br>
+	 * We need calculate distance between left line self control and right line other control<br>
+	 * <br>
+	 * +------+   +------+<br>
+	 * | Self |---|Other |<br>
+	 * +------+   +------+<br>
+	 * <br>
+	 * positive distance<br>
 	 */
 	LEFT("left")
 	{
@@ -457,8 +487,15 @@ public enum PieceKind implements Measure
 	},
 
 	/**
-	 * If self rectangle on right on other rectangle, distance will be positive.
-	 * We need calculate distance between right line self control and left line other control
+	 * If self rectangle on right on other rectangle, distance will be positive.<br>
+	 * We need calculate distance between right line self control and left line other control<br>
+	 *
+	 * +------+   +------+<br>
+	 * |Other |---| Self |<br>
+	 * +------+   +------+<br>
+	 * <br>
+	 * positive distance<br>
+	 *
 	 */
 	RIGHT("right")
 	{
@@ -476,8 +513,18 @@ public enum PieceKind implements Measure
 	},
 
 	/**
-	 * If self rectangle under other rectangle, distance will be positive.
-	 * We need calculate distance between top line self control and bottom line other control
+	 * If self rectangle above other rectangle, distance will be positive.<br>
+	 * We need calculate distance between top line self control and bottom line other control<br>
+	 *
+	 * +------+ <br>
+	 * | Self | <br>
+	 * +------+ <br>
+	 *    |     <br>
+	 * +------+ <br>
+	 * | Other |<br>
+	 * +------+ <br>
+	 *
+	 *  positive distance
 	 */
 	TOP("top")
 	{
@@ -495,8 +542,19 @@ public enum PieceKind implements Measure
 	},
 
 	/**
-	 * If self rectangle above other rectangle, distance will be positive.
-	 * We need calculate distance between bottom line self control and top line other control
+	 * If self rectangle below other rectangle, distance will be positive.<br></br>
+	 * We need calculate distance between bottom line self control and top line other control<br></br>
+	 *
+	 * +------+ <br>
+	 * |Other | <br>
+	 * +------+ <br>
+	 *    |     <br>
+	 * +------+ <br>
+	 * | Self |<br>
+	 * +------+ <br>
+	 *
+	 *  positive distance
+	 *
 	 */
 	BOTTOM("bottom")
 	{
@@ -514,8 +572,8 @@ public enum PieceKind implements Measure
 	},
 
 	/**
-	 * If whole self rectangle inside other rectangle, distance will be positive
-	 * We need to calculate distance between left line's both rectangles.
+	 * If whole self rectangle inside other rectangle, distance will be positive<br>
+	 * We need to calculate distance between left line's both rectangles.<br>
 	 */
 	INSIDE_LEFT("inLeft")
 	{
@@ -832,9 +890,9 @@ public enum PieceKind implements Measure
 		performDerived(piece, executor, self, others, result);
 	}
 
-	public String toFormula(String controlId, Range range, String first, String second, String text, String color)
+	public String toFormula(String controlId, Range range, String first, String second, String text, String text2, String color)
 	{
-		return String.format(formulaTemplate(), this.name, controlId, range == null ? "" : range.toString(first, second), text, color);
+		return String.format(formulaTemplate(), this.name, controlId, range == null ? "" : range.toString(first, second), text, text2, color);
 	}
 
 	public int distance(Rectangle s, Rectangle o)

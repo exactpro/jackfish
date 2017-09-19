@@ -26,7 +26,7 @@ public class Piece implements Serializable
 	@Override
 	public String toString()
 	{
-		return this.kind.toFormula(this.name, this.range, "" + this.a, "" + this.b, "" + this.text, "" + this.color);
+		return this.kind.toFormula(this.name, this.range, "" + this.a, "" + this.b, "" + this.text, this.text2, "" + this.color);
 	}
 	
 	public void tune(IWindow window) throws Exception
@@ -89,6 +89,12 @@ public class Piece implements Serializable
 		this.text = text;
 		return this;
 	}
+
+	public Piece setText2(String text)
+	{
+		this.text2 = text;
+		return this;
+	}
 	
 	public Piece setColor(Color color)
 	{
@@ -105,6 +111,7 @@ public class Piece implements Serializable
 	protected long b;
 	protected Range range;
 	protected String text;
+	protected String text2;
 	protected Color color;
 
 }

@@ -71,7 +71,7 @@ public class Spec implements Iterable<Piece>, Serializable
 	@DescriptionAttribute(text = DoSpec.text)
 	public Spec text(@FieldParameter(name = "text") String text)
 	{
-		this.list.add(new Piece(PieceKind.TEXT).setName(text));
+		this.list.add(new Piece(PieceKind.TEXT).setText(text));
 		return this;
 	}
 
@@ -89,10 +89,10 @@ public class Spec implements Iterable<Piece>, Serializable
 		return this;
 	}
 
-	@DescriptionAttribute(text = DoSpec.color)
+	@DescriptionAttribute(text = DoSpec.attr)
 	public Spec attr(@FieldParameter(name = "name") String name, @FieldParameter(name = "value") String value)
 	{
-		this.list.add(new Piece(PieceKind.ATTR).setName(name).setText(value));
+		this.list.add(new Piece(PieceKind.ATTR).setText(name).setText2(value));
 		return this;
 	}
 	//endregion
