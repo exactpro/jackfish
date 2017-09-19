@@ -3,27 +3,28 @@ package com.exactprosystems.jf.tool.wizard.all;
 import com.exactprosystems.jf.actions.DefaultValuePool;
 import com.exactprosystems.jf.actions.tables.TableLoadFromFile;
 import com.exactprosystems.jf.api.common.IContext;
-import com.exactprosystems.jf.api.wizard.WizardAttribute;
-import com.exactprosystems.jf.api.wizard.WizardCategory;
-import com.exactprosystems.jf.api.wizard.WizardCommand;
-import com.exactprosystems.jf.api.wizard.WizardManager;
+import com.exactprosystems.jf.api.wizard.*;
 import com.exactprosystems.jf.documents.matrix.parser.Parameters;
 import com.exactprosystems.jf.documents.matrix.parser.items.ActionItem;
 import com.exactprosystems.jf.functions.Table;
+import com.exactprosystems.jf.tool.custom.grideditor.DataProvider;
+import com.exactprosystems.jf.tool.custom.grideditor.SpreadsheetView;
+import com.exactprosystems.jf.tool.custom.grideditor.TableDataProvider;
 import com.exactprosystems.jf.tool.helpers.DialogsHelper;
 import com.exactprosystems.jf.tool.matrix.MatrixFx;
 import com.exactprosystems.jf.tool.wizard.AbstractWizard;
+import com.exactprosystems.jf.tool.wizard.CommandBuilder;
 import javafx.scene.layout.BorderPane;
 
-import java.util.List;
+import java.util.*;
 import java.util.function.Supplier;
 
 @WizardAttribute(
         name 				= "TableWizard ",
         pictureName 		= "TableWizard.jpg",
         category 			= WizardCategory.MATRIX,
-        shortDescription 	= "This wizard work with table",
-        detailedDescription = "This wizard work with table",
+        shortDescription 	= "This wizard makes it easier to work with tables.",
+        detailedDescription = "You can change the table directly in the matrix, without having to need other tools.",
         experimental 		= true,
         strongCriteries 	= false,
         criteries 			= { ActionItem.class, MatrixFx.class }
@@ -31,9 +32,9 @@ import java.util.function.Supplier;
 public class TableWizard extends AbstractWizard
 {
     private ActionItem actionItem;
-    private Table table;
-    private char delimeter;
-    private String fileName;
+    private Table      table;
+    private char       delimiter;
+    private String     fileName;
 
     @Override
     public void init(IContext context, WizardManager wizardManager, Object... parameters) {
@@ -51,11 +52,12 @@ public class TableWizard extends AbstractWizard
 
         try
         {
-            this.table = new Table(this.fileName, this.delimeter, this.context.getEvaluator());
+            this.table = new Table(this.fileName, this.delimiter, this.context.getEvaluator());
         }
         catch (Exception e)
         {
             DialogsHelper.showError("Error while table creating. Please check file name or file extension.");
+            return false;
         }
         return true;
     }
@@ -64,7 +66,7 @@ public class TableWizard extends AbstractWizard
     {
         if(parameters.getByName(TableLoadFromFile.fileName).getExpression().isEmpty())
         {
-            DialogsHelper.showError("File name for table wasn't choiced");
+            DialogsHelper.showError("No file name specified");
             return false;
         }
 
@@ -80,11 +82,11 @@ public class TableWizard extends AbstractWizard
 
         if(parameters.getByName(TableLoadFromFile.delimiterName) == null)
         {
-            this.delimeter = DefaultValuePool.Semicolon.toString().charAt(0);
+            this.delimiter = DefaultValuePool.Semicolon.toString().charAt(0);
         }
         else
         {
-            this.delimeter = parameters.getByName(TableLoadFromFile.delimiterName).toString().charAt(0);
+            this.delimiter = parameters.getByName(TableLoadFromFile.delimiterName).toString().charAt(0);
         }
 
         return true;
@@ -93,6 +95,9 @@ public class TableWizard extends AbstractWizard
     @Override
     protected void initDialog(BorderPane borderPane)
     {
+        DataProvider<String> provider = new TableDataProvider(this.table, (undo, redo) -> this.actionItem.getMatrix().addCommand(undo, redo));
+        SpreadsheetView spreadsheetView = new SpreadsheetView(provider);
+        borderPane.setCenter(spreadsheetView);
         borderPane.setPrefSize(800.0, 600.0);
         borderPane.setMinSize(800.0, 600.0);
     }
@@ -100,6 +105,7 @@ public class TableWizard extends AbstractWizard
     @Override
     protected Supplier<List<WizardCommand>> getCommands()
     {
-        return null;
+        this.table.save(this.fileName, this.delimiter, false, false);
+        return () -> CommandBuilder.start().build();
     }
 }
