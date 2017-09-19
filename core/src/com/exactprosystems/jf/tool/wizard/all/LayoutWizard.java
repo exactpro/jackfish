@@ -40,6 +40,8 @@ import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.CheckBoxListCell;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.*;
@@ -125,7 +127,7 @@ public class LayoutWizard extends AbstractWizard
 
 	private HBox boxWithCheckBoxes;
 
-	private Map<PieceKind, String> map = new HashMap<>(); //TODO remake this map to <PieceKind, Icon>
+	private Map<PieceKind, Image> map = new HashMap<>();
 
 	//region AbstractWizard methods
 	@Override
@@ -362,22 +364,23 @@ public class LayoutWizard extends AbstractWizard
 
 	private void fillMap()
 	{
-		this.addToMap("V", PieceKind.VISIBLE); 					// v - visible
-		this.addToMap("C", PieceKind.COUNT);   					// c - count
-		this.addToMap("S", PieceKind.WIDTH, PieceKind.HEIGHT);	// S - size
-		this.addToMap("C", PieceKind.CONTAINS);					// c - contains
-		this.addToMap("D", PieceKind.LEFT, PieceKind.RIGHT, PieceKind.TOP, PieceKind.BOTTOM); // D - distance
-		this.addToMap("I", PieceKind.INSIDE_LEFT, PieceKind.INSIDE_RIGHT, PieceKind.INSIDE_TOP, PieceKind.INSIDE_BOTTOM); // I - inside
-		this.addToMap("O", PieceKind.ON_LEFT, PieceKind.ON_RIGHT, PieceKind.ON_TOP, PieceKind.ON_BOTTOM); // O - on
-		this.addToMap("A", PieceKind.LEFT_ALIGNED, PieceKind.RIGHT_ALIGNED, PieceKind.TOP_ALIGNED, PieceKind.BOTTOM_ALIGNED); //A - align
-		this.addToMap("R", PieceKind.HORIZONTAL_CENTERED, PieceKind.VERTICAL_CENTERED); // R - centeRed
+		this.addToMap(new Image("/com/exactprosystems/jf/tool/wizard/all/layoutWizardIcons/9.png"),  PieceKind.VISIBLE); 					// v - visible
+		this.addToMap(new Image("/com/exactprosystems/jf/tool/wizard/all/layoutWizardIcons/10.png"), PieceKind.COUNT);   					// c - count
+		this.addToMap(new Image("/com/exactprosystems/jf/tool/wizard/all/layoutWizardIcons/1.png"),  PieceKind.WIDTH, PieceKind.HEIGHT);	// S - size
+		this.addToMap(new Image("/com/exactprosystems/jf/tool/wizard/all/layoutWizardIcons/2.png"),  PieceKind.CONTAINS);					// c - contains
+		this.addToMap(new Image("/com/exactprosystems/jf/tool/wizard/all/layoutWizardIcons/3.png"),  PieceKind.LEFT, PieceKind.RIGHT, PieceKind.TOP, PieceKind.BOTTOM); // D - distance
+		this.addToMap(new Image("/com/exactprosystems/jf/tool/wizard/all/layoutWizardIcons/4.png"),  PieceKind.INSIDE_LEFT, PieceKind.INSIDE_RIGHT, PieceKind.INSIDE_TOP, PieceKind.INSIDE_BOTTOM); // I - inside
+		this.addToMap(new Image("/com/exactprosystems/jf/tool/wizard/all/layoutWizardIcons/5.png"),  PieceKind.ON_LEFT, PieceKind.ON_RIGHT, PieceKind.ON_TOP, PieceKind.ON_BOTTOM); // O - on
+		this.addToMap(new Image("/com/exactprosystems/jf/tool/wizard/all/layoutWizardIcons/6.png"),  PieceKind.LEFT_ALIGNED, PieceKind.RIGHT_ALIGNED, PieceKind.TOP_ALIGNED, PieceKind.BOTTOM_ALIGNED); //A - align
+		this.addToMap(new Image("/com/exactprosystems/jf/tool/wizard/all/layoutWizardIcons/7.png"),  PieceKind.HORIZONTAL_CENTERED, PieceKind.VERTICAL_CENTERED); // R - centeRed
+		this.addToMap(new Image("/com/exactprosystems/jf/tool/wizard/all/layoutWizardIcons/8.png"),  PieceKind.VERTICAL_CENTERED); // R - centeRed
 	}
 
-	private void addToMap(String word, PieceKind ... kinds)
+	private void addToMap(Image image, PieceKind ... kinds)
 	{
 		for (PieceKind kind : kinds)
 		{
-			map.put(kind, word);
+			map.put(kind, image);
 		}
 	}
 
@@ -651,7 +654,7 @@ public class LayoutWizard extends AbstractWizard
 					RowConstraints r0 = new RowConstraints();
 					r0.setPercentHeight(-1);
 					r0.setVgrow(Priority.ALWAYS);
-					r0.setMaxHeight(32.0);
+					r0.setMaxHeight(36.0);
 
 					ColumnConstraints c0 = new ColumnConstraints();
 					c0.setHalignment(HPos.CENTER);
@@ -1163,15 +1166,17 @@ public class LayoutWizard extends AbstractWizard
 
 		private void setFormula(Spec formula)
 		{
-			//TODO add icons on button ( icon of pieces)
 			this.formula = formula;
 			Iterator<Piece> iterator = this.formula.iterator();
-			Set<String> set = new HashSet<>();
+			Set<Image> set = new HashSet<>();
 			iterator.forEachRemaining(piece ->
 			{
 				set.add(map.get(piece.getKind()));
 			});
-			this.setText(set.stream().collect(Collectors.joining("")));
+			FlowPane pane = new FlowPane();
+			pane.alignmentProperty().set(Pos.CENTER);
+			pane.getChildren().addAll(set.stream().map(ImageView::new).collect(Collectors.toList()));
+			this.setGraphic(pane);
 		}
 	}
 
