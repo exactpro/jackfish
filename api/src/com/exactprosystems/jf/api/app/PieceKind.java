@@ -588,6 +588,15 @@ public enum PieceKind implements Measure
 		{
 			return s.x - o.x;
 		}
+
+		@Override
+		public boolean checkValid(Rectangle s, Rectangle o)
+		{
+			return o.x <= s.x
+					&& (o.x + o.width) >= (s.x + s.width)
+					&& o.y <= s.y
+					&& (o.y + o.height) >= (s.y + s.height);
+		}
 	},
 
 	/**
@@ -606,6 +615,15 @@ public enum PieceKind implements Measure
 		public int distance(Rectangle s, Rectangle o)
 		{
 			return (o.x + o.width) - (s.x + s.width);
+		}
+
+		@Override
+		public boolean checkValid(Rectangle s, Rectangle o)
+		{
+			return o.x <= s.x
+					&& (o.x + o.width) >= (s.x + s.width)
+					&& o.y <= s.y
+					&& (o.y + o.height) >= (s.y + s.height);
 		}
 	},
 
@@ -626,6 +644,15 @@ public enum PieceKind implements Measure
 		{
 			return s.y - o.y;
 		}
+
+		@Override
+		public boolean checkValid(Rectangle s, Rectangle o)
+		{
+			return o.x <= s.x
+					&& (o.x + o.width) >= (s.x + s.width)
+					&& o.y <= s.y
+					&& (o.y + o.height) >= (s.y + s.height);
+		}
 	},
 
 	/**
@@ -644,6 +671,15 @@ public enum PieceKind implements Measure
 		public int distance(Rectangle s, Rectangle o)
 		{
 			return (o.y + o.height) - (s.y + s.height);
+		}
+
+		@Override
+		public boolean checkValid(Rectangle s, Rectangle o)
+		{
+			return o.x <= s.x
+					&& (o.x + o.width) >= (s.x + s.width)
+					&& o.y <= s.y
+					&& (o.y + o.height) >= (s.y + s.height);
 		}
 	},
 
@@ -664,6 +700,12 @@ public enum PieceKind implements Measure
 		{
 			return -INSIDE_LEFT.distance(s, o);
 		}
+
+		@Override
+		public boolean checkValid(Rectangle s, Rectangle o)
+		{
+			return s.intersects(o) && !o.contains(s) && s.x <= o.x;
+		}
 	},
 
 	/**
@@ -682,6 +724,12 @@ public enum PieceKind implements Measure
 		public int distance(Rectangle s, Rectangle o)
 		{
 			return -INSIDE_RIGHT.distance(s, o);
+		}
+
+		@Override
+		public boolean checkValid(Rectangle s, Rectangle o)
+		{
+			return s.intersects(o) && !o.contains(s) && (o.x + o.width) <= (s.x + s.width);
 		}
 	},
 
@@ -702,6 +750,12 @@ public enum PieceKind implements Measure
 		{
 			return -INSIDE_TOP.distance(s, o);
 		}
+
+		@Override
+		public boolean checkValid(Rectangle s, Rectangle o)
+		{
+			return s.intersects(o) && !o.contains(s) && s.y < o.y;
+		}
 	},
 
 	/**
@@ -720,6 +774,12 @@ public enum PieceKind implements Measure
 		public int distance(Rectangle s, Rectangle o)
 		{
 			return -INSIDE_BOTTOM.distance(s, o);
+		}
+
+		@Override
+		public boolean checkValid(Rectangle s, Rectangle o)
+		{
+			return s.intersects(o) && !o.contains(s) && o.y + o.height <= s.y + s.height;
 		}
 	},
 
@@ -814,7 +874,7 @@ public enum PieceKind implements Measure
 		@Override
 		public int distance(Rectangle s, Rectangle o)
 		{
-			return (s.x + s.width / 2) - (o.x + o.width / 2);
+			return (s.y + s.height / 2) - (o.y + o.height / 2);
 		}
 	},
 
@@ -833,7 +893,7 @@ public enum PieceKind implements Measure
 		@Override
 		public int distance(Rectangle s, Rectangle o)
 		{
-			return (s.y + s.height / 2) - (o.y + o.height / 2);
+			return (s.x + s.width / 2) - (o.x + o.width / 2);
 		}
 	}
 	;
@@ -910,6 +970,11 @@ public enum PieceKind implements Measure
 			}
 		}
 		return null;
+	}
+
+	public boolean checkValid(Rectangle s, Rectangle o)
+	{
+		return true;
 	}
 
 	protected boolean selfNeedOne()

@@ -107,7 +107,7 @@ public enum Range
 		{
 			long min = Math.min(a, b);
 			long max = Math.max(a, b);
-			return min < x && x < max;
+			return min <= x && x <= max;
 		}
 
 		@Override

@@ -118,16 +118,35 @@ public class LayoutWizard extends AbstractWizard
 	private BorderPane        bpView;
 	private AbstractEvaluator evaluator;
 
-	private CheckBox cbNumber;
-	private CheckBox cbLess;
-	private CheckBox cbGreat;
-	private CheckBox cbAbout;
-	private CheckBox cbBetween;
-	private ToggleGroup toggleGroup = new ToggleGroup();
+	private ToggleGroup distanceGroup;
+	private ToggleGroup allOrSignificantGroup;
+	private HBox boxWithRadioButtons;
+	private RadioButton rbNumber;
+	private RadioButton rbLess;
+	private RadioButton rbGreat;
+	private RadioButton rbAbout;
+	private RadioButton rbBetween;
 
-	private HBox boxWithCheckBoxes;
+	private RadioButton rbAll;
+	private RadioButton rbSignificant;
+
+	private ToggleGroup viewGroup = new ToggleGroup();
+
+	private CheckBox cbVisible;
+	private CheckBox cbCount;
+	private CheckBox cbWidthHeight;
+	private CheckBox cbContains;
+	private CheckBox cbNear;
+	private CheckBox cbIn;
+	private CheckBox cbOn;
+	private CheckBox cbAligned;
+	private CheckBox cbVCentered;
+	private CheckBox cbHCentered;
+
+	private HBox boxWithFunctions;
 
 	private Map<PieceKind, Image> map = new HashMap<>();
+	List<Rectangle> topRectangles;
 
 	//region AbstractWizard methods
 	@Override
@@ -161,6 +180,8 @@ public class LayoutWizard extends AbstractWizard
 	@Override
 	protected void initDialog(BorderPane borderPane)
 	{
+		fillMap();
+
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 		double height = screenSize.getHeight() - 150;
 		borderPane.setMinHeight(height);
@@ -203,7 +224,7 @@ public class LayoutWizard extends AbstractWizard
 		sp.setContent(this.checkGrid);
 		sp.setFitToWidth(true);
 		sp.setFitToHeight(true);
-		this.main.add(sp, 0, 3);
+		this.main.add(sp, 0, 4);
 
 		ColumnConstraints c0 = new ColumnConstraints();
 		c0.setPercentWidth(70.0);
@@ -223,8 +244,8 @@ public class LayoutWizard extends AbstractWizard
 
 		Supplier<RowConstraints> createBigRow = () -> {
 			RowConstraints r1 = new RowConstraints();
-			r1.setMinHeight((height - smallRow * 2 - 4 * 8 - errorRow) / 2);
-			r1.setPrefHeight((height - smallRow * 2 - 4 * 8 - errorRow) / 2);
+			r1.setMinHeight((height - smallRow * 3 - 4 * 8 - errorRow) / 2);
+			r1.setPrefHeight((height - smallRow * 3 - 4 * 8 - errorRow) / 2);
 			r1.setVgrow(Priority.SOMETIMES);
 			r1.setPercentHeight(-1);
 			return r1;
@@ -258,23 +279,101 @@ public class LayoutWizard extends AbstractWizard
 		//region scan and checkboxes
 		{
 			this.main.getRowConstraints().addAll(createSmallRow.get());
+			this.main.getRowConstraints().addAll(createSmallRow.get());
 
-			this.boxWithCheckBoxes = new HBox();
+			this.boxWithRadioButtons = new HBox();
 			HBox cbBoxes = new HBox();
+			this.distanceGroup = new ToggleGroup();
 
-			this.cbNumber = new CheckBox("Number");
-			this.cbNumber.setSelected(true); // default value
-			this.cbAbout = new CheckBox("About");
-			this.cbLess = new CheckBox("Less");
-			this.cbGreat = new CheckBox("Great");
-			this.cbBetween = new CheckBox("Between");
+			this.rbNumber = new RadioButton("Number");
+			this.rbNumber.setToggleGroup(this.distanceGroup);
+			this.rbNumber.setSelected(true); // default value
+			this.rbAbout = new RadioButton("About");
+			this.rbAbout.setToggleGroup(this.distanceGroup);
+			this.rbLess = new RadioButton("Less");
+			this.rbLess.setToggleGroup(this.distanceGroup);
+			this.rbGreat = new RadioButton("Great");
+			this.rbGreat.setToggleGroup(this.distanceGroup);
+			this.rbBetween = new RadioButton("Between");
+			this.rbBetween.setToggleGroup(this.distanceGroup);
 
-			cbBoxes.getChildren().addAll(this.cbNumber, Common.createSpacer(Common.SpacerEnum.HorizontalMin), this.cbAbout, Common.createSpacer(Common.SpacerEnum.HorizontalMin), this.cbLess, Common.createSpacer(Common.SpacerEnum.HorizontalMin), this.cbGreat, Common.createSpacer(Common.SpacerEnum.HorizontalMin), this.cbBetween);
+			cbBoxes.getChildren().addAll(
+					new Label("Select distance : ")
+					, Common.createSpacer(Common.SpacerEnum.HorizontalMid)
+					, Common.createSpacer(Common.SpacerEnum.HorizontalMin)
+					, this.rbNumber
+					, Common.createSpacer(Common.SpacerEnum.HorizontalMin)
+					, this.rbAbout
+					, Common.createSpacer(Common.SpacerEnum.HorizontalMin)
+					, this.rbLess
+					, Common.createSpacer(Common.SpacerEnum.HorizontalMin)
+					, this.rbGreat
+					, Common.createSpacer(Common.SpacerEnum.HorizontalMin)
+					, this.rbBetween);
 
-			this.boxWithCheckBoxes.getChildren().addAll(cbBoxes, this.btnScan);
+			this.rbAll = new RadioButton("All");
+			this.allOrSignificantGroup = new ToggleGroup();
+			this.rbAll.setToggleGroup(this.allOrSignificantGroup);
+			this.rbSignificant = new RadioButton("Significant");
+			this.rbSignificant.setToggleGroup(this.allOrSignificantGroup);
+			this.rbAll.setSelected(true);
+
+			cbBoxes.getChildren().addAll(
+					  Common.createSpacer(Common.SpacerEnum.HorizontalMin)
+					, new Separator(Orientation.VERTICAL)
+					, new Label("Use distances : ")
+					, Common.createSpacer(Common.SpacerEnum.HorizontalMin)
+					, this.rbAll
+					, Common.createSpacer(Common.SpacerEnum.HorizontalMin)
+					, this.rbSignificant
+			);
+			cbBoxes.setAlignment(Pos.CENTER_LEFT);
+			this.boxWithRadioButtons.getChildren().addAll(cbBoxes, this.btnScan);
 			HBox.setHgrow(cbBoxes, Priority.ALWAYS);
-			this.boxWithCheckBoxes.setAlignment(Pos.CENTER_LEFT);
-			this.main.add(this.boxWithCheckBoxes, 0, 2, 2, 1);
+			this.boxWithRadioButtons.setAlignment(Pos.CENTER_LEFT);
+			this.main.add(this.boxWithRadioButtons, 0, 2, 2, 1);
+
+			this.boxWithFunctions = new HBox();
+
+			this.cbVisible = new CheckBox();
+			this.cbVisible.setGraphic(new ImageView(this.map.get(PieceKind.VISIBLE)));
+
+			this.cbCount = new CheckBox();
+			this.cbCount.setGraphic(new ImageView(this.map.get(PieceKind.COUNT)));
+
+			this.cbWidthHeight = new CheckBox();
+			this.cbWidthHeight.setGraphic(new ImageView(this.map.get(PieceKind.WIDTH)));
+
+			this.cbContains = new CheckBox();
+			this.cbContains.setGraphic(new ImageView(this.map.get(PieceKind.CONTAINS)));
+
+			this.cbNear = new CheckBox();
+			this.cbNear.setGraphic(new ImageView(this.map.get(PieceKind.LEFT)));
+
+			this.cbIn = new CheckBox();
+			this.cbIn.setGraphic(new ImageView(this.map.get(PieceKind.INSIDE_LEFT)));
+
+			this.cbOn = new CheckBox();
+			this.cbOn.setGraphic(new ImageView(this.map.get(PieceKind.ON_LEFT)));
+
+			this.cbAligned = new CheckBox();
+			this.cbAligned.setGraphic(new ImageView(this.map.get(PieceKind.LEFT_ALIGNED)));
+
+			this.cbVCentered = new CheckBox();
+			this.cbVCentered.setGraphic(new ImageView(this.map.get(PieceKind.VERTICAL_CENTERED)));
+
+			this.cbHCentered = new CheckBox();
+			this.cbHCentered.setGraphic(new ImageView(this.map.get(PieceKind.HORIZONTAL_CENTERED)));
+
+			this.boxWithFunctions.getChildren().add(new Label("Select functions : "));
+
+			Stream.of(this.cbVisible,this.cbCount,this.cbWidthHeight,this.cbContains,this.cbNear,this.cbIn,this.cbOn,this.cbAligned,this.cbVCentered, this.cbHCentered)
+					.forEach(cb -> {
+						cb.setSelected(true);
+						this.boxWithFunctions.getChildren().addAll(Common.createSpacer(Common.SpacerEnum.HorizontalMax), cb);
+					});
+			this.boxWithFunctions.setAlignment(Pos.CENTER_LEFT);
+			this.main.add(this.boxWithFunctions, 0, 3, 2, 1);
 		}
 		//endregion
 
@@ -287,7 +386,7 @@ public class LayoutWizard extends AbstractWizard
 			this.checkGrid.add(pane, 0, 0);
 
 			this.bpView = new BorderPane();
-			this.main.add(this.bpView, 1, 3);
+			this.main.add(this.bpView, 1, 4);
 		}
 		//endregion
 
@@ -304,7 +403,7 @@ public class LayoutWizard extends AbstractWizard
 
 			this.main.getRowConstraints().addAll(r0);
 
-			this.main.add(this.errorArea, 0, 4, 2, 1);
+			this.main.add(this.errorArea, 0, 5, 2, 1);
 
 		}
 		//endregion
@@ -314,11 +413,10 @@ public class LayoutWizard extends AbstractWizard
 		this.cbConnections.getItems().setAll(WizardCommonHelper.getAllConnections(this.matrix.getFactory().getConfiguration()));
 
 		this.btnScan.setDisable(true);
-		this.boxWithCheckBoxes.setDisable(true);
+		this.boxWithRadioButtons.setDisable(true);
+		this.boxWithFunctions.setDisable(true);
 		hideTableAndView();
 		listeners();
-
-		fillMap();
 	}
 
 	@Override
@@ -364,16 +462,16 @@ public class LayoutWizard extends AbstractWizard
 
 	private void fillMap()
 	{
-		this.addToMap(new Image("/com/exactprosystems/jf/tool/wizard/all/layoutWizardIcons/9.png"),  PieceKind.VISIBLE); 					// v - visible
-		this.addToMap(new Image("/com/exactprosystems/jf/tool/wizard/all/layoutWizardIcons/10.png"), PieceKind.COUNT);   					// c - count
-		this.addToMap(new Image("/com/exactprosystems/jf/tool/wizard/all/layoutWizardIcons/1.png"),  PieceKind.WIDTH, PieceKind.HEIGHT);	// S - size
-		this.addToMap(new Image("/com/exactprosystems/jf/tool/wizard/all/layoutWizardIcons/2.png"),  PieceKind.CONTAINS);					// c - contains
-		this.addToMap(new Image("/com/exactprosystems/jf/tool/wizard/all/layoutWizardIcons/3.png"),  PieceKind.LEFT, PieceKind.RIGHT, PieceKind.TOP, PieceKind.BOTTOM); // D - distance
-		this.addToMap(new Image("/com/exactprosystems/jf/tool/wizard/all/layoutWizardIcons/4.png"),  PieceKind.INSIDE_LEFT, PieceKind.INSIDE_RIGHT, PieceKind.INSIDE_TOP, PieceKind.INSIDE_BOTTOM); // I - inside
-		this.addToMap(new Image("/com/exactprosystems/jf/tool/wizard/all/layoutWizardIcons/5.png"),  PieceKind.ON_LEFT, PieceKind.ON_RIGHT, PieceKind.ON_TOP, PieceKind.ON_BOTTOM); // O - on
-		this.addToMap(new Image("/com/exactprosystems/jf/tool/wizard/all/layoutWizardIcons/6.png"),  PieceKind.LEFT_ALIGNED, PieceKind.RIGHT_ALIGNED, PieceKind.TOP_ALIGNED, PieceKind.BOTTOM_ALIGNED); //A - align
-		this.addToMap(new Image("/com/exactprosystems/jf/tool/wizard/all/layoutWizardIcons/7.png"),  PieceKind.HORIZONTAL_CENTERED, PieceKind.VERTICAL_CENTERED); // R - centeRed
-		this.addToMap(new Image("/com/exactprosystems/jf/tool/wizard/all/layoutWizardIcons/8.png"),  PieceKind.VERTICAL_CENTERED); // R - centeRed
+		this.addToMap(new Image("/com/exactprosystems/jf/tool/wizard/all/icons/visible.png"), 			PieceKind.VISIBLE); 					// v - visible
+		this.addToMap(new Image("/com/exactprosystems/jf/tool/wizard/all/icons/count.png"), 			PieceKind.COUNT);   					// c - count
+		this.addToMap(new Image("/com/exactprosystems/jf/tool/wizard/all/icons/widthHeight.png"),  		PieceKind.WIDTH, PieceKind.HEIGHT);	// S - size
+		this.addToMap(new Image("/com/exactprosystems/jf/tool/wizard/all/icons/contains.png"),  		PieceKind.CONTAINS);					// c - contains
+		this.addToMap(new Image("/com/exactprosystems/jf/tool/wizard/all/icons/near.png"),  			PieceKind.LEFT, PieceKind.RIGHT, PieceKind.TOP, PieceKind.BOTTOM); // D - distance
+		this.addToMap(new Image("/com/exactprosystems/jf/tool/wizard/all/icons/in.png"),  				PieceKind.INSIDE_LEFT, PieceKind.INSIDE_RIGHT, PieceKind.INSIDE_TOP, PieceKind.INSIDE_BOTTOM); // I - inside
+		this.addToMap(new Image("/com/exactprosystems/jf/tool/wizard/all/icons/on.png"),  				PieceKind.ON_LEFT, PieceKind.ON_RIGHT, PieceKind.ON_TOP, PieceKind.ON_BOTTOM); // O - on
+		this.addToMap(new Image("/com/exactprosystems/jf/tool/wizard/all/icons/align.png"),  			PieceKind.LEFT_ALIGNED, PieceKind.RIGHT_ALIGNED, PieceKind.TOP_ALIGNED, PieceKind.BOTTOM_ALIGNED); //A - align
+		this.addToMap(new Image("/com/exactprosystems/jf/tool/wizard/all/icons/horizontalCentered.png"),PieceKind.HORIZONTAL_CENTERED); // R - centeRed
+		this.addToMap(new Image("/com/exactprosystems/jf/tool/wizard/all/icons/verticalCentered.png"),  PieceKind.VERTICAL_CENTERED); // R - centeRed
 	}
 
 	private void addToMap(Image image, PieceKind ... kinds)
@@ -486,6 +584,7 @@ public class LayoutWizard extends AbstractWizard
 			hideTableAndView();
 			if (newDialog != null)
 			{
+				this.cbDialogs.setDisable(true);
 				this.imageViewWithScale.removeCurrentImage();
 				boolean removeIf = this.main.getChildren().removeIf(node -> node == this.waitText);
 				if (removeIf)
@@ -499,6 +598,7 @@ public class LayoutWizard extends AbstractWizard
 
 				this.wizardLoader = new WizardLoader(this.appConnection, newDialog.getSelfControl(), (image, doc) ->
 				{
+					this.cbDialogs.setDisable(false);
 					Collection<IControl> controls = newDialog.getControls(IWindow.SectionKind.Run);
 					this.lvControls.getItems().setAll(
 							controls.stream()
@@ -548,8 +648,9 @@ public class LayoutWizard extends AbstractWizard
 								this.lvControls.refresh();
 							}));
 				}
-						, ex ->
+				, ex ->
 				{
+					this.cbDialogs.setDisable(false);
 					String message = ex.getMessage();
 					if (ex.getCause() instanceof JFRemoteException)
 					{
@@ -560,7 +661,8 @@ public class LayoutWizard extends AbstractWizard
 				this.wizardLoader.start();
 				this.currentWindow = newDialog;
 				this.btnScan.setDisable(false);
-				this.boxWithCheckBoxes.setDisable(false);
+				this.boxWithRadioButtons.setDisable(false);
+				this.boxWithFunctions.setDisable(false);
 			}
 			else
 			{
@@ -588,7 +690,7 @@ public class LayoutWizard extends AbstractWizard
 		box.getChildren().addAll(indicator, new Text("Creating table..."));
 
 		this.checkGrid.setVisible(false);
-		this.main.add(box, 0, 3);
+		this.main.add(box, 0, 4);
 
 		Optional.ofNullable(this.scanTask).ifPresent(Task::cancel);
 
@@ -607,7 +709,8 @@ public class LayoutWizard extends AbstractWizard
 			this.cbConnections.setDisable(flag);
 			this.cbDialogs.setDisable(flag);
 			this.btnScan.setDisable(flag);
-			this.boxWithCheckBoxes.setDisable(flag);
+			this.boxWithRadioButtons.setDisable(flag);
+			this.boxWithFunctions.setDisable(flag);
 		};
 		setDisable.accept(true);
 
@@ -682,21 +785,32 @@ public class LayoutWizard extends AbstractWizard
 				.forEach(i ->
 				{
 					String id = collect.get(i - 1).getID();
-					this.checkGrid.add(new TopText(id), 0, i);
+					this.checkGrid.add(new TopText(id), 0, collect.size() - i + 1);
 					this.checkGrid.add(new Text(id), i, 0);
 				}));
 
 		List<RelationButton> list = new ArrayList<>();
-
-		for (IControl top : collect)
+		this.topRectangles = new ArrayList<>();
+		for (int i = 0; i < collect.size(); i++)
 		{
-			for (IControl left : collect)
+			IControl top = collect.get(i);
+			for (int j = collect.size() - 1; j >= 0; j--)
 			{
+				IControl left = collect.get(j);
 				if (this.scanTask.isCancelled())
 				{
 					return Collections.emptyList();
 				}
-				list.add(this.createRelation(top, left));
+				RelationButton relation;
+				if (i > j)
+				{
+					relation = emptyButton();
+				}
+				else
+				{
+					relation = this.createRelation(top, left);
+				}
+				list.add(relation);
 			}
 		}
 		return list;
@@ -705,8 +819,17 @@ public class LayoutWizard extends AbstractWizard
 	private RelationButton createRelation(IControl top, IControl left)
 	{
 		RelationButton btn = new RelationButton(createFormula(top, left), top, left);
-		btn.setToggleGroup(this.toggleGroup);
+		btn.setToggleGroup(this.viewGroup);
 		btn.setOnAction(e -> this.bpView.setCenter(btn.createView()));
+		return btn;
+	}
+
+	private RelationButton emptyButton()
+	{
+		RelationButton btn = new RelationButton();
+		btn.setToggleGroup(this.viewGroup);
+		btn.setVisible(false);
+		btn.setDisable(true);
 		return btn;
 	}
 
@@ -735,69 +858,80 @@ public class LayoutWizard extends AbstractWizard
 		{
 			return Spec.create().invisible();
 		}
-		//same control
+
 		Spec spec = Spec.create();
+		//same control
 		if (topControl == leftControl)
 		{
-			spec.visible().count(1);
-			addSpecs(top.getHeight(), spec::height, spec::height);
-			addSpecs(top.getWidth(), spec::width, spec::width);
+			if (this.cbVisible.isSelected())
+			{
+				spec.visible();
+			}
+			if (this.cbCount.isSelected())
+			{
+				spec.count(1);
+			}
+			if (this.cbWidthHeight.isSelected())
+			{
+				addSpecs(top.getHeight(), spec::height, spec::height);
+				addSpecs(top.getWidth(), spec::width, spec::width);
+			}
 
 			return spec;
 		}
 		else
 		{
 			//check full contains
-			if (!(top.x > left.x || (top.x + top.width) < (left.x + left.width) || top.y > left.y || (top.y + top.height) < (left.y + left.height)))
+			if (!(top.x > left.x || (top.x + top.width) < (left.x + left.width) || top.y > left.y || (top.y + top.height) < (left.y + left.height)) && this.cbContains.isSelected())
 			{
 				spec.contains(leftId);
 			}
 
-			addSpecsAnother(PieceKind.LEFT, top, left, leftId, spec::left, spec::left);
-			addSpecsAnother(PieceKind.RIGHT, top, left, leftId, spec::right, spec::right);
-			addSpecsAnother(PieceKind.TOP, top, left, leftId, spec::top, spec::top);
-			addSpecsAnother(PieceKind.BOTTOM, top, left, leftId, spec::bottom, spec::bottom);
+			addSpecsAnother(PieceKind.LEFT, top, left, leftId, spec::left, spec::left, this.cbNear);
+			addSpecsAnother(PieceKind.RIGHT, top, left, leftId, spec::right, spec::right, this.cbNear);
+			addSpecsAnother(PieceKind.TOP, top, left, leftId, spec::top, spec::top, this.cbNear);
+			addSpecsAnother(PieceKind.BOTTOM, top, left, leftId, spec::bottom, spec::bottom, this.cbNear);
 
-			addSpecsAnother(PieceKind.INSIDE_LEFT, top, left, leftId, spec::inLeft, spec::inLeft);
-			addSpecsAnother(PieceKind.INSIDE_RIGHT, top, left, leftId, spec::inRight, spec::inRight);
-			addSpecsAnother(PieceKind.INSIDE_TOP, top, left, leftId, spec::inTop, spec::inTop);
-			addSpecsAnother(PieceKind.INSIDE_BOTTOM, top, left, leftId, spec::inBottom, spec::inBottom);
+			addSpecsAnother(PieceKind.INSIDE_LEFT, top, left, leftId, spec::inLeft, spec::inLeft, this.cbIn);
+			addSpecsAnother(PieceKind.INSIDE_RIGHT, top, left, leftId, spec::inRight, spec::inRight, this.cbIn);
+			addSpecsAnother(PieceKind.INSIDE_TOP, top, left, leftId, spec::inTop, spec::inTop, this.cbIn);
+			addSpecsAnother(PieceKind.INSIDE_BOTTOM, top, left, leftId, spec::inBottom, spec::inBottom, this.cbIn);
 
-			addSpecsAnother(PieceKind.ON_LEFT, top, left, leftId, spec::onLeft, spec::onLeft);
-			addSpecsAnother(PieceKind.ON_RIGHT, top, left, leftId, spec::onRight, spec::onRight);
-			addSpecsAnother(PieceKind.ON_TOP, top, left, leftId, spec::onTop, spec::onTop);
-			addSpecsAnother(PieceKind.ON_BOTTOM, top, left, leftId, spec::onBottom, spec::onBottom);
+			addSpecsAnother(PieceKind.ON_LEFT, top, left, leftId, spec::onLeft, spec::onLeft, this.cbOn);
+			addSpecsAnother(PieceKind.ON_RIGHT, top, left, leftId, spec::onRight, spec::onRight, this.cbOn);
+			addSpecsAnother(PieceKind.ON_TOP, top, left, leftId, spec::onTop, spec::onTop, this.cbOn);
+			addSpecsAnother(PieceKind.ON_BOTTOM, top, left, leftId, spec::onBottom, spec::onBottom, this.cbOn);
 
-			addSpecsAnother(PieceKind.LEFT_ALIGNED, top, left, leftId, spec::lAlign, spec::lAlign);
-			addSpecsAnother(PieceKind.RIGHT_ALIGNED, top, left, leftId, spec::rAlign, spec::rAlign);
-			addSpecsAnother(PieceKind.TOP_ALIGNED, top, left, leftId, spec::tAlign, spec::tAlign);
-			addSpecsAnother(PieceKind.BOTTOM_ALIGNED, top, left, leftId, spec::bAlign, spec::bAlign);
+			addSpecsAnother(PieceKind.LEFT_ALIGNED, top, left, leftId, spec::lAlign, spec::lAlign, this.cbAligned, true);
+			addSpecsAnother(PieceKind.RIGHT_ALIGNED, top, left, leftId, spec::rAlign, spec::rAlign, this.cbAligned, true);
+			addSpecsAnother(PieceKind.TOP_ALIGNED, top, left, leftId, spec::tAlign, spec::tAlign, this.cbAligned, true);
+			addSpecsAnother(PieceKind.BOTTOM_ALIGNED, top, left, leftId, spec::bAlign, spec::bAlign, this.cbAligned, true);
 
-			addSpecsAnother(PieceKind.HORIZONTAL_CENTERED, top, left, leftId, spec::hCenter, spec::hCenter);
-			addSpecsAnother(PieceKind.VERTICAL_CENTERED, top, left, leftId, spec::vCenter, spec::vCenter);
+			addSpecsAnother(PieceKind.HORIZONTAL_CENTERED, top, left, leftId, spec::hCenter, spec::hCenter, this.cbHCentered, true);
+			addSpecsAnother(PieceKind.VERTICAL_CENTERED, top, left, leftId, spec::vCenter, spec::vCenter, this.cbVCentered, true);
 		}
 		return spec;
 	}
 
 	private void addSpecs(Number n, Consumer<Number> c0, Consumer<CheckProvider> c1)
 	{
-		if (this.cbNumber.isSelected())
+		if (this.rbNumber.isSelected())
 		{
 			c0.accept(n);
 		}
-		if (this.cbAbout.isSelected())
+		if (this.rbAbout.isSelected())
 		{
 			c1.accept(DoSpec.about(n));
 		}
-		if (this.cbLess.isSelected())
+		if (this.rbLess.isSelected())
 		{
 			c1.accept(DoSpec.less(n.longValue() + 1));
 		}
-		if (this.cbGreat.isSelected())
+		if (this.rbGreat.isSelected())
 		{
 			c1.accept(DoSpec.great(n.longValue() - 1));
 		}
-		if (this.cbBetween.isSelected())
+		if (this.rbBetween.isSelected())
 		{
 			c1.accept(DoSpec.between(0, n.longValue() * 2));
 		}
@@ -805,34 +939,53 @@ public class LayoutWizard extends AbstractWizard
 
 	private void addSpecsAnother(Number n, String another, BiConsumer<String, Number> c0, BiConsumer<String, CheckProvider> c1)
 	{
-		if (this.cbNumber.isSelected())
+		if (this.rbNumber.isSelected())
 		{
 			c0.accept(another, n);
 		}
-		if (this.cbAbout.isSelected())
+		if (this.rbAbout.isSelected())
 		{
 			c1.accept(another, DoSpec.about(n));
 		}
-		if (this.cbLess.isSelected())
+		if (this.rbLess.isSelected())
 		{
 			c1.accept(another, DoSpec.less(n.longValue() + 1));
 		}
-		if (this.cbGreat.isSelected())
+		if (this.rbGreat.isSelected())
 		{
 			c1.accept(another, DoSpec.great(n.longValue() - 1));
 		}
-		if (this.cbBetween.isSelected())
+		if (this.rbBetween.isSelected())
 		{
 			c1.accept(another, DoSpec.between(0, n.longValue() * 2));
 		}
 	}
 
-	private void addSpecsAnother(PieceKind kind, Rectangle top, Rectangle left, String leftId, BiConsumer<String, Number> c0, BiConsumer<String, CheckProvider> c1)
+	private void addSpecsAnother(PieceKind kind, Rectangle top, Rectangle left, String leftId, BiConsumer<String, Number> c0, BiConsumer<String, CheckProvider> c1, CheckBox cb)
 	{
-		int distance;
-		if ((distance = kind.distance(top, left)) > 0)
+		this.addSpecsAnother(kind, top, left, leftId, c0, c1, cb, false);
+	}
+
+	private void addSpecsAnother(PieceKind kind, Rectangle top, Rectangle left, String leftId, BiConsumer<String, Number> c0, BiConsumer<String, CheckProvider> c1, CheckBox cb, boolean strong)
+	{
+		if (cb.isSelected() && kind.checkValid(top, left))
 		{
-			addSpecsAnother(distance, leftId, c0, c1);
+			int distance = kind.distance(top, left);
+			if (this.rbAll.isSelected())
+			{
+				addSpecsAnother(distance, leftId, c0, c1);
+			}
+			else
+			{
+				if (strong && distance == 0)
+				{
+					addSpecsAnother(distance, leftId, c0, c1);
+				}
+				else if (!strong && distance > 0)
+				{
+					addSpecsAnother(distance, leftId, c0, c1);
+				}
+			}
 		}
 	}
 
@@ -923,6 +1076,11 @@ public class LayoutWizard extends AbstractWizard
 		private String leftName;
 		private IControl control;
 		private VBox boxWithFields;
+
+		public RelationButton()
+		{
+			super();
+		}
 
 		public RelationButton(Spec formula, IControl topControl, IControl leftControl)
 		{
@@ -1098,6 +1256,10 @@ public class LayoutWizard extends AbstractWizard
 		 */
 		public List<String> checkFormula()
 		{
+			if (this.control == null)
+			{
+				return null;
+			}
 			try
 			{
 				CheckingLayoutResult res = this.control.checkLayout(service(), currentWindow, this.formula);
@@ -1126,7 +1288,7 @@ public class LayoutWizard extends AbstractWizard
 					.collect(Collectors.toList());
 
 			StringBuilder doSpecString = new StringBuilder(DoSpec.class.getSimpleName());
-			Spec func = null;
+			Spec func = Spec.create();
 			for (String piece : pieces)
 			{
 				if (piece.isEmpty())
