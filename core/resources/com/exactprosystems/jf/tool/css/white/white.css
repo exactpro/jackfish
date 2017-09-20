@@ -137,6 +137,12 @@
 	-fx-background-color : #d0d0d0;
 
 }
+
+.simpleItem.trueOffItem:customSelectedState {
+	-fx-background-color : #bebebe;
+
+}
+
 .falseOffItem {
 	-fx-background-color : transparent;
 
@@ -231,14 +237,32 @@
 	-fx-background-color : rgb(74, 110, 58,0.2)
 
 }
+
+.itemPassed.simpleItem:customSelectedState {
+	-fx-background-color : rgb(74, 110, 58,0.3)
+
+}
+
 .itemFailed {
 	-fx-background-color : rgb(205, 92, 92, 0.2)
 
 }
+
+.itemFailed.simpleItem:customSelectedState {
+	-fx-background-color : rgb(205, 92, 92, 0.3)
+
+}
+
 .itemExecuting {
 	-fx-background-color : rgb(42, 117, 150, 0.1)
 
 }
+
+.itemExecuting.simpleItem:customSelectedState {
+	-fx-background-color : rgb(42, 117, 150, 0.3)
+
+}
+
 .waitsLabel {
 	-fx-text-fill : orange;
 	-fx-opacity : 0.5;

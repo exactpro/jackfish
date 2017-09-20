@@ -26,7 +26,7 @@ import java.util.function.Supplier;
         category 			= WizardCategory.MATRIX,
         shortDescription 	= "This wizard makes it easier to work with tables.",
         detailedDescription = "{{`This wizard allowed for TableLoadFromFile action.`}}" +
-                "{{`With his help, you can change the table directly in the matrix, without the need to using other tools.`}}",
+                "{{`With it, you can change a table directly in the matrix, without using other tools.`}}",
         experimental 		= false,
         strongCriteries 	= false,
         criteries 			= { ActionItem.class, MatrixFx.class }

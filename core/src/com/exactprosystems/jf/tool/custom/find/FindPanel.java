@@ -110,6 +110,7 @@ public class FindPanel<T> extends BorderPane
 			}
 			else
 			{
+				this.results.clear();
 				lblFind.setText("Found 0");
 			}
 		}));
@@ -141,6 +142,7 @@ public class FindPanel<T> extends BorderPane
 					currentElement = results.size() - 1;
 				}
 				iFind.find(results.get(currentElement));
+				this.lblFind.setText(currentElement + 1 + " of " + results.size());
 			}
 		});
 
@@ -154,6 +156,7 @@ public class FindPanel<T> extends BorderPane
 					currentElement = 0;
 				}
 				iFind.find(results.get(currentElement));
+				this.lblFind.setText(currentElement + 1 + " of " + results.size());
 			}
 		});
 		results = new ArrayList<>();

@@ -21,6 +21,7 @@ import com.sun.javafx.scene.control.skin.TreeTableViewSkin;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.ListChangeListener;
+import javafx.concurrent.Task;
 import javafx.scene.AccessibleAttribute;
 import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
@@ -97,22 +98,32 @@ public class MatrixTreeView extends TreeTableView<MatrixItem>
 	{
 		if (treeItem != null)
 		{
-			Platform.runLater(() -> {
-				TreeItem<MatrixItem> parent = treeItem.getParent();
-				while (parent != null)
+
+			TreeItem<MatrixItem> parent = treeItem.getParent();
+			while (parent != null)
+			{
+		        parent.setExpanded(true);
+				parent = parent.getParent();
+			}
+			if (needExpand)
+			{
+				expand(treeItem, !this.needExpand);
+			}
+			final int row = getRow(treeItem);
+			Task<Void> task = new Task<Void>()
+			{
+				@Override
+				protected Void call() throws Exception
 				{
-			        parent.setExpanded(true);
-					parent = parent.getParent();
+					Thread.sleep(30);
+					return null;
 				}
-				if (needExpand)
-				{
-					expand(treeItem, !this.needExpand);
-				}
-				final int row = getRow(treeItem);
+			};
+			task.setOnSucceeded(event -> {
 				getSelectionModel().clearAndSelect(row);
-				tryCatch(() -> Thread.sleep(100), "Error sleep");
 				scrollTo(row);
 			});
+			new Thread(task).start();
 		}
 	}
 
@@ -416,7 +427,7 @@ public class MatrixTreeView extends TreeTableView<MatrixItem>
 
 		public void show(int index)
 		{
-			Platform.runLater(() -> flow.show(index));
+			flow.show(index);
 		}
 
 		public ScrollBar getVSB()
