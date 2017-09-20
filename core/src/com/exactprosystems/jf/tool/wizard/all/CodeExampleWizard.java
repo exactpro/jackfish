@@ -62,7 +62,7 @@ public class CodeExampleWizard extends AbstractWizard
 
 	private String textFromMatrix()
 	{
-		String string = "";
+		String string;
     	
 		try
 		{
@@ -95,15 +95,10 @@ public class CodeExampleWizard extends AbstractWizard
     @Override
     protected Supplier<List<WizardCommand>> getCommands()
     {
-        return () ->
-        {
-            List<WizardCommand> commands = CommandBuilder
-                    .start()
-                    .clipboard(this.text.getText())
-                    .build();
-            
-            return commands;
-        };
+        return () -> CommandBuilder
+                .start()
+                .clipboard(this.text.getText())
+                .build();
     }
 
     @Override

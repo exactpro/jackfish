@@ -22,7 +22,6 @@ public final class SpreadsheetColumn {
 
     private final SpreadsheetView spreadsheetView;
     final TableColumn<ObservableList<SpreadsheetCell>, SpreadsheetCell> column;
-	private final ContextMenu contextMenu;
     private final Integer indexColumn;
 
 	SpreadsheetColumn(final TableColumn<ObservableList<SpreadsheetCell>, SpreadsheetCell> column,final SpreadsheetView spreadsheetView, final Integer indexColumn, DataProvider provider) {
@@ -31,8 +30,7 @@ public final class SpreadsheetColumn {
 		column.setMinWidth(50);
 		this.indexColumn = indexColumn;
 
-		contextMenu = getColumnContextMenu();
-		column.setContextMenu(contextMenu);
+		column.setContextMenu(getColumnContextMenu());
 
 		provider.getColumnHeaders().addListener((Observable arg0) -> {
 			List<String> columnsHeader = spreadsheetView.getProvider().getColumnHeaders();
@@ -57,9 +55,11 @@ public final class SpreadsheetColumn {
         return column.getText();
     }
 
-    private ContextMenu getColumnContextMenu() {
-		ContextMenu contextMenu = new ContextMenu();
+    private ContextMenu getColumnContextMenu()
+	{
+		final ContextMenu contextMenu = new ContextMenu();
 		contextMenu.setAutoHide(true);
+
 		MenuItem addColumnBefore = new MenuItem("Add column before");
 		addColumnBefore.setOnAction(e -> this.spreadsheetView.addColumn(this.spreadsheetView.getColumns().indexOf(this)));
 

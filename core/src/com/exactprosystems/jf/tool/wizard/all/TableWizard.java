@@ -21,7 +21,7 @@ import java.util.function.Supplier;
 
 @WizardAttribute(
         name 				= "TableWizard ",
-        pictureName 		= "TableWizard.jpg",
+        pictureName 		= "TableWizard.png",
         category 			= WizardCategory.MATRIX,
         shortDescription 	= "This wizard makes it easier to work with tables.",
         detailedDescription = "You can change the table directly in the matrix, without having to need other tools.",
@@ -64,7 +64,7 @@ public class TableWizard extends AbstractWizard
 
     private boolean checkParameters(Parameters parameters)
     {
-        if(parameters.getByName(TableLoadFromFile.fileName).getExpression().isEmpty())
+        if (parameters.getByName(TableLoadFromFile.fileName).getExpression().isEmpty())
         {
             DialogsHelper.showError("No file name specified");
             return false;
@@ -80,15 +80,28 @@ public class TableWizard extends AbstractWizard
             return false;
         }
 
-        if(parameters.getByName(TableLoadFromFile.delimiterName) == null)
+        if (!this.fileName.contains("csv"))
+        {
+            DialogsHelper.showError("The file '" + this.fileName + "' is not a CSV");
+            return false;
+        }
+
+        if (parameters.getByName(TableLoadFromFile.delimiterName) == null)
         {
             this.delimiter = DefaultValuePool.Semicolon.toString().charAt(0);
         }
         else
         {
-            this.delimiter = parameters.getByName(TableLoadFromFile.delimiterName).toString().charAt(0);
+            try
+            {
+                this.delimiter = super.context.getEvaluator().evaluate(parameters.getByName(TableLoadFromFile.delimiterName).getExpression()).toString().charAt(0);
+            }
+            catch (Exception e)
+            {
+                DialogsHelper.showError("Incorrect delimiter");
+                return false;
+            }
         }
-
         return true;
     }
 
@@ -97,6 +110,7 @@ public class TableWizard extends AbstractWizard
     {
         DataProvider<String> provider = new TableDataProvider(this.table, (undo, redo) -> this.actionItem.getMatrix().addCommand(undo, redo));
         SpreadsheetView spreadsheetView = new SpreadsheetView(provider);
+        provider.displayFunction(spreadsheetView::display);
         borderPane.setCenter(spreadsheetView);
         borderPane.setPrefSize(800.0, 600.0);
         borderPane.setMinSize(800.0, 600.0);
@@ -105,7 +119,9 @@ public class TableWizard extends AbstractWizard
     @Override
     protected Supplier<List<WizardCommand>> getCommands()
     {
-        this.table.save(this.fileName, this.delimiter, false, false);
-        return () -> CommandBuilder.start().build();
+        return () -> CommandBuilder
+                .start()
+                .saveTable(this.table, this.fileName, this.delimiter)
+                .build();
     }
 }

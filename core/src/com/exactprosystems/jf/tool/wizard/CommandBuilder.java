@@ -22,6 +22,7 @@ import com.exactprosystems.jf.documents.matrix.Matrix;
 import com.exactprosystems.jf.documents.matrix.parser.Parameter;
 import com.exactprosystems.jf.documents.matrix.parser.Parser;
 import com.exactprosystems.jf.documents.matrix.parser.items.MatrixItem;
+import com.exactprosystems.jf.functions.Table;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.dictionary.DictionaryFx;
 import org.apache.log4j.Logger;
@@ -114,6 +115,12 @@ public class CommandBuilder
 		return this;
 	}
 
+    public CommandBuilder saveTable(Table table, String fileName, char delimiter)
+    {
+        this.commands.add(context -> table.save(fileName, delimiter, false, false));
+        return this;
+    }
+
 	public CommandBuilder replaceControl(Section section, IControl oldControl, IControl newControl)
 	{
 		this.commands.add(context -> 
@@ -152,10 +159,10 @@ public class CommandBuilder
 	
     public CommandBuilder createDocument(DocumentKind kind, String name)
     {
-        this.commands.add(context -> 
+        this.commands.add(context ->
         {
-            Common.tryCatch(() -> 
-            { 
+            Common.tryCatch(() ->
+            {
                 Document doc = context.getFactory().createDocument(kind, name);
             }, "Error on create " + name + " of kind " + kind);
         });
@@ -164,10 +171,10 @@ public class CommandBuilder
 
     public CommandBuilder loadDocument(Document doc)
     {
-        this.commands.add(context -> 
+        this.commands.add(context ->
         {
-            Common.tryCatch(() -> 
-            { 
+            Common.tryCatch(() ->
+            {
                 try (Reader reader = CommonHelper.readerFromFileName(doc.getNameProperty().get()))
                 {
                     doc.load(reader);
@@ -179,10 +186,10 @@ public class CommandBuilder
 
 	public CommandBuilder saveDocument(Document doc)
 	{
-		this.commands.add(context -> 
+		this.commands.add(context ->
 		{
-			Common.tryCatch(() -> 
-			{ 
+			Common.tryCatch(() ->
+			{
 			    doc.save(doc.getNameProperty().get());
 			    doc.close();
 			}, "Error on save " + doc.getNameProperty().get());
