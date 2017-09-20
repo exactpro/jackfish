@@ -25,7 +25,8 @@ import java.util.function.Supplier;
         pictureName 		= "TableWizard.png",
         category 			= WizardCategory.MATRIX,
         shortDescription 	= "This wizard makes it easier to work with tables.",
-        detailedDescription = "You can change the table directly in the matrix, without having to need other tools.",
+        detailedDescription = "{{`This wizard allowed for TableLoadFromFile action.`}}" +
+                "{{`With his help, you can change the table directly in the matrix, without the need to using other tools.`}}",
         experimental 		= false,
         strongCriteries 	= false,
         criteries 			= { ActionItem.class, MatrixFx.class }
