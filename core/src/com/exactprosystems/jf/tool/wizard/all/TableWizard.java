@@ -16,6 +16,7 @@ import com.exactprosystems.jf.tool.wizard.AbstractWizard;
 import com.exactprosystems.jf.tool.wizard.CommandBuilder;
 import javafx.scene.layout.BorderPane;
 
+import java.io.File;
 import java.util.*;
 import java.util.function.Supplier;
 
@@ -25,7 +26,7 @@ import java.util.function.Supplier;
         category 			= WizardCategory.MATRIX,
         shortDescription 	= "This wizard makes it easier to work with tables.",
         detailedDescription = "You can change the table directly in the matrix, without having to need other tools.",
-        experimental 		= true,
+        experimental 		= false,
         strongCriteries 	= false,
         criteries 			= { ActionItem.class, MatrixFx.class }
 )
@@ -66,7 +67,7 @@ public class TableWizard extends AbstractWizard
     {
         if (parameters.getByName(TableLoadFromFile.fileName).getExpression().isEmpty())
         {
-            DialogsHelper.showError("No file name specified");
+            DialogsHelper.showError("No file name specified.");
             return false;
         }
 
@@ -76,13 +77,19 @@ public class TableWizard extends AbstractWizard
         }
         catch (Exception e)
         {
-            DialogsHelper.showError("Error in filename");
+            DialogsHelper.showError("Error in filename.");
             return false;
         }
 
         if (!this.fileName.contains("csv"))
         {
-            DialogsHelper.showError("The file '" + this.fileName + "' is not a CSV");
+            DialogsHelper.showError("The file '" + this.fileName + "' is not a CSV.");
+            return false;
+        }
+
+        if (!new File(this.fileName).canWrite())
+        {
+            DialogsHelper.showError("The file '" + this.fileName + "' is read-only and can't be changed.");
             return false;
         }
 
@@ -98,7 +105,7 @@ public class TableWizard extends AbstractWizard
             }
             catch (Exception e)
             {
-                DialogsHelper.showError("Incorrect delimiter");
+                DialogsHelper.showError("Delimiter is incorrect or empty.");
                 return false;
             }
         }
