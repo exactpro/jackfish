@@ -76,11 +76,23 @@ import static com.exactprosystems.jf.tool.Common.bundle;
 				+ "{{`In top left corner will appear image of selected dialog.`}}"
 				+ "{{`Then you need to select one or more controls in the list or the image.`}}"
 				+ "{{`After it you may check options under image:`}}"
-				+ "{{`CheckBox {{$Number$}} - will generate DoSpec function with number. E.g. {{$DoSpec.width(10)$}}.`}}"
-				+ "{{`CheckBox {{$About$}} - will generate DoSpec function with function about. Boundary values from 90% to 110%. E.g. {{$DoSpec.width(about(10))$}}.`}}"
-				+ "{{`CheckBox {{$Less$}} - will generate DoSpec function with function less. E.g. {{$DoSpec.width(less(11))$}}.`}}"
-				+ "{{`CheckBox {{$Great$}} - will generate DoSpec function with function great. E.g. {{$DoSpec.width(great(9))$}}.`}}"
-				+ "{{`CheckBox {{$Between$}} - will generate DoSpec function with function great.Boundary values from 0% to 200% E.g. {{$DoSpec.width(between(0, 20))$}}.`}}"
+				+ "{{`RadioButton {{$Number$}} - will generate DoSpec function with number. E.g. {{$DoSpec.width(10)$}}.`}}"
+				+ "{{`RadioButton {{$About$}} - will generate DoSpec function with function about. Boundary values from 90% to 110%. E.g. {{$DoSpec.width(about(10))$}}.`}}"
+				+ "{{`RadioButton {{$Less$}} - will generate DoSpec function with function less. E.g. {{$DoSpec.width(less(11))$}}.`}}"
+				+ "{{`RadioButton {{$Great$}} - will generate DoSpec function with function great. E.g. {{$DoSpec.width(great(9))$}}.`}}"
+				+ "{{`RadioButton {{$Between$}} - will generate DoSpec function with function great.Boundary values from 0% to 200% E.g. {{$DoSpec.width(between(0, 20))$}}.`}}"
+				+ "{{`After you need choose which distance will generating : {{$All$}} or only {{$Significant$}}.`}}"
+				+ "{{`Then you may select or deselect group functions : `}}"
+				+ "{{`visible : {{*DoSpec.visible*}}`}}"
+				+ "{{`count : {{*DoSpec.count*}}`}}"
+				+ "{{`dimension : {{*DoSpec.width*}} and {{*DoSpec.height*}}`}}"
+				+ "{{`contains : {{*DoSpec.contains*}}`}}"
+				+ "{{`near : {{*DoSpec.left*}}, {{*DoSpec.right*}}, {{*DoSpec.top*}} and {{*DoSpec.bottom*}}`}}"
+				+ "{{`in-functions : {{*DoSpec.inLeft*}}, {{*DoSpec.inRight*}}, {{*DoSpec.inTop*}} and {{*DoSpec.inBottom*}}`}}"
+				+ "{{`on-functions : {{*DoSpec.onLeft*}}, {{*DoSpec.onRight*}}, {{*DoSpec.onTop*}} and {{*DoSpec.onBottom*}}`}}"
+				+ "{{`align : {{*DoSpec.lAlign*}}, {{*DoSpec.rAlign*}}, {{*DoSpec.tAlign*}} and {{*DoSpec.bAlign*}}`}}`}}"
+				+ "{{`horizontal centered : {{*DoSpec.hCentered*}}`}}"
+				+ "{{`vertical centered : {{*DoSpec.vCentered*}}`}}"
 				+ "{{`For selected controls will be generated the table with relations between controls.`}}"
 				+ "{{`User can see created relation by switching a toggle button at intersection controls.`}}"
 				+ "{{`User can edit created relation (add/remove/edit functions) and {{$save$}} it or {{$check$}}.`}}"
@@ -316,7 +328,7 @@ public class LayoutWizard extends AbstractWizard
 			this.rbAll.setToggleGroup(this.allOrSignificantGroup);
 			this.rbSignificant = new RadioButton("Significant");
 			this.rbSignificant.setToggleGroup(this.allOrSignificantGroup);
-			this.rbAll.setSelected(true);
+			this.rbSignificant.setSelected(true);
 
 			cbBoxes.getChildren().addAll(
 					  Common.createSpacer(Common.SpacerEnum.HorizontalMin)
@@ -441,7 +453,15 @@ public class LayoutWizard extends AbstractWizard
 		{
 			for (int j = 1; j < lines[i].length; j++)
 			{
-				lines[j][i] = iterator.next().toString();
+				Spec next = iterator.next();
+				if (next != null)
+				{
+					lines[j][i] = next.toString();
+				}
+				else
+				{
+					lines[j][i] = "";
+				}
 			}
 		}
 		CommandBuilder builder = CommandBuilder.start();
@@ -1295,7 +1315,7 @@ public class LayoutWizard extends AbstractWizard
 				{
 					continue;
 				}
-				if (checkRelationTask.isCancelled())
+				if (checkRelationTask != null && checkRelationTask.isCancelled())
 				{
 					return null;
 				}
@@ -1330,11 +1350,8 @@ public class LayoutWizard extends AbstractWizard
 		{
 			this.formula = formula;
 			Iterator<Piece> iterator = this.formula.iterator();
-			Set<Image> set = new HashSet<>();
-			iterator.forEachRemaining(piece ->
-			{
-				set.add(map.get(piece.getKind()));
-			});
+			Set<Image> set = new LinkedHashSet<>();
+			iterator.forEachRemaining(piece -> set.add(map.get(piece.getKind())));
 			FlowPane pane = new FlowPane();
 			pane.alignmentProperty().set(Pos.CENTER);
 			pane.getChildren().addAll(set.stream().map(ImageView::new).collect(Collectors.toList()));
