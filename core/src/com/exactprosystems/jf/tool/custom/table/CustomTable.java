@@ -9,6 +9,7 @@
 package com.exactprosystems.jf.tool.custom.table;
 
 import com.exactprosystems.jf.api.common.Str;
+import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.CssVariables;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
@@ -123,7 +124,7 @@ public class CustomTable<T> extends TableView<T>
 
 	public void update()
 	{
-		this.getColumns().forEach(column -> Platform.runLater(() -> {
+		this.getColumns().forEach(column -> Common.runLater(() -> {
 			column.setVisible(false);
 			column.setVisible(true);
 		}));
@@ -221,7 +222,7 @@ public class CustomTable<T> extends TableView<T>
 				textField.setText(getString());
 				setGraphic(textField);
 				setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
-				Platform.runLater(textField::requestFocus);
+				Common.runLater(textField::requestFocus);
 			}
 		}
 

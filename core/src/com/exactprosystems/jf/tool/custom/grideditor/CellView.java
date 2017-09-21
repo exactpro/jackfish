@@ -7,6 +7,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 package com.exactprosystems.jf.tool.custom.grideditor;
 
+import com.exactprosystems.jf.tool.Common;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -575,7 +576,7 @@ public class CellView extends TableCell<ObservableList<SpreadsheetCell>, Spreads
 		}
 		else
 		{
-			Platform.runLater(runnable);
+ 			Common.runLater(runnable);
 		}
 	}
 

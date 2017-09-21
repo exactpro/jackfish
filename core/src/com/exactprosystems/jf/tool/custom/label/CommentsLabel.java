@@ -44,7 +44,7 @@ public class CommentsLabel extends Label
 	public void requestFocus()
 	{
 		createTextArea();
-		Platform.runLater(textArea::requestFocus);
+		Common.runLater(textArea::requestFocus);
 	}
 
 	//============================================================

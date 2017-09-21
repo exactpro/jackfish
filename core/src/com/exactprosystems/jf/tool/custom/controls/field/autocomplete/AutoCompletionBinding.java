@@ -7,6 +7,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 package com.exactprosystems.jf.tool.custom.controls.field.autocomplete;
 
+import com.exactprosystems.jf.tool.Common;
 import com.sun.javafx.event.EventHandlerManager;
 import javafx.application.Platform;
 import javafx.beans.property.ObjectProperty;
@@ -158,7 +159,7 @@ public abstract class AutoCompletionBinding<T> implements EventTarget
 				}
 				if (!isCancelled())
 				{
-					Platform.runLater(() -> {
+					Common.runLater(() -> {
 						if (fetchedSuggestions != null && !fetchedSuggestions.isEmpty())
 						{
 							autoCompletionPopup.getSuggestions().setAll(fetchedSuggestions);

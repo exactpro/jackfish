@@ -143,7 +143,7 @@ public class UserEditTableDialog extends Dialog<Boolean>
 		grid.add(this.expressionLabel, 0, 1);
 		getDialogPane().setContent(grid);
 
-		Platform.runLater(tableView::requestFocus);
+		Common.runLater(tableView::requestFocus);
 	}
     
 }

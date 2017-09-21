@@ -9,6 +9,7 @@
 package com.exactprosystems.jf.tool.custom.xmltree;
 
 import com.exactprosystems.jf.documents.matrix.parser.SearchHelper;
+import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.CssVariables;
 import com.exactprosystems.jf.tool.wizard.related.MarkerStyle;
 import com.exactprosystems.jf.tool.wizard.related.XmlItem;
@@ -265,7 +266,7 @@ public class XmlTreeView extends AnchorPane
 
 	public void refresh()
 	{
-		Platform.runLater(() -> 
+		Common.runLater(() ->
 		{
 			this.treeTableView.getColumns().get(1).setVisible(false);
 			this.treeTableView.getColumns().get(1).setVisible(true);

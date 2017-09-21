@@ -191,7 +191,7 @@ public class ReportBrowser extends BorderPane
 
 					EventListener listener = evt ->
 					{
-						Platform.runLater(() -> {
+						Common.runLater(() -> {
 							EventTarget aElement = evt.getTarget();
 							if (aElement instanceof Element)
 							{
@@ -332,7 +332,7 @@ public class ReportBrowser extends BorderPane
 			int currentIndex = history.getCurrentIndex();
 			if (currentIndex > 0)
 			{
-				Platform.runLater(() -> history.go(-1));
+				Common.runLater(() -> history.go(-1));
 			}
 			String url = entryList.get(currentIndex > 0 ? currentIndex - 1 : currentIndex).getUrl();
 			this.engine.load(url);
@@ -345,7 +345,7 @@ public class ReportBrowser extends BorderPane
 			int currentIndex = history.getCurrentIndex();
 			if (currentIndex + 1 < this.engine.getHistory().getEntries().size())
 			{
-				Platform.runLater(() -> history.go(1));
+				Common.runLater(() -> history.go(1));
 			}
 			String url = entryList.get(currentIndex < entryList.size() - 1 ? currentIndex + 1 : currentIndex).getUrl();
 			this.engine.load(url);

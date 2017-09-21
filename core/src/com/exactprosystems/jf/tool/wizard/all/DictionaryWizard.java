@@ -438,7 +438,7 @@ public class DictionaryWizard extends AbstractWizard
 				this.xmlTreeView.displayDocument(this.document);
 				List<Rectangle> list = XpathUtils.collectAllRectangles(this.document);
 				this.imageViewWithScale.setListForSearch(list);
-				Platform.runLater(() -> findElements(false));
+				Common.runLater(() -> findElements(false));
 			},
 			ex ->
 			{
@@ -886,14 +886,14 @@ public class DictionaryWizard extends AbstractWizard
 							}
 
 							Thread.sleep(200);
-							Platform.runLater(() -> lblInfo.setText("Start updating item " + ++count[0] + " of " + sum));
+							Common.runLater(() -> lblInfo.setText("Start updating item " + ++count[0] + " of " + sum));
 							Common.tryCatch(() -> arrangeOne(node, control, style), "Error on arrange one");
-							Platform.runLater(() -> {
+							Common.runLater(() -> {
 								lblInfo.setText("End updating " + count[0] + " of " + sum);
 								progressBar.setProgress((double) count[0] / sum);
 							});
 						}
-						Platform.runLater(() -> xmlTreeView.refresh());
+						Common.runLater(() -> xmlTreeView.refresh());
 						return null;
 					}
 				};
@@ -1040,7 +1040,7 @@ public class DictionaryWizard extends AbstractWizard
 
 	private void clearCheckboxes()
 	{
-		Platform.runLater(() -> {
+		Common.runLater(() -> {
 			this.cbQuestion.setText("0");
 			this.cbMark.setText("0");
 			this.cbUpdate.setText("0");

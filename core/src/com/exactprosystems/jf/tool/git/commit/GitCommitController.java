@@ -152,7 +152,7 @@ public class GitCommitController implements Initializable, ContainingParent
 
 	private void update()
 	{
-		this.tableView.getColumns().forEach(column -> Platform.runLater(() -> {
+		this.tableView.getColumns().forEach(column -> Common.runLater(() -> {
 			column.setVisible(false);
 			column.setVisible(true);
 		}));

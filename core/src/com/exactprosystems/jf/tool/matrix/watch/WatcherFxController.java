@@ -120,7 +120,7 @@ public class WatcherFxController implements Initializable, ContainingParent
 
 	public void displayData(List<Settings.SettingsValue> values)
 	{
-		Platform.runLater(() -> {
+		Common.runLater(() -> {
 			this.table.getItems().clear();
 			this.table.setItems(FXCollections.observableArrayList(values));
 			this.table.update();

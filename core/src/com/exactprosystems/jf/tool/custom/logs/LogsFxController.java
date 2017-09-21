@@ -48,7 +48,7 @@ public class LogsFxController implements Initializable, ContainingParent
 		this.listView = new CustomListView<>(false);
 		this.borderPane.setCenter(listView);
 		BorderPane.setMargin(this.listView, new Insets(10, 0, 0, 0));
-		Platform.runLater(() -> {
+		Common.runLater(() -> {
 			btnRefresh.setTooltip(new Tooltip("Refresh\nF5"));
 			btnRefresh.getScene().addEventFilter(KeyEvent.KEY_RELEASED, keyEvent -> refresh(null));
 			Common.customizeLabeled(btnRefresh, CssVariables.TRANSPARENT_BACKGROUND, CssVariables.Icons.REFRESH);

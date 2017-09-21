@@ -7,6 +7,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 package com.exactprosystems.jf.tool.custom.combobox;
 
+import com.exactprosystems.jf.tool.Common;
 import com.sun.javafx.scene.control.skin.ComboBoxListViewSkin;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
@@ -95,7 +96,7 @@ public class CheckedComboBox<T> extends ComboBox<T>
 	public void setChecked(List<T> list)
 	{
 		list.forEach(t -> this.map.put(t, true));
-		Platform.runLater(() -> this.buttonCell.updateItem(list.isEmpty() ? null : list.get(0), false));
+		Common.runLater(() -> this.buttonCell.updateItem(list.isEmpty() ? null : list.get(0), false));
 	}
 
 	@Override

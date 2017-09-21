@@ -124,7 +124,7 @@ public class ImageViewWithScale extends BorderPane
 			this.group.setScaleX(s);
 			this.group.setScaleY(s);
 
-			Platform.runLater(() -> {
+			Common.runLater(() -> {
 				this.group.setTranslateX(0);
 				this.group.setTranslateY(0);
 				this.group.setTranslateX(this.group.getBoundsInParent().getMinX() * -1);
@@ -200,7 +200,7 @@ public class ImageViewWithScale extends BorderPane
 	public void displayImage(BufferedImage image)
 	{
 		this.image = image;
-		Platform.runLater(() -> 
+		Common.runLater(() ->
 		{
 			this.hBox.getChildren().forEach(node ->  node.setDisable(false));
 			this.anchorPane.getChildren().remove(this.waitingNode);

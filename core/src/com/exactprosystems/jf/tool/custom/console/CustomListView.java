@@ -9,6 +9,7 @@
 package com.exactprosystems.jf.tool.custom.console;
 
 import com.exactprosystems.jf.api.common.Sys;
+import com.exactprosystems.jf.tool.Common;
 import javafx.application.Platform;
 import javafx.collections.ListChangeListener;
 import javafx.scene.control.ContextMenu;
@@ -93,7 +94,7 @@ public class CustomListView<T> extends ListView<ConsoleText<T>> {
         int size = this.getItems().size();
         if (size > 0)
         {
-            Platform.runLater(() -> this.scrollTo(size - 1));
+            Common.runLater(() -> this.scrollTo(size - 1));
         }
     };
 }

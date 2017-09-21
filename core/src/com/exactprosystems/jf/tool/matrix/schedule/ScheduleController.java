@@ -218,7 +218,7 @@ public class ScheduleController implements Initializable, ContainingParent
 
 	private void refresh()
 	{
-		Platform.runLater(() -> {
+		Common.runLater(() -> {
 			this.tableView.getColumns().get(0).setVisible(false);
 			this.tableView.getColumns().get(0).setVisible(true);
 		});

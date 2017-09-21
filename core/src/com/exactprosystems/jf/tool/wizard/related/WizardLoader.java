@@ -14,6 +14,7 @@ import com.exactprosystems.jf.api.app.IRemoteApplication;
 import com.exactprosystems.jf.api.app.Locator;
 import com.exactprosystems.jf.api.common.Converter;
 import com.exactprosystems.jf.common.utils.XpathUtils;
+import com.exactprosystems.jf.tool.Common;
 import javafx.application.Platform;
 import javafx.concurrent.Task;
 import javafx.util.Pair;
@@ -74,13 +75,13 @@ public class WizardLoader
 
 		this.task.setOnSucceeded(event -> {
 			Pair<BufferedImage, Document> value = this.task.getValue();
-			Optional.ofNullable(onSuccess).ifPresent(c -> Platform.runLater(() -> c.accept(value.getKey(), value.getValue())));
+			Optional.ofNullable(onSuccess).ifPresent(c -> Common.runLater(() -> c.accept(value.getKey(), value.getValue())));
 		});
 
 		this.task.setOnFailed(event -> {
 			Throwable exception = event.getSource().getException();
 			logger.error(exception.getMessage(), exception);
-			Optional.ofNullable(onError).ifPresent(oe -> Platform.runLater(() -> oe.accept(exception)));
+			Optional.ofNullable(onError).ifPresent(oe -> Common.runLater(() -> oe.accept(exception)));
 		});
 	}
 

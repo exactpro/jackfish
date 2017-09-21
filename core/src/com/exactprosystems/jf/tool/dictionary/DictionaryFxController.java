@@ -118,7 +118,7 @@ public class DictionaryFxController implements Initializable, ContainingParent
 
 	public void println(String str)
 	{
-		Platform.runLater(() ->this.listView.getItems().add(ConsoleText.defaultText(str)));
+		Common.runLater(() ->this.listView.getItems().add(ConsoleText.defaultText(str)));
 	}
 
 
@@ -132,7 +132,7 @@ public class DictionaryFxController implements Initializable, ContainingParent
 
 	public void displayTitle(String title)
 	{
-		Platform.runLater(() -> this.tab.setTitle(title));
+		Common.runLater(() -> this.tab.setTitle(title));
 	}
 
 	public void displayDialog(IWindow window, Collection<IWindow> windows)

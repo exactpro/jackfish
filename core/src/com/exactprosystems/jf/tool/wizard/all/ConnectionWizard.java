@@ -139,7 +139,7 @@ public class ConnectionWizard extends AbstractWizard {
                     this.status.setTextFill(Color.GREEN);
                     break;
                 case Connecting:
-                    Platform.runLater(() -> this.status.setText("Loading..."));
+                    Common.runLater(() -> this.status.setText("Loading..."));
                     break;
                 default:
                     this.status.setText("");

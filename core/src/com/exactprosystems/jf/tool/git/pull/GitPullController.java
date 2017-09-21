@@ -111,7 +111,7 @@ public class GitPullController implements Initializable, ContainingParent
 	public void endPulling(String text)
 	{
 		this.vbox.getChildren().clear();
-		Platform.runLater(() -> {
+		Common.runLater(() -> {
 			Text e = new Text(text);
 			e.setFill(Color.GREEN);
 			this.vbox.getChildren().add(e);
@@ -198,7 +198,7 @@ public class GitPullController implements Initializable, ContainingParent
 
 	private void refresh()
 	{
-		this.tableView.getColumns().forEach(c -> Platform.runLater(() -> {
+		this.tableView.getColumns().forEach(c -> Common.runLater(() -> {
 			c.setVisible(false);
 			c.setVisible(true);
 		}));

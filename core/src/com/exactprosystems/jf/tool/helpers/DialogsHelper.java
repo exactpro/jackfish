@@ -191,7 +191,7 @@ public abstract class DialogsHelper
 		pane.setCenter(listView);
 		BorderPane.setAlignment(listView, Pos.CENTER);
 		TextField tf = new TextField();
-		Platform.runLater(tf::requestFocus);
+		Common.runLater(tf::requestFocus);
 		pane.setTop(tf);
 		BorderPane.setAlignment(tf, Pos.CENTER);
 		Dialog<ButtonType> dialog = new Alert(Alert.AlertType.CONFIRMATION);
@@ -329,7 +329,7 @@ public abstract class DialogsHelper
 				listView.getFocusModel().focus(0);
 			}
 		});
-		Platform.runLater(tf::requestFocus);
+		Common.runLater(tf::requestFocus);
 		dialog.getDialogPane().getStylesheets().addAll(Common.currentThemesPaths());
 		Optional<ButtonType> buttonType = dialog.showAndWait();
 		if (buttonType.isPresent())
@@ -431,7 +431,7 @@ public abstract class DialogsHelper
 				listView.getFocusModel().focus(0);
 			}
 		});
-		Platform.runLater(tf::requestFocus);
+		Common.runLater(tf::requestFocus);
 		dialog.getDialogPane().getStylesheets().addAll(Common.currentThemesPaths());
 		Optional<ButtonType> buttonType = dialog.showAndWait();
 		if (buttonType.isPresent())
@@ -586,7 +586,7 @@ public abstract class DialogsHelper
 
         final Boolean[] res = { Boolean.FALSE };
         task.setOnSucceeded(e -> res[0] = ((Boolean) e.getSource().getValue()));
-        Platform.runLater(task);
+        Common.runLater(task);
         try
         {
             res[0] = task.get();
@@ -616,7 +616,7 @@ public abstract class DialogsHelper
 
 		final Object[] res = { defaultValue };
 		task.setOnSucceeded(e -> res[0] = e.getSource().getValue());
-		Platform.runLater(task);
+		Common.runLater(task);
 		try
 		{
 			res[0] = task.get();
@@ -715,7 +715,7 @@ public abstract class DialogsHelper
 				DialogsHelper.showError("Desktop is not supported. Used internal report browser");
 			}
 		}
-		Platform.runLater(() ->
+		Common.runLater(() ->
 		{
 			final String[] matrName = {matrixName};
 			tryCatch(() ->
@@ -767,7 +767,7 @@ public abstract class DialogsHelper
 
 	public static void showNotifier(final String message, final Notifier notifier)
 	{
-		Platform.runLater(() -> Notifications.create().msg(message).hideAfter(Duration.seconds(timeNotification)).state(notifier).title(notifier.name()).show());
+		Common.runLater(() -> Notifications.create().msg(message).hideAfter(Duration.seconds(timeNotification)).state(notifier).title(notifier.name()).show());
 	}
 
 	public static Alert createGitDialog(String title, Parent parent)
