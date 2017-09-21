@@ -6,7 +6,6 @@ import com.exactprosystems.jf.tool.ContainingParent;
 import com.exactprosystems.jf.tool.custom.number.NumberTextField;
 import com.exactprosystems.jf.tool.settings.SettingsPanel;
 import com.exactprosystems.jf.tool.settings.Theme;
-import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.Initializable;
@@ -18,6 +17,7 @@ import javafx.scene.text.Font;
 import java.net.URL;
 import java.util.Arrays;
 import java.util.Map;
+import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.stream.Collectors;
 
@@ -59,9 +59,8 @@ public class MainTabController implements Initializable, ContainingParent, ITabH
 		this.comboBoxTheme.setItems(FXCollections.observableArrayList(Arrays.stream(Theme.values()).filter(Theme::isVisible).collect(Collectors.toList())));
 		initializeFont();
 
-		comboBoxTheme.getSelectionModel().selectedItemProperty().addListener((observableValue, theme, theme2) ->
-				Common.runLater(() ->
-						this.comboBoxTheme.getScene().getStylesheets().setAll(theme2.getPath())
+		comboBoxTheme.getSelectionModel().selectedItemProperty().addListener((observableValue, theme, theme2) -> Common.runLater(() ->
+						Optional.ofNullable(this.comboBoxTheme.getScene()).ifPresent(scene -> scene.getStylesheets().setAll(theme2.getPath()))
 				)
 		);
 

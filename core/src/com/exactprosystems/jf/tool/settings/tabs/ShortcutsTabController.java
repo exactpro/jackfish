@@ -373,7 +373,7 @@ public class ShortcutsTabController implements Initializable, ContainingParent, 
 		private void displayTextField()
 		{
 			this.textField = new TextField(Common.EMPTY.equals(this.lblValue.getText()) ? "" : this.lblValue.getText());
-			Common.setFocused(this.textField);
+			Common.setFocusedFast(this.textField);
 
 			this.textField.setOnKeyPressed(keyEvent ->
 			{

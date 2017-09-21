@@ -1399,7 +1399,7 @@ public class LayoutWizard extends AbstractWizard
 
 		public void requestFocus()
 		{
-			Common.setFocused(this.field, 30);
+			Common.setFocusedFast(this.field);
 		}
 
 		public String getValue()

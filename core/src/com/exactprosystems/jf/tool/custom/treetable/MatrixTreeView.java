@@ -18,7 +18,6 @@ import com.exactprosystems.jf.tool.matrix.MatrixFx;
 import com.exactprosystems.jf.tool.matrix.params.ParametersPane;
 import com.exactprosystems.jf.tool.settings.SettingsPanel;
 import com.sun.javafx.scene.control.skin.TreeTableViewSkin;
-import javafx.application.Platform;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.ListChangeListener;
 import javafx.concurrent.Task;
@@ -32,8 +31,6 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
-
-import static com.exactprosystems.jf.tool.Common.tryCatch;
 
 public class MatrixTreeView extends TreeTableView<MatrixItem>
 {
@@ -240,7 +237,12 @@ public class MatrixTreeView extends TreeTableView<MatrixItem>
 				if (currentItem != null)
 				{
 					GridPane layout = (GridPane) currentItem.getLayout();
-					layout.getChildren().stream().filter(n -> n instanceof GridPane).findFirst().ifPresent(p -> Common.setFocused(((GridPane) p).getChildren().get(0)));
+					layout.getChildren()
+							.stream()
+							.filter(n -> n instanceof GridPane)
+							.findFirst()
+							.map(p -> ((GridPane) p).getChildren().get(0))
+							.ifPresent(Common::setFocusedFast);
 				}
 			}
 			else if (SettingsPanel.match(settings, keyEvent, Settings.SHOW_ALL))

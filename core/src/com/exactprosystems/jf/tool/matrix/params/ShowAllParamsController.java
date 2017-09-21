@@ -13,8 +13,6 @@ import com.exactprosystems.jf.documents.matrix.parser.Parameters;
 import com.exactprosystems.jf.documents.matrix.parser.items.TypeMandatory;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.ContainingParent;
-
-import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -116,7 +114,7 @@ public class ShowAllParamsController implements Initializable, ContainingParent
 		this.dialog.getDialogPane().setContent(this.parent);
 		dialog.getDialogPane().getStylesheets().addAll(Common.currentThemesPaths());
 		Common.runLater(() -> expandTree(this.treeView.getRoot()));
-		this.dialog.setOnShown(e -> Common.setFocused(tfFilter));
+		this.dialog.setOnShown(e -> Common.setFocusedFast(tfFilter));
 		Optional<ButtonType> optional = this.dialog.showAndWait();
 		ArrayList<Pair<ReadableValue, TypeMandatory>> res = new ArrayList<>();
 		if (optional.get().getButtonData().equals(ButtonBar.ButtonData.OK_DONE))
@@ -166,7 +164,7 @@ public class ShowAllParamsController implements Initializable, ContainingParent
 		this.tfFilter.setOnKeyPressed(event -> {
 			if (event.getCode() == KeyCode.DOWN || event.getCode() == KeyCode.TAB)
 			{
-				Common.setFocused(this.treeView, 0);
+				Common.setFocusedFast(this.treeView);
 				this.treeView.getSelectionModel().clearAndSelect(0);
 			}
 		});
@@ -175,12 +173,15 @@ public class ShowAllParamsController implements Initializable, ContainingParent
 			if (event.getCode() == KeyCode.SPACE)
 			{
 				CheckBoxTreeItem selectedItem = (CheckBoxTreeItem) this.treeView.getSelectionModel().getSelectedItem();
-				selectedItem.setSelected(!selectedItem.isSelected());
+				if (selectedItem != null)
+				{
+					selectedItem.setSelected(!selectedItem.isSelected());
+				}
 			}
 			else if ((event.getCode() == KeyCode.UP && this.treeView.getSelectionModel().getSelectedItem() == this.treeView.getRoot()) || event.getCode() == KeyCode.TAB)
 			{
 				this.treeView.getSelectionModel().clearSelection();
-				Common.setFocused(this.tfFilter, 0);
+				Common.setFocusedFast(this.tfFilter);
 			}
 			else if (event.getCode() == KeyCode.ENTER)
 			{

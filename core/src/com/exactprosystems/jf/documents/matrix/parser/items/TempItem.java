@@ -85,10 +85,8 @@ public class TempItem extends MatrixItem
 		            newItem.display(driver, context);
 		            driver.setCurrentItem(newItem, getMatrix(), false);
 		        }
-		        catch (Exception e)
-		        {
-		            //          DialogsHelper.showError(e.getMessage());
-		        }
+		        catch (Exception ignored)
+		        {}
 		        finally
 		        {
 		            this.remove();
