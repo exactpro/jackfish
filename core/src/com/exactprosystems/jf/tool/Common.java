@@ -86,35 +86,43 @@ public abstract class Common
 
 	public static final Logger	logger					= Logger.getLogger(Common.class);
 
-	public static void reportListener(Consumer<String> listener)
-	{
-		Common.browserListener = listener;
-	}
-
-	public static void openDefaultBrowser(String url)
-	{
-		Common.browserListener.accept(url);
-	}
-
+	//region focused methods
+	/**
+	 * set focused the node after 300ms delay
+	 */
 	public static void setFocused(final Node node)
 	{
-		Thread thread = new Thread(new Task<Void>()
+		setFocused(node, 300);
+	}
+
+	/**
+	 * set focused the node after 15ms delay
+	 */
+	public static void setFocusedFast(final Node node)
+	{
+		setFocused(node, 15);
+	}
+
+	/**
+	 * set focused the node after the delay
+	 */
+	public static void setFocused(final Node node, int delay)
+	{
+		Task<Void> task = new Task<Void>()
 		{
 			@Override
 			protected Void call() throws Exception
 			{
-				Thread.sleep(300);
-				Common.runLater(node::requestFocus);
+				Thread.sleep(delay);
 				return null;
 			}
-		});
-		thread.setName("Focused node : " + node + " , thread id : " + thread.getId());
+		};
+		task.setOnSucceeded(e -> node.requestFocus());
+		Thread thread = new Thread(task);
+		thread.setName("Focused node with delay : " + node + " , thread id : " + thread.getId());
 		thread.start();
-	}
 
-	public static void setFocused(final Node node, int delay)
-	{
-		Thread thread = new Thread(new Task<Void>()
+	/*	Thread thread = new Thread(new Task<Void>()
 		{
 			@Override
 			protected Void call() throws Exception
@@ -125,12 +133,24 @@ public abstract class Common
 			}
 		});
 		thread.setName("Focused node with delay : " + node + " , thread id : " + thread.getId());
-		thread.start();
+		thread.start();*/
 	}
 
 	public static boolean appIsFocused()
 	{
 		return node != null && node.isFocused();
+	}
+
+	//endregion
+
+	public static void reportListener(Consumer<String> listener)
+	{
+		Common.browserListener = listener;
+	}
+
+	public static void openDefaultBrowser(String url)
+	{
+		Common.browserListener.accept(url);
 	}
 
 	/**

@@ -41,7 +41,6 @@ import com.exactprosystems.jf.tool.custom.tab.CustomTabPane;
 import com.exactprosystems.jf.tool.helpers.DialogsHelper;
 import com.exactprosystems.jf.tool.matrix.MatrixFx;
 import com.exactprosystems.jf.tool.matrix.params.ParametersPane;
-import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.geometry.Insets;
@@ -53,7 +52,10 @@ import org.fxmisc.richtext.StyleClassedTextArea;
 import org.reactfx.Subscription;
 
 import java.io.FileReader;
-import java.util.*;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 import java.util.function.BooleanSupplier;
 import java.util.function.Consumer;
 import java.util.function.Function;
@@ -126,12 +128,16 @@ public class DisplayDriverFx implements DisplayDriver
 		final Label label = new Label(name);
 		label.getStyleClass().add(CssVariables.BOLD_LABEL);
 		label.getStyleClass().add(CssVariables.OBLIQUE_LABEL);
-		label.setOnMouseClicked(mouseEvent -> pane.getChildren().stream().filter(c ->
-		{
-			Integer rowIndex = GridPane.getRowIndex(c);
-			Integer columnIndex = GridPane.getColumnIndex(c);
-			return rowIndex != null && columnIndex != null && rowIndex == 0 && columnIndex == 0;
-		}).findFirst().ifPresent(Node::requestFocus));
+		label.setOnMouseClicked(mouseEvent -> pane.getChildren()
+				.stream()
+				.filter(c ->
+				{
+					Integer rowIndex = GridPane.getRowIndex(c);
+					Integer columnIndex = GridPane.getColumnIndex(c);
+					return rowIndex != null && columnIndex != null && rowIndex == 0 && columnIndex == 0;
+				})
+				.findFirst()
+				.ifPresent(Common::setFocusedFast));
 		label.setMinWidth(name.length() * 9);
 		pane.add(label, column, row);
 		GridPane.setMargin(label, INSETS);
@@ -153,7 +159,7 @@ public class DisplayDriverFx implements DisplayDriver
 		{
 			updateStyle(item.getClass().getSimpleName(), settings, label);
 		}
-		Common.setFocused(label);
+		Common.setFocusedFast(label);
 	}
 
 	@Override
@@ -476,7 +482,7 @@ public class DisplayDriverFx implements DisplayDriver
 		});
 		pane.add(field, column, row);
 		GridPane.setMargin(field, INSETS);
-		Common.setFocused(field);
+		Common.setFocusedFast(field);
 	}
 
 	@Override
@@ -658,7 +664,11 @@ public class DisplayDriverFx implements DisplayDriver
 			c.setVisible(!hide);
 			if (c.isVisible() && c.getStyleClass().contains(GRID_PARENT_EXP_FIELD))
 			{
-				((GridPane) c).getChildren().stream().filter(node -> node instanceof ExpressionField).findFirst().ifPresent(Common::setFocused);
+				((GridPane) c).getChildren()
+						.stream()
+						.filter(node -> node instanceof ExpressionField)
+						.findFirst()
+						.ifPresent(Common::setFocusedFast);
 			}
 		});
 	}

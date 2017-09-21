@@ -109,7 +109,7 @@ public class ParameterGridPane extends GridPane
 		{
 			focused = value;
 		}
-		Common.setFocused(focused);
+		Common.setFocusedFast(focused);
 	}
 
 	private void strech(TextField textField)

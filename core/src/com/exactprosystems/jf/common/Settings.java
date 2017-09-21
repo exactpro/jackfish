@@ -654,7 +654,8 @@ public class Settings
 				SHOW_RESULT,
 				SHOW_WATCH,
 				TRACING,
-				FIND_ON_MATRIX
+				FIND_ON_MATRIX,
+				SEARCH
 		)
 				.map(s -> Common.getShortcut(this, s))
 				.filter(Objects::nonNull)

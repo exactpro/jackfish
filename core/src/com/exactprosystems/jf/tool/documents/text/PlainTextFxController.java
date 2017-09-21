@@ -83,7 +83,7 @@ public class PlainTextFxController extends AbstractDocumentController<PlainTextF
 			this.findPane.setMinHeight(newValue ? 60 : 0);
 			this.findPane.setMaxHeight(newValue ? 60 : 0);
 			subscribeAndSet();
-			Common.setFocused(this.tfFind);
+			Common.setFocusedFast(this.tfFind);
 
 			if (!newValue)
 			{
