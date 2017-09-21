@@ -104,7 +104,7 @@ public abstract class Common
 			protected Void call() throws Exception
 			{
 				Thread.sleep(300);
-				Platform.runLater(node::requestFocus);
+				Common.runLater(node::requestFocus);
 				return null;
 			}
 		});
@@ -120,7 +120,7 @@ public abstract class Common
 			protected Void call() throws Exception
 			{
 				Thread.sleep(delay);
-				Platform.runLater(node::requestFocus);
+				Common.runLater(node::requestFocus);
 				return null;
 			}
 		});
@@ -344,7 +344,7 @@ public abstract class Common
 
 	public static void progressBarVisible(final boolean flag)
 	{
-		Platform.runLater(() -> progressBar.setVisible(flag));
+		Common.runLater(() -> progressBar.setVisible(flag));
 	}
 
 	public static String getSimpleTitle(String s)

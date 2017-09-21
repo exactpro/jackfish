@@ -63,7 +63,7 @@ public class ElementsTable extends TableView<TableBean>
 				textField.setText(getString());
 				setGraphic(textField);
 				setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
-				Platform.runLater(textField::requestFocus);
+				Common.runLater(textField::requestFocus);
 			}
 
 			@Override

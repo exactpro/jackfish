@@ -244,7 +244,7 @@ public class MatrixContextMenu extends ContextMenu
 		{
 			MatrixItem item = tree.currentItem();
 			MatrixItem[] inserted = matrix.paste(item);
-			Platform.runLater(() -> Arrays.stream(inserted).map(tree::find).forEach(treeItem -> tree.expand(treeItem, !this.fold)));
+			Common.runLater(() -> Arrays.stream(inserted).map(tree::find).forEach(treeItem -> tree.expand(treeItem, !this.fold)));
 		}, "Error on paste");
 	}
 

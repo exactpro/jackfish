@@ -60,7 +60,7 @@ public class MainTabController implements Initializable, ContainingParent, ITabH
 		initializeFont();
 
 		comboBoxTheme.getSelectionModel().selectedItemProperty().addListener((observableValue, theme, theme2) ->
-				Platform.runLater(() ->
+				Common.runLater(() ->
 						this.comboBoxTheme.getScene().getStylesheets().setAll(theme2.getPath())
 				)
 		);
@@ -180,7 +180,7 @@ public class MainTabController implements Initializable, ContainingParent, ITabH
 			cell.setMaxWidth(100);
 			return cell;
 		});
-		Platform.runLater(() -> cbFontFamily.setItems(FXCollections.observableArrayList(Font.getFamilies())));
+		Common.runLater(() -> cbFontFamily.setItems(FXCollections.observableArrayList(Font.getFamilies())));
 		cbFontSize.getStyleClass().add("font-menu-button");
 		cbFontSize.setFocusTraversable(false);
 		cbFontSize.getItems().add((double) 8);

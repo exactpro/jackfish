@@ -115,7 +115,7 @@ public class ShowAllParamsController implements Initializable, ContainingParent
 		this.dialog.setResizable(true);
 		this.dialog.getDialogPane().setContent(this.parent);
 		dialog.getDialogPane().getStylesheets().addAll(Common.currentThemesPaths());
-		Platform.runLater(() -> expandTree(this.treeView.getRoot()));
+		Common.runLater(() -> expandTree(this.treeView.getRoot()));
 		this.dialog.setOnShown(e -> Common.setFocused(tfFilter));
 		Optional<ButtonType> optional = this.dialog.showAndWait();
 		ArrayList<Pair<ReadableValue, TypeMandatory>> res = new ArrayList<>();

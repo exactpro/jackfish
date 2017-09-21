@@ -7,6 +7,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 package com.exactprosystems.jf.tool.git;
 
+import com.exactprosystems.jf.tool.Common;
 import javafx.application.Platform;
 import javafx.collections.ObservableList;
 import javafx.scene.Node;
@@ -98,7 +99,7 @@ public class VBoxProgressMonitor extends BatchingProgressMonitor
 
 	private void send(StringBuilder s)
 	{
-		Platform.runLater(() -> {
+		Common.runLater(() -> {
 			ObservableList<Node> children = this.box.getChildren();
 			if (currentIndex > children.size() - 1)
 			{

@@ -7,6 +7,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 package com.exactprosystems.jf.tool.custom.grideditor;
 
+import com.exactprosystems.jf.tool.Common;
 import com.sun.javafx.scene.control.skin.NestedTableColumnHeader;
 import com.sun.javafx.scene.control.skin.TableColumnHeader;
 import com.sun.javafx.scene.control.skin.TableHeaderRow;
@@ -45,7 +46,7 @@ public class HorizontalHeader extends TableHeaderRow
 
 		gridViewSkin.getSelectedColumns().addListener(selectionListener);
 
-		Platform.runLater(() -> {
+		Common.runLater(() -> {
 			requestLayout();
 			installHeaderMouseEvent();
 		});

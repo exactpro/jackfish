@@ -327,7 +327,7 @@ public class ExpressionField extends CustomField
 	{
 		if (isShadowTextIsNotPresented)
 		{
-			Platform.runLater(() -> this.setPrefWidth(Common.computeTextWidth(this.getFont(), text, 0.0D) + 40));
+			Common.runLater(() -> this.setPrefWidth(Common.computeTextWidth(this.getFont(), text, 0.0D) + 40));
 		}
 	}
 

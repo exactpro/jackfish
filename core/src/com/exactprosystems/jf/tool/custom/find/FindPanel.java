@@ -95,7 +95,7 @@ public class FindPanel<T> extends BorderPane
 
 	private void initialize()
 	{
-		Platform.runLater(() ->
+		Common.runLater(() ->
 		{
 			btnPrevious.setTooltip(new Tooltip("Previous"));
 			btnNext.setTooltip(new Tooltip("Next"));

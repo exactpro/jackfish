@@ -9,12 +9,8 @@
 package com.exactprosystems.jf.tool.custom.console;
 
 import com.exactprosystems.jf.tool.Common;
-import javafx.application.Platform;
-import javafx.scene.control.ContextMenu;
 import javafx.scene.control.ListCell;
-import javafx.scene.control.MenuItem;
 
-import java.util.Optional;
 
 public class ColorCell<T> extends ListCell<ConsoleText<T>>
 {
@@ -22,6 +18,6 @@ public class ColorCell<T> extends ListCell<ConsoleText<T>>
 	protected void updateItem(final ConsoleText<T> s, boolean b)
 	{
 		super.updateItem(s, b);
-		Platform.runLater(() -> setGraphic(s));
+		Common.runLater(() -> setGraphic(s));
 	}
 }

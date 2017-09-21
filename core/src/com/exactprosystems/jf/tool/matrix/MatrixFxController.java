@@ -108,7 +108,7 @@ public class MatrixFxController implements Initializable, ContainingParent, IMat
 		this.listView = new CustomListView<>(matrixItem -> tryCatch(() ->
 		{
 			TreeItem<MatrixItem> treeItem = this.tree.find(matrixItem);
-			Optional.ofNullable(treeItem).ifPresent(item -> Platform.runLater(() -> this.tree.setCurrent(item, false)));
+			Optional.ofNullable(treeItem).ifPresent(item -> Common.runLater(() -> this.tree.setCurrent(item, false)));
 		}, "Error on moving to item"), true);
 		this.listView.autoScroll(true);
 		this.listView.setMinHeight(100.0);
@@ -218,7 +218,7 @@ public class MatrixFxController implements Initializable, ContainingParent, IMat
 	{
 		this.ok = false;
 		this.exceptionMessage = String.format("error(%d, %s, %s)", lineNumber, item == null ? "<null>" : item.getPath(), message);
-		Platform.runLater(() ->
+		Common.runLater(() ->
 		{
 			String format = item == null ? message : String.format("%s %s", item.getPath(), message);
 			if (listView != null)
@@ -301,7 +301,7 @@ public class MatrixFxController implements Initializable, ContainingParent, IMat
 		this.tree.init(model, settings, rowContextMenu);
 		this.tab = CustomTabPane.getInstance().createTab(model);
 		this.tab.setContent(this.pane);
-		console.setConsumer(s -> Platform.runLater(() -> this.listView.getItems().add(ConsoleText.defaultText(s))));
+		console.setConsumer(s -> Common.runLater(() -> this.listView.getItems().add(ConsoleText.defaultText(s))));
 		CustomTabPane.getInstance().addTab(this.tab);
 		CustomTabPane.getInstance().selectTab(this.tab);
 
@@ -462,7 +462,7 @@ public class MatrixFxController implements Initializable, ContainingParent, IMat
 	// ------------------------------------------------------------------------------------------------------------------
 	void displayTimer(long ms, boolean needShow)
 	{
-		Platform.runLater(() -> {
+		Common.runLater(() -> {
 			if (ms < MIN_TIME_FOR_SHOW_WAITS && !lblTimer.isVisible())
 			{
 				return;
@@ -522,12 +522,12 @@ public class MatrixFxController implements Initializable, ContainingParent, IMat
 
 	public void remove(MatrixItem item)
 	{
-		Platform.runLater(() -> this.driver.deleteItem(item) );
+		Common.runLater(() -> this.driver.deleteItem(item) );
 	}
 
 	public void display(MatrixItem item, boolean needExpand)
 	{
-		Platform.runLater(() -> {
+		Common.runLater(() -> {
 			item.display(this.driver, this.context);
 			this.driver.setCurrentItem(item, this.model, needExpand);
 		});
@@ -535,27 +535,27 @@ public class MatrixFxController implements Initializable, ContainingParent, IMat
 	
 	public void displayTitle(String title)
 	{
-		Platform.runLater(() -> this.tab.setTitle(title));
+		Common.runLater(() -> this.tab.setTitle(title));
 	}
 
 	public void displayAppList(List<String> result)
 	{
-		Platform.runLater(() -> this.cbDefaultApp.setItems(FXCollections.observableList(result)));
+		Common.runLater(() -> this.cbDefaultApp.setItems(FXCollections.observableList(result)));
 	}
 
 	public void setDefaultApp(String id)
 	{
-		Platform.runLater(() -> this.cbDefaultApp.getSelectionModel().select(id));
+		Common.runLater(() -> this.cbDefaultApp.getSelectionModel().select(id));
 	}
 
 	public void displayClientList(List<String> result)
 	{
-		Platform.runLater(() -> this.cbDefaultClient.setItems(FXCollections.observableList(result)));
+		Common.runLater(() -> this.cbDefaultClient.setItems(FXCollections.observableList(result)));
 	}
 
 	public void setDefaultClient(String id)
 	{
-		Platform.runLater(() -> this.cbDefaultClient.getSelectionModel().select(id));
+		Common.runLater(() -> this.cbDefaultClient.getSelectionModel().select(id));
 	}
 	// ------------------------------------------------------------------------------------------------------------------
 	// private methods
@@ -613,7 +613,7 @@ public class MatrixFxController implements Initializable, ContainingParent, IMat
 
 	private void initializeButtons(final Settings settings)
 	{
-		Platform.runLater(() -> tryCatch(() ->
+		Common.runLater(() -> tryCatch(() ->
 		{
 			this.btnStartMatrix.setTooltip(new Tooltip("Start\n" + getShortcutTooltip(settings, Settings.START_MATRIX)));
 			this.btnStopMatrix.setTooltip(new Tooltip("Stop\n" + getShortcutTooltip(settings, Settings.STOP_MATRIX)));

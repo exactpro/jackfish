@@ -176,14 +176,14 @@ public class UserInputDialog extends Dialog<Object>
 
         if (this.mainControl == null)
         {
-            Platform.runLater(this::close);
+            Common.runLater(this::close);
             return;
         }
 
         grid.getChildren().clear();
         grid.add(this.mainControl, 0, 0);
 
-        Platform.runLater(this.mainControl::requestFocus);
+        Common.runLater(this.mainControl::requestFocus);
 	}
 
     private DateTimePicker createDateTimePickerField(Date defaultValue)
@@ -278,7 +278,7 @@ public class UserInputDialog extends Dialog<Object>
 	private void done()
     { 
 	    Button buttonOk = ((Button)getDialogPane().lookupButton(ButtonType.OK));
-	    Platform.runLater(() -> 
+	    Common.runLater(() ->
 	    {
 	        if (buttonOk != null)
 	        {

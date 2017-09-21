@@ -132,7 +132,7 @@ public class MatrixTreeView extends TreeTableView<MatrixItem>
 		long current = System.currentTimeMillis();
 		if (Math.abs(current - lastTime) > 199)
 		{
-			Optional.ofNullable(this.getColumns().get(0)).ifPresent(col -> Platform.runLater(() ->{
+			Optional.ofNullable(this.getColumns().get(0)).ifPresent(col -> Common.runLater(() ->{
 				col.setVisible(false);
 				col.setVisible(true);
 			}));
@@ -147,7 +147,7 @@ public class MatrixTreeView extends TreeTableView<MatrixItem>
 		{
 			GridPane layout = (GridPane) treeItem.getValue().getLayout();
 			{
-				layout.getChildren().stream().filter(pane -> pane instanceof ParametersPane).forEach(pane -> Platform.runLater(() -> {
+				layout.getChildren().stream().filter(pane -> pane instanceof ParametersPane).forEach(pane -> Common.runLater(() -> {
 					((ParametersPane) pane).refreshParameters(selectedIndex);
 				}));
 			}

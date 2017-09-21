@@ -22,6 +22,7 @@ import com.exactprosystems.jf.documents.matrix.parser.items.Call;
 import com.exactprosystems.jf.documents.matrix.parser.items.MatrixItem;
 import com.exactprosystems.jf.documents.matrix.parser.items.NameSpace;
 import com.exactprosystems.jf.documents.matrix.parser.items.SubCase;
+import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.custom.controls.field.CustomFieldWithButton;
 import com.exactprosystems.jf.tool.helpers.DialogsHelper;
 import com.exactprosystems.jf.tool.matrix.MatrixFx;
@@ -174,7 +175,7 @@ public class NameSpaceWizard extends AbstractWizard {
         Task<List<Refactor>> task = new Task<List<Refactor>>() {
             @Override
             protected List<Refactor> call() throws Exception {
-                Platform.runLater(() -> pane1.setBottom(label));
+                Common.runLater(() -> pane1.setBottom(label));
                 List<Refactor> res = new LinkedList<>();
 
                 config.forEach(document -> listView.getItems().forEach(item ->

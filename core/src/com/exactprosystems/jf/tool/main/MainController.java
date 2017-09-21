@@ -188,7 +188,7 @@ public class MainController implements Initializable, ContainingParent
 
 	private void initializeButtons(final Settings settings)
 	{
-		Platform.runLater(() -> Common.tryCatch(() ->
+		Common.runLater(() -> Common.tryCatch(() ->
 		{
 			this.btnSaveAsDocument.setTooltip(new Tooltip("Save as\n"+shortcutsName(Settings.SAVE_DOCUMENT_AS)));
 			this.btnSaveDocument.setTooltip(new Tooltip("Save\n"+shortcutsName(Settings.SAVE_DOCUMENT)));
@@ -595,7 +595,7 @@ public class MainController implements Initializable, ContainingParent
 	//region progress tasks
 	public void startTask(String title)
 	{
-		Platform.runLater(() -> {
+		Common.runLater(() -> {
 			this.progressBar.setVisible(true);
 			this.progressLabel.setText(title);
 		});
@@ -603,7 +603,7 @@ public class MainController implements Initializable, ContainingParent
 
 	public void updateTask(String title)
 	{
-		Platform.runLater(() -> {
+		Common.runLater(() -> {
 			if (!this.progressLabel.getText().isEmpty())
 			{
 				this.progressLabel.setText(title);
@@ -613,7 +613,7 @@ public class MainController implements Initializable, ContainingParent
 
 	public void endTask()
 	{
-		Platform.runLater(() -> {
+		Common.runLater(() -> {
 			this.progressBar.setVisible(false);
 			this.progressLabel.setText("");
 		});
@@ -883,7 +883,7 @@ public class MainController implements Initializable, ContainingParent
 			{
 				try
 				{
-					Platform.runLater(() -> lblMemory.setText(getMBytes(Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory()) + "MB of "
+					Common.runLater(() -> lblMemory.setText(getMBytes(Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory()) + "MB of "
 							+ getMBytes(Runtime.getRuntime().maxMemory()) + "MB"));
 
 					Thread.sleep(1000);

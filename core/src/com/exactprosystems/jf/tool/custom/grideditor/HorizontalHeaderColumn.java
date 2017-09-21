@@ -7,6 +7,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 package com.exactprosystems.jf.tool.custom.grideditor;
 
+import com.exactprosystems.jf.tool.Common;
 import com.sun.javafx.scene.control.skin.NestedTableColumnHeader;
 import com.sun.javafx.scene.control.skin.TableColumnHeader;
 import com.sun.javafx.scene.control.skin.TableViewSkinBase;
@@ -55,7 +56,7 @@ public class HorizontalHeaderColumn extends NestedTableColumnHeader
 				if (mouseEvent.getClickCount() == 2 && mouseEvent.isPrimaryButtonDown()) {
 					int columnIndex = getColumnHeaders().indexOf(columnHeader);
 					SpreadsheetColumn spreadsheetColumn = ((GridViewSkin) (Object) tableViewSkin).handle.getView().getColumns().get(columnIndex);
-					Platform.runLater(spreadsheetColumn::startRenameColumn);
+					Common.runLater(spreadsheetColumn::startRenameColumn);
 				}
 			});
 			return columnHeader;

@@ -174,7 +174,7 @@ public class DisplayDriverFx implements DisplayDriver
 		{
 			label.getStyleClass().add(CssVariables.BOLD_LABEL);
 		}
-		Platform.runLater(() -> label.setTooltip(new Tooltip(name)));
+		Common.runLater(() -> label.setTooltip(new Tooltip(name)));
 		pane.add(label, column, row);
 		GridPane.setMargin(label, INSETS);
 	}

@@ -123,7 +123,7 @@ public class ParametersTableView extends TableView<TablePair>
 			this.textField.setText(getString());
 			setGraphic(this.textField);
 			setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
-			Platform.runLater(this.textField::requestFocus);
+			Common.runLater(this.textField::requestFocus);
 		}
 
 		@Override

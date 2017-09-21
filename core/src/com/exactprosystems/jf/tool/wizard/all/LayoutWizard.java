@@ -801,7 +801,7 @@ public class LayoutWizard extends AbstractWizard
 					this.checkGrid.getRowConstraints().add(r0);
 				});
 
-		Platform.runLater(() -> IntStream.rangeClosed(1, collect.size())
+		Common.runLater(() -> IntStream.rangeClosed(1, collect.size())
 				.forEach(i ->
 				{
 					String id = collect.get(i - 1).getID();

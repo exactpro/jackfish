@@ -376,7 +376,7 @@ public class XpathWizard extends AbstractWizard
 				this.xmlTreeView.displayDocument(this.document);
 				List<Rectangle> list = XpathUtils.collectAllRectangles(this.document);
 				this.imageViewWithScale.setListForSearch(list);
-				Platform.runLater(() -> this.applyXpath(this.cfMainExpression.getText()));
+				Common.runLater(() -> this.applyXpath(this.cfMainExpression.getText()));
 			},
 			ex ->
 			{

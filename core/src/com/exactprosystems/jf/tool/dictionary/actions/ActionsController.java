@@ -102,7 +102,7 @@ public class ActionsController implements Initializable, ContainingParent
 		imageArea.getStyleClass().add(CssVariables.IMAGE_AREA);
 		comboBoxWindows.setOnShowing(event -> tryCatch(() -> this.model.displayTitles(), "Error on update titles"));
 		comboBoxAppsStore.setOnShowing(event -> tryCatch(() -> this.model.displayStores(), "Error on update titles"));
-		Platform.runLater(() -> ((BorderPane) this.pane).setCenter(BorderWrapper.wrap(this.mainGrid).title("Actions").color(Common.currentTheme().getReverseColor()).build()));
+		Common.runLater(() -> ((BorderPane) this.pane).setCenter(BorderWrapper.wrap(this.mainGrid).title("Actions").color(Common.currentTheme().getReverseColor()).build()));
 		setDisable(true);
 		this.groupSection.selectedToggleProperty().addListener((observable, oldValue, newValue) -> setDisable(!(newValue != null && newValue == this.rbSize)));
 		this.rbMin.setUserData(Resize.Minimize);
@@ -323,7 +323,7 @@ public class ActionsController implements Initializable, ContainingParent
 
 	public void displayImage(ImageWrapper imageWrapper)
 	{
-		Platform.runLater(() ->
+		Common.runLater(() ->
 		{
 			tryCatch(() ->
 			{
@@ -344,7 +344,7 @@ public class ActionsController implements Initializable, ContainingParent
 
 	public void displayApplicationStatus(ApplicationStatus status, Throwable ifTrouble)
 	{
-		Platform.runLater(() ->
+		Common.runLater(() ->
 		{
 			if (status != null)
 			{
@@ -402,7 +402,7 @@ public class ActionsController implements Initializable, ContainingParent
 
 	public void displayStoreActionControl(Collection<String> stories, String lastSelectedStore)
 	{
-		Platform.runLater(() ->
+		Common.runLater(() ->
 		{
 			if (stories!=null)
 			{
@@ -414,7 +414,7 @@ public class ActionsController implements Initializable, ContainingParent
 
 	public void displayActionControl(Collection<String> entries, String entry, String title)
 	{
-		Platform.runLater(() ->
+		Common.runLater(() ->
 		{
 			if (entries != null)
 			{

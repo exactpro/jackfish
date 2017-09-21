@@ -7,6 +7,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 package com.exactprosystems.jf.tool.custom.scroll;
 
+import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.CssVariables;
 import com.sun.javafx.scene.control.skin.ScrollPaneSkin;
 import javafx.application.Platform;
@@ -38,7 +39,7 @@ public class CustomScrollPane extends ScrollPane
 	{
 		CustomScrollPaneSkin skin = new CustomScrollPaneSkin(this);
 		ScrollBar hsb = skin.getHsb();
-		hsb.visibleProperty().addListener((observable, oldValue, newValue) -> Platform.runLater(() ->
+		hsb.visibleProperty().addListener((observable, oldValue, newValue) -> Common.runLater(() ->
 		{
 			if (oldValue && !newValue)
 			{

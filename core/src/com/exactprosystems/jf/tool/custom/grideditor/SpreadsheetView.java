@@ -8,6 +8,7 @@
 package com.exactprosystems.jf.tool.custom.grideditor;
 
 import com.exactprosystems.jf.api.common.Sys;
+import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.helpers.DialogsHelper;
 import javafx.application.Platform;
 import javafx.beans.property.*;
@@ -212,7 +213,7 @@ public class SpreadsheetView extends Control
 			try
 			{
 				FutureTask<Void> future = new FutureTask<>(runnable, null);
-				Platform.runLater(future);
+				Common.runLater(future);
 				future.get();
 			}
 			catch (InterruptedException | ExecutionException ex)

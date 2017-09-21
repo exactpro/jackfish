@@ -164,7 +164,7 @@ public class CustomTab extends Tab implements AutoCloseable
 
 	public void reload() throws Exception
 	{
-		Platform.runLater(() ->
+		Common.runLater(() ->
 		{
 			ButtonType desision = DialogsHelper.showFileChangedDialog(this.document.getNameProperty().get());
 			if (desision == ButtonType.OK)

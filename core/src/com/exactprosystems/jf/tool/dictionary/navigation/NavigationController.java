@@ -130,7 +130,7 @@ public class NavigationController implements Initializable, ContainingParent
 		));
 		this.vBoxElement.getChildren().add(0, this.listViewElement);
 		
-		Platform.runLater(() -> 
+		Common.runLater(() ->
 		{
 			ScrollPane scrollPaneWindow = new ScrollPane(this.vBoxWindow);
 			scrollPaneWindow.setFitToWidth(true);
@@ -321,7 +321,7 @@ public class NavigationController implements Initializable, ContainingParent
 
 	public void displaySection(SectionKind sectionKind)
 	{
-		Platform.runLater(() -> {
+		Common.runLater(() -> {
 			String kindName = String.valueOf(sectionKind);
 
 			for (Toggle toggle : this.groupSection.getToggles())
@@ -348,7 +348,7 @@ public class NavigationController implements Initializable, ContainingParent
 
 	public void displayTestingControl(IControl control, String text, DictionaryFxController.Result result)
 	{
-		Platform.runLater(() ->
+		Common.runLater(() ->
 		{
 			int i = this.listViewElement.getItems().indexOf(new BorderPaneAndControl(control));
 			BorderPaneAndControl borderPaneAndControl = this.listViewElement.getItems().get(i);
@@ -393,7 +393,7 @@ public class NavigationController implements Initializable, ContainingParent
 
 	private <T> void display(T item, Collection<T> items, FindListView<T> listView, ChangeListener<T> listener)
 	{
-		Platform.runLater(() -> {
+		Common.runLater(() -> {
 			listView.removeChangeListener(listener);
 			if (items != null)
 			{
@@ -537,7 +537,7 @@ public class NavigationController implements Initializable, ContainingParent
 			textField.setText(this.converter.apply(getItem()));
 			setGraphic(textField);
 			setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
-			Platform.runLater(textField::requestFocus);
+			Common.runLater(textField::requestFocus);
 		}
 
 		@Override
