@@ -8,6 +8,7 @@
 
 package com.exactprosystems.jf.app;
 
+import com.exactprosystems.jf.api.app.AbstractApplicationFactory;
 import com.exactprosystems.jf.api.app.ProxyApplication;
 import com.exactprosystems.jf.api.common.SerializablePair;
 import com.exactprosystems.jf.api.common.Str;
@@ -81,6 +82,12 @@ public class ProxyWinGuiApp extends ProxyApplication
 			System.out.println(WinAppFactory.logLevel + "=" + logLevel);
 			driverParameters.put(ProxyApplication.remoteLogLevelName, logLevel);
 			parameters.put(WinAppFactory.logLevel, logLevel);
+		}
+
+		String trimText = driverParameters.get(AbstractApplicationFactory.trimTextName);
+		if (!Str.IsNullOrEmpty(trimText))
+		{
+			parameters.put(AbstractApplicationFactory.trimTextName, Boolean.valueOf(trimText).toString());
 		}
 	}
 

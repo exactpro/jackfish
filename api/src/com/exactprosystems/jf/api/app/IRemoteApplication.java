@@ -30,6 +30,8 @@ public interface IRemoteApplication extends Remote
 	int 						connect			(Map<String, String> args) throws RemoteException;
 	int 						run				(Map<String, String> args) throws RemoteException;
 	void 						stop			(boolean needKill) throws RemoteException;
+
+	//TODO why we use serializable pair with boolean? Replace to String
 	SerializablePair<String, Boolean> getAlertText() throws RemoteException;
 	void						navigate		(NavigateKind kind) throws RemoteException;
 	void 						setAlertText	(String text, PerformKind performKind) throws RemoteException;

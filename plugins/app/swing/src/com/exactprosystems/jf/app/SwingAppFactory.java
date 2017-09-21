@@ -33,16 +33,6 @@ public class SwingAppFactory extends AbstractApplicationFactory
 
 	private static String[]    empty = {  };
 
-	private static ControlKind[] supportedControls = 
-        { 
-            ControlKind.Any, ControlKind.Wait, ControlKind.Button, ControlKind.CheckBox, ControlKind.ComboBox, ControlKind.Dialog,
-            ControlKind.Frame, ControlKind.Label, ControlKind.ListView, ControlKind.Menu, ControlKind.MenuItem, ControlKind.Panel,
-            ControlKind.ProgressBar, ControlKind.RadioButton, ControlKind.ScrollBar, ControlKind.Slider, ControlKind.Splitter,
-            ControlKind.Spinner, ControlKind.Table, ControlKind.TabPanel, ControlKind.TextBox, ControlKind.ToggleButton, 
-            ControlKind.Tooltip, ControlKind.Tree,
-        };
-
-    
 	private static PluginInfo  info;
     
     static
@@ -88,17 +78,13 @@ public class SwingAppFactory extends AbstractApplicationFactory
         info.addExcludes(ControlKind.ComboBox, OperationKind.SCROLL_TO);
     }
 
-	private IGuiDictionary dictionary = null;
-
-	//----------------------------------------------------------------------------------------------
-	// IFactory
-	//----------------------------------------------------------------------------------------------
+	//region IFactory
 	@Override
 	public String[] wellKnownParameters(ParametersKind kind)
 	{
 		switch (kind)
 		{
-			case LOAD:		    return new String[] { jreExecName, jreArgsName, logLevel };
+			case LOAD:		    return new String[] { jreExecName, jreArgsName, logLevel, trimTextName };
 			case START:		    return new String[] { jarName, argsName, mainClassName };
 			case CONNECT:	    return new String[] { urlName };
             case GET_PROPERTY:  return new String[] { propertyTitle };
@@ -106,7 +92,8 @@ public class SwingAppFactory extends AbstractApplicationFactory
 			default:		    return empty;	
 		}
 	}
-	
+
+
 	@Override
 	public boolean canFillParameter(String parameterToFill)
 	{
@@ -119,25 +106,13 @@ public class SwingAppFactory extends AbstractApplicationFactory
 		return empty;
 	}
 
-	//----------------------------------------------------------------------------------------------
-	// IApplicationFactory
-	//----------------------------------------------------------------------------------------------
-	@Override
-	public void init(IGuiDictionary dictionary)
-	{
-		this.dictionary = dictionary;
-	}
+	//endregion
 
+	//region IApplicationFactory
     @Override
     public InputStream getHelp()
     {
         return SwingAppFactory.class.getResourceAsStream(helpFileName);
-    }
-
-    @Override
-    public Set<ControlKind> supportedControlKinds()
-    {
-        return info.supportedControlKinds();
     }
 
 	@Override
@@ -152,27 +127,13 @@ public class SwingAppFactory extends AbstractApplicationFactory
 		return SwingRemoteApplication.class.getCanonicalName();
 	}
 
-	@Override
-	public IGuiDictionary getDictionary()
-	{
-		return this.dictionary;
-	}
-
-	@Override
-	public boolean isAllowed(ControlKind kind, OperationKind operation) {
-		return getInfo().isAllowed(kind, operation);
-	}
-
-	@Override
-	public boolean isSupported(ControlKind kind) {
-		return getInfo().isSupported(kind);
-	}
-
     @Override
     public PluginInfo getInfo()
     {
 		return info;
     }
+
+    //endregion
 
     private static class SwingPluginInfo extends PluginInfo
 	{

@@ -10,6 +10,7 @@ package com.exactprosystems.jf.api.app;
 
 import com.exactprosystems.jf.api.common.Converter;
 import com.exactprosystems.jf.api.common.SerializablePair;
+import com.exactprosystems.jf.api.common.Str;
 import com.exactprosystems.jf.api.error.app.ElementNotFoundException;
 import com.exactprosystems.jf.api.error.app.ProxyException;
 import org.w3c.dom.Document;
@@ -30,6 +31,8 @@ public abstract class RemoteApplication implements IRemoteApplication
 {
 	public static final String CONNECTED_PORT_DELIMITER = ":";
 	public static final String CONNECTED_PORT = "connectedPort" + CONNECTED_PORT_DELIMITER;
+
+	protected boolean useTrimText = true;
 
 	public static void main(String[] args)
 	{
@@ -96,56 +99,6 @@ public abstract class RemoteApplication implements IRemoteApplication
 		}
 	}
 
-	private static int firstFreePort(int startPort) throws Exception
-	{
-		int port = 0;
-		boolean ok = false;
-		for (int count = 0; count <= 1000; count++)
-		{
-			port = startPort + count;
-			if (available(port))
-			{
-				ok = true;
-				break;
-			}
-		}
-		if (!ok)
-		{
-			throw new Exception("No one free port in range " + startPort + "-" + (startPort + 1000));
-		}
-
-		return port;
-	}
-
-	private static boolean available(int port)
-	{
-		try (ServerSocket ss = new ServerSocket(port))
-		{
-			ss.setReuseAddress(true);
-		}
-		catch (IOException e)
-		{
-			return false;
-		}
-
-		try (DatagramSocket ds = new DatagramSocket(port))
-		{
-			ds.setReuseAddress(true);
-		}
-		catch (IOException e)
-		{
-			return false;
-		}
-
-		return true;
-	}
-
-	private static String time()
-    {
-        return new Date().toString();
-    }
-
-
     @Override
 	public final void createLogger(String logName, String serverLogLevel, String serverLogPattern) throws RemoteException
 	{
@@ -169,7 +122,7 @@ public abstract class RemoteApplication implements IRemoteApplication
 	}
 
     @Override
-    public void setPluginInfo   (PluginInfo info) throws RemoteException
+    public void setPluginInfo (PluginInfo info) throws RemoteException
     {
         try 
         {
@@ -188,13 +141,18 @@ public abstract class RemoteApplication implements IRemoteApplication
         }
     }
 
-
 	@Override
 	public final int connect(Map<String, String> args) throws RemoteException
 	{
 		try 
 		{
 			exceptionIfNull(args, "args", "run");
+
+			String s = args.get(AbstractApplicationFactory.trimTextName);
+			if (!Str.IsNullOrEmpty(s))
+			{
+				this.useTrimText = Boolean.valueOf(s);
+			}
 
 			return connectDerived(args);
 		}
@@ -215,6 +173,12 @@ public abstract class RemoteApplication implements IRemoteApplication
 		try 
 		{
 			exceptionIfNull(args, "args", "run");
+
+			String s = args.get(AbstractApplicationFactory.trimTextName);
+			if (!Str.IsNullOrEmpty(s))
+			{
+				this.useTrimText = Boolean.valueOf(s);
+			}
 
 			return runDerived(args);
 		}
@@ -325,7 +289,13 @@ public abstract class RemoteApplication implements IRemoteApplication
 	{
 		try 
 		{
-			return titlesDerived();
+			Collection<String> strings = titlesDerived();
+			Collection<String> trimmed = new ArrayList<>(strings.size());
+			for (String s : strings)
+			{
+				trimmed.add(trimIfNeeded(s));
+			}
+			return trimmed;
 		}
 		catch (RemoteException e)
 		{
@@ -365,7 +335,8 @@ public abstract class RemoteApplication implements IRemoteApplication
 		{
 			exceptionIfNull(criteria, "criteria", "switchTo");
 
-			return switchToDerived(criteria, softCondition);
+			String switchToDerived = switchToDerived(criteria, softCondition);
+			return this.trimIfNeeded(switchToDerived);
 		}
 		catch (RemoteException e)
 		{
@@ -607,6 +578,7 @@ public abstract class RemoteApplication implements IRemoteApplication
 		}
 	}
 
+	//region protected abstract methods
 	protected abstract void createLoggerDerived(String logName, String serverLogLevel, String serverLogPattern) throws Exception;
 
 	protected abstract void setPluginInfoDerived(PluginInfo info) throws Exception;
@@ -654,6 +626,17 @@ public abstract class RemoteApplication implements IRemoteApplication
 	protected abstract void startNewDialogDerived() throws Exception;
 
 	protected abstract void moveWindowDerived(int x, int y) throws Exception;
+	//endregion
+
+	//region private methods
+	private String trimIfNeeded(String s)
+	{
+		if (s != null && this.useTrimText)
+		{
+			return s.trim();
+		}
+		return s;
+	}
 
 	private static String removeExtraQuotes(String string)
 	{
@@ -673,6 +656,55 @@ public abstract class RemoteApplication implements IRemoteApplication
 		}
 			
 		return null;
+	}
+
+	private static int firstFreePort(int startPort) throws Exception
+	{
+		int port = 0;
+		boolean ok = false;
+		for (int count = 0; count <= 1000; count++)
+		{
+			port = startPort + count;
+			if (available(port))
+			{
+				ok = true;
+				break;
+			}
+		}
+		if (!ok)
+		{
+			throw new Exception("No one free port in range " + startPort + "-" + (startPort + 1000));
+		}
+
+		return port;
+	}
+
+	private static boolean available(int port)
+	{
+		try (ServerSocket ss = new ServerSocket(port))
+		{
+			ss.setReuseAddress(true);
+		}
+		catch (IOException e)
+		{
+			return false;
+		}
+
+		try (DatagramSocket ds = new DatagramSocket(port))
+		{
+			ds.setReuseAddress(true);
+		}
+		catch (IOException e)
+		{
+			return false;
+		}
+
+		return true;
+	}
+
+	private static String time()
+	{
+		return new Date().toString();
 	}
 
 	@SuppressWarnings("unchecked")
@@ -697,5 +729,6 @@ public abstract class RemoteApplication implements IRemoteApplication
 	}
 
 	private static List<IRemoteApplication> services = new ArrayList<IRemoteApplication>();
+	//endregion
 
 }

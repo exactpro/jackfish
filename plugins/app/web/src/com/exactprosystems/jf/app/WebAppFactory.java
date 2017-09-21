@@ -85,8 +85,6 @@ public class WebAppFactory extends AbstractApplicationFactory
 
     }
 
-	private IGuiDictionary dictionary = null;
-
 	public enum WhereToOpen 
 	{
 	    OpenInTab,
@@ -99,17 +97,14 @@ public class WebAppFactory extends AbstractApplicationFactory
 	    }
 	}
 
-
-	//----------------------------------------------------------------------------------------------
-	// IFactory
-	//----------------------------------------------------------------------------------------------
+	//region IFactory
 	@Override
 	public String[] wellKnownParameters(ParametersKind kind)
 	{
 		switch (kind)
 		{
 			case LOAD:		    return new String[] { jreExecName, jreArgsName, chromeDriverPathName, geckoDriverPathName, ieDriverPathName, 
-			        chromeDriverBinary, firefoxProfileDir, usePrivateMode, logLevel };
+			        chromeDriverBinary, firefoxProfileDir, usePrivateMode, logLevel, trimTextName };
 			case START:         return new String[] { browserName, urlName };
 			case GET_PROPERTY:  return new String[] { propertyUrlName, propertyTitle, propertyAllTitles, propertyCookie, propertyAllCookies };
             case SET_PROPERTY:  return new String[] { propertyUrlName, propertyTitle, propertyAddCookie, propertyRemoveCookie, propertyRemoveAllCookies };
@@ -151,25 +146,15 @@ public class WebAppFactory extends AbstractApplicationFactory
 		}
 	}
 
-	//----------------------------------------------------------------------------------------------
-	// IApplicationFactory
-	//----------------------------------------------------------------------------------------------
-	@Override
-	public void init(IGuiDictionary dictionary)
-	{
-		this.dictionary = dictionary;
-	}
+	//endregion
 
+	//region IApplicationFactory
+
+	@Deprecated
     @Override
     public InputStream getHelp()
     {
         return WebAppFactory.class.getResourceAsStream(helpFileName);
-    }
-
-    @Override
-    public Set<ControlKind> supportedControlKinds()
-    {
-        return info.supportedControlKinds();
     }
 
 	@Override
@@ -185,26 +170,12 @@ public class WebAppFactory extends AbstractApplicationFactory
 	}
 
 	@Override
-	public IGuiDictionary getDictionary()
-	{
-		return this.dictionary;
-	}
-
-	@Override
-	public boolean isAllowed(ControlKind kind, OperationKind operation) {
-		return getInfo().isAllowed(kind, operation);
-	}
-
-	@Override
-	public boolean isSupported(ControlKind kind) {
-		return getInfo().isSupported(kind);
-	}
-
-	@Override
     public PluginInfo getInfo()
     {
 		return info;
     }
+
+    //endregion
 
 	private static class WebPluginInfo extends PluginInfo
 	{

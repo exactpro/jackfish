@@ -18,7 +18,7 @@ import java.util.*;
 public class WinAppFactory extends AbstractApplicationFactory
 {
     public static final String      helpFileName            = "help.txt";
-    
+
 	public static final String		logLevel				= "LogLevel";
 	public static final String		jreExecName				= "jreExec";
 	public static final String		jreArgsName				= "jreArgs";
@@ -79,15 +79,13 @@ public class WinAppFactory extends AbstractApplicationFactory
         info.addExcludes(ControlKind.MenuItem,  OperationKind.KEY_DOWN, OperationKind.KEY_UP, OperationKind.PRESS);
 	}
 	
-	private IGuiDictionary dictionary = null;
-
 	//region IFactory
 	@Override
 	public String[] wellKnownParameters(ParametersKind kind)
 	{
 		switch (kind)
 		{
-			case LOAD:		     return new String[] { jreExecName, jreArgsName, maxTimeout, logLevel};
+			case LOAD:		     return new String[] { jreExecName, jreArgsName, maxTimeout, logLevel, trimTextName};
 			case START:		     return new String[] { execName, workDirName, argsName, alwaysToFront };
 			case CONNECT:        return new String[] { mainWindowName, mainWindowHeight, mainWindowWidth, pidName, controlKindName, connectionTimeout, alwaysToFront };
 			case GET_PROPERTY:   return new String[] { propertyWindowRectangle, propertyTitle }; 
@@ -113,21 +111,9 @@ public class WinAppFactory extends AbstractApplicationFactory
 	//region IApplicationFactory
 
 	@Override
-	public void init(IGuiDictionary dictionary)
-	{
-		this.dictionary = dictionary;
-	}
-
-	@Override
 	public InputStream getHelp()
 	{
 		return WinAppFactory.class.getResourceAsStream(helpFileName);
-	}
-
-	@Override
-	public Set<ControlKind> supportedControlKinds()
-	{
-		return info.supportedControlKinds();
 	}
 
 	@Override
@@ -140,24 +126,6 @@ public class WinAppFactory extends AbstractApplicationFactory
 	public String getRemoteClassName()
 	{
 		return WinRemoteApplicationJNA.class.getCanonicalName();
-	}
-
-	@Override
-	public IGuiDictionary getDictionary()
-	{
-		return this.dictionary;
-	}
-
-	@Override
-	public boolean isAllowed(ControlKind kind, OperationKind operation)
-	{
-		return getInfo().isAllowed(kind, operation);
-	}
-
-	@Override
-	public boolean isSupported(ControlKind kind)
-	{
-		return getInfo().isSupported(kind);
 	}
 
 	@Override

@@ -8,6 +8,7 @@
 
 package com.exactprosystems.jf.app;
 
+import com.exactprosystems.jf.api.app.AbstractApplicationFactory;
 import com.exactprosystems.jf.api.app.ProxyApplication;
 import com.exactprosystems.jf.api.common.SerializablePair;
 import com.exactprosystems.jf.api.common.Str;
@@ -70,6 +71,12 @@ public class ProxyWebApp extends ProxyApplication
 		if (!Str.IsNullOrEmpty(logLevel))
 		{
 			driverParameters.put(ProxyApplication.remoteLogLevelName, logLevel);
+		}
+
+		String trimText = driverParameters.get(AbstractApplicationFactory.trimTextName);
+		if (!Str.IsNullOrEmpty(trimText))
+		{
+			parameters.put(AbstractApplicationFactory.trimTextName, Boolean.valueOf(trimText).toString());
 		}
 
 		String chromeDriverPath 	= driverParameters.get(WebAppFactory.chromeDriverPathName);
