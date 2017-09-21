@@ -133,7 +133,21 @@ public abstract class Common
 		return node != null && node.isFocused();
 	}
 
-	
+	/**
+	 * use this method instead of Platform.runLater()
+	 */
+	public static void runLater(Runnable runnable)
+	{
+		if (Platform.isFxApplicationThread())
+		{
+			runnable.run();
+		}
+		else
+		{
+			Platform.runLater(runnable);
+		}
+	}
+
 	@Deprecated
 	public static <T extends ContainingParent> T loadController(URL resource)
 	{
