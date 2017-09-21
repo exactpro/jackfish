@@ -14,6 +14,7 @@ import javafx.application.Platform;
 import javafx.beans.property.*;
 import javafx.beans.value.ChangeListener;
 import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.collections.ObservableMap;
 import javafx.event.Event;
@@ -21,14 +22,12 @@ import javafx.event.EventHandler;
 import javafx.event.EventType;
 import javafx.scene.Node;
 import javafx.scene.control.*;
-import javafx.scene.control.MenuItem;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.util.Pair;
 
-import java.awt.*;
+import java.awt.Point;
 import java.util.*;
-import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.FutureTask;
 import java.util.regex.Matcher;
@@ -202,6 +201,8 @@ public class SpreadsheetView extends Control
 			{
 				cellsView.getFocusModel().focus(finalPair.getKey(), cellsView.getColumns().get(finalPair.getValue()));
 			}
+
+			removeAndAddListener();
 		};
 
 		if (Platform.isFxApplicationThread())
@@ -223,9 +224,45 @@ public class SpreadsheetView extends Control
 		}
 	}
 
+	private void removeAndAddListener()
+	{
+		if (this.oldListener != null)
+		{
+			cellsView.getColumns().removeListener(this.oldListener);
+		}
+		TableColumn[] columns = cellsView.getColumns().toArray(new TableColumn[cellsView.getColumns().size()]);
+		this.oldListener = new ColumnChangeListener(columns);
+		cellsView.getColumns().addListener(this.oldListener);
+	}
+
 	public final void display(DataProvider<String> dataProvider)
 	{
 		this.setDataProvider(dataProvider);
+		removeAndAddListener();
+	}
+
+	private ColumnChangeListener oldListener;
+
+	private class ColumnChangeListener implements ListChangeListener<TableColumn<ObservableList<SpreadsheetCell>, ?>>
+	{
+		boolean suspended;
+		private TableColumn[] columns;
+
+		public ColumnChangeListener(TableColumn[] columns)
+		{
+			this.columns = columns;
+		}
+
+		@Override
+		public void onChanged(Change<? extends TableColumn<ObservableList<SpreadsheetCell>, ?>> change)
+		{
+			change.next();
+			if (change.wasReplaced() && !suspended) {
+				this.suspended = true;
+				cellsView.getColumns().setAll(columns);
+				this.suspended = false;
+			}
+		}
 	}
 
 	public void addColumn(int index)

@@ -83,6 +83,7 @@ public class TempItem extends MatrixItem
 		            newItem.createId();
 		            this.getParent().insert(index, newItem);
 		            newItem.display(driver, context);
+		            driver.setCurrentItem(newItem, getMatrix(), false);
 		        }
 		        catch (Exception e)
 		        {
