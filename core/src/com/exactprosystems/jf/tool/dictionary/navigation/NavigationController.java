@@ -28,7 +28,6 @@ import com.exactprosystems.jf.tool.dictionary.DictionaryFxController;
 import com.exactprosystems.jf.tool.dictionary.FindListView;
 import com.exactprosystems.jf.tool.helpers.DialogsHelper;
 import com.exactprosystems.jf.tool.wizard.WizardButton;
-import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.event.ActionEvent;
 import javafx.fxml.Initializable;
@@ -81,6 +80,9 @@ public class NavigationController implements Initializable, ContainingParent
 
 	private Parent pane;
 
+	private Node dialog;
+	private Node element;
+
 	private DictionaryFx model;
 	private boolean fullScreen = false;
 	private AppConnection appConnection;
@@ -94,6 +96,11 @@ public class NavigationController implements Initializable, ContainingParent
 	public void setParent(Parent parent)
 	{
 		this.pane = parent;
+		Common.runLater(() ->
+		{
+			((HBox)this.pane).getChildren().add(0,this.dialog);
+			((HBox)this.pane).getChildren().add(this.element);
+		});
 	}
 
 	@Override
@@ -130,34 +137,30 @@ public class NavigationController implements Initializable, ContainingParent
 		));
 		this.vBoxElement.getChildren().add(0, this.listViewElement);
 		
-		Common.runLater(() ->
-		{
 			ScrollPane scrollPaneWindow = new ScrollPane(this.vBoxWindow);
 			scrollPaneWindow.setFitToWidth(true);
 			scrollPaneWindow.setFitToHeight(true);
 			scrollPaneWindow.setHbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
 			scrollPaneWindow.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
-			Node dialog = BorderWrapper.wrap(this.vBoxWindow).title("Dialog").color(Common.currentTheme().getReverseColor()).build();
+			this.dialog = BorderWrapper.wrap(this.vBoxWindow).title("Dialog").color(Common.currentTheme().getReverseColor()).build();
 			double width = 350.0;
-			((Region) dialog).setMinWidth(width);
-			((Region) dialog).setMaxWidth(width);
-			((Region) dialog).setPrefWidth(width);
-			((HBox)this.pane).getChildren().add(0,dialog);
-			HBox.setHgrow(dialog, Priority.ALWAYS);
+			((Region) this.dialog).setMinWidth(width);
+			((Region) this.dialog).setMaxWidth(width);
+			((Region) this.dialog).setPrefWidth(width);
+
+			HBox.setHgrow(this.dialog, Priority.ALWAYS);
 
 			ScrollPane scrollPaneElement = new ScrollPane(this.vBoxElement);
 			scrollPaneElement.setFitToWidth(true);
 			scrollPaneElement.setFitToHeight(true);
 			scrollPaneElement.setHbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
 			scrollPaneElement.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
-			Node element = BorderWrapper.wrap(this.vBoxElement).title("Element").color(Common.currentTheme().getReverseColor()).build();
+			this.element = BorderWrapper.wrap(this.vBoxElement).title("Element").color(Common.currentTheme().getReverseColor()).build();
 			double widthForElement = 316;
-			((Region) element).setMinWidth(widthForElement);
-			((Region) element).setMaxWidth(widthForElement);
-			((Region) element).setPrefWidth(widthForElement);
-			((HBox)this.pane).getChildren().add(element);
-			HBox.setHgrow(element, Priority.ALWAYS);
-		});
+			((Region) this.element).setMinWidth(widthForElement);
+			((Region) this.element).setMaxWidth(widthForElement);
+			((Region) this.element).setPrefWidth(widthForElement);
+			HBox.setHgrow(this.element, Priority.ALWAYS);
 	}
 
 	public void init(DictionaryFx model, GridPane gridPane, Settings settings, CustomTab owner)

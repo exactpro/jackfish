@@ -25,7 +25,6 @@ import com.exactprosystems.jf.tool.dictionary.element.ElementInfoController;
 import com.exactprosystems.jf.tool.dictionary.navigation.NavigationController;
 import com.exactprosystems.jf.tool.helpers.DialogsHelper;
 import com.exactprosystems.jf.tool.helpers.ExpressionFieldsPane;
-import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.Initializable;
@@ -94,6 +93,7 @@ public class ActionsController implements Initializable, ContainingParent
 	public void setParent(Parent parent)
 	{
 		this.pane = parent;
+		Common.runLater(() -> ((BorderPane) this.pane).setCenter(BorderWrapper.wrap(this.mainGrid).title("Actions").color(Common.currentTheme().getReverseColor()).build()));
 	}
 
 	@Override
@@ -102,7 +102,6 @@ public class ActionsController implements Initializable, ContainingParent
 		imageArea.getStyleClass().add(CssVariables.IMAGE_AREA);
 		comboBoxWindows.setOnShowing(event -> tryCatch(() -> this.model.displayTitles(), "Error on update titles"));
 		comboBoxAppsStore.setOnShowing(event -> tryCatch(() -> this.model.displayStores(), "Error on update titles"));
-		Common.runLater(() -> ((BorderPane) this.pane).setCenter(BorderWrapper.wrap(this.mainGrid).title("Actions").color(Common.currentTheme().getReverseColor()).build()));
 		setDisable(true);
 		this.groupSection.selectedToggleProperty().addListener((observable, oldValue, newValue) -> setDisable(!(newValue != null && newValue == this.rbSize)));
 		this.rbMin.setUserData(Resize.Minimize);

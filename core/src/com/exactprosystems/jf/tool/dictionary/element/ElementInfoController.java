@@ -19,7 +19,6 @@ import com.exactprosystems.jf.tool.custom.controls.field.CustomFieldWithButton;
 import com.exactprosystems.jf.tool.dictionary.DictionaryFx;
 import com.exactprosystems.jf.tool.dictionary.navigation.NavigationController;
 import com.exactprosystems.jf.tool.helpers.DialogsHelper;
-import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -81,13 +80,12 @@ public class ElementInfoController implements Initializable, ContainingParent
 	public void setParent(Parent parent)
 	{
 		this.pane = parent;
+		Common.runLater(() -> ((BorderPane) this.pane).setCenter(BorderWrapper.wrap(this.mainGrid).color(Common.currentTheme().getReverseColor()).title("Element info").build()));
 	}
 
 	@Override
 	public void initialize(URL url, ResourceBundle resourceBundle)
 	{
-		Common.runLater(() -> ((BorderPane) this.pane).setCenter(BorderWrapper.wrap(this.mainGrid).color(Common.currentTheme().getReverseColor()).title("Element info").build()));
-
 		Arrays.asList(tfID, tfUID, tfXpath, tfClass, tfText, tfName, tfTooltip, tfColumns, tfAction, tfTitle, tfExpression).forEach(tf -> {
 			tf.prefWidthProperty().bind(this.fieldGrid.getColumnConstraints().get(1).maxWidthProperty());
 			tf.maxWidthProperty().bind(this.fieldGrid.getColumnConstraints().get(1).maxWidthProperty());
