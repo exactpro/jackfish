@@ -18,6 +18,7 @@ import com.exactprosystems.jf.documents.matrix.parser.listeners.IMatrixListener;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.ContainingParent;
 import com.exactprosystems.jf.tool.CssVariables;
+import com.exactprosystems.jf.tool.custom.console.ConsoleArea;
 import com.exactprosystems.jf.tool.custom.console.ConsoleText;
 import com.exactprosystems.jf.tool.custom.console.CustomListView;
 import com.exactprosystems.jf.tool.custom.date.CustomDateTimePicker;
@@ -44,12 +45,14 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
+import org.fxmisc.flowless.VirtualizedScrollPane;
 
 import java.io.File;
 import java.net.URL;
 import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
+import java.util.function.Consumer;
 
 import static com.exactprosystems.jf.tool.Common.*;
 
@@ -89,6 +92,7 @@ public class MatrixFxController implements Initializable, ContainingParent, IMat
 
 	private static final int MIN_TIME_FOR_SHOW_WAITS = 5000;
 	private static final int MIN_TIME_FOR_HIDE_WAITS = 1000;
+	private ConsoleArea area;
 
 	// ==============================================================================================================================
 	// interface Initializable
@@ -104,7 +108,9 @@ public class MatrixFxController implements Initializable, ContainingParent, IMat
 		assert btnPauseMatrix != null : "fx:id=\"btnPauseMatrix\" was not injected: check your FXML file 'MatrixFx.fxml'.";
 		assert btnStepMatrix != null : "fx:id=\"btnStepMatrix\" was not injected: check your FXML file 'MatrixFx.fxml'.";
 		assert toggleTracing != null : "fx:id=\"toggleTracing\" was not injected: check your FXML file 'MatrixFx.fxml'.";
-		
+
+		createConsoleTextArea();
+
 		this.listView = new CustomListView<>(matrixItem -> tryCatch(() ->
 		{
 			TreeItem<MatrixItem> treeItem = this.tree.find(matrixItem);
@@ -167,16 +173,22 @@ public class MatrixFxController implements Initializable, ContainingParent, IMat
 		String format = String.format("Matrix '%s' started...", matrix.getNameProperty().get());
 		if (this.listView != null)
 		{
-		this.listView.getItems().clear();
-		this.listView.getItems().add(ConsoleText.defaultText(format));
-		Optional.ofNullable(tab1).ifPresent(t -> {
-		t.getStyleClass().removeAll(CssVariables.MATRIX_FINISHED_OK, CssVariables.MATRIX_FINISHED_BAD);
-		t.getStyleClass().add(CssVariables.EXECUTING_TAB);
-		});
-		}
-		else
-		{
-		DialogsHelper.showInfo(format);
+			Platform.runLater(() ->
+			{
+				this.area.clear();
+				this.area.appendDefaultText(String.format("Matrix '%s' started...", matrix.getNameProperty().get()));
+			});
+
+			this.listView.getItems().clear();
+			this.listView.getItems().add(ConsoleText.defaultText(format));
+			Optional.ofNullable(tab1).ifPresent(t -> {
+			t.getStyleClass().removeAll(CssVariables.MATRIX_FINISHED_OK, CssVariables.MATRIX_FINISHED_BAD);
+			t.getStyleClass().add(CssVariables.EXECUTING_TAB);
+			});
+			}
+			else
+			{
+			DialogsHelper.showInfo(format);
 		}
 	}
 
@@ -199,6 +211,7 @@ public class MatrixFxController implements Initializable, ContainingParent, IMat
 		String format = String.format("Matrix '%s' finished.", matrix.getNameProperty().get());
 		if (this.listView != null)
 		{
+			Platform.runLater(() -> this.area.appendErrorText(String.format("Matrix '%s' finished.", matrix.getNameProperty().get())));
 			this.listView.getItems().add(ConsoleText.defaultText(format));
 			Optional.ofNullable(this.tab).ifPresent(t -> {
 				t.getStyleClass().remove(CssVariables.EXECUTING_TAB);
@@ -221,6 +234,7 @@ public class MatrixFxController implements Initializable, ContainingParent, IMat
 		Common.runLater(() ->
 		{
 			String format = item == null ? message : String.format("%s %s", item.getPath(), message);
+			this.area.appendErrorText(format);
 			if (listView != null)
 			{
 				listView.getItems().add(ConsoleText.errorItem(format, item));
@@ -262,6 +276,7 @@ public class MatrixFxController implements Initializable, ContainingParent, IMat
 			else
 			{
 				DialogsHelper.showInfo(String.format("Matrix paused on \'%s\'", treeItem.getValue().getItemName()));
+				Platform.runLater(() -> this.area.appendMatrixItemLink(String.format("%d : Paused on %s", item.getNumber(), item.getItemName()), treeItem));
 				Optional.ofNullable(this.listView).ifPresent(lv -> lv.getItems().add(ConsoleText.pausedItem(String.format("Paused on %s", item), item)));
 				this.tree.scrollTo(this.tree.getRow(treeItem));
 			}
@@ -301,7 +316,11 @@ public class MatrixFxController implements Initializable, ContainingParent, IMat
 		this.tree.init(model, settings, rowContextMenu);
 		this.tab = CustomTabPane.getInstance().createTab(model);
 		this.tab.setContent(this.pane);
-		console.setConsumer(s -> Common.runLater(() -> this.listView.getItems().add(ConsoleText.defaultText(s))));
+		console.setConsumer(s -> Common.runLater(() ->
+		{
+			this.area.appendDefaultText(s);
+			this.listView.getItems().add(ConsoleText.defaultText(s));
+		}));
 		CustomTabPane.getInstance().addTab(this.tab);
 		CustomTabPane.getInstance().selectTab(this.tab);
 
@@ -316,6 +335,14 @@ public class MatrixFxController implements Initializable, ContainingParent, IMat
 		this.bottomBox.getChildren().addAll(this.efParameter, Common.createSpacer(SpacerEnum.HorizontalMin), new Separator(Orientation.VERTICAL));
 		initializeButtons(context.getFactory().getSettings());
 		initShortcuts(context.getFactory().getSettings());
+	}
+
+	private void createConsoleTextArea()
+	{
+		Consumer<TreeItem<MatrixItem>> moveToMatrixItem = treeItem -> MatrixFxController.this.tree.setCurrent(treeItem, false);
+		this.area = new ConsoleArea(moveToMatrixItem);
+		this.area.setEditable(false);
+		this.splitPane.getItems().add(new VirtualizedScrollPane<>(area));
 	}
 
 	public void save(String name)

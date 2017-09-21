@@ -16,7 +16,7 @@ public class ConsoleText<T> extends Text
 {
 	private T item;
 
-	private ConsoleText(String text)
+	public ConsoleText(String text)
 	{
 		super(text);
 	}
