@@ -62,7 +62,7 @@ testcases;Never;;
         DLGFLL1;DialogFill;'Main';appCon;Do.click();Do.text('',true).click().keyDown(Keyboard.SHIFT).press(Keyboard.A).keyUp(Keyboard.SHIFT).getValue();Do.getValue()
 
         #Id;#Let
-        result;'TextBox_down_16' + getNewLine(plugin) + 'TextBox_down_65' + getNewLine(plugin) + 'TextBox_press_65' + getNewLine(plugin) + 'TextBox_up_65' + getNewLine(plugin) + 'TextBox_up_16' + getNewLine(plugin)
+        result;'TextBox_down_16' + getNewLine(plugin) + 'TextBox_down_65' + getNewLine(plugin) + 'TextBox_press_65' + getNewLine(plugin) + 'TextBox_up_65' + getNewLine(plugin) + 'TextBox_up_16'
 
         #Assert;#Message
         DLGFLL1.Out.TextBox == 'A';DLGFLL1.Out.TextBox + ' != A'
@@ -88,7 +88,7 @@ testcases;Never;;
         DLGFLL1;DialogFill;'Main';appCon;Do.click();Do.text('',true).click().move().keyDown(Keyboard.CONTROL).press(Keyboard.A).keyUp(Keyboard.CONTROL).getValue();Do.getValue()
 
         #Id;#Let
-        expected;'TextBox_down_17' + getNewLine(plugin) +'TextBox_down_65' + getNewLine(plugin) + 'TextBox_press_1' + getNewLine(plugin) + 'TextBox_up_65' + getNewLine(plugin) + 'TextBox_up_17' + getNewLine(plugin)
+        expected;'TextBox_down_17' + getNewLine(plugin) +'TextBox_down_65' + getNewLine(plugin) + 'TextBox_press_1' + getNewLine(plugin) + 'TextBox_up_65' + getNewLine(plugin) + 'TextBox_up_17'
 
         #Assert;#Message
         DLGFLL1.Out.protocolText == expected;DLGFLL1.Out.protocolText + ' != ' + expected
@@ -101,7 +101,7 @@ testcases;Never;;
         DLGFLL1;DialogFill;'Main';appCon;Do.click();Do.text('',true).click().move().keyDown(Keyboard.CONTROL).keyDown(Keyboard.SHIFT).press(Keyboard.A).keyUp(Keyboard.SHIFT).keyUp(Keyboard.CONTROL).getValue();Do.getValue()
 
         #Id;#Let
-        expected;'TextBox_down_17' + getNewLine(plugin) + 'TextBox_down_16' + getNewLine(plugin) + 'TextBox_down_65' + getNewLine(plugin) + 'TextBox_press_1' + getNewLine(plugin) + 'TextBox_up_65' + getNewLine(plugin) + 'TextBox_up_16' + getNewLine(plugin) + 'TextBox_up_17' + getNewLine(plugin)
+        expected;'TextBox_down_17' + getNewLine(plugin) + 'TextBox_down_16' + getNewLine(plugin) + 'TextBox_down_65' + getNewLine(plugin) + 'TextBox_press_1' + getNewLine(plugin) + 'TextBox_up_65' + getNewLine(plugin) + 'TextBox_up_16' + getNewLine(plugin) + 'TextBox_up_17'
 
         #Assert;#Message
         DLGFLL1.Out.protocolText == expected;DLGFLL1.Out.protocolText + ' != ' + expected
@@ -114,7 +114,7 @@ testcases;Never;;
         DLGFLL1;DialogFill;'Main';appCon;Do.click();Do.text('',true).click().move().keyDown(Keyboard.CONTROL).keyDown(Keyboard.SHIFT).keyDown(Keyboard.ALT).press(Keyboard.A).keyUp(Keyboard.ALT).keyUp(Keyboard.SHIFT).keyUp(Keyboard.CONTROL).getValue();Do.getValue()
 
         #Id;#Let
-        expected;'TextBox_down_17' + getNewLine(plugin) + 'TextBox_down_16' + getNewLine(plugin) + 'TextBox_down_18' + getNewLine(plugin) + 'TextBox_down_65' + getNewLine(plugin) + 'TextBox_press_1' + getNewLine(plugin) + 'TextBox_up_65' + getNewLine(plugin) + 'TextBox_up_18' + getNewLine(plugin) + 'TextBox_up_16' + getNewLine(plugin) + 'TextBox_up_17' + getNewLine(plugin)
+        expected;'TextBox_down_17' + getNewLine(plugin) + 'TextBox_down_16' + getNewLine(plugin) + 'TextBox_down_18' + getNewLine(plugin) + 'TextBox_down_65' + getNewLine(plugin) + 'TextBox_press_1' + getNewLine(plugin) + 'TextBox_up_65' + getNewLine(plugin) + 'TextBox_up_18' + getNewLine(plugin) + 'TextBox_up_16' + getNewLine(plugin) + 'TextBox_up_17'
 
         #Assert;#Message
         DLGFLL1.Out.protocolText == expected;DLGFLL1.Out.protocolText + ' != ' + expected
