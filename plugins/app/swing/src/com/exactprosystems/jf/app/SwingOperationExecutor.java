@@ -59,7 +59,7 @@ import java.util.concurrent.atomic.AtomicLong;
 import static org.fest.swing.driver.ComponentStateValidator.validateIsEnabledAndShowing;
 import static org.fest.swing.edt.GuiActionRunner.execute;
 
-public class SwingOperationExecutor implements OperationExecutor<ComponentFixture<Component>>
+public class SwingOperationExecutor extends AbstractOperationExecutor<ComponentFixture<Component>>
 {
 	private Robot currentRobot;
 	private Logger logger;
@@ -67,10 +67,10 @@ public class SwingOperationExecutor implements OperationExecutor<ComponentFixtur
 	private boolean isAltDown = false;
 	private boolean isShiftDown = false;
 	private boolean isControlDown = false;
-	private PluginInfo info;
 
-	public SwingOperationExecutor(Robot currentRobot, Logger logger)
+	public SwingOperationExecutor(Robot currentRobot, Logger logger, boolean useTrimText)
 	{
+		super(useTrimText);
 		this.currentRobot = currentRobot;
 		this.logger = logger;
 	}
@@ -126,25 +126,6 @@ public class SwingOperationExecutor implements OperationExecutor<ComponentFixtur
 	}
 
 	//region OperationExecutor methods
-
-
-    @Override
-    public void setPluginInfo(PluginInfo info)
-    {
-        this.info = info;
-    }
-
-    @Override
-    public boolean isAllowed(ControlKind kind, OperationKind operation)
-    {
-		return this.info.isAllowed(kind, operation);
-    }
-
-	@Override
-	public boolean isSupported(ControlKind kind)
-	{
-		return this.info.isSupported(kind);
-	}
 
 	@Override
 	public Rectangle getRectangle(ComponentFixture<Component> component) throws Exception
@@ -288,42 +269,6 @@ public class SwingOperationExecutor implements OperationExecutor<ComponentFixtur
 			return Collections.emptyList();
 		}
     }
-
-    private class JTreeItemFixture extends ComponentFixture<Component>
-	{
-		JTreeItemFixture(Robot robot, JTreeItem target)
-		{
-			super(robot, target);
-		}
-	}
-
-	private class JTreeItem extends JComponent
-	{
-		JTree tree;
-		TreePath path;
-
-		JTreeItem(JTree tree, TreePath path)
-		{
-			this.tree = tree;
-			this.path = path;
-		}
-
-		JTree getTree()
-		{
-			return tree;
-		}
-
-		TreePath getPath()
-		{
-			return path;
-		}
-
-		@Override
-		public boolean isVisible()
-		{
-			return this.tree.isVisible(this.path);
-		}
-	}
 
     @Override
 	public ComponentFixture<Component> lookAtTable(ComponentFixture<Component> component, Locator additional, Locator header, int x, int y) throws Exception
@@ -631,38 +576,6 @@ public class SwingOperationExecutor implements OperationExecutor<ComponentFixtur
 		}
 	}
 
-	private Document convertTreeToXMLDoc(JTree tree) throws ParserConfigurationException, XPathExpressionException
-	{
-		Document doc = DocumentBuilderFactory.newInstance().newDocumentBuilder().newDocument();
-		TreeNode treeNode = (TreeNode) tree.getModel().getRoot();
-		Node root = doc.getDocumentElement();
-		createDom(doc, treeNode, root);
-		return doc;
-	}
-
-	private void createDom(Document doc, TreeNode treeNode, Node current)
-	{
-		Element node = doc.createElement("item");
-		node.setAttribute("name", treeNode.toString());
-		node.setUserData("path", new TreePath(((DefaultMutableTreeNode) treeNode).getPath()), null);
-		node.setUserData("node", treeNode, null);
-
-		if(current != null)
-		{
-			current.appendChild(node);
-		}
-		else
-		{
-			doc.appendChild(node);
-		}
-
-		Enumeration kiddies = treeNode.children();
-		while (kiddies.hasMoreElements())
-		{
-			createDom(doc, (TreeNode) kiddies.nextElement(), node);
-		}
-	}
-
 	@Override
 	public boolean select(ComponentFixture<Component> component, String selectedText) throws Exception
 	{
@@ -753,16 +666,6 @@ public class SwingOperationExecutor implements OperationExecutor<ComponentFixtur
 		}
 	}
 
-	private NodeList findNodesInTreeByXpath(Document document, String selectedText) throws XPathExpressionException
-	{
-		XPathFactory xPathfactory = XPathFactory.newInstance();
-		XPath xpath = xPathfactory.newXPath();
-		XPathExpression expr = xpath.compile(selectedText);
-
-		Object result = expr.evaluate(document, XPathConstants.NODESET);
-		return (NodeList) result;
-	}
-
 	@Override
 	public boolean expand(ComponentFixture<Component> component, String path, boolean expandOrCollapse) throws Exception
 	{
@@ -841,30 +744,6 @@ public class SwingOperationExecutor implements OperationExecutor<ComponentFixtur
 			logger.error(e.getMessage(), e);
 			throw e;
 		}
-	}
-
-	private JMenu findMenu(JMenu menu, List<String> items)
-	{
-		if(items.isEmpty())
-		{
-			return menu;
-		}
-
-		boolean found = false;
-		for(String menuName : items)
-		{
-			found = false;
-			for(Component menuComponent : menu.getMenuComponents())
-			{
-				if (menuComponent instanceof JMenu && ((JMenu) menuComponent).getText().equals(menuName))
-				{
-					menu = (JMenu) menuComponent;
-					found = true;
-					break;
-				}
-			}
-		}
-		return found ? menu : null;
 	}
 
 	@Override
@@ -1028,7 +907,7 @@ public class SwingOperationExecutor implements OperationExecutor<ComponentFixtur
 	}
 
 	@Override
-	public String getValue(ComponentFixture<Component> component) throws Exception
+	public String getValueDerived(ComponentFixture<Component> component) throws Exception
 	{
 		try
 		{
@@ -1048,37 +927,20 @@ public class SwingOperationExecutor implements OperationExecutor<ComponentFixtur
 	}
 
 	@Override
-	public List<String> getList(ComponentFixture<Component> fixture, boolean onlyVisible) throws Exception {
-			ListModel<?> model = getListModelFromComponentOrError(fixture.target);
-			return getListOfNamesFromListItems(model);
+	public List<String> getListDerived(ComponentFixture<Component> fixture, boolean onlyVisible) throws Exception
+	{
+		ListModel<?> model = getListModelFromComponentOrError(fixture.target);
+		return getListOfNamesFromListItems(model);
 	}
 
 	@Override
-	public Document getTree(ComponentFixture<Component> component) throws Exception {
+	public Document getTree(ComponentFixture<Component> component) throws Exception
+	{
 		return convertTreeToXMLDoc((JTree)component.target);
 	}
 
-	private List<String> getListOfNamesFromListItems(ListModel<?> model) {
-		ArrayList<String> resultList = new ArrayList<>();
-		for (int i = 0; i < model.getSize(); i++)
-		{
-			resultList.add(model.getElementAt(i).toString());
-		}
-		return resultList;
-	}
-
-	private ListModel<?> getListModelFromComponentOrError(Component component) {
-		switch (component.getClass().getSimpleName())
-		{
-			case "JComboBox":	return ((JComboBox<?>) component).getModel();
-			case "JList":		return ((JList<?>) component).getModel();
-			case "JTabbedPane":	return new TabbedPaneModel((JTabbedPane) component);
-			default:			throw new Error("Element " + component.getName() + " does not have list model. Please try another element.");
-		}
-	}
-
 	@Override
-	public String get(ComponentFixture<Component> component) throws Exception
+	public String getDerived(ComponentFixture<Component> component) throws Exception
 	{
 		try
 		{
@@ -1100,7 +962,7 @@ public class SwingOperationExecutor implements OperationExecutor<ComponentFixtur
 	}
 
 	@Override
-	public String getAttr(ComponentFixture<Component> component, String name) throws Exception
+	public String getAttrDerived(ComponentFixture<Component> component, String name) throws Exception
 	{
 		try
 		{
@@ -1132,181 +994,9 @@ public class SwingOperationExecutor implements OperationExecutor<ComponentFixtur
 	}
 
 	@Override
-	public String script(ComponentFixture<Component> component, String script) throws FeatureNotSupportedException
+	public String scriptDerived(ComponentFixture<Component> component, String script) throws FeatureNotSupportedException
 	{
 		throw new FeatureNotSupportedException("script");
-	}
-
-	private boolean isCoordsDidNotIntroduce(int x, int y)
-	{
-		return (x == Integer.MIN_VALUE || y == Integer.MIN_VALUE);
-	}
-
-	private void waitUntilAnotherActionsCompleted()
-	{
-		this.currentRobot.waitForIdle();
-	}
-
-	private ArrayList<AWTEvent> createEventsList(MouseAction action, Component component, int x, int y)
-	{
-		final int NO_CLICK = 0;
-		final int ONE_CLICK = 1;
-		final int TWO_CLICK = 2;
-		final boolean SHOW_POPUP = true;
-		final boolean NOT_SHOW_POPUP = false;
-
-		final ArrayList<AWTEvent> events = new ArrayList<>();
-		final int ALT_CTRL_SHIFT = getModifierKeysArePressed();
-
-		events.add(new FocusEvent(component, FocusEvent.FOCUS_GAINED));
-		events.add(new MouseEvent(component, MouseEvent.MOUSE_ENTERED, System.currentTimeMillis(), ALT_CTRL_SHIFT, x, y, NO_CLICK, NOT_SHOW_POPUP, MouseEvent.NOBUTTON));
-		events.add(new MouseEvent(component, MouseEvent.MOUSE_MOVED, System.currentTimeMillis(), ALT_CTRL_SHIFT, x, y, NO_CLICK, NOT_SHOW_POPUP, MouseEvent.NOBUTTON));
-		switch (action)
-		{
-			case LeftClick:
-				events.add(new MouseEvent(component, MouseEvent.MOUSE_PRESSED, System.currentTimeMillis(), ALT_CTRL_SHIFT, x, y, ONE_CLICK, NOT_SHOW_POPUP, MouseEvent.BUTTON1));
-				events.add(new MouseEvent(component, MouseEvent.MOUSE_RELEASED, System.currentTimeMillis(), ALT_CTRL_SHIFT, x, y, ONE_CLICK, NOT_SHOW_POPUP, MouseEvent.BUTTON1));
-				events.add(new MouseEvent(component, MouseEvent.MOUSE_CLICKED, System.currentTimeMillis(), ALT_CTRL_SHIFT, x, y, ONE_CLICK, NOT_SHOW_POPUP, MouseEvent.BUTTON1));
-				break;
-
-			case LeftDoubleClick:
-				events.add(new MouseEvent(component, MouseEvent.MOUSE_PRESSED, System.currentTimeMillis(), ALT_CTRL_SHIFT, x, y, TWO_CLICK, NOT_SHOW_POPUP, MouseEvent.BUTTON1));
-				events.add(new MouseEvent(component, MouseEvent.MOUSE_RELEASED, System.currentTimeMillis(), ALT_CTRL_SHIFT, x, y, TWO_CLICK, NOT_SHOW_POPUP, MouseEvent.BUTTON1));
-				events.add(new MouseEvent(component, MouseEvent.MOUSE_PRESSED, System.currentTimeMillis(), ALT_CTRL_SHIFT, x, y, TWO_CLICK, NOT_SHOW_POPUP, MouseEvent.BUTTON1));
-				events.add(new MouseEvent(component, MouseEvent.MOUSE_RELEASED, System.currentTimeMillis(), ALT_CTRL_SHIFT, x, y, TWO_CLICK, NOT_SHOW_POPUP, MouseEvent.BUTTON1));
-				events.add(new MouseEvent(component, MouseEvent.MOUSE_CLICKED, System.currentTimeMillis(), ALT_CTRL_SHIFT, x, y, TWO_CLICK, NOT_SHOW_POPUP, MouseEvent.BUTTON1));
-				break;
-
-			case RightClick:
-				events.add(new MouseEvent(component, MouseEvent.MOUSE_PRESSED, System.currentTimeMillis(), ALT_CTRL_SHIFT, x, y, ONE_CLICK, SHOW_POPUP, MouseEvent.BUTTON3));
-				events.add(new MouseEvent(component, MouseEvent.MOUSE_RELEASED, System.currentTimeMillis(), ALT_CTRL_SHIFT, x, y, ONE_CLICK, SHOW_POPUP, MouseEvent.BUTTON3));
-				events.add(new MouseEvent(component, MouseEvent.MOUSE_CLICKED, System.currentTimeMillis(), ALT_CTRL_SHIFT, x, y, ONE_CLICK, SHOW_POPUP, MouseEvent.BUTTON3));
-				break;
-
-			case RightDoubleClick:
-				events.add(new MouseEvent(component, MouseEvent.MOUSE_PRESSED, System.currentTimeMillis(), ALT_CTRL_SHIFT, x, y, TWO_CLICK, SHOW_POPUP, MouseEvent.BUTTON3));
-				events.add(new MouseEvent(component, MouseEvent.MOUSE_RELEASED, System.currentTimeMillis(), ALT_CTRL_SHIFT, x, y, TWO_CLICK, SHOW_POPUP, MouseEvent.BUTTON3));
-				events.add(new MouseEvent(component, MouseEvent.MOUSE_PRESSED, System.currentTimeMillis(), ALT_CTRL_SHIFT, x, y, TWO_CLICK, SHOW_POPUP, MouseEvent.BUTTON3));
-				events.add(new MouseEvent(component, MouseEvent.MOUSE_RELEASED, System.currentTimeMillis(), ALT_CTRL_SHIFT, x, y, TWO_CLICK, SHOW_POPUP, MouseEvent.BUTTON3));
-				events.add(new MouseEvent(component, MouseEvent.MOUSE_CLICKED, System.currentTimeMillis(), ALT_CTRL_SHIFT, x, y, TWO_CLICK, SHOW_POPUP, MouseEvent.BUTTON3));
-				break;
-
-			case Press:
-				events.add(new MouseEvent(component, MouseEvent.MOUSE_PRESSED, System.currentTimeMillis(), ALT_CTRL_SHIFT, x, y, ONE_CLICK, NOT_SHOW_POPUP, MouseEvent.BUTTON1));
-				break;
-
-			case Drop:
-				events.add(new MouseEvent(component, MouseEvent.MOUSE_DRAGGED, System.currentTimeMillis(), ALT_CTRL_SHIFT, x, y, NO_CLICK, NOT_SHOW_POPUP, MouseEvent.BUTTON1));
-				events.add(new MouseEvent(component, MouseEvent.MOUSE_RELEASED, System.currentTimeMillis(), ALT_CTRL_SHIFT, x, y, ONE_CLICK, NOT_SHOW_POPUP, MouseEvent.BUTTON1));
-				break;
-
-			case DragNDrop:
-			case Focus:
-			case Enter:
-			case Move:
-			case Activated:
-				break;
-		}
-		return events;
-	}
-
-	private void executeEventsList(final Component component, final ArrayList<AWTEvent> events)
-	{
-		SwingUtilities.invokeLater(new Runnable()
-		{
-			@Override
-			public void run()
-			{
-				for (AWTEvent event : events)
-				{
-					logger.debug("event : "  + event.toString());
-					component.dispatchEvent(event);
-				}
-			}
-		});
-	}
-
-	private void executeAction(MouseAction action, Component component, int x, int y)
-	{
-		waitUntilAnotherActionsCompleted();
-		ArrayList<AWTEvent> events = createEventsList(action, component, x, y);
-		executeEventsList(component, events);
-	}
-
-	private Point getPointLocation(Component component, int x, int y)
-	{
-		Point point = AWT.locationOnScreenOf(component);
-		x += point.getX();
-		y += point.getY();
-		return new Point(x,y);
-	}
-
-	private boolean dragNdropThrowEvents(ComponentFixture<Component> drag, int x1, int y1, ComponentFixture<Component> drop, int x2, int y2)
-	{
-		Component dragComp = drag.target;
-		if (isCoordsDidNotIntroduce(x1,y1))
-		{
-			Point point = AWT.visibleCenterOf(dragComp);
-			x1 = point.x;
-			y1 = point.y;
-		}
-
-		if(drop == null)
-		{
-			executeAction(MouseAction.Press, dragComp, x1, y1);
-			executeAction(MouseAction.Drop, dragComp, x2, y2);
-		}
-		else
-		{
-			Component dropComp = drop.target;
-
-			Point pointOne = getPointLocation(dragComp, x1, y1);
-			Point pointTwo = getPointLocation(dropComp, x2, y2);
-			int x3 = x1 + (pointTwo.x - pointOne.x);
-			int y3 = y1 + (pointTwo.y - pointOne.y);
-
-			executeAction(MouseAction.Press, dragComp, x1, y1);
-			executeAction(MouseAction.Drop, dragComp, x3, y3);
-		}
-		return true;
-	}
-
-	private boolean dragNdropThrowRobot(ComponentFixture<Component> drag, int x1, int y1, ComponentFixture<Component> drop, int x2, int y2) throws InterruptedException {
-
-		Component dragComp = drag.target;
-		if (isCoordsDidNotIntroduce(x1,y1))
-		{
-			Point point = AWT.visibleCenterOf(dragComp);
-			x1 = point.x;
-			y1 = point.y;
-		}
-
-		if(drop == null)
-		{
-			this.currentRobot.pressMouse(dragComp, new Point(x1, y1), MouseButton.LEFT_BUTTON);
-			Thread.sleep(100);
-			this.currentRobot.moveMouse(dragComp, new Point(x2, y2));
-			Thread.sleep(100);
-			this.currentRobot.releaseMouse(MouseButton.LEFT_BUTTON);
-			Thread.sleep(100);
-		}
-		else
-		{
-			Component dropComp = drop.target;
-			Point pointOne = getPointLocation(dragComp, x1, y1);
-			Point pointTwo = getPointLocation(dropComp, x2, y2);
-			int x3 = x1 + (pointTwo.x - pointOne.x);
-			int y3 = y1 + (pointTwo.y - pointOne.y);
-
-			this.currentRobot.pressMouse(dragComp, new Point(x1, y1), MouseButton.LEFT_BUTTON);
-			Thread.sleep(100);
-			this.currentRobot.moveMouse(dragComp, new Point(x3, y3));
-			Thread.sleep(100);
-			this.currentRobot.releaseMouse(MouseButton.LEFT_BUTTON);
-			Thread.sleep(100);
-		}
-
-		return true;
 	}
 
 	@Override
@@ -1314,10 +1004,12 @@ public class SwingOperationExecutor implements OperationExecutor<ComponentFixtur
 	{
 		try
 		{
-			if(moveCursor) {
+			if(moveCursor)
+			{
 				dragNdropThrowRobot(drag, x1, y1, drop, x2, y2);
 			}
-			else {
+			else
+			{
 				dragNdropThrowEvents(drag, x1, y1, drop, x2, y2);
 			}
 			return true;
@@ -1409,7 +1101,7 @@ public class SwingOperationExecutor implements OperationExecutor<ComponentFixtur
 	}
 
 	@Override
-	public String getValueTableCell(ComponentFixture<Component> component, int column, int row) throws Exception
+	public String getValueTableCellDerived(ComponentFixture<Component> component, int column, int row) throws Exception
 	{
 		try
 		{
@@ -1427,7 +1119,7 @@ public class SwingOperationExecutor implements OperationExecutor<ComponentFixtur
 	}
 
 	@Override
-	public Map<String, String> getRow(ComponentFixture<Component> component, Locator rows, Locator header, boolean useNumericHeader, String[] columns, ICondition valueCondition, ICondition colorCondition) throws Exception
+	public Map<String, String> getRowDerived(ComponentFixture<Component> component, Locator rows, Locator header, boolean useNumericHeader, String[] columns, ICondition valueCondition, ICondition colorCondition) throws Exception
 	{
 		try {
 			this.currentRobot.waitForIdle();
@@ -1520,7 +1212,7 @@ public class SwingOperationExecutor implements OperationExecutor<ComponentFixtur
 
 
 	@Override
-	public Map<String, String> getRowByIndex(ComponentFixture<Component> component, Locator additional, Locator header, boolean useNumericHeader, String[] columns, int i) throws Exception
+	public Map<String, String> getRowByIndexDerived(ComponentFixture<Component> component, Locator additional, Locator header, boolean useNumericHeader, String[] columns, int i) throws Exception
 	{
 		try
 		{
@@ -1555,7 +1247,7 @@ public class SwingOperationExecutor implements OperationExecutor<ComponentFixtur
 	}
 
 	@Override
-	public Map<String, ValueAndColor> getRowWithColor(ComponentFixture<Component> component, Locator additional, Locator header, boolean useNumericHeader, String[] columns, int i) throws Exception
+	public Map<String, ValueAndColor> getRowWithColorDerived(ComponentFixture<Component> component, Locator additional, Locator header, boolean useNumericHeader, String[] columns, int i) throws Exception
 	{
 		try
 		{
@@ -1589,7 +1281,7 @@ public class SwingOperationExecutor implements OperationExecutor<ComponentFixtur
 	}
 
 	@Override
-	public String[][] getTable(final ComponentFixture<Component> component, Locator additional, Locator header, final boolean useNumericHeader, String[] columns) throws Exception
+	public String[][] getTableDerived(final ComponentFixture<Component> component, Locator additional, Locator header, final boolean useNumericHeader, String[] columns) throws Exception
 	{
 		try
 		{
@@ -2313,6 +2005,301 @@ public class SwingOperationExecutor implements OperationExecutor<ComponentFixtur
 		Pair<Rectangle, Point> boundsAndCoordinates = location.rowBoundsAndCoordinates(tree, row);
 		tree.scrollRectToVisible(boundsAndCoordinates.i);
 		return boundsAndCoordinates.ii;
+	}
+
+	private class JTreeItemFixture extends ComponentFixture<Component>
+	{
+		JTreeItemFixture(Robot robot, JTreeItem target)
+		{
+			super(robot, target);
+		}
+	}
+
+	private class JTreeItem extends JComponent
+	{
+		JTree tree;
+		TreePath path;
+
+		JTreeItem(JTree tree, TreePath path)
+		{
+			this.tree = tree;
+			this.path = path;
+		}
+
+		JTree getTree()
+		{
+			return tree;
+		}
+
+		TreePath getPath()
+		{
+			return path;
+		}
+
+		@Override
+		public boolean isVisible()
+		{
+			return this.tree.isVisible(this.path);
+		}
+	}
+
+	private Document convertTreeToXMLDoc(JTree tree) throws ParserConfigurationException, XPathExpressionException
+	{
+		Document doc = DocumentBuilderFactory.newInstance().newDocumentBuilder().newDocument();
+		TreeNode treeNode = (TreeNode) tree.getModel().getRoot();
+		Node root = doc.getDocumentElement();
+		createDom(doc, treeNode, root);
+		return doc;
+	}
+
+	private void createDom(Document doc, TreeNode treeNode, Node current)
+	{
+		Element node = doc.createElement("item");
+		node.setAttribute("name", treeNode.toString());
+		node.setUserData("path", new TreePath(((DefaultMutableTreeNode) treeNode).getPath()), null);
+		node.setUserData("node", treeNode, null);
+
+		if(current != null)
+		{
+			current.appendChild(node);
+		}
+		else
+		{
+			doc.appendChild(node);
+		}
+
+		Enumeration kiddies = treeNode.children();
+		while (kiddies.hasMoreElements())
+		{
+			createDom(doc, (TreeNode) kiddies.nextElement(), node);
+		}
+	}
+
+	private NodeList findNodesInTreeByXpath(Document document, String selectedText) throws XPathExpressionException
+	{
+		XPathFactory xPathfactory = XPathFactory.newInstance();
+		XPath xpath = xPathfactory.newXPath();
+		XPathExpression expr = xpath.compile(selectedText);
+
+		Object result = expr.evaluate(document, XPathConstants.NODESET);
+		return (NodeList) result;
+	}
+
+	private JMenu findMenu(JMenu menu, List<String> items)
+	{
+		if(items.isEmpty())
+		{
+			return menu;
+		}
+
+		boolean found = false;
+		for(String menuName : items)
+		{
+			found = false;
+			for(Component menuComponent : menu.getMenuComponents())
+			{
+				if (menuComponent instanceof JMenu && ((JMenu) menuComponent).getText().equals(menuName))
+				{
+					menu = (JMenu) menuComponent;
+					found = true;
+					break;
+				}
+			}
+		}
+		return found ? menu : null;
+	}
+
+	private List<String> getListOfNamesFromListItems(ListModel<?> model)
+	{
+		ArrayList<String> resultList = new ArrayList<>();
+		for (int i = 0; i < model.getSize(); i++)
+		{
+			resultList.add(model.getElementAt(i).toString());
+		}
+		return resultList;
+	}
+
+	private ListModel<?> getListModelFromComponentOrError(Component component)
+	{
+		switch (component.getClass().getSimpleName())
+		{
+			case "JComboBox":	return ((JComboBox<?>) component).getModel();
+			case "JList":		return ((JList<?>) component).getModel();
+			case "JTabbedPane":	return new TabbedPaneModel((JTabbedPane) component);
+			default:			throw new Error("Element " + component.getName() + " does not have list model. Please try another element.");
+		}
+	}
+
+	private boolean isCoordsDidNotIntroduce(int x, int y)
+	{
+		return (x == Integer.MIN_VALUE || y == Integer.MIN_VALUE);
+	}
+
+	private void waitUntilAnotherActionsCompleted()
+	{
+		this.currentRobot.waitForIdle();
+	}
+
+	private ArrayList<AWTEvent> createEventsList(MouseAction action, Component component, int x, int y)
+	{
+		final int NO_CLICK = 0;
+		final int ONE_CLICK = 1;
+		final int TWO_CLICK = 2;
+		final boolean SHOW_POPUP = true;
+		final boolean NOT_SHOW_POPUP = false;
+
+		final ArrayList<AWTEvent> events = new ArrayList<>();
+		final int ALT_CTRL_SHIFT = getModifierKeysArePressed();
+
+		events.add(new FocusEvent(component, FocusEvent.FOCUS_GAINED));
+		events.add(new MouseEvent(component, MouseEvent.MOUSE_ENTERED, System.currentTimeMillis(), ALT_CTRL_SHIFT, x, y, NO_CLICK, NOT_SHOW_POPUP, MouseEvent.NOBUTTON));
+		events.add(new MouseEvent(component, MouseEvent.MOUSE_MOVED, System.currentTimeMillis(), ALT_CTRL_SHIFT, x, y, NO_CLICK, NOT_SHOW_POPUP, MouseEvent.NOBUTTON));
+		switch (action)
+		{
+			case LeftClick:
+				events.add(new MouseEvent(component, MouseEvent.MOUSE_PRESSED, System.currentTimeMillis(), ALT_CTRL_SHIFT, x, y, ONE_CLICK, NOT_SHOW_POPUP, MouseEvent.BUTTON1));
+				events.add(new MouseEvent(component, MouseEvent.MOUSE_RELEASED, System.currentTimeMillis(), ALT_CTRL_SHIFT, x, y, ONE_CLICK, NOT_SHOW_POPUP, MouseEvent.BUTTON1));
+				events.add(new MouseEvent(component, MouseEvent.MOUSE_CLICKED, System.currentTimeMillis(), ALT_CTRL_SHIFT, x, y, ONE_CLICK, NOT_SHOW_POPUP, MouseEvent.BUTTON1));
+				break;
+
+			case LeftDoubleClick:
+				events.add(new MouseEvent(component, MouseEvent.MOUSE_PRESSED, System.currentTimeMillis(), ALT_CTRL_SHIFT, x, y, TWO_CLICK, NOT_SHOW_POPUP, MouseEvent.BUTTON1));
+				events.add(new MouseEvent(component, MouseEvent.MOUSE_RELEASED, System.currentTimeMillis(), ALT_CTRL_SHIFT, x, y, TWO_CLICK, NOT_SHOW_POPUP, MouseEvent.BUTTON1));
+				events.add(new MouseEvent(component, MouseEvent.MOUSE_PRESSED, System.currentTimeMillis(), ALT_CTRL_SHIFT, x, y, TWO_CLICK, NOT_SHOW_POPUP, MouseEvent.BUTTON1));
+				events.add(new MouseEvent(component, MouseEvent.MOUSE_RELEASED, System.currentTimeMillis(), ALT_CTRL_SHIFT, x, y, TWO_CLICK, NOT_SHOW_POPUP, MouseEvent.BUTTON1));
+				events.add(new MouseEvent(component, MouseEvent.MOUSE_CLICKED, System.currentTimeMillis(), ALT_CTRL_SHIFT, x, y, TWO_CLICK, NOT_SHOW_POPUP, MouseEvent.BUTTON1));
+				break;
+
+			case RightClick:
+				events.add(new MouseEvent(component, MouseEvent.MOUSE_PRESSED, System.currentTimeMillis(), ALT_CTRL_SHIFT, x, y, ONE_CLICK, SHOW_POPUP, MouseEvent.BUTTON3));
+				events.add(new MouseEvent(component, MouseEvent.MOUSE_RELEASED, System.currentTimeMillis(), ALT_CTRL_SHIFT, x, y, ONE_CLICK, SHOW_POPUP, MouseEvent.BUTTON3));
+				events.add(new MouseEvent(component, MouseEvent.MOUSE_CLICKED, System.currentTimeMillis(), ALT_CTRL_SHIFT, x, y, ONE_CLICK, SHOW_POPUP, MouseEvent.BUTTON3));
+				break;
+
+			case RightDoubleClick:
+				events.add(new MouseEvent(component, MouseEvent.MOUSE_PRESSED, System.currentTimeMillis(), ALT_CTRL_SHIFT, x, y, TWO_CLICK, SHOW_POPUP, MouseEvent.BUTTON3));
+				events.add(new MouseEvent(component, MouseEvent.MOUSE_RELEASED, System.currentTimeMillis(), ALT_CTRL_SHIFT, x, y, TWO_CLICK, SHOW_POPUP, MouseEvent.BUTTON3));
+				events.add(new MouseEvent(component, MouseEvent.MOUSE_PRESSED, System.currentTimeMillis(), ALT_CTRL_SHIFT, x, y, TWO_CLICK, SHOW_POPUP, MouseEvent.BUTTON3));
+				events.add(new MouseEvent(component, MouseEvent.MOUSE_RELEASED, System.currentTimeMillis(), ALT_CTRL_SHIFT, x, y, TWO_CLICK, SHOW_POPUP, MouseEvent.BUTTON3));
+				events.add(new MouseEvent(component, MouseEvent.MOUSE_CLICKED, System.currentTimeMillis(), ALT_CTRL_SHIFT, x, y, TWO_CLICK, SHOW_POPUP, MouseEvent.BUTTON3));
+				break;
+
+			case Press:
+				events.add(new MouseEvent(component, MouseEvent.MOUSE_PRESSED, System.currentTimeMillis(), ALT_CTRL_SHIFT, x, y, ONE_CLICK, NOT_SHOW_POPUP, MouseEvent.BUTTON1));
+				break;
+
+			case Drop:
+				events.add(new MouseEvent(component, MouseEvent.MOUSE_DRAGGED, System.currentTimeMillis(), ALT_CTRL_SHIFT, x, y, NO_CLICK, NOT_SHOW_POPUP, MouseEvent.BUTTON1));
+				events.add(new MouseEvent(component, MouseEvent.MOUSE_RELEASED, System.currentTimeMillis(), ALT_CTRL_SHIFT, x, y, ONE_CLICK, NOT_SHOW_POPUP, MouseEvent.BUTTON1));
+				break;
+
+			case DragNDrop:
+			case Focus:
+			case Enter:
+			case Move:
+			case Activated:
+				break;
+		}
+		return events;
+	}
+
+	private void executeEventsList(final Component component, final ArrayList<AWTEvent> events)
+	{
+		SwingUtilities.invokeLater(new Runnable()
+		{
+			@Override
+			public void run()
+			{
+				for (AWTEvent event : events)
+				{
+					logger.debug("event : "  + event.toString());
+					component.dispatchEvent(event);
+				}
+			}
+		});
+	}
+
+	private void executeAction(MouseAction action, Component component, int x, int y)
+	{
+		waitUntilAnotherActionsCompleted();
+		ArrayList<AWTEvent> events = createEventsList(action, component, x, y);
+		executeEventsList(component, events);
+	}
+
+	private Point getPointLocation(Component component, int x, int y)
+	{
+		Point point = AWT.locationOnScreenOf(component);
+		x += point.getX();
+		y += point.getY();
+		return new Point(x,y);
+	}
+
+	private boolean dragNdropThrowEvents(ComponentFixture<Component> drag, int x1, int y1, ComponentFixture<Component> drop, int x2, int y2)
+	{
+		Component dragComp = drag.target;
+		if (isCoordsDidNotIntroduce(x1,y1))
+		{
+			Point point = AWT.visibleCenterOf(dragComp);
+			x1 = point.x;
+			y1 = point.y;
+		}
+
+		if(drop == null)
+		{
+			executeAction(MouseAction.Press, dragComp, x1, y1);
+			executeAction(MouseAction.Drop, dragComp, x2, y2);
+		}
+		else
+		{
+			Component dropComp = drop.target;
+
+			Point pointOne = getPointLocation(dragComp, x1, y1);
+			Point pointTwo = getPointLocation(dropComp, x2, y2);
+			int x3 = x1 + (pointTwo.x - pointOne.x);
+			int y3 = y1 + (pointTwo.y - pointOne.y);
+
+			executeAction(MouseAction.Press, dragComp, x1, y1);
+			executeAction(MouseAction.Drop, dragComp, x3, y3);
+		}
+		return true;
+	}
+
+	private boolean dragNdropThrowRobot(ComponentFixture<Component> drag, int x1, int y1, ComponentFixture<Component> drop, int x2, int y2) throws InterruptedException
+	{
+		Component dragComp = drag.target;
+		if (isCoordsDidNotIntroduce(x1,y1))
+		{
+			Point point = AWT.visibleCenterOf(dragComp);
+			x1 = point.x;
+			y1 = point.y;
+		}
+
+		if(drop == null)
+		{
+			this.currentRobot.pressMouse(dragComp, new Point(x1, y1), MouseButton.LEFT_BUTTON);
+			Thread.sleep(100);
+			this.currentRobot.moveMouse(dragComp, new Point(x2, y2));
+			Thread.sleep(100);
+			this.currentRobot.releaseMouse(MouseButton.LEFT_BUTTON);
+			Thread.sleep(100);
+		}
+		else
+		{
+			Component dropComp = drop.target;
+			Point pointOne = getPointLocation(dragComp, x1, y1);
+			Point pointTwo = getPointLocation(dropComp, x2, y2);
+			int x3 = x1 + (pointTwo.x - pointOne.x);
+			int y3 = y1 + (pointTwo.y - pointOne.y);
+
+			this.currentRobot.pressMouse(dragComp, new Point(x1, y1), MouseButton.LEFT_BUTTON);
+			Thread.sleep(100);
+			this.currentRobot.moveMouse(dragComp, new Point(x3, y3));
+			Thread.sleep(100);
+			this.currentRobot.releaseMouse(MouseButton.LEFT_BUTTON);
+			Thread.sleep(100);
+		}
+
+		return true;
 	}
 	//endregion
 

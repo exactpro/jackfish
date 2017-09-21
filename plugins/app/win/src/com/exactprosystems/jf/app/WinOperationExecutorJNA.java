@@ -31,9 +31,9 @@ import java.util.concurrent.atomic.AtomicLong;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class WinOperationExecutorJNA implements OperationExecutor<UIProxyJNA>
+public class WinOperationExecutorJNA extends AbstractOperationExecutor<UIProxyJNA>
 {
-	static final String RECTANGLE_PATTERN = "(-?\\d+)[,;](-?\\d+)[,;](\\d+)[,;](\\d+)";
+	private static final String RECTANGLE_PATTERN = "(-?\\d+)[,;](-?\\d+)[,;](\\d+)[,;](\\d+)";
 
 	private static final String SEPARATOR_CELL = "###";
 	private static final String SEPARATOR_ROWS = ";;;";
@@ -45,30 +45,12 @@ public class WinOperationExecutorJNA implements OperationExecutor<UIProxyJNA>
 
 	private Logger logger;
 	private JnaDriverImpl driver;
-	private PluginInfo info;
 
-	public WinOperationExecutorJNA(Logger logger, JnaDriverImpl driver)
+	public WinOperationExecutorJNA(Logger logger, JnaDriverImpl driver, boolean useTrimText)
 	{
+		super(useTrimText);
 		this.logger = logger;
 		this.driver = driver;
-	}
-
-    @Override
-    public void setPluginInfo(PluginInfo info)
-    {
-        this.info = info;
-    }
-
-    @Override
-    public boolean isAllowed(ControlKind kind, OperationKind operation)
-    {
-		return this.info.isAllowed(kind, operation);
-    }
-
-	@Override
-	public boolean isSupported(ControlKind kind)
-	{
-		return this.info.isSupported(kind);
 	}
 
 	@Override
@@ -93,26 +75,6 @@ public class WinOperationExecutorJNA implements OperationExecutor<UIProxyJNA>
 			this.logger.error(e.getMessage(), e);
 			throw e;
 		}
-	}
-
-	private Rectangle stringToRect(String stringRect) throws RemoteException
-	{
-		Rectangle rectangle = new Rectangle();
-		Pattern pattern = Pattern.compile(RECTANGLE_PATTERN);
-		Matcher matcher = pattern.matcher(stringRect);
-		if (matcher.matches())
-		{
-			rectangle.setBounds(
-					Integer.parseInt(matcher.group(1))
-					, Integer.parseInt(matcher.group(2))
-					, Integer.parseInt(matcher.group(3))
-					, Integer.parseInt(matcher.group(4)));
-		}
-		else
-		{
-			throw new RemoteException("returned rectangle not matches pattern " + RECTANGLE_PATTERN+" , rect : " + stringRect);
-		}
-		return rectangle;
 	}
 
 	@Override
@@ -428,82 +390,6 @@ public class WinOperationExecutorJNA implements OperationExecutor<UIProxyJNA>
 		}
 	}
 
-	private List<UIProxyJNA> findComponents(UIProxyJNA component, WindowTreeScope scope, WindowProperty property, String string) throws Exception {
-		try
-		{
-			int length = 100;
-			int[] arr = new int[length];
-			int count = this.driver.findAll(arr, component, scope, property, string);
-			if (count > length)
-			{
-				length = count;
-				arr = new int[length];
-				this.driver.findAll(arr, component, scope, property, string);
-			}
-			ArrayList<UIProxyJNA> list = new ArrayList<>();
-
-			int itemsCount = arr[0];
-			int itemLength = arr[1];
-			int[] items = Arrays.copyOfRange(arr, 2, arr.length);
-			for (int i = 0; i < itemsCount; i++) {
-				list.add(new UIProxyJNA(Arrays.copyOfRange(items, 0, itemLength)));
-				items = Arrays.copyOfRange(items, itemLength+1, items.length);
-			}
-			return list;
-		}
-		catch (RemoteException e)
-		{
-			throw e;
-		}
-		catch (Exception e)
-		{
-			this.logger.error(String.format("select(%s)", component));
-			this.logger.error(e.getMessage(), e);
-			throw e;
-		}
-	}
-
-	private int[] findItem(UIProxyJNA component, String selectedText) throws Exception {
-		try
-		{
-			WindowTreeScope treeScope = WindowTreeScope.Descendants;
-			if (this.driver.elementAttribute(component, AttributeKind.TYPE_NAME).toLowerCase().contains(ControlType.Tab.getName()))
-			{
-				treeScope = WindowTreeScope.Children;
-			}
-			int length = 100;
-			int[] arr = new int[length];
-			int count = this.driver.findAll(arr, component, treeScope, WindowProperty.NameProperty, selectedText);
-			if (count > length)
-			{
-				length = count;
-				arr = new int[length];
-				this.driver.findAll(arr, component, treeScope, WindowProperty.NameProperty, selectedText);
-			}
-			int foundElementCount = arr[0];
-			if (foundElementCount > 1)
-			{
-				throw new WrongParameterException("Inside current component found " + foundElementCount + " elements with name " + selectedText);
-			}
-			this.logger.info("Getting array : " + Arrays.toString(arr));
-			int itemLength = arr[1];
-			int[] itemId = new int[itemLength];
-			System.arraycopy(arr, 2, itemId, 0, itemLength);
-			this.logger.info("Element id array : " + Arrays.toString(itemId));
-			return itemId;
-		}
-		catch (RemoteException e)
-		{
-			throw e;
-		}
-		catch (Exception e)
-		{
-			this.logger.error(String.format("select(%s,%s)", component, selectedText));
-			this.logger.error(e.getMessage(), e);
-			throw e;
-		}
-	}
-
 	@Override
 	public boolean expand(UIProxyJNA component, String path, boolean expandOrCollapse) throws Exception
 	{
@@ -577,18 +463,6 @@ public class WinOperationExecutorJNA implements OperationExecutor<UIProxyJNA>
 			this.logger.error(String.format("fold(%s,%s,%b)", component, path, expandOrCollapse));
 			this.logger.error(e.getMessage(), e);
 			throw e;
-		}
-	}
-
-	private void expandCollapse(UIProxyJNA component, boolean expandOrCollapse) throws Exception
-	{
-		if (expandOrCollapse)
-		{
-			this.driver.doPatternCall(component, WindowPattern.ExpandCollapsePattern, "Expand", null, -1);
-		}
-		else
-		{
-			this.driver.doPatternCall(component, WindowPattern.ExpandCollapsePattern, "Collapse", null, -1);
 		}
 	}
 
@@ -698,7 +572,7 @@ public class WinOperationExecutorJNA implements OperationExecutor<UIProxyJNA>
 	}
 
 	@Override
-	public List<String> getList(UIProxyJNA component, boolean onlyVisible) throws Exception
+	public List<String> getListDerived(UIProxyJNA component, boolean onlyVisible) throws Exception
 	{
 		try
 		{
@@ -740,7 +614,7 @@ public class WinOperationExecutorJNA implements OperationExecutor<UIProxyJNA>
     }
 
     @Override
-	public String getValue(UIProxyJNA component) throws Exception
+	public String getValueDerived(UIProxyJNA component) throws Exception
 	{
 		try
 		{
@@ -791,7 +665,7 @@ public class WinOperationExecutorJNA implements OperationExecutor<UIProxyJNA>
 	}
 
 	@Override
-	public String get(UIProxyJNA component) throws Exception
+	public String getDerived(UIProxyJNA component) throws Exception
 	{
 		//TODO need remake, cause get() need return text of component, not value;
 		try
@@ -873,7 +747,7 @@ public class WinOperationExecutorJNA implements OperationExecutor<UIProxyJNA>
 	}
 
 	@Override
-	public String getAttr(UIProxyJNA component, String name) throws Exception
+	public String getAttrDerived(UIProxyJNA component, String name) throws Exception
 	{
 		try
 		{
@@ -907,7 +781,7 @@ public class WinOperationExecutorJNA implements OperationExecutor<UIProxyJNA>
 	}
 
 	@Override
-	public String script(UIProxyJNA component, String script) throws Exception
+	public String scriptDerived(UIProxyJNA component, String script) throws Exception
 	{
 		throw new FeatureNotSupportedException("script");
 	}
@@ -1007,11 +881,6 @@ public class WinOperationExecutorJNA implements OperationExecutor<UIProxyJNA>
 		}
 	}
 
-	private boolean checkPatternIsAvailable(UIProxyJNA element, WindowPattern pattern) throws Exception
-	{
-		List<WindowPattern> availablePatterns = this.driver.getAvailablePatterns(element);
-		return availablePatterns.contains(pattern);
-	}
 
 	@Override
 	public boolean mouseTable(UIProxyJNA component, int column, int row, MouseAction action) throws Exception
@@ -1054,7 +923,7 @@ public class WinOperationExecutorJNA implements OperationExecutor<UIProxyJNA>
 	}
 
 	@Override
-	public String getValueTableCell(UIProxyJNA component, int column, int row) throws Exception
+	public String getValueTableCellDerived(UIProxyJNA component, int column, int row) throws Exception
 	{
 		try
 		{
@@ -1074,7 +943,7 @@ public class WinOperationExecutorJNA implements OperationExecutor<UIProxyJNA>
 	}
 
 	@Override
-	public Map<String, String> getRow(UIProxyJNA component, Locator additional, Locator header, boolean useNumericHeader, String[] columns, ICondition valueCondition, ICondition colorCondition) throws Exception
+	public Map<String, String> getRowDerived(UIProxyJNA component, Locator additional, Locator header, boolean useNumericHeader, String[] columns, ICondition valueCondition, ICondition colorCondition) throws Exception
 	{
 		try
 		{
@@ -1155,7 +1024,7 @@ public class WinOperationExecutorJNA implements OperationExecutor<UIProxyJNA>
 	}
 
 	@Override
-	public Map<String, String> getRowByIndex(UIProxyJNA component, Locator additional, Locator header, boolean useNumericHeader, String[] columns, int i) throws Exception
+	public Map<String, String> getRowByIndexDerived(UIProxyJNA component, Locator additional, Locator header, boolean useNumericHeader, String[] columns, int i) throws Exception
 	{
 		try
 		{
@@ -1183,13 +1052,13 @@ public class WinOperationExecutorJNA implements OperationExecutor<UIProxyJNA>
 	}
 
 	@Override
-	public Map<String, ValueAndColor> getRowWithColor(UIProxyJNA component, Locator additional, Locator header, boolean useNumericHeader, String[] columns, int i) throws Exception
+	public Map<String, ValueAndColor> getRowWithColorDerived(UIProxyJNA component, Locator additional, Locator header, boolean useNumericHeader, String[] columns, int i) throws Exception
 	{
 		throw new FeatureNotSupportedException("getRowWithColor");
 	}
 
 	@Override
-	public String[][] getTable(UIProxyJNA component, Locator additional, Locator header, boolean useNumericHeader, String[] columns) throws Exception
+	public String[][] getTableDerived(UIProxyJNA component, Locator additional, Locator header, boolean useNumericHeader, String[] columns) throws Exception
 	{
 		try
 		{
@@ -1329,5 +1198,120 @@ public class WinOperationExecutorJNA implements OperationExecutor<UIProxyJNA>
 		return new Point(x, y);
 	}
 
+	private boolean checkPatternIsAvailable(UIProxyJNA element, WindowPattern pattern) throws Exception
+	{
+		List<WindowPattern> availablePatterns = this.driver.getAvailablePatterns(element);
+		return availablePatterns.contains(pattern);
+	}
+
+	private List<UIProxyJNA> findComponents(UIProxyJNA component, WindowTreeScope scope, WindowProperty property, String string) throws Exception
+	{
+		try
+		{
+			int length = 100;
+			int[] arr = new int[length];
+			int count = this.driver.findAll(arr, component, scope, property, string);
+			if (count > length)
+			{
+				length = count;
+				arr = new int[length];
+				this.driver.findAll(arr, component, scope, property, string);
+			}
+			ArrayList<UIProxyJNA> list = new ArrayList<>();
+
+			int itemsCount = arr[0];
+			int itemLength = arr[1];
+			int[] items = Arrays.copyOfRange(arr, 2, arr.length);
+			for (int i = 0; i < itemsCount; i++) {
+				list.add(new UIProxyJNA(Arrays.copyOfRange(items, 0, itemLength)));
+				items = Arrays.copyOfRange(items, itemLength+1, items.length);
+			}
+			return list;
+		}
+		catch (RemoteException e)
+		{
+			throw e;
+		}
+		catch (Exception e)
+		{
+			this.logger.error(String.format("select(%s)", component));
+			this.logger.error(e.getMessage(), e);
+			throw e;
+		}
+	}
+
+	private int[] findItem(UIProxyJNA component, String selectedText) throws Exception
+	{
+		try
+		{
+			WindowTreeScope treeScope = WindowTreeScope.Descendants;
+			if (this.driver.elementAttribute(component, AttributeKind.TYPE_NAME).toLowerCase().contains(ControlType.Tab.getName()))
+			{
+				treeScope = WindowTreeScope.Children;
+			}
+			int length = 100;
+			int[] arr = new int[length];
+			int count = this.driver.findAll(arr, component, treeScope, WindowProperty.NameProperty, selectedText);
+			if (count > length)
+			{
+				length = count;
+				arr = new int[length];
+				this.driver.findAll(arr, component, treeScope, WindowProperty.NameProperty, selectedText);
+			}
+			int foundElementCount = arr[0];
+			if (foundElementCount > 1)
+			{
+				throw new WrongParameterException("Inside current component found " + foundElementCount + " elements with name " + selectedText);
+			}
+			this.logger.info("Getting array : " + Arrays.toString(arr));
+			int itemLength = arr[1];
+			int[] itemId = new int[itemLength];
+			System.arraycopy(arr, 2, itemId, 0, itemLength);
+			this.logger.info("Element id array : " + Arrays.toString(itemId));
+			return itemId;
+		}
+		catch (RemoteException e)
+		{
+			throw e;
+		}
+		catch (Exception e)
+		{
+			this.logger.error(String.format("select(%s,%s)", component, selectedText));
+			this.logger.error(e.getMessage(), e);
+			throw e;
+		}
+	}
+
+	private void expandCollapse(UIProxyJNA component, boolean expandOrCollapse) throws Exception
+	{
+		if (expandOrCollapse)
+		{
+			this.driver.doPatternCall(component, WindowPattern.ExpandCollapsePattern, "Expand", null, -1);
+		}
+		else
+		{
+			this.driver.doPatternCall(component, WindowPattern.ExpandCollapsePattern, "Collapse", null, -1);
+		}
+	}
+
+	private Rectangle stringToRect(String stringRect) throws RemoteException
+	{
+		Rectangle rectangle = new Rectangle();
+		Pattern pattern = Pattern.compile(RECTANGLE_PATTERN);
+		Matcher matcher = pattern.matcher(stringRect);
+		if (matcher.matches())
+		{
+			rectangle.setBounds(
+					Integer.parseInt(matcher.group(1))
+					, Integer.parseInt(matcher.group(2))
+					, Integer.parseInt(matcher.group(3))
+					, Integer.parseInt(matcher.group(4)));
+		}
+		else
+		{
+			throw new RemoteException("returned rectangle not matches pattern " + RECTANGLE_PATTERN+" , rect : " + stringRect);
+		}
+		return rectangle;
+	}
 	//endregion
 }

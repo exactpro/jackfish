@@ -17,9 +17,6 @@ import com.exactprosystems.jf.api.error.app.TimeoutException;
 import com.exactprosystems.jf.app.WebAppFactory.WhereToOpen;
 import org.apache.log4j.*;
 import org.openqa.selenium.*;
-import org.openqa.selenium.Dimension;
-import org.openqa.selenium.Point;
-import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeDriverService;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.firefox.GeckoDriverService;
@@ -39,10 +36,7 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.rmi.RemoteException;
 import java.util.*;
-import java.util.List;
 import java.util.Map.Entry;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 import java.util.stream.Collectors;
 
 public class SeleniumRemoteApplication extends RemoteApplication
@@ -54,54 +48,60 @@ public class SeleniumRemoteApplication extends RemoteApplication
 	private static final String ATTRIBUTE_VALUE_FIELD = "val";
 	private static final String ELEMENT_TEXT_FIELD = "text";
 
+	private static final String SCRIPT = "function attrs(e) { \n" +
+			"    var a = []; \n" +
+			"    var attrs = e.attributes; \n" +
+			"    for(var i = 0; i < attrs.length; i++) { \n" +
+			"        var t = attrs[i]; \n" +
+			"        a.push({ \n" +
+			"            " + ATTRIBUTE_NAME_FIELD + " : t.nodeName, \n" +
+			"            " + ATTRIBUTE_VALUE_FIELD + " : t.value \n" +
+			"        }); \n" +
+			"    } \n" +
+			"    return a; \n" +
+			"}; \n" +
+			" \n" +
+			"function go(e) { \n" +
+			"    if (e.tagName !== undefined) { \n" +
+			"        var child = []; \n" +
+			"        var els = e.childNodes; \n" +
+			"        for(var i=0; i<els.length; i++) { \n" +
+			"            var ch = go(els[i]); \n" +
+			"            if (ch != null) { \n" +
+			"                child.push(ch); \n" +
+			"            } \n" +
+			"        } \n" +
+			"        var temp = { \n" +
+			"            " + TAG_FIELD + " : e.tagName, \n" +
+			"            " + ATTRIBUTES_FIELD + " : attrs(e), \n" +
+			"            " + IRemoteApplication.visibleName + " : (e.offsetWidth > 0 || e.offsetHeight > 0), \n" +
+			"            " + IRemoteApplication.rectangleName + " : { \n" +
+			"            " + "    left : e.getBoundingClientRect().left, \n" +
+			"            " + "    top : e.getBoundingClientRect().top, \n" +
+			"            " + "    height : e.getBoundingClientRect().height, \n" +
+			"            " + "    width : e.getBoundingClientRect().width, \n" +
+			"            " + "}, \n" +
+			"            " + ELEMENT_TEXT_FIELD + " : (e.tagName === 'input') ? e.value : (e.firstChild !== null) ? e.firstChild.data : undefined, \n" +
+			"            " + ELEMENT_CHILD_FIELD + " : child \n" +
+			"        }; \n" +
+			"        return temp; \n" +
+			"    } \n" +
+			"    return null; \n" +
+			"}; \n" +
+			" \n" +
+			"return go(arguments[0]); \n";
+
 	private Alert currentAlert;
-
 	private	Exception te = null;
+	private static long time = System.currentTimeMillis();
 
-	private static final String SCRIPT = 
-		" \n" +
-		"function attrs(e) { \n" +
-		"    var a = []; \n" +
-		"    var attrs = e.attributes; \n" +
-		"    for(var i = 0; i < attrs.length; i++) { \n" + 
-		"        var t = attrs[i]; \n" +
-		"        a.push({ \n" +
-		"            " + ATTRIBUTE_NAME_FIELD + " : t.nodeName, \n" +
-		"            " + ATTRIBUTE_VALUE_FIELD + " : t.value \n" +
-		"        }); \n" +
-		"    } \n" +
-		"    return a; \n" +
-		"}; \n" +
-		" \n" +
-		"function go(e) { \n" +
-		"    if (e.tagName !== undefined) { \n" +
-		"        var child = []; \n" +
-		"        var els = e.childNodes; \n" +
-		"        for(var i=0; i<els.length; i++) { \n" +
-		"            var ch = go(els[i]); \n" +
-		"            if (ch != null) { \n" +
-		"                child.push(ch); \n" +
-		"            } \n" +
-		"        } \n" +
-		"        var temp = { \n" +
-		"            " + TAG_FIELD + " : e.tagName, \n" +
-		"            " + ATTRIBUTES_FIELD + " : attrs(e), \n" +
-		"            " + IRemoteApplication.visibleName + " : (e.offsetWidth > 0 || e.offsetHeight > 0), \n" +
-		"            " + IRemoteApplication.rectangleName + " : { \n" +
-		"            " + "    left : e.getBoundingClientRect().left, \n" +
-		"            " + "    top : e.getBoundingClientRect().top, \n" +
-		"            " + "    height : e.getBoundingClientRect().height, \n" +
-		"            " + "    width : e.getBoundingClientRect().width, \n" +
-		"            " + "}, \n" +
-		"            " + ELEMENT_TEXT_FIELD + " : (e.tagName === 'input') ? e.value : (e.firstChild !== null) ? e.firstChild.data : undefined, \n" +
-		"            " + ELEMENT_CHILD_FIELD + " : child \n" +
-		"        }; \n" +
-		"        return temp; \n" +
-		"    } \n" +
-		"    return null; \n" +
-		"}; \n" +
-		" \n" +
-		"return go(arguments[0]); \n";
+	private WebDriverListenerNew driver;
+	private PluginInfo info;
+
+	private final int repeatLimit = 5;
+	private OperationExecutor<WebElement> operationExecutor;
+	private Logger logger = null;
+
 
 	public SeleniumRemoteApplication()
 	{
@@ -141,7 +141,7 @@ public class SeleniumRemoteApplication extends RemoteApplication
 					return this.driver.getTitle();
 					
                 case WebAppFactory.propertyAllTitles:
-                    return titles().stream().collect(Collectors.toCollection(ArrayList::new));
+                    return new ArrayList<>(titles());
 
                 case WebAppFactory.propertyCookie:
 			        Cookie cookie = this.driver.manage().getCookieNamed("" + prop);
@@ -211,7 +211,6 @@ public class SeleniumRemoteApplication extends RemoteApplication
 		}
     }
 
-	
 	@Override
 	protected int connectDerived(Map<String, String> args) throws Exception
 	{
@@ -292,7 +291,7 @@ public class SeleniumRemoteApplication extends RemoteApplication
 							throw te;
 						}
                         driver = new WebDriverListenerNew(browser.createDriver(chromeDriverBinary, firefoxProfileDirectory, usePrivateMode));
-                        operationExecutor = new SeleniumOperationExecutor(driver, logger);
+                        operationExecutor = new SeleniumOperationExecutor(driver, logger, SeleniumRemoteApplication.super.useTrimText);
 
                         logger.info("Before driver.get(" + url + ")");
                         driver.get(url);
@@ -350,21 +349,6 @@ public class SeleniumRemoteApplication extends RemoteApplication
 		}
 		
 		return -1;
-	}
-
-	public static void main(String[] args)
-	{
-		ExecutorService executorService = Executors.newFixedThreadPool(3);
-		System.setProperty(ChromeDriverService.CHROME_DRIVER_EXE_PROPERTY, "/home/andrey.bystrov/Projects/JackFish/core/apps/unix/chromedriver-linux-2.28-x64.");
-
-		for (int i = 0; i < 10; i++)
-		{
-			Runnable runnable = () -> {
-				ChromeDriver chromeDriver = new ChromeDriver(ChromeDriverService.createDefaultService());
-				chromeDriver.get("http://ya.ru");
-			};
-			executorService.submit(runnable);
-		}
 	}
 
 	@Override
@@ -1033,13 +1017,4 @@ public class SeleniumRemoteApplication extends RemoteApplication
 		logger.info(message + " " + (newTime - time));
 		time = newTime;
 	}
-
-	private static long time = System.currentTimeMillis();
-
-	private WebDriverListenerNew driver;
-	private PluginInfo info;
-
-	private final int repeatLimit = 5;
-	public OperationExecutor<WebElement> operationExecutor;
-	private Logger logger = null;
 }

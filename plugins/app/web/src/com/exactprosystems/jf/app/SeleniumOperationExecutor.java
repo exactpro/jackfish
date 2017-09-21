@@ -40,7 +40,7 @@ import java.util.concurrent.atomic.AtomicLong;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class SeleniumOperationExecutor implements OperationExecutor<WebElement>
+public class SeleniumOperationExecutor extends AbstractOperationExecutor<WebElement>
 {
 	private static final String tag_tbody 	= "tbody";
 	private static final String tag_tr 		= "tr";
@@ -56,28 +56,11 @@ public class SeleniumOperationExecutor implements OperationExecutor<WebElement>
 	private boolean isAltDown = false;
 	private boolean isControlDown = false;
 
-	public SeleniumOperationExecutor(WebDriverListenerNew driver, Logger logger)
+	public SeleniumOperationExecutor(WebDriverListenerNew driver, Logger logger, boolean useTrimText)
 	{
+		super(useTrimText);
 		this.driver = driver;
 		this.logger = logger;
-	}
-
-    @Override
-    public void setPluginInfo(PluginInfo info)
-    {
-        this.info = info;
-    }
-
-    @Override
-    public boolean isAllowed(ControlKind kind, OperationKind operation)
-    {
-		return this.info.isAllowed(kind, operation);
-    }
-
-	@Override
-	public boolean isSupported(ControlKind kind)
-	{
-		return this.info.isSupported(kind);
 	}
 
 	@Override
@@ -164,101 +147,11 @@ public class SeleniumOperationExecutor implements OperationExecutor<WebElement>
 	}
 
 	@Override
-	public String getValueTableCell(WebElement component, int column, int row) throws Exception
-	{
-		return null;    // the realization is not needed because table is a container
-	}
-
-	@Override
 	public boolean textTableCell(WebElement component, int column, int row, String text) throws Exception
 	{
 		return false;    // the realization is not needed because table is a container 
 	}
 	//endregion
-
-	@Override
-	public String get(WebElement component) throws Exception
-	{
-		Exception real = null;
-		int repeat = 1;
-		do
-		{
-			try
-			{
-				scrollToElement(component);
-				if (component.getTagName().equals("input") || component.getTagName().equals("select"))
-				{
-					return component.getAttribute("value");
-				}
-				return component.getText();
-			}
-			catch (StaleElementReferenceException e)
-			{
-				real = e;
-				logger.debug("Element is no longer attached to the DOM. Try in SeleniumOperationExecutor : " + repeat);
-			}
-		}
-		while (++repeat < repeatLimit);
-		throw real;
-	}
-
-	@Override
-	public String getAttr(WebElement component, String name) throws Exception
-	{
-		Exception real = null;
-		int repeat = 1;
-		do
-		{
-			try
-			{
-				if (name == null)
-				{
-					return null;
-				}
-				if (name.startsWith(css_prefix))
-				{
-					String cssAttrName = name.substring(css_prefix.length());
-					return component.getCssValue(cssAttrName);
-				}
-				return component.getAttribute(name);
-			}
-			catch (StaleElementReferenceException e)
-			{
-				real = e;
-				logger.debug("Element is no longer attached to the DOM. Try in SeleniumOperationExecutor : " + repeat);
-			}
-		}
-		while (++repeat < repeatLimit);
-		throw real;
-	}
-
-	@Override
-	public String script(WebElement component, String script) throws Exception
-	{
-		int repeat = 1;
-		Exception real = null;
-		do
-		{
-			try
-			{
-				Object ret = driver.executeScript(script, component);
-				return String.valueOf(ret);
-			}
-			catch (StaleElementReferenceException e)
-			{
-				real = e;
-				logger.debug("Element is no longer attached to the DOM. Try in SeleniumOperationExecutor : " + repeat);
-			}
-			catch (Exception e)
-			{
-				logger.error(String.format("Error script(%s, %s)", component, script));
-				logger.error(e.getMessage(), e);
-				throw new RemoteException(e.getMessage());
-			}
-		}
-		while (++repeat < repeatLimit);
-		throw real;
-	}
 
 	@Override
 	public boolean dragNdrop(WebElement drag, int x1, int y1, WebElement drop, int x2, int y2, boolean moveCursor) throws Exception
@@ -340,7 +233,7 @@ public class SeleniumOperationExecutor implements OperationExecutor<WebElement>
 				<th>th3</th>
 			</tr>
 		</thead>
-	
+
 		<tbody>
 			<tr>
 				<td>td1</td>
@@ -360,7 +253,7 @@ public class SeleniumOperationExecutor implements OperationExecutor<WebElement>
 				<td>th3</td>
 			</tr>
 		</thead>
-	
+
 		<tbody>
 			<tr>
 				<td>td1</td>
@@ -370,7 +263,7 @@ public class SeleniumOperationExecutor implements OperationExecutor<WebElement>
 		</tbody>
 	</table>
 </div>
-	
+
 <div>
 	<span> thead th
 	<table id="t3">
@@ -379,7 +272,7 @@ public class SeleniumOperationExecutor implements OperationExecutor<WebElement>
 			<th>th2</th>
 			<th>th3</th>
 		</thead>
-	
+
 		<tbody>
 			<tr>
 				<td>td1</td>
@@ -389,7 +282,7 @@ public class SeleniumOperationExecutor implements OperationExecutor<WebElement>
 		</tbody>
 	</table>
 </div>
-	
+
 <div>
 	<span> thead td
 	<table id="t4">
@@ -398,7 +291,7 @@ public class SeleniumOperationExecutor implements OperationExecutor<WebElement>
 			<td>th2</td>
 			<td>th3</td>
 		</thead>
-	
+
 		<tbody>
 			<tr>
 				<td>td1</td>
@@ -408,7 +301,7 @@ public class SeleniumOperationExecutor implements OperationExecutor<WebElement>
 		</tbody>
 	</table>
 </div>
-	
+
 <div>
 	<span> tr th
 	<table id="t5">
@@ -444,58 +337,6 @@ public class SeleniumOperationExecutor implements OperationExecutor<WebElement>
 	</table>
 </div>
 	 */
-	@Override
-	public Map<String, String> getRow(WebElement table, Locator additional, Locator header, boolean useNumericHeader, String[] columns, ICondition valueCondition, ICondition colorCondition) throws Exception
-	{
-		int repeat = 1;
-		Exception real = null;
-		do
-		{
-			try
-			{
-				List<Map<String, String>> list = new ArrayList<>();
-				List<String> headers = null;
-				if(header != null)
-				{
-					headers = getHeadersFromHeaderField(header);
-				}
-				else
-				{
-					headers = getHeaders(table, columns);
-				}
-
-				List<WebElement> rows = findRows(additional, table);
-
-				for (WebElement row : rows)
-				{
-					if (rowMatches(row, valueCondition, colorCondition, headers))
-					{
-						list.add(getRowValues(row, headers));
-					}
-				}
-				if (list.size() == 1)
-				{
-					return list.get(0);
-				}
-
-				throw new RemoteException("Found " + list.size() + " rows instead 1.");
-			}
-			catch (StaleElementReferenceException e)
-			{
-				real = e;
-				logger.debug("Element is no longer attached to the DOM. Try in SeleniumOperationExecutor : " + repeat);
-			}
-			catch (Exception e)
-			{
-				logger.error(String.format("Error getRow(%s, %s, %s)", table, valueCondition, colorCondition));
-				logger.error(e.getMessage(), e);
-				throw new RemoteException(e.getMessage());
-			}
-		}
-		while (++repeat < repeatLimit);
-		throw real;
-	}
-
 	@Override
 	public List<String> getRowIndexes(WebElement table, Locator additional, Locator header, boolean useNumericHeader, String[] columns, ICondition valueCondition, ICondition colorCondition) throws Exception
 	{
@@ -543,145 +384,6 @@ public class SeleniumOperationExecutor implements OperationExecutor<WebElement>
 		throw real;
 	}
 
-	@Override
-	public Map<String, String> getRowByIndex(WebElement table, Locator additional, Locator header, boolean useNumericHeader, String[] columns, int i) throws Exception
-	{
-		Exception real = null;
-		int repeat = 1;
-		do
-		{
-			try
-			{
-				List<String> headers = null;
-				if(header != null)
-				{
-					headers = getHeadersFromHeaderField(header);
-				}
-				else
-				{
-					headers = getHeaders(table, columns);
-				}
-
-				this.logger.debug("Found headers : " + headers);
-				List<WebElement> rows = findRows(additional, table);
-				this.logger.debug("Found rows. Rows size : " + rows.size());
-				if (i > rows.size() - 1 || i < 0)
-				{
-					throw new RemoteException("Invalid index : " + i + ", max index : " + (rows.size() - 1));
-				}
-				this.logger.debug("rows.get(i).getText() : " + rows.get(i).getText());
-				return getRowValues(rows.get(i), headers);
-			}
-			catch (StaleElementReferenceException e)
-			{
-				real = e;
-				logger.debug("Element is no longer attached to the DOM. Try in SeleniumOperationExecutor : " + repeat);
-			}
-			catch (Exception e)
-			{
-				logger.error("Error on get row by index");
-				logger.error(e.getMessage(), e);
-				throw new RemoteException(e.getMessage());
-			}
-		}
-		while (++repeat < repeatLimit);
-		throw real;
-	}
-
-	@Override
-	public Map<String, ValueAndColor> getRowWithColor(WebElement component, Locator additional, Locator header, boolean useNumericHeader, String[] columns, int i) throws Exception
-	{
-		Exception real = null;
-		int repeat = 1;
-		do
-		{
-			try
-			{
-				List<String> headers = null;
-				if(header != null)
-				{
-					headers = getHeadersFromHeaderField(header);
-				}
-				else
-				{
-					headers = getHeaders(component, columns);
-				}
-
-				List<WebElement> rows = findRows(additional, component);
-
-				if (rows.isEmpty())
-				{
-					logger.error("Table is empty");
-					throw new RemoteException("Table is empty");
-				}
-
-				if (i < 0 || i > rows.size() - 1)
-				{
-					throw new RemoteException("Invalid index=[" + i + "]. Maximum index=[" + (rows.size() - 1) + "].");
-				}
-				return valueFromRow(rows.get(i), headers);
-			}
-			catch (StaleElementReferenceException e)
-			{
-				real = e;
-				logger.debug("Element is no longer attached to the DOM. Try in SeleniumOperationExecutor : " + repeat);
-			}
-			catch (Exception e)
-			{
-				logger.error("Error on get row with color");
-				logger.error(e.getMessage(), e);
-				throw new RemoteException(e.getMessage());
-			}
-		}
-		while (++repeat < repeatLimit);
-		throw real;
-	}
-
-	@Override
-	public String[][] getTable(WebElement component, Locator additional, Locator header, boolean useNumericHeader, String[] columns) throws Exception
-	{
-		String outerHTML = component.getAttribute("outerHTML");
-		Document doc = Jsoup.parse(outerHTML);
-		AtomicBoolean ab = new AtomicBoolean(false);
-		List<String> headers = null;
-		if(header != null)
-		{
-			headers = getHeadersFromHeaderField(header);
-		}
-		else
-		{
-			headers = getHeadersFromHTML(outerHTML, ab, columns);
-		}
-		logger.debug("Headers : " + headers);
-		Elements rows = findRows(doc);
-		if (ab.get())
-		{
-			rows.remove(0);
-		}
-		logger.debug("Rows size : " + rows.size());
-		String[][] res = new String[rows.size() + 1][headers.size()];
-		String[] cols = res[0];
-		for (int i = 0; i < cols.length; i++)
-		{
-			cols[i] = headers.get(i);
-		}
-		for (int i = 1; i < res.length; i++)
-		{
-			Element row = rows.get(i - 1);
-			Elements cells = row.children();
-			for (int j = 0; j < Math.min(cols.length, cells.size()); j++)
-			{
-				res[i][j] = cells.get(j).text();
-			}
-		}
-		logger.debug("Result table");
-		for (String[] re : res)
-		{
-			logger.debug(Arrays.toString(re));
-		}
-		logger.debug("############");
-		return res;
-	}
 
 	private List<String> getHeadersFromHeaderField(Locator header) throws Exception {
 		WebElement headerTable = find(null, header);
@@ -1381,8 +1083,33 @@ public class SeleniumOperationExecutor implements OperationExecutor<WebElement>
 		throw real;
 	}
 
+	private List<String> getListOfNamesFromListItems(List<WebElement> list, boolean onlyVisible)
+	{
+		ArrayList<String> resultList = new ArrayList<>();
+		for (WebElement element : list)
+		{
+			boolean needAdd = true;
+			if (onlyVisible)
+			{
+				needAdd = element.isDisplayed();
+			}
+			if (needAdd)
+			{
+				resultList.add(element.getText().trim());
+			}
+		}
+		return resultList;
+	}
+
+    @Override
+    public org.w3c.dom.Document getTree(WebElement component) throws Exception {
+        return null;
+    }
+
+    //region methods from AbstractOperationExecutor
+
 	@Override
-	public String getValue(WebElement component) throws Exception
+	protected String getValueDerived(WebElement component) throws Exception
 	{
 		//TODO make this method
 		Exception real = null;
@@ -1418,26 +1145,9 @@ public class SeleniumOperationExecutor implements OperationExecutor<WebElement>
 		throw real;
 	}
 
-	private List<String> getListOfNamesFromListItems(List<WebElement> list, boolean onlyVisible)
-	{
-		ArrayList<String> resultList = new ArrayList<>();
-		for (WebElement element : list)
-		{
-			boolean needAdd = true;
-			if (onlyVisible)
-			{
-				needAdd = element.isDisplayed();
-			}
-			if (needAdd)
-			{
-				resultList.add(element.getText().trim());
-			}
-		}
-		return resultList;
-	}
-
 	@Override
-	public List<String> getList(WebElement component, boolean onlyVisible) throws Exception {
+	protected List<String> getListDerived(WebElement component, boolean onlyVisible) throws Exception
+	{
 		scrollToElement(component);
 		switch (component.getTagName())
 		{
@@ -1451,10 +1161,290 @@ public class SeleniumOperationExecutor implements OperationExecutor<WebElement>
 		}
 	}
 
-    @Override
-    public org.w3c.dom.Document getTree(WebElement component) throws Exception {
-        return null;
-    }
+	@Override
+	protected String getValueTableCellDerived(WebElement component, int column, int row) throws Exception
+	{
+		return null;    // the realization is not needed because table is a container
+	}
+
+	@Override
+	protected String getDerived(WebElement component) throws Exception
+	{
+		Exception real = null;
+		int repeat = 1;
+		do
+		{
+			try
+			{
+				scrollToElement(component);
+				if (component.getTagName().equals("input") || component.getTagName().equals("select"))
+				{
+					return component.getAttribute("value");
+				}
+				return component.getText();
+			}
+			catch (StaleElementReferenceException e)
+			{
+				real = e;
+				logger.debug("Element is no longer attached to the DOM. Try in SeleniumOperationExecutor : " + repeat);
+			}
+		}
+		while (++repeat < repeatLimit);
+		throw real;
+	}
+
+	@Override
+	protected String getAttrDerived(WebElement component, String name) throws Exception
+	{
+		Exception real = null;
+		int repeat = 1;
+		do
+		{
+			try
+			{
+				if (name == null)
+				{
+					return null;
+				}
+				if (name.startsWith(css_prefix))
+				{
+					String cssAttrName = name.substring(css_prefix.length());
+					return component.getCssValue(cssAttrName);
+				}
+				return component.getAttribute(name);
+			}
+			catch (StaleElementReferenceException e)
+			{
+				real = e;
+				logger.debug("Element is no longer attached to the DOM. Try in SeleniumOperationExecutor : " + repeat);
+			}
+		}
+		while (++repeat < repeatLimit);
+		throw real;
+	}
+
+	@Override
+	protected String scriptDerived(WebElement component, String script) throws Exception
+	{
+		int repeat = 1;
+		Exception real = null;
+		do
+		{
+			try
+			{
+				Object ret = driver.executeScript(script, component);
+				return String.valueOf(ret);
+			}
+			catch (StaleElementReferenceException e)
+			{
+				real = e;
+				logger.debug("Element is no longer attached to the DOM. Try in SeleniumOperationExecutor : " + repeat);
+			}
+			catch (Exception e)
+			{
+				logger.error(String.format("Error script(%s, %s)", component, script));
+				logger.error(e.getMessage(), e);
+				throw new RemoteException(e.getMessage());
+			}
+		}
+		while (++repeat < repeatLimit);
+		throw real;
+	}
+
+	@Override
+	protected Map<String, String> getRowDerived(WebElement table, Locator additional, Locator header, boolean useNumericHeader, String[] columns, ICondition valueCondition, ICondition colorCondition) throws Exception
+	{
+		int repeat = 1;
+		Exception real = null;
+		do
+		{
+			try
+			{
+				List<Map<String, String>> list = new ArrayList<>();
+				List<String> headers = null;
+				if(header != null)
+				{
+					headers = getHeadersFromHeaderField(header);
+				}
+				else
+				{
+					headers = getHeaders(table, columns);
+				}
+
+				List<WebElement> rows = findRows(additional, table);
+
+				for (WebElement row : rows)
+				{
+					if (rowMatches(row, valueCondition, colorCondition, headers))
+					{
+						list.add(getRowValues(row, headers));
+					}
+				}
+				if (list.size() == 1)
+				{
+					return list.get(0);
+				}
+
+				throw new RemoteException("Found " + list.size() + " rows instead 1.");
+			}
+			catch (StaleElementReferenceException e)
+			{
+				real = e;
+				logger.debug("Element is no longer attached to the DOM. Try in SeleniumOperationExecutor : " + repeat);
+			}
+			catch (Exception e)
+			{
+				logger.error(String.format("Error getRow(%s, %s, %s)", table, valueCondition, colorCondition));
+				logger.error(e.getMessage(), e);
+				throw new RemoteException(e.getMessage());
+			}
+		}
+		while (++repeat < repeatLimit);
+		throw real;
+	}
+
+	@Override
+	protected Map<String, String> getRowByIndexDerived(WebElement table, Locator additional, Locator header, boolean useNumericHeader, String[] columns, int i) throws Exception
+	{
+		Exception real = null;
+		int repeat = 1;
+		do
+		{
+			try
+			{
+				List<String> headers = null;
+				if(header != null)
+				{
+					headers = getHeadersFromHeaderField(header);
+				}
+				else
+				{
+					headers = getHeaders(table, columns);
+				}
+
+				this.logger.debug("Found headers : " + headers);
+				List<WebElement> rows = findRows(additional, table);
+				this.logger.debug("Found rows. Rows size : " + rows.size());
+				if (i > rows.size() - 1 || i < 0)
+				{
+					throw new RemoteException("Invalid index : " + i + ", max index : " + (rows.size() - 1));
+				}
+				this.logger.debug("rows.get(i).getText() : " + rows.get(i).getText());
+				return getRowValues(rows.get(i), headers);
+			}
+			catch (StaleElementReferenceException e)
+			{
+				real = e;
+				logger.debug("Element is no longer attached to the DOM. Try in SeleniumOperationExecutor : " + repeat);
+			}
+			catch (Exception e)
+			{
+				logger.error("Error on get row by index");
+				logger.error(e.getMessage(), e);
+				throw new RemoteException(e.getMessage());
+			}
+		}
+		while (++repeat < repeatLimit);
+		throw real;
+	}
+
+	@Override
+	protected Map<String, ValueAndColor> getRowWithColorDerived(WebElement component, Locator additional, Locator header, boolean useNumericHeader, String[] columns, int i) throws Exception
+	{
+		Exception real = null;
+		int repeat = 1;
+		do
+		{
+			try
+			{
+				List<String> headers = null;
+				if(header != null)
+				{
+					headers = getHeadersFromHeaderField(header);
+				}
+				else
+				{
+					headers = getHeaders(component, columns);
+				}
+
+				List<WebElement> rows = findRows(additional, component);
+
+				if (rows.isEmpty())
+				{
+					logger.error("Table is empty");
+					throw new RemoteException("Table is empty");
+				}
+
+				if (i < 0 || i > rows.size() - 1)
+				{
+					throw new RemoteException("Invalid index=[" + i + "]. Maximum index=[" + (rows.size() - 1) + "].");
+				}
+				return valueFromRow(rows.get(i), headers);
+			}
+			catch (StaleElementReferenceException e)
+			{
+				real = e;
+				logger.debug("Element is no longer attached to the DOM. Try in SeleniumOperationExecutor : " + repeat);
+			}
+			catch (Exception e)
+			{
+				logger.error("Error on get row with color");
+				logger.error(e.getMessage(), e);
+				throw new RemoteException(e.getMessage());
+			}
+		}
+		while (++repeat < repeatLimit);
+		throw real;
+	}
+
+	@Override
+	protected String[][] getTableDerived(WebElement component, Locator additional, Locator header, boolean useNumericHeader, String[] columns) throws Exception
+	{
+		String outerHTML = component.getAttribute("outerHTML");
+		Document doc = Jsoup.parse(outerHTML);
+		AtomicBoolean ab = new AtomicBoolean(false);
+		List<String> headers = null;
+		if(header != null)
+		{
+			headers = getHeadersFromHeaderField(header);
+		}
+		else
+		{
+			headers = getHeadersFromHTML(outerHTML, ab, columns);
+		}
+		logger.debug("Headers : " + headers);
+		Elements rows = findRows(doc);
+		if (ab.get())
+		{
+			rows.remove(0);
+		}
+		logger.debug("Rows size : " + rows.size());
+		String[][] res = new String[rows.size() + 1][headers.size()];
+		String[] cols = res[0];
+		for (int i = 0; i < cols.length; i++)
+		{
+			cols[i] = headers.get(i);
+		}
+		for (int i = 1; i < res.length; i++)
+		{
+			Element row = rows.get(i - 1);
+			Elements cells = row.children();
+			for (int j = 0; j < Math.min(cols.length, cells.size()); j++)
+			{
+				res[i][j] = cells.get(j).text();
+			}
+		}
+		logger.debug("Result table");
+		for (String[] re : res)
+		{
+			logger.debug(Arrays.toString(re));
+		}
+		logger.debug("############");
+		return res;
+	}
+
+
+	//endregion
 
     //region private methods
 	private String getElementString(WebElement element)
@@ -2121,23 +2111,10 @@ public class SeleniumOperationExecutor implements OperationExecutor<WebElement>
 	}
 	//endregion
 
-	private static final String MOVE_TO_SCRIPT =
-			"var myMoveToFunction = function(elem) {\n"+
-			"   if (document.createEvent) {\n"+
-			"       var evObj = document.createEvent('MouseEvents');\n"+
-			"       evObj.initEvent('mouseover',true, false);\n"+
-			"       elem.dispatchEvent(evObj);\n"+
-			"   } else if (document.createEventObject) {\n"+
-			"       elem.fireEvent('onmouseover');\n"+
-			"   };\n"+
-			"};\n"+
-			"myMoveToFunction(arguments[0])";
-
 	//TODO need normal scroll to function
 	private static final String SCROLL_TO_SCRIPT = loadScript("js/scrollTo.js");
 
 	private String markAttribute = "seleniummarkattribute";
 	private WebDriverListenerNew driver;
-	private PluginInfo info;
 	private Logger logger;
 }

@@ -132,7 +132,7 @@ public class WinRemoteApplicationJNA extends RemoteApplication
 			this.driver = new JnaDriverImpl(this.logger);
 			setLogger(this.driver, args.get(logLevel));
 			setMaxTimeout(this.driver, args.get(maxTimeout));
-			this.operationExecutor = new WinOperationExecutorJNA(this.logger, this.driver);
+			this.operationExecutor = new WinOperationExecutorJNA(this.logger, this.driver, super.useTrimText);
 			return this.driver.connect(title, height, width, pid, controlKind, timeout, alwaysToFront);
 		}
 		catch (RemoteException e)
@@ -170,7 +170,7 @@ public class WinRemoteApplicationJNA extends RemoteApplication
 			this.driver = new JnaDriverImpl(this.logger);
 			setLogger(this.driver, args.get(logLevel));
 			setMaxTimeout(this.driver, args.get(maxTimeout));
-			this.operationExecutor = new WinOperationExecutorJNA(this.logger, this.driver);
+			this.operationExecutor = new WinOperationExecutorJNA(this.logger, this.driver, super.useTrimText);
 			return this.driver.run(exec, workDir, parameters, alwaysToFront);
 		}
 		catch (RemoteException e)

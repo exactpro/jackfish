@@ -43,9 +43,9 @@ public class SwingRemoteApplication extends RemoteApplication
 	private Logger logger = null;
 	private Robot currentRobot;
 
-	public SwingOperationExecutor operationExecutor;
-	private PluginInfo info;
-	
+	private SwingOperationExecutor operationExecutor;
+	private PluginInfo             info;
+
 	@Override
 	protected void createLoggerDerived(String logName, String serverLogLevel, String serverLogPattern) throws Exception
 	{
@@ -132,7 +132,7 @@ public class SwingRemoteApplication extends RemoteApplication
 			}
 
 			this.currentRobot = new RobotListener(BasicRobot.robotWithCurrentAwtHierarchy());
-			this.operationExecutor = new SwingOperationExecutor(this.currentRobot, this.logger);
+			this.operationExecutor = new SwingOperationExecutor(this.currentRobot, this.logger, super.useTrimText);
 		}
 		catch (Exception e)
 		{
@@ -176,7 +176,7 @@ public class SwingRemoteApplication extends RemoteApplication
 			mainMethod.invoke(null, new Object[]{arg == null ? null : new String[]{arg}});
 
 			this.currentRobot = new RobotListener(BasicRobot.robotWithCurrentAwtHierarchy());
-			this.operationExecutor = new SwingOperationExecutor(this.currentRobot, this.logger);
+			this.operationExecutor = new SwingOperationExecutor(this.currentRobot, this.logger, super.useTrimText);
 		}
 		catch (Exception e)
 		{
