@@ -9,7 +9,6 @@ package com.exactprosystems.jf.app;
 
 import com.exactprosystems.jf.api.app.*;
 import com.exactprosystems.jf.api.common.Converter;
-import com.exactprosystems.jf.api.common.SerializablePair;
 import com.exactprosystems.jf.api.common.Str;
 import com.exactprosystems.jf.api.error.app.ElementNotFoundException;
 import com.exactprosystems.jf.api.error.app.FeatureNotSupportedException;
@@ -236,7 +235,7 @@ public class WinRemoteApplicationJNA extends RemoteApplication
 	}
 
 	@Override
-	protected SerializablePair<String, Boolean> getAlertTextDerived() throws Exception
+	protected String getAlertTextDerived() throws Exception
 	{
 		throw new FeatureNotSupportedException("getAlertText");
 	}

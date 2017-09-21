@@ -12,7 +12,6 @@ import com.exactprosystems.jf.api.app.AppConnection;
 import com.exactprosystems.jf.api.app.IApplication;
 import com.exactprosystems.jf.api.app.IRemoteApplication;
 import com.exactprosystems.jf.api.app.PerformKind;
-import com.exactprosystems.jf.api.common.SerializablePair;
 import com.exactprosystems.jf.api.error.ErrorKind;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.report.ReportBuilder;
@@ -102,7 +101,7 @@ public class DialogAlert extends AbstractAction
 			return;
 		}
 
-		SerializablePair<String, Boolean> alertText;
+		String alertText;
 		try
 		{
 			alertText = service.getAlertText();
@@ -114,6 +113,6 @@ public class DialogAlert extends AbstractAction
 			return;
 		}
 		service.setAlertText(this.text, this.perform);
-		this.setResult(alertText.getKey());
+		this.setResult(alertText);
 	}
 }

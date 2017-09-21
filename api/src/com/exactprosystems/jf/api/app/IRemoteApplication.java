@@ -8,8 +8,6 @@
 
 package com.exactprosystems.jf.api.app;
 
-import com.exactprosystems.jf.api.common.SerializablePair;
-
 import java.awt.*;
 import java.io.Serializable;
 import java.rmi.Remote;
@@ -31,8 +29,7 @@ public interface IRemoteApplication extends Remote
 	int 						run				(Map<String, String> args) throws RemoteException;
 	void 						stop			(boolean needKill) throws RemoteException;
 
-	//TODO why we use serializable pair with boolean? Replace to String
-	SerializablePair<String, Boolean> getAlertText() throws RemoteException;
+	String 						getAlertText	() throws RemoteException;
 	void						navigate		(NavigateKind kind) throws RemoteException;
 	void 						setAlertText	(String text, PerformKind performKind) throws RemoteException;
 	void 						refresh			() throws RemoteException;

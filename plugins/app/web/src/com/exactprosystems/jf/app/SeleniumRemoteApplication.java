@@ -10,7 +10,6 @@ package com.exactprosystems.jf.app;
 
 import com.exactprosystems.jf.api.app.*;
 import com.exactprosystems.jf.api.common.Converter;
-import com.exactprosystems.jf.api.common.SerializablePair;
 import com.exactprosystems.jf.api.common.Str;
 import com.exactprosystems.jf.api.error.app.FeatureNotSupportedException;
 import com.exactprosystems.jf.api.error.app.TimeoutException;
@@ -382,7 +381,7 @@ public class SeleniumRemoteApplication extends RemoteApplication
 	}
 
 	@Override
-	protected SerializablePair<String, Boolean> getAlertTextDerived() throws Exception
+	protected String getAlertTextDerived() throws Exception
 	{
 		try
 		{
@@ -392,7 +391,7 @@ public class SeleniumRemoteApplication extends RemoteApplication
 		{
 			throw new RemoteException("Alert is not present");
 		}
-		return new SerializablePair<>(this.currentAlert.getText(), true);
+		return this.currentAlert.getText();
 	}
 
 	@Override

@@ -9,7 +9,6 @@
 package com.exactprosystems.jf.api.app;
 
 import com.exactprosystems.jf.api.common.Converter;
-import com.exactprosystems.jf.api.common.SerializablePair;
 import com.exactprosystems.jf.api.common.Str;
 import com.exactprosystems.jf.api.error.app.ElementNotFoundException;
 import com.exactprosystems.jf.api.error.app.ProxyException;
@@ -231,7 +230,7 @@ public abstract class RemoteApplication implements IRemoteApplication
 	}
 
 	@Override
-	public SerializablePair<String, Boolean> getAlertText() throws RemoteException
+	public String getAlertText() throws RemoteException
 	{
 		try
 		{
@@ -591,7 +590,7 @@ public abstract class RemoteApplication implements IRemoteApplication
 	
 	protected abstract void refreshDerived() throws Exception;
 
-	protected abstract SerializablePair<String,Boolean> getAlertTextDerived() throws Exception;
+	protected abstract String getAlertTextDerived() throws Exception;
 
 	protected abstract void navigateDerived(NavigateKind kind) throws Exception;
 

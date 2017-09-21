@@ -10,7 +10,6 @@ package com.exactprosystems.jf.app;
 
 import com.exactprosystems.jf.api.app.*;
 import com.exactprosystems.jf.api.common.ProcessTools;
-import com.exactprosystems.jf.api.common.SerializablePair;
 import com.exactprosystems.jf.api.common.Str;
 import com.exactprosystems.jf.api.error.app.FeatureNotSupportedException;
 import com.exactprosystems.jf.api.error.app.NullParameterException;
@@ -211,7 +210,7 @@ public class SwingRemoteApplication extends RemoteApplication
 	}
 
 	@Override
-	protected SerializablePair<String, Boolean> getAlertTextDerived() throws Exception
+	protected String getAlertTextDerived() throws Exception
 	{
 		throw new FeatureNotSupportedException("getAlertText");
 	}
