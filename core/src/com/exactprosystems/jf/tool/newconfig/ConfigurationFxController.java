@@ -9,6 +9,7 @@ import com.exactprosystems.jf.tool.ContainingParent;
 import com.exactprosystems.jf.tool.custom.CustomTreeViewSkin;
 import com.exactprosystems.jf.tool.helpers.DialogsHelper;
 import com.exactprosystems.jf.tool.newconfig.nodes.*;
+import javafx.collections.FXCollections;
 import javafx.fxml.Initializable;
 import javafx.geometry.Orientation;
 import javafx.scene.Parent;
@@ -247,4 +248,9 @@ public class ConfigurationFxController implements Initializable, ContainingParen
 		this.treeView.getRoot().setExpanded(true);
 	}
 
+	public void updateParameters()
+	{
+		List<TablePair> parameters = this.treeView.getSelectionModel().getSelectedItem().getValue().getParameters();
+		tableView.setItems(FXCollections.observableArrayList(parameters));
+	}
 }

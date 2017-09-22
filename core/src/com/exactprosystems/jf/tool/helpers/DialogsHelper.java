@@ -39,7 +39,6 @@ import com.exactprosystems.jf.tool.custom.browser.ReportBrowser;
 import com.exactprosystems.jf.tool.custom.date.DateTimePicker;
 import com.exactprosystems.jf.tool.custom.date.DateTimePickerSkin;
 import com.exactprosystems.jf.tool.custom.helper.HelperFx;
-import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
@@ -54,6 +53,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.*;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.Region;
 import javafx.scene.text.Text;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
@@ -148,6 +148,7 @@ public abstract class DialogsHelper
 	{
 		Dialog<ButtonType> dialog = new Alert(Alert.AlertType.CONFIRMATION);
 		Common.addIcons(((Stage) dialog.getDialogPane().getScene().getWindow()));
+		dialog.getDialogPane().setMinHeight(Region.USE_PREF_SIZE);
 		dialog.setTitle("Warning");
 		dialog.getDialogPane().setHeaderText(header);
 		dialog.getDialogPane().setContentText(body);

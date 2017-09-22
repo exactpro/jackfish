@@ -409,7 +409,10 @@ public class ConfigurationFx extends Configuration
 
 	public void removeMatrix(File matrixFile) throws Exception
 	{
-		removeFileFromFileSystem(matrixFile, this::displayMatrix);
+		if (Common.confirmFileDelete(matrixFile.getName()))
+		{
+			removeFileFromFileSystem(matrixFile, this::displayMatrix);
+		}
 	}
 
 	public void updateMatrices()
@@ -449,6 +452,11 @@ public class ConfigurationFx extends Configuration
 
 	public void removeLibrary(String namespace) throws Exception
 	{
+		boolean fileDelete = Common.confirmFileDelete(namespace);
+		if (!fileDelete)
+		{
+			return;
+		}
 		Map<String, Matrix> libs = super.libs;
 		Matrix matrix = libs.get(namespace);
 		File file = new File(matrix.getNameProperty().get());
@@ -489,7 +497,10 @@ public class ConfigurationFx extends Configuration
 
 	public void excludeVarsFile(String file)
 	{
-		excludeFile(file, getUserVars(), this::displayVars);
+		if (Common.confirmFileDelete(file))
+		{
+			excludeFile(file, getUserVars(), this::displayVars);
+		}
 	}
 
 	public void addUserVarsFile(File file)
@@ -522,13 +533,19 @@ public class ConfigurationFx extends Configuration
 
 	public void removeReport(File file) throws Exception
 	{
-		removeFileFromFileSystem(file, this::displayReport);
+		if (Common.confirmFileDelete(file.getName()))
+		{
+			removeFileFromFileSystem(file, this::displayReport);
+		}
 	}
 
 	public void clearReportFolder() throws Exception
 	{
-		File reportFolder = new File(getReports().get());
-		Optional.ofNullable(reportFolder.listFiles()).ifPresent(files -> removeFilesFromFileSystem(Arrays.asList(files), this::displayReport));
+		if (Common.confirmFileDelete("all reports"))
+		{
+			File reportFolder = new File(getReports().get());
+			Optional.ofNullable(reportFolder.listFiles()).ifPresent(files -> removeFilesFromFileSystem(Arrays.asList(files), this::displayReport));
+		}
 	}
 
 	public void updateReport()
@@ -848,8 +865,18 @@ public class ConfigurationFx extends Configuration
 
 	public void updateHandlerValue(HandlerKind kind, String newValue) throws Exception
 	{
-		this.getGlobalHandler().setHandler(kind, newValue);
-		this.displayGlobalHandler();
+		Command undo = () -> {
+			this.getGlobalHandler().setHandler(kind, "");
+			this.getGlobalHandler().setEnabled(false);
+			this.displayGlobalHandler();
+		};
+
+		Command redo = () -> {
+			this.getGlobalHandler().setHandler(kind, newValue);
+			this.displayGlobalHandler();
+		};
+
+		addCommand(undo, redo);
 	}
 
 	public void changeEntry(Entry entry, String key, Object newValue) throws Exception
@@ -862,10 +889,12 @@ public class ConfigurationFx extends Configuration
 		Command undo = () ->
 		{
 			Common.tryCatch(() -> entry.set(key, lastValue), "");
+			this.controller.updateParameters();
 		};
 		Command redo = () ->
 		{
 			Common.tryCatch(() -> entry.set(key, newValue), "");
+			this.controller.updateParameters();
 		};
 		addCommand(undo, redo);
 	}
@@ -876,7 +905,7 @@ public class ConfigurationFx extends Configuration
 		{
 			return file.getCanonicalPath();
 		}
-		catch (Exception e)
+		catch (Exception ignore)
 		{
 
 		}
@@ -1171,7 +1200,6 @@ public class ConfigurationFx extends Configuration
 
 	private void removeFileFromFileSystem(File removeFile, DisplayFunction displayFunction)
 	{
-		// TODO think about undo/redo files
 		forceDelete(removeFile);
 		displayFunction.display();
 	}
@@ -1354,4 +1382,6 @@ public class ConfigurationFx extends Configuration
 			this.controller.init(this, this.pane, this.currentCompareEnum);
 		}
 	}
+
+
 }
