@@ -13,6 +13,7 @@ import com.exactprosystems.jf.api.client.IClientsPool;
 import com.exactprosystems.jf.api.client.Possibility;
 import com.exactprosystems.jf.api.common.IPool;
 import com.exactprosystems.jf.api.common.ParametersKind;
+import com.exactprosystems.jf.api.common.Str;
 import com.exactprosystems.jf.api.service.IServiceFactory;
 import com.exactprosystems.jf.api.service.IServicesPool;
 import com.exactprosystems.jf.api.service.ServiceConnection;
@@ -888,7 +889,7 @@ public class ConfigurationFx extends Configuration
 		}
 		Command undo = () ->
 		{
-			Common.tryCatch(() -> entry.set(key, lastValue), "");
+			Common.tryCatch(() -> entry.set(key, Str.asString(lastValue)), "");
 			this.controller.updateParameters();
 		};
 		Command redo = () ->

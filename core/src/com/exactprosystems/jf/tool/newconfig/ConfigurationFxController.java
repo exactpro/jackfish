@@ -251,6 +251,9 @@ public class ConfigurationFxController implements Initializable, ContainingParen
 	public void updateParameters()
 	{
 		List<TablePair> parameters = this.treeView.getSelectionModel().getSelectedItem().getValue().getParameters();
-		tableView.setItems(FXCollections.observableArrayList(parameters));
+		if (parameters != null)
+		{
+			tableView.setItems(FXCollections.observableArrayList(parameters));
+		}
 	}
 }
