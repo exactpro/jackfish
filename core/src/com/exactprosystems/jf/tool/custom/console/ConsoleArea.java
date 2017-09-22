@@ -35,16 +35,29 @@ public class ConsoleArea extends StyleClassedTextArea
 
     public void appendDefaultText(String text)
     {
-        int start = this.getLength();
-        this.appendText(text + "\n");
-        this.setStyleClass(start, this.getLength(), CssVariables.CONSOLE_DEFAULT_TEXT);
+        this.appendStyledText(text, false, CssVariables.CONSOLE_DEFAULT_TEXT);
+    }
+
+    public void appendDefaultTextOnNewLine(String text)
+    {
+        this.appendStyledText(text, true, CssVariables.CONSOLE_DEFAULT_TEXT);
     }
 
     public void appendErrorText(String text)
     {
+        this.appendStyledText(text, false, CssVariables.CONSOLE_DEFAULT_TEXT);
+    }
+
+    public void appendErrorTextOnNewLine(String text)
+    {
+        this.appendStyledText(text, true, CssVariables.CONSOLE_DEFAULT_TEXT);
+    }
+
+    private void appendStyledText(String text, boolean newLine, String style)
+    {
         int start = this.getLength();
-        this.appendText(text + "\n");
-        this.setStyleClass(start, this.getLength(), CssVariables.CONSOLE_ERROR_ITEM);
+        this.appendText(newLine ? text + "\n" : text);
+        this.setStyleClass(start, this.getLength(), style);
     }
 
     public void appendMatrixItemLink(String text, TreeItem <MatrixItem> item)

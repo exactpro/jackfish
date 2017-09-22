@@ -176,7 +176,7 @@ public class MatrixFxController implements Initializable, ContainingParent, IMat
 			Platform.runLater(() ->
 			{
 				this.area.clear();
-				this.area.appendDefaultText(String.format("Matrix '%s' started...", matrix.getNameProperty().get()));
+				this.area.appendDefaultTextOnNewLine(String.format("Matrix '%s' started...", matrix.getNameProperty().get()));
 			});
 
 			this.listView.getItems().clear();
@@ -211,7 +211,7 @@ public class MatrixFxController implements Initializable, ContainingParent, IMat
 		String format = String.format("Matrix '%s' finished.", matrix.getNameProperty().get());
 		if (this.listView != null)
 		{
-			Platform.runLater(() -> this.area.appendDefaultText(String.format("Matrix '%s' finished.", matrix.getNameProperty().get())));
+			Platform.runLater(() -> this.area.appendDefaultTextOnNewLine(String.format("Matrix '%s' finished.", matrix.getNameProperty().get())));
 			this.listView.getItems().add(ConsoleText.defaultText(format));
 			Optional.ofNullable(this.tab).ifPresent(t -> {
 				t.getStyleClass().remove(CssVariables.EXECUTING_TAB);
@@ -234,7 +234,7 @@ public class MatrixFxController implements Initializable, ContainingParent, IMat
 		Common.runLater(() ->
 		{
 			String format = item == null ? message : String.format("%s %s", item.getPath(), message);
-			this.area.appendErrorText(format);
+			this.area.appendErrorTextOnNewLine(format);
 			if (listView != null)
 			{
 				listView.getItems().add(ConsoleText.errorItem(format, item));
@@ -276,7 +276,12 @@ public class MatrixFxController implements Initializable, ContainingParent, IMat
 			else
 			{
 				DialogsHelper.showInfo(String.format("Matrix paused on \'%s\'", treeItem.getValue().getItemName()));
-				Platform.runLater(() -> this.area.appendMatrixItemLink(String.format("%d : Paused on %s", item.getNumber(), item.getItemName()), treeItem));
+				Platform.runLater(() ->
+                        {
+                            this.area.appendDefaultText(String.format("%d : Paused on ", item.getNumber()));
+                            this.area.appendMatrixItemLink(String.format("%s", item.getItemName()), treeItem);
+                        }
+                );
 				Optional.ofNullable(this.listView).ifPresent(lv -> lv.getItems().add(ConsoleText.pausedItem(String.format("Paused on %s", item), item)));
 				this.tree.scrollTo(this.tree.getRow(treeItem));
 			}
@@ -318,7 +323,7 @@ public class MatrixFxController implements Initializable, ContainingParent, IMat
 		this.tab.setContent(this.pane);
 		console.setConsumer(s -> Common.runLater(() ->
 		{
-			this.area.appendDefaultText(s);
+			this.area.appendDefaultTextOnNewLine(s);
 			this.listView.getItems().add(ConsoleText.defaultText(s));
 		}));
 		CustomTabPane.getInstance().addTab(this.tab);
