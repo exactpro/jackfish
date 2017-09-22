@@ -2,10 +2,13 @@ package com.exactprosystems.jf.tool.custom.console;
 
 import com.exactprosystems.jf.documents.matrix.parser.items.MatrixItem;
 import com.exactprosystems.jf.tool.CssVariables;
+import javafx.scene.control.ContextMenu;
+import javafx.scene.control.MenuItem;
 import javafx.scene.control.TreeItem;
 import org.fxmisc.richtext.MouseOverTextEvent;
 import org.fxmisc.richtext.StyleClassedTextArea;
 
+import java.awt.MouseInfo;
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.function.Consumer;
@@ -15,22 +18,34 @@ public class ConsoleArea extends StyleClassedTextArea
     private ArrayList<Link> list;
     private int charIndex;
 
+	private ContextMenu contextMenu;
+
     public ConsoleArea(Consumer<TreeItem<MatrixItem>> moveToMatrixItem)
     {
         this.list = new ArrayList<>();
         this.setMouseOverTextDelay(Duration.ofMillis(10));
         this.addEventHandler(MouseOverTextEvent.MOUSE_OVER_TEXT_BEGIN, e -> this.charIndex = e.getCharacterIndex());
-        this.setOnMouseClicked(event ->
+        this.setOnMouseReleased(event ->
         {
             for (Link link : this.list)
             {
-                if(this.charIndex>link.getStart() && this.charIndex<link.getEnd())
-                {
-                    moveToMatrixItem.accept(link.getItem());
-                    break;
-                }
-            }
+				if (this.charIndex > link.getStart() && this.charIndex < link.getEnd())
+				{
+					moveToMatrixItem.accept(link.getItem());
+					break;
+				}
+			}
         });
+		this.contextMenu = new ContextMenu();
+		this.contextMenu.setAutoFix(true);
+		this.contextMenu.setAutoHide(true);
+		MenuItem itemClear = new MenuItem("Clear");
+		itemClear.setOnAction(e -> this.clear());
+		this.contextMenu.getItems().addAll(itemClear);
+		this.setOnContextMenuRequested(e ->
+		{
+			this.contextMenu.show(this.getScene().getWindow(), MouseInfo.getPointerInfo().getLocation().getX(),MouseInfo.getPointerInfo().getLocation().getY());
+		});
     }
 
     public void appendDefaultText(String text)
