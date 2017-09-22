@@ -211,7 +211,7 @@ public class MatrixFxController implements Initializable, ContainingParent, IMat
 		String format = String.format("Matrix '%s' finished.", matrix.getNameProperty().get());
 		if (this.listView != null)
 		{
-			Platform.runLater(() -> this.area.appendErrorText(String.format("Matrix '%s' finished.", matrix.getNameProperty().get())));
+			Platform.runLater(() -> this.area.appendDefaultText(String.format("Matrix '%s' finished.", matrix.getNameProperty().get())));
 			this.listView.getItems().add(ConsoleText.defaultText(format));
 			Optional.ofNullable(this.tab).ifPresent(t -> {
 				t.getStyleClass().remove(CssVariables.EXECUTING_TAB);
