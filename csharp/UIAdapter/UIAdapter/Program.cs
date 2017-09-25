@@ -1723,6 +1723,11 @@ namespace UIAdapter
                         throw new Exception("Could not find window still 60 seconds");
                     }
                     List<Process> children = GetChildProcesses(process);
+                    if (children.Count == 0)
+                    {
+                        children.Add(process);
+                    }
+
                     logger.All("Child count : " + children.Count);
                     bool isExit = false;
                     foreach (Process p in children)
