@@ -398,7 +398,7 @@ Text {
 }
 .consolePausedItem {
 	-fx-fill : -fx-company-color-light;
-
+    -fx-cursor: hand;
 }
 .consoleErrorItem {
 	-fx-fill : red;
