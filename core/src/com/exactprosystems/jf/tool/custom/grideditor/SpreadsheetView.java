@@ -30,8 +30,6 @@ import java.awt.Point;
 import java.util.*;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.FutureTask;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -45,8 +43,6 @@ public class SpreadsheetView extends Control
 		RIGHT
 	}
 
-	private static final int minProgression = Integer.MIN_VALUE;
-	private static int currentIndexColumn = 0;
 	private static final double DEFAULT_ROW_HEADER_WIDTH = 30.0;
 
 	private final SpreadsheetGridView cellsView;
@@ -322,95 +318,66 @@ public class SpreadsheetView extends Control
 
 	public void extentionView(ObservableList<ObservableList<String>> initial, Direction direction, RectangleSelection.GridRange range)
 	{
+		List<String> strings;
+		int count;
+		List<String> values;
 		Map<Point, String> map = new LinkedHashMap<>();
+
 		switch (direction)
 		{
 			case UP:
-				for (int j = range.getLeft(); j < range.getRight() + 1; j++)
+				strings = initial.stream().flatMap(Collection::stream).collect(Collectors.toList());
+				Collections.reverse(strings);
+
+				count = range.getBottom() - range.getTop() - strings.size() +1;
+				values = getNextValues(strings, count);
+				for (int i = 0; i < values.size(); i++)
 				{
-					ObservableList<String> strings = FXCollections.observableArrayList();
-					int size = initial.size();
-					for (ObservableList<String> s : initial)
-					{
-						strings.add(s.get(j - range.getLeft()));
-					}
-					Collections.reverse(strings);
-					int progression = strings.size() == 1 ? 1 : getProgression(strings);
-					int skip = progression != minProgression ? 1 : size;
-					int currentProgression = progression != minProgression ? progression : -1;
-					for (int i = range.getBottom() - size; i > range.getTop() - 1; i--)
-					{
-						String value = String.valueOf(this.providerProperty.get().getCellValue(j, i + skip));
-						String evaluatedText = getEvaluatedText(value, currentProgression);
-						map.put(new Point(j, i), evaluatedText);
-					}
+					map.put(new Point(range.getLeft(),range.getBottom() - strings.size() - i), values.get(i));
 				}
 
 				break;
 
 			case DOWN:
-				for (int j = range.getLeft(); j < range.getRight() + 1; j++)
-				{
-					ObservableList<String> strings = FXCollections.observableArrayList();
-					int size = initial.size();
-					for (ObservableList<String> s : initial)
-					{
-						strings.add(s.get(j - range.getLeft()));
-					}
-					int progression = strings.size() == 1 ? 1 : getProgression(strings);
-					int skip = progression != minProgression ? 1 : size;
-					int currentProgression = progression != minProgression ? progression : 1;
-					String value = String.valueOf(this.providerProperty.get().getCellValue(j, range.getTop() + size - skip));
-					for (int i = range.getTop() + size - skip; i < range.getTop() + size; i++)
-					{
-						String a = String.valueOf(this.providerProperty.get().getCellValue(j,i));
-						if (a != null){
-							value = a;
-						}
-						else
-						{
-							break;
-						}
+				strings = initial.stream().flatMap(Collection::stream).collect(Collectors.toList());
 
-					}
-					int newProgression = currentProgression;
-					for (int i = range.getTop() + size; i < range.getBottom() + 1; i++)
-					{
-						if (i != (range.getTop() + size)){
-							newProgression = newProgression + currentProgression;
-						}
-						String evaluatedText = getEvaluatedText(value, newProgression);
-						map.put(new Point(j, i), evaluatedText);
-					}
+				count = range.getBottom() - range.getTop() - strings.size() +1;
+				values = getNextValues(strings, count);
+				for (int i = 0; i < values.size(); i++)
+				{
+					map.put(new Point(range.getLeft(),range.getTop() + strings.size() + i), values.get(i));
 				}
 				break;
 
 			case LEFT:
-				ObservableList<String> stringsLeft = initial.get(0);
-				int countLeft = range.getRight() - range.getLeft() - stringsLeft.size() + 1;
-				List<String> nextValuesLeft = getNextValues(stringsLeft, countLeft,Direction.LEFT);
-				for (int i = 0; i < nextValuesLeft.size(); i++)
+
+				strings = initial.get(0);
+				Collections.reverse(strings);
+				count = range.getRight() - range.getLeft() - strings.size() + 1;
+
+				values = getNextValues(strings, count);
+				for (int i = 0; i < values.size(); i++)
 				{
-					map.put(new Point(range.getRight() - stringsLeft.size() - i, range.getTop()), nextValuesLeft.get(i));
+					map.put(new Point(range.getRight() - strings.size() - i, range.getTop()), values.get(i));
 				}
 
 				break;
 
 			case RIGHT:
 
-				ObservableList<String> strings = initial.get(0);
-				int countRight = range.getRight() - range.getLeft() - strings.size() + 1;
-				List<String> nextValuesRight = getNextValues(strings, countRight, Direction.RIGHT);
-				for (int i = 0; i < nextValuesRight.size(); i++)
+				strings = initial.get(0);
+				count = range.getRight() - range.getLeft() - strings.size() + 1;
+				values = getNextValues(strings, count);
+				for (int i = 0; i < values.size(); i++)
 				{
-					map.put(new Point(range.getLeft() + strings.size() + i, range.getTop()), nextValuesRight.get(i));
+					map.put(new Point(range.getLeft() + strings.size() + i, range.getTop()), values.get(i));
 				}
 				break;
 		}
 		this.providerProperty.get().updateCells(map);
 	}
 
-	private List<String> getNextValues(List<String> list, int iter, Direction dir) {
+	private List<String> getNextValues(List<String> list, int iter) {
 
 		switch (getKind(list))
 		{
@@ -428,17 +395,8 @@ public class SpreadsheetView extends Control
 				List<String> res = new ArrayList<>();
 				for (int i = 0; i < iter; i++)
 				{
-					int value = 0;
-					switch (dir)
-					{
-						case RIGHT:
-							value = Integer.parseInt(list.get(list.size() - 1)) + progression * (1 + i);
-						break;
-						case LEFT:
-							value = Integer.parseInt(list.get(0)) - progression * (1 + i);
-							break;
 
-					}
+					int value = Integer.parseInt(list.get(list.size() - 1)) + progression * (1 + i);
 					res.add(String.valueOf(value));
 				}
 
@@ -446,10 +404,6 @@ public class SpreadsheetView extends Control
 
 			case STRINGS:
 				List<String> strings = new ArrayList<>();
-				if (dir.equals(Direction.LEFT))
-				{
-					Collections.reverse(list);
-				}
 				Iterator<String> iterator = list.iterator();
 				for (int i = 0; i < iter; i++)
 				{
@@ -466,8 +420,8 @@ public class SpreadsheetView extends Control
 				List<String> stringWnumbers = new ArrayList<>();
 				List<String> strings1 = list.stream().map(s -> s.split("(?<=\\D)(?=\\d)|(?<=\\d)(?=\\D)")[0]).collect(Collectors.toList());
 				List<String> numbers = list.stream().map(s -> s.split("(?<=\\D)(?=\\d)|(?<=\\d)(?=\\D)")[1]).collect(Collectors.toList());
-				List<String> stringsFrom = getNextValues(strings1, iter,dir);
-				List<String> numbersFrom = getNextValues(numbers, iter,dir);
+				List<String> stringsFrom = getNextValues(strings1, iter);
+				List<String> numbersFrom = getNextValues(numbers, iter);
 				for (int i = 0; i < stringsFrom.size(); i++)
 				{
 					stringWnumbers.add(stringsFrom.get(i) + numbersFrom.get(i));
@@ -498,117 +452,6 @@ public class SpreadsheetView extends Control
 		NUMBERS,
 		STRINGS,
 		STRINGNUMBER,
-	}
-
-	private static int getProgression(List<String> strings)
-	{
-		int progression = minProgression;
-		ArrayList<Integer> list = new ArrayList<>();
-		for (int i = 0; i < strings.size() - 1; i++)
-		{
-			String firstValue = strings.get(i);
-			String secondValue = strings.get(i + 1);
-			try
-			{
-				//TODO think about numberWORDnumber
-				int firstInt = Integer.parseInt(firstValue);
-				int secondInt = Integer.parseInt(secondValue);
-				list.add(secondInt - firstInt);
-			}
-			catch (NumberFormatException e)
-			{
-				try
-				{
-
-					int firstInt = Integer.parseInt(getSubstring(firstValue));
-					int secondInt = Integer.parseInt(getSubstring(secondValue));
-					list.add(secondInt - firstInt);
-				}
-				catch (Exception ex){
-					return progression;
-				}
-			}
-		}
-		if (list.stream().distinct().count() == 1)
-		{
-			progression = list.get(0);
-		}
-		return progression;
-	}
-
-	private static String getSubstring(String s)
-	{
-		String res = null;
-		Pattern compile = Pattern.compile("^(-?\\d+)?(.*?)(-?\\d+)?$");
-		Matcher matcher = compile.matcher(s);
-		if (matcher.find())
-		{
-			res = matcher.group(3);
-		}
-		if (res != null)
-		{
-			return res;
-		}
-		else
-		{
-			return s;
-		}
-	}
-
-	private String getEvaluatedText(String s, int progression)
-	{
-		/**
-		 *  only number
-		 */
-		try
-		{
-			int i = Integer.parseInt(s);
-			int w = i + progression;
-			return String.valueOf(w);
-		}
-		catch (Exception e)
-		{
-			//
-		}
-		/**
-		 *  number add string
-		 */
-		try
-		{
-			StringBuilder res = new StringBuilder();
-			Pattern compile = Pattern.compile("^(-?\\d+)?(.*?)(-?\\d+)?$");
-			Matcher matcher = compile.matcher(s);
-			if (matcher.find())
-			{
-				String firstDigits = matcher.group(1);
-				if (firstDigits != null)
-				{
-					int first = Integer.parseInt(firstDigits);
-					int firstNew = first + progression;
-					res.append(firstNew);
-				}
-
-				String word = matcher.group(2);
-				res.append(word);
-
-				String lastDigits = matcher.group(3);
-				if (lastDigits != null)
-				{
-					int last = Integer.parseInt(lastDigits);
-					int lastNew = last + progression;
-					res.append(lastNew);
-				}
-				return res.toString();
-			}
-		}
-		catch (Exception e)
-		{
-			//
-		}
-		/**
-		 *  only string
-		 */
-		return s;
 	}
 
 	public ObservableList<String> convert(ObservableList<TablePosition> focusedCells)
