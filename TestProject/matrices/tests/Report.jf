@@ -98,8 +98,11 @@ Check Report with one parameter;Never;;
     CALL_2;expand;appCon
 
     // check that element inside table
-    #Id;#Action;#Assert;$Dialog;$AppConnection;MockElement
-    DLGFLL5;DialogFill;This.Out.MockElement == true;'DialogForTestReport';appCon;Do.use(locator).isVisible()
+    #Id;#Action;$Dialog;$AppConnection;MockElement
+    DLGFLL5;DialogFill;'DialogForTestReport';appCon;Do.use(locator).isVisible()
+
+    #Assert;#Message
+    DLGFLL5.Out.MockElement == true;
 
     #Id;#Call;appCon
     CALL_2;testLib.stopBrowser;appCon
@@ -871,7 +874,7 @@ report chart Pie chart;;;
 #TestCase;#Kind;#Depends;#For
 subcases;;;
     #Id;#SubCase;rawText
-    runMatrix;returned value - path to report;TEXT1
+    runMatrix;returned value - path to report;TEXT
         #Id;#Action;$Text
         MXRN1;MatrixRunFromText;rawText
 
@@ -894,8 +897,8 @@ subcases;;;
         #Id;#Action;$Dialog;$AppConnection;MockElement
         DLGFLL2;DialogFill;'DialogForTestReport';appCon;Do.use(new Locator().kind(ControlKind.Any).xpath('.//a[contains(.,"TestCase")]')).click()
 
-        #Id;#Action;$Dialog;$AppConnection;MockElement
-        DLGFLL3;DialogFill;'DialogForTestReport';appCon;Do.use(new Locator().kind(ControlKind.Any).xpath('.//a[contains(.,"ActionItem (Report)")]')).click()
+        #Id;#Off;#Action;$Dialog;$AppConnection;MockElement
+        DLGFLL3;1;DialogFill;'DialogForTestReport';appCon;Do.use(new Locator().kind(ControlKind.Any).xpath('.//a[contains(.,"ActionItem (Report)")]')).click()
 
     #EndSubCase
 
