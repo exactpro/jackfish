@@ -386,39 +386,118 @@ public class SpreadsheetView extends Control
 				break;
 
 			case LEFT:
-				for (int i = 0; i < initial.size(); i++)
+				ObservableList<String> stringsLeft = initial.get(0);
+				int countLeft = range.getRight() - range.getLeft() - stringsLeft.size() + 1;
+				List<String> nextValuesLeft = getNextValues(stringsLeft, countLeft,Direction.LEFT);
+				for (int i = 0; i < nextValuesLeft.size(); i++)
 				{
-					ObservableList<String> strings = initial.get(i);
-					Collections.reverse(strings);
-					int progression = strings.size() == 1 ? 1 : getProgression(strings);
-					int skip = progression != minProgression ? 1 : strings.size();
-					int currentProgression = progression != minProgression ? progression : -1;
-					for (int j = range.getRight() - strings.size(); j > range.getLeft() - 1; j--)
-					{
-						String value = String.valueOf(this.providerProperty.get().getCellValue(j + skip, i + range.getTop()));
-						String evaluatedText = getEvaluatedText(value, currentProgression);
-						map.put(new Point(j, i + range.getTop()), evaluatedText);
-					}
+					map.put(new Point(range.getRight() - stringsLeft.size() - i, range.getTop()), nextValuesLeft.get(i));
 				}
 
 				break;
 
 			case RIGHT:
-				for (int i = 0; i < initial.size(); i++)
+
+				ObservableList<String> strings = initial.get(0);
+				int countRight = range.getRight() - range.getLeft() - strings.size() + 1;
+				List<String> nextValuesRight = getNextValues(strings, countRight, Direction.RIGHT);
+				for (int i = 0; i < nextValuesRight.size(); i++)
 				{
-					ObservableList<String> strings = initial.get(i);
-					int progression = strings.size() == 1 ? 1 : getProgression(strings);
-					int skip = progression != minProgression ? 1 : strings.size();
-					int currentProgression = progression != minProgression ? progression : 1;
-					for (int j = range.getLeft() + strings.size(); j < range.getRight() + 1; j++)
-					{
-						String evaluatedText = getEvaluatedText(String.valueOf(this.providerProperty.get().getCellValue(j - skip, i + range.getTop())), currentProgression);
-						map.put(new Point(j, i + range.getTop()), evaluatedText);
-					}
+					map.put(new Point(range.getLeft() + strings.size() + i, range.getTop()), nextValuesRight.get(i));
 				}
 				break;
 		}
 		this.providerProperty.get().updateCells(map);
+	}
+
+	private List<String> getNextValues(List<String> list, int iter, Direction dir) {
+
+		switch (getKind(list))
+		{
+			case NUMBERS:
+				List<Integer> collect = list.stream().map(Integer::parseInt).collect(Collectors.toList());
+				List<Integer> values = IntStream.range(1, list.size())
+						.mapToObj(i -> collect.get(i) - collect.get(i - 1))
+						.collect(Collectors.toList());
+
+				int progression = 0;
+				if (values.stream().distinct().count() == 1) {
+					progression = values.get(0);
+				}
+
+				List<String> res = new ArrayList<>();
+				for (int i = 0; i < iter; i++)
+				{
+					int value = 0;
+					switch (dir)
+					{
+						case RIGHT:
+							value = Integer.parseInt(list.get(list.size() - 1)) + progression * (1 + i);
+						break;
+						case LEFT:
+							value = Integer.parseInt(list.get(0)) - progression * (1 + i);
+							break;
+
+					}
+					res.add(String.valueOf(value));
+				}
+
+				return res;
+
+			case STRINGS:
+				List<String> strings = new ArrayList<>();
+				if (dir.equals(Direction.LEFT))
+				{
+					Collections.reverse(list);
+				}
+				Iterator<String> iterator = list.iterator();
+				for (int i = 0; i < iter; i++)
+				{
+					if (!iterator.hasNext())
+					{
+						iterator = list.iterator();
+					}
+					strings.add(iterator.next());
+				}
+
+				return strings;
+
+			case STRINGNUMBER:
+				List<String> stringWnumbers = new ArrayList<>();
+				List<String> strings1 = list.stream().map(s -> s.split("(?<=\\D)(?=\\d)|(?<=\\d)(?=\\D)")[0]).collect(Collectors.toList());
+				List<String> numbers = list.stream().map(s -> s.split("(?<=\\D)(?=\\d)|(?<=\\d)(?=\\D)")[1]).collect(Collectors.toList());
+				List<String> stringsFrom = getNextValues(strings1, iter,dir);
+				List<String> numbersFrom = getNextValues(numbers, iter,dir);
+				for (int i = 0; i < stringsFrom.size(); i++)
+				{
+					stringWnumbers.add(stringsFrom.get(i) + numbersFrom.get(i));
+				}
+
+				return stringWnumbers;
+				default:
+					return new ArrayList<>();
+		}
+	}
+
+	private StringKind getKind(List<String> list) {
+
+		if (list.stream().allMatch(s -> s.matches("\\d+")))
+		{
+			return StringKind.NUMBERS;
+		}
+		if (list.stream().allMatch(s -> s.matches("^[a-zA-Z]*\\d+")))
+		{
+			return StringKind.STRINGNUMBER;
+		}
+
+		return StringKind.STRINGS;
+	}
+
+	private enum StringKind
+	{
+		NUMBERS,
+		STRINGS,
+		STRINGNUMBER,
 	}
 
 	private static int getProgression(List<String> strings)

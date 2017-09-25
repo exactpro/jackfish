@@ -19,10 +19,7 @@ import javafx.scene.layout.BorderPane;
 
 import java.io.File;
 import java.net.URL;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
-import java.util.ResourceBundle;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class ConfigurationFxController implements Initializable, ContainingParent
@@ -251,9 +248,6 @@ public class ConfigurationFxController implements Initializable, ContainingParen
 	public void updateParameters()
 	{
 		List<TablePair> parameters = this.treeView.getSelectionModel().getSelectedItem().getValue().getParameters();
-		if (parameters != null)
-		{
-			tableView.setItems(FXCollections.observableArrayList(parameters));
-		}
+		tableView.setItems(FXCollections.observableArrayList(Optional.ofNullable(parameters).orElse(Collections.emptyList())));
 	}
 }
