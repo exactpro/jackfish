@@ -612,4 +612,10 @@ public abstract class Common
 	{
 		return ResourceBundle.getBundle("com/exactprosystems/jf/ToolResourceBundle");
 	}
+
+	public static boolean confirmFileDelete(String name)
+	{
+		return DialogsHelper.showQuestionDialog("Removing", String.format("Are you sure you want "
+				+"to remove %s?\nYou can't undo this action.", name));
+	}
 }

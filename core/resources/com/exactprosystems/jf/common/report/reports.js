@@ -141,12 +141,30 @@ $(document).ready(function(){
 	)
 	$('td.timestamp').hide();
 
+	var expandIfNeed = function(e) {
+		var trs = $(e).children().children().children().children();
+
+		var l = $(trs).length
+		if (l == 1) {
+			//this means, that element is left.
+			return;
+		} else if (l == 2 || l ==3 ) {
+			var hiddenPart = $(trs).parent().children('tr:not([class])');
+			//show hidden path and go deep
+			$(hiddenPart).show();
+			expandIfNeed(hiddenPart);
+		} else {
+			return;
+		}
+	}
+
 	$("a.showBody").click(function(event) {
 		var tbl = $(this).parent().parent().next();
 		if (tbl.is(":visible")) {
 			tbl.hide();
 		} else {
 			tbl.show();
+			expandIfNeed(tbl);
 			//find rotate div and rotate it
 			var childs = tbl.find(".rotatedDiv")
 			if (childs.length == 1) {

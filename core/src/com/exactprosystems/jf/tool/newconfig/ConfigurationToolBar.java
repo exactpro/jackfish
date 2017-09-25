@@ -20,6 +20,8 @@ public class ConfigurationToolBar extends ToolBar
 
 //	private SplitMenuButton sortButton;
 	private WizardButton    wizardButton;
+	private Button 			undoBtn;
+	private Button 			redoBtn;
 
 	public ConfigurationToolBar(ConfigurationFx model, CompareEnum compareEnum)
 	{
@@ -50,6 +52,18 @@ public class ConfigurationToolBar extends ToolBar
 				Common.tryCatch(() -> this.model.changeSortType((CompareEnum) newValue.getUserData()), "");
 			}
 		});
+
+		this.redoBtn = new Button();
+		this.redoBtn.setId("btnSmallRedo");
+		this.redoBtn.getStyleClass().add(CssVariables.TRANSPARENT_BACKGROUND);
+		this.redoBtn.setOnAction(event -> this.model.redo());
+
+		this.undoBtn = new Button();
+		this.undoBtn.setId("btnSmallUndo");
+		this.undoBtn.getStyleClass().add(CssVariables.TRANSPARENT_BACKGROUND);
+		this.undoBtn.setOnAction(event -> this.model.undo());
+
+		this.getItems().addAll(undoBtn, redoBtn);
 	}
 
 	//region private methods

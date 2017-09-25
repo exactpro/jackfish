@@ -846,6 +846,15 @@ CellView > .text-input.text-field{
 	-fx-graphic : url("icons/redo_32.png");
 
 }
+#btnSmallRedo{
+	-fx-graphic : url("icons/redo_16.png");
+
+}
+
+#btnSmallUndo{
+	-fx-graphic : url("icons/undo_16.png");
+
+}
 #splitMenuButtonToolbar {
 	-fx-graphic : url("icons/start.png")
 

@@ -57,6 +57,6 @@ public class Str
 		{
 			return "";
 		}
-		return String.valueOf(object);
+		return object.toString();
 	}
 }
