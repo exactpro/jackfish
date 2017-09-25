@@ -2,79 +2,109 @@ package com.exactprosystems.jf.tool.custom.console;
 
 import com.exactprosystems.jf.documents.matrix.parser.items.MatrixItem;
 import com.exactprosystems.jf.tool.CssVariables;
-import javafx.geometry.VPos;
+import javafx.scene.control.ContextMenu;
+import javafx.scene.control.MenuItem;
 import javafx.scene.control.TreeItem;
-import javafx.scene.paint.Color;
-import javafx.scene.text.Text;
-import org.fxmisc.richtext.GenericStyledArea;
-import org.fxmisc.richtext.model.ReadOnlyStyledDocument;
-import org.fxmisc.richtext.model.StyledText;
-import org.fxmisc.richtext.model.TextOps;
-import org.reactfx.util.Either;
+import org.fxmisc.richtext.MouseOverTextEvent;
+import org.fxmisc.richtext.StyleClassedTextArea;
 
+import java.awt.MouseInfo;
+import java.time.Duration;
+import java.util.ArrayList;
 import java.util.function.Consumer;
-import java.util.function.Function;
 
-public class ConsoleArea extends GenericStyledArea<Void, Either<StyledText<TextStyle>, MatrixItemLink<TextStyle>>, TextStyle>
+public class ConsoleArea extends StyleClassedTextArea
 {
-    private static TextOps<StyledText<TextStyle>, TextStyle> STYLED_TEXT_OPS = StyledText.textOps();
-    private static MatrixItemLinkOps<TextStyle> MATRIXITEMLINK_OPS = new MatrixItemLinkOps<>();
-    private static TextOps<Either<StyledText<TextStyle>, MatrixItemLink<TextStyle>>, TextStyle> EITHER_OPS = STYLED_TEXT_OPS._or(MATRIXITEMLINK_OPS);
+    private ArrayList<Link> list;
+    private int charIndex;
 
-    public ConsoleArea(Consumer<TreeItem<MatrixItem>> moveToMatixItem) {
-        super(
-                null,
-                (t, p) -> {},
-                TextStyle.EMPTY,
-                EITHER_OPS,
-                e -> e.unify(styledText -> createStyledTextNode(t ->
-                        {
-                            t.setText(styledText.getText());
-                            t.setStyle(styledText
-                                    .getStyle()
-                                    .toCss());
-                        }),
-                        matrixItemLink ->
-                                createStyledTextNode(t -> {
-                                    if (matrixItemLink.isReal()) {
-                                        t.setText(matrixItemLink.getDisplayedText());
-                                        t.getStyleClass().add(CssVariables.CONSOLE_PAUSED_ITEM);
-                                        t.setOnMouseClicked(ae -> moveToMatixItem.accept(matrixItemLink.getItem()));
-                                    }
-                                })
-                )
-        );
+	private ContextMenu contextMenu;
+
+    public ConsoleArea(Consumer<TreeItem<MatrixItem>> moveToMatrixItem)
+    {
+        this.list = new ArrayList<>();
+        this.setMouseOverTextDelay(Duration.ofMillis(10));
+        this.addEventHandler(MouseOverTextEvent.MOUSE_OVER_TEXT_BEGIN, e -> this.charIndex = e.getCharacterIndex());
+        this.setOnMouseReleased(event ->
+        {
+            for (Link link : this.list)
+            {
+				if (this.charIndex > link.getStart() && this.charIndex < link.getEnd())
+				{
+					moveToMatrixItem.accept(link.getItem());
+					break;
+				}
+			}
+        });
+		this.contextMenu = new ContextMenu();
+		this.contextMenu.setAutoFix(true);
+		this.contextMenu.setAutoHide(true);
+		MenuItem itemClear = new MenuItem("Clear");
+		itemClear.setOnAction(e -> this.clear());
+		this.contextMenu.getItems().addAll(itemClear);
+		this.setOnContextMenuRequested(e ->
+		{
+			this.contextMenu.show(this.getScene().getWindow(), MouseInfo.getPointerInfo().getLocation().getX(),MouseInfo.getPointerInfo().getLocation().getY());
+		});
     }
 
     public void appendDefaultText(String text)
     {
-        super.appendText(text + "\n");
+        this.appendStyledText(text, false, CssVariables.CONSOLE_DEFAULT_TEXT);
+    }
+
+    public void appendDefaultTextOnNewLine(String text)
+    {
+        this.appendStyledText(text, true, CssVariables.CONSOLE_DEFAULT_TEXT);
     }
 
     public void appendErrorText(String text)
     {
-        super.appendText(text + "\n");
+        this.appendStyledText(text, false, CssVariables.CONSOLE_DEFAULT_TEXT);
     }
 
-    public void appendMatrixItemLink(String displayedText, TreeItem <MatrixItem> item) {
-        replaceWithLink(getLength(), getLength(), displayedText + "\n", item);
+    public void appendErrorTextOnNewLine(String text)
+    {
+        this.appendStyledText(text, true, CssVariables.CONSOLE_ERROR_ITEM);
     }
 
-    public void replaceWithLink(int start, int end, String displayedText, TreeItem <MatrixItem> item) {
-        replace(start, end, ReadOnlyStyledDocument.fromSegment(
-                Either.right(new MatrixItemLink<>(displayedText, displayedText, TextStyle.EMPTY, item)),
-                null,
-                TextStyle.EMPTY,
-                EITHER_OPS
-        ));
+    private void appendStyledText(String text, boolean newLine, String style)
+    {
+        int start = this.getLength();
+        this.appendText(newLine ? text + "\n" : text);
+        this.setStyleClass(start, this.getLength(), style);
     }
 
-    public static Text createStyledTextNode(Consumer<Text> applySegment) {
-        Text t = new Text();
-        t.setTextOrigin(VPos.TOP);
-        applySegment.accept(t);
+    public void appendMatrixItemLink(String text, TreeItem <MatrixItem> item)
+    {
+        int start = this.getLength();
+        this.appendText(text + "\n");
+        this.setStyleClass(start, this.getLength(), CssVariables.CONSOLE_PAUSED_ITEM);
+        this.list.add(new Link(start, this.getLength(), item));
+    }
 
-        t.impl_selectionFillProperty().bind(t.fillProperty());
-        return t;
+    private class Link
+    {
+        int start;
+        int end;
+        TreeItem <MatrixItem> item;
+
+        private Link(int start, int end, TreeItem <MatrixItem> item) {
+            this.start = start;
+            this.end = end;
+            this.item = item;
+        }
+
+        public int getStart() {
+            return start;
+        }
+
+        public int getEnd() {
+            return end;
+        }
+
+        public TreeItem<MatrixItem> getItem() {
+            return item;
+        }
     }
 }
