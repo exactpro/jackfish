@@ -119,7 +119,7 @@ public class MatrixFxController implements Initializable, ContainingParent, IMat
 		this.listView.autoScroll(true);
 		this.listView.setMinHeight(100.0);
 		this.listView.setMaxHeight(250.0);
-		this.splitPane.getItems().add(this.listView);
+		//this.splitPane.getItems().add(this.listView);
 		this.tree = new MatrixTreeView();
 		this.mainScrollPane.setContent(this.tree);
 		this.findPanel = new FindPanel<>(new IFind<MatrixItem>()
@@ -173,7 +173,7 @@ public class MatrixFxController implements Initializable, ContainingParent, IMat
 		String format = String.format("Matrix '%s' started...", matrix.getNameProperty().get());
 		if (this.listView != null)
 		{
-			Platform.runLater(() ->
+			Common.runLater(() ->
 			{
 				this.area.clear();
 				this.area.appendDefaultTextOnNewLine(String.format("Matrix '%s' started...", matrix.getNameProperty().get()));
@@ -211,7 +211,7 @@ public class MatrixFxController implements Initializable, ContainingParent, IMat
 		String format = String.format("Matrix '%s' finished.", matrix.getNameProperty().get());
 		if (this.listView != null)
 		{
-			Platform.runLater(() -> this.area.appendDefaultTextOnNewLine(String.format("Matrix '%s' finished.", matrix.getNameProperty().get())));
+			Common.runLater(() -> this.area.appendDefaultTextOnNewLine(String.format("Matrix '%s' finished.", matrix.getNameProperty().get())));
 			this.listView.getItems().add(ConsoleText.defaultText(format));
 			Optional.ofNullable(this.tab).ifPresent(t -> {
 				t.getStyleClass().remove(CssVariables.EXECUTING_TAB);
@@ -276,7 +276,7 @@ public class MatrixFxController implements Initializable, ContainingParent, IMat
 			else
 			{
 				DialogsHelper.showInfo(String.format("Matrix paused on \'%s\'", treeItem.getValue().getItemName()));
-				Platform.runLater(() ->
+				Common.runLater(() ->
                         {
                             this.area.appendDefaultText(String.format("%d : Paused on ", item.getNumber()));
                             this.area.appendMatrixItemLink(String.format("%s", item.getItemName()), treeItem);
@@ -347,6 +347,7 @@ public class MatrixFxController implements Initializable, ContainingParent, IMat
 		Consumer<TreeItem<MatrixItem>> moveToMatrixItem = treeItem -> MatrixFxController.this.tree.setCurrent(treeItem, false);
 		this.area = new ConsoleArea(moveToMatrixItem);
 		this.area.setEditable(false);
+		this.area.setMaxHeight(250);
 		this.splitPane.getItems().add(new VirtualizedScrollPane<>(area));
 	}
 
@@ -523,12 +524,18 @@ public class MatrixFxController implements Initializable, ContainingParent, IMat
 
 	public void displayBeforeStart(String msg)
 	{
+		Common.runLater(() ->
+		{
+			this.area.clear();
+			this.area.appendDefaultTextOnNewLine(msg);
+		});
 		this.listView.getItems().clear();
 		this.listView.getItems().add(ConsoleText.defaultText(msg));
 	}
 
 	public void displayAfterStopped(String msg)
 	{
+		Common.runLater(() -> this.area.appendDefaultTextOnNewLine(msg));
 		this.listView.getItems().add(ConsoleText.defaultText(msg));
 	}
 

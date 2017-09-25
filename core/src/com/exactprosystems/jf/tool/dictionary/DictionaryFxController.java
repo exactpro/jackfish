@@ -17,6 +17,7 @@ import com.exactprosystems.jf.documents.config.Configuration;
 import com.exactprosystems.jf.documents.matrix.parser.listeners.ListProvider;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.ContainingParent;
+import com.exactprosystems.jf.tool.custom.console.ConsoleArea;
 import com.exactprosystems.jf.tool.custom.console.ConsoleText;
 import com.exactprosystems.jf.tool.custom.console.CustomListView;
 import com.exactprosystems.jf.tool.custom.tab.CustomTab;
@@ -26,12 +27,12 @@ import com.exactprosystems.jf.tool.dictionary.element.ElementInfoController;
 import com.exactprosystems.jf.tool.dictionary.navigation.NavigationController;
 import com.exactprosystems.jf.tool.helpers.DialogsHelper;
 import com.exactprosystems.jf.tool.settings.Theme;
-import javafx.application.Platform;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.control.SplitPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
+import org.fxmisc.flowless.VirtualizedScrollPane;
 
 import java.net.URL;
 import java.util.ArrayList;
@@ -64,6 +65,7 @@ public class DictionaryFxController implements Initializable, ContainingParent
 	public GridPane					mainGridPane;
 	private Parent					pane;
 	private CustomTab				tab;
+	private ConsoleArea 			area;
 	
 	private ActionsController		actionsController;
 	private ElementInfoController	elementInfoController;
@@ -75,7 +77,16 @@ public class DictionaryFxController implements Initializable, ContainingParent
 	{
 		this.listView = new CustomListView<>(true);
 		this.listView.setMaxHeight(250.0);
-		this.splitPane.getItems().add(listView);
+		//this.splitPane.getItems().add(listView);
+		createConsoleTextArea();
+	}
+
+	private void createConsoleTextArea()
+	{
+		this.area = new ConsoleArea();
+		this.area.setEditable(false);
+		this.area.setMaxHeight(250);
+		this.splitPane.getItems().add(new VirtualizedScrollPane<>(area));
 	}
 
 	public void saved(String name)
@@ -118,7 +129,11 @@ public class DictionaryFxController implements Initializable, ContainingParent
 
 	public void println(String str)
 	{
-		Common.runLater(() ->this.listView.getItems().add(ConsoleText.defaultText(str)));
+		Common.runLater(() ->
+				{
+					this.area.appendDefaultTextOnNewLine(str);
+					this.listView.getItems().add(ConsoleText.defaultText(str));
+				});
 	}
 
 

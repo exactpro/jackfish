@@ -18,10 +18,14 @@ public class ConsoleArea extends StyleClassedTextArea
     private ArrayList<Link> list;
     private int charIndex;
 
-	private ContextMenu contextMenu;
+	public ConsoleArea()
+    {
+        createContextMenu();
+    }
 
     public ConsoleArea(Consumer<TreeItem<MatrixItem>> moveToMatrixItem)
     {
+        createContextMenu();
         this.list = new ArrayList<>();
         this.setMouseOverTextDelay(Duration.ofMillis(10));
         this.addEventHandler(MouseOverTextEvent.MOUSE_OVER_TEXT_BEGIN, e -> this.charIndex = e.getCharacterIndex());
@@ -36,16 +40,22 @@ public class ConsoleArea extends StyleClassedTextArea
 				}
 			}
         });
-		this.contextMenu = new ContextMenu();
-		this.contextMenu.setAutoFix(true);
-		this.contextMenu.setAutoHide(true);
-		MenuItem itemClear = new MenuItem("Clear");
-		itemClear.setOnAction(e -> this.clear());
-		this.contextMenu.getItems().addAll(itemClear);
-		this.setOnContextMenuRequested(e ->
-		{
-			this.contextMenu.show(this.getScene().getWindow(), MouseInfo.getPointerInfo().getLocation().getX(),MouseInfo.getPointerInfo().getLocation().getY());
-		});
+    }
+
+    private void createContextMenu()
+    {
+        ContextMenu contextMenu = new ContextMenu();
+        contextMenu.setAutoFix(true);
+        contextMenu.setAutoHide(true);
+
+        MenuItem itemClear = new MenuItem("Clear");
+        itemClear.setOnAction(e -> this.clear());
+        contextMenu.getItems().addAll(itemClear);
+
+        this.setOnContextMenuRequested(e -> contextMenu.show(
+                this.getScene().getWindow(),
+                MouseInfo.getPointerInfo().getLocation().getX(),
+                MouseInfo.getPointerInfo().getLocation().getY()));
     }
 
     public void appendDefaultText(String text)
@@ -106,5 +116,15 @@ public class ConsoleArea extends StyleClassedTextArea
         public TreeItem<MatrixItem> getItem() {
             return item;
         }
+    }
+
+    @Override
+    public void clear()
+    {
+        if(this.list != null)
+        {
+            this.list.clear();
+        }
+        super.clear();
     }
 }
