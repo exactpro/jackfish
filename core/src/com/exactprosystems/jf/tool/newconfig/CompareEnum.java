@@ -5,7 +5,7 @@ import java.util.Comparator;
 
 public enum CompareEnum
 {
-	ALPHABET_0_1
+	ALPHABET_1_0
 	{
 		@Override
 		public Comparator<File> getComparator()
@@ -34,7 +34,7 @@ public enum CompareEnum
 		}
 	},
 
-	ALPHABET_1_0
+	ALPHABET_0_1
 	{
 		@Override
 		public Comparator<File> getComparator()
