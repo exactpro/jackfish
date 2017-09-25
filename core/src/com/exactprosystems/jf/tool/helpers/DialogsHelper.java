@@ -702,7 +702,7 @@ public abstract class DialogsHelper
 
 	public static void displayReport(File file, String matrixName, DocumentFactory factory)
 	{
-		Settings.SettingsValue value = factory.getSettings().getValueOrDefault(Settings.GLOBAL_NS, Settings.SETTINGS, Settings.USE_EXTERNAL_REPORT_VIEWER, "false");
+		Settings.SettingsValue value = factory.getSettings().getValueOrDefault(Settings.GLOBAL_NS, Settings.SETTINGS, Settings.USE_EXTERNAL_REPORT_VIEWER);
 		boolean useExternalReportViewer = Boolean.parseBoolean(value.getValue());
 		if (useExternalReportViewer)
 		{

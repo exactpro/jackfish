@@ -132,7 +132,7 @@ public class Main extends Application
 			this.wizardManager = new WizardManagerImpl();
 			this.factory = new FxDocumentFactory(this, this.wizardManager);
 			this.settings = this.factory.getSettings();
-			DialogsHelper.setTimeNotification(Integer.parseInt(this.settings.getValueOrDefault(Settings.GLOBAL_NS, Settings.SETTINGS, Settings.TIME_NOTIFICATION, "5").getValue()));
+			DialogsHelper.setTimeNotification(Integer.parseInt(this.settings.getValueOrDefault(Settings.GLOBAL_NS, Settings.SETTINGS, Settings.TIME_NOTIFICATION).getValue()));
 		}
 		catch (Exception e)
 		{
@@ -143,7 +143,7 @@ public class Main extends Application
 
 		Locale.setDefault(new Locale(this.settings.getValue(Settings.GLOBAL_NS, Settings.SETTINGS, Settings.LANGUAGE).getValue()));
 
-		Settings.SettingsValue theme = this.settings.getValueOrDefault(Settings.GLOBAL_NS, Settings.SETTINGS, Settings.THEME, Theme.WHITE.name());
+		Settings.SettingsValue theme = this.settings.getValueOrDefault(Settings.GLOBAL_NS, Settings.SETTINGS, Settings.THEME);
 		Common.setTheme(Theme.valueOf(theme.getValue().toUpperCase()));
 
 		notifyPreloader(new Preloader.ProgressNotification(5));
@@ -347,8 +347,8 @@ public class Main extends Application
 	public CredentialBean getCredential()
 	{
 		checkCredential();
-		SettingsValue idRsa = this.settings.getValueOrDefault("GLOBAL", Settings.GIT, Settings.GIT_SSH_IDENTITY, "");
-		SettingsValue knownHosts = this.settings.getValueOrDefault("GLOBAL", Settings.GIT, Settings.GIT_KNOWN_HOST, "");
+		SettingsValue idRsa = this.settings.getValueOrDefault(Settings.GLOBAL_NS, Settings.GIT, Settings.GIT_SSH_IDENTITY);
+		SettingsValue knownHosts = this.settings.getValueOrDefault(Settings.GLOBAL_NS, Settings.GIT, Settings.GIT_KNOWN_HOST);
 		return new CredentialBean(this.username, this.password, idRsa.getValue(), knownHosts.getValue());
 	}
 
@@ -493,7 +493,7 @@ public class Main extends Application
 		checkConfig();
 		Matrix doc = (Matrix) this.factory.createDocument(DocumentKind.MATRIX, newName(Matrix.class));
 		doc.create();
-		Settings.SettingsValue copyright = settings.getValueOrDefault(Settings.GLOBAL_NS, "Main", "copyright", "");
+		Settings.SettingsValue copyright = settings.getValueOrDefault(Settings.GLOBAL_NS, Settings.SETTINGS, Settings.COPYRIGHT);
 		String text = copyright.getValue().replaceAll("\\\\n", System.lineSeparator());
 		doc.addCopyright(text);
 		doc.display();
@@ -504,7 +504,7 @@ public class Main extends Application
 		checkConfig();
 		Matrix doc = (Matrix) this.factory.createDocument(DocumentKind.LIBRARY, fullPath);
 		doc.create();
-		Settings.SettingsValue copyright = settings.getValueOrDefault(Settings.GLOBAL_NS, "Main", "copyright", "");
+		Settings.SettingsValue copyright = settings.getValueOrDefault(Settings.GLOBAL_NS, Settings.SETTINGS, Settings.COPYRIGHT);
 		String text = copyright.getValue().replaceAll("\\\\n", System.lineSeparator());
 		doc.addCopyright(text);
 		if (new File(fullPath).exists())
@@ -906,7 +906,7 @@ public class Main extends Application
                 }
             }
             doc.saved();
-            SettingsValue maxSettings = this.settings.getValueOrDefault(Settings.GLOBAL_NS, Settings.SETTINGS, Settings.MAX_LAST_COUNT, "3");
+            SettingsValue maxSettings = this.settings.getValueOrDefault(Settings.GLOBAL_NS, Settings.SETTINGS, Settings.MAX_LAST_COUNT);
             int max = Integer.parseInt(maxSettings.getValue());
             this.settings.setValue(Settings.MAIN_NS, kind.toString(), new File(doc.getNameProperty().get()).getName(), max, doc.getNameProperty().get());
             this.settings.saveIfNeeded();
@@ -1048,8 +1048,8 @@ public class Main extends Application
 		public CustomJschConfigSessionFactory(Settings settings)
 		{
 			this.settings = settings;
-			SettingsValue idRsa = this.settings.getValue("GLOBAL", Settings.GIT, Settings.GIT_SSH_IDENTITY);
-			SettingsValue knownHosts = this.settings.getValue("GLOBAL", Settings.GIT, Settings.GIT_KNOWN_HOST);
+			SettingsValue idRsa = this.settings.getValue(Settings.GLOBAL_NS, Settings.GIT, Settings.GIT_SSH_IDENTITY);
+			SettingsValue knownHosts = this.settings.getValue(Settings.GLOBAL_NS, Settings.GIT, Settings.GIT_KNOWN_HOST);
 			this.isValid = idRsa != null && knownHosts != null;
 			if (this.isValid)
 			{

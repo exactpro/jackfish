@@ -246,7 +246,7 @@ public class MainController implements Initializable, ContainingParent
 		});
 		scene.getStylesheets().addAll(Common.currentThemesPaths());
 		this.stage.setScene(scene);
-		SettingsValue value = settings.getValueOrDefault(Settings.GLOBAL_NS, Settings.SETTINGS, Settings.USE_FULL_SCREEN, "false");
+		SettingsValue value = settings.getValueOrDefault(Settings.GLOBAL_NS, Settings.SETTINGS, Settings.USE_FULL_SCREEN);
 		this.stage.setFullScreen(Boolean.parseBoolean(value.getValue()));
 		this.model.changeDocument(null);
 		this.stage.show();

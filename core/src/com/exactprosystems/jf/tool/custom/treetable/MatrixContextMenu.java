@@ -28,7 +28,6 @@ import com.exactprosystems.jf.tool.helpers.DialogsHelper;
 import com.exactprosystems.jf.tool.matrix.MatrixFx;
 import com.exactprosystems.jf.tool.settings.SettingsPanel;
 import com.exactprosystems.jf.tool.wizard.WizardButton;
-import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.event.EventTarget;
@@ -59,7 +58,7 @@ public class MatrixContextMenu extends ContextMenu
 		this.menuWizard.setGraphic(new ImageView(new Image(CssVariables.Icons.WIZARD_SMALL)));
 		this.context = context;
 
-		SettingsValue foldSetting = settings.getValueOrDefault(Settings.GLOBAL_NS, Settings.MATRIX_NAME, Settings.MATRIX_FOLD_ITEMS, "false");
+		SettingsValue foldSetting = settings.getValueOrDefault(Settings.GLOBAL_NS, Settings.MATRIX_NAME, Settings.MATRIX_FOLD_ITEMS);
 		this.fold = Boolean.parseBoolean(foldSetting.getValue());
 
 		setAutoHide(true);

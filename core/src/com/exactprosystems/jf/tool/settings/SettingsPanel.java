@@ -162,7 +162,7 @@ public class SettingsPanel
 	public void save() throws Exception
 	{
 		this.settings.saveIfNeeded();
-		Settings.SettingsValue theme = this.settings.getValueOrDefault(Settings.GLOBAL_NS, Settings.SETTINGS, Settings.THEME, Theme.WHITE.name());
+		Settings.SettingsValue theme = this.settings.getValueOrDefault(Settings.GLOBAL_NS, Settings.SETTINGS, Settings.THEME);
 		Common.setTheme(Theme.valueOf(theme.getValue().toUpperCase()));
 	}
 

@@ -15,6 +15,8 @@ import com.exactprosystems.jf.documents.matrix.parser.ScreenshotKind;
 import com.exactprosystems.jf.documents.matrix.parser.Tokens;
 import com.exactprosystems.jf.documents.matrix.parser.items.MutableArrayList;
 import com.exactprosystems.jf.tool.Common;
+import com.exactprosystems.jf.tool.newconfig.CompareEnum;
+import com.exactprosystems.jf.tool.settings.Theme;
 import com.exactprosystems.jf.tool.wizard.WizardSettings;
 import javafx.scene.input.KeyCombination;
 import org.apache.log4j.Logger;
@@ -276,7 +278,7 @@ public class Settings
 
 	public Settings()
 	{
-		this.values = new MutableArrayList<SettingsValue>();
+		this.values = new MutableArrayList<>();
 	}
 
 	public static Settings load(String fileName)
@@ -321,11 +323,13 @@ public class Settings
 		if (DEFAULT_SETTINGS == null)
 		{
 			DEFAULT_SETTINGS = new Settings();
-
+			DEFAULT_SETTINGS.setMapValues(GLOBAL_NS, CONFIG_DIALOG, mapOf(
+					CONFIG_COMPARATOR, CompareEnum.ALPHABET_0_1.name()
+			));
 			DEFAULT_SETTINGS.setMapValues(GLOBAL_NS, SETTINGS, mapOf(
 					MAX_LAST_COUNT,"10",
 					TIME_NOTIFICATION,"5",
-					THEME,"WHITE",
+					THEME, Theme.WHITE.name(),
 					USE_FULL_SCREEN,"false",
 					USE_EXTERNAL_REPORT_VIEWER, "false",
 					USE_FULLSCREEN_XPATH,"false",
@@ -517,16 +521,14 @@ public class Settings
 		return res;
 	}
 
-	public SettingsValue getValueOrDefault(String ns, String dialog, String key, String defaultValue)
+	public SettingsValue getValueOrDefault(String ns, String dialog, String key)
 	{
 		SettingsValue result = getValue(ns, dialog, key);
 		if (result == null)
 		{
-			result = new SettingsValue(ns, dialog, key);
-			result.setValue(defaultValue);
+			result = defaultSettings().getValue(ns, dialog, key);
 		}
-
-		return result;
+		return Optional.ofNullable(result).orElseThrow(() -> new IllegalArgumentException("No default settings for key " + key));
 	}
 
 	public synchronized SettingsValue getValue(String ns, String dialog, String key)

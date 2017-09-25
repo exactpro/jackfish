@@ -167,7 +167,7 @@ public class NavigationController implements Initializable, ContainingParent
 	{
 		this.model = model;
 		//TODO this need move from here to model
-		this.fullScreen = Boolean.parseBoolean(settings.getValueOrDefault(Settings.GLOBAL_NS, Settings.SETTINGS, "useFullScreenXpath", "false").getValue());
+		this.fullScreen = Boolean.parseBoolean(settings.getValueOrDefault(Settings.GLOBAL_NS, Settings.SETTINGS, Settings.USE_FULLSCREEN_XPATH).getValue());
 		setChoiseBoxListeners();
 
 		Context context = model.getFactory().createContext();

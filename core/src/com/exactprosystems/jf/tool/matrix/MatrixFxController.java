@@ -34,7 +34,6 @@ import com.exactprosystems.jf.tool.custom.treetable.MatrixTreeView;
 import com.exactprosystems.jf.tool.helpers.DialogsHelper;
 import com.exactprosystems.jf.tool.matrix.watch.WatcherFx;
 import com.exactprosystems.jf.tool.settings.SettingsPanel;
-import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.Initializable;
@@ -307,7 +306,7 @@ public class MatrixFxController implements Initializable, ContainingParent, IMat
 	public void init(MatrixFx model, Context context, TabConsole console)
 	{
 		Settings settings = context.getFactory().getSettings();
-		Settings.SettingsValue foldSetting = settings.getValueOrDefault(Settings.GLOBAL_NS, Settings.MATRIX_NAME, Settings.MATRIX_FOLD_ITEMS, "false");
+		Settings.SettingsValue foldSetting = settings.getValueOrDefault(Settings.GLOBAL_NS, Settings.MATRIX_NAME, Settings.MATRIX_FOLD_ITEMS);
 		boolean fold = Boolean.parseBoolean(foldSetting.getValue());
 
 		this.tree.setNeedExpand(fold);

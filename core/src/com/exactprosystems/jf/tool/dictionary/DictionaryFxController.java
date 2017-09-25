@@ -116,7 +116,7 @@ public class DictionaryFxController implements Initializable, ContainingParent
 		this.navigationController = Common.loadController(NavigationController.class.getResource("Navigation.fxml"));
 		this.navigationController.init(model, this.mainGridPane, this.settings, this.tab);
 
-		Settings.SettingsValue themePath = this.settings.getValueOrDefault(Settings.GLOBAL_NS, Settings.SETTINGS, Settings.THEME, Theme.WHITE.name());
+		Settings.SettingsValue themePath = this.settings.getValueOrDefault(Settings.GLOBAL_NS, Settings.SETTINGS, Settings.THEME);
 		this.elementInfoController = Common.loadController(ElementInfoController.class.getResource("ElementInfo.fxml"));
 		this.elementInfoController.init(model, configuration, this.mainGridPane, this.navigationController, Theme.valueOf(themePath.getValue()).getPath());
 

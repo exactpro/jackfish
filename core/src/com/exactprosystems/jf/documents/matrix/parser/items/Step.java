@@ -245,10 +245,10 @@ public class Step extends MatrixItem
 			String kindStr = this.kind.get();
 			if (Str.IsNullOrEmpty(kindStr))
 			{
-		        kindStr = settings.getValueOrDefault(Settings.GLOBAL_NS, Settings.MATRIX_NAME, Settings.MATRIX_DEFAULT_SCREENSHOT, ScreenshotKind.Never.name()).getValue();	        		
+		        kindStr = settings.getValueOrDefault(Settings.GLOBAL_NS, Settings.MATRIX_NAME, Settings.MATRIX_DEFAULT_SCREENSHOT).getValue();
 			}
 	        ScreenshotKind screenshotKind = ScreenshotKind.valueByName(kindStr);
-	        String str = settings.getValueOrDefault(Settings.GLOBAL_NS, Settings.MATRIX_NAME, Settings.MATRIX_POPUPS, "" + false).getValue();
+	        String str = settings.getValueOrDefault(Settings.GLOBAL_NS, Settings.MATRIX_NAME, Settings.MATRIX_POPUPS).getValue();
 	        boolean showPopups = Boolean.parseBoolean(str);
 
             if (row != null)

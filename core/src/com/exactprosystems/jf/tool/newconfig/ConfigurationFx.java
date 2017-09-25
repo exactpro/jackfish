@@ -945,7 +945,7 @@ public class ConfigurationFx extends Configuration
 	private void restoreSettings()
 	{
 		Settings settings = getFactory().getSettings();
-		Settings.SettingsValue valueOrDefault = settings.getValueOrDefault(Settings.GLOBAL_NS, Settings.CONFIG_DIALOG, Settings.CONFIG_COMPARATOR, CompareEnum.ALPHABET_0_1.name());
+		Settings.SettingsValue valueOrDefault = settings.getValueOrDefault(Settings.GLOBAL_NS, Settings.CONFIG_DIALOG, Settings.CONFIG_COMPARATOR);
 		String value = valueOrDefault.getValue();
 		this.currentCompareEnum = CompareEnum.valueOf(value);
 	}

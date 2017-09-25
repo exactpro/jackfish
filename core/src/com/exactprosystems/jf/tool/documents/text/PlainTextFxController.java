@@ -111,7 +111,7 @@ public class PlainTextFxController extends AbstractDocumentController<PlainTextF
 		this.model.getHighlighter().setOnChangeListener((o, n) -> this.cbHighlighting.getSelectionModel().select(n));
 
 		this.textArea.replaceText(this.model.getProperty().get());
-		Settings.SettingsValue value = model.getFactory().getSettings().getValueOrDefault(Settings.GLOBAL_NS, Settings.SETTINGS, Settings.FONT, "Monospaced$16");
+		Settings.SettingsValue value = model.getFactory().getSettings().getValueOrDefault(Settings.GLOBAL_NS, Settings.SETTINGS, Settings.FONT);
 		Font font = Common.fontFromString(value.getValue());
 		this.textArea.setStyle("-fx-font-size: " + font.getSize() + "; -fx-font-family: \"" + font.getFamily() + "\";");
 	}

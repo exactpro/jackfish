@@ -20,13 +20,13 @@ public class WizardSettings
 	{
 		for (Kind kind : Kind.values())
 		{
-			SettingsValue min = settings.getValueOrDefault(Settings.GLOBAL_NS, Settings.WIZARD_NAME, kind.name() + "_MIN", "0.0");
-			SettingsValue max = settings.getValueOrDefault(Settings.GLOBAL_NS, Settings.WIZARD_NAME, kind.name() + "_MAX", "0.0");
+			SettingsValue min = settings.getValueOrDefault(Settings.GLOBAL_NS, Settings.WIZARD_NAME, kind.name() + Settings.MIN);
+			SettingsValue max = settings.getValueOrDefault(Settings.GLOBAL_NS, Settings.WIZARD_NAME, kind.name() + Settings.MAX);
 			setMin(kind, Double.parseDouble(min.getValue()));
 			setMax(kind, Double.parseDouble(max.getValue()));
 		}
 
-		SettingsValue threshold = settings.getValueOrDefault(Settings.GLOBAL_NS, Settings.WIZARD_NAME, Settings.THRESHOLD, "0.0");
+		SettingsValue threshold = settings.getValueOrDefault(Settings.GLOBAL_NS, Settings.WIZARD_NAME, Settings.THRESHOLD);
 		setThreshold(Double.parseDouble(threshold.getValue()));
 	}
 
