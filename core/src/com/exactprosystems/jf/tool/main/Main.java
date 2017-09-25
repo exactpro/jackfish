@@ -496,7 +496,7 @@ public class Main extends Application
 		Settings.SettingsValue copyright = settings.getValueOrDefault(Settings.GLOBAL_NS, "Main", "copyright", "");
 		String text = copyright.getValue().replaceAll("\\\\n", System.lineSeparator());
 		doc.addCopyright(text);
-		doc.display();
+		this.factory.showDocument(doc);
 	}
 
 	public void newLibrary(String fullPath) throws Exception
@@ -712,6 +712,11 @@ public class Main extends Application
 		return this.controller.createTab(document);
 	}
 
+	public void selectTab(CustomTab tab)
+	{
+		this.controller.selectTab(tab);
+	}
+
 	public void clearFileLastOpenMatrix() throws Exception
 	{
 		this.settings.removeAll(Settings.MAIN_NS, DocumentKind.MATRIX.toString());
@@ -896,7 +901,7 @@ public class Main extends Application
             if (!isFromInit)
             {
                 // TODO replace this branches to one when all documents use new approach
-                if (doc instanceof SystemVars || doc instanceof PlainText || doc instanceof Csv)
+                if (doc instanceof SystemVars || doc instanceof PlainText || doc instanceof Csv || doc instanceof MatrixFx)
                 {
                     this.factory.showDocument(doc);
                 }

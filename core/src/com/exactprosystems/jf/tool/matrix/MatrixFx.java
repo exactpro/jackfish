@@ -19,15 +19,12 @@ import com.exactprosystems.jf.common.undoredo.Command;
 import com.exactprosystems.jf.documents.DocumentFactory;
 import com.exactprosystems.jf.documents.config.Context;
 import com.exactprosystems.jf.documents.matrix.Matrix;
+import com.exactprosystems.jf.documents.matrix.parser.MutableValue;
 import com.exactprosystems.jf.documents.matrix.parser.Parameter;
 import com.exactprosystems.jf.documents.matrix.parser.Parameters;
 import com.exactprosystems.jf.documents.matrix.parser.Parser;
-import com.exactprosystems.jf.documents.matrix.parser.items.MatrixItem;
-import com.exactprosystems.jf.documents.matrix.parser.items.MatrixItemExecutingState;
-import com.exactprosystems.jf.documents.matrix.parser.items.TempItem;
-import com.exactprosystems.jf.documents.matrix.parser.items.TypeMandatory;
+import com.exactprosystems.jf.documents.matrix.parser.items.*;
 import com.exactprosystems.jf.documents.matrix.parser.listeners.IMatrixListener;
-import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.helpers.DialogsHelper;
 import javafx.scene.control.ButtonType;
 import javafx.util.Pair;
@@ -45,9 +42,9 @@ public class MatrixFx extends Matrix
 {
 	private static final String DELIMITER = ",";
 
-	public static final String Dialog = "Matrix";
+	public static final String Dialog            = "Matrix";
 	public static final String DIALOG_BREAKPOINT = "BreakPointMatrix";
-	public static final String DIALOG_DEFAULTS = "DefaultsAppAndClient";
+	public static final String DIALOG_DEFAULTS   = "DefaultsAppAndClient";
 
 	public MatrixFx(String matrixName, DocumentFactory factory, IMatrixListener matrixListener, boolean isLibrary) throws Exception
 	{
@@ -63,15 +60,12 @@ public class MatrixFx extends Matrix
 	{
 		super.display();
 
-		initController();
-
-		this.controller.displayTitle(getNameProperty().get());
-
+		//		initController();
+		this.getRoot().fire();
+		getNameProperty().fire();
 		displayGuiDictionaries();
 		displayClientDictionaries();
-
-        restoreSettings(getFactory().getSettings());
-		this.controller.displayTab(this.getRoot());
+		restoreSettings(getFactory().getSettings());
 	}
 
 	@Override
@@ -90,11 +84,6 @@ public class MatrixFx extends Matrix
 	public void save(String fileName) throws Exception
 	{
 		super.save(fileName);
-		if (this.controller != null)
-		{
-			this.controller.save(getNameProperty().get());
-			this.controller.displayTitle(getNameProperty().get());
-		}
 	}
 
 	@Override
@@ -142,12 +131,8 @@ public class MatrixFx extends Matrix
 	@Override
 	public void close() throws Exception
 	{
-		super.close();
 		storeSettings(getFactory().getSettings());
-		if (this.controller != null)
-		{
-		    this.controller.close();
-		}
+		super.close();
 	}
 
 	@Override
@@ -163,14 +148,14 @@ public class MatrixFx extends Matrix
 	public void setDefaultApp(String id)
 	{
 		super.setDefaultApp(id);
-		this.defaultAppId = id;
+		this.defaultApp.set(id);
 	}
 
 	@Override
 	public void setDefaultClient(String id)
 	{
 		super.setDefaultClient(id);
-		this.defaultClientId = id;
+		this.defaultClient.set(id);
 	}
 
 	@Override
@@ -187,23 +172,9 @@ public class MatrixFx extends Matrix
 			super.insert(item, index, what);
 			return;
 		}
-		
-		Command undo = () ->
-		{
-			super.remove(what);
-			if (this.controller != null)
-			{
-			    this.controller.remove(what);
-			}
-		};
-		Command redo = () ->
-		{
-			super.insert(item, index, what);
-            if (this.controller != null)
-            {
-                this.controller.display(what, true);
-            }
-		};
+
+		Command undo = () -> super.remove(what);
+		Command redo = () -> super.insert(item, index, what);
 		if (!(what instanceof TempItem))
 		{
 			addCommand(undo, redo);
@@ -221,20 +192,8 @@ public class MatrixFx extends Matrix
 		{
 			MatrixItem parent = item.getParent();
 			int index = super.getIndex(item);
-			Command undo = () -> {
-				super.insert(parent, index, item);
-	            if (this.controller != null)
-	            {
-	                this.controller.display(item, false);
-	            }
-			};
-			Command redo = () -> {
-				super.remove(item);
-	            if (this.controller != null)
-	            {
-	                this.controller.remove(item);
-	            }
-			};
+			Command undo = () -> super.insert(parent, index, item);
+			Command redo = () -> super.remove(item);
 			addCommand(undo, redo);
 		}
 	}
@@ -279,38 +238,33 @@ public class MatrixFx extends Matrix
 				return;
 			}
 			List<Temp> collect = items.stream().map(item -> new Temp(item.getParent(), item, super.getIndex(item))).collect(Collectors.toList());
-			Command undo = () ->
-			{
+			Command undo = () -> {
 				collect.sort(Comparator.comparingInt(Temp::getIndex));
-				collect.forEach(temp -> {
-					super.insert(temp.getParent(), temp.getIndex(), temp.getItem());
-		            if (this.controller != null)
-		            {
-		                this.controller.display(temp.getItem(), false);
-		            }
-				});
+				collect.forEach(temp -> super.insert(temp.getParent(), temp.getIndex(), temp.getItem()));
 				enumerate();
 			};
-			Command redo = () ->
-			{
-				items.forEach(item -> {
-					super.remove(item);
-		            if (this.controller != null)
-		            {
-		                this.controller.remove(item);
-		            }
-				});
+			Command redo = () -> {
+				items.forEach(super::remove);
 				enumerate();
 			};
 			addCommand(undo, redo);
 		}
 	}
 
+	public MutableValue<Long> timerProperty()
+	{
+		return this.timer;
+	}
+
 	public void displayTimer(long ms, boolean needShow)
 	{
-		if (this.isControllerInit)
+		if (needShow)
 		{
-			this.controller.displayTimer(ms, needShow);
+			this.timer.set(ms);
+		}
+		else
+		{
+			this.timer.set(-1L);
 		}
 	}
 
@@ -322,12 +276,10 @@ public class MatrixFx extends Matrix
 			return;
 		}
 		int number = item.getNumber();
-		Command undo = () ->
-		{
+		Command undo = () -> {
 			findAndCallParameters(number, par -> par.remove(index + 1), -1);
 		};
-		Command redo = () ->
-		{
+		Command redo = () -> {
 			findAndCallParameters(number, par -> par.insert(index + 1, "", "", TypeMandatory.Extra), index + 1);
 		};
 		addCommand(undo, redo);
@@ -338,20 +290,16 @@ public class MatrixFx extends Matrix
 		int number = item.getNumber();
 		int size = list.size();
 
-		Command undo = () ->
-		{
-			findAndCallParameters(number, par ->
-			{
+		Command undo = () -> {
+			findAndCallParameters(number, par -> {
 				for (int i = 0; i < size; i++)
 				{
 					par.remove(index + 1);
 				}
 			}, -1);
 		};
-		Command redo = () ->
-		{
-			findAndCallParameters(number, par ->
-			{
+		Command redo = () -> {
+			findAndCallParameters(number, par -> {
 				for (int i = 0; i < size; i++)
 				{
 					Pair<ReadableValue, TypeMandatory> pair = list.get(i);
@@ -367,12 +315,10 @@ public class MatrixFx extends Matrix
 	{
 		int number = item.getNumber();
 		Parameter last = item.getParameters().getByIndex(index).clone();
-		Command undo = () ->
-		{
+		Command undo = () -> {
 			findAndCallParameters(number, par -> par.insert(index, last.getName(), last.getExpression(), last.getType()), -1);
 		};
-		Command redo = () ->
-		{
+		Command redo = () -> {
 			findAndCallParameters(number, par -> par.remove(index), -1);
 		};
 		addCommand(undo, redo);
@@ -382,12 +328,10 @@ public class MatrixFx extends Matrix
 	{
 		int number = item.getNumber();
 		int size = item.getParameters().size();
-		Command undo = () ->
-		{
+		Command undo = () -> {
 			findAndCallParameters(number, par -> par.moveRight((index - 1 + size) % size), -1);
 		};
-		Command redo = () ->
-		{
+		Command redo = () -> {
 			findAndCallParameters(number, par -> par.moveLeft(index), -1);
 		};
 		addCommand(undo, redo);
@@ -397,12 +341,10 @@ public class MatrixFx extends Matrix
 	{
 		int number = item.getNumber();
 		int size = item.getParameters().size();
-		Command undo = () ->
-		{
+		Command undo = () -> {
 			findAndCallParameters(number, par -> par.moveLeft((index + 1 + size) % size), -1);
 		};
-		Command redo = () ->
-		{
+		Command redo = () -> {
 			findAndCallParameters(number, par -> par.moveRight(index), -1);
 		};
 		addCommand(undo, redo);
@@ -416,12 +358,10 @@ public class MatrixFx extends Matrix
 		{
 			return;
 		}
-		Command undo = () ->
-		{
+		Command undo = () -> {
 			findAndCallParameters(number, par -> par.getByIndex(index).setName(last), -1);
 		};
-		Command redo = () ->
-		{
+		Command redo = () -> {
 			findAndCallParameters(number, par -> par.getByIndex(index).setName(name), -1);
 		};
 		addCommand(undo, redo);
@@ -435,12 +375,10 @@ public class MatrixFx extends Matrix
 		{
 			return;
 		}
-		Command undo = () ->
-		{
+		Command undo = () -> {
 			findAndCallParameters(number, par -> par.getByIndex(index).setExpression(last), -1);
 		};
-		Command redo = () ->
-		{
+		Command redo = () -> {
 			findAndCallParameters(number, par -> par.getByIndex(index).setExpression(value), -1);
 		};
 		addCommand(undo, redo);
@@ -450,12 +388,10 @@ public class MatrixFx extends Matrix
 	{
 		int number = item.getNumber();
 		Parameters last = item.getParameters().clone();
-		Command undo = () ->
-		{
+		Command undo = () -> {
 			findAndCallParameters(number, par -> par.setValue(last), -1);
 		};
-		Command redo = () ->
-		{
+		Command redo = () -> {
 			findAndCallParameters(number, par -> par.setValue(parameters), -1);
 		};
 		addCommand(undo, redo);
@@ -474,12 +410,10 @@ public class MatrixFx extends Matrix
 		List<Boolean> lastStates = new ArrayList<>(size);
 		IntStream.range(0, size).forEach(i -> lastStates.add(root.get(i).isOff()));
 
-		Command undo = () ->
-		{
+		Command undo = () -> {
 			IntStream.range(0, size).forEach(i -> root.get(i).setOff(lastStates.get(i)));
 		};
-		Command redo = () ->
-		{
+		Command redo = () -> {
 			IntStream.range(0, size).forEach(i -> root.get(i).setOff(flag));
 		};
 		addCommand(undo, redo);
@@ -520,22 +454,24 @@ public class MatrixFx extends Matrix
 		return items;
 	}
 
-	public void move(MatrixItem from, MatrixItem to) throws Exception
+	//	public void move(MatrixItem from, MatrixItem to) throws Exception
+	//	{
+	//		int index = to.getParent().index(to);
+	//		insert(to.getParent(), index == -1 ? 0 : index, from.clone());
+	//		remove(from);
+	//		enumerate();
+	//		refresh();
+	//		super.getChangedProperty().set(true);
+	//	}
+
+	public MutableValue<MatrixItem> currentItemProperty()
 	{
-		int index = to.getParent().index(to);
-		insert(to.getParent(), index == -1 ? 0 : index, from.clone());
-		remove(from);
-		enumerate();
-        refresh();
-		super.getChangedProperty().set(true);
+		return this.currentItemProperty;
 	}
 
 	public void setCurrent(MatrixItem item, boolean needExpand)
 	{
-        if (this.controller != null)
-        {
-            this.controller.setCurrent(item, needExpand);
-        }
+		this.currentItemProperty.set(item);
 	}
 
 	public void breakPoint(List<MatrixItem> items)
@@ -571,19 +507,22 @@ public class MatrixFx extends Matrix
 		this.startDate = date;
 	}
 
+	public MutableValue<String> logProperty()
+	{
+		return this.log;
+	}
+
 	public void startMatrix() throws Exception
 	{
 		if (getEngine() != null)
 		{
 			if (!getEngine().isRunning())
 			{
-	            if (this.controller != null)
-	            {
-	                this.controller.displayBeforeStart("Matrix will start at " + this.startDate);
-	            }
+				this.log.set(null);
+				this.log.set("Matrix will start at " + this.startDate);
 			}
 
-			getEngine().start(this.startDate, this.controller.getParameter());
+			getEngine().start(this.startDate, this.parameter.get());
 		}
 	}
 
@@ -591,13 +530,10 @@ public class MatrixFx extends Matrix
 	{
 		if (getEngine() != null)
 		{
-		    getEngine().stop();
-            refresh();
-            if (this.controller != null)
-            {
-    			this.controller.displayAfterStopped("Matrix stopped");
-    			this.controller.displayTimer(0, false);
-            }
+			getEngine().stop();
+			refresh();
+			this.log.set("Matrix stopped");
+			this.timer.set(-1L);
 		}
 	}
 
@@ -605,16 +541,15 @@ public class MatrixFx extends Matrix
 	{
 		if (getEngine() != null)
 		{
-		    getEngine().pause();
+			getEngine().pause();
 		}
 	}
 
 	public void pausedMatrix(Matrix matrix) throws Exception
 	{
-		//TODO this is awesome code. We need check binding Matrix, MatrixRunner and Context
 		if (matrix == this && getEngine() != null)
 		{
-		    getEngine().pause();
+			getEngine().pause();
 		}
 	}
 
@@ -622,7 +557,7 @@ public class MatrixFx extends Matrix
 	{
 		if (getEngine() != null)
 		{
-		    getEngine().step();
+			getEngine().step();
 		}
 	}
 
@@ -631,33 +566,31 @@ public class MatrixFx extends Matrix
 		if (getEngine() != null && getEngine().getReportName() != null)
 		{
 			File file = new File(getEngine().getReportName());
-            if (this.controller != null)
-            {
-                this.controller.showResult(file, getNameProperty().get());
-            }
+			DialogsHelper.displayReport(file, getNameProperty().get(), this.factory);
 		}
 	}
 
 	public void showWatch()
 	{
-        if (this.controller != null)
-        {
-            this.controller.showWatcher(this, getEngine().getContext());
-        }
+		//		if (this.controller != null)
+		//		{
+		//			this.controller.showWatcher(this, getEngine().getContext());
+		//		}
 	}
 
 	void clearExecutingState()
 	{
 		this.getRoot().bypass(item -> item.changeExecutingState(MatrixItemExecutingState.None));
 	}
+
 	//==============================================================================================================================
 	private void init(DocumentFactory factory) throws Exception
 	{
 		this.console = new TabConsole(System.out);
-		
+
 		if (!isLibrary())
 		{
-		    getEngine().getContext().setOut(this.console);
+			getEngine().getContext().setOut(this.console);
 		}
 
 		super.saved();
@@ -665,33 +598,33 @@ public class MatrixFx extends Matrix
 
 	private void initController() throws Exception
 	{
-		if (!this.isControllerInit)
-		{
-			getFactory().getConfiguration().register(this);
-
-			this.controller = Common.loadController(MatrixFx.class.getResource("MatrixFx.fxml"));
-            this.controller.init(this, getEngine().getContext(), this.console);
-			setListener(this.controller);
-			this.isControllerInit = true;
-		}
+		//		if (!this.isControllerInit)
+		//		{
+		//			getFactory().getConfiguration().register(this);
+		//
+		//			this.controller = Common.loadController(MatrixFx.class.getResource("MatrixFx.fxml"));
+		//			this.controller.init(this, getEngine().getContext(), this.console);
+		//			setListener(this.controller);
+		//			this.isControllerInit = true;
+		//		}
 	}
 
 	private void displayGuiDictionaries() throws Exception
 	{
 		ArrayList<String> result = new ArrayList<>();
 		result.add(EMPTY_STRING);
-        Context context = (Context) getEngine().getContext();
-		result.addAll(context.getConfiguration().getApplicationPool().appNames().stream().collect(Collectors.toList()));
-		this.controller.displayAppList(result);
+		Context context = getEngine().getContext();
+		result.addAll(new ArrayList<>(context.getConfiguration().getApplicationPool().appNames()));
+		this.appList.addAll(result.stream().map(MutableValue::new).collect(Collectors.toList()));
 	}
 
 	private void displayClientDictionaries() throws Exception
 	{
 		ArrayList<String> result = new ArrayList<>();
 		result.add(EMPTY_STRING);
-		Context context = (Context) getEngine().getContext();
-		result.addAll(context.getConfiguration().getClientPool().clientNames().stream().collect(Collectors.toList()));
-		this.controller.displayClientList(result);
+		Context context = getEngine().getContext();
+		result.addAll(new ArrayList<>(context.getConfiguration().getClientPool().clientNames()));
+		this.clientList.addAll(result.stream().map(MutableValue::new).collect(Collectors.toList()));
 	}
 
 	private void insert(MatrixItem where, MatrixItem[] items) throws Exception
@@ -705,7 +638,7 @@ public class MatrixFx extends Matrix
 			insert(parent, index + i, item);
 		}
 		enumerate();
-        refresh();
+		refresh();
 		super.getChangedProperty().set(true);
 	}
 
@@ -729,13 +662,13 @@ public class MatrixFx extends Matrix
 			settings.setValue(Settings.MAIN_NS, DIALOG_BREAKPOINT, absolutePathMatrix, breakPoints.stream().map(Object::toString).collect(Collectors.joining(DELIMITER)));
 		}
 
-		if (Str.areEqual(this.defaultAppId, EMPTY_STRING) && Str.areEqual(this.defaultClientId, EMPTY_STRING))
+		if (Str.areEqual(this.defaultApp.get(), EMPTY_STRING) && Str.areEqual(this.defaultClient.get(), EMPTY_STRING))
 		{
 			settings.remove(Settings.MAIN_NS, DIALOG_DEFAULTS, absolutePathMatrix);
 		}
 		else
 		{
-			settings.setValue(Settings.MAIN_NS, DIALOG_DEFAULTS, absolutePathMatrix, this.defaultAppId + DELIMITER + this.defaultClientId);
+			settings.setValue(Settings.MAIN_NS, DIALOG_DEFAULTS, absolutePathMatrix, this.defaultApp.get() + DELIMITER + this.defaultClient.get());
 		}
 		settings.saveIfNeeded();
 	}
@@ -744,7 +677,7 @@ public class MatrixFx extends Matrix
 	{
 		Settings.SettingsValue breakPoints = settings.getValue(Settings.MAIN_NS, DIALOG_BREAKPOINT, new File(getNameProperty().get()).getAbsolutePath());
 		Optional.ofNullable(breakPoints).ifPresent(setting -> {
-			List<Integer> list = Arrays.stream(setting.getValue().split(DELIMITER)).mapToInt(Integer::valueOf).mapToObj(i -> i).collect(Collectors.toList());
+			List<Integer> list = Arrays.stream(setting.getValue().split(DELIMITER)).mapToInt(Integer::valueOf).boxed().collect(Collectors.toList());
 
 			this.getRoot().bypass(item -> {
 				if (list.contains(item.getNumber()))
@@ -757,22 +690,20 @@ public class MatrixFx extends Matrix
 		Settings.SettingsValue defaults = settings.getValue(Settings.MAIN_NS, DIALOG_DEFAULTS, new File(getNameProperty().get()).getAbsolutePath());
 		if (Objects.isNull(defaults))
 		{
-			this.controller.setDefaultApp(this.defaultAppId);
-			this.controller.setDefaultClient(this.defaultClientId);
+			this.defaultApp.set(EMPTY_STRING);
+			this.defaultClient.set(EMPTY_STRING);
 		}
 		else
 		{
 			String[] split = defaults.getValue().split(DELIMITER);
 			if (split.length == 2)
 			{
-				this.defaultAppId = split[0];
-				this.defaultClientId = split[1];
+				this.defaultApp.set(split[0]);
+				this.defaultClient.set(split[1]);
 			}
-			this.controller.setDefaultApp(this.defaultAppId);
-			this.controller.setDefaultClient(this.defaultClientId);
 		}
-		super.setDefaultApp(this.defaultAppId);
-		super.setDefaultClient(this.defaultClientId);
+		super.setDefaultApp(this.defaultApp.get());
+		super.setDefaultClient(this.defaultClient.get());
 
 	}
 
@@ -803,7 +734,8 @@ public class MatrixFx extends Matrix
 			try
 			{
 				applier.accept(item.getParameters());
-				this.controller.refreshParameters(item, selectIndex);
+				//TODO THINK ABOUT IT!!!
+				//				this.controller.refreshParameters(item, selectIndex);
 			}
 			catch (Exception e)
 			{
@@ -811,25 +743,57 @@ public class MatrixFx extends Matrix
 			}
 		}
 	}
-	
+
 	private void refresh()
 	{
-        if (this.controller != null)
-        {
-            this.controller.refresh();
-        }
+		this.refresh.fire();
 	}
 
-	void disableButtons(boolean isOn) {
-		this.controller.disableButtons(isOn);
+	public MutableValue<String> defaultAppProperty()
+	{
+		return this.defaultApp;
 	}
 
-	private boolean isControllerInit = false;
-	private MatrixFxController 		controller;
-	private Date 					startDate = new Date();
-	private TabConsole 				console;
-	private String defaultAppId    = EMPTY_STRING;
-	private String defaultClientId = EMPTY_STRING;
+	public MutableValue<String> defaultClientProperty()
+	{
+		return this.defaultClient;
+	}
 
-	private static final Logger	logger	= Logger.getLogger(MatrixFx.class);
+	public MutableArrayList<MutableValue<String>> appsProperty()
+	{
+		return appList;
+	}
+
+	public MutableArrayList<MutableValue<String>> clientsProperty()
+	{
+		return clientList;
+	}
+
+	public MutableValue<Object> parameterProperty()
+	{
+		return parameter;
+	}
+
+	public MutableValue<Boolean> refreshProperty()
+	{
+		return this.refresh;
+	}
+
+	private MutableValue<MatrixItem>               currentItemProperty = new MutableValue<>();
+	private MutableArrayList<MutableValue<String>> appList             = new MutableArrayList<>();
+	private MutableArrayList<MutableValue<String>> clientList          = new MutableArrayList<>();
+	private MutableValue<Long>                     timer               = new MutableValue<>(0L);
+	private MutableValue<String>                   log                 = new MutableValue<>("");
+	private MutableValue<Object>                   parameter           = new MutableValue<>(null);
+	private MutableValue<Boolean>                  refresh             = new MutableValue<>(false);
+
+	//TODO think about defaultApp and defaultClient. Mb move upper?
+	private MutableValue<String> defaultApp    = new MutableValue<>(EMPTY_STRING);
+	private MutableValue<String> defaultClient = new MutableValue<>(EMPTY_STRING);
+
+
+	private Date startDate = new Date();
+	private TabConsole console;
+
+	private static final Logger logger = Logger.getLogger(MatrixFx.class);
 }

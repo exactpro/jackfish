@@ -9,14 +9,15 @@
 package com.exactprosystems.jf.tool.matrix;
 
 import com.exactprosystems.jf.common.Settings;
+import com.exactprosystems.jf.documents.Document;
 import com.exactprosystems.jf.documents.config.Context;
 import com.exactprosystems.jf.documents.matrix.Matrix;
 import com.exactprosystems.jf.documents.matrix.parser.DisplayDriver;
+import com.exactprosystems.jf.documents.matrix.parser.MutableValue;
 import com.exactprosystems.jf.documents.matrix.parser.Result;
 import com.exactprosystems.jf.documents.matrix.parser.items.MatrixItem;
 import com.exactprosystems.jf.documents.matrix.parser.listeners.IMatrixListener;
 import com.exactprosystems.jf.tool.Common;
-import com.exactprosystems.jf.tool.ContainingParent;
 import com.exactprosystems.jf.tool.CssVariables;
 import com.exactprosystems.jf.tool.custom.console.ConsoleText;
 import com.exactprosystems.jf.tool.custom.console.CustomListView;
@@ -25,35 +26,34 @@ import com.exactprosystems.jf.tool.custom.expfield.ExpressionField;
 import com.exactprosystems.jf.tool.custom.find.FindPanel;
 import com.exactprosystems.jf.tool.custom.find.IFind;
 import com.exactprosystems.jf.tool.custom.tab.CustomTab;
-import com.exactprosystems.jf.tool.custom.tab.CustomTabPane;
 import com.exactprosystems.jf.tool.custom.treetable.DisplayDriverFx;
 import com.exactprosystems.jf.tool.custom.treetable.MatrixContextMenu;
 import com.exactprosystems.jf.tool.custom.treetable.MatrixParametersContextMenu;
 import com.exactprosystems.jf.tool.custom.treetable.MatrixTreeView;
+import com.exactprosystems.jf.tool.documents.AbstractDocumentController;
+import com.exactprosystems.jf.tool.documents.ControllerInfo;
 import com.exactprosystems.jf.tool.helpers.DialogsHelper;
 import com.exactprosystems.jf.tool.matrix.watch.WatcherFx;
 import com.exactprosystems.jf.tool.settings.SettingsPanel;
-import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
-import javafx.fxml.Initializable;
 import javafx.geometry.Orientation;
-import javafx.scene.Parent;
 import javafx.scene.control.*;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 
-import java.io.File;
 import java.net.URL;
 import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
+import java.util.stream.Collectors;
 
 import static com.exactprosystems.jf.tool.Common.*;
 
-public class MatrixFxController implements Initializable, ContainingParent, IMatrixListener
+@ControllerInfo(resourceName = "MatrixFx.fxml")
+public class MatrixFxController extends AbstractDocumentController<MatrixFx> implements IMatrixListener
 {
 	public MatrixTreeView				tree;
 	public Button						btnStartMatrix;
@@ -79,9 +79,6 @@ public class MatrixFxController implements Initializable, ContainingParent, IMat
 	private FindPanel<MatrixItem>		findPanel;
 	private boolean						visible	= false;
 
-	private Parent						pane;
-	private CustomTab					tab;
-	private MatrixFx					model;
 	private DisplayDriver				driver;
 	private Context						context;
 	private boolean						ok;
@@ -143,11 +140,11 @@ public class MatrixFxController implements Initializable, ContainingParent, IMat
 	// ==============================================================================================================================
 	// interface ContainingParent
 	// ==============================================================================================================================
-	@Override
-	public void setParent(Parent parent)
-	{
-		this.pane = parent;
-	}
+//	@Override
+//	public void setParent(Parent parent)
+//	{
+//		this.pane = parent;
+//	}
 
 	// ==============================================================================================================================
 	// MatrixListener
@@ -200,7 +197,7 @@ public class MatrixFxController implements Initializable, ContainingParent, IMat
 		if (this.listView != null)
 		{
 			this.listView.getItems().add(ConsoleText.defaultText(format));
-			Optional.ofNullable(this.tab).ifPresent(t -> {
+			Optional.ofNullable(this.customTab).ifPresent(t -> {
 				t.getStyleClass().remove(CssVariables.EXECUTING_TAB);
 				t.getStyleClass().add(failed == 0 ? CssVariables.MATRIX_FINISHED_OK : CssVariables.MATRIX_FINISHED_BAD);
 			});
@@ -210,7 +207,7 @@ public class MatrixFxController implements Initializable, ContainingParent, IMat
 			DialogsHelper.showInfo(format);
 		}
 		this.refresh();
-		this.model.disableButtons(false);
+		this.disableButtons(false);
 	}
 
 	@Override
@@ -249,7 +246,7 @@ public class MatrixFxController implements Initializable, ContainingParent, IMat
 	{
 		try
 		{
-			this.model.disableButtons(false);
+			this.disableButtons(false);
 			this.model.pausedMatrix(matrix);
 			this.refreshTreeIfToogle();
 			Optional.ofNullable(this.watcher).ifPresent(WatcherFx::update);
@@ -284,6 +281,69 @@ public class MatrixFxController implements Initializable, ContainingParent, IMat
 		return this.ok;
 	}
 
+	@Override
+	protected void init(Document model, CustomTab customTab)
+	{
+		super.init(model, customTab);
+
+		this.model.getRoot().setOnRemoveListener((integer, matrixItem) -> this.remove(matrixItem));
+		//TODO think about second parameter of method display;
+		this.model.getRoot().setOnAddListener((integer, matrixItem) -> this.display(matrixItem, false));
+		this.model.currentItemProperty().setOnChangeListener(((oldValue, newValue) -> this.setCurrent(newValue, false)));
+		this.model.defaultAppProperty().setOnChangeListener((s, s2) -> this.setDefaultApp(s2));
+		this.model.defaultClientProperty().setOnChangeListener((s, s2) -> this.setDefaultClient(s2));
+		this.model.appsProperty().setOnAddAllListener((integer, mutableValues) -> this.displayAppList(mutableValues.stream().map(MutableValue::get).collect(Collectors.toList())));
+		this.model.clientsProperty().setOnAddAllListener((integer, mutableValues) -> this.displayClientList(mutableValues.stream().map(MutableValue::get).collect(Collectors.toList())));
+		this.model.timerProperty().setOnChangeListener((aLong, aLong2) -> this.displayTimer(aLong2, aLong2 > 0));
+		this.model.logProperty().setOnChangeListener((s, s2) -> {
+			if (s2 == null)
+			{
+				this.listView.getItems().clear();
+			}
+			else
+			{
+				this.listView.getItems().add(ConsoleText.defaultText(s2));
+			}
+		});
+		this.model.refreshProperty().setOnChangeListener((aBoolean, aBoolean2) -> this.tree.refresh());
+
+		this.context = this.model.getFactory().createContext();
+		Settings settings = context.getFactory().getSettings();
+		Settings.SettingsValue foldSetting = settings.getValueOrDefault(Settings.GLOBAL_NS, Settings.MATRIX_NAME, Settings.MATRIX_FOLD_ITEMS, "false");
+		boolean fold = Boolean.parseBoolean(foldSetting.getValue());
+
+		this.tree.setNeedExpand(fold);
+		MatrixParametersContextMenu parametersContextMenu 	= new MatrixParametersContextMenu(context, this.model, this.tree, settings);
+		MatrixContextMenu 			rowContextMenu 			= new MatrixContextMenu(context, this.model, this.tree, settings);
+		parametersContextMenu.initShortcuts(settings, this.tree, this.model, context);
+
+		this.driver = new DisplayDriverFx(this.tree, this.context, rowContextMenu, parametersContextMenu);
+		this.tree.init(this.model, settings, rowContextMenu);
+//		console.setConsumer(s -> Common.runLater(() -> this.listView.getItems().add(ConsoleText.defaultText(s))));
+
+		this.efParameter = new ExpressionField(context.getEvaluator());
+		HBox.setHgrow(this.efParameter, Priority.ALWAYS);
+		this.efParameter.setStretchable(false);
+		this.efParameter.setPromptText("Parameter for start");
+		this.efParameter.setMaxWidth(250.0);
+		this.efParameter.setPrefWidth(250.0);
+		this.efParameter.setMinWidth(250.0);
+		this.efParameter.setHelperForExpressionField("Parameter for start", this.model);
+		this.bottomBox.getChildren().addAll(this.efParameter, Common.createSpacer(SpacerEnum.HorizontalMin), new Separator(Orientation.VERTICAL));
+		initializeButtons(context.getFactory().getSettings());
+		initShortcuts(context.getFactory().getSettings());
+		this.efParameter.textProperty().addListener((observable, oldValue, newValue) -> {
+			Object value = null;
+			try
+			{
+				value = this.getParameter();
+			}
+			catch (Exception ignored)
+			{}
+			this.model.parameterProperty().set(value);
+		});
+	}
+
 	public void init(MatrixFx model, Context context, TabConsole console)
 	{
 		Settings settings = context.getFactory().getSettings();
@@ -299,11 +359,8 @@ public class MatrixFxController implements Initializable, ContainingParent, IMat
 		this.context = context;
 		this.driver = new DisplayDriverFx(this.tree, this.context, rowContextMenu, parametersContextMenu);
 		this.tree.init(model, settings, rowContextMenu);
-		this.tab = CustomTabPane.getInstance().createTab(model);
-		this.tab.setContent(this.pane);
+//		this.tab.setContent(this.pane);
 		console.setConsumer(s -> Common.runLater(() -> this.listView.getItems().add(ConsoleText.defaultText(s))));
-		CustomTabPane.getInstance().addTab(this.tab);
-		CustomTabPane.getInstance().selectTab(this.tab);
 
 		this.efParameter = new ExpressionField(context.getEvaluator());
 		HBox.setHgrow(this.efParameter, Priority.ALWAYS);
@@ -316,19 +373,24 @@ public class MatrixFxController implements Initializable, ContainingParent, IMat
 		this.bottomBox.getChildren().addAll(this.efParameter, Common.createSpacer(SpacerEnum.HorizontalMin), new Separator(Orientation.VERTICAL));
 		initializeButtons(context.getFactory().getSettings());
 		initShortcuts(context.getFactory().getSettings());
+		this.efParameter.textProperty().addListener((observable, oldValue, newValue) -> {
+			Object value = null;
+			try
+			{
+				value = this.getParameter();
+			}
+			catch (Exception ignored)
+			{}
+			this.model.parameterProperty().set(value);
+		});
 	}
 
 	public void save(String name)
 	{
-		this.tab.getStyleClass().removeAll(CssVariables.MATRIX_FINISHED_OK, CssVariables.MATRIX_FINISHED_BAD);
-		this.tab.saved(name);
+		this.customTab.getStyleClass().removeAll(CssVariables.MATRIX_FINISHED_OK, CssVariables.MATRIX_FINISHED_BAD);
+		this.customTab.saved(name);
 		this.model.clearExecutingState();
 		this.refresh();
-	}
-
-	public void showResult(File file, String matrixName)
-	{
-		DialogsHelper.displayReport(file, matrixName, this.model.getFactory());
 	}
 
 	public void showWatcher(MatrixFx matrix, Context context)
@@ -347,20 +409,8 @@ public class MatrixFxController implements Initializable, ContainingParent, IMat
 	{
 		tryCatch(() ->
 		{
-			this.tab.close();
-			CustomTabPane.getInstance().removeTab(this.tab);
 			Optional.ofNullable(watcher).ifPresent(WatcherFx::close);
 		}, "Error on closing matrix");
-	}
-
-	public void displayTab(MatrixItem matrixItem)
-	{
-		matrixItem.display(this.driver, this.context);
-	}
-
-	public void coloring()
-	{
-		// this.driver.coloring();
 	}
 
 	public Object getParameter() throws Exception
@@ -379,19 +429,19 @@ public class MatrixFxController implements Initializable, ContainingParent, IMat
 	public void stopMatrix(ActionEvent event)
 	{
 		tryCatch(this.model::stop, "Error on stopping matrix");
-		this.model.disableButtons(false);
+		this.disableButtons(false);
 	}
 
 	public void startMatrix(ActionEvent event)
 	{
 		tryCatch(this.model::startMatrix, "Error on starting matrix. See the matrix output for details.");
-		this.model.disableButtons(true);
+		this.disableButtons(true);
 	}
 
 	public void pauseMatrix(ActionEvent event)
 	{
 		tryCatch(this.model::pauseMatrix, "Error on pausing matrix");
-		this.model.disableButtons(false);
+		this.disableButtons(false);
 	}
 
 	public void stepMatrix(ActionEvent event)
@@ -489,17 +539,6 @@ public class MatrixFxController implements Initializable, ContainingParent, IMat
 		);
 	}
 
-	public void displayBeforeStart(String msg)
-	{
-		this.listView.getItems().clear();
-		this.listView.getItems().add(ConsoleText.defaultText(msg));
-	}
-
-	public void displayAfterStopped(String msg)
-	{
-		this.listView.getItems().add(ConsoleText.defaultText(msg));
-	}
-
 	public void refresh()
 	{
 		this.tree.refresh();
@@ -531,11 +570,6 @@ public class MatrixFxController implements Initializable, ContainingParent, IMat
 			item.display(this.driver, this.context);
 			this.driver.setCurrentItem(item, this.model, needExpand);
 		});
-	}
-	
-	public void displayTitle(String title)
-	{
-		Common.runLater(() -> this.tab.setTitle(title));
 	}
 
 	public void displayAppList(List<String> result)
@@ -570,9 +604,9 @@ public class MatrixFxController implements Initializable, ContainingParent, IMat
 
 	private void initShortcuts(final Settings settings)
 	{
-		this.pane.addEventFilter(KeyEvent.KEY_PRESSED, keyEvent -> tryCatch(() ->
+		this.parent.addEventFilter(KeyEvent.KEY_PRESSED, keyEvent -> tryCatch(() ->
 		{
-			if (tab.isSelected())
+			if (customTab.isSelected())
 			{
 				if (SettingsPanel.match(settings, keyEvent, Settings.START_MATRIX))
 				{
@@ -627,7 +661,7 @@ public class MatrixFxController implements Initializable, ContainingParent, IMat
 	}
 
 	void disableButtons(boolean isOn) {
-		this.btnStartMatrix.disableProperty().setValue(isOn);
-		this.btnStepMatrix.disableProperty().setValue(isOn);
+		this.btnStartMatrix.setDisable(isOn);
+		this.btnStepMatrix.setDisable(isOn);
 	}
 }

@@ -27,29 +27,31 @@ import com.exactprosystems.jf.functions.Notifier;
 import com.exactprosystems.jf.functions.RowTable;
 import org.apache.log4j.Logger;
 
-import java.awt.*;
+import java.awt.Rectangle;
+import java.awt.Toolkit;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
+import java.util.function.BiConsumer;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 public abstract class MatrixItem implements IMatrixItem, Mutable, Cloneable
 {
+	private BiConsumer<Integer, MatrixItem> onAddListener;
+	private BiConsumer<Integer, MatrixItem> onRemoveListener;
+	private BiConsumer<Integer, MatrixItem> onSetListener;
+
 	public MatrixItem()
 	{
 		this.parameters = new Parameters();
-		this.id 		= new MutableValue<String>();
-		this.off		= new MutableValue<Boolean>();
-        this.repOff     = new MutableValue<Boolean>();
-		this.global		= new MutableValue<Boolean>();
-		this.ignoreErr	= new MutableValue<Boolean>();
-		this.comments 	= new MutableArrayList<CommentString>();
-		this.children 	= new MutableArrayList<MatrixItem>();
+		this.id = new MutableValue<String>();
+		this.off = new MutableValue<Boolean>();
+		this.repOff = new MutableValue<Boolean>();
+		this.global = new MutableValue<Boolean>();
+		this.ignoreErr = new MutableValue<Boolean>();
+		this.comments = new MutableArrayList<CommentString>();
+		this.children = new MutableArrayList<MatrixItem>();
 	}
 
 	//==============================================================================================
@@ -63,25 +65,25 @@ public abstract class MatrixItem implements IMatrixItem, Mutable, Cloneable
 		{
 			MatrixItem clone = ((MatrixItem) super.clone());
 
-			clone.number 	= 0;
-			clone.id 		= this.id.clone();
-			clone.off 		= this.off.clone();
-            clone.repOff    = this.repOff.clone();
-			clone.global 	= this.global.clone();
+			clone.number = 0;
+			clone.id = this.id.clone();
+			clone.off = this.off.clone();
+			clone.repOff = this.repOff.clone();
+			clone.global = this.global.clone();
 			clone.ignoreErr = this.ignoreErr.clone();
 
-            clone.source    = this.source;
-			clone.owner     = this.owner;
-			clone.comments 	= (MutableArrayList<CommentString>) comments.clone();
-			clone.parent 	= this.parent;
-			clone.children 	= new MutableArrayList<MatrixItem>(children.size());
+			clone.source = this.source;
+			clone.owner = this.owner;
+			clone.comments = (MutableArrayList<CommentString>) comments.clone();
+			clone.parent = this.parent;
+			clone.children = new MutableArrayList<MatrixItem>(children.size());
 			for (MatrixItem child : children)
 			{
 				MatrixItem item = child.clone();
 				item.parent = clone;
 				clone.children.add(item);
 			}
-			clone.result 	= null;
+			clone.result = null;
 			clone.parameters = this.parameters.clone();
 
 			return clone;
@@ -99,11 +101,11 @@ public abstract class MatrixItem implements IMatrixItem, Mutable, Cloneable
 		return getClass().getSimpleName();
 	}
 
-    public static MatrixItem createMatrixItem(String className) throws Exception
-    {
-        Class<?> clazz = Class.forName(MatrixItem.class.getPackage().getName() + "." +className);
-        return (MatrixItem) clazz.newInstance();
-    }
+	public static MatrixItem createMatrixItem(String className) throws Exception
+	{
+		Class<?> clazz = Class.forName(MatrixItem.class.getPackage().getName() + "." + className);
+		return (MatrixItem) clazz.newInstance();
+	}
 
 	//==============================================================================================
 	// implements Displayed
@@ -122,7 +124,7 @@ public abstract class MatrixItem implements IMatrixItem, Mutable, Cloneable
 			new End(this).display(driver, context);
 		}
 	}
-	
+
 	public final Object getLayout()
 	{
 		return this.layout;
@@ -134,90 +136,84 @@ public abstract class MatrixItem implements IMatrixItem, Mutable, Cloneable
 	}
 	//==============================================================================================
 
-    public boolean canExecute()
-    {
-    	if (isTrue(this.off.get()))
-    	{
-    		return false;
-    	}
+	public boolean canExecute()
+	{
+		if (isTrue(this.off.get()))
+		{
+			return false;
+		}
 
-    	if (this.parent == null)
-    	{
-    		return true;
-    	}
+		if (this.parent == null)
+		{
+			return true;
+		}
 
-    	return this.parent.canExecute();
-    }
+		return this.parent.canExecute();
+	}
 
 	//==============================================================================================
 	// implements Mutable
 	//==============================================================================================
 
-    public boolean isChanged()
-    {
-    	if (	this.id.isChanged()
-    		||	this.off.isChanged()
-            ||  this.repOff.isChanged()
-    		||	this.global.isChanged()
-    		||	this.ignoreErr.isChanged()
-    		||	this.comments.isChanged()
-    		||	this.parameters.isChanged()
-    		||	this.children.isChanged() )
-    	{
-    		return true;
-    	}
+	public boolean isChanged()
+	{
+		if (this.id.isChanged() || this.off.isChanged() || this.repOff.isChanged() || this.global.isChanged() || this.ignoreErr.isChanged() || this.comments.isChanged() || this.parameters.isChanged()
+				|| this.children.isChanged())
+		{
+			return true;
+		}
 		return false;
-    }
+	}
 
-    @Override
-    public void saved()
-    {
-    	this.id.saved();
-    	this.off.saved();
-        this.repOff.saved();
-    	this.global.saved();
-    	this.ignoreErr.saved();
-    	this.comments.saved();
-    	this.parameters.saved();
-    	this.children.saved();
-    }
+	@Override
+	public void saved()
+	{
+		this.id.saved();
+		this.off.saved();
+		this.repOff.saved();
+		this.global.saved();
+		this.ignoreErr.saved();
+		this.comments.saved();
+		this.parameters.saved();
+		this.children.saved();
+	}
 
 	//==============================================================================================
 	// bypass
 	//==============================================================================================
-    public final void bypass(int startLevel, LevelVisiter visiter)
-    {
-    	if (visiter != null)
-    	{
-    		visiter.visit(startLevel, this);
-    	}
+	public final void bypass(int startLevel, LevelVisiter visiter)
+	{
+		if (visiter != null)
+		{
+			visiter.visit(startLevel, this);
+		}
 
 		for (MatrixItem item : this.children)
 		{
 			item.bypass(startLevel + 1, visiter);
 		}
-    }
+	}
 
-    public final void bypass(Visiter visiter)
-    {
-    	if (visiter != null)
-    	{
-    		visiter.visit(this);
-    	}
+	public final void bypass(Visiter visiter)
+	{
+		if (visiter != null)
+		{
+			visiter.visit(this);
+		}
 
 		for (MatrixItem item : this.children)
 		{
 			item.bypass(visiter);
 		}
-    }
+	}
 
 	//==============================================================================================
 	// Getters / Setters
 	//==============================================================================================
-    public final Matrix getSource()
-    {
-        return this.source;
-    }
+	public final Matrix getSource()
+	{
+		return this.source;
+	}
 
 	public final Matrix getMatrix()
 	{
@@ -234,7 +230,7 @@ public abstract class MatrixItem implements IMatrixItem, Mutable, Cloneable
 		return this.id.get();
 	}
 
-	public final void setId(String id) 
+	public final void setId(String id)
 	{
 		this.id.set(id);
 	}
@@ -244,10 +240,10 @@ public abstract class MatrixItem implements IMatrixItem, Mutable, Cloneable
 		return isTrue(this.off.get());
 	}
 
-    public final boolean isRepOff()
-    {
-        return isTrue(this.repOff.get());
-    }
+	public final boolean isRepOff()
+	{
+		return isTrue(this.repOff.get());
+	}
 
 	public final boolean isGlobal()
 	{
@@ -279,10 +275,10 @@ public abstract class MatrixItem implements IMatrixItem, Mutable, Cloneable
 		return this.parameters;
 	}
 
-    public boolean isBreakPoint()
-    {
-        return this.breakPoint;
-    }
+	public boolean isBreakPoint()
+	{
+		return this.breakPoint;
+	}
 
 	public void setNubmer(int number)
 	{
@@ -294,84 +290,83 @@ public abstract class MatrixItem implements IMatrixItem, Mutable, Cloneable
 		this.off.set(off);
 	}
 
-    public void setRepOff(boolean off)
-    {
-        this.repOff.set(off);
-    }
+	public void setRepOff(boolean off)
+	{
+		this.repOff.set(off);
+	}
 
 	public MatrixItemState getItemState()
 	{
 		return this.matrixItemState;
 	}
 
-    public Object get(Tokens key)
-    {
-        switch (key)
-        {
-        case Id:
-            return this.id.get();
-        case Off:
-            return this.off.get();
-        case RepOff:
-            return this.repOff.get();
-        case Global:
-            return this.global.get();
-        case IgnoreErr:
-            return this.ignoreErr.get();
-        default:
-            return null;
-        }
-    }
+	public Object get(Tokens key)
+	{
+		switch (key)
+		{
+			case Id:
+				return this.id.get();
+			case Off:
+				return this.off.get();
+			case RepOff:
+				return this.repOff.get();
+			case Global:
+				return this.global.get();
+			case IgnoreErr:
+				return this.ignoreErr.get();
+			default:
+				return null;
+		}
+	}
 
-    public void set(Tokens key, Object value)
-    {
-        switch (key)
-        {
-        case Id:
-            this.id.set((String)value);
-            break;
-        case Off:
-            this.off.set((Boolean)value);
-            break;
-        case RepOff:
-            this.repOff.set((Boolean)value);
-            break;
-        case Global:
-            this.global.set((Boolean)value);
-            break;
-        case IgnoreErr:
-            this.ignoreErr.set((Boolean)value);
-            break;
-        default:
-            break;
-        }
-    }
+	public void set(Tokens key, Object value)
+	{
+		switch (key)
+		{
+			case Id:
+				this.id.set((String) value);
+				break;
+			case Off:
+				this.off.set((Boolean) value);
+				break;
+			case RepOff:
+				this.repOff.set((Boolean) value);
+				break;
+			case Global:
+				this.global.set((Boolean) value);
+				break;
+			case IgnoreErr:
+				this.ignoreErr.set((Boolean) value);
+				break;
+			default:
+				break;
+		}
+	}
 
 	public MatrixItemExecutingState getExecutingState()
 	{
 		return this.executingState;
 	}
 
-    //==========================================================================================================================
+	//==========================================================================================================================
 	// Public members
 	//==========================================================================================================================
 	public final void init(Matrix owner, Matrix source)
 	{
-		this.owner 			= owner;
-		this.source         = source;
+		this.owner = owner;
+		this.source = source;
 		for (MatrixItem child : this.children)
 		{
 			child.init(owner, source);
 		}
 	}
 
-	public final void init(Matrix owner, List<String> comments,
-			Map<Tokens, String> systemParameters, Parameters userParameters) throws MatrixException
+	public final void init(Matrix owner, List<String> comments, Map<Tokens, String> systemParameters, Parameters userParameters) throws MatrixException
 	{
 		MatrixItemAttribute annotation = this.getClass().getAnnotation(MatrixItemAttribute.class);
 		boolean hasValue = annotation.hasValue();
-		this.owner 			= owner;
-        this.source         = owner;
+		this.owner = owner;
+		this.source = owner;
 		if (comments != null)
 		{
 			this.comments = new MutableArrayList<CommentString>();
@@ -383,7 +378,7 @@ public abstract class MatrixItem implements IMatrixItem, Mutable, Cloneable
 
 		this.id.set(systemParameters.get(Tokens.Id));
 		this.off.set(isTrue(hasValue, systemParameters, Tokens.Off));
-        this.repOff.set(isTrue(hasValue, systemParameters, Tokens.RepOff));
+		this.repOff.set(isTrue(hasValue, systemParameters, Tokens.RepOff));
 		this.global.set(isTrue(hasValue, systemParameters, Tokens.Global));
 		this.ignoreErr.set(isTrue(hasValue, systemParameters, Tokens.IgnoreErr));
 
@@ -394,7 +389,7 @@ public abstract class MatrixItem implements IMatrixItem, Mutable, Cloneable
 
 		initItSelf(systemParameters);
 	}
-	
+
 	public final void createId()
 	{
 		String suffix = this.itemSuffixSelf();
@@ -455,41 +450,39 @@ public abstract class MatrixItem implements IMatrixItem, Mutable, Cloneable
 
 		boolean prev = report.reportIsOn();
 		if (isRepOff() && prev)
-        {
-            report.reportSwitch(false);
-        }
+		{
+			report.reportSwitch(false);
+		}
 
 		beforeReport(report);
 		report.itemStarted(this);
 		report.itemIntermediate(this);
-		
+
 		// TODO handling exceptions should be here
-		
+
 		this.result = executeItSelf(start, context, listener, evaluator, report, this.parameters);
-		
-		
-		
-		
+
+
 		long duration = this.result.getTime();
-		
+
 		if (this.result.getResult() == Result.Failed && isIgnoreErr())
 		{
 			this.result = new ReturnAndResult(start, this.result.getError(), Result.Ignored);
 		}
-		
+
 		report.itemFinished(this, duration, this.screenshot);
 		listener.finished(this.owner, this, this.result.getResult());
 		this.changeState(this.isBreakPoint() ? MatrixItemState.BreakPoint : MatrixItemState.None);
-		
+
 		afterReport(report);
-        
+
 		report.reportSwitch(prev);
 
 		if (isRepOff() && prev)
-        {
-            report.reportSwitch(true);
-        }
-        
+		{
+			report.reportSwitch(true);
+		}
+
 
 		return this.result;
 	}
@@ -497,12 +490,12 @@ public abstract class MatrixItem implements IMatrixItem, Mutable, Cloneable
 	public final void write(int level, CsvWriter writer) throws IOException
 	{
 
-		if(this.getClass().isAnnotationPresent(Deprecated.class))
+		if (this.getClass().isAnnotationPresent(Deprecated.class))
 		{
 			return;
 		}
 
-        String indent = "";
+		String indent = "";
 		if (this instanceof Else)
 		{
 			level--;
@@ -516,7 +509,7 @@ public abstract class MatrixItem implements IMatrixItem, Mutable, Cloneable
 		{
 			for (CommentString comment : this.comments)
 			{
-				writer.writeRecord(new String[] { indent + Parser.commentPrefix + " " + comment }, true);
+				writer.writeRecord(new String[]{indent + Parser.commentPrefix + " " + comment}, true);
 			}
 		}
 
@@ -531,7 +524,7 @@ public abstract class MatrixItem implements IMatrixItem, Mutable, Cloneable
 		MatrixItemAttribute annotation = getClass().getAnnotation(MatrixItemAttribute.class);
 		boolean hasValue = annotation.hasValue();
 		writeBoolean(hasValue, firstLine, secondLine, this.off, Tokens.Off);
-        writeBoolean(hasValue, firstLine, secondLine, this.repOff, Tokens.RepOff);
+		writeBoolean(hasValue, firstLine, secondLine, this.repOff, Tokens.RepOff);
 		writeBoolean(hasValue, firstLine, secondLine, this.ignoreErr, Tokens.IgnoreErr);
 		writeBoolean(hasValue, firstLine, secondLine, this.global, Tokens.Global);
 		writePrefixItSelf(writer, firstLine, secondLine);
@@ -541,7 +534,7 @@ public abstract class MatrixItem implements IMatrixItem, Mutable, Cloneable
 
 		if (count() > 0)
 		{
-			for(int index = 0; index < this.count(); index++)
+			for (int index = 0; index < this.count(); index++)
 			{
 				MatrixItem children = get(index);
 				children.write(level + 1, writer);
@@ -570,9 +563,9 @@ public abstract class MatrixItem implements IMatrixItem, Mutable, Cloneable
 			{
 				addParameter(firstLine, TypeMandatory.System, token.get());
 			}
-		}	
+		}
 	}
-	
+
 	private void writeRecord(CsvWriter writer, List<String> line, String indent) throws IOException
 	{
 		String[] arr = Converter.convertArray(String.class, line.toArray());
@@ -591,14 +584,14 @@ public abstract class MatrixItem implements IMatrixItem, Mutable, Cloneable
 			this.comments.addAll(Arrays.asList(copyright.split(System.lineSeparator())).stream().map(CommentString::new).collect(Collectors.toList()));
 		}
 	}
-	
+
 	//----------------------------------------------------------------------------------------------
 	// Work witch children
 	//----------------------------------------------------------------------------------------------
 	public final int count(Result result)
 	{
 		int count = 0;
-		for(MatrixItem item : this.children)
+		for (MatrixItem item : this.children)
 		{
 			if (!item.isRepOff() && item.result != null && item.result.getResult() == result)
 			{
@@ -612,7 +605,7 @@ public abstract class MatrixItem implements IMatrixItem, Mutable, Cloneable
 	{
 		return this.children.size();
 	}
-	
+
 	public boolean contains(MatrixItem item)
 	{
 		if (item == null)
@@ -630,7 +623,7 @@ public abstract class MatrixItem implements IMatrixItem, Mutable, Cloneable
 				return true;
 			}
 		}
-		
+
 		return false;
 	}
 
@@ -656,9 +649,15 @@ public abstract class MatrixItem implements IMatrixItem, Mutable, Cloneable
 	public final void insert(int index, MatrixItem item)
 	{
 		item.parent = this;
-		item.owner  = this.owner;
-        item.source = this.owner;
+		item.owner = this.owner;
+		item.source = this.owner;
 		this.children.add(index, item);
+		item.bypass(child ->
+		{
+			child.onAddListener = item.parent.onAddListener;
+			child.onSetListener = item.parent.onSetListener;
+			child.onRemoveListener = item.parent.onRemoveListener;
+		});
 	}
 
 	public final void remove()
@@ -671,29 +670,29 @@ public abstract class MatrixItem implements IMatrixItem, Mutable, Cloneable
 		this.parent = null;
 	}
 
-    public final Optional<MatrixItem> find(Predicate<MatrixItem> predicate)
-    {
-        if (predicate.test(this))
-        {
-            return Optional.ofNullable(this);
-        }
-        for (MatrixItem item : this.children)
-        {
-            Optional<MatrixItem> found = item.find(predicate);
-            if (found.isPresent())
-            {
-                return found;
-            }
-        }
-        return Optional.ofNullable(null);
-    }
-	
-    public final List<MatrixItem> findAll(Predicate<MatrixItem> predicate)
-    {
-        List<MatrixItem> list = new ArrayList<>();
-        findAll(list, predicate);
-        return list;
-    }
+	public final Optional<MatrixItem> find(Predicate<MatrixItem> predicate)
+	{
+		if (predicate.test(this))
+		{
+			return Optional.ofNullable(this);
+		}
+		for (MatrixItem item : this.children)
+		{
+			Optional<MatrixItem> found = item.find(predicate);
+			if (found.isPresent())
+			{
+				return found;
+			}
+		}
+		return Optional.ofNullable(null);
+	}
+
+	public final List<MatrixItem> findAll(Predicate<MatrixItem> predicate)
+	{
+		List<MatrixItem> list = new ArrayList<>();
+		findAll(list, predicate);
+		return list;
+	}
 
 	public final MatrixItem find(boolean everyWhere, Class<?> clazz, String id)
 	{
@@ -703,9 +702,8 @@ public abstract class MatrixItem implements IMatrixItem, Mutable, Cloneable
 			{
 				continue;
 			}
-			
-			if (	(clazz != null && clazz == item.getClass() || clazz == null)
-				&&	(id != null && id.equals(item.getId()) || id == null) )
+
+			if ((clazz != null && clazz == item.getClass() || clazz == null) && (id != null && id.equals(item.getId()) || id == null))
 			{
 				return item;
 			}
@@ -753,9 +751,9 @@ public abstract class MatrixItem implements IMatrixItem, Mutable, Cloneable
 		return this;
 	}
 
-    public final void setBreakPoint(boolean breakPoint)
-    {
-        this.breakPoint = breakPoint;
+	public final void setBreakPoint(boolean breakPoint)
+	{
+		this.breakPoint = breakPoint;
 		MatrixItemState oldState = getItemState();
 		MatrixItemState newState;
 		if (breakPoint)
@@ -785,7 +783,7 @@ public abstract class MatrixItem implements IMatrixItem, Mutable, Cloneable
 		{
 			return false;
 		}
-		
+
 		String[] parts = what.trim().split(" ");
 		for (String part : parts)
 		{
@@ -795,6 +793,38 @@ public abstract class MatrixItem implements IMatrixItem, Mutable, Cloneable
 			}
 		}
 		return true;
+	}
+
+	public final void setOnAddListener(BiConsumer<Integer, MatrixItem> addListener)
+	{
+		this.owner.getRoot().bypass(item ->
+		{
+			item.children.setOnAddListener(addListener);
+			item.onAddListener = addListener;
+		});
+	}
+
+	public final void setOnSetListener(BiConsumer<Integer, MatrixItem> setListener)
+	{
+		this.owner.getRoot().bypass(item ->
+		{
+			item.children.setOnSetListener(setListener);
+			item.onSetListener = setListener;
+		});
+	}
+
+	public final void setOnRemoveListener(BiConsumer<Integer, MatrixItem> removeListener)
+	{
+		this.owner.getRoot().bypass(item ->
+		{
+			item.children.setOnRemoveListener(removeListener);
+			item.onRemoveListener = removeListener;
+		});
+	}
+
+	public final void fire()
+	{
+		Optional.ofNullable(this.onAddListener).ifPresent(l -> l.accept(0, this.owner.getRoot()));
 	}
 
 	private final boolean matchesPart(String what, boolean caseSensitive, boolean wholeWord)
