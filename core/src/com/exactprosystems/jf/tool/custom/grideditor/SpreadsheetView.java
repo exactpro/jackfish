@@ -30,6 +30,8 @@ import java.awt.Point;
 import java.util.*;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.FutureTask;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -321,63 +323,98 @@ public class SpreadsheetView extends Control
 		List<String> strings;
 		int count;
 		List<String> values;
+		List<List<String>> lists;
 		Map<Point, String> map = new LinkedHashMap<>();
 
 		switch (direction)
 		{
 			case UP:
-				strings = initial.stream().flatMap(Collection::stream).collect(Collectors.toList());
-				Collections.reverse(strings);
-
-				count = range.getBottom() - range.getTop() - strings.size() +1;
-				values = getNextValues(strings, count);
-				for (int i = 0; i < values.size(); i++)
+				if (initial.size() == 1)
 				{
-					map.put(new Point(range.getLeft(),range.getBottom() - strings.size() - i), values.get(i));
+					lists = new ArrayList<>((initial.get(0).stream().map(Arrays::asList).collect(Collectors.toList())));
+				}else
+				{
+					Collections.reverse(initial);
+					lists = new ArrayList<>(IntStream.range(0, initial.get(0).size())
+							.mapToObj(i -> Arrays.asList(initial.get(0).get(i), initial.get(1).get(i)))
+							.collect(Collectors.toList()));
+				}
+
+				for (int j = 0; j < lists.size(); j++)
+				{
+					strings = lists.get(j);
+					count = range.getBottom() - range.getTop() - strings.size() +1;
+					values = getNextValues(strings, count);
+					for (int i = 0; i < values.size(); i++)
+					{
+						map.put(new Point(range.getLeft() + j, range.getBottom() - strings.size() - i), values.get(i));
+					}
 				}
 
 				break;
 
 			case DOWN:
-				strings = initial.stream().flatMap(Collection::stream).collect(Collectors.toList());
-
-				count = range.getBottom() - range.getTop() - strings.size() +1;
-				values = getNextValues(strings, count);
-				for (int i = 0; i < values.size(); i++)
+				if (initial.size() == 1)
 				{
-					map.put(new Point(range.getLeft(),range.getTop() + strings.size() + i), values.get(i));
+					lists = new ArrayList<>(initial.get(0).stream().map(Arrays::asList).collect(Collectors.toList()));
+				}else
+				{
+					lists = new ArrayList<>(IntStream.range(0, initial.get(0).size())
+							.mapToObj(i -> Arrays.asList(initial.get(0).get(i), initial.get(1).get(i)))
+							.collect(Collectors.toList()));
 				}
+
+				for (int j = 0; j < lists.size(); j++)
+				{
+					strings = lists.get(j);
+
+					count = range.getBottom() - range.getTop() - strings.size() +1;
+					values = getNextValues(strings, count);
+					for (int i = 0; i < values.size(); i++)
+					{
+						map.put(new Point(range.getLeft() + j,range.getTop() + strings.size() + i), values.get(i));
+					}
+				}
+
 				break;
 
 			case LEFT:
 
-				strings = initial.get(0);
-				Collections.reverse(strings);
-				count = range.getRight() - range.getLeft() - strings.size() + 1;
-
-				values = getNextValues(strings, count);
-				for (int i = 0; i < values.size(); i++)
+				for (int j = 0; j < initial.size(); j++)
 				{
-					map.put(new Point(range.getRight() - strings.size() - i, range.getTop()), values.get(i));
+					strings = initial.get(j);
+					Collections.reverse(strings);
+					count = range.getRight() - range.getLeft() - strings.size() + 1;
+					values = getNextValues(strings, count);
+					for (int i = 0; i < values.size(); i++)
+					{
+						map.put(new Point(range.getRight() - strings.size() - i, range.getTop() + j), values.get(i));
+					}
 				}
 
 				break;
 
 			case RIGHT:
 
-				strings = initial.get(0);
-				count = range.getRight() - range.getLeft() - strings.size() + 1;
-				values = getNextValues(strings, count);
-				for (int i = 0; i < values.size(); i++)
+				for (int j = 0; j < initial.size(); j++)
 				{
-					map.put(new Point(range.getLeft() + strings.size() + i, range.getTop()), values.get(i));
+					strings = initial.get(j);
+					count = range.getRight() - range.getLeft() - strings.size() + 1;
+					values = getNextValues(strings, count);
+					for (int i = 0; i < values.size(); i++)
+					{
+						map.put(new Point(range.getLeft() + strings.size() + i, range.getTop() + j), values.get(i));
+					}
 				}
+
 				break;
 		}
 		this.providerProperty.get().updateCells(map);
 	}
 
 	private List<String> getNextValues(List<String> list, int iter) {
+
+		List<String> result = new ArrayList<>();
 
 		switch (getKind(list))
 		{
@@ -392,18 +429,17 @@ public class SpreadsheetView extends Control
 					progression = values.get(0);
 				}
 
-				List<String> res = new ArrayList<>();
-				for (int i = 0; i < iter; i++)
+				if (progression != 0)
 				{
-
-					int value = Integer.parseInt(list.get(list.size() - 1)) + progression * (1 + i);
-					res.add(String.valueOf(value));
+					for (int i = 0; i < iter; i++)
+					{
+						int value = Integer.parseInt(list.get(list.size() - 1)) + progression * (1 + i);
+						result.add(String.valueOf(value));
+					}
+					return result;
 				}
 
-				return res;
-
 			case STRINGS:
-				List<String> strings = new ArrayList<>();
 				Iterator<String> iterator = list.iterator();
 				for (int i = 0; i < iter; i++)
 				{
@@ -411,35 +447,46 @@ public class SpreadsheetView extends Control
 					{
 						iterator = list.iterator();
 					}
-					strings.add(iterator.next());
+					result.add(iterator.next());
 				}
 
-				return strings;
+				return result;
 
 			case STRINGNUMBER:
-				List<String> stringWnumbers = new ArrayList<>();
-				List<String> strings1 = list.stream().map(s -> s.split("(?<=\\D)(?=\\d)|(?<=\\d)(?=\\D)")[0]).collect(Collectors.toList());
-				List<String> numbers = list.stream().map(s -> s.split("(?<=\\D)(?=\\d)|(?<=\\d)(?=\\D)")[1]).collect(Collectors.toList());
+				Pattern compile = Pattern.compile("^(.*?)(\\d+)$");
+
+				List<String> strings1 = list.stream().map(s -> {
+					Matcher matcher = compile.matcher(s);
+					matcher.find();
+					return matcher.group(1);
+				}).collect(Collectors.toList());
+
+				List<String> numbers = list.stream().map(s ->{
+					Matcher matcher = compile.matcher(s);
+					matcher.find();
+					return matcher.group(2);
+				}).collect(Collectors.toList());
+
 				List<String> stringsFrom = getNextValues(strings1, iter);
 				List<String> numbersFrom = getNextValues(numbers, iter);
 				for (int i = 0; i < stringsFrom.size(); i++)
 				{
-					stringWnumbers.add(stringsFrom.get(i) + numbersFrom.get(i));
+					result.add(stringsFrom.get(i) + numbersFrom.get(i));
 				}
 
-				return stringWnumbers;
+				return result;
 				default:
-					return new ArrayList<>();
+					return result;
 		}
 	}
 
 	private StringKind getKind(List<String> list) {
 
-		if (list.stream().allMatch(s -> s.matches("\\d+")))
+		if (list.stream().allMatch(s -> s.matches("-?\\d+")))
 		{
 			return StringKind.NUMBERS;
 		}
-		if (list.stream().allMatch(s -> s.matches("^[a-zA-Z]*\\d+")))
+		if (list.stream().allMatch(s -> s.matches("^[a-zA-Zа-яА-Я0-9]*[a-zA-Zа-яА-Я]+\\d+")))
 		{
 			return StringKind.STRINGNUMBER;
 		}
