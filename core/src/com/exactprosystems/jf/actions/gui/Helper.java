@@ -19,6 +19,7 @@ import com.exactprosystems.jf.api.common.Str;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.documents.config.Context;
 import com.exactprosystems.jf.documents.matrix.Matrix;
+import com.exactprosystems.jf.exceptions.DialogNotFoundException;
 
 import java.util.List;
 
@@ -85,6 +86,14 @@ class Helper
 	{
         return "/" + appId + "/" + window.getName() +  "/" + section + "/" + Str.asString(control) + " - " + Str.asString(locator) + " "
                 + msg;
+	}
+
+	public static void throwExceptionIfDialogNull(IWindow window, String windowName) throws DialogNotFoundException
+	{
+		if (window == null)
+		{
+			throw new DialogNotFoundException(windowName);
+		}
 	}
 
 	

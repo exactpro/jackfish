@@ -13,7 +13,12 @@ import java.util.Collection;
 public interface IGuiDictionary
 {
 	IWindow 			getFirstWindow();
-	IWindow 			getWindow(String name)  throws Exception;
+	/**
+	 * return window from dictionary
+	 * @param name searching window name
+	 * @return IWindow or null, if window by name not found
+	 */
+	IWindow 			getWindow(String name);
 	Collection<IWindow> getWindows();
 	boolean 			containsWindow(String dialogName);
 }

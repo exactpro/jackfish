@@ -94,6 +94,7 @@ public class DialogClose extends AbstractAction
 	{
 		IGuiDictionary dictionary = this.connection.getDictionary();
 		IWindow window = dictionary.getWindow(this.dialog);
+		Helper.throwExceptionIfDialogNull(window, this.dialog);
 		String id = connection.getId();
 
 		logger.debug("Process dialog : " + window);

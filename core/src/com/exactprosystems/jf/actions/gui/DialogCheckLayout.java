@@ -13,18 +13,19 @@ import com.exactprosystems.jf.api.app.*;
 import com.exactprosystems.jf.api.app.IWindow.SectionKind;
 import com.exactprosystems.jf.api.common.Str;
 import com.exactprosystems.jf.api.error.ErrorKind;
-import com.exactprosystems.jf.api.error.app.WrongParameterException;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.report.ReportBuilder;
 import com.exactprosystems.jf.common.report.ReportTable;
 import com.exactprosystems.jf.documents.config.Context;
 import com.exactprosystems.jf.documents.matrix.parser.Parameter;
 import com.exactprosystems.jf.documents.matrix.parser.Parameters;
-import com.exactprosystems.jf.functions.HelpKind;
 import com.exactprosystems.jf.documents.matrix.parser.items.TypeMandatory;
+import com.exactprosystems.jf.functions.HelpKind;
 import com.exactprosystems.jf.functions.Table;
 
-import java.util.*;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import static com.exactprosystems.jf.actions.gui.Helper.message;
 
@@ -134,10 +135,7 @@ public class DialogCheckLayout extends AbstractAction
 		}
 		IGuiDictionary dictionary = connection.getDictionary();
 		IWindow window = dictionary.getWindow(this.dialog);
-		if (window == null)
-		{
-			throw new WrongParameterException("The dialog with name '" + this.dialog + "' does not found in the dictionary");
-		}
+		Helper.throwExceptionIfDialogNull(window, this.dialog);
 		Set<ControlKind> supportedControls = app.getFactory().supportedControlKinds();
 
 		logger.debug("Process dialog: " + window);

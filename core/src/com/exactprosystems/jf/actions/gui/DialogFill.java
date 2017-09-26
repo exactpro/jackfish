@@ -165,11 +165,7 @@ public class DialogFill extends AbstractAction
 		}
 		IGuiDictionary dictionary = connection.getDictionary();
 		IWindow window = dictionary.getWindow(this.dialog);
-        if (window == null)
-        {
-            super.setError("Window " + this.dialog + " not found in the dictionary",ErrorKind.DIALOG_NOT_FOUND);
-            return;
-        }
+		Helper.throwExceptionIfDialogNull(window, this.dialog);
 
         Set<ControlKind> supportedControls = app.getFactory().supportedControlKinds();
 

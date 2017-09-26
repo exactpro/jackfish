@@ -153,16 +153,10 @@ public class GuiDictionary extends AbstractDocument implements IGuiDictionary
 	@Override
 	public IWindow getWindow(String name)
 	{
-    	Iterator<Window> iterator = this.bean.windows.iterator();
-    	while (iterator.hasNext())
-    	{
-    		Window window = iterator.next();
-    		if (window.getName().equals(name))
-    		{
-    			return window;
-    		}
-    	}
-    	return null;
+		return this.bean.windows.stream()
+				.filter(window -> window.getName().equals(name))
+				.findFirst()
+				.orElse(null);
 	}
 
 	@Override
