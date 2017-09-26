@@ -297,7 +297,7 @@ public class ShortcutsTabController implements Initializable, ContainingParent, 
 	//endregion
 
 	//region private classes
-	private class CustomTreeCell extends TreeCell<GridPane>
+	private static class CustomTreeCell extends TreeCell<GridPane>
 	{
 		@Override
 		protected void updateItem(GridPane item, boolean empty)

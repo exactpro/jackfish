@@ -248,7 +248,7 @@ public class SearchController implements Initializable, ContainingParent
 		}
 	}
 
-	private class SearchResultCellItem extends TreeCell<AbstractResult>
+	private static class SearchResultCellItem extends TreeCell<AbstractResult>
 	{
 		public SearchResultCellItem()
 		{

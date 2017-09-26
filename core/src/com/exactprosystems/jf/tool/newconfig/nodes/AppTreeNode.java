@@ -244,7 +244,7 @@ public class AppTreeNode extends TreeNode
 
 	}
 
-	private class AppDictionaryTreeNode extends TreeNode
+	private static class AppDictionaryTreeNode extends TreeNode
 	{
 		private TreeItem<TreeNode> treeItem;
 		private ConfigurationFx model;

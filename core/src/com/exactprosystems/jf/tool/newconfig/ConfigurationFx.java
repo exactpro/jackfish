@@ -269,6 +269,8 @@ public class ConfigurationFx extends Configuration
 			case CSV:
 				this.model.newCsv();
 				break;
+			default:
+
 		}
 	}
 

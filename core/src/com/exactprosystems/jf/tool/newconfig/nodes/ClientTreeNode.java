@@ -187,7 +187,7 @@ public class ClientTreeNode extends TreeNode
 
 	}
 
-	private class ClientDictionaryTreeNode extends TreeNode
+	private static class ClientDictionaryTreeNode extends TreeNode
 	{
 		private TreeItem<TreeNode>	treeItem;
 		private ConfigurationFx	model;

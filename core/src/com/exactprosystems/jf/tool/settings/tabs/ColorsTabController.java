@@ -232,7 +232,7 @@ public class ColorsTabController implements Initializable, ContainingParent, ITa
 	//endregion
 
 	//region private classes
-	private class TreeCellBean
+	private static class TreeCellBean
 	{
 		private String name;
 		private boolean isChangeable = true;
