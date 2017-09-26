@@ -48,6 +48,7 @@ import com.exactprosystems.jf.tool.matrix.MatrixFx;
 import com.exactprosystems.jf.tool.newconfig.ConfigurationFx;
 import com.exactprosystems.jf.tool.newconfig.wizard.WizardConfiguration;
 import com.exactprosystems.jf.tool.search.Search;
+import com.exactprosystems.jf.tool.settings.Locales;
 import com.exactprosystems.jf.tool.settings.Theme;
 import com.exactprosystems.jf.tool.wizard.WizardManagerImpl;
 import com.jcraft.jsch.JSch;
@@ -141,7 +142,7 @@ public class Main extends Application
 			this.settings = new Settings();
 		}
 
-		Locale.setDefault(new Locale(this.settings.getValue(Settings.GLOBAL_NS, Settings.SETTINGS, Settings.LANGUAGE).getValue()));
+		Locale.setDefault(Locales.valueOf(this.settings.getValue(Settings.GLOBAL_NS, Settings.SETTINGS, Settings.LANGUAGE).getValue().toUpperCase()).getLocale());
 
 		Settings.SettingsValue theme = this.settings.getValueOrDefault(Settings.GLOBAL_NS, Settings.SETTINGS, Settings.THEME);
 		Common.setTheme(Theme.valueOf(theme.getValue().toUpperCase()));

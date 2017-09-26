@@ -14,11 +14,12 @@ import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.helpers.DialogsHelper;
 import com.exactprosystems.jf.tool.wizard.AbstractWizard;
 import com.exactprosystems.jf.tool.wizard.CommandBuilder;
-import javafx.application.Platform;
 import javafx.geometry.HPos;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
+
+import static com.exactprosystems.jf.tool.Common.bundle;
 
 import java.util.List;
 import java.util.function.Supplier;
@@ -59,7 +60,7 @@ public class ConnectionWizard extends AbstractWizard {
         this.name = new TextField();
         Tooltip nameOfVar = new Tooltip("Enter name of var here");
         this.name.tooltipProperty().set(nameOfVar);
-        Button start = new Button("Start");
+        Button start = new Button(bundle().getString("start"));
         start.setOnAction(e -> {
             try
             {
