@@ -15,7 +15,7 @@ import java.util.function.BiFunction;
 
 public interface IWindow
 {
-	public enum SectionKind 
+	enum SectionKind
 	{ 
 		Any,
 		Self,
@@ -23,7 +23,6 @@ public interface IWindow
 		Run, 
 		OnClose,
 		Close,
-
 	}
 
 	void				setName(String name);
@@ -33,18 +32,18 @@ public interface IWindow
 
 	boolean 			hasReferences(IControl control);
 	void 				removeControl(IControl control);
-	void 				addControl(SectionKind kind, IControl control) throws Exception;
+	void 				addControl(SectionKind kind, IControl control);
 	Collection<IControl> getControls(SectionKind kind);
-	IControl 			getFirstControl(SectionKind kind) throws Exception;
+	IControl 			getFirstControl(SectionKind kind);
 	IControl 			getControlForName(SectionKind kind, String name);
 	IControl 			getOwnerControl(IControl control);
 	IControl 			getReferenceControl(IControl control);
-	IControl			getRowsControl(IControl control) throws Exception;
-	IControl			getHeaderControl(IControl control) throws Exception;
+	IControl			getRowsControl(IControl control);
+	IControl			getHeaderControl(IControl control);
 	IControl 			getSelfControl();
 
 	void 				checkParams(Collection<String> set) throws Exception;
-	boolean 			containsControl(String controlName) throws Exception;
+	boolean 			containsControl(String controlName);
     List<IControl>      allMatched(BiFunction<ISection, IControl, Boolean> predicat);
 
 	

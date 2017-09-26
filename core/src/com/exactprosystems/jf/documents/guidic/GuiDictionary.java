@@ -24,13 +24,11 @@ import javax.xml.transform.Source;
 import javax.xml.transform.stream.StreamSource;
 import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
-
 import java.io.File;
 import java.io.Reader;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
-import java.util.List;
 
 
 @DocumentInfo(
@@ -127,15 +125,10 @@ public class GuiDictionary extends AbstractDocument implements IGuiDictionary
     // interface IGuiDictionary
     //------------------------------------------------------------------------------------------------------------------
     @Override
-    public Collection<IWindow> getWindows()
-    {
-    	List<IWindow> result = new ArrayList<IWindow>();
-    	for (IWindow window : this.bean.windows)
-    	{
-    		result.add(window);
-    	}
-    	return result;
-    }
+	public Collection<IWindow> getWindows()
+	{
+		return new ArrayList<>(this.bean.windows);
+	}
 
 	@Override
 	public boolean containsWindow(String dialogName)

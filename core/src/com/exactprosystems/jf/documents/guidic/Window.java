@@ -186,7 +186,7 @@ public class Window implements IWindow, Mutable
 	}
 
 	@Override
-	public void addControl(SectionKind kind, IControl control) throws Exception
+	public void addControl(SectionKind kind, IControl control)
 	{
 		Section section = this.allSections.get(kind);
 		if (section == null)
@@ -296,7 +296,7 @@ public class Window implements IWindow, Mutable
 	}
 
 	@Override
-	public boolean containsControl(String controlName) throws Exception
+	public boolean containsControl(String controlName)
 	{
 		for (ISection section : this.allSections.values())
 		{
@@ -346,7 +346,7 @@ public class Window implements IWindow, Mutable
 	}
 
 	@Override
-	public IControl getRowsControl(IControl control) throws Exception
+	public IControl getRowsControl(IControl control)
 	{
 		if (control != null && control.getRowsId() != null && !control.getRowsId().isEmpty())
 		{
@@ -357,7 +357,7 @@ public class Window implements IWindow, Mutable
 	}
 
 	@Override
-	public IControl getHeaderControl(IControl control) throws Exception
+	public IControl getHeaderControl(IControl control)
 	{
 		if (control != null && control.getHeaderId() != null && !control.getHeaderId().isEmpty())
 		{
@@ -368,12 +368,12 @@ public class Window implements IWindow, Mutable
 	}
 
     @Override
-    public List<IControl> allMatched(BiFunction<ISection, IControl, Boolean> predicat)
+    public List<IControl> allMatched(BiFunction<ISection, IControl, Boolean> predicate)
     {
         List<IControl> res = new ArrayList<>();
         this.allSections.values().forEach(s -> s.getControls().forEach(c -> 
         { 
-            if (predicat.apply(s, c)) 
+            if (predicate.apply(s, c))
             { 
                 res.add(c); 
             } 
