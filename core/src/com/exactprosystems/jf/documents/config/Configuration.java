@@ -646,7 +646,7 @@ public class Configuration extends AbstractDocument
 			try
 			{
 				DocumentKind kind = DocumentKind.byDocument(doc);
-				if (!doc.getNameProperty().isNullOrEmpty())
+				if (!doc.getNameProperty().isNullOrEmpty() && new File(doc.getNameProperty().get()).exists())
 				{
 					settings.setValue(Settings.MAIN_NS, Settings.OPENED, doc.getNameProperty().get(), kind.toString());
 				}
