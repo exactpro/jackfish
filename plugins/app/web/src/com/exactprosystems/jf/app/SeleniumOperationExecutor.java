@@ -1050,8 +1050,7 @@ public class SeleniumOperationExecutor extends AbstractOperationExecutor<WebElem
 		{
 			throw new Exception("Doesn't support");
 		}
-		Exception real = null;
-		double newValue = value - 50d;
+		Exception real;
 		int repeat = 1;
 		do
 		{
@@ -1061,14 +1060,28 @@ public class SeleniumOperationExecutor extends AbstractOperationExecutor<WebElem
 				Actions customAction = new Actions(this.driver);
 				int height = component.getSize().getHeight();
 				int width = component.getSize().getWidth();
+				double step = width/100d;
+				int offset = 30;
+				int valueWithOffset = value + offset > 100 ? (int)value + offset - 100 : (int)value + offset;
+
 				if (height > width)
 				{
-					customAction.dragAndDropBy(component, width / 2, (int) (newValue * ((double) height / 100))).build().perform();
+					customAction
+							.moveToElement(component, width/2, (int)((valueWithOffset)*step))
+							.clickAndHold()
+							.moveToElement(component, width/2, (int)(value*step))
+							.release()
+							.perform();
 				}
 				//horizontal slider
 				else
 				{
-					customAction.dragAndDropBy(component, (int) ((newValue * ((double) width / 100))), height / 2).build().perform();
+					customAction
+							.moveToElement(component, (int)((valueWithOffset)*step), height/2)
+							.clickAndHold()
+							.moveToElement(component, (int)(value*step), height/2)
+							.release()
+							.perform();
 				}
 
 				return true;
