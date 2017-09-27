@@ -17,6 +17,7 @@ import com.exactprosystems.jf.functions.Text;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.stream.Collectors;
 
 @MatrixItemAttribute(
@@ -39,14 +40,19 @@ public class TempItem extends MatrixItem
 				Tokens.Continue.get(), Tokens.Break.get(), Tokens.OnError.get(), Tokens.Switch.get(), Tokens.Case.get(), 
 				Tokens.Default.get(), Tokens.Fail.get(), Tokens.RawTable.get(), 
 				Tokens.RawMessage.get(), Tokens.RawText.get(), Tokens.NameSpace.get(), Tokens.Let.get(), Tokens.Step.get(),
-				Tokens.Assert.get(), Tokens.SetHandler.get() ));
+				Tokens.Assert.get(), Tokens.SetHandler.get()));
 	}
 
 	private boolean isInit = false;
+	private static boolean isFirstInvoke = false;
+	private static final String CALL = "Call -> ";
+
 
 	@Override
 	protected Object displayYourself(DisplayDriver driver, Context context)
 	{
+		fillList(context);
+
 		Object layout = driver.createLayout(this, 1);
 		driver.showAutoCompleteBox(this, layout, 0, 0, list, s -> {
 			if (!isInit)
@@ -75,11 +81,19 @@ public class TempItem extends MatrixItem
 		                    newItem = Parser.createItem(s, null);
 		                }
 		            }
-		            else
-		            {
-		                newItem = Parser.createItem(Tokens.Action.get(), s);
-		            }
-		            newItem.init(getMatrix(), getMatrix());
+		            else if (s.startsWith(CALL))
+					{
+						String name = s.substring(CALL.length(), s.length());
+
+						newItem = Parser.createItem(Tokens.Call.get(), name);
+						((Call) newItem).updateReference(context,name);
+						newItem.addKnownParameters();
+					}
+					else
+					{
+						newItem = Parser.createItem(Tokens.Action.get(), s);
+					}
+					newItem.init(getMatrix(), getMatrix());
 		            newItem.createId();
 		            this.getParent().insert(index, newItem);
 		            newItem.display(driver, context);
@@ -99,6 +113,16 @@ public class TempItem extends MatrixItem
 			}
 		});
 		return layout;
+	}
+
+	private void fillList(Context context)
+	{
+		if (!isFirstInvoke)
+		{
+			List<String> subcases = context.subcases(this).stream().map(readableValue -> CALL + readableValue.getValue()).collect(Collectors.toList());
+			list.addAll(subcases);
+			isFirstInvoke = true;
+		}
 	}
 
 	@Override

@@ -155,6 +155,16 @@ public final class Call extends MatrixItem
 	//==============================================================================================
 	// Protected members should be overridden
 	//==============================================================================================
+
+	@Override
+	public void addKnownParameters()
+	{
+		if (this.ref != null)
+		{
+			this.parameters.addAll(this.ref.getParameters());
+		}
+	}
+
 	@Override
 	public String getItemName()
 	{
@@ -303,7 +313,7 @@ public final class Call extends MatrixItem
         }
     }
 
-	private void updateReference(Context context, String name)
+	void updateReference(Context context, String name)
 	{
 	    this.ref = context.referenceToSubcase(name, this).subCase;
 	}
