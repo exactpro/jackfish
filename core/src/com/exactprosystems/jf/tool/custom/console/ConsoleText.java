@@ -12,6 +12,7 @@ import com.exactprosystems.jf.tool.CssVariables;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 
+@Deprecated
 public class ConsoleText<T> extends Text
 {
 	private T item;

@@ -1,10 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.*?>
-<?import javafx.scene.control.*?>
-<?import java.lang.*?>
-<?import javafx.scene.layout.*?>
-
 <!--
    Copyright (c) 2009-2015, Exactpro Systems, LLC
    Quality Assurance & Related Development for Innovative Trading Systems.
@@ -13,12 +8,33 @@
    information which is the property of Exactpro Systems, LLC or its licensors.
   -->
 
-<BorderPane fx:id="borderPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.exactprosystems.jf.tool.custom.logs.LogsFxController">
-   <top>
-      <BorderPane fx:id="ownerFindPanel" prefHeight="34.0" prefWidth="600.0" BorderPane.alignment="CENTER">
-         <left>
-            <Button fx:id="btnRefresh" mnemonicParsing="false" onAction="#refresh" BorderPane.alignment="CENTER" />
-         </left>
-      </BorderPane>
-   </top>
+<?import com.exactprosystems.jf.tool.CssVariables?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<BorderPane fx:id="borderPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8"
+			xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.exactprosystems.jf.tool.custom.logs.LogsFxController">
+	<fx:define>
+		<CssVariables fx:id="verMid" fx:constant="VERTICAL_MID"/>
+		<CssVariables fx:id="horMid" fx:constant="HORIZONTAL_MID"/>
+
+		<CssVariables fx:id="transparentBackground" fx:constant="TRANSPARENT_BACKGROUND"/>
+	</fx:define>
+	<top>
+		<VBox fx:id="topVBox" alignment="CENTER_LEFT">
+			<HBox alignment="CENTER_LEFT">
+				<Label text="Select log file : "/>
+				<Label id="$horMid"/>
+				<ComboBox fx:id="cbFiles" HBox.hgrow="ALWAYS" maxWidth="Infinity"/>
+				<Label id="$horMid"/>
+				<Button fx:id="btnRefresh" id="reloadConfiguration" mnemonicParsing="false" onAction="#refresh" styleClass="$transparentBackground">
+					<tooltip>
+						<Tooltip text="Refresh"/>
+					</tooltip>
+				</Button>
+			</HBox>
+			<Label id="$verMid"/>
+		</VBox>
+	</top>
 </BorderPane>

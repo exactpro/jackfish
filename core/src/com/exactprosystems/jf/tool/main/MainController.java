@@ -80,7 +80,6 @@ public class MainController implements Initializable, ContainingParent
 	public SplitPane			splitPane;
 	public GridPane				projectGridPane;
 	public ToolBar				mainToolbar;
-	private LogsFx				log;
 
 	public Menu					menuFile;
 
@@ -814,14 +813,7 @@ public class MainController implements Initializable, ContainingParent
 
 	private void openLogs()
 	{
-		Common.tryCatch(() ->
-		{
-			if (this.log == null)
-			{
-				this.log = new LogsFx(this.settings);
-			}
-			log.show();
-		}, "Error on open log");
+		Common.tryCatch(() -> new LogsFx(this.settings).show(), "Error on open log");
 	}
 
 	private void showAllTabs()

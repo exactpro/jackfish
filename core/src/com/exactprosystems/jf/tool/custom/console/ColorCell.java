@@ -11,7 +11,7 @@ package com.exactprosystems.jf.tool.custom.console;
 import com.exactprosystems.jf.tool.Common;
 import javafx.scene.control.ListCell;
 
-
+@Deprecated
 public class ColorCell<T> extends ListCell<ConsoleText<T>>
 {
 	@Override

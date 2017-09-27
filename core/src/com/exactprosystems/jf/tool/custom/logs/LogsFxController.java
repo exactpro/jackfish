@@ -11,48 +11,48 @@ package com.exactprosystems.jf.tool.custom.logs;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.ContainingParent;
 import com.exactprosystems.jf.tool.CssVariables;
-import com.exactprosystems.jf.tool.custom.console.ConsoleText;
-import com.exactprosystems.jf.tool.custom.console.CustomListView;
 import com.exactprosystems.jf.tool.custom.find.FindPanel;
 import com.exactprosystems.jf.tool.custom.find.IFind;
-import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
 import javafx.scene.Parent;
 import javafx.scene.control.*;
-import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import org.fxmisc.flowless.VirtualizedScrollPane;
+import org.fxmisc.richtext.InlineCssTextArea;
+import org.fxmisc.richtext.LineNumberFactory;
 
+import java.io.File;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 
 public class LogsFxController implements Initializable, ContainingParent
 {
-	public CustomListView<String> listView;
-	public Button btnRefresh;
-	public BorderPane borderPane;
-	public BorderPane ownerFindPanel;
-	private LogsFx model;
-	private Dialog dialog;
-	private FindPanel<ConsoleText<String>> findPanel;
+	public  Button            btnRefresh;
+	public  BorderPane        borderPane;
+	public  ComboBox<File>    cbFiles;
+	public  VBox              topVBox;
+	private InlineCssTextArea consoleArea;
+
+	private LogsFx                          model;
+	private Dialog                          dialog;
+	private FindPanel<LogsFx.LineWithStyle> findPanel;
 
 	@Override
 	public void initialize(URL url, ResourceBundle resourceBundle)
 	{
 		this.findPanel = new FindPanel<>();
-		this.ownerFindPanel.setCenter(this.findPanel);
-		this.listView = new CustomListView<>(false);
-		this.borderPane.setCenter(listView);
-		BorderPane.setMargin(this.listView, new Insets(10, 0, 0, 0));
-		Common.runLater(() -> {
-			btnRefresh.setTooltip(new Tooltip("Refresh\nF5"));
-			btnRefresh.getScene().addEventFilter(KeyEvent.KEY_RELEASED, keyEvent -> refresh(null));
-			Common.customizeLabeled(btnRefresh, CssVariables.TRANSPARENT_BACKGROUND, CssVariables.Icons.REFRESH);
-		});
+		this.findPanel.getStyleClass().remove(CssVariables.FIND_PANEL);
+		this.topVBox.getChildren().add(this.findPanel);
+		this.consoleArea = new InlineCssTextArea();
+		this.consoleArea.setParagraphGraphicFactory(LineNumberFactory.get(this.consoleArea));
+		this.consoleArea.setEditable(false);
+		this.borderPane.setCenter(new VirtualizedScrollPane<>(consoleArea));
+		BorderPane.setMargin(this.consoleArea, new Insets(10, 0, 0, 0));
 	}
 
 	@Override
@@ -63,26 +63,31 @@ public class LogsFxController implements Initializable, ContainingParent
 		this.dialog.setResizable(true);
 		this.dialog.getDialogPane().setPrefWidth(600);
 		this.dialog.getDialogPane().setPrefHeight(600);
-		this.dialog.setHeaderText("");
-		this.dialog.setTitle("Main.log");
+		this.dialog.setTitle("Logs");
 		this.dialog.getDialogPane().setHeader(new Label());
 		this.dialog.getDialogPane().setContent(parent);
 		this.dialog.getDialogPane().getStylesheets().addAll(Common.currentThemesPaths());
+		this.cbFiles.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+			if (newValue != null)
+			{
+				this.model.displayLines(newValue);
+			}
+		});
 	}
 
 	public void init(LogsFx model)
 	{
 		this.model = model;
-		findPanel.setListener(new IFind<ConsoleText<String>>()
+		this.findPanel.setListener(new IFind<LogsFx.LineWithStyle>()
 		{
 			@Override
-			public void find(ConsoleText<String> stringConsoleText)
+			public void find(LogsFx.LineWithStyle line)
 			{
-				model.find(stringConsoleText);
+				model.find(line);
 			}
 
 			@Override
-			public List<ConsoleText<String>> findItem(String what, boolean matchCase, boolean wholeWord)
+			public List<LogsFx.LineWithStyle> findItem(String what, boolean matchCase, boolean wholeWord)
 			{
 				return model.findItem(what, matchCase, wholeWord);
 			}
@@ -94,19 +99,30 @@ public class LogsFxController implements Initializable, ContainingParent
 		this.dialog.show();
 	}
 
-	public void close()
+	public void displayLines(List<LogsFx.LineWithStyle> list)
 	{
-		this.dialog.hide();
+		for (LogsFx.LineWithStyle line : list)
+		{
+			int start = this.consoleArea.getLength();
+			this.consoleArea.appendText(line.getLine() + "\n");
+			this.consoleArea.setStyle(start, this.consoleArea.getLength(), "-fx-fill: " + Common.colorToString(line.getStyle()));
+		}
 	}
 
-	public void setTextToList(ArrayList<ConsoleText<String>> list)
+	void clearListView()
 	{
-		listView.getItems().addAll(list);
+		this.consoleArea.clear();
 	}
 
-	public void clearListView()
+	void clearFiles()
 	{
-		this.listView.getItems().clear();
+		this.cbFiles.getItems().clear();
+	}
+
+	void displayFiles(List<File> files)
+	{
+		this.cbFiles.getItems().setAll(files);
+		this.cbFiles.getSelectionModel().selectFirst();
 	}
 
 	//============================================================
@@ -124,7 +140,6 @@ public class LogsFxController implements Initializable, ContainingParent
 
 	public void clearAndSelect(int index)
 	{
-		listView.getSelectionModel().clearAndSelect(index);
-		listView.scrollTo(index);
+		this.consoleArea.moveTo(index, 0);
 	}
 }

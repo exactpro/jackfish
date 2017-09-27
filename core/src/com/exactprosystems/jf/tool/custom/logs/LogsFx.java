@@ -8,56 +8,37 @@
 
 package com.exactprosystems.jf.tool.custom.logs;
 
-import com.exactprosystems.jf.common.MainRunner;
 import com.exactprosystems.jf.common.Settings;
 import com.exactprosystems.jf.common.Settings.SettingsValue;
 import com.exactprosystems.jf.documents.matrix.parser.SearchHelper;
 import com.exactprosystems.jf.tool.Common;
-import com.exactprosystems.jf.tool.CssVariables;
-import com.exactprosystems.jf.tool.custom.console.ConsoleText;
-import com.exactprosystems.jf.tool.helpers.DialogsHelper;
-
 import javafx.scene.paint.Color;
+import org.apache.log4j.*;
 
-import org.apache.log4j.Appender;
-import org.apache.log4j.FileAppender;
-import org.apache.log4j.Level;
-import org.apache.log4j.Logger;
-
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileReader;
-import java.util.ArrayList;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.Enumeration;
+import java.util.HashSet;
 import java.util.List;
-import java.util.Optional;
+import java.util.Set;
+import java.util.function.Consumer;
+import java.util.stream.Collectors;
 import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
-public class LogsFx implements AutoCloseable
+public class LogsFx
 {
-	public final static String Dialog	= "Logs";
-
-	private LogsFxController				controller;
-	private ArrayList<ConsoleText<String>>	lines;
-	private Settings settings;
+	private LogsFxController    controller;
+	private List<LineWithStyle> lines;
+	private Settings            settings;
 
 	public LogsFx(Settings settings) throws Exception
 	{
 		this.settings = settings;
 		this.controller = Common.loadController(LogsFx.class.getResource("LogsFx.fxml"));
 		this.controller.init(this);
-		readFile();
-		this.controller.setTextToList(lines);
-	}
-
-	@Override
-	public void close() throws Exception
-	{
-		if (this.controller != null)
-		{
-			this.controller.close();
-			this.controller = null;
-		}
 	}
 
 	public void show() throws Exception
@@ -69,29 +50,27 @@ public class LogsFx implements AutoCloseable
 	public void refresh() throws Exception
 	{
 		this.controller.clearListView();
-		readFile();
-		this.controller.setTextToList(this.lines);
+		this.controller.clearFiles();
+		this.displayAllFiles();
 	}
 
-	public List<ConsoleText<String>> findItem(String what, boolean matchCase, boolean wholeWord)
+	public List<LineWithStyle> findItem(String what, boolean matchCase, boolean wholeWord)
 	{
-		ArrayList<ConsoleText<String>> results = new ArrayList<>();
-		for (ConsoleText<String> consoleText : lines)
-		{
-			String text = consoleText.getText().substring(consoleText.getText().indexOf("\t") + 1);
-			for (String s : text.split(" "))
-			{
-				if (SearchHelper.matches(s, what, matchCase, wholeWord))
-				{
-					results.add(consoleText);
-					break;
-				}
-			}
-		}
-		return results;
+		return this.lines.stream()
+				.filter(line -> {
+					String text = line.getLine();
+					for (String s : text.split(" "))
+					{
+						if (SearchHelper.matches(s, what, matchCase, wholeWord))
+						{
+							return true;
+						}
+					}
+					return false;
+				}).collect(Collectors.toList());
 	}
 
-	public void find(ConsoleText<String> row)
+	public void find(LineWithStyle row)
 	{
 		IntStream.range(0, lines.size())
 				.filter(i -> lines.get(i).equals(row))
@@ -99,62 +78,90 @@ public class LogsFx implements AutoCloseable
 				.ifPresent(controller::clearAndSelect);
 	}
 
-	// TODO this is should be in model
-	private void readFile() throws Exception
+	void displayLines(File file)
 	{
-		int i = 1;
-		lines = new ArrayList<>();
-		String mainLogFileName = mainLogFileName();
-		if (mainLogFileName == null)
+		this.controller.clearListView();
+		try (Stream<String> stream = Files.lines(Paths.get(file.getAbsolutePath())))
 		{
-			DialogsHelper.showError("Main.log not found");
-			return;
+			this.lines = stream.map(s -> new LineWithStyle(s, getStyle(s))).collect(Collectors.toList());
+			this.controller.displayLines(this.lines);
 		}
-		try (BufferedReader br = new BufferedReader(new FileReader(new File(mainLogFileName))))
-		{
-			String str;
-			while ((str = br.readLine()) != null)
-			{
-				ConsoleText<String> consoleText = ConsoleText.defaultText(i++ + "\t" + str);
-				setColor(consoleText, str, Level.DEBUG);
-				setColor(consoleText, str, Level.ERROR);
-				setColor(consoleText, str, Level.FATAL);
-				setColor(consoleText, str, Level.INFO);
-				setColor(consoleText, str, Level.TRACE);
-				setColor(consoleText, str, Level.WARN);
-				lines.add(consoleText);
-			}
-		}
+		catch (IOException ignore)
+		{}
 	}
 
-	//============================================================
-	// private methods
-	//============================================================
-	private void setColor(ConsoleText<String> consoleText, String str, Level level)
+	//region private methods
+	private void displayAllFiles()
 	{
-		if (str.contains(level.toString()) )
-		{
-			SettingsValue res = this.settings.getValue(Settings.GLOBAL_NS, Dialog, level.toString());
-			Optional.ofNullable(res).ifPresent(result -> {
-				consoleText.getStyleClass().removeAll(CssVariables.CONSOLE_DEFAULT_TEXT);
-				consoleText.setFill(Color.valueOf(result.getValue()));
-			});
-		}
+		this.controller.displayFiles(allLogFiles());
 	}
 
-	private static String mainLogFileName()
+	private Color getStyle(String line)
 	{
+		return Stream.of(Level.DEBUG, Level.ERROR, Level.FATAL, Level.INFO, Level.TRACE, Level.WARN)
+				.map(Priority::toString)
+				.filter(line::startsWith)
+				.map(l -> this.settings.getValueOrDefault(Settings.GLOBAL_NS, Settings.LOGS_NAME, l))
+				.map(SettingsValue::getValue)
+				.map(Color::valueOf)
+				.findFirst()
+				.orElse(Color.BLACK);
+	}
+
+	private static List<File> allLogFiles()
+	{
+		Set<String> files = new HashSet<>();
+
 		@SuppressWarnings("unchecked")
-		Enumeration<Appender> e = Logger.getLogger(MainRunner.class).getParent().getAllAppenders();
+		Enumeration<Logger> logs = LogManager.getCurrentLoggers();
+		forEach(logs, log ->
+		{
+			@SuppressWarnings("unchecked")
+			Enumeration<Appender> apps = logs.nextElement().getAllAppenders();
+			forEach(apps, app -> files.add(((FileAppender) app).getFile()));
+		});
+		return files.stream().map(File::new).filter(File::exists).collect(Collectors.toList());
+	}
+
+	private static <T> void forEach(Enumeration<T> e, Consumer<T> consumer)
+	{
 		while (e.hasMoreElements())
 		{
-			Appender app = e.nextElement();
-			if (app instanceof FileAppender)
-			{
-				return ((FileAppender) app).getFile();
-			}
+			consumer.accept(e.nextElement());
 		}
-		return null;
+	}
+	//endregion
+
+	static class LineWithStyle
+	{
+		private String line;
+		private Color style;
+
+		public LineWithStyle(String line, Color style)
+		{
+			this.line = line;
+			this.style = style;
+		}
+
+		public String getLine()
+		{
+			return line;
+		}
+
+		public void setLine(String line)
+		{
+			this.line = line;
+		}
+
+		public Color getStyle()
+		{
+			return style;
+		}
+
+		public void setStyle(Color style)
+		{
+			this.style = style;
+		}
 	}
 
 }

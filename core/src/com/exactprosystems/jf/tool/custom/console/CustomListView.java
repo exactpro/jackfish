@@ -10,7 +10,6 @@ package com.exactprosystems.jf.tool.custom.console;
 
 import com.exactprosystems.jf.api.common.Sys;
 import com.exactprosystems.jf.tool.Common;
-import javafx.application.Platform;
 import javafx.collections.ListChangeListener;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.ListView;
@@ -20,6 +19,7 @@ import javafx.scene.control.SelectionMode;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
+@Deprecated
 public class CustomListView<T> extends ListView<ConsoleText<T>> {
     private OnDoubleClickListener<T> listener;
 
