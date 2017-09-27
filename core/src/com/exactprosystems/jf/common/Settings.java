@@ -17,6 +17,7 @@ import com.exactprosystems.jf.documents.matrix.parser.items.MutableArrayList;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.newconfig.CompareEnum;
 import com.exactprosystems.jf.tool.settings.Theme;
+import com.exactprosystems.jf.tool.settings.Locales;
 import com.exactprosystems.jf.tool.wizard.WizardSettings;
 import javafx.scene.input.KeyCombination;
 import org.apache.log4j.Logger;
@@ -333,7 +334,7 @@ public class Settings
 					USE_FULL_SCREEN,"false",
 					USE_EXTERNAL_REPORT_VIEWER, "false",
 					USE_FULLSCREEN_XPATH,"false",
-					LANGUAGE,"en",
+					LANGUAGE, Locales.ENGLISH.name(),
 					COPYRIGHT,"",
 					FONT, "System$13"
 			));
