@@ -63,8 +63,8 @@
 		<Label text="Font size :" GridPane.rowIndex="5"/>
 		<ComboBox fx:id="cbFontSize" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="5"/>
 
-		<Label text="Select language: " GridPane.rowIndex="6"/>
-		<ComboBox fx:id="selectLanguage" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="6"/>
+		<Label text="Select language: " GridPane.rowIndex="6" visible="false"/>
+		<ComboBox fx:id="selectLanguage" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="6" visible="false"/>
 
 		<CheckBox fx:id="useFullScreen" mnemonicParsing="false" text="Use fullscreen mode" GridPane.columnIndex="1" GridPane.rowIndex="7"/>
 		<CheckBox fx:id="useExternalReportViewer" mnemonicParsing="false" text="Use external report viewer" GridPane.columnIndex="1" GridPane.rowIndex="8"/>

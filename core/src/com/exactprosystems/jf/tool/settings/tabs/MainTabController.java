@@ -58,7 +58,7 @@ public class MainTabController implements Initializable, ContainingParent, ITabH
 		this.comboBoxTheme.setItems(FXCollections.observableArrayList(Arrays.stream(Theme.values()).filter(Theme::isVisible).collect(Collectors.toList())));
 		initializeFont();
 
-		this.selectLanguage.setItems(FXCollections.observableArrayList(Arrays.asList(Locales.values())));
+//		this.selectLanguage.setItems(FXCollections.observableArrayList(Arrays.asList(Locales.values())));
 
 		comboBoxTheme.getSelectionModel().selectedItemProperty().addListener((observableValue, theme, theme2) -> Common.runLater(() ->
 						Optional.ofNullable(this.comboBoxTheme.getScene()).ifPresent(scene -> scene.getStylesheets().setAll(theme2.getPath()))
@@ -91,7 +91,7 @@ public class MainTabController implements Initializable, ContainingParent, ITabH
 		SettingsPanel.setValue(Settings.USE_EXTERNAL_REPORT_VIEWER, res, str -> this.useExternalReportViewer.setSelected(Boolean.parseBoolean(str)));
 		SettingsPanel.setValue(Settings.USE_FULLSCREEN_XPATH, res, str -> this.useFullScreenXpath.setSelected(Boolean.parseBoolean(str)));
 		SettingsPanel.setValue(Settings.COPYRIGHT, res, str -> this.taCopyright.setText(str.replaceAll("\\\\n", System.lineSeparator())));
-		SettingsPanel.setValue(Settings.LANGUAGE, res, str -> this.selectLanguage.getSelectionModel().select(Locales.valueOf(str.toUpperCase())));
+//		SettingsPanel.setValue(Settings.LANGUAGE, res, str -> this.selectLanguage.getSelectionModel().select(Locales.valueOf(str.toUpperCase())));
 	}
 
 	public void displayInto(Tab tab)
@@ -118,7 +118,7 @@ public class MainTabController implements Initializable, ContainingParent, ITabH
 		this.model.updateSettingsValue(Settings.USE_FULL_SCREEN, Settings.SETTINGS, String.valueOf(this.useFullScreen.isSelected()));
 		this.model.updateSettingsValue(Settings.USE_EXTERNAL_REPORT_VIEWER, Settings.SETTINGS, String.valueOf(this.useExternalReportViewer.isSelected()));
 		this.model.updateSettingsValue(Settings.USE_FULLSCREEN_XPATH, Settings.SETTINGS, String.valueOf(this.useFullScreenXpath.isSelected()));
-		this.model.updateSettingsValue(Settings.LANGUAGE, Settings.SETTINGS, this.selectLanguage.getSelectionModel().getSelectedItem().name());
+//		this.model.updateSettingsValue(Settings.LANGUAGE, Settings.SETTINGS, this.selectLanguage.getSelectionModel().getSelectedItem().name());
 
 		this.model.updateSettingsValue(Settings.COPYRIGHT, Settings.SETTINGS, this.taCopyright.getText().replaceAll(System.lineSeparator(), "\\\\n"));
 	}
@@ -141,7 +141,7 @@ public class MainTabController implements Initializable, ContainingParent, ITabH
 		this.useFullScreen.setSelected(Boolean.parseBoolean(defaultSettings.getValue(Settings.GLOBAL_NS, Settings.SETTINGS, Settings.USE_FULL_SCREEN).getValue()));
 		this.useExternalReportViewer.setSelected(Boolean.parseBoolean(defaultSettings.getValue(Settings.GLOBAL_NS, Settings.SETTINGS, Settings.USE_EXTERNAL_REPORT_VIEWER).getValue()));
 		this.useFullScreenXpath.setSelected(Boolean.parseBoolean(defaultSettings.getValue(Settings.GLOBAL_NS, Settings.SETTINGS, Settings.USE_FULLSCREEN_XPATH).getValue()));
-		this.selectLanguage.getSelectionModel().select(Locales.valueOf(defaultSettings.getValue(Settings.GLOBAL_NS, Settings.SETTINGS, Settings.LANGUAGE).getValue()));
+//		this.selectLanguage.getSelectionModel().select(Locales.valueOf(defaultSettings.getValue(Settings.GLOBAL_NS, Settings.SETTINGS, Settings.LANGUAGE).getValue()));
 
 		this.taCopyright.setText(defaultSettings.getValue(Settings.GLOBAL_NS, Settings.SETTINGS, Settings.COPYRIGHT).getValue().replaceAll("\\\\n", System.lineSeparator()));
 	}
