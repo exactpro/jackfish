@@ -14,12 +14,11 @@ import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.ContainingParent;
 import com.exactprosystems.jf.tool.CssVariables;
 import com.exactprosystems.jf.tool.newconfig.ConfigurationFx;
-
+import com.exactprosystems.jf.tool.settings.Theme;
 import javafx.event.ActionEvent;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.control.*;
-
 import javafx.stage.Stage;
 import org.apache.log4j.Logger;
 
@@ -88,7 +87,7 @@ public class TestingConnectionFxController implements Initializable, ContainingP
 		Common.addIcons(((Stage) dialog.getDialogPane().getScene().getWindow()));
 		dialog.getDialogPane().setContent(this.parent);
 		dialog.setHeaderText("Test connection for " + this.name);
-		dialog.getDialogPane().getStylesheets().addAll(Common.currentThemesPaths());
+		dialog.getDialogPane().getStylesheets().addAll(Theme.currentThemesPaths());
 		dialog.show();
 	}
 

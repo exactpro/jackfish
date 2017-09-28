@@ -18,12 +18,11 @@ import com.exactprosystems.jf.tool.custom.date.DateTimePicker;
 import com.exactprosystems.jf.tool.custom.expfield.ExpressionField;
 import com.exactprosystems.jf.tool.custom.number.NumberTextField;
 import com.exactprosystems.jf.tool.helpers.DialogsHelper;
+import com.exactprosystems.jf.tool.settings.Theme;
 import com.sun.javafx.scene.control.skin.DatePickerSkin;
-
 import javafx.animation.Animation.Status;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
-import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.event.EventHandler;
 import javafx.geometry.Pos;
@@ -53,7 +52,7 @@ public class UserInputDialog extends Dialog<Object>
 		timeout = timeout < 0 ? Integer.MAX_VALUE : timeout;
 		DialogPane dialogPane = getDialogPane();
 		this.setResizable(true);
-		dialogPane.getStylesheets().addAll(Common.currentThemesPaths());
+		dialogPane.getStylesheets().addAll(Theme.currentThemesPaths());
 		this.timer = new Timeline(new KeyFrame(Duration.millis(timeout), ae -> done()) );
 		this.timer.setCycleCount(1);
 		this.timer.play();

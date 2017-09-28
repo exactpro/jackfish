@@ -8,6 +8,7 @@
 
 package com.exactprosystems.jf.tool.settings;
 
+import com.exactprosystems.jf.common.Settings;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.ContainingParent;
 import com.exactprosystems.jf.tool.helpers.DialogsHelper;
@@ -189,7 +190,7 @@ public class SettingsPanelController implements Initializable, ContainingParent
 		ButtonBar.setButtonData(this.dialog.getDialogPane().lookupButton(save), ButtonBar.ButtonData.OTHER);
 		this.dialog.getDialogPane().setContent(this.pane);
 		this.dialog.setTitle(title);
-		this.dialog.getDialogPane().getStylesheets().addAll(Common.currentThemesPaths());
+		this.dialog.getDialogPane().getStylesheets().addAll(Theme.currentThemesPaths());
 		this.dialog.heightProperty().addListener((observable, oldValue, newValue) ->
 		{
 			if (newValue.doubleValue() > this.defaultHeight)
@@ -202,7 +203,7 @@ public class SettingsPanelController implements Initializable, ContainingParent
 		{
 			if (save())
 			{
-				DialogsHelper.showInfo(String.format("Settings saved to file [%s] %n Restart application for all changes apply", Common.SETTINGS_PATH));
+				DialogsHelper.showInfo(String.format("Settings saved to file [%s] %n Restart application for all changes apply", Settings.SETTINGS_PATH));
 			}
 			else
 			{

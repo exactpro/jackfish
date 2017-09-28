@@ -9,9 +9,9 @@ import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.CssVariables;
 import com.exactprosystems.jf.tool.custom.controls.field.CustomFieldWithButton;
 import com.exactprosystems.jf.tool.helpers.DialogsHelper;
+import com.exactprosystems.jf.tool.settings.Theme;
 import com.exactprosystems.jf.tool.wizard.related.MarkerStyle;
 import com.sun.javafx.css.PseudoClassState;
-import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.css.PseudoClass;
 import javafx.geometry.HPos;
@@ -402,7 +402,7 @@ public class ElementsTable extends TableView<TableBean>
 	{
 		Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
 		Common.addIcons(((Stage) alert.getDialogPane().getScene().getWindow()));
-		alert.getDialogPane().getStylesheets().addAll(Common.currentThemesPaths());
+		alert.getDialogPane().getStylesheets().addAll(Theme.currentThemesPaths());
 		alert.getDialogPane().setHeader(new Label());
 		alert.setTitle("Change element");
 		GridPane gridPane = new GridPane();

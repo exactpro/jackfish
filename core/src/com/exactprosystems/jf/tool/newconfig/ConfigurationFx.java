@@ -38,6 +38,7 @@ import com.exactprosystems.jf.tool.custom.tab.CustomTab;
 import com.exactprosystems.jf.tool.git.GitUtil;
 import com.exactprosystems.jf.tool.helpers.DialogsHelper;
 import com.exactprosystems.jf.tool.main.Main;
+import com.exactprosystems.jf.tool.settings.Theme;
 import javafx.concurrent.Task;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
@@ -1236,7 +1237,7 @@ public class ConfigurationFx extends Configuration
 		dialog.getDialogPane().setContent(listView);
 		dialog.getDialogPane().setPrefWidth(500);
 		dialog.getDialogPane().setPrefHeight(300);
-		dialog.getDialogPane().getStylesheets().addAll(Common.currentThemesPaths());
+		dialog.getDialogPane().getStylesheets().addAll(Theme.currentThemesPaths());
 		dialog.show();
 	}
 

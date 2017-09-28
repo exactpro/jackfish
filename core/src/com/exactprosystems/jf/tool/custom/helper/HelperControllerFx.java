@@ -17,6 +17,7 @@ import com.exactprosystems.jf.tool.ContainingParent;
 import com.exactprosystems.jf.tool.CssVariables;
 import com.exactprosystems.jf.tool.custom.helper.HelperFx.IToString;
 import com.exactprosystems.jf.tool.dictionary.FindListView;
+import com.exactprosystems.jf.tool.settings.Theme;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -156,7 +157,7 @@ public class HelperControllerFx implements Initializable, ContainingParent
 	public String showAndWait(String expression)
 	{
 		this.styleClassedTextArea.appendText(expression == null ? "" : expression);
-		this.dialog.getDialogPane().getScene().getStylesheets().addAll(Common.currentThemesPaths());
+		this.dialog.getDialogPane().getScene().getStylesheets().addAll(Theme.currentThemesPaths());
 		Optional<ButtonType> buttonType = this.dialog.showAndWait();
 		return buttonType.isPresent() && buttonType.get().equals(ButtonType.OK) ?  styleClassedTextArea.getText() : expression;
 	}
@@ -381,7 +382,7 @@ public class HelperControllerFx implements Initializable, ContainingParent
 					}
 				}, "Error on key pressed");
 			});
-			dialog.getDialogPane().getStylesheets().addAll(Common.currentThemesPaths());
+			dialog.getDialogPane().getStylesheets().addAll(Theme.currentThemesPaths());
 			Optional<ButtonType> optional = dialog.showAndWait();
 			optional.filter(buttonType -> buttonType.getButtonData().equals(ButtonBar.ButtonData.OK_DONE)).ifPresent(
 					type -> Optional.ofNullable(tableView.getSelectionModel().getSelectedItem()).ifPresent(i -> name = i.getName()));

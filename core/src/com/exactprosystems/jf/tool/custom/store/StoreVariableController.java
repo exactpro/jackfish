@@ -7,12 +7,12 @@
 ////////////////////////////////////////////////////////////////////////////////
 package com.exactprosystems.jf.tool.custom.store;
 
-import com.exactprosystems.jf.actions.system.Store;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.ContainingParent;
 import com.exactprosystems.jf.tool.CssVariables;
 import com.exactprosystems.jf.tool.custom.date.CustomDateTimePicker;
 import com.exactprosystems.jf.tool.custom.number.NumberTextField;
+import com.exactprosystems.jf.tool.settings.Theme;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
@@ -116,7 +116,7 @@ public class StoreVariableController implements Initializable, ContainingParent
 		alert.setResizable(true);
 		alert.setTitle("Store");
 		alert.setHeaderText("Edit store variable");
-		alert.getDialogPane().getStylesheets().addAll(Common.currentThemesPaths());
+		alert.getDialogPane().getStylesheets().addAll(Theme.currentThemesPaths());
 		alert.getDialogPane().setContent(this.parent);
 		Optional<ButtonType> buttonType = alert.showAndWait();
 		if (buttonType.isPresent() && buttonType.get().getButtonData().equals(ButtonBar.ButtonData.OK_DONE))

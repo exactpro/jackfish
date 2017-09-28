@@ -38,7 +38,7 @@ import java.util.stream.Stream;
 @XmlAccessorType(XmlAccessType.NONE)
 public class Settings
 {
-	public final static String SettingsPath	= ".settings.xml";
+	public final static String SETTINGS_PATH	= ".settings.xml";
 
 	public static final String	FONT			= "Font";
 	public static final String	SETTINGS 		= "Main";
@@ -134,11 +134,11 @@ public class Settings
 
 	static
 	{
-		if (!new File(SettingsPath).exists())
+		if (!new File(SETTINGS_PATH).exists())
 		{
 			try
 			{
-				defaultSettings().save(SettingsPath);
+				defaultSettings().save(SETTINGS_PATH);
 			}
 			catch (Exception e)
 			{
@@ -476,7 +476,7 @@ public class Settings
 		}
 		else
 		{
-			save(SettingsPath);
+			save(SETTINGS_PATH);
 		}
 	}
 

@@ -12,7 +12,6 @@ import com.exactprosystems.jf.api.app.ImageWrapper;
 import com.exactprosystems.jf.charts.ChartBuilder;
 import com.exactprosystems.jf.documents.matrix.parser.items.MatrixItem;
 import com.exactprosystems.jf.functions.Content;
-import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.settings.Theme;
 
 import java.io.IOException;
@@ -84,7 +83,7 @@ public class ContextHelpBuilder extends ReportBuilder
                 "<meta http-equiv='Content-Type' content='text/html; charset=utf-8'>\n");
 
         writer.fwrite("<style>\n" + "<!--\n");
-		if (Common.currentTheme().equals(Theme.WHITE))
+		if (Theme.currentTheme().equals(Theme.WHITE))
 		{
 			writer.include(getClass().getResourceAsStream("white-help.css"));
 		}else{

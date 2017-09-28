@@ -27,6 +27,7 @@ import com.exactprosystems.jf.tool.dictionary.DictionaryFx;
 import com.exactprosystems.jf.tool.dictionary.DictionaryFxController;
 import com.exactprosystems.jf.tool.dictionary.FindListView;
 import com.exactprosystems.jf.tool.helpers.DialogsHelper;
+import com.exactprosystems.jf.tool.settings.Theme;
 import com.exactprosystems.jf.tool.wizard.WizardButton;
 import javafx.beans.value.ChangeListener;
 import javafx.event.ActionEvent;
@@ -142,7 +143,7 @@ public class NavigationController implements Initializable, ContainingParent
 			scrollPaneWindow.setFitToHeight(true);
 			scrollPaneWindow.setHbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
 			scrollPaneWindow.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
-			this.dialog = BorderWrapper.wrap(this.vBoxWindow).title("Dialog").color(Common.currentTheme().getReverseColor()).build();
+			this.dialog = BorderWrapper.wrap(this.vBoxWindow).title("Dialog").color(Theme.currentTheme().getReverseColor()).build();
 			double width = 350.0;
 			((Region) this.dialog).setMinWidth(width);
 			((Region) this.dialog).setMaxWidth(width);
@@ -155,7 +156,7 @@ public class NavigationController implements Initializable, ContainingParent
 			scrollPaneElement.setFitToHeight(true);
 			scrollPaneElement.setHbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
 			scrollPaneElement.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
-			this.element = BorderWrapper.wrap(this.vBoxElement).title("Element").color(Common.currentTheme().getReverseColor()).build();
+			this.element = BorderWrapper.wrap(this.vBoxElement).title("Element").color(Theme.currentTheme().getReverseColor()).build();
 			double widthForElement = 316;
 			((Region) this.element).setMinWidth(widthForElement);
 			((Region) this.element).setMaxWidth(widthForElement);

@@ -7,6 +7,7 @@ import com.exactprosystems.jf.tool.custom.BorderWrapper;
 import com.exactprosystems.jf.tool.search.results.AbstractResult;
 import com.exactprosystems.jf.tool.search.results.AggregateResult;
 import com.exactprosystems.jf.tool.search.results.FailedResult;
+import com.exactprosystems.jf.tool.settings.Theme;
 import javafx.event.ActionEvent;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
@@ -65,13 +66,13 @@ public class SearchController implements Initializable, ContainingParent
 	@Override
 	public void initialize(URL location, ResourceBundle resources)
 	{
-		Node fileMask = BorderWrapper.wrap(this.maskPane).title("File mask and scope").color(Common.currentTheme().getReverseColor()).outerPadding(8).innerPadding(8).build();
+		Node fileMask = BorderWrapper.wrap(this.maskPane).title("File mask and scope").color(Theme.currentTheme().getReverseColor()).outerPadding(8).innerPadding(8).build();
 		this.mainGridPane.add(fileMask, 0, 0);
 
-		Node textPane = BorderWrapper.wrap(this.textPane).title("Containing text").color(Common.currentTheme().getReverseColor()).outerPadding(8).innerPadding(8).build();
+		Node textPane = BorderWrapper.wrap(this.textPane).title("Containing text").color(Theme.currentTheme().getReverseColor()).outerPadding(8).innerPadding(8).build();
 		this.mainGridPane.add(textPane, 0, 1);
 
-		Node results = BorderWrapper.wrap(this.resultsPane).title("Results").color(Common.currentTheme().getReverseColor()).outerPadding(8).innerPadding(8).build();
+		Node results = BorderWrapper.wrap(this.resultsPane).title("Results").color(Theme.currentTheme().getReverseColor()).outerPadding(8).innerPadding(8).build();
 		this.mainGridPane.add(results, 0, 2);
 
 		this.cbFileMask.getItems().add(Search.ALL_FILES);
@@ -131,7 +132,7 @@ public class SearchController implements Initializable, ContainingParent
 	void show()
 	{
 		this.alert = new Alert(Alert.AlertType.INFORMATION);
-		this.alert.getDialogPane().getScene().getStylesheets().addAll(Common.currentThemesPaths());
+		this.alert.getDialogPane().getScene().getStylesheets().addAll(Theme.currentThemesPaths());
 		this.alert.getDialogPane().setHeader(new Label());
 		this.alert.initModality(Modality.WINDOW_MODAL);
 		Common.addIcons(((Stage) this.alert.getDialogPane().getScene().getWindow()));

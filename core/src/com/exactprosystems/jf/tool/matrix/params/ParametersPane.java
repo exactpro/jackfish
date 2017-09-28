@@ -270,7 +270,6 @@ public class ParametersPane extends CustomScrollPane
 				}
 
 				AbstractEvaluator evaluator = this.context.getEvaluator();
-				List<String> themePaths = Common.currentThemesPaths();
 
 				if (howHelp != null)
 				{

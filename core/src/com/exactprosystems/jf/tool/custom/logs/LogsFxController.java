@@ -13,6 +13,7 @@ import com.exactprosystems.jf.tool.ContainingParent;
 import com.exactprosystems.jf.tool.CssVariables;
 import com.exactprosystems.jf.tool.custom.find.FindPanel;
 import com.exactprosystems.jf.tool.custom.find.IFind;
+import com.exactprosystems.jf.tool.settings.Theme;
 import javafx.event.ActionEvent;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
@@ -66,7 +67,7 @@ public class LogsFxController implements Initializable, ContainingParent
 		this.dialog.setTitle("Logs");
 		this.dialog.getDialogPane().setHeader(new Label());
 		this.dialog.getDialogPane().setContent(parent);
-		this.dialog.getDialogPane().getStylesheets().addAll(Common.currentThemesPaths());
+		this.dialog.getDialogPane().getStylesheets().addAll(Theme.currentThemesPaths());
 		this.cbFiles.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
 			if (newValue != null)
 			{

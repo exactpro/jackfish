@@ -12,6 +12,7 @@ import com.exactprosystems.jf.tool.ContainingParent;
 import com.exactprosystems.jf.tool.CssVariables;
 import com.exactprosystems.jf.tool.custom.controls.field.CustomFieldWithButton;
 import com.exactprosystems.jf.tool.helpers.DialogsHelper;
+import com.exactprosystems.jf.tool.settings.Theme;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.fxml.Initializable;
@@ -113,7 +114,7 @@ public class WizardConfigurationController implements Initializable, ContainingP
 		Dialog<Boolean> dialog = new Dialog<>();
 		Common.addIcons(((Stage) dialog.getDialogPane().getScene().getWindow()));
 		dialog.setResizable(true);
-		dialog.getDialogPane().getStylesheets().addAll(Common.currentThemesPaths());
+		dialog.getDialogPane().getStylesheets().addAll(Theme.currentThemesPaths());
 		dialog.setTitle("New Project");
 //		dialog.getDialogPane().setHeader(new Label());
 		dialog.getDialogPane().setContent(this.parent);

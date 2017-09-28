@@ -12,20 +12,12 @@ import com.exactprosystems.jf.functions.RowTable;
 import com.exactprosystems.jf.functions.Table;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.CssVariables;
-import javafx.application.Platform;
+import com.exactprosystems.jf.tool.settings.Theme;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Pos;
-import javafx.scene.control.ButtonBar;
-import javafx.scene.control.ButtonType;
-import javafx.scene.control.Dialog;
-import javafx.scene.control.DialogPane;
-import javafx.scene.control.Label;
-import javafx.scene.control.TableCell;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Priority;
 
@@ -42,7 +34,7 @@ public class UserEditTableDialog extends Dialog<Boolean>
 	{
 		final DialogPane dialogPane = getDialogPane();
 		this.setResizable(true);
-		dialogPane.getStylesheets().addAll(Common.currentThemesPaths());
+		dialogPane.getStylesheets().addAll(Theme.currentThemesPaths());
 		this.expressionLabel = new Label();
 		
 		this.tableView = createTableView(table, columns);

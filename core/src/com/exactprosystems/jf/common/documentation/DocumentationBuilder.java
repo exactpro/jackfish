@@ -1,19 +1,5 @@
 package com.exactprosystems.jf.common.documentation;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-import java.util.stream.Collectors;
-
 import com.exactprosystems.jf.actions.AbstractAction;
 import com.exactprosystems.jf.actions.ActionAttribute;
 import com.exactprosystems.jf.actions.ActionGroups;
@@ -36,8 +22,16 @@ import com.exactprosystems.jf.documents.matrix.parser.items.*;
 import com.exactprosystems.jf.functions.Content;
 import com.exactprosystems.jf.functions.ContentItem;
 import com.exactprosystems.jf.functions.Table;
-import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.settings.Theme;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 public class DocumentationBuilder
 {
@@ -195,7 +189,7 @@ public class DocumentationBuilder
         String[] headers = new String[] {"Symbol", "Description", "Example", "Example result"};
         int[] width = new int[] {15, 35, 25, 25};
         Table table = new Table(headers, evaluator);
-        for (String[] element : new Marker.HTMLMaker(Common.currentTheme().equals(Theme.WHITE)).keysDescriptions())
+        for (String[] element : new Marker.HTMLMaker(Theme.currentTheme().equals(Theme.WHITE)).keysDescriptions())
         {
             table.addValue(element);
         }
