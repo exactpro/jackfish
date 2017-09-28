@@ -43,11 +43,13 @@ import org.apache.log4j.Logger;
 import org.fxmisc.richtext.model.StyleSpans;
 import org.fxmisc.richtext.model.StyleSpansBuilder;
 
-import java.awt.*;
+import java.awt.Toolkit;
 import java.awt.datatransfer.StringSelection;
-import java.io.*;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.net.URL;
-import java.net.URLConnection;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -56,7 +58,6 @@ import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.*;
-import java.util.List;
 import java.util.function.Consumer;
 
 public abstract class Common
@@ -604,46 +605,6 @@ public abstract class Common
 		helper.setLineSpacing(DEFAULT_LINE_SPACING);
 		helper.setText(DEFAULT_TEXT);
 		return d;
-	}
-
-	public static ResourceBundle bundle()
-	{
-		return ResourceBundle.getBundle("com/exactprosystems/jf/ToolResourceBundle", new UTF8Control());
-	}
-
-	public static class UTF8Control extends ResourceBundle.Control
-	{
-		public ResourceBundle newBundle
-				(String baseName, Locale locale, String format, ClassLoader loader, boolean reload)
-				throws IllegalAccessException, InstantiationException, IOException
-		{
-			// The below is a copy of the default implementation.
-			String bundleName = toBundleName(baseName, locale);
-			String resourceName = toResourceName(bundleName, "properties");
-			ResourceBundle bundle = null;
-			InputStream stream = null;
-			if (reload) {
-				URL url = loader.getResource(resourceName);
-				if (url != null) {
-					URLConnection connection = url.openConnection();
-					if (connection != null) {
-						connection.setUseCaches(false);
-						stream = connection.getInputStream();
-					}
-				}
-			} else {
-				stream = loader.getResourceAsStream(resourceName);
-			}
-			if (stream != null) {
-				try {
-					// Only this line is changed to make it to read properties files as UTF-8.
-					bundle = new PropertyResourceBundle(new InputStreamReader(stream, "UTF-8"));
-				} finally {
-					stream.close();
-				}
-			}
-			return bundle;
-		}
 	}
 
 	public static boolean confirmFileDelete(String name)

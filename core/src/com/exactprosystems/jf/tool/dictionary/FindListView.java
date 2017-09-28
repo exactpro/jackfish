@@ -8,6 +8,7 @@
 package com.exactprosystems.jf.tool.dictionary;
 
 import com.exactprosystems.jf.api.common.Str;
+import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.custom.controls.field.CustomFieldWithButton;
 import javafx.beans.value.ChangeListener;
@@ -34,7 +35,7 @@ public class FindListView<T> extends VBox
 	{
 		this.filter = filter;
 		this.listView = new ListView<>();
-		this.listView.setTooltip(new Tooltip("Use drag-n-drop to reorder elements in this list"));
+		this.listView.setTooltip(new Tooltip(R.DRAG_N_DROP_LIST_TOOLTIP.get()));
 		this.cfbFind = new CustomFieldWithButton();
 		this.cfbFind.setPromptText("find");
 		this.getChildren().add(this.cfbFind);

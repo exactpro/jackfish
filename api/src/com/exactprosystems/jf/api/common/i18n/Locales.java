@@ -1,4 +1,4 @@
-package com.exactprosystems.jf.tool.settings;
+package com.exactprosystems.jf.api.common.i18n;
 import java.util.*;
 
 public enum Locales
@@ -8,15 +8,15 @@ public enum Locales
 
     private final Locale locale;
 
-    public Locale getLocale()
-    {
-        return locale;
-    }
+	Locales(Locale locale)
+	{
+		this.locale = locale;
+	}
 
-    Locales(Locale locale)
-    {
-        this.locale = locale;
-    }
+	public static void setDefault(String localeName)
+	{
+		Locale.setDefault(Locales.valueOf(localeName.toUpperCase()).locale);
+	}
 
     @Override
     public String toString()

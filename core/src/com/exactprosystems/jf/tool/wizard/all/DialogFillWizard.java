@@ -3,6 +3,7 @@ package com.exactprosystems.jf.tool.wizard.all;
 import com.exactprosystems.jf.actions.gui.DialogFill;
 import com.exactprosystems.jf.api.app.*;
 import com.exactprosystems.jf.api.common.IContext;
+import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.api.error.JFRemoteException;
 import com.exactprosystems.jf.api.wizard.WizardAttribute;
 import com.exactprosystems.jf.api.wizard.WizardCategory;
@@ -13,7 +14,6 @@ import com.exactprosystems.jf.documents.matrix.parser.Tokens;
 import com.exactprosystems.jf.documents.matrix.parser.items.MatrixItem;
 import com.exactprosystems.jf.documents.matrix.parser.items.MatrixItemAttribute;
 import com.exactprosystems.jf.documents.matrix.parser.items.TypeMandatory;
-import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.custom.scaledimage.ImageViewWithScale;
 import com.exactprosystems.jf.tool.dictionary.DictionaryFx;
 import com.exactprosystems.jf.tool.helpers.DialogsHelper;
@@ -49,9 +49,6 @@ import java.util.Optional;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
-
-import static com.exactprosystems.jf.tool.Common.bundle;
-import static com.exactprosystems.jf.tool.Common.tryCatch;
 
 
 @WizardAttribute(
@@ -114,14 +111,14 @@ public class DialogFillWizard extends AbstractWizard
             }
         });
         this.resultListView = new ListView<>(FXCollections.observableArrayList());
-        this.resultListView.tooltipProperty().set(new Tooltip(bundle().getString("ResultListTooltip")));
+        this.resultListView.tooltipProperty().set(new Tooltip(R.DRAG_N_DROP_LIST_TOOLTIP.get()));
         this.dialogs = new ComboBox<>();
         this.dialogs.setPrefWidth(300);
         this.storedConnections = new ComboBox<>();
         this.storedConnections.setPrefWidth(300);
 
-        this.storedConnections.setOnShowing(event -> tryCatch(this::displayStores, bundle().getString("ErrorOnDisplayStoredConn")));
-        this.storedConnections.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) ->
+		this.storedConnections.setOnShowing(event -> this.displayStores());
+		this.storedConnections.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) ->
         {
             this.connectToApplicationFromStore(newValue);
             this.dictionary = (DictionaryFx) this.appConnection.getDictionary();
@@ -131,7 +128,7 @@ public class DialogFillWizard extends AbstractWizard
 
         this.resultListView.setCellFactory(param -> new MyCell());
 
-        Button scan = new Button(bundle().getString("Scan"));
+        Button scan = new Button(R.WIZARD_SCAN.get());
         scan.setOnAction(event ->
         {
             this.resultListView.getItems().clear();
@@ -164,11 +161,11 @@ public class DialogFillWizard extends AbstractWizard
         grid.setHgap(10);
         grid.getColumnConstraints().addAll(col1, col2, col3);
 
-        text = new Text(bundle().getString("SelectConnectionInfo"));
+        text = new Text(R.WIZARD_SELECT_CONNECTION_INFO.get());
 
-        grid.add(new Label(bundle().getString("SelectStoredConn")), 0, 0);
+        grid.add(new Label(R.WIZARD_SELECT_STORED_CONN.get()), 0, 0);
         grid.add(this.storedConnections, 1, 0);
-        grid.add(new Label(bundle().getString("SelectDialog")), 2, 0);
+        grid.add(new Label(R.WIZARD_SELECT_DIALOG.get()), 2, 0);
         grid.add(this.dialogs, 3, 0);
         grid.add(this.controls, 3, 1);
         grid.add(scan, 3, 2);
@@ -201,7 +198,7 @@ public class DialogFillWizard extends AbstractWizard
         return true;
     }
 
-    private void displayStores() throws Exception
+    private void displayStores()
     {
 		this.storedConnections.getItems().setAll(WizardCommonHelper.getAllConnections(this.currentMatrix.getFactory().getConfiguration()));
     }
@@ -218,18 +215,19 @@ public class DialogFillWizard extends AbstractWizard
 
     private void fillNamesAndValues(IControl control)
     {
-        String name = control.getID();
-        String value = "";
-        if (control.getBindedClass().isAllowed(OperationKind.GET_VALUE))
-        {
-            value = Common.tryCatch(() -> String.valueOf(control.operate(this.service, this.currentDialog, Do.getValue())
-                    .getValue()), bundle().getString("ErrorOnGetControlsValues"), "");
-        }
-
-        String operation = getDefaultAction(control, value);
-        this.resultListView.getItems().add(new ResultBean(name, operation));
-    }
-
+		String name = control.getID();
+		if (control.getBindedClass().isAllowed(OperationKind.GET_VALUE))
+		{
+			try
+			{
+				String value = String.valueOf(control.operate(this.service, this.currentDialog, Do.getValue()).getValue());
+				String operation = getDefaultAction(control, value);
+				this.resultListView.getItems().add(new ResultBean(name, operation));
+			}
+			catch (Exception ignored)
+			{}
+		}
+	}
 
     private MatrixItem createItem(List<ResultBean> beans)
     {
@@ -279,7 +277,7 @@ public class DialogFillWizard extends AbstractWizard
         }
 
         this.imageViewWithScale.removeCurrentImage();
-        IControl selfControl = Common.tryCatch(() -> this.currentDialog.getSelfControl(), bundle().getString("ErrorOnGetSelf"), null);
+		IControl selfControl = this.currentDialog.getSelfControl();
 
         Predicate<IControl> predicate = (IControl control) ->
         {
@@ -304,8 +302,11 @@ public class DialogFillWizard extends AbstractWizard
             }
         };
 
-        List<ControlItem> collect = currentDialog.getControls(IWindow.SectionKind.Run).stream().filter(predicate)
-                .map(iControl -> new ControlItem(iControl, false)).collect(Collectors.toList());
+        List<ControlItem> collect = this.currentDialog.getControls(IWindow.SectionKind.Run)
+				.stream()
+				.filter(predicate)
+                .map(iControl -> new ControlItem(iControl, false))
+				.collect(Collectors.toList());
 
         ObservableList<ControlItem> objects = FXCollections.observableArrayList(collect);
         this.controls.getItems().clear();
@@ -404,11 +405,14 @@ public class DialogFillWizard extends AbstractWizard
 
         public Rectangle getRectangle(WizardMatcher wizardMatcher)
         {
-            return Common.tryCatch(() ->
-            {
-                List<Node> all = wizardMatcher.findAll(document, this.control.locator());
-                return ((Rectangle) all.get(0).getUserData(IRemoteApplication.rectangleName));
-            }, bundle().getString("ErrorOnGetRectangle"), null);
+			try
+			{
+				List<Node> all = wizardMatcher.findAll(document, this.control.locator());
+				return ((Rectangle) all.get(0).getUserData(IRemoteApplication.rectangleName));
+			}
+			catch (Exception ignored)
+			{}
+			return null;
         }
     }
 

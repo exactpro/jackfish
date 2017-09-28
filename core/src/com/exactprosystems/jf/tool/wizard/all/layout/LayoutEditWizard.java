@@ -4,6 +4,7 @@ import com.exactprosystems.jf.api.app.AppConnection;
 import com.exactprosystems.jf.api.app.IWindow;
 import com.exactprosystems.jf.api.app.PieceKind;
 import com.exactprosystems.jf.api.common.IContext;
+import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.api.wizard.WizardAttribute;
 import com.exactprosystems.jf.api.wizard.WizardCategory;
 import com.exactprosystems.jf.api.wizard.WizardCommand;
@@ -38,8 +39,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Supplier;
 import java.util.stream.Stream;
-
-import static com.exactprosystems.jf.tool.Common.bundle;
 
 @WizardAttribute(name = "Layout edit wizard", pictureName = "LayoutWizard.png", shortDescription = "Short description", detailedDescription = "Detailed description",
 				 criteries = {MatrixFx.class, RawTable.class}, experimental = true, strongCriteries = true, category = WizardCategory.MATRIX
@@ -139,8 +138,8 @@ public class LayoutEditWizard extends AbstractWizard
 		this.lblDialog = new Label(this.currentWindow.getName());
 		this.imageViewWithScale = new ImageViewWithScale();
 		this.imageViewWithScale.addShowGrid();
-		this.btnScan = new Button(bundle().getString("Scan"));
-		this.btnCheckTable = new Button(bundle().getString("CheckTable"));
+		this.btnScan = new Button(R.WIZARD_SCAN.get());
+		this.btnCheckTable = new Button(R.WIZARD_CHECK_TABLE.get());
 		this.btnCheckTable.setDisable(true);
 		//		this.btnCheckTable.setOnAction(e -> this.checkTable());
 		this.piCheckTable = new ProgressIndicator(ProgressIndicator.INDETERMINATE_PROGRESS);
@@ -148,7 +147,7 @@ public class LayoutEditWizard extends AbstractWizard
 		this.piCheckTable.setPrefSize(32.0, 32.0);
 		this.piCheckTable.setMaxSize(32.0, 32.0);
 		this.piCheckTable.setVisible(false);
-		this.waitText = new Text(bundle().getString("SelectConnectionInfo"));
+		this.waitText = new Text(R.WIZARD_SELECT_CONNECTION_INFO.get());
 
 		this.main = new GridPane();
 		this.main.getStyleClass().addAll(CssVariables.HGAP_MID, CssVariables.VGAP_MID);

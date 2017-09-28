@@ -1,6 +1,7 @@
 package com.exactprosystems.jf.tool.wizard.all;
 
 import com.exactprosystems.jf.api.common.IContext;
+import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.api.wizard.WizardAttribute;
 import com.exactprosystems.jf.api.wizard.WizardCategory;
 import com.exactprosystems.jf.api.wizard.WizardCommand;
@@ -15,11 +16,15 @@ import com.exactprosystems.jf.tool.helpers.DialogsHelper;
 import com.exactprosystems.jf.tool.wizard.AbstractWizard;
 import com.exactprosystems.jf.tool.wizard.CommandBuilder;
 import javafx.geometry.HPos;
-import javafx.scene.control.*;
-import javafx.scene.layout.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
+import javafx.scene.control.Tooltip;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.ColumnConstraints;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.Priority;
 import javafx.scene.paint.Color;
-
-import static com.exactprosystems.jf.tool.Common.bundle;
 
 import java.util.List;
 import java.util.function.Supplier;
@@ -60,7 +65,7 @@ public class ConnectionWizard extends AbstractWizard {
         this.name = new TextField();
         Tooltip nameOfVar = new Tooltip("Enter name of var here");
         this.name.tooltipProperty().set(nameOfVar);
-        Button start = new Button(bundle().getString("start"));
+        Button start = new Button(R.WIZARD_START_CONNECTION.get());
         start.setOnAction(e -> {
             try
             {

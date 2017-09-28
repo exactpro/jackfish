@@ -4,7 +4,7 @@ import com.exactprosystems.jf.common.Settings;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.ContainingParent;
 import com.exactprosystems.jf.tool.custom.number.NumberTextField;
-import com.exactprosystems.jf.tool.settings.Locales;
+import com.exactprosystems.jf.api.common.i18n.Locales;
 import com.exactprosystems.jf.tool.settings.SettingsPanel;
 import com.exactprosystems.jf.tool.settings.Theme;
 import javafx.collections.FXCollections;

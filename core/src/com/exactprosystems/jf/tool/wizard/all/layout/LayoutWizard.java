@@ -4,6 +4,7 @@ import com.exactprosystems.jf.actions.gui.DialogCheckLayout;
 import com.exactprosystems.jf.api.app.*;
 import com.exactprosystems.jf.api.common.IContext;
 import com.exactprosystems.jf.api.common.Str;
+import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.api.error.JFRemoteException;
 import com.exactprosystems.jf.api.wizard.WizardAttribute;
 import com.exactprosystems.jf.api.wizard.WizardCategory;
@@ -60,8 +61,6 @@ import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
-
-import static com.exactprosystems.jf.tool.Common.bundle;
 
 @WizardAttribute(
 		name = "Layout wizard",
@@ -216,8 +215,8 @@ public class LayoutWizard extends AbstractWizard
 			}
 		});
 		this.lvControls.setCellFactory(CheckBoxListCell.forListView(IControlWithCheck::onProperty));
-		this.btnScan = new Button(bundle().getString("Scan"));
-		this.btnCheckTable = new Button(bundle().getString("CheckTable"));
+		this.btnScan = new Button(R.WIZARD_SCAN.get());
+		this.btnCheckTable = new Button(R.WIZARD_CHECK_TABLE.get());
 		this.btnCheckTable.setDisable(true);
 		this.btnCheckTable.setOnAction(e -> this.checkTable());
 		this.piCheckTable = new ProgressIndicator(ProgressIndicator.INDETERMINATE_PROGRESS);
@@ -225,7 +224,7 @@ public class LayoutWizard extends AbstractWizard
 		this.piCheckTable.setPrefSize(32.0, 32.0);
 		this.piCheckTable.setMaxSize(32.0, 32.0);
 		this.piCheckTable.setVisible(false);
-		this.waitText = new Text(bundle().getString("SelectConnectionInfo"));
+		this.waitText = new Text(R.WIZARD_SELECT_CONNECTION_INFO.get());
 
 		this.main = new GridPane();
 		this.main.getStyleClass().addAll(CssVariables.HGAP_MID, CssVariables.VGAP_MID);

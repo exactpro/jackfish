@@ -8,6 +8,7 @@
 
 package com.exactprosystems.jf.tool.wizard;
 
+import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.api.wizard.*;
 import com.exactprosystems.jf.common.version.VersionInfo;
 import com.exactprosystems.jf.documents.config.Context;
@@ -24,8 +25,6 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
-
-import static com.exactprosystems.jf.tool.Common.bundle;
 
 public class WizardManagerImpl implements WizardManager
 {
@@ -118,7 +117,7 @@ public class WizardManagerImpl implements WizardManager
 				{
 					List<WizardCommand> commands = result.commands();
 					commands.forEach(c -> c.apply(context));
-					DialogsHelper.showSuccess(MessageFormat.format(bundle().getString("WizardSuccess_1"), this.nameOf(wizard)));
+					DialogsHelper.showSuccess(MessageFormat.format(R.WIZARD_SUCCESS.get(), this.nameOf(wizard)));
 				}
 			}
 		}
