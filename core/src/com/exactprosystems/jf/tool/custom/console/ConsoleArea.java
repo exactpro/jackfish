@@ -65,7 +65,7 @@ public class ConsoleArea extends StyleClassedTextArea
 
     public void appendDefaultTextOnNewLine(String text)
     {
-        this.appendStyledText(text, this.getCaretPosition() > 0, null, CssVariables.CONSOLE_DEFAULT_TEXT);
+        this.appendStyledText(text, this.getText().length() > 0, null, CssVariables.CONSOLE_DEFAULT_TEXT);
     }
 
     public void appendErrorText(String text)
@@ -75,7 +75,7 @@ public class ConsoleArea extends StyleClassedTextArea
 
     public void appendErrorTextOnNewLine(String text)
     {
-        this.appendStyledText(text, this.getCaretPosition() > 0, null, CssVariables.CONSOLE_ERROR_ITEM);
+        this.appendStyledText(text, this.getText().length() > 0, null, CssVariables.CONSOLE_ERROR_ITEM);
     }
 
     public void appendMatrixItemLink(String text, TreeItem <MatrixItem> item)
