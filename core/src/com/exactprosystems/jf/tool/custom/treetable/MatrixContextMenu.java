@@ -114,7 +114,6 @@ public class MatrixContextMenu extends ContextMenu
 				deleteItem.setDisable(b);
 				help.setDisable(b);
 				parAdd.setDisable(!AbstractAction.additionFieldsAllow(selectedItem.getValue()));
-				menuWizard.setDisable(b);
 				this.addWizards(matrix, tree.getSelectionModel().getSelectedItem().getValue());
 			}
 		});

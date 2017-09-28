@@ -21,7 +21,7 @@ import java.util.*;
 import java.util.function.Supplier;
 
 @WizardAttribute(
-        name 				= "TableWizard ",
+        name 				= "Table wizard ",
         pictureName 		= "TableWizard.png",
         category 			= WizardCategory.MATRIX,
         shortDescription 	= "This wizard makes it easier to work with tables.",

@@ -1,4 +1,4 @@
-package com.exactprosystems.jf.tool.wizard.all;
+package com.exactprosystems.jf.tool.wizard.all.layout;
 
 import com.exactprosystems.jf.actions.gui.DialogCheckLayout;
 import com.exactprosystems.jf.api.app.*;
@@ -14,6 +14,7 @@ import com.exactprosystems.jf.common.utils.XpathUtils;
 import com.exactprosystems.jf.documents.matrix.Matrix;
 import com.exactprosystems.jf.documents.matrix.parser.Parameters;
 import com.exactprosystems.jf.documents.matrix.parser.Tokens;
+import com.exactprosystems.jf.documents.matrix.parser.items.End;
 import com.exactprosystems.jf.documents.matrix.parser.items.MatrixItem;
 import com.exactprosystems.jf.documents.matrix.parser.items.RawTable;
 import com.exactprosystems.jf.documents.matrix.parser.items.TypeMandatory;
@@ -30,7 +31,6 @@ import com.exactprosystems.jf.tool.wizard.related.ConnectionBean;
 import com.exactprosystems.jf.tool.wizard.related.MarkerStyle;
 import com.exactprosystems.jf.tool.wizard.related.WizardCommonHelper;
 import com.exactprosystems.jf.tool.wizard.related.WizardLoader;
-import javafx.application.Platform;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.concurrent.Task;
@@ -64,13 +64,13 @@ import java.util.stream.Stream;
 import static com.exactprosystems.jf.tool.Common.bundle;
 
 @WizardAttribute(
-		name = "LayoutWizard",
+		name = "Layout wizard",
 		pictureName = "LayoutWizard.png",
 		category = WizardCategory.MATRIX,
 		shortDescription = "This wizard creates RawTable and action DialogCheckLayout",
-		strongCriteries = true,
+		strongCriteries = false,
 		experimental = true,
-		criteries = {MatrixFx.class, MatrixItem.class},
+		criteries = {MatrixFx.class, MatrixItem.class, End.class},
 		detailedDescription = "{{`First of all you need to select one of stored connection and dialog.`}}"
 				+ "{{`For store connection user may use {{$ConnectionWizard$}} or store the connection inside a matrix.`}}"
 				+ "{{`In top left corner will appear image of selected dialog.`}}"
@@ -1081,7 +1081,7 @@ public class LayoutWizard extends AbstractWizard
 	//endregion
 
 	//region private classes
-	private class TopText extends Text
+	public class TopText extends Text
 	{
 		public TopText(String text)
 		{
@@ -1089,7 +1089,7 @@ public class LayoutWizard extends AbstractWizard
 		}
 	}
 
-	private class RelationButton extends ToggleButton
+	public class RelationButton extends ToggleButton
 	{
 		private Spec formula;
 		private String topName;
@@ -1359,7 +1359,7 @@ public class LayoutWizard extends AbstractWizard
 		}
 	}
 
-	private static class OneRow extends HBox
+	public static class OneRow extends HBox
 	{
 		private TextField field;
 
