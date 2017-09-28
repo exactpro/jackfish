@@ -70,7 +70,7 @@ public class ConsoleArea extends StyleClassedTextArea
 
     public void appendErrorText(String text)
     {
-        this.appendStyledText(text, false, null, CssVariables.CONSOLE_DEFAULT_TEXT);
+        this.appendStyledText(text, false, null, CssVariables.CONSOLE_ERROR_ITEM);
     }
 
     public void appendErrorTextOnNewLine(String text)
