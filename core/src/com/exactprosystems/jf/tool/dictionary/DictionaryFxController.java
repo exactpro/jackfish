@@ -60,7 +60,6 @@ public class DictionaryFxController implements Initializable, ContainingParent
 		private Color color;
 	} 
 
-	public CustomListView<String>	listView;
 	public SplitPane				splitPane;
 	public GridPane					mainGridPane;
 	private Parent					pane;
@@ -75,9 +74,6 @@ public class DictionaryFxController implements Initializable, ContainingParent
 	@Override
 	public void initialize(URL url, ResourceBundle resourceBundle)
 	{
-		this.listView = new CustomListView<>(true);
-		this.listView.setMaxHeight(250.0);
-		//this.splitPane.getItems().add(listView);
 		createConsoleTextArea();
 	}
 
@@ -129,11 +125,7 @@ public class DictionaryFxController implements Initializable, ContainingParent
 
 	public void println(String str)
 	{
-		Common.runLater(() ->
-				{
-					this.area.appendDefaultTextOnNewLine(str);
-					this.listView.getItems().add(ConsoleText.defaultText(str));
-				});
+		Common.runLater(() -> this.area.appendDefaultTextOnNewLine(str));
 	}
 
 

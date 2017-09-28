@@ -64,7 +64,6 @@ public class MatrixFxController implements Initializable, ContainingParent, IMat
 	public Button						btnPauseMatrix;
 	public Button						btnStepMatrix;
 	public ToggleButton					toggleTracing;
-	public CustomListView<MatrixItem>	listView;
 	public Button						btnWatch;
 	public ScrollPane					mainScrollPane;
 	public ComboBox<String>				cbDefaultApp;
@@ -110,15 +109,6 @@ public class MatrixFxController implements Initializable, ContainingParent, IMat
 
 		createConsoleTextArea();
 
-		this.listView = new CustomListView<>(matrixItem -> tryCatch(() ->
-		{
-			TreeItem<MatrixItem> treeItem = this.tree.find(matrixItem);
-			Optional.ofNullable(treeItem).ifPresent(item -> Common.runLater(() -> this.tree.setCurrent(item, false)));
-		}, "Error on moving to item"), true);
-		this.listView.autoScroll(true);
-		this.listView.setMinHeight(100.0);
-		this.listView.setMaxHeight(250.0);
-		//this.splitPane.getItems().add(this.listView);
 		this.tree = new MatrixTreeView();
 		this.mainScrollPane.setContent(this.tree);
 		this.findPanel = new FindPanel<>(new IFind<MatrixItem>()
@@ -170,25 +160,11 @@ public class MatrixFxController implements Initializable, ContainingParent, IMat
 		this.refresh();
 		CustomTab tab1 = checkDocument(matrix);
 		String format = String.format("Matrix '%s' started...", matrix.getNameProperty().get());
-		if (this.listView != null)
+		Common.runLater(() ->
 		{
-			Common.runLater(() ->
-			{
-				this.area.clear();
-				this.area.appendDefaultTextOnNewLine(String.format("Matrix '%s' started...", matrix.getNameProperty().get()));
-			});
-
-			this.listView.getItems().clear();
-			this.listView.getItems().add(ConsoleText.defaultText(format));
-			Optional.ofNullable(tab1).ifPresent(t -> {
-			t.getStyleClass().removeAll(CssVariables.MATRIX_FINISHED_OK, CssVariables.MATRIX_FINISHED_BAD);
-			t.getStyleClass().add(CssVariables.EXECUTING_TAB);
-			});
-			}
-			else
-			{
-			DialogsHelper.showInfo(format);
-		}
+			this.area.clear();
+			this.area.appendDefaultTextOnNewLine(String.format("Matrix '%s' started...", matrix.getNameProperty().get()));
+		});
 	}
 
 	@Override
@@ -208,19 +184,7 @@ public class MatrixFxController implements Initializable, ContainingParent, IMat
 	public void matrixFinished(final Matrix matrix, final int passed, final int failed)
 	{
 		String format = String.format("Matrix '%s' finished.", matrix.getNameProperty().get());
-		if (this.listView != null)
-		{
-			Common.runLater(() -> this.area.appendDefaultTextOnNewLine(String.format("Matrix '%s' finished.", matrix.getNameProperty().get())));
-			this.listView.getItems().add(ConsoleText.defaultText(format));
-			Optional.ofNullable(this.tab).ifPresent(t -> {
-				t.getStyleClass().remove(CssVariables.EXECUTING_TAB);
-				t.getStyleClass().add(failed == 0 ? CssVariables.MATRIX_FINISHED_OK : CssVariables.MATRIX_FINISHED_BAD);
-			});
-		}
-		else
-		{
-			DialogsHelper.showInfo(format);
-		}
+		Common.runLater(() -> this.area.appendDefaultTextOnNewLine(String.format("Matrix '%s' finished.", matrix.getNameProperty().get())));
 		this.refresh();
 		this.model.disableButtons(false);
 	}
@@ -234,14 +198,6 @@ public class MatrixFxController implements Initializable, ContainingParent, IMat
 		{
 			String format = item == null ? message : String.format("%s %s", item.getPath(), message);
 			this.area.appendErrorTextOnNewLine(format);
-			if (listView != null)
-			{
-				listView.getItems().add(ConsoleText.errorItem(format, item));
-			}
-			else
-			{
-				DialogsHelper.showError(format);
-			}
 		});
 	}
 
@@ -267,23 +223,13 @@ public class MatrixFxController implements Initializable, ContainingParent, IMat
 			this.refreshTreeIfToogle();
 			Optional.ofNullable(this.watcher).ifPresent(WatcherFx::update);
 			TreeItem<MatrixItem> treeItem = this.tree.find(item);
-			if (treeItem == null)
-			{
-				DialogsHelper.showInfo(String.format("Matrix paused on \'%s\' in file \'%s\'", item, matrix.getNameProperty().get()));
-				Optional.ofNullable(this.listView).ifPresent(lv -> lv.getItems().add(ConsoleText.pausedItem(String.format("Paused on %s", item), null)));
-			}
-			else
-			{
-				DialogsHelper.showInfo(String.format("Matrix paused on \'%s\'", treeItem.getValue().getItemName()));
-				Common.runLater(() ->
-                        {
-                            this.area.appendDefaultText(String.format("%d : Paused on ", item.getNumber()));
-                            this.area.appendMatrixItemLink(String.format("%s", item.getItemName()), treeItem);
-                        }
-                );
-				Optional.ofNullable(this.listView).ifPresent(lv -> lv.getItems().add(ConsoleText.pausedItem(String.format("Paused on %s", item), item)));
-				this.tree.scrollTo(this.tree.getRow(treeItem));
-			}
+			Common.runLater(() ->
+					{
+						this.area.appendDefaultText(String.format("%d : Paused on ", item.getNumber()));
+						this.area.appendMatrixItemLink(String.format("%s", item.getItemName()), treeItem);
+						this.tree.scrollTo(this.tree.getRow(treeItem));
+					}
+			);
 		}
 		catch (Exception e)
 		{
@@ -320,11 +266,7 @@ public class MatrixFxController implements Initializable, ContainingParent, IMat
 		this.tree.init(model, settings, rowContextMenu);
 		this.tab = CustomTabPane.getInstance().createTab(model);
 		this.tab.setContent(this.pane);
-		console.setConsumer(s -> Common.runLater(() ->
-		{
-			this.area.appendDefaultTextOnNewLine(s);
-			this.listView.getItems().add(ConsoleText.defaultText(s));
-		}));
+		console.setConsumer(s -> Common.runLater(() -> this.area.appendDefaultTextOnNewLine(s)));
 		CustomTabPane.getInstance().addTab(this.tab);
 		CustomTabPane.getInstance().selectTab(this.tab);
 
@@ -528,14 +470,11 @@ public class MatrixFxController implements Initializable, ContainingParent, IMat
 			this.area.clear();
 			this.area.appendDefaultTextOnNewLine(msg);
 		});
-		this.listView.getItems().clear();
-		this.listView.getItems().add(ConsoleText.defaultText(msg));
 	}
 
 	public void displayAfterStopped(String msg)
 	{
 		Common.runLater(() -> this.area.appendDefaultTextOnNewLine(msg));
-		this.listView.getItems().add(ConsoleText.defaultText(msg));
 	}
 
 	public void refresh()
