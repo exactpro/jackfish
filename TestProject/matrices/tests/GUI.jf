@@ -76,7 +76,7 @@ LAYOUT;DialogCheckLayout;;;
 #Id;#TestCase;#Kind;#Depends;#For
 CLOSE;DialogClose;;;
     #Id;#Action;#Assert;$Dialog;$AppConnection
-    DLGCLS1;DialogClose;This.Result == Result.Failed && This.Kind == ErrorKind.EXCEPTION;'someDialog';APPSTR1.Out
+    DLGCLS1;DialogClose;This.Result == Result.Failed && This.Kind == ErrorKind.DIALOG_NOT_FOUND;'someDialog';APPSTR1.Out
 
     #Id;#Action;#Assert;$Dialog;$AppConnection
     DLGCLS2;DialogClose;This.Out > 0;'Main';APPSTR1.Out
