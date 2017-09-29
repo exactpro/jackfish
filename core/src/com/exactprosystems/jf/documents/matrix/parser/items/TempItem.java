@@ -45,7 +45,7 @@ public class TempItem extends MatrixItem
 
 	private boolean isInit = false;
 	private static boolean isFirstInvoke = false;
-	private static final String CALL = "Call -> ";
+	private static final String CALL = "Call ";
 
 
 	@Override

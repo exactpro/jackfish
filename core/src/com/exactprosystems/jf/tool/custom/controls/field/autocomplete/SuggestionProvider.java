@@ -91,9 +91,11 @@ public abstract class SuggestionProvider<T> implements Callback<AutoCompletionBi
 		@Override
 		protected boolean isMatch(T suggestion, AutoCompletionBinding.ISuggestionRequest request)
 		{
-			String userTextLower = request.getUserText().toLowerCase();
-			String suggestionStr = suggestion.toString().toLowerCase();
-			return suggestionStr.contains(userTextLower);
+			String userText = request.getUserText();
+			String suggestionStr = String.valueOf(suggestion).toLowerCase();
+			String[] split = userText.split("\\s|\\.");
+
+			return Arrays.stream(split).map(String::toLowerCase).allMatch(suggestionStr::contains);
 		}
 	}
 }

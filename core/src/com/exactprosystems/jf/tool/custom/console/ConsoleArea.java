@@ -60,37 +60,42 @@ public class ConsoleArea extends StyleClassedTextArea
 
     public void appendDefaultText(String text)
     {
-        this.appendStyledText(text, false, CssVariables.CONSOLE_DEFAULT_TEXT);
+        this.appendStyledText(text, false, null, CssVariables.CONSOLE_DEFAULT_TEXT);
     }
 
     public void appendDefaultTextOnNewLine(String text)
     {
-        this.appendStyledText(text, true, CssVariables.CONSOLE_DEFAULT_TEXT);
+        this.appendStyledText(text, this.getText().length() > 0, null, CssVariables.CONSOLE_DEFAULT_TEXT);
     }
 
     public void appendErrorText(String text)
     {
-        this.appendStyledText(text, false, CssVariables.CONSOLE_DEFAULT_TEXT);
+        this.appendStyledText(text, false, null, CssVariables.CONSOLE_ERROR_ITEM);
     }
 
     public void appendErrorTextOnNewLine(String text)
     {
-        this.appendStyledText(text, true, CssVariables.CONSOLE_ERROR_ITEM);
-    }
-
-    private void appendStyledText(String text, boolean newLine, String style)
-    {
-        int start = this.getLength();
-        this.appendText(newLine ? text + "\n" : text);
-        this.setStyleClass(start, this.getLength(), style);
+        this.appendStyledText(text, this.getText().length() > 0, null, CssVariables.CONSOLE_ERROR_ITEM);
     }
 
     public void appendMatrixItemLink(String text, TreeItem <MatrixItem> item)
     {
+        this.appendStyledText(text, true, item, CssVariables.CONSOLE_PAUSED_ITEM);
+    }
+
+    private void appendStyledText(String text, boolean newLine, TreeItem <MatrixItem> item, String style)
+    {
         int start = this.getLength();
-        this.appendText(text + "\n");
-        this.setStyleClass(start, this.getLength(), CssVariables.CONSOLE_PAUSED_ITEM);
-        this.list.add(new Link(start, this.getLength(), item));
+        this.appendText(newLine ? "\n" + text : text);
+        this.setStyleClass(start, this.getLength(), style);
+        if (item != null)
+        {
+            this.list.add(new Link(start, this.getLength(), item));
+        }
+        if (this.totalHeightEstimateProperty().getValue() != null)
+        {
+            this.setEstimatedScrollY(this.getTotalHeightEstimate() - this.getHeight());
+        }
     }
 
     private class Link

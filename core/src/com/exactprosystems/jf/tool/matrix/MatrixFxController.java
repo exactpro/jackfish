@@ -19,8 +19,6 @@ import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.ContainingParent;
 import com.exactprosystems.jf.tool.CssVariables;
 import com.exactprosystems.jf.tool.custom.console.ConsoleArea;
-import com.exactprosystems.jf.tool.custom.console.ConsoleText;
-import com.exactprosystems.jf.tool.custom.console.CustomListView;
 import com.exactprosystems.jf.tool.custom.date.CustomDateTimePicker;
 import com.exactprosystems.jf.tool.custom.expfield.ExpressionField;
 import com.exactprosystems.jf.tool.custom.find.FindPanel;
