@@ -37,7 +37,22 @@ public class SuggestionProvider implements Callback<String, Collection<String>>
                 suggestions = isMatch(new ArrayList<>(possibleSuggestions), request);
             }
 
-            Collections.sort(suggestions);
+            String prefix = request.toLowerCase();
+
+            suggestions.sort((s1, s2) ->
+            {
+                if (s1.toLowerCase().startsWith(prefix) && !s2.toLowerCase().startsWith(prefix))
+                {
+                    return -1;
+                }
+                else if (!s1.toLowerCase().startsWith(prefix) && s2.toLowerCase().startsWith(prefix))
+                {
+                    return 1;
+                }else
+                {
+                    return Integer.compare(s1.length(), s2.length());
+                }
+            });
         }
         return suggestions;
     }
