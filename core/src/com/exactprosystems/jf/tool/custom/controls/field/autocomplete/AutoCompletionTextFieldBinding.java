@@ -41,12 +41,12 @@ public class AutoCompletionTextFieldBinding<T> extends AutoCompletionBinding<T>
 
 	private StringConverter<T> converter;
 
-	public AutoCompletionTextFieldBinding(final TextField textField, Callback<ISuggestionRequest, Collection<T>> suggestionProvider)
+	public AutoCompletionTextFieldBinding(final TextField textField, Callback<String, Collection<T>> suggestionProvider)
 	{
 		this(textField, suggestionProvider, AutoCompletionTextFieldBinding.defaultStringConverter());
 	}
 
-	public AutoCompletionTextFieldBinding(final TextField textField, Callback<ISuggestionRequest, Collection<T>> suggestionProvider, final StringConverter<T> converter)
+	public AutoCompletionTextFieldBinding(final TextField textField, Callback<String, Collection<T>> suggestionProvider, final StringConverter<T> converter)
 	{
 		super(textField, suggestionProvider, converter);
 		this.converter = converter;

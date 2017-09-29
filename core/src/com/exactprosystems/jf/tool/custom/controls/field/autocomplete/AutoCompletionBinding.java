@@ -30,10 +30,10 @@ public abstract class AutoCompletionBinding<T> implements EventTarget
 	private final Object suggestionsTaskLock = new Object();
 
 	private FetchSuggestionsTask suggestionsTask = null;
-	private Callback<ISuggestionRequest, Collection<T>> suggestionProvider = null;
+	private Callback<String, Collection<T>> suggestionProvider = null;
 	private boolean ignoreInputChanges = false;
 
-	protected AutoCompletionBinding(Node completionTarget, Callback<ISuggestionRequest, Collection<T>> suggestionProvider, StringConverter<T> converter)
+	protected AutoCompletionBinding(Node completionTarget, Callback<String, Collection<T>> suggestionProvider, StringConverter<T> converter)
 	{
 		this.completionTarget = completionTarget;
 		this.suggestionProvider = suggestionProvider;
@@ -129,7 +129,7 @@ public abstract class AutoCompletionBinding<T> implements EventTarget
 		ignoreInputChanges = state;
 	}
 
-	public static interface ISuggestionRequest
+	public interface ISuggestionRequest
 	{
 		boolean isCancelled();
 		String getUserText();
@@ -147,11 +147,11 @@ public abstract class AutoCompletionBinding<T> implements EventTarget
 		@Override
 		protected Void call() throws Exception
 		{
-			Callback<ISuggestionRequest, Collection<T>> provider = suggestionProvider;
+			Callback<String, Collection<T>> provider = suggestionProvider;
 			if (provider != null)
 			{
 				long start_time = System.currentTimeMillis();
-				final Collection<T> fetchedSuggestions = provider.call(this);
+				final Collection<T> fetchedSuggestions = provider.call(this.userText);
 				long sleep_time = start_time + AUTO_COMPLETE_DELAY - System.currentTimeMillis();
 				if (sleep_time > 0 && !isCancelled())
 				{
@@ -190,11 +190,11 @@ public abstract class AutoCompletionBinding<T> implements EventTarget
 	public static class AutoCompletionEvent<TE> extends Event
 	{
 		@SuppressWarnings("rawtypes")
-		public static final EventType<AutoCompletionEvent> AUTO_COMPLETED = new EventType<>("AUTO_COMPLETED"); //$NON-NLS-1$
+		static final EventType<AutoCompletionEvent> AUTO_COMPLETED = new EventType<>("AUTO_COMPLETED"); //$NON-NLS-1$
 
 		private final TE completion;
 
-		public AutoCompletionEvent(TE completion)
+		AutoCompletionEvent(TE completion)
 		{
 			super(AUTO_COMPLETED);
 			this.completion = completion;
@@ -219,7 +219,7 @@ public abstract class AutoCompletionBinding<T> implements EventTarget
 		return onAutoCompleted == null ? null : onAutoCompleted.get();
 	}
 
-	public final ObjectProperty<EventHandler<AutoCompletionEvent<T>>> onAutoCompletedProperty()
+	private final ObjectProperty<EventHandler<AutoCompletionEvent<T>>> onAutoCompletedProperty()
 	{
 		if (onAutoCompleted == null)
 		{
@@ -248,16 +248,7 @@ public abstract class AutoCompletionBinding<T> implements EventTarget
 		return onAutoCompleted;
 	}
 
-	final EventHandlerManager eventHandlerManager = new EventHandlerManager(this);
-
-	public <E extends Event> void addEventHandler(EventType<E> eventType, EventHandler<E> eventHandler)
-	{
-		eventHandlerManager.addEventHandler(eventType, eventHandler);
-	}
-	public <E extends Event> void removeEventHandler(EventType<E> eventType, EventHandler<E> eventHandler)
-	{
-		eventHandlerManager.removeEventHandler(eventType, eventHandler);
-	}
+	private final EventHandlerManager eventHandlerManager = new EventHandlerManager(this);
 
 	@Override
 	public EventDispatchChain buildEventDispatchChain(EventDispatchChain tail)

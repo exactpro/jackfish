@@ -462,10 +462,9 @@ public class DisplayDriverFx implements DisplayDriver
 		List<String> tempList = words.stream().map(String::toLowerCase).collect(Collectors.toList());
 		field.textProperty().addListener((observable1, oldValue1, newValue1) ->
 		{
-			boolean present = tempList.stream().anyMatch(s ->
-					Arrays.stream(newValue1.split("\\s|\\.")).allMatch(str -> s.contains(str.toLowerCase())));
+			List<String> match = SuggestionProvider.isMatch(tempList, newValue1);
 
-			if (present)
+			if (!match.isEmpty())
 			{
 				field.setStyle("-fx-text-fill : green");
 			}

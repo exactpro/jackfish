@@ -30,23 +30,10 @@ import java.util.stream.Collectors;
 		hasChildren = false)
 public class TempItem extends MatrixItem
 {
-	private static ArrayList<String> list = new ArrayList<>();
-
-	static
-	{
-		list.addAll(Arrays.stream(ActionsList.actions).map(Class::getSimpleName).collect(Collectors.toList()));
-		list.addAll(Arrays.asList(Tokens.TestCase.get(), Tokens.SubCase.get(), Tokens.Return.get(), Tokens.Call.get(), 
-				Tokens.If.get(), Tokens.Else.get(), Tokens.For.get(), Tokens.ForEach.get(), Tokens.While.get(), 
-				Tokens.Continue.get(), Tokens.Break.get(), Tokens.OnError.get(), Tokens.Switch.get(), Tokens.Case.get(), 
-				Tokens.Default.get(), Tokens.Fail.get(), Tokens.RawTable.get(), 
-				Tokens.RawMessage.get(), Tokens.RawText.get(), Tokens.NameSpace.get(), Tokens.Let.get(), Tokens.Step.get(),
-				Tokens.Assert.get(), Tokens.SetHandler.get()));
-	}
+	private ArrayList<String> list = new ArrayList<>();
 
 	private boolean isInit = false;
-	private static boolean isFirstInvoke = false;
-	private static final String CALL = "Call ";
-
+	public static final String CALL = "Call ";
 
 	@Override
 	protected Object displayYourself(DisplayDriver driver, Context context)
@@ -117,12 +104,17 @@ public class TempItem extends MatrixItem
 
 	private void fillList(Context context)
 	{
-		if (!isFirstInvoke)
-		{
-			List<String> subcases = context.subcases(this).stream().map(readableValue -> CALL + readableValue.getValue()).collect(Collectors.toList());
-			list.addAll(subcases);
-			isFirstInvoke = true;
-		}
+		list.addAll(Arrays.stream(ActionsList.actions).map(Class::getSimpleName).collect(Collectors.toList()));
+		list.addAll(Arrays.asList(Tokens.TestCase.get(), Tokens.SubCase.get(), Tokens.Return.get(), Tokens.Call.get(),
+				Tokens.If.get(), Tokens.Else.get(), Tokens.For.get(), Tokens.ForEach.get(), Tokens.While.get(),
+				Tokens.Continue.get(), Tokens.Break.get(), Tokens.OnError.get(), Tokens.Switch.get(), Tokens.Case.get(),
+				Tokens.Default.get(), Tokens.Fail.get(), Tokens.RawTable.get(),
+				Tokens.RawMessage.get(), Tokens.RawText.get(), Tokens.NameSpace.get(), Tokens.Let.get(), Tokens.Step.get(),
+				Tokens.Assert.get(), Tokens.SetHandler.get()));
+
+
+		List<String> subcases = context.subcases(this).stream().map(readableValue -> CALL + readableValue.getValue()).collect(Collectors.toList());
+		list.addAll(subcases);
 	}
 
 	@Override

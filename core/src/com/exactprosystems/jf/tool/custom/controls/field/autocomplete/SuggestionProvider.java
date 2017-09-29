@@ -7,95 +7,69 @@
 ////////////////////////////////////////////////////////////////////////////////
 package com.exactprosystems.jf.tool.custom.controls.field.autocomplete;
 
+import com.exactprosystems.jf.documents.matrix.parser.items.TempItem;
 import javafx.util.Callback;
 
 import java.util.*;
 import java.util.stream.Collectors;
 
-public abstract class SuggestionProvider<T> implements Callback<AutoCompletionBinding.ISuggestionRequest, Collection<T>>
+public class SuggestionProvider implements Callback<String, Collection<String>>
 {
-	private final List<T> possibleSuggestions = new ArrayList<>();
-	private final Object possibleSuggestionsLock = new Object();
+    private final List<String> possibleSuggestions = new ArrayList<>();
+    private final Object possibleSuggestionsLock = new Object();
 
-	public void addPossibleSuggestions(Collection<T> newPossible)
-	{
-		synchronized (possibleSuggestionsLock)
-		{
-			possibleSuggestions.addAll(newPossible);
-		}
-	}
+    public SuggestionProvider(Collection<String> collection)
+    {
+        synchronized (possibleSuggestionsLock)
+        {
+            possibleSuggestions.addAll(collection);
+        }
+    }
 
-	@Override
-	public final Collection<T> call(final AutoCompletionBinding.ISuggestionRequest request)
-	{
-		List<T> suggestions = new ArrayList<>();
-		if (!request.getUserText().isEmpty())
-		{
-			synchronized (possibleSuggestionsLock)
-			{
-				suggestions.addAll(possibleSuggestions.stream()
-						.filter(possibleSuggestion -> isMatch(possibleSuggestion, request))
-						.collect(Collectors.toList())
-				);
-			}
-			Collections.sort(suggestions, getComparator());
-		}
-		return suggestions;
-	}
+    @Override
+    public final Collection<String> call(final String request)
+    {
+        List<String> suggestions = new ArrayList<>();
+        if (!request.isEmpty())
+        {
+            synchronized (possibleSuggestionsLock)
+            {
+                suggestions = isMatch(new ArrayList<>(possibleSuggestions), request);
+            }
 
-	protected abstract Comparator<T> getComparator();
+            Collections.sort(suggestions);
+        }
+        return suggestions;
+    }
 
-	protected abstract boolean isMatch(T suggestion, AutoCompletionBinding.ISuggestionRequest request);
+    public static SuggestionProvider create(Collection<String> possibleSuggestions)
+    {
+        return new SuggestionProvider(possibleSuggestions);
+    }
 
-	public static <T> SuggestionProvider<T> create(Collection<T> possibleSuggestions)
-	{
-		return create(null, possibleSuggestions);
-	}
+    public static List<String> isMatch(List<String> list, String request)
+    {
+        return list.stream().filter(s ->
+        {
+            String userText = request.toLowerCase();
+            String suggestionStr = s.toLowerCase();
+            String[] split = userText.split(" ", 2);
+            String call = TempItem.CALL.toLowerCase();
 
-	public static <T> SuggestionProvider<T> create(Callback<T, String> stringConverter, Collection<T> possibleSuggestions)
-	{
-		SuggestionProviderString<T> suggestionProvider = new SuggestionProviderString<>(stringConverter);
-		suggestionProvider.addPossibleSuggestions(possibleSuggestions);
-		return suggestionProvider;
-	}
+            if (userText.matches("^c|^ca|^cal|^|call"))
+            {
+                return suggestionStr.startsWith(call.substring(0,call.length()-1));
+            }
+            if (!userText.startsWith(call))
+            {
 
-	private static class SuggestionProviderString<T> extends SuggestionProvider<T>
-	{
-		private Callback<T, String> stringConverter;
+                return suggestionStr.contains(userText) && !suggestionStr.startsWith(call);
+            }
+            else
+            {
+                return suggestionStr.startsWith(call) && (split.length == 1 || suggestionStr.substring(call.length()).contains(split[1]));
+            }
 
-		private final Comparator<T> stringComparator = new Comparator<T>()
-		{
-			@Override
-			public int compare(T o1, T o2)
-			{
-				String o1str = stringConverter.call(o1);
-				String o2str = stringConverter.call(o2);
-				return o1str.compareTo(o2str);
-			}
-		};
-
-		public SuggestionProviderString(Callback<T, String> stringConverter)
-		{
-			this.stringConverter = stringConverter;
-			if (this.stringConverter == null)
-			{
-				this.stringConverter = obj -> obj != null ? obj.toString() : "";
-			}
-		}
-
-		protected Comparator<T> getComparator()
-		{
-			return stringComparator;
-		}
-
-		@Override
-		protected boolean isMatch(T suggestion, AutoCompletionBinding.ISuggestionRequest request)
-		{
-			String userText = request.getUserText();
-			String suggestionStr = String.valueOf(suggestion).toLowerCase();
-			String[] split = userText.split("\\s|\\.");
-
-			return Arrays.stream(split).map(String::toLowerCase).allMatch(suggestionStr::contains);
-		}
-	}
+        }).collect(Collectors.toList());
+    }
 }
