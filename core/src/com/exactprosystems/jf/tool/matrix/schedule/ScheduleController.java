@@ -12,7 +12,7 @@ import com.exactprosystems.jf.api.common.MatrixState;
 import com.exactprosystems.jf.documents.matrix.Matrix;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.ContainingParent;
-import javafx.application.Platform;
+import com.exactprosystems.jf.tool.settings.Theme;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.event.ActionEvent;
 import javafx.fxml.Initializable;
@@ -30,6 +30,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.stream.Collectors;
+
+import static com.exactprosystems.jf.tool.settings.Theme.*;
 
 @SuppressWarnings("deprecation")
 public class ScheduleController implements Initializable, ContainingParent
@@ -145,7 +147,7 @@ public class ScheduleController implements Initializable, ContainingParent
 		this.dialog.getDialogPane().setPrefWidth(600);
 		this.dialog.getDialogPane().setPrefHeight(600);
 		this.dialog.getDialogPane().setPadding(new Insets(-15,0,0,0));
-		this.dialog.getDialogPane().getStylesheets().addAll(Common.currentThemesPaths());
+		this.dialog.getDialogPane().getStylesheets().addAll(currentThemesPaths());
 		this.dialog.showAndWait();
 	}
 

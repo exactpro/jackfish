@@ -15,8 +15,7 @@ import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.ContainingParent;
 import com.exactprosystems.jf.tool.custom.expfield.ExpressionField;
 import com.exactprosystems.jf.tool.custom.table.CustomTable;
-
-import javafx.application.Platform;
+import com.exactprosystems.jf.tool.settings.Theme;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.Initializable;
@@ -111,7 +110,7 @@ public class WatcherFxController implements Initializable, ContainingParent
 	{
 		if (!isShow())
 		{
-			this.dialog.getDialogPane().getStylesheets().addAll(Common.currentThemesPaths());
+			this.dialog.getDialogPane().getStylesheets().addAll(Theme.currentThemesPaths());
 			this.dialog.setTitle("Watcher for " + text);
 			Optional<ButtonType> buttonType = this.dialog.showAndWait();
 			buttonType.filter(bt -> bt.getButtonData().equals(ButtonBar.ButtonData.OK_DONE)).ifPresent(bt -> Common.tryCatch(this.model::saveData, "Error on close watcher"));

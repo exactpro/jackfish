@@ -145,7 +145,7 @@ public class Main extends Application
 		Locales.setDefault(this.settings.getValue(Settings.GLOBAL_NS, Settings.SETTINGS, Settings.LANGUAGE).getValue());
 
 		Settings.SettingsValue theme = this.settings.getValueOrDefault(Settings.GLOBAL_NS, Settings.SETTINGS, Settings.THEME);
-		Common.setTheme(Theme.valueOf(theme.getValue().toUpperCase()));
+		Theme.setCurrentTheme(theme.getValue());
 
 		notifyPreloader(new Preloader.ProgressNotification(5));
 

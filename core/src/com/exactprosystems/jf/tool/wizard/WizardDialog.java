@@ -18,6 +18,7 @@ import com.exactprosystems.jf.documents.matrix.parser.items.MatrixItem;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.CssVariables;
 import com.exactprosystems.jf.tool.helpers.DialogsHelper;
+import com.exactprosystems.jf.tool.settings.Theme;
 import javafx.geometry.HPos;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
@@ -47,7 +48,7 @@ public class WizardDialog extends Dialog<Boolean>
 		expandTitle(null);
 		this.setResizable(true);
 		this.initOwner(Common.node);
-		this.getDialogPane().getStylesheets().addAll(Common.currentThemesPaths());
+		this.getDialogPane().getStylesheets().addAll(Theme.currentThemesPaths());
 		Stage stage = ((Stage) this.getDialogPane().getScene().getWindow());
 		Common.addIcons(stage);
         stage.setOnCloseRequest(event ->

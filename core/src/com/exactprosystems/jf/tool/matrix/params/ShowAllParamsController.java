@@ -13,6 +13,7 @@ import com.exactprosystems.jf.documents.matrix.parser.Parameters;
 import com.exactprosystems.jf.documents.matrix.parser.items.TypeMandatory;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.ContainingParent;
+import com.exactprosystems.jf.tool.settings.Theme;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -112,7 +113,7 @@ public class ShowAllParamsController implements Initializable, ContainingParent
 		this.dialog.setHeaderText(title);
 		this.dialog.setResizable(true);
 		this.dialog.getDialogPane().setContent(this.parent);
-		dialog.getDialogPane().getStylesheets().addAll(Common.currentThemesPaths());
+		dialog.getDialogPane().getStylesheets().addAll(Theme.currentThemesPaths());
 		Common.runLater(() -> expandTree(this.treeView.getRoot()));
 		this.dialog.setOnShown(e -> Common.setFocusedFast(tfFilter));
 		Optional<ButtonType> optional = this.dialog.showAndWait();

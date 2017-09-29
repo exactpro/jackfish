@@ -33,6 +33,7 @@ import com.exactprosystems.jf.tool.custom.treetable.MatrixTreeView;
 import com.exactprosystems.jf.tool.helpers.DialogsHelper;
 import com.exactprosystems.jf.tool.matrix.MatrixFx;
 import com.exactprosystems.jf.tool.settings.SettingsPanel;
+import com.exactprosystems.jf.tool.settings.Theme;
 import javafx.collections.MapChangeListener;
 import javafx.event.ActionEvent;
 import javafx.fxml.Initializable;
@@ -243,7 +244,7 @@ public class MainController implements Initializable, ContainingParent
 					.findFirst()
 					.ifPresent(scene.getAccelerators()::remove);
 		});
-		scene.getStylesheets().addAll(Common.currentThemesPaths());
+		scene.getStylesheets().addAll(Theme.currentThemesPaths());
 		this.stage.setScene(scene);
 		SettingsValue value = settings.getValueOrDefault(Settings.GLOBAL_NS, Settings.SETTINGS, Settings.USE_FULL_SCREEN);
 		this.stage.setFullScreen(Boolean.parseBoolean(value.getValue()));
@@ -844,7 +845,7 @@ public class MainController implements Initializable, ContainingParent
 				selectAndHide(listView, dialog);
 			}
 		});
-		dialog.getDialogPane().getStylesheets().addAll(Common.currentThemesPaths());
+		dialog.getDialogPane().getStylesheets().addAll(Theme.currentThemesPaths());
 		Optional<ButtonType> buttonType = dialog.showAndWait();
 		buttonType.filter(bt -> bt.getButtonData().equals(ButtonBar.ButtonData.OK_DONE)).ifPresent(type -> selectAndHide(listView, dialog));
 	}

@@ -8,6 +8,8 @@
 
 package com.exactprosystems.jf.tool;
 
+import com.exactprosystems.jf.tool.settings.Theme;
+
 public class CssVariables
 {
 	/**
@@ -253,7 +255,7 @@ public class CssVariables
 		//endregion
 
 		//region Theme dependence icons
-		private static final String THEME_IMAGES_DIR = Common.currentTheme().getPathToIcons();
+		private static final String THEME_IMAGES_DIR = Theme.currentTheme().getPathToIcons();
 
 		public static final String UNDO_ICON_SMALL = THEME_IMAGES_DIR + "/undo_16.png";
 		public static final String REDO_ICON_SMALL = THEME_IMAGES_DIR + "/redo_16.png";

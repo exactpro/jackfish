@@ -14,6 +14,7 @@ import com.exactprosystems.jf.tool.git.GitBean;
 import com.exactprosystems.jf.tool.git.GitUtil;
 import com.exactprosystems.jf.tool.newconfig.CompareEnum;
 import com.exactprosystems.jf.tool.newconfig.nodes.BuildTree;
+import com.exactprosystems.jf.tool.settings.Theme;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -137,7 +138,7 @@ public class GitStatusController implements Initializable, ContainingParent
 		Dialog<ButtonType> dialog = new Alert(Alert.AlertType.INFORMATION);
 		Common.addIcons(((Stage) dialog.getDialogPane().getScene().getWindow()));
 		dialog.setResizable(true);
-		dialog.getDialogPane().getStylesheets().addAll(Common.currentThemesPaths());
+		dialog.getDialogPane().getStylesheets().addAll(Theme.currentThemesPaths());
 		dialog.setTitle("Git status");
 		Text headerLabel = new Text(state);
 		if (list.isEmpty())

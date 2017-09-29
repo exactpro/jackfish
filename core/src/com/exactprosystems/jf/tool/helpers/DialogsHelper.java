@@ -39,6 +39,7 @@ import com.exactprosystems.jf.tool.custom.browser.ReportBrowser;
 import com.exactprosystems.jf.tool.custom.date.DateTimePicker;
 import com.exactprosystems.jf.tool.custom.date.DateTimePickerSkin;
 import com.exactprosystems.jf.tool.custom.helper.HelperFx;
+import com.exactprosystems.jf.tool.settings.Theme;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
@@ -57,7 +58,10 @@ import javafx.scene.layout.Region;
 import javafx.scene.text.Text;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
-import javafx.stage.*;
+import javafx.stage.DirectoryChooser;
+import javafx.stage.FileChooser;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
 import javafx.util.Duration;
 import org.apache.log4j.Logger;
 
@@ -101,7 +105,7 @@ public abstract class DialogsHelper
 		ListView<ExpressionFieldsPane> listView = new ListView<>();
 		dialog.getDialogPane().setContent(listView);
 		parameters.forEach((key, value) -> listView.getItems().addAll(new ExpressionFieldsPane(key, value, evaluator, function.apply(key))));
-		dialog.getDialogPane().getStylesheets().addAll(Common.currentThemesPaths());
+		dialog.getDialogPane().getStylesheets().addAll(Theme.currentThemesPaths());
 		Optional<ButtonType> buttonType = dialog.showAndWait();
 		if (buttonType.isPresent())
 		{
@@ -122,7 +126,7 @@ public abstract class DialogsHelper
 		dialog.setTitle("Warning");
 		dialog.getDialogPane().setHeaderText("File " + fileName + " was changed by another process");
 		dialog.getDialogPane().setContentText("Reload it?");
-		dialog.getDialogPane().getStylesheets().addAll(Common.currentThemesPaths());
+		dialog.getDialogPane().getStylesheets().addAll(Theme.currentThemesPaths());
 		Optional<ButtonType> buttonType = dialog.showAndWait();
 		return buttonType.orElse(ButtonType.CANCEL);
 	}
@@ -137,7 +141,7 @@ public abstract class DialogsHelper
 		alert.getDialogPane().setContent(popupContent);
 		alert.setTitle("Select date");
 		alert.setHeaderText("Choose date");
-		alert.getDialogPane().getStylesheets().addAll(Common.currentThemesPaths());
+		alert.getDialogPane().getStylesheets().addAll(Theme.currentThemesPaths());
 		Optional<ButtonType> buttonType = alert.showAndWait();
 		Optional<ButtonType> btnOk = buttonType.filter(bt -> bt.getButtonData().equals(ButtonBar.ButtonData.OK_DONE));
 		return btnOk.map(buttonType1 -> picker.getDate()).orElse(initialValue);
@@ -152,7 +156,7 @@ public abstract class DialogsHelper
 		dialog.setTitle("Warning");
 		dialog.getDialogPane().setHeaderText(header);
 		dialog.getDialogPane().setContentText(body);
-		dialog.getDialogPane().getStylesheets().addAll(Common.currentThemesPaths());
+		dialog.getDialogPane().getStylesheets().addAll(Theme.currentThemesPaths());
 		Optional<ButtonType> buttonType = dialog.showAndWait();
 		return buttonType.map(buttonType1 -> buttonType1.getButtonData() == ButtonBar.ButtonData.OK_DONE).orElse(false);
 	}
@@ -165,7 +169,7 @@ public abstract class DialogsHelper
 		dialog.getDialogPane().setHeaderText("File " + fileName + " was changed.");
 		dialog.getDialogPane().setContentText("Do you want to save?");
 		dialog.getDialogPane().getButtonTypes().addAll(ButtonType.YES, ButtonType.NO, ButtonType.CANCEL);
-		dialog.getDialogPane().getStylesheets().addAll(Common.currentThemesPaths());
+		dialog.getDialogPane().getStylesheets().addAll(Theme.currentThemesPaths());
 		Optional<ButtonType> res = dialog.showAndWait();
 		if (res.isPresent())
 		{
@@ -246,7 +250,7 @@ public abstract class DialogsHelper
 				listView.getFocusModel().focus(0);
 			}
 		});
-		dialog.getDialogPane().getStylesheets().addAll(Common.currentThemesPaths());
+		dialog.getDialogPane().getStylesheets().addAll(Theme.currentThemesPaths());
 		Optional<ButtonType> optional = dialog.showAndWait();
 		optional.ifPresent(o ->
 		{
@@ -331,7 +335,7 @@ public abstract class DialogsHelper
 			}
 		});
 		Common.runLater(tf::requestFocus);
-		dialog.getDialogPane().getStylesheets().addAll(Common.currentThemesPaths());
+		dialog.getDialogPane().getStylesheets().addAll(Theme.currentThemesPaths());
 		Optional<ButtonType> buttonType = dialog.showAndWait();
 		if (buttonType.isPresent())
 		{
@@ -433,7 +437,7 @@ public abstract class DialogsHelper
 			}
 		});
 		Common.runLater(tf::requestFocus);
-		dialog.getDialogPane().getStylesheets().addAll(Common.currentThemesPaths());
+		dialog.getDialogPane().getStylesheets().addAll(Theme.currentThemesPaths());
 		Optional<ButtonType> buttonType = dialog.showAndWait();
 		if (buttonType.isPresent())
 		{
@@ -550,7 +554,7 @@ public abstract class DialogsHelper
         dialog.getDialogPane().setHeader(new Label());
         dialog.setTitle("Help for " + name);
         dialog.setHeaderText(null);
-        dialog.getDialogPane().getStylesheets().addAll(Common.currentThemesPaths());
+        dialog.getDialogPane().getStylesheets().addAll(Theme.currentThemesPaths());
         dialog.show();
     }
 
@@ -674,7 +678,7 @@ public abstract class DialogsHelper
 		grid.add(copyrightTxt,1,1);
 		dialog.getDialogPane().setContent(grid);
 		GridPane.setValignment(logo, VPos.TOP);
-		dialog.getDialogPane().getStylesheets().addAll(Common.currentThemesPaths());
+		dialog.getDialogPane().getStylesheets().addAll(Theme.currentThemesPaths());
 		dialog.show();
 	}
 
@@ -750,7 +754,7 @@ public abstract class DialogsHelper
 					}
 				}
 				dialog.setHeaderText("Report for " + matrName[0]);
-				dialog.getDialogPane().getStylesheets().addAll(Common.currentThemesPaths());
+				dialog.getDialogPane().getStylesheets().addAll(Theme.currentThemesPaths());
 				Optional<ButtonType> buttonType = dialog.showAndWait();
 				buttonType.filter(bt -> bt.getButtonData().equals(ButtonBar.ButtonData.OTHER)).ifPresent(type -> Common.tryCatch(() ->
 				{
@@ -779,7 +783,7 @@ public abstract class DialogsHelper
 		dialog.initOwner(Common.node);
 		dialog.setResult(new ButtonType("", ButtonBar.ButtonData.CANCEL_CLOSE));
 		dialog.setResizable(true);
-		dialog.getDialogPane().getStylesheets().addAll(Common.currentThemesPaths());
+		dialog.getDialogPane().getStylesheets().addAll(Theme.currentThemesPaths());
 		dialog.setTitle(title);
 		Label header = new Label();
 		header.setMinHeight(0.0);
@@ -838,7 +842,7 @@ public abstract class DialogsHelper
 		dialog.getDialogPane().setPrefWidth(1024);
 		dialog.getDialogPane().setPrefHeight(768);
 		dialog.getDialogPane().setPadding(new Insets(-28,-10,-59,-10));
-		dialog.getDialogPane().getStylesheets().addAll(Common.currentThemesPaths());
+		dialog.getDialogPane().getStylesheets().addAll(Theme.currentThemesPaths());
 		dialog.initModality(Modality.NONE);
 		dialog.show();
 	}

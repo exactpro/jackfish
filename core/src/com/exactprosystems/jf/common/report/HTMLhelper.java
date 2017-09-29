@@ -8,14 +8,13 @@
 
 package com.exactprosystems.jf.common.report;
 
-import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.settings.Theme;
 
 import java.util.HashMap;
 import java.util.Map;
 
-import static  com.exactprosystems.jf.common.report.ReportBuilder.OM;
-import static  com.exactprosystems.jf.common.report.ReportBuilder.CM;
+import static com.exactprosystems.jf.common.report.ReportBuilder.CM;
+import static com.exactprosystems.jf.common.report.ReportBuilder.OM;
 
 public class HTMLhelper
 {
@@ -114,7 +113,7 @@ public class HTMLhelper
 	
 	public static String htmlMarker(String marker)
 	{
-		boolean theme = Common.currentTheme().equals(Theme.WHITE);
+		boolean theme = Theme.currentTheme().equals(Theme.WHITE);
 		if (marker == null)
 		{
 			return "";

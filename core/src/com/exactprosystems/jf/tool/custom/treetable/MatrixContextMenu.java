@@ -27,6 +27,7 @@ import com.exactprosystems.jf.tool.custom.grideditor.SpreadsheetView;
 import com.exactprosystems.jf.tool.helpers.DialogsHelper;
 import com.exactprosystems.jf.tool.matrix.MatrixFx;
 import com.exactprosystems.jf.tool.settings.SettingsPanel;
+import com.exactprosystems.jf.tool.settings.Theme;
 import com.exactprosystems.jf.tool.wizard.WizardButton;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -249,7 +250,7 @@ public class MatrixContextMenu extends ContextMenu
 	private void gotoLine(MatrixTreeView tree)
 	{
 		TextInputDialog dialog = new TextInputDialog();
-		dialog.getDialogPane().getStylesheets().addAll(Common.currentThemesPaths());
+		dialog.getDialogPane().getStylesheets().addAll(Theme.currentThemesPaths());
 		dialog.getDialogPane().setHeader(new Pane());
 		dialog.setTitle("Enter line number");
 		dialog.getEditor().textProperty().addListener((observable, oldValue, newValue) ->

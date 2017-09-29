@@ -20,7 +20,6 @@ import com.exactprosystems.jf.tool.custom.label.CommentsLabel;
 import com.exactprosystems.jf.tool.custom.tab.CustomTab;
 import com.exactprosystems.jf.tool.custom.tab.CustomTabPane;
 import com.exactprosystems.jf.tool.helpers.DialogsHelper;
-import com.exactprosystems.jf.tool.settings.Theme;
 import javafx.application.Platform;
 import javafx.concurrent.Task;
 import javafx.fxml.FXMLLoader;
@@ -57,7 +56,10 @@ import java.nio.file.Paths;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.util.*;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Date;
+import java.util.List;
 import java.util.function.Consumer;
 
 public abstract class Common
@@ -69,7 +71,6 @@ public abstract class Common
 
 	private static Consumer<String> browserListener;
 
-	public final static String	SETTINGS_PATH			= ".settings.xml";
 	public final static int		PREF_HEIGHT				= 23;
 	public final static int		MIN_HEIGHT				= PREF_HEIGHT - 1;
 	public final static int		MAX_HEIGHT				= PREF_HEIGHT + 1;
@@ -182,24 +183,6 @@ public abstract class Common
 		{
 			throw new RuntimeException("Can't load resource: " + resource, e);
 		}
-	}
-
-	// TODO move it to Main
-	private static Theme theme;
-
-	public static void setTheme(Theme theme)
-	{
-		Common.theme = theme;
-	}
-
-	public static List<String> currentThemesPaths()
-	{
-		return Arrays.asList(Theme.GENERAL.getPath(), Common.theme.getPath());
-	}
-
-	public static Theme currentTheme()
-	{
-		return Common.theme;
 	}
 
 	// TODO move it to CustomTab

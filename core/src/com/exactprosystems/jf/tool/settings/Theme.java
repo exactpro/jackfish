@@ -10,6 +10,9 @@ package com.exactprosystems.jf.tool.settings;
 
 import javafx.scene.paint.Color;
 
+import java.util.Arrays;
+import java.util.List;
+
 public enum Theme
 {
 	GENERAL("com/exactprosystems/jf/tool/css/general/general.css", "com/exactprosystems/jf/tool/css/general/icons", false, null, null),
@@ -23,6 +26,8 @@ public enum Theme
 	private Color mainColor;
 	private Color reverseColor;
 
+	private static Theme currentTheme = WHITE;
+
 	Theme(String path, String pathToIcons, boolean visible, Color mainColor, Color reverseColor)
 	{
 		this.path = path;
@@ -30,6 +35,21 @@ public enum Theme
 		this.visible = visible;
 		this.mainColor = mainColor;
 		this.reverseColor = reverseColor;
+	}
+
+	public static Theme currentTheme()
+	{
+		return currentTheme;
+	}
+
+	public static void setCurrentTheme(String themeName)
+	{
+		currentTheme = Theme.valueOf(themeName.toUpperCase());
+	}
+
+	public static List<String> currentThemesPaths()
+	{
+		return Arrays.asList(Theme.GENERAL.getPath(), currentTheme.getPath());
 	}
 
 	public String getPath()

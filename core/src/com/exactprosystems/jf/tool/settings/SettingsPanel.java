@@ -163,7 +163,7 @@ public class SettingsPanel
 	{
 		this.settings.saveIfNeeded();
 		Settings.SettingsValue theme = this.settings.getValueOrDefault(Settings.GLOBAL_NS, Settings.SETTINGS, Settings.THEME);
-		Common.setTheme(Theme.valueOf(theme.getValue().toUpperCase()));
+		Theme.setCurrentTheme(theme.getValue());
 	}
 
 	public String nameOtherShortcut(String value, String currentKey)
