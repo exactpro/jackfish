@@ -348,12 +348,13 @@
         <ComboBox x:Name="comboboxWithData" Height="15" Margin="0,30,41,0" VerticalAlignment="Top" ItemTemplate="{StaticResource ItemTemplate}" ItemsSource="{Binding Collection}" d:LayoutOverrides="LeftMargin, RightMargin, TopMargin, BottomMargin" HorizontalAlignment="Right" Width="26"/>
         <sdk:Label x:Name="labelCheckboxes" Height="16" Margin="10,50,72,0" VerticalAlignment="Top" Content="With checkboxes" d:LayoutOverrides="LeftMargin, RightMargin, TopMargin, BottomMargin"/>
         <ComboBox x:Name="comboboxCheckboxes" Height="15" Margin="0,50,41,0" VerticalAlignment="Top" ItemTemplate="{StaticResource ItemTemplate1}" d:LayoutOverrides="LeftMargin, RightMargin, TopMargin, BottomMargin" Style="{StaticResource MultiSelComboBoxStyle}" DataContext="{Binding Source={StaticResource MultySelectData}}" ItemsSource="{Binding Collection}" HorizontalAlignment="Right" Width="26"/>
-        <sdk:DataGrid Margin="10,80,40,62" d:LayoutOverrides="LeftMargin, RightMargin, TopMargin, BottomMargin, LeftPosition, RightPosition, TopPosition, BottomPosition" AutoGenerateColumns="False" DataContext="{Binding Source={StaticResource TableData}}" ItemsSource="{Binding Collection}">
+        <sdk:DataGrid Margin="10,80,40,62" d:LayoutOverrides="LeftMargin, RightMargin, TopMargin, BottomMargin, LeftPosition, RightPosition, TopPosition, BottomPosition" AutoGenerateColumns="False" DataContext="{StaticResource TableData}" ItemsSource="{Binding Collection}">
             <sdk:DataGrid.Columns>
                 <sdk:DataGridCheckBoxColumn Binding="{Binding Boolean}" Header="Boolean"/>
                 <sdk:DataGridTextColumn Binding="{Binding Image}" Header="Image"/>
                 <sdk:DataGridTextColumn Binding="{Binding Number}" Header="Number"/>
                 <sdk:DataGridTextColumn Binding="{Binding String}" Header="String"/>
+                <sdk:DataGridTextColumn Visibility="Collapsed" Binding="{Binding EMPTY_HEADER}" Header="EMPTY_HEADER"/>
             </sdk:DataGrid.Columns>
         </sdk:DataGrid>
         <sdk:AutoCompleteBox Height="28" Margin="10,0,53,29" VerticalAlignment="Bottom" x:Name="autocompleteBox" IsDropDownOpen="True" ItemsSource="{Binding Collection, Source={StaticResource ComboBoxData}}" FilterMode="None" ItemTemplate="{StaticResource ItemTemplate}" d:LayoutOverrides="LeftMargin, RightMargin, TopMargin, BottomMargin"/>

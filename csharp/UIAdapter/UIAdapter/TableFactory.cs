@@ -382,7 +382,7 @@ namespace UIAdapter.Tables
             int i = 0;
             while (headerCell != null)
             {
-                if (this.HeaderCellIsGood(headerCell))
+                if (this.HeaderCellIsGood(headerCell) && !headerCell.Current.IsOffscreen)
                 {
                     String headerCellValue = this.GetValueHeaderCell(headerCell);
                     builder.Append(sep).Append(GetValueFromArray(columnsArray, i, headerCellValue));

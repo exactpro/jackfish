@@ -135,6 +135,7 @@
             <comboBox id="combo" uid="comboboxSimple" xpath="" class=""/>
             <comboBox id="combo3" uid="comboboxSimple2" xpath="" class=""/>
             <comboBox id="comboCheckBoxes" uid="comboboxCheckboxes" xpath="" class=""/>
+            <table id="Table" xpath="//DataGrid"/>
         </run>
         <onClose/>
         <close/>

@@ -5,15 +5,15 @@
 -->
 <SampleData:TableData xmlns:SampleData="clr-namespace:Expression.Blend.SampleData.TableData" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation">
   <SampleData:TableData.Collection>
-    <SampleData:Item String="Cras class curae maecenas" Boolean="True" Number="22" Image="12" />
-    <SampleData:Item String="Aenean nam" Boolean="False" Number="47" Image="91" />
-    <SampleData:Item String="Praesent sed donec mauris" Boolean="True" Number="11" Image="97" />
-    <SampleData:Item String="Etiam fusce dis" Boolean="False" Number="10" Image="12" />
-    <SampleData:Item String="Nullam lorem accumsan" Boolean="True" Number="84" Image="88" />
-    <SampleData:Item String="Bibendum morbi aliquam" Boolean="False" Number="45" Image="28" />
-    <SampleData:Item String="Nulla dictumst integer" Boolean="True" Number="10" Image="58" />
-    <SampleData:Item String="Aptent eleifend duis nunc" Boolean="False" Number="72" Image="48" />
-    <SampleData:Item String="Est auctor congue" Boolean="True" Number="80" Image="29" />
-    <SampleData:Item String="Proin augue hac" Boolean="False" Number="39" Image="89" />
+    <SampleData:Item String="Cras class curae maecenas" Boolean="True" Number="22" Image="12" EMPTY_HEADER="Aliquam nam cras aenean" />
+    <SampleData:Item String="Aenean nam" Boolean="False" Number="47" Image="91" EMPTY_HEADER="Mauris sed" />
+    <SampleData:Item String="Praesent sed donec mauris" Boolean="True" Number="11" Image="97" EMPTY_HEADER="Nullam integer" />
+    <SampleData:Item String="Etiam fusce dis" Boolean="False" Number="10" Image="12" EMPTY_HEADER="Maecenas praesent class" />
+    <SampleData:Item String="Nullam lorem accumsan" Boolean="True" Number="84" Image="88" EMPTY_HEADER="Curae accumsan dis" />
+    <SampleData:Item String="Bibendum morbi aliquam" Boolean="False" Number="45" Image="28" EMPTY_HEADER="Aptent duis" />
+    <SampleData:Item String="Nulla dictumst integer" Boolean="True" Number="10" Image="58" EMPTY_HEADER="Quisque donec etiam" />
+    <SampleData:Item String="Aptent eleifend duis nunc" Boolean="False" Number="72" Image="48" EMPTY_HEADER="Nunc fusce auctor est" />
+    <SampleData:Item String="Est auctor congue" Boolean="True" Number="80" Image="29" EMPTY_HEADER="Amet hac leo bibendum" />
+    <SampleData:Item String="Proin augue hac" Boolean="False" Number="39" Image="89" EMPTY_HEADER="Dictumst vivamus lorem eleifend" />
   </SampleData:TableData.Collection>
 </SampleData:TableData>

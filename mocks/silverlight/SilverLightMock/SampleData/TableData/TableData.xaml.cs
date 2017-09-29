@@ -138,6 +138,25 @@ namespace Expression.Blend.SampleData.TableData
                 }
             }
         }
+
+        private string _EMPTY_HEADER = string.Empty;
+
+        public string EMPTY_HEADER
+        {
+            get
+            {
+                return this._EMPTY_HEADER;
+            }
+
+            set
+            {
+                if (this._EMPTY_HEADER != value)
+                {
+                    this._EMPTY_HEADER = value;
+                    this.OnPropertyChanged("EMPTY_HEADER");
+                }
+            }
+        }
     }
 #endif
 }
