@@ -142,5 +142,6 @@ public class LogsFxController implements Initializable, ContainingParent
 	public void clearAndSelect(int index)
 	{
 		this.consoleArea.moveTo(index, 0);
+		this.consoleArea.setEstimatedScrollY(this.consoleArea.getTotalHeightEstimate() / this.consoleArea.getParagraphs().size() * index);
 	}
 }

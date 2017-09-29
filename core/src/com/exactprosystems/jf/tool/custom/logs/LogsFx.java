@@ -117,7 +117,7 @@ public class LogsFx
 		forEach(logs, log ->
 		{
 			@SuppressWarnings("unchecked")
-			Enumeration<Appender> apps = logs.nextElement().getAllAppenders();
+			Enumeration<Appender> apps = log.getAllAppenders();
 			forEach(apps, app -> files.add(((FileAppender) app).getFile()));
 		});
 		return files.stream().map(File::new).filter(File::exists).collect(Collectors.toList());
