@@ -8,6 +8,9 @@ import com.exactprosystems.jf.api.app.ControlKind;
 import com.exactprosystems.jf.api.app.IApplicationFactory;
 import com.exactprosystems.jf.api.app.OperationKind;
 import com.exactprosystems.jf.api.common.DateTime;
+import com.exactprosystems.jf.api.common.PluginDescription;
+import com.exactprosystems.jf.api.common.PluginFieldDescription;
+import com.exactprosystems.jf.api.common.Str;
 import com.exactprosystems.jf.api.wizard.Wizard;
 import com.exactprosystems.jf.api.wizard.WizardManager;
 import com.exactprosystems.jf.common.ControlsAttributes;
@@ -28,9 +31,11 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.lang.reflect.Field;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 public class DocumentationBuilder
@@ -165,6 +170,31 @@ public class DocumentationBuilder
         return help;
     }
 
+    public static MatrixItem createNewHelpForPlugin(ReportBuilder report, Context context, String title, IApplicationFactory applicationFactory) throws Exception
+    {
+        AbstractEvaluator evaluator = context.getEvaluator();
+        MatrixItem help = new HelpTextLine("{{`{{*" + title + "*}}`}}");
+        PluginDescription pd = applicationFactory.getClass().getAnnotation(PluginDescription.class);
+        //description
+        addTextLine(help, pd.description());
+        //fields -> table
+        Field[] fields = applicationFactory.getClass().getDeclaredFields();
+        addFieldDescriptionForPlugin(help, evaluator, fields);
+        //controls
+        addTextLine(help, "{{`{{*Supported controls*}}`}}");
+        Set<ControlKind> controls = applicationFactory.supportedControlKinds();
+        String s = controls.stream().map(c -> "{{@" + c.getClazz() + "@}}").collect(Collectors.joining(", "));
+        addTextLine(help, "{{`" + s + "`}}");
+        //additional info
+        if(!Str.IsNullOrEmpty(pd.additionalDescription()))
+        {
+            addTextLine(help, "{{`{{*Additional info*}}`}}");
+            addTextLine(help, pd.additionalDescription());
+        }
+        //any??
+        return help;
+    }
+
     public static void addContent(MatrixItem root, String title, Content content) throws Exception
     {
         MatrixItem contentItem = new HelpContent(title, content); 
@@ -192,6 +222,23 @@ public class DocumentationBuilder
         for (String[] element : new Marker.HTMLMaker(Theme.currentTheme().equals(Theme.WHITE)).keysDescriptions())
         {
             table.addValue(element);
+        }
+        MatrixItem tableItem = new HelpTable("", table, true, width);
+        root.insert(root.count(), tableItem);
+    }
+
+    private static void addFieldDescriptionForPlugin(MatrixItem root, AbstractEvaluator evaluator, Field[] fields) throws Exception
+    {
+        String[] headers = new String[] {"Parameter", "Description", "Example"};
+        int[] width = new int[] {20, 50, 30};
+        Table table = new Table(headers, evaluator);
+        for(Field f : fields)
+        {
+            PluginFieldDescription pfd = f.getAnnotation(PluginFieldDescription.class);
+            if(pfd != null)
+            {
+                table.addValue(new String[] {pfd.parameter(), pfd.description(), pfd.description()});
+            }
         }
         MatrixItem tableItem = new HelpTable("", table, true, width);
         root.insert(root.count(), tableItem);

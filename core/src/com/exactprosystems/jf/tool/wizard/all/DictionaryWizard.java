@@ -11,6 +11,7 @@ package com.exactprosystems.jf.tool.wizard.all;
 import com.exactprosystems.jf.api.app.*;
 import com.exactprosystems.jf.api.common.IContext;
 import com.exactprosystems.jf.api.common.Str;
+import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.api.error.JFRemoteException;
 import com.exactprosystems.jf.api.wizard.WizardAttribute;
 import com.exactprosystems.jf.api.wizard.WizardCategory;
@@ -36,7 +37,6 @@ import com.exactprosystems.jf.tool.wizard.AbstractWizard;
 import com.exactprosystems.jf.tool.wizard.CommandBuilder;
 import com.exactprosystems.jf.tool.wizard.related.MarkerStyle;
 import com.exactprosystems.jf.tool.wizard.related.WizardLoader;
-import javafx.application.Platform;
 import javafx.concurrent.Service;
 import javafx.concurrent.Task;
 import javafx.geometry.*;
@@ -53,6 +53,7 @@ import org.w3c.dom.Node;
 
 import java.awt.*;
 import java.awt.geom.Point2D;
+import java.text.MessageFormat;
 import java.util.*;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
@@ -249,7 +250,7 @@ public class DictionaryWizard extends AbstractWizard
 		r0.setVgrow(Priority.SOMETIMES);
 		gridPane.getRowConstraints().addAll(r0);
 
-		Label lblDialog = new Label("Dialog : ");
+		Label lblDialog = new Label(R.WIZARD_LABEL_DIALOG.get());
 		gridPane.add(lblDialog, 0, 0);
 		GridPane.setHalignment(lblDialog, HPos.RIGHT);
 
@@ -257,12 +258,12 @@ public class DictionaryWizard extends AbstractWizard
 		this.tfDialogName.setText(this.copyWindow.getName());
 		gridPane.add(this.tfDialogName, 1, 0);
 
-		Label lblSelf = new Label("Self id : ");
+		Label lblSelf = new Label(R.WIZARD_LABEL_SELFID.get());
 		gridPane.add(lblSelf, 2, 0);
 		GridPane.setHalignment(lblSelf, HPos.RIGHT);
 
 		this.lblSelfId = new Label();
-		Common.tryCatch(() -> this.lblSelfId.setText(this.copyWindow.getSelfControl().getID()), "Error on set self id");
+		Common.tryCatch(() -> this.lblSelfId.setText(this.copyWindow.getSelfControl().getID()), R.WIZARD_ERROR_ON_SET_SELF_ID.get());
 		gridPane.add(this.lblSelfId, 3, 0);
 		GridPane.setHalignment(this.lblSelfId, HPos.LEFT);
 		this.lblSelfId.getStyleClass().add(CssVariables.BOLD_LABEL);
@@ -273,8 +274,8 @@ public class DictionaryWizard extends AbstractWizard
 		GridPane.setValignment(hBox, VPos.CENTER);
 		hBox.setAlignment(Pos.CENTER_RIGHT);
 
-		this.btnGenerateOnOpen = new Button("On open");
-		this.btnGenerateOnClose = new Button("On close");
+		this.btnGenerateOnOpen = new Button(R.WIZARD_LABEL_ON_OPEN.get());
+		this.btnGenerateOnClose = new Button(R.WIZARD_LABEL_ON_CLOSE.get());
 		hBox.getChildren().addAll(this.btnGenerateOnOpen, Common.createSpacer(Common.SpacerEnum.HorizontalMid), this.btnGenerateOnClose);
 
 		vBox.getChildren().addAll(Common.createSpacer(Common.SpacerEnum.VerticalMid), gridPane, Common.createSpacer(Common.SpacerEnum.VerticalMid));
@@ -412,18 +413,18 @@ public class DictionaryWizard extends AbstractWizard
 			IControl self = this.currentWindow.getSelfControl();
 			if (self == null)
 			{
-				DialogsHelper.showError("Self control not found");
+				DialogsHelper.showError(R.WIZARD_SELF_ID_NOT_FOUND.get());
 				return false;
 			}
 			if (self.getID().isEmpty())
 			{
-				DialogsHelper.showError("Self control is empty");
+				DialogsHelper.showError(R.WIZARD_SELF_CONTROL_IS_EMPTY.get());
 				return false;
 			}
 
 			if (this.currentConnection == null || !this.currentConnection.isGood())
 			{
-				DialogsHelper.showError("Application is not started.\nStart it before call the wizard.");
+				DialogsHelper.showError(R.WIZARD_APPLICATION_NOT_STARTED.get());
 				return false;
 			}
 
@@ -432,7 +433,7 @@ public class DictionaryWizard extends AbstractWizard
 			{
 				this.imageViewWithScale.displayImage(image);
 				this.dialogRectangle = Common.tryCatch(() -> this.currentConnection.getApplication().service().getRectangle(null, Optional.ofNullable(this.copyWindow.getSelfControl()).map(IControl::locator).orElse(null)),
-						"DictionaryWizard exception", new Rectangle(0, 0, 0, 0));
+						R.WIZARD_DICTIONARY_EXCEPTION.get(), new Rectangle(0, 0, 0, 0));
 				this.document = doc;
 				this.rootNode = XpathUtils.getFirst(this.document, "/*");
 				this.xmlTreeView.displayDocument(this.document);
@@ -530,14 +531,14 @@ public class DictionaryWizard extends AbstractWizard
 			section.clearSection();
 			section.addControl(onOpen);
 			updateOnButtons();
-		}, "Error on generate onOpen"));
+		}, R.WIZARD_ERROR_ON_GENERATE_ON_OPEN.get()));
 		this.btnGenerateOnClose.setOnAction(e ->Common.tryCatch(() -> {
 			AbstractControl onOpen = generate(Addition.WaitToDisappear);
 			Section section = (Section) this.copyWindow.getSection(IWindow.SectionKind.OnClose);
 			section.clearSection();
 			section.addControl(onOpen);
 			updateOnButtons();
-		}, "Error on generate onClose"));
+		}, R.WIZARD_ERROR_ON_GENERATE_ON_CLOSE.get()));
 
 		this.tfDialogName.textProperty().addListener((observable, oldValue, newValue) -> this.copyWindow.setName(newValue));
 
@@ -828,7 +829,7 @@ public class DictionaryWizard extends AbstractWizard
 		int sum = this.xmlTreeView.getMarkedRowCount();
 		if (sum == 0)
 		{
-			DialogsHelper.showInfo("Nothing to update");
+			DialogsHelper.showInfo(R.WIZARD_NOTHING_TO_UPDATE_INFO.get());
 			return;
 		}
 		Dialog<String> dialog = new Dialog<>();
@@ -842,7 +843,7 @@ public class DictionaryWizard extends AbstractWizard
 		progressBar.setMaxWidth(Double.MAX_VALUE);
 		progressBar.setProgress(0);
 
-		Button btnStop = new Button("Stop");
+		Button btnStop = new Button(R.WIZARD_STOP_APPLICATION.get());
 		btnStop.setOnAction(e -> {
 			dialog.setResult("");
 			taskExecutor.shutdownNow();
@@ -857,7 +858,7 @@ public class DictionaryWizard extends AbstractWizard
 
 		dialog.getDialogPane().setContent(borderPane);
 		dialog.getDialogPane().setHeader(new Label());
-		dialog.setTitle("Updating elements");
+		dialog.setTitle(R.WIZARD_UPDATING_ELEMENTS.get());
 		dialog.show();
 
 		Service<Void> service = new Service<Void>()
@@ -886,10 +887,10 @@ public class DictionaryWizard extends AbstractWizard
 							}
 
 							Thread.sleep(200);
-							Common.runLater(() -> lblInfo.setText("Start updating item " + ++count[0] + " of " + sum));
-							Common.tryCatch(() -> arrangeOne(node, control, style), "Error on arrange one");
+							Common.runLater(() -> lblInfo.setText(MessageFormat.format(R.WIZARD_START_UPDATING_ITEMS.get(), ++count[0], sum)));
+							Common.tryCatch(() -> arrangeOne(node, control, style), R.WIZARD_ERROR_ON_ARRANGE_ONE.get());
 							Common.runLater(() -> {
-								lblInfo.setText("End updating " + count[0] + " of " + sum);
+								lblInfo.setText(MessageFormat.format(R.WIZARD_END_UPDATING.get(), count[0], sum));
 								progressBar.setProgress((double) count[0] / sum);
 							});
 						}
@@ -902,7 +903,7 @@ public class DictionaryWizard extends AbstractWizard
 		service.setExecutor(taskExecutor);
 		service.setOnSucceeded(e -> {
 			Common.tryCatch(() -> Thread.sleep(200), "");
-			Common.tryCatch(() -> findElements(true), "Error on find elements");
+			Common.tryCatch(() -> findElements(true), R.WIZARD_ERROR_ON_FIND.get());
 			dialog.setResult("");
 			dialog.close();
 		});

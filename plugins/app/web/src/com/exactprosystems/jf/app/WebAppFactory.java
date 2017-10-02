@@ -10,11 +10,22 @@ package com.exactprosystems.jf.app;
 
 import com.exactprosystems.jf.api.app.*;
 import com.exactprosystems.jf.api.common.ParametersKind;
+import com.exactprosystems.jf.api.common.PluginDescription;
+import com.exactprosystems.jf.api.common.PluginFieldDescription;
 import org.w3c.dom.Node;
 
 import java.io.InputStream;
 import java.util.*;
 
+@PluginDescription(
+		description = "A Web plugin used for testings web browser application. The plugin based on {{*Selenium*}} framework. \n" +
+				"Can starts on {{/Windows/}}, {{/Linux/}} and {{/MacOS/}}. (InternetExplorer only on {{/Windows/}}).\n" +
+				"The plugin supported cross browse testing. \n" +
+				"Supported browsers : {{/AndroidChrome/}}, {{/AndroidBrowser/}}, {{/Firefox/}}, {{/Chrome/}}, {{/InternetExplorer/}}, \n" +
+				"{{/Opera/}}, {{/PhantomJS/}}, {{/Safari/}}.",
+		additionalDescription = "2",
+		any = "3"
+)
 public class WebAppFactory extends AbstractApplicationFactory
 {
     public static final String  helpFileName          = "help.txt";

@@ -63,7 +63,7 @@ public class ConnectionWizard extends AbstractWizard {
 
         this.status = new Label();
         this.name = new TextField();
-        Tooltip nameOfVar = new Tooltip("Enter name of var here");
+        Tooltip nameOfVar = new Tooltip(R.WIZARD_TOOLTIP_NAME_OF_VAR.get());
         this.name.tooltipProperty().set(nameOfVar);
         Button start = new Button(R.WIZARD_START_CONNECTION.get());
         start.setOnAction(e -> {
@@ -73,12 +73,12 @@ public class ConnectionWizard extends AbstractWizard {
             } catch (Exception e1)
             {
                 this.isConnected = false;
-                this.status.setText("Failed");
+                this.status.setText(R.WIZARD_STATUS_FAILED.get());
                 this.status.setTextFill(Color.RED);
                 DialogsHelper.showError(e1.getMessage());
             }
         });
-        Button connect = new Button("Connect");
+        Button connect = new Button(R.WIZARD_CONNECT.get());
         connect.setOnAction(e -> {
             try
             {
@@ -87,23 +87,23 @@ public class ConnectionWizard extends AbstractWizard {
             } catch (Exception e1)
             {
                 this.isConnected = false;
-                this.status.setText("Failed");
+                this.status.setText(R.WIZARD_STATUS_FAILED.get());
                 this.status.setTextFill(Color.RED);
                 DialogsHelper.showError(e1.getMessage());
             }
         });
 
-        Button stop = new Button("Stop");
+        Button stop = new Button(R.WIZARD_STOP_APPLICATION.get());
         stop.setOnAction(e -> Common.tryCatch(() ->
                 {
                     connector.stopApplication();
                     this.isConnected = false;
-                },"Error on application stop"));
+                },R.WIZARD_ERROR_ON_APPLICATION_STOP.get()));
         name.textProperty().addListener(event -> configuration.getStoreMap().forEach((s, o) -> {
             if (s.equals(name.getText()))
             {
                 name.setStyle("-fx-text-fill: red");
-                name.setTooltip(new Tooltip("Variable with name '" + name.getText() + "' already exist"));
+                name.setTooltip(new Tooltip(R.WIZARD_VARIABLE_WITH_NAME + name.getText() + R.WIZARD_ALREADY_EXIST));
             }
             else
             {
@@ -127,9 +127,9 @@ public class ConnectionWizard extends AbstractWizard {
         grid.add(start, 0, 0);
         grid.add(connect, 1, 0);
         grid.add(stop, 2, 0);
-        grid.add(new Label("Status: "), 0, 1);
+        grid.add(new Label(R.WIZARD_LABEL_STATUS.get()), 0, 1);
         grid.add(status, 1, 1);
-        grid.add(new Label("Store as: "), 0, 2);
+        grid.add(new Label(R.WIZARD_LABEL_STORE_AS.get()), 0, 2);
         grid.add(name, 1, 2,2,1);
         grid.setHgap(5);
         grid.setVgap(15);
@@ -141,11 +141,11 @@ public class ConnectionWizard extends AbstractWizard {
             {
                 case Connected:
                     this.isConnected = true;
-                    this.status.setText("Success");
+                    this.status.setText(R.WIZARD_STATUS_SUCCESS.get());
                     this.status.setTextFill(Color.GREEN);
                     break;
                 case Connecting:
-                    Common.runLater(() -> this.status.setText("Loading..."));
+                    Common.runLater(() -> this.status.setText(R.WIZARD_STATUS_LOADING.get()));
                     break;
                 default:
                     this.status.setText("");
@@ -189,7 +189,7 @@ public class ConnectionWizard extends AbstractWizard {
     protected void onRefused() {
         if (isConnected)
         {
-            Common.tryCatch(this.connector::stopApplication, "Error on close wizard");
+            Common.tryCatch(this.connector::stopApplication, R.WIZARD_ERROR_ON_CLOSE_WIZARD.get());
         }
     }
 }

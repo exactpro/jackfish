@@ -53,6 +53,7 @@ import org.w3c.dom.Document;
 import java.awt.Dimension;
 import java.awt.Rectangle;
 import java.awt.Toolkit;
+import java.text.MessageFormat;
 import java.util.*;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
@@ -267,13 +268,13 @@ public class LayoutWizard extends AbstractWizard
 			this.main.getRowConstraints().addAll(createSmallRow.get(), createBigRow.get());
 
 			HBox connectionBox = new HBox();
-			connectionBox.getChildren().addAll(new Label("Connection : "), this.cbConnections);
+			connectionBox.getChildren().addAll(new Label(R.WIZARD_LABEL_CONNECTION.get()), this.cbConnections);
 			this.cbConnections.setMaxWidth(Double.MAX_VALUE);
 			HBox.setHgrow(this.cbConnections, Priority.ALWAYS);
 			connectionBox.setAlignment(Pos.CENTER_LEFT);
 
 			HBox dialogBox = new HBox();
-			dialogBox.getChildren().addAll(new Label("Dialog : "), this.cbDialogs);
+			dialogBox.getChildren().addAll(new Label(R.WIZARD_LABEL_DIALOG.get()), this.cbDialogs);
 			this.cbDialogs.setMaxWidth(Double.MAX_VALUE);
 			HBox.setHgrow(this.cbDialogs, Priority.ALWAYS);
 			dialogBox.setAlignment(Pos.CENTER_RIGHT);
@@ -296,20 +297,20 @@ public class LayoutWizard extends AbstractWizard
 			HBox cbBoxes = new HBox();
 			this.distanceGroup = new ToggleGroup();
 
-			this.rbNumber = new RadioButton("Number");
+			this.rbNumber = new RadioButton(R.WIZARD_NUMBER.get());
 			this.rbNumber.setToggleGroup(this.distanceGroup);
 			this.rbNumber.setSelected(true); // default value
-			this.rbAbout = new RadioButton("About");
+			this.rbAbout = new RadioButton(R.WIZARD_ABOUT.get());
 			this.rbAbout.setToggleGroup(this.distanceGroup);
-			this.rbLess = new RadioButton("Less");
+			this.rbLess = new RadioButton(R.WIZARD_LESS.get());
 			this.rbLess.setToggleGroup(this.distanceGroup);
-			this.rbGreat = new RadioButton("Great");
+			this.rbGreat = new RadioButton(R.WIZARD_GREAT.get());
 			this.rbGreat.setToggleGroup(this.distanceGroup);
-			this.rbBetween = new RadioButton("Between");
+			this.rbBetween = new RadioButton(R.WIZARD_BETWEEN.get());
 			this.rbBetween.setToggleGroup(this.distanceGroup);
 
 			cbBoxes.getChildren().addAll(
-					new Label("Select distance : ")
+					new Label(R.WIZARD_LABEL_SELECT_DISTANCE.get())
 					, Common.createSpacer(Common.SpacerEnum.HorizontalMid)
 					, Common.createSpacer(Common.SpacerEnum.HorizontalMin)
 					, this.rbNumber
@@ -322,17 +323,17 @@ public class LayoutWizard extends AbstractWizard
 					, Common.createSpacer(Common.SpacerEnum.HorizontalMin)
 					, this.rbBetween);
 
-			this.rbAll = new RadioButton("All");
+			this.rbAll = new RadioButton(R.WIZARD_ALL.get());
 			this.allOrSignificantGroup = new ToggleGroup();
 			this.rbAll.setToggleGroup(this.allOrSignificantGroup);
-			this.rbSignificant = new RadioButton("Significant");
+			this.rbSignificant = new RadioButton(R.WIZARD_SIGNIFICANT.get());
 			this.rbSignificant.setToggleGroup(this.allOrSignificantGroup);
 			this.rbSignificant.setSelected(true);
 
 			cbBoxes.getChildren().addAll(
 					  Common.createSpacer(Common.SpacerEnum.HorizontalMin)
 					, new Separator(Orientation.VERTICAL)
-					, new Label("Use distances : ")
+					, new Label(R.WIZARD_USE_DISTANCE.get())
 					, Common.createSpacer(Common.SpacerEnum.HorizontalMin)
 					, this.rbAll
 					, Common.createSpacer(Common.SpacerEnum.HorizontalMin)
@@ -376,7 +377,7 @@ public class LayoutWizard extends AbstractWizard
 			this.cbHCentered = new CheckBox();
 			this.cbHCentered.setGraphic(new ImageView(this.map.get(PieceKind.HORIZONTAL_CENTERED)));
 
-			this.boxWithFunctions.getChildren().add(new Label("Select functions : "));
+			this.boxWithFunctions.getChildren().add(new Label(R.WIZARD_SELECT_FUNCTIONS.get()));
 
 			Stream.of(this.cbVisible,this.cbCount,this.cbWidthHeight,this.cbContains,this.cbNear,this.cbIn,this.cbOn,this.cbAligned,this.cbVCentered, this.cbHCentered)
 					.forEach(cb -> {
@@ -551,7 +552,7 @@ public class LayoutWizard extends AbstractWizard
 		if (errorList == null || errorList.isEmpty())
 		{
 			removeAndSet(CssVariables.EVALUATE_SUCCESS);
-			this.errorArea.setText("All ok");
+			this.errorArea.setText(R.WIZARD_ALL_OK.get());
 		}
 		else
 		{
@@ -569,7 +570,7 @@ public class LayoutWizard extends AbstractWizard
 	private void checking()
 	{
 		removeAndSet(CssVariables.EVALUATE_FAILED);
-		this.errorArea.setText("Checking...");
+		this.errorArea.setText(R.WIZARD_CHECKING.get());
 	}
 
 	private void removeAndSet(String styleClass)
@@ -696,7 +697,7 @@ public class LayoutWizard extends AbstractWizard
 	{
 		if (this.lvControls.getItems().stream().noneMatch(c -> c.onProperty().getValue()))
 		{
-			DialogsHelper.showInfo("Select more than zero elements from listView above");
+			DialogsHelper.showInfo(R.WIZARD_SELECT_MORE_ELEMENTS.get());
 			return;
 		}
 		hideTableAndView();
@@ -706,7 +707,7 @@ public class LayoutWizard extends AbstractWizard
 		ProgressIndicator indicator = new ProgressIndicator(ProgressIndicator.INDETERMINATE_PROGRESS);
 		indicator.setMinSize(64.0, 64.0);
 
-		box.getChildren().addAll(indicator, new Text("Creating table..."));
+		box.getChildren().addAll(indicator, new Text(R.WIZARD_CREATING_TABLE.get()));
 
 		this.checkGrid.setVisible(false);
 		this.main.add(box, 0, 4);
@@ -1121,7 +1122,7 @@ public class LayoutWizard extends AbstractWizard
 
 			ScrollPane sp = new ScrollPane();
 
-			Text e1 = new Text(String.format("Relation %s -> %s", topName, leftName));
+			Text e1 = new Text(MessageFormat.format(R.WIZARD_RELATION.get(), topName, leftName));
 			e1.setWrappingWidth(this.getScene().getWindow().getWidth() * 0.25);
 			main.getChildren().add(e1);
 			main.getChildren().add(new Separator(Orientation.HORIZONTAL));
@@ -1178,8 +1179,8 @@ public class LayoutWizard extends AbstractWizard
 			main.getChildren().add(sp);
 			VBox.setVgrow(sp, Priority.ALWAYS);
 
-			Button btnCheck = new Button("Check");
-			Button btnSave = new Button("Save");
+			Button btnCheck = new Button(R.WIZARD_CHECK.get());
+			Button btnSave = new Button(R.WIZARD_CHECK.get());
 			HBox checkBox = new HBox();
 			checkBox.setAlignment(Pos.CENTER_RIGHT);
 			checkBox.getChildren().add(btnCheck);
@@ -1239,7 +1240,7 @@ public class LayoutWizard extends AbstractWizard
 
 		private void save()
 		{
-			Spec func = this.create(piece -> DialogsHelper.showError(String.format("Can't save, because %s is invalid doSpec function", piece)));
+			Spec func = this.create(piece -> DialogsHelper.showError(MessageFormat.format(R.WIZARD_CANT_SAVE_INVALID_DOSPEC.get(), piece)));
 			if (func != null)
 			{
 				setFormula(func);
@@ -1251,7 +1252,7 @@ public class LayoutWizard extends AbstractWizard
 		 */
 		public List<String> checkView()
 		{
-			Spec func = this.create(piece -> DialogsHelper.showError(String.format("Can't check, because %s is invalid doSpec function", piece)));
+			Spec func = this.create(piece -> DialogsHelper.showError(MessageFormat.format(R.WIZARD_CANT_CHECK_INVALID_DOSPEC.get(), piece)));
 			if (func != null)
 			{
 				try
