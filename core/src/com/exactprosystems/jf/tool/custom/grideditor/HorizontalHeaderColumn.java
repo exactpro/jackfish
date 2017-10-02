@@ -7,7 +7,6 @@
 ////////////////////////////////////////////////////////////////////////////////
 package com.exactprosystems.jf.tool.custom.grideditor;
 
-import com.exactprosystems.jf.tool.Common;
 import com.sun.javafx.scene.control.skin.NestedTableColumnHeader;
 import com.sun.javafx.scene.control.skin.TableColumnHeader;
 import com.sun.javafx.scene.control.skin.TableViewSkinBase;
@@ -31,15 +30,12 @@ public class HorizontalHeaderColumn extends NestedTableColumnHeader
 		columnReorderLine.layoutXProperty().addListener((ObservableValue<? extends Number> observable, Number oldValue, Number newValue) -> {
 			HorizontalHeader headerRow = (HorizontalHeader) skin.getTableHeaderRow();
 			GridViewSkin mySkin = ((GridViewSkin) skin);
-			if (newValue.intValue() == 0 && lastColumnResized >= 0)
+			if (newValue.intValue() == 0 && lastColumnResized >= 0 && headerRow.selectedColumns.get(lastColumnResized))
 			{
-				if (headerRow.selectedColumns.get(lastColumnResized))
+				double width1 = mySkin.getColumns().get(lastColumnResized).getWidth();
+				for (int i = headerRow.selectedColumns.nextSetBit(0); i >= 0; i = headerRow.selectedColumns.nextSetBit(i + 1))
 				{
-					double width1 = mySkin.getColumns().get(lastColumnResized).getWidth();
-					for (int i = headerRow.selectedColumns.nextSetBit(0); i >= 0; i = headerRow.selectedColumns.nextSetBit(i + 1))
-					{
-						mySkin.getColumns().get(i).setPrefWidth(width1);
-					}
+					mySkin.getColumns().get(i).setPrefWidth(width1);
 				}
 			}
 		});
@@ -56,7 +52,7 @@ public class HorizontalHeaderColumn extends NestedTableColumnHeader
 				if (mouseEvent.getClickCount() == 2 && mouseEvent.isPrimaryButtonDown()) {
 					int columnIndex = getColumnHeaders().indexOf(columnHeader);
 					SpreadsheetColumn spreadsheetColumn = ((GridViewSkin) (Object) tableViewSkin).handle.getView().getColumns().get(columnIndex);
-					Common.runLater(spreadsheetColumn::startRenameColumn);
+					Platform.runLater(spreadsheetColumn::startRenameColumn);
 				}
 			});
 			return columnHeader;
