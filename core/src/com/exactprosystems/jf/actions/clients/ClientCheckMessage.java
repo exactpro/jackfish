@@ -59,7 +59,6 @@ public class ClientCheckMessage extends AbstractAction
 	public final static String actualName = "ActualMessage";
 	public final static String expectedMessageTypeName 	= "ExpectedMessageType";
 
-	//TODO think about remove it
 	@ActionFieldAttribute(name = connectionName, mandatory = true, description = "The connection with the client, which is derived from the action ClientLoad." )
 	protected ClientConnection	connection	= null;
 
