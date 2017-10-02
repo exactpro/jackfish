@@ -149,14 +149,8 @@ public class CustomTable<T> extends TableView<T>
 	private void deleteItems()
 	{
 		List<T> selectedItems = FXCollections.observableArrayList(this.getSelectionModel().getSelectedItems());
-		List<T> list = new ArrayList<>();
-		for (int i = selectedItems.size() - 1; i >= 0; i--)
-		{
-			T t = selectedItems.get(i);
-			list.add(t);
-			this.getItems().remove(t);
-		}
-		onDeleteItems(list);
+
+		onDeleteItems(selectedItems);
 	}
 
 	private void deleteAllItems()
