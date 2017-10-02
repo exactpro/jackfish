@@ -26,6 +26,7 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Priority;
 import javafx.scene.paint.Color;
 
+import java.text.MessageFormat;
 import java.util.List;
 import java.util.function.Supplier;
 
@@ -103,7 +104,7 @@ public class ConnectionWizard extends AbstractWizard {
             if (s.equals(name.getText()))
             {
                 name.setStyle("-fx-text-fill: red");
-                name.setTooltip(new Tooltip(R.WIZARD_VARIABLE_WITH_NAME + name.getText() + R.WIZARD_ALREADY_EXIST));
+                name.setTooltip(new Tooltip(MessageFormat.format(R.WIZARD_VARIABLE_WITH_NAME.get(), name.getText())));
             }
             else
             {
