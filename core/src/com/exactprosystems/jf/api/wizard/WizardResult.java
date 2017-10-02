@@ -8,19 +8,15 @@
 
 package com.exactprosystems.jf.api.wizard;
 
-import java.io.Serializable;
 import java.util.Collections;
 import java.util.List;
 
-public class WizardResult implements Serializable
+public class WizardResult
 {
-    private static final long serialVersionUID = 2096698115010000991L;
-
     private boolean submitted = false;
     
     private List<WizardCommand> commands = Collections.emptyList(); 
-    
-    
+
     private WizardResult(List<WizardCommand> commands, boolean submitted)
     {
         this.commands = commands;
