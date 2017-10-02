@@ -322,7 +322,10 @@ public class Configuration extends AbstractDocument
 					{
 						if (it instanceof SubCase)
 						{
-							list.add(new ReadableValue(name + "." + it.getId(), ((SubCase) it).getName()));
+							if (!list.contains(new ReadableValue(it.getId())))
+							{
+								list.add(new ReadableValue(name + "." + it.getId(), ((SubCase) it).getName()));
+							}
 						}
 					});
 				}

@@ -10,6 +10,7 @@ package com.exactprosystems.jf.documents.matrix.parser.items;
 
 import com.csvreader.CsvWriter;
 import com.exactprosystems.jf.actions.ReadableValue;
+import com.exactprosystems.jf.api.common.Str;
 import com.exactprosystems.jf.api.error.ErrorKind;
 import com.exactprosystems.jf.api.error.common.MatrixException;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
@@ -85,6 +86,10 @@ public final class Call extends MatrixItem
 			(str) -> 
 			{
 				String res = DialogsHelper.selectFromList("Choose sub case from list", new ReadableValue(str), context.subcases(this)).getValue();
+				if (Str.IsNullOrEmpty(res))
+				{
+					return res;
+				}
 				updateReference(context, res);
 				if (this.ref == null)
 				{
