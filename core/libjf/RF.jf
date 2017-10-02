@@ -39,6 +39,9 @@ RF;RegressionFramework
         #Assert;#Message
         table.columnIsPresent('Priority');'Table should contain the column Priority'
 
+        #Assert;#Message
+        table.columnIsPresent('Multi');'Table should contain the column Multi'
+
         #Id;#Call
         SQL;Connect
 
@@ -95,8 +98,8 @@ RF;RegressionFramework
                 #Id;#Let
                 scenarioName;row.containsKey('Name') && !Str.IsNullOrEmpty(row.Name) ? row.Name : scenario
 
-                #Id;#Action;$Connection;$Query;RunId;Scenario;Counter;Performer;Priority;Manual;StartTime;Host;User;TestSet
-                selectScenarioId;SQLinsert;SQL;'INSERT INTO scenarios (run_id, scenario, counter, performer, priority, manual, start_time, host, username, test_set) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';runId;scenarioName;counter;row.Performer;row.Priority;manual ? 1 : 0;DateTime.current();Sys.hostName();Sys.userName();row.TestSet
+                #Id;#Action;$Connection;$Query;RunId;Scenario;Counter;Performer;Priority;Manual;StartTime;Host;User;TestSet;Multi
+                selectScenarioId;SQLinsert;SQL;'INSERT INTO scenarios (run_id, scenario, counter, performer, priority, manual, start_time, host, username, test_set, multi) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';runId;scenarioName;counter;row.Performer;row.Priority;manual ? 1 : 0;DateTime.current();Sys.hostName();Sys.userName();row.TestSet;Str.IsNullOrEmpty(row.Multi) ? 0 : 1
 
                 #Id;#Let
                 scenarioId;selectScenarioId.Out[0]
@@ -1425,6 +1428,153 @@ RF;RegressionFramework
 
     #EndSubCase
 
+    #Id;#SubCase;date
+    showResults;Show result for user;
+        #Id;#Call
+        sqlCon;Connect
+
+        #Id;#Call;sql;date
+        runIdFromDate;runIdFromDate;sqlCon;date
+
+        #Id;#Let
+        runId;runIdFromDate.id
+
+        #Id;#Action;scenario_id;scenario_name;testcase_name;scenario_counter;reason
+        TBL1;TableCreate;;;;;
+
+        #Id;#Action;$Query;$Connection;currentId
+        prevIdTable;SQLselect;'SELECT id FROM runs WHERE id = (select MAX(id) FROM runs WHERE id < ?)';sqlCon;runId
+
+        #Id;#Action;$Query;$Connection;currentId
+        table;SQLselect;'SELECT * from scenarios where failed != 0 && run_id = ?';sqlCon;runId
+
+        #Id;#Let
+        prevRunIdExists;!prevIdTable.Out.isEmpty()
+
+        // for each row we can try to get prev or current reason
+        #ForEach;#In
+        row;table.Out
+            #If
+            row.multi == '0'
+                #Id;#Let
+                re;''
+
+                // this branch done
+                #If
+                prevRunIdExists
+                    #Id;#RawText;#Kind
+                    TEXT8;Text;Sql
+                    ~;"SELECT reason FROM results where scenario_id = ("
+                    ~;"  SELECT id FROM scenarios WHERE run_id = ? && scenario = ? && counter = ?"
+                    ~;")"
+                    #EndRawText
+
+                    #Id;#Action;$Query;$Connection;runId;scenario;counter
+                    SQLSLCT20;SQLselect;TEXT8.toString();sqlCon;prevIdTable.Out[0].id;row.scenario;row.counter
+
+                    #Id;#Let
+                    re;SQLSLCT20.Out.isEmpty() ? '' : SQLSLCT20.Out[0].reason
+
+                #EndIf
+
+                #Id;#Action;$Query;$Connection;scenId;counter
+                SQLSLCT21;SQLselect;'SELECT reason FROM results WHERE scenario_id = ? && scenario_counter = ?';sqlCon;row.id;row.counter
+
+                #If
+                !SQLSLCT21.Out.isEmpty()
+                    #Id;#Let
+                    re;SQLSLCT21.Out[0].reason
+
+                #EndIf
+
+                #Action;$Table;scenario_id;scenario_name;testcase_name;scenario_counter;reason
+                TableAddValue;TBL1.Out;row.id;row.scenario;'';row.counter;re
+
+            #Else
+                #Id;#Action;$Query;$Connection;scenId
+                tableFromDet;SQLselect;'SELECT testcase FROM details WHERE scenario_id = ? && result = \'Failed\'';sqlCon;row.id
+
+                #ForEach;#In
+                det;tableFromDet.Out
+                    #Id;#Let
+                    re;''
+
+                    #If
+                    prevRunIdExists
+                        #Id;#RawText;#Kind
+                        TEXT8;Text;Sql
+                        ~;"SELECT reason FROM results where scenario_id = ("
+                        ~;"  SELECT id FROM scenarios WHERE run_id = ? && scenario = ? && counter = ?"
+                        ~;") && testcase_name = ?"
+                        #EndRawText
+
+                        #Id;#Action;$Query;$Connection;runId;scenario;counter;testcaseName
+                        SQLSLCT20;SQLselect;TEXT8.toString();sqlCon;prevIdTable.Out[0].id;row.scenario;row.counter;det.testcase
+
+                        #Id;#Let
+                        re;SQLSLCT20.Out.isEmpty() ? '' : SQLSLCT20.Out[0].reason
+
+                    #EndIf
+
+                    #Id;#Action;$Query;$Connection;scenId;counter;tcName
+                    SQLSLCT21;SQLselect;'SELECT reason FROM results WHERE scenario_id = ? && scenario_counter = ? && testcase_name = ?';sqlCon;row.id;row.counter;det.testcase
+
+                    #If
+                    !SQLSLCT21.Out.isEmpty()
+                        #Id;#Let
+                        re;SQLSLCT21.Out[0].reason
+
+                    #EndIf
+
+                    #Action;$Table;scenario_id;scenario_name;testcase_name;scenario_counter;reason
+                    TableAddValue;TBL1.Out;row.id;row.scenario;det.testcase;row.counter;re
+
+                #EndForEach
+
+
+            #EndIf
+
+        #EndForEach
+
+        #Id;#Action;$Table;$Title;scenario_name;testcase_name;scenario_counter;reason
+        TBEDT1;TableEdit;TBL1.Out;'try to edit it';false;false;false;true
+
+        #If
+        TBEDT1.Out
+            #ForEach;#In
+            row;TBL1.Out
+                #Id;#Action;$Query;$Connection;scenarioName;counter;testcaseName
+                SQLSLCT19;SQLselect;'SELECT * FROM results WHERE scenario_name = ? && scenario_counter = ? && testcase_name = ?';sqlCon;row.scenario_name;row.scenario_counter;row.testcase_name
+
+                #If
+                SQLSLCT19.Out.isEmpty()
+                    #Id;#Action;$Query;$Connection;scenarioId;name;counter;testcaseName;reason
+                    in;SQLinsert;'INSERT INTO results (scenario_id, scenario_name, scenario_counter, testcase_name, reason) VALUES (?, ?, ?, ?, ?)\u003b';sqlCon;row.scenario_id;row.scenario_name;row.scenario_counter;row.testcase_name;row.reason
+
+                #Else
+                    #Id;#Action;$Query;$Connection;reason;id
+                    ex;SQLexecute;'UPDATE results SET reason = ? WHERE id = ?';sqlCon;row.reason;SQLSLCT19.Out[0].id
+
+
+                #EndIf
+
+            #EndForEach
+
+            #Action;$Text;$Notifier
+            Show;'Successful update table \'results\'';Notifier.Success
+
+        #Else
+            #Action;$Text;$Notifier
+            Show;'Nothing saved';Notifier.Info
+
+
+        #EndIf
+
+        #Return
+        table.Out
+
+    #EndSubCase
+
     // //==============================================
     // // Esteblishes connection to SQL server using variable set that is set
     // // by RF.SetVar
@@ -1472,8 +1622,11 @@ RF;RegressionFramework
                 #Id;#Action;$Query;$Connection
                 chck4;SQLselect;'check table user_details fast';SQLCNT.Out
 
+                #Id;#Action;$Query;$Connection
+                chck5;SQLselect;'check table results fast';SQLCNT.Out
+
                 #Id;#Let
-                tablesAreNotExists;!(chck1.Out[0].Msg_text == 'OK' && chck2.Out[0].Msg_text == 'OK' && chck3.Out[0].Msg_text == 'OK' && chck4.Out[0].Msg_text == 'OK')
+                tablesAreNotExists;!(chck1.Out[0].Msg_text == 'OK' && chck2.Out[0].Msg_text == 'OK' && chck3.Out[0].Msg_text == 'OK' && chck4.Out[0].Msg_text == 'OK' && chck5.Out[0].Msg_text =='OK')
 
 
             #Case
@@ -1490,8 +1643,11 @@ RF;RegressionFramework
                 #Id;#Action;$Query;$Connection
                 chck4;SQLselect;'SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME =\'user_details\' and TABLE_SCHEMA=SCHEMA_NAME()';SQLCNT.Out
 
+                #Id;#Action;$Query;$Connection
+                chck5;SQLselect;'SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME =\'results\' and TABLE_SCHEMA=SCHEMA_NAME()';SQLCNT.Out
+
                 #Id;#Let
-                tablesAreNotExists;chck1.Out.isEmpty() || chck2.Out.isEmpty() || chck3.Out.isEmpty() || chck4.Out.isEmpty()
+                tablesAreNotExists;chck1.Out.isEmpty() || chck2.Out.isEmpty() || chck3.Out.isEmpty() || chck4.Out.isEmpty() || chck5.Out.isEmpty()
 
 
             #Default
@@ -1539,6 +1695,7 @@ RF;RegressionFramework
                     ~;"  `username` varchar(45) DEFAULT NULL,"
                     ~;"  `passed` int(11) DEFAULT '0',"
                     ~;"  `failed` int(11) DEFAULT '0',"
+                    ~;"  `multi` int(1) DEFAULT '0',"
                     ~;"  `report` longblob,"
                     ~;"  `done` int(1) DEFAULT NULL,"
                     ~;"  PRIMARY KEY (`id`)"
@@ -1569,6 +1726,19 @@ RF;RegressionFramework
                     ~;"  `value` varchar(256) DEFAULT NULL,"
                     ~;"  PRIMARY KEY (`id`)"
                     ~;") ENGINE=InnoDB DEFAULT CHARSET=utf8;"
+                    #EndRawText
+
+                    #Id;#RawText;#Kind
+                    query5;create;Sql
+                    ~;"CREATE TABLE IF NOT EXISTS `results` ("
+                    ~;"  `id` int(11) NOT NULL AUTO_INCREMENT,"
+                    ~;"  `scenario_id` int(11) NOT NULL,"
+                    ~;"  `scenario_name` varchar(256) NOT NULL,"
+                    ~;"  `scenario_counter` int(11) DEFAULT NULL,"
+                    ~;"  `testcase_name` varchar(256) DEFAULT NULL,"
+                    ~;"  `reason` varchar(512) DEFAULT NULL,"
+                    ~;"  PRIMARY KEY (`id`)"
+                    ~;") ENGINE=InnoDB AUTO_INCREMENT=834 DEFAULT CHARSET=utf8;"
                     #EndRawText
 
 
@@ -1607,6 +1777,7 @@ RF;RegressionFramework
                     ~;"  username varchar(45) DEFAULT NULL,"
                     ~;"  passed int DEFAULT '0',"
                     ~;"  failed int DEFAULT '0',"
+                    ~;"  multi int DEFAULT '0'"
                     ~;"  report VARBINARY(MAX),"
                     ~;"  done int DEFAULT NULL"
                     ~;");"
@@ -1641,6 +1812,21 @@ RF;RegressionFramework
                     ~;");"
                     #EndRawText
 
+                    #Id;#RawText;#Kind
+                    query5;create;Sql
+                    ~;"IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE table_name = 'results' and TABLE_SCHEMA=SCHEMA_NAME()) "
+                    ~;"CREATE TABLE  results  "
+                    ~;"("
+                    ~;"  id int IDENTITY(1,1) PRIMARY KEY NOT NULL,"
+                    ~;"  scenario_id int NOT NULL,"
+                    ~;"  scenario_name varchar(256) NOT NULL,"
+                    ~;"  scenario_counter int DEFAULT NULL,"
+                    ~;"  testcase_name varchar(256) DEFAULT NULL,"
+                    ~;"  reason varchar(512) DEFAULT NULL"
+                    ~;");"
+                    ~;" "
+                    #EndRawText
+
 
                 #Default
                     #Fail
@@ -1660,6 +1846,9 @@ RF;RegressionFramework
 
             #Action;$Query;$Connection
             SQLexecute;query4.toString();SQLCNT.Out
+
+            #Action;$Query;$Connection
+            SQLexecute;query5.toString();SQLCNT.Out
 
         #EndIf
 

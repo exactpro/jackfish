@@ -10,7 +10,7 @@ Init;Never;;
     date;inputDate.Out == '' ? null : DateTime.date(inputDate.Out)
 
     #Id;#Action;$DefaultValue;$Title;$HelpKind;$DataSource
-    INP1;Input;'Overall';'Choose the report:';HelpKind.ChooseFromList;[ 'Overall', 'Progress', 'Summary', 'Export', 'Detailed', 'Remove']
+    INP1;Input;'Overall';'Choose the report:';HelpKind.ChooseFromList;[ 'Overall', 'Progress', 'Summary', 'Export', 'Detailed', 'Remove', 'Result']
 
     #Switch
     INP1.Out
@@ -52,8 +52,14 @@ Init;Never;;
 
         #Case
         'Remove'
-            #Id;#Call;date
-            CALL_1;RF.deleteSummary;date
+            #Call;date
+            RF.deleteSummary;date
+
+
+        #Case
+        'Result'
+            #Call;date
+            RF.showResults;date
 
 
     #EndSwitch
