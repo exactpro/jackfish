@@ -10,11 +10,17 @@ package com.exactprosystems.jf.app;
 
 import com.exactprosystems.jf.api.app.*;
 import com.exactprosystems.jf.api.common.ParametersKind;
+import com.exactprosystems.jf.api.common.PluginDescription;
 import org.w3c.dom.Node;
 
 import java.io.InputStream;
 import java.util.*;
 
+@PluginDescription(
+		description = "1",
+		additionalDescription = "2",
+		any = "3"
+)
 public class WinAppFactory extends AbstractApplicationFactory
 {
     public static final String      helpFileName            = "help.txt";
