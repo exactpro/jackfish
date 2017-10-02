@@ -99,7 +99,10 @@ Test;Matrix;;;
 #Id;#TestCase;#Kind;#Depends;#For
 Test;Controls;;;
     #Call;testName;param
-    runControls;'Controls';'Web'
+    runControls;'Controls';'InternetExplorer'
+
+    #Call;testName;param
+    runControls;'Controls';'Chrome'
 
     #Call;testName;param
     runControls;'Controls';'Swing'

@@ -23,6 +23,7 @@ import org.jsoup.select.Elements;
 import org.openqa.selenium.*;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.ie.InternetExplorerDriver;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.safari.SafariDriver;
 import org.openqa.selenium.support.ui.Quotes;
@@ -198,7 +199,14 @@ public class SeleniumOperationExecutor extends AbstractOperationExecutor<WebElem
 			case "select":
 				List<WebElement> options = component.findElements(By.xpath("child::option"));
 				checkScroll(options, index);
-				driver.executeScript("arguments[0].scrollIntoView()", options.get(index));
+				if(driver.getWrappedDriver() instanceof InternetExplorerDriver)
+				{
+					driver.executeScript(SCROLL_TO_IE_SCRIPT, options.get(index));
+				}
+				else
+				{
+					driver.executeScript("arguments[0].scrollIntoView()", options.get(index));
+				}
 				return true;
 
 			case "ul":
@@ -2126,6 +2134,7 @@ public class SeleniumOperationExecutor extends AbstractOperationExecutor<WebElem
 
 	//TODO need normal scroll to function
 	private static final String SCROLL_TO_SCRIPT = loadScript("js/scrollTo.js");
+	private static final String SCROLL_TO_IE_SCRIPT = loadScript("js/scrollToIE.js");
 
 	private String markAttribute = "seleniummarkattribute";
 	private WebDriverListenerNew driver;
