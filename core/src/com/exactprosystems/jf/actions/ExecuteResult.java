@@ -10,6 +10,12 @@ package com.exactprosystems.jf.actions;
 
 public class ExecuteResult
 {
+	public String Text;
+
+	public int ExitCode;
+
+	public int PID;
+
 	public ExecuteResult(String text, int exitCode, int pid)
 	{
 		this.Text = text;
@@ -24,10 +30,4 @@ public class ExecuteResult
 			+  "ExitCode: " + this.ExitCode + "\n"
 			+  "Text:     " + this.Text;
 	}
-	
-	public String Text;
-
-	public int ExitCode;
-	
-	public int PID;
 }

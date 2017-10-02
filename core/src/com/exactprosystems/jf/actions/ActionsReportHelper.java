@@ -9,7 +9,12 @@ import java.util.stream.Collectors;
 
 public class ActionsReportHelper
 {
-	public static void fillListForParameter(Matrix matrix, List<ReadableValue> list, AbstractEvaluator evaluator) throws Exception
+	private ActionsReportHelper()
+	{
+
+	}
+
+	public static void fillListForParameter(Matrix matrix, List<ReadableValue> list, AbstractEvaluator evaluator)
 	{
 		List<String> listIds = matrix.listOfIds(TestCase.class);
 		if (!listIds.isEmpty())
@@ -26,7 +31,8 @@ public class ActionsReportHelper
 
 	public static String getBeforeTestCase(String testCaseId, Matrix matrix)
 	{
-		return matrix.listOfIds(TestCase.class).stream()
+		return matrix.listOfIds(TestCase.class)
+				.stream()
 				.filter(st -> st.equals(testCaseId))
 				.findFirst()
 				.orElse(null);

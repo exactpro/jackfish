@@ -10,8 +10,8 @@ package com.exactprosystems.jf.actions;
 
 public class ReadableValue
 {
-	public static ReadableValue TRUE = new ReadableValue("true");
-	public static ReadableValue FALSE = new ReadableValue("false");
+	public static final ReadableValue TRUE = new ReadableValue("true");
+	public static final ReadableValue FALSE = new ReadableValue("false");
 
 	public ReadableValue(String value, String description)
 	{

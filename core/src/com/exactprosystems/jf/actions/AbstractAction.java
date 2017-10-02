@@ -21,17 +21,23 @@ import com.exactprosystems.jf.documents.matrix.parser.Parameters;
 import com.exactprosystems.jf.documents.matrix.parser.Result;
 import com.exactprosystems.jf.documents.matrix.parser.Tokens;
 import com.exactprosystems.jf.documents.matrix.parser.items.*;
-import com.exactprosystems.jf.functions.HelpKind;
 import com.exactprosystems.jf.documents.matrix.parser.listeners.IMatrixListener;
+import com.exactprosystems.jf.functions.HelpKind;
 import org.apache.log4j.Logger;
 
 import javax.lang.model.type.NullType;
 import java.lang.reflect.Field;
 import java.util.*;
 import java.util.Map.Entry;
+import java.util.stream.Collectors;
 
 public abstract class AbstractAction implements Cloneable
 {
+	private Action action;
+	protected MatrixItem owner;
+
+	protected static final Logger logger = Logger.getLogger(AbstractAction.class);
+
     public AbstractAction()
     {
     	this.action = new Action();
@@ -48,14 +54,6 @@ public abstract class AbstractAction implements Cloneable
 		ActionAttribute annotation = clazz.getAnnotation(ActionAttribute.class);
 		return annotation.additionFieldsAllowed();
 	}
-
-    @Override
-    public AbstractAction clone() throws CloneNotSupportedException
-    {
-        AbstractAction clone = (AbstractAction) super.clone();
-        clone.action = action.clone();
-        return clone;
-    }
 
     @Override
     public String toString()
@@ -119,21 +117,18 @@ public abstract class AbstractAction implements Cloneable
         List<String> extraFields   	= checkExtraFields(parameters.keySet());
         List<String> omittedFields 	= checkMandatoryFields(parameters.keySet());
 
-        if (extraFields != null && extraFields.size() > 0)
+        if (!extraFields.isEmpty())
         {
-            listener.error(owner.getMatrix(), owner.getNumber(), owner, "Extra parameters "
-                    + Arrays.toString(extraFields.toArray()));
+            listener.error(owner.getMatrix(), owner.getNumber(), owner, "Extra parameters " + Arrays.toString(extraFields.toArray()));
         }
 
-        if (omittedFields != null && omittedFields.size() > 0)
+        if (!omittedFields.isEmpty())
         {
-            listener.error(owner.getMatrix(), owner.getNumber(), owner, "Missing parameters "
-                    + Arrays.toString(omittedFields.toArray()));
+            listener.error(owner.getMatrix(), owner.getNumber(), owner, "Missing parameters " + Arrays.toString(omittedFields.toArray()));
         }
     }
 
-    public final Result doAction(Context context, AbstractEvaluator evaluator,
-                                 ReportBuilder report, Parameters parameters, String actionId, Parameter assertBool)
+    public final Result doAction(Context context, AbstractEvaluator evaluator, ReportBuilder report, Parameters parameters, String actionId, Parameter assertBool)
     {
 		try
 		{
@@ -178,14 +173,7 @@ public abstract class AbstractAction implements Cloneable
 		catch (Exception e)
 		{
 			logger.error(e.getMessage(), e);
-			if (e.getCause() != null)
-			{
-				setError("Exception occurred: " + e.getCause().getMessage(), ErrorKind.EXCEPTION);
-			}
-			else
-			{
-				setError("Exception occurred: " + e.getMessage(), ErrorKind.EXCEPTION);
-			}
+			setError("Exception occurred: " + (e.getCause() == null ? e.getMessage() : e.getCause().getMessage()), ErrorKind.EXCEPTION);
 		}
 
 		try
@@ -195,14 +183,7 @@ public abstract class AbstractAction implements Cloneable
         catch (Exception e)
         {
             logger.error(e.getMessage(), e);
-            if (e.getCause() != null)
-            {
-                setError("Exception in asserts occurred: " + e.getCause().getMessage(), ErrorKind.EXCEPTION);
-            }
-            else
-            {
-                setError("Exception in asserts occurred: " + e.getMessage(), ErrorKind.EXCEPTION);
-            }
+			setError("Exception occurred: " + (e.getCause() == null ? e.getMessage() : e.getCause().getMessage()), ErrorKind.EXCEPTION);
         }
 
         reportResults(report, assertBool);
@@ -213,7 +194,6 @@ public abstract class AbstractAction implements Cloneable
 
     public final String actionSuffix()
     {
-
 		ActionAttribute annotation = this.getClass().getAnnotation(ActionAttribute.class);
 		if (annotation.outputType() == NullType.class)
 		{
@@ -244,17 +224,17 @@ public abstract class AbstractAction implements Cloneable
     	if (evaluator != null)
     	{
     		parameters.evaluateAll(evaluator);
-    		List<ReadableValue> res = new ArrayList<ReadableValue>();
+    		List<ReadableValue> res = new ArrayList<>();
     		listToFillParameterDerived(res, context, parameterToFill, parameters);
 	    	 
 	    	return res;
     	}
-    	return null;
-    }
+		return Collections.emptyList();
+	}
     
 	public final Map<ReadableValue, TypeMandatory> helpToAddParameters(Context context, Parameters parameters)  throws Exception
 	{
-        Map<ReadableValue, TypeMandatory> res = new LinkedHashMap<ReadableValue, TypeMandatory>();
+        Map<ReadableValue, TypeMandatory> res = new LinkedHashMap<>();
         Map<String, FieldAndAttributes> map = getFieldsAttributes();
         for (Entry<String, FieldAndAttributes> entry : map.entrySet())
         {
@@ -264,7 +244,7 @@ public abstract class AbstractAction implements Cloneable
     	
     	if (evaluator != null)
     	{
-    		List<ReadableValue> list = new ArrayList<ReadableValue>();
+    		List<ReadableValue> list = new ArrayList<>();
     		parameters.evaluateAll(evaluator);
 	    	helpToAddParametersDerived(list, context, parameters);
 	    	for (ReadableValue element : list)
@@ -435,7 +415,7 @@ public abstract class AbstractAction implements Cloneable
 	                    }
 	                    else
 	                    {
-	                        description.field.setAccessible(true);;
+	                        description.field.setAccessible(true);
 	                        description.field.set(this, value);
 	                    }
                 	}
@@ -471,8 +451,7 @@ public abstract class AbstractAction implements Cloneable
     }
 
 
-    private void checkAsserts(AbstractEvaluator evaluator, 
-    		Parameter assertBool) throws Exception
+    private void checkAsserts(AbstractEvaluator evaluator, Parameter assertBool)
     {
         if (!assertBool.isExpressionNullOrEmpty())
         {
@@ -488,8 +467,7 @@ public abstract class AbstractAction implements Cloneable
                 if (!(Boolean)value)
                 {
                     setError(assertBool.getExpression(), ErrorKind.ASSERT);
-                    return ;
-                }
+				}
                 else
                 {
                 	if (this.action.Result != Result.Passed)
@@ -501,58 +479,33 @@ public abstract class AbstractAction implements Cloneable
             else
             {
                 setError(Tokens.Assert + " must have type of Boolean", ErrorKind.EXPRESSION_ERROR);
-                return;
-            }
+			}
         }
     }
 
 
     private List<String> checkMandatoryFields(Set<String> fields)
     {
-        List<String> list 	= new ArrayList<String>();
-
-        Map<String, FieldAndAttributes> attributes = getFieldsAttributes();
-
-        if (attributes != null)
-        {
-            for (Entry<String, FieldAndAttributes> entry : attributes.entrySet())
-            {
-                String 					name = entry.getKey();
-                ActionFieldAttribute 	attr = entry.getValue().attribute;
-                if (attr.mandatory() && !fields.contains(name))
-                {
-                    list.add(name);
-                }
-            }
-        }
-
-        return list;
+		return getFieldsAttributes().entrySet()
+				.stream()
+				.filter(entry -> entry.getValue().attribute.mandatory() && !fields.contains(entry.getKey()))
+				.map(Map.Entry::getKey)
+				.collect(Collectors.toList());
     }
 
 
     private List<String> checkExtraFields(Set<String> fields)
     {
-        List<String> list 	= new ArrayList<String>();
-
         if (getClass().getAnnotation(ActionAttribute.class).additionFieldsAllowed())
         {
-            return list;
+            return Collections.emptyList();
         }
 
         Map<String, FieldAndAttributes> descriptions = getFieldsAttributes();
 
-        if (descriptions != null)
-        {
-            for (String name : fields)
-            {
-                if (!descriptions.containsKey(name))
-                {
-                    list.add(name);
-                }
-            }
-        }
-
-        return list;
+        return fields.stream()
+				.filter(name -> !descriptions.containsKey(name))
+				.collect(Collectors.toList());
     }
 
 
@@ -561,7 +514,7 @@ public abstract class AbstractAction implements Cloneable
         this.action.clearResults();
     }
 
-    public class FieldAndAttributes
+    public static class FieldAndAttributes
     {
         public FieldAndAttributes(Field field, ActionFieldAttribute attributes)
         {
@@ -573,21 +526,8 @@ public abstract class AbstractAction implements Cloneable
         public ActionFieldAttribute attribute;
     }
 
-    public class Action implements Cloneable
+    public static class Action
     {
-        @Override
-        public Action clone() throws CloneNotSupportedException
-        {
-            Action clone = (Action) super.clone();
-            clone.Out = null;
-            clone.In = null;
-            clone.Reason = "";
-            clone.Kind = null;
-            clone.Result = null;
-			clone.Errors = null;
-            return clone;
-        }
-
         @Override
     	public String toString()
     	{
@@ -630,9 +570,4 @@ public abstract class AbstractAction implements Cloneable
     	public Result Result;
 		public Map<String, MatrixError> Errors;
     }
-    
-    private Action action;
-    protected MatrixItem owner;
-
-    protected static final Logger logger = Logger.getLogger(AbstractAction.class);
 }

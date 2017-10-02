@@ -23,7 +23,12 @@ import com.exactprosystems.jf.actions.xml.*;
 
 public class ActionsList 
 {
-	public static Class<?>[] actions = new Class<?>[]
+	private ActionsList()
+	{
+
+	}
+
+	public static final Class<?>[] actions = new Class<?>[]
 			{
 		        ApplicationConnectTo.class,
 		        ApplicationGetProperties.class,

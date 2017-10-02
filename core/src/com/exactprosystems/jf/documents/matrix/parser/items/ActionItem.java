@@ -55,18 +55,6 @@ public final class ActionItem extends MatrixItem
 	}
 
 	@Override
-	public MatrixItem clone() throws CloneNotSupportedException
-	{
-		ActionItem clone = (ActionItem) super.clone();
-
-		clone.assertBool = this.assertBool.clone();
-		clone.action = action.clone();
-		clone.action.setOwner(clone);
-
-		return clone;
-	}
-
-	@Override
 	public String toString()
 	{
 		return super.toString() + ":" + this.action.toString();
