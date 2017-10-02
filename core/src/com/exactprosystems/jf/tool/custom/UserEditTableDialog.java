@@ -27,38 +27,29 @@ import java.util.Map.Entry;
 public class UserEditTableDialog extends Dialog<Boolean>
 {
 	private final GridPane grid;
-	private final Label expressionLabel;
 	private final TableView<RowTable> tableView;
 
-	public UserEditTableDialog(String title, Table table, Map<String, Boolean> columns)
+	public UserEditTableDialog(Table table, Map<String, Boolean> columns)
 	{
 		final DialogPane dialogPane = getDialogPane();
 		this.setResizable(true);
 		dialogPane.getStylesheets().addAll(Theme.currentThemesPaths());
-		this.expressionLabel = new Label();
-		
+
 		this.tableView = createTableView(table, columns);
 
 		GridPane.setHgrow(this.tableView, Priority.ALWAYS);
 		GridPane.setFillWidth(this.tableView, true);
 
-		GridPane.setHgrow(this.expressionLabel, Priority.ALWAYS);
-		GridPane.setFillWidth(this.expressionLabel, true);
-
 		this.grid = new GridPane();
 		this.grid.setHgap(10);
 		this.grid.setVgap(10);
 		this.grid.setMaxWidth(Double.MAX_VALUE);
+		this.grid.setMaxHeight(Double.MAX_VALUE);
 		this.grid.setAlignment(Pos.CENTER_LEFT);
 
 		dialogPane.contentTextProperty().addListener(o -> updateGrid());
 		dialogPane.getButtonTypes().addAll(ButtonType.OK);
 		dialogPane.setPrefWidth(550);
-		dialogPane.setMaxWidth(550);
-		dialogPane.setMinWidth(550);
-		dialogPane.setPrefHeight(200);
-		dialogPane.setMinHeight(200);
-		dialogPane.setMaxHeight(200);
 
 		updateGrid();
 
@@ -115,13 +106,7 @@ public class UserEditTableDialog extends Dialog<Boolean>
             }
         }
         
-        ObservableList<RowTable> data = FXCollections.observableArrayList();
-
-        for (RowTable a : table)
-        {
-            data.add(a);
-        }
-        
+        ObservableList<RowTable> data = FXCollections.observableArrayList(table);
         tableView.setItems(data);
 
         return tableView;
@@ -132,7 +117,6 @@ public class UserEditTableDialog extends Dialog<Boolean>
 		grid.getChildren().clear();
 
 		grid.add(this.tableView, 0, 0);
-		grid.add(this.expressionLabel, 0, 1);
 		getDialogPane().setContent(grid);
 
 		Common.runLater(tableView::requestFocus);

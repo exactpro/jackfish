@@ -8,11 +8,6 @@
 
 package com.exactprosystems.jf.actions.tables;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import com.exactprosystems.jf.actions.*;
 import com.exactprosystems.jf.api.error.ErrorKind;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
@@ -23,6 +18,10 @@ import com.exactprosystems.jf.documents.matrix.parser.Parameters;
 import com.exactprosystems.jf.documents.matrix.parser.items.TypeMandatory;
 import com.exactprosystems.jf.functions.HelpKind;
 import com.exactprosystems.jf.functions.Table;
+
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 @ActionAttribute(
 		group					= ActionGroups.Tables,
@@ -101,7 +100,7 @@ public class TableEdit extends AbstractAction
 			return;
 		}
 		
-		Map<String, Boolean> columns = new HashMap<>();
+		Map<String, Boolean> columns = new LinkedHashMap<>();
 		for (Parameter param : parameters.select(TypeMandatory.Extra))
 		{
 		    String name = param.getName();

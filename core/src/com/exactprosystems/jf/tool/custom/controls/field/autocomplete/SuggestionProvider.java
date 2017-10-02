@@ -22,7 +22,7 @@ public class SuggestionProvider implements Callback<String, Collection<String>>
     {
         synchronized (possibleSuggestionsLock)
         {
-            possibleSuggestions.addAll(collection);
+            this.possibleSuggestions.addAll(collection);
         }
     }
 
@@ -34,7 +34,7 @@ public class SuggestionProvider implements Callback<String, Collection<String>>
         {
             synchronized (possibleSuggestionsLock)
             {
-                suggestions = isMatch(new ArrayList<>(possibleSuggestions), request);
+                suggestions = isMatch(this.possibleSuggestions, request);
             }
 
             String prefix = request.toLowerCase();
@@ -64,27 +64,26 @@ public class SuggestionProvider implements Callback<String, Collection<String>>
 
     public static List<String> isMatch(List<String> list, String request)
     {
-        return list.stream().filter(s ->
-        {
-            String userText = request.toLowerCase();
-            String suggestionStr = s.toLowerCase();
-            String[] split = userText.split(" ", 2);
-            String call = TempItem.CALL.toLowerCase();
-
-            if (userText.matches("^c|^ca|^cal|^|call"))
-            {
-                return suggestionStr.startsWith(call.substring(0,call.length()-1));
-            }
-            if (!userText.startsWith(call))
-            {
-
-                return suggestionStr.contains(userText) && !suggestionStr.startsWith(call);
-            }
-            else
-            {
-                return suggestionStr.startsWith(call) && (split.length == 1 || suggestionStr.substring(call.length()).contains(split[1]));
-            }
-
-        }).collect(Collectors.toList());
-    }
+		String userText = request.toLowerCase();
+		String[] split = userText.split(" ", 2);
+		String call = TempItem.CALL.toLowerCase();
+		String ss = call.substring(0, call.length() - 1);
+		return list.stream()
+				.filter(suggestionStr ->
+				{
+					suggestionStr = suggestionStr.toLowerCase();
+					if (ss.startsWith(userText))
+					{
+						return suggestionStr.startsWith(ss);
+					}
+					if (userText.startsWith(ss) || call.indexOf(userText) == 0)
+					{
+						return suggestionStr.startsWith(ss) && suggestionStr.startsWith(call) && (split.length == 1 || suggestionStr.substring(call.length()).contains(split[1]));
+					}
+					else
+					{
+						return suggestionStr.contains(userText) && !suggestionStr.startsWith(call);
+					}
+				}).collect(Collectors.toList());
+	}
 }

@@ -334,8 +334,8 @@ public abstract class DialogsHelper
 				listView.getFocusModel().focus(0);
 			}
 		});
-		Common.runLater(tf::requestFocus);
 		dialog.getDialogPane().getStylesheets().addAll(Theme.currentThemesPaths());
+		dialog.setOnShown(e -> Common.setFocusedFast(tf));
 		Optional<ButtonType> buttonType = dialog.showAndWait();
 		if (buttonType.isPresent())
 		{
@@ -581,7 +581,7 @@ public abstract class DialogsHelper
             @Override
             protected Boolean call() throws Exception
             {
-                UserEditTableDialog dialog = new UserEditTableDialog(title, table, columns);
+                UserEditTableDialog dialog = new UserEditTableDialog(table, columns);
                 dialog.setTitle(title);
                 dialog.getDialogPane().setHeader(null);
                 Optional<Boolean> s = dialog.showAndWait();
@@ -615,7 +615,7 @@ public abstract class DialogsHelper
 				dialog.setTitle(title);
 				dialog.getDialogPane().setHeader(null);
 				Optional<Object> s = dialog.showAndWait();
-				return s.isPresent() ? s.get() : null;
+				return s.orElse(null);
 			}
 		};
 

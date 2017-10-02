@@ -639,6 +639,7 @@ public class Settings
 	public synchronized List<KeyCombination> getRemovedShortcuts()
 	{
 		return Stream.of(
+				SAVE_DOCUMENT,
 				ADD_ITEMS,
 				ALL_PARAMETERS,
 				BREAK_POINT,
