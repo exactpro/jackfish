@@ -3,6 +3,7 @@ package com.exactprosystems.jf.tool.wizard.all;
 import com.exactprosystems.jf.actions.app.ApplicationResize;
 import com.exactprosystems.jf.api.app.Resize;
 import com.exactprosystems.jf.api.common.IContext;
+import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.api.wizard.WizardAttribute;
 import com.exactprosystems.jf.api.wizard.WizardCategory;
 import com.exactprosystems.jf.api.wizard.WizardCommand;
@@ -80,9 +81,9 @@ public class AutomateConvertWizard extends AbstractWizard
 		this.comboBox.getItems().addAll(CONVERTER_LIST);
 		this.comboBox.setMaxWidth(Double.MAX_VALUE);
 
-		Button btnScan = new Button("Scan");
+		Button btnScan = new Button(R.WIZARD_SCAN.get());
 
-		TextArea shortDescription = new TextArea("Select converter from the above combobox");
+		TextArea shortDescription = new TextArea(R.WIZARD_SELECT_CONVERTER_FROM_COMBOBOX.get());
 		shortDescription.setEditable(false);
 
 		shortDescription.setMaxWidth(Double.MAX_VALUE);
@@ -108,7 +109,7 @@ public class AutomateConvertWizard extends AbstractWizard
 
 		HBox progressBox = new HBox();
 		progressBox.setAlignment(Pos.CENTER_LEFT);
-		progressBox.getChildren().addAll(new ProgressIndicator(ProgressIndicator.INDETERMINATE_PROGRESS), new Label("Scanning..."));
+		progressBox.getChildren().addAll(new ProgressIndicator(ProgressIndicator.INDETERMINATE_PROGRESS), new Label(R.WIZARD_STATUS_SCANNING.get()));
 		scanPane.add(progressBox, 0, 0);
 		progressBox.setVisible(false);
 
@@ -215,18 +216,7 @@ public class AutomateConvertWizard extends AbstractWizard
 		@Override
 		public String shortDescription()
 		{
-			return "It converting the action ApplicationResize from old to new format.\n"
-					+ "Old action contains 3 fields : Maximize, Minimize and Normal.\n"
-					+ "User can set several parameters and it will throw exception.\n"
-					+ "In new format user can't do it, because these parameters replaced to one new parameter : Resize\n"
-					+ "Example.\n"
-					+ "Old action :\n"
-					+ "    #Action;$AppConnection;$Maximize\n"
-					+ "    ApplicationResize;CALL_7;true\n"
-					+ "will converted to \n"
-					+ "    #Action;$AppConnection;$Resize\n"
-					+ "    ApplicationResize;Resize.Maximize\n"
-			;
+			return R.WIZARD_APP_RESIZE_DESCRIPTION.get();
 		}
 
 		@Override
