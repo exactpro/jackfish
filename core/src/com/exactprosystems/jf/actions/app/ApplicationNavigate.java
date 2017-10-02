@@ -17,6 +17,7 @@ import com.exactprosystems.jf.documents.matrix.parser.Parameters;
 import com.exactprosystems.jf.functions.HelpKind;
 
 import java.util.List;
+import java.util.stream.Stream;
 
 @ActionAttribute(
 		group = ActionGroups.App,
@@ -61,10 +62,12 @@ public class ApplicationNavigate extends AbstractAction
 		switch (parameterToFill)
 		{
 			case navigateKindName:
-				for (NavigateKind kind : NavigateKind.values())
-				{
-					list.add(new ReadableValue(NavigateKind.class.getSimpleName() + "." + kind.name()));
-				}
+				Stream.of(NavigateKind.values())
+						.map(kind -> NavigateKind.class.getSimpleName() + "." + kind.name())
+						.map(ReadableValue::new)
+						.forEach(list::add);
+				break;
+			default:
 				break;
 		}
 	}

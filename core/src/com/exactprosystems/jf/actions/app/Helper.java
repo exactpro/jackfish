@@ -8,8 +8,6 @@
 
 package com.exactprosystems.jf.actions.app;
 
-import java.util.List;
-
 import com.exactprosystems.jf.actions.ReadableValue;
 import com.exactprosystems.jf.api.app.AppConnection;
 import com.exactprosystems.jf.api.app.IApplicationFactory;
@@ -20,8 +18,13 @@ import com.exactprosystems.jf.documents.config.Context;
 import com.exactprosystems.jf.documents.matrix.Matrix;
 import com.exactprosystems.jf.documents.matrix.parser.Parameters;
 
+import java.util.List;
+
 class Helper
 {
+	private Helper()
+	{}
+
 	public static void applicationsNames(List<ReadableValue> list, Context context) throws Exception
 	{
 		AbstractEvaluator evaluator = context.getEvaluator();

@@ -43,10 +43,6 @@ public class ClientSetProperties extends AbstractAction
 	@ActionFieldAttribute(name = connectionName, mandatory = true, description = "The connection with the client, which is derived from the action ClientLoad.")
 	protected ClientConnection	connection		= null;
 
-	public ClientSetProperties()
-	{
-	}
-
 	@Override
 	protected void helpToAddParametersDerived(List<ReadableValue> list, Context context, Parameters parameters) throws Exception
 	{

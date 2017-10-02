@@ -122,10 +122,6 @@ public class DialogCheckLayout extends AbstractAction
 	@Override
 	public void doRealAction(Context context, ReportBuilder report, Parameters parameters, AbstractEvaluator evaluator) throws Exception
 	{
-		if (connection == null)
-		{
-			throw new NullPointerException(String.format("Field with name '%s' can't be null", connectionName));
-		}
 		IApplication app = connection.getApplication();
 		String id = connection.getId();
 		IRemoteApplication service = app.service();
@@ -197,7 +193,7 @@ public class DialogCheckLayout extends AbstractAction
 		}
 		
 		boolean totalResult = true;
-		ReportTable table = null;
+		ReportTable resultTable = null;
 		SectionKind run = SectionKind.Run;
 		logger.debug("Perform " + run);
 		ISection sectionRun = window.getSection(run);
@@ -224,10 +220,10 @@ public class DialogCheckLayout extends AbstractAction
 			
 			if (!res.isOk())
 			{ 
-				table = createTable(table, report);
+				resultTable = createTable(resultTable, report);
 				for (String error : res.getErrors())
 				{
-					table.addValues(name, error);
+					resultTable.addValues(name, error);
 				}
 			}
 		}
@@ -272,7 +268,7 @@ public class DialogCheckLayout extends AbstractAction
 		return report.addTable("Layout mismatching", null, true, true, new int[]{25, 65}, "Field", "Error");
 	}
 
-	private boolean checkControl(Set<ControlKind> supportedControls, IControl control) throws Exception
+	private boolean checkControl(Set<ControlKind> supportedControls, IControl control)
 	{
 		return !supportedControls.contains(control.getBindedClass());
 	}

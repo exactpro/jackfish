@@ -10,6 +10,7 @@ package com.exactprosystems.jf.actions.gui;
 
 import com.exactprosystems.jf.actions.*;
 import com.exactprosystems.jf.api.app.*;
+import com.exactprosystems.jf.api.common.Str;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.report.ReportBuilder;
 import com.exactprosystems.jf.documents.config.Context;
@@ -47,7 +48,7 @@ public class DesktopScreenshot extends AbstractAction
 
         ImageWrapper imageWrapper =  new ImageWrapper(image);
 
-		if (imageWrapper != null)
+		if (!Str.IsNullOrEmpty(this.description))
 		{
 			imageWrapper.setDescription(this.description);
 		}

@@ -39,7 +39,7 @@ import com.exactprosystems.jf.documents.matrix.parser.Parameters;
 )
 public class ApplicationCloseWindow extends AbstractAction
 {
-	public final static String connectionName = "AppConnection";
+	public static final String connectionName = "AppConnection";
 
 	@ActionFieldAttribute(name = connectionName, mandatory = true, description = "A special object which identifies"
 			+ " the started application session. This object is required in many other actions to specify the session"

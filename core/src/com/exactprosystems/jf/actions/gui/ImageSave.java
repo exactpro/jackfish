@@ -22,9 +22,6 @@ import com.exactprosystems.jf.documents.matrix.parser.Parameters;
 import com.exactprosystems.jf.functions.HelpKind;
 
 import java.io.File;
-import java.nio.file.Files;
-import java.nio.file.LinkOption;
-import java.nio.file.Paths;
 
 
 @ActionAttribute(

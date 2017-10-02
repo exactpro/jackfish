@@ -150,11 +150,6 @@ public class DialogFill extends AbstractAction
 	@Override
 	public void doRealAction(Context context, ReportBuilder report, Parameters parameters, AbstractEvaluator evaluator) throws Exception
 	{
-		if (connection == null)
-		{
-			super.setError("Connection is null", ErrorKind.EMPTY_PARAMETER);
-			return;
-		}
 		IApplication app = connection.getApplication();
 		String id = connection.getId();
 		IRemoteApplication service = app.service();
@@ -388,7 +383,7 @@ public class DialogFill extends AbstractAction
 		}
 	}
 
-	private boolean checkControl(Set<ControlKind> supportedControls, IControl control) throws Exception
+	private boolean checkControl(Set<ControlKind> supportedControls, IControl control)
 	{
 		return !supportedControls.contains(control.getBindedClass());
 	}

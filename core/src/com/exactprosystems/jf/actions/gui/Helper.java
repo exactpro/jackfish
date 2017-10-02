@@ -25,6 +25,11 @@ import java.util.List;
 
 class Helper
 {
+	private Helper()
+	{
+
+	}
+
 	public static void dialogsNames(Context context, Matrix matrix, AppConnection connection, List<ReadableValue> list) throws Exception
 	{
 		IGuiDictionary dictionary = getGuiDictionary(matrix, connection);
@@ -41,28 +46,24 @@ class Helper
 	{
 		IGuiDictionary dictionary = getGuiDictionary(matrix, connection);
 		
-		if (dictionary != null)
+		IWindow window = dictionary.getWindow(String.valueOf(dlgValue));
+		if (window != null)
 		{
-			IWindow window = dictionary.getWindow(String.valueOf(dlgValue));
-			if (window != null)
-			{
-				window.getControls(SectionKind.Run)
-						.stream()
-						.filter(control -> !Str.IsNullOrEmpty(control.getID()))
-						.map(control -> {
-							String id = control.getID();
-							if (needQuote)
-							{
-								id = "'" + id + "'";
-							}
-							return new ReadableValue(id, control.toString());
-						})
-						.forEach(list::add);
-			}
+			window.getControls(SectionKind.Run)
+					.stream()
+					.filter(control -> !Str.IsNullOrEmpty(control.getID()))
+					.map(control -> {
+						String id = control.getID();
+						if (needQuote)
+						{
+							id = "'" + id + "'";
+						}
+						return new ReadableValue(id, control.toString());
+					})
+					.forEach(list::add);
 		}
 	}
-	
-	
+
 	public static IGuiDictionary getGuiDictionary(Matrix matrix, AppConnection connection) throws Exception
 	{
 		IGuiDictionary dictionary = null;
@@ -95,54 +96,5 @@ class Helper
 			throw new DialogNotFoundException(windowName);
 		}
 	}
-
-	
-//	@FunctionalInterface
-//	public static interface RemoteFunction <T>  
-//	{
-//		T call() throws Exception;
-//	}
-//
-//	@FunctionalInterface
-//	public static interface OnErrorFunction  
-//	{
-//		String errorMessage() throws Exception;
-//	}
-//
-//	public static <T> T tryCatch(AbstractAction action, boolean stopOnFail, RemoteFunction<T> fn, OnErrorFunction error) throws Exception
-//	{
-//		try
-//		{
-//			return fn.call();
-//		}
-//		catch (ServerException e)
-//		{
-//			RemoteException t = (RemoteException)e.getCause();
-//			String mes = error.errorMessage();
-//			
-//			if (t instanceof ElementIsNotFoundException)
-//			{
-//				action.setError(mes, ErrorKind.ELEMENT_NOT_FOUND);
-//				return;
-//			}
-//			else if (t instanceof OperationIsNotAllowedException)
-//			{
-//				action.setError(mes, ErrorKind.OPERATION_NOT_ALLOWED);
-//				return;
-//			}
-//			else if (t instanceof ParameterIsNullException)
-//			{
-//				action.setError(mes, ErrorKind.EMPTY_PARAMETER);
-//				return;
-//			}
-//			
-//			throw t;
-//		}
-//		catch (Exception e)
-//		{
-//		}
-//		
-//		return null;
-//	}
 
 }

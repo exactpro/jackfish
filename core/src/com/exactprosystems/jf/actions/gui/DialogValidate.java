@@ -111,10 +111,6 @@ public class DialogValidate extends AbstractAction
 	@Override
 	public void doRealAction(Context context, ReportBuilder report, Parameters parameters, AbstractEvaluator evaluator) throws Exception
 	{
-		if (connection == null)
-		{
-			throw new NullPointerException(String.format("Field with name '%s' can't be null", connectionName));
-		}
 		IApplication app = connection.getApplication();
 		String id = connection.getId();
 		IRemoteApplication service = app.service();
@@ -227,7 +223,7 @@ public class DialogValidate extends AbstractAction
 		super.setResult(null);
 	}
 
-	private boolean checkControl(Set<ControlKind> supportedControls, IControl control) throws Exception
+	private boolean checkControl(Set<ControlKind> supportedControls, IControl control)
 	{
 		return !supportedControls.contains(control.getBindedClass());
 	}

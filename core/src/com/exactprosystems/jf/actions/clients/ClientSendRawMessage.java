@@ -55,13 +55,6 @@ public class ClientSendRawMessage extends AbstractAction
 	@ActionFieldAttribute(name = dataName, mandatory = true, description = "Array of bytes that will be sent 'as is'." )
 	protected byte[]	data	= null;
 
-
-
-	public ClientSendRawMessage()
-	{
-	}
-
-
 	@Override
 	protected HelpKind howHelpWithParameterDerived(Context context, Parameters parameters, String fieldName) throws Exception
 	{

@@ -21,13 +21,16 @@ import java.util.List;
 
 public class Helper
 {
-	public static void clientsNames(List<ReadableValue> list, Context context) throws Exception
+	private Helper()
+	{}
+
+	public static void clientsNames(List<ReadableValue> list, Context context)
 	{
-		for (String str : context.getConfiguration().getClientPool().clientNames())
-		{
-			String quoted = context.getEvaluator().createString(str);
-			list.add(new ReadableValue(quoted));
-		}
+		context.getConfiguration().getClientPool().clientNames()
+				.stream()
+				.map(context.getEvaluator()::createString)
+				.map(ReadableValue::new)
+				.forEach(list::add);
 	}
 	
 	public static IClientFactory getFactory(Matrix matrix, Context context, Parameters parameters, 
@@ -197,6 +200,6 @@ public class Helper
         {
             return false;
         }
-        return  field.getType().getJavaClass() == Boolean.class || field.getValues() != null && field.getValues().size() > 0;
+        return  field.getType().getJavaClass() == Boolean.class || field.getValues() != null && !field.getValues().isEmpty();
 	}
 }

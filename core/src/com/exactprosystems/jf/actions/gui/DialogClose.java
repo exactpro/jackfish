@@ -18,7 +18,6 @@ import com.exactprosystems.jf.common.report.ReportBuilder;
 import com.exactprosystems.jf.documents.config.Context;
 import com.exactprosystems.jf.documents.matrix.parser.Parameters;
 import com.exactprosystems.jf.functions.HelpKind;
-import org.apache.log4j.Logger;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -49,8 +48,6 @@ import static com.exactprosystems.jf.actions.gui.Helper.message;
 )
 public class DialogClose extends AbstractAction
 {
-	private static final Logger logger = Logger.getLogger(DialogClose.class);
-
 	public final static String	connectionName	= "AppConnection";
 	public final static String	dialogName		= "Dialog";
 
@@ -109,7 +106,7 @@ public class DialogClose extends AbstractAction
 			return;
 		}
 		
-		List<LocatorAndOperation> operations = new ArrayList<LocatorAndOperation>();
+		List<LocatorAndOperation> operations = new ArrayList<>();
 		for (IControl control : window.getSection(IWindow.SectionKind.Close).getControls())
 		{
 			String expression = control.getExpression();
