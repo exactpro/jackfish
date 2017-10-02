@@ -181,9 +181,8 @@ public class MatrixFxController implements Initializable, ContainingParent, IMat
 	@Override
 	public void matrixFinished(final Matrix matrix, final int passed, final int failed)
 	{
-		String format = String.format("Matrix '%s' finished.", matrix.getNameProperty().get());
 		Common.runLater(() -> this.area.appendDefaultTextOnNewLine(String.format("Matrix '%s' finished.", matrix.getNameProperty().get())));
-		this.refresh();
+		this.forceRefresh();
 		this.model.disableButtons(false);
 	}
 
@@ -478,6 +477,11 @@ public class MatrixFxController implements Initializable, ContainingParent, IMat
 	public void refresh()
 	{
 		this.tree.refresh();
+	}
+
+	public void forceRefresh()
+	{
+		this.tree.forceRefresh();
 	}
 
 	public void refreshParameters(MatrixItem item, int selectIndex)

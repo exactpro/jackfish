@@ -1,3 +1,10 @@
+version 4.5.9
+1. New column add in regression table. This column mean, what 1 matrix = 1 scenario ( empty value) or 1 matrix = many scenarios (filled value).
+2. New column on scenario table into databases : Multi. Value 0 mean that 1 matrix = 1 scenario and value 1 mean that 1 matrix = many scenarios.
+For add the Multi column, need drop database and rerun regression matrix, or use this SQL script
+ALTER TABLE scenario ADD Mutli int(1)
+
+--------------------------------------------------------------------------------
 19.05.2017
 Change version to 4.5.1
 --------------------------------------------------------------------------------

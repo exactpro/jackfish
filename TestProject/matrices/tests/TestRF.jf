@@ -104,10 +104,10 @@ Drop and create database;;;
 Run regression;Never;;
     #Id;#RawTable
     table;Table
-    @;Off;Scenario;Name;TestSet;Start;Finish;Performer;Priority
-    0;;pathToMatrices + 'Matrix1';nameMatrix1;testSetMatrix1;;;Some performer;0
-    1;;pathToMatrices + 'Matrix2';nameMatrix2;testSetMatrix2;0;2;;4
-    2;x;pathToMatrices + 'Matrix3';;;;;;1
+    @;Off;Scenario;Name;TestSet;Start;Finish;Performer;Priority;Multi
+    0;;pathToMatrices + 'Matrix1';nameMatrix1;testSetMatrix1;;;Some performer;0;
+    1;;pathToMatrices + 'Matrix2';nameMatrix2;testSetMatrix2;0;2;;4;
+    2;x;pathToMatrices + 'Matrix3';;;;;;1;
     #EndRawTable
 
     #Action;$Table;$Expression
@@ -156,10 +156,18 @@ Check repOverall;;;
     #EndFor
 
     #Id;#Action;$Dialog;$AppConnection;Executed;Passed;Failed
-    DLGFLL4;DialogFill;'DialogForTestReport';app;Do.check('Executed : 2');Do.check('Passed : ' + 1);Do.check('Failed : ' + 1)
+    DLGFLL4;DialogFill;'DialogForTestReport';app;Do.check('Executed : 4');Do.check('Passed : ' + 1);Do.check('Failed : ' + 3)
 
     #Call;appCon
     testLib.stopBrowser;app
+
+    #OnError
+        #Call;appCon
+        testLib.stopBrowser;app
+
+        #Fail
+        error
+
 
 
 #TestCase;#Kind;#Depends;#For
@@ -174,7 +182,7 @@ Check summary;;;
     app;testLib.runBrowser;reportPath
 
     #Id;#Action;$Dialog;$AppConnection;Executed;Passed;Failed
-    DLGFLL4;DialogFill;'DialogForTestReport';app;Do.check('Executed : 2');Do.check('Passed : ' + 1);Do.check('Failed : ' + 1)
+    DLGFLL4;DialogFill;'DialogForTestReport';app;Do.check('Executed : 4');Do.check('Passed : ' + 1);Do.check('Failed : ' + 3)
 
     #Id;#Action;$Dialog;$AppConnection;umbrellaTable
     DLGFLL1;DialogFill;'DialogForTestReport';app;Do.getTable()
@@ -187,6 +195,8 @@ Check summary;;;
     @;Test set;Matrix Name;Execution Status;Executed By;Execution Machine
     0;testSetMatrix1;nameMatrix1;Passed;Sys.userName();Sys.hostName()
     1;testSetMatrix2;nameMatrix2;Failed;Sys.userName();Sys.hostName()
+    2;testSetMatrix2;nameMatrix2;Failed;Sys.userName();Sys.hostName()
+    3;testSetMatrix2;nameMatrix2;Failed;Sys.userName();Sys.hostName()
     #EndRawTable
 
     #Action;$Table;$Expression
@@ -197,6 +207,14 @@ Check summary;;;
 
     #Call;appCon
     testLib.stopBrowser;app
+
+    #OnError
+        #Call;appCon
+        testLib.stopBrowser;app
+
+        #Fail
+        error
+
 
 
 #TestCase;#Kind;#Depends;#For
@@ -259,6 +277,8 @@ Check repCsvExport;;;
         expected;Table
         @;Test Name;Execution Status;Execution Date;Execution Time;Executed By;Execution Machine;Step1
         0;nameMatrix2;Failed;2017-06-06;12:19:18 PM;Sys.userName();Sys.hostName();some reason for failing
+        1;nameMatrix2;Failed;2017-06-06;12:19:20 PM;Sys.userName();Sys.hostName();some reason for failing
+        2;nameMatrix2;Failed;2017-06-06;12:19:21 PM;Sys.userName();Sys.hostName();some reason for failing
         #EndRawTable
 
         #Action;$Table;$Expression
@@ -283,7 +303,7 @@ Check repLastAllDetails;;;
     app;testLib.runBrowser;reportPath
 
     #Id;#Action;$Dialog;$AppConnection;Executed;Passed;Failed
-    DLGFLL4;DialogFill;'DialogForTestReport';app;Do.check('Executed : 5');Do.check('Passed : ' + 3);Do.check('Failed : ' + 2)
+    DLGFLL4;DialogFill;'DialogForTestReport';app;Do.check('Executed : 9');Do.check('Passed : ' + 3);Do.check('Failed : ' + 6)
 
     #Id;#Action;$Dialog;$AppConnection;umbrellaTable
     DLGFLL1;DialogFill;'DialogForTestReport';app;Do.getTable()
@@ -296,6 +316,10 @@ Check repLastAllDetails;;;
     2;nameMatrix1;TestCase;Simple another step;Passed;
     3;nameMatrix2;TestCase;;Failed;some reason for failing
     4;nameMatrix2;TestCase;Always failed step;Failed;some reason for failing
+    5;nameMatrix2;TestCase;;Failed;some reason for failing
+    6;nameMatrix2;TestCase;Always failed step;Failed;some reason for failing
+    7;nameMatrix2;TestCase;;Failed;some reason for failing
+    8;nameMatrix2;TestCase;Always failed step;Failed;some reason for failing
     #EndRawTable
 
     #Action;$Table;$Expression
@@ -306,6 +330,14 @@ Check repLastAllDetails;;;
 
     #Call;appCon
     testLib.stopBrowser;app
+
+    #OnError
+        #Call;appCon
+        testLib.stopBrowser;app
+
+        #Fail
+        error
+
 
 
 #TestCase;#Kind;#Depends;#For

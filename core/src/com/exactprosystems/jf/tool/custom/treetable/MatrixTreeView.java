@@ -137,6 +137,14 @@ public class MatrixTreeView extends TreeTableView<MatrixItem>
 		}
 	}
 
+	public void forceRefresh()
+	{
+		Optional.ofNullable(this.getColumns().get(0)).ifPresent(col -> Common.runLater(() ->{
+			col.setVisible(false);
+			col.setVisible(true);
+		}));
+	}
+
 	public void refreshParameters(MatrixItem item, int selectedIndex)
 	{
 		TreeItem<MatrixItem> treeItem = find(item);

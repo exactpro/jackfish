@@ -1428,6 +1428,11 @@ RF;RegressionFramework
 
     #EndSubCase
 
+    // //=============================================
+    // // Show results with user justification for current runId. If a TC was failed in
+    // // previos run and user fill the error column, the error will appear on the
+    // // current table
+    // //=============================================
     #Id;#SubCase;date
     showResults;Show result for user;
         #Id;#Call
@@ -1442,9 +1447,11 @@ RF;RegressionFramework
         #Id;#Action;scenario_id;scenario_name;testcase_name;scenario_counter;reason
         TBL1;TableCreate;;;;;
 
+        // select previous runId
         #Id;#Action;$Query;$Connection;currentId
         prevIdTable;SQLselect;'SELECT id FROM runs WHERE id = (select MAX(id) FROM runs WHERE id < ?)';sqlCon;runId
 
+        // select all failed scenarios from current runs
         #Id;#Action;$Query;$Connection;currentId
         table;SQLselect;'SELECT * from scenarios where failed != 0 && run_id = ?';sqlCon;runId
 
@@ -1459,7 +1466,7 @@ RF;RegressionFramework
                 #Id;#Let
                 re;''
 
-                // this branch done
+                // 
                 #If
                 prevRunIdExists
                     #Id;#RawText;#Kind
@@ -1543,8 +1550,8 @@ RF;RegressionFramework
         TBEDT1.Out
             #ForEach;#In
             row;TBL1.Out
-                #Id;#Action;$Query;$Connection;scenarioName;counter;testcaseName
-                SQLSLCT19;SQLselect;'SELECT * FROM results WHERE scenario_name = ? && scenario_counter = ? && testcase_name = ?';sqlCon;row.scenario_name;row.scenario_counter;row.testcase_name
+                #Id;#Action;$Query;$Connection;scenarioId;scenarioName;counter;testcaseName
+                SQLSLCT19;SQLselect;'SELECT * FROM results WHERE scenario_id = ? && scenario_name = ? && scenario_counter = ? && testcase_name = ?';sqlCon;row.scenario_id;row.scenario_name;row.scenario_counter;row.testcase_name
 
                 #If
                 SQLSLCT19.Out.isEmpty()
@@ -1569,9 +1576,6 @@ RF;RegressionFramework
 
 
         #EndIf
-
-        #Return
-        table.Out
 
     #EndSubCase
 
