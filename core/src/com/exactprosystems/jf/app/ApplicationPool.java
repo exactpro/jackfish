@@ -11,6 +11,7 @@ package com.exactprosystems.jf.app;
 import com.exactprosystems.jf.api.app.*;
 import com.exactprosystems.jf.api.common.SerializablePair;
 import com.exactprosystems.jf.api.common.Str;
+import com.exactprosystems.jf.api.error.app.NullParameterException;
 import com.exactprosystems.jf.common.CommonHelper;
 import com.exactprosystems.jf.common.MainRunner;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
@@ -28,9 +29,15 @@ import java.net.URLClassLoader;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentSkipListSet;
+import java.util.stream.Collectors;
 
 public class ApplicationPool implements IApplicationPool
 {
+	private static final Logger logger = Logger.getLogger(ApplicationPool.class);
+	private DocumentFactory factory;
+	private Map<String, IApplicationFactory> appFactories;
+	private Set<AppConnection> connections;
+
 	public ApplicationPool(DocumentFactory factory)
 	{
 		this.factory = factory;
@@ -38,9 +45,7 @@ public class ApplicationPool implements IApplicationPool
 		this.connections = new ConcurrentSkipListSet<>(Comparator.comparingInt(AppConnection::getPort));
 	}
 
-	//----------------------------------------------------------------------------------------------
-	// PoolVersionSupported
-	//----------------------------------------------------------------------------------------------
+	//region PoolVersionSupported
 	@Override
 	public boolean isSupported(String id)
 	{
@@ -57,9 +62,9 @@ public class ApplicationPool implements IApplicationPool
 		return false;
 	}
 
-	//----------------------------------------------------------------------------------------------
-	// IApplicationPool
-	//----------------------------------------------------------------------------------------------
+	//endregion
+
+	//region IApplicationPool
 	@Override
 	public Set<ControlKind> supportedControlKinds(String id) throws Exception
 	{
@@ -71,22 +76,10 @@ public class ApplicationPool implements IApplicationPool
 	@Override
 	public List<String> appNames()
 	{
-		List<String> result = new ArrayList<String>();
-		for (AppEntry entry : this.factory.getConfiguration().getAppEntries())
-		{
-			String name = null; 
-			try
-			{
-				name = entry.toString();
-				result.add(name);
-			}
-			catch (Exception e)
-			{
-				logger.error("Error in appNames() name = " + name);
-				logger.error(e.getMessage(), e);
-			}
-		}
-		return result;
+		return this.factory.getConfiguration().getAppEntries()
+				.stream()
+				.map(AppEntry::toString)
+				.collect(Collectors.toList());
 	}	
 
 	@Override
@@ -98,8 +91,7 @@ public class ApplicationPool implements IApplicationPool
 	@Override
 	public IApplicationFactory loadApplicationFactory(String id) throws Exception
 	{
-		IApplicationFactory applicationFactory = loadFactory(id);
-		return applicationFactory;
+		return loadFactory(id);
 	}
 
 	@Override
@@ -109,7 +101,7 @@ public class ApplicationPool implements IApplicationPool
 		{
 			if (id == null)
 			{
-				throw new Exception("id");
+				throw new NullParameterException("id");
 			}
 
 			// prepare initial parameters
@@ -243,12 +235,12 @@ public class ApplicationPool implements IApplicationPool
 			}
 			catch (Exception e)
 			{
-				logger.error(String.format("Error in stopAllApplications()"));
+				logger.error("Error in stopAllApplications()");
 				logger.error(e.getMessage(), e);
 			}
 		}
 	}
-	//----------------------------------------------------------------------------------------------
+	//endregion
 
     public GuiDictionary getDictionary(AppEntry entry) throws Exception
     {
@@ -263,14 +255,13 @@ public class ApplicationPool implements IApplicationPool
             {
                 dictionary.load(reader);
             }
-            // TODO why we do it?
             AbstractEvaluator evaluator = this.factory.createEvaluator();
             dictionary.evaluateAll(evaluator);
         }
         return dictionary;
     }	    
 
-    //----------------------------------------------------------------------------------------------
+    //region private methods
 	private IApplicationFactory loadFactory(String id) throws Exception
 	{
 		AppEntry entry = parametersEntry(id);
@@ -301,7 +292,7 @@ public class ApplicationPool implements IApplicationPool
         			String jarName	= entry.get(Configuration.appJar);
         			jarName	= MainRunner.makeDirWithSubstitutions(jarName); 
         			
-        			List<URL> urls = new ArrayList<URL>();
+        			List<URL> urls = new ArrayList<>();
         			urls.add(new URL("file:" + jarName));
         
         			ClassLoader parent = getClass().getClassLoader();
@@ -327,10 +318,10 @@ public class ApplicationPool implements IApplicationPool
 		return applicationFactory;
 	}
 	
-	private Map<String, String> getDriverParameters(AppEntry entry) throws Exception
+	private Map<String, String> getDriverParameters(AppEntry entry)
 	{
 		List<Parameter> list = entry.getParameters();
-		Map<String, String> driverParameters = new HashMap<String, String>();
+		Map<String, String> driverParameters = new HashMap<>();
 		for (Parameter param : list)
 		{
             String key   = param.getKey();
@@ -339,12 +330,5 @@ public class ApplicationPool implements IApplicationPool
 		}
 		return driverParameters;
 	}
-
-	private DocumentFactory factory;
-
-	private Map<String, IApplicationFactory> appFactories;
-
-	private Set<AppConnection> connections;
-	
-	private static final Logger logger = Logger.getLogger(ApplicationPool.class);
+	//endregion
 }
