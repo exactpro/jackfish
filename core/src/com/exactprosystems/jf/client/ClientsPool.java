@@ -14,6 +14,7 @@ import com.exactprosystems.jf.api.client.IClientFactory;
 import com.exactprosystems.jf.api.client.IClientsPool;
 import com.exactprosystems.jf.api.common.IContext;
 import com.exactprosystems.jf.api.common.Str;
+import com.exactprosystems.jf.api.error.app.NullParameterException;
 import com.exactprosystems.jf.common.CommonHelper;
 import com.exactprosystems.jf.common.MainRunner;
 import com.exactprosystems.jf.documents.DocumentFactory;
@@ -22,27 +23,28 @@ import com.exactprosystems.jf.documents.config.ClientEntry;
 import com.exactprosystems.jf.documents.config.Configuration;
 import com.exactprosystems.jf.documents.config.Parameter;
 import com.exactprosystems.jf.documents.msgdic.MessageDictionary;
-
 import org.apache.log4j.Logger;
 
-import java.io.FileReader;
 import java.io.Reader;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
 
 public class ClientsPool implements IClientsPool
 {
+	private static final Logger logger = Logger.getLogger(ClientsPool.class);
+	private DocumentFactory factory;
+	private Map<String, IClientFactory> clientFactories;
+
 	public ClientsPool(DocumentFactory factory)
 	{
 		this.factory = factory;
 		this.clientFactories = new ConcurrentHashMap<>();
 	}
 
-	//----------------------------------------------------------------------------------------------
-	// PoolVersionSupported
-	//----------------------------------------------------------------------------------------------
+	//region PoolVersionSupported
 	@Override
 	public boolean isSupported(String id)
 	{
@@ -60,36 +62,23 @@ public class ClientsPool implements IClientsPool
 		return false;
 	}
 
-	//----------------------------------------------------------------------------------------------
-	// IClientPool
-	//----------------------------------------------------------------------------------------------
+	//endregion
+
+	//region IClientPool
 	@Override
 	public List<String> clientNames()
 	{
-		List<String> result = new ArrayList<String>();
-		for (ClientEntry entry : this.factory.getConfiguration().getClientEntries())
-		{
-			String name = null; 
-			try
-			{
-				name = entry.toString();
-				result.add(name);
-			}
-			catch (Exception e)
-			{
-				logger.error("Error in clientNames() name = " + name);
-				logger.error(e.getMessage(), e);
-			}
-		}
-		return result;
-	}	
+		return this.factory.getConfiguration().getClientEntries()
+				.stream()
+				.map(ClientEntry::toString)
+				.collect(Collectors.toList());
+	}
 
 	@Override
 	public IClientFactory loadClientFactory(String id) throws Exception
 	{
 		ClientEntry entry = parametersEntry(id);
-		IClientFactory clientFactory = loadClientFactory(id, entry);
-		return clientFactory;
+		return loadClientFactory(id, entry);
 	}
 
 	@Override
@@ -99,14 +88,14 @@ public class ClientsPool implements IClientsPool
 		{
 			if (id == null)
 			{
-				throw new Exception("id");
+				throw new NullParameterException("id");
 			}
 			
 			ClientEntry entry = parametersEntry(id);
 			IClientFactory clientFactory = loadClientFactory(id, entry);
 
 			List<Parameter> list = entry.getParameters();
-			Map<String, String> map = new HashMap<String, String>();
+			Map<String, String> map = new HashMap<>();
 			for (Parameter param : list)
 			{
 			    String key   = param.getKey();
@@ -170,7 +159,9 @@ public class ClientsPool implements IClientsPool
 		}
 	}
 
-	//----------------------------------------------------------------------------------------------
+	//endregion
+
+	//region private methods
 	private MessageDictionary getDictionary(ClientEntry entry) throws Exception
 	{
 		String dictionaryName = entry.get(Configuration.clientDictionary);
@@ -205,7 +196,7 @@ public class ClientsPool implements IClientsPool
 			String jarName	= MainRunner.makeDirWithSubstitutions(entry.get(Configuration.clientJar)); 
 			
 			
-			List<URL> urls = new ArrayList<URL>();
+			List<URL> urls = new ArrayList<>();
 			urls.add(new URL("file:" + jarName));
 			
 			ClassLoader parent = getClass().getClassLoader();
@@ -228,10 +219,6 @@ public class ClientsPool implements IClientsPool
 		}
 		return clientFactory;
 	}
-	
-	private DocumentFactory factory;
 
-	private Map<String, IClientFactory> clientFactories;
-	
-	private static final Logger logger = Logger.getLogger(ClientsPool.class);
+	//endregion
 }
