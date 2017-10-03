@@ -5,7 +5,6 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLConnection;
-import java.text.MessageFormat;
 import java.util.Locale;
 import java.util.PropertyResourceBundle;
 import java.util.ResourceBundle;
@@ -142,9 +141,19 @@ public enum R
 	}
 
 	//this class contains non i18n constants
-	enum Constants
+	public enum Constants
 	{
-		RESOURCE_BUNDLE("com/exactprosystems/jf/ToolResourceBundle");
+		RESOURCE_BUNDLE("com/exactprosystems/jf/ToolResourceBundle"),
+		DEFAULT(""),
+
+		//region jf.actions.app
+		APP_CONNECTION_NAME("AppConnection"),
+		APP_CONNECTION_NAME_DESCRIPTION("A special object which identifies the started application session. This object is required in many other actions to specify the session of the application the indicated action belongs to.It is the output value of such actions as {{@ApplicationStart@}}, {{@ApplicationConnectTo@}}."),
+
+		//endregion
+
+
+		;
 
 		private final String string;
 		Constants(String s)

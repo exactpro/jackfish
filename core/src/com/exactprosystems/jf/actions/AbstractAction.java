@@ -9,6 +9,7 @@
 package com.exactprosystems.jf.actions;
 
 import com.exactprosystems.jf.api.common.Str;
+import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.api.error.ErrorKind;
 import com.exactprosystems.jf.api.error.JFException;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
@@ -444,7 +445,8 @@ public abstract class AbstractAction implements Cloneable
             ActionFieldAttribute attr = field.getAnnotation(ActionFieldAttribute.class);
             if (field.getAnnotation(ActionFieldAttribute.class) != null)
             {
-                fieldAttributes.put(attr.name(), new FieldAndAttributes(field, attr));
+	            String name = attr.constantName() == R.Constants.DEFAULT ? attr.name() : attr.constantName().get();
+	            fieldAttributes.put(name, new FieldAndAttributes(field, attr));
             }
         }
         return fieldAttributes;

@@ -7,9 +7,6 @@
 ////////////////////////////////////////////////////////////////////////////////
 package com.exactprosystems.jf.documents.matrix.parser.items;
 
-import java.util.Arrays;
-import java.util.stream.Collectors;
-
 import com.exactprosystems.jf.api.error.ErrorKind;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.report.HTMLhelper;
@@ -20,6 +17,9 @@ import com.exactprosystems.jf.documents.matrix.parser.Parameters;
 import com.exactprosystems.jf.documents.matrix.parser.Result;
 import com.exactprosystems.jf.documents.matrix.parser.ReturnAndResult;
 import com.exactprosystems.jf.documents.matrix.parser.listeners.IMatrixListener;
+
+import java.util.Arrays;
+import java.util.stream.Collectors;
 
 public class HelpItem extends MatrixItem
 {

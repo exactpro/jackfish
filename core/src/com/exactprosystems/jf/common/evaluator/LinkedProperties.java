@@ -15,6 +15,8 @@ import java.util.*;
 
 public class LinkedProperties extends Properties
 {
+	private Map<Object, Object>	linkMap				= new LinkedHashMap<>();
+
 	public LinkedProperties()
 	{
 	}
@@ -76,7 +78,5 @@ public class LinkedProperties extends Properties
 		bw.flush();
 	}
 	private static final long	serialVersionUID	= 1L;
-
-	private Map<Object, Object>	linkMap				= new LinkedHashMap<Object, Object>();
 }
 

@@ -7,13 +7,10 @@
 ////////////////////////////////////////////////////////////////////////////////
 package com.exactprosystems.jf.documents.matrix.parser.items;
 
-import java.lang.reflect.Field;
-import java.util.Arrays;
-import java.util.stream.Collectors;
-
 import com.exactprosystems.jf.actions.AbstractAction;
 import com.exactprosystems.jf.actions.ActionAttribute;
 import com.exactprosystems.jf.actions.ActionFieldAttribute;
+import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.api.error.ErrorKind;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.report.HTMLhelper;
@@ -25,6 +22,10 @@ import com.exactprosystems.jf.documents.matrix.parser.Parameters;
 import com.exactprosystems.jf.documents.matrix.parser.Result;
 import com.exactprosystems.jf.documents.matrix.parser.ReturnAndResult;
 import com.exactprosystems.jf.documents.matrix.parser.listeners.IMatrixListener;
+
+import java.lang.reflect.Field;
+import java.util.Arrays;
+import java.util.stream.Collectors;
 
 public class HelpActionItem extends MatrixItem
 {
@@ -83,13 +84,16 @@ public class HelpActionItem extends MatrixItem
             {
                 continue;
             }
-            if (annotation.mandatory())
+
+            String fieldDescription = annotation.constantDescription() == R.Constants.DEFAULT ? annotation.description() : annotation.constantDescription().get();
+	        String fieldName = annotation.constantName() == R.Constants.DEFAULT ? annotation.name() : annotation.constantName().get();
+	        if (annotation.mandatory())
             {
-                table.addValues(annotation.name(), f.getType().getSimpleName(), annotation.description(), "Yes", "");
+                table.addValues(fieldName, f.getType().getSimpleName(), fieldDescription, "Yes", "");
             }
             else
             {
-                table.addValues(annotation.name(), f.getType().getSimpleName(), annotation.description(), "No", annotation.def());
+                table.addValues(fieldName, f.getType().getSimpleName(), fieldDescription, "No", annotation.def());
             }
         }
 

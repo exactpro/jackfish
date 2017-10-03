@@ -16,7 +16,9 @@ public abstract class AbstractEvaluator
 {
 	public final static String EVALUATOR_NAME   = "evaluator";
     public final static String VERSION_NAME     = "config_version";
-	
+
+	private Map<String, Object> initVars = new HashMap<>();
+
 	public abstract void addImports(Collection<String> imports);
 	
 	public abstract Variables getGlobals();
@@ -34,7 +36,7 @@ public abstract class AbstractEvaluator
 		this.initVars.put(key, value);
 	}
 
-	public final void reset(String version) throws Exception
+	public final void reset(String version)
 	{
 		getLocals().getVars().clear();
 		getGlobals().getVars().clear();
@@ -46,62 +48,17 @@ public abstract class AbstractEvaluator
 
 	public final Object compile(String expression) throws Exception
 	{
-		if (expression == null)
-		{
-			return null;
-		}
-		
-	    Object compiled = null;
-		try
-		{
-			compiled = rawCompile(expression);
-		}
-		catch (Exception ex)
-		{
-			throw ex;
-		}
-		
-		return compiled;
+		return expression == null ? null : rawCompile(expression);
 	}
 
 	public final Object execute(Object compiled) throws Exception
 	{
-		if (compiled == null)
-		{
-			return null;
-		}
-		
-	    Object retValue = null;
-		try
-		{
-			retValue = rawExecute(compiled);
-		}
-		catch (Exception ex)
-		{
-			throw ex;
-		}
-		
-		return retValue;
+		return compiled == null ? null : rawExecute(compiled);
 	}
 
 	public final Object evaluate(String expression) throws Exception
 	{
-		if (expression == null)
-		{
-			return null;
-		}
-		
-	    Object retValue = null;
-		try
-		{
-			retValue = rawEvaluate(expression);
-		}
-		catch (Exception ex)
-		{
-			throw ex;
-		}
-		
-		return retValue;
+		return expression == null ? null : rawEvaluate(expression);
 	}
 	
 	public final Object tryEvaluate(String expression)
@@ -116,31 +73,17 @@ public abstract class AbstractEvaluator
 		{
 			retValue = rawEvaluate(expression);
 		}
-		catch (Exception ex)
-		{ }
+		catch (Exception ignored)
+		{
+
+		}
 		
 		return retValue;
 	}
 
-
 	public final String templateEvaluate(String template) throws Exception
 	{
-		if (template == null)
-		{
-			return null;
-		}
-		
-	    String retValue = null;
-		try
-		{
-			retValue = rawTemplateEvaluate(template);
-		}
-		catch (Exception ex)
-		{
-			throw ex;
-		}
-		
-		return retValue;
+		return template == null ? null : rawTemplateEvaluate(template);
 	}
 
 	protected abstract Object rawCompile(String expression)  throws Exception;
@@ -150,6 +93,4 @@ public abstract class AbstractEvaluator
 	protected abstract Object rawExecute(Object compiled) throws Exception;
 
 	protected abstract String rawTemplateEvaluate(String expression) throws Exception;
-	
-	private Map<String, Object> initVars = new HashMap<String, Object>();
 }

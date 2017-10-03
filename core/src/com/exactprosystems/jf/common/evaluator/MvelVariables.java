@@ -11,10 +11,10 @@ package com.exactprosystems.jf.common.evaluator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 
 public class MvelVariables extends Variables
 {
+	private Map<String, Object> var = new HashMap<>();
 
 	@Override
 	public void set(Map<String, Object> predef)
@@ -60,7 +60,4 @@ public class MvelVariables extends Variables
 	{
 	    this.var.clear();
 	}
-	
-	private Map<String, Object> var = new HashMap<String, Object>();
-
 }

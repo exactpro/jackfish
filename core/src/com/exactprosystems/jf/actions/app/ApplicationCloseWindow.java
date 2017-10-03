@@ -14,6 +14,7 @@ import com.exactprosystems.jf.actions.ActionFieldAttribute;
 import com.exactprosystems.jf.actions.ActionGroups;
 import com.exactprosystems.jf.api.app.AppConnection;
 import com.exactprosystems.jf.api.app.IApplication;
+import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.api.error.ErrorKind;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.report.ReportBuilder;
@@ -39,12 +40,7 @@ import com.exactprosystems.jf.documents.matrix.parser.Parameters;
 )
 public class ApplicationCloseWindow extends AbstractAction
 {
-	public static final String connectionName = "AppConnection";
-
-	@ActionFieldAttribute(name = connectionName, mandatory = true, description = "A special object which identifies"
-			+ " the started application session. This object is required in many other actions to specify the session"
-			+ " of the application the indicated action belongs to.It is the output value of such actions as "
-			+ "{{@ApplicationStart@}}, {{@ApplicationConnectTo@}}.")
+	@ActionFieldAttribute(constantName = R.Constants.APP_CONNECTION_NAME, mandatory = true, constantDescription = R.Constants.APP_CONNECTION_NAME_DESCRIPTION)
 	protected AppConnection connection = null;
 
 	@Override

@@ -8,19 +8,18 @@
 
 package com.exactprosystems.jf.common.evaluator;
 
-import java.io.Serializable;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
-
+import com.exactprosystems.jf.api.common.Unique;
+import com.exactprosystems.jf.api.conditions.Condition;
 import org.mvel2.MVEL;
 import org.mvel2.ParserContext;
 import org.mvel2.templates.CompiledTemplate;
 import org.mvel2.templates.TemplateCompiler;
 import org.mvel2.templates.TemplateRuntime;
 
-import com.exactprosystems.jf.api.common.Unique;
-import com.exactprosystems.jf.api.conditions.Condition;
+import java.io.Serializable;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 
 public class MvelEvaluator extends AbstractEvaluator 
 {
@@ -118,7 +117,7 @@ public class MvelEvaluator extends AbstractEvaluator
 	
     private Map<String, Object> makeVars()
     {
-        Map<String, Object> vars = new HashMap<String, Object>();
+        Map<String, Object> vars = new HashMap<>();
         vars.putAll(this.globals.getVars());
         vars.putAll(this.locals.getVars());
         return vars;

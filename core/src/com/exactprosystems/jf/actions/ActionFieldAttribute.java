@@ -8,6 +8,8 @@
 
 package com.exactprosystems.jf.actions;
 
+import com.exactprosystems.jf.api.common.i18n.R;
+
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -17,8 +19,14 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface ActionFieldAttribute
 {
-	String name();
-	String description();
+	R.Constants constantName() default R.Constants.DEFAULT;
+	@Deprecated
+	String name() default "";
+
+	R.Constants constantDescription() default R.Constants.DEFAULT;
+	@Deprecated
+	String description() default "";
+
 	boolean mandatory();
 	DefaultValuePool def() default DefaultValuePool.Null;
 }
