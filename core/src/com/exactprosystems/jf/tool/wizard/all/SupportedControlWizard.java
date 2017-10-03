@@ -6,6 +6,7 @@ import com.exactprosystems.jf.api.app.ISection;
 import com.exactprosystems.jf.api.app.IWindow;
 import com.exactprosystems.jf.api.common.IContext;
 import com.exactprosystems.jf.api.common.Str;
+import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.api.wizard.WizardAttribute;
 import com.exactprosystems.jf.api.wizard.WizardCategory;
 import com.exactprosystems.jf.api.wizard.WizardCommand;
@@ -24,6 +25,7 @@ import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 
+import java.text.MessageFormat;
 import java.util.Collection;
 import java.util.List;
 import java.util.Set;
@@ -128,7 +130,7 @@ public class SupportedControlWizard extends AbstractWizard
 						}
 
 						IControl copyControl = Common.tryCatch(() -> AbstractControl.createCopy(oldControl, controlSimpleBean.value)
-								, "Error on create copy"
+								, R.WIZARD_ERROR_ON_CREATE_COPY.get()
 								, oldControl
 						);
 						builder.replaceControl(((Section) section), oldControl, copyControl);
@@ -162,8 +164,8 @@ public class SupportedControlWizard extends AbstractWizard
 					{
 						ComboBox<ControlKind> comboBox = new ComboBox<>();
 						comboBox.getItems().setAll(supportedControls);
-						box.getChildren().add(new Label("old value : " + item.value));
-						box.getChildren().add(new Label(", select new value : "));
+						box.getChildren().add(new Label(MessageFormat.format(R.WIZARD_OLD_VALUE_1.get(), item.value)));
+						box.getChildren().add(new Label(R.WIZARD_SELECT_NEW_VALUE.get()));
 						box.getChildren().add(comboBox);
 						comboBox.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
 							if (newValue != null)
@@ -182,7 +184,7 @@ public class SupportedControlWizard extends AbstractWizard
 			}
 		});
 
-		TreeItem<SimpleBean> root = new TreeItem<>(new SimpleBean("Dictionary : " + this.dictionary.getNameProperty()));
+		TreeItem<SimpleBean> root = new TreeItem<>(new SimpleBean(MessageFormat.format(R.WIZARD_DICTIONARY_NAME_1.get(), this.dictionary.getNameProperty())));
 		root.setExpanded(true);
 		this.treeView.setRoot(root);
 
@@ -233,7 +235,7 @@ public class SupportedControlWizard extends AbstractWizard
 
 		if (root.getChildren().isEmpty())
 		{
-			root.getValue().name = "Dictionary is ok";
+			root.getValue().name = R.WIZARD_DICTIONARY_OK.get();
 		}
 		return this.treeView;
 	}

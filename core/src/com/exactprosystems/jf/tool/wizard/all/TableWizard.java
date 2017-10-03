@@ -3,6 +3,7 @@ package com.exactprosystems.jf.tool.wizard.all;
 import com.exactprosystems.jf.actions.DefaultValuePool;
 import com.exactprosystems.jf.actions.tables.TableLoadFromFile;
 import com.exactprosystems.jf.api.common.IContext;
+import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.api.wizard.*;
 import com.exactprosystems.jf.documents.matrix.parser.Parameters;
 import com.exactprosystems.jf.documents.matrix.parser.items.ActionItem;
@@ -17,6 +18,7 @@ import com.exactprosystems.jf.tool.wizard.CommandBuilder;
 import javafx.scene.layout.BorderPane;
 
 import java.io.File;
+import java.text.MessageFormat;
 import java.util.*;
 import java.util.function.Supplier;
 
@@ -58,7 +60,7 @@ public class TableWizard extends AbstractWizard
         }
         catch (Exception e)
         {
-            DialogsHelper.showError("Error while table creating. Please check file name or file extension.");
+            DialogsHelper.showError(R.WIZARD_ERROR_ON_TABLE_CREATE.get());
             return false;
         }
         return true;
@@ -68,7 +70,7 @@ public class TableWizard extends AbstractWizard
     {
         if (parameters.getByName(TableLoadFromFile.fileName).getExpression().isEmpty())
         {
-            DialogsHelper.showError("No file name specified.");
+            DialogsHelper.showError(R.WIZARD_NO_FILE_NAME.get());
             return false;
         }
 
@@ -78,19 +80,19 @@ public class TableWizard extends AbstractWizard
         }
         catch (Exception e)
         {
-            DialogsHelper.showError("Error in filename.");
+            DialogsHelper.showError(R.WIZARD_ERROR_IN_FILENAME.get());
             return false;
         }
 
         if (!this.fileName.contains("csv"))
         {
-            DialogsHelper.showError("The file '" + this.fileName + "' is not a CSV.");
+            DialogsHelper.showError(MessageFormat.format(R.WIZARD_FILE_NOT_CSV_1.get(), this.fileName));
             return false;
         }
 
         if (!new File(this.fileName).canWrite())
         {
-            DialogsHelper.showError("The file '" + this.fileName + "' is read-only and can't be changed.");
+            DialogsHelper.showError(MessageFormat.format(R.WIZARD_FILE_READ_ONLY_1.get(), this.fileName));
             return false;
         }
 
@@ -106,7 +108,7 @@ public class TableWizard extends AbstractWizard
             }
             catch (Exception e)
             {
-                DialogsHelper.showError("Delimiter is incorrect or empty.");
+                DialogsHelper.showError(R.WIZARD_DELIMITER_INCORRECT.get());
                 return false;
             }
         }

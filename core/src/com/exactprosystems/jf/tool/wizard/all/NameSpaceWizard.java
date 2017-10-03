@@ -10,6 +10,7 @@ package com.exactprosystems.jf.tool.wizard.all;
 
 import com.exactprosystems.jf.actions.ReadableValue;
 import com.exactprosystems.jf.api.common.IContext;
+import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.api.wizard.WizardAttribute;
 import com.exactprosystems.jf.api.wizard.WizardCategory;
 import com.exactprosystems.jf.api.wizard.WizardCommand;
@@ -107,7 +108,7 @@ public class NameSpaceWizard extends AbstractWizard {
             String currentText = this.nextNamespace.getText();
             List<ReadableValue> list = getNamespaces();
             ReadableValue value = new ReadableValue(currentText);
-            value = DialogsHelper.selectFromList("Namespases", value, list);
+            value = DialogsHelper.selectFromList(R.WIZARD_NAMESPACES.get(), value, list);
             this.nextNamespace.setText(value.getValue());
         });
 
@@ -133,7 +134,7 @@ public class NameSpaceWizard extends AbstractWizard {
         pane.setHgap(4);
         pane.add(listView, 0, 0, 7, 1);
         pane.add(new Label(), 0, 1);
-        pane.add(new Label("Where to move: "), 1, 1);
+        pane.add(new Label(R.WIZARD_WHERE_TO_MOVE.get()), 1, 1);
         GridPane.setFillWidth(nextNamespace, false);
         pane.add(nextNamespace, 2, 1);
         pane.add(new Label(), 4, 1);
@@ -170,7 +171,7 @@ public class NameSpaceWizard extends AbstractWizard {
         indicator.setMaxHeight(height);
         pane1.setCenter(indicator);
 
-        Label label = new Label("Loading...");
+        Label label = new Label(R.WIZARD_STATUS_LOADING.get());
         BorderPane.setAlignment(label, Pos.CENTER);
         Task<List<Refactor>> task = new Task<List<Refactor>>() {
             @Override

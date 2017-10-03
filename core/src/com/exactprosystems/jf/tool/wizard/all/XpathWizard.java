@@ -12,6 +12,7 @@ import com.exactprosystems.jf.api.app.*;
 import com.exactprosystems.jf.api.app.IWindow.SectionKind;
 import com.exactprosystems.jf.api.common.IContext;
 import com.exactprosystems.jf.api.common.Str;
+import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.api.error.JFRemoteException;
 import com.exactprosystems.jf.api.wizard.WizardAttribute;
 import com.exactprosystems.jf.api.wizard.WizardCategory;
@@ -229,7 +230,7 @@ public class XpathWizard extends AbstractWizard
 		BorderPane resultPane = new BorderPane();
 
 		this.cfMainExpression = new CustomFieldWithButton();
-		this.cfMainExpression.setPromptText("Enter xpath here");
+		this.cfMainExpression.setPromptText(R.WIZARD_ENTER_XPATH.get());
 		try
 		{
 			Object obj = this.currentControl.get(AbstractControl.xpathName);
@@ -258,7 +259,7 @@ public class XpathWizard extends AbstractWizard
 		titledPane.setContentDisplay(ContentDisplay.CENTER);
 		titledPane.setExpanded(false);
 		titledPane.setRotate(180.0);
-		titledPane.setText("Helper");
+		titledPane.setText(R.WIZARD_HELPER.get());
 
 		GridPane gp = new GridPane();
 
@@ -281,7 +282,7 @@ public class XpathWizard extends AbstractWizard
 
 		BorderPane relativePane = new BorderPane();
 		GridPane.setColumnSpan(relativePane, 3);
-		Label lblRelative = new Label("Relative");
+		Label lblRelative = new Label(R.WIZARD_RELATIVE.get());
 		BorderPane.setAlignment(lblRelative, Pos.CENTER);
 		this.cfRelativeFrom = new CustomFieldWithButton();
 		relativePane.setCenter(this.cfRelativeFrom);
@@ -290,7 +291,7 @@ public class XpathWizard extends AbstractWizard
 
 		BorderPane chekboxPane = new BorderPane();
 		GridPane.setColumnSpan(chekboxPane, 3);
-		this.useText = new CheckBox("use text()");
+		this.useText = new CheckBox(R.WIZARD_USE_TEXT.get());
 		BorderPane.setAlignment(this.useText, Pos.CENTER_LEFT);
 		chekboxPane.setLeft(this.useText);
 
@@ -358,7 +359,7 @@ public class XpathWizard extends AbstractWizard
 		{
 			if (this.currentConnection == null || !this.currentConnection.isGood())
 			{
-				DialogsHelper.showError("Application is not started.\nStart it before call the wizard.");
+				DialogsHelper.showError(R.WIZARD_APPLICATION_NOT_STARTED.get());
 				return false;
 			}
 

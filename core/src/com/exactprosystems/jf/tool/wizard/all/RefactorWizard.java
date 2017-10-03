@@ -11,6 +11,7 @@ package com.exactprosystems.jf.tool.wizard.all;
 import com.exactprosystems.jf.actions.ReadableValue;
 import com.exactprosystems.jf.api.common.IContext;
 import com.exactprosystems.jf.api.common.Str;
+import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.api.wizard.WizardAttribute;
 import com.exactprosystems.jf.api.wizard.WizardCategory;
 import com.exactprosystems.jf.api.wizard.WizardCommand;
@@ -42,6 +43,7 @@ import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Priority;
 
+import java.text.MessageFormat;
 import java.util.*;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
@@ -80,6 +82,15 @@ public class RefactorWizard extends AbstractWizard
     @Override
     public boolean beforeRun()
     {
+        MatrixItem parent = this.currentSubCase.findParent(NameSpace.class);
+        if (parent instanceof NameSpace)
+        {
+            this.currentNameSpace = ((NameSpace) parent);
+        }else
+        {
+            DialogsHelper.showError(R.WIZARD_INVOKE_FROM_NAMESPACE.get());
+            return false;
+        }
         return true;
     }
 
@@ -169,7 +180,6 @@ public class RefactorWizard extends AbstractWizard
 
         this.currentMatrix = super.get(MatrixFx.class, parameters);
         this.currentSubCase = super.get(SubCase.class, parameters);
-        this.currentNameSpace = (NameSpace)this.currentSubCase.findParent(NameSpace.class);
     }
     
     private List<ReadableValue> getNamespaces()
@@ -238,7 +248,7 @@ public class RefactorWizard extends AbstractWizard
                     {
                         if (onlyCheck)
                         {
-                            items.add(new RefactorEmpty(matrix.getNameProperty().get() + " contains " + calls.size() + " reference(s)"));
+                            items.add(new RefactorEmpty(MessageFormat.format(R.WIZARD_MATRIX_CONTAINS_REFERENCES_2.get(), matrix.getNameProperty().get(), calls.size())));
                             this.success = false;
                         }
                         else
@@ -253,7 +263,7 @@ public class RefactorWizard extends AbstractWizard
 
         if (items.size() == 0)
         {
-            items.add(new RefactorEmpty("No changes needed."));
+            items.add(new RefactorEmpty(R.WIZARD_NO_CHANGES_NEEDED.get()));
             this.success = false;
         }
     }
