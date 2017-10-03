@@ -16,6 +16,7 @@ import com.exactprosystems.jf.documents.matrix.parser.Result;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.custom.tab.CustomTab;
 import com.exactprosystems.jf.tool.helpers.DialogsHelper;
+import com.exactprosystems.jf.tool.matrix.MatrixFx;
 import javafx.stage.Window;
 
 import java.io.File;
@@ -96,5 +97,9 @@ public class MatrixScheduler implements DocumentFactory.MatrixStateChanged
 					.filter(Objects::nonNull)
 					.forEach(file -> ((Matrix) this.factory.createDocument(DocumentKind.MATRIX, Common.getRelativePath(file.getAbsolutePath()))).getStateProperty().fire());
 		}
+	}
+
+	void showReport(Matrix matrix){
+		Common.tryCatch(((MatrixFx) matrix)::showResult, "Error on report open");
 	}
 }
