@@ -23,7 +23,7 @@ public @interface ActionFieldAttribute
 	@Deprecated
 	String name() default "";
 
-	R.Constants constantDescription() default R.Constants.DEFAULT;
+	R constantDescription() default R.DEFAULT;
 	@Deprecated
 	String description() default "";
 

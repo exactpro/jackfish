@@ -13,7 +13,12 @@ import java.util.ResourceBundle;
 public enum R
 {
 	//region general
+	DEFAULT("Default"),
 	DRAG_N_DROP_LIST_TOOLTIP("DragNDropListTooltip"),
+	//endregion
+
+	//region actions.app
+	APP_CONNECTION_NAME_DESCRIPTION("AppConnectionDescription"),
 	//endregion
 
 	//region tool.wizard
@@ -148,7 +153,6 @@ public enum R
 
 		//region jf.actions.app
 		APP_CONNECTION_NAME("AppConnection"),
-		APP_CONNECTION_NAME_DESCRIPTION("A special object which identifies the started application session. This object is required in many other actions to specify the session of the application the indicated action belongs to.It is the output value of such actions as {{@ApplicationStart@}}, {{@ApplicationConnectTo@}}."),
 
 		//endregion
 

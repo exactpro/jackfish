@@ -85,7 +85,7 @@ public class HelpActionItem extends MatrixItem
                 continue;
             }
 
-            String fieldDescription = annotation.constantDescription() == R.Constants.DEFAULT ? annotation.description() : annotation.constantDescription().get();
+            String fieldDescription = annotation.constantDescription() == R.DEFAULT ? annotation.description() : annotation.constantDescription().get();
 	        String fieldName = annotation.constantName() == R.Constants.DEFAULT ? annotation.name() : annotation.constantName().get();
 	        if (annotation.mandatory())
             {
