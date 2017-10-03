@@ -911,6 +911,10 @@ CellView > .text-input.text-field{
 
 }
 
+#scheduleShowResultBtn {
+	-fx-graphic : url("icons/showResult_small.png")
+}
+
 /*Matrix tab*/
 #matrixBtnStartDefaultClient {
 	-fx-graphic : url("icons/stop_small.png")

@@ -135,7 +135,7 @@ public class ScheduleController implements Initializable, ContainingParent
 				{
 					Button btn = new Button();
 					btn.getStyleClass().add("transparentBackground");
-					btn.setId("matrixBtnShowResult");
+					btn.setId("scheduleShowResultBtn");
 					btn.setOnAction(event -> showReport(item.getMatrix()));
 					setGraphic(btn);
 
