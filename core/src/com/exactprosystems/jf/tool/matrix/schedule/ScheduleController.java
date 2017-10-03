@@ -12,7 +12,6 @@ import com.exactprosystems.jf.api.common.MatrixState;
 import com.exactprosystems.jf.documents.matrix.Matrix;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.ContainingParent;
-import com.exactprosystems.jf.tool.settings.Theme;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.event.ActionEvent;
 import javafx.fxml.Initializable;
@@ -51,6 +50,7 @@ public class ScheduleController implements Initializable, ContainingParent
 	public TableColumn<MatrixWithState, MatrixState>     columnState;
 	public TableColumn<MatrixWithState, MatrixWithState> columnCheckBox;
 	public TableColumn<MatrixWithState, String>          columnDone;
+	public TableColumn<MatrixWithState, MatrixWithState> columnReport;
 
 	private static final SimpleDateFormat formatter = new SimpleDateFormat(Common.DATE_TIME_PATTERN);
 
@@ -58,6 +58,7 @@ public class ScheduleController implements Initializable, ContainingParent
 	private static final int widthDate		= 160;
 	private static final int widthState		= 70;
 	private static final int widthDone		= 90;
+	private static final int widthReport	= 90;
 
 	@Override
 	public void initialize(URL url, ResourceBundle resourceBundle)
@@ -91,7 +92,7 @@ public class ScheduleController implements Initializable, ContainingParent
 		});
 
 		columnMatrixName.setCellValueFactory(param -> new SimpleObjectProperty<>(param.getValue().getMatrix().getNameProperty().get()));
-		columnMatrixName.prefWidthProperty().bind(this.tableView.widthProperty().subtract(widthCheckBox + widthDate + widthState + widthDone + 2));
+		columnMatrixName.prefWidthProperty().bind(this.tableView.widthProperty().subtract(widthCheckBox + widthDate + widthReport + widthState + widthDone + 2));
 
 		columnStartDate.setCellValueFactory(param -> new SimpleObjectProperty<>(param.getValue().date));
 		columnStartDate.prefWidthProperty().bind(new SimpleObjectProperty<>(widthDate));
@@ -120,6 +121,31 @@ public class ScheduleController implements Initializable, ContainingParent
 
 		columnDone.setCellValueFactory(param -> new SimpleObjectProperty<>(param.getValue().getExecuted()));
 		columnDone.prefWidthProperty().bind(new SimpleObjectProperty<>(widthDone));
+
+		columnReport.prefWidthProperty().bind(new SimpleObjectProperty<>(widthReport));
+		columnReport.setStyle("-fx-alignment: CENTER");
+		columnReport.setCellValueFactory(param -> new SimpleObjectProperty<>(param.getValue()));
+		columnReport.setCellFactory(p -> new TableCell<MatrixWithState, MatrixWithState>()
+		{
+			@Override
+			protected void updateItem(MatrixWithState item, boolean empty)
+			{
+				super.updateItem(item, empty);
+				if (!empty && item.getState().equals(MatrixState.Finished))
+				{
+					Button btn = new Button();
+					btn.getStyleClass().add("transparentBackground");
+					btn.setId("matrixBtnShowResult");
+					btn.setOnAction(event -> showReport(item.getMatrix()));
+					setGraphic(btn);
+
+				}
+				else
+				{
+					setGraphic(null);
+				}
+			}
+		});
 	}
 
 	@Override
@@ -208,6 +234,11 @@ public class ScheduleController implements Initializable, ContainingParent
 	public void loadSeveral(ActionEvent actionEvent)
 	{
 		Common.tryCatch(this.model::loadSeveral, "Error on load matrices");
+	}
+
+	public void showReport(Matrix matrix)
+	{
+		this.model.showReport(matrix);
 	}
 	//endregion
 

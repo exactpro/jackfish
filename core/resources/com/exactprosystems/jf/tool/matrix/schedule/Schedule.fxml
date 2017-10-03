@@ -12,7 +12,7 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.BorderPane?>
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.112" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.exactprosystems.jf.tool.matrix.schedule.ScheduleController">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="700.0" xmlns="http://javafx.com/javafx/8.0.112" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.exactprosystems.jf.tool.matrix.schedule.ScheduleController">
 	<fx:define>
 		<CssVariables fx:id="transparentBackground" fx:constant="TRANSPARENT_BACKGROUND"/>
 	</fx:define>
@@ -24,6 +24,7 @@
 				<TableColumn fx:id="columnStartDate" prefWidth="75.0" text="Start date" />
 				<TableColumn fx:id="columnState" prefWidth="75.0" text="State" />
 				<TableColumn fx:id="columnDone" prefWidth="75.0" text="Done" />
+				<TableColumn fx:id="columnReport" prefWidth="75.0" text="Report" />
 			</columns>
          <BorderPane.margin>
             <Insets bottom="-10.0" />
