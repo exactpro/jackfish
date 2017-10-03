@@ -35,11 +35,12 @@ import java.lang.reflect.Field;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 public class DocumentationBuilder
 {
+    private static final String mvel = "mvel.txt";
+
     public static MatrixItem createHelp (ReportBuilder report, Context context) throws Exception
     {
         Content content = new Content();
@@ -48,8 +49,8 @@ public class DocumentationBuilder
 
         MatrixItem help = new HelpTextLine("");
         content.add(new ContentItem(addPartOfContent("MVEL", true)));
-        addPartOfContent(DocumentationBuilder.class.getResourceAsStream("mvel.txt"), content);
-        addText(help, DocumentationBuilder.class.getResourceAsStream("mvel.txt"));
+        addPartOfContent(DocumentationBuilder.class.getResourceAsStream(mvel), content);
+        addText(help, DocumentationBuilder.class.getResourceAsStream(mvel));
         content.add(new ContentItem(addEndParentPartOfContent()));
 
         addAllControlsTable(help, "All controls", context, operations, true, true, content);
@@ -111,7 +112,7 @@ public class DocumentationBuilder
         addTextLine(help, "{{&&}}");
         
         addTextLine(help, "{{1MVEL1}}");
-        addText(help, DocumentationBuilder.class.getResourceAsStream("mvel.txt"));
+        addText(help, DocumentationBuilder.class.getResourceAsStream(mvel));
         addTextLine(help, "{{&&}}");
 
         addTextLine(help, "{{1All controls1}}");
@@ -174,40 +175,47 @@ public class DocumentationBuilder
     {
         AbstractEvaluator evaluator = context.getEvaluator();
         MatrixItem help = new HelpTextLine("{{`{{*" + title + "*}}`}}");
-        PluginDescription pd = applicationFactory.getClass().getAnnotation(PluginDescription.class);
-        //description
-        addTextLine(help, pd.description());
-        //fields -> table
-        Field[] fields = applicationFactory.getClass().getDeclaredFields();
-        addFieldDescriptionForPlugin(help, evaluator, fields);
-        //controls
-        addTextLine(help, "{{`{{*Supported controls*}}`}}");
-        Set<ControlKind> controls = applicationFactory.supportedControlKinds();
-        String s = controls.stream().map(c -> "{{@" + c.getClazz() + "@}}").collect(Collectors.joining(", "));
-        addTextLine(help, "{{`" + s + "`}}");
-        //additional info
-        if(!Str.IsNullOrEmpty(pd.additionalDescription()))
+        Class<?> clazz = applicationFactory.getClass();
+        PluginDescription pd = clazz.getAnnotation(PluginDescription.class);
+        if (pd != null)
         {
-            addTextLine(help, "{{`{{*Additional info*}}`}}");
-            addTextLine(help, pd.additionalDescription());
+            //description
+            addTextLine(help, pd.description());
+            //fields -> table
+            addFieldDescriptionForPlugin(help, evaluator, clazz);
+            //controls
+            addTextLine(help, "{{`{{*Supported controls*}}`}}");
+            Set<ControlKind> controls = applicationFactory.supportedControlKinds();
+            String s = controls.stream().map(c -> "{{@" + c.getClazz() + "@}}").collect(Collectors.joining(", "));
+            addTextLine(help, "{{`" + s + "`}}");
+            //additional info
+            if(!Str.IsNullOrEmpty(pd.additionalDescription()))
+            {
+                addTextLine(help, "{{`{{*Additional info*}}`}}");
+                addTextLine(help, pd.additionalDescription());
+            }
+            //any??
+            if(!Str.IsNullOrEmpty(pd.any()))
+            {
+                addTextLine(help, pd.any());
+            }
         }
-        //any??
         return help;
     }
 
-    public static void addContent(MatrixItem root, String title, Content content) throws Exception
+    private static void addContent(MatrixItem root, String title, Content content) throws Exception
     {
         MatrixItem contentItem = new HelpContent(title, content); 
         root.insert(root.count(), contentItem);
     }
-    
-    public static void addPicture(MatrixItem root, String title, int width, InputStream stream) throws Exception
+
+    private static void addPicture(MatrixItem root, String title, int width, InputStream stream) throws Exception
     {
         MatrixItem picture = new HelpPicture(title, stream, width); 
         root.insert(root.count(), picture);
     }
-    
-    public static void addTable(MatrixItem root, String title, boolean bordered, String[][] content, int[] widths, AbstractEvaluator evaluator) throws Exception
+
+    private static void addTable(MatrixItem root, String title, boolean bordered, String[][] content, int[] widths, AbstractEvaluator evaluator) throws Exception
     {
         Table table = new Table(content, evaluator);
         MatrixItem text = new HelpTable(title, table, bordered, widths);
@@ -227,24 +235,24 @@ public class DocumentationBuilder
         root.insert(root.count(), tableItem);
     }
 
-    private static void addFieldDescriptionForPlugin(MatrixItem root, AbstractEvaluator evaluator, Field[] fields) throws Exception
+    private static void addFieldDescriptionForPlugin(MatrixItem root, AbstractEvaluator evaluator,  Class<?> clazz) throws Exception
     {
         String[] headers = new String[] {"Parameter", "Description", "Example"};
         int[] width = new int[] {20, 50, 30};
         Table table = new Table(headers, evaluator);
-        for(Field f : fields)
+        for(Field f : clazz.getDeclaredFields())
         {
             PluginFieldDescription pfd = f.getAnnotation(PluginFieldDescription.class);
             if(pfd != null)
             {
-                table.addValue(new String[] {pfd.parameter(), pfd.description(), pfd.description()});
+                table.addValue(new String[] {pfd.parameter(), pfd.description(), pfd.example()});
             }
         }
         MatrixItem tableItem = new HelpTable("", table, true, width);
         root.insert(root.count(), tableItem);
     }
-    
-    public static void addAllControlsTable(MatrixItem root, String title, Context context, List<OperationKind> operations, boolean rotate, boolean bordered, Content content) throws Exception
+
+    private static void addAllControlsTable(MatrixItem root, String title, Context context, List<OperationKind> operations, boolean rotate, boolean bordered, Content content) throws Exception
     {
         try
         {
@@ -324,27 +332,27 @@ public class DocumentationBuilder
         {
         }
     }
-    
-    public static void addTextLine(MatrixItem root, String str) throws Exception
+
+    private static void addTextLine(MatrixItem root, String str) throws Exception
     {
         MatrixItem line = new HelpTextLine(str);
         root.insert(root.count(), line);
     }
-    
-    public static void addText(MatrixItem root, InputStream stream) throws Exception
+
+    private static void addText(MatrixItem root, InputStream stream) throws Exception
     {
         MatrixItem text = new HelpText(stream);
         root.insert(root.count(), text);
     }
-    
-    public static void addClass(MatrixItem root, Class<?> clazz) throws Exception
+
+    private static void addClass(MatrixItem root, Class<?> clazz) throws Exception
     {
         MatrixItem item = new HelpClass(clazz);
         root.insert(root.count(), item);
     }
 
     @SuppressWarnings("unchecked")
-    public static void addAllItems(MatrixItem root, Content content) throws Exception
+    private static void addAllItems(MatrixItem root, Content content) throws Exception
     {
         content.add(new ContentItem(addPartOfContent("Matrix syntax", true)));
 
@@ -376,7 +384,7 @@ public class DocumentationBuilder
     }
     
     @SuppressWarnings("unchecked")
-    public static void addAllActions(MatrixItem root, Content content)
+    private static void addAllActions(MatrixItem root, Content content)
     {
         MatrixItem item = new HelpTextLine("{{1All actions by groups1}}");
         root.insert(root.count(), item);

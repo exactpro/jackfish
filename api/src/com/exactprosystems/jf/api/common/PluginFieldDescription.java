@@ -8,7 +8,7 @@ import java.lang.annotation.Target;
 @Target(ElementType.FIELD)
 @Retention(RetentionPolicy.RUNTIME)
 public @interface PluginFieldDescription {
-    String parameter() default "";
-    String description() default "";
-    String example() default "";
+    String parameter();
+    String description();
+    String example();
 }
