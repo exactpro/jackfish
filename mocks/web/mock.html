@@ -103,8 +103,8 @@
 	var NEWLINE = "\n";
 
 	var getControlName = function() {
-		var a = $('#moveLabel').text();
-		a = a.substring(0,a.length-5);
+		var a = $('#centralLabel').text();
+		a = a.substring(0,a.indexOf("_"));
 		return a;
 	}
 
