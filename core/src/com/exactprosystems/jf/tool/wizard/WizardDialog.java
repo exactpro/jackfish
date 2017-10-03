@@ -9,6 +9,7 @@
 package com.exactprosystems.jf.tool.wizard;
 
 import com.exactprosystems.jf.api.common.Str;
+import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.api.wizard.Wizard;
 import com.exactprosystems.jf.common.documentation.DocumentationBuilder;
 import com.exactprosystems.jf.common.report.ContextHelpFactory;
@@ -125,7 +126,7 @@ public class WizardDialog extends Dialog<Boolean>
 
 		gridPane.getColumnConstraints().addAll(c0, c1);
 
-		Button wizardHelp = new Button("Help");
+		Button wizardHelp = new Button(R.WIZARD_HELP.get());
 		Common.customizeLabeled(wizardHelp, CssVariables.TRANSPARENT_BACKGROUND, CssVariables.Icons.ACTIONS_HELP_ICON);
 		wizardHelp.setOnAction(event ->
 		{
@@ -146,13 +147,13 @@ public class WizardDialog extends Dialog<Boolean>
 		gridPane.add(wizardHelp, 0, 1);
 		borderPane.setBottom(gridPane);
 
-		Button wizardOk = new Button("Accept");
+		Button wizardOk = new Button(R.WIZARD_ACCEPT.get());
 		wizardOk.setOnAction(e ->
 		{
 			this.setResult(true);
 			this.close();
 		});
-		Button wizardRefuse = new Button("Refuse");
+		Button wizardRefuse = new Button(R.WIZARD_REFUSE.get());
 		wizardRefuse.setOnAction(e ->
 		{
 			this.setResult(false);

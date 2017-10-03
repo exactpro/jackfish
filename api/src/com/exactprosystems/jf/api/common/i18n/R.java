@@ -24,6 +24,21 @@ public enum R
 	//region tool.wizard
 	WIZARD_SUCCESS("WizardSuccess_1"),
 
+	WIZARD_ERROR_ON_CONFIG_REFRESH("WIZARD_ERROR_ON_CONFIG_REFRESH"),
+	WIZARD_ERROR_ON_SHOW_ELEMENT("WIZARD_ERROR_ON_SHOW_ELEMENT"),
+	WIZARD_ERROR_ON_DISPLAY_WINDOW("WIZARD_ERROR_ON_DISPLAY_WINDOW"),
+	WIZARD_ERROR_ON_CREATE_DOCUMENT_2("WIZARD_ERROR_ON_CREATE_DOCUMENT_2"),
+	WIZARD_ERROR_ON_LOAD_DOC_1("WIZARD_ERROR_ON_LOAD_DOC_1"),
+	WIZARD_ERROR_ON_CREATE_DOC_1("WIZARD_ERROR_ON_CREATE_DOC_1"),
+	WIZARD_WIZARD("WIZARD"),
+	WIZARDS("WIZARDS"),
+	WIZARD_NO_ONE_ACCESSIBLE("WIZARD_NO_ONE_ACCESSIBLE"),
+	WIZARD_CHOOSE_WIZARD("WIZARD_CHOOSE_WIZARD"),
+	WIZARD_HELP("WIZARD_HELP"),
+	WIZARD_ACCEPT("WIZARD_ACCEPT"),
+	WIZARD_REFUSE("WIZARD_REFUSE"),
+
+
 	//region tool.wizard.all
 	WIZARD_START_CONNECTION("Start"),
 	WIZARD_SCAN("Scan"),
@@ -100,7 +115,6 @@ public enum R
 	WIZARD_DELIMITER_INCORRECT("WIZARD_DELIMETR_INCORRECT"),
 	WIZARD_ENTER_XPATH("WIZARD_ENTER_XPATH"),
 	WIZARD_HELPER("WIZARD_HELPER"),
-
 	WIZARD_RELATIVE("WIZARD_RELATIVE"),
 	WIZARD_USE_TEXT("WIZARD_USE_TEXT"),
 
@@ -120,6 +134,7 @@ public enum R
 
 	/**
 	 * use this method for I18n
+	 *
 	 * @return string by default locales
 	 */
 	public static String get(R r)
@@ -143,23 +158,32 @@ public enum R
 			String resourceName = toResourceName(bundleName, "properties");
 			ResourceBundle bundle = null;
 			InputStream stream = null;
-			if (reload) {
+			if (reload)
+			{
 				URL url = loader.getResource(resourceName);
-				if (url != null) {
+				if (url != null)
+				{
 					URLConnection connection = url.openConnection();
-					if (connection != null) {
+					if (connection != null)
+					{
 						connection.setUseCaches(false);
 						stream = connection.getInputStream();
 					}
 				}
-			} else {
+			}
+			else
+			{
 				stream = loader.getResourceAsStream(resourceName);
 			}
-			if (stream != null) {
-				try {
+			if (stream != null)
+			{
+				try
+				{
 					// Only this line is changed to make it to read properties files as UTF-8.
 					bundle = new PropertyResourceBundle(new InputStreamReader(stream, "UTF-8"));
-				} finally {
+				}
+				finally
+				{
 					stream.close();
 				}
 			}
@@ -182,6 +206,7 @@ public enum R
 		;
 
 		private final String string;
+
 		Constants(String s)
 		{
 			this.string = s;
@@ -193,4 +218,4 @@ public enum R
 		}
 
 	}
-}
+	}

@@ -11,6 +11,7 @@ package com.exactprosystems.jf.tool.wizard;
 import com.exactprosystems.jf.api.app.IControl;
 import com.exactprosystems.jf.api.app.IWindow;
 import com.exactprosystems.jf.api.common.Sys;
+import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.api.wizard.WizardCommand;
 import com.exactprosystems.jf.common.CommonHelper;
 import com.exactprosystems.jf.documents.Document;
@@ -28,6 +29,7 @@ import com.exactprosystems.jf.tool.dictionary.DictionaryFx;
 import org.apache.log4j.Logger;
 
 import java.io.Reader;
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
@@ -56,7 +58,7 @@ public class CommandBuilder
 
     public CommandBuilder refreshConfig(Configuration config)
     {
-        this.commands.add(context -> Common.tryCatch(config::refresh, "Error on refresh config"));
+        this.commands.add(context -> Common.tryCatch(config::refresh, R.WIZARD_ERROR_ON_CONFIG_REFRESH.get()));
         return this;
     }
 
@@ -132,7 +134,7 @@ public class CommandBuilder
 
 	public CommandBuilder displayControl(DictionaryFx dictionaryFx, Window window, Section section, IControl control)
 	{
-		this.commands.add(context -> Common.tryCatch(() -> dictionaryFx.displayElement(window, section.getSectionKind(), control), "Error on show element"));
+		this.commands.add(context -> Common.tryCatch(() -> dictionaryFx.displayElement(window, section.getSectionKind(), control), R.WIZARD_ERROR_ON_SHOW_ELEMENT.get()));
 		return this;
 	}
 
@@ -153,7 +155,7 @@ public class CommandBuilder
 		this.commands.add(context -> Common.tryCatch(() -> {
 			dictionaryFx.displayDialog(window, dictionaryFx.getWindows());
 			dictionaryFx.displayElement(window, IWindow.SectionKind.Run, window.getFirstControl(IWindow.SectionKind.Run));
-		}, "Error on display window"));
+		}, R.WIZARD_ERROR_ON_DISPLAY_WINDOW.get()));
 		return this;
 	}
 	
@@ -164,7 +166,7 @@ public class CommandBuilder
             Common.tryCatch(() ->
             {
                 Document doc = context.getFactory().createDocument(kind, name);
-            }, "Error on create " + name + " of kind " + kind);
+            }, MessageFormat.format(R.WIZARD_ERROR_ON_CREATE_DOCUMENT_2.get(), name, kind));
         });
         return this;
     }
@@ -179,7 +181,7 @@ public class CommandBuilder
                 {
                     doc.load(reader);
                 }
-            }, "Error on load " + doc.getNameProperty().get());
+            }, MessageFormat.format(R.WIZARD_ERROR_ON_LOAD_DOC_1.get(), doc.getNameProperty().get()));
         });
         return this;
     }
@@ -192,7 +194,7 @@ public class CommandBuilder
 			{
 			    doc.save(doc.getNameProperty().get());
 			    doc.close();
-			}, "Error on save " + doc.getNameProperty().get());
+			}, MessageFormat.format(R.WIZARD_ERROR_ON_CREATE_DOC_1.get(), doc.getNameProperty().get()));
 		});
 		return this;
 	}

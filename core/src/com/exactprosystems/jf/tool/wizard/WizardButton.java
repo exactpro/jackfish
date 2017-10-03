@@ -1,5 +1,6 @@
 package com.exactprosystems.jf.tool.wizard;
 
+import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.api.wizard.Wizard;
 import com.exactprosystems.jf.api.wizard.WizardManager;
 import com.exactprosystems.jf.common.utils.ArrayUtils;
@@ -31,7 +32,7 @@ public class WizardButton extends Button
 
 	public static Menu createMenu()
 	{
-		Menu menu = new Menu("Wizard");
+		Menu menu = new Menu(R.WIZARD_WIZARD.get());
 		menu.setGraphic(new ImageView(new Image(CssVariables.Icons.WIZARD_SMALL)));
 		return menu;
 	}
@@ -39,7 +40,7 @@ public class WizardButton extends Button
 	public WizardButton()
 	{
 		super();
-        this.setTooltip(new Tooltip("Wizards"));
+        this.setTooltip(new Tooltip(R.WIZARDS.get()));
 		this.setId("btnWizard");
 		this.getStyleClass().addAll(CssVariables.TRANSPARENT_BACKGROUND);
 	}
@@ -52,10 +53,10 @@ public class WizardButton extends Button
 	        List<Class<? extends Wizard>> suitable  = manager.suitableWizards(criteries);
 	        if (suitable.isEmpty())
 	        {
-	            DialogsHelper.showInfo("No one wizard is accessible here");
+	            DialogsHelper.showInfo(R.WIZARD_NO_ONE_ACCESSIBLE.get());
 	            return;
 	        }
-	        Class<? extends Wizard> wizardClass = DialogsHelper.selectFromList("Choose wizard", null, suitable, wizard ->  manager.nameOf(wizard));
+	        Class<? extends Wizard> wizardClass = DialogsHelper.selectFromList(R.WIZARD_CHOOSE_WIZARD.get(), null, suitable, wizard ->  manager.nameOf(wizard));
 	        Object[] parameters = criteries;
  	        if (parameterSupplier != null)
 	        {
