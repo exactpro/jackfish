@@ -282,7 +282,7 @@ public class MatrixFxController extends AbstractDocumentController<MatrixFx> imp
 		this.model.getRoot().setOnAddListener((integer, matrixItem) -> this.display(matrixItem, false));
 		this.model.currentItemProperty().setOnChangeListener(((oldValue, newValue) -> this.setCurrent(newValue, false)));
 		this.model.timerProperty().setOnChangeListener((aLong, aLong2) -> this.displayTimer(aLong2, aLong2 > 0));
-		this.model.refreshProperty().setOnChangeListener((aBoolean, aBoolean2) -> this.tree.refresh());
+		this.model.getRoot().setOnBreakPoint((oldValue,newValue) -> this.tree.refresh());
 		this.model.getRoot().setOnChangeParameter((integer, matrixItem) -> this.refreshParameters(matrixItem, integer));
 
 		this.context = this.model.getEngine().getContext();

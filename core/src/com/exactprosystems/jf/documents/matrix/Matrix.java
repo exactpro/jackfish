@@ -57,7 +57,7 @@ public class Matrix extends AbstractDocument implements IMatrix
     private boolean                      isLibrary;
     private int                          count            = 0;
     private MatrixItem                   root             = null;
-    private IMatrixListener              matrixListener   = null;
+    protected IMatrixListener              matrixListener   = null;
     private MatrixEngine                 engine           = null;
     private MutableValue<MatrixState>    stateProperty    = new MutableValue<>(MatrixState.Created);
 

@@ -498,7 +498,7 @@ public class MatrixFx extends Matrix
 		if (getEngine() != null)
 		{
 			getEngine().stop();
-			refresh();
+			super.matrixListener.matrixFinished(this, 0, 0);
 			this.getEngine().getContext().getOut().println("Matrix stopped");
 			this.timer.set(-1L);
 		}
@@ -580,7 +580,6 @@ public class MatrixFx extends Matrix
 			insert(parent, index + i, item);
 		}
 		enumerate();
-		refresh();
 		super.getChangedProperty().set(true);
 	}
 
@@ -644,7 +643,6 @@ public class MatrixFx extends Matrix
 				}
 			});
 			enumerate();
-			refresh();
 		}
 	}
 
@@ -665,25 +663,14 @@ public class MatrixFx extends Matrix
 		}
 	}
 
-	private void refresh()
-	{
-		this.refresh.fire();
-	}
-
 	public MutableValue<Object> parameterProperty()
 	{
 		return parameter;
 	}
 
-	public MutableValue<Boolean> refreshProperty()
-	{
-		return this.refresh;
-	}
-
 	private MutableValue<MatrixItem>               currentItemProperty = new MutableValue<>();
 	private MutableValue<Long>                     timer               = new MutableValue<>(0L);
 	private MutableValue<Object>                   parameter           = new MutableValue<>(null);
-	private MutableValue<Boolean>                  refresh             = new MutableValue<>(false);
 
 	private String defaultAppId;
 	private String defaultClientId;

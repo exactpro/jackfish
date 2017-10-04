@@ -33,6 +33,7 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.*;
 import java.util.function.BiConsumer;
+import java.util.function.Consumer;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
@@ -42,6 +43,7 @@ public abstract class MatrixItem implements IMatrixItem, Mutable, Cloneable
 	private BiConsumer<Integer, MatrixItem> onRemoveListener;
 	private BiConsumer<Integer, MatrixItem> onSetListener;
 	private BiConsumer<Integer, MatrixItem> onChangeParameter;
+	private BiConsumer<Boolean, MatrixItem> onBreakPoint;
 
 	public MatrixItem()
 	{
@@ -756,6 +758,7 @@ public abstract class MatrixItem implements IMatrixItem, Mutable, Cloneable
 	public final void setBreakPoint(boolean breakPoint)
 	{
 		this.breakPoint = breakPoint;
+		Optional.ofNullable(this.onBreakPoint).ifPresent(l -> l.accept(breakPoint, this));
 		MatrixItemState oldState = getItemState();
 		MatrixItemState newState;
 		if (breakPoint)
@@ -795,6 +798,14 @@ public abstract class MatrixItem implements IMatrixItem, Mutable, Cloneable
 			}
 		}
 		return true;
+	}
+
+	public final void setOnBreakPoint(BiConsumer<Boolean, MatrixItem> breakPointListener)
+	{
+		this.owner.getRoot().bypass(item->
+		{
+			item.onBreakPoint = breakPointListener;
+		});
 	}
 
 	public final void setOnAddListener(BiConsumer<Integer, MatrixItem> addListener)
