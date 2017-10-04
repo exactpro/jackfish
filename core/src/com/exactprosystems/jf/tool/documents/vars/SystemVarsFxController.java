@@ -25,6 +25,7 @@ import java.net.URL;
 import java.util.ResourceBundle;
 
 import static com.exactprosystems.jf.tool.Common.tryCatch;
+import static com.exactprosystems.jf.tool.custom.table.CustomTable.*;
 
 
 @ControllerInfo(resourceName = "SystemVarsFx.fxml")
@@ -67,10 +68,10 @@ public class SystemVarsFxController extends AbstractDocumentController<SystemVar
 
 	private void createTable()
 	{
-		this.tableView.completeFirstColumn("Name", "name", true, false);
-		this.tableView.completeSecondColumn("Expression", "expression", true, false);
-		this.tableView.completeThirdColumn("Value", "valueAsString", false, true);
-		this.tableView.completeFourthColumn("Description", "description", true, true);
+		this.tableView.completeFirstColumn("Name", "name", EditState.TEXTFIELD, false);
+		this.tableView.completeSecondColumn("Expression", "expression", EditState.TEXTFIELD, false);
+		this.tableView.completeThirdColumn("Value", "valueAsString", EditState.LABEL, true);
+		this.tableView.completeFourthColumn("Description", "description", EditState.TEXTFIELD, true);
 		this.tableView.onFinishEditFirstColumn((par, value) -> this.model.updateNameRow(current(), value));
 		this.tableView.onFinishEditSecondColumn((par, value) -> this.model.updateExpressionRow(current(), value));
 		this.tableView.onFinishEditFourthColumn((par, varlue) -> this.model.updateDescriptionRow(current(), varlue));

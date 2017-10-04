@@ -11,7 +11,6 @@ package com.exactprosystems.jf.tool.custom.table;
 import com.exactprosystems.jf.api.common.Str;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.CssVariables;
-import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
@@ -19,7 +18,6 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -32,6 +30,13 @@ public class CustomTable<T> extends TableView<T>
 	private boolean mayChanged;
 	private ContextMenuListener<T> listener;
 	private ContextMenu contextMenu;
+
+	public enum EditState
+    {
+        LABEL,
+        TEXTFIELD,
+        TEXTFIELD_READONLY
+    }
 
 	public CustomTable(boolean isChanged)
 	{
@@ -73,27 +78,27 @@ public class CustomTable<T> extends TableView<T>
 		this.listener = listener;
 	}
 
-	public void completeFirstColumn(String name, String valueFactory, boolean editable, boolean needTooltip)
+	public void completeFirstColumn(String name, String valueFactory, EditState editState, boolean needTooltip)
 	{
-		completeColumn(firstColumn, name, valueFactory, editable, needTooltip);
+		completeColumn(firstColumn, name, valueFactory, editState, needTooltip);
 		showColumn(firstColumn, 0);
 	}
 
-	public void completeSecondColumn(String name, String valueFactory, boolean editable, boolean needTooltip)
+	public void completeSecondColumn(String name, String valueFactory, EditState editState, boolean needTooltip)
 	{
-		completeColumn(secondColumn, name, valueFactory, editable, needTooltip);
+		completeColumn(secondColumn, name, valueFactory, editState, needTooltip);
 		showColumn(secondColumn, 1);
 	}
 
-	public void completeThirdColumn(String name, String valueFactory, boolean editable, boolean needTooltip)
+	public void completeThirdColumn(String name, String valueFactory, EditState editState, boolean needTooltip)
 	{
-		completeColumn(thirdColumn, name, valueFactory, editable, needTooltip);
+		completeColumn(thirdColumn, name, valueFactory, editState, needTooltip);
 		showColumn(thirdColumn, 2);
 	}
 
-	public void completeFourthColumn(String name, String valueFactory, boolean editable, boolean needTooltip)
+	public void completeFourthColumn(String name, String valueFactory, EditState editState, boolean needTooltip)
 	{
-		completeColumn(fourthColumn, name, valueFactory, editable, needTooltip);
+		completeColumn(fourthColumn, name, valueFactory, editState, needTooltip);
 		showColumn(fourthColumn, 3);
 	}
 
@@ -172,13 +177,31 @@ public class CustomTable<T> extends TableView<T>
         });
     }
 
-	private void completeColumn(CustomTableColumn column, String name, String valueFactory, boolean editable, boolean needTooltip)
+	private void completeColumn(CustomTableColumn column, String name, String valueFactory, EditState editState, boolean needTooltip)
 	{
 		column.setText(name);
 		column.setCellValueFactory(new PropertyValueFactory<>(valueFactory));
-		column.setEditable(editable);
 		column.setNeedTooltip(needTooltip);
 		column.setCellFactory(tsTableColumn -> new CustomTableCell());
+		switch (editState)
+        {
+            case LABEL:
+            {
+                column.setEditable(false);
+                break;
+            }
+            case TEXTFIELD:
+            {
+                column.setEditable(true);
+                break;
+            }
+            case TEXTFIELD_READONLY:
+            {
+                column.setEditable(true);
+                column.setReadOnly();
+                break;
+            }
+        }
 	}
 
 	private void showColumn(CustomTableColumn c, int index)
@@ -197,7 +220,7 @@ public class CustomTable<T> extends TableView<T>
 	{
 		private TextField textField;
 
-		public CustomTableCell()
+        CustomTableCell()
 		{
 		    super();
 		}
@@ -251,6 +274,12 @@ public class CustomTable<T> extends TableView<T>
 			}
 		}
 
+        @Override
+        public void commitEdit(String newValue)
+        {
+            super.commitEdit(((CustomTableColumn) getTableColumn()).isReadOnly() ? getString() : newValue);
+        }
+
 		private String getString()
 		{
 			return Str.asString(getItem());
@@ -285,21 +314,32 @@ public class CustomTable<T> extends TableView<T>
 	private class CustomTableColumn extends TableColumn<T, String>
 	{
 		private boolean needTooltip;
+        private boolean readOnly;
 
-		public CustomTableColumn()
+		CustomTableColumn()
 		{
 			super();
 		}
 
-		public boolean isNeedTooltip()
+		boolean isNeedTooltip()
 		{
 			return needTooltip;
 		}
 
-		public void setNeedTooltip(boolean needTooltip)
+		void setNeedTooltip(boolean needTooltip)
 		{
 			this.needTooltip = needTooltip;
 		}
+
+        void setReadOnly()
+        {
+            this.readOnly = true;
+        }
+
+        boolean isReadOnly()
+        {
+            return this.readOnly;
+        }
 	}
 
 	private void onDeleteItems(List<T> items)

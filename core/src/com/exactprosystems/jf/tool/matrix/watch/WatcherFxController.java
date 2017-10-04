@@ -35,6 +35,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
+import static com.exactprosystems.jf.tool.custom.table.CustomTable.*;
+
 public class WatcherFxController implements Initializable, ContainingParent
 {
 	public ExpressionField expressionField;
@@ -100,8 +102,8 @@ public class WatcherFxController implements Initializable, ContainingParent
 		this.mainGrid.setPadding(new Insets(0,16,5,16));
 		this.dialog.getDialogPane().setHeader(new Label());
 		GridPane.setValignment(this.expressionField, VPos.BOTTOM);
-		this.table.completeFirstColumn("Expression", "key", true, false);
-		this.table.completeSecondColumn("Result", "value", false, true);
+		this.table.completeFirstColumn("Expression", "key", EditState.TEXTFIELD, false);
+		this.table.completeSecondColumn("Result", "value", EditState.TEXTFIELD_READONLY, true);
 		this.table.onFinishEditFirstColumn((value, newValue) -> this.model.updateRow(newValue, this.table.getItems().indexOf(value)));
 		listeners();
 	}
