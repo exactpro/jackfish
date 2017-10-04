@@ -3,6 +3,7 @@ package com.exactprosystems.jf.common.documentation;
 import com.exactprosystems.jf.actions.ActionAttribute;
 import com.exactprosystems.jf.actions.ActionsList;
 import com.exactprosystems.jf.api.common.Str;
+import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.documents.matrix.parser.Parser;
 import com.exactprosystems.jf.documents.matrix.parser.items.*;
 
@@ -44,10 +45,17 @@ public class CheckItemsAndActions {
         {
             ActionAttribute attr = clazz.getAnnotation(ActionAttribute.class);
             if (attr != null){
-                checkPartOfAttribute(attr.generalDescription(), clazz.getSimpleName());
-                checkPartOfAttribute(attr.examples(), clazz.getSimpleName());
-                checkPartOfAttribute(attr.additionalDescription(), clazz.getSimpleName());
-                checkPartOfAttribute(attr.outputDescription(), clazz.getSimpleName());
+	            String generalDescription = attr.constantGeneralDescription() == R.DEFAULT ? attr.generalDescription() : attr.constantGeneralDescription().get();
+	            checkPartOfAttribute(generalDescription, clazz.getSimpleName());
+
+				String examples = attr.constantExamples() == R.DEFAULT ? attr.examples() : attr.constantExamples().get();
+				checkPartOfAttribute(examples, clazz.getSimpleName());
+
+				String additionalDescription = attr.constantAdditionalDescription() == R.DEFAULT ? attr.additionalDescription() : attr.constantAdditionalDescription().get();
+                checkPartOfAttribute(additionalDescription, clazz.getSimpleName());
+
+                String outputDescription = attr.constantOutputDescription() == R.DEFAULT_OUTPUT_DESCRIPTION ? attr.outputDescription() : attr.constantOutputDescription().get();
+                checkPartOfAttribute(outputDescription, clazz.getSimpleName());
             }
         }
     }

@@ -22,21 +22,14 @@ import com.exactprosystems.jf.documents.config.Context;
 import com.exactprosystems.jf.documents.matrix.parser.Parameters;
 
 @ActionAttribute(
-		group					= ActionGroups.App,
-		suffix					= "APPCW",
-		generalDescription		=
-				"Plug-in dependent action. The purpose of the action is to close the currently active window of the"
-				+ " application. When the application is a browser, the action closes the currently active tab.",
-		additionFieldsAllowed	= false,
-		outputDescription		= "Returns the title bar of the window which was closed.",
-		outputType				= String.class,
-		examples = "{{#\n" +
-				"#Id;#Action;#AppConnection\n"
-				+ "ACW;ApplicationCloseWindow;app\n"
-				+ "\n"
-				+ "#Assert;#Message\n"
-				+ "!Str.IsNullOrEmpty(ACW.Out);'String is null or empty'#}}",
-        seeAlsoClass            = { ApplicationStart.class, ApplicationConnectTo.class }
+		group						= ActionGroups.App,
+		suffix						= "APPCW",
+		constantGeneralDescription	= R.APP_CLOSE_WINDOW_GENERAL_DESCRIPTION,
+		additionFieldsAllowed		= false,
+		constantOutputDescription	= R.APP_CLOSE_WINDOW_OUTPUT_DESCRIPTION,
+		outputType					= String.class,
+		constantExamples			= R.APP_CLOSE_WINDOW_EXAMPLES,
+        seeAlsoClass				= { ApplicationStart.class, ApplicationConnectTo.class }
 )
 public class ApplicationCloseWindow extends AbstractAction
 {

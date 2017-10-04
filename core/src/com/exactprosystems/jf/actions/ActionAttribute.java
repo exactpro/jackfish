@@ -8,6 +8,8 @@
 
 package com.exactprosystems.jf.actions;
 
+import com.exactprosystems.jf.api.common.i18n.R;
+
 import javax.lang.model.type.NullType;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -23,9 +25,21 @@ public @interface ActionAttribute
 	boolean additionFieldsAllowed();
 	Class<?> outputType() default NullType.class;
 
-	String generalDescription();
+	@Deprecated
+	String generalDescription() default "";
+	R constantGeneralDescription() default R.DEFAULT;
+
+	@Deprecated
 	String additionalDescription() default "";
+	R constantAdditionalDescription() default R.DEFAULT;
+
+	@Deprecated
 	String outputDescription() default "No output value.";
+	R constantOutputDescription() default R.DEFAULT_OUTPUT_DESCRIPTION;
+
     Class<?>[] seeAlsoClass() default {};
+
+    @Deprecated
 	String examples() default "";
+    R constantExamples() default R.DEFAULT;
 }

@@ -47,23 +47,26 @@ public class HelpActionItem extends MatrixItem
         report.itemIntermediate(item);
         report.putMark(this.actionClazz.getSimpleName());
         report.outLine(this, null, "{{`{{3" + "Action " + this.actionClazz.getSimpleName() + "3}}`}}", null);
-        report.outLine(this, null, "{{`" + attr.generalDescription() + "`}}", null);
+	    String generalDescription = attr.constantGeneralDescription() == R.DEFAULT ? attr.generalDescription() : attr.constantGeneralDescription().get();
+	    report.outLine(this, null, "{{`" + generalDescription + "`}}", null);
         if (attr.additionFieldsAllowed())
         {
             report.outLine(this, null, "{{`{{*Additional fields - Yes*}}`}}", null);
-            report.outLine(this, null, "{{`" + attr.additionalDescription() + "`}}", null);
+			String additionalDescription = attr.constantAdditionalDescription() == R.DEFAULT ? attr.additionalDescription() : attr.constantAdditionalDescription().get();
+			report.outLine(this, null, "{{`" + additionalDescription + "`}}", null);
         }
         else
         {
             report.outLine(this, null, "{{`{{*Additional fields - No*}}`}}", null);
         }
         report.outLine(this, null, "{{`{{*Examples*}}`}}", null);
-        if (report instanceof HelpBuilder){
-            report.outLine(this, null, "{{`" + HTMLhelper.htmlescape(attr.examples()) + "`}}", null);
+		String exmaples = attr.constantExamples() == R.DEFAULT ? attr.examples() : attr.constantExamples().get();
+		if (report instanceof HelpBuilder){
+            report.outLine(this, null, "{{`" + HTMLhelper.htmlescape(exmaples) + "`}}", null);
         }
         else
         {
-            report.outLine(this, null, "{{`" + attr.examples() + "`}}", null);
+            report.outLine(this, null, "{{`" + exmaples + "`}}", null);
         }
         if (attr.seeAlsoClass().length != 0)
         {
@@ -98,7 +101,8 @@ public class HelpActionItem extends MatrixItem
 
         // Output
         table = report.addTable("{{*Output:*}}", null, true, false, new int[] { 30, 70 }, "Result type", "Description");
-        table.addValues(attr.outputType().getSimpleName(), attr.outputDescription());
+		String outputDescription = attr.constantOutputDescription() == R.DEFAULT_OUTPUT_DESCRIPTION ? attr.outputDescription() : attr.constantOutputDescription().get();
+		table.addValues(attr.outputType().getSimpleName(), outputDescription);
 
     }
 

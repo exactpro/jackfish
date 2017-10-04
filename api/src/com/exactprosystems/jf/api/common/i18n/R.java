@@ -17,8 +17,16 @@ public enum R
 	DRAG_N_DROP_LIST_TOOLTIP("DragNDropListTooltip"),
 	//endregion
 
+	//region actions
+	DEFAULT_OUTPUT_DESCRIPTION("DefaultOutputDescription"),
+
 	//region actions.app
 	APP_CONNECTION_NAME_DESCRIPTION("AppConnectionDescription"),
+	APP_CLOSE_WINDOW_GENERAL_DESCRIPTION("AppCloseWindowGeneralDescription"),
+	APP_CLOSE_WINDOW_OUTPUT_DESCRIPTION("AppCloseWindowOutputDescription"),
+	APP_CLOSE_WINDOW_EXAMPLES("AppCloseWindowExample"),
+	//endregion
+
 	//endregion
 
 	//region tool.wizard
