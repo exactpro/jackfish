@@ -43,7 +43,8 @@ import java.util.*;
 				"Remember! After each changes in config click 'Save configuration' and 'Reload configuration'. Without that your changes not applicable. \n" +
 				" \n" +
 				" \n" +
-				" \n"*/R.WEB_PLUGIN_ADD_DESCRIPTION
+				" \n"*/R.WEB_PLUGIN_ADD_DESCRIPTION,
+		any = R.DEFAULT
 )
 public class WebAppFactory extends AbstractApplicationFactory
 {

@@ -181,7 +181,7 @@ public class DocumentationBuilder
         if (pd != null)
         {
             //description
-            addTextLine(help, pd.description() == R.DEFAULT ? R.DEFAULT.get() : pd.description().get());
+            addTextLine(help, pd.description().get());
             //fields -> table
             addFieldDescriptionForPlugin(help, evaluator, clazz);
             //controls
@@ -190,14 +190,14 @@ public class DocumentationBuilder
             String s = controls.stream().map(c -> "{{@" + c.getClazz() + "@}}").collect(Collectors.joining(", "));
             addTextLine(help, "{{`" + s + "`}}");
             //additional info
-            String pluginAddDescr = pd.additionalDescription() == R.DEFAULT ? R.DEFAULT.get() : pd.additionalDescription().get();
+            String pluginAddDescr = pd.additionalDescription().get();
             if(!Str.IsNullOrEmpty(pluginAddDescr))
             {
                 addTextLine(help, "{{`{{*Additional info*}}`}}");
                 addTextLine(help, pluginAddDescr);
             }
             //any
-            String pluginAny = pd.any()== R.DEFAULT ? R.DEFAULT.get() : pd.any().get();
+            String pluginAny = pd.any().get();
             if(!Str.IsNullOrEmpty(pluginAny))
             {
                 addTextLine(help, pluginAny);
@@ -248,7 +248,7 @@ public class DocumentationBuilder
             PluginFieldDescription pfd = f.getAnnotation(PluginFieldDescription.class);
             if(pfd != null)
             {
-                table.addValue(new String[] {pfd.parameter(), pfd.description() == R.DEFAULT ? R.DEFAULT.get() : pfd.description().get(), pfd.example()});
+                table.addValue(new String[] {pfd.parameter(), pfd.description().get(), pfd.example()});
             }
         }
         MatrixItem tableItem = new HelpTable("", table, true, width);

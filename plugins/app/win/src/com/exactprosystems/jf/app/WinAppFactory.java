@@ -11,13 +11,16 @@ package com.exactprosystems.jf.app;
 import com.exactprosystems.jf.api.app.*;
 import com.exactprosystems.jf.api.common.ParametersKind;
 import com.exactprosystems.jf.api.common.PluginDescription;
+import com.exactprosystems.jf.api.common.i18n.R;
 import org.w3c.dom.Node;
 
 import java.io.InputStream;
 import java.util.*;
 
 @PluginDescription(
-
+		description = R.WIN_PLUGIN_DESCRIPTION,
+		additionalDescription = R.WIN_PLUGIN_ADD_DESCRIPTION,
+		any = R.DEFAULT
 )
 public class WinAppFactory extends AbstractApplicationFactory
 {

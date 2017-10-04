@@ -11,6 +11,6 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface PluginFieldDescription {
     String parameter();
-    R description() default R.DEFAULT;
+    R description();
     String example();
 }

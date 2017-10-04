@@ -10,7 +10,7 @@ import java.lang.annotation.Target;
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
 public @interface PluginDescription {
-    R description() default R.DEFAULT;
-    R additionalDescription() default R.DEFAULT;
-    R any() default R.DEFAULT;
+    R description();
+    R additionalDescription();
+    R any();
 }
