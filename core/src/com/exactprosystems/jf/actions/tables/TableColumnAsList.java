@@ -9,6 +9,7 @@
 package com.exactprosystems.jf.actions.tables;
 
 import com.exactprosystems.jf.actions.*;
+import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.api.error.ErrorKind;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.report.ReportBuilder;
@@ -20,16 +21,16 @@ import com.exactprosystems.jf.functions.Table;
 import java.util.List;
 
 @ActionAttribute(
-		group					= ActionGroups.Tables,
-		suffix					= "TBL",
-		generalDescription 		= "This action extract one column of a table and returns it as a list of values.",
-		additionFieldsAllowed 	= false,
-		outputDescription 		= "List of strings.",
-		outputType				= List.class,
-		examples 				= "",
+		group					   = ActionGroups.Tables,
+		suffix					   = "TBL",
+		constantGeneralDescription = R.TABLE_COLUMN_AS_LIST_GENERAL_DESC,
+		additionFieldsAllowed 	   = false,
+		constantOutputDescription  = R.TABLE_COLUMN_AS_LIST_OUTPUT_DESC,
+		outputType				   = List.class,
+		examples 				   = "",
 		seeAlsoClass = { Table.class }
 	)
-public class TableColumnAsList extends AbstractAction 
+public class TableColumnAsList extends AbstractAction
 {
     public final static String tableName = "Table";
     public final static String columnName = "Column";
@@ -53,11 +54,11 @@ public class TableColumnAsList extends AbstractAction
             case getValuesName:
                 return HelpKind.ChooseFromList;
         }
-        
+
         return null;
     }
 
-    
+
     @Override
     protected void listToFillParameterDerived(List<ReadableValue> list, Context context, String parameterToFill, Parameters parameters) throws Exception
     {

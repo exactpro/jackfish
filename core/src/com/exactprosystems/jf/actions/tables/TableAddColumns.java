@@ -13,6 +13,7 @@ import com.exactprosystems.jf.actions.ActionAttribute;
 import com.exactprosystems.jf.actions.ActionFieldAttribute;
 import com.exactprosystems.jf.actions.ActionGroups;
 import com.exactprosystems.jf.actions.DefaultValuePool;
+import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.api.error.ErrorKind;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.report.ReportBuilder;
@@ -21,23 +22,10 @@ import com.exactprosystems.jf.documents.matrix.parser.Parameters;
 import com.exactprosystems.jf.functions.Table;
 
 @ActionAttribute(
-		group					= ActionGroups.Tables,
-		generalDescription 		= "This action is determined to add columns to the table given. It can be used if a "
-				+ "table is created from different sources or if new columns are added to the table given.",
-		additionFieldsAllowed 	= false,
-		examples 				=
-				"{{`1. Create a table with column Name.`}}"
-				+ "{{`2. Add to the table created column Age (to the line number 0).`}}"
-				+ "{{`3. Verify that the table has columns Name and Age. `}}"
-				+ "{{#\n#Id;#RawTable\n"
-				+ "TC;Table\n"
-				+ "@;Name\n"
-				+ "0;\n"
-				+ "#EndRawTable\n"
-				+ "#Action;#Index;#Table;#Columns\n"
-				+ "TableAddColumns;0;TC;{'Age'}\n"
-				+ "#Assert;#Message\n"
-				+ "TC.getHeader(0) == 'Name' && TC.getHeader(1) == 'Age';'Table is not correct'#}}",
+		group					  	= ActionGroups.Tables,
+		constantGeneralDescription 	= R.TABLE_ADD_COLUMNS_GENERAL_DESC,
+		additionFieldsAllowed 	  	= false,
+		constantExamples   			= R.TABLE_ADD_COLUMNS_EXAMPLES,
 		seeAlsoClass = {TableReplace.class, TableColumnRename.class, TableAddValue.class, TableConsiderColumnsAs.class}
 	)
 public class TableAddColumns extends AbstractAction 

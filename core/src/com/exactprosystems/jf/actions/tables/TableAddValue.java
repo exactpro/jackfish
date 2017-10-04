@@ -13,6 +13,7 @@ import com.exactprosystems.jf.actions.ActionAttribute;
 import com.exactprosystems.jf.actions.ActionFieldAttribute;
 import com.exactprosystems.jf.actions.ActionGroups;
 import com.exactprosystems.jf.actions.DefaultValuePool;
+import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.api.error.ErrorKind;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.report.ReportBuilder;
@@ -22,23 +23,12 @@ import com.exactprosystems.jf.documents.matrix.parser.items.TypeMandatory;
 import com.exactprosystems.jf.functions.Table;
 
 @ActionAttribute(
-		group					= ActionGroups.Tables,
-		generalDescription 		= "This action  is determined to add lines to a Table..",
-		additionFieldsAllowed 	= true,
-		additionalDescription 	= "Are used to insert values where a parameter name - a column name, a parameter value - a cell value.",
-		examples 				=
-				"{{`1. Create a table with columns Name and Age. Add a value into 0 line to a column Name. A cell in a column Age leave empty.`}}"
-				+ "{{`2. Verify that a value in the first line of a column Name is equal 'Mike', Age is equal  null. Column Age is filled with a value null. `}}"
-				+ "{{#\n#Id;#RawTable\n"
-				+ "TC;Table\n"
-				+ "@;Name;Age\n"
-				+ "0;;\n"
-				+ "#EndRawTable\n"
-				+ "#Action;#Index;#Table;#Name\n"
-				+ "TableAddValue;0;TC;'Mike'\n"
-				+ "#Assert;#Message\n"
-				+ "TC.get(0).get('Name') == 'Mike' && TC.get(0).get('Age') == null;'Not equals'#}}",
-		seeAlsoClass = {TableReplace.class, TableAddColumns.class, TableConsiderColumnsAs.class, TableColumnRename.class}
+		group					      = ActionGroups.Tables,
+		constantGeneralDescription    = R.TABLE_ADD_VALUE_GENERAL_DESC,
+		additionFieldsAllowed 	      = true,
+		constantAdditionalDescription = R.TABLE_ADD_VALUE_ADDITIONAL_DESC,
+		constantExamples              = R.TABLE_ADD_VALUE_EXAMPLE,
+		seeAlsoClass                  = {TableReplace.class, TableAddColumns.class, TableConsiderColumnsAs.class, TableColumnRename.class}
 	)
 public class TableAddValue extends AbstractAction 
 {

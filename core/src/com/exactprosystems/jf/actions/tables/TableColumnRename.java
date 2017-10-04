@@ -4,6 +4,7 @@ import com.exactprosystems.jf.actions.AbstractAction;
 import com.exactprosystems.jf.actions.ActionAttribute;
 import com.exactprosystems.jf.actions.ActionFieldAttribute;
 import com.exactprosystems.jf.actions.ActionGroups;
+import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.report.ReportBuilder;
 import com.exactprosystems.jf.documents.config.Context;
@@ -13,23 +14,12 @@ import com.exactprosystems.jf.documents.matrix.parser.items.TypeMandatory;
 import com.exactprosystems.jf.functions.Table;
 
 @ActionAttribute(
-		group					= ActionGroups.Tables,
-		generalDescription 		= "This action is determined to rename a column in the table given.",
-		additionFieldsAllowed 	= true,
-		additionalDescription 	= "The column name given is indicated in a parameter's name, a new column name is in a parameter's value.",
-		examples 				=
-				"{{`1. Create a table with columns Name and Age.`}}"
-				+ "{{`2. Rename column Name into FirstName.`}}"
-				+ "{{`3. Verify that a new name is assigned to a column. `}}"
-				+ "{{#\n#Id;#RawTable\n"
-				+ "TC;Table\n"
-				+ "@;Name;Age\n"
-				+ "0;;\n"
-				+ "#EndRawTable\n"
-				+ "#Action;#Table;#Name\n"
-				+ "TableColumnRename;TC;'FirstName'\n"
-				+ "#Assert;#Message\n"
-				+ "TC.getHeader(0) == 'FirstName';'Values is not equals'#}}",
+		group					      = ActionGroups.Tables,
+		constantGeneralDescription    = R.TABLE_COLUMN_RENAME_GENERAL_DESC,
+		additionFieldsAllowed 	      = true,
+		constantAdditionalDescription = R.TABLE_COLUMN_RENAME_ADDITIONAL_DESC ,
+		constantExamples 		      = R.TABLE_COLUMN_RENAME_EXAMPLE
+,
 		seeAlsoClass = {TableReplace.class, TableAddColumns.class, TableConsiderColumnsAs.class, TableAddValue.class}
 )
 public class TableColumnRename extends AbstractAction

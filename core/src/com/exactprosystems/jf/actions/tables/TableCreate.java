@@ -11,6 +11,7 @@ package com.exactprosystems.jf.actions.tables;
 import com.exactprosystems.jf.actions.AbstractAction;
 import com.exactprosystems.jf.actions.ActionAttribute;
 import com.exactprosystems.jf.actions.ActionGroups;
+import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.api.error.ErrorKind;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.report.ReportBuilder;
@@ -21,25 +22,14 @@ import com.exactprosystems.jf.documents.matrix.parser.items.TypeMandatory;
 import com.exactprosystems.jf.functions.Table;
 
 @ActionAttribute(
-		group					= ActionGroups.Tables,
-		suffix					= "TBL",
-		generalDescription 		= "This action is determined to create a table (object type {{$Table$}}). Object Table is set"
-				+ " as the two-dimensional structure consisting of rows and columns. Ordering of Rows starts with 0, columns are named. "
-				+ "Object Table can be created with  {{@RawTable@}}, with actions {{@TableCreate@}} , {{@TableLoadFromFile@}} ,"
-				+ " {{@TableLoadFromDir@}} , {{@TableSelect@}} and method {{@Do.getTable()@}}. "
-				+ "{{`|header1|header2|`}} "
-				+ "{{`|value1 |value2 |`}} "
-				+ "{{`|value1 |value2 |`}} ",
-		additionFieldsAllowed 	= true,
-		additionalDescription 	= "Additional parameters are used to assign column titles. The value field of parameter is left empty.",
-		outputDescription 		= "Table structure.",
-		outputType				= Table.class,
-		examples 				= "{{`1.Create a table with columns Name and Age.`}}"
-				+ "{{`2. Verify that the created object has columns  set initially.`}}\n"
-				+ "{{#\n#Id;#Action;#Name;#Age\n"
-				+ "TC;TableCreate;;\n"
-				+ "#Assert;#Message\n"
-				+ "TC.Out.getHeader(0)=='Name' && TC.Out.getHeader(1)=='Age';'Table isn't correct'#}}\n",
+		group					      = ActionGroups.Tables,
+		suffix					      = "TBL",
+		constantGeneralDescription    = R.TABLE_CREATE_GENERAL_DESC,
+		additionFieldsAllowed 	      = true,
+		constantAdditionalDescription = R.TABLE_CREATE_ADDITIONAL_DESC,
+		constantOutputDescription 	  = R.TABLE_CREATE_OUTPUT_DESC,
+		outputType				      = Table.class,
+		constantExamples 			  = R.TABLE_CREATE_EXAMPLE,
 		seeAlsoClass = {RawTable.class, TableLoadFromDir.class, TableLoadFromFile.class, TableSelect.class}
 	)
 public class TableCreate extends AbstractAction 

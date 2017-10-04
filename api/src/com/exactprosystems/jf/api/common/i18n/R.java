@@ -27,6 +27,28 @@ public enum R
 	APP_CLOSE_WINDOW_EXAMPLES("AppCloseWindowExample"),
 	//endregion
 
+
+	//region actions.tables
+	TABLE_CREATE_GENERAL_DESC("TableCreateGeneralDescriptions"),
+	TABLE_CREATE_ADDITIONAL_DESC("TableCreateAdditionalDesc"),
+	TABLE_CREATE_OUTPUT_DESC("TableCreateOutputDesc"),
+	TABLE_CREATE_EXAMPLE("TABLE_CREATE_EXAMPLE"),
+	TABLE_ADD_COLUMNS_GENERAL_DESC("TableAddColumnsGeneralDesc"),
+	TABLE_ADD_COLUMNS_EXAMPLES("TABLE_ADD_COLUMNS_EXAMPLES"),
+	TABLE_ADD_VALUE_EXAMPLE("TABLE_ADD_VALUE_EXAMPLE"),
+	TABLE_ADD_VALUE_GENERAL_DESC("TABLE_ADD_VALUE_GENERAL_DESC"),
+	TABLE_ADD_VALUE_ADDITIONAL_DESC("TABLE_ADD_VALUE_ADDITIONAL_DESC"),
+	TABLE_COLUMN_AS_LIST_GENERAL_DESC("TABLE_COLUMN_AS_LIST_GENERAL_DESC"),
+	TABLE_COLUMN_AS_LIST_OUTPUT_DESC("TABLE_COLUMN_AS_LIST_OUTPUT_DESC"),
+	TABLE_COLUMN_RENAME_GENERAL_DESC("TABLE_COLUMN_RENAME_GENERAL_DESC"),
+	TABLE_COLUMN_RENAME_ADDITIONAL_DESC("TABLE_COLUMN_RENAME_ADDITIONAL_DESC"),
+	TABLE_COLUMN_RENAME_EXAMPLE("TABLE_COLUMN_RENAME_EXAMPLE"),
+	TABLE_COMPARE_TWO_GENERAL_DESC("TABLE_COMPARE_TWO_GENERAL_DESC"),
+	TABLE_COMPARE_TWO_EXAMPLE("TABLE_COMPARE_TWO_EXAMPLE"),
+	TABLE_COMPARE_TWO_OUTPUT_DESC("TABLE_COMPARE_TWO_OUTPUT_DESC"),
+
+	//endregion
+
 	//endregion
 
 	//region tool.wizard
@@ -132,8 +154,8 @@ public enum R
 	//endregion
 	;
 
-	public static final  String         RESOURCE_BUNDLE_PATH = "com/exactprosystems/jf/ToolResourceBundle";
-	private static final ResourceBundle bundle               = ResourceBundle.getBundle(RESOURCE_BUNDLE_PATH, new UTF8Control());
+	public static final String RESOURCE_BUNDLE_PATH = "com/exactprosystems/jf/ToolResourceBundle";
+	private static final ResourceBundle bundle = ResourceBundle.getBundle(RESOURCE_BUNDLE_PATH, new UTF8Control());
 	private final String string;
 
 	R(String s)

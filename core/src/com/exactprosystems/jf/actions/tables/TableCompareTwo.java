@@ -9,6 +9,7 @@
 package com.exactprosystems.jf.actions.tables;
 
 import com.exactprosystems.jf.actions.*;
+import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.api.error.ErrorKind;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.report.ReportBuilder;
@@ -23,34 +24,13 @@ import java.util.Objects;
 import java.util.Set;
 
 @ActionAttribute(
-		group					= ActionGroups.Tables,
-		suffix					= "TBLCMP",
-		generalDescription 		= "This action is determined to compare two tables.",
-		additionFieldsAllowed 	= false,
-		outputType              = Table.class,
-		outputDescription       = "A table as a resulf of compare.",
-		examples 				=
-				"{{`1. Create a table with columns Name and Age. The first table line is applied with values Mike and 42 accordingly.`}}"
-				+ "{{`2. Create a table similar to the previous. The first table line is applied with values Mike and 42 accordingly.`}}"
-				+ "{{`3. Compare two tables.`}}"
-				+ "Information about distinctions ( line number and columns titles which values do not match) is reported as a result of this action in form of:"
-				+ "{{`Differences`}}"
-				+ "{{`# Expected Actual`}}"
-				+ "{{`0 [ Name : Mike, Age : 42 ] [ Name : Mike, Age : 41 ]`}}"
-				+ "{{`Age 42 41`}}"
-				+ "{{`If tables have different columns numbers, distinctions in cells will be ignored and information about all columns titles is displayed.`}} "
-				+ "{{#\n#Id;#RawTable\n"
-				+ "TC;Table\n"
-				+ "@;Name;Age\n"
-				+ "0;Mike;42\n"
-				+ "#EndRawTable\n"
-				+ "#Id;#RawTable\n"
-				+ "TC1;Table\n"
-				+ "@;Name;Age\n"
-				+ "0;Mike;41\n"
-				+ "#EndRawTable\n"
-				+ "#Action;#Expected;#Actual\n"
-				+ "TableCompareTwo;TC;TC1#}}"
+		group					   = ActionGroups.Tables,
+		suffix					   = "TBLCMP",
+		constantGeneralDescription = R.TABLE_COMPARE_TWO_GENERAL_DESC,
+		additionFieldsAllowed 	   = false,
+		outputType                 = Table.class,
+		constantOutputDescription  = R.TABLE_COMPARE_TWO_OUTPUT_DESC,
+		constantExamples 		   = R.TABLE_COMPARE_TWO_EXAMPLE
 	)
 public class TableCompareTwo extends AbstractAction
 {
