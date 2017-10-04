@@ -69,7 +69,7 @@ import java.util.stream.Stream;
 		category = WizardCategory.MATRIX,
 		shortDescription = "This wizard creates RawTable and action DialogCheckLayout",
 		strongCriteries = false,
-		experimental = true,
+		experimental = false,
 		criteries = {MatrixFx.class, MatrixItem.class, End.class},
 		detailedDescription = "{{`First of all you need to select one of stored connection and dialog.`}}"
 				+ "{{`For store connection user may use {{$ConnectionWizard$}} or store the connection inside a matrix.`}}"

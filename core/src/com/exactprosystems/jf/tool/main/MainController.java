@@ -271,49 +271,46 @@ public class MainController implements Initializable, ContainingParent
 		Common.addIcons(this.stage);
 		initializeButtons(settings);
 
-		if (VersionInfo.isDevVersion())
-		{
-			Menu wizard = new Menu("Wizard");
-			this.menuHelp.getItems().add(0, wizard);
+		Menu wizard = new Menu("Wizard");
+		this.menuHelp.getItems().add(0, wizard);
 
-			Map<WizardCategory, Menu> map = Arrays.stream(WizardCategory.values())
-					.collect(Collectors.toMap(Function.identity(), v -> Stream.of(v)
-							.map(WizardCategory::toString)
-							.map(Menu::new)
-							.peek(wizard.getItems()::add)
-							.findFirst()
-							.orElse(null))
-					);
+		Map<WizardCategory, Menu> map = Arrays.stream(WizardCategory.values())
+				.collect(Collectors.toMap(Function.identity(), v -> Stream.of(v)
+						.map(WizardCategory::toString)
+						.map(Menu::new)
+						.peek(wizard.getItems()::add)
+						.findFirst()
+						.orElse(null))
+				);
 
-			wizardManager.allWizards().forEach(wizardClass -> {
-				WizardCategory wizardCategory = wizardManager.categoryOf(wizardClass);
-				String wizardName = wizardManager.nameOf(wizardClass);
-				MenuItem menuItem = new MenuItem(wizardName);
+		wizardManager.allWizards().forEach(wizardClass -> {
+			WizardCategory wizardCategory = wizardManager.categoryOf(wizardClass);
+			String wizardName = wizardManager.nameOf(wizardClass);
+			MenuItem menuItem = new MenuItem(wizardName);
 
-				menuItem.setOnAction(e -> Common.tryCatch(() -> {
-					Context context = factory.createContext();
-					ReportBuilder report = new ContextHelpFactory().createReportBuilder(null, null, new Date());
-					MatrixItem help = DocumentationBuilder.createHelpForWizard(report, context, wizardClass);
-					DialogsHelper.showHelpDialog(context, wizardName, report, help);
-				},""));
+			menuItem.setOnAction(e -> Common.tryCatch(() -> {
+				Context context = factory.createContext();
+				ReportBuilder report = new ContextHelpFactory().createReportBuilder(null, null, new Date());
+				MatrixItem help = DocumentationBuilder.createHelpForWizard(report, context, wizardClass);
+				DialogsHelper.showHelpDialog(context, wizardName, report, help);
+			},""));
 
-				map.get(wizardCategory).getItems().add(menuItem);
-			});
+			map.get(wizardCategory).getItems().add(menuItem);
+		});
 
-			Menu menuAll = new Menu("All");
-			menuAll.getItems().addAll(map.values().stream()
-					.map(Menu::getItems)
-					.flatMap(Collection::stream)
-					.map(menuItem -> {
-						MenuItem newMenu = new MenuItem(menuItem.getText());
-						newMenu.setOnAction(e -> menuItem.getOnAction().handle(e));
-						return newMenu;
-					})
-					.sorted(Comparator.comparing(k -> k.getText().toLowerCase()))
-					.collect(Collectors.toList())
-			);
-			wizard.getItems().add(menuAll);
-		}
+		Menu menuAll = new Menu("All");
+		menuAll.getItems().addAll(map.values().stream()
+				.map(Menu::getItems)
+				.flatMap(Collection::stream)
+				.map(menuItem -> {
+					MenuItem newMenu = new MenuItem(menuItem.getText());
+					newMenu.setOnAction(e -> menuItem.getOnAction().handle(e));
+					return newMenu;
+				})
+				.sorted(Comparator.comparing(k -> k.getText().toLowerCase()))
+				.collect(Collectors.toList())
+		);
+		wizard.getItems().add(menuAll);
 	}
 
 	public void displayTitle(String title)
