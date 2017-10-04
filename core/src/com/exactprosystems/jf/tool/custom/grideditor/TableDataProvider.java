@@ -464,12 +464,11 @@ public class TableDataProvider implements DataProvider<String>
 			else
 			{
 				int addedColumns = prefCol - this.table.getHeaderSize();
-				this.table.addColumns(
-						IntStream.range(0, addedColumns)
-								.mapToObj(i -> Table.generateColumnName(this.table))
-								.collect(Collectors.toList())
-								.toArray(new String[addedColumns])
-				);
+
+				IntStream.range(0, addedColumns)
+						.mapToObj(i -> Table.generateColumnName(this.table))
+						.forEach(s -> this.table.addColumns(s));
+
 
 				int addedRows = prefRow - this.table.size();
 				IntStream.range(0, addedRows)
