@@ -19,8 +19,6 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface ActionFieldAttribute
 {
-	R.Constants constantName() default R.Constants.DEFAULT;
-	@Deprecated
 	String name() default "";
 
 	R constantDescription() default R.DEFAULT;

@@ -40,7 +40,9 @@ import com.exactprosystems.jf.documents.matrix.parser.Parameters;
 )
 public class ApplicationCloseWindow extends AbstractAction
 {
-	@ActionFieldAttribute(constantName = R.Constants.APP_CONNECTION_NAME, mandatory = true, constantDescription = R.APP_CONNECTION_NAME_DESCRIPTION)
+	public static final String APP_CONNECTION_NAME = "AppConnection";
+
+	@ActionFieldAttribute(name = APP_CONNECTION_NAME, mandatory = true, constantDescription = R.APP_CONNECTION_NAME_DESCRIPTION)
 	protected AppConnection connection = null;
 
 	@Override

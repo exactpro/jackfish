@@ -86,14 +86,13 @@ public class HelpActionItem extends MatrixItem
             }
 
             String fieldDescription = annotation.constantDescription() == R.DEFAULT ? annotation.description() : annotation.constantDescription().get();
-	        String fieldName = annotation.constantName() == R.Constants.DEFAULT ? annotation.name() : annotation.constantName().get();
 	        if (annotation.mandatory())
             {
-                table.addValues(fieldName, f.getType().getSimpleName(), fieldDescription, "Yes", "");
+                table.addValues(annotation.name(), f.getType().getSimpleName(), fieldDescription, "Yes", "");
             }
             else
             {
-                table.addValues(fieldName, f.getType().getSimpleName(), fieldDescription, "No", annotation.def());
+                table.addValues(annotation.name(), f.getType().getSimpleName(), fieldDescription, "No", annotation.def());
             }
         }
 
