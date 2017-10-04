@@ -504,19 +504,14 @@ public class MatrixFx extends Matrix
 		this.startDate = date;
 	}
 
-	public MutableValue<String> logProperty()
-	{
-		return this.log;
-	}
-
 	public void startMatrix() throws Exception
 	{
 		if (getEngine() != null)
 		{
 			if (!getEngine().isRunning())
 			{
-				this.log.set(null);
-				this.log.set("Matrix will start at " + this.startDate);
+				this.getEngine().getContext().getOut().println((String) null);
+				this.getEngine().getContext().getOut().println("Matrix will start at " + this.startDate);
 			}
 
 			getEngine().start(this.startDate, this.parameter.get());
@@ -529,7 +524,7 @@ public class MatrixFx extends Matrix
 		{
 			getEngine().stop();
 			refresh();
-			this.log.set("Matrix stopped");
+			this.getEngine().getContext().getOut().println("Matrix stopped");
 			this.timer.set(-1L);
 		}
 	}
@@ -583,13 +578,6 @@ public class MatrixFx extends Matrix
 	//==============================================================================================================================
 	private void init(DocumentFactory factory) throws Exception
 	{
-		this.console = new TabConsole(System.out);
-
-		if (!isLibrary())
-		{
-			getEngine().getContext().setOut(this.console);
-		}
-
 		super.saved();
 	}
 
@@ -720,7 +708,6 @@ public class MatrixFx extends Matrix
 
 	private MutableValue<MatrixItem>               currentItemProperty = new MutableValue<>();
 	private MutableValue<Long>                     timer               = new MutableValue<>(0L);
-	private MutableValue<String>                   log                 = new MutableValue<>("");
 	private MutableValue<Object>                   parameter           = new MutableValue<>(null);
 	private MutableValue<Boolean>                  refresh             = new MutableValue<>(false);
 
@@ -729,7 +716,6 @@ public class MatrixFx extends Matrix
 
 
 	private Date startDate = new Date();
-	private TabConsole console;
 
 	private static final Logger logger = Logger.getLogger(MatrixFx.class);
 }

@@ -132,16 +132,10 @@ public class MatrixFxController extends AbstractDocumentController<MatrixFx> imp
 		this.findPanel.setVisible(false);
 		CustomDateTimePicker customDateTimePicker = new CustomDateTimePicker(date -> this.model.setStartTime(date));
 		hBox.getChildren().add(0, customDateTimePicker);
-	}
 
-	// ==============================================================================================================================
-	// interface ContainingParent
-	// ==============================================================================================================================
-//	@Override
-//	public void setParent(Parent parent)
-//	{
-//		this.pane = parent;
-//	}
+		this.cbDefaultApp.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> super.model.setDefaultApp(newValue));
+		this.cbDefaultClient.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> super.model.setDefaultClient(newValue));
+	}
 
 	// ==============================================================================================================================
 	// MatrixListener
@@ -287,33 +281,30 @@ public class MatrixFxController extends AbstractDocumentController<MatrixFx> imp
 		//TODO think about second parameter of method display;
 		this.model.getRoot().setOnAddListener((integer, matrixItem) -> this.display(matrixItem, false));
 		this.model.currentItemProperty().setOnChangeListener(((oldValue, newValue) -> this.setCurrent(newValue, false)));
-
 		this.model.timerProperty().setOnChangeListener((aLong, aLong2) -> this.displayTimer(aLong2, aLong2 > 0));
-		this.model.logProperty().setOnChangeListener((s, s2) -> {
-			if (s2 == null)
-			{
-				this.listView.getItems().clear();
-			}
-			else
-			{
-				this.listView.getItems().add(ConsoleText.defaultText(s2));
-			}
-		});
 		this.model.refreshProperty().setOnChangeListener((aBoolean, aBoolean2) -> this.tree.refresh());
 
-		this.context = this.model.getFactory().createContext();
-		Settings settings = context.getFactory().getSettings();
-		Settings.SettingsValue foldSetting = settings.getValueOrDefault(Settings.GLOBAL_NS, Settings.MATRIX_NAME, Settings.MATRIX_FOLD_ITEMS, "false");
-		boolean fold = Boolean.parseBoolean(foldSetting.getValue());
-
-		this.tree.setNeedExpand(fold);
+		this.context = this.model.getEngine().getContext();
+		Settings settings = this.model.getFactory().getSettings();
 		MatrixParametersContextMenu parametersContextMenu 	= new MatrixParametersContextMenu(context, this.model, this.tree, settings);
 		MatrixContextMenu 			rowContextMenu 			= new MatrixContextMenu(context, this.model, this.tree, settings);
 		parametersContextMenu.initShortcuts(settings, this.tree, this.model, context);
 
 		this.driver = new DisplayDriverFx(this.tree, this.context, rowContextMenu, parametersContextMenu);
 		this.tree.init(this.model, settings, rowContextMenu);
-//		console.setConsumer(s -> Common.runLater(() -> this.listView.getItems().add(ConsoleText.defaultText(s))));
+
+		TabConsole console = new TabConsole(System.out);
+		super.model.getEngine().getContext().setOut(console);
+		console.setConsumer(s -> Common.runLater(() -> {
+			if (s == null)
+			{
+				this.listView.getItems().clear();
+			}
+			else
+			{
+				this.listView.getItems().add(ConsoleText.defaultText(s));
+			}
+		}));
 
 		this.efParameter = new ExpressionField(context.getEvaluator());
 		HBox.setHgrow(this.efParameter, Priority.ALWAYS);
@@ -339,6 +330,7 @@ public class MatrixFxController extends AbstractDocumentController<MatrixFx> imp
 
 		displayGuiDictionaries();
 		displayClientDictionaries();
+		this.model.setListener(this);
 	}
 
 	@Override
@@ -359,6 +351,10 @@ public class MatrixFxController extends AbstractDocumentController<MatrixFx> imp
 				this.cbDefaultClient.getSelectionModel().select(split[1]);
 			}
 		}
+		Settings.SettingsValue foldSetting = settings.getValueOrDefault(Settings.GLOBAL_NS, Settings.MATRIX_NAME, Settings.MATRIX_FOLD_ITEMS, "false");
+		boolean fold = Boolean.parseBoolean(foldSetting.getValue());
+
+		this.tree.setNeedExpand(fold);
 	}
 
 	public void init(MatrixFx model, Context context, TabConsole console)
@@ -495,16 +491,6 @@ public class MatrixFxController extends AbstractDocumentController<MatrixFx> imp
 				this.findPanel.requestFocus();
 			}
 		}, "Error on showing the find panel");
-	}
-
-	public void changeDefaultApp(ActionEvent actionEvent)
-	{
-		super.model.setDefaultApp(cbDefaultApp.getSelectionModel().getSelectedItem());
-	}
-
-	public void changeDefaultClient(ActionEvent actionEvent)
-	{
-		super.model.setDefaultClient(cbDefaultClient.getSelectionModel().getSelectedItem());
 	}
 
 	public void markAll(ActionEvent actionEvent)
