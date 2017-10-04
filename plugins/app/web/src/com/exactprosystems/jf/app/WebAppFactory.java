@@ -12,13 +12,14 @@ import com.exactprosystems.jf.api.app.*;
 import com.exactprosystems.jf.api.common.ParametersKind;
 import com.exactprosystems.jf.api.common.PluginDescription;
 import com.exactprosystems.jf.api.common.PluginFieldDescription;
+import com.exactprosystems.jf.api.common.i18n.R;
 import org.w3c.dom.Node;
 
 import java.io.InputStream;
 import java.util.*;
 
 @PluginDescription(
-		description = "A Web plugin used for testings web browser application. The plugin based on {{*Selenium*}} framework. \n" +
+		description = /*"A Web plugin used for testings web browser application. The plugin based on {{*Selenium*}} framework. \n" +
 				"Can starts on {{/Windows/}}, {{/Linux/}} and {{/MacOS/}}. (InternetExplorer only on {{/Windows/}}).\n" +
 				"The plugin supported cross browse testing. \n" +
 				"Supported browsers : " +  //todo
@@ -32,8 +33,8 @@ import java.util.*;
 				"4. In actions part of dictionary choose plugin via combo box and click on start button. \n" +
 				"You will see new window with 2 fields: URL and Browser. \n" +
 				"Set URL (remember about http/https) and choose Browser via combo box in right part of field, click on 'Start WEB' button. \n" +
-				"JF will run selected browser and try open selected URL. \n", //todo
-		additionalDescription = "How set path to browser: \n" +
+				"JF will run selected browser and try open selected URL. \n"*/R.WEB_PLUGIN_DESCRIPTION,
+		additionalDescription = /*"How set path to browser: \n" +
 				"Open JackFish folder -> apps. You will see few folders each one for different OS. In each folder You can find driver files for browsers. \n" +
 				"Open folder which corresponds to your OS and choose file which corresponds to your browser and OS architecture. \n" +
 				"Copy file name (with extension if You are using Windows). In JF tool open Project -> App entries, choose WEB (or WEB_WIN for Windows) plugin. \n" +
@@ -42,38 +43,37 @@ import java.util.*;
 				"Remember! After each changes in config click 'Save configuration' and 'Reload configuration'. Without that your changes not applicable. \n" +
 				" \n" +
 				" \n" +
-				" \n"
+				" \n"*/R.WEB_PLUGIN_ADD_DESCRIPTION
 )
 public class WebAppFactory extends AbstractApplicationFactory
 {
     public static final String  helpFileName          = "help.txt";
 
-    @PluginFieldDescription(parameter = "LogLevel", description = "Set logging level for control logging output. You can use different levels (ALL, ERROR, INFO, WARNING, etc), but we are recommend use 'ALL'.", example = "ALL")
+    @PluginFieldDescription(parameter = "LogLevel", description = R.WEB_PLUGIN_LOG_LEVEL, example = "ALL")
     public static final String   logLevel             = "LogLevel";
-	@PluginFieldDescription(parameter = "jreExec", description = "Set path to jar", example = "")
+	@PluginFieldDescription(parameter = "jreExec", description = R.WEB_PLUGIN_JRE_EXEC, example = "")
     public static final String   jreExecName          = "jreExec";
-	@PluginFieldDescription(parameter = "jreArgs", description = "Run JVM with determined params. For example, initial size and max size of the memory application pool", example = "-Xms128m -Xmx1G")
+	@PluginFieldDescription(parameter = "jreArgs", description = R.WEB_PLUGIN_JRE_ARGS, example = "-Xms128m -Xmx1G")
     public static final String   jreArgsName          = "jreArgs";
 
-	@PluginFieldDescription(parameter = "ChromeDriverPath", description = "Path to Chrome driver. Depends on used OS", example = "unix/chromedriver-linux-2.32-x64.")
+	@PluginFieldDescription(parameter = "ChromeDriverPath", description = R.WEB_PLUGIN_CHROME_DRIVER, example = "unix/chromedriver-linux-2.32-x64.")
     public static final String   chromeDriverPathName     = "ChromeDriverPath";
-	@PluginFieldDescription(parameter = "GeckoDriverPath", description = "Path to Firefox driver. Depends on used OS", example = "unix/geckodriver-linux-0.11.1-x64.")
+	@PluginFieldDescription(parameter = "GeckoDriverPath", description = R.WEB_PLUGIN_GECKO_DRIVER, example = "unix/geckodriver-linux-0.11.1-x64.")
     public static final String   geckoDriverPathName      = "GeckoDriverPath";
-	@PluginFieldDescription(parameter = "IEDriverPath", description = "Path to Internet Explorer driver. Depends on used OS. IE can used only in Windows.", example = "win/iedriverserver-2.53.1-x64.exe")
+	@PluginFieldDescription(parameter = "IEDriverPath", description = R.WEB_PLUGIN_IE_DRIVER, example = "win/iedriverserver-2.53.1-x64.exe")
     public static final String   ieDriverPathName         = "IEDriverPath";
-	@PluginFieldDescription(parameter = "ChromeDriverBinary", description = "Path to Chrome binary driver", example = "unix/chromedriver")
+	@PluginFieldDescription(parameter = "ChromeDriverBinary", description = R.WEB_PLUGIN_CHROME_DRIVER_BINARY, example = "unix/chromedriver")
     public static final String   chromeDriverBinary       = "ChromeDriverBinary";
-	@PluginFieldDescription(parameter = "FirefoxProfileDirectory", description = "Path to Firefox profile folder which can contains personal information such as bookmarks, passwords, etc.", example = "~/.mozilla/firefox/xxxxxxxx.default/")
+	@PluginFieldDescription(parameter = "FirefoxProfileDirectory", description = R.WEB_PLUGIN_FIREFOX_PROFILE, example = "~/.mozilla/firefox/xxxxxxxx.default/")
     public static final String   firefoxProfileDir        = "FirefoxProfileDirectory";
-	@PluginFieldDescription(parameter = "UsePrivateMode", description = "Allows you to browse the Internet without saving any information about which sites and pages you’ve visited.", example = "true")
+	@PluginFieldDescription(parameter = "UsePrivateMode", description = R.WEB_PLUGIN_PRIVATE_MODE, example = "true")
     public static final String   usePrivateMode           = "UsePrivateMode";
 
-	@PluginFieldDescription(parameter = "Browser", description = "Choose one of determined browsers via combo box", example = "'Chrome'")
+	@PluginFieldDescription(parameter = "Browser", description = R.WEB_PLUGIN_BROWSER, example = "'Chrome'")
     public static final String   browserName              = "Browser";
-	@PluginFieldDescription(parameter = "URL", description = "Set URL which should opened via Browser", example = "https://example.com")
+	@PluginFieldDescription(parameter = "URL", description = R.WEB_PLUGIN_URL, example = "https://example.com")
     public static final String   urlName                  = "URL";
-	@PluginFieldDescription(parameter = "WhereOpen", description = "Available only when application is running." +
-			" In actions part of dictionary switch to 'New' tab, set URL and choose where open this URl - new tab of browser, new browser window or change URL in first opened tab - via combo box.", example = "'OpenInTab'")
+	@PluginFieldDescription(parameter = "WhereOpen", description = R.WEB_PLUGIN_WHERE_OPEN, example = "'OpenInTab'")
     public static final String   whereOpenName            = "WhereOpen";
 
     public static final String   tabName                  = "Tab";

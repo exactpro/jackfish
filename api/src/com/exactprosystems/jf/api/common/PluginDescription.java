@@ -1,5 +1,7 @@
 package com.exactprosystems.jf.api.common;
 
+import com.exactprosystems.jf.api.common.i18n.R;
+
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -8,7 +10,7 @@ import java.lang.annotation.Target;
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
 public @interface PluginDescription {
-    String description() default "";
-    String additionalDescription() default "";
-    String any() default "";
+    R description() default R.DEFAULT;
+    R additionalDescription() default R.DEFAULT;
+    R any() default R.DEFAULT;
 }

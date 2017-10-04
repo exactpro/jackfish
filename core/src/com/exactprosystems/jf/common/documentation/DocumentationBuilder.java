@@ -11,6 +11,7 @@ import com.exactprosystems.jf.api.common.DateTime;
 import com.exactprosystems.jf.api.common.PluginDescription;
 import com.exactprosystems.jf.api.common.PluginFieldDescription;
 import com.exactprosystems.jf.api.common.Str;
+import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.api.wizard.Wizard;
 import com.exactprosystems.jf.api.wizard.WizardManager;
 import com.exactprosystems.jf.common.ControlsAttributes;
@@ -180,7 +181,7 @@ public class DocumentationBuilder
         if (pd != null)
         {
             //description
-            addTextLine(help, pd.description());
+            addTextLine(help, pd.description() == R.DEFAULT ? R.DEFAULT.get() : pd.description().get());
             //fields -> table
             addFieldDescriptionForPlugin(help, evaluator, clazz);
             //controls
@@ -189,15 +190,17 @@ public class DocumentationBuilder
             String s = controls.stream().map(c -> "{{@" + c.getClazz() + "@}}").collect(Collectors.joining(", "));
             addTextLine(help, "{{`" + s + "`}}");
             //additional info
-            if(!Str.IsNullOrEmpty(pd.additionalDescription()))
+            String pluginAddDescr = pd.additionalDescription() == R.DEFAULT ? R.DEFAULT.get() : pd.additionalDescription().get();
+            if(!Str.IsNullOrEmpty(pluginAddDescr))
             {
                 addTextLine(help, "{{`{{*Additional info*}}`}}");
-                addTextLine(help, pd.additionalDescription());
+                addTextLine(help, pluginAddDescr);
             }
-            //any??
-            if(!Str.IsNullOrEmpty(pd.any()))
+            //any
+            String pluginAny = pd.any()== R.DEFAULT ? R.DEFAULT.get() : pd.any().get();
+            if(!Str.IsNullOrEmpty(pluginAny))
             {
-                addTextLine(help, pd.any());
+                addTextLine(help, pluginAny);
             }
         }
         return help;
@@ -245,7 +248,7 @@ public class DocumentationBuilder
             PluginFieldDescription pfd = f.getAnnotation(PluginFieldDescription.class);
             if(pfd != null)
             {
-                table.addValue(new String[] {pfd.parameter(), pfd.description(), pfd.example()});
+                table.addValue(new String[] {pfd.parameter(), pfd.description() == R.DEFAULT ? R.DEFAULT.get() : pfd.description().get(), pfd.example()});
             }
         }
         MatrixItem tableItem = new HelpTable("", table, true, width);

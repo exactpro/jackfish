@@ -17,9 +17,7 @@ import java.io.InputStream;
 import java.util.*;
 
 @PluginDescription(
-		description = "1",
-		additionalDescription = "2",
-		any = "3"
+
 )
 public class WinAppFactory extends AbstractApplicationFactory
 {
