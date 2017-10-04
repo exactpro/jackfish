@@ -124,7 +124,8 @@ public enum R
 	//endregion
 	;
 
-	private static final ResourceBundle bundle = ResourceBundle.getBundle(Constants.RESOURCE_BUNDLE.get(), new UTF8Control());
+	public static final  String         RESOURCE_BUNDLE_PATH = "com/exactprosystems/jf/ToolResourceBundle";
+	private static final ResourceBundle bundle               = ResourceBundle.getBundle(RESOURCE_BUNDLE_PATH, new UTF8Control());
 	private final String string;
 
 	R(String s)
@@ -149,9 +150,8 @@ public enum R
 
 	private static class UTF8Control extends ResourceBundle.Control
 	{
-		public ResourceBundle newBundle
-				(String baseName, Locale locale, String format, ClassLoader loader, boolean reload)
-				throws IllegalAccessException, InstantiationException, IOException
+		@Override
+		public ResourceBundle newBundle(String baseName, Locale locale, String format, ClassLoader loader, boolean reload) throws IllegalAccessException, InstantiationException, IOException
 		{
 			// The below is a copy of the default implementation.
 			String bundleName = toBundleName(baseName, locale);
@@ -190,32 +190,4 @@ public enum R
 			return bundle;
 		}
 	}
-
-	//this class contains non i18n constants
-	public enum Constants
-	{
-		RESOURCE_BUNDLE("com/exactprosystems/jf/ToolResourceBundle"),
-		DEFAULT(""),
-
-		//region jf.actions.app
-		APP_CONNECTION_NAME("AppConnection"),
-
-		//endregion
-
-
-		;
-
-		private final String string;
-
-		Constants(String s)
-		{
-			this.string = s;
-		}
-
-		public String get()
-		{
-			return this.string;
-		}
-
-	}
-	}
+}
