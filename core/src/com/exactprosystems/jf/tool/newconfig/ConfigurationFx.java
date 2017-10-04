@@ -19,6 +19,7 @@ import com.exactprosystems.jf.api.service.IServicesPool;
 import com.exactprosystems.jf.api.service.ServiceConnection;
 import com.exactprosystems.jf.api.service.ServiceStatus;
 import com.exactprosystems.jf.app.ApplicationPool;
+import com.exactprosystems.jf.common.MainRunner;
 import com.exactprosystems.jf.common.MutableString;
 import com.exactprosystems.jf.common.Settings;
 import com.exactprosystems.jf.common.documentation.DocumentationBuilder;
@@ -794,7 +795,7 @@ public class ConfigurationFx extends Configuration
 
 	public void openAppsDictionary(AppEntry entry) throws Exception
 	{
-		this.openAppsDictionary(new File(entry.get(Configuration.appDicPath)), entry.toString());
+		this.openAppsDictionary(new File(MainRunner.makeDirWithSubstitutions(entry.get(Configuration.appDicPath))), entry.toString());
 	}
 
 	public void openAppsDictionary(File file) throws Exception
