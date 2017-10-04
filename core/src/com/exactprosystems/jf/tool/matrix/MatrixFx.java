@@ -40,7 +40,7 @@ import java.util.stream.IntStream;
 
 public class MatrixFx extends Matrix
 {
-	private static final String DELIMITER = ",";
+	public static final String DELIMITER = ",";
 
 	public static final String Dialog            = "Matrix";
 	public static final String DIALOG_BREAKPOINT = "BreakPointMatrix";
@@ -59,12 +59,9 @@ public class MatrixFx extends Matrix
 	public void display() throws Exception
 	{
 		super.display();
-
-		//		initController();
 		this.getRoot().fire();
 		getNameProperty().fire();
-		displayGuiDictionaries();
-		displayClientDictionaries();
+
 		restoreSettings(getFactory().getSettings());
 	}
 
@@ -148,14 +145,14 @@ public class MatrixFx extends Matrix
 	public void setDefaultApp(String id)
 	{
 		super.setDefaultApp(id);
-		this.defaultApp.set(id);
+		this.defaultAppId = id;
 	}
 
 	@Override
 	public void setDefaultClient(String id)
 	{
 		super.setDefaultClient(id);
-		this.defaultClient.set(id);
+		this.defaultClientId = id;
 	}
 
 	@Override
@@ -609,24 +606,6 @@ public class MatrixFx extends Matrix
 		//		}
 	}
 
-	private void displayGuiDictionaries() throws Exception
-	{
-		ArrayList<String> result = new ArrayList<>();
-		result.add(EMPTY_STRING);
-		Context context = getEngine().getContext();
-		result.addAll(new ArrayList<>(context.getConfiguration().getApplicationPool().appNames()));
-		this.appList.addAll(result.stream().map(MutableValue::new).collect(Collectors.toList()));
-	}
-
-	private void displayClientDictionaries() throws Exception
-	{
-		ArrayList<String> result = new ArrayList<>();
-		result.add(EMPTY_STRING);
-		Context context = getEngine().getContext();
-		result.addAll(new ArrayList<>(context.getConfiguration().getClientPool().clientNames()));
-		this.clientList.addAll(result.stream().map(MutableValue::new).collect(Collectors.toList()));
-	}
-
 	private void insert(MatrixItem where, MatrixItem[] items) throws Exception
 	{
 		MatrixItem parent = where.getParent();
@@ -654,7 +633,6 @@ public class MatrixFx extends Matrix
 		String absolutePathMatrix = new File(getNameProperty().get()).getAbsolutePath();
 		if (breakPoints.isEmpty())
 		{
-			//if matrix was present and don't have breakpoint - remove it;
 			settings.remove(Settings.MAIN_NS, DIALOG_BREAKPOINT, absolutePathMatrix);
 		}
 		else
@@ -662,13 +640,13 @@ public class MatrixFx extends Matrix
 			settings.setValue(Settings.MAIN_NS, DIALOG_BREAKPOINT, absolutePathMatrix, breakPoints.stream().map(Object::toString).collect(Collectors.joining(DELIMITER)));
 		}
 
-		if (Str.areEqual(this.defaultApp.get(), EMPTY_STRING) && Str.areEqual(this.defaultClient.get(), EMPTY_STRING))
+		if (Str.areEqual(this.defaultAppId, EMPTY_STRING) && Str.areEqual(this.defaultClientId, EMPTY_STRING))
 		{
 			settings.remove(Settings.MAIN_NS, DIALOG_DEFAULTS, absolutePathMatrix);
 		}
 		else
 		{
-			settings.setValue(Settings.MAIN_NS, DIALOG_DEFAULTS, absolutePathMatrix, this.defaultApp.get() + DELIMITER + this.defaultClient.get());
+			settings.setValue(Settings.MAIN_NS, DIALOG_DEFAULTS, absolutePathMatrix, this.defaultAppId + DELIMITER + this.defaultClientId);
 		}
 		settings.saveIfNeeded();
 	}
@@ -686,25 +664,6 @@ public class MatrixFx extends Matrix
 				}
 			});
 		});
-
-		Settings.SettingsValue defaults = settings.getValue(Settings.MAIN_NS, DIALOG_DEFAULTS, new File(getNameProperty().get()).getAbsolutePath());
-		if (Objects.isNull(defaults))
-		{
-			this.defaultApp.set(EMPTY_STRING);
-			this.defaultClient.set(EMPTY_STRING);
-		}
-		else
-		{
-			String[] split = defaults.getValue().split(DELIMITER);
-			if (split.length == 2)
-			{
-				this.defaultApp.set(split[0]);
-				this.defaultClient.set(split[1]);
-			}
-		}
-		super.setDefaultApp(this.defaultApp.get());
-		super.setDefaultClient(this.defaultClient.get());
-
 	}
 
 	private void checkAndCall(List<MatrixItem> items, Consumer<MatrixItem> applier)
@@ -749,26 +708,6 @@ public class MatrixFx extends Matrix
 		this.refresh.fire();
 	}
 
-	public MutableValue<String> defaultAppProperty()
-	{
-		return this.defaultApp;
-	}
-
-	public MutableValue<String> defaultClientProperty()
-	{
-		return this.defaultClient;
-	}
-
-	public MutableArrayList<MutableValue<String>> appsProperty()
-	{
-		return appList;
-	}
-
-	public MutableArrayList<MutableValue<String>> clientsProperty()
-	{
-		return clientList;
-	}
-
 	public MutableValue<Object> parameterProperty()
 	{
 		return parameter;
@@ -780,16 +719,13 @@ public class MatrixFx extends Matrix
 	}
 
 	private MutableValue<MatrixItem>               currentItemProperty = new MutableValue<>();
-	private MutableArrayList<MutableValue<String>> appList             = new MutableArrayList<>();
-	private MutableArrayList<MutableValue<String>> clientList          = new MutableArrayList<>();
 	private MutableValue<Long>                     timer               = new MutableValue<>(0L);
 	private MutableValue<String>                   log                 = new MutableValue<>("");
 	private MutableValue<Object>                   parameter           = new MutableValue<>(null);
 	private MutableValue<Boolean>                  refresh             = new MutableValue<>(false);
 
-	//TODO think about defaultApp and defaultClient. Mb move upper?
-	private MutableValue<String> defaultApp    = new MutableValue<>(EMPTY_STRING);
-	private MutableValue<String> defaultClient = new MutableValue<>(EMPTY_STRING);
+	private String defaultAppId;
+	private String defaultClientId;
 
 
 	private Date startDate = new Date();

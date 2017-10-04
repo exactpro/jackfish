@@ -88,6 +88,7 @@ public class FxDocumentFactory extends DocumentFactory
 		}
 		CustomTab customTab = this.mainModel.createCustomTab(doc);
 		controller.init(doc, customTab);
+		controller.restoreSettings(this.settings);
 		this.mainModel.selectTab(customTab);
 		getConfiguration().register(doc);
 		AbstractDocumentController<? extends Document> finalController = controller;

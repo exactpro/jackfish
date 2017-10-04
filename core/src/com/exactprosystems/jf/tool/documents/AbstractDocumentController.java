@@ -8,6 +8,7 @@
 
 package com.exactprosystems.jf.tool.documents;
 
+import com.exactprosystems.jf.common.Settings;
 import com.exactprosystems.jf.documents.Document;
 import com.exactprosystems.jf.tool.ContainingParent;
 import com.exactprosystems.jf.tool.custom.tab.CustomTab;
@@ -48,6 +49,11 @@ public abstract class AbstractDocumentController<T extends Document> implements 
 			this.customTab.setTitle(n);
 			this.customTab.saved(n);
 		});
+	}
+
+	protected void restoreSettings(Settings settings)
+	{
+
 	}
 
 	protected void close()

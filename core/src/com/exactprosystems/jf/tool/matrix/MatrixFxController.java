@@ -13,7 +13,6 @@ import com.exactprosystems.jf.documents.Document;
 import com.exactprosystems.jf.documents.config.Context;
 import com.exactprosystems.jf.documents.matrix.Matrix;
 import com.exactprosystems.jf.documents.matrix.parser.DisplayDriver;
-import com.exactprosystems.jf.documents.matrix.parser.MutableValue;
 import com.exactprosystems.jf.documents.matrix.parser.Result;
 import com.exactprosystems.jf.documents.matrix.parser.items.MatrixItem;
 import com.exactprosystems.jf.documents.matrix.parser.listeners.IMatrixListener;
@@ -44,11 +43,9 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 
+import java.io.File;
 import java.net.URL;
-import java.util.List;
-import java.util.Optional;
-import java.util.ResourceBundle;
-import java.util.stream.Collectors;
+import java.util.*;
 
 import static com.exactprosystems.jf.tool.Common.*;
 
@@ -290,10 +287,7 @@ public class MatrixFxController extends AbstractDocumentController<MatrixFx> imp
 		//TODO think about second parameter of method display;
 		this.model.getRoot().setOnAddListener((integer, matrixItem) -> this.display(matrixItem, false));
 		this.model.currentItemProperty().setOnChangeListener(((oldValue, newValue) -> this.setCurrent(newValue, false)));
-		this.model.defaultAppProperty().setOnChangeListener((s, s2) -> this.setDefaultApp(s2));
-		this.model.defaultClientProperty().setOnChangeListener((s, s2) -> this.setDefaultClient(s2));
-		this.model.appsProperty().setOnAddAllListener((integer, mutableValues) -> this.displayAppList(mutableValues.stream().map(MutableValue::get).collect(Collectors.toList())));
-		this.model.clientsProperty().setOnAddAllListener((integer, mutableValues) -> this.displayClientList(mutableValues.stream().map(MutableValue::get).collect(Collectors.toList())));
+
 		this.model.timerProperty().setOnChangeListener((aLong, aLong2) -> this.displayTimer(aLong2, aLong2 > 0));
 		this.model.logProperty().setOnChangeListener((s, s2) -> {
 			if (s2 == null)
@@ -342,6 +336,29 @@ public class MatrixFxController extends AbstractDocumentController<MatrixFx> imp
 			{}
 			this.model.parameterProperty().set(value);
 		});
+
+		displayGuiDictionaries();
+		displayClientDictionaries();
+	}
+
+	@Override
+	protected void restoreSettings(Settings settings)
+	{
+		Settings.SettingsValue defaults = settings.getValue(Settings.MAIN_NS, MatrixFx.DIALOG_DEFAULTS, new File(super.model.getNameProperty().get()).getAbsolutePath());
+		if (Objects.isNull(defaults))
+		{
+			this.cbDefaultApp.getSelectionModel().select(MatrixFx.EMPTY_STRING);
+			this.cbDefaultClient.getSelectionModel().select(MatrixFx.EMPTY_STRING);
+		}
+		else
+		{
+			String[] split = defaults.getValue().split(MatrixFx.DELIMITER);
+			if (split.length == 2)
+			{
+				this.cbDefaultApp.getSelectionModel().select(split[0]);
+				this.cbDefaultClient.getSelectionModel().select(split[1]);
+			}
+		}
 	}
 
 	public void init(MatrixFx model, Context context, TabConsole console)
@@ -405,12 +422,11 @@ public class MatrixFxController extends AbstractDocumentController<MatrixFx> imp
 		}, "Error on showing watcher ");
 	}
 
-	public void close()
+	@Override
+	protected void close()
 	{
-		tryCatch(() ->
-		{
-			Optional.ofNullable(watcher).ifPresent(WatcherFx::close);
-		}, "Error on closing matrix");
+		Optional.ofNullable(this.watcher).ifPresent(WatcherFx::close);
+		super.close();
 	}
 
 	public Object getParameter() throws Exception
@@ -483,12 +499,12 @@ public class MatrixFxController extends AbstractDocumentController<MatrixFx> imp
 
 	public void changeDefaultApp(ActionEvent actionEvent)
 	{
-		tryCatch(() -> this.model.setDefaultApp(cbDefaultApp.getSelectionModel().getSelectedItem()), "Error on changing app");
+		super.model.setDefaultApp(cbDefaultApp.getSelectionModel().getSelectedItem());
 	}
 
 	public void changeDefaultClient(ActionEvent actionEvent)
 	{
-		tryCatch(() -> this.model.setDefaultClient(cbDefaultClient.getSelectionModel().getSelectedItem()), "Error on changing client");
+		super.model.setDefaultClient(cbDefaultClient.getSelectionModel().getSelectedItem());
 	}
 
 	public void markAll(ActionEvent actionEvent)
@@ -572,19 +588,9 @@ public class MatrixFxController extends AbstractDocumentController<MatrixFx> imp
 		});
 	}
 
-	public void displayAppList(List<String> result)
-	{
-		Common.runLater(() -> this.cbDefaultApp.setItems(FXCollections.observableList(result)));
-	}
-
 	public void setDefaultApp(String id)
 	{
 		Common.runLater(() -> this.cbDefaultApp.getSelectionModel().select(id));
-	}
-
-	public void displayClientList(List<String> result)
-	{
-		Common.runLater(() -> this.cbDefaultClient.setItems(FXCollections.observableList(result)));
 	}
 
 	public void setDefaultClient(String id)
@@ -594,6 +600,24 @@ public class MatrixFxController extends AbstractDocumentController<MatrixFx> imp
 	// ------------------------------------------------------------------------------------------------------------------
 	// private methods
 	// ------------------------------------------------------------------------------------------------------------------
+
+	private void displayGuiDictionaries()
+	{
+		ArrayList<String> result = new ArrayList<>();
+		result.add(Matrix.EMPTY_STRING);
+		result.addAll(new ArrayList<>(super.model.getFactory().getConfiguration().getApplicationPool().appNames()));
+		Common.runLater(() -> this.cbDefaultApp.setItems(FXCollections.observableList(result)));
+	}
+
+	private void displayClientDictionaries()
+	{
+		ArrayList<String> result = new ArrayList<>();
+		result.add(Matrix.EMPTY_STRING);
+		result.addAll(new ArrayList<>(super.model.getFactory().getConfiguration().getClientPool().clientNames()));
+		Common.runLater(() -> this.cbDefaultClient.setItems(FXCollections.observableList(result)));
+	}
+
+
 	private void refreshTreeIfToogle()
 	{
 		if (this.toggleTracing.isSelected())
