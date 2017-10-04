@@ -43,7 +43,6 @@ public abstract class MatrixItem implements IMatrixItem, Mutable, Cloneable
 	private BiConsumer<Integer, MatrixItem> onRemoveListener;
 	private BiConsumer<Integer, MatrixItem> onSetListener;
 	private BiConsumer<Integer, MatrixItem> onChangeParameter;
-	private BiConsumer<Boolean, MatrixItem> onBreakPoint;
 
 	public MatrixItem()
 	{
@@ -55,6 +54,7 @@ public abstract class MatrixItem implements IMatrixItem, Mutable, Cloneable
 		this.ignoreErr = new MutableValue<Boolean>();
 		this.comments = new MutableArrayList<CommentString>();
 		this.children = new MutableArrayList<MatrixItem>();
+		this.breakPointValue = new MutableValue<>(false);
 	}
 
 	//==============================================================================================
@@ -280,7 +280,7 @@ public abstract class MatrixItem implements IMatrixItem, Mutable, Cloneable
 
 	public boolean isBreakPoint()
 	{
-		return this.breakPoint;
+		return this.breakPointValue.get();
 	}
 
 	public void setNubmer(int number)
@@ -661,6 +661,8 @@ public abstract class MatrixItem implements IMatrixItem, Mutable, Cloneable
 			child.onSetListener = item.parent.onSetListener;
 			child.onRemoveListener = item.parent.onRemoveListener;
 			child.onChangeParameter = item.parent.onChangeParameter;
+			//TODO fix me
+			child.breakPointValue.setOnChangeListener(item.parent.breakPointValue.getChangeListener());
 		});
 	}
 
@@ -757,8 +759,7 @@ public abstract class MatrixItem implements IMatrixItem, Mutable, Cloneable
 
 	public final void setBreakPoint(boolean breakPoint)
 	{
-		this.breakPoint = breakPoint;
-		Optional.ofNullable(this.onBreakPoint).ifPresent(l -> l.accept(breakPoint, this));
+		this.breakPointValue.set(breakPoint);
 		MatrixItemState oldState = getItemState();
 		MatrixItemState newState;
 		if (breakPoint)
@@ -804,7 +805,7 @@ public abstract class MatrixItem implements IMatrixItem, Mutable, Cloneable
 	{
 		this.owner.getRoot().bypass(item->
 		{
-			item.onBreakPoint = breakPointListener;
+			item.breakPointValue.setOnChangeListener((aBoolean, aBoolean2) -> breakPointListener.accept(aBoolean2, this));
 		});
 	}
 
@@ -1176,7 +1177,7 @@ public abstract class MatrixItem implements IMatrixItem, Mutable, Cloneable
     protected int                             number;
     protected MatrixItem                      parent;
     protected ReturnAndResult                 result;
-    protected boolean                         breakPoint;
+    protected MutableValue<Boolean>           breakPointValue;
     protected MatrixItemState                 matrixItemState         = MatrixItemState.None;
 	protected MatrixItemExecutingState        executingState  = MatrixItemExecutingState.None;
     protected ImageWrapper                    screenshot              = null;
