@@ -13,17 +13,17 @@ import com.exactprosystems.jf.actions.ReadableValue;
 import com.exactprosystems.jf.api.common.Str;
 import com.exactprosystems.jf.api.common.Sys;
 import com.exactprosystems.jf.common.Settings;
-import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
-import com.exactprosystems.jf.common.report.ReportBuilder;
 import com.exactprosystems.jf.common.undoredo.Command;
 import com.exactprosystems.jf.documents.DocumentFactory;
-import com.exactprosystems.jf.documents.config.Context;
 import com.exactprosystems.jf.documents.matrix.Matrix;
 import com.exactprosystems.jf.documents.matrix.parser.MutableValue;
 import com.exactprosystems.jf.documents.matrix.parser.Parameter;
 import com.exactprosystems.jf.documents.matrix.parser.Parameters;
 import com.exactprosystems.jf.documents.matrix.parser.Parser;
-import com.exactprosystems.jf.documents.matrix.parser.items.*;
+import com.exactprosystems.jf.documents.matrix.parser.items.MatrixItem;
+import com.exactprosystems.jf.documents.matrix.parser.items.MatrixItemExecutingState;
+import com.exactprosystems.jf.documents.matrix.parser.items.TempItem;
+import com.exactprosystems.jf.documents.matrix.parser.items.TypeMandatory;
 import com.exactprosystems.jf.documents.matrix.parser.listeners.IMatrixListener;
 import com.exactprosystems.jf.tool.helpers.DialogsHelper;
 import javafx.scene.control.ButtonType;
@@ -31,7 +31,6 @@ import javafx.util.Pair;
 import org.apache.log4j.Logger;
 
 import java.io.File;
-import java.io.Reader;
 import java.util.*;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
@@ -63,24 +62,6 @@ public class MatrixFx extends Matrix
 		getNameProperty().fire();
 
 		restoreSettings(getFactory().getSettings());
-	}
-
-	@Override
-	public void create() throws Exception
-	{
-		super.create();
-	}
-
-	@Override
-	public void load(Reader reader) throws Exception
-	{
-		super.load(reader);
-	}
-
-	@Override
-	public void save(String fileName) throws Exception
-	{
-		super.save(fileName);
 	}
 
 	@Override
@@ -153,12 +134,6 @@ public class MatrixFx extends Matrix
 	{
 		super.setDefaultClient(id);
 		this.defaultClientId = id;
-	}
-
-	@Override
-	public void start(Context context, AbstractEvaluator evaluator, ReportBuilder report)
-	{
-		super.start(context, evaluator, report);
 	}
 
 	@Override
@@ -681,8 +656,7 @@ public class MatrixFx extends Matrix
 			try
 			{
 				applier.accept(item.getParameters());
-				//TODO THINK ABOUT IT!!!
-				//				this.controller.refreshParameters(item, selectIndex);
+				item.parametersFire(selectIndex);
 			}
 			catch (Exception e)
 			{

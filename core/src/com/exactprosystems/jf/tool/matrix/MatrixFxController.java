@@ -283,6 +283,7 @@ public class MatrixFxController extends AbstractDocumentController<MatrixFx> imp
 		this.model.currentItemProperty().setOnChangeListener(((oldValue, newValue) -> this.setCurrent(newValue, false)));
 		this.model.timerProperty().setOnChangeListener((aLong, aLong2) -> this.displayTimer(aLong2, aLong2 > 0));
 		this.model.refreshProperty().setOnChangeListener((aBoolean, aBoolean2) -> this.tree.refresh());
+		this.model.getRoot().setOnChangeParameter((integer, matrixItem) -> this.refreshParameters(matrixItem, integer));
 
 		this.context = this.model.getEngine().getContext();
 		Settings settings = this.model.getFactory().getSettings();
@@ -313,10 +314,10 @@ public class MatrixFxController extends AbstractDocumentController<MatrixFx> imp
 		this.efParameter.setMaxWidth(250.0);
 		this.efParameter.setPrefWidth(250.0);
 		this.efParameter.setMinWidth(250.0);
-		this.efParameter.setHelperForExpressionField("Parameter for start", this.model);
+		this.efParameter.setHelperForExpressionField("Parameter for start", super.model);
 		this.bottomBox.getChildren().addAll(this.efParameter, Common.createSpacer(SpacerEnum.HorizontalMin), new Separator(Orientation.VERTICAL));
-		initializeButtons(context.getFactory().getSettings());
-		initShortcuts(context.getFactory().getSettings());
+		initializeButtons(super.model.getFactory().getSettings());
+		initShortcuts(super.model.getFactory().getSettings());
 		this.efParameter.textProperty().addListener((observable, oldValue, newValue) -> {
 			Object value = null;
 			try

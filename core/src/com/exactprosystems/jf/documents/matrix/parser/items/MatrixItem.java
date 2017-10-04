@@ -41,6 +41,7 @@ public abstract class MatrixItem implements IMatrixItem, Mutable, Cloneable
 	private BiConsumer<Integer, MatrixItem> onAddListener;
 	private BiConsumer<Integer, MatrixItem> onRemoveListener;
 	private BiConsumer<Integer, MatrixItem> onSetListener;
+	private BiConsumer<Integer, MatrixItem> onChangeParameter;
 
 	public MatrixItem()
 	{
@@ -657,6 +658,7 @@ public abstract class MatrixItem implements IMatrixItem, Mutable, Cloneable
 			child.onAddListener = item.parent.onAddListener;
 			child.onSetListener = item.parent.onSetListener;
 			child.onRemoveListener = item.parent.onRemoveListener;
+			child.onChangeParameter = item.parent.onChangeParameter;
 		});
 	}
 
@@ -820,6 +822,19 @@ public abstract class MatrixItem implements IMatrixItem, Mutable, Cloneable
 			item.children.setOnRemoveListener(removeListener);
 			item.onRemoveListener = removeListener;
 		});
+	}
+
+	public final void setOnChangeParameter(BiConsumer<Integer, MatrixItem> changeParameter)
+	{
+		this.owner.getRoot().bypass(item ->
+		{
+			item.onChangeParameter = changeParameter;
+		});
+	}
+
+	public final void parametersFire(int index)
+	{
+		Optional.ofNullable(this.onChangeParameter).ifPresent(l -> l.accept(index, this));
 	}
 
 	public final void fire()
