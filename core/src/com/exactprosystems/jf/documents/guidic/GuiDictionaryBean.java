@@ -8,16 +8,12 @@
 
 package com.exactprosystems.jf.documents.guidic;
 
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlType;
-
 import com.exactprosystems.jf.api.app.Addition;
 import com.exactprosystems.jf.api.app.Mutable;
 import com.exactprosystems.jf.documents.guidic.controls.AbstractControl;
 import com.exactprosystems.jf.documents.matrix.parser.items.MutableArrayList;
+
+import javax.xml.bind.annotation.*;
 
 @XmlAccessorType(XmlAccessType.NONE)
 @XmlType(name = "GuiDictionary", propOrder = { "windows" })
@@ -44,27 +40,17 @@ public class GuiDictionaryBean implements Mutable
         this.windows = new MutableArrayList<>();
     }
 
-    @Override
+	//region interface Mutable
+	@Override
     public boolean isChanged()
     {
-        for (Window window : this.windows)
-        {
-            if (window.isChanged())
-            {
-                return true;
-            }
-        }
-        return this.windows.isChanged();
+		return this.windows.isChanged();
     }
 
     @Override
     public void saved()
     {
-        for (Window window : this.windows)
-        {
-            window.saved();
-        }
-        this.windows.saved();
+		this.windows.saved();
     }
-
+	//endregion
 }

@@ -8,14 +8,15 @@
 
 package com.exactprosystems.jf.documents.guidic;
 
-import com.exactprosystems.jf.api.app.*;
+import com.exactprosystems.jf.api.app.IExtraInfo;
+import com.exactprosystems.jf.api.app.Mutable;
 import com.exactprosystems.jf.common.report.HTMLhelper;
 import org.apache.log4j.Logger;
 
 import javax.xml.bind.annotation.*;
 import java.lang.reflect.Field;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 
 @XmlRootElement
@@ -56,15 +57,12 @@ public class ExtraInfo implements Mutable, IExtraInfo
         return getClass().getSimpleName()  + ":" + hashCode();
     }
 
-    public static ExtraInfo create() throws Exception
+    public static ExtraInfo create()
     {
-    	ExtraInfo ret = new ExtraInfo(); 
-		return ret;
+		return new ExtraInfo();
     }
 
-    //------------------------------------------------------------------------------------------------------------------
-    // interface Mutable
-    //------------------------------------------------------------------------------------------------------------------
+    //region interface Mutable
 	@Override
     public boolean isChanged()
 	{
@@ -77,7 +75,8 @@ public class ExtraInfo implements Mutable, IExtraInfo
 		this.changed = false;
 	}
 	
-    //------------------------------------------------------------------------------------------------------------------
+    //endregion
+
 	public void correctAllXml()
 	{
 		this.node = xmlToText(this.node); 
@@ -87,9 +86,23 @@ public class ExtraInfo implements Mutable, IExtraInfo
 	public void correctAllText()
 	{
 		this.node = textToXml(this.node); 
-		this.xpath= textToXml(this.xpath);;
+		this.xpath= textToXml(this.xpath);
 	}
 
+	public void set(String name, Object value) throws Exception
+	{
+		Object oldValue = get(ExtraInfo.class, this, name);
+		set(ExtraInfo.class, this, name, value);
+		Object newValue = get(ExtraInfo.class, this, name);
+		this.changed = this.changed || !Objects.equals(oldValue, newValue);
+	}
+
+	public Object get(String name) throws Exception
+	{
+		return get(ExtraInfo.class, this, name);
+	}
+
+	//region private methods
 	private String xmlToText(String source)
 	{
 		return HTMLhelper.htmlunescape(source);
@@ -100,12 +113,12 @@ public class ExtraInfo implements Mutable, IExtraInfo
 		return HTMLhelper.htmlescape(source);
 	}
 
-	static void set(Class<?> clazz, Object object, String name, Object value) throws Exception
+	private static void set(Class<?> clazz, Object object, String name, Object value) throws Exception
 	{
 		Field[] fields = clazz.getDeclaredFields();
 		for (Field field : fields)
 		{
-		    XmlElement attr = field.getAnnotation(XmlElement.class);
+			XmlElement attr = field.getAnnotation(XmlElement.class);
 			if (attr == null)
 			{
 				continue;
@@ -117,13 +130,13 @@ public class ExtraInfo implements Mutable, IExtraInfo
 		}
 	}
 
-	static Object get(Class<?> clazz, Object object, String name) throws Exception
+	private static Object get(Class<?> clazz, Object object, String name) throws Exception
 	{
 		Field[] fields = clazz.getDeclaredFields();
 
 		for (Field field : fields)
 		{
-		    XmlElement attr = field.getAnnotation(XmlElement.class);
+			XmlElement attr = field.getAnnotation(XmlElement.class);
 			if (attr == null)
 			{
 				continue;
@@ -135,16 +148,5 @@ public class ExtraInfo implements Mutable, IExtraInfo
 		}
 		return null;
 	}
-
-	public void set(String name, Object value) throws Exception
-	{
-		Object oldValue = get(ExtraInfo.class, this, name);
-		set(ExtraInfo.class, this, name, value);
-		Object newValue = get(ExtraInfo.class, this, name);
-	}
-
-	public Object get(String name) throws Exception
-	{
-		return get(ExtraInfo.class, this, name);
-	}
+	//endregion
 }

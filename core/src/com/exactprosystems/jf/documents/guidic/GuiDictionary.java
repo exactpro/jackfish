@@ -52,18 +52,13 @@ public class GuiDictionary extends AbstractDocument implements IGuiDictionary
 		this.bean = new GuiDictionaryBean();
 	}
 
-    //------------------------------------------------------------------------------------------------------------------
-    // Object
-    //------------------------------------------------------------------------------------------------------------------
 	@Override
 	public String toString()
 	{
 		return getClass().getSimpleName() + " <" + getNameProperty() + ">";
 	}
 
-    //------------------------------------------------------------------------------------------------------------------
-    // interface Document
-    //------------------------------------------------------------------------------------------------------------------
+    //region AbstractDocument
     @Override
 	public void load(Reader reader) throws Exception
 	{
@@ -80,14 +75,9 @@ public class GuiDictionary extends AbstractDocument implements IGuiDictionary
 			Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
 
 			unmarshaller.setSchema(schema);
-			unmarshaller.setEventHandler(new ValidationEventHandler()
-			{
-				@Override
-				public boolean handleEvent(ValidationEvent event)
-				{
-					System.out.println("Error in dictionary : " + event);
-					return false;
-				}
+			unmarshaller.setEventHandler(event -> {
+				System.out.println("Error in dictionary : " + event);
+				return false;
 			});
 
 			unmarshaller.setListener(new DictionaryUnmarshallerListener());
@@ -121,9 +111,9 @@ public class GuiDictionary extends AbstractDocument implements IGuiDictionary
         marshaller.marshal(this.bean, file);
     }
 
-    //------------------------------------------------------------------------------------------------------------------
-    // interface IGuiDictionary
-    //------------------------------------------------------------------------------------------------------------------
+    //endregion
+
+    //region interface IGuiDictionary
     @Override
 	public Collection<IWindow> getWindows()
 	{
@@ -133,14 +123,9 @@ public class GuiDictionary extends AbstractDocument implements IGuiDictionary
 	@Override
 	public boolean containsWindow(String dialogName)
 	{
-		for (Window window : this.bean.windows)
-		{
-			if (Str.areEqual(dialogName, window.getName()))
-			{
-				return true;
-			}
-		}
-		return false;
+		return this.bean.windows.stream()
+				.map(Window::getName)
+				.anyMatch(name -> Str.areEqual(name, dialogName));
 	}
 
 	@Override
@@ -161,9 +146,10 @@ public class GuiDictionary extends AbstractDocument implements IGuiDictionary
 		}
 		return this.bean.windows.get(0);
 	}
-	//------------------------------------------------------------------------------------------------------------------
-	// interface Mutable
-    //------------------------------------------------------------------------------------------------------------------
+
+	//endregion
+
+	//region interface Mutable
 	@Override
 	public boolean isChanged()
 	{
@@ -176,13 +162,11 @@ public class GuiDictionary extends AbstractDocument implements IGuiDictionary
 		this.bean.saved();
 	}
 
-    //------------------------------------------------------------------------------------------------------------------
+    //endregion
+
 	public void evaluateAll(AbstractEvaluator evaluator)
 	{
-		for (Window window : this.bean.windows)
-		{
-			window.evaluateAll(evaluator);
-		}
+		this.bean.windows.forEach(window -> window.evaluateAll(evaluator));
 	}
 	
 	public void addWindow(Window window)
@@ -194,20 +178,6 @@ public class GuiDictionary extends AbstractDocument implements IGuiDictionary
 	{
 		this.bean.windows.add(index, window);
 	}
-
-    public void removeWindowByName(String name)
-    {
-    	Iterator<Window> iterator = this.bean.windows.iterator();
-    	while (iterator.hasNext())
-    	{
-    		Window window = iterator.next();
-    		if (window.getName().equals(name))
-    		{
-    			iterator.remove();
-    			return;
-    		}
-    	}
-    }
 
 	public int indexOf(IWindow window)
 	{

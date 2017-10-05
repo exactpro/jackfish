@@ -13,6 +13,7 @@ import com.exactprosystems.jf.api.app.IControl;
 import com.exactprosystems.jf.api.app.ISection;
 import com.exactprosystems.jf.api.app.IWindow;
 import com.exactprosystems.jf.api.app.Mutable;
+import com.exactprosystems.jf.api.common.Str;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.documents.guidic.controls.*;
 import com.exactprosystems.jf.documents.matrix.parser.items.MutableArrayList;
@@ -23,6 +24,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 
 @XmlRootElement(name = "section")
@@ -88,9 +90,7 @@ public class Section implements ISection, Mutable
 		return newSection;
 	}
 
-	//------------------------------------------------------------------------------------------------------------------
-    // interface ISection
-    //------------------------------------------------------------------------------------------------------------------
+    //region interface ISection
 	@Override
 	public boolean hasReferences(IControl control)
 	{
@@ -148,7 +148,7 @@ public class Section implements ISection, Mutable
 	@Override
 	public Collection<IControl> getControls()
 	{
-		return new ArrayList<IControl>(this.controls);
+		return new ArrayList<>(this.controls);
 	}
 
 	@Override
@@ -168,16 +168,11 @@ public class Section implements ISection, Mutable
 		{
 			return null;
 		}
-		
-		for (IControl control : this.controls)
-		{
-			if (name.equals(control.getID()))
-			{
-				return control;
-			}
-		}
-		
-		return null;
+
+		return this.controls.stream()
+				.filter(control -> name.equals(control.getID()))
+				.findFirst()
+				.orElse(null);
 	}
 
 	@Override
@@ -194,18 +189,10 @@ public class Section implements ISection, Mutable
 	@Override
 	public List<String>  getControlsNames()
 	{
-		List<String> ret = new ArrayList<String>();
-		
-		for (IControl control : this.controls)
-		{
-			String name = control.getID();
-			if (name != null && !name.isEmpty())
-			{
-				ret.add(control.getID());
-			}
-		}
-		
-		return ret;
+		return this.controls.stream()
+				.map(IControl::getID)
+				.filter(id -> !Str.IsNullOrEmpty(id))
+				.collect(Collectors.toList());
 	}
 
 	@Override
@@ -219,10 +206,9 @@ public class Section implements ISection, Mutable
     {
         return this.window;
     }
-	
-    //------------------------------------------------------------------------------------------------------------------
-    // interface Mutable
-    //------------------------------------------------------------------------------------------------------------------
+	//endregion
+
+    //region interface Mutable
 	@Override
 	public boolean isChanged()
 	{
@@ -234,14 +220,11 @@ public class Section implements ISection, Mutable
 	{
 		this.controls.saved();
 	}
-    //------------------------------------------------------------------------------------------------------------------
+    //endregion
 	
 	public void evaluateAll(AbstractEvaluator evaluator)
 	{
-		for (AbstractControl control : this.controls)
-		{
-			control.evaluate(evaluator);
-		}
+		this.controls.forEach(c -> c.evaluate(evaluator));
 	}
 
 	public void clearSection()
