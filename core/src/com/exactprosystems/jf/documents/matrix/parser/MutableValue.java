@@ -110,12 +110,6 @@ public class MutableValue<T> implements Mutable, Getter<T>, Setter<T>, Cloneable
 	    }
 	}
 
-	//TODO fix me
-	public BiConsumer<T, T> getChangeListener()
-	{
-		return changeListener;
-	}
-
 	public void setOnChangeListener(BiConsumer<T, T> listener)
 	{
 	    this.changeListener = listener;
