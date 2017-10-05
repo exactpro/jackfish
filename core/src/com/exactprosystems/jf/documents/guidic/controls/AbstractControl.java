@@ -518,8 +518,7 @@ public abstract class AbstractControl implements IControl, Mutable
 			logger.error(re.getMessage(), re);
 			if (re.getMessage().contains("is not allowed"))
 			{
-				CheckingLayoutResult result = new CheckingLayoutResult();
-				return result;
+				return new CheckingLayoutResult();
 			}
 			throw re;
 		}
@@ -576,12 +575,9 @@ public abstract class AbstractControl implements IControl, Mutable
 		this.expression = xmlToText(this.expression);
 		this.columns = xmlToText(this.columns);
 		
-		if (!Str.IsNullOrEmpty(this.ownerId) && !Str.IsNullOrEmpty(this.xpath))
+		if (!Str.IsNullOrEmpty(this.ownerId) && !Str.IsNullOrEmpty(this.xpath) && this.xpath.startsWith("//"))
 		{
-		    if (this.xpath.startsWith("//"))
-		    {
-		        this.xpath = "." + this.xpath;
-		    }
+			this.xpath = "." + this.xpath;
 		}
 	}
 
@@ -593,7 +589,7 @@ public abstract class AbstractControl implements IControl, Mutable
         }
 		
 		this.id = textToXml(this.id); 
-		this.uid= textToXml(this.uid);;
+		this.uid= textToXml(this.uid);
 		this.xpath = textToXml(this.xpath);
 		this.ownerId = textToXml(this.ownerId);
 		this.refId = textToXml(this.refId);

@@ -9,6 +9,7 @@
 package com.exactprosystems.jf.documents;
 
 import com.exactprosystems.jf.actions.ReadableValue;
+import com.exactprosystems.jf.api.wizard.EmptyWizardManager;
 import com.exactprosystems.jf.api.wizard.WizardManager;
 import com.exactprosystems.jf.common.Settings;
 import com.exactprosystems.jf.common.VerboseLevel;
@@ -151,8 +152,7 @@ public class ConsoleDocumentFactory extends DocumentFactory
 	@Override
 	public WizardManager getWizardManager()
 	{
-		//TODO implement empty wizard manager
-		return null;
+		return new EmptyWizardManager();
 	}
 
 	@Override

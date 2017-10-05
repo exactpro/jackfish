@@ -111,10 +111,7 @@ public abstract class DocumentFactory
                     
                 case MATRIX:            
 					Matrix matrix = createMatrix(fileName, this.configuration, createMatrixListener());
-					matrix.getStateProperty().setOnChangeListener((oldState, newState) ->
-					{
-						Optional.ofNullable(this.listener).ifPresent(l -> l.changed(matrix, oldState, newState));
-					});
+					matrix.getStateProperty().setOnChangeListener((oldState, newState) -> Optional.ofNullable(this.listener).ifPresent(l -> l.changed(matrix, oldState, newState)));
                     return matrix;
                 
                 case LIBRARY:           
@@ -134,7 +131,10 @@ public abstract class DocumentFactory
                 
                 case PLAIN_TEXT:        
                     return createPlainText(fileName, this.configuration);
-            }
+
+				case REPORTS:
+					return null;
+			}
         }
         catch (Exception e)
         {

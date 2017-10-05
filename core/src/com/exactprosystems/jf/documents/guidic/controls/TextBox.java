@@ -30,10 +30,6 @@ public class TextBox extends AbstractControl
 	@Override
 	public void prepare(Part part, Object value) throws Exception
 	{
-		if (value == null)
-		{
-			value = "";
-		}
-		part.setText(String.valueOf(value)).setBool(false);
+		part.setText(value == null ? "" : String.valueOf(value)).setBool(false);
 	}
 }

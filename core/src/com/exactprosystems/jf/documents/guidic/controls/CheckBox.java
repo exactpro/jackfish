@@ -10,6 +10,7 @@ package com.exactprosystems.jf.documents.guidic.controls;
 
 import com.exactprosystems.jf.api.app.ControlKind;
 import com.exactprosystems.jf.api.app.Part;
+import com.exactprosystems.jf.api.error.common.NullParameterException;
 import com.exactprosystems.jf.common.ControlsAttributes;
 
 import javax.xml.bind.annotation.XmlAccessType;
@@ -28,13 +29,11 @@ public class CheckBox extends AbstractControl
 	{
 		if (value == null)
 		{
-			throw new Exception("value is null");
+			throw new NullParameterException("value is null");
 		}
 		if (value instanceof Boolean)
 		{
-			
-			boolean bool = ((Boolean)value).booleanValue();
-			part.setBool(bool);
+			part.setBool((Boolean) value);
 		}
 	}
 }
