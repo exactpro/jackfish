@@ -33,7 +33,6 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.*;
 import java.util.function.BiConsumer;
-import java.util.function.Consumer;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
@@ -41,8 +40,8 @@ public abstract class MatrixItem implements IMatrixItem, Mutable, Cloneable
 {
 	private BiConsumer<Integer, MatrixItem> onAddListener;
 	private BiConsumer<Integer, MatrixItem> onRemoveListener;
-	private BiConsumer<Integer, MatrixItem> onSetListener;
 	private BiConsumer<Integer, MatrixItem> onChangeParameter;
+	private BiConsumer<Boolean, MatrixItem> onBreakPointListener;
 
 	public MatrixItem()
 	{
@@ -54,7 +53,6 @@ public abstract class MatrixItem implements IMatrixItem, Mutable, Cloneable
 		this.ignoreErr = new MutableValue<Boolean>();
 		this.comments = new MutableArrayList<CommentString>();
 		this.children = new MutableArrayList<MatrixItem>();
-		this.breakPointValue = new MutableValue<>(false);
 	}
 
 	//==============================================================================================
@@ -280,7 +278,7 @@ public abstract class MatrixItem implements IMatrixItem, Mutable, Cloneable
 
 	public boolean isBreakPoint()
 	{
-		return this.breakPointValue.get();
+		return this.breakPoint;
 	}
 
 	public void setNubmer(int number)
@@ -655,15 +653,7 @@ public abstract class MatrixItem implements IMatrixItem, Mutable, Cloneable
 		item.owner = this.owner;
 		item.source = this.owner;
 		this.children.add(index, item);
-		item.bypass(child ->
-		{
-			child.onAddListener = item.parent.onAddListener;
-			child.onSetListener = item.parent.onSetListener;
-			child.onRemoveListener = item.parent.onRemoveListener;
-			child.onChangeParameter = item.parent.onChangeParameter;
-			//TODO fix me
-			child.breakPointValue.setOnChangeListener(item.parent.breakPointValue.getChangeListener());
-		});
+		callAddListener(item, index);
 	}
 
 	public final void remove()
@@ -672,6 +662,7 @@ public abstract class MatrixItem implements IMatrixItem, Mutable, Cloneable
 		{
 			int index = this.parent.index(this);
 			parent.children.remove(index);
+			callRemoveListener(this, index);
 		}
 		this.parent = null;
 	}
@@ -759,7 +750,8 @@ public abstract class MatrixItem implements IMatrixItem, Mutable, Cloneable
 
 	public final void setBreakPoint(boolean breakPoint)
 	{
-		this.breakPointValue.set(breakPoint);
+		this.breakPoint = breakPoint;
+		this.callBreakPointListener(this, breakPoint);
 		MatrixItemState oldState = getItemState();
 		MatrixItemState newState;
 		if (breakPoint)
@@ -803,55 +795,32 @@ public abstract class MatrixItem implements IMatrixItem, Mutable, Cloneable
 
 	public final void setOnBreakPoint(BiConsumer<Boolean, MatrixItem> breakPointListener)
 	{
-		this.owner.getRoot().bypass(item->
-		{
-			item.breakPointValue.setOnChangeListener((aBoolean, aBoolean2) -> breakPointListener.accept(aBoolean2, this));
-		});
+		this.owner.getRoot().onBreakPointListener = breakPointListener;
 	}
 
 	public final void setOnAddListener(BiConsumer<Integer, MatrixItem> addListener)
 	{
-		this.owner.getRoot().bypass(item ->
-		{
-			item.children.setOnAddListener(addListener);
-			item.onAddListener = addListener;
-		});
-	}
-
-	public final void setOnSetListener(BiConsumer<Integer, MatrixItem> setListener)
-	{
-		this.owner.getRoot().bypass(item ->
-		{
-			item.children.setOnSetListener(setListener);
-			item.onSetListener = setListener;
-		});
+		this.owner.getRoot().onAddListener = addListener;
 	}
 
 	public final void setOnRemoveListener(BiConsumer<Integer, MatrixItem> removeListener)
 	{
-		this.owner.getRoot().bypass(item ->
-		{
-			item.children.setOnRemoveListener(removeListener);
-			item.onRemoveListener = removeListener;
-		});
+		this.owner.getRoot().onRemoveListener = removeListener;
 	}
 
 	public final void setOnChangeParameter(BiConsumer<Integer, MatrixItem> changeParameter)
 	{
-		this.owner.getRoot().bypass(item ->
-		{
-			item.onChangeParameter = changeParameter;
-		});
+		this.owner.getRoot().onChangeParameter = changeParameter;
 	}
 
 	public final void parametersFire(int index)
 	{
-		Optional.ofNullable(this.onChangeParameter).ifPresent(l -> l.accept(index, this));
+		callChangeParametersListener(this, index);
 	}
 
 	public final void fire()
 	{
-		Optional.ofNullable(this.onAddListener).ifPresent(l -> l.accept(0, this.owner.getRoot()));
+		callAddListener(this.owner.getRoot(), 0);
 	}
 
 	private final boolean matchesPart(String what, boolean caseSensitive, boolean wholeWord)
@@ -1152,6 +1121,66 @@ public abstract class MatrixItem implements IMatrixItem, Mutable, Cloneable
         }
     }
 
+	private void callAddListener(MatrixItem item, Integer index)
+	{
+		BiConsumer<Integer, MatrixItem> addListener = this.onAddListener;
+		MatrixItem parentItem = item;
+		while (addListener == null && parentItem != null)
+		{
+			addListener = parentItem.onAddListener;
+			parentItem = parentItem.getParent();
+		}
+		if (addListener != null)
+		{
+			addListener.accept(index, item);
+		}
+	}
+
+	private void callChangeParametersListener(MatrixItem item, Integer index)
+	{
+		BiConsumer<Integer, MatrixItem> addListener = this.onChangeParameter;
+		MatrixItem parentItem = item;
+		while (addListener == null && parentItem != null)
+		{
+			addListener = parentItem.onChangeParameter;
+			parentItem = parentItem.getParent();
+		}
+		if (addListener != null)
+		{
+			addListener.accept(index, item);
+		}
+	}
+
+	private void callRemoveListener(MatrixItem item, Integer index)
+	{
+		BiConsumer<Integer, MatrixItem> addListener = this.onRemoveListener;
+		MatrixItem parentItem = item;
+		while (addListener == null && parentItem != null)
+		{
+			addListener = parentItem.onRemoveListener;
+			parentItem = parentItem.getParent();
+		}
+		if (addListener != null)
+		{
+			addListener.accept(index, item);
+		}
+	}
+
+	private void callBreakPointListener(MatrixItem item, Boolean newValue)
+	{
+		BiConsumer<Boolean, MatrixItem> addListener = this.onBreakPointListener;
+		MatrixItem parentItem = item;
+		while (addListener == null && parentItem != null)
+		{
+			addListener = parentItem.onBreakPointListener;
+			parentItem = parentItem.getParent();
+		}
+		if (addListener != null)
+		{
+			addListener.accept(newValue, item);
+		}
+	}
+
 
 	protected static final Logger logger = Logger.getLogger(MatrixItem.class);
 
@@ -1177,7 +1206,7 @@ public abstract class MatrixItem implements IMatrixItem, Mutable, Cloneable
     protected int                             number;
     protected MatrixItem                      parent;
     protected ReturnAndResult                 result;
-    protected MutableValue<Boolean>           breakPointValue;
+	protected boolean                         breakPoint;
     protected MatrixItemState                 matrixItemState         = MatrixItemState.None;
 	protected MatrixItemExecutingState        executingState  = MatrixItemExecutingState.None;
     protected ImageWrapper                    screenshot              = null;
