@@ -28,20 +28,20 @@ public class ClientEntry extends Entry
 	protected String clientDictionaryValue;
 
 	@Override
-	protected String getDerived(String name) throws Exception
+	protected String getDerived(String name)
 	{
 		switch (name)
 		{
 			case Configuration.clientDescription:	return this.descriptionValue;
 			case Configuration.clientJar:			return this.clientJarNameValue;
-			case Configuration.clientLimit:			return "" + this.clientLimitValue;
+			case Configuration.clientLimit:			return Integer.toString(this.clientLimitValue);
 			case Configuration.clientDictionary:	return this.clientDictionaryValue;
 		}
 		return null;
 	}
 
 	@Override
-	protected void setDerived(String name, Object value) throws Exception
+	protected void setDerived(String name, Object value)
 	{
 		switch (name)
 		{

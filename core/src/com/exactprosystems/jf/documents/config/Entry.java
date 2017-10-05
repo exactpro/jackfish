@@ -9,6 +9,7 @@
 package com.exactprosystems.jf.documents.config;
 
 import com.exactprosystems.jf.api.app.Mutable;
+import com.exactprosystems.jf.api.common.Str;
 import com.exactprosystems.jf.documents.matrix.parser.items.MutableArrayList;
 
 import javax.xml.bind.annotation.XmlAccessType;
@@ -33,6 +34,7 @@ public abstract class Entry implements Mutable
 		return this.entryNameValue == null ? "" : this.entryNameValue;
 	}
 
+	//region interface Mutable
 	@Override
 	public boolean isChanged()
 	{
@@ -40,19 +42,9 @@ public abstract class Entry implements Mutable
 		{
 			return true;
 		}
-		if (this.parameters != null)
+		if (this.parameters != null && this.parameters.isChanged())
 		{
-			if (this.parameters.isChanged())
-			{
-				return true;
-			}
-			for (Parameter parameter : this.parameters)
-			{
-				if (parameter.isChanged())
-				{
-					return true;
-				}
-			}
+			return true;
 		}
 
 		return false;
@@ -64,25 +56,26 @@ public abstract class Entry implements Mutable
 		if (this.parameters != null)
 		{
 			this.parameters.saved();
-			this.parameters.forEach(Parameter::saved);
 		}
 		changed = false;
 	}
+	//endregion
 
-	public final String get(String name) throws Exception
+	public final String get(String name)
 	{
-		switch (name)
+		if (Str.areEqual(name, Configuration.entryName))
 		{
-			case Configuration.entryName : return this.entryNameValue;
+			return this.entryNameValue;
 		}
 		return this.getParameter(name).orElse(getDerived(name));
 	}
 
-	public final void set(String name, Object value) throws Exception
+	public final void set(String name, Object value)
 	{
-		switch (name)
+		if (Str.areEqual(name, Configuration.entryName))
 		{
-			case Configuration.entryName : this.entryNameValue = "" +value; return;
+			this.entryNameValue = ""+value;
+			return;
 		}
 		Parameter o = new Parameter();
 		o.setKey(name);
@@ -95,26 +88,28 @@ public abstract class Entry implements Mutable
 		setDerived(name, value);
 	}
 
-	protected abstract String getDerived(String name) throws Exception;
+	//region abstract methods
+	protected abstract String getDerived(String name);
 	
-	protected abstract void setDerived(String name, Object value) throws Exception;
+	protected abstract void setDerived(String name, Object value);
+	//endregion
 
-	public Optional<String> getParameter(String key)
+	public List<Parameter> getParameters()
+	{
+		if (this.parameters == null)
+		{
+			this.parameters = new MutableArrayList<>();
+		}
+		return this.parameters;
+	}
+
+	private Optional<String> getParameter(String key)
 	{
 		return this.getParameters()
 				.stream()
 				.filter(p -> p.key != null && p.key.equals(key))
 				.map(Parameter::getValue)
 				.findFirst();
-	}
-
-	public List<Parameter> getParameters()
-	{
-		if (this.parameters == null)
-		{
-			this.parameters = new MutableArrayList<Parameter>();
-		}
-		return this.parameters;
 	}
 	
 	private boolean changed = false;

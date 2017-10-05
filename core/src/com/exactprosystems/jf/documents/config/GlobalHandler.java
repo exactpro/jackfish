@@ -8,8 +8,9 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import java.util.Arrays;
-import java.util.LinkedHashMap;
+import java.util.EnumMap;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import static com.exactprosystems.jf.documents.config.Configuration.*;
 
@@ -116,7 +117,7 @@ public class GlobalHandler implements Mutable
 
 	public boolean isEnabled()
 	{
-		return this.enabled == null? false : this.enabled.booleanValue();
+		return this.enabled != null && this.enabled;
 	}
 
 	public void setEnabled(boolean enabled)
@@ -127,8 +128,12 @@ public class GlobalHandler implements Mutable
 
 	public Map<HandlerKind, String> getMap()
 	{
-		Map<HandlerKind, String> map = new LinkedHashMap<>();
-		Arrays.stream(HandlerKind.values()).forEach(h -> map.put(h, getGlobalHandler(h).get()));
-		return map;
+		return Arrays.stream(HandlerKind.values())
+				.collect(Collectors.toMap(
+						kind -> kind
+						, kind -> getGlobalHandler(kind).get()
+						, (u,v) -> u /*never happened, because key is enum*/
+						, () -> new EnumMap<>(HandlerKind.class))
+				);
 	}
 }

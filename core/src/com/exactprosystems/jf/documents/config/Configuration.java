@@ -38,8 +38,6 @@ import com.exactprosystems.jf.documents.matrix.parser.items.MatrixItem;
 import com.exactprosystems.jf.documents.matrix.parser.items.MutableArrayList;
 import com.exactprosystems.jf.documents.matrix.parser.items.NameSpace;
 import com.exactprosystems.jf.documents.matrix.parser.items.SubCase;
-import com.exactprosystems.jf.documents.matrix.parser.listeners.IMatrixListener;
-import com.exactprosystems.jf.documents.matrix.parser.listeners.MatrixListener;
 import com.exactprosystems.jf.documents.vars.SystemVars;
 import com.exactprosystems.jf.functions.Table;
 import com.exactprosystems.jf.service.ServicePool;
@@ -57,13 +55,12 @@ import javax.xml.transform.Source;
 import javax.xml.transform.stream.StreamSource;
 import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
-import java.awt.*;
+import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.io.*;
 import java.math.MathContext;
 import java.time.Instant;
 import java.util.*;
-import java.util.List;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.function.Function;
@@ -151,7 +148,7 @@ public class Configuration extends AbstractDocument
 	public static final String USER_VARS_FILE		= "myVars.ini";
 	public static final String REPORTS_FOLDER		= "reports";
 
-	public static final MutableArrayList<MutableString> DEFAULT_IMPORTS = new MutableArrayList<>();
+	private static final MutableArrayList<MutableString> DEFAULT_IMPORTS = new MutableArrayList<>();
 	static
 	{
         DEFAULT_IMPORTS.add(new MutableString(List.class.getCanonicalName()));
@@ -178,7 +175,7 @@ public class Configuration extends AbstractDocument
 		DEFAULT_IMPORTS.add(new MutableString(org.mvel2.MVEL.class.getPackage().getName()));
 	}
 
-	public static final MutableArrayList<MutableString> DEFAULT_FORMATS = new MutableArrayList<>();
+	private static final MutableArrayList<MutableString> DEFAULT_FORMATS = new MutableArrayList<>();
 	static
 	{
 		DEFAULT_FORMATS.add(new MutableString("dd.MM.yyyy HH:mm:ss"));
@@ -198,7 +195,6 @@ public class Configuration extends AbstractDocument
 
     protected String                  reportFactoryValue = HTMLReportFactory.class.getSimpleName();
     protected String                  evaluatorValue     = MvelEvaluator.class.getSimpleName();
-    protected Map<File, Long>         timestampMap       = new HashMap<>();
     protected boolean                 changed;
     protected ReportFactory           reportFactoryObj;
     protected Map<String, Matrix>     libs;
@@ -225,15 +221,15 @@ public class Configuration extends AbstractDocument
 
 		this.changed 					= false;
 
-		this.globals 					= new HashMap<String, Object>();
+		this.globals 					= new HashMap<>();
 		this.clients 					= new ClientsPool(factory);
 		this.services 					= new ServicePool(factory);
 		this.applications 				= new ApplicationPool(factory);
 		this.databases 					= new DataBasePool(factory);
 
-		this.libs 						= new HashMap<String, Matrix>();
-		this.documentsActuality 		= new HashMap<String, Date>();
-		this.systemVars					= new HashSet<SystemVars>();
+		this.libs 						= new HashMap<>();
+		this.documentsActuality 		= new HashMap<>();
+		this.systemVars					= new HashSet<>();
 	}
 
 	public Configuration()
@@ -320,12 +316,9 @@ public class Configuration extends AbstractDocument
 				{
 					mitem.bypass(it ->
 					{
-						if (it instanceof SubCase)
+						if (it instanceof SubCase && !list.contains(new ReadableValue(it.getId())))
 						{
-							if (!list.contains(new ReadableValue(it.getId())))
-							{
-								list.add(new ReadableValue(name + "." + it.getId(), ((SubCase) it).getName()));
-							}
+							list.add(new ReadableValue(name + "." + it.getId(), ((SubCase) it).getName()));
 						}
 					});
 				}
@@ -403,18 +396,13 @@ public class Configuration extends AbstractDocument
 
 	public AbstractEvaluator createEvaluator() throws Exception
 	{
-		if (Str.IsNullOrEmpty(this.evaluatorValue))
-		{
-			throw new Exception("Empty evaluator class name.");
-		}
-
 		AbstractEvaluator evaluator	= objectFromClassName(this.evaluatorValue, AbstractEvaluator.class);
 		evaluator.addImports(toStringList(DEFAULT_IMPORTS));
 		evaluator.addImports(toStringList(this.bean.importsValue));
 
-		for (SystemVars vars : this.systemVars)
+		for (SystemVars sysVars : this.systemVars)
 		{
-			vars.injectVariables(evaluator);
+			sysVars.injectVariables(evaluator);
 		}
 		evaluator.reset("" + getVersion());
 
@@ -423,7 +411,7 @@ public class Configuration extends AbstractDocument
 
 	public Date getLastUpdateDate()
 	{
-	    return this.lastUpdate;
+		return new DateTime(this.lastUpdate);
 	}
 
 	public void refresh()  throws Exception
@@ -440,10 +428,9 @@ public class Configuration extends AbstractDocument
 		display();
 	}
 
-
+	//region protected methods, may be overrided
 	protected void refreshLibs()
 	{
-		IMatrixListener checker = new MatrixListener();
 		if (this.bean.librariesValue == null)
 		{
 			return;
@@ -456,7 +443,7 @@ public class Configuration extends AbstractDocument
 			{
 				File[] libFiles = folderFile.listFiles((dir, name) -> name != null && name.endsWith(matrixExt));
 
-				for (File libFile : libFiles)
+				for (File libFile : Optional.ofNullable(libFiles).orElse(new File[0]))
 				{
 					Date fileTime = new Date(libFile.lastModified());
 					Date previousTime = this.documentsActuality.put(libFile.getAbsolutePath(), fileTime);
@@ -466,32 +453,7 @@ public class Configuration extends AbstractDocument
 						continue;
 					}
 
-					try (Reader reader = CommonHelper.readerFromFile(libFile))
-					{
-						Matrix matrix = (Matrix) getFactory().createDocument(DocumentKind.LIBRARY, libFile.getAbsolutePath());
-						if (!checker.isOk())
-						{
-							logger.error("Library load error: [" + libFile.getName() + "] " + checker.getExceptionMessage());
-							continue;
-						}
-						matrix.load(reader);
-						List<String> namespaces = matrix.listOfIds(NameSpace.class);
-						if (namespaces.isEmpty())
-						{
-							matrix.close();
-						}
-						else
-						{
-							for (String ns : namespaces)
-							{
-								this.libs.put(ns, matrix);
-							}
-						}
-					}
-					catch (Exception e)
-					{
-						logger.error(e.getMessage(), e);
-					}
+					loadLibrary(libFile);
 				}
 			}
 			else
@@ -564,48 +526,43 @@ public class Configuration extends AbstractDocument
 
 	protected void refreshReport()
 	{}
+	//endregion
 
-    //------------------------------------------------------------------------------------------------------------------
-    // interface Document
-    //------------------------------------------------------------------------------------------------------------------
+    //region interface Document
     @Override
-    public void load(Reader reader) throws Exception
-    {
-    	super.load(reader);
-    	try
-    	{
+	public void load(Reader reader) throws Exception
+	{
+		super.load(reader);
+		try
+		{
 			this.valid = false;
 
-//	        ConfigurationBean.jaxbContextClasses[0] = this.getClass();
-	        JAXBContext jaxbContext = JAXBContext.newInstance(ConfigurationBean.jaxbContextClasses);
+			JAXBContext jaxbContext = JAXBContext.newInstance(ConfigurationBean.jaxbContextClasses);
+
+			SchemaFactory schemaFactory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
+			Source schemaFile = new StreamSource(Xsd.class.getResourceAsStream("Configuration.xsd"));
+			Schema schema = schemaFactory.newSchema(schemaFile);
 
 
-	        SchemaFactory schemaFactory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
-	        Source schemaFile = new StreamSource(Xsd.class.getResourceAsStream("Configuration.xsd"));
-	        Schema schema = schemaFactory.newSchema(schemaFile);
+			Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
 
-
-	        Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
-
-	        unmarshaller.setSchema(schema);
-	        unmarshaller.setEventHandler(event ->
+			unmarshaller.setSchema(schema);
+			unmarshaller.setEventHandler(event ->
 			{
 				System.out.println("Error in configuration : " + event);
 
 				return false;
 			});
 
-	        this.bean = (ConfigurationBean) unmarshaller.unmarshal(reader);
-            this.changed = false;
+			this.bean = (ConfigurationBean) unmarshaller.unmarshal(reader);
+			this.changed = false;
 			this.reportFactoryObj		= objectFromClassName(reportFactoryValue, ReportFactory.class);
 
 			DateTime.setFormats(this.bean.timeValue.get(), this.bean.dateValue.get(), this.bean.dateTimeValue.get());
 			Converter.setFormats(toStringList(this.bean.formatsValue));
 
-//			refresh();
-
 			this.valid = true;
-    	}
+		}
 		catch (UnmarshalException e)
 		{
 			throw new Exception(e.getCause().getMessage(), e.getCause());
@@ -688,9 +645,9 @@ public class Configuration extends AbstractDocument
         }
     }
 
-    //------------------------------------------------------------------------------------------------------------------
-    // interface Mutable
-    //------------------------------------------------------------------------------------------------------------------
+    //endregion
+
+	//region interface Mutable
 	@Override
 	public boolean isChanged()
 	{
@@ -711,7 +668,8 @@ public class Configuration extends AbstractDocument
 		this.changed = false;
 	}
 
-	//------------------------------------------------------------------------------------------------------------------
+	//endregion
+
     public void forEachFile(BiConsumer<File, DocumentKind> applier, DocumentKind... kinds)
     {
 		for (DocumentKind kind : kinds)
@@ -779,13 +737,6 @@ public class Configuration extends AbstractDocument
         
 	}
 
-	private <T> List<File> files(Stream<T> stream, Function<T, String> map)
-	{
-		return stream.map(map).map(File::new).collect(Collectors.toList());
-	}
-
-	
-	
 	public void forEach(Consumer<Document> applier, DocumentKind... kinds)
 	{
 		DocumentFactory consoleFactory = new ConsoleDocumentFactory(VerboseLevel.None);
@@ -837,7 +788,7 @@ public class Configuration extends AbstractDocument
 		}
 	}
 	
-	public SqlEntry getSqlEntry(String name) throws Exception
+	public SqlEntry getSqlEntry(String name)
 	{
 		return getEntry(name, this.bean.sqlEntriesValue);
 	}
@@ -847,7 +798,7 @@ public class Configuration extends AbstractDocument
 		return this.bean.sqlEntriesValue;
 	}
 
-	public ClientEntry getClientEntry(String name) throws Exception
+	public ClientEntry getClientEntry(String name)
 	{
 		return getEntry(name, this.bean.clientEntriesValue);
 	}
@@ -857,7 +808,7 @@ public class Configuration extends AbstractDocument
 		return this.bean.clientEntriesValue;
 	}
 
-	public ServiceEntry getServiceEntry(String name) throws Exception
+	public ServiceEntry getServiceEntry(String name)
 	{
 		return getEntry(name, this.bean.serviceEntriesValue);
 	}
@@ -867,7 +818,7 @@ public class Configuration extends AbstractDocument
 		return this.bean.serviceEntriesValue;
 	}
 
-	public AppEntry getAppEntry(String name) throws Exception
+	public AppEntry getAppEntry(String name)
 	{
 		return getEntry(name, this.bean.appEntriesValue);
 	}
@@ -882,19 +833,19 @@ public class Configuration extends AbstractDocument
 		return this.reportFactoryObj;
 	}
 
-	public final Collection<String> getClients() throws Exception
+	public final Collection<String> getClients()
 	{
-		return this.bean.clientEntriesValue.stream().map(entry -> entry.toString()).collect(Collectors.toList());
+		return this.bean.clientEntriesValue.stream().map(Entry::toString).collect(Collectors.toList());
 	}
 
-	public final Collection<String> getServices() throws Exception
+	public final Collection<String> getServices()
 	{
-		return this.bean.serviceEntriesValue.stream().map(entry -> entry.toString()).collect(Collectors.toList());
+		return this.bean.serviceEntriesValue.stream().map(Entry::toString).collect(Collectors.toList());
 	}
 
-	public final Collection<String> getApplications() throws Exception
+	public final Collection<String> getApplications()
 	{
-		return this.bean.appEntriesValue.stream().map(entry -> entry.toString()).collect(Collectors.toList());
+		return this.bean.appEntriesValue.stream().map(Entry::toString).collect(Collectors.toList());
 	}
 
 	public Matrix getLib(String name)
@@ -938,49 +889,65 @@ public class Configuration extends AbstractDocument
 		this.globals = map;
 	}
 
-	public static List<String> toStringList(MutableArrayList<MutableString> str)
-	{
-		return str.stream().map(a -> MainRunner.makeDirWithSubstitutions(a.get())).collect(Collectors.toList());
-	}
-
 	public List<Document> getSubordinates()
 	{
 		return subordinates;
 	}
 
-	@SuppressWarnings("unchecked")
-	protected <T extends Entry> T getEntry(String name, List<T> entries) throws Exception
+	public static List<String> toStringList(MutableArrayList<MutableString> str)
+	{
+		return str.stream().map(a -> MainRunner.makeDirWithSubstitutions(a.get())).collect(Collectors.toList());
+	}
+	//region private methods
+
+	private <T extends Entry> T getEntry(String name, List<T> entries)
 	{
 		if (entries == null)
 		{
 			return null;
 		}
-		for (Entry entry : entries)
-		{
-			if (entry.toString().equals(name))
-			{
-				return (T)entry;
-			}
-		}
-		return null;
+		return entries.stream()
+				.filter(e -> name.equals(e.toString()))
+				.findFirst()
+				.orElse(null);
 	}
 
+	private void loadLibrary(File libFile)
+	{
+		try (Reader reader = CommonHelper.readerFromFile(libFile))
+		{
+			Matrix matrix = (Matrix) getFactory().createDocument(DocumentKind.LIBRARY, libFile.getAbsolutePath());
+			matrix.load(reader);
+			List<String> namespaces = matrix.listOfIds(NameSpace.class);
+			if (namespaces.isEmpty())
+			{
+				matrix.close();
+			}
+			else
+			{
+				for (String ns : namespaces)
+				{
+					this.libs.put(ns, matrix);
+				}
+			}
+		}
+		catch (Exception e)
+		{
+			logger.error(e.getMessage(), e);
+		}
+	}
 
+	private <T> List<File> files(Stream<T> stream, Function<T, String> map)
+	{
+		return stream.map(map).map(File::new).collect(Collectors.toList());
+	}
 
 	@SuppressWarnings("unchecked")
 	private <T> T objectFromClassName(String name, Class<T> baseType) 	throws Exception
 	{
 		try
 		{
-			Class<?> type = null;
-			try
-			{
-				type = Class.forName(name);
-			}
-			catch (ClassNotFoundException e)
-			{
-				type = Class.forName(baseType.getPackage().getName() + "." + name);
-			}
+			Class<?> type = classForName(name, baseType);
 
 			if (!baseType.isAssignableFrom(type))
 			{
@@ -994,6 +961,20 @@ public class Configuration extends AbstractDocument
 			logger.error(String.format("objectFromClassName(%s, %s)", name, baseType));
 			throw e;
 		}
+	}
+
+	private <T> Class<?> classForName(String name, Class<T> baseType) throws ClassNotFoundException
+	{
+		Class<?> type;
+		try
+		{
+			type = Class.forName(name);
+		}
+		catch (ClassNotFoundException e)
+		{
+			type = Class.forName(baseType.getPackage().getName() + "." + name);
+		}
+		return type;
 	}
 
 	private void setUserVariablesFromMask(String userVariablesFileName)  throws Exception
@@ -1066,4 +1047,5 @@ public class Configuration extends AbstractDocument
 			applier.accept(path, kind);
 		}
 	}
+	//endregion
 }

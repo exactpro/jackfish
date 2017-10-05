@@ -70,7 +70,7 @@ public final class SetHandler extends MatrixItem
 			(str) -> 
 			{ 
 			    EntryPoint entryPoint = context.referenceToSubcase(str, this);
-				driver.setCurrentItem(entryPoint.subCase, entryPoint.matrix, false);
+				driver.setCurrentItem(entryPoint.getSubCase(), entryPoint.getMatrix(), false);
 				return str;
 			}, null, 'G' );
 		

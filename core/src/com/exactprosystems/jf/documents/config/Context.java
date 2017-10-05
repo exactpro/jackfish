@@ -20,7 +20,6 @@ import com.exactprosystems.jf.common.report.ReportBuilder;
 import com.exactprosystems.jf.documents.DocumentFactory;
 import com.exactprosystems.jf.documents.DocumentKind;
 import com.exactprosystems.jf.documents.matrix.Matrix;
-import com.exactprosystems.jf.documents.matrix.MatrixEngine;
 import com.exactprosystems.jf.documents.matrix.parser.Parameter;
 import com.exactprosystems.jf.documents.matrix.parser.Parameters;
 import com.exactprosystems.jf.documents.matrix.parser.Result;
@@ -55,21 +54,47 @@ public class Context implements IContext, AutoCloseable
 
 	public static class EntryPoint
 	{
-	    public static EntryPoint NULL = new EntryPoint(null, null);
+	    public static final EntryPoint NULL = new EntryPoint(null, null);
 	    
 	    public EntryPoint(Matrix matrix, SubCase subCase)
         {
 	        this.matrix = matrix;
 	        this.subCase = subCase;
         }
-	    
-	    public Matrix matrix;
-	    public SubCase subCase;
+
+		public Matrix getMatrix()
+		{
+			return matrix;
+		}
+
+		public SubCase getSubCase()
+		{
+			return subCase;
+		}
+
+		private Matrix  matrix;
+		private SubCase subCase;
 	}
+
+	private volatile boolean	pause;
+	private volatile boolean	stop;
+	private volatile boolean	tracing;
+
+	private DocumentFactory factory;
+	private PrintStream outStream;
+	private IMatrixListener matrixListener;
+	private AbstractEvaluator evaluator;
+	private Table resultTable;
+	private Presenter presenter;
+
+	private Map<String, Matrix> libs = new HashMap<>();
+	private Map<HandlerKind, String> handlers = new EnumMap<>(HandlerKind.class);
+	private Date   lastConfigUpdate = null;
+
+	private static final Logger  logger  = Logger.getLogger(Context.class);
+	private              Monitor monitor = new Monitor();
 	
-	private Monitor monitor = new Monitor();
-	
-	public Context(DocumentFactory factory, IMatrixListener matrixListener, PrintStream out, Presenter presenter) throws Exception
+	public Context(DocumentFactory factory, IMatrixListener matrixListener, PrintStream out, Presenter presenter)
 	{
 		this.factory = factory;
 		this.matrixListener = matrixListener;
@@ -102,7 +127,7 @@ public class Context implements IContext, AutoCloseable
     }
     //endregion
 
-    public void reset() throws Exception
+    public void reset()
     {
         this.handlers.clear();
         this.evaluator.reset("" + getConfiguration().getVersion());
@@ -110,8 +135,7 @@ public class Context implements IContext, AutoCloseable
     
 	public void createResultTable()
 	{
-		String headers[] = resultColumns;
-		this.resultTable =  new Table(headers, this.evaluator);
+		this.resultTable =  new Table(resultColumns, this.evaluator);
 	}
 
     public void setHandler(HandlerKind handlerKind, String name, MatrixItem item) throws Exception
@@ -124,11 +148,11 @@ public class Context implements IContext, AutoCloseable
             }
             else
             {
-                SubCase subCase = referenceToSubcase(name, item).subCase;
+                SubCase subCase = referenceToSubcase(name, item).getSubCase();
                 if (subCase != null)
                 {
                 	//check parameters of subcase.
-					if ((handlerKind == HandlerKind.OnStepError || handlerKind == HandlerKind.OnTestCaseError) && subCase.getParameters().size() == 0)
+					if ((handlerKind == HandlerKind.OnStepError || handlerKind == HandlerKind.OnTestCaseError) && subCase.getParameters().isEmpty())
 					{
 						throw new WrongSubcaseNameException(String.format("Parameters count for handler %s (subCase %s) must be great that 0", handlerKind, name));
 					}
@@ -167,13 +191,13 @@ public class Context implements IContext, AutoCloseable
 
             if (!Str.IsNullOrEmpty(name))
             {
-                SubCase handler = referenceToSubcase(name, item).subCase;
+                SubCase handler = referenceToSubcase(name, item).getSubCase();
                 if (handler != null)
                 {
                     if (handlerKind == HandlerKind.OnTestCaseError || handlerKind == HandlerKind.OnStepError)
                     {
                         Parameters parameters = handler.getParameters();
-                        if (parameters.size() > 0)
+                        if (!parameters.isEmpty())
                         {
                             Parameter par = parameters.getByIndex(0);
                             par.setValue(err);
@@ -215,8 +239,6 @@ public class Context implements IContext, AutoCloseable
         }
     }
 
-
-	
 	public AbstractEvaluator getEvaluator()
 	{
 		return this.evaluator;
@@ -250,6 +272,7 @@ public class Context implements IContext, AutoCloseable
 	@Override
 	public void close() throws Exception
 	{
+		this.outStream.close();
 	}
 
 	public EntryPoint referenceToSubcase(String name, MatrixItem item)
@@ -324,7 +347,7 @@ public class Context implements IContext, AutoCloseable
 	
 	public List<ReadableValue> subcases(MatrixItem item)
 	{
-		final List<ReadableValue> res = new ArrayList<ReadableValue>();
+		final List<ReadableValue> res = new ArrayList<>();
 
 		MatrixItem root = item.findParent(MatrixRoot.class);
 
@@ -337,45 +360,6 @@ public class Context implements IContext, AutoCloseable
 		});
 		this.getConfiguration().addSubcaseFromLibs(res);
 		return res;
-	}
-
-	private class Monitor
-	{
-		public void enter()
-		{
-			synchronized (this.obj)
-			{
-				if (this.obj.get())
-				{
-					try
-					{
-						this.obj.set(false);
-						while (!this.obj.get())
-						{
-							this.obj.wait();
-						}
-					}
-					catch (InterruptedException e)
-					{
-						logger.error(e.getMessage(), e);
-					}
-				}
-			}
-		}
-
-		public void leave()
-		{
-			while (!this.obj.get())
-			{
-				synchronized (this.obj)
-				{
-					this.obj.set(true);
-					this.obj.notifyAll();
-				}
-			}
-		}
-
-		private final AtomicBoolean obj	= new AtomicBoolean(true);
 	}
 
 	public void setTracing(boolean value)
@@ -446,20 +430,42 @@ public class Context implements IContext, AutoCloseable
 		this.monitor.leave();
 	}
 
-	private volatile boolean	pause;
-	private volatile boolean	stop;
-	private volatile boolean	tracing;
+	private static class Monitor
+	{
+		public void enter()
+		{
+			synchronized (this.obj)
+			{
+				if (this.obj.get())
+				{
+					try
+					{
+						this.obj.set(false);
+						while (!this.obj.get())
+						{
+							this.obj.wait();
+						}
+					}
+					catch (InterruptedException e)
+					{
+						logger.error(e.getMessage(), e);
+					}
+				}
+			}
+		}
 
-	private DocumentFactory factory;
-	private PrintStream outStream;
-	private IMatrixListener matrixListener;
-	private AbstractEvaluator evaluator;
-	private Table resultTable;
-	private Presenter presenter;
+		public void leave()
+		{
+			while (!this.obj.get())
+			{
+				synchronized (this.obj)
+				{
+					this.obj.set(true);
+					this.obj.notifyAll();
+				}
+			}
+		}
 
-	private Map<String, Matrix> libs = new HashMap<>();
-	private Map<HandlerKind, String> handlers = new HashMap<>();
-	private Date   lastConfigUpdate = null;
-	
-	private static final Logger logger = Logger.getLogger(Context.class);
+		private final AtomicBoolean obj = new AtomicBoolean(true);
+	}
 }

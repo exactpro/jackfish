@@ -104,7 +104,7 @@ public final class Call extends MatrixItem
 			(str) -> 
 			{ 
 			    EntryPoint entryPoint = context.referenceToSubcase(str, this);
-				driver.setCurrentItem(entryPoint.subCase, entryPoint.matrix, false);
+				driver.setCurrentItem(entryPoint.getSubCase(), entryPoint.getMatrix(), false);
 				return str;
 			}, null, 'G' ); 
 		driver.showParameters(this, layout, 1, 3, this.parameters, null, false);
@@ -320,7 +320,7 @@ public final class Call extends MatrixItem
 
 	void updateReference(Context context, String name)
 	{
-	    this.ref = context.referenceToSubcase(name, this).subCase;
+	    this.ref = context.referenceToSubcase(name, this).getSubCase();
 	}
 	
 	//==============================================================================================

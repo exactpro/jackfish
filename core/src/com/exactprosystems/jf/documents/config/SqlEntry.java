@@ -22,7 +22,7 @@ public class SqlEntry extends Entry
 	protected String sqlConnectionStringValue;
 
 	@Override
-	protected String getDerived(String name) throws Exception
+	protected String getDerived(String name)
 	{
 		switch (name)
 		{
@@ -33,7 +33,7 @@ public class SqlEntry extends Entry
 	}
 
 	@Override
-	protected void setDerived(String name, Object value) throws Exception
+	protected void setDerived(String name, Object value)
 	{
 		switch (name)
 		{

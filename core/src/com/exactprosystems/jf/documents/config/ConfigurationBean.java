@@ -8,20 +8,20 @@
 
 package com.exactprosystems.jf.documents.config;
 
+import com.exactprosystems.jf.api.app.Mutable;
+import com.exactprosystems.jf.common.MutableString;
+import com.exactprosystems.jf.documents.matrix.parser.items.MutableArrayList;
+
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
-import com.exactprosystems.jf.api.app.Mutable;
-import com.exactprosystems.jf.common.MutableString;
-import com.exactprosystems.jf.documents.matrix.parser.items.MutableArrayList;
-
 @XmlRootElement(name="configuration")
 @XmlAccessorType(XmlAccessType.NONE)
 public class ConfigurationBean implements Mutable
 {
-    public static final Class<?>[] jaxbContextClasses =
+    static final Class<?>[] jaxbContextClasses =
         {
             ConfigurationBean.class,
             SqlEntry.class,
@@ -92,23 +92,23 @@ public class ConfigurationBean implements Mutable
         this.timeValue                  = new MutableString();
         this.dateValue                  = new MutableString();
         this.dateTimeValue              = new MutableString();
-        this.formatsValue               = new MutableArrayList<MutableString>();
+        this.formatsValue               = new MutableArrayList<>();
         this.reportsValue               = new MutableString();
         this.versionValue               = new MutableString();
 
         this.globalHandlerValue         = new GlobalHandler();
 
-        this.sqlEntriesValue            = new MutableArrayList<SqlEntry>();
-        this.clientEntriesValue         = new MutableArrayList<ClientEntry>();
-        this.serviceEntriesValue        = new MutableArrayList<ServiceEntry>();
-        this.appEntriesValue            = new MutableArrayList<AppEntry>();
-        this.importsValue               = new MutableArrayList<MutableString>();
+        this.sqlEntriesValue            = new MutableArrayList<>();
+        this.clientEntriesValue         = new MutableArrayList<>();
+        this.serviceEntriesValue        = new MutableArrayList<>();
+        this.appEntriesValue            = new MutableArrayList<>();
+        this.importsValue               = new MutableArrayList<>();
         this.varsValue                  = new MutableString();
-        this.userVarsValue              = new MutableArrayList<MutableString>();
-        this.matricesValue              = new MutableArrayList<MutableString>();
-        this.appDictionariesValue       = new MutableArrayList<MutableString>();
-        this.clientDictionariesValue    = new MutableArrayList<MutableString>();
-        this.librariesValue             = new MutableArrayList<MutableString>();
+        this.userVarsValue              = new MutableArrayList<>();
+        this.matricesValue              = new MutableArrayList<>();
+        this.appDictionariesValue       = new MutableArrayList<>();
+        this.clientDictionariesValue    = new MutableArrayList<>();
+        this.librariesValue             = new MutableArrayList<>();
     }
 
 
