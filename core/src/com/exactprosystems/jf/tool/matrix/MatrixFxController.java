@@ -222,7 +222,7 @@ public class MatrixFxController implements Initializable, ContainingParent, IMat
 			TreeItem<MatrixItem> treeItem = this.tree.find(item);
 			Common.runLater(() ->
 					{
-						this.area.appendDefaultText(String.format("%d : Paused on ", item.getNumber()));
+						this.area.appendDefaultTextOnNewLine(String.format("%d : Paused on ", item.getNumber()));
 						this.area.appendMatrixItemLink(String.format("%s", item.getItemName()), treeItem);
 						this.tree.scrollTo(this.tree.getRow(treeItem));
 					}

@@ -80,7 +80,7 @@ public class ConsoleArea extends StyleClassedTextArea
 
     public void appendMatrixItemLink(String text, TreeItem <MatrixItem> item)
     {
-        this.appendStyledText(text, true, item, CssVariables.CONSOLE_PAUSED_ITEM);
+        this.appendStyledText(text, false, item, CssVariables.CONSOLE_PAUSED_ITEM);
     }
 
     private void appendStyledText(String text, boolean newLine, TreeItem <MatrixItem> item, String style)
