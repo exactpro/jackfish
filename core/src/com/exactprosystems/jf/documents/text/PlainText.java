@@ -25,15 +25,15 @@ import java.io.*;
 )
 public class PlainText extends AbstractDocument
 {
+	protected MutableValue<String>		property;
+
 	public PlainText(String fileName, DocumentFactory factory)
 	{
 		super(fileName, factory);
 		this.property = new MutableValue<>("");
 	}
 
-	// ==============================================================================================================================
-	// AbstractDocument
-	// ==============================================================================================================================
+	//region AbstractDocument
 	@Override
 	public void load(Reader reader) throws Exception
 	{
@@ -55,6 +55,7 @@ public class PlainText extends AbstractDocument
 		super.save(fileName);
 		saved();
 	}
+	//endregion
 
 	@Override
 	public boolean isChanged()
@@ -67,7 +68,7 @@ public class PlainText extends AbstractDocument
 		return this.property;
 	}
 
-	// ------------------------------------------------------------------------------------------------------------------
+	//region private methods
 	private String read(Reader reader) throws IOException
 	{
 		StringBuilder sb = new StringBuilder();
@@ -95,5 +96,5 @@ public class PlainText extends AbstractDocument
 		}
 	}
 
-	protected MutableValue<String>		property;
+	//endregion
 }

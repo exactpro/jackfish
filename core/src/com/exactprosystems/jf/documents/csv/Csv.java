@@ -36,9 +36,7 @@ public class Csv extends AbstractDocument
 		this.table.saved();
 	}
 
-	// ==============================================================================================================================
-	// AbstractDocument
-	// ==============================================================================================================================
+	//region AbstractDocument
 	@Override
 	public void load(Reader reader) throws Exception
 	{
@@ -60,9 +58,9 @@ public class Csv extends AbstractDocument
 		super.save(fileName);
 	}
 
-	// ------------------------------------------------------------------------------------------------------------------
-	// interface Mutable
-	// ------------------------------------------------------------------------------------------------------------------
+	//endregion
+
+	//region interface Mutable
 	@Override
 	public boolean isChanged()
 	{
@@ -75,6 +73,8 @@ public class Csv extends AbstractDocument
 		super.saved();
 		this.table.saved();
 	}
+
+	//endregion
 
 	public void setDelimiter(char delimiter)
 	{

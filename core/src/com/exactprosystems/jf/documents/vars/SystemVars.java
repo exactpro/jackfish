@@ -37,13 +37,10 @@ public class SystemVars extends AbstractDocument
     public SystemVars(String fileName, DocumentFactory factory)
 	{
 		super(fileName, factory);
-
-		parameters = new Parameters();
+		this.parameters = new Parameters();
 	}
 
-	//------------------------------------------------------------------------------------------------------------------
-	// interface Document
-	//------------------------------------------------------------------------------------------------------------------
+	//region AbstractDocument
 	@Override
 	public void load(Reader reader) throws Exception
 	{
@@ -112,9 +109,9 @@ public class SystemVars extends AbstractDocument
 		this.parameters.evaluateAll(this.getFactory().createEvaluator());
 	}
 
-	//------------------------------------------------------------------------------------------------------------------
-	// interface Mutable
-	//------------------------------------------------------------------------------------------------------------------
+	//endregion
+
+	//region interface Mutable
 	@Override
 	public boolean isChanged()
 	{
@@ -128,7 +125,8 @@ public class SystemVars extends AbstractDocument
 		this.parameters.saved();
 	}
 
-	//------------------------------------------------------------------------------------------------------------------
+	//endregion
+
 	public void setParameters(List<Parameter> parameters)
 	{
 		this.parameters.clear();
