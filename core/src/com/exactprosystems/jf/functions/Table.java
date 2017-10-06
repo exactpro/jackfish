@@ -84,12 +84,9 @@ public class Table implements List<RowTable>, Mutable
 	 */
 	public Table(Table table)
 	{
-		if (table != null)
-		{
-			this.evaluator = table.evaluator;
-			this.addColumns(Arrays.stream(table.headers).map(h -> h.name).toArray(String[]::new));
-			this.addAll(table);
-		}
+		this(table.evaluator);
+		this.addColumns(Arrays.stream(table.headers).map(h -> h.name).toArray(String[]::new));
+		this.addAll(table);
 	}
 
 	public Table(String[] headers, AbstractEvaluator evaluator)
