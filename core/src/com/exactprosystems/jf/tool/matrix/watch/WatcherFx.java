@@ -86,7 +86,7 @@ public class WatcherFx
 		this.controller.close();
 	}
 
-	public void addAllVariables() throws Exception
+	void addAllVariables() throws Exception
 	{
 		ArrayList<String> matrixIds = new ArrayList<>();
 		this.matrix.getRoot().bypass(item -> Optional.ofNullable(item.getId()).filter(s -> !s.isEmpty()).ifPresent(id -> matrixIds.add(id + ".Out")));
@@ -98,7 +98,7 @@ public class WatcherFx
 		collect.stream().forEach(value -> newVariable(value.getKey(), false));
 	}
 
-	public void newVariable(String text, boolean showError)
+	void newVariable(String text, boolean showError)
 	{
 		if (text == null || text.isEmpty())
 		{

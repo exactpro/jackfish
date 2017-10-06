@@ -61,7 +61,7 @@ public class SystemVarsFxController extends AbstractDocumentController<SystemVar
 		this.tableView.completeFourthColumn("Description", "description", EditState.TEXTFIELD, true);
 		this.tableView.onFinishEditFirstColumn((par, value) -> this.model.updateNameRow(current(), value));
 		this.tableView.onFinishEditSecondColumn((par, value) -> this.model.updateExpressionRow(current(), value));
-		this.tableView.onFinishEditFourthColumn((par, varlue) -> this.model.updateDescriptionRow(current(), varlue));
+		this.tableView.onFinishEditFourthColumn((par, value) -> this.model.updateDescriptionRow(current(), value));
 		this.tableView.setRowFactory(v -> new ColorRow());
 		this.tableView.setSortable(false);
 	}

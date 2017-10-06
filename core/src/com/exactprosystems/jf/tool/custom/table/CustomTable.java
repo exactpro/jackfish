@@ -30,16 +30,6 @@ public class CustomTable<T> extends TableView<T>
 	private Consumer<List<T>> deleteListener;
 	private Runnable addListener;
 
-	public void setDeleteListener(Consumer <List <T>> deleteListener)
-	{
-		this.deleteListener = deleteListener;
-	}
-
-    public void setAddListener(Runnable addListener)
-    {
-        this.addListener = addListener;
-    }
-
     public enum EditState
     {
         LABEL,
@@ -120,6 +110,16 @@ public class CustomTable<T> extends TableView<T>
 		this.getColumns().forEach(col -> col.setSortable(flag));
 	}
 
+    public void setDeleteListener(Consumer <List <T>> deleteListener)
+    {
+        this.deleteListener = deleteListener;
+    }
+
+    public void setAddListener(Runnable addListener)
+    {
+        this.addListener = addListener;
+    }
+
 	public void update()
 	{
 		this.getColumns().forEach(column -> Common.runLater(() -> {
@@ -184,21 +184,15 @@ public class CustomTable<T> extends TableView<T>
 		switch (editState)
         {
             case LABEL:
-            {
                 column.setEditable(false);
                 break;
-            }
             case TEXTFIELD:
-            {
                 column.setEditable(true);
                 break;
-            }
             case TEXTFIELD_READONLY:
-            {
                 column.setEditable(true);
                 column.setReadOnly();
                 break;
-            }
         }
 	}
 
@@ -272,12 +266,6 @@ public class CustomTable<T> extends TableView<T>
 			}
 		}
 
-        @Override
-        public void commitEdit(String newValue)
-        {
-            super.commitEdit(((CustomTableColumn) getTableColumn()).isReadOnly() ? getString() : newValue);
-        }
-
 		private String getString()
 		{
 			return Str.asString(getItem());
@@ -286,6 +274,10 @@ public class CustomTable<T> extends TableView<T>
 		private void createTextField()
 		{
 			textField = new TextField(getString());
+			if(((CustomTableColumn) getTableColumn()).isReadOnly())
+			{
+				textField.setEditable(false);
+			}
 			textField.getStyleClass().add(CssVariables.TEXT_FIELD_VARIABLES);
 			textField.setMinWidth(this.getWidth() - this.getGraphicTextGap() * 2);
 			textField.setOnKeyPressed(t -> 
