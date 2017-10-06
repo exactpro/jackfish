@@ -277,21 +277,21 @@ public class MatrixFxController extends AbstractDocumentController<MatrixFx> imp
 	{
 		super.init(model, customTab);
 
-		this.model.getRoot().setOnRemoveListener((integer, matrixItem) -> this.remove(matrixItem));
+		super.model.getRoot().setOnRemoveListener((integer, matrixItem) -> this.remove(matrixItem));
 		//TODO think about second parameter of method display;
-		this.model.getRoot().setOnAddListener((integer, matrixItem) -> this.display(matrixItem, false));
-		this.model.timerProperty().setOnChangeListener((aLong, aLong2) -> this.displayTimer(aLong2, aLong2 > 0));
-		this.model.getRoot().setOnBreakPoint((oldValue,newValue) -> this.tree.refresh());
-		this.model.getRoot().setOnChangeParameter((integer, matrixItem) -> this.refreshParameters(matrixItem, integer));
+		super.model.getRoot().setOnAddListener((integer, matrixItem) -> this.display(matrixItem, false));
+		super.model.timerProperty().setOnChangeListener((aLong, aLong2) -> this.displayTimer(aLong2, aLong2 > 0));
+		super.model.getRoot().setOnBreakPoint((oldValue,newValue) -> this.tree.refresh());
+		super.model.getRoot().setOnChangeParameter((integer, matrixItem) -> this.refreshParameters(matrixItem, integer));
 
-		this.context = this.model.getEngine().getContext();
-		Settings settings = this.model.getFactory().getSettings();
-		MatrixParametersContextMenu parametersContextMenu 	= new MatrixParametersContextMenu(context, this.model, this.tree, settings);
-		MatrixContextMenu 			rowContextMenu 			= new MatrixContextMenu(context, this.model, this.tree, settings);
-		parametersContextMenu.initShortcuts(settings, this.tree, this.model, context);
+		this.context = super.model.getEngine().getContext();
+		Settings settings = super.model.getFactory().getSettings();
+		MatrixParametersContextMenu parametersContextMenu 	= new MatrixParametersContextMenu(context, super.model, this.tree, settings);
+		MatrixContextMenu 			rowContextMenu 			= new MatrixContextMenu(context, super.model, this.tree, settings);
+		parametersContextMenu.initShortcuts(settings, this.tree, super.model, context);
 
 		this.driver = new DisplayDriverFx(this.tree, this.context, rowContextMenu, parametersContextMenu);
-		this.tree.init(this.model, settings, rowContextMenu);
+		this.tree.init(super.model, settings, rowContextMenu);
 
 		TabConsole console = new TabConsole(System.out);
 		super.model.getEngine().getContext().setOut(console);
@@ -476,7 +476,7 @@ public class MatrixFxController extends AbstractDocumentController<MatrixFx> imp
 
 	public void showWatch(ActionEvent event)
 	{
-		tryCatch(this.model::showWatch, "Error on showing watcher");
+		this.showWatcher(super.model, this.context);
 	}
 
 	public void showFindPanel(ActionEvent actionEvent)
@@ -646,7 +646,7 @@ public class MatrixFxController extends AbstractDocumentController<MatrixFx> imp
 				}
 				else if (SettingsPanel.match(settings, keyEvent, Settings.SHOW_WATCH))
 				{
-					model.showWatch();
+					this.showWatcher(super.model, this.context);
 				}
 				else if (SettingsPanel.match(settings, keyEvent, Settings.TRACING))
 				{

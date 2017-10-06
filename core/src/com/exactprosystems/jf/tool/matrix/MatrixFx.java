@@ -522,15 +522,6 @@ public class MatrixFx extends Matrix
 		}
 	}
 
-	public void showWatch()
-	{
-		//TODO show watcher
-		//		if (this.controller != null)
-		//		{
-		//			this.controller.showWatcher(this, getEngine().getContext());
-		//		}
-	}
-
 	void clearExecutingState()
 	{
 		this.getRoot().bypass(item -> item.changeExecutingState(MatrixItemExecutingState.None));
