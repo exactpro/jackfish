@@ -272,7 +272,6 @@ public class Context implements IContext, AutoCloseable
 	@Override
 	public void close() throws Exception
 	{
-		this.outStream.close();
 	}
 
 	public EntryPoint referenceToSubcase(String name, MatrixItem item)
