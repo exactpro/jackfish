@@ -36,7 +36,7 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-public class Table implements List<RowTable>, Mutable, Cloneable
+public class Table implements List<RowTable>, Mutable
 {
 	//region fields
 	private static final String EMPTY_HEADER       = "newH";
@@ -681,7 +681,11 @@ public class Table implements List<RowTable>, Mutable, Cloneable
 	public Table select(Condition[] conditions)
 	{
 		Table result = new Table(this.evaluator);
-		result.headers = this.headers.clone();
+		result.headers = new Header[this.headers.length];
+		for (int i = 0; i < result.headers.length; i++)
+		{
+			result.headers[i] = new Header(this.headers[i]);
+		}
 
 		for (int index = 0; index < size(); index++)
 		{

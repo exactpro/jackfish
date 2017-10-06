@@ -8,6 +8,10 @@ import java.util.Objects;
 
 class Header implements Cloneable
 {
+	public String name;
+	Header.HeaderType type;
+	public int index;
+
 	public enum HeaderType
 	{
 		STRING		(String.class),
@@ -66,6 +70,7 @@ class Header implements Cloneable
 
 		public Class<?> clazz;
 	}
+
 	public Header(String name, Header.HeaderType type)
 	{
 		this.name = name;
@@ -73,23 +78,16 @@ class Header implements Cloneable
 		this.index = getIndex();
 	}
 
-	public String name;
-	
-	@Override
-	protected Object clone() throws CloneNotSupportedException
+	/**
+	 * copy constructor
+	 */
+	public Header(Header header)
 	{
-		Header clone = (Header)super.clone();
-		
-		clone.name = this.name;
-		clone.type = this.type;
-		clone.index = getIndex();
-		
-		return clone;
+		this.name = header.name;
+		this.type = header.type;
+		this.index = getIndex();
 	}
 
-	Header.HeaderType type;
-
-	public int index;
 
 	@Override
 	public String toString()
