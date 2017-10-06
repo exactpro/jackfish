@@ -66,6 +66,7 @@ public class DocumentationBuilder
     
     public static MatrixItem createUserManual (ReportBuilder report, Context context) throws Exception
     {
+        String newPage = "{{&&}}";
         AbstractEvaluator evaluator = context.getEvaluator();
         Content content = new Content();
         MatrixItem help = new HelpTextLine("{{``}}");
@@ -102,36 +103,36 @@ public class DocumentationBuilder
         addPicture(help, "", 100, DocumentationBuilder.class.getResourceAsStream("BurntOrangeLine.png"));
         addTable(help, "\\DocInfo",    false,  table2, new int[] { 25, 23, 23, 25 },  evaluator);
         addTable(help, "\\Abbreviations",           false,  table3, new int[] { 50, 50 },  evaluator);
-        addTextLine(help, "{{&&}}");
+        addTextLine(help, newPage);
         
         addContent(help, "{{*Table of contenst*}}", new Content());
-        addTextLine(help, "{{&&}}");
+        addTextLine(help, newPage);
 
         addText(help, DocumentationBuilder.class.getResourceAsStream("intro1.txt"));
         addPicture(help, "Architecture", 80, DocumentationBuilder.class.getResourceAsStream("Intro.png"));
         addText(help, DocumentationBuilder.class.getResourceAsStream("intro2.txt"));
-        addTextLine(help, "{{&&}}");
+        addTextLine(help, newPage);
         
         addTextLine(help, "{{1MVEL1}}");
         addText(help, DocumentationBuilder.class.getResourceAsStream(mvel));
-        addTextLine(help, "{{&&}}");
+        addTextLine(help, newPage);
 
         addTextLine(help, "{{1All controls1}}");
         addText(help, DocumentationBuilder.class.getResourceAsStream("controls.txt"));
-        addTextLine(help, "{{&&}}");
+        addTextLine(help, newPage);
         addAllControlsTable(help, "All controls", context, operations.subList(0, size/3), true, true, content);
-        addTextLine(help, "{{&&}}");
+        addTextLine(help, newPage);
         addAllControlsTable(help, "All controls - continue", context, operations.subList(size/3, size*2/3), true, true, content);
-        addTextLine(help, "{{&&}}");
+        addTextLine(help, newPage);
         addAllControlsTable(help, "All controls - end", context, operations.subList(size*2/3, size), true, true, content);
-        addTextLine(help, "{{&&}}");
+        addTextLine(help, newPage);
 
         addTextLine(help, "{{1Matrix syntax1}}");
         addAllItems(help, content);
-        addTextLine(help, "{{&&}}");
+        addTextLine(help, newPage);
 
         addAllActions(help, content);
-        addTextLine(help, "{{&&}}");
+        addTextLine(help, newPage);
 
         return help;
     }
@@ -155,8 +156,7 @@ public class DocumentationBuilder
     public static MatrixItem createHelpForWizard(ReportBuilder report, Context context, Class<? extends Wizard> clazz)
     {
         WizardManager manager = context.getFactory().getWizardManager();
-        MatrixItem help = new HelpWizardItem(manager, clazz);
-        return help;
+        return new HelpWizardItem(manager, clazz);
     }
     
     public static MatrixItem createHelpForPlugin(ReportBuilder report, Context context, String title, IApplicationFactory applicationFactory) throws Exception
@@ -196,6 +196,7 @@ public class DocumentationBuilder
                 addTextLine(help, "{{`{{*Additional info*}}`}}");
                 addTextLine(help, pluginAddDescr);
             }
+            addDifferenceInActions(help, evaluator, clazz);
             //any
             String pluginAny = pd.any().get();
             if(!Str.IsNullOrEmpty(pluginAny))
@@ -249,6 +250,34 @@ public class DocumentationBuilder
             if(pfd != null)
             {
                 table.addValue(new String[] {pfd.parameter(), pfd.description().get(), pfd.example()});
+            }
+        }
+        MatrixItem tableItem = new HelpTable("", table, true, width);
+        root.insert(root.count(), tableItem);
+    }
+
+    private static void addDifferenceInActions(MatrixItem root, AbstractEvaluator evaluator,  Class<?> clazz) throws Exception
+    {
+        String[] headers = new String[] {"Action", "Difference"};
+        int[] width = new int[] {30, 70};
+        Table table = new Table(headers, evaluator);
+
+        for (Class<?> action : ActionsList.actions)
+        {
+            ActionAttribute attr = action.getAnnotation(ActionAttribute.class);
+            R difference;
+            switch (clazz.getSimpleName()){
+                case "WebAppFactory" :      difference = attr.WebPluginDifference();
+                                            break;
+                case "WinAppFactory" :      difference = attr.WinPluginDifference();
+                                            break;
+                case "SwingAppFactory" :    difference = attr.SwingPluginDifference();
+                                            break;
+                default: difference = R.DEFAULT;
+            }
+            if (difference != R.DEFAULT)
+            {
+                table.addValue(new String[] {clazz.getSimpleName(), difference.get()});
             }
         }
         MatrixItem tableItem = new HelpTable("", table, true, width);
