@@ -18,86 +18,86 @@ Test;EventHandlers;;;
     runMatrix;'EventHandlers'
 
 
-#Id;#Off;#TestCase;#Kind;#Depends;#For
-Test;1;Basic;;;
+#Id;#TestCase;#Kind;#Depends;#For
+Test;Basic;;;
     #Call;testName
     runMatrix;'Basic'
 
 
-#Id;#Off;#TestCase;#Kind;#Depends;#For
-Test;1;GUI;;;
+#Id;#TestCase;#Kind;#Depends;#For
+Test;GUI;;;
     #Call;testName
     runMatrix;'GUI'
 
 
-#Id;#Off;#TestCase;#Kind;#Depends;#For
-Test;1;System;;;
+#Id;#TestCase;#Kind;#Depends;#For
+Test;System;;;
     #Call;testName
     runMatrix;'System'
 
 
-#Id;#Off;#TestCase;#Kind;#Depends;#For
-Test;1;Report;;;
+#Id;#TestCase;#Kind;#Depends;#For
+Test;Report;;;
     #Call;testName
     runMatrix;'Report'
 
 
-#Id;#Off;#TestCase;#Kind;#Depends;#For
-Test;1;App;;;
+#Id;#TestCase;#Kind;#Depends;#For
+Test;App;;;
     #Call;testName
     runMatrix;'App'
 
 
-#Id;#Off;#TestCase;#Kind;#Depends;#For
-Test;1;Messages;;;
+#Id;#TestCase;#Kind;#Depends;#For
+Test;Messages;;;
     #Call;testName
     runMatrix;'Messages'
 
 
-#Id;#Off;#TestCase;#Kind;#Depends;#For
-Test;1;Clients;;;
+#Id;#TestCase;#Kind;#Depends;#For
+Test;Clients;;;
     #Call;testName
     runMatrix;'Clients'
 
 
-#Id;#Off;#TestCase;#Kind;#Depends;#For
-Test;1;Services;;;
+#Id;#TestCase;#Kind;#Depends;#For
+Test;Services;;;
     #Call;testName
     runMatrix;'Services'
 
 
-#Id;#Off;#TestCase;#Kind;#Depends;#For
-Test;1;Tables;;;
+#Id;#TestCase;#Kind;#Depends;#For
+Test;Tables;;;
     #Call;testName
     runMatrix;'Tables'
 
 
-#Id;#Off;#TestCase;#Kind;#Depends;#For
-Test;1;Text;;;
+#Id;#TestCase;#Kind;#Depends;#For
+Test;Text;;;
     #Call;testName
     runMatrix;'Text'
 
 
-#Id;#Off;#TestCase;#Kind;#Depends;#For
-Test;1;XML;;;
+#Id;#TestCase;#Kind;#Depends;#For
+Test;XML;;;
     #Call;testName
     runMatrix;'XML'
 
 
-#Id;#Off;#TestCase;#Kind;#Depends;#For
-Test;1;SQL;;;
+#Id;#TestCase;#Kind;#Depends;#For
+Test;SQL;;;
     #Call;testName
     runMatrix;'SQL'
 
 
-#Id;#Off;#TestCase;#Kind;#Depends;#For
-Test;1;Matrix;;;
+#Id;#TestCase;#Kind;#Depends;#For
+Test;Matrix;;;
     #Call;testName
     runMatrix;'Matrix'
 
 
-#Id;#Off;#TestCase;#Kind;#Depends;#For
-Test;1;Controls;;;
+#Id;#TestCase;#Kind;#Depends;#For
+Test;Controls;;;
     #Call;testName;param
     runControls;'Controls';'InternetExplorer'
 
@@ -111,8 +111,8 @@ Test;1;Controls;;;
     runControls;'Controls';'Win'
 
 
-#Id;#Off;#TestCase;#Kind;#Depends;#For
-Test;1;Keys;;;
+#Id;#TestCase;#Kind;#Depends;#For
+Test;Keys;;;
     #Call;testName
     runMatrix;'KeysChrome'
 
@@ -129,50 +129,50 @@ Test;1;Keys;;;
     runMatrix;'KeysWin'
 
 
-#Id;#Off;#TestCase;#Kind;#Depends;#For
-Test;1;Matchers;;;
+#Id;#TestCase;#Kind;#Depends;#For
+Test;Matchers;;;
     #Call;testName
     runMatrix;'Matchers'
 
 
-#Id;#Off;#TestCase;#Kind;#Depends;#For
-Test;1;Check plugin independs matrix;;;
+#Id;#TestCase;#Kind;#Depends;#For
+Test;Check plugin independs matrix;;;
     #Call;testName
     runMatrix;'PluginIndepends'
 
 
-#Id;#Off;#TestCase;#Kind;#Depends;#For
-Test;1;Check web plugin;;;
+#Id;#TestCase;#Kind;#Depends;#For
+Test;Check web plugin;;;
     #Call;testName
     runMatrix;'WebPlugin'
 
 
-#Id;#Off;#TestCase;#Kind;#Depends;#For
-Test;1;Check swing plugin;;;
+#Id;#TestCase;#Kind;#Depends;#For
+Test;Check swing plugin;;;
     #Call;testName
     runMatrix;'SwingPlugin'
 
 
-#Id;#Off;#TestCase;#Kind;#Depends;#For
-Test;1;Check win plugin;;;
+#Id;#TestCase;#Kind;#Depends;#For
+Test;Check win plugin;;;
     #Call;testName
     runMatrix;'WinPlugin'
 
 
-#Id;#Off;#TestCase;#Kind;#Depends;#For
-Test;1;Test RF.jf;;;
+#Id;#TestCase;#Kind;#Depends;#For
+Test;Test RF.jf;;;
     #Call;testName
     runMatrix;'TestRF'
 
 
-#Id;#Off;#TestCase;#Kind;#Depends;#For
-Test;1;Zip;;;
+#Id;#TestCase;#Kind;#Depends;#For
+Test;Zip;;;
     #Call;testName
     runMatrix;'Zip'
 
 
-#Id;#Off;#TestCase;#Kind;#Depends;#For
-Test;1;checlLayout;;;
+#Id;#TestCase;#Kind;#Depends;#For
+Test;checlLayout;;;
     #Call;testName
     runMatrix;'CheckLayout'
 
@@ -198,7 +198,7 @@ REPORT;Cleanup;;;
     TBLSLCT1.Out.size() == 0;'There are fails in the tests'
 
     #Id;#SubCase;testName
-    runMatrix;Running test;'KeysInternetExplorer'
+    runMatrix;Running test;'EventHandlers'
         #Id;#Action;$Matrix
         MXRN1;MatrixRun;matrixTestsPath + testName +  '.jf'
 
