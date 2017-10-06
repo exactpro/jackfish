@@ -17,7 +17,7 @@ public class VersionInfo
 		Package pkg = VersionInfo.class.getPackage();
 		String version = pkg.getImplementationVersion();
 
-		return version == null ? "LocalBuild" : version;
+		return version == null ? LOCAL_BUILD : version;
 	}
 
 	public static boolean isDevVersion()

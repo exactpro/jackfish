@@ -9,6 +9,7 @@
 package com.exactprosystems.jf.tool.main;
 
 import com.exactprosystems.jf.api.common.Str;
+import com.exactprosystems.jf.api.wizard.WizardAttribute;
 import com.exactprosystems.jf.api.wizard.WizardCategory;
 import com.exactprosystems.jf.api.wizard.WizardManager;
 import com.exactprosystems.jf.common.Settings;
@@ -283,20 +284,26 @@ public class MainController implements Initializable, ContainingParent
 						.orElse(null))
 				);
 
-		wizardManager.allWizards().forEach(wizardClass -> {
-			WizardCategory wizardCategory = wizardManager.categoryOf(wizardClass);
-			String wizardName = wizardManager.nameOf(wizardClass);
-			MenuItem menuItem = new MenuItem(wizardName);
+		wizardManager.allWizards()
+				.stream()
+				.filter(wizardClass -> {
+					WizardAttribute annotation = wizardClass.getAnnotation(WizardAttribute.class);
+					return VersionInfo.isDevVersion() || annotation != null && !annotation.experimental();
+				})
+				.forEach(wizardClass -> {
+					WizardCategory wizardCategory = wizardManager.categoryOf(wizardClass);
+					String wizardName = wizardManager.nameOf(wizardClass);
+					MenuItem menuItem = new MenuItem(wizardName);
 
-			menuItem.setOnAction(e -> Common.tryCatch(() -> {
-				Context context = factory.createContext();
-				ReportBuilder report = new ContextHelpFactory().createReportBuilder(null, null, new Date());
-				MatrixItem help = DocumentationBuilder.createHelpForWizard(report, context, wizardClass);
-				DialogsHelper.showHelpDialog(context, wizardName, report, help);
-			},""));
+					menuItem.setOnAction(e -> Common.tryCatch(() -> {
+						Context context = factory.createContext();
+						ReportBuilder report = new ContextHelpFactory().createReportBuilder(null, null, new Date());
+						MatrixItem help = DocumentationBuilder.createHelpForWizard(report, context, wizardClass);
+						DialogsHelper.showHelpDialog(context, wizardName, report, help);
+					},""));
 
-			map.get(wizardCategory).getItems().add(menuItem);
-		});
+					map.get(wizardCategory).getItems().add(menuItem);
+				});
 
 		Menu menuAll = new Menu("All");
 		menuAll.getItems().addAll(map.values().stream()
