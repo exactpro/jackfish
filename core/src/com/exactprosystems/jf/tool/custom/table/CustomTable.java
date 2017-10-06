@@ -19,7 +19,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 
 import java.util.List;
-import java.util.Optional;
+import java.util.function.Consumer;
 
 public class CustomTable<T> extends TableView<T>
 {
@@ -27,37 +27,27 @@ public class CustomTable<T> extends TableView<T>
 	private CustomTableColumn secondColumn;
 	private CustomTableColumn thirdColumn;
 	private CustomTableColumn fourthColumn;
-	private boolean mayChanged;
-	private ContextMenuListener<T> listener;
-	private ContextMenu contextMenu;
+	private Consumer<List<T>> deleteListener;
+	private Runnable addListener;
 
-	public enum EditState
+	public void setDeleteListener(Consumer <List <T>> deleteListener)
+	{
+		this.deleteListener = deleteListener;
+	}
+
+    public void setAddListener(Runnable addListener)
+    {
+        this.addListener = addListener;
+    }
+
+    public enum EditState
     {
         LABEL,
         TEXTFIELD,
         TEXTFIELD_READONLY
     }
 
-	public CustomTable(boolean isChanged)
-	{
-		this(null);
-		this.mayChanged = isChanged;
-		
-        getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
-        setOnKeyPressed(keyEvent -> {
-            if (keyEvent.getCode() == KeyCode.DELETE && keyEvent.isShiftDown())
-            {
-                deleteAllItems();
-            }
-            else if (keyEvent.getCode() == KeyCode.DELETE)
-            {
-                deleteItems();
-            }
-        });
-
-	}
-
-	public CustomTable(ContextMenuListener<T> listener)
+	public CustomTable(boolean allowAdd)
 	{
 		super();
 		this.setColumnResizePolicy(CONSTRAINED_RESIZE_POLICY);
@@ -65,17 +55,20 @@ public class CustomTable<T> extends TableView<T>
 		this.secondColumn		= new CustomTableColumn();
 		this.thirdColumn		= new CustomTableColumn();
 		this.fourthColumn		= new CustomTableColumn();
-		this.listener = listener;
-		this.mayChanged = true;
 		this.setEditable(true);
-		this.contextMenu = new ContextMenu();
-		this.setContextMenu(this.contextMenu);
-		addItemsToContextMenu();
-	}
+		addItemsToContextMenu(allowAdd);
 
-	public void setListener(ContextMenuListener<T> listener)
-	{
-		this.listener = listener;
+		getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+		setOnKeyPressed(keyEvent -> {
+			if (keyEvent.getCode() == KeyCode.DELETE && keyEvent.isShiftDown())
+			{
+				deleteAllItems();
+			}
+			else if (keyEvent.getCode() == KeyCode.DELETE)
+			{
+				deleteItems();
+			}
+		});
 	}
 
 	public void completeFirstColumn(String name, String valueFactory, EditState editState, boolean needTooltip)
@@ -135,17 +128,22 @@ public class CustomTable<T> extends TableView<T>
 		}));
 	}
 
-	private void addItemsToContextMenu()
+	private void addItemsToContextMenu(boolean allowAdd)
 	{
+		ContextMenu contextMenu = new ContextMenu();
+	    if(allowAdd)
+        {
+            MenuItem itemAdd = new MenuItem("Add new variable");
+            itemAdd.setOnAction(event -> this.addListener.run());
+            contextMenu.getItems().add(0, itemAdd);
+        }
+
 		MenuItem removeSelected = new MenuItem("Remove selected");
 		removeSelected.setGraphic(new ImageView(new Image(CssVariables.Icons.DELETE_ICON)));
 		MenuItem removeAll = new MenuItem("Remove all");
-		if (this.mayChanged)
-		{
-			ContextMenu contextMenu = new ContextMenu();
-			contextMenu.getItems().addAll(removeSelected, removeAll);
-			setContextMenu(contextMenu);
-		}
+
+		contextMenu.getItems().addAll(removeSelected, removeAll);
+		setContextMenu(contextMenu);
 
 		removeSelected.setOnAction(event -> deleteItems());
 		removeAll.setOnAction(event -> deleteAllItems());
@@ -154,13 +152,13 @@ public class CustomTable<T> extends TableView<T>
 	private void deleteItems()
 	{
 		List<T> selectedItems = FXCollections.observableArrayList(this.getSelectionModel().getSelectedItems());
-		onDeleteItems(selectedItems);
+		this.deleteListener.accept(selectedItems);
 		this.getItems().removeAll(selectedItems);
 	}
 
 	private void deleteAllItems()
 	{
-		onDeleteItems(this.getItems());
+		this.deleteListener.accept(this.getItems());
 		this.getItems().clear();
 	}
 
@@ -340,10 +338,5 @@ public class CustomTable<T> extends TableView<T>
         {
             return this.readOnly;
         }
-	}
-
-	private void onDeleteItems(List<T> items)
-	{
-		Optional.ofNullable(this.listener).ifPresent(l -> l.onDeleteItems(items));
 	}
 }

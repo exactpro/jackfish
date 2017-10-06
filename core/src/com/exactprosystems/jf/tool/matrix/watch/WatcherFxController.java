@@ -55,7 +55,7 @@ public class WatcherFxController implements Initializable, ContainingParent
 		assert btnAddNewExpression != null : "fx:id=\"btnAddNewExpression\" was not injected: check your FXML file 'WatcherFx.fxml'.";
 		assert btnClose != null : "fx:id=\"btnClose\" was not injected: check your FXML file 'WatcherFx.fxml'.";
 		assert btnAddAll != null : "fx:id=\"btnAddAll\" was not injected: check your FXML file 'WatcherFx.fxml'.";
-		this.table = new CustomTable<>(true);
+		this.table = new CustomTable<>(false);
 		this.table.setOnDragDropped(event -> {
 			Dragboard dragboard = event.getDragboard();
 			boolean b = false;
@@ -94,7 +94,7 @@ public class WatcherFxController implements Initializable, ContainingParent
 	{
 		this.dialog.initOwner(owner);
 		this.model = model;
-		this.table.setListener(this.model::removeItems);
+		this.table.setDeleteListener(this.model::removeItems);
 		this.expressionField = new ExpressionField(evaluator);
 		this.expressionField.setHelperForExpressionField("Watcher", matrix);
 		this.expressionField.setMaxWidth(1.7976931348623157E308);
