@@ -71,18 +71,6 @@ public class RowTable implements Map<String, Object>, Cloneable
     }
     
     //==============================================================================================
-    // Interface Cloneable
-    //==============================================================================================
-    @Override
-    public RowTable clone() throws CloneNotSupportedException
-    {
-        RowTable clone = new RowTable(this.table, this.index); 
-        clone.putAll(this);
-        return clone;
-    }
-
-
-    //==============================================================================================
     // Interface Map
     //==============================================================================================
 

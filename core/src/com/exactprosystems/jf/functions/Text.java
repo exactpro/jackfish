@@ -21,6 +21,11 @@ import java.util.function.Consumer;
 
 public class Text implements List<String>, Mutable, Cloneable
 {
+	private boolean changed;
+	private Consumer<Boolean> changeListener;
+	private List<String> list;
+	private static final Logger logger = Logger.getLogger(Text.class);
+
 	public Text()
 	{
 		this.changed = false;
@@ -42,6 +47,9 @@ public class Text implements List<String>, Mutable, Cloneable
 		}
 	}
 
+	/**
+	 * copy constructor
+	 */
 	public Text(Text text)
 	{
 		this();
@@ -68,22 +76,6 @@ public class Text implements List<String>, Mutable, Cloneable
 		this.changeListener = changeListener;
 	}
 
-	//==============================================================================================
-    // Interface Cloneable
-    //==============================================================================================
-    @Override
-    public Text clone() throws CloneNotSupportedException
-    {
-        Text clone = (Text)super.clone();
-        
-        clone.list = new ArrayList<String>();
-        clone.list.addAll(this.list);
-        
-        return clone;
-    }
-
-	//==============================================================================================
-	
 	public boolean save(String fileName)
 	{
 		try (Writer writer = CommonHelper.writerToFileName(fileName))
@@ -319,9 +311,4 @@ public class Text implements List<String>, Mutable, Cloneable
 			}
 		}
 	}
-	
-	private boolean changed;
-	private Consumer<Boolean> changeListener;
-	private List<String> list;
-	private static final Logger logger = Logger.getLogger(Text.class);
 }

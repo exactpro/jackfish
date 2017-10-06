@@ -135,18 +135,6 @@ public class CopyRowTable extends RowTable implements Cloneable
 		return true;
     }
 
-    //==============================================================================================
-	// Interface Cloneable
-	//==============================================================================================
-	@Override
-	public CopyRowTable clone() throws CloneNotSupportedException
-	{
-		CopyRowTable clone = new CopyRowTable(); 
-		clone.putAll(this);
-		return clone;
-	}
-
-
 	//==============================================================================================
 	// Interface Map
 	//==============================================================================================

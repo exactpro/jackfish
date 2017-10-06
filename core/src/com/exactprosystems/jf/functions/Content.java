@@ -10,7 +10,6 @@ package com.exactprosystems.jf.functions;
 
 import com.exactprosystems.jf.api.app.Mutable;
 import com.exactprosystems.jf.common.CommonHelper;
-import com.exactprosystems.jf.common.report.ReportBuilder;
 import org.apache.log4j.Logger;
 
 import java.io.*;
@@ -79,20 +78,6 @@ public class Content implements List<ContentItem>, Mutable, Cloneable
 	{
 		this.changeListener = changeListener;
 	}
-
-	//==============================================================================================
-    // Interface Cloneable
-    //==============================================================================================
-    @Override
-    public Content clone() throws CloneNotSupportedException
-    {
-        Content clone = (Content)super.clone();
-        
-        clone.list = new ArrayList<ContentItem>();
-        clone.list.addAll(this.list);
-        
-        return clone;
-    }
 
 	//==============================================================================================
 	
