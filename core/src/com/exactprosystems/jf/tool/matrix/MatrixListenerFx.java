@@ -28,22 +28,6 @@ public class MatrixListenerFx implements IMatrixListener
 		logger.trace("reset()");
 	}
 
-	@Override
-	public IMatrixListener clone() throws CloneNotSupportedException
-	{
-		try
-		{
-			MatrixListenerFx clone = ((MatrixListenerFx) super.clone());
-			clone.ok = true;
-			return clone;
-		}
-		catch (Exception e)
-		{
-			logger.error(e.getMessage(), e);
-			throw new InternalError();
-		}
-	}
-
 	public void matrixStarted(Matrix matrix)
 	{
 		logger.trace("matrixStarted()");

@@ -13,7 +13,6 @@ public interface IMatrixListener extends Cloneable
 	void		paused				(Matrix matrix, MatrixItem item);
 	void		finished			(Matrix matrix, MatrixItem item, Result result);
 	void		error				(Matrix matrix, int lineNumber, MatrixItem item, String message);
-	IMatrixListener clone () throws CloneNotSupportedException;
 	String		getExceptionMessage	();
 	boolean		isOk				();
 
