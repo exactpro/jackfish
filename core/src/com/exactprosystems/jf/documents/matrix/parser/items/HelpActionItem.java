@@ -60,13 +60,13 @@ public class HelpActionItem extends MatrixItem
             report.outLine(this, null, "{{`{{*Additional fields - No*}}`}}", null);
         }
         report.outLine(this, null, "{{`{{*Examples*}}`}}", null);
-		String exmaples = attr.constantExamples() == R.DEFAULT ? attr.examples() : attr.constantExamples().get();
+		String examples = attr.constantExamples() == R.DEFAULT ? attr.examples() : attr.constantExamples().get();
 		if (report instanceof HelpBuilder){
-            report.outLine(this, null, "{{`" + HTMLhelper.htmlescape(exmaples) + "`}}", null);
+            report.outLine(this, null, "{{`" + HTMLhelper.htmlescape(examples) + "`}}", null);
         }
         else
         {
-            report.outLine(this, null, "{{`" + exmaples + "`}}", null);
+            report.outLine(this, null, "{{`" + examples + "`}}", null);
         }
         if (attr.seeAlsoClass().length != 0)
         {

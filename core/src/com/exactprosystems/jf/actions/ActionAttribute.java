@@ -42,4 +42,8 @@ public @interface ActionAttribute
     @Deprecated
 	String examples() default "";
     R constantExamples() default R.DEFAULT;
+
+	R WebPluginDifference() default R.DEFAULT;
+	R WinPluginDifference() default R.DEFAULT;
+	R SwingPluginDifference() default R.DEFAULT;
 }
