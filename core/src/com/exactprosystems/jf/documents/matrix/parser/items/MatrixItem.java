@@ -18,6 +18,7 @@ import com.exactprosystems.jf.api.common.Str;
 import com.exactprosystems.jf.api.error.common.MatrixException;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.report.ReportBuilder;
+import com.exactprosystems.jf.common.undoredo.Command;
 import com.exactprosystems.jf.documents.config.Configuration;
 import com.exactprosystems.jf.documents.config.Context;
 import com.exactprosystems.jf.documents.matrix.Matrix;
@@ -34,6 +35,7 @@ import java.io.IOException;
 import java.util.*;
 import java.util.function.BiConsumer;
 import java.util.function.Predicate;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 public abstract class MatrixItem implements IMatrixItem, Mutable, Cloneable
@@ -1115,70 +1117,43 @@ public abstract class MatrixItem implements IMatrixItem, Mutable, Cloneable
         {
             list.add(this);
         }
-        for (MatrixItem item : this.children)
-        {
-            item.findAll(list, predicate);
-        }
+		this.children.forEach(item -> item.findAll(list, predicate));
     }
 
 	private void callAddListener(MatrixItem item, Integer index)
 	{
-		BiConsumer<Integer, MatrixItem> addListener = this.onAddListener;
-		MatrixItem parentItem = item;
-		while (addListener == null && parentItem != null)
+		if (this.getParent() != null)
 		{
-			addListener = parentItem.onAddListener;
-			parentItem = parentItem.getParent();
+			this.getParent().callAddListener(item, index);
 		}
-		if (addListener != null)
-		{
-			addListener.accept(index, item);
-		}
+		Optional.ofNullable(this.onAddListener).ifPresent(addListener -> addListener.accept(index, item));
 	}
 
 	private void callChangeParametersListener(MatrixItem item, Integer index)
 	{
-		BiConsumer<Integer, MatrixItem> addListener = this.onChangeParameter;
-		MatrixItem parentItem = item;
-		while (addListener == null && parentItem != null)
+		if (this.getParent() != null)
 		{
-			addListener = parentItem.onChangeParameter;
-			parentItem = parentItem.getParent();
+			this.getParent().callChangeParametersListener(item, index);
 		}
-		if (addListener != null)
-		{
-			addListener.accept(index, item);
-		}
+		Optional.ofNullable(this.onChangeParameter).ifPresent(chaneParameterListener -> chaneParameterListener.accept(index, item));
 	}
 
 	private void callRemoveListener(MatrixItem item, Integer index)
 	{
-		BiConsumer<Integer, MatrixItem> addListener = this.onRemoveListener;
-		MatrixItem parentItem = item;
-		while (addListener == null && parentItem != null)
+		if (this.getParent() != null)
 		{
-			addListener = parentItem.onRemoveListener;
-			parentItem = parentItem.getParent();
+			this.getParent().callRemoveListener(item, index);
 		}
-		if (addListener != null)
-		{
-			addListener.accept(index, item);
-		}
+		Optional.ofNullable(this.onRemoveListener).ifPresent(removeListener -> removeListener.accept(index, item));
 	}
 
 	private void callBreakPointListener(MatrixItem item, Boolean newValue)
 	{
-		BiConsumer<Boolean, MatrixItem> addListener = this.onBreakPointListener;
-		MatrixItem parentItem = item;
-		while (addListener == null && parentItem != null)
+		if (this.getParent() != null)
 		{
-			addListener = parentItem.onBreakPointListener;
-			parentItem = parentItem.getParent();
+			this.getParent().callBreakPointListener(item, newValue);
 		}
-		if (addListener != null)
-		{
-			addListener.accept(newValue, item);
-		}
+		Optional.ofNullable(this.onBreakPointListener).ifPresent(breakPointListener -> breakPointListener.accept(newValue, item));
 	}
 
 
