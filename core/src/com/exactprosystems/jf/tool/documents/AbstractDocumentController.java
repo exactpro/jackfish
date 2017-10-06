@@ -44,6 +44,7 @@ public abstract class AbstractDocumentController<T extends Document> implements 
 		this.model = (T) model;
 		this.customTab = customTab;
 		this.customTab.setContent(this.parent);
+		this.customTab.setController(this);
 		this.model.getNameProperty().setOnChangeListener((o, n) ->
 		{
 			this.customTab.setTitle(n);

@@ -280,7 +280,6 @@ public class MatrixFxController extends AbstractDocumentController<MatrixFx> imp
 		this.model.getRoot().setOnRemoveListener((integer, matrixItem) -> this.remove(matrixItem));
 		//TODO think about second parameter of method display;
 		this.model.getRoot().setOnAddListener((integer, matrixItem) -> this.display(matrixItem, false));
-		this.model.currentItemProperty().setOnChangeListener(((oldValue, newValue) -> this.setCurrent(newValue, false)));
 		this.model.timerProperty().setOnChangeListener((aLong, aLong2) -> this.displayTimer(aLong2, aLong2 > 0));
 		this.model.getRoot().setOnBreakPoint((oldValue,newValue) -> this.tree.refresh());
 		this.model.getRoot().setOnChangeParameter((integer, matrixItem) -> this.refreshParameters(matrixItem, integer));
@@ -513,7 +512,7 @@ public class MatrixFxController extends AbstractDocumentController<MatrixFx> imp
 	// ------------------------------------------------------------------------------------------------------------------
 	// display* methods
 	// ------------------------------------------------------------------------------------------------------------------
-	void displayTimer(long ms, boolean needShow)
+	private void displayTimer(long ms, boolean needShow)
 	{
 		Common.runLater(() -> {
 			if (ms < MIN_TIME_FOR_SHOW_WAITS && !lblTimer.isVisible())
@@ -550,6 +549,12 @@ public class MatrixFxController extends AbstractDocumentController<MatrixFx> imp
 	public void refreshParameters(MatrixItem item, int selectIndex)
 	{
 		this.tree.refreshParameters(item, selectIndex);
+	}
+
+	public void setCurrent(int itemNumber)
+	{
+		TreeItem<MatrixItem> treeItem = this.tree.find(item -> item.getNumber() == itemNumber);
+		this.tree.setCurrent(treeItem, true);
 	}
 
 	public void setCurrent(MatrixItem item, boolean needExpand)

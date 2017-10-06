@@ -426,26 +426,6 @@ public class MatrixFx extends Matrix
 		return items;
 	}
 
-	//	public void move(MatrixItem from, MatrixItem to) throws Exception
-	//	{
-	//		int index = to.getParent().index(to);
-	//		insert(to.getParent(), index == -1 ? 0 : index, from.clone());
-	//		remove(from);
-	//		enumerate();
-	//		refresh();
-	//		super.getChangedProperty().set(true);
-	//	}
-
-	public MutableValue<MatrixItem> currentItemProperty()
-	{
-		return this.currentItemProperty;
-	}
-
-	public void setCurrent(MatrixItem item, boolean needExpand)
-	{
-		this.currentItemProperty.set(item);
-	}
-
 	public void breakPoint(List<MatrixItem> items)
 	{
 		checkAndCall(items, item -> item.setBreakPoint(!item.isBreakPoint()));
@@ -668,7 +648,6 @@ public class MatrixFx extends Matrix
 		return parameter;
 	}
 
-	private MutableValue<MatrixItem>               currentItemProperty = new MutableValue<>();
 	private MutableValue<Long>                     timer               = new MutableValue<>(0L);
 	private MutableValue<Object>                   parameter           = new MutableValue<>(null);
 

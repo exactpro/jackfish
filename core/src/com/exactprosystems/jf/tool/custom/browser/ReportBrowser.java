@@ -10,20 +10,16 @@ package com.exactprosystems.jf.tool.custom.browser;
 import com.exactprosystems.jf.api.common.Sys;
 import com.exactprosystems.jf.documents.DocumentKind;
 import com.exactprosystems.jf.documents.config.Context;
-import com.exactprosystems.jf.documents.matrix.MatrixEngine;
-import com.exactprosystems.jf.documents.matrix.parser.items.MatrixItem;
+import com.exactprosystems.jf.documents.matrix.Matrix;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.CssVariables;
 import com.exactprosystems.jf.tool.custom.tab.CustomTab;
-import com.exactprosystems.jf.tool.helpers.DialogsHelper;
-import com.exactprosystems.jf.tool.matrix.MatrixFx;
-import javafx.application.Platform;
+import com.exactprosystems.jf.tool.documents.AbstractDocumentController;
+import com.exactprosystems.jf.tool.matrix.MatrixFxController;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Worker;
 import javafx.geometry.Pos;
-import javafx.scene.control.Button;
 import javafx.scene.control.*;
-import javafx.scene.control.MenuItem;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.*;
@@ -40,11 +36,10 @@ import org.w3c.dom.NodeList;
 import org.w3c.dom.events.EventListener;
 import org.w3c.dom.events.EventTarget;
 
-import java.awt.*;
+import java.awt.Toolkit;
 import java.awt.datatransfer.StringSelection;
 import java.io.File;
 import java.io.FileReader;
-import java.util.Date;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.stream.IntStream;
@@ -198,41 +193,24 @@ public class ReportBrowser extends BorderPane
 								Element element = (Element) aElement;
 								String matrixSourcePath = element.getAttribute("source");
 								final int number = Integer.parseInt(element.getTextContent());
-								final MatrixFx[] matrix = {null};
 								CustomTab customTab = Common.checkDocument(new File(matrixSourcePath));
-
-								if (customTab != null)
-								{
-									com.exactprosystems.jf.documents.Document document = customTab.getDocument();
-									if (document instanceof MatrixFx)
-									{
-										matrix[0] = (MatrixFx) document;
-										customTab.getTabPane().getSelectionModel().select(customTab);
-									}
-									else
-									{
-
-									}
-								}
-								else
+								//if custom tab null - load matrix
+								if (customTab == null)
 								{
 									Common.tryCatch(() -> {
-										matrix[0] = (MatrixFx) context.getFactory().createDocument(DocumentKind.MATRIX, matrixSourcePath);
-										matrix[0].load(new FileReader(matrixSourcePath));
-										matrix[0].display();
+										Matrix matrix = (Matrix) context.getFactory().createDocument(DocumentKind.MATRIX, matrixSourcePath);
+										matrix.load(new FileReader(matrixSourcePath));
+										context.getFactory().showDocument(matrix);
 									}, "Error on load matrix");
+									customTab = Common.checkDocument(new File(matrixSourcePath));
 								}
-
-								if (matrix[0] != null)
+								if (customTab != null)
 								{
-									MatrixItem item = matrix[0].find(matrixItem -> matrixItem.getNumber() == number);
-									if (item != null)
+									AbstractDocumentController<? extends com.exactprosystems.jf.documents.Document> controller = customTab.getController();
+									if (controller instanceof MatrixFxController)
 									{
-										matrix[0].setCurrent(item, false);
-									}
-									else
-									{
-										DialogsHelper.showError(String.format("Can't find item with number '%s' in a matrhix '%s'", number, matrixSourcePath));
+										customTab.getTabPane().getSelectionModel().select(customTab);
+										((MatrixFxController) controller).setCurrent(number);
 									}
 								}
 							}

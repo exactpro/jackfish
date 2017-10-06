@@ -14,6 +14,7 @@ import com.exactprosystems.jf.api.common.Str;
 import com.exactprosystems.jf.common.Settings;
 import com.exactprosystems.jf.common.highlighter.Highlighter;
 import com.exactprosystems.jf.common.undoredo.Command;
+import com.exactprosystems.jf.documents.Document;
 import com.exactprosystems.jf.documents.DocumentKind;
 import com.exactprosystems.jf.documents.config.Context;
 import com.exactprosystems.jf.documents.matrix.Matrix;
@@ -38,8 +39,10 @@ import com.exactprosystems.jf.tool.custom.number.NumberSpinner;
 import com.exactprosystems.jf.tool.custom.number.NumberTextField;
 import com.exactprosystems.jf.tool.custom.tab.CustomTab;
 import com.exactprosystems.jf.tool.custom.tab.CustomTabPane;
+import com.exactprosystems.jf.tool.documents.AbstractDocumentController;
 import com.exactprosystems.jf.tool.helpers.DialogsHelper;
 import com.exactprosystems.jf.tool.matrix.MatrixFx;
+import com.exactprosystems.jf.tool.matrix.MatrixFxController;
 import com.exactprosystems.jf.tool.matrix.params.ParametersPane;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
@@ -688,28 +691,31 @@ public class DisplayDriverFx implements DisplayDriver
 		}
 
 		CustomTab tab = Common.checkDocument(matrix);
-		Matrix matrixFx = null;
+		if (tab == null)
+		{
+			Common.tryCatch(() -> {
+				/*
+				checkConfig();
+				Matrix doc = (Matrix) this.factory.createDocument(DocumentKind.MATRIX, newName(Matrix.class));
+				doc.create();
+				Settings.SettingsValue copyright = settings.getValueOrDefault(Settings.GLOBAL_NS, "Main", "copyright", "");
+				String text = copyright.getValue().replaceAll("\\\\n", System.lineSeparator());
+				doc.addCopyright(text);
+				this.factory.showDocument(doc);
+				 */
+				Matrix matrixFx = (Matrix) context.getFactory().createDocument(DocumentKind.MATRIX, matrix.getNameProperty().get());
+				matrixFx.load(new FileReader(matrix.getNameProperty().get()));
+				context.getFactory().showDocument(matrixFx);
+			}, "Couldn't open the matrix " + matrix.getNameProperty().get());
+			tab = Common.checkDocument(matrix);
+		}
 		if (tab != null)
 		{
-			matrixFx = (MatrixFx) tab.getDocument();
-			tab.getTabPane().getSelectionModel().select(tab);
-		}
-		else
-		{
-			try
+			AbstractDocumentController<? extends Document> controller = tab.getController();
+			if (controller instanceof MatrixFxController)
 			{
-				matrixFx = (Matrix) context.getFactory().createDocument(DocumentKind.MATRIX, matrix.getNameProperty().get());
-				matrixFx.load(new FileReader(matrix.getNameProperty().get()));
-				matrixFx.display();
+				((MatrixFxController) controller).setCurrent(item, needExpand);
 			}
-			catch (Exception e)
-			{
-				DialogsHelper.showError("Couldn't open the matrix " + matrixFx);
-			}
-		}
-		if (matrixFx != null)
-		{
-			((MatrixFx) matrixFx).setCurrent(item, needExpand);
 		}
 	}
 
