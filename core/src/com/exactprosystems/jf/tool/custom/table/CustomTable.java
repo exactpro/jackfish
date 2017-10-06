@@ -247,23 +247,38 @@ public class CustomTable<T> extends TableView<T>
 		protected void updateItem(String s, boolean b)
 		{
 			super.updateItem(s, b);
+
+            CustomTableColumn column = ((CustomTableColumn) this.getTableColumn());
+
 			if (b || s == null)
 			{
 				setText(null);
 				setGraphic(null);
 			}
-			else
-			{
-                setText(getString());
-                setContentDisplay(ContentDisplay.TEXT_ONLY);
-
-                CustomTableColumn column = ((CustomTableColumn) this.getTableColumn());
-				if (column.isNeedTooltip())
-				{
-					Tooltip tip = new Tooltip(getString());
-					Tooltip.install(this, tip);
-				}
-			}
+            else
+            {
+                if(column.isReadOnly())
+                {
+                    if (textField == null)
+                    {
+                        textField = new TextField();
+                        textField.setEditable(false);
+                    }
+                    textField.setText(getString());
+                    setGraphic(textField);
+                    setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
+                }
+                else
+                {
+                    setText(getString());
+                    setContentDisplay(ContentDisplay.TEXT_ONLY);
+                    if (column.isNeedTooltip())
+                    {
+                        Tooltip tip = new Tooltip(getString());
+                        Tooltip.install(this, tip);
+                    }
+                }
+            }
 		}
 
 		private String getString()
