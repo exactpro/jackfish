@@ -120,7 +120,7 @@ public class WatcherFx
 		this.controller.displayNewVariable(newValue);
 	}
 
-	public void removeItems(List<Settings.SettingsValue> values)
+	void removeItems(List <Settings.SettingsValue> values)
 	{
 		this.values.removeAll(values);
 	}

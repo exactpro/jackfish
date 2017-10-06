@@ -16,8 +16,6 @@ import com.exactprosystems.jf.tool.custom.table.CustomTable;
 import com.exactprosystems.jf.tool.documents.AbstractDocumentController;
 import com.exactprosystems.jf.tool.documents.ControllerInfo;
 import javafx.collections.FXCollections;
-import javafx.event.ActionEvent;
-import javafx.scene.control.MenuItem;
 import javafx.scene.control.TableRow;
 import javafx.scene.layout.GridPane;
 
@@ -34,20 +32,11 @@ public class SystemVarsFxController extends AbstractDocumentController<SystemVar
 	public GridPane               grid;
 	public CustomTable<Parameter> tableView;
 
-	public void addNewVar(ActionEvent event)
-	{
-		tryCatch(this.model::addNewVariable, "Error on adding new var");
-	}
-
 	@Override
 	public void initialize(URL location, ResourceBundle resources)
 	{
 		super.initialize(location, resources);
-
 		this.tableView = new CustomTable<>(true);
-		MenuItem itemAdd = new MenuItem("Add new variable");
-		itemAdd.setOnAction(this::addNewVar);
-		this.tableView.getContextMenu().getItems().add(0, itemAdd);
 		this.grid.add(this.tableView, 0, 0);
 	}
 
@@ -55,16 +44,14 @@ public class SystemVarsFxController extends AbstractDocumentController<SystemVar
 	public void init(Document model, CustomTab customTab)
 	{
 		super.init(model, customTab);
-
-		this.tableView.setListener(this.model::removeParameters);
+		this.tableView.setAddListener(() -> tryCatch(this.model::addNewVariable, "Error on adding new var"));
+		this.tableView.setDeleteListener(this.model::removeParameters);
 		createTable();
-
 		this.model.getParameters().setOnChangeListener((o, n) -> {
 			this.tableView.setItems(FXCollections.observableList(this.model.getParameters()));
 			this.tableView.update();
 		});
 	}
-
 
 	private void createTable()
 	{
@@ -75,7 +62,7 @@ public class SystemVarsFxController extends AbstractDocumentController<SystemVar
 		this.tableView.onFinishEditFirstColumn((par, value) -> this.model.updateNameRow(current(), value));
 		this.tableView.onFinishEditSecondColumn((par, value) -> this.model.updateExpressionRow(current(), value));
 		this.tableView.onFinishEditFourthColumn((par, varlue) -> this.model.updateDescriptionRow(current(), varlue));
-		this.tableView.setRowFactory((v) -> new ColorRow());
+		this.tableView.setRowFactory(v -> new ColorRow());
 		this.tableView.setSortable(false);
 	}
 
