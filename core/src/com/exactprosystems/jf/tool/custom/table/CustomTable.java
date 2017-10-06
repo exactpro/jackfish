@@ -134,7 +134,10 @@ public class CustomTable<T> extends TableView<T>
 	    if(allowAdd)
         {
             MenuItem itemAdd = new MenuItem("Add new variable");
-            itemAdd.setOnAction(event -> this.addListener.run());
+            if(this.addListener != null)
+			{
+				itemAdd.setOnAction(event -> this.addListener.run());
+			}
             contextMenu.getItems().add(0, itemAdd);
         }
 
@@ -151,15 +154,18 @@ public class CustomTable<T> extends TableView<T>
 
 	private void deleteItems()
 	{
-		List<T> selectedItems = FXCollections.observableArrayList(this.getSelectionModel().getSelectedItems());
-		this.deleteListener.accept(selectedItems);
-		this.getItems().removeAll(selectedItems);
+		if(this.deleteListener != null)
+		{
+			this.deleteListener.accept(FXCollections.observableArrayList(this.getSelectionModel().getSelectedItems()));
+		}
 	}
 
 	private void deleteAllItems()
 	{
-		this.deleteListener.accept(this.getItems());
-		this.getItems().clear();
+		if(this.deleteListener != null)
+		{
+			this.deleteListener.accept(this.getItems());
+		}
 	}
 
     private void onEditCommitColumn(CustomTableColumn c, final EditCommit<T> editCommit)
