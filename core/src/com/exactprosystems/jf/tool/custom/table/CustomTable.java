@@ -20,6 +20,7 @@ import javafx.scene.input.KeyCode;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Consumer;
 
 public class CustomTable<T> extends TableView<T>
 {
@@ -28,7 +29,7 @@ public class CustomTable<T> extends TableView<T>
 	private CustomTableColumn thirdColumn;
 	private CustomTableColumn fourthColumn;
 	private boolean mayChanged;
-	private ContextMenuListener<T> listener;
+	private Consumer<List<T>> listener;
 	private ContextMenu contextMenu;
 
 	public enum EditState
@@ -57,7 +58,7 @@ public class CustomTable<T> extends TableView<T>
 
 	}
 
-	public CustomTable(ContextMenuListener<T> listener)
+	public CustomTable(Consumer<List<T>> listener)
 	{
 		super();
 		this.setColumnResizePolicy(CONSTRAINED_RESIZE_POLICY);
@@ -73,7 +74,7 @@ public class CustomTable<T> extends TableView<T>
 		addItemsToContextMenu();
 	}
 
-	public void setListener(ContextMenuListener<T> listener)
+	public void setListener(Consumer<List<T>> listener)
 	{
 		this.listener = listener;
 	}
@@ -344,6 +345,6 @@ public class CustomTable<T> extends TableView<T>
 
 	private void onDeleteItems(List<T> items)
 	{
-		Optional.ofNullable(this.listener).ifPresent(l -> l.onDeleteItems(items));
+		Optional.ofNullable(this.listener).ifPresent(l -> l.accept(items));
 	}
 }
