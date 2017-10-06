@@ -51,7 +51,12 @@ import java.util.Map;
 		seeAlsoClass 	= {Step.class}
 	)
 public final class TestCase extends MatrixItem 
-{	
+{
+	private Parameter plugin;
+	private MutableValue<String> name;
+	private MutableValue<String> kind;
+	private MutableValue<String> depends;
+
 	public TestCase()
 	{
 		super();
@@ -68,16 +73,18 @@ public final class TestCase extends MatrixItem
         this.kind.set(ScreenshotKind.Never.name());
 	}
 
+	public TestCase(TestCase testCase)
+	{
+		this.plugin = new Parameter(testCase.plugin);
+		this.name = new MutableValue<>(testCase.name);
+		this.kind = new MutableValue<>(testCase.kind);
+		this.depends = new MutableValue<>(testCase.depends);
+	}
 
 	@Override
-	public MatrixItem clone() throws CloneNotSupportedException
+	protected MatrixItem makeCopy()
 	{
-		TestCase clone = (TestCase) super.clone();
-		clone.plugin = this.plugin.clone();
-		clone.name = this.name.clone();
-        clone.kind = this.kind.clone();
-        clone.depends = this.depends.clone();
-		return clone;
+		return new TestCase(this);
 	}
 
 	@Override
@@ -347,10 +354,4 @@ public final class TestCase extends MatrixItem
 	{
         super.afterReport(report);
 	}
-
-	
-    private Parameter plugin;
-	private MutableValue<String> name;
-    private MutableValue<String> kind;
-    private MutableValue<String> depends;
 }

@@ -44,6 +44,14 @@ import java.util.Map;
 )
 public class RawTable extends MatrixItem
 {
+	private MutableValue<String> typeName;
+	private Table table;
+
+	private int prefCols;
+	private int prefRows;
+
+	private boolean firstUsing = true;
+
 	public RawTable()
 	{
 		super();
@@ -53,12 +61,21 @@ public class RawTable extends MatrixItem
 		this.prefRows = this.table.size();
 	}
 
-	@Override
-	public MatrixItem clone() throws CloneNotSupportedException
+	/**
+	 * copy constructor
+	 */
+	public RawTable(RawTable rt)
 	{
-		RawTable data = ((RawTable) super.clone());
-		data.typeName = this.typeName.clone();
-		return data;
+		this.typeName = new MutableValue<>(rt.typeName);
+		this.table = new Table(rt.table);
+		this.prefCols = rt.prefCols;
+		this.prefRows = rt.prefRows;
+	}
+
+	@Override
+	protected MatrixItem makeCopy()
+	{
+		return new RawTable(this);
 	}
 
 	@Override
@@ -203,7 +220,7 @@ public class RawTable extends MatrixItem
 
 			Variables vars = isGlobal() ? evaluator.getGlobals() : evaluator.getLocals();
 
-			ReturnAndResult ret = new ReturnAndResult(start, Result.Passed, new Table(this.table, evaluator));
+			ReturnAndResult ret = new ReturnAndResult(start, Result.Passed, new Table(this.table));
 
 			if (!super.id.isNullOrEmpty())
 			{
@@ -224,11 +241,4 @@ public class RawTable extends MatrixItem
 	// ==============================================================================================
 	// Private members
 	// ==============================================================================================
-	private MutableValue<String> typeName;
-	private Table table;
-
-	private int prefCols;
-	private int prefRows;
-	
-	private boolean firstUsing = true;
 }

@@ -13,12 +13,11 @@ import com.exactprosystems.jf.documents.matrix.parser.items.MatrixItem;
 import com.exactprosystems.jf.documents.matrix.parser.items.MutableArrayList;
 import com.exactprosystems.jf.documents.matrix.parser.items.TypeMandatory;
 import com.exactprosystems.jf.documents.matrix.parser.listeners.IMatrixListener;
+import org.apache.log4j.Logger;
 
- import java.util.*;
+import java.util.*;
 import java.util.Map.Entry;
 import java.util.stream.Collectors;
-
-import org.apache.log4j.Logger;
 
  public class Parameters extends MutableArrayList<Parameter> implements Cloneable//, Map<String, Object>
 {
@@ -29,19 +28,33 @@ import org.apache.log4j.Logger;
 	{
 	}
 
+	/**
+	 * copy constructor
+	 */
+	public Parameters(Parameters params)
+	{
+		params.stream()
+				.map(Parameter::new)
+				.forEach(this::add);
+	}
+
+	public Map<String, Object> makeCopy()
+	{
+		return this.stream()
+				.collect(Collectors.toMap(
+						Parameter::getName,
+						Parameter::getValue,
+						(u,v) -> {throw new IllegalStateException(String.format("Duplicate key %s", u));} ,
+						LinkedHashMap::new
+				));
+	}
+
 	public void setValue(Parameters value)
 	{
 		clear();
 		addAll(value);
 	}
 
-	public Map<String, Object> makeCopy()
-	{
-		Map<String, Object> result = new LinkedHashMap<>();
-		forEach(e -> result.put(e.getName(), e.getValue()));
-		return result;
-	}
-	
 	public Parameters select(TypeMandatory ... types)
 	{
 		if (types == null || types.length == 0)
@@ -53,28 +66,6 @@ import org.apache.log4j.Logger;
 		Parameters result = new Parameters();
 		result.addAll(stream().filter(param -> set.contains(param.type)).collect(Collectors.toList()));
 		return result;
-	}
-
-	//------------------------------------------------------------------------------------------------------------------
-	// implements Cloneable
-	//------------------------------------------------------------------------------------------------------------------
-	@Override
-	public Parameters clone()
-	{
-		Parameters clone = ((Parameters) super.clone());
-		clone = new Parameters();
-		for (Parameter parameter : this)
-		{
-			try
-            {
-                clone.add(parameter.clone());
-            }
-            catch (CloneNotSupportedException e)
-            {
-                logger.error(e.getMessage(), e);
-            }
-		}
-		return clone;
 	}
 
 	public boolean containsKey(Object key)

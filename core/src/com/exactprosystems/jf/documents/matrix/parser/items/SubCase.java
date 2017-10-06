@@ -48,22 +48,27 @@ import java.util.Map;
 )
 public final class SubCase extends MatrixItem
 {
+	private boolean	call	= false;
+
+	private MutableValue<String> name;
+
 	public SubCase()
 	{
 		super();
-		this.name = new MutableValue<String>();
+		this.name = new MutableValue<>();
+	}
+
+	public SubCase(SubCase subCase)
+	{
+		this.name = new MutableValue<>(subCase.name);
 	}
 
 	@Override
-	public MatrixItem clone() throws CloneNotSupportedException
+	protected MatrixItem makeCopy()
 	{
-		SubCase clone = (SubCase) super.clone();
-		clone.call = call;
-		clone.name = name.clone();
-		return clone;
+		return new SubCase(this);
 	}
 
-	
 	//==============================================================================================
 	// Interface Mutable
 	//==============================================================================================
@@ -275,8 +280,4 @@ public final class SubCase extends MatrixItem
 			table.addValues(parameter.getName(), parameter.getExpression(), parameter.getValue());
 		}
 	}
-
-	private boolean	call	= false;
-
-	private MutableValue<String> name;
 }

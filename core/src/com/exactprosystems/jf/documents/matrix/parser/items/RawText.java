@@ -45,7 +45,12 @@ import java.util.stream.Collectors;
 public class RawText extends MatrixItem
 {
     private static final String RAW_PREFIX = "~";
-    
+	private MutableValue<String>    highlighterMutableValue;
+	private MutableValue<String>    description;
+	private Text                    text;
+
+	private boolean					firstUsing	= true;
+
 	public RawText()
 	{
 		super();
@@ -55,13 +60,20 @@ public class RawText extends MatrixItem
 		this.highlighterMutableValue = new MutableValue<>(Highlighter.None.name());
 	}
 
-	@Override
-	public MatrixItem clone() throws CloneNotSupportedException
+	/**
+	 * copy constructor
+	 */
+	public RawText(RawText rt)
 	{
-		RawText data = ((RawText) super.clone());
-		data.text = this.text.clone();
-		data.description = this.description.clone();
-		return data;
+		this.highlighterMutableValue = new MutableValue<>(rt.highlighterMutableValue);
+		this.description = new MutableValue<>(rt.description);
+		this.text = new Text(rt.text);
+	}
+
+	@Override
+	protected MatrixItem makeCopy()
+	{
+		return new RawText(this);
 	}
 
 	@Override
@@ -249,10 +261,4 @@ public class RawText extends MatrixItem
 	// ==============================================================================================
 	// Private members
 	// ==============================================================================================
-	
-	private MutableValue<String>    highlighterMutableValue;
-	private MutableValue<String>    description;
-	private Text                    text;
-
-	private boolean					firstUsing	= true;
 }

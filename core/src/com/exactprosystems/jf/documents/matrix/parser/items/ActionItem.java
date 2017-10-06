@@ -35,7 +35,8 @@ import java.util.Map;
 	)
 public final class ActionItem extends MatrixItem
 {
-
+	private AbstractAction action;
+	private Parameter assertBool;
 
 	public ActionItem()
 	{
@@ -48,7 +49,21 @@ public final class ActionItem extends MatrixItem
 		this();
 		this.action = actionByName(actionName);
 	}
-	
+
+	/**
+	 * copy constructor
+	 */
+	public ActionItem(ActionItem actionItem)
+	{
+		this.assertBool = new Parameter(actionItem.assertBool);
+	}
+
+	@Override
+	protected MatrixItem makeCopy()
+	{
+		return new ActionItem(this);
+	}
+
 	public Class<? extends AbstractAction> getActionClass()
 	{
 	    return this.action.getClass();
@@ -272,8 +287,4 @@ public final class ActionItem extends MatrixItem
 
 		return ret;
 	}
-
-	private AbstractAction action;
-
-	private Parameter assertBool;
 }

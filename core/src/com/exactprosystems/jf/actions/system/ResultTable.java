@@ -113,8 +113,8 @@ public class ResultTable extends AbstractAction
 			super.setError("The result table is null", ErrorKind.EMPTY_PARAMETER);
 			return;
 		}
-		
-		Table copy = result.clone();
+
+		Table copy = new Table(result);
 		if (report.reportIsOn()) {		//TODO zzz
 			copy.setValue(copy.size() - 1, map);
 		}

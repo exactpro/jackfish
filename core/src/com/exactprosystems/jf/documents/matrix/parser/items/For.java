@@ -54,6 +54,11 @@ import java.util.concurrent.atomic.AtomicReference;
 	)
 public final class For extends MatrixItem
 {
+	private MutableValue<String> var;
+	private Parameter from;
+	private Parameter to;
+	private Parameter step;
+
 	public For()
 	{
 		super();
@@ -63,17 +68,23 @@ public final class For extends MatrixItem
 		this.step	= new Parameter(Tokens.Step.get(), 	null); 
 	}
 
-	@Override
-	public MatrixItem clone() throws CloneNotSupportedException
+	/**
+	 * copy constructor
+	 */
+	public For(For f)
 	{
-		For clone = ((For) super.clone());
-		clone.var = var.clone();
-		clone.from = from.clone();
-		clone.to = to.clone();
-		clone.step = step.clone();
-		return clone;
+		this.var = new MutableValue<>(f.var);
+		this.from = new Parameter(f.from);
+		this.to = new Parameter(f.to);
+		this.step = new Parameter(f.step);
 	}
-	
+
+	@Override
+	protected MatrixItem makeCopy()
+	{
+		return new For(this);
+	}
+
 	//==============================================================================================
 	// Interface Mutable
 	//==============================================================================================
@@ -310,8 +321,5 @@ public final class For extends MatrixItem
 	}
 
 
-    private MutableValue<String> var; 
-	private Parameter from; 
-	private Parameter to; 
-	private Parameter step;
+
 }

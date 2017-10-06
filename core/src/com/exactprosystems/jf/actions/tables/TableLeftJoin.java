@@ -87,7 +87,7 @@ public class TableLeftJoin extends AbstractAction
 	public void doRealAction(Context context, ReportBuilder report, Parameters parameters, AbstractEvaluator evaluator) throws Exception
 	{
 		Parameters extra = parameters.select(TypeMandatory.Extra);
-		Table newTable = this.leftTable.clone();
+		Table newTable = new Table(this.leftTable);
 		newTable.clear();
 
 		for (Parameter column : extra)

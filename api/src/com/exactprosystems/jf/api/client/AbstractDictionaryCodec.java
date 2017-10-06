@@ -25,7 +25,7 @@ public abstract class AbstractDictionaryCodec implements ICodec
 	@Override
 	public MapMessage convert(String messageType, Map<String, Object> message) throws Exception
 	{
-		MapMessage result = new MapMessage(null);
+		MapMessage result = new MapMessage((String)null);
 		IMessage mess = this.dictionary.getMessage(messageType);
 		if (mess == null)
 		{

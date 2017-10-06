@@ -25,31 +25,39 @@ import java.io.InputStream;
 
 public class HelpWizardItem extends MatrixItem
 {
-    public HelpWizardItem(WizardManager manager, Class<? extends Wizard> itemClazz)
-    {
-        this.manager = manager;
-        this.wizardClazz = itemClazz;
-    }
-    
-    @Override
-    public String getItemName()
-    {
-        return this.manager.nameOf(this.wizardClazz);
-    }
-    
+	private Class<? extends Wizard> wizardClazz;
+	private WizardManager manager;
+
+	public HelpWizardItem(WizardManager manager, Class<? extends Wizard> itemClazz)
+	{
+		this.manager = manager;
+		this.wizardClazz = itemClazz;
+	}
+
+	@Override
+	protected MatrixItem makeCopy()
+	{
+		return new HelpWizardItem(this.manager, this.wizardClazz);
+	}
+
+	@Override
+	public String getItemName()
+	{
+		return this.manager.nameOf(this.wizardClazz);
+	}
+
 	public void actionReport(ReportBuilder report)
 	{
 		String picture = this.manager.pictureOf(this.wizardClazz);
 		String shortDescription = this.manager.shortDescriptionOf(this.wizardClazz);
 		String category = this.manager.categoryOf(this.wizardClazz).toString();
 		String detailedDescription = this.manager.detailedDescriptionOf(this.wizardClazz);
-        
+
 		report.itemIntermediate(this);
-        
+
 		byte[] bytes = null;
-		try(
-				InputStream inputStream = this.wizardClazz.getResourceAsStream(picture);
-				ByteArrayOutputStream buffer = new ByteArrayOutputStream()
+		try (InputStream inputStream = this.wizardClazz.getResourceAsStream(picture);
+			 ByteArrayOutputStream buffer = new ByteArrayOutputStream()
 		)
 		{
 			int read;
@@ -67,7 +75,7 @@ public class HelpWizardItem extends MatrixItem
 		{
 			logger.error(e.getMessage(), e);
 		}
-        
+
 		report.outLine(this, null, "{{`" + shortDescription + "`}}", null);
 		report.outLine(this, null, "{{`{{*Wizard category: *}} " + category + "`}}", null);
 		report.outImage(this, null, null, bytes, "{{* View example *}}", -1, ImageReportMode.AsEmbeddedImage);
@@ -75,24 +83,21 @@ public class HelpWizardItem extends MatrixItem
 	}
 
 
-    @Override
-    protected ReturnAndResult executeItSelf(long start, Context context, IMatrixListener listener, AbstractEvaluator evaluator, ReportBuilder report, Parameters parameters)
-    {
-        try
-        {
-            if (this.wizardClazz != null)
-            {
-                actionReport(report);
-            }
-        }
-        catch (Exception e)
-        {
-            logger.error(e.getMessage(), e);
-            return new ReturnAndResult(start, Result.Failed, e.getMessage(), ErrorKind.EXCEPTION, this);
-        }
-        return new ReturnAndResult(start, Result.Passed); 
-    }
-	
-    private Class<? extends Wizard> wizardClazz;
-    private WizardManager manager;
+	@Override
+	protected ReturnAndResult executeItSelf(long start, Context context, IMatrixListener listener, AbstractEvaluator evaluator, ReportBuilder report, Parameters parameters)
+	{
+		try
+		{
+			if (this.wizardClazz != null)
+			{
+				actionReport(report);
+			}
+		}
+		catch (Exception e)
+		{
+			logger.error(e.getMessage(), e);
+			return new ReturnAndResult(start, Result.Failed, e.getMessage(), ErrorKind.EXCEPTION, this);
+		}
+		return new ReturnAndResult(start, Result.Passed);
+	}
 }

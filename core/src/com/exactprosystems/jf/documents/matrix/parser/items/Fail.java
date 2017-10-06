@@ -53,18 +53,26 @@ import java.util.Map;
 )
 public class Fail extends MatrixItem
 {
+	private Parameter	failValue	= null;
+
 	public Fail()
 	{
 		super();
 		this.failValue = new Parameter(Tokens.Fail.get(), null);
 	}
 
-	@Override
-	public MatrixItem clone() throws CloneNotSupportedException
+	/**
+	 * copy constructor
+	 */
+	public Fail(Fail fail)
 	{
-		Fail clone = (Fail) super.clone();
-		clone.failValue = failValue;
-		return clone;
+		this.failValue = new Parameter(fail.failValue);
+	}
+
+	@Override
+	protected MatrixItem makeCopy()
+	{
+		return new Fail(this);
 	}
 
 	//==============================================================================================
@@ -166,6 +174,4 @@ public class Fail extends MatrixItem
 		return SearchHelper.matches(Tokens.Fail.get(), what, caseSensitive, wholeWord)
 				|| SearchHelper.matches(this.failValue.getExpression(), what, caseSensitive, wholeWord);
 	}
-
-	private Parameter	failValue	= null;
 }

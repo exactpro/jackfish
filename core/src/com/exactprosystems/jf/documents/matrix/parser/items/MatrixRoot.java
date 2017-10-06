@@ -24,12 +24,20 @@ import java.io.File;
 )
 public class MatrixRoot extends MatrixItem
 {
+	private String matrixName = null;
+
 	public MatrixRoot(String matrixName)
 	{
 		if (matrixName != null)
 		{
 			this.matrixName = new File(matrixName).getName();
 		}
+	}
+
+	@Override
+	protected MatrixItem makeCopy()
+	{
+		return new MatrixRoot(this.matrixName);
 	}
 
 	public String getMatrixName()
@@ -48,7 +56,4 @@ public class MatrixRoot extends MatrixItem
 	{
 		return "Matrix " + "(" + this.matrixName + ")";
 	}
-
-	private String matrixName = null;
-
 }

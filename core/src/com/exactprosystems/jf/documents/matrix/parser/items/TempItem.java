@@ -30,6 +30,12 @@ import java.util.stream.Collectors;
 		hasChildren = false)
 public class TempItem extends MatrixItem
 {
+	@Override
+	protected MatrixItem makeCopy()
+	{
+		return new TempItem();
+	}
+
 	private ArrayList<String> list = new ArrayList<>();
 
 	private boolean isInit = false;

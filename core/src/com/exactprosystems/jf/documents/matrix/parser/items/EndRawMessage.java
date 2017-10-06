@@ -22,4 +22,9 @@ hasChildren 	= false
 )
 public class EndRawMessage extends MatrixItem
 {
+	@Override
+	protected MatrixItem makeCopy()
+	{
+		return new EndRawMessage();
+	}
 }

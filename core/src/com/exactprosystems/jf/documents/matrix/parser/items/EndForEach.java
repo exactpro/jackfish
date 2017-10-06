@@ -22,4 +22,9 @@ hasChildren 	= false
 )
 public class EndForEach extends MatrixItem
 {
+	@Override
+	protected MatrixItem makeCopy()
+	{
+		return new EndForEach();
+	}
 }

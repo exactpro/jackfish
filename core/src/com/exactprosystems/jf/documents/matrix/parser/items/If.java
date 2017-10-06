@@ -54,18 +54,23 @@ import java.util.Map;
 )
 public class If extends MatrixItem
 {
+	private Parameter condition;
+
 	public If()
 	{
 		super();
 		this.condition	= new Parameter(Tokens.If.get(),	null); 
 	}
 
-	@Override
-	public MatrixItem clone() throws CloneNotSupportedException
+	public If(If oldIf)
 	{
-		If clone = (If) super.clone();
-		clone.condition = condition.clone();
-		return clone;
+		this.condition = new Parameter(oldIf.condition);
+	}
+
+	@Override
+	protected MatrixItem makeCopy()
+	{
+		return new If(this);
 	}
 
 	//==============================================================================================
@@ -137,7 +142,6 @@ public class If extends MatrixItem
         super.checkItSelf(context, evaluator, listener, parameters);
         this.condition.prepareAndCheck(evaluator, listener, this);
     }
-    
 
 	@Override
 	protected ReturnAndResult executeItSelf(long start, Context context, IMatrixListener listener, AbstractEvaluator evaluator, ReportBuilder report, Parameters parameters)
@@ -188,6 +192,4 @@ public class If extends MatrixItem
 			return new ReturnAndResult(start, Result.Failed, e.getMessage(), ErrorKind.EXCEPTION, this);
 		}
 	}
-
-	private Parameter condition;
 }

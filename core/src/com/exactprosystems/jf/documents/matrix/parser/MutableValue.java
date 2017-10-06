@@ -8,10 +8,10 @@
 
 package com.exactprosystems.jf.documents.matrix.parser;
 
+import com.exactprosystems.jf.api.app.Mutable;
+
 import java.util.Objects;
 import java.util.function.BiConsumer;
-
-import com.exactprosystems.jf.api.app.Mutable;
 
 public class MutableValue<T> implements Mutable, Getter<T>, Setter<T>, Cloneable
 {
@@ -28,6 +28,16 @@ public class MutableValue<T> implements Mutable, Getter<T>, Setter<T>, Cloneable
 	{
 		this();
 		this.value = value;
+	}
+
+	/**
+	 * copy constructor
+	 */
+	public MutableValue(MutableValue<T> mutableValue)
+	{
+		this();
+		this.value = mutableValue.value;
+		this.changed = mutableValue.changed;
 	}
 	
 	@Override
@@ -71,17 +81,6 @@ public class MutableValue<T> implements Mutable, Getter<T>, Setter<T>, Cloneable
 	public T get()
 	{
 		return this.value;
-	}
-
-	@Override
-	public MutableValue<T> clone() throws CloneNotSupportedException
-	{
-		@SuppressWarnings("unchecked")
-		MutableValue<T> clone = ((MutableValue<T>) super.clone());
-		clone.value = this.value;
-		clone.changed = this.changed;
-
-		return clone;
 	}
 
 	@Override

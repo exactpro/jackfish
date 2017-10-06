@@ -18,17 +18,33 @@ import com.exactprosystems.jf.documents.matrix.parser.ReturnAndResult;
 import com.exactprosystems.jf.documents.matrix.parser.listeners.IMatrixListener;
 import com.exactprosystems.jf.functions.Content;
 
-
-
 public class HelpContent extends MatrixItem
 {
+	private String title;
+	private Content content;
+
     public HelpContent(String title, Content content)
     {
     	this.title = title;
     	this.content = content;
     }
 
-    @Override
+	/**
+	 * copy constructor
+	 */
+	public HelpContent(HelpContent helpContent)
+	{
+		this.title = helpContent.title;
+		this.content = new Content(helpContent.content);
+	}
+
+	@Override
+	protected MatrixItem makeCopy()
+	{
+		return new HelpContent(this);
+	}
+
+	@Override
     public String getItemName()
     {
         return "";
@@ -48,7 +64,4 @@ public class HelpContent extends MatrixItem
         }
         return new ReturnAndResult(start, Result.Passed); 
     }
-    
-    private String title;
-    private Content content;
 }

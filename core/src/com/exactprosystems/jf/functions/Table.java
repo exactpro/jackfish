@@ -79,15 +79,17 @@ public class Table implements List<RowTable>, Mutable, Cloneable
 		this.innerList = new ArrayList<>();
 	}
 
-	public Table(Table table, AbstractEvaluator evaluator)
+	/**
+	 * copy constructor
+	 */
+	public Table(Table table)
 	{
-		this(evaluator);
-        this.addColumns(Arrays.stream(table.headers).map(h -> h.name).toArray(String[]::new));
-	    for (int i = 0; i < table.size(); i++)
-        {
-	        RowTable row = table.get(i);
-	        this.add(row);
-        }
+		if (table != null)
+		{
+			this.evaluator = table.evaluator;
+			this.addColumns(Arrays.stream(table.headers).map(h -> h.name).toArray(String[]::new));
+			this.addAll(table);
+		}
 	}
 
 	public Table(String[] headers, AbstractEvaluator evaluator)
@@ -211,25 +213,6 @@ public class Table implements List<RowTable>, Mutable, Cloneable
 	}
 	//endregion
 
-	//region Interface Cloneable
-	@Override
-	public Table clone() throws CloneNotSupportedException
-	{
-		Table clone = (Table)super.clone();
-		
-		clone.headers = this.headers.clone();
-		clone.innerList = new ArrayList<>();
-		for (Map<Header, Object> item : this.innerList)
-		{
-			Map<Header, Object> copy = new LinkedHashMap<>();
-			for (Entry<Header, Object> e : item.entrySet())
-			{
-				copy.put(e.getKey(), e.getValue());
-			}
-			clone.innerList.add(copy);
-		}
-		return clone;
-	}
 	//endregion
 
 	public void setOnChangeListener(BiConsumer<Integer, Integer> consumer)

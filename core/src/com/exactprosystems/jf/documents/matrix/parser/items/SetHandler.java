@@ -38,21 +38,27 @@ import java.util.stream.Collectors;
 		seeAlsoClass 	= {SubCase.class, Step.class, TestCase.class}
 )
 public final class SetHandler extends MatrixItem 
-{	
+{
+	private MutableValue<String> name;
+	private MutableValue<String> kind;
+
 	public SetHandler()
 	{
 		super();
-		this.name = new MutableValue<String>();
-        this.kind = new MutableValue<String>();
+		this.name = new MutableValue<>();
+        this.kind = new MutableValue<>();
+	}
+
+	public SetHandler(SetHandler handler)
+	{
+		this.name = new MutableValue<>(handler.name);
+		this.kind = new MutableValue<>(handler.kind);
 	}
 
 	@Override
-	public MatrixItem clone() throws CloneNotSupportedException
+	protected MatrixItem makeCopy()
 	{
-		SetHandler setHandler = ((SetHandler) super.clone());
-		setHandler.name = this.name.clone();
-        setHandler.kind = this.kind.clone();
-		return setHandler;
+		return new SetHandler(this);
 	}
 
 	@Override
@@ -165,6 +171,4 @@ public final class SetHandler extends MatrixItem
 	//==============================================================================================
 	// Private members
 	//==============================================================================================
-	private MutableValue<String> name;
-    private MutableValue<String> kind;
 }

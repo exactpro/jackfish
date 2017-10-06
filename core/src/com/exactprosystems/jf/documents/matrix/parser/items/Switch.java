@@ -56,18 +56,23 @@ import java.util.Map;
 )
 public class Switch extends MatrixItem
 {
+	private Parameter switcher;
+
 	public Switch()
 	{
 		super();
 		this.switcher	= new Parameter(Tokens.Switch.get(),	 null); 
 	}
 
-	@Override
-	public MatrixItem clone() throws CloneNotSupportedException
+	public Switch(Switch sw)
 	{
-		Switch clone = (Switch) super.clone();
-		clone.switcher = switcher.clone();
-		return clone;
+		this.switcher = new Parameter(sw.switcher);
+	}
+
+	@Override
+	protected MatrixItem makeCopy()
+	{
+		return new Switch(this);
 	}
 
 	//==============================================================================================
@@ -218,5 +223,4 @@ public class Switch extends MatrixItem
 		}
 	}
 
-	private Parameter switcher;
 }

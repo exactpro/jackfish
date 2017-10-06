@@ -16,9 +16,15 @@ import org.apache.log4j.Logger;
 import java.io.*;
 import java.util.*;
 import java.util.function.Consumer;
+import java.util.stream.Collectors;
 
 public class Content implements List<ContentItem>, Mutable, Cloneable
 {
+	private static final Logger logger = Logger.getLogger(Content.class);
+	private boolean changed;
+	private Consumer<Boolean> changeListener;
+	private List<ContentItem> list;
+
 	public Content()
 	{
 		this.changed = false;
@@ -38,6 +44,20 @@ public class Content implements List<ContentItem>, Mutable, Cloneable
 		{
 			read(reader);
 		}
+	}
+
+	/**
+	 * copy constructor
+	 */
+	public Content(Content content)
+	{
+		this.list = content.list.stream()
+				.map(ContentItem::toString)
+				.map(ContentItem::new)
+				.collect(Collectors.toList());
+
+		this.changed = content.changed;
+		this.changeListener = content.changeListener;
 	}
 	
 	//==============================================================================================
@@ -284,9 +304,4 @@ public class Content implements List<ContentItem>, Mutable, Cloneable
 			}
 		}
 	}
-	
-	private boolean changed;
-	private Consumer<Boolean> changeListener;
-	private List<ContentItem> list;
-	private static final Logger logger = Logger.getLogger(Content.class);
 }

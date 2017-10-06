@@ -12,15 +12,8 @@ import com.csvreader.CsvWriter;
 import com.exactprosystems.jf.api.error.ErrorKind;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.report.ReportBuilder;
-import com.exactprosystems.jf.common.report.ReportTable;
 import com.exactprosystems.jf.documents.config.Context;
-import com.exactprosystems.jf.documents.matrix.parser.DisplayDriver;
-import com.exactprosystems.jf.documents.matrix.parser.Parameters;
-import com.exactprosystems.jf.documents.matrix.parser.Parser;
-import com.exactprosystems.jf.documents.matrix.parser.Result;
-import com.exactprosystems.jf.documents.matrix.parser.ReturnAndResult;
-import com.exactprosystems.jf.documents.matrix.parser.SearchHelper;
-import com.exactprosystems.jf.documents.matrix.parser.Tokens;
+import com.exactprosystems.jf.documents.matrix.parser.*;
 import com.exactprosystems.jf.documents.matrix.parser.listeners.IMatrixListener;
 
 import java.util.List;
@@ -58,10 +51,23 @@ import java.util.List;
 		seeAlsoClass 	= {Fail.class}
 )
 public final class OnError extends MatrixItem 
-{	
+{
+	private MatrixError matrixError = null;
+
 	public OnError()
 	{
 		super();
+	}
+
+	public OnError(OnError onError)
+	{
+		this.matrixError = new MatrixError(onError.matrixError);
+	}
+
+	@Override
+	protected MatrixItem makeCopy()
+	{
+		return new OnError(this);
 	}
 
 	public void setError(MatrixError error)
@@ -121,6 +127,4 @@ public final class OnError extends MatrixItem
 			return new ReturnAndResult(start, Result.Failed, e.getMessage(), ErrorKind.EXCEPTION, this);
 		}
 	}
-	
-	private MatrixError matrixError = null;
 }

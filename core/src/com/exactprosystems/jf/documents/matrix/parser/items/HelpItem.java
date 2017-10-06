@@ -23,12 +23,20 @@ import java.util.stream.Collectors;
 
 public class HelpItem extends MatrixItem
 {
-    public HelpItem(Class<? extends MatrixItem> itemClazz)
+	private Class<? extends MatrixItem> itemClazz;
+
+	public HelpItem(Class<? extends MatrixItem> itemClazz)
     {
         this.itemClazz = itemClazz;
     }
-    
-    @Override
+
+	@Override
+	protected MatrixItem makeCopy()
+	{
+		return new HelpItem(this.itemClazz);
+	}
+
+	@Override
     public String getItemName()
     {
         return "";
@@ -67,7 +75,6 @@ public class HelpItem extends MatrixItem
 
     }
 
-
     @Override
     protected ReturnAndResult executeItSelf(long start, Context context, IMatrixListener listener, AbstractEvaluator evaluator, ReportBuilder report, Parameters parameters)
     {
@@ -85,6 +92,4 @@ public class HelpItem extends MatrixItem
         }
         return new ReturnAndResult(start, Result.Passed); 
     }
-	
-    private Class<? extends MatrixItem> itemClazz;
 }

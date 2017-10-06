@@ -70,18 +70,26 @@ import java.util.Map;
 	)
 public class Case extends MatrixItem
 {
+	private Parameter variant;
+
 	public Case()
 	{
 		super();
 		this.variant = new Parameter(Tokens.Case.get(),	null); 
 	}
-	
-	@Override
-	public MatrixItem clone() throws CloneNotSupportedException
+
+	/**
+	 * copy constructor
+	 */
+	public Case(Case caze)
 	{
-		Case clone = (Case) super.clone();
-		clone.variant = variant.clone();
-		return clone;
+		this.variant = new Parameter(caze.variant);
+	}
+
+	@Override
+	protected MatrixItem makeCopy()
+	{
+		return new Case(this);
 	}
 
 	//==============================================================================================
@@ -152,6 +160,4 @@ public class Case extends MatrixItem
 	{
 		return this.variant;
 	}
-
-	private Parameter variant;
 }

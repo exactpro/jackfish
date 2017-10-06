@@ -51,18 +51,25 @@ import java.util.Map;
 )
 public class While extends MatrixItem
 {
+	private Parameter condition;
+
+	private int loops = 0;
+
 	public While()
 	{
 		super();
 		this.condition = new Parameter(Tokens.While.get(),	null); 
 	}
 
-	@Override
-	public MatrixItem clone() throws CloneNotSupportedException
+	public While(While wh)
 	{
-		While clone = (While) super.clone();
-		clone.condition = condition;
-		return clone;
+		this.condition = new Parameter(wh.condition);
+	}
+
+	@Override
+	protected MatrixItem makeCopy()
+	{
+		return new While(this);
 	}
 
 	@Override
@@ -213,8 +220,4 @@ public class While extends MatrixItem
         }
         return (Boolean)bool;
     }
-    
-	private Parameter condition;
-	
-	private int loops = 0;
 }

@@ -53,6 +53,10 @@ import java.util.concurrent.atomic.AtomicReference;
 )
 public final class ForEach extends MatrixItem
 {
+
+	private MutableValue<String>	var;
+	private Parameter				in;
+
 	public ForEach()
 	{
 		super();
@@ -60,13 +64,19 @@ public final class ForEach extends MatrixItem
 		this.in = new Parameter(Tokens.In.get(), null);
 	}
 
-	@Override
-	public MatrixItem clone() throws CloneNotSupportedException
+	/**
+	 * copy constructor
+	 */
+	public ForEach(ForEach forEach)
 	{
-		ForEach clone = ((ForEach) super.clone());
-		clone.var = var.clone();
-		clone.in = in.clone();
-		return clone;
+		this.var = new MutableValue<>(forEach.var);
+		this.in = new Parameter(forEach.in);
+	}
+
+	@Override
+	protected MatrixItem makeCopy()
+	{
+		return new ForEach(this);
 	}
 
 	// ==============================================================================================
@@ -241,6 +251,4 @@ public final class ForEach extends MatrixItem
 	    return ret;
 	}
 
-	private MutableValue<String>	var;
-	private Parameter				in;
 }

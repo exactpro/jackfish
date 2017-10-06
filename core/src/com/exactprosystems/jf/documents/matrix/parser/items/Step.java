@@ -48,6 +48,11 @@ import java.util.stream.Collectors;
 	)
 public class Step extends MatrixItem
 {
+	private Parameter identify;
+	private MutableValue<String> kind;
+	private Parameter plugin;
+	private MutableValue<String> depends;
+
 	public Step()
 	{
 		super();
@@ -57,22 +62,25 @@ public class Step extends MatrixItem
         this.depends = new MutableValue<String>();
 	}
 
+	public Step(Step step)
+	{
+		this.identify = new Parameter(step.identify);
+		this.kind = new MutableValue<>(step.kind);
+		this.plugin = new Parameter(step.plugin);
+		this.depends = new MutableValue<>(step.depends);
+	}
+
+	@Override
+	protected MatrixItem makeCopy()
+	{
+		return new Step(this);
+	}
+
 	@Override
 	public String toString()
 	{
         String s = this.identify.getExpression();
         return Str.IsNullOrEmpty(s) ? super.toString() : s;
-	}
-
-	@Override
-	public MatrixItem clone() throws CloneNotSupportedException
-	{
-		Step clone = (Step) super.clone();
-		clone.kind = this.kind;
-        clone.plugin = this.plugin.clone();
-		clone.identify = this.identify;
-		clone.depends = this.depends;
-		return clone;
 	}
 
 	@Override
@@ -348,9 +356,4 @@ public class Step extends MatrixItem
             table.updateValue(position, row);
         }
     }
-    
-    private Parameter identify;
-    private MutableValue<String> kind;
-    private Parameter plugin;
-    private MutableValue<String> depends;
 }

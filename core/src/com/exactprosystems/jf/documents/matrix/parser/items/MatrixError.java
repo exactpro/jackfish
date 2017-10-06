@@ -12,6 +12,20 @@ import com.exactprosystems.jf.api.error.ErrorKind;
 
 public class MatrixError
 {
+	public MatrixItem 	Where;
+	public String 		Message;
+	public ErrorKind 	Kind;
+
+	public MatrixError(MatrixError error)
+	{
+		if (error != null)
+		{
+			this.Where = error.Where.makeCopy();
+			this.Message = error.Message;
+			this.Kind = error.Kind;
+		}
+	}
+
 	public MatrixError(String message, ErrorKind kind, MatrixItem where)
 	{
 		this.Message 	= message;
@@ -24,8 +38,4 @@ public class MatrixError
 	{
 		return this.Message;
 	}
-	
-	public MatrixItem 	Where;
-	public String 		Message;
-	public ErrorKind 	Kind;
 }

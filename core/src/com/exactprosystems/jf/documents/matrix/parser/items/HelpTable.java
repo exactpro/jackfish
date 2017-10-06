@@ -8,8 +8,6 @@
 
 package com.exactprosystems.jf.documents.matrix.parser.items;
 
-import java.util.Collections;
-
 import com.exactprosystems.jf.api.error.ErrorKind;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.report.ReportBuilder;
@@ -20,9 +18,16 @@ import com.exactprosystems.jf.documents.matrix.parser.ReturnAndResult;
 import com.exactprosystems.jf.documents.matrix.parser.listeners.IMatrixListener;
 import com.exactprosystems.jf.functions.Table;
 
+import java.util.Collections;
+
 
 public class HelpTable extends MatrixItem
 {
+	private String str;
+	private Table table;
+	private int[]  widths;
+	private boolean bordered;
+
     public HelpTable(String str, Table table, boolean bordered, int[] widths)
     {
         this.str = str;
@@ -34,6 +39,24 @@ public class HelpTable extends MatrixItem
     public HelpTable(String str, Table table, int[] widths)
 	{
         this(str, table, false, widths);
+	}
+
+	/**
+	 * copy constructor
+	 */
+	public HelpTable(HelpTable helpTable)
+	{
+		this.str = helpTable.str;
+		this.table = new Table(helpTable.table);
+		this.widths = new int[helpTable.widths.length];
+		System.arraycopy(helpTable.widths, 0, this.widths, 0, helpTable.widths.length);
+		this.bordered = helpTable.bordered;
+	}
+
+	@Override
+	protected MatrixItem makeCopy()
+	{
+		return new HelpTable(this);
 	}
 
 	@Override
@@ -56,9 +79,4 @@ public class HelpTable extends MatrixItem
         }
         return new ReturnAndResult(start, Result.Passed); 
 	}
-
-	private String str;
-	private Table table;
-    private int[]  widths;
-    private boolean bordered;
 }

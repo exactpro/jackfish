@@ -8,19 +8,7 @@
 
 package com.exactprosystems.jf.documents.matrix.parser.items;
 
-import java.awt.image.BufferedImage;
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileReader;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.URL;
-
-import javax.imageio.ImageIO;
-
 import com.exactprosystems.jf.api.app.ImageWrapper;
-import com.exactprosystems.jf.api.common.Str;
 import com.exactprosystems.jf.api.error.ErrorKind;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.report.ReportBuilder;
@@ -31,14 +19,29 @@ import com.exactprosystems.jf.documents.matrix.parser.Result;
 import com.exactprosystems.jf.documents.matrix.parser.ReturnAndResult;
 import com.exactprosystems.jf.documents.matrix.parser.listeners.IMatrixListener;
 
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.InputStream;
 
 public class HelpPicture extends MatrixItem
 {
+	private String title;
+	private InputStream stream = null;
+	private int scale = 100;
+
+	//TODO remove this input stream.
 	public HelpPicture(String title, InputStream stream, int scale)
 	{
 	    this.title = title;
         this.stream = stream;
         this.scale = scale;
+	}
+
+	@Override
+	protected MatrixItem makeCopy()
+	{
+		//TODO
+		return new HelpPicture(this.title, this.stream, this.scale);
 	}
 
 	@Override
@@ -63,8 +66,4 @@ public class HelpPicture extends MatrixItem
         }
         return new ReturnAndResult(start, Result.Passed); 
 	}
-
-	private String title;
-	private InputStream stream = null;
-	private int scale = 100;
 }

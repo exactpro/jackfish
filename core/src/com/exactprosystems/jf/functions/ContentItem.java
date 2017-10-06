@@ -11,8 +11,7 @@ package com.exactprosystems.jf.functions;
 public class ContentItem
 {
     private String name;
-    private int level;
-    
+
     public ContentItem()
     {
         this("");
@@ -21,9 +20,8 @@ public class ContentItem
     public ContentItem(String name)
     {
         this.name = name;
-        this.level = 0;
     }
-    
+
     @Override
     public String toString()
     {

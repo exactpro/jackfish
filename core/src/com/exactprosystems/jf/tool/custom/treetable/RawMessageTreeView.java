@@ -318,7 +318,7 @@ public class RawMessageTreeView extends TreeView<RawMessageTreeView.MessageBean>
 
 	private MapMessage extractMapMessage(IMessage reference, Function<String, Boolean> function)
 	{
-		MapMessage mapMessage = new MapMessage(null);
+		MapMessage mapMessage = new MapMessage((String)null);
 		extractFields(mapMessage, reference.getMessageField(), function);
 		return mapMessage;
 	}

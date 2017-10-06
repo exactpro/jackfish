@@ -49,18 +49,23 @@ import java.util.Map;
 )
 public class Return extends MatrixItem
 {
+	private Parameter returnValue = null;
+
 	public Return()
 	{
 		super();
 		this.returnValue = new Parameter(Tokens.Return.get(),	null); 
 	}
 
-	@Override
-	public MatrixItem clone() throws CloneNotSupportedException
+	public Return(Return ret)
 	{
-		Return clone = (Return) super.clone();
-		clone.returnValue = returnValue;
-		return clone;
+		this.returnValue = new Parameter(ret.returnValue);
+	}
+
+	@Override
+	protected MatrixItem makeCopy()
+	{
+		return new Return(this);
 	}
 
 	//==============================================================================================
@@ -168,6 +173,5 @@ public class Return extends MatrixItem
 				SearchHelper.matches(this.returnValue.getExpression(), what, caseSensitive, wholeWord);
 	}
 
-	private Parameter returnValue = null;
 }
 

@@ -6,12 +6,20 @@ public class CommentString implements Mutable
 {
 	public CommentString()
 	{
-		this(null);
+		this((String) null);
 	}
 	
 	public CommentString(String string)
 	{
 		this.str = string;
+	}
+
+	/**
+	 * copy constructor
+	 */
+	public CommentString(CommentString cs)
+	{
+		this.str = cs.str;
 	}
 
 	@Override

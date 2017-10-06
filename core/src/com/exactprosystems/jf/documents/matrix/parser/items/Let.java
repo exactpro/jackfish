@@ -48,18 +48,26 @@ import java.util.Map;
 	)
 public class Let extends MatrixItem
 {
+	private Parameter value = null;
+
 	public Let()
 	{
 		super();
 		this.value = new Parameter(Tokens.Let.get(),	null); 
 	}
 
-	@Override
-	public MatrixItem clone() throws CloneNotSupportedException
+	/**
+	 * copy constructor
+	 */
+	public Let(Let let)
 	{
-		Let clone = (Let) super.clone();
-		clone.value = value.clone();
-		return clone;
+		this.value = new Parameter(let.value);
+	}
+
+	@Override
+	protected MatrixItem makeCopy()
+	{
+		return new Let(this);
 	}
 
 	//==============================================================================================
@@ -172,6 +180,5 @@ public class Let extends MatrixItem
 				SearchHelper.matches(this.value.getExpression(), what, caseSensitive, wholeWord);
 	}
 
-	private Parameter value = null;
 }
 

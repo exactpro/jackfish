@@ -19,9 +19,17 @@ import com.exactprosystems.jf.documents.matrix.parser.listeners.IMatrixListener;
 
 public class HelpTextLine extends MatrixItem
 {
+	private String str = null;
+
 	public HelpTextLine(String name)
 	{
 		this.str = name;
+	}
+
+	@Override
+	protected MatrixItem makeCopy()
+	{
+		return new HelpTextLine(this.str);
 	}
 
 	@Override
@@ -44,6 +52,4 @@ public class HelpTextLine extends MatrixItem
         }
         return executeChildren(start, context, listener, evaluator, report, new Class<?>[] {  });
 	}
-
-	private String str = null;
 }

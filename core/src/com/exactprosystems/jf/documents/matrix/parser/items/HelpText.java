@@ -27,12 +27,22 @@ import com.exactprosystems.jf.documents.matrix.parser.listeners.IMatrixListener;
 
 public class HelpText extends MatrixItem
 {
-    public HelpText(InputStream stream)
+	private InputStream stream = null;
+
+	//TODO remove this stream
+	public HelpText(InputStream stream)
     {
         this.stream = stream;
     }
 
-    @Override
+	@Override
+	protected MatrixItem makeCopy()
+	{
+		//TODO
+		return new HelpText(this.stream);
+	}
+
+	@Override
     public String getItemName()
     {
         return "";
@@ -139,6 +149,4 @@ public class HelpText extends MatrixItem
             report.outLine(this, null, text, null);
         }
     }
-    
-    private InputStream stream = null;
 }

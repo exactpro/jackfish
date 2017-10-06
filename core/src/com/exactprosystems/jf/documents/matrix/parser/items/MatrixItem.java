@@ -27,14 +27,11 @@ import com.exactprosystems.jf.functions.Notifier;
 import com.exactprosystems.jf.functions.RowTable;
 import org.apache.log4j.Logger;
 
-import java.awt.*;
+import java.awt.Rectangle;
+import java.awt.Toolkit;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
@@ -52,46 +49,35 @@ public abstract class MatrixItem implements IMatrixItem, Mutable, Cloneable
 		this.children 	= new MutableArrayList<MatrixItem>();
 	}
 
-	//==============================================================================================
-	//implements Cloneable
-	//==============================================================================================
-	@SuppressWarnings("unchecked")
-	@Override
-	public MatrixItem clone() throws CloneNotSupportedException
+	public final MatrixItem createCopy()
 	{
-		try
-		{
-			MatrixItem clone = ((MatrixItem) super.clone());
+		MatrixItem matrixItem = this.makeCopy();
+		matrixItem.number = this.number;
+		matrixItem.id = new MutableValue<>(this.id);
+		matrixItem.off = new MutableValue<>(this.off);
+		matrixItem.repOff = new MutableValue<>(this.repOff);
+		matrixItem.global = new MutableValue<>(this.global);
+		matrixItem.ignoreErr = new MutableValue<>(this.ignoreErr);
 
-			clone.number 	= 0;
-			clone.id 		= this.id.clone();
-			clone.off 		= this.off.clone();
-            clone.repOff    = this.repOff.clone();
-			clone.global 	= this.global.clone();
-			clone.ignoreErr = this.ignoreErr.clone();
+		matrixItem.source = this.source;
+		matrixItem.owner = this.owner;
+		
+		matrixItem.comments = this.comments.stream()
+				.map(CommentString::new)
+				.collect(Collectors.toCollection(MutableArrayList::new));
+		matrixItem.parent = this.parent == null ? null : this.parent.makeCopy();
+		matrixItem.children = new MutableArrayList<>(this.children.size());
+		this.children.stream()
+				.map(MatrixItem::createCopy)
+				.peek(copy -> copy.parent = matrixItem)
+				.forEach(matrixItem.children::add);
 
-            clone.source    = this.source;
-			clone.owner     = this.owner;
-			clone.comments 	= (MutableArrayList<CommentString>) comments.clone();
-			clone.parent 	= this.parent;
-			clone.children 	= new MutableArrayList<MatrixItem>(children.size());
-			for (MatrixItem child : children)
-			{
-				MatrixItem item = child.clone();
-				item.parent = clone;
-				clone.children.add(item);
-			}
-			clone.result 	= null;
-			clone.parameters = this.parameters.clone();
-
-			return clone;
-		}
-		catch (Exception e)
-		{
-			// this exception from ArrayList.clone()
-			throw new InternalError();
-		}
+		matrixItem.result = null;
+		matrixItem.parameters = new Parameters(this.parameters);
+		return matrixItem;
 	}
+
+	protected abstract MatrixItem makeCopy();
 
 	@Override
 	public String toString()

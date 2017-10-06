@@ -1,8 +1,6 @@
 package com.exactprosystems.jf.documents.matrix.parser.items;
 
 import com.csvreader.CsvWriter;
-import com.exactprosystems.jf.common.report.ReportBuilder;
-import com.exactprosystems.jf.common.report.ReportTable;
 import com.exactprosystems.jf.documents.config.Context;
 import com.exactprosystems.jf.documents.matrix.parser.DisplayDriver;
 import com.exactprosystems.jf.documents.matrix.parser.SearchHelper;
@@ -48,6 +46,12 @@ public class Default extends MatrixItem
     {
         super();
     }
+
+	@Override
+	protected MatrixItem makeCopy()
+	{
+		return new Default();
+	}
 
 	@Override
 	protected Object displayYourself(DisplayDriver driver, Context context)

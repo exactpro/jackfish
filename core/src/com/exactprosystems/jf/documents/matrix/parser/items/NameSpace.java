@@ -55,21 +55,25 @@ import java.util.Map;
 )
 public final class NameSpace extends MatrixItem
 {
+	private MutableValue<String> name;
+
 	public NameSpace()
 	{
 		super();
 		this.name = new MutableValue<String>();
 	}
 
-	@Override
-	public MatrixItem clone() throws CloneNotSupportedException
+	public NameSpace(NameSpace ns)
 	{
-		NameSpace clone = (NameSpace) super.clone();
-		clone.name = name.clone();
-		return clone;
+		this.name = new MutableValue<>(ns.name);
 	}
 
-	
+	@Override
+	protected MatrixItem makeCopy()
+	{
+		return new NameSpace(this);
+	}
+
 	//==============================================================================================
 	// Interface Mutable
 	//==============================================================================================
@@ -223,6 +227,4 @@ public final class NameSpace extends MatrixItem
 	// ==============================================================================================
 	// Private members
 	// ==============================================================================================
-
-	private MutableValue<String> name;
 }

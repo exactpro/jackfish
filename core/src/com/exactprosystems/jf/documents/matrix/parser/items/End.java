@@ -22,6 +22,21 @@ public class End extends MatrixItem
 		this.setNubmer(-1);
 	}
 
+	/**
+	 * copy constructor
+	 */
+	public End(End end)
+	{
+		this.parent = end.parent.makeCopy();
+		this.setNubmer(-1);
+	}
+
+	@Override
+	protected MatrixItem makeCopy()
+	{
+		return new End(this);
+	}
+
 	@Override
 	protected Object displayYourself(DisplayDriver driver, Context context)
 	{

@@ -7,11 +7,6 @@
 ////////////////////////////////////////////////////////////////////////////////
 package com.exactprosystems.jf.documents.matrix.parser.items;
 
-import java.lang.reflect.Method;
-import java.lang.reflect.Parameter;
-import java.util.Arrays;
-import java.util.stream.Collectors;
-
 import com.exactprosystems.jf.api.common.DescriptionAttribute;
 import com.exactprosystems.jf.api.error.ErrorKind;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
@@ -22,12 +17,24 @@ import com.exactprosystems.jf.documents.matrix.parser.Result;
 import com.exactprosystems.jf.documents.matrix.parser.ReturnAndResult;
 import com.exactprosystems.jf.documents.matrix.parser.listeners.IMatrixListener;
 
+import java.lang.reflect.Method;
+import java.util.Arrays;
+import java.util.stream.Collectors;
+
 public class HelpClass extends MatrixItem
 {
-    public HelpClass(Class<?> clazz)
+	private Class<?> clazz;
+
+	public HelpClass(Class<?> clazz)
     {
         this.clazz = clazz;
     }
+
+	@Override
+	protected MatrixItem makeCopy()
+	{
+		return new HelpClass(this.clazz);
+	}
     
     @Override
     public String getItemName()
@@ -87,6 +94,4 @@ public class HelpClass extends MatrixItem
         }
         return new ReturnAndResult(start, Result.Passed); 
     }
-	
-    private Class<?> clazz;
 }

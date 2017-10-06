@@ -118,14 +118,14 @@ public class Matrix extends AbstractDocument implements IMatrix
 		return getNameProperty().toString();
 	}
 	
-     public Matrix makeCopy() throws Exception
-      {
-          Matrix copy = new Matrix(getNameProperty().get(), getFactory(), this.matrixListener, this.isLibrary);
-          copy.root = this.root.clone();
-          copy.root.init(copy, copy);
-          copy.enumerate();
-          return copy;
-      }
+	public Matrix makeCopy() throws Exception
+	{
+		Matrix copy = new Matrix(getNameProperty().get(), getFactory(), this.matrixListener, this.isLibrary);
+		copy.root = this.root.createCopy();
+		copy.root.init(copy, copy);
+		copy.enumerate();
+		return copy;
+	}
 
 	
 	// ==============================================================================================================================

@@ -363,10 +363,10 @@ public class MatrixFx extends Matrix
 	}
 
 
-	public void parameterRemove(MatrixItem item, int index) throws CloneNotSupportedException
+	public void parameterRemove(MatrixItem item, int index)
 	{
 		int number = item.getNumber();
-		Parameter last = item.getParameters().getByIndex(index).clone();
+		Parameter last = new Parameter(item.getParameters().getByIndex(index));
 		Command undo = () ->
 		{
 			findAndCallParameters(number, par -> par.insert(index, last.getName(), last.getExpression(), last.getType()), -1);
@@ -449,7 +449,7 @@ public class MatrixFx extends Matrix
 	public void setupCall(MatrixItem item, String reference, Parameters parameters)
 	{
 		int number = item.getNumber();
-		Parameters last = item.getParameters().clone();
+		Parameters last = new Parameters(item.getParameters());
 		Command undo = () ->
 		{
 			findAndCallParameters(number, par -> par.setValue(last), -1);
@@ -518,16 +518,6 @@ public class MatrixFx extends Matrix
 		MatrixItem[] items = new MatrixItem[]{newItem};
 		insert(item, items);
 		return items;
-	}
-
-	public void move(MatrixItem from, MatrixItem to) throws Exception
-	{
-		int index = to.getParent().index(to);
-		insert(to.getParent(), index == -1 ? 0 : index, from.clone());
-		remove(from);
-		enumerate();
-        refresh();
-		super.getChangedProperty().set(true);
 	}
 
 	public void setCurrent(MatrixItem item, boolean needExpand)

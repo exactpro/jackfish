@@ -22,4 +22,9 @@ hasChildren 	= false
 )
 public class EndRawTable extends MatrixItem
 {
+	@Override
+	protected MatrixItem makeCopy()
+	{
+		return new EndRawTable();
+	}
 }

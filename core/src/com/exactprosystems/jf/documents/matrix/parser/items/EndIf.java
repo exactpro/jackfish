@@ -22,4 +22,9 @@ import com.exactprosystems.jf.documents.matrix.parser.Tokens;
 	)
 public class EndIf extends MatrixItem
 {
+	@Override
+	protected MatrixItem makeCopy()
+	{
+		return new EndIf();
+	}
 }

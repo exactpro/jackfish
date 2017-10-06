@@ -11,7 +11,6 @@ package com.exactprosystems.jf.documents.matrix.parser;
 import com.exactprosystems.jf.api.app.Mutable;
 import com.exactprosystems.jf.api.common.Converter;
 import com.exactprosystems.jf.api.common.Str;
-import com.exactprosystems.jf.common.MutableString;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.documents.matrix.parser.items.MatrixItem;
 import com.exactprosystems.jf.documents.matrix.parser.items.TypeMandatory;
@@ -34,11 +33,31 @@ public class Parameter implements Mutable, Cloneable, Setter<String>, Getter<Str
 		this.changed = false;
 	}
 
+	/**
+	 * copy constructor
+	 */
+	public Parameter(Parameter p)
+	{
+		this.value = null;
+		this.compiled = null;
+		if (p != null)
+		{
+			this.type = p.type;
+			this.name = p.name;
+			this.expression = p.expression;
+			this.changed = p.changed;
+			if (p.description != null)
+			{
+				this.description = new MutableValue<>(p.description.get());
+			}
+		}
+	}
+
 	public void setDescription(String description)
 	{
 		if (this.description == null)
 		{
-			this.description = new MutableString();
+			this.description = new MutableValue<>(description);
 		}
 		this.description.set(description);
 		this.changed = true;
@@ -46,7 +65,7 @@ public class Parameter implements Mutable, Cloneable, Setter<String>, Getter<Str
 
 	public String getDescription()
 	{
-		return Optional.ofNullable(this.description).map(MutableString::get).orElse(null);
+		return Optional.ofNullable(this.description).map(MutableValue::get).orElse(null);
 	}
 
 	public void setAll(Parameter parameter)
@@ -57,22 +76,7 @@ public class Parameter implements Mutable, Cloneable, Setter<String>, Getter<Str
 		
 		this.value = parameter.value;
 		this.isValid = parameter.isValid;
-		this.description = new MutableString(parameter.getDescription());
-	}
-
-	@Override
-	public Parameter clone() throws CloneNotSupportedException
-	{
-		Parameter clone = ((Parameter) super.clone());
-		clone.value = null;
-		clone.type = type;
-		clone.name = name;
-		clone.expression = expression;
-		clone.compiled = null;
-		clone.changed = changed;
-		clone.description = description;
-
-		return clone;
+		this.description = new MutableValue<>(parameter.getDescription());
 	}
 
 	@Override
@@ -285,7 +289,7 @@ public class Parameter implements Mutable, Cloneable, Setter<String>, Getter<Str
         }
     }
 
-    private MutableString description;
+    private MutableValue<String> description;
 
 	private    String name;
 	protected  String expression;

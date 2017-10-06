@@ -23,7 +23,9 @@ import com.exactprosystems.jf.documents.matrix.parser.*;
 import com.exactprosystems.jf.documents.matrix.parser.listeners.IMatrixListener;
 import com.exactprosystems.jf.exceptions.ParametersException;
 import com.exactprosystems.jf.tool.helpers.DialogsHelper;
+import org.junit.runners.model.FrameworkField;
 
+import java.time.chrono.ThaiBuddhistChronology;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -60,19 +62,32 @@ import java.util.Set;
 		seeAlsoClass 	= {SubCase.class, Return.class}
 )
 public final class Call extends MatrixItem 
-{	
+{
+	private MutableValue<String> name;
+	private SubCase ref;
+
 	public Call()
 	{
 		super();
 		this.name = new MutableValue<String>();
 	}
 
-	@Override
-	public MatrixItem clone() throws CloneNotSupportedException
+	/**
+	 * copy constructor
+	 */
+	public Call(Call call)
 	{
-		Call call = ((Call) super.clone());
-		call.name = this.name.clone();
-		return call;
+		this.name = new MutableValue<>(call.name);
+		if (call.ref != null)
+		{
+			this.ref = new SubCase(call.ref);
+		}
+	}
+
+	@Override
+	protected MatrixItem makeCopy()
+	{
+		return new Call(this);
 	}
 
 	@Override
@@ -97,7 +112,7 @@ public final class Call extends MatrixItem
 				}
 				else
 				{
-					driver.setupCall(this, res, this.ref.getParameters().clone());
+					driver.setupCall(this, res, new Parameters(this.ref.getParameters()));
 				}
 				return res;
 			},
@@ -326,7 +341,4 @@ public final class Call extends MatrixItem
 	//==============================================================================================
 	// Private members
 	//==============================================================================================
-	private MutableValue<String> name;
-	
-	private SubCase ref;
 }

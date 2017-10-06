@@ -29,10 +29,18 @@ import java.util.stream.Collectors;
 
 public class HelpActionItem extends MatrixItem
 {
-    public HelpActionItem(Class<? extends AbstractAction> itemClazz)
+	private Class<? extends AbstractAction> actionClazz;
+
+	public HelpActionItem(Class<? extends AbstractAction> itemClazz)
     {
         this.actionClazz = itemClazz;
     }
+
+	@Override
+	protected MatrixItem makeCopy()
+	{
+		return new HelpActionItem(this.actionClazz);
+	}
     
     @Override
     public String getItemName()
@@ -106,7 +114,6 @@ public class HelpActionItem extends MatrixItem
 
     }
 
-
     @Override
     protected ReturnAndResult executeItSelf(long start, Context context, IMatrixListener listener, AbstractEvaluator evaluator, ReportBuilder report, Parameters parameters)
     {
@@ -124,6 +131,4 @@ public class HelpActionItem extends MatrixItem
         }
         return new ReturnAndResult(start, Result.Passed); 
     }
-	
-    private Class<? extends AbstractAction> actionClazz;
 }

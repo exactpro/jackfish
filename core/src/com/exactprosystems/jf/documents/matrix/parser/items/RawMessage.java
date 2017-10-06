@@ -51,22 +51,46 @@ import java.util.stream.Collectors;
 	)
 public class RawMessage extends MatrixItem
 {
+	private String[] headers = null;
+	private MapMessage reading = null;
+	private Map<Integer, List<MapMessage>> groups = new HashMap<>();
+
+	private MutableValue<String> clientName;
+	private MutableValue<String> typeName;
+	private MapMessage message;
+
 	public RawMessage()
 	{
 		super();
-		this.clientName	= new MutableValue<String>();
-		this.typeName  	= new MutableValue<String>();
-		this.message 	= new MapMessage(null);
+		this.clientName	= new MutableValue<>();
+		this.typeName  	= new MutableValue<>();
+		this.message 	= new MapMessage((String) null);
+	}
+
+	public RawMessage(RawMessage rm)
+	{
+		if (rm != null)
+		{
+			if (rm.headers != null)
+			{
+				this.headers = new String[rm.headers.length];
+				System.arraycopy(rm.headers, 0, this.headers, 0, rm.headers.length);
+			}
+			if (this.reading != null)
+			{
+				this.reading = new MapMessage(this.reading);
+			}
+			this.groups = new HashMap<>(rm.groups);
+			this.clientName = new MutableValue<>(rm.clientName);
+			this.typeName = new MutableValue<>(rm.typeName);
+			this.message = new MapMessage(rm.message);
+		}
 	}
 
 	@Override
-	public MatrixItem clone() throws CloneNotSupportedException
+	protected MatrixItem makeCopy()
 	{
-		RawMessage message = ((RawMessage) super.clone());
-		message.clientName = this.clientName.clone();
-		message.typeName = this.typeName.clone();
-		message.message = this.message.clone();
-		return message;
+		return new RawMessage(this);
 	}
 
 	@Override
@@ -349,7 +373,7 @@ public class RawMessage extends MatrixItem
 			{
 				if (this.headers != null && str.length > 0)
 				{
-					this.reading = new MapMessage(null);
+					this.reading = new MapMessage((String)null);
 					for (int i = 1; i < Math.min(this.headers.length, str.length); i++)
 					{
 						String value = "" + str[i];
@@ -427,16 +451,8 @@ public class RawMessage extends MatrixItem
 
 	private MapMessage extractMapMessage(IMessage reference)
 	{
-		MapMessage mapMessage = new MapMessage(null);
+		MapMessage mapMessage = new MapMessage((String)null);
 		extractFields(mapMessage, reference.getMessageField());
 		return mapMessage;
 	}
-
-	private String[] headers = null;
-	private MapMessage reading = null;
-	private Map<Integer, List<MapMessage>> groups = new HashMap<Integer, List<MapMessage>>();
-	
-	private MutableValue<String> clientName;
-	private MutableValue<String> typeName;
-	private MapMessage message;
 }

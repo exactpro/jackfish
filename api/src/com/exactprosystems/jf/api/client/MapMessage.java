@@ -8,23 +8,22 @@
 
 package com.exactprosystems.jf.api.client;
 
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
 import com.exactprosystems.jf.api.app.Mutable;
 
-public class MapMessage implements Map<String, Object>, Serializable, Mutable, Cloneable
+import java.io.Serializable;
+import java.util.*;
+
+public class MapMessage implements Map<String, Object>, Serializable, Mutable
 {
 	private static final long	serialVersionUID	= -1159773416112486653L;
 	
 	public static final String messageTypeName = "MessageType";
+	private boolean changed;
+	private String messageType = null;
+	private Map<String, Object> fields = new LinkedHashMap<>();
+	private String source = null;
+
+	private List<String> errors = null;
 
 	public MapMessage(String source)
 	{
@@ -54,6 +53,24 @@ public class MapMessage implements Map<String, Object>, Serializable, Mutable, C
 		this.fields.putAll(message.fields);
 	}
 
+	/**
+	 * copy constructor
+	 */
+	public MapMessage(MapMessage mapMessage)
+	{
+		if (mapMessage != null)
+		{
+			this.changed = mapMessage.changed;
+			this.messageType = mapMessage.messageType;
+			this.fields = new LinkedHashMap<>(mapMessage.fields);
+			this.source = mapMessage.source;
+			if (mapMessage.errors != null)
+			{
+				this.errors = new ArrayList<>(mapMessage.errors);
+			}
+		}
+	}
+
 	//==============================================================================================
 	// Interface Mutable
 	//==============================================================================================
@@ -69,17 +86,6 @@ public class MapMessage implements Map<String, Object>, Serializable, Mutable, C
 		this.changed = false;
 	}
 
-	//==============================================================================================
-	// Interface Cloneable
-	//==============================================================================================
-	@Override
-	public MapMessage clone() throws CloneNotSupportedException
-	{
-		MapMessage clon = new MapMessage(this.messageType, this.fields, this.source);
-		return clon;
-	}
-	//==============================================================================================
-	
 	public void addError(String error)
 	{
 		if (this.errors == null)
@@ -277,11 +283,4 @@ public class MapMessage implements Map<String, Object>, Serializable, Mutable, C
 	{
 		return this.fields.entrySet();
 	}
-	
-	private boolean changed;
-	private String messageType = null;
-	private Map<String, Object>fields = new LinkedHashMap<String, Object>();
-	private String source = null;
-
-	private List<String> errors = null;
 }
