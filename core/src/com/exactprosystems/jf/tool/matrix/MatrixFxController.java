@@ -325,7 +325,7 @@ public class MatrixFxController extends AbstractDocumentController<MatrixFx> imp
 			}
 			catch (Exception ignored)
 			{}
-			this.model.parameterProperty().set(value);
+			this.model.setParameter(value);
 		});
 
 		displayGuiDictionaries();
@@ -394,7 +394,7 @@ public class MatrixFxController extends AbstractDocumentController<MatrixFx> imp
 			}
 			catch (Exception ignored)
 			{}
-			this.model.parameterProperty().set(value);
+			this.model.setParameter(value);
 		});
 	}
 

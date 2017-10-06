@@ -459,6 +459,11 @@ public class MatrixFx extends Matrix
 		this.startDate = date;
 	}
 
+	public void setParameter(Object parameter)
+	{
+		this.parameter = parameter;
+	}
+
 	public void startMatrix() throws Exception
 	{
 		if (getEngine() != null)
@@ -469,7 +474,7 @@ public class MatrixFx extends Matrix
 				this.getEngine().getContext().getOut().println("Matrix will start at " + this.startDate);
 			}
 
-			getEngine().start(this.startDate, this.parameter.get());
+			getEngine().start(this.startDate, this.parameter);
 		}
 	}
 
@@ -484,7 +489,7 @@ public class MatrixFx extends Matrix
 		}
 	}
 
-	public void pauseMatrix() throws Exception
+	public void pauseMatrix()
 	{
 		if (getEngine() != null)
 		{
@@ -492,7 +497,7 @@ public class MatrixFx extends Matrix
 		}
 	}
 
-	public void pausedMatrix(Matrix matrix) throws Exception
+	public void pausedMatrix(Matrix matrix)
 	{
 		if (matrix == this && getEngine() != null)
 		{
@@ -500,7 +505,7 @@ public class MatrixFx extends Matrix
 		}
 	}
 
-	public void stepMatrix() throws Exception
+	public void stepMatrix()
 	{
 		if (getEngine() != null)
 		{
@@ -508,7 +513,7 @@ public class MatrixFx extends Matrix
 		}
 	}
 
-	public void showResult() throws Exception
+	public void showResult()
 	{
 		if (getEngine() != null && getEngine().getReportName() != null)
 		{
@@ -519,6 +524,7 @@ public class MatrixFx extends Matrix
 
 	public void showWatch()
 	{
+		//TODO show watcher
 		//		if (this.controller != null)
 		//		{
 		//			this.controller.showWatcher(this, getEngine().getContext());
@@ -643,19 +649,13 @@ public class MatrixFx extends Matrix
 		}
 	}
 
-	public MutableValue<Object> parameterProperty()
-	{
-		return parameter;
-	}
-
-	private MutableValue<Long>                     timer               = new MutableValue<>(0L);
-	private MutableValue<Object>                   parameter           = new MutableValue<>(null);
+	private MutableValue<Long> timer = new MutableValue<>(0L);
 
 	private String defaultAppId;
 	private String defaultClientId;
 
-
-	private Date startDate = new Date();
+	private Object parameter = null;
+	private Date startDate = null;
 
 	private static final Logger logger = Logger.getLogger(MatrixFx.class);
 }
