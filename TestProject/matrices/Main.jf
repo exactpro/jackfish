@@ -5,8 +5,8 @@ INIT;Setup;;;
 
 
 // 
-#Id;#Off;#TestCase;#Kind;#Depends;#For
-Test;1;MatrixItems;;;
+#Id;#TestCase;#Kind;#Depends;#For
+Test;MatrixItems;;;
     #Call;testName
     runMatrix;'MatrixItems'
 
