@@ -102,7 +102,7 @@ public class MatrixFxController extends AbstractDocumentController<MatrixFx> imp
 
 	private static final int MIN_TIME_FOR_SHOW_WAITS = 5000;
 	private static final int MIN_TIME_FOR_HIDE_WAITS = 1000;
-	private ConsoleArea area;
+	private ConsoleArea<TreeItem<MatrixItem>> area;
 
 	//region Initializable
 	@Override
@@ -119,7 +119,7 @@ public class MatrixFxController extends AbstractDocumentController<MatrixFx> imp
 		assert tbTracing != null : "fx:id=\"tbTracing\" was not injected: check your FXML file 'MatrixFx.fxml'.";
 
 		Consumer<TreeItem<MatrixItem>> moveToMatrixItem = treeItem -> this.tree.setCurrent(treeItem, false);
-		this.area = new ConsoleArea(moveToMatrixItem);
+		this.area = new ConsoleArea<>(moveToMatrixItem);
 		this.area.setEditable(false);
 		this.area.setMaxHeight(250);
 		this.splitPane.getItems().add(new VirtualizedScrollPane<>(area));
