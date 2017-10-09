@@ -9,6 +9,7 @@
 package com.exactprosystems.jf.tool.matrix;
 
 import com.exactprosystems.jf.common.Settings;
+import com.exactprosystems.jf.documents.Document;
 import com.exactprosystems.jf.documents.config.Context;
 import com.exactprosystems.jf.documents.matrix.Matrix;
 import com.exactprosystems.jf.documents.matrix.parser.DisplayDriver;
@@ -16,7 +17,6 @@ import com.exactprosystems.jf.documents.matrix.parser.Result;
 import com.exactprosystems.jf.documents.matrix.parser.items.MatrixItem;
 import com.exactprosystems.jf.documents.matrix.parser.listeners.IMatrixListener;
 import com.exactprosystems.jf.tool.Common;
-import com.exactprosystems.jf.tool.ContainingParent;
 import com.exactprosystems.jf.tool.CssVariables;
 import com.exactprosystems.jf.tool.custom.console.ConsoleArea;
 import com.exactprosystems.jf.tool.custom.date.CustomDateTimePicker;
@@ -24,19 +24,18 @@ import com.exactprosystems.jf.tool.custom.expfield.ExpressionField;
 import com.exactprosystems.jf.tool.custom.find.FindPanel;
 import com.exactprosystems.jf.tool.custom.find.IFind;
 import com.exactprosystems.jf.tool.custom.tab.CustomTab;
-import com.exactprosystems.jf.tool.custom.tab.CustomTabPane;
 import com.exactprosystems.jf.tool.custom.treetable.DisplayDriverFx;
 import com.exactprosystems.jf.tool.custom.treetable.MatrixContextMenu;
 import com.exactprosystems.jf.tool.custom.treetable.MatrixParametersContextMenu;
 import com.exactprosystems.jf.tool.custom.treetable.MatrixTreeView;
+import com.exactprosystems.jf.tool.documents.AbstractDocumentController;
+import com.exactprosystems.jf.tool.documents.ControllerInfo;
 import com.exactprosystems.jf.tool.helpers.DialogsHelper;
 import com.exactprosystems.jf.tool.matrix.watch.WatcherFx;
 import com.exactprosystems.jf.tool.settings.SettingsPanel;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
-import javafx.fxml.Initializable;
 import javafx.geometry.Orientation;
-import javafx.scene.Parent;
 import javafx.scene.control.*;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.GridPane;
@@ -46,14 +45,13 @@ import org.fxmisc.flowless.VirtualizedScrollPane;
 
 import java.io.File;
 import java.net.URL;
-import java.util.List;
-import java.util.Optional;
-import java.util.ResourceBundle;
+import java.util.*;
 import java.util.function.Consumer;
 
 import static com.exactprosystems.jf.tool.Common.*;
 
-public class MatrixFxController implements Initializable, ContainingParent, IMatrixListener
+@ControllerInfo(resourceName = "MatrixFx.fxml")
+public class MatrixFxController extends AbstractDocumentController<MatrixFx> implements IMatrixListener
 {
 	public MatrixTreeView				tree;
 	public Button						btnStartMatrix;
@@ -78,9 +76,6 @@ public class MatrixFxController implements Initializable, ContainingParent, IMat
 	private FindPanel<MatrixItem>		findPanel;
 	private boolean						visible	= false;
 
-	private Parent						pane;
-	private CustomTab					tab;
-	private MatrixFx					model;
 	private DisplayDriver				driver;
 	private Context						context;
 	private boolean						ok;
@@ -131,15 +126,9 @@ public class MatrixFxController implements Initializable, ContainingParent, IMat
 		this.findPanel.setVisible(false);
 		CustomDateTimePicker customDateTimePicker = new CustomDateTimePicker(date -> this.model.setStartTime(date));
 		hBox.getChildren().add(0, customDateTimePicker);
-	}
 
-	// ==============================================================================================================================
-	// interface ContainingParent
-	// ==============================================================================================================================
-	@Override
-	public void setParent(Parent parent)
-	{
-		this.pane = parent;
+		this.cbDefaultApp.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> super.model.setDefaultApp(newValue));
+		this.cbDefaultClient.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> super.model.setDefaultClient(newValue));
 	}
 
 	// ==============================================================================================================================
@@ -202,7 +191,7 @@ public class MatrixFxController implements Initializable, ContainingParent, IMat
 	{
 		try
 		{
-			this.model.disableButtons(false);
+			this.disableButtons(false);
 			this.model.pausedMatrix(matrix);
 			this.refreshTreeIfToogle();
 			Optional.ofNullable(this.watcher).ifPresent(WatcherFx::update);
@@ -233,6 +222,91 @@ public class MatrixFxController implements Initializable, ContainingParent, IMat
 		return this.ok;
 	}
 
+	@Override
+	protected void init(Document model, CustomTab customTab)
+	{
+		super.init(model, customTab);
+
+		super.model.getRoot().setOnRemoveListener((integer, matrixItem) -> this.remove(matrixItem));
+		//TODO think about second parameter of method display;
+		super.model.getRoot().setOnAddListener((integer, matrixItem) -> this.display(matrixItem, false));
+		super.model.timerProperty().setOnChangeListener((aLong, aLong2) -> this.displayTimer(aLong2, aLong2 > 0));
+		super.model.getRoot().setOnBreakPoint((oldValue,newValue) -> this.tree.refresh());
+		super.model.getRoot().setOnChangeParameter((integer, matrixItem) -> this.refreshParameters(matrixItem, integer));
+
+		this.context = super.model.getEngine().getContext();
+		Settings settings = super.model.getFactory().getSettings();
+		MatrixParametersContextMenu parametersContextMenu 	= new MatrixParametersContextMenu(context, super.model, this.tree, settings);
+		MatrixContextMenu 			rowContextMenu 			= new MatrixContextMenu(context, super.model, this.tree, settings);
+		parametersContextMenu.initShortcuts(settings, this.tree, super.model, context);
+
+		this.driver = new DisplayDriverFx(this.tree, this.context, rowContextMenu, parametersContextMenu);
+		this.tree.init(super.model, settings, rowContextMenu);
+
+		TabConsole console = new TabConsole(System.out);
+		super.model.getEngine().getContext().setOut(console);
+		console.setConsumer(s -> Common.runLater(() -> {
+			if (s == null)
+			{
+				this.listView.getItems().clear();
+			}
+			else
+			{
+				this.listView.getItems().add(ConsoleText.defaultText(s));
+			}
+		}));
+
+		this.efParameter = new ExpressionField(context.getEvaluator());
+		HBox.setHgrow(this.efParameter, Priority.ALWAYS);
+		this.efParameter.setStretchable(false);
+		this.efParameter.setPromptText("Parameter for start");
+		this.efParameter.setMaxWidth(250.0);
+		this.efParameter.setPrefWidth(250.0);
+		this.efParameter.setMinWidth(250.0);
+		this.efParameter.setHelperForExpressionField("Parameter for start", super.model);
+		this.bottomBox.getChildren().addAll(this.efParameter, Common.createSpacer(SpacerEnum.HorizontalMin), new Separator(Orientation.VERTICAL));
+		initializeButtons(super.model.getFactory().getSettings());
+		initShortcuts(super.model.getFactory().getSettings());
+		this.efParameter.textProperty().addListener((observable, oldValue, newValue) -> {
+			Object value = null;
+			try
+			{
+				value = this.getParameter();
+			}
+			catch (Exception ignored)
+			{}
+			this.model.setParameter(value);
+		});
+
+		displayGuiDictionaries();
+		displayClientDictionaries();
+		this.model.setListener(this);
+	}
+
+	@Override
+	protected void restoreSettings(Settings settings)
+	{
+		Settings.SettingsValue defaults = settings.getValue(Settings.MAIN_NS, MatrixFx.DIALOG_DEFAULTS, new File(super.model.getNameProperty().get()).getAbsolutePath());
+		if (Objects.isNull(defaults))
+		{
+			this.cbDefaultApp.getSelectionModel().select(MatrixFx.EMPTY_STRING);
+			this.cbDefaultClient.getSelectionModel().select(MatrixFx.EMPTY_STRING);
+		}
+		else
+		{
+			String[] split = defaults.getValue().split(MatrixFx.DELIMITER);
+			if (split.length == 2)
+			{
+				this.cbDefaultApp.getSelectionModel().select(split[0]);
+				this.cbDefaultClient.getSelectionModel().select(split[1]);
+			}
+		}
+		Settings.SettingsValue foldSetting = settings.getValueOrDefault(Settings.GLOBAL_NS, Settings.MATRIX_NAME, Settings.MATRIX_FOLD_ITEMS, "false");
+		boolean fold = Boolean.parseBoolean(foldSetting.getValue());
+
+		this.tree.setNeedExpand(fold);
+	}
+
 	public void init(MatrixFx model, Context context, TabConsole console)
 	{
 		Settings settings = context.getFactory().getSettings();
@@ -248,11 +322,8 @@ public class MatrixFxController implements Initializable, ContainingParent, IMat
 		this.context = context;
 		this.driver = new DisplayDriverFx(this.tree, this.context, rowContextMenu, parametersContextMenu);
 		this.tree.init(model, settings, rowContextMenu);
-		this.tab = CustomTabPane.getInstance().createTab(model);
-		this.tab.setContent(this.pane);
+//		this.tab.setContent(this.pane);
 		console.setConsumer(s -> Common.runLater(() -> this.area.appendDefaultTextOnNewLine(s)));
-		CustomTabPane.getInstance().addTab(this.tab);
-		CustomTabPane.getInstance().selectTab(this.tab);
 
 		this.efParameter = new ExpressionField(context.getEvaluator());
 		HBox.setHgrow(this.efParameter, Priority.ALWAYS);
@@ -265,6 +336,16 @@ public class MatrixFxController implements Initializable, ContainingParent, IMat
 		this.bottomBox.getChildren().addAll(this.efParameter, Common.createSpacer(SpacerEnum.HorizontalMin), new Separator(Orientation.VERTICAL));
 		initializeButtons(context.getFactory().getSettings());
 		initShortcuts(context.getFactory().getSettings());
+		this.efParameter.textProperty().addListener((observable, oldValue, newValue) -> {
+			Object value = null;
+			try
+			{
+				value = this.getParameter();
+			}
+			catch (Exception ignored)
+			{}
+			this.model.setParameter(value);
+		});
 	}
 
 	private void createConsoleTextArea()
@@ -278,15 +359,10 @@ public class MatrixFxController implements Initializable, ContainingParent, IMat
 
 	public void save(String name)
 	{
-		this.tab.getStyleClass().removeAll(CssVariables.MATRIX_FINISHED_OK, CssVariables.MATRIX_FINISHED_BAD);
-		this.tab.saved(name);
+		this.customTab.getStyleClass().removeAll(CssVariables.MATRIX_FINISHED_OK, CssVariables.MATRIX_FINISHED_BAD);
+		this.customTab.saved(name);
 		this.model.clearExecutingState();
 		this.refresh();
-	}
-
-	public void showResult(File file, String matrixName)
-	{
-		DialogsHelper.displayReport(file, matrixName, this.model.getFactory());
 	}
 
 	public void showWatcher(MatrixFx matrix, Context context)
@@ -301,24 +377,11 @@ public class MatrixFxController implements Initializable, ContainingParent, IMat
 		}, "Error on showing watcher ");
 	}
 
-	public void close()
+	@Override
+	protected void close()
 	{
-		tryCatch(() ->
-		{
-			this.tab.close();
-			CustomTabPane.getInstance().removeTab(this.tab);
-			Optional.ofNullable(watcher).ifPresent(WatcherFx::close);
-		}, "Error on closing matrix");
-	}
-
-	public void displayTab(MatrixItem matrixItem)
-	{
-		matrixItem.display(this.driver, this.context);
-	}
-
-	public void coloring()
-	{
-		// this.driver.coloring();
+		Optional.ofNullable(this.watcher).ifPresent(WatcherFx::close);
+		super.close();
 	}
 
 	public Object getParameter() throws Exception
@@ -337,19 +400,19 @@ public class MatrixFxController implements Initializable, ContainingParent, IMat
 	public void stopMatrix(ActionEvent event)
 	{
 		tryCatch(this.model::stop, "Error on stopping matrix");
-		this.model.disableButtons(false);
+		this.disableButtons(false);
 	}
 
 	public void startMatrix(ActionEvent event)
 	{
 		tryCatch(this.model::startMatrix, "Error on starting matrix. See the matrix output for details.");
-		this.model.disableButtons(true);
+		this.disableButtons(true);
 	}
 
 	public void pauseMatrix(ActionEvent event)
 	{
 		tryCatch(this.model::pauseMatrix, "Error on pausing matrix");
-		this.model.disableButtons(false);
+		this.disableButtons(false);
 	}
 
 	public void stepMatrix(ActionEvent event)
@@ -372,7 +435,7 @@ public class MatrixFxController implements Initializable, ContainingParent, IMat
 
 	public void showWatch(ActionEvent event)
 	{
-		tryCatch(this.model::showWatch, "Error on showing watcher");
+		this.showWatcher(super.model, this.context);
 	}
 
 	public void showFindPanel(ActionEvent actionEvent)
@@ -387,16 +450,6 @@ public class MatrixFxController implements Initializable, ContainingParent, IMat
 				this.findPanel.requestFocus();
 			}
 		}, "Error on showing the find panel");
-	}
-
-	public void changeDefaultApp(ActionEvent actionEvent)
-	{
-		tryCatch(() -> this.model.setDefaultApp(cbDefaultApp.getSelectionModel().getSelectedItem()), "Error on changing app");
-	}
-
-	public void changeDefaultClient(ActionEvent actionEvent)
-	{
-		tryCatch(() -> this.model.setDefaultClient(cbDefaultClient.getSelectionModel().getSelectedItem()), "Error on changing client");
 	}
 
 	public void markAll(ActionEvent actionEvent)
@@ -418,7 +471,7 @@ public class MatrixFxController implements Initializable, ContainingParent, IMat
 	// ------------------------------------------------------------------------------------------------------------------
 	// display* methods
 	// ------------------------------------------------------------------------------------------------------------------
-	void displayTimer(long ms, boolean needShow)
+	private void displayTimer(long ms, boolean needShow)
 	{
 		Common.runLater(() -> {
 			if (ms < MIN_TIME_FOR_SHOW_WAITS && !lblTimer.isVisible())
@@ -476,6 +529,12 @@ public class MatrixFxController implements Initializable, ContainingParent, IMat
 		this.tree.refreshParameters(item, selectIndex);
 	}
 
+	public void setCurrent(int itemNumber)
+	{
+		TreeItem<MatrixItem> treeItem = this.tree.find(item -> item.getNumber() == itemNumber);
+		this.tree.setCurrent(treeItem, true);
+	}
+
 	public void setCurrent(MatrixItem item, boolean needExpand)
 	{
 		TreeItem<MatrixItem> treeItem = this.tree.find(item);
@@ -498,25 +557,10 @@ public class MatrixFxController implements Initializable, ContainingParent, IMat
 			this.driver.setCurrentItem(item, this.model, needExpand);
 		});
 	}
-	
-	public void displayTitle(String title)
-	{
-		Common.runLater(() -> this.tab.setTitle(title));
-	}
-
-	public void displayAppList(List<String> result)
-	{
-		Common.runLater(() -> this.cbDefaultApp.setItems(FXCollections.observableList(result)));
-	}
 
 	public void setDefaultApp(String id)
 	{
 		Common.runLater(() -> this.cbDefaultApp.getSelectionModel().select(id));
-	}
-
-	public void displayClientList(List<String> result)
-	{
-		Common.runLater(() -> this.cbDefaultClient.setItems(FXCollections.observableList(result)));
 	}
 
 	public void setDefaultClient(String id)
@@ -526,6 +570,24 @@ public class MatrixFxController implements Initializable, ContainingParent, IMat
 	// ------------------------------------------------------------------------------------------------------------------
 	// private methods
 	// ------------------------------------------------------------------------------------------------------------------
+
+	private void displayGuiDictionaries()
+	{
+		ArrayList<String> result = new ArrayList<>();
+		result.add(Matrix.EMPTY_STRING);
+		result.addAll(new ArrayList<>(super.model.getFactory().getConfiguration().getApplicationPool().appNames()));
+		Common.runLater(() -> this.cbDefaultApp.setItems(FXCollections.observableList(result)));
+	}
+
+	private void displayClientDictionaries()
+	{
+		ArrayList<String> result = new ArrayList<>();
+		result.add(Matrix.EMPTY_STRING);
+		result.addAll(new ArrayList<>(super.model.getFactory().getConfiguration().getClientPool().clientNames()));
+		Common.runLater(() -> this.cbDefaultClient.setItems(FXCollections.observableList(result)));
+	}
+
+
 	private void refreshTreeIfToogle()
 	{
 		if (this.toggleTracing.isSelected())
@@ -536,9 +598,9 @@ public class MatrixFxController implements Initializable, ContainingParent, IMat
 
 	private void initShortcuts(final Settings settings)
 	{
-		this.pane.addEventFilter(KeyEvent.KEY_PRESSED, keyEvent -> tryCatch(() ->
+		this.parent.addEventFilter(KeyEvent.KEY_PRESSED, keyEvent -> tryCatch(() ->
 		{
-			if (tab.isSelected())
+			if (customTab.isSelected())
 			{
 				if (SettingsPanel.match(settings, keyEvent, Settings.START_MATRIX))
 				{
@@ -562,7 +624,7 @@ public class MatrixFxController implements Initializable, ContainingParent, IMat
 				}
 				else if (SettingsPanel.match(settings, keyEvent, Settings.SHOW_WATCH))
 				{
-					model.showWatch();
+					this.showWatcher(super.model, this.context);
 				}
 				else if (SettingsPanel.match(settings, keyEvent, Settings.TRACING))
 				{
@@ -593,7 +655,7 @@ public class MatrixFxController implements Initializable, ContainingParent, IMat
 	}
 
 	void disableButtons(boolean isOn) {
-		this.btnStartMatrix.disableProperty().setValue(isOn);
-		this.btnStepMatrix.disableProperty().setValue(isOn);
+		this.btnStartMatrix.setDisable(isOn);
+		this.btnStepMatrix.setDisable(isOn);
 	}
 }

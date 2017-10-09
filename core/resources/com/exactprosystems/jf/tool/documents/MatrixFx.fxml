@@ -84,7 +84,7 @@
 											</padding>
 										</Label>
 										<Label id="$horMin"/>
-										<ComboBox fx:id="cbDefaultApp" maxWidth="250.0" onAction="#changeDefaultApp" HBox.hgrow="ALWAYS"/>
+										<ComboBox fx:id="cbDefaultApp" maxWidth="250.0" HBox.hgrow="ALWAYS"/>
 										<Label id="$horMin"/>
 										<Separator orientation="VERTICAL" prefHeight="35.0" prefWidth="0.0"/>
 										<Label id="$horMin"/>
@@ -94,7 +94,7 @@
 											</padding>
 										</Label>
 										<Label id="$horMin"/>
-										<ComboBox fx:id="cbDefaultClient" maxWidth="250.0" onAction="#changeDefaultClient" prefHeight="25.0" HBox.hgrow="ALWAYS"/>
+										<ComboBox fx:id="cbDefaultClient" maxWidth="250.0" prefHeight="25.0" HBox.hgrow="ALWAYS"/>
 										<Label id="$horMin"/>
 										<Separator orientation="VERTICAL" prefHeight="35.0" prefWidth="0.0"/>
 										<Label id="$horMin"/>

@@ -28,6 +28,7 @@ import com.exactprosystems.jf.functions.HelpKind;
 import com.exactprosystems.jf.functions.Notifier;
 import com.exactprosystems.jf.functions.Table;
 import com.exactprosystems.jf.tool.Common;
+import com.exactprosystems.jf.tool.custom.tab.CustomTab;
 import com.exactprosystems.jf.tool.dictionary.DictionaryFx;
 import com.exactprosystems.jf.tool.documents.csv.CsvFx;
 import com.exactprosystems.jf.tool.documents.csv.CsvFxController;
@@ -38,6 +39,7 @@ import com.exactprosystems.jf.tool.documents.vars.SystemVarsFxController;
 import com.exactprosystems.jf.tool.helpers.DialogsHelper;
 import com.exactprosystems.jf.tool.main.Main;
 import com.exactprosystems.jf.tool.matrix.MatrixFx;
+import com.exactprosystems.jf.tool.matrix.MatrixFxController;
 import com.exactprosystems.jf.tool.matrix.MatrixListenerFx;
 import com.exactprosystems.jf.tool.matrix.schedule.MatrixScheduler;
 import com.exactprosystems.jf.tool.msgdictionary.MessageDictionaryFx;
@@ -80,28 +82,35 @@ public class FxDocumentFactory extends DocumentFactory
 		{
 			controller = loadController(CsvFx.class, CsvFxController.class);
 		}
-		controller.init(doc, this.mainModel.createCustomTab(doc));
+		if (doc instanceof MatrixFx)
+		{
+			controller = loadController(MatrixFx.class, MatrixFxController.class);
+		}
+		CustomTab customTab = this.mainModel.createCustomTab(doc);
+		controller.init(doc, customTab);
+		controller.restoreSettings(this.settings);
+		this.mainModel.selectTab(customTab);
 		getConfiguration().register(doc);
 		AbstractDocumentController<? extends Document> finalController = controller;
 		doc.onClose(d -> finalController.close());
 	    super.showDocument(doc);
 	}
 	
-   private static <V extends Document, T extends AbstractDocumentController<V>> T loadController(Class<V> docClass, Class<T> controlllerClass) throws Exception
-    {
-        ControllerInfo info = controlllerClass.getAnnotation(ControllerInfo.class);
-        if (info == null)
-        {
-            throw new Exception("ControllerInfo attribute is not found for " + controlllerClass);
-        }
+	private static <V extends Document, T extends AbstractDocumentController<V>> T loadController(Class<V> docClass, Class<T> controlllerClass) throws Exception
+	{
+		ControllerInfo info = controlllerClass.getAnnotation(ControllerInfo.class);
+		if (info == null)
+		{
+			throw new Exception("ControllerInfo attribute is not found for " + controlllerClass);
+		}
 
-        URL resource = FxDocumentFactory.class.getResource(info.resourceName());
-        FXMLLoader loader = new FXMLLoader(resource);
-        Parent parent = loader.load();
-        T controller = loader.getController();
-        controller.setParent(parent);
-        return controller;
-    }
+		URL resource = FxDocumentFactory.class.getResource(info.resourceName());
+		FXMLLoader loader = new FXMLLoader(resource);
+		Parent parent = loader.load();
+		T controller = loader.getController();
+		controller.setParent(parent);
+		return controller;
+	}
 
 	@Override
 	protected Context createContext(Configuration configuration, IMatrixListener matrixListener) throws Exception

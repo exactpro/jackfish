@@ -108,7 +108,7 @@ public class MutableValue<T> implements Mutable, Getter<T>, Setter<T>, Cloneable
 	        this.changeListener.accept(this.value, this.value);
 	    }
 	}
-	
+
 	public void setOnChangeListener(BiConsumer<T, T> listener)
 	{
 	    this.changeListener = listener;

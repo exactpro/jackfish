@@ -12,8 +12,8 @@ import com.exactprosystems.jf.common.CommonHelper;
 import com.exactprosystems.jf.documents.Document;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.CssVariables;
+import com.exactprosystems.jf.tool.documents.AbstractDocumentController;
 import com.exactprosystems.jf.tool.helpers.DialogsHelper;
-import javafx.application.Platform;
 import javafx.geometry.Pos;
 import javafx.scene.SnapshotParameters;
 import javafx.scene.control.ButtonType;
@@ -35,12 +35,13 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 import static com.exactprosystems.jf.tool.custom.tab.CustomTabPane.TAB_DRAG_KEY;
 
-public class CustomTab extends Tab implements AutoCloseable
+public class CustomTab extends Tab
 {
 	private static final String	CHANGED_MARKER	= " *";
 	private Hyperlink			crossButton;
 	private Text				text;
 	private Document			document;
+	private AbstractDocumentController<? extends Document> abstractController;
 	private FileWatcher			watcher;
 	private final AtomicBoolean	warningIsShow;
 
@@ -55,6 +56,16 @@ public class CustomTab extends Tab implements AutoCloseable
 		this.document = document;
 
 		init();
+	}
+
+	public void setController(AbstractDocumentController<? extends Document> abstractController)
+	{
+		this.abstractController = abstractController;
+	}
+
+	public AbstractDocumentController<? extends Document> getController()
+	{
+		return abstractController;
 	}
 
 	protected void init()
@@ -151,7 +162,6 @@ public class CustomTab extends Tab implements AutoCloseable
 		});
 	}
 
-	@Override
 	public void close()
 	{
 		this.watcher.close();
