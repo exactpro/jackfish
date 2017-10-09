@@ -191,24 +191,21 @@ public class Main extends Application
 			notifyPreloader(new Preloader.ProgressNotification(55));
 
 			List<SettingsValue> values = settings.getValues(Settings.MAIN_NS, Settings.OPENED);
-			double progressStep = 45 / Math.max(1, values.size());
+			double progressStep = 45 /(double) Math.max(1, values.size());
 			double currentProgress = 55;
 			for (SettingsValue item : values)
 			{
 				DocumentKind kind = DocumentKind.valueOf(item.getValue());
-				if (kind != null)
+				String filePath = item.getKey();
+				File file = new File(filePath);
+				try
 				{
-					String filePath = item.getKey();
-					File file = new File(filePath);
-					try
-					{
-                        needDisplayDoc.add(loadDocument(file, kind));
-					}
-					catch (FileNotFoundException e)
-					{
-						settings.remove(Settings.MAIN_NS, Settings.OPENED, file.getAbsolutePath());
-						settings.saveIfNeeded();
-					}
+					needDisplayDoc.add(loadDocument(file, kind));
+				}
+				catch (FileNotFoundException e)
+				{
+					settings.remove(Settings.MAIN_NS, Settings.OPENED, file.getAbsolutePath());
+					settings.saveIfNeeded();
 				}
 				currentProgress += progressStep;
 				notifyPreloader(new Preloader.ProgressNotification(currentProgress));
@@ -238,7 +235,7 @@ public class Main extends Application
 		});
 		controller.init(factory, this, this.wizardManager, settings, stage);
 		Common.node = stage;
-		Common.reportListener(url -> Common.tryCatch(() -> HostServicesFactory.getInstance(this).showDocument(url), "Error on show report"));
+		Common.reportListener(url -> HostServicesFactory.getInstance(this).showDocument(url));
 		controller.display();
 		controller.initShortcuts();
 		this.isFromInit = false;
