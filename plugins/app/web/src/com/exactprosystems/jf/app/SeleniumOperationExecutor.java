@@ -900,13 +900,15 @@ public class SeleniumOperationExecutor extends AbstractOperationExecutor<WebElem
 				new Select(component).selectByVisibleText(selectedText);
 				return true;
 			case "ul" :
-				List<WebElement> lis = component.findElements(By.xpath(".//li[normalize-space(.) = " + Quotes.escape(selectedText) + "]"));
-				if (lis.size() != 1)
+				for (WebElement webElement: component.findElements(By.xpath("child::li")))
 				{
-					throw new RemoteException("Found " + lis.size() + " elements instead of 1");
+					if(webElement.getText().contains(selectedText))
+					{
+						webElement.click();
+						return true;
+					}
 				}
-				lis.get(0).click();
-				return true;
+				throw new RemoteException("element with text '" + selectedText + "' was not found in the list");
 			default:
 				return true;
 		}
