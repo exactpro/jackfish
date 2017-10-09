@@ -26,7 +26,6 @@ import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.ie.InternetExplorerDriver;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.safari.SafariDriver;
-import org.openqa.selenium.support.ui.Quotes;
 import org.openqa.selenium.support.ui.Select;
 
 import javax.imageio.ImageIO;
@@ -201,7 +200,7 @@ public class SeleniumOperationExecutor extends AbstractOperationExecutor<WebElem
 				checkScroll(options, index);
 				if(driver.getWrappedDriver() instanceof InternetExplorerDriver)
 				{
-					driver.executeScript(SCROLL_TO_IE_SCRIPT, options.get(index));
+					driver.executeScript(SCROLL_COMBOBOX_IE_SCRIPT, options.get(index));
 				}
 				else
 				{
@@ -212,7 +211,14 @@ public class SeleniumOperationExecutor extends AbstractOperationExecutor<WebElem
 			case "ul":
 				List<WebElement> list = component.findElements(By.xpath("child::li"));
 				checkScroll(list, index);
-				driver.executeScript("arguments[0].scrollIntoView()", list.get(index));
+				if(driver.getWrappedDriver() instanceof InternetExplorerDriver)
+				{
+					driver.executeScript("arguments[0].parentElement.scrollTop = arguments[1] * arguments[0].clientHeight", list.get(index), index);
+				}
+				else
+				{
+					driver.executeScript("arguments[0].scrollIntoView()", list.get(index));
+				}
 				return true;
 
 			default:
@@ -877,12 +883,12 @@ public class SeleniumOperationExecutor extends AbstractOperationExecutor<WebElem
 				new Select(component).selectByIndex(index);
 				return true;
 			case "ul" :
-				List<WebElement> lis = component.findElements(By.xpath("child::li"));
-				if (index > lis.size())
+				List<WebElement> list = component.findElements(By.xpath("child::li"));
+				if (index > list.size())
 				{
-					throw new RemoteException("Can't select element by index " + index + " ,because found " + lis.size() + " elements");
+					throw new RemoteException("Can't select element by index " + index + " ,because found " + list.size() + " elements");
 				}
-				lis.get(index).click();
+				list.get(index).click();
 				return true;
 
 			default:
@@ -900,11 +906,13 @@ public class SeleniumOperationExecutor extends AbstractOperationExecutor<WebElem
 				new Select(component).selectByVisibleText(selectedText);
 				return true;
 			case "ul" :
-				for (WebElement webElement: component.findElements(By.xpath("child::li")))
+				List <WebElement> list = component.findElements(By.xpath("child::li"));
+				for (int i = 0; i < list.size(); i++)
 				{
-					if(webElement.getText().contains(selectedText))
+					if(list.get(i).getText().contains(selectedText))
 					{
-						webElement.click();
+						scrollTo(component, i);
+						list.get(i).click();
 						return true;
 					}
 				}
@@ -2136,7 +2144,7 @@ public class SeleniumOperationExecutor extends AbstractOperationExecutor<WebElem
 
 	//TODO need normal scroll to function
 	private static final String SCROLL_TO_SCRIPT = loadScript("js/scrollTo.js");
-	private static final String SCROLL_TO_IE_SCRIPT = loadScript("js/scrollToIE.js");
+	private static final String SCROLL_COMBOBOX_IE_SCRIPT = loadScript("js/comboboxScroll.js");
 
 	private String markAttribute = "seleniummarkattribute";
 	private WebDriverListenerNew driver;
