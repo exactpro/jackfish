@@ -33,6 +33,8 @@ public interface Document extends Mutable
 	
 	void save(String fileName) throws Exception;
 
+	void onSave(Consumer<Document> consumer);
+
     void addCommand(Command undo, Command redo);
 
     void undo();

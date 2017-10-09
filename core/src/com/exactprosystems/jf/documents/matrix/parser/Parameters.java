@@ -40,13 +40,9 @@ import java.util.stream.Collectors;
 
 	public Map<String, Object> makeCopy()
 	{
-		return this.stream()
-				.collect(Collectors.toMap(
-						Parameter::getName,
-						Parameter::getValue,
-						(u,v) -> {throw new IllegalStateException(String.format("Duplicate key %s", u));} ,
-						LinkedHashMap::new
-				));
+		Map<String, Object> result = new LinkedHashMap<>();
+		forEach(e -> result.put(e.getName(), e.getValue()));
+		return result;
 	}
 
 	public void setValue(Parameters value)

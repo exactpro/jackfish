@@ -56,7 +56,7 @@
 												<Tooltip text="Open watcher"/>
 											</tooltip>
 										</Button>
-										<ToggleButton id="matrixToggleTracing" fx:id="toggleTracing" mnemonicParsing="false" onAction="#toggleTracing" styleClass="$transparentBackground"/>
+										<ToggleButton id="matrixToggleTracing" fx:id="tbTracing" mnemonicParsing="false" onAction="#toggleTracing" styleClass="$transparentBackground"/>
 										<Button id="matrixBtnStartMatrix" fx:id="btnStartMatrix" mnemonicParsing="false" onAction="#startMatrix" styleClass="$transparentBackground"/>
 										<Button id="matrixBtnStopMatrix" fx:id="btnStopMatrix" mnemonicParsing="false" onAction="#stopMatrix" styleClass="$transparentBackground"/>
 										<Button id="matrixBtnPauseMatrix" fx:id="btnPauseMatrix" mnemonicParsing="false" onAction="#pauseMatrix" styleClass="$transparentBackground"/>

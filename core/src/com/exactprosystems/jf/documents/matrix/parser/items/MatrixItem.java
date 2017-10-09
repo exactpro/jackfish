@@ -18,7 +18,6 @@ import com.exactprosystems.jf.api.common.Str;
 import com.exactprosystems.jf.api.error.common.MatrixException;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.report.ReportBuilder;
-import com.exactprosystems.jf.common.undoredo.Command;
 import com.exactprosystems.jf.documents.config.Configuration;
 import com.exactprosystems.jf.documents.config.Context;
 import com.exactprosystems.jf.documents.matrix.Matrix;
@@ -35,7 +34,6 @@ import java.io.IOException;
 import java.util.*;
 import java.util.function.BiConsumer;
 import java.util.function.Predicate;
-import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 public abstract class MatrixItem implements IMatrixItem, Mutable, Cloneable
@@ -67,16 +65,16 @@ public abstract class MatrixItem implements IMatrixItem, Mutable, Cloneable
 		matrixItem.global = new MutableValue<>(this.global);
 		matrixItem.ignoreErr = new MutableValue<>(this.ignoreErr);
 
-			matrixItem.source    = this.source;
-			matrixItem.owner     = this.owner;
-			matrixItem.comments 	= this. comments.stream()
-			.map(CommentString::new)
+		matrixItem.source    = this.source;
+		matrixItem.owner     = this.owner;
+		matrixItem.comments 	= this. comments.stream()
+				.map(CommentString::new)
 				.collect(Collectors.toCollection(MutableArrayList::new));
-		matrixItem.parent 	= this.parent== null ? null : this.parent.makeCopy();
-			matrixItem.children 	= new MutableArrayList<>(this.children.size());
-			this. children.stream()
-			.map(
-				MatrixItem ::createCopy)
+		matrixItem.parent 	= this.parent == null ? null : this.parent.makeCopy();
+		matrixItem.children 	= new MutableArrayList<>(this.children.size());
+
+		this.children.stream()
+				.map(MatrixItem ::createCopy)
 				.peek(copy -> copy.parent = matrixItem)
 				.forEach(matrixItem.children::add);
 

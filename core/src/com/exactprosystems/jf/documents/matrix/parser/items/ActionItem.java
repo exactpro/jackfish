@@ -56,6 +56,7 @@ public final class ActionItem extends MatrixItem
 	public ActionItem(ActionItem actionItem)
 	{
 		this.assertBool = new Parameter(actionItem.assertBool);
+		this.action = actionItem.action;
 	}
 
 	@Override

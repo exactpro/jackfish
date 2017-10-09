@@ -42,6 +42,7 @@ public abstract class AbstractDocumentController<T extends Document> implements 
 	protected void init(Document model, CustomTab customTab)
 	{
 		this.model = (T) model;
+		this.model.onSave(doc -> this.save());
 		this.customTab = customTab;
 		this.customTab.setContent(this.parent);
 		this.customTab.setController(this);
@@ -53,6 +54,11 @@ public abstract class AbstractDocumentController<T extends Document> implements 
 	}
 
 	protected void restoreSettings(Settings settings)
+	{
+
+	}
+
+	protected void save()
 	{
 
 	}
