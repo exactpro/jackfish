@@ -67,6 +67,7 @@ public class GridCellEditor
 				viewCell.commitEdit(modelCell);
 				end();
 				spreadsheetCellEditor.end();
+				view.getCellsViewSkin().resizeRowsToFitContent();
 
 				//We select the cell below if "enter" was typed.
 				if (KeyCode.ENTER.equals(lastKeyPressed))
