@@ -593,20 +593,20 @@ public class Table implements List<RowTable>, Mutable
         return names;
     }
 
-	public Table sort(String colName, boolean az) throws Exception
+	public Table sort(String colName, boolean az, boolean ignoreCase) throws Exception
 	{
 		changed(true);
 		for (int i = 0; i < this.headers.length; i++)
 		{
 			if (this.headers[i].name.equals(colName))
 			{
-				return this.sort(i, az);
+				return this.sort(i, az, ignoreCase);
 			}
 		}
 		throw new Exception("Column this name \'" + colName + "\' not fount in the table");
 	}
 
-	public Table sort(int colNumber, boolean az)
+	public Table sort(int colNumber, boolean az, boolean ignoreCase)
 	{
 		changed(true);
 		Header header = this.headers[colNumber];
@@ -619,7 +619,7 @@ public class Table implements List<RowTable>, Mutable
 			obj2 = convertCell(o2, header, obj2, null);
 
 			Header.HeaderType type = header.type == null ? Header.HeaderType.STRING : header.type;
-			int compare = type.compare(obj1, obj2);
+			int compare = type.compare(obj1, obj2, ignoreCase);
 			return az ? compare : -compare;
 		});
 		return this;

@@ -1,13 +1,6 @@
 package com.exactprosystems.jf.actions.tables;
 
-import java.util.List;
-
-import com.exactprosystems.jf.actions.AbstractAction;
-import com.exactprosystems.jf.actions.ActionAttribute;
-import com.exactprosystems.jf.actions.ActionFieldAttribute;
-import com.exactprosystems.jf.actions.ActionGroups;
-import com.exactprosystems.jf.actions.DefaultValuePool;
-import com.exactprosystems.jf.actions.ReadableValue;
+import com.exactprosystems.jf.actions.*;
 import com.exactprosystems.jf.api.error.ErrorKind;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.report.ReportBuilder;
@@ -15,6 +8,8 @@ import com.exactprosystems.jf.documents.config.Context;
 import com.exactprosystems.jf.documents.matrix.parser.Parameters;
 import com.exactprosystems.jf.functions.HelpKind;
 import com.exactprosystems.jf.functions.Table;
+
+import java.util.List;
 
 @ActionAttribute(
 		group 				  = ActionGroups.Tables,
@@ -45,6 +40,7 @@ public class TableSort extends AbstractAction
 	public static final String tableName = "Table";
 	public static final String columnName = "ColumnName";
 	public static final String ascendingName = "Ascending";
+	public static final String ignoreCaseName = "IgnoreCase";
 
 	@ActionFieldAttribute(name = tableName, mandatory = true, description = "Sorted table.")
 	protected Table table = null;
@@ -55,6 +51,9 @@ public class TableSort extends AbstractAction
 	@ActionFieldAttribute(name = ascendingName, mandatory = false, def = DefaultValuePool.True, description = "Sorting type: true - ascending sorting,"
 			+ " false - descending sorting. By default is true.")
 	protected Boolean ascending;
+
+	@ActionFieldAttribute(name = ignoreCaseName, mandatory = false, def = DefaultValuePool.False, description = "If this ignoreCase is true - sorting will ignore case. Available only for strings")
+	protected Boolean ignoreCase;
 
 	@Override
 	protected HelpKind howHelpWithParameterDerived(Context context,	Parameters parameters, String fieldName) throws Exception
@@ -107,6 +106,6 @@ public class TableSort extends AbstractAction
 			return;
 		}
 
-		super.setResult(this.table.sort(columnIndex, ascending));
+		super.setResult(this.table.sort(this.columnIndex, this.ascending, this.ignoreCase));
 	}
 }
