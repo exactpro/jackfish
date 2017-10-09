@@ -691,6 +691,7 @@ public class SpreadsheetView extends Control
 		{
 			column = new TableColumn<>(columnHeader);
 
+			column.widthProperty().addListener(observable -> this.getCellsViewSkin().resizeRowsToFitContent());
 			column.setEditable(true);
 			column.setSortable(false);
 			column.setCellValueFactory((TableColumn.CellDataFeatures<ObservableList<SpreadsheetCell>, SpreadsheetCell> p) ->

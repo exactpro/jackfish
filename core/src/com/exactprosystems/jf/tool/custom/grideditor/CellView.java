@@ -424,7 +424,7 @@ public class CellView extends TableCell<ObservableList<SpreadsheetCell>, Spreads
 	public void show(final SpreadsheetCell cell)
 	{
 		textProperty().bind(cell.textProperty());
-		setWrapText(cell.isWrapText());
+		setWrapText(true);
 		setEditable(cell.isEditable());
 	}
 

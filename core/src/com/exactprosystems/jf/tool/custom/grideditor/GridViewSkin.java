@@ -248,7 +248,7 @@ public class GridViewSkin extends TableViewSkinBase<ObservableList<SpreadsheetCe
 		}
 
 		double maxHeight;
-		maxHeight = 0;
+		maxHeight = 18;
 		getChildren().add(cell);
 
 		for (TableColumn column : getSkinnable().getColumns())
@@ -319,7 +319,7 @@ public class GridViewSkin extends TableViewSkinBase<ObservableList<SpreadsheetCe
 				.getAsDouble();
 
 		cell.updateIndex(-1);
-		double widthMax = Math.max(tc.getText().length() * 9 + 20, maxWidth);
+		double widthMax = Math.max(tc.getText().length() * 7 + 20, maxWidth);
 		if (handle.getGridView().getColumnResizePolicy() == TableView.CONSTRAINED_RESIZE_POLICY)
 		{
 			widthMax = Math.max(widthMax, tc.getWidth());
@@ -334,6 +334,7 @@ public class GridViewSkin extends TableViewSkinBase<ObservableList<SpreadsheetCe
 			tc.setPrefWidth(widthMax);
 		}
 
+		resizeRowsToFitContent();
 		rectangleSelection.updateRectangle();
 	}
 
