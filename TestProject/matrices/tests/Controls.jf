@@ -73,8 +73,8 @@ INIT;Test case;;;
     22;;push;OperationKind.PUSH;;Do.use(control).push();Do.use('pushLabel').getValue();control.Name + '_push';
     23;;getList;OperationKind.GET_LIST;;Do.use(control);Do.use(control).getList();control.getList;
     24;;toggle;OperationKind.TOGGLE;;Do.use(control).toggle(true).toggle(false).toggle(true);Do.use(control).getValue();control.toggle;
-    25;;selectSTRING;OperationKind.SELECT;;Do.use(control).select(par).delay(amount);Do.use(control).getValue();control.select;control.selectPar
-    26;x;selectINT;OperationKind.SELECT_BY_INDEX;;Do.use(control).select(0).delay(amount);Do.use(control).getValue();control.selectInt;
+    25;x;selectSTRING;OperationKind.SELECT;;Do.use(control).select(par).delay(amount);Do.use(control).getValue();control.select;control.selectPar
+    26;;selectINT;OperationKind.SELECT_BY_INDEX;;Do.use(control).select(0).delay(amount);Do.use(control).getValue();control.selectInt;
     27;;count;OperationKind.COUNT;;Do.use(control);Do.use(control).count();1;
     28;;use;OperationKind.USE;;Do.use(control);Do.use(control).use(0).count();1;
     29;x;move;OperationKind.MOVE;;Do.use(control).move();Do.use('moveLabel').getValue();control.Name + '_move';
