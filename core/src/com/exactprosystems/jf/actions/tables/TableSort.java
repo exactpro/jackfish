@@ -61,6 +61,7 @@ public class TableSort extends AbstractAction
 		switch (fieldName)
 		{
 			case ascendingName:
+			case ignoreCaseName:
 			case columnName:
 				return HelpKind.ChooseFromList;
 		}
@@ -73,6 +74,7 @@ public class TableSort extends AbstractAction
 		switch (parameterToFill)
 		{
 			case ascendingName:
+			case ignoreCaseName:
 				list.add(ReadableValue.TRUE);
 				list.add(ReadableValue.FALSE);
 				break;
