@@ -68,7 +68,7 @@ public class NumberTextField extends TextField
 
 	public int getValue()
 	{
-		return Integer.parseInt(this.getText());
+		return Integer.parseInt(this.getText().isEmpty() ? "0" : this.getText());
 	}
 
 	public void setValue(int value)

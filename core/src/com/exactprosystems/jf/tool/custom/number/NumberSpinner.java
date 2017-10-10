@@ -83,8 +83,9 @@ public class NumberSpinner extends HBox
 		buttons.setId(BUTTONS_BOX);
 		Button incrementButton = new Button();
 		incrementButton.getStyleClass().add(CssVariables.SPINNER_BUTTON_UP);
-		incrementButton.prefWidthProperty().bind(numberField.heightProperty());
-		incrementButton.minWidthProperty().bind(numberField.heightProperty());
+		//commented rows make buttons with arrows bigger
+//		incrementButton.prefWidthProperty().bind(numberField.heightProperty());
+//		incrementButton.minWidthProperty().bind(numberField.heightProperty());
 		incrementButton.maxHeightProperty().bind(buttonHeight.add(spacing));
 		incrementButton.prefHeightProperty().bind(buttonHeight.add(spacing));
 		incrementButton.minHeightProperty().bind(buttonHeight.add(spacing));
@@ -102,8 +103,9 @@ public class NumberSpinner extends HBox
 
 		Button decrementButton = new Button();
 		decrementButton.getStyleClass().add(CssVariables.SPINNER_BUTTON_DOWN);
-		decrementButton.prefWidthProperty().bind(numberField.heightProperty());
-		decrementButton.minWidthProperty().bind(numberField.heightProperty());
+		//commented rows make buttons with arrows bigger
+//		decrementButton.prefWidthProperty().bind(numberField.heightProperty());
+//		decrementButton.minWidthProperty().bind(numberField.heightProperty());
 		decrementButton.maxHeightProperty().bind(buttonHeight);
 		decrementButton.prefHeightProperty().bind(buttonHeight);
 		decrementButton.minHeightProperty().bind(buttonHeight);
@@ -128,6 +130,11 @@ public class NumberSpinner extends HBox
 	public NumberTextField getNumberField()
 	{
 		return numberField;
+	}
+
+	public int getValue()
+	{
+		return this.numberField.getValue();
 	}
 
 	//============================================================
