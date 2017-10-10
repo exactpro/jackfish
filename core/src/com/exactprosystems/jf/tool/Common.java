@@ -168,6 +168,11 @@ public abstract class Common
 		}
 	}
 
+	public static <T extends ContainingParent> T loadController(Class<?> clazz)
+	{
+		return loadController(clazz.getResource(clazz.getSimpleName()));
+	}
+
 	public static <T extends ContainingParent> T loadController(URL resource)
 	{
 		try

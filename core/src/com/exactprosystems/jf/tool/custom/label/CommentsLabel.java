@@ -10,11 +10,12 @@ package com.exactprosystems.jf.tool.custom.label;
 
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.CssVariables;
-import javafx.application.Platform;
 import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.input.KeyCode;
+
+import java.util.Optional;
 
 public class CommentsLabel extends Label
 {
@@ -26,30 +27,19 @@ public class CommentsLabel extends Label
 		super();
 	}
 
-	public CommentsLabel(String s)
-	{
-		super(s);
-	}
-
-	public void appendText(String s)
-	{
-		this.setText(this.getText() + s);
-	}
-
 	public void setListener(LabelListener listener)
 	{
 		this.listener = listener;
 	}
 
+	@Override
 	public void requestFocus()
 	{
 		createTextArea();
 		Common.runLater(textArea::requestFocus);
 	}
 
-	//============================================================
-	// private methods
-	//============================================================
+	//region private methods
 	private void createTextArea()
 	{
 		Common.sizeHeightComments(this, Common.setHeightComments(this.getText()) == 0 ? 45 : Common.setHeightComments(this.getText()));
@@ -79,7 +69,7 @@ public class CommentsLabel extends Label
 		});
 
 		textArea.focusedProperty().addListener((observableValue, aBoolean, t1) -> {
-			if (!t1 && textArea != null)
+			if (!t1 && this.textArea != null)
 			{
 				updateItem();
 			}
@@ -93,9 +83,8 @@ public class CommentsLabel extends Label
 		this.setContentDisplay(ContentDisplay.TEXT_ONLY);
 		Common.sizeHeightComments(this, Common.setHeightComments(text));
 		this.textArea = null;
-		if (listener != null)
-		{
-			listener.update();
-		}
+		Optional.ofNullable(this.listener).ifPresent(LabelListener::update);
 	}
+
+	//endregion
 }

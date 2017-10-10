@@ -821,7 +821,7 @@ public class MainController implements Initializable, ContainingParent
 
 	private void openLogs()
 	{
-		Common.tryCatch(() -> new LogsFx(this.settings).show(), "Error on open log");
+		new LogsFx(this.settings).show();
 	}
 
 	private void showAllTabs()
