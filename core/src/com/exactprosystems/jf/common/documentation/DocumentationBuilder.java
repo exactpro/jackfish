@@ -207,6 +207,11 @@ public class DocumentationBuilder
         return help;
     }
 
+    private static void addCommonPluginHelp(MatrixItem root) throws Exception
+    {
+        addTextLine(root, R.PLUGIN_COMMON_DESCRIPTION.get());
+    }
+
     private static void addContent(MatrixItem root, String title, Content content) throws Exception
     {
         MatrixItem contentItem = new HelpContent(title, content); 

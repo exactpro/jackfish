@@ -888,6 +888,7 @@ public class SeleniumOperationExecutor extends AbstractOperationExecutor<WebElem
 				{
 					throw new RemoteException("Can't select element by index " + index + " ,because found " + list.size() + " elements");
 				}
+				scrollTo(component, index);
 				list.get(index).click();
 				return true;
 

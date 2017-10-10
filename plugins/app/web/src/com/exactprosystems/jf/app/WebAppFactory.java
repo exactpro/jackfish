@@ -77,15 +77,24 @@ public class WebAppFactory extends AbstractApplicationFactory
 	@PluginFieldDescription(parameter = "WhereOpen", description = R.WEB_PLUGIN_WHERE_OPEN, example = "'OpenInTab'")
     public static final String   whereOpenName            = "WhereOpen";
 
+	@PluginFieldDescription(parameter = "Tab", description = R.WEB_PLUGIN_PROPERTY_TAB, example = "")
     public static final String   tabName                  = "Tab";
 
+	@PluginFieldDescription(parameter = "URL", description = R.WEB_PLUGIN_PROPERTY_URL, example = "")
     public static final String   propertyUrlName          = "URL";
+	@PluginFieldDescription(parameter = "Title", description = R.WEB_PLUGIN_PROPERTY_TITLE, example = "")
     public static final String   propertyTitle            = "Title";
+	@PluginFieldDescription(parameter = "AllTitles", description = R.WEB_PLUGIN_PROPERTY_ALL_TITLES, example = "")
     public static final String   propertyAllTitles        = "AllTitles";
+	@PluginFieldDescription(parameter = "Cookie", description = R.WEB_PLUGIN_PROPERTY_COOKIE, example = "")
     public static final String   propertyCookie           = "Cookie";
+	@PluginFieldDescription(parameter = "AllCookies", description = R.WEB_PLUGIN_PROPERTY_ALL_COOKIES, example = "")
     public static final String   propertyAllCookies       = "AllCookies";
+	@PluginFieldDescription(parameter = "AddCookie", description = R.WEB_PLUGIN_PROPERTY_ADD_COOKIE, example = "")
     public static final String   propertyAddCookie        = "AddCookie";
+	@PluginFieldDescription(parameter = "RemoveCookie", description = R.WEB_PLUGIN_PROPERTY_REMOVE_COOKIE, example = "")
     public static final String   propertyRemoveCookie     = "RemoveCookie";
+	@PluginFieldDescription(parameter = "RemoveAllCookies", description = R.WEB_PLUGIN_PROPERTY_REMOVE_ALL_COOKIES, example = "")
     public static final String   propertyRemoveAllCookies = "RemoveAllCookies";
 	
 	private static String[]      empty = {  };
