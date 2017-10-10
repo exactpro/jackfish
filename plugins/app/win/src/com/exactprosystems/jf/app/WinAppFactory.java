@@ -11,6 +11,7 @@ package com.exactprosystems.jf.app;
 import com.exactprosystems.jf.api.app.*;
 import com.exactprosystems.jf.api.common.ParametersKind;
 import com.exactprosystems.jf.api.common.PluginDescription;
+import com.exactprosystems.jf.api.common.PluginFieldDescription;
 import com.exactprosystems.jf.api.common.i18n.R;
 import org.w3c.dom.Node;
 
@@ -26,24 +27,40 @@ public class WinAppFactory extends AbstractApplicationFactory
 {
     public static final String      helpFileName            = "help.txt";
 
+    @PluginFieldDescription(parameter = "LogLevel", description = R.WIN_PLUGIN_LOG_LEVEL, example = "")
 	public static final String		logLevel				= "LogLevel";
+	@PluginFieldDescription(parameter = "jreExec", description = R.WIN_PLUGIN_JRE_EXEC, example = "")
 	public static final String		jreExecName				= "jreExec";
+	@PluginFieldDescription(parameter = "jreArgs", description = R.WIN_PLUGIN_JRE_ARGS, example = "")
 	public static final String		jreArgsName				= "jreArgs";
+	@PluginFieldDescription(parameter = "MaxTimeout", description = R.WIN_PLUGIN_MAX_TIMEOUT, example = "")
 	public static final String		maxTimeout				= "MaxTimeout";
 
+	@PluginFieldDescription(parameter = "AlwaysToFront", description = R.WIN_PLUGIN_ALWAYS_TO_FRONT, example = "")
 	public static final String		alwaysToFront			= "AlwaysToFront";
+	@PluginFieldDescription(parameter = "MainWindow", description = R.WIN_PLUGIN_MAIN_WINDOW, example = "")
 	public static final String		mainWindowName			= "MainWindow";
+	@PluginFieldDescription(parameter = "Height", description = R.WIN_PLUGIN_HEIGHT, example = "")
 	public static final String		mainWindowHeight		= "Height";
+	@PluginFieldDescription(parameter = "Width", description = R.WIN_PLUGIN_WIDTH, example = "")
 	public static final String		mainWindowWidth			= "Width";
+	@PluginFieldDescription(parameter = "PID", description = R.WIN_PLUGIN_PID, example = "")
 	public static final String		pidName					= "PID";
+	@PluginFieldDescription(parameter = "ControlKind", description = R.WIN_PLUGIN_CONTROL_KIND, example = "")
 	public static final String		controlKindName			= "ControlKind";
+	@PluginFieldDescription(parameter = "Timeout", description = R.WIN_PLUGIN_TIMEOUT, example = "")
 	public static final String		connectionTimeout		= "Timeout";
 
+	@PluginFieldDescription(parameter = "Exec", description = R.WIN_PLUGIN_EXEC, example = "")
 	public static final String		execName				= "Exec";
+	@PluginFieldDescription(parameter = "WorkDir", description = R.WIN_PLUGIN_WORK_DIR, example = "")
 	public static final String		workDirName				= "WorkDir";
+	@PluginFieldDescription(parameter = "Args", description = R.WIN_PLUGIN_ARGS, example = "")
 	public static final String		argsName				= "Args";
 
+	@PluginFieldDescription(parameter = "Rectangle", description = R.WIN_PLUGIN_RECTANGLE, example = "")
 	public static final String      propertyWindowRectangle = "Rectangle";
+	@PluginFieldDescription(parameter = "Title", description = R.WIN_PLUGIN_TITLE, example = "")
     public static final String      propertyTitle           = "Title";
 	private static      String[]    empty = {  };
 

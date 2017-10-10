@@ -11,6 +11,7 @@ package com.exactprosystems.jf.app;
 import com.exactprosystems.jf.api.app.*;
 import com.exactprosystems.jf.api.common.ParametersKind;
 import com.exactprosystems.jf.api.common.PluginDescription;
+import com.exactprosystems.jf.api.common.PluginFieldDescription;
 import com.exactprosystems.jf.api.common.i18n.R;
 import org.w3c.dom.Node;
 
@@ -27,15 +28,23 @@ public class SwingAppFactory extends AbstractApplicationFactory
 {
     public static final String helpFileName     = "help.txt";
 
+    @PluginFieldDescription(parameter = "LogLevel", description = R.SWING_PLUGIN_LOG_LEVEL, example = "")
     public static final String logLevel         = "LogLevel";
+	@PluginFieldDescription(parameter = "jreExec", description = R.SWING_PLUGIN_JRE_EXEC, example = "")
 	public final static String jreExecName 		= "jreExec";
+	@PluginFieldDescription(parameter = "jreArgs", description = R.SWING_PLUGIN_JRE_ARGS, example = "")
 	public final static String jreArgsName 		= "jreArgs";
+	@PluginFieldDescription(parameter = "MainClass", description = R.SWING_PLUGIN_MAIN_CLASS, example = "")
 	public final static String mainClassName 	= "MainClass";
+	@PluginFieldDescription(parameter = "Jar", description = R.SWING_PLUGIN_JAR, example = "")
 	public final static String jarName 			= "Jar";
+	@PluginFieldDescription(parameter = "Args", description = R.SWING_PLUGIN_ARGS, example = "")
 	public final static String argsName 		= "Args";
-	
+
+	@PluginFieldDescription(parameter = "URL", description = R.SWING_PLUGIN_URL, example = "")
 	public final static String urlName 			= "URL";
 
+	@PluginFieldDescription(parameter = "Title", description = R.SWING_PLUGIN_TITLE, example = "")
     public static final String propertyTitle    = "Title";
 
 	private static String[]    empty = {  };

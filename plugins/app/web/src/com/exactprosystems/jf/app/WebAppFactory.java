@@ -80,6 +80,7 @@ public class WebAppFactory extends AbstractApplicationFactory
 	@PluginFieldDescription(parameter = "Tab", description = R.WEB_PLUGIN_PROPERTY_TAB, example = "")
     public static final String   tabName                  = "Tab";
 
+	//todo change parameter
 	@PluginFieldDescription(parameter = "URL", description = R.WEB_PLUGIN_PROPERTY_URL, example = "")
     public static final String   propertyUrlName          = "URL";
 	@PluginFieldDescription(parameter = "Title", description = R.WEB_PLUGIN_PROPERTY_TITLE, example = "")

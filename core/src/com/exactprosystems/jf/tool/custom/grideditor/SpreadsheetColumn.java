@@ -117,11 +117,7 @@ public final class SpreadsheetColumn {
 		tf.toFront();
 		tf.requestFocus();
 		tf.setOnKeyPressed(e1 -> {
-			if (e1.getCode().equals(KeyCode.SHIFT))
-			{
-				//nothing
-			}
-			if (e1.getCode().equals(KeyCode.TAB) || e1.getCode().equals(KeyCode.ENTER))
+			if (e1.getCode().equals(KeyCode.ENTER))
 			{
 				this.spreadsheetView.renameColumn(this, tf.getText());
 				this.column.setGraphic(null);
@@ -129,26 +125,22 @@ public final class SpreadsheetColumn {
 			}
 			if (e1.getCode().equals(KeyCode.ESCAPE))
 			{
-				this.spreadsheetView.renameColumn(this, oldValue);
 				this.column.setGraphic(null);
 				isColumnEditable = false;
 			}
 		});
+
 		tf.focusedProperty().addListener((observable, oldValue1, newValue) -> {
-			if (!newValue && oldValue1)
+			if (!newValue && !tf.getText().equals(column.getText()))
 			{
-				if (this.column.getGraphic() != null)
-				{
-					this.spreadsheetView.renameColumn(this, oldValue);
-					this.column.setGraphic(null);
-					isColumnEditable = false;
-				}
-				if (!tf.isFocused())
-				{
-					this.spreadsheetView.renameColumn(this, tf.getText());
-					this.column.setGraphic(null);
-					isColumnEditable = false;
-				}
+				this.spreadsheetView.renameColumn(this, tf.getText());
+				this.column.setGraphic(null);
+				isColumnEditable = false;
+			}
+			else
+			{
+				this.column.setGraphic(null);
+				isColumnEditable = false;
 			}
 		});
 	}
