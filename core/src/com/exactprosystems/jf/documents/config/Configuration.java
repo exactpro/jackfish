@@ -314,13 +314,11 @@ public class Configuration extends AbstractDocument
 				MatrixItem mitem = lib.getRoot().find(false, NameSpace.class, name);
 				if(mitem != null)
 				{
-					mitem.bypass(it ->
-					{
-						if (it instanceof SubCase && !list.contains(new ReadableValue(it.getId())))
-						{
-							list.add(new ReadableValue(name + "." + it.getId(), ((SubCase) it).getName()));
-						}
-					});
+					mitem.stream()
+							.filter(item -> item instanceof SubCase && !list.contains(new ReadableValue(item.getId())))
+							.map(item -> (SubCase) item)
+							.map(sc -> new ReadableValue(name + "." + sc.getId(), sc.getName()))
+							.forEach(list::add);
 				}
 			}
 		}

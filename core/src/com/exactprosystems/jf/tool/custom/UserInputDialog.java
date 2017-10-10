@@ -42,257 +42,247 @@ import java.util.function.Supplier;
 
 public class UserInputDialog extends Dialog<Object>
 {
-	private GridPane grid;
-    private Control mainControl;
+	private Control  mainControl;
 	private Timeline timer;
-	private Supplier<Object> result = () -> null;  
+	private Supplier<Object> result = () -> null;
 
 	public UserInputDialog(Object defaultValue, AbstractEvaluator evaluator, HelpKind helpKind, List<ReadableValue> dataSource, int timeout)
 	{
-		timeout = timeout < 0 ? Integer.MAX_VALUE : timeout;
 		DialogPane dialogPane = getDialogPane();
 		this.setResizable(true);
 		dialogPane.getStylesheets().addAll(Theme.currentThemesPaths());
-		this.timer = new Timeline(new KeyFrame(Duration.millis(timeout), ae -> done()) );
+		this.timer = new Timeline(new KeyFrame(Duration.millis(timeout < 0 ? Integer.MAX_VALUE : timeout), ae -> done()));
 		this.timer.setCycleCount(1);
 		this.timer.play();
-		
-        try
-        {
-            if (helpKind != null )
-            {
-            	switch (helpKind)
-            	{
-            	    case Number:
-                        this.mainControl = createNumberTextField(Converter.convertToType(defaultValue, Integer.class));
-            	        break;
-            	    
-            	    case Boolean:
-                        this.mainControl = createBooleanField(Converter.convertToType(defaultValue, Boolean.class));
-                        break;
-            	        
-            	    case Expression:
-                        this.mainControl = createExpressionField(evaluator, Str.asString(defaultValue));
-                        break;
 
-            		case ChooseDateTime:
-            		    this.mainControl = createDateTimePickerField(Converter.convertToType(defaultValue, Date.class));
-            		    break;
-            		
-            		case ChooseOpenFile:
-                        ExpressionField openFile = createExpressionField(evaluator, Str.asString(defaultValue));
-                        this.mainControl = openFile;
-                        openFile.setNameSecond(helpKind.getLabel());
-            			openFile.setSecondActionListener(str ->
-            			{
-            			    this.timer.stop();
-            				File file = DialogsHelper.showOpenSaveDialog("Choose file to open", "All files", "*.*", DialogsHelper.OpenSaveMode.OpenFile);
-            				this.timer.play();
-            				if (file != null)
-            				{
-            					return Common.getRelativePath(file.getAbsolutePath());
-            				}
-            				return str;
-            			});
-            			break;
+		try
+		{
+			switch (helpKind)
+			{
+				case Number:
+					this.mainControl = createNumberTextField(Converter.convertToType(defaultValue, Integer.class));
+					break;
 
-            		case ChooseFolder:
-                    {
-                        ExpressionField chooseFolder = createExpressionField(evaluator, Str.asString(defaultValue));
-                        this.mainControl = chooseFolder;
-                        chooseFolder.setNameSecond(helpKind.getLabel());
-            			chooseFolder.setSecondActionListener(str ->
-            			{
-                            this.timer.stop();
-            				File file = DialogsHelper.showDirChooseDialog("Choose directory");
-                            this.timer.play();
-            				if (file != null)
-            				{
-            					return Common.getRelativePath(file.getAbsolutePath());
-            				}
-            				return str;
-            			});
-            			break;
-                    }
-            		case ChooseFromList:
-            		    dataSource = dataSource == null ? Collections.emptyList() : dataSource; 
-                        this.mainControl = createListViewField(dataSource, Str.asString(defaultValue));
-            			break;
+				case Boolean:
+					this.mainControl = createBooleanField(Converter.convertToType(defaultValue, Boolean.class));
+					break;
 
-            		default:
-                        this.mainControl = createTextField(Str.asString(defaultValue));
-                        break;
-            	}
-            }
+				case Expression:
+					this.mainControl = createExpressionField(evaluator, Str.asString(defaultValue));
+					break;
 
-            EventHandler<? super KeyEvent> onKeyPressed = this.mainControl.getOnKeyPressed();
-            this.mainControl.setOnKeyPressed(k -> 
-            { 
-                if (onKeyPressed != null)
-                {
-                    onKeyPressed.handle(k);
-                }
-                restartTimer(); 
-            });
+				case ChooseDateTime:
+					this.mainControl = createDateTimePickerField(Converter.convertToType(defaultValue, Date.class));
+					break;
 
-            EventHandler<? super MouseEvent> onMouseMoved = this.mainControl.getOnMouseMoved();
-            this.mainControl.setOnMouseMoved(m -> 
-            {
-                if (onMouseMoved != null)
-                {
-                    onMouseMoved.handle(m);
-                }
-                restartTimer(); 
-            });
-            
-        }
-        catch (Exception e)
-        {
-            e.printStackTrace();
-        }
+				case ChooseOpenFile:
+					ExpressionField openFile = createExpressionField(evaluator, Str.asString(defaultValue));
+					this.mainControl = openFile;
+					openFile.setNameSecond(helpKind.getLabel());
+					openFile.setSecondActionListener(str -> {
+						this.timer.stop();
+						File file = DialogsHelper.showOpenSaveDialog("Choose file to open", "All files", "*.*", DialogsHelper.OpenSaveMode.OpenFile);
+						this.timer.play();
+						if (file != null)
+						{
+							return Common.getRelativePath(file.getAbsolutePath());
+						}
+						return str;
+					});
+					break;
 
-        this.grid = new GridPane();
-        this.grid.setHgap(10);
-        this.grid.setVgap(10);
-        this.grid.setMaxWidth(Double.MAX_VALUE);
-        this.grid.setAlignment(Pos.CENTER_LEFT);
+				case ChooseFolder:
+					ExpressionField chooseFolder = createExpressionField(evaluator, Str.asString(defaultValue));
+					this.mainControl = chooseFolder;
+					chooseFolder.setNameSecond(helpKind.getLabel());
+					chooseFolder.setSecondActionListener(str -> {
+						this.timer.stop();
+						File file = DialogsHelper.showDirChooseDialog("Choose directory");
+						this.timer.play();
+						if (file != null)
+						{
+							return Common.getRelativePath(file.getAbsolutePath());
+						}
+						return str;
+					});
+					break;
 
-        dialogPane.getButtonTypes().addAll(ButtonType.OK);
-        dialogPane.setPrefWidth(550);
-        dialogPane.setMaxWidth(550);
-        dialogPane.setMinWidth(550);
-        dialogPane.setPrefHeight(200);
-        dialogPane.setMinHeight(200);
-        dialogPane.setMaxHeight(200);
-        dialogPane.setContent(this.grid);
+				case ChooseFromList:
+					this.mainControl = createListViewField(dataSource == null ? Collections.emptyList() : dataSource, Str.asString(defaultValue));
+					break;
 
-        setResultConverter((dialogButton) ->
-        {
-            ButtonBar.ButtonData data = dialogButton == null ? null : dialogButton.getButtonData();
-            this.timer.stop();
-            return data == ButtonBar.ButtonData.OK_DONE ? this.result.get() : null;
-        });
+				default:
+					this.mainControl = createTextField(Str.asString(defaultValue));
+					break;
+			}
 
-        if (this.mainControl == null)
-        {
-            Common.runLater(this::close);
-            return;
-        }
+			EventHandler<? super KeyEvent> onKeyPressed = this.mainControl.getOnKeyPressed();
+			this.mainControl.setOnKeyPressed(k -> {
+				if (onKeyPressed != null)
+				{
+					onKeyPressed.handle(k);
+				}
+				restartTimer();
+			});
 
-        grid.getChildren().clear();
-        grid.add(this.mainControl, 0, 0);
+			EventHandler<? super MouseEvent> onMouseMoved = this.mainControl.getOnMouseMoved();
+			this.mainControl.setOnMouseMoved(m -> {
+				if (onMouseMoved != null)
+				{
+					onMouseMoved.handle(m);
+				}
+				restartTimer();
+			});
+		}
+		catch (Exception ignored)
+		{}
 
-        Common.runLater(this.mainControl::requestFocus);
+		GridPane grid = new GridPane();
+		grid.setHgap(10);
+		grid.setVgap(10);
+		grid.setMaxWidth(Double.MAX_VALUE);
+		grid.setAlignment(Pos.CENTER_LEFT);
+
+		dialogPane.getButtonTypes().addAll(ButtonType.OK);
+		dialogPane.setPrefWidth(550);
+		dialogPane.setMaxWidth(550);
+		dialogPane.setMinWidth(550);
+		dialogPane.setPrefHeight(200);
+		dialogPane.setMinHeight(200);
+		dialogPane.setMaxHeight(200);
+		dialogPane.setContent(grid);
+
+		setResultConverter(dialogButton -> {
+			ButtonBar.ButtonData data = dialogButton == null ? null : dialogButton.getButtonData();
+			this.timer.stop();
+			return data == ButtonBar.ButtonData.OK_DONE ? this.result.get() : null;
+		});
+
+		if (this.mainControl == null)
+		{
+			Common.runLater(this::close);
+			return;
+		}
+
+		grid.getChildren().clear();
+		grid.add(this.mainControl, 0, 0);
+
+		Common.runLater(this.mainControl::requestFocus);
 	}
 
-    private DateTimePicker createDateTimePickerField(Date defaultValue)
-    {
-        DateTimePicker field = new DateTimePicker(defaultValue);
-        field.getEditor().setOnMouseMoved(m -> restartTimer());
-        field.getEditor().setOnKeyPressed(m -> restartTimer());
-        field.setOnShown(e -> 
-        {
-            DatePickerSkin skin = ((DatePickerSkin)field.getSkin());
-            skin.getPopupContent().setOnMouseMoved(m -> restartTimer());
-            skin.getPopupContent().setOnKeyPressed(m -> restartTimer());
-        });
-        field.setMaxWidth(Double.MAX_VALUE);
-        GridPane.setHgrow(field, Priority.ALWAYS);
-        GridPane.setFillWidth(field, true);
-        this.result = () -> field.getDate();
+	//region private methods
+	private DateTimePicker createDateTimePickerField(Date defaultValue)
+	{
+		DateTimePicker field = new DateTimePicker(defaultValue);
+		field.getEditor().setOnMouseMoved(m -> restartTimer());
+		field.getEditor().setOnKeyPressed(m -> restartTimer());
+		field.setOnShown(e -> {
+			DatePickerSkin skin = ((DatePickerSkin) field.getSkin());
+			skin.getPopupContent().setOnMouseMoved(m -> restartTimer());
+			skin.getPopupContent().setOnKeyPressed(m -> restartTimer());
+		});
+		field.setMaxWidth(Double.MAX_VALUE);
+		GridPane.setHgrow(field, Priority.ALWAYS);
+		GridPane.setFillWidth(field, true);
+		this.result = field::getDate;
+		return field;
+	}
 
-        return field;
-    }
+	private CheckBox createBooleanField(boolean defaultValue)
+	{
+		CheckBox field = new CheckBox();
+		field.setIndeterminate(false);
+		field.setSelected(defaultValue);
+		field.setMaxWidth(Double.MAX_VALUE);
+		GridPane.setHgrow(field, Priority.ALWAYS);
+		GridPane.setFillWidth(field, true);
+		this.result = field::isSelected;
 
-    private CheckBox createBooleanField(boolean defaultValue)
-    {
-        CheckBox field = new CheckBox();
-        field.setIndeterminate(false);
-        field.setSelected(defaultValue);
-        field.setMaxWidth(Double.MAX_VALUE);
-        GridPane.setHgrow(field, Priority.ALWAYS);
-        GridPane.setFillWidth(field, true);
-        this.result = () -> field.isSelected();
-        
-        return field;
-    }
-	
-    private NumberTextField createNumberTextField(int defaultValue)
-    {
-        NumberTextField field = new NumberTextField(defaultValue);
-        field.setMaxWidth(Double.MAX_VALUE);
-        GridPane.setHgrow(field, Priority.ALWAYS);
-        GridPane.setFillWidth(field, true);
-        this.result = () -> field.getValue();
-        
-        return field;
-    }
+		return field;
+	}
+
+	private NumberTextField createNumberTextField(int defaultValue)
+	{
+		NumberTextField field = new NumberTextField(defaultValue);
+		field.setMaxWidth(Double.MAX_VALUE);
+		GridPane.setHgrow(field, Priority.ALWAYS);
+		GridPane.setFillWidth(field, true);
+		this.result = field::getValue;
+
+		return field;
+	}
 
 	private TextField createTextField(String defaultValue)
-    {
-        TextField field = new TextField(defaultValue);
-        field.setMaxWidth(Double.MAX_VALUE);
-        GridPane.setHgrow(field, Priority.ALWAYS);
-        GridPane.setFillWidth(field, true);
-        this.result = () -> field.getText();
-        
-        return field;
-    }
-	
+	{
+		TextField field = new TextField(defaultValue);
+		field.setMaxWidth(Double.MAX_VALUE);
+		GridPane.setHgrow(field, Priority.ALWAYS);
+		GridPane.setFillWidth(field, true);
+		this.result = field::getText;
+
+		return field;
+	}
+
 	private ExpressionField createExpressionField(AbstractEvaluator evaluator, String defaultExpression)
 	{
-	    ExpressionField expressionField = new ExpressionField(evaluator, defaultExpression);
-        expressionField.setHelperForExpressionField("Title", null);
-        expressionField.setMaxWidth(Double.MAX_VALUE);
-        GridPane.setHgrow(expressionField, Priority.ALWAYS);
-        GridPane.setFillWidth(expressionField, true);
-        this.result = () -> expressionField.getText();
-        
-        return expressionField;
+		ExpressionField expressionField = new ExpressionField(evaluator, defaultExpression);
+		expressionField.setHelperForExpressionField("Title", null);
+		expressionField.setMaxWidth(Double.MAX_VALUE);
+		GridPane.setHgrow(expressionField, Priority.ALWAYS);
+		GridPane.setFillWidth(expressionField, true);
+		this.result = expressionField::getText;
+
+		return expressionField;
 	}
-	
-    private ListView<ReadableValue> createListViewField(List<ReadableValue> dataSource, String defaultValue)
-    {
-        ListView<ReadableValue> list = new ListView<>(FXCollections.observableList(dataSource));
-        list.getSelectionModel().select(new ReadableValue(defaultValue));
-        list.setOnKeyPressed(keyEvent ->
-        {
-            if (keyEvent.getCode() == KeyCode.ENTER)
-            {
-                done();
-            }
-        });
-        list.setMaxWidth(Double.MAX_VALUE);
-        GridPane.setHgrow(list, Priority.ALWAYS);
-        GridPane.setFillWidth(list, true);
-        this.result = () ->
-        {
-            ReadableValue item = list.getSelectionModel().getSelectedItem();
-            return item == null ? null : item.getValue();
-        };
-        
-        return list;
-    }
+
+	private ListView<ReadableValue> createListViewField(List<ReadableValue> dataSource, String defaultValue)
+	{
+		ListView<ReadableValue> list = new ListView<>(FXCollections.observableList(dataSource));
+		list.getSelectionModel().select(new ReadableValue(defaultValue));
+		list.setOnKeyPressed(keyEvent ->
+		{
+			if (keyEvent.getCode() == KeyCode.ENTER)
+			{
+				done();
+			}
+		});
+		list.setOnMouseClicked(mouseEvent ->
+		{
+			if (mouseEvent.getClickCount() == 2)
+			{
+				done();
+			}
+		});
+		list.setMaxWidth(Double.MAX_VALUE);
+		GridPane.setHgrow(list, Priority.ALWAYS);
+		GridPane.setFillWidth(list, true);
+		this.result = () -> {
+			ReadableValue item = list.getSelectionModel().getSelectedItem();
+			return item == null ? null : item.getValue();
+		};
+
+		return list;
+	}
 
 	private void done()
-    { 
-	    Button buttonOk = ((Button)getDialogPane().lookupButton(ButtonType.OK));
-	    Common.runLater(() ->
-	    {
-	        if (buttonOk != null)
-	        {
-    	        buttonOk.requestFocus();   
-    	        buttonOk.fire();
-	        }
-	    });
-    }
+	{
+		Button buttonOk = ((Button) getDialogPane().lookupButton(ButtonType.OK));
+		Common.runLater(() -> {
+			if (buttonOk != null)
+			{
+				buttonOk.requestFocus();
+				buttonOk.fire();
+			}
+		});
+	}
 
 	private void restartTimer()
-    {
-	    if (this.timer.getStatus() != Status.STOPPED)
-	    {
-            this.timer.stop();
-            this.timer.play();
-	    }
-    }
+	{
+		if (this.timer.getStatus() != Status.STOPPED)
+		{
+			this.timer.stop();
+			this.timer.play();
+		}
+	}
+	//endregion
 }

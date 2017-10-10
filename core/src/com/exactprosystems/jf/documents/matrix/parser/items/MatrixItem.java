@@ -35,6 +35,7 @@ import java.util.*;
 import java.util.function.BiConsumer;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public abstract class MatrixItem implements IMatrixItem, Mutable, Cloneable
 {
@@ -195,6 +196,13 @@ public abstract class MatrixItem implements IMatrixItem, Mutable, Cloneable
 		{
 			item.bypass(visiter);
 		}
+	}
+
+	public final Stream<MatrixItem> stream()
+	{
+		List<MatrixItem> list = new ArrayList<>();
+		this.bypass(list::add);
+		return list.stream();
 	}
 
 	//==============================================================================================

@@ -30,7 +30,6 @@ public class CustomTreeViewSkin<T> extends TreeViewSkin<T>
 		getSkinnable().getSelectionModel().select(treeItem);
 	}
 
-
 	//region pritvate methods
 	private void expandAll(TreeItem<T> item)
 	{

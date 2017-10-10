@@ -15,7 +15,6 @@ import com.exactprosystems.jf.tool.CssVariables;
 import com.exactprosystems.jf.tool.settings.Theme;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
@@ -26,7 +25,7 @@ import java.util.Map.Entry;
 
 public class UserEditTableDialog extends Dialog<Boolean>
 {
-	private final GridPane grid;
+	private final GridPane            grid;
 	private final TableView<RowTable> tableView;
 
 	public UserEditTableDialog(Table table, Map<String, Boolean> columns)
@@ -35,7 +34,8 @@ public class UserEditTableDialog extends Dialog<Boolean>
 		this.setResizable(true);
 		dialogPane.getStylesheets().addAll(Theme.currentThemesPaths());
 
-		this.tableView = createTableView(table, columns);
+		this.tableView = new TableView<>();
+		initTableView(table, columns);
 
 		GridPane.setHgrow(this.tableView, Priority.ALWAYS);
 		GridPane.setFillWidth(this.tableView, true);
@@ -53,66 +53,59 @@ public class UserEditTableDialog extends Dialog<Boolean>
 
 		updateGrid();
 
-		setResultConverter((dialogButton) ->
-		{
+		setResultConverter(dialogButton -> {
 			ButtonBar.ButtonData data = dialogButton == null ? null : dialogButton.getButtonData();
 			return data == ButtonBar.ButtonData.OK_DONE;
 		});
 	}
 
-	private TableView<RowTable> createTableView(Table table, Map<String, Boolean> columns)
-    {
-        TableView<RowTable> tableView = new TableView<>();
-        tableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
-        
-        for (Entry<String, Boolean> entry : columns.entrySet())
-        {
-            final String name = entry.getKey();
-            final Boolean editable = entry.getValue();
+	//region private methods
+	private void initTableView(Table table, Map<String, Boolean> columns)
+	{
+		this.tableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
 
-            if (table.columnIsPresent(name))
-            {
-                final TableColumn<RowTable, String> column = new TableColumn<>();
-                column.setText(name);
-                column.setCellValueFactory(p -> new SimpleObjectProperty<>("" + p.getValue().get(name)));
+		for (Entry<String, Boolean> entry : columns.entrySet())
+		{
+			final String name = entry.getKey();
+			final Boolean editable = entry.getValue();
 
-                if (editable)
-                {
-                    column.setEditable(true);
-                    column.setCellFactory(p -> new TableCell<RowTable, String>()
-                    {
-                        @Override
-                        protected void updateItem(String item, boolean empty)
-                        {
-                            super.updateItem(item, empty);
-                            if (item != null && !empty)
-                            {
-                                TextField value = new TextField(item.toString());
-                                value.textProperty().addListener((observable, oldValue, newValue) -> 
-                                {
-                                    ((RowTable) getTableRow().getItem()).put(name,newValue);
-                                });
-                                value.getStyleClass().setAll(CssVariables.EDITABLE_PARAMETER);
-                                setGraphic(value);
-                            }
-                            else
-                            {
-                                setText(null);
-                            }
-                        }
-                    });
-                }
-                tableView.getColumns().add(column);
-            }
-        }
-        
-        ObservableList<RowTable> data = FXCollections.observableArrayList(table);
-        tableView.setItems(data);
+			if (table.columnIsPresent(name))
+			{
+				final TableColumn<RowTable, String> column = new TableColumn<>();
+				column.setText(name);
+				column.setCellValueFactory(p -> new SimpleObjectProperty<>("" + p.getValue().get(name)));
 
-        return tableView;
-    }
+				if (editable)
+				{
+					column.setEditable(true);
+					column.setCellFactory(p -> new TableCell<RowTable, String>()
+					{
+						@Override
+						protected void updateItem(String item, boolean empty)
+						{
+							super.updateItem(item, empty);
+							if (item != null && !empty)
+							{
+								TextField value = new TextField(item);
+								value.textProperty().addListener((observable, oldValue, newValue) -> ((RowTable) getTableRow().getItem()).put(name, newValue));
+								value.getStyleClass().setAll(CssVariables.EDITABLE_PARAMETER);
+								setGraphic(value);
+							}
+							else
+							{
+								setText(null);
+							}
+						}
+					});
+				}
+				this.tableView.getColumns().add(column);
+			}
+		}
 
-    private void updateGrid()
+		this.tableView.setItems(FXCollections.observableArrayList(table));
+	}
+
+	private void updateGrid()
 	{
 		grid.getChildren().clear();
 
@@ -121,5 +114,5 @@ public class UserEditTableDialog extends Dialog<Boolean>
 
 		Common.runLater(tableView::requestFocus);
 	}
-    
+	//endregion
 }

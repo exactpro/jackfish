@@ -39,8 +39,8 @@ import java.util.Map;
 public class Notifications
 {
 	private static final Pos POSITION = Pos.BOTTOM_RIGHT;
-	private static Duration hideAfterDuration = Duration.seconds(5);
 
+	private Duration hideAfterDuration = Duration.seconds(5);
 	private Notifier state;
 	private String title;
 	private String msg;
@@ -70,7 +70,7 @@ public class Notifications
 
 	public Notifications hideAfter(Duration duration)
 	{
-		hideAfterDuration = duration;
+		this.hideAfterDuration = duration;
 		return this;
 	}
 
@@ -103,38 +103,30 @@ public class Notifications
 
 		private double startX = 0;
 		private double startY = 0;
-		private double screenWidth;
-		private double screenHeight;
 
-		private static NotificationPopupHandler INSTANCE = null;
+		private static NotificationPopupHandler INSTANCE;
 
-		static NotificationPopupHandler getInstance()
+		static synchronized NotificationPopupHandler getInstance()
 		{
 			if (INSTANCE == null)
 			{
-				synchronized (NotificationPopupHandler.class)
-				{
-					if (INSTANCE == null)
-					{
-						INSTANCE = new NotificationPopupHandler();
-					}
-				}
+				INSTANCE = new NotificationPopupHandler();
 			}
-			
+
 			return INSTANCE;
 		}
 
 		private final Map<Pos, List<Popup>> popupsMap = new HashMap<>();
-		private final double padding = 10;
+		private static final double padding = 10;
 
-		private ParallelTransition parallelTransition = new ParallelTransition(new FadeTransition());
+		private ParallelTransition parallelTransition = new ParallelTransition(new FillTransition());
 
 		private boolean isShowing = false;
 
 		private void show(Window owner, final Notifications notification)
 		{
-			screenWidth = screenBounds.getWidth();
-			screenHeight = screenBounds.getHeight();
+			double screenWidth = screenBounds.getWidth();
+			double screenHeight = screenBounds.getHeight();
 			final Popup popup = new Popup();
 			popup.setAutoFix(false);
 
@@ -188,11 +180,10 @@ public class Notifications
 			popup.show(owner, 0, 0);
 
 			// determine location for the popup
-			double anchorX = 0, anchorY = 0;
 			final double barWidth = notificationBar.getWidth();
 			final double barHeight = notificationBar.getHeight();
-			anchorX = startX + screenWidth - barWidth - padding;
-			anchorY = startY + screenHeight - barHeight - padding;
+			double anchorX = startX + screenWidth - barWidth - padding;
+			double anchorY = startY + screenHeight - barHeight - padding;
 
 			popup.setAnchorX(anchorX);
 			popup.setAnchorY(anchorY);
@@ -200,7 +191,7 @@ public class Notifications
 			isShowing = true;
 			notificationBar.doShow();
 			addPopupToMap(popup);
-			Timeline timeline = createHideTimeline(popup, notificationBar, hideAfterDuration);
+			Timeline timeline = createHideTimeline(popup, notificationBar, notification.hideAfterDuration);
 			notificationBar.setTimeline(timeline);
 			timeline.play();
 		}
@@ -335,7 +326,7 @@ public class Notifications
 
 		private GridPane pane;
 
-		public DoubleProperty transition = new SimpleDoubleProperty()
+		private DoubleProperty transition = new SimpleDoubleProperty()
 		{
 			@Override
 			protected void invalidated()
@@ -409,7 +400,7 @@ public class Notifications
 			this.closeBtn.opacityProperty().bind(this.transition);
 
 			this.copyBtn = new Button("C");
-			this.copyBtn.setOnAction((e) -> Common.copyText(this.label.getText()));
+			this.copyBtn.setOnAction(e -> Common.copyText(this.label.getText()));
 			this.copyBtn.getStyleClass().setAll(CssVariables.NOTIFICATION_COPY_BUTTON);
 			this.copyBtn.setMinSize(16, 16);
 			this.copyBtn.setPrefSize(16, 16);
@@ -490,7 +481,7 @@ public class Notifications
 
 
 		// --- animation timeline code
-		private final Duration TRANSITION_DURATION = new Duration(350.0);
+		private static final Duration TRANSITION_DURATION = new Duration(350.0);
 		private Timeline timeline;
 		private double transitionStartValue;
 
@@ -518,7 +509,8 @@ public class Notifications
 			timeline = new Timeline();
 			timeline.setCycleCount(1);
 
-			KeyFrame startKeyFrame, endKeyFrame;
+			KeyFrame startKeyFrame;
+			KeyFrame endKeyFrame;
 
 			if (isShowing())
 			{
@@ -529,16 +521,11 @@ public class Notifications
 
 				}, new KeyValue(transition, transitionStartValue));
 
-				endKeyFrame = new KeyFrame(duration, event -> {
-					// end expand
-					pane.setCache(false);
-				}, new KeyValue(transition, 1, Interpolator.EASE_OUT));
+				endKeyFrame = new KeyFrame(duration, event -> pane.setCache(false), new KeyValue(transition, 1, Interpolator.EASE_OUT));
 			}
 			else
 			{
-				startKeyFrame = new KeyFrame(Duration.ZERO, event -> {
-					pane.setCache(true);
-				}, new KeyValue(this.opacityProperty(), 1.0));
+				startKeyFrame = new KeyFrame(Duration.ZERO, event -> pane.setCache(true), new KeyValue(this.opacityProperty(), 1.0));
 
 				endKeyFrame = new KeyFrame(duration, event -> {
 					setCache(false);
