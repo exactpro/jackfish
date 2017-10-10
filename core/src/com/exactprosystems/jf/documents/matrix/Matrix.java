@@ -57,7 +57,7 @@ public class Matrix extends AbstractDocument implements IMatrix
     private boolean                      isLibrary;
     private int                          count            = 0;
     private MatrixItem                   root             = null;
-    private IMatrixListener              matrixListener   = null;
+    protected IMatrixListener              matrixListener   = null;
     private MatrixEngine                 engine           = null;
     private MutableValue<MatrixState>    stateProperty    = new MutableValue<>(MatrixState.Created);
 
@@ -255,24 +255,22 @@ public class Matrix extends AbstractDocument implements IMatrix
     @Override
     public void close() throws Exception
     {
-        super.close();
-        
         if (this.engine != null)
         {
             this.engine.close();
         }
+		super.close();
     }
 
 	@Override
 	public void save(String fileName) throws Exception
 	{
-		super.save(fileName);
-		
 		try (Writer rawWriter = CommonHelper.writerToFileName(fileName))
 		{
 			Parser parser = new Parser();
 			parser.saveMatrix(this.root, rawWriter);
 		}
+		super.save(fileName);
 	}
 	
 	@Override

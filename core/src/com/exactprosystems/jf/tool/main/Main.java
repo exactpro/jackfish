@@ -74,6 +74,7 @@ import java.nio.file.Path;
 import java.util.*;
 import java.util.List;
 import java.util.function.BiConsumer;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 public class Main extends Application
@@ -190,24 +191,21 @@ public class Main extends Application
 			notifyPreloader(new Preloader.ProgressNotification(55));
 
 			List<SettingsValue> values = settings.getValues(Settings.MAIN_NS, Settings.OPENED);
-			double progressStep = 45 / Math.max(1, values.size());
+			double progressStep = 45 /(double) Math.max(1, values.size());
 			double currentProgress = 55;
 			for (SettingsValue item : values)
 			{
 				DocumentKind kind = DocumentKind.valueOf(item.getValue());
-				if (kind != null)
+				String filePath = item.getKey();
+				File file = new File(filePath);
+				try
 				{
-					String filePath = item.getKey();
-					File file = new File(filePath);
-					try
-					{
-                        needDisplayDoc.add(loadDocument(file, kind));
-					}
-					catch (FileNotFoundException e)
-					{
-						settings.remove(Settings.MAIN_NS, Settings.OPENED, file.getAbsolutePath());
-						settings.saveIfNeeded();
-					}
+					needDisplayDoc.add(loadDocument(file, kind));
+				}
+				catch (FileNotFoundException e)
+				{
+					settings.remove(Settings.MAIN_NS, Settings.OPENED, file.getAbsolutePath());
+					settings.saveIfNeeded();
 				}
 				currentProgress += progressStep;
 				notifyPreloader(new Preloader.ProgressNotification(currentProgress));
@@ -237,7 +235,7 @@ public class Main extends Application
 		});
 		controller.init(factory, this, this.wizardManager, settings, stage);
 		Common.node = stage;
-		Common.reportListener(url -> Common.tryCatch(() -> HostServicesFactory.getInstance(this).showDocument(url), "Error on show report"));
+		Common.reportListener(url -> HostServicesFactory.getInstance(this).showDocument(url));
 		controller.display();
 		controller.initShortcuts();
 		this.isFromInit = false;
@@ -245,7 +243,14 @@ public class Main extends Application
 		{
 			if (document != null)
 			{
-				document.display();
+				if (DocumentKind.byDocument(document).isUseNewMVP())
+				{
+					this.factory.showDocument(document);
+				}
+				else
+				{
+					document.display();
+				}
 			}
 		}
 		this.needDisplayDoc.clear();
@@ -450,7 +455,6 @@ public class Main extends Application
 		}
 	}
 
-	// TODO it is new approach
 	public void loadSystemVars(String filePath) throws Exception
 	{
 		checkConfig();
@@ -491,13 +495,12 @@ public class Main extends Application
 
 	public void newMatrix() throws Exception
 	{
-		checkConfig();
-		Matrix doc = (Matrix) this.factory.createDocument(DocumentKind.MATRIX, newName(Matrix.class));
-		doc.create();
-		Settings.SettingsValue copyright = settings.getValueOrDefault(Settings.GLOBAL_NS, Settings.SETTINGS, Settings.COPYRIGHT);
-		String text = copyright.getValue().replaceAll("\\\\n", System.lineSeparator());
-		doc.addCopyright(text);
-		doc.display();
+		newDocument(DocumentKind.MATRIX, newName(Matrix.class), doc ->
+		{
+			Settings.SettingsValue copyright = settings.getValueOrDefault(Settings.GLOBAL_NS, Settings.SETTINGS, Settings.COPYRIGHT);
+			String text = copyright.getValue().replaceAll("\\\\n", System.lineSeparator());
+			((Matrix) doc).addCopyright(text);
+		});
 	}
 
 	public void newLibrary(String fullPath) throws Exception
@@ -516,7 +519,7 @@ public class Main extends Application
 		{
 			doc.save(fullPath);
 		}
-		doc.display();
+		this.factory.showDocument(doc);
 	}
 
 	public void newLibrary() throws Exception
@@ -524,30 +527,28 @@ public class Main extends Application
 		newLibrary(newName(Matrix.class));
 	}
 
-	// TODO it is new approach
 	public void newSystemVars() throws Exception
 	{
-		checkConfig();
-
-		Document doc = this.factory.createDocument(DocumentKind.SYSTEM_VARS, newName(SystemVars.class));
-		doc.create();
-		this.factory.showDocument(doc);
+		newDocument(DocumentKind.SYSTEM_VARS, newName(SystemVars.class), doc -> {});
 	}
 
 	public void newPlainText() throws Exception
 	{
-		checkConfig();
-		Document doc = this.factory.createDocument(DocumentKind.PLAIN_TEXT, newName(PlainText.class));
-		doc.create();
-		this.factory.showDocument(doc);
+		newDocument(DocumentKind.PLAIN_TEXT, newName(PlainText.class), doc -> {});
 	}
 
 	public void newCsv() throws Exception
 	{
+		newDocument(DocumentKind.CSV, newName(Csv.class), doc -> {});
+	}
+
+	private void newDocument(DocumentKind kind, String name, Consumer<Document> consumer) throws Exception
+	{
 		checkConfig();
-		Document doc = this.factory.createDocument(DocumentKind.CSV, newName(Csv.class));
-		doc.create();
-		this.factory.showDocument(doc);
+		Document document = this.factory.createDocument(kind, name);
+		document.create();
+		consumer.accept(document);
+		this.factory.showDocument(document);
 	}
 	//endregion
 
@@ -711,6 +712,11 @@ public class Main extends Application
 	public CustomTab createCustomTab(Document document)
 	{
 		return this.controller.createTab(document);
+	}
+
+	public void selectTab(CustomTab tab)
+	{
+		this.controller.selectTab(tab);
 	}
 
 	public void clearFileLastOpenMatrix() throws Exception
@@ -896,15 +902,14 @@ public class Main extends Application
             }
             if (!isFromInit)
             {
-                // TODO replace this branches to one when all documents use new approach
-                if (doc instanceof SystemVars || doc instanceof PlainText || doc instanceof Csv)
-                {
-                    this.factory.showDocument(doc);
-                }
-                else
-                {
-                    doc.display();
-                }
+            	if (kind.isUseNewMVP())
+            	{
+					this.factory.showDocument(doc);
+				}
+				else
+				{
+					doc.display();
+				}
             }
             doc.saved();
             SettingsValue maxSettings = this.settings.getValueOrDefault(Settings.GLOBAL_NS, Settings.SETTINGS, Settings.MAX_LAST_COUNT);

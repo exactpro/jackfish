@@ -168,7 +168,13 @@ public abstract class Common
 		}
 	}
 
-	@Deprecated
+	private static final String FXML_EXTENSION = ".fxml";
+
+	public static <T extends ContainingParent> T loadController(Class<?> clazz)
+	{
+		return loadController(clazz.getResource(clazz.getSimpleName() + FXML_EXTENSION));
+	}
+
 	public static <T extends ContainingParent> T loadController(URL resource)
 	{
 		try
@@ -303,7 +309,7 @@ public abstract class Common
 		label.setPrefHeight(prefSize);
 	}
 
-	public static String getShortcutTooltip(Settings settings, String nameShortcut) throws Exception
+	public static String getShortcutTooltip(Settings settings, String nameShortcut)
 	{
 		Settings.SettingsValue value = settings.getValue(Settings.GLOBAL_NS, Settings.SHORTCUTS_NAME, nameShortcut);
 		if (value != null)

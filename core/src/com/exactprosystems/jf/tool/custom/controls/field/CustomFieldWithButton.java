@@ -16,7 +16,6 @@ import javafx.scene.layout.StackPane;
 
 public class CustomFieldWithButton extends CustomField
 {
-	private final EventHandler<MouseEvent> defaultHandler = event -> this.clear();
 	private Label label;
 	private StackPane stackPane;
 
@@ -27,7 +26,7 @@ public class CustomFieldWithButton extends CustomField
 	{
 		super(text);
 		this.getStyleClass().add(CssVariables.CUSTOM_FIELD_WITH_BUTTON);
-		updateStyle("X", defaultHandler);
+		updateStyle("X", event -> this.clear());
 	}
 
 	public CustomFieldWithButton()

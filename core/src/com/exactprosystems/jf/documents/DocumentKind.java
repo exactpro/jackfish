@@ -10,20 +10,40 @@ package com.exactprosystems.jf.documents;
 
 public enum DocumentKind
 {
-	MATRIX, LIBRARY, GUI_DICTIONARY, MESSAGE_DICTIONARY, SYSTEM_VARS, CONFIGURATION, PLAIN_TEXT, CSV, REPORTS;
-	
-    public static <T extends Document> DocumentKind byDocument(T doc)
-    {
-        Class<?> aClass = doc.getClass();
-        DocumentInfo attr = aClass.getAnnotation(DocumentInfo.class);
+	MATRIX(true),
+	LIBRARY(true),
+	GUI_DICTIONARY(false),
+	MESSAGE_DICTIONARY(false),
+	SYSTEM_VARS(true),
+	CONFIGURATION(false),
+	PLAIN_TEXT(true),
+	CSV(true),
+	REPORTS(true);
 
-        while (attr == null && aClass != null)
-        {
-            attr = aClass.getAnnotation(DocumentInfo.class);
-            aClass = aClass.getSuperclass();
-        }
+	private boolean useNewMVP;
 
-        return attr.kind();
+	private DocumentKind(boolean useNewMVP)
+	{
+		this.useNewMVP = useNewMVP;
+	}
+
+	public boolean isUseNewMVP()
+	{
+		return this.useNewMVP;
+	}
+
+	public static <T extends Document> DocumentKind byDocument(T doc)
+	{
+		Class<?> aClass = doc.getClass();
+		DocumentInfo attr = aClass.getAnnotation(DocumentInfo.class);
+
+		while (attr == null && aClass != null)
+		{
+			attr = aClass.getAnnotation(DocumentInfo.class);
+			aClass = aClass.getSuperclass();
+		}
+
+		return attr.kind();
 	}
 
 }

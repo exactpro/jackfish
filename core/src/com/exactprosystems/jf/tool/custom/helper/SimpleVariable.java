@@ -10,9 +10,9 @@ package com.exactprosystems.jf.tool.custom.helper;
 
 public class SimpleVariable
 {
-	private String name;
-	private Object value;
-	private String clazz;
+	private final String name;
+	private final Object value;
+	private final Class<?> clazz;
 
 	public SimpleVariable(String name, Object value)
 	{
@@ -20,7 +20,7 @@ public class SimpleVariable
 		this.value = value;
 		if (value != null)
 		{
-			this.clazz = value.getClass().getSimpleName();
+			this.clazz = value.getClass();
 		}
 		else
 		{
@@ -33,29 +33,14 @@ public class SimpleVariable
 		return name;
 	}
 
-	public void setName(String name)
-	{
-		this.name = name;
-	}
-
 	public Object getValue()
 	{
 		return value;
 	}
 
-	public void setValue(Object value)
-	{
-		this.value = value;
-	}
-
-	public String getClazz()
+	public Class<?> getClazz()
 	{
 		return clazz;
-	}
-
-	public void setClazz(String clazz)
-	{
-		this.clazz = clazz;
 	}
 
 	@Override

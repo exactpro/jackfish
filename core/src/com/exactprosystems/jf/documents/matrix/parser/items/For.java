@@ -148,9 +148,7 @@ public final class For extends MatrixItem
 	protected void initItSelf(Map<Tokens, String> systemParameters) 
 			throws MatrixException
 	{
-		super.initItSelf(systemParameters);
-		
-		this.var.set(systemParameters.get(Tokens.For)); 
+		this.var.set(systemParameters.get(Tokens.For));
 		this.from.setExpression(systemParameters.get(Tokens.From)); 
 		this.to.setExpression(systemParameters.get(Tokens.To)); 
 		this.step.setExpression(systemParameters.get(Tokens.Step)); 

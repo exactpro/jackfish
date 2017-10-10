@@ -10,10 +10,11 @@ package com.exactprosystems.jf.tool.custom.tab;
 
 import com.exactprosystems.jf.common.CommonHelper;
 import com.exactprosystems.jf.documents.Document;
+import com.exactprosystems.jf.documents.DocumentKind;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.CssVariables;
+import com.exactprosystems.jf.tool.documents.AbstractDocumentController;
 import com.exactprosystems.jf.tool.helpers.DialogsHelper;
-import javafx.application.Platform;
 import javafx.geometry.Pos;
 import javafx.scene.SnapshotParameters;
 import javafx.scene.control.ButtonType;
@@ -35,12 +36,15 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 import static com.exactprosystems.jf.tool.custom.tab.CustomTabPane.TAB_DRAG_KEY;
 
-public class CustomTab extends Tab implements AutoCloseable
+public class CustomTab extends Tab
 {
 	private static final String	CHANGED_MARKER	= " *";
 	private Hyperlink			crossButton;
 	private Text				text;
+
 	private Document			document;
+	private AbstractDocumentController<? extends Document> abstractController;
+
 	private FileWatcher			watcher;
 	private final AtomicBoolean	warningIsShow;
 
@@ -53,8 +57,17 @@ public class CustomTab extends Tab implements AutoCloseable
 		this.tabPane = tabPane;
 		this.warningIsShow = new AtomicBoolean(false);
 		this.document = document;
-
 		init();
+	}
+
+	public void setController(AbstractDocumentController<? extends Document> abstractController)
+	{
+		this.abstractController = abstractController;
+	}
+
+	public AbstractDocumentController<? extends Document> getController()
+	{
+		return abstractController;
 	}
 
 	protected void init()
@@ -80,7 +93,7 @@ public class CustomTab extends Tab implements AutoCloseable
 		});
 		this.view.getChildren().addAll(this.text, this.crossButton);
 		this.view.setOnDragDetected(e -> {
-			tabPane.draggingTabProperty().set(this);
+			this.tabPane.draggingTabProperty().set(this);
 
 			Dragboard dragboard = this.view.startDragAndDrop(TransferMode.MOVE);
 			ClipboardContent clipboardContent = new ClipboardContent();
@@ -91,9 +104,7 @@ public class CustomTab extends Tab implements AutoCloseable
 
 			e.consume();
 		});
-		this.view.setOnDragOver(e -> {
-			tabPane.droppedTabProperty().set(null);
-		});
+		this.view.setOnDragOver(e -> this.tabPane.droppedTabProperty().set(null));
 		this.setGraphic(this.view);
 
 		this.watcher = new FileWatcher()
@@ -151,7 +162,6 @@ public class CustomTab extends Tab implements AutoCloseable
 		});
 	}
 
-	@Override
 	public void close()
 	{
 		this.watcher.close();
@@ -175,7 +185,14 @@ public class CustomTab extends Tab implements AutoCloseable
 					{
 						this.document.load(reader);
 					}
-					this.document.display();
+					if (DocumentKind.byDocument(this.document).isUseNewMVP())
+					{
+						this.document.getFactory().showDocument(this.document);
+					}
+					else
+					{
+						this.document.display();
+					}
 					this.document.saved();
 				}, "Error on reload");
 			}
@@ -210,11 +227,6 @@ public class CustomTab extends Tab implements AutoCloseable
 		this.text.setText(Common.getSimpleTitle(text));
 	}
 
-	HBox getView()
-	{
-		return view;
-	}
-
 	public static class TempCustomTab extends CustomTab
 	{
 		public TempCustomTab(Document document, CustomTabPane pane)
@@ -238,9 +250,7 @@ public class CustomTab extends Tab implements AutoCloseable
 				super.view.getStyleClass().removeAll(CssVariables.TEMP_VIEW_OVER_CUSTOM_TAB);
 				super.view.getStyleClass().add(CssVariables.TEMP_VIEW_OVER_CUSTOM_TAB);
 			});
-			super.view.setOnDragExited(e -> {
-				super.view.getStyleClass().removeAll(CssVariables.TEMP_VIEW_OVER_CUSTOM_TAB);
-			});
+			super.view.setOnDragExited(e -> super.view.getStyleClass().removeAll(CssVariables.TEMP_VIEW_OVER_CUSTOM_TAB));
 			setGraphic(super.view);
 		}
 
@@ -266,12 +276,6 @@ public class CustomTab extends Tab implements AutoCloseable
 		public void onClose() throws Exception
 		{
 
-		}
-
-		@Override
-		public String getTitle()
-		{
-			return super.getTitle();
 		}
 
 		@Override

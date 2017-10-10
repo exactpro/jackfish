@@ -15,10 +15,14 @@ import com.exactprosystems.jf.tool.custom.find.FindPanel;
 import com.exactprosystems.jf.tool.custom.find.IFind;
 import com.exactprosystems.jf.tool.settings.Theme;
 import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
 import javafx.scene.Parent;
-import javafx.scene.control.*;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.Dialog;
+import javafx.scene.control.Label;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
@@ -33,12 +37,14 @@ import java.util.ResourceBundle;
 
 public class LogsFxController implements Initializable, ContainingParent
 {
-	public  Button            btnRefresh;
-	public  BorderPane        borderPane;
-	public  ComboBox<File>    cbFiles;
-	public  VBox              topVBox;
-	private InlineCssTextArea consoleArea;
+	@FXML
+	private BorderPane     borderPane;
+	@FXML
+	private ComboBox<File> cbFiles;
+	@FXML
+	private VBox           topVBox;
 
+	private InlineCssTextArea               consoleArea;
 	private LogsFx                          model;
 	private Dialog                          dialog;
 	private FindPanel<LogsFx.LineWithStyle> findPanel;
@@ -49,10 +55,11 @@ public class LogsFxController implements Initializable, ContainingParent
 		this.findPanel = new FindPanel<>();
 		this.findPanel.getStyleClass().remove(CssVariables.FIND_PANEL);
 		this.topVBox.getChildren().add(this.findPanel);
+
 		this.consoleArea = new InlineCssTextArea();
 		this.consoleArea.setParagraphGraphicFactory(LineNumberFactory.get(this.consoleArea));
 		this.consoleArea.setEditable(false);
-		this.borderPane.setCenter(new VirtualizedScrollPane<>(consoleArea));
+		this.borderPane.setCenter(new VirtualizedScrollPane<>(this.consoleArea));
 		BorderPane.setMargin(this.consoleArea, new Insets(10, 0, 0, 0));
 	}
 
@@ -76,7 +83,7 @@ public class LogsFxController implements Initializable, ContainingParent
 		});
 	}
 
-	public void init(LogsFx model)
+	void init(LogsFx model)
 	{
 		this.model = model;
 		this.findPanel.setListener(new IFind<LogsFx.LineWithStyle>()
@@ -95,12 +102,12 @@ public class LogsFxController implements Initializable, ContainingParent
 		});
 	}
 
-	public void show()
+	void show()
 	{
 		this.dialog.show();
 	}
 
-	public void displayLines(List<LogsFx.LineWithStyle> list)
+	void displayLines(List<LogsFx.LineWithStyle> list)
 	{
 		for (LogsFx.LineWithStyle line : list)
 		{
@@ -126,20 +133,13 @@ public class LogsFxController implements Initializable, ContainingParent
 		this.cbFiles.getSelectionModel().selectFirst();
 	}
 
-	//============================================================
-	// events methods
-	//============================================================
-	public void refresh(ActionEvent actionEvent)
+	@FXML
+	private void refresh(ActionEvent actionEvent)
 	{
-		Common.tryCatch(model::refresh, "Error on refresh");
+		this.model.refresh();
 	}
 
-	public boolean isShow()
-	{
-		return this.dialog != null && this.dialog.isShowing();
-	}
-
-	public void clearAndSelect(int index)
+	void clearAndSelect(int index)
 	{
 		this.consoleArea.moveTo(index, 0);
 		this.consoleArea.setEstimatedScrollY(this.consoleArea.getTotalHeightEstimate() / this.consoleArea.getParagraphs().size() * index);

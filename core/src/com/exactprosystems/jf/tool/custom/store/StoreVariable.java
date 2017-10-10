@@ -21,10 +21,12 @@ public class StoreVariable
 
 	public StoreVariable(Configuration config)
 	{
-		this.controller = Common.loadController(StoreVariable.class.getResource("StoreVariable.fxml"));
+		this.controller = Common.loadController(StoreVariable.class);
 		this.config = config;
-		List<StoreVariableController.StoreBean> list = this.config.getStoreMap().entrySet().stream().map(entry -> new StoreVariableController.StoreBean(entry.getKey(), entry.getValue())).collect(Collectors.toList());
-		this.controller.init(this, list);
+		this.controller.init(this, this.config.getStoreMap().entrySet()
+				.stream()
+				.map(entry -> new StoreVariableController.StoreBean(entry.getKey(), entry.getValue()))
+				.collect(Collectors.toList()));
 	}
 
 	private Map<String, Object> convert(List<StoreVariableController.StoreBean> list)

@@ -67,7 +67,6 @@ import org.apache.log4j.Logger;
 
 import java.awt.Desktop;
 import java.io.File;
-import java.io.IOException;
 import java.io.StringReader;
 import java.nio.file.Paths;
 import java.util.*;
@@ -561,17 +560,8 @@ public abstract class DialogsHelper
 	
 	public static String showHelperDialog(String title, AbstractEvaluator evaluator, String value, Matrix matrix)
 	{
-		try
-		{
-			HelperFx helper = new HelperFx(title, evaluator, matrix);
-			return helper.showAndWait(value);
-		}
-		catch (IOException e)
-		{
-			logger.error(e.getMessage(), e);
-			showError(e.getMessage());
-		}
-		return value;
+		HelperFx helper = new HelperFx(title, evaluator, matrix);
+		return helper.showAndWait(value);
 	}
 
     public static Boolean showUserTable(AbstractEvaluator evaluator, String title, Table table, Map<String, Boolean> columns)

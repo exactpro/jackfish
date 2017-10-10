@@ -19,10 +19,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.Enumeration;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -34,43 +31,34 @@ public class LogsFx
 	private List<LineWithStyle> lines;
 	private Settings            settings;
 
-	public LogsFx(Settings settings) throws Exception
+	public LogsFx(Settings settings)
 	{
 		this.settings = settings;
-		this.controller = Common.loadController(LogsFx.class.getResource("LogsFx.fxml"));
+		this.controller = Common.loadController(LogsFx.class);
 		this.controller.init(this);
 	}
 
-	public void show() throws Exception
+	public void show()
 	{
 		refresh();
 		this.controller.show();
 	}
 
-	public void refresh() throws Exception
+	public void refresh()
 	{
 		this.controller.clearListView();
 		this.controller.clearFiles();
 		this.displayAllFiles();
 	}
 
-	public List<LineWithStyle> findItem(String what, boolean matchCase, boolean wholeWord)
+	List<LineWithStyle> findItem(String what, boolean matchCase, boolean wholeWord)
 	{
 		return this.lines.stream()
-				.filter(line -> {
-					String text = line.getLine();
-					for (String s : text.split(" "))
-					{
-						if (SearchHelper.matches(s, what, matchCase, wholeWord))
-						{
-							return true;
-						}
-					}
-					return false;
-				}).collect(Collectors.toList());
+				.filter(line -> Arrays.stream(line.getLine().split(" ")).anyMatch(s -> SearchHelper.matches(s, what, matchCase, wholeWord)))
+				.collect(Collectors.toList());
 	}
 
-	public void find(LineWithStyle row)
+	void find(LineWithStyle row)
 	{
 		IntStream.range(0, lines.size())
 				.filter(i -> lines.get(i).equals(row))

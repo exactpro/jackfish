@@ -4,7 +4,6 @@ import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.CssVariables;
 import com.exactprosystems.jf.tool.custom.controls.rect.DecoratedRectangle;
 import com.exactprosystems.jf.tool.wizard.related.MarkerStyle;
-import javafx.application.Platform;
 import javafx.geometry.Pos;
 import javafx.scene.Group;
 import javafx.scene.Node;
@@ -31,30 +30,30 @@ import java.util.function.Consumer;
 
 public class ImageViewWithScale extends BorderPane
 {
-	private final static double WIDHT_COORDS = 120;
+	private static final double WIDHT_COORDS = 120;
 
 	//region fields
-    private final ScrollPane scrollPane;
-    private final AnchorPane anchorPane;
-    private final ScalePane  scalePane;
-    
-    private final HBox                         hBox;
-    private final ToggleButton                 btnInspect;
-    private final Label                        lblInspect;
-    private final Label                        lblColor;
-    private final CheckBox                     cbIds;
+	private final ScrollPane scrollPane;
+	private final AnchorPane anchorPane;
+	private final ScalePane  scalePane;
 
-    private final javafx.scene.shape.Rectangle rectangleColor;
-    private final Group                        group;
-    private final CheckBox                     cbCustomGrid;
-    private final CustomGrid                   customGrid;
-    private ImageView                          imageView;
+	private final HBox         hBox;
+	private final ToggleButton btnInspect;
+	private final Label        lblInspect;
+	private final Label        lblColor;
+	private final CheckBox     cbIds;
 
-    private Node                               waitingNode;
-    private Dimension                          initial;
-    private BufferedImage                      image;
-    private Map<Rectangle, Set<Rectangle>>     searchingMap = new HashMap<>();
-    private Consumer<Rectangle>                onRectangleClick;
+	private final javafx.scene.shape.Rectangle rectangleColor;
+	private final Group                        group;
+	private final CheckBox                     cbCustomGrid;
+	private final CustomGrid                   customGrid;
+	private       ImageView                    imageView;
+
+	private Node          waitingNode;
+	private Dimension     initial;
+	private BufferedImage image;
+	private Map<Rectangle, Set<Rectangle>> searchingMap = new HashMap<>();
+	private Consumer<Rectangle> onRectangleClick;
 
 	//endregion
 
@@ -133,7 +132,6 @@ public class ImageViewWithScale extends BorderPane
 				this.anchorPane.setPrefSize(this.initial.width * s, this.initial.height * s);
 				this.anchorPane.setMinSize(this.initial.width * s, this.initial.height * s);
 				this.anchorPane.setMaxSize(this.initial.width * s, this.initial.height * s);
-
 			});
 			hideAllRectangles(null);
 		});
@@ -143,74 +141,70 @@ public class ImageViewWithScale extends BorderPane
 	//region public methods
 	public void showRectangle(java.awt.Rectangle rectangle, MarkerStyle style, String text, boolean selected)
 	{
-	    DecoratedRectangle newRectangle = new DecoratedRectangle(rectangle, style, text);
-	    newRectangle.setTextVisible(this.cbIds.isSelected());
-	    newRectangle.setOpacity(selected ? 1.0 : 0.5);
-	    this.group.getChildren().add(newRectangle);
+		DecoratedRectangle newRectangle = new DecoratedRectangle(rectangle, style, text);
+		newRectangle.setTextVisible(this.cbIds.isSelected());
+		newRectangle.setOpacity(selected ? 1.0 : 0.5);
+		this.group.getChildren().add(newRectangle);
 	}
-	
-    public void hideRectangle(java.awt.Rectangle rectangle, MarkerStyle style)
-    {
-        this.group.getChildren().removeIf(d -> (d instanceof DecoratedRectangle) && (((DecoratedRectangle)d).matches(rectangle, style)));
-    }
 
-    public void hideRectangle(java.awt.Rectangle rectangle, Color color)
+	public void hideRectangle(java.awt.Rectangle rectangle, MarkerStyle style)
 	{
-		this.group.getChildren().removeIf(d -> (d instanceof DecoratedRectangle) && (((DecoratedRectangle)d).matches(rectangle, color)));
+		this.group.getChildren().removeIf(d -> (d instanceof DecoratedRectangle) && (((DecoratedRectangle) d).matches(rectangle, style)));
+	}
+
+	public void hideRectangle(java.awt.Rectangle rectangle, Color color)
+	{
+		this.group.getChildren().removeIf(d -> (d instanceof DecoratedRectangle) && (((DecoratedRectangle) d).matches(rectangle, color)));
 	}
 
 	public void visibleRectangle(MarkerStyle style, boolean visible)
 	{
 		if (style.color() != null)
 		{
-			this.group.getChildren()
-					.stream()
-					.filter(d -> (d instanceof DecoratedRectangle) && (((DecoratedRectangle)d).getMarkerStyle() == style))
-					.forEach(d -> d.setVisible(visible));
+			this.group.getChildren().stream().filter(d -> (d instanceof DecoratedRectangle) && (((DecoratedRectangle) d).getMarkerStyle() == style)).forEach(d -> d.setVisible(visible));
 		}
 	}
-	
-    public void hideAllRectangles(MarkerStyle style)
-    {
-        if (style == null)
-        {
-            this.group.getChildren().removeIf(d -> (d instanceof DecoratedRectangle));
-        }
-        else
-        {
-            this.group.getChildren().removeIf(d -> (d instanceof DecoratedRectangle) && (((DecoratedRectangle)d).getMarkerStyle() == style));
-        }
-    }
-    
-    public void setTextVisible(boolean value)
-    {
-        this.group.getChildren().filtered(d -> d instanceof DecoratedRectangle).forEach(d -> ((DecoratedRectangle)d).setTextVisible(value));
-    }
-    
-    public void setListForSearch(List<Rectangle> list)
-    {
-        if (this.image != null)
-        {
-            int width = image.getWidth();
-            int height = image.getHeight();
-            buildMap(width, height, new Dimension(width / 16, height / 16), list);
-        }
-    }
-	
+
+	public void hideAllRectangles(MarkerStyle style)
+	{
+		if (style == null)
+		{
+			this.group.getChildren().removeIf(d -> (d instanceof DecoratedRectangle));
+		}
+		else
+		{
+			this.group.getChildren().removeIf(d -> (d instanceof DecoratedRectangle) && (((DecoratedRectangle) d).getMarkerStyle() == style));
+		}
+	}
+
+	public void setTextVisible(boolean value)
+	{
+		this.group.getChildren().filtered(d -> d instanceof DecoratedRectangle).forEach(d -> ((DecoratedRectangle) d).setTextVisible(value));
+	}
+
+	public void setListForSearch(List<Rectangle> list)
+	{
+		if (this.image != null)
+		{
+			int width = image.getWidth();
+			int height = image.getHeight();
+			buildMap(width, height, new Dimension(width / 16, height / 16), list);
+		}
+	}
+
 	public void displayImage(BufferedImage image)
 	{
 		this.image = image;
-		Common.runLater(() ->
-		{
-			this.hBox.getChildren().forEach(node ->  node.setDisable(false));
+		Common.runLater(() -> {
+			this.hBox.getChildren().forEach(node -> node.setDisable(false));
 			this.anchorPane.getChildren().remove(this.waitingNode);
 
-			this.initial = new Dimension(image.getWidth(), image.getHeight()); // TODO think about
+			this.initial = new Dimension(image.getWidth(), image.getHeight());
 			this.scrollPane.setMaxSize(Region.USE_COMPUTED_SIZE, Region.USE_COMPUTED_SIZE);
 			this.scrollPane.setMaxSize(Region.USE_COMPUTED_SIZE, Region.USE_COMPUTED_SIZE);
 			this.cbCustomGrid.setDisable(false);
 			this.customGrid.setSize(this.image.getWidth(), this.image.getHeight());
-			Common.tryCatch(() -> createCanvas(image), "Error on create canvas");
+			createCanvas(image);
 		});
 	}
 
@@ -229,21 +223,28 @@ public class ImageViewWithScale extends BorderPane
 	private void addWaitingPane()
 	{
 		this.waitingNode = new BorderPane();
-		((BorderPane)this.waitingNode).setCenter(new ProgressIndicator(ProgressIndicator.INDETERMINATE_PROGRESS));
-		((BorderPane)this.waitingNode).setBottom(new Text("Waiting for image..."));
+		((BorderPane) this.waitingNode).setCenter(new ProgressIndicator(ProgressIndicator.INDETERMINATE_PROGRESS));
+		((BorderPane) this.waitingNode).setBottom(new Text("Waiting for image..."));
 
 		AnchorPane.setLeftAnchor(this.waitingNode, 50.0);
 		AnchorPane.setTopAnchor(this.waitingNode, 50.0);
 
 		this.anchorPane.getChildren().add(this.waitingNode);
-		this.hBox.getChildren().forEach(node ->  node.setDisable(true));
+		this.hBox.getChildren().forEach(node -> node.setDisable(true));
 	}
 
-	private void createCanvas(BufferedImage bufferedImage) throws IOException
+	private void createCanvas(BufferedImage bufferedImage)
 	{
 		this.imageView = new ImageView();
 		ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-		ImageIO.write(bufferedImage, "jpg", outputStream);
+		try
+		{
+			ImageIO.write(bufferedImage, "jpg", outputStream);
+		}
+		catch (IOException ignored)
+		{
+			;//never raise
+		}
 		javafx.scene.image.Image image = new javafx.scene.image.Image(new ByteArrayInputStream(outputStream.toByteArray()));
 		this.imageView.setImage(image);
 		this.group.getChildren().add(imageView);
@@ -252,78 +253,68 @@ public class ImageViewWithScale extends BorderPane
 
 	public void removeCurrentImage()
 	{
-		if(this.group.getChildren().remove(this.imageView))
+		if (this.group.getChildren().remove(this.imageView))
 		{
 			addWaitingPane();
 		}
 
 	}
 
-    private void listeners()
-    {
-    	this.cbCustomGrid.selectedProperty().addListener((observable, oldValue, newValue) ->
-		{
-			if (newValue)
+	private void listeners()
+	{
+		this.cbCustomGrid.selectedProperty().addListener((observable, oldValue, newValue) -> {
+			Runnable show = newValue ? this.customGrid::show : this.customGrid::hide;
+			show.run();
+		});
+		this.cbIds.selectedProperty().addListener((observable, oldValue, newValue) -> setTextVisible(newValue));
+
+		this.group.setOnMouseMoved(event -> {
+			Point point = getMouseCoords(event);
+			printMouseCoords(point);
+			printPixelColor(point);
+
+			if (this.btnInspect.selectedProperty().get())
 			{
-				this.customGrid.show();
-			}
-			else
-			{
-				this.customGrid.hide();
+				double x = event.getX();
+				double y = event.getY();
+				Rectangle rectangle = findRectangle(x, y);
+				if (rectangle != null)
+				{
+					hideAllRectangles(MarkerStyle.INSPECT);
+					showRectangle(rectangle, MarkerStyle.INSPECT, null, true);
+				}
 			}
 		});
-        this.cbIds.selectedProperty().addListener((observable, oldValue, newValue) -> setTextVisible(newValue));
 
-        this.group.setOnMouseMoved(event ->
-        {
-            Point point = getMouseCoords(event);
-            printMouseCoords(point);
-            printPixelColor(point);
+		this.group.setOnMouseClicked(event -> {
+			if (this.btnInspect.selectedProperty().get())
+			{
+				double x = event.getX();
+				double y = event.getY();
+				Rectangle rectangle = findRectangle(x, y);
+				if (rectangle != null && this.onRectangleClick != null)
+				{
+					this.onRectangleClick.accept(rectangle);
+				}
+				this.btnInspect.setSelected(false);
+			}
+		});
 
-            if (this.btnInspect.selectedProperty().get())
-            {
-                double x = event.getX(); 
-                double y = event.getY();
-                Rectangle rectangle = findRectangle(x, y);
-                if (rectangle != null)
-                {
-                    hideAllRectangles(MarkerStyle.INSPECT);
-                    showRectangle(rectangle, MarkerStyle.INSPECT, null, true);
-                }
-            }
-        });
-
-        this.group.setOnMouseClicked(event ->
-        {
-            if (this.btnInspect.selectedProperty().get())
-            {
-                double x = event.getX(); 
-                double y = event.getY();
-                Rectangle rectangle = findRectangle(x, y);
-                if (rectangle != null && this.onRectangleClick != null)
-                {
-                    this.onRectangleClick.accept(rectangle);
-                }
-                this.btnInspect.setSelected(false);
-            }
-        });
-        
-        this.btnInspect.selectedProperty().addListener((observable, oldValue, newValue) ->
-        {
-            if (!newValue)
-            {
-                hideAllRectangles(MarkerStyle.INSPECT);
-            }
-        });
-    }
+		this.btnInspect.selectedProperty().addListener((observable, oldValue, newValue) -> {
+			if (!newValue)
+			{
+				hideAllRectangles(MarkerStyle.INSPECT);
+			}
+		});
+	}
 
 	private Rectangle findRectangle(double x, double y)
 	{
-	    if (this.initial == null)
-	    {
-	        return null;
-	    }
-	    
+		if (this.initial == null)
+		{
+			return null;
+		}
+
 		int intX = (int) x;
 		int intY = (int) y;
 
@@ -381,33 +372,33 @@ public class ImageViewWithScale extends BorderPane
 	private Point getMouseCoords(MouseEvent event)
 	{
 		int x = (int) event.getX();
-		int	y = (int) event.getY();
-		return new Point(x,y);
+		int y = (int) event.getY();
+		return new Point(x, y);
 	}
 
 	private void buildMap(int width, int height, Dimension cellSize, List<Rectangle> list)
-    {
-	    this.searchingMap = new HashMap<>();
+	{
+		this.searchingMap = new HashMap<>();
 
-        int x = 0;
-        while (x < width)
-        {
-            int y = 0;
-            while (y < height)
-            {
-                Rectangle key = new Rectangle(new Point(x, y), cellSize);
-                Set<Rectangle> set = new HashSet<>();
-                list.stream().filter(r -> r.intersects(key)).forEach(r -> set.add(r));
-                if (set.size() > 0)
-                {
-                    this.searchingMap.put(key, set);
-                }
+		int x = 0;
+		while (x < width)
+		{
+			int y = 0;
+			while (y < height)
+			{
+				Rectangle key = new Rectangle(new Point(x, y), cellSize);
+				Set<Rectangle> set = new HashSet<>();
+				list.stream().filter(r -> r.intersects(key)).forEach(set::add);
+				if (!set.isEmpty())
+				{
+					this.searchingMap.put(key, set);
+				}
 
-                y += cellSize.height;
-            }
-            x += cellSize.width;
-        }
-    }
+				y += cellSize.height;
+			}
+			x += cellSize.width;
+		}
+	}
 
 	//endregion
 }

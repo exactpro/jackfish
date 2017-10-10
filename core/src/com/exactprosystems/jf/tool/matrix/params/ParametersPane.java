@@ -142,7 +142,7 @@ public class ParametersPane extends CustomScrollPane
 			{
 				if (child instanceof ParameterGridPane)
 				{
-					((ParameterGridPane) child).getExpressionField().clearlListener();
+					((ParameterGridPane) child).getExpressionField().clearListener();
 				}
 			}
 		}

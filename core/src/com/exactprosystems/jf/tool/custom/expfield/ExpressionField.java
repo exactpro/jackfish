@@ -15,7 +15,6 @@ import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.CssVariables;
 import com.exactprosystems.jf.tool.custom.controls.field.CustomField;
 import com.exactprosystems.jf.tool.helpers.DialogsHelper;
-import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.event.EventDispatcher;
 import javafx.event.EventHandler;
@@ -34,6 +33,8 @@ import java.util.function.Function;
 
 public class ExpressionField extends CustomField
 {
+	private static final Logger	logger	= Logger.getLogger(ExpressionField.class);
+
 	private AbstractEvaluator			evaluator;
 
 	private StackPane					firstPane;
@@ -51,7 +52,7 @@ public class ExpressionField extends CustomField
 
 	private boolean isStretchable;
 
-	private final int MIN_WIDTH = 80;
+	private static final int MIN_WIDTH = 80;
 
 	public ExpressionField(AbstractEvaluator evaluator)
 	{
@@ -67,11 +68,11 @@ public class ExpressionField extends CustomField
 		this.getStyleClass().add(CssVariables.EXPRESSION_EDITOR);
 		this.globalListener = (observable, oldValue, newValue) ->
 		{
-			Optional.ofNullable(valueListener).ifPresent(listener -> listener.changed(observable, oldValue, newValue));
-			Optional.ofNullable(focusListener).ifPresent(listener -> listener.changed(observable, oldValue, newValue));
+			Optional.ofNullable(this.valueListener).ifPresent(listener -> listener.changed(observable, oldValue, newValue));
+			Optional.ofNullable(this.focusListener).ifPresent(listener -> listener.changed(observable, oldValue, newValue));
 			stretchField(this.getText());
 		};
-		this.focusedProperty().addListener(globalListener);
+		this.focusedProperty().addListener(this.globalListener);
 
 		Label firstLabel = new Label("≡");
 		firstLabel.getStyleClass().setAll(CssVariables.EXPRESSION_BUTTON);
@@ -95,9 +96,9 @@ public class ExpressionField extends CustomField
 		stretchField(this.getText());
 	}
 
-	public void clearlListener()
+	public void clearListener()
 	{
-		this.focusedProperty().removeListener(globalListener);
+		this.focusedProperty().removeListener(this.globalListener);
 	}
 
 	public void setOnContextMenuRequest(EventHandler<ContextMenuEvent> event)
@@ -237,9 +238,7 @@ public class ExpressionField extends CustomField
 		this.isStretchable = flag;
 	}
 
-	// ============================================================
-	// private methods
-	// ============================================================
+	//region private methods
 	private void listeners()
 	{
 		this.firstPane.setOnMouseClicked(mouseEvent ->
@@ -331,7 +330,6 @@ public class ExpressionField extends CustomField
 		}
 	}
 
-
 	private void showButtons()
 	{
 		this.hBox.getChildren().clear();
@@ -344,6 +342,5 @@ public class ExpressionField extends CustomField
 			this.hBox.getChildren().add(secondPane);
 		}
 	}
-
-	private final static Logger	logger	= Logger.getLogger(ExpressionField.class);
+	//endregion
 }

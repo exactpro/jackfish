@@ -12,33 +12,32 @@ import com.exactprosystems.jf.api.app.Mutable;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Optional;
 import java.util.function.BiConsumer;
 
 public class MutableArrayList<T extends Mutable> extends ArrayList<T> implements Mutable
 {
-    private static final long            serialVersionUID = -61727654712092442L;
-    private boolean                      changed;
-    private BiConsumer<Integer, Integer> changeListener   = null;
-    private BiConsumer<Integer, T>       addListener      = null;
-    private BiConsumer<Integer, T>       setListener      = null;
-    private BiConsumer<Integer, T>       removeListener   = null;
+	private static final long                                         serialVersionUID = -61727654712092442L;
+	private              boolean                                      changed          = false;
+	private              BiConsumer<Integer, Integer>                 changeListener   = null;
+	private              BiConsumer<Integer, T>                       addListener      = null;
+	private              BiConsumer<Integer, Collection<? extends T>> addAllListener   = null;
+	private              BiConsumer<Integer, T>                       setListener      = null;
+	private              BiConsumer<Integer, T>                       removeListener   = null;
 
 	public MutableArrayList()
 	{
 		super();
-		this.changed = false;
 	}
 
 	public MutableArrayList(Collection<? extends T> c)
 	{
 		super(c);
-		this.changed = false;
 	}
 
 	public MutableArrayList(int initialCapacity)
 	{
 		super(initialCapacity);
-		this.changed = false;
 	}
 
 	public void from(Collection<? extends T> c)
@@ -46,111 +45,97 @@ public class MutableArrayList<T extends Mutable> extends ArrayList<T> implements
 		clear();
 		addAll(c);
 	}
-	
-	//==============================================================================================
-	// implements ArrayList
-	//==============================================================================================
-    @Override
-    public void add(int index, T element)
-    {
-        int before = size();
-        this.changed = true;
-        super.add(index, element);
-        onChange(before, size());
-    }
+
+	//region ArrayList methods
+	@Override
+	public void add(int index, T element)
+	{
+		this.changed = true;
+		super.add(index, element);
+		onAdd(index, element);
+	}
 
 	@Override
 	public boolean add(T e)
 	{
-        int before = size();
 		this.changed = true;
 		boolean res = super.add(e);
 		onAdd(size(), e);
-        onChange(before, size());
-        return res; 
+		return res;
 	}
-	
+
 	@Override
 	public boolean addAll(Collection<? extends T> c)
 	{
-        int before = size();
 		this.changed = this.changed || c.size() > 0;
 		boolean res = super.addAll(c);
-        onChange(before, size());
-        return res; 
+		onAddAll(size(), c);
+		return res;
 	}
-	
+
 	@Override
 	public boolean addAll(int index, Collection<? extends T> c)
 	{
-        int before = size();
 		this.changed = this.changed || c.size() > 0;
 		boolean res = super.addAll(index, c);
-        onChange(before, size());
-        return res; 
+		onAddAll(index, c);
+		return res;
 	}
-	
+
 	@Override
 	public void clear()
 	{
-        int before = size();
+		int before = size();
 		this.changed = this.changed || size() > 0;
 		super.clear();
-        onChange(before, size());
+		onChange(before, size());
 	}
-	
+
 	@Override
 	public T remove(int index)
 	{
-        int before = size();
 		T res = super.remove(index);
 		this.changed = this.changed || res != null;
-        onRemove(index, res);
-        onChange(before, size());
-        return res; 
+		onRemove(index, res);
+		return res;
 	}
-	
+
 	@Override
 	public boolean removeAll(Collection<?> c)
 	{
-        int before = size();
+		int before = size();
 		boolean res = super.removeAll(c);
 		this.changed = this.changed || res;
-        onChange(before, size());
-        return res; 
+		onChange(before, size());
+		return res;
 	}
-	
+
 	@Override
 	public boolean remove(Object o)
 	{
-        int before = size();
-        int index = super.indexOf(o);
-        boolean res = index >= 0;
-        T value = null;
-        if (res)
-        {
-            value = super.remove(index);
-        }
+		int index = super.indexOf(o);
+		boolean res = index >= 0;
+		if (res)
+		{
+			T value = super.remove(index);
+			onRemove(index, value);
+		}
 		this.changed |= res;
-		onRemove(index, value);
-        onChange(before, size());
-        return res; 
+		return res;
 	}
-	
+
 	@Override
 	public T set(int index, T element)
 	{
-        int before = size();
 		this.changed = true;
 		T res = super.set(index, element);
 		onSet(index, element);
-        onChange(before, size());
-        return res; 
+		return res;
 	}
-	
-	//==============================================================================================
-	// implements Mutable
-	//==============================================================================================
+	//endregion
+
+	//region Mutable methods
+
 	@Override
 	public boolean isChanged()
 	{
@@ -158,83 +143,74 @@ public class MutableArrayList<T extends Mutable> extends ArrayList<T> implements
 		{
 			return true;
 		}
-		for (T element : this)
-		{
-			if (element.isChanged())
-			{
-				return true;
-			}
-		}
-		
-		return false;
+		return this.stream().anyMatch(Mutable::isChanged);
 	}
 
 	@Override
 	public void saved()
 	{
 		this.changed = false;
-		for (T element : this)
-		{
-			element.saved();
-		}
+		this.forEach(Mutable::saved);
 	}
 
-    //==============================================================================================
-    public void fire()
-    {
-        onChange(size(), size());
-    }
-	
-    public void setOnChangeListener(BiConsumer<Integer, Integer> listener)
-    {
-        this.changeListener = listener;
-    }
-    
-    public void setOnAddListener(BiConsumer<Integer, T> listener)
-    {
-        this.addListener = listener;
-    }
-    
-    public void setOnRemoveListener(BiConsumer<Integer, T> listener)
-    {
-        this.removeListener = listener;
-    }
-    
-    public void setOnSetListener(BiConsumer<Integer, T> listener)
-    {
-        this.setListener = listener;
-    }
-    
-    //==============================================================================================
-    private void onChange(int before, int now)
-    {
-        if (this.changeListener != null)
-        {
-            this.changeListener.accept(before, now);
-        }
-    }
-    
-    private void onAdd(int index, T value)
-    {
-        if (this.addListener != null)
-        {
-            this.addListener.accept(index, value);
-        }
-    }
+	//endregion
 
-    private void onSet(int index, T value)
-    {
-        if (this.setListener != null)
-        {
-            this.setListener.accept(index, value);
-        }
-    }
+	//region event methods
+	public void fire()
+	{
+		onChange(size(), size());
+	}
 
-    private void onRemove(int index, T value)
-    {
-        if (this.removeListener != null)
-        {
-            this.removeListener.accept(index, value);
-        }
-    }
+	public void setOnChangeListener(BiConsumer<Integer, Integer> listener)
+	{
+		this.changeListener = listener;
+	}
+
+	public void setOnAddListener(BiConsumer<Integer, T> listener)
+	{
+		this.addListener = listener;
+	}
+
+	public void setOnAddAllListener(BiConsumer<Integer, Collection<? extends T>> listener)
+	{
+		this.addAllListener = listener;
+	}
+
+	public void setOnRemoveListener(BiConsumer<Integer, T> listener)
+	{
+		this.removeListener = listener;
+	}
+
+	public void setOnSetListener(BiConsumer<Integer, T> listener)
+	{
+		this.setListener = listener;
+	}
+	//endregion
+
+	//region private methods
+	private void onChange(int before, int now)
+	{
+		Optional.ofNullable(this.changeListener).ifPresent(l -> l.accept(before, now));
+	}
+
+	private void onAdd(int index, T value)
+	{
+		Optional.ofNullable(this.addListener).ifPresent(l -> l.accept(index, value));
+	}
+
+	private void onAddAll(int index, Collection<? extends T> collection)
+	{
+		Optional.ofNullable(this.addAllListener).ifPresent(l -> l.accept(index, collection));
+	}
+
+	private void onSet(int index, T value)
+	{
+		Optional.ofNullable(this.setListener).ifPresent(l -> l.accept(index, value));
+	}
+
+	private void onRemove(int index, T value)
+	{
+		Optional.ofNullable(this.removeListener).ifPresent(l -> l.accept(index, value));
+	}
+	//endregion
 }

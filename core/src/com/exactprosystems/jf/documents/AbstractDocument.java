@@ -26,6 +26,7 @@ public abstract class AbstractDocument implements Document
     private MutableValue<Boolean> changedProperty;
 
     private Consumer<Document>    closeConsumer;
+    private Consumer<Document>    saveConsumer;
 
     public AbstractDocument(String fileName, DocumentFactory factory)
 	{
@@ -78,8 +79,15 @@ public abstract class AbstractDocument implements Document
 	public void save(String fileName) throws Exception
 	{
         this.nameProperty.set(fileName);
+		Optional.ofNullable(this.saveConsumer).ifPresent(consumer -> consumer.accept(this));
 	}
-	
+
+	@Override
+	public void onSave(Consumer<Document> consumer)
+	{
+		this.saveConsumer = consumer;
+	}
+
 	@Override
 	public void display() throws Exception
 	{
