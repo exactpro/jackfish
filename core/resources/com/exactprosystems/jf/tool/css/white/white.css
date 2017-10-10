@@ -163,6 +163,16 @@
 
 }
 
+.table-view:focused .table-row-cell:filled:selected .table-cell .text-field
+{
+    -fx-text-fill: white;
+}
+
+.table-row-cell:filled:selected .table-cell .text-field
+{
+    -fx-text-fill: black;
+}
+
 /*Correct / Incorrect fields*/
 .incorrectField {
 	-fx-text-fill : red;

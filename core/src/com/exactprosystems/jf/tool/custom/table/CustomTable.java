@@ -269,6 +269,8 @@ public class CustomTable<T> extends TableView<T>
                     {
                         textField = new TextField();
                         textField.setEditable(false);
+						textField.getStyleClass().add(CssVariables.TRANSPARENT_BACKGROUND);
+						textField.setMinWidth(this.getWidth() - this.getGraphicTextGap() * 2);
                     }
                     textField.setText(getString());
                     setGraphic(textField);
@@ -295,10 +297,6 @@ public class CustomTable<T> extends TableView<T>
 		private void createTextField()
 		{
 			textField = new TextField(getString());
-			if(((CustomTableColumn) getTableColumn()).isReadOnly())
-			{
-				textField.setEditable(false);
-			}
 			textField.getStyleClass().add(CssVariables.TEXT_FIELD_VARIABLES);
 			textField.setMinWidth(this.getWidth() - this.getGraphicTextGap() * 2);
 			textField.setOnKeyPressed(t -> 

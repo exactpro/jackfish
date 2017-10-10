@@ -250,6 +250,16 @@ Text {
 
 }
 
+.table-view:focused .table-row-cell:filled:selected
+{
+    -fx-background-color : -fx-company-color-dark;
+}
+
+.table-row-cell:filled:selected
+{
+    -fx-background-color : derive(-fx-base, 20%);
+}
+
 /*Correct / Incorrect fields*/
 .incorrectField {
 	-fx-text-fill : red;
@@ -392,6 +402,10 @@ Text {
 }
 
 /*Console Text*/
+.styled-text-area .paragraph-box .paragraph-text {
+    -fx-background-color : -fx-base;
+}
+
 .consoleDefaultText {
 	-fx-fill : -fx-text-base-color;
 
