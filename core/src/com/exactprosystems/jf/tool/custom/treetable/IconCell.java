@@ -10,10 +10,6 @@ import javafx.scene.image.ImageView;
 
 public class IconCell extends TreeTableCell<MatrixItem, MatrixItemState>
 {
-	public IconCell()
-	{
-	}
-
 	@Override
 	public void updateItem(MatrixItemState state, boolean empty)
 	{
@@ -25,6 +21,7 @@ public class IconCell extends TreeTableCell<MatrixItem, MatrixItemState>
 			TreeItem<MatrixItem> treeItem = getTreeTableRow().getTreeItem();
 			switch (state)
 			{
+				case None:			setGraphic(null);return;
 				case BreakPoint:	setGraphic(new ImageView(new Image(CssVariables.Icons.BREAK_POINT_ICON))); return;
 				case Executing:
 					if (isTracing)

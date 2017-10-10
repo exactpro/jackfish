@@ -56,7 +56,6 @@ public class MatrixContextMenu extends ContextMenu
 	public MatrixContextMenu(Context context, MatrixFx matrix, MatrixTreeView tree, Settings settings)
 	{
 		super();
-		this.menuWizard.setGraphic(new ImageView(new Image(CssVariables.Icons.WIZARD_SMALL)));
 		this.context = context;
 
 		SettingsValue foldSetting = settings.getValueOrDefault(Settings.GLOBAL_NS, Settings.MATRIX_NAME, Settings.MATRIX_FOLD_ITEMS);
@@ -68,9 +67,9 @@ public class MatrixContextMenu extends ContextMenu
 		breakPoint.setAccelerator(Common.getShortcut(settings, Settings.BREAK_POINT));
 		breakPoint.setOnAction(event -> breakPoint(matrix, tree));
 
-		MenuItem addBefore = new MenuItem("Add item", new ImageView(new Image(CssVariables.Icons.ADD_BEFORE_ICON)));
-		addBefore.setAccelerator(Common.getShortcut(settings, Settings.ADD_ITEMS));
-		addBefore.setOnAction(event -> addBefore(tree, matrix));
+		MenuItem addItem = new MenuItem("Add item", new ImageView(new Image(CssVariables.Icons.ADD_BEFORE_ICON)));
+		addItem.setAccelerator(Common.getShortcut(settings, Settings.ADD_ITEMS));
+		addItem.setOnAction(event -> addItem(tree, matrix));
 
 		MenuItem deleteItem = new MenuItem("Delete", new ImageView(new Image(CssVariables.Icons.DELETE_ICON)));
 		deleteItem.setAccelerator(Common.getShortcut(settings, Settings.DELETE_ITEM));
@@ -80,7 +79,6 @@ public class MatrixContextMenu extends ContextMenu
 		copy.setAccelerator(Common.getShortcut(settings, Settings.COPY_ITEMS));
 		copy.setOnAction(event -> copyItems(matrix, tree));
 
-		//TODO add icon
 		MenuItem cut = new MenuItem("Cut", new ImageView(new Image(CssVariables.Icons.CUT_ICON)));
 		cut.setAccelerator(Common.getShortcut(settings, Settings.CUT_ITEMS));
 		cut.setOnAction(event -> cutItems(matrix, tree));
@@ -101,8 +99,21 @@ public class MatrixContextMenu extends ContextMenu
 		parAdd.setAccelerator(Common.getShortcut(settings, Settings.ADD_PARAMETER));
 		parAdd.setOnAction(event -> addParameter(matrix, tree));
 
-		getItems().addAll(breakPoint, new SeparatorMenuItem(), parAdd, new SeparatorMenuItem(), copy, cut, pasteBefore, new SeparatorMenuItem(), addBefore,
-				deleteItem, gotoItem, new SeparatorMenuItem(), menuWizard, new SeparatorMenuItem(), help);
+		getItems().addAll(
+				breakPoint,
+				new SeparatorMenuItem(),
+				parAdd,
+				new SeparatorMenuItem(),
+				copy,
+				cut,
+				pasteBefore,
+				new SeparatorMenuItem(),
+				addItem,
+				deleteItem,
+				gotoItem,
+				new SeparatorMenuItem(),
+				this.menuWizard,
+				new SeparatorMenuItem(), help);
 		this.setOnShown(event ->
 		{
 			TreeItem<MatrixItem> selectedItem = tree.getSelectionModel().getSelectedItem();
@@ -154,7 +165,7 @@ public class MatrixContextMenu extends ContextMenu
 			}
 			else if (SettingsPanel.match(settings, keyEvent, Settings.ADD_ITEMS))
 			{
-				addBefore(treeView, matrix);
+				addItem(treeView, matrix);
 			}
 			else if (SettingsPanel.match(settings, keyEvent, Settings.DELETE_ITEM))
 			{
@@ -187,7 +198,7 @@ public class MatrixContextMenu extends ContextMenu
 		});
 	}
 
-	protected void addWizards(Object ... criteries)
+	void addWizards(Object... criteries)
 	{
 		WizardManager manager = context.getFactory().getWizardManager();
 		java.util.List<Class<? extends Wizard>> suitableWizards = manager.suitableWizards(criteries);
@@ -207,7 +218,8 @@ public class MatrixContextMenu extends ContextMenu
 		return new ActionHelp(context, tree);
 	}
 
-	private void addBefore(MatrixTreeView treeView, MatrixFx matrix)
+	//region private methods
+	private void addItem(MatrixTreeView treeView, MatrixFx matrix)
 	{
 		Common.tryCatch(() ->
 		{
@@ -218,12 +230,20 @@ public class MatrixContextMenu extends ContextMenu
 
 	private void breakPoint(MatrixFx matrix, MatrixTreeView tree)
 	{
-		Common.tryCatch(() -> matrix.breakPoint(tree.currentItems().stream().filter(item -> !item.getClass().equals(End.class)).collect(Collectors.toList())), "Error on breakpoint");
+		matrix.breakPoint(tree.currentItems()
+				.stream()
+				.filter(item -> !item.getClass().equals(End.class))
+				.collect(Collectors.toList())
+		);
 	}
 
 	private void deleteCurrentItems(MatrixFx matrix, MatrixTreeView tree)
 	{
-		Common.tryCatch(() -> matrix.remove(tree.currentItems().stream().filter(item -> !item.getClass().equals(End.class)).collect(Collectors.toList())), "Error on delete item");
+		matrix.remove(tree.currentItems()
+				.stream()
+				.filter(item -> !item.getClass().equals(End.class))
+				.collect(Collectors.toList())
+		);
 	}
 
 	private void copyItems(MatrixFx matrix, MatrixTreeView tree)
@@ -255,12 +275,9 @@ public class MatrixContextMenu extends ContextMenu
 		dialog.setTitle("Enter line number");
 		dialog.getEditor().textProperty().addListener((observable, oldValue, newValue) ->
 		{
-			if (!newValue.isEmpty())
+			if (!newValue.isEmpty() && !newValue.matches(Common.UINT_REGEXP))
 			{
-				if (!newValue.matches(Common.UINT_REGEXP))
-				{
-					dialog.getEditor().setText(oldValue);
-				}
+				dialog.getEditor().setText(oldValue);
 			}
 		});
 		Optional<String> string = dialog.showAndWait();
@@ -289,22 +306,20 @@ public class MatrixContextMenu extends ContextMenu
 
 	private void addParameter(MatrixFx matrix, MatrixTreeView tree)
 	{
-		Common.tryCatch(() ->
+		MatrixItem value = tree.getSelectionModel().getSelectedItem().getValue();
+		if (!(value instanceof End))
 		{
-			MatrixItem value = tree.getSelectionModel().getSelectedItem().getValue();
-			if (!(value instanceof End))
-			{
-				matrix.parameterInsert(value, value.getParameters().size() - 1);
-			}
-		}, "Error on add new parameter");
+			matrix.parameterInsert(value, value.getParameters().size() - 1);
+		}
 	}
+	//endregion
 
 	private static class ActionHelp implements EventHandler<ActionEvent>
 	{
 		private MatrixTreeView tree;
 		private Context        context;
 
-		public ActionHelp(Context context, MatrixTreeView tree)
+		ActionHelp(Context context, MatrixTreeView tree)
 		{
 			this.tree = tree;
 			this.context = context;
@@ -322,8 +337,7 @@ public class MatrixContextMenu extends ContextMenu
 					MatrixItem help = DocumentationBuilder.createHelpForItem(report, context, item);
 					DialogsHelper.showHelpDialog(context, item.getClass().getSimpleName(), report, help);
 				}
-			}, "Error on show result");
+			}, "Error on show help");
 		}
-
 	}
 }

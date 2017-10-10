@@ -66,6 +66,7 @@ public class MatrixTreeRow extends TreeTableRow<MatrixItem>
 				case Failed: this.getStyleClass().add(CssVariables.ITEM_FAILED); break;
 				case Passed: this.getStyleClass().add(CssVariables.ITEM_PASSED); break;
 				case Executing: this.getStyleClass().add(CssVariables.ITEM_EXECUTING); break;
+				case None : break;
 			}
 			this.getStyleClass().add(CssVariables.SIMPLE_ITEM);
 			if (!item.canExecute())
@@ -75,14 +76,14 @@ public class MatrixTreeRow extends TreeTableRow<MatrixItem>
 		}
 	}
 
-	public void showExpressionsResults()
+	void showExpressionsResults()
 	{
 		List<ExpressionField> list = new ArrayList<>();
 		find((GridPane) this.getTreeTableView().getSelectionModel().getSelectedItem().getValue().getLayout(), list);
 		list.forEach(ExpressionField::showShadowText);
 	}
 
-	public void hideExpressionsResults()
+	void hideExpressionsResults()
 	{
 		List<ExpressionField> list = new ArrayList<>();
 		find((GridPane) this.getTreeTableView().getSelectionModel().getSelectedItem().getValue().getLayout(), list);

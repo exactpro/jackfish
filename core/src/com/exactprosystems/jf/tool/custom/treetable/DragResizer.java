@@ -19,11 +19,11 @@ import java.util.function.DoublePredicate;
 public class DragResizer
 {
 	private static final int RESIZE_MARGIN = 5;
+	private static final int MIN_VALUE     = 40;
+
 	private final Region region;
-	private final int minValue = 40;
 	private DoublePredicate predicate;
 	private double y;
-	private boolean initMinHeight;
 	private boolean dragging;
 	private DoubleConsumer consumer;
 
@@ -39,7 +39,6 @@ public class DragResizer
 
 		region.setOnMousePressed(resizer::mousePressed);
 		region.setOnMouseDragged(resizer::mouseDragged);
-//		region.setOnMouseMoved(resizer::mouseOver);
 		region.addEventFilter(MouseEvent.MOUSE_MOVED, resizer::mouseOver);
 		region.setOnMouseReleased(resizer::mouseReleased);
 		region.setOnMouseExited(resizer::mouseExited);
@@ -52,20 +51,21 @@ public class DragResizer
 		resizer.predicate = minPredicate;
 		region.setOnMousePressed(resizer::mousePressed);
 		region.setOnMouseDragged(resizer::mouseDragged);
-		region.setOnMouseMoved(resizer::mouseOver);
+		region.addEventFilter(MouseEvent.MOUSE_MOVED, resizer::mouseOver);
 		region.setOnMouseReleased(resizer::mouseReleased);
 		region.setOnMouseExited(resizer::mouseExited);
 		region.getStyleClass().add(CssVariables.RESIZABLE_REGION);
 	}
 
-	protected void mouseReleased(MouseEvent event)
+	//region private methods
+	private void mouseReleased(MouseEvent event)
 	{
 		this.dragging = false;
 		this.region.setCursor(Cursor.DEFAULT);
 		Optional.ofNullable(this.consumer).ifPresent(c -> c.accept(this.region.getPrefHeight()));
 	}
 
-	protected void mouseExited(MouseEvent event)
+	private void mouseExited(MouseEvent event)
 	{
 		if (!this.dragging)
 		{
@@ -73,7 +73,7 @@ public class DragResizer
 		}
 	}
 
-	protected void mouseOver(MouseEvent event)
+	private void mouseOver(MouseEvent event)
 	{
 		if (this.isInDraggableZone(event) || this.dragging)
 		{
@@ -90,30 +90,30 @@ public class DragResizer
 		}
 	}
 
-	protected boolean isInDraggableZone(MouseEvent event)
+	private boolean isInDraggableZone(MouseEvent event)
 	{
 		return event.getY() >= (region.getHeight() - RESIZE_MARGIN);
 	}
 
-	protected void mouseDragged(MouseEvent event)
+	private void mouseDragged(MouseEvent event)
 	{
 		if (!dragging)
 		{
 			return;
 		}
-		double mousey = event.getY();
-		double newHeight = region.getMinHeight() + (mousey - y);
-		Boolean value = Optional.ofNullable(this.predicate).map(pr -> pr.test(newHeight)).orElse(newHeight > minValue);
+		double mouseY = event.getY();
+		double newHeight = region.getMinHeight() + (mouseY - y);
+		Boolean value = Optional.ofNullable(this.predicate).map(pr -> pr.test(newHeight)).orElse(newHeight > MIN_VALUE);
 		if (value)
 		{
 			region.setMinHeight(newHeight);
 			region.setPrefHeight(newHeight);
 			region.setMaxHeight(newHeight);
-			y = mousey;
+			y = mouseY;
 		}
 	}
 
-	protected void mousePressed(MouseEvent event)
+	private void mousePressed(MouseEvent event)
 	{
 		if (!isInDraggableZone(event))
 		{
@@ -129,4 +129,5 @@ public class DragResizer
 
 		this.y = event.getY();
 	}
+	//endregion
 }

@@ -23,6 +23,7 @@ import com.exactprosystems.jf.documents.matrix.parser.*;
 import com.exactprosystems.jf.documents.matrix.parser.listeners.IMatrixListener;
 import com.exactprosystems.jf.exceptions.ParametersException;
 import com.exactprosystems.jf.tool.helpers.DialogsHelper;
+import com.exactprosystems.jf.tool.matrix.MatrixFx;
 import org.junit.runners.model.FrameworkField;
 
 import java.time.chrono.ThaiBuddhistChronology;
@@ -112,7 +113,7 @@ public final class Call extends MatrixItem
 				}
 				else
 				{
-					driver.setupCall(this, res, new Parameters(this.ref.getParameters()));
+					((MatrixFx) this.getMatrix()).setupCall(this, res, new Parameters(this.ref.getParameters()));
 				}
 				return res;
 			},

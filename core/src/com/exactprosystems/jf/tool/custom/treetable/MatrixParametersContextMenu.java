@@ -11,7 +11,6 @@ package com.exactprosystems.jf.tool.custom.treetable;
 
 import com.exactprosystems.jf.actions.AbstractAction;
 import com.exactprosystems.jf.actions.ReadableValue;
-import com.exactprosystems.jf.api.error.app.ProxyException;
 import com.exactprosystems.jf.api.wizard.Wizard;
 import com.exactprosystems.jf.api.wizard.WizardManager;
 import com.exactprosystems.jf.common.Settings;
@@ -44,10 +43,13 @@ import javafx.scene.layout.GridPane;
 import javafx.util.Pair;
 import org.fxmisc.richtext.StyledTextArea;
 
-import java.awt.*;
+import java.awt.MouseInfo;
+import java.awt.Point;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
+import java.util.function.BiConsumer;
 
 public class MatrixParametersContextMenu extends MatrixContextMenu
 {
@@ -88,21 +90,24 @@ public class MatrixParametersContextMenu extends MatrixContextMenu
 
 		//TODO add icon
 		MenuItem parameterWizard = new MenuItem("For parameter");
-        parameterWizard.setOnAction(event ->
-        {
-            WizardManager manager = context.getFactory().getWizardManager();
-            Object[] criteries = new Object[] { matrix, tree.getSelectionModel().getSelectedItem().getValue(),
-                    row.getItem().getParameters().getByIndex(this.index) };
+		parameterWizard.setOnAction(event ->
+		{
+			WizardManager manager = context.getFactory().getWizardManager();
+			Object[] criteries = new Object[] {
+					matrix,
+					tree.getSelectionModel().getSelectedItem().getValue(),
+					row.getItem().getParameters().getByIndex(this.index)
+			};
             
-            List<Class<? extends Wizard>> suitable  = manager.suitableWizards(criteries);
-            if (suitable.isEmpty())
-            {
-                DialogsHelper.showInfo("No one wizard is accesible here");
-                return;
-            }
-            Class<? extends Wizard> wizardClass = DialogsHelper.selectFromList("Choose wizard", null, suitable, wizard ->  manager.nameOf(wizard));
-            manager.runWizard(wizardClass, context, criteries);
-        });
+			List<Class<? extends Wizard>> suitable  = manager.suitableWizards(criteries);
+			if (suitable.isEmpty())
+			{
+				DialogsHelper.showInfo("No one wizard is accessible here");
+				return;
+			}
+			Class<? extends Wizard> wizardClass = DialogsHelper.selectFromList("Choose wizard", null, suitable, manager::nameOf);
+			manager.runWizard(wizardClass, context, criteries);
+		});
 
 		getItems().add(0, this.parRemove);
 		getItems().add(1, this.parMoveLeft);
@@ -169,22 +174,12 @@ public class MatrixParametersContextMenu extends MatrixContextMenu
 		});
 	}
 
-	
-	@FunctionalInterface
-	public static interface Function
+	//region private methods
+	private void changeParameters(Event event, BiConsumer<MatrixItem, Integer> func)
 	{
-		void call(MatrixItem item, int index) throws ProxyException, Exception;
-	}
-
-	private void changeParameters(Event event, Function func)
-	{
-		Common.tryCatch(() -> 
-		{
-			if (this.row != null)
-			{
-				func.call(this.row.getItem(), this.index);
-			}
-		}, "Error on change parameters");
+		Optional.ofNullable(this.row)
+				.map(MatrixTreeRow::getItem)
+				.ifPresent(item -> func.accept(item, this.index));
 	}
 
 	private void allParameters(Context context, MatrixFx matrix, Event event)
@@ -221,8 +216,7 @@ public class MatrixParametersContextMenu extends MatrixContextMenu
 		return null;
 	}
 
-
-	protected MatrixTreeRow matrixTreeRow(Event event)
+	private MatrixTreeRow matrixTreeRow(Event event)
 	{
 		Node parent = (Node)event.getSource();
 		while (parent != null)
@@ -238,7 +232,7 @@ public class MatrixParametersContextMenu extends MatrixContextMenu
 		return null;
 	}
 
-	protected int parameterIndex(Event event)
+	private int parameterIndex(Event event)
 	{
 		Node selectedPane = null;
 		Node item = (Node)event.getSource();
@@ -262,6 +256,5 @@ public class MatrixParametersContextMenu extends MatrixContextMenu
 			return ((GridPane)selectedPane.getParent()).getChildren().indexOf(selectedPane);
 		}
 	}
-
-
+	//endregion
 }

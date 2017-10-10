@@ -11,6 +11,7 @@ package com.exactprosystems.jf.tool.custom.treetable;
 import com.exactprosystems.jf.api.client.IMessageDictionary;
 import com.exactprosystems.jf.api.client.MapMessage;
 import com.exactprosystems.jf.api.common.Str;
+import com.exactprosystems.jf.common.CommonHelper;
 import com.exactprosystems.jf.common.Settings;
 import com.exactprosystems.jf.common.highlighter.Highlighter;
 import com.exactprosystems.jf.common.undoredo.Command;
@@ -45,20 +46,17 @@ import com.exactprosystems.jf.tool.matrix.MatrixFx;
 import com.exactprosystems.jf.tool.matrix.MatrixFxController;
 import com.exactprosystems.jf.tool.matrix.params.ParametersPane;
 import javafx.collections.FXCollections;
-import javafx.event.ActionEvent;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
+import javafx.scene.text.Font;
 import org.fxmisc.richtext.StyleClassedTextArea;
 import org.reactfx.Subscription;
 
-import java.io.FileReader;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
+import java.io.Reader;
+import java.util.*;
 import java.util.function.BooleanSupplier;
 import java.util.function.Consumer;
 import java.util.function.Function;
@@ -69,6 +67,13 @@ public class DisplayDriverFx implements DisplayDriver
 {
 	private static final String GRID_PARENT           = "gridParent";
 	private static final String GRID_PARENT_EXP_FIELD = "gridParentExpField";
+
+	private              Map<GridPane, Subscription> mapSubscribers = new HashMap<>();
+	private static final Insets                      INSETS         = new Insets(0, 0, 0, 5);
+	private MatrixTreeView              treeView;
+	private Context                     context;
+	private MatrixContextMenu           rowContextMenu;
+	private MatrixParametersContextMenu parametersContextMenu;
 
 	public DisplayDriverFx(MatrixTreeView treeView, Context context, MatrixContextMenu rowContextMenu, MatrixParametersContextMenu parametersContextMenu)
 	{
@@ -92,6 +97,7 @@ public class DisplayDriverFx implements DisplayDriver
 	public Object createLayout(MatrixItem item, int lines)
 	{
 		GridPane pane = new GridPane();
+		//this true only for RootItem
 		if (item.getParent() == null)
 		{
 			TreeItem<MatrixItem> root = new TreeItem<>(item);
@@ -111,6 +117,7 @@ public class DisplayDriverFx implements DisplayDriver
 				}
 			}
 			TreeItem<MatrixItem> newTreeItem = new TreeItem<>(item);
+			//this true only for End elements
 			if (lines == -1)
 			{
 				treeItem.getChildren().add(newTreeItem);
@@ -129,8 +136,7 @@ public class DisplayDriverFx implements DisplayDriver
 		GridPane pane = (GridPane) layout;
 
 		final Label label = new Label(name);
-		label.getStyleClass().add(CssVariables.BOLD_LABEL);
-		label.getStyleClass().add(CssVariables.OBLIQUE_LABEL);
+		label.getStyleClass().addAll(CssVariables.BOLD_LABEL, CssVariables.OBLIQUE_LABEL);
 		label.setOnMouseClicked(mouseEvent -> pane.getChildren()
 				.stream()
 				.filter(c ->
@@ -189,12 +195,12 @@ public class DisplayDriverFx implements DisplayDriver
 	}
 
 	@Override
-	public void showCheckBox(MatrixItem item, Object layout, int row, int column, String name, Setter<Boolean> set, Getter<Boolean> get)
+	public void showCheckBox(MatrixItem item, Object layout, int row, int column, String name, Setter<Boolean> setter, Getter<Boolean> getter)
 	{
 		GridPane pane = (GridPane) layout;
 		CheckBox checkBox = new CheckBox(name);
 		checkBox.setMinWidth(name.length() * 8 + 20);
-		checkBox.setSelected(get.get());
+		checkBox.setSelected(getter.get());
 		checkBox.focusedProperty().addListener((observable, oldValue, newValue) ->
 		{
 			if (!oldValue && newValue)
@@ -204,7 +210,7 @@ public class DisplayDriverFx implements DisplayDriver
 		});
 		checkBox.setOnAction(e ->
 		{
-			Boolean lastValue = get.get();
+			Boolean lastValue = getter.get();
 			Boolean value = checkBox.isSelected();
 			if (lastValue == value)
 			{
@@ -213,33 +219,32 @@ public class DisplayDriverFx implements DisplayDriver
 
 			Command undo = () ->
 			{
-				set.set(lastValue);
+				setter.set(lastValue);
 				checkBox.setSelected(lastValue);
 			};
 			Command redo = () ->
 			{
-				set.set(value);
+				setter.set(value);
 				checkBox.setSelected(value);
 			};
 			item.getMatrix().addCommand(undo, redo);
 		});
 		addToLayout(checkBox, column, row, pane);
-		//		pane.add(checkBox, column, row);
 		GridPane.setMargin(checkBox, INSETS);
 	}
 
 	@Override
-	public void showComboBox(MatrixItem item, Object layout, int row, int column, Setter<String> set, Getter<String> get, Supplier<List<String>> handler, Function<String, Boolean> needUpdate)
+	public void showComboBox(MatrixItem item, Object layout, int row, int column, Setter<String> setter, Getter<String> getter, Supplier<List<String>> handler, Function<String, Boolean> needUpdate)
 	{
 		GridPane pane = (GridPane) layout;
 		ComboBox<String> comboBox = new ComboBox<>();
-		comboBox.setValue(get.get());
+		comboBox.setValue(getter.get());
 		comboBox.setOnAction(event -> {
 			if (comboBox.getValue() == null)
 			{
 				return;
 			}
-			String lastValue = get.get();
+			String lastValue = getter.get();
 			String newValue = comboBox.getValue();
 			if (Str.areEqual(lastValue, newValue))
 			{
@@ -255,12 +260,12 @@ public class DisplayDriverFx implements DisplayDriver
 
 			Command undo = () ->
 			{
-				set.set(lastValue);
+				setter.set(lastValue);
 				comboBox.getSelectionModel().select(lastValue);
 			};
 			Command redo = () ->
 			{
-				set.set(newValue);
+				setter.set(newValue);
 				comboBox.getSelectionModel().select(newValue);
 			};
 			item.getMatrix().addCommand(undo, redo);
@@ -281,22 +286,16 @@ public class DisplayDriverFx implements DisplayDriver
 		GridPane.setMargin(comboBox, INSETS);
 	}
 
-	private class StubEvent extends ActionEvent
-	{
-
-	}
-
 	@Override
-	public void showTextBox(MatrixItem item, Object layout, int row, int column, Setter<String> set, Getter<String> get, FormulaGenerator generator)
+	public void showTextBox(MatrixItem item, Object layout, int row, int column, Setter<String> set, Getter<String> getter, FormulaGenerator generator)
 	{
 		GridPane pane = (GridPane) layout;
 
 		TextField textBox = new TextField();
 		textBox.setContextMenu(this.rowContextMenu);
 		textBox.setStyle(Common.FONT_SIZE);
-		textBox.setText(get.get());
+		textBox.setText(getter.get());
 		Common.sizeTextField(textBox);
-		textBox.setPrefWidth(Common.computeTextWidth(textBox.getFont(), textBox.getText(), 0.0D) + 40);
 		textBox.focusedProperty().addListener((observable, oldValue, newValue) ->
 		{
 			if (!oldValue && newValue)
@@ -305,7 +304,7 @@ public class DisplayDriverFx implements DisplayDriver
 			}
 			if (!newValue && oldValue)
 			{
-				String lastValue = get.get();
+				String lastValue = getter.get();
 				String value = textBox.getText();
 				if (Str.areEqual(lastValue, value))
 				{
@@ -338,7 +337,6 @@ public class DisplayDriverFx implements DisplayDriver
 		gridPane.add(textBox, 0, 0);
 		pane.add(gridPane, column, row);
 		GridPane.setMargin(textBox, INSETS);
-		//		Common.setFocused(textBox);
 	}
 
 	@Override
@@ -395,6 +393,10 @@ public class DisplayDriverFx implements DisplayDriver
 		temp.getStyleClass().add(GRID_PARENT_EXP_FIELD);
 		temp.add(field, 0, 0);
 		pane.add(temp, column, row);
+		if (item instanceof ActionItem && Str.areEqual(name, Tokens.Assert.get()))
+		{
+			GridPane.setColumnSpan(temp, 2);
+		}
 		GridPane.setMargin(field, INSETS);
 	}
 
@@ -407,11 +409,12 @@ public class DisplayDriverFx implements DisplayDriver
 		textArea.setPrefWidth(Double.MAX_VALUE);
 		textArea.getUndoManager().close();
 		textArea.appendText(text.stream().collect(Collectors.joining("\n")));
-		Optional.ofNullable(this.lastSubscription).ifPresent(Subscription::unsubscribe);
+		Optional.ofNullable(this.mapSubscribers.get(pane)).ifPresent(Subscription::unsubscribe);
 		textArea.setStyleSpans(0, Common.convertFromList(highlighter.getStyles(textArea.getText())));
-		this.lastSubscription = textArea.richChanges()
+		this.mapSubscribers.putIfAbsent(pane, textArea.richChanges()
 				.filter(ch -> !ch.getInserted().equals(ch.getRemoved()))
-				.subscribe(change -> textArea.setStyleSpans(0, Common.convertFromList(highlighter.getStyles(textArea.getText()))));
+				.subscribe(change -> textArea.setStyleSpans(0, Common.convertFromList(highlighter.getStyles(textArea.getText()))))
+		);
 
 		textArea.focusedProperty().addListener((observable, oldValue, newValue) ->
 		{
@@ -421,7 +424,6 @@ public class DisplayDriverFx implements DisplayDriver
 			}
 		});
 		pane.add(textArea, column, row, Integer.MAX_VALUE, 1);
-
 	}
 
 	@Override
@@ -435,11 +437,12 @@ public class DisplayDriverFx implements DisplayDriver
 				.orElseThrow(() -> new RuntimeException("Never"));
 
 		StyleClassedTextArea styledTextArea = (StyleClassedTextArea) node;
-		Optional.ofNullable(this.lastSubscription).ifPresent(Subscription::unsubscribe);
+		Optional.ofNullable(this.mapSubscribers.get(gridPane)).ifPresent(Subscription::unsubscribe);
 		styledTextArea.setStyleSpans(0, Common.convertFromList(highlighter.getStyles(styledTextArea.getText())));
-		this.lastSubscription = styledTextArea.richChanges()
+		this.mapSubscribers.putIfAbsent(gridPane, styledTextArea.richChanges()
 				.filter(ch -> !ch.getInserted().equals(ch.getRemoved()))
-				.subscribe(change -> styledTextArea.setStyleSpans(0, Common.convertFromList(highlighter.getStyles(styledTextArea.getText()))));
+				.subscribe(change -> styledTextArea.setStyleSpans(0, Common.convertFromList(highlighter.getStyles(styledTextArea.getText()))))
+		);
 	}
 
 	@Override
@@ -466,9 +469,9 @@ public class DisplayDriverFx implements DisplayDriver
 		field.textProperty().addListener((observable1, oldValue1, newValue1) ->
 		{
 			List<String> match = SuggestionProvider.isMatch(tempList, newValue1);
-
 			if (!match.isEmpty())
 			{
+				//TODO remake this via CssVariables and styleClasses
 				field.setStyle("-fx-text-fill : green");
 			}
 			else
@@ -576,15 +579,16 @@ public class DisplayDriverFx implements DisplayDriver
 		{
 			return;
 		}
-		GridPane pane = ((GridPane) layout);
-
-		Optional<BorderPane> gridParent = pane.getChildren().stream().filter(node -> node.getStyleClass().contains(GRID_PARENT)).map(node -> (BorderPane) node).findFirst();
-		if (gridParent.isPresent())
-		{
-			BorderPane borderPane = gridParent.get();
-			SpreadsheetView spreadsheetView = (SpreadsheetView) borderPane.getCenter();
-			spreadsheetView.getProvider().extendsTable(prefCols, prefRows);
-		}
+		((GridPane) layout).getChildren()
+				.stream()
+				.filter(node -> node.getStyleClass().contains(GRID_PARENT))
+				.map(node -> (BorderPane) node)
+				.findFirst()
+				.ifPresent(bp ->
+				{
+					SpreadsheetView spreadsheetView = (SpreadsheetView) bp.getCenter();
+					spreadsheetView.getProvider().extendsTable(prefCols, prefRows);
+				});
 	}
 
 	@Override
@@ -614,7 +618,7 @@ public class DisplayDriverFx implements DisplayDriver
 		GridPane pane = (GridPane) layout;
 
 		ParametersPane paramsPane = new ParametersPane(item, this.context, oneLine, parameters, generator, this.rowContextMenu, this.parametersContextMenu, () -> selectCurrentRow(((MatrixTreeRow) pane.getParent().getParent())));
-		GridPane.setMargin(paramsPane, new Insets(column, 10, column, 10));
+		GridPane.setMargin(paramsPane, new Insets(column, 8, column, 8));
 		pane.add(paramsPane, column, row, Integer.MAX_VALUE, 2);
 	}
 
@@ -622,7 +626,7 @@ public class DisplayDriverFx implements DisplayDriver
 	public void showGrid(MatrixItem item, Object layout, int row, int column, Table table)
 	{
 		GridPane pane = (GridPane) layout;
-		DataProvider<String> provider = new TableDataProvider(table, (undo, redo) -> item.getMatrix().addCommand(undo, redo));
+		DataProvider<String> provider = new TableDataProvider(table, item.getMatrix()::addCommand);
 		SpreadsheetView view = new SpreadsheetView(provider);
 		provider.displayFunction(view::display);
 		view.setPrefHeight(25 * (Math.min(provider.getRowHeaders().size(), 50) + 1));
@@ -640,10 +644,10 @@ public class DisplayDriverFx implements DisplayDriver
 	public void showTree(MatrixItem item, Object layout, int row, int column, MapMessage message, IMessageDictionary dictionary, Context context)
 	{
 		GridPane pane = (GridPane) layout;
-		RawMessageTreeView treeView = new RawMessageTreeView(context.getEvaluator());
-		treeView.displayTree(message, dictionary);
-		DragResizer.makeResizable(treeView, treeView::setPrefHeight);
-		pane.add(treeView, column, row, 10, 2);
+		RawMessageTreeView messageView = new RawMessageTreeView(context.getEvaluator());
+		messageView.displayTree(message, dictionary);
+		DragResizer.makeResizable(messageView, messageView::setPrefHeight);
+		pane.add(messageView, column, row, 10, 2);
 	}
 
 	@Override
@@ -660,21 +664,24 @@ public class DisplayDriverFx implements DisplayDriver
 	public void hide(MatrixItem item, Object layout, int row, boolean hide)
 	{
 		GridPane pane = (GridPane) layout;
-		pane.getChildren().stream().filter(child -> GridPane.getRowIndex(child) != null && GridPane.getRowIndex(child) == row).forEach(c ->
-		{
-			((Region) c).setPrefHeight(hide ? 0 : Control.USE_COMPUTED_SIZE);
-			((Region) c).setMaxHeight(hide ? 0 : Control.USE_COMPUTED_SIZE);
-			((Region) c).setMinHeight(hide ? 0 : Control.USE_COMPUTED_SIZE);
-			c.setVisible(!hide);
-			if (c.isVisible() && c.getStyleClass().contains(GRID_PARENT_EXP_FIELD))
-			{
-				((GridPane) c).getChildren()
-						.stream()
-						.filter(node -> node instanceof ExpressionField)
-						.findFirst()
-						.ifPresent(Common::setFocusedFast);
-			}
-		});
+		pane.getChildren()
+				.stream()
+				.filter(child -> GridPane.getRowIndex(child) != null && GridPane.getRowIndex(child) == row)
+				.forEach(c ->
+				{
+					((Region) c).setPrefHeight(hide ? 0 : Control.USE_COMPUTED_SIZE);
+					((Region) c).setMaxHeight(hide ? 0 : Control.USE_COMPUTED_SIZE);
+					((Region) c).setMinHeight(hide ? 0 : Control.USE_COMPUTED_SIZE);
+					c.setVisible(!hide);
+					if (c.isVisible() && c.getStyleClass().contains(GRID_PARENT_EXP_FIELD))
+					{
+						((GridPane) c).getChildren()
+								.stream()
+								.filter(node -> node instanceof ExpressionField)
+								.findFirst()
+								.ifPresent(Common::setFocusedFast);
+					}
+				});
 	}
 
 	@Override
@@ -695,18 +702,12 @@ public class DisplayDriverFx implements DisplayDriver
 		if (tab == null)
 		{
 			Common.tryCatch(() -> {
-				/*
-				checkConfig();
-				Matrix doc = (Matrix) this.factory.createDocument(DocumentKind.MATRIX, newName(Matrix.class));
-				doc.create();
-				Settings.SettingsValue copyright = settings.getValueOrDefault(Settings.GLOBAL_NS, "Main", "copyright", "");
-				String text = copyright.getValue().replaceAll("\\\\n", System.lineSeparator());
-				doc.addCopyright(text);
-				this.factory.showDocument(doc);
-				 */
-				Matrix matrixFx = (Matrix) context.getFactory().createDocument(DocumentKind.MATRIX, matrix.getNameProperty().get());
-				matrixFx.load(new FileReader(matrix.getNameProperty().get()));
-				context.getFactory().showDocument(matrixFx);
+				try(Reader reader = CommonHelper.readerFromFileName(matrix.getNameProperty().get()))
+				{
+					Matrix matrixFx = (Matrix) context.getFactory().createDocument(DocumentKind.MATRIX, matrix.getNameProperty().get());
+					matrixFx.load(reader);
+					context.getFactory().showDocument(matrixFx);
+				}
 			}, "Couldn't open the matrix " + matrix.getNameProperty().get());
 			tab = Common.checkDocument(matrix);
 		}
@@ -738,6 +739,7 @@ public class DisplayDriverFx implements DisplayDriver
 		}
 	}
 
+	//region private methods
 	private void updateStyle(String key, Settings settings, Label label)
 	{
 		Settings.SettingsValue value = settings.getValue(Settings.GLOBAL_NS, Settings.MATRIX_COLORS, key);
@@ -746,12 +748,14 @@ public class DisplayDriverFx implements DisplayDriver
 
 	private void addToLayout(Node node, int column, int row, GridPane layout)
 	{
-		Optional<Node> first = layout.getChildren().stream().filter(Objects::nonNull).filter(n ->
-		{
-			Integer columnIndex = GridPane.getColumnIndex(n);
-			Integer rowIndex = GridPane.getRowIndex(n);
-			return columnIndex != null && rowIndex != null && columnIndex == column && rowIndex == row;
-		}).findFirst();
+		Optional<Node> first = layout.getChildren().stream()
+				.filter(Objects::nonNull)
+				.filter(n ->
+				{
+					Integer columnIndex = GridPane.getColumnIndex(n);
+					Integer rowIndex = GridPane.getRowIndex(n);
+					return columnIndex != null && rowIndex != null && columnIndex == column && rowIndex == row;
+				}).findFirst();
 
 		if (first.isPresent())
 		{
@@ -782,7 +786,7 @@ public class DisplayDriverFx implements DisplayDriver
 
 	private void stretchIfCan(TextField tf)
 	{
-		int size = getPrefWidth(tf.getText());
+		double size = getPrefWidth(tf.getText(), tf.getFont());
 		if (tf.getScene() != null)
 		{
 			double v = tf.getScene().getWindow().getWidth() / 3;
@@ -795,21 +799,23 @@ public class DisplayDriverFx implements DisplayDriver
 		tf.setPrefWidth(size);
 	}
 
-	private int getPrefWidth(String text)
+	private double getPrefWidth(String text, Font font)
 	{
-		return text != null ? (text.length() * 8 + 20) : 60;
+		return Common.computeTextWidth(font, text, 0.0D) + 40;
 	}
 
 	private List<CommentString> fromStr(String str)
 	{
-		// because TextArea from javafx split line via \n, not via System.lineSeparator()
-		return Arrays.stream(str.split("\n")).map(CommentString::new).collect(Collectors.toList());
+		return Arrays.stream(str.split("\n"))
+				.map(CommentString::new)
+				.collect(Collectors.toList());
 	}
 
 	private String fromList(List<CommentString> list)
 	{
-		Optional<CommentString> opt = list.stream().reduce((cs1, cs2) -> new CommentString(cs1.toString() + LINE_SEPARATOR + cs2.toString()));
-		return opt.isPresent() ? opt.get().toString() : "";
+		return list.stream()
+				.map(CommentString::toString)
+				.collect(Collectors.joining("\n"));
 	}
 
 	private void accept(List<String> words, Consumer<String> supplier, TextField field)
@@ -824,12 +830,5 @@ public class DisplayDriverFx implements DisplayDriver
 			supplier.accept(field.getText());
 		}
 	}
-
-	private Subscription lastSubscription;
-	private static final Insets INSETS = new Insets(0, 0, 0, 5);
-	private static final String LINE_SEPARATOR = System.getProperty("line.separator");
-	private MatrixTreeView treeView;
-	private Context context;
-	private MatrixContextMenu rowContextMenu;
-	private MatrixParametersContextMenu parametersContextMenu;
+	//endregion
 }
