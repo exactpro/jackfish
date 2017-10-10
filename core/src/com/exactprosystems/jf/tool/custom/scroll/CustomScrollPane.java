@@ -10,14 +10,13 @@ package com.exactprosystems.jf.tool.custom.scroll;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.CssVariables;
 import com.sun.javafx.scene.control.skin.ScrollPaneSkin;
-import javafx.application.Platform;
 import javafx.scene.control.ScrollBar;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.Skin;
 
 public class CustomScrollPane extends ScrollPane
 {
-    private static final int heightHorizontalScroll = 8;
+	private static final int HEIGHT_HORIZONTAL_SCROLL = 8;
 
 	public CustomScrollPane()
 	{
@@ -31,7 +30,7 @@ public class CustomScrollPane extends ScrollPane
 		this.setHbarPolicy(ScrollBarPolicy.AS_NEEDED);
 		this.getStyleClass().add(CssVariables.CUSTOM_SCROLL_PANE);
 		this.setFitToHeight(true);
-		this.setPrefHeight(prefHeight + heightHorizontalScroll);
+		this.setPrefHeight(prefHeight + HEIGHT_HORIZONTAL_SCROLL);
 	}
 
 	@Override
@@ -43,12 +42,12 @@ public class CustomScrollPane extends ScrollPane
 		{
 			if (oldValue && !newValue)
 			{
-				this.setPrefHeight(this.getPrefHeight() - heightHorizontalScroll);
+				this.setPrefHeight(this.getPrefHeight() - HEIGHT_HORIZONTAL_SCROLL);
 			}
 
 			if (!oldValue && newValue)
 			{
-				this.setPrefHeight(this.getPrefHeight() + heightHorizontalScroll);
+				this.setPrefHeight(this.getPrefHeight() + HEIGHT_HORIZONTAL_SCROLL);
 			}
 		}));
 		return skin;
