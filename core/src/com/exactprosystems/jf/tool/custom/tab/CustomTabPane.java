@@ -108,7 +108,7 @@ public class CustomTabPane extends TabPane
 		return droppedTab;
 	}
 
-	void addTempTabs()
+	private void addTempTabs()
 	{
 		this.tempTabList.clear();
 		int size = this.getTabs().size();
@@ -128,7 +128,7 @@ public class CustomTabPane extends TabPane
 		}
 	}
 
-	void removeTempTabs()
+	private void removeTempTabs()
 	{
 		this.getTabs().removeAll(this.tempTabList);
 		this.tempTabList.clear();

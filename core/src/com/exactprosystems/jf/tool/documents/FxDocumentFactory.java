@@ -68,7 +68,15 @@ public class FxDocumentFactory extends DocumentFactory
 	@Override
 	public void showDocument(Document doc) throws Exception
 	{
-	    AbstractDocumentController<? extends Document> controller = null;
+		CustomTab customTab1 = Common.checkDocument(doc);
+		if (customTab1 != null)
+		{
+			//this need for reload document.
+			customTab1.getController().init(doc, customTab1);
+			super.showDocument(doc);
+			return;
+		}
+		AbstractDocumentController<? extends Document> controller = null;
 	    
 	    if (doc instanceof SystemVarsFx)
 	    {

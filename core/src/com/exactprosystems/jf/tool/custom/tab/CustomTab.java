@@ -10,6 +10,7 @@ package com.exactprosystems.jf.tool.custom.tab;
 
 import com.exactprosystems.jf.common.CommonHelper;
 import com.exactprosystems.jf.documents.Document;
+import com.exactprosystems.jf.documents.DocumentKind;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.CssVariables;
 import com.exactprosystems.jf.tool.documents.AbstractDocumentController;
@@ -40,8 +41,10 @@ public class CustomTab extends Tab
 	private static final String	CHANGED_MARKER	= " *";
 	private Hyperlink			crossButton;
 	private Text				text;
+
 	private Document			document;
 	private AbstractDocumentController<? extends Document> abstractController;
+
 	private FileWatcher			watcher;
 	private final AtomicBoolean	warningIsShow;
 
@@ -54,7 +57,6 @@ public class CustomTab extends Tab
 		this.tabPane = tabPane;
 		this.warningIsShow = new AtomicBoolean(false);
 		this.document = document;
-
 		init();
 	}
 
@@ -91,7 +93,7 @@ public class CustomTab extends Tab
 		});
 		this.view.getChildren().addAll(this.text, this.crossButton);
 		this.view.setOnDragDetected(e -> {
-			tabPane.draggingTabProperty().set(this);
+			this.tabPane.draggingTabProperty().set(this);
 
 			Dragboard dragboard = this.view.startDragAndDrop(TransferMode.MOVE);
 			ClipboardContent clipboardContent = new ClipboardContent();
@@ -102,9 +104,7 @@ public class CustomTab extends Tab
 
 			e.consume();
 		});
-		this.view.setOnDragOver(e -> {
-			tabPane.droppedTabProperty().set(null);
-		});
+		this.view.setOnDragOver(e -> this.tabPane.droppedTabProperty().set(null));
 		this.setGraphic(this.view);
 
 		this.watcher = new FileWatcher()
@@ -185,7 +185,14 @@ public class CustomTab extends Tab
 					{
 						this.document.load(reader);
 					}
-					this.document.display();
+					if (DocumentKind.byDocument(this.document).isUseNewMVP())
+					{
+						this.document.getFactory().showDocument(this.document);
+					}
+					else
+					{
+						this.document.display();
+					}
 					this.document.saved();
 				}, "Error on reload");
 			}
@@ -220,11 +227,6 @@ public class CustomTab extends Tab
 		this.text.setText(Common.getSimpleTitle(text));
 	}
 
-	HBox getView()
-	{
-		return view;
-	}
-
 	public static class TempCustomTab extends CustomTab
 	{
 		public TempCustomTab(Document document, CustomTabPane pane)
@@ -248,9 +250,7 @@ public class CustomTab extends Tab
 				super.view.getStyleClass().removeAll(CssVariables.TEMP_VIEW_OVER_CUSTOM_TAB);
 				super.view.getStyleClass().add(CssVariables.TEMP_VIEW_OVER_CUSTOM_TAB);
 			});
-			super.view.setOnDragExited(e -> {
-				super.view.getStyleClass().removeAll(CssVariables.TEMP_VIEW_OVER_CUSTOM_TAB);
-			});
+			super.view.setOnDragExited(e -> super.view.getStyleClass().removeAll(CssVariables.TEMP_VIEW_OVER_CUSTOM_TAB));
 			setGraphic(super.view);
 		}
 
@@ -276,12 +276,6 @@ public class CustomTab extends Tab
 		public void onClose() throws Exception
 		{
 
-		}
-
-		@Override
-		public String getTitle()
-		{
-			return super.getTitle();
 		}
 
 		@Override

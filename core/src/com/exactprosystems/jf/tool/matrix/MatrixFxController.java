@@ -8,6 +8,7 @@
 
 package com.exactprosystems.jf.tool.matrix;
 
+import com.exactprosystems.jf.api.common.Str;
 import com.exactprosystems.jf.common.Settings;
 import com.exactprosystems.jf.documents.Document;
 import com.exactprosystems.jf.documents.config.Context;
@@ -436,7 +437,7 @@ public class MatrixFxController extends AbstractDocumentController<MatrixFx> imp
 		TreeItem<MatrixItem> treeItem = this.tree.find(item);
 		if (treeItem == null)
 		{
-			treeItem = this.tree.find(this.tree.getRoot(), matrixItem -> item.getId().equals(matrixItem.getId()));
+			treeItem = this.tree.find(this.tree.getRoot(), matrixItem -> Str.areEqual(item.getId(), matrixItem.getId()));
 		}
 		this.tree.setCurrent(treeItem, needExpand);
 	}
