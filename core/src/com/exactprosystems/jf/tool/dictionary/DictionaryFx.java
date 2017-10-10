@@ -50,6 +50,8 @@ public class DictionaryFx extends GuiDictionary
 	private AbstractEvaluator      evaluator;
 	private ApplicationConnector   applicationConnector;
 	private volatile boolean isWorking = false;
+	private Collection<String> titles;
+
 
 	public DictionaryFx(String fileName, DocumentFactory factory) throws Exception
 	{
@@ -168,12 +170,7 @@ public class DictionaryFx extends GuiDictionary
 
 	public void displayTitles() throws Exception
 	{
-		Collection<String> titles = null;
-		if (isApplicationRun())
-		{
-			titles = this.applicationConnector.getAppConnection().getApplication().service().titles();
-		}
-		this.controller.displayTitles(titles);
+		this.controller.displayTitles(this.titles);
 	}
 
 	public void setCurrentAdapter(String adapter)
@@ -769,6 +766,14 @@ public class DictionaryFx extends GuiDictionary
 	public void switchToParent() throws Exception
 	{
 		checkIsWorking(() -> this.applicationConnector.getAppConnection().getApplication().service().switchToFrame(null, null));
+	}
+
+	public void refreshTitles() throws Exception
+	{
+		if (isApplicationRun())
+		{
+			this.titles = this.applicationConnector.getAppConnection().getApplication().service().titles();
+		}
 	}
 	//endregion
 

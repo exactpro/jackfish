@@ -13,6 +13,7 @@ import com.exactprosystems.jf.api.app.Resize;
 import com.exactprosystems.jf.api.common.Str;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.documents.matrix.parser.listeners.ListProvider;
+import com.exactprosystems.jf.functions.Notifier;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.ContainingParent;
 import com.exactprosystems.jf.tool.CssVariables;
@@ -398,6 +399,14 @@ public class ActionsController implements Initializable, ContainingParent
 		{
 			this.comboBoxWindows.getItems().setAll(FXCollections.observableArrayList());
 		}
+	}
+
+	public void refreshTitles()
+	{
+		tryCatch(() -> {
+			this.model.refreshTitles();
+			DialogsHelper.showNotifier("Titles refreshed successfully", Notifier.Success);
+		},"Error on refresh titles");
 	}
 
 	public void displayStoreActionControl(Collection<String> stories, String lastSelectedStore)
