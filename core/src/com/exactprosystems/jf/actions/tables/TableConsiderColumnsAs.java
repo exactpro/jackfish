@@ -13,6 +13,7 @@ import com.exactprosystems.jf.actions.ActionAttribute;
 import com.exactprosystems.jf.actions.ActionFieldAttribute;
 import com.exactprosystems.jf.actions.ActionGroups;
 import com.exactprosystems.jf.actions.DefaultValuePool;
+import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.api.error.ErrorKind;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.report.ReportBuilder;
@@ -21,39 +22,15 @@ import com.exactprosystems.jf.documents.matrix.parser.Parameters;
 import com.exactprosystems.jf.functions.Table;
 
 @ActionAttribute(
-		group					= ActionGroups.Tables,
-		generalDescription 		= "This action is determined  to take string values stored in a table to a certain data type. \n"
-				+ "Objects Table are filled with string values by default. It is used in case when it is needed to "
-				+ "perform an action with data stored in a table not as a line but as a one type of data given: "
-				+ "{{$Integer$}}, {{$String$}}, {{$Boolean$}}, {{$Double$}}, {{$BigDecimal$}}, {{$Date$}}, and also {{$Expression$}}"
-				+ " which is used to name cells which include expressions in mvel language. These expressions s will be "
-				+ "calculated  when actions TableReport (if parameter ReportValues is used), TableSaveToFile (if parameter"
-				+ " SaveValues is used), TableCompareTwo are performed.",
-		additionFieldsAllowed 	= false,
-		examples 				=
-				"{{`1. Create a table with columns Name and Age, SalaryPerYear and populate it with values.`}}"
-				+ "{{`2. Set data type  Integer for column  Age.`}}"
-				+ "{{`3. Using action TableSelect select all rows with value more than 25(int) in column Age.`}}"
-				+ "{{`4. Verify that TableConsiderColumnsAs is correct. `}}"
-				+ "{{#\n#Id;#RawTable\n"
-				+ "TC;Table\n"
-				+ "@;Name;Age;SalaryPerYear\n"
-				+ "0;Mike;42;12000 * 12\n"
-				+ "1;John;32;25000*12\n"
-				+ "2;Fred;21;7000*12\n"
-				+ "#EndRawTable\n"
-				+ "#Action;#Table;#Integer\n"
-				+ "TableConsiderColumnsAs;TC;'Age'\n"
-				+ "#Id;#Action;#Table;#Age\n"
-				+ "TS;TableSelect;TC;new NumberCondition('Age','>',25)\n"
-				+ "#Action;#Expression;#Table\n"
-				+ "TableConsiderColumnsAs;'SalaryPerYear';TS.Out\n"
-				+ "#Assert;#Message\n"
-				+ "TS.Out.size() == 2 && TS.Out.get(0).get('SalaryPerYear') == '144000'#}}",
+		group					   = ActionGroups.Tables,
+		constantGeneralDescription = R.TABLE_CONSIDER_COLUMN_AS_GENERAL_DESC,
+		additionFieldsAllowed 	   = false,
+		constantExamples		   = R.TABLE_CONSIDER_COLUMN_AS_EXAMPLE
+,
 		seeAlsoClass = {TableReplace.class, TableAddColumns.class, TableColumnRename.class, TableAddValue.class}
 
 	)
-public class TableConsiderColumnsAs extends AbstractAction 
+public class TableConsiderColumnsAs extends AbstractAction
 {
     public final static String tableName        = "Table";
     public final static String asStringName     = "String";
@@ -90,10 +67,10 @@ public class TableConsiderColumnsAs extends AbstractAction
 
 	@ActionFieldAttribute(name = asExpressionName, mandatory = false, def = DefaultValuePool.EmptyArrString, description = "Is specified as an array of column names, where it is needed to set data type - Expression.")
 	protected String[]	asExpression;
-	
+
     @ActionFieldAttribute(name = asGroupName, mandatory = false, def = DefaultValuePool.EmptyArrString, description = "Is specified as an array of column names, where it is needed to set data type - Group.")
     protected String[]  asGroup;
-    
+
     @ActionFieldAttribute(name = asHyperlinkName, mandatory = false, def = DefaultValuePool.EmptyArrString, description = "Is specified as an array of column names, where it is needed to set data type - Hyperlink.")
     protected String[]  asHyperlink;
 
@@ -158,7 +135,7 @@ public class TableConsiderColumnsAs extends AbstractAction
         {
             this.table.considerAsColored(this.asColored);
         }
-		
+
 		super.setResult(null);
 	}
 }
