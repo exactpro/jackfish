@@ -10,7 +10,6 @@ package com.exactprosystems.jf.tool;
 
 import javafx.scene.Parent;
 
-@Deprecated
 public interface ContainingParent
 {
 	void setParent(Parent parent);

@@ -13,14 +13,11 @@ import com.exactprosystems.jf.api.common.FieldParameter;
 import com.exactprosystems.jf.api.common.HideAttribute;
 import com.exactprosystems.jf.api.common.Str;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
-import com.exactprosystems.jf.common.evaluator.Variables;
 import com.exactprosystems.jf.documents.matrix.Matrix;
 import com.exactprosystems.jf.tool.Common;
-
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
-import java.io.IOException;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
@@ -30,7 +27,6 @@ import java.util.stream.Collectors;
 public class HelperFx
 {
 	private Matrix matrix;
-	private Class<?> clazz;
 	private HelperControllerFx controller;
 	private AbstractEvaluator evaluator;
 	private Comparator<IToString> comparatorAZ;
@@ -45,15 +41,14 @@ public class HelperFx
 	{
 		this.evaluator = evaluator;
 		this.matrix = matrix;
-		this.clazz = clazz;
-		comparatorAZ = (o1, o2) -> o1.getName().compareTo(o2.getName());
+		comparatorAZ = Comparator.comparing(IToString::getName);
 		comparatorZA = comparatorAZ.reversed();
 
 		this.controller = Common.loadController(HelperFx.class.getResource("HelperFx.fxml"));
-		this.controller.init(this, title, this.clazz, this.evaluator != null);
+		this.controller.init(this, title, clazz, this.evaluator != null);
 	}
 	
-	public String showAndWait(String value) throws IOException
+	public String showAndWait(String value)
 	{
 		return this.controller.showAndWait(value);
 	}
@@ -84,41 +79,19 @@ public class HelperFx
 
 				ObservableList<IToString> observableAll = FXCollections.observableArrayList();
 
-				for (Method method : clazz.getMethods())
-				{
-				    if (method.getAnnotation(HideAttribute.class) != null)
-				    {
-				        continue;
-				    }
-					SimpleMethod simpleMethod = getStringSimpleMethod(method);
-					if (simpleMethod != null)
-					{
-						boolean add = true;
-						
-						if (!showVoid && simpleMethod.getReturnType().equals("void"))
-						{
-							add = false;
-						}
-						
-						if (!showStatic && simpleMethod.isStatic())
-						{
-							add = false;
-						}
-						
-						if (add)
-						{
-							observableAll.add(simpleMethod);
-						}
-					}
-				}
+				Arrays.stream(clazz.getMethods())
+						.filter(m -> m.getAnnotation(HideAttribute.class) == null)
+						.map(this::getStringSimpleMethod)
+						.filter(simpleMethod -> !showVoid && simpleMethod.getReturnType().equalsIgnoreCase(Void.TYPE.getSimpleName()) || !showStatic && simpleMethod.isStatic())
+						.forEach(observableAll::add);
 
-				observableAll.addAll(Arrays.stream(clazz.getFields())
-	                            .filter(t -> t.getAnnotation(HideAttribute.class) == null )
-								.map(this::getStringsSimpleField)
-								.filter(Objects::nonNull)
-								.collect(Collectors.toList())
-				);
-				Collections.sort(observableAll, ascentingSorting ? comparatorAZ : comparatorZA);
+				Arrays.stream(clazz.getFields())
+						.filter(t -> t.getAnnotation(HideAttribute.class) == null )
+						.map(this::getStringsSimpleField)
+						.filter(Objects::nonNull)
+						.forEach(observableAll::add);
+
+				observableAll.sort(ascentingSorting ? comparatorAZ : comparatorZA);
 
 				this.controller.displayClass(clazz);
 				this.controller.displayMethods(observableAll);
@@ -131,41 +104,36 @@ public class HelperFx
 		}
 	}
 
-	public void fillVariables(final ObservableList<SimpleVariable> data)
+	void fillVariables(final List<SimpleVariable> data)
 	{
-		Common.tryCatch(() -> {
-			Variables localVars = this.evaluator.getLocals();
-			localVars.getVars().entrySet().forEach((entry) -> data.add(new SimpleVariable(entry.getKey(), entry.getValue())));
+		this.evaluator.getLocals().getVars()
+				.forEach((key, value) -> data.add(new SimpleVariable(key, value)));
 
-			Variables globalVars = this.evaluator.getGlobals();
-			data.addAll(globalVars.getVars().entrySet()
-					.stream()
-					.map(entry -> new SimpleVariable(entry.getKey(), entry.getValue()))
-					.filter(simpleVariable -> !data.contains(simpleVariable))
-					.collect(Collectors.toList())
-			);
-			Optional.ofNullable(this.matrix).ifPresent(m -> m.getRoot().bypass(item -> {
-				String id = item.getId();
-				if (!Str.IsNullOrEmpty(id))
+		this.evaluator.getGlobals().getVars().entrySet()
+				.stream()
+				.map(entry -> new SimpleVariable(entry.getKey(), entry.getValue()))
+				.filter(simpleVariable -> !data.contains(simpleVariable))
+				.forEach(data::add);
+
+		Optional.ofNullable(this.matrix).ifPresent(m -> m.getRoot().bypass(item -> {
+			String id = item.getId();
+			if (!Str.IsNullOrEmpty(id))
+			{
+				Object res;
+				try
 				{
-					Object res;
-					try
-					{
-						res = evaluator.evaluate(id + ".Out");
-					}
-					catch (Exception e)
-					{
-						res = "Error";
-					}
-					data.add(new SimpleVariable(id + ".Out", res));
+					res = evaluator.evaluate(id + ".Out");
 				}
-			}));
-		}, "Error on set variables");
+				catch (Exception e)
+				{
+					res = "Error";
+				}
+				data.add(new SimpleVariable(id + ".Out", res));
+			}
+		}));
 	}
 
-	//============================================================
-	// private methods
-	//============================================================
+	//region private methods
 	private SimpleMethod getStringSimpleMethod(Method method)
 	{
 		if (method.getAnnotation(Deprecated.class) != null)
@@ -177,14 +145,14 @@ public class HelperFx
 
 	private SimpleField getStringsSimpleField(Field field)
 	{
-		String modifiers = Modifier.toString(field.getModifiers());
-		if (!modifiers.contains("public"))
+		if (!Modifier.isPublic(field.getModifiers()))
 		{
 			return null;
 		}
 		return new SimpleField(field);
 	}
 
+	//endregion
 
 	static class SimpleMethod implements IToString
 	{
@@ -197,7 +165,7 @@ public class HelperFx
 
 		public boolean isStatic()
 		{
-			return (this.method.getModifiers() & Modifier.STATIC) != 0;
+			return Modifier.isStatic(this.method.getModifiers());
 		}
 
 		private List<String> getParameters()
@@ -251,22 +219,15 @@ public class HelperFx
 
 		public String getMethodWithParams()
 		{
-			StringBuilder s = new StringBuilder(getName());
-			s.append("(");
-			String comma = "";
-			for (String parameter : getParameterTypes())
-			{
-				s.append(comma);
-				s.append(parameter);
-				comma = ", ";
-			}
-			s.append(")");
-			return s.toString();
+			return getParameterTypes()
+					.stream()
+					.collect(Collectors.joining(",", "(", ")"));
 		}
 
 		@Override
 		public String getDescription()
 		{
+			//TODO add all annotations
 			return Optional.ofNullable(this.method.getAnnotation(DescriptionAttribute.class))
 					.map(DescriptionAttribute::text)
 					.orElse(null);

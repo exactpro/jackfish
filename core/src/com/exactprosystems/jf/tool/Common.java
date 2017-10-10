@@ -168,7 +168,6 @@ public abstract class Common
 		}
 	}
 
-	@Deprecated
 	public static <T extends ContainingParent> T loadController(URL resource)
 	{
 		try
