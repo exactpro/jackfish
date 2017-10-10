@@ -168,9 +168,11 @@ public abstract class Common
 		}
 	}
 
+	private static final String FXML_EXTENTION = ".fxml";
+
 	public static <T extends ContainingParent> T loadController(Class<?> clazz)
 	{
-		return loadController(clazz.getResource(clazz.getSimpleName()));
+		return loadController(clazz.getResource(clazz.getSimpleName() + FXML_EXTENTION));
 	}
 
 	public static <T extends ContainingParent> T loadController(URL resource)
