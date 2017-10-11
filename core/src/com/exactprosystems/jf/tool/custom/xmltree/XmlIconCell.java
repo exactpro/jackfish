@@ -23,7 +23,6 @@ public class XmlIconCell extends TreeTableCell<XmlItem, XmlItem>
 	protected void updateItem(XmlItem item, boolean empty)
 	{
 		super.updateItem(item, empty);
-		setTooltip(null);
 		if (item != null && !empty)
 		{
 			MarkerStyle icon = item.getStyle();

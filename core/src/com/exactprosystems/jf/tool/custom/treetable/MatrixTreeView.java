@@ -14,14 +14,13 @@ import com.exactprosystems.jf.documents.matrix.parser.items.MatrixItem;
 import com.exactprosystems.jf.documents.matrix.parser.items.MatrixItemState;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.CssVariables;
+import com.exactprosystems.jf.tool.custom.CustomTreeTableViewSkin;
 import com.exactprosystems.jf.tool.matrix.MatrixFx;
 import com.exactprosystems.jf.tool.matrix.params.ParametersPane;
 import com.exactprosystems.jf.tool.settings.SettingsPanel;
-import com.sun.javafx.scene.control.skin.TreeTableViewSkin;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.ListChangeListener;
 import javafx.concurrent.Task;
-import javafx.scene.AccessibleAttribute;
 import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.GridPane;
@@ -43,7 +42,7 @@ public class MatrixTreeView extends TreeTableView<MatrixItem>
 	public MatrixTreeView()
 	{
 		super(null);
-		this.setSkin(new MatrixTreeViewSkin(this));
+		this.setSkin(new CustomTreeTableViewSkin<>(this));
 		this.setShowRoot(false);
 		this.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
 		this.getStyleClass().addAll(CssVariables.CUSTOM_TREE_TABLE_VIEW);
@@ -51,7 +50,7 @@ public class MatrixTreeView extends TreeTableView<MatrixItem>
 		TreeTableColumn[] columns = this.getColumns().toArray(new TreeTableColumn[this.getColumns().size()]);
 		this.getColumns().addListener(new ListChangeListener<TreeTableColumn<MatrixItem, ?>>()
 		{
-			public boolean suspended;
+			private boolean suspended;
 
 			@Override
 			public void onChanged(Change<? extends TreeTableColumn<MatrixItem, ?>> change)
@@ -67,8 +66,7 @@ public class MatrixTreeView extends TreeTableView<MatrixItem>
 		this.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
 			if (newValue != null)
 			{
-				int row = this.getRow(newValue);
-				scrollTo(row);
+				scrollTo(newValue);
 			}
 		});
 	}
@@ -95,45 +93,27 @@ public class MatrixTreeView extends TreeTableView<MatrixItem>
 	{
 		if (treeItem != null)
 		{
+			expandAllParents(treeItem);
 
-			TreeItem<MatrixItem> parent = treeItem.getParent();
-			while (parent != null)
-			{
-		        parent.setExpanded(true);
-				parent = parent.getParent();
-			}
 			if (needExpand)
 			{
 				expand(treeItem, !this.needExpand);
 			}
-			final int row = getRow(treeItem);
-			Task<Void> task = new Task<Void>()
-			{
-				@Override
-				protected Void call() throws Exception
-				{
-					Thread.sleep(30);
-					return null;
-				}
-			};
-			task.setOnSucceeded(event -> {
-				getSelectionModel().clearAndSelect(row);
-				scrollTo(row);
-			});
-			new Thread(task).start();
+
+			scrollTo(treeItem);
 		}
 	}
 
 	public void refresh()
 	{
 		long current = System.currentTimeMillis();
-		if (Math.abs(current - lastTime) > 199)
+		if (Math.abs(current - this.lastTime) > 199)
 		{
 			Optional.ofNullable(this.getColumns().get(0)).ifPresent(col -> Common.runLater(() ->{
 				col.setVisible(false);
 				col.setVisible(true);
 			}));
-			lastTime = current;
+			this.lastTime = current;
 		}
 	}
 
@@ -151,11 +131,9 @@ public class MatrixTreeView extends TreeTableView<MatrixItem>
 		if (treeItem != null)
 		{
 			GridPane layout = (GridPane) treeItem.getValue().getLayout();
-			{
-				layout.getChildren().stream().filter(pane -> pane instanceof ParametersPane).forEach(pane -> Common.runLater(() -> {
-					((ParametersPane) pane).refreshParameters(selectedIndex);
-				}));
-			}
+			layout.getChildren().stream()
+					.filter(pane -> pane instanceof ParametersPane)
+					.forEach(pane -> Common.runLater(() -> ((ParametersPane) pane).refreshParameters(selectedIndex)));
 		}
 	}
 
@@ -185,13 +163,17 @@ public class MatrixTreeView extends TreeTableView<MatrixItem>
 	
 	public List<MatrixItem> currentItems()
 	{
-		return getSelectionModel().getSelectedCells().stream().map(TreeTablePosition::getTreeItem).map(TreeItem::getValue).collect(Collectors.toList());
+		return getSelectionModel().getSelectedCells().stream()
+				.map(TreeTablePosition::getTreeItem)
+				.map(TreeItem::getValue)
+				.collect(Collectors.toList());
 	}
 
 	public MatrixItem currentItem()
 	{
-		TreeItem<MatrixItem> selectedItem = getSelectionModel().getSelectedItem();
-		return selectedItem != null ? selectedItem.getValue() : null;
+		return Optional.ofNullable(getSelectionModel().getSelectedItem())
+				.map(TreeItem::getValue)
+				.orElse(null);
 	}
 
 	public void setTracing(boolean flag)
@@ -236,16 +218,39 @@ public class MatrixTreeView extends TreeTableView<MatrixItem>
 		return null;
 	}
 
+	public void scrollTo(TreeItem<MatrixItem> treeItem)
+	{
+		final int row = getRow(treeItem);
+		Task<Void> task = new Task<Void>()
+		{
+			@Override
+			protected Void call() throws Exception
+			{
+				Thread.sleep(30);
+				return null;
+			}
+		};
+		task.setOnSucceeded(event -> {
+			getSelectionModel().clearAndSelect(row);
+			CustomTreeTableViewSkin skin = (CustomTreeTableViewSkin) getSkin();
+			if (!skin.isIndexVisible(row))
+			{
+				skin.show(row);
+			}
+		});
+		new Thread(task).start();
+	}
+
+	//region private methods
 	private void shortCuts(MatrixTreeRow row, final Settings settings)
 	{
-		setOnKeyPressed(keyEvent -> Common.tryCatch(() -> {
+		setOnKeyPressed(keyEvent -> {
 			if (keyEvent.getCode() == KeyCode.ENTER)
 			{
 				MatrixItem currentItem = currentItem();
 				if (currentItem != null)
 				{
-					GridPane layout = (GridPane) currentItem.getLayout();
-					layout.getChildren()
+					((GridPane) currentItem.getLayout()).getChildren()
 							.stream()
 							.filter(n -> n instanceof GridPane)
 							.findFirst()
@@ -261,14 +266,14 @@ public class MatrixTreeView extends TreeTableView<MatrixItem>
 			{
 				MatrixTreeView.this.requestFocus();
 			}
-		}, "Error on do actions by shortcuts"));
+		});
 
-		setOnKeyReleased(keyEvent -> Common.tryCatch(() -> {
+		setOnKeyReleased(keyEvent -> {
 			if (SettingsPanel.match(settings, keyEvent, Settings.SHOW_ALL))
 			{
 				row.hideExpressionsResults();
 			}
-		}, "Error on hide all"));
+		});
 	}
 
 	private void initTable()
@@ -336,7 +341,6 @@ public class MatrixTreeView extends TreeTableView<MatrixItem>
 						item.setRepOff(box.isSelected());
 				        matrix.getChangedProperty().set(true);
 						updateTooltip();
-						refresh();
 					});
 					setGraphic(box);
 				}
@@ -374,7 +378,6 @@ public class MatrixTreeView extends TreeTableView<MatrixItem>
 						item.setOff(box.isSelected());
 				        matrix.getChangedProperty().set(true);
 						updateTooltip();
-						refresh();
 					});
 					setGraphic(box);
 				}
@@ -396,7 +399,7 @@ public class MatrixTreeView extends TreeTableView<MatrixItem>
 		this.setColumnResizePolicy(param -> true);
 		gridColumn.prefWidthProperty().bind(this.widthProperty().subtract(numberColumn.getWidth() + iconColumn.getWidth() + offColumn.getWidth() + reportOffColumn.getWidth()).subtract(2));
 
-		ScrollBar vsb = ((MatrixTreeViewSkin) this.getSkin()).getVSB();
+		ScrollBar vsb = ((CustomTreeTableViewSkin) this.getSkin()).getVSB();
 		vsb.visibleProperty().addListener((observable, oldValue, newValue) ->
 		{
 			if (newValue && !oldValue)
@@ -410,40 +413,15 @@ public class MatrixTreeView extends TreeTableView<MatrixItem>
 		});
 	}
 
-	public void scrollTo(int index)
+	private void expandAllParents(TreeItem<MatrixItem> treeItem)
 	{
-		MatrixTreeViewSkin skin = (MatrixTreeViewSkin) getSkin();
-		if (!skin.isIndexVisible(index))
+		TreeItem<MatrixItem> parent = treeItem.getParent();
+		while (parent != null)
 		{
-			skin.show(index);
+			parent.setExpanded(true);
+			parent = parent.getParent();
 		}
 	}
 
-	private class MatrixTreeViewSkin extends TreeTableViewSkin<MatrixItem>
-	{
-
-		public MatrixTreeViewSkin(TreeTableView<MatrixItem> treeView)
-		{
-			super(treeView);
-		}
-
-		public boolean isIndexVisible(int index)
-		{
-			return flow.getFirstVisibleCell() != null &&
-					flow.getLastVisibleCell() != null &&
-					flow.getFirstVisibleCell().getIndex() <= index - 1 &&
-					flow.getLastVisibleCell().getIndex() >= index + 1;
-		}
-
-		public void show(int index)
-		{
-			flow.show(index);
-		}
-
-		public ScrollBar getVSB()
-		{
-			ScrollBar scrollBar = (ScrollBar) super.queryAccessibleAttribute(AccessibleAttribute.VERTICAL_SCROLLBAR);
-			return scrollBar;
-		}
-	}
+	//endregion
 }
