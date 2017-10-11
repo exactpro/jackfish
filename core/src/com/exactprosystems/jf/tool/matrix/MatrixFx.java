@@ -471,7 +471,7 @@ public class MatrixFx extends Matrix
 			if (!getEngine().isRunning())
 			{
 				this.getEngine().getContext().getOut().println((String) null);
-				this.getEngine().getContext().getOut().println("Matrix will start at " + this.startDate);
+				this.getEngine().getContext().getOut().println("Matrix will start at " + (this.startDate == null ? new Date() : this.startDate));
 			}
 
 			getEngine().start(this.startDate, this.parameter);

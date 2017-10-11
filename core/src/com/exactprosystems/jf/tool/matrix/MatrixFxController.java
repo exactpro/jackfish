@@ -192,6 +192,7 @@ public class MatrixFxController extends AbstractDocumentController<MatrixFx> imp
 		Common.runLater(() -> {
 			String format = item == null ? message : String.format("%s %s", item.getPath(), message);
 			this.area.appendErrorTextOnNewLine(format);
+			this.disableButtons(false);
 		});
 	}
 
@@ -367,8 +368,8 @@ public class MatrixFxController extends AbstractDocumentController<MatrixFx> imp
 	@FXML
 	private void startMatrix(ActionEvent event)
 	{
-		tryCatch(this.model::startMatrix, "Error on starting matrix. See the matrix output for details.");
 		this.disableButtons(true);
+		tryCatch(this.model::startMatrix, "Error on starting matrix. See the matrix output for details.");
 	}
 
 	@FXML
