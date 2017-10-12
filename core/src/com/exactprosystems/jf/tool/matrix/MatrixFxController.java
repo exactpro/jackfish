@@ -78,7 +78,7 @@ public class MatrixFxController extends AbstractDocumentController<MatrixFx> imp
 	@FXML
 	private ComboBox<String> cbDefaultClient;
 	@FXML
-	private Button           btnFind;
+	private ToggleButton     btnFind;
 	@FXML
 	private SplitPane        splitPane;
 	@FXML
@@ -410,6 +410,14 @@ public class MatrixFxController extends AbstractDocumentController<MatrixFx> imp
 		if (this.visible)
 		{
 			this.findPanel.requestFocus();
+		}
+		if (this.btnFind.isSelected())
+		{
+			this.btnFind.getStyleClass().remove(CssVariables.TRANSPARENT_BACKGROUND);
+		}
+		else
+		{
+			this.btnFind.getStyleClass().add(CssVariables.TRANSPARENT_BACKGROUND);
 		}
 	}
 

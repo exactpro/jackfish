@@ -50,7 +50,7 @@
 											</items>
 										</SplitMenuButton>
 										<Label minWidth="8"/>
-										<Button id="matrixBtnFind" fx:id="btnFind" mnemonicParsing="false" onAction="#showFindPanel" styleClass="$transparentBackground"/>
+										<ToggleButton id="matrixBtnFind" fx:id="btnFind" mnemonicParsing="false" onAction="#showFindPanel" styleClass="$transparentBackground"/>
 										<Button id="matrixBtnWatch" fx:id="btnWatch" mnemonicParsing="false" onAction="#showWatch" styleClass="$transparentBackground">
 											<tooltip>
 												<Tooltip text="Open watcher"/>
