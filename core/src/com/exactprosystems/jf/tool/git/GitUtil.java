@@ -699,13 +699,13 @@ public class GitUtil
 		}
 	}
 	//endregion
-
-	public static void rmFile(File file) throws Exception
+	public static String getRepositoryFilePath(File file) throws Exception
 	{
-		try (Git git = git(EMPTY_BEAN))
+		String filePath;
+		try(Git git = git(EMPTY_BEAN))
 		{
 			String repositoryPath = replaceWinSeparatorToInux(git.getRepository().getWorkTree().getPath());
-			String filePath = file.getPath();
+			filePath = file.getPath();
 			filePath = replaceWinSeparatorToInux(filePath);
 			if (filePath.contains(repositoryPath))
 			{
@@ -715,7 +715,20 @@ public class GitUtil
 			{
 				filePath = checkFile(EMPTY_BEAN, file.getPath());
 			}
-			git.rm().addFilepattern(filePath).call();
+		}
+		return filePath;
+	}
+
+	public static void callCommand(List<String> filePaths) throws Exception
+	{
+		try(Git git = git(EMPTY_BEAN))
+		{
+			RmCommand command = git.rm();
+			for (String path : filePaths)
+			{
+				command = command.addFilepattern(path);
+			}
+			command.call();
 		}
 	}
 

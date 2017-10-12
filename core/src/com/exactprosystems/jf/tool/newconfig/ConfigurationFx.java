@@ -1205,13 +1205,17 @@ public class ConfigurationFx extends Configuration
 
 	private void removeFileFromFileSystem(File removeFile, DisplayFunction displayFunction)
 	{
-		forceDelete(removeFile);
+		List<String> list = new ArrayList<>();
+		forceDelete(removeFile, list);
+		rmCall(list);
 		displayFunction.display();
 	}
 
 	private void removeFilesFromFileSystem(List<File> files, DisplayFunction displayFunction)
 	{
-		files.forEach(ConfigurationFx::forceDelete);
+		List<String> list = new ArrayList<>();
+		files.forEach(file -> forceDelete(file, list));
+		rmCall(list);
 		displayFunction.display();
 	}
 
@@ -1230,7 +1234,7 @@ public class ConfigurationFx extends Configuration
 	private void showPossibilities(Set<Possibility> possibilities, String entryName)
 	{
 		ListView<String> listView = new ListView<>();
-		possibilities.stream().forEach((possibility) -> listView.getItems().add(possibility.getDescription()));
+		possibilities.stream().forEach(possibility -> listView.getItems().add(possibility.getDescription()));
 		Dialog<ButtonType> dialog = new Alert(Alert.AlertType.INFORMATION);
 		Common.addIcons(((Stage) dialog.getDialogPane().getScene().getWindow()));
 		dialog.setHeaderText("Possibilities for " + entryName);
@@ -1242,17 +1246,44 @@ public class ConfigurationFx extends Configuration
 		dialog.show();
 	}
 
-	private static void forceDelete(File directory)
+	private static void forceDelete(File directory, List <String> list)
 	{
 		if (directory.isDirectory())
 		{
-			cleanDirectory(directory);
+			cleanDirectory(directory, list);
 		}
-		rmFromGit(directory);
+		rmFromGit(directory, list);
 		directory.delete();
 	}
 
-	private static void cleanDirectory(File directory)
+	private static void rmCall(List <String> list)
+	{
+		try
+		{
+			GitUtil.callCommand(list);
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+		}
+	}
+
+	private static void rmFromGit(File file, List <String> list)
+	{
+		try
+		{
+			if (Main.IS_PROJECT_UNDER_GIT)
+			{
+				list.add(GitUtil.getRepositoryFilePath(file));
+			}
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+		}
+	}
+
+	private static void cleanDirectory(File directory, List <String> list)
 	{
 		File[] files = directory.listFiles();
 		if (files != null)
@@ -1261,29 +1292,14 @@ public class ConfigurationFx extends Configuration
 			{
 				if (file.isDirectory())
 				{
-					forceDelete(file);
+					forceDelete(file, list);
 				}
 				else
 				{
-					rmFromGit(file);
+					rmFromGit(file, list);
 					file.delete();
 				}
 			}
-		}
-	}
-
-	private static void rmFromGit(File file)
-	{
-		try
-		{
-			if (Main.IS_PROJECT_UNDER_GIT)
-			{
-				GitUtil.rmFile(file);
-			}
-		}
-		catch (Exception e)
-		{
-
 		}
 	}
 
