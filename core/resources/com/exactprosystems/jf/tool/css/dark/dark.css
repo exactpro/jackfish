@@ -574,7 +574,7 @@ Text {
 	-fx-padding: 0 0 0 0.2em;
 	-fx-border-color: white;
 	-fx-border-width : 0.3px;
-	-fx-background-color: -fx-table-cell-border-color,black;
+	-fx-background-color: #424242;
 	-fx-text-fill : -fx-text-base-color;
 }
 VerticalHeader > Label {
