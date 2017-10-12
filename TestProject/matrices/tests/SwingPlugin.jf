@@ -67,14 +67,14 @@ Appliaction connect;;;
 
     #Step;#Kind;#For;#Depends
     'Resize';;;
-        #Id;#Action;$AppConnection;$Minimize
-        APPSZ1;ApplicationResize;APPSTR1.Out;true
+        #Action;$Resize;$AppConnection
+        ApplicationResize;Resize.Minimize;APPSTR1.Out
 
-        #Id;#Action;$AppConnection;$Maximize
-        APPSZ1;ApplicationResize;APPSTR1.Out;true
+        #Action;$Resize;$AppConnection
+        ApplicationResize;Resize.Maximize;APPSTR1.Out
 
-        #Id;#Action;$AppConnection;$Normal
-        APPSZ1;ApplicationResize;APPSTR1.Out;true
+        #Action;$Resize;$AppConnection
+        ApplicationResize;Resize.Normal;APPSTR1.Out
 
         #Id;#Action;$AppConnection;$Height;$Width
         APPSZ1;ApplicationResize;APPSTR1.Out;200;200
