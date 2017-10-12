@@ -323,6 +323,58 @@ TABLE_SORT;Test case;Never;;
     #EndStep
 
     #Step;#Kind;#For;#Depends
+    'Sorting by ascending = true for ingnore case';;;
+        #Id;#RawTable
+        actual;Table
+        @;letters
+        0;A
+        1;b
+        2;C
+        #EndRawTable
+
+        #Action;$IgnoreCase;$ColumnName;$Table;$Ascending
+        TableSort;true;'letters';actual;false
+
+        #Id;#RawTable
+        expected;Table
+        @;letters
+        0;C
+        1;b
+        2;A
+        #EndRawTable
+
+        #Action;$Expected;$Actual
+        TableCompareTwo;expected;actual
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'Sorting by ascending = false for ingnore case';;;
+        #Id;#RawTable
+        actual;Table
+        @;letters
+        0;A
+        1;b
+        2;C
+        #EndRawTable
+
+        #Action;$IgnoreCase;$ColumnName;$Table;$Ascending
+        TableSort;false;'letters';actual;false
+
+        #Id;#RawTable
+        expected;Table
+        @;letters
+        0;b
+        1;C
+        2;A
+        #EndRawTable
+
+        #Action;$Expected;$Actual
+        TableCompareTwo;expected;actual
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
     'If one column has sorted, then other columns also has sorted';;;
         #Id;#RawTable
         actual;Table

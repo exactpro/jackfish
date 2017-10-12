@@ -271,7 +271,7 @@ public class WinRemoteApplicationJNA extends RemoteApplication
 	}
 
 	@Override
-	protected void resizeDerived(Resize resize, int height, int width, boolean maximize, boolean minimize, boolean normal) throws Exception
+	protected void resizeDerived(Resize resize, int height, int width) throws Exception
 	{
 		try
 		{
@@ -289,18 +289,6 @@ public class WinRemoteApplicationJNA extends RemoteApplication
 					case Normal: this.driver.doPatternCall(currentWindow, WindowPattern.WindowPattern, "SetWindowVisualState", "Normal", 3); return;
 				}
 			}
-			if (normal)
-			{
-				this.driver.doPatternCall(currentWindow, WindowPattern.WindowPattern, "SetWindowVisualState", "Normal", 3);
-			}
-			else if (maximize)
-			{
-				this.driver.doPatternCall(currentWindow, WindowPattern.WindowPattern, "SetWindowVisualState", "Maximized", 3);
-			}
-			else if (minimize)
-			{
-				this.driver.doPatternCall(currentWindow, WindowPattern.WindowPattern, "SetWindowVisualState", "Minimized", 3);
-			}
 			else
 			{
 				this.driver.doPatternCall(currentWindow, WindowPattern.TransformPattern, "Resize", width + "%" + height, 1);
@@ -312,7 +300,7 @@ public class WinRemoteApplicationJNA extends RemoteApplication
 		}
 		catch (Exception e)
 		{
-			this.logger.error(String.format("resizeDerived(%d,%d,%b,%b)", height, width, maximize, minimize));
+			this.logger.error(String.format("resizeDerived(%d,%d)", height, width));
 			this.logger.error(e.getMessage(), e);
 			throw e;
 		}
@@ -323,7 +311,6 @@ public class WinRemoteApplicationJNA extends RemoteApplication
 	{
 		try
 		{
-			List<String> res = new ArrayList<>();
 			UIProxyJNA ownerId = new UIProxyJNA();
 			if (owner != null)
 			{

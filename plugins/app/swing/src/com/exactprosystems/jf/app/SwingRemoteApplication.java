@@ -268,7 +268,7 @@ public class SwingRemoteApplication extends RemoteApplication
 	}
 
 	@Override
-	protected void resizeDerived(Resize resize, int height, int width, boolean maximize, boolean minimize, boolean normal) throws Exception
+	protected void resizeDerived(Resize resize, int height, int width) throws Exception
 	{
 		try
 		{
@@ -297,35 +297,16 @@ public class SwingRemoteApplication extends RemoteApplication
 							return;
 					}
 				}
-				if (normal)
-				{
-					logger.debug("Change state to normal");
-					frame.setExtendedState(JFrame.NORMAL);
-					logger.debug("Current state is " + frame.getExtendedState());
-				}
-				else if (maximize)
-				{
-					logger.debug("Change state to maximized");
-					frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
-					logger.debug("Current state is " + frame.getExtendedState());
-				}
-				else if (minimize)
-				{
-					logger.debug("Change state to minimize");
-					frame.setExtendedState(JFrame.ICONIFIED);
-					logger.debug("Current state is " + frame.getExtendedState());
-				}
 				else
 				{
 					logger.debug("Change state via w and h");
 					frame.setSize(width, height);
 				}
 			}
-
 		}
 		catch (Exception e)
 		{
-			logger.error(String.format("resizeDerived(%s,%s, %s, %s)", height, width, maximize, minimize));
+			logger.error(String.format("resizeDerived(%s,%s)", height, width));
 			logger.error(e.getMessage(), e);
 			throw e;
 		}

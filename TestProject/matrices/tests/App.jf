@@ -659,41 +659,6 @@ Application Resize;;;
 
     #EndStep
 
-    // TODO remove this step on build 4.5.9
-    #Step;#Kind;#For;#Depends
-    'Negative';;;
-        #Id;#Action;#Assert;$AppConnection
-        APPSZ2;ApplicationResize;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;
-
-        #Id;#Action;#Assert;$AppConnection
-        APPSZ3;ApplicationResize;This.Result == Result.Failed && This.Kind == ErrorKind.WRONG_PARAMETERS;new Date()
-
-        #Id;#Call
-        CALL_7;appStart
-
-        #Action;#Assert;$AppConnection
-        ApplicationResize;This.Kind == ErrorKind.WRONG_PARAMETERS;CALL_7
-
-        #Action;#Assert;$AppConnection;$Minimize
-        ApplicationResize;This.Kind == ErrorKind.WRONG_PARAMETERS;CALL_7;
-
-        #Action;#Assert;$AppConnection;$Maximize
-        ApplicationResize;This.Kind == ErrorKind.WRONG_PARAMETERS;CALL_7;
-
-        #Action;#Assert;$AppConnection;$Height
-        ApplicationResize;This.Kind == ErrorKind.WRONG_PARAMETERS;CALL_7;
-
-        #Action;#Assert;$AppConnection;$Minimize;$Maximize
-        ApplicationResize;This.Kind == ErrorKind.WRONG_PARAMETERS;CALL_7;true;true
-
-        #Action;#Assert;$AppConnection;$Minimize;$Height
-		ApplicationResize;This.Kind == ErrorKind.WRONG_PARAMETERS;CALL_7;true;10
-
-        #Action;$AppConnection
-        ApplicationStop;CALL_7
-
-    #EndStep
-
     // 
     #Step;#Kind;#For;#Depends
     'Negative';;;

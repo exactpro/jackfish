@@ -843,7 +843,7 @@ public class DictionaryFx extends GuiDictionary
 	public void resize(Resize resize, int h, int w) throws Exception
 	{
 		checkIsWorking(() ->
-			this.applicationConnector.getAppConnection().getApplication().service().resize(resize, h, w, false, false, false)
+			this.applicationConnector.getAppConnection().getApplication().service().resize(resize, h, w)
 		);
 	}
 	//endregion
