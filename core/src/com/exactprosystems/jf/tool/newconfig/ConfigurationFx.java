@@ -1207,7 +1207,7 @@ public class ConfigurationFx extends Configuration
 	{
 		List<String> list = new ArrayList<>();
 		forceDelete(removeFile, list);
-		rmCall(list);
+		rmFile(list);
 		displayFunction.display();
 	}
 
@@ -1215,7 +1215,7 @@ public class ConfigurationFx extends Configuration
 	{
 		List<String> list = new ArrayList<>();
 		files.forEach(file -> forceDelete(file, list));
-		rmCall(list);
+		rmFile(list);
 		displayFunction.display();
 	}
 
@@ -1256,15 +1256,15 @@ public class ConfigurationFx extends Configuration
 		directory.delete();
 	}
 
-	private static void rmCall(List <String> list)
+	private static void rmFile(List <String> list)
 	{
 		try
 		{
-			GitUtil.callCommand(list);
+			GitUtil.rmFile(list);
 		}
-		catch (Exception e)
+		catch (Exception ignored)
 		{
-			e.printStackTrace();
+
 		}
 	}
 
@@ -1274,12 +1274,12 @@ public class ConfigurationFx extends Configuration
 		{
 			if (Main.IS_PROJECT_UNDER_GIT)
 			{
-				list.add(GitUtil.getRepositoryFilePath(file));
+				GitUtil.getRepositoryFilePath(file, list);
 			}
 		}
-		catch (Exception e)
+		catch (Exception ignored)
 		{
-			e.printStackTrace();
+
 		}
 	}
 
