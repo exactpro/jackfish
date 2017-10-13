@@ -216,6 +216,7 @@ public class CellView extends TableCell<ObservableList<SpreadsheetCell>, Spreads
 			}
 		});
 		itemProperty().addListener(itemChangeListener);
+		setWrapText(true);
 	}
 
 	private TablePosition findMinPosition(ObservableList<TablePosition> selectedCells)
@@ -342,21 +343,25 @@ public class CellView extends TableCell<ObservableList<SpreadsheetCell>, Spreads
 			getTableView().edit(-1, null);
 			return;
 		}
-		final SpreadsheetView spv = handle.getView();
-		if (getTableRow() != null && !getTableRow().isManaged())
+		else if (handle.getGridView().getEditWithEnter())
 		{
+			handle.getGridView().setEditWithEnter(false);
+			//The TableView keep that editing cell so we need to inform that we cancelled the edition.
+			getTableView().edit(-1, null);
 			return;
 		}
+
+		final SpreadsheetView spv = handle.getView();
+
+		if (getTableRow() == null || !getTableRow().isManaged()) {
+			return;
+		}
+
 		GridCellEditor editor = getEditor(getItem(), spv);
-		if (editor != null)
-		{
+		if (editor != null) {
 			super.startEdit();
 			setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
 			editor.startEdit();
-		}
-		else
-		{
-			getTableView().edit(-1, null);
 		}
 	}
 
@@ -424,7 +429,6 @@ public class CellView extends TableCell<ObservableList<SpreadsheetCell>, Spreads
 	public void show(final SpreadsheetCell cell)
 	{
 		textProperty().bind(cell.textProperty());
-		setWrapText(true);
 		setEditable(cell.isEditable());
 	}
 
@@ -446,7 +450,7 @@ public class CellView extends TableCell<ObservableList<SpreadsheetCell>, Spreads
 			GridCellEditor editor = handle.getCellsViewSkin().getSpreadsheetCellEditorImpl();
 			if (editor.isEditing())
 			{
-				editor.endEdit(false, cell.getColumn(), cell.getRow());
+				editor.endEdit(false);
 			}
 
 			editor.updateSpreadsheetCell(this);

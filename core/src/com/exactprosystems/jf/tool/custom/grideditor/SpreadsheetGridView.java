@@ -13,6 +13,10 @@ import javafx.scene.control.TableView;
 public class SpreadsheetGridView extends TableView<ObservableList<SpreadsheetCell>>
 {
 	private final SpreadsheetHandle handle;
+	private boolean editWithEnter = false;
+	private boolean editWithKey = false;
+
+
 
 	public SpreadsheetGridView(SpreadsheetHandle handle)
 	{
@@ -23,5 +27,20 @@ public class SpreadsheetGridView extends TableView<ObservableList<SpreadsheetCel
 	protected javafx.scene.control.Skin<?> createDefaultSkin()
 	{
 		return new GridViewSkin(handle);
+	}
+	public boolean getEditWithEnter(){
+		return editWithEnter;
+	}
+
+	public void setEditWithEnter(boolean b){
+		editWithEnter = b;
+	}
+
+	public void setEditWithKey(boolean b){
+		editWithKey = b;
+	}
+
+	public boolean getEditWithKey(){
+		return editWithKey;
 	}
 }

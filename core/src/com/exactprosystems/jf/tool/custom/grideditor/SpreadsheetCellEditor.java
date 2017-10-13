@@ -24,7 +24,7 @@ public abstract class SpreadsheetCellEditor
 
 	public final void endEdit(boolean b)
 	{
-		view.getCellsViewSkin().getSpreadsheetCellEditorImpl().endEdit(b, view.getEditingCell().getColumn(), view.getEditingCell().getRow());
+		view.getCellsViewSkin().getSpreadsheetCellEditorImpl().endEdit(b);
 	}
 
 	public abstract void startEdit(Object item);
