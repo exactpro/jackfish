@@ -19,9 +19,9 @@ import java.io.InputStream;
 import java.util.*;
 
 @PluginDescription(
+		pluginName = "WIN",
 		description = R.WIN_PLUGIN_DESCRIPTION,
-		additionalDescription = R.WIN_PLUGIN_ADD_DESCRIPTION,
-		any = R.DEFAULT
+		difference = R.WIN_PLUGIN_DIFFERENCE
 )
 public class WinAppFactory extends AbstractApplicationFactory
 {

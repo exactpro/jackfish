@@ -19,6 +19,7 @@ import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.report.Marker;
 import com.exactprosystems.jf.common.report.ReportBuilder;
 import com.exactprosystems.jf.common.version.VersionInfo;
+import com.exactprosystems.jf.documents.config.Configuration;
 import com.exactprosystems.jf.documents.config.Context;
 import com.exactprosystems.jf.documents.guidic.controls.AbstractControl;
 import com.exactprosystems.jf.documents.matrix.parser.Parser;
@@ -190,26 +191,20 @@ public class DocumentationBuilder
             String s = controls.stream().map(c -> "{{@" + c.getClazz() + "@}}").collect(Collectors.joining(", "));
             addTextLine(help, "{{`" + s + "`}}");
             //additional info
-            String pluginAddDescr = pd.additionalDescription().get();
-            if(!Str.IsNullOrEmpty(pluginAddDescr))
+            String pluginDifference = pd.difference().get();
+            if(!Str.IsNullOrEmpty(pluginDifference))
             {
-                addTextLine(help, "{{`{{*Additional info*}}`}}");
-                addTextLine(help, pluginAddDescr);
-            }
-            addDifferenceInActions(help, evaluator, clazz);
-            //any
-            String pluginAny = pd.any().get();
-            if(!Str.IsNullOrEmpty(pluginAny))
-            {
-                addTextLine(help, pluginAny);
+                addTextLine(help, "{{`{{*Difference*}}`}}");
+                addTextLine(help, pluginDifference);
             }
         }
         return help;
     }
 
-    private static void addCommonPluginHelp(MatrixItem root) throws Exception
+    private static void addCommonPluginHelp(MatrixItem root, AbstractEvaluator evaluator) throws Exception
     {
         addTextLine(root, R.PLUGIN_COMMON_DESCRIPTION.get());
+        addFieldDescriptionForPlugin(root, evaluator, Configuration.class);
     }
 
     private static void addContent(MatrixItem root, String title, Content content) throws Exception
@@ -255,34 +250,6 @@ public class DocumentationBuilder
             if(pfd != null)
             {
                 table.addValue(new String[] {pfd.parameter(), pfd.description().get(), pfd.example()});
-            }
-        }
-        MatrixItem tableItem = new HelpTable("", table, true, width);
-        root.insert(root.count(), tableItem);
-    }
-
-    private static void addDifferenceInActions(MatrixItem root, AbstractEvaluator evaluator,  Class<?> clazz) throws Exception
-    {
-        String[] headers = new String[] {"Action", "Difference"};
-        int[] width = new int[] {30, 70};
-        Table table = new Table(headers, evaluator);
-
-        for (Class<?> action : ActionsList.actions)
-        {
-            ActionAttribute attr = action.getAnnotation(ActionAttribute.class);
-            R difference;
-            switch (clazz.getSimpleName()){
-                case "WebAppFactory" :      difference = attr.WebPluginDifference();
-                                            break;
-                case "WinAppFactory" :      difference = attr.WinPluginDifference();
-                                            break;
-                case "SwingAppFactory" :    difference = attr.SwingPluginDifference();
-                                            break;
-                default: difference = R.DEFAULT;
-            }
-            if (difference != R.DEFAULT)
-            {
-                table.addValue(new String[] {clazz.getSimpleName(), difference.get()});
             }
         }
         MatrixItem tableItem = new HelpTable("", table, true, width);

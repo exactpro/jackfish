@@ -20,9 +20,9 @@ import java.io.InputStream;
 import java.util.*;
 
 @PluginDescription(
+		pluginName = "SWING",
 		description = R.SWING_PLUGIN_DESCRIPTION,
-		additionalDescription = R.SWING_PLUGIN_ADD_DESCRIPTION,
-		any = R.DEFAULT
+		difference = R.SWING_PLUGIN_DIFFERENCE
 )
 public class SwingAppFactory extends AbstractApplicationFactory
 {

@@ -19,32 +19,9 @@ import java.io.InputStream;
 import java.util.*;
 
 @PluginDescription(
-		description = /*"A Web plugin used for testings web browser application. The plugin based on {{*Selenium*}} framework. \n" +
-				"Can starts on {{/Windows/}}, {{/Linux/}} and {{/MacOS/}}. (InternetExplorer only on {{/Windows/}}).\n" +
-				"The plugin supported cross browse testing. \n" +
-				"Supported browsers : " +  //todo
-				"{{*How use*}}: \n" +
-				"1. Open project tree in JF (click on 'Project' in left top corner) \n" +
-				"2. Go to 'App entries' and choose WEB or WEB_WIN (for Windows) plugin\n" +
-				"3. Check params for plugin: \n" +
-				"appDicPath - path to dictionary for current plugin, \n" +
-				"driver path for used browser (see additional info onwards). \n" +
-				"Example and use other params You can find in table onwards \n" +
-				"4. In actions part of dictionary choose plugin via combo box and click on start button. \n" +
-				"You will see new window with 2 fields: URL and Browser. \n" +
-				"Set URL (remember about http/https) and choose Browser via combo box in right part of field, click on 'Start WEB' button. \n" +
-				"JF will run selected browser and try open selected URL. \n"*/R.WEB_PLUGIN_DESCRIPTION,
-		additionalDescription = /*"How set path to browser: \n" +
-				"Open JackFish folder -> apps. You will see few folders each one for different OS. In each folder You can find driver files for browsers. \n" +
-				"Open folder which corresponds to your OS and choose file which corresponds to your browser and OS architecture. \n" +
-				"Copy file name (with extension if You are using Windows). In JF tool open Project -> App entries, choose WEB (or WEB_WIN for Windows) plugin. \n" +
-				"Below You will see table with parameters. Choose parameter which one correspond to selected browser and set 'Value' like 'folderName/driverFileName' where folderName - folder in JF/apps for current OS \n" +
-				"and driverFileName - name of file driver (remember about file extension for Windows). For example 'win/chromedriver-linux-2.32-x64.exe'. \n" +
-				"Remember! After each changes in config click 'Save configuration' and 'Reload configuration'. Without that your changes not applicable. \n" +
-				" \n" +
-				" \n" +
-				" \n"*/R.WEB_PLUGIN_ADD_DESCRIPTION,
-		any = R.DEFAULT
+		pluginName = "WEB",
+		description = R.WEB_PLUGIN_DESCRIPTION,
+		difference = R.WEB_PLUGIN_DIFFERENCE
 )
 public class WebAppFactory extends AbstractApplicationFactory
 {
