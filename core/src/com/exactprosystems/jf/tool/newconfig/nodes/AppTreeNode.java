@@ -21,6 +21,7 @@ import com.exactprosystems.jf.tool.newconfig.ConfigurationFx;
 import com.exactprosystems.jf.tool.newconfig.ConfigurationTreeView;
 import com.exactprosystems.jf.tool.newconfig.TablePair;
 import com.exactprosystems.jf.tool.wizard.WizardButton;
+import javafx.concurrent.Task;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
@@ -69,7 +70,7 @@ public class AppTreeNode extends TreeNode
 						.ifPresent(res -> Common.tryCatch(() -> this.model.addNewAppEntry(res), "Error on add new application")));
 		menu.getItems().addAll(
 				ConfigurationTreeView.createItem(TEST_VERSION, () -> this.model.testAppVersion(), "Error on test app version"),
-				ConfigurationTreeView.createMenu(CLOSE_APPS, ConfigurationTreeView.createItem(ALL, null, () -> this.model.getApplicationPool().stopAllApplications(true), "Error on close all application")),
+				ConfigurationTreeView.createMenu(CLOSE_APPS, ConfigurationTreeView.createItem(ALL, null, this::closeAllApplication, "Error on close all application")),
 				ConfigurationTreeView.createDisabledItem(REFRESH),
 				ConfigurationTreeView.createDisabledItem(EXCLUDE_APP_DIC_FOLDER),
 				ConfigurationTreeView.createDisabledItem(OPEN_DICTIONARY),
@@ -132,6 +133,23 @@ public class AppTreeNode extends TreeNode
 				.map(e -> new AppEntryNode(model, e))
 				.map(e -> new TreeItem<TreeNode>(e))
 				.forEach(i -> this.treeItem.getChildren().add(i));
+	}
+
+	private void closeAllApplication()
+	{
+		Task<Void> task = new Task<Void>()
+		{
+			@Override
+			protected Void call() throws Exception
+			{
+				Common.progressBarVisible(true);
+				model.getApplicationPool().stopAllApplications(true);
+				return null;
+			}
+		};
+		task.setOnFailed(e -> Common.progressBarVisible(false));
+		task.setOnSucceeded(e -> Common.progressBarVisible(false));
+		new Thread(task).start();
 	}
 
 	private class AppEntryNode extends AbstractEntryNode<AppEntry>
