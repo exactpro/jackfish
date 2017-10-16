@@ -45,10 +45,10 @@ public class MatrixFx extends Matrix
 	public static final String DIALOG_BREAKPOINT = "BreakPointMatrix";
 	public static final String DIALOG_DEFAULTS   = "DefaultsAppAndClient";
 
-	public MatrixFx(String matrixName, DocumentFactory factory, IMatrixListener matrixListener, boolean isLibrary) throws Exception
+	public MatrixFx(String matrixName, DocumentFactory factory, IMatrixListener matrixListener, boolean isLibrary)
 	{
 		super(matrixName, factory, matrixListener, isLibrary);
-		init(factory);
+		super.saved();
 	}
 
 	//==============================================================================================================================
@@ -528,24 +528,6 @@ public class MatrixFx extends Matrix
 	}
 
 	//==============================================================================================================================
-	private void init(DocumentFactory factory) throws Exception
-	{
-		super.saved();
-	}
-
-	private void initController() throws Exception
-	{
-		//		if (!this.isControllerInit)
-		//		{
-		//			getFactory().getConfiguration().register(this);
-		//
-		//			this.controller = Common.loadController(MatrixFx.class.getResource("MatrixFx.fxml"));
-		//			this.controller.init(this, getEngine().getContext(), this.console);
-		//			setListener(this.controller);
-		//			this.isControllerInit = true;
-		//		}
-	}
-
 	private void insert(MatrixItem where, MatrixItem[] items) throws Exception
 	{
 		MatrixItem parent = where.getParent();

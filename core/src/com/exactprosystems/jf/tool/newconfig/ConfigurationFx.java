@@ -77,12 +77,12 @@ public class ConfigurationFx extends Configuration
 	//endregion
 
 	//region Constructors
-	public ConfigurationFx() throws Exception
+	public ConfigurationFx()
 	{
 		this(null, null, null);
 	}
 
-	public ConfigurationFx(DocumentFactory factory, String fileName, Main model) throws Exception
+	public ConfigurationFx(DocumentFactory factory, String fileName, Main model)
 	{
 		super(fileName, factory);
 

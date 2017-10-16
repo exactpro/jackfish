@@ -61,7 +61,7 @@ public class Matrix extends AbstractDocument implements IMatrix
     private MatrixEngine                 engine           = null;
     private MutableValue<MatrixState>    stateProperty    = new MutableValue<>(MatrixState.Created);
 
-	public Matrix(String matrixName, DocumentFactory factory, IMatrixListener matrixListener, boolean isLibrary) throws Exception
+	public Matrix(String matrixName, DocumentFactory factory, IMatrixListener matrixListener, boolean isLibrary)
 	{
 		super(matrixName, factory); 
 
@@ -74,16 +74,16 @@ public class Matrix extends AbstractDocument implements IMatrix
 		this.root = new MatrixRoot(matrixName);
 		this.matrixListener = matrixListener;
 
-		if (!getNameProperty().isNullOrEmpty())
-		{
-			if (!matrixListener.isOk())
-			{
-				String mgs = matrixListener.getExceptionMessage();
-				logger.error(mgs);
-				throw new Exception("Matrix did not executed cause errors." + mgs);
-			}
-
-		}
+//		if (!getNameProperty().isNullOrEmpty())
+//		{
+//			if (!matrixListener.isOk())
+//			{
+//				String mgs = matrixListener.getExceptionMessage();
+//				logger.error(mgs);
+//				throw new Exception("Matrix did not executed cause errors." + mgs);
+//			}
+//
+//		}
 	}
 
 	public MatrixEngine getEngine()
@@ -118,7 +118,7 @@ public class Matrix extends AbstractDocument implements IMatrix
 		return getNameProperty().toString();
 	}
 	
-	public Matrix makeCopy() throws Exception
+	public Matrix makeCopy()
 	{
 		Matrix copy = new Matrix(getNameProperty().get(), getFactory(), this.matrixListener, this.isLibrary);
 		copy.root = this.root.createCopy();

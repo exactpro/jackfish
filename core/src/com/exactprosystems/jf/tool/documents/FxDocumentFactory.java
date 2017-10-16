@@ -15,6 +15,7 @@ import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.highlighter.Highlighter;
 import com.exactprosystems.jf.documents.Document;
 import com.exactprosystems.jf.documents.DocumentFactory;
+import com.exactprosystems.jf.documents.DocumentKind;
 import com.exactprosystems.jf.documents.config.Configuration;
 import com.exactprosystems.jf.documents.config.Context;
 import com.exactprosystems.jf.documents.csv.Csv;
@@ -31,15 +32,11 @@ import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.custom.tab.CustomTab;
 import com.exactprosystems.jf.tool.dictionary.DictionaryFx;
 import com.exactprosystems.jf.tool.documents.csv.CsvFx;
-import com.exactprosystems.jf.tool.documents.csv.CsvFxController;
 import com.exactprosystems.jf.tool.documents.text.PlainTextFx;
-import com.exactprosystems.jf.tool.documents.text.PlainTextFxController;
 import com.exactprosystems.jf.tool.documents.vars.SystemVarsFx;
-import com.exactprosystems.jf.tool.documents.vars.SystemVarsFxController;
 import com.exactprosystems.jf.tool.helpers.DialogsHelper;
 import com.exactprosystems.jf.tool.main.Main;
 import com.exactprosystems.jf.tool.matrix.MatrixFx;
-import com.exactprosystems.jf.tool.matrix.MatrixFxController;
 import com.exactprosystems.jf.tool.matrix.MatrixListenerFx;
 import com.exactprosystems.jf.tool.matrix.schedule.MatrixScheduler;
 import com.exactprosystems.jf.tool.msgdictionary.MessageDictionaryFx;
@@ -53,9 +50,15 @@ import java.net.URL;
 import java.util.List;
 import java.util.Map;
 
-@SuppressWarnings("deprecation")
 public class FxDocumentFactory extends DocumentFactory
 {
+	private MatrixScheduler runnerListener;
+
+	private Main          mainModel;
+	private WizardManager wizardManager;
+
+	private static final Logger logger = Logger.getLogger(FxDocumentFactory.class);
+
 	public FxDocumentFactory(Main mainModel, WizardManager wizardManager) throws Exception
 	{
 		super();
@@ -64,91 +67,62 @@ public class FxDocumentFactory extends DocumentFactory
 		this.wizardManager = wizardManager;
 		this.runnerListener = new MatrixScheduler(this);
 	}
-	
+
 	@Override
 	public void showDocument(Document doc) throws Exception
 	{
-		CustomTab customTab1 = Common.checkDocument(doc);
-		if (customTab1 != null)
+		CustomTab docTab = Common.checkDocument(doc);
+		if (docTab != null)
 		{
 			//this need for reload document.
-			customTab1.getController().init(doc, customTab1);
+			docTab.getController().init(doc, docTab);
 			super.showDocument(doc);
 			return;
 		}
-		AbstractDocumentController<? extends Document> controller = null;
-	    
-	    if (doc instanceof SystemVarsFx)
-	    {
-	        controller = loadController(SystemVarsFx.class, SystemVarsFxController.class);
-	    }
-		if (doc instanceof PlainTextFx)
-		{
-			controller = loadController(PlainTextFx.class, PlainTextFxController.class);
-		}
-		if (doc instanceof CsvFx)
-		{
-			controller = loadController(CsvFx.class, CsvFxController.class);
-		}
-		if (doc instanceof MatrixFx)
-		{
-			controller = loadController(MatrixFx.class, MatrixFxController.class);
-		}
-		CustomTab customTab = this.mainModel.createCustomTab(doc);
-		controller.init(doc, customTab);
-		controller.restoreSettings(this.settings);
-		this.mainModel.selectTab(customTab);
-		getConfiguration().register(doc);
-		AbstractDocumentController<? extends Document> finalController = controller;
-		doc.onClose(d -> finalController.close());
-	    super.showDocument(doc);
-	}
-	
-	private static <V extends Document, T extends AbstractDocumentController<V>> T loadController(Class<V> docClass, Class<T> controlllerClass) throws Exception
-	{
-		ControllerInfo info = controlllerClass.getAnnotation(ControllerInfo.class);
-		if (info == null)
-		{
-			throw new Exception("ControllerInfo attribute is not found for " + controlllerClass);
-		}
 
-		URL resource = FxDocumentFactory.class.getResource(info.resourceName());
-		FXMLLoader loader = new FXMLLoader(resource);
-		Parent parent = loader.load();
-		T controller = loader.getController();
-		controller.setParent(parent);
-		return controller;
+		DocumentKind documentKind = DocumentKind.byDocument(doc);
+		//it's always true on this step
+		if (documentKind.isUseNewMVP())
+		{
+			AbstractDocumentController<? extends Document> controller = loadController(documentKind.getClazz());
+			CustomTab customTab = this.mainModel.createCustomTab(doc);
+			controller.init(doc, customTab);
+			controller.restoreSettings(this.settings);
+			this.mainModel.selectTab(customTab);
+			getConfiguration().register(doc);
+			doc.onClose(d -> controller.close());
+			super.showDocument(doc);
+		}
 	}
 
 	@Override
-	protected Context createContext(Configuration configuration, IMatrixListener matrixListener) throws Exception
+	protected Context createContext(Configuration configuration, IMatrixListener matrixListener)
 	{
-		return new Context(this, matrixListener, System.out, name ->
-	        Common.tryCatch(() -> this.mainModel.openReport(new File(name)), "Error on show report") );
+		return new Context(this, matrixListener, System.out, name -> this.mainModel.openReport(new File(name)));
 	}
 
 	@Override
-	protected Configuration createConfig(String fileName, Settings settings) throws Exception
+	protected Configuration createConfig(String fileName, Settings settings)
 	{
 		return new ConfigurationFx(this, fileName, this.mainModel);
 	}
 
 	@Override
-	protected Matrix createLibrary(String fileName, Configuration configuration, IMatrixListener matrixListener) throws Exception
+	protected Matrix createLibrary(String fileName, Configuration configuration, IMatrixListener matrixListener)
 	{
 		return new MatrixFx(fileName, this, matrixListener, true);
 	}
 
 	@Override
-	protected Matrix createMatrix(String fileName, Configuration configuration, IMatrixListener matrixListener) throws Exception
+	protected Matrix createMatrix(String fileName, Configuration configuration, IMatrixListener matrixListener)
 	{
 		return new MatrixFx(fileName, this, matrixListener, false);
 	}
 
 	@Override
-	protected MessageDictionary createClientDictionary(String fileName, Configuration configuration) throws Exception
-	{ 
-		return new MessageDictionaryFx(fileName, this);  
+	protected MessageDictionary createClientDictionary(String fileName, Configuration configuration)
+	{
+		return new MessageDictionaryFx(fileName, this);
 	}
 
 	@Override
@@ -158,23 +132,23 @@ public class FxDocumentFactory extends DocumentFactory
 	}
 
 	@Override
-	protected Csv createCsv(String fileName, Configuration configuration) throws Exception
+	protected Csv createCsv(String fileName, Configuration configuration)
 	{
 		return new CsvFx(fileName, this);
 	}
 
 	@Override
-	protected PlainText createPlainText(String fileName, Configuration configuration) throws Exception
+	protected PlainText createPlainText(String fileName, Configuration configuration)
 	{
 		return new PlainTextFx(fileName, this, fileName.endsWith(Configuration.matrixExt) ? Highlighter.Matrix : Highlighter.None);
 	}
 
 	@Override
-	protected SystemVars createVars(String fileName, Configuration configuration) throws Exception
+	protected SystemVars createVars(String fileName, Configuration configuration)
 	{
 		return new SystemVarsFx(fileName, this);
 	}
-	
+
 	@Override
 	protected IMatrixListener createMatrixListener()
 	{
@@ -182,7 +156,7 @@ public class FxDocumentFactory extends DocumentFactory
 	}
 
 	@Override
-	public void 				error(Exception exception)
+	public void error(Exception exception)
 	{
 		if (exception != null)
 		{
@@ -190,9 +164,9 @@ public class FxDocumentFactory extends DocumentFactory
 			DialogsHelper.showError(exception.getMessage());
 		}
 	}
-	
+
 	@Override
-	public void 				popup(String message, Notifier notifier)
+	public void popup(String message, Notifier notifier)
 	{
 		DialogsHelper.showNotifier(message, notifier);
 	}
@@ -207,18 +181,15 @@ public class FxDocumentFactory extends DocumentFactory
 	}
 
 	@Override
-    public boolean editTable(AbstractEvaluator evaluator, String title, Table table, Map<String, Boolean> columns)
-    {
-        Boolean result = DialogsHelper.showUserTable(evaluator, title, table, columns);
-        return result;
-    }
-
+	public boolean editTable(AbstractEvaluator evaluator, String title, Table table, Map<String, Boolean> columns)
+	{
+		return DialogsHelper.showUserTable(evaluator, title, table, columns);
+	}
 
 	@Override
 	public Object input(AbstractEvaluator evaluator, String title, Object defaultValue, HelpKind helpKind, List<ReadableValue> dataSource, int timeout)
 	{
-	    Object value = DialogsHelper.showUserInput(evaluator, title, defaultValue, helpKind, dataSource, timeout);
-		return value;
+		return DialogsHelper.showUserInput(evaluator, title, defaultValue, helpKind, dataSource, timeout);
 	}
 
 	public void showMatrixScheduler()
@@ -232,11 +203,21 @@ public class FxDocumentFactory extends DocumentFactory
 		return this.wizardManager;
 	}
 
-	private MatrixScheduler runnerListener;
-	
-	private Main mainModel;
-	private WizardManager wizardManager;
+	//region private methods
+	private static <T extends AbstractDocumentController<? extends Document>> T loadController(Class<T> controllerClass) throws Exception
+	{
+		ControllerInfo info = controllerClass.getAnnotation(ControllerInfo.class);
+		if (info == null)
+		{
+			throw new Exception("ControllerInfo attribute is not found for " + controllerClass);
+		}
 
-	private static final Logger logger = Logger.getLogger(FxDocumentFactory.class);
-
+		URL resource = FxDocumentFactory.class.getResource(info.resourceName());
+		FXMLLoader loader = new FXMLLoader(resource);
+		Parent parent = loader.load();
+		T controller = loader.getController();
+		controller.setParent(parent);
+		return controller;
+	}
+	//endregion
 }

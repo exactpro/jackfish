@@ -22,7 +22,7 @@ import java.util.stream.Collectors;
 
 public class SystemVarsFx extends SystemVars
 {
-	public SystemVarsFx(String fileName, DocumentFactory factory) throws Exception
+	public SystemVarsFx(String fileName, DocumentFactory factory)
 	{
 		super(fileName, factory);
 	}

@@ -8,28 +8,41 @@
 
 package com.exactprosystems.jf.documents;
 
+import com.exactprosystems.jf.tool.documents.AbstractDocumentController;
+import com.exactprosystems.jf.tool.documents.csv.CsvFxController;
+import com.exactprosystems.jf.tool.documents.text.PlainTextFxController;
+import com.exactprosystems.jf.tool.documents.vars.SystemVarsFxController;
+import com.exactprosystems.jf.tool.matrix.MatrixFxController;
+
 public enum DocumentKind
 {
-	MATRIX(true),
-	LIBRARY(true),
-	GUI_DICTIONARY(false),
-	MESSAGE_DICTIONARY(false),
-	SYSTEM_VARS(true),
-	CONFIGURATION(false),
-	PLAIN_TEXT(true),
-	CSV(true),
-	REPORTS(true);
+	MATRIX(true, MatrixFxController.class),
+	LIBRARY(true, MatrixFxController.class),
+	GUI_DICTIONARY(false, null),
+	MESSAGE_DICTIONARY(false, null),
+	SYSTEM_VARS(true, SystemVarsFxController.class),
+	CONFIGURATION(false, null),
+	PLAIN_TEXT(true, PlainTextFxController.class),
+	CSV(true, CsvFxController.class),
+	REPORTS(true, null);
 
-	private boolean useNewMVP;
+	private boolean                                                         useNewMVP;
+	private Class<? extends AbstractDocumentController<? extends Document>> clazz;
 
-	private DocumentKind(boolean useNewMVP)
+	DocumentKind(boolean useNewMVP, Class<? extends AbstractDocumentController<? extends Document>> clazz)
 	{
 		this.useNewMVP = useNewMVP;
+		this.clazz = clazz;
 	}
 
 	public boolean isUseNewMVP()
 	{
 		return this.useNewMVP;
+	}
+
+	public Class<? extends AbstractDocumentController<? extends Document>> getClazz()
+	{
+		return clazz;
 	}
 
 	public static <T extends Document> DocumentKind byDocument(T doc)

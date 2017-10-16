@@ -649,7 +649,7 @@ public class Main extends Application
 		openReport(file);
 	}
 
-	public void openReport(File file) throws Exception
+	public void openReport(File file)
 	{
 		Optional.ofNullable(file).ifPresent(f -> DialogsHelper.displayReport(f, null, this.factory));
 	}
