@@ -12,6 +12,7 @@ import com.exactprosystems.jf.actions.AbstractAction;
 import com.exactprosystems.jf.actions.ActionAttribute;
 import com.exactprosystems.jf.actions.ActionFieldAttribute;
 import com.exactprosystems.jf.actions.ActionGroups;
+import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.api.error.ErrorKind;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.report.ReportBuilder;
@@ -23,21 +24,14 @@ import com.exactprosystems.jf.functions.Table;
 import java.io.File;
 
 @ActionAttribute(
-        group                 = ActionGroups.Tables,
-        suffix                = "TBLD",
-        generalDescription    = "This action is determined to get directory structure as an object Table. "
-                + "Can be used to check required files in  this directory.",
-        additionFieldsAllowed = false,
-        outputDescription     = "Table which consists columns Name, Size, Date, Is directory, Hidden. Each table row contains"
-                + " data corresponding a file/folder in this directory. If it is directed to a null directory or file,"
-                + " an object Table is created without any columns or rows. If it is directed to an empty directory, a"
-                + " table is created with column titles and 0 rows.",
-        outputType = Table.class,
-        examples              ="{{`1. Create a table with information about files/folders in directory Home.`}}\n"
-                + "{{#\n" +
-                "#Id;#Action;#Dir\n"
-                + "TBLD1;TableLoadFromDir;System.getProperty('user.home')#}}",
-        seeAlsoClass = {RawTable.class, TableCreate.class, TableLoadFromFile.class, TableSelect.class}
+        group                      = ActionGroups.Tables,
+        suffix                     = "TBLD",
+        constantGeneralDescription =  R.TABLE_LOAD_FROM_DIR_GENERAL_DESC ,
+        additionFieldsAllowed      = false,
+        constantOutputDescription  = R.TABLE_LOAD_FROM_DIR_OUTPUT_DESC,
+        outputType                 = Table.class,
+        constantExamples           = R.TABLE_LOAD_FROM_DIR_EXAMPLE,
+        seeAlsoClass               = {RawTable.class, TableCreate.class, TableLoadFromFile.class, TableSelect.class}
 )
 public class TableLoadFromDir extends AbstractAction
 {

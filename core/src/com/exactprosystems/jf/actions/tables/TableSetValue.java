@@ -12,6 +12,7 @@ import com.exactprosystems.jf.actions.AbstractAction;
 import com.exactprosystems.jf.actions.ActionAttribute;
 import com.exactprosystems.jf.actions.ActionFieldAttribute;
 import com.exactprosystems.jf.actions.ActionGroups;
+import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.api.error.ErrorKind;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.report.ReportBuilder;
@@ -21,25 +22,12 @@ import com.exactprosystems.jf.documents.matrix.parser.items.TypeMandatory;
 import com.exactprosystems.jf.functions.Table;
 
 @ActionAttribute(
-		group					= ActionGroups.Tables,
-		generalDescription 		= "This action is used to set values in the cells of a table given.",
-		additionFieldsAllowed 	= true,
-		additionalDescription 	= "Set values for all cells in the line given. Each parameter name sets the column"
-				+ " title, where the value is set. The value if a corresponding parameter sets the value of the column.",
-		seeAlsoClass = {TableReplace.class, TableAddColumns.class, TableConsiderColumnsAs.class, TableColumnRename.class},
-		examples = "{{`1. Create a table with columns Name and Age. Add values to the first line of the table.`}}"
-				+ "{{`2. Set the value for the columns Name and Age 'John' and '42' in the first line.`}}"
-				+ "{{`3. Verify that the new values were inserted correctly. `}}"
-				+ "{{#\n" +
-				"#Id;#RawTable\n"
-				+ "TC;Table\n"
-				+ "@;Name;Age\n"
-				+ "0;Mike;25\n"
-				+ "#EndRawTable\n"
-				+ "#Action;#Table;#Index;#Name;#Age\n"
-				+ "TableSetValue;TC;0;'John';'42'\n"
-				+ "#Assert;#Message\n"
-				+ "TC.get(0).get('Name') == 'John'&& TC.get(0).get('Age') == '42';#}}"
+		group					      = ActionGroups.Tables,
+		constantGeneralDescription    = R.TABLE_SET_VALUE_GENERAL_DESK,
+		additionFieldsAllowed 	      = true,
+		constantAdditionalDescription = R.TABLE_SET_VALUE_ADDITIONAL_DESK,
+		seeAlsoClass       			  = {TableReplace.class, TableAddColumns.class, TableConsiderColumnsAs.class, TableColumnRename.class},
+		constantExamples 			  = R.TABLE_SET_VALUE_EXAMPLE
 	)
 public class TableSetValue extends AbstractAction 
 {

@@ -1,6 +1,7 @@
 package com.exactprosystems.jf.actions.tables;
 
 import com.exactprosystems.jf.actions.*;
+import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.api.error.ErrorKind;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.report.ReportBuilder;
@@ -12,28 +13,14 @@ import com.exactprosystems.jf.functions.Table;
 import java.util.List;
 
 @ActionAttribute(
-		group 				  = ActionGroups.Tables,
-		suffix 				  = "TBLS",
-		generalDescription 	  = "This action is used to sorting the table by the column given.",
-		additionFieldsAllowed = true,
-		outputDescription 	  = "Restores the original but sorted table.",
-		outputType 			  = Table.class,
-		examples = "{{` 1. Create a table with columns Name and Age. Complete the table with 3 lines.`}}"
-				+ "{{`2. Do top-down sorting in  Age.`}}"
-				+ "{{`3. Output the sorted table to report. `}}"
-				+ "{{#\n" +
-				"#Id;#RawTable\n"
-				+ "TC;Table\n"
-				+ "@;Name;Age\n"
-				+ "0;Mike;42\n"
-				+ "1;John;57\n"
-				+ "2;Anna;21\n"
-				+ "#EndRawTable\n"
-				+ "#Action;#Ascending;#ColumnName;#Table\n"
-				+ "TableSort;false;'Age';TC\n"
-				+ "#Action;#Table;#Title\n"
-				+ "TableReport;TC;'Table title'#}}"
-)
+		group 				       = ActionGroups.Tables,
+		suffix 				       = "TBLS",
+		constantGeneralDescription = R.TABLE_SORT_GENERAL_DESC,
+		additionFieldsAllowed      = true,
+		constantOutputDescription  = R.TABLE_SORT_OUTPUT_DESK,
+		outputType 			       = Table.class,
+		constantExamples 		   = R.TABLE_SORT_EXAMPLE
+	)
 
 public class TableSort extends AbstractAction
 {

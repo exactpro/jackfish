@@ -5,6 +5,7 @@ import com.exactprosystems.jf.actions.ActionAttribute;
 import com.exactprosystems.jf.actions.ActionFieldAttribute;
 import com.exactprosystems.jf.actions.ActionGroups;
 import com.exactprosystems.jf.actions.DefaultValuePool;
+import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.api.error.ErrorKind;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.report.ReportBuilder;
@@ -13,29 +14,11 @@ import com.exactprosystems.jf.documents.matrix.parser.Parameters;
 import com.exactprosystems.jf.functions.Table;
 
 @ActionAttribute(
-		group					= ActionGroups.Tables,
-		generalDescription 		= "This action is used to replace cell values if the value is equal to the given "
-				+ "one or complies with a regular expression.",
-		additionFieldsAllowed 	= false,
-		examples 				=
-				"{{`1. Create a table with columns Name and Age. Add four lines with data about Mike, Anna, John, Bruce.`}}"
-				+ "{{`2. Replace all that comply with Regexp with 'passed'.`}}"
-				+ "{{`3. Verify if everything was correct.`}} "
-				+ "{{#\n" +
-				"#Id;#RawTable\n"
-				+ "TC;Table\n"
-				+ "@;Name;Mail\n"
-				+ "0;John;c0nst@money.simply.net\n"
-				+ "1;Mike;somebody@dev.com.ua\n"
-				+ "2;Bruce;Name.Sur_name@gmail.com\n"
-				+ "3;Anna;user33@somewhere.in.the.net\n"
-				+ "#EndRawTable\n" +
-				"#Id;#Let\n" +
-				"rgxp;'[a-zA-Z]{1}[a-zA-Z\\\\d\\\\.\\\\_]+@([a-zA-Z]+\\\\.){1,2}((net)|(com)|(org))'\n"
-				+ "#Action;#Regexp;#Replace;#Table;#Columns\n"
-				+ "TableReplace;rgxp;'passed';TC;'Mail'\n"
-				+ "#Assert;#Message\n"
-				+ "TC.get(0).get('Mail')=='passed' && TC.get(2).get('Mail')=='passed';'Assert!'#}}",
+		group					   = ActionGroups.Tables,
+		constantGeneralDescription = R.TABLE_REPLACE_GENERAL_DESC,
+		additionFieldsAllowed 	   = false,
+		constantExamples 		   = R.TABLE_REPLACE_EXAMPLE
+,
 		seeAlsoClass = {TableAddValue.class, TableAddColumns.class, TableConsiderColumnsAs.class, TableColumnRename.class, TableRemoveRow.class}
 	)
 public class TableReplace extends AbstractAction 

@@ -11,6 +11,7 @@ package com.exactprosystems.jf.actions.tables;
 import com.exactprosystems.jf.actions.*;
 import com.exactprosystems.jf.api.common.Converter;
 import com.exactprosystems.jf.api.common.Str;
+import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.api.error.ErrorKind;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.report.ReportBuilder;
@@ -30,24 +31,11 @@ import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
 @ActionAttribute(
-		group					= ActionGroups.Tables,
-		generalDescription 		= "This action is used to output the table to report.",
-		additionFieldsAllowed 	= true,
-        additionalDescription   = "Columns containing the data which defines the outgoing columns. Column title is given in"
-                + " the parameter's value. In the value it is needed to specify the new name for table in the report.",
-		examples 				=
-				"{{` 1. Create a test case with id Test.`}}"
-				+ "{{` 2. Create a table with columns Name and Age. Add values to the first line of the table.`}}"
-				+ "{{` 3. Output the table into the report only with the column Age, before the test case with id Test.`}} "
-				+ "{{#\n#Id;#TestCase\n"
-				+ "Test;\n"
-				+ "    #Id;#RawTable\n"
-				+ "    TC;Table\n"
-				+ "    @;Name;Age\n"
-				+ "    0;Mike;25\n"
-				+ "    #EndRawTable\n"
-				+ "    #Action;#BeforeTestCase;#Table;#Title;#Columns\n"
-				+ "    TableReport;'Test';TC;'Table title';{'Age' : 'Age of person'}#}}"
+		group					      = ActionGroups.Tables,
+		constantGeneralDescription    = R.TABLE_REPORT_GENERAL_DESC,
+		additionFieldsAllowed 	      = true,
+        constantAdditionalDescription = R.TABLE_REPORT_ADDITIONAL_DESC,
+		constantExamples 			  = R.TABLE_REPORT_EXAMPLE
 	)
 public class TableReport extends AbstractAction 
 {

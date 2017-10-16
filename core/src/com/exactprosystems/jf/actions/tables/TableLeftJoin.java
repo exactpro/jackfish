@@ -12,6 +12,7 @@ import com.exactprosystems.jf.actions.AbstractAction;
 import com.exactprosystems.jf.actions.ActionAttribute;
 import com.exactprosystems.jf.actions.ActionFieldAttribute;
 import com.exactprosystems.jf.actions.ActionGroups;
+import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.api.error.ErrorKind;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.report.ReportBuilder;
@@ -23,42 +24,14 @@ import com.exactprosystems.jf.functions.RowTable;
 import com.exactprosystems.jf.functions.Table;
 
 @ActionAttribute(
-		group 					= ActionGroups.Tables, 
-		suffix 					= "TBLJN", 
-		generalDescription 		= "This action is determined to join tables as in SQL Left Join.",
-		additionFieldsAllowed 	= true,
-		additionalDescription 	= "Additional parameters are used to assign column titles.",
-		outputDescription 		= "Table structure.",
-		outputType				= Table.class,
-		examples 				=
-				"{{`1. Create a table with columns Name and Language. Populate it with few rows.`}}"
-				+ "{{`2. Create a table with columns Name and CityId. Populate it with few rows.`}}"
-				+ "{{`3. Use Left Join choosing rows from the first table on condition: matching column Name. `}}"
-				+ "{{#\n"  +
-						"#Id;#RawTable\n" +
-						"City;Table\n" +
-						"@;id;Name;Language\n" +
-						"0;1;London;us\n" +
-						"1;2;Moscow;ru\n" +
-						"2;3;France;fr\n" +
-						"#EndRawTable\n" +
-						"\n" +
-						"#Id;#RawTable\n" +
-						"Person;Table\n" +
-						"@;Name;CityId\n" +
-						"0;Andrey;1\n" +
-						"1;Victor;2\n" +
-						"2;Aleksander;1\n" +
-						"3;Valery;4\n" +
-						"4;Kate;3\n" +
-						"#EndRawTable\n" +
-						"\n" +
-						"#Id;#Action;$Condition;$LeftTable;$LeftAlias; \n $RightTable;$RightAlias;CityName;Language\n" +
-						"TBLJN1;TableLeftJoin;'person.CityId == city.id'; \n Person;'person';City;'city';'city.Name';'city.Language'\n" +
-						"\n" +
-						"#Action;$Table;$Title\n" +
-						"TableReport;TBLJN1.Out;'title'" +
-				"#}}"
+		group 					      = ActionGroups.Tables,
+		suffix 					      = "TBLJN",
+		constantGeneralDescription    = R.TABLE_LEFT_JOIN_GENERAL_DESK,
+		additionFieldsAllowed 	      = true,
+		constantAdditionalDescription = R.TABLE_LEFT_JOIN_ADDITIONAL_DESC,
+		constantOutputDescription     = R.TABLE_LEFT_JOIN_OUTPUT_DESC,
+		outputType				      = Table.class,
+		constantExamples 		 	  = R.TABLE_LEFT_JOIN_EXAMPLE
 )
 public class TableLeftJoin extends AbstractAction
 {
@@ -123,7 +96,7 @@ public class TableLeftJoin extends AbstractAction
 		{
             boolean hasColumn = false;
 			evaluator.getLocals().set(this.leftAlias, rowLeft);
-			
+
 			for (RowTable rowRight : this.rightTable)
 			{
 				evaluator.getLocals().set(this.rightAlias, rowRight);
@@ -142,7 +115,7 @@ public class TableLeftJoin extends AbstractAction
                         }
                     }
 				}
-				else 
+				else
 				{
 					super.setError("Join condition must be Boolean", ErrorKind.WRONG_PARAMETERS);
 					return;
@@ -159,7 +132,7 @@ public class TableLeftJoin extends AbstractAction
 				}
 			}
 		}
-		
+
 		super.setResult(newTable);
 	}
 }

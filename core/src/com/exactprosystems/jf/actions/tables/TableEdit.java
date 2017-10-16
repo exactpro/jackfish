@@ -9,6 +9,7 @@
 package com.exactprosystems.jf.actions.tables;
 
 import com.exactprosystems.jf.actions.*;
+import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.api.error.ErrorKind;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.report.ReportBuilder;
@@ -24,30 +25,14 @@ import java.util.List;
 import java.util.Map;
 
 @ActionAttribute(
-		group					= ActionGroups.Tables,
-		generalDescription 		= "Edit a table via interaction with a user",
-		additionFieldsAllowed 	= true,
-		additionalDescription   = "Values where a parameter name - a table column name, a parameter value - true, if it is allowed to edit.",
-        outputDescription       = "Returns true if the user pushed the button Ok.",
-		suffix					= "TBEDT",
-        outputType              = Boolean.class,
-		examples = "{{#\n" +
-				"#Id;#RawTable\n" +
-				"TC;Table\n" +
-				"@;Name;Age;City\n" +
-				"0;Mike;25;London\n" +
-				"1;Jane;21;Moscow\n" +
-				"2;Ann;19;France\n" +
-				"#EndRawTable\n" +
-				"\n" +
-				"#Action;$Table;$Title;Name;Age;City\n" +
-				"TableEdit;TC;'Title';true;false;true\n" +
-				"\n" +
-				"#Action;$Table;$Title\n" +
-				"TableReport;TC;'table after edit'\n" +
-				"\n" +
-				"#}}"
-		
+		group						  = ActionGroups.Tables,
+		constantGeneralDescription 	  = R.TABLE_EDIT_GENERAL_DESK,
+		additionFieldsAllowed 		  = true,
+		constantAdditionalDescription = R.TABLE_EDIT_ADDITIONAL_DESC,
+        outputDescription       	  = "Returns true if the user pushed the button Ok.",
+		suffix						  = "TBEDT",
+        outputType              	  = Boolean.class,
+		constantExamples 			  = R.TABLE_EDIT_EXAMPLE
 	)
 public class TableEdit extends AbstractAction 
 {

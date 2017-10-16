@@ -16,6 +16,7 @@ import com.exactprosystems.jf.actions.ActionFieldAttribute;
 import com.exactprosystems.jf.actions.ActionGroups;
 import com.exactprosystems.jf.actions.DefaultValuePool;
 import com.exactprosystems.jf.actions.ReadableValue;
+import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.report.ReportBuilder;
 import com.exactprosystems.jf.documents.config.Context;
@@ -25,19 +26,14 @@ import com.exactprosystems.jf.functions.HelpKind;
 import com.exactprosystems.jf.functions.Table;
 
 @ActionAttribute(
-		group					= ActionGroups.Tables,
-		suffix					= "TBL",
-		generalDescription 		= "This action is determined to create a table from file csv. "
-				+ "{{`{{$CSV$}} (Comma-Separated Values) - a text format, which is determined to display table data."
-				+ "Specification: Each file row is a table row. The first row contains column titles.`}}",
-		additionFieldsAllowed 	= false,
-		outputDescription 		= "If file is not found, object Table is not created.",
-		outputType				= Table.class,
-		examples 				=
-				"{{`1. Get table downloaded from file testTable.csv divided internally with '|'. Verify that table is downloaded correctly.`}} "
-				+ "{{#\n" +
-				"#Id;#Action;#Assert;#File;#Delimiter\n"
-				+ "TLFF;TableLoadFromFile;TLFF.Out.size() > 0;'PathToFile/testTable.csv';'|'#}}",
+		group					   = ActionGroups.Tables,
+		suffix					   = "TBL",
+		constantGeneralDescription = R.TABLE_LOAD_FROM_FILE_GENERAL_DESK,
+		additionFieldsAllowed 	   = false,
+		constantOutputDescription  = R.TABLE_LOAD_FROM_FILE_OUTPUT_DESK,
+		outputType				   = Table.class,
+		constantExamples 		   = R.TABLE_LOAD_FROM_FILE_EXAMPLE
+,
 		seeAlsoClass = {RawTable.class, TableLoadFromDir.class, TableCreate.class, TableSelect.class}
 	)
 public class TableLoadFromFile extends AbstractAction 
