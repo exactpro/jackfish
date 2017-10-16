@@ -21,8 +21,6 @@ import com.exactprosystems.jf.documents.config.AppEntry;
 import com.exactprosystems.jf.documents.config.Configuration;
 import com.exactprosystems.jf.documents.config.Parameter;
 import com.exactprosystems.jf.documents.guidic.GuiDictionary;
-import com.exactprosystems.jf.tool.Common;
-import javafx.concurrent.Task;
 import org.apache.log4j.Logger;
 
 import java.io.Reader;
@@ -228,30 +226,19 @@ public class ApplicationPool implements IApplicationPool
 	@Override
 	public void stopAllApplications(boolean needKill) throws Exception
 	{
-        Task task = new Task() {
-            @Override
-            protected Object call() throws Exception
-            {
-				Common.progressBarVisible(true);
-				AppConnection[] openApps = ApplicationPool.this.connections.toArray(new AppConnection[]{});
-				for (int i = 0; i < openApps.length; i++)
-				{
-					stopApplication(openApps[i], needKill);
-					updateProgress(i+1, openApps.length);
-				}
-				Thread.sleep(1000);
-                return null;
-            }
-        };
-		task.setOnSucceeded(workerStateEvent -> Common.progressBarVisible(false));
-		task.setOnFailed(workerStateEvent ->
-				{
-					Common.progressBarVisible(false);
-					logger.error("Error in stopAllApplications()");
-					logger.error(task.getException().getMessage(), task.getException());
-				});
-		Common.progressBar.progressProperty().bind(task.progressProperty());
-		new Thread(task).start();
+		//java.util.ConcurrentModificationException
+		for (AppConnection connection : this.connections.toArray(new AppConnection[this.connections.size()]))
+		{
+			try
+			{
+				stopApplication(connection, needKill);
+			}
+			catch (Exception e)
+			{
+				logger.error("Error in stopAllApplications()");
+				logger.error(e.getMessage(), e);
+			}
+		}
 	}
 	//endregion
 
