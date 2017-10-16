@@ -55,6 +55,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.*;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 @XmlRootElement(name="configuration")
@@ -451,7 +452,7 @@ public class ConfigurationFx extends Configuration
 
 	public void addNewLibrary(File parentFolder, String fileName) throws Exception
 	{
-		this.model.newLibrary(checkNameExtention(parentFolder.getAbsolutePath() + File.separator + fileName, Configuration.matrixExt));
+		this.model.newLibrary(checkNameExtension(parentFolder.getAbsolutePath() + File.separator + fileName, Configuration.matrixExt));
 		displayLibrary();
 	}
 
@@ -1205,17 +1206,16 @@ public class ConfigurationFx extends Configuration
 
 	private void removeFileFromFileSystem(File removeFile, DisplayFunction displayFunction)
 	{
-		List<String> list = new ArrayList<>();
-		forceDelete(removeFile, list);
-		rmFile(list);
+		forceDelete(removeFile, file -> {});
+		rmFileFromGit(removeFile);
 		displayFunction.display();
 	}
 
 	private void removeFilesFromFileSystem(List<File> files, DisplayFunction displayFunction)
 	{
-		List<String> list = new ArrayList<>();
-		files.forEach(file -> forceDelete(file, list));
-		rmFile(list);
+		List<File> list = new ArrayList<>();
+		files.forEach(file -> forceDelete(file, list::add));
+		rmFilesFromGit(list);
 		displayFunction.display();
 	}
 
@@ -1246,44 +1246,17 @@ public class ConfigurationFx extends Configuration
 		dialog.show();
 	}
 
-	private static void forceDelete(File directory, List <String> list)
+	private static void forceDelete(File file, Consumer<File> consumer)
 	{
-		if (directory.isDirectory())
+		if (file.isDirectory())
 		{
-			cleanDirectory(directory, list);
+			cleanDirectory(file, consumer);
 		}
-		rmFromGit(directory, list);
-		directory.delete();
+		consumer.accept(file);
+		file.delete();
 	}
 
-	private static void rmFile(List <String> list)
-	{
-		try
-		{
-			GitUtil.rmFile(list);
-		}
-		catch (Exception ignored)
-		{
-
-		}
-	}
-
-	private static void rmFromGit(File file, List <String> list)
-	{
-		try
-		{
-			if (Main.IS_PROJECT_UNDER_GIT)
-			{
-				GitUtil.getRepositoryFilePath(file, list);
-			}
-		}
-		catch (Exception ignored)
-		{
-
-		}
-	}
-
-	private static void cleanDirectory(File directory, List <String> list)
+	private static void cleanDirectory(File directory, Consumer<File> consumer)
 	{
 		File[] files = directory.listFiles();
 		if (files != null)
@@ -1292,18 +1265,50 @@ public class ConfigurationFx extends Configuration
 			{
 				if (file.isDirectory())
 				{
-					forceDelete(file, list);
+					forceDelete(file, consumer);
 				}
 				else
 				{
-					rmFromGit(file, list);
+					consumer.accept(file);
 					file.delete();
 				}
 			}
 		}
 	}
 
-	private static String checkNameExtention(String fileName, String ext)
+	private static void rmFileFromGit(File file)
+	{
+		if (!Main.IS_PROJECT_UNDER_GIT)
+		{
+			return;
+		}
+		try
+		{
+			GitUtil.rmFile(file);
+		}
+		catch (Exception ignored)
+		{
+
+		}
+	}
+
+	private static void rmFilesFromGit(List<File> files)
+	{
+		if (!Main.IS_PROJECT_UNDER_GIT)
+		{
+			return;
+		}
+		try
+		{
+			GitUtil.rmFiles(files);
+		}
+		catch (Exception ignored)
+		{
+
+		}
+	}
+
+	private static String checkNameExtension(String fileName, String ext)
 	{
 		if (fileName.endsWith(ext))
 		{

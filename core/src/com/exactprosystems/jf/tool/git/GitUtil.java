@@ -103,10 +103,7 @@ public class GitUtil
 	{
 		try (Git git = git(bean))
 		{
-			Iterable<PushResult> call = git.push()
-					.setRefSpecs(new RefSpec(git.getRepository().getFullBranch()+":" + remoteBranchName))
-					.setCredentialsProvider(getCredentialsProvider(bean))
-					.call();
+			Iterable<PushResult> call = git.push().setRefSpecs(new RefSpec(git.getRepository().getFullBranch() + ":" + remoteBranchName)).setCredentialsProvider(getCredentialsProvider(bean)).call();
 			for (PushResult pushResult : call)
 			{
 				for (RemoteRefUpdate update : pushResult.getRemoteUpdates())
@@ -168,10 +165,7 @@ public class GitUtil
 			try
 			{
 				PullResult pullResult = git.pull().
-						setCredentialsProvider(getCredentialsProvider(bean))
-						.setProgressMonitor(monitor)
-						.setRemoteBranchName(remoteBranchName)
-						.call();
+						setCredentialsProvider(getCredentialsProvider(bean)).setProgressMonitor(monitor).setRemoteBranchName(remoteBranchName).call();
 
 				//get merging files
 				MergeResult mergeResult = pullResult.getMergeResult();
@@ -225,12 +219,12 @@ public class GitUtil
 	{
 		if (new File(filePath).exists())
 		{
-			return replaceWinSeparatorToInux(filePath);
+			return replaceWinSeparatorToUnux(filePath);
 		}
 		try (Git git = git(bean))
 		{
 			String pathToGitFolder = git.getRepository().getDirectory().getParent();
-			return replaceWinSeparatorToInux(pathToGitFolder + File.separator + filePath);
+			return replaceWinSeparatorToUnux(pathToGitFolder + File.separator + filePath);
 		}
 	}
 
@@ -244,10 +238,7 @@ public class GitUtil
 		CanonicalTreeParser newTreeIter = new CanonicalTreeParser();
 		newTreeIter.reset(reader, head);
 
-		return git.diff()
-				.setNewTree(newTreeIter)
-				.setOldTree(oldTreeIter)
-				.call();
+		return git.diff().setNewTree(newTreeIter).setOldTree(oldTreeIter).call();
 	}
 
 	public static List<Chunk> getConflicts(CredentialBean bean, String fileName) throws Exception
@@ -343,7 +334,7 @@ public class GitUtil
 		try (Git git = git(bean))
 		{
 			CheckoutCommand checkout = git.checkout();
-			paths.stream().map(GitUtil::replaceWinSeparatorToInux).forEach(checkout::addPath);
+			paths.stream().map(GitUtil::replaceWinSeparatorToUnux).forEach(checkout::addPath);
 			checkout.call();
 		}
 	}
@@ -355,7 +346,7 @@ public class GitUtil
 		{
 			for (String path : paths)
 			{
-				writer.write(replaceWinSeparatorToInux(path) + "\n");
+				writer.write(replaceWinSeparatorToUnux(path) + "\n");
 			}
 		}
 	}
@@ -393,7 +384,7 @@ public class GitUtil
 	//region Merge
 	public static List<String> getTheirs(CredentialBean bean, String filePath) throws Exception
 	{
-		try(Git git = git(bean))
+		try (Git git = git(bean))
 		{
 			Repository repository = git.getRepository();
 			ObjectId lastCommitId = repository.resolve(Constants.MERGE_HEAD);
@@ -405,7 +396,7 @@ public class GitUtil
 				{
 					treeWalk.addTree(tree);
 					treeWalk.setRecursive(true);
-					treeWalk.setFilter(PathFilter.create(replaceWinSeparatorToInux(filePath)));
+					treeWalk.setFilter(PathFilter.create(replaceWinSeparatorToUnux(filePath)));
 					if (!treeWalk.next())
 					{
 						return Collections.emptyList();
@@ -425,7 +416,7 @@ public class GitUtil
 
 	public static void mergeTheirs(CredentialBean credentialBean, String filePath) throws Exception
 	{
-		filePath = replaceWinSeparatorToInux(filePath);
+		filePath = replaceWinSeparatorToUnux(filePath);
 		List<String> theirs = getTheirs(credentialBean, filePath);
 		Common.writeToFile(new File(GitUtil.checkFile(credentialBean, filePath)), theirs);
 		try (Git git = git(credentialBean))
@@ -449,7 +440,7 @@ public class GitUtil
 				{
 					treeWalk.addTree(tree);
 					treeWalk.setRecursive(true);
-					treeWalk.setFilter(PathFilter.create(replaceWinSeparatorToInux(filePath)));
+					treeWalk.setFilter(PathFilter.create(replaceWinSeparatorToUnux(filePath)));
 					if (!treeWalk.next())
 					{
 						return Collections.emptyList();
@@ -469,7 +460,7 @@ public class GitUtil
 
 	public static void mergeYours(CredentialBean credentialBean, String filePath) throws Exception
 	{
-		filePath = replaceWinSeparatorToInux(filePath);
+		filePath = replaceWinSeparatorToUnux(filePath);
 		List<String> yours = getYours(credentialBean, filePath);
 		Common.writeToFile(new File(GitUtil.checkFile(credentialBean, filePath)), yours);
 		try (Git git = git(credentialBean))
@@ -482,7 +473,7 @@ public class GitUtil
 	{
 		try (Git git = git(bean))
 		{
-			git.add().addFilepattern(replaceWinSeparatorToInux(filePath)).call();
+			git.add().addFilepattern(replaceWinSeparatorToUnux(filePath)).call();
 		}
 	}
 	//endregion
@@ -505,18 +496,9 @@ public class GitUtil
 			List<Ref> remoteBrahcnes = git.branchList().setListMode(ListBranchCommand.ListMode.REMOTE).call();
 			List<Branch> list = new ArrayList<>();
 
-			localBranches.stream()
-					.filter(r -> !r.isSymbolic())
-					.map(Ref::getName)
-					.map(name -> new Branch(true, false, name))
-					.peek(b -> b.isCurrent = b.name.equals(currentBranch))
-					.forEach(list::add);
+			localBranches.stream().filter(r -> !r.isSymbolic()).map(Ref::getName).map(name -> new Branch(true, false, name)).peek(b -> b.isCurrent = b.name.equals(currentBranch)).forEach(list::add);
 
-			remoteBrahcnes.stream()
-					.filter(r -> !r.isSymbolic())
-					.map(Ref::getName)
-					.map(name -> new Branch(false, false, name))
-					.forEach(list::add);
+			remoteBrahcnes.stream().filter(r -> !r.isSymbolic()).map(Ref::getName).map(name -> new Branch(false, false, name)).forEach(list::add);
 
 			return list;
 		}
@@ -535,11 +517,9 @@ public class GitUtil
 	{
 		try (Git git = git(bean))
 		{
-			Ref	ref = git.branchCreate()
-					.setName(newName)
+			Ref ref = git.branchCreate().setName(newName)
 					//think how to set upstream correctly
-					.setUpstreamMode(CreateBranchCommand.SetupUpstreamMode.SET_UPSTREAM)
-					.call();
+					.setUpstreamMode(CreateBranchCommand.SetupUpstreamMode.SET_UPSTREAM).call();
 
 			Iterable<PushResult> call = git.push().setCredentialsProvider(getCredentialsProvider(bean)).add(ref).call();
 		}
@@ -549,17 +529,11 @@ public class GitUtil
 	{
 		try (Git git = git(bean))
 		{
-			CheckoutCommand checkoutCommand = git.checkout()
-					.setStartPoint(branchName)
-					.setCreateBranch(false)
-					.setName(branchName);
+			CheckoutCommand checkoutCommand = git.checkout().setStartPoint(branchName).setCreateBranch(false).setName(branchName);
 
 			if (localBranchName != null)
 			{
-				checkoutCommand
-						.setName(localBranchName)
-						.setUpstreamMode(CreateBranchCommand.SetupUpstreamMode.TRACK)
-						.setCreateBranch(true);
+				checkoutCommand.setName(localBranchName).setUpstreamMode(CreateBranchCommand.SetupUpstreamMode.TRACK).setCreateBranch(true);
 			}
 			Ref ref = checkoutCommand.call();
 			return ref.getName();
@@ -593,7 +567,7 @@ public class GitUtil
 	{
 		private boolean isLocal;
 		private boolean isCurrent;
-		private String name;
+		private String  name;
 
 		public Branch(boolean isLocal, boolean isCurrent, String name)
 		{
@@ -699,42 +673,48 @@ public class GitUtil
 		}
 	}
 	//endregion
-	public static void getRepositoryFilePath(File file, List <String> list) throws Exception
+
+	public static void rmFile(File file) throws Exception
 	{
-		try(Git git = git(EMPTY_BEAN))
+		try (Git git = git(EMPTY_BEAN))
 		{
-			String repositoryPath = replaceWinSeparatorToInux(git.getRepository().getWorkTree().getPath());
-            String filePath = file.getPath();
-			filePath = replaceWinSeparatorToInux(filePath);
-			if (filePath.contains(repositoryPath))
-			{
-				filePath = filePath.substring(repositoryPath.length() + 1);
-			}
-			else
-			{
-				filePath = checkFile(EMPTY_BEAN, file.getPath());
-			}
-			list.add(filePath);
+			git.rm().addFilepattern(convertFilePathToGitFilePath(git, file)).call();
 		}
 	}
 
-	public static void rmFile(List<String> filePaths) throws Exception
+	public static void rmFiles(List<File> files) throws Exception
 	{
-		try(Git git = git(EMPTY_BEAN))
+		try (Git git = git(EMPTY_BEAN))
 		{
-			RmCommand command = git.rm();
-			for (String path : filePaths)
-			{
-				command = command.addFilepattern(path);
-			}
-			command.call();
+			RmCommand rm = git.rm();
+			files.stream()
+					.map(file -> Common.tryCatch(() -> convertFilePathToGitFilePath(git, file), "", null))
+					.filter(Objects::nonNull)
+					.forEach(rm::addFilepattern);
+			rm.call();
 		}
 	}
 
 	//region private methods
-	private static String replaceWinSeparatorToInux(String path)
+	private static String replaceWinSeparatorToUnux(String path)
 	{
 		return path.replace('\\', '/');
+	}
+
+	private static String convertFilePathToGitFilePath(Git git, File file) throws Exception
+	{
+		String repositoryPath = replaceWinSeparatorToUnux(git.getRepository().getWorkTree().getPath());
+		String filePath = file.getPath();
+		filePath = replaceWinSeparatorToUnux(filePath);
+		if (filePath.contains(repositoryPath))
+		{
+			filePath = filePath.substring(repositoryPath.length() + 1);
+		}
+		else
+		{
+			filePath = checkFile(EMPTY_BEAN, file.getPath());
+		}
+		return filePath;
 	}
 
 	private static File checkGitIgnoreFile() throws Exception
@@ -751,7 +731,7 @@ public class GitUtil
 	private static void replaceFiles(List<GitBean> mainList, Set<String> newList, GitBean.Status status)
 	{
 		List<GitBean> collect = newList.stream()
-				.map(GitUtil::replaceWinSeparatorToInux)
+				.map(GitUtil::replaceWinSeparatorToUnux)
 				.map(st -> new GitBean(status, new File(st)))
 				.collect(Collectors.toList());
 		mainList.stream().filter(collect::contains).forEach(bean -> bean.updateStatus(status));
