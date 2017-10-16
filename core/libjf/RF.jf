@@ -72,6 +72,15 @@ RF;RegressionFramework
         #Id;#Action;$Decoraded
         standartResult;ResultTable;false
 
+        #Action;Before start all matrices
+        Print;''
+
+        #Id;#Call
+        CALL_1;printMemory
+
+        #Action;$Str
+        Print;'============================'
+
         // // Main loop
         #ForEach;#In
         row;table
@@ -112,6 +121,9 @@ RF;RegressionFramework
                     #Action;$Str
                     Print;'Starting: ' + scenarioName
 
+                    #Id;#Call
+                    CALL_3;printMemory
+
                     #Id;#Action;$Matrix;$Parameter
                     MXRN;MatrixRun;row.Scenario + '.jf';counter
 
@@ -126,6 +138,9 @@ RF;RegressionFramework
 
                     #Action;Passed;Failed
                     Print;MXRN.Out.passed();MXRN.Out.failed()
+
+                    #Action;$Str
+                    Print;'============================'
 
                     #Id;#Let
                     successCount;successCount + (MXRN.Out.failed() == 0 ? 1 : 0)
@@ -191,6 +206,12 @@ RF;RegressionFramework
 
         #EndForEach
 
+        #Action;After end all matrices
+        Print;''
+
+        #Id;#Call
+        CALL_2;printMemory
+
         #Id;#Action;$Query;$Connection;ScenarioId
         SQLSLCT18;SQLselect;'SELECT * FROM details where step != \'null\' and scenario_id = ?';SQL;scenarioId
 
@@ -217,6 +238,25 @@ RF;RegressionFramework
 
         #Return
         runId
+
+    #EndSubCase
+
+    #Id;#SubCase
+    printMemory;
+        #Id;#Let
+        totalMemory;def () { return Runtime.getRuntime().totalMemory() }
+
+        #Id;#Let
+        maxMemory;def () { return Runtime.getRuntime().maxMemory() }
+
+        #Id;#Let
+        freeMemory;def () { return Runtime.getRuntime().freeMemory() }
+
+        #Id;#Let
+        convertToMb;def(l) { return l / 1024 / 1024}
+
+        #Action;Mem
+        Print;convertToMb(totalMemory())+ ' mb / ' + convertToMb(freeMemory())+ ' mb / ' +  convertToMb(totalMemory() - freeMemory()) + ' mb'
 
     #EndSubCase
 
@@ -1466,7 +1506,7 @@ RF;RegressionFramework
                 #Id;#Let
                 re;''
 
-                //
+                // 
                 #If
                 prevRunIdExists
                     #Id;#RawText;#Kind
