@@ -403,7 +403,7 @@ public class Main extends Application
 
 	public void gitBranches() throws Exception
 	{
-		new GitBranch(this).display();
+		new GitBranch(this.getCredential()).display();
 	}
 
 	public void gitPush() throws Exception

@@ -4,20 +4,17 @@ import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.git.CredentialBean;
 import com.exactprosystems.jf.tool.git.GitUtil;
 import com.exactprosystems.jf.tool.helpers.DialogsHelper;
-import com.exactprosystems.jf.tool.main.Main;
 import javafx.concurrent.Task;
 
 public class GitBranch
 {
-	private Main model;
 	private final CredentialBean credentialBean;
 	private GitBranchController controller;
 
-	public GitBranch(Main model) throws Exception
+	public GitBranch(CredentialBean credentialBean) throws Exception
 	{
-		this.model = model;
-		this.credentialBean = this.model.getCredential();
-		this.controller = Common.loadController(this.getClass().getResource("GitBranch.fxml"));
+		this.credentialBean = credentialBean;
+		this.controller = Common.loadController(this.getClass());
 		this.controller.init(this);
 		this.controller.updateBranches(GitUtil.getBranches(this.credentialBean));
 	}
@@ -27,7 +24,7 @@ public class GitBranch
 		this.controller.show();
 	}
 
-	void newBranch(String newName) throws Exception
+	void newBranch(String newName)
 	{
 		DialogsHelper.showInfo("Start creating branch");
 		this.controller.setDisable(true);
@@ -66,8 +63,7 @@ public class GitBranch
 
 	void deleteBranch(GitUtil.Branch branch) throws Exception
 	{
-		boolean flag = DialogsHelper.showYesNoDialog("Are you sure, that you want to delete the branch?", "Delete branch");
-		if (flag)
+		if (DialogsHelper.showYesNoDialog("Are you sure, that you want to delete the branch?", "Delete branch"))
 		{
 			GitUtil.deleteBranch(this.credentialBean, branch);
 			this.controller.updateBranches(GitUtil.getBranches(this.credentialBean));

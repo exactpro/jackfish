@@ -19,24 +19,24 @@ import java.util.ResourceBundle;
 
 public class GitBranchController implements Initializable, ContainingParent
 {
-	private static final String LOCAL = "Local";
-	private static final String REMOTE = "Remote";
-	public Parent parent;
+	private static final String LOCAL_NAME  = "Local";
+	private static final String REMOTE_NAME = "Remote";
+
+	public Parent                   parent;
 	public TreeView<GitUtil.Branch> treeView;
-	public Button btnNewBranch;
-	public Button btnRenameBranch;
-	public Button btnCheckoutBranch;
-	public Button btnMergeBranch;
-	public Button btnDeleteBranch;
-	public VBox vBox;
-	public Button btnClose;
+	public Button                   btnNewBranch;
+	public Button                   btnRenameBranch;
+	public Button                   btnCheckoutBranch;
+	public Button                   btnMergeBranch;
+	public Button                   btnDeleteBranch;
+	public VBox                     vBox;
+	public Button                   btnClose;
 
 	private GitBranch model;
-	private Alert dialog;
+	private Alert     dialog;
 
-	private TreeItem<GitUtil.Branch> local;
-	private TreeItem<GitUtil.Branch> remote;
-
+	private TreeItem<GitUtil.Branch> localBranchParent;
+	private TreeItem<GitUtil.Branch> remoteBranchParent;
 
 	//region Initializable
 	@Override
@@ -44,7 +44,7 @@ public class GitBranchController implements Initializable, ContainingParent
 	{
 
 	}
-	//endregion
+	//endregion Initializable
 
 	//region ContainingParent
 	@Override
@@ -68,17 +68,11 @@ public class GitBranchController implements Initializable, ContainingParent
 
 	void updateBranches(List<GitUtil.Branch> branches)
 	{
-		this.local.getChildren().clear();
-		this.remote.getChildren().clear();
+		this.localBranchParent.getChildren().clear();
+		this.remoteBranchParent.getChildren().clear();
 		branches.forEach(b -> {
-			if (b.isLocal())
-			{
-				local.getChildren().add(new TreeItem<>(b));
-			}
-			else
-			{
-				remote.getChildren().add(new TreeItem<>(b));
-			}
+			TreeItem<GitUtil.Branch> item = b.isLocal() ? this.localBranchParent : this.remoteBranchParent;
+			item.getChildren().add(new TreeItem<>(b));
 		});
 	}
 
@@ -91,7 +85,7 @@ public class GitBranchController implements Initializable, ContainingParent
 		{
 			this.btnNewBranch.setDisable(false);
 			this.treeView.getSelectionModel().clearSelection();
-			this.treeView.getSelectionModel().select(local);
+			this.treeView.getSelectionModel().select(this.localBranchParent);
 		}
 	}
 
@@ -109,19 +103,10 @@ public class GitBranchController implements Initializable, ContainingParent
 		inputDialog.getEditor().textProperty().addListener((observable, oldValue, newValue) -> {
 			if (newValue != null)
 			{
-				node.setDisable(anyMatch(local.getChildren(), newValue));
+				node.setDisable(this.anyMatch(this.localBranchParent.getChildren(), newValue));
 			}
 		});
-		Optional<String> newName = inputDialog.showAndWait();
-		newName.ifPresent(name -> Common.tryCatch(() -> this.model.newBranch(name), "Error on create new branch"));
-	}
-
-	private boolean anyMatch(List<TreeItem<GitUtil.Branch>> children, String newValue)
-	{
-		return children.stream()
-				.map(TreeItem::getValue)
-				.map(GitUtil.Branch::getSimpleName)
-				.anyMatch(newValue::equals);
+		inputDialog.showAndWait().ifPresent(this.model::newBranch);
 	}
 
 	public void renameBranch(ActionEvent actionEvent)
@@ -137,7 +122,7 @@ public class GitBranchController implements Initializable, ContainingParent
 		inputDialog.getEditor().textProperty().addListener((observable, oldValue, newValue) -> {
 			if (newValue != null)
 			{
-				node.setDisable(anyMatch(local.getChildren(), newValue));
+				node.setDisable(this.anyMatch(this.localBranchParent.getChildren(), newValue));
 			}
 		});
 		Optional<String> newName = inputDialog.showAndWait();
@@ -149,7 +134,7 @@ public class GitBranchController implements Initializable, ContainingParent
 		TreeItem<GitUtil.Branch> selectedItem = this.treeView.getSelectionModel().getSelectedItem();
 		GitUtil.Branch branch = selectedItem.getValue();
 		String branchName = null;
-		if (!branch.isLocal())
+		if (branch != null && !branch.isLocal())
 		{
 			TextInputDialog inputDialog = new TextInputDialog();
 			inputDialog.setTitle("Enter branch name");
@@ -159,7 +144,7 @@ public class GitBranchController implements Initializable, ContainingParent
 			inputDialog.getEditor().textProperty().addListener((observable, oldValue, newValue) -> {
 				if (newValue != null)
 				{
-					node.setDisable(anyMatch(local.getChildren(), newValue));
+					node.setDisable(this.anyMatch(this.localBranchParent.getChildren(), newValue));
 				}
 			});
 			Optional<String> newName = inputDialog.showAndWait();
@@ -188,9 +173,16 @@ public class GitBranchController implements Initializable, ContainingParent
 		Common.tryCatch(() -> this.model.deleteBranch(branch), "Error on delete branch");
 	}
 
+	//region private methods
+	private boolean anyMatch(List<TreeItem<GitUtil.Branch>> children, String newValue)
+	{
+		return children.stream().map(TreeItem::getValue).map(GitUtil.Branch::getSimpleName).anyMatch(newValue::equals);
+	}
+
 	private void initTree()
 	{
-		this.treeView.setCellFactory(p -> new TreeCell<GitUtil.Branch>(){
+		this.treeView.setCellFactory(p -> new TreeCell<GitUtil.Branch>()
+		{
 			@Override
 			protected void updateItem(GitUtil.Branch item, boolean empty)
 			{
@@ -214,9 +206,8 @@ public class GitBranchController implements Initializable, ContainingParent
 			else
 			{
 				GitUtil.Branch branch = newValue.getValue();
-				Arrays.asList(this.btnCheckoutBranch, this.btnRenameBranch, this.btnMergeBranch, this.btnDeleteBranch).forEach(b -> {
-					b.setDisable(branch.isCurrent() || (branch.getSimpleName().equals(REMOTE) || branch.getSimpleName().equals(LOCAL)));
-				});
+				Arrays.asList(this.btnCheckoutBranch, this.btnRenameBranch, this.btnMergeBranch, this.btnDeleteBranch)
+						.forEach(b -> b.setDisable(branch.isCurrent() || (branch.getSimpleName().equals(REMOTE_NAME) || branch.getSimpleName().equals(LOCAL_NAME))));
 				if (!branch.isLocal())
 				{
 					this.btnRenameBranch.setDisable(true);
@@ -228,13 +219,14 @@ public class GitBranchController implements Initializable, ContainingParent
 		this.treeView.setRoot(root);
 		this.treeView.setShowRoot(false);
 
-		this.local = new TreeItem<>(new GitUtil.Branch(false, false, "Local"));
-		this.remote = new TreeItem<>(new GitUtil.Branch(false, false, "Remote"));
+		this.localBranchParent = new TreeItem<>(new GitUtil.Branch(false, false, LOCAL_NAME));
+		this.remoteBranchParent = new TreeItem<>(new GitUtil.Branch(false, false, REMOTE_NAME));
 
-		root.getChildren().addAll(this.local, this.remote);
-		this.local.setExpanded(true);
-		this.remote.setExpanded(true);
+		root.getChildren().addAll(this.localBranchParent, this.remoteBranchParent);
+		this.localBranchParent.setExpanded(true);
+		this.remoteBranchParent.setExpanded(true);
 
 		this.treeView.getSelectionModel().selectFirst();
 	}
+	//endregion
 }
