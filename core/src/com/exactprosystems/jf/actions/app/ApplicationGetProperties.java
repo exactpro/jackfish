@@ -13,6 +13,7 @@ import com.exactprosystems.jf.api.app.AppConnection;
 import com.exactprosystems.jf.api.app.IApplication;
 import com.exactprosystems.jf.api.app.IRemoteApplication;
 import com.exactprosystems.jf.api.common.ParametersKind;
+import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.api.error.ErrorKind;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.report.ReportBuilder;
@@ -28,24 +29,14 @@ import java.util.List;
 import java.util.Map;
 
 @ActionAttribute(
-		group 				= ActionGroups.App, 
-		suffix 				= "APPPAR", 
-		generalDescription 	= "Plug-in dependent action. The purpose of the action is to get certain properties"
-				+ " from the available connection.",
-		additionFieldsAllowed = true,
-		additionalDescription = "The parameters are determined by the chosen plug-in. {{`For example, additional "
-				+ "parameters {{$Title$}} and {{$URL$}} are available for web plug-in. They are necessary to get the information"
-				+ " about the title bar and the address respectively.`}} The parameters can be chosen in the dialogue"
-				+ " window opened with the context menu of this action in {{$'All parameters'$}} option.",
-        outputType              = Map.class,
-        outputDescription       = "Associative array which displays the names of the elements processed by the action "
-                + "along with prpperties received from the app.",
-		examples = "{{#\n" +
-				"#Id;#Action;#URL;#AppConnection\n"
-				+ "AGP1;ApplicationGetProperties;;app\n"
-				+ "\n"
-				+ "#Assert;#Message\n"
-				+ "!Str.IsNullOrEmpty(AGP1.Out.URL);'String is null or empty'#}}",
+		group 						  = ActionGroups.App,
+		suffix 						  = "APPPAR",
+		constantGeneralDescription    = R.APP_GET_PROPERTIES_GENERAL_DESK,
+		additionFieldsAllowed 		  = true,
+		constantAdditionalDescription = R.APP_GET_PROPERTIES_ADDITIONAL_DESC,
+        outputType              	  = Map.class,
+        constantOutputDescription 	  = R.APP_GET_PROPERTIES_OUTPUT_DESC,
+		constantExamples 			  = R.APP_GET_PROPERTIES_EXAMPLE,
 		seeAlsoClass = { ApplicationSetProperties.class, ApplicationStart.class, ApplicationConnectTo.class }
 )
 public class ApplicationGetProperties extends AbstractAction

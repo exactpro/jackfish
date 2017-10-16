@@ -14,17 +14,18 @@ import com.exactprosystems.jf.actions.ActionFieldAttribute;
 import com.exactprosystems.jf.actions.ActionGroups;
 import com.exactprosystems.jf.api.app.AppConnection;
 import com.exactprosystems.jf.api.app.IApplication;
+import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.report.ReportBuilder;
 import com.exactprosystems.jf.documents.config.Context;
 import com.exactprosystems.jf.documents.matrix.parser.Parameters;
 
 @ActionAttribute(
-		group = ActionGroups.App,
-		generalDescription = "Plug-in depend action. This action is used for moving the main window",
-		additionFieldsAllowed = false,
-		examples = "", // TODO add examples here. VMF 03.05.17
-		seeAlsoClass = {ApplicationStart.class, ApplicationConnectTo.class}
+		group 					   = ActionGroups.App,
+		constantGeneralDescription = R.APP_MOVE_GENERAL_DESK,
+		additionFieldsAllowed 	   = false,
+		examples 				   = "", // TODO add examples here. VMF 03.05.17
+		seeAlsoClass 			   = {ApplicationStart.class, ApplicationConnectTo.class}
 )
 public class ApplicationMove extends AbstractAction
 {

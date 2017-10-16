@@ -21,6 +21,7 @@ import com.exactprosystems.jf.actions.ReadableValue;
 import com.exactprosystems.jf.api.app.AppConnection;
 import com.exactprosystems.jf.api.app.IApplication;
 import com.exactprosystems.jf.api.common.ParametersKind;
+import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.api.error.ErrorKind;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.report.ReportBuilder;
@@ -30,23 +31,15 @@ import com.exactprosystems.jf.documents.matrix.parser.items.TypeMandatory;
 import com.exactprosystems.jf.functions.HelpKind;
 
 @ActionAttribute(
-		group					= ActionGroups.App,
-		suffix					= "APPSW",
-		generalDescription 		= "Plug-in dependent action. The purpose of the action is to switch the focus among "
-				+ "windows/tabs of the web application.",
-		additionFieldsAllowed 	= true,
-		additionalDescription   = "The parameters are determined by the chosen plug-in. {{`For example, additional "
-                + "parameters {{$Title$}} and {{$URL$}} are available for web plug-in. They are necessary to get the information"
-                + " about the title bar and the address respectively.`}} The parameters can be chosen in the dialogue"
-                + " window opened with the context menu of this action in {{$'All parameters'$}} option.",
-		outputDescription 		= "It returns the title bar of the window which gained the focus.",
-		outputType				= String.class,
-		examples = "{{#\n" +
-				"#Id;#Action;#Title;#AppConnection\n" +
-				"AST;ApplicationSwitchTo;'Title';app\n" +
-				"#Assert;#Message\n" +
-				"Str.IsNullOrEmpty(AST.Out);'Title is null'#}}",
-		seeAlsoClass = {ApplicationStart.class, ApplicationConnectTo.class}
+		group					      = ActionGroups.App,
+		suffix						  = "APPSW",
+		constantGeneralDescription    = R.APP_SWITCH_TO_GENERAL_DESC,
+		additionFieldsAllowed 	      = true,
+		constantAdditionalDescription = R.APP_SWITCH_TO_ADDITIONAL_DESC,
+		constantOutputDescription 	  = R.APP_SWITCH_TO_OUTPUT_DESC,
+		outputType					  = String.class,
+		constantExamples 			  = R.APP_SWITCH_TO_EXAMPLE,
+		seeAlsoClass 				  = {ApplicationStart.class, ApplicationConnectTo.class}
 	)
 public class ApplicationSwitchTo extends AbstractAction
 {

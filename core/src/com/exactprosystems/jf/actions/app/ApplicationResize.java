@@ -12,6 +12,7 @@ import com.exactprosystems.jf.actions.*;
 import com.exactprosystems.jf.api.app.AppConnection;
 import com.exactprosystems.jf.api.app.IApplication;
 import com.exactprosystems.jf.api.app.Resize;
+import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.api.error.ErrorKind;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.report.ReportBuilder;
@@ -23,21 +24,12 @@ import java.util.Arrays;
 import java.util.List;
 
 @ActionAttribute(
-		group					= ActionGroups.App,
-		suffix					= "APPSZ",
-		generalDescription 		= "The purpose of the action is to change the window size of the application under test.",
-		additionFieldsAllowed 	= false,
-		examples = "Example 1."
-				+ "{{#\n" +
-				"#Action;#AppConnection;#Width;#Height\n"
-				+ "ApplicationResize;app;1000;1000\n" +
-				"#}} \n"
-				+ "Example 2."
-				+ "{{#\n" +
-				"#Action;#Maximize;#AppConnection\n"
-				+ "ApplicationResize;true;app\n" +
-				"#}}",
-		seeAlsoClass = {ApplicationStart.class, ApplicationConnectTo.class}
+		group					   = ActionGroups.App,
+		suffix					   = "APPSZ",
+		constantGeneralDescription = R.APP_RESIZE_GENERAL_DESC,
+		additionFieldsAllowed 	   = false,
+		constantExamples    	   = R.APP_RESIZE_EXAMPLE,
+		seeAlsoClass 			   = {ApplicationStart.class, ApplicationConnectTo.class}
 	)
 
 public class ApplicationResize extends AbstractAction

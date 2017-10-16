@@ -29,7 +29,7 @@ import java.util.Map;
 		constantGeneralDescription 	  = R.TABLE_EDIT_GENERAL_DESK,
 		additionFieldsAllowed 		  = true,
 		constantAdditionalDescription = R.TABLE_EDIT_ADDITIONAL_DESC,
-        outputDescription       	  = "Returns true if the user pushed the button Ok.",
+        constantOutputDescription 	  = R.TABLE_EDIT_OUTPUT_DESC,
 		suffix						  = "TBEDT",
         outputType              	  = Boolean.class,
 		constantExamples 			  = R.TABLE_EDIT_EXAMPLE
