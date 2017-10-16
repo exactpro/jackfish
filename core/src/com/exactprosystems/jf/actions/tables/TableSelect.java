@@ -12,6 +12,7 @@ import com.exactprosystems.jf.actions.AbstractAction;
 import com.exactprosystems.jf.actions.ActionAttribute;
 import com.exactprosystems.jf.actions.ActionFieldAttribute;
 import com.exactprosystems.jf.actions.ActionGroups;
+import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.api.conditions.Condition;
 import com.exactprosystems.jf.api.error.ErrorKind;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
@@ -23,55 +24,15 @@ import com.exactprosystems.jf.documents.matrix.parser.items.TypeMandatory;
 import com.exactprosystems.jf.functions.Table;
 
 @ActionAttribute(
-		group					= ActionGroups.Tables,
-		suffix					= "TBLSLCT",
-		generalDescription 		= "This action is used for extracting lines from the table given and creating a new"
-				+ " table with these lines. Can be applied when it Is needed to get only a part of data from the table."
-				+ "Line extracting is done according to the content which is specified in additional parameters.",
-		additionFieldsAllowed 	= true,
-		additionalDescription   = "Columns containing the data which defines the selection. Column title is given in"
-				+ " the parameter's value. In the value it is needed to specify the content which defines the selection.",
-		outputDescription 		= "Outputs the table containing the selected lines.",
-		outputType				= Table.class,
-		seeAlsoClass = {RawTable.class, TableLoadFromDir.class, TableLoadFromFile.class, TableCreate.class},
-		examples = "{{`Example #1:`}}\n"
-				+ "{{`1. Create a table with columns Name and Age. Complete the table with 3 lines.`}}\n"
-				+ "{{`2. Set the data type  Integer for the column Age.`}}\n"
-				+ "{{`3. With the actionTableSelect select all lines with the value 'Mike' in the column Name.`}}\n"
-				+ "{{`4. Verify that the size of the table is equal to 1. `}}\n"
-				+ "{{#\n#Id;#RawTable\n"
-				+ "TC;Table\n"
-				+ "@;Name;Age\n"
-				+ "0;Mike;42\n"
-				+ "1;John;42\n"
-				+ "2;Fred;21\n"
-				+ "#EndRawTable\n"
-				+ "#Action;#Table;#Integer\n"
-				+ "TableConsiderColumnsAs;TC;'Age'\n"
-				+ "#Id;#Action;#Table;#Age\n"
-				+ "TS;TableSelect;TC;new StringCondition('Name','Mike')\n"
-				+ "#Assert;#Message\n"
-				+ "TS.Out.size() == 1;#}}\n"
-				+ "{{`Example #2:`}}\n"
-				+ "{{`1. Create a table with columns Name and Age. Complete the table with 3 lines.`}}\n"
-				+ "{{`2. Set the data type  Integer for the column Age.`}}\n"
-				+ "{{`3. With the action TableSelect select all lines where the column values Age are more than 20`}}\n"
-				+ "{{`4. Verify that the size of the table is equal to 2. `}}\n"
-				+ "{{#\n#Id;#RawTable\n"
-				+ "TC;Table\n"
-				+ "@;Name;Age\n"
-				+ "0;Mike;42\n"
-				+ "1;John;34\n"
-				+ "2;Fred;21\n"
-				+ "#EndRawTable\n"
-				+ "#Action;#Table;#Integer\n"
-				+ "TableConsiderColumnsAs;TC;'Age'\n"
-				+ "#Id;#Let\n"
-				+ "condition; new AndCondition(new NumberCondition('Age','>',20))\n"
-				+ "#Id;#Action;#Table;#Age\n"
-				+ "TS;TableSelect;TC;condition\n"
-				+ "#Assert;#Message\n"
-				+ "TS.Out.size() == 2;#}}\n"
+		group					      = ActionGroups.Tables,
+		suffix					      = "TBLSLCT",
+		constantGeneralDescription 	  = R.TABLE_SELECT_GENERAL_DESC,
+		additionFieldsAllowed 	      = true,
+		constantAdditionalDescription = R.TABLE_SELECT_ADDITIONAL_DESC ,
+		constantOutputDescription 	  = R.TABLE_SELECT_OUTPUT_DESC,
+		outputType				      = Table.class,
+		seeAlsoClass                  = {RawTable.class, TableLoadFromDir.class, TableLoadFromFile.class, TableCreate.class},
+		constantExamples              = R.TABLE_SELECT_EXAMPLE
 	)
 public class TableSelect extends AbstractAction 
 {

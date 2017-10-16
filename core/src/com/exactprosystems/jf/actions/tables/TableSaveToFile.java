@@ -16,6 +16,7 @@ import com.exactprosystems.jf.actions.ActionFieldAttribute;
 import com.exactprosystems.jf.actions.ActionGroups;
 import com.exactprosystems.jf.actions.DefaultValuePool;
 import com.exactprosystems.jf.actions.ReadableValue;
+import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.api.error.ErrorKind;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.report.ReportBuilder;
@@ -25,26 +26,13 @@ import com.exactprosystems.jf.functions.HelpKind;
 import com.exactprosystems.jf.functions.Table;
 
 @ActionAttribute(
-		group					= ActionGroups.Tables,
-		generalDescription 		= "This action is used to save a table to the file with csv structure."
-				+ "{{`CSV (Comma-Separated Values)`}} is a text format, used for displaying data from the table."
-				+ "Specification: Each line in the file is one line from the table. The first line contains column titles.",
-		additionFieldsAllowed 	= false,
-		outputDescription 		= "True if saved successfully.",
-		outputType				= Boolean.class,
-		examples = "{{` 1. Create a table with columns Name and Age. `}}"
-				+ "{{` 2. Add values to the first line of the table. `}}"
-				+ "{{` 3. Save the table into the file dest.csv. `}}"
-				+ "{{#\n#Id;#RawTable\n"
-				+ "TC;Table\n"
-				+ "@;Name;Age\n"
-				+ "0;Mike;25\n"
-				+ "#EndRawTable\n"
-				+ "#Id;#Action;#Table;#File\n"
-				+ "TSTF;TableSaveToFile;TC;'Path/dest.csv'\n"
-				+ "#Assert;#Message\n"
-				+ "TSTF.Out;'Table was not saved'#}}"
-	)
+		group					   = ActionGroups.Tables,
+		constantGeneralDescription = R.TABLE_SAVE_TO_FILE_GENERAL_DESC,
+		additionFieldsAllowed 	   = false,
+		constantOutputDescription  = R.TABLE_SAVE_TO_FILE_OUTPUT_DESC,
+		outputType			 	   = Boolean.class,
+		constantExamples           = R.TABLE_SAVE_TO_FILE_EXAMPLE
+)
 public class TableSaveToFile extends AbstractAction 
 {
 	public final static String tableName = "Table";

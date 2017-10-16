@@ -13,6 +13,7 @@ import com.exactprosystems.jf.api.app.AppConnection;
 import com.exactprosystems.jf.api.app.IApplication;
 import com.exactprosystems.jf.api.app.IRemoteApplication;
 import com.exactprosystems.jf.api.common.ParametersKind;
+import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.api.error.ErrorKind;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.report.ReportBuilder;
@@ -26,22 +27,13 @@ import java.io.Serializable;
 import java.util.List;
 
 @ActionAttribute(
-		group 				= ActionGroups.App, 
-		suffix 				= "APPPAR", 
-		generalDescription 	= "Plug-in dependent action. The purpose of the action is to set certain properties"
-				+ " into the available connection.",
-		additionFieldsAllowed = true,
-		additionalDescription = "The parameters are determined by the chosen plug-in. {{`For example, additional "
-				+ "parameters {{$CookieAdd$}} and {{$CookieRemove$}} are available for web plug-in. They are necessary "
-				+ "to add and to remove a cookie respectively.`}} The parameters can be chosen in the dialogue"
-				+ " window opened with the context menu of this action in {{$'All parameters'$}} option.",
-		examples = "{{#\n" +
-				"#Id;#Action;#CookieRemove\n"
-				+ "AGP1;ApplicationGetProperties;'name'\n"
-				+ "\n"
-				+ "#Assert;#Message\n"
-				+ "AGP1.Out.CookieRemove;'Cookie was not removed'#}}",
-		seeAlsoClass = { ApplicationGetProperties.class, ApplicationStart.class, ApplicationConnectTo.class }
+		group 					      = ActionGroups.App,
+		suffix 					      = "APPPAR",
+		constantGeneralDescription    = R.APP_SET_PROPERTIES_GENERAL_DESC,
+		additionFieldsAllowed 	      = true,
+		constantAdditionalDescription = R.APP_SET_PROPERTIES_ADDITIONAL_DESC,
+		constantExamples 			  = R.APP_SET_PROPERTIES_EXAMPLE,
+		seeAlsoClass 				  = { ApplicationGetProperties.class, ApplicationStart.class, ApplicationConnectTo.class }
 )
 public class ApplicationSetProperties extends AbstractAction
 {

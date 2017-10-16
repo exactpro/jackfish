@@ -11,6 +11,7 @@ import com.exactprosystems.jf.actions.AbstractAction;
 import com.exactprosystems.jf.actions.ActionAttribute;
 import com.exactprosystems.jf.actions.ActionFieldAttribute;
 import com.exactprosystems.jf.actions.ActionGroups;
+import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.report.ReportBuilder;
 import com.exactprosystems.jf.documents.config.Context;
@@ -18,23 +19,10 @@ import com.exactprosystems.jf.documents.matrix.parser.Parameters;
 import com.exactprosystems.jf.functions.Table;
 
 @ActionAttribute(
-		group = ActionGroups.Tables,
-		generalDescription 	  = "This action is determined  to delete columns in a table given. (Object type Table)."
-				+ "Can be used to correct the table.",
-		additionFieldsAllowed = false,
-		examples 			  =
-				"{{`1. Create a table with columns Name,Age,Gender,Salary`}}"
-				+ "{{`2. Delete columns Name, Age, Gender  in a table  given.`}}"
-				+ "{{`3.Verify that headings are deleted. `}}"
-				+ "{{#\n#Id;#RawTable\n"
-				+ "TC;Table\n"
-				+ "@;Name;Age;Gender;Salary\n"
-				+ "0;;;;\n"
-				+ "#EndRawTable\n"
-				+ "#Action;#Table;#Columns\n"
-				+ "TableRemoveColumns;TC;{'Name','Age','Gender'}\n"
-				+ "#Assert;#Message\n"
-				+ "TC.getHeader(0) == 'Salary';#}}"
+		group     				   = ActionGroups.Tables,
+		constantGeneralDescription = R.TABLE_REMOVE_COLUMNS_GENERAL_DESK,
+		additionFieldsAllowed      = false,
+		constantExamples           = R.TABLE_REMOVE_COLUMNS_EXAMPLE
 )
 public class TableRemoveColumns extends AbstractAction
 {

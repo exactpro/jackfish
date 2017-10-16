@@ -500,6 +500,7 @@ public class Main extends Application
 			Settings.SettingsValue copyright = settings.getValueOrDefault(Settings.GLOBAL_NS, Settings.SETTINGS, Settings.COPYRIGHT);
 			String text = copyright.getValue().replaceAll("\\\\n", System.lineSeparator());
 			((Matrix) doc).addCopyright(text);
+			((Matrix) doc).enumerate();
 		});
 	}
 
@@ -519,6 +520,7 @@ public class Main extends Application
 		{
 			doc.save(fullPath);
 		}
+		doc.enumerate();
 		this.factory.showDocument(doc);
 	}
 

@@ -12,6 +12,7 @@ import com.exactprosystems.jf.actions.*;
 import com.exactprosystems.jf.api.app.AppConnection;
 import com.exactprosystems.jf.api.app.IApplication;
 import com.exactprosystems.jf.api.common.ParametersKind;
+import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.report.ReportBuilder;
 import com.exactprosystems.jf.documents.config.Context;
@@ -25,20 +26,13 @@ import java.util.List;
 import java.util.Map;
 
 @ActionAttribute(
-		group = ActionGroups.App,
-		suffix = "APPNI",
-		generalDescription = "Plug-in dependent action. The action is used to open new windows in the web browser.",
-		additionFieldsAllowed = true,
-		additionalDescription = "The parameters are determined by the chosen plug-in. For example, the available"
-				+ " parameters for win.jar are the following: "
-				+ "{{` {{$URL$}} - string. It defines the URL.`}} "
-				+ "{{` {{$Browser$}} - string. It defines which browser should be launched.`}} "
-				+ "The parameters can be chosen in the dialogue"
-				+ " window opened with the context menu of this action in {{$'All parameters'$}} option.",
-		examples = "{{#\n" +
-				"#Id;#Action;#Browser;#URL;#AppConnection\n"
-				+ "APPNI1;ApplicationNewInstance;'Chrome';'http://google.com';app#}}",
-		seeAlsoClass = {ApplicationStart.class, ApplicationConnectTo.class}
+		group 						  = ActionGroups.App,
+		suffix 						  = "APPNI",
+		constantGeneralDescription 	  = R.APP_NEW_INSTANCE_GENERAL_DESC,
+		additionFieldsAllowed 		  = true,
+		constantAdditionalDescription = R.APP_NEW_INSTANCE_ADDITIONAL_DESC,
+		constantExamples 			  = R.APP_NEW_INSTANCE_EXAMPLE,
+		seeAlsoClass 				  = {ApplicationStart.class, ApplicationConnectTo.class}
 )
 public class ApplicationNewInstance extends AbstractAction
 {

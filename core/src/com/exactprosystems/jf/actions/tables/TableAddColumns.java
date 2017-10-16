@@ -26,7 +26,7 @@ import com.exactprosystems.jf.functions.Table;
 		constantGeneralDescription 	= R.TABLE_ADD_COLUMNS_GENERAL_DESC,
 		additionFieldsAllowed 	  	= false,
 		constantExamples   			= R.TABLE_ADD_COLUMNS_EXAMPLES,
-		seeAlsoClass = {TableReplace.class, TableColumnRename.class, TableAddValue.class, TableConsiderColumnsAs.class}
+		seeAlsoClass 			    = {TableReplace.class, TableColumnRename.class, TableAddValue.class, TableConsiderColumnsAs.class}
 	)
 public class TableAddColumns extends AbstractAction 
 {

@@ -20,6 +20,7 @@ import com.exactprosystems.jf.api.app.AppConnection;
 import com.exactprosystems.jf.api.app.IApplicationPool;
 import com.exactprosystems.jf.api.common.ParametersKind;
 import com.exactprosystems.jf.api.common.Str;
+import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.api.error.ErrorKind;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.report.ReportBuilder;
@@ -34,32 +35,17 @@ import java.util.List;
 import java.util.Map;
 
 @ActionAttribute(
-		group					= ActionGroups.App,
-		suffix					= "APPSTR",
-		generalDescription 		= "Plug-in dependent action. The purpose of the action is connect to the running application."
-				+ "The action requires some additional parameters which depend on the type of the plug-in used.",
-		additionFieldsAllowed 	= true,
-		additionalDescription = "The parameters are determined by the chosen plug-in."
-				+ "For example, the available parameters for win.jar are the following:"
-				+ "{{` {{$Main window$}} - a text string to search for the window of the application to connect to.`}}"
-				+ "{{` {{$Height$}} - the height of the window.`}} "
-				+ "{{` {{$Width$}} - the width of the window.`}} "
-				+ "The parameters can be chosen"
-				+ " in the dialogue window opened with the context menu of this action in {{$'All parameters'$}} option.",
-		outputDescription 		= "A special object which identifies the started application session."
-				+ "This object is required in many other actions to specify the session of the application the"
-				+ " indicated action belongs to. Should be created with an active {{$'Global'$}} flag.",
-		outputType				= AppConnection.class,
-		examples = "{{#\n" +
-				"#Id;#Global;#Action;#Browser;#URL;#AppId\n"
-				+ "app;1;ApplicationStart;'Chrome';'http://google.com';'WEB'\n"
-				+ "\n"
-				+ "#Assert;#Message\n"
-				+ "app.Out.IsGood();'Connection is not established'#}}",
-		seeAlsoClass = {ApplicationStop.class, ApplicationStart.class, ApplicationGetProperties.class, ApplicationNewInstance.class,
-				ApplicationRefresh.class,	ApplicationResize.class, ApplicationSwitchTo.class, DialogAlert.class, DialogCheckLayout.class,
-				DialogClose.class, DialogFill.class, DialogSwitchToWindow.class
-		}
+		group						  = ActionGroups.App,
+		suffix						  = "APPSTR",
+		constantGeneralDescription    = R.APP_CONNECT_TO_GENERAL_DESC,
+		additionFieldsAllowed 		  = true,
+		constantAdditionalDescription = R.APP_CONNECT_TO_ADDITIONAL_DESC,
+		constantOutputDescription 	  = R.APP_CONNECT_TO_OUTPUT_DESC,
+		outputType					  = AppConnection.class,
+		constantExamples 			  = R.APP_CONNECT_TO_EXAMPLE,
+		seeAlsoClass 				  = {ApplicationStop.class, ApplicationStart.class, ApplicationGetProperties.class,
+				ApplicationNewInstance.class, ApplicationRefresh.class,	ApplicationResize.class, ApplicationSwitchTo.class,
+				DialogAlert.class, DialogCheckLayout.class, DialogClose.class, DialogFill.class, DialogSwitchToWindow.class}
 	)
 public class ApplicationConnectTo extends AbstractAction 
 {

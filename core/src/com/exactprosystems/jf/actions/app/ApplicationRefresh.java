@@ -14,6 +14,7 @@ import com.exactprosystems.jf.actions.ActionFieldAttribute;
 import com.exactprosystems.jf.actions.ActionGroups;
 import com.exactprosystems.jf.api.app.AppConnection;
 import com.exactprosystems.jf.api.app.IApplication;
+import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.api.error.ErrorKind;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.report.ReportBuilder;
@@ -21,15 +22,12 @@ import com.exactprosystems.jf.documents.config.Context;
 import com.exactprosystems.jf.documents.matrix.parser.Parameters;
 
 @ActionAttribute(
-		group					= ActionGroups.App,
-		suffix					= "APPR",
-		generalDescription 		= "Plug-in dependent action. The purpose of the action is to refresh the application "
-				+ "window. It should be used only with web plug-in.",
-		additionFieldsAllowed 	= false,
-		examples = "{{#\n" +
-				"#Action;#AppConnection\n" +
-				"ApplicationRefresh;app\n#}}",
-		seeAlsoClass = {ApplicationStart.class, ApplicationConnectTo.class}
+		group					   = ActionGroups.App,
+		suffix					   = "APPR",
+		constantGeneralDescription = R.APP_REFRESH_GENERAL_DESC,
+		additionFieldsAllowed      = false,
+		constantExamples       	   = R.APP_REFRESH_EXAMPLE,
+		seeAlsoClass 			   = {ApplicationStart.class, ApplicationConnectTo.class}
 	)
 public class ApplicationRefresh extends AbstractAction
 {

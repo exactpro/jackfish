@@ -10,6 +10,7 @@ package com.exactprosystems.jf.actions.app;
 
 import com.exactprosystems.jf.actions.*;
 import com.exactprosystems.jf.api.app.*;
+import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.report.ReportBuilder;
 import com.exactprosystems.jf.documents.config.Context;
@@ -20,21 +21,13 @@ import java.util.List;
 import java.util.stream.Stream;
 
 @ActionAttribute(
-		group = ActionGroups.App,
-		suffix = "APPPNVG",
-		generalDescription = "Navigate inside application.",
-		additionFieldsAllowed = true,
-		additionalDescription = "The parameters are determined by the chosen plug-in. "
-				+ "{{`For example, an additional"
-				+ " parameter {{$Navigate$}} is available for web plug-in. It has two values {{$BACK$}} and {{$FORWARD$}} which help"
-				+ " to move within the browser back and forward respectively.`}} "
-				+ "The parameters can be chosen in the"
-				+ " dialogue window opened with the context menu of this action in {{$'All parameters'$}} option.",
-		examples =
-				"{{#\n" +
-				"#Action;#Navigate;#Navigate;#AppConnection\n"
-				+ "ApplicationNavigate;NavigateKind.BACK;NavigateKind.FORWARD;app#}}",
-		seeAlsoClass = {ApplicationStart.class, ApplicationConnectTo.class}
+		group 					      = ActionGroups.App,
+		suffix 						  = "APPPNVG",
+		constantGeneralDescription 	  = R.APP_NAVIGATE_GENERAL_DESC,
+		additionFieldsAllowed 		  = true,
+		constantAdditionalDescription = R.APP_NAVIGATE_ADDITIONAL_DESC,
+		constantExamples 			  = R.APP_NAVIGATE_EXAMPLE,
+		seeAlsoClass 				  = {ApplicationStart.class, ApplicationConnectTo.class}
 )
 public class ApplicationNavigate extends AbstractAction
 {

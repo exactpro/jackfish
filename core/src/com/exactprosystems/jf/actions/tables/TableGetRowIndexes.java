@@ -13,6 +13,7 @@ import com.exactprosystems.jf.actions.AbstractAction;
 import com.exactprosystems.jf.actions.ActionAttribute;
 import com.exactprosystems.jf.actions.ActionFieldAttribute;
 import com.exactprosystems.jf.actions.ActionGroups;
+import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.api.conditions.Condition;
 import com.exactprosystems.jf.api.error.ErrorKind;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
@@ -24,38 +25,15 @@ import com.exactprosystems.jf.documents.matrix.parser.items.TypeMandatory;
 import com.exactprosystems.jf.functions.Table;
 
 @ActionAttribute(
-		group					= ActionGroups.Tables,
-		suffix					= "TBLIDX",
-		generalDescription 		= "This action is used for searching a suitable line numbers in the table given. "
-				+ "Can be applied when it Is needed to get all indexes of the such lines.",
-		additionFieldsAllowed 	= true,
-		additionalDescription   = "Columns containing the data which defines the search conditions. Column title is given in"
-				+ " the parameter's value. In the value it is needed to specify the content which defines the search.",
-		outputDescription 		= "Outputs the index list matching to conditions.",
-		outputType				= List.class,
-		examples = "{{#\n" +
-				"#Id;#RawTable\n" +
-				"TC;Table\n" +
-				"@;Name;Column\n" +
-				"0;Mike;2\n" +
-				"1;John;32\n" +
-				"2;Fred;2\n" +
-				"3;Mike;1\n" +
-				"4;Angel;10\n" +
-				"5;John;40\n" +
-				"#EndRawTable\n" +
-				"\n" +
-				"#Action;$Table;$Integer\n" +
-				"TableConsiderColumnsAs;TC;'Column'\n" +
-				"\n" +
-				"#Id;#Action;$Table;Column;Name\n" +
-				"TBLIDX1;TableGetRowIndexes;TC;new NumberCondition('Column','>',2);'John'\n" +
-				"\n" +
-				"#Assert;#Message\n" +
-				"TBLIDX1.Out == [1,5];\n" +
-				"\n" +
-				"#}}",
-		seeAlsoClass = {RawTable.class, TableLoadFromFile.class, TableLoadFromDir.class, TableCreate.class, TableSelect.class}
+		group						  = ActionGroups.Tables,
+		suffix						  = "TBLIDX",
+		constantGeneralDescription 	  = R.TABLE_GET_ROW_INDEXES_GENERAL_DESC,
+		additionFieldsAllowed 		  = true,
+		constantAdditionalDescription = R.TABLE_GET_ROW_INDEXES_ADDITIONAL_DESC,
+		constantOutputDescription	  = R.TABLE_GET_ROW_INDEXES_OUTPUT_DESC ,
+		outputType					  = List.class,
+		constantExamples 			  = R.TABLE_GET_ROW_INDEXES_EXAMPLE,
+		seeAlsoClass				  = {RawTable.class, TableLoadFromFile.class, TableLoadFromDir.class, TableCreate.class, TableSelect.class}
 	)
 public class TableGetRowIndexes extends AbstractAction 
 {
