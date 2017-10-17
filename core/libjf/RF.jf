@@ -1610,6 +1610,18 @@ RF;RegressionFramework
             #Action;$Text;$Notifier
             Show;'Successful update table \'results\'';Notifier.Success
 
+            #Id;#Action;$ReportName
+            REP3;ReportStart;'Result table'
+
+            #Action;$Table;$Title;$ToReport;$ReportValues;$Numbers
+            TableReport;TBL1.Out;'Result table';REP3.Out;true;false
+
+            #Action;$Passed;$Report;$Failed
+            ReportFinish;0;REP3.Out;0
+
+            #Action;$Report
+            ReportShow;REP3.Out.getReportName()
+
         #Else
             #Action;$Text;$Notifier
             Show;'Nothing saved';Notifier.Info
