@@ -1,5 +1,5 @@
 {{1Special Symbols1}}
 Via using special frame around necessary part of text You can set format for text.
-All patterns contains &#123;&#123; + some special symbol, text, again special symbol and &#125;&#125;.
-Different symbols set different format for determined text. For example, if You will use &#123;&#123;&#42; and &#42;&#125;&#125; frame around text 'Hello, world!' you will get bolder text '{{*Hello, world!*}}'.
-Lower You can find table contains all available symbols and their functions with examples.
+All patterns contains &#123;&#123; and some special symbol, text, again same special symbol and &#125;&#125;.
+Different symbols set different format for determined text. For example, if You use &#123;&#123;&#42; and &#42;&#125;&#125; frame around text 'Hello, world!' You will get bolder text '{{*Hello, world!*}}'.
+In the table You can find all available symbols and their functions with examples.

@@ -27,16 +27,16 @@ public class WinAppFactory extends AbstractApplicationFactory
 {
     public static final String      helpFileName            = "help.txt";
 
-    @PluginFieldDescription(parameter = "LogLevel", description = R.WIN_PLUGIN_LOG_LEVEL, example = "")
+    @PluginFieldDescription(parameter = "LogLevel", description = R.WIN_PLUGIN_LOG_LEVEL, example = "ALL")
 	public static final String		logLevel				= "LogLevel";
 	@PluginFieldDescription(parameter = "jreExec", description = R.WIN_PLUGIN_JRE_EXEC, example = "")
 	public static final String		jreExecName				= "jreExec";
-	@PluginFieldDescription(parameter = "jreArgs", description = R.WIN_PLUGIN_JRE_ARGS, example = "")
+	@PluginFieldDescription(parameter = "jreArgs", description = R.WIN_PLUGIN_JRE_ARGS, example = "-Xms128m -Xmx1G")
 	public static final String		jreArgsName				= "jreArgs";
-	@PluginFieldDescription(parameter = "MaxTimeout", description = R.WIN_PLUGIN_MAX_TIMEOUT, example = "")
+	@PluginFieldDescription(parameter = "MaxTimeout", description = R.WIN_PLUGIN_MAX_TIMEOUT, example = "1000")
 	public static final String		maxTimeout				= "MaxTimeout";
 
-	@PluginFieldDescription(parameter = "AlwaysToFront", description = R.WIN_PLUGIN_ALWAYS_TO_FRONT, example = "")
+	@PluginFieldDescription(parameter = "AlwaysToFront", description = R.WIN_PLUGIN_ALWAYS_TO_FRONT, example = "true")
 	public static final String		alwaysToFront			= "AlwaysToFront";
 	@PluginFieldDescription(parameter = "MainWindow", description = R.WIN_PLUGIN_MAIN_WINDOW, example = "")
 	public static final String		mainWindowName			= "MainWindow";
@@ -48,12 +48,12 @@ public class WinAppFactory extends AbstractApplicationFactory
 	public static final String		pidName					= "PID";
 	@PluginFieldDescription(parameter = "ControlKind", description = R.WIN_PLUGIN_CONTROL_KIND, example = "")
 	public static final String		controlKindName			= "ControlKind";
-	@PluginFieldDescription(parameter = "Timeout", description = R.WIN_PLUGIN_TIMEOUT, example = "")
+	@PluginFieldDescription(parameter = "Timeout", description = R.WIN_PLUGIN_TIMEOUT, example = "1000")
 	public static final String		connectionTimeout		= "Timeout";
 
-	@PluginFieldDescription(parameter = "Exec", description = R.WIN_PLUGIN_EXEC, example = "")
+	@PluginFieldDescription(parameter = "Exec", description = R.WIN_PLUGIN_EXEC, example = "example.exe")
 	public static final String		execName				= "Exec";
-	@PluginFieldDescription(parameter = "WorkDir", description = R.WIN_PLUGIN_WORK_DIR, example = "")
+	@PluginFieldDescription(parameter = "WorkDir", description = R.WIN_PLUGIN_WORK_DIR, example = "C:/example/")
 	public static final String		workDirName				= "WorkDir";
 	@PluginFieldDescription(parameter = "Args", description = R.WIN_PLUGIN_ARGS, example = "")
 	public static final String		argsName				= "Args";

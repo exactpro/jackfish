@@ -28,21 +28,21 @@ public class SwingAppFactory extends AbstractApplicationFactory
 {
     public static final String helpFileName     = "help.txt";
 
-    @PluginFieldDescription(parameter = "LogLevel", description = R.SWING_PLUGIN_LOG_LEVEL, example = "")
+    @PluginFieldDescription(parameter = "LogLevel", description = R.SWING_PLUGIN_LOG_LEVEL, example = "ALL")
     public static final String logLevel         = "LogLevel";
 	@PluginFieldDescription(parameter = "jreExec", description = R.SWING_PLUGIN_JRE_EXEC, example = "")
-	public final static String jreExecName 		= "jreExec";
-	@PluginFieldDescription(parameter = "jreArgs", description = R.SWING_PLUGIN_JRE_ARGS, example = "")
-	public final static String jreArgsName 		= "jreArgs";
-	@PluginFieldDescription(parameter = "MainClass", description = R.SWING_PLUGIN_MAIN_CLASS, example = "")
-	public final static String mainClassName 	= "MainClass";
-	@PluginFieldDescription(parameter = "Jar", description = R.SWING_PLUGIN_JAR, example = "")
-	public final static String jarName 			= "Jar";
-	@PluginFieldDescription(parameter = "Args", description = R.SWING_PLUGIN_ARGS, example = "")
-	public final static String argsName 		= "Args";
+	public static final String jreExecName 		= "jreExec";
+	@PluginFieldDescription(parameter = "jreArgs", description = R.SWING_PLUGIN_JRE_ARGS, example = "-Xms128m -Xmx1G")
+	public static final String jreArgsName 		= "jreArgs";
+	@PluginFieldDescription(parameter = "MainClass", description = R.SWING_PLUGIN_MAIN_CLASS, example = "com.example.MainClass")
+	public static final String mainClassName 	= "MainClass";
+	@PluginFieldDescription(parameter = "Jar", description = R.SWING_PLUGIN_JAR, example = "C:/example.jar")
+	public static final String jarName 			= "Jar";
+	@PluginFieldDescription(parameter = "Args", description = R.SWING_PLUGIN_ARGS, example = "'Arg1'")
+	public static final String argsName 		= "Args";
 
 	@PluginFieldDescription(parameter = "URL", description = R.SWING_PLUGIN_URL, example = "")
-	public final static String urlName 			= "URL";
+	public static final String urlName 			= "URL";
 
 	@PluginFieldDescription(parameter = "Title", description = R.SWING_PLUGIN_TITLE, example = "")
     public static final String propertyTitle    = "Title";

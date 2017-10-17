@@ -58,19 +58,19 @@ public class WebAppFactory extends AbstractApplicationFactory
     public static final String   tabName                  = "Tab";
 
 	//todo change parameter
-	@PluginFieldDescription(parameter = "URL", description = R.WEB_PLUGIN_PROPERTY_URL, example = "")
+	@PluginFieldDescription(parameter = "URL", description = R.WEB_PLUGIN_PROPERTY_URL, example = "https://example.com")
     public static final String   propertyUrlName          = "URL";
-	@PluginFieldDescription(parameter = "Title", description = R.WEB_PLUGIN_PROPERTY_TITLE, example = "")
+	@PluginFieldDescription(parameter = "Title", description = R.WEB_PLUGIN_PROPERTY_TITLE, example = "'Title'")
     public static final String   propertyTitle            = "Title";
 	@PluginFieldDescription(parameter = "AllTitles", description = R.WEB_PLUGIN_PROPERTY_ALL_TITLES, example = "")
     public static final String   propertyAllTitles        = "AllTitles";
-	@PluginFieldDescription(parameter = "Cookie", description = R.WEB_PLUGIN_PROPERTY_COOKIE, example = "")
+	@PluginFieldDescription(parameter = "Cookie", description = R.WEB_PLUGIN_PROPERTY_COOKIE, example = "Cookie{example:100}")
     public static final String   propertyCookie           = "Cookie";
 	@PluginFieldDescription(parameter = "AllCookies", description = R.WEB_PLUGIN_PROPERTY_ALL_COOKIES, example = "")
     public static final String   propertyAllCookies       = "AllCookies";
-	@PluginFieldDescription(parameter = "AddCookie", description = R.WEB_PLUGIN_PROPERTY_ADD_COOKIE, example = "")
+	@PluginFieldDescription(parameter = "AddCookie", description = R.WEB_PLUGIN_PROPERTY_ADD_COOKIE, example = "new CookieBean('newBean', 'newValue').setPath('http://example.com').setDomain('example.com').setExpary(new Date()).setSecure(true).setHttpOnly(false)")
     public static final String   propertyAddCookie        = "AddCookie";
-	@PluginFieldDescription(parameter = "RemoveCookie", description = R.WEB_PLUGIN_PROPERTY_REMOVE_COOKIE, example = "")
+	@PluginFieldDescription(parameter = "RemoveCookie", description = R.WEB_PLUGIN_PROPERTY_REMOVE_COOKIE, example = "'example'")
     public static final String   propertyRemoveCookie     = "RemoveCookie";
 	@PluginFieldDescription(parameter = "RemoveAllCookies", description = R.WEB_PLUGIN_PROPERTY_REMOVE_ALL_COOKIES, example = "")
     public static final String   propertyRemoveAllCookies = "RemoveAllCookies";

@@ -231,16 +231,10 @@ public enum R
 
 	//region plugins
 	PLUGIN_COMMON_DESCRIPTION,
+
+	//region plugins.app.web
 	WEB_PLUGIN_DESCRIPTION,
 	WEB_PLUGIN_DIFFERENCE,
-	WIN_PLUGIN_DESCRIPTION,
-	WIN_PLUGIN_DIFFERENCE,
-	SWING_PLUGIN_DESCRIPTION,
-	SWING_PLUGIN_DIFFERENCE,
-
-	//region plugins.fields
-
-	//region plugins.fields.web
 	WEB_PLUGIN_LOG_LEVEL,
 	WEB_PLUGIN_JRE_EXEC,
 	WEB_PLUGIN_JRE_ARGS,
@@ -262,11 +256,11 @@ public enum R
 	WEB_PLUGIN_PROPERTY_REMOVE_COOKIE,
 	WEB_PLUGIN_PROPERTY_REMOVE_ALL_COOKIES,
 	WEB_PLUGIN_PROPERTY_TAB,
-
-
 	//endregion
 
-	//region plugins.fields.win
+	//region plugins.app.win
+	WIN_PLUGIN_DESCRIPTION,
+	WIN_PLUGIN_DIFFERENCE,
 	WIN_PLUGIN_LOG_LEVEL,
 	WIN_PLUGIN_JRE_EXEC,
 	WIN_PLUGIN_JRE_ARGS,
@@ -285,7 +279,9 @@ public enum R
 	WIN_PLUGIN_TITLE,
 	//endregion
 
-	//region plugins.fields.swing
+	//region plugins.app.swing
+	SWING_PLUGIN_DESCRIPTION,
+	SWING_PLUGIN_DIFFERENCE,
 	SWING_PLUGIN_LOG_LEVEL,
 	SWING_PLUGIN_JRE_EXEC,
 	SWING_PLUGIN_JRE_ARGS,
@@ -294,8 +290,6 @@ public enum R
 	SWING_PLUGIN_ARGS,
 	SWING_PLUGIN_URL,
 	SWING_PLUGIN_TITLE,
-	//endregion
-
 	//endregion
 
 	//endregion

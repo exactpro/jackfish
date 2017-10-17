@@ -191,12 +191,7 @@ public class DocumentationBuilder
             String s = controls.stream().map(c -> "{{@" + c.getClazz() + "@}}").collect(Collectors.joining(", "));
             addTextLine(help, "{{`" + s + "`}}");
             //additional info
-            String pluginDifference = pd.difference().get();
-            if(!Str.IsNullOrEmpty(pluginDifference))
-            {
-                addTextLine(help, "{{`{{*Difference*}}`}}");
-                addTextLine(help, pluginDifference);
-            }
+            addTextLine(help, pd.difference().get());
         }
         return help;
     }
