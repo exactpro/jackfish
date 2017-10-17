@@ -25,7 +25,7 @@ import java.util.List;
 @ActionAttribute(
 		group					= ActionGroups.Clients,
 		suffix					= "CLSRM",
-		constantGeneralDescription = R.CLEINT_SEND_RAW_MESSAGE_GENERAL_DESC,
+		constantGeneralDescription = R.CLIENT_SEND_RAW_MESSAGE_GENERAL_DESC,
 		additionFieldsAllowed 	= false,
 		constantExamples = R.CLIENT_SEND_RAW_MESSAGE_EXAMPLE
 	)
