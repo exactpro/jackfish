@@ -16,6 +16,7 @@ import com.exactprosystems.jf.actions.DefaultValuePool;
 import com.exactprosystems.jf.actions.ReadableValue;
 import com.exactprosystems.jf.api.client.*;
 import com.exactprosystems.jf.api.common.ParametersKind;
+import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.api.error.ErrorKind;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.report.ReportBuilder;
@@ -27,24 +28,14 @@ import com.exactprosystems.jf.functions.HelpKind;
 import java.util.List;
 
 @ActionAttribute(
-		group					= ActionGroups.Clients,
-		suffix					= "CLSM",
-		generalDescription 		= "The purpose of the action is to create and send the message."
-				+ " The start of the client is mandatory.",
-		additionFieldsAllowed 	= true,
-		outputDescription = "The message which was created and sent.",
-		outputType = MapMessage.class,
-		additionalDescription 	= "In additional parameters name and values set is indicated which will be converted into the message type which is typical for the client.",
-		examples 				= "{{`1. Load the client for FIX.`}}"
-				+ "{{`2. Connect to the port #10555.`}}"
-				+ "{{`3. Create and send the message, check it beforehand with the indication of CHECK - true in the  parameter.`}}"
-				+ "{{#\n" +
-				"#Id;#Action;$ClientId\n" +
-				"CLLD1;ClientLoad;'TestClient'\n" +
-				"#Id;#Action;Address;Port;$ClientConnection\n" +
-				"CLSTRT1;ClientStart;'127.0.0.1';10555;CLLD1.Out\n" +
-				"#Id;#Action;$Check;PartyID;$ClientConnection;$MessageType\n" +
-				"CLSM1;ClientSendMessage;true;'test';CLLD1.Out;'35'#}}"
+		group						  = ActionGroups.Clients,
+		suffix						  = "CLSM",
+		constantGeneralDescription    = R.CLIENT_SEND_MESSAGE_GENERAL_DESC,
+		additionFieldsAllowed 	 	  = true,
+		constantOutputDescription     = R.CLIENT_SEND_MESSAGE_OUTPUT_DESC,
+		outputType 					  = MapMessage.class,
+		constantAdditionalDescription = R.CLIENT_SEND_MESSAGE_ADDITIONAL_DESC,
+		constantExamples 			  = R.CLIENT_SEND_MESSAGE_EXAMPLE
 	)
 public class ClientSendMessage extends AbstractAction
 {

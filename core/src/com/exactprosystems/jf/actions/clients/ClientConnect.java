@@ -19,6 +19,7 @@ import com.exactprosystems.jf.actions.ReadableValue;
 import com.exactprosystems.jf.api.client.ClientConnection;
 import com.exactprosystems.jf.api.client.IClient;
 import com.exactprosystems.jf.api.common.ParametersKind;
+import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.api.error.ErrorKind;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.report.ReportBuilder;
@@ -28,21 +29,13 @@ import com.exactprosystems.jf.documents.matrix.parser.items.TypeMandatory;
 import com.exactprosystems.jf.functions.HelpKind;
 
 @ActionAttribute(
-		group 				  = ActionGroups.Clients,
-		suffix 				  = "CLCNCT",
-		generalDescription 	  = "The purpose of the action is to connect the client to the specific socket. Usually the number of the socket comes from the service.\n" +
-				"Later the client will bring in and send messages through this socket.",
-		additionFieldsAllowed = true, 
-		outputDescription 	  = "True, if the connection was successful.",
-		additionalDescription = "Parameters for  the client run are indicated.",
-		examples 			  = "{{`1. Load the client for FIX.`}}"
-				+ "{{`2. Connect the client to the port #10506.`}}"
-				+ "{{#\n" +
-				"#Id;#Action;#ClientId\n"
-				+ "CLLD1;ClientLoad;'FIX'\n"
-				+ "\n"
-				+ "#Id;#Action;#ClientConnection;#Socket\n"
-				+ "CLCNCT1;ClientConnect;CLLD1.Out;10506#}}"
+		group 				  	      = ActionGroups.Clients,
+		suffix 				  	      = "CLCNCT",
+		constantGeneralDescription    = R.CLIENT_CONNECT_GENERAL_DESC,
+		additionFieldsAllowed 	      = true,
+		constantOutputDescription     = R.CLIENT_CONNECT_OUTPUT_DESC,
+		constantAdditionalDescription = R.CLIENT_CONNECT_ADDITIONAL_DESC,
+		constantExamples 			  = R.CLIENT_CONNECT_EXAMPLE
 )
 public class ClientConnect extends AbstractAction
 {

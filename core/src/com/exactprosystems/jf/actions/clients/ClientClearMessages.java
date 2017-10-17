@@ -16,25 +16,18 @@ import com.exactprosystems.jf.api.client.ClientConnection;
 import com.exactprosystems.jf.api.client.ClientHelper;
 import com.exactprosystems.jf.api.client.IClient;
 import com.exactprosystems.jf.api.client.Possibility;
+import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.report.ReportBuilder;
 import com.exactprosystems.jf.documents.config.Context;
 import com.exactprosystems.jf.documents.matrix.parser.Parameters;
 
 @ActionAttribute(
-		group					= ActionGroups.Clients,
-		suffix					= "CLCLM",
-		generalDescription 		= "The purpose of the action is to clear the list of all accepted client messages."
-				+ " Start of the client is not mandatory.",
-		additionFieldsAllowed 	= false,
-		examples 				= "{{`1. Load the client for FIX.`}}"
-				+ "{{`2. Clear the list of the client messages.`}} "
-				+ "{{#\n" +
-				"#Id;#Action;#ClientId\n"
-				+ "CLLD1;ClientLoad;'FIX'\n"
-				+ "\n"
-				+ "#Id;#Action;#ClientConnection\n"
-				+ "CLCLM1;ClientClearMessages;CLLD1.Out#}}"
+		group					   = ActionGroups.Clients,
+		suffix					   = "CLCLM",
+		constantGeneralDescription = R.CLIENT_CLEAR_MESSAGES_GENERAL_DESC,
+		additionFieldsAllowed 	   = false,
+		constantExamples 		   = R.CLIENT_CLEAR_MESSAGES_EXAMPLE
 	)
 public class ClientClearMessages extends AbstractAction 
 {

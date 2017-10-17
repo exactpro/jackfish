@@ -19,6 +19,7 @@ import com.exactprosystems.jf.api.client.ClientHelper;
 import com.exactprosystems.jf.api.client.IClient;
 import com.exactprosystems.jf.api.client.MapMessage;
 import com.exactprosystems.jf.api.client.Possibility;
+import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.api.error.ErrorKind;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.report.ReportBuilder;
@@ -29,24 +30,11 @@ import com.exactprosystems.jf.functions.HelpKind;
 import java.util.List;
 
 @ActionAttribute(
-		group					= ActionGroups.Clients,
-		suffix					= "CLSMM",
-		generalDescription 		= "The purpose of the action is to send messages through a made connection."
-				+ "The start of the client is mandatory. It is targeted at converting messages for specified type and its sending.",
-		additionFieldsAllowed 	= false,
-		examples 				= "{{`1. Load the client for FIX.`}}"
-				+ "{{`2. Create the message with the help of MessageCreate method.`}}"
-				+ "{{`3. Connect to the port #13000.`}}"
-				+ "{{`4. Send the created message, test it preliminarily with the indication of CHECK - true in the  parameter.`}}"
-				+ "{{#\n" +
-				"#Id;#Action;$ClientId\n" +
-				"CLLD1;ClientLoad;'FIX'\n" +
-				"#Id;#Action;PartyID;$MessageType\n" +
-				"MSGCR1;MessageCreate;'qpwoei';'35'\n" +
-				"#Id;#Action;Address;Port;$ClientConnection\n" +
-				"CLSTRT1;ClientStart;'127.0.0.1';13000;CLLD3.Out\n" +
-				"#Id;#Action;$Check;$MapMessage;$ClientConnection\n" +
-				"CLSMM1;ClientSendMapMessage;true;MSGCR1.Out;CLLD1.Out#}}"
+		group					   = ActionGroups.Clients,
+		suffix					   = "CLSMM",
+		constantGeneralDescription = R.CLIENT_SEND_MAP_MESSAGE_GENERAL_DESC,
+		additionFieldsAllowed 	   = false,
+		constantExamples 		   = R.CLIENT_SEND_MAP_MESSAGE_EXAMPLE
 	)
 public class ClientSendMapMessage extends AbstractAction
 {

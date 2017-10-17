@@ -13,6 +13,7 @@ import com.exactprosystems.jf.api.client.ClientConnection;
 import com.exactprosystems.jf.api.client.ClientHelper;
 import com.exactprosystems.jf.api.client.IClient;
 import com.exactprosystems.jf.api.client.Possibility;
+import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.report.ReportBuilder;
 import com.exactprosystems.jf.documents.config.Context;
@@ -24,25 +25,9 @@ import java.util.List;
 @ActionAttribute(
 		group					= ActionGroups.Clients,
 		suffix					= "CLSRM",
-		generalDescription 		= "The purpose of the action is to send an array of bytes through a made connection without any preprocessing."
-				+ "The start of the client is mandatory.",
+		constantGeneralDescription = R.CLEINT_SEND_RAW_MESSAGE_GENERAL_DESC,
 		additionFieldsAllowed 	= false,
-		examples 				= "{{`1. Load the client for FIX.`}}"
-				+ "{{`2. Connect to the port #10555.`}}"
-				+ "{{`3. Create and send the raw message.`}} "
-				+ "{{#\n" +
-				"#Id;#Let\n" +
-				"str;'8=FIXT.1.1|9=91|35=A|34=1|49=SenderCompID|52=20170426-08:25:00.002'\n" +
-				"#Id;#Let\n" +
-				"str;str + '|56=TargetCompID|98=0|108=1|141=Y|1137=9|10=131|'\n" +
-				"#Id;#Let\n" +
-				"bytes;str.replace('|', '\\001').getBytes()\n" +
-				"#Id;#Action;$ClientId\n" +
-				"CLLD1;ClientLoad;'FIX'\n" +
-				"#Id;#Action;$ClientConnection;$Socket\n" +
-				"CLCNCT1;ClientConnect;CLLD1.Out;10555\n" +
-				"#Id;#Action;$ClientConnection;$Data\n" +
-				"CLSRM1;ClientSendRawMessage;CLLD1.Out;bytes#}}"
+		constantExamples = R.CLIENT_SEND_RAW_MESSAGE_EXAMPLE
 	)
 public class ClientSendRawMessage extends AbstractAction
 {

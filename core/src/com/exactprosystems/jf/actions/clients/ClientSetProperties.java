@@ -12,6 +12,7 @@ import com.exactprosystems.jf.actions.*;
 import com.exactprosystems.jf.api.client.ClientConnection;
 import com.exactprosystems.jf.api.client.IClient;
 import com.exactprosystems.jf.api.common.ParametersKind;
+import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.report.ReportBuilder;
 import com.exactprosystems.jf.documents.config.Context;
@@ -22,19 +23,12 @@ import com.exactprosystems.jf.functions.HelpKind;
 import java.util.List;
 
 @ActionAttribute(
-		group 					= ActionGroups.Clients, 
-		suffix 					= "CLSP", 
-		generalDescription 		= "The purpose of the action is to set properties to the client."
-				+ " The following properties are available: {{$SenderCompID$}}, {{$TargetCompID$}}, {{$MsgSeqNum$}}.",
-		additionFieldsAllowed 	= true,
-		additionalDescription 	= "In the value of the additional parameter the name of the property is indicated, in the parameter  value the property value is pointed out.",
-		examples 				= "{{`1. Load the client for FIX`}}"
-				+ "{{`2. Set the propertyName the value Value`}} "
-				+ "{{#\n" +
-				"#Id;#Action;#ClientId\n"
-				+ "CLLD1;ClientLoad;'FIX'\n"
-				+ "#Id;#Action;#ClientConnection;#Name\n"
-				+ "CLSP1;ClientSetProperties;CLLD1.Out;'Value'#}}"
+		group 						  = ActionGroups.Clients,
+		suffix 						  = "CLSP",
+		constantGeneralDescription 	  = R.CLIENT_SET_PROPERTIES_GENERAL_DESC,
+		additionFieldsAllowed 	      = true,
+		constantAdditionalDescription = R.CLIENT_SET_PROPERTIES_ADDITIONAL_DESC,
+		constantExamples 			  = R.CLIENT_SET_PROPERTIES_EXAMPLE
 	)
 public class ClientSetProperties extends AbstractAction
 {

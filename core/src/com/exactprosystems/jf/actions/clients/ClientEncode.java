@@ -17,31 +17,20 @@ import com.exactprosystems.jf.api.client.ClientHelper;
 import com.exactprosystems.jf.api.client.IClient;
 import com.exactprosystems.jf.api.client.MapMessage;
 import com.exactprosystems.jf.api.client.Possibility;
+import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.report.ReportBuilder;
 import com.exactprosystems.jf.documents.config.Context;
 import com.exactprosystems.jf.documents.matrix.parser.Parameters;
 
 @ActionAttribute(
-		group					= ActionGroups.Clients,
-		suffix					= "CLENC",
-		generalDescription 		= "The purpose of the action is to encode the message. It converts the message in a massive byte."
-				+ " Start of the client is not mandatory.",
-		additionFieldsAllowed 	= false,
-		outputDescription 		= "Array of bytes.",
-		outputType				= byte[].class,
-		examples 				= "{{`1. Load the client for FIX.`}}"
-				+ "{{`2. Create the message.`}}"
-				+ "{{`3. Encode the message.`}} "
-				+ "{{#\n" +
-				"#Id;#Action;$ClientId\n"
-				+ "CLLD;ClientLoad;'FIX'\n"
-				+ "\n"
-				+ "#Id;#Action;PartyID;$MessageType\n"
-				+ "MSGCR1;MessageCreate;'test';'35'\n"
-				+ "\n"
-				+ "#Id;#Action;$MapMessage;$ClientConnection\n"
-				+ "CLENC1;ClientEncode;MSGCR1.Out;CLLD.Out#}}"
+		group					   = ActionGroups.Clients,
+		suffix					   = "CLENC",
+		constantGeneralDescription = R.CLIENT_ENCODE_GENERAL_DESC,
+		additionFieldsAllowed 	   = false,
+		constantOutputDescription  = R.CLIENT_ENCODE_OUTPUT_DESC,
+		outputType				   = byte[].class,
+		constantExamples 		   = R.CLIENT_ENCODE_EXAMPLE
 	)
 public class ClientEncode extends AbstractAction
 {

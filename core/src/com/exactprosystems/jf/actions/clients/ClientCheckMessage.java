@@ -14,6 +14,7 @@ import com.exactprosystems.jf.api.client.ClientHelper;
 import com.exactprosystems.jf.api.client.MapMessage;
 import com.exactprosystems.jf.api.common.ParametersKind;
 import com.exactprosystems.jf.api.common.Str;
+import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.api.conditions.Condition;
 import com.exactprosystems.jf.api.error.ErrorKind;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
@@ -28,30 +29,12 @@ import java.util.List;
 import java.util.Map;
 
 @ActionAttribute(
-		group					= ActionGroups.Clients,
-		suffix					= "CLMSGCHK",
-		generalDescription 		= "The purpose of the action is to compare the message type MapMessage with the field set type key-value."
-				+ " MapMessage is the output value of actions: {{@ClientCreateMapMessage@}}, {{@ClientDecode@}}, {{@ClientGetMessage@}}, {{@ClientSendMessage@}}."
-				+ " In the report a chart will be formed with the headline the Mismatched fields: consisting of columns {{$Name$}} and {{$Expected$}} + {{$Actual$}}. "
-				+ "In the case of inequality in the compared fields the MapMessage action fails."
-				+ " Start of the client is not mandatory.",
-		additionFieldsAllowed 	= true,
-		additionalDescription   = "In additional parameters, the names and values which should be compared with MapMessage, which is passed in parameter {{$ActualMessage$}}, are pointed out.",
-		examples 				= "{{`1. Load the client for FIX`}}"
-				+ "{{`2. Create a message type FIX with a set key-value.`}}"
-				+ "{{`3. Check the message.`}} "
-				+ "{{#\n" +
-				"#Id;#Action;$ClientId\n"
-				+ "CLLD1;ClientLoad;'TestClient'\n"
-				+ "\n"
-				+ "#Id;#Action;Address;Port;$ClientConnection\n"
-				+ "CLSTRT1;ClientStart;'127.0.0.1';13000;CLLD3.Out\n"
-				+ "\n"
-				+ "#Id;#Action;PartyID;PartyIDSource;PartyRole;$MessageType\n"
-				+ "MSGCR1;MessageCreate;'test';'1';3;'35'\n"
-				+ "\n"
-				+ "#Id;#Action;PartyID;$ActualMessage;$ExpectedMessageType;$ClientConnection\n"
-				+ "CLMSGCHK1;ClientCheckMessage;'test';MSGCR1.Out;'35';CLLD1.Out#}}"
+		group					      = ActionGroups.Clients,
+		suffix					      = "CLMSGCHK",
+		constantGeneralDescription    = R.CLIENT_CHECK_MESSAGE_GENERAL_DESK,
+		additionFieldsAllowed 	      = true,
+		constantAdditionalDescription = R.CLIENT_CHECK_MESSAGE_ADDITIONAL_DESC,
+		constantExamples              = R.CLIENT_CHECK_MESSAGE_EXAMPLE
 	)
 public class ClientCheckMessage extends AbstractAction 
 {

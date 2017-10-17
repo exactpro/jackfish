@@ -14,27 +14,18 @@ import com.exactprosystems.jf.actions.ActionFieldAttribute;
 import com.exactprosystems.jf.actions.ActionGroups;
 import com.exactprosystems.jf.api.client.ClientConnection;
 import com.exactprosystems.jf.api.client.IClient;
+import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.report.ReportBuilder;
 import com.exactprosystems.jf.documents.config.Context;
 import com.exactprosystems.jf.documents.matrix.parser.Parameters;
 
 @ActionAttribute(
-		group					= ActionGroups.Clients,
-		suffix					= "CLSTP",
-		generalDescription 		= "The purpose of the action is to stop connectivity break with the service. "
-				+ "The start of the client is mandatory.",
-		additionFieldsAllowed 	= false,
-		examples 				= "{{`1. Load the client for FIX.`}}"
-				+ "{{`2. Start the client.`}}"
-				+ "3. Stop the client.\n"
-				+ "{{#\n" +
-				"#Id;#Action;#ClientId\n"
-				+ "CLLD1;ClientLoad;'FIX'\n"
-				+ "#Id;#Action;#ClientConnection\n"
-				+ "CLSTRT1;ClientStart;CLLD1.Out\n"
-				+ "#Id;#Action;#ClientConnection\n"
-				+ "CLSTP1;ClientStop;CLLD1.Out#}}"
+		group					   = ActionGroups.Clients,
+		suffix					   = "CLSTP",
+		constantGeneralDescription = R.CLIENT_STOP_GENERAL_DESC,
+		additionFieldsAllowed 	   = false,
+		constantExamples 		   = R.CLIENT_STOP_EXAMPLE
 	)
 public class ClientStop extends AbstractAction 
 {

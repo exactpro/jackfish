@@ -22,6 +22,7 @@ import com.exactprosystems.jf.api.client.IClient;
 import com.exactprosystems.jf.api.client.MapMessage;
 import com.exactprosystems.jf.api.client.Possibility;
 import com.exactprosystems.jf.api.common.ParametersKind;
+import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.api.conditions.Condition;
 import com.exactprosystems.jf.api.error.ErrorKind;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
@@ -32,24 +33,14 @@ import com.exactprosystems.jf.documents.matrix.parser.items.TypeMandatory;
 import com.exactprosystems.jf.functions.HelpKind;
 
 @ActionAttribute(
-		group					= ActionGroups.Clients,
-		suffix					= "CLGM",
-		generalDescription 		= "{{`The purpose of the action is to get the message, which conforms the required condition."
-				+ " The search of the message takes place in the message queue. If the message with the required conditions wasn't"
-				+ " found, the search starts from the beginning of the queue because during the search new messages can appear in the queue.`}}"
-				+ "{{`The search happens during the specified period of time, if the message is not found upon the expiry of time, the action fails.`}}",
-		additionFieldsAllowed 	= true,
-		additionalDescription 	= "Values, in accordance with which the search of the message will happen.",
-		outputDescription 		= "The message or error, if the message was not found within the time limit.",
-		outputType				= MapMessage.class,
-		examples 				= "{{`1. Load the client for FIX.`}}"
-				+ "{{`2. Find the message with the value Value and name Name.`}} "
-				+ "{{#\n" +
-				"#Id;#Action;#ClientId\n"
-				+ "CLLD1;ClientLoad;'FIX'\n"
-				+ "\n"
-				+ "#Id;#Action;#ClientConnection;#MessageType;#Name\n"
-				+ "CLGM1;ClientGetMessage;CLLD1.Out;'35';'Value'#}}"
+		group						  = ActionGroups.Clients,
+		suffix						  = "CLGM",
+		constantGeneralDescription 	  = R.CLIENT_GET_MESSAGE_GENERAL_DESC,
+		additionFieldsAllowed 		  = true,
+		constantAdditionalDescription = R.CLIENT_GET_MESSAGE_ADDITIONAL_DESC,
+		constantOutputDescription 	  = R.CLIENT_GET_MESSAGE_OUTPUT_DESC,
+		outputType					  = MapMessage.class,
+		constantExamples 			  = R.CLIENT_GET_MESSAGE_EXAMPLE
 	)
 public class ClientGetMessage extends AbstractAction 
 {

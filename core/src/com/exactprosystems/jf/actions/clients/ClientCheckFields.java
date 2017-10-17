@@ -15,31 +15,20 @@ import com.exactprosystems.jf.actions.ActionGroups;
 import com.exactprosystems.jf.api.client.ClientConnection;
 import com.exactprosystems.jf.api.client.IClient;
 import com.exactprosystems.jf.api.client.MapMessage;
+import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.report.ReportBuilder;
 import com.exactprosystems.jf.documents.config.Context;
 import com.exactprosystems.jf.documents.matrix.parser.Parameters;
 
 @ActionAttribute(
-		group					= ActionGroups.Clients,
-		suffix					= "CLCHM",
-		generalDescription 		= "The purpose of the action is to check message fields against the field set dictionary of the client."
-				+ " Start of the client is not mandatory.",
-		additionFieldsAllowed 	= false,
-		outputDescription 		= "True, if the message is correct.",
-		outputType				= Boolean.class,
-		examples 				= "{{`1.Load the client for FIX.`}}"
-				+ "{{`2.Create a message type FIX with a set key-value.`}}"
-				+ "{{`3.Check the message.`}} "
-				+ "{{#\n" +
-				"#Id;#Action;$ClientId\n"
-				+ "CLLD1;ClientLoad;'FIX'\n"
-				+ "\n"
-				+ "#Id;#Action;PartyID;PartyIDSource;PartyRole;$MessageType\n"
-				+ "MSGCR1;MessageCreate;'test';'1';3;'35'\n"
-				+ "\n"
-				+ "#Id;#Action;#Assert;$MapMessage;$ClientConnection\n"
-				+ "CLCHM1;ClientCheckFields;This.Out == true;MSGCR1.Out;CLLD1.Out#}}"
+		group					   = ActionGroups.Clients,
+		suffix					   = "CLCHM",
+		constantGeneralDescription = R.CLIENT_CHECK_FIELDS_GENERAL_DESK,
+		additionFieldsAllowed 	   = false,
+		constantOutputDescription  = R.CLIENT_CHECK_FIELDS_OUTPUT_DESK,
+		outputType				   = Boolean.class,
+		constantExamples     	   = R.CLIENT_CHECK_FIELDS_EXAMPLE
 	)
 public class ClientCheckFields extends AbstractAction
 {

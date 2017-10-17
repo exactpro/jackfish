@@ -20,6 +20,7 @@ import com.exactprosystems.jf.api.client.IClient;
 import com.exactprosystems.jf.api.client.Possibility;
 import com.exactprosystems.jf.api.common.ParametersKind;
 import com.exactprosystems.jf.api.common.Str;
+import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.api.conditions.Condition;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.report.ReportBuilder;
@@ -32,22 +33,14 @@ import java.util.List;
 import java.util.Map;
 
 @ActionAttribute(
-		group					= ActionGroups.Clients,
-		suffix					= "CLCNT",
-		generalDescription 		= "The purpose of the action is to count the messages, which field set responds to the reported condition."
-				+ " Simple comparison conditions are passed in additional parameters. Complicated comparison conditions are indicated in the parameter Conditions.",
-		additionFieldsAllowed 	= true,
-		outputDescription 		= "The number of messages which meet the requirements.",
-		outputType				= Integer.class,
-		additionalDescription 	= "In the name of the parameter the key is indicated, in the option setting the predicted value is indicated.",
-		examples 				= "{{`1. Load the client for FIX.`}}"
-				+ "{{`2. Count the number of messages with the field name Name and  the field value Value.`}} "
-				+ "{{#\n" +
-				"#Id;#Action;#ClientId\n"
-				+ "CLLD1;ClientLoad;'FIX'\n"
-				+ "\n"
-				+ "#Id;#Action;#ClientConnection;#MessageType;#Name\n"
-				+ "CLCNT1;ClientCountMessages;CLLD1.Out;'35';'Value'#}}"
+		group					      = ActionGroups.Clients,
+		suffix						  = "CLCNT",
+		constantGeneralDescription 	  = R.CLIENT_COUNT_MESSAGES_GENERAL_DESC,
+		additionFieldsAllowed 		  = true,
+		constantOutputDescription 	  = R.CLIENT_COUNT_MESSAGES_OUTPUT_DESC,
+		outputType					  = Integer.class,
+		constantAdditionalDescription = R.CLIENT_COUNT_MESSAGES_ADDITIONAL_DESC,
+		constantExamples 			  = R.CLIENT_COUNT_MESSAGES_EXAMPLE
 	)
 public class ClientCountMessages extends AbstractAction 
 {

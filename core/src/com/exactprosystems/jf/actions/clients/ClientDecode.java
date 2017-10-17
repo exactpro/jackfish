@@ -18,35 +18,20 @@ import com.exactprosystems.jf.api.client.IClient;
 import com.exactprosystems.jf.api.client.MapMessage;
 import com.exactprosystems.jf.api.client.Possibility;
 import com.exactprosystems.jf.api.common.Converter;
+import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.report.ReportBuilder;
 import com.exactprosystems.jf.documents.config.Context;
 import com.exactprosystems.jf.documents.matrix.parser.Parameters;
 
 @ActionAttribute(
-		group = ActionGroups.Clients, 
-		suffix					= "CLDEC",
-		generalDescription 		= "The purpose of the action is for  the message decode. Converts the massive byte in the message."
-				+ " Start of the client is not mandatory.",
-		additionFieldsAllowed 	= false,
-		outputDescription 		= "Converted message.",
-		outputType 				= MapMessage.class,
-		examples 				= "{{`1. Load the client for FIX.`}}"
-				+ "{{`2. Create the message.`}}"
-				+ "{{`3. Encode the message.`}}"
-				+ "{{`4. Decode the message.`}} "
-				+ "{{#\n" +
-				"#Id;#Action;$ClientId\n"
-				+ "CLLD1;ClientLoad;'FIX'\n"
-				+ "\n"
-				+ "#Id;#Action;PartyID;$MessageType\n"
-				+ "MSGCR1;MessageCreate;'test';'35'\n"
-				+ "\n"
-				+ "#Id;#Action;$MapMessage;$ClientConnection\n"
-				+ "CLENC1;ClientEncode;MSGCR1.Out;CLLD1.Out\n"
-				+ "\n"
-				+ "#Id;#Action;$Array;$ClientConnection\n"
-				+ "CLDEC1;ClientDecode;CLENC1.Out;CLLD4.Out#}}"
+		group 					   = ActionGroups.Clients,
+		suffix					   = "CLDEC",
+		constantGeneralDescription = R.CLIENT_DECODE_GENERAL_DESC,
+		additionFieldsAllowed 	   = false,
+		constantOutputDescription  = R.CLIENT_DECODE_OUTPUT_DESC,
+		outputType 				   = MapMessage.class,
+		constantExamples 		   = R.CLIENT_DECODE_EXAMPLE
 		)
 public class ClientDecode extends AbstractAction
 {

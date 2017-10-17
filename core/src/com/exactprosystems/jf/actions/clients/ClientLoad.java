@@ -15,6 +15,7 @@ import com.exactprosystems.jf.actions.ActionGroups;
 import com.exactprosystems.jf.actions.ReadableValue;
 import com.exactprosystems.jf.api.client.ClientConnection;
 import com.exactprosystems.jf.api.client.IClientsPool;
+import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.report.ReportBuilder;
 import com.exactprosystems.jf.documents.config.Context;
@@ -24,19 +25,13 @@ import com.exactprosystems.jf.functions.HelpKind;
 import java.util.List;
 
 @ActionAttribute(
-		group					= ActionGroups.Clients,
-		suffix					= "CLLD",
-		generalDescription 		= "The purpose of the action is to load,initialize and get the connection with the Client."
-				+ "Later, the received connection is used in such actions as {{@ClientStart@}}, {{@ClientStop@}}, {{@ClientDecode@}} and etc."
-				+ " Clients represent the entity which performs functions in respect of client- server."
-				+ " The client can send and get messages through received TCP connection.",
-		additionFieldsAllowed 	= false,
-		outputDescription 		= "The connection with the Client.",
-		outputType 				= ClientConnection.class,
-		examples 				= "{{`Load the client for FIX.`}} "
-				+ "{{#\n" +
-				"#Id;#Action;#ClientId\n"
-				+ "CLLD1;ClientLoad;'FIX'#}}"
+		group					   = ActionGroups.Clients,
+		suffix					   = "CLLD",
+		constantGeneralDescription = R.CLIENT_LOAD_GENERAL_DESC,
+		additionFieldsAllowed 	   = false,
+		constantOutputDescription  = R.CLIENT_LOAD_OUTPUT_DESC,
+		outputType 				   = ClientConnection.class,
+		constantExamples 	       = R.CLIENT_LOAD_EXAMPLE
 	)
 public class ClientLoad extends AbstractAction 
 {
