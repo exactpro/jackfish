@@ -270,15 +270,11 @@ public class Search
 		private Pair<String, List<Pair<Integer, Integer>>> processLine(String line)
 		{
 			int caseInsensitive = 0;
-			int multiLine = 0;
 			if (!this.isMatchCase)
 			{
 				caseInsensitive = Pattern.CASE_INSENSITIVE;
 			}
-			if (this.isMultiLine)
-			{
-				multiLine = Pattern.MULTILINE | Pattern.DOTALL;
-			}
+
 			List<Pair<Integer, Integer>> list = new ArrayList<>();
 			String patString = "(" + this.what + ")";
 			if (!this.isRegexp)
@@ -289,7 +285,7 @@ public class Search
 			{
 				patString = "\\b(" + this.what + ")\\b";
 			}
-			Pattern compile = Pattern.compile(patString, caseInsensitive | multiLine);
+			Pattern compile = Pattern.compile(patString, caseInsensitive);
 			Matcher matcher = compile.matcher(line);
 			while (matcher.find())
 			{
