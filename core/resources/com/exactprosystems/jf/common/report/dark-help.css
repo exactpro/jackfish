@@ -28,6 +28,12 @@ a:focus, a:hover{
     background-color: #424242;
 }
 
+#contentPart>li>a {
+	position: relative;
+    display: block;
+    padding: 10px 15px;
+}
+
 .nav-pills>li.active>a, .nav-pills>li.active>a:focus, .nav-pills>li.active>a:hover{
     background-color: #424242;
 }

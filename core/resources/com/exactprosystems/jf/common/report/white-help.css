@@ -28,6 +28,13 @@ ul.nav > ul > li > a {
     padding-left: 30px;
 }
 
+#contentPart>li>a {
+	position: relative;
+    display: block;
+    padding: 10px 15px;
+}
+
+
 .deepNav > li > a {
     padding-left: 45px !important;
 }
