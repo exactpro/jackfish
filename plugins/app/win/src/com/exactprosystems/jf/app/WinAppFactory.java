@@ -29,7 +29,7 @@ public class WinAppFactory extends AbstractApplicationFactory
 
     @PluginFieldDescription(parameter = "LogLevel", description = R.WIN_PLUGIN_LOG_LEVEL, example = "ALL")
 	public static final String		logLevel				= "LogLevel";
-	@PluginFieldDescription(parameter = "jreExec", description = R.WIN_PLUGIN_JRE_EXEC, example = "")
+	@PluginFieldDescription(parameter = "jreExec", description = R.WIN_PLUGIN_JRE_EXEC, example = "C:\\Program Files\\Java\\jdk1.8.0_XX\\bin\\java")
 	public static final String		jreExecName				= "jreExec";
 	@PluginFieldDescription(parameter = "jreArgs", description = R.WIN_PLUGIN_JRE_ARGS, example = "-Xms128m -Xmx1G")
 	public static final String		jreArgsName				= "jreArgs";
@@ -38,24 +38,24 @@ public class WinAppFactory extends AbstractApplicationFactory
 
 	@PluginFieldDescription(parameter = "AlwaysToFront", description = R.WIN_PLUGIN_ALWAYS_TO_FRONT, example = "true")
 	public static final String		alwaysToFront			= "AlwaysToFront";
-	@PluginFieldDescription(parameter = "MainWindow", description = R.WIN_PLUGIN_MAIN_WINDOW, example = "")
+	@PluginFieldDescription(parameter = "MainWindow", description = R.WIN_PLUGIN_MAIN_WINDOW, example = "'Example'")
 	public static final String		mainWindowName			= "MainWindow";
-	@PluginFieldDescription(parameter = "Height", description = R.WIN_PLUGIN_HEIGHT, example = "")
+	@PluginFieldDescription(parameter = "Height", description = R.WIN_PLUGIN_HEIGHT, example = "100")
 	public static final String		mainWindowHeight		= "Height";
-	@PluginFieldDescription(parameter = "Width", description = R.WIN_PLUGIN_WIDTH, example = "")
+	@PluginFieldDescription(parameter = "Width", description = R.WIN_PLUGIN_WIDTH, example = "100")
 	public static final String		mainWindowWidth			= "Width";
-	@PluginFieldDescription(parameter = "PID", description = R.WIN_PLUGIN_PID, example = "")
+	@PluginFieldDescription(parameter = "PID", description = R.WIN_PLUGIN_PID, example = "101")
 	public static final String		pidName					= "PID";
-	@PluginFieldDescription(parameter = "ControlKind", description = R.WIN_PLUGIN_CONTROL_KIND, example = "")
+	@PluginFieldDescription(parameter = "ControlKind", description = R.WIN_PLUGIN_CONTROL_KIND, example = "ControlKind.Panel")
 	public static final String		controlKindName			= "ControlKind";
 	@PluginFieldDescription(parameter = "Timeout", description = R.WIN_PLUGIN_TIMEOUT, example = "1000")
 	public static final String		connectionTimeout		= "Timeout";
 
-	@PluginFieldDescription(parameter = "Exec", description = R.WIN_PLUGIN_EXEC, example = "example.exe")
+	@PluginFieldDescription(parameter = "Exec", description = R.WIN_PLUGIN_EXEC, example = "'example.exe'")
 	public static final String		execName				= "Exec";
-	@PluginFieldDescription(parameter = "WorkDir", description = R.WIN_PLUGIN_WORK_DIR, example = "C:/example/")
+	@PluginFieldDescription(parameter = "WorkDir", description = R.WIN_PLUGIN_WORK_DIR, example = "'C:/example/'")
 	public static final String		workDirName				= "WorkDir";
-	@PluginFieldDescription(parameter = "Args", description = R.WIN_PLUGIN_ARGS, example = "")
+	@PluginFieldDescription(parameter = "Args", description = R.WIN_PLUGIN_ARGS, example = "'Arg1'")
 	public static final String		argsName				= "Args";
 
 	@PluginFieldDescription(parameter = "Rectangle", description = R.WIN_PLUGIN_RECTANGLE, example = "")

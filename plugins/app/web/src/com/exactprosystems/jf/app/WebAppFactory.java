@@ -29,7 +29,7 @@ public class WebAppFactory extends AbstractApplicationFactory
 
     @PluginFieldDescription(parameter = "LogLevel", description = R.WEB_PLUGIN_LOG_LEVEL, example = "ALL")
     public static final String   logLevel             = "LogLevel";
-	@PluginFieldDescription(parameter = "jreExec", description = R.WEB_PLUGIN_JRE_EXEC, example = "")
+	@PluginFieldDescription(parameter = "jreExec", description = R.WEB_PLUGIN_JRE_EXEC, example = "C:\\Program Files\\Java\\jdk1.8.0_XX\\bin\\java")
     public static final String   jreExecName          = "jreExec";
 	@PluginFieldDescription(parameter = "jreArgs", description = R.WEB_PLUGIN_JRE_ARGS, example = "-Xms128m -Xmx1G")
     public static final String   jreArgsName          = "jreArgs";
