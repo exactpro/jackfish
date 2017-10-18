@@ -176,7 +176,7 @@ public class DocumentationBuilder
     public static MatrixItem createNewHelpForPlugin(ReportBuilder report, Context context, String title, IApplicationFactory applicationFactory) throws Exception
     {
         AbstractEvaluator evaluator = context.getEvaluator();
-        MatrixItem help = new HelpTextLine("{{`{{*" + title + "*}}`}}");
+        MatrixItem help = new HelpTextLine("{{`{{2" + title.toUpperCase() + "2}}`}}");
         Class<?> clazz = applicationFactory.getClass();
         PluginDescription pd = clazz.getAnnotation(PluginDescription.class);
         if (pd != null)
@@ -248,7 +248,7 @@ public class DocumentationBuilder
                 table.addValue(new String[] {pfd.parameter(), pfd.description().get(), pfd.example()});
             }
         }
-        MatrixItem tableItem = new HelpTable("", table, true, width);
+        MatrixItem tableItem = new HelpTable("{{`{{*Parameters for work with plugin:*}}`}}", table, true, width);
         root.insert(root.count(), tableItem);
     }
 
