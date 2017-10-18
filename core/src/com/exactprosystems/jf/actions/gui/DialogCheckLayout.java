@@ -49,7 +49,8 @@ import static com.exactprosystems.jf.actions.gui.Helper.message;
 				"If an element is not virtual (for example, Wait), it should be found on the screen, then its' sequence that was set by the parameter is processed. " +
 				"Action DoSpec is specified in the parameter. For example, DoSpec top('Element1', 10) means that Element1 is10px higher than the known one.",
 		additionFieldsAllowed 	= true,
-		suffix = "DLGCL"
+		suffix = "DLGCL",
+		outputType = Table.class
 	)
 public class DialogCheckLayout extends AbstractAction
 {
@@ -186,14 +187,14 @@ public class DialogCheckLayout extends AbstractAction
 				OperationResult res = control.operate(service, window, null);
 				if (!res.isOk())
 				{
-					super.setError(message(id, window, onOpen, control, res.getLocator(), "" + res.getValue()), ErrorKind.NOT_EQUAL);
+					super.setError(message(id, window, onOpen, control, res.getLocator(), "" + res.getValue()), ErrorKind.DIALOG_CHECK_LAYOUT);
 					return;
 				}
 			}
 		}
 		
 		boolean totalResult = true;
-		ReportTable resultTable = null;
+		Table resTable = null;
 		SectionKind run = SectionKind.Run;
 		logger.debug("Perform " + run);
 		ISection sectionRun = window.getSection(run);
@@ -219,18 +220,19 @@ public class DialogCheckLayout extends AbstractAction
 			totalResult = totalResult && res.isOk();
 			
 			if (!res.isOk())
-			{ 
-				resultTable = createTable(resultTable, report);
-				for (String error : res.getErrors())
+			{
+				resTable = createTable(resTable, evaluator);
+				for (CheckingLayoutResultBean bean : res.getNewErrors())
 				{
-					resultTable.addValues(name, error);
+					resTable.addValue(new Object[]{name, bean.getRelativeField(), bean.getRelation(), bean.getActual(), bean.getExpected()});
 				}
 			}
 		}
 
 		if (!totalResult)
 		{
-			super.setError(message(id, window, run, null, null, "Layout checking failed."), ErrorKind.NOT_EQUAL);
+			super.setResult(resTable);
+			super.setError(ErrorKind.DIALOG_CHECK_LAYOUT.toString(), ErrorKind.DIALOG_CHECK_LAYOUT);
 			return;
 		}
 
@@ -250,7 +252,7 @@ public class DialogCheckLayout extends AbstractAction
 				OperationResult res = control.operate(service, window, null);
 				if (!res.isOk())
 				{
-					super.setError(message(id, window, onClose, control, res.getLocator(), " returned 'false'. Process is stopped."), ErrorKind.NOT_EQUAL);
+					super.setError(message(id, window, onClose, control, res.getLocator(), " returned 'false'. Process is stopped."), ErrorKind.DIALOG_CHECK_LAYOUT);
 					return;
 				}
 			}
@@ -259,13 +261,22 @@ public class DialogCheckLayout extends AbstractAction
 		super.setResult(null);
 	}
 
+	private Table createTable(Table table, AbstractEvaluator evaluator)
+	{
+		if (table != null)
+		{
+			return table;
+		}
+		return new Table(new String[]{"Base field", "Relative field", "Relation", "Actual", "Expected"}, evaluator);
+	}
+
 	private ReportTable createTable(ReportTable table, ReportBuilder report)
 	{
 		if (table != null)
 		{
 			return table;
 		}
-		return report.addTable("Layout mismatching", null, true, true, new int[]{25, 65}, "Field", "Error");
+		return report.addTable("Layout mismatching", null, true, true, new int[]{20, 20, 20, 20, 20}, "Base field", "Relative field", "Relation", "Actual", "Expected");
 	}
 
 	private boolean checkControl(Set<ControlKind> supportedControls, IControl control)

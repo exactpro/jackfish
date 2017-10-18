@@ -16,6 +16,10 @@ public class CheckingLayoutResult implements Serializable
 {
 	private static final long	serialVersionUID	= 3562209509406788900L;
 
+	private boolean ok = true;
+	private List<String> errors = new ArrayList<>();
+	private List<CheckingLayoutResultBean> beans = new ArrayList<>();
+
 	public boolean isOk()
 	{
 		return this.ok;
@@ -26,10 +30,21 @@ public class CheckingLayoutResult implements Serializable
 		return this.errors;
 	}
 
+	public List<CheckingLayoutResultBean> getNewErrors()
+	{
+		return this.beans;
+	}
+
 	public void error(Piece piece, String string)
 	{
 		this.ok = false;
 		this.errors.add("Processing part is [" + piece + "] " + string);
+	}
+
+	public void newError(Piece piece, String actual, String expected)
+	{
+		this.ok = false;
+		this.beans.add(new CheckingLayoutResultBean(piece.name, piece.toString(), actual, expected));
 	}
 
 	public void set(boolean b)
@@ -39,7 +54,4 @@ public class CheckingLayoutResult implements Serializable
 			this.ok = false;
 		}
 	}
-	
-	private boolean ok = true;
-	private List<String> errors = new ArrayList<String>();
 }

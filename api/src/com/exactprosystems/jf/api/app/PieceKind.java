@@ -65,6 +65,7 @@ public enum PieceKind implements Measure
 			boolean isEquals = Str.areEqual(text, piece.text);
 			if (!isEquals)
 			{
+				result.newError(piece, piece.text, text);
 				result.error(piece, "Actual = " + piece.text + " Expected = " + text);
 			}
 		}
@@ -109,6 +110,7 @@ public enum PieceKind implements Measure
 			}
 			if (!piece.color.equals(color))
 			{
+				result.newError(piece, piece.color.toString(), color == null ? "null" : color.toString());
 				result.error(piece, "Actual = " + piece.color + " Expected = " + color);
 			}
 		}
@@ -153,6 +155,7 @@ public enum PieceKind implements Measure
 			}
 			if (!piece.color.equals(color))
 			{
+				result.newError(piece, piece.color.toString(), color == null ? "null" : color.toString());
 				result.error(piece, "Actual = " + piece.color + " Expected = " + color);
 			}
 		} 
@@ -236,6 +239,7 @@ public enum PieceKind implements Measure
 			boolean res = !self.isEmpty() && self.get(0) != null;
 			if (!res)
 			{
+				result.newError(piece, "Element in not visible", "Element is visible");
 				result.error(piece, "Element in not visible");
 				return;
 			}
@@ -278,6 +282,7 @@ public enum PieceKind implements Measure
 			boolean res = self.isEmpty() || self.get(0) == null;
 			if (!res)
 			{
+				result.newError(piece, "Element is visible", "Element in not visible");
 				result.error(piece, "Element in visible");
 				return;
 			}
@@ -320,6 +325,7 @@ public enum PieceKind implements Measure
 			boolean func = piece.range.func(self.size(), piece.a, piece.b);
 			if (!func)
 			{
+				result.newError(piece, "" + self.size(), piece.range.toString("" + piece.a, "" + piece.b));
 				result.error(piece, "Actual = " + self.size() + " Expected = " + piece.range.toString("" + piece.a, "" + piece.b));
 			}
 		}
@@ -446,6 +452,7 @@ public enum PieceKind implements Measure
 		{
 			if (others == null)
 			{
+				result.newError(piece, "Referenced elements absent", "References elements are not null");
 				result.error(piece, "Referenced elements absent");
 				return;
 			}
@@ -456,6 +463,7 @@ public enum PieceKind implements Measure
 			if (	s.x > o.x || (s.x + s.width) < (o.x + o.width)
 				|| 	s.y > o.y || (s.y + s.height) < (o.y + o.height) )
 			{
+				result.newError(piece, "Does not contain " + piece.locator, "Contains");
 				result.error(piece, "Does not contain " + piece.locator);
 			}
 		}
@@ -926,6 +934,7 @@ public enum PieceKind implements Measure
 	{
 		if (selfNeedOne() && self.size() != 1 )
 		{
+			result.newError(piece, "Element '" + locator.getId() + "' does not found", "");
 			result.error(piece, "Element '" + locator.getId() + "' does not found");
 			return;
 		}
@@ -938,11 +947,13 @@ public enum PieceKind implements Measure
 		}
 		if (otherNeedOne() && others.size() != 1 )
 		{
+			result.newError(piece, "Need 1", "Found : " + others.size());
 			result.error(piece, "Count of relative elements " + piece.locator.getId() + " should be 1, but was found " + others.size());
 			return;
 		}
 		if (othersNeed() && others.size() == 0 )
 		{
+			result.newError(piece, "Relative element '" + piece.locator.getId() + "' does not found", "");
 			result.error(piece, "Relative element '" + piece.locator.getId() + "' does not found");
 			return;
 		}
@@ -1005,6 +1016,7 @@ public enum PieceKind implements Measure
 	{
 		if (others == null)
 		{
+			result.newError(piece, "Others elements are empty", "Other elements are not empty");
 			result.error(piece, "Others elements is empty");
 			return;
 		}
@@ -1017,6 +1029,7 @@ public enum PieceKind implements Measure
 		boolean res = piece.range.func(value, piece.a, piece.b);
 		if (!res)
 		{
+			result.newError(piece, "" + value, piece.range.toString("" + piece.a, "" + piece.b));
 			result.error(piece, "Actual = " + value + " Expected = " + piece.range.toString("" + piece.a, "" + piece.b));
 		}
 	}

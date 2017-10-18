@@ -16,7 +16,6 @@ import com.exactprosystems.jf.common.report.ReportBuilder;
 import com.exactprosystems.jf.documents.config.Context;
 import com.exactprosystems.jf.documents.matrix.parser.Parameters;
 import com.exactprosystems.jf.functions.HelpKind;
-import com.exactprosystems.jf.tool.Common;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -104,7 +103,7 @@ public class Input extends AbstractAction
 		Object input = context.getFactory().input(evaluator, this.title, this.defaultValue, this.helpKind, list, this.timeout);
 		if (input == null)
 		{
-            super.setError("User cancelled input", ErrorKind.INPUT_CACNELLED);
+            super.setError("User cancelled input", ErrorKind.INPUT_CANCELLED);
             return;
 		}
 		super.setResult(input);
