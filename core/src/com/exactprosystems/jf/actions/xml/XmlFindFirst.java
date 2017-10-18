@@ -12,6 +12,7 @@ import com.exactprosystems.jf.actions.AbstractAction;
 import com.exactprosystems.jf.actions.ActionAttribute;
 import com.exactprosystems.jf.actions.ActionFieldAttribute;
 import com.exactprosystems.jf.actions.ActionGroups;
+import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.report.ReportBuilder;
 import com.exactprosystems.jf.documents.config.Context;
@@ -20,42 +21,13 @@ import com.exactprosystems.jf.functions.HelpKind;
 import com.exactprosystems.jf.functions.Xml;
 
 @ActionAttribute(
-		group					= ActionGroups.XML,
-		suffix					= "XML",
-		generalDescription 		= "The purpose of the action is to return (restore) the Xml structure, allocated using Xpath parameter from Xml document."
-				+ "The first appropriate to the condition element and all its parts will be returned."
-				+ "It is used when it is necessary to get a link to the part of a structure from the existing Xml document. "
-				+ "The change of an output value of the action will lead to the change in Xml structure from which it was obtained.",
-		additionFieldsAllowed 	= false,
-		outputDescription 		= "Link to Xml structure that contains the search result.",
-		outputType				= Xml.class,
-		examples 				= "{{`1. Create an object by downloading it from the file.`}}"
-				+ "{{`Contents of an xml file:`}} "
-				+ "{{#\n" +
-				"<note> \n"
-				+ "<to>\n"
-				+ "<friend>\n"
-				+ "<name id=\"first\">Tove</name>\n"
-				+ "</friend>\n"
-				+ "</to>\n"
-				+ "<from>\n"
-				+ "<friend>\n"
-				+ "<name id=\"second\">Jani</name>\n"
-				+ "</friend>\n"
-				+ "</from>\n"
-				+ "<heading>Reminder</heading>\n"
-				+ "<body>Don't forget me this weekend!</body>\n"
-				+ "</note>#}}"
-				+ "\n"
-				+ "{{`2. Find the first element name.`}}"
-				+ "{{`3. Check the output.`}} "
-				+ "{{#\n" +
-				"#Id;#Action;#File\n"
-				+ "XML2;XmlLoadFromFile;'/path/Xml.xml'\n"
-				+ "#Id;#Action;#Xpath;#Xml\n"
-				+ "XML2;XmlFindFirst;'//name';XML1.Out\n"
-				+ "#Assert;#Message\n"
-				+ "XML2.Out.getChild().getAttribute() == 'first';'No such attribute'#}}"
+		group					   = ActionGroups.XML,
+		suffix					   = "XML",
+		constantGeneralDescription = R.XML_FIND_FIRST_GENERAL_DESC,
+		additionFieldsAllowed 	   = false,
+		constantOutputDescription  = R.XML_FIND_FIRST_OUTPUT_DESC,
+		outputType				   = Xml.class,
+		constantExamples           = R.XML_FIND_FIRST_EXAMPLE
 	)
 public class XmlFindFirst extends AbstractAction 
 {

@@ -12,6 +12,7 @@ import com.exactprosystems.jf.actions.AbstractAction;
 import com.exactprosystems.jf.actions.ActionAttribute;
 import com.exactprosystems.jf.actions.ActionFieldAttribute;
 import com.exactprosystems.jf.actions.ActionGroups;
+import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.api.error.ErrorKind;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.report.ReportBuilder;
@@ -23,36 +24,13 @@ import com.exactprosystems.jf.functions.Xml;
 import java.io.File;
 
 @ActionAttribute(
-		group					= ActionGroups.XML,
-		suffix					= "XML",
-		generalDescription 		= "The purpose of this action is to download the XML structure from a file.",
-		additionFieldsAllowed 	= false,
-		outputDescription 		= "XML structure.",
-		outputType				= Xml.class,
-		examples 				= "{{`1. Create Xml object by downloading it from the file.`}} "
-				+ "{{`Contents of an xml file:`}} "
-				+ "{{#\n" +
-				"<note> \n"
-				+ "<to>\n"
-				+ "<friend>\n"
-				+ "<name id=\"first\">Tove</name>\n"
-				+ "</friend>\n"
-				+ "</to>\n"
-				+ "<from>\n"
-				+ "<friend>\n"
-				+ "<name id=\"second\">Jani</name>\n"
-				+ "</friend>\n"
-				+ "</from>\n"
-				+ "<heading>Reminder</heading>\n"
-				+ "<body>Don't forget me this weekend!</body>\n"
-				+ "</note>#}}"
-				+ "\n"
-				+ "{{`2. Make sure that the object has been created and contains nodes.`}} "
-				+ "{{#\n" +
-				"#Id;#Action;#File\n"
-				+ "XML1;XmlLoadFromFile;'PathToTheFile'\n"
-				+ "#Assert;#Message\n"
-				+ "XML1.Result.toString() == 'Passed';'No such attribute'#}}"
+		group					   = ActionGroups.XML,
+		suffix					   = "XML",
+		constantGeneralDescription = R.XML_LOAD_FROM_FILE_GENERAL_DESC,
+		additionFieldsAllowed 	   = false,
+		constantOutputDescription  = R.XML_LOAD_FROM_FILE_OUTPUT_DESC,
+		outputType				   = Xml.class,
+		constantExamples 		   = R.XML_LOAD_FROM_FILE_EXAMPLE
 	)
 public class XmlLoadFromFile extends AbstractAction 
 {

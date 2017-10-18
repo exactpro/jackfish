@@ -17,6 +17,7 @@ import com.exactprosystems.jf.actions.ReadableValue;
 import com.exactprosystems.jf.actions.clients.Helper;
 import com.exactprosystems.jf.api.client.MapMessage;
 import com.exactprosystems.jf.api.common.ParametersKind;
+import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.report.ReportBuilder;
 import com.exactprosystems.jf.documents.config.Context;
@@ -30,18 +31,14 @@ import java.util.List;
 import java.util.Map;
 
 @ActionAttribute(
-		group					= ActionGroups.Messages,
-		suffix					= "MSGCR",
-		generalDescription 		= "The purpose of the action is to create an object of MapMessage type.\n" +
-				"The object of MapMessage type is a collection which stores data in the form of key/value pairs.\n" +
-				"It is used in such actions as ClientCheckFields, ClientCheckMessage, ClientEncode, ClientSendMapMessage, MessageCheck, MessageCompareTwo.",
-		additionalDescription = "Names and values are passed to fill MapMessage. This parameter is used only if the parameter Fiels is not set.",
-		additionFieldsAllowed 	= true,
-		outputDescription 		= "Message object.",
-		outputType				= MapMessage.class,
-		examples = "{{#\n" +
-				"#Id;#Action;#Fields\n" +
-				"MSGCR1;MessageCreate;{'First item':'First Value', 'Second Item':'Second Value'}#}}"
+		group					      = ActionGroups.Messages,
+		suffix						  = "MSGCR",
+		constantGeneralDescription 	  = R.MESSAGE_CREATE_GENERAL_DESC,
+		constantAdditionalDescription = R.MESSAGE_CREATE_ADDITIONAL_DESC,
+		additionFieldsAllowed 	      = true,
+		constantOutputDescription 	  = R.MESSAGE_CREATE_OUTPUT_DESC,
+		outputType					  = MapMessage.class,
+		constantExamples 			  = R.MESSAGE_CREATE_EXAMPLE
 	)
 public class MessageCreate extends AbstractAction 
 {

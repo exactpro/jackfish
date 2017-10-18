@@ -14,6 +14,7 @@ import com.exactprosystems.jf.actions.ActionFieldAttribute;
 import com.exactprosystems.jf.actions.ActionGroups;
 import com.exactprosystems.jf.actions.DefaultValuePool;
 import com.exactprosystems.jf.api.common.MatrixConnection;
+import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.api.error.ErrorKind;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.report.ReportBuilder;
@@ -21,16 +22,11 @@ import com.exactprosystems.jf.documents.config.Context;
 import com.exactprosystems.jf.documents.matrix.parser.Parameters;
 
 @ActionAttribute(
-        group = ActionGroups.Matrix,
-        generalDescription = "The purpose of this action is to wait until the executed matrix stops. "
-                + "If the matrix doesn't stop during the specified timeout, an action is failed.",
-        additionFieldsAllowed = false,
-        examples = "{{#\n" +
-                "#Id;#Action;#Matrix\n" +
-                "MXRN1;MatrixRun;'matrices/Matrix.jf'\n" +
-                "#Id;#Action;#Time;#Matrix\n" +
-                "MXWT1;MatrixWait;5000;MXRN1.Out#}}",
-        seeAlsoClass = {MatrixRunFromText.class, MatrixRun.class}
+        group                      = ActionGroups.Matrix,
+        constantGeneralDescription = R.MATRIX_WAIT_GENERAL_DESC,
+        additionFieldsAllowed      = false,
+        constantExamples           = R.MATRIX_WAIT_EXAMPLE,
+        seeAlsoClass               = {MatrixRunFromText.class, MatrixRun.class}
 )
 public class MatrixWait extends AbstractAction
 {

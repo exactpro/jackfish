@@ -10,6 +10,7 @@ package com.exactprosystems.jf.actions.system;
 
 import com.exactprosystems.jf.actions.*;
 import com.exactprosystems.jf.api.common.Str;
+import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.api.error.ErrorKind;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.report.ReportBuilder;
@@ -23,12 +24,12 @@ import java.util.List;
 import java.util.Map;
 
 @ActionAttribute(
-		group					= ActionGroups.System,
-		generalDescription 		= "Input a value via interaction with a user",
-		additionFieldsAllowed 	= false,
-        outputDescription       = "Result of choosing a value by user, or default value if the timeout expired",
-		suffix					= "INP",
-        outputType              = Object.class
+		group					   = ActionGroups.System,
+		constantGeneralDescription = R.INPUT_GENERAL_DESC,
+		additionFieldsAllowed 	   = false,
+        constantOutputDescription  = R.INPUT_OUTPUT_DESC,
+		suffix					   = "INP",
+        outputType                 = Object.class
 		
 	)
 public class Input extends AbstractAction 

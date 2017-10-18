@@ -14,6 +14,7 @@ import com.exactprosystems.jf.actions.AbstractAction;
 import com.exactprosystems.jf.actions.ActionAttribute;
 import com.exactprosystems.jf.actions.ActionFieldAttribute;
 import com.exactprosystems.jf.actions.ActionGroups;
+import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.api.error.ErrorKind;
 import com.exactprosystems.jf.api.error.JFSQLException;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
@@ -25,49 +26,15 @@ import com.exactprosystems.jf.functions.HelpKind;
 import com.exactprosystems.jf.sql.SqlConnection;
 
 @ActionAttribute(
-		group					= ActionGroups.SQL,
-		suffix					= "SQLEXEC",
-		generalDescription 		= "The following action is needed to execute any SQL database query.",
-		additionFieldsAllowed 	= true,
-		additionalDescription = "The additional parameter is defined by the data that will be used in completed SQL"
-				+ " query instead of placeholders -'?'. The parameter name is not used during the execution and in"
-				+ " this case can serve as a comment for the user. For example you can use it as an object "
-				+ "description set as a parameter value. \n" +
-                "{{*Attention!*}} You should mind the order of additional parameters.",
-		outputType = Boolean.class,
-		outputDescription = "Returns 'true' if the query was for data selection and 'false' if for data change.",
-		examples = "{{` 1. Create a connection to a database. `}}" +
-				"{{` 2. Execute the query to create Users table. `}}" +
-				"{{` 3.-4. Define and initialize Name and Age variables. `}}" +
-				"{{` 5. Execute the query to fill in the Users table using placeholders in additional parameters. `}}" +
-				"{{` 6. Execute the Update query using placeholders. `}}\n" +
-				"{{#\n" +
-				"#Id;#Action;#User;#Server;#Base;#Sql;#Password\n" +
-				"SQLCNT1;SQLconnect;'username';'127.0.0.1:3306';'database';'MySQL';'password'\n" +
-				"#Id;#RawText;#Kind \n" +
-				"createTable;Text;None\n" +
-				"~;CREATE TABLE users (id INT(6) PRIMARY KEY, \n" +
-				"name VARCHAR(30) NOT NULL,age int NOT NULL)\n" +
-				"#EndRawText\n" +
-				"#Id;#Action;#Query;#Connection\n" +
-				"SQLEXEC1;SQLexecute;createTable;SQLCNT1.Out\n" +
-				"#Id;#Let\n" +
-				"name;'mike'\n" +
-				"#Id;#Let\n" +
-				"age;23\n" +
-				"#Id;#RawText;#Kind \n" +
-				"insertQuery;Text;None\n" +
-				"~;insert into users (name, age) values (?, ?)\n" +
-				"#EndRawText\n" +
-				"#Id;#Action;#Query;#Connection;#User name;#User age\n" +
-				"SQLINS1;SQLinsert;insertQuery;SQLCNT1.Out;name;age\n" +
-				"#Id;#RawText;#Kind \n" +
-				"updateQuery;Text;None\n" +
-				"~;update users set name=? where ? = 23\n" +
-				"#EndRawText\n" +
-				"#Id;#Action;#Query;#Connection;#User new name;#User new age\n" +
-				"SQLEXEC2;SQLexecute;updateQuery;SQLCNT1.Out;'john';age#}}",
-		seeAlsoClass = {SQLdisconnect.class, SQLinsert.class, SQLselect.class, SQLtableUpload.class, SQLconnect.class}
+		group						  = ActionGroups.SQL,
+		suffix						  = "SQLEXEC",
+		constantGeneralDescription    = R.SQL_EXECUTE_GENERAL_DESC,
+		additionFieldsAllowed 		  = true,
+		constantAdditionalDescription = R.SQL_EXECUTE_ADDITIONAL_DESC,
+		outputType 					  = Boolean.class,
+		constantOutputDescription     = R.SQL_EXECUTE_OUTPUT_DESC,
+		constantExamples 			  = R.SQL_EXECUTE_EXAMPLE,
+		seeAlsoClass 				  = {SQLdisconnect.class, SQLinsert.class, SQLselect.class, SQLtableUpload.class, SQLconnect.class}
 	)
 public class SQLexecute extends AbstractAction
 {

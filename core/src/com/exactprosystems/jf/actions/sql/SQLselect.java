@@ -14,6 +14,7 @@ import com.exactprosystems.jf.actions.AbstractAction;
 import com.exactprosystems.jf.actions.ActionAttribute;
 import com.exactprosystems.jf.actions.ActionFieldAttribute;
 import com.exactprosystems.jf.actions.ActionGroups;
+import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.api.error.ErrorKind;
 import com.exactprosystems.jf.api.error.JFSQLException;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
@@ -26,52 +27,14 @@ import com.exactprosystems.jf.functions.Table;
 import com.exactprosystems.jf.sql.SqlConnection;
 
 @ActionAttribute(
-		group					= ActionGroups.SQL,
-		suffix					= "SQLSLCT",
-		generalDescription 		= "The following action is needed to execute the Select SQLquery.",
-		additionFieldsAllowed 	= true,
-		additionalDescription = "The additional parameter is defined by the data that will be used in completed SQL"
-				+ " query instead of placeholders -'?'. The parameter name is not used during the execution and in"
-				+ " this case can serve as a comment for the user. For example you can use it as an object "
-				+ "description set as a parameter value. \n" +
-				"{{*Attention!*}} You should mind the order of additional parameters.",
-		outputDescription 		= "Select SQL query returns a Table object. The returned Table column names coincide"
-				+ " with the Table column names we get as a result of a query.",
-		outputType				= Table.class,
-		examples = "{{` 1. Create a connection to a database. `}}" +
-				"{{` 2. Execute the query to create Users table `}}" +
-				"{{` 3.-4. Define and initialize Name and Age variables `}}" +
-				"{{` 5. Execute the query to fill in the Users table using placeholders in additional parameters `}}" +
-				"{{` 6. Execute SQLselect action using placeholders in additional parameters `}}" +
-				"{{` 7. Add the table to the report using the Table Report action `}}\n" +
-				"{{#\n" +
-				"#Id;#Action;#User;#Server;#Base;#Sql;#Password\n" +
-				"SQLCNT1;SQLconnect;'username';'127.0.0.1:3306';'database';'MySQL';'password'\n" +
-				"#Id;#RawText;#Kind \n" +
-				"createTable;Text;None\n" +
-				"~;CREATE TABLE users (id INT(6) PRIMARY KEY, \n" +
-				"name VARCHAR(30) NOT NULL,age int NOT NULL)\n" +
-				"#EndRawText\n" +
-				"#Id;#Action;#Query;#Connection\n" +
-				"SQLEXEC1;SQLexecute;createTable;SQLCNT1.Out\n" +
-				"#Id;#Let\n" +
-				"name;'mike'\n" +
-				"#Id;#Let\n" +
-				"age;23\n" +
-				"#Id;#RawText;#Kind \n" +
-				"insertQuery;Text;None\n" +
-				"~;insert into users (name, age) values (?, ?)" +
-				"#EndRawText\n" +
-				"#Id;#RawText;#Kind \n" +
-				"selectQuery;Text;None\n" +
-				"~;select name, age from test.users where name = ? and age = ?\n" +
-				"#EndRawText\n" +
-				"#Id;#Action;#Query;#Connection;#User name;#User age\n" +
-				"SQLEXEC3;SQLexecute;insertQuery;SQLCNT1.Out;name;age\n" +
-				"#Id;#Action;#Query;#Connection;#User name;#User age\n" +
-				"SQLSLCT1;SQLselect;selectQuery;SQLCNT1.Out;name;age\n" +
-				"#Action;#Table;#Title\n" +
-				"TableReport;SQLSLCT1.Out;'Report title'#}}",
+		group						  = ActionGroups.SQL,
+		suffix						  = "SQLSLCT",
+		constantGeneralDescription    = R.SQL_SELECT_GENERAL_DESC,
+		additionFieldsAllowed 		  = true,
+		constantAdditionalDescription = R.SQL_SELECT_ADDITIONAL_DESC,
+		constantOutputDescription     = R.SQL_SELECT_OUTPUT_DESC,
+		outputType					  = Table.class,
+		constantExamples 			  = R.SQL_SELECT_EXAMPLE,
 		seeAlsoClass = {SQLdisconnect.class, SQLexecute.class, SQLinsert.class, SQLtableUpload.class, SQLconnect.class}
 	)
 public class SQLselect extends AbstractAction

@@ -13,6 +13,7 @@ import com.exactprosystems.jf.actions.ActionAttribute;
 import com.exactprosystems.jf.actions.ActionFieldAttribute;
 import com.exactprosystems.jf.actions.ActionGroups;
 import com.exactprosystems.jf.actions.ReadableValue;
+import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.api.error.ErrorKind;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.report.ReportBuilder;
@@ -27,22 +28,14 @@ import java.sql.SQLException;
 import java.util.List;
 
 @ActionAttribute(
-		group					= ActionGroups.SQL,
-		suffix					= "SQLCNT",
-		generalDescription 		= "The following action is needed to establish a database connection which is used in"
-				+ " {{@ SQLexecute @}}, {{@ SQLinsert @}}, {{@ SQLselect @}}, {{@ SQLtableUpload @}}, {{@ SQLdisconnect @}} actions.",
-		additionFieldsAllowed 	= false,
-		outputDescription 		= "Connection to the SQL server.",
-		outputType				= SqlConnection.class,
-		examples =
-				"{{` 1. Establish a database connection setting all mandatory parameters. `}}" +
-				"{{` 2. Check that the connection is created and open. `}}" +
-				"{{#\n" +
-				"#Id;#Action;#User;#Server;#Base;#Sql;#Password\n" +
-				"SQLCNT1;SQLconnect;'username';'127.0.0.1:3306';'database';'MySQL';'password'\n" +
-				"#Assert;#Message\n" +
-				"!(SQL.Out.isClosed());'connection is not established'#}}",
-		seeAlsoClass = {SQLexecute.class, SQLinsert.class, SQLselect.class, SQLtableUpload.class, SQLdisconnect.class}
+		group					   = ActionGroups.SQL,
+		suffix					   = "SQLCNT",
+		constantGeneralDescription = R.SQL_CONNECT_GENERAL_DESC,
+		additionFieldsAllowed 	   = false,
+		constantOutputDescription  = R.SQL_CONNECT_OUTPUT_DESC,
+		outputType				   = SqlConnection.class,
+		constantExamples 		   = R.SQL_CONNECT_EXAMPLE,
+		seeAlsoClass 			   = {SQLexecute.class, SQLinsert.class, SQLselect.class, SQLtableUpload.class, SQLdisconnect.class}
 	)
 public class SQLconnect  extends AbstractAction
 {

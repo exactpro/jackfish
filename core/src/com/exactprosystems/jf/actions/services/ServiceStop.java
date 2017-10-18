@@ -12,6 +12,7 @@ import com.exactprosystems.jf.actions.AbstractAction;
 import com.exactprosystems.jf.actions.ActionAttribute;
 import com.exactprosystems.jf.actions.ActionFieldAttribute;
 import com.exactprosystems.jf.actions.ActionGroups;
+import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.api.error.ErrorKind;
 import com.exactprosystems.jf.api.service.IServicesPool;
 import com.exactprosystems.jf.api.service.ServiceConnection;
@@ -21,20 +22,11 @@ import com.exactprosystems.jf.documents.config.Context;
 import com.exactprosystems.jf.documents.matrix.parser.Parameters;
 
 @ActionAttribute(
-		group					= ActionGroups.Services,
-		suffix					= "SRVSTP",
-		generalDescription 		= "The following action is needed to stop a service that was run by {{@ServiceStart@}}.",
-		additionFieldsAllowed 	= false,
-		examples 				= "{{`1. Load MatrixService.`}}"
-				+ "{{`2. Run a service with additional parameter Port, that was specified earlier.`}}"
-				+ "{{`3. Close a connection.`}} "
-				+ "{{#\n" +
-				"#Id;#Action;#ServiceId\n"
-				+ "SRVLD1;ServiceLoad;'MatrixService'\n"
-				+ "#Id;#Action;#Port;#ServiceConnection\n"
-				+ "SRVSTRT1;ServiceStart;10565;SRVLD1.Out\n"
-				+ "#Id;#Action;#ServiceConnection\n"
-				+ "SRVSTP1;ServiceStop;SRVLD1.Out#}}"
+		group					   = ActionGroups.Services,
+		suffix					   = "SRVSTP",
+		constantGeneralDescription = R.SERVICE_STOP_GENERAL_DESC,
+		additionFieldsAllowed      = false,
+		constantExamples 		   = R.SERVICE_STOP_EXAMPLE
 	)
 public class ServiceStop extends AbstractAction
 {

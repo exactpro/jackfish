@@ -12,6 +12,7 @@ import com.exactprosystems.jf.actions.*;
 import com.exactprosystems.jf.api.app.*;
 import com.exactprosystems.jf.api.app.IWindow.SectionKind;
 import com.exactprosystems.jf.api.common.Str;
+import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.api.error.ErrorKind;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.report.ReportBuilder;
@@ -29,17 +30,11 @@ import java.util.Set;
 import static com.exactprosystems.jf.actions.gui.Helper.message;
 
 @ActionAttribute(
-		group 				  = ActionGroups.GUI,
-		generalDescription 	  = "The purpose of this action is to check the accessibility of all the elements of the indicated dialog.",
-		additionFieldsAllowed = true,
-		additionalDescription = "The name of the additional parameter should contain the ID of the element. The value should contain the expected number of detected elements.",
-		examples 			  = "{{`1. Connect to the web application.`}}"
-				+ "{{`2. Check the accessibility of all elements described in MyDialog.`}}"
-				+ "{{#\n"
-				+ "#Id;#Action;#Browser;#URL;#AppId\n"
-				+ "APPSTR1;ApplicationStart;'Chrome';'https://google.com';'WEB'\n"
-				+ "#Action;#Dialog;#AppConnection\n"
-				+ "DialogValidate;'MyDialog';APPSTR1.Out#}}"
+		group 				  		  = ActionGroups.GUI,
+		constantGeneralDescription 	  = R.DIALOG_VALIDATE_GENERAL_DESC,
+		additionFieldsAllowed 		  = true,
+		constantAdditionalDescription = R.DIALOG_VALIDATE_ADDITIONAL_DESC,
+		constantExamples 			  = R.DIALOG_VALIDATE_EXAMPLE
 	)
 public class DialogValidate extends AbstractAction
 {

@@ -12,6 +12,7 @@ import com.exactprosystems.jf.actions.AbstractAction;
 import com.exactprosystems.jf.actions.ActionAttribute;
 import com.exactprosystems.jf.actions.ActionFieldAttribute;
 import com.exactprosystems.jf.actions.ActionGroups;
+import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.api.error.ErrorKind;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.report.ReportBuilder;
@@ -20,21 +21,12 @@ import com.exactprosystems.jf.documents.matrix.parser.Parameters;
 import com.exactprosystems.jf.functions.Text;
 
 @ActionAttribute(
-		group					= ActionGroups.Text,
-		generalDescription 		=
- "The purpose of the action is to change the definite line in the object {{$Text$}}. "
-+ "The object type {{$Text$}} is the text-based pattern which consists of lines. "
-+ "It can be used when it is required to make changes in the object, which has a "
-+ "sufficiently large volume or when there is no access to the source "
-+ "from which it was obtained.",
-		additionFieldsAllowed 	= false,
-		examples =
- "{{#\n" +
- "#Id;#Action;#Content\n"
-+ "TXT1;TextCreate;'Text'\n"
-+ "#Action;#Line;#Text;#Index\n"
-+ "TextSetValue;'string successfully set';TXT1.Out;2#}}",
-		seeAlsoClass = {TextReport.class, TextAddLine.class, TextLoadFromFile.class, TextCreate.class, TextSaveToFile.class, TextPerform.class}
+		group					   = ActionGroups.Text,
+		constantGeneralDescription = R.TEXT_SET_VALUE_GENERAL_DESC,
+		additionFieldsAllowed 	   = false,
+		constantExamples           = R.TEXT_SET_VALUE_EXAMPLE,
+		seeAlsoClass 			   = {TextReport.class, TextAddLine.class, TextLoadFromFile.class, TextCreate.class,
+		TextSaveToFile.class, TextPerform.class}
 	)
 public class TextSetValue extends AbstractAction 
 {

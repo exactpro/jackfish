@@ -12,6 +12,7 @@ import com.exactprosystems.jf.actions.AbstractAction;
 import com.exactprosystems.jf.actions.ActionAttribute;
 import com.exactprosystems.jf.actions.ActionFieldAttribute;
 import com.exactprosystems.jf.actions.ActionGroups;
+import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.report.ReportBuilder;
 import com.exactprosystems.jf.documents.config.Context;
@@ -20,21 +21,13 @@ import com.exactprosystems.jf.functions.HelpKind;
 import com.exactprosystems.jf.functions.Text;
 
 @ActionAttribute(
-		group					= ActionGroups.Text,
-		suffix					= "TXT",
-		generalDescription 		=
- "The purpose of the action is to create the object type {{$Text$}} from the file. "
-+ "The object type {{$Text$}} is the text-based pattern which consists of lines. "
-+ "Any file which contains plain-text can be used as a source file.",
-		additionFieldsAllowed 	= false,
-		outputDescription 		= "The object type {{$Text$}} is the text-based pattern which consists of lines.",
-		outputType				= Text.class,
-		examples =
- "{{#\n" +
- "#Id;#Action;#File\n"
-+ "TXT1;TextLoadFromFile;'path/text.txt'\n"
-+ "#Assert;#Message\n"
-+ "TXT1.Out != null;#}}\n",
+		group				 	   = ActionGroups.Text,
+		suffix					   = "TXT",
+		constantGeneralDescription = R.TEXT_LOAD_FROM_FILE_GENERAL_DESC,
+		additionFieldsAllowed 	   = false,
+		constantOutputDescription  = R.TEXT_LOAD_FROM_FILE_OUTPUT_DESC,
+		outputType				   = Text.class,
+		constantExamples 		   = R.TEXT_LOAD_FROM_FILE_EXAMPLE,
 		seeAlsoClass = {TextReport.class, TextAddLine.class, TextPerform.class, TextCreate.class, TextSaveToFile.class, TextSetValue.class}
 	)
 public class TextLoadFromFile extends AbstractAction 

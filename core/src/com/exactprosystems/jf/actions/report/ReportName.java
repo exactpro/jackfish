@@ -12,19 +12,17 @@ import com.exactprosystems.jf.actions.AbstractAction;
 import com.exactprosystems.jf.actions.ActionAttribute;
 import com.exactprosystems.jf.actions.ActionFieldAttribute;
 import com.exactprosystems.jf.actions.ActionGroups;
+import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.report.ReportBuilder;
 import com.exactprosystems.jf.documents.config.Context;
 import com.exactprosystems.jf.documents.matrix.parser.Parameters;
 
 @ActionAttribute(
-		group					= ActionGroups.Report,
-		generalDescription 		= "The following action is needed to add text to the name of the created report.",
-		additionFieldsAllowed 	= false,
-		examples 				= "If to execute the following example the name of the report file will be given - 'Date and time of"
-				+ " running matrix'_'Matrix name'_'PASSED' Chrome.html\n"
-				+ "{{#\n#Action;#Name\n"
-				+ "ReportName;'Chrome'#}}"
+		group					   = ActionGroups.Report,
+		constantGeneralDescription = R.REPORT_NAME_GENERAL_DESC,
+		additionFieldsAllowed 	   = false,
+		constantExamples 		   = R.REPORT_NAME_EXAMPLE
 	)
 public class ReportName extends AbstractAction 
 {

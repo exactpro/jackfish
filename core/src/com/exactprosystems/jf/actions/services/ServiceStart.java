@@ -10,6 +10,7 @@ package com.exactprosystems.jf.actions.services;
 
 import com.exactprosystems.jf.actions.*;
 import com.exactprosystems.jf.api.common.ParametersKind;
+import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.api.error.ErrorKind;
 import com.exactprosystems.jf.api.service.IServicesPool;
 import com.exactprosystems.jf.api.service.ServiceConnection;
@@ -23,19 +24,13 @@ import com.exactprosystems.jf.functions.HelpKind;
 import java.util.List;
 
 @ActionAttribute(
-		group					= ActionGroups.Services,
-		suffix					= "SRVSTRT",
-		generalDescription 		= "The following action is needed to run a service that was loaded earlier by {{@ServiceLoad@}}.",
-		additionFieldsAllowed 	= true,
-		additionalDescription 	= "Additional parameters depend on the type of the running service.",
-		outputDescription 		= "True, if service running successful.",
-		examples 				= "{{`1. Load MatrixService`}}"
-				+ "{{`2. Load a service woth an additional parameter Port, that was loaded earlier.`}} "
-				+ "{{#\n" +
-				"#Id;#Action;#ServiceId\n"
-				+ "SRVLD1;ServiceLoad;'MatrixService'\n"
-				+ "#Id;#Action;#Port;#ServiceConnection\n"
-				+ "SRVSTRT1;ServiceStart;10565;SRVLD1.Out#}}"
+		group						  = ActionGroups.Services,
+		suffix						  = "SRVSTRT",
+		constantGeneralDescription    = R.SERVICE_START_GENERAL_DESC,
+		additionFieldsAllowed 		  = true,
+		constantAdditionalDescription = R.SERVICE_START_ADDITIONAL_DESC,
+		constantOutputDescription     = R.SERVICE_START_OUTPUT_DESC,
+		constantExamples 			  = R.SERVICE_START_EXAMPLE
 	)
 public class ServiceStart extends AbstractAction 
 {

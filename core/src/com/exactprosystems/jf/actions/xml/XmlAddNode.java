@@ -13,6 +13,7 @@ import com.exactprosystems.jf.actions.ActionAttribute;
 import com.exactprosystems.jf.actions.ActionFieldAttribute;
 import com.exactprosystems.jf.actions.ActionGroups;
 import com.exactprosystems.jf.actions.DefaultValuePool;
+import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.api.error.ErrorKind;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.report.ReportBuilder;
@@ -22,64 +23,11 @@ import com.exactprosystems.jf.documents.matrix.parser.items.TypeMandatory;
 import com.exactprosystems.jf.functions.Xml;
 
 @ActionAttribute(
-		group					= ActionGroups.XML,
-		generalDescription 		= "The purpose of the action is to add a new element at the end of the parental element"
-				+ " Xml structure. It can be applied when necessary changes have to be done to the current object."
-				+ "If a NewXml parameter is indicated then the parameters {{$NodeName$}} and {{$Content$}} are ignored.",
-		additionFieldsAllowed 	= true,
-		additionalDescription   = "With the help of additional parameters one can transfer attributes for the new node. "
-				+ "The name of the parameter contains the name of an attribute, in the value of a parameter the value of "
-				+ "an attribute is specified. It is used when the insertion of the node is accompanied by the usage of "
-				+ "NodeName and Content parameters.",
-		examples = "{{`Example #1:`}}"
-				+ "{{`1. Create an Xml structure by loading a file.`}}"
-				+ "{{`Contents of an xml file: `}}"
-				+ "{{#\n" +
-				"<note> \n"
-				+ "<to>\n"
-				+ "<friend>\n"
-				+ "<name id=\"first\">Tove</name>\n"
-				+ "</friend>\n"
-				+ "</to>\n"
-				+ "<from>\n"
-				+ "<friend>\n"
-				+ "<name id=\"second\">Jani</name>\n"
-				+ "</friend>\n"
-				+ "</from>\n"
-				+ "<heading>Reminder</heading>\n"
-				+ "<body>Don't forget me this weekend!</body>\n"
-				+ "</note>#}}"
-				+ "\n"
-				+ "{{`2. Add node to it by giving it the name and attribute 'id' and the meaning 'gift'`}}"
-				+ "{{`3. Make sure that node has been added and contains the transferred attribute.`}}"
-				+ "{{#\n" +
-				"#Id;#Action;#File\n"
-				+ "XML1;XmlLoadFromFile;'Xml.xml'\n"
-				+ "#Action;#NodeName;#Xml;#id\n"
-				+ "XmlAddNode;'ps';XML1.Out;'gift'\n"
-				+ "#Assert;#Message\n"
-				+ "XML1.Out.getChild('ps').getAttribute('id') == 'gift';'No such attribute'#}}"
-				+ "\n"
-				+ "{{`Example #2:`}}"
-				+ "\n"
-				+ "{{`1. Create object Xml similar to the object from the first example.`}}"
-				+ "{{`2. Create second Xml object of the following content:`}} "
-				+ "{{#\n" +
-				"<ps id=\"gift\">\n"
-				+ "<body>P.S. I have a gift for you...</body>\n"
-				+ "</ps>#}} "
-				+ "{{`3. Add to it Xml structure applying parameter NewXml.`}}"
-				+ "{{`4. Make sure that the structure has been added and contains the transferred attribute.`}}"
-				+ "\n"
-				+ "{{#\n" +
-				"#Id;#Action;#File\n"
-				+ "XML1;XmlLoadFromFile;'Xml.xml'\n"
-				+ "#Id;#Action;#File\n"
-				+ "XML2;XmlLoadFromFile;'Xml2.xml'\n"
-				+ "#Action;#NewXML;#NodeName;#Xml\n"
-				+ "XmlAddNode;XML2.Out;;XML1.Out\n"
-				+ "#Assert;#Message\n"
-				+ "XML1.Out.getChild('ps').getAttribute('id') == 'gift';'No such attribute'#}}"
+		group					      = ActionGroups.XML,
+		constantGeneralDescription    = R.XML_ADD_NODE_GENERAL_DESC,
+		additionFieldsAllowed 	   	  = true,
+		constantAdditionalDescription = R.XML_ADD_NODE_ADDITIONAL_DESC,
+		constantExamples 			  = R.XML_ADD_NODE_EXAMPLE
 	)
 public class XmlAddNode extends AbstractAction 
 {

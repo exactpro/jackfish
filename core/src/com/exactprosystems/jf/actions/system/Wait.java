@@ -13,6 +13,7 @@ import com.exactprosystems.jf.actions.ActionAttribute;
 import com.exactprosystems.jf.actions.ActionFieldAttribute;
 import com.exactprosystems.jf.actions.ActionGroups;
 import com.exactprosystems.jf.actions.DefaultValuePool;
+import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.api.error.ErrorKind;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.report.ReportBuilder;
@@ -24,13 +25,10 @@ import com.exactprosystems.jf.functions.HelpKind;
 import java.util.Date;
 
 @ActionAttribute(
-		group					= ActionGroups.System,
-		generalDescription 		= "The following action is needed to stop running a matrix for a while. To execute this"
-				+ " action correctly, it is needed to specify at least one optional parameter.",
-		additionFieldsAllowed 	= false,
-		examples 				= "Stop running a matrix for 5 seconds.\n"
-				+ "{{#\n#Action;#Time\n"
-				+ "Wait;5000#}}"
+		group					   = ActionGroups.System,
+		constantGeneralDescription = R.WAIT_GENERAL_DESC,
+		additionFieldsAllowed 	   = false,
+		constantExamples 		   = R.WAIT_EXAMPLE
 	)
 public class Wait extends AbstractAction 
 {

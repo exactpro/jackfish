@@ -11,6 +11,7 @@ package com.exactprosystems.jf.actions.system;
 import com.exactprosystems.jf.actions.*;
 import com.exactprosystems.jf.api.app.ImageWrapper;
 import com.exactprosystems.jf.api.common.Str;
+import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.api.error.ErrorKind;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.report.ReportBuilder;
@@ -31,33 +32,13 @@ import java.util.Map.Entry;
 import java.util.function.Function;
 
 @ActionAttribute(
-		group 					= ActionGroups.System, 
-		suffix 					= "RESTBL", 
-		generalDescription 		= "This action is needed to get a copy of the system table that contains information about running current matrix. \n"
-				+ "This table is made during running a matrix, each row of the table contains information about one {{@TestCase@}} or {{@Step@}}.\n"
-				+ "Amendments made to the table do not influence the system table. To add columns and values there is action {{@ResultTableUserValue@}}.\n"
-				+ "It is needed to use an optional parameter if applying to another matrix.",
-		additionFieldsAllowed 	= false, 
-		outputDescription 		= "A copy if the system table that has columns Matrix, TestCaseId, TestCase, StepIdentity, Step, Time, Result, Error, Screenshot.",
-		outputType 				= Table.class,
-		examples 				= "{{#\n#Id;#TestCase;#Kind\n"
-				+ "First;;\n"
-				+ "    #Action;#name\n"
-				+ "    Print;'value'\n"
-				+ "    #Action;#Time\n"
-				+ "    Wait;1000\n"
-				+ "#Id;#TestCase;#Kind\n"
-				+ "Second;;\n"
-				+ "    #Action;#Text;#Notifier\n"
-				+ "    Show;'Some text for print';Notifier.Info\n"
-				+ "    #Fail\n"
-				+ "    'Fail'\n"
-				+ "#Id;#TestCase;#Kind\n"
-				+ "Third;;\n"
-				+ "    #Id;#Action;#Decoraded\n"
-				+ "    RESTBL1;ResultTable;true\n"
-				+ "    #Action;#BeforeTestCase;#Table;#Title\n"
-				+ "    TableReport;'First';RESTBL1.Out;'Result table'#}}",
+		group 					   = ActionGroups.System,
+		suffix 					   = "RESTBL",
+		constantGeneralDescription = R.RESULT_TABLE_GENERAL_DESC,
+		additionFieldsAllowed 	   = false,
+		constantOutputDescription  = R.RESULT_TABLE_OUTPUT_DESC,
+		outputType 				   = Table.class,
+		constantExamples 		   = R.RESULT_TABLE_EXAMPLE,
 		seeAlsoClass = {ResultTableUserValue.class}
 )
 public class ResultTable extends AbstractAction

@@ -14,6 +14,7 @@ import com.exactprosystems.jf.actions.AbstractAction;
 import com.exactprosystems.jf.actions.ActionAttribute;
 import com.exactprosystems.jf.actions.ActionFieldAttribute;
 import com.exactprosystems.jf.actions.ActionGroups;
+import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.api.error.ErrorKind;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.report.ReportBuilder;
@@ -22,21 +23,12 @@ import com.exactprosystems.jf.documents.matrix.parser.Parameters;
 import com.exactprosystems.jf.sql.SqlConnection;
 
 @ActionAttribute(
-		group					= ActionGroups.SQL,
-		suffix					= "SQLDCNT",
-		generalDescription 		= "The following action is needed to close a database connection.",
-		additionFieldsAllowed 	= false,
-		examples = "{{` 1. Establish a database connection setting all mandatory parameters. `}}" +
-				"{{` 2. Close the database connection. `}}" +
-				"{{` 3. Confirm that the database connection is closed. `}}" +
-				"{{#\n" +
-				"#Id;#Action;#User;#Server;#Base;#Sql;#Password\n" +
-				"SQLCNT1;SQLconnect;'username';'127.0.0.1:3306';'database';'MySQL';'password'\n" +
-				"#Id;#Action;#Connection\n" +
-				"SQLDCNT1;SQLdisconnect;SQLCNT1.Out\n" +
-				"#Assert;#Message\n" +
-				"SQLCNT1.Out.isClosed();'connection is not closed'. #}}",
-		seeAlsoClass = {SQLexecute.class, SQLinsert.class, SQLselect.class, SQLtableUpload.class, SQLconnect.class}
+		group					   = ActionGroups.SQL,
+		suffix					   = "SQLDCNT",
+		constantGeneralDescription = R.SQL_DISCONNECT_GENERAL_DESC,
+		additionFieldsAllowed 	   = false,
+		constantExamples 		   = R.SQL_DISCONNECT_EXAMPLE,
+		seeAlsoClass 			   = {SQLexecute.class, SQLinsert.class, SQLselect.class, SQLtableUpload.class, SQLconnect.class}
 	)
 public class SQLdisconnect extends AbstractAction
 {

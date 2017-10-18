@@ -11,6 +11,7 @@ package com.exactprosystems.jf.actions.message;
 import com.exactprosystems.jf.actions.*;
 import com.exactprosystems.jf.api.client.MapMessage;
 import com.exactprosystems.jf.api.common.Str;
+import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.api.error.ErrorKind;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.report.ReportBuilder;
@@ -25,14 +26,11 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 @ActionAttribute(
-		group					= ActionGroups.Messages,
-		generalDescription 		=
- "The purpose of the action is to display the object content {{$MapMessage$}} in the report on the matrix run. "
-+ "The object type {{$MapMessaget$}} is the tree-based representation of message which consists of fields. "
-+ "It is applied when it is necessary to send or receive {{$MapMessage$}}.",
-		additionFieldsAllowed 	= false,
-		examples = "",
-		seeAlsoClass = { MessageCreate.class }
+		group					   = ActionGroups.Messages,
+		constantGeneralDescription = R.MESSAGE_REPORT_GENERAL_DESC,
+		additionFieldsAllowed 	   = false,
+		examples                   = "",
+		seeAlsoClass               = { MessageCreate.class }
 	)
 public class MessageReport extends AbstractAction 
 {

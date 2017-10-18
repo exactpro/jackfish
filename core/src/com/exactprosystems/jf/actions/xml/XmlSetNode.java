@@ -13,6 +13,7 @@ import com.exactprosystems.jf.actions.ActionAttribute;
 import com.exactprosystems.jf.actions.ActionFieldAttribute;
 import com.exactprosystems.jf.actions.ActionGroups;
 import com.exactprosystems.jf.actions.DefaultValuePool;
+import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.report.ReportBuilder;
 import com.exactprosystems.jf.documents.config.Context;
@@ -21,35 +22,11 @@ import com.exactprosystems.jf.documents.matrix.parser.items.TypeMandatory;
 import com.exactprosystems.jf.functions.Xml;
 
 @ActionAttribute(
-		group					= ActionGroups.XML,
-		generalDescription 		= "The purpose of the action is to transfer the content of the core element of the Xml structure.",
-		additionFieldsAllowed 	= true,
-		additionalDescription 	= "With the help of additional parameters attributes for the the core node can be transferred."
-				+ "Parameter is given the name of an attribute, the value of the parameter has the value of the attribute.",
-		examples 				= "{{`1. Create an Xml object by downloading it from the file.`}}"
-				+ "{{`2. Transfer to the core element content 'Text for insert'`}}"
-				+ "{{`3. Contents of an xml file:`}} "
-				+ "{{#\n" +
-				"<note>"
-				+ "<to>\n"
-				+ "<friend>\n"
-				+ "<name id=\"first\">Tove</name>\n"
-				+ "</friend>\n"
-				+ "</to>\n"
-				+ "<from>\n"
-				+ "<friend>\n"
-				+ "<name id=\"second\">Jani</name>\n"
-				+ "</friend>\n"
-				+ "</from>\n"
-				+ "<heading>Reminder</heading>\n"
-				+ "<body>Don't forget me this weekend!</body>\n"
-				+ "</note>#}}"
-				+ "\n"
-				+ "{{#\n" +
-				"#Id;#Action;#File\n"
-				+ "XML1;XmlLoadFromFile;'/path/Xml.xml'\n"
-				+ "#Id;#Action;#Text;#Xml\n"
-				+ "XSN;XmlSetNode;'Text for insert';Xml#}}"
+		group					      = ActionGroups.XML,
+		constantGeneralDescription    = R.XML_SET_NODE_GENERAL_DESC,
+		additionFieldsAllowed 	      = true,
+		constantAdditionalDescription = R.XML_SET_NODE_ADDITIONAL_DESC,
+		constantExamples              = R.XML_SET_NODE_EXAMPLE
 	)
 public class XmlSetNode extends AbstractAction 
 {

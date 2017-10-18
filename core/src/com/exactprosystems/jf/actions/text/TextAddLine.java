@@ -12,6 +12,7 @@ import com.exactprosystems.jf.actions.AbstractAction;
 import com.exactprosystems.jf.actions.ActionAttribute;
 import com.exactprosystems.jf.actions.ActionFieldAttribute;
 import com.exactprosystems.jf.actions.ActionGroups;
+import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.report.ReportBuilder;
 import com.exactprosystems.jf.documents.config.Context;
@@ -19,18 +20,11 @@ import com.exactprosystems.jf.documents.matrix.parser.Parameters;
 import com.exactprosystems.jf.functions.Text;
 
 @ActionAttribute(
-        group = ActionGroups.Text,
-        generalDescription =
-                "The purpose of the action is to add a line to the object type {{$Text$}}. "
-                        + "Object type {{$Text$}} is a text-based pattern which consists of lines. "
-                        + "The action can work for object creation {{$Text$}} line-by-line from different sources.",
-        additionFieldsAllowed = false,
-        examples =        "{{#\n" +
-                        "#Id;#Action;#Content\n"
-                        + "TXT1;TextCreate;'Text'\n"
-                        + "#Action;#Line;#Text\n"
-                        + "TextAddLine;'New line';TXT1.Out#}}\n",
-        seeAlsoClass = {TextReport.class, TextPerform.class, TextLoadFromFile.class, TextCreate.class, TextSaveToFile.class, TextSetValue.class}
+        group                      = ActionGroups.Text,
+        constantGeneralDescription = R.TEXT_ADD_LINE_GENERAL_DESC,
+        additionFieldsAllowed      = false,
+        constantExamples           = R.TEXT_ADD_LINE_EXAMPLE,
+        seeAlsoClass               = {TextReport.class, TextPerform.class, TextLoadFromFile.class, TextCreate.class, TextSaveToFile.class, TextSetValue.class}
 )
 public class TextAddLine extends AbstractAction {
     public final static String textName = "Text";

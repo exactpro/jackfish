@@ -12,6 +12,7 @@ import com.exactprosystems.jf.actions.AbstractAction;
 import com.exactprosystems.jf.actions.ActionAttribute;
 import com.exactprosystems.jf.actions.ActionFieldAttribute;
 import com.exactprosystems.jf.actions.ActionGroups;
+import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.common.CommonHelper;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.report.ReportBuilder;
@@ -23,25 +24,14 @@ import java.io.Reader;
 import java.io.StringReader;
 
 @ActionAttribute(
-		group					= ActionGroups.Text,
-		suffix					= "TXT",
-		generalDescription 		=
- "The purpose of the action is to create the object type {{$Text$}}. "
-+ "The object type {{$Text$}} is the text-based pattern which consists of lines. "
-+ "Object type {{$Text$}} is used as the input object in many text actions. "
-+ "Also the object type {{$Text$}} can be converted into the line object "
-+ "which can contain many lines {{$Text.Out.toString()$}} divided by the line break symbol (\\n) and "
-+ "transferred to any action which accepts the line as the parameter or parameters, for example in action {{@SQLExecute@}}.",
-		additionFieldsAllowed 	= false,
-		outputDescription 		= "The object type {{$Text$}} is the text-based pattern which consists of lines.",
-		outputType				= Text.class,
-		examples =
- "{{#\n" +
- "#Id;#Action;#Content\n"
-+ "TXT1;TextCreate;'Text'\n"
-+ "#Assert;#Message\n"
-+ "TXT1.Out.toString() == 'Text';#}}\n",
-		seeAlsoClass = {TextReport.class, TextAddLine.class, TextLoadFromFile.class, TextPerform.class,
+		group					   = ActionGroups.Text,
+		suffix				       = "TXT",
+		constantGeneralDescription = R.TEXT_CREATE_GENERAL_DESC,
+		additionFieldsAllowed 	   = false,
+		constantOutputDescription  = R.TEXT_CREATE_OUTPUT_DESC,
+		outputType				   = Text.class,
+		constantExamples 		   = R.TEXT_CREATE_EXMAPLE,
+		seeAlsoClass 			   = {TextReport.class, TextAddLine.class, TextLoadFromFile.class, TextPerform.class,
 		TextSaveToFile.class, TextSetValue.class}
 	)
 public class TextCreate extends AbstractAction 

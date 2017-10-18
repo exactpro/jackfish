@@ -16,6 +16,7 @@ import com.exactprosystems.jf.actions.DefaultValuePool;
 import com.exactprosystems.jf.actions.ExecuteResult;
 import com.exactprosystems.jf.actions.ReadableValue;
 import com.exactprosystems.jf.api.common.ProcessTools;
+import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.report.ReportBuilder;
 import com.exactprosystems.jf.documents.config.Context;
@@ -29,22 +30,13 @@ import java.nio.charset.Charset;
 import java.util.List;
 
 @ActionAttribute(
-		group					= ActionGroups.System,
-		suffix					= "EXEC",
-		generalDescription 		= "The following action is needed to run external processes via command line of the operating system.\n"
-				+ "Depends on the operating system which is used, different commands can be used for the same actions in different systems.\n"
-				+ "Using this action one can unpack an archive or download a file from FTP server.",
-		additionFieldsAllowed 	= false,
-		outputDescription 		= "Result of the standard output of the running process to the console.\n"
-				+ "Available if stated true in parameter wait.\n"
-				+ "One can get a text using Out.Text, to get ExitCode use Out.ExitCode, get PID use Out.PID.",
-		outputType				= ExecuteResult.class,
-		examples = "{{`1. Run system command 'help'`}}"
-				+ "2. Check if you get an answer in the form of text when executing the current command.\n"
-				+ "{{#\n#Id;#Action;#Command\n"
-				+ "EXEC1;Execute;'help'\n"
-				+ "#Assert;#Message\n"
-				+ "Str.IsNullOrEmpty(EXEC1.Out.Text);'Command wasn't executed'#}}"
+		group					   = ActionGroups.System,
+		suffix					   = "EXEC",
+		constantGeneralDescription = R.EXECUTE_GENERAL_DESC,
+		additionFieldsAllowed 	   = false,
+		constantOutputDescription  = R.EXECUTE_OUTPUT_DESC,
+		outputType				   = ExecuteResult.class,
+		constantExamples 		   = R.EXECUTE_EXAMPLE
 	)
 public class Execute extends AbstractAction 
 {

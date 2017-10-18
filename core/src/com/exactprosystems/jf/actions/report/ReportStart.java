@@ -16,6 +16,7 @@ import com.exactprosystems.jf.actions.ActionFieldAttribute;
 import com.exactprosystems.jf.actions.ActionGroups;
 import com.exactprosystems.jf.actions.DefaultValuePool;
 import com.exactprosystems.jf.api.common.Str;
+import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.api.error.ErrorKind;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.report.ReportBuilder;
@@ -24,15 +25,13 @@ import com.exactprosystems.jf.documents.config.Context;
 import com.exactprosystems.jf.documents.matrix.parser.Parameters;
 
 @ActionAttribute(
-		group					= ActionGroups.Report,
-		generalDescription 		= "This action is used to create an object of Report type. It is possible to set it as "
-				+ "ToReport parameter in the following actions: {{@TableReport@}}, {{@TextReport@}}, {{@XmlReport@}} and others to fill the created Report object",
-		additionFieldsAllowed 	= false,
-		suffix                  = "REP",
-		outputDescription       = "Created report.",
-        outputType              = ReportBuilder.class,
-		examples 				= "{{#\n#Id;#Action;#Version;#ReportName\n" +
-				"REP1;ReportStart;'3.141592';'MyReport'#}}"
+		group					   = ActionGroups.Report,
+		constantGeneralDescription = R.REPORT_START_GENERAL_DESC,
+		additionFieldsAllowed 	   = false,
+		suffix                     = "REP",
+		constantOutputDescription  = R.REPORT_START_OUTPUT_DESC,
+        outputType                 = ReportBuilder.class,
+		constantExamples 		   = R.REPORT_START_EXAMPLE
 	)
 public class ReportStart extends AbstractAction 
 {

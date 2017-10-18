@@ -11,6 +11,7 @@ package com.exactprosystems.jf.actions.gui;
 import com.exactprosystems.jf.actions.*;
 import com.exactprosystems.jf.api.app.ImageWrapper;
 import com.exactprosystems.jf.api.common.Str;
+import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.api.error.ErrorKind;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.report.ReportBuilder;
@@ -23,25 +24,13 @@ import java.util.List;
 
 
 @ActionAttribute(
-		group					= ActionGroups.GUI,
-		suffix					= "IMGRPT",
-		generalDescription 		= "The purpose of this action Is to place the generated image in the report.",
-		additionFieldsAllowed 	= false,
-		outputDescription 		= "Path to image.",
-		outputType 				= String.class,
-		examples 				= "{{`1. Start the application.`}}"
-				+ "{{`2. Capture the whole application.`}}"
-				+ "{{`3. Create new report.`}}"
-				+ "{{`4. Send the generated image to the new report.`}}"
-				+ "{{#\n" +
-				"#Id;#Action;#Browser;#URL;#AppId\n"
-				+ "APPSTR1;ApplicationStart;'Chrome';'https://google.com';'WEB'\n"
-				+ "#Id;#Action;#AppConnection\n"
-				+ "IMGGET1;ImageGet;APPSTR1.Out\n"
-				+ "#Id;#Action;#ReportName\n"
-				+ "REP1;ReportStart;'New Report'\n"
-				+ "#Id;#Action;#Image\n"
-				+ "IMGRPT1;ImageReport;IMGGET1.Out#}}"
+		group					   = ActionGroups.GUI,
+		suffix					   = "IMGRPT",
+		constantGeneralDescription = R.IMAGE_REPORT_GENERAL_DESC,
+		additionFieldsAllowed 	   = false,
+		constantOutputDescription  = R.IMAGE_REPORT_OUTPUT_DESC,
+		outputType 				   = String.class,
+		constantExamples 		   = R.IMAGE_REPORT_EXAMPLE
 	)
 public class ImageReport extends AbstractAction
 {

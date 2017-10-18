@@ -12,6 +12,7 @@ import com.exactprosystems.jf.actions.AbstractAction;
 import com.exactprosystems.jf.actions.ActionAttribute;
 import com.exactprosystems.jf.actions.ActionFieldAttribute;
 import com.exactprosystems.jf.actions.ActionGroups;
+import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.report.ReportBuilder;
 import com.exactprosystems.jf.documents.config.Context;
@@ -20,18 +21,12 @@ import com.exactprosystems.jf.functions.HelpKind;
 import com.exactprosystems.jf.functions.Xml;
 
 @ActionAttribute(
-		group					= ActionGroups.XML,
-		generalDescription 		= "The purpose of this action is to keep (store) of the transferred Xml structure in the assigned file.",
-		additionFieldsAllowed 	= false,
-		outputDescription 		= "True, if saved successfully.",
-		outputType				= Boolean.class,
-		examples 				= "{{`1. Save the Xml object into the file filename.xml`}}"
-				+ "{{`2. Make sure that the check went well.`}} "
-				+ "{{#\n" +
-				"#Id;#Action;#Xml;#File\n"
-				+ "XSTF;XmlSaveToFile;Xml1;'path/filename.xml'\n"
-				+ "#Assert;#Message\n"
-				+ "XSTF.Out;'File was not saved'#}}"
+		group					   = ActionGroups.XML,
+		constantGeneralDescription = R.XML_SAVE_TO_FILE_GENERAL_DESC,
+		additionFieldsAllowed 	   = false,
+		constantOutputDescription  = R.XML_SAVE_TO_FILE_OUTPUT_DESC,
+		outputType				   = Boolean.class,
+		constantExamples 		   = R.XML_SAVE_TO_FILE_EXAMPLE
 	)
 public class XmlSaveToFile extends AbstractAction 
 {

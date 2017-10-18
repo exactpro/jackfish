@@ -15,6 +15,7 @@ import com.exactprosystems.jf.actions.ActionAttribute;
 import com.exactprosystems.jf.actions.ActionFieldAttribute;
 import com.exactprosystems.jf.actions.ActionGroups;
 import com.exactprosystems.jf.actions.ReadableValue;
+import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.api.error.ErrorKind;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.report.ReportBuilder;
@@ -24,14 +25,11 @@ import com.exactprosystems.jf.functions.HelpKind;
 import com.exactprosystems.jf.functions.Notifier;
 
 @ActionAttribute(
-		group					= ActionGroups.System,
-		generalDescription 		= "The following action is needed to output values in the pop-up notification that appears above all windows.",
-		additionFieldsAllowed 	= false,
-		examples 				= "Output the following row \"Current time is: currentTime\" in the pop-up window, "
-				+ "with notification type Info.\n"
-				+ "{{#\n#Action;#Text;#Notifier\n"
-				+ "Show;'Current time is: ' + DateTime.currentTime();Notifier.Info#}}",
-		seeAlsoClass = {Print.class}
+		group					   = ActionGroups.System,
+		constantGeneralDescription = R.SHOW_GENERAL_DESC,
+		additionFieldsAllowed 	   = false,
+		constantExamples 		   = R.SHOW_EXAMPLE,
+		seeAlsoClass 			   = {Print.class}
 	)
 public class Show extends AbstractAction 
 {

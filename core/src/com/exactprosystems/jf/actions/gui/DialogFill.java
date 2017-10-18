@@ -12,6 +12,7 @@ import com.exactprosystems.jf.actions.*;
 import com.exactprosystems.jf.api.app.*;
 import com.exactprosystems.jf.api.app.IWindow.SectionKind;
 import com.exactprosystems.jf.api.common.Str;
+import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.api.error.ErrorKind;
 import com.exactprosystems.jf.api.error.app.*;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
@@ -36,42 +37,13 @@ import java.util.Set;
 import static com.exactprosystems.jf.actions.gui.Helper.message;
 
 @ActionAttribute(
-		group 					= ActionGroups.GUI, 
-		suffix					= "DLGFLL",
-		generalDescription 		= "The purpose of this action is to work with control elements on the screen of the application under test."
-				+ "  With its help the user can fill in the text boxes of the forms, manage the mouse and the keyboard and also get some parameters "
-				+ "from the elements of the forms (names, attributes etc.) The action uses the dictionary containing the descriptions of forms, its elements"
-				+ " and the rules for finding those elements on the screen.  In matrix editor this action can help to choose the elements which need to be "
-				+ "dealt with from the dictionary.  For this, the user should choose 'Default app' on the Matrix editor control panel. The chosen application "
-				+ "'is aware' of its dictionary and allows to work with it interactively by choosing a dialog from the list or indicating the elements to work with "
-				+ "through 'All parameters' context menu for the specified dialog.  The elements can be of different types - buttons, text boxes, menus, table etc.  "
-				+ "Each type of element can process only the operations pertaining to it.  Buttons can be clicked, but not filled with text, for example.  "
-				+ "Besides, for each element the action is set by default. While being launched, the action draws the information about the dictionary from the "
-				+ "connection with the application (AppConnection). The action's work starts with processing the 'OnOpen' section of the chosen dialog.  "
-				+ "If there are some elements in this section then the default action will be performed for all of them one after another.  Usually the Wait "
-				+ "element is found here which waits for the main container of the form to appear on the screen.  This allows to make sure the elements of the "
-				+ "form are available for work.  In some cases - when the user is sure that the form is on the screen - the processing of this section can be canceled"
-				+ " by setting DoNotOpen parameter in true.  By default this parameter has false value.  The same mechanism works when closing the form - the OnClose "
-				+ "section is processed.  Usually it contains the Wait element which waits for the form's container to become invisible.  Processing of this section "
-				+ "can be forbidden with DoNotClose parameter. Most work is performed with the Run section of the dialog in the dictionary.  All named elements "
-				+ "(with ID attribute set) from this section can be used when working with DialogFill. The name of the element is set as parameter name.  "
-				+ "The form's elements are processed in the order used in this action.  If the element is not virtual (like Wait), then it is first searched "
-				+ "for on the screen and then the sequence of operations is performed, defined by the value of the parameter. The same element can be met "
-				+ "several times.  For instance, you can click the button, input some value in the text field and click the same button again. In general, "
-				+ "the expression is a sequence of operations.  There is a class for describing these sequences - Do.  For example Do.click() However, more complex "
-				+ "sequences can be built for each element.  For a certain text field one can come up with such sequence: Do.text('test').delay(100).check('test')."
-				+ "Here the operations are described in more detail:  [Do] if the expression doesn't represent the sequence of operations then for the specified "
-				+ "element its default action is performed.  Therefore text fields can be just given string values which will be modified into a chain "
-				+ "Do.text('your text') automatically.  If the value is not necessary for the operation, for example the default action for a button is just"
-				+ " clicking, then this value is ignored.",
-		additionFieldsAllowed 	= true, 
-		outputDescription 		= "Associative array which displays the names of the elements processed by the action "
-				+ "along with values received from the form, for example, as a result of the operation Do.get().  "
-				+ "If some element in the action was used several times, only the last value will be returned."
-				+ "Expressions are operations with elements.",
-		outputType 				= Map.class,
-		additionalDescription 	= "Parameter names assign names to the elements from Run section of the specified dialog.\n"
-				+ "Expressions are operations with elements."
+		group 						  = ActionGroups.GUI,
+		suffix						  = "DLGFLL",
+		constantGeneralDescription    = R.DIALOG_FILL_GENERAL_DESC,
+		additionFieldsAllowed 		  = true,
+		constantOutputDescription 	  = R.DIALOG_FILL_OUTPUT_DESC,
+		outputType 					  = Map.class,
+		constantAdditionalDescription = R.DIALOG_FILL_EXAMPLE
 	)
 public class DialogFill extends AbstractAction
 {

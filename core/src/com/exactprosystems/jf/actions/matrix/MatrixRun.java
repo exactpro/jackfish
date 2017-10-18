@@ -14,6 +14,7 @@ import com.exactprosystems.jf.actions.ActionFieldAttribute;
 import com.exactprosystems.jf.actions.ActionGroups;
 import com.exactprosystems.jf.actions.DefaultValuePool;
 import com.exactprosystems.jf.api.common.MatrixConnection;
+import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.api.error.common.MatrixException;
 import com.exactprosystems.jf.common.CommonHelper;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
@@ -28,28 +29,14 @@ import java.io.Reader;
 import java.util.Date;
 
 @ActionAttribute(
-		group					= ActionGroups.Matrix,
-		suffix					= "MXRN",
-		generalDescription 		= "The purpose of the action is to run a Matrix from a file. An execution context"
-				+ " is created for the run matrix, so as matrices do not cross under the run. The run matrix creates"
-				+ " its own status report. The run matrix uses the same output console as the triggering one. Otherwise,"
-				+ " messages sent by action {{@Print@}} would be invisible. To pass some value to the run matrix,"
-				+ " {{$Parameter$}} should be used. To pass several values at once, they should be bulked, for example,"
-				+ " in Map. In the started matrix to access this value use public variable with the predefined"
-				+ " name {{$Parameter$}}.",
-		additionFieldsAllowed 	= false,
-		outputDescription 		= "A special object which identifies the started matrix. This object is required"
-				+ " for {{@MatrixWait@}} action to wait when the started matrix stops. With the help of this object"
-				+ " property one can access information about the number of successfully run and failed test cases"
-				+ " of the started matrix.",
-		outputType				= MatrixConnection.class,
-		examples =
-				"{{#\n" +
-				"#Id;#Action;#Matrix\n" +
-				"MXRN1;MatrixRun;'matrices/Matrix.jf'\n" +
-				"#Assert;#Message\n" +
-				"MXRN1.Out.isRunning();'MatrixRun is failed'#}}",
-		seeAlsoClass = {MatrixRunFromText.class, MatrixWait.class}
+		group					   = ActionGroups.Matrix,
+		suffix					   = "MXRN",
+		constantGeneralDescription = R.MATRIX_RUN_GENERAL_DESC,
+		additionFieldsAllowed 	   = false,
+		constantOutputDescription  = R.MATRIX_RUN_OUTPUT_DESC,
+		outputType				   = MatrixConnection.class,
+		constantExamples 		   = R.MATRIX_RUN_EXAMPLE,
+		seeAlsoClass 			   = {MatrixRunFromText.class, MatrixWait.class}
 	)
 public class MatrixRun extends AbstractAction 
 {

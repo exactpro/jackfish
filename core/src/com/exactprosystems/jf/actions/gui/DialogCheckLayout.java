@@ -12,6 +12,7 @@ import com.exactprosystems.jf.actions.*;
 import com.exactprosystems.jf.api.app.*;
 import com.exactprosystems.jf.api.app.IWindow.SectionKind;
 import com.exactprosystems.jf.api.common.Str;
+import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.api.error.ErrorKind;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.report.ReportBuilder;
@@ -30,26 +31,10 @@ import java.util.Set;
 import static com.exactprosystems.jf.actions.gui.Helper.message;
 
 @ActionAttribute(
-		group 					= ActionGroups.GUI, 
-		generalDescription 		= "The following action is needed to check the structure of elements of the dialogue in the form. " +
-				"It helps to verify a reorganization of the forms of agile applications forms. " +
-				"For example, a change of resolution, screen layout (vertical/horizontal) etc. " +
-				"You can also verify adjusting of elements relative to one another, visibility of elements, and their sizes. " +
-				"The action uses it's dictionary in which forms, their elements and algorithms for finding them on the screen are described. " +
-				"The chosen application 'knows' about its' dictionary and allows to operate interactively with it - to choose a dialogue from the list and " +
-				"to choose those elements that will be used by the user via the context menu 'All parameters'. " +
-				"When you run this action, it gets the information related to the dictionary from the connection with the application (AppConnection). " +
-				"Running of the action starts with processing section 'OnOpen' of the chosen dialogue. If there are some elements in this section, the action will be applied to all of them one by one by default. " +
-				"Usually element Wait is found here, that waits for the main container of the form to appear on the screen. " +
-				"In some cases (when a user is sure that there is a form on the screen, processing of this section can be turned off by setting parameter DoNotOpen in true). " +
-				"This parameter has value false by default. The same happens when closing the form - section OnClose is processed. " +
-				"Usually element Wait is found here, that waits for the main container of the form to become invisible. It is possible to stop processing this section by setting parameter DoNotClose. " +
-				"The main work is done in section of the dictionary Run of the dialogue. All identified elements (that have attribute Id) from this section can be used when dealing with DialogCheckLayout. " +
-				"A name of the element is set as a name of the parameter. Elements of the form are processed according to this action. " +
-				"If an element is not virtual (for example, Wait), it should be found on the screen, then its' sequence that was set by the parameter is processed. " +
-				"Action DoSpec is specified in the parameter. For example, DoSpec top('Element1', 10) means that Element1 is10px higher than the known one.",
-		additionFieldsAllowed 	= true,
-		suffix = "DLGCL",
+		group 					   = ActionGroups.GUI,
+		constantGeneralDescription = R.DIALOG_CHECK_LAYOUT_GENERAL_DESC,
+		additionFieldsAllowed 	   = true,
+		suffix 					   = "DLGCL",
 		outputType = Table.class
 	)
 public class DialogCheckLayout extends AbstractAction

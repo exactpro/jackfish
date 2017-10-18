@@ -12,6 +12,7 @@ import com.exactprosystems.jf.actions.*;
 import com.exactprosystems.jf.api.app.*;
 import com.exactprosystems.jf.api.app.IWindow.SectionKind;
 import com.exactprosystems.jf.api.common.Str;
+import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.api.error.ErrorKind;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.report.ReportBuilder;
@@ -25,19 +26,13 @@ import static com.exactprosystems.jf.actions.gui.Helper.message;
 
 
 @ActionAttribute(
-		group					= ActionGroups.GUI,
-		suffix					= "IMGGET",
-		generalDescription 		= "The purpose of this action is to get the screenshot of the started application."
-				+ "Without setting optional parameters the screenshot of the whole application is made. When setting the "
-				+ "Dialog parameter, the screenshot of the first element of 'Self' section is made. When setting the Dialog "
-				+ "and Name parameters, the screenshot of the element indicated in Name is made.",
-		additionFieldsAllowed 	= false,
-		outputDescription 		= "An image which is grabbed from the screen.", 
-		outputType 				= ImageWrapper.class,
-		examples 				= "{{`1. Make the screenshot of the logo element located in MyDialog.`}}"
-				+ "{{#\n" +
-				"#Id;#Action;#Description;#Dialog;#Name;#AppConnection\n"
-				+ "IMGGET1;ImageGet;'Chrome screenshot';'MyDialog';'logo';App#}}"
+		group					   = ActionGroups.GUI,
+		suffix					   = "IMGGET",
+		constantGeneralDescription = R.IMAGE_GET_GENERAL_DESC,
+		additionFieldsAllowed 	   = false,
+		constantOutputDescription  = R.IMAGE_GET_OUTPUT_DESC,
+		outputType 				   = ImageWrapper.class,
+		constantExamples 		   = R.IMAGE_GET_EXAMPLE
 	)
 public class ImageGet extends AbstractAction
 {

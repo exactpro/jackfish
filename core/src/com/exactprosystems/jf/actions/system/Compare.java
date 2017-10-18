@@ -15,6 +15,7 @@ import com.exactprosystems.jf.actions.ActionGroups;
 import com.exactprosystems.jf.actions.DefaultValuePool;
 import com.exactprosystems.jf.actions.ReadableValue;
 import com.exactprosystems.jf.api.common.Str;
+import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.api.error.ErrorKind;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.report.ReportBuilder;
@@ -32,24 +33,14 @@ import java.util.Objects;
 import java.util.Map.Entry;
 
 @ActionAttribute(
-        group                   = ActionGroups.System,
-        generalDescription      = "The following action is needed to compare two structured objects that implement interface"
-                + " Map, for example: table rows, MapMessages.",
-        additionFieldsAllowed   = false,
-        suffix                  = "CMP",
-        outputType              = Table.class,
-        outputDescription       = "A table as a resulf of compare.",
-        additionalDescription = "Helps to pass values and their names that are needed to be compared.",
-        examples = "{{`1. Make a table with 2 rows and columns, add values.`}}"
-                + "2. Compare values from the first row of the table with those ones that are specified in Expected parameter of action Compare. "
-                + "{{#\n#Id;#RawTable\n"
-                + "DATA1;Table\n"
-                + "@;Country;Capital\n"
-                + "0;Russia;Moscow\n"
-                + "1;Germany;Berlin\n"
-                + "#EndRawTable\n"
-                + "#Action;#DoNotFail;#Actual;#Expected\n"
-                + "Compare;true;DATA1.get(0); { 'Country':'Russia', 'Capital':'Berlin' } #}}"
+        group                         = ActionGroups.System,
+        constantGeneralDescription    = R.COMPARE_GENERAL_DESC,
+        additionFieldsAllowed         = false,
+        suffix                        = "CMP",
+        outputType                    = Table.class,
+        constantOutputDescription     = R.COMPARE_OUTPUT_DESC,
+        constantAdditionalDescription = R.COMPARE_ADDITIONAL_DESC,
+        constantExamples              = R.COMPARE_EXAMPLE
     )
 public class Compare extends AbstractAction
 {

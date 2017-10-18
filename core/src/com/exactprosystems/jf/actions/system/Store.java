@@ -12,22 +12,18 @@ import com.exactprosystems.jf.actions.AbstractAction;
 import com.exactprosystems.jf.actions.ActionAttribute;
 import com.exactprosystems.jf.actions.ActionFieldAttribute;
 import com.exactprosystems.jf.actions.ActionGroups;
+import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.report.ReportBuilder;
 import com.exactprosystems.jf.documents.config.Context;
 import com.exactprosystems.jf.documents.matrix.parser.Parameters;
 
 @ActionAttribute(
-		group = ActionGroups.System,
-		generalDescription = "The following action is needed to store values of the object from any matrix in global {{$Store$}}.\n"
-				+ "Later, this object is available by action {{@Restore@}}.\n"
-				+ "Also if the value is {{$null$}} the stored value will be removed from {{$Store$}}."
-				+ "All objects from global {{$Store$}} are stored only during the current tool session.",
-		additionFieldsAllowed = false,
-		examples 			= "Save object DateTime that contains current date and time when doing this action.\n"
-				+ "{{#\n#Action;#Value;#Name\n"
-				+ "Store;DateTime.current();'currentTime#}}",
-		seeAlsoClass = {Restore.class}
+		group 					   = ActionGroups.System,
+		constantGeneralDescription = R.STORE_GENERAL_DESC,
+		additionFieldsAllowed 	   = false,
+		constantExamples 		   = R.STORE_EXAMPLE,
+		seeAlsoClass 			   = {Restore.class}
 )
 
 public class Store extends AbstractAction

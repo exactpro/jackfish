@@ -10,6 +10,7 @@ package com.exactprosystems.jf.actions.xml;
 
 import com.exactprosystems.jf.actions.*;
 import com.exactprosystems.jf.api.common.Str;
+import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.report.ReportBuilder;
 import com.exactprosystems.jf.documents.config.Context;
@@ -20,34 +21,10 @@ import com.exactprosystems.jf.functions.Xml;
 import java.util.List;
 
 @ActionAttribute(
-		group					= ActionGroups.XML,
-		generalDescription 		= "The purpose of this action is to map the content of the Xml object in the report of a matrix run."
-				+ "It is used when there is a need to go through the content of the Xml object.",
-		additionFieldsAllowed 	= false,
-		examples 				= "{{`1. Create an Xml object by downloading it from the file.`}}"
-				+ "{{`Contents of an xml file:`}} "
-				+ "{{#\n" +
-				"<note> \n"
-				+ "<to>\n"
-				+ "<friend>\n"
-				+ "<name id=\"first\">Tove</name>\n"
-				+ "</friend>\n"
-				+ "</to>\n"
-				+ "<from>\n"
-				+ "<friend>\n"
-				+ "<name id=\"second\">Jani</name>\n"
-				+ "</friend>\n"
-				+ "</from>\n"
-				+ "<heading>Reminder</heading>\n"
-				+ "<body>Don't forget me this weekend!</body>\n"
-				+ "</note>#}}"
-				+ "\n"
-				+ "{{`2. Reflect the content of the Xml object in the report.`}} "
-				+ "{{#\n" +
-				"#Id;#Action;#File\n"
-				+ "XML1;XmlLoadFromFile;'/path/Xml.xml'\n"
-				+ "#Action;#Xml;#Title\n"
-				+ "XmlReport;Xml1;'Xml report'#}}"
+		group					   = ActionGroups.XML,
+		constantGeneralDescription = R.XML_REPORT_GENERAL_DESC,
+		additionFieldsAllowed 	   = false,
+		constantExamples 		   = R.XML_REPORT_EXAMPLE
 	)
 public class XmlReport extends AbstractAction 
 {

@@ -9,6 +9,7 @@
 package com.exactprosystems.jf.actions.xml;
 
 import com.exactprosystems.jf.actions.*;
+import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.report.ReportBuilder;
 import com.exactprosystems.jf.documents.config.Context;
@@ -19,26 +20,13 @@ import com.exactprosystems.jf.functions.Xml;
 import java.util.List;
 
 @ActionAttribute(
-		group					= ActionGroups.XML,
-		suffix					= "XMLCMP",
-		generalDescription 		= "The purpose of the action is to compare two Xml structures.",
-		additionFieldsAllowed 	= false,
-		outputDescription 		= "True, if Xml structures are equal.",
-		outputType				= Boolean.class,
-		examples 				= "{{`1. Create an Xml structure from a file.`}}"
-				+ "{{`2. Create two new Xml structures by choosing them using XPath from the uploaded Xml structure.`}}"
-				+ "{{`3. Compare two Xml structures.`}}"
-				+ "{{`4. Check the results of the comparison.`}}"
-				+ "\n"
-				+ "{{#\n" +
-				"#Id;#Action;#File\n"
-				+ "XML1;XmlLoadFromFile;'pathToTheFile'\n"
-				+ "#Id;#Action;#Xpath;#NodeName;#Xml\n"
-				+ "XML2;XmlSelect;'//friend';'newParent';XML1.Out\n"
-				+ "#Id;#Action;#Expected;#Actual\n"
-				+ "XMLCMP1;XmlCompare;XML2.Out.getChildren().get(0);XML2.Out.getChildren().get(1)\n"
-				+ "#Assert;#Message\n"
-				+ "XMLCMP1.Out;'Xmls does not equals'#}}"
+		group					   = ActionGroups.XML,
+		suffix					   = "XMLCMP",
+		constantGeneralDescription = R.XML_COMPARE_GENERAL_DESC,
+		additionFieldsAllowed 	   = false,
+		constantOutputDescription  = R.XML_COMPARE_OUTPUT_DESC,
+		outputType				   = Boolean.class,
+		constantExamples 		   = R.XML_COMPARE_EXAMPLE
 	)
 public class XmlCompare extends AbstractAction 
 {

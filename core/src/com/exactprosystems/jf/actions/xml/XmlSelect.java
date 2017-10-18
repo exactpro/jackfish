@@ -12,6 +12,7 @@ import com.exactprosystems.jf.actions.AbstractAction;
 import com.exactprosystems.jf.actions.ActionAttribute;
 import com.exactprosystems.jf.actions.ActionFieldAttribute;
 import com.exactprosystems.jf.actions.ActionGroups;
+import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.report.ReportBuilder;
 import com.exactprosystems.jf.documents.config.Context;
@@ -20,43 +21,13 @@ import com.exactprosystems.jf.functions.HelpKind;
 import com.exactprosystems.jf.functions.Xml;
 
 @ActionAttribute(
-		group					= ActionGroups.XML,
-		suffix					= "XML",
-		generalDescription 		= "The purpose of the action is to return (restore) the Xml structure allocated using "
-				+ "Xpath parameter from Xml document. The action returns all appropriate to the condition elements "
-				+ "(an element) and all their (its) parts. The output value is a separate Xml structure and is not connected"
-				+ " to the structure transferred in Xml parameter.",
-		additionFieldsAllowed 	= false,
-		outputDescription 		= "Xml structure that contains the result of the demand.",
-		outputType				= Xml.class,
-		examples 				= "{{`Create an Xml object by downloading it from the file.`}}"
-				+ "{{`Contents of an xml file:`}} "
-				+ "{{#\n" +
-				"<note> \n"
-				+ "<to>\n"
-				+ "<friend>\n"
-				+ "<name id=\"first\">Tove</name>\n"
-				+ "</friend>\n"
-				+ "</to>\n"
-				+ "\n"
-				+ "<from>\n"
-				+ "<friend>\n"
-				+ "<name id=\"second\">Jani</name>\n"
-				+ "</friend>\n"
-				+ "</from>\n"
-				+ "<heading>Reminder</heading>\n"
-				+ "<body>Don't forget me this weekend!</body>\n"
-				+ "</note>#}}"
-				+ " \n"
-				+ "{{`2. Find the element from.`}}"
-				+ "{{`3. Make sure that a new Xml structure has been created.`}} "
-				+ "{{#\n" +
-				"#Id;#Action;#File\n"
-				+ "XML1;XmlLoadFromFile;'/path/Xml.xml'\n"
-				+ "#Id;#Action;#Xml;#Xpath;#NodeName\n"
-				+ "XS;XmlSelect;Xml1;'//from';'sub_item'\n"
-				+ "#Assert;#Message\n"
-				+ "XS.Out != null;'Object is null'#}}"
+		group					   = ActionGroups.XML,
+		suffix					   = "XML",
+		constantGeneralDescription = R.XML_SELECT_GENERAL_DESC,
+		additionFieldsAllowed 	   = false,
+		constantOutputDescription  = R.XML_SELECT_OUTPUT_DESC,
+		outputType				   = Xml.class,
+		constantExamples 		   = R.XML_SELECT_EXAMPLE
 	)
 public class XmlSelect extends AbstractAction 
 {

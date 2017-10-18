@@ -3,6 +3,7 @@ package com.exactprosystems.jf.actions.xml;
 import com.exactprosystems.jf.actions.AbstractAction;
 import com.exactprosystems.jf.actions.ActionAttribute;
 import com.exactprosystems.jf.actions.ActionGroups;
+import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.report.ReportBuilder;
 import com.exactprosystems.jf.documents.config.Context;
@@ -15,12 +16,10 @@ import javax.xml.parsers.DocumentBuilderFactory;
 
 
 @ActionAttribute(
-        group = ActionGroups.XML,
-        generalDescription = "Create new xml.",
-        examples = "{{#\n" +
-                "#Id;#Action\n" +
-                "xml;XmlCreate#}}",
-        additionFieldsAllowed = false
+        group                      = ActionGroups.XML,
+        constantGeneralDescription = R.XML_CREATE_GENERAL_DESC,
+        constantExamples           = R.XML_CREATE_EXAMPLE,
+        additionFieldsAllowed      = false
 )
 public class XmlCreate extends AbstractAction
 {

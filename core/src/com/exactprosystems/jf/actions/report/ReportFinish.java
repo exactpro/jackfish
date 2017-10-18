@@ -15,6 +15,7 @@ import com.exactprosystems.jf.actions.ActionAttribute;
 import com.exactprosystems.jf.actions.ActionFieldAttribute;
 import com.exactprosystems.jf.actions.ActionGroups;
 import com.exactprosystems.jf.actions.DefaultValuePool;
+import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.api.error.ErrorKind;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.report.ReportBuilder;
@@ -22,25 +23,10 @@ import com.exactprosystems.jf.documents.config.Context;
 import com.exactprosystems.jf.documents.matrix.parser.Parameters;
 
 @ActionAttribute(
-		group					= ActionGroups.Report,
-		generalDescription 		= "This action is used as a final step in building a report taken from {{@ReportStart@}} "
-				+ "action. It will be impossible to add new elements to Report after after using this action.",
-		additionFieldsAllowed 	= false,
-		examples 				= "{{`1. Create an object of Report type.`}}"
-				+ "{{`2. Create an object of Table type.`}}"
-				+ "{{`3. Move the object Table using {{@TableReport@}} action to the report created in the first step.`}}"
-				+ "{{`4. Finish building Report object.`}} "
-				+ "{{#\n#Id;#Action;#Version;#ReportName\n"
-				+ "REP1;ReportStart;'3.141592';'MyReport'\n"
-				+ "#Id;#RawTable\n"
-				+ "DATA1;Table\n"
-				+ "@;newH\n"
-				+ "0;newR\n"
-				+ "#EndRawTable\n"
-				+ "#Action;#ToReport;#Table;#Title\n"
-				+ "TableReport;REP1.Out;DATA1;'Report title'\n"
-				+ "#Action;#Passed;#Report;#Failed\n"
-				+ "ReportFinish;0;REP1.Out;0#}}"
+		group					   = ActionGroups.Report,
+		constantGeneralDescription = R.REPORT_FINISH_GENERAL_DESC,
+		additionFieldsAllowed 	   = false,
+		constantExamples 		   = R.REPORT_FINISH_EXAMPLE
 	)
 public class ReportFinish extends AbstractAction 
 {

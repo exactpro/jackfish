@@ -12,6 +12,7 @@ import com.exactprosystems.jf.actions.AbstractAction;
 import com.exactprosystems.jf.actions.ActionAttribute;
 import com.exactprosystems.jf.actions.ActionFieldAttribute;
 import com.exactprosystems.jf.actions.ActionGroups;
+import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.api.error.ErrorKind;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.report.ReportBuilder;
@@ -22,28 +23,10 @@ import com.exactprosystems.jf.functions.HelpKind;
 import java.io.File;
 
 @ActionAttribute(
-		group					= ActionGroups.Report,
-		generalDescription 		= "This action is used for Report object display which was finished with ReportFinish action."
-				+ " Report will be displayed straight after finishing this action.",
-		additionFieldsAllowed 	= false,
-		examples 				= "{{`1. Create an object of Report type.`}}"
-				+ "{{`2. Create an object of Table type.`}}"
-				+ "{{`3. Move the object Table using TableReport action to the report created in the first step.`}}"
-				+ "{{`4. Finish building Report object.`}}"
-				+ "{{`5. Display the report.`}} "
-				+ "{{#\n#Id;#Action;#Version;#ReportName\n"
-				+ "REP1;ReportStart;'3.141592';'MyReport'\n"
-				+ "#Id;#RawTable\n"
-				+ "DATA1;Table\n"
-				+ "@;newH\n"
-				+ "0;newR\n"
-				+ "#EndRawTable\n"
-				+ "#Action;#ToReport;#Table;#Title\n"
-				+ "TableReport;REP1.Out;DATA1;'Report title'\n"
-				+ "#Action;#Passed;#Report;#Failed\n"
-				+ "ReportFinish;23;REP1.Out;34\n"
-				+ "#Action;#Report\n"
-				+ "ReportShow;REP1.Out.getReportName()#}}"
+		group					   = ActionGroups.Report,
+		constantGeneralDescription = R.REPORT_SHOW_GENERAL_DESC,
+		additionFieldsAllowed      = false,
+		constantExamples           = R.REPORT_SHOW_EXAMPLE
 	)
 public class ReportShow extends AbstractAction 
 {

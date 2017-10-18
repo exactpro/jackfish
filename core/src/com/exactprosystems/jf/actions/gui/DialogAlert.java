@@ -12,6 +12,7 @@ import com.exactprosystems.jf.api.app.AppConnection;
 import com.exactprosystems.jf.api.app.IApplication;
 import com.exactprosystems.jf.api.app.IRemoteApplication;
 import com.exactprosystems.jf.api.app.PerformKind;
+import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.api.error.ErrorKind;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.report.ReportBuilder;
@@ -23,20 +24,13 @@ import java.rmi.RemoteException;
 import java.util.List;
 
 @ActionAttribute(
-		group					= ActionGroups.GUI,
-		suffix					= "DLGALRT",
-		generalDescription		= "The purpose of this action is to process pop-up notifications.\n"
-				+ "It is a plug-in dependent action currently being used only with web plug-in.",
-		additionFieldsAllowed	= false,
-		outputDescription		= "Output value is the notification heading.",
-		outputType				= String.class,
-		examples 				= "{{`1. Type 'hello' in the pop-up notification field`}}"
-				+ "{{`2. Ensure we have the notification heading as an output value.`}}"
-				+ "{{#\n" +
-				"#Id;#Action;#Text;#Perform;#AppConnection\n"
-				+ "DLGALRT1;DialogAlert;'hello';PerformKind.Accept;APPSTR1.Out\n"
-				+ "#Assert;#Message\n"
-				+ "DLGALRT1.Out != null;#}}"
+		group					   = ActionGroups.GUI,
+		suffix					   = "DLGALRT",
+		constantGeneralDescription = R.DIALOG_ALERT_GENERAL_DESC,
+		additionFieldsAllowed	   = false,
+		constantOutputDescription  = R.DIALOG_ALERT_OUTPUT_DESC,
+		outputType				   = String.class,
+		constantExamples 		   = R.DIALOG_ALERT_EXAMPLE
 	)
 public class DialogAlert extends AbstractAction
 {

@@ -11,6 +11,7 @@ import com.exactprosystems.jf.actions.*;
 import com.exactprosystems.jf.api.app.*;
 import com.exactprosystems.jf.api.app.IWindow.SectionKind;
 import com.exactprosystems.jf.api.common.Str;
+import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.api.error.ErrorKind;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.report.ReportBuilder;
@@ -23,20 +24,10 @@ import java.util.List;
 import static com.exactprosystems.jf.actions.gui.Helper.message;
 
 @ActionAttribute(
-		group 					= ActionGroups.GUI,
-		generalDescription 		= "The purpose of this action is to switch focus to another application.\n"
-				+ "Plug-in dependent action currently being used only with web plug-in.",
-		additionFieldsAllowed 	= false,
-		examples 				= "{{`1. Start the web application.`}}"
-				+ "{{`2. Connect to the desktop application, the window headed WinApp.`}}"
-				+ "{{`3. Switch focus back to the MainFrame of the web application, located in MyDialog.`}}"
-				+ "{{#\n" +
-				"#Id;#Action;#Browser;#URL;#AppId\n"
-				+ "APPSTR1;ApplicationStart;'Chrome';'https://google.com';'WEB'\n"
-				+ "#Id;#Action;#AppId;#Main window\n"
-				+ "APPSTR2;ApplicationConnectTo;'WIN';'WinApp'\n"
-				+ "#Action;#Frame;#Dialog;#AppConnection\n"
-				+ "DialogSwitchToWindow;'MainFrame';'MyDialog';APPSTR1.Out#}}"
+		group 					   = ActionGroups.GUI,
+		constantGeneralDescription = R.DIALOG_SWITCH_TO_WINDOW_GENERAL_DESC,
+		additionFieldsAllowed 	   = false,
+		constantExamples 	       = R.DIALOG_SWITCH_TO_WINDOW_EXAMPLE
 	)
 public class DialogSwitchToWindow extends AbstractAction
 {

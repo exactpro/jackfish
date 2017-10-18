@@ -9,6 +9,7 @@
 package com.exactprosystems.jf.actions.report;
 
 import com.exactprosystems.jf.actions.*;
+import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.report.ReportBuilder;
 import com.exactprosystems.jf.common.report.ReportTable;
@@ -21,20 +22,11 @@ import com.exactprosystems.jf.functions.HelpKind;
 import java.util.List;
 
 @ActionAttribute(
-		group					= ActionGroups.Report,
-		generalDescription 		= "The following action is needed to output values to the report.",
-		additionFieldsAllowed 	= true,
-		additionalDescription   = "The name and the value that will be shown in the report.",
-		examples 				= "This example will add the following row 'String for printing: name = value' to "
-				+ "the report that was created by action {{@ReportStart@}} \n"
-				+ "{{#\n#Id;#Action;#ReportName\n"
-				+ "REP1;ReportStart;'My Report'\n"
-				+ "#Action;#ToReport;#Str;#name\n"
-				+ "Report;REP1.Out;'String for printing:';'value'\n"
-				+ "ReportFinish;0;REP1.Out;0\n"
-				+ "#Action;#Passed;#Report;#Failed\n"
-				+ "#Action;#Report\n"
-				+ "ReportShow;REP1.Out.getReportName()#}}"
+		group					      = ActionGroups.Report,
+		constantGeneralDescription    = R.REPORT_GENERAL_DESC,
+		additionFieldsAllowed 	      = true,
+		constantAdditionalDescription = R.REPORT_ADDITIONAL_DESC,
+		constantExamples 			  = R.REPORT_EXAMPLE
 	)
 public class Report extends AbstractAction 
 {

@@ -14,6 +14,7 @@ import com.exactprosystems.jf.actions.ActionFieldAttribute;
 import com.exactprosystems.jf.actions.ActionGroups;
 import com.exactprosystems.jf.actions.DefaultValuePool;
 import com.exactprosystems.jf.api.common.MatrixConnection;
+import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.api.error.common.MatrixException;
 import com.exactprosystems.jf.common.CommonHelper;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
@@ -29,23 +30,14 @@ import java.io.Reader;
 import java.util.Date;
 
 @ActionAttribute(
-		group					= ActionGroups.Matrix,
-		suffix					= "MXRN",
-		generalDescription 		= "The purpose of this action is to run the matrix from the text. "
-				+ "An execution context is created for the run matrix, so as matrices do not cross under run. "
-				+ "The run matrix creates its own status report.",
-		additionFieldsAllowed 	= false,
-		outputDescription 		= "A special object which identifies the started matrix. "
-				+ "This object is required for {{@MatrixWait@}} action to wait when the started matrix stops."
-				+ "With the help of this object property one can access information about the number of"
-				+ " successfully run and failed test cases of the started matrix. ",
-		outputType				= MatrixConnection.class,
-		examples = "{{#\n" +
-				"#Id;#Action;#Text\n" +
-				"MXRN1;MatrixRunFromText;Text\n" +
-				"#Assert;#Message\n" +
-				"MXRN1.Out.isRunning();'MatrixRun is failed'#}}",
-		seeAlsoClass = {MatrixRun.class, MatrixWait.class}
+		group					   = ActionGroups.Matrix,
+		suffix					   = "MXRN",
+		constantGeneralDescription = R.MATRIX_RUN_FROM_TEXT_GENERAL_DESC,
+		additionFieldsAllowed 	   = false,
+		constantOutputDescription  = R.MATRIX_RUN_FROM_TEXT_OUTPUT_DESC,
+		outputType				   = MatrixConnection.class,
+		constantExamples           = R.MATRIX_RUN_FROM_TEXT_EXAMPLE,
+		seeAlsoClass 			   = {MatrixRun.class, MatrixWait.class}
 	)
 public class MatrixRunFromText extends AbstractAction 
 {

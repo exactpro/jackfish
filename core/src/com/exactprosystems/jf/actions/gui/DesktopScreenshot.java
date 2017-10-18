@@ -11,6 +11,7 @@ package com.exactprosystems.jf.actions.gui;
 import com.exactprosystems.jf.actions.*;
 import com.exactprosystems.jf.api.app.*;
 import com.exactprosystems.jf.api.common.Str;
+import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.report.ReportBuilder;
 import com.exactprosystems.jf.documents.config.Context;
@@ -21,17 +22,13 @@ import java.awt.image.BufferedImage;
 
 
 @ActionAttribute(
-		group					= ActionGroups.GUI,
-		suffix					= "DSK",
-		generalDescription 		= "The purpose of the action is to capture the full screenshot along with the desktop.\n"
-				+ "This gives the user the advantage to see system notifications of third-party applications.  The disadvantage"
-				+ " is that the screenshot is captured on the 'upper layer', i.e the events/windows overlapped by other windows will not be seen. ",
-		additionFieldsAllowed 	= false,
-		outputDescription 		= "An image which is grabbed from the desktop.", 
-		outputType 				= ImageWrapper.class,
-		examples 				= "{{#\n" +
-				"#Id;#Action;#Description\n"
-				+ "DSK1;DesktopScreenshot;'My desktop'#}}"
+		group					   = ActionGroups.GUI,
+		suffix					   = "DSK",
+		constantGeneralDescription = R.DESKTOP_SCREENSHOT_GENERAL_DESC,
+		additionFieldsAllowed 	   = false,
+		constantOutputDescription  = R.DESKTOP_SCREENSHOT_OUTPUT_DESC,
+		outputType 				   = ImageWrapper.class,
+		constantExamples 		   = R.DESKTOP_SCREENSHOT_EXAMPLE
 	)
 public class DesktopScreenshot extends AbstractAction
 {

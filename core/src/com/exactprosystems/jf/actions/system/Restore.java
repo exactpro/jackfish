@@ -9,6 +9,7 @@
 package com.exactprosystems.jf.actions.system;
 
 import com.exactprosystems.jf.actions.*;
+import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.report.ReportBuilder;
 import com.exactprosystems.jf.documents.config.Context;
@@ -19,18 +20,13 @@ import java.util.List;
 import java.util.Map.Entry;
 
 @ActionAttribute(
-		group = ActionGroups.System,
-		generalDescription 		= "The following action is needed to get the value that was previously saved in global Store (see action {{@Store@}}).\n"
-				+ "One can restore only those objects that are in global Store (View -> Store).\n"
-				+ "All objects from the global Store are saved only during current tool session.",
-		additionFieldsAllowed = false,
-		outputDescription 		= "A value that will be required. Otherwise, null, if a non-existent value was required.",
-		outputType				= Object.class,
-		examples 				= "Restore value with name currentTime that was stored by action Store. Assign it to "
-				+ "the local variable createDate.\n"
-				+ "{{#\n#Action;#AsVar;#Name\n"
-				+ "Restore;'createDate';'currentTime'#}}",
-		seeAlsoClass = {Store.class}
+		group 					   = ActionGroups.System,
+		constantGeneralDescription = R.RESTORE_GENERAL_DESC,
+		additionFieldsAllowed 	   = false,
+		constantOutputDescription  = R.RESTORE_OUTPUT_DESC,
+		outputType				   = Object.class,
+		constantExamples 		   = R.RESTORE_EXAMPLE,
+		seeAlsoClass 			   = {Store.class}
 )
 
 public class Restore extends AbstractAction

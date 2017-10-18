@@ -13,6 +13,7 @@ import com.exactprosystems.jf.actions.ActionAttribute;
 import com.exactprosystems.jf.actions.ActionFieldAttribute;
 import com.exactprosystems.jf.actions.ActionGroups;
 import com.exactprosystems.jf.actions.ReadableValue;
+import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.api.error.ErrorKind;
 import com.exactprosystems.jf.api.service.IServicesPool;
 import com.exactprosystems.jf.api.service.ServiceConnection;
@@ -26,17 +27,13 @@ import com.exactprosystems.jf.functions.HelpKind;
 import java.util.List;
 
 @ActionAttribute(
-		group					= ActionGroups.Services,
-		suffix					= "SRVLD",
-		generalDescription 		= "The following action is needed to load a service, to initialize it and to connect to it."
-				+ "Services are things functioning as a server in a client-server relationship."
-				+ "A server listens to a definite port and allows installing TCP connection from the client side.",
-		additionFieldsAllowed 	= false,
-		outputDescription = "Is a connection with a loaded server. It is used for further interaction with the loaded server.",
-		outputType 				= ServiceConnection.class,
-		examples 				= "{{#\n" +
-				"#Id;#Action;#ServiceId\n"
-				+ "SRVLD1;ServiceLoad;'TEST'#}}"
+		group					   = ActionGroups.Services,
+		suffix					   = "SRVLD",
+		constantGeneralDescription = R.SERVICE_LOAD_GENERAL_DESC,
+		additionFieldsAllowed 	   = false,
+		constantOutputDescription  = R.SERVICE_LOAD_OUTPUT_DESC,
+		outputType 				   = ServiceConnection.class,
+		constantExamples 		   = R.SERVICE_LOAD_EXAMPLE
 	)
 public class ServiceLoad extends AbstractAction 
 {

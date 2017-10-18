@@ -11,6 +11,7 @@ package com.exactprosystems.jf.actions.report;
 import com.exactprosystems.jf.actions.*;
 import com.exactprosystems.jf.api.app.ChartKind;
 import com.exactprosystems.jf.api.common.Str;
+import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.api.error.common.NullParameterException;
 import com.exactprosystems.jf.charts.ChartBuilder;
 import com.exactprosystems.jf.charts.ChartFactory;
@@ -28,36 +29,10 @@ import java.util.Map;
 
 @ActionAttribute(
 		group = ActionGroups.Report, 
-		generalDescription = "The following action is needed to display graphs and diagrams in reports based on data from the tables.",
-		additionFieldsAllowed = true,
-		additionalDescription = "Depend on the type of the graph/diagram. {{` {{$Labels$}} - it is needed to name a column, "
-				+ "which values will be used for creating a diagram.`}} {{` {{$YAxisDescription$}} - it is needed to specify the "
-				+ "name that will be assigned to Z-axis.`}} {{` {{$Values$}} - the name of the column, which values will be used "
-				+ "for creating Pie type diagram.`}}",
-		examples = "1. Make a table\n"
-				+ "2. Create a report by ReportStart action\n"
-				+ "3. Create a graph based on the table. Specify a newly created report in parameter Report.\n"
-				+ "4-5. Display a report.\n"
-				+ "{{#\n#Id;#TestCase;#Kind;#Depends;#For\n"
-				+ "Chart;;;;\n"
-				+ "    #Id;#RawTable\n"
-				+ "    DATA1;Table\n"
-				+ "    @;Labels;Mike salary;John Salary\n"
-				+ "    0;2001;1;2\n"
-				+ "    1;2002;2;3\n"
-				+ "    2;2003;3;4\n"
-				+ "    3;2004;3;4\n"
-				+ "    4;2005;3;5\n"
-				+ "    5;2006;4;5\n"
-				+ "    #EndRawTable\n"
-				+ "    #Id;#Action;#ReportName\n"
-				+ "    REP1;ReportStart;'My report'\n"
-				+ "    #Action;#ToReport;#Type;#Table;#Title;#Labels\n"
-				+ "    ChartReport;REP1.Out;ChartKind.Line;DATA1;'Chart title';'Labels'\n"
-				+ "    #Action;#Passed;#Report;#Failed\n"
-				+ "    ReportFinish;0;REP1.Out;0\n"
-				+ "    #Action;#Report\n"
-				+ "    ReportShow;REP1.Out.getReportName()#}}"
+		constantGeneralDescription 	  = R.CHART_REPORT_GENERAL_DESC,
+		additionFieldsAllowed 		  = true,
+		constantAdditionalDescription = R.CHART_REPORT_ADDITIONAL_DESC,
+		constantExamples 			  = R.CHART_REPORT_EXAMPLE
 )
 public class ChartReport extends AbstractAction
 {

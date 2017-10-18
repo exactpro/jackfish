@@ -14,6 +14,7 @@ import com.exactprosystems.jf.actions.ActionFieldAttribute;
 import com.exactprosystems.jf.actions.ActionGroups;
 import com.exactprosystems.jf.actions.DefaultValuePool;
 import com.exactprosystems.jf.api.app.ImageWrapper;
+import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.api.error.ErrorKind;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.report.ReportBuilder;
@@ -25,22 +26,13 @@ import java.io.File;
 
 
 @ActionAttribute(
-		group					= ActionGroups.GUI,
-		suffix					= "IMGSV",
-		generalDescription 		= "The purpose of this action is to save the image.",
-		additionFieldsAllowed 	= false,
-		outputDescription 		= "Full path to file", 
-		outputType 				= String.class,
-		examples 				= "{{`1. Connect to web application`}}"
-				+ "{{`2. Get the images of the whole application.`}}"
-				+ "{{`3. Save the file to the user's home directory.`}}"
-				+ "{{#\n" +
-				"#Id;#Action;#Browser;#URL;#AppId\n"
-				+ "APPSTR1;ApplicationStart;'Chrome';'https://google.com';'WEB'\n"
-				+ "#Id;#Action;#AppConnection\n"
-				+ "IMGGET1;ImageGet;APPSTR1.Out\n"
-				+ "#Id;#Action;#Dir;#Image\n"
-				+ "IMGSV1;ImageSave;currentUser/home;IMGGET1.Out#}}"
+		group					   = ActionGroups.GUI,
+		suffix					   = "IMGSV",
+		constantGeneralDescription = R.IMAGE_SAVE_GENERAL_DESC,
+		additionFieldsAllowed 	   = false,
+		constantOutputDescription  = R.IMAGE_SAVE_OUTPUT_DESC,
+		outputType 				   = String.class,
+		constantExamples 		   = R.IMAGE_SAVE_EXAMPLE
 	)
 public class ImageSave extends AbstractAction
 {

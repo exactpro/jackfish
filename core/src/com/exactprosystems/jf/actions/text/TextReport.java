@@ -10,6 +10,7 @@ package com.exactprosystems.jf.actions.text;
 
 import com.exactprosystems.jf.actions.*;
 import com.exactprosystems.jf.api.common.Str;
+import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.api.error.ErrorKind;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.report.ReportBuilder;
@@ -21,20 +22,12 @@ import com.exactprosystems.jf.functions.Text;
 import java.util.List;
 
 @ActionAttribute(
-		group					= ActionGroups.Text,
-		generalDescription 		=
- "The purpose of the action is to display the object content {{$Text$}} in the report on the matrix run. "
-+ "The object type {{$Text$}} is the text-based pattern which consists of lines. "
-+ "It is applied when it is necessary to examine the content of the object {{$Text$}}.",
-		additionFieldsAllowed 	= false,
-		examples =
- "{{#\n" +
- "#Id;#Action;#Content\n"
-+ "TXT1;TextCreate;'Text'\n"
-+ "#Action;#Title;#Text\n"
-+ "TextReport;'My text';TXT1.Out#}}\n",
-		seeAlsoClass = {TextPerform.class, TextAddLine.class, TextLoadFromFile.class, TextCreate.class, TextSaveToFile.class,
-		TextSetValue.class}
+		group					   = ActionGroups.Text,
+		constantGeneralDescription = R.TEXT_REPORT_GENERAL_DESC,
+		additionFieldsAllowed 	   = false,
+		constantExamples           = R.TEXT_REPORT_EXAMPLE,
+		seeAlsoClass               = {TextPerform.class, TextAddLine.class, TextLoadFromFile.class, TextCreate.class,
+        TextSaveToFile.class, TextSetValue.class}
 	)
 public class TextReport extends AbstractAction 
 {

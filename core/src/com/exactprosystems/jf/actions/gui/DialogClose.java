@@ -12,6 +12,7 @@ import com.exactprosystems.jf.actions.*;
 import com.exactprosystems.jf.api.app.*;
 import com.exactprosystems.jf.api.app.IWindow.SectionKind;
 import com.exactprosystems.jf.api.common.Str;
+import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.api.error.ErrorKind;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.report.ReportBuilder;
@@ -26,25 +27,13 @@ import java.util.List;
 import static com.exactprosystems.jf.actions.gui.Helper.message;
 
 @ActionAttribute(
-		group 					= ActionGroups.GUI,
-		suffix 					= "DLGCLS",
-		additionFieldsAllowed 	= false,
-		generalDescription 		= "The purpose of the action is to close the dialogs.  The dialog to be closed needs to"
-				+ " be described in the Close section of the dictionary. When working with swing and win plug-ins, Dialogs"
-				+ " can be closed without being described in the Close section because there is a capability to programmatically"
-				+ " close the window. In web the elements can't be closed programmatically and require direct handling.",
-		outputDescription 		= "The number of dialogs closed. ",
-		outputType 				= Integer.class,
-		examples 				= "{{`1. Start the web application.`}}"
-				+ "{{`2. Close all the elements described in the Close section of MyDialog.`}}"
-				+ "{{`3. Check the number of closed elements.`}}"
-				+ "{{#\n" +
-				"#Id;#Action;#Browser;#URL;#AppId\n"
-				+ "APPSTR1;ApplicationStart;'Chrome';'https://google.com';'WEB'\n"
-				+ "#Id;#Action;#Dialog;#AppConnection\n"
-				+ "DLGCLS1;DialogClose;'MyDialog';APPSTR1.Out\n"
-				+ "#Assert;#Message\n"
-				+ "DLGCLS1.Out > 0;'0 elements was closed'#}}"
+		group 					   = ActionGroups.GUI,
+		suffix 					   = "DLGCLS",
+		additionFieldsAllowed 	   = false,
+		constantGeneralDescription = R.DIALOG_CLOSE_GENERAL_DESC,
+		constantOutputDescription  = R.DIALOG_CLOSE_OUTPUT_DESC,
+		outputType 				   = Integer.class,
+		constantExamples 		   = R.DIALOG_CLOSE_EXAMPLE
 )
 public class DialogClose extends AbstractAction
 {

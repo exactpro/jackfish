@@ -12,6 +12,7 @@ import com.exactprosystems.jf.actions.AbstractAction;
 import com.exactprosystems.jf.actions.ActionAttribute;
 import com.exactprosystems.jf.actions.ActionFieldAttribute;
 import com.exactprosystems.jf.actions.ActionGroups;
+import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.report.ReportBuilder;
 import com.exactprosystems.jf.documents.config.Context;
@@ -20,42 +21,13 @@ import com.exactprosystems.jf.functions.HelpKind;
 import com.exactprosystems.jf.functions.Xml;
 
 @ActionAttribute(
-		group					= ActionGroups.XML,
-		suffix					= "XML",
-		generalDescription 		= "The purpose of the action is to return (restore) the Xml structure allocated using "
-				+ "Xpath parameter from Xml document. The first appropriate to the condition element and all its parts "
-				+ "will be returned. The output value is a separate Xml structure and is not connected to the structure "
-				+ "transferred in Xml parameter.",
-		additionFieldsAllowed 	= false,
-		outputDescription 		= "Xml structure containing the result of a demand.",
-		outputType				= Xml.class,
-		examples 				= "{{`1. Create Xml object by downloading it from the file.`}}"
-				+ "{{`Contents of an xml file:`}} "
-				+ "{{#\n" +
-				"<note> \n"
-				+ "<to>\n"
-				+ "<friend>\n"
-				+ "<name id=\"first\">Tove</name>\n"
-				+ "</friend>\n"
-				+ "</to>\n"
-				+ "<from>\n"
-				+ "<friend>\n"
-				+ "<name id=\"second\">Jani</name>\n"
-				+ "</friend>\n"
-				+ "</from>\n"
-				+ "<heading>Reminder</heading>\n"
-				+ "<body>Don't forget me this weekend!</body>\n"
-				+ "</note>#}}"
-				+ "\n"
-				+ "{{`2. Find the first element from.`}} "
-				+ "{{`3. Check the outcome`}} "
-				+ "{{#\n" +
-				"#Id;#Action;#File\n"
-				+ "XML2;XmlLoadFromFile;'/path/Xml.xml'\n"
-				+ "#Id;#Action;#Xpath;#Xml\n"
-				+ "XML2;XmlFindFirst;'//name';XML1.Out\n"
-				+ "#Assert;#Message\n"
-				+ "XML2.Out.getChild().getAttribute() == 'first';'No such attribute'#}}"
+		group					   = ActionGroups.XML,
+		suffix					   = "XML",
+		constantGeneralDescription = R.XML_SELECT_FIRST_GENERAL_DESC,
+		additionFieldsAllowed 	   = false,
+		constantOutputDescription  = R.XML_SELECT_FIRST_OUTPUT_DESC,
+		outputType				   = Xml.class,
+		constantExamples 		   = R.XML_SELECT_FIRST_EXAMPLE
 	)
 public class XmlSelectFirst extends AbstractAction 
 {
