@@ -811,20 +811,10 @@ public class ConfigurationFx extends Configuration
 
 	public void showAppHelp(AppEntry entry) throws Exception
 	{
-        IApplicationFactory applicationFactory = this.getApplicationPool().loadApplicationFactory(entry.get(entryName));
-        Context context = factory.createContext();
-        ReportBuilder report = new ContextHelpFactory().createReportBuilder(null, null, new Date());
-        MatrixItem help = DocumentationBuilder.createHelpForPlugin(report, context, entry.get(entryName), applicationFactory);
-        DialogsHelper.showHelpDialog(context, entry.get(entryName), report, help);
-		
-	}
-
-	public void showNewAppHelp(AppEntry entry) throws Exception
-	{
 		IApplicationFactory applicationFactory = this.getApplicationPool().loadApplicationFactory(entry.get(entryName));
 		Context context = factory.createContext();
 		ReportBuilder report = new ContextHelpFactory().createReportBuilder(null, null, new Date());
-		MatrixItem help = DocumentationBuilder.createNewHelpForPlugin(report, context, entry.get(entryName), applicationFactory);
+		MatrixItem help = DocumentationBuilder.createHelpForPlugin(report, context, entry.get(entryName), applicationFactory);
 		DialogsHelper.showHelpDialog(context, entry.get(entryName), report, help);
 
 	}

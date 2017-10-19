@@ -52,7 +52,6 @@ public class AppTreeNode extends TreeNode
 	private static final SerializablePair<String, String> REMOVE = new SerializablePair<>("Remove", CssVariables.Icons.REMOVE_PARAMETER_ICON);
 	private static final SerializablePair<String, String> ADD_ALL_KNOWN_PARAMS = new SerializablePair<>("Add all known parameters", null);
 	private static final SerializablePair<String, String> SHOW_HELP = new SerializablePair<>("Show help", CssVariables.Icons.HELP_ICON);
-	private static final SerializablePair<String, String> SHOW_NEW_HELP = new SerializablePair<>("Show new help", CssVariables.Icons.HELP_ICON);
 
 	public AppTreeNode(ConfigurationFx model, TreeItem<TreeNode> treeItem)
 	{
@@ -78,7 +77,6 @@ public class AppTreeNode extends TreeNode
 				ConfigurationTreeView.createDisabledItem(REMOVE),
 				ConfigurationTreeView.createDisabledItem(ADD_ALL_KNOWN_PARAMS),
 				ConfigurationTreeView.createDisabledItem(SHOW_HELP),
-				ConfigurationTreeView.createDisabledItem(SHOW_NEW_HELP),
 				ConfigurationTreeView.createDisabledItem("Git", null)
 		);
 		return Optional.of(menu);
@@ -223,7 +221,6 @@ public class AppTreeNode extends TreeNode
 					ConfigurationTreeView.createItem(REMOVE, () -> model.removeAppEntry(getEntry()), String.format("Error on remove entry '%s'", getEntry().toString())),
 					ConfigurationTreeView.createItem(ADD_ALL_KNOWN_PARAMS, () -> model.addAllAppParams(getEntry()), String.format("Error on add all parameters for entry '%s'", getEntry())),
 					ConfigurationTreeView.createItem(SHOW_HELP, () -> model.showAppHelp(getEntry()), "Error on show help"),
-					ConfigurationTreeView.createItem(SHOW_NEW_HELP, () -> model.showNewAppHelp(getEntry()), "Error on show help"),
 					menuWizard,
 					ConfigurationTreeView.createDisabledItem("Git", null)
 			);
@@ -304,7 +301,6 @@ public class AppTreeNode extends TreeNode
 					ConfigurationTreeView.createDisabledItem(REMOVE),
 					ConfigurationTreeView.createDisabledItem(ADD_ALL_KNOWN_PARAMS),
 					ConfigurationTreeView.createDisabledItem(SHOW_HELP),
-					ConfigurationTreeView.createDisabledItem(SHOW_NEW_HELP),
 					ConfigurationTreeView.createDisabledItem("Git", null)
 			);
 			return Optional.of(ret);
@@ -324,8 +320,7 @@ public class AppTreeNode extends TreeNode
 						ConfigurationTreeView.createDisabledItem(OPEN_DICTIONARY),
 						ConfigurationTreeView.createDisabledItem(REMOVE),
 						ConfigurationTreeView.createDisabledItem(ADD_ALL_KNOWN_PARAMS),
-						ConfigurationTreeView.createDisabledItem(SHOW_HELP),
-						ConfigurationTreeView.createDisabledItem(SHOW_NEW_HELP)
+						ConfigurationTreeView.createDisabledItem(SHOW_HELP)
 				);
 				return menu;
 			};
@@ -340,8 +335,7 @@ public class AppTreeNode extends TreeNode
 						ConfigurationTreeView.createItem(OPEN_DICTIONARY, () -> this.model.openAppsDictionary(file), "Error on open app dictionary"),
 						ConfigurationTreeView.createDisabledItem(REMOVE),
 						ConfigurationTreeView.createDisabledItem(ADD_ALL_KNOWN_PARAMS),
-						ConfigurationTreeView.createDisabledItem(SHOW_HELP),
-						ConfigurationTreeView.createDisabledItem(SHOW_NEW_HELP)
+						ConfigurationTreeView.createDisabledItem(SHOW_HELP)
 				);
 				return menu;
 			};

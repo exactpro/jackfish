@@ -159,21 +159,8 @@ public class DocumentationBuilder
         WizardManager manager = context.getFactory().getWizardManager();
         return new HelpWizardItem(manager, clazz);
     }
-    
-    public static MatrixItem createHelpForPlugin(ReportBuilder report, Context context, String title, IApplicationFactory applicationFactory) throws Exception
-    {
-        InputStream stream = applicationFactory.getHelp();
-        MatrixItem help = new HelpTextLine("{{`{{*" + title + "*}}`}}");
-        addText(help, stream);
-        addTextLine(help, "{{`{{*Supported controls*}}`}}");
-        Set<ControlKind> controls = applicationFactory.supportedControlKinds();
-        String s = controls.stream().map(c -> "{{@" + c.getClazz() + "@}}").collect(Collectors.joining(", "));
-        addTextLine(help, "{{`" + s + "`}}");
-        
-        return help;
-    }
 
-    public static MatrixItem createNewHelpForPlugin(ReportBuilder report, Context context, String title, IApplicationFactory applicationFactory) throws Exception
+    public static MatrixItem createHelpForPlugin(ReportBuilder report, Context context, String title, IApplicationFactory applicationFactory) throws Exception
     {
         AbstractEvaluator evaluator = context.getEvaluator();
         MatrixItem help = new HelpTextLine("{{`{{2" + title.toUpperCase() + "2}}`}}");
@@ -186,12 +173,12 @@ public class DocumentationBuilder
             //fields -> table
             addFieldDescriptionForPlugin(help, evaluator, clazz);
             //controls
-            addTextLine(help, "{{`{{*Supported controls*}}`}}");
+            addTextLine(help, "{{`{{*" + R.SUPPORTED_CONTROLS.get() + "*}}`}}");
             Set<ControlKind> controls = applicationFactory.supportedControlKinds();
             String s = controls.stream().map(c -> "{{@" + c.getClazz() + "@}}").collect(Collectors.joining(", "));
             addTextLine(help, "{{`" + s + "`}}");
             //additional info
-            addTextLine(help, "{{`{{*Differences:*}}`}}");
+            addTextLine(help, "{{`{{*" + R.DIFFERENCES.get() + ":*}}`}}");
             addTextLine(help, pd.difference().get());
         }
         return help;
@@ -237,7 +224,7 @@ public class DocumentationBuilder
 
     private static void addFieldDescriptionForPlugin(MatrixItem root, AbstractEvaluator evaluator,  Class<?> clazz) throws Exception
     {
-        String[] headers = new String[] {"Parameter", "Description", "Example"};
+        String[] headers = new String[] {R.PARAMETER.get(), R.DESCRIPTION.get(), R.EXAMPLE.get()};
         int[] width = new int[] {20, 50, 30};
         Table table = new Table(headers, evaluator);
         for(Field f : clazz.getDeclaredFields())
@@ -248,7 +235,7 @@ public class DocumentationBuilder
                 table.addValue(new String[] {pfd.parameter(), pfd.description().get(), pfd.example()});
             }
         }
-        MatrixItem tableItem = new HelpTable("{{`{{*Parameters for work with plugin:*}}`}}", table, true, width);
+        MatrixItem tableItem = new HelpTable("{{`{{*" + R.PLUGIN_PARAMS.get() + ":*}}`}}", table, true, width);
         root.insert(root.count(), tableItem);
     }
 

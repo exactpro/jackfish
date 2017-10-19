@@ -539,6 +539,15 @@ public enum R
 	//endregion
 
 	//endregion
+
+	//region common.documentation
+	SUPPORTED_CONTROLS,
+	DIFFERENCES,
+	PARAMETER,
+	DESCRIPTION,
+	EXAMPLE,
+	PLUGIN_PARAMS
+	//endregion
 	;
 
 	public static final String RESOURCE_BUNDLE_PATH = "com/exactprosystems/jf/ToolResourceBundle";
