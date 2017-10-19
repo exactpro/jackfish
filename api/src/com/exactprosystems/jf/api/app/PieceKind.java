@@ -198,8 +198,13 @@ public enum PieceKind implements Measure
 			{
 				text = executor.getAttr(self.get(0), piece.text);
 			}
-			
-			result.set(Str.areEqual(text, piece.text2));
+
+			boolean res = Str.areEqual(text, piece.text2);
+			if (!res)
+			{
+				result.newError(piece, text, piece.text2);
+			}
+			result.set(res);
 		}
 	},
 

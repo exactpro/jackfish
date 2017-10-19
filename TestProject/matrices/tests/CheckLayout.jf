@@ -15,11 +15,14 @@ Prepare;Never;;
 
     #Id;#SubCase;map;failedMap
     check;;{'selfLeft' : DoSpec.left('otherLeft',about(35))};{'selfLeft' : DoSpec.left('otherLeft',about(39))}
-        #Action;$Dialog;$AppConnection;$Fields
-        DialogCheckLayout;dialog;app;map
+        #Id;#Action;$Dialog;$AppConnection;$Fields
+        dcl;DialogCheckLayout;dialog;app;map
 
-        #Action;#Assert;$Dialog;$AppConnection;$Fields
-        DialogCheckLayout;This.Result ==  Result.Failed && This.Kind == ErrorKind.NOT_EQUAL;dialog;app;failedMap
+        #Id;#Action;#Assert;$Dialog;$AppConnection;$Fields
+        dcl1;DialogCheckLayout;This.Result ==  Result.Failed && This.Kind == ErrorKind.DIALOG_CHECK_LAYOUT;dialog;app;failedMap
+
+        #Assert;#Message
+        dcl1.Out.size() == 1;'actual : ' + dcl1.Out.size()
 
     #EndSubCase
 
