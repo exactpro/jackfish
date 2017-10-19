@@ -819,6 +819,15 @@ public class ConfigurationFx extends Configuration
 		
 	}
 
+	public void showNewAppHelp(AppEntry entry) throws Exception
+	{
+		IApplicationFactory applicationFactory = this.getApplicationPool().loadApplicationFactory(entry.get(entryName));
+		Context context = factory.createContext();
+		ReportBuilder report = new ContextHelpFactory().createReportBuilder(null, null, new Date());
+		MatrixItem help = DocumentationBuilder.createNewHelpForPlugin(report, context, entry.get(entryName), applicationFactory);
+		DialogsHelper.showHelpDialog(context, entry.get(entryName), report, help);
+
+	}
 	public void excludeAppDictionaryFolder(String file) throws Exception
 	{
 		this.excludeFile(file, getAppDictionariesValue(), this::displayApp);
