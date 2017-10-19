@@ -31,7 +31,7 @@ import java.util.Map;
 @ActionAttribute(
 		group 						  = ActionGroups.App,
 		suffix 						  = "APPPAR",
-		constantGeneralDescription    = R.APP_GET_PROPERTIES_GENERAL_DESK,
+		constantGeneralDescription    = R.APP_GET_PROPERTIES_GENERAL_DESC,
 		additionFieldsAllowed 		  = true,
 		constantAdditionalDescription = R.APP_GET_PROPERTIES_ADDITIONAL_DESC,
         outputType              	  = Map.class,

@@ -20,7 +20,7 @@ import com.exactprosystems.jf.functions.Table;
 
 @ActionAttribute(
 		group     				   = ActionGroups.Tables,
-		constantGeneralDescription = R.TABLE_REMOVE_COLUMNS_GENERAL_DESK,
+		constantGeneralDescription = R.TABLE_REMOVE_COLUMNS_GENERAL_DESC,
 		additionFieldsAllowed      = false,
 		constantExamples           = R.TABLE_REMOVE_COLUMNS_EXAMPLE
 )

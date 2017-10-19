@@ -28,9 +28,9 @@ import com.exactprosystems.jf.functions.Table;
 @ActionAttribute(
 		group					   = ActionGroups.Tables,
 		suffix					   = "TBL",
-		constantGeneralDescription = R.TABLE_LOAD_FROM_FILE_GENERAL_DESK,
+		constantGeneralDescription = R.TABLE_LOAD_FROM_FILE_GENERAL_DESC,
 		additionFieldsAllowed 	   = false,
-		constantOutputDescription  = R.TABLE_LOAD_FROM_FILE_OUTPUT_DESK,
+		constantOutputDescription  = R.TABLE_LOAD_FROM_FILE_OUTPUT_DESC,
 		outputType				   = Table.class,
 		constantExamples 		   = R.TABLE_LOAD_FROM_FILE_EXAMPLE
 ,

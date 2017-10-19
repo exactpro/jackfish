@@ -31,7 +31,7 @@ import java.util.Map;
 @ActionAttribute(
 		group					      = ActionGroups.Clients,
 		suffix					      = "CLMSGCHK",
-		constantGeneralDescription    = R.CLIENT_CHECK_MESSAGE_GENERAL_DESK,
+		constantGeneralDescription    = R.CLIENT_CHECK_MESSAGE_GENERAL_DESC,
 		additionFieldsAllowed 	      = true,
 		constantAdditionalDescription = R.CLIENT_CHECK_MESSAGE_ADDITIONAL_DESC,
 		constantExamples              = R.CLIENT_CHECK_MESSAGE_EXAMPLE

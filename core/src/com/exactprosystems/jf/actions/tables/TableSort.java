@@ -17,7 +17,7 @@ import java.util.List;
 		suffix 				       = "TBLS",
 		constantGeneralDescription = R.TABLE_SORT_GENERAL_DESC,
 		additionFieldsAllowed      = true,
-		constantOutputDescription  = R.TABLE_SORT_OUTPUT_DESK,
+		constantOutputDescription  = R.TABLE_SORT_OUTPUT_DESC,
 		outputType 			       = Table.class,
 		constantExamples 		   = R.TABLE_SORT_EXAMPLE
 	)

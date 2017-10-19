@@ -26,7 +26,7 @@ import java.util.Map;
 
 @ActionAttribute(
 		group						  = ActionGroups.Tables,
-		constantGeneralDescription 	  = R.TABLE_EDIT_GENERAL_DESK,
+		constantGeneralDescription 	  = R.TABLE_EDIT_GENERAL_DESC,
 		additionFieldsAllowed 		  = true,
 		constantAdditionalDescription = R.TABLE_EDIT_ADDITIONAL_DESC,
         constantOutputDescription 	  = R.TABLE_EDIT_OUTPUT_DESC,

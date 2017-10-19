@@ -324,7 +324,7 @@ public class Main extends Application
 
 	public void projectFromGit(BorderPane projectPane) throws Exception
 	{
-		GitClone cloneWindow = new GitClone(this);
+		GitClone cloneWindow = new GitClone(this.getCredential());
 		String fullPath = cloneWindow.display();
 		if (fullPath != null)
 		{

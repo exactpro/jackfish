@@ -22,7 +22,6 @@ import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.RowConstraints;
 import javafx.scene.layout.VBox;
 
 import java.io.File;
@@ -35,29 +34,25 @@ import java.util.regex.Pattern;
 
 public class GitCloneController implements Initializable, ContainingParent
 {
-	public TextField tfURI;
-	public CustomFieldWithButton cfLocation;
-	public TextField tfProjectName;
-	public CheckBox cbOpenProject;
-	public Button btnCancel;
-	public Button btnClone;
+	private static final Pattern pattern = Pattern.compile(".*?[:/](\\w+)\\.git$");
 
-	public ScrollPane scrollPane;
-	public VBox vBox;
-	public GridPane gridPane;
+	public TextField             tfURI;
+	public CustomFieldWithButton cfLocation;
+	public TextField             tfProjectName;
+	public CheckBox              cbOpenProject;
+	public Button                btnCancel;
+	public Button                btnClone;
+	public ScrollPane            scrollPane;
+	public VBox                  vBox;
+	public GridPane              gridPane;
 
 	private GitClone model;
-	private Parent parent;
-	private BooleanProperty folderExist = new SimpleBooleanProperty(false);
+	private Parent   parent;
+	private BooleanProperty folderExist  = new SimpleBooleanProperty(false);
 	private BooleanProperty projectExist = new SimpleBooleanProperty(false);
-
-	private final BooleanBinding binding = this.folderExist.not().or(this.projectExist.not());
-
-	private final Pattern pattern = Pattern.compile(".*?[:/](\\w+)\\.git$");
-
+	private BooleanBinding  binding      = this.folderExist.not().or(this.projectExist.not());
 	private VBoxProgressMonitor monitor;
-
-	private Alert dialog;
+	private Alert               dialog;
 
 	//region ContainingParent
 	@Override
@@ -74,12 +69,13 @@ public class GitCloneController implements Initializable, ContainingParent
 		this.cfLocation.setButtonText("...");
 		this.cfLocation.setHandler(event -> {
 			File file = DialogsHelper.showDirChooseDialog("Choose folder to clone project", this.cfLocation.getText());
-			Optional.ofNullable(file).ifPresent(f -> this.cfLocation.setText(f.getAbsolutePath()));
+			Optional.ofNullable(file).map(File::getAbsolutePath).ifPresent(this.cfLocation::setText);
 		});
 		this.cfLocation.textProperty().addListener((observable, oldValue, newValue) -> {
 			checkLocation(newValue);
 			checkProjectName(this.tfProjectName.getText());
 		});
+
 		this.tfURI.textProperty().addListener((observable, oldValue, newValue) -> {
 			if (newValue != null && !newValue.isEmpty())
 			{
@@ -95,9 +91,7 @@ public class GitCloneController implements Initializable, ContainingParent
 			}
 		});
 
-		this.tfProjectName.textProperty().addListener((observable, oldValue, newValue) -> {
-			checkProjectName(newValue);
-		});
+		this.tfProjectName.textProperty().addListener((observable, oldValue, newValue) -> checkProjectName(newValue));
 
 		this.monitor = new VBoxProgressMonitor(this.vBox);
 		this.btnClone.disableProperty().bind(this.binding);
@@ -113,7 +107,8 @@ public class GitCloneController implements Initializable, ContainingParent
 	public void cloneProject(ActionEvent actionEvent)
 	{
 		this.displayStatus(true);
-		Common.tryCatch(() -> this.model.cloneProject(this.cfLocation.getText(), this.tfURI.getText(), this.tfProjectName.getText(), this.cbOpenProject.isSelected(), this.monitor), "Error on clone project");
+		Common.tryCatch(() -> this.model.cloneProject(this.cfLocation.getText(), this.tfURI.getText(), this.tfProjectName.getText(), this.cbOpenProject.isSelected(), this.monitor),
+				"Error on clone project");
 	}
 
 	public void setDisable(boolean flag)

@@ -22,7 +22,7 @@ import com.exactprosystems.jf.documents.matrix.parser.Parameters;
 
 @ActionAttribute(
 		group 					   = ActionGroups.App,
-		constantGeneralDescription = R.APP_MOVE_GENERAL_DESK,
+		constantGeneralDescription = R.APP_MOVE_GENERAL_DESC,
 		additionFieldsAllowed 	   = false,
 		examples 				   = "", // TODO add examples here. VMF 03.05.17
 		seeAlsoClass 			   = {ApplicationStart.class, ApplicationConnectTo.class}

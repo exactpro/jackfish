@@ -23,9 +23,9 @@ import com.exactprosystems.jf.functions.Table;
 
 @ActionAttribute(
 		group					      = ActionGroups.Tables,
-		constantGeneralDescription    = R.TABLE_SET_VALUE_GENERAL_DESK,
+		constantGeneralDescription    = R.TABLE_SET_VALUE_GENERAL_DESC,
 		additionFieldsAllowed 	      = true,
-		constantAdditionalDescription = R.TABLE_SET_VALUE_ADDITIONAL_DESK,
+		constantAdditionalDescription = R.TABLE_SET_VALUE_ADDITIONAL_DESC,
 		seeAlsoClass       			  = {TableReplace.class, TableAddColumns.class, TableConsiderColumnsAs.class, TableColumnRename.class},
 		constantExamples 			  = R.TABLE_SET_VALUE_EXAMPLE
 	)

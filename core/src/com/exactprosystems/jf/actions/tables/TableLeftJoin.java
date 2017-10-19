@@ -26,7 +26,7 @@ import com.exactprosystems.jf.functions.Table;
 @ActionAttribute(
 		group 					      = ActionGroups.Tables,
 		suffix 					      = "TBLJN",
-		constantGeneralDescription    = R.TABLE_LEFT_JOIN_GENERAL_DESK,
+		constantGeneralDescription    = R.TABLE_LEFT_JOIN_GENERAL_DESC,
 		additionFieldsAllowed 	      = true,
 		constantAdditionalDescription = R.TABLE_LEFT_JOIN_ADDITIONAL_DESC,
 		constantOutputDescription     = R.TABLE_LEFT_JOIN_OUTPUT_DESC,

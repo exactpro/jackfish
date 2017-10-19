@@ -24,9 +24,9 @@ import com.exactprosystems.jf.documents.matrix.parser.Parameters;
 @ActionAttribute(
 		group					   = ActionGroups.Clients,
 		suffix					   = "CLCHM",
-		constantGeneralDescription = R.CLIENT_CHECK_FIELDS_GENERAL_DESK,
+		constantGeneralDescription = R.CLIENT_CHECK_FIELDS_GENERAL_DESC,
 		additionFieldsAllowed 	   = false,
-		constantOutputDescription  = R.CLIENT_CHECK_FIELDS_OUTPUT_DESK,
+		constantOutputDescription  = R.CLIENT_CHECK_FIELDS_OUTPUT_DESC,
 		outputType				   = Boolean.class,
 		constantExamples     	   = R.CLIENT_CHECK_FIELDS_EXAMPLE
 	)

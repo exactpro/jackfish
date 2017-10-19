@@ -11,8 +11,6 @@ import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.git.CredentialBean;
 import com.exactprosystems.jf.tool.git.GitUtil;
 import com.exactprosystems.jf.tool.helpers.DialogsHelper;
-import com.exactprosystems.jf.tool.main.Main;
-import javafx.concurrent.Service;
 import javafx.concurrent.Task;
 import org.apache.log4j.Logger;
 import org.eclipse.jgit.lib.ProgressMonitor;
@@ -22,64 +20,54 @@ import java.io.File;
 public class GitClone
 {
 	private static final Logger logger = Logger.getLogger(GitClone.class);
+
 	private GitCloneController controller;
-
 	private String locationToCloningConfig = null;
+	private Task<Void> task;
+	private CredentialBean credentialBean;
 
-	private Service<Void> service;
-	private Main model;
-
-	public GitClone(Main model)
+	public GitClone(CredentialBean bean)
 	{
-		this.model = model;
-		this.controller = Common.loadController(this.getClass().getResource("GitCloneWindow.fxml"));
+		this.credentialBean = bean;
+		this.controller = Common.loadController(this.getClass());
 		this.controller.init(this);
 	}
 
-	public String display() throws Exception
+	public String display()
 	{
 		this.controller.show();
 		return locationToCloningConfig;
 	}
 
-	public void cancel() throws Exception
+	public void cancel()
 	{
-		if (this.service == null || !this.service.isRunning())
+		if (this.task == null || !this.task.isRunning())
 		{
 			this.controller.hide();
 		}
-		if (this.service != null && this.service.isRunning())
+		if (this.task != null && this.task.isRunning())
 		{
-			this.service.cancel();
-			this.service = null;
+			this.task.cancel();
+			this.task = null;
 		}
 	}
 
-	public void cloneProject(String projectLocation, String uri, String projectName, boolean openProject, ProgressMonitor monitor) throws Exception
+	void cloneProject(String projectLocation, String uri, String projectName, boolean openProject, ProgressMonitor monitor)
 	{
 		this.locationToCloningConfig = null;
 		this.controller.setDisable(true);
-		CredentialBean credential = model.getCredential();
 		File projectFolder = new File(projectLocation + File.separator + projectName);
-		this.service = new Service<Void>()
+		this.task = new Task<Void>()
 		{
 			@Override
-			protected Task<Void> createTask()
+			protected Void call() throws Exception
 			{
-				return new Task<Void>()
-				{
-					@Override
-					protected Void call() throws Exception
-					{
-						DialogsHelper.showInfo("Start cloning");
-						GitUtil.gitClone(uri, projectFolder, credential, monitor);
-						return null;
-					}
-				};
+				DialogsHelper.showInfo("Start cloning");
+				GitUtil.gitClone(uri, projectFolder, credentialBean, monitor);
+				return null;
 			}
 		};
-		service.start();
-		service.setOnSucceeded(e -> {
+		this.task.setOnSucceeded(e -> {
 			this.controller.setDisable(false);
 			DialogsHelper.showSuccess("Successful cloning repo " + uri);
 			if (openProject)
@@ -88,15 +76,16 @@ public class GitClone
 			}
 			this.controller.hide();
 		});
-		service.setOnCancelled(e -> {
+		this.task.setOnCancelled(e -> {
 			DialogsHelper.showInfo("Task canceled by user");
 			this.controller.setDisable(false);
 		});
-		service.setOnFailed(e -> {
+		this.task.setOnFailed(e -> {
 			Throwable exception = e.getSource().getException();
 			logger.error(exception.getMessage(), exception);
 			DialogsHelper.showError("Error on cloning repository " + exception.getMessage());
 			this.controller.setDisable(false);
 		});
+		new Thread(this.task).start();
 	}
 }
