@@ -7,10 +7,7 @@ import com.exactprosystems.jf.actions.ActionsList;
 import com.exactprosystems.jf.api.app.ControlKind;
 import com.exactprosystems.jf.api.app.IApplicationFactory;
 import com.exactprosystems.jf.api.app.OperationKind;
-import com.exactprosystems.jf.api.common.DateTime;
-import com.exactprosystems.jf.api.common.PluginDescription;
-import com.exactprosystems.jf.api.common.PluginFieldDescription;
-import com.exactprosystems.jf.api.common.Str;
+import com.exactprosystems.jf.api.common.*;
 import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.api.wizard.Wizard;
 import com.exactprosystems.jf.api.wizard.WizardManager;
@@ -224,19 +221,45 @@ public class DocumentationBuilder
 
     private static void addFieldDescriptionForPlugin(MatrixItem root, AbstractEvaluator evaluator,  Class<?> clazz) throws Exception
     {
-        String[] headers = new String[] {R.PARAMETER.get(), R.DESCRIPTION.get(), R.EXAMPLE.get()};
-        int[] width = new int[] {20, 50, 30};
-        Table table = new Table(headers, evaluator);
+        Map<FieldType, List<PluginFieldDescription>> fields = new HashMap<>();
+        for (FieldType pt : FieldType.values())
+        {
+            fields.put(pt, new ArrayList<>());
+        }
+
         for(Field f : clazz.getDeclaredFields())
         {
             PluginFieldDescription pfd = f.getAnnotation(PluginFieldDescription.class);
             if(pfd != null)
             {
-                table.addValue(new String[] {pfd.parameter(), pfd.description().get(), pfd.example()});
+                fields.get(pfd.fieldType()).add(pfd);
             }
         }
-        MatrixItem tableItem = new HelpTable("{{`{{*" + R.PLUGIN_PARAMS.get() + ":*}}`}}", table, true, width);
-        root.insert(root.count(), tableItem);
+
+        fields.keySet().forEach(type -> addPluginDescriptionTable(root, evaluator, fields.get(type), type));
+    }
+
+    private static void addPluginDescriptionTable(MatrixItem root, AbstractEvaluator evaluator, List<PluginFieldDescription> fields, FieldType type)
+    {
+        if (!fields.isEmpty())
+        {
+            String title;
+            switch (type)
+            {
+                case PLUGIN: title = "1"; break;
+                case APP_START: title = "2"; break;
+                case APP_START_CONNECT: title = "3"; break;
+                case APP_CONNECT: title = "4"; break;
+                case APP_WORK: title = "5"; break;
+                default: title = "0"; break;
+            }
+            String[] headers = new String[] {R.PARAMETER.get(), R.DESCRIPTION.get(), R.EXAMPLE.get()};
+            int[] width = new int[] {20, 50, 30};
+            Table table = new Table(headers, evaluator);
+            fields.forEach(f -> table.addValue(new String[] {f.parameter(), f.description().get(), f.example()}));
+            MatrixItem tableItem = new HelpTable("{{`{{/" + title + "/}}`}}", table, true, width);
+            root.insert(root.count(), tableItem);
+        }
     }
 
     private static void addAllControlsTable(MatrixItem root, String title, Context context, List<OperationKind> operations, boolean rotate, boolean bordered, Content content) throws Exception
