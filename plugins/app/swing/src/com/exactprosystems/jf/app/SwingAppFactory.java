@@ -9,7 +9,6 @@
 package com.exactprosystems.jf.app;
 
 import com.exactprosystems.jf.api.app.*;
-import com.exactprosystems.jf.api.common.FieldType;
 import com.exactprosystems.jf.api.common.ParametersKind;
 import com.exactprosystems.jf.api.common.PluginDescription;
 import com.exactprosystems.jf.api.common.PluginFieldDescription;
@@ -29,23 +28,23 @@ public class SwingAppFactory extends AbstractApplicationFactory
 {
     public static final String helpFileName     = "help.txt";
 
-    @PluginFieldDescription(parameter = "LogLevel", description = R.SWING_PLUGIN_LOG_LEVEL, example = "ALL", fieldType = FieldType.PLUGIN)
+    @PluginFieldDescription(parameter = "LogLevel", description = R.SWING_PLUGIN_LOG_LEVEL, example = "ALL")
     public static final String logLevel         = "LogLevel";
-	@PluginFieldDescription(parameter = "jreExec", description = R.SWING_PLUGIN_JRE_EXEC, example = "C:\\Program Files\\Java\\jdk1.8.0_XX\\bin\\java", fieldType = FieldType.PLUGIN)
+	@PluginFieldDescription(parameter = "jreExec", description = R.SWING_PLUGIN_JRE_EXEC, example = "C:\\Program Files\\Java\\jdk1.8.0_XX\\bin\\java")
 	public static final String jreExecName 		= "jreExec";
-	@PluginFieldDescription(parameter = "jreArgs", description = R.SWING_PLUGIN_JRE_ARGS, example = "-Xms128m -Xmx1G", fieldType = FieldType.PLUGIN)
+	@PluginFieldDescription(parameter = "jreArgs", description = R.SWING_PLUGIN_JRE_ARGS, example = "-Xms128m -Xmx1G")
 	public static final String jreArgsName 		= "jreArgs";
-	@PluginFieldDescription(parameter = "MainClass", description = R.SWING_PLUGIN_MAIN_CLASS, example = "com.example.MainClass", fieldType = FieldType.APP_START)
+	@PluginFieldDescription(parameter = "MainClass", description = R.SWING_PLUGIN_MAIN_CLASS, example = "com.example.MainClass")
 	public static final String mainClassName 	= "MainClass";
-	@PluginFieldDescription(parameter = "Jar", description = R.SWING_PLUGIN_JAR, example = "C:/example.jar", fieldType = FieldType.APP_START)
+	@PluginFieldDescription(parameter = "Jar", description = R.SWING_PLUGIN_JAR, example = "'C:/example.jar'")
 	public static final String jarName 			= "Jar";
-	@PluginFieldDescription(parameter = "Args", description = R.SWING_PLUGIN_ARGS, example = "'Arg1'", fieldType = FieldType.APP_START)
+	@PluginFieldDescription(parameter = "Args", description = R.SWING_PLUGIN_ARGS, example = "'Arg1'")
 	public static final String argsName 		= "Args";
 
-	@PluginFieldDescription(parameter = "URL", description = R.SWING_PLUGIN_URL, example = "", fieldType = FieldType.APP_CONNECT)
+	@PluginFieldDescription(parameter = "URL", description = R.SWING_PLUGIN_URL, example = "http://site.com/start.jnlp")
 	public static final String urlName 			= "URL";
 
-	@PluginFieldDescription(parameter = "Title", description = R.SWING_PLUGIN_TITLE, example = "", fieldType = FieldType.APP_WORK)
+	@PluginFieldDescription(parameter = "Title", description = R.SWING_PLUGIN_TITLE, example = "'Title'")
     public static final String propertyTitle    = "Title";
 
 	private static String[]    empty = {  };

@@ -16,7 +16,6 @@ import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.report.Marker;
 import com.exactprosystems.jf.common.report.ReportBuilder;
 import com.exactprosystems.jf.common.version.VersionInfo;
-import com.exactprosystems.jf.documents.config.Configuration;
 import com.exactprosystems.jf.documents.config.Context;
 import com.exactprosystems.jf.documents.guidic.controls.AbstractControl;
 import com.exactprosystems.jf.documents.matrix.parser.Parser;
@@ -30,7 +29,6 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.lang.reflect.Field;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -168,7 +166,38 @@ public class DocumentationBuilder
             //description
             addTextLine(help, pd.description().get());
             //fields -> table
-            addFieldDescriptionForPlugin(help, evaluator, clazz);
+            List<PluginFieldDescription> allFields = Arrays.stream(clazz.getDeclaredFields()).map(f-> f.getAnnotation(PluginFieldDescription.class)).filter(f-> f != null).collect(Collectors.toList());
+            for(ParametersKind pk : ParametersKind.values())
+            {
+                String[] knownParameters = applicationFactory.wellKnownParameters(pk);
+                if (knownParameters.length > 0)
+                {
+                    List<PluginFieldDescription> pfdList = new ArrayList<>();
+                    for (String field : knownParameters)
+                    {
+                        List<PluginFieldDescription> filteredResult = allFields.stream().filter(f -> f.parameter().equals(field)).collect(Collectors.toList());
+                        if (filteredResult.size() == 1){
+                            pfdList.addAll(filteredResult);
+                        }
+                        else
+                        {
+                            filteredResult.forEach(f ->
+                                {
+                                    for(ParametersKind pKind : f.parametersKind())
+                                    {
+                                        if(pk == pKind)
+                                        {
+                                            pfdList.add(f);
+                                            break;
+                                        }
+                                    }
+                                }
+                            );
+                        }
+                    }
+                    addPluginDescriptionTable(help, evaluator, pfdList, pk);
+                }
+            }
             //controls
             addTextLine(help, "{{`{{*" + R.SUPPORTED_CONTROLS.get() + "*}}`}}");
             Set<ControlKind> controls = applicationFactory.supportedControlKinds();
@@ -179,12 +208,6 @@ public class DocumentationBuilder
             addTextLine(help, pd.difference().get());
         }
         return help;
-    }
-
-    private static void addCommonPluginHelp(MatrixItem root, AbstractEvaluator evaluator) throws Exception
-    {
-        addTextLine(root, R.PLUGIN_COMMON_DESCRIPTION.get());
-        addFieldDescriptionForPlugin(root, evaluator, Configuration.class);
     }
 
     private static void addContent(MatrixItem root, String title, Content content) throws Exception
@@ -219,44 +242,28 @@ public class DocumentationBuilder
         root.insert(root.count(), tableItem);
     }
 
-    private static void addFieldDescriptionForPlugin(MatrixItem root, AbstractEvaluator evaluator,  Class<?> clazz) throws Exception
+    private static void addPluginDescriptionTable(MatrixItem root, AbstractEvaluator evaluator, List<PluginFieldDescription> fields, ParametersKind pk)
     {
-        Map<FieldType, List<PluginFieldDescription>> fields = new HashMap<>();
-        for (FieldType pt : FieldType.values())
-        {
-            fields.put(pt, new ArrayList<>());
-        }
-
-        for(Field f : clazz.getDeclaredFields())
-        {
-            PluginFieldDescription pfd = f.getAnnotation(PluginFieldDescription.class);
-            if(pfd != null)
-            {
-                fields.get(pfd.fieldType()).add(pfd);
-            }
-        }
-
-        fields.keySet().forEach(type -> addPluginDescriptionTable(root, evaluator, fields.get(type), type));
-    }
-
-    private static void addPluginDescriptionTable(MatrixItem root, AbstractEvaluator evaluator, List<PluginFieldDescription> fields, FieldType type)
-    {
-        if (!fields.isEmpty())
+        if(!fields.isEmpty())
         {
             String title;
-            switch (type)
+            switch(pk)
             {
-                case PLUGIN: title = R.DOC_PLUGIN_PARAMS.get(); break;
-                case APP_START: title = R.DOC_APP_START.get(); break;
-                case APP_START_CONNECT: title = R.DOC_APP_START_CONNECT.get(); break;
-                case APP_CONNECT: title = R.DOC_APP_CONNECT.get(); break;
-                case APP_WORK: title = R.DOC_APP_WORK.get(); break;
-                default: title = R.DEFAULT.get(); break;
+                case CONNECT: title = R.PARAMETERS_KIND_CONNECT.get(); break;
+                case GET_PROPERTY: title = R.PARAMETERS_KIND_GET_PROPERTY.get(); break;
+                case NEW_INSTANCE: title = R.PARAMETERS_KIND_NEW_INSTANCE.get(); break;
+                case SET_PROPERTY: title = R.PARAMETERS_KIND_SET_PROPERTY.get(); break;
+                case START: title = R.PARAMETERS_KIND_START.get(); break;
+                case ENCODE: title = R.PARAMETERS_KIND_ENCODE.get(); break;
+                case LOAD: title = R.PARAMETERS_KIND_LOAD.get(); break;
+                case PROPS: title = R.PARAMETERS_KIND_PROPS.get(); break;
+                case STOP: title = R.PARAMETERS_KIND_STOP.get(); break;
+                default: title =""; break;
             }
             String[] headers = new String[] {R.PARAMETER.get(), R.DESCRIPTION.get(), R.EXAMPLE.get()};
             int[] width = new int[] {20, 50, 30};
             Table table = new Table(headers, evaluator);
-            fields.forEach(f -> table.addValue(new String[] {f.parameter(), f.description().get(), f.example()}));
+            fields.forEach(f-> table.addValue(new String[] {f.parameter(), f.description().get(), f.example()}));
             MatrixItem tableItem = new HelpTable("{{`{{/" + title + "/}}`}}", table, true, width);
             root.insert(root.count(), tableItem);
         }

@@ -13,5 +13,5 @@ public @interface PluginFieldDescription {
     String parameter();
     R description();
     String example();
-    FieldType fieldType();
+    ParametersKind[] parametersKind() default {};
 }

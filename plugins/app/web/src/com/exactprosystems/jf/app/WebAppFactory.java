@@ -9,7 +9,6 @@
 package com.exactprosystems.jf.app;
 
 import com.exactprosystems.jf.api.app.*;
-import com.exactprosystems.jf.api.common.FieldType;
 import com.exactprosystems.jf.api.common.ParametersKind;
 import com.exactprosystems.jf.api.common.PluginDescription;
 import com.exactprosystems.jf.api.common.PluginFieldDescription;
@@ -28,52 +27,51 @@ public class WebAppFactory extends AbstractApplicationFactory
 {
     public static final String  helpFileName          = "help.txt";
 
-    @PluginFieldDescription(parameter = "LogLevel", description = R.WEB_PLUGIN_LOG_LEVEL, example = "ALL", fieldType = FieldType.PLUGIN)
+    @PluginFieldDescription(parameter = "LogLevel", description = R.WEB_PLUGIN_LOG_LEVEL, example = "ALL")
     public static final String   logLevel             = "LogLevel";
-	@PluginFieldDescription(parameter = "jreExec", description = R.WEB_PLUGIN_JRE_EXEC, example = "C:\\Program Files\\Java\\jdk1.8.0_XX\\bin\\java", fieldType = FieldType.PLUGIN)
+	@PluginFieldDescription(parameter = "jreExec", description = R.WEB_PLUGIN_JRE_EXEC, example = "C:\\Program Files\\Java\\jdk1.8.0_XX\\bin\\java")
     public static final String   jreExecName          = "jreExec";
-	@PluginFieldDescription(parameter = "jreArgs", description = R.WEB_PLUGIN_JRE_ARGS, example = "-Xms128m -Xmx1G", fieldType = FieldType.PLUGIN)
+	@PluginFieldDescription(parameter = "jreArgs", description = R.WEB_PLUGIN_JRE_ARGS, example = "-Xms128m -Xmx1G")
     public static final String   jreArgsName          = "jreArgs";
 
-	@PluginFieldDescription(parameter = "ChromeDriverPath", description = R.WEB_PLUGIN_CHROME_DRIVER, example = "unix/chromedriver-linux-2.32-x64.", fieldType = FieldType.PLUGIN)
+	@PluginFieldDescription(parameter = "ChromeDriverPath", description = R.WEB_PLUGIN_CHROME_DRIVER, example = "unix/chromedriver-linux-2.32-x64.")
     public static final String   chromeDriverPathName     = "ChromeDriverPath";
-	@PluginFieldDescription(parameter = "GeckoDriverPath", description = R.WEB_PLUGIN_GECKO_DRIVER, example = "unix/geckodriver-linux-0.11.1-x64.", fieldType = FieldType.PLUGIN)
+	@PluginFieldDescription(parameter = "GeckoDriverPath", description = R.WEB_PLUGIN_GECKO_DRIVER, example = "unix/geckodriver-linux-0.11.1-x64.")
     public static final String   geckoDriverPathName      = "GeckoDriverPath";
-	@PluginFieldDescription(parameter = "IEDriverPath", description = R.WEB_PLUGIN_IE_DRIVER, example = "win/iedriverserver-2.53.1-x64.exe", fieldType = FieldType.PLUGIN)
+	@PluginFieldDescription(parameter = "IEDriverPath", description = R.WEB_PLUGIN_IE_DRIVER, example = "win/iedriverserver-2.53.1-x64.exe")
     public static final String   ieDriverPathName         = "IEDriverPath";
-	@PluginFieldDescription(parameter = "ChromeDriverBinary", description = R.WEB_PLUGIN_CHROME_DRIVER_BINARY, example = "unix/chromedriver", fieldType = FieldType.PLUGIN)
+	@PluginFieldDescription(parameter = "ChromeDriverBinary", description = R.WEB_PLUGIN_CHROME_DRIVER_BINARY, example = "unix/chromedriver")
     public static final String   chromeDriverBinary       = "ChromeDriverBinary";
-	@PluginFieldDescription(parameter = "FirefoxProfileDirectory", description = R.WEB_PLUGIN_FIREFOX_PROFILE, example = "~/.mozilla/firefox/xxxxxxxx.default/", fieldType = FieldType.PLUGIN)
+	@PluginFieldDescription(parameter = "FirefoxProfileDirectory", description = R.WEB_PLUGIN_FIREFOX_PROFILE, example = "~/.mozilla/firefox/xxxxxxxx.default/")
     public static final String   firefoxProfileDir        = "FirefoxProfileDirectory";
-	@PluginFieldDescription(parameter = "UsePrivateMode", description = R.WEB_PLUGIN_PRIVATE_MODE, example = "true", fieldType = FieldType.PLUGIN)
+	@PluginFieldDescription(parameter = "UsePrivateMode", description = R.WEB_PLUGIN_PRIVATE_MODE, example = "true")
     public static final String   usePrivateMode           = "UsePrivateMode";
 
-	@PluginFieldDescription(parameter = "Browser", description = R.WEB_PLUGIN_BROWSER, example = "'Chrome'", fieldType = FieldType.APP_START)
+	@PluginFieldDescription(parameter = "Browser", description = R.WEB_PLUGIN_BROWSER, example = "'Chrome'")
     public static final String   browserName              = "Browser";
-	@PluginFieldDescription(parameter = "URL", description = R.WEB_PLUGIN_URL, example = "'https://example.com'", fieldType = FieldType.APP_START)
+	@PluginFieldDescription(parameter = "URL", description = R.WEB_PLUGIN_URL, example = "'https://example.com'", parametersKind = ParametersKind.START)
     public static final String   urlName                  = "URL";
-	@PluginFieldDescription(parameter = "WhereOpen", description = R.WEB_PLUGIN_WHERE_OPEN, example = "'OpenInTab'", fieldType = FieldType.APP_START)
+	@PluginFieldDescription(parameter = "WhereOpen", description = R.WEB_PLUGIN_WHERE_OPEN, example = "'OpenInTab' 'OpenInWindow' 'OpenNewUrl'")
     public static final String   whereOpenName            = "WhereOpen";
 
-	//@PluginFieldDescription(parameter = "Tab", description = R.WEB_PLUGIN_PROPERTY_TAB, example = "")
     public static final String   tabName                  = "Tab";
 
 	//todo change parameter
-	@PluginFieldDescription(parameter = "URL", description = R.WEB_PLUGIN_PROPERTY_URL, example = "https://example.com", fieldType = FieldType.APP_WORK)
+	@PluginFieldDescription(parameter = "URL", description = R.WEB_PLUGIN_PROPERTY_URL, example = "'https://example.com'", parametersKind = {ParametersKind.GET_PROPERTY, ParametersKind.SET_PROPERTY})
     public static final String   propertyUrlName          = "URL";
-	@PluginFieldDescription(parameter = "Title", description = R.WEB_PLUGIN_PROPERTY_TITLE, example = "'Title'", fieldType = FieldType.APP_WORK)
+	@PluginFieldDescription(parameter = "Title", description = R.WEB_PLUGIN_PROPERTY_TITLE, example = "'Title'")
     public static final String   propertyTitle            = "Title";
-	@PluginFieldDescription(parameter = "AllTitles", description = R.WEB_PLUGIN_PROPERTY_ALL_TITLES, example = "", fieldType = FieldType.APP_WORK)
+	@PluginFieldDescription(parameter = "AllTitles", description = R.WEB_PLUGIN_PROPERTY_ALL_TITLES, example = "['Title1', 'Title2']")
     public static final String   propertyAllTitles        = "AllTitles";
-	@PluginFieldDescription(parameter = "Cookie", description = R.WEB_PLUGIN_PROPERTY_COOKIE, example = "'example'", fieldType = FieldType.APP_WORK)
+	@PluginFieldDescription(parameter = "Cookie", description = R.WEB_PLUGIN_PROPERTY_COOKIE, example = "'example'")
     public static final String   propertyCookie           = "Cookie";
-	@PluginFieldDescription(parameter = "AllCookies", description = R.WEB_PLUGIN_PROPERTY_ALL_COOKIES, example = "", fieldType = FieldType.APP_WORK)
+	@PluginFieldDescription(parameter = "AllCookies", description = R.WEB_PLUGIN_PROPERTY_ALL_COOKIES, example = "[Cookie{example:100}, Cookie{abc:18}]")
     public static final String   propertyAllCookies       = "AllCookies";
-	@PluginFieldDescription(parameter = "AddCookie", description = R.WEB_PLUGIN_PROPERTY_ADD_COOKIE, example = "new CookieBean('newBean', 'newValue').setPath('http://example.com').setDomain('example.com').setExpary(new Date()).setSecure(true).setHttpOnly(false)", fieldType = FieldType.APP_WORK)
+	@PluginFieldDescription(parameter = "AddCookie", description = R.WEB_PLUGIN_PROPERTY_ADD_COOKIE, example = "new CookieBean('newBean', 'newValue').setPath('http://example.com').setDomain('example.com').setExpary(new Date()).setSecure(true).setHttpOnly(false)")
     public static final String   propertyAddCookie        = "AddCookie";
-	@PluginFieldDescription(parameter = "RemoveCookie", description = R.WEB_PLUGIN_PROPERTY_REMOVE_COOKIE, example = "'example'", fieldType = FieldType.APP_WORK)
+	@PluginFieldDescription(parameter = "RemoveCookie", description = R.WEB_PLUGIN_PROPERTY_REMOVE_COOKIE, example = "'example'")
     public static final String   propertyRemoveCookie     = "RemoveCookie";
-	@PluginFieldDescription(parameter = "RemoveAllCookies", description = R.WEB_PLUGIN_PROPERTY_REMOVE_ALL_COOKIES, example = "", fieldType = FieldType.APP_WORK)
+	@PluginFieldDescription(parameter = "RemoveAllCookies", description = R.WEB_PLUGIN_PROPERTY_REMOVE_ALL_COOKIES, example = "")
     public static final String   propertyRemoveAllCookies = "RemoveAllCookies";
 	
 	private static String[]      empty = {  };
