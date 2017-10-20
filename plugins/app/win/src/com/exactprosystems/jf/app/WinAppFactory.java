@@ -56,7 +56,7 @@ public class WinAppFactory extends AbstractApplicationFactory
 	public static final String		execName				= "Exec";
 	@PluginFieldDescription(parameter = "WorkDir", description = R.WIN_PLUGIN_WORK_DIR, example = "'C:/example/'", fieldType = FieldType.APP_START)
 	public static final String		workDirName				= "WorkDir";
-	@PluginFieldDescription(parameter = "Args", description = R.WIN_PLUGIN_ARGS, example = "'Arg1'", fieldType = FieldType.APP_CONNECT)
+	@PluginFieldDescription(parameter = "Args", description = R.WIN_PLUGIN_ARGS, example = "'Arg1'", fieldType = FieldType.APP_START)
 	public static final String		argsName				= "Args";
 
 	@PluginFieldDescription(parameter = "Rectangle", description = R.WIN_PLUGIN_RECTANGLE, example = "", fieldType = FieldType.APP_WORK)

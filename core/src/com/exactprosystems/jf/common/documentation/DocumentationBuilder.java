@@ -246,12 +246,12 @@ public class DocumentationBuilder
             String title;
             switch (type)
             {
-                case PLUGIN: title = "1"; break;
-                case APP_START: title = "2"; break;
-                case APP_START_CONNECT: title = "3"; break;
-                case APP_CONNECT: title = "4"; break;
-                case APP_WORK: title = "5"; break;
-                default: title = "0"; break;
+                case PLUGIN: title = R.DOC_PLUGIN_PARAMS.get(); break;
+                case APP_START: title = R.DOC_APP_START.get(); break;
+                case APP_START_CONNECT: title = R.DOC_APP_START_CONNECT.get(); break;
+                case APP_CONNECT: title = R.DOC_APP_CONNECT.get(); break;
+                case APP_WORK: title = R.DOC_APP_WORK.get(); break;
+                default: title = R.DEFAULT.get(); break;
             }
             String[] headers = new String[] {R.PARAMETER.get(), R.DESCRIPTION.get(), R.EXAMPLE.get()};
             int[] width = new int[] {20, 50, 30};

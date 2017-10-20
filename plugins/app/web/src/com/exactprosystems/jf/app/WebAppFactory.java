@@ -50,7 +50,7 @@ public class WebAppFactory extends AbstractApplicationFactory
 
 	@PluginFieldDescription(parameter = "Browser", description = R.WEB_PLUGIN_BROWSER, example = "'Chrome'", fieldType = FieldType.APP_START)
     public static final String   browserName              = "Browser";
-	@PluginFieldDescription(parameter = "URL", description = R.WEB_PLUGIN_URL, example = "https://example.com", fieldType = FieldType.APP_START)
+	@PluginFieldDescription(parameter = "URL", description = R.WEB_PLUGIN_URL, example = "'https://example.com'", fieldType = FieldType.APP_START)
     public static final String   urlName                  = "URL";
 	@PluginFieldDescription(parameter = "WhereOpen", description = R.WEB_PLUGIN_WHERE_OPEN, example = "'OpenInTab'", fieldType = FieldType.APP_START)
     public static final String   whereOpenName            = "WhereOpen";
@@ -65,7 +65,7 @@ public class WebAppFactory extends AbstractApplicationFactory
     public static final String   propertyTitle            = "Title";
 	@PluginFieldDescription(parameter = "AllTitles", description = R.WEB_PLUGIN_PROPERTY_ALL_TITLES, example = "", fieldType = FieldType.APP_WORK)
     public static final String   propertyAllTitles        = "AllTitles";
-	@PluginFieldDescription(parameter = "Cookie", description = R.WEB_PLUGIN_PROPERTY_COOKIE, example = "Cookie{example:100}", fieldType = FieldType.APP_WORK)
+	@PluginFieldDescription(parameter = "Cookie", description = R.WEB_PLUGIN_PROPERTY_COOKIE, example = "'example'", fieldType = FieldType.APP_WORK)
     public static final String   propertyCookie           = "Cookie";
 	@PluginFieldDescription(parameter = "AllCookies", description = R.WEB_PLUGIN_PROPERTY_ALL_COOKIES, example = "", fieldType = FieldType.APP_WORK)
     public static final String   propertyAllCookies       = "AllCookies";
