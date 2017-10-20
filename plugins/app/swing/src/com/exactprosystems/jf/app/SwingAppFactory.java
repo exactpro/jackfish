@@ -41,7 +41,7 @@ public class SwingAppFactory extends AbstractApplicationFactory
 	@PluginFieldDescription(parameter = "Args", description = R.SWING_PLUGIN_ARGS, example = "'Arg1'")
 	public static final String argsName 		= "Args";
 
-	@PluginFieldDescription(parameter = "URL", description = R.SWING_PLUGIN_URL, example = "http://site.com/start.jnlp")
+	@PluginFieldDescription(parameter = "URL", description = R.SWING_PLUGIN_URL, example = "'http://site.com/start.jnlp'")
 	public static final String urlName 			= "URL";
 
 	@PluginFieldDescription(parameter = "Title", description = R.SWING_PLUGIN_TITLE, example = "'Title'")
