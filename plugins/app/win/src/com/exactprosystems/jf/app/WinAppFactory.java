@@ -46,7 +46,7 @@ public class WinAppFactory extends AbstractApplicationFactory
 	public static final String		mainWindowWidth			= "Width";
 	@PluginFieldDescription(parameter = "PID", description = R.WIN_PLUGIN_PID, example = "101")
 	public static final String		pidName					= "PID";
-	@PluginFieldDescription(parameter = "ControlKind", description = R.WIN_PLUGIN_CONTROL_KIND, example = "ControlKind.Panel")
+	@PluginFieldDescription(parameter = "ControlKind", description = R.WIN_PLUGIN_CONTROL_KIND, example = "ControlKind.Pane")
 	public static final String		controlKindName			= "ControlKind";
 	@PluginFieldDescription(parameter = "Timeout", description = R.WIN_PLUGIN_TIMEOUT, example = "20000")
 	public static final String		connectionTimeout		= "Timeout";
