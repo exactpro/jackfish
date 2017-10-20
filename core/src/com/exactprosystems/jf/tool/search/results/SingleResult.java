@@ -1,13 +1,21 @@
 package com.exactprosystems.jf.tool.search.results;
 
+import com.exactprosystems.jf.documents.DocumentKind;
+import com.exactprosystems.jf.tool.CssVariables;
+import com.exactprosystems.jf.tool.search.Search;
+import javafx.geometry.Pos;
 import javafx.scene.Node;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
+import javafx.scene.text.TextAlignment;
 import javafx.util.Pair;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.IntStream;
@@ -16,21 +24,46 @@ public class SingleResult extends AbstractResult
 {
 	private String                       line;
 	private int                          lineNumber;
+	private int                          itemLineNumber;
 	private List<Pair<Integer, Integer>> matches;
-	private String                       fileName;
+	private Search 						 model;
+	private DocumentKind 				 kind;
+	private final File 	 				 file;
 
-	public SingleResult(String fileName, String line, int lineNumber, List<Pair<Integer, Integer>> matches)
+	public SingleResult(File file, String line, int lineNumber, int itemLineNumber, List<Pair<Integer, Integer>> matches, Search model, DocumentKind kind)
 	{
 		this.line = line;
-		this.fileName = fileName;
 		this.lineNumber = lineNumber;
+		this.itemLineNumber = itemLineNumber;
 		this.matches = matches;
+		this.model = model;
+		this.kind = kind;
+		this.file = file;
 	}
 
 	@Override
 	public Node toView()
 	{
-		return new Label(fileName + " : " + this.lineNumber);
+		BorderPane pane = new BorderPane();
+
+		Label label = new Label(file.getName() + " : " + this.itemLineNumber);
+		label.setAlignment(Pos.CENTER_LEFT);
+		label.setTextAlignment(TextAlignment.LEFT);
+		BorderPane.setAlignment(label, Pos.CENTER_LEFT);
+
+		switch (kind)
+		{
+			case LIBRARY:
+			case MATRIX:
+				Button btnGoToLineInDoc = new Button();
+				btnGoToLineInDoc.setOnAction(event -> model.openAsDocWithNavToRow(file, itemLineNumber, kind));
+				btnGoToLineInDoc.getStyleClass().addAll(CssVariables.TRANSPARENT_BACKGROUND);
+				btnGoToLineInDoc.setId("btnOpenAsDocument");
+				pane.setRight(btnGoToLineInDoc);
+		}
+
+		pane.setCenter(label);
+		return pane;
 	}
 
 	@Override

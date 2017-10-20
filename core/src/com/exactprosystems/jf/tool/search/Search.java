@@ -1,11 +1,19 @@
 package com.exactprosystems.jf.tool.search;
 
 import com.exactprosystems.jf.api.common.Str;
+import com.exactprosystems.jf.common.CommonHelper;
 import com.exactprosystems.jf.common.Settings;
+import com.exactprosystems.jf.documents.Document;
+import com.exactprosystems.jf.documents.DocumentFactory;
 import com.exactprosystems.jf.documents.DocumentKind;
 import com.exactprosystems.jf.documents.config.Configuration;
+import com.exactprosystems.jf.documents.matrix.Matrix;
+import com.exactprosystems.jf.documents.matrix.parser.Parser;
 import com.exactprosystems.jf.tool.Common;
+import com.exactprosystems.jf.tool.custom.tab.CustomTab;
+import com.exactprosystems.jf.tool.documents.AbstractDocumentController;
 import com.exactprosystems.jf.tool.main.Main;
+import com.exactprosystems.jf.tool.matrix.MatrixFxController;
 import com.exactprosystems.jf.tool.search.results.AggregateResult;
 import com.exactprosystems.jf.tool.search.results.FailedResult;
 import com.exactprosystems.jf.tool.search.results.SingleResult;
@@ -14,6 +22,7 @@ import javafx.concurrent.Task;
 import javafx.util.Pair;
 
 import java.io.File;
+import java.io.Reader;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.*;
@@ -32,6 +41,7 @@ public class Search
 	private Main             model;
 	private Configuration    configuration;
 	private Settings         settings;
+	private DocumentFactory  factory;
 
 	static final String ALL_FILES = "*.*";
 
@@ -41,6 +51,7 @@ public class Search
 	{
 		this.model = model;
 		this.configuration = configuration;
+		this.factory = configuration.getFactory();
 		this.settings = settings;
 
 		this.controller = Common.loadController(this.getClass().getResource("Search.fxml"));
@@ -99,27 +110,32 @@ public class Search
 
 	public void openAsPlainText(File file)
 	{
-		Common.tryCatch(() -> this.model.loadPlainText(file.getAbsolutePath()), "Error on opem plain text");
+		Common.tryCatch(() -> this.model.loadPlainText(file.getAbsolutePath()), "Error on open plain text");
 	}
 
 	public void openAsMatrix(File file)
 	{
-		Common.tryCatch(() -> this.model.loadMatrix(file.getAbsolutePath()), "Error on opem plain text");
+		Common.tryCatch(() -> this.model.loadMatrix(file.getAbsolutePath()), "Error on open matrix");
 	}
 
 	public void openAsGuiDic(File file)
 	{
-		Common.tryCatch(() -> this.model.loadDictionary(file.getAbsolutePath(), null), "Error on opem plain text");
+		Common.tryCatch(() -> this.model.loadDictionary(file.getAbsolutePath(), null), "Error on open dictionary");
 	}
 
 	public void openAsVars(File file)
 	{
-		Common.tryCatch(() -> this.model.loadSystemVars(file.getAbsolutePath()), "Error on opem plain text");
+		Common.tryCatch(() -> this.model.loadSystemVars(file.getAbsolutePath()), "Error on open vars");
 	}
 
 	public void openAsHtml(File file)
 	{
 		Common.tryCatch(() -> this.model.openReport(file), "Error on open file");
+	}
+
+	public void openAsDocWithNavToRow(File file, int index, DocumentKind kind)
+	{
+		Common.tryCatch(() -> this.goToItemInMatrix(file, index, kind), "Error on open file");
 	}
 
 	//region private methods
@@ -226,14 +242,14 @@ public class Search
 
 					if (Str.IsNullOrEmpty(what))
 					{
-						return new AggregateResult(Search.this, Collections.singletonList(new SingleResult(fileName, null, 0, null)), file, kind);
+						return new AggregateResult(Search.this, Collections.singletonList(new SingleResult(file, null, 0,0, null, Search.this, kind)), file, kind);
 					}
 
 					List<SingleResult> collect;
+					List<String> strings = Files.readAllLines(Paths.get(file.getAbsolutePath()));
 
 					if (isMultiLine)
 					{
-						List<String> strings = Files.readAllLines(Paths.get(file.getAbsolutePath()));
 						String str = strings.stream().collect(Collectors.joining(System.lineSeparator()));
 						Pair<String, List<Pair<Integer, Integer>>> pair = processLine(str);
 						if (pair == null)
@@ -244,19 +260,19 @@ public class Search
 						collect = pair.getValue().stream()
 								.map(Arrays::asList)
 								.peek(p -> atomicInteger.set(indexOf(str, p.get(0).getKey())))
-								.map(list -> new SingleResult(fileName, line, atomicInteger.get(), list))
+								.map(list -> new SingleResult(file, line, atomicInteger.get(), getItemRowNumber(strings, atomicInteger.get(), kind), list, Search.this, kind))
 								.collect(Collectors.toList());
 					}
 					else
 					{
-						try (Stream<String> stream = Files.lines(Paths.get(file.getAbsolutePath())))
+						try (Stream<String> stream = strings.stream())
 						{
 							collect = stream
 									.peek(s -> atomicInteger.incrementAndGet())
 									.map(String::trim)
 									.map(SearchService.this::processLine)
 									.filter(Objects::nonNull)
-									.map(pair -> new SingleResult(fileName, pair.getKey(), atomicInteger.get(), pair.getValue()))
+									.map(pair -> new SingleResult(file, pair.getKey(), atomicInteger.get(), getItemRowNumber(strings, atomicInteger.get(), kind), pair.getValue(), Search.this, kind))
 									.collect(Collectors.toList());
 						}
 					}
@@ -331,4 +347,42 @@ public class Search
 	}
 	//endregion
 
+	private void goToItemInMatrix(File file, int itemRowNumber, DocumentKind kind) throws Exception
+	{
+		Matrix matrix = (Matrix) this.factory.createDocument(kind, file.getAbsolutePath());
+
+		CustomTab tab = Common.checkDocument(matrix);
+		if (tab == null)
+		{
+			try(Reader reader = CommonHelper.readerFromFileName(file.getAbsolutePath()))
+			{
+				matrix.load(reader);
+				factory.showDocument(matrix);
+				tab = Common.checkDocument(matrix);
+			}
+		}
+		if (tab != null)
+		{
+			AbstractDocumentController<? extends Document> controller = tab.getController();
+			if (controller instanceof MatrixFxController)
+			{
+				((MatrixFxController) controller).setCurrent(itemRowNumber);
+			}
+		}
+	}
+
+	private int getItemRowNumber(List<String> strings, int lineNumber, DocumentKind kind)
+	{
+		if (kind.equals(DocumentKind.MATRIX) || kind.equals(DocumentKind.LIBRARY))
+		{
+			int res = (int) strings
+					.stream()
+					.limit(lineNumber)
+					.filter(s -> s.matches("^\\s*" + Parser.systemPrefix + ".*") && !s.startsWith(Parser.systemPrefix + "End"))
+					.count();
+			return res == 0 ? 1 : res;
+		}
+
+		return lineNumber;
+	}
 }

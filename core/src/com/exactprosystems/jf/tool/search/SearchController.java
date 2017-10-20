@@ -104,6 +104,7 @@ public class SearchController implements Initializable, ContainingParent
 		this.tvResults.setRoot(new TreeItem<>());
 		this.tvResults.setShowRoot(false);
 		this.tvResults.setCellFactory(param -> new SearchResultCellItem());
+		this.tvResults.setId("searchResultsTree");
 		this.tvResults.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
 			this.hBoxResult.getChildren().clear();
 			if (newValue != null)

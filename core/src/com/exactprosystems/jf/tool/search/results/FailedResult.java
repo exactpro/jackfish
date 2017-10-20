@@ -10,7 +10,7 @@ public class FailedResult extends SingleResult
 
 	public FailedResult(String msg)
 	{
-		super(null, null, 0, null);
+		super(null, null, 0, 0, null, null, null);
 		this.msg = msg;
 	}
 

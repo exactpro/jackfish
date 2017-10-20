@@ -1061,3 +1061,6 @@ CellView > .text-input.text-field{
 	-fx-graphic : url('icons/plainTextIcon.png');
 
 }
+#searchResultsTree:focused .tree-cell:filled:selected {
+    -fx-background-color: #28b0ff;
+}
