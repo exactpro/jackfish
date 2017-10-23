@@ -37,7 +37,7 @@ public class TableLoadFromDir extends AbstractAction
 {
     public final static String dirName = "Dir";
 
-    @ActionFieldAttribute(name = dirName, mandatory = true, description = "Path to directory. It's not permitted to use ways with metacharacters (wildcard).")
+    @ActionFieldAttribute(name = dirName, mandatory = true, constantDescription = R.TABLE_LOAD_FROM_DIR_DIRECTORY)
     protected String directory = null;
 
     @Override

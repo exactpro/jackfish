@@ -40,19 +40,19 @@ public class TableCompareTwo extends AbstractAction
 	public final static String ignoreRowsOrderName = "IgnoreRowsOrder";
     public final static String compareValuesName = "CompareValues";
 
-	@ActionFieldAttribute(name = actualName, mandatory = true, description = "A table which is to be compared. .")
+	@ActionFieldAttribute(name = actualName, mandatory = true, constantDescription = R.TABLE_COMPARE_TWO_ACTUAL)
 	protected Table actual = null;
 
-	@ActionFieldAttribute(name = expectedName, mandatory = true, description = "A table which is to be compared with.")
+	@ActionFieldAttribute(name = expectedName, mandatory = true, constantDescription = R.TABLE_COMPARE_TWO_EXPECTED)
 	protected Table expected = null;
 
-	@ActionFieldAttribute(name = excludeName, mandatory = false, def = DefaultValuePool.EmptyArrString, description = "An array of column names, which are excluded out of comparison.")
+	@ActionFieldAttribute(name = excludeName, mandatory = false, def = DefaultValuePool.EmptyArrString, constantDescription = R.TABLE_COMPARE_TWO_EXCLUDE)
 	protected String[] exclude;
 
-	@ActionFieldAttribute(name = ignoreRowsOrderName, mandatory = false, def = DefaultValuePool.False, description = "Ignore row order.")
+	@ActionFieldAttribute(name = ignoreRowsOrderName, mandatory = false, def = DefaultValuePool.False, constantDescription = R.TABLE_COMPARE_TWO_IGNORE_ROWS_ORDER)
 	protected Boolean ignoreRowsOrder;
 
-    @ActionFieldAttribute(name = compareValuesName, mandatory = false, def = DefaultValuePool.False, description = "If true compare values otherwise compare string representation of values.")
+    @ActionFieldAttribute(name = compareValuesName, mandatory = false, def = DefaultValuePool.False, constantDescription = R.TABLE_COMPARE_TWO_COMPARE_VALUES)
     protected Boolean compareValues;
 
 	@Override

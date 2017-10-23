@@ -29,17 +29,16 @@ public class TableSort extends AbstractAction
 	public static final String ascendingName = "Ascending";
 	public static final String ignoreCaseName = "IgnoreCase";
 
-	@ActionFieldAttribute(name = tableName, mandatory = true, description = "Sorted table.")
+	@ActionFieldAttribute(name = tableName, mandatory = true, constantDescription = R.TABLE_SORT_TABLE)
 	protected Table table = null;
 
-	@ActionFieldAttribute(name = columnName, mandatory = true, description = "Column title that defines the table sorting.")
+	@ActionFieldAttribute(name = columnName, mandatory = true, constantDescription = R.TABLE_SORT_COLUMN_INDEX)
 	protected String columnIndex = null;
 
-	@ActionFieldAttribute(name = ascendingName, mandatory = false, def = DefaultValuePool.True, description = "Sorting type: true - ascending sorting,"
-			+ " false - descending sorting. By default is true.")
+	@ActionFieldAttribute(name = ascendingName, mandatory = false, def = DefaultValuePool.True, constantDescription = R.TABLE_SORT_ASCENDING)
 	protected Boolean ascending;
 
-	@ActionFieldAttribute(name = ignoreCaseName, mandatory = false, def = DefaultValuePool.False, description = "If this ignoreCase is true - sorting will ignore case. Available only for strings")
+	@ActionFieldAttribute(name = ignoreCaseName, mandatory = false, def = DefaultValuePool.False, constantDescription = R.TABLE_SORT_IGNORE_CASE)
 	protected Boolean ignoreCase;
 
 	@Override

@@ -29,10 +29,10 @@ public class TableRemoveColumns extends AbstractAction
 	public static final String tableName = "Table";
 	public static final String columnsName = "Columns";
 
-	@ActionFieldAttribute(name = tableName, mandatory = true, description = "Table, where columns are to be deleted.")
+	@ActionFieldAttribute(name = tableName, mandatory = true, constantDescription = R.TABLE_REMOVE_COLUMNS_TABLE)
 	protected Table table = null;
 
-	@ActionFieldAttribute(name = columnsName, mandatory = true, description = "An array of column names to delete.")
+	@ActionFieldAttribute(name = columnsName, mandatory = true, constantDescription = R.TABLE_REMOVE_COLUMNS_COLUMNS)
 	protected String[] columns = new String[] {};
 
 	@Override

@@ -38,7 +38,7 @@ public class TableSelect extends AbstractAction
 {
 	public final static String tableName = "Table";
 
-	@ActionFieldAttribute(name = tableName, mandatory = true, description = "The table from which rows are selected")
+	@ActionFieldAttribute(name = tableName, mandatory = true, constantDescription = R.TABLE_SELECT_TABLE)
 	protected Table 	table;
 
 	@Override

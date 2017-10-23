@@ -28,11 +28,10 @@ public class TableRemoveRow extends AbstractAction
 	public final static String tableName = "Table";
 	public static final String rowIndex = "Index";
 
-	@ActionFieldAttribute(name = tableName, mandatory = true, description = "A table where a line needs to be deleted.")
+	@ActionFieldAttribute(name = tableName, mandatory = true, constantDescription = R.TABLE_REMOVE_ROW_TABLE)
 	protected Table table = null;
 
-	@ActionFieldAttribute(name = rowIndex, mandatory = true, description = "A deletable line number. In case of a"
-			+ " negative value the last line will be deleted. Numeration starts with 0.")
+	@ActionFieldAttribute(name = rowIndex, mandatory = true, constantDescription = R.TABLE_REMOVE_ROW_ROW)
 	protected Integer row = null;
 
 	@Override

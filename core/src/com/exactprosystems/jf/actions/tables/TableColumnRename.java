@@ -27,7 +27,7 @@ public class TableColumnRename extends AbstractAction
 
 	public static final String tableName = "Table";
 
-	@ActionFieldAttribute(name = tableName, mandatory = true, description = "A table where a column / columns are needed to rename.")
+	@ActionFieldAttribute(name = tableName, mandatory = true, constantDescription = R.TABLE_COLUMN_RENAME_TABLE)
 	protected Table table = null;
 
 	@Override

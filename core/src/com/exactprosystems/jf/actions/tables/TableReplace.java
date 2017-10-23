@@ -23,33 +23,29 @@ import com.exactprosystems.jf.functions.Table;
 	)
 public class TableReplace extends AbstractAction 
 {
-	public final static String tableName 		= "Table";
-	public final static String colunmsName 		= "Columns";
-	public final static String replaceName 		= "Replace";
-	public final static String searchName 		= "Search";
-	public final static String regexpName 		= "Regexp";
-	public final static String matchCellname 	= "MatchCell";
+	public static final String tableName 		= "Table";
+	public static final String colunmsName 		= "Columns";
+	public static final String replaceName 		= "Replace";
+	public static final String searchName 		= "Search";
+	public static final String regexpName 		= "Regexp";
+	public static final String matchCellname 	= "MatchCell";
 
-	@ActionFieldAttribute(name = tableName, mandatory = true, description = "Table where it is needed to replace values.")
+	@ActionFieldAttribute(name = tableName, mandatory = true, constantDescription = R.TABLE_REPLACE_TABLE)
 	protected Table 	table 	= null;
 
-	@ActionFieldAttribute(name = colunmsName, mandatory = true, description = "Array of column titles where it is needed to change values.")
+	@ActionFieldAttribute(name = colunmsName, mandatory = true, constantDescription = R.TABLE_REPLACE_COLUMNS)
 	protected String[]	columns = new String[] {};
 
-	@ActionFieldAttribute(name = replaceName, mandatory = true, description = "Value which replaces.")
+	@ActionFieldAttribute(name = replaceName, mandatory = true, constantDescription = R.TABLE_REPLACE_REPLACE)
 	protected Object 	replace = null;
 	
-	@ActionFieldAttribute(name = searchName, mandatory = false, def = DefaultValuePool.Null, description = "If a cell value or a part of a cell is "
-			+ "equal to this value, cell will be replaced. It is ignored if you set Regexp. ")
+	@ActionFieldAttribute(name = searchName, mandatory = false, def = DefaultValuePool.Null, constantDescription = R.TABLE_REPLACE_SEARCH)
 	protected Object 	search;
 
-	@ActionFieldAttribute(name = regexpName, mandatory = false, def = DefaultValuePool.Null, description = "If a cell value complies with this"
-			+ " regular expression it will be replaced.")
+	@ActionFieldAttribute(name = regexpName, mandatory = false, def = DefaultValuePool.Null, constantDescription = R.TABLE_REPLACE_REGEXP)
 	protected String 	regexp;
 
-	@ActionFieldAttribute(name = matchCellname, mandatory = false, def = DefaultValuePool.True, description = "if the value is true, the cell will be"
-			+ " replaced, otherwise only the one that complies. It is used only when setting Search parameter and is "
-			+ "ignored when setting Regexp.")
+	@ActionFieldAttribute(name = matchCellname, mandatory = false, def = DefaultValuePool.True, constantDescription = R.TABLE_REPLACE_MATCH_CELL)
 	protected Boolean	matchCell;
 
 	@Override

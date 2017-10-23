@@ -48,32 +48,28 @@ public class TableReport extends AbstractAction
     public final static String toReportName       = "ToReport";
     public final static String widthName          = "Width";
 
-	@ActionFieldAttribute(name = tableName, mandatory = true, description = "A table which is needed to to be output into the report.")
+	@ActionFieldAttribute(name = tableName, mandatory = true, constantDescription = R.TABLE_REPORT_TABLE)
 	protected Table 	table 	= null;
 
-	@ActionFieldAttribute(name = titleName, mandatory = true, description = "The title of the output table.")
+	@ActionFieldAttribute(name = titleName, mandatory = true, constantDescription = R.TABLE_REPORT_TITLE)
 	protected String 	title 	= null;
 
-    @ActionFieldAttribute(name=toReportName, mandatory = false, def = DefaultValuePool.Null, description = 
-            "This parameter is used for directing the output from the given object to the external report "
-          + "created by the {{@ReportStart@}} action.")
+    @ActionFieldAttribute(name=toReportName, mandatory = false, def = DefaultValuePool.Null, constantDescription = R.TABLE_REPORT_TO_REPORT)
     protected ReportBuilder toReport;
 
-    @ActionFieldAttribute(name = beforeTestCaseName, mandatory = false, def = DefaultValuePool.Null, description = "Enables to output the table on the highest level of the report.")
+    @ActionFieldAttribute(name = beforeTestCaseName, mandatory = false, def = DefaultValuePool.Null, constantDescription = R.TABLE_REPORT_BEFORE_TEST_CASE)
     protected String    beforeTestCase;
 
-	@ActionFieldAttribute(name = numbersName, mandatory = false, def = DefaultValuePool.True, description = "If the value is true the column with the lines numbers is output.")
+	@ActionFieldAttribute(name = numbersName, mandatory = false, def = DefaultValuePool.True, constantDescription = R.TABLE_REPORT_WITH_NUMBERS)
 	protected Boolean withNumbers;
 
-	@ActionFieldAttribute(name = columnsName, mandatory = false, def = DefaultValuePool.Null, description = "Array or map of column titles which is needed to be output into the report.")
+	@ActionFieldAttribute(name = columnsName, mandatory = false, def = DefaultValuePool.Null, constantDescription = R.TABLE_REPORT_COLUMNS)
 	protected Object	columns;
 
-    @ActionFieldAttribute(name = widthName, mandatory = false, def = DefaultValuePool.Null, description = "Array of integers which define widht of each column.")
+    @ActionFieldAttribute(name = widthName, mandatory = false, def = DefaultValuePool.Null, constantDescription = R.TABLE_REPORT_WIDTHS)
     protected Integer[]  widths;
 	
-	@ActionFieldAttribute(name = reportValuesName, mandatory = false, def = DefaultValuePool.False, description = "If the value is false, the value"
-			+ " from the cell is output, if the value is true the expression result is output. "
-			+ "Applicable for the cells of Expression type, see {{@TableConsiderColumnAs@}}.")
+	@ActionFieldAttribute(name = reportValuesName, mandatory = false, def = DefaultValuePool.False, constantDescription = R.TABLE_REPORT_REPORT_VALUES)
 	protected Boolean	reportValues;
 
 	@Override

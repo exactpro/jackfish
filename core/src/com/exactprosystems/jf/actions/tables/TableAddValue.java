@@ -35,11 +35,10 @@ public class TableAddValue extends AbstractAction
 	public final static String tableName = "Table";
 	public static final String indexName = "Index";
 
-	@ActionFieldAttribute(name = tableName, mandatory = true, description = "A table where it is needed to add a line.")
+	@ActionFieldAttribute(name = tableName, mandatory = true, constantDescription = R.TABLE_ADD_VALUE_TABLE)
 	protected Table 	table 	= null;
 
-	@ActionFieldAttribute(name = indexName, mandatory = false, def = DefaultValuePool.IntMin, description = "A line index, where a new line is added. "
-			+ "If it is a negative value it will be inserted at the end of the table. Numeration starts with 0.")
+	@ActionFieldAttribute(name = indexName, mandatory = false, def = DefaultValuePool.IntMin, constantDescription = R.TABLE_ADD_VALUE_INDEX)
 	protected Integer	index;
 
 	@Override

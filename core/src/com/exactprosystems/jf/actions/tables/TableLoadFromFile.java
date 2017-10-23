@@ -41,11 +41,10 @@ public class TableLoadFromFile extends AbstractAction
 	public final static String fileName 		= "File";
 	public final static String delimiterName 	= "Delimiter";
 
-	@ActionFieldAttribute(name = fileName, mandatory = true, description = "Path to file")
+	@ActionFieldAttribute(name = fileName, mandatory = true, constantDescription = R.TABLE_LOAD_FROM_FILE_FILE)
 	protected String 	file 	= null;
 
-	@ActionFieldAttribute(name = delimiterName, mandatory = false, def = DefaultValuePool.Semicolon, description = "Any symbol, which divides values in"
-			+ " file. By default ',' . is accepted.")
+	@ActionFieldAttribute(name = delimiterName, mandatory = false, def = DefaultValuePool.Semicolon, constantDescription = R.TABLE_LOAD_FROM_FILE_DELIMITER)
 	protected String	delimiter;
 	
 	@Override

@@ -31,10 +31,10 @@ public class TableUnion extends AbstractAction
 	public final static String mainTableName = "MainTable";
 	public final static String unitedTableName = "UnitedTable";
 
-	@ActionFieldAttribute(name = mainTableName, mandatory = true, description = "Table where lines will be added.")
+	@ActionFieldAttribute(name = mainTableName, mandatory = true, constantDescription = R.TABLE_UNION_MAIN_TABLE)
 	protected Table mainTable = null;
 
-	@ActionFieldAttribute(name = unitedTableName, mandatory = true, description = "Table with the lines that will be added to the main one")
+	@ActionFieldAttribute(name = unitedTableName, mandatory = true, constantDescription = R.TABLE_UNION_UNITED_TABLE)
 	protected Table unitedTable = null;
 
 	@Override

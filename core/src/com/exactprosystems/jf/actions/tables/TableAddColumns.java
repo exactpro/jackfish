@@ -30,18 +30,17 @@ import com.exactprosystems.jf.functions.Table;
 	)
 public class TableAddColumns extends AbstractAction 
 {
-	public final static String tableName = "Table";
-	public final static String columnsName = "Columns";
+	public static final String tableName = "Table";
+	public static final String columnsName = "Columns";
 	public static final String indexName = "Index";
 
-	@ActionFieldAttribute(name = tableName, mandatory = true, description = "A table which is needed to add columns. ")
+	@ActionFieldAttribute(name = tableName, mandatory = true, constantDescription = R.TABLE_ADD_COLUMNS_TABLE)
 	protected Table 	table 	= null;
 
-	@ActionFieldAttribute(name = columnsName, mandatory = true, description = "Array of column titles' names.")
+	@ActionFieldAttribute(name = columnsName, mandatory = true, constantDescription = R.TABLE_ADD_COLUMNS_COLUMNS)
 	protected String[]	columns 	= new String[] {};
 
-	@ActionFieldAttribute(name = indexName, mandatory = false, def = DefaultValuePool.Null, description = "Line number  where it is needed to insert."
-			+ "Numeration starts with 0. By default it will be inserted at end of the table.")
+	@ActionFieldAttribute(name = indexName, mandatory = false, def = DefaultValuePool.Null,  constantDescription = R.TABLE_ADD_COLUMNS_INDEX)
 	protected Integer	index;
 	
 	@Override

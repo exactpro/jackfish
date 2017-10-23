@@ -41,19 +41,19 @@ public class TableLeftJoin extends AbstractAction
 	public final static String leftAliasName 	= "LeftAlias";
 	public final static String conditionName 	= "Condition";
 
-	@ActionFieldAttribute(name = rightTableName, mandatory = true, description = "Table, which rows are matched according to condition.")
+	@ActionFieldAttribute(name = rightTableName, mandatory = true, constantDescription = R.TABLE_LEFT_JOIN_RIGHT_TABLE)
 	protected Table rightTable = null;
 
-	@ActionFieldAttribute(name = leftTableName, mandatory = true, description = "Table, which rows are selected according to condition.")
+	@ActionFieldAttribute(name = leftTableName, mandatory = true, constantDescription = R.TABLE_LEFT_JOIN_LEFT_TABLE)
 	protected Table leftTable = null;
 
-	@ActionFieldAttribute(name = rightAliasName, mandatory = true, description = "Alias for the right table rows.")
+	@ActionFieldAttribute(name = rightAliasName, mandatory = true, constantDescription = R.TABLE_LEFT_JOIN_RIGHT_ALIAS)
 	protected String rightAlias = null;
 
-	@ActionFieldAttribute(name = leftAliasName, mandatory = true, description = "Alias for the left table rows.")
+	@ActionFieldAttribute(name = leftAliasName, mandatory = true, constantDescription = R.TABLE_LEFT_JOIN_LEFT_ALIAS)
 	protected String leftAlias = null;
 
-	@ActionFieldAttribute(name = conditionName, mandatory = true, description = "Condition under which row sample is made.")
+	@ActionFieldAttribute(name = conditionName, mandatory = true, constantDescription = R.TABLE_LEFT_JOIN_CONDITION)
 	protected String condition = null;
 
 	@Override

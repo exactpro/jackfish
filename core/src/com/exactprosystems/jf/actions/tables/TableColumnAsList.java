@@ -36,13 +36,13 @@ public class TableColumnAsList extends AbstractAction
     public final static String columnName = "Column";
     public final static String getValuesName = "GetValues";
 
-    @ActionFieldAttribute(name = tableName, mandatory = true, description = "A table from which the column will be extracted.")
+    @ActionFieldAttribute(name = tableName, mandatory = true, constantDescription = R.TABLE_COLUMN_AS_LIST_TABLE)
     protected Table table = null;
 
-    @ActionFieldAttribute(name = columnName, mandatory = true, description = "Column name which will be extracted.")
+    @ActionFieldAttribute(name = columnName, mandatory = true, constantDescription = R.TABLE_COLUMN_AS_LIST_COLUMN)
     protected String column = null;
 
-    @ActionFieldAttribute(name = getValuesName, mandatory = false, def = DefaultValuePool.False, description = "If true get values otherwise get expressions.")
+    @ActionFieldAttribute(name = getValuesName, mandatory = false, def = DefaultValuePool.False, constantDescription = R.TABLE_COLUMN_AS_LIST_GET_VALUES)
     protected Boolean getValues;
 
 

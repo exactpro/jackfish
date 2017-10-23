@@ -40,19 +40,16 @@ public class TableSaveToFile extends AbstractAction
 	public final static String delimiterName = "Delimiter";
 	public final static String saveValuesName = "SaveValues";
 
-	@ActionFieldAttribute(name = tableName, mandatory = true, description = "A table which is needed to be saved to a file")
+	@ActionFieldAttribute(name = tableName, mandatory = true, constantDescription = R.TABLE_SAVE_TO_FILE_TABLE)
 	protected Table 	table 	= null;
 
-	@ActionFieldAttribute(name = fileNameName, mandatory = true, description = "Path name to a target file where the "
-			+ "table will be saved. The name of the file needs to be given with the name suffix")
+	@ActionFieldAttribute(name = fileNameName, mandatory = true, constantDescription = R.TABLE_SAVE_TO_FILE_FILE_NAME)
 	protected String 	fileName 	= null;
 
-	@ActionFieldAttribute(name = delimiterName, mandatory = false, def = DefaultValuePool.Semicolon, description = "Any character that separates the columns in the file. The default is ',' .\n")
+	@ActionFieldAttribute(name = delimiterName, mandatory = false, def = DefaultValuePool.Semicolon, constantDescription = R.TABLE_SAVE_TO_FILE_DELIMITER)
 	protected String	delimiter;
 
-	@ActionFieldAttribute(name = saveValuesName, mandatory = false, def = DefaultValuePool.False, description = "If the value is false , the value"
-			+ " from the cell is saved, if the value is true the expression result is saved. Applicable for the cells"
-			+ " of Expression type, see {{@TableConsiderColumnAs@}}.")
+	@ActionFieldAttribute(name = saveValuesName, mandatory = false, def = DefaultValuePool.False, constantDescription = R.TABLE_SAVE_TO_FILE_SAVE_VALUES)
 	protected Boolean	saveValues;
 
 	@Override

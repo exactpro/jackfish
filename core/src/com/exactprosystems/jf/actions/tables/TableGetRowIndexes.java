@@ -39,7 +39,7 @@ public class TableGetRowIndexes extends AbstractAction
 {
 	public final static String tableName = "Table";
 
-	@ActionFieldAttribute(name = tableName, mandatory = true, description = "The table in which row is serached")
+	@ActionFieldAttribute(name = tableName, mandatory = true, constantDescription = R.TABLE_GET_ROW_INDEXES_TABLE)
 	protected Table 	table 	= null;
 
 	@Override

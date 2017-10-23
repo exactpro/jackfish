@@ -34,11 +34,10 @@ public class TableSetValue extends AbstractAction
 	public final static String tableName = "Table";
 	public final static String indexName = "Index";
 
-	@ActionFieldAttribute(name = tableName, mandatory = true, description = "Table which is needed to be changed")
+	@ActionFieldAttribute(name = tableName, mandatory = true, constantDescription = R.TABLE_SET_VALUE_TABLE)
 	protected Table 	table 	= null;
 
-	@ActionFieldAttribute(name = indexName, mandatory = true, description = "line number where it is needed to set the"
-			+ " value. Numeration starts with 0.")
+	@ActionFieldAttribute(name = indexName, mandatory = true, constantDescription = R.TABLE_SET_VALUE_INDEX)
 	protected Integer	index 	= 0;
 
     @Override

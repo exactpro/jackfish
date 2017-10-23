@@ -44,37 +44,37 @@ public class TableConsiderColumnsAs extends AbstractAction
     public final static String asHyperlinkName  = "Hyperlink";
     public final static String asColoredName    = "Colored";
 
-	@ActionFieldAttribute(name = tableName, mandatory = true, description = "A table is needed to be performed.\n")
+	@ActionFieldAttribute(name = tableName, mandatory = true, constantDescription = R.TABLE_CONSIDER_COLUMN_AS_TABLE)
 	protected Table 	table 	= null;
 
-	@ActionFieldAttribute(name = asStringName, mandatory = false, def = DefaultValuePool.EmptyArrString, description = "Is specified as an array of column names, where it is needed to set data type - String.")
+	@ActionFieldAttribute(name = asStringName, mandatory = false, def = DefaultValuePool.EmptyArrString, constantDescription = R.TABLE_CONSIDER_COLUMN_AS_STRING)
 	protected String[]	asString;
 
-	@ActionFieldAttribute(name = asBooleanName, mandatory = false, def = DefaultValuePool.EmptyArrString, description = "Is specified as an array of column names, where it is needed to set data type - Boolean.")
+	@ActionFieldAttribute(name = asBooleanName, mandatory = false, def = DefaultValuePool.EmptyArrString, constantDescription = R.TABLE_CONSIDER_COLUMN_AS_BOOLEAN)
 	protected String[]	asBoolean;
 
-	@ActionFieldAttribute(name = asIntegerName, mandatory = false, def = DefaultValuePool.EmptyArrString, description = "Is specified as an array of column names, where it is needed to set data type - Integer.")
+	@ActionFieldAttribute(name = asIntegerName, mandatory = false, def = DefaultValuePool.EmptyArrString, constantDescription = R.TABLE_CONSIDER_COLUMN_AS_INTEGER)
 	protected String[]	asInteger;
 
-	@ActionFieldAttribute(name = asDoubleName, mandatory = false, def = DefaultValuePool.EmptyArrString, description = "Is specified as an array of column names, where it is needed to set data type - Double.")
+	@ActionFieldAttribute(name = asDoubleName, mandatory = false, def = DefaultValuePool.EmptyArrString, constantDescription = R.TABLE_CONSIDER_COLUMN_AS_DOUBLE)
 	protected String[]	asDouble;
 
-	@ActionFieldAttribute(name = asBigDecimalName, mandatory = false, def = DefaultValuePool.EmptyArrString, description = "Is specified as an array of column names, where it is needed to set data type - BigDecimal.")
+	@ActionFieldAttribute(name = asBigDecimalName, mandatory = false, def = DefaultValuePool.EmptyArrString, constantDescription = R.TABLE_CONSIDER_COLUMN_AS_BIG_DECIMAL)
 	protected String[]	asBigDecimal;
 
-	@ActionFieldAttribute(name = asDateName, mandatory = false, def = DefaultValuePool.EmptyArrString, description = "Is specified as an array of column names, where it is needed to set data type - Date.")
+	@ActionFieldAttribute(name = asDateName, mandatory = false, def = DefaultValuePool.EmptyArrString, constantDescription = R.TABLE_CONSIDER_COLUMN_AS_DATE)
 	protected String[]	asDate;
 
-	@ActionFieldAttribute(name = asExpressionName, mandatory = false, def = DefaultValuePool.EmptyArrString, description = "Is specified as an array of column names, where it is needed to set data type - Expression.")
+	@ActionFieldAttribute(name = asExpressionName, mandatory = false, def = DefaultValuePool.EmptyArrString, constantDescription = R.TABLE_CONSIDER_COLUMN_AS_EXPRESSION)
 	protected String[]	asExpression;
 
-    @ActionFieldAttribute(name = asGroupName, mandatory = false, def = DefaultValuePool.EmptyArrString, description = "Is specified as an array of column names, where it is needed to set data type - Group.")
+    @ActionFieldAttribute(name = asGroupName, mandatory = false, def = DefaultValuePool.EmptyArrString, constantDescription = R.TABLE_CONSIDER_COLUMN_AS_GROUP)
     protected String[]  asGroup;
 
-    @ActionFieldAttribute(name = asHyperlinkName, mandatory = false, def = DefaultValuePool.EmptyArrString, description = "Is specified as an array of column names, where it is needed to set data type - Hyperlink.")
+    @ActionFieldAttribute(name = asHyperlinkName, mandatory = false, def = DefaultValuePool.EmptyArrString, constantDescription = R.TABLE_CONSIDER_COLUMN_AS_HYPERLINK)
     protected String[]  asHyperlink;
 
-    @ActionFieldAttribute(name = asColoredName, mandatory = false, def = DefaultValuePool.EmptyArrString, description = "Is specified as an array of column names, where it is needed to set data type - Colored.")
+    @ActionFieldAttribute(name = asColoredName, mandatory = false, def = DefaultValuePool.EmptyArrString, constantDescription = R.TABLE_CONSIDER_COLUMN_AS_COLORED)
     protected String[]  asColored;
 
 	@Override

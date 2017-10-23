@@ -39,10 +39,10 @@ public class TableEdit extends AbstractAction
     public static final String titleName          = "Title";
     public final static String tableName          = "Table";
 
-    @ActionFieldAttribute(name=titleName, mandatory = true, description = "Title of user input")
+    @ActionFieldAttribute(name=titleName, mandatory = true, constantDescription = R.TABLE_EDIT_TITLE)
     protected String title;
 
-    @ActionFieldAttribute(name = tableName, mandatory = true, description = "A table which is needed to to be edited.")
+    @ActionFieldAttribute(name = tableName, mandatory = true, constantDescription = R.TABLE_EDIT_TABLE)
     protected Table     table   = null;
 	
     @Override
