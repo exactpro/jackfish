@@ -79,19 +79,41 @@ public class HelperFx
 
 				ObservableList<IToString> observableAll = FXCollections.observableArrayList();
 
-				Arrays.stream(clazz.getMethods())
-						.filter(m -> m.getAnnotation(HideAttribute.class) == null)
-						.map(this::getStringSimpleMethod)
-						.filter(simpleMethod -> !showVoid && simpleMethod.getReturnType().equalsIgnoreCase(Void.TYPE.getSimpleName()) || !showStatic && simpleMethod.isStatic())
-						.forEach(observableAll::add);
+				for (Method method : clazz.getMethods())
+				{
+					if (method.getAnnotation(HideAttribute.class) != null)
+					{
+						continue;
+					}
+					SimpleMethod simpleMethod = getStringSimpleMethod(method);
+					if (simpleMethod != null)
+					{
+						boolean add = true;
 
-				Arrays.stream(clazz.getFields())
+						if (!showVoid && simpleMethod.getReturnType().equals("void"))
+						{
+							add = false;
+						}
+
+						if (!showStatic && simpleMethod.isStatic())
+						{
+							add = false;
+						}
+
+						if (add)
+						{
+							observableAll.add(simpleMethod);
+						}
+					}
+				}
+
+				observableAll.addAll(Arrays.stream(clazz.getFields())
 						.filter(t -> t.getAnnotation(HideAttribute.class) == null )
 						.map(this::getStringsSimpleField)
 						.filter(Objects::nonNull)
-						.forEach(observableAll::add);
-
-				observableAll.sort(ascentingSorting ? comparatorAZ : comparatorZA);
+						.collect(Collectors.toList())
+				);
+				Collections.sort(observableAll, ascentingSorting ? comparatorAZ : comparatorZA);
 
 				this.controller.displayClass(clazz);
 				this.controller.displayMethods(observableAll);
@@ -152,7 +174,6 @@ public class HelperFx
 		return new SimpleField(field);
 	}
 
-	//endregion
 
 	static class SimpleMethod implements IToString
 	{
@@ -227,7 +248,6 @@ public class HelperFx
 		@Override
 		public String getDescription()
 		{
-			//TODO add all annotations
 			return Optional.ofNullable(this.method.getAnnotation(DescriptionAttribute.class))
 					.map(DescriptionAttribute::text)
 					.orElse(null);
