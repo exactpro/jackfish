@@ -33,16 +33,13 @@ public class ApplicationMove extends AbstractAction
 	public static final String xName = "X";
 	public static final String yName = "Y";
 
-	@ActionFieldAttribute(name = connectionName, mandatory = true, description = "A special object which identifies"
-			+ " the started application session. This object is required in many other actions to specify the "
-			+ "session of the application the indicated action belongs to. It is the output value of such actions "
-			+ "as {{@ApplicationStart@}}, {{@ApplicationConnectTo@}}." )
+	@ActionFieldAttribute(name = connectionName, mandatory = true, constantDescription = R.APPLICATION_MOVE_CONNECTION )
 	protected AppConnection connection = null;
 
-	@ActionFieldAttribute(name = xName, mandatory = true, description = "The X coordinate for move window.")
+	@ActionFieldAttribute(name = xName, mandatory = true, constantDescription = R.APPLICATION_MOVE_X)
 	protected Integer x;
 
-	@ActionFieldAttribute(name = yName, mandatory = true, description = "The Y coordinate for move window")
+	@ActionFieldAttribute(name = yName, mandatory = true, constantDescription = R.APPLICATION_MOVE_Y)
 	protected Integer y;
 
 	@Override

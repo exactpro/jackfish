@@ -52,14 +52,10 @@ public class ApplicationConnectTo extends AbstractAction
 	public static final String idName 			= "AppId";
     public static final String connectionName   = "AppConnection";
 
-	@ActionFieldAttribute(name = idName, mandatory = true, description = "Adapter key, one of those described in the"
-			+ " {{$App entries$}} branch of the configuration, will be used to start the corresponding plug-in and to select"
-			+ " the dictionary.")
+	@ActionFieldAttribute(name = idName, mandatory = true, constantDescription = R.APPLICATION_CONNECT_TO_ID)
 	protected String 		id	= null;
 
-    @ActionFieldAttribute(name = connectionName, mandatory = false, def = DefaultValuePool.Null, description = "A special object which identifies the"
-            + " started application session. In case this parameter is not empty the reconnect is performed. "
-            + " It is the output value of such actions as {{@ApplicationStart@}}.")
+    @ActionFieldAttribute(name = connectionName, mandatory = false, def = DefaultValuePool.Null, constantDescription = R.APPLICATION_CONNECT_TO_CONNECTION)
     protected AppConnection connection = null;
 
 	@Override

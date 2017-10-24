@@ -34,13 +34,10 @@ public class ApplicationNavigate extends AbstractAction
 	public static final String connectionName = "AppConnection";
 	public static final String navigateKindName = "Navigate";
 
-	@ActionFieldAttribute(name = connectionName, mandatory = true, description = "A special object which identifies"
-			+ " the started application session. This object is required in many other actions to specify the "
-			+ "session of the application the indicated action belongs to. It is the output value of such actions"
-			+ " as {{@ApplicationStart@}}, {{@ApplicationConnectTo@}}.")
+	@ActionFieldAttribute(name = connectionName, mandatory = true, constantDescription = R.APPLICATION_NAVIGATE_CONNECTION)
 	protected AppConnection connection = null;
 
-	@ActionFieldAttribute(name = navigateKindName, mandatory = true, description = "Where navigate. See additional field description")
+	@ActionFieldAttribute(name = navigateKindName, mandatory = true, constantDescription = R.APPLICATION_NAVIGATE_KIND)
 	protected NavigateKind kind = null;
 
 	@Override

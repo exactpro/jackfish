@@ -42,19 +42,16 @@ public class ApplicationResize extends AbstractAction
 	public final static String maximizeName 	= "Maximize";
 	public final static String normalName		= "Normal";
 
-	@ActionFieldAttribute(name = connectionName, mandatory = true, description = "A special object which identifies the"
-			+ " started application session. This object is required in many other actions to specify the session"
-			+ " of the application the indicated action belongs to. It is the output value of such actions"
-			+ " as {{@ApplicationStart@}}, {{@ApplicationConnectTo@}}." )
+	@ActionFieldAttribute(name = connectionName, mandatory = true, constantDescription = R.APPLICATION_RESIZE_CONNECTION )
 	protected AppConnection	connection	= null;
 
-	@ActionFieldAttribute(name = heightName, mandatory = false, def = DefaultValuePool.Null, description = "The window height is changed to the specified height." )
+	@ActionFieldAttribute(name = heightName, mandatory = false, def = DefaultValuePool.Null, constantDescription = R.APPLICATION_RESIZE_HEIGHT )
 	protected Integer height;
 
-	@ActionFieldAttribute(name = widthName, mandatory = false, def = DefaultValuePool.Null, description = "The window width is changed to the specified width." )
+	@ActionFieldAttribute(name = widthName, mandatory = false, def = DefaultValuePool.Null, constantDescription = R.APPLICATION_RESIZE_WIDTH )
 	protected Integer width;
 
-	@ActionFieldAttribute(name = resizeName, mandatory = false, def = DefaultValuePool.Null, description = "Type of resizing. Must be Resize.Maximize, Resize.Minimize or Resize.Normal")
+	@ActionFieldAttribute(name = resizeName, mandatory = false, def = DefaultValuePool.Null, constantDescription = R.APPLICATION_RESIZE_RESIZE)
 	protected Resize resize;
 
 	@Override

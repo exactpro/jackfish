@@ -50,11 +50,7 @@ public class ApplicationStart extends AbstractAction
 	public static final String idName 	= "AppId";
 
 
-	@ActionFieldAttribute(name = idName, mandatory = true, description = 
-		  "Adapter key, one of those described in the App entries branch of the configuration, "
-		+ "which will be used for starting the corresponding plug-in and selecting the dictionary. "
-		+ "The plug-in, in its turn, will start the application under test using the transferred parameters. "
-		+ "If no record is found in a configuration for the corresponding {{$AppId$}}, the action will result in an error.")
+	@ActionFieldAttribute(name = idName, mandatory = true, constantDescription = R.APPLICATION_START_APP_ID)
 	protected String id	= null;
 	
 	@Override
