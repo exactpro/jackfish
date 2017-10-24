@@ -34,13 +34,13 @@ public class MessageCompareTwo extends AbstractAction
 	public final static String expectedName = "Expected";
 	public final static String excludeName = "Exclude";
 
-	@ActionFieldAttribute(name = actualName, mandatory = true, description = "MapMessage which should be compared.")
+	@ActionFieldAttribute(name = actualName, mandatory = true, constantDescription = R.MESSAGE_COMPARE_TWO_ACTUAL)
 	protected MapMessage actual = null;
 
-	@ActionFieldAttribute(name = expectedName, mandatory = true, description = "MapMessage which should be compared with.")
+	@ActionFieldAttribute(name = expectedName, mandatory = true, constantDescription = R.MESSAGE_COMPARE_TWO_EXPECTED)
 	protected MapMessage expected = null;
 
-	@ActionFieldAttribute(name = excludeName, mandatory = false, def = DefaultValuePool.Null, description = "An array of column names which should be excluded from comparison.")
+	@ActionFieldAttribute(name = excludeName, mandatory = false, def = DefaultValuePool.Null, constantDescription = R.MESSAGE_COMPARE_TWO_EXCLUDE)
 	protected String[] exclude;
 	
 	@Override

@@ -46,13 +46,13 @@ public class MessageCreate extends AbstractAction
 	public final static String sourceName = "Source";
 	public final static String fieldsName = "Fields";
 
-	@ActionFieldAttribute(name = messageTypeName, mandatory = true, description = "The type of created MapMessage should be specified." )
+	@ActionFieldAttribute(name = messageTypeName, mandatory = true, constantDescription = R.MESSAGE_CREATE_MESSAGE_TYPE )
 	protected String 				messageType;
 
-	@ActionFieldAttribute(name = sourceName, mandatory = false, def = DefaultValuePool.Null, description = "The source of created MapMessage should be specified." )
+	@ActionFieldAttribute(name = sourceName, mandatory = false, def = DefaultValuePool.Null, constantDescription = R.MESSAGE_CREATE_SOURCE )
 	protected String 				source;
 
-	@ActionFieldAttribute(name = fieldsName, mandatory = false, def = DefaultValuePool.Null, description = "The collection of Map type values is specified." )
+	@ActionFieldAttribute(name = fieldsName, mandatory = false, def = DefaultValuePool.Null, constantDescription = R.MESSAGE_CREATE_FIELDS )
 	protected Map<String, Object> 	fields;
 
     @Override

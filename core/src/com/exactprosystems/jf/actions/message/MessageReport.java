@@ -42,19 +42,16 @@ public class MessageReport extends AbstractAction
     public final static String titleName          = "Title";
     public final static String toReportName       = "ToReport";
 
-	@ActionFieldAttribute(name = messageName, mandatory = true, description = "Object {{$MapMessage$}}, which is required to output.")
+	@ActionFieldAttribute(name = messageName, mandatory = true, constantDescription = R.MESSAGE_REPORT_MESSAGE)
 	protected MapMessage 	message 	= null;
 
-	@ActionFieldAttribute(name = titleName, mandatory = true, description = "The title of the text.")
+	@ActionFieldAttribute(name = titleName, mandatory = true, constantDescription = R.MESSAGE_REPORT_TITLE)
 	protected String 	title 	= null;
 
-    @ActionFieldAttribute(name=toReportName, mandatory = false, def = DefaultValuePool.Null, description = 
-            "This parameter is used for directing the output from the given object to the external report "
-          + "created by the {{$ReportStart$}} action.")
+    @ActionFieldAttribute(name=toReportName, mandatory = false, def = DefaultValuePool.Null, constantDescription = R.MESSAGE_REPORT_TO_REPORT)
     protected ReportBuilder toReport;
 
-    @ActionFieldAttribute(name = beforeTestCaseName, mandatory = false, def = DefaultValuePool.Null, description = "It accepts id test case before " +
-            "which the text will be displayed in the report.")
+    @ActionFieldAttribute(name = beforeTestCaseName, mandatory = false, def = DefaultValuePool.Null, constantDescription = R.MESSAGE_REPORT_BEFORE_TESTCASE)
     protected String    beforeTestCase  = null;
 
     @Override

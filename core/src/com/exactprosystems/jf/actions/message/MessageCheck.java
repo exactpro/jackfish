@@ -39,7 +39,7 @@ public class MessageCheck extends AbstractAction
 {
 	public final static String actualName = "ActualMessage";
 
-	@ActionFieldAttribute(name = actualName, mandatory = true, description = "an object of MapMessage type.")
+	@ActionFieldAttribute(name = actualName, mandatory = true, constantDescription = R.MESSAGE_CHECK_ACTUAL)
 	protected MapMessage actual = null;
 
 	@Override
