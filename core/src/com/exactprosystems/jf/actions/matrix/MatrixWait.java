@@ -33,14 +33,10 @@ public class MatrixWait extends AbstractAction
     public final static String matrixName = "Matrix";
     public final static String timeName   = "Time";
 
-    @ActionFieldAttribute(name = matrixName, mandatory = true, description = "A special object that connects to the"
-            + " matrix which is run.")
+    @ActionFieldAttribute(name = matrixName, mandatory = true, constantDescription = R.MATRIX_WAIT_MATRIX)
     protected MatrixConnection    matrix     = null;
 
-    @ActionFieldAttribute(name = timeName, mandatory = false, def = DefaultValuePool.Long0, description = "Matrix timeout per millisecond."
-            + "If the matrix doesn't stop during the specified timeout, an action is failed."
-            + "If the value is 0 - there will be pending before the matrix stops with no time limit."
-            + "Be careful with such a value, if the started matrix is cycled, the current matrix will hang up in latency.")
+    @ActionFieldAttribute(name = timeName, mandatory = false, def = DefaultValuePool.Long0, constantDescription = R.MATRIX_WAIT_TIME)
     protected Long             time;
 
     @Override

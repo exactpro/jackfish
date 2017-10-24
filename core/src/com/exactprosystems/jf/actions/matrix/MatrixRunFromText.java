@@ -45,17 +45,13 @@ public class MatrixRunFromText extends AbstractAction
 	public final static String textName = "Text";
 	public final static String parameterName = "Parameter";
 
-	@ActionFieldAttribute(name = textName, mandatory = true, description = "{{$Text$}} object related to the execution matrix.")
+	@ActionFieldAttribute(name = textName, mandatory = true, constantDescription = R.MATRIX_RUN_FROM_TEXT_TEXT)
 	protected Text text	= null;
 
-	@ActionFieldAttribute(name = atName, mandatory = false, def = DefaultValuePool.Null, description = "Is used to state the time when the matrix"
-			+ " is started. If the specified time is not yet, the launched matrix goes the halted state before the"
-			+ " start time, otherwise, the matrix starts straightaway.")
+	@ActionFieldAttribute(name = atName, mandatory = false, def = DefaultValuePool.Null, constantDescription = R.MATRIX_RUN_FROM_TEXT_AT)
 	protected Date at;
 
-	@ActionFieldAttribute(name = parameterName, mandatory = false, def = DefaultValuePool.Null, description = "Is used to pass parameters to"
-			+ " the started matrix. As a call - by - reference mechanism is used, be careful - the started"
-			+ " matrix could modify the object passed.")
+	@ActionFieldAttribute(name = parameterName, mandatory = false, def = DefaultValuePool.Null, constantDescription = R.MATRIX_RUN_FROM_TEXT_PARAMETER)
 	protected Object parameter;
 	
 	@Override

@@ -44,19 +44,13 @@ public class MatrixRun extends AbstractAction
 	public final static String matrixName = "Matrix";
 	public final static String parameterName = "Parameter";
 
-	@ActionFieldAttribute(name = matrixName, mandatory = true, description = "A file path to the run matrix. "
-			+ "A path can be both absolute and relative. A current folder, with respect to which a file location"
-			+ " is specified, is a folder where the configuration is.")
+	@ActionFieldAttribute(name = matrixName, mandatory = true, constantDescription = R.MATRIX_RUN_MATRIX)
 	protected String matrix	= null;
 	
-	@ActionFieldAttribute(name = atName, mandatory = false, def = DefaultValuePool.Null, description = "Is used to state the time when"
-			+ " the matrix is started. If the specified time is not yet, the launched matrix goes the halted"
-			+ " state before the start time, otherwise, the matrix starts straightaway.")
+	@ActionFieldAttribute(name = atName, mandatory = false, def = DefaultValuePool.Null, constantDescription = R.MATRIX_RUN_AT)
 	protected Date at;
 
-	@ActionFieldAttribute(name = parameterName, mandatory = false, def = DefaultValuePool.Null, description = "Is used to pass parameters"
-			+ " to the started matrix. As a call - by - reference mechanism is used, be careful - the started matrix"
-			+ " could modify the object passed. It should be considered and can be used for a feedback mechanism between matrices.")
+	@ActionFieldAttribute(name = parameterName, mandatory = false, def = DefaultValuePool.Null, constantDescription = R.MATRIX_RUN_PARAMETER)
 	protected Object parameter;
 
 	@Override
