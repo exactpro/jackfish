@@ -36,10 +36,10 @@ public class Show extends AbstractAction
 	public final static String notifierName = "Notifier";
 	public final static String textName = "Text";
 
-	@ActionFieldAttribute(name = notifierName, mandatory = true, description = "Set a type of notification: Info - blue color, Success - green, Error - red.")
+	@ActionFieldAttribute(name = notifierName, mandatory = true, constantDescription = R.SHOW_NOTIFIER)
 	protected Notifier notifier; 
 
-	@ActionFieldAttribute(name = textName, mandatory = true, description = "Output row.")
+	@ActionFieldAttribute(name = textName, mandatory = true, constantDescription = R.SHOW_TEXT)
 	protected String text; 
 	
 	@Override

@@ -48,15 +48,13 @@ public class Compare extends AbstractAction
     public final static String    actualName   = "Actual";
     public final static String    expectedName = "Expected";
 
-    @ActionFieldAttribute(name = actualName, mandatory = true, description = "A set of names and values that should be compared as actual value.")
+    @ActionFieldAttribute(name = actualName, mandatory = true, constantDescription = R.COMPARE_ACTUAL)
     protected Map<String, Object> actual       = Collections.emptyMap();
 
-    @ActionFieldAttribute(name = expectedName, mandatory = true, description = "A set of names and values that should be compared as expected value.")
+    @ActionFieldAttribute(name = expectedName, mandatory = true, constantDescription = R.COMPARE_EXPECTED)
     protected Map<String, Object> expected     = Collections.emptyMap();
 
-    @ActionFieldAttribute(name = dontFailName, mandatory = false, def = DefaultValuePool.False, description = "If true, then when identifying"
-            + " differences as a result of the comparison, action will still be marked as Passed, otherwise, as "
-            + "Failed. By default, a parameter has a false value.")
+    @ActionFieldAttribute(name = dontFailName, mandatory = false, def = DefaultValuePool.False, constantDescription = R.COMPARE_DONT_FAIL)
     protected Boolean             dontFail;
 
     @Override

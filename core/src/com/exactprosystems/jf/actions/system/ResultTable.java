@@ -43,15 +43,13 @@ import java.util.function.Function;
 )
 public class ResultTable extends AbstractAction
 {
-	public final static String decoratedName = "Decoraded";
+	public final static String decoratedName = "Decorated";
 	public final static String matrixName = "Matrix";
 
-	@ActionFieldAttribute(name = decoratedName, mandatory = true, description = "If you set true, a table has a"
-			+ " human-readable kind. When indicating false, values that are in the table will be objects  which can be used later.")
+	@ActionFieldAttribute(name = decoratedName, mandatory = true, constantDescription = R.RESULT_TABLE_DECORATED)
 	protected Boolean decorated;
 
-	@ActionFieldAttribute(name = matrixName, mandatory = false, def = DefaultValuePool.Null, description = "Object MatrixRunner is indicated "
-			+ "(that is an output value of actions {{@MatrixRun@}} and {{@MatrixRunFromText@}}). This action will be used in the summary table.")
+	@ActionFieldAttribute(name = matrixName, mandatory = false, def = DefaultValuePool.Null,  constantDescription = R.RESULT_TABLE_MATRIX)
 	protected MatrixConnectionImpl matrix = null;
 
 	@Override

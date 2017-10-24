@@ -44,15 +44,13 @@ public class Execute extends AbstractAction
 	public final static String waitName = "Wait";
 	public final static String workDirName = "WorkDir";
 
-	@ActionFieldAttribute(name = commandName, mandatory = true, description = "A system command that will be executed.")
+	@ActionFieldAttribute(name = commandName, mandatory = true, constantDescription = R.EXECUTE_COMMAND)
 	protected String command 	= "";
 
-	@ActionFieldAttribute(name = waitName, mandatory = false, def = DefaultValuePool.True, description = "waiting for the command to terminate. "
-			+ "If true - execution of the matrix is stopped until the command is executed. By default - true.")
+	@ActionFieldAttribute(name = waitName, mandatory = false, def = DefaultValuePool.True, constantDescription = R.EXECUTE_WAIT)
 	protected Boolean wait; 
 	
-	@ActionFieldAttribute(name = workDirName, mandatory = false, def = DefaultValuePool.Null, description = "A task of the working directory for the"
-			+ " current command.")
+	@ActionFieldAttribute(name = workDirName, mandatory = false, def = DefaultValuePool.Null, constantDescription = R.EXECUTE_WORK_DIR)
 	protected String workDir;
 	
 	@Override

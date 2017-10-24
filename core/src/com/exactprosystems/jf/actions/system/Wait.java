@@ -35,11 +35,10 @@ public class Wait extends AbstractAction
 	public final static String timeName = "Time";
 	public final static String byTimeName = "ByTime";
 
-	@ActionFieldAttribute(name = timeName, mandatory = false, def = DefaultValuePool.Null, description = "Time in milliseconds, during this time running of a matrix will be stopped.")
+	@ActionFieldAttribute(name = timeName, mandatory = false, def = DefaultValuePool.Null, constantDescription = R.WAIT_TIMEOUT)
 	protected Integer timeout;
 
-	@ActionFieldAttribute(name = byTimeName, mandatory = false, def = DefaultValuePool.Null, description = "Time before which running a matrix will"
-			+ " be stopped. It is ignored when parameter 'Time' is specified.")
+	@ActionFieldAttribute(name = byTimeName, mandatory = false, def = DefaultValuePool.Null, constantDescription = R.WAIT_BY_TIME)
 	protected Date byTime;
 
 	@Override

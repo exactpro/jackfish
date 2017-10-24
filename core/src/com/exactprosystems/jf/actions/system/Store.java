@@ -31,10 +31,10 @@ public class Store extends AbstractAction
 	public final static String nameName = "Name";
 	public final static String valueName = "Value";
 
-	@ActionFieldAttribute(name = nameName, mandatory = true, description = "The name of the saved object.")
+	@ActionFieldAttribute(name = nameName, mandatory = true, constantDescription = R.STORE_NAME)
 	protected String name = null;
 
-	@ActionFieldAttribute(name = valueName, mandatory = false, description = "The object that needs to be stored.")
+	@ActionFieldAttribute(name = valueName, mandatory = false, constantDescription = R.STORE_VALUE)
 	protected Object value = null;
 
 	@Override

@@ -33,7 +33,7 @@ public class Print extends AbstractAction
 {
 	public final static String strName = "Str";
 
-	@ActionFieldAttribute(name = strName, mandatory = false, def = DefaultValuePool.EmptyString, description = "Comments to the output row.")
+	@ActionFieldAttribute(name = strName, mandatory = false, def = DefaultValuePool.EmptyString, constantDescription = R.PRINT_MESSAGE)
 	protected String message; 
 	
 	@Override

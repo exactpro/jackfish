@@ -46,12 +46,10 @@ public class Check extends AbstractAction
     public final static String dontFailName = "DoNotFail";
     public final static String actualName = "Actual";
 
-    @ActionFieldAttribute(name = actualName, mandatory = true, description = "A set of names and values that should be compared.")
+    @ActionFieldAttribute(name = actualName, mandatory = true, constantDescription = R.CHECK_ACTUAL)
     protected Map<String, Object> actual = Collections.emptyMap(); 
     
-    @ActionFieldAttribute(name = dontFailName, mandatory = false, def = DefaultValuePool.False, description = "If true, then when identifying"
-            + " differences as a result of the comparison, action will still be marked as Passed, otherwise, as "
-            + "Failed. By default, a parameter has a false value.")
+    @ActionFieldAttribute(name = dontFailName, mandatory = false, def = DefaultValuePool.False,  constantDescription = R.CHECK_DONT_FAIL)
     protected Boolean dontFail; 
 
     @Override

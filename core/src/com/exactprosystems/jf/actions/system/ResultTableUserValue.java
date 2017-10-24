@@ -41,8 +41,7 @@ public class ResultTableUserValue extends AbstractAction
 {
 	public final static String	matrixName		= "Matrix";
 
-	@ActionFieldAttribute(name = matrixName, mandatory = false, def = DefaultValuePool.Null, description = "Object MatrixRunner is indicated (that "
-			+ "is an output value of actions {{@MatrixRun@}} and {{@MatrixRunFromText@}}). This action will be used in the summary table. ")
+	@ActionFieldAttribute(name = matrixName, mandatory = false, def = DefaultValuePool.Null, constantDescription = R.RESULT_TABLE_USER_VALUE_MATRIX)
 	protected MatrixConnectionImpl		matrix			= null;
 
 	@Override

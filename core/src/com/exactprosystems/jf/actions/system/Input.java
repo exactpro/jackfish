@@ -40,19 +40,19 @@ public class Input extends AbstractAction
     public static final String titleName		= "Title";
     public final static String timeoutName      = "Timeout";
 
-    @ActionFieldAttribute(name=titleName, mandatory = true, description = "Title of user input")
+    @ActionFieldAttribute(name=titleName, mandatory = true, constantDescription = R.INPUT_TITLE)
     protected String title;
 
-	@ActionFieldAttribute(name = defaultValueName, mandatory = true, description = "Default value if the timout expiered.")
+	@ActionFieldAttribute(name = defaultValueName, mandatory = true, constantDescription = R.INPUT_DEFAULT_VALUE)
 	protected Object defaultValue; 
 	
-    @ActionFieldAttribute(name = helpKindName, mandatory = true, description = "How to help user enter or choose a value.")
+    @ActionFieldAttribute(name = helpKindName, mandatory = true, constantDescription = R.INPUT_HELP_KIND)
     protected HelpKind helpKind;
 
-    @ActionFieldAttribute(name = dataSourceName, mandatory = false, def = DefaultValuePool.Null, description = "Collection (a list or a map) to choice value.")
+    @ActionFieldAttribute(name = dataSourceName, mandatory = false, def = DefaultValuePool.Null, constantDescription = R.INPUT_DATA_SOURCE)
     protected Object dataSource; 
 
-    @ActionFieldAttribute(name = timeoutName, mandatory = false, def = DefaultValuePool.IntMin, description = "If this timeout expires default value will be used.")
+    @ActionFieldAttribute(name = timeoutName, mandatory = false, def = DefaultValuePool.IntMin, constantDescription = R.INPUT_TIMEOUT)
     protected Integer timeout;
     
     @Override

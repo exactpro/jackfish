@@ -34,11 +34,10 @@ public class Restore extends AbstractAction
 	public final static String nameName = "Name";
 	public final static String asVarName = "AsVar";
 
-	@ActionFieldAttribute(name = nameName, mandatory = true, description = "The name of the object which value will be restored.")
+	@ActionFieldAttribute(name = nameName, mandatory = true, constantDescription = R.RESTORE_NAME)
 	protected String name = null;
 
-	@ActionFieldAttribute(name = asVarName, mandatory = false, def = DefaultValuePool.Null, description = "the name of the variable that will be "
-			+ "given the value of the restored object. A variable will be global if an action is tagged 'G', otherwise, variable will be local.")
+	@ActionFieldAttribute(name = asVarName, mandatory = false, def = DefaultValuePool.Null, constantDescription = R.RESTORE_AS_VAR)
 	protected String asVar;
 	
 	@Override
