@@ -40,13 +40,10 @@ public class DialogClose extends AbstractAction
 	public final static String	connectionName	= "AppConnection";
 	public final static String	dialogName		= "Dialog";
 
-	@ActionFieldAttribute(name = connectionName, mandatory = true, description = "A special object which identifies the"
-			+ " started application session. This object is required in many other actions to specify the session"
-			+ " of the application the indicated action belongs to. It is the output value of such actions"
-			+ " as {{@ApplicationStart@}}, {{@ApplicationConnectTo@}}.")
+	@ActionFieldAttribute(name = connectionName, mandatory = true, constantDescription = R.DIALOG_CLOSE_APP_CONNECTION)
 	protected AppConnection connection		= null;
 
-	@ActionFieldAttribute(name = dialogName, mandatory = true, description = "The name of the Dialog whose Close section has the descriptions of elements to be closed.")
+	@ActionFieldAttribute(name = dialogName, mandatory = true, constantDescription = R.DIALOG_CLOSE_DIALOG)
 	protected String			dialog			= null;
 
 	@Override

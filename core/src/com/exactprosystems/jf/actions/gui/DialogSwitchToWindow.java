@@ -35,17 +35,13 @@ public class DialogSwitchToWindow extends AbstractAction
 	public static final String	dialogName		= "Dialog";
 	public static final String frameName = "Frame";
 
-	@ActionFieldAttribute(name = connectionName, mandatory = true, description = "A special object which identifies the"
-			+ " started application session. This object is required in many other actions to specify the session"
-			+ " of the application the indicated action belongs to. It is the output value of such actions"
-			+ " as {{@ApplicationStart@}}, {{@ApplicationConnectTo@}}.")
+	@ActionFieldAttribute(name = connectionName, mandatory = true, constantDescription = R.DIALOG_SWITCH_TO_WINDOW_APP_CONNECTION)
 	protected AppConnection		connection		= null;
 
-	@ActionFieldAttribute(name = dialogName, mandatory = false, def = DefaultValuePool.Null, description = "The name of the dialog containing the frame which needs to be connected to."
-			+ "If is absent tool will switch to the parent frame.")
+	@ActionFieldAttribute(name = dialogName, mandatory = false, def = DefaultValuePool.Null, constantDescription = R.DIALOG_SWITCH_TO_WINDOW_DIALOG)
 	protected String			dialog;
 
-	@ActionFieldAttribute(name = frameName, mandatory = false, def = DefaultValuePool.Null, description = "Frame name to which the focus will be set.")
+	@ActionFieldAttribute(name = frameName, mandatory = false, def = DefaultValuePool.Null, constantDescription = R.DIALOG_SWITCH_TO_WINDOW_FRAME)
 	protected String 			frame;
 
 	@Override

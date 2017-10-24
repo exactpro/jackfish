@@ -45,31 +45,28 @@ public class ImageGet extends AbstractAction
 	public final static String	x_rightDown	= "X2";
 	public final static String	y_rightDown	= "Y2";
 
-	@ActionFieldAttribute(name = connectionName, mandatory = true, description = "A special object which identifies the"
-			+ " started application session. This object is required in many other actions to specify the session"
-			+ " of the application the indicated action belongs to. It is the output value of such actions"
-			+ " as {{@ApplicationStart@}}, {{@ApplicationConnectTo@}}.")
+	@ActionFieldAttribute(name = connectionName, mandatory = true, constantDescription = R.IMAGE_GET_APP_CONNECTION)
 	protected AppConnection		connection		= null;
 
-	@ActionFieldAttribute(name = dialogName, mandatory = false, description = "The name of the dialog.")
+	@ActionFieldAttribute(name = dialogName, mandatory = false, constantDescription = R.IMAGE_GET_DIALOG)
 	protected String			dialog			= null;
 
-	@ActionFieldAttribute(name = nameName, mandatory = false, def = DefaultValuePool.Null, description = "The name of the element.")
+	@ActionFieldAttribute(name = nameName, mandatory = false, def = DefaultValuePool.Null, constantDescription = R.IMAGE_GET_NAME)
 	protected String			name;
 
-	@ActionFieldAttribute(name = descriptionName, mandatory = false, def = DefaultValuePool.EmptyString, description = "The description of the image which will be displayed in tooltip.")
+	@ActionFieldAttribute(name = descriptionName, mandatory = false, def = DefaultValuePool.EmptyString, constantDescription = R.IMAGE_GET_DESCRIPTION)
 	protected String			description;
 
-	@ActionFieldAttribute(name = x_leftUp, mandatory = false, def = DefaultValuePool.IntMin, description = "X coordinate is for left upper corner")
+	@ActionFieldAttribute(name = x_leftUp, mandatory = false, def = DefaultValuePool.IntMin, constantDescription = R.IMAGE_GET_X1)
 	protected Integer			x1;
 
-	@ActionFieldAttribute(name = y_leftUp, mandatory = false, def = DefaultValuePool.IntMin, description = "Y coordinate is for left upper corner")
+	@ActionFieldAttribute(name = y_leftUp, mandatory = false, def = DefaultValuePool.IntMin, constantDescription = R.IMAGE_GET_Y1)
 	protected Integer			y1;
 
-	@ActionFieldAttribute(name = x_rightDown, mandatory = false, def = DefaultValuePool.IntMin, description = "X coordinate is for right bottom corner")
+	@ActionFieldAttribute(name = x_rightDown, mandatory = false, def = DefaultValuePool.IntMin, constantDescription = R.IMAGE_GET_X2)
 	protected Integer			x2;
 
-	@ActionFieldAttribute(name = y_rightDown, mandatory = false, def = DefaultValuePool.IntMin, description = "Y coordinate is for right bottom corner")
+	@ActionFieldAttribute(name = y_rightDown, mandatory = false, def = DefaultValuePool.IntMin, constantDescription = R.IMAGE_GET_Y2)
 	protected Integer			y2;
 
 	@Override

@@ -38,20 +38,13 @@ public class DialogAlert extends AbstractAction
 	public static final String performName		= "Perform";
 	public static final String textName			= "Text";
 
-	@ActionFieldAttribute(name = connectionName, mandatory = true, description = "A special object which identifies the"
-			+ " started application session. This object is required in many other actions to specify the session"
-			+ " of the application the indicated action belongs to. It is the output value of such actions"
-			+ " as {{@ApplicationStart@}}, {{@ApplicationConnectTo@}}.")
+	@ActionFieldAttribute(name = connectionName, mandatory = true, constantDescription = R.DIALOG_ALERT_APP_CONNECTION)
 	protected AppConnection connection = null;
 
-	@ActionFieldAttribute(name = performName, mandatory = true, description = "The PerformKind type. The parameter "
-			+ "responsible for actions with alert.  There are 3 states to the parameter:\n"
-			+ "Nothing - ignore the notification.\n"
-			+ "Accept - click 'OK'.\n"
-			+ "Dismiss - click 'Cancel'.")
+	@ActionFieldAttribute(name = performName, mandatory = true, constantDescription = R.DIALOG_ALERT_PERFORM_KIND)
 	protected PerformKind perform = null;
 
-	@ActionFieldAttribute(name = textName, mandatory = false, def = DefaultValuePool.Null, description = "Used to input text in the corresponding field of notification.")
+	@ActionFieldAttribute(name = textName, mandatory = false, def = DefaultValuePool.Null, constantDescription = R.DIALOG_ALERT_TEXT)
 	protected String text;
 
 	@Override

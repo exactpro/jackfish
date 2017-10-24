@@ -35,26 +35,25 @@ import java.util.List;
 public class ImageReport extends AbstractAction
 {
 	public final static String	imageName	= "Image";
-	public final static String beforeTestCaseName = "BeforeTestCase";
+	public final static String  beforeTestCaseName = "BeforeTestCase";
 	public final static String	titleName	= "Title";
 
 	public final static String	toReportName		= "ToReport";
 	public final static String	asLinkName		= "AsLink";
 
-    @ActionFieldAttribute(name = imageName, mandatory = true, description = "The image to be placed in the report.")
+    @ActionFieldAttribute(name = imageName, mandatory = true, constantDescription = R.IMAGE_REPORT_IMAGE)
     protected ImageWrapper      image;
 
-	@ActionFieldAttribute(name=toReportName, mandatory = false, def = DefaultValuePool.Null, description = "The Report object which will include the indicated image is specified."
-			+ "  Report is an  an output value of the ReportStart action.")
+	@ActionFieldAttribute(name=toReportName, mandatory = false, def = DefaultValuePool.Null, constantDescription = R.IMAGE_REPORT_TO_REPORT)
 	protected ReportBuilder toReport;
 
-	@ActionFieldAttribute(name = beforeTestCaseName, mandatory = false, def = DefaultValuePool.Null, description = "Enables to output the table on the highest level of the report.")
+	@ActionFieldAttribute(name = beforeTestCaseName, mandatory = false, def = DefaultValuePool.Null, constantDescription = R.IMAGE_REPORT_BEFORE_TESTCASE)
 	protected String 	beforeTestCase;
 
-	@ActionFieldAttribute(name = titleName, mandatory = false, def = DefaultValuePool.EmptyString, description = "The title of the image.")
+	@ActionFieldAttribute(name = titleName, mandatory = false, def = DefaultValuePool.EmptyString, constantDescription = R.IMAGE_REPORT_TITLE)
 	protected String			title;
 
-	@ActionFieldAttribute(name = asLinkName, mandatory = false, def = DefaultValuePool.False, description = "Instead of the image the link to it is generated in the report.")
+	@ActionFieldAttribute(name = asLinkName, mandatory = false, def = DefaultValuePool.False, constantDescription = R.IMAGE_REPORT_AS_LINK)
 	protected Boolean			asLink;
 
 	@Override

@@ -34,7 +34,7 @@ public class DesktopScreenshot extends AbstractAction
 {
 	public final static String	descriptionName	= "Description";
 	
-	@ActionFieldAttribute(name = descriptionName, mandatory = false, def = DefaultValuePool.EmptyString, description = "The description of the image which will be displayed in tooltip.")
+	@ActionFieldAttribute(name = descriptionName, mandatory = false, def = DefaultValuePool.EmptyString, constantDescription = R.DESKTOP_SCREENSHOT_DESCRIPTION_PARAM)
 	protected String			description;
 
 	@Override

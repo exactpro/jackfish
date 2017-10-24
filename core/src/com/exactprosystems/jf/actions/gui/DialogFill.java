@@ -54,28 +54,22 @@ public class DialogFill extends AbstractAction
 	public final static String	stopOnFailName			= "StopOnFail";
 	public static final String	fieldsName				= "Fields";
 
-	@ActionFieldAttribute(name = connectionName, mandatory = true, description = "A special object which identifies the"
-			+ " started application session. This object is required in many other actions to specify the session"
-			+ " of the application the indicated action belongs to. It is the output value of such actions"
-			+ " as {{@ApplicationStart@}}, {{@ApplicationConnectTo@}}.")
+	@ActionFieldAttribute(name = connectionName, mandatory = true, constantDescription = R.DIALOG_FILL_APP_CONNECTION)
 	protected AppConnection		connection			= null;
 
-	@ActionFieldAttribute(name = dialogName, mandatory = true, description = "The name of the dialog being processed.")
+	@ActionFieldAttribute(name = dialogName, mandatory = true, constantDescription = R.DIALOG_FILL_DIALOG)
 	protected String			dialog				= null;
 
-	@ActionFieldAttribute(name = doNotOpenName, mandatory = false, def = DefaultValuePool.False, description = "Do not process the 'OnOpen' section of the dialog from the dictionary.  False by default.")
+	@ActionFieldAttribute(name = doNotOpenName, mandatory = false, def = DefaultValuePool.False, constantDescription = R.DIALOG_FILL_DO_NOT_OPEN)
 	protected Boolean			doNotOpen;
 	
-	@ActionFieldAttribute(name = doNotCloseName, mandatory = false, def = DefaultValuePool.False, description = "Do not process the 'OnClose' section of the dialog from the dictionary.  False by default.")
+	@ActionFieldAttribute(name = doNotCloseName, mandatory = false, def = DefaultValuePool.False, constantDescription = R.DIALOG_FILL_DO_NOT_CLOSE)
 	protected Boolean			doNotClose;
 	
-	@ActionFieldAttribute(name = stopOnFailName, mandatory = false, def = DefaultValuePool.True, description = "Stop in case of an error occurring in the processing of another element of this action. "
-			+ " Otherwise the element's error code is logged into the output collection of matrix values, but the work of action is not interrupted. True by default.")
+	@ActionFieldAttribute(name = stopOnFailName, mandatory = false, def = DefaultValuePool.True, constantDescription = R.DIALOG_FILL_STOP_ON_FAIL)
 	protected Boolean			stopOnFail;
 
-	@ActionFieldAttribute(name = fieldsName, mandatory = false, def = DefaultValuePool.Null, description = "Is an associative array which can be used instead of parameters.  "
-			+ "Array keys define the elements in the dictionary; the values are operations.  This parameter is designated more for writing "
-			+ "frameworks working with dictionaries other than daily work.\n")
+	@ActionFieldAttribute(name = fieldsName, mandatory = false, def = DefaultValuePool.Null, constantDescription = R.DIALOG_FILL_FIELDS)
 	protected Map<String, Object> fields;
 
 	@Override

@@ -43,19 +43,16 @@ public class DialogValidate extends AbstractAction
 	public final static String	doNotOpenName	= "DoNotOpen";
 	public final static String	doNotCloseName	= "DoNotClose";
 
-	@ActionFieldAttribute(name = connectionName, mandatory = true, description = "A special object which identifies the"
-			+ " started application session. This object is required in many other actions to specify the session"
-			+ " of the application the indicated action belongs to. It is the output value of such actions"
-			+ " as {{@ApplicationStart@}}, {{@ApplicationConnectTo@}}.")
+	@ActionFieldAttribute(name = connectionName, mandatory = true, constantDescription = R.DIALOG_VALIDATE_APP_CONNECTION)
 	protected AppConnection		connection		= null;
 
-	@ActionFieldAttribute(name = dialogName, mandatory = true, description = "The dialog whose elements need to be checked for accessibility.")
+	@ActionFieldAttribute(name = dialogName, mandatory = true, constantDescription = R.DIALOG_VALIDATE_DIALOG)
 	protected String			dialog			= null;
 
-	@ActionFieldAttribute(name = doNotOpenName, mandatory = false, def = DefaultValuePool.False, description = " When true is set, the operations indicated in 'On open' section of the current dialog are performed.  False by default.")
+	@ActionFieldAttribute(name = doNotOpenName, mandatory = false, def = DefaultValuePool.False, constantDescription = R.DIALOG_VALIDATE_DO_NOT_OPEN)
 	protected Boolean			doNotOpen;
 
-	@ActionFieldAttribute(name = doNotCloseName, mandatory = false, def = DefaultValuePool.False, description = "When true is set, the operations indicated in 'On close' section of the current dialog are performed.  False by default.")
+	@ActionFieldAttribute(name = doNotCloseName, mandatory = false, def = DefaultValuePool.False, constantDescription = R.DIALOG_VALIDATE_DO_NOT_CLOSE)
 	protected Boolean			doNotClose;
 
 	@Override

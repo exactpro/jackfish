@@ -46,22 +46,22 @@ public class DialogCheckLayout extends AbstractAction
 	public final static String	fieldsName		= "Fields";
 	public final static String  tableName		= "Table";
 
-	@ActionFieldAttribute(name = connectionName, mandatory = true, description = "The application connection.")
+	@ActionFieldAttribute(name = connectionName, mandatory = true, constantDescription = R.DIALOG_CHECK_LAYOUT_APP_CONNECTION)
 	protected AppConnection		connection		= null;
 
-	@ActionFieldAttribute(name = dialogName, mandatory = true, description = "A name of the dialog.")
+	@ActionFieldAttribute(name = dialogName, mandatory = true, constantDescription = R.DIALOG_CHECK_LAYOUT_DIALOG)
 	protected String			dialog			= null;
 
-	@ActionFieldAttribute(name = doNotOpenName, mandatory = false, def = DefaultValuePool.False, description = "Do not open a new dialog.")
+	@ActionFieldAttribute(name = doNotOpenName, mandatory = false, def = DefaultValuePool.False, constantDescription = R.DIALOG_CHECK_LAYOUT_DO_NOT_OPEN)
 	protected Boolean			doNotOpen;
 
-	@ActionFieldAttribute(name = doNotCloseName, mandatory = false, def = DefaultValuePool.False, description = "Do not close a dialog.")
+	@ActionFieldAttribute(name = doNotCloseName, mandatory = false, def = DefaultValuePool.False, constantDescription = R.DIALOG_CHECK_LAYOUT_DO_NOT_CLOSE)
 	protected Boolean			doNotClose;
 
-	@ActionFieldAttribute(name = fieldsName, mandatory = false, def = DefaultValuePool.Null, description = "Map of control name : control operation.")
+	@ActionFieldAttribute(name = fieldsName, mandatory = false, def = DefaultValuePool.Null, constantDescription = R.DIALOG_CHECK_LAYOUT_FIELDS)
 	protected Map<String, Object> fields;
 
-	@ActionFieldAttribute(name = tableName, mandatory = false, def = DefaultValuePool.Null, description = "Table with DoSpec operations")
+	@ActionFieldAttribute(name = tableName, mandatory = false, def = DefaultValuePool.Null, constantDescription = R.DIALOG_CHECK_LAYOUT_TABLE)
 	protected Table table;
 
 	@Override

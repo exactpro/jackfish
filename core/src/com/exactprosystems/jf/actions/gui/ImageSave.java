@@ -40,13 +40,13 @@ public class ImageSave extends AbstractAction
 	public final static String	dirName		= "Dir";
 	public final static String	fileName	= "File";
 	
-	@ActionFieldAttribute(name = imageName, mandatory = true, description = "The object of the Image type which needs to be saved.")
+	@ActionFieldAttribute(name = imageName, mandatory = true, constantDescription = R.IMAGE_SAVE_IMAGE)
 	protected ImageWrapper		image;
 
-	@ActionFieldAttribute(name = dirName, mandatory = false, def = DefaultValuePool.Null, description = "Directory where the file should be saved.  In this case the filename will be generated.")
+	@ActionFieldAttribute(name = dirName, mandatory = false, def = DefaultValuePool.Null, constantDescription = R.IMAGE_SAVE_DIR)
 	protected String			dir;
 
-	@ActionFieldAttribute(name = fileName, mandatory = false, def = DefaultValuePool.Null, description = "The path to the file where the image will be saved.")
+	@ActionFieldAttribute(name = fileName, mandatory = false, def = DefaultValuePool.Null, constantDescription = R.IMAGE_SAVE_FILE)
 	protected String			file;
 
 	@Override
