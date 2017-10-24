@@ -169,9 +169,9 @@ if(e.which == 13) {
     $("#btnNext").toggleClass('activeBtn nonActiveBtn');
 
     if($(this).val().includes('|') || $(this).val().includes('^')){
-    	foundDivs = $('h2:contains('+str+'), p:contains('+str+'), td:contains('+str+'), font:contains('+str+'), pre:contains('+str+')');
+    	foundDivs = $('h3:contains('+str+'), h2:contains('+str+'), p:contains('+str+'), td:contains('+str+'), font:contains('+str+'), pre:contains('+str+')');
     }else{
-    	foundDivs = $('h2:Contains('+str+'), p:Contains('+str+'), td:Contains('+str+'), font:Contains('+str+'), pre:Contains('+str+')');
+    	foundDivs = $('h3:contains('+str+'), h2:Contains('+str+'), p:Contains('+str+'), td:Contains('+str+'), font:Contains('+str+'), pre:Contains('+str+')');
     }
 
     if(foundDivs.length === 0){
