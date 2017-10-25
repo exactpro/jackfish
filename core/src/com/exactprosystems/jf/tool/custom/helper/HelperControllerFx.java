@@ -11,6 +11,7 @@ package com.exactprosystems.jf.tool.custom.helper;
 import com.exactprosystems.jf.api.app.Do;
 import com.exactprosystems.jf.api.app.DoSpec;
 import com.exactprosystems.jf.api.common.*;
+import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.common.highlighter.Highlighter;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.ContainingParent;
@@ -35,6 +36,7 @@ import javafx.stage.Stage;
 import org.fxmisc.richtext.StyleClassedTextArea;
 
 import java.net.URL;
+import java.text.MessageFormat;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
@@ -106,7 +108,7 @@ public class HelperControllerFx implements Initializable, ContainingParent
 		dialogPane.setPrefWidth(1000);
 		dialogPane.setContent(parent);
 		this.dialog.setResizable(true);
-		this.dialog.setTitle("Formula interpreter");
+		this.dialog.setTitle(R.FORMULA_INTERPRETER.get());
 
 	}
 
@@ -150,7 +152,7 @@ public class HelperControllerFx implements Initializable, ContainingParent
 				taDescription.setText("");
 			}
 		});
-		this.dialog.setHeaderText("Parameters name = " + (title == null ? "<none>" : title));
+		this.dialog.setHeaderText(MessageFormat.format(R.PARAMETERS_NAME.get(), title == null ? "<none>" : title));
 		listeners();
 	}
 

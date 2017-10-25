@@ -646,6 +646,8 @@ public enum R
 
 	//endregion
 
+	//region tool
+
 	//region tool.wizard
 	WIZARD_SUCCESS,
 	WIZARD_ERROR_ON_CONFIG_REFRESH,
@@ -741,6 +743,12 @@ public enum R
 	WIZARD_HELPER,
 	WIZARD_RELATIVE,
 	WIZARD_USE_TEXT,
+	//endregion
+
+	//tool.custom.helper
+	FORMULA_INTERPRETER,
+	PARAMETERS_NAME,
+	//endregion
 
 	//endregion
 
