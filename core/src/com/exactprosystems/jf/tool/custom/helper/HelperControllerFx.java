@@ -45,14 +45,14 @@ public class HelperControllerFx implements Initializable, ContainingParent
 	public BorderPane mainPane;
 	private Class<?>					clazz;
 
-	private Dialog<ButtonType>   dialog;
-	public  ToggleButton         btnVoid;
-	public  ToggleButton         btnStatic;
-	public  Button               btnCancel;
-	public  Button               btnOk;
+	private Dialog<ButtonType>          dialog;
+	public  ToggleButton                btnVoid;
+	public  ToggleButton                btnStatic;
+	public  Button                      btnCancel;
+	public  Button                      btnOk;
 	//	public TextArea						styleClassedTextArea;
-	public  StyleClassedTextArea styleClassedTextArea;
-	public  SplitMenuButton      smbClass;
+	public  StyleClassedTextArea        styleClassedTextArea;
+	public  SplitMenuButton             smbClass;
 
 	private FindListView<IToString>		listMembers;
 	public TextArea						taResult;
@@ -118,7 +118,7 @@ public class HelperControllerFx implements Initializable, ContainingParent
 		this.model = model;
 		this.clazz = clazz;
 		this.styleClassedTextArea.setEditable(editable);
-		this.listMembers = new FindListView<>((iToString, s) -> iToString.getName().contains(s), false);
+		this.listMembers = new FindListView<>((iToString, s) -> iToString.getName().toLowerCase().contains(s.toLowerCase()), false);
 		this.borderPane.setCenter(this.listMembers);
 
 		this.listMembers.setCellFactory(list -> new ListCell<IToString>()
