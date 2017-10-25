@@ -745,9 +745,10 @@ public enum R
 	WIZARD_USE_TEXT,
 	//endregion
 
-	//tool.custom.helper
+	//region tool.custom.helper
 	FORMULA_INTERPRETER,
 	PARAMETERS_NAME,
+	ALL_VARIABLES_FOR_CURRENT_MATRIX,
 	//endregion
 
 	//endregion

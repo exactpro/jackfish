@@ -363,7 +363,7 @@ public class HelperControllerFx implements Initializable, ContainingParent
 			dialog.getDialogPane().setPrefWidth(500);
 			dialog.getDialogPane().setPrefHeight(500);
 			dialog.setResizable(true);
-			dialog.setHeaderText("All variables for current matrix");
+			dialog.setHeaderText(R.ALL_VARIABLES_FOR_CURRENT_MATRIX.get());
 
 			tableView.setOnMouseClicked(mouseEvent -> {
 				Common.tryCatch(() -> {
