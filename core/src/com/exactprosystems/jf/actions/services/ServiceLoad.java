@@ -39,9 +39,7 @@ public class ServiceLoad extends AbstractAction
 {
 	public final static String idName = "ServiceId";
 
-	@ActionFieldAttribute(name = idName, mandatory = true, description = "A service ID that was described in Service "
-			+ "entries configuration, which will be used for booting a relevant service.If no entry is found in the "
-			+ "configuration at such ServiceId, an action finishes with an error." )
+	@ActionFieldAttribute(name = idName, mandatory = true, constantDescription = R.SERVICE_LOAD_ID )
 	protected String 		id	= null;
 
 	@Override

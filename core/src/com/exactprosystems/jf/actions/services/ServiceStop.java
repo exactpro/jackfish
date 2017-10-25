@@ -32,7 +32,7 @@ public class ServiceStop extends AbstractAction
 {
 	public final static String connectionName = "ServiceConnection";
 
-	@ActionFieldAttribute(name = connectionName, mandatory = true, description = "A connection with a service is specified, that needed to be closed." )
+	@ActionFieldAttribute(name = connectionName, mandatory = true, constantDescription = R.SERVICE_STOP_CONNECTION )
 	protected ServiceConnection	connection	= null;
 
 	@Override

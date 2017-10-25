@@ -36,7 +36,7 @@ public class ServiceStart extends AbstractAction
 {
 	public final static String connectionName = "ServiceConnection";
 
-	@ActionFieldAttribute(name = connectionName, mandatory = true, description = "A connection with a service is specified, that should be run. An output object of {{@ServiceLoad@}} action is indicated." )
+	@ActionFieldAttribute(name = connectionName, mandatory = true, constantDescription = R.SERVICE_START_CONNECTION )
 	protected ServiceConnection	connection	= null;
 
 	@Override
