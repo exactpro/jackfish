@@ -34,15 +34,13 @@ public class Report extends AbstractAction
     public final static String strName            = "Str";
     public final static String toReportName       = "ToReport";
 
-	@ActionFieldAttribute(name=toReportName, mandatory = false, def = DefaultValuePool.Null, description = 
-            "This parameter is used for directing the output from the given object to the external report "
-          + "created by the {{@ReportStart@}} action.")
+	@ActionFieldAttribute(name=toReportName, mandatory = false, def = DefaultValuePool.Null, constantDescription = R.REPORT_TO_REPORT)
 	protected ReportBuilder toReport;
 
-	@ActionFieldAttribute(name = beforeTestCaseName, mandatory = false, def = DefaultValuePool.Null, description = "Allows to output a table at the top of the report.")
+	@ActionFieldAttribute(name = beforeTestCaseName, mandatory = false, def = DefaultValuePool.Null, constantDescription = R.REPORT_BEFORE_TEST_CASE)
 	protected String 	beforeTestCase 	= null;
 
-	@ActionFieldAttribute(name = strName, mandatory = false, def = DefaultValuePool.EmptyString, description = "Output row.")
+	@ActionFieldAttribute(name = strName, mandatory = false, def = DefaultValuePool.EmptyString, constantDescription = R.REPORT_MESSAGE)
 	protected String message; 
 	
 	@Override

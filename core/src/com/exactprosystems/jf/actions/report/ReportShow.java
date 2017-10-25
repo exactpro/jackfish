@@ -32,7 +32,7 @@ public class ReportShow extends AbstractAction
 {
 	public final static String reportName = "Report";
 
-	@ActionFieldAttribute(name = reportName, mandatory = true, description = "Object of Report type which should be displayed.")
+	@ActionFieldAttribute(name = reportName, mandatory = true, constantDescription = R.REPORT_SHOW_REPORT)
 	protected String 	report 	= null;
 
     @Override

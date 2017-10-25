@@ -36,19 +36,19 @@ public class ReportFinish extends AbstractAction
 	public final static String startTimeName 	= "StartTime";
 	public final static String finishTimeName 	= "FinishTime";
 
-    @ActionFieldAttribute(name = reportName, mandatory = true, description = "Report which should be finished.")
+    @ActionFieldAttribute(name = reportName, mandatory = true, constantDescription = R.REPORT_FINISH_REPORT)
     protected ReportBuilder    report;
 
-    @ActionFieldAttribute(name = passedName, mandatory = true, description = "A number of passed actions is specified.")
+    @ActionFieldAttribute(name = passedName, mandatory = true, constantDescription= R.REPORT_FINISH_PASSED)
     protected Integer          passed;
 
-    @ActionFieldAttribute(name = failedName, mandatory = true, description = "A number of failed actions is specified.")
+    @ActionFieldAttribute(name = failedName, mandatory = true, constantDescription = R.REPORT_FINISH_FAILED)
     protected Integer          failed;
 
-	@ActionFieldAttribute(name = startTimeName, mandatory = false, def = DefaultValuePool.Null, description = "Time when the report starts to be built. If the parameter is not set then the current time is used.")
+	@ActionFieldAttribute(name = startTimeName, mandatory = false, def = DefaultValuePool.Null, constantDescription= R.REPORT_FINISH_START_TIME)
 	protected Date startTime; 
 
-	@ActionFieldAttribute(name = finishTimeName, mandatory = false, def = DefaultValuePool.Null, description = "The time when the report is finished. If the parameter is not set then the curent time is used.")
+	@ActionFieldAttribute(name = finishTimeName, mandatory = false, def = DefaultValuePool.Null, constantDescription= R.REPORT_FINISH_FINISH_TIME)
 	protected Date finishTime; 
 
 	@Override

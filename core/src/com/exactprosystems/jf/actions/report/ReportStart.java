@@ -38,10 +38,10 @@ public class ReportStart extends AbstractAction
 	public final static String reportNameName  = "ReportName";
 	public final static String versionName     = "Version";
 
-	@ActionFieldAttribute(name = reportNameName, mandatory = true, description = "Name of a created report.")
+	@ActionFieldAttribute(name = reportNameName, mandatory = true, constantDescription = R.REPORT_START_REPORT_NAME)
 	protected String reportName; 
 
-    @ActionFieldAttribute(name = versionName, mandatory = false, def = DefaultValuePool.Null, description = "Version of the report. It will be displayed in report")
+    @ActionFieldAttribute(name = versionName, mandatory = false, def = DefaultValuePool.Null, constantDescription = R.REPORT_START_VERSION)
     protected String version; 
 
 	@Override

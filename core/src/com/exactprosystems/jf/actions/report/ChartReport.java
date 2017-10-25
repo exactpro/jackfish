@@ -43,24 +43,22 @@ public class ChartReport extends AbstractAction
     public final static String  colorsName          = "Colors";
 	public final static String	toReportName		= "ToReport";
 
-	@ActionFieldAttribute(name = titleName, mandatory = true, description = "Title.")
+	@ActionFieldAttribute(name = titleName, mandatory = true, constantDescription = R.CHART_REPORT_TITLE)
 	protected String 	title;
 
-	@ActionFieldAttribute(name = tableName, mandatory = true, description = "Table that contains data for a graph.")
+	@ActionFieldAttribute(name = tableName, mandatory = true, constantDescription = R.CHART_REPORT_TABLE)
 	protected Table 	table;
 
-	@ActionFieldAttribute(name = typeName, mandatory = true, description = "Type of graph.")
+	@ActionFieldAttribute(name = typeName, mandatory = true, constantDescription = R.CHART_REPORT_CHART_TYPE)
 	protected ChartKind			 chartType;
 
-    @ActionFieldAttribute(name=toReportName, mandatory = false, def = DefaultValuePool.Null, description = 
-            "This parameter is used for directing the output from the given object to the external report "
-          + "created by the {{$ReportStart$}} action.")
+    @ActionFieldAttribute(name=toReportName, mandatory = false, def = DefaultValuePool.Null, constantDescription = R.CHART_REPORT_TO_REPORT)
     protected ReportBuilder toReport;
 
-    @ActionFieldAttribute(name = colorsName, mandatory = false, def = DefaultValuePool.Null, description = "Color map.")
+    @ActionFieldAttribute(name = colorsName, mandatory = false, def = DefaultValuePool.Null, constantDescription = R.CHART_REPORT_COLORS)
     protected Map<String, Color>    colors;
 
-	@ActionFieldAttribute(name = beforeTestCaseName, mandatory = false, def = DefaultValuePool.Null, description = "Allows to display a graph at the top of the report.")
+	@ActionFieldAttribute(name = beforeTestCaseName, mandatory = false, def = DefaultValuePool.Null, constantDescription = R.CHART_REPORT_BEFORE_TEST_CASE)
 	protected String			beforeTestCase;
 
 	@Override

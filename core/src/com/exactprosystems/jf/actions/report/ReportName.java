@@ -30,13 +30,13 @@ public class ReportName extends AbstractAction
 	public final static String failedStepsName = "FailedSteps";
 	public final static String passedStepsName = "PassedSteps";
 
-	@ActionFieldAttribute(name = nameName, mandatory = true, description = "Text that will be added to the name of the report.")
+	@ActionFieldAttribute(name = nameName, mandatory = true, constantDescription = R.REPORT_NAME_NAME)
 	protected String name 		= "";
 
-	@ActionFieldAttribute(name = failedStepsName, mandatory = false, description = "Failed steps count that will be added to the report.")
+	@ActionFieldAttribute(name = failedStepsName, mandatory = false, constantDescription = R.REPORT_NAME_FAILED_STEPS)
 	protected Integer failedSteps;
 
-	@ActionFieldAttribute(name = passedStepsName, mandatory = false, description = "Passed steps count that will be added to the report.")
+	@ActionFieldAttribute(name = passedStepsName, mandatory = false, constantDescription = R.REPORT_NAME_PASSED_STEPS)
 	protected Integer passedSteps;
 	
 	@Override
