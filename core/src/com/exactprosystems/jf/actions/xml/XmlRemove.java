@@ -31,10 +31,10 @@ public class XmlRemove extends AbstractAction
 	public final static String xmlName = "Xml";
 	public final static String xpathName = "Xpath";
 
-	@ActionFieldAttribute(name = xmlName, mandatory = true, description = "An Xml structure that needs to be changed (altered)")
+	@ActionFieldAttribute(name = xmlName, mandatory = true, constantDescription = R.XML_REMOVE_XML)
 	protected Xml 	xml;
 
-	@ActionFieldAttribute(name = xpathName, mandatory = true, description = "Formula for the search of an element.")
+	@ActionFieldAttribute(name = xpathName, mandatory = true, constantDescription = R.XML_REMOVE_XPATH)
 	protected String 	xpath;
 	
 	@Override

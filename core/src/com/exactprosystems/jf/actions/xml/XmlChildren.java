@@ -35,8 +35,7 @@ public class XmlChildren extends AbstractAction
 {
 	public final static String	xmlName			= "Xml";
 
-	@ActionFieldAttribute(name = xmlName, mandatory = true, description = "An Xml structure to which an action needs to"
-			+ " be applied. From the root of this structure a list of elements will be drawn.")
+	@ActionFieldAttribute(name = xmlName, mandatory = true, constantDescription = R.XML_CHILDREN_XML)
 	protected Xml				xml				= null;
 
 	@Override

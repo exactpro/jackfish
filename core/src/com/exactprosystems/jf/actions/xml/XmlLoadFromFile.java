@@ -36,7 +36,7 @@ public class XmlLoadFromFile extends AbstractAction
 {
 	public final static String fileName 		= "File";
 
-	@ActionFieldAttribute(name = fileName, mandatory = true, description = "The path to the file.")
+	@ActionFieldAttribute(name = fileName, mandatory = true, constantDescription = R.XML_LOAD_FROM_FILE_FILE)
 	protected String 	file 	= null;
 	
 	@Override

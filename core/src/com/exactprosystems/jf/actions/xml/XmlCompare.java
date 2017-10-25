@@ -34,13 +34,13 @@ public class XmlCompare extends AbstractAction
 	public final static String expectedName        = "Expected";
 	public final static String ignoreNodeOrderName = "IgnoreNodeOrder";
 
-	@ActionFieldAttribute(name = actualName, mandatory = true, description = "An Xml structure is the one that has to undergo comparison.")
+	@ActionFieldAttribute(name = actualName, mandatory = true, constantDescription = R.XML_COMPARE_ACTUAL)
 	protected Xml actual = null;
 
-	@ActionFieldAttribute(name = expectedName, mandatory = true, description = "An Xml structure is the one that comparison has to be done to.")
+	@ActionFieldAttribute(name = expectedName, mandatory = true, constantDescription = R.XML_COMPARE_EXPECTED)
 	protected Xml expected = null;
 
-	@ActionFieldAttribute(name = ignoreNodeOrderName, mandatory = false, def = DefaultValuePool.False, description = "Ignore node order.")
+	@ActionFieldAttribute(name = ignoreNodeOrderName, mandatory = false, def = DefaultValuePool.False, constantDescription = R.XML_COMPARE_IGNORE_NODE_ORDER)
 	protected Boolean ignoreNodesOrder;
 
 	@Override

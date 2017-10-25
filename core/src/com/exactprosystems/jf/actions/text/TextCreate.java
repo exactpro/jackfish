@@ -38,7 +38,7 @@ public class TextCreate extends AbstractAction
 {
 	public final static String contentName = "Content";
 
-	@ActionFieldAttribute(name = contentName, mandatory = true, description = "The text which is required to type.")
+	@ActionFieldAttribute(name = contentName, mandatory = true, constantDescription = R.TEXT_CREATE_CONTENT)
 	protected String 	content 	= null;
 
 	@Override

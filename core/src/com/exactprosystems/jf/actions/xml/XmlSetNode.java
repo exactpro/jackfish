@@ -33,10 +33,10 @@ public class XmlSetNode extends AbstractAction
 	public final static String xmlName = "Xml";
 	public final static String textName = "Text";
 
-	@ActionFieldAttribute(name = xmlName, mandatory = true, description = "A type of Xml object to which an action needs to be applied.")
+	@ActionFieldAttribute(name = xmlName, mandatory = true, constantDescription = R.XML_SET_NODE_XML)
 	protected Xml 	xml 	= null;
 
-	@ActionFieldAttribute(name = textName, mandatory = false, def = DefaultValuePool.Null, description = "Content which has to be transferred to the element.")
+	@ActionFieldAttribute(name = textName, mandatory = false, def = DefaultValuePool.Null, constantDescription = R.XML_SET_NODE_TEXT)
 	protected String 	text;
 
 	@Override

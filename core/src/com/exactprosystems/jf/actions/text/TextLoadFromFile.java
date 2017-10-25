@@ -34,7 +34,7 @@ public class TextLoadFromFile extends AbstractAction
 {
 	public final static String fileName 		= "File";
 
-	@ActionFieldAttribute(name = fileName, mandatory = true, description = "A text file, the text of which is required to type")
+	@ActionFieldAttribute(name = fileName, mandatory = true, constantDescription = R.TEXT_LOAD_FROM_FILE_FILE)
 	protected String 	file 	= null;
 
 	@Override

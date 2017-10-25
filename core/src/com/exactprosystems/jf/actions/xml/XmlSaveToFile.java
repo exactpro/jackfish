@@ -33,11 +33,10 @@ public class XmlSaveToFile extends AbstractAction
 	public final static String xmlName = "Xml";
 	public final static String fileNameName = "File";
 
-	@ActionFieldAttribute(name = xmlName, mandatory = true, description = "The Xml structure that needs to be kept (preserved).")
+	@ActionFieldAttribute(name = xmlName, mandatory = true, constantDescription = R.XML_SAVE_TO_FILE_XML)
 	protected Xml 	xml 	= null;
 
-	@ActionFieldAttribute(name = fileNameName, mandatory = true, description = "The path to the file. If the given path "
-			+ "already contains a file then it will be replaced.")
+	@ActionFieldAttribute(name = fileNameName, mandatory = true, constantDescription = R.XML_SAVE_TO_FILE_FILE_NAME)
 	protected String 	fileName 	= null;
 
 	@Override

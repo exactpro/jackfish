@@ -22,11 +22,11 @@ import com.exactprosystems.jf.functions.Text;
 
 @ActionAttribute(
 		group					   = ActionGroups.Text,
-		constantGeneralDescription = R.TEXT_TO_FILE_GENERAL_DESC,
+		constantGeneralDescription = R.TEXT_SAVE_TO_FILE_GENERAL_DESC,
 		additionFieldsAllowed 	   = false,
-		constantOutputDescription  = R.TEXT_TO_FILE_OUTPUT_DESC,
+		constantOutputDescription  = R.TEXT_SAVE_TO_FILE_OUTPUT_DESC,
 		outputType				   = Boolean.class,
-		constantExamples 		   = R.TEXT_TO_FILE_EXAMPLE,
+		constantExamples 		   = R.TEXT_SAVE_TO_FILE_EXAMPLE,
 		seeAlsoClass 			   = {TextReport.class, TextAddLine.class, TextLoadFromFile.class,
 		TextCreate.class, TextPerform.class, TextSetValue.class}
 	)
@@ -35,10 +35,10 @@ public class TextSaveToFile extends AbstractAction
 	public final static String textName = "Text";
 	public final static String fileNameName = "File";
 
-	@ActionFieldAttribute(name = textName, mandatory = true, description = "Object {{$Text$}},which is required to output.")
+	@ActionFieldAttribute(name = textName, mandatory = true, constantDescription = R.TEXT_SAVE_TO_FILE_TEXT)
 	protected Text 	text 	= null;
 
-	@ActionFieldAttribute(name = fileNameName, mandatory = true, description = "A path where to save a file and the file name with an extension.")
+	@ActionFieldAttribute(name = fileNameName, mandatory = true, constantDescription = R.TEXT_SAVE_TO_FILE_FILE)
 	protected String 	fileName 	= null;
 
 	@Override

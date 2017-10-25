@@ -34,10 +34,10 @@ public class XmlFindFirst extends AbstractAction
 	public final static String xmlName = "Xml";
 	public final static String xpathName = "Xpath";
 
-	@ActionFieldAttribute(name = xmlName, mandatory = true, description = "An Xml structure in which the element needs to be detected.")
+	@ActionFieldAttribute(name = xmlName, mandatory = true, constantDescription = R.XML_FIND_FIRST_XML)
 	protected Xml 	xml;
 
-	@ActionFieldAttribute(name = xpathName, mandatory = true, description = "The Xpath, the path to the element.")
+	@ActionFieldAttribute(name = xpathName, mandatory = true, constantDescription = R.XML_FIND_FIRST_X_PATH)
 	protected String 	xpath;
 
 	@Override

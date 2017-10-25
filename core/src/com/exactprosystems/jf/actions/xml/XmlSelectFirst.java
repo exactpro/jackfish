@@ -36,15 +36,15 @@ public class XmlSelectFirst extends AbstractAction
 	public final static String nodeNameName = "NodeName";
 
 
-	@ActionFieldAttribute(name = xmlName, mandatory = true, description = "An Xml structure in which an operation needs to be done.")
+	@ActionFieldAttribute(name = xmlName, mandatory = true, constantDescription = R.XML_SELECT_FIRST_XML)
 	protected Xml 	xml;
 
 
-	@ActionFieldAttribute(name = nodeNameName, mandatory = true, description = "Insert the selection result into assigned tag.")
+	@ActionFieldAttribute(name = nodeNameName, mandatory = true, constantDescription = R.XML_SELECT_FIRST_NODE_NAME)
 	protected String 	nodeName;
 
 
-	@ActionFieldAttribute(name = xpathName, mandatory = true, description = "The Xpath, the path to the element.")
+	@ActionFieldAttribute(name = xpathName, mandatory = true, constantDescription = R.XML_SELECT_FIRST_X_PATH)
 	protected String 	xpath;
 
 	@Override

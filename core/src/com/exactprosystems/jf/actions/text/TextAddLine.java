@@ -30,10 +30,10 @@ public class TextAddLine extends AbstractAction {
     public final static String textName = "Text";
     public final static String lineName = "Line";
 
-    @ActionFieldAttribute(name = textName, mandatory = true, description = "Object {{$Text$}}.")
+    @ActionFieldAttribute(name = textName, mandatory = true, constantDescription = R.TEXT_ADD_LINE_TEXT)
     protected Text text = null;
 
-    @ActionFieldAttribute(name = lineName, mandatory = true, description = "The line that should be added.")
+    @ActionFieldAttribute(name = lineName, mandatory = true, constantDescription = R.TEXT_ADD_LINE_LINE)
     protected String line = null;
 
     @Override

@@ -33,7 +33,7 @@ public class TextPerform extends AbstractAction
 {
 	public final static String textName = "Text";
 
-	@ActionFieldAttribute(name = textName, mandatory = true, description = "Object {{$Text$}}, with which the operation is required to perform.")
+	@ActionFieldAttribute(name = textName, mandatory = true, constantDescription = R.TEXT_PERFORM_TEXT)
 	protected Text 	text 	= null;
 
 	@Override

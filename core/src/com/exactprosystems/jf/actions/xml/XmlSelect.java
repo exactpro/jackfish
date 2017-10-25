@@ -35,14 +35,13 @@ public class XmlSelect extends AbstractAction
 	public final static String nodeNameName = "NodeName";
 	public final static String xpathName = "Xpath";
 
-	@ActionFieldAttribute(name = xmlName, mandatory = true, description = "An Xml structure in which the element needs to be detected.")
+	@ActionFieldAttribute(name = xmlName, mandatory = true, constantDescription = R.XML_SELECT_XML)
 	protected Xml 	xml 	= null;
 
-	@ActionFieldAttribute(name = nodeNameName, mandatory = true, description = "The name of a core element to which the "
-			+ "collection of the found elements will be allocated.")
+	@ActionFieldAttribute(name = nodeNameName, mandatory = true, constantDescription = R.XML_SELECT_NODE_NAME)
 	protected String 	nodeName 	= null;
 
-	@ActionFieldAttribute(name = xpathName, mandatory = true, description = "The Xpath, the path to the element.")
+	@ActionFieldAttribute(name = xpathName, mandatory = true, constantDescription = R.XML_SELECT_X_PATH)
 	protected String 	xpath 	= null;
 
 	@Override

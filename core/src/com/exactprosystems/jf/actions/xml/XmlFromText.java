@@ -28,7 +28,7 @@ public class XmlFromText extends AbstractAction
 {
 	public final static String textName		= "Text";
 
-	@ActionFieldAttribute(name = textName, mandatory = true, description = "{{$Text$}} object related to the xml.")
+	@ActionFieldAttribute(name = textName, mandatory = true, constantDescription = R.XML_FROM_TEXT_TEXT)
 	protected Text text = null;
 
 	@Override

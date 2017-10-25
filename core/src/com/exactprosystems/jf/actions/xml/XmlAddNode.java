@@ -36,17 +36,16 @@ public class XmlAddNode extends AbstractAction
 	public final static String contentName 	= "Content";
 	public final static String newXML = "NewXML";
 
-	@ActionFieldAttribute(name = xmlName, mandatory = true, description = "An Xml structure to which an action has to be done.")
+	@ActionFieldAttribute(name = xmlName, mandatory = true, constantDescription = R.XML_ADD_NODE_XML)
 	protected Xml 		xml 	= null;
 
-	@ActionFieldAttribute(name = nodeNameName, mandatory = false, def = DefaultValuePool.Null, description = "The name of an added element.")
+	@ActionFieldAttribute(name = nodeNameName, mandatory = false, def = DefaultValuePool.Null, constantDescription = R.XML_ADD_NODE_NODE_NAME)
 	protected String 	nodeName;
 
-	@ActionFieldAttribute(name = contentName, mandatory = false, def = DefaultValuePool.Null, description = "The contents of a new element.")
+	@ActionFieldAttribute(name = contentName, mandatory = false, def = DefaultValuePool.Null, constantDescription = R.XML_ADD_NODE_CONTENT_NAME)
 	protected String 	content;
 
-	@ActionFieldAttribute(name =  newXML, mandatory = false, def = DefaultValuePool.Null, description = "Node that has to be added to the original "
-			+ "structure. If it is indicated then parameters NodeName and Content are ignored.")
+	@ActionFieldAttribute(name =  newXML, mandatory = false, def = DefaultValuePool.Null, constantDescription = R.XML_ADD_NODE_NEW_XML)
 	protected Xml 		copiedXML;
 
 	@Override

@@ -36,19 +36,16 @@ public class TextReport extends AbstractAction
     public final static String titleName          = "Title";
     public final static String toReportName       = "ToReport";
 
-	@ActionFieldAttribute(name = textName, mandatory = true, description = "Object {{$Text$}}, which is required to output.")
+	@ActionFieldAttribute(name = textName, mandatory = true, constantDescription = R.TEXT_REPORT_TEXT)
 	protected Text 	text 	= null;
 
-	@ActionFieldAttribute(name = titleName, mandatory = true, description = "The title of the text.")
+	@ActionFieldAttribute(name = titleName, mandatory = true, constantDescription = R.TEXT_REPORT_TITLE)
 	protected String 	title 	= null;
 
-	@ActionFieldAttribute(name = beforeTestCaseName, mandatory = false, def = DefaultValuePool.Null, description = "It accepts id test case before " +
-			"which the text will be displayed in the report.")
+	@ActionFieldAttribute(name = beforeTestCaseName, mandatory = false, def = DefaultValuePool.Null, constantDescription = R.TEXT_REPORT_BEFORE_TESTCASE)
 	protected String 	beforeTestCase 	= null;
 
-	@ActionFieldAttribute(name = toReportName, mandatory = false, def = DefaultValuePool.Null, description = 
-            "This parameter is used for directing the output from the given object to the external report "
-          + "created by the {{$ReportStart$}} action.")
+	@ActionFieldAttribute(name = toReportName, mandatory = false, def = DefaultValuePool.Null, constantDescription =R.TEXT_REPORT_TO_REPORT)
 	protected ReportBuilder toReport;
 
     @Override

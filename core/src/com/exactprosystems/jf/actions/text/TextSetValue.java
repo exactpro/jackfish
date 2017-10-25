@@ -34,14 +34,13 @@ public class TextSetValue extends AbstractAction
 	public final static String lineName = "Line";
 	public final static String indexName = "Index";
 
-	@ActionFieldAttribute(name = textName, mandatory = true, description = "Object {{$Text$}}, in which" +
-			" it is necessary to change the line.")
+	@ActionFieldAttribute(name = textName, mandatory = true, constantDescription = R.TEXT_SET_VALUE_TEXT)
 	protected Text 	text 	= null;
 
-	@ActionFieldAttribute(name = lineName, mandatory = true, description = "Input line.")
+	@ActionFieldAttribute(name = lineName, mandatory = true, constantDescription = R.TEXT_SET_VALUE_LINE)
 	protected String	line 	= null;
 
-	@ActionFieldAttribute(name = indexName, mandatory = true, description = "Line index, which is required to change. ")
+	@ActionFieldAttribute(name = indexName, mandatory = true, constantDescription = R.TEXT_SET_VALUE_INDEX)
 	protected Integer	index 	= 0;
 
 	@Override
