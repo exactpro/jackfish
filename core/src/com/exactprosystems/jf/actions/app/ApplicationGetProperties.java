@@ -43,10 +43,7 @@ public class ApplicationGetProperties extends AbstractAction
 {
 	public static final String	connectionName	= "AppConnection";
 
-	@ActionFieldAttribute(name = connectionName, mandatory = true, description = "A special object which identifies"
-			+ " the started application session. This object is required in many other actions to specify the session"
-			+ " of the application the indicated action belongs to."
-			+ "It is the output value of such actions as {{@ApplicationStart@}}, {{@ApplicationConnectTo@}}.")
+	@ActionFieldAttribute(name = connectionName, mandatory = true, constantDescription = R.APPLICATION_GET_PROPERTIES_CONNECTION)
 	protected AppConnection		connection		= null;
 
 	@Override

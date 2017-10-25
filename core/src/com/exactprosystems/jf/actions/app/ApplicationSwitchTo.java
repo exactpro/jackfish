@@ -46,15 +46,10 @@ public class ApplicationSwitchTo extends AbstractAction
 	public final static String connectionName = "AppConnection";
 	public final static String softConditionName = "SoftCondition";
 
-	@ActionFieldAttribute(name = connectionName, mandatory = true, description = "A special object which identifies the"
-			+ " started application session. This object is required in many other actions to specify the session"
-			+ " of the application the indicated action belongs to. It is the output value of such actions"
-			+ " as {{@ApplicationStart@}}, {{@ApplicationConnectTo@}}.")
+	@ActionFieldAttribute(name = connectionName, mandatory = true, constantDescription = R.APPLICATION_SWITCH_TO_CONNECTION)
 	protected AppConnection	connection	= null;
 
-	@ActionFieldAttribute(name = softConditionName, mandatory = false, def = DefaultValuePool.True, description = "If the parameter value is true,"
-			+ " the string in Title will be compared to the window title bar using the 'contains' principle."
-			+ " The window title bar is allowed to have the value of Title field and not to be the same.")
+	@ActionFieldAttribute(name = softConditionName, mandatory = false, def = DefaultValuePool.True, constantDescription = R.APPLICATION_SWITCH_TO_SOFT_CONDITION)
 	protected Boolean 				softCondition;
 
 	@Override
