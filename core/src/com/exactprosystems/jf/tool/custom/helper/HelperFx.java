@@ -13,11 +13,14 @@ import com.exactprosystems.jf.api.common.FieldParameter;
 import com.exactprosystems.jf.api.common.HideAttribute;
 import com.exactprosystems.jf.api.common.Str;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
+import com.exactprosystems.jf.common.evaluator.Variables;
 import com.exactprosystems.jf.documents.matrix.Matrix;
 import com.exactprosystems.jf.tool.Common;
+
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
+import java.io.IOException;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
@@ -27,6 +30,7 @@ import java.util.stream.Collectors;
 public class HelperFx
 {
 	private Matrix matrix;
+	private Class<?> clazz;
 	private HelperControllerFx controller;
 	private AbstractEvaluator evaluator;
 	private Comparator<IToString> comparatorAZ;
@@ -41,14 +45,15 @@ public class HelperFx
 	{
 		this.evaluator = evaluator;
 		this.matrix = matrix;
+		this.clazz = clazz;
 		comparatorAZ = Comparator.comparing(IToString::getName);
 		comparatorZA = comparatorAZ.reversed();
 
 		this.controller = Common.loadController(HelperFx.class.getResource("HelperFx.fxml"));
-		this.controller.init(this, title, clazz, this.evaluator != null);
+		this.controller.init(this, title, this.clazz, this.evaluator != null);
 	}
-	
-	public String showAndWait(String value)
+
+	public String showAndWait(String value) throws IOException
 	{
 		return this.controller.showAndWait(value);
 	}
@@ -126,36 +131,41 @@ public class HelperFx
 		}
 	}
 
-	void fillVariables(final List<SimpleVariable> data)
+	public void fillVariables(final ObservableList<SimpleVariable> data)
 	{
-		this.evaluator.getLocals().getVars()
-				.forEach((key, value) -> data.add(new SimpleVariable(key, value)));
+		Common.tryCatch(() -> {
+			Variables localVars = this.evaluator.getLocals();
+			localVars.getVars().entrySet().forEach((entry) -> data.add(new SimpleVariable(entry.getKey(), entry.getValue())));
 
-		this.evaluator.getGlobals().getVars().entrySet()
-				.stream()
-				.map(entry -> new SimpleVariable(entry.getKey(), entry.getValue()))
-				.filter(simpleVariable -> !data.contains(simpleVariable))
-				.forEach(data::add);
-
-		Optional.ofNullable(this.matrix).ifPresent(m -> m.getRoot().bypass(item -> {
-			String id = item.getId();
-			if (!Str.IsNullOrEmpty(id))
-			{
-				Object res;
-				try
+			Variables globalVars = this.evaluator.getGlobals();
+			data.addAll(globalVars.getVars().entrySet()
+					.stream()
+					.map(entry -> new SimpleVariable(entry.getKey(), entry.getValue()))
+					.filter(simpleVariable -> !data.contains(simpleVariable))
+					.collect(Collectors.toList())
+			);
+			Optional.ofNullable(this.matrix).ifPresent(m -> m.getRoot().bypass(item -> {
+				String id = item.getId();
+				if (!Str.IsNullOrEmpty(id))
 				{
-					res = evaluator.evaluate(id + ".Out");
+					Object res;
+					try
+					{
+						res = evaluator.evaluate(id + ".Out");
+					}
+					catch (Exception e)
+					{
+						res = "Error";
+					}
+					data.add(new SimpleVariable(id + ".Out", res));
 				}
-				catch (Exception e)
-				{
-					res = "Error";
-				}
-				data.add(new SimpleVariable(id + ".Out", res));
-			}
-		}));
+			}));
+		}, "Error on set variables");
 	}
 
-	//region private methods
+	//============================================================
+	// private methods
+	//============================================================
 	private SimpleMethod getStringSimpleMethod(Method method)
 	{
 		if (method.getAnnotation(Deprecated.class) != null)
@@ -167,7 +177,8 @@ public class HelperFx
 
 	private SimpleField getStringsSimpleField(Field field)
 	{
-		if (!Modifier.isPublic(field.getModifiers()))
+		String modifiers = Modifier.toString(field.getModifiers());
+		if (!modifiers.contains("public"))
 		{
 			return null;
 		}
@@ -186,7 +197,7 @@ public class HelperFx
 
 		public boolean isStatic()
 		{
-			return Modifier.isStatic(this.method.getModifiers());
+			return (this.method.getModifiers() & Modifier.STATIC) != 0;
 		}
 
 		private List<String> getParameters()
@@ -206,9 +217,9 @@ public class HelperFx
 		private List<String> getParameterTypes()
 		{
 			return Arrays.stream(this.method.getParameterTypes())
-                    .filter(t -> t.getAnnotation(HideAttribute.class) == null )
-			        .map(Class::getSimpleName)
-			        .collect(Collectors.toList());
+					.filter(t -> t.getAnnotation(HideAttribute.class) == null )
+					.map(Class::getSimpleName)
+					.collect(Collectors.toList());
 		}
 
 		@Override
@@ -240,9 +251,17 @@ public class HelperFx
 
 		public String getMethodWithParams()
 		{
-			return getParameterTypes()
-					.stream()
-					.collect(Collectors.joining(",", "(", ")"));
+			StringBuilder s = new StringBuilder(getName());
+			s.append("(");
+			String comma = "";
+			for (String parameter : getParameterTypes())
+			{
+				s.append(comma);
+				s.append(parameter);
+				comma = ", ";
+			}
+			s.append(")");
+			return s.toString();
 		}
 
 		@Override
