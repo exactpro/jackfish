@@ -42,13 +42,13 @@ public class ClientSendMapMessage extends AbstractAction
 	public final static String messageName = "MapMessage";
 	public final static String checkName = "Check";
 
-	@ActionFieldAttribute(name = connectionName, mandatory = true, description = "The connection with the client, which is derived from the action ClientLoad." )
+	@ActionFieldAttribute(name = connectionName, mandatory = true, constantDescription = R.CLIENT_SEND_MAP_MESSAGE_CONNECTION )
 	protected ClientConnection	connection	= null;
 
-	@ActionFieldAttribute(name = messageName, mandatory = true, description = "Message that is required to send." )
+	@ActionFieldAttribute(name = messageName, mandatory = true, constantDescription = R.CLIENT_SEND_MAP_MESSAGE_MESSAGE )
 	protected MapMessage	message	= null;
 
-	@ActionFieldAttribute(name = checkName, mandatory = false, def = DefaultValuePool.True, description = "Validation message check before sending. As a default true." )
+	@ActionFieldAttribute(name = checkName, mandatory = false, def = DefaultValuePool.True, constantDescription= R.CLIENT_SEND_MAP_MESSAGE_CHECK )
 	protected Boolean	check;
 
 

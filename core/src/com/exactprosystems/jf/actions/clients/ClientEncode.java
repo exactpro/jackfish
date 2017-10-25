@@ -37,10 +37,10 @@ public class ClientEncode extends AbstractAction
 	public final static String connectionName 	= "ClientConnection";
 	public final static String messageName 		= "MapMessage";
 
-	@ActionFieldAttribute(name = connectionName, mandatory = true, description = "The connection with the client, which is derived from the action ClientLoad." )
+	@ActionFieldAttribute(name = connectionName, mandatory = true, constantDescription = R.CLIENT_ENCODE_CONNECTION )
 	protected ClientConnection	connection	= null;
 
-	@ActionFieldAttribute(name = messageName, mandatory = true, description = "The object type MapMessage, which is required to convert in a massive byte." )
+	@ActionFieldAttribute(name = messageName, mandatory = true, constantDescription = R.CLIENT_ENCODE_MESSAGE )
 	protected MapMessage	message	= null;
 	
 	@Override

@@ -42,13 +42,13 @@ public class ClientCheckMessage extends AbstractAction
 	public final static String actualName = "ActualMessage";
 	public final static String expectedMessageTypeName 	= "ExpectedMessageType";
 
-	@ActionFieldAttribute(name = connectionName, mandatory = true, description = "The connection with the client, which is derived from the action ClientLoad." )
+	@ActionFieldAttribute(name = connectionName, mandatory = true, constantDescription = R.CLIENT_CHECK_MESSAGE_CONNECTION )
 	protected ClientConnection	connection	= null;
 
-	@ActionFieldAttribute(name = actualName, mandatory = true, description = "The message that is required to compare.")
+	@ActionFieldAttribute(name = actualName, mandatory = true, constantDescription = R.CLIENT_CHECK_MESSAGE_ACTUAL)
 	protected MapMessage actual = null;
 
-	@ActionFieldAttribute(name = expectedMessageTypeName, mandatory = true, description = "The message type that is expected." )
+	@ActionFieldAttribute(name = expectedMessageTypeName, mandatory = true, constantDescription = R.CLIENT_CHECK_MESSAGE_MESSAGE_TYPE )
 	protected String	messageType	= null;
 
 	@Override

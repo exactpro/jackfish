@@ -34,10 +34,10 @@ public class ClientSendRawMessage extends AbstractAction
 	public final static String connectionName = "ClientConnection";
 	public final static String dataName = "Data";
 
-	@ActionFieldAttribute(name = connectionName, mandatory = true, description = "The connection with the client, which is derived from the action ClientLoad." )
+	@ActionFieldAttribute(name = connectionName, mandatory = true, constantDescription = R.CLIENT_SEND_RAW_MESSAGE_CONNECTION )
 	protected ClientConnection	connection	= null;
 
-	@ActionFieldAttribute(name = dataName, mandatory = true, description = "Array of bytes that will be sent 'as is'." )
+	@ActionFieldAttribute(name = dataName, mandatory = true, constantDescription = R.CLIENT_SEND_RAW_MESSAGE_DATA )
 	protected byte[]	data	= null;
 
 	@Override

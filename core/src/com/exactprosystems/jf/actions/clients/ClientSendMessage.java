@@ -43,13 +43,13 @@ public class ClientSendMessage extends AbstractAction
 	public final static String messageTypeName = "MessageType";
 	public final static String checkName = "Check";
 
-	@ActionFieldAttribute(name = connectionName, mandatory = true, description = "The connection with the client, which is derived from the action ClientLoad." )
+	@ActionFieldAttribute(name = connectionName, mandatory = true, constantDescription = R.CLIENT_SEND_MESSAGE_CONNECTION )
 	protected ClientConnection	connection	= null;
 
-	@ActionFieldAttribute(name = messageTypeName, mandatory = true, description = "The type of the created message." )
+	@ActionFieldAttribute(name = messageTypeName, mandatory = true, constantDescription = R.CLIENT_SEND_MESSAGE_MESSAGE_TYPE )
 	protected String	messageType	= null;
 
-	@ActionFieldAttribute(name = checkName, mandatory = false, def = DefaultValuePool.True, description = "Checks the validation before the message sending. As a default true.")
+	@ActionFieldAttribute(name = checkName, mandatory = false, def = DefaultValuePool.True, constantDescription= R.CLIENT_SEND_MESSAGE_CHECK)
 	protected Boolean	check;
 
 	@Override

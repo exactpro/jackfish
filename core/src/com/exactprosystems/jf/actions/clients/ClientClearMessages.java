@@ -33,7 +33,7 @@ public class ClientClearMessages extends AbstractAction
 {
 	public final static String connectionName = "ClientConnection";
 
-	@ActionFieldAttribute(name = connectionName, mandatory = true, description = "The connection with the client, which is derived from the action {{@ClientLoad@}}." )
+	@ActionFieldAttribute(name = connectionName, mandatory = true, constantDescription = R.CLIENT_CLEAR_MESSAGES_CONNECTION )
 	protected ClientConnection	connection	= null;
 
 	@Override

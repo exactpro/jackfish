@@ -48,13 +48,13 @@ public class ClientCountMessages extends AbstractAction
 	public final static String messageTypeName = "MessageType";
 	public final static String conditionsName = "Conditions";
 
-	@ActionFieldAttribute(name = connectionName, mandatory = true, description = "The connection with the client, which is derived from the action ClientLoad.")
+	@ActionFieldAttribute(name = connectionName, mandatory = true, constantDescription = R.CLIENT_COUNT_MESSAGES_CONNECTION)
 	protected ClientConnection	connection	= null;
 
-	@ActionFieldAttribute(name = messageTypeName, mandatory = true, description = "Message type. Use * for any type of messages." )
+	@ActionFieldAttribute(name = messageTypeName, mandatory = true, constantDescription = R.CLIENT_COUNT_MESSAGES_MESSAGE_TYPE )
 	protected String	messageType	= null;
 
-	@ActionFieldAttribute(name = conditionsName, mandatory = false, def = DefaultValuePool.Null, description = "The conditions in which the comparison will be carried out.")
+	@ActionFieldAttribute(name = conditionsName, mandatory = false, def = DefaultValuePool.Null, constantDescription = R.CLIENT_COUNT_MESSAGES_CONDITIONS)
 	protected Condition[] conditions;
 	
 	@Override

@@ -38,10 +38,10 @@ public class ClientDecode extends AbstractAction
 	public final static String connectionName 	= "ClientConnection";
 	public final static String arrayName 		= "Array";
 
-	@ActionFieldAttribute(name = connectionName, mandatory = true, description = "The connection with the client, which is derived from the action ClientLoad." )
+	@ActionFieldAttribute(name = connectionName, mandatory = true, constantDescription = R.CLIENT_DECODE_CONNECTION )
 	protected ClientConnection	connection	= null;
 
-	@ActionFieldAttribute(name = arrayName, mandatory = true, description = "A massive byte which is required to convert in MapMessage.")
+	@ActionFieldAttribute(name = arrayName, mandatory = true, constantDescription = R.CLIENT_DECODE_ARRAY)
 	protected Byte[]	array	= null;
 
 	@Override

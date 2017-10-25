@@ -37,7 +37,7 @@ public class ClientLoad extends AbstractAction
 {
 	public final static String idName = "ClientId";
 
-	@ActionFieldAttribute(name = idName, mandatory = true, description = "Id of the Client, with which the connection should be made." )
+	@ActionFieldAttribute(name = idName, mandatory = true, constantDescription = R.CLIENT_LOAD_ID )
 	protected String 		id	= null;
 
 	@Override

@@ -50,19 +50,19 @@ public class ClientGetMessage extends AbstractAction
 	public final static String timeoutName 		= "MessageTimeout";
 	public final static String removeName 		= "Remove";
 
-	@ActionFieldAttribute(name = connectionName, mandatory = true, description = "The connection with the client, which is derived from the action ClientLoad." )
+	@ActionFieldAttribute(name = connectionName, mandatory = true, constantDescription = R.CLIENT_GET_MESSAGE_CONNECTION )
 	protected ClientConnection	connection	= null;
 
-	@ActionFieldAttribute(name = messageTypeName, mandatory = true, description = "The type of the message. Use * for any type of messages." )
+	@ActionFieldAttribute(name = messageTypeName, mandatory = true, constantDescription = R.CLIENT_GET_MESSAGE_MESSAGE_TYPE )
 	protected String	messageType	= null;
 
-	@ActionFieldAttribute(name = conditionsName, mandatory = false, def = DefaultValuePool.Null, description = "The conditions upon which the message will be checked.")
+	@ActionFieldAttribute(name = conditionsName, mandatory = false, def = DefaultValuePool.Null, constantDescription=  R.CLIENT_GET_MESSAGE_CONDITIONS)
 	protected Condition[] conditions;
 
-	@ActionFieldAttribute(name = timeoutName, mandatory = false, def = DefaultValuePool.Int20000, description = "The time which is given to find the acceptable message.")
+	@ActionFieldAttribute(name = timeoutName, mandatory = false, def = DefaultValuePool.Int20000, constantDescription = R.CLIENT_GET_MESSAGE_TIMEOUT)
 	protected Integer timeout;
 	
-	@ActionFieldAttribute(name = removeName, mandatory = false, def = DefaultValuePool.True, description = "Delete the found message.")
+	@ActionFieldAttribute(name = removeName, mandatory = false, def = DefaultValuePool.True, constantDescription = R.CLIENT_GET_MESSAGE_REMOVE)
 	protected Boolean remove;
 
 	@Override
