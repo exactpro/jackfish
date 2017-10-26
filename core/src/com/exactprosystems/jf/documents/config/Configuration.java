@@ -495,7 +495,7 @@ public class Configuration extends AbstractDocument
 
 			File dicFile = new File(MainRunner.makeDirWithSubstitutions(dicPath));
 			Date currentTime  = new Date(dicFile.lastModified());
-			Date previousTime = this.documentsActuality.get(dicFile.getAbsolutePath());
+			Date previousTime = this.documentsActuality.get(name + dicFile.getAbsolutePath());
 
 			if (previousTime != null && !currentTime.after(previousTime))
 			{
@@ -509,7 +509,7 @@ public class Configuration extends AbstractDocument
 					IApplicationFactory factory = this.applications.loadApplicationFactory(name);
 					IGuiDictionary dictionary = this.applications.getDictionary(entry);
 					factory.init(dictionary);
-					this.documentsActuality.put(dicFile.getAbsolutePath(), currentTime);
+					this.documentsActuality.put(name + dicFile.getAbsolutePath(), currentTime);
 				}
 			}
 			catch (Exception e)
