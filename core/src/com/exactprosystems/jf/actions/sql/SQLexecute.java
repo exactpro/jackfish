@@ -41,11 +41,10 @@ public class SQLexecute extends AbstractAction
 	public final static String connectionName 	= "Connection";
 	public final static String queryName 		= "Query";
 
-	@ActionFieldAttribute(name = connectionName, mandatory = true, description = "Database connection established by"
-			+ " the {{@ SQLconnect action @}}.")
+	@ActionFieldAttribute(name = connectionName, mandatory = true, constantDescription = R.SQL_EXECUTE_CONNECTION)
 	protected SqlConnection connection 		= null;
 
-	@ActionFieldAttribute(name = queryName, mandatory = true, description = "The SQL database query.")
+	@ActionFieldAttribute(name = queryName, mandatory = true, constantDescription = R.SQL_EXECUTE_QUERY)
 	protected String query 	= "";
 
 	@Override

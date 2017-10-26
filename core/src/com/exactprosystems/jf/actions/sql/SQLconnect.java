@@ -47,21 +47,19 @@ public class SQLconnect  extends AbstractAction
 
 
 
-	@ActionFieldAttribute(name = sqlName, mandatory = true, description = "SQL Entry name.")
+	@ActionFieldAttribute(name = sqlName, mandatory = true, constantDescription = R.SQL_CONNECT_SQL)
 	protected String sql 		= "";
 
-	@ActionFieldAttribute(name = serverName, mandatory = true, description = "Database ip address. The value of this "
-			+ "parameter replaces ${SERVER} in the sqlConnection line in the selected SQL entry parameters.")
+	@ActionFieldAttribute(name = serverName, mandatory = true, constantDescription = R.SQL_CONNECT_SERVER)
 	protected String server 	= "";
 
-	@ActionFieldAttribute(name = baseName, mandatory = true, description = "Database name. The value of this parameter "
-			+ "replaces ${BASE} in the sqlConnection line in the selected SQL entry parameters.")
+	@ActionFieldAttribute(name = baseName, mandatory = true, constantDescription = R.SQL_CONNECT_BASE)
 	protected String base 		= "";
 
-	@ActionFieldAttribute(name = userName, mandatory = true, description = "Database user name.")
+	@ActionFieldAttribute(name = userName, mandatory = true, constantDescription = R.SQL_CONNECT_USER)
 	protected String user 		= "";
 
-	@ActionFieldAttribute(name = passwordName, mandatory = true, description = "Database password.")
+	@ActionFieldAttribute(name = passwordName, mandatory = true, constantDescription = R.SQL_CONNECT_PASSWORD)
 	protected String password 	= "";
 
 	@Override

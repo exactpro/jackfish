@@ -34,7 +34,7 @@ public class SQLdisconnect extends AbstractAction
 {
 	public final static  String connectionName = "Connection";
 
-	@ActionFieldAttribute(name = connectionName, mandatory = true, description = "Database connection established by the SQLconnect action.")
+	@ActionFieldAttribute(name = connectionName, mandatory = true, constantDescription = R.SQL_DISCONNECT_CONNECTION)
 	protected SqlConnection connection 		= null;
 
 	@Override

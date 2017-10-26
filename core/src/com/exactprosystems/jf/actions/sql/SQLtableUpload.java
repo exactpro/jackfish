@@ -36,13 +36,13 @@ public class SQLtableUpload extends AbstractAction
 	public final static String tableName 		= "Table";
 	public final static String dataName 		= "Data";
 
-	@ActionFieldAttribute(name = connectionName, mandatory = true, description = "Connection to the database, output value of the SQLconnect action.")
+	@ActionFieldAttribute(name = connectionName, mandatory = true, constantDescription = R.SQL_TABLE_UPLOAD_CONNECTION)
 	protected SqlConnection connection 		= null;
 
-	@ActionFieldAttribute(name = tableName, mandatory = true, description = "The name of the database table which you need to fill in with data.")
+	@ActionFieldAttribute(name = tableName, mandatory = true, constantDescription = R.SQL_TABLE_UPLOAD_TABLE)
 	protected String table 	= "";
 
-	@ActionFieldAttribute(name = dataName, mandatory = true, description = "The Table, from which you take the data to add to the database.")
+	@ActionFieldAttribute(name = dataName, mandatory = true, constantDescription = R.SQL_TABLE_UPLOAD_DATA)
 	protected Table data 	= null;
 
 	@Override

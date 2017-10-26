@@ -42,11 +42,10 @@ public class SQLselect extends AbstractAction
 	public final static String connectionName 	= "Connection";
 	public final static String queryName 		= "Query";
 
-	@ActionFieldAttribute(name = connectionName, mandatory = true, description = "Connection to the database, output "
-			+ "value of the SQLconnect action.")
+	@ActionFieldAttribute(name = connectionName, mandatory = true, constantDescription = R.SQL_SELECT_CONNECTION)
 	protected SqlConnection connection 		= null;
 
-	@ActionFieldAttribute(name = queryName, mandatory = true, description = "The SQL database query.")
+	@ActionFieldAttribute(name = queryName, mandatory = true, constantDescription = R.SQL_SELECT_QUERY)
 	protected String query 	= "";
 
 	@Override
