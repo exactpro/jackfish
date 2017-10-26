@@ -252,7 +252,7 @@ public class HelperControllerFx implements Initializable, ContainingParent
 			{
 				int position = styleClassedTextArea.getCaretPosition();
 				styleClassedTextArea.insertText(position, varName);
-				styleClassedTextArea.positionCaret(position + varName.length());
+				styleClassedTextArea.moveTo(position + varName.length());
 			});
 		}, "Error on show all vars");
 	}
@@ -304,7 +304,7 @@ public class HelperControllerFx implements Initializable, ContainingParent
 							caretPosition++;
 						}
 						styleClassedTextArea.insertText(caretPosition, method.getMethodWithParams());
-						styleClassedTextArea.positionCaret(caretPosition + methodName.length() + 2);
+						styleClassedTextArea.moveTo(caretPosition + methodName.length() + 2);
 					}
 					else if (selectedMember instanceof HelperFx.SimpleField)
 					{
@@ -317,7 +317,7 @@ public class HelperControllerFx implements Initializable, ContainingParent
 							caretPosition++;
 						}
 						styleClassedTextArea.insertText(caretPosition, methodName);
-						styleClassedTextArea.positionCaret(caretPosition + methodName.length());
+						styleClassedTextArea.moveTo(caretPosition + methodName.length());
 					}
 				}
 			}
