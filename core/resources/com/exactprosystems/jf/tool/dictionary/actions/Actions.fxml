@@ -5,6 +5,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import com.exactprosystems.jf.tool.custom.number.NumberTextField?>
+<?import com.exactprosystems.jf.api.common.i18n.R?>
 <BorderPane prefHeight="513.0" prefWidth="1105.0" xmlns="http://javafx.com/javafx/8.0.112" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.exactprosystems.jf.tool.dictionary.actions.ActionsController">
 	<fx:define>
 		<CssVariables fx:id="verMin" fx:constant="VERTICAL_MIN"/>
@@ -101,7 +102,11 @@
 													</rowConstraints>
 													<children>
 														<CustomFieldWithButton fx:id="tfSendKeys" onAction="#sendKeysAction" GridPane.columnSpan="2"/>
-														<Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#sendKeysAction" text="Send keys" GridPane.columnIndex="2"/>
+														<Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#sendKeysAction"  GridPane.columnIndex="2">
+															<text>
+																<R fx:constant="SEND_KEYS"/>
+															</text>
+														</Button>
 														<Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#doIt" text="Do it" GridPane.columnIndex="2" GridPane.rowIndex="1"/>
 														<Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#findAction" text="Find" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
 														<Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#clickAction" text="Click" GridPane.rowIndex="2"/>
