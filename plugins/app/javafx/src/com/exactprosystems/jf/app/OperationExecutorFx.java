@@ -11,11 +11,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicLong;
 
-public class FXOperationExecutor extends AbstractOperationExecutor<Node>
+public class OperationExecutorFx extends AbstractOperationExecutor<Node>
 {
     private Logger logger;
 
-    public FXOperationExecutor(boolean useTrimText)
+    public OperationExecutorFx(boolean useTrimText)
     {
         super(useTrimText);
     }

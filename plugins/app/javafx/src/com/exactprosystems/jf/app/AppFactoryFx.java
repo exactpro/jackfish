@@ -14,7 +14,7 @@ import java.io.InputStream;
         description = R.JAVAFX_PLUGIN_DESCRIPTION,
         difference = R.JAVAFX_PLUGIN_DIFFERENCE
 )
-public class FXAppFactory extends AbstractApplicationFactory
+public class AppFactoryFx extends AbstractApplicationFactory
 {
 
     @Override

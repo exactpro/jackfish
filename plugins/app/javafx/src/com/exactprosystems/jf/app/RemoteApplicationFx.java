@@ -10,12 +10,12 @@ import java.rmi.RemoteException;
 import java.util.Collection;
 import java.util.Map;
 
-public class FXRemoteApplication extends RemoteApplication
+public class RemoteApplicationFx extends RemoteApplication
 {
     private Logger logger = null;
     private Robot  currentRobot;
 
-    private FXOperationExecutor operationExecutor;
+    private OperationExecutorFx operationExecutor;
     private PluginInfo          info;
 
     @Override
