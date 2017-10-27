@@ -6,6 +6,7 @@
 <?import javafx.scene.layout.*?>
 <?import com.exactprosystems.jf.tool.custom.number.NumberTextField?>
 <?import com.exactprosystems.jf.api.common.i18n.R?>
+<?import org.fxmisc.richtext.TextFlowExt?>
 <BorderPane prefHeight="513.0" prefWidth="1105.0" xmlns="http://javafx.com/javafx/8.0.112" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.exactprosystems.jf.tool.dictionary.actions.ActionsController">
 	<fx:define>
 		<CssVariables fx:id="verMin" fx:constant="VERTICAL_MIN"/>
@@ -55,32 +56,55 @@
 										<Label/>
 										<Button id="dictionaryBtnStartApplication" fx:id="btnStartApplication" mnemonicParsing="false" onAction="#startApplication" styleClass="$transparentBackground">
 											<tooltip>
-												<Tooltip text="Start the selected application"/>
+												<Tooltip>
+													<text>
+														<R fx:constant="ACTIONS_START_TOOLTIP"/>
+													</text>
+												</Tooltip>
 											</tooltip>
 										</Button>
 										<Label/>
 										<Button id="dictionaryBtnConnectApplication" fx:id="btnConnectApplication" mnemonicParsing="false" onAction="#connectApplication" styleClass="$transparentBackground">
 											<tooltip>
-												<Tooltip text="Connect the selected application"/>
+												<Tooltip>
+													<text>
+														<R fx:constant="ACTIONS_CONNECT_TOOLTIP"/>
+													</text>
+												</Tooltip>
 											</tooltip>
 										</Button>
 										<Label/>
 										<Button id="dictionaryBtnStopApplication" fx:id="btnStop" mnemonicParsing="false" onAction="#stopConnection" styleClass="$transparentBackground">
 											<tooltip>
-												<Tooltip text="Stop the selected application"/>
+												<Tooltip>
+													<text>
+														<R fx:constant="ACTIONS_STOP_TOOLTIP"/>
+													</text>
+												</Tooltip>
 											</tooltip>
 										</Button>
 									</children>
 								</HBox>
-								<Label text="Stored connection:" GridPane.halignment="LEFT" GridPane.rowIndex="1"/>
+								<Label GridPane.halignment="LEFT" GridPane.rowIndex="1">
+									<text>
+										<R fx:constant="ACTIONS_STORED_CONNECTIONS"/>
+									</text>
+								</Label>
 								<ComboBox fx:id="comboBoxAppsStore" maxWidth="1.7976931348623157E308" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.halignment="CENTER" GridPane.rowIndex="1"/>
-								<Label maxWidth="1.7976931348623157E308" text="Application plugin:"/>
+								<Label maxWidth="1.7976931348623157E308">
+									<text>
+										<R fx:constant="ACTIONS_APP_PLUGIN"/>
+									</text>
+								</Label>
 							</children>
 						</GridPane>
 						<Label id="$verMax"/>
 						<TabPane id="actionsTab" prefHeight="200.0" prefWidth="200.0" tabClosingPolicy="UNAVAILABLE" VBox.vgrow="ALWAYS">
 							<tabs>
-								<Tab text="Do">
+								<Tab>
+									<text>
+										<R fx:constant="ACTIONS_DO"/>
+									</text>
 									<content>
 										<VBox>
 											<children>
@@ -104,20 +128,39 @@
 														<CustomFieldWithButton fx:id="tfSendKeys" onAction="#sendKeysAction" GridPane.columnSpan="2"/>
 														<Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#sendKeysAction"  GridPane.columnIndex="2">
 															<text>
-																<R fx:constant="SEND_KEYS"/>
+																<R fx:constant="ACTIONS_SEND_KEYS"/>
 															</text>
 														</Button>
-														<Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#doIt" text="Do it" GridPane.columnIndex="2" GridPane.rowIndex="1"/>
-														<Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#findAction" text="Find" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
-														<Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#clickAction" text="Click" GridPane.rowIndex="2"/>
-														<Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#getValue" text="Get value" GridPane.columnIndex="2" GridPane.rowIndex="2"/>
+														<Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#doIt" GridPane.columnIndex="2" GridPane.rowIndex="1">
+															<text>
+																<R fx:constant="ACTIONS_DO_IT"/>
+															</text>
+														</Button>
+														<Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#findAction" GridPane.columnIndex="1" GridPane.rowIndex="2">
+															<text>
+																<R fx:constant="ACTIONS_FIND"/>
+															</text>
+														</Button>
+														<Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#clickAction" GridPane.rowIndex="2">
+															<text>
+																<R fx:constant="ACTIONS_CLICK"/>
+															</text>
+														</Button>
+														<Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#getValue" GridPane.columnIndex="2" GridPane.rowIndex="2">
+															<text>
+																<R fx:constant="ACTIONS_GET_VALUE"/>
+															</text>
+														</Button>
 													</children>
 												</GridPane>
 											</children>
 										</VBox>
 									</content>
 								</Tab>
-								<Tab text="Switch">
+								<Tab>
+									<text>
+										<R fx:constant="ACTIONS_SWITCH"/>
+									</text>
 									<content>
 										<VBox>
 											<children>
@@ -133,16 +176,27 @@
 												<Label id="$verMid"/>
 												<HBox alignment="CENTER" prefHeight="32.0" prefWidth="370.0">
 													<children>
-														<Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#switchToCurrent" text="Switch to current" HBox.hgrow="ALWAYS"/>
+														<Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#switchToCurrent" HBox.hgrow="ALWAYS">
+															<text>
+																<R fx:constant="ACTIONS_SWITCH_TO_CURRENT"/>
+															</text>
+														</Button>
 														<Label maxWidth="4.0" minWidth="4.0"/>
-														<Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#switchToParent" text="Switch to parent" HBox.hgrow="ALWAYS"/>
+														<Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#switchToParent" HBox.hgrow="ALWAYS">
+															<text>
+																<R fx:constant="ACTIONS_SWITCH_TO_PARENT"/>
+															</text>
+														</Button>
 													</children>
 												</HBox>
 											</children>
 										</VBox>
 									</content>
 								</Tab>
-								<Tab text="Navigate">
+								<Tab>
+									<text>
+										<R fx:constant="ACTIONS_NAVIGATE"/>
+									</text>
 									<content>
 										<VBox>
 											<children>
@@ -162,17 +216,36 @@
 														<RowConstraints minHeight="10.0" prefHeight="32.0" maxHeight="32.0" vgrow="SOMETIMES"/>
 													</rowConstraints>
 													<children>
-														<Button maxWidth="1.7976931348623157E308" onAction="#navigateBack" mnemonicParsing="false" text="Back"/>
-														<Button maxWidth="1.7976931348623157E308" onAction="#navigateForward" mnemonicParsing="false" text="Forward" GridPane.columnIndex="1"/>
-														<Button maxWidth="1.7976931348623157E308" onAction="#refresh" mnemonicParsing="false" text="Refresh" GridPane.columnSpan="2" GridPane.rowIndex="1"/>
-														<Button maxWidth="1.7976931348623157E308" onAction="#closeWindow" mnemonicParsing="false" text="Close window" GridPane.columnSpan="2" GridPane.rowIndex="2"/>
+														<Button maxWidth="1.7976931348623157E308" onAction="#navigateBack" mnemonicParsing="false">
+															<text>
+																<R fx:constant="ACTIONS_BACK"/>
+															</text>
+														</Button>
+														<Button maxWidth="1.7976931348623157E308" onAction="#navigateForward" mnemonicParsing="false" GridPane.columnIndex="1">
+															<text>
+																<R fx:constant="ACTIONS_FORWARD"/>
+															</text>
+														</Button>
+														<Button maxWidth="1.7976931348623157E308" onAction="#refresh" mnemonicParsing="false" GridPane.columnSpan="2" GridPane.rowIndex="1">
+															<text>
+																<R fx:constant="ACTIONS_REFRESH"/>
+															</text>
+														</Button>
+														<Button maxWidth="1.7976931348623157E308" onAction="#closeWindow" mnemonicParsing="false" GridPane.columnSpan="2" GridPane.rowIndex="2">
+															<text>
+																<R fx:constant="ACTIONS_CLOSE_WINDOW"/>
+															</text>
+														</Button>
 													</children>
 												</GridPane>
 											</children>
 										</VBox>
 									</content>
 								</Tab>
-								<Tab text="New">
+								<Tab>
+									<text>
+										<R fx:constant="ACTIONS_NEW"/>
+									</text>
 									<content>
 										<VBox>
 											<Label id="$verMid"/>
@@ -182,11 +255,18 @@
 												</ListView>
 											</ScrollPane>
 											<Label id="$verMid"/>
-											<Button onAction="#newInstance" fx:id="btnNewInstance" maxWidth="1.7976931348623157E308" mnemonicParsing="false" text="New Instance" GridPane.columnSpan="2" GridPane.rowIndex="2"/>
+											<Button onAction="#newInstance" fx:id="btnNewInstance" maxWidth="1.7976931348623157E308" mnemonicParsing="false" GridPane.columnSpan="2" GridPane.rowIndex="2">
+												<text>
+													<R fx:constant="ACTIONS_NEW_INSTANCE"/>
+												</text>
+											</Button>
 										</VBox>
 									</content>
 								</Tab>
-								<Tab text="Pos&amp;Size">
+								<Tab>
+									<text>
+										<R fx:constant="ACTIONS_POS_AND_SIZE"/>
+									</text>
 									<content>
 										<VBox>
 											<children>
@@ -220,7 +300,11 @@
 																<RowConstraints minHeight="10.0" prefHeight="32.0" maxHeight="32.0" vgrow="SOMETIMES"/>
 															</rowConstraints>
 															<children>
-																<Button maxWidth="1.7976931348623157E308" onAction="#moveTo" mnemonicParsing="false" text="Move" GridPane.columnSpan="5" GridPane.rowIndex="1"/>
+																<Button maxWidth="1.7976931348623157E308" onAction="#moveTo" mnemonicParsing="false" GridPane.columnSpan="5" GridPane.rowIndex="1">
+																	<text>
+																		<R fx:constant="ACTIONS_MOVE"/>
+																	</text>
+																</Button>
 																<Label text="Move to "/>
 																<Label text="X:" GridPane.columnIndex="1" GridPane.halignment="RIGHT"/>
 																<Label text="Y:" GridPane.columnIndex="3" GridPane.halignment="RIGHT"/>
@@ -244,14 +328,29 @@
 																<RowConstraints minHeight="10.0" prefHeight="32.0" maxHeight="32.0" vgrow="SOMETIMES"/>
 															</rowConstraints>
 															<children>
-																<Button maxWidth="1.7976931348623157E308" onAction="#resize" mnemonicParsing="false" text="Resize" GridPane.columnSpan="3" GridPane.rowIndex="2"/>
-																<RadioButton fx:id="rbMin" mnemonicParsing="false" text="Min">
+																<Button maxWidth="1.7976931348623157E308" onAction="#resize" mnemonicParsing="false" GridPane.columnSpan="3" GridPane.rowIndex="2">
+																	<text>
+																		<R fx:constant="ACTIONS_RESIZE"/>
+																	</text>
+																</Button>
+																<RadioButton fx:id="rbMin" mnemonicParsing="false">
+																	<text>
+																		<R fx:constant="ACTIONS_MIN"/>
+																	</text>
 																	<toggleGroup>
 																		<ToggleGroup fx:id="groupSection"/>
 																	</toggleGroup>
 																</RadioButton>
-																<RadioButton fx:id="rbMax" mnemonicParsing="false" text="Max" GridPane.columnIndex="1" toggleGroup="$groupSection"/>
-																<RadioButton fx:id="rbNormal" mnemonicParsing="false" text="Normal" GridPane.columnIndex="2" toggleGroup="$groupSection"/>
+																<RadioButton fx:id="rbMax" mnemonicParsing="false" GridPane.columnIndex="1" toggleGroup="$groupSection">
+																	<text>
+																		<R fx:constant="ACTIONS_MAX"/>
+																	</text>
+																</RadioButton>
+																<RadioButton fx:id="rbNormal" mnemonicParsing="false" GridPane.columnIndex="2" toggleGroup="$groupSection">
+																	<text>
+																		<R fx:constant="ACTIONS_NORMAL"/>
+																	</text>
+																</RadioButton>
 																<GridPane GridPane.columnSpan="3" GridPane.rowIndex="1">
 																	<styleClass>
 																		<CssVariables fx:constant="HGAP_MIN"/>
@@ -271,7 +370,11 @@
 																		<Label text="W:" GridPane.columnIndex="3" GridPane.halignment="RIGHT"/>
 																		<NumberTextField fx:id="ntfResizeH" GridPane.columnIndex="2"/>
 																		<NumberTextField fx:id="ntfResizeW" GridPane.columnIndex="4"/>
-																		<RadioButton fx:id="rbSize" mnemonicParsing="false" text="Size" toggleGroup="$groupSection"/>
+																		<RadioButton fx:id="rbSize" mnemonicParsing="false" toggleGroup="$groupSection">
+																			<text>
+																				<R fx:constant="ACTIONS_SIZE"/>
+																			</text>
+																		</RadioButton>
 																	</children>
 																</GridPane>
 															</children>
@@ -282,7 +385,10 @@
 										</VBox>
 									</content>
 								</Tab>
-								<Tab text="Props">
+								<Tab>
+									<text>
+										<R fx:constant="ACTIONS_PROPS"/>
+									</text>
 									<content>
 										<VBox>
 											<children>
@@ -304,8 +410,16 @@
 													<children>
 														<ComboBox fx:id="cbGetProperty" maxWidth="1.7976931348623157E308" prefWidth="150.0"/>
 														<ComboBox fx:id="cbSetProperty" maxWidth="1.7976931348623157E308" prefWidth="150.0" GridPane.rowIndex="1"/>
-														<Button onAction="#getProperty" mnemonicParsing="false" text="Get" GridPane.columnIndex="2"/>
-														<Button onAction="#setProperty" mnemonicParsing="false" text="Set" GridPane.columnIndex="2" GridPane.rowIndex="1"/>
+														<Button onAction="#getProperty" mnemonicParsing="false" GridPane.columnIndex="2">
+															<text>
+																<R fx:constant="ACTIONS_GET"/>
+															</text>
+														</Button>
+														<Button onAction="#setProperty" mnemonicParsing="false" GridPane.columnIndex="2" GridPane.rowIndex="1">
+															<text>
+																<R fx:constant="ACTIONS_SET"/>
+															</text>
+														</Button>
 													</children>
 												</GridPane>
 											</children>
