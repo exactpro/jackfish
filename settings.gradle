@@ -11,6 +11,7 @@ pluginRepositories {
 include	'core',
 		'api',				//api
 							//app plugins
+		'plugins:app:javafx',
 		'plugins:app:web',
 		'plugins:app:swing:netx',
 		'plugins:app:swing',

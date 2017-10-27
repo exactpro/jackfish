@@ -320,4 +320,11 @@
         <appWorkDir>${JF}/apps</appWorkDir>
         <appStartPort>7000</appStartPort>
     </appEntry>
+    <appEntry>
+        <name>JAVAFX</name>
+        <appDicPath>dic/mock_javafx_dic.xml</appDicPath>
+        <appJar>${JF}/apps/javafx.jar</appJar>
+        <appWorkDir>${JF}/apps</appWorkDir>
+        <appStartPort>7000</appStartPort>
+    </appEntry>
 </configuration>
