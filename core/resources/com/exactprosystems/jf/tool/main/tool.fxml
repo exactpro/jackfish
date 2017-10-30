@@ -13,6 +13,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.Group?>
 <?import javafx.scene.layout.*?>
+<?import com.exactprosystems.jf.api.common.i18n.R?>
 <GridPane fx:id="rootGrid" alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="300.0" minWidth="300.0" prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8"
 		  xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.exactprosystems.jf.tool.main.MainController">
 	<fx:define>
@@ -31,93 +32,186 @@
 					<children>
 						<MenuBar minHeight="30.0" prefHeight="29.0" prefWidth="1276.0">
 							<menus>
-								<Menu fx:id="menuFile" mnemonicParsing="false" text="File">
+								<Menu fx:id="menuFile" mnemonicParsing="false">
+									<text><R fx:constant="TOOL_MENU_FILE"/></text>
 									<items>
-										<MenuItem mnemonicParsing="false" onAction="#openProject" text="Open project"/>
-										<MenuItem mnemonicParsing="false" onAction="#createProject" text="Create project"/>
-										<MenuItem mnemonicParsing="false" onAction="#projectFromGit" text="Project from git"/>
-
+										<MenuItem mnemonicParsing="false" onAction="#openProject">
+											<text><R fx:constant="TOOL_OPEN_PROJECT"/></text>
+										</MenuItem>
+										<MenuItem mnemonicParsing="false" onAction="#createProject">
+											<text><R fx:constant="TOOL_CREATE_PROJECT"/></text>
+										</MenuItem>
+										<MenuItem mnemonicParsing="false" onAction="#projectFromGit">
+											<text><R fx:constant="TOOL_PROJECT_FROM_GIT"/></text>
+										</MenuItem>
 										<SeparatorMenuItem mnemonicParsing="false"/>
-										<Menu fx:id="fileLoad" mnemonicParsing="false" text="Load">
+										<Menu fx:id="fileLoad" mnemonicParsing="false">
+											<text><R fx:constant="TOOL_MENU_LOAD"/></text>
 											<items>
-												<MenuItem mnemonicParsing="false" onAction="#loadDictionary" text="Dictionary"/>
-												<MenuItem mnemonicParsing="false" onAction="#loadSystemVars" text="System variables"/>
-												<MenuItem mnemonicParsing="false" onAction="#loadMatrix" text="Matrix"/>
-												<MenuItem mnemonicParsing="false" onAction="#loadPlainText" text="Plain text"/>
-												<MenuItem mnemonicParsing="false" onAction="#loadCsv" text="Csv"/>
+												<MenuItem mnemonicParsing="false" onAction="#loadDictionary">
+													<text><R fx:constant="TOOL_DICTIONARY"/></text>
+												</MenuItem>
+												<MenuItem mnemonicParsing="false" onAction="#loadSystemVars">
+													<text><R fx:constant="TOOL_SYSTEM_VARIABLES"/></text>
+												</MenuItem>
+												<MenuItem mnemonicParsing="false" onAction="#loadMatrix">
+													<text><R fx:constant="TOOL_MATRIX"/></text>
+												</MenuItem>
+												<MenuItem mnemonicParsing="false" onAction="#loadPlainText">
+													<text><R fx:constant="TOOL_PLAIN_TEXT"/></text>
+												</MenuItem>
+												<MenuItem mnemonicParsing="false" onAction="#loadCsv">
+													<text><R fx:constant="TOOL_CSV"/></text>
+												</MenuItem>
 											</items>
 										</Menu>
-										<Menu fx:id="fileNew" mnemonicParsing="false" text="New">
+										<Menu fx:id="fileNew" mnemonicParsing="false">
+											<text><R fx:constant="TOOL_MENU_NEW"/></text>
 											<items>
-												<MenuItem mnemonicParsing="false" onAction="#newDictionary" text="Dictionary"/>
-												<MenuItem mnemonicParsing="false" onAction="#newSystemVars" text="System variables"/>
-												<MenuItem mnemonicParsing="false" onAction="#newMatrix" text="Matrix"/>
-												<MenuItem mnemonicParsing="false" onAction="#newLibrary" text="Library"/>
-												<MenuItem mnemonicParsing="false" onAction="#newPlainText" text="Plain text"/>
-												<MenuItem mnemonicParsing="false" onAction="#newCsv" text="Csv"/>
+												<MenuItem mnemonicParsing="false" onAction="#newSystemVars">
+													<text><R fx:constant="TOOL_NEW_SYSTEM_VARS"/></text>
+												</MenuItem>
+												<MenuItem mnemonicParsing="false" onAction="#newMatrix">
+													<text><R fx:constant="TOOL_NEW_MATRIX"/></text>
+												</MenuItem>
+												<MenuItem mnemonicParsing="false" onAction="#newLibrary">
+													<text><R fx:constant="TOOL_NEW_LIBRARY"/></text>
+												</MenuItem>
+												<MenuItem mnemonicParsing="false" onAction="#newPlainText">
+													<text><R fx:constant="TOOL_NEW_PLAIN_TEXT"/></text>
+												</MenuItem>
+												<MenuItem mnemonicParsing="false" onAction="#newCsv">
+													<text><R fx:constant="TOOL_NEW_CSV"/></text>
+												</MenuItem>
 											</items>
 										</Menu>
-										<MenuItem fx:id="fileSave" mnemonicParsing="false" onAction="#saveDocument" text="Save"/>
-										<MenuItem fx:id="fileSaveAs" mnemonicParsing="false" onAction="#saveAsDocument" text="Save as..."/>
-										<MenuItem fx:id="fileSaveAll" mnemonicParsing="false" onAction="#saveAll" text="Save all"/>
+										<MenuItem fx:id="fileSave" mnemonicParsing="false" onAction="#saveDocument">
+											<text><R fx:constant="TOOL_SAVE"/></text>
+										</MenuItem>
+										<MenuItem fx:id="fileSaveAs" mnemonicParsing="false" onAction="#saveAsDocument">
+											<text><R fx:constant="TOOL_SAVE_AS"/></text>
+										</MenuItem>
+										<MenuItem fx:id="fileSaveAll" mnemonicParsing="false" onAction="#saveAll">
+											<text><R fx:constant="TOOL_SAVE_ALL"/></text>
+										</MenuItem>
 										<SeparatorMenuItem mnemonicParsing="false"/>
-										<Menu fx:id="fileLastOpenMatrix" mnemonicParsing="false" text="Last opened matrix"/>
-										<MenuItem fx:id="fileRunFromFile" mnemonicParsing="false" onAction="#runFromFile" text="Run from file"/>
-										<MenuItem mnemonicParsing="false" onAction="#openReport" text="Open report"/>
-										<SeparatorMenuItem mnemonicParsing="false"/>
-										<MenuItem mnemonicParsing="false" onAction="#closeApplication" text="Exit"/>
-									</items>
-								</Menu>
-								<Menu fx:id="menuEdit" mnemonicParsing="false" text="Edit">
-									<items>
-										<MenuItem id="editUndo" fx:id="editUndo" mnemonicParsing="false" onAction="#undo" text="Undo"/>
-										<MenuItem id="editRedo" fx:id="editRedo" mnemonicParsing="false" onAction="#redo" text="Redo"/>
-										<SeparatorMenuItem/>
-										<MenuItem fx:id="editSettings" id="editSettings" mnemonicParsing="false" onAction="#showSettingsPanel" text="Settings"/>
-									</items>
-								</Menu>
-								<Menu mnemonicParsing="false" text="View">
-									<items>
-										<MenuItem fx:id="viewSearch" mnemonicParsing="false" onAction="#search" text="Search"/>
-										<SeparatorMenuItem/>
-										<MenuItem mnemonicParsing="false" onAction="#openMainLog" text="Logs"/>
-										<MenuItem fx:id="viewStore" mnemonicParsing="false" onAction="#showStore" text="Store"/>
-										<SeparatorMenuItem/>
-										<MenuItem fx:id="viewShowTabs" mnemonicParsing="false" onAction="#showAllTabs" text="Show tabs"/>
-									</items>
-								</Menu>
-								<Menu fx:id="menuMatrix" mnemonicParsing="false" text="Matrix">
-									<items>
-										<MenuItem fx:id="matrixStart" mnemonicParsing="false" onAction="#startMatrix" text="Start"/>
-										<MenuItem fx:id="matrixStop" mnemonicParsing="false" onAction="#stopMatrix" text="Stop"/>
-										<CheckMenuItem fx:id="matrixShowWait" mnemonicParsing="false" text="Show waits" selected="true"/>
-										<SeparatorMenuItem mnemonicParsing="false"/>
-										<MenuItem fx:id="matrixSchedule" id="matrixSchedule" mnemonicParsing="false" onAction="#matrixSchedule" text="Matrix schedule"/>
-									</items>
-								</Menu>
-								<Menu mnemonicParsing="false" text="Git">
-									<items>
-										<MenuItem mnemonicParsing="false" onAction="#gitClone" text="Clone"/>
-										<SeparatorMenuItem/>
-										<Menu text="Publishing">
-											<MenuItem fx:id="gitCommit" mnemonicParsing="false" onAction="#gitCommit" text="Commit"/>
-											<MenuItem fx:id="gitPush" mnemonicParsing="false" onAction="#gitPush" text="Push"/>
+										<Menu fx:id="fileLastOpenMatrix" mnemonicParsing="false">
+											<text><R fx:constant="TOOL_LAST_OPENED_MATRIX"/></text>
 										</Menu>
-										<MenuItem fx:id="gitPull" mnemonicParsing="false" onAction="#gitPull" text="Pull"/>
-										<MenuItem fx:id="gitReset" mnemonicParsing="false" onAction="#gitReset" text="Reset"/>
-										<MenuItem fx:id="gitStatus" mnemonicParsing="false" onAction="#gitStatus" text="Status"/>
-										<MenuItem fx:id="gitMerge" mnemonicParsing="false" onAction="#gitMerge" text="Resolve conflict"/>
-										<MenuItem fx:id="gitBranches" mnemonicParsing="false" onAction="#gitBranches" text="Branches"/>
-										<MenuItem fx:id="gitTags" mnemonicParsing="false" onAction="#gitTags" text="Tags"/>
-										<SeparatorMenuItem/>
-										<MenuItem fx:id="gitChangeCredential" mnemonicParsing="false" onAction="#gitChangeCredential" text="Change credential"/>
+										<MenuItem fx:id="fileRunFromFile" mnemonicParsing="false" onAction="#runFromFile">
+											<text><R fx:constant="TOOL_RUN_FROM_FILE"/></text>
+										</MenuItem>
+										<MenuItem mnemonicParsing="false" onAction="#openReport">
+											<text><R fx:constant="TOOL_OPEN_REPORT"/></text>
+										</MenuItem>
+										<SeparatorMenuItem mnemonicParsing="false"/>
+										<MenuItem mnemonicParsing="false" onAction="#closeApplication">
+											<text><R fx:constant="TOOL_EXIT"/></text>
+										</MenuItem>
 									</items>
 								</Menu>
-								<Menu mnemonicParsing="false" text="Help" fx:id="menuHelp">
+								<Menu fx:id="menuEdit" mnemonicParsing="false">
+									<text><R fx:constant="TOOL_MENU_EDIT"/></text>
 									<items>
-										<MenuItem fx:id="helpActionsHelp" id="helpActionsHelp" mnemonicParsing="false" onAction="#showActionsHelp" text="Actions help"/>
+										<MenuItem id="editUndo" fx:id="editUndo" mnemonicParsing="false" onAction="#undo">
+											<text><R fx:constant="TOOL_UNDO"/></text>
+										</MenuItem>
+										<MenuItem id="editRedo" fx:id="editRedo" mnemonicParsing="false" onAction="#redo">
+											<text><R fx:constant="TOOL_REDO"/></text>
+										</MenuItem>
+										<SeparatorMenuItem/>
+										<MenuItem id="editSettings" fx:id="editSettings" mnemonicParsing="false" onAction="#showSettingsPanel">
+											<text><R fx:constant="TOOL_SETTINGS"/></text>
+										</MenuItem>
+									</items>
+								</Menu>
+								<Menu mnemonicParsing="false">
+									<text><R fx:constant="TOOL_MENU_VIEW"/></text>
+									<items>
+										<MenuItem fx:id="viewSearch" mnemonicParsing="false" onAction="#search">
+											<text><R fx:constant="TOOL_SEARCH"/></text>
+										</MenuItem>
+										<SeparatorMenuItem/>
+										<MenuItem  mnemonicParsing="false" onAction="#openMainLog">
+											<text><R fx:constant="TOOL_LOGS"/></text>
+										</MenuItem>
+										<MenuItem fx:id="viewStore" mnemonicParsing="false" onAction="#showStore">
+											<text><R fx:constant="TOOL_STORE"/></text>
+										</MenuItem>
+										<SeparatorMenuItem/>
+										<MenuItem fx:id="viewShowTabs" mnemonicParsing="false" onAction="#showAllTabs">
+											<text><R fx:constant="TOOL_SHOW_TABS"/></text>
+										</MenuItem>
+									</items>
+								</Menu>
+								<Menu fx:id="menuMatrix" mnemonicParsing="false">
+									<text><R fx:constant="TOOL_MENU_MATRIX"/></text>
+									<items>
+										<MenuItem fx:id="matrixStart" mnemonicParsing="false" onAction="#startMatrix">
+											<text><R fx:constant="TOOL_MATRIX_START"/></text>
+										</MenuItem>
+										<MenuItem fx:id="matrixStop" mnemonicParsing="false" onAction="#stopMatrix">
+											<text><R fx:constant="TOOL_MATRIX_STOP"/></text>
+										</MenuItem>
+										<CheckMenuItem fx:id="matrixShowWait" mnemonicParsing="false" selected="true">
+											<text><R fx:constant="TOOL_SHOW_WAITS"/></text>
+										</CheckMenuItem>
 										<SeparatorMenuItem mnemonicParsing="false"/>
-										<MenuItem fx:id="helpAboutProgram" id="helpAboutProgram" mnemonicParsing="false" onAction="#showAboutProgram" text="About program"/>
+										<MenuItem fx:id="matrixSchedule" id="matrixSchedule" mnemonicParsing="false" onAction="#matrixSchedule">
+											<text><R fx:constant="TOOL_MATRIX_SCHEDULE"/></text>
+										</MenuItem>
+									</items>
+								</Menu>
+								<Menu mnemonicParsing="false">
+									<text><R fx:constant="TOOL_MENU_GIT"/></text>
+									<items>
+										<MenuItem mnemonicParsing="false" onAction="#gitClone">
+											<text><R fx:constant="TOOL_CLONE"/></text>
+										</MenuItem>
+										<SeparatorMenuItem/>
+										<Menu>
+											<text><R fx:constant="TOOL_MENU_PUBLISHING"/></text>
+											<MenuItem fx:id="gitCommit" mnemonicParsing="false" onAction="#gitCommit">
+												<text><R fx:constant="TOOL_COMMIT"/></text>
+											</MenuItem>
+											<MenuItem fx:id="gitPush" mnemonicParsing="false" onAction="#gitPush">
+												<text><R fx:constant="TOOL_PUSH"/></text>
+											</MenuItem>
+										</Menu>
+										<MenuItem fx:id="gitPull" mnemonicParsing="false" onAction="#gitPull">
+											<text><R fx:constant="TOOL_PULL"/></text>
+										</MenuItem>
+										<MenuItem fx:id="gitReset" mnemonicParsing="false" onAction="#gitReset">
+											<text><R fx:constant="TOOL_RESET"/></text>
+										</MenuItem>
+										<MenuItem fx:id="gitStatus" mnemonicParsing="false" onAction="#gitStatus">
+											<text><R fx:constant="TOOL_STATUS"/></text>
+										</MenuItem>
+										<MenuItem fx:id="gitMerge" mnemonicParsing="false" onAction="#gitMerge">
+											<text><R fx:constant="TOOL_RESOLVE_CONFLICT"/></text>
+										</MenuItem>
+										<MenuItem fx:id="gitBranches" mnemonicParsing="false" onAction="#gitBranches">
+											<text><R fx:constant="TOOL_BRANCHES"/></text>
+										</MenuItem>
+										<MenuItem fx:id="gitTags" mnemonicParsing="false" onAction="#gitTags">
+											<text><R fx:constant="TOOL_TAGS"/></text>
+										</MenuItem>
+										<SeparatorMenuItem/>
+										<MenuItem fx:id="gitChangeCredential" mnemonicParsing="false" onAction="#gitChangeCredential">
+											<text><R fx:constant="TOOL_CHANGE_CREDENTIAL"/></text>
+										</MenuItem>
+									</items>
+								</Menu>
+								<Menu mnemonicParsing="false" fx:id="menuHelp">
+									<text><R fx:constant="TOOL_MENU_HELP"/></text>
+									<items>
+										<MenuItem fx:id="helpActionsHelp" id="helpActionsHelp" mnemonicParsing="false" onAction="#showActionsHelp">
+											<text><R fx:constant="TOOL_ACTIONS_HELP"/></text>
+										</MenuItem>
+										<SeparatorMenuItem mnemonicParsing="false"/>
+										<MenuItem fx:id="helpAboutProgram" id="helpAboutProgram" mnemonicParsing="false" onAction="#showAboutProgram">
+											<text><R fx:constant="TOOL_ABOUT_PROGRAM"/></text>
+										</MenuItem>
 									</items>
 								</Menu>
 							</menus>
