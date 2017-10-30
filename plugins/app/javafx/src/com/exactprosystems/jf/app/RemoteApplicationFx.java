@@ -1,7 +1,7 @@
 package com.exactprosystems.jf.app;
 
 import com.exactprosystems.jf.api.app.*;
-import org.apache.log4j.Logger;
+import org.apache.log4j.*;
 import org.w3c.dom.Document;
 
 import java.awt.*;
@@ -21,7 +21,27 @@ public class RemoteApplicationFx extends RemoteApplication
     @Override
     protected void createLoggerDerived(String logName, String serverLogLevel, String serverLogPattern) throws Exception
     {
+        try
+        {
+            this.logger = Logger.getLogger(RemoteApplicationFx.class);
 
+            Layout layout = new PatternLayout(serverLogPattern);
+            Appender appender = new FileAppender(layout, logName);
+            this.logger.addAppender(appender);
+            this.logger.setLevel(Level.toLevel(serverLogLevel, Level.ALL));
+
+            MatcherFx.setLogger(this.logger);
+        }
+        catch (RemoteException e)
+        {
+            throw e;
+        }
+        catch (Exception e)
+        {
+            logger.error(String.format("createLoggerDerived(%s, %s,%s)", logName, serverLogLevel, serverLogPattern));
+            logger.error(e.getMessage(), e);
+            throw e;
+        }
     }
 
     @Override

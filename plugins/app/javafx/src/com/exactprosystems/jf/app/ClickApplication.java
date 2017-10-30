@@ -1,6 +1,7 @@
 package com.exactprosystems.jf.app;
 
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -26,6 +27,24 @@ public class ClickApplication extends Application {
             Button button = new Button("click me!");
             button.setOnAction(actionEvent -> button.setText("clicked!"));
             getChildren().add(button);
+        }
+    }
+
+    public static void main(String[] args)
+    {
+        if (Platform.isFxApplicationThread()) {
+            Stage someStage = new Stage();
+            ClickApplication app = new ClickApplication();
+            try
+            {
+                app.start(someStage);
+            }
+            catch (Exception e)
+            {
+                e.printStackTrace();
+            }
+        } else {
+            launch(args);
         }
     }
 }
