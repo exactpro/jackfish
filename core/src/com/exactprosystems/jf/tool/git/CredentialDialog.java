@@ -7,6 +7,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 package com.exactprosystems.jf.tool.git;
 
+import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.tool.Common;
 import javafx.geometry.Insets;
 import javafx.scene.control.*;
@@ -46,17 +47,17 @@ public class CredentialDialog
 		PasswordField pfPassword = new PasswordField();
 		pfPassword.setText(password != null ? password : "");
 
-		Label labelUserName = new Label("Username");
+		Label labelUserName = new Label(R.CREDENTIAL_DIALOG_USERNAME.get());
 		gridPane.add(labelUserName, 0, 0);
 		gridPane.add(tfUsername, 1, 0);
-		Label labelPassword = new Label("Password");
+		Label labelPassword = new Label(R.CREDENTIAL_DIALOG_PASSWORD.get());
 		gridPane.add(labelPassword, 0, 1);
 		gridPane.add(pfPassword, 1, 1);
 
 		Arrays.asList(tfUsername, pfPassword, labelPassword, labelUserName).stream().forEach(n -> GridPane.setMargin(n, new Insets(2, 0, 2, 0)));
 
-		dialog.setTitle("Credential");
-		dialog.setHeaderText("Store credential");
+		dialog.setTitle(R.CREDENTIAL_DIALOG_CREDENTIAL.get());
+		dialog.setHeaderText(R.CREDENTIAL_DIALOG_STORE_CREDENTIAL.get());
 
 		dialog.setResultConverter(param -> {
 			this.consumer.accept(tfUsername.getText().isEmpty() ? null : tfUsername.getText(), pfPassword.getText());

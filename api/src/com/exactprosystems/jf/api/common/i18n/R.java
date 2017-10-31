@@ -829,6 +829,13 @@ public enum R
     SCHEDULE_REPORT,
     //endregion
 
+	//region tool.git
+	CREDENTIAL_DIALOG_USERNAME,
+	CREDENTIAL_DIALOG_PASSWORD,
+	CREDENTIAL_DIALOG_CREDENTIAL,
+	CREDENTIAL_DIALOG_STORE_CREDENTIAL,
+	//endregion
+
 	//endregion
 
 	//region plugins
