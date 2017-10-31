@@ -5,9 +5,9 @@ import com.exactprosystems.jf.api.common.ParametersKind;
 import com.exactprosystems.jf.api.common.PluginDescription;
 import com.exactprosystems.jf.api.common.PluginFieldDescription;
 import com.exactprosystems.jf.api.common.i18n.R;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.Pane;
-import javafx.stage.Stage;
 import org.w3c.dom.Node;
 
 import java.io.InputStream;
@@ -67,7 +67,7 @@ public class AppFactoryFx extends AbstractApplicationFactory
         info.addTypes(ControlKind.CheckBox, CheckBox.class.getSimpleName());
         info.addTypes(ControlKind.ComboBox, ComboBox.class.getSimpleName());
         info.addTypes(ControlKind.Dialog, Dialog.class.getSimpleName());
-        info.addTypes(ControlKind.Frame, Stage.class.getSimpleName());
+        info.addTypes(ControlKind.Frame, Scene.class.getSimpleName());
         info.addTypes(ControlKind.Label, Label.class.getSimpleName());
         info.addTypes(ControlKind.ListView, ListView.class.getSimpleName());
         info.addTypes(ControlKind.Menu, Menu.class.getSimpleName());

@@ -18,14 +18,21 @@ import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import org.apache.log4j.Logger;
 import org.w3c.dom.DOMException;
+import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.*;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
 import javax.xml.xpath.*;
 import java.awt.*;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.rmi.RemoteException;
 
 public class MatcherFx<T extends Node>
@@ -39,12 +46,16 @@ public class MatcherFx<T extends Node>
         this.locator = locator;
         this.info = info;
 
-        String xpath = this.locator.getXpath();
-        if (!Str.IsNullOrEmpty(xpath) && owner != null)
+        String locatorXpath = this.locator.getXpath();
+        if (!Str.IsNullOrEmpty(locatorXpath) && owner != null)
         {
             try
             {
                 org.w3c.dom.Document document = createDocument(this.info, owner, true, false);
+
+                // TODO Only for debugging in the beginning. Remove in the future.
+                printDocument(document, System.out);
+
                 XPathFactory factory = XPathFactory.newInstance();
                 XPath xPath = factory.newXPath();
                 org.w3c.dom.Node root = document;
@@ -57,18 +68,31 @@ public class MatcherFx<T extends Node>
                 {
                 }
 
-                this.nodelist = (NodeList) xPath.compile(xpath).evaluate(root, XPathConstants.NODESET);
+                this.nodelist = (NodeList) xPath.compile(locatorXpath).evaluate(root, XPathConstants.NODESET);
                 logger.debug("Found by xpath : " + nodelist.getLength());
             }
             catch (Exception pe)
             {
                 logger.error(pe.getMessage(), pe);
-                throw new ElementNotFoundException("Wrong xpath: " + xpath, locator);
+                throw new ElementNotFoundException("Wrong xpath: " + locatorXpath, locator);
             }
         }
 
         logger.debug("=========================================");
         logger.debug("Matcher locator = " + locator);
+    }
+
+    public static void printDocument(Document doc, OutputStream out) throws IOException, TransformerException
+    {
+        TransformerFactory tf = TransformerFactory.newInstance();
+        Transformer transformer = tf.newTransformer();
+        transformer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "no");
+        transformer.setOutputProperty(OutputKeys.METHOD, "xml");
+        transformer.setOutputProperty(OutputKeys.INDENT, "yes");
+        transformer.setOutputProperty(OutputKeys.ENCODING, "UTF-8");
+        transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "4");
+
+        transformer.transform(new DOMSource(doc), new StreamResult(new OutputStreamWriter(out, "UTF-8")));
     }
 
     private static org.w3c.dom.Document createDocument(PluginInfo info, Node owner, boolean addItems, boolean addRectangles) throws ParserConfigurationException
@@ -234,7 +258,11 @@ public class MatcherFx<T extends Node>
 
         if (obj instanceof Control)
         {
-            objText = ((Control) obj).getTooltip().getText();
+            Tooltip tooltip = ((Control) obj).getTooltip();
+            if(tooltip != null)
+            {
+                objText = tooltip.getText();
+            }
         }
 
         return objText;

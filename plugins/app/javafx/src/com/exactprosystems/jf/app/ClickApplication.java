@@ -24,7 +24,9 @@ public class ClickApplication extends Application {
     public static class ClickPane extends StackPane {
         public ClickPane() {
             super();
+            this.setId("clickPaneId");
             Button button = new Button("click me!");
+            button.setId("clickButtonId");
             button.setOnAction(actionEvent -> button.setText("clicked!"));
             getChildren().add(button);
         }
