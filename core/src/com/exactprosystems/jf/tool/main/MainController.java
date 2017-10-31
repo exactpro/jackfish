@@ -59,6 +59,7 @@ import java.awt.Point;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.net.URL;
+import java.text.MessageFormat;
 import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -187,14 +188,14 @@ public class MainController implements Initializable, ContainingParent
 	{
 		Common.runLater(() -> Common.tryCatch(() ->
 		{
-			this.btnSaveAsDocument.setTooltip(new Tooltip(R.TOOL_BUTTON_SAVE_AS_DOCUMENT.get() + " " + shortcutsName(Settings.SAVE_DOCUMENT_AS)));
-			this.btnSaveDocument.setTooltip(new Tooltip(R.TOOL_BUTTON_SAVE_DOCUMENT.get() + " " +shortcutsName(Settings.SAVE_DOCUMENT)));
+			this.btnSaveAsDocument.setTooltip(new Tooltip(MessageFormat.format(R.TOOL_BUTTON_SAVE_AS_DOCUMENT.get(), shortcutsName(Settings.SAVE_DOCUMENT_AS))));
+			this.btnSaveDocument.setTooltip(new Tooltip(MessageFormat.format(R.TOOL_BUTTON_SAVE_DOCUMENT.get(), shortcutsName(Settings.SAVE_DOCUMENT))));
 			this.btnOpenMatrix.setTooltip(new Tooltip(R.TOOL_BUTTON_OPEN_MATRIX.get()));
 			this.btnNewMatrix.setTooltip(new Tooltip(R.TOOL_BUTTON_NEW_MATRIX.get()));
 			this.btnOpenMainLog.setTooltip(new Tooltip(R.TOOL_BUTTON_OPEN_MAIN_LOG.get()));
 			this.btnShowCalculator.setTooltip(new Tooltip(R.TOOL_BUTTON_SHOW_CALCULATOR.get()));
-			this.btnUndo.setTooltip(new Tooltip(R.TOOL_BUTTON_UNDO + shortcutsName(Settings.UNDO)));
-			this.btnRedo.setTooltip(new Tooltip(R.TOOL_BUTTON_REDO + shortcutsName(Settings.REDO)));
+			this.btnUndo.setTooltip(new Tooltip(MessageFormat.format(R.TOOL_BUTTON_UNDO.get(), shortcutsName(Settings.UNDO))));
+			this.btnRedo.setTooltip(new Tooltip(MessageFormat.format(R.TOOL_BUTTON_REDO.get(), shortcutsName(Settings.REDO))));
 
 			this.editUndo.setGraphic(new ImageView(new Image(CssVariables.Icons.UNDO_ICON_SMALL)));
 			this.editUndo.setAccelerator(Common.getShortcut(settings, Settings.UNDO));
