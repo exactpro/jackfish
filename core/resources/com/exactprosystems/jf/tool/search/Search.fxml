@@ -3,6 +3,7 @@
 <?import com.exactprosystems.jf.tool.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
+<?import com.exactprosystems.jf.api.common.i18n.R?>
 <VBox alignment="CENTER_RIGHT" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="624.0" prefWidth="989.0" xmlns="http://javafx.com/javafx/8"
 	  xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.exactprosystems.jf.tool.search.SearchController">
 	<fx:define>
@@ -49,13 +50,41 @@
 										<RowConstraints maxHeight="36.0" minHeight="36.0" prefHeight="36.0" vgrow="SOMETIMES"/>
 									</rowConstraints>
 									<children>
-										<CheckBox fx:id="cbMatrix" mnemonicParsing="false" text="Matrices"/>
-										<CheckBox fx:id="cbLibs" mnemonicParsing="false" text="Libraries" GridPane.rowIndex="1"/>
-										<CheckBox fx:id="cbGuiDic" mnemonicParsing="false" text="Gui dictionaries" GridPane.columnIndex="1"/>
-										<CheckBox fx:id="cbClientDic" mnemonicParsing="false" text="Client dictionaries" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
-										<CheckBox fx:id="cbVariables" mnemonicParsing="false" text="System variables" GridPane.columnIndex="2"/>
-										<CheckBox fx:id="cbOtherFiles" mnemonicParsing="false" text="Other files" GridPane.columnIndex="3"/>
-										<CheckBox fx:id="cbReports" mnemonicParsing="false" text="Reports" GridPane.columnIndex="2" GridPane.rowIndex="1"/>
+										<CheckBox fx:id="cbMatrix" mnemonicParsing="false">
+											<text>
+												<R fx:constant="SEARCH_MATRICES"/>
+											</text>
+										</CheckBox>
+										<CheckBox fx:id="cbLibs" mnemonicParsing="false" GridPane.rowIndex="1">
+											<text>
+												<R fx:constant="SEARCH_LIBRARIES"/>
+											</text>
+										</CheckBox>
+										<CheckBox fx:id="cbGuiDic" mnemonicParsing="false" GridPane.columnIndex="1">
+											<text>
+												<R fx:constant="SEARCH_GUI_DICTIONARIES"/>
+											</text>
+										</CheckBox>
+										<CheckBox fx:id="cbClientDic" mnemonicParsing="false" GridPane.columnIndex="1" GridPane.rowIndex="1">
+											<text>
+												<R fx:constant="SEARCH_CLIENT_DICTIONARIES"/>
+											</text>
+										</CheckBox>
+										<CheckBox fx:id="cbVariables" mnemonicParsing="false" GridPane.columnIndex="2">
+											<text>
+												<R fx:constant="SEARCH_VARIABLES"/>
+											</text>
+										</CheckBox>
+										<CheckBox fx:id="cbOtherFiles" mnemonicParsing="false" GridPane.columnIndex="3">
+											<text>
+												<R fx:constant="SEARCH_OTHER_FILES"/>
+											</text>
+										</CheckBox>
+										<CheckBox fx:id="cbReports" mnemonicParsing="false" GridPane.columnIndex="2" GridPane.rowIndex="1">
+											<text>
+												<R fx:constant="SEARCH_REPORTS"/>
+											</text>
+										</CheckBox>
 									</children>
 								</GridPane>
 							</children>
@@ -69,13 +98,29 @@
 								</HBox>
 								<HBox alignment="CENTER_LEFT" maxHeight="36.0" minHeight="36.0" prefHeight="36.0">
 									<children>
-										<CheckBox fx:id="cbCaseSensitive" text="Case sensitive"/>
+										<CheckBox fx:id="cbCaseSensitive">
+											<text>
+												<R fx:constant="SEARCH_CASE_SENSITIVE"/>
+											</text>
+										</CheckBox>
 										<Label id="$horMax"/>
-										<CheckBox fx:id="cbWholeWord" mnemonicParsing="false" text="Whole word"/>
+										<CheckBox fx:id="cbWholeWord" mnemonicParsing="false">
+											<text>
+												<R fx:constant="SEARCH_WHOLE_WORD"/>
+											</text>
+										</CheckBox>
 										<Label id="$horMax"/>
-										<CheckBox fx:id="cbRegexp" text="Re_gexp"/>
+										<CheckBox fx:id="cbRegexp">
+											<text>
+												<R fx:constant="SEARCH_REGEXP"/>
+											</text>
+										</CheckBox>
 										<Label id="$horMax"/>
-										<CheckBox fx:id="cbMultiLine" text="Multi line"/>
+										<CheckBox fx:id="cbMultiLine">
+											<text>
+												<R fx:constant="SEARCH_MULTI_LINE"/>
+											</text>
+										</CheckBox>
 									</children>
 								</HBox>
 							</children>
@@ -106,7 +151,11 @@
 														<ProgressIndicator maxHeight="36.0" maxWidth="36.0" minHeight="36.0" minWidth="36.0" prefHeight="36.0" prefWidth="36.0"
 																		   BorderPane.alignment="CENTER"/>
 														<Label id="$horMid"/>
-														<Label text="Searching..."/>
+														<Label>
+															<text>
+																<R fx:constant="SEARCH_SEARCHING"/>
+															</text>
+														</Label>
 													</children>
 												</HBox>
 											</left>

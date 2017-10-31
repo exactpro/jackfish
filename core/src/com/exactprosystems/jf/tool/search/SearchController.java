@@ -1,5 +1,6 @@
 package com.exactprosystems.jf.tool.search;
 
+import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.documents.DocumentKind;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.ContainingParent;
@@ -22,6 +23,7 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import java.net.URL;
+import java.text.MessageFormat;
 import java.util.*;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
@@ -66,13 +68,13 @@ public class SearchController implements Initializable, ContainingParent
 	@Override
 	public void initialize(URL location, ResourceBundle resources)
 	{
-		Node fileMask = BorderWrapper.wrap(this.maskPane).title("File mask and scope").color(Theme.currentTheme().getReverseColor()).outerPadding(8).innerPadding(8).build();
+		Node fileMask = BorderWrapper.wrap(this.maskPane).title(R.SEARCH_FILE_MASK_AND_SCOPE.get()).color(Theme.currentTheme().getReverseColor()).outerPadding(8).innerPadding(8).build();
 		this.mainGridPane.add(fileMask, 0, 0);
 
-		Node textPane = BorderWrapper.wrap(this.textPane).title("Containing text").color(Theme.currentTheme().getReverseColor()).outerPadding(8).innerPadding(8).build();
+		Node textPane = BorderWrapper.wrap(this.textPane).title(R.SEARCH_CONTAINING_TEXT.get()).color(Theme.currentTheme().getReverseColor()).outerPadding(8).innerPadding(8).build();
 		this.mainGridPane.add(textPane, 0, 1);
 
-		Node results = BorderWrapper.wrap(this.resultsPane).title("Results").color(Theme.currentTheme().getReverseColor()).outerPadding(8).innerPadding(8).build();
+		Node results = BorderWrapper.wrap(this.resultsPane).title(R.SEARCH_RESULTS.get()).color(Theme.currentTheme().getReverseColor()).outerPadding(8).innerPadding(8).build();
 		this.mainGridPane.add(results, 0, 2);
 
 		this.cbFileMask.getItems().add(Search.ALL_FILES);
@@ -140,7 +142,7 @@ public class SearchController implements Initializable, ContainingParent
 		DialogPane dp = this.alert.getDialogPane();
 		dp.setContent(this.parent);
 		this.alert.setOnHiding(event -> this.model.alertClose());
-		this.alert.setTitle("Search");
+		this.alert.setTitle(R.SEARCH_SEARCH.get());
 		this.alert.show();
 		Node node = this.alert.getDialogPane().lookupButton(ButtonType.OK);
 		if (node != null)
@@ -184,7 +186,7 @@ public class SearchController implements Initializable, ContainingParent
 	void startFind()
 	{
 		this.btnFind.setDisable(true);
-		this.lblMatches.setText("Searching...");
+		this.lblMatches.setText(R.SEARCH_SEARCHING.get());
 		this.hBoxSearching.setVisible(true);
 		this.tvResults.getRoot().getChildren().clear();
 	}
@@ -203,7 +205,7 @@ public class SearchController implements Initializable, ContainingParent
 				.mapToLong(child -> child.getChildren().size())
 				.sum();
 
-		this.lblMatches.setText(matches + " matches in " + files + " files");
+		this.lblMatches.setText(MessageFormat.format(R.SEARCH_MATCHES_2.get(), matches, files));
 	}
 
 	//region private methods

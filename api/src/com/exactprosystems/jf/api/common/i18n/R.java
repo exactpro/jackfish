@@ -10,7 +10,8 @@ import java.util.PropertyResourceBundle;
 import java.util.ResourceBundle;
 
 //this class contains i18n constants
-public enum R {
+public enum R
+{
 	//region general
 	DEFAULT,
 	DRAG_N_DROP_LIST_TOOLTIP,
@@ -798,6 +799,27 @@ public enum R {
 	ACTIONS_POS_AND_SIZE,
 	ACTIONS_PROPS,
 	//endregion
+
+	//region tool.search
+	SEARCH_MATRICES,
+	SEARCH_LIBRARIES,
+	SEARCH_GUI_DICTIONARIES,
+	SEARCH_CLIENT_DICTIONARIES,
+	SEARCH_VARIABLES,
+	SEARCH_OTHER_FILES,
+	SEARCH_REPORTS,
+	SEARCH_CASE_SENSITIVE,
+	SEARCH_WHOLE_WORD,
+	SEARCH_REGEXP,
+	SEARCH_MULTI_LINE,
+	SEARCH_SEARCHING,
+	SEARCH_FILE_MASK_AND_SCOPE,
+	SEARCH_CONTAINING_TEXT,
+	SEARCH_RESULTS,
+	SEARCH_SEARCH,
+	SEARCH_MATCHES_2,
+	//endregion
+
 	//endregion
 
 	//region plugins
@@ -964,45 +986,59 @@ public enum R {
 	 *
 	 * @return string by default locales
 	 */
-	public static String get(R r) {
+	public static String get(R r)
+	{
 		return bundle.getString(r.name());
 	}
 
-	public String get() {
+	public String get()
+	{
 		return this.toString();
 	}
 
 	@Override
-	public String toString() {
+	public String toString()
+	{
 		return bundle.getString(this.name());
 	}
 
 
-	private static class UTF8Control extends ResourceBundle.Control {
+	private static class UTF8Control extends ResourceBundle.Control
+	{
 		@Override
-		public ResourceBundle newBundle(String baseName, Locale locale, String format, ClassLoader loader, boolean reload) throws IllegalAccessException, InstantiationException, IOException {
+		public ResourceBundle newBundle(String baseName, Locale locale, String format, ClassLoader loader, boolean reload) throws IllegalAccessException, InstantiationException, IOException
+		{
 			// The below is a copy of the default implementation.
 			String bundleName = toBundleName(baseName, locale);
 			String resourceName = toResourceName(bundleName, "properties");
 			ResourceBundle bundle = null;
 			InputStream stream = null;
-			if (reload) {
+			if (reload)
+			{
 				URL url = loader.getResource(resourceName);
-				if (url != null) {
+				if (url != null)
+				{
 					URLConnection connection = url.openConnection();
-					if (connection != null) {
+					if (connection != null)
+					{
 						connection.setUseCaches(false);
 						stream = connection.getInputStream();
 					}
 				}
-			} else {
+			}
+			else
+			{
 				stream = loader.getResourceAsStream(resourceName);
 			}
-			if (stream != null) {
-				try {
+			if (stream != null)
+			{
+				try
+				{
 					// Only this line is changed to make it to read properties files as UTF-8.
 					bundle = new PropertyResourceBundle(new InputStreamReader(stream, "UTF-8"));
-				} finally {
+				}
+				finally
+				{
 					stream.close();
 				}
 			}
