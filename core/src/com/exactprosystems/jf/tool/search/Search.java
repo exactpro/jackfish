@@ -377,9 +377,13 @@ public class Search
 		{
 			int res = (int) strings
 					.stream()
-					.limit(lineNumber)
+					.limit(lineNumber-1)
 					.filter(s -> s.matches("^\\s*" + Parser.systemPrefix + ".*") && !s.matches("^\\s*" + Parser.systemPrefix + "End.*\n?"))
 					.count();
+			if (strings.get(lineNumber-1).matches("^\\s*" + Parser.commentPrefix + ".*"))
+			{
+				res++;
+			}
 			return res == 0 ? 1 : res;
 		}
 
