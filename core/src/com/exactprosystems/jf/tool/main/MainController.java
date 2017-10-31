@@ -9,6 +9,7 @@
 package com.exactprosystems.jf.tool.main;
 
 import com.exactprosystems.jf.api.common.Str;
+import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.api.wizard.WizardAttribute;
 import com.exactprosystems.jf.api.wizard.WizardCategory;
 import com.exactprosystems.jf.api.wizard.WizardManager;
@@ -186,14 +187,14 @@ public class MainController implements Initializable, ContainingParent
 	{
 		Common.runLater(() -> Common.tryCatch(() ->
 		{
-			this.btnSaveAsDocument.setTooltip(new Tooltip("Save as\n"+shortcutsName(Settings.SAVE_DOCUMENT_AS)));
-			this.btnSaveDocument.setTooltip(new Tooltip("Save\n"+shortcutsName(Settings.SAVE_DOCUMENT)));
-			this.btnOpenMatrix.setTooltip(new Tooltip("Open matrix"));
-			this.btnNewMatrix.setTooltip(new Tooltip("New matrix"));
-			this.btnOpenMainLog.setTooltip(new Tooltip("Show log"));
-			this.btnShowCalculator.setTooltip(new Tooltip("Show calculator\n"));
-			this.btnUndo.setTooltip(new Tooltip("Undo\n" + shortcutsName(Settings.UNDO)));
-			this.btnRedo.setTooltip(new Tooltip("Redo\n" + shortcutsName(Settings.REDO)));
+			this.btnSaveAsDocument.setTooltip(new Tooltip(R.TOOL_BUTTON_SAVE_AS_DOCUMENT.get() + " " + shortcutsName(Settings.SAVE_DOCUMENT_AS)));
+			this.btnSaveDocument.setTooltip(new Tooltip(R.TOOL_BUTTON_SAVE_DOCUMENT.get() + " " +shortcutsName(Settings.SAVE_DOCUMENT)));
+			this.btnOpenMatrix.setTooltip(new Tooltip(R.TOOL_BUTTON_OPEN_MATRIX.get()));
+			this.btnNewMatrix.setTooltip(new Tooltip(R.TOOL_BUTTON_NEW_MATRIX.get()));
+			this.btnOpenMainLog.setTooltip(new Tooltip(R.TOOL_BUTTON_OPEN_MAIN_LOG.get()));
+			this.btnShowCalculator.setTooltip(new Tooltip(R.TOOL_BUTTON_SHOW_CALCULATOR.get()));
+			this.btnUndo.setTooltip(new Tooltip(R.TOOL_BUTTON_UNDO + shortcutsName(Settings.UNDO)));
+			this.btnRedo.setTooltip(new Tooltip(R.TOOL_BUTTON_REDO + shortcutsName(Settings.REDO)));
 
 			this.editUndo.setGraphic(new ImageView(new Image(CssVariables.Icons.UNDO_ICON_SMALL)));
 			this.editUndo.setAccelerator(Common.getShortcut(settings, Settings.UNDO));

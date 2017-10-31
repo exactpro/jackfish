@@ -14,6 +14,7 @@
 <?import javafx.scene.Group?>
 <?import javafx.scene.layout.*?>
 <?import com.exactprosystems.jf.api.common.i18n.R?>
+<?import com.sun.javafx.scene.control.skin.ToolBarSkin.ToolBarOverflowMenu?>
 <GridPane fx:id="rootGrid" alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="300.0" minWidth="300.0" prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8"
 		  xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.exactprosystems.jf.tool.main.MainController">
 	<fx:define>
@@ -249,7 +250,8 @@
 									<children>
 										<Group>
 											<children>
-												<Label fx:id="projectLabel" rotate="-90.0" text="Project">
+												<Label fx:id="projectLabel" rotate="-90.0">
+													<text><R fx:constant="TOOL_PROJECT"/></text>
 													<VBox.margin>
 														<Insets left="-10.0"/>
 													</VBox.margin>
@@ -260,12 +262,12 @@
 											<children>
 												<Button id="reloadConfiguration" styleClass="$transparentBackground" onAction="#reloadConfiguration">
 													<tooltip>
-														<Tooltip text="Reload configuration"/>
+														<Tooltip><text><R fx:constant="TOOL_RELOAD_CONFIGURATION"/></text></Tooltip>
 													</tooltip>
 												</Button>
 												<Button id="saveConfiguration" styleClass="$transparentBackground" onAction="#saveConfiguration">
 													<tooltip>
-														<Tooltip text="Save configuration"/>
+														<Tooltip><text><R fx:constant="TOOL_SAVE_CONFIGURATION"/></text></Tooltip>
 													</tooltip>
 												</Button>
 											</children>
