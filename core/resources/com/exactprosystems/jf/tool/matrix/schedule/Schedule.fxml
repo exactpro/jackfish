@@ -12,6 +12,7 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.BorderPane?>
+<?import com.exactprosystems.jf.api.common.i18n.R?>
 <BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="700.0" xmlns="http://javafx.com/javafx/8.0.112" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.exactprosystems.jf.tool.matrix.schedule.ScheduleController">
 	<fx:define>
 		<CssVariables fx:id="transparentBackground" fx:constant="TRANSPARENT_BACKGROUND"/>
@@ -19,12 +20,32 @@
 	<center>
 		<TableView fx:id="tableView" editable="true" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
 			<columns>
-				<TableColumn fx:id="columnCheckBox" prefWidth="75.0" text="#" />
-				<TableColumn fx:id="columnMatrixName" prefWidth="75.0" text="Matrix name" />
-				<TableColumn fx:id="columnStartDate" prefWidth="75.0" text="Start date" />
-				<TableColumn fx:id="columnState" prefWidth="75.0" text="State" />
-				<TableColumn fx:id="columnDone" prefWidth="75.0" text="Done" />
-				<TableColumn fx:id="columnReport" prefWidth="75.0" text="Report" />
+				<TableColumn fx:id="columnCheckBox" prefWidth="75.0" />
+				<TableColumn fx:id="columnMatrixName" prefWidth="75.0" >
+					<text>
+						<R fx:constant="SCHEDULE_MATRIX_NAME"/>
+					</text>
+				</TableColumn>
+				<TableColumn fx:id="columnStartDate" prefWidth="75.0" >
+					<text>
+						<R fx:constant="SCHEDULE_START_DATE"/>
+					</text>
+				</TableColumn>
+				<TableColumn fx:id="columnState" prefWidth="75.0" >
+					<text>
+						<R fx:constant="SCHEDULE_STATE"/>
+					</text>
+				</TableColumn>
+				<TableColumn fx:id="columnDone" prefWidth="75.0" >
+					<text>
+						<R fx:constant="SCHEDULE_DONE"/>
+					</text>
+				</TableColumn>
+				<TableColumn fx:id="columnReport" prefWidth="75.0" >
+					<text>
+						<R fx:constant="SCHEDULE_REPORT"/>
+					</text>
+				</TableColumn>
 			</columns>
          <BorderPane.margin>
             <Insets bottom="-10.0" />

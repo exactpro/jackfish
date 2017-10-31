@@ -9,6 +9,7 @@
 package com.exactprosystems.jf.tool.matrix.schedule;
 
 import com.exactprosystems.jf.api.common.MatrixState;
+import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.documents.matrix.Matrix;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.ContainingParent;
@@ -168,7 +169,7 @@ public class ScheduleController implements Initializable, ContainingParent
 		this.dialog.initOwner(window);
 		this.dialog.setHeaderText("");
 		this.dialog.getDialogPane().setHeader(new Label());
-		this.dialog.setTitle("Monitoring matrices");
+		this.dialog.setTitle(R.SCHEDULE_TITLE.get());
 		this.dialog.getDialogPane().setContent(this.parent);
 		this.dialog.getDialogPane().setPrefWidth(600);
 		this.dialog.getDialogPane().setPrefHeight(600);

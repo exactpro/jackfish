@@ -820,6 +820,15 @@ public enum R
 	SEARCH_MATCHES_2,
 	//endregion
 
+    //region tool.matrix.schedule
+    SCHEDULE_TITLE,
+    SCHEDULE_MATRIX_NAME,
+    SCHEDULE_START_DATE,
+    SCHEDULE_STATE,
+    SCHEDULE_DONE,
+    SCHEDULE_REPORT,
+    //endregion
+
 	//endregion
 
 	//region plugins
