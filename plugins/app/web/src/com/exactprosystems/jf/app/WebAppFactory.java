@@ -15,7 +15,6 @@ import com.exactprosystems.jf.api.common.PluginFieldDescription;
 import com.exactprosystems.jf.api.common.i18n.R;
 import org.w3c.dom.Node;
 
-import java.io.InputStream;
 import java.util.*;
 
 @PluginDescription(
@@ -180,13 +179,6 @@ public class WebAppFactory extends AbstractApplicationFactory
 	//endregion
 
 	//region IApplicationFactory
-
-	@Deprecated
-    @Override
-    public InputStream getHelp()
-    {
-        return WebAppFactory.class.getResourceAsStream(helpFileName);
-    }
 
 	@Override
 	public IApplication createApplication()

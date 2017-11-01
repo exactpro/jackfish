@@ -10,17 +10,12 @@ package com.exactprosystems.jf.api.app;
 
 import com.exactprosystems.jf.api.common.IFactory;
 
-import java.io.InputStream;
 import java.util.Set;
 
 public interface IApplicationFactory  extends IFactory
 {
     void                init(IGuiDictionary dictionary);
 
-    String 				createHelp();
-
-    @Deprecated
-	InputStream		    getHelp();
 	Set<ControlKind> 	supportedControlKinds();
 
 	IApplication 		createApplication() throws Exception;

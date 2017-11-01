@@ -10,12 +10,12 @@ import java.rmi.RemoteException;
 import java.util.Collection;
 import java.util.Map;
 
-public class RemoteApplicationFx extends RemoteApplication
+public class FxRemoteApplication extends RemoteApplication
 {
     private Logger logger = null;
     private Robot  currentRobot;
 
-    private OperationExecutorFx operationExecutor;
+    private FxOperationExecutor operationExecutor;
     private PluginInfo          info;
 
     @Override
@@ -23,7 +23,7 @@ public class RemoteApplicationFx extends RemoteApplication
     {
         try
         {
-            this.logger = Logger.getLogger(RemoteApplicationFx.class);
+            this.logger = Logger.getLogger(FxRemoteApplication.class);
 
             Layout layout = new PatternLayout(serverLogPattern);
             Appender appender = new FileAppender(layout, logName);

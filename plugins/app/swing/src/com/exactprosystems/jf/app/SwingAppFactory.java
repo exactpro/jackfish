@@ -16,7 +16,6 @@ import com.exactprosystems.jf.api.common.i18n.R;
 import org.w3c.dom.Node;
 
 import javax.swing.*;
-import java.io.InputStream;
 import java.util.*;
 
 @PluginDescription(
@@ -123,13 +122,6 @@ public class SwingAppFactory extends AbstractApplicationFactory
 	}
 
 	//endregion
-
-	//region IApplicationFactory
-    @Override
-    public InputStream getHelp()
-    {
-        return SwingAppFactory.class.getResourceAsStream(helpFileName);
-    }
 
 	@Override
 	public IApplication createApplication()

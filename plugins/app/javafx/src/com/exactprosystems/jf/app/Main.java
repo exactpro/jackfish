@@ -27,12 +27,12 @@ public class Main extends Application
 			String remoteLogLevel 		= "ALL";
 			String remoteLogPattern		= "%-5p %d{yyyy-MM-dd HH:mm:ss.SSS} %c{1}:%-3L-%m%n";
 
-			new RemoteApplicationFx().createLogger(remoteLog, remoteLogLevel, remoteLogPattern);
+			new FxRemoteApplication().createLogger(remoteLog, remoteLogLevel, remoteLogPattern);
 
 			Window window = windowIterator.next();
 
 			new MatcherFx <>(
-					new AppFactoryFx().getInfo(),
+					new FxAppFactory().getInfo(),
 					new Locator().xpath("//Button[@name=\"clickButtonId\"]"),
 					window.getScene().getRoot());
 		}
