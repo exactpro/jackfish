@@ -25,9 +25,7 @@ import java.util.*;
 )
 public class SwingAppFactory extends AbstractApplicationFactory
 {
-    public static final String helpFileName     = "help.txt";
-
-    @PluginFieldDescription(parameter = "LogLevel", description = R.SWING_PLUGIN_LOG_LEVEL, example = "ALL")
+	@PluginFieldDescription(parameter = "LogLevel", description = R.SWING_PLUGIN_LOG_LEVEL, example = "ALL")
     public static final String logLevel         = "LogLevel";
 	@PluginFieldDescription(parameter = "jreExec", description = R.SWING_PLUGIN_JRE_EXEC, example = "C:\\Program Files\\Java\\jdk1.8.0_XX\\bin\\java")
 	public static final String jreExecName 		= "jreExec";

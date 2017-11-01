@@ -31,7 +31,7 @@ public class Main extends Application
 
 			Window window = windowIterator.next();
 
-			new MatcherFx <>(
+			new MatcherFx(
 					new FxAppFactory().getInfo(),
 					new Locator().xpath("//Button[@name=\"clickButtonId\"]"),
 					window.getScene().getRoot());

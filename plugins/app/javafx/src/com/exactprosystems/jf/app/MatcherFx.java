@@ -35,7 +35,7 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.rmi.RemoteException;
 
-public class MatcherFx<T extends Node>
+public class MatcherFx
 {
     public MatcherFx(PluginInfo info, Locator locator, Node owner) throws RemoteException
     {
