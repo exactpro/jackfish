@@ -13,6 +13,7 @@
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
+<?import com.exactprosystems.jf.api.common.i18n.R?>
 <BorderPane fx:id="borderPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8"
 			xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.exactprosystems.jf.tool.custom.logs.LogsFxController">
 	<fx:define>
@@ -24,13 +25,21 @@
 	<top>
 		<VBox fx:id="topVBox" alignment="CENTER_LEFT">
 			<HBox alignment="CENTER_LEFT">
-				<Label text="Select log file : "/>
+				<Label>
+					<text>
+						<R fx:constant="LOGS_SELECT_FILE"/>
+					</text>
+				</Label>
 				<Label id="$horMid"/>
 				<ComboBox fx:id="cbFiles" HBox.hgrow="ALWAYS" maxWidth="Infinity"/>
 				<Label id="$horMid"/>
 				<Button fx:id="btnRefresh" id="reloadConfiguration" mnemonicParsing="false" onAction="#refresh" styleClass="$transparentBackground">
 					<tooltip>
-						<Tooltip text="Refresh"/>
+						<Tooltip>
+							<text>
+								<R fx:constant="LOGS_REFRESH"/>
+							</text>
+						</Tooltip>
 					</tooltip>
 				</Button>
 			</HBox>

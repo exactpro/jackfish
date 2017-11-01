@@ -8,6 +8,7 @@
 
 package com.exactprosystems.jf.tool.custom.logs;
 
+import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.ContainingParent;
 import com.exactprosystems.jf.tool.CssVariables;
@@ -71,7 +72,7 @@ public class LogsFxController implements Initializable, ContainingParent
 		this.dialog.setResizable(true);
 		this.dialog.getDialogPane().setPrefWidth(600);
 		this.dialog.getDialogPane().setPrefHeight(600);
-		this.dialog.setTitle("Logs");
+		this.dialog.setTitle(R.LOGS_LOGS.get());
 		this.dialog.getDialogPane().setHeader(new Label());
 		this.dialog.getDialogPane().setContent(parent);
 		this.dialog.getDialogPane().getStylesheets().addAll(Theme.currentThemesPaths());
