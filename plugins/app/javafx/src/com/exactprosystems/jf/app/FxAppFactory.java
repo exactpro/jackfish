@@ -28,16 +28,17 @@ public class FxAppFactory extends AbstractApplicationFactory
 	public static final String jreExecName   = "jreExec";
 	@PluginFieldDescription(parameter = "jreArgs", description = R.JAVAFX_PLUGIN_JRE_ARGS, example = "-Xms128m -Xmx1G")
 	public static final String jreArgsName   = "jreArgs";
+
 	@PluginFieldDescription(parameter = "MainClass", description = R.JAVAFX_PLUGIN_MAIN_CLASS, example = "com.example.MainClass")
 	public static final String mainClassName = "MainClass";
 	@PluginFieldDescription(parameter = "Jar", description = R.JAVAFX_PLUGIN_JAR, example = "'C:/example.jar'")
 	public static final String jarName       = "Jar";
 	@PluginFieldDescription(parameter = "Args", description = R.JAVAFX_PLUGIN_ARGS, example = "'Arg1'")
 	public static final String argsName      = "Args";
-
+/*
 	@PluginFieldDescription(parameter = "URL", description = R.JAVAFX_PLUGIN_URL, example = "'http://site.com/start.jnlp'")
 	public static final String urlName = "URL";
-
+*/
 	@PluginFieldDescription(parameter = "Title", description = R.JAVAFX_PLUGIN_TITLE, example = "'Title'")
 	public static final String propertyTitle = "Title";
 
@@ -88,7 +89,7 @@ public class FxAppFactory extends AbstractApplicationFactory
 	@Override
 	public IApplication createApplication() throws Exception
 	{
-		return null;
+		return new ProxyFxApp();
 	}
 
 	@Override
@@ -106,7 +107,13 @@ public class FxAppFactory extends AbstractApplicationFactory
 	@Override
 	public String[] wellKnownParameters(ParametersKind kind)
 	{
-		return new String[0];
+		switch (kind)
+		{
+			case LOAD: return new String[]{jreExecName, jreArgsName, logLevel, trimTextName};
+			case START: return new String[] {jarName, argsName, mainClassName};
+			case GET_PROPERTY: return new String[] {propertyTitle};
+			default: return empty;
+		}
 	}
 
 	@Override
