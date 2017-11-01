@@ -856,6 +856,17 @@ public enum R
 	FIND_PANEL_MATCH_CASE_FIND_NEXT,
 	//endregion
 
+	//region tool.custom.store
+	STORE_CONTROLLER_STORE,
+	STORE_CONTROLLER_EDIT_STORE_VARIABLE,
+	STORE_VARIABLE_NAME,
+	STORE_VARIABLE_TYPE,
+	STORE_VARIABLE_VALUE,
+	STORE_VARIABLE_DEL,
+	//endregion
+
+	//endregion
+
 	//endregion
 
 	//region plugins
@@ -921,7 +932,7 @@ public enum R
 	SWING_PLUGIN_TITLE,
 	//endregion
 
-	//region plugins.app.swing
+	//region plugins.app.javafx
 	JAVAFX_PLUGIN_DESCRIPTION,
 	JAVAFX_PLUGIN_DIFFERENCE,
 	JAVAFX_PLUGIN_LOG_LEVEL,
@@ -1019,7 +1030,8 @@ public enum R
 	TOOL_BUTTON_REDO,
 	TOOL_PROJECT,
 	TOOL_SAVE_CONFIGURATION,
-	TOOL_RELOAD_CONFIGURATION,;
+	TOOL_RELOAD_CONFIGURATION
+	;
 	//endregion
 
 

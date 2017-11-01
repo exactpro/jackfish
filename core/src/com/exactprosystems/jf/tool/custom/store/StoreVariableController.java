@@ -7,6 +7,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 package com.exactprosystems.jf.tool.custom.store;
 
+import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.ContainingParent;
 import com.exactprosystems.jf.tool.CssVariables;
@@ -118,8 +119,8 @@ public class StoreVariableController implements Initializable, ContainingParent
 		Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
 		Common.addIcons(((Stage) alert.getDialogPane().getScene().getWindow()));
 		alert.setResizable(true);
-		alert.setTitle("Store");
-		alert.setHeaderText("Edit store variable");
+		alert.setTitle(R.STORE_CONTROLLER_STORE.get());
+		alert.setHeaderText(R.STORE_CONTROLLER_EDIT_STORE_VARIABLE.get());
 		alert.getDialogPane().getStylesheets().addAll(Theme.currentThemesPaths());
 		alert.getDialogPane().setContent(this.parent);
 		Optional<ButtonType> buttonType = alert.showAndWait();
