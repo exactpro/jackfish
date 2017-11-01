@@ -8,6 +8,7 @@
 
 package com.exactprosystems.jf.tool.custom.find;
 
+import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.CssVariables;
 import com.exactprosystems.jf.tool.custom.controls.field.CustomFieldWithButton;
@@ -21,6 +22,7 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -45,9 +47,9 @@ public class FindPanel<T> extends BorderPane
 		this.cfFind = new CustomFieldWithButton();
 		this.btnPrevious = new Button();
 		this.btnNext = new Button();
-		this.checkBoxMatchCase = new CheckBox("Match case");
-		this.checkBoxWords = new CheckBox("Whole word");
-		this.lblFind = new Label("Found 0");
+		this.checkBoxMatchCase = new CheckBox(R.FIND_PANEL_MATCH_CASE.get());
+		this.checkBoxWords = new CheckBox(R.FIND_PANEL_MATCH_CASE_WHOLE_WORD.get());
+		this.lblFind = new Label(R.FIND_PANEL_MATCH_CASE_FOUND_ZERO.get());
 		this.lblFind.setPrefWidth(100);
 		this.lblFind.setMaxWidth(100);
 		this.lblFind.setMinWidth(100);
@@ -79,7 +81,7 @@ public class FindPanel<T> extends BorderPane
 		BorderPane.setAlignment(cfFind, Pos.CENTER);
 		this.setCenter(cfFind);
 
-		Label find = new Label("Find");
+		Label find = new Label(R.FIND_PANEL_MATCH_CASE_FIND.get());
 		BorderPane.setMargin(find, new Insets(0, 10, 0, 0));
 		BorderPane.setAlignment(find, Pos.CENTER);
 		this.setLeft(find);
@@ -97,8 +99,8 @@ public class FindPanel<T> extends BorderPane
 	{
 		Common.runLater(() ->
 		{
-			btnPrevious.setTooltip(new Tooltip("Previous"));
-			btnNext.setTooltip(new Tooltip("Next"));
+			btnPrevious.setTooltip(new Tooltip(R.FIND_PANEL_MATCH_CASE_FIND_PREVIOUS.get()));
+			btnNext.setTooltip(new Tooltip(R.FIND_PANEL_MATCH_CASE_FIND_NEXT.get()));
 			Common.customizeLabeled(btnNext, CssVariables.TRANSPARENT_BACKGROUND, CssVariables.Icons.FIND_NEXT);
 			Common.customizeLabeled(btnPrevious, CssVariables.TRANSPARENT_BACKGROUND, CssVariables.Icons.FIND_PREVIOUS);
 		});
@@ -111,7 +113,7 @@ public class FindPanel<T> extends BorderPane
 			else
 			{
 				this.results.clear();
-				this.lblFind.setText("Found 0");
+				this.lblFind.setText(R.FIND_PANEL_MATCH_CASE_FOUND_ZERO.get());
 			}
 		}));
 
@@ -144,7 +146,7 @@ public class FindPanel<T> extends BorderPane
 					this.currentElement = this.results.size() - 1;
 				}
 				this.iFind.find(this.results.get(this.currentElement));
-				this.lblFind.setText(this.currentElement + 1 + " of " + this.results.size());
+				this.lblFind.setText(MessageFormat.format(R.FIND_PANEL_MATCH_CASE_FIND_FOUND_2.get(), this.currentElement + 1, this.results.size()));
 			}
 		});
 
@@ -158,7 +160,7 @@ public class FindPanel<T> extends BorderPane
 					this.currentElement = 0;
 				}
 				this.iFind.find(this.results.get(this.currentElement));
-				this.lblFind.setText(this.currentElement + 1 + " of " + this.results.size());
+				this.lblFind.setText(MessageFormat.format(R.FIND_PANEL_MATCH_CASE_FIND_FOUND_2.get(), this.currentElement + 1, this.results.size()));
 			}
 		});
 
@@ -171,7 +173,7 @@ public class FindPanel<T> extends BorderPane
 		this.currentElement = -1;
 		if (this.results.isEmpty())
 		{
-			this.lblFind.setText("Found 0");
+			this.lblFind.setText(R.FIND_PANEL_MATCH_CASE_FOUND_ZERO.get());
 			if (!lblFind.getStyleClass().contains(CssVariables.INCORRECT_FIELD))
 			{
 				this.lblFind.getStyleClass().add(CssVariables.INCORRECT_FIELD);
@@ -180,7 +182,7 @@ public class FindPanel<T> extends BorderPane
 		}
 		else
 		{
-			this.lblFind.setText("Found " + this.results.size());
+			this.lblFind.setText(MessageFormat.format(R.FIND_PANEL_MATCH_CASE_FIND_FOUND_1.get(), this.results.size()));
 			if (!this.lblFind.getStyleClass().contains(CssVariables.CORRECT_FIELD))
 			{
 				this.lblFind.getStyleClass().add(CssVariables.CORRECT_FIELD);
