@@ -15,9 +15,10 @@ public class FxOperationExecutor extends AbstractOperationExecutor<Node>
 {
     private Logger logger;
 
-    public FxOperationExecutor(boolean useTrimText)
+    public FxOperationExecutor(boolean useTrimText, Logger logger)
     {
         super(useTrimText);
+        this.logger = logger;
     }
 
     @Override
@@ -83,7 +84,17 @@ public class FxOperationExecutor extends AbstractOperationExecutor<Node>
     @Override
     public Rectangle getRectangle(Node component) throws Exception
     {
-        return null;
+        //todo check
+        try
+        {
+            return MatcherFx.getRect(component);
+        }
+        catch (Throwable e)
+        {
+            logger.error(String.format("getRectangle(%s)", component));
+            logger.error(e.getMessage(), e);
+            throw e;
+        }
     }
 
     @Override
@@ -125,13 +136,13 @@ public class FxOperationExecutor extends AbstractOperationExecutor<Node>
     @Override
     public boolean elementIsEnabled(Node component) throws Exception
     {
-        return false;
+        return !component.isDisabled();
     }
 
     @Override
     public boolean elementIsVisible(Node component) throws Exception
     {
-        return false;
+        return component.isVisible();
     }
 
     @Override
