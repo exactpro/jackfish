@@ -1,249 +1,52 @@
 #Id;#TestCase;#Kind;#Depends;#For
-INIT;Setup;;;
-    #Id;#Global;#Action;$Decoraded
-    RESTBL1;1;ResultTable;true
-
-
-// 
-#Id;#TestCase;#Kind;#Depends;#For
-Test;MatrixItems;;;
-    #Call;testName
-    runMatrix;'MatrixItems'
-
-
-// 
-#Id;#TestCase;#Kind;#Depends;#For
-Test;EventHandlers;;;
-    #Call;testName
-    runMatrix;'EventHandlers'
-
-
-#Id;#TestCase;#Kind;#Depends;#For
-Test;Basic;;;
-    #Call;testName
-    runMatrix;'Basic'
-
-
-#Id;#TestCase;#Kind;#Depends;#For
-Test;GUI;;;
-    #Call;testName
-    runMatrix;'GUI'
-
-
-#Id;#TestCase;#Kind;#Depends;#For
-Test;System;;;
-    #Call;testName
-    runMatrix;'System'
-
-
-#Id;#TestCase;#Kind;#Depends;#For
-Test;Report;;;
-    #Call;testName
-    runMatrix;'Report'
-
-
-#Id;#TestCase;#Kind;#Depends;#For
-Test;App;;;
-    #Call;testName
-    runMatrix;'App'
-
-
-#Id;#TestCase;#Kind;#Depends;#For
-Test;Messages;;;
-    #Call;testName
-    runMatrix;'Messages'
-
-
-#Id;#TestCase;#Kind;#Depends;#For
-Test;Clients;;;
-    #Call;testName
-    runMatrix;'Clients'
-
-
-#Id;#TestCase;#Kind;#Depends;#For
-Test;Services;;;
-    #Call;testName
-    runMatrix;'Services'
-
-
-#Id;#TestCase;#Kind;#Depends;#For
-Test;Tables;;;
-    #Call;testName
-    runMatrix;'Tables'
-
-
-#Id;#TestCase;#Kind;#Depends;#For
-Test;Text;;;
-    #Call;testName
-    runMatrix;'Text'
-
-
-#Id;#TestCase;#Kind;#Depends;#For
-Test;XML;;;
-    #Call;testName
-    runMatrix;'XML'
-
-
-#Id;#TestCase;#Kind;#Depends;#For
-Test;SQL;;;
-    #Call;testName
-    runMatrix;'SQL'
-
-
-#Id;#TestCase;#Kind;#Depends;#For
-Test;Matrix;;;
-    #Call;testName
-    runMatrix;'Matrix'
-
-
-#Id;#TestCase;#Kind;#Depends;#For
-Test;Controls;;;
-    #Call;testName;param
-    runControls;'Controls';'InternetExplorer'
-
-    #Call;testName;param
-    runControls;'Controls';'Chrome'
-
-    #Call;testName;param
-    runControls;'Controls';'Swing'
-
-    #Call;testName;param
-    runControls;'Controls';'Win'
-
-
-#Id;#TestCase;#Kind;#Depends;#For
-Test;Keys;;;
-    #Call;testName
-    runMatrix;'KeysChrome'
-
-    #Call;testName
-    runMatrix;'KeysInternetExplorer'
-
-    #Off;#Call;testName
-    1;runMatrix;'KeysFirefox'
-
-    #Call;testName
-    runMatrix;'KeysSwing'
-
-    #Call;testName
-    runMatrix;'KeysWin'
-
-
-#Id;#TestCase;#Kind;#Depends;#For
-Test;Matchers;;;
-    #Call;testName
-    runMatrix;'Matchers'
-
-
-#Id;#TestCase;#Kind;#Depends;#For
-Test;Check plugin independs matrix;;;
-    #Call;testName
-    runMatrix;'PluginIndepends'
-
-
-#Id;#TestCase;#Kind;#Depends;#For
-Test;Check web plugin;;;
-    #Call;testName
-    runMatrix;'WebPlugin'
-
-
-#Id;#TestCase;#Kind;#Depends;#For
-Test;Check swing plugin;;;
-    #Call;testName
-    runMatrix;'SwingPlugin'
-
-
-#Id;#TestCase;#Kind;#Depends;#For
-Test;Check win plugin;;;
-    #Call;testName
-    runMatrix;'WinPlugin'
-
-
-#Id;#TestCase;#Kind;#Depends;#For
-Test;Test RF.jf;;;
-    #Call;testName
-    runMatrix;'TestRF'
-
-
-#Id;#TestCase;#Kind;#Depends;#For
-Test;Zip;;;
-    #Call;testName
-    runMatrix;'Zip'
-
-
-#Id;#TestCase;#Kind;#Depends;#For
-Test;checlLayout;;;
-    #Call;testName
-    runMatrix;'CheckLayout'
-
-
-// 
-#Id;#TestCase;#Kind;#Depends;#For
-REPORT;Cleanup;;;
-    // RM38487 (impossible to use Result as a field) solved for this case
-    #Id;#Action;$Table;Result
-    TBLSLCT1;TableSelect;RESTBL1.Out;new RegexpCondition('Result', '^.*Failed.*$')
-
-    #If
-    TBLSLCT1.Out.size() != 0
-        #Action;$Table;$Title;$BeforeTestCase
-        TableReport;TBLSLCT1.Out;'Failed rows';'INIT'
-
-    #EndIf
-
-    #Action;$Table;$Title;$BeforeTestCase
-    TableReport;RESTBL1.Out;'All tests';'INIT'
-
-    #Assert;#Message
-    TBLSLCT1.Out.size() == 0;'There are fails in the tests'
-
-    #Id;#SubCase;testName
-    runMatrix;Running test;'EventHandlers'
-        #Id;#Action;$Matrix
-        MXRN1;MatrixRun;matrixTestsPath + testName +  '.jf'
-
-        #Id;#Action;$Matrix
-        MXWT1;MatrixWait;MXRN1.Out
-
-        #Id;#Action;$Decoraded;$Matrix
-        RESTBL2;ResultTable;true;MXRN1.Out
-
-        #Id;#Let
-        removedColumns;[]
-
-        #For;#From;#To;#Step
-        i;0;RESTBL2.Out.getHeaderSize() - 1;1
-            #If
-            !RESTBL1.Out.columnIsPresent(RESTBL2.Out.getHeader(i))
-                #Let
-                removedColumns.add(RESTBL2.Out.getHeader(i))
-
-            #EndIf
-
-        #EndFor
-
-        #Action;$Table;$Columns
-        TableRemoveColumns;RESTBL2.Out;removedColumns.toArray()
-
-        #Action;$UnitedTable;$MainTable
-        TableUnion;RESTBL2.Out;RESTBL1.Out
-
-    #EndSubCase
-
-    #Id;#SubCase;testName;param
-    runControls;Running test;'Controls';'Web'
-        #Id;#Action;$Matrix;$Parameter
-        MXRN1;MatrixRun;matrixTestsPath + testName +  '.jf';param
-
-        #Id;#Action;$Matrix
-        MXWT1;MatrixWait;MXRN1.Out
-
-        #Id;#Action;$Decoraded;$Matrix
-        RESTBL2;ResultTable;true;MXRN1.Out
-
-        #Action;$UnitedTable;$MainTable
-        TableUnion;RESTBL2.Out;RESTBL1.Out
-
-    #EndSubCase
+INIT;;;;
+    #Id;#RawTable
+    table;Table
+    @;Off;Scenario;Name;TestSet;Start;Finish;Performer;Priority;Multi
+    0;;matrices/tests/MatrixItems;;q;;;;1;
+    1;;matrices/tests/EventHandlers;;q;;;;0;
+    2;;matrices/tests/Basic;;q;;;;1;
+    3;;matrices/tests/GUI;;q;;;;0;
+    4;;matrices/tests/System;;q;;;;0;
+    5;;matrices/tests/Report;;q;;;;0;
+    6;;matrices/tests/App;;q;;;;0;
+    7;;matrices/tests/Messages;;q;;;;0;
+    8;;matrices/tests/Clients;;q;;;;0;
+    9;;matrices/tests/Services;;q;;;;0;
+    10;;matrices/tests/Tables;;q;;;;0;
+    11;;matrices/tests/Text;;q;;;;0;
+    12;;matrices/tests/XML;;q;;;;0;
+    13;;matrices/tests/SQL;;q;;;;0;
+    14;;matrices/tests/Matrix;;q;;;;0;
+    15;;matrices/tests/ControlsRF;;q;;;;0;
+    16;;matrices/tests/KeysChrome;;q;;;;0;
+    17;;matrices/tests/KeysInternetExplorer;;q;;;;0;
+    18;;matrices/tests/KeysFirefox;;q;;;;0;
+    19;;matrices/tests/KeysSwing;;q;;;;0;
+    20;;matrices/tests/KeysWin;;q;;;;0;
+    21;;matrices/tests/Matchers;;q;;;;0;
+    22;;matrices/tests/PluginIndepends;;q;;;;0;
+    23;;matrices/tests/WebPlugin;;q;;;;0;
+    24;;matrices/tests/SwingPlugin;;q;;;;0;
+    25;;matrices/tests/WinPlugin;;q;;;;0;
+    26;;matrices/tests/TestRF;;q;;;;0;
+    27;;matrices/tests/Zip;;q;;;;0;
+    28;;matrices/tests/CheckLayout;;q;;;;0;
+    #EndRawTable
+
+    #Id;#Action;$DefaultValue;$HelpKind;$Title
+    name;Input;'Test';HelpKind.String;'Tests RF'
+
+    #Id;#Global;#Let
+    date;1;DateTime.current().shiftTime(0, 0, 1)
+
+    #Call;table;name
+    RF.RunAll;table;name.Out
+
+
+#TestCase;#Kind;#Depends;#For
+;;;
+    #Call;date
+    RF.repSummary;date
 
 

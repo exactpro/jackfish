@@ -1,0 +1,28 @@
+#Id;#TestCase;#Kind;#Depends;#For
+Test;Controls;;;
+    #Call;testName;param
+    runControls;'Controls';'InternetExplorer'
+
+    #Call;testName;param
+    runControls;'Controls';'Chrome'
+
+    #Call;testName;param
+    runControls;'Controls';'Swing'
+
+    #Call;testName;param
+    runControls;'Controls';'Win'
+
+
+#Id;#TestCase;#Kind;#Depends;#For
+Subs;;;;
+    #Id;#SubCase;testName;param
+    runControls;Running test;'Controls';'Swing'
+        #Id;#Action;$Matrix;$Parameter
+        MXRN1;MatrixRun;matrixTestsPath + testName +  '.jf';param
+
+        #Id;#Action;$Matrix
+        MXWT1;MatrixWait;MXRN1.Out
+
+    #EndSubCase
+
+
