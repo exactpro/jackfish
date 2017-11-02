@@ -363,6 +363,7 @@ public class Search
 		}
 		if (tab != null)
 		{
+			tab.getTabPane().getSelectionModel().select(tab);
 			AbstractDocumentController<? extends Document> controller = tab.getController();
 			if (controller instanceof MatrixFxController)
 			{
