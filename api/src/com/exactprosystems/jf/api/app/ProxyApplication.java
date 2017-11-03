@@ -106,6 +106,9 @@ public abstract class ProxyApplication implements IApplication
 				}
 			}
 		}
+
+		this.addToClassPath(classPath, parameters);
+
 		add(commandLine, "-cp");
 		add(commandLine, classPath.toString());
 		add(commandLine, RemoteApplication.class.getName());
@@ -272,7 +275,11 @@ public abstract class ProxyApplication implements IApplication
 		return this.factory;
 	}
 
-	
+	protected void addToClassPath(StringBuilder sb, Map<String, String> parameters)
+	{
+
+	}
+
 	private static void add(List<String> list, String str)
 	{
 		if (str != null)

@@ -26,6 +26,21 @@ public class ProxyFxApp extends ProxyApplication
 		super.stop(needKill);
 	}
 
+	@Override
+	protected void addToClassPath(StringBuilder sb, Map<String, String> parameters)
+	{
+		String jarName = parameters.get(FxAppFactory.jarName);
+		if (!Str.IsNullOrEmpty(jarName))
+		{
+			String separator = System.getProperty("path.separator");
+			if (!sb.toString().endsWith(separator))
+			{
+				sb.append(separator);
+			}
+			sb.append(jarName);
+		}
+	}
+
 	private void tune(Map<String, String> driverParameters, Map<String, String> parameters)
 	{
 		String jreExec = driverParameters.get(FxAppFactory.jreExecName);

@@ -139,8 +139,8 @@ public class Main extends Application
 		catch (Exception e)
 		{
 			logger.error(e.getMessage(), e);
-			DialogsHelper.showError("Settings are invalid. Using empty settings.");
-			this.settings = new Settings();
+			DialogsHelper.showError("Settings are invalid. Using default settings.");
+			this.settings = Settings.defaultSettings();
 		}
 
 		Locales.setDefault(this.settings.getValue(Settings.GLOBAL_NS, Settings.SETTINGS, Settings.LANGUAGE).getValue());
