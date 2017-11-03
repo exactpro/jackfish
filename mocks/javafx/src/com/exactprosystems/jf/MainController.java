@@ -13,6 +13,7 @@ import java.util.ResourceBundle;
 
 public class MainController implements Initializable
 {
+    @FXML private TreeView treeView;
     @FXML private CheckBox checkBox;
     @FXML private RadioButton green;
     @FXML private RadioButton yellow;
@@ -43,8 +44,8 @@ public class MainController implements Initializable
         mainModel = new MainModel();
         panel.getStyleClass().add("pane");
         comboBox.getItems().addAll(mainModel.getData());
-        table.getColumns().addAll(mainModel.getHeaders());
-        table.setItems(mainModel.getTableData());
+        table.getColumns().addAll(mainModel.getTable().getHeaders());
+        table.setItems(mainModel.getTable().getTableData());
     }
 
     public void clickHandler(MouseEvent mouseEvent)

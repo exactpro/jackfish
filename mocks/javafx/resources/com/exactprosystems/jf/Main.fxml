@@ -22,6 +22,7 @@
     <ScrollBar      fx:id="scrollBar"       GridPane.rowIndex="6" GridPane.columnIndex="3" onMouseClicked="#clickHandler"/>
     <ComboBox       fx:id="comboBox"        GridPane.rowIndex="8" GridPane.columnIndex="3" onMouseClicked="#clickHandler"/>
     <CheckBox       fx:id="checkBox"        GridPane.rowIndex="4" GridPane.columnIndex="4" onMouseClicked="#clickHandler" text="CheckBox"/>
+    <TreeView       fx:id="treeView"        GridPane.rowIndex="0" GridPane.columnIndex="2" onMouseClicked="#clickHandler" GridPane.rowSpan="3"/>
 
     <fx:define>
         <ToggleGroup fx:id="radioGroup"/>
@@ -42,7 +43,7 @@
 
     <Spinner        fx:id="spinner"         GridPane.rowIndex="7" GridPane.columnIndex="3" onMouseClicked="#clickHandler">
         <valueFactory>
-            <SpinnerValueFactory.IntegerSpinnerValueFactory min="0" max="10"/>
+            <SpinnerValueFactory.IntegerSpinnerValueFactory min="0" max="100"/>
         </valueFactory>
     </Spinner>
 
