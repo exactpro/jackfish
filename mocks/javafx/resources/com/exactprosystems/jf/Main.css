@@ -1,0 +1,45 @@
+.root {
+    small-height : 25;
+    large-width  : 250;
+}
+
+#centralLabel {
+    -fx-pref-width  : 225;
+    -fx-pref-height : small-height;
+}
+
+#scrollBar {
+    -fx-pref-width  : 100;
+    -fx-pref-height : small-height;
+}
+
+.button,
+.toggle-button,
+.text-field,
+.pane,
+.progress-bar,
+.spinner,
+.combo-box,
+.radio-button,
+.check-box {
+    -fx-pref-width  : 100;
+    -fx-pref-height : small-height;
+}
+
+.table-view {
+    -fx-pref-width  : large-width;
+    -fx-pref-height : 75;
+}
+
+.tab-pane {
+    -fx-pref-width  : large-width;
+    -fx-pref-height : 50;
+}
+
+.image-view {
+    -fx-image: url(../../../../../../core/resources/com/exactprosystems/jf/tool/css/general/icons/ide.png);
+}
+
+.pane {
+    -fx-background-color: #8fbc8f;
+}
