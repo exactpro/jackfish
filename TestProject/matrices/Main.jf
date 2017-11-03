@@ -29,9 +29,8 @@ INIT;;;;
     23;;matrices/tests/WebPlugin;;q;;;;1;
     24;;matrices/tests/SwingPlugin;;q;;;;1;
     25;;matrices/tests/WinPlugin;;q;;;;1;
-    26;;matrices/tests/TestRF;;q;;;;1;
-    27;;matrices/tests/Zip;;q;;;;1;
-    28;;matrices/tests/CheckLayout;;q;;;;1;
+    26;;matrices/tests/Zip;;q;;;;1;
+    27;;matrices/tests/CheckLayout;;q;;;;1;
     #EndRawTable
 
     #Id;#Action;$DefaultValue;$HelpKind;$Title
