@@ -19,6 +19,7 @@ include	'core',
 							//app mocks
 		'mocks:swing',
 		'mocks:win',
+		'mocks:javafx',
 							//UIAdapter
 		'csharp:UIAdapter',
 							//clients
