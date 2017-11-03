@@ -1,6 +1,9 @@
 .root {
-    small-height : 25;
-    large-width  : 250;
+    small-height    : 25;
+    standard-height : 50;
+    large-height    : 75;
+    standard-width  : 100;
+    large-width     : 250;
 }
 
 #centralLabel {
@@ -9,7 +12,7 @@
 }
 
 #scrollBar {
-    -fx-pref-width  : 100;
+    -fx-pref-width  : standard-width;
     -fx-pref-height : small-height;
 }
 
@@ -22,18 +25,23 @@
 .combo-box,
 .radio-button,
 .check-box {
-    -fx-pref-width  : 100;
+    -fx-pref-width  : standard-width;
     -fx-pref-height : small-height;
 }
 
 .table-view {
     -fx-pref-width  : large-width;
-    -fx-pref-height : 75;
+    -fx-pref-height : large-height;
+}
+
+.tree-view {
+    -fx-pref-width  : standard-width;
+    -fx-pref-height : large-height;
 }
 
 .tab-pane {
     -fx-pref-width  : large-width;
-    -fx-pref-height : 50;
+    -fx-pref-height : standard-height;
 }
 
 .image-view {
