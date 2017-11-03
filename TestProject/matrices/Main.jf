@@ -21,7 +21,7 @@ INIT;;;;
     15;;matrices/tests/ControlsRF;;q;;;;1;
     16;;matrices/tests/KeysChrome;;q;;;;1;
     17;;matrices/tests/KeysInternetExplorer;;q;;;;1;
-    18;;matrices/tests/KeysFirefox;;q;;;;1;
+    18;x;matrices/tests/KeysFirefox;;q;;;;1;
     19;;matrices/tests/KeysSwing;;q;;;;1;
     20;;matrices/tests/KeysWin;;q;;;;1;
     21;;matrices/tests/Matchers;;q;;;;1;
