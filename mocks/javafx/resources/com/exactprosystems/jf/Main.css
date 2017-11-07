@@ -36,6 +36,10 @@
     -fx-pref-height : small-height;
 }
 
+.label {
+    -fx-pref-height : small-height;
+}
+
 .table-view {
     -fx-pref-width  : large-width;
     -fx-pref-height : large-height;

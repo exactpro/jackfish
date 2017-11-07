@@ -14,6 +14,14 @@ import java.util.ResourceBundle;
 
 public class MainController implements Initializable
 {
+    @FXML private Label sliderLabel;
+    @FXML private Label downUpLabel;
+    @FXML private Label pushLabel;
+    @FXML private Label pressLabel;
+    @FXML private Label selectLabel;
+    @FXML private Label moveLabel;
+    @FXML private Label checkedLabel;
+    @FXML private Slider slider;
     @FXML private MenuBar menu;
     @FXML private Button protocolClear;
     @FXML private TextArea protocol;
