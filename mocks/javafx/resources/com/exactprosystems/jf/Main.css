@@ -1,19 +1,25 @@
 .root {
     small-height    : 25;
-    standard-height : 50;
+    medium-height   : 50;
     large-height    : 75;
-    standard-width  : 100;
+    small-width     : 100;
+    medium-width    : 225;
     large-width     : 250;
 }
 
 #centralLabel {
-    -fx-pref-width  : 225;
+    -fx-pref-width  : medium-width;
     -fx-pref-height : small-height;
 }
 
 #scrollBar {
-    -fx-pref-width  : standard-width;
+    -fx-pref-width  : small-width;
     -fx-pref-height : small-height;
+}
+
+#protocol {
+    -fx-pref-width  : medium-width;
+    -fx-pref-height : large-height;
 }
 
 .button,
@@ -24,8 +30,9 @@
 .spinner,
 .combo-box,
 .radio-button,
-.check-box {
-    -fx-pref-width  : standard-width;
+.check-box,
+#protocolClear {
+    -fx-pref-width  : small-width;
     -fx-pref-height : small-height;
 }
 
@@ -35,13 +42,13 @@
 }
 
 .tree-view {
-    -fx-pref-width  : standard-width;
+    -fx-pref-width  : small-width;
     -fx-pref-height : large-height;
 }
 
 .tab-pane {
     -fx-pref-width  : large-width;
-    -fx-pref-height : standard-height;
+    -fx-pref-height : medium-height;
 }
 
 .image-view {

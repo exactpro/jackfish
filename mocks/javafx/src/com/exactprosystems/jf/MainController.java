@@ -1,5 +1,6 @@
 package com.exactprosystems.jf;
 
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
@@ -13,6 +14,9 @@ import java.util.ResourceBundle;
 
 public class MainController implements Initializable
 {
+    @FXML private MenuBar menu;
+    @FXML private Button protocolClear;
+    @FXML private TextArea protocol;
     @FXML private TreeView treeView;
     @FXML private CheckBox checkBox;
     @FXML private RadioButton green;
@@ -46,6 +50,8 @@ public class MainController implements Initializable
         comboBox.getItems().addAll(mainModel.getData());
         table.getColumns().addAll(mainModel.getTable().getHeaders());
         table.setItems(mainModel.getTable().getTableData());
+        treeView.setRoot(mainModel.getTree().getRoot());
+        menu.getMenus().addAll(mainModel.getMenu().getMenus());
     }
 
     public void clickHandler(MouseEvent mouseEvent)
@@ -55,4 +61,8 @@ public class MainController implements Initializable
         centralLabel.setText(formatName + (mouseEvent.getClickCount() == 1 ? CLICK : DOUBLE_CLICK));
     }
 
+    public void doProtocolClear(ActionEvent actionEvent)
+    {
+        this.protocol.clear();
+    }
 }

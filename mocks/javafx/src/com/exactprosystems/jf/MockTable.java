@@ -6,14 +6,14 @@ import javafx.collections.ObservableList;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.cell.PropertyValueFactory;
 
-public class Table
+public class MockTable
 {
     private TableColumn <String, String> head1;
     private TableColumn <String, String> head2;
     private TableColumn <String, String> head3;
     private ObservableList <TableData> tableData;
 
-    Table()
+    MockTable()
     {
         this.tableData = FXCollections.observableArrayList(
                 new TableData("tr_1_td_1", "tr_1_td_2", "tr_1_td_3"),
@@ -35,10 +35,10 @@ public class Table
 
     ObservableList<TableData> getTableData()
     {
-        return tableData;
+        return this.tableData;
     }
 
-    public static class TableData
+    public class TableData
     {
         private final SimpleStringProperty head1;
         private final SimpleStringProperty head2;

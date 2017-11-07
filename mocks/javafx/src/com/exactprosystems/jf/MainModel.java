@@ -2,13 +2,17 @@ package com.exactprosystems.jf;
 
 class MainModel
 {
+    private final MockMenu menu;
+    private MockTree tree;
     private String[] data;
-    private Table table;
+    private MockTable table;
 
     MainModel()
     {
         this.data = new String[]{"Green", "Yellow", "Orange", "Blue"};
-        this.table = new Table();
+        this.table = new MockTable();
+        this.tree = new MockTree();
+        this.menu = new MockMenu();
     }
 
     String[] getData()
@@ -16,8 +20,18 @@ class MainModel
         return this.data;
     }
 
-    Table getTable()
+    MockTable getTable()
     {
-        return table;
+        return this.table;
+    }
+
+    MockTree getTree()
+    {
+        return tree;
+    }
+
+    MockMenu getMenu()
+    {
+        return this.menu;
     }
 }
