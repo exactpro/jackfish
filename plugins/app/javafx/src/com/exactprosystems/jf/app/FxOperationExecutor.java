@@ -2,12 +2,16 @@ package com.exactprosystems.jf.app;
 
 import com.exactprosystems.jf.api.app.*;
 import com.exactprosystems.jf.api.client.ICondition;
+import com.sun.javafx.robot.FXRobot;
+import com.sun.javafx.robot.FXRobotFactory;
+import javafx.collections.ObservableList;
 import javafx.event.EventTarget;
+import javafx.scene.control.*;
+import javafx.scene.input.MouseButton;
 import org.apache.log4j.Logger;
 import org.w3c.dom.Document;
 
-import java.awt.Color;
-import java.awt.Rectangle;
+import java.awt.*;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicLong;
@@ -145,7 +149,26 @@ public class FxOperationExecutor extends AbstractOperationExecutor<EventTarget>
 	@Override
 	public boolean mouse(EventTarget component, int x, int y, MouseAction action) throws Exception
 	{
-		return false;
+		FXRobot robot = FXRobotFactory.createRobot(null);
+		final int clickCount = this.getClickCount(action);
+
+		robot.mouseMove(x, y);
+
+		switch (action)
+		{
+			case LeftDoubleClick:
+			case LeftClick:
+				robot.mouseClick(MouseButton.PRIMARY, clickCount);
+				break;
+			case RightClick:
+			case RightDoubleClick:
+				robot.mouseClick(MouseButton.SECONDARY, clickCount);
+				break;
+			case Press:
+				robot.mousePress(MouseButton.PRIMARY);
+		}
+
+		return true;
 	}
 
 	@Override
@@ -175,12 +198,67 @@ public class FxOperationExecutor extends AbstractOperationExecutor<EventTarget>
 	@Override
 	public boolean select(EventTarget component, String selectedText) throws Exception
 	{
+		if (component instanceof ComboBox)
+		{
+			ComboBox comboBox = (ComboBox) component;
+			comboBox.getSelectionModel().select(selectedText);
+			return true;
+		}
+		if (component instanceof TabPane)
+		{
+			TabPane tabPane = (TabPane) component;
+			ObservableList<Tab> tabs = tabPane.getTabs();
+			for (Tab tab : tabs)
+			{
+				if (tab.getText().contains(selectedText))
+				{
+					tabPane.getSelectionModel().select(tab);
+					return true;
+				}
+			}
+		}
+		if (component instanceof ListView)
+		{
+			ListView listView = (ListView) component;
+			listView.getSelectionModel().select(selectedText);
+			return true;
+		}
+		if (component instanceof TreeView)
+		{
+			TreeView treeView = (TreeView) component;
+			treeView.getSelectionModel().select(selectedText);
+			return true;
+		}
 		return false;
 	}
 
 	@Override
 	public boolean selectByIndex(EventTarget component, int index) throws Exception
 	{
+		if (component instanceof ComboBox)
+		{
+			ComboBox comboBox = (ComboBox) component;
+			comboBox.getSelectionModel().select(index);
+			return true;
+		}
+		if (component instanceof TabPane)
+		{
+			TabPane tabPane = (TabPane) component;
+			tabPane.getSelectionModel().select(index);
+			return true;
+		}
+		if (component instanceof ListView)
+		{
+			ListView listView = (ListView) component;
+			listView.getSelectionModel().select(index);
+			return true;
+		}
+		if (component instanceof TreeView)
+		{
+			TreeView treeView = (TreeView) component;
+			treeView.getSelectionModel().select(index);
+			return true;
+		}
 		return false;
 	}
 
@@ -193,6 +271,19 @@ public class FxOperationExecutor extends AbstractOperationExecutor<EventTarget>
 	@Override
 	public boolean text(EventTarget component, String text, boolean clear) throws Exception
 	{
+		if (component instanceof TextInputControl)
+		{
+			TextInputControl field = (TextInputControl) component;
+			if (clear)
+			{
+				field.setText(text);
+			}else {
+				String currentText = field.getText();
+				field.setText(currentText + text);
+			}
+
+			return true;
+		}
 		return false;
 	}
 
@@ -255,4 +346,17 @@ public class FxOperationExecutor extends AbstractOperationExecutor<EventTarget>
 	{
 		return null;
 	}
+
+	private int getClickCount(MouseAction action)
+	{
+		switch (action)
+		{
+			case LeftDoubleClick:
+			case RightDoubleClick:
+				return 2;
+			default:
+				return 1;
+		}
+	}
+
 }
