@@ -5,14 +5,18 @@ import com.exactprosystems.jf.api.client.ICondition;
 import com.sun.javafx.robot.FXRobot;
 import com.sun.javafx.robot.FXRobotFactory;
 import javafx.collections.ObservableList;
+import javafx.application.Platform;
 import javafx.event.EventTarget;
 import javafx.scene.Node;
 import javafx.scene.control.*;
-import javafx.scene.input.MouseButton;
+import javafx.scene.control.Button;
+import javafx.scene.input.*;
+import javafx.event.EventTarget;
 import org.apache.log4j.Logger;
 import org.w3c.dom.Document;
 
 import java.awt.*;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicLong;
@@ -20,6 +24,11 @@ import java.util.concurrent.atomic.AtomicLong;
 public class FxOperationExecutor extends AbstractOperationExecutor<EventTarget>
 {
     private Logger logger;
+    private FXRobot currentRobot;
+
+    private boolean isAltDown = false;
+    private boolean isShiftDown = false;
+    private boolean isControlDown = false;
 
     public FxOperationExecutor(boolean useTrimText, Logger logger)
     {
@@ -175,13 +184,108 @@ public class FxOperationExecutor extends AbstractOperationExecutor<EventTarget>
 	@Override
 	public boolean press(EventTarget component, Keyboard key) throws Exception
 	{
-		return false;
+	    //not checked. can't use robot cause he don't have target for events
+		try
+		{
+            waitForIdle();
+			final ArrayList<InputEvent> events = new ArrayList<>();
+			events.add(new KeyEvent(null, component, KeyEvent.KEY_PRESSED, "", "", KeyCode.getKeyCode(key.name()), this.isShiftDown, this.isControlDown, this.isAltDown, false ));
+			events.add(new KeyEvent(null, component, KeyEvent.KEY_TYPED, "", "", KeyCode.getKeyCode(key.name()), this.isShiftDown, this.isControlDown, this.isAltDown, false ));
+			events.add(new KeyEvent(null, component, KeyEvent.KEY_RELEASED, "", "", KeyCode.getKeyCode(key.name()), this.isShiftDown, this.isControlDown, this.isAltDown, false ));
+            List<Class<? extends Control>> allControls = new ArrayList<>();
+            allControls.add(Button.class); //todo add all classes OR create around 20+ instanceof
+            Platform.runLater(new Runnable()
+			{
+				@Override
+				public void run()
+				{
+                    /*for (Class<? extends Control> clazz : allControls)
+                    {
+                        if (component instanceof clazz)
+                        {
+                            for (InputEvent event : events)
+                            {
+                                logger.debug("event : " + event);
+                                ((clazz) component).fireEvent(event);
+                            }
+                            break;
+                        }
+                    }*/
+				}
+			});
+			return true;
+		}
+		catch (Throwable e)
+		{
+			logger.error(String.format("press(%s, %s)", component, key));
+			logger.error(e.getMessage(), e);
+			throw e;
+		}
+		finally
+		{
+            waitForIdle();
+		}
 	}
 
 	@Override
 	public boolean upAndDown(EventTarget component, Keyboard key, boolean b) throws Exception
 	{
-		return false;
+	    //not checked
+        try
+        {
+            this.currentRobot.waitForIdle();
+            switch (key)
+            {
+                case SHIFT:
+                    this.isShiftDown = b;
+                    break;
+                case ALT:
+                    this.isAltDown = b;
+                    break;
+                case CONTROL:
+                    this.isControlDown = b;
+                    break;
+                default:
+                    break;
+            }
+
+            final ArrayList<InputEvent> events = new ArrayList<>();
+            boolean needPress = (key.equals(Keyboard.CONTROL)) && (key.equals(Keyboard.SHIFT)) && (key.equals(Keyboard.ALT)) && (key.equals(Keyboard.CAPS_LOCK)) ; //todo
+
+            if(b)
+            {
+                events.add(new KeyEvent(null, component, KeyEvent.KEY_PRESSED, "", "", KeyCode.getKeyCode(key.name()), this.isShiftDown, this.isControlDown, this.isAltDown, false ));
+
+                if(needPress)
+                {
+                    events.add(new KeyEvent(null, component, KeyEvent.KEY_TYPED, "", "", KeyCode.getKeyCode(key.name()), this.isShiftDown, this.isControlDown, this.isAltDown, false ));
+                }
+            }
+            else
+            {
+                events.add(new KeyEvent(null, component, KeyEvent.KEY_RELEASED, "", "", KeyCode.getKeyCode(key.name()), this.isShiftDown, this.isControlDown, this.isAltDown, false ));
+            }
+
+            Platform.runLater(new Runnable()
+            {
+                @Override
+                public void run()
+                {
+                    for (InputEvent event : events)
+                    {
+                        logger.debug("event : " + event);
+                        //todo
+                    }
+                }
+            });
+        }
+        catch (Throwable e)
+        {
+            logger.error(String.format("upAndDown(%s, %s, %b)", component, key, b));
+            logger.error(e.getMessage(), e);
+            throw e;
+        }
+        return true;
 	}
 
 	@Override
@@ -376,4 +480,8 @@ public class FxOperationExecutor extends AbstractOperationExecutor<EventTarget>
 		}
 	}
 
+	private void waitForIdle()
+	{
+		this.currentRobot.waitForIdle();
+	}
 }
