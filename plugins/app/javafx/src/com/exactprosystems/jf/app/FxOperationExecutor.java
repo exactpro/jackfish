@@ -6,6 +6,7 @@ import com.sun.javafx.robot.FXRobot;
 import com.sun.javafx.robot.FXRobotFactory;
 import javafx.collections.ObservableList;
 import javafx.event.EventTarget;
+import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseButton;
 import org.apache.log4j.Logger;
@@ -198,12 +199,6 @@ public class FxOperationExecutor extends AbstractOperationExecutor<EventTarget>
 	@Override
 	public boolean select(EventTarget component, String selectedText) throws Exception
 	{
-		if (component instanceof ComboBox)
-		{
-			ComboBox comboBox = (ComboBox) component;
-			comboBox.getSelectionModel().select(selectedText);
-			return true;
-		}
 		if (component instanceof TabPane)
 		{
 			TabPane tabPane = (TabPane) component;
@@ -217,19 +212,7 @@ public class FxOperationExecutor extends AbstractOperationExecutor<EventTarget>
 				}
 			}
 		}
-		if (component instanceof ListView)
-		{
-			ListView listView = (ListView) component;
-			listView.getSelectionModel().select(selectedText);
-			return true;
-		}
-		if (component instanceof TreeView)
-		{
-			TreeView treeView = (TreeView) component;
-			treeView.getSelectionModel().select(selectedText);
-			return true;
-		}
-		return false;
+        return false;
 	}
 
 	@Override
@@ -296,7 +279,29 @@ public class FxOperationExecutor extends AbstractOperationExecutor<EventTarget>
 	@Override
 	public boolean setValue(EventTarget component, double value) throws Exception
 	{
-		return false;
+        if (component instanceof Spinner)
+        {
+            Spinner spinner = (Spinner) component;
+            Object o = spinner.getValueFactory().getConverter().fromString(String.valueOf(value));
+            spinner.getValueFactory().setValue(o);
+            return true;
+        }
+        if (component instanceof ScrollBar)
+        {
+            ((ScrollBar) component).setValue(value);
+            return true;
+        }
+        if (component instanceof Slider)
+        {
+            ((Slider) component).setValue(value);
+            return true;
+        }
+        if (component instanceof SplitPane)
+        {
+            ((SplitPane) component).getDividers().get(0).setPosition(value);//todo splitPane has multi dividers, think what to do with it
+            return true;
+        }
+        return false;
 	}
 
 	@Override
@@ -314,6 +319,18 @@ public class FxOperationExecutor extends AbstractOperationExecutor<EventTarget>
 	@Override
 	public boolean scrollTo(EventTarget component, int index) throws Exception
 	{
+		if (component instanceof ListView)
+		{
+			ListView listView = (ListView) component;
+			listView.scrollTo(index);
+			return true;
+		}
+		if (component instanceof TreeView)
+		{
+			TreeView treeView = (TreeView) component;
+			treeView.scrollTo(index);
+			return true;
+		}
 		return false;
 	}
 
