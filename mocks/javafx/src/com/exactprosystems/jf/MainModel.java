@@ -2,6 +2,7 @@ package com.exactprosystems.jf;
 
 class MainModel
 {
+    private int counter;
     private final MockMenu menu;
     private MockTree tree;
     private String[] data;
@@ -13,6 +14,7 @@ class MainModel
         this.table = new MockTable();
         this.tree = new MockTree();
         this.menu = new MockMenu();
+        clearCounter();
     }
 
     String[] getData()
@@ -33,5 +35,20 @@ class MainModel
     MockMenu getMenu()
     {
         return this.menu;
+    }
+
+    int getCounter()
+    {
+        return this.counter;
+    }
+
+    void plusCounter()
+    {
+        this.counter++;
+    }
+
+    void clearCounter()
+    {
+        this.counter = 0;
     }
 }

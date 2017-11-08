@@ -81,10 +81,28 @@
             </GridPane>
             <StackPane>
                 <padding>
-                    <Insets top="10"/>
+                    <Insets top="10" bottom="20"/>
                 </padding>
                 <Slider fx:id="slider"/>
             </StackPane>
+            <HBox>
+                <Button fx:id="showButton" text="Show Area" onAction="#doShowButton"/>
+                <Button fx:id="hideButton" text="Hide Area" visible="false" onAction="#doHideButton"/>
+            </HBox>
+            <HBox>
+                <Button fx:id="clearButton" text="Clear" onAction="#doClearCount"/>
+                <Button fx:id="plusButton" text="+1" onAction="#doPlusCount"/>
+                <Label  fx:id="countLabel" text="Count" prefWidth="50" alignment="CENTER"/>
+            </HBox>
+            <HBox>
+                <Button fx:id="notEnabledButton" text="notEnabledButton" disable="true"/>
+                <Button fx:id="notVisibleButton" text="notVisibleButton" visible="false"/>
+            </HBox>
         </VBox>
     </center>
+    <bottom>
+        <StackPane alignment="BOTTOM_CENTER">
+            <Button fx:id="colorButton" text="#red"/>
+        </StackPane>
+    </bottom>
 </BorderPane>

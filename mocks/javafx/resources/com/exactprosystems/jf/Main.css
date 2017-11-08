@@ -22,6 +22,11 @@
     -fx-pref-height : large-height;
 }
 
+#colorButton {
+    -fx-background-color : red;
+    -fx-text-fill : white;
+}
+
 .button,
 .toggle-button,
 .text-field,
@@ -31,7 +36,8 @@
 .combo-box,
 .radio-button,
 .check-box,
-#protocolClear {
+#protocolClear,
+#colorButton {
     -fx-pref-width  : small-width;
     -fx-pref-height : small-height;
 }

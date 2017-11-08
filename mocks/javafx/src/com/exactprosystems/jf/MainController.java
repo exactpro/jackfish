@@ -14,6 +14,14 @@ import java.util.ResourceBundle;
 
 public class MainController implements Initializable
 {
+    @FXML private Button notEnabledButton;
+    @FXML private Button notVisibleButton;
+    @FXML private Button clearButton;
+    @FXML private Button plusButton;
+    @FXML private Label countLabel;
+    @FXML private Button showButton;
+    @FXML private Button hideButton;
+    @FXML private Button colorButton;
     @FXML private Label sliderLabel;
     @FXML private Label downUpLabel;
     @FXML private Label pushLabel;
@@ -72,5 +80,27 @@ public class MainController implements Initializable
     public void doProtocolClear(ActionEvent actionEvent)
     {
         this.protocol.clear();
+    }
+
+    public void doShowButton(ActionEvent actionEvent)
+    {
+        hideButton.setVisible(true);
+    }
+
+    public void doHideButton(ActionEvent actionEvent)
+    {
+        hideButton.setVisible(false);
+    }
+
+    public void doClearCount(ActionEvent actionEvent)
+    {
+        mainModel.clearCounter();
+        countLabel.setText(String.valueOf(mainModel.getCounter()));
+    }
+
+    public void doPlusCount(ActionEvent actionEvent)
+    {
+        mainModel.plusCounter();
+        countLabel.setText(String.valueOf(mainModel.getCounter()));
     }
 }
