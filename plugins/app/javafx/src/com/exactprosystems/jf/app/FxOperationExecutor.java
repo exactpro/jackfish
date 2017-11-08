@@ -4,19 +4,26 @@ import com.exactprosystems.jf.api.app.*;
 import com.exactprosystems.jf.api.client.ICondition;
 import com.sun.javafx.robot.FXRobot;
 import com.sun.javafx.robot.FXRobotFactory;
-import javafx.collections.ObservableList;
+import com.sun.javafx.robot.impl.FXRobotHelper;
 import javafx.application.Platform;
+import javafx.collections.ObservableList;
 import javafx.event.EventTarget;
 import javafx.scene.Node;
+import javafx.scene.Parent;
 import javafx.scene.control.*;
-import javafx.scene.control.Button;
-import javafx.scene.input.*;
-import javafx.event.EventTarget;
+import javafx.scene.input.InputEvent;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
+import javafx.scene.input.MouseButton;
+import javafx.stage.Stage;
+import javafx.stage.Window;
 import org.apache.log4j.Logger;
 import org.w3c.dom.Document;
 
-import java.awt.*;
+import java.awt.Color;
+import java.awt.Rectangle;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicLong;
@@ -123,7 +130,27 @@ public class FxOperationExecutor extends AbstractOperationExecutor<EventTarget>
 	@Override
 	public EventTarget find(Locator owner, Locator element) throws Exception
 	{
-		return null;
+
+
+		EventTarget target = null;
+		for (Stage stage : FXRobotHelper.getStages())
+		{
+			Parent root = stage.getScene().getRoot();
+			Node lookup = root.lookup("#any");
+			if (lookup != null)
+			{
+				target = lookup;
+				break;
+			}
+		}
+		logger.debug("Find " + target);
+		if (target == null)
+		{
+			//TODO
+			throw new Exception("");
+		}
+		logger.debug("Find " + target);
+		return target;
 	}
 
 	@Override
@@ -484,4 +511,64 @@ public class FxOperationExecutor extends AbstractOperationExecutor<EventTarget>
 	{
 		this.currentRobot.waitForIdle();
 	}
+
+	//region methods for work with windows/stages.
+	Parent currentRoot()
+	{
+		RootContainer container = new RootContainer();
+		Window.impl_getWindows().forEachRemaining(w -> container.addTarget(w.getScene().getRoot()));
+		return container;
+	}
+
+	Parent currentSceneRoot()
+	{
+		Iterator<Window> windowIterator = Window.impl_getWindows();
+		Parent parent = null;
+		//get first window ( and root) from queue
+		if (windowIterator.hasNext())
+		{
+			parent = windowIterator.next().getScene().getRoot();
+		}
+		return parent;
+	}
+
+	Window mainWindow()
+	{
+		Iterator<Window> windowIterator = Window.impl_getWindows();
+		Window mainWindow = null;
+		//get first window from queue
+		if (windowIterator.hasNext())
+		{
+			mainWindow = windowIterator.next();
+		}
+		return mainWindow;
+	}
+
+	Stage mainStage()
+	{
+		ObservableList<Stage> stages = FXRobotHelper.getStages();
+		if (stages.isEmpty())
+		{
+			return null;
+		}
+		return stages.stream().filter(s -> s.impl_getMXWindowType().equals("PrimaryStage")).findFirst().orElse(stages.get(0));
+	}
+
+	Node findOwner(Locator owner) throws Exception
+	{
+		if (owner == null)
+		{
+			return mainWindow().getScene().getRoot();
+		}
+		else
+		{
+			EventTarget target = this.find(null, owner);
+			if (target instanceof Node)
+			{
+				return (Node) target;
+			}
+		}
+		return null;
+	}
+	//endregion
 }
