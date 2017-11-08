@@ -7,7 +7,6 @@ import com.exactprosystems.jf.api.error.app.FeatureNotSupportedException;
 import com.exactprosystems.jf.api.error.app.TooManyElementsException;
 import com.sun.javafx.robot.FXRobot;
 import com.sun.javafx.robot.FXRobotFactory;
-import com.sun.javafx.robot.impl.FXRobotHelper;
 import javafx.application.Platform;
 import javafx.collections.ObservableList;
 import javafx.event.Event;
@@ -19,15 +18,12 @@ import javafx.scene.input.InputEvent;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseButton;
-import javafx.stage.Stage;
-import javafx.stage.Window;
 import org.apache.log4j.Logger;
 import org.w3c.dom.Document;
 
 import java.awt.Color;
 import java.awt.Rectangle;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicLong;
@@ -147,7 +143,7 @@ public class FxOperationExecutor extends AbstractOperationExecutor<EventTarget>
 
 					if (owner != null)
 					{
-						List<EventTarget> targets = new MatcherFx(this.info, owner, currentRoot()).findAll();
+						List<EventTarget> targets = new MatcherFx(this.info, owner, UtilsFx.currentRoot()).findAll();
 						logger.debug(String.format("Found owners size %s", targets.size()));
 
 						if (targets.isEmpty())
@@ -171,7 +167,7 @@ public class FxOperationExecutor extends AbstractOperationExecutor<EventTarget>
 					}
 					else
 					{
-						ownerNode = currentRoot();
+						ownerNode = UtilsFx.currentRoot();
 					}
 					logger.debug(String.format("Found owner : %s", MatcherFx.targetToString(ownerNode)));
 
@@ -634,63 +630,12 @@ public class FxOperationExecutor extends AbstractOperationExecutor<EventTarget>
 		return 0;
 	}
 
-	//region methods for work with windows/stages.
-
-	/**
-	 * collect roots from all windows
-	 */
-	Parent currentRoot()
-	{
-		RootContainer container = new RootContainer();
-		Window.impl_getWindows().forEachRemaining(w -> container.addTarget(w.getScene().getRoot()));
-		return container;
-	}
-
-	Parent currentSceneRoot()
-	{
-		Iterator<Window> windowIterator = Window.impl_getWindows();
-		Parent parent = null;
-		//get first window ( and root) from queue
-		if (windowIterator.hasNext())
-		{
-			parent = windowIterator.next().getScene().getRoot();
-		}
-		return parent;
-	}
-
-	Window mainWindow()
-	{
-		Iterator<Window> windowIterator = Window.impl_getWindows();
-		Window mainWindow = null;
-		//get first window from queue
-		if (windowIterator.hasNext())
-		{
-			mainWindow = windowIterator.next();
-		}
-		return mainWindow;
-	}
-
-	Stage mainStage()
-	{
-		ObservableList<Stage> stages = FXRobotHelper.getStages();
-		logger.debug(String.format("Found %s stages", stages.size()));
-		if (stages.isEmpty())
-		{
-			return null;
-		}
-		return stages.stream()
-				.peek(s -> logger.debug(String.format("Found stage : %s. MxWindowType : %s", MatcherFx.targetToString(s), s.impl_getMXWindowType())))
-				.filter(s -> s.impl_getMXWindowType().equals("PrimaryStage"))
-				.findFirst()
-				.orElse(stages.get(0));
-	}
-
 	Node findOwner(Locator owner) throws Exception
 	{
 		logger.debug("Start found owner for " + owner);
 		if (owner == null)
 		{
-			Parent root = currentRoot();
+			Parent root = UtilsFx.currentRoot();
 			logger.debug("Found root of main window : " + root);
 			return root;
 		}

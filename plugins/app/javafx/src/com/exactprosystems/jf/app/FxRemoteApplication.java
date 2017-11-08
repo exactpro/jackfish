@@ -11,7 +11,6 @@ import javafx.application.Platform;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.event.EventTarget;
 import javafx.scene.Node;
-import javafx.scene.Parent;
 import javafx.scene.SnapshotParameters;
 import javafx.scene.control.ComboBox;
 import javafx.scene.image.WritableImage;
@@ -51,6 +50,7 @@ public class FxRemoteApplication extends RemoteApplication
 		{
 			this.logger = createLogger(FxRemoteApplication.class, logName, serverLogLevel, serverLogPattern);
 			MatcherFx.setLogger(createLogger(MatcherFx.class, logName, serverLogLevel, serverLogPattern));
+			UtilsFx.setLogger(createLogger(UtilsFx.class, logName, serverLogLevel, serverLogPattern));
 		}
 		catch (RemoteException e)
 		{
@@ -189,7 +189,7 @@ public class FxRemoteApplication extends RemoteApplication
 		this.tryExecute(
 				() ->
 				{
-					Stage stage = this.operationExecutor.mainStage();
+					Stage stage = UtilsFx.mainStage();
 					logger.debug("Get main stage : %s" + MatcherFx.targetToString(stage));
 					if (stage != null)
 					{
@@ -273,17 +273,17 @@ public class FxRemoteApplication extends RemoteApplication
 					}
 					if (element == null)
 					{
-						Parent parent = this.operationExecutor.currentSceneRoot();
-						logger.debug(String.format("Found current scene root : %s", parent));
-						if (parent == null)
+						Stage mainStage = UtilsFx.mainStage();
+						logger.debug(String.format("Found current stage: %s", mainStage));
+						if (mainStage == null)
 						{
-							logger.debug(String.format("Parent is null. Getting image of whole screen"));
+							logger.debug(String.format("Stage is null. Getting image of whole screen"));
 							Rectangle desktopRect = new Rectangle(Toolkit.getDefaultToolkit().getScreenSize());
 							return new ImageWrapper(new java.awt.Robot().createScreenCapture(desktopRect));
 						}
 						else
 						{
-							target = parent;
+							target = mainStage.getScene().getRoot();
 						}
 					}
 					logger.debug(String.format("target : %s", target));
@@ -299,7 +299,7 @@ public class FxRemoteApplication extends RemoteApplication
 							latch.countDown();
 						});
 						//wait image
-						waitForIdle();
+						UtilsFx.waitForIdle();
 						logger.debug(String.format("Getting image for target %s is done. Image size [width : %s, height : %s]", target, img[0].getWidth(), img[0].getHeight()));
 						return new ImageWrapper(img[0]);
 					}
@@ -322,7 +322,7 @@ public class FxRemoteApplication extends RemoteApplication
 					logger.debug(String.format("Start get rectangle for owner [%s] and element [%s]", owner, element));
 					if (element == null)
 					{
-						return this.operationExecutor.getRectangle(this.operationExecutor.mainStage());
+						return this.operationExecutor.getRectangle(UtilsFx.mainStage());
 					}
 					else
 					{
@@ -409,8 +409,9 @@ public class FxRemoteApplication extends RemoteApplication
 		this.tryExecute(
 				() ->
 				{
-					this.operationExecutor.mainStage().setX(x);
-					this.operationExecutor.mainStage().setY(y);
+					Stage stage = UtilsFx.mainStage();
+					stage.setX(x);
+					stage.setY(y);
 					return null;
 				},
 				e ->
@@ -483,7 +484,7 @@ public class FxRemoteApplication extends RemoteApplication
 		beforeCall.check();
 		try
 		{
-			waitForIdle();
+			UtilsFx.waitForIdle();
 			return func.call();
 		}
 		catch (RemoteException e)
@@ -508,10 +509,10 @@ public class FxRemoteApplication extends RemoteApplication
 		return logger;
 	}
 
-	public static Logger createLogger(Class<?> clazz, Logger log)
+	public static Logger createLogger(Class<?> clazz, Logger baseLogger)
 	{
 		Logger logger = Logger.getLogger(clazz);
-		Enumeration allAppenders = log.getAllAppenders();
+		Enumeration allAppenders = baseLogger.getAllAppenders();
 		while (allAppenders.hasMoreElements())
 		{
 			logger.addAppender(((Appender) allAppenders.nextElement()));
@@ -532,25 +533,6 @@ public class FxRemoteApplication extends RemoteApplication
 						throw new Exception("Application is not init");
 					}
 				}, func,log);
-	}
-
-	private static void waitForIdle()
-	{
-		//code from BaseFXRobot
-		final CountDownLatch latch = new CountDownLatch(1);
-		PlatformImpl.runLater(latch::countDown);
-		while (true)
-		{
-			try
-			{
-				latch.await();
-				break;
-			}
-			catch (InterruptedException ignored)
-			{
-				;
-			}
-		}
 	}
 
 	interface IReturn<T>

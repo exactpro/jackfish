@@ -58,9 +58,9 @@ public class FxAppFactory extends AbstractApplicationFactory
 		fieldMap.put(LocatorFieldKind.TEXT, "text");
 		fieldMap.put(LocatorFieldKind.TOOLTIP, "tooltip");
 
-		info = new JavaFxPluginInfo(fieldMap, new ArrayList<>());
+		info = new FxPluginInfo(fieldMap, new ArrayList<>());
 
-		info.addTypes(ControlKind.Any, "*");
+		info.addTypes(ControlKind.Any, PluginInfo.ANY_TYPE);
 		info.addTypes(ControlKind.Button, Button.class.getName());
 		info.addTypes(ControlKind.CheckBox, CheckBox.class.getName());
 		info.addTypes(ControlKind.ComboBox, ComboBox.class.getName());
@@ -128,9 +128,9 @@ public class FxAppFactory extends AbstractApplicationFactory
 		return empty;
 	}
 
-	private static class JavaFxPluginInfo extends PluginInfo
+	private static class FxPluginInfo extends PluginInfo
 	{
-		JavaFxPluginInfo(Map<LocatorFieldKind, String> fieldMap, List<String> notStableList)
+		FxPluginInfo(Map<LocatorFieldKind, String> fieldMap, List<String> notStableList)
 		{
 			super(fieldMap, notStableList);
 		}
@@ -139,6 +139,12 @@ public class FxAppFactory extends AbstractApplicationFactory
 		public ControlKind derivedControlKindByNode(Node node)
 		{
 			return ControlKind.Any;
+		}
+
+		@Override
+		public ControlKind controlKindByNode(Node node)
+		{
+			return super.controlKindByNode(node);
 		}
 	}
 }

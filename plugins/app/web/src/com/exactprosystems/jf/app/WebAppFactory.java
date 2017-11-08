@@ -102,7 +102,7 @@ public class WebAppFactory extends AbstractApplicationFactory
 		List<String> notStableList = Arrays.asList("value", "maxlength", "style", "size");
 		info = new WebPluginInfo(fieldMap, notStableList);
 
-        info.addTypes(ControlKind.Any, "*");
+        info.addTypes(ControlKind.Any, PluginInfo.ANY_TYPE);
         info.addTypes(ControlKind.Button, "button", "input", "a", "img");
         info.addTypes(ControlKind.CheckBox, "button", "input");
         info.addTypes(ControlKind.ComboBox,"select", "input");
@@ -119,7 +119,7 @@ public class WebAppFactory extends AbstractApplicationFactory
         info.addTypes(ControlKind.TextBox,"input", "textarea");
         info.addTypes(ControlKind.ToggleButton,"input");
         info.addTypes(ControlKind.ListView,"ul");
-        info.addTypes(ControlKind.Wait,"*");
+        info.addTypes(ControlKind.Wait,PluginInfo.ANY_TYPE);
 
     }
 

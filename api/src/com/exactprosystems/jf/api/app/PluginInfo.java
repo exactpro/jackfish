@@ -18,7 +18,9 @@ public abstract class PluginInfo implements Serializable
 {
     private static final long serialVersionUID = -1595364917643729823L;
 
-    private Map<ControlKind, ControlInfo>   controlMap;
+	public static final String ANY_TYPE = "*";
+
+	private Map<ControlKind, ControlInfo>   controlMap;
     private Map<LocatorFieldKind, String>   fieldMap;
     private List<String> notStableList;
 

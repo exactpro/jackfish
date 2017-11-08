@@ -5,7 +5,6 @@ import com.exactprosystems.jf.api.common.Converter;
 import com.exactprosystems.jf.api.common.Str;
 import com.exactprosystems.jf.api.error.app.ElementNotFoundException;
 import com.exactprosystems.jf.api.error.app.NullParameterException;
-import com.sun.javafx.robot.impl.FXRobotHelper;
 import javafx.collections.ObservableList;
 import javafx.event.EventTarget;
 import javafx.geometry.Bounds;
@@ -71,7 +70,7 @@ public class MatcherFx
 				org.w3c.dom.Document document = createDocument(this.info, owner, true, false);
 
 				// TODO Only for debugging in the beginning. Remove in the future.
-				printDocument(document, System.out);
+				printDocument(document, System.err);
 
 				XPathFactory factory = XPathFactory.newInstance();
 				XPath xPath = factory.newXPath();
@@ -175,6 +174,10 @@ public class MatcherFx
 		Set<String> strClasses = this.info.nodeByControlKind(locator.getControlKind());
 		for (String strClass : strClasses)
 		{
+			if (strClass.equals(PluginInfo.ANY_TYPE))
+			{
+				return true;
+			}
 			try
 			{
 				Class<?> clazz = Class.forName(strClass);
@@ -195,7 +198,7 @@ public class MatcherFx
 		nodes.add(node);
 		if (node instanceof Parent)
 		{
-			ObservableList<Node> children = FXRobotHelper.getChildren((Parent) node);
+			ObservableList<Node> children = ((Parent) node).getChildrenUnmodifiable();
 			children.forEach(child -> collect(child, nodes));
 		}
 	}
