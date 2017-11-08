@@ -1,10 +1,12 @@
 package com.exactprosystems.jf;
 
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 
@@ -22,7 +24,6 @@ public class MainController implements Initializable
     @FXML private Button hideButton;
     @FXML private Button colorButton;
     @FXML private Label sliderLabel;
-    @FXML private Label downUpLabel;
     @FXML private Label pushLabel;
     @FXML private Label pressLabel;
     @FXML private Label selectLabel;
@@ -55,25 +56,47 @@ public class MainController implements Initializable
 
     private static final String CLICK = "_click";
     private static final String DOUBLE_CLICK = "_double_click";
+    private static final String MOVE = "_move";
+    private static final String UP = "_up_";
+    private static final String DOWN = "_down_";
+    private static final String PRESS = "_press_";
+    private static final String PUSH = "_push";
+    private static final String NEW_LINE = "\n";
     private MainModel mainModel;
 
     @Override
     public void initialize(URL location, ResourceBundle resources)
     {
         mainModel = new MainModel();
-        panel.getStyleClass().add("pane");
         comboBox.getItems().addAll(mainModel.getData());
         table.getColumns().addAll(mainModel.getTable().getHeaders());
         table.setItems(mainModel.getTable().getTableData());
         treeView.setRoot(mainModel.getTree().getRoot());
         menu.getMenus().addAll(mainModel.getMenu().getMenus());
+        slider.valueProperty().addListener((observable, oldValue, newValue) -> sliderLabel.setText("Slider_" + String.valueOf(newValue.intValue())));
+        textEdit.textProperty().addListener((observable, oldValue, newValue) -> centralLabel.setText("TextEdit_" + newValue));
+        checkBox.selectedProperty().addListener((observable, oldValue, newValue) -> checkedLabel.setText("CheckBox_" + (newValue ? "checked" : "unchecked")));
+        comboBox.valueProperty().addListener((observable, oldValue, newValue) -> centralLabel.setText("ComboBox_" + newValue));
     }
 
     public void clickHandler(MouseEvent mouseEvent)
     {
-        Node node = (Node) mouseEvent.getSource();
-        String formatName = node.getId().substring(0,1).toUpperCase() + node.getId().substring(1);
-        centralLabel.setText(formatName + (mouseEvent.getClickCount() == 1 ? CLICK : DOUBLE_CLICK));
+        centralLabel.setText(getFormattedName(mouseEvent.getSource()) + (mouseEvent.getClickCount() == 1 ? CLICK : DOUBLE_CLICK));
+    }
+
+    public void moveHandler(MouseEvent mouseEvent)
+    {
+        moveLabel.setText(getFormattedName(mouseEvent.getSource()) + MOVE);
+    }
+
+    public void moveHandlerRadio()
+    {
+        moveLabel.setText("RadioButton" + MOVE);
+    }
+
+    public void pushHandler(ActionEvent actionEvent)
+    {
+        pushLabel.setText(getFormattedName(actionEvent.getSource()) + PUSH);
     }
 
     public void doProtocolClear()
@@ -101,5 +124,26 @@ public class MainController implements Initializable
     {
         mainModel.plusCounter();
         countLabel.setText(String.valueOf(mainModel.getCounter()));
+    }
+
+    public void releasedHandler(KeyEvent keyEvent)
+    {
+        protocol.appendText(getFormattedName(keyEvent.getSource()) + UP + keyEvent.getCode().impl_getCode() + NEW_LINE);
+    }
+
+    public void pressHandler(KeyEvent keyEvent)
+    {
+        protocol.appendText(getFormattedName(keyEvent.getSource()) + DOWN + keyEvent.getCode().impl_getCode() + NEW_LINE);
+    }
+
+    public void typedHandler(KeyEvent keyEvent)
+    {
+        protocol.appendText(getFormattedName(keyEvent.getSource()) + PRESS + (int)keyEvent.getCharacter().toCharArray()[0] + NEW_LINE);
+    }
+
+    private String getFormattedName(Object object)
+    {
+        Node node = (Node) object;
+        return node.getId().substring(0,1).toUpperCase() + node.getId().substring(1);
     }
 }

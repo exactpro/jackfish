@@ -31,11 +31,9 @@ public class Main extends Application
             @Override
             public void createWindow(Stage stage, Parent root)
             {
-                Scene scene = new Scene(root, 800, 800);
-                scene.getStylesheets().add(getClass().getResource("Main.css").toExternalForm());
-                stage.setOnCloseRequest(event -> Platform.exit());
                 stage.setTitle("JavaFx Mock");
-                stage.setScene(scene);
+                stage.setScene(new Scene(root, 800, 800));
+                stage.setOnCloseRequest(event -> Platform.exit());
                 stage.show();
             }
         },
@@ -46,9 +44,9 @@ public class Main extends Application
             void createWindow(Stage stage, Parent root)
             {
                 stage.setTitle("Dialog");
+                stage.setScene(new Scene(root, 150, 200));
                 stage.setX(1500);
                 stage.setY(300);
-                stage.setScene(new Scene(root, 150, 200));
                 stage.show();
             }
         };
