@@ -41,7 +41,7 @@ public class FxRemoteApplication extends RemoteApplication
 	private PluginInfo          info;
 
 	private boolean isInit = false;
-	private Thread thread;
+	private Thread mainThread;
 
 	@Override
 	protected void createLoggerDerived(String logName, String serverLogLevel, String serverLogPattern) throws Exception
@@ -110,7 +110,7 @@ public class FxRemoteApplication extends RemoteApplication
 		Exception[] last = new Exception[1];
 		AtomicBoolean isLoading = new AtomicBoolean(false);
 
-		this.thread = new Thread(() -> {
+		this.mainThread = new Thread(() -> {
 			try
 			{
 				ClassLoader classLoader = FxRemoteApplication.class.getClassLoader();
@@ -134,9 +134,9 @@ public class FxRemoteApplication extends RemoteApplication
 				isLoading.set(true);
 			}
 		});
-		this.thread.setName("Thread [" + this.thread.getId() + "] : start javafx application");
-		logger.debug("Thread " + this.thread + " started");
-		this.thread.start();
+		this.mainThread.setName("Thread [" + this.mainThread.getId() + "] : start javafx application");
+		logger.debug("Thread " + this.mainThread + " started");
+		this.mainThread.start();
 
 		//wait while mainMethod not invoked
 		while (!isLoading.get())
@@ -147,11 +147,11 @@ public class FxRemoteApplication extends RemoteApplication
 		//check it we have exception - throw it
 		if (last[0] != null)
 		{
-			//we need throw exception and stop the thread
-			if (this.thread.isAlive())
+			//we need throw exception and stop the mainThread
+			if (this.mainThread.isAlive())
 			{
-				this.thread.interrupt();
-				this.thread = null;
+				this.mainThread.interrupt();
+				this.mainThread = null;
 			}
 			throw last[0];
 		}
@@ -162,9 +162,10 @@ public class FxRemoteApplication extends RemoteApplication
 	@Override
 	protected void stopDerived(boolean needKill) throws Exception
 	{
-		if (this.thread != null && this.thread.isAlive())
+		if (this.mainThread != null && this.mainThread.isAlive())
 		{
-			this.thread.interrupt();
+			this.mainThread.interrupt();
+			this.mainThread = null;
 		}
 	}
 
@@ -203,7 +204,11 @@ public class FxRemoteApplication extends RemoteApplication
 									Platform.runLater(() -> stage.setIconified(true));
 									break;
 								case Normal:
-									//TODO
+									logger.debug("Change state to normal");
+									Platform.runLater(() -> {
+										stage.setIconified(false);
+										stage.setMaximized(false);
+									});
 									break;
 							}
 						}
@@ -286,13 +291,8 @@ public class FxRemoteApplication extends RemoteApplication
 							img[0] = SwingFXUtils.fromFXImage(snapshot, null);
 							latch.countDown();
 						});
-						//TODO
-						while (true) {
-							try {
-								latch.await();
-								break;
-							} catch (InterruptedException e) {}
-						}
+						//wait image
+						this.waitForIdle();
 						return new ImageWrapper(img[0]);
 					}
 					throw new Exception("Target is not instance of node");
@@ -336,7 +336,7 @@ public class FxRemoteApplication extends RemoteApplication
 				e ->
 				{
 					logger.error(String.format("operateDerived(%s,%s,%s,%s,%s)", owner, element, rows, header, operation));
-					logger.error("EXCEPTION : " + e.getMessage(), e);
+					logger.error(e.getMessage(), e);
 				}
 		);
 	}
@@ -479,6 +479,7 @@ public class FxRemoteApplication extends RemoteApplication
 		}
 		try
 		{
+			this.waitForIdle();
 			return func.call();
 		}
 		catch (RemoteException e)
@@ -490,7 +491,25 @@ public class FxRemoteApplication extends RemoteApplication
 			log.accept(e);
 			throw e;
 		}
+	}
 
+	private void waitForIdle()
+	{
+		//code from BaseFXRobot
+		final CountDownLatch latch = new CountDownLatch(1);
+		PlatformImpl.runLater(latch::countDown);
+		while (true)
+		{
+			try
+			{
+				latch.await();
+				break;
+			}
+			catch (InterruptedException ignored)
+			{
+				;
+			}
+		}
 	}
 
 	private interface IReturn<T>
