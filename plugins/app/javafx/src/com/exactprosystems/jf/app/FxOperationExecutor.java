@@ -532,29 +532,43 @@ public class FxOperationExecutor extends AbstractOperationExecutor<EventTarget>
 	@Override
 	public boolean setValue(EventTarget component, double value) throws Exception
 	{
-        if (component instanceof Spinner)
-        {
-            Spinner spinner = (Spinner) component;
-            Object o = spinner.getValueFactory().getConverter().fromString(String.valueOf(value));
-            spinner.getValueFactory().setValue(o);
-            return true;
-        }
-        if (component instanceof ScrollBar)
-        {
-            ((ScrollBar) component).setValue(value);
-            return true;
-        }
-        if (component instanceof Slider)
-        {
-            ((Slider) component).setValue(value);
-            return true;
-        }
-        if (component instanceof SplitPane)
-        {
-            ((SplitPane) component).getDividers().get(0).setPosition(value);//todo splitPane has multi dividers, think what to do with it
-            return true;
-        }
-        return false;
+		return tryExecute(EMPTY_CHECK, () ->
+		{
+			if (component instanceof Spinner)
+			{
+				Spinner spinner = (Spinner) component;
+				if (spinner.getValueFactory() instanceof SpinnerValueFactory.IntegerSpinnerValueFactory)
+				{
+					spinner.getValueFactory().setValue((int)value);
+					return true;
+				}
+				if (spinner.getValueFactory() instanceof SpinnerValueFactory.DoubleSpinnerValueFactory)
+				{
+					spinner.getValueFactory().setValue(value);
+					return true;
+				}
+			}
+			if (component instanceof ScrollBar)
+			{
+				((ScrollBar) component).setValue(value);
+				return true;
+			}
+			if (component instanceof Slider)
+			{
+				((Slider) component).setValue(value);
+				return true;
+			}
+			if (component instanceof SplitPane)
+			{
+				((SplitPane) component).getDividers().get(0).setPosition(value);//todo splitPane has multi dividers, think what to do with it
+				return true;
+			}
+			return false;
+		}, e ->
+		{
+			this.logger.error(String.format("setValue(%s)", component));
+			this.logger.error(e.getMessage(), e);
+		});
 	}
 
 	@Override
@@ -572,19 +586,27 @@ public class FxOperationExecutor extends AbstractOperationExecutor<EventTarget>
 	@Override
 	public boolean scrollTo(EventTarget component, int index) throws Exception
 	{
-		if (component instanceof ListView)
+		return tryExecute(EMPTY_CHECK, () ->
 		{
-			ListView listView = (ListView) component;
-			listView.scrollTo(index);
-			return true;
-		}
-		if (component instanceof TreeView)
+			if (component instanceof ListView)
+			{
+				ListView listView = (ListView) component;
+				listView.scrollTo(index);
+				return true;
+			}
+			if (component instanceof TreeView)
+			{
+				TreeView treeView = (TreeView) component;
+				treeView.scrollTo(index);
+				return true;
+			}
+			return false;
+		}, e ->
 		{
-			TreeView treeView = (TreeView) component;
-			treeView.scrollTo(index);
-			return true;
-		}
-		return false;
+			this.logger.error(String.format("scrollTo(%s)", component));
+			this.logger.error(e.getMessage(), e);
+		});
+
 	}
 
 	@Override
@@ -608,7 +630,14 @@ public class FxOperationExecutor extends AbstractOperationExecutor<EventTarget>
 	@Override
 	public int getTableSize(EventTarget component, Locator additional, Locator header, boolean useNumericHeader) throws Exception
 	{
-		return 0;
+		if (component instanceof TableView)
+		{
+			return ((TableView) component).getItems().size();
+		}
+		else
+		{
+			throw new UnsupportedOperationException("Element is not a table");
+		}
 	}
 
 	@Override
