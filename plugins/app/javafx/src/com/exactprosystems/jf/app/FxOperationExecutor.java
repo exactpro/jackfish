@@ -10,6 +10,7 @@ import com.sun.javafx.robot.FXRobotFactory;
 import com.sun.javafx.robot.impl.FXRobotHelper;
 import javafx.application.Platform;
 import javafx.collections.ObservableList;
+import javafx.event.Event;
 import javafx.event.EventTarget;
 import javafx.scene.Node;
 import javafx.scene.Parent;
@@ -36,7 +37,6 @@ import static com.exactprosystems.jf.app.FxRemoteApplication.tryExecute;
 public class FxOperationExecutor extends AbstractOperationExecutor<EventTarget>
 {
     private Logger logger;
-    private FXRobot currentRobot;
 
     private boolean isAltDown = false;
     private boolean isShiftDown = false;
@@ -272,90 +272,95 @@ public class FxOperationExecutor extends AbstractOperationExecutor<EventTarget>
 	@Override
 	public boolean press(EventTarget component, Keyboard key) throws Exception
 	{
-	    //todo check
-		try
-		{
-            waitForIdle();
-            KeyCode kc = KeyCode.getKeyCode(key.name());
-            Rectangle rectangle = getRectangle(component);
-            this.currentRobot.mouseMove((int)rectangle.getX(), (int)rectangle.getY());
-            this.currentRobot.mouseClick(MouseButton.PRIMARY);
-            this.currentRobot.keyPress(kc);
-            this.currentRobot.keyType(kc, key.name());
-            this.currentRobot.keyRelease(kc);
-
-			return true;
-		}
-		catch (Throwable e)
-		{
-			logger.error(String.format("press(%s, %s)", component, key));
-			logger.error(e.getMessage(), e);
-			throw e;
-		}
-		finally
-		{
-            waitForIdle();
-		}
+		return tryExecute(EMPTY_CHECK,
+			() ->
+			{
+				final ArrayList<InputEvent> events = new ArrayList<>();
+				events.add(new KeyEvent(null, component, KeyEvent.KEY_PRESSED, "", "", KeyCode.getKeyCode(key.name()), this.isShiftDown, this.isControlDown, this.isAltDown, false ));
+				events.add(new KeyEvent(null, component, KeyEvent.KEY_TYPED, "", "", KeyCode.getKeyCode(key.name()), this.isShiftDown, this.isControlDown, this.isAltDown, false ));
+				events.add(new KeyEvent(null, component, KeyEvent.KEY_RELEASED, "", "", KeyCode.getKeyCode(key.name()), this.isShiftDown, this.isControlDown, this.isAltDown, false ));
+				Platform.runLater(new Runnable()
+				{
+					@Override
+					public void run()
+					{
+						for (InputEvent event : events)
+						{
+							Event.fireEvent(component, event);
+						}
+					}
+				});
+				return true;
+			},
+			e->
+			{
+				logger.error(String.format("press(%s, %s)", component, key));
+				logger.error(e.getMessage(), e);
+			}
+		);
 	}
 
 	@Override
 	public boolean upAndDown(EventTarget component, Keyboard key, boolean b) throws Exception
 	{
-        try
-        {
-            this.currentRobot.waitForIdle();
-            switch (key)
-            {
-                case SHIFT:
-                    this.isShiftDown = b;
-                    break;
-                case ALT:
-                    this.isAltDown = b;
-                    break;
-                case CONTROL:
-                    this.isControlDown = b;
-                    break;
-                default:
-                    break;
-            }
 
-            final ArrayList<InputEvent> events = new ArrayList<>();
-            boolean needPress = (key.equals(Keyboard.CONTROL)) && (key.equals(Keyboard.SHIFT)) && (key.equals(Keyboard.ALT)) && (key.equals(Keyboard.CAPS_LOCK)) ; //todo
+		return tryExecute(EMPTY_CHECK,
+			() ->
+			{
+				switch (key)
+				{
+					case SHIFT:
+						this.isShiftDown = b;
+						break;
+					case ALT:
+						this.isAltDown = b;
+						break;
+					case CONTROL:
+						this.isControlDown = b;
+						break;
+					default:
+						break;
+				}
 
-            if(b)
-            {
-                events.add(new KeyEvent(null, component, KeyEvent.KEY_PRESSED, "", "", KeyCode.getKeyCode(key.name()), this.isShiftDown, this.isControlDown, this.isAltDown, false ));
+				//todo check key with control
 
-                if(needPress)
-                {
-                    events.add(new KeyEvent(null, component, KeyEvent.KEY_TYPED, "", "", KeyCode.getKeyCode(key.name()), this.isShiftDown, this.isControlDown, this.isAltDown, false ));
-                }
-            }
-            else
-            {
-                events.add(new KeyEvent(null, component, KeyEvent.KEY_RELEASED, "", "", KeyCode.getKeyCode(key.name()), this.isShiftDown, this.isControlDown, this.isAltDown, false ));
-            }
+				final ArrayList<InputEvent> events = new ArrayList<>();
+				boolean needPress = (!key.equals(Keyboard.CONTROL) && !key.equals(Keyboard.SHIFT) && !key.equals(Keyboard.ALT) && !key.equals(Keyboard.CAPS_LOCK));
 
-            Platform.runLater(new Runnable()
-            {
-                @Override
-                public void run()
-                {
-                    for (InputEvent event : events)
-                    {
-                        logger.debug("event : " + event);
-                        //todo
-                    }
-                }
-            });
-        }
-        catch (Throwable e)
-        {
-            logger.error(String.format("upAndDown(%s, %s, %b)", component, key, b));
-            logger.error(e.getMessage(), e);
-            throw e;
-        }
-        return true;
+				if(b)
+				{
+					events.add(new KeyEvent(null, component, KeyEvent.KEY_PRESSED, "", "", KeyCode.getKeyCode(key.name()), this.isShiftDown, this.isControlDown, this.isAltDown, false ));
+
+					if(needPress)
+					{
+						events.add(new KeyEvent(null, component, KeyEvent.KEY_TYPED, "", "", KeyCode.getKeyCode(key.name()), this.isShiftDown, this.isControlDown, this.isAltDown, false ));
+					}
+				}
+				else
+				{
+					events.add(new KeyEvent(null, component, KeyEvent.KEY_RELEASED, "", "", KeyCode.getKeyCode(key.name()), this.isShiftDown, this.isControlDown, this.isAltDown, false ));
+				}
+
+				Platform.runLater(new Runnable()
+				{
+					@Override
+					public void run()
+					{
+						for (InputEvent event : events)
+						{
+							logger.debug("event : " + event);
+							Event.fireEvent(component, event);
+						}
+					}
+				});
+				return true;
+			},
+			e->
+			{
+				logger.error(String.format("upAndDown(%s, %s, %b)", component, key, b));
+				logger.error(e.getMessage(), e);
+			}
+		);
 	}
 
 	@Override
@@ -624,9 +629,9 @@ public class FxOperationExecutor extends AbstractOperationExecutor<EventTarget>
 		}
 	}
 
-	private void waitForIdle()
+	private int getKeyCode(Keyboard key)
 	{
-		this.currentRobot.waitForIdle();
+		return 0;
 	}
 
 	//region methods for work with windows/stages.
