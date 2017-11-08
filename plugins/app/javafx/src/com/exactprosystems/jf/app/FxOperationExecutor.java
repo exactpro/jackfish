@@ -211,35 +211,18 @@ public class FxOperationExecutor extends AbstractOperationExecutor<EventTarget>
 	@Override
 	public boolean press(EventTarget component, Keyboard key) throws Exception
 	{
-	    //not checked. can't use robot cause he don't have target for events
+	    //todo check
 		try
 		{
             waitForIdle();
-			final ArrayList<InputEvent> events = new ArrayList<>();
-			events.add(new KeyEvent(null, component, KeyEvent.KEY_PRESSED, "", "", KeyCode.getKeyCode(key.name()), this.isShiftDown, this.isControlDown, this.isAltDown, false ));
-			events.add(new KeyEvent(null, component, KeyEvent.KEY_TYPED, "", "", KeyCode.getKeyCode(key.name()), this.isShiftDown, this.isControlDown, this.isAltDown, false ));
-			events.add(new KeyEvent(null, component, KeyEvent.KEY_RELEASED, "", "", KeyCode.getKeyCode(key.name()), this.isShiftDown, this.isControlDown, this.isAltDown, false ));
-            List<Class<? extends Control>> allControls = new ArrayList<>();
-            allControls.add(Button.class); //todo add all classes OR create around 20+ instanceof
-            Platform.runLater(new Runnable()
-			{
-				@Override
-				public void run()
-				{
-                    /*for (Class<? extends Control> clazz : allControls)
-                    {
-                        if (component instanceof clazz)
-                        {
-                            for (InputEvent event : events)
-                            {
-                                logger.debug("event : " + event);
-                                ((clazz) component).fireEvent(event);
-                            }
-                            break;
-                        }
-                    }*/
-				}
-			});
+            KeyCode kc = KeyCode.getKeyCode(key.name());
+            Rectangle rectangle = getRectangle(component);
+            this.currentRobot.mouseMove((int)rectangle.getX(), (int)rectangle.getY());
+            this.currentRobot.mouseClick(MouseButton.PRIMARY);
+            this.currentRobot.keyPress(kc);
+            this.currentRobot.keyType(kc, key.name());
+            this.currentRobot.keyRelease(kc);
+
 			return true;
 		}
 		catch (Throwable e)
@@ -257,7 +240,6 @@ public class FxOperationExecutor extends AbstractOperationExecutor<EventTarget>
 	@Override
 	public boolean upAndDown(EventTarget component, Keyboard key, boolean b) throws Exception
 	{
-	    //not checked
         try
         {
             this.currentRobot.waitForIdle();
