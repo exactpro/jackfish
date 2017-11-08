@@ -380,9 +380,29 @@ public class FxOperationExecutor extends AbstractOperationExecutor<EventTarget>
 	}
 
 	@Override
-	public boolean toggle(EventTarget component, boolean value) throws Exception
+	public boolean toggle(EventTarget target, boolean value) throws Exception
 	{
-		return false;
+		return tryExecute(EMPTY_CHECK,
+				()->
+				{
+					if (target instanceof ToggleButton)
+					{
+						Platform.runLater(() -> ((ToggleButton) target).setSelected(value));
+						return true;
+					}
+					else if (target instanceof CheckBox)
+					{
+						Platform.runLater(() -> ((CheckBox) target).setSelected(value));
+						return true;
+					}
+					return false;
+				},
+				e ->
+				{
+					logger.debug(String.format("toggle(%s,%s)", target, value));
+					logger.debug(e.getMessage(), e);
+				}
+		);
 	}
 
 	@Override
