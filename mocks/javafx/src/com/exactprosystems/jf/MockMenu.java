@@ -7,11 +7,11 @@ import javafx.scene.control.MenuItem;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MockMenu
+class MockMenu
 {
     private List<Menu> menus;
 
-    public MockMenu()
+    MockMenu()
     {
         menus = new ArrayList<>();
         Menu menuItem = new Menu("MenuItem");
@@ -24,7 +24,7 @@ public class MockMenu
         menus.add(menuItem);
     }
 
-    public Menu[] getMenus()
+    Menu[] getMenus()
     {
         return menus.toArray(new Menu[0]);
     }

@@ -23,6 +23,15 @@ Subs;;;;
         #Id;#Action;$Matrix
         MXWT1;MatrixWait;MXRN1.Out
 
+        #Id;#Action;$Table;Result
+        TBLSLCT1;TableSelect;MXRN1.Out.getTable();new StringCondition('Result','Failed')
+
+        #Action;$Colored;$Table
+        TableConsiderColumnsAs;{'Result'};TBLSLCT1.Out
+
+        #Action;$ReportValues;$Columns;$BeforeTestCase;$Table;$Title
+        TableReport;true;{'Result', 'Time', 'Error', 'Screenshot'};'Test';TBLSLCT1.Out;param + ' Controls'
+
     #EndSubCase
 
 

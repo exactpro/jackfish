@@ -1,6 +1,5 @@
 package com.exactprosystems.jf;
 
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
@@ -33,13 +32,13 @@ public class MainController implements Initializable
     @FXML private MenuBar menu;
     @FXML private Button protocolClear;
     @FXML private TextArea protocol;
-    @FXML private TreeView treeView;
+    @FXML private TreeView<String> treeView;
     @FXML private CheckBox checkBox;
     @FXML private RadioButton green;
     @FXML private RadioButton yellow;
     @FXML private RadioButton orange;
     @FXML private RadioButton blue;
-    @FXML private ComboBox comboBox;
+    @FXML private ComboBox<String> comboBox;
     @FXML private Spinner spinner;
     @FXML private SplitPane splitter;
     @FXML private TabPane tabPanel;
@@ -51,7 +50,7 @@ public class MainController implements Initializable
     @FXML private Button any;
     @FXML private Label centralLabel;
     @FXML private ImageView image;
-    @FXML private TableView table;
+    @FXML private TableView<MockTable.TableData> table;
     @FXML private Button button;
 
     private static final String CLICK = "_click";
@@ -77,28 +76,28 @@ public class MainController implements Initializable
         centralLabel.setText(formatName + (mouseEvent.getClickCount() == 1 ? CLICK : DOUBLE_CLICK));
     }
 
-    public void doProtocolClear(ActionEvent actionEvent)
+    public void doProtocolClear()
     {
         this.protocol.clear();
     }
 
-    public void doShowButton(ActionEvent actionEvent)
+    public void doShowButton()
     {
         hideButton.setVisible(true);
     }
 
-    public void doHideButton(ActionEvent actionEvent)
+    public void doHideButton()
     {
         hideButton.setVisible(false);
     }
 
-    public void doClearCount(ActionEvent actionEvent)
+    public void doClearCount()
     {
         mainModel.clearCounter();
         countLabel.setText(String.valueOf(mainModel.getCounter()));
     }
 
-    public void doPlusCount(ActionEvent actionEvent)
+    public void doPlusCount()
     {
         mainModel.plusCounter();
         countLabel.setText(String.valueOf(mainModel.getCounter()));
