@@ -143,7 +143,7 @@ public class FxOperationExecutor extends AbstractOperationExecutor<EventTarget>
 				{
 					logger.debug(String.format("Start found owner : %s", owner));
 
-					Node ownerNode = null;
+					Node ownerNode;
 
 					if (owner != null)
 					{
@@ -173,7 +173,7 @@ public class FxOperationExecutor extends AbstractOperationExecutor<EventTarget>
 					{
 						ownerNode = currentRoot();
 					}
-					logger.debug(String.format("Found owner : " + MatcherFx.targetToString(ownerNode)));
+					logger.debug(String.format("Found owner : %s", MatcherFx.targetToString(ownerNode)));
 
 					return new MatcherFx(this.info, element, ownerNode).findAll();
 				},
@@ -228,18 +228,19 @@ public class FxOperationExecutor extends AbstractOperationExecutor<EventTarget>
 	@Override
 	public boolean elementIsEnabled(EventTarget component) throws Exception
 	{
-		return false;
+		return component instanceof Node && !((Node) component).isDisable();
 	}
 
 	@Override
 	public boolean elementIsVisible(EventTarget component) throws Exception
 	{
-		return false;
+		return component instanceof Node && !((Node) component).isVisible();
 	}
 
 	@Override
 	public boolean tableIsContainer()
 	{
+		//TODO think about it
 		return false;
 	}
 
@@ -358,9 +359,24 @@ public class FxOperationExecutor extends AbstractOperationExecutor<EventTarget>
 	}
 
 	@Override
-	public boolean push(EventTarget component) throws Exception
+	public boolean push(EventTarget target) throws Exception
 	{
-		return false;
+		return tryExecute(EMPTY_CHECK,
+			()->
+			{
+				if (target instanceof ButtonBase)
+				{
+					Platform.runLater(((ButtonBase) target)::fire);
+					return true;
+				}
+				return false;
+			},
+			e ->
+			{
+				logger.debug(String.format("push(%s)", target));
+				logger.debug(e.getMessage(), e);
+			}
+	);
 	}
 
 	@Override
