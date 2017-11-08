@@ -50,39 +50,39 @@ public class FxAppFactory extends AbstractApplicationFactory
 	{
 		Map<LocatorFieldKind, String> fieldMap = new HashMap<>();
 
-		fieldMap.put(LocatorFieldKind.UID, null);
-		fieldMap.put(LocatorFieldKind.ACTION, "action");
+		fieldMap.put(LocatorFieldKind.UID, "id");
+		fieldMap.put(LocatorFieldKind.ACTION, null);
 		fieldMap.put(LocatorFieldKind.CLAZZ, "class");
 		fieldMap.put(LocatorFieldKind.NAME, "name");
 		fieldMap.put(LocatorFieldKind.TITLE, "title");
-		fieldMap.put(LocatorFieldKind.TEXT, null);
+		fieldMap.put(LocatorFieldKind.TEXT, "text");
 		fieldMap.put(LocatorFieldKind.TOOLTIP, "tooltip");
 
 		info = new JavaFxPluginInfo(fieldMap, new ArrayList<>());
 
 		info.addTypes(ControlKind.Any, "*");
-		info.addTypes(ControlKind.Button, Button.class.getSimpleName());
-		info.addTypes(ControlKind.CheckBox, CheckBox.class.getSimpleName());
-		info.addTypes(ControlKind.ComboBox, ComboBox.class.getSimpleName());
-		info.addTypes(ControlKind.Dialog, Dialog.class.getSimpleName());
-		info.addTypes(ControlKind.Frame, Scene.class.getSimpleName());
-		info.addTypes(ControlKind.Label, Label.class.getSimpleName());
-		info.addTypes(ControlKind.ListView, ListView.class.getSimpleName());
-		info.addTypes(ControlKind.Menu, Menu.class.getSimpleName());
-		info.addTypes(ControlKind.MenuItem, MenuItem.class.getSimpleName());
-		info.addTypes(ControlKind.Panel, Pane.class.getSimpleName());
-		info.addTypes(ControlKind.ProgressBar, ProgressBar.class.getSimpleName());
-		info.addTypes(ControlKind.RadioButton, RadioButton.class.getSimpleName());
-		info.addTypes(ControlKind.ScrollBar, ScrollBar.class.getSimpleName());
-		info.addTypes(ControlKind.Slider, Slider.class.getSimpleName());
-		info.addTypes(ControlKind.Splitter, SplitPane.class.getSimpleName());
-		info.addTypes(ControlKind.Spinner, Spinner.class.getSimpleName());
-		info.addTypes(ControlKind.Table, TableView.class.getSimpleName());
-		info.addTypes(ControlKind.TabPanel, TabPane.class.getSimpleName());
-		info.addTypes(ControlKind.TextBox, TextField.class.getSimpleName(), TextArea.class.getSimpleName());
-		info.addTypes(ControlKind.ToggleButton, ToggleButton.class.getSimpleName());
-		info.addTypes(ControlKind.Tooltip, Tooltip.class.getSimpleName());
-		info.addTypes(ControlKind.Tree, TreeView.class.getSimpleName());
+		info.addTypes(ControlKind.Button, Button.class.getName());
+		info.addTypes(ControlKind.CheckBox, CheckBox.class.getName());
+		info.addTypes(ControlKind.ComboBox, ComboBox.class.getName());
+		info.addTypes(ControlKind.Dialog, Dialog.class.getName());
+		info.addTypes(ControlKind.Frame, Scene.class.getName());
+		info.addTypes(ControlKind.Label, Label.class.getName());
+		info.addTypes(ControlKind.ListView, ListView.class.getName());
+		info.addTypes(ControlKind.Menu, Menu.class.getName());
+		info.addTypes(ControlKind.MenuItem, MenuItem.class.getName());
+		info.addTypes(ControlKind.Panel, Pane.class.getName());
+		info.addTypes(ControlKind.ProgressBar, ProgressBar.class.getName());
+		info.addTypes(ControlKind.RadioButton, RadioButton.class.getName());
+		info.addTypes(ControlKind.ScrollBar, ScrollBar.class.getName());
+		info.addTypes(ControlKind.Slider, Slider.class.getName());
+		info.addTypes(ControlKind.Splitter, SplitPane.class.getName());
+		info.addTypes(ControlKind.Spinner, Spinner.class.getName());
+		info.addTypes(ControlKind.Table, TableView.class.getName());
+		info.addTypes(ControlKind.TabPanel, TabPane.class.getName());
+		info.addTypes(ControlKind.TextBox, TextField.class.getName(), TextArea.class.getName());
+		info.addTypes(ControlKind.ToggleButton, ToggleButton.class.getName());
+		info.addTypes(ControlKind.Tooltip, Tooltip.class.getName());
+		info.addTypes(ControlKind.Tree, TreeView.class.getName());
 		info.addTypes(ControlKind.Wait, "*");
 	}
 

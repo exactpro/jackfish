@@ -7,6 +7,7 @@ import javafx.scene.Parent;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class RootContainer extends Parent
 {
@@ -27,5 +28,11 @@ public class RootContainer extends Parent
 	public ObservableList<Node> getChildrenUnmodifiable()
 	{
 		return FXCollections.unmodifiableObservableList(FXCollections.observableArrayList(this.targets));
+	}
+
+	@Override
+	public String toString()
+	{
+		return String.format("RootContainer, targets size : %s , targets : [%s]", this.targets.size(), this.targets.stream().map(MatcherFx::targetToString).collect(Collectors.joining(",")));
 	}
 }

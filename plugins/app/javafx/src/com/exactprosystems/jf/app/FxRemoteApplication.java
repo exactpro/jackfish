@@ -37,6 +37,7 @@ import java.util.stream.Collectors;
 public class FxRemoteApplication extends RemoteApplication
 {
 	private Logger logger = null;
+	private Logger executorLogger = null;
 	private FxOperationExecutor operationExecutor;
 	private PluginInfo          info;
 
@@ -48,14 +49,9 @@ public class FxRemoteApplication extends RemoteApplication
 	{
 		try
 		{
-			this.logger = Logger.getLogger(FxRemoteApplication.class);
-
-			Layout layout = new PatternLayout(serverLogPattern);
-			Appender appender = new FileAppender(layout, logName);
-			this.logger.addAppender(appender);
-			this.logger.setLevel(Level.toLevel(serverLogLevel, Level.ALL));
-
-			MatcherFx.setLogger(this.logger);
+			this.logger = createLogger(FxRemoteApplication.class, logName, serverLogLevel, serverLogPattern);
+			this.executorLogger = createLogger(FxOperationExecutor.class, logName, serverLogLevel, serverLogPattern);
+			MatcherFx.setLogger(createLogger(MatcherFx.class, logName, serverLogLevel, serverLogPattern));
 		}
 		catch (RemoteException e)
 		{
@@ -113,21 +109,22 @@ public class FxRemoteApplication extends RemoteApplication
 		this.mainThread = new Thread(() -> {
 			try
 			{
+				logger.debug(String.format("Start loading class %s", mainClass));
 				ClassLoader classLoader = FxRemoteApplication.class.getClassLoader();
-				try(URLClassLoader urlClassLoader = URLClassLoader.newInstance(new URL[]{new URL("file://" + jarName)}, classLoader))
+				try (URLClassLoader urlClassLoader = URLClassLoader.newInstance(new URL[]{new URL("file://" + jarName)}, classLoader))
 				{
 					Class<?> applicationType = urlClassLoader.loadClass(mainClass);
 					Method mainMethod = applicationType.getMethod("main", String[].class);
-					this.operationExecutor = new FxOperationExecutor(this.useTrimText, this.logger);
+					this.operationExecutor = new FxOperationExecutor(this.useTrimText, this.executorLogger);
 					this.isInit = true;
 					isLoading.set(true);
-
+					logger.debug("Before invoke main method");
 					mainMethod.invoke(null, new Object[]{arguments == null ? null : new String[]{arguments}});
 				}
 			}
 			catch (Exception e)
 			{
-				logger.error("connectDerived. keys : " + args.keySet() + " , value : " + args.values());
+				logger.error("startDerived. keys : " + args.keySet() + " , value : " + args.values());
 				logger.error(e.getMessage(), e);
 				last[0] = e;
 				this.isInit = false;
@@ -145,8 +142,10 @@ public class FxRemoteApplication extends RemoteApplication
 		}
 
 		//check it we have exception - throw it
+		logger.debug(String.format("Application load successful"));
 		if (last[0] != null)
 		{
+			logger.debug(String.format("Application load failed"));
 			//we need throw exception and stop the mainThread
 			if (this.mainThread.isAlive())
 			{
@@ -162,6 +161,7 @@ public class FxRemoteApplication extends RemoteApplication
 	@Override
 	protected void stopDerived(boolean needKill) throws Exception
 	{
+		logger.debug("Stop derived");
 		if (this.mainThread != null && this.mainThread.isAlive())
 		{
 			this.mainThread.interrupt();
@@ -172,7 +172,7 @@ public class FxRemoteApplication extends RemoteApplication
 	@Override
 	protected Collection<String> titlesDerived() throws Exception
 	{
-		return this.tryAndThrowOrReturn(
+		return this.tryExecute(
 				() ->FXRobotHelper.getStages().stream().map(Stage::getTitle).collect(Collectors.toList()),
 				e ->
 				{
@@ -185,10 +185,11 @@ public class FxRemoteApplication extends RemoteApplication
 	@Override
 	protected void resizeDerived(Resize resize, int height, int width) throws Exception
 	{
-		this.tryAndThrowOrReturn(
+		this.tryExecute(
 				() ->
 				{
 					Stage stage = this.operationExecutor.mainStage();
+					logger.debug("Get main stage : %s" + MatcherFx.targetToString(stage));
 					if (stage != null)
 					{
 						if (resize != null)
@@ -232,17 +233,17 @@ public class FxRemoteApplication extends RemoteApplication
 	@Override
 	protected Collection <String> findAllDerived(Locator owner, Locator element) throws Exception
 	{
-		return this.tryAndThrowOrReturn(
+		return this.tryExecute(
 				() -> this.operationExecutor.findAll(owner, element)
 						.stream()
 						.filter(e -> e instanceof Node)
 						.map(e -> (Node)e)
 						.map(node ->
 						{
-							StringBuilder sb = new StringBuilder(node.toString());
+							StringBuilder sb = new StringBuilder(MatcherFx.targetToString(node));
 							if (node instanceof ComboBox)
 							{
-								sb.append(((ComboBox) node).getItems());
+								sb.append("items : ").append(((ComboBox) node).getItems());
 							}
 							return sb.toString();
 						})
@@ -259,19 +260,23 @@ public class FxRemoteApplication extends RemoteApplication
 	@Override
 	protected ImageWrapper getImageDerived(Locator owner, Locator element) throws Exception
 	{
-		return this.tryAndThrowOrReturn(
+		return this.tryExecute(
 				() ->
 				{
+					logger.debug(String.format("Start get image for owner = %s and element = %s", owner, element));
 					EventTarget target = null;
 					if (element != null)
 					{
 						target = this.operationExecutor.find(owner, element);
+						logger.debug(String.format("Found target : %s", target));
 					}
 					if (element == null)
 					{
 						Parent parent = this.operationExecutor.currentSceneRoot();
+						logger.debug(String.format("Found current scene root : %s", parent));
 						if (parent == null)
 						{
+							logger.debug(String.format("Parent is null. Getting image of whole screen"));
 							Rectangle desktopRect = new Rectangle(Toolkit.getDefaultToolkit().getScreenSize());
 							return new ImageWrapper(new java.awt.Robot().createScreenCapture(desktopRect));
 						}
@@ -280,19 +285,21 @@ public class FxRemoteApplication extends RemoteApplication
 							target = parent;
 						}
 					}
-
+					logger.debug(String.format("target : %s", target));
 					if (target instanceof Node)
 					{
 						final BufferedImage[] img = {null};
 						final CountDownLatch latch = new CountDownLatch(1);
-						EventTarget finalTarget = target;
+						Node finalTarget = (Node) target;
 						PlatformImpl.runLater(() -> {
-							WritableImage snapshot = ((Node) finalTarget).snapshot(new SnapshotParameters(), null);
+							logger.debug(String.format("Start get image of Node %s", finalTarget));
+							WritableImage snapshot = finalTarget.snapshot(new SnapshotParameters(), null);
 							img[0] = SwingFXUtils.fromFXImage(snapshot, null);
 							latch.countDown();
 						});
 						//wait image
-						this.waitForIdle();
+						waitForIdle();
+						logger.debug(String.format("Getting image for target %s is done. Image size [width : %s, height : %s]", target, img[0].getWidth(), img[0].getHeight()));
 						return new ImageWrapper(img[0]);
 					}
 					throw new Exception("Target is not instance of node");
@@ -308,9 +315,10 @@ public class FxRemoteApplication extends RemoteApplication
 	@Override
 	protected Rectangle getRectangleDerived(Locator owner, Locator element) throws Exception
 	{
-		return this.tryAndThrowOrReturn(
+		return this.tryExecute(
 				() ->
 				{
+					logger.debug(String.format("Start get rectangle for owner [%s] and element [%s]", owner, element));
 					if (element == null)
 					{
 						return this.operationExecutor.getRectangle(this.operationExecutor.mainStage());
@@ -331,7 +339,7 @@ public class FxRemoteApplication extends RemoteApplication
 	@Override
 	protected OperationResult operateDerived(Locator owner, Locator element, Locator rows, Locator header, Operation operation) throws Exception
 	{
-		return this.tryAndThrowOrReturn(
+		return this.tryExecute(
 				() -> operation.operate(this.operationExecutor, owner, element, rows, header),
 				e ->
 				{
@@ -344,7 +352,7 @@ public class FxRemoteApplication extends RemoteApplication
 	@Override
 	protected CheckingLayoutResult checkLayoutDerived(Locator owner, Locator element, Spec spec) throws Exception
 	{
-		return this.tryAndThrowOrReturn(
+		return this.tryExecute(
 				() -> spec.perform(this.operationExecutor, owner, element),
 				e ->
 				{
@@ -357,7 +365,7 @@ public class FxRemoteApplication extends RemoteApplication
 	@Override
 	protected int closeAllDerived(Locator element, Collection <LocatorAndOperation> operations) throws Exception
 	{
-		return this.tryAndThrowOrReturn(
+		return this.tryExecute(
 				()->
 				{
 					logger.debug("Operations count : " + operations.size());
@@ -378,7 +386,7 @@ public class FxRemoteApplication extends RemoteApplication
 	@Override
 	protected Document getTreeDerived(Locator owner) throws Exception
 	{
-		return this.tryAndThrowOrReturn(
+		return this.tryExecute(
 				() -> MatcherFx.createDocument(this.info, this.operationExecutor.findOwner(owner), false, true),
 				e ->
 				{
@@ -397,7 +405,7 @@ public class FxRemoteApplication extends RemoteApplication
 	@Override
 	protected void moveWindowDerived(int x, int y) throws Exception
 	{
-		this.tryAndThrowOrReturn(
+		this.tryExecute(
 				() ->
 				{
 					this.operationExecutor.mainStage().setX(x);
@@ -469,17 +477,12 @@ public class FxRemoteApplication extends RemoteApplication
 	}
 	//endregion
 
-	//region private methods
-
-	private <T> T tryAndThrowOrReturn(IReturn<T> func, Consumer<Exception> log) throws Exception
+	public static <T> T tryExecute(ICheck beforeCall, IReturn<T> func, Consumer<Exception> log) throws Exception
 	{
-		if (!this.isInit)
-		{
-			throw new Exception("Application is not init");
-		}
+		beforeCall.check();
 		try
 		{
-			this.waitForIdle();
+			waitForIdle();
 			return func.call();
 		}
 		catch (RemoteException e)
@@ -493,7 +496,32 @@ public class FxRemoteApplication extends RemoteApplication
 		}
 	}
 
-	private void waitForIdle()
+	public static Logger createLogger(Class<?> clazz, String logName, String serverLogLevel, String serverLogPattern) throws Exception
+	{
+		Logger logger = Logger.getLogger(clazz);
+
+		Layout layout = new PatternLayout(serverLogPattern);
+		Appender appender = new FileAppender(layout, logName);
+		logger.addAppender(appender);
+		logger.setLevel(Level.toLevel(serverLogLevel, Level.ALL));
+		return logger;
+	}
+
+	//region private methods
+
+	private <T> T tryExecute(IReturn<T> func, Consumer<Exception> log) throws Exception
+	{
+		return tryExecute(
+				() ->
+				{
+					if (!this.isInit)
+					{
+						throw new Exception("Application is not init");
+					}
+				}, func,log);
+	}
+
+	private static void waitForIdle()
 	{
 		//code from BaseFXRobot
 		final CountDownLatch latch = new CountDownLatch(1);
@@ -512,9 +540,14 @@ public class FxRemoteApplication extends RemoteApplication
 		}
 	}
 
-	private interface IReturn<T>
+	interface IReturn<T>
 	{
 		T call() throws Exception;
+	}
+
+	interface ICheck
+	{
+		void check() throws Exception;
 	}
 
 	//endregion

@@ -2,6 +2,9 @@ package com.exactprosystems.jf.app;
 
 import com.exactprosystems.jf.api.app.*;
 import com.exactprosystems.jf.api.client.ICondition;
+import com.exactprosystems.jf.api.error.app.ElementNotFoundException;
+import com.exactprosystems.jf.api.error.app.FeatureNotSupportedException;
+import com.exactprosystems.jf.api.error.app.TooManyElementsException;
 import com.sun.javafx.robot.FXRobot;
 import com.sun.javafx.robot.FXRobotFactory;
 import com.sun.javafx.robot.impl.FXRobotHelper;
@@ -28,6 +31,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicLong;
 
+import static com.exactprosystems.jf.app.FxRemoteApplication.tryExecute;
+
 public class FxOperationExecutor extends AbstractOperationExecutor<EventTarget>
 {
     private Logger logger;
@@ -36,6 +41,8 @@ public class FxOperationExecutor extends AbstractOperationExecutor<EventTarget>
     private boolean isAltDown = false;
     private boolean isShiftDown = false;
     private boolean isControlDown = false;
+
+    private static final FxRemoteApplication.ICheck EMPTY_CHECK = () -> {};
 
     public FxOperationExecutor(boolean useTrimText, Logger logger)
     {
@@ -70,7 +77,7 @@ public class FxOperationExecutor extends AbstractOperationExecutor<EventTarget>
 	@Override
 	protected String scriptDerived(EventTarget component, String script) throws Exception
 	{
-		return null;
+		throw new FeatureNotSupportedException("script");
 	}
 
 	@Override
@@ -104,9 +111,16 @@ public class FxOperationExecutor extends AbstractOperationExecutor<EventTarget>
 	}
 
 	@Override
-	public Rectangle getRectangle(EventTarget component) throws Exception
+	public Rectangle getRectangle(EventTarget target) throws Exception
 	{
-		return null;
+		return tryExecute(EMPTY_CHECK,
+				() -> MatcherFx.getRect(target),
+				e->
+				{
+					this.logger.error(String.format("getRectangle(%s)", target));
+					this.logger.error(e.getMessage(), e);
+				}
+		);
 	}
 
 	@Override
@@ -124,33 +138,79 @@ public class FxOperationExecutor extends AbstractOperationExecutor<EventTarget>
 	@Override
 	public List<EventTarget> findAll(Locator owner, Locator element) throws Exception
 	{
-		return null;
+		return tryExecute(EMPTY_CHECK,
+				()->
+				{
+					logger.debug(String.format("Start found owner : %s", owner));
+
+					Node ownerNode = null;
+
+					if (owner != null)
+					{
+						List<EventTarget> targets = new MatcherFx(this.info, owner, currentRoot()).findAll();
+						logger.debug(String.format("Found owners size %s", targets.size()));
+
+						if (targets.isEmpty())
+						{
+							throw new ElementNotFoundException("owner", owner);
+						}
+
+						if (targets.size() > 1)
+						{
+							targets.stream().map(MatcherFx::targetToString).forEach(s -> logger.debug(String.format("Found %s", s)));
+							throw new TooManyElementsException(Integer.toString(targets.size()), owner);
+						}
+
+						EventTarget target = targets.get(0);
+						if (!(target instanceof Node))
+						{
+							logger.debug(String.format("Owner not instance of Node. Owner : %s", MatcherFx.targetToString(target)));
+							throw new ElementNotFoundException("Found owner not a node");
+						}
+						ownerNode = (Node) target;
+					}
+					else
+					{
+						ownerNode = currentRoot();
+					}
+					logger.debug(String.format("Found owner : " + MatcherFx.targetToString(ownerNode)));
+
+					return new MatcherFx(this.info, element, ownerNode).findAll();
+				},
+				e->
+				{
+					logger.error(String.format("findAll(%s,%s)", owner, element));
+					logger.error(e.getMessage(), e);
+				}
+		);
 	}
 
 	@Override
 	public EventTarget find(Locator owner, Locator element) throws Exception
 	{
-
-
-		EventTarget target = null;
-		for (Stage stage : FXRobotHelper.getStages())
-		{
-			Parent root = stage.getScene().getRoot();
-			Node lookup = root.lookup("#any");
-			if (lookup != null)
-			{
-				target = lookup;
-				break;
-			}
-		}
-		logger.debug("Find " + target);
-		if (target == null)
-		{
-			//TODO
-			throw new Exception("");
-		}
-		logger.debug("Find " + target);
-		return target;
+		return tryExecute(EMPTY_CHECK,
+				()->
+				{
+					logger.debug(String.format("Start find for owner = %s and element = %s", owner, element));
+					List<EventTarget> targets = this.findAll(owner, element);
+					logger.debug(String.format("Found %s elements", targets.size()));
+					if (targets.isEmpty())
+					{
+						throw new ElementNotFoundException(element);
+					}
+					if (targets.size() > 1)
+					{
+						targets.stream().map(MatcherFx::targetToString).forEach(s -> logger.debug(String.format("Found %s", s)));
+						throw new TooManyElementsException(Integer.toString(targets.size()), element);
+					}
+					return targets.get(0);
+				},
+				e ->
+				{
+					logger.debug(String.format("find(%s,%s)", owner, element));
+					logger.debug(e.getMessage(), e);
+				}
+		);
 	}
 
 	@Override
@@ -513,6 +573,10 @@ public class FxOperationExecutor extends AbstractOperationExecutor<EventTarget>
 	}
 
 	//region methods for work with windows/stages.
+
+	/**
+	 * collect roots from all windows
+	 */
 	Parent currentRoot()
 	{
 		RootContainer container = new RootContainer();
@@ -547,22 +611,32 @@ public class FxOperationExecutor extends AbstractOperationExecutor<EventTarget>
 	Stage mainStage()
 	{
 		ObservableList<Stage> stages = FXRobotHelper.getStages();
+		logger.debug(String.format("Found %s stages", stages.size()));
 		if (stages.isEmpty())
 		{
 			return null;
 		}
-		return stages.stream().filter(s -> s.impl_getMXWindowType().equals("PrimaryStage")).findFirst().orElse(stages.get(0));
+		return stages.stream()
+				.peek(s -> logger.debug(String.format("Found stage : %s. MxWindowType : %s", MatcherFx.targetToString(s), s.impl_getMXWindowType())))
+				.filter(s -> s.impl_getMXWindowType().equals("PrimaryStage"))
+				.findFirst()
+				.orElse(stages.get(0));
 	}
 
 	Node findOwner(Locator owner) throws Exception
 	{
+		logger.debug("Start found owner for " + owner);
 		if (owner == null)
 		{
-			return mainWindow().getScene().getRoot();
+			Parent root = currentRoot();
+			logger.debug("Found root of main window : " + root);
+			return root;
 		}
 		else
 		{
+			logger.debug("Try to find owner");
 			EventTarget target = this.find(null, owner);
+			logger.debug("Found eventTarget : " + target);
 			if (target instanceof Node)
 			{
 				return (Node) target;

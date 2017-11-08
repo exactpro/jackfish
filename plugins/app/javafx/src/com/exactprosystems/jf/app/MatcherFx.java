@@ -39,6 +39,7 @@ import java.io.OutputStreamWriter;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -152,14 +153,41 @@ public class MatcherFx
 			}
 		}
 
+		//we need check that target is instance of locator.getControlKind()
+		boolean classIsFound = checkClass(target);
+
+		if (!classIsFound)
+		{
+			return false;
+		}
+
+		result = part(result, this.locator, LocatorFieldKind.UID,     getId(target));
 		result = part(result, this.locator, LocatorFieldKind.CLAZZ,   getClass(target));
-		result = part(result, this.locator, LocatorFieldKind.NAME,    getName(target));
 		result = part(result, this.locator, LocatorFieldKind.TEXT,    getText(target));
 		result = part(result, this.locator, LocatorFieldKind.TOOLTIP, getToolTip(target));
 		result = part(result, this.locator, LocatorFieldKind.TITLE,   getTitle(target));
-		result = part(result, this.locator, LocatorFieldKind.ACTION,  getAction(target));
 
 		return result;
+	}
+
+	private boolean checkClass(EventTarget target)
+	{
+		Set<String> strClasses = this.info.nodeByControlKind(locator.getControlKind());
+		for (String strClass : strClasses)
+		{
+			try
+			{
+				Class<?> clazz = Class.forName(strClass);
+				boolean classIsFound = clazz.isAssignableFrom(target.getClass());
+				if (classIsFound)
+				{
+					return true;
+				}
+			}
+			catch (ClassNotFoundException ignored)
+			{}
+		}
+		return false;
 	}
 
 	private void collect(Node node, List<Node> nodes)
@@ -264,17 +292,15 @@ public class MatcherFx
 		}
 
 		String className = info.attributeName(LocatorFieldKind.CLAZZ);
-		String nameName = info.attributeName(LocatorFieldKind.NAME);
+		String idName = info.attributeName(LocatorFieldKind.UID);
 		String titleName = info.attributeName(LocatorFieldKind.TITLE);
-		String actionName = info.attributeName(LocatorFieldKind.ACTION);
 		String tooltipName = info.attributeName(LocatorFieldKind.TOOLTIP);
 
-		//TODO think about getAction
-		node.setAttribute(actionName, getAction(component));
-		node.setAttribute(titleName, getTitle(component));
-		node.setAttribute(tooltipName, getToolTip(component));
-		node.setAttribute(nameName, getName(component));
-		node.setAttribute(className, getClass(component));
+
+		setNodeAttribute(node, titleName, getTitle(component));
+		setNodeAttribute(node, tooltipName, getToolTip(component));
+		setNodeAttribute(node, idName, getId(component));
+		setNodeAttribute(node, className, getClass(component));
 		String textContent = getText(component);
 		if (!Str.IsNullOrEmpty(textContent))
 		{
@@ -292,10 +318,18 @@ public class MatcherFx
 			}
 		}
 	}
+
+	private static void setNodeAttribute(Element node, String attrName, String attrValue)
+	{
+		if (!Str.IsNullOrEmpty(attrValue))
+		{
+			node.setAttribute(attrName, attrValue);
+		}
+	}
 	//endregion
 
-	//region private methods
-	private static String getText(EventTarget target)
+	//region public static methods
+	public static String getText(EventTarget target)
 	{
 		if (target instanceof TableView)
 		{
@@ -339,7 +373,7 @@ public class MatcherFx
 		}
 	}
 
-	private static String getAction(EventTarget target)
+	public static String getAction(EventTarget target)
 	{
 		String objAction = null;
 
@@ -367,7 +401,7 @@ public class MatcherFx
 		return objAction;
 	}
 
-	private static String getTitle(EventTarget obj)
+	public static String getTitle(EventTarget obj)
 	{
 		String objTitle = null;
 
@@ -378,7 +412,7 @@ public class MatcherFx
 		return objTitle;
 	}
 
-	private static String getToolTip(EventTarget obj)
+	public static String getToolTip(EventTarget obj)
 	{
 		String objText = null;
 
@@ -394,7 +428,7 @@ public class MatcherFx
 		return objText;
 	}
 
-	private static String getName(EventTarget target)
+	public static String getId(EventTarget target)
 	{
 		String objText = null;
 
@@ -406,7 +440,7 @@ public class MatcherFx
 		return objText;
 	}
 
-	private static String getClass(EventTarget target)
+	public static String getClass(EventTarget target)
 	{
 		String objText = null;
 
@@ -418,7 +452,7 @@ public class MatcherFx
 		return objText;
 	}
 
-	private static boolean isVisible(EventTarget target)
+	public static boolean isVisible(EventTarget target)
 	{
 		if (target instanceof Scene)
 		{
@@ -443,16 +477,22 @@ public class MatcherFx
 		return false;
 	}
 
-	private static Rectangle getRect(EventTarget target)
+	public static Rectangle getRect(EventTarget target)
 	{
-		if (!(target instanceof Node))
+		if (target instanceof Window)
+		{
+			return new Rectangle(
+					(int) ((Window) target).getX()
+					, (int) ((Window) target).getY()
+					, (int) ((Window) target).getWidth()
+					, (int) ((Window) target).getHeight()
+			);
+		}
+		if (!(target instanceof Node) || target instanceof RootContainer)
 		{
 			return new Rectangle(0, 0, 0, 0);
 		}
 		Node node = (Node) target;
-		logger.debug("getRect is showing ? " + node.isVisible());
-		logger.debug("component " + node);
-		logger.debug("component hc" + node.hashCode());
 		if (node.isVisible())
 		{
 			Bounds screenBounds = node.localToScreen(node.getBoundsInLocal());
@@ -463,6 +503,23 @@ public class MatcherFx
 			return new Rectangle(x, y, width, height);
 		}
 		return new Rectangle(0, 0, 0, 0);
+	}
+
+	public static String targetToString(EventTarget target)
+	{
+		if (target instanceof Stage)
+		{
+			return "Stage : " + ((Stage) target).getTitle();
+		}
+		else if (target instanceof Dialog)
+		{
+			return "Dialog : " + ((Dialog) target).getTitle();
+		}
+		else if (target instanceof Scene)
+		{
+			return "SceneRoot : " + ((Scene) target).getRoot();
+		}
+		return target.toString();
 	}
 	//endregion
 

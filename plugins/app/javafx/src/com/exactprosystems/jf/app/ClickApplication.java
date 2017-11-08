@@ -26,7 +26,8 @@ public class ClickApplication extends Application {
             super();
             this.setId("clickPaneId");
             Button button = new Button("click me!");
-            button.setId("clickButtonId");
+			button.getStyleClass().addAll("someAnotherClass");
+			button.setId("clickButtonId");
             button.setOnAction(actionEvent -> button.setText("clicked!"));
             getChildren().add(button);
         }
