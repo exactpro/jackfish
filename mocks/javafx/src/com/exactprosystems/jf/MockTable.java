@@ -6,11 +6,14 @@ import javafx.collections.ObservableList;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.cell.PropertyValueFactory;
 
-public class MockTable
+import java.util.Arrays;
+import java.util.List;
+
+class MockTable
 {
-    private TableColumn <String, String> head1;
-    private TableColumn <String, String> head2;
-    private TableColumn <String, String> head3;
+    private TableColumn <TableData, String> head1;
+    private TableColumn <TableData, String> head2;
+    private TableColumn <TableData, String> head3;
     private ObservableList <TableData> tableData;
 
     MockTable()
@@ -28,9 +31,9 @@ public class MockTable
         this.head3.setCellValueFactory(new PropertyValueFactory<>("head3"));
     }
 
-    TableColumn[] getHeaders()
+    List<TableColumn<TableData, String>> getHeaders()
     {
-        return new TableColumn[]{head1, head2, head3};
+        return Arrays.asList(head1, head2, head3);
     }
 
     ObservableList<TableData> getTableData()

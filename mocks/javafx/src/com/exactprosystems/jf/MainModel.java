@@ -1,23 +1,26 @@
 package com.exactprosystems.jf;
 
+import java.util.Arrays;
+import java.util.List;
+
 class MainModel
 {
     private int counter;
     private final MockMenu menu;
     private MockTree tree;
-    private String[] data;
+    private List<String> data;
     private MockTable table;
 
     MainModel()
     {
-        this.data = new String[]{"Green", "Yellow", "Orange", "Blue"};
+        this.data = Arrays.asList("Green", "Yellow", "Orange", "Blue");
         this.table = new MockTable();
         this.tree = new MockTree();
         this.menu = new MockMenu();
         clearCounter();
     }
 
-    String[] getData()
+    List<String> getData()
     {
         return this.data;
     }
