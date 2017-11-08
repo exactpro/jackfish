@@ -28,6 +28,7 @@ import java.net.URL;
 import java.net.URLClassLoader;
 import java.rmi.RemoteException;
 import java.util.Collection;
+import java.util.Enumeration;
 import java.util.Map;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -37,7 +38,6 @@ import java.util.stream.Collectors;
 public class FxRemoteApplication extends RemoteApplication
 {
 	private Logger logger = null;
-	private Logger executorLogger = null;
 	private FxOperationExecutor operationExecutor;
 	private PluginInfo          info;
 
@@ -50,7 +50,6 @@ public class FxRemoteApplication extends RemoteApplication
 		try
 		{
 			this.logger = createLogger(FxRemoteApplication.class, logName, serverLogLevel, serverLogPattern);
-			this.executorLogger = createLogger(FxOperationExecutor.class, logName, serverLogLevel, serverLogPattern);
 			MatcherFx.setLogger(createLogger(MatcherFx.class, logName, serverLogLevel, serverLogPattern));
 		}
 		catch (RemoteException e)
@@ -115,10 +114,12 @@ public class FxRemoteApplication extends RemoteApplication
 				{
 					Class<?> applicationType = urlClassLoader.loadClass(mainClass);
 					Method mainMethod = applicationType.getMethod("main", String[].class);
-					this.operationExecutor = new FxOperationExecutor(this.useTrimText, this.executorLogger);
+					Logger executorLogger = createLogger(FxOperationExecutor.class, this.logger);
+					this.operationExecutor = new FxOperationExecutor(this.useTrimText, executorLogger);
+
 					this.isInit = true;
 					isLoading.set(true);
-					logger.debug("Before invoke main method");
+					this.logger.debug("Before invoke main method");
 					mainMethod.invoke(null, new Object[]{arguments == null ? null : new String[]{arguments}});
 				}
 			}
@@ -504,6 +505,18 @@ public class FxRemoteApplication extends RemoteApplication
 		Appender appender = new FileAppender(layout, logName);
 		logger.addAppender(appender);
 		logger.setLevel(Level.toLevel(serverLogLevel, Level.ALL));
+		return logger;
+	}
+
+	public static Logger createLogger(Class<?> clazz, Logger log)
+	{
+		Logger logger = Logger.getLogger(clazz);
+		Enumeration allAppenders = log.getAllAppenders();
+		while (allAppenders.hasMoreElements())
+		{
+			logger.addAppender(((Appender) allAppenders.nextElement()));
+		}
+		logger.setLevel(logger.getLevel());
 		return logger;
 	}
 

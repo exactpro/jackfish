@@ -207,8 +207,8 @@ public class FxOperationExecutor extends AbstractOperationExecutor<EventTarget>
 				},
 				e ->
 				{
-					logger.debug(String.format("find(%s,%s)", owner, element));
-					logger.debug(e.getMessage(), e);
+					logger.error(String.format("find(%s,%s)", owner, element));
+					logger.error(e.getMessage(), e);
 				}
 		);
 	}
@@ -378,8 +378,8 @@ public class FxOperationExecutor extends AbstractOperationExecutor<EventTarget>
 			},
 			e ->
 			{
-				logger.debug(String.format("push(%s)", target));
-				logger.debug(e.getMessage(), e);
+				logger.error(String.format("push(%s)", target));
+				logger.error(e.getMessage(), e);
 			}
 	);
 	}
@@ -404,8 +404,8 @@ public class FxOperationExecutor extends AbstractOperationExecutor<EventTarget>
 				},
 				e ->
 				{
-					logger.debug(String.format("toggle(%s,%s)", target, value));
-					logger.debug(e.getMessage(), e);
+					logger.error(String.format("toggle(%s,%s)", target, value));
+					logger.error(e.getMessage(), e);
 				}
 		);
 	}
