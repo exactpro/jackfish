@@ -482,7 +482,46 @@ public class FxOperationExecutor extends AbstractOperationExecutor<EventTarget>
 	@Override
 	public boolean wait(Locator locator, int ms, boolean toAppear, AtomicLong atomicLong) throws Exception
 	{
-		return false;
+		long begin = System.currentTimeMillis();
+		try
+		{
+			logger.debug("Wait to " + (toAppear ? "" : "Dis") + "appear for " + locator + " on time " + ms);
+			long time = System.currentTimeMillis();
+			while (System.currentTimeMillis() < time + ms)
+			{
+				try
+				{
+					List<EventTarget> targets = this.findAll(null, locator);
+					if (toAppear)
+					{
+						if (!targets.isEmpty())
+						{
+							return true;
+						}
+					}
+					else
+					{
+						if (targets.isEmpty())
+						{
+							return true;
+						}
+					}
+				}
+				catch (Exception e)
+				{
+					logger.error("Error on waiting");
+					logger.error(e.getMessage(), e);
+				}
+			}
+			return false;
+		}
+		finally
+		{
+			if (atomicLong != null)
+			{
+				atomicLong.set(System.currentTimeMillis() - begin);
+			}
+		}
 	}
 
 	@Override
