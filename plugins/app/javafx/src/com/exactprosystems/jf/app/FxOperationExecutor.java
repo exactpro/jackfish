@@ -28,7 +28,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicLong;
 
-import static com.exactprosystems.jf.app.FxRemoteApplication.tryExecute;
+import static com.exactprosystems.jf.app.UtilsFx.tryExecute;
 
 public class FxOperationExecutor extends AbstractOperationExecutor<EventTarget>
 {
@@ -38,7 +38,7 @@ public class FxOperationExecutor extends AbstractOperationExecutor<EventTarget>
     private boolean isShiftDown = false;
     private boolean isControlDown = false;
 
-    private static final FxRemoteApplication.ICheck EMPTY_CHECK = () -> {};
+    private static final UtilsFx.ICheck EMPTY_CHECK = () -> {};
 
     public FxOperationExecutor(boolean useTrimText, Logger logger)
     {

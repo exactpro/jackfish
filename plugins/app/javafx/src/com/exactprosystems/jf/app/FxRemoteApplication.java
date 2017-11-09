@@ -27,7 +27,6 @@ import java.net.URL;
 import java.net.URLClassLoader;
 import java.rmi.RemoteException;
 import java.util.Collection;
-import java.util.Enumeration;
 import java.util.Map;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -48,9 +47,9 @@ public class FxRemoteApplication extends RemoteApplication
 	{
 		try
 		{
-			this.logger = createLogger(FxRemoteApplication.class, logName, serverLogLevel, serverLogPattern);
-			MatcherFx.setLogger(createLogger(MatcherFx.class, logName, serverLogLevel, serverLogPattern));
-			UtilsFx.setLogger(createLogger(UtilsFx.class, logName, serverLogLevel, serverLogPattern));
+			this.logger = UtilsFx.createLogger(FxRemoteApplication.class, logName, serverLogLevel, serverLogPattern);
+			MatcherFx.setLogger(UtilsFx.createLogger(MatcherFx.class, logName, serverLogLevel, serverLogPattern));
+			UtilsFx.setLogger(UtilsFx.createLogger(UtilsFx.class, logName, serverLogLevel, serverLogPattern));
 		}
 		catch (RemoteException e)
 		{
@@ -114,7 +113,7 @@ public class FxRemoteApplication extends RemoteApplication
 				{
 					Class<?> applicationType = urlClassLoader.loadClass(mainClass);
 					Method mainMethod = applicationType.getMethod("main", String[].class);
-					Logger executorLogger = createLogger(FxOperationExecutor.class, this.logger);
+					Logger executorLogger = UtilsFx.createLogger(FxOperationExecutor.class, this.logger);
 					this.operationExecutor = new FxOperationExecutor(this.useTrimText, executorLogger);
 
 					this.isInit = true;
@@ -479,53 +478,11 @@ public class FxRemoteApplication extends RemoteApplication
 	}
 	//endregion
 
-	public static <T> T tryExecute(ICheck beforeCall, IReturn<T> func, Consumer<Exception> log) throws Exception
-	{
-		beforeCall.check();
-		try
-		{
-			UtilsFx.waitForIdle();
-			return func.call();
-		}
-		catch (RemoteException e)
-		{
-			throw e;
-		}
-		catch (Exception e)
-		{
-			log.accept(e);
-			throw e;
-		}
-	}
-
-	public static Logger createLogger(Class<?> clazz, String logName, String serverLogLevel, String serverLogPattern) throws Exception
-	{
-		Logger logger = Logger.getLogger(clazz);
-
-		Layout layout = new PatternLayout(serverLogPattern);
-		Appender appender = new FileAppender(layout, logName);
-		logger.addAppender(appender);
-		logger.setLevel(Level.toLevel(serverLogLevel, Level.ALL));
-		return logger;
-	}
-
-	public static Logger createLogger(Class<?> clazz, Logger baseLogger)
-	{
-		Logger logger = Logger.getLogger(clazz);
-		Enumeration allAppenders = baseLogger.getAllAppenders();
-		while (allAppenders.hasMoreElements())
-		{
-			logger.addAppender(((Appender) allAppenders.nextElement()));
-		}
-		logger.setLevel(logger.getLevel());
-		return logger;
-	}
-
 	//region private methods
 
-	private <T> T tryExecute(IReturn<T> func, Consumer<Exception> log) throws Exception
+	private <T> T tryExecute(UtilsFx.IReturn<T> func, Consumer<Exception> log) throws Exception
 	{
-		return tryExecute(
+		return UtilsFx.tryExecute(
 				() ->
 				{
 					if (!this.isInit)
@@ -533,16 +490,6 @@ public class FxRemoteApplication extends RemoteApplication
 						throw new Exception("Application is not init");
 					}
 				}, func,log);
-	}
-
-	interface IReturn<T>
-	{
-		T call() throws Exception;
-	}
-
-	interface ICheck
-	{
-		void check() throws Exception;
 	}
 
 	//endregion

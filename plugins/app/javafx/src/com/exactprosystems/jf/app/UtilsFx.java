@@ -5,18 +5,73 @@ import com.sun.javafx.stage.StageHelper;
 import javafx.collections.ObservableList;
 import javafx.scene.Parent;
 import javafx.stage.Stage;
-import org.apache.log4j.Logger;
+import org.apache.log4j.*;
 
+import java.rmi.RemoteException;
+import java.util.Enumeration;
 import java.util.Optional;
 import java.util.concurrent.CountDownLatch;
+import java.util.function.Consumer;
 
 public class UtilsFx
 {
 	private static Logger logger;
 
+	interface IReturn<T>
+	{
+		T call() throws Exception;
+	}
+
+	interface ICheck
+	{
+		void check() throws Exception;
+	}
+
 	private UtilsFx()
 	{
 
+	}
+
+	public static <T> T tryExecute(ICheck beforeCall, IReturn<T> func, Consumer<Exception> log) throws Exception
+	{
+		beforeCall.check();
+		try
+		{
+			waitForIdle();
+			return func.call();
+		}
+		catch (RemoteException e)
+		{
+			throw e;
+		}
+		catch (Exception e)
+		{
+			log.accept(e);
+			throw e;
+		}
+	}
+
+	public static Logger createLogger(Class<?> clazz, String logName, String serverLogLevel, String serverLogPattern) throws Exception
+	{
+		Logger logger = Logger.getLogger(clazz);
+
+		Layout layout = new PatternLayout(serverLogPattern);
+		Appender appender = new FileAppender(layout, logName);
+		logger.addAppender(appender);
+		logger.setLevel(Level.toLevel(serverLogLevel, Level.ALL));
+		return logger;
+	}
+
+	public static Logger createLogger(Class<?> clazz, Logger baseLogger)
+	{
+		Logger logger = Logger.getLogger(clazz);
+		Enumeration allAppenders = baseLogger.getAllAppenders();
+		while (allAppenders.hasMoreElements())
+		{
+			logger.addAppender(((Appender) allAppenders.nextElement()));
+		}
+		logger.setLevel(logger.getLevel());
+		return logger;
 	}
 
 	static void setLogger(Logger logger)
