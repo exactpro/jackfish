@@ -266,7 +266,7 @@ SUBCASES;;;;
             #EndIf
 
             #Step;#Kind;#For;#Depends
-            plugin + ' - '+ control.Name;OnError;;
+            plugin + ' - '+ control.Name;;;
                 #Id;#Global;#Let
                 failedList;1;''
 
