@@ -22,8 +22,7 @@ import javafx.util.StringConverter;
 import org.apache.log4j.Logger;
 import org.w3c.dom.Document;
 
-import java.awt.Color;
-import java.awt.Rectangle;
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -631,13 +630,13 @@ public class FxOperationExecutor extends AbstractOperationExecutor<EventTarget>
 		{
 			if (component instanceof ListView)
 			{
-				ListView listView = (ListView) component;
+				ListView<?> listView = (ListView) component;
 				listView.scrollTo(index);
 				return true;
 			}
 			if (component instanceof TreeView)
 			{
-				TreeView treeView = (TreeView) component;
+				TreeView<?> treeView = (TreeView) component;
 				treeView.scrollTo(index);
 				return true;
 			}
@@ -673,7 +672,7 @@ public class FxOperationExecutor extends AbstractOperationExecutor<EventTarget>
 	{
 		if (component instanceof TableView)
 		{
-			return ((TableView) component).getItems().size();
+			return ((TableView<?>) component).getItems().size();
 		}
 		else
 		{
@@ -684,7 +683,14 @@ public class FxOperationExecutor extends AbstractOperationExecutor<EventTarget>
 	@Override
 	public Color getColorXY(EventTarget component, int x, int y) throws Exception
 	{
-		return null;
+		return tryExecute(EMPTY_CHECK, () -> {
+			Point point = this.getPointLocation(component, x, y);
+			return new Robot().getPixelColor(point.x, point.y);
+		}, e -> {
+			this.logger.error(String.format("getColorXY(%s)", component));
+			this.logger.error(e.getMessage(), e);
+		});
+
 	}
 
 	private int getClickCount(MouseAction action)
@@ -697,6 +703,12 @@ public class FxOperationExecutor extends AbstractOperationExecutor<EventTarget>
 			default:
 				return 1;
 		}
+	}
+
+	private Point getPointLocation(EventTarget target, int x, int y) throws Exception
+	{
+		Rectangle rectangle = this.getRectangle(target);
+		return new Point(rectangle.x + x, rectangle.y + y);
 	}
 
 	private int getKeyCode(Keyboard key)
