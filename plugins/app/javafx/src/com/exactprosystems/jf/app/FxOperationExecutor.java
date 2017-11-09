@@ -103,7 +103,37 @@ public class FxOperationExecutor extends AbstractOperationExecutor<EventTarget>
 	@Override
 	protected String[][] getTableDerived(EventTarget component, Locator additional, Locator header, boolean useNumericHeader, String[] columns) throws Exception
 	{
-		return new String[0][];
+		return tryExecute(EMPTY_CHECK, () ->
+		{
+			if (component instanceof TableView)
+			{
+				TableView<?> tableView = (TableView<?>) component;
+				int rowsCount = tableView.getItems().size();
+				int columnsCount = tableView.getColumns().size();
+
+				String[][] res = new String[rowsCount + 1][columnsCount];
+				ObservableList<? extends TableColumn<?, ?>> columns1 = tableView.getColumns();
+
+				this.fillHeaders(res, tableView, columns);
+				for (int i = 0; i < rowsCount; i++)
+				{
+					for (int j = 0; j < columns1.size(); j++)
+					{
+						res[i + 1][j] = columns1.get(j).getCellObservableValue(i).getValue().toString();
+					}
+				}
+
+				return res;
+			}
+			else
+			{
+				throw new UnsupportedOperationException("Element is not a table");
+			}
+		}, e ->
+		{
+			this.logger.error(String.format("getTable(%s)", component));
+			this.logger.error(e.getMessage(), e);
+		});
 	}
 
 	@Override
@@ -701,6 +731,33 @@ public class FxOperationExecutor extends AbstractOperationExecutor<EventTarget>
 				return 1;
 		}
 	}
+
+	private void fillHeaders(String[][] array, TableView<?> table, String[] customHeaders)
+	{
+		ObservableList<? extends TableColumn<?, ?>> columns = table.getColumns();
+
+		if (customHeaders != null)
+		{
+			for (int i = 0; i < columns.size(); i++)
+			{
+				if (i < customHeaders.length)
+				{
+					array[0][i] = customHeaders[i];
+
+				}
+				else
+				{
+					array[0][i] = String.valueOf(i);
+				}
+			}
+			return;
+		}
+		for (int i = 0; i < columns.size(); i++)
+		{
+			array[0][i] = columns.get(i).getText();
+		}
+	}
+
 
 	private Point getPointLocation(EventTarget target, int x, int y) throws Exception
 	{
