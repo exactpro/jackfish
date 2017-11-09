@@ -25,6 +25,7 @@ import java.awt.Rectangle;
 import java.awt.Toolkit;
 import java.awt.image.BufferedImage;
 import java.io.Serializable;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.URL;
 import java.net.URLClassLoader;
@@ -142,9 +143,13 @@ public class FxRemoteApplication extends RemoteApplication
 					mainMethod.invoke(null, new Object[]{arguments == null ? null : new String[]{arguments}});
 				}
 			}
-			//TODO add check if we close application normally
+			catch (InvocationTargetException e)
+			{
+				//ignore.
+			}
 			catch (Exception e)
 			{
+				logger.error(e.getClass() + " " + e.getCause());
 				logger.error("startDerived. keys : " + args.keySet() + " , value : " + args.values());
 				logger.error(e.getMessage(), e);
 				last[0] = e;
@@ -163,10 +168,9 @@ public class FxRemoteApplication extends RemoteApplication
 		}
 
 		//check it we have exception - throw it
-		logger.debug(String.format("Application load successful"));
 		if (last[0] != null)
 		{
-			logger.debug(String.format("Application load failed"));
+			logger.debug("Application load failed");
 			//we need throw exception and stop the mainThread
 			if (this.mainThread.isAlive())
 			{
@@ -175,7 +179,7 @@ public class FxRemoteApplication extends RemoteApplication
 			}
 			throw last[0];
 		}
-
+		logger.debug("Application load successful");
 		return ProcessTools.currentProcessId();
 	}
 
