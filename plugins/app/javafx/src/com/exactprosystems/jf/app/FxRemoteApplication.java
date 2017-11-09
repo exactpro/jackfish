@@ -6,16 +6,19 @@ import com.exactprosystems.jf.api.common.Str;
 import com.exactprosystems.jf.api.error.app.FeatureNotSupportedException;
 import com.exactprosystems.jf.api.error.app.NullParameterException;
 import com.sun.javafx.application.PlatformImpl;
-import com.sun.javafx.robot.impl.FXRobotHelper;
+import com.sun.javafx.stage.StageHelper;
 import javafx.application.Platform;
 import javafx.embed.swing.SwingFXUtils;
+import javafx.event.Event;
 import javafx.event.EventTarget;
 import javafx.scene.Node;
 import javafx.scene.SnapshotParameters;
 import javafx.scene.control.ComboBox;
 import javafx.scene.image.WritableImage;
 import javafx.stage.Stage;
-import org.apache.log4j.*;
+import javafx.stage.Window;
+import javafx.stage.WindowEvent;
+import org.apache.log4j.Logger;
 import org.w3c.dom.Document;
 
 import java.awt.Rectangle;
@@ -27,7 +30,9 @@ import java.net.URL;
 import java.net.URLClassLoader;
 import java.rmi.RemoteException;
 import java.util.Collection;
+import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Consumer;
@@ -66,8 +71,23 @@ public class FxRemoteApplication extends RemoteApplication
 	@Override
 	public Serializable getProperty(String name, Serializable prop) throws RemoteException
 	{
-		//TODO implement
-		return null;
+		try
+		{
+			if (this.isInit)
+			{
+				if (Str.areEqual(name, FxAppFactory.propertyTitle))
+				{
+					return UtilsFx.mainStage().getTitle();
+				}
+			}
+			return null;
+		}
+		catch (Exception e)
+		{
+			logger.error(String.format("getProperty(%s, %s)", name, prop));
+			logger.error(e.getMessage(), e);
+			throw e;
+		}
 	}
 
 	@Override
@@ -173,7 +193,7 @@ public class FxRemoteApplication extends RemoteApplication
 	protected Collection<String> titlesDerived() throws Exception
 	{
 		return this.tryExecute(
-				() ->FXRobotHelper.getStages().stream().map(Stage::getTitle).collect(Collectors.toList()),
+				() -> StageHelper.getStages().stream().map(Stage::getTitle).collect(Collectors.toList()),
 				e ->
 				{
 					logger.error("titlesDerived()");
@@ -276,7 +296,7 @@ public class FxRemoteApplication extends RemoteApplication
 						logger.debug(String.format("Found current stage: %s", mainStage));
 						if (mainStage == null)
 						{
-							logger.debug(String.format("Stage is null. Getting image of whole screen"));
+							logger.debug("Stage is null. Getting image of whole screen");
 							Rectangle desktopRect = new Rectangle(Toolkit.getDefaultToolkit().getScreenSize());
 							return new ImageWrapper(new java.awt.Robot().createScreenCapture(desktopRect));
 						}
@@ -368,12 +388,28 @@ public class FxRemoteApplication extends RemoteApplication
 		return this.tryExecute(
 				()->
 				{
+					int closed = 0;
 					logger.debug("Operations count : " + operations.size());
 					logger.debug("Element : " + element);
 
-					//TODO think about it
+					Node currentRoot = UtilsFx.currentRoot();
+					logger.debug(String.format("Current root : %s", currentRoot));
 
-					return 0;
+					List<EventTarget> all = this.operationExecutor.findAll(ControlKind.Any, currentRoot, element);
+					for (EventTarget target : all)
+					{
+						if (target instanceof Node)
+						{
+							Node node = (Node) target;
+							Window closeWindow = node.getScene().getWindow();
+							if (Objects.nonNull(closeWindow))
+							{
+								Event.fireEvent(closeWindow, new WindowEvent(closeWindow, WindowEvent.WINDOW_CLOSE_REQUEST));
+								closed++;
+							}
+						}
+					}
+					return closed;
 				},
 				e ->
 				{
