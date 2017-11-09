@@ -284,21 +284,11 @@ public class FxOperationExecutor extends AbstractOperationExecutor<EventTarget>
 		return tryExecute(EMPTY_CHECK,
 			() ->
 			{
-				final ArrayList<InputEvent> events = new ArrayList<>();
+				ArrayList<InputEvent> events = new ArrayList<>();
 				events.add(new KeyEvent(null, component, KeyEvent.KEY_PRESSED, "", "", KeyCode.getKeyCode(key.name()), this.isShiftDown, this.isControlDown, this.isAltDown, false ));
 				events.add(new KeyEvent(null, component, KeyEvent.KEY_TYPED, "", "", KeyCode.getKeyCode(key.name()), this.isShiftDown, this.isControlDown, this.isAltDown, false ));
 				events.add(new KeyEvent(null, component, KeyEvent.KEY_RELEASED, "", "", KeyCode.getKeyCode(key.name()), this.isShiftDown, this.isControlDown, this.isAltDown, false ));
-				Platform.runLater(new Runnable()
-				{
-					@Override
-					public void run()
-					{
-						for (InputEvent event : events)
-						{
-							Event.fireEvent(component, event);
-						}
-					}
-				});
+				Platform.runLater(() -> events.stream().peek(e -> logger.debug("Event : " + e)).forEach(e -> Event.fireEvent(component, e)));
 				return true;
 			},
 			e->
@@ -350,18 +340,7 @@ public class FxOperationExecutor extends AbstractOperationExecutor<EventTarget>
 					events.add(new KeyEvent(null, component, KeyEvent.KEY_RELEASED, "", "", KeyCode.getKeyCode(key.name()), this.isShiftDown, this.isControlDown, this.isAltDown, false ));
 				}
 
-				Platform.runLater(new Runnable()
-				{
-					@Override
-					public void run()
-					{
-						for (InputEvent event : events)
-						{
-							logger.debug("event : " + event);
-							Event.fireEvent(component, event);
-						}
-					}
-				});
+				Platform.runLater(() -> events.stream().peek(event -> logger.debug("Event : " + event)).forEach(event -> Event.fireEvent(component, event)));
 				return true;
 			},
 			e->
@@ -508,20 +487,32 @@ public class FxOperationExecutor extends AbstractOperationExecutor<EventTarget>
 	@Override
 	public boolean text(EventTarget component, String text, boolean clear) throws Exception
 	{
-		if (component instanceof TextInputControl)
-		{
-			TextInputControl field = (TextInputControl) component;
-			if (clear)
-			{
-				field.setText(text);
-			}else {
-				String currentText = field.getText();
-				field.setText(currentText + text);
-			}
+		return tryExecute(EMPTY_CHECK,
+				()->
+				{
+					if (component instanceof TextInputControl)
+					{
+						TextInputControl field = (TextInputControl) component;
+						if (clear)
+						{
+							field.setText(text);
+						}
+						else
+						{
+							String currentText = field.getText();
+							field.setText(currentText + text);
+						}
 
-			return true;
-		}
-		return false;
+						return true;
+					}
+					return false;
+				},
+				e ->
+				{
+					logger.error(String.format("text(%s, %s,%s)", component, text, clear));
+					logger.error(e.getMessage(), e);
+				}
+		);
 	}
 
 	@Override
@@ -572,43 +563,47 @@ public class FxOperationExecutor extends AbstractOperationExecutor<EventTarget>
 	@Override
 	public boolean setValue(EventTarget component, double value) throws Exception
 	{
-		return tryExecute(EMPTY_CHECK, () ->
-		{
-			if (component instanceof Spinner)
-			{
-				Spinner spinner = (Spinner) component;
-				if (spinner.getValueFactory() instanceof SpinnerValueFactory.IntegerSpinnerValueFactory)
+		return tryExecute(EMPTY_CHECK,
+				() ->
 				{
-					spinner.getValueFactory().setValue((int)value);
-					return true;
-				}
-				if (spinner.getValueFactory() instanceof SpinnerValueFactory.DoubleSpinnerValueFactory)
+					//TODO think about it
+					if (component instanceof Spinner)
+					{
+						Spinner spinner = (Spinner) component;
+						if (spinner.getValueFactory() instanceof SpinnerValueFactory.IntegerSpinnerValueFactory)
+						{
+							spinner.getValueFactory().setValue((int)value);
+							return true;
+						}
+						if (spinner.getValueFactory() instanceof SpinnerValueFactory.DoubleSpinnerValueFactory)
+						{
+							spinner.getValueFactory().setValue(value);
+							return true;
+						}
+					}
+					if (component instanceof ScrollBar)
+					{
+						((ScrollBar) component).setValue(value);
+						return true;
+					}
+					if (component instanceof Slider)
+					{
+						((Slider) component).setValue(value);
+						return true;
+					}
+					if (component instanceof SplitPane)
+					{
+						((SplitPane) component).getDividers().get(0).setPosition(value);//todo splitPane has multi dividers, think what to do with it
+						return true;
+					}
+					return false;
+				},
+				e ->
 				{
-					spinner.getValueFactory().setValue(value);
-					return true;
+					this.logger.error(String.format("setValue(%s)", component));
+					this.logger.error(e.getMessage(), e);
 				}
-			}
-			if (component instanceof ScrollBar)
-			{
-				((ScrollBar) component).setValue(value);
-				return true;
-			}
-			if (component instanceof Slider)
-			{
-				((Slider) component).setValue(value);
-				return true;
-			}
-			if (component instanceof SplitPane)
-			{
-				((SplitPane) component).getDividers().get(0).setPosition(value);//todo splitPane has multi dividers, think what to do with it
-				return true;
-			}
-			return false;
-		}, e ->
-		{
-			this.logger.error(String.format("setValue(%s)", component));
-			this.logger.error(e.getMessage(), e);
-		});
+		);
 	}
 
 	@Override
@@ -630,13 +625,13 @@ public class FxOperationExecutor extends AbstractOperationExecutor<EventTarget>
 		{
 			if (component instanceof ListView)
 			{
-				ListView<?> listView = (ListView) component;
+				ListView listView = (ListView) component;
 				listView.scrollTo(index);
 				return true;
 			}
 			if (component instanceof TreeView)
 			{
-				TreeView<?> treeView = (TreeView) component;
+				TreeView treeView = (TreeView) component;
 				treeView.scrollTo(index);
 				return true;
 			}
@@ -672,7 +667,7 @@ public class FxOperationExecutor extends AbstractOperationExecutor<EventTarget>
 	{
 		if (component instanceof TableView)
 		{
-			return ((TableView<?>) component).getItems().size();
+			return ((TableView) component).getItems().size();
 		}
 		else
 		{
@@ -683,10 +678,12 @@ public class FxOperationExecutor extends AbstractOperationExecutor<EventTarget>
 	@Override
 	public Color getColorXY(EventTarget component, int x, int y) throws Exception
 	{
-		return tryExecute(EMPTY_CHECK, () -> {
+		return tryExecute(EMPTY_CHECK, () ->
+		{
 			Point point = this.getPointLocation(component, x, y);
 			return new Robot().getPixelColor(point.x, point.y);
-		}, e -> {
+		}, e ->
+		{
 			this.logger.error(String.format("getColorXY(%s)", component));
 			this.logger.error(e.getMessage(), e);
 		});
@@ -709,11 +706,6 @@ public class FxOperationExecutor extends AbstractOperationExecutor<EventTarget>
 	{
 		Rectangle rectangle = this.getRectangle(target);
 		return new Point(rectangle.x + x, rectangle.y + y);
-	}
-
-	private int getKeyCode(Keyboard key)
-	{
-		return 0;
 	}
 
 	Node findOwner(Locator owner) throws Exception
