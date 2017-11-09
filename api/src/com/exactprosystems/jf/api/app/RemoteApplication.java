@@ -577,6 +577,24 @@ public abstract class RemoteApplication implements IRemoteApplication
 		}
 	}
 
+	@Override
+	public void moveDialog(Locator owner, int x, int y) throws RemoteException
+	{
+		try
+		{
+			//TODO create and implement method moveDialogDerived(Locator owner, int x, int y) and uncomment catch RemoteException
+		}
+//		catch (RemoteException e)
+//		{
+//			throw e;
+//		}
+		catch (Exception e)
+		{
+			String msg = String.format("Error on moveDialog(%s, %s,%s)", owner, x, y);
+			throw new ProxyException(msg, e.getMessage(), e);
+		}
+	}
+
 	//region protected abstract methods
 	protected abstract void createLoggerDerived(String logName, String serverLogLevel, String serverLogPattern) throws Exception;
 
