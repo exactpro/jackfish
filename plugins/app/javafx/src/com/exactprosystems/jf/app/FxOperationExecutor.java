@@ -727,18 +727,18 @@ public class FxOperationExecutor extends AbstractOperationExecutor<EventTarget>
 		return tryExecute(EMPTY_CHECK,
 				() ->
 				{
-					//TODO think about it
 					if (component instanceof Spinner)
 					{
 						Spinner spinner = (Spinner) component;
-						if (spinner.getValueFactory() instanceof SpinnerValueFactory.IntegerSpinnerValueFactory)
-						{
-							spinner.getValueFactory().setValue((int)value);
-							return true;
-						}
-						if (spinner.getValueFactory() instanceof SpinnerValueFactory.DoubleSpinnerValueFactory)
+						Object val = spinner.getValue();
+						if (val instanceof Double)
 						{
 							spinner.getValueFactory().setValue(value);
+							return true;
+						}
+						else if (val instanceof Integer)
+						{
+							spinner.getValueFactory().setValue((int)value);
 							return true;
 						}
 					}
