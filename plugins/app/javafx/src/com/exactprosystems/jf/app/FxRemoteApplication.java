@@ -142,6 +142,7 @@ public class FxRemoteApplication extends RemoteApplication
 					mainMethod.invoke(null, new Object[]{arguments == null ? null : new String[]{arguments}});
 				}
 			}
+			//TODO add check if we close application normally
 			catch (Exception e)
 			{
 				logger.error("startDerived. keys : " + args.keySet() + " , value : " + args.values());
@@ -404,7 +405,7 @@ public class FxRemoteApplication extends RemoteApplication
 							Window closeWindow = node.getScene().getWindow();
 							if (Objects.nonNull(closeWindow))
 							{
-								Event.fireEvent(closeWindow, new WindowEvent(closeWindow, WindowEvent.WINDOW_CLOSE_REQUEST));
+								Platform.runLater(() -> Event.fireEvent(closeWindow, new WindowEvent(closeWindow, WindowEvent.WINDOW_CLOSE_REQUEST)));
 								closed++;
 							}
 						}

@@ -128,7 +128,21 @@ public class FxOperationExecutor extends AbstractOperationExecutor<EventTarget>
 	@Override
 	public List<EventTarget> findAll(ControlKind controlKind, EventTarget window, Locator locator) throws Exception
 	{
-		return null;
+		return tryExecute(EMPTY_CHECK,
+				() ->
+				{
+					if (window instanceof Node)
+					{
+						return new MatcherFx(this.info, locator, (Node) window).findAll();
+					}
+					throw new Exception("Window is not a node");
+				},
+				e->
+				{
+					logger.error(String.format("findAll(%s,%s,%s)", controlKind, window, locator));
+					logger.error(e.getMessage(), e);
+				}
+		);
 	}
 
 	@Override
