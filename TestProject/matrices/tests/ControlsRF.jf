@@ -1,16 +1,16 @@
 #Id;#TestCase;#Kind;#Depends;#For
 Test;Controls;;;
-    #Off;#Call;testName;param
-    1;runControls;'Controls';'InternetExplorer'
+    #Call;testName;param
+    runControls;'Controls';'InternetExplorer'
 
     #Call;testName;param
     runControls;'Controls';'Chrome'
 
-    #Off;#Call;testName;param
-    1;runControls;'Controls';'Swing'
+    #Call;testName;param
+    runControls;'Controls';'Swing'
 
-    #Off;#Call;testName;param
-    1;runControls;'Controls';'Win'
+    #Call;testName;param
+    runControls;'Controls';'Win'
 
 
 #Id;#TestCase;#Kind;#Depends;#For

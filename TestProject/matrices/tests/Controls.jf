@@ -180,7 +180,7 @@ SUBCASES;;;;
     #EndSubCase
 
     #Id;#SubCase;controlName;operationName;operationKind;expected;actual;pluginName;result
-    PRINT;Print_result;control.Name;operation.Name;operation.Kind;expected;actual;plugin;'Passed'
+    PRINT;Print_result;control.Name;operation.Name;operation.Kind;expected;actual;plugin;'Failed'
         #Off;#Action;
         1;Print;pluginName + ' - ' + controlName + ' - ' + result + ' - ' + operationName
 
@@ -194,7 +194,7 @@ SUBCASES;;;;
     #EndSubCase
 
     #Id;#SubCase;plugin
-    RUN;Run;'InternetExplorer'
+    RUN;Run;'Chrome'
         #Step;#Kind;#For;#Depends
         'start application';;;
             #Id;#Action;Plugin;Control;Operation;Expected;Actual;Result

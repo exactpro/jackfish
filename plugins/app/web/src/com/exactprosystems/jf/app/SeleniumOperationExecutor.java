@@ -31,8 +31,7 @@ import org.openqa.selenium.support.ui.Select;
 import javax.imageio.ImageIO;
 import java.awt.Color;
 import java.awt.Rectangle;
-import java.awt.image.BufferedImage;
-import java.io.File;
+import java.io.ByteArrayInputStream;
 import java.rmi.RemoteException;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -462,13 +461,11 @@ public class SeleniumOperationExecutor extends AbstractOperationExecutor<WebElem
 			throw new Exception("Element out of screen");
 		}
 
-		//TODO FIX it. remake to OutputType.BYTES
-		File image = driver.getScreenshotAs(OutputType.FILE);
-		BufferedImage bufferedImage = ImageIO.read(image);
-
-		BufferedImage subimage = bufferedImage.getSubimage(returnRectangle.x, returnRectangle.y, returnRectangle.width, returnRectangle.height);
-		return new Color(subimage.getRGB(x,y));
-    }
+		try (ByteArrayInputStream bytes = new ByteArrayInputStream(driver.getScreenshotAs(OutputType.BYTES)))
+		{
+			return new Color(ImageIO.read(bytes).getSubimage(returnRectangle.x, returnRectangle.y, returnRectangle.width, returnRectangle.height).getRGB(x,y));
+		}
+	}
 	//endregion
 
 	//region public find methods
