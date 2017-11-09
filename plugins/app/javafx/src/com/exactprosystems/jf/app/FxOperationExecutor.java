@@ -316,7 +316,7 @@ public class FxOperationExecutor extends AbstractOperationExecutor<EventTarget>
 			{
 				ArrayList<InputEvent> events = new ArrayList<>();
 				events.add(new KeyEvent(null, component, KeyEvent.KEY_PRESSED, "", "", KeyCode.getKeyCode(key.name()), this.isShiftDown, this.isControlDown, this.isAltDown, false ));
-				events.add(new KeyEvent(null, component, KeyEvent.KEY_TYPED, "", "", KeyCode.getKeyCode(key.name()), this.isShiftDown, this.isControlDown, this.isAltDown, false ));
+				events.add(new KeyEvent(null, component, KeyEvent.KEY_TYPED, key.name(), "", KeyCode.getKeyCode(key.name()), this.isShiftDown, this.isControlDown, this.isAltDown, false ));
 				events.add(new KeyEvent(null, component, KeyEvent.KEY_RELEASED, "", "", KeyCode.getKeyCode(key.name()), this.isShiftDown, this.isControlDown, this.isAltDown, false ));
 				Platform.runLater(() -> events.stream().peek(e -> logger.debug("Event : " + e)).forEach(e -> Event.fireEvent(component, e)));
 				return true;
@@ -325,6 +325,7 @@ public class FxOperationExecutor extends AbstractOperationExecutor<EventTarget>
 			{
 				logger.error(String.format("press(%s, %s)", component, key));
 				logger.error(e.getMessage(), e);
+				logger.error(e.getCause(), e);
 			}
 		);
 	}
@@ -351,8 +352,6 @@ public class FxOperationExecutor extends AbstractOperationExecutor<EventTarget>
 						break;
 				}
 
-				//todo check key with control
-
 				final ArrayList<InputEvent> events = new ArrayList<>();
 				boolean needPress = (!key.equals(Keyboard.CONTROL) && !key.equals(Keyboard.SHIFT) && !key.equals(Keyboard.ALT) && !key.equals(Keyboard.CAPS_LOCK));
 
@@ -362,7 +361,7 @@ public class FxOperationExecutor extends AbstractOperationExecutor<EventTarget>
 
 					if(needPress)
 					{
-						events.add(new KeyEvent(null, component, KeyEvent.KEY_TYPED, "", "", KeyCode.getKeyCode(key.name()), this.isShiftDown, this.isControlDown, this.isAltDown, false ));
+						events.add(new KeyEvent(null, component, KeyEvent.KEY_TYPED, key.name(), "", KeyCode.getKeyCode(key.name()), this.isShiftDown, this.isControlDown, this.isAltDown, false ));
 					}
 				}
 				else
@@ -377,6 +376,7 @@ public class FxOperationExecutor extends AbstractOperationExecutor<EventTarget>
 			{
 				logger.error(String.format("upAndDown(%s, %s, %b)", component, key, b));
 				logger.error(e.getMessage(), e);
+				logger.error(e.getCause(), e);
 			}
 		);
 	}
