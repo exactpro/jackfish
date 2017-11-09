@@ -323,7 +323,16 @@ public class FxRemoteApplication extends RemoteApplication
 							latch.countDown();
 						});
 						//wait image
-						UtilsFx.waitForIdle();
+						while (true)
+						{
+							try
+							{
+								latch.await();
+								break;
+							}
+							catch (InterruptedException ignored)
+							{}
+						}
 						logger.debug(String.format("Getting image for target %s is done. Image size [width : %s, height : %s]", target, img[0].getWidth(), img[0].getHeight()));
 						return new ImageWrapper(img[0]);
 					}

@@ -18,6 +18,7 @@ import javafx.scene.input.InputEvent;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseButton;
+import javafx.util.StringConverter;
 import org.apache.log4j.Logger;
 import org.w3c.dom.Document;
 
@@ -250,7 +251,6 @@ public class FxOperationExecutor extends AbstractOperationExecutor<EventTarget>
 	@Override
 	public boolean tableIsContainer()
 	{
-		//TODO think about it
 		return false;
 	}
 
@@ -423,50 +423,81 @@ public class FxOperationExecutor extends AbstractOperationExecutor<EventTarget>
 	@Override
 	public boolean select(EventTarget component, String selectedText) throws Exception
 	{
-		if (component instanceof TabPane)
-		{
-			TabPane tabPane = (TabPane) component;
-			ObservableList<Tab> tabs = tabPane.getTabs();
-			for (Tab tab : tabs)
-			{
-				if (tab.getText().contains(selectedText))
+		return tryExecute(EMPTY_CHECK,
+				()->
 				{
-					tabPane.getSelectionModel().select(tab);
-					return true;
+					if (component instanceof TabPane)
+					{
+						TabPane tabPane = (TabPane) component;
+						ObservableList<Tab> tabs = tabPane.getTabs();
+						tabs.stream()
+								.filter(tab -> tab.getText().contains(selectedText))
+								.findFirst()
+								.ifPresent(tabPane.getSelectionModel()::select);
+						return true;
+					}
+					if (component instanceof ComboBox)
+					{
+						ComboBox comboBox = (ComboBox) component;
+						StringConverter converter = comboBox.getConverter();
+						comboBox.getItems().stream()
+								.filter(s -> converter.toString(s).equals(selectedText))
+								.findFirst()
+								.ifPresent(comboBox.getSelectionModel()::select);
+						return true;
+					}
+					if (component instanceof ListView)
+					{
+						ListView listView = (ListView) component;
+						listView.getItems().stream()
+								.filter(s -> s.toString().equals(selectedText))
+								.findFirst()
+								.ifPresent(listView.getSelectionModel()::select);
+						return true;
+					}
+					return false;
+				},
+				e->
+				{
+					logger.error(String.format("select(%s,%s)", component, selectedText));
+					logger.error(e.getMessage(), e);
 				}
-			}
-		}
-        return false;
+		);
+
 	}
 
 	@Override
 	public boolean selectByIndex(EventTarget component, int index) throws Exception
 	{
-		if (component instanceof ComboBox)
-		{
-			ComboBox comboBox = (ComboBox) component;
-			comboBox.getSelectionModel().select(index);
-			return true;
-		}
-		if (component instanceof TabPane)
-		{
-			TabPane tabPane = (TabPane) component;
-			tabPane.getSelectionModel().select(index);
-			return true;
-		}
-		if (component instanceof ListView)
-		{
-			ListView listView = (ListView) component;
-			listView.getSelectionModel().select(index);
-			return true;
-		}
-		if (component instanceof TreeView)
-		{
-			TreeView treeView = (TreeView) component;
-			treeView.getSelectionModel().select(index);
-			return true;
-		}
-		return false;
+		return tryExecute(EMPTY_CHECK,
+				() ->
+				{
+					if (component instanceof ComboBox)
+					{
+						ComboBox comboBox = (ComboBox) component;
+						comboBox.getSelectionModel().select(index);
+						return true;
+					}
+					if (component instanceof TabPane)
+					{
+						TabPane tabPane = (TabPane) component;
+						tabPane.getSelectionModel().select(index);
+						return true;
+					}
+					if (component instanceof ListView)
+					{
+						ListView listView = (ListView) component;
+						listView.getSelectionModel().select(index);
+						return true;
+					}
+					return false;
+				},
+				e->
+				{
+					logger.error(String.format("selectByIndex(%s,%s)", component, index));
+					logger.error(e.getMessage(), e);
+				}
+		);
 	}
 
 	@Override
