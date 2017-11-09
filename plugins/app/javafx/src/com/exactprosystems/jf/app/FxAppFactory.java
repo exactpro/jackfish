@@ -10,10 +10,7 @@ import javafx.scene.control.*;
 import javafx.scene.layout.Pane;
 import org.w3c.dom.Node;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @PluginDescription(
 		pluginName = "JAVAFX",
@@ -83,7 +80,7 @@ public class FxAppFactory extends AbstractApplicationFactory
 		info.addTypes(ControlKind.ToggleButton, ToggleButton.class.getName());
 		info.addTypes(ControlKind.Tooltip, Tooltip.class.getName());
 		info.addTypes(ControlKind.Tree, TreeView.class.getName());
-		info.addTypes(ControlKind.Wait, "*");
+		info.addTypes(ControlKind.Wait, PluginInfo.ANY_TYPE);
 	}
 
 	@Override
@@ -139,12 +136,6 @@ public class FxAppFactory extends AbstractApplicationFactory
 		public ControlKind derivedControlKindByNode(Node node)
 		{
 			return ControlKind.Any;
-		}
-
-		@Override
-		public ControlKind controlKindByNode(Node node)
-		{
-			return super.controlKindByNode(node);
 		}
 	}
 }

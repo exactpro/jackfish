@@ -40,7 +40,7 @@ public class UtilsFx
 		Optional.ofNullable(logger).ifPresent(l -> l.debug(String.format("Found %s stages", stages.size())));
 		if (stages.isEmpty())
 		{
-			throw new RuntimeException("No one stages found");
+			throw new RuntimeException("No one stages was found");
 		}
 
 		return stages.stream()

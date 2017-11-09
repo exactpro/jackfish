@@ -62,7 +62,7 @@ public class SwingAppFactory extends AbstractApplicationFactory
 
         info = new SwingPluginInfo(fieldMap, new ArrayList<>());
 
-		info.addTypes(ControlKind.Any, "*");
+		info.addTypes(ControlKind.Any, PluginInfo.ANY_TYPE);
 		info.addTypes(ControlKind.Button, JButton.class.getSimpleName());
 		info.addTypes(ControlKind.CheckBox, JCheckBox.class.getSimpleName());
 		info.addTypes(ControlKind.ComboBox, JComboBox.class.getSimpleName());
@@ -85,7 +85,7 @@ public class SwingAppFactory extends AbstractApplicationFactory
 		info.addTypes(ControlKind.ToggleButton, JToggleButton.class.getSimpleName());
 		info.addTypes(ControlKind.Tooltip, JToolTip.class.getSimpleName());
 		info.addTypes(ControlKind.Tree, JTree.class.getSimpleName());
-		info.addTypes(ControlKind.Wait,"*");
+		info.addTypes(ControlKind.Wait,PluginInfo.ANY_TYPE);
 
         info.addExcludes(ControlKind.MenuItem, OperationKind.EXPAND, OperationKind.COLLAPSE);
         info.addExcludes(ControlKind.ComboBox, OperationKind.SCROLL_TO);

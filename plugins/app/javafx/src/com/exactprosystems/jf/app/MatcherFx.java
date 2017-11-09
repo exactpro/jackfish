@@ -70,7 +70,7 @@ public class MatcherFx
 				org.w3c.dom.Document document = createDocument(this.info, owner, true, false);
 
 				// TODO Only for debugging in the beginning. Remove in the future.
-				printDocument(document, System.err);
+//				printDocument(document, System.err);
 
 				XPathFactory factory = XPathFactory.newInstance();
 				XPath xPath = factory.newXPath();
