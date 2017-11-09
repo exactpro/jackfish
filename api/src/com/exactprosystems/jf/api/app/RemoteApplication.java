@@ -14,6 +14,8 @@ import com.exactprosystems.jf.api.error.app.ElementNotFoundException;
 import com.exactprosystems.jf.api.error.app.ProxyException;
 import org.w3c.dom.Document;
 
+import java.awt.Dimension;
+import java.awt.Point;
 import java.awt.Rectangle;
 import java.io.IOException;
 import java.net.DatagramSocket;
@@ -609,6 +611,44 @@ public abstract class RemoteApplication implements IRemoteApplication
 		catch (Exception e)
 		{
 			String msg = String.format("Error on resizeDialog(%s, %s, %s,%s)", owner, resize, height, width);
+			throw new ProxyException(msg, e.getMessage(), e);
+		}
+	}
+
+	@Override
+	public Dimension getDialogSize(Locator owner) throws RemoteException
+	{
+		try
+		{
+			//TODO create and implement method getDialogSizeDerived(Locator owner) and uncomment catch RemoteException
+			return null;
+		}
+		//		catch (RemoteException e)
+		//		{
+		//			throw e;
+		//		}
+		catch (Exception e)
+		{
+			String msg = String.format("Error on getDialogSize(%s)", owner);
+			throw new ProxyException(msg, e.getMessage(), e);
+		}
+	}
+
+	@Override
+	public Point getDialogPosition(Locator owner) throws RemoteException
+	{
+		try
+		{
+			//TODO create and implement method getDialogPositionDerived(Locator owner) and uncomment catch RemoteException
+			return null;
+		}
+		//		catch (RemoteException e)
+		//		{
+		//			throw e;
+		//		}
+		catch (Exception e)
+		{
+			String msg = String.format("Error on getDialogPosition(%s)", owner);
 			throw new ProxyException(msg, e.getMessage(), e);
 		}
 	}

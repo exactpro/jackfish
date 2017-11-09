@@ -52,4 +52,7 @@ public interface IRemoteApplication extends Remote
 
 	void 						moveDialog(Locator owner, int x, int y) throws RemoteException;
 	void						resizeDialog(Locator owner, Resize resize, int height, int width) throws RemoteException;
+	Dimension					getDialogSize(Locator owner) throws RemoteException;
+	Point						getDialogPosition(Locator owner) throws RemoteException;
+
 }
