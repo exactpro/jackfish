@@ -18,15 +18,22 @@ import javafx.scene.input.InputEvent;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseButton;
+import javafx.scene.layout.Pane;
 import javafx.util.StringConverter;
 import org.apache.log4j.Logger;
 import org.w3c.dom.Document;
 
-import java.awt.*;
+import java.awt.Color;
+import java.awt.Point;
+import java.awt.Rectangle;
+import java.awt.Robot;
+import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicLong;
+import java.util.stream.Collectors;
 
 import static com.exactprosystems.jf.app.UtilsFx.tryExecute;
 
@@ -49,25 +56,149 @@ public class FxOperationExecutor extends AbstractOperationExecutor<EventTarget>
 	@Override
 	protected String getValueDerived(EventTarget component) throws Exception
 	{
-		return null;
+		return tryExecute(EMPTY_CHECK, () ->
+		{
+			if (component instanceof Button)
+			{
+				return ((Button) component).getText();
+			}
+			if (component instanceof CheckBox)
+			{
+				return String.valueOf(((CheckBox) component).isSelected());
+			}
+			if (component instanceof ComboBox)
+			{
+				return String.valueOf(((ComboBox) component).getSelectionModel().getSelectedItem());
+			}
+			if (component instanceof Label)
+			{
+				return ((Label) component).getText();
+			}
+			if (component instanceof ListView)
+			{
+				return String.valueOf(((ListView) component).getSelectionModel().getSelectedItem());
+			}
+			if (component instanceof Pane)
+			{
+				StringBuilder sb = new StringBuilder();
+				MatcherFx.collectAllText(((Pane) component), sb);
+				return sb.toString();
+			}
+			if (component instanceof ProgressBar)
+			{
+				return String.valueOf(((ProgressBar) component).getProgress());
+			}
+			if (component instanceof Slider)
+			{
+				return String.valueOf(((Slider) component).getValue());
+			}
+			if (component instanceof SplitPane)
+			{
+				return String.valueOf(((SplitPane) component).getDividerPositions()[0]);
+			}
+			if (component instanceof Spinner)
+			{
+				return String.valueOf(((Spinner) component).getValue());
+			}
+			if (component instanceof TextInputControl)
+			{
+				return ((TextInputControl) component).getText();
+			}
+			if (component instanceof ToggleButton)
+			{
+				return String.valueOf(((ToggleButton) component).isSelected());
+			}
+			if (component instanceof Tooltip)
+			{
+				return ((Tooltip) component).getText();
+			}
+			return null;
+		}, e->
+		{
+			logger.error(String.format("getValueDerived(%s)", component));
+			logger.error(e.getMessage(), e);
+		});
 	}
 
 	@Override
 	protected List<String> getListDerived(EventTarget component, boolean onlyVisible) throws Exception
 	{
-		return null;
+		return tryExecute(EMPTY_CHECK, ()->
+		{
+			if (component instanceof ComboBox)
+			{
+				ComboBox comboBox = (ComboBox) component;
+				StringConverter converter = comboBox.getConverter();
+				List<String> list = new ArrayList<>();
+				for (Object item : comboBox.getItems())
+				{
+					list.add(converter.toString(item));
+				}
+				return list;
+			}
+			if (component instanceof TabPane)
+			{
+				return ((TabPane) component).getTabs()
+						.stream()
+						.map(Tab::getText)
+						.collect(Collectors.toList());
+			}
+			if (component instanceof ListView)
+			{
+				return ((ListView<?>) component).getItems()
+						.stream()
+						.map(Object::toString)
+						.collect(Collectors.toList());
+			}
+			throw new Exception("Target element does not has items");
+		}, e->
+		{
+			logger.error(String.format("getListDerived(%s,%s)", component, onlyVisible));
+			logger.error(e.getMessage(), e);
+		});
 	}
 
 	@Override
 	protected String getDerived(EventTarget component) throws Exception
 	{
-		return null;
+		return tryExecute(EMPTY_CHECK, () ->
+		{
+			if (component instanceof Pane)
+			{
+				StringBuilder sb = new StringBuilder();
+				MatcherFx.collectAllText((Pane) component, sb);
+				return sb.toString();
+			}
+			return MatcherFx.getText(component);
+		}, e ->
+		{
+			logger.error(String.format("getDerived(%s)", component));
+			logger.error(e.getMessage(), e);
+		});
 	}
 
 	@Override
 	protected String getAttrDerived(EventTarget component, String name) throws Exception
 	{
-		return null;
+		return tryExecute(EMPTY_CHECK, () ->
+		{
+			String firstLetter = String.valueOf(name.charAt(0)).toUpperCase();
+			String methodName = "get" + firstLetter + name.substring(1);
+			Method[] methods = component.getClass().getMethods();
+			for (Method method : methods)
+			{
+				if (method.getName().equals(methodName) && Modifier.isPublic(method.getModifiers()) && method.getParameterTypes().length == 0)
+				{
+					Object invoke = method.invoke(component);
+					return String.valueOf(invoke);
+				}
+			}
+			return "";
+		}, e ->
+		{
+			logger.error(String.format("getAttrDerived(%s,%s)", component, name));
+			logger.error(e.getMessage(), e);
+		});
 	}
 
 	@Override
@@ -262,7 +393,7 @@ public class FxOperationExecutor extends AbstractOperationExecutor<EventTarget>
 	@Override
 	public EventTarget lookAtTable(EventTarget table, Locator additional, Locator header, int x, int y) throws Exception
 	{
-		return null;
+		throw new FeatureNotSupportedException("lookAtTable");
 	}
 
 	@Override

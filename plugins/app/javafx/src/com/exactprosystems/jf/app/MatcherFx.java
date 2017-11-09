@@ -12,6 +12,7 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.layout.Pane;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.stage.Window;
@@ -373,6 +374,30 @@ public class MatcherFx
 		else
 		{
 			return null;
+		}
+	}
+
+	public static void collectAllText(Pane pane, StringBuilder sb)
+	{
+		String text = getText(pane);
+		if (!Str.IsNullOrEmpty(text))
+		{
+			sb.append(text);
+		}
+		for (Node node : pane.getChildren())
+		{
+			if (node instanceof Pane)
+			{
+				collectAllText((Pane) node, sb);
+			}
+			else
+			{
+				String text1 = getText(node);
+				if (!Str.IsNullOrEmpty(text1))
+				{
+					sb.append(text1);
+				}
+			}
 		}
 	}
 
