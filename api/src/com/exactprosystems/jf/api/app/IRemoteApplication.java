@@ -50,5 +50,6 @@ public interface IRemoteApplication extends Remote
 	void                        startNewDialog  () throws RemoteException;
 	void 						moveWindow(int x, int y) throws RemoteException;
 
-	void moveDialog(Locator owner, int x, int y) throws RemoteException;
+	void 						moveDialog(Locator owner, int x, int y) throws RemoteException;
+	void						resizeDialog(Locator owner, Resize resize, int height, int width) throws RemoteException;
 }

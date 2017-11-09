@@ -595,6 +595,24 @@ public abstract class RemoteApplication implements IRemoteApplication
 		}
 	}
 
+	@Override
+	public void resizeDialog(Locator owner, Resize resize, int height, int width) throws RemoteException
+	{
+		try
+		{
+			//TODO create and implement method resizeDialogDerived(Locator owner, Resize resize, int height, int width) and uncomment catch RemoteException
+		}
+		//		catch (RemoteException e)
+		//		{
+		//			throw e;
+		//		}
+		catch (Exception e)
+		{
+			String msg = String.format("Error on resizeDialog(%s, %s, %s,%s)", owner, resize, height, width);
+			throw new ProxyException(msg, e.getMessage(), e);
+		}
+	}
+
 	//region protected abstract methods
 	protected abstract void createLoggerDerived(String logName, String serverLogLevel, String serverLogPattern) throws Exception;
 
