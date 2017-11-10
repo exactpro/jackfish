@@ -58,6 +58,11 @@ public enum Keyboard implements Serializable
     {
         this.ch = ch;
     }
+
+    public String getChar()
+	{
+		return this.ch == null ? "" : this.ch.toString();
+	}
     
     static Keyboard byChar(char ch)
     {

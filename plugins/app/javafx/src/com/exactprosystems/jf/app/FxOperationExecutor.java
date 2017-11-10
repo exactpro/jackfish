@@ -543,10 +543,14 @@ public class FxOperationExecutor extends AbstractOperationExecutor<EventTarget>
 		return tryExecute(EMPTY_CHECK,
 			() ->
 			{
+				KeyCode keyCode = getKeyCode(key);
 				ArrayList<InputEvent> events = new ArrayList<>();
-				events.add(new KeyEvent(null, component, KeyEvent.KEY_PRESSED, "", "", KeyCode.getKeyCode(getKeyName(key)), this.isShiftDown, this.isControlDown, this.isAltDown, false ));
-				events.add(new KeyEvent(null, component, KeyEvent.KEY_TYPED, key.name(), "", KeyCode.getKeyCode(getKeyName(key)), this.isShiftDown, this.isControlDown, this.isAltDown, false ));
-				events.add(new KeyEvent(null, component, KeyEvent.KEY_RELEASED, "", "", KeyCode.getKeyCode(getKeyName(key)), this.isShiftDown, this.isControlDown, this.isAltDown, false ));
+				events.add(new KeyEvent(null, component, KeyEvent.KEY_PRESSED, "", "", keyCode, this.isShiftDown, this.isControlDown, this.isAltDown, false ));
+				if(needType(keyCode))
+				{
+					events.add(new KeyEvent(null, component, KeyEvent.KEY_TYPED, getTypedValue(key), "", keyCode, this.isShiftDown, this.isControlDown, this.isAltDown, false ));
+				}
+				events.add(new KeyEvent(null, component, KeyEvent.KEY_RELEASED, "", "", keyCode, this.isShiftDown, this.isControlDown, this.isAltDown, false ));
 				Platform.runLater(() -> events.stream().peek(e -> logger.debug("Event : " + e)).forEach(e -> Event.fireEvent(component, e)));
 				return true;
 			},
@@ -580,25 +584,6 @@ public class FxOperationExecutor extends AbstractOperationExecutor<EventTarget>
 					default:
 						break;
 				}
-
-				final ArrayList<InputEvent> events = new ArrayList<>();
-				boolean needPress = (!key.equals(Keyboard.CONTROL) && !key.equals(Keyboard.SHIFT) && !key.equals(Keyboard.ALT) && !key.equals(Keyboard.CAPS_LOCK));
-
-				if(b)
-				{
-					events.add(new KeyEvent(null, component, KeyEvent.KEY_PRESSED, "", "", KeyCode.getKeyCode(getKeyName(key)), this.isShiftDown, this.isControlDown, this.isAltDown, false ));
-
-					if(needPress)
-					{
-						events.add(new KeyEvent(null, component, KeyEvent.KEY_TYPED, key.name(), "", KeyCode.getKeyCode(getKeyName(key)), this.isShiftDown, this.isControlDown, this.isAltDown, false ));
-					}
-				}
-				else
-				{
-					events.add(new KeyEvent(null, component, KeyEvent.KEY_RELEASED, "", "", KeyCode.getKeyCode(getKeyName(key)), this.isShiftDown, this.isControlDown, this.isAltDown, false ));
-				}
-
-				Platform.runLater(() -> events.stream().peek(event -> logger.debug("Event : " + event)).forEach(event -> Event.fireEvent(component, event)));
 				return true;
 			},
 			e->
@@ -1004,45 +989,128 @@ public class FxOperationExecutor extends AbstractOperationExecutor<EventTarget>
 		return Converter.convertColumns(list);
 	}
 
-	private String getKeyName(Keyboard key)
+	private KeyCode getKeyCode(Keyboard key)
 	{
 		switch (key)
 		{
-			case ESCAPE: return KeyCode.ESCAPE.getName();
-			case BACK_SPACE: return KeyCode.BACK_SPACE.getName();
-			case INSERT: return KeyCode.INSERT.getName();
-			case HOME: return KeyCode.HOME.getName();
-			case PAGE_UP: return KeyCode.PAGE_UP.getName();
-			case TAB: return KeyCode.TAB.getName();
-			case BACK_SLASH: return KeyCode.BACK_SLASH.getName();
-			case DELETE: return KeyCode.DELETE.getName();
-			case END: return KeyCode.END.getName();
-			case PAGE_DOWN: return KeyCode.PAGE_DOWN.getName();
-			case CAPS_LOCK: return KeyCode.CAPS.getName();
-			case SEMICOLON: return KeyCode.SEMICOLON.getName();
-			case QUOTE: return KeyCode.QUOTE.getName();
-			case DOUBLE_QUOTE: return KeyCode.QUOTEDBL.getName();
-			case ENTER: return KeyCode.ENTER.getName();
-			case SHIFT: return KeyCode.SHIFT.getName();
-			case UP: return KeyCode.UP.getName();
-			case CONTROL: return KeyCode.CONTROL.getName();
-			case ALT: return KeyCode.ALT.getName();
-			case SPACE: return KeyCode.SPACE.getName();
-			case LEFT: return KeyCode.LEFT.getName();
-			case DOWN: return KeyCode.DOWN.getName();
-			case RIGHT: return KeyCode.RIGHT.getName();
-			case PLUS: return KeyCode.PLUS.getName();
-			case MINUS: return KeyCode.MINUS.getName();
-			case UNDERSCORE: return KeyCode.UNDERSCORE.getName();
-			case NUM_LOCK: return KeyCode.NUM_LOCK.getName();
-			case NUM_DIVIDE: return KeyCode.DIVIDE.getName();
-			case NUM_SEPARATOR: return KeyCode.SEPARATOR.getName();
-			case NUM_MULTIPLY: return KeyCode.MULTIPLY.getName();
-			case NUM_MINUS: return KeyCode.MINUS.getName();
-			case NUM_DOT: return KeyCode.PERIOD.getName();
-			case NUM_ENTER: return KeyCode.ENTER.getName();
-			default: return key.name();
+			case ESCAPE : return KeyCode.ESCAPE;
+			case F1 : return KeyCode.F1;
+			case F2 : return KeyCode.F2;
+			case F3 : return KeyCode.F3;
+			case F4 : return KeyCode.F4;
+			case F5 : return KeyCode.F5;
+			case F6 : return KeyCode.F6;
+			case F7 : return KeyCode.F7;
+			case F8 : return KeyCode.F8;
+			case F9 : return KeyCode.F9;
+			case F10 : return KeyCode.F10;
+			case F11 : return KeyCode.F11;
+			case F12 : return KeyCode.F12;
+
+			case DIG1 : return KeyCode.DIGIT1;
+			case DIG2 : return KeyCode.DIGIT2;
+			case DIG3 : return KeyCode.DIGIT3;
+			case DIG4 : return KeyCode.DIGIT4;
+			case DIG5 : return KeyCode.DIGIT5;
+			case DIG6 : return KeyCode.DIGIT6;
+			case DIG7 : return KeyCode.DIGIT7;
+			case DIG8 : return KeyCode.DIGIT8;
+			case DIG9 : return KeyCode.DIGIT9;
+			case DIG0 : return KeyCode.DIGIT0;
+			case BACK_SPACE : return KeyCode.BACK_SPACE;
+			case INSERT : return KeyCode.INSERT;
+			case HOME : return KeyCode.HOME;
+			case PAGE_UP : return KeyCode.PAGE_UP;
+
+			case TAB : return KeyCode.TAB;
+			case Q : return KeyCode.Q;
+			case W : return KeyCode.W;
+			case E : return KeyCode.E;
+			case R : return KeyCode.R;
+			case T : return KeyCode.T;
+			case Y : return KeyCode.Y;
+			case U : return KeyCode.U;
+			case I : return KeyCode.I;
+			case O : return KeyCode.O;
+			case P : return KeyCode.P;
+			case SLASH : return KeyCode.SLASH;
+			case BACK_SLASH : return KeyCode.BACK_SLASH;
+			case DELETE : return KeyCode.DELETE;
+			case END : return KeyCode.END;
+			case PAGE_DOWN : return KeyCode.PAGE_DOWN;
+
+			case CAPS_LOCK : return KeyCode.CAPS;
+			case A : return KeyCode.A;
+			case S : return KeyCode.S;
+			case D : return KeyCode.D;
+			case F : return KeyCode.F;
+			case G : return KeyCode.G;
+			case H : return KeyCode.H;
+			case J : return KeyCode.J;
+			case K : return KeyCode.K;
+			case L : return KeyCode.L;
+			case SEMICOLON : return KeyCode.SEMICOLON;
+			case QUOTE : return KeyCode.QUOTE;
+			case DOUBLE_QUOTE : return KeyCode.QUOTEDBL;
+			case ENTER : return KeyCode.ENTER;
+
+			case SHIFT : return KeyCode.SHIFT;
+			case Z : return KeyCode.Z;
+			case X : return KeyCode.X;
+			case C : return KeyCode.C;
+			case V : return KeyCode.V;
+			case B : return KeyCode.B;
+			case N : return KeyCode.N;
+			case M : return KeyCode.M;
+			case DOT : return KeyCode.PERIOD;
+			case UP : return KeyCode.UP;
+
+			case CONTROL : return KeyCode.CONTROL;
+			case ALT : return KeyCode.ALT;
+			case SPACE : return KeyCode.SPACE;
+			case LEFT : return KeyCode.LEFT;
+			case DOWN : return KeyCode.DOWN;
+
+			case RIGHT : return KeyCode.RIGHT;
+
+			case PLUS : return KeyCode.PLUS;
+			case MINUS : return KeyCode.MINUS;
+
+			case UNDERSCORE : return KeyCode.UNDERSCORE;
+
+			case NUM_LOCK: return KeyCode.NUM_LOCK;
+			case NUM_DIVIDE : return KeyCode.DIVIDE;
+			case NUM_SEPARATOR : return KeyCode.SEPARATOR;
+			case NUM_MULTIPLY : return KeyCode.MULTIPLY;
+			case NUM_MINUS : return KeyCode.MINUS;
+			case NUM_DIG7 : return KeyCode.NUMPAD7;
+			case NUM_DIG8 : return KeyCode.NUMPAD8;
+			case NUM_DIG9 : return KeyCode.NUMPAD9;
+			case NUM_PLUS : return KeyCode.PLUS;
+			case NUM_DIG4 : return KeyCode.NUMPAD4;
+			case NUM_DIG5 : return KeyCode.NUMPAD5;
+			case NUM_DIG6 : return KeyCode.NUMPAD6;
+			case NUM_DIG1 : return KeyCode.NUMPAD1;
+			case NUM_DIG2 : return KeyCode.NUMPAD2;
+			case NUM_DIG3 : return KeyCode.NUMPAD3;
+			case NUM_DIG0 : return KeyCode.NUMPAD0;
+			case NUM_DOT : return KeyCode.PERIOD;
+			case NUM_ENTER : return KeyCode.ENTER;
+			default: return KeyCode.UNDEFINED;
 		}
+	}
+
+	private String getTypedValue(Keyboard key)
+	{
+		return this.isShiftDown ? key.getChar().toUpperCase() : key.getChar().toLowerCase();
+	}
+
+	private boolean needType(KeyCode keyCode)
+	{
+		return !keyCode.isFunctionKey() && !keyCode.isNavigationKey()
+				&& !keyCode.isArrowKey() && !keyCode.isModifierKey()
+				&& !keyCode.isKeypadKey() && !keyCode.isMediaKey()
+				&& !keyCode.equals(KeyCode.ENTER) && !keyCode.equals(KeyCode.TAB); //todo think about it
 	}
 
 	private int getClickCount(MouseAction action)
