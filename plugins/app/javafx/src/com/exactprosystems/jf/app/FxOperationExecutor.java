@@ -7,20 +7,16 @@ import com.exactprosystems.jf.api.error.app.ElementNotFoundException;
 import com.exactprosystems.jf.api.error.app.FeatureNotSupportedException;
 import com.exactprosystems.jf.api.error.app.TooManyElementsException;
 import com.exactprosystems.jf.api.error.app.WrongParameterException;
-import com.sun.javafx.robot.FXRobot;
-import com.sun.javafx.robot.FXRobotFactory;
 import javafx.application.Platform;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
 import javafx.event.Event;
 import javafx.event.EventTarget;
+import javafx.geometry.Bounds;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.control.*;
-import javafx.scene.input.InputEvent;
-import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
-import javafx.scene.input.MouseButton;
+import javafx.scene.input.*;
 import javafx.scene.layout.Pane;
 import javafx.util.StringConverter;
 import org.apache.log4j.Logger;
@@ -496,26 +492,24 @@ public class FxOperationExecutor extends AbstractOperationExecutor<EventTarget>
 	@Override
 	public boolean mouse(EventTarget component, int x, int y, MouseAction action) throws Exception
 	{
-		FXRobot robot = FXRobotFactory.createRobot(null);
-		final int clickCount = this.getClickCount(action);
-
-		robot.mouseMove(x, y);
-
-		switch (action)
+		return tryExecute(EMPTY_CHECK, () ->
 		{
-			case LeftDoubleClick:
-			case LeftClick:
-				robot.mouseClick(MouseButton.PRIMARY, clickCount);
-				break;
-			case RightClick:
-			case RightDoubleClick:
-				robot.mouseClick(MouseButton.SECONDARY, clickCount);
-				break;
-			case Press:
-				robot.mousePress(MouseButton.PRIMARY);
-		}
+			if (component instanceof Node)
+			{
+				Node node = (Node) component;
+				Point point = this.checkCoords(node, x, y);
 
-		return true;
+				List<Event> eventList = createMouseEventsList(action, component, point.x, point.y);
+				executeEventList(node, eventList);
+
+				return true;
+			}
+
+			return false;
+		}, e ->{
+			logger.error(String.format("click(%s)", component));
+			logger.error(e.getMessage(), e);
+		});
 	}
 
 	@Override
@@ -1036,6 +1030,116 @@ public class FxOperationExecutor extends AbstractOperationExecutor<EventTarget>
 		}
 	}
 
+	private List<Event> createMouseEventsList(MouseAction action, EventTarget target, int x, int y) throws Exception
+	{
+		MouseButton mb;
+		List<Event> result = new ArrayList<>();
+		Rectangle rectangle = this.getRectangle(target);
+		Point respectScene = getPointRespectScene(target);
+		int clickCount = getClickCount(action);
+
+		result.add(new MouseEvent(MouseEvent.MOUSE_ENTERED_TARGET, respectScene.x + x, respectScene.y + y, rectangle.x + x, rectangle.y + y, MouseButton.NONE,
+				clickCount, isShiftDown, isControlDown, isAltDown, false, false,
+				false, false, true, false, false, null));
+		result.add(new MouseEvent(MouseEvent.MOUSE_MOVED, respectScene.x + x, respectScene.y + y, rectangle.x + x, rectangle.y + y, MouseButton.NONE,
+				clickCount, isShiftDown, isControlDown, isAltDown, false, false,
+				false, false, true, false, false, null));
+		switch (action)
+		{
+			case LeftClick:
+			case LeftDoubleClick:
+				mb = MouseButton.PRIMARY;
+				result.add(new MouseEvent(MouseEvent.MOUSE_PRESSED, respectScene.x + x, respectScene.y + y, rectangle.x + x, rectangle.y + y, mb,
+						clickCount, isShiftDown, isControlDown, isAltDown, false, true,
+						false, false, true, false, false, null));
+				result.add(new MouseEvent(MouseEvent.MOUSE_RELEASED, respectScene.x + x, respectScene.y + y, rectangle.x + x, rectangle.y + y, mb,
+						clickCount, isShiftDown, isControlDown, isAltDown, false, true,
+						false, false, true, false, false, null));
+				result.add(new MouseEvent(MouseEvent.MOUSE_CLICKED, respectScene.x + x, respectScene.y + y, rectangle.x + x, rectangle.y + y, mb,
+						clickCount, isShiftDown, isControlDown, isAltDown, false, true,
+						false, false, true, false, false, null));
+				return result;
+			case RightClick:
+			case RightDoubleClick:
+				mb = MouseButton.SECONDARY;
+				result.add(new MouseEvent(MouseEvent.MOUSE_PRESSED, respectScene.x + x, respectScene.y + y, rectangle.x + x, rectangle.y + y, mb,
+						clickCount, isShiftDown, isControlDown, isAltDown, false, false,
+						false, true, true, true, true, null));
+				result.add(new MouseEvent(MouseEvent.MOUSE_RELEASED, respectScene.x + x, respectScene.y + y, rectangle.x + x, rectangle.y + y, mb,
+						clickCount, isShiftDown, isControlDown, isAltDown, false, false,
+						false, true, true, true, true, null));
+				result.add(new MouseEvent(MouseEvent.MOUSE_CLICKED, respectScene.x + x, respectScene.y + y, rectangle.x + x, rectangle.y + y, mb,
+						clickCount, isShiftDown, isControlDown, isAltDown, false, false,
+						false, true, true, true, true, null));
+				return result;
+			case Press:
+				mb = MouseButton.PRIMARY;
+				result.add(new MouseEvent(MouseEvent.MOUSE_PRESSED, respectScene.x + x, respectScene.y + y, rectangle.x + x, rectangle.y + y, mb,
+						clickCount, isShiftDown, isControlDown, isAltDown, false, true,
+						false, false, true, false, false, null));
+				return result;
+			case Drop:
+				mb = MouseButton.PRIMARY;
+				result.add(new MouseEvent(MouseEvent.MOUSE_DRAGGED, respectScene.x + x, respectScene.y + y, rectangle.x + x, rectangle.y + y, mb,
+						clickCount, isShiftDown, isControlDown, isAltDown, false, true,
+						false, false, true, false, false, null));
+				result.add(new MouseEvent(MouseEvent.MOUSE_RELEASED, respectScene.x + x, respectScene.y + y, rectangle.x + x, rectangle.y + y, mb,
+						clickCount, isShiftDown, isControlDown, isAltDown, false, true,
+						false, false, true, false, false, null));
+				return result;
+			default:
+				return result;
+		}
+	}
+
+	private Point getPointRespectScene(EventTarget target) throws Exception
+	{
+		if (target instanceof Node)
+		{
+			Node node = (Node) target;
+			if (node.isVisible())
+			{
+				Bounds screenBounds = node.localToScene(node.getBoundsInLocal());
+				int x = (int) screenBounds.getMinX();
+				int y = (int) screenBounds.getMinY();
+
+				return new Point(x, y);
+			}else
+			{
+				throw new UnsupportedOperationException(String.format("Element %s is not visible", node));
+			}
+
+		}else
+		{
+			throw new UnsupportedOperationException(String.format("Element %s is not a node", target));
+		}
+	}
+
+	private Point checkCoords(Node node, int x, int y) throws Exception
+	{
+		Point res;
+		Rectangle rectangle = this.getRectangle(node);
+		if (x == Integer.MIN_VALUE || y == Integer.MIN_VALUE)
+		{
+			res = new Point(rectangle.width / 2, rectangle.height / 2);
+		}
+		else
+		{
+			res = new Point(x, y);
+		}
+
+		return res;
+	}
+
+	private void executeEventList(Node node, List<Event> events)
+	{
+		Platform.runLater(() -> {
+			for (Event event : events)
+			{
+				node.fireEvent(event);
+			}
+		});
+	}
 
 	private Point getPointLocation(EventTarget target, int x, int y) throws Exception
 	{
