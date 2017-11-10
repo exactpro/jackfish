@@ -239,11 +239,36 @@ public class FxOperationExecutor extends AbstractOperationExecutor<EventTarget>
 	{
 		return tryExecute(EMPTY_CHECK, () ->
 		{
-			Map<String, String> result = new LinkedHashMap<>();
+			List<Map<String, Object>> listOfRows = new ArrayList<>();
 			if (target instanceof TableView)
 			{
-				//TODO add implementation
-				return result;
+				TableView<?> tableView = (TableView<?>) target;
+				List<String> tableHeaders = getTableHeaders(tableView, columns);
+				for (int i = 0; i < tableView.getItems().size(); i++)
+				{
+					Map<String, Object> row = new LinkedHashMap<>();
+					for (int j = 0; j < tableHeaders.size(); j++)
+					{
+						String cellValue = getValueTableCellDerived(tableView, j, i);
+						row.put(tableHeaders.get(j), cellValue);
+					}
+
+					if (Objects.nonNull(valueCondition) && valueCondition.isMatched(row))
+					{
+						listOfRows.add(row);
+					}
+				}
+				if (listOfRows.size() > 1)
+				{
+					throw new Exception("Too many rows");
+				}
+				if (listOfRows.isEmpty())
+				{
+					throw new Exception("No one row was found");
+				}
+				Map<String, String> map = new LinkedHashMap<>();
+				listOfRows.get(0).forEach((s, o) -> map.put(s, String.valueOf(o)));
+				return map;
 			}
 			throw tableException(target);
 		}, e->
@@ -891,9 +916,37 @@ public class FxOperationExecutor extends AbstractOperationExecutor<EventTarget>
 	}
 
 	@Override
-	public List<String> getRowIndexes(EventTarget component, Locator additional, Locator header, boolean useNumericHeader, String[] columns, ICondition valueCondition, ICondition colorCondition) throws Exception
+	public List<String> getRowIndexes(EventTarget target, Locator additional, Locator header, boolean useNumericHeader, String[] columns, ICondition valueCondition, ICondition colorCondition) throws Exception
 	{
-		return null;
+		return tryExecute(EMPTY_CHECK, () ->
+		{
+			List<String> rowNumbers = new ArrayList<>();
+			if (target instanceof TableView)
+			{
+				TableView<?> tableView = (TableView<?>) target;
+				List<String> tableHeaders = getTableHeaders(tableView, columns);
+				for (int i = 0; i < tableView.getItems().size(); i++)
+				{
+					Map<String, Object> row = new LinkedHashMap<>();
+					for (int j = 0; j < tableHeaders.size(); j++)
+					{
+						String cellValue = getValueTableCellDerived(tableView, j, i);
+						row.put(tableHeaders.get(j), cellValue);
+					}
+
+					if (Objects.nonNull(valueCondition) && valueCondition.isMatched(row))
+					{
+						rowNumbers.add(String.valueOf(i));
+					}
+				}
+				return rowNumbers;
+			}
+			throw tableException(target);
+		}, e->
+		{
+			logger.error(String.format("getRowDerived(%s,%s,%s,%s,%s,%s,%s)", target, additional, header, useNumericHeader, Arrays.toString(columns), valueCondition, colorCondition));
+			logger.error(e.getMessage(), e);
+		});
 	}
 
 	@Override
