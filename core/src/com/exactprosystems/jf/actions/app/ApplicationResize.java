@@ -9,6 +9,7 @@
 package com.exactprosystems.jf.actions.app;
 
 import com.exactprosystems.jf.actions.*;
+import com.exactprosystems.jf.actions.gui.DialogResize;
 import com.exactprosystems.jf.api.app.AppConnection;
 import com.exactprosystems.jf.api.app.IApplication;
 import com.exactprosystems.jf.api.app.Resize;
@@ -29,7 +30,7 @@ import java.util.List;
 		constantGeneralDescription = R.APP_RESIZE_GENERAL_DESC,
 		additionFieldsAllowed 	   = false,
 		constantExamples    	   = R.APP_RESIZE_EXAMPLE,
-		seeAlsoClass 			   = {ApplicationStart.class, ApplicationConnectTo.class}
+		seeAlsoClass 			   = {ApplicationStart.class, ApplicationConnectTo.class, DialogResize.class}
 	)
 
 public class ApplicationResize extends AbstractAction

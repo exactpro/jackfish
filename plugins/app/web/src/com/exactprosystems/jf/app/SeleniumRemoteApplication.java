@@ -487,7 +487,13 @@ public class SeleniumRemoteApplication extends RemoteApplication
 		}
 	}
 
-	@Override
+    @Override
+    protected void resizeDialogDerived(Locator element, Resize resize, int height, int width) throws Exception
+    {
+
+    }
+
+    @Override
 	protected String switchToDerived(final Map<String, String> criteria, final boolean softCondition) throws Exception
 	{
 		final String[] result = new String[]{""};
