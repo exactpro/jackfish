@@ -4,6 +4,7 @@ import com.sun.javafx.application.PlatformImpl;
 import com.sun.javafx.stage.StageHelper;
 import javafx.collections.ObservableList;
 import javafx.scene.Parent;
+import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import org.apache.log4j.*;
 
@@ -122,5 +123,15 @@ public class UtilsFx
 				;
 			}
 		}
+	}
+
+	static java.awt.Color convert(Color javafxColor)
+	{
+		return new java.awt.Color(
+				(int) (javafxColor.getRed() * 255)
+				, (int) (javafxColor.getGreen() * 255)
+				, (int) (javafxColor.getBlue() * 255)
+				, (int) (javafxColor.getOpacity() * 255)
+		);
 	}
 }

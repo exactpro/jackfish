@@ -1147,6 +1147,7 @@ public class SwingOperationExecutor extends AbstractOperationExecutor<ComponentF
 					throw new Exception("Too many rows");
 				}
 			}
+			//TODO remove this branch. We can't call Do.getRow with condition on tree (see ControlKind.java)
 			if (component.target instanceof JTree) {
 				String path = ((StringCondition) valueCondition).getValue();
 				JTree tree = component.targetCastedTo(JTree.class);
@@ -1232,6 +1233,7 @@ public class SwingOperationExecutor extends AbstractOperationExecutor<ComponentF
 					ret.put(underscopedName, value);
 				}
 			}
+			//TODO remove this branch. We can't call Do.getRow with condition on tree (see ControlKind.java)
 			if(component.target instanceof JTree)
 			{
 				ret.put("value", convertJTreeToPathsList((JTree)component.target).get(i));
