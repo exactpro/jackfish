@@ -8,6 +8,7 @@ import com.exactprosystems.jf.api.error.app.TooManyElementsException;
 import com.sun.javafx.robot.FXRobot;
 import com.sun.javafx.robot.FXRobotFactory;
 import javafx.application.Platform;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
 import javafx.event.Event;
 import javafx.event.EventTarget;
@@ -210,7 +211,31 @@ public class FxOperationExecutor extends AbstractOperationExecutor<EventTarget>
 	@Override
 	protected String getValueTableCellDerived(EventTarget component, int column, int row) throws Exception
 	{
-		return null;
+		return tryExecute(EMPTY_CHECK, ()->
+		{
+			if (component instanceof TableView)
+			{
+				TableView<?> tableView = (TableView) component;
+				if (tableView.getItems().size() < row)
+				{
+					throw new Exception(String.format("Can't get value for row %s because size of rows is %s", row, tableView.getItems().size()));
+				}
+
+				if (tableView.getColumns().size() < column)
+				{
+					throw new Exception(String.format("Can't get value for column %s because size of columns is %s", column, tableView.getColumns().size()));
+				}
+
+				TableColumn<?,?> tableColumn = tableView.getColumns().get(column);
+				ObservableValue<?> cellObservableValue = tableColumn.getCellObservableValue(row);
+				return String.valueOf(cellObservableValue.getValue());
+			}
+			return null;
+		}, e->
+		{
+			logger.error(String.format("getValueTableCellDerived(%s,%s,%s)", component, column, row));
+			logger.error(e.getMessage(), e);
+		});
 	}
 
 	@Override
