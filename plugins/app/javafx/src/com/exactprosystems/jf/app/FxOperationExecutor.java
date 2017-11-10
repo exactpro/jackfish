@@ -381,9 +381,20 @@ public class FxOperationExecutor extends AbstractOperationExecutor<EventTarget>
 	}
 
 	@Override
-	public Color getColor(EventTarget component, boolean isForeground) throws Exception
+	public Color getColor(EventTarget target, boolean isForeground) throws Exception
 	{
-		return null;
+		return tryExecute(EMPTY_CHECK, () ->
+		{
+			Rectangle rectangle = getRectangle(target);
+			double xOffset = rectangle.width * 0.1;
+			double yOffset = rectangle.height * 0.1;
+			Point point = this.getPointLocation(target, (int) xOffset, (int) yOffset);
+			return new Robot().getPixelColor(point.x, point.y);
+		}, e ->
+		{
+			this.logger.error(String.format("getColorXY(%s)", target));
+			this.logger.error(e.getMessage(), e);
+		});
 	}
 
 	@Override
@@ -974,7 +985,6 @@ public class FxOperationExecutor extends AbstractOperationExecutor<EventTarget>
 			this.logger.error(String.format("getColorXY(%s)", component));
 			this.logger.error(e.getMessage(), e);
 		});
-
 	}
 
 	//region private methods
