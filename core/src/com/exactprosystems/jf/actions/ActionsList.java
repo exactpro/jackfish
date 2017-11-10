@@ -63,6 +63,7 @@ public class ActionsList
 		        Compare.class,
 		        DesktopScreenshot.class,
 		        DialogCheckLayout.class,
+				DialogResize.class,
 		        DialogClose.class,
 		        DialogFill.class,
 		        DialogAlert.class,

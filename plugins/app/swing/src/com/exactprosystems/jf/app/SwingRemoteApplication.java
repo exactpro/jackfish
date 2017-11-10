@@ -312,7 +312,13 @@ public class SwingRemoteApplication extends RemoteApplication
 		}
 	}
 
-	@Override
+    @Override
+    protected void resizeDialogDerived(Locator element, Resize resize, int height, int width) throws Exception
+    {
+
+    }
+
+    @Override
 	protected String switchToDerived(final Map<String, String> criteria, boolean softCondition) throws Exception
 	{
 		throw new FeatureNotSupportedException("switchTo");

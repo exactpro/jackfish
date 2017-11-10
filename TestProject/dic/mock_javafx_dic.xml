@@ -109,7 +109,7 @@
     </window>
     <window name="Dialog">
         <self>
-            <dialog id="DialogD" title="Dialog" addition="Many"/>
+            <dialog id="DialogD" xpath=".//StackPane[contains(@class,&amp;quot;root&amp;quot;)]" title="" addition="Many"/>
         </self>
         <onOpen/>
         <run>

@@ -602,12 +602,12 @@ public abstract class RemoteApplication implements IRemoteApplication
 	{
 		try
 		{
-			//TODO create and implement method resizeDialogDerived(Locator owner, Resize resize, int height, int width) and uncomment catch RemoteException
+			resizeDialogDerived(owner, resize, height, width);
 		}
-		//		catch (RemoteException e)
-		//		{
-		//			throw e;
-		//		}
+		catch (RemoteException e)
+		{
+			throw e;
+		}
 		catch (Exception e)
 		{
 			String msg = String.format("Error on resizeDialog(%s, %s, %s,%s)", owner, resize, height, width);
@@ -679,6 +679,8 @@ public abstract class RemoteApplication implements IRemoteApplication
 	protected abstract void switchToFrameDerived(Locator owner, Locator element) throws Exception;
 
 	protected abstract void resizeDerived(Resize resize, int height, int width) throws Exception;
+
+	protected abstract void resizeDialogDerived(Locator element, Resize resize, int height, int width) throws Exception;
 
 	protected abstract Collection<String> findAllDerived(Locator owner, Locator element) throws Exception;
 	

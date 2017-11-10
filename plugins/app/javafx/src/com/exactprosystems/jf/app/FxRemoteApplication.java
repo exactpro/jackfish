@@ -215,36 +215,7 @@ public class FxRemoteApplication extends RemoteApplication
 				{
 					Stage stage = UtilsFx.mainStage();
 					logger.debug("Get main stage : %s" + MatcherFx.targetToString(stage));
-					if (stage != null)
-					{
-						if (resize != null)
-						{
-							switch (resize)
-							{
-								case Maximize:
-									logger.debug("Change state to maximized");
-									Platform.runLater(() -> stage.setMaximized(true));
-									break;
-								case Minimize:
-									logger.debug("Change state to minimize");
-									Platform.runLater(() -> stage.setIconified(true));
-									break;
-								case Normal:
-									logger.debug("Change state to normal");
-									Platform.runLater(() -> {
-										stage.setIconified(false);
-										stage.setMaximized(false);
-									});
-									break;
-							}
-						}
-						else
-						{
-							logger.debug("Change size");
-							stage.setWidth(width);
-							stage.setHeight(height);
-						}
-					}
+					resizeStage(stage, resize, height, width);
 					return null;
 				},
 				e ->
@@ -256,6 +227,31 @@ public class FxRemoteApplication extends RemoteApplication
 	}
 
 	@Override
+    protected void resizeDialogDerived(Locator element, Resize resize, int height, int width) throws Exception
+    {
+		this.tryExecute(
+				()->
+				{
+					logger.debug("Element : " + element);
+					EventTarget target = this.operationExecutor.find(null, element);
+					if(target != null && target instanceof Node)
+					{
+						Node node = (Node) target;
+						Stage stage = (Stage) node.getScene().getWindow();
+						logger.debug("Get stage : %s" + MatcherFx.targetToString(stage));
+						resizeStage(stage, resize, height, width);
+					}
+					return null;
+				},
+				e ->
+				{
+					logger.error(String.format("resizeDerived(%s,%s,%s,%s)", element, resize, height, width));
+					logger.error(e.getMessage(), e);
+				}
+		);
+    }
+
+    @Override
 	protected Collection <String> findAllDerived(Locator owner, Locator element) throws Exception
 	{
 		return this.tryExecute(
@@ -542,5 +538,38 @@ public class FxRemoteApplication extends RemoteApplication
 				}, func,log);
 	}
 
+	private void resizeStage(Stage stage, Resize resize, int height, int width)
+	{
+		if (stage != null)
+		{
+			if (resize != null)
+			{
+				switch (resize)
+				{
+					case Maximize:
+						logger.debug("Change state to maximized");
+						Platform.runLater(() -> stage.setMaximized(true));
+						break;
+					case Minimize:
+						logger.debug("Change state to minimize");
+						Platform.runLater(() -> stage.setIconified(true));
+						break;
+					case Normal:
+						logger.debug("Change state to normal");
+						Platform.runLater(() -> {
+							stage.setIconified(false);
+							stage.setMaximized(false);
+						});
+						break;
+				}
+			}
+			else
+			{
+				logger.debug("Change size");
+				stage.setWidth(width);
+				stage.setHeight(height);
+			}
+		}
+	}
 	//endregion
 }

@@ -306,7 +306,13 @@ public class WinRemoteApplicationJNA extends RemoteApplication
 		}
 	}
 
-	@Override
+    @Override
+    protected void resizeDialogDerived(Locator element, Resize resize, int height, int width) throws Exception
+    {
+
+    }
+
+    @Override
 	protected Collection<String> findAllDerived(Locator owner, Locator element) throws Exception
 	{
 		try
