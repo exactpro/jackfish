@@ -124,8 +124,17 @@ public class Converter
 				e.removeAttribute(IRemoteApplication.visibleName);
 				e.setUserData(IRemoteApplication.visibleName, Boolean.valueOf(visible), null);
 			}
+
+			String baseParent = e.getAttribute(IRemoteApplication.baseParnetName);
+			if (!Str.IsNullOrEmpty(baseParent))
+			{
+				e.removeAttribute(IRemoteApplication.baseParnetName);
+				e.setUserData(IRemoteApplication.baseParnetName, baseParent, null);
+			}
 		}
-		IntStream.range(0, element.getChildNodes().getLength()).mapToObj(element.getChildNodes()::item).forEach(Converter::convertAttributesToUserData);
+		IntStream.range(0, element.getChildNodes().getLength())
+				.mapToObj(element.getChildNodes()::item)
+				.forEach(Converter::convertAttributesToUserData);
 	}
 
 	public static String rectangleToString(Rectangle r)

@@ -12,10 +12,7 @@ import com.exactprosystems.jf.api.app.*;
 import com.exactprosystems.jf.api.common.ParametersKind;
 import com.exactprosystems.jf.api.common.PluginDescription;
 import com.exactprosystems.jf.api.common.PluginFieldDescription;
-import com.exactprosystems.jf.api.common.Str;
 import com.exactprosystems.jf.api.common.i18n.R;
-import org.w3c.dom.Attr;
-import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 
 import javax.swing.*;
@@ -164,24 +161,16 @@ public class SwingAppFactory extends AbstractApplicationFactory
 		@Override
 		public ControlKind derivedControlKindByNode(Node node)
 		{
-			NamedNodeMap attributes = node.getAttributes();
-			for (int i = 0; i < attributes.getLength(); i++)
+			Object userData = node.getUserData(IRemoteApplication.baseParnetName);
+			if (userData instanceof String)
 			{
-				Node nodeAttr = attributes.item(i);
-				if (nodeAttr instanceof Attr)
+				try
 				{
-					Attr attr = (Attr) nodeAttr;
-					if (Str.areEqual(attr.getName(), IRemoteApplication.baseParnetName))
-					{
-						try
-						{
-							Class<?> clazz = Class.forName(attr.getValue());
-							return super.controlKindByType(clazz.getSimpleName());
-						}
-						catch (ClassNotFoundException e)
-						{}
-					}
+					Class<?> clazz = Class.forName(((String) userData));
+					return super.controlKindByType(clazz.getSimpleName());
 				}
+				catch (ClassNotFoundException e)
+				{}
 			}
 			return ControlKind.Any;
 		}
