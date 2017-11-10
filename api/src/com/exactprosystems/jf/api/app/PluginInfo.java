@@ -56,15 +56,25 @@ public abstract class PluginInfo implements Serializable
         		.filter(e -> e.getValue().getTypes().stream().anyMatch(s -> s.equals(nodeName)))
         		.map(Map.Entry::getKey)
 				.collect(Collectors.toList());
-		if (list.size() == 0)
-		{
-			return ControlKind.Any;
-		}
 		if (list.size() == 1)
 		{
 			return list.get(0);
 		}
 		return derivedControlKindByNode(node);
+	}
+
+	public ControlKind controlKindByType(String type)
+	{
+		if (this.controlMap == null)
+		{
+			return ControlKind.Any;
+		}
+		return this.controlMap.entrySet()
+				.stream()
+				.filter(e -> e.getValue().getTypes().stream().anyMatch(s -> s.equals(type)))
+				.findFirst()
+				.map(Map.Entry::getKey)
+				.orElse(ControlKind.Any);
 	}
 
 	protected abstract ControlKind derivedControlKindByNode(Node node);

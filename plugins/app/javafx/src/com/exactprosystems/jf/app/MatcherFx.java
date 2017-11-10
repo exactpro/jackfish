@@ -37,9 +37,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.rmi.RemoteException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -52,6 +50,8 @@ public class MatcherFx
 	private NodeList   nodelist;
 
 	private Node owner;
+
+	private static Set<Class<?>> parents;
 
 	public MatcherFx(PluginInfo info, Locator locator, Node owner) throws RemoteException
 	{
@@ -305,6 +305,7 @@ public class MatcherFx
 		setNodeAttribute(node, tooltipName, getToolTip(component));
 		setNodeAttribute(node, idName, getId(component));
 		setNodeAttribute(node, className, getClass(component));
+		addBaseClass(node, component, info);
 		String textContent = getText(component);
 		if (!Str.IsNullOrEmpty(textContent))
 		{
@@ -330,6 +331,45 @@ public class MatcherFx
 			node.setAttribute(attrName, attrValue);
 		}
 	}
+
+	private static void addBaseClass(Element node, EventTarget target, PluginInfo info)
+	{
+		Set<Class<?>> allParents = getAllParents(info);
+		Class<?> clazz = target.getClass();
+		while (clazz != null)
+		{
+			if (allParents.contains(clazz))
+			{
+				node.setAttribute(IRemoteApplication.baseParnetName, clazz.getName());
+				break;
+			}
+			clazz = clazz.getSuperclass();
+		}
+	}
+
+	private static Set<Class<?>> getAllParents(PluginInfo info)
+	{
+		if (parents == null)
+		{
+			parents = Arrays.stream(ControlKind.values())
+					.map(info::nodeByControlKind)
+					.filter(Objects::nonNull)
+					.flatMap(Set::stream)
+					.map(str ->
+					{
+						try
+						{
+							return Class.forName(str);
+						}
+						catch (ClassNotFoundException ignored) {;}
+						return null;
+					})
+					.filter(Objects::nonNull)
+					.collect(Collectors.toSet());
+		}
+		return parents;
+	}
+
 	//endregion
 
 	//region public static methods

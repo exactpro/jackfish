@@ -4,13 +4,17 @@ import com.exactprosystems.jf.api.app.*;
 import com.exactprosystems.jf.api.common.ParametersKind;
 import com.exactprosystems.jf.api.common.PluginDescription;
 import com.exactprosystems.jf.api.common.PluginFieldDescription;
+import com.exactprosystems.jf.api.common.Str;
 import com.exactprosystems.jf.api.common.i18n.R;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.Pane;
+import org.w3c.dom.Attr;
+import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 
 import java.util.*;
+import java.util.stream.IntStream;
 
 @PluginDescription(
 		pluginName = "JAVAFX",
@@ -135,7 +139,16 @@ public class FxAppFactory extends AbstractApplicationFactory
 		@Override
 		public ControlKind derivedControlKindByNode(Node node)
 		{
-			return ControlKind.Any;
+			NamedNodeMap attributes = node.getAttributes();
+			Optional<String> baseParentName = IntStream.range(0, attributes.getLength())
+					.mapToObj(attributes::item)
+					.filter(a -> a instanceof Attr)
+					.map(n -> (Attr)n)
+					.filter(attr -> Str.areEqual(IRemoteApplication.baseParnetName, attr.getName()))
+					.map(Attr::getValue)
+					.filter(s -> !Str.IsNullOrEmpty(s))
+					.findFirst();
+			return baseParentName.map(super::controlKindByType).orElse(ControlKind.Any);
 		}
 	}
 }

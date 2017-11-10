@@ -19,6 +19,7 @@ public interface IRemoteApplication extends Remote
 {
 	String rectangleName = "jf_rectangle";
 	String visibleName = "jf_visible";
+	String baseParnetName = "jf_base_parent";
 
 	Serializable                getProperty		(String name, Serializable prop) throws RemoteException;
     void                        setProperty     (String name, Serializable prop) throws RemoteException;
