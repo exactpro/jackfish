@@ -12,7 +12,10 @@ import com.exactprosystems.jf.api.app.*;
 import com.exactprosystems.jf.api.common.ParametersKind;
 import com.exactprosystems.jf.api.common.PluginDescription;
 import com.exactprosystems.jf.api.common.PluginFieldDescription;
+import com.exactprosystems.jf.api.common.Str;
 import com.exactprosystems.jf.api.common.i18n.R;
+import org.w3c.dom.Attr;
+import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 
 import javax.swing.*;
@@ -91,6 +94,16 @@ public class SwingAppFactory extends AbstractApplicationFactory
         info.addExcludes(ControlKind.ComboBox, OperationKind.SCROLL_TO);
     }
 
+    static final Set<Class<?>> ALL_PARENETS = new HashSet<>(Arrays.asList(
+    		JButton.class, JCheckBox.class, JComboBox.class, JDialog.class,
+			JFrame.class, JLabel.class, JList.class, JMenu.class,
+			JMenuItem.class, JPanel.class, JProgressBar.class,
+			JRadioButton.class, JScrollBar.class, JSlider.class,
+			JSplitPane.class, JSpinner.class, JTable.class, JTabbedPane.class,
+			JTextField.class, JTextArea.class, JToggleButton.class,
+			JToolTip.class, JTree.class
+	));
+
 	//region IFactory
 	@Override
 	public String[] wellKnownParameters(ParametersKind kind)
@@ -151,6 +164,25 @@ public class SwingAppFactory extends AbstractApplicationFactory
 		@Override
 		public ControlKind derivedControlKindByNode(Node node)
 		{
+			NamedNodeMap attributes = node.getAttributes();
+			for (int i = 0; i < attributes.getLength(); i++)
+			{
+				Node nodeAttr = attributes.item(i);
+				if (nodeAttr instanceof Attr)
+				{
+					Attr attr = (Attr) nodeAttr;
+					if (Str.areEqual(attr.getName(), IRemoteApplication.baseParnetName))
+					{
+						try
+						{
+							Class<?> clazz = Class.forName(attr.getValue());
+							return super.controlKindByType(clazz.getSimpleName());
+						}
+						catch (ClassNotFoundException e)
+						{}
+					}
+				}
+			}
 			return ControlKind.Any;
 		}
 	}

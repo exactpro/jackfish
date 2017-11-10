@@ -13,7 +13,6 @@ import com.exactprosystems.jf.api.common.Converter;
 import com.exactprosystems.jf.api.common.Str;
 import com.exactprosystems.jf.api.error.app.ElementNotFoundException;
 import com.exactprosystems.jf.api.error.app.NullParameterException;
-
 import org.apache.log4j.Logger;
 import org.fest.swing.core.GenericTypeMatcher;
 import org.w3c.dom.*;
@@ -23,16 +22,10 @@ import javax.swing.text.JTextComponent;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.xpath.XPath;
-import javax.xml.xpath.XPathConstants;
-import javax.xml.xpath.XPathExpression;
-import javax.xml.xpath.XPathExpressionException;
-import javax.xml.xpath.XPathFactory;
-
+import javax.xml.xpath.*;
 import java.awt.*;
 import java.rmi.RemoteException;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
+import java.util.Set;
 
 public class MatcherSwing<T extends Component> extends GenericTypeMatcher<T>
 {
@@ -273,8 +266,7 @@ public class MatcherSwing<T extends Component> extends GenericTypeMatcher<T>
         return result;
     }
 
-    private static void buildDom(PluginInfo info, Document document, Node current, Component component,
-            boolean addItems, boolean addRectangles)
+    private static void buildDom(PluginInfo info, Document document, Node current, Component component, boolean addItems, boolean addRectangles)
     {
         if (component == null)
         {
@@ -324,6 +316,9 @@ public class MatcherSwing<T extends Component> extends GenericTypeMatcher<T>
         node.setAttribute(tooltipName,  getToolTip(component));
         node.setAttribute(nameName,     getName(component));
         node.setAttribute(className,    getClass(component));
+
+		addBaseClass(node, component, info);
+
         String textContent = getText(component);
         if (!Str.IsNullOrEmpty(textContent))
         {
@@ -342,7 +337,22 @@ public class MatcherSwing<T extends Component> extends GenericTypeMatcher<T>
         }
     }
 
-    static Rectangle getRect(Component c)
+	private static void addBaseClass(Element node, Component component, PluginInfo info)
+	{
+		Set<Class<?>> allParents = SwingAppFactory.ALL_PARENETS;
+		Class<?> clazz = component.getClass();
+		while (clazz != null)
+		{
+			if (allParents.contains(clazz))
+			{
+				node.setAttribute(IRemoteApplication.baseParnetName, clazz.getName());
+				break;
+			}
+			clazz = clazz.getSuperclass();
+		}
+	}
+
+	static Rectangle getRect(Component c)
     {
         logger.debug("getRect is showing ? " + c.isShowing());
         logger.debug("component " + c);
@@ -399,6 +409,7 @@ public class MatcherSwing<T extends Component> extends GenericTypeMatcher<T>
 
         return result;
     }
+
 
     @Override
     public String toString()
