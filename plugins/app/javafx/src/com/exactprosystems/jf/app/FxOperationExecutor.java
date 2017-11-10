@@ -249,8 +249,9 @@ public class FxOperationExecutor extends AbstractOperationExecutor<EventTarget>
 					Map<String, Object> row = new LinkedHashMap<>();
 					for (int j = 0; j < tableHeaders.size(); j++)
 					{
-						String cellValue = getValueTableCellDerived(tableView, j, i);
-						row.put(tableHeaders.get(j), cellValue);
+						TableColumn<?,?> tableColumn = tableView.getColumns().get(j);
+						ObservableValue<?> cellObservableValue = tableColumn.getCellObservableValue(i);
+						row.put(tableHeaders.get(j), cellObservableValue.getValue());
 					}
 
 					if (Objects.nonNull(valueCondition) && valueCondition.isMatched(row))
