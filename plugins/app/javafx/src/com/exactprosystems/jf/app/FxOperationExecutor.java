@@ -446,9 +446,9 @@ public class FxOperationExecutor extends AbstractOperationExecutor<EventTarget>
 			() ->
 			{
 				ArrayList<InputEvent> events = new ArrayList<>();
-				events.add(new KeyEvent(null, component, KeyEvent.KEY_PRESSED, "", "", KeyCode.getKeyCode(key.name()), this.isShiftDown, this.isControlDown, this.isAltDown, false ));
-				events.add(new KeyEvent(null, component, KeyEvent.KEY_TYPED, key.name(), "", KeyCode.getKeyCode(key.name()), this.isShiftDown, this.isControlDown, this.isAltDown, false ));
-				events.add(new KeyEvent(null, component, KeyEvent.KEY_RELEASED, "", "", KeyCode.getKeyCode(key.name()), this.isShiftDown, this.isControlDown, this.isAltDown, false ));
+				events.add(new KeyEvent(null, component, KeyEvent.KEY_PRESSED, "", "", KeyCode.getKeyCode(getKeyName(key)), this.isShiftDown, this.isControlDown, this.isAltDown, false ));
+				events.add(new KeyEvent(null, component, KeyEvent.KEY_TYPED, key.name(), "", KeyCode.getKeyCode(getKeyName(key)), this.isShiftDown, this.isControlDown, this.isAltDown, false ));
+				events.add(new KeyEvent(null, component, KeyEvent.KEY_RELEASED, "", "", KeyCode.getKeyCode(getKeyName(key)), this.isShiftDown, this.isControlDown, this.isAltDown, false ));
 				Platform.runLater(() -> events.stream().peek(e -> logger.debug("Event : " + e)).forEach(e -> Event.fireEvent(component, e)));
 				return true;
 			},
@@ -488,16 +488,16 @@ public class FxOperationExecutor extends AbstractOperationExecutor<EventTarget>
 
 				if(b)
 				{
-					events.add(new KeyEvent(null, component, KeyEvent.KEY_PRESSED, "", "", KeyCode.getKeyCode(key.name()), this.isShiftDown, this.isControlDown, this.isAltDown, false ));
+					events.add(new KeyEvent(null, component, KeyEvent.KEY_PRESSED, "", "", KeyCode.getKeyCode(getKeyName(key)), this.isShiftDown, this.isControlDown, this.isAltDown, false ));
 
 					if(needPress)
 					{
-						events.add(new KeyEvent(null, component, KeyEvent.KEY_TYPED, key.name(), "", KeyCode.getKeyCode(key.name()), this.isShiftDown, this.isControlDown, this.isAltDown, false ));
+						events.add(new KeyEvent(null, component, KeyEvent.KEY_TYPED, key.name(), "", KeyCode.getKeyCode(getKeyName(key)), this.isShiftDown, this.isControlDown, this.isAltDown, false ));
 					}
 				}
 				else
 				{
-					events.add(new KeyEvent(null, component, KeyEvent.KEY_RELEASED, "", "", KeyCode.getKeyCode(key.name()), this.isShiftDown, this.isControlDown, this.isAltDown, false ));
+					events.add(new KeyEvent(null, component, KeyEvent.KEY_RELEASED, "", "", KeyCode.getKeyCode(getKeyName(key)), this.isShiftDown, this.isControlDown, this.isAltDown, false ));
 				}
 
 				Platform.runLater(() -> events.stream().peek(event -> logger.debug("Event : " + event)).forEach(event -> Event.fireEvent(component, event)));
@@ -849,6 +849,47 @@ public class FxOperationExecutor extends AbstractOperationExecutor<EventTarget>
 			this.logger.error(e.getMessage(), e);
 		});
 
+	}
+
+	private String getKeyName(Keyboard key)
+	{
+		switch (key)
+		{
+			case ESCAPE: return KeyCode.ESCAPE.getName();
+			case BACK_SPACE: return KeyCode.BACK_SPACE.getName();
+			case INSERT: return KeyCode.INSERT.getName();
+			case HOME: return KeyCode.HOME.getName();
+			case PAGE_UP: return KeyCode.PAGE_UP.getName();
+			case TAB: return KeyCode.TAB.getName();
+			case BACK_SLASH: return KeyCode.BACK_SLASH.getName();
+			case DELETE: return KeyCode.DELETE.getName();
+			case END: return KeyCode.END.getName();
+			case PAGE_DOWN: return KeyCode.PAGE_DOWN.getName();
+			case CAPS_LOCK: return KeyCode.CAPS.getName();
+			case SEMICOLON: return KeyCode.SEMICOLON.getName();
+			case QUOTE: return KeyCode.QUOTE.getName();
+			case DOUBLE_QUOTE: return KeyCode.QUOTEDBL.getName();
+			case ENTER: return KeyCode.ENTER.getName();
+			case SHIFT: return KeyCode.SHIFT.getName();
+			case UP: return KeyCode.UP.getName();
+			case CONTROL: return KeyCode.CONTROL.getName();
+			case ALT: return KeyCode.ALT.getName();
+			case SPACE: return KeyCode.SPACE.getName();
+			case LEFT: return KeyCode.LEFT.getName();
+			case DOWN: return KeyCode.DOWN.getName();
+			case RIGHT: return KeyCode.RIGHT.getName();
+			case PLUS: return KeyCode.PLUS.getName();
+			case MINUS: return KeyCode.MINUS.getName();
+			case UNDERSCORE: return KeyCode.UNDERSCORE.getName();
+			case NUM_LOCK: return KeyCode.NUM_LOCK.getName();
+			case NUM_DIVIDE: return KeyCode.DIVIDE.getName();
+			case NUM_SEPARATOR: return KeyCode.SEPARATOR.getName();
+			case NUM_MULTIPLY: return KeyCode.MULTIPLY.getName();
+			case NUM_MINUS: return KeyCode.MINUS.getName();
+			case NUM_DOT: return KeyCode.PERIOD.getName();
+			case NUM_ENTER: return KeyCode.ENTER.getName();
+			default: return key.name();
+		}
 	}
 
 	private int getClickCount(MouseAction action)
