@@ -31,6 +31,7 @@ import java.io.Serializable;
 import java.lang.reflect.Method;
 import java.net.URL;
 import java.net.URLClassLoader;
+import java.rmi.Remote;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -318,7 +319,22 @@ public class SwingRemoteApplication extends RemoteApplication
 
     }
 
-    @Override
+	@Override
+	protected Dimension getDialogSizeDerived(Locator owner) throws Exception
+	{
+		ComponentFixture<Component> fixture = this.operationExecutor.find(null, owner);
+
+		return fixture.component().getSize();
+	}
+
+	@Override
+	protected Point getDialogPositionDerived(Locator owner) throws Exception
+	{
+		ComponentFixture<Component> fixture = this.operationExecutor.find(null, owner);
+		return fixture.component().getLocationOnScreen();
+	}
+
+	@Override
 	protected String switchToDerived(final Map<String, String> criteria, boolean softCondition) throws Exception
 	{
 		throw new FeatureNotSupportedException("switchTo");

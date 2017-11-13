@@ -493,7 +493,19 @@ public class SeleniumRemoteApplication extends RemoteApplication
 
     }
 
-    @Override
+	@Override
+	protected java.awt.Dimension getDialogSizeDerived(Locator owner) throws Exception
+	{
+		return null;
+	}
+
+	@Override
+	protected java.awt.Point getDialogPositionDerived(Locator owner) throws Exception
+	{
+		return null;
+	}
+
+	@Override
 	protected String switchToDerived(final Map<String, String> criteria, final boolean softCondition) throws Exception
 	{
 		final String[] result = new String[]{""};

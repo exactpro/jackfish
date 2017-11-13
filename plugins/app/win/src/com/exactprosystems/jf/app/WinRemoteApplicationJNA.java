@@ -312,7 +312,19 @@ public class WinRemoteApplicationJNA extends RemoteApplication
 
     }
 
-    @Override
+	@Override
+	protected Dimension getDialogSizeDerived(Locator owner) throws Exception
+	{
+		return null;
+	}
+
+	@Override
+	protected Point getDialogPositionDerived(Locator owner) throws Exception
+	{
+		return null;
+	}
+
+	@Override
 	protected Collection<String> findAllDerived(Locator owner, Locator element) throws Exception
 	{
 		try

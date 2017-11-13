@@ -620,13 +620,12 @@ public abstract class RemoteApplication implements IRemoteApplication
 	{
 		try
 		{
-			//TODO create and implement method getDialogSizeDerived(Locator owner) and uncomment catch RemoteException
-			return null;
+			return getDialogSizeDerived(owner);
 		}
-		//		catch (RemoteException e)
-		//		{
-		//			throw e;
-		//		}
+			catch (RemoteException e)
+			{
+				throw e;
+			}
 		catch (Exception e)
 		{
 			String msg = String.format("Error on getDialogSize(%s)", owner);
@@ -639,13 +638,13 @@ public abstract class RemoteApplication implements IRemoteApplication
 	{
 		try
 		{
-			//TODO create and implement method getDialogPositionDerived(Locator owner) and uncomment catch RemoteException
-			return null;
+			return getDialogPositionDerived(owner);
+
 		}
-		//		catch (RemoteException e)
-		//		{
-		//			throw e;
-		//		}
+				catch (RemoteException e)
+				{
+					throw e;
+				}
 		catch (Exception e)
 		{
 			String msg = String.format("Error on getDialogPosition(%s)", owner);
@@ -681,6 +680,10 @@ public abstract class RemoteApplication implements IRemoteApplication
 	protected abstract void resizeDerived(Resize resize, int height, int width) throws Exception;
 
 	protected abstract void resizeDialogDerived(Locator element, Resize resize, int height, int width) throws Exception;
+
+	protected abstract Dimension getDialogSizeDerived(Locator owner) throws Exception;
+
+	protected abstract Point getDialogPositionDerived(Locator owner) throws Exception;
 
 	protected abstract Collection<String> findAllDerived(Locator owner, Locator element) throws Exception;
 	

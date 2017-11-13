@@ -69,6 +69,7 @@ public class ActionsList
 		        DialogAlert.class,
 		        DialogSwitchToWindow.class,
 		        DialogValidate.class,
+				DialogGetProperties.class,
 		        MessageCheck.class,
 		        MessageCompareTwo.class,
 		        MessageCreate.class,
@@ -140,8 +141,8 @@ public class ActionsList
 				XmlRemove.class,
 				XmlReport.class,
 				XmlSaveToFile.class,
-				XmlSetNode.class, 
-				ApplicationNewInstance.class, 
+				XmlSetNode.class,
+				ApplicationNewInstance.class,
 			};
 
 }

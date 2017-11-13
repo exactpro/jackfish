@@ -17,8 +17,7 @@ import javafx.stage.WindowEvent;
 import org.apache.log4j.Logger;
 import org.w3c.dom.Document;
 
-import java.awt.Rectangle;
-import java.awt.Toolkit;
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.Serializable;
 import java.lang.reflect.InvocationTargetException;
@@ -246,7 +245,19 @@ public class FxRemoteApplication extends RemoteApplication
 		);
     }
 
-    @Override
+	@Override
+	protected Dimension getDialogSizeDerived(Locator owner) throws Exception
+	{
+		return null;
+	}
+
+	@Override
+	protected Point getDialogPositionDerived(Locator owner) throws Exception
+	{
+		return null;
+	}
+
+	@Override
 	protected Collection <String> findAllDerived(Locator owner, Locator element) throws Exception
 	{
 		return this.tryExecute(
