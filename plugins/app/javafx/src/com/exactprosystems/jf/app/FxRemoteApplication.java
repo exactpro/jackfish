@@ -209,7 +209,7 @@ public class FxRemoteApplication extends RemoteApplication
 				{
 					Stage stage = UtilsFx.mainStage();
 					logger.debug("Get main stage : %s" + MatcherFx.targetToString(stage));
-					resizeStage(stage, resize, height, width);
+					resizeWindow(stage, resize, height, width);
 					return null;
 				},
 				e ->
@@ -228,18 +228,18 @@ public class FxRemoteApplication extends RemoteApplication
 				{
 					logger.debug("Element : " + element);
 					EventTarget target = this.operationExecutor.find(null, element);
-					if(target != null && target instanceof Node)
+					if(target instanceof Node)
 					{
 						Node node = (Node) target;
 						Stage stage = (Stage) node.getScene().getWindow();
 						logger.debug("Get stage : %s" + MatcherFx.targetToString(stage));
-						resizeStage(stage, resize, height, width);
+						resizeWindow(stage, resize, height, width);
 					}
 					return null;
 				},
 				e ->
 				{
-					logger.error(String.format("resizeDerived(%s,%s,%s,%s)", element, resize, height, width));
+					logger.error(String.format("resizeDialogDerived(%s,%s,%s,%s)", element, resize, height, width));
 					logger.error(e.getMessage(), e);
 				}
 		);
@@ -550,7 +550,7 @@ public class FxRemoteApplication extends RemoteApplication
 				}, func,log);
 	}
 
-	private void resizeStage(Stage stage, Resize resize, int height, int width)
+	private void resizeWindow(Stage stage, Resize resize, int height, int width)
 	{
 		if (stage != null)
 		{

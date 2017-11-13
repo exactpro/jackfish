@@ -13,6 +13,7 @@ import com.exactprosystems.jf.api.common.ProcessTools;
 import com.exactprosystems.jf.api.common.Str;
 import com.exactprosystems.jf.api.error.app.FeatureNotSupportedException;
 import com.exactprosystems.jf.api.error.app.NullParameterException;
+import com.exactprosystems.jf.api.error.app.WrongParameterException;
 import net.sourceforge.jnlp.Launcher;
 import net.sourceforge.jnlp.runtime.ApplicationInstance;
 import net.sourceforge.jnlp.runtime.JNLPRuntime;
@@ -276,33 +277,7 @@ public class SwingRemoteApplication extends RemoteApplication
 			Component component = this.operationExecutor.currentFrame();
 			if (component instanceof JFrame)
 			{
-				JFrame frame = (JFrame)component;
-				if (resize != null)
-				{
-					switch (resize)
-					{
-						case Maximize:
-							logger.debug("Change state to maximized");
-							frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
-							logger.debug("Current state is " + frame.getExtendedState());
-							return;
-						case Minimize:
-							logger.debug("Change state to minimize");
-							frame.setExtendedState(JFrame.ICONIFIED);
-							logger.debug("Current state is " + frame.getExtendedState());
-							return;
-						case Normal:
-							logger.debug("Change state to normal");
-							frame.setExtendedState(JFrame.NORMAL);
-							logger.debug("Current state is " + frame.getExtendedState());
-							return;
-					}
-				}
-				else
-				{
-					logger.debug("Change state via w and h");
-					frame.setSize(width, height);
-				}
+				resizeWindow((JFrame) component, resize, height, width);
 			}
 		}
 		catch (Exception e)
@@ -313,10 +288,27 @@ public class SwingRemoteApplication extends RemoteApplication
 		}
 	}
 
-    @Override
+	@Override
     protected void resizeDialogDerived(Locator element, Resize resize, int height, int width) throws Exception
     {
-
+		try
+		{
+			ComponentFixture<Component> componentFixture = this.operationExecutor.find(null, element);
+			if (componentFixture.target instanceof JFrame)
+			{
+				resizeWindow((JFrame) componentFixture.target, resize, height, width);
+			}
+			if (componentFixture.target instanceof JDialog)
+			{
+				resizeWindow((JDialog) componentFixture.target, resize, height, width);
+			}
+		}
+		catch (Exception e)
+		{
+			logger.error(String.format("resizeDerived(%s,%s)", height, width));
+			logger.error(e.getMessage(), e);
+			throw e;
+		}
     }
 
 	@Override
@@ -647,4 +639,45 @@ public class SwingRemoteApplication extends RemoteApplication
 			throw e;
 		}
 	}
+
+	//region private method
+	private void resizeWindow(Window window, Resize resize, int height, int width) throws RemoteException
+	{
+		if (resize != null)
+		{
+			if(window instanceof JFrame)
+			{
+				JFrame frame = (JFrame) window;
+				switch (resize)
+				{
+					case Maximize:
+						logger.debug("Change state to maximized");
+						frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
+						logger.debug("Current state is " + frame.getExtendedState());
+						break;
+					case Minimize:
+						logger.debug("Change state to minimize");
+						frame.setExtendedState(JFrame.ICONIFIED);
+						logger.debug("Current state is " + frame.getExtendedState());
+						break;
+					case Normal:
+						logger.debug("Change state to normal");
+						frame.setExtendedState(JFrame.NORMAL);
+						logger.debug("Current state is " + frame.getExtendedState());
+						break;
+				}
+			}
+			if(window instanceof JDialog)
+			{
+				throw new WrongParameterException("Can't resize. Please use width and height as parameters in action DialogResize for resizing current dialog.");
+			}
+		}
+		else
+		{
+			logger.debug("Change state via width and height");
+			window.setSize(width, height);
+		}
+	}
+	//endregion
+
 }

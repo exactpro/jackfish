@@ -140,4 +140,13 @@
         <onClose/>
         <close/>
     </window>
+    <window name="Dialog">
+        <self>
+            <dialog id="Dialog" uid="Dialog"/>
+        </self>
+        <onOpen/>
+        <run/>
+        <onClose/>
+        <close/>
+    </window>
 </dictionary>

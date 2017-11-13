@@ -490,7 +490,7 @@ public class SeleniumRemoteApplication extends RemoteApplication
     @Override
     protected void resizeDialogDerived(Locator element, Resize resize, int height, int width) throws Exception
     {
-
+		// The action isn't relevant to the web-plugin
     }
 
 	@Override

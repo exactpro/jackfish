@@ -276,23 +276,7 @@ public class WinRemoteApplicationJNA extends RemoteApplication
 		try
 		{
 			UIProxyJNA currentWindow = currentWindow();
-			if (currentWindow == null)
-			{
-				throw new ElementNotFoundException("Current window not found");
-			}
-			if (resize != null)
-			{
-				switch (resize)
-				{
-					case Maximize: this.driver.doPatternCall(currentWindow, WindowPattern.WindowPattern, "SetWindowVisualState", "Maximized", 3);return;
-					case Minimize: this.driver.doPatternCall(currentWindow, WindowPattern.WindowPattern, "SetWindowVisualState", "Minimized", 3);return;
-					case Normal: this.driver.doPatternCall(currentWindow, WindowPattern.WindowPattern, "SetWindowVisualState", "Normal", 3); return;
-				}
-			}
-			else
-			{
-				this.driver.doPatternCall(currentWindow, WindowPattern.TransformPattern, "Resize", width + "%" + height, 1);
-			}
+			resizeWindow(currentWindow, resize, height, width);
 		}
 		catch (RemoteException e)
 		{
@@ -309,7 +293,20 @@ public class WinRemoteApplicationJNA extends RemoteApplication
     @Override
     protected void resizeDialogDerived(Locator element, Resize resize, int height, int width) throws Exception
     {
-
+		try
+		{
+			resizeWindow(this.operationExecutor.find(null, element), resize, height, width);
+		}
+		catch (RemoteException e)
+		{
+			throw e;
+		}
+		catch (Exception e)
+		{
+			this.logger.error(String.format("resizeDerived(%d,%d)", height, width));
+			this.logger.error(e.getMessage(), e);
+			throw e;
+		}
     }
 
 	@Override
@@ -682,6 +679,29 @@ public class WinRemoteApplicationJNA extends RemoteApplication
 		return value;
 	}
 
+	private void resizeWindow(UIProxyJNA currentWindow, Resize resize, int height, int width) throws Exception
+	{
+		if (currentWindow == null)
+		{
+			throw new ElementNotFoundException("Current window not found");
+		}
+		if (resize != null)
+		{
+			switch (resize)
+			{
+				case Maximize: this.driver.doPatternCall(currentWindow, WindowPattern.WindowPattern, "SetWindowVisualState", "Maximized", 3);
+					break;
+				case Minimize: this.driver.doPatternCall(currentWindow, WindowPattern.WindowPattern, "SetWindowVisualState", "Minimized", 3);
+					break;
+				case Normal: this.driver.doPatternCall(currentWindow, WindowPattern.WindowPattern, "SetWindowVisualState", "Normal", 3);
+					break;
+			}
+		}
+		else
+		{
+			this.driver.doPatternCall(currentWindow, WindowPattern.TransformPattern, "Resize", width + "%" + height, 1);
+		}
+	}
 	//endregion
 
 }
