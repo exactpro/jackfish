@@ -51,9 +51,15 @@ public class SeleniumOperationExecutor extends AbstractOperationExecutor<WebElem
 	private static final String col_span	= "colspan";
 
 	private final int repeatLimit = 4;
+
 	private boolean isShiftDown = false;
+	private boolean isShiftPressed = false;
+
 	private boolean isAltDown = false;
+	private boolean isAltPressed = false;
+
 	private boolean isControlDown = false;
+	private boolean isControlPressed = false;
 
 	public SeleniumOperationExecutor(WebDriverListenerNew driver, Logger logger, boolean useTrimText)
 	{
@@ -670,7 +676,8 @@ public class SeleniumOperationExecutor extends AbstractOperationExecutor<WebElem
 				}
 				
 				scrollToElement(component);
-				Actions customAction = new Actions(this.driver);
+				Actions actions = new Actions(this.driver);
+				this.addModifiers(actions);
 				switch (action)
 				{
 					case Move:
@@ -680,11 +687,11 @@ public class SeleniumOperationExecutor extends AbstractOperationExecutor<WebElem
 						}
 						if (x == Integer.MIN_VALUE || y == Integer.MIN_VALUE)
 						{
-							customAction.moveToElement(component).perform();
+							actions.moveToElement(component).perform();
 						}
 						else
 						{
-							customAction.moveToElement(component, x, y).perform();
+							actions.moveToElement(component, x, y).perform();
 						}
 						break;
 
@@ -702,7 +709,7 @@ public class SeleniumOperationExecutor extends AbstractOperationExecutor<WebElem
 								{
 									clickByJavascript(component);
 								}
-								else customAction.moveToElement(component).click().perform();
+								else actions.moveToElement(component).click().perform();
 							}
 							else
 							{
@@ -710,16 +717,16 @@ public class SeleniumOperationExecutor extends AbstractOperationExecutor<WebElem
 								{
 									clickByJavascriptByXY(component, x, y);
 								}
-								else customAction.moveToElement(component, x, y).click().perform();
+								else actions.moveToElement(component, x, y).click().perform();
 							}*/
 							
 							if (x == Integer.MIN_VALUE || y == Integer.MIN_VALUE)
 							{
-								customAction.moveToElement(component).click().perform();
+								actions.moveToElement(component).click().perform();
 							}
 							else
 							{
-								customAction.moveToElement(component, x, y).click().perform();
+								actions.moveToElement(component, x, y).click().perform();
 							}
 						}
 						break;
@@ -737,11 +744,11 @@ public class SeleniumOperationExecutor extends AbstractOperationExecutor<WebElem
 						{
 							if (x == Integer.MIN_VALUE || y == Integer.MIN_VALUE)
 							{
-								customAction.moveToElement(component).doubleClick().perform();
+								actions.moveToElement(component).doubleClick().perform();
 							}
 							else
 							{
-								customAction.moveToElement(component, x, y).doubleClick().perform();
+								actions.moveToElement(component, x, y).doubleClick().perform();
 							}
 						}
 						break;
@@ -753,11 +760,11 @@ public class SeleniumOperationExecutor extends AbstractOperationExecutor<WebElem
 						}
 						if (x == Integer.MIN_VALUE || y == Integer.MIN_VALUE)
 						{
-							customAction.contextClick(component).perform();
+							actions.contextClick(component).perform();
 						}
 						else
 						{
-							customAction.moveToElement(component, x, y).contextClick().perform();
+							actions.moveToElement(component, x, y).contextClick().perform();
 						}
 						break;
 
@@ -1018,9 +1025,9 @@ public class SeleniumOperationExecutor extends AbstractOperationExecutor<WebElem
 				scrollToElement(component);
 				CharSequence key = getKey(keyboard);
 				String chord = Keys.chord(
-						isControlDown ? Keys.CONTROL : "",
-						isShiftDown ? Keys.SHIFT : "",
-						isAltDown ? Keys.ALT : "",
+						this.isControlDown ? Keys.CONTROL : "",
+						this.isShiftDown ? Keys.SHIFT : "",
+						this.isAltDown ? Keys.ALT : "",
 						key
 				);
 
@@ -1475,7 +1482,45 @@ public class SeleniumOperationExecutor extends AbstractOperationExecutor<WebElem
 
 	//endregion
 
-    //region private methods
+	//region private methods
+	private void addModifiers(Actions actions)
+	{
+		// If some keys ( e.g. control, shift or alt) already pressed - we not need press it again.
+
+		if (this.isControlDown && !this.isControlPressed)
+		{
+			actions.keyDown(Keys.CONTROL);
+			this.isControlPressed = true;
+		}
+		if (!this.isControlDown && this.isControlPressed)
+		{
+			actions.keyUp(Keys.CONTROL);
+			this.isControlPressed = false;
+		}
+
+		if (this.isShiftDown && !this.isShiftPressed)
+		{
+			actions.keyDown(Keys.SHIFT);
+			this.isShiftPressed = true;
+		}
+		if (!this.isShiftDown && this.isShiftPressed)
+		{
+			actions.keyUp(Keys.SHIFT);
+			this.isShiftPressed = false;
+		}
+
+		if (this.isAltDown && !this.isAltPressed)
+		{
+			actions.keyDown(Keys.ALT);
+			this.isAltPressed = true;
+		}
+		if (!this.isAltDown && this.isAltPressed)
+		{
+			actions.keyUp(Keys.ALT);
+			this.isAltPressed = false;
+		}
+	}
+
 	private String getElementString(WebElement element)
 	{
 		String s = element.getAttribute("outerHTML");
