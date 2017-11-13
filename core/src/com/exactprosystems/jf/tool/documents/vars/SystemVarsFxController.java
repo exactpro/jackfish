@@ -44,13 +44,19 @@ public class SystemVarsFxController extends AbstractDocumentController<SystemVar
 	public void init(Document model, CustomTab customTab)
 	{
 		super.init(model, customTab);
-		this.tableView.setAddListener(() -> tryCatch(this.model::addNewVariable, "Error on adding new var"));
+		this.tableView.setAddListener(() -> tryCatch(SystemVarsFxController.this.model::addNewVariable, "Error on adding new var"));
 		this.tableView.setDeleteListener(this.model::removeParameters);
 		createTable();
-		this.model.getParameters().setOnChangeListener((o, n) -> {
-			this.tableView.setItems(FXCollections.observableList(this.model.getParameters()));
-			this.tableView.update();
-		});
+
+		this.model.getParameters().setOnAddListener((o, n) -> updateVars());
+		this.model.getParameters().setOnRemoveListener((o, n) -> updateVars());
+		this.model.getParameters().setOnChangeListener((o, n) -> updateVars());
+	}
+
+	private void updateVars()
+	{
+		SystemVarsFxController.this.tableView.setItems(FXCollections.observableList(SystemVarsFxController.this.model.getParameters()));
+		SystemVarsFxController.this.tableView.update();
 	}
 
 	private void createTable()

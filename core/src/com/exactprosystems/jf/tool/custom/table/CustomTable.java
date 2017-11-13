@@ -134,10 +134,7 @@ public class CustomTable<T> extends TableView<T>
 	    if(allowAdd)
         {
             MenuItem itemAdd = new MenuItem("Add new variable");
-            if(this.addListener != null)
-			{
-				itemAdd.setOnAction(event -> this.addListener.run());
-			}
+			itemAdd.setOnAction(event -> addItem());
             contextMenu.getItems().add(0, itemAdd);
         }
 
@@ -150,6 +147,14 @@ public class CustomTable<T> extends TableView<T>
 
 		removeSelected.setOnAction(event -> deleteItems());
 		removeAll.setOnAction(event -> deleteAllItems());
+	}
+
+	private void addItem()
+	{
+		if(this.addListener != null)
+		{
+			this.addListener.run();
+		}
 	}
 
 	private void deleteItems()
