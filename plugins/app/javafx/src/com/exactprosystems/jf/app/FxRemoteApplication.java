@@ -248,13 +248,39 @@ public class FxRemoteApplication extends RemoteApplication
 	@Override
 	protected Dimension getDialogSizeDerived(Locator owner) throws Exception
 	{
-		return null;
+		return tryExecute(() ->
+		{
+			EventTarget target = this.operationExecutor.find(null, owner);
+			if (target instanceof Node)
+			{
+				Rectangle rectangle = this.getRectangle(null, owner);
+				return rectangle.getSize();
+			}
+			return null;
+		}, e ->
+		{
+			logger.error(String.format("getDialogSizeDerived %s", owner));
+			logger.error(e.getMessage(), e);
+		});
 	}
 
 	@Override
 	protected Point getDialogPositionDerived(Locator owner) throws Exception
 	{
-		return null;
+		return tryExecute(() ->
+		{
+			EventTarget target = this.operationExecutor.find(null, owner);
+			if (target instanceof Node)
+			{
+				Rectangle rectangle = this.getRectangle(null, owner);
+				return rectangle.getLocation();
+			}
+			return null;
+		}, e ->
+		{
+			logger.error(String.format("getDialogPositionDerived %s", owner));
+			logger.error(e.getMessage(), e);
+		});
 	}
 
 	@Override
