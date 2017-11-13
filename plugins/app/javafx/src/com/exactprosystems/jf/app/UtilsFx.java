@@ -3,11 +3,17 @@ package com.exactprosystems.jf.app;
 import com.sun.javafx.application.PlatformImpl;
 import com.sun.javafx.stage.StageHelper;
 import javafx.collections.ObservableList;
+import javafx.embed.swing.SwingFXUtils;
+import javafx.event.EventTarget;
+import javafx.scene.Node;
 import javafx.scene.Parent;
+import javafx.scene.SnapshotParameters;
+import javafx.scene.image.WritableImage;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import org.apache.log4j.*;
 
+import java.awt.image.BufferedImage;
 import java.rmi.RemoteException;
 import java.util.Enumeration;
 import java.util.Optional;
@@ -133,5 +139,31 @@ public class UtilsFx
 				, (int) (javafxColor.getBlue() * 255)
 				, (int) (javafxColor.getOpacity() * 255)
 		);
+	}
+
+	static BufferedImage getNodeImage(EventTarget target)
+	{
+		final BufferedImage[] img = {null};
+		final CountDownLatch latch = new CountDownLatch(1);
+		Node finalTarget = (Node) target;
+		PlatformImpl.runLater(() -> {
+			Optional.ofNullable(logger).ifPresent(l -> l.debug(String.format("Start get image of Node %s", finalTarget)));
+			WritableImage snapshot = finalTarget.snapshot(new SnapshotParameters(), null);
+			img[0] = SwingFXUtils.fromFXImage(snapshot, null);
+			latch.countDown();
+		});
+		//wait image
+		while (true)
+		{
+			try
+			{
+				latch.await();
+				break;
+			}
+			catch (InterruptedException ignored)
+			{}
+		}
+		Optional.ofNullable(logger).ifPresent(l -> l.debug(String.format("Getting image for target %s is done. Image size [width : %s, height : %s]", target, img[0].getWidth(), img[0].getHeight())));
+		return img[0];
 	}
 }

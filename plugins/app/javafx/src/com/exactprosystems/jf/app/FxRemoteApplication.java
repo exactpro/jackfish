@@ -5,16 +5,12 @@ import com.exactprosystems.jf.api.common.ProcessTools;
 import com.exactprosystems.jf.api.common.Str;
 import com.exactprosystems.jf.api.error.app.FeatureNotSupportedException;
 import com.exactprosystems.jf.api.error.app.NullParameterException;
-import com.sun.javafx.application.PlatformImpl;
 import com.sun.javafx.stage.StageHelper;
 import javafx.application.Platform;
-import javafx.embed.swing.SwingFXUtils;
 import javafx.event.Event;
 import javafx.event.EventTarget;
 import javafx.scene.Node;
-import javafx.scene.SnapshotParameters;
 import javafx.scene.control.ComboBox;
-import javafx.scene.image.WritableImage;
 import javafx.stage.Stage;
 import javafx.stage.Window;
 import javafx.stage.WindowEvent;
@@ -34,7 +30,6 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
@@ -309,28 +304,8 @@ public class FxRemoteApplication extends RemoteApplication
 					logger.debug(String.format("target : %s", target));
 					if (target instanceof Node)
 					{
-						final BufferedImage[] img = {null};
-						final CountDownLatch latch = new CountDownLatch(1);
-						Node finalTarget = (Node) target;
-						PlatformImpl.runLater(() -> {
-							logger.debug(String.format("Start get image of Node %s", finalTarget));
-							WritableImage snapshot = finalTarget.snapshot(new SnapshotParameters(), null);
-							img[0] = SwingFXUtils.fromFXImage(snapshot, null);
-							latch.countDown();
-						});
-						//wait image
-						while (true)
-						{
-							try
-							{
-								latch.await();
-								break;
-							}
-							catch (InterruptedException ignored)
-							{}
-						}
-						logger.debug(String.format("Getting image for target %s is done. Image size [width : %s, height : %s]", target, img[0].getWidth(), img[0].getHeight()));
-						return new ImageWrapper(img[0]);
+						BufferedImage image = UtilsFx.getNodeImage(target);
+						return new ImageWrapper(image);
 					}
 					throw new Exception("Target is not instance of node");
 				},
