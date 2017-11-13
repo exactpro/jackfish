@@ -3,6 +3,7 @@ package com.exactprosystems.jf.app;
 import com.exactprosystems.jf.api.app.*;
 import com.exactprosystems.jf.api.client.ICondition;
 import com.exactprosystems.jf.api.common.Converter;
+import com.exactprosystems.jf.api.common.Str;
 import com.exactprosystems.jf.api.error.app.ElementNotFoundException;
 import com.exactprosystems.jf.api.error.app.FeatureNotSupportedException;
 import com.exactprosystems.jf.api.error.app.TooManyElementsException;
@@ -13,6 +14,7 @@ import javafx.collections.ObservableList;
 import javafx.event.Event;
 import javafx.event.EventTarget;
 import javafx.geometry.Bounds;
+import javafx.scene.AccessibleAttribute;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.control.*;
@@ -31,6 +33,7 @@ import java.lang.reflect.Modifier;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 import static com.exactprosystems.jf.app.UtilsFx.tryExecute;
 
@@ -348,16 +351,13 @@ public class FxOperationExecutor extends AbstractOperationExecutor<EventTarget>
 				int columnsCount = tableView.getColumns().size();
 
 				String[][] res = new String[rowsCount + 1][columnsCount];
-				ObservableList<? extends TableColumn<?, ?>> columns1 = tableView.getColumns();
+				ObservableList<? extends TableColumn<?, ?>> tableColumns = tableView.getColumns();
 
 				this.fillHeaders(res, tableView, columns);
-				for (int i = 0; i < rowsCount; i++)
-				{
-					for (int j = 0; j < columns1.size(); j++)
-					{
-						res[i + 1][j] = columns1.get(j).getCellObservableValue(i).getValue().toString();
-					}
-				}
+				IntStream.range(0, rowsCount)
+						.forEach(i -> IntStream.range(0, tableColumns.size())
+								.forEach(j -> res[i + 1][j] = Str.asString(tableColumns.get(j).getCellObservableValue(i).getValue()))
+						);
 				return res;
 			}
 			throw tableException(target);
@@ -499,6 +499,7 @@ public class FxOperationExecutor extends AbstractOperationExecutor<EventTarget>
 	@Override
 	public List<EventTarget> findByXpath(EventTarget element, String path) throws Exception
 	{
+		//TODO implement
 		return null;
 	}
 
@@ -737,6 +738,7 @@ public class FxOperationExecutor extends AbstractOperationExecutor<EventTarget>
 	@Override
 	public boolean expand(EventTarget component, String path, boolean expandOrCollapse) throws Exception
 	{
+		//TODO implement
 		return false;
 	}
 
@@ -865,13 +867,22 @@ public class FxOperationExecutor extends AbstractOperationExecutor<EventTarget>
 	@Override
 	public Document getTree(EventTarget component) throws Exception
 	{
+		//TODO implement
 		return null;
 	}
 
 	@Override
 	public boolean dragNdrop(EventTarget drag, int x1, int y1, EventTarget drop, int x2, int y2, boolean moveCursor) throws Exception
 	{
-		return false;
+		return tryExecute(EMPTY_CHECK, () ->
+		{
+			//TODO implement
+			return false;
+		}, e ->
+		{
+			logger.error(String.format("dragNdrop(%s,%s,%s,%s,%s,%s,%s)", drag, x1, y1, drop, x2, y2, moveCursor));
+			logger.error(e.getMessage(), e);
+		});
 	}
 
 	@Override
@@ -903,13 +914,124 @@ public class FxOperationExecutor extends AbstractOperationExecutor<EventTarget>
 	@Override
 	public boolean mouseTable(EventTarget component, int column, int row, MouseAction action) throws Exception
 	{
-		return false;
+		return tryExecute(EMPTY_CHECK, ()->
+		{
+			if (component instanceof TableView)
+			{
+				TableView<?> tableView = (TableView) component;
+				if (tableView.getItems().size() < row)
+				{
+					throw new Exception(String.format("Can't get value for row %s because size of rows is %s", row, tableView.getItems().size()));
+				}
+
+				if (tableView.getColumns().size() < column)
+				{
+					throw new Exception(String.format("Can't get value for column %s because size of columns is %s", column, tableView.getColumns().size()));
+				}
+
+				Node cell = UtilsFx.runOnFxThreadAndWaitResult(() -> {
+					try
+					{
+						logger.debug(String.format("Start scroll to column %s", column));
+						tableView.scrollToColumnIndex(column);
+						logger.debug(String.format("Start scroll to row %s", row));
+						tableView.scrollTo(row);
+						logger.debug(String.format("Start getting cell"));
+						return (Node) tableView.queryAccessibleAttribute(AccessibleAttribute.CELL_AT_ROW_COLUMN, row, column);
+					}
+					catch (Exception e)
+					{
+						logger.error(e.getMessage(), e);
+					}
+					return null;
+				});
+				logger.debug("Found cell : " + cell);
+				if (cell != null)
+				{
+					if (cell instanceof TableCell<?, ?> && ((TableCell) cell).getGraphic() != null)
+					{
+						cell = ((TableCell) cell).getGraphic();
+					}
+					Point point = this.checkCoords(cell, Integer.MIN_VALUE, Integer.MIN_VALUE);
+
+					List<Event> eventList = createMouseEventsList(action, cell, point.x, point.y);
+					executeEventList(cell, eventList);
+
+					return true;
+				}
+				return false;
+			}
+			throw tableException(component);
+		}, e->
+		{
+			logger.error(String.format("mouseTable(%s,%s,%s,%s)", component, column, row, action));
+			logger.error(e.getMessage(), e);
+		});
 	}
 
 	@Override
 	public boolean textTableCell(EventTarget component, int column, int row, String text) throws Exception
 	{
-		return false;
+		return tryExecute(EMPTY_CHECK, ()->
+		{
+			if (component instanceof TableView)
+			{
+				TableView<?> tableView = (TableView) component;
+				if (tableView.getItems().size() < row)
+				{
+					throw new Exception(String.format("Can't get value for row %s because size of rows is %s", row, tableView.getItems().size()));
+				}
+
+				if (tableView.getColumns().size() < column)
+				{
+					throw new Exception(String.format("Can't get value for column %s because size of columns is %s", column, tableView.getColumns().size()));
+				}
+
+				Node cell = UtilsFx.runOnFxThreadAndWaitResult(() -> {
+					try
+					{
+						logger.debug(String.format("Start scroll to column %s", column));
+						tableView.scrollToColumnIndex(column);
+						logger.debug(String.format("Start scroll to row %s", row));
+						tableView.scrollTo(row);
+						logger.debug(String.format("Start getting cell"));
+						return (Node) tableView.queryAccessibleAttribute(AccessibleAttribute.CELL_AT_ROW_COLUMN, row, column);
+					}
+					catch (Exception e)
+					{
+						logger.error(e.getMessage(), e);
+					}
+					return null;
+				});
+				logger.debug("Found cell : " + cell);
+				if (cell != null)
+				{
+					if (cell instanceof TableCell<?, ?> && ((TableCell) cell).getGraphic() != null)
+					{
+						cell = ((TableCell) cell).getGraphic();
+					}
+					if (!(cell instanceof TextInputControl))
+					{
+						Locator locator = new Locator();
+						locator.kind(ControlKind.TextBox);
+						List<EventTarget> all = new MatcherFx(this.info, locator, cell).findAll();
+						if (all.isEmpty())
+						{
+							throw new Exception("Cant set text to not text element");
+						}
+						TextInputControl cellBox = (TextInputControl) all.get(0);
+						cellBox.setText(text);
+					}
+					return true;
+				}
+				return false;
+			}
+			throw tableException(component);
+		}, e->
+		{
+			logger.error(String.format("mouseTable(%s,%s,%s,%s)", component, column, row, text));
+			logger.error(e.getMessage(), e);
+		});
 	}
 
 	@Override
@@ -949,14 +1071,18 @@ public class FxOperationExecutor extends AbstractOperationExecutor<EventTarget>
 	@Override
 	public int getTableSize(EventTarget component, Locator additional, Locator header, boolean useNumericHeader) throws Exception
 	{
-		if (component instanceof TableView)
+		return tryExecute(EMPTY_CHECK, () ->
 		{
-			return ((TableView) component).getItems().size();
-		}
-		else
+			if (component instanceof TableView)
+			{
+				return ((TableView) component).getItems().size();
+			}
+			throw tableException(component);
+		}, e ->
 		{
-			throw new UnsupportedOperationException("Element is not a table");
-		}
+			logger.error(String.format("getTableSize(%s,%s,%s,%s)", component, additional, header, useNumericHeader));
+			logger.error(e.getMessage(), e);
+		});
 	}
 
 	@Override

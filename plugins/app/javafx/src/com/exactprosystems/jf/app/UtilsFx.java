@@ -2,6 +2,7 @@ package com.exactprosystems.jf.app;
 
 import com.sun.javafx.application.PlatformImpl;
 import com.sun.javafx.stage.StageHelper;
+import javafx.application.Platform;
 import javafx.collections.ObservableList;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.event.EventTarget;
@@ -18,7 +19,9 @@ import java.rmi.RemoteException;
 import java.util.Enumeration;
 import java.util.Optional;
 import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Consumer;
+import java.util.function.Supplier;
 
 public class UtilsFx
 {
@@ -143,16 +146,37 @@ public class UtilsFx
 
 	static BufferedImage getNodeImage(EventTarget target)
 	{
-		final BufferedImage[] img = {null};
-		final CountDownLatch latch = new CountDownLatch(1);
 		Node finalTarget = (Node) target;
-		PlatformImpl.runLater(() -> {
+		BufferedImage image = runOnFxThreadAndWaitResult(() -> {
 			Optional.ofNullable(logger).ifPresent(l -> l.debug(String.format("Start get image of Node %s", finalTarget)));
 			WritableImage snapshot = finalTarget.snapshot(new SnapshotParameters(), null);
-			img[0] = SwingFXUtils.fromFXImage(snapshot, null);
-			latch.countDown();
+			return SwingFXUtils.fromFXImage(snapshot, null);
 		});
-		//wait image
+		Optional.ofNullable(logger).ifPresent(l -> l.debug(String.format("Getting image for target %s is done. Image size [width : %s, height : %s]", target, image.getWidth(), image.getHeight())));
+		return image;
+	}
+
+	static <T> T runOnFxThreadAndWaitResult(Supplier<T> func)
+	{
+		if (Platform.isFxApplicationThread())
+		{
+			return func.get();
+		}
+		AtomicReference<T> reference = new AtomicReference<>();
+		CountDownLatch latch = new CountDownLatch(1);
+		Platform.runLater(() -> {
+			try
+			{
+				T value = func.get();
+				Optional.ofNullable(logger).ifPresent(l -> l.debug(String.format("Getting value : %s", value)));
+				reference.set(value);
+			}
+			finally
+			{
+				latch.countDown();
+			}
+
+		});
 		while (true)
 		{
 			try
@@ -163,7 +187,6 @@ public class UtilsFx
 			catch (InterruptedException ignored)
 			{}
 		}
-		Optional.ofNullable(logger).ifPresent(l -> l.debug(String.format("Getting image for target %s is done. Image size [width : %s, height : %s]", target, img[0].getWidth(), img[0].getHeight())));
-		return img[0];
+		return reference.get();
 	}
 }
