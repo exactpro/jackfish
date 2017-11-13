@@ -43,12 +43,14 @@ public class RowTable implements Map<String, Object>, Cloneable
     public CopyRowTable copy(Set<String> names, boolean compareValues)
     {
         checkRow();
-        LinkedHashMap<String, Object> map = this.currentRow.entrySet()
-                .stream()
-                .filter(e -> e.getKey() != null && names.contains(e.getKey().name))
-                .collect(Collectors.toMap(e -> e.getKey().name, e -> compareValues ? get(e.getKey().name) : Str.asString(e.getValue()), (k,v) -> k, LinkedHashMap::new));
-        
-        return new CopyRowTable(map);
+		LinkedHashMap<String, Object> map = new LinkedHashMap<>();
+		this.currentRow.forEach((key, value) -> {
+			if (key != null && names.contains(key.name))
+			{
+				map.put(key.name, compareValues ? get(key.name) : Str.asString(value));
+			}
+		});
+		return new CopyRowTable(map);
     }
     
     public CopyRowTable copy()
