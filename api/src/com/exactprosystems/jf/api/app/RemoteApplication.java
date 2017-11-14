@@ -584,12 +584,12 @@ public abstract class RemoteApplication implements IRemoteApplication
 	{
 		try
 		{
-			//TODO create and implement method moveDialogDerived(Locator owner, int x, int y) and uncomment catch RemoteException
+			this.moveDialogDerived(owner, x, y);
 		}
-//		catch (RemoteException e)
-//		{
-//			throw e;
-//		}
+		catch (RemoteException e)
+		{
+			throw e;
+		}
 		catch (Exception e)
 		{
 			String msg = String.format("Error on moveDialog(%s, %s,%s)", owner, x, y);
@@ -706,6 +706,8 @@ public abstract class RemoteApplication implements IRemoteApplication
 	protected abstract void startNewDialogDerived() throws Exception;
 
 	protected abstract void moveWindowDerived(int x, int y) throws Exception;
+
+	protected abstract  void moveDialogDerived(Locator owner, int x, int y) throws Exception;
 	//endregion
 
 	//region private methods
