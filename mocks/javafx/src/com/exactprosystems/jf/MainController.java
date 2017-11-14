@@ -1,14 +1,18 @@
 package com.exactprosystems.jf;
 
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.VBox;
 
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -63,8 +67,9 @@ public class MainController implements Initializable
     private static final String PUSH = "_push";
     private static final String NEW_LINE = "\n";
     private MainModel mainModel;
+	public VBox vBox;
 
-    @Override
+	@Override
     public void initialize(URL location, ResourceBundle resources)
     {
         mainModel = new MainModel();
@@ -77,7 +82,71 @@ public class MainController implements Initializable
         textEdit.textProperty().addListener((observable, oldValue, newValue) -> centralLabel.setText("TextEdit_" + newValue));
         checkBox.selectedProperty().addListener((observable, oldValue, newValue) -> checkedLabel.setText("CheckBox_" + (newValue ? "checked" : "unchecked")));
         comboBox.valueProperty().addListener((observable, oldValue, newValue) -> centralLabel.setText("ComboBox_" + newValue));
-    }
+
+		TableView<A> tb = new TableView<>();
+		tb.setMinHeight(100);
+
+		tb.getItems().addAll(new A("1", "2"), new A("3", "4"), new A("5", "6"));
+		TableColumn<A, String> c1 = new TableColumn<>("A");
+		c1.setCellValueFactory(p -> new SimpleObjectProperty<>(p.getValue().a));
+
+		TableColumn<A, String> c2 = new TableColumn<>("B");
+		c2.setCellValueFactory(p -> new SimpleObjectProperty<>(p.getValue().b));
+		c2.setCellFactory(e -> new TableCell<A, String>(){
+			@Override
+			protected void updateItem(String item, boolean empty)
+			{
+				super.updateItem(item, empty);
+				if (item != null && !empty)
+				{
+					BorderPane pane = new BorderPane();
+					TextField tf = new TextField("my Item :" + item);
+					pane.setLeft(tf);
+					pane.setRight(new Button("Click"));
+					setGraphic(pane);
+					setAlignment(Pos.CENTER_RIGHT);
+				}
+			}
+		});
+		tb.getColumns().addAll(c1, c2);
+		vBox.getChildren().add(tb);
+	}
+
+    class A
+	{
+		public String a;
+		public String b;
+
+		public A(String a, String b)
+		{
+			this.a = a;
+			this.b = b;
+		}
+
+		public A()
+		{
+		}
+
+		public String getA()
+		{
+			return a;
+		}
+
+		public void setA(String a)
+		{
+			this.a = a;
+		}
+
+		public String getB()
+		{
+			return b;
+		}
+
+		public void setB(String b)
+		{
+			this.b = b;
+		}
+	}
 
     public void clickHandler(MouseEvent mouseEvent)
     {
