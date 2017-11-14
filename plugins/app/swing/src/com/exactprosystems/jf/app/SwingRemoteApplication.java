@@ -315,14 +315,30 @@ public class SwingRemoteApplication extends RemoteApplication
 	protected Dimension getDialogSizeDerived(Locator owner) throws Exception
 	{
 		ComponentFixture<Component> fixture = this.operationExecutor.find(null, owner);
-		return fixture.component().getSize();
+		Component root = SwingUtilities.getRoot(fixture.component());
+		if (root instanceof Window)
+		{
+			return root.getSize();
+		}
+		else
+		{
+			throw new FeatureNotSupportedException(String.format("Self %s is not in a Dialog or Frame", owner));
+		}
 	}
 
 	@Override
 	protected Point getDialogPositionDerived(Locator owner) throws Exception
 	{
 		ComponentFixture<Component> fixture = this.operationExecutor.find(null, owner);
-		return fixture.component().getLocationOnScreen();
+		Component root = SwingUtilities.getRoot(fixture.component());
+		if (root instanceof Window)
+		{
+			return root.getLocation();
+		}
+		else
+		{
+			throw new FeatureNotSupportedException(String.format("Self %s is not in a Dialog or Frame", owner));
+		}
 	}
 
 	@Override
