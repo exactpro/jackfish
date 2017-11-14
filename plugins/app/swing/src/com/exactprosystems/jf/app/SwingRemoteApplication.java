@@ -315,7 +315,6 @@ public class SwingRemoteApplication extends RemoteApplication
 	protected Dimension getDialogSizeDerived(Locator owner) throws Exception
 	{
 		ComponentFixture<Component> fixture = this.operationExecutor.find(null, owner);
-
 		return fixture.component().getSize();
 	}
 
