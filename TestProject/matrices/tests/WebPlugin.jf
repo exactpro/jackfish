@@ -199,3 +199,30 @@ Properties;Dialog get properties;;;
     #EndStep
 
 
+#TestCase;#Kind;#Depends;#For
+DialogMove;;;
+    #Id;#Step;#Kind;#For;#Depends
+    Start;;;;
+        #Id;#Global;#Action;Browser;URL;$AppId
+        APPSTR5;1;ApplicationStart;mockWebBrowser;mockWebURL;mockWebApp
+
+    #EndStep
+
+    #Id;#Step;#Kind;#For;#Depends
+    Positive;;;;
+    #EndStep
+
+    #Id;#Step;#Kind;#For;#Depends
+    Negative;;;;
+        #Action;#Assert;$Dialog;$X;$Y;$AppConnection
+        DialogMove;This.Result == Result.Failed && This.Kind == ErrorKind.FEATURE_NOT_SUPPORTED;'Main';1;1;APPSTR5.Out
+
+    #EndStep
+
+    #Id;#TestCase;#Kind;#Depends;#For
+    Stop;;;;
+        #Action;$AppConnection
+        ApplicationStop;APPSTR5.Out
+
+
+
