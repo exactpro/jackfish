@@ -269,13 +269,8 @@ public class FxRemoteApplication extends RemoteApplication
 	{
 		return tryExecute(() ->
 		{
-			EventTarget target = this.operationExecutor.find(null, owner);
-			if (target instanceof Node)
-			{
-				Rectangle rectangle = this.getRectangle(null, owner);
-				return rectangle.getLocation();
-			}
-			return null;
+			Rectangle rectangle = this.getRectangle(null, owner);
+			return rectangle.getLocation();
 		}, e ->
 		{
 			logger.error(String.format("getDialogPositionDerived %s", owner));

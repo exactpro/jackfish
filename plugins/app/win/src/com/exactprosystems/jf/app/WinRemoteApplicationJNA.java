@@ -312,13 +312,15 @@ public class WinRemoteApplicationJNA extends RemoteApplication
 	@Override
 	protected Dimension getDialogSizeDerived(Locator owner) throws Exception
 	{
-		return null;
+		Rectangle rectangle = this.getRectangle(null, owner);
+		return rectangle.getSize();
 	}
 
 	@Override
 	protected Point getDialogPositionDerived(Locator owner) throws Exception
 	{
-		return null;
+		Rectangle rectangle = this.getRectangle(null, owner);
+		return rectangle.getLocation();
 	}
 
 	@Override

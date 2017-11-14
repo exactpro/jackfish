@@ -215,7 +215,7 @@
         <appDescription>Swing applications</appDescription>
         <appDicPath>dic/mock_swing_dic.xml</appDicPath>
         <appJar>${JF}/apps/swing.jar</appJar>
-        <appWorkDir>.</appWorkDir>
+        <appWorkDir>${JF}/apps</appWorkDir>
         <appStartPort>7000</appStartPort>
     </appEntry>
     <appEntry>

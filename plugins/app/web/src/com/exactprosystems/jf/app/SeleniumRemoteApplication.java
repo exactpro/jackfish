@@ -496,13 +496,13 @@ public class SeleniumRemoteApplication extends RemoteApplication
 	@Override
 	protected java.awt.Dimension getDialogSizeDerived(Locator owner) throws Exception
 	{
-		return null;
+		throw new FeatureNotSupportedException("Get dialog size");
 	}
 
 	@Override
 	protected java.awt.Point getDialogPositionDerived(Locator owner) throws Exception
 	{
-		return null;
+		throw new FeatureNotSupportedException("Get dialog position");
 	}
 
 	@Override

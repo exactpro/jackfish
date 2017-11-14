@@ -88,7 +88,7 @@ Appliaction connect;;;
 #TestCase;#Kind;#Depends;#For
 Appliaction negative;;;
     #Id;#Action;$AppId;Jar;Args;MainClass
-    APPSTR1;ApplicationStart;'SWING';mockSwingJar;;mockSwingClass
+    APPSTR1;ApplicationStart;mockSwingApp;mockSwingJar;;mockSwingClass
 
     #Id;#Action;#Assert;$AppConnection
     APPR1;ApplicationRefresh;This.Kind == ErrorKind.EXCEPTION && This.Result == Result.Failed;APPSTR1.Out
@@ -107,5 +107,54 @@ Appliaction negative;;;
 
     #Id;#Action;$AppConnection
     APPSTP1;ApplicationStop;APPSTR1.Out
+
+
+#Id;#TestCase;#Kind;#Depends;#For
+Properties;Dialog get properties;;;
+    #Id;#Step;#Kind;#For;#Depends
+    Start;;;;
+        #Id;#Global;#Action;MainClass;Args;Jar;$AppId
+        APPSTR4;1;ApplicationStart;mockSwingClass;'';mockSwingJar;mockSwingApp
+
+    #EndStep
+
+    #Id;#Step;#Kind;#For;#Depends
+    Positive;;;;
+        #Id;#Action;#Assert;$Size;$Position;$Dialog;$AppConnection
+        APPPAR6;DialogGetProperties;This.Result == Result.Passed && This.Out.Size != null && This.Out.Position != null;;;'Dialog';APPSTR4.Out
+
+        #Id;#Action;#Assert;$Position;$Dialog;$AppConnection
+        APPPAR6;DialogGetProperties;This.Result == Result.Passed && This.Out.Position != null;;'Dialog';APPSTR4.Out
+
+        #Id;#Action;#Assert;$Size;$Dialog;$AppConnection
+        APPPAR6;DialogGetProperties;This.Result == Result.Passed && This.Out.Size != null;;'Dialog';APPSTR4.Out
+
+        #Id;#Action;#Assert;$Dialog;$AppConnection
+        APPPAR6;DialogGetProperties;This.Result == Result.Passed;'Dialog';APPSTR4.Out
+
+    #EndStep
+
+    #Id;#Step;#Kind;#For;#Depends
+    Negative;;;;
+        #Id;#Action;#Assert;$Dialog;$AppConnection
+        APPPAR7;DialogGetProperties;This.Result == Result.Failed && This.Kind == ErrorKind.DIALOG_NOT_FOUND;'Dialogg';APPSTR4.Out
+
+        #Id;#Action;#Assert;$Dialog;$AppConnection
+        APPPAR8;DialogGetProperties;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;'Dialog';
+
+        #Id;#Action;#Assert;$Dialog;$AppConnection
+        APPPAR9;DialogGetProperties;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;;APPSTR4.Out
+
+        #Id;#Action;#Assert;$Dialog;$AppConnection
+        APPPAR10;DialogGetProperties;This.Result == Result.Failed && This.Kind == ErrorKind.EXPRESSION_ERROR;'Dialog';asd
+
+    #EndStep
+
+    #Id;#Step;#Kind;#For;#Depends
+    Stop;;;;
+        #Action;$AppConnection
+        ApplicationStop;APPSTR4.Out
+
+    #EndStep
 
 
