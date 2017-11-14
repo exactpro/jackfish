@@ -505,13 +505,22 @@ public class FxRemoteApplication extends RemoteApplication
 				{
 					EventTarget target = this.operationExecutor.find(null, owner);
 
-					if (target instanceof Node)
+					if (target instanceof Window )
 					{
-						Window window = ((Node) target).getScene().getWindow();
+						Window window = (Window) target;
 						window.setX(x);
 						window.setY(y);
+						return null;
 					}
-					return null;
+					if (target instanceof Dialog<?>)
+					{
+						Dialog dialog = (Dialog<?>) target;
+						dialog.setX(x);
+						dialog.setY(y);
+						return null;
+					}
+					throw new FeatureNotSupportedException(String.format("Self %s is not dialog or window", owner));
+
 				},
 				e ->
 				{

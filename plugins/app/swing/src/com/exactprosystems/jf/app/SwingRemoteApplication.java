@@ -639,8 +639,15 @@ public class SwingRemoteApplication extends RemoteApplication
 		try
 		{
 			ComponentFixture<Component> fixture = this.operationExecutor.find(null, owner);
-			Component root = SwingUtilities.getRoot(fixture.component());
-			root.setLocation(x, y);
+
+			if (fixture.component() instanceof Window)
+			{
+				fixture.component().setLocation(x, y);
+			}
+			else
+			{
+				throw new FeatureNotSupportedException(String.format("Self %s is not in a Window", owner));
+			}
 		}
 		catch (RemoteException e)
 		{

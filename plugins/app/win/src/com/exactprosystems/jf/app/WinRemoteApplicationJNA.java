@@ -517,7 +517,25 @@ public class WinRemoteApplicationJNA extends RemoteApplication
 
 	@Override
 	protected void moveDialogDerived(Locator owner, int x, int y) throws Exception {
-
+		try
+		{
+			UIProxyJNA currentDialog = this.operationExecutor.find(null, owner);
+			if(currentDialog == null)
+			{
+				throw new ElementNotFoundException(owner);
+			}
+			this.driver.doPatternCall(currentDialog, WindowPattern.TransformPattern, "Move", x + "%" + y, 1);
+		}
+		catch (RemoteException e)
+		{
+			throw e;
+		}
+		catch (Exception e)
+		{
+			this.logger.error(String.format("moveDialog(%d,%d)", x, y));
+			this.logger.error(e.getMessage(), e);
+			throw e;
+		}
 	}
 
 	@Override
