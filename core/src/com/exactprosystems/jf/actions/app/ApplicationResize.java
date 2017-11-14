@@ -26,7 +26,7 @@ import java.util.List;
 
 @ActionAttribute(
 		group					   = ActionGroups.App,
-		suffix					   = "APPSZ",
+		suffix					   = "APPR",
 		constantGeneralDescription = R.APP_RESIZE_GENERAL_DESC,
 		additionFieldsAllowed 	   = false,
 		constantExamples    	   = R.APP_RESIZE_EXAMPLE,

@@ -18,7 +18,7 @@ import static com.exactprosystems.jf.actions.gui.Helper.message;
 
 @ActionAttribute(
         group					   = ActionGroups.GUI,
-        suffix					   = "DLGSZ",
+        suffix					   = "DLGR",
         constantGeneralDescription = R.DIALOG_RESIZE_GENERAL_DESC,
         additionFieldsAllowed 	   = false,
         constantExamples    	   = R.DIALOG_RESIZE_EXAMPLE,

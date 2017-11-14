@@ -231,9 +231,12 @@ public class FxRemoteApplication extends RemoteApplication
 					if(target instanceof Node)
 					{
 						Node node = (Node) target;
-						Stage stage = (Stage) node.getScene().getWindow();
-						logger.debug("Get stage : %s" + MatcherFx.targetToString(stage));
-						resizeWindow(stage, resize, height, width);
+						if(node.getScene().getWindow() instanceof Stage)
+						{
+							Stage stage = (Stage) node.getScene().getWindow();
+							logger.debug("Get stage : %s" + MatcherFx.targetToString(stage));
+							resizeWindow(stage, resize, height, width);
+						}
 					}
 					return null;
 				},
