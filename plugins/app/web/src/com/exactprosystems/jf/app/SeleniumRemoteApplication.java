@@ -912,6 +912,11 @@ public class SeleniumRemoteApplication extends RemoteApplication
 	}
 
 	@Override
+	protected void moveDialogDerived(Locator owner, int x, int y) throws Exception {
+		throw new FeatureNotSupportedException("moveDialog");
+	}
+
+	@Override
 	protected Document getTreeDerived(Locator owner) throws Exception
 	{
 		log("start");

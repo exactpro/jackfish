@@ -516,6 +516,11 @@ public class WinRemoteApplicationJNA extends RemoteApplication
 	}
 
 	@Override
+	protected void moveDialogDerived(Locator owner, int x, int y) throws Exception {
+
+	}
+
+	@Override
 	protected Document getTreeDerived(Locator owner) throws Exception
 	{
 		UIProxyJNA parent = owner == null ? currentWindow() : this.operationExecutor.find(null, owner);

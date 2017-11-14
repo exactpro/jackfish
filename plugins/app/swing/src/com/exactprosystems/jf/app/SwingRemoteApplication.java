@@ -636,6 +636,14 @@ public class SwingRemoteApplication extends RemoteApplication
 	}
 
 	@Override
+	protected void moveDialogDerived(Locator owner, int x, int y) throws Exception
+	{
+		ComponentFixture<Component> fixture = this.operationExecutor.find(null, owner);
+		Component root = SwingUtilities.getRoot(fixture.component());
+		root.setLocation(x, y);
+	}
+
+	@Override
 	protected Document getTreeDerived(Locator owner) throws Exception
 	{
 		try

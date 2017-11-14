@@ -70,6 +70,7 @@ public class ActionsList
 		        DialogSwitchToWindow.class,
 		        DialogValidate.class,
 				DialogGetProperties.class,
+				DialogMove.class,
 		        MessageCheck.class,
 		        MessageCompareTwo.class,
 		        MessageCreate.class,

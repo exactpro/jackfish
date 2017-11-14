@@ -485,6 +485,30 @@ public class FxRemoteApplication extends RemoteApplication
 		);
 	}
 
+	@Override
+	protected void moveDialogDerived(Locator owner, int x, int y) throws Exception
+	{
+		this.tryExecute(
+				() ->
+				{
+					EventTarget target = this.operationExecutor.find(null, owner);
+
+					if (target instanceof Node)
+					{
+						Window window = ((Node) target).getScene().getWindow();
+						window.setX(x);
+						window.setY(y);
+					}
+					return null;
+				},
+				e ->
+				{
+					logger.error(String.format("moveDialogDerived(%s,%s)", x, y));
+					logger.error(e.getMessage(), e);
+				}
+		);
+	}
+
 	//region FeatureNotSupported
 	@Override
 	protected int connectDerived(Map<String, String> args) throws Exception
