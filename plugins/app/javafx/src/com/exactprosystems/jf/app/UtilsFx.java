@@ -8,7 +8,9 @@ import javafx.embed.swing.SwingFXUtils;
 import javafx.event.EventTarget;
 import javafx.scene.Node;
 import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.SnapshotParameters;
+import javafx.scene.control.Dialog;
 import javafx.scene.image.WritableImage;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
@@ -95,7 +97,7 @@ public class UtilsFx
 	static Parent currentRoot()
 	{
 		RootContainer rootContainer = new RootContainer();
-		StageHelper.getStages().stream().map(s -> s.getScene().getRoot()).forEach(rootContainer::addTarget);
+		StageHelper.getStages().forEach(rootContainer::addStage);
 		return rootContainer;
 	}
 
@@ -146,11 +148,24 @@ public class UtilsFx
 
 	static BufferedImage getNodeImage(EventTarget target)
 	{
-		Node finalTarget = (Node) target;
 		BufferedImage image = runOnFxThreadAndWaitResult(() -> {
-			debug(String.format("Start get image of Node %s", finalTarget));
-			WritableImage snapshot = finalTarget.snapshot(new SnapshotParameters(), null);
-			return SwingFXUtils.fromFXImage(snapshot, null);
+			debug(String.format("Start get image of Node %s", target));
+			if (target instanceof Dialog<?>)
+			{
+				Scene scene = ((Dialog) target).getOwner().getScene();
+				WritableImage snapshot = scene.snapshot(null);
+				return SwingFXUtils.fromFXImage(snapshot, null);
+			}
+			if (target instanceof Stage)
+			{
+				WritableImage snapshot = ((Stage) target).getScene().snapshot(null);
+				return SwingFXUtils.fromFXImage(snapshot, null);
+			}
+			else
+			{
+				WritableImage snapshot = ((Node) target).snapshot(new SnapshotParameters(), null);
+				return SwingFXUtils.fromFXImage(snapshot, null);
+			}
 		});
 		debug(String.format("Getting image for target %s is done. Image size [width : %s, height : %s]", target, image.getWidth(), image.getHeight()));
 		return image;

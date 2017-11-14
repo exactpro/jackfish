@@ -66,6 +66,7 @@ public class FxRemoteApplication extends RemoteApplication
 	@Override
 	public Serializable getProperty(String name, Serializable prop) throws RemoteException
 	{
+		//TODO replace via tryExecute
 		try
 		{
 			if (this.isInit)
@@ -295,8 +296,6 @@ public class FxRemoteApplication extends RemoteApplication
 		return this.tryExecute(
 				() -> this.operationExecutor.findAll(owner, element)
 						.stream()
-						.filter(e -> e instanceof Node)
-						.map(e -> (Node)e)
 						.map(node ->
 						{
 							StringBuilder sb = new StringBuilder(MatcherFx.targetToString(node));
@@ -345,12 +344,8 @@ public class FxRemoteApplication extends RemoteApplication
 						}
 					}
 					logger.debug(String.format("target : %s", target));
-					if (target instanceof Node)
-					{
-						BufferedImage image = UtilsFx.getNodeImage(target);
-						return new ImageWrapper(image);
-					}
-					throw new Exception("Target is not instance of node");
+					BufferedImage image = UtilsFx.getNodeImage(target);
+					return new ImageWrapper(image);
 				},
 				e ->
 				{
@@ -369,11 +364,11 @@ public class FxRemoteApplication extends RemoteApplication
 					logger.debug(String.format("Start get rectangle for owner [%s] and element [%s]", owner, element));
 					if (element == null)
 					{
-						return this.operationExecutor.getRectangle(UtilsFx.mainStage());
+						return MatcherFx.getRect(UtilsFx.mainStage());
 					}
 					else
 					{
-						return this.operationExecutor.getRectangle(this.operationExecutor.find(owner, element));
+						return MatcherFx.getRect(this.operationExecutor.find(owner, element));
 					}
 				},
 				e ->
@@ -426,6 +421,7 @@ public class FxRemoteApplication extends RemoteApplication
 					List<EventTarget> all = this.operationExecutor.findAll(ControlKind.Any, currentRoot, element);
 					for (EventTarget target : all)
 					{
+						//TODO remake this code
 						if (target instanceof Node)
 						{
 							Node node = (Node) target;

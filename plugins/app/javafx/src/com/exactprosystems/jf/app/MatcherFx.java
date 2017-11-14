@@ -5,6 +5,7 @@ import com.exactprosystems.jf.api.common.Converter;
 import com.exactprosystems.jf.api.common.Str;
 import com.exactprosystems.jf.api.error.app.ElementNotFoundException;
 import com.exactprosystems.jf.api.error.app.NullParameterException;
+import javafx.application.Platform;
 import javafx.collections.ObservableList;
 import javafx.event.EventTarget;
 import javafx.geometry.Bounds;
@@ -49,11 +50,11 @@ public class MatcherFx
 	private PluginInfo info;
 	private NodeList   nodelist;
 
-	private Node owner;
+	private EventTarget owner;
 
 	private static Set<Class<?>> parents;
 
-	public MatcherFx(PluginInfo info, Locator locator, Node owner) throws RemoteException
+	public MatcherFx(PluginInfo info, Locator locator, EventTarget owner) throws RemoteException
 	{
 		if (locator == null)
 		{
@@ -70,12 +71,10 @@ public class MatcherFx
 			{
 				org.w3c.dom.Document document = createDocument(this.info, owner, true, false);
 
-				// TODO Only for debugging in the beginning. Remove in the future.
-//				printDocument(document, System.err);
-
 				XPathFactory factory = XPathFactory.newInstance();
 				XPath xPath = factory.newXPath();
 				org.w3c.dom.Node root = document;
+
 				try
 				{
 					XPathExpression compile = xPath.compile("/*");
@@ -117,9 +116,11 @@ public class MatcherFx
 	//region work with find Nodes
 	public List<EventTarget> findAll()
 	{
-		List<Node> nodes = new ArrayList<>();
+		List<EventTarget> nodes = new ArrayList<>();
 		collect(this.owner, nodes);
-		return nodes.stream().filter(this::isMatches).collect(Collectors.toList());
+		return nodes.stream()
+				.filter(this::isMatches)
+				.collect(Collectors.toList());
 	}
 
 	private boolean isMatches(EventTarget target)
@@ -130,7 +131,7 @@ public class MatcherFx
 		}
 		if (target instanceof Stage)
 		{
-			((Stage) target).toFront();
+			Platform.runLater(((Stage) target)::toFront);
 		}
 		boolean result = isVisible(target);
 		if (this.locator.getVisibility() == Visibility.Visible)
@@ -194,12 +195,22 @@ public class MatcherFx
 		return false;
 	}
 
-	private void collect(Node node, List<Node> nodes)
+	private void collect(EventTarget eventTarget, List<EventTarget> nodes)
 	{
-		nodes.add(node);
-		if (node instanceof Parent)
+		nodes.add(eventTarget);
+		if (eventTarget instanceof RootContainer)
 		{
-			ObservableList<Node> children = ((Parent) node).getChildrenUnmodifiable();
+			//this means that we pass owner as null for searching of locator
+			RootContainer rootContainer = (RootContainer) eventTarget;
+			rootContainer.getStages().forEach(s -> collect(s, nodes));
+		}
+		else if (eventTarget instanceof Stage)
+		{
+			collect(((Stage) eventTarget).getScene().getRoot(), nodes);
+		}
+		else if (eventTarget instanceof Parent)
+		{
+			ObservableList<Node> children = ((Parent) eventTarget).getChildrenUnmodifiable();
 			children.forEach(child -> collect(child, nodes));
 		}
 	}
@@ -251,7 +262,7 @@ public class MatcherFx
 		transformer.transform(new DOMSource(doc), new StreamResult(new OutputStreamWriter(out, "UTF-8")));
 	}
 
-	public static org.w3c.dom.Document createDocument(PluginInfo info, Node owner, boolean addItems, boolean addRectangles) throws ParserConfigurationException
+	public static org.w3c.dom.Document createDocument(PluginInfo info, EventTarget owner, boolean addItems, boolean addRectangles) throws ParserConfigurationException
 	{
 		DocumentBuilderFactory builderFactory = DocumentBuilderFactory.newInstance();
 		DocumentBuilder builder = builderFactory.newDocumentBuilder();
@@ -313,7 +324,16 @@ public class MatcherFx
 		}
 
 		current.appendChild(node);
-		if (component instanceof Parent)
+		if (component instanceof Stage)
+		{
+			buildDom(info, document, node, ((Stage) component).getScene().getRoot(), addItems, addRectangles);
+		}
+		else if (component instanceof RootContainer)
+		{
+			RootContainer rootContainer = (RootContainer) component;
+			rootContainer.getStages().forEach(stage -> buildDom(info, document, node, stage, addItems, addRectangles));
+		}
+		else if (component instanceof Parent)
 		{
 			Parent container = (Parent) component;
 
@@ -421,6 +441,14 @@ public class MatcherFx
 			collectAllText(((Pane) target), sb);
 			return sb.toString();
 		}
+		else if (target instanceof Stage)
+		{
+			return ((Stage) target).getTitle();
+		}
+		else if (target instanceof Dialog)
+		{
+			return ((Dialog) target).getTitle();
+		}
 		else
 		{
 			return null;
@@ -468,6 +496,10 @@ public class MatcherFx
 		if (obj instanceof Stage)
 		{
 			objTitle = ((Stage) obj).getTitle();
+		}
+		else if (obj instanceof Dialog<?>)
+		{
+			objTitle = ((Dialog) obj).getTitle();
 		}
 		return objTitle;
 	}

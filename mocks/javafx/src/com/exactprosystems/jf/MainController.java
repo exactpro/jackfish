@@ -110,6 +110,17 @@ public class MainController implements Initializable
 		});
 		tb.getColumns().addAll(c1, c2);
 		vBox.getChildren().add(tb);
+
+		Button btnOpenDialog = new Button("Open dialog");
+		btnOpenDialog.setOnAction(e ->
+		{
+			Dialog<ButtonType> dialog = new Alert(Alert.AlertType.CONFIRMATION);
+			dialog.setContentText("Simple content");
+			dialog.setHeaderText("Simple header");
+			dialog.showAndWait();
+		});
+
+		vBox.getChildren().add(btnOpenDialog);
 	}
 
     class A

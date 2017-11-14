@@ -373,14 +373,7 @@ public class FxOperationExecutor extends AbstractOperationExecutor<EventTarget>
 	public List<EventTarget> findAll(ControlKind controlKind, EventTarget window, Locator locator) throws Exception
 	{
 		return tryExecute(EMPTY_CHECK,
-				() ->
-				{
-					if (window instanceof Node)
-					{
-						return new MatcherFx(this.info, locator, (Node) window).findAll();
-					}
-					throw new Exception("Window is not a node");
-				},
+				() -> new MatcherFx(this.info, locator, window).findAll(),
 				e->
 				{
 					logger.error(String.format("findAll(%s,%s,%s)", controlKind, window, locator));
@@ -397,7 +390,7 @@ public class FxOperationExecutor extends AbstractOperationExecutor<EventTarget>
 				{
 					logger.debug(String.format("Start found owner : %s", owner));
 
-					Node ownerNode;
+					EventTarget ownerEventTarget;
 
 					if (owner != null)
 					{
@@ -415,21 +408,15 @@ public class FxOperationExecutor extends AbstractOperationExecutor<EventTarget>
 							throw new TooManyElementsException(Integer.toString(targets.size()), owner);
 						}
 
-						EventTarget target = targets.get(0);
-						if (!(target instanceof Node))
-						{
-							logger.debug(String.format("Owner not instance of Node. Owner : %s", MatcherFx.targetToString(target)));
-							throw new ElementNotFoundException("Found owner not a node");
-						}
-						ownerNode = (Node) target;
+						ownerEventTarget = targets.get(0);
 					}
 					else
 					{
-						ownerNode = UtilsFx.currentRoot();
+						ownerEventTarget = UtilsFx.currentRoot();
 					}
-					logger.debug(String.format("Found owner : %s", MatcherFx.targetToString(ownerNode)));
+					logger.debug(String.format("Found owner : %s", MatcherFx.targetToString(ownerEventTarget)));
 
-					return new MatcherFx(this.info, element, ownerNode).findAll();
+					return new MatcherFx(this.info, element, ownerEventTarget).findAll();
 				},
 				e->
 				{
@@ -489,7 +476,7 @@ public class FxOperationExecutor extends AbstractOperationExecutor<EventTarget>
 	@Override
 	public boolean elementIsVisible(EventTarget component) throws Exception
 	{
-		return component instanceof Node && !((Node) component).isVisible();
+		return MatcherFx.isVisible(component);
 	}
 
 	@Override
@@ -503,18 +490,12 @@ public class FxOperationExecutor extends AbstractOperationExecutor<EventTarget>
 	{
 		return tryExecute(EMPTY_CHECK, () ->
 		{
-			if (component instanceof Node)
-			{
-				Node node = (Node) component;
-				Point point = this.checkCoords(node, x, y);
+			Point point = this.checkCoords(component, x, y);
 
-				List<Event> eventList = createMouseEventsList(action, component, point.x, point.y);
-				executeEventList(node, eventList);
+			List<Event> eventList = createMouseEventsList(action, component, point.x, point.y);
+			executeEventList(component, eventList);
 
-				return true;
-			}
-
-			return false;
+			return true;
 		}, e ->{
 			logger.error(String.format("click(%s)", component));
 			logger.error(e.getMessage(), e);
@@ -967,9 +948,9 @@ public class FxOperationExecutor extends AbstractOperationExecutor<EventTarget>
 	{
 		return tryExecute(EMPTY_CHECK, () ->
 		{
-			List<String> rowNumbers = new ArrayList<>();
 			if (target instanceof TableView)
 			{
+				List<String> rowNumbers = new ArrayList<>();
 				TableView<?> tableView = (TableView<?>) target;
 				List<String> tableHeaders = getTableHeaders(tableView, columns);
 				for (int i = 0; i < tableView.getItems().size(); i++)
@@ -1359,10 +1340,10 @@ public class FxOperationExecutor extends AbstractOperationExecutor<EventTarget>
 		}
 	}
 
-	private Point checkCoords(Node node, int x, int y) throws Exception
+	private Point checkCoords(EventTarget eventTarget, int x, int y) throws Exception
 	{
 		Point res;
-		Rectangle rectangle = this.getRectangle(node);
+		Rectangle rectangle = MatcherFx.getRect(eventTarget);
 		if (x == Integer.MIN_VALUE || y == Integer.MIN_VALUE)
 		{
 			res = new Point(rectangle.width / 2, rectangle.height / 2);
@@ -1375,19 +1356,14 @@ public class FxOperationExecutor extends AbstractOperationExecutor<EventTarget>
 		return res;
 	}
 
-	private void executeEventList(Node node, List<Event> events)
+	private void executeEventList(EventTarget node, List<Event> events)
 	{
-		Platform.runLater(() -> {
-			for (Event event : events)
-			{
-				node.fireEvent(event);
-			}
-		});
+		Platform.runLater(() -> events.forEach(event -> Event.fireEvent(node, event)));
 	}
 
 	private Point getPointLocation(EventTarget target, int x, int y) throws Exception
 	{
-		Rectangle rectangle = this.getRectangle(target);
+		Rectangle rectangle = MatcherFx.getRect(target);
 		return new Point(rectangle.x + x, rectangle.y + y);
 	}
 
