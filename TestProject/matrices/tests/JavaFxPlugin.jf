@@ -1,0 +1,106 @@
+#TestCase;#Kind;#Depends;#For
+Prepare;;;
+    #Id;#Global;#Let
+    plugin;1;'JavaFx'
+
+
+#TestCase;#Kind;#Depends;#For
+Dialog get properties;Never;;
+    #Id;#Step;#Kind;#For;#Depends
+    Start;;;;
+        #Id;#Global;#Call;plugin
+        appCon;1;testLib.runPlugin;plugin
+
+    #EndStep
+
+    #Id;#Step;#Kind;#For;#Depends
+    Positive;;;;
+        #Id;#Action;#Assert;$Size;$Position;$Dialog;$AppConnection
+        APPPAR2;DialogGetProperties;This.Result == Result.Passed && This.Out.Size != null && This.Out.Position != null;;;'Dialog';appCon
+
+        #Id;#Action;#Assert;$Size;$Dialog;$AppConnection
+        APPPAR3;DialogGetProperties;This.Result == Result.Passed && This.Out.Size != null;;'Dialog';appCon
+
+        #Id;#Action;#Assert;$Position;$Dialog;$AppConnection
+        APPPAR4;DialogGetProperties;This.Result == Result.Passed && This.Out.Position != null;;'Dialog';appCon
+
+        #Id;#Action;#Assert;$Dialog;$AppConnection
+        APPPAR5;DialogGetProperties;This.Result == Result.Passed && This.Out.size == 0;'Dialog';appCon
+
+    #EndStep
+
+    #Id;#Step;#Kind;#For;#Depends
+    Negative;;;;
+        #Id;#Action;#Assert;$Dialog;$AppConnection
+        APPPAR7;DialogGetProperties;This.Result == Result.Failed && This.Kind == ErrorKind.DIALOG_NOT_FOUND;'Dialogg';appCon
+
+        #Id;#Action;#Assert;$Dialog;$AppConnection
+        APPPAR8;DialogGetProperties;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;'Dialog';
+
+        #Id;#Action;#Assert;$Dialog;$AppConnection
+        APPPAR9;DialogGetProperties;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;;appCon
+
+        #Id;#Action;#Assert;$Dialog;$AppConnection
+        APPPAR10;DialogGetProperties;This.Result == Result.Failed && This.Kind == ErrorKind.EXPRESSION_ERROR;'Dialog';asd
+
+    #EndStep
+
+    #Id;#Step;#Kind;#For;#Depends
+    Stop;;;;
+        #Action;$AppConnection
+        ApplicationStop;appCon
+
+    #EndStep
+
+
+#TestCase;#Kind;#Depends;#For
+Dialog resize;Never;;
+    #Id;#Step;#Kind;#For;#Depends
+    Start;;;;
+        #Id;#Global;#Call;plugin
+        appCon;1;testLib.runPlugin;plugin
+
+    #EndStep
+
+    // 
+    #Step;#Kind;#For;#Depends
+    'Negative';;;
+        #Action;#Assert;$Dialog;$AppConnection
+        DialogResize;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;;appCon
+
+        #Action;#Assert;$Dialog;$AppConnection
+        DialogResize;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;'Dialog';
+
+        #Action;#Assert;$Dialog;$AppConnection
+        DialogResize;This.Result == Result.Failed && This.Kind == ErrorKind.WRONG_PARAMETERS;'Dialog';new Date()
+
+        #Action;#Assert;$Dialog;$AppConnection
+        DialogResize;This.Kind == ErrorKind.WRONG_PARAMETERS;'Dialog';appCon
+
+        #Action;#Assert;$Dialog;$AppConnection;$Resize
+        DialogResize;This.Kind == ErrorKind.WRONG_PARAMETERS;'Dialog';appCon;
+
+        #Action;#Assert;$Dialog;$AppConnection;$Resize;$Height
+        DialogResize;This.Kind == ErrorKind.WRONG_PARAMETERS;'Dialog';appCon;Resize.Maximize;10
+
+    #EndStep
+
+    // 
+    #Step;#Kind;#For;#Depends
+    'Positive';;;
+        #Action;#Assert;$Dialog;$AppConnection;$Height;$Width
+        DialogResize;This.Result == Result.Passed;'Dialog';appCon;500;500
+
+        #Action;#Assert;$Dialog;$AppConnection;$Resize
+        DialogResize;This.Result == Result.Passed;'Dialog';appCon;Resize.Maximize
+
+    #EndStep
+
+    #Id;#Step;#Kind;#For;#Depends
+    Stop;;;;
+        #Action;$AppConnection
+        ApplicationStop;appCon
+
+    #EndStep
+
+

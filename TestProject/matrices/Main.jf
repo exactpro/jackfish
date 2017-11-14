@@ -19,18 +19,19 @@ INIT;;;;
     13;;matrices/tests/SQL;;q;;;;1;
     14;;matrices/tests/Matrix;;q;;;;1;
     15;;matrices/tests/ControlsRF;;q;;;;1;
-    16;;matrices/tests/KeysChrome;;q;;;;1;
-    17;;matrices/tests/KeysInternetExplorer;;q;;;;1;
-    18;x;matrices/tests/KeysFirefox;;q;;;;1;
-    19;;matrices/tests/KeysSwing;;q;;;;1;
-    20;;matrices/tests/KeysWin;;q;;;;1;
+    16;;matrices/tests/Keys/KeysChrome;;q;;;;1;
+    17;;matrices/tests/Keys/KeysInternetExplorer;;q;;;;1;
+    18;x;matrices/tests/Keys/KeysFirefox;;q;;;;1;
+    19;;matrices/tests/Keys/KeysSwing;;q;;;;1;
+    20;;matrices/tests/Keys/KeysWin;;q;;;;1;
     21;;matrices/tests/Matchers;;q;;;;1;
     22;;matrices/tests/PluginIndepends;;q;;;;1;
     23;;matrices/tests/WebPlugin;;q;;;;1;
     24;;matrices/tests/SwingPlugin;;q;;;;1;
     25;;matrices/tests/WinPlugin;;q;;;;1;
-    26;;matrices/tests/Zip;;q;;;;1;
-    27;;matrices/tests/CheckLayout;;q;;;;1;
+    26;;matrices/tests/JavaFxPlugin;;q;;;;1;
+    27;;matrices/tests/Zip;;q;;;;1;
+    28;;matrices/tests/CheckLayout;;q;;;;1;
     #EndRawTable
 
     #Id;#Action;$DefaultValue;$HelpKind;$Title

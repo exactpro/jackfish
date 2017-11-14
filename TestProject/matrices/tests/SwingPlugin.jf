@@ -1,4 +1,10 @@
 #TestCase;#Kind;#Depends;#For
+Prepare;;;
+    #Id;#Global;#Let
+    plugin;1;'Swing'
+
+
+#TestCase;#Kind;#Depends;#For
 Application start;Never;;
     #Step;#Kind;#For;#Depends
     'App start without any';;;
@@ -44,14 +50,18 @@ Application start;Never;;
 Appliaction connect;;;
 
 #TestCase;#Kind;#Depends;#For
-;;;
-    #Id;#Action;$AppId;Jar;MainClass
-    APPSTR1;ApplicationStart;'SWING';mockSwingJar;mockSwingClass
+Application (Get properties, Move, Resize);;;
+    #Id;#Step;#Kind;#For;#Depends
+    Start;;;;
+        #Id;#Global;#Call;plugin
+        appCon;1;testLib.runPlugin;plugin
+
+    #EndStep
 
     #Step;#Kind;#For;#Depends
     'Get properties';;;
         #Id;#Action;$AppConnection;Title
-        APPPAR1;ApplicationGetProperties;APPSTR1.Out;
+        APPPAR1;ApplicationGetProperties;appCon;
 
         #Assert;#Message
         APPPAR1.Out.Title == 'frame0';'Actula name : ' +APPPAR1.Out.Title
@@ -61,89 +71,108 @@ Appliaction connect;;;
     #Step;#Kind;#For;#Depends
     'Move';;;
         #Action;$X;$Y;$AppConnection
-        ApplicationMove;10;10;APPSTR1.Out
+        ApplicationMove;10;10;appCon
 
     #EndStep
 
     #Step;#Kind;#For;#Depends
     'Resize';;;
         #Action;$Resize;$AppConnection
-        ApplicationResize;Resize.Minimize;APPSTR1.Out
+        ApplicationResize;Resize.Minimize;appCon
 
         #Action;$Resize;$AppConnection
-        ApplicationResize;Resize.Maximize;APPSTR1.Out
+        ApplicationResize;Resize.Maximize;appCon
 
         #Action;$Resize;$AppConnection
-        ApplicationResize;Resize.Normal;APPSTR1.Out
+        ApplicationResize;Resize.Normal;appCon
 
         #Id;#Action;$AppConnection;$Height;$Width
-        APPSZ1;ApplicationResize;APPSTR1.Out;200;200
+        APPSZ1;ApplicationResize;appCon;200;200
 
     #EndStep
 
-    #Id;#Action;$AppConnection
-    APPSTP1;ApplicationStop;APPSTR1.Out
+    #Id;#Step;#Kind;#For;#Depends
+    Stop;;;;
+        #Id;#Action;$AppConnection
+        APPSTP1;ApplicationStop;appCon
+
+    #EndStep
 
 
 #TestCase;#Kind;#Depends;#For
 Appliaction negative;;;
-    #Id;#Action;$AppId;Jar;Args;MainClass
-    APPSTR1;ApplicationStart;mockSwingApp;mockSwingJar;;mockSwingClass
-
-    #Id;#Action;#Assert;$AppConnection
-    APPR1;ApplicationRefresh;This.Kind == ErrorKind.EXCEPTION && This.Result == Result.Failed;APPSTR1.Out
-
-    #Id;#Action;#Assert;$Navigate;$AppConnection
-    APPPNVG1;ApplicationNavigate;This.Kind == ErrorKind.EXCEPTION && This.Result == Result.Failed;NavigateKind.BACK;APPSTR1.Out
-
-    #Id;#Action;#Assert;$AppConnection
-    APPNI1;ApplicationNewInstance;This.Kind == ErrorKind.EXCEPTION && This.Result == Result.Failed;APPSTR1.Out
-
-    #Id;#Action;#Assert;$AppConnection
-    APPCW1;ApplicationCloseWindow;This.Kind == ErrorKind.EXCEPTION && This.Result == Result.Failed;APPSTR1.Out
-
-    #Id;#Action;#Assert;$AppConnection
-    APPSW1;ApplicationSwitchTo;This.Kind == ErrorKind.EXCEPTION && This.Result == Result.Failed;APPSTR1.Out
-
-    #Id;#Action;$AppConnection
-    APPSTP1;ApplicationStop;APPSTR1.Out
-
-
-#Id;#TestCase;#Kind;#Depends;#For
-Properties;Dialog get properties;;;
     #Id;#Step;#Kind;#For;#Depends
     Start;;;;
-        #Id;#Global;#Action;MainClass;Args;Jar;$AppId
-        APPSTR4;1;ApplicationStart;mockSwingClass;'';mockSwingJar;mockSwingApp
+        #Id;#Global;#Call;plugin
+        appCon;1;testLib.runPlugin;plugin
+
+    #EndStep
+
+    #Id;#Step;#Kind;#For;#Depends
+    Negative;;;;
+        #Id;#Action;#Assert;$AppConnection
+        APPR1;ApplicationRefresh;This.Kind == ErrorKind.EXCEPTION && This.Result == Result.Failed;appCon
+
+        #Id;#Action;#Assert;$Navigate;$AppConnection
+        APPPNVG1;ApplicationNavigate;This.Kind == ErrorKind.EXCEPTION && This.Result == Result.Failed;NavigateKind.BACK;appCon
+
+        #Id;#Action;#Assert;$AppConnection
+        APPNI1;ApplicationNewInstance;This.Kind == ErrorKind.EXCEPTION && This.Result == Result.Failed;appCon
+
+        #Id;#Action;#Assert;$AppConnection
+        APPCW1;ApplicationCloseWindow;This.Kind == ErrorKind.EXCEPTION && This.Result == Result.Failed;appCon
+
+        #Id;#Action;#Assert;$AppConnection
+        APPSW1;ApplicationSwitchTo;This.Kind == ErrorKind.EXCEPTION && This.Result == Result.Failed;appCon
+
+        #Id;#Action;$AppConnection
+        APPSTP1;ApplicationStop;appCon
+
+    #EndStep
+
+    #Id;#Step;#Kind;#For;#Depends
+    Stop;;;;
+        #Action;$AppConnection
+        ApplicationStop;appCon
+
+    #EndStep
+
+
+#TestCase;#Kind;#Depends;#For
+Dialog get properties;;;
+    #Id;#Step;#Kind;#For;#Depends
+    Start;;;;
+        #Id;#Global;#Call;plugin
+        appCon;1;testLib.runPlugin;plugin
 
     #EndStep
 
     #Id;#Step;#Kind;#For;#Depends
     Positive;;;;
         #Id;#Action;#Assert;$Size;$Position;$Dialog;$AppConnection
-        APPPAR6;DialogGetProperties;This.Result == Result.Passed && This.Out.Size != null && This.Out.Position != null;;;'Dialog';APPSTR4.Out
+        APPPAR6;DialogGetProperties;This.Result == Result.Passed && This.Out.Size != null && This.Out.Position != null;;;'Dialog';appCon
 
         #Id;#Action;#Assert;$Position;$Dialog;$AppConnection
-        APPPAR6;DialogGetProperties;This.Result == Result.Passed && This.Out.Position != null;;'Dialog';APPSTR4.Out
+        APPPAR6;DialogGetProperties;This.Result == Result.Passed && This.Out.Position != null;;'Dialog';appCon
 
         #Id;#Action;#Assert;$Size;$Dialog;$AppConnection
-        APPPAR6;DialogGetProperties;This.Result == Result.Passed && This.Out.Size != null;;'Dialog';APPSTR4.Out
+        APPPAR6;DialogGetProperties;This.Result == Result.Passed && This.Out.Size != null;;'Dialog';appCon
 
         #Id;#Action;#Assert;$Dialog;$AppConnection
-        APPPAR6;DialogGetProperties;This.Result == Result.Passed;'Dialog';APPSTR4.Out
+        APPPAR6;DialogGetProperties;This.Result == Result.Passed;'Dialog';appCon
 
     #EndStep
 
     #Id;#Step;#Kind;#For;#Depends
     Negative;;;;
         #Id;#Action;#Assert;$Dialog;$AppConnection
-        APPPAR7;DialogGetProperties;This.Result == Result.Failed && This.Kind == ErrorKind.DIALOG_NOT_FOUND;'Dialogg';APPSTR4.Out
+        APPPAR7;DialogGetProperties;This.Result == Result.Failed && This.Kind == ErrorKind.DIALOG_NOT_FOUND;'Dialogg';appCon
 
         #Id;#Action;#Assert;$Dialog;$AppConnection
         APPPAR8;DialogGetProperties;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;'Dialog';
 
         #Id;#Action;#Assert;$Dialog;$AppConnection
-        APPPAR9;DialogGetProperties;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;;APPSTR4.Out
+        APPPAR9;DialogGetProperties;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;;appCon
 
         #Id;#Action;#Assert;$Dialog;$AppConnection
         APPPAR10;DialogGetProperties;This.Result == Result.Failed && This.Kind == ErrorKind.EXPRESSION_ERROR;'Dialog';asd
@@ -153,7 +182,63 @@ Properties;Dialog get properties;;;
     #Id;#Step;#Kind;#For;#Depends
     Stop;;;;
         #Action;$AppConnection
-        ApplicationStop;APPSTR4.Out
+        ApplicationStop;appCon
+
+    #EndStep
+
+
+#TestCase;#Kind;#Depends;#For
+Dialog resize;Never;;
+    #Id;#Step;#Kind;#For;#Depends
+    Start;;;;
+        #Id;#Global;#Call;plugin
+        appCon;1;testLib.runPlugin;plugin
+
+    #EndStep
+
+    // 
+    #Step;#Kind;#For;#Depends
+    'Negative';;;
+        #Action;#Assert;$Dialog;$AppConnection
+        DialogResize;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;;appCon
+
+        #Action;#Assert;$Dialog;$AppConnection
+        DialogResize;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;'Dialog';
+
+        #Action;#Assert;$Dialog;$AppConnection
+        DialogResize;This.Result == Result.Failed && This.Kind == ErrorKind.WRONG_PARAMETERS;'Dialog';new Date()
+
+        #Action;#Assert;$Dialog;$AppConnection
+        DialogResize;This.Kind == ErrorKind.WRONG_PARAMETERS;'Dialog';appCon
+
+        #Action;#Assert;$Dialog;$AppConnection;$Resize
+        DialogResize;This.Kind == ErrorKind.WRONG_PARAMETERS;'Dialog';appCon;
+
+        #Action;#Assert;$Dialog;$AppConnection;$Resize;$Height
+        DialogResize;This.Kind == ErrorKind.WRONG_PARAMETERS;'Dialog';appCon;Resize.Maximize;10
+
+    #EndStep
+
+    // 
+    #Step;#Kind;#For;#Depends
+    'Negative - Swing';;;
+        #Action;#Assert;$Dialog;$AppConnection;$Resize
+        DialogResize;This.Result == Result.Failed && This.Kind == ErrorKind.EXCEPTION;'Dialog';appCon;Resize.Maximize
+
+    #EndStep
+
+    // 
+    #Step;#Kind;#For;#Depends
+    'Positive';;;
+        #Action;#Assert;$Dialog;$AppConnection;$Height;$Width
+        DialogResize;This.Result == Result.Passed;'Dialog';appCon;500;500
+
+    #EndStep
+
+    #Id;#Step;#Kind;#For;#Depends
+    Stop;;;;
+        #Action;$AppConnection
+        ApplicationStop;appCon
 
     #EndStep
 

@@ -1,4 +1,10 @@
 #TestCase;#Kind;#Depends;#For
+Prepare;;;
+    #Id;#Global;#Let
+    plugin;1;'Win'
+
+
+#TestCase;#Kind;#Depends;#For
 Application start;Never;;
     #Step;#Kind;#For;#Depends
     'Start without any parameters';;;
@@ -44,14 +50,14 @@ Application start;Never;;
 
 #TestCase;#Kind;#Depends;#For
 Application connect;;;
-    #Id;#Action;$AppId;WorkDir;Exec
-    app;ApplicationStart;'WIN';mockWinDir;mockWinExec
+    #Id;#Call;plugin
+    appCon;testLib.runPlugin;plugin
 
     #Id;#Action;$AppConnection;Rectangle
-    APPPAR2;ApplicationGetProperties;app.Out;
+    APPPAR2;ApplicationGetProperties;appCon;
 
     #Id;#Let
-    pid;app.Out.getProcessId()
+    pid;appCon.getProcessId()
 
     #Id;#Let
     h;APPPAR2.Out.Rectangle.height
@@ -109,7 +115,7 @@ Application connect;;;
     #EndStep
 
     #Id;#Action;$AppConnection
-    APPSTP1;ApplicationStop;app.Out
+    APPSTP1;ApplicationStop;appCon
 
     #Step;#Kind;#For;#Depends
     'Connect with timeout';;;
@@ -221,82 +227,147 @@ Application stop;;;
 
 #TestCase;#Kind;#Depends;#For
 Application get properties;;;
-    #Id;#Global;#Action;$AppId;WorkDir;Exec
-    appGP;1;ApplicationStart;'WIN';mockWinDir;mockWinExec
+    #Id;#Step;#Kind;#For;#Depends
+    Start;;;;
+        #Id;#Global;#Call;plugin
+        appCon;1;testLib.runPlugin;plugin
 
-    #Id;#Action;$AppConnection;Rectangle
-    APPPAR2;ApplicationGetProperties;appGP.Out;
+    #EndStep
 
-    #Id;#Let
-    width;APPPAR2.Out.Rectangle.width
+    #Step;#Kind;#For;#Depends
+    'get properties';;;
+        #Id;#Action;$AppConnection;Rectangle
+        APPPAR2;ApplicationGetProperties;appCon;
 
-    #Id;#Let
-    height;APPPAR2.Out.Rectangle.height
+        #Id;#Let
+        width;APPPAR2.Out.Rectangle.width
 
-    #Assert;#Message
-    width > 800 && width < 1000;'Width is  wrong ' + width
+        #Id;#Let
+        height;APPPAR2.Out.Rectangle.height
 
-    #Assert;#Message
-    height > 800 && height < 1000;'Height is  wrong ' + height
+        #Assert;#Message
+        width > 800 && width < 1000;'Width is  wrong ' + width
 
-    #Id;#Action;$AppConnection;Title
-    APPPAR3;ApplicationGetProperties;appGP.Out;
+        #Assert;#Message
+        height > 800 && height < 1000;'Height is  wrong ' + height
 
-    #Assert;#Message
-    APPPAR3.Result == Result.Passed;
+        #Id;#Action;$AppConnection;Title
+        APPPAR3;ApplicationGetProperties;appCon;
 
+        #Assert;#Message
+        APPPAR3.Result == Result.Passed;
 
-#TestCase;#Kind;#Depends;#For
-Application get properties (close app);;;
-    #Id;#Action;$AppConnection
-    APPSTP5;ApplicationStop;appGP.Out
+    #EndStep
+
+    #Id;#Step;#Kind;#For;#Depends
+    Stop;;;;
+        #Id;#Action;$AppConnection
+        APPSTP5;ApplicationStop;appCon
+
+    #EndStep
 
 
 #TestCase;#Kind;#Depends;#For
 Dialog get properties;;;
     #Id;#Step;#Kind;#For;#Depends
     Start;;;;
-        #Id;#Global;#Action;Exec;WorkDir;Args;AlwaysToFront;$AppId
-        APPSTR2;1;ApplicationStart;mockWinExec;mockWinDir;'';true;mockWinApp
+        #Id;#Global;#Call;plugin
+        appCon;1;testLib.runPlugin;plugin
 
     #EndStep
 
     #Id;#Step;#Kind;#For;#Depends
     Positive;;;;
         #Id;#Action;#Assert;$Size;$Position;$Dialog;$AppConnection
-        APPPAR2;DialogGetProperties;This.Result == Result.Passed && This.Out.Size != null && This.Out.Position != null;;;'Dialog';APPSTR2.Out
+        APPPAR2;DialogGetProperties;This.Result == Result.Passed && This.Out.Size != null && This.Out.Position != null;;;'Dialog';appCon
 
         #Action;#Assert;$Size;$Dialog;$AppConnection
-        DialogGetProperties;This.Result == Result.Passed && This.Out.Size != null;;'Dialog';APPSTR2.Out
+        DialogGetProperties;This.Result == Result.Passed && This.Out.Size != null;;'Dialog';appCon
 
         #Action;#Assert;$Position;$Dialog;$AppConnection
-        DialogGetProperties;This.Result == Result.Passed && This.Out.Position != null;;'Dialog';APPSTR2.Out
+        DialogGetProperties;This.Result == Result.Passed && This.Out.Position != null;;'Dialog';appCon
 
         #Action;#Assert;$Dialog;$AppConnection
-        DialogGetProperties;This.Result == Result.Passed && This.Out.size == 0;'Dialog';APPSTR2.Out
+        DialogGetProperties;This.Result == Result.Passed && This.Out.size == 0;'Dialog';appCon
 
     #EndStep
 
     #Id;#Step;#Kind;#For;#Depends
     Negative;;;;
         #Id;#Action;#Assert;$Dialog;$AppConnection
-        APPPAR7;DialogGetProperties;This.Result == Result.Failed && This.Kind == ErrorKind.DIALOG_NOT_FOUND;'Dialogg';APPSTR2.Out
+        APPPAR7;DialogGetProperties;This.Result == Result.Failed && This.Kind == ErrorKind.DIALOG_NOT_FOUND;'Dialogg';appCon
 
         #Id;#Action;#Assert;$Dialog;$AppConnection
         APPPAR8;DialogGetProperties;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;'Dialog';
 
         #Id;#Action;#Assert;$Dialog;$AppConnection
-        APPPAR9;DialogGetProperties;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;;APPSTR2.Out
+        APPPAR9;DialogGetProperties;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;;appCon
 
         #Id;#Action;#Assert;$Dialog;$AppConnection
-        APPPAR10;DialogGetProperties;This.Result == Result.Failed && This.Kind == ErrorKind.EXCEPTION;'Dialog';asd
+        APPPAR10;DialogGetProperties;This.Result == Result.Failed && This.Kind == ErrorKind.EXPRESSION_ERROR;'Dialog';asd
 
     #EndStep
 
     #Id;#Step;#Kind;#For;#Depends
     Stop;;;;
         #Action;$AppConnection
-        ApplicationStop;APPSTR2.Out
+        ApplicationStop;appCon
+
+    #EndStep
+
+
+#TestCase;#Kind;#Depends;#For
+Dialog resize;Never;;
+    #Id;#Step;#Kind;#For;#Depends
+    Start;;;;
+        #Id;#Global;#Call;plugin
+        appCon;1;testLib.runPlugin;plugin
+
+    #EndStep
+
+    // 
+    #Step;#Kind;#For;#Depends
+    'Negative';;;
+        #Action;#Assert;$Dialog;$AppConnection
+        DialogResize;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;;appCon
+
+        #Action;#Assert;$Dialog;$AppConnection
+        DialogResize;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;'Dialog';
+
+        #Action;#Assert;$Dialog;$AppConnection
+        DialogResize;This.Result == Result.Failed && This.Kind == ErrorKind.WRONG_PARAMETERS;'Dialog';new Date()
+
+        #Action;#Assert;$Dialog;$AppConnection
+        DialogResize;This.Kind == ErrorKind.WRONG_PARAMETERS;'Dialog';appCon
+
+        #Action;#Assert;$Dialog;$AppConnection;$Resize
+        DialogResize;This.Kind == ErrorKind.WRONG_PARAMETERS;'Dialog';appCon;
+
+        #Action;#Assert;$Dialog;$AppConnection;$Resize;$Height
+        DialogResize;This.Kind == ErrorKind.WRONG_PARAMETERS;'Dialog';appCon;Resize.Maximize;10
+
+    #EndStep
+
+    // 
+    #Step;#Kind;#For;#Depends
+    'Negative - Win';;;
+        #Action;#Assert;$Dialog;$AppConnection;$Height;$Width
+        DialogResize;This.Result == Result.Failed && This.Kind == ErrorKind.EXCEPTION;'Dialog';appCon;500;500
+
+    #EndStep
+
+    // 
+    #Step;#Kind;#For;#Depends
+    'Positive';;;
+        #Action;#Assert;$Dialog;$AppConnection;$Resize
+        DialogResize;This.Result == Result.Passed;'Dialog';appCon;Resize.Maximize
+
+    #EndStep
+
+    #Id;#Step;#Kind;#For;#Depends
+    Stop;;;;
+        #Action;$AppConnection
+        ApplicationStop;appCon
 
     #EndStep
 

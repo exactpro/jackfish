@@ -25,5 +25,40 @@ testLib;Simple library for testing jf functionality
 
     #EndSubCase
 
+    #Id;#SubCase;plugin
+    runPlugin;returned value - appConnection;
+        #If
+        plugin == 'Chrome'
+            #Id;#Action;$AppId;Browser;URL
+            APPSTR1;ApplicationStart;mockWebApp;mockWebBrowser;mockWebURL
+
+        #EndIf
+
+        #If
+        plugin == 'Swing'
+            #Id;#Action;$AppId;Jar;Args;MainClass
+            APPSTR1;ApplicationStart;mockSwingApp;mockSwingJar;'';mockSwingClass
+
+        #EndIf
+
+        #If
+        plugin == 'JavaFx'
+            #Id;#Action;MainClass;Args;Jar;$AppId
+            APPSTR1;ApplicationStart;mockJavaFxMainClass;'';mockJavaFxJar;mockJavaFxApp
+
+        #EndIf
+
+        #If
+        plugin == 'Win'
+            #Id;#Action;$AppId;Exec;WorkDir;Args
+            APPSTR1;ApplicationStart;mockWinApp;mockWinExec;mockWinDir;''
+
+        #EndIf
+
+        #Return
+        APPSTR1.Out
+
+    #EndSubCase
+
 #EndNameSpace
 

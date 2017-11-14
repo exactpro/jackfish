@@ -63,7 +63,7 @@ testcases;Never;;
     #Step;#Kind;#For;#Depends
     'CtrlC CtrlV';;;
         #Id;#Action;$Dialog;$AppConnection;TextBox
-        DLGFLL1;DialogFill;'Main';appCon;Do.text('V',true).keyDown(Keyboard.CONTROL).press(Keyboard.A).press(Keyboard.C).click().press(Keyboard.V).keyUp(Keyboard.CONTROL).getValue()
+        DLGFLL1;DialogFill;'Main';appCon;Do.text('V',true).keyDown(Keyboard.CONTROL).press(Keyboard.A).press(Keyboard.C).keyUp(Keyboard.CONTROL).click().keyDown(Keyboard.CONTROL).press(Keyboard.V).keyUp(Keyboard.CONTROL).getValue()
 
         #Assert;#Message
         DLGFLL1.Out.TextBox == 'VV';DLGFLL1.Out.TextBox + ' != VV'
