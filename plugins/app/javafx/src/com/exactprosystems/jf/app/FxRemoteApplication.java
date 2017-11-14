@@ -11,6 +11,7 @@ import javafx.event.Event;
 import javafx.event.EventTarget;
 import javafx.scene.Node;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.Dialog;
 import javafx.stage.Stage;
 import javafx.stage.Window;
 import javafx.stage.WindowEvent;
@@ -232,9 +233,12 @@ public class FxRemoteApplication extends RemoteApplication
 					if(target instanceof Node)
 					{
 						Node node = (Node) target;
-						Stage stage = (Stage) node.getScene().getWindow();
-						logger.debug("Get stage : %s" + MatcherFx.targetToString(stage));
-						resizeWindow(stage, resize, height, width);
+						if(node.getScene().getWindow() instanceof Stage)
+						{
+							Stage stage = (Stage) node.getScene().getWindow();
+							logger.debug("Get stage : %s" + MatcherFx.targetToString(stage));
+							resizeWindow(stage, resize, height, width);
+						}
 					}
 					return null;
 				},
@@ -253,14 +257,22 @@ public class FxRemoteApplication extends RemoteApplication
 		{
 			EventTarget target = this.operationExecutor.find(null, owner);
 
-			if (target instanceof Node)
+			if (target instanceof Window )
 			{
-				int width = (int) (((Node) target).getScene().getWindow()).getWidth();
-				int height = (int) (((Node) target).getScene().getWindow()).getHeight();
+				int width = (int) ((Window) target).getWidth();
+				int height = (int) ((Window) target).getHeight();
 
 				return new Dimension(width, height);
 			}
-			return null;
+			if (target instanceof Dialog<?>)
+			{
+				int width = (int) ((Dialog<?>) target).getWidth();
+				int height = (int) ((Dialog<?>) target).getHeight();
+
+				return new Dimension(width, height);
+			}
+
+			throw new FeatureNotSupportedException(String.format("Self %s is not dialog or window", owner));
 		}, e ->
 		{
 			logger.error(String.format("getDialogSizeDerived %s", owner));
@@ -489,13 +501,22 @@ public class FxRemoteApplication extends RemoteApplication
 				{
 					EventTarget target = this.operationExecutor.find(null, owner);
 
-					if (target instanceof Node)
+					if (target instanceof Stage)
 					{
-						Window window = ((Node) target).getScene().getWindow();
-						window.setX(x);
-						window.setY(y);
+						Stage stage = (Stage) target;
+						stage.setX(x);
+						stage.setY(y);
+						return null;
 					}
-					return null;
+					if (target instanceof Dialog )
+					{
+						Dialog dialog = (Dialog) target;
+						dialog.setX(x);
+						dialog.setY(y);
+						return null;
+					}
+					throw new FeatureNotSupportedException(String.format("Self %s is not stage or dialog", owner));
+
 				},
 				e ->
 				{

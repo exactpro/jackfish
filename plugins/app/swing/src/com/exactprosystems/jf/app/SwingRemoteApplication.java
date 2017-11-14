@@ -315,14 +315,13 @@ public class SwingRemoteApplication extends RemoteApplication
 	protected Dimension getDialogSizeDerived(Locator owner) throws Exception
 	{
 		ComponentFixture<Component> fixture = this.operationExecutor.find(null, owner);
-		Component root = SwingUtilities.getRoot(fixture.component());
-		if (root instanceof Window)
+		if (fixture.component() instanceof Window)
 		{
-			return root.getSize();
+			return fixture.component().getSize();
 		}
 		else
 		{
-			throw new FeatureNotSupportedException(String.format("Self %s is not in a Dialog or Frame", owner));
+			throw new FeatureNotSupportedException(String.format("Self %s is not in a Window", owner));
 		}
 	}
 
@@ -330,10 +329,9 @@ public class SwingRemoteApplication extends RemoteApplication
 	protected Point getDialogPositionDerived(Locator owner) throws Exception
 	{
 		ComponentFixture<Component> fixture = this.operationExecutor.find(null, owner);
-		Component root = SwingUtilities.getRoot(fixture.component());
-		if (root instanceof Window)
+		if (fixture.component() instanceof Window)
 		{
-			return root.getLocation();
+			return fixture.component().getLocation();
 		}
 		else
 		{
@@ -638,9 +636,29 @@ public class SwingRemoteApplication extends RemoteApplication
 	@Override
 	protected void moveDialogDerived(Locator owner, int x, int y) throws Exception
 	{
-		ComponentFixture<Component> fixture = this.operationExecutor.find(null, owner);
-		Component root = SwingUtilities.getRoot(fixture.component());
-		root.setLocation(x, y);
+		try
+		{
+			ComponentFixture<Component> fixture = this.operationExecutor.find(null, owner);
+
+			if (fixture.component() instanceof Window)
+			{
+				fixture.component().setLocation(x, y);
+			}
+			else
+			{
+				throw new FeatureNotSupportedException(String.format("Self %s is not in a Window", owner));
+			}
+		}
+		catch (RemoteException e)
+		{
+			throw e;
+		}
+		catch (Exception e)
+		{
+			logger.error(String.format("moveDialogDerived(%s, %s, %s)", owner, x, y));
+			logger.error(e.getMessage(), e);
+			throw e;
+		}
 	}
 
 	@Override
