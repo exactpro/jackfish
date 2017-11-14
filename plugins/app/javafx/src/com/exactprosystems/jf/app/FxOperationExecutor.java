@@ -3,7 +3,6 @@ package com.exactprosystems.jf.app;
 import com.exactprosystems.jf.api.app.*;
 import com.exactprosystems.jf.api.client.ICondition;
 import com.exactprosystems.jf.api.common.Converter;
-import com.exactprosystems.jf.api.common.Str;
 import com.exactprosystems.jf.api.error.app.ElementNotFoundException;
 import com.exactprosystems.jf.api.error.app.FeatureNotSupportedException;
 import com.exactprosystems.jf.api.error.app.TooManyElementsException;
@@ -19,7 +18,6 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.control.*;
 import javafx.scene.input.*;
-import javafx.scene.layout.Pane;
 import javafx.util.StringConverter;
 import org.apache.log4j.Logger;
 import org.w3c.dom.Document;
@@ -78,12 +76,6 @@ public class FxOperationExecutor extends AbstractOperationExecutor<EventTarget>
 			{
 				return String.valueOf(((ListView) component).getSelectionModel().getSelectedItem());
 			}
-			if (component instanceof Pane)
-			{
-				StringBuilder sb = new StringBuilder();
-				MatcherFx.collectAllText(((Pane) component), sb);
-				return sb.toString();
-			}
 			if (component instanceof ProgressBar)
 			{
 				return String.valueOf(((ProgressBar) component).getProgress());
@@ -112,7 +104,7 @@ public class FxOperationExecutor extends AbstractOperationExecutor<EventTarget>
 			{
 				return ((Tooltip) component).getText();
 			}
-			return null;
+			return MatcherFx.getText(component);
 		}, e->
 		{
 			logger.error(String.format("getValueDerived(%s)", component));
@@ -161,16 +153,7 @@ public class FxOperationExecutor extends AbstractOperationExecutor<EventTarget>
 	@Override
 	protected String getDerived(EventTarget component) throws Exception
 	{
-		return tryExecute(EMPTY_CHECK, () ->
-		{
-			if (component instanceof Pane)
-			{
-				StringBuilder sb = new StringBuilder();
-				MatcherFx.collectAllText((Pane) component, sb);
-				return sb.toString();
-			}
-			return MatcherFx.getText(component);
-		}, e ->
+		return tryExecute(EMPTY_CHECK, () -> MatcherFx.getText(component), e ->
 		{
 			logger.error(String.format("getDerived(%s)", component));
 			logger.error(e.getMessage(), e);
@@ -215,19 +198,10 @@ public class FxOperationExecutor extends AbstractOperationExecutor<EventTarget>
 			if (target instanceof TableView)
 			{
 				TableView<?> tableView = (TableView) target;
-				if (tableView.getItems().size() < row)
-				{
-					throw new Exception(String.format("Can't get value for row %s because size of rows is %s", row, tableView.getItems().size()));
-				}
+				this.checkTable(tableView, column, row);
 
-				if (tableView.getColumns().size() < column)
-				{
-					throw new Exception(String.format("Can't get value for column %s because size of columns is %s", column, tableView.getColumns().size()));
-				}
-
-				TableColumn<?,?> tableColumn = tableView.getColumns().get(column);
-				ObservableValue<?> cellObservableValue = tableColumn.getCellObservableValue(row);
-				return String.valueOf(cellObservableValue.getValue());
+				Node cell = this.findCell(tableView, column, row);
+				return this.getCellValue(cell,tableView, column, row);
 			}
 			throw tableException(target);
 		}, e->
@@ -252,9 +226,7 @@ public class FxOperationExecutor extends AbstractOperationExecutor<EventTarget>
 					Map<String, Object> row = new LinkedHashMap<>();
 					for (int j = 0; j < tableHeaders.size(); j++)
 					{
-						TableColumn<?,?> tableColumn = tableView.getColumns().get(j);
-						ObservableValue<?> cellObservableValue = tableColumn.getCellObservableValue(i);
-						row.put(tableHeaders.get(j), cellObservableValue.getValue());
+						row.put(tableHeaders.get(j), this.getCellValue(this.findCell(tableView, j, i), tableView, j, i));
 					}
 
 					if (Objects.nonNull(valueCondition) && valueCondition.isMatched(row))
@@ -287,14 +259,14 @@ public class FxOperationExecutor extends AbstractOperationExecutor<EventTarget>
 	{
 		return tryExecute(EMPTY_CHECK, () ->
 		{
-			Map<String, String> result = new LinkedHashMap<>();
 			if (target instanceof TableView)
 			{
+				Map<String, String> result = new LinkedHashMap<>();
 				TableView<?> tableView = (TableView<?>) target;
-				List<String> tableHeaders = getTableHeaders(tableView, columns);
+				List<String> tableHeaders = this.getTableHeaders(tableView, columns);
 				for (int j = 0; j < tableHeaders.size(); j++)
 				{
-					String cellValue = getValueTableCellDerived(tableView, j, i);
+					String cellValue = this.getCellValue(this.findCell(tableView, j, i), tableView, j, i);
 					result.put(tableHeaders.get(j), cellValue);
 				}
 				return result;
@@ -320,7 +292,7 @@ public class FxOperationExecutor extends AbstractOperationExecutor<EventTarget>
 				for (int j = 0; j < tableHeaders.size(); j++)
 				{
 					String headerName = tableHeaders.get(j);
-					String cellValue = getValueTableCellDerived(tableView, j, i);
+					String cellValue = this.getCellValue(this.findCell(tableView, j, i), tableView, j, i);
 
 //					TODO think how we can get color from row?
 //					TableCell call = (TableCell) ((TableColumn) tableView.getColumns().get(0)).getCellFactory().call(tableView.getColumns().get(0));
@@ -354,10 +326,9 @@ public class FxOperationExecutor extends AbstractOperationExecutor<EventTarget>
 				ObservableList<? extends TableColumn<?, ?>> tableColumns = tableView.getColumns();
 
 				this.fillHeaders(res, tableView, columns);
-				IntStream.range(0, rowsCount)
-						.forEach(i -> IntStream.range(0, tableColumns.size())
-								.forEach(j -> res[i + 1][j] = Str.asString(tableColumns.get(j).getCellObservableValue(i).getValue()))
-						);
+				IntStream.range(0, rowsCount).forEach(i ->
+						IntStream.range(0, tableColumns.size())
+								.forEach(j -> res[i + 1][j] = this.getCellValue(this.findCell(tableView, j, i), tableView, j, i)));
 				return res;
 			}
 			throw tableException(target);
@@ -683,6 +654,7 @@ public class FxOperationExecutor extends AbstractOperationExecutor<EventTarget>
 					}
 					if (component instanceof ListView)
 					{
+						//TODO replace this with node.queryAccessibleAttribute()
 						ListView listView = (ListView) component;
 						listView.getItems().stream()
 								.filter(s -> s.toString().equals(selectedText))
@@ -763,7 +735,7 @@ public class FxOperationExecutor extends AbstractOperationExecutor<EventTarget>
 
 						return true;
 					}
-					return false;
+					throw new Exception("Cant set text to not input control");
 				},
 				e ->
 				{
@@ -919,33 +891,9 @@ public class FxOperationExecutor extends AbstractOperationExecutor<EventTarget>
 			if (component instanceof TableView)
 			{
 				TableView<?> tableView = (TableView) component;
-				if (tableView.getItems().size() < row)
-				{
-					throw new Exception(String.format("Can't get value for row %s because size of rows is %s", row, tableView.getItems().size()));
-				}
+				this.checkTable(tableView, column, row);
 
-				if (tableView.getColumns().size() < column)
-				{
-					throw new Exception(String.format("Can't get value for column %s because size of columns is %s", column, tableView.getColumns().size()));
-				}
-
-				Node cell = UtilsFx.runOnFxThreadAndWaitResult(() -> {
-					try
-					{
-						logger.debug(String.format("Start scroll to column %s", column));
-						tableView.scrollToColumnIndex(column);
-						logger.debug(String.format("Start scroll to row %s", row));
-						tableView.scrollTo(row);
-						logger.debug(String.format("Start getting cell"));
-						return (Node) tableView.queryAccessibleAttribute(AccessibleAttribute.CELL_AT_ROW_COLUMN, row, column);
-					}
-					catch (Exception e)
-					{
-						logger.error(e.getMessage(), e);
-					}
-					return null;
-				});
-				logger.debug("Found cell : " + cell);
+				Node cell = this.findCell(tableView, column, row);
 				if (cell != null)
 				{
 					if (cell instanceof TableCell<?, ?> && ((TableCell) cell).getGraphic() != null)
@@ -977,33 +925,9 @@ public class FxOperationExecutor extends AbstractOperationExecutor<EventTarget>
 			if (component instanceof TableView)
 			{
 				TableView<?> tableView = (TableView) component;
-				if (tableView.getItems().size() < row)
-				{
-					throw new Exception(String.format("Can't get value for row %s because size of rows is %s", row, tableView.getItems().size()));
-				}
+				this.checkTable(tableView, column, row);
 
-				if (tableView.getColumns().size() < column)
-				{
-					throw new Exception(String.format("Can't get value for column %s because size of columns is %s", column, tableView.getColumns().size()));
-				}
-
-				Node cell = UtilsFx.runOnFxThreadAndWaitResult(() -> {
-					try
-					{
-						logger.debug(String.format("Start scroll to column %s", column));
-						tableView.scrollToColumnIndex(column);
-						logger.debug(String.format("Start scroll to row %s", row));
-						tableView.scrollTo(row);
-						logger.debug(String.format("Start getting cell"));
-						return (Node) tableView.queryAccessibleAttribute(AccessibleAttribute.CELL_AT_ROW_COLUMN, row, column);
-					}
-					catch (Exception e)
-					{
-						logger.error(e.getMessage(), e);
-					}
-					return null;
-				});
-				logger.debug("Found cell : " + cell);
+				Node cell = this.findCell(tableView, column, row);
 				if (cell != null)
 				{
 					if (cell instanceof TableCell<?, ?> && ((TableCell) cell).getGraphic() != null)
@@ -1053,7 +977,7 @@ public class FxOperationExecutor extends AbstractOperationExecutor<EventTarget>
 					Map<String, Object> row = new LinkedHashMap<>();
 					for (int j = 0; j < tableHeaders.size(); j++)
 					{
-						String cellValue = getValueTableCellDerived(tableView, j, i);
+						String cellValue = this.getCellValue(this.findCell(tableView, j, i), tableView, j, i);
 						row.put(tableHeaders.get(j), cellValue);
 					}
 
@@ -1107,6 +1031,64 @@ public class FxOperationExecutor extends AbstractOperationExecutor<EventTarget>
 	private WrongParameterException tableException(EventTarget target)
 	{
 		return new WrongParameterException(String.format("Target not instance of Table. Target : %s", target));
+	}
+
+	private void checkTable(TableView<?> tableView, int column, int row) throws Exception
+	{
+		if (tableView.getItems().size() < row)
+		{
+			throw new Exception(String.format("Can't get value for row %s because size of rows is %s", row, tableView.getItems().size()));
+		}
+
+		if (tableView.getColumns().size() < column)
+		{
+			throw new Exception(String.format("Can't get value for column %s because size of columns is %s", column, tableView.getColumns().size()));
+		}
+	}
+
+	private Node findCell(TableView<?> tableView, int column, int row)
+	{
+		Node cell = UtilsFx.runOnFxThreadAndWaitResult(() -> {
+			try
+			{
+				logger.debug(String.format("Start scroll to column %s", column));
+				tableView.scrollToColumnIndex(column);
+				logger.debug(String.format("Start scroll to row %s", row));
+				tableView.scrollTo(row);
+				logger.debug(String.format("Start getting cell"));
+				return (Node) tableView.queryAccessibleAttribute(AccessibleAttribute.CELL_AT_ROW_COLUMN, row, column);
+			}
+			catch (Exception e)
+			{
+				logger.error(String.format("findCell(%s,%s,%s)", tableView, column, row));
+				logger.error(e.getMessage(), e);
+			}
+			return null;
+		});
+		logger.debug(String.format("Found cell : %s", cell));
+		return cell;
+	}
+
+	private String getCellValue(Node cell, TableView<?> tableView, int column, int row)
+	{
+		if (cell != null)
+		{
+			if (cell instanceof TableCell<?, ?>)
+			{
+				TableCell tableCell = (TableCell) cell;
+				if (tableCell.getGraphic() == null)
+				{
+					return tableCell.getText();
+				}
+				else
+				{
+					return MatcherFx.getText(tableCell.getGraphic());
+				}
+			}
+		}
+		TableColumn<?,?> tableColumn = tableView.getColumns().get(column);
+		ObservableValue<?> cellObservableValue = tableColumn.getCellObservableValue(row);
+		return String.valueOf(cellObservableValue.getValue());
 	}
 
 	private List<String> getTableHeaders(TableView<?> tableView, String[] columns)

@@ -42,7 +42,7 @@ public class UtilsFx
 
 	}
 
-	public static <T> T tryExecute(ICheck beforeCall, IReturn<T> func, Consumer<Exception> log) throws Exception
+	static <T> T tryExecute(ICheck beforeCall, IReturn<T> func, Consumer<Exception> log) throws Exception
 	{
 		beforeCall.check();
 		try
@@ -61,7 +61,7 @@ public class UtilsFx
 		}
 	}
 
-	public static Logger createLogger(Class<?> clazz, String logName, String serverLogLevel, String serverLogPattern) throws Exception
+	static Logger createLogger(Class<?> clazz, String logName, String serverLogLevel, String serverLogPattern) throws Exception
 	{
 		Logger logger = Logger.getLogger(clazz);
 
@@ -72,7 +72,7 @@ public class UtilsFx
 		return logger;
 	}
 
-	public static Logger createLogger(Class<?> clazz, Logger baseLogger)
+	static Logger createLogger(Class<?> clazz, Logger baseLogger)
 	{
 		Logger logger = Logger.getLogger(clazz);
 		Enumeration allAppenders = baseLogger.getAllAppenders();
@@ -102,14 +102,14 @@ public class UtilsFx
 	static Stage mainStage()
 	{
 		ObservableList<Stage> stages = StageHelper.getStages();
-		Optional.ofNullable(logger).ifPresent(l -> l.debug(String.format("Found %s stages", stages.size())));
+		debug(String.format("Found %s stages", stages.size()));
 		if (stages.isEmpty())
 		{
 			throw new RuntimeException("No one stages was found");
 		}
 
 		return stages.stream()
-				.peek(s -> Optional.ofNullable(logger).ifPresent(l -> l.debug(String.format("Found stage : %s. MxWindowType : %s", MatcherFx.targetToString(s), s.impl_getMXWindowType()))))
+				.peek(s -> debug(String.format("Found stage : %s. MxWindowType : %s", MatcherFx.targetToString(s), s.impl_getMXWindowType())))
 				.filter(s -> s.impl_getMXWindowType().equals("PrimaryStage"))
 				.findFirst()
 				.orElse(stages.get(0));
@@ -148,11 +148,11 @@ public class UtilsFx
 	{
 		Node finalTarget = (Node) target;
 		BufferedImage image = runOnFxThreadAndWaitResult(() -> {
-			Optional.ofNullable(logger).ifPresent(l -> l.debug(String.format("Start get image of Node %s", finalTarget)));
+			debug(String.format("Start get image of Node %s", finalTarget));
 			WritableImage snapshot = finalTarget.snapshot(new SnapshotParameters(), null);
 			return SwingFXUtils.fromFXImage(snapshot, null);
 		});
-		Optional.ofNullable(logger).ifPresent(l -> l.debug(String.format("Getting image for target %s is done. Image size [width : %s, height : %s]", target, image.getWidth(), image.getHeight())));
+		debug(String.format("Getting image for target %s is done. Image size [width : %s, height : %s]", target, image.getWidth(), image.getHeight()));
 		return image;
 	}
 
@@ -168,7 +168,7 @@ public class UtilsFx
 			try
 			{
 				T value = func.get();
-				Optional.ofNullable(logger).ifPresent(l -> l.debug(String.format("Getting value : %s", value)));
+				debug(String.format("Getting value : %s", value));
 				reference.set(value);
 			}
 			finally
@@ -188,5 +188,10 @@ public class UtilsFx
 			{}
 		}
 		return reference.get();
+	}
+
+	private static void debug(String msg)
+	{
+		Optional.ofNullable(logger).ifPresent(l -> l.debug(msg));
 	}
 }

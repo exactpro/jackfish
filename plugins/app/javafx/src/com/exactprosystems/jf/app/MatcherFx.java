@@ -411,34 +411,26 @@ public class MatcherFx
 		{
 			return ((Tooltip) target).getText();
 		}
+		else if (target instanceof TextInputControl)
+		{
+			return ((TextInputControl) target).getText();
+		}
+		else if (target instanceof Pane)
+		{
+			StringBuilder sb = new StringBuilder();
+			collectAllText(((Pane) target), sb);
+			return sb.toString();
+		}
 		else
 		{
 			return null;
 		}
 	}
 
-	public static void collectAllText(Pane pane, StringBuilder sb)
+	private static void collectAllText(Pane pane, StringBuilder sb)
 	{
-		String text = getText(pane);
-		if (!Str.IsNullOrEmpty(text))
-		{
-			sb.append(text);
-		}
-		for (Node node : pane.getChildren())
-		{
-			if (node instanceof Pane)
-			{
-				collectAllText((Pane) node, sb);
-			}
-			else
-			{
-				String text1 = getText(node);
-				if (!Str.IsNullOrEmpty(text1))
-				{
-					sb.append(text1);
-				}
-			}
-		}
+		ObservableList<Node> children = pane.getChildren();
+		children.forEach(node -> sb.append(getText(node)));
 	}
 
 	public static String getAction(EventTarget target)

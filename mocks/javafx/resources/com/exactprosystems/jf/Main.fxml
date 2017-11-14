@@ -10,7 +10,7 @@
         <MenuBar fx:id="menu"/>
     </top>
     <center>
-        <VBox>
+        <VBox fx:id="vBox">
             <GridPane>
                 <padding>
                     <Insets top="5" left="5"/>
