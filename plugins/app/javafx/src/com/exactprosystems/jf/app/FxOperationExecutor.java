@@ -1022,6 +1022,10 @@ public class FxOperationExecutor extends AbstractOperationExecutor<EventTarget>
 						TextInputControl cellBox = (TextInputControl) all.get(0);
 						cellBox.setText(text);
 					}
+					else
+					{
+						((TextInputControl) cell).setText(text);
+					}
 					return true;
 				}
 				return false;
