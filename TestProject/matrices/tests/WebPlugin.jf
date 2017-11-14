@@ -170,3 +170,32 @@ subcase;;;
     #EndSubCase
 
 
+#Id;#TestCase;#Kind;#Depends;#For
+Properties;Dialog get properties;;;
+    #Id;#Step;#Kind;#For;#Depends
+    Start;;;;
+        #Id;#Global;#Action;$AppId;Browser;URL
+        APPSTR1;1;ApplicationStart;mockWebApp;mockWebBrowser;mockWebURL
+
+    #EndStep
+
+    // //Not supported for web. see negative test
+    #Id;#Step;#Kind;#For;#Depends
+    Positive;;;;
+    #EndStep
+
+    #Id;#Step;#Kind;#For;#Depends
+    Negative;;;;
+        #Id;#Action;#Assert;$Position;$Size;$Dialog;$AppConnection
+        APPPAR1;DialogGetProperties;This.Result == Result.Failed && This.Kind == ErrorKind.FEATURE_NOT_SUPPORTED;;;'Main';APPSTR1.Out
+
+    #EndStep
+
+    #Id;#Step;#Kind;#For;#Depends
+    Stop;;;;
+        #Action;$AppConnection
+        ApplicationStop;APPSTR1.Out
+
+    #EndStep
+
+

@@ -252,3 +252,52 @@ Application get properties (close app);;;
     APPSTP5;ApplicationStop;appGP.Out
 
 
+#TestCase;#Kind;#Depends;#For
+Dialog get properties;;;
+    #Id;#Step;#Kind;#For;#Depends
+    Start;;;;
+        #Id;#Global;#Action;Exec;WorkDir;Args;AlwaysToFront;$AppId
+        APPSTR2;1;ApplicationStart;mockWinExec;mockWinDir;'';true;mockWinApp
+
+    #EndStep
+
+    #Id;#Step;#Kind;#For;#Depends
+    Positive;;;;
+        #Id;#Action;#Assert;$Size;$Position;$Dialog;$AppConnection
+        APPPAR2;DialogGetProperties;This.Result == Result.Passed && This.Out.Size != null && This.Out.Position != null;;;'Dialog';APPSTR2.Out
+
+        #Action;#Assert;$Size;$Dialog;$AppConnection
+        DialogGetProperties;This.Result == Result.Passed && This.Out.Size != null;;'Dialog';APPSTR2.Out
+
+        #Action;#Assert;$Position;$Dialog;$AppConnection
+        DialogGetProperties;This.Result == Result.Passed && This.Out.Position != null;;'Dialog';APPSTR2.Out
+
+        #Action;#Assert;$Dialog;$AppConnection
+        DialogGetProperties;This.Result == Result.Passed && This.Out.size == 0;'Dialog';APPSTR2.Out
+
+    #EndStep
+
+    #Id;#Step;#Kind;#For;#Depends
+    Negative;;;;
+        #Id;#Action;#Assert;$Dialog;$AppConnection
+        APPPAR7;DialogGetProperties;This.Result == Result.Failed && This.Kind == ErrorKind.DIALOG_NOT_FOUND;'Dialogg';APPSTR2.Out
+
+        #Id;#Action;#Assert;$Dialog;$AppConnection
+        APPPAR8;DialogGetProperties;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;'Dialog';
+
+        #Id;#Action;#Assert;$Dialog;$AppConnection
+        APPPAR9;DialogGetProperties;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;;APPSTR2.Out
+
+        #Id;#Action;#Assert;$Dialog;$AppConnection
+        APPPAR10;DialogGetProperties;This.Result == Result.Failed && This.Kind == ErrorKind.EXCEPTION;'Dialog';asd
+
+    #EndStep
+
+    #Id;#Step;#Kind;#For;#Depends
+    Stop;;;;
+        #Action;$AppConnection
+        ApplicationStop;APPSTR2.Out
+
+    #EndStep
+
+

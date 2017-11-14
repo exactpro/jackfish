@@ -4,6 +4,7 @@ import com.exactprosystems.jf.actions.*;
 import com.exactprosystems.jf.api.app.*;
 import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.api.error.ErrorKind;
+import com.exactprosystems.jf.api.error.app.FeatureNotSupportedException;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.report.ReportBuilder;
 import com.exactprosystems.jf.documents.config.Context;
@@ -13,10 +14,12 @@ import com.exactprosystems.jf.documents.matrix.parser.items.TypeMandatory;
 import com.exactprosystems.jf.functions.HelpKind;
 
 import java.awt.*;
-import java.io.Serializable;
+import java.rmi.RemoteException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import static com.exactprosystems.jf.actions.gui.Helper.message;
 
 @ActionAttribute(
         group 				  		  = ActionGroups.GUI,
@@ -82,27 +85,50 @@ public class DialogGetProperties extends AbstractAction
     {
         Map<String, Object> result = new HashMap<>();
 
-        IApplication app = this.connection.getApplication();
         IGuiDictionary dictionary = this.connection.getDictionary();
+        IApplication app = this.connection.getApplication();
+        String id = connection.getId();
+
         IWindow window = dictionary.getWindow(this.dialog);
-        IRemoteApplication service = app.service();
+        Helper.throwExceptionIfDialogNull(window, this.dialog);
         IControl selfControl = window.getSelfControl();
-        Locator selfLocator = new Locator(selfControl);
+        IRemoteApplication service = app.service();
+
+        if (selfControl == null)
+        {
+            super.setError(message(id, window, IWindow.SectionKind.Self, null, null, "Self control is not found."), ErrorKind.ELEMENT_NOT_FOUND);
+            return;
+        }
 
         for (Parameter parameter : parameters.select(TypeMandatory.NotMandatory))
         {
-
-            if (parameter.getName().equals(sizeName))
+            try
             {
-                Dimension dialogSize = service.getDialogSize(selfLocator);
-                result.put(parameter.getName(), dialogSize);
+                if (parameter.getName().equals(sizeName))
+                {
+                    Dimension dialogSize = service.getDialogSize(selfControl.locator());
+                    result.put(parameter.getName(), dialogSize);
+                }
+                if (parameter.getName().equals(positionName))
+                {
+                    Point dialogPosition = service.getDialogPosition(selfControl.locator());
+                    result.put(parameter.getName(), dialogPosition);
+                }
             }
-            if (parameter.getName().equals(positionName))
+            catch (RemoteException e)
             {
-                Point dialogPosition = service.getDialogPosition(selfLocator);
-                result.put(parameter.getName(), dialogPosition);
-            }
+                String mes = message(id, window, IWindow.SectionKind.Self, selfControl, null, e.getCause().getClass().getSimpleName());
 
+                if (e.getCause() instanceof FeatureNotSupportedException)
+                {
+                    super.setError(mes, ErrorKind.FEATURE_NOT_SUPPORTED);
+                    return;
+                }else
+                {
+                    super.setError(mes, ErrorKind.EXCEPTION);
+                    return;
+                }
+            }
         }
 
         setResult(result);
