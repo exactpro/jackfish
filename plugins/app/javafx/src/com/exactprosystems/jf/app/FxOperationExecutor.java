@@ -470,7 +470,7 @@ public class FxOperationExecutor extends AbstractOperationExecutor<EventTarget>
 	@Override
 	public boolean elementIsEnabled(EventTarget component) throws Exception
 	{
-		return component instanceof Node && !((Node) component).isDisable();
+		return !(component instanceof Node) || ((Node) component).isDisable();
 	}
 
 	@Override
@@ -1319,25 +1319,19 @@ public class FxOperationExecutor extends AbstractOperationExecutor<EventTarget>
 
 	private Point getPointRespectScene(EventTarget target) throws Exception
 	{
+		if (!MatcherFx.isVisible(target))
+		{
+			throw new UnsupportedOperationException(String.format("Target %s is not visible", MatcherFx.targetToString(target)));
+		}
 		if (target instanceof Node)
 		{
 			Node node = (Node) target;
-			if (node.isVisible())
-			{
-				Bounds screenBounds = node.localToScene(node.getBoundsInLocal());
-				int x = (int) screenBounds.getMinX();
-				int y = (int) screenBounds.getMinY();
-
-				return new Point(x, y);
-			}else
-			{
-				throw new UnsupportedOperationException(String.format("Element %s is not visible", node));
-			}
-
-		}else
-		{
-			throw new UnsupportedOperationException(String.format("Element %s is not a node", target));
+			Bounds screenBounds = node.localToScene(node.getBoundsInLocal());
+			int x = (int) screenBounds.getMinX();
+			int y = (int) screenBounds.getMinY();
+			return new Point(x, y);
 		}
+		return new Point(0, 0);
 	}
 
 	private Point checkCoords(EventTarget eventTarget, int x, int y) throws Exception
@@ -1367,7 +1361,7 @@ public class FxOperationExecutor extends AbstractOperationExecutor<EventTarget>
 		return new Point(rectangle.x + x, rectangle.y + y);
 	}
 
-	Node findOwner(Locator owner) throws Exception
+	EventTarget findOwner(Locator owner) throws Exception
 	{
 		logger.debug("Start found owner for " + owner);
 		if (owner == null)
@@ -1381,12 +1375,8 @@ public class FxOperationExecutor extends AbstractOperationExecutor<EventTarget>
 			logger.debug("Try to find owner");
 			EventTarget target = this.find(null, owner);
 			logger.debug("Found eventTarget : " + target);
-			if (target instanceof Node)
-			{
-				return (Node) target;
-			}
+			return target;
 		}
-		return null;
 	}
 	//endregion
 }

@@ -161,11 +161,12 @@ public class UtilsFx
 				WritableImage snapshot = ((Stage) target).getScene().snapshot(null);
 				return SwingFXUtils.fromFXImage(snapshot, null);
 			}
-			else
+			else if (target instanceof Node)
 			{
 				WritableImage snapshot = ((Node) target).snapshot(new SnapshotParameters(), null);
 				return SwingFXUtils.fromFXImage(snapshot, null);
 			}
+			return new BufferedImage(0, 0, 0);
 		});
 		debug(String.format("Getting image for target %s is done. Image size [width : %s, height : %s]", target, image.getWidth(), image.getHeight()));
 		return image;
