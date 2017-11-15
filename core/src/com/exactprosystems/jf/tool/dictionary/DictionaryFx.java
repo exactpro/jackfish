@@ -921,6 +921,7 @@ public class DictionaryFx extends GuiDictionary
 
 	private Optional<OperationResult> operate(Operation operation, IWindow window, IControl control) throws Exception
 	{
+		this.applicationConnector.getAppConnection().getApplication().service().startNewDialog();
 		if (isApplicationRun())
 		{
 			IControl owner = window.getOwnerControl(control);

@@ -3,6 +3,7 @@ package com.exactprosystems.jf.app;
 import com.exactprosystems.jf.api.app.*;
 import com.exactprosystems.jf.api.client.ICondition;
 import com.exactprosystems.jf.api.common.Converter;
+import com.exactprosystems.jf.api.common.Str;
 import com.exactprosystems.jf.api.error.app.ElementNotFoundException;
 import com.exactprosystems.jf.api.error.app.FeatureNotSupportedException;
 import com.exactprosystems.jf.api.error.app.TooManyElementsException;
@@ -635,12 +636,17 @@ public class FxOperationExecutor extends AbstractOperationExecutor<EventTarget>
 					}
 					if (component instanceof ListView)
 					{
-						//TODO replace this with node.queryAccessibleAttribute()
 						ListView listView = (ListView) component;
-						listView.getItems().stream()
-								.filter(s -> s.toString().equals(selectedText))
-								.findFirst()
-								.ifPresent(listView.getSelectionModel()::select);
+						for (int i = 0; i < listView.getItems().size(); i++)
+						{
+							Node visual = (Node) listView.queryAccessibleAttribute(AccessibleAttribute.ITEM_AT_INDEX, i);
+							String text = MatcherFx.getText(visual);
+							if (Str.areEqual(text, selectedText))
+							{
+								listView.getSelectionModel().select(i);
+								break;
+							}
+						}
 						return true;
 					}
 					return false;

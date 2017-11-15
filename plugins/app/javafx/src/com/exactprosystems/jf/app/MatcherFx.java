@@ -449,6 +449,10 @@ public class MatcherFx
 		{
 			return ((Dialog) target).getTitle();
 		}
+		else if (target instanceof Labeled)
+		{
+			return ((Labeled) target).getText();
+		}
 		else
 		{
 			return null;
