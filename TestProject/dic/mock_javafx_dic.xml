@@ -2,7 +2,7 @@
 <dictionary>
     <window name="Main">
         <self>
-            <any id="owner" xpath=".//BorderPane[contains(@class,&amp;quot;root&amp;quot;)]"/>
+            <any id="owner" xpath=".//Stage[contains(@title,&amp;quot;JavaFx Mock&amp;quot;)]"/>
         </self>
         <onOpen/>
         <run>
@@ -109,7 +109,7 @@
     </window>
     <window name="Dialog">
         <self>
-            <frame id="DialogD" xpath="" title="JavaFx Mock" addition="Many"/>
+            <dialog id="DialogD" xpath=".//Stage[contains(@title,&amp;quot;Dialog&amp;quot;)]" title="" addition="Many"/>
         </self>
         <onOpen/>
         <run>

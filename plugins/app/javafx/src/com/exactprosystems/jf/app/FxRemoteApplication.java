@@ -232,15 +232,11 @@ public class FxRemoteApplication extends RemoteApplication
 				{
 					logger.debug("Element : " + element);
 					EventTarget target = this.operationExecutor.find(null, element);
-					if(target instanceof Node)
+					if(target instanceof Stage)
 					{
-						Node node = (Node) target;
-						if(node.getScene().getWindow() instanceof Stage)
-						{
-							Stage stage = (Stage) node.getScene().getWindow();
-							logger.debug("Get stage : %s" + MatcherFx.targetToString(stage));
-							resizeWindow(stage, resize, height, width);
-						}
+						Stage stage = (Stage) target;
+						logger.debug("Get stage : %s" + MatcherFx.targetToString(stage));
+						resizeWindow(stage, resize, height, width);
 					}
 					return null;
 				},
