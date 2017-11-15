@@ -19,7 +19,6 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.control.*;
 import javafx.scene.input.*;
-import javafx.util.Callback;
 import javafx.util.StringConverter;
 import org.apache.log4j.Logger;
 import org.w3c.dom.Document;
@@ -530,7 +529,7 @@ public class FxOperationExecutor extends AbstractOperationExecutor<EventTarget>
 	@Override
 	public boolean elementIsEnabled(EventTarget component) throws Exception
 	{
-		return !(component instanceof Node) || ((Node) component).isDisable();
+		return !(component instanceof Node) || !((Node) component).isDisable();
 	}
 
 	@Override
