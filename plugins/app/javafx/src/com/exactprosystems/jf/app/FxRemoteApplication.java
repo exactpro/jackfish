@@ -14,6 +14,7 @@ import com.exactprosystems.jf.api.common.ProcessTools;
 import com.exactprosystems.jf.api.common.Str;
 import com.exactprosystems.jf.api.error.app.FeatureNotSupportedException;
 import com.exactprosystems.jf.api.error.app.NullParameterException;
+import com.exactprosystems.jf.api.error.app.WrongParameterException;
 import com.sun.javafx.stage.StageHelper;
 import javafx.application.Platform;
 import javafx.event.Event;
@@ -246,6 +247,12 @@ public class FxRemoteApplication extends RemoteApplication
 						Stage stage = (Stage) target;
 						logger.debug("Get stage : %s" + MatcherFx.targetToString(stage));
 						resizeWindow(stage, resize, height, width);
+					}
+					if(target instanceof Dialog)
+					{
+						Dialog dialog = (Dialog) target;
+						logger.debug("Get dialog : %s" + MatcherFx.targetToString(dialog));
+						resizeDialog(dialog, resize, height, width);
 					}
 					return null;
 				},
@@ -659,9 +666,31 @@ public class FxRemoteApplication extends RemoteApplication
 			}
 			else
 			{
-				logger.debug("Change size");
+				logger.debug("Change stage size");
 				stage.setWidth(width);
 				stage.setHeight(height);
+			}
+		}
+	}
+
+	private void resizeDialog(Dialog dialog, Resize resize, int height, int width) throws RemoteException
+	{
+		if (dialog != null)
+		{
+			if(!dialog.isResizable())
+			{
+				throw new FeatureNotSupportedException(String.format("Dialog '%s' can't resize.", dialog));
+			}
+
+			if (resize != null)
+			{
+				throw new WrongParameterException("Can't resize. Please use width and height as parameters in action DialogResize for resizing current dialog.");
+			}
+			else
+			{
+				logger.debug("Change dialog size");
+				dialog.setWidth(width);
+				dialog.setHeight(height);
 			}
 		}
 	}
