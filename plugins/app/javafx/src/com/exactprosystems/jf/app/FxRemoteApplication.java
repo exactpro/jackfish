@@ -289,14 +289,23 @@ public class FxRemoteApplication extends RemoteApplication
 		{
 			EventTarget target = this.operationExecutor.find(null, owner);
 
-			if (target instanceof Node)
+			if (target instanceof Stage)
 			{
-				int x = (int) (((Node) target).getScene().getWindow()).getX();
-				int y = (int) (((Node) target).getScene().getWindow()).getY();
+				int x = (int) ((Stage) target).getX();
+				int y = (int) ((Stage) target).getY();
 
 				return new Point(x, y);
 			}
-			return null;
+			if (target instanceof Dialog<?>)
+			{
+				int x = (int) ((Dialog<?>) target).getX();
+				int y = (int) ((Dialog<?>) target).getY();
+
+				return new Point(x, y);
+			}
+
+			throw new FeatureNotSupportedException(String.format("Self %s is not dialog or window", owner));
+
 		}, e ->
 		{
 			logger.error(String.format("getDialogPositionDerived %s", owner));
