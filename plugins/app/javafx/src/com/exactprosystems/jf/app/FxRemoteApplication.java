@@ -259,10 +259,10 @@ public class FxRemoteApplication extends RemoteApplication
 		{
 			EventTarget target = this.operationExecutor.find(null, owner);
 
-			if (target instanceof Window )
+			if (target instanceof Stage)
 			{
-				int width = (int) ((Window) target).getWidth();
-				int height = (int) ((Window) target).getHeight();
+				int width = (int) ((Stage) target).getWidth();
+				int height = (int) ((Stage) target).getHeight();
 
 				return new Dimension(width, height);
 			}

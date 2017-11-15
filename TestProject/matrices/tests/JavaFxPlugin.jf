@@ -15,8 +15,26 @@ Dialog get properties;Never;;
 
     #Id;#Step;#Kind;#For;#Depends
     Positive;;;;
+        #Id;#Let
+        x;1111
+
+        #Id;#Let
+        y;111
+
+        #Id;#Let
+        width;555
+
+        #Id;#Let
+        height;555
+
+        #Action;$Dialog;$X;$Y;$AppConnection
+        DialogMove;'Dialog';x;y;appCon
+
+        #Action;$Height;$Width;$Dialog;$AppConnection
+        DialogResize;height;width;'Dialog';appCon
+
         #Id;#Action;#Assert;$Size;$Position;$Dialog;$AppConnection
-        APPPAR2;DialogGetProperties;This.Result == Result.Passed && This.Out.Size != null && This.Out.Position != null;;;'Dialog';appCon
+        APPPAR6;DialogGetProperties;This.Result == Result.Passed && This.Out.Size.getWidth() == width && This.Out.Size.getWidth() == height  && This.Out.Position.getX() == x && This.Out.Position.getY() == y;;;'Dialog';appCon
 
         #Id;#Action;#Assert;$Size;$Dialog;$AppConnection
         APPPAR3;DialogGetProperties;This.Result == Result.Passed && This.Out.Size != null;;'Dialog';appCon
