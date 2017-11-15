@@ -28,6 +28,9 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.control.*;
 import javafx.scene.input.*;
+import javafx.scene.layout.BackgroundFill;
+import javafx.scene.paint.Paint;
+import javafx.scene.text.Text;
 import javafx.util.StringConverter;
 import org.apache.log4j.Logger;
 import org.w3c.dom.Document;
@@ -309,12 +312,66 @@ public class FxOperationExecutor extends AbstractOperationExecutor<EventTarget>
 					String headerName = tableHeaders.get(j);
 					String cellValue = this.getCellValue(this.findCell(tableView, j, i), tableView, j, i);
 
-//					TODO think how we can get color from row?
-//					TableCell call = (TableCell) ((TableColumn) tableView.getColumns().get(0)).getCellFactory().call(tableView.getColumns().get(0));
-//					TableRow tableRow = call.getTableRow();
-//					Paint fill = tableRow.getBackground().getFills().get(0).getFill();
+					Color backgroundColor = Color.WHITE;
+					Color foregroundColor = Color.BLACK;
+					Paint fgPaint = null;
 
-					result.put(headerName, new ValueAndColor(cellValue, Color.BLACK, Color.WHITE));
+					Node nodeTableCell = (Node) tableView.queryAccessibleAttribute(AccessibleAttribute.CELL_AT_ROW_COLUMN, i, j);
+					if (nodeTableCell instanceof TableCell<?, ?>)
+					{
+						TableCell tableCell = (TableCell) nodeTableCell;
+						backgroundColor = ((TableRow<?>) tableCell.getTableRow()).getBackground().getFills()
+								.stream()
+								.map(BackgroundFill::getFill)
+								.filter(paint -> paint instanceof javafx.scene.paint.Color)
+								.map(paint -> (javafx.scene.paint.Color)paint)
+								.filter(Objects::nonNull)
+								.findFirst()
+								.map(UtilsFx::convert)
+								.orElse(Color.WHITE);
+
+						if (tableCell.getGraphic() != null)
+						{
+							//use graphic
+							Node tableCellGraphic = tableCell.getGraphic();
+							if (tableCellGraphic instanceof Text)
+							{
+								fgPaint = ((Text) tableCellGraphic).getFill();
+							}
+							else if (tableCellGraphic instanceof Labeled)
+							{
+								fgPaint = ((Labeled) tableCellGraphic).getTextFill();
+							}
+							else
+							{
+								Locator emptyLocator = new Locator();
+								List<EventTarget> allDescendants = new MatcherFx(this.info, emptyLocator, tableCellGraphic).findAllDescedants();
+								for (EventTarget descendant : allDescendants)
+								{
+									if (descendant instanceof Labeled)
+									{
+										fgPaint = ((Labeled) descendant).getTextFill();
+										break;
+									}
+									if (descendant instanceof Text)
+									{
+										fgPaint = ((Text) descendant).getFill();
+										break;
+									}
+								}
+							}
+						}
+						else
+						{
+							fgPaint = tableCell.getTextFill();
+						}
+					}
+
+					if (fgPaint instanceof javafx.scene.paint.Color)
+					{
+						foregroundColor = UtilsFx.convert((javafx.scene.paint.Color) fgPaint);
+					}
+					result.put(headerName, new ValueAndColor(cellValue, foregroundColor, backgroundColor));
 				}
 				return result;
 			}

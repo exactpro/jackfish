@@ -132,6 +132,13 @@ public class MatcherFx
 				.collect(Collectors.toList());
 	}
 
+	public List<EventTarget> findAllDescedants()
+	{
+		List<EventTarget> nodes = new ArrayList<>();
+		collect(this.owner, nodes);
+		return nodes;
+	}
+
 	private boolean isMatches(EventTarget target)
 	{
 		if (target == null)
