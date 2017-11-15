@@ -12,13 +12,17 @@ import javafx.event.EventTarget;
 import javafx.scene.Node;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Dialog;
+import javafx.scene.control.DialogEvent;
 import javafx.stage.Stage;
 import javafx.stage.Window;
 import javafx.stage.WindowEvent;
 import org.apache.log4j.Logger;
 import org.w3c.dom.Document;
 
-import java.awt.*;
+import java.awt.Dimension;
+import java.awt.Point;
+import java.awt.Rectangle;
+import java.awt.Toolkit;
 import java.awt.image.BufferedImage;
 import java.io.Serializable;
 import java.lang.reflect.InvocationTargetException;
@@ -29,7 +33,6 @@ import java.rmi.RemoteException;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
@@ -67,7 +70,6 @@ public class FxRemoteApplication extends RemoteApplication
 	@Override
 	public Serializable getProperty(String name, Serializable prop) throws RemoteException
 	{
-		//TODO replace via tryExecute
 		try
 		{
 			if (this.isInit)
@@ -433,17 +435,28 @@ public class FxRemoteApplication extends RemoteApplication
 					List<EventTarget> all = this.operationExecutor.findAll(ControlKind.Any, currentRoot, element);
 					for (EventTarget target : all)
 					{
-						//TODO remake this code
-						if (target instanceof Node)
+						if (target instanceof Stage)
 						{
-							Node node = (Node) target;
-							Window closeWindow = node.getScene().getWindow();
-							if (Objects.nonNull(closeWindow))
+							Event.fireEvent(target, new WindowEvent(((Stage) target), WindowEvent.WINDOW_CLOSE_REQUEST));
+						}
+						else if (target instanceof Dialog<?>)
+						{
+							Event.fireEvent(target, new DialogEvent(((Dialog) target), DialogEvent.DIALOG_CLOSE_REQUEST));
+						}
+						else
+						{
+							for (LocatorAndOperation pair : operations)
 							{
-								Platform.runLater(() -> Event.fireEvent(closeWindow, new WindowEvent(closeWindow, WindowEvent.WINDOW_CLOSE_REQUEST)));
-								closed++;
+								Locator locator = pair.getLocator();
+								List<EventTarget> allNodes = this.operationExecutor.findAll(locator.getControlKind(), target, locator);
+								if (allNodes.size() == 1)
+								{
+									EventTarget findNode = allNodes.get(0);
+									pair.getOperation().operate(this.operationExecutor, locator, findNode);
+								}
 							}
 						}
+						closed++;
 					}
 					return closed;
 				},
