@@ -23,10 +23,9 @@ import static com.exactprosystems.jf.actions.gui.Helper.message;
 
 @ActionAttribute(
         group 				  		  = ActionGroups.GUI,
-        suffix 						  = "APPPAR",
+        suffix 						  = "DLGGP",
         constantGeneralDescription    = R.DIALOG_GET_PROPERTIES_GENERAL_DESC,
-        additionFieldsAllowed 		  = true,
-        constantAdditionalDescription = R.DIALOG_GET_PROPERTIES_ADDITIONAL_DESC,
+        additionFieldsAllowed 		  = false,
         outputType              	  = Map.class,
         constantOutputDescription 	  = R.DIALOG_GET_PROPERTIES_OUTPUT_DESC,
         constantExamples 			  = R.DIALOG_GET_PROPERTIES_EXAMPLE
