@@ -7,7 +7,7 @@
 // information which is the property of Exactpro Systems or its licensors.
 ////////////////////////////////////////////////////////////////////////////////
 
-ackage com.exactprosystems.jf.tool.git.clone;
+package com.exactprosystems.jf.tool.git.clone;
 
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.ContainingParent;
