@@ -6,12 +6,14 @@ import com.exactprosystems.jf.actions.app.ApplicationMove;
 import com.exactprosystems.jf.api.app.*;
 import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.api.error.ErrorKind;
+import com.exactprosystems.jf.api.error.app.FeatureNotSupportedException;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.report.ReportBuilder;
 import com.exactprosystems.jf.documents.config.Context;
 import com.exactprosystems.jf.documents.matrix.parser.Parameters;
 import com.exactprosystems.jf.functions.HelpKind;
 
+import java.rmi.RemoteException;
 import java.util.List;
 
 import static com.exactprosystems.jf.actions.gui.Helper.message;
@@ -110,12 +112,29 @@ public class DialogMove extends AbstractAction
             super.setError(message(id, window, IWindow.SectionKind.Self, null, null, "Self control is not found."), ErrorKind.ELEMENT_NOT_FOUND);
             return;
         }
-        Locator selfLocator = new Locator(selfControl);
+        Locator selfLocator = selfControl.locator();
 
-        this.connection
-                .getApplication()
-                .service()
-                .moveDialog(selfLocator, this.x, this.y);
+        try
+        {
+            this.connection
+                    .getApplication()
+                    .service()
+                    .moveDialog(selfLocator, this.x, this.y);
+        }
+        catch (RemoteException e)
+        {
+            String mes = message(id, window, IWindow.SectionKind.Self, selfControl, null, e.getCause().getClass().getSimpleName());
+
+            if (e.getCause() instanceof FeatureNotSupportedException)
+            {
+                super.setError(mes, ErrorKind.FEATURE_NOT_SUPPORTED);
+                return;
+            }else
+            {
+                super.setError(mes, ErrorKind.EXCEPTION);
+                return;
+            }
+        }
 
         super.setResult(null);
     }

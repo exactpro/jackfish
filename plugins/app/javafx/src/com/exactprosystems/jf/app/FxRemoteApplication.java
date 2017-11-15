@@ -534,9 +534,9 @@ public class FxRemoteApplication extends RemoteApplication
 						stage.setY(y);
 						return null;
 					}
-					if (target instanceof Dialog )
+					if (target instanceof Dialog<?>)
 					{
-						Dialog dialog = (Dialog) target;
+						Dialog<?> dialog = (Dialog<?>) target;
 						dialog.setX(x);
 						dialog.setY(y);
 						return null;
