@@ -389,4 +389,74 @@ Dialog resize;Never;;
 
     #EndStep
 
+#TestCase;#Kind;#Depends;#For
+DialogMove;;;
+    #Id;#Step;#Kind;#For;#Depends
+    Start;;;;
+        #Id;#Global;#Call;plugin
+        appCon;1;testLib.runPlugin;plugin
+
+    #EndStep
+
+    #Id;#Step;#Kind;#For;#Depends
+    Negative;;;;
+        #Action;#Assert;$Dialog;$X;$Y;$AppConnection
+        DialogMove;This.Result == Result.Failed && This.Kind == ErrorKind.DIALOG_NOT_FOUND;'DialogNotExistException';1;1;appCon
+
+        #Action;#Assert;$Dialog;$X;$Y;$AppConnection
+        DialogMove;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;'Dialog';1;;appCon
+
+        #Action;#Assert;$Dialog;$X;$Y;$AppConnection
+        DialogMove;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;;1;1;appCon
+
+        #Action;#Assert;$Dialog;$X;$Y;$AppConnection
+        DialogMove;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;'Dialog';;1;appCon
+
+        #Action;#Assert;$Dialog;$X;$Y;$AppConnection
+        DialogMove;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;'Dialog';1;1;
+
+        #Action;#Assert;$Dialog;$X;$Y;$AppConnection
+        DialogMove;This.Result == Result.Failed && This.Kind == ErrorKind.EXPRESSION_ERROR;'Dialog';1;1;asd
+
+    #EndStep
+
+    #Id;#Step;#Kind;#For;#Depends
+    Positive;;;;
+        #Id;#Action;$Position;$Dialog;$AppConnection
+        APPPAR1;DialogGetProperties;;'Dialog';appCon
+
+        #Id;#Let
+        currentX;APPPAR1.Out.Position.getX()
+
+        #Id;#Let
+        currentY;APPPAR1.Out.Position.getY()
+
+        #Id;#Let
+        newX;currentX + 10
+
+        #Id;#Let
+        newY;currentY + 10
+
+        #Action;$Dialog;$X;$Y;$AppConnection
+        DialogMove;'Dialog';newX;newY;appCon
+
+        #Id;#Action;$Position;$Dialog;$AppConnection
+        APPPAR6;DialogGetProperties;;'Dialog';appCon
+
+        #Assert;#Message
+        APPPAR6.Out.Position.getX() == newX;'Error while moving by X from ' + currentX + ' to ' + newX
+
+        #Assert;#Message
+        APPPAR6.Out.Position.getY() == newY;'Error while moving by Y from ' + currentY + ' to ' + newY
+
+    #EndStep
+
+    #Id;#Step;#Kind;#For;#Depends
+    Stop;;;;
+        #Action;$AppConnection
+        ApplicationStop;appCon
+
+    #EndStep
+
+
 
