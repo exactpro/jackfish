@@ -474,6 +474,7 @@ public class FxOperationExecutor extends AbstractOperationExecutor<EventTarget>
 					List <EventTarget> list = new ArrayList <>();
 					for (int i = 0; i < nodes.getLength(); i++)
 					{
+
 						list.add((TreeItem) nodes.item(i).getUserData("item"));
 					}
 					return list;

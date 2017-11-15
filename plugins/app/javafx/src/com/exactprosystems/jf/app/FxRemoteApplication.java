@@ -232,15 +232,11 @@ public class FxRemoteApplication extends RemoteApplication
 				{
 					logger.debug("Element : " + element);
 					EventTarget target = this.operationExecutor.find(null, element);
-					if(target instanceof Node)
+					if(target instanceof Stage)
 					{
-						Node node = (Node) target;
-						if(node.getScene().getWindow() instanceof Stage)
-						{
-							Stage stage = (Stage) node.getScene().getWindow();
-							logger.debug("Get stage : %s" + MatcherFx.targetToString(stage));
-							resizeWindow(stage, resize, height, width);
-						}
+						Stage stage = (Stage) target;
+						logger.debug("Get stage : %s" + MatcherFx.targetToString(stage));
+						resizeWindow(stage, resize, height, width);
 					}
 					return null;
 				},
@@ -289,14 +285,23 @@ public class FxRemoteApplication extends RemoteApplication
 		{
 			EventTarget target = this.operationExecutor.find(null, owner);
 
-			if (target instanceof Node)
+			if (target instanceof Stage)
 			{
-				int x = (int) (((Node) target).getScene().getWindow()).getX();
-				int y = (int) (((Node) target).getScene().getWindow()).getY();
+				int x = (int) ((Stage) target).getX();
+				int y = (int) ((Stage) target).getY();
 
 				return new Point(x, y);
 			}
-			return null;
+			if (target instanceof Dialog<?>)
+			{
+				int x = (int) ((Dialog<?>) target).getX();
+				int y = (int) ((Dialog<?>) target).getY();
+
+				return new Point(x, y);
+			}
+
+			throw new FeatureNotSupportedException(String.format("Self %s is not dialog or window", owner));
+
 		}, e ->
 		{
 			logger.error(String.format("getDialogPositionDerived %s", owner));
@@ -529,9 +534,9 @@ public class FxRemoteApplication extends RemoteApplication
 						stage.setY(y);
 						return null;
 					}
-					if (target instanceof Dialog )
+					if (target instanceof Dialog<?>)
 					{
-						Dialog dialog = (Dialog) target;
+						Dialog<?> dialog = (Dialog<?>) target;
 						dialog.setX(x);
 						dialog.setY(y);
 						return null;

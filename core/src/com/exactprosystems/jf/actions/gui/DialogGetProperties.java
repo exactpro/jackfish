@@ -1,3 +1,12 @@
+////////////////////////////////////////////////////////////////////////////////
+// Copyright (c) 2009-2017, Exactpro Systems
+// Quality Assurance & Related Software Development for Innovative Trading Systems.
+// London Stock Exchange Group.
+// All rights reserved.
+// This is unpublished, licensed software, confidential and proprietary
+// information which is the property of Exactpro Systems or its licensors.
+////////////////////////////////////////////////////////////////////////////////
+
 package com.exactprosystems.jf.actions.gui;
 
 import com.exactprosystems.jf.actions.*;
@@ -23,10 +32,9 @@ import static com.exactprosystems.jf.actions.gui.Helper.message;
 
 @ActionAttribute(
         group 				  		  = ActionGroups.GUI,
-        suffix 						  = "APPPAR",
+        suffix 						  = "DLGGP",
         constantGeneralDescription    = R.DIALOG_GET_PROPERTIES_GENERAL_DESC,
-        additionFieldsAllowed 		  = true,
-        constantAdditionalDescription = R.DIALOG_GET_PROPERTIES_ADDITIONAL_DESC,
+        additionFieldsAllowed 		  = false,
         outputType              	  = Map.class,
         constantOutputDescription 	  = R.DIALOG_GET_PROPERTIES_OUTPUT_DESC,
         constantExamples 			  = R.DIALOG_GET_PROPERTIES_EXAMPLE
