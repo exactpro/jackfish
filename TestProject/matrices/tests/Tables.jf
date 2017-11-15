@@ -3650,6 +3650,31 @@ TABLE_REPORT;Test case;Never;;
     #EndStep
 
     #Step;#Kind;#For;#Depends
+    'before == true and before inside library';;;
+        #Id;#RawText;#Kind
+        TEXT1;Text;Matrix
+        ~;"#Id;#TestCase;#Kind;#Depends;#For"
+        ~;"TCName;Test case;Never;;"
+        ~;"    #Id;#Call;TCName"
+        ~;"    CALL_1;testLib.testReportTableInsideLibrary;'TCName'"
+        #EndRawText
+
+        #Id;#Call;rawText
+        pathToReport;runMatrix;TEXT1
+
+        #Id;#Call;pathToReport
+        appCon;runBrowser;pathToReport
+
+        // 
+        #Id;#Action;#Assert;$Dialog;$AppConnection;table
+        DLG;DialogFill;DLG.Out.table == 1;'DialogForTestTableReport';appCon;Do.count()
+
+        #Id;#Call;appCon
+        CALL_2;stopBrowser;appCon
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
     'table field does not fill';;;
         #Id;#RawTable
         TC;Table

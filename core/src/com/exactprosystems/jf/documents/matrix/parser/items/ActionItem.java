@@ -62,7 +62,9 @@ public final class ActionItem extends MatrixItem
 	@Override
 	protected MatrixItem makeCopy()
 	{
-		return new ActionItem(this);
+		ActionItem actionItem = new ActionItem(this);
+		actionItem.setOwner();
+		return actionItem;
 	}
 
 	public Class<? extends AbstractAction> getActionClass()
