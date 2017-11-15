@@ -2,7 +2,7 @@
 <dictionary>
     <window name="Main">
         <self>
-            <any id="owner" xpath="//JFrame[@name=&amp;quot;frame0&amp;quot;]"/>
+            <any id="owner" xpath=".//BorderPane[contains(@class,&amp;quot;root&amp;quot;)]"/>
         </self>
         <onOpen/>
         <run>
@@ -16,7 +16,7 @@
             <comboBox id="ComboBox" owner="owner" class="javax.swing.JComboBox" name="ComboBox" action="comboBoxChanged" addition="Many"/>
             <comboBox id="EditableComboBox" owner="owner" class="javax.swing.JComboBox" name="EditableComboBox" addition="Many"/>
             <radioButton id="RadioButton" owner="owner" class="javax.swing.JRadioButton" action="Green" text="Green" addition="Many"/>
-            <tree id="Tree" owner="owner" class="javax.swing.JTree" addition="Many"/>
+            <tree id="Tree" xpath=".//TreeView" owner="owner" class="" addition="Many"/>
             <tabPanel id="TabPanel" owner="owner" class="javax.swing.JTabbedPane" addition="Many"/>
             <label id="centralLabel" owner="owner" class="javax.swing.JLabel" name="CentralLabel" text="" addition="Many"/>
             <toggleButton id="ToggleButton" owner="owner" class="javax.swing.JToggleButton" name="ToggleButton" addition="Many"/>
