@@ -471,7 +471,15 @@ public class FxRemoteApplication extends RemoteApplication
 	@Override
 	protected void startNewDialogDerived() throws Exception
 	{
-
+		this.tryExecute(() ->
+		{
+			this.operationExecutor.clearModifiers();
+			return null;
+		}, e ->
+		{
+			logger.error("startNewDialog");
+			logger.error(e.getMessage(), e);
+		});
 	}
 
 	@Override

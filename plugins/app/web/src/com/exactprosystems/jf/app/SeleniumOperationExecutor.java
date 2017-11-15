@@ -1142,7 +1142,14 @@ public class SeleniumOperationExecutor extends AbstractOperationExecutor<WebElem
         return null;
     }
 
-    //region methods from AbstractOperationExecutor
+	void clearModifiers()
+	{
+		this.isAltDown = false;
+		this.isShiftDown = false;
+		this.isControlDown = false;
+	}
+
+	//region methods from AbstractOperationExecutor
 
 	@Override
 	protected String getValueDerived(WebElement component) throws Exception

@@ -2305,6 +2305,13 @@ public class SwingOperationExecutor extends AbstractOperationExecutor<ComponentF
 	}
 	//endregion
 
+	void clearModifiers()
+	{
+		this.isAltDown = false;
+		this.isShiftDown = false;
+		this.isControlDown = false;
+	}
+
 	@SuppressWarnings("unchecked")
 	<T extends Component> ComponentFixture<T> getFixture(T component) throws RemoteException
 	{

@@ -614,7 +614,7 @@ public class SwingRemoteApplication extends RemoteApplication
 	@Override
 	protected void startNewDialogDerived() throws Exception
 	{
-		//done
+		this.operationExecutor.clearModifiers();
 	}
 
 	@Override

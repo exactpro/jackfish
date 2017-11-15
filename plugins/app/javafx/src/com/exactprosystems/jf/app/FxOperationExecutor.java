@@ -1008,6 +1008,31 @@ public class FxOperationExecutor extends AbstractOperationExecutor<EventTarget>
 		});
 	}
 
+	EventTarget findOwner(Locator owner) throws Exception
+	{
+		logger.debug("Start found owner for " + owner);
+		if (owner == null)
+		{
+			Parent root = UtilsFx.currentRoot();
+			logger.debug("Found root of main window : " + root);
+			return root;
+		}
+		else
+		{
+			logger.debug("Try to find owner");
+			EventTarget target = this.find(null, owner);
+			logger.debug("Found eventTarget : " + target);
+			return target;
+		}
+	}
+
+	void clearModifiers()
+	{
+		this.isAltDown = false;
+		this.isControlDown = false;
+		this.isShiftDown = false;
+	}
+
 	//region private methods
 	private WrongParameterException tableException(EventTarget target)
 	{
@@ -1359,24 +1384,6 @@ public class FxOperationExecutor extends AbstractOperationExecutor<EventTarget>
 	{
 		Rectangle rectangle = MatcherFx.getRect(target);
 		return new Point(rectangle.x + x, rectangle.y + y);
-	}
-
-	EventTarget findOwner(Locator owner) throws Exception
-	{
-		logger.debug("Start found owner for " + owner);
-		if (owner == null)
-		{
-			Parent root = UtilsFx.currentRoot();
-			logger.debug("Found root of main window : " + root);
-			return root;
-		}
-		else
-		{
-			logger.debug("Try to find owner");
-			EventTarget target = this.find(null, owner);
-			logger.debug("Found eventTarget : " + target);
-			return target;
-		}
 	}
 	//endregion
 }

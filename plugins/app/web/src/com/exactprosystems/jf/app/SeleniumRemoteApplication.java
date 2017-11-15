@@ -98,7 +98,7 @@ public class SeleniumRemoteApplication extends RemoteApplication
 	private PluginInfo info;
 
 	private final int repeatLimit = 5;
-	private OperationExecutor<WebElement> operationExecutor;
+	private SeleniumOperationExecutor operationExecutor;
 	private Logger logger = null;
 
 
@@ -902,7 +902,7 @@ public class SeleniumRemoteApplication extends RemoteApplication
 	@Override
 	protected void startNewDialogDerived() throws Exception
 	{
-
+		this.operationExecutor.clearModifiers();
 	}
 
 	@Override
