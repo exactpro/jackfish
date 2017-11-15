@@ -463,21 +463,27 @@ public class FxOperationExecutor extends AbstractOperationExecutor<EventTarget>
 	@Override
 	public List<EventTarget> findByXpath(EventTarget element, String path) throws Exception
 	{
-		if (element instanceof TreeView)
+		return tryExecute(EMPTY_CHECK, () ->
 		{
-			TreeView tree = (TreeView) element;
-			NodeList nodes = findNodesInTreeByXpath(convertTreeToXMLDoc(tree), path);
-			if(nodes.getLength() != 0)
+			if (element instanceof TreeView)
 			{
-				List<EventTarget> list = new ArrayList<>();
-				for (int i = 0; i < nodes.getLength(); i++)
+				TreeView tree = (TreeView) element;
+				NodeList nodes = findNodesInTreeByXpath(convertTreeToXMLDoc(tree), path);
+				if (nodes.getLength() != 0)
 				{
-					list.add((TreeItem) nodes.item(i).getUserData("item"));
+					List <EventTarget> list = new ArrayList <>();
+					for (int i = 0; i < nodes.getLength(); i++)
+					{
+						list.add((TreeItem) nodes.item(i).getUserData("item"));
+					}
+					return list;
 				}
-				return list;
 			}
-		}
-		return Collections.emptyList();
+			return Collections.emptyList();
+		}, e -> {
+			logger.error(String.format("findByXpath(%s,%s)", element, path));
+			logger.error(e.getMessage(), e);
+		});
 	}
 
 	private NodeList findNodesInTreeByXpath(Document document, String selectedText) throws XPathExpressionException
@@ -755,28 +761,34 @@ public class FxOperationExecutor extends AbstractOperationExecutor<EventTarget>
 	@Override
 	public boolean expand(EventTarget component, String path, boolean expandOrCollapse) throws Exception
 	{
-		if (component instanceof TreeView)
+		return tryExecute(EMPTY_CHECK, () ->
 		{
-			TreeView tree = (TreeView) component;
-			NodeList nodes = findNodesInTreeByXpath(convertTreeToXMLDoc(tree), path);
-			if (nodes.getLength() == 0)
+			if (component instanceof TreeView)
 			{
-				throw new WrongParameterException("Path '" + path + "' is not found in the tree.");
-			}
-			for (int i = nodes.getLength() - 1; i >= 0; i--)
-			{
-				TreeItem item = (TreeItem) nodes.item(i).getUserData("item");
-				if (expandOrCollapse)
+				TreeView tree = (TreeView) component;
+				NodeList nodes = findNodesInTreeByXpath(convertTreeToXMLDoc(tree), path);
+				if (nodes.getLength() == 0)
 				{
-					item.setExpanded(true);
+					throw new WrongParameterException("Path '" + path + "' is not found in the tree.");
 				}
-				else
+				for (int i = nodes.getLength() - 1; i >= 0; i--)
 				{
-					item.setExpanded(false);
+					TreeItem item = (TreeItem) nodes.item(i).getUserData("item");
+					if (expandOrCollapse)
+					{
+						item.setExpanded(true);
+					}
+					else
+					{
+						item.setExpanded(false);
+					}
 				}
 			}
-		}
-		return true;
+			return true;
+		}, e -> {
+			logger.error(String.format("expand(%s,%s,%s)", component, path, expandOrCollapse));
+			logger.error(e.getMessage(), e);
+		});
 	}
 
 	@Override
@@ -904,14 +916,21 @@ public class FxOperationExecutor extends AbstractOperationExecutor<EventTarget>
 	@Override
 	public Document getTree(EventTarget component) throws Exception
 	{
-		if(component instanceof TreeView)
+		return tryExecute(EMPTY_CHECK, () ->
 		{
-			return convertTreeToXMLDoc((TreeView) component);
-		}
-		else
+			if(component instanceof TreeView)
+			{
+				return convertTreeToXMLDoc((TreeView) component);
+			}
+			else
+			{
+				throw new WrongParameterException(String.format("Component is not instance of TreeView. Component : %s", component));
+			}
+		}, e ->
 		{
-			throw new WrongParameterException(String.format("Component is not instance of TreeView. Component : %s", component));
-		}
+			logger.error(String.format("getTree(%s)", component));
+			logger.error(e.getMessage(), e);
+		});
 	}
 
 	@Override
