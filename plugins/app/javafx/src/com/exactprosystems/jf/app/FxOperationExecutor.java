@@ -19,10 +19,16 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.control.*;
 import javafx.scene.input.*;
+import javafx.util.Callback;
 import javafx.util.StringConverter;
 import org.apache.log4j.Logger;
 import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
 
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.xpath.*;
 import java.awt.Color;
 import java.awt.Point;
 import java.awt.Rectangle;
@@ -458,8 +464,61 @@ public class FxOperationExecutor extends AbstractOperationExecutor<EventTarget>
 	@Override
 	public List<EventTarget> findByXpath(EventTarget element, String path) throws Exception
 	{
-		//TODO implement
-		return null;
+		if (element instanceof TreeView)
+		{
+			TreeView tree = (TreeView) element;
+			NodeList nodes = findNodesInTreeByXpath(convertTreeToXMLDoc(tree), path);
+			if(nodes.getLength() != 0)
+			{
+				List<EventTarget> list = new ArrayList<>();
+				for (int i = 0; i < nodes.getLength(); i++)
+				{
+					list.add((TreeItem) nodes.item(i).getUserData("item"));
+				}
+				return list;
+			}
+		}
+		return Collections.emptyList();
+	}
+
+	private NodeList findNodesInTreeByXpath(Document document, String selectedText) throws XPathExpressionException
+	{
+		XPathFactory xPathfactory = XPathFactory.newInstance();
+		XPath xpath = xPathfactory.newXPath();
+		XPathExpression expr = xpath.compile(selectedText);
+
+		Object result = expr.evaluate(document, XPathConstants.NODESET);
+		return (NodeList) result;
+	}
+
+	private Document convertTreeToXMLDoc(TreeView tree) throws ParserConfigurationException
+	{
+		Document doc = DocumentBuilderFactory.newInstance().newDocumentBuilder().newDocument();
+		org.w3c.dom.Node root = doc.getDocumentElement();
+		createDom(doc, tree.getRoot(), root);
+		return doc;
+	}
+
+	private void createDom(Document doc, TreeItem treeItem, org.w3c.dom.Node current)
+	{
+		Element node = doc.createElement("item");
+		node.setAttribute("name", treeItem.getValue().toString());
+		node.setUserData("node", treeItem.getGraphic(), null);
+		node.setUserData("item", treeItem, null);
+
+		if(current != null)
+		{
+			current.appendChild(node);
+		}
+		else
+		{
+			doc.appendChild(node);
+		}
+
+		for (Object o : treeItem.getChildren())
+		{
+			createDom(doc, (TreeItem) o, node);
+		}
 	}
 
 	@Override
@@ -697,8 +756,28 @@ public class FxOperationExecutor extends AbstractOperationExecutor<EventTarget>
 	@Override
 	public boolean expand(EventTarget component, String path, boolean expandOrCollapse) throws Exception
 	{
-		//TODO implement
-		return false;
+		if (component instanceof TreeView)
+		{
+			TreeView tree = (TreeView) component;
+			NodeList nodes = findNodesInTreeByXpath(convertTreeToXMLDoc(tree), path);
+			if (nodes.getLength() == 0)
+			{
+				throw new WrongParameterException("Path '" + path + "' is not found in the tree.");
+			}
+			for (int i = nodes.getLength() - 1; i >= 0; i--)
+			{
+				TreeItem item = (TreeItem) nodes.item(i).getUserData("item");
+				if (expandOrCollapse)
+				{
+					item.setExpanded(true);
+				}
+				else
+				{
+					item.setExpanded(false);
+				}
+			}
+		}
+		return true;
 	}
 
 	@Override
@@ -826,8 +905,14 @@ public class FxOperationExecutor extends AbstractOperationExecutor<EventTarget>
 	@Override
 	public Document getTree(EventTarget component) throws Exception
 	{
-		//TODO implement
-		return null;
+		if(component instanceof TreeView)
+		{
+			return convertTreeToXMLDoc((TreeView) component);
+		}
+		else
+		{
+			throw new WrongParameterException(String.format("Component is not instance of TreeView. Component : %s", component));
+		}
 	}
 
 	@Override
