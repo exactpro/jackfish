@@ -703,10 +703,6 @@ public class WinRemoteApplicationJNA extends RemoteApplication
 
 	private void resizeWindow(UIProxyJNA currentWindow, Resize resize, int height, int width) throws Exception
 	{
-		if (currentWindow == null)
-		{
-			throw new ElementNotFoundException("Current window not found");
-		}
 		if (resize != null)
 		{
 			switch (resize)
