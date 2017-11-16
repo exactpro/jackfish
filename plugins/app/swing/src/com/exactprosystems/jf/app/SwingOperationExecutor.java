@@ -32,12 +32,14 @@ import org.fest.swing.finder.WindowFinder;
 import org.fest.swing.fixture.*;
 import org.fest.swing.timing.Pause;
 import org.fest.swing.util.Pair;
-import org.w3c.dom.*;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+import sun.awt.AppContext;
 
 import javax.swing.*;
-import javax.swing.text.*;
+import javax.swing.text.JTextComponent;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
@@ -49,6 +51,7 @@ import java.awt.event.FocusEvent;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
+import java.lang.ref.WeakReference;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.rmi.RemoteException;
@@ -63,17 +66,19 @@ import static org.fest.swing.edt.GuiActionRunner.execute;
 public class SwingOperationExecutor extends AbstractOperationExecutor<ComponentFixture<Component>>
 {
 	private Robot currentRobot;
+	private AppContext appContext;
 	private Logger logger;
 
 	private boolean isAltDown = false;
 	private boolean isShiftDown = false;
 	private boolean isControlDown = false;
 
-	public SwingOperationExecutor(Robot currentRobot, Logger logger, boolean useTrimText)
+	public SwingOperationExecutor(Robot currentRobot, Logger logger, boolean useTrimText, AppContext appContext)
 	{
 		super(useTrimText);
 		this.currentRobot = currentRobot;
 		this.logger = logger;
+		this.appContext = appContext == null ? AppContext.getAppContext() : appContext;
 	}
 
 	public Component fromOwner(Locator owner)  throws RemoteException
@@ -115,7 +120,7 @@ public class SwingOperationExecutor extends AbstractOperationExecutor<ComponentF
 	public Component currentRoot()
 	{
 		Container root = new RootContainer();
-		for (Window window : Window.getWindows())
+		for (Window window : this.getWindows())
 		{
 			logger.trace("Find window : " + window);
 			if (window.isVisible() && window.isShowing())
@@ -2436,6 +2441,35 @@ public class SwingOperationExecutor extends AbstractOperationExecutor<ComponentF
 			case DELETE: return 127;
 			default:
 				return getKeyCode(key);
+		}
+	}
+
+	Window[] getWindows()
+	{
+		//This from java.awt.Window.getWindows(AppContext appContext)
+		synchronized (Window.class) {
+			Window realCopy[];
+			@SuppressWarnings("unchecked") Vector<WeakReference<Window>> windowList =
+					(Vector<WeakReference<Window>>)this.appContext.get(Window.class);
+			if (windowList != null) {
+				int fullSize = windowList.size();
+				int realSize = 0;
+				Window fullCopy[] = new Window[fullSize];
+				for (int i = 0; i < fullSize; i++) {
+					Window w = windowList.get(i).get();
+					if (w != null) {
+						fullCopy[realSize++] = w;
+					}
+				}
+				if (fullSize != realSize) {
+					realCopy = Arrays.copyOf(fullCopy, realSize);
+				} else {
+					realCopy = fullCopy;
+				}
+			} else {
+				realCopy = new Window[0];
+			}
+			return realCopy;
 		}
 	}
 

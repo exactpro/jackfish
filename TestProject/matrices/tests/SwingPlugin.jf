@@ -4,8 +4,8 @@ Prepare;;;
     plugin;1;'Swing'
 
 
-#TestCase;#Kind;#Depends;#For
-Application start;Never;;
+#Off;#TestCase;#Kind;#Depends;#For
+1;Application start;Never;;
     #Step;#Kind;#For;#Depends
     'App start without any';;;
         #Id;#Action;#Assert;$AppId
@@ -45,12 +45,50 @@ Application start;Never;;
     #EndStep
 
 
-// //TODO need add tests
+// 
 #TestCase;#Kind;#Depends;#For
 Appliaction connect;;;
+    #Step;#Kind;#For;#Depends
+    'App start win empty url';;;
+        #Id;#Action;#Assert;$AppId
+        APPSTR3;ApplicationConnectTo;This.Kind == ErrorKind.EXCEPTION && This.Result == Result.Failed;'SWING'
 
-#TestCase;#Kind;#Depends;#For
-Application (Get properties, Move, Resize);;;
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'App start with invalid file to jnlp';;;
+        #Id;#Action;#Assert;$AppId;URL
+        APPSTR4;ApplicationConnectTo;This.Kind == ErrorKind.EXCEPTION && This.Result == Result.Failed;'SWING';'fake url'
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'App start with valid jnlp file';;;
+        #Id;#Action;$AppId;URL
+        APPSTR5;ApplicationConnectTo;'SWING';mockSwingJNLPUrl
+
+        #Action;$Time
+        Wait;5000
+
+        #Action;$Dialog;table;headerCheckBox;footerCheckBox;footerTextBox;headerTextBox;fitCheckBox;Print;Show print dialog;interactiveCheckBox;$AppConnection
+        DialogValidate;'JNLPSwingApplication';1;1;1;1;1;1;1;1;1;APPSTR5.Out
+
+        #Action;$AppConnection
+        ApplicationStop;APPSTR5.Out
+
+        #OnError
+            #Action;$AppConnection
+            ApplicationStop;APPSTR5.Out
+
+            #Fail
+            error
+
+
+    #EndStep
+
+
+#Off;#TestCase;#Kind;#Depends;#For
+1;Application (Get properties, Move, Resize);;;
     #Id;#Step;#Kind;#For;#Depends
     Start;;;;
         #Id;#Global;#Call;plugin
@@ -99,8 +137,8 @@ Application (Get properties, Move, Resize);;;
     #EndStep
 
 
-#TestCase;#Kind;#Depends;#For
-Appliaction negative;;;
+#Off;#TestCase;#Kind;#Depends;#For
+1;Appliaction negative;;;
     #Id;#Step;#Kind;#For;#Depends
     Start;;;;
         #Id;#Global;#Call;plugin
@@ -138,8 +176,8 @@ Appliaction negative;;;
     #EndStep
 
 
-#TestCase;#Kind;#Depends;#For
-Dialog get properties;;;
+#Off;#TestCase;#Kind;#Depends;#For
+1;Dialog get properties;;;
     #Id;#Step;#Kind;#For;#Depends
     Start;;;;
         #Id;#Global;#Call;plugin
@@ -205,8 +243,8 @@ Dialog get properties;;;
     #EndStep
 
 
-#TestCase;#Kind;#Depends;#For
-Dialog resize;Never;;
+#Off;#TestCase;#Kind;#Depends;#For
+1;Dialog resize;Never;;
     #Id;#Step;#Kind;#For;#Depends
     Start;;;;
         #Id;#Global;#Call;plugin
@@ -261,8 +299,8 @@ Dialog resize;Never;;
     #EndStep
 
 
-#TestCase;#Kind;#Depends;#For
-DialogMove;;;
+#Off;#TestCase;#Kind;#Depends;#For
+1;DialogMove;;;
     #Id;#Step;#Kind;#For;#Depends
     start;;;;
         #Id;#Global;#Call;plugin

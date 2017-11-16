@@ -224,4 +224,122 @@
         <onClose/>
         <close/>
     </window>
+    <window name="JNLPSwingApplication">
+        <self>
+            <any id="self" xpath="./TablePrintDemo1"/>
+        </self>
+        <onOpen/>
+        <run>
+            <table id="table" xpath="./JRootPane/JLayeredPane/JPanel/JScrollPane/JViewport[1]/JTable" owner="self" rows="" header="" columns="">
+                <info>
+                    <xpath>/JRootPane/JLayeredPane/JPanel/JScrollPane/JViewport[1]/JTable</xpath>
+                    <rectangle x1="0.02" y1="0.15166666666666667" x2="1.0142857142857142" y2="2.231666666666667"/>
+                    <node>JTable</node>
+                    <attr name="action"></attr>
+                    <attr name="class">javax.swing.JTable</attr>
+                    <attr name="name"></attr>
+                    <attr name="title"></attr>
+                    <attr name="tooltip"></attr>
+                </info>
+            </table>
+            <checkBox id="headerCheckBox" xpath=".//JButton[.=&amp;quot;Print&amp;quot;]/../JCheckBox[1]" owner="self" rows="" header="" columns="">
+                <info>
+                    <xpath>/JRootPane/JLayeredPane/JPanel/JPanel/JCheckBox[1]</xpath>
+                    <rectangle x1="0.04428571428571428" y1="0.8466666666666667" x2="0.16142857142857142" y2="0.8866666666666667"/>
+                    <node>JCheckBox</node>
+                    <attr name="action">Header:</attr>
+                    <attr name="class">javax.swing.JCheckBox</attr>
+                    <attr name="name"></attr>
+                    <attr name="title"></attr>
+                    <attr name="tooltip">Include a page header</attr>
+                </info>
+            </checkBox>
+            <checkBox id="footerCheckBox" xpath=".//JButton[.=&amp;quot;Print&amp;quot;]/../JCheckBox[2]" owner="self" rows="" header="" columns="">
+                <info>
+                    <xpath>/JRootPane/JLayeredPane/JPanel/JPanel/JCheckBox[2]</xpath>
+                    <rectangle x1="0.04428571428571428" y1="0.9033333333333334" x2="0.15428571428571428" y2="0.9433333333333334"/>
+                    <node>JCheckBox</node>
+                    <attr name="action">Footer:</attr>
+                    <attr name="class">javax.swing.JCheckBox</attr>
+                    <attr name="name"></attr>
+                    <attr name="title"></attr>
+                    <attr name="tooltip">Include a page footer</attr>
+                </info>
+            </checkBox>
+            <textBox id="footerTextBox" xpath=".//JButton[.=&amp;quot;Print&amp;quot;]/../JTextField[1]" owner="self" rows="" header="" columns="">
+                <info>
+                    <xpath>/JRootPane/JLayeredPane/JPanel/JPanel/JTextField[1]</xpath>
+                    <rectangle x1="0.17" y1="0.9016666666666667" x2="0.42714285714285716" y2="0.9466666666666668"/>
+                    <node>JTextField</node>
+                    <attr name="action"></attr>
+                    <attr name="class">javax.swing.JTextField</attr>
+                    <attr name="name"></attr>
+                    <attr name="title"></attr>
+                    <attr name="tooltip">Page Footer (Use {0} to Include Page Number)</attr>
+                </info>
+            </textBox>
+            <textBox id="headerTextBox" xpath=".//JButton[.=&amp;quot;Print&amp;quot;]/../JTextField[2]" owner="self" rows="" header="" columns="">
+                <info>
+                    <xpath>/JRootPane/JLayeredPane/JPanel/JPanel/JTextField[2]</xpath>
+                    <rectangle x1="0.17" y1="0.8450000000000001" x2="0.42714285714285716" y2="0.89"/>
+                    <node>JTextField</node>
+                    <attr name="action"></attr>
+                    <attr name="class">javax.swing.JTextField</attr>
+                    <attr name="name"></attr>
+                    <attr name="title"></attr>
+                    <attr name="tooltip">Page Header (Use {0} to include page number)</attr>
+                </info>
+            </textBox>
+            <checkBox id="fitCheckBox" xpath=".//JButton[.=&amp;quot;Print&amp;quot;]/../JCheckBox[3]" owner="self" rows="" header="" columns="">
+                <info>
+                    <xpath>/JRootPane/JLayeredPane/JPanel/JPanel/JCheckBox[3]</xpath>
+                    <rectangle x1="0.4442857142857143" y1="0.9033333333333334" x2="0.7242857142857143" y2="0.9433333333333334"/>
+                    <node>JCheckBox</node>
+                    <attr name="action">Fit width to printed page</attr>
+                    <attr name="class">javax.swing.JCheckBox</attr>
+                    <attr name="name"></attr>
+                    <attr name="title"></attr>
+                    <attr name="tooltip">Shrink the Table to Fit the Entire Width on a Page</attr>
+                </info>
+            </checkBox>
+            <button id="Print" owner="self" action="Print" rows="" header="" columns="">
+                <info>
+                    <xpath>/JRootPane/JLayeredPane/JPanel/JPanel/JButton</xpath>
+                    <rectangle x1="0.9442857142857143" y1="0.9" x2="1.0085714285714287" y2="0.9483333333333334"/>
+                    <node>JButton</node>
+                    <attr name="action">Print</attr>
+                    <attr name="class">javax.swing.JButton</attr>
+                    <attr name="name"></attr>
+                    <attr name="title"></attr>
+                    <attr name="tooltip">Print the Table</attr>
+                </info>
+            </button>
+            <checkBox id="Show print dialog" owner="self" action="Show print dialog" rows="" header="" columns="">
+                <info>
+                    <xpath>/JRootPane/JLayeredPane/JPanel/JPanel/JCheckBox[4]</xpath>
+                    <rectangle x1="0.4442857142857143" y1="0.8466666666666667" x2="0.6528571428571428" y2="0.8866666666666667"/>
+                    <node>JCheckBox</node>
+                    <attr name="action">Show print dialog</attr>
+                    <attr name="class">javax.swing.JCheckBox</attr>
+                    <attr name="name"></attr>
+                    <attr name="title"></attr>
+                    <attr name="tooltip">Show the Print Dialog Before Printing</attr>
+                </info>
+            </checkBox>
+            <checkBox id="interactiveCheckBox" xpath=".//JButton[.=&amp;quot;Print&amp;quot;]/../JCheckBox[5]" owner="self" rows="" header="" columns="">
+                <info>
+                    <xpath>/JRootPane/JLayeredPane/JPanel/JPanel/JCheckBox[5]</xpath>
+                    <rectangle x1="0.6614285714285715" y1="0.8466666666666667" x2="1.0085714285714287" y2="0.8866666666666667"/>
+                    <node>JCheckBox</node>
+                    <attr name="action">Interactive (Show status dialog)</attr>
+                    <attr name="class">javax.swing.JCheckBox</attr>
+                    <attr name="name"></attr>
+                    <attr name="title"></attr>
+                    <attr name="tooltip">Keep the GUI Responsive and Show a Status Dialog During Printing</attr>
+                </info>
+            </checkBox>
+        </run>
+        <onClose/>
+        <close/>
+    </window>
 </dictionary>

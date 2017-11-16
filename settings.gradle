@@ -13,7 +13,6 @@ include	'core',
 							//app plugins
 		'plugins:app:javafx',
 		'plugins:app:web',
-		'plugins:app:swing:netx',
 		'plugins:app:swing',
 		'plugins:app:win',
 							//app mocks

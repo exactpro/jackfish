@@ -15,17 +15,21 @@ import com.exactprosystems.jf.api.common.Str;
 import com.exactprosystems.jf.api.error.app.FeatureNotSupportedException;
 import com.exactprosystems.jf.api.error.app.NullParameterException;
 import com.exactprosystems.jf.api.error.app.WrongParameterException;
-import net.sourceforge.jnlp.Launcher;
-import net.sourceforge.jnlp.runtime.ApplicationInstance;
-import net.sourceforge.jnlp.runtime.JNLPRuntime;
+import netx.jnlp.Launcher;
+import netx.jnlp.runtime.ApplicationInstance;
+import netx.jnlp.runtime.JNLPRuntime;
 import org.apache.log4j.*;
 import org.fest.swing.core.BasicRobot;
 import org.fest.swing.core.ComponentMatcher;
 import org.fest.swing.core.Robot;
 import org.fest.swing.fixture.ComponentFixture;
 import org.w3c.dom.Document;
+import sun.awt.AppContext;
 
-import javax.swing.*;
+import javax.swing.JComboBox;
+import javax.swing.JDialog;
+import javax.swing.JFrame;
+import javax.swing.SwingUtilities;
 import java.awt.*;
 import java.awt.event.WindowEvent;
 import java.awt.image.BufferedImage;
@@ -33,7 +37,6 @@ import java.io.Serializable;
 import java.lang.reflect.Method;
 import java.net.URL;
 import java.net.URLClassLoader;
-import java.rmi.Remote;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -109,32 +112,34 @@ public class SwingRemoteApplication extends RemoteApplication
 		
 		try
 		{
-			// java -jar netx.jar -verbose -nosecurity  -Xtrustall -Xnofork URL
+			// java -jar netx.jar -verbose -nosecurity  -Xtrustall -Xnofork http://pathTo.jnlp
 			
-			JNLPRuntime.setTrustAll(true);
-			JNLPRuntime.setAllowRedirect(true);
 			JNLPRuntime.setDebug(true);
-			JNLPRuntime.setForksAllowed(false);
 			JNLPRuntime.setSecurityEnabled(false);
-			JNLPRuntime.setVerify(true);
-			JNLPRuntime.initialize(true);
+			JNLPRuntime.initialize();
 
 			logger.debug("Runtime init has done.");
 
-			Launcher launcher = new Launcher(false);
+			Launcher launcher = new Launcher();
+
+			ApplicationInstance app = null;
 
 			try
 			{
-				ApplicationInstance app = launcher.launch(new URL(url));
+				app = launcher.launch(new URL(url));
 				logger.debug("connected to " + app);
 			}
 			catch (Throwable t)
 			{
 				logger.error(t.getMessage(), t);
 			}
+			if (app == null)
+			{
+				throw new Exception("Can't initialize application");
+			}
 
 			this.currentRobot = new RobotListener(BasicRobot.robotWithCurrentAwtHierarchy());
-			this.operationExecutor = new SwingOperationExecutor(this.currentRobot, this.logger, super.useTrimText);
+			this.operationExecutor = new SwingOperationExecutor(this.currentRobot, this.logger, super.useTrimText, this.appContextFromThreadGroup(app.getThreadGroup()));
 		}
 		catch (Exception e)
 		{
@@ -178,7 +183,7 @@ public class SwingRemoteApplication extends RemoteApplication
 			mainMethod.invoke(null, new Object[]{arg == null ? null : new String[]{arg}});
 
 			this.currentRobot = new RobotListener(BasicRobot.robotWithCurrentAwtHierarchy());
-			this.operationExecutor = new SwingOperationExecutor(this.currentRobot, this.logger, super.useTrimText);
+			this.operationExecutor = new SwingOperationExecutor(this.currentRobot, this.logger, super.useTrimText, null);
 		}
 		catch (Exception e)
 		{
@@ -719,6 +724,18 @@ public class SwingRemoteApplication extends RemoteApplication
 			logger.debug("Change state via width and height");
 			window.setSize(width, height);
 		}
+	}
+
+	private AppContext appContextFromThreadGroup(ThreadGroup group)
+	{
+		for (AppContext appContext : AppContext.getAppContexts())
+		{
+			if (appContext.getThreadGroup().equals(group))
+			{
+				return appContext;
+			}
+		}
+		return null;
 	}
 	//endregion
 
