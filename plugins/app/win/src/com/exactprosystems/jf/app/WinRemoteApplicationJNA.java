@@ -521,10 +521,6 @@ public class WinRemoteApplicationJNA extends RemoteApplication
 		try
 		{
 			UIProxyJNA currentDialog = this.operationExecutor.find(null, owner);
-			if(currentDialog == null)
-			{
-				throw new ElementNotFoundException(owner);
-			}
 			this.driver.doPatternCall(currentDialog, WindowPattern.TransformPattern, "Move", x + "%" + y, 1);
 		}
 		catch (RemoteException e)
