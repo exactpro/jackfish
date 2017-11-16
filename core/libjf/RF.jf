@@ -1397,9 +1397,6 @@ RF;RegressionFramework
 
         #EndSwitch
 
-        #Action;Last_build_date
-        Print;date
-
         #Id;#Action;$Connection;$Query;CreateTime
         select2;SQLselect;sql;query.toString();date
 
