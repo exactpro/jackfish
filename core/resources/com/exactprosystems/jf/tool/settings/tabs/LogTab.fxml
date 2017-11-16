@@ -6,6 +6,14 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
+<!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+<!-- Copyright (c) 2009-2017, Exactpro Systems -->
+<!-- Quality Assurance & Related Software Development for Innovative Trading Systems. -->
+<!-- London Stock Exchange Group. -->
+<!-- All rights reserved. -->
+<!-- This is unpublished, licensed software, confidential and proprietary -->
+<!-- information which is the property of Exactpro Systems or its licensors. -->
+<!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
 <AnchorPane prefHeight="200.0" prefWidth="200.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.exactprosystems.jf.tool.settings.tabs.LogTabController">
 	<children>
 		<GridPane hgap="8.0" layoutX="-4.0" layoutY="-1.0" vgap="4.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
