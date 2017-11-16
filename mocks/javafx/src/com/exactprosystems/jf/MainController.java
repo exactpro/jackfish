@@ -1,3 +1,11 @@
+////////////////////////////////////////////////////////////////////////////////
+// Copyright (c) 2009-2017, Exactpro Systems
+// Quality Assurance & Related Software Development for Innovative Trading Systems.
+// London Stock Exchange Group.
+// All rights reserved.
+// This is unpublished, licensed software, confidential and proprietary
+// information which is the property of Exactpro Systems or its licensors.
+////////////////////////////////////////////////////////////////////////////////
 package com.exactprosystems.jf;
 
 import javafx.beans.property.SimpleObjectProperty;
@@ -5,6 +13,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
+import javafx.scene.AccessibleAttribute;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
@@ -15,7 +24,9 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 
 import java.net.URL;
+import java.util.Objects;
 import java.util.ResourceBundle;
+import java.util.stream.Collectors;
 
 public class MainController implements Initializable
 {
@@ -68,6 +79,7 @@ public class MainController implements Initializable
     private static final String NEW_LINE = "\n";
     private MainModel mainModel;
 	public VBox vBox;
+	private TableView<A> tb;
 
 	@Override
     public void initialize(URL location, ResourceBundle resources)
@@ -83,10 +95,32 @@ public class MainController implements Initializable
         checkBox.selectedProperty().addListener((observable, oldValue, newValue) -> checkedLabel.setText("CheckBox_" + (newValue ? "checked" : "unchecked")));
         comboBox.valueProperty().addListener((observable, oldValue, newValue) -> centralLabel.setText("ComboBox_" + newValue));
 
-		TableView<A> tb = new TableView<>();
-		tb.setMinHeight(100);
+		this.tb = new TableView<>();
+		tb.setMinHeight(150);
 
 		tb.getItems().addAll(new A("1", "2"), new A("3", "4"), new A("5", "6"));
+		tb.setRowFactory(param -> new TableRow<A>(){
+			@Override
+			protected void updateItem(A item, boolean empty)
+			{
+				super.updateItem(item, empty);
+				if (item != null && !empty)
+				{
+					if (Objects.equals(item.a, "1"))
+					{
+						this.setStyle("-fx-background-color :red");
+					}
+					else if (item.a.equals("3"))
+					{
+						this.setStyle("-fx-background-color : green");
+					}
+					else if (item.a.equals("5"))
+					{
+						this.setStyle("-fx-background-color : blue");
+					}
+				}
+			}
+		});
 		TableColumn<A, String> c1 = new TableColumn<>("A");
 		c1.setCellValueFactory(p -> new SimpleObjectProperty<>(p.getValue().a));
 
@@ -102,13 +136,18 @@ public class MainController implements Initializable
 					BorderPane pane = new BorderPane();
 					TextField tf = new TextField("my Item :" + item);
 					pane.setLeft(tf);
-					pane.setRight(new Button("Click"));
+					Button click = new Button("Click");
+					click.setOnAction(e ->
+					{
+						printColors();
+					});
+					pane.setRight(click);
 					setGraphic(pane);
 					setAlignment(Pos.CENTER_RIGHT);
 				}
 			}
 		});
-		tb.getColumns().addAll(c1, c2);
+//		tb.getColumns().addAll(c1, c2);
 		vBox.getChildren().add(tb);
 
 		Button btnOpenDialog = new Button("Open dialog");
@@ -123,7 +162,20 @@ public class MainController implements Initializable
 		vBox.getChildren().add(btnOpenDialog);
 	}
 
-    class A
+	private void printColors()
+	{
+		for (int i = 0; i < tb.getItems().size(); i++)
+		{
+			Node cell = (Node) tb.queryAccessibleAttribute(AccessibleAttribute.CELL_AT_ROW_COLUMN, i, 0);
+			if (cell instanceof TableCell<?,?>)
+			{
+				TableRow tableRow = ((TableCell) cell).getTableRow();
+				System.out.println(tableRow.getBackground().getFills().stream().map(bf -> bf.getFill()).collect(Collectors.toList()));
+			}
+		}
+	}
+
+	class A
 	{
 		public String a;
 		public String b;
@@ -181,8 +233,9 @@ public class MainController implements Initializable
 
     public void doProtocolClear()
     {
-        this.protocol.clear();
-    }
+		this.protocol.clear();
+		this.printColors();
+	}
 
     public void doShowButton()
     {
