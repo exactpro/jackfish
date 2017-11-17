@@ -33,6 +33,7 @@ import javax.swing.SwingUtilities;
 import java.awt.*;
 import java.awt.event.WindowEvent;
 import java.awt.image.BufferedImage;
+import java.io.File;
 import java.io.Serializable;
 import java.lang.reflect.Method;
 import java.net.URL;
@@ -117,7 +118,7 @@ public class SwingRemoteApplication extends RemoteApplication
 			JNLPRuntime.setDebug(true);
 			JNLPRuntime.setSecurityEnabled(false);
 			JNLPRuntime.initialize();
-
+			JNLPRuntime.setBaseDir(new File("."));
 			logger.debug("Runtime init has done.");
 
 			Launcher launcher = new Launcher();
