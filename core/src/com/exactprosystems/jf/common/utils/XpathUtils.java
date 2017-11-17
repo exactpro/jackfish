@@ -206,6 +206,8 @@ public class XpathUtils
     	return res;
     }
 
+
+
     public static String text(Node node)
     {
         if (node == null)
@@ -218,6 +220,25 @@ public class XpathUtils
                 value -> value != null).map(value -> value.trim().replace('\n', ' ')).forEach(sb::append);
         return sb.toString();
     }
+
+	public static String findText(Node node)
+	{
+		if (node == null)
+		{
+			return null;
+		}
+
+		StringBuilder sb = new StringBuilder();
+		sb.append(node.getNodeName()).append(" ");
+		for(int i = 0; i < node.getAttributes().getLength(); i++)
+		{
+			Node attr = node.getAttributes().item(i);
+			sb.append(attr.getNodeName()).append(" ").append(attr.getNodeValue()).append(" ");
+		}
+		sb.append(node.getNodeValue());
+
+		return sb.toString().trim().replaceAll("\n", " ");
+	}
 
     public static int getIndexNode(Node node)
     {

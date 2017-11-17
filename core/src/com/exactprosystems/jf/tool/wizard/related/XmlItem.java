@@ -50,6 +50,10 @@ public class XmlItem
 	{
 		return XpathUtils.text(this.node);
 	}
+
+	public String findText() {
+		return XpathUtils.findText(this.node);
+	}
 	
     public void setStyle(MarkerStyle style)
     {

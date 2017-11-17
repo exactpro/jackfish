@@ -202,7 +202,7 @@ public class XmlTreeView extends AnchorPane
 
 	public List<org.w3c.dom.Node> findItem(String what, boolean matchCase, boolean wholeWord)
 	{
-		return findAll(i -> i != null && matches(i.getText(), what, matchCase, wholeWord))
+		return findAll(i -> i != null && matches(i.findText(), what, matchCase, wholeWord))
 				.stream()
 				.map(i -> i.getValue().getNode())
 				.collect(Collectors.toList());
