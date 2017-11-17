@@ -209,6 +209,7 @@ namespace mock_win
         public void createDialog()
         {
             Dialog form = new Dialog() { Left = 1000, Top = 300 };
+            form.FormBorderStyle = FormBorderStyle.FixedSingle;
             form.StartPosition = FormStartPosition.Manual;
             form.Show(this);
         }
