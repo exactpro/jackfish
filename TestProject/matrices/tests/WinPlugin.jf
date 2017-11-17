@@ -377,14 +377,14 @@ Dialog resize;Never;;
     // 
     #Step;#Kind;#For;#Depends
     'Negative - Win';;;
-        #Action;#Assert;$Dialog;$AppConnection;$Height;$Width
-        DialogResize;This.Result == Result.Failed && This.Kind == ErrorKind.EXCEPTION;'Dialog';appCon;500;500
-
     #EndStep
 
     // 
     #Step;#Kind;#For;#Depends
     'Positive';;;
+        #Action;#Assert;$Dialog;$AppConnection;$Height;$Width
+        DialogResize;This.Result == Result.Passed;'Dialog';appCon;500;500
+
         #Action;#Assert;$Dialog;$AppConnection;$Resize
         DialogResize;This.Result == Result.Passed;'Dialog';appCon;Resize.Maximize
 
@@ -396,6 +396,7 @@ Dialog resize;Never;;
         ApplicationStop;appCon
 
     #EndStep
+
 
 #TestCase;#Kind;#Depends;#For
 DialogMove;;;
@@ -465,6 +466,5 @@ DialogMove;;;
         ApplicationStop;appCon
 
     #EndStep
-
 
 

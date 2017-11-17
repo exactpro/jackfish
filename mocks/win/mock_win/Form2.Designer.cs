@@ -55,7 +55,6 @@ namespace mock_win
             this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.ClientSize = new System.Drawing.Size(284, 262);
             this.Controls.Add(this.DialogButton);
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.KeyPreview = true;
             this.Location = new System.Drawing.Point(600, 400);
             this.Name = "Dialog";
