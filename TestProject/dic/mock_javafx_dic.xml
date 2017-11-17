@@ -6,57 +6,57 @@
         </self>
         <onOpen/>
         <run>
-            <button id="Button" owner="owner" class="" name="Button" action="" text="Button" addition="Many"/>
-            <textBox id="TextBox" owner="owner" class="javax.swing.JTextField" name="TextBox" text=""/>
-            <table id="Table" owner="owner" class="javax.swing.JTable" name="Table" text="" addition="Many"/>
+            <button id="Button" uid="button" owner="owner" class="" name="" action="" text="" addition="Many"/>
+            <textBox id="TextBox" uid="textEdit" owner="owner" class="" name="" text=""/>
+            <table id="Table" uid="table" owner="owner" class="" name="" text="" addition="Many"/>
             <table id="Table1" owner="owner" class="javax.swing.JTable" name="Table1" text="" addition="Many"/>
-            <checkBox id="CheckBox" owner="owner" class="javax.swing.JCheckBox" action="CheckBox" text="CheckBox" addition="Many"/>
-            <slider id="Slider" owner="owner" class="javax.swing.JSlider" addition="Many"/>
-            <scrollBar id="ScrollBar" owner="owner" class="javax.swing.JScrollBar" addition="Many"/>
-            <comboBox id="ComboBox" owner="owner" class="javax.swing.JComboBox" name="ComboBox" action="comboBoxChanged" addition="Many"/>
-            <comboBox id="EditableComboBox" owner="owner" class="javax.swing.JComboBox" name="EditableComboBox" addition="Many"/>
-            <radioButton id="RadioButton" owner="owner" class="javax.swing.JRadioButton" action="Green" text="Green" addition="Many"/>
-            <tree id="Tree" xpath=".//TreeView" owner="owner" class="" addition="Many"/>
-            <tabPanel id="TabPanel" owner="owner" class="javax.swing.JTabbedPane" addition="Many"/>
-            <label id="centralLabel" owner="owner" class="javax.swing.JLabel" name="CentralLabel" text="" addition="Many"/>
-            <toggleButton id="ToggleButton" owner="owner" class="javax.swing.JToggleButton" name="ToggleButton" addition="Many"/>
+            <checkBox id="CheckBox" uid="checkBox" owner="owner" class="" action="" text="" addition="Many"/>
+            <slider id="Slider" uid="slider" owner="owner" class="" addition="Many"/>
+            <scrollBar id="ScrollBar" uid="scrollBar" owner="owner" class="" addition="Many"/>
+            <comboBox id="ComboBox" uid="comboBox" owner="owner" class="" name="" action="" addition="Many"/>
+            <comboBox id="EditableComboBox" owner="owner" addition="Many"/>
+            <radioButton id="RadioButton" uid="green" owner="owner" class="" action="" text="" addition="Many"/>
+            <tree id="Tree" uid="treeView" owner="owner" class="" addition="Many"/>
+            <tabPanel id="TabPanel" uid="tabPanel" owner="owner" addition="Many"/>
+            <label id="centralLabel" uid="centralLabel" owner="owner" text="" addition="Many"/>
+            <toggleButton id="ToggleButton" uid="toggleButton" owner="owner" addition="Many"/>
             <frame id="Frame" owner="owner" class="javax.swing.JFrame" name="frame0" title="Mock swing app" addition="Many"/>
-            <label id="Label" owner="owner" class="javax.swing.JLabel" name="CentralLabel" text="" addition="Many"/>
-            <progressBar id="ProgressBar" owner="owner" class="javax.swing.JProgressBar" name="ProgressBar" addition="Many"/>
-            <panel id="Panel" owner="owner" class="javax.swing.JPanel" name="Panel" addition="Many"/>
+            <label id="Label" owner="owner" uid="centralLabel" text="" addition="Many"/>
+            <progressBar id="ProgressBar" uid="progressBar" owner="owner" addition="Many"/>
+            <panel id="Panel" uid="panel" owner="owner" addition="Many"/>
             <dialog id="Dialog" title="Dialog" addition="Many"/>
-            <listView id="List" owner="owner" class="javax.swing.JList" addition="Many"/>
-            <menu id="Menu" owner="owner" class="javax.swing.JMenu" name="Menu" action="Menu" text="Menu" addition="Many"/>
-            <menuItem id="MenuItem" owner="owner" class="javax.swing.JMenuItem" name="MenuItem" action="MenuItem" text="MenuItem" addition="Many"/>
-            <menu id="Menu1" owner="owner" class="javax.swing.JMenu" action="JMenu 1" text="JMenu 1"/>
-            <image id="Image" xpath="" owner="owner" name="Image" addition="Many"/>
+            <listView id="List" uid="listView" owner="owner" addition="Many"/>
+            <menu id="Menu" uid="menu" owner="owner" addition="Many"/>
+            <menuItem id="MenuItem" owner="owner" text="MenuItem" addition="Many"/>
+            <menu id="Menu1" owner="owner" text="JMenu 1"/>
+            <image id="Image" uid="image" owner="owner" addition="Many"/>
             <row id="Row" owner="owner"/>
             <treeItem id="TreeItem" owner="owner"/>
-            <splitter id="Splitter" owner="owner" class="javax.swing.JSplitPane" name="Splitter" addition="Many"/>
+            <splitter id="Splitter" uid="splitter" owner="owner" addition="Many"/>
             <radioButton id="RadioButton1" owner="owner" class="javax.swing.JRadioButton" action="Yellow" text="Yellow" addition="Many"/>
             <toolTip id="Tooltip" owner="owner" text="Tooltip" addition="Many"/>
             <menu id="Menu2" xpath="" owner="owner" class="" name="menu2" action="" text=""/>
-            <any id="Any" owner="owner" class="javax.swing.JButton" name="Any" action="Any" text="Any" addition="Many"/>
+            <any id="Any" uid="button" owner="owner" addition="Many"/>
             <wait id="Wait" owner="owner" addition="Many"/>
-            <label id="moveLabel" owner="owner" class="javax.swing.JLabel" name="moveLabel" text=""/>
+            <label id="moveLabel" uid="moveLabel" owner="owner" text=""/>
             <button id="Button1" owner="owner" class="javax.swing.JButton" name="ButtonMany" addition="Many"/>
-            <button id="buttonShowArea" uid="" owner="owner" name="showButton" text=""/>
-            <button id="buttonHideArea" uid="" owner="owner" name="hideButton" text=""/>
-            <button id="countButton" owner="" name="countButton"/>
-            <button id="countButtonClear" owner="" name="countButtonClear"/>
-            <label id="countLabel" owner="" name="countLabel"/>
-            <label id="pressLabel" owner="" name="pressLabel"/>
-            <label id="downUpLabel" owner="" name="downUpLabel"/>
-            <button id="invisibleButton" xpath="" name="invisibleButton" visibility="Visible"/>
-            <button id="notEnabledButton" name="notEnabledButton"/>
-            <label id="sliderLabel" uid="" name="sliderLabel" addition="Many"/>
-            <button id="colorButton" owner="owner" name="colorButton"/>
-            <label id="pushLabel" uid="" owner="owner" name="pushLabel" addition="Many"/>
-            <label id="checkedLabel" uid="" owner="owner" name="checkedLabel"/>
-            <spinner id="Spinner" owner="owner" name="Spinner"/>
-            <label id="selectLabel" owner="owner" name="selectLabel"/>
-            <textBox id="protocolText" uid="" owner="" name="protocolText"/>
-            <button id="protocolClear" uid="" owner="" name="protocolClear"/>
+            <button id="buttonShowArea" uid="showButton" owner="owner" name="" text=""/>
+            <button id="buttonHideArea" uid="hideButton" owner="owner" name="" text=""/>
+            <button id="countButton" uid="countButton" owner="" name=""/>
+            <button id="countButtonClear" uid="clearButton" owner="" name="countButtonClear"/>
+            <label id="countLabel" uid="countLabel" owner="" name=""/>
+            <label id="pressLabel" uid="pressLabel" owner="" name=""/>
+            <label id="downUpLabel" uid="downUpLabel" owner="" name=""/>
+            <button id="invisibleButton" uid="invisibleButton" name="" visibility="Visible"/>
+            <button id="notEnabledButton" uid="notEnabledButton" name=""/>
+            <label id="sliderLabel" uid="sliderLabel" name="" addition="Many"/>
+            <button id="colorButton" uid="colorButton" owner="owner" name=""/>
+            <label id="pushLabel" uid="pushLabel" owner="owner" name="" addition="Many"/>
+            <label id="checkedLabel" uid="checkedLabel" owner="owner" name=""/>
+            <spinner id="Spinner" uid="spinner" owner="owner" name=""/>
+            <label id="selectLabel" uid="selectLabel" owner="owner" name=""/>
+            <textBox id="protocolText" uid="protocolText" owner="" name=""/>
+            <button id="protocolClear" uid="protocolClear" owner="" name=""/>
         </run>
         <onClose/>
         <close/>

@@ -57,6 +57,11 @@
     -fx-pref-height : large-height;
 }
 
+.list-view {
+    -fx-pref-width  : small-width;
+    -fx-pref-height : medium-height;
+}
+
 .tab-pane {
     -fx-pref-width  : large-width;
     -fx-pref-height : medium-height;

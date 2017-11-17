@@ -47,6 +47,7 @@
                 <TreeView       fx:id="treeView"        GridPane.rowIndex="0" GridPane.columnIndex="2" onMouseClicked="#clickHandler" onMouseMoved="#moveHandler" onKeyPressed="#pressHandler" onKeyReleased="#releasedHandler" onKeyTyped="#typedHandler" GridPane.rowSpan="3"/>
                 <TextArea       fx:id="protocol"        GridPane.rowIndex="0" GridPane.columnIndex="5" GridPane.rowSpan="9" GridPane.columnSpan="2"/>
                 <Button         fx:id="protocolClear"   GridPane.rowIndex="9" GridPane.columnIndex="6" onAction="#doProtocolClear" text="Clear"/>
+                <ListView       fx:id="listView"        GridPane.rowIndex="4" GridPane.columnIndex="4" onMouseClicked="#clickHandler" onMouseMoved="#moveHandlerRadio" onKeyPressed="#pressHandler" onKeyReleased="#releasedHandler" onKeyTyped="#typedHandler" GridPane.rowSpan="2"/>
 
                 <fx:define>
                     <ToggleGroup fx:id="radioGroup"/>

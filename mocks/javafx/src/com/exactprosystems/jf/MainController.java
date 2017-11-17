@@ -30,6 +30,7 @@ import java.util.stream.Collectors;
 
 public class MainController implements Initializable
 {
+    @FXML private ListView<String> listView;
     @FXML private Button notEnabledButton;
     @FXML private Button notVisibleButton;
     @FXML private Button clearButton;
@@ -94,6 +95,7 @@ public class MainController implements Initializable
         textEdit.textProperty().addListener((observable, oldValue, newValue) -> centralLabel.setText("TextEdit_" + newValue));
         checkBox.selectedProperty().addListener((observable, oldValue, newValue) -> checkedLabel.setText("CheckBox_" + (newValue ? "checked" : "unchecked")));
         comboBox.valueProperty().addListener((observable, oldValue, newValue) -> centralLabel.setText("ComboBox_" + newValue));
+        listView.getItems().addAll(mainModel.getData());
 
 		this.tb = new TableView<>();
 		tb.setMinHeight(150);
