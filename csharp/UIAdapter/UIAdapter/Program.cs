@@ -1056,7 +1056,7 @@ namespace UIAdapter
                             }
                         }
                         //TODO set position via win api
-                        IntPtr hWnd = new IntPtr(handler.Current.NativeWindowHandle);
+                        IntPtr hWnd = new IntPtr(element.Current.NativeWindowHandle);
                         logger.All("Window handle : " + hWnd);
                         MyRect rect = new MyRect();
                         bool f = Win32.UnsafeNativeMethods.GetWindowRect(hWnd, ref rect);
