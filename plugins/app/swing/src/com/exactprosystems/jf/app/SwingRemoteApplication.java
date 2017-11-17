@@ -117,8 +117,9 @@ public class SwingRemoteApplication extends RemoteApplication
 			
 			JNLPRuntime.setDebug(true);
 			JNLPRuntime.setSecurityEnabled(false);
-			JNLPRuntime.initialize();
 			JNLPRuntime.setBaseDir(new File("."));
+
+			JNLPRuntime.initialize();
 			logger.debug("Runtime init has done.");
 
 			Launcher launcher = new Launcher();
