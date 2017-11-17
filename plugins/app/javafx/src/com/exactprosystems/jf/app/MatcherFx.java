@@ -566,23 +566,27 @@ public class MatcherFx
 
 	public static boolean isVisible(EventTarget target)
 	{
-		if (target instanceof Scene)
+		if (target instanceof TreeCell)
+		{
+			return ((TreeCell) target).isVisible();
+		}
+		else if (target instanceof Scene)
 		{
 			return ((Scene) target).getWindow().isShowing();
 		}
-		if (target instanceof Dialog)
+		else if (target instanceof Dialog)
 		{
 			return ((Dialog) target).isShowing();
 		}
-		if (target instanceof MenuItem)
+		else if (target instanceof MenuItem)
 		{
 			return ((MenuItem) target).isVisible();
 		}
-		if (target instanceof Node)
+		else if (target instanceof Node)
 		{
 			return ((Node) target).isVisible();
 		}
-		if (target instanceof Window)
+		else if (target instanceof Window)
 		{
 			return ((Window) target).isShowing();
 		}

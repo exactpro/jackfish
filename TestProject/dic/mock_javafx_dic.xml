@@ -1,12 +1,4 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
-<!-- Copyright (c) 2009-2017, Exactpro Systems -->
-<!-- Quality Assurance & Related Software Development for Innovative Trading Systems. -->
-<!-- London Stock Exchange Group. -->
-<!-- All rights reserved. -->
-<!-- This is unpublished, licensed software, confidential and proprietary -->
-<!-- information which is the property of Exactpro Systems or its licensors. -->
-<!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
 <dictionary>
     <window name="Main">
         <self>
@@ -14,7 +6,7 @@
         </self>
         <onOpen/>
         <run>
-            <button id="Button" owner="owner" class="javax.swing.JButton" name="Button" action="Button" text="Button" addition="Many"/>
+            <button id="Button" owner="owner" class="" name="Button" action="" text="Button" addition="Many"/>
             <textBox id="TextBox" owner="owner" class="javax.swing.JTextField" name="TextBox" text=""/>
             <table id="Table" owner="owner" class="javax.swing.JTable" name="Table" text="" addition="Many"/>
             <table id="Table1" owner="owner" class="javax.swing.JTable" name="Table1" text="" addition="Many"/>

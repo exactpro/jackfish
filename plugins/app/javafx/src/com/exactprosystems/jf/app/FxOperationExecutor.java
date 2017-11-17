@@ -540,8 +540,24 @@ public class FxOperationExecutor extends AbstractOperationExecutor<EventTarget>
 					List <EventTarget> list = new ArrayList <>();
 					for (int i = 0; i < nodes.getLength(); i++)
 					{
+						TreeItem treeItem = (TreeItem) nodes.item(i).getUserData("item");
+						Node cell = UtilsFx.runOnFxThreadAndWaitResult(() -> {
+							try
+							{
+								return (Node) tree.queryAccessibleAttribute(AccessibleAttribute.ROW_AT_INDEX, tree.getRow(treeItem));
+							}
+							catch (Exception e)
+							{
+								logger.error(String.format("findByXpath(%s,%s) - can't get a visual cell", element, path));
+								logger.error(e.getMessage(), e);
+							}
+							return null;
+						});
 
-						list.add((TreeItem) nodes.item(i).getUserData("item"));
+						if (cell instanceof TreeCell<?>)
+						{
+							list.add(cell);
+						}
 					}
 					return list;
 				}
@@ -622,11 +638,33 @@ public class FxOperationExecutor extends AbstractOperationExecutor<EventTarget>
 	{
 		return tryExecute(EMPTY_CHECK, () ->
 		{
-			Point point = this.checkCoords(component, x, y);
+			EventTarget node = component;
+			if(component instanceof TreeCell)
+			{
+				TreeCell cell = (TreeCell) component;
+				TreeView treeView = cell.getTreeView();
+				int index = cell.getIndex();
+				scrollTo(treeView, cell.getIndex());
+				node = UtilsFx.runOnFxThreadAndWaitResult(() -> {
+					try
+					{
+						return (Node) treeView.queryAccessibleAttribute(AccessibleAttribute.ROW_AT_INDEX, index);
+					}
+					catch (Exception e)
+					{
+						logger.error(String.format("can't get a visual cell", component, action));
+						logger.error(e.getMessage(), e);
+					}
+					return null;
+				});
+			}
 
-			List<Event> eventList = createMouseEventsList(action, component, point.x, point.y);
-			executeEventList(component, eventList);
-
+			if(node != null)
+			{
+				Point point = this.checkCoords(node, x, y);
+				List <Event> eventList = createMouseEventsList(action, node, point.x, point.y);
+				executeEventList(node, eventList);
+			}
 			return true;
 		}, e ->{
 			logger.error(String.format("click(%s)", component));
@@ -1023,12 +1061,14 @@ public class FxOperationExecutor extends AbstractOperationExecutor<EventTarget>
 			{
 				ListView listView = (ListView) component;
 				listView.scrollTo(index);
+				Platform.runLater(listView::layout);
 				return true;
 			}
 			if (component instanceof TreeView)
 			{
 				TreeView treeView = (TreeView) component;
 				treeView.scrollTo(index);
+				Platform.runLater(treeView::layout);
 				return true;
 			}
 			return false;
