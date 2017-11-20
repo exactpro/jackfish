@@ -399,11 +399,11 @@ public class FxRemoteApplication extends RemoteApplication
 					logger.debug(String.format("Start get rectangle for owner [%s] and element [%s]", owner, element));
 					if (element == null)
 					{
-						return MatcherFx.getRect(UtilsFx.mainStage());
+						return MatcherFx.getRect(UtilsFx.mainStage(), true);
 					}
 					else
 					{
-						return MatcherFx.getRect(this.operationExecutor.find(owner, element));
+						return MatcherFx.getRect(this.operationExecutor.find(owner, element), true);
 					}
 				},
 				e ->

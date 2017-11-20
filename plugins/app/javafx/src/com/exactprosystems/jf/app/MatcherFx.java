@@ -318,7 +318,7 @@ public class MatcherFx
 		}
 		if (addRectangles)
 		{
-			node.setAttribute(IRemoteApplication.rectangleName, Converter.rectangleToString(getRect(component)));
+			node.setAttribute(IRemoteApplication.rectangleName, Converter.rectangleToString(getRect(component, true)));
 			node.setAttribute(IRemoteApplication.visibleName, "" + isVisible(component));
 		}
 
@@ -593,32 +593,33 @@ public class MatcherFx
 		return false;
 	}
 
-	public static Rectangle getRect(EventTarget target)
+	public static Rectangle getRect(EventTarget target, boolean getScene)
 	{
+		if (target instanceof Dialog<?>)
+		{
+			Dialog<?> dialog = (Dialog<?>) target;
+			return new Rectangle((int)dialog.getX(), (int)dialog.getY(), (int)dialog.getWidth(), (int)dialog.getHeight());
+		}
 		if (target instanceof Window)
 		{
-			return new Rectangle(
-					(int) ((Window) target).getX()
-					, (int) ((Window) target).getY()
-					, (int) ((Window) target).getWidth()
-					, (int) ((Window) target).getHeight()
-			);
+			if(getScene)
+			{
+				Scene scene = ((Window) target).getScene();
+				Node node = scene.getRoot();
+				return getRectangleFromNode(node, getScene);
+			}
+			else
+			{
+				Window window = (Window) target;
+				return new Rectangle((int) window.getX(), (int) window.getY(), (int) window.getWidth(), (int) window.getHeight());
+			}
 		}
 		if (!(target instanceof Node) || target instanceof RootContainer)
 		{
 			return new Rectangle(0, 0, 0, 0);
 		}
 		Node node = (Node) target;
-		if (node.isVisible())
-		{
-			Bounds screenBounds = node.localToScreen(node.getBoundsInLocal());
-			int x = (int) screenBounds.getMinX();
-			int y = (int) screenBounds.getMinY();
-			int width = (int) screenBounds.getWidth();
-			int height = (int) screenBounds.getHeight();
-			return new Rectangle(x, y, width, height);
-		}
-		return new Rectangle(0, 0, 0, 0);
+		return getRectangleFromNode(node, getScene);
 	}
 
 	public static String targetToString(EventTarget target)
@@ -642,5 +643,28 @@ public class MatcherFx
 	static void setLogger(Logger logger)
 	{
 		MatcherFx.logger = logger;
+	}
+
+	private static Rectangle getRectangleFromNode(Node node, boolean getScene)
+	{
+		if (node.isVisible())
+		{
+			Bounds screenBounds;
+			if(getScene)
+			{
+				screenBounds = node.localToScene(node.getBoundsInLocal());
+			}
+			else
+			{
+				screenBounds = node.localToScreen(node.getBoundsInLocal());
+			}
+
+			int x = (int) screenBounds.getMinX();
+			int y = (int) screenBounds.getMinY();
+			int width = (int) screenBounds.getWidth();
+			int height = (int) screenBounds.getHeight();
+			return new Rectangle(x, y, width, height);
+		}
+		return new Rectangle(0, 0, 0, 0);
 	}
 }

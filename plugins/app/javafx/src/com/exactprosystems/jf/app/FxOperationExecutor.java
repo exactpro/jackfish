@@ -415,7 +415,7 @@ public class FxOperationExecutor extends AbstractOperationExecutor<EventTarget>
 	public Rectangle getRectangle(EventTarget target) throws Exception
 	{
 		return tryExecute(EMPTY_CHECK,
-				() -> MatcherFx.getRect(target),
+				() -> MatcherFx.getRect(target, false),
 				e->
 				{
 					this.logger.error(String.format("getRectangle(%s)", target));
@@ -1578,7 +1578,7 @@ public class FxOperationExecutor extends AbstractOperationExecutor<EventTarget>
 	private Point checkCoords(EventTarget eventTarget, int x, int y) throws Exception
 	{
 		Point res;
-		Rectangle rectangle = MatcherFx.getRect(eventTarget);
+		Rectangle rectangle = MatcherFx.getRect(eventTarget, false);
 		if (x == Integer.MIN_VALUE || y == Integer.MIN_VALUE)
 		{
 			res = new Point(rectangle.width / 2, rectangle.height / 2);
@@ -1598,7 +1598,7 @@ public class FxOperationExecutor extends AbstractOperationExecutor<EventTarget>
 
 	private Point getPointLocation(EventTarget target, int x, int y) throws Exception
 	{
-		Rectangle rectangle = MatcherFx.getRect(target);
+		Rectangle rectangle = MatcherFx.getRect(target, false);
 		return new Point(rectangle.x + x, rectangle.y + y);
 	}
 	//endregion
