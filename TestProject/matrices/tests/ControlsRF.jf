@@ -24,7 +24,7 @@ Test;Controls;;;
 #Id;#TestCase;#Kind;#Depends;#For
 Subs;;;;
     #Id;#SubCase;testName;param
-    runControls;Running test;'Controls';'Swing'
+    runControls;Running test;'Controls';'Win'
         #Id;#Action;$Matrix;$Parameter
         MXRN1;MatrixRun;matrixTestsPath + testName +  '.jf';param
 
@@ -39,6 +39,13 @@ Subs;;;;
 
         #Action;$ReportValues;$Columns;$BeforeTestCase;$Table;$Title
         TableReport;true;{'Result', 'Time', 'Error', 'Screenshot'};'Test';TBLSLCT1.Out;param + ' Controls'
+
+        #If
+        !TBLSLCT1.Out.isEmpty()
+            #Fail
+            'Controls failed'
+
+        #EndIf
 
     #EndSubCase
 
