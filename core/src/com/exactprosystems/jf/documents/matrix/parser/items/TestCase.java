@@ -164,8 +164,8 @@ public final class TestCase extends MatrixItem
         driver.showLabel(this, layout, 2, 0, Tokens.Depends.get() + ":");
         driver.showComboBox(this, layout, 2, 1, this.depends, this.depends, () ->
         {
-            List<String> list = this.owner.listOfIds(TestCase.class);
-            list.add(0, "");
+			List<String> list = this.listOfTopIds(TestCase.class, MatrixRoot.class);
+			list.add(0, "");
             return list;
         }, (str) -> true);
         driver.showLabel(this, layout, 2, 2, "Screenshot:");

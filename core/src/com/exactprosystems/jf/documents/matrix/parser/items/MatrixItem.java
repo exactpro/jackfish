@@ -36,6 +36,7 @@ import java.util.*;
 import java.util.function.BiConsumer;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 public abstract class MatrixItem implements IMatrixItem, Mutable, Cloneable
@@ -582,6 +583,23 @@ public abstract class MatrixItem implements IMatrixItem, Mutable, Cloneable
 		{
 			this.comments.addAll(Arrays.asList(copyright.split(System.lineSeparator())).stream().map(CommentString::new).collect(Collectors.toList()));
 		}
+	}
+
+	public List<String> listOfTopIds(Class<? extends MatrixItem> foundClazz, Class<? extends MatrixItem> owner)
+	{
+		MatrixItem thisItem = this;
+		Class<? extends MatrixItem> stopClass = owner == null ? MatrixRoot.class : owner;
+		List<MatrixItem> allTopItems = new ArrayList<>();
+		while (thisItem.getClass() != stopClass)
+		{
+			allTopItems.addAll(thisItem.topDescendants(thisItem != this));
+			thisItem = thisItem.getParent();
+		}
+
+		return allTopItems.stream()
+				.filter(item -> item.getClass() == foundClazz)
+				.map(MatrixItem::getId)
+				.collect(Collectors.toList());
 	}
 
 	//----------------------------------------------------------------------------------------------
@@ -1150,6 +1168,17 @@ public abstract class MatrixItem implements IMatrixItem, Mutable, Cloneable
 			this.getParent().callBreakPointListener(item, newValue);
 		}
 		Optional.ofNullable(this.onBreakPointListener).ifPresent(breakPointListener -> breakPointListener.accept(newValue, item));
+	}
+
+	private List<MatrixItem> topDescendants(boolean include)
+	{
+		return Optional.ofNullable(this.parent)
+				.map(par ->
+						IntStream.range(0, par.index(this) + (include ? 1 : 0))
+								.mapToObj(par::get)
+								.collect(Collectors.toList())
+				)
+				.orElseGet(Collections::emptyList);
 	}
 
 
