@@ -39,7 +39,9 @@ public class TempItem extends MatrixItem
 
 	private ArrayList<String> list = new ArrayList<>();
 
+	//TODO think about remove this field
 	private boolean isInit = false;
+
 	public static final String CALL = "Call ";
 
 	@Override
@@ -48,7 +50,7 @@ public class TempItem extends MatrixItem
 		fillList(context);
 
 		Object layout = driver.createLayout(this, 1);
-		driver.showAutoCompleteBox(this, layout, 0, 0, list, s -> {
+		driver.showAutoCompleteBox(this, layout, 0, 0, () -> list,  () -> "", s -> {
 			if (!isInit)
 			{
 		        MatrixItem parent = this.getParent();

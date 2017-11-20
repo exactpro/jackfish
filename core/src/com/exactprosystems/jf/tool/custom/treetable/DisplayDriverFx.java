@@ -460,32 +460,56 @@ public class DisplayDriverFx implements DisplayDriver
 	}
 
 	@Override
-	public void showAutoCompleteBox(MatrixItem item, Object layout, int row, int column, List<String> words, Consumer<String> supplier)
+	public void showAutoCompleteBox(MatrixItem item, Object layout, int row, int column, Supplier<List<String>> wordsSupplier, Getter<String> init, Setter<String> supplier)
 	{
 		GridPane pane = (GridPane) layout;
-		TextField field = new TextField("");
-		AutoCompletionTextFieldBinding<String> binding = new AutoCompletionTextFieldBinding<>(field, SuggestionProvider.create(words));
-		binding.setOnAutoCompleted(e -> accept(words, supplier, field));
-		List<String> tempList = words.stream().map(String::toLowerCase).collect(Collectors.toList());
+
+		//create field
+		TextField field = new TextField(init.get());
+		Common.sizeTextField(field);
+		field.textProperty().addListener((observable, oldValue, newValue) -> field.setPrefWidth(Common.computeTextWidth(field.getFont(), field.getText(), 0.0D) + 40));
+
+		//create autocomplete
+		List<String> list = new ArrayList<>(wordsSupplier.get());
+		AutoCompletionTextFieldBinding<String> binding = new AutoCompletionTextFieldBinding<>(field, SuggestionProvider.create(list));
+		binding.setOnAutoCompleted(e -> accept(list, supplier, field));
+
+		//create temp list for found matches and function for updating the temp list
+		List<String> tempList = new ArrayList<>();
+		Consumer<List<String>> updateTempListFunction = l ->
+		{
+			tempList.clear();
+			tempList.addAll(l.stream().map(String::toLowerCase).collect(Collectors.toList()));
+		};
+		updateTempListFunction.accept(list);
+
+
 		field.textProperty().addListener((observable1, oldValue1, newValue1) ->
 		{
 			List<String> match = SuggestionProvider.isMatch(tempList, newValue1);
-			if (!match.isEmpty())
-			{
-				//TODO remake this via CssVariables and styleClasses
-				field.setStyle("-fx-text-fill : green");
-			}
-			else
-			{
-				field.setStyle("-fx-text-fill : red");
-			}
+			field.getStyleClass().removeAll(CssVariables.COMPILE_FAILED, CssVariables.EVALUATE_SUCCESS);
+			field.getStyleClass().add(match.isEmpty() ? CssVariables.COMPILE_FAILED : CssVariables.EVALUATE_SUCCESS);
 		});
-		field.setOnAction(e -> accept(words, supplier, field));
+		field.setOnAction(e -> accept(list, supplier, field));
 		field.focusedProperty().addListener((observable, oldValue, newValue) ->
 		{
 			if (!newValue && oldValue)
 			{
-				accept(words, supplier, field);
+				accept(list, supplier, field);
+			}
+			if (!oldValue && newValue)
+			{
+				//if we change focus to the field, we check, that list is changed.
+				List<String> getList = wordsSupplier.get();
+				if (list.equals(getList))
+				{
+					return;
+				}
+				// If list is changed, we update list, tempList and bindings
+				list.clear();
+				list.addAll(getList);
+				binding.updateProvider(SuggestionProvider.create(list));
+				updateTempListFunction.accept(list);
 			}
 		});
 		pane.add(field, column, row);
@@ -820,16 +844,18 @@ public class DisplayDriverFx implements DisplayDriver
 				.collect(Collectors.joining("\n"));
 	}
 
-	private void accept(List<String> words, Consumer<String> supplier, TextField field)
+	private void accept(List<String> words, Setter<String> supplier, TextField field)
 	{
+		field.getStyleClass().removeAll(CssVariables.COMPILE_FAILED, CssVariables.EVALUATE_SUCCESS);
 		Optional<String> first = words.stream().filter(field.getText()::equalsIgnoreCase).findFirst();
 		if (first.isPresent())
 		{
-			supplier.accept(first.get());
+			supplier.set(first.get());
 		}
 		else
 		{
-			supplier.accept(field.getText());
+			supplier.set("");
+			field.clear();
 		}
 	}
 	//endregion

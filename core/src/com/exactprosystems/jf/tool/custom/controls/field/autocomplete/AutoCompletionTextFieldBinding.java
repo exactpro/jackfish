@@ -56,6 +56,11 @@ public class AutoCompletionTextFieldBinding<T> extends AutoCompletionBinding<T>
 		getCompletionTarget().focusedProperty().addListener(focusChangedListener);
 	}
 
+	public void updateProvider(Callback<String, Collection<T>> suggestionProvider)
+	{
+		super.suggestionProvider = suggestionProvider;
+	}
+
 	@Override
 	public TextField getCompletionTarget()
 	{

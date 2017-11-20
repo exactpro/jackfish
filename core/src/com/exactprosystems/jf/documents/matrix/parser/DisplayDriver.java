@@ -39,7 +39,7 @@ public interface DisplayDriver
 										Function<String, String> firstHandler, Function<String, String> secondHandler, Character first, Character second);
 	void 		showTextArea		(MatrixItem item, Object layout, int row, int column, Text text, Consumer<List<String>> consumer, Highlighter highlighter);
 	void		updateTextArea		(MatrixItem item, Object layout, Text text);
-	void		showAutoCompleteBox	(MatrixItem item, Object layout, int row, int column, List<String> words, Consumer<String> supplier);
+	void		showAutoCompleteBox	(MatrixItem item, Object layout, int row, int column, Supplier<List<String>> wordsSupplier, Getter<String> init, Setter<String> supplier);
 	void 		showComment			(MatrixItem item, Object layout, int row, int column, List<CommentString> lines);
 	void 		showButton			(MatrixItem item, Object layout, int row, int column, String name, Consumer<MatrixItem> action);
 

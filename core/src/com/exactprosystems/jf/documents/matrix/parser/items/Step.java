@@ -184,13 +184,8 @@ public class Step extends MatrixItem
         driver.showExpressionField(this, layout, 1, 2, Tokens.Step.get(), this.identify, this.identify, null, null, null, null);
         
         driver.showLabel(this, layout, 2, 0, Tokens.Depends.get() + ":");
-        driver.showComboBox(this, layout, 2, 1, this.depends, this.depends, () ->
-        {
-			List<String> list = this.listOfTopIds(Step.class, TestCase.class);
-			list.add(0, "");
-            return list;
-        }, (str) -> true);
-        driver.showLabel(this, layout, 2, 2, " Screenshot:");
+		driver.showAutoCompleteBox(this, layout, 2, 1, () -> this.listOfTopIds(Step.class, TestCase.class), this.depends, this.depends);
+		driver.showLabel(this, layout, 2, 2, " Screenshot:");
         driver.showComboBox(this, layout, 2, 3, this.kind, this.kind,() ->
         {   
             return Arrays.stream(ScreenshotKind.values()).map(Enum::toString).collect(Collectors.toList());

@@ -10,7 +10,6 @@ package com.exactprosystems.jf.tool.custom.controls.field.autocomplete;
 
 import com.exactprosystems.jf.tool.Common;
 import com.sun.javafx.event.EventHandlerManager;
-import javafx.application.Platform;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.ObjectPropertyBase;
 import javafx.concurrent.Task;
@@ -31,7 +30,7 @@ public abstract class AutoCompletionBinding<T> implements EventTarget
 	private final Object suggestionsTaskLock = new Object();
 
 	private FetchSuggestionsTask suggestionsTask = null;
-	private Callback<String, Collection<T>> suggestionProvider = null;
+	protected Callback<String, Collection<T>> suggestionProvider = null;
 	private boolean ignoreInputChanges = false;
 
 	protected AutoCompletionBinding(Node completionTarget, Callback<String, Collection<T>> suggestionProvider, StringConverter<T> converter)
