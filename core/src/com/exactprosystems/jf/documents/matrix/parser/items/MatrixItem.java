@@ -587,19 +587,24 @@ public abstract class MatrixItem implements IMatrixItem, Mutable, Cloneable
 
 	public List<String> listOfTopIds(Class<? extends MatrixItem> foundClazz, List<Class<? extends MatrixItem>> owners)
 	{
+		return this.listOfTopItems(owners).stream()
+				.filter(item -> item.getClass() == foundClazz)
+				.map(MatrixItem::getId)
+				.filter(Objects::nonNull)
+				.collect(Collectors.toList());
+	}
+
+	public List<MatrixItem> listOfTopItems(List<Class<? extends MatrixItem>> owners)
+	{
 		MatrixItem thisItem = this;
 		List<Class<? extends MatrixItem>> stopClasses = owners == null || owners.isEmpty() ? Collections.singletonList(MatrixRoot.class) : owners;
 		List<MatrixItem> allTopItems = new ArrayList<>();
-		while (!stopClasses.contains(thisItem.getClass()))
+		while (thisItem != null && !stopClasses.contains(thisItem.getClass()))
 		{
 			allTopItems.addAll(thisItem.topDescendants(thisItem != this));
 			thisItem = thisItem.getParent();
 		}
-
-		return allTopItems.stream()
-				.filter(item -> item.getClass() == foundClazz)
-				.map(MatrixItem::getId)
-				.collect(Collectors.toList());
+		return allTopItems;
 	}
 
 	//----------------------------------------------------------------------------------------------
@@ -1172,9 +1177,10 @@ public abstract class MatrixItem implements IMatrixItem, Mutable, Cloneable
 
 	private List<MatrixItem> topDescendants(boolean include)
 	{
+		int diff = include ? 1 : 0;
 		return Optional.ofNullable(this.parent)
 				.map(par ->
-						IntStream.range(0, par.index(this) + (include ? 1 : 0))
+						IntStream.range(0, par.index(this) + diff)
 								.mapToObj(par::get)
 								.collect(Collectors.toList())
 				)

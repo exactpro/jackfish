@@ -24,10 +24,7 @@ import com.exactprosystems.jf.functions.Notifier;
 import com.exactprosystems.jf.functions.RowTable;
 import com.exactprosystems.jf.functions.Table;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @MatrixItemAttribute(
@@ -284,16 +281,32 @@ public class Step extends MatrixItem
             
             if (!Str.IsNullOrEmpty(this.depends.get()))
             {
-                MatrixItem step = this.owner.getRoot().find(true, Step.class, this.depends.get());
-                if (step != null && step.result != null && step.result.getResult().isFail())
-                {
-                    ret = new ReturnAndResult(start, Result.StepFailed, "Fail due the Step " + this.depends.get() + " is failed", ErrorKind.FAIL, this);
-                    updateTable(table, position, row, ret, ret.getError());
+            	//check that we can found Step with id depends.get()
+				List<MatrixItem> topItems = this.listOfTopItems(Arrays.asList(TestCase.class, SubCase.class));
+				Optional<MatrixItem> dependsStep = topItems.stream()
+						.filter(item -> item.getClass() == Step.class && Objects.equals(item.getId(), this.depends.get()))
+						.findFirst();
+
+				//if step with id depends.get() is not presented - return fail
+				if (!dependsStep.isPresent())
+				{
+					ret = new ReturnAndResult(start, Result.StepFailed, "Fail due the Step this id " + this.depends.get() + " is not found", ErrorKind.FAIL, this);
+					updateTable(table, position, row, ret, ret.getError());
 					super.changeExecutingState(MatrixItemExecutingState.Failed);
-                    return ret;
-                }
+					return ret;
+				}
+
+				//else check that depends step is failed. Is the step is failed, return fail
+				MatrixItem step = dependsStep.get();
+				if (step.result != null && step.result.getResult().isFail())
+				{
+					ret = new ReturnAndResult(start, Result.StepFailed, "Fail due the Step " + this.depends.get() + " is failed", ErrorKind.FAIL, this);
+					updateTable(table, position, row, ret, ret.getError());
+					super.changeExecutingState(MatrixItemExecutingState.Failed);
+					return ret;
+				}
             }
-            
+
             this.plugin.evaluate(evaluator);
             doSreenshot(row, this.plugin.getValue(), screenshotKind, ScreenshotKind.OnStart, ScreenshotKind.OnStartOrError);
 			doShowPopup(showPopups, context, "started", Notifier.Info);

@@ -24,9 +24,7 @@ import com.exactprosystems.jf.functions.Notifier;
 import com.exactprosystems.jf.functions.RowTable;
 import com.exactprosystems.jf.functions.Table;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @MatrixItemAttribute(
 		description 	= "The main operator in matrix directory. It is used to logically divide matrix in steps." +
@@ -279,14 +277,30 @@ public final class TestCase extends MatrixItem
 
 	        if (!Str.IsNullOrEmpty(this.depends.get()))
 	        {
-	            MatrixItem testcase = this.owner.getRoot().find(true, TestCase.class, this.depends.get());
-	            if (testcase != null && testcase.result != null && testcase.result.getResult().isFail())
-	            {
-	                ret = new ReturnAndResult(start, Result.Failed, "Fail due the TestCase " + this.depends.get() + " is failed", ErrorKind.FAIL, this);
-	                updateTable(table, position, row, ret, ret.getError());
-	                super.changeExecutingState(MatrixItemExecutingState.Failed);
-	                return ret;
-	            }
+				//check that we can found TestCase with id depends.get()
+				List<MatrixItem> topItems = this.listOfTopItems(Collections.singletonList(MatrixRoot.class));
+				Optional<MatrixItem> dependsTestCase = topItems.stream()
+						.filter(item -> item.getClass() == TestCase.class && Objects.equals(item.getId(), this.depends.get()))
+						.findFirst();
+
+				//if TestCase with id depends.get() is not presented - return fail
+				if (!dependsTestCase.isPresent())
+				{
+					ret = new ReturnAndResult(start, Result.Failed, "Fail due the TestCase this id " + this.depends.get() + " is not found", ErrorKind.FAIL, this);
+					updateTable(table, position, row, ret, ret.getError());
+					super.changeExecutingState(MatrixItemExecutingState.Failed);
+					return ret;
+				}
+
+				//else check that depends testCase is failed. Is the testCase is failed, return fail
+				MatrixItem testCase = dependsTestCase.get();
+				if (testCase.result != null && testCase.result.getResult().isFail())
+				{
+					ret = new ReturnAndResult(start, Result.Failed, "Fail due the TestCase " + this.depends.get() + " is failed", ErrorKind.FAIL, this);
+					updateTable(table, position, row, ret, ret.getError());
+					super.changeExecutingState(MatrixItemExecutingState.Failed);
+					return ret;
+				}
 	        }
 	        
             this.plugin.evaluate(evaluator);
