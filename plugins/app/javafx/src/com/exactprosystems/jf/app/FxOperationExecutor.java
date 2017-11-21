@@ -27,8 +27,6 @@ import javafx.scene.AccessibleAttribute;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.control.*;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
 import javafx.scene.input.*;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.paint.Paint;
@@ -42,11 +40,13 @@ import org.w3c.dom.NodeList;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.xpath.*;
-import java.awt.*;
+import java.awt.Color;
+import java.awt.Point;
+import java.awt.Rectangle;
+import java.awt.Robot;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.*;
-import java.util.List;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -1043,42 +1043,84 @@ public class FxOperationExecutor extends AbstractOperationExecutor<EventTarget>
 	{
 		return tryExecute(EMPTY_CHECK, () ->
 		{
+			Point point = checkCoords(drag, x1, y1);
+			Rectangle dragRect = MatcherFx.getRect(drag, false);
+			int startX = dragRect.x + point.x;
+			int startY = dragRect.y + point.y;
+
+			int endX = x2;
+			int endY = y2;
+
+			//TODO drop == null never should be true. Check it
+			if (drop != null)
+			{
+				Rectangle rect = MatcherFx.getRect(drop, false);
+				endX = x2 + rect.x;
+				endY = y2 + rect.y;
+			}
+
 			if (moveCursor)
 			{
 				Robot robot = new Robot();
-				Point point = checkCoords(drag, x1, y1);
-				Rectangle dragRect = MatcherFx.getRect(drag, false);
-				int startMoveX = dragRect.x + point.x;
-				int startMoveY = dragRect.y + point.y;
-
-				robot.mouseMove(startMoveX, startMoveY);
+				robot.mouseMove(startX, startY);
 				this.sleep(100);
 
 				robot.mousePress(java.awt.event.InputEvent.BUTTON1_MASK);
 
-				for (int i = 1; i < 11; i++)
-				{
-					robot.mouseMove(startMoveX + i, startMoveY + i);
-				}
-				this.sleep(100);
+				int currentX = startX;
+				int currentY = startY;
 
-				//TODO drop == null never should be true. Check it
-				if (drop == null)
+				int stepCount = 10;
+
+				int diffX = Math.abs(startX - endX) / stepCount;
+				int diffY = Math.abs(startY - endY) / stepCount;
+
+				diffX = startX < endX ? diffX : -1 * diffX;
+				diffY = startY < endY ? diffX : -1 * diffY;
+
+				boolean stopX = diffX == 0;
+				boolean stopY = diffY == 0;
+
+				while (Math.abs(currentX - endX) > diffX || Math.abs(currentY - endY) > diffY)
 				{
-					robot.mouseMove(x2, y2);
+					if (stopX && stopY)
+					{
+						break;
+					}
+
+					if (Math.abs(currentX - endX) > diffX)
+					{
+						currentX += diffX;
+					}
+					else
+					{
+						currentX += Math.abs(currentX - endX);
+						stopX = true;
+					}
+
+					if (Math.abs(currentY - endY) > diffY)
+					{
+						currentY += diffY;
+					}
+					else
+					{
+						currentY += Math.abs(currentY - endY);
+						stopY = true;
+					}
+					robot.mouseMove(currentX, currentY);
+					this.sleep(10);
 				}
-				else
-				{
-					Rectangle rect = MatcherFx.getRect(drop, false);
-					robot.mouseMove(x2 + rect.x, y2 + rect.y);
-				}
+
+				robot.mouseMove(endX, endY);
 				this.sleep(100);
 				robot.mouseRelease(java.awt.event.InputEvent.BUTTON1_MASK);
 				return true;
 			}
 			else
 			{
-				throw new FeatureNotSupportedException("dragAndDrop without move mouse");
+				executeEventList(drag, createMouseEventsList(MouseAction.Press, drag, startX, startY));
+				executeEventList(drop, createMouseEventsList(MouseAction.Drop, drop, endX, endY));
+				return true;
 			}
 		}, e ->
 		{
