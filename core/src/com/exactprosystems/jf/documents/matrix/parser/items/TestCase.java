@@ -24,6 +24,7 @@ import com.exactprosystems.jf.functions.Notifier;
 import com.exactprosystems.jf.functions.RowTable;
 import com.exactprosystems.jf.functions.Table;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -162,8 +163,8 @@ public final class TestCase extends MatrixItem
 		driver.showTitle(this, layout, 1, 1, Tokens.TestCase.get(), context.getFactory().getSettings());
 		driver.showTextBox(this, layout, 1, 2, this.name, this.name, null);
         driver.showLabel(this, layout, 2, 0, Tokens.Depends.get() + ":");
-		driver.showAutoCompleteBox(this, layout, 2, 1, () -> this.listOfTopIds(TestCase.class, MatrixRoot.class), this.depends, this.depends);
-        driver.showLabel(this, layout, 2, 2, "Screenshot:");
+		driver.showAutoCompleteBox(this, layout, 2, 1, () -> this.listOfTopIds(TestCase.class, Collections.singletonList(MatrixRoot.class)), this.depends, this.depends);
+		driver.showLabel(this, layout, 2, 2, "Screenshot:");
         driver.showComboBox(this, layout, 2, 3, this.kind, this.kind, () ->
         {
         	List<String> list = ScreenshotKind.names();

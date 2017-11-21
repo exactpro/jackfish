@@ -585,12 +585,12 @@ public abstract class MatrixItem implements IMatrixItem, Mutable, Cloneable
 		}
 	}
 
-	public List<String> listOfTopIds(Class<? extends MatrixItem> foundClazz, Class<? extends MatrixItem> owner)
+	public List<String> listOfTopIds(Class<? extends MatrixItem> foundClazz, List<Class<? extends MatrixItem>> owners)
 	{
 		MatrixItem thisItem = this;
-		Class<? extends MatrixItem> stopClass = owner == null ? MatrixRoot.class : owner;
+		List<Class<? extends MatrixItem>> stopClasses = owners == null || owners.isEmpty() ? Collections.singletonList(MatrixRoot.class) : owners;
 		List<MatrixItem> allTopItems = new ArrayList<>();
-		while (thisItem.getClass() != stopClass)
+		while (!stopClasses.contains(thisItem.getClass()))
 		{
 			allTopItems.addAll(thisItem.topDescendants(thisItem != this));
 			thisItem = thisItem.getParent();

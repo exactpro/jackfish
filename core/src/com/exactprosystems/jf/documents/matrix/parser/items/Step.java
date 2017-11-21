@@ -25,6 +25,7 @@ import com.exactprosystems.jf.functions.RowTable;
 import com.exactprosystems.jf.functions.Table;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -184,7 +185,7 @@ public class Step extends MatrixItem
         driver.showExpressionField(this, layout, 1, 2, Tokens.Step.get(), this.identify, this.identify, null, null, null, null);
         
         driver.showLabel(this, layout, 2, 0, Tokens.Depends.get() + ":");
-		driver.showAutoCompleteBox(this, layout, 2, 1, () -> this.listOfTopIds(Step.class, TestCase.class), this.depends, this.depends);
+		driver.showAutoCompleteBox(this, layout, 2, 1, () -> this.listOfTopIds(Step.class, Arrays.asList(TestCase.class, SubCase.class)), this.depends, this.depends);
 		driver.showLabel(this, layout, 2, 2, " Screenshot:");
         driver.showComboBox(this, layout, 2, 3, this.kind, this.kind,() ->
         {   
