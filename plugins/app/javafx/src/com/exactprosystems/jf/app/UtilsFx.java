@@ -24,6 +24,7 @@ import javafx.scene.image.WritableImage;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import org.apache.log4j.*;
+import com.exactprosystems.jf.api.error.app.ApplicationClosedException;
 
 import java.awt.image.BufferedImage;
 import java.rmi.RemoteException;
@@ -126,22 +127,15 @@ public class UtilsFx
 				.orElse(stages.get(0));
 	}
 
-	static void waitForIdle()
+	static void waitForIdle() throws Exception
 	{
-		//code from BaseFXRobot
-		final CountDownLatch latch = new CountDownLatch(1);
-		PlatformImpl.runLater(latch::countDown);
-		while (true)
+		try
 		{
-			try
-			{
-				latch.await();
-				break;
-			}
-			catch (InterruptedException ignored)
-			{
-				;
-			}
+			PlatformImpl.runAndWait(() -> {});
+		}
+		catch (IllegalStateException e)
+		{
+			throw new ApplicationClosedException("Application was closed");
 		}
 	}
 
