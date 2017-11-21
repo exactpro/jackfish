@@ -27,6 +27,8 @@ import javafx.scene.AccessibleAttribute;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.input.*;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.paint.Paint;
@@ -40,13 +42,11 @@ import org.w3c.dom.NodeList;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.xpath.*;
-import java.awt.Color;
-import java.awt.Point;
-import java.awt.Rectangle;
-import java.awt.Robot;
+import java.awt.*;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.*;
+import java.util.List;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -1043,13 +1043,58 @@ public class FxOperationExecutor extends AbstractOperationExecutor<EventTarget>
 	{
 		return tryExecute(EMPTY_CHECK, () ->
 		{
-			//TODO implement
-			return false;
+			if (moveCursor)
+			{
+				Robot robot = new Robot();
+				Point point = checkCoords(drag, x1, y1);
+				Rectangle dragRect = MatcherFx.getRect(drag, false);
+				int startMoveX = dragRect.x + point.x;
+				int startMoveY = dragRect.y + point.y;
+
+				robot.mouseMove(startMoveX, startMoveY);
+				this.sleep(100);
+
+				robot.mousePress(java.awt.event.InputEvent.BUTTON1_MASK);
+
+				for (int i = 1; i < 11; i++)
+				{
+					robot.mouseMove(startMoveX + i, startMoveY + i);
+				}
+				this.sleep(100);
+
+				//TODO drop == null never should be true. Check it
+				if (drop == null)
+				{
+					robot.mouseMove(x2, y2);
+				}
+				else
+				{
+					Rectangle rect = MatcherFx.getRect(drop, false);
+					robot.mouseMove(x2 + rect.x, y2 + rect.y);
+				}
+				this.sleep(100);
+				robot.mouseRelease(java.awt.event.InputEvent.BUTTON1_MASK);
+				return true;
+			}
+			else
+			{
+				throw new FeatureNotSupportedException("dragAndDrop without move mouse");
+			}
 		}, e ->
 		{
 			logger.error(String.format("dragNdrop(%s,%s,%s,%s,%s,%s,%s)", drag, x1, y1, drop, x2, y2, moveCursor));
 			logger.error(e.getMessage(), e);
 		});
+	}
+
+	private void sleep(long time)
+	{
+		try
+		{
+			Thread.sleep(time);
+		}
+		catch (Exception e)
+		{}
 	}
 
 	@Override
