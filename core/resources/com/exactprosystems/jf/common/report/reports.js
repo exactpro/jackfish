@@ -124,8 +124,16 @@ $(document).ready(function(){
 
 	$("button.filterExpandAllFailed").click(function(event) {
 		var failedTr = $("tr.danger");
+
+		//show parents
+		var parent = failedTr.parent();
+		while ($(parent).length != 0 && !parent.is(":visible"))
+		{
+			parent.show();
+			parent = parent.parent();
+		}
+
 		failedTr.show();
-		failedTr.parent().show();
 		failedTr.next().show();
 	});
 	$("button.filterCollapseAll").click(function(event) {
