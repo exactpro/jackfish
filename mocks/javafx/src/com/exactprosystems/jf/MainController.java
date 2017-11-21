@@ -14,14 +14,16 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
 import javafx.scene.AccessibleAttribute;
+import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.KeyEvent;
-import javafx.scene.input.MouseEvent;
+import javafx.scene.input.*;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Text;
 
 import java.net.URL;
 import java.util.Objects;
@@ -81,6 +83,7 @@ public class MainController implements Initializable
     private MainModel mainModel;
 	public VBox vBox;
 	private TableView<A> tb;
+	public BorderPane mainPanel;
 
 	@Override
     public void initialize(URL location, ResourceBundle resources)
@@ -149,7 +152,7 @@ public class MainController implements Initializable
 				}
 			}
 		});
-//		tb.getColumns().addAll(c1, c2);
+		tb.getColumns().addAll(c1, c2);
 		vBox.getChildren().add(tb);
 
 		Button btnOpenDialog = new Button("Open dialog");
@@ -162,6 +165,91 @@ public class MainController implements Initializable
 		});
 
 		vBox.getChildren().add(btnOpenDialog);
+
+		Group dragGroup = new Group();
+
+		final Text source = new Text(50, 100, "DRAG ME");
+		source.setId("source");
+		source.setScaleX(2.0);
+		source.setScaleY(2.0);
+
+		final Text target = new Text(250, 100, "DROP HERE");
+		target.setId("#target");
+		target.setScaleX(2.0);
+		target.setScaleY(2.0);
+
+		source.setOnDragDetected(event -> {
+			System.err.println("set on drag detected : " + event);
+			Dragboard db = source.startDragAndDrop(TransferMode.MOVE);
+			source.startFullDrag();
+
+			ClipboardContent content = new ClipboardContent();
+			content.putString(source.getText());
+			db.setContent(content);
+
+			event.consume();
+		});
+
+		target.setOnDragOver(event -> {
+			System.err.println("set on drag over : " + event);
+			if (event.getGestureSource() != target &&
+					event.getDragboard().hasString()) {
+				event.acceptTransferModes(TransferMode.COPY_OR_MOVE);
+			}
+
+			event.consume();
+		});
+
+		target.setOnDragEntered(event -> {
+			System.err.println("set on drag entered : " + event);
+			if (event.getGestureSource() != target &&
+					event.getDragboard().hasString()) {
+				target.setFill(Color.GREEN);
+			}
+
+			event.consume();
+		});
+
+		target.setOnDragExited(event -> {
+			System.err.println("set on drag exited : " + event);
+			target.setFill(Color.BLACK);
+
+			event.consume();
+		});
+
+		target.setOnDragDropped(event -> {
+			System.err.println("set on drag dropped : " + event);
+			Dragboard db = event.getDragboard();
+			boolean success = false;
+			if (db.hasString()) {
+				target.setText(db.getString());
+				success = true;
+			}
+			event.setDropCompleted(success);
+
+			event.consume();
+		});
+
+		source.setOnDragDone(event -> {
+			System.err.println("set on drag done : " + event);
+			if (event.getTransferMode() == TransferMode.MOVE) {
+				source.setText("");
+			}
+
+			event.consume();
+		});
+
+		dragGroup.getChildren().add(source);
+		dragGroup.getChildren().add(target);
+		Button resetDrag = new Button("Reset");
+		resetDrag.setOnAction(e -> {
+			source.setText("DRAG ME");
+			target.setText("DROP HERE");
+		});
+		BorderPane bpDrag = new BorderPane();
+		bpDrag.setCenter(dragGroup);
+		bpDrag.setRight(resetDrag);
+		vBox.getChildren().add(bpDrag);
 	}
 
 	private void printColors()

@@ -13,7 +13,7 @@
 <!-- This is unpublished, licensed software, confidential and proprietary -->
 <!-- information which is the property of Exactpro Systems or its licensors. -->
 <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
-<BorderPane fx:controller="com.exactprosystems.jf.MainController" xmlns:fx="http://javafx.com/fxml" stylesheets="@Main.css">
+<BorderPane fx:id="mainPanel" fx:controller="com.exactprosystems.jf.MainController" xmlns:fx="http://javafx.com/fxml" stylesheets="@Main.css">
     <top>
         <MenuBar fx:id="menu"/>
     </top>
