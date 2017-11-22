@@ -104,6 +104,7 @@ public class MainController implements Initializable, ContainingParent
 
 	public MenuItem editSettings;
 
+	public Menu menuView;
 	public MenuItem viewSearch;
 	public MenuItem viewStore;
 	public MenuItem viewShowTabs;
@@ -114,6 +115,7 @@ public class MainController implements Initializable, ContainingParent
 	public MenuItem matrixStop;
 	public CheckMenuItem matrixShowWait;
 
+	public Menu menuGit;
 	public MenuItem				gitCommit;
 	public MenuItem				gitPush;
 	public MenuItem				gitPull;

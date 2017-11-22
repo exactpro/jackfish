@@ -129,7 +129,7 @@
 										</MenuItem>
 									</items>
 								</Menu>
-								<Menu mnemonicParsing="false">
+								<Menu fx:id="menuView" mnemonicParsing="false">
 									<text><R fx:constant="TOOL_MENU_VIEW"/></text>
 									<items>
 										<MenuItem fx:id="viewSearch" mnemonicParsing="false" onAction="#search">
@@ -166,7 +166,7 @@
 										</MenuItem>
 									</items>
 								</Menu>
-								<Menu mnemonicParsing="false">
+								<Menu fx:id="menuGit" mnemonicParsing="false">
 									<text><R fx:constant="TOOL_MENU_GIT"/></text>
 									<items>
 										<MenuItem mnemonicParsing="false" onAction="#gitClone">

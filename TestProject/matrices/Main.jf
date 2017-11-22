@@ -45,7 +45,8 @@ INIT;;;;
     #Id;#RawTable
     jfVisualTable;Table
     @;Off;Scenario;Name;TestSet;Start;Finish;Performer;Priority;Multi
-    0;;matrices/JackFishTests/SimpleTest;;q;;;;1;
+    0;;matrices/JackFishTests/MainTest;;q;;;;1;
+    1;;matrices/JackFishTests/ConfigurationTest;;q;;;;1;
     #EndRawTable
 
     #Id;#Let

@@ -329,6 +329,22 @@
     </appEntry>
     <appEntry>
         <name>JAVAFX_JF</name>
+        <parameters>
+            <key>jreExec</key>
+            <value></value>
+        </parameters>
+        <parameters>
+            <key>jreArgs</key>
+            <value></value>
+        </parameters>
+        <parameters>
+            <key>LogLevel</key>
+            <value></value>
+        </parameters>
+        <parameters>
+            <key>TrimText</key>
+            <value></value>
+        </parameters>
         <appDescription>Plugin for testing JackIFsh</appDescription>
         <appDicPath>dic/jackfish_javafx.xml</appDicPath>
         <appJar>${JF}/apps/javafx.jar</appJar>

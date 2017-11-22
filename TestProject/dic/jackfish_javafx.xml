@@ -1,10 +1,286 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <dictionary>
-    <window name="NewWindow">
-        <self/>
-        <onOpen/>
-        <run/>
-        <onClose/>
-        <close/>
-    </window>
+	<window name="Main">
+		<self>
+			<any id="self" xpath="./Stage"/>
+		</self>
+		<onOpen>
+			<wait owner="self" ref="btnLoadMatrix" addition="WaitToAppear" timeout="10000"/>
+		</onOpen>
+		<run>
+			<button id="btnLoadMatrix" xpath=".//Button[@id=&amp;quot;btnLoadMatrix&amp;quot;]" owner="self" rows="" header="" columns="">
+				<info>
+					<xpath>/GridPane/BorderPane/VBox/ToolBar/HBox/Button[1]</xpath>
+					<rectangle x1="0.0125" y1="0.05666666666666667" x2="0.0525" y2="0.11"/>
+					<node>Button</node>
+					<attr name="class">button transparentBackground</attr>
+					<attr name="id">btnLoadMatrix</attr>
+					<attr name="tooltip">Open matrix</attr>
+				</info>
+			</button>
+			<button id="btnNewMatrix" xpath=".//Button[@id=&amp;quot;btnNewMatrix&amp;quot;]" owner="self" rows="" header="" columns="">
+				<info>
+					<xpath>/GridPane/BorderPane/VBox/ToolBar/HBox/Button[2]</xpath>
+					<rectangle x1="0.0575" y1="0.05666666666666667" x2="0.0975" y2="0.11"/>
+					<node>Button</node>
+					<attr name="class">button transparentBackground</attr>
+					<attr name="id">btnNewMatrix</attr>
+					<attr name="tooltip">New matrix</attr>
+				</info>
+			</button>
+			<button id="btnSaveDocument" xpath=".//Button[@id=&amp;quot;btnSaveDocument&amp;quot;]" owner="self" rows="" header="" columns="">
+				<info>
+					<xpath>/GridPane/BorderPane/VBox/ToolBar/HBox/Button[3]</xpath>
+					<rectangle x1="0.115" y1="0.05666666666666667" x2="0.155" y2="0.11"/>
+					<node>Button</node>
+					<attr name="class">button transparentBackground</attr>
+					<attr name="id">btnSaveDocument</attr>
+					<attr name="tooltip">Save Ctrl+S</attr>
+				</info>
+			</button>
+			<button id="btnSaveAsDocument" xpath=".//Button[@id=&amp;quot;btnSaveAsDocument&amp;quot;]" owner="self" rows="" header="" columns="">
+				<info>
+					<xpath>/GridPane/BorderPane/VBox/ToolBar/HBox/Button[4]</xpath>
+					<rectangle x1="0.16" y1="0.05666666666666667" x2="0.2" y2="0.11"/>
+					<node>Button</node>
+					<attr name="class">button transparentBackground</attr>
+					<attr name="id">btnSaveAsDocument</attr>
+					<attr name="tooltip">Save as.. Shift+Ctrl+S</attr>
+				</info>
+			</button>
+			<button id="btnOpenMainLog" xpath=".//Button[@id=&amp;quot;btnOpenMainLog&amp;quot;]" owner="self" rows="" header="" columns="">
+				<info>
+					<xpath>/GridPane/BorderPane/VBox/ToolBar/HBox/Button[5]</xpath>
+					<rectangle x1="0.20500000000000002" y1="0.05666666666666667" x2="0.245" y2="0.11"/>
+					<node>Button</node>
+					<attr name="class">button transparentBackground</attr>
+					<attr name="id">btnOpenMainLog</attr>
+					<attr name="tooltip">Show log
+					</attr>
+				</info>
+			</button>
+			<button id="btnShowCalculator" xpath=".//Button[@id=&amp;quot;btnShowCalculator&amp;quot;]" owner="self" rows="" header="" columns="">
+				<info>
+					<xpath>/GridPane/BorderPane/VBox/ToolBar/HBox/Button[6]</xpath>
+					<rectangle x1="0.25" y1="0.05666666666666667" x2="0.29" y2="0.11"/>
+					<node>Button</node>
+					<attr name="class">button transparentBackground</attr>
+					<attr name="id">btnShowCalculator</attr>
+					<attr name="tooltip">Show calculator
+					</attr>
+				</info>
+			</button>
+			<button id="btnUndo" xpath=".//Button[@id=&amp;quot;btnUndo&amp;quot;]" owner="self" rows="" header="" columns="">
+				<info>
+					<xpath>/GridPane/BorderPane/VBox/ToolBar/HBox/Button[7]</xpath>
+					<rectangle x1="0.3075" y1="0.05666666666666667" x2="0.34750000000000003" y2="0.11"/>
+					<node>Button</node>
+					<attr name="class">button transparentBackground</attr>
+					<attr name="id">btnUndo</attr>
+					<attr name="tooltip">Undo
+						Ctrl+Z
+					</attr>
+				</info>
+			</button>
+			<button id="btnRedo" xpath=".//Button[@id=&amp;quot;btnRedo&amp;quot;]" owner="self" rows="" header="" columns="">
+				<info>
+					<xpath>/GridPane/BorderPane/VBox/ToolBar/HBox/Button[8]</xpath>
+					<rectangle x1="0.3525" y1="0.05666666666666667" x2="0.3925" y2="0.11"/>
+					<node>Button</node>
+					<attr name="class">button transparentBackground</attr>
+					<attr name="id">btnRedo</attr>
+					<attr name="tooltip">Redo
+						Shift+Ctrl+Z
+					</attr>
+				</info>
+			</button>
+			<tabPanel id="mainTabPanel" xpath=".//CustomTabPane[contains(.,&amp;quot;&amp;quot;)]" owner="self" rows="" header="" columns="">
+				<info>
+					<xpath>/GridPane/BorderPane/SplitPane/Content[2]/CustomTabPane</xpath>
+					<rectangle x1="0.0525" y1="0.11833333333333335" x2="0.995" y2="0.9650000000000001"/>
+					<node>CustomTabPane</node>
+					<attr name="class">tab-pane customTabPane</attr>
+				</info>
+			</tabPanel>
+		</run>
+		<onClose/>
+		<close/>
+	</window>
+	<window name="MainMenu">
+		<self>
+			<any id="self" xpath=".//MenuBar[contains(@class,&amp;quot;menu-bar&amp;quot;)]"/>
+		</self>
+		<onOpen/>
+		<run>
+			<button id="menuFile" xpath=".//MenuBarButton[@id=&amp;quot;menuFile&amp;quot;]" owner="self" rows="" header="" columns="">
+				<info>
+					<xpath>/HBox/MenuBarButton[1]</xpath>
+					<rectangle x1="0.011335012594458438" y1="0.0" x2="0.06297229219143577" y2="0.9666666666666667"/>
+					<node>MenuBarButton</node>
+					<attr name="class">menu-button menu</attr>
+					<attr name="id">menuFile</attr>
+				</info>
+			</button>
+			<button id="menuEdit" xpath=".//MenuBarButton[@id=&amp;quot;menuEdit&amp;quot;]" owner="self" rows="" header="" columns="">
+				<info>
+					<xpath>/HBox/MenuBarButton[2]</xpath>
+					<rectangle x1="0.0654911838790932" y1="0.0" x2="0.12090680100755667" y2="0.9666666666666667"/>
+					<node>MenuBarButton</node>
+					<attr name="class">menu-button menu</attr>
+					<attr name="id">menuEdit</attr>
+				</info>
+			</button>
+			<button id="menuView" xpath=".//MenuBarButton[@id=&amp;quot;menuView&amp;quot;]" owner="self" rows="" header="" columns="">
+				<info>
+					<xpath>/HBox/MenuBarButton[3]</xpath>
+					<rectangle x1="0.1234256926952141" y1="0.0" x2="0.18639798488664988" y2="0.9666666666666667"/>
+					<node>MenuBarButton</node>
+					<attr name="class">menu-button menu</attr>
+					<attr name="id">menuView</attr>
+				</info>
+			</button>
+			<button id="menuMatrix" xpath=".//MenuBarButton[@id=&amp;quot;menuMatrix&amp;quot;]" owner="self" rows="" header="" columns="">
+				<info>
+					<xpath>/HBox/MenuBarButton[4]</xpath>
+					<rectangle x1="0.1889168765743073" y1="0.0" x2="0.2632241813602015" y2="0.9666666666666667"/>
+					<node>MenuBarButton</node>
+					<attr name="class">menu-button menu</attr>
+					<attr name="id">menuMatrix</attr>
+				</info>
+			</button>
+			<button id="menuGit" xpath=".//MenuBarButton[@id=&amp;quot;menuGit&amp;quot;]" owner="self" rows="" header="" columns="">
+				<info>
+					<xpath>/HBox/MenuBarButton[5]</xpath>
+					<rectangle x1="0.26574307304785894" y1="0.0" x2="0.3123425692695214" y2="0.9666666666666667"/>
+					<node>MenuBarButton</node>
+					<attr name="class">menu-button menu</attr>
+					<attr name="id">menuGit</attr>
+				</info>
+			</button>
+			<button id="menuHelp" xpath=".//MenuBarButton[@id=&amp;quot;menuHelp&amp;quot;]" owner="self" rows="" header="" columns="">
+				<info>
+					<xpath>/HBox/MenuBarButton[6]</xpath>
+					<rectangle x1="0.3148614609571788" y1="0.0" x2="0.37531486146095716" y2="0.9666666666666667"/>
+					<node>MenuBarButton</node>
+					<attr name="class">menu-button menu</attr>
+					<attr name="id">menuHelp</attr>
+				</info>
+			</button>
+		</run>
+		<onClose/>
+		<close/>
+	</window>
+	<window name="MenuFile">
+		<self>
+			<any id="self" xpath=".//Pane[@class=&amp;quot;root popup&amp;quot;]"/>
+		</self>
+		<onOpen/>
+		<run>
+			<any id="openProject" xpath=".//MenuItemContainer[contains(.,&amp;quot;Open project&amp;quot;)]" owner="self" rows="" header="" columns="">
+				<info>
+					<xpath>/CSSBridge/ContextMenuContent/MenuBox/MenuItemContainer[1]</xpath>
+					<rectangle x1="0.008333333333333333" y1="0.015105740181268881" x2="0.9916666666666667" y2="0.09365558912386707"/>
+					<node>MenuItemContainer</node>
+					<attr name="class">menu-item</attr>
+				</info>
+			</any>
+			<any id="createProject" xpath=".//MenuItemContainer[contains(.,&amp;quot;Create project&amp;quot;)]" owner="self" rows="" header="" columns="">
+				<info>
+					<xpath>/CSSBridge/ContextMenuContent/MenuBox/MenuItemContainer[2]</xpath>
+					<rectangle x1="0.008333333333333333" y1="0.09365558912386707" x2="0.9916666666666667" y2="0.17220543806646527"/>
+					<node>MenuItemContainer</node>
+					<attr name="class">menu-item</attr>
+				</info>
+			</any>
+			<any id="projectFromGit" xpath=".//MenuItemContainer[contains(.,&amp;#39;Project from Git&amp;#39;)]" owner="self" rows="" header="" columns="">
+				<info>
+					<xpath>/CSSBridge/ContextMenuContent/MenuBox/MenuItemContainer[3]</xpath>
+					<rectangle x1="0.008333333333333333" y1="0.17220543806646527" x2="0.9916666666666667" y2="0.25075528700906347"/>
+					<node>MenuItemContainer</node>
+					<attr name="class">menu-item</attr>
+				</info>
+			</any>
+			<any id="fileLoad" uid="fileLoad" owner="self" rows="" header="" columns="">
+				<info>
+					<xpath>/CSSBridge/ContextMenuContent/MenuBox/MenuItemContainer[4]</xpath>
+					<rectangle x1="0.008333333333333333" y1="0.2598187311178248" x2="0.9916666666666667" y2="0.338368580060423"/>
+					<node>MenuItemContainer</node>
+					<attr name="class">menu-item menu</attr>
+					<attr name="id">fileLoad</attr>
+				</info>
+			</any>
+			<any id="fileNew" uid="fileNew" owner="self" rows="" header="" columns="">
+				<info>
+					<xpath>/CSSBridge/ContextMenuContent/MenuBox/MenuItemContainer[5]</xpath>
+					<rectangle x1="0.008333333333333333" y1="0.338368580060423" x2="0.9916666666666667" y2="0.4169184290030212"/>
+					<node>MenuItemContainer</node>
+					<attr name="class">menu-item menu</attr>
+					<attr name="id">fileNew</attr>
+				</info>
+			</any>
+			<any id="fileSave" uid="fileSave" owner="self" rows="" header="" columns="">
+				<info>
+					<xpath>/CSSBridge/ContextMenuContent/MenuBox/MenuItemContainer[6]</xpath>
+					<rectangle x1="0.008333333333333333" y1="0.4169184290030212" x2="0.9916666666666667" y2="0.4954682779456193"/>
+					<node>MenuItemContainer</node>
+					<attr name="class">menu-item</attr>
+					<attr name="id">fileSave</attr>
+				</info>
+			</any>
+			<any id="fileSaveAs" uid="fileSaveAs" owner="self" rows="" header="" columns="">
+				<info>
+					<xpath>/CSSBridge/ContextMenuContent/MenuBox/MenuItemContainer[7]</xpath>
+					<rectangle x1="0.008333333333333333" y1="0.4954682779456193" x2="0.9916666666666667" y2="0.5740181268882175"/>
+					<node>MenuItemContainer</node>
+					<attr name="class">menu-item</attr>
+					<attr name="id">fileSaveAs</attr>
+				</info>
+			</any>
+			<any id="fileSaveAll" uid="fileSaveAll" owner="self" rows="" header="" columns="">
+				<info>
+					<xpath>/CSSBridge/ContextMenuContent/MenuBox/MenuItemContainer[8]</xpath>
+					<rectangle x1="0.008333333333333333" y1="0.5740181268882175" x2="0.9916666666666667" y2="0.6525679758308157"/>
+					<node>MenuItemContainer</node>
+					<attr name="class">menu-item</attr>
+					<attr name="id">fileSaveAll</attr>
+				</info>
+			</any>
+			<any id="fileLastOpenMatrix" uid="fileLastOpenMatrix" owner="self" rows="" header="" columns="">
+				<info>
+					<xpath>/CSSBridge/ContextMenuContent/MenuBox/MenuItemContainer[9]</xpath>
+					<rectangle x1="0.008333333333333333" y1="0.6616314199395771" x2="0.9916666666666667" y2="0.7401812688821753"/>
+					<node>MenuItemContainer</node>
+					<attr name="class">menu-item menu</attr>
+					<attr name="id">fileLastOpenMatrix</attr>
+				</info>
+			</any>
+			<any id="fileRunFromFile" uid="fileRunFromFile" owner="self" rows="" header="" columns="">
+				<info>
+					<xpath>/CSSBridge/ContextMenuContent/MenuBox/MenuItemContainer[10]</xpath>
+					<rectangle x1="0.008333333333333333" y1="0.7401812688821753" x2="0.9916666666666667" y2="0.8187311178247734"/>
+					<node>MenuItemContainer</node>
+					<attr name="class">menu-item</attr>
+					<attr name="id">fileRunFromFile</attr>
+				</info>
+			</any>
+			<any id="openReport" xpath=".//MenuItemContainer[contains(.,&amp;quot;Open report&amp;quot;)]" owner="self" rows="" header="" columns="">
+				<info>
+					<xpath>/CSSBridge/ContextMenuContent/MenuBox/MenuItemContainer[11]</xpath>
+					<rectangle x1="0.008333333333333333" y1="0.8187311178247734" x2="0.9916666666666667" y2="0.8972809667673716"/>
+					<node>MenuItemContainer</node>
+					<attr name="class">menu-item</attr>
+				</info>
+			</any>
+			<any id="exit" xpath=".//MenuItemContainer[contains(.,&amp;quot;Exit&amp;quot;)]" owner="self" rows="" header="" columns="">
+				<info>
+					<xpath>/CSSBridge/ContextMenuContent/MenuBox/MenuItemContainer[12]</xpath>
+					<rectangle x1="0.008333333333333333" y1="0.9063444108761329" x2="0.9916666666666667" y2="0.9848942598187311"/>
+					<node>MenuItemContainer</node>
+					<attr name="class">menu-item</attr>
+				</info>
+			</any>
+		</run>
+		<onClose/>
+		<close/>
+	</window>
 </dictionary>
