@@ -58,30 +58,45 @@ public enum Browser
 					FirefoxProfile profile = new FirefoxProfile(new File(firefoxProfileDir));
 					return new FirefoxDriver(profile);
 				}
-				return new FirefoxDriver();
+				DesiredCapabilities desiredCapabilities = DesiredCapabilities.firefox();
+				desiredCapabilities.setCapability(FirefoxDriver.SystemProperty.BROWSER_LOGFILE, "firefoxDriver.log");
+				return new FirefoxDriver(desiredCapabilities);
 
 			case ANDROIDCHROME:
-					ChromeOptions chromeOptions = new ChromeOptions();
-					chromeOptions.setExperimentalOption("androidPackage", "com.android.chrome");
-					DesiredCapabilities capabilities_chrome = new DesiredCapabilities();
-					capabilities_chrome.setCapability(ChromeOptions.CAPABILITY, chromeOptions);
-					return new ChromeDriver(capabilities_chrome);
+				System.setProperty(ChromeDriverService.CHROME_DRIVER_LOG_PROPERTY, "androidChrome.log");
+				System.setProperty(ChromeDriverService.CHROME_DRIVER_VERBOSE_LOG_PROPERTY, "true");
+
+				ChromeOptions chromeOptions = new ChromeOptions();
+				chromeOptions.setExperimentalOption("androidPackage", "com.android.chrome");
+
+				DesiredCapabilities chromeCapability = new DesiredCapabilities();
+				chromeCapability.setCapability(ChromeOptions.CAPABILITY, chromeOptions);
+
+				return new ChromeDriver(chromeCapability);
 
 			case ANDROIDBROWSER:
-					ChromeOptions browserOptions = new ChromeOptions();
-					browserOptions.setExperimentalOption("androidPackage", "com.android.browser");
-					browserOptions.setExperimentalOption("androidActivity","com.android.browser.BrowserActivity");
-					DesiredCapabilities capabilities_browser = new DesiredCapabilities();
-					capabilities_browser.setCapability(ChromeOptions.CAPABILITY, browserOptions);
-					return new ChromeDriver(capabilities_browser);
+				System.setProperty(ChromeDriverService.CHROME_DRIVER_LOG_PROPERTY, "androidBrowser.log");
+				System.setProperty(ChromeDriverService.CHROME_DRIVER_VERBOSE_LOG_PROPERTY, "true");
+
+				ChromeOptions browserOptions = new ChromeOptions();
+				browserOptions.setExperimentalOption("androidPackage", "com.android.browser");
+				browserOptions.setExperimentalOption("androidActivity","com.android.browser.BrowserActivity");
+
+				DesiredCapabilities capabilities_browser = new DesiredCapabilities();
+				capabilities_browser.setCapability(ChromeOptions.CAPABILITY, browserOptions);
+
+				return new ChromeDriver(capabilities_browser);
 				
 			case CHROME:
 				if (Str.IsNullOrEmpty(System.getProperty(ChromeDriverService.CHROME_DRIVER_EXE_PROPERTY)))
 				{
 					throw new Exception("You need set the 'ChromeDriverPath' parameter on plugin to valid value");
 				}
+				System.setProperty(ChromeDriverService.CHROME_DRIVER_LOG_PROPERTY, "chromeDriver.log");
+				System.setProperty(ChromeDriverService.CHROME_DRIVER_VERBOSE_LOG_PROPERTY, "true");
+
 				ChromeOptions options = new ChromeOptions();
-				options.addArguments("--disable-extensions"); // TODO think about it. Mb take out this on parameters for adapter?
+				options.addArguments("--disable-extensions");
 				if (pathToBinary != null && !pathToBinary.isEmpty())
 				{
 					options.setBinary(new File(pathToBinary));
@@ -95,7 +110,9 @@ public enum Browser
 				}
 				DesiredCapabilities capabilities = DesiredCapabilities.internetExplorer();
 				capabilities.setCapability("ie.enableFullPageScreenshot", false);
-				capabilities.setCapability("enablePersistentHover", false);
+				capabilities.setCapability(InternetExplorerDriver.ENABLE_PERSISTENT_HOVERING, false);
+				capabilities.setCapability(InternetExplorerDriver.LOG_FILE, "ieDriver.log");
+				capabilities.setCapability(InternetExplorerDriver.LOG_LEVEL, "DEBUG");
 				if (usePrivateMode)
 				{
 					capabilities.setCapability(InternetExplorerDriver.FORCE_CREATE_PROCESS, true);
