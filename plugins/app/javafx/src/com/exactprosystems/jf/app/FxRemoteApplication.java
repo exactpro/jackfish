@@ -271,10 +271,10 @@ public class FxRemoteApplication extends RemoteApplication
 		{
 			EventTarget target = this.operationExecutor.find(null, owner);
 
-			if (target instanceof Stage)
+			if (target instanceof Window)
 			{
-				int width = (int) ((Stage) target).getWidth();
-				int height = (int) ((Stage) target).getHeight();
+				int width = (int) ((Window) target).getWidth();
+				int height = (int) ((Window) target).getHeight();
 
 				return new Dimension(width, height);
 			}
@@ -301,10 +301,10 @@ public class FxRemoteApplication extends RemoteApplication
 		{
 			EventTarget target = this.operationExecutor.find(null, owner);
 
-			if (target instanceof Stage)
+			if (target instanceof Window)
 			{
-				int x = (int) ((Stage) target).getX();
-				int y = (int) ((Stage) target).getY();
+				int x = (int) ((Window) target).getX();
+				int y = (int) ((Window) target).getY();
 
 				return new Point(x, y);
 			}
@@ -456,9 +456,9 @@ public class FxRemoteApplication extends RemoteApplication
 					List<EventTarget> all = this.operationExecutor.findAll(ControlKind.Any, currentRoot, element);
 					for (EventTarget target : all)
 					{
-						if (target instanceof Stage)
+						if (target instanceof Window)
 						{
-							Event.fireEvent(target, new WindowEvent(((Stage) target), WindowEvent.WINDOW_CLOSE_REQUEST));
+							Event.fireEvent(target, new WindowEvent(((Window) target), WindowEvent.WINDOW_CLOSE_REQUEST));
 						}
 						else if (target instanceof Dialog<?>)
 						{
@@ -543,9 +543,9 @@ public class FxRemoteApplication extends RemoteApplication
 				{
 					EventTarget target = this.operationExecutor.find(null, owner);
 
-					if (target instanceof Stage)
+					if (target instanceof Window)
 					{
-						Stage stage = (Stage) target;
+						Window stage = (Window) target;
 						stage.setX(x);
 						stage.setY(y);
 						return null;

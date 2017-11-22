@@ -9,6 +9,7 @@
 
 package com.exactprosystems.jf.app;
 
+import com.exactprosystems.jf.api.error.app.ApplicationClosedException;
 import com.sun.javafx.application.PlatformImpl;
 import com.sun.javafx.stage.StageHelper;
 import javafx.application.Platform;
@@ -23,14 +24,13 @@ import javafx.scene.control.Dialog;
 import javafx.scene.image.WritableImage;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
+import javafx.stage.Window;
 import org.apache.log4j.*;
-import com.exactprosystems.jf.api.error.app.ApplicationClosedException;
 
 import java.awt.image.BufferedImage;
 import java.rmi.RemoteException;
 import java.util.Enumeration;
 import java.util.Optional;
-import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
@@ -107,7 +107,7 @@ public class UtilsFx
 	static Parent currentRoot()
 	{
 		RootContainer rootContainer = new RootContainer();
-		StageHelper.getStages().forEach(rootContainer::addStage);
+		Window.impl_getWindows().forEachRemaining(rootContainer::addWindow);
 		return rootContainer;
 	}
 
@@ -127,7 +127,7 @@ public class UtilsFx
 				.orElse(stages.get(0));
 	}
 
-	static void waitForIdle() throws Exception
+	static void waitForIdle() throws ApplicationClosedException
 	{
 		try
 		{
@@ -135,6 +135,10 @@ public class UtilsFx
 		}
 		catch (IllegalStateException e)
 		{
+			Optional.ofNullable(logger).ifPresent(l -> {
+				l.error(e.getMessage(), e);
+				l.error(e.getCause() != null ? e.getCause().getMessage() : "cause is null", e.getCause());
+			});
 			throw new ApplicationClosedException("Application was closed");
 		}
 	}
@@ -182,30 +186,12 @@ public class UtilsFx
 			return func.get();
 		}
 		AtomicReference<T> reference = new AtomicReference<>();
-		CountDownLatch latch = new CountDownLatch(1);
-		Platform.runLater(() -> {
-			try
-			{
-				T value = func.get();
-				debug(String.format("Getting value : %s", value));
-				reference.set(value);
-			}
-			finally
-			{
-				latch.countDown();
-			}
-
-		});
-		while (true)
+		PlatformImpl.runAndWait(() ->
 		{
-			try
-			{
-				latch.await();
-				break;
-			}
-			catch (InterruptedException ignored)
-			{}
-		}
+			T value = func.get();
+			debug(String.format("Getting value : %s", value));
+			reference.set(value);
+		});
 		return reference.get();
 	}
 

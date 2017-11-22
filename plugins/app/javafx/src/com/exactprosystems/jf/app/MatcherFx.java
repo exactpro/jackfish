@@ -199,8 +199,7 @@ public class MatcherFx
 			try
 			{
 				Class<?> clazz = Class.forName(strClass);
-				boolean classIsFound = clazz.isAssignableFrom(target.getClass());
-				if (classIsFound)
+				if (clazz.isAssignableFrom(target.getClass()))
 				{
 					return true;
 				}
@@ -218,11 +217,11 @@ public class MatcherFx
 		{
 			//this means that we pass owner as null for searching of locator
 			RootContainer rootContainer = (RootContainer) eventTarget;
-			rootContainer.getStages().forEach(s -> collect(s, nodes));
+			rootContainer.getWindows().forEach(window -> collect(window, nodes));
 		}
-		else if (eventTarget instanceof Stage)
+		else if (eventTarget instanceof Window)
 		{
-			collect(((Stage) eventTarget).getScene().getRoot(), nodes);
+			collect(((Window) eventTarget).getScene().getRoot(), nodes);
 		}
 		else if (eventTarget instanceof Parent)
 		{
@@ -340,14 +339,14 @@ public class MatcherFx
 		}
 
 		current.appendChild(node);
-		if (component instanceof Stage)
+		if (component instanceof Window)
 		{
-			buildDom(info, document, node, ((Stage) component).getScene().getRoot(), addItems, addRectangles);
+			buildDom(info, document, node, ((Window) component).getScene().getRoot(), addItems, addRectangles);
 		}
 		else if (component instanceof RootContainer)
 		{
 			RootContainer rootContainer = (RootContainer) component;
-			rootContainer.getStages().forEach(stage -> buildDom(info, document, node, stage, addItems, addRectangles));
+			rootContainer.getWindows().forEach(window -> buildDom(info, document, node, window, addItems, addRectangles));
 		}
 		else if (component instanceof Parent)
 		{
@@ -635,6 +634,10 @@ public class MatcherFx
 		else if (target instanceof Scene)
 		{
 			return "SceneRoot : " + ((Scene) target).getRoot();
+		}
+		else if (target instanceof Window)
+		{
+			return "Window : " + target.getClass();
 		}
 		return target.toString();
 	}
