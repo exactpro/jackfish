@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<dictionary>
+    <window name="NewWindow">
+        <self/>
+        <onOpen/>
+        <run/>
+        <onClose/>
+        <close/>
+    </window>
+</dictionary>

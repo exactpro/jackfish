@@ -1,12 +1,4 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
-<!-- Copyright (c) 2009-2017, Exactpro Systems -->
-<!-- Quality Assurance & Related Software Development for Innovative Trading Systems. -->
-<!-- London Stock Exchange Group. -->
-<!-- All rights reserved. -->
-<!-- This is unpublished, licensed software, confidential and proprietary -->
-<!-- information which is the property of Exactpro Systems or its licensors. -->
-<!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
 <configuration>
     <time>HH:mm:ss.SSS</time>
     <date>dd.MM.yyyy</date>
@@ -334,5 +326,13 @@
         <appJar>${JF}/apps/javafx.jar</appJar>
         <appWorkDir>${JF}/apps</appWorkDir>
         <appStartPort>7000</appStartPort>
+    </appEntry>
+    <appEntry>
+        <name>JAVAFX_JF</name>
+        <appDescription>Plugin for testing JackIFsh</appDescription>
+        <appDicPath>dic/jackfish_javafx.xml</appDicPath>
+        <appJar>${JF}/apps/javafx.jar</appJar>
+        <appWorkDir>${JF}/apps</appWorkDir>
+        <appStartPort>10000</appStartPort>
     </appEntry>
 </configuration>

@@ -15,7 +15,6 @@
 <?import javafx.scene.Group?>
 <?import javafx.scene.layout.*?>
 <?import com.exactprosystems.jf.api.common.i18n.R?>
-<?import com.sun.javafx.scene.control.skin.ToolBarSkin.ToolBarOverflowMenu?>
 <GridPane fx:id="rootGrid" alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="300.0" minWidth="300.0" prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8"
 		  xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.exactprosystems.jf.tool.main.MainController">
 	<fx:define>
@@ -50,14 +49,14 @@
 										<Menu fx:id="fileLoad" mnemonicParsing="false">
 											<text><R fx:constant="TOOL_MENU_LOAD"/></text>
 											<items>
+												<MenuItem mnemonicParsing="false" onAction="#loadMatrix">
+													<text><R fx:constant="TOOL_MATRIX"/></text>
+												</MenuItem>
 												<MenuItem mnemonicParsing="false" onAction="#loadDictionary">
 													<text><R fx:constant="TOOL_DICTIONARY"/></text>
 												</MenuItem>
 												<MenuItem mnemonicParsing="false" onAction="#loadSystemVars">
 													<text><R fx:constant="TOOL_SYSTEM_VARIABLES"/></text>
-												</MenuItem>
-												<MenuItem mnemonicParsing="false" onAction="#loadMatrix">
-													<text><R fx:constant="TOOL_MATRIX"/></text>
 												</MenuItem>
 												<MenuItem mnemonicParsing="false" onAction="#loadPlainText">
 													<text><R fx:constant="TOOL_PLAIN_TEXT"/></text>
@@ -70,14 +69,17 @@
 										<Menu fx:id="fileNew" mnemonicParsing="false">
 											<text><R fx:constant="TOOL_MENU_NEW"/></text>
 											<items>
-												<MenuItem mnemonicParsing="false" onAction="#newSystemVars">
-													<text><R fx:constant="TOOL_NEW_SYSTEM_VARS"/></text>
-												</MenuItem>
 												<MenuItem mnemonicParsing="false" onAction="#newMatrix">
 													<text><R fx:constant="TOOL_NEW_MATRIX"/></text>
 												</MenuItem>
 												<MenuItem mnemonicParsing="false" onAction="#newLibrary">
 													<text><R fx:constant="TOOL_NEW_LIBRARY"/></text>
+												</MenuItem>
+												<MenuItem mnemonicParsing="false" onAction="#newDictionary">
+													<text><R fx:constant="TOOL_NEW_DICTIONARY"/></text>
+												</MenuItem>
+												<MenuItem mnemonicParsing="false" onAction="#newSystemVars">
+													<text><R fx:constant="TOOL_NEW_SYSTEM_VARS"/></text>
 												</MenuItem>
 												<MenuItem mnemonicParsing="false" onAction="#newPlainText">
 													<text><R fx:constant="TOOL_NEW_PLAIN_TEXT"/></text>

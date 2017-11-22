@@ -42,6 +42,15 @@ INIT;;;;
     28;;matrices/tests/CheckLayout;;q;;;;1;
     #EndRawTable
 
+    #Id;#RawTable
+    jfVisualTable;Table
+    @;Off;Scenario;Name;TestSet;Start;Finish;Performer;Priority;Multi
+    0;;matrices/JackFishTests/SimpleTest;;q;;;;1;
+    #EndRawTable
+
+    #Id;#Let
+    addAll;table.addAll(jfVisualTable)
+
     #Id;#Action;$DefaultValue;$HelpKind;$Title
     name;Input;'Test ' + VersionInfo.getVersion();HelpKind.String;'Tests RF'
 
