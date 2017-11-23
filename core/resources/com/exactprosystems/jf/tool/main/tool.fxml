@@ -136,7 +136,7 @@
 											<text><R fx:constant="TOOL_SEARCH"/></text>
 										</MenuItem>
 										<SeparatorMenuItem/>
-										<MenuItem  mnemonicParsing="false" onAction="#openMainLog">
+										<MenuItem fx:id="viewLogs" mnemonicParsing="false" onAction="#openMainLog">
 											<text><R fx:constant="TOOL_LOGS"/></text>
 										</MenuItem>
 										<MenuItem fx:id="viewStore" mnemonicParsing="false" onAction="#showStore">
@@ -169,11 +169,11 @@
 								<Menu fx:id="menuGit" mnemonicParsing="false">
 									<text><R fx:constant="TOOL_MENU_GIT"/></text>
 									<items>
-										<MenuItem mnemonicParsing="false" onAction="#gitClone">
+										<MenuItem fx:id="gitClone" mnemonicParsing="false" onAction="#gitClone">
 											<text><R fx:constant="TOOL_CLONE"/></text>
 										</MenuItem>
 										<SeparatorMenuItem/>
-										<Menu>
+										<Menu fx:id="gitPublishing">
 											<text><R fx:constant="TOOL_MENU_PUBLISHING"/></text>
 											<MenuItem fx:id="gitCommit" mnemonicParsing="false" onAction="#gitCommit">
 												<text><R fx:constant="TOOL_COMMIT"/></text>

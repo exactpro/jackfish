@@ -107,6 +107,7 @@ public class MainController implements Initializable, ContainingParent
 	public Menu menuView;
 	public MenuItem viewSearch;
 	public MenuItem viewStore;
+	public MenuItem viewLogs;
 	public MenuItem viewShowTabs;
 
 	public Menu					menuMatrix;
@@ -116,6 +117,8 @@ public class MainController implements Initializable, ContainingParent
 	public CheckMenuItem matrixShowWait;
 
 	public Menu menuGit;
+	public MenuItem				gitClone;
+	public Menu					gitPublishing;
 	public MenuItem				gitCommit;
 	public MenuItem				gitPush;
 	public MenuItem				gitPull;
@@ -278,12 +281,14 @@ public class MainController implements Initializable, ContainingParent
 		initializeButtons(settings);
 
 		Menu wizard = new Menu("Wizard");
+		wizard.setId("wizard");
 		this.menuHelp.getItems().add(0, wizard);
 
 		Map<WizardCategory, Menu> map = Arrays.stream(WizardCategory.values())
 				.collect(Collectors.toMap(Function.identity(), v -> Stream.of(v)
 						.map(WizardCategory::toString)
 						.map(Menu::new)
+						.peek(menu -> menu.setId(menu.getText()))
 						.peek(wizard.getItems()::add)
 						.findFirst()
 						.orElse(null))

@@ -29,6 +29,7 @@ import com.exactprosystems.jf.tool.settings.Theme;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.control.SplitPane;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
 import org.fxmisc.flowless.VirtualizedScrollPane;
@@ -42,6 +43,8 @@ import java.util.function.Function;
 
 public class DictionaryFxController implements Initializable, ContainingParent
 {
+	public BorderPane dictionaryPane;
+
 	public enum Result
 	{ 
 		PASSED (Color.GREEN), FAILED (Color.RED), NOT_ALLOWED (Color.DARKGRAY);

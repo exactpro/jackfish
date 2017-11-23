@@ -348,7 +348,7 @@
         <appDescription>Plugin for testing JackIFsh</appDescription>
         <appDicPath>dic/jackfish_javafx.xml</appDicPath>
         <appJar>${JF}/apps/javafx.jar</appJar>
-        <appWorkDir>${JF}/apps</appWorkDir>
+        <appWorkDir>${JF}</appWorkDir>
         <appStartPort>10000</appStartPort>
     </appEntry>
 </configuration>
