@@ -339,6 +339,10 @@ public class MatcherFx
 		}
 
 		current.appendChild(node);
+		if (component instanceof Dialog<?>)
+		{
+			buildDom(info, document, node, ((Dialog<?>) component).getDialogPane().getScene().getWindow(), addItems, addRectangles);
+		}
 		if (component instanceof Window)
 		{
 			buildDom(info, document, node, ((Window) component).getScene().getRoot(), addItems, addRectangles);
@@ -346,6 +350,7 @@ public class MatcherFx
 		else if (component instanceof RootContainer)
 		{
 			RootContainer rootContainer = (RootContainer) component;
+			logger.debug("Found root container : " + rootContainer.toString());
 			rootContainer.getWindows().forEach(window -> buildDom(info, document, node, window, addItems, addRectangles));
 		}
 		else if (component instanceof Parent)

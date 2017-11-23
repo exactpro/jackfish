@@ -788,7 +788,7 @@ public class FxOperationExecutor extends AbstractOperationExecutor<EventTarget>
 						TabPane tabPane = (TabPane) component;
 						ObservableList<Tab> tabs = tabPane.getTabs();
 						tabs.stream()
-								.filter(tab -> tab.getText().contains(selectedText))
+								.filter(tab -> Str.areEqual(tab.getText(), selectedText))
 								.findFirst()
 								.ifPresent(tabPane.getSelectionModel()::select);
 						return true;
@@ -798,7 +798,7 @@ public class FxOperationExecutor extends AbstractOperationExecutor<EventTarget>
 						ComboBox comboBox = (ComboBox) component;
 						StringConverter converter = comboBox.getConverter();
 						comboBox.getItems().stream()
-								.filter(s -> converter.toString(s).equals(selectedText))
+								.filter(s -> Str.areEqual(converter.toString(s), selectedText))
 								.findFirst()
 								.ifPresent(comboBox.getSelectionModel()::select);
 						return true;

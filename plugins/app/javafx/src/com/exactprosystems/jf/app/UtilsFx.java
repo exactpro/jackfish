@@ -163,9 +163,9 @@ public class UtilsFx
 				WritableImage snapshot = scene.snapshot(null);
 				return SwingFXUtils.fromFXImage(snapshot, null);
 			}
-			if (target instanceof Stage)
+			if (target instanceof Window)
 			{
-				WritableImage snapshot = ((Stage) target).getScene().snapshot(null);
+				WritableImage snapshot = ((Window) target).getScene().snapshot(null);
 				return SwingFXUtils.fromFXImage(snapshot, null);
 			}
 			else if (target instanceof Node)
