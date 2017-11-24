@@ -1,1032 +1,993 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <dictionary>
-	<window name="Main">
-		<self>
-			<any id="self" xpath="./Stage"/>
-		</self>
-		<onOpen>
-			<wait owner="self" ref="btnLoadMatrix" addition="WaitToAppear" timeout="10000"/>
-		</onOpen>
-		<run>
-			<button id="btnLoadMatrix" xpath=".//Button[@id=&amp;quot;btnLoadMatrix&amp;quot;]" owner="self" rows="" header="" columns="">
-				<info>
-					<xpath>/GridPane/BorderPane/VBox/ToolBar/HBox/Button[1]</xpath>
-					<rectangle x1="0.0125" y1="0.05666666666666667" x2="0.0525" y2="0.11"/>
-					<node>Button</node>
-					<attr name="class">button transparentBackground</attr>
-					<attr name="id">btnLoadMatrix</attr>
-					<attr name="tooltip">Open matrix</attr>
-				</info>
-			</button>
-			<button id="btnNewMatrix" xpath=".//Button[@id=&amp;quot;btnNewMatrix&amp;quot;]" owner="self" rows="" header="" columns="">
-				<info>
-					<xpath>/GridPane/BorderPane/VBox/ToolBar/HBox/Button[2]</xpath>
-					<rectangle x1="0.0575" y1="0.05666666666666667" x2="0.0975" y2="0.11"/>
-					<node>Button</node>
-					<attr name="class">button transparentBackground</attr>
-					<attr name="id">btnNewMatrix</attr>
-					<attr name="tooltip">New matrix</attr>
-				</info>
-			</button>
-			<button id="btnSaveDocument" xpath=".//Button[@id=&amp;quot;btnSaveDocument&amp;quot;]" owner="self" rows="" header="" columns="">
-				<info>
-					<xpath>/GridPane/BorderPane/VBox/ToolBar/HBox/Button[3]</xpath>
-					<rectangle x1="0.115" y1="0.05666666666666667" x2="0.155" y2="0.11"/>
-					<node>Button</node>
-					<attr name="class">button transparentBackground</attr>
-					<attr name="id">btnSaveDocument</attr>
-					<attr name="tooltip">Save Ctrl+S</attr>
-				</info>
-			</button>
-			<button id="btnSaveAsDocument" xpath=".//Button[@id=&amp;quot;btnSaveAsDocument&amp;quot;]" owner="self" rows="" header="" columns="">
-				<info>
-					<xpath>/GridPane/BorderPane/VBox/ToolBar/HBox/Button[4]</xpath>
-					<rectangle x1="0.16" y1="0.05666666666666667" x2="0.2" y2="0.11"/>
-					<node>Button</node>
-					<attr name="class">button transparentBackground</attr>
-					<attr name="id">btnSaveAsDocument</attr>
-					<attr name="tooltip">Save as.. Shift+Ctrl+S</attr>
-				</info>
-			</button>
-			<button id="btnOpenMainLog" xpath=".//Button[@id=&amp;quot;btnOpenMainLog&amp;quot;]" owner="self" rows="" header="" columns="">
-				<info>
-					<xpath>/GridPane/BorderPane/VBox/ToolBar/HBox/Button[5]</xpath>
-					<rectangle x1="0.20500000000000002" y1="0.05666666666666667" x2="0.245" y2="0.11"/>
-					<node>Button</node>
-					<attr name="class">button transparentBackground</attr>
-					<attr name="id">btnOpenMainLog</attr>
-					<attr name="tooltip">Show log
+    <window name="Main">
+        <self>
+            <any id="self" xpath="./Stage"/>
+        </self>
+        <onOpen>
+            <wait owner="self" ref="btnLoadMatrix" addition="WaitToAppear" timeout="10000"/>
+        </onOpen>
+        <run>
+            <button id="btnLoadMatrix" xpath=".//Button[@id=&amp;quot;btnLoadMatrix&amp;quot;]" owner="self" rows="" header="" columns="">
+                <info>
+                    <xpath>/GridPane/BorderPane/VBox/ToolBar/HBox/Button[1]</xpath>
+                    <rectangle x1="0.0125" y1="0.05666666666666667" x2="0.0525" y2="0.11"/>
+                    <node>Button</node>
+                    <attr name="class">button transparentBackground</attr>
+                    <attr name="id">btnLoadMatrix</attr>
+                    <attr name="tooltip">Open matrix</attr>
+                </info>
+            </button>
+            <button id="btnNewMatrix" xpath=".//Button[@id=&amp;quot;btnNewMatrix&amp;quot;]" owner="self" rows="" header="" columns="">
+                <info>
+                    <xpath>/GridPane/BorderPane/VBox/ToolBar/HBox/Button[2]</xpath>
+                    <rectangle x1="0.0575" y1="0.05666666666666667" x2="0.0975" y2="0.11"/>
+                    <node>Button</node>
+                    <attr name="class">button transparentBackground</attr>
+                    <attr name="id">btnNewMatrix</attr>
+                    <attr name="tooltip">New matrix</attr>
+                </info>
+            </button>
+            <button id="btnSaveDocument" xpath=".//Button[@id=&amp;quot;btnSaveDocument&amp;quot;]" owner="self" rows="" header="" columns="">
+                <info>
+                    <xpath>/GridPane/BorderPane/VBox/ToolBar/HBox/Button[3]</xpath>
+                    <rectangle x1="0.115" y1="0.05666666666666667" x2="0.155" y2="0.11"/>
+                    <node>Button</node>
+                    <attr name="class">button transparentBackground</attr>
+                    <attr name="id">btnSaveDocument</attr>
+                    <attr name="tooltip">Save Ctrl+S</attr>
+                </info>
+            </button>
+            <button id="btnSaveAsDocument" xpath=".//Button[@id=&amp;quot;btnSaveAsDocument&amp;quot;]" owner="self" rows="" header="" columns="">
+                <info>
+                    <xpath>/GridPane/BorderPane/VBox/ToolBar/HBox/Button[4]</xpath>
+                    <rectangle x1="0.16" y1="0.05666666666666667" x2="0.2" y2="0.11"/>
+                    <node>Button</node>
+                    <attr name="class">button transparentBackground</attr>
+                    <attr name="id">btnSaveAsDocument</attr>
+                    <attr name="tooltip">Save as.. Shift+Ctrl+S</attr>
+                </info>
+            </button>
+            <button id="btnOpenMainLog" xpath=".//Button[@id=&amp;quot;btnOpenMainLog&amp;quot;]" owner="self" rows="" header="" columns="">
+                <info>
+                    <xpath>/GridPane/BorderPane/VBox/ToolBar/HBox/Button[5]</xpath>
+                    <rectangle x1="0.20500000000000002" y1="0.05666666666666667" x2="0.245" y2="0.11"/>
+                    <node>Button</node>
+                    <attr name="class">button transparentBackground</attr>
+                    <attr name="id">btnOpenMainLog</attr>
+                    <attr name="tooltip">Show log
 					</attr>
-				</info>
-			</button>
-			<button id="btnShowCalculator" xpath=".//Button[@id=&amp;quot;btnShowCalculator&amp;quot;]" owner="self" rows="" header="" columns="">
-				<info>
-					<xpath>/GridPane/BorderPane/VBox/ToolBar/HBox/Button[6]</xpath>
-					<rectangle x1="0.25" y1="0.05666666666666667" x2="0.29" y2="0.11"/>
-					<node>Button</node>
-					<attr name="class">button transparentBackground</attr>
-					<attr name="id">btnShowCalculator</attr>
-					<attr name="tooltip">Show calculator
+                </info>
+            </button>
+            <button id="btnShowCalculator" xpath=".//Button[@id=&amp;quot;btnShowCalculator&amp;quot;]" owner="self" rows="" header="" columns="">
+                <info>
+                    <xpath>/GridPane/BorderPane/VBox/ToolBar/HBox/Button[6]</xpath>
+                    <rectangle x1="0.25" y1="0.05666666666666667" x2="0.29" y2="0.11"/>
+                    <node>Button</node>
+                    <attr name="class">button transparentBackground</attr>
+                    <attr name="id">btnShowCalculator</attr>
+                    <attr name="tooltip">Show calculator
 					</attr>
-				</info>
-			</button>
-			<button id="btnUndo" xpath=".//Button[@id=&amp;quot;btnUndo&amp;quot;]" owner="self" rows="" header="" columns="">
-				<info>
-					<xpath>/GridPane/BorderPane/VBox/ToolBar/HBox/Button[7]</xpath>
-					<rectangle x1="0.3075" y1="0.05666666666666667" x2="0.34750000000000003" y2="0.11"/>
-					<node>Button</node>
-					<attr name="class">button transparentBackground</attr>
-					<attr name="id">btnUndo</attr>
-					<attr name="tooltip">Undo
+                </info>
+            </button>
+            <button id="btnUndo" xpath=".//Button[@id=&amp;quot;btnUndo&amp;quot;]" owner="self" rows="" header="" columns="">
+                <info>
+                    <xpath>/GridPane/BorderPane/VBox/ToolBar/HBox/Button[7]</xpath>
+                    <rectangle x1="0.3075" y1="0.05666666666666667" x2="0.34750000000000003" y2="0.11"/>
+                    <node>Button</node>
+                    <attr name="class">button transparentBackground</attr>
+                    <attr name="id">btnUndo</attr>
+                    <attr name="tooltip">Undo
 						Ctrl+Z
 					</attr>
-				</info>
-			</button>
-			<button id="btnRedo" xpath=".//Button[@id=&amp;quot;btnRedo&amp;quot;]" owner="self" rows="" header="" columns="">
-				<info>
-					<xpath>/GridPane/BorderPane/VBox/ToolBar/HBox/Button[8]</xpath>
-					<rectangle x1="0.3525" y1="0.05666666666666667" x2="0.3925" y2="0.11"/>
-					<node>Button</node>
-					<attr name="class">button transparentBackground</attr>
-					<attr name="id">btnRedo</attr>
-					<attr name="tooltip">Redo
+                </info>
+            </button>
+            <button id="btnRedo" xpath=".//Button[@id=&amp;quot;btnRedo&amp;quot;]" owner="self" rows="" header="" columns="">
+                <info>
+                    <xpath>/GridPane/BorderPane/VBox/ToolBar/HBox/Button[8]</xpath>
+                    <rectangle x1="0.3525" y1="0.05666666666666667" x2="0.3925" y2="0.11"/>
+                    <node>Button</node>
+                    <attr name="class">button transparentBackground</attr>
+                    <attr name="id">btnRedo</attr>
+                    <attr name="tooltip">Redo
 						Shift+Ctrl+Z
 					</attr>
-				</info>
-			</button>
-			<tabPanel id="mainTabPanel" xpath=".//CustomTabPane[contains(.,&amp;quot;&amp;quot;)]" owner="self" rows="" header="" columns="">
-				<info>
-					<xpath>/GridPane/BorderPane/SplitPane/Content[2]/CustomTabPane</xpath>
-					<rectangle x1="0.0525" y1="0.11833333333333335" x2="0.995" y2="0.9650000000000001"/>
-					<node>CustomTabPane</node>
-					<attr name="class">tab-pane customTabPane</attr>
-				</info>
-			</tabPanel>
-		</run>
-		<onClose/>
-		<close/>
-	</window>
-	<window name="MainMenu">
-		<self>
-			<any id="self" xpath=".//MenuBar[contains(@class,&amp;quot;menu-bar&amp;quot;)]"/>
-		</self>
-		<onOpen/>
-		<run>
-			<button id="menuFile" xpath=".//MenuBarButton[@id=&amp;quot;menuFile&amp;quot;]" owner="self" rows="" header="" columns="">
-				<info>
-					<xpath>/HBox/MenuBarButton[1]</xpath>
-					<rectangle x1="0.011335012594458438" y1="0.0" x2="0.06297229219143577" y2="0.9666666666666667"/>
-					<node>MenuBarButton</node>
-					<attr name="class">menu-button menu</attr>
-					<attr name="id">menuFile</attr>
-				</info>
-			</button>
-			<button id="menuEdit" xpath=".//MenuBarButton[@id=&amp;quot;menuEdit&amp;quot;]" owner="self" rows="" header="" columns="">
-				<info>
-					<xpath>/HBox/MenuBarButton[2]</xpath>
-					<rectangle x1="0.0654911838790932" y1="0.0" x2="0.12090680100755667" y2="0.9666666666666667"/>
-					<node>MenuBarButton</node>
-					<attr name="class">menu-button menu</attr>
-					<attr name="id">menuEdit</attr>
-				</info>
-			</button>
-			<button id="menuView" xpath=".//MenuBarButton[@id=&amp;quot;menuView&amp;quot;]" owner="self" rows="" header="" columns="">
-				<info>
-					<xpath>/HBox/MenuBarButton[3]</xpath>
-					<rectangle x1="0.1234256926952141" y1="0.0" x2="0.18639798488664988" y2="0.9666666666666667"/>
-					<node>MenuBarButton</node>
-					<attr name="class">menu-button menu</attr>
-					<attr name="id">menuView</attr>
-				</info>
-			</button>
-			<button id="menuMatrix" xpath=".//MenuBarButton[@id=&amp;quot;menuMatrix&amp;quot;]" owner="self" rows="" header="" columns="">
-				<info>
-					<xpath>/HBox/MenuBarButton[4]</xpath>
-					<rectangle x1="0.1889168765743073" y1="0.0" x2="0.2632241813602015" y2="0.9666666666666667"/>
-					<node>MenuBarButton</node>
-					<attr name="class">menu-button menu</attr>
-					<attr name="id">menuMatrix</attr>
-				</info>
-			</button>
-			<button id="menuGit" xpath=".//MenuBarButton[@id=&amp;quot;menuGit&amp;quot;]" owner="self" rows="" header="" columns="">
-				<info>
-					<xpath>/HBox/MenuBarButton[5]</xpath>
-					<rectangle x1="0.26574307304785894" y1="0.0" x2="0.3123425692695214" y2="0.9666666666666667"/>
-					<node>MenuBarButton</node>
-					<attr name="class">menu-button menu</attr>
-					<attr name="id">menuGit</attr>
-				</info>
-			</button>
-			<button id="menuHelp" xpath=".//MenuBarButton[@id=&amp;quot;menuHelp&amp;quot;]" owner="self" rows="" header="" columns="">
-				<info>
-					<xpath>/HBox/MenuBarButton[6]</xpath>
-					<rectangle x1="0.3148614609571788" y1="0.0" x2="0.37531486146095716" y2="0.9666666666666667"/>
-					<node>MenuBarButton</node>
-					<attr name="class">menu-button menu</attr>
-					<attr name="id">menuHelp</attr>
-				</info>
-			</button>
-		</run>
-		<onClose/>
-		<close/>
-	</window>
-	<window name="MenuFile">
-		<self>
-			<any id="self" xpath=".//Pane[@class=&amp;quot;root popup&amp;quot;]"/>
-		</self>
-		<onOpen/>
-		<run>
-			<any id="openProject" xpath=".//MenuItemContainer[contains(.,&amp;quot;Open project&amp;quot;)]" owner="self" rows="" header="" columns="">
-				<info>
-					<xpath>/CSSBridge/ContextMenuContent/MenuBox/MenuItemContainer[1]</xpath>
-					<rectangle x1="0.008333333333333333" y1="0.015105740181268881" x2="0.9916666666666667" y2="0.09365558912386707"/>
-					<node>MenuItemContainer</node>
-					<attr name="class">menu-item</attr>
-				</info>
-			</any>
-			<any id="createProject" xpath=".//MenuItemContainer[contains(.,&amp;quot;Create project&amp;quot;)]" owner="self" rows="" header="" columns="">
-				<info>
-					<xpath>/CSSBridge/ContextMenuContent/MenuBox/MenuItemContainer[2]</xpath>
-					<rectangle x1="0.008333333333333333" y1="0.09365558912386707" x2="0.9916666666666667" y2="0.17220543806646527"/>
-					<node>MenuItemContainer</node>
-					<attr name="class">menu-item</attr>
-				</info>
-			</any>
-			<any id="projectFromGit" xpath=".//MenuItemContainer[contains(.,&amp;#39;Project from Git&amp;#39;)]" owner="self" rows="" header="" columns="">
-				<info>
-					<xpath>/CSSBridge/ContextMenuContent/MenuBox/MenuItemContainer[3]</xpath>
-					<rectangle x1="0.008333333333333333" y1="0.17220543806646527" x2="0.9916666666666667" y2="0.25075528700906347"/>
-					<node>MenuItemContainer</node>
-					<attr name="class">menu-item</attr>
-				</info>
-			</any>
-			<any id="fileLoad" uid="fileLoad" owner="self" rows="" header="" columns="">
-				<info>
-					<xpath>/CSSBridge/ContextMenuContent/MenuBox/MenuItemContainer[4]</xpath>
-					<rectangle x1="0.008333333333333333" y1="0.2598187311178248" x2="0.9916666666666667" y2="0.338368580060423"/>
-					<node>MenuItemContainer</node>
-					<attr name="class">menu-item menu</attr>
-					<attr name="id">fileLoad</attr>
-				</info>
-			</any>
-			<any id="fileNew" uid="fileNew" owner="self" rows="" header="" columns="">
-				<info>
-					<xpath>/CSSBridge/ContextMenuContent/MenuBox/MenuItemContainer[5]</xpath>
-					<rectangle x1="0.008333333333333333" y1="0.338368580060423" x2="0.9916666666666667" y2="0.4169184290030212"/>
-					<node>MenuItemContainer</node>
-					<attr name="class">menu-item menu</attr>
-					<attr name="id">fileNew</attr>
-				</info>
-			</any>
-			<any id="fileSave" uid="fileSave" owner="self" rows="" header="" columns="">
-				<info>
-					<xpath>/CSSBridge/ContextMenuContent/MenuBox/MenuItemContainer[6]</xpath>
-					<rectangle x1="0.008333333333333333" y1="0.4169184290030212" x2="0.9916666666666667" y2="0.4954682779456193"/>
-					<node>MenuItemContainer</node>
-					<attr name="class">menu-item</attr>
-					<attr name="id">fileSave</attr>
-				</info>
-			</any>
-			<any id="fileSaveAs" uid="fileSaveAs" owner="self" rows="" header="" columns="">
-				<info>
-					<xpath>/CSSBridge/ContextMenuContent/MenuBox/MenuItemContainer[7]</xpath>
-					<rectangle x1="0.008333333333333333" y1="0.4954682779456193" x2="0.9916666666666667" y2="0.5740181268882175"/>
-					<node>MenuItemContainer</node>
-					<attr name="class">menu-item</attr>
-					<attr name="id">fileSaveAs</attr>
-				</info>
-			</any>
-			<any id="fileSaveAll" uid="fileSaveAll" owner="self" rows="" header="" columns="">
-				<info>
-					<xpath>/CSSBridge/ContextMenuContent/MenuBox/MenuItemContainer[8]</xpath>
-					<rectangle x1="0.008333333333333333" y1="0.5740181268882175" x2="0.9916666666666667" y2="0.6525679758308157"/>
-					<node>MenuItemContainer</node>
-					<attr name="class">menu-item</attr>
-					<attr name="id">fileSaveAll</attr>
-				</info>
-			</any>
-			<any id="fileLastOpenMatrix" uid="fileLastOpenMatrix" owner="self" rows="" header="" columns="">
-				<info>
-					<xpath>/CSSBridge/ContextMenuContent/MenuBox/MenuItemContainer[9]</xpath>
-					<rectangle x1="0.008333333333333333" y1="0.6616314199395771" x2="0.9916666666666667" y2="0.7401812688821753"/>
-					<node>MenuItemContainer</node>
-					<attr name="class">menu-item menu</attr>
-					<attr name="id">fileLastOpenMatrix</attr>
-				</info>
-			</any>
-			<any id="fileRunFromFile" uid="fileRunFromFile" owner="self" rows="" header="" columns="">
-				<info>
-					<xpath>/CSSBridge/ContextMenuContent/MenuBox/MenuItemContainer[10]</xpath>
-					<rectangle x1="0.008333333333333333" y1="0.7401812688821753" x2="0.9916666666666667" y2="0.8187311178247734"/>
-					<node>MenuItemContainer</node>
-					<attr name="class">menu-item</attr>
-					<attr name="id">fileRunFromFile</attr>
-				</info>
-			</any>
-			<any id="openReport" xpath=".//MenuItemContainer[contains(.,&amp;quot;Open report&amp;quot;)]" owner="self" rows="" header="" columns="">
-				<info>
-					<xpath>/CSSBridge/ContextMenuContent/MenuBox/MenuItemContainer[11]</xpath>
-					<rectangle x1="0.008333333333333333" y1="0.8187311178247734" x2="0.9916666666666667" y2="0.8972809667673716"/>
-					<node>MenuItemContainer</node>
-					<attr name="class">menu-item</attr>
-				</info>
-			</any>
-			<any id="exit" xpath=".//MenuItemContainer[contains(.,&amp;quot;Exit&amp;quot;)]" owner="self" rows="" header="" columns="">
-				<info>
-					<xpath>/CSSBridge/ContextMenuContent/MenuBox/MenuItemContainer[12]</xpath>
-					<rectangle x1="0.008333333333333333" y1="0.9063444108761329" x2="0.9916666666666667" y2="0.9848942598187311"/>
-					<node>MenuItemContainer</node>
-					<attr name="class">menu-item</attr>
-				</info>
-			</any>
-		</run>
-		<onClose/>
-		<close/>
-	</window>
-	<window name="MenuEdit">
-		<self>
-			<any id="self" xpath=".//Pane[@class=&amp;quot;root popup&amp;quot;]"/>
-		</self>
-		<onOpen/>
-		<run>
-			<any id="editUndo" uid="editUndo" owner="self" rows="" header="" columns="">
-				<info>
-					<xpath>/CSSBridge/ContextMenuContent/MenuBox/MenuItemContainer[1]</xpath>
-					<rectangle x1="0.010582010582010581" y1="0.05494505494505495" x2="0.9894179894179893" y2="0.34065934065934067"/>
-					<node>MenuItemContainer</node>
-					<attr name="class">menu-item</attr>
-					<attr name="id">editUndo</attr>
-				</info>
-			</any>
-			<any id="editRedo" uid="editRedo" owner="self" rows="" header="" columns="">
-				<info>
-					<xpath>/CSSBridge/ContextMenuContent/MenuBox/MenuItemContainer[2]</xpath>
-					<rectangle x1="0.010582010582010581" y1="0.34065934065934067" x2="0.9894179894179893" y2="0.6263736263736264"/>
-					<node>MenuItemContainer</node>
-					<attr name="class">menu-item</attr>
-					<attr name="id">editRedo</attr>
-				</info>
-			</any>
-			<any id="editSettings" uid="editSettings" owner="self" rows="" header="" columns="">
-				<info>
-					<xpath>/CSSBridge/ContextMenuContent/MenuBox/MenuItemContainer[3]</xpath>
-					<rectangle x1="0.010582010582010581" y1="0.6593406593406594" x2="0.9894179894179893" y2="0.9450549450549451"/>
-					<node>MenuItemContainer</node>
-					<attr name="class">menu-item</attr>
-					<attr name="id">editSettings</attr>
-				</info>
-			</any>
-		</run>
-		<onClose/>
-		<close/>
-	</window>
-	<window name="MenuView">
-		<self>
-			<any id="self" xpath=".//Pane[@class=&amp;quot;root popup&amp;quot;]"/>
-		</self>
-		<onOpen/>
-		<run>
-			<any id="viewSearch" uid="viewSearch" owner="self" rows="" header="" columns="">
-				<info>
-					<xpath>/CSSBridge/ContextMenuContent/MenuBox/MenuItemContainer[1]</xpath>
-					<rectangle x1="0.011049723756906077" y1="0.041666666666666664" x2="0.9889502762430938" y2="0.2583333333333333"/>
-					<node>MenuItemContainer</node>
-					<attr name="class">menu-item</attr>
-					<attr name="id">viewSearch</attr>
-				</info>
-			</any>
-			<any id="viewStore" uid="viewStore" owner="self" rows="" header="" columns="">
-				<info>
-					<xpath>/CSSBridge/ContextMenuContent/MenuBox/MenuItemContainer[3]</xpath>
-					<rectangle x1="0.011049723756906077" y1="0.5" x2="0.9889502762430938" y2="0.7166666666666667"/>
-					<node>MenuItemContainer</node>
-					<attr name="class">menu-item</attr>
-					<attr name="id">viewStore</attr>
-				</info>
-			</any>
-			<any id="viewShowTabs" uid="viewShowTabs" owner="self" rows="" header="" columns="">
-				<info>
-					<xpath>/CSSBridge/ContextMenuContent/MenuBox/MenuItemContainer[4]</xpath>
-					<rectangle x1="0.011049723756906077" y1="0.7416666666666667" x2="0.9889502762430938" y2="0.9583333333333334"/>
-					<node>MenuItemContainer</node>
-					<attr name="class">menu-item</attr>
-					<attr name="id">viewShowTabs</attr>
-				</info>
-			</any>
-			<any id="viewLogs" uid="viewLogs" owner="self" rows="" header="" columns="">
-				<info>
-					<xpath>/CSSBridge/ContextMenuContent/MenuBox/MenuItemContainer[2]</xpath>
-					<rectangle x1="0.011049723756906077" y1="0.2833333333333333" x2="0.9889502762430938" y2="0.5"/>
-					<node>MenuItemContainer</node>
-					<attr name="class">menu-item</attr>
-					<attr name="id">viewLogs</attr>
-				</info>
-			</any>
-		</run>
-		<onClose/>
-		<close/>
-	</window>
-	<window name="MenuMatrix">
-		<self>
-			<any id="self" xpath=".//Pane[@class=&amp;quot;root popup&amp;quot;]"/>
-		</self>
-		<onOpen/>
-		<run>
-			<any id="matrixStart" uid="matrixStart" owner="self" rows="" header="" columns="">
-				<info>
-					<xpath>/CSSBridge/ContextMenuContent/MenuBox/MenuItemContainer[1]</xpath>
-					<rectangle x1="0.009009009009009009" y1="0.042735042735042736" x2="0.990990990990991" y2="0.26495726495726496"/>
-					<node>MenuItemContainer</node>
-					<attr name="class">menu-item</attr>
-					<attr name="id">matrixStart</attr>
-				</info>
-			</any>
-			<any id="matrixStop" uid="matrixStop" owner="self" rows="" header="" columns="">
-				<info>
-					<xpath>/CSSBridge/ContextMenuContent/MenuBox/MenuItemContainer[2]</xpath>
-					<rectangle x1="0.009009009009009009" y1="0.26495726495726496" x2="0.990990990990991" y2="0.4871794871794872"/>
-					<node>MenuItemContainer</node>
-					<attr name="class">menu-item</attr>
-					<attr name="id">matrixStop</attr>
-				</info>
-			</any>
-			<any id="matrixShowWait" uid="matrixShowWait" owner="self" rows="" header="" columns="">
-				<info>
-					<xpath>/CSSBridge/ContextMenuContent/MenuBox/MenuItemContainer[3]</xpath>
-					<rectangle x1="0.009009009009009009" y1="0.4871794871794872" x2="0.990990990990991" y2="0.7094017094017094"/>
-					<node>MenuItemContainer</node>
-					<attr name="class">menu-item check-menu-item selected</attr>
-					<attr name="id">matrixShowWait</attr>
-				</info>
-			</any>
-			<any id="matrixSchedule" uid="matrixSchedule" owner="self" rows="" header="" columns="">
-				<info>
-					<xpath>/CSSBridge/ContextMenuContent/MenuBox/MenuItemContainer[4]</xpath>
-					<rectangle x1="0.009009009009009009" y1="0.7350427350427351" x2="0.990990990990991" y2="0.9572649572649574"/>
-					<node>MenuItemContainer</node>
-					<attr name="class">menu-item</attr>
-					<attr name="id">matrixSchedule</attr>
-				</info>
-			</any>
-		</run>
-		<onClose/>
-		<close/>
-	</window>
-	<window name="MenuGit">
-		<self>
-			<any id="self" xpath=".//Pane[@class=&amp;quot;root popup&amp;quot;]"/>
-		</self>
-		<onOpen/>
-		<run>
-			<any id="gitPull" uid="gitPull" owner="self" rows="" header="" columns="">
-				<info>
-					<xpath>/CSSBridge/ContextMenuContent/MenuBox/MenuItemContainer[3]</xpath>
-					<rectangle x1="0.012903225806451613" y1="0.24" x2="0.9870967741935484" y2="0.34400000000000003"/>
-					<node>MenuItemContainer</node>
-					<attr name="class">menu-item</attr>
-					<attr name="id">gitPull</attr>
-				</info>
-			</any>
-			<any id="gitReset" uid="gitReset" owner="self" rows="" header="" columns="">
-				<info>
-					<xpath>/CSSBridge/ContextMenuContent/MenuBox/MenuItemContainer[4]</xpath>
-					<rectangle x1="0.012903225806451613" y1="0.34400000000000003" x2="0.9870967741935484" y2="0.448"/>
-					<node>MenuItemContainer</node>
-					<attr name="class">menu-item</attr>
-					<attr name="id">gitReset</attr>
-				</info>
-			</any>
-			<any id="gitStatus" uid="gitStatus" owner="self" rows="" header="" columns="">
-				<info>
-					<xpath>/CSSBridge/ContextMenuContent/MenuBox/MenuItemContainer[5]</xpath>
-					<rectangle x1="0.012903225806451613" y1="0.448" x2="0.9870967741935484" y2="0.552"/>
-					<node>MenuItemContainer</node>
-					<attr name="class">menu-item</attr>
-					<attr name="id">gitStatus</attr>
-				</info>
-			</any>
-			<any id="gitMerge" uid="gitMerge" owner="self" rows="" header="" columns="">
-				<info>
-					<xpath>/CSSBridge/ContextMenuContent/MenuBox/MenuItemContainer[6]</xpath>
-					<rectangle x1="0.012903225806451613" y1="0.552" x2="0.9870967741935484" y2="0.656"/>
-					<node>MenuItemContainer</node>
-					<attr name="class">menu-item</attr>
-					<attr name="id">gitMerge</attr>
-				</info>
-			</any>
-			<any id="gitBranches" uid="gitBranches" owner="self" rows="" header="" columns="">
-				<info>
-					<xpath>/CSSBridge/ContextMenuContent/MenuBox/MenuItemContainer[7]</xpath>
-					<rectangle x1="0.012903225806451613" y1="0.656" x2="0.9870967741935484" y2="0.76"/>
-					<node>MenuItemContainer</node>
-					<attr name="class">menu-item</attr>
-					<attr name="id">gitBranches</attr>
-				</info>
-			</any>
-			<any id="gitTags" uid="gitTags" owner="self" rows="" header="" columns="">
-				<info>
-					<xpath>/CSSBridge/ContextMenuContent/MenuBox/MenuItemContainer[8]</xpath>
-					<rectangle x1="0.012903225806451613" y1="0.76" x2="0.9870967741935484" y2="0.864"/>
-					<node>MenuItemContainer</node>
-					<attr name="class">menu-item</attr>
-					<attr name="id">gitTags</attr>
-				</info>
-			</any>
-			<any id="gitChangeCredential" uid="gitChangeCredential" owner="self" rows="" header="" columns="">
-				<info>
-					<xpath>/CSSBridge/ContextMenuContent/MenuBox/MenuItemContainer[9]</xpath>
-					<rectangle x1="0.012903225806451613" y1="0.876" x2="0.9870967741935484" y2="0.98"/>
-					<node>MenuItemContainer</node>
-					<attr name="class">menu-item</attr>
-					<attr name="id">gitChangeCredential</attr>
-				</info>
-			</any>
-			<any id="gitClone" uid="gitClone" owner="self" rows="" header="" columns="">
-				<info>
-					<xpath>/CSSBridge/ContextMenuContent/MenuBox/MenuItemContainer[1]</xpath>
-					<rectangle x1="0.012903225806451613" y1="0.02" x2="0.9870967741935484" y2="0.124"/>
-					<node>MenuItemContainer</node>
-					<attr name="class">menu-item</attr>
-					<attr name="id">gitClone</attr>
-				</info>
-			</any>
-			<any id="gitPublishing" uid="gitPublishing" owner="self" rows="" header="" columns="">
-				<info>
-					<xpath>/CSSBridge/ContextMenuContent/MenuBox/MenuItemContainer[2]</xpath>
-					<rectangle x1="0.012903225806451613" y1="0.136" x2="0.9870967741935484" y2="0.24"/>
-					<node>MenuItemContainer</node>
-					<attr name="class">menu-item menu</attr>
-					<attr name="id">gitPublishing</attr>
-				</info>
-			</any>
-		</run>
-		<onClose/>
-		<close/>
-	</window>
-	<window name="MenuHelp">
-		<self>
-			<any id="self" xpath=".//Pane[@class=&amp;quot;root popup&amp;quot;]"/>
-		</self>
-		<onOpen/>
-		<run>
-			<any id="helpActionsHelp" uid="helpActionsHelp" owner="self" rows="" header="" columns="">
-				<info>
-					<xpath>/CSSBridge/ContextMenuContent/MenuBox/MenuItemContainer[2]</xpath>
-					<rectangle x1="0.012903225806451613" y1="0.34065934065934067" x2="0.9870967741935484" y2="0.6263736263736264"/>
-					<node>MenuItemContainer</node>
-					<attr name="class">menu-item</attr>
-					<attr name="id">helpActionsHelp</attr>
-				</info>
-			</any>
-			<any id="helpAboutProgram" uid="helpAboutProgram" owner="self" rows="" header="" columns="">
-				<info>
-					<xpath>/CSSBridge/ContextMenuContent/MenuBox/MenuItemContainer[3]</xpath>
-					<rectangle x1="0.012903225806451613" y1="0.6593406593406594" x2="0.9870967741935484" y2="0.9450549450549451"/>
-					<node>MenuItemContainer</node>
-					<attr name="class">menu-item</attr>
-					<attr name="id">helpAboutProgram</attr>
-				</info>
-			</any>
-			<any id="wizard" uid="wizard" owner="self" rows="" header="" columns="">
-				<info>
-					<xpath>/CSSBridge/ContextMenuContent/MenuBox/MenuItemContainer[1]</xpath>
-					<rectangle x1="0.012903225806451613" y1="0.05494505494505495" x2="0.9870967741935484" y2="0.34065934065934067"/>
-					<node>MenuItemContainer</node>
-					<attr name="class">menu-item menu</attr>
-					<attr name="id">wizard</attr>
-				</info>
-			</any>
-		</run>
-		<onClose/>
-		<close/>
-	</window>
-	<window name="QuestionDialog">
-		<self>
-			<frame id="self" title="Save"/>
-		</self>
-		<onOpen>
-			<wait id="waitOpen" ref="self" addition="WaitToAppear" timeout="5000"/>
-		</onOpen>
-		<run>
-			<label id="header" xpath="" owner="self" class="label" rows="" header="" columns="">
-				<info>
-					<xpath>/DialogPane/GridPane/Label</xpath>
-					<rectangle x1="0.015299026425591097" y1="0.088" x2="0.9694019471488178" y2="0.24"/>
-					<node>Label</node>
-					<attr name="class">label</attr>
-				</info>
-			</label>
-			<label id="question" xpath="" owner="self" class="label content" rows="" header="" columns="">
-				<info>
-					<xpath>/DialogPane/Label</xpath>
-					<rectangle x1="0.0" y1="0.328" x2="1.0" y2="0.6"/>
-					<node>Label</node>
-					<attr name="class">label content</attr>
-				</info>
-			</label>
-			<button id="no" xpath="" owner="self" text="No" rows="" header="" columns="">
-				<info>
-					<xpath>/DialogPane/ButtonBar/com.sun.javafx.scene.control.skin.ButtonBarSkin_1/Button[1]</xpath>
-					<rectangle x1="0.5855354659248957" y1="0.6880000000000001" x2="0.7037552155771906" y2="0.912"/>
-					<node>Button</node>
-					<attr name="class">button</attr>
-				</info>
-			</button>
-			<button id="yes" xpath="" owner="self" text="Yes" rows="" header="" columns="">
-				<info>
-					<xpath>/DialogPane/ButtonBar/com.sun.javafx.scene.control.skin.ButtonBarSkin_1/Button[2]</xpath>
-					<rectangle x1="0.7260083449235049" y1="0.6880000000000001" x2="0.8442280945757997" y2="0.912"/>
-					<node>Button</node>
-					<attr name="class">button</attr>
-				</info>
-			</button>
-			<button id="cancel" xpath="" owner="self" text="Cancel" rows="" header="" columns="">
-				<info>
-					<xpath>/DialogPane/ButtonBar/com.sun.javafx.scene.control.skin.ButtonBarSkin_1/Button[3]</xpath>
-					<rectangle x1="0.866481223922114" y1="0.6880000000000001" x2="0.9847009735744089" y2="0.912"/>
-					<node>Button</node>
-					<attr name="class">button</attr>
-				</info>
-			</button>
-		</run>
-		<onClose/>
-		<close/>
-	</window>
-	<window name="Notification">
-		<self>
-			<frame id="self" xpath="./Popup"/>
-		</self>
-		<onOpen/>
-		<run>
-			<label id="notificationType" xpath="" owner="self" text="Info" rows="" header="" columns="">
-				<info>
-					<xpath>/Pane/com.exactprosystems.jf.tool.custom.Notifications_NotificationPopupHandler_1/GridPane/Label[1]</xpath>
-					<rectangle x1="0.02252252252252252" y1="0.10101010101010102" x2="0.8513513513513513" y2="0.29292929292929293"/>
-					<node>Label</node>
-					<attr name="class">label notificationTitle</attr>
-				</info>
-			</label>
-			<label id="notificationMessage" xpath="" owner="self" class="label notificationMsg info" rows="" header="" columns="">
-				<info>
-					<xpath>/Pane/com.exactprosystems.jf.tool.custom.Notifications_NotificationPopupHandler_1/GridPane/Label[2]</xpath>
-					<rectangle x1="0.02252252252252252" y1="0.29292929292929293" x2="0.9234234234234234" y2="0.8989898989898991"/>
-					<node>Label</node>
-					<attr name="class">label notificationMsg info</attr>
-				</info>
-			</label>
-			<button id="copyBtn" xpath="" owner="self" text="C" rows="" header="" columns="">
-				<info>
-					<xpath>/Pane/com.exactprosystems.jf.tool.custom.Notifications_NotificationPopupHandler_1/GridPane/Button[1]</xpath>
-					<rectangle x1="0.8513513513513513" y1="0.12121212121212122" x2="0.8873873873873874" y2="0.2828282828282829"/>
-					<node>Button</node>
-					<attr name="class">notificationCopyButton</attr>
-				</info>
-			</button>
-			<checkBox id="cbPin" xpath="" owner="self" rows="" header="" columns="">
-				<info>
-					<xpath>/Pane/com.exactprosystems.jf.tool.custom.Notifications_NotificationPopupHandler_1/GridPane/CheckBox</xpath>
-					<rectangle x1="0.8873873873873874" y1="0.12121212121212122" x2="0.9324324324324325" y2="0.2828282828282829"/>
-					<node>CheckBox</node>
-					<attr name="class">transparentBackground</attr>
-				</info>
-			</checkBox>
-			<button id="closeBtn" xpath="" owner="self" class="notificationCloseButton" name="" rows="" header="" columns="">
-				<info>
-					<xpath>/Pane/com.exactprosystems.jf.tool.custom.Notifications_NotificationPopupHandler_1/GridPane/Button[2]</xpath>
-					<rectangle x1="0.9414414414414415" y1="0.10101010101010102" x2="0.9774774774774775" y2="0.26262626262626265"/>
-					<node>Button</node>
-					<attr name="class">notificationCloseButton</attr>
-				</info>
-			</button>
-		</run>
-		<onClose/>
-		<close/>
-	</window>
-	<window name="ConfigurationPanel">
-		<self>
-			<panel id="self" uid="projectGridPane" xpath=""/>
-		</self>
-		<onOpen/>
-		<run>
-			<label id="projectLabel" xpath=".//Label[@id=&amp;quot;projectLabel&amp;quot;]" owner="self" rows="" header="" columns="">
-				<info>
-					<xpath>/VBox/Group/Label</xpath>
-					<rectangle x1="0.0" y1="0.008556149732620321" x2="0.05" y2="0.05561497326203209"/>
-					<node>Label</node>
-					<attr name="class">label</attr>
-					<attr name="id">projectLabel</attr>
-				</info>
-			</label>
-			<button id="reloadConfiguration" xpath=".//Button[@id=&amp;quot;reloadConfiguration&amp;quot;]" owner="self" rows="" header="" columns="">
-				<info>
-					<xpath>/VBox/VBox/Button[1]</xpath>
-					<rectangle x1="0.0" y1="0.06524064171122995" x2="0.07500000000000001" y2="0.09197860962566845"/>
-					<node>Button</node>
-					<attr name="class">button transparentBackground</attr>
-					<attr name="id">reloadConfiguration</attr>
-					<attr name="tooltip">Reload configuration</attr>
-				</info>
-			</button>
-			<button id="saveConfiguration" xpath=".//Button[@id=&amp;quot;saveConfiguration&amp;quot;]" owner="self" rows="" header="" columns="">
-				<info>
-					<xpath>/VBox/VBox/Button[2]</xpath>
-					<rectangle x1="0.0" y1="0.09197860962566845" x2="0.07500000000000001" y2="0.11871657754010695"/>
-					<node>Button</node>
-					<attr name="class">button transparentBackground</attr>
-					<attr name="id">saveConfiguration</attr>
-					<attr name="tooltip">Save configuration</attr>
-				</info>
-			</button>
-			<toggleButton id="sortAZ" xpath=".//HBox[@class=&amp;quot;container&amp;quot;]/ToggleButton[1]" owner="self" rows="" header="" columns="">
-				<info>
-					<xpath>/BorderPane/ConfigurationToolBar/HBox/ToggleButton[1]</xpath>
-					<rectangle x1="0.115625" y1="0.006417112299465241" x2="0.22187500000000002" y2="0.03529411764705882"/>
-					<node>ToggleButton</node>
-					<attr name="class">toggle-button</attr>
-					<attr name="tooltip">Sorting via alphabet asc</attr>
-				</info>
-			</toggleButton>
-			<toggleButton id="sortZA" xpath=".//HBox[@class=&amp;quot;container&amp;quot;]/ToggleButton[2]" owner="self" rows="" header="" columns="">
-				<info>
-					<xpath>/BorderPane/ConfigurationToolBar/HBox/ToggleButton[2]</xpath>
-					<rectangle x1="0.234375" y1="0.006417112299465241" x2="0.340625" y2="0.03529411764705882"/>
-					<node>ToggleButton</node>
-					<attr name="class">toggle-button</attr>
-					<attr name="tooltip">Sorting via alphabet desc</attr>
-				</info>
-			</toggleButton>
-			<toggleButton id="sort19" xpath=".//HBox[@class=&amp;quot;container&amp;quot;]/ToggleButton[3]" owner="self" rows="" header="" columns="">
-				<info>
-					<xpath>/BorderPane/ConfigurationToolBar/HBox/ToggleButton[3]</xpath>
-					<rectangle x1="0.353125" y1="0.006417112299465241" x2="0.45937500000000003" y2="0.03529411764705882"/>
-					<node>ToggleButton</node>
-					<attr name="class">toggle-button</attr>
-					<attr name="tooltip">Sorting via date asc</attr>
-				</info>
-			</toggleButton>
-			<toggleButton id="sort91" xpath=".//HBox[@class=&amp;quot;container&amp;quot;]/ToggleButton[4]" owner="self" rows="" header="" columns="">
-				<info>
-					<xpath>/BorderPane/ConfigurationToolBar/HBox/ToggleButton[4]</xpath>
-					<rectangle x1="0.47187500000000004" y1="0.006417112299465241" x2="0.578125" y2="0.03529411764705882"/>
-					<node>ToggleButton</node>
-					<attr name="class">toggle-button</attr>
-					<attr name="tooltip">Sorting via date desc</attr>
-				</info>
-			</toggleButton>
-			<button id="btnSmallWizard" xpath=".//WizardButton[contains(.,&amp;quot;&amp;quot;)]" owner="self" rows="" header="" columns="">
-				<info>
-					<xpath>/BorderPane/ConfigurationToolBar/HBox/WizardButton</xpath>
-					<rectangle x1="0.6218750000000001" y1="0.0074866310160427805" x2="0.696875" y2="0.034224598930481284"/>
-					<node>WizardButton</node>
-					<attr name="class">button transparentBackground</attr>
-					<attr name="id">btnSmallWizard</attr>
-					<attr name="tooltip">Wizards</attr>
-				</info>
-			</button>
-			<button id="btnSmallUndo" xpath=".//Button[@id=&amp;quot;btnSmallUndo&amp;quot;]" owner="self" rows="" header="" columns="">
-				<info>
-					<xpath>/BorderPane/ConfigurationToolBar/HBox/Button[1]</xpath>
-					<rectangle x1="0.7093750000000001" y1="0.0074866310160427805" x2="0.784375" y2="0.034224598930481284"/>
-					<node>Button</node>
-					<attr name="class">button transparentBackground</attr>
-					<attr name="id">btnSmallUndo</attr>
-				</info>
-			</button>
-			<button id="btnSmallRedo" xpath=".//Button[@id=&amp;quot;btnSmallRedo&amp;quot;]" owner="self" rows="" header="" columns="">
-				<info>
-					<xpath>/BorderPane/ConfigurationToolBar/HBox/Button[2]</xpath>
-					<rectangle x1="0.796875" y1="0.0074866310160427805" x2="0.8718750000000001" y2="0.034224598930481284"/>
-					<node>Button</node>
-					<attr name="class">button transparentBackground</attr>
-					<attr name="id">btnSmallRedo</attr>
-				</info>
-			</button>
-			<tree id="configurationTree" xpath="./BorderPane/SplitPane/Content[1]/ConfigurationTreeView" owner="self" rows="" header="" columns="">
-				<info>
-					<xpath>/BorderPane/SplitPane/Content[1]/ConfigurationTreeView</xpath>
-					<rectangle x1="0.09375" y1="0.040641711229946524" x2="1.0" y2="0.6663101604278076"/>
-					<node>ConfigurationTreeView</node>
-					<attr name="class">tree-view</attr>
-				</info>
-			</tree>
-			<table id="parametersTable" xpath="./BorderPane/SplitPane/Content[2]/ParametersTableView" owner="self" rows="" header="" columns="">
-				<info>
-					<xpath>/BorderPane/SplitPane/Content[2]/ParametersTableView</xpath>
-					<rectangle x1="0.096875" y1="0.6737967914438503" x2="0.9968750000000001" y2="0.9989304812834224"/>
-					<node>ParametersTableView</node>
-					<attr name="class">table-view</attr>
-				</info>
-			</table>
-		</run>
-		<onClose/>
-		<close/>
-	</window>
-	<window name="MatrixTab">
-		<self/>
-		<onOpen/>
-		<run/>
-		<onClose/>
-		<close/>
-	</window>
-	<window name="DictionaryTab">
-		<self>
-			<panel id="self" uid="dictionaryPane"/>
-		</self>
-		<onOpen>
-			<wait id="waitOpen" ref="self" addition="WaitToAppear" timeout="5000"/>
-		</onOpen>
-		<run>
-			<textBox id="findnullnullfind&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;XXXX"
-					 xpath=".//FindListView[contains(.,&amp;quot;null&lt;br&gt;findnullnullfind&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;XXXX&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;MainMain&lt;br&gt;&lt;br&gt;MenuMenu&lt;br&gt;&lt;br&gt;TestTableTestTable&lt;br&gt;&lt;br&gt;MyDialogMyDialog&amp;quot;)]/CustomFieldWithButton"
-					 owner="self" rows="" header="" columns="">
-				<info>
-					<xpath>
-						/SplitPane/Content[1]/ScrollPane/com.sun.javafx.scene.control.skin.ScrollPaneSkin_3/com.sun.javafx.scene.control.skin.ScrollPaneSkin_4/GridPane/HBox/com.exactprosystems.jf.tool.custom.BorderWrapper_StrokeBorder_1[1]/com.exactprosystems.jf.tool.custom.BorderWrapper_StrokeBorder_1/com.exactprosystems.jf.tool.custom.BorderWrapper_StrokeBorder_1/VBox/FindListView/CustomFieldWithButton
-					</xpath>
-					<rectangle x1="0.018143009605122735" y1="0.03765227021040975" x2="0.1696905016008538" y2="0.06644518272425248"/>
-					<node>CustomFieldWithButton</node>
-					<attr name="class">text-input text-field custom-text-field customFieldWithButton</attr>
-				</info>
-			</textBox>
-			<listView id="MainMain&lt;br&gt;&lt;br&gt;MenuMenu&lt;br&gt;&lt;br&gt;TestTableTestTable&lt;br&gt;&lt;br&gt;MyDialogMyDialog"
-					  xpath=".//ListView[contains(.,&amp;quot;MainMainMenuMenuTestTableTestTableMyDialogMyDialog&amp;quot;)]" owner="self" rows="" header="" columns="">
-				<info>
-					<xpath>
-						/SplitPane/Content[1]/ScrollPane/com.sun.javafx.scene.control.skin.ScrollPaneSkin_3/com.sun.javafx.scene.control.skin.ScrollPaneSkin_4/GridPane/HBox/com.exactprosystems.jf.tool.custom.BorderWrapper_StrokeBorder_1[1]/com.exactprosystems.jf.tool.custom.BorderWrapper_StrokeBorder_1/com.exactprosystems.jf.tool.custom.BorderWrapper_StrokeBorder_1/VBox/FindListView/ListView
-					</xpath>
-					<rectangle x1="0.018143009605122735" y1="0.07087486157253599" x2="0.1696905016008538" y2="0.33554817275747506"/>
-					<node>ListView</node>
-					<attr name="class">list-view</attr>
-					<attr name="tooltip">""Use drag-n-drop to reorder elements"</attr>
-				</info>
-			</listView>
-			<button id="dictionaryBtnNewDialog" xpath=".//Button[@id=&amp;quot;dictionaryBtnNewDialog&amp;quot;]" owner="self" rows="" header="" columns="">
-				<info>
-					<xpath>
-						/SplitPane/Content[1]/ScrollPane/com.sun.javafx.scene.control.skin.ScrollPaneSkin_3/com.sun.javafx.scene.control.skin.ScrollPaneSkin_4/GridPane/HBox/com.exactprosystems.jf.tool.custom.BorderWrapper_StrokeBorder_1[1]/com.exactprosystems.jf.tool.custom.BorderWrapper_StrokeBorder_1/com.exactprosystems.jf.tool.custom.BorderWrapper_StrokeBorder_1/VBox/HBox/Button[1]
-					</xpath>
-					<rectangle x1="0.018143009605122735" y1="0.34440753045404204" x2="0.0352187833511206" y2="0.3798449612403101"/>
-					<node>Button</node>
-					<attr name="class">button transparentBackground</attr>
-					<attr name="id">dictionaryBtnNewDialog</attr>
-					<attr name="tooltip">Create new window</attr>
-				</info>
-			</button>
-			<button id="dictionaryBtnDeleteDialog" xpath=".//Button[@id=&amp;quot;dictionaryBtnDeleteDialog&amp;quot;]" owner="self" rows="" header="" columns="">
-				<info>
-					<xpath>
-						/SplitPane/Content[1]/ScrollPane/com.sun.javafx.scene.control.skin.ScrollPaneSkin_3/com.sun.javafx.scene.control.skin.ScrollPaneSkin_4/GridPane/HBox/com.exactprosystems.jf.tool.custom.BorderWrapper_StrokeBorder_1[1]/com.exactprosystems.jf.tool.custom.BorderWrapper_StrokeBorder_1/com.exactprosystems.jf.tool.custom.BorderWrapper_StrokeBorder_1/VBox/HBox/Button[2]
-					</xpath>
-					<rectangle x1="0.03735325506937033" y1="0.34440753045404204" x2="0.0544290288153682" y2="0.3798449612403101"/>
-					<node>Button</node>
-					<attr name="class">button transparentBackground</attr>
-					<attr name="id">dictionaryBtnDeleteDialog</attr>
-					<attr name="tooltip">Delete selected window</attr>
-				</info>
-			</button>
-			<button id="dictionaryBtnCopyDialog" xpath=".//Button[@id=&amp;quot;dictionaryBtnCopyDialog&amp;quot;]" owner="self" rows="" header="" columns="">
-				<info>
-					<xpath>
-						/SplitPane/Content[1]/ScrollPane/com.sun.javafx.scene.control.skin.ScrollPaneSkin_3/com.sun.javafx.scene.control.skin.ScrollPaneSkin_4/GridPane/HBox/com.exactprosystems.jf.tool.custom.BorderWrapper_StrokeBorder_1[1]/com.exactprosystems.jf.tool.custom.BorderWrapper_StrokeBorder_1/com.exactprosystems.jf.tool.custom.BorderWrapper_StrokeBorder_1/VBox/HBox/Button[3]
-					</xpath>
-					<rectangle x1="0.05656350053361793" y1="0.34440753045404204" x2="0.0736392742796158" y2="0.3798449612403101"/>
-					<node>Button</node>
-					<attr name="class">button transparentBackground</attr>
-					<attr name="id">dictionaryBtnCopyDialog</attr>
-					<attr name="tooltip">Copy current dialog with all elements</attr>
-				</info>
-			</button>
-			<button id="dictionaryBtnPasteDialog" xpath=".//Button[@id=&amp;quot;dictionaryBtnPasteDialog&amp;quot;]" owner="self" rows="" header="" columns="">
-				<info>
-					<xpath>
-						/SplitPane/Content[1]/ScrollPane/com.sun.javafx.scene.control.skin.ScrollPaneSkin_3/com.sun.javafx.scene.control.skin.ScrollPaneSkin_4/GridPane/HBox/com.exactprosystems.jf.tool.custom.BorderWrapper_StrokeBorder_1[1]/com.exactprosystems.jf.tool.custom.BorderWrapper_StrokeBorder_1/com.exactprosystems.jf.tool.custom.BorderWrapper_StrokeBorder_1/VBox/HBox/Button[4]
-					</xpath>
-					<rectangle x1="0.07577374599786553" y1="0.34440753045404204" x2="0.09284951974386339" y2="0.3798449612403101"/>
-					<node>Button</node>
-					<attr name="class">button transparentBackground</attr>
-					<attr name="id">dictionaryBtnPasteDialog</attr>
-					<attr name="tooltip">Paste copied dialog</attr>
-				</info>
-			</button>
-			<button id="btnWizard" xpath=".//HBox[@id=&amp;quot;hBoxWindow&amp;quot;]/WizardButton" owner="self" rows="" header="" columns="">
-				<info>
-					<xpath>
-						/SplitPane/Content[1]/ScrollPane/com.sun.javafx.scene.control.skin.ScrollPaneSkin_3/com.sun.javafx.scene.control.skin.ScrollPaneSkin_4/GridPane/HBox/com.exactprosystems.jf.tool.custom.BorderWrapper_StrokeBorder_1[1]/com.exactprosystems.jf.tool.custom.BorderWrapper_StrokeBorder_1/com.exactprosystems.jf.tool.custom.BorderWrapper_StrokeBorder_1/VBox/HBox/WizardButton
-					</xpath>
-					<rectangle x1="0.09498399146211313" y1="0.34440753045404204" x2="0.112059765208111" y2="0.3798449612403101"/>
-					<node>WizardButton</node>
-					<attr name="class">button transparentBackground</attr>
-					<attr name="id">btnWizard</attr>
-					<attr name="tooltip">Wizards</attr>
-				</info>
-			</button>
-			<radioButton id="Self" xpath=".//RadioButton[@id=&amp;quot;Self&amp;quot;]" owner="self" rows="" header="" columns="">
-				<info>
-					<xpath>/SplitPane/Content[1]/ScrollPane/com.sun.javafx.scene.control.skin.ScrollPaneSkin_3/com.sun.javafx.scene.control.skin.ScrollPaneSkin_4/GridPane/HBox/VBox/RadioButton[1]
-					</xpath>
-					<rectangle x1="0.1872998932764141" y1="0.150609080841639" x2="0.21344717182497333" y2="0.1716500553709856"/>
-					<node>RadioButton</node>
-					<attr name="class">radio-button</attr>
-					<attr name="id">Self</attr>
-				</info>
-			</radioButton>
-			<radioButton id="OnOpen" xpath=".//RadioButton[@id=&amp;quot;OnOpen&amp;quot;]" owner="self" rows="" header="" columns="">
-				<info>
-					<xpath>/SplitPane/Content[1]/ScrollPane/com.sun.javafx.scene.control.skin.ScrollPaneSkin_3/com.sun.javafx.scene.control.skin.ScrollPaneSkin_4/GridPane/HBox/VBox/RadioButton[2]
-					</xpath>
-					<rectangle x1="0.1872998932764141" y1="0.17497231450719822" x2="0.22998932764140875" y2="0.19601328903654483"/>
-					<node>RadioButton</node>
-					<attr name="class">radio-button</attr>
-					<attr name="id">OnOpen</attr>
-				</info>
-			</radioButton>
-			<radioButton id="Run" xpath=".//RadioButton[@id=&amp;quot;Run&amp;quot;]" owner="self" rows="" header="" columns="">
-				<info>
-					<xpath>/SplitPane/Content[1]/ScrollPane/com.sun.javafx.scene.control.skin.ScrollPaneSkin_3/com.sun.javafx.scene.control.skin.ScrollPaneSkin_4/GridPane/HBox/VBox/RadioButton[3]
-					</xpath>
-					<rectangle x1="0.1872998932764141" y1="0.19933554817275748" x2="0.21398078975453577" y2="0.2203765227021041"/>
-					<node>RadioButton</node>
-					<attr name="class">radio-button</attr>
-					<attr name="id">Run</attr>
-				</info>
-			</radioButton>
-			<radioButton id="OnClose" xpath=".//RadioButton[@id=&amp;quot;OnClose&amp;quot;]" owner="self" rows="" header="" columns="">
-				<info>
-					<xpath>/SplitPane/Content[1]/ScrollPane/com.sun.javafx.scene.control.skin.ScrollPaneSkin_3/com.sun.javafx.scene.control.skin.ScrollPaneSkin_4/GridPane/HBox/VBox/RadioButton[4]
-					</xpath>
-					<rectangle x1="0.1872998932764141" y1="0.2236987818383167" x2="0.2305229455709712" y2="0.24473975636766335"/>
-					<node>RadioButton</node>
-					<attr name="class">radio-button</attr>
-					<attr name="id">OnClose</attr>
-				</info>
-			</radioButton>
-			<radioButton id="Close" xpath=".//RadioButton[@id=&amp;quot;Close&amp;quot;]" owner="self" rows="" header="" columns="">
-				<info>
-					<xpath>/SplitPane/Content[1]/ScrollPane/com.sun.javafx.scene.control.skin.ScrollPaneSkin_3/com.sun.javafx.scene.control.skin.ScrollPaneSkin_4/GridPane/HBox/VBox/RadioButton[5]
-					</xpath>
-					<rectangle x1="0.1872998932764141" y1="0.24806201550387597" x2="0.2193169690501601" y2="0.2691029900332226"/>
-					<node>RadioButton</node>
-					<attr name="class">radio-button</attr>
-					<attr name="id">Close</attr>
-				</info>
-			</radioButton>
-			<textBox id="findnullnullfind&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;XXXX"
-					 xpath=".//VBox[@id=&amp;quot;vBoxElement&amp;quot;]/FindListView/CustomFieldWithButton" owner="self" rows="" header="" columns="">
-				<info>
-					<xpath>
-						/SplitPane/Content[1]/ScrollPane/com.sun.javafx.scene.control.skin.ScrollPaneSkin_3/com.sun.javafx.scene.control.skin.ScrollPaneSkin_4/GridPane/HBox/com.exactprosystems.jf.tool.custom.BorderWrapper_StrokeBorder_1[2]/com.exactprosystems.jf.tool.custom.BorderWrapper_StrokeBorder_1/com.exactprosystems.jf.tool.custom.BorderWrapper_StrokeBorder_1/VBox/FindListView/CustomFieldWithButton
-					</xpath>
-					<rectangle x1="0.25827107790821774" y1="0.03765227021040975" x2="0.39167556029882605" y2="0.06644518272425248"/>
-					<node>CustomFieldWithButton</node>
-					<attr name="class">text-input text-field custom-text-field customFieldWithButton</attr>
-				</info>
-			</textBox>
-			<listView xpath=".//VBox[@id=&amp;quot;vBoxElement&amp;quot;]/FindListView/ListView" owner="self" rows="" header="" columns="">
-				<info>
-					<xpath>
-						/SplitPane/Content[1]/ScrollPane/com.sun.javafx.scene.control.skin.ScrollPaneSkin_3/com.sun.javafx.scene.control.skin.ScrollPaneSkin_4/GridPane/HBox/com.exactprosystems.jf.tool.custom.BorderWrapper_StrokeBorder_1[2]/com.exactprosystems.jf.tool.custom.BorderWrapper_StrokeBorder_1/com.exactprosystems.jf.tool.custom.BorderWrapper_StrokeBorder_1/VBox/FindListView/ListView
-					</xpath>
-					<rectangle x1="0.25827107790821774" y1="0.07087486157253599" x2="0.39167556029882605" y2="0.33554817275747506"/>
-					<node>ListView</node>
-					<attr name="class">list-view</attr>
-					<attr name="tooltip">""Use drag-n-drop to reorder elements"</attr>
-				</info>
-			</listView>
-			<button id="dictionaryBtnNewElement" xpath=".//Button[@id=&amp;quot;dictionaryBtnNewElement&amp;quot;]" owner="self" rows="" header="" columns="">
-				<info>
-					<xpath>
-						/SplitPane/Content[1]/ScrollPane/com.sun.javafx.scene.control.skin.ScrollPaneSkin_3/com.sun.javafx.scene.control.skin.ScrollPaneSkin_4/GridPane/HBox/com.exactprosystems.jf.tool.custom.BorderWrapper_StrokeBorder_1[2]/com.exactprosystems.jf.tool.custom.BorderWrapper_StrokeBorder_1/com.exactprosystems.jf.tool.custom.BorderWrapper_StrokeBorder_1/VBox/HBox/Button[1]
-					</xpath>
-					<rectangle x1="0.25827107790821774" y1="0.34440753045404204" x2="0.2753468516542156" y2="0.3798449612403101"/>
-					<node>Button</node>
-					<attr name="class">button transparentBackground</attr>
-					<attr name="id">dictionaryBtnNewElement</attr>
-					<attr name="tooltip">Create new Element</attr>
-				</info>
-			</button>
-			<button id="dictionaryBtnDeleteElement" xpath=".//Button[@id=&amp;quot;dictionaryBtnDeleteElement&amp;quot;]" owner="self" rows="" header="" columns="">
-				<info>
-					<xpath>
-						/SplitPane/Content[1]/ScrollPane/com.sun.javafx.scene.control.skin.ScrollPaneSkin_3/com.sun.javafx.scene.control.skin.ScrollPaneSkin_4/GridPane/HBox/com.exactprosystems.jf.tool.custom.BorderWrapper_StrokeBorder_1[2]/com.exactprosystems.jf.tool.custom.BorderWrapper_StrokeBorder_1/com.exactprosystems.jf.tool.custom.BorderWrapper_StrokeBorder_1/VBox/HBox/Button[2]
-					</xpath>
-					<rectangle x1="0.27748132337246534" y1="0.34440753045404204" x2="0.2945570971184632" y2="0.3798449612403101"/>
-					<node>Button</node>
-					<attr name="class">button transparentBackground</attr>
-					<attr name="id">dictionaryBtnDeleteElement</attr>
-					<attr name="tooltip">Delete current element</attr>
-				</info>
-			</button>
-			<button id="dictionaryBtnCopyElement" xpath=".//Button[@id=&amp;quot;dictionaryBtnCopyElement&amp;quot;]" owner="self" rows="" header="" columns="">
-				<info>
-					<xpath>
-						/SplitPane/Content[1]/ScrollPane/com.sun.javafx.scene.control.skin.ScrollPaneSkin_3/com.sun.javafx.scene.control.skin.ScrollPaneSkin_4/GridPane/HBox/com.exactprosystems.jf.tool.custom.BorderWrapper_StrokeBorder_1[2]/com.exactprosystems.jf.tool.custom.BorderWrapper_StrokeBorder_1/com.exactprosystems.jf.tool.custom.BorderWrapper_StrokeBorder_1/VBox/HBox/Button[3]
-					</xpath>
-					<rectangle x1="0.29669156883671294" y1="0.34440753045404204" x2="0.3137673425827108" y2="0.3798449612403101"/>
-					<node>Button</node>
-					<attr name="class">button transparentBackground</attr>
-					<attr name="id">dictionaryBtnCopyElement</attr>
-					<attr name="tooltip">Copy current element</attr>
-				</info>
-			</button>
-			<button id="dictionaryBtnPasteElement" xpath=".//Button[@id=&amp;quot;dictionaryBtnPasteElement&amp;quot;]" owner="self" rows="" header="" columns="">
-				<info>
-					<xpath>
-						/SplitPane/Content[1]/ScrollPane/com.sun.javafx.scene.control.skin.ScrollPaneSkin_3/com.sun.javafx.scene.control.skin.ScrollPaneSkin_4/GridPane/HBox/com.exactprosystems.jf.tool.custom.BorderWrapper_StrokeBorder_1[2]/com.exactprosystems.jf.tool.custom.BorderWrapper_StrokeBorder_1/com.exactprosystems.jf.tool.custom.BorderWrapper_StrokeBorder_1/VBox/HBox/Button[4]
-					</xpath>
-					<rectangle x1="0.31590181430096054" y1="0.34440753045404204" x2="0.3329775880469584" y2="0.3798449612403101"/>
-					<node>Button</node>
-					<attr name="class">button transparentBackground</attr>
-					<attr name="id">dictionaryBtnPasteElement</attr>
-					<attr name="tooltip">Paste copied element</attr>
-				</info>
-			</button>
-			<button id="dictionaryBtnTestSection" xpath=".//Button[@id=&amp;quot;dictionaryBtnTestSection&amp;quot;]" owner="self" rows="" header="" columns="">
-				<info>
-					<xpath>
-						/SplitPane/Content[1]/ScrollPane/com.sun.javafx.scene.control.skin.ScrollPaneSkin_3/com.sun.javafx.scene.control.skin.ScrollPaneSkin_4/GridPane/HBox/com.exactprosystems.jf.tool.custom.BorderWrapper_StrokeBorder_1[2]/com.exactprosystems.jf.tool.custom.BorderWrapper_StrokeBorder_1/com.exactprosystems.jf.tool.custom.BorderWrapper_StrokeBorder_1/VBox/HBox/Button[5]
-					</xpath>
-					<rectangle x1="0.33511205976520814" y1="0.34440753045404204" x2="0.35218783351120597" y2="0.3798449612403101"/>
-					<node>Button</node>
-					<attr name="class">button transparentBackground</attr>
-					<attr name="id">dictionaryBtnTestSection</attr>
-					<attr name="tooltip">Test all controls into the current section</attr>
-				</info>
-			</button>
-			<button id="btnWizard" xpath=".//HBox[@id=&amp;quot;hBoxElement&amp;quot;]/WizardButton" owner="self" rows="" header="" columns="">
-				<info>
-					<xpath>
-						/SplitPane/Content[1]/ScrollPane/com.sun.javafx.scene.control.skin.ScrollPaneSkin_3/com.sun.javafx.scene.control.skin.ScrollPaneSkin_4/GridPane/HBox/com.exactprosystems.jf.tool.custom.BorderWrapper_StrokeBorder_1[2]/com.exactprosystems.jf.tool.custom.BorderWrapper_StrokeBorder_1/com.exactprosystems.jf.tool.custom.BorderWrapper_StrokeBorder_1/VBox/HBox/WizardButton
-					</xpath>
-					<rectangle x1="0.35218783351120597" y1="0.34440753045404204" x2="0.36926360725720386" y2="0.3798449612403101"/>
-					<node>WizardButton</node>
-					<attr name="class">button transparentBackground</attr>
-					<attr name="id">btnWizard</attr>
-					<attr name="tooltip">Wizards</attr>
-				</info>
-			</button>
-		</run>
-		<onClose/>
-		<close/>
-	</window>
-	<window name="VariablesTab">
-		<self/>
-		<onOpen/>
-		<run/>
-		<onClose/>
-		<close/>
-	</window>
-	<window name="PlainTextTab">
-		<self/>
-		<onOpen/>
-		<run/>
-		<onClose/>
-		<close/>
-	</window>
-	<window name="CsvTab">
-		<self/>
-		<onOpen/>
-		<run/>
-		<onClose/>
-		<close/>
-	</window>
+                </info>
+            </button>
+            <tabPanel id="mainTabPanel" xpath=".//CustomTabPane[contains(.,&amp;quot;&amp;quot;)]" owner="self" rows="" header="" columns="">
+                <info>
+                    <xpath>/GridPane/BorderPane/SplitPane/Content[2]/CustomTabPane</xpath>
+                    <rectangle x1="0.0525" y1="0.11833333333333335" x2="0.995" y2="0.9650000000000001"/>
+                    <node>CustomTabPane</node>
+                    <attr name="class">tab-pane customTabPane</attr>
+                </info>
+            </tabPanel>
+        </run>
+        <onClose/>
+        <close/>
+    </window>
+    <window name="MainMenu">
+        <self>
+            <any id="self" xpath=".//MenuBar[contains(@class,&amp;quot;menu-bar&amp;quot;)]"/>
+        </self>
+        <onOpen/>
+        <run>
+            <button id="menuFile" xpath=".//MenuBarButton[@id=&amp;quot;menuFile&amp;quot;]" owner="self" rows="" header="" columns="">
+                <info>
+                    <xpath>/HBox/MenuBarButton[1]</xpath>
+                    <rectangle x1="0.011335012594458438" y1="0.0" x2="0.06297229219143577" y2="0.9666666666666667"/>
+                    <node>MenuBarButton</node>
+                    <attr name="class">menu-button menu</attr>
+                    <attr name="id">menuFile</attr>
+                </info>
+            </button>
+            <button id="menuEdit" xpath=".//MenuBarButton[@id=&amp;quot;menuEdit&amp;quot;]" owner="self" rows="" header="" columns="">
+                <info>
+                    <xpath>/HBox/MenuBarButton[2]</xpath>
+                    <rectangle x1="0.0654911838790932" y1="0.0" x2="0.12090680100755667" y2="0.9666666666666667"/>
+                    <node>MenuBarButton</node>
+                    <attr name="class">menu-button menu</attr>
+                    <attr name="id">menuEdit</attr>
+                </info>
+            </button>
+            <button id="menuView" xpath=".//MenuBarButton[@id=&amp;quot;menuView&amp;quot;]" owner="self" rows="" header="" columns="">
+                <info>
+                    <xpath>/HBox/MenuBarButton[3]</xpath>
+                    <rectangle x1="0.1234256926952141" y1="0.0" x2="0.18639798488664988" y2="0.9666666666666667"/>
+                    <node>MenuBarButton</node>
+                    <attr name="class">menu-button menu</attr>
+                    <attr name="id">menuView</attr>
+                </info>
+            </button>
+            <button id="menuMatrix" xpath=".//MenuBarButton[@id=&amp;quot;menuMatrix&amp;quot;]" owner="self" rows="" header="" columns="">
+                <info>
+                    <xpath>/HBox/MenuBarButton[4]</xpath>
+                    <rectangle x1="0.1889168765743073" y1="0.0" x2="0.2632241813602015" y2="0.9666666666666667"/>
+                    <node>MenuBarButton</node>
+                    <attr name="class">menu-button menu</attr>
+                    <attr name="id">menuMatrix</attr>
+                </info>
+            </button>
+            <button id="menuGit" xpath=".//MenuBarButton[@id=&amp;quot;menuGit&amp;quot;]" owner="self" rows="" header="" columns="">
+                <info>
+                    <xpath>/HBox/MenuBarButton[5]</xpath>
+                    <rectangle x1="0.26574307304785894" y1="0.0" x2="0.3123425692695214" y2="0.9666666666666667"/>
+                    <node>MenuBarButton</node>
+                    <attr name="class">menu-button menu</attr>
+                    <attr name="id">menuGit</attr>
+                </info>
+            </button>
+            <button id="menuHelp" xpath=".//MenuBarButton[@id=&amp;quot;menuHelp&amp;quot;]" owner="self" rows="" header="" columns="">
+                <info>
+                    <xpath>/HBox/MenuBarButton[6]</xpath>
+                    <rectangle x1="0.3148614609571788" y1="0.0" x2="0.37531486146095716" y2="0.9666666666666667"/>
+                    <node>MenuBarButton</node>
+                    <attr name="class">menu-button menu</attr>
+                    <attr name="id">menuHelp</attr>
+                </info>
+            </button>
+        </run>
+        <onClose/>
+        <close/>
+    </window>
+    <window name="MenuFile">
+        <self>
+            <any id="self" xpath=".//Pane[@class=&amp;quot;root popup&amp;quot;]"/>
+        </self>
+        <onOpen/>
+        <run>
+            <any id="openProject" xpath=".//MenuItemContainer[contains(.,&amp;quot;Open project&amp;quot;)]" owner="self" rows="" header="" columns="">
+                <info>
+                    <xpath>/CSSBridge/ContextMenuContent/MenuBox/MenuItemContainer[1]</xpath>
+                    <rectangle x1="0.008333333333333333" y1="0.015105740181268881" x2="0.9916666666666667" y2="0.09365558912386707"/>
+                    <node>MenuItemContainer</node>
+                    <attr name="class">menu-item</attr>
+                </info>
+            </any>
+            <any id="createProject" xpath=".//MenuItemContainer[contains(.,&amp;quot;Create project&amp;quot;)]" owner="self" rows="" header="" columns="">
+                <info>
+                    <xpath>/CSSBridge/ContextMenuContent/MenuBox/MenuItemContainer[2]</xpath>
+                    <rectangle x1="0.008333333333333333" y1="0.09365558912386707" x2="0.9916666666666667" y2="0.17220543806646527"/>
+                    <node>MenuItemContainer</node>
+                    <attr name="class">menu-item</attr>
+                </info>
+            </any>
+            <any id="projectFromGit" xpath=".//MenuItemContainer[contains(.,&amp;#39;Project from Git&amp;#39;)]" owner="self" rows="" header="" columns="">
+                <info>
+                    <xpath>/CSSBridge/ContextMenuContent/MenuBox/MenuItemContainer[3]</xpath>
+                    <rectangle x1="0.008333333333333333" y1="0.17220543806646527" x2="0.9916666666666667" y2="0.25075528700906347"/>
+                    <node>MenuItemContainer</node>
+                    <attr name="class">menu-item</attr>
+                </info>
+            </any>
+            <any id="fileLoad" uid="fileLoad" owner="self" rows="" header="" columns="">
+                <info>
+                    <xpath>/CSSBridge/ContextMenuContent/MenuBox/MenuItemContainer[4]</xpath>
+                    <rectangle x1="0.008333333333333333" y1="0.2598187311178248" x2="0.9916666666666667" y2="0.338368580060423"/>
+                    <node>MenuItemContainer</node>
+                    <attr name="class">menu-item menu</attr>
+                    <attr name="id">fileLoad</attr>
+                </info>
+            </any>
+            <any id="fileNew" uid="fileNew" owner="self" rows="" header="" columns="">
+                <info>
+                    <xpath>/CSSBridge/ContextMenuContent/MenuBox/MenuItemContainer[5]</xpath>
+                    <rectangle x1="0.008333333333333333" y1="0.338368580060423" x2="0.9916666666666667" y2="0.4169184290030212"/>
+                    <node>MenuItemContainer</node>
+                    <attr name="class">menu-item menu</attr>
+                    <attr name="id">fileNew</attr>
+                </info>
+            </any>
+            <any id="fileSave" uid="fileSave" owner="self" rows="" header="" columns="">
+                <info>
+                    <xpath>/CSSBridge/ContextMenuContent/MenuBox/MenuItemContainer[6]</xpath>
+                    <rectangle x1="0.008333333333333333" y1="0.4169184290030212" x2="0.9916666666666667" y2="0.4954682779456193"/>
+                    <node>MenuItemContainer</node>
+                    <attr name="class">menu-item</attr>
+                    <attr name="id">fileSave</attr>
+                </info>
+            </any>
+            <any id="fileSaveAs" uid="fileSaveAs" owner="self" rows="" header="" columns="">
+                <info>
+                    <xpath>/CSSBridge/ContextMenuContent/MenuBox/MenuItemContainer[7]</xpath>
+                    <rectangle x1="0.008333333333333333" y1="0.4954682779456193" x2="0.9916666666666667" y2="0.5740181268882175"/>
+                    <node>MenuItemContainer</node>
+                    <attr name="class">menu-item</attr>
+                    <attr name="id">fileSaveAs</attr>
+                </info>
+            </any>
+            <any id="fileSaveAll" uid="fileSaveAll" owner="self" rows="" header="" columns="">
+                <info>
+                    <xpath>/CSSBridge/ContextMenuContent/MenuBox/MenuItemContainer[8]</xpath>
+                    <rectangle x1="0.008333333333333333" y1="0.5740181268882175" x2="0.9916666666666667" y2="0.6525679758308157"/>
+                    <node>MenuItemContainer</node>
+                    <attr name="class">menu-item</attr>
+                    <attr name="id">fileSaveAll</attr>
+                </info>
+            </any>
+            <any id="fileLastOpenMatrix" uid="fileLastOpenMatrix" owner="self" rows="" header="" columns="">
+                <info>
+                    <xpath>/CSSBridge/ContextMenuContent/MenuBox/MenuItemContainer[9]</xpath>
+                    <rectangle x1="0.008333333333333333" y1="0.6616314199395771" x2="0.9916666666666667" y2="0.7401812688821753"/>
+                    <node>MenuItemContainer</node>
+                    <attr name="class">menu-item menu</attr>
+                    <attr name="id">fileLastOpenMatrix</attr>
+                </info>
+            </any>
+            <any id="fileRunFromFile" uid="fileRunFromFile" owner="self" rows="" header="" columns="">
+                <info>
+                    <xpath>/CSSBridge/ContextMenuContent/MenuBox/MenuItemContainer[10]</xpath>
+                    <rectangle x1="0.008333333333333333" y1="0.7401812688821753" x2="0.9916666666666667" y2="0.8187311178247734"/>
+                    <node>MenuItemContainer</node>
+                    <attr name="class">menu-item</attr>
+                    <attr name="id">fileRunFromFile</attr>
+                </info>
+            </any>
+            <any id="openReport" xpath=".//MenuItemContainer[contains(.,&amp;quot;Open report&amp;quot;)]" owner="self" rows="" header="" columns="">
+                <info>
+                    <xpath>/CSSBridge/ContextMenuContent/MenuBox/MenuItemContainer[11]</xpath>
+                    <rectangle x1="0.008333333333333333" y1="0.8187311178247734" x2="0.9916666666666667" y2="0.8972809667673716"/>
+                    <node>MenuItemContainer</node>
+                    <attr name="class">menu-item</attr>
+                </info>
+            </any>
+            <any id="exit" xpath=".//MenuItemContainer[contains(.,&amp;quot;Exit&amp;quot;)]" owner="self" rows="" header="" columns="">
+                <info>
+                    <xpath>/CSSBridge/ContextMenuContent/MenuBox/MenuItemContainer[12]</xpath>
+                    <rectangle x1="0.008333333333333333" y1="0.9063444108761329" x2="0.9916666666666667" y2="0.9848942598187311"/>
+                    <node>MenuItemContainer</node>
+                    <attr name="class">menu-item</attr>
+                </info>
+            </any>
+        </run>
+        <onClose/>
+        <close/>
+    </window>
+    <window name="MenuEdit">
+        <self>
+            <any id="self" xpath=".//Pane[@class=&amp;quot;root popup&amp;quot;]"/>
+        </self>
+        <onOpen/>
+        <run>
+            <any id="editUndo" uid="editUndo" owner="self" rows="" header="" columns="">
+                <info>
+                    <xpath>/CSSBridge/ContextMenuContent/MenuBox/MenuItemContainer[1]</xpath>
+                    <rectangle x1="0.010582010582010581" y1="0.05494505494505495" x2="0.9894179894179893" y2="0.34065934065934067"/>
+                    <node>MenuItemContainer</node>
+                    <attr name="class">menu-item</attr>
+                    <attr name="id">editUndo</attr>
+                </info>
+            </any>
+            <any id="editRedo" uid="editRedo" owner="self" rows="" header="" columns="">
+                <info>
+                    <xpath>/CSSBridge/ContextMenuContent/MenuBox/MenuItemContainer[2]</xpath>
+                    <rectangle x1="0.010582010582010581" y1="0.34065934065934067" x2="0.9894179894179893" y2="0.6263736263736264"/>
+                    <node>MenuItemContainer</node>
+                    <attr name="class">menu-item</attr>
+                    <attr name="id">editRedo</attr>
+                </info>
+            </any>
+            <any id="editSettings" uid="editSettings" owner="self" rows="" header="" columns="">
+                <info>
+                    <xpath>/CSSBridge/ContextMenuContent/MenuBox/MenuItemContainer[3]</xpath>
+                    <rectangle x1="0.010582010582010581" y1="0.6593406593406594" x2="0.9894179894179893" y2="0.9450549450549451"/>
+                    <node>MenuItemContainer</node>
+                    <attr name="class">menu-item</attr>
+                    <attr name="id">editSettings</attr>
+                </info>
+            </any>
+        </run>
+        <onClose/>
+        <close/>
+    </window>
+    <window name="MenuView">
+        <self>
+            <any id="self" xpath=".//Pane[@class=&amp;quot;root popup&amp;quot;]"/>
+        </self>
+        <onOpen/>
+        <run>
+            <any id="viewSearch" uid="viewSearch" owner="self" rows="" header="" columns="">
+                <info>
+                    <xpath>/CSSBridge/ContextMenuContent/MenuBox/MenuItemContainer[1]</xpath>
+                    <rectangle x1="0.011049723756906077" y1="0.041666666666666664" x2="0.9889502762430938" y2="0.2583333333333333"/>
+                    <node>MenuItemContainer</node>
+                    <attr name="class">menu-item</attr>
+                    <attr name="id">viewSearch</attr>
+                </info>
+            </any>
+            <any id="viewStore" uid="viewStore" owner="self" rows="" header="" columns="">
+                <info>
+                    <xpath>/CSSBridge/ContextMenuContent/MenuBox/MenuItemContainer[3]</xpath>
+                    <rectangle x1="0.011049723756906077" y1="0.5" x2="0.9889502762430938" y2="0.7166666666666667"/>
+                    <node>MenuItemContainer</node>
+                    <attr name="class">menu-item</attr>
+                    <attr name="id">viewStore</attr>
+                </info>
+            </any>
+            <any id="viewShowTabs" uid="viewShowTabs" owner="self" rows="" header="" columns="">
+                <info>
+                    <xpath>/CSSBridge/ContextMenuContent/MenuBox/MenuItemContainer[4]</xpath>
+                    <rectangle x1="0.011049723756906077" y1="0.7416666666666667" x2="0.9889502762430938" y2="0.9583333333333334"/>
+                    <node>MenuItemContainer</node>
+                    <attr name="class">menu-item</attr>
+                    <attr name="id">viewShowTabs</attr>
+                </info>
+            </any>
+            <any id="viewLogs" uid="viewLogs" owner="self" rows="" header="" columns="">
+                <info>
+                    <xpath>/CSSBridge/ContextMenuContent/MenuBox/MenuItemContainer[2]</xpath>
+                    <rectangle x1="0.011049723756906077" y1="0.2833333333333333" x2="0.9889502762430938" y2="0.5"/>
+                    <node>MenuItemContainer</node>
+                    <attr name="class">menu-item</attr>
+                    <attr name="id">viewLogs</attr>
+                </info>
+            </any>
+        </run>
+        <onClose/>
+        <close/>
+    </window>
+    <window name="MenuMatrix">
+        <self>
+            <any id="self" xpath=".//Pane[@class=&amp;quot;root popup&amp;quot;]"/>
+        </self>
+        <onOpen/>
+        <run>
+            <any id="matrixStart" uid="matrixStart" owner="self" rows="" header="" columns="">
+                <info>
+                    <xpath>/CSSBridge/ContextMenuContent/MenuBox/MenuItemContainer[1]</xpath>
+                    <rectangle x1="0.009009009009009009" y1="0.042735042735042736" x2="0.990990990990991" y2="0.26495726495726496"/>
+                    <node>MenuItemContainer</node>
+                    <attr name="class">menu-item</attr>
+                    <attr name="id">matrixStart</attr>
+                </info>
+            </any>
+            <any id="matrixStop" uid="matrixStop" owner="self" rows="" header="" columns="">
+                <info>
+                    <xpath>/CSSBridge/ContextMenuContent/MenuBox/MenuItemContainer[2]</xpath>
+                    <rectangle x1="0.009009009009009009" y1="0.26495726495726496" x2="0.990990990990991" y2="0.4871794871794872"/>
+                    <node>MenuItemContainer</node>
+                    <attr name="class">menu-item</attr>
+                    <attr name="id">matrixStop</attr>
+                </info>
+            </any>
+            <any id="matrixShowWait" uid="matrixShowWait" owner="self" rows="" header="" columns="">
+                <info>
+                    <xpath>/CSSBridge/ContextMenuContent/MenuBox/MenuItemContainer[3]</xpath>
+                    <rectangle x1="0.009009009009009009" y1="0.4871794871794872" x2="0.990990990990991" y2="0.7094017094017094"/>
+                    <node>MenuItemContainer</node>
+                    <attr name="class">menu-item check-menu-item selected</attr>
+                    <attr name="id">matrixShowWait</attr>
+                </info>
+            </any>
+            <any id="matrixSchedule" uid="matrixSchedule" owner="self" rows="" header="" columns="">
+                <info>
+                    <xpath>/CSSBridge/ContextMenuContent/MenuBox/MenuItemContainer[4]</xpath>
+                    <rectangle x1="0.009009009009009009" y1="0.7350427350427351" x2="0.990990990990991" y2="0.9572649572649574"/>
+                    <node>MenuItemContainer</node>
+                    <attr name="class">menu-item</attr>
+                    <attr name="id">matrixSchedule</attr>
+                </info>
+            </any>
+        </run>
+        <onClose/>
+        <close/>
+    </window>
+    <window name="MenuGit">
+        <self>
+            <any id="self" xpath=".//Pane[@class=&amp;quot;root popup&amp;quot;]"/>
+        </self>
+        <onOpen/>
+        <run>
+            <any id="gitPull" uid="gitPull" owner="self" rows="" header="" columns="">
+                <info>
+                    <xpath>/CSSBridge/ContextMenuContent/MenuBox/MenuItemContainer[3]</xpath>
+                    <rectangle x1="0.012903225806451613" y1="0.24" x2="0.9870967741935484" y2="0.34400000000000003"/>
+                    <node>MenuItemContainer</node>
+                    <attr name="class">menu-item</attr>
+                    <attr name="id">gitPull</attr>
+                </info>
+            </any>
+            <any id="gitReset" uid="gitReset" owner="self" rows="" header="" columns="">
+                <info>
+                    <xpath>/CSSBridge/ContextMenuContent/MenuBox/MenuItemContainer[4]</xpath>
+                    <rectangle x1="0.012903225806451613" y1="0.34400000000000003" x2="0.9870967741935484" y2="0.448"/>
+                    <node>MenuItemContainer</node>
+                    <attr name="class">menu-item</attr>
+                    <attr name="id">gitReset</attr>
+                </info>
+            </any>
+            <any id="gitStatus" uid="gitStatus" owner="self" rows="" header="" columns="">
+                <info>
+                    <xpath>/CSSBridge/ContextMenuContent/MenuBox/MenuItemContainer[5]</xpath>
+                    <rectangle x1="0.012903225806451613" y1="0.448" x2="0.9870967741935484" y2="0.552"/>
+                    <node>MenuItemContainer</node>
+                    <attr name="class">menu-item</attr>
+                    <attr name="id">gitStatus</attr>
+                </info>
+            </any>
+            <any id="gitMerge" uid="gitMerge" owner="self" rows="" header="" columns="">
+                <info>
+                    <xpath>/CSSBridge/ContextMenuContent/MenuBox/MenuItemContainer[6]</xpath>
+                    <rectangle x1="0.012903225806451613" y1="0.552" x2="0.9870967741935484" y2="0.656"/>
+                    <node>MenuItemContainer</node>
+                    <attr name="class">menu-item</attr>
+                    <attr name="id">gitMerge</attr>
+                </info>
+            </any>
+            <any id="gitBranches" uid="gitBranches" owner="self" rows="" header="" columns="">
+                <info>
+                    <xpath>/CSSBridge/ContextMenuContent/MenuBox/MenuItemContainer[7]</xpath>
+                    <rectangle x1="0.012903225806451613" y1="0.656" x2="0.9870967741935484" y2="0.76"/>
+                    <node>MenuItemContainer</node>
+                    <attr name="class">menu-item</attr>
+                    <attr name="id">gitBranches</attr>
+                </info>
+            </any>
+            <any id="gitTags" uid="gitTags" owner="self" rows="" header="" columns="">
+                <info>
+                    <xpath>/CSSBridge/ContextMenuContent/MenuBox/MenuItemContainer[8]</xpath>
+                    <rectangle x1="0.012903225806451613" y1="0.76" x2="0.9870967741935484" y2="0.864"/>
+                    <node>MenuItemContainer</node>
+                    <attr name="class">menu-item</attr>
+                    <attr name="id">gitTags</attr>
+                </info>
+            </any>
+            <any id="gitChangeCredential" uid="gitChangeCredential" owner="self" rows="" header="" columns="">
+                <info>
+                    <xpath>/CSSBridge/ContextMenuContent/MenuBox/MenuItemContainer[9]</xpath>
+                    <rectangle x1="0.012903225806451613" y1="0.876" x2="0.9870967741935484" y2="0.98"/>
+                    <node>MenuItemContainer</node>
+                    <attr name="class">menu-item</attr>
+                    <attr name="id">gitChangeCredential</attr>
+                </info>
+            </any>
+            <any id="gitClone" uid="gitClone" owner="self" rows="" header="" columns="">
+                <info>
+                    <xpath>/CSSBridge/ContextMenuContent/MenuBox/MenuItemContainer[1]</xpath>
+                    <rectangle x1="0.012903225806451613" y1="0.02" x2="0.9870967741935484" y2="0.124"/>
+                    <node>MenuItemContainer</node>
+                    <attr name="class">menu-item</attr>
+                    <attr name="id">gitClone</attr>
+                </info>
+            </any>
+            <any id="gitPublishing" uid="gitPublishing" owner="self" rows="" header="" columns="">
+                <info>
+                    <xpath>/CSSBridge/ContextMenuContent/MenuBox/MenuItemContainer[2]</xpath>
+                    <rectangle x1="0.012903225806451613" y1="0.136" x2="0.9870967741935484" y2="0.24"/>
+                    <node>MenuItemContainer</node>
+                    <attr name="class">menu-item menu</attr>
+                    <attr name="id">gitPublishing</attr>
+                </info>
+            </any>
+        </run>
+        <onClose/>
+        <close/>
+    </window>
+    <window name="MenuHelp">
+        <self>
+            <any id="self" xpath=".//Pane[@class=&amp;quot;root popup&amp;quot;]"/>
+        </self>
+        <onOpen/>
+        <run>
+            <any id="helpActionsHelp" uid="helpActionsHelp" owner="self" rows="" header="" columns="">
+                <info>
+                    <xpath>/CSSBridge/ContextMenuContent/MenuBox/MenuItemContainer[2]</xpath>
+                    <rectangle x1="0.012903225806451613" y1="0.34065934065934067" x2="0.9870967741935484" y2="0.6263736263736264"/>
+                    <node>MenuItemContainer</node>
+                    <attr name="class">menu-item</attr>
+                    <attr name="id">helpActionsHelp</attr>
+                </info>
+            </any>
+            <any id="helpAboutProgram" uid="helpAboutProgram" owner="self" rows="" header="" columns="">
+                <info>
+                    <xpath>/CSSBridge/ContextMenuContent/MenuBox/MenuItemContainer[3]</xpath>
+                    <rectangle x1="0.012903225806451613" y1="0.6593406593406594" x2="0.9870967741935484" y2="0.9450549450549451"/>
+                    <node>MenuItemContainer</node>
+                    <attr name="class">menu-item</attr>
+                    <attr name="id">helpAboutProgram</attr>
+                </info>
+            </any>
+            <any id="wizard" uid="wizard" owner="self" rows="" header="" columns="">
+                <info>
+                    <xpath>/CSSBridge/ContextMenuContent/MenuBox/MenuItemContainer[1]</xpath>
+                    <rectangle x1="0.012903225806451613" y1="0.05494505494505495" x2="0.9870967741935484" y2="0.34065934065934067"/>
+                    <node>MenuItemContainer</node>
+                    <attr name="class">menu-item menu</attr>
+                    <attr name="id">wizard</attr>
+                </info>
+            </any>
+        </run>
+        <onClose/>
+        <close/>
+    </window>
+    <window name="QuestionDialog">
+        <self>
+            <frame id="self" title="Save"/>
+        </self>
+        <onOpen>
+            <wait id="waitOpen" ref="self" addition="WaitToAppear" timeout="5000"/>
+        </onOpen>
+        <run>
+            <label id="header" xpath="" owner="self" class="label" rows="" header="" columns="">
+                <info>
+                    <xpath>/DialogPane/GridPane/Label</xpath>
+                    <rectangle x1="0.015299026425591097" y1="0.088" x2="0.9694019471488178" y2="0.24"/>
+                    <node>Label</node>
+                    <attr name="class">label</attr>
+                </info>
+            </label>
+            <label id="question" xpath="" owner="self" class="label content" rows="" header="" columns="">
+                <info>
+                    <xpath>/DialogPane/Label</xpath>
+                    <rectangle x1="0.0" y1="0.328" x2="1.0" y2="0.6"/>
+                    <node>Label</node>
+                    <attr name="class">label content</attr>
+                </info>
+            </label>
+            <button id="no" xpath="" owner="self" text="No" rows="" header="" columns="">
+                <info>
+                    <xpath>/DialogPane/ButtonBar/com.sun.javafx.scene.control.skin.ButtonBarSkin_1/Button[1]</xpath>
+                    <rectangle x1="0.5855354659248957" y1="0.6880000000000001" x2="0.7037552155771906" y2="0.912"/>
+                    <node>Button</node>
+                    <attr name="class">button</attr>
+                </info>
+            </button>
+            <button id="yes" xpath="" owner="self" text="Yes" rows="" header="" columns="">
+                <info>
+                    <xpath>/DialogPane/ButtonBar/com.sun.javafx.scene.control.skin.ButtonBarSkin_1/Button[2]</xpath>
+                    <rectangle x1="0.7260083449235049" y1="0.6880000000000001" x2="0.8442280945757997" y2="0.912"/>
+                    <node>Button</node>
+                    <attr name="class">button</attr>
+                </info>
+            </button>
+            <button id="cancel" xpath="" owner="self" text="Cancel" rows="" header="" columns="">
+                <info>
+                    <xpath>/DialogPane/ButtonBar/com.sun.javafx.scene.control.skin.ButtonBarSkin_1/Button[3]</xpath>
+                    <rectangle x1="0.866481223922114" y1="0.6880000000000001" x2="0.9847009735744089" y2="0.912"/>
+                    <node>Button</node>
+                    <attr name="class">button</attr>
+                </info>
+            </button>
+        </run>
+        <onClose/>
+        <close/>
+    </window>
+    <window name="Notification">
+        <self>
+            <frame id="self" xpath="./Popup"/>
+        </self>
+        <onOpen/>
+        <run>
+            <label id="notificationType" xpath="" owner="self" text="Info" rows="" header="" columns="">
+                <info>
+                    <xpath>/Pane/com.exactprosystems.jf.tool.custom.Notifications_NotificationPopupHandler_1/GridPane/Label[1]</xpath>
+                    <rectangle x1="0.02252252252252252" y1="0.10101010101010102" x2="0.8513513513513513" y2="0.29292929292929293"/>
+                    <node>Label</node>
+                    <attr name="class">label notificationTitle</attr>
+                </info>
+            </label>
+            <label id="notificationMessage" xpath="" owner="self" class="label notificationMsg info" rows="" header="" columns="">
+                <info>
+                    <xpath>/Pane/com.exactprosystems.jf.tool.custom.Notifications_NotificationPopupHandler_1/GridPane/Label[2]</xpath>
+                    <rectangle x1="0.02252252252252252" y1="0.29292929292929293" x2="0.9234234234234234" y2="0.8989898989898991"/>
+                    <node>Label</node>
+                    <attr name="class">label notificationMsg info</attr>
+                </info>
+            </label>
+            <button id="copyBtn" xpath="" owner="self" text="C" rows="" header="" columns="">
+                <info>
+                    <xpath>/Pane/com.exactprosystems.jf.tool.custom.Notifications_NotificationPopupHandler_1/GridPane/Button[1]</xpath>
+                    <rectangle x1="0.8513513513513513" y1="0.12121212121212122" x2="0.8873873873873874" y2="0.2828282828282829"/>
+                    <node>Button</node>
+                    <attr name="class">notificationCopyButton</attr>
+                </info>
+            </button>
+            <checkBox id="cbPin" xpath="" owner="self" rows="" header="" columns="">
+                <info>
+                    <xpath>/Pane/com.exactprosystems.jf.tool.custom.Notifications_NotificationPopupHandler_1/GridPane/CheckBox</xpath>
+                    <rectangle x1="0.8873873873873874" y1="0.12121212121212122" x2="0.9324324324324325" y2="0.2828282828282829"/>
+                    <node>CheckBox</node>
+                    <attr name="class">transparentBackground</attr>
+                </info>
+            </checkBox>
+            <button id="closeBtn" xpath="" owner="self" class="notificationCloseButton" name="" rows="" header="" columns="">
+                <info>
+                    <xpath>/Pane/com.exactprosystems.jf.tool.custom.Notifications_NotificationPopupHandler_1/GridPane/Button[2]</xpath>
+                    <rectangle x1="0.9414414414414415" y1="0.10101010101010102" x2="0.9774774774774775" y2="0.26262626262626265"/>
+                    <node>Button</node>
+                    <attr name="class">notificationCloseButton</attr>
+                </info>
+            </button>
+        </run>
+        <onClose/>
+        <close/>
+    </window>
+    <window name="ConfigurationPanel">
+        <self>
+            <panel id="self" uid="projectGridPane" xpath=""/>
+        </self>
+        <onOpen/>
+        <run>
+            <label id="projectLabel" xpath=".//Label[@id=&amp;quot;projectLabel&amp;quot;]" owner="self" rows="" header="" columns="">
+                <info>
+                    <xpath>/VBox/Group/Label</xpath>
+                    <rectangle x1="0.0" y1="0.008556149732620321" x2="0.05" y2="0.05561497326203209"/>
+                    <node>Label</node>
+                    <attr name="class">label</attr>
+                    <attr name="id">projectLabel</attr>
+                </info>
+            </label>
+            <button id="reloadConfiguration" xpath=".//Button[@id=&amp;quot;reloadConfiguration&amp;quot;]" owner="self" rows="" header="" columns="">
+                <info>
+                    <xpath>/VBox/VBox/Button[1]</xpath>
+                    <rectangle x1="0.0" y1="0.06524064171122995" x2="0.07500000000000001" y2="0.09197860962566845"/>
+                    <node>Button</node>
+                    <attr name="class">button transparentBackground</attr>
+                    <attr name="id">reloadConfiguration</attr>
+                    <attr name="tooltip">Reload configuration</attr>
+                </info>
+            </button>
+            <button id="saveConfiguration" xpath=".//Button[@id=&amp;quot;saveConfiguration&amp;quot;]" owner="self" rows="" header="" columns="">
+                <info>
+                    <xpath>/VBox/VBox/Button[2]</xpath>
+                    <rectangle x1="0.0" y1="0.09197860962566845" x2="0.07500000000000001" y2="0.11871657754010695"/>
+                    <node>Button</node>
+                    <attr name="class">button transparentBackground</attr>
+                    <attr name="id">saveConfiguration</attr>
+                    <attr name="tooltip">Save configuration</attr>
+                </info>
+            </button>
+            <toggleButton id="sortAZ" xpath=".//HBox[@class=&amp;quot;container&amp;quot;]/ToggleButton[1]" owner="self" rows="" header="" columns="">
+                <info>
+                    <xpath>/BorderPane/ConfigurationToolBar/HBox/ToggleButton[1]</xpath>
+                    <rectangle x1="0.115625" y1="0.006417112299465241" x2="0.22187500000000002" y2="0.03529411764705882"/>
+                    <node>ToggleButton</node>
+                    <attr name="class">toggle-button</attr>
+                    <attr name="tooltip">Sorting via alphabet asc</attr>
+                </info>
+            </toggleButton>
+            <toggleButton id="sortZA" xpath=".//HBox[@class=&amp;quot;container&amp;quot;]/ToggleButton[2]" owner="self" rows="" header="" columns="">
+                <info>
+                    <xpath>/BorderPane/ConfigurationToolBar/HBox/ToggleButton[2]</xpath>
+                    <rectangle x1="0.234375" y1="0.006417112299465241" x2="0.340625" y2="0.03529411764705882"/>
+                    <node>ToggleButton</node>
+                    <attr name="class">toggle-button</attr>
+                    <attr name="tooltip">Sorting via alphabet desc</attr>
+                </info>
+            </toggleButton>
+            <toggleButton id="sort19" xpath=".//HBox[@class=&amp;quot;container&amp;quot;]/ToggleButton[3]" owner="self" rows="" header="" columns="">
+                <info>
+                    <xpath>/BorderPane/ConfigurationToolBar/HBox/ToggleButton[3]</xpath>
+                    <rectangle x1="0.353125" y1="0.006417112299465241" x2="0.45937500000000003" y2="0.03529411764705882"/>
+                    <node>ToggleButton</node>
+                    <attr name="class">toggle-button</attr>
+                    <attr name="tooltip">Sorting via date asc</attr>
+                </info>
+            </toggleButton>
+            <toggleButton id="sort91" xpath=".//HBox[@class=&amp;quot;container&amp;quot;]/ToggleButton[4]" owner="self" rows="" header="" columns="">
+                <info>
+                    <xpath>/BorderPane/ConfigurationToolBar/HBox/ToggleButton[4]</xpath>
+                    <rectangle x1="0.47187500000000004" y1="0.006417112299465241" x2="0.578125" y2="0.03529411764705882"/>
+                    <node>ToggleButton</node>
+                    <attr name="class">toggle-button</attr>
+                    <attr name="tooltip">Sorting via date desc</attr>
+                </info>
+            </toggleButton>
+            <button id="btnSmallWizard" xpath=".//WizardButton[contains(.,&amp;quot;&amp;quot;)]" owner="self" rows="" header="" columns="">
+                <info>
+                    <xpath>/BorderPane/ConfigurationToolBar/HBox/WizardButton</xpath>
+                    <rectangle x1="0.6218750000000001" y1="0.0074866310160427805" x2="0.696875" y2="0.034224598930481284"/>
+                    <node>WizardButton</node>
+                    <attr name="class">button transparentBackground</attr>
+                    <attr name="id">btnSmallWizard</attr>
+                    <attr name="tooltip">Wizards</attr>
+                </info>
+            </button>
+            <button id="btnSmallUndo" xpath=".//Button[@id=&amp;quot;btnSmallUndo&amp;quot;]" owner="self" rows="" header="" columns="">
+                <info>
+                    <xpath>/BorderPane/ConfigurationToolBar/HBox/Button[1]</xpath>
+                    <rectangle x1="0.7093750000000001" y1="0.0074866310160427805" x2="0.784375" y2="0.034224598930481284"/>
+                    <node>Button</node>
+                    <attr name="class">button transparentBackground</attr>
+                    <attr name="id">btnSmallUndo</attr>
+                </info>
+            </button>
+            <button id="btnSmallRedo" xpath=".//Button[@id=&amp;quot;btnSmallRedo&amp;quot;]" owner="self" rows="" header="" columns="">
+                <info>
+                    <xpath>/BorderPane/ConfigurationToolBar/HBox/Button[2]</xpath>
+                    <rectangle x1="0.796875" y1="0.0074866310160427805" x2="0.8718750000000001" y2="0.034224598930481284"/>
+                    <node>Button</node>
+                    <attr name="class">button transparentBackground</attr>
+                    <attr name="id">btnSmallRedo</attr>
+                </info>
+            </button>
+            <tree id="configurationTree" xpath="./BorderPane/SplitPane/Content[1]/ConfigurationTreeView" owner="self" rows="" header="" columns="">
+                <info>
+                    <xpath>/BorderPane/SplitPane/Content[1]/ConfigurationTreeView</xpath>
+                    <rectangle x1="0.09375" y1="0.040641711229946524" x2="1.0" y2="0.6663101604278076"/>
+                    <node>ConfigurationTreeView</node>
+                    <attr name="class">tree-view</attr>
+                </info>
+            </tree>
+            <table id="parametersTable" xpath="./BorderPane/SplitPane/Content[2]/ParametersTableView" owner="self" rows="" header="" columns="">
+                <info>
+                    <xpath>/BorderPane/SplitPane/Content[2]/ParametersTableView</xpath>
+                    <rectangle x1="0.096875" y1="0.6737967914438503" x2="0.9968750000000001" y2="0.9989304812834224"/>
+                    <node>ParametersTableView</node>
+                    <attr name="class">table-view</attr>
+                </info>
+            </table>
+        </run>
+        <onClose/>
+        <close/>
+    </window>
+    <window name="MatrixTab">
+        <self/>
+        <onOpen/>
+        <run/>
+        <onClose/>
+        <close/>
+    </window>
+    <window name="DictionaryTab">
+        <self>
+            <panel id="self" uid="dictionaryPane"/>
+        </self>
+        <onOpen>
+            <wait id="waitOpen" ref="self" addition="WaitToAppear" timeout="5000"/>
+        </onOpen>
+        <run>
+            <textBox id="findWindow" xpath=".//FindListView[@id=&amp;quot;findListWindow&amp;quot;]/CustomFieldWithButton" owner="self" rows="" header="" columns="">
+                <info>
+                    <xpath>/SplitPane/Content[1]/ScrollPane/com.sun.javafx.scene.control.skin.ScrollPaneSkin_3/com.sun.javafx.scene.control.skin.ScrollPaneSkin_4/GridPane/HBox/com.exactprosystems.jf.tool.custom.BorderWrapper_StrokeBorder_1[1]/com.exactprosystems.jf.tool.custom.BorderWrapper_StrokeBorder_1/com.exactprosystems.jf.tool.custom.BorderWrapper_StrokeBorder_1/VBox/FindListView/CustomFieldWithButton</xpath>
+                    <rectangle x1="0.018143009605122735" y1="0.03765227021040975" x2="0.1696905016008538" y2="0.06644518272425248"/>
+                    <node>CustomFieldWithButton</node>
+                    <attr name="class">text-input text-field custom-text-field customFieldWithButton</attr>
+                </info>
+            </textBox>
+            <listView id="listViewWindow" xpath=".//FindListView[@id=&amp;quot;findListWindow&amp;quot;]/ListView" owner="self" rows="" header="" columns="">
+                <info>
+                    <xpath>/SplitPane/Content[1]/ScrollPane/com.sun.javafx.scene.control.skin.ScrollPaneSkin_3/com.sun.javafx.scene.control.skin.ScrollPaneSkin_4/GridPane/HBox/com.exactprosystems.jf.tool.custom.BorderWrapper_StrokeBorder_1[1]/com.exactprosystems.jf.tool.custom.BorderWrapper_StrokeBorder_1/com.exactprosystems.jf.tool.custom.BorderWrapper_StrokeBorder_1/VBox/FindListView/ListView</xpath>
+                    <rectangle x1="0.018143009605122735" y1="0.07087486157253599" x2="0.1696905016008538" y2="0.33554817275747506"/>
+                    <node>ListView</node>
+                    <attr name="class">list-view</attr>
+                    <attr name="tooltip">""Use drag-n-drop to reorder elements"</attr>
+                </info>
+            </listView>
+            <button id="btnNewDialog" uid="dictionaryBtnNewDialog" xpath="" owner="self" rows="" header="" columns="">
+                <info>
+                    <xpath>/SplitPane/Content[1]/ScrollPane/com.sun.javafx.scene.control.skin.ScrollPaneSkin_3/com.sun.javafx.scene.control.skin.ScrollPaneSkin_4/GridPane/HBox/com.exactprosystems.jf.tool.custom.BorderWrapper_StrokeBorder_1[1]/com.exactprosystems.jf.tool.custom.BorderWrapper_StrokeBorder_1/com.exactprosystems.jf.tool.custom.BorderWrapper_StrokeBorder_1/VBox/HBox/Button[1]</xpath>
+                    <rectangle x1="0.018143009605122735" y1="0.34440753045404204" x2="0.0352187833511206" y2="0.3798449612403101"/>
+                    <node>Button</node>
+                    <attr name="class">button transparentBackground</attr>
+                    <attr name="id">dictionaryBtnNewDialog</attr>
+                    <attr name="tooltip">Create new window</attr>
+                </info>
+            </button>
+            <button id="btnDeleteDialog" uid="dictionaryBtnDeleteDialog" xpath="" owner="self" rows="" header="" columns="">
+                <info>
+                    <xpath>/SplitPane/Content[1]/ScrollPane/com.sun.javafx.scene.control.skin.ScrollPaneSkin_3/com.sun.javafx.scene.control.skin.ScrollPaneSkin_4/GridPane/HBox/com.exactprosystems.jf.tool.custom.BorderWrapper_StrokeBorder_1[1]/com.exactprosystems.jf.tool.custom.BorderWrapper_StrokeBorder_1/com.exactprosystems.jf.tool.custom.BorderWrapper_StrokeBorder_1/VBox/HBox/Button[2]</xpath>
+                    <rectangle x1="0.03735325506937033" y1="0.34440753045404204" x2="0.0544290288153682" y2="0.3798449612403101"/>
+                    <node>Button</node>
+                    <attr name="class">button transparentBackground</attr>
+                    <attr name="id">dictionaryBtnDeleteDialog</attr>
+                    <attr name="tooltip">Delete selected window</attr>
+                </info>
+            </button>
+            <button id="btnCopyDialog" uid="dictionaryBtnCopyDialog" xpath="" owner="self" rows="" header="" columns="">
+                <info>
+                    <xpath>/SplitPane/Content[1]/ScrollPane/com.sun.javafx.scene.control.skin.ScrollPaneSkin_3/com.sun.javafx.scene.control.skin.ScrollPaneSkin_4/GridPane/HBox/com.exactprosystems.jf.tool.custom.BorderWrapper_StrokeBorder_1[1]/com.exactprosystems.jf.tool.custom.BorderWrapper_StrokeBorder_1/com.exactprosystems.jf.tool.custom.BorderWrapper_StrokeBorder_1/VBox/HBox/Button[3]</xpath>
+                    <rectangle x1="0.05656350053361793" y1="0.34440753045404204" x2="0.0736392742796158" y2="0.3798449612403101"/>
+                    <node>Button</node>
+                    <attr name="class">button transparentBackground</attr>
+                    <attr name="id">dictionaryBtnCopyDialog</attr>
+                    <attr name="tooltip">Copy current dialog with all elements</attr>
+                </info>
+            </button>
+            <button id="btnPasteDialog" uid="dictionaryBtnPasteDialog" xpath="" owner="self" rows="" header="" columns="">
+                <info>
+                    <xpath>/SplitPane/Content[1]/ScrollPane/com.sun.javafx.scene.control.skin.ScrollPaneSkin_3/com.sun.javafx.scene.control.skin.ScrollPaneSkin_4/GridPane/HBox/com.exactprosystems.jf.tool.custom.BorderWrapper_StrokeBorder_1[1]/com.exactprosystems.jf.tool.custom.BorderWrapper_StrokeBorder_1/com.exactprosystems.jf.tool.custom.BorderWrapper_StrokeBorder_1/VBox/HBox/Button[4]</xpath>
+                    <rectangle x1="0.07577374599786553" y1="0.34440753045404204" x2="0.09284951974386339" y2="0.3798449612403101"/>
+                    <node>Button</node>
+                    <attr name="class">button transparentBackground</attr>
+                    <attr name="id">dictionaryBtnPasteDialog</attr>
+                    <attr name="tooltip">Paste copied dialog</attr>
+                </info>
+            </button>
+            <button id="btnWizardWindow" xpath=".//HBox[@id=&amp;quot;hBoxWindow&amp;quot;]/WizardButton" owner="self" rows="" header="" columns="">
+                <info>
+                    <xpath>/SplitPane/Content[1]/ScrollPane/com.sun.javafx.scene.control.skin.ScrollPaneSkin_3/com.sun.javafx.scene.control.skin.ScrollPaneSkin_4/GridPane/HBox/com.exactprosystems.jf.tool.custom.BorderWrapper_StrokeBorder_1[1]/com.exactprosystems.jf.tool.custom.BorderWrapper_StrokeBorder_1/com.exactprosystems.jf.tool.custom.BorderWrapper_StrokeBorder_1/VBox/HBox/WizardButton</xpath>
+                    <rectangle x1="0.09498399146211313" y1="0.34440753045404204" x2="0.112059765208111" y2="0.3798449612403101"/>
+                    <node>WizardButton</node>
+                    <attr name="class">button transparentBackground</attr>
+                    <attr name="id">btnWizard</attr>
+                    <attr name="tooltip">Wizards</attr>
+                </info>
+            </button>
+            <radioButton id="Self" xpath=".//RadioButton[@id=&amp;quot;Self&amp;quot;]" owner="self" rows="" header="" columns="">
+                <info>
+                    <xpath>/SplitPane/Content[1]/ScrollPane/com.sun.javafx.scene.control.skin.ScrollPaneSkin_3/com.sun.javafx.scene.control.skin.ScrollPaneSkin_4/GridPane/HBox/VBox/RadioButton[1]</xpath>
+                    <rectangle x1="0.1872998932764141" y1="0.150609080841639" x2="0.21344717182497333" y2="0.1716500553709856"/>
+                    <node>RadioButton</node>
+                    <attr name="class">radio-button</attr>
+                    <attr name="id">Self</attr>
+                </info>
+            </radioButton>
+            <radioButton id="OnOpen" xpath=".//RadioButton[@id=&amp;quot;OnOpen&amp;quot;]" owner="self" rows="" header="" columns="">
+                <info>
+                    <xpath>/SplitPane/Content[1]/ScrollPane/com.sun.javafx.scene.control.skin.ScrollPaneSkin_3/com.sun.javafx.scene.control.skin.ScrollPaneSkin_4/GridPane/HBox/VBox/RadioButton[2]</xpath>
+                    <rectangle x1="0.1872998932764141" y1="0.17497231450719822" x2="0.22998932764140875" y2="0.19601328903654483"/>
+                    <node>RadioButton</node>
+                    <attr name="class">radio-button</attr>
+                    <attr name="id">OnOpen</attr>
+                </info>
+            </radioButton>
+            <radioButton id="Run" xpath=".//RadioButton[@id=&amp;quot;Run&amp;quot;]" owner="self" rows="" header="" columns="">
+                <info>
+                    <xpath>/SplitPane/Content[1]/ScrollPane/com.sun.javafx.scene.control.skin.ScrollPaneSkin_3/com.sun.javafx.scene.control.skin.ScrollPaneSkin_4/GridPane/HBox/VBox/RadioButton[3]</xpath>
+                    <rectangle x1="0.1872998932764141" y1="0.19933554817275748" x2="0.21398078975453577" y2="0.2203765227021041"/>
+                    <node>RadioButton</node>
+                    <attr name="class">radio-button</attr>
+                    <attr name="id">Run</attr>
+                </info>
+            </radioButton>
+            <radioButton id="OnClose" xpath=".//RadioButton[@id=&amp;quot;OnClose&amp;quot;]" owner="self" rows="" header="" columns="">
+                <info>
+                    <xpath>/SplitPane/Content[1]/ScrollPane/com.sun.javafx.scene.control.skin.ScrollPaneSkin_3/com.sun.javafx.scene.control.skin.ScrollPaneSkin_4/GridPane/HBox/VBox/RadioButton[4]</xpath>
+                    <rectangle x1="0.1872998932764141" y1="0.2236987818383167" x2="0.2305229455709712" y2="0.24473975636766335"/>
+                    <node>RadioButton</node>
+                    <attr name="class">radio-button</attr>
+                    <attr name="id">OnClose</attr>
+                </info>
+            </radioButton>
+            <radioButton id="Close" xpath=".//RadioButton[@id=&amp;quot;Close&amp;quot;]" owner="self" rows="" header="" columns="">
+                <info>
+                    <xpath>/SplitPane/Content[1]/ScrollPane/com.sun.javafx.scene.control.skin.ScrollPaneSkin_3/com.sun.javafx.scene.control.skin.ScrollPaneSkin_4/GridPane/HBox/VBox/RadioButton[5]</xpath>
+                    <rectangle x1="0.1872998932764141" y1="0.24806201550387597" x2="0.2193169690501601" y2="0.2691029900332226"/>
+                    <node>RadioButton</node>
+                    <attr name="class">radio-button</attr>
+                    <attr name="id">Close</attr>
+                </info>
+            </radioButton>
+            <textBox id="findElement" xpath=".//FindListView[@id=&amp;quot;findListElement&amp;quot;]/CustomFieldWithButton" owner="self" rows="" header="" columns="">
+                <info>
+                    <xpath>/SplitPane/Content[1]/ScrollPane/com.sun.javafx.scene.control.skin.ScrollPaneSkin_3/com.sun.javafx.scene.control.skin.ScrollPaneSkin_4/GridPane/HBox/com.exactprosystems.jf.tool.custom.BorderWrapper_StrokeBorder_1[2]/com.exactprosystems.jf.tool.custom.BorderWrapper_StrokeBorder_1/com.exactprosystems.jf.tool.custom.BorderWrapper_StrokeBorder_1/VBox/FindListView/CustomFieldWithButton</xpath>
+                    <rectangle x1="0.25827107790821774" y1="0.03765227021040975" x2="0.39167556029882605" y2="0.06644518272425248"/>
+                    <node>CustomFieldWithButton</node>
+                    <attr name="class">text-input text-field custom-text-field customFieldWithButton</attr>
+                </info>
+            </textBox>
+            <listView id="listViewElement" xpath=".//FindListView[@id=&amp;quot;findListElement&amp;quot;]/ListView" owner="self" rows="" header="" columns="">
+                <info>
+                    <xpath>/SplitPane/Content[1]/ScrollPane/com.sun.javafx.scene.control.skin.ScrollPaneSkin_3/com.sun.javafx.scene.control.skin.ScrollPaneSkin_4/GridPane/HBox/com.exactprosystems.jf.tool.custom.BorderWrapper_StrokeBorder_1[2]/com.exactprosystems.jf.tool.custom.BorderWrapper_StrokeBorder_1/com.exactprosystems.jf.tool.custom.BorderWrapper_StrokeBorder_1/VBox/FindListView/ListView</xpath>
+                    <rectangle x1="0.25827107790821774" y1="0.07087486157253599" x2="0.39167556029882605" y2="0.33554817275747506"/>
+                    <node>ListView</node>
+                    <attr name="class">list-view</attr>
+                    <attr name="tooltip">""Use drag-n-drop to reorder elements"</attr>
+                </info>
+            </listView>
+            <button id="btnNewElement" uid="dictionaryBtnNewElement" xpath="" owner="self" rows="" header="" columns="">
+                <info>
+                    <xpath>/SplitPane/Content[1]/ScrollPane/com.sun.javafx.scene.control.skin.ScrollPaneSkin_3/com.sun.javafx.scene.control.skin.ScrollPaneSkin_4/GridPane/HBox/com.exactprosystems.jf.tool.custom.BorderWrapper_StrokeBorder_1[2]/com.exactprosystems.jf.tool.custom.BorderWrapper_StrokeBorder_1/com.exactprosystems.jf.tool.custom.BorderWrapper_StrokeBorder_1/VBox/HBox/Button[1]</xpath>
+                    <rectangle x1="0.25827107790821774" y1="0.34440753045404204" x2="0.2753468516542156" y2="0.3798449612403101"/>
+                    <node>Button</node>
+                    <attr name="class">button transparentBackground</attr>
+                    <attr name="id">dictionaryBtnNewElement</attr>
+                    <attr name="tooltip">Create new Element</attr>
+                </info>
+            </button>
+            <button id="btnDeleteElement" uid="dictionaryBtnDeleteElement" xpath="" owner="self" rows="" header="" columns="">
+                <info>
+                    <xpath>/SplitPane/Content[1]/ScrollPane/com.sun.javafx.scene.control.skin.ScrollPaneSkin_3/com.sun.javafx.scene.control.skin.ScrollPaneSkin_4/GridPane/HBox/com.exactprosystems.jf.tool.custom.BorderWrapper_StrokeBorder_1[2]/com.exactprosystems.jf.tool.custom.BorderWrapper_StrokeBorder_1/com.exactprosystems.jf.tool.custom.BorderWrapper_StrokeBorder_1/VBox/HBox/Button[2]</xpath>
+                    <rectangle x1="0.27748132337246534" y1="0.34440753045404204" x2="0.2945570971184632" y2="0.3798449612403101"/>
+                    <node>Button</node>
+                    <attr name="class">button transparentBackground</attr>
+                    <attr name="id">dictionaryBtnDeleteElement</attr>
+                    <attr name="tooltip">Delete current element</attr>
+                </info>
+            </button>
+            <button id="btnCopyElement" uid="dictionaryBtnCopyElement" xpath="" owner="self" rows="" header="" columns="">
+                <info>
+                    <xpath>/SplitPane/Content[1]/ScrollPane/com.sun.javafx.scene.control.skin.ScrollPaneSkin_3/com.sun.javafx.scene.control.skin.ScrollPaneSkin_4/GridPane/HBox/com.exactprosystems.jf.tool.custom.BorderWrapper_StrokeBorder_1[2]/com.exactprosystems.jf.tool.custom.BorderWrapper_StrokeBorder_1/com.exactprosystems.jf.tool.custom.BorderWrapper_StrokeBorder_1/VBox/HBox/Button[3]</xpath>
+                    <rectangle x1="0.29669156883671294" y1="0.34440753045404204" x2="0.3137673425827108" y2="0.3798449612403101"/>
+                    <node>Button</node>
+                    <attr name="class">button transparentBackground</attr>
+                    <attr name="id">dictionaryBtnCopyElement</attr>
+                    <attr name="tooltip">Copy current element</attr>
+                </info>
+            </button>
+            <button id="btnPasteElement" uid="dictionaryBtnPasteElement" xpath="" owner="self" rows="" header="" columns="">
+                <info>
+                    <xpath>/SplitPane/Content[1]/ScrollPane/com.sun.javafx.scene.control.skin.ScrollPaneSkin_3/com.sun.javafx.scene.control.skin.ScrollPaneSkin_4/GridPane/HBox/com.exactprosystems.jf.tool.custom.BorderWrapper_StrokeBorder_1[2]/com.exactprosystems.jf.tool.custom.BorderWrapper_StrokeBorder_1/com.exactprosystems.jf.tool.custom.BorderWrapper_StrokeBorder_1/VBox/HBox/Button[4]</xpath>
+                    <rectangle x1="0.31590181430096054" y1="0.34440753045404204" x2="0.3329775880469584" y2="0.3798449612403101"/>
+                    <node>Button</node>
+                    <attr name="class">button transparentBackground</attr>
+                    <attr name="id">dictionaryBtnPasteElement</attr>
+                    <attr name="tooltip">Paste copied element</attr>
+                </info>
+            </button>
+            <button id="btnTestSection" uid="dictionaryBtnTestSection" xpath="" owner="self" rows="" header="" columns="">
+                <info>
+                    <xpath>/SplitPane/Content[1]/ScrollPane/com.sun.javafx.scene.control.skin.ScrollPaneSkin_3/com.sun.javafx.scene.control.skin.ScrollPaneSkin_4/GridPane/HBox/com.exactprosystems.jf.tool.custom.BorderWrapper_StrokeBorder_1[2]/com.exactprosystems.jf.tool.custom.BorderWrapper_StrokeBorder_1/com.exactprosystems.jf.tool.custom.BorderWrapper_StrokeBorder_1/VBox/HBox/Button[5]</xpath>
+                    <rectangle x1="0.33511205976520814" y1="0.34440753045404204" x2="0.35218783351120597" y2="0.3798449612403101"/>
+                    <node>Button</node>
+                    <attr name="class">button transparentBackground</attr>
+                    <attr name="id">dictionaryBtnTestSection</attr>
+                    <attr name="tooltip">Test all controls into the current section</attr>
+                </info>
+            </button>
+            <button id="btnWizardElement" xpath=".//HBox[@id=&amp;quot;hBoxElement&amp;quot;]/WizardButton" owner="self" rows="" header="" columns="">
+                <info>
+                    <xpath>/SplitPane/Content[1]/ScrollPane/com.sun.javafx.scene.control.skin.ScrollPaneSkin_3/com.sun.javafx.scene.control.skin.ScrollPaneSkin_4/GridPane/HBox/com.exactprosystems.jf.tool.custom.BorderWrapper_StrokeBorder_1[2]/com.exactprosystems.jf.tool.custom.BorderWrapper_StrokeBorder_1/com.exactprosystems.jf.tool.custom.BorderWrapper_StrokeBorder_1/VBox/HBox/WizardButton</xpath>
+                    <rectangle x1="0.35218783351120597" y1="0.34440753045404204" x2="0.36926360725720386" y2="0.3798449612403101"/>
+                    <node>WizardButton</node>
+                    <attr name="class">button transparentBackground</attr>
+                    <attr name="id">btnWizard</attr>
+                    <attr name="tooltip">Wizards</attr>
+                </info>
+            </button>
+        </run>
+        <onClose/>
+        <close/>
+    </window>
+    <window name="VariablesTab">
+        <self/>
+        <onOpen/>
+        <run/>
+        <onClose/>
+        <close/>
+    </window>
+    <window name="PlainTextTab">
+        <self/>
+        <onOpen/>
+        <run/>
+        <onClose/>
+        <close/>
+    </window>
+    <window name="CsvTab">
+        <self/>
+        <onOpen/>
+        <run/>
+        <onClose/>
+        <close/>
+    </window>
 </dictionary>

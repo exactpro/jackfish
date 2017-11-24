@@ -113,6 +113,7 @@ public class NavigationController implements Initializable, ContainingParent
 		assert btnFindDialog != null : "fx:id=\"btnFindDialog\" was not injected: check your FXML file 'Navigation.fxml'.";
 		
 		this.listViewWindow = new FindListView<>((w, s) -> w.getName().toUpperCase().contains(s.toUpperCase()), true);
+		this.listViewWindow.setId("findListWindow");
 		this.listViewWindow.setCellFactory(param -> new CustomListCell<>(
 		        (w, s) -> this.model.checkDialogName(w, s),
 				(w, s) -> Common.tryCatch(() -> this.model.dialogRename(w, s), "Error on rename"),
@@ -131,6 +132,7 @@ public class NavigationController implements Initializable, ContainingParent
 		this.listViewElement = new FindListView<>((e, s) -> (!Str.IsNullOrEmpty(e.control.getID()) && e.control.getID().toUpperCase().contains(s.toUpperCase()) || (e.control.getBindedClass().getClazz().toUpperCase()
 				.contains(s.toUpperCase()))),
 				false);
+		this.listViewElement.setId("findListElement");
 		this.listViewElement.setCellFactory(param -> new CustomListCell<>(
 		        (w, s) -> this.model.checkNewId(w.control.getSection().getWindow(), w.control, s),
 				(w, s) -> {},
