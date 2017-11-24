@@ -302,13 +302,22 @@ public class ActionsController implements Initializable, ContainingParent
 
 	public void dialogResize(ActionEvent event)
 	{
-		Toggle selectedToggle = this.dialogGroupSection.getSelectedToggle();
+		tryCatch(() ->
+			{
+				Toggle selectedToggle = this.dialogGroupSection.getSelectedToggle();
 
-		int h = selectedToggle == this.rbdSize ? this.ntfDialogResizeH.getValue() : 0;
-		int w = selectedToggle == this.rbdSize ? this.ntfDialogResizeW.getValue() : 0;
+				if(selectedToggle == null)
+				{
+					throw new Exception("No one resizing parameter is filled.");
+				}
 
-		Resize resize = ((Resize) selectedToggle.getUserData());
-		tryCatch(() -> this.model.dialogResize(resize , h ,w), "Error on resize");
+				int h = selectedToggle == this.rbdSize ? this.ntfDialogResizeH.getValue() : 0;
+				int w = selectedToggle == this.rbdSize ? this.ntfDialogResizeW.getValue() : 0;
+
+				Resize resize = ((Resize) selectedToggle.getUserData());
+				this.model.dialogResize(resize , h ,w);
+			}
+			, "Error on resize");
 	}
 
 	public void getDialogProperty(ActionEvent event)
