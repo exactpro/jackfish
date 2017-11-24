@@ -10,6 +10,7 @@
 package com.exactprosystems.jf.tool.dictionary;
 
 import com.exactprosystems.jf.actions.ReadableValue;
+import com.exactprosystems.jf.actions.gui.DialogGetProperties;
 import com.exactprosystems.jf.api.app.*;
 import com.exactprosystems.jf.api.app.IWindow.SectionKind;
 import com.exactprosystems.jf.api.common.Str;
@@ -927,12 +928,12 @@ public class DictionaryFx extends GuiDictionary
 					Locator selfLocator = getLocatorForCurrentWindow();
 
 					String result = null;
-					if(propertyName.equals("Size"))
+					if(propertyName.equals(DialogGetProperties.sizeName))
 					{
 						Dimension dialogSize = this.applicationConnector.getAppConnection().getApplication().service().getDialogSize(selfLocator);
 						result = String.format("Dimension[width = %d, height = %d]", (int)dialogSize.getWidth(), (int)dialogSize.getHeight());
 					}
-					if(propertyName.equals("Position"))
+					if(propertyName.equals(DialogGetProperties.positionName))
 					{
 						Point dialogPosition = this.applicationConnector.getAppConnection().getApplication().service().getDialogPosition(selfLocator);
 						result = String.format("Point[x = %d, y = %d]", (int)dialogPosition.getX(), (int)dialogPosition.getY());

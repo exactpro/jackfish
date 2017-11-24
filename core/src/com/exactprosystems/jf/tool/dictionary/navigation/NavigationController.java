@@ -367,7 +367,7 @@ public class NavigationController implements Initializable, ContainingParent
 	// ------------------------------------------------------------------------------------------------------------------
 	// private methods
 	// ------------------------------------------------------------------------------------------------------------------
-	private IWindow currentWindow()
+	public IWindow currentWindow()
 	{
 		return this.listViewWindow.getSelectedItem();
 	}
@@ -595,11 +595,5 @@ public class NavigationController implements Initializable, ContainingParent
                 cancelEdit();
             }
         }
-	}
-
-	//public methods
-	public IWindow getCurrentWindow()
-	{
-		return currentWindow();
 	}
 }

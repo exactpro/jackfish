@@ -17,6 +17,8 @@ public interface IControl
 	void 				setSection(ISection section);
 
 	String 				getID();
+	void 				setID(String id);
+
 	String 				getOwnerID();
     String              getRefID();
 	String 				getUID();

@@ -9,6 +9,7 @@
 
 package com.exactprosystems.jf.tool.dictionary;
 
+import com.exactprosystems.jf.actions.gui.DialogGetProperties;
 import com.exactprosystems.jf.api.app.*;
 import com.exactprosystems.jf.api.app.IWindow.SectionKind;
 import com.exactprosystems.jf.api.common.ParametersKind;
@@ -132,7 +133,7 @@ public class DictionaryFxController implements Initializable, ContainingParent
 
 	public IWindow getCurrentWindow()
 	{
-		return this.navigationController.getCurrentWindow();
+		return this.navigationController.currentWindow();
 	}
 
 
@@ -183,7 +184,7 @@ public class DictionaryFxController implements Initializable, ContainingParent
 			IApplicationFactory factory = appConnection.getApplication().getFactory();
 			String[] getProps = factory.wellKnownParameters(ParametersKind.GET_PROPERTY);
 			String[] setProps = factory.wellKnownParameters(ParametersKind.SET_PROPERTY);
-			String[] getDialogProps = {"Size", "Position"};
+			String[] getDialogProps = {DialogGetProperties.sizeName, DialogGetProperties.positionName};
 			this.actionsController.displayProperties(Arrays.asList(getProps), Arrays.asList(setProps), Arrays.asList(getDialogProps));
 
 			String[] params = factory.wellKnownParameters(ParametersKind.NEW_INSTANCE);
