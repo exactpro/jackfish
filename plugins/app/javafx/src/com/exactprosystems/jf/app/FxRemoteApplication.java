@@ -148,7 +148,7 @@ public class FxRemoteApplication extends RemoteApplication
 					this.isInit = true;
 					isLoading.set(true);
 					this.logger.debug("Before invoke main method");
-					mainMethod.invoke(null, new Object[]{arguments == null ? null : new String[]{arguments}});
+					mainMethod.invoke(null, new Object[]{arguments == null ? null : arguments.split(" ")});
 				}
 			}
 			catch (InvocationTargetException e)
