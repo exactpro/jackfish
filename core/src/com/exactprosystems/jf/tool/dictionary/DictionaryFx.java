@@ -30,10 +30,12 @@ import javafx.concurrent.Task;
 import javafx.scene.control.ButtonType;
 
 import javax.xml.bind.annotation.XmlRootElement;
+import java.awt.*;
 import java.io.File;
 import java.io.Reader;
 import java.io.Serializable;
 import java.util.*;
+import java.util.List;
 import java.util.stream.Collectors;
 
 import static com.exactprosystems.jf.tool.Common.tryCatchThrow;
@@ -897,6 +899,50 @@ public class DictionaryFx extends GuiDictionary
 
 	//endregion
 
+	//region Dialog tab
+	public void dialogMoveTo(int x, int y) throws Exception
+	{
+		checkIsWorking(() ->
+			{
+				Locator selfLocator = getLocatorForCurrentWindow();
+				this.applicationConnector.getAppConnection().getApplication().service().moveDialog(selfLocator, x, y);
+			}
+		);
+	}
+
+	public void dialogResize(Resize resize, int h, int w) throws Exception
+	{
+		checkIsWorking(() ->
+			{
+				Locator selfLocator = getLocatorForCurrentWindow();
+				this.applicationConnector.getAppConnection().getApplication().service().resizeDialog(selfLocator, resize, h, w);
+			}
+		);
+	}
+
+	public void dialogGetProperty(String propertyName) throws Exception
+	{
+		checkIsWorking(() ->
+				{
+					Locator selfLocator = getLocatorForCurrentWindow();
+
+					String result = null;
+					if(propertyName.equals("Size"))
+					{
+						Dimension dialogSize = this.applicationConnector.getAppConnection().getApplication().service().getDialogSize(selfLocator);
+						result = String.format("Dimension[width = %d, height = %d]", (int)dialogSize.getWidth(), (int)dialogSize.getHeight());
+					}
+					if(propertyName.equals("Position"))
+					{
+						Point dialogPosition = this.applicationConnector.getAppConnection().getApplication().service().getDialogPosition(selfLocator);
+						result = String.format("Point[x = %d, y = %d]", (int)dialogPosition.getX(), (int)dialogPosition.getY());
+					}
+					Optional.ofNullable(result).ifPresent(this.controller::println);
+				}
+		);
+	}
+	//endregion
+
 
 	//------------------------------------------------------------------------------------------------------------------
 	// private methods
@@ -1129,5 +1175,22 @@ public class DictionaryFx extends GuiDictionary
 
 	private boolean getIsWorking(){
 		return this.isWorking;
+	}
+
+	private IWindow getCurrentWindow()
+	{
+		return this.controller.getCurrentWindow();
+	}
+
+	private Locator getLocatorForCurrentWindow() throws Exception
+	{
+		IWindow currentWindow = getCurrentWindow();
+		IControl selfControl = currentWindow.getSelfControl();
+
+		if (selfControl == null)
+		{
+			throw new Exception("Can't find self control for current window.");
+		}
+		return selfControl.locator();
 	}
 }

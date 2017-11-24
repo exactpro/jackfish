@@ -130,6 +130,11 @@ public class DictionaryFxController implements Initializable, ContainingParent
 		Common.runLater(() -> this.area.appendDefaultTextOnNewLine(str));
 	}
 
+	public IWindow getCurrentWindow()
+	{
+		return this.navigationController.getCurrentWindow();
+	}
+
 
 	// ------------------------------------------------------------------------------------------------------------------
 	// display* methods
@@ -178,14 +183,15 @@ public class DictionaryFxController implements Initializable, ContainingParent
 			IApplicationFactory factory = appConnection.getApplication().getFactory();
 			String[] getProps = factory.wellKnownParameters(ParametersKind.GET_PROPERTY);
 			String[] setProps = factory.wellKnownParameters(ParametersKind.SET_PROPERTY);
-			this.actionsController.displayProperties(Arrays.asList(getProps), Arrays.asList(setProps));
+			String[] getDialogProps = {"Size", "Position"};
+			this.actionsController.displayProperties(Arrays.asList(getProps), Arrays.asList(setProps), Arrays.asList(getDialogProps));
 
 			String[] params = factory.wellKnownParameters(ParametersKind.NEW_INSTANCE);
 			this.actionsController.displayParameters(Arrays.asList(params), function);
 		}
 		else
 		{
-			this.actionsController.displayProperties(new ArrayList<>(), new ArrayList<>());
+			this.actionsController.displayProperties(new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
 			this.actionsController.displayParameters(null, function);
 		}
 	}
