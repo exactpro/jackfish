@@ -12,7 +12,7 @@ package com.exactprosystems.jf.tool.custom.xmltree;
 import com.exactprosystems.jf.documents.matrix.parser.SearchHelper;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.CssVariables;
-import com.exactprosystems.jf.tool.custom.CustomTreeTableViewSkin;
+import com.exactprosystems.jf.tool.custom.skin.CustomTreeTableViewSkin;
 import com.exactprosystems.jf.tool.wizard.related.MarkerStyle;
 import com.exactprosystems.jf.tool.wizard.related.XmlItem;
 import javafx.beans.property.SimpleObjectProperty;
@@ -119,6 +119,14 @@ public class XmlTreeView extends AnchorPane
 			}
 		});
 
+		this.treeTableView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) ->
+		{
+			if (newValue != null)
+			{
+				scrollTo(newValue);
+			}
+		});
+
 		TreeTableColumn<XmlItem, ?> column = this.treeTableView.getColumns().get(1);
 		double width = column.getWidth();
 		column.setPrefWidth(width);
@@ -151,7 +159,7 @@ public class XmlTreeView extends AnchorPane
 		this.treeTableView.setRoot(new TreeItem<>());
 		displayTree(document, this.treeTableView.getRoot());
 		expandTree(this.treeTableView.getRoot());
-		((CustomTreeTableViewSkin<XmlItem>) this.treeTableView.getSkin()).resizeColumnToFitContent(this.treeTableView.getColumns().get(1), -1);
+		((CustomTreeTableViewSkin) this.treeTableView.getSkin()).resizeColumnToFitContent(this.treeTableView.getColumns().get(1), -1);
 	}
 
 	public void select(org.w3c.dom.Node node)
@@ -160,7 +168,7 @@ public class XmlTreeView extends AnchorPane
 		if (treeItem != null)
 		{
 			this.treeTableView.getSelectionModel().select(treeItem);
-			this.scrollToElement(treeItem);
+			this.expandAndScroll(treeItem);
 		}
 	}
 
@@ -191,7 +199,7 @@ public class XmlTreeView extends AnchorPane
 		if (treeItem != null)
 		{
 			this.treeTableView.getSelectionModel().select(treeItem);
-			this.scrollToElement(treeItem);
+			this.expandAndScroll(treeItem);
 		}
 	}
 
@@ -212,7 +220,7 @@ public class XmlTreeView extends AnchorPane
 		}
 		this.currentIndex = Math.min(this.currentIndex + 1, markedRows.size() - 1);
 		TreeItem<XmlItem> treeItem = markedRows.get(this.currentIndex);
-		scrollToElement(treeItem);
+		expandAndScroll(treeItem);
 		this.treeTableView.getSelectionModel().select(treeItem);
 	}
 
@@ -225,7 +233,7 @@ public class XmlTreeView extends AnchorPane
 		}
 		this.currentIndex = Math.max(this.currentIndex - 1, 0);
 		TreeItem<XmlItem> treeItem = markedRows.get(this.currentIndex);
-		scrollToElement(treeItem);
+		expandAndScroll(treeItem);
 		this.treeTableView.getSelectionModel().select(treeItem);
 	}
 
@@ -267,7 +275,7 @@ public class XmlTreeView extends AnchorPane
 			TreeItem<XmlItem> firstFound = list.get(0);
 			this.treeTableView.getSelectionModel().clearSelection();
 			this.treeTableView.getSelectionModel().select(firstFound);
-			this.scrollToElement(firstFound);
+			this.expandAndScroll(firstFound);
 		}
 		this.refresh();
 	}
@@ -358,7 +366,7 @@ public class XmlTreeView extends AnchorPane
 		}
 	}
 
-	private void scrollToElement(TreeItem<XmlItem> xpathItemTreeItem)
+	private void expandAndScroll(TreeItem<XmlItem> xpathItemTreeItem)
 	{
 		TreeItem<XmlItem> parent = xpathItemTreeItem.getParent();
 		while (parent != null)
@@ -366,12 +374,14 @@ public class XmlTreeView extends AnchorPane
 			parent.setExpanded(true);
 			parent = parent.getParent();
 		}
+		scrollTo(xpathItemTreeItem);
+	}
+
+	private void scrollTo(TreeItem<XmlItem> xpathItemTreeItem)
+	{
 		CustomTreeTableViewSkin skin = (CustomTreeTableViewSkin) this.treeTableView.getSkin();
 		int row = this.treeTableView.getRow(xpathItemTreeItem);
-		if (!skin.isIndexVisible(row))
-		{
-			skin.show(row);
-		}
+		skin.scrollTo(row);
 	}
 
 	private boolean matches(String text, String what, boolean matchCase, boolean wholeWord)

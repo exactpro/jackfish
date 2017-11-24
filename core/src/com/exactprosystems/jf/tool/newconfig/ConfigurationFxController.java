@@ -15,7 +15,7 @@ import com.exactprosystems.jf.documents.config.*;
 import com.exactprosystems.jf.documents.matrix.Matrix;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.ContainingParent;
-import com.exactprosystems.jf.tool.custom.CustomTreeViewSkin;
+import com.exactprosystems.jf.tool.custom.skin.CustomTreeViewSkin;
 import com.exactprosystems.jf.tool.helpers.DialogsHelper;
 import com.exactprosystems.jf.tool.newconfig.nodes.*;
 import javafx.collections.FXCollections;

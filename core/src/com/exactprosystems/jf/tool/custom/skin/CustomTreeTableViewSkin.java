@@ -7,7 +7,7 @@
 // information which is the property of Exactpro Systems or its licensors.
 ////////////////////////////////////////////////////////////////////////////////
 
-package com.exactprosystems.jf.tool.custom;
+package com.exactprosystems.jf.tool.custom.skin;
 
 import com.sun.javafx.scene.control.skin.TreeTableViewSkin;
 import javafx.scene.AccessibleAttribute;
@@ -22,17 +22,12 @@ public class CustomTreeTableViewSkin<T> extends TreeTableViewSkin<T>
 		super(treeTableView);
 	}
 
-	public void show(int index)
+	public void scrollTo(int index)
 	{
-		super.flow.show(index);
-	}
-
-	public boolean isIndexVisible(int index)
-	{
-		return super.flow.getFirstVisibleCell() != null &&
-				super.flow.getLastVisibleCell() != null &&
-				super.flow.getFirstVisibleCell().getIndex() <= index - 1 &&
-				super.flow.getLastVisibleCell().getIndex() >= index + 1;
+		if (!this.isIndexVisible(index))
+		{
+			this.show(index);
+		}
 	}
 
 	@Override
@@ -45,4 +40,19 @@ public class CustomTreeTableViewSkin<T> extends TreeTableViewSkin<T>
 	{
 		return (ScrollBar) super.queryAccessibleAttribute(AccessibleAttribute.VERTICAL_SCROLLBAR);
 	}
+
+	//region private methods
+	private void show(int index)
+	{
+		super.flow.show(index);
+	}
+
+	private boolean isIndexVisible(int index)
+	{
+		return super.flow.getFirstVisibleCell() != null &&
+				super.flow.getLastVisibleCell() != null &&
+				super.flow.getFirstVisibleCell().getIndex() <= index - 1 &&
+				super.flow.getLastVisibleCell().getIndex() >= index + 1;
+	}
+	//endregion
 }

@@ -15,6 +15,7 @@ import com.exactprosystems.jf.documents.matrix.parser.items.MatrixItem;
 import com.exactprosystems.jf.documents.matrix.parser.items.MatrixItemState;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.CssVariables;
+import com.exactprosystems.jf.tool.custom.skin.CustomTreeTableViewSkin;
 import com.exactprosystems.jf.tool.matrix.MatrixFx;
 import com.exactprosystems.jf.tool.matrix.params.ParametersPane;
 import com.exactprosystems.jf.tool.settings.SettingsPanel;
@@ -44,7 +45,7 @@ public class MatrixTreeView extends TreeTableView<MatrixItem>
 	public MatrixTreeView()
 	{
 		super(null);
-		this.setSkin(new MatrixTreeViewSkin(this));
+		this.setSkin(new CustomTreeTableViewSkin<>(this));
 		this.setShowRoot(false);
 		this.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
 		this.getStyleClass().addAll(CssVariables.CUSTOM_TREE_TABLE_VIEW);
@@ -397,7 +398,7 @@ public class MatrixTreeView extends TreeTableView<MatrixItem>
 		this.setColumnResizePolicy(param -> true);
 		gridColumn.prefWidthProperty().bind(this.widthProperty().subtract(numberColumn.getWidth() + iconColumn.getWidth() + offColumn.getWidth() + reportOffColumn.getWidth()).subtract(2));
 
-		ScrollBar vsb = ((MatrixTreeViewSkin) this.getSkin()).getVSB();
+		ScrollBar vsb = ((CustomTreeTableViewSkin) this.getSkin()).getVSB();
 		vsb.visibleProperty().addListener((observable, oldValue, newValue) ->
 		{
 			if (newValue && !oldValue)
@@ -413,11 +414,8 @@ public class MatrixTreeView extends TreeTableView<MatrixItem>
 
 	public void scrollTo(int index)
 	{
-		MatrixTreeViewSkin skin = (MatrixTreeViewSkin) getSkin();
-		if (!skin.isIndexVisible(index))
-		{
-			skin.show(index);
-		}
+		CustomTreeTableViewSkin skin = (CustomTreeTableViewSkin) this.getSkin();
+		skin.scrollTo(index);
 	}
 
 	private class MatrixTreeViewSkin extends TreeTableViewSkin<MatrixItem>

@@ -11,7 +11,7 @@ package com.exactprosystems.jf.tool.newconfig;
 import com.exactprosystems.jf.api.common.SerializablePair;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.CssVariables;
-import com.exactprosystems.jf.tool.custom.CustomTreeViewSkin;
+import com.exactprosystems.jf.tool.custom.skin.CustomTreeViewSkin;
 import com.exactprosystems.jf.tool.newconfig.nodes.ConfigurationTreeNode;
 import com.exactprosystems.jf.tool.newconfig.nodes.SeparatorTreeNode;
 import com.exactprosystems.jf.tool.newconfig.nodes.TreeNode;
@@ -112,6 +112,14 @@ public class ConfigurationTreeView extends TreeView<TreeNode>
 					this.tableView.show();
 					this.tableView.updateParameters(newValue.getValue().getParameters());
 				}
+			}
+		});
+
+		this.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) ->
+		{
+			if (newValue != null)
+			{
+				((CustomTreeViewSkin<TreeNode>) this.getSkin()).scrollTo(newValue);
 			}
 		});
 	}

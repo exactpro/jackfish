@@ -7,7 +7,7 @@
 // information which is the property of Exactpro Systems or its licensors.
 ////////////////////////////////////////////////////////////////////////////////
 
-package com.exactprosystems.jf.tool.custom;
+package com.exactprosystems.jf.tool.custom.skin;
 
 import com.sun.javafx.scene.control.skin.TreeViewSkin;
 import javafx.scene.control.TreeItem;
@@ -39,7 +39,20 @@ public class CustomTreeViewSkin<T> extends TreeViewSkin<T>
 		getSkinnable().getSelectionModel().select(treeItem);
 	}
 
-	//region pritvate methods
+	public void scrollTo(int index)
+	{
+		if (!isIndexVisible(index))
+		{
+			show(index);
+		}
+	}
+
+	public void scrollTo(TreeItem<T> treeItem)
+	{
+		scrollTo(super.getSkinnable().getRow(treeItem));
+	}
+
+	//region private methods
 	private void expandAll(TreeItem<T> item)
 	{
 		TreeItem<T> parent = item.getParent();
@@ -47,14 +60,6 @@ public class CustomTreeViewSkin<T> extends TreeViewSkin<T>
 		{
 			parent.setExpanded(true);
 			parent = parent.getParent();
-		}
-	}
-
-	private void scrollTo(int index)
-	{
-		if (!isIndexVisible(index))
-		{
-			show(index);
 		}
 	}
 
