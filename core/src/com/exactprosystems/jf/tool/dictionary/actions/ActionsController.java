@@ -83,6 +83,19 @@ public class ActionsController implements Initializable, ContainingParent
 	public ListView<ExpressionFieldsPane> listView;
 	public Button btnNewInstance;
 
+	public ToggleGroup                    dialogGroupSection;
+	public NumberTextField                ntfDialogMoveToX;
+	public NumberTextField                ntfDialogMoveToY;
+	public RadioButton                    rbdMin;
+	public RadioButton                    rbdMax;
+	public RadioButton                    rbdNormal;
+	public RadioButton                    rbdSize;
+	public NumberTextField                ntfDialogResizeH;
+	public NumberTextField                ntfDialogResizeW;
+	public GridPane                       propDialogGridPane;
+	public ComboBox<String>               cbGetDialogProperty;
+	public ExpressionField                efGetDialogProperty;
+
 
 	private ExpressionField			expressionField;
 	private Parent					pane;
@@ -112,6 +125,11 @@ public class ActionsController implements Initializable, ContainingParent
 		this.rbNormal.setUserData(Resize.Normal);
 		this.rbSize.setUserData(null);
 
+		this.dialogGroupSection.selectedToggleProperty().addListener((observable, oldValue, newValue) -> setDisable(!(newValue != null && newValue == this.rbdSize)));
+		this.rbdMin.setUserData(Resize.Minimize);
+		this.rbdMax.setUserData(Resize.Maximize);
+		this.rbdNormal.setUserData(Resize.Normal);
+		this.rbdSize.setUserData(null);
 	}
 
 	private void setDisable(boolean value)
@@ -158,6 +176,10 @@ public class ActionsController implements Initializable, ContainingParent
 		this.propGridPane.add(this.efGetProperty, 1, 0);
 		this.propGridPane.add(this.efSetProperty, 1, 1);
 		this.btnNewInstance.setDisable(true);
+
+		this.efGetDialogProperty = new ExpressionField(evaluator);
+		this.efGetDialogProperty.setHelperForExpressionField(null, null);
+		this.propDialogGridPane.add(this.efGetDialogProperty, 1, 0);
 	}
 
 	//region Do tab
@@ -272,6 +294,39 @@ public class ActionsController implements Initializable, ContainingParent
 
 	//endregion
 
+	//region Dialog
+	public void dialogMoveTo(ActionEvent event)
+	{
+		tryCatch(() -> this.model.dialogMoveTo(this.ntfDialogMoveToX.getValue(), this.ntfDialogMoveToY.getValue()), "Error on move to");
+	}
+
+	public void dialogResize(ActionEvent event)
+	{
+		tryCatch(() ->
+			{
+				Toggle selectedToggle = this.dialogGroupSection.getSelectedToggle();
+
+				if(selectedToggle == null)
+				{
+					throw new Exception("No one resizing parameter is filled.");
+				}
+
+				int h = selectedToggle == this.rbdSize ? this.ntfDialogResizeH.getValue() : 0;
+				int w = selectedToggle == this.rbdSize ? this.ntfDialogResizeW.getValue() : 0;
+
+				Resize resize = ((Resize) selectedToggle.getUserData());
+				this.model.dialogResize(resize , h ,w);
+			}
+			, "Error on resize");
+	}
+
+	public void getDialogProperty(ActionEvent event)
+	{
+		tryCatch(() -> this.model.dialogGetProperty(this.cbGetDialogProperty.getValue()), "Error on get property");
+	}
+
+	//endregion
+
 	public void startApplication(ActionEvent actionEvent)
 	{
 		tryCatch(() -> this.model.startApplication(currentApp()), "Error on start application");
@@ -295,13 +350,16 @@ public class ActionsController implements Initializable, ContainingParent
 	// ------------------------------------------------------------------------------------------------------------------
 	// display* methods
 	// ------------------------------------------------------------------------------------------------------------------
-	public void displayProperties(List<String> getProperties, List<String> setProperties)
+	public void displayProperties(List<String> getProperties, List<String> setProperties, List<String> getDialogProperties)
 	{
 		this.cbGetProperty.getItems().setAll(getProperties);
 		this.cbGetProperty.getSelectionModel().selectFirst();
 
 		this.cbSetProperty.getItems().setAll(setProperties);
 		this.cbSetProperty.getSelectionModel().selectFirst();
+
+		this.cbGetDialogProperty.getItems().setAll(getDialogProperties);
+		this.cbGetDialogProperty.getSelectionModel().selectFirst();
 	}
 
 	public void displayParameters(List<String> names, Function<String, ListProvider> function)

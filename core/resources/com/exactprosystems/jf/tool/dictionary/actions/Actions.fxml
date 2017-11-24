@@ -34,7 +34,7 @@
 				<CssVariables fx:constant="VGAP_MID"/>
 			</styleClass>
 			<columnConstraints>
-				<ColumnConstraints hgrow="SOMETIMES" maxWidth="370.0" minWidth="370.0" prefWidth="370.0"/>
+				<ColumnConstraints hgrow="SOMETIMES" maxWidth="400.0" minWidth="370.0" prefWidth="370.0"/>
 				<ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
 			</columnConstraints>
 			<rowConstraints>
@@ -43,7 +43,7 @@
 			<children>
 				<VBox alignment="TOP_CENTER" GridPane.halignment="CENTER">
 					<children>
-						<GridPane maxHeight="60" minHeight="60" prefHeight="60" prefWidth="370.0">
+						<GridPane maxHeight="60" minHeight="60" prefHeight="60" prefWidth="400.0">
 							<styleClass>
 								<CssVariables fx:constant="VGAP_MIN"/>
 								<CssVariables fx:constant="HGAP_MIN"/>
@@ -428,6 +428,150 @@
 																<R fx:constant="ACTIONS_SET"/>
 															</text>
 														</Button>
+													</children>
+												</GridPane>
+											</children>
+										</VBox>
+									</content>
+								</Tab>
+								<Tab>
+									<text>
+										<R fx:constant="DIALOGS_POS_SIZE_GET"/>
+									</text>
+									<content>
+										<VBox>
+											<children>
+												<Label id="$verMid"/>
+												<GridPane VBox.vgrow="ALWAYS">
+													<styleClass>
+														<CssVariables fx:constant="VGAP_MIN"/>
+													</styleClass>
+													<columnConstraints>
+														<ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
+													</columnConstraints>
+													<rowConstraints>
+														<RowConstraints minHeight="10.0" prefHeight="32.0" maxHeight="68.0" vgrow="SOMETIMES"/>
+														<RowConstraints minHeight="10.0" prefHeight="32.0" maxHeight="112.0" vgrow="SOMETIMES"/>
+													</rowConstraints>
+													<children>
+														<GridPane>
+															<styleClass>
+																<CssVariables fx:constant="VGAP_MIN"/>
+																<CssVariables fx:constant="HGAP_MIN"/>
+															</styleClass>
+															<columnConstraints>
+																<ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="20.0" prefWidth="100.0"/>
+																<ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="5.0" prefWidth="100.0"/>
+																<ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
+																<ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="5.0" prefWidth="100.0"/>
+																<ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
+															</columnConstraints>
+															<rowConstraints>
+																<RowConstraints minHeight="10.0" prefHeight="32.0" maxHeight="32.0" vgrow="SOMETIMES"/>
+																<RowConstraints minHeight="10.0" prefHeight="32.0" maxHeight="32.0" vgrow="SOMETIMES"/>
+															</rowConstraints>
+															<children>
+																<Button maxWidth="1.7976931348623157E308" onAction="#dialogMoveTo" mnemonicParsing="false" GridPane.columnSpan="5" GridPane.rowIndex="1">
+																	<text>
+																		<R fx:constant="DIALOGS_MOVE"/>
+																	</text>
+																</Button>
+																<Label text="Move to "/>
+																<Label text="X:" GridPane.columnIndex="1" GridPane.halignment="RIGHT"/>
+																<Label text="Y:" GridPane.columnIndex="3" GridPane.halignment="RIGHT"/>
+																<NumberTextField fx:id="ntfDialogMoveToX" GridPane.columnIndex="2"/>
+																<NumberTextField fx:id="ntfDialogMoveToY" GridPane.columnIndex="4"/>
+															</children>
+														</GridPane>
+														<GridPane GridPane.rowIndex="1">
+															<styleClass>
+																<CssVariables fx:constant="VGAP_MIN"/>
+																<CssVariables fx:constant="HGAP_MIN"/>
+															</styleClass>
+															<columnConstraints>
+																<ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
+																<ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
+																<ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
+															</columnConstraints>
+															<rowConstraints>
+																<RowConstraints minHeight="10.0" prefHeight="32.0" maxHeight="32.0" vgrow="SOMETIMES"/>
+																<RowConstraints minHeight="10.0" prefHeight="32.0" maxHeight="32.0" vgrow="SOMETIMES"/>
+																<RowConstraints minHeight="10.0" prefHeight="32.0" maxHeight="32.0" vgrow="SOMETIMES"/>
+															</rowConstraints>
+															<children>
+																<Button maxWidth="1.7976931348623157E308" onAction="#dialogResize" mnemonicParsing="false" GridPane.columnSpan="3" GridPane.rowIndex="2">
+																	<text>
+																		<R fx:constant="DIALOGS_RESIZE"/>
+																	</text>
+																</Button>
+																<RadioButton fx:id="rbdMin" mnemonicParsing="false">
+																	<text>
+																		<R fx:constant="DIALOGS_MIN"/>
+																	</text>
+																	<toggleGroup>
+																		<ToggleGroup fx:id="dialogGroupSection"/>
+																	</toggleGroup>
+																</RadioButton>
+																<RadioButton fx:id="rbdMax" mnemonicParsing="false" GridPane.columnIndex="1" toggleGroup="$dialogGroupSection">
+																	<text>
+																		<R fx:constant="DIALOGS_MAX"/>
+																	</text>
+																</RadioButton>
+																<RadioButton fx:id="rbdNormal" mnemonicParsing="false" GridPane.columnIndex="2" toggleGroup="$dialogGroupSection">
+																	<text>
+																		<R fx:constant="DIALOGS_NORMAL"/>
+																	</text>
+																</RadioButton>
+																<GridPane GridPane.columnSpan="3" GridPane.rowIndex="1">
+																	<styleClass>
+																		<CssVariables fx:constant="HGAP_MIN"/>
+																	</styleClass>
+																	<columnConstraints>
+																		<ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="20.0" prefWidth="100.0"/>
+																		<ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="5.0" prefWidth="100.0"/>
+																		<ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
+																		<ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="5.0" prefWidth="100.0"/>
+																		<ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
+																	</columnConstraints>
+																	<rowConstraints>
+																		<RowConstraints minHeight="10.0" prefHeight="32.0" maxHeight="32.0" vgrow="SOMETIMES"/>
+																	</rowConstraints>
+																	<children>
+																		<Label text="H:" GridPane.columnIndex="1" GridPane.halignment="RIGHT"/>
+																		<Label text="W:" GridPane.columnIndex="3" GridPane.halignment="RIGHT"/>
+																		<NumberTextField fx:id="ntfDialogResizeH" GridPane.columnIndex="2"/>
+																		<NumberTextField fx:id="ntfDialogResizeW" GridPane.columnIndex="4"/>
+																		<RadioButton fx:id="rbdSize" mnemonicParsing="false" toggleGroup="$dialogGroupSection">
+																			<text>
+																				<R fx:constant="DIALOGS_SIZE"/>
+																			</text>
+																		</RadioButton>
+																	</children>
+																</GridPane>
+															</children>
+														</GridPane>
+														<GridPane fx:id="propDialogGridPane" GridPane.rowIndex="2">
+															<styleClass>
+																<CssVariables fx:constant="VGAP_MIN"/>
+																<CssVariables fx:constant="HGAP_MIN"/>
+															</styleClass>
+															<columnConstraints>
+																<ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
+																<ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
+																<ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="45.0" maxWidth="45.0"/>
+															</columnConstraints>
+															<rowConstraints>
+																<RowConstraints minHeight="10.0" prefHeight="32.0" maxHeight="32.0" vgrow="SOMETIMES"/>
+															</rowConstraints>
+															<children>
+																<ComboBox fx:id="cbGetDialogProperty" maxWidth="1.7976931348623157E308" prefWidth="150.0"/>
+																<Button onAction="#getDialogProperty" mnemonicParsing="false" GridPane.columnIndex="2">
+																	<text>
+																		<R fx:constant="DIALOGS_GET"/>
+																	</text>
+																</Button>
+															</children>
+														</GridPane>
 													</children>
 												</GridPane>
 											</children>

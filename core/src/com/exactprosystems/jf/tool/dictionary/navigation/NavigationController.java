@@ -596,4 +596,10 @@ public class NavigationController implements Initializable, ContainingParent
             }
         }
 	}
+
+	//public methods
+	public IWindow getCurrentWindow()
+	{
+		return currentWindow();
+	}
 }
