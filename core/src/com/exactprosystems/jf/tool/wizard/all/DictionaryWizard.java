@@ -1017,7 +1017,7 @@ public class DictionaryWizard extends AbstractWizard
 
 		try
 		{
-			List<Node> list = findAll(locator);
+			List<Node> list = findAll(locator, node.getNodeName());
 			if (list.size() != 1)
 			{
 				return list.size();
@@ -1035,9 +1035,9 @@ public class DictionaryWizard extends AbstractWizard
 		return 0;
 	}
 
-	private List<Node> findAll(Locator locator) throws Exception
+	private List<Node> findAll(Locator locator, String nodeName) throws Exception
 	{
-		return this.matcher.findAll(this.rootNode, locator);
+		return this.matcher.findAll(this.rootNode, locator, nodeName);
 	}
 	//endregion
 

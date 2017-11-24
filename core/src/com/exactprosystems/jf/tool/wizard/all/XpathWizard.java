@@ -31,23 +31,20 @@ import com.exactprosystems.jf.tool.custom.find.IFind;
 import com.exactprosystems.jf.tool.custom.scaledimage.ImageViewWithScale;
 import com.exactprosystems.jf.tool.custom.xmltree.XmlTreeView;
 import com.exactprosystems.jf.tool.dictionary.DictionaryFx;
-import com.exactprosystems.jf.tool.wizard.WizardMatcher;
 import com.exactprosystems.jf.tool.helpers.DialogsHelper;
 import com.exactprosystems.jf.tool.wizard.AbstractWizard;
 import com.exactprosystems.jf.tool.wizard.CommandBuilder;
+import com.exactprosystems.jf.tool.wizard.WizardMatcher;
 import com.exactprosystems.jf.tool.wizard.related.MarkerStyle;
 import com.exactprosystems.jf.tool.wizard.related.WizardLoader;
-import javafx.application.Platform;
 import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
 import javafx.scene.layout.*;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 
-import java.awt.*;
+import java.awt.Rectangle;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -612,7 +609,7 @@ public class XpathWizard extends AbstractWizard
 
 		try
 		{
-			List<Node> list = findAll(locator, owner);
+			List<Node> list = findAll(locator, owner, node.getNodeName());
 			if (list.size() != 1)
 			{
 				return list.size();
@@ -630,9 +627,9 @@ public class XpathWizard extends AbstractWizard
 		return 0;
 	}
 
-	private List<Node> findAll(Locator locator, Node owner) throws Exception
+	private List<Node> findAll(Locator locator, Node owner, String nodeName) throws Exception
 	{
-		return this.wizardMatcher.findAll(owner, locator);
+		return this.wizardMatcher.findAll(owner, locator, nodeName);
 	}
 
 	private ControlKind composeKind(Node node)

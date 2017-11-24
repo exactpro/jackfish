@@ -10,6 +10,7 @@
 package com.exactprosystems.jf.tool.wizard;
 
 import com.exactprosystems.jf.api.app.*;
+import com.exactprosystems.jf.api.common.Str;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
@@ -29,34 +30,39 @@ public class WizardMatcher
     {
         this.pluginInfo = pluginInfo;
     }
-    
-    public List<Node> findAll(Node from, Locator locator) throws Exception
+
+	public List<Node> findAll(Node from, Locator locator, String nodeName) throws Exception
+	{
+		if (from == null || locator == null)
+		{
+			return Collections.emptyList();
+		}
+		Visibility visibility = locator.getVisibility();
+		String xpathStr = xpathFromControl(locator.getControlKind(), locator, nodeName);
+
+		XPath xpath = XPathFactory.newInstance().newXPath();
+		XPathExpression compile = xpath.compile(xpathStr);
+		NodeList nodeList = (NodeList) compile.evaluate(from, XPathConstants.NODESET);
+		return IntStream.range(0, nodeList.getLength())
+				.mapToObj(nodeList::item)
+				.filter(n ->
+				{
+					if (visibility == Visibility.Visible)
+					{
+						return true;
+					}
+					Boolean visible = (Boolean)n.getUserData(IRemoteApplication.visibleName);
+					return visible != null && visible.booleanValue();
+				})
+				.collect(Collectors.toList());
+	}
+
+	public List<Node> findAll(Node from, Locator locator) throws Exception
     {
-        if (from == null || locator == null)
-        {
-            return Collections.emptyList();
-        }
-        Visibility visibility = locator.getVisibility();
-        String xpathStr = xpathFromControl(locator.getControlKind(), locator);
-        
-        XPath xpath = XPathFactory.newInstance().newXPath();
-        XPathExpression compile = xpath.compile(xpathStr);
-        NodeList nodeList = (NodeList) compile.evaluate(from, XPathConstants.NODESET);
-        return IntStream.range(0, nodeList.getLength())
-                .mapToObj(nodeList::item)
-                .filter(n -> 
-                {
-                    if (visibility == Visibility.Visible)
-                    {
-                        return true;
-                    }
-                    Boolean visible = (Boolean)n.getUserData(IRemoteApplication.visibleName);
-                    return visible != null && visible.booleanValue();
-                })
-                .collect(Collectors.toList());
-    }
+		return this.findAll(from, locator, null);
+	}
     
-    private String xpathFromControl(ControlKind controlKind, Locator locator)
+    private String xpathFromControl(ControlKind controlKind, Locator locator, String nodeName)
     {
         if (locator.getXpath() != null)
         {
@@ -67,12 +73,12 @@ public class WizardMatcher
             return null;
         }
         Set<String> setNodes = this.pluginInfo.nodeByControlKind(controlKind);
-        String[] nodes = setNodes.toArray(new String[setNodes.size()]);
-        if (nodes != null)
-        {
-            return complexXpath(locator, nodes);
-        }
-        return complexXpath(locator, "*");
+		if (!Str.IsNullOrEmpty(nodeName))
+		{
+			setNodes.add(nodeName);
+		}
+		String[] nodes = setNodes.toArray(new String[setNodes.size()]);
+		return complexXpath(locator, nodes);
     }
 
     private String complexXpath(Locator locator, String ... strings)
@@ -112,7 +118,7 @@ public class WizardMatcher
         if (locator.getUid() != null)
         {
             sb.append(separator); separator = " and ";
-            sb.append(String.format("@" + idName + "='%s'", locator.getUid()));
+			sb.append(this.full(idName, locator.getUid()));
         }
         if (locator.getClazz() != null)
         {
@@ -122,48 +128,58 @@ public class WizardMatcher
 
                 if (part.startsWith("!"))
                 {
-                    sb.append(String.format("not (contains(@" + className + ", '%s'))", part.substring(1)));
+					sb.append(String.format("not (%s)", this.contains(className, part.substring(1))));
                 }
                 else
                 {
-                    sb.append(String.format("contains(@" + className + ", '%s')", part));
+					sb.append(this.contains(className, part));
                 }
             }
         }
         if (locator.getName() != null)
         {
             sb.append(separator); separator = " and ";
-            sb.append(String.format("@" + nameName + "='%s'", locator.getName()));
+			sb.append(this.full(nameName, locator.getName()));
         }
         if (locator.getTitle() != null)
         {
             sb.append(separator); separator = " and ";
-            sb.append(String.format("contains(@" + titleName + ",'%s')", locator.getTitle()));
+			sb.append(this.contains(titleName, locator.getTitle()));
         }
         if (locator.getAction() != null)
         {
             sb.append(separator); separator = " and ";
-            sb.append(String.format("@" + actionName + "='%s'", locator.getAction()));
+			sb.append(this.full(actionName, locator.getAction()));
         }
         if (locator.getText() != null)
         {
             sb.append(separator); separator = " and ";
             if (locator.isWeak())
             {
-                sb.append(String.format("contains(.,'%s') or contains(@" + textName + ",'%s')", locator.getText(), locator.getText()));
-            }
+				sb.append(String.format("contains(.,'%s') or contains(@%s,'%s')", locator.getText(), textName, locator.getText()));
+			}
             else
             {
-                sb.append(String.format("(.='%s') or @" + textName + "='%s'", locator.getText(), locator.getText()));
+                sb.append(String.format("(.='%s') or @%s='%s' or text()='%s'", locator.getText(), textName, locator.getText(), locator.getText()));
             }
         }
         if (locator.getTooltip() != null)
         {
             sb.append(separator);
-            sb.append(String.format("@" + tooltipName + "='%s'", locator.getTooltip()));
+			sb.append(this.full(tooltipName, locator.getTooltip()));
         }
         return sb.length() == 0 ? "*" : sb.toString();
     }
-    
-    private PluginInfo pluginInfo;
+
+	private String full(String key, String value)
+	{
+		return String.format("@%s='%s'", key, value);
+	}
+
+	private String contains(String key, String value)
+	{
+		return String.format("contains(%s, '%s')", key, value);
+	}
+
+	private PluginInfo pluginInfo;
 }
