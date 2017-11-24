@@ -10,6 +10,9 @@
 package com.exactprosystems.jf.tool.custom.skin;
 
 import com.sun.javafx.scene.control.skin.TreeViewSkin;
+import com.sun.javafx.scene.control.skin.VirtualFlow;
+import javafx.scene.control.IndexedCell;
+import javafx.scene.control.TreeCell;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
 
@@ -52,6 +55,12 @@ public class CustomTreeViewSkin<T> extends TreeViewSkin<T>
 		scrollTo(super.getSkinnable().getRow(treeItem));
 	}
 
+	@Override
+	protected VirtualFlow<TreeCell<T>> createVirtualFlow()
+	{
+		return new CustomVirtualFlow<>();
+	}
+
 	//region private methods
 	private void expandAll(TreeItem<T> item)
 	{
@@ -65,10 +74,7 @@ public class CustomTreeViewSkin<T> extends TreeViewSkin<T>
 
 	private boolean isIndexVisible(int index)
 	{
-		return flow.getFirstVisibleCell() != null &&
-				flow.getLastVisibleCell() != null &&
-				flow.getFirstVisibleCell().getIndex() <= index - 1 &&
-				flow.getLastVisibleCell().getIndex() >= index + 1;
+		return flow.getFirstVisibleCell() != null && flow.getLastVisibleCell() != null && flow.getFirstVisibleCell().getIndex() <= index - 1 && flow.getLastVisibleCell().getIndex() >= index + 1;
 	}
 
 	private void show(int index)
@@ -76,4 +82,30 @@ public class CustomTreeViewSkin<T> extends TreeViewSkin<T>
 		flow.show(index);
 	}
 	//endregion
+
+	//workaround from https://stackoverflow.com/a/34924750/3452146
+	private class CustomVirtualFlow<T extends IndexedCell> extends VirtualFlow<T>
+	{
+		@Override
+		public double getPosition()
+		{
+			double position = super.getPosition();
+			if (position == 1.0d)
+			{
+				return 0.99999999999;
+			}
+			return super.getPosition();
+		}
+
+		@Override
+		public void setPosition(double newPosition)
+		{
+			if (newPosition == 1.0d)
+			{
+				newPosition = 0.99999999999;
+			}
+			super.setPosition(newPosition);
+		}
+
+	}
 }
