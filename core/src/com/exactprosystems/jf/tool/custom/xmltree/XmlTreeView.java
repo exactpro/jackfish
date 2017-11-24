@@ -21,6 +21,7 @@ import javafx.scene.control.ProgressIndicator;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeTableColumn;
 import javafx.scene.control.TreeTableView;
+import javafx.scene.input.KeyCode;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.text.Text;
@@ -90,22 +91,16 @@ public class XmlTreeView extends AnchorPane
 			{
 				XmlIconCell iconCell = (XmlIconCell) target;
 				TreeItem<XmlItem> treeItem = iconCell.getTreeTableRow().getTreeItem();
-				if (treeItem != null)
-				{
-					XmlItem item = treeItem.getValue();
-					MarkerStyle oldValue = item.getStyle();
-					MarkerStyle newValue = item.changeStyle();
-					item.setVisible(newValue == null ? true : this.stateMap.get(newValue));
-					if (this.onMarkerChanged != null)
-					{
-						TreeItem<XmlItem> selectedItem = this.treeTableView.getSelectionModel().selectedItemProperty().get();
-						boolean selected = selectedItem != null && selectedItem.getValue() == item;
-						oldValue = oldValue == null && selected ? MarkerStyle.SELECT : oldValue;
-						newValue = newValue == null && selected ? MarkerStyle.SELECT : newValue;
-						this.onMarkerChanged.changed(item, oldValue, newValue, selected);
-					}
-					refresh();
-				}
+				Optional.ofNullable(treeItem).ifPresent(this::changeMarkerState);
+			}
+		});
+
+		this.treeTableView.setOnKeyPressed(e ->
+		{
+			if (e.getCode() == KeyCode.SPACE)
+			{
+				TreeItem<XmlItem> selectedItem = this.treeTableView.getSelectionModel().getSelectedItem();
+				Optional.ofNullable(selectedItem).ifPresent(this::changeMarkerState);
 			}
 		});
 
@@ -295,6 +290,23 @@ public class XmlTreeView extends AnchorPane
 	//endregion
 
 	//region private methods
+	private void changeMarkerState(TreeItem<XmlItem> treeItem)
+	{
+		XmlItem item = treeItem.getValue();
+		MarkerStyle oldValue = item.getStyle();
+		MarkerStyle newValue = item.changeStyle();
+		item.setVisible(newValue == null ? true : this.stateMap.get(newValue));
+		if (this.onMarkerChanged != null)
+		{
+			TreeItem<XmlItem> selectedItem = this.treeTableView.getSelectionModel().selectedItemProperty().get();
+			boolean selected = selectedItem != null && selectedItem.getValue() == item;
+			oldValue = oldValue == null && selected ? MarkerStyle.SELECT : oldValue;
+			newValue = newValue == null && selected ? MarkerStyle.SELECT : newValue;
+			this.onMarkerChanged.changed(item, oldValue, newValue, selected);
+		}
+		refresh();
+	}
+
 	private MarkerStyle selectionStyle(XmlItem item)
 	{
 		if (item == null)

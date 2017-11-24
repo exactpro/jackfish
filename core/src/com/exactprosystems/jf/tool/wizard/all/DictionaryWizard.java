@@ -117,6 +117,7 @@ import java.util.stream.Collectors;
 				+ "{{`    3. Add`}}"
 				+ "{{`    4. Update`}}"
 				+ "{{`    `}}"
+				+ "{{`State can be switched by clicking on left column in the same line or pressing key SPACE on the line`}}"
 				+ "{{`State Mark means, that element found successful and count of items found - 1.`}}"
 				+ "{{`State Question means, that element not found, but we try to find element via some information ( via sophistic algorithm), that was grabbed from last found. This info save to dictionary on tag info.`}}"
 				+ "{{`For founding we evaluate some functions with weight. These weight you may set on SettingsPanel -> Wizard tab.`}}"
