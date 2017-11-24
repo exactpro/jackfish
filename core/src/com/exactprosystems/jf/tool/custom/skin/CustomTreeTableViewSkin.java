@@ -10,9 +10,11 @@
 package com.exactprosystems.jf.tool.custom.skin;
 
 import com.sun.javafx.scene.control.skin.TreeTableViewSkin;
+import com.sun.javafx.scene.control.skin.VirtualFlow;
 import javafx.scene.AccessibleAttribute;
 import javafx.scene.control.ScrollBar;
 import javafx.scene.control.TreeTableColumn;
+import javafx.scene.control.TreeTableRow;
 import javafx.scene.control.TreeTableView;
 
 public class CustomTreeTableViewSkin<T> extends TreeTableViewSkin<T>
@@ -39,6 +41,12 @@ public class CustomTreeTableViewSkin<T> extends TreeTableViewSkin<T>
 	public ScrollBar getVSB()
 	{
 		return (ScrollBar) super.queryAccessibleAttribute(AccessibleAttribute.VERTICAL_SCROLLBAR);
+	}
+
+	@Override
+	protected VirtualFlow<TreeTableRow<T>> createVirtualFlow()
+	{
+		return new CustomVirtualFlow<>();
 	}
 
 	//region private methods
