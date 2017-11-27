@@ -17,6 +17,7 @@ import com.exactprosystems.jf.api.error.app.ElementNotFoundException;
 import com.exactprosystems.jf.api.error.app.FeatureNotSupportedException;
 import com.exactprosystems.jf.api.error.app.TooManyElementsException;
 import com.exactprosystems.jf.api.error.app.WrongParameterException;
+import com.sun.javafx.scene.control.skin.ComboBoxListViewSkin;
 import javafx.application.Platform;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
@@ -86,6 +87,10 @@ public class FxOperationExecutor extends AbstractOperationExecutor<EventTarget>
 			{
 				return String.valueOf(((ComboBox) component).getSelectionModel().getSelectedItem());
 			}
+			if (component instanceof ChoiceBox)
+			{
+				return String.valueOf(((ChoiceBox) component).getSelectionModel().getSelectedItem());
+			}
 			if (component instanceof Label)
 			{
 				return ((Label) component).getText();
@@ -138,9 +143,37 @@ public class FxOperationExecutor extends AbstractOperationExecutor<EventTarget>
 			if (component instanceof ComboBox)
 			{
 				ComboBox comboBox = (ComboBox) component;
+				if (onlyVisible)
+				{
+					Skin<?> skin = comboBox.getSkin();
+					if (skin instanceof ComboBoxListViewSkin<?>)
+					{
+						ListView<?> listView = ((ComboBoxListViewSkin) skin).getListView();
+						if (listView != null)
+						{
+							return UtilsFx.runOnFxThreadAndWaitResult(() -> IntStream.range(0, listView.getItems().size())
+									.filter(i -> ((Node) listView.queryAccessibleAttribute(AccessibleAttribute.ITEM_AT_INDEX, i)).isVisible())
+									.mapToObj(listView.getItems()::get)
+									.map(Str::asString)
+									.collect(Collectors.toList()));
+						}
+					}
+				}
 				StringConverter converter = comboBox.getConverter();
 				List<String> list = new ArrayList<>();
 				for (Object item : comboBox.getItems())
+				{
+					list.add(converter.toString(item));
+				}
+				return list;
+			}
+			if (component instanceof ChoiceBox<?>)
+			{
+				//API can't allows get only visible elements
+				ChoiceBox choiceBox = (ChoiceBox) component;
+				StringConverter converter = choiceBox.getConverter();
+				List<String> list = new ArrayList<>();
+				for (Object item : choiceBox.getItems())
 				{
 					list.add(converter.toString(item));
 				}
@@ -812,6 +845,16 @@ public class FxOperationExecutor extends AbstractOperationExecutor<EventTarget>
 								.ifPresent(comboBox.getSelectionModel()::select);
 						return true;
 					}
+					if (component instanceof ChoiceBox)
+					{
+						ChoiceBox choiceBox = (ChoiceBox) component;
+						StringConverter converter = choiceBox.getConverter();
+						choiceBox.getItems().stream()
+								.filter(s -> Str.areEqual(converter.toString(s), selectedText))
+								.findFirst()
+								.ifPresent(choiceBox.getSelectionModel()::select);
+						return true;
+					}
 					if (component instanceof ListView)
 					{
 						ListView listView = (ListView) component;
@@ -848,6 +891,12 @@ public class FxOperationExecutor extends AbstractOperationExecutor<EventTarget>
 					{
 						ComboBox comboBox = (ComboBox) component;
 						comboBox.getSelectionModel().select(index);
+						return true;
+					}
+					if (component instanceof ChoiceBox)
+					{
+						ChoiceBox choiceBox = (ChoiceBox) component;
+						choiceBox.getSelectionModel().select(index);
 						return true;
 					}
 					if (component instanceof TabPane)
