@@ -985,7 +985,7 @@ public class DictionaryWizard extends AbstractWizard
 			return res;
 		}
 
-		String text = node.getTextContent();
+		String text = XpathUtils.text(node);//node.getTextContent();
 		if (XpathUtils.isStable(text, this.pluginInfo::isStable))
 		{
 			return text;

@@ -178,7 +178,7 @@ public class WizardMatcher
 
 	private String contains(String key, String value)
 	{
-		return String.format("contains(%s, '%s')", key, value);
+		return String.format("contains(@%s, '%s')", key, value);
 	}
 
 	private PluginInfo pluginInfo;

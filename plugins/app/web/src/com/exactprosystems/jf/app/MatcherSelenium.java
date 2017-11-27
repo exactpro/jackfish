@@ -87,7 +87,8 @@ public class MatcherSelenium extends By
 
 		return result;
 	}
-	
+
+	//TODO the same code from WizardMatcher
     private String xpathFromControl(ControlKind controlKind, Locator locator)
     {
         if (locator.getXpath() != null && !locator.getXpath().isEmpty())

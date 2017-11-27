@@ -8,17 +8,7 @@
             <wait owner="self" ref="btnLoadMatrix" addition="WaitToAppear" timeout="10000"/>
         </onOpen>
         <run>
-            <button id="btnLoadMatrix" xpath=".//Button[@id=&amp;quot;btnLoadMatrix&amp;quot;]" owner="self" rows="" header="" columns="">
-                <info>
-                    <xpath>/GridPane/BorderPane/VBox/ToolBar/HBox/Button[1]</xpath>
-                    <rectangle x1="0.0125" y1="0.05666666666666667" x2="0.0525" y2="0.11"/>
-                    <node>Button</node>
-                    <attr name="class">button transparentBackground</attr>
-                    <attr name="id">btnLoadMatrix</attr>
-                    <attr name="tooltip">Open matrix</attr>
-                </info>
-            </button>
-            <button id="btnNewMatrix" xpath=".//Button[@id=&amp;quot;btnNewMatrix&amp;quot;]" owner="self" rows="" header="" columns="">
+            <button id="btnNewMatrix" uid="btnNewMatrix" owner="self" rows="" header="" columns="">
                 <info>
                     <xpath>/GridPane/BorderPane/VBox/ToolBar/HBox/Button[2]</xpath>
                     <rectangle x1="0.0575" y1="0.05666666666666667" x2="0.0975" y2="0.11"/>
@@ -28,7 +18,7 @@
                     <attr name="tooltip">New matrix</attr>
                 </info>
             </button>
-            <button id="btnSaveDocument" xpath=".//Button[@id=&amp;quot;btnSaveDocument&amp;quot;]" owner="self" rows="" header="" columns="">
+            <button id="btnSaveDocument" uid="btnSaveDocument" owner="self" rows="" header="" columns="">
                 <info>
                     <xpath>/GridPane/BorderPane/VBox/ToolBar/HBox/Button[3]</xpath>
                     <rectangle x1="0.115" y1="0.05666666666666667" x2="0.155" y2="0.11"/>
@@ -38,7 +28,7 @@
                     <attr name="tooltip">Save Ctrl+S</attr>
                 </info>
             </button>
-            <button id="btnSaveAsDocument" xpath=".//Button[@id=&amp;quot;btnSaveAsDocument&amp;quot;]" owner="self" rows="" header="" columns="">
+            <button id="btnSaveAsDocument" uid="btnSaveAsDocument" owner="self" rows="" header="" columns="">
                 <info>
                     <xpath>/GridPane/BorderPane/VBox/ToolBar/HBox/Button[4]</xpath>
                     <rectangle x1="0.16" y1="0.05666666666666667" x2="0.2" y2="0.11"/>
@@ -48,7 +38,7 @@
                     <attr name="tooltip">Save as.. Shift+Ctrl+S</attr>
                 </info>
             </button>
-            <button id="btnOpenMainLog" xpath=".//Button[@id=&amp;quot;btnOpenMainLog&amp;quot;]" owner="self" rows="" header="" columns="">
+            <button id="btnOpenMainLog" uid="btnOpenMainLog" owner="self" rows="" header="" columns="">
                 <info>
                     <xpath>/GridPane/BorderPane/VBox/ToolBar/HBox/Button[5]</xpath>
                     <rectangle x1="0.20500000000000002" y1="0.05666666666666667" x2="0.245" y2="0.11"/>
@@ -56,10 +46,10 @@
                     <attr name="class">button transparentBackground</attr>
                     <attr name="id">btnOpenMainLog</attr>
                     <attr name="tooltip">Show log
-					</attr>
+</attr>
                 </info>
             </button>
-            <button id="btnShowCalculator" xpath=".//Button[@id=&amp;quot;btnShowCalculator&amp;quot;]" owner="self" rows="" header="" columns="">
+            <button id="btnShowCalculator" uid="btnShowCalculator" owner="self" rows="" header="" columns="">
                 <info>
                     <xpath>/GridPane/BorderPane/VBox/ToolBar/HBox/Button[6]</xpath>
                     <rectangle x1="0.25" y1="0.05666666666666667" x2="0.29" y2="0.11"/>
@@ -67,10 +57,10 @@
                     <attr name="class">button transparentBackground</attr>
                     <attr name="id">btnShowCalculator</attr>
                     <attr name="tooltip">Show calculator
-					</attr>
+</attr>
                 </info>
             </button>
-            <button id="btnUndo" xpath=".//Button[@id=&amp;quot;btnUndo&amp;quot;]" owner="self" rows="" header="" columns="">
+            <button id="btnUndo" uid="btnUndo" owner="self" rows="" header="" columns="">
                 <info>
                     <xpath>/GridPane/BorderPane/VBox/ToolBar/HBox/Button[7]</xpath>
                     <rectangle x1="0.3075" y1="0.05666666666666667" x2="0.34750000000000003" y2="0.11"/>
@@ -78,11 +68,10 @@
                     <attr name="class">button transparentBackground</attr>
                     <attr name="id">btnUndo</attr>
                     <attr name="tooltip">Undo
-						Ctrl+Z
-					</attr>
+Ctrl+Z</attr>
                 </info>
             </button>
-            <button id="btnRedo" xpath=".//Button[@id=&amp;quot;btnRedo&amp;quot;]" owner="self" rows="" header="" columns="">
+            <button id="btnRedo" uid="btnRedo" owner="self" rows="" header="" columns="">
                 <info>
                     <xpath>/GridPane/BorderPane/VBox/ToolBar/HBox/Button[8]</xpath>
                     <rectangle x1="0.3525" y1="0.05666666666666667" x2="0.3925" y2="0.11"/>
@@ -90,11 +79,10 @@
                     <attr name="class">button transparentBackground</attr>
                     <attr name="id">btnRedo</attr>
                     <attr name="tooltip">Redo
-						Shift+Ctrl+Z
-					</attr>
+Shift+Ctrl+Z</attr>
                 </info>
             </button>
-            <tabPanel id="mainTabPanel" xpath=".//CustomTabPane[contains(.,&amp;quot;&amp;quot;)]" owner="self" rows="" header="" columns="">
+            <tabPanel id="mainTabPanel" owner="self" class="customTabPane" rows="" header="" columns="">
                 <info>
                     <xpath>/GridPane/BorderPane/SplitPane/Content[2]/CustomTabPane</xpath>
                     <rectangle x1="0.0525" y1="0.11833333333333335" x2="0.995" y2="0.9650000000000001"/>
@@ -102,6 +90,16 @@
                     <attr name="class">tab-pane customTabPane</attr>
                 </info>
             </tabPanel>
+            <button id="btnLoadMatrix" uid="btnLoadMatrix" owner="self" rows="" header="" columns="">
+                <info>
+                    <xpath>/GridPane/BorderPane/VBox/ToolBar/HBox/Button[1]</xpath>
+                    <rectangle x1="0.0125" y1="0.05666666666666667" x2="0.0525" y2="0.11"/>
+                    <node>Button</node>
+                    <attr name="class">button transparentBackground</attr>
+                    <attr name="id">btnLoadMatrix</attr>
+                    <attr name="tooltip">Open matrix</attr>
+                </info>
+            </button>
         </run>
         <onClose/>
         <close/>
@@ -112,7 +110,7 @@
         </self>
         <onOpen/>
         <run>
-            <button id="menuFile" xpath=".//MenuBarButton[@id=&amp;quot;menuFile&amp;quot;]" owner="self" rows="" header="" columns="">
+            <button id="menuFile" uid="menuFile" owner="self" rows="" header="" columns="">
                 <info>
                     <xpath>/HBox/MenuBarButton[1]</xpath>
                     <rectangle x1="0.011335012594458438" y1="0.0" x2="0.06297229219143577" y2="0.9666666666666667"/>
@@ -121,7 +119,7 @@
                     <attr name="id">menuFile</attr>
                 </info>
             </button>
-            <button id="menuEdit" xpath=".//MenuBarButton[@id=&amp;quot;menuEdit&amp;quot;]" owner="self" rows="" header="" columns="">
+            <button id="menuEdit" uid="menuEdit" owner="self" rows="" header="" columns="">
                 <info>
                     <xpath>/HBox/MenuBarButton[2]</xpath>
                     <rectangle x1="0.0654911838790932" y1="0.0" x2="0.12090680100755667" y2="0.9666666666666667"/>
@@ -130,7 +128,7 @@
                     <attr name="id">menuEdit</attr>
                 </info>
             </button>
-            <button id="menuView" xpath=".//MenuBarButton[@id=&amp;quot;menuView&amp;quot;]" owner="self" rows="" header="" columns="">
+            <button id="menuView" uid="menuView" owner="self" rows="" header="" columns="">
                 <info>
                     <xpath>/HBox/MenuBarButton[3]</xpath>
                     <rectangle x1="0.1234256926952141" y1="0.0" x2="0.18639798488664988" y2="0.9666666666666667"/>
@@ -139,7 +137,7 @@
                     <attr name="id">menuView</attr>
                 </info>
             </button>
-            <button id="menuMatrix" xpath=".//MenuBarButton[@id=&amp;quot;menuMatrix&amp;quot;]" owner="self" rows="" header="" columns="">
+            <button id="menuMatrix" uid="menuMatrix" owner="self" rows="" header="" columns="">
                 <info>
                     <xpath>/HBox/MenuBarButton[4]</xpath>
                     <rectangle x1="0.1889168765743073" y1="0.0" x2="0.2632241813602015" y2="0.9666666666666667"/>
@@ -148,7 +146,7 @@
                     <attr name="id">menuMatrix</attr>
                 </info>
             </button>
-            <button id="menuGit" xpath=".//MenuBarButton[@id=&amp;quot;menuGit&amp;quot;]" owner="self" rows="" header="" columns="">
+            <button id="menuGit" uid="menuGit" owner="self" rows="" header="" columns="">
                 <info>
                     <xpath>/HBox/MenuBarButton[5]</xpath>
                     <rectangle x1="0.26574307304785894" y1="0.0" x2="0.3123425692695214" y2="0.9666666666666667"/>
@@ -157,7 +155,7 @@
                     <attr name="id">menuGit</attr>
                 </info>
             </button>
-            <button id="menuHelp" xpath=".//MenuBarButton[@id=&amp;quot;menuHelp&amp;quot;]" owner="self" rows="" header="" columns="">
+            <button id="menuHelp" uid="menuHelp" owner="self" rows="" header="" columns="">
                 <info>
                     <xpath>/HBox/MenuBarButton[6]</xpath>
                     <rectangle x1="0.3148614609571788" y1="0.0" x2="0.37531486146095716" y2="0.9666666666666667"/>
@@ -548,46 +546,46 @@
             <wait id="waitOpen" ref="self" addition="WaitToAppear" timeout="5000"/>
         </onOpen>
         <run>
-            <label id="header" xpath="" owner="self" class="label" rows="" header="" columns="">
+            <button id="Cancel" owner="self" text="Cancel" rows="" header="" columns="">
                 <info>
-                    <xpath>/DialogPane/GridPane/Label</xpath>
-                    <rectangle x1="0.015299026425591097" y1="0.088" x2="0.9694019471488178" y2="0.24"/>
-                    <node>Label</node>
-                    <attr name="class">label</attr>
+                    <xpath>/DialogPane/ButtonBar/com.sun.javafx.scene.control.skin.ButtonBarSkin_1/Button[3]</xpath>
+                    <rectangle x1="0.8675862068965516" y1="0.6880000000000001" x2="0.9848275862068965" y2="0.912"/>
+                    <node>Button</node>
+                    <attr name="class">button</attr>
                 </info>
-            </label>
-            <label id="question" xpath="" owner="self" class="label content" rows="" header="" columns="">
+            </button>
+            <button id="No" owner="self" text="No" rows="" header="" columns="">
+                <info>
+                    <xpath>/DialogPane/ButtonBar/com.sun.javafx.scene.control.skin.ButtonBarSkin_1/Button[1]</xpath>
+                    <rectangle x1="0.5889655172413792" y1="0.6880000000000001" x2="0.7062068965517241" y2="0.912"/>
+                    <node>Button</node>
+                    <attr name="class">button</attr>
+                </info>
+            </button>
+            <button id="Yes" owner="self" text="Yes" rows="" header="" columns="">
+                <info>
+                    <xpath>/DialogPane/ButtonBar/com.sun.javafx.scene.control.skin.ButtonBarSkin_1/Button[2]</xpath>
+                    <rectangle x1="0.7282758620689654" y1="0.6880000000000001" x2="0.8455172413793103" y2="0.912"/>
+                    <node>Button</node>
+                    <attr name="class">button</attr>
+                </info>
+            </button>
+            <label id="question" owner="self" class="content" rows="" header="" columns="">
                 <info>
                     <xpath>/DialogPane/Label</xpath>
-                    <rectangle x1="0.0" y1="0.328" x2="1.0" y2="0.6"/>
+                    <rectangle x1="0.0" y1="0.328" x2="0.9999999999999999" y2="0.6"/>
                     <node>Label</node>
                     <attr name="class">label content</attr>
                 </info>
             </label>
-            <button id="no" xpath="" owner="self" text="No" rows="" header="" columns="">
+            <label id="header" xpath="" owner="self" class="label !content" rows="" header="" columns="">
                 <info>
-                    <xpath>/DialogPane/ButtonBar/com.sun.javafx.scene.control.skin.ButtonBarSkin_1/Button[1]</xpath>
-                    <rectangle x1="0.5855354659248957" y1="0.6880000000000001" x2="0.7037552155771906" y2="0.912"/>
-                    <node>Button</node>
-                    <attr name="class">button</attr>
+                    <xpath>/DialogPane/GridPane/Label</xpath>
+                    <rectangle x1="0.015172413793103447" y1="0.088" x2="0.9696551724137931" y2="0.24"/>
+                    <node>Label</node>
+                    <attr name="class">label</attr>
                 </info>
-            </button>
-            <button id="yes" xpath="" owner="self" text="Yes" rows="" header="" columns="">
-                <info>
-                    <xpath>/DialogPane/ButtonBar/com.sun.javafx.scene.control.skin.ButtonBarSkin_1/Button[2]</xpath>
-                    <rectangle x1="0.7260083449235049" y1="0.6880000000000001" x2="0.8442280945757997" y2="0.912"/>
-                    <node>Button</node>
-                    <attr name="class">button</attr>
-                </info>
-            </button>
-            <button id="cancel" xpath="" owner="self" text="Cancel" rows="" header="" columns="">
-                <info>
-                    <xpath>/DialogPane/ButtonBar/com.sun.javafx.scene.control.skin.ButtonBarSkin_1/Button[3]</xpath>
-                    <rectangle x1="0.866481223922114" y1="0.6880000000000001" x2="0.9847009735744089" y2="0.912"/>
-                    <node>Button</node>
-                    <attr name="class">button</attr>
-                </info>
-            </button>
+            </label>
         </run>
         <onClose/>
         <close/>
@@ -648,29 +646,29 @@
         </self>
         <onOpen/>
         <run>
-            <label id="projectLabel" xpath=".//Label[@id=&amp;quot;projectLabel&amp;quot;]" owner="self" rows="" header="" columns="">
+            <label id="projectLabel" uid="projectLabel" owner="self" rows="" header="" columns="">
                 <info>
                     <xpath>/VBox/Group/Label</xpath>
-                    <rectangle x1="0.0" y1="0.008556149732620321" x2="0.05" y2="0.05561497326203209"/>
+                    <rectangle x1="0.0" y1="0.015748031496062992" x2="0.05128205128205128" y2="0.10236220472440945"/>
                     <node>Label</node>
                     <attr name="class">label</attr>
                     <attr name="id">projectLabel</attr>
                 </info>
             </label>
-            <button id="reloadConfiguration" xpath=".//Button[@id=&amp;quot;reloadConfiguration&amp;quot;]" owner="self" rows="" header="" columns="">
+            <button id="reloadConfiguration" uid="reloadConfiguration" owner="self" rows="" header="" columns="">
                 <info>
                     <xpath>/VBox/VBox/Button[1]</xpath>
-                    <rectangle x1="0.0" y1="0.06524064171122995" x2="0.07500000000000001" y2="0.09197860962566845"/>
+                    <rectangle x1="0.0" y1="0.12007874015748031" x2="0.07692307692307693" y2="0.16929133858267717"/>
                     <node>Button</node>
                     <attr name="class">button transparentBackground</attr>
                     <attr name="id">reloadConfiguration</attr>
                     <attr name="tooltip">Reload configuration</attr>
                 </info>
             </button>
-            <button id="saveConfiguration" xpath=".//Button[@id=&amp;quot;saveConfiguration&amp;quot;]" owner="self" rows="" header="" columns="">
+            <button id="saveConfiguration" uid="saveConfiguration" owner="self" rows="" header="" columns="">
                 <info>
                     <xpath>/VBox/VBox/Button[2]</xpath>
-                    <rectangle x1="0.0" y1="0.09197860962566845" x2="0.07500000000000001" y2="0.11871657754010695"/>
+                    <rectangle x1="0.0" y1="0.16929133858267717" x2="0.07692307692307693" y2="0.21850393700787402"/>
                     <node>Button</node>
                     <attr name="class">button transparentBackground</attr>
                     <attr name="id">saveConfiguration</attr>
@@ -680,7 +678,7 @@
             <toggleButton id="sortAZ" xpath=".//HBox[@class=&amp;quot;container&amp;quot;]/ToggleButton[1]" owner="self" rows="" header="" columns="">
                 <info>
                     <xpath>/BorderPane/ConfigurationToolBar/HBox/ToggleButton[1]</xpath>
-                    <rectangle x1="0.115625" y1="0.006417112299465241" x2="0.22187500000000002" y2="0.03529411764705882"/>
+                    <rectangle x1="0.11858974358974358" y1="0.011811023622047244" x2="0.22756410256410256" y2="0.06496062992125984"/>
                     <node>ToggleButton</node>
                     <attr name="class">toggle-button</attr>
                     <attr name="tooltip">Sorting via alphabet asc</attr>
@@ -689,7 +687,7 @@
             <toggleButton id="sortZA" xpath=".//HBox[@class=&amp;quot;container&amp;quot;]/ToggleButton[2]" owner="self" rows="" header="" columns="">
                 <info>
                     <xpath>/BorderPane/ConfigurationToolBar/HBox/ToggleButton[2]</xpath>
-                    <rectangle x1="0.234375" y1="0.006417112299465241" x2="0.340625" y2="0.03529411764705882"/>
+                    <rectangle x1="0.24038461538461536" y1="0.011811023622047244" x2="0.34935897435897434" y2="0.06496062992125984"/>
                     <node>ToggleButton</node>
                     <attr name="class">toggle-button</attr>
                     <attr name="tooltip">Sorting via alphabet desc</attr>
@@ -698,7 +696,7 @@
             <toggleButton id="sort19" xpath=".//HBox[@class=&amp;quot;container&amp;quot;]/ToggleButton[3]" owner="self" rows="" header="" columns="">
                 <info>
                     <xpath>/BorderPane/ConfigurationToolBar/HBox/ToggleButton[3]</xpath>
-                    <rectangle x1="0.353125" y1="0.006417112299465241" x2="0.45937500000000003" y2="0.03529411764705882"/>
+                    <rectangle x1="0.36217948717948717" y1="0.011811023622047244" x2="0.47115384615384615" y2="0.06496062992125984"/>
                     <node>ToggleButton</node>
                     <attr name="class">toggle-button</attr>
                     <attr name="tooltip">Sorting via date asc</attr>
@@ -707,52 +705,52 @@
             <toggleButton id="sort91" xpath=".//HBox[@class=&amp;quot;container&amp;quot;]/ToggleButton[4]" owner="self" rows="" header="" columns="">
                 <info>
                     <xpath>/BorderPane/ConfigurationToolBar/HBox/ToggleButton[4]</xpath>
-                    <rectangle x1="0.47187500000000004" y1="0.006417112299465241" x2="0.578125" y2="0.03529411764705882"/>
+                    <rectangle x1="0.483974358974359" y1="0.011811023622047244" x2="0.592948717948718" y2="0.06496062992125984"/>
                     <node>ToggleButton</node>
                     <attr name="class">toggle-button</attr>
                     <attr name="tooltip">Sorting via date desc</attr>
                 </info>
             </toggleButton>
-            <button id="btnSmallWizard" xpath=".//WizardButton[contains(.,&amp;quot;&amp;quot;)]" owner="self" rows="" header="" columns="">
+            <button id="btnSmallWizard" uid="btnSmallWizard" owner="self" rows="" header="" columns="">
                 <info>
                     <xpath>/BorderPane/ConfigurationToolBar/HBox/WizardButton</xpath>
-                    <rectangle x1="0.6218750000000001" y1="0.0074866310160427805" x2="0.696875" y2="0.034224598930481284"/>
+                    <rectangle x1="0.6378205128205128" y1="0.013779527559055118" x2="0.7147435897435898" y2="0.06299212598425197"/>
                     <node>WizardButton</node>
                     <attr name="class">button transparentBackground</attr>
                     <attr name="id">btnSmallWizard</attr>
                     <attr name="tooltip">Wizards</attr>
                 </info>
             </button>
-            <button id="btnSmallUndo" xpath=".//Button[@id=&amp;quot;btnSmallUndo&amp;quot;]" owner="self" rows="" header="" columns="">
+            <button id="btnSmallUndo" uid="btnSmallUndo" owner="self" rows="" header="" columns="">
                 <info>
                     <xpath>/BorderPane/ConfigurationToolBar/HBox/Button[1]</xpath>
-                    <rectangle x1="0.7093750000000001" y1="0.0074866310160427805" x2="0.784375" y2="0.034224598930481284"/>
+                    <rectangle x1="0.7275641025641025" y1="0.013779527559055118" x2="0.8044871794871794" y2="0.06299212598425197"/>
                     <node>Button</node>
                     <attr name="class">button transparentBackground</attr>
                     <attr name="id">btnSmallUndo</attr>
                 </info>
             </button>
-            <button id="btnSmallRedo" xpath=".//Button[@id=&amp;quot;btnSmallRedo&amp;quot;]" owner="self" rows="" header="" columns="">
+            <button id="btnSmallRedo" uid="btnSmallRedo" owner="self" rows="" header="" columns="">
                 <info>
                     <xpath>/BorderPane/ConfigurationToolBar/HBox/Button[2]</xpath>
-                    <rectangle x1="0.796875" y1="0.0074866310160427805" x2="0.8718750000000001" y2="0.034224598930481284"/>
+                    <rectangle x1="0.8173076923076923" y1="0.013779527559055118" x2="0.8942307692307692" y2="0.06299212598425197"/>
                     <node>Button</node>
                     <attr name="class">button transparentBackground</attr>
                     <attr name="id">btnSmallRedo</attr>
                 </info>
             </button>
-            <tree id="configurationTree" xpath="./BorderPane/SplitPane/Content[1]/ConfigurationTreeView" owner="self" rows="" header="" columns="">
+            <tree id="configurationTree" xpath=".//ConfigurationTreeView" owner="self" rows="" header="" columns="">
                 <info>
                     <xpath>/BorderPane/SplitPane/Content[1]/ConfigurationTreeView</xpath>
-                    <rectangle x1="0.09375" y1="0.040641711229946524" x2="1.0" y2="0.6663101604278076"/>
+                    <rectangle x1="0.09615384615384615" y1="0.07480314960629922" x2="1.0" y2="0.8070866141732284"/>
                     <node>ConfigurationTreeView</node>
                     <attr name="class">tree-view</attr>
                 </info>
             </tree>
-            <table id="parametersTable" xpath="./BorderPane/SplitPane/Content[2]/ParametersTableView" owner="self" rows="" header="" columns="">
+            <table id="parametersTable" xpath=".//ParametersTableView" owner="self" rows="" header="" columns="">
                 <info>
                     <xpath>/BorderPane/SplitPane/Content[2]/ParametersTableView</xpath>
-                    <rectangle x1="0.096875" y1="0.6737967914438503" x2="0.9968750000000001" y2="0.9989304812834224"/>
+                    <rectangle x1="0.09935897435897435" y1="0.8208661417322834" x2="0.9967948717948718" y2="0.9980314960629921"/>
                     <node>ParametersTableView</node>
                     <attr name="class">table-view</attr>
                 </info>
@@ -779,15 +777,15 @@
             <textBox id="findWindow" xpath=".//FindListView[@id=&amp;quot;findListWindow&amp;quot;]/CustomFieldWithButton" owner="self" rows="" header="" columns="">
                 <info>
                     <xpath>/SplitPane/Content[1]/ScrollPane/com.sun.javafx.scene.control.skin.ScrollPaneSkin_3/com.sun.javafx.scene.control.skin.ScrollPaneSkin_4/GridPane/HBox/com.exactprosystems.jf.tool.custom.BorderWrapper_StrokeBorder_1[1]/com.exactprosystems.jf.tool.custom.BorderWrapper_StrokeBorder_1/com.exactprosystems.jf.tool.custom.BorderWrapper_StrokeBorder_1/VBox/FindListView/CustomFieldWithButton</xpath>
-                    <rectangle x1="0.018143009605122735" y1="0.03765227021040975" x2="0.1696905016008538" y2="0.06644518272425248"/>
+                    <rectangle x1="0.02135678391959799" y1="0.03765227021040975" x2="0.19974874371859297" y2="0.06644518272425248"/>
                     <node>CustomFieldWithButton</node>
                     <attr name="class">text-input text-field custom-text-field customFieldWithButton</attr>
                 </info>
             </textBox>
-            <listView id="listViewWindow" xpath=".//FindListView[@id=&amp;quot;findListWindow&amp;quot;]/ListView" owner="self" rows="" header="" columns="">
+            <listView id="listViewWindow" xpath=".//FindListView[@id=&amp;quot;findListWindow&amp;quot;]/ListView" owner="self" visibility="Visible" rows="" header="" columns="">
                 <info>
                     <xpath>/SplitPane/Content[1]/ScrollPane/com.sun.javafx.scene.control.skin.ScrollPaneSkin_3/com.sun.javafx.scene.control.skin.ScrollPaneSkin_4/GridPane/HBox/com.exactprosystems.jf.tool.custom.BorderWrapper_StrokeBorder_1[1]/com.exactprosystems.jf.tool.custom.BorderWrapper_StrokeBorder_1/com.exactprosystems.jf.tool.custom.BorderWrapper_StrokeBorder_1/VBox/FindListView/ListView</xpath>
-                    <rectangle x1="0.018143009605122735" y1="0.07087486157253599" x2="0.1696905016008538" y2="0.33554817275747506"/>
+                    <rectangle x1="0.02135678391959799" y1="0.07087486157253599" x2="0.19974874371859297" y2="0.33554817275747506"/>
                     <node>ListView</node>
                     <attr name="class">list-view</attr>
                     <attr name="tooltip">""Use drag-n-drop to reorder elements"</attr>
@@ -796,7 +794,7 @@
             <button id="btnNewDialog" uid="dictionaryBtnNewDialog" xpath="" owner="self" rows="" header="" columns="">
                 <info>
                     <xpath>/SplitPane/Content[1]/ScrollPane/com.sun.javafx.scene.control.skin.ScrollPaneSkin_3/com.sun.javafx.scene.control.skin.ScrollPaneSkin_4/GridPane/HBox/com.exactprosystems.jf.tool.custom.BorderWrapper_StrokeBorder_1[1]/com.exactprosystems.jf.tool.custom.BorderWrapper_StrokeBorder_1/com.exactprosystems.jf.tool.custom.BorderWrapper_StrokeBorder_1/VBox/HBox/Button[1]</xpath>
-                    <rectangle x1="0.018143009605122735" y1="0.34440753045404204" x2="0.0352187833511206" y2="0.3798449612403101"/>
+                    <rectangle x1="0.02135678391959799" y1="0.34440753045404204" x2="0.0414572864321608" y2="0.3798449612403101"/>
                     <node>Button</node>
                     <attr name="class">button transparentBackground</attr>
                     <attr name="id">dictionaryBtnNewDialog</attr>
@@ -806,7 +804,7 @@
             <button id="btnDeleteDialog" uid="dictionaryBtnDeleteDialog" xpath="" owner="self" rows="" header="" columns="">
                 <info>
                     <xpath>/SplitPane/Content[1]/ScrollPane/com.sun.javafx.scene.control.skin.ScrollPaneSkin_3/com.sun.javafx.scene.control.skin.ScrollPaneSkin_4/GridPane/HBox/com.exactprosystems.jf.tool.custom.BorderWrapper_StrokeBorder_1[1]/com.exactprosystems.jf.tool.custom.BorderWrapper_StrokeBorder_1/com.exactprosystems.jf.tool.custom.BorderWrapper_StrokeBorder_1/VBox/HBox/Button[2]</xpath>
-                    <rectangle x1="0.03735325506937033" y1="0.34440753045404204" x2="0.0544290288153682" y2="0.3798449612403101"/>
+                    <rectangle x1="0.04396984924623116" y1="0.34440753045404204" x2="0.06407035175879397" y2="0.3798449612403101"/>
                     <node>Button</node>
                     <attr name="class">button transparentBackground</attr>
                     <attr name="id">dictionaryBtnDeleteDialog</attr>
@@ -816,7 +814,7 @@
             <button id="btnCopyDialog" uid="dictionaryBtnCopyDialog" xpath="" owner="self" rows="" header="" columns="">
                 <info>
                     <xpath>/SplitPane/Content[1]/ScrollPane/com.sun.javafx.scene.control.skin.ScrollPaneSkin_3/com.sun.javafx.scene.control.skin.ScrollPaneSkin_4/GridPane/HBox/com.exactprosystems.jf.tool.custom.BorderWrapper_StrokeBorder_1[1]/com.exactprosystems.jf.tool.custom.BorderWrapper_StrokeBorder_1/com.exactprosystems.jf.tool.custom.BorderWrapper_StrokeBorder_1/VBox/HBox/Button[3]</xpath>
-                    <rectangle x1="0.05656350053361793" y1="0.34440753045404204" x2="0.0736392742796158" y2="0.3798449612403101"/>
+                    <rectangle x1="0.06658291457286432" y1="0.34440753045404204" x2="0.08668341708542714" y2="0.3798449612403101"/>
                     <node>Button</node>
                     <attr name="class">button transparentBackground</attr>
                     <attr name="id">dictionaryBtnCopyDialog</attr>
@@ -826,7 +824,7 @@
             <button id="btnPasteDialog" uid="dictionaryBtnPasteDialog" xpath="" owner="self" rows="" header="" columns="">
                 <info>
                     <xpath>/SplitPane/Content[1]/ScrollPane/com.sun.javafx.scene.control.skin.ScrollPaneSkin_3/com.sun.javafx.scene.control.skin.ScrollPaneSkin_4/GridPane/HBox/com.exactprosystems.jf.tool.custom.BorderWrapper_StrokeBorder_1[1]/com.exactprosystems.jf.tool.custom.BorderWrapper_StrokeBorder_1/com.exactprosystems.jf.tool.custom.BorderWrapper_StrokeBorder_1/VBox/HBox/Button[4]</xpath>
-                    <rectangle x1="0.07577374599786553" y1="0.34440753045404204" x2="0.09284951974386339" y2="0.3798449612403101"/>
+                    <rectangle x1="0.08919597989949749" y1="0.34440753045404204" x2="0.1092964824120603" y2="0.3798449612403101"/>
                     <node>Button</node>
                     <attr name="class">button transparentBackground</attr>
                     <attr name="id">dictionaryBtnPasteDialog</attr>
@@ -836,53 +834,53 @@
             <button id="btnWizardWindow" xpath=".//HBox[@id=&amp;quot;hBoxWindow&amp;quot;]/WizardButton" owner="self" rows="" header="" columns="">
                 <info>
                     <xpath>/SplitPane/Content[1]/ScrollPane/com.sun.javafx.scene.control.skin.ScrollPaneSkin_3/com.sun.javafx.scene.control.skin.ScrollPaneSkin_4/GridPane/HBox/com.exactprosystems.jf.tool.custom.BorderWrapper_StrokeBorder_1[1]/com.exactprosystems.jf.tool.custom.BorderWrapper_StrokeBorder_1/com.exactprosystems.jf.tool.custom.BorderWrapper_StrokeBorder_1/VBox/HBox/WizardButton</xpath>
-                    <rectangle x1="0.09498399146211313" y1="0.34440753045404204" x2="0.112059765208111" y2="0.3798449612403101"/>
+                    <rectangle x1="0.11180904522613065" y1="0.34440753045404204" x2="0.13190954773869346" y2="0.3798449612403101"/>
                     <node>WizardButton</node>
                     <attr name="class">button transparentBackground</attr>
                     <attr name="id">btnWizard</attr>
                     <attr name="tooltip">Wizards</attr>
                 </info>
             </button>
-            <radioButton id="Self" xpath=".//RadioButton[@id=&amp;quot;Self&amp;quot;]" owner="self" rows="" header="" columns="">
+            <radioButton id="Self" uid="Self" owner="self" rows="" header="" columns="">
                 <info>
                     <xpath>/SplitPane/Content[1]/ScrollPane/com.sun.javafx.scene.control.skin.ScrollPaneSkin_3/com.sun.javafx.scene.control.skin.ScrollPaneSkin_4/GridPane/HBox/VBox/RadioButton[1]</xpath>
-                    <rectangle x1="0.1872998932764141" y1="0.150609080841639" x2="0.21344717182497333" y2="0.1716500553709856"/>
+                    <rectangle x1="0.22047738693467336" y1="0.150609080841639" x2="0.25125628140703515" y2="0.1716500553709856"/>
                     <node>RadioButton</node>
                     <attr name="class">radio-button</attr>
                     <attr name="id">Self</attr>
                 </info>
             </radioButton>
-            <radioButton id="OnOpen" xpath=".//RadioButton[@id=&amp;quot;OnOpen&amp;quot;]" owner="self" rows="" header="" columns="">
+            <radioButton id="OnOpen" uid="OnOpen" owner="self" rows="" header="" columns="">
                 <info>
                     <xpath>/SplitPane/Content[1]/ScrollPane/com.sun.javafx.scene.control.skin.ScrollPaneSkin_3/com.sun.javafx.scene.control.skin.ScrollPaneSkin_4/GridPane/HBox/VBox/RadioButton[2]</xpath>
-                    <rectangle x1="0.1872998932764141" y1="0.17497231450719822" x2="0.22998932764140875" y2="0.19601328903654483"/>
+                    <rectangle x1="0.22047738693467336" y1="0.17497231450719822" x2="0.2707286432160804" y2="0.19601328903654483"/>
                     <node>RadioButton</node>
                     <attr name="class">radio-button</attr>
                     <attr name="id">OnOpen</attr>
                 </info>
             </radioButton>
-            <radioButton id="Run" xpath=".//RadioButton[@id=&amp;quot;Run&amp;quot;]" owner="self" rows="" header="" columns="">
+            <radioButton id="Run" uid="Run" owner="self" rows="" header="" columns="">
                 <info>
                     <xpath>/SplitPane/Content[1]/ScrollPane/com.sun.javafx.scene.control.skin.ScrollPaneSkin_3/com.sun.javafx.scene.control.skin.ScrollPaneSkin_4/GridPane/HBox/VBox/RadioButton[3]</xpath>
-                    <rectangle x1="0.1872998932764141" y1="0.19933554817275748" x2="0.21398078975453577" y2="0.2203765227021041"/>
+                    <rectangle x1="0.22047738693467336" y1="0.19933554817275748" x2="0.2518844221105528" y2="0.2203765227021041"/>
                     <node>RadioButton</node>
                     <attr name="class">radio-button</attr>
                     <attr name="id">Run</attr>
                 </info>
             </radioButton>
-            <radioButton id="OnClose" xpath=".//RadioButton[@id=&amp;quot;OnClose&amp;quot;]" owner="self" rows="" header="" columns="">
+            <radioButton id="OnClose" uid="OnClose" owner="self" rows="" header="" columns="">
                 <info>
                     <xpath>/SplitPane/Content[1]/ScrollPane/com.sun.javafx.scene.control.skin.ScrollPaneSkin_3/com.sun.javafx.scene.control.skin.ScrollPaneSkin_4/GridPane/HBox/VBox/RadioButton[4]</xpath>
-                    <rectangle x1="0.1872998932764141" y1="0.2236987818383167" x2="0.2305229455709712" y2="0.24473975636766335"/>
+                    <rectangle x1="0.22047738693467336" y1="0.2236987818383167" x2="0.271356783919598" y2="0.24473975636766335"/>
                     <node>RadioButton</node>
                     <attr name="class">radio-button</attr>
                     <attr name="id">OnClose</attr>
                 </info>
             </radioButton>
-            <radioButton id="Close" xpath=".//RadioButton[@id=&amp;quot;Close&amp;quot;]" owner="self" rows="" header="" columns="">
+            <radioButton id="Close" uid="Close" owner="self" rows="" header="" columns="">
                 <info>
                     <xpath>/SplitPane/Content[1]/ScrollPane/com.sun.javafx.scene.control.skin.ScrollPaneSkin_3/com.sun.javafx.scene.control.skin.ScrollPaneSkin_4/GridPane/HBox/VBox/RadioButton[5]</xpath>
-                    <rectangle x1="0.1872998932764141" y1="0.24806201550387597" x2="0.2193169690501601" y2="0.2691029900332226"/>
+                    <rectangle x1="0.22047738693467336" y1="0.24806201550387597" x2="0.25816582914572866" y2="0.2691029900332226"/>
                     <node>RadioButton</node>
                     <attr name="class">radio-button</attr>
                     <attr name="id">Close</attr>
@@ -891,7 +889,7 @@
             <textBox id="findElement" xpath=".//FindListView[@id=&amp;quot;findListElement&amp;quot;]/CustomFieldWithButton" owner="self" rows="" header="" columns="">
                 <info>
                     <xpath>/SplitPane/Content[1]/ScrollPane/com.sun.javafx.scene.control.skin.ScrollPaneSkin_3/com.sun.javafx.scene.control.skin.ScrollPaneSkin_4/GridPane/HBox/com.exactprosystems.jf.tool.custom.BorderWrapper_StrokeBorder_1[2]/com.exactprosystems.jf.tool.custom.BorderWrapper_StrokeBorder_1/com.exactprosystems.jf.tool.custom.BorderWrapper_StrokeBorder_1/VBox/FindListView/CustomFieldWithButton</xpath>
-                    <rectangle x1="0.25827107790821774" y1="0.03765227021040975" x2="0.39167556029882605" y2="0.06644518272425248"/>
+                    <rectangle x1="0.30402010050251255" y1="0.03765227021040975" x2="0.4610552763819096" y2="0.06644518272425248"/>
                     <node>CustomFieldWithButton</node>
                     <attr name="class">text-input text-field custom-text-field customFieldWithButton</attr>
                 </info>
@@ -899,7 +897,7 @@
             <listView id="listViewElement" xpath=".//FindListView[@id=&amp;quot;findListElement&amp;quot;]/ListView" owner="self" rows="" header="" columns="">
                 <info>
                     <xpath>/SplitPane/Content[1]/ScrollPane/com.sun.javafx.scene.control.skin.ScrollPaneSkin_3/com.sun.javafx.scene.control.skin.ScrollPaneSkin_4/GridPane/HBox/com.exactprosystems.jf.tool.custom.BorderWrapper_StrokeBorder_1[2]/com.exactprosystems.jf.tool.custom.BorderWrapper_StrokeBorder_1/com.exactprosystems.jf.tool.custom.BorderWrapper_StrokeBorder_1/VBox/FindListView/ListView</xpath>
-                    <rectangle x1="0.25827107790821774" y1="0.07087486157253599" x2="0.39167556029882605" y2="0.33554817275747506"/>
+                    <rectangle x1="0.30402010050251255" y1="0.07087486157253599" x2="0.4610552763819096" y2="0.33554817275747506"/>
                     <node>ListView</node>
                     <attr name="class">list-view</attr>
                     <attr name="tooltip">""Use drag-n-drop to reorder elements"</attr>
@@ -908,7 +906,7 @@
             <button id="btnNewElement" uid="dictionaryBtnNewElement" xpath="" owner="self" rows="" header="" columns="">
                 <info>
                     <xpath>/SplitPane/Content[1]/ScrollPane/com.sun.javafx.scene.control.skin.ScrollPaneSkin_3/com.sun.javafx.scene.control.skin.ScrollPaneSkin_4/GridPane/HBox/com.exactprosystems.jf.tool.custom.BorderWrapper_StrokeBorder_1[2]/com.exactprosystems.jf.tool.custom.BorderWrapper_StrokeBorder_1/com.exactprosystems.jf.tool.custom.BorderWrapper_StrokeBorder_1/VBox/HBox/Button[1]</xpath>
-                    <rectangle x1="0.25827107790821774" y1="0.34440753045404204" x2="0.2753468516542156" y2="0.3798449612403101"/>
+                    <rectangle x1="0.30402010050251255" y1="0.34440753045404204" x2="0.3241206030150754" y2="0.3798449612403101"/>
                     <node>Button</node>
                     <attr name="class">button transparentBackground</attr>
                     <attr name="id">dictionaryBtnNewElement</attr>
@@ -918,7 +916,7 @@
             <button id="btnDeleteElement" uid="dictionaryBtnDeleteElement" xpath="" owner="self" rows="" header="" columns="">
                 <info>
                     <xpath>/SplitPane/Content[1]/ScrollPane/com.sun.javafx.scene.control.skin.ScrollPaneSkin_3/com.sun.javafx.scene.control.skin.ScrollPaneSkin_4/GridPane/HBox/com.exactprosystems.jf.tool.custom.BorderWrapper_StrokeBorder_1[2]/com.exactprosystems.jf.tool.custom.BorderWrapper_StrokeBorder_1/com.exactprosystems.jf.tool.custom.BorderWrapper_StrokeBorder_1/VBox/HBox/Button[2]</xpath>
-                    <rectangle x1="0.27748132337246534" y1="0.34440753045404204" x2="0.2945570971184632" y2="0.3798449612403101"/>
+                    <rectangle x1="0.32663316582914576" y1="0.34440753045404204" x2="0.34673366834170855" y2="0.3798449612403101"/>
                     <node>Button</node>
                     <attr name="class">button transparentBackground</attr>
                     <attr name="id">dictionaryBtnDeleteElement</attr>
@@ -928,7 +926,7 @@
             <button id="btnCopyElement" uid="dictionaryBtnCopyElement" xpath="" owner="self" rows="" header="" columns="">
                 <info>
                     <xpath>/SplitPane/Content[1]/ScrollPane/com.sun.javafx.scene.control.skin.ScrollPaneSkin_3/com.sun.javafx.scene.control.skin.ScrollPaneSkin_4/GridPane/HBox/com.exactprosystems.jf.tool.custom.BorderWrapper_StrokeBorder_1[2]/com.exactprosystems.jf.tool.custom.BorderWrapper_StrokeBorder_1/com.exactprosystems.jf.tool.custom.BorderWrapper_StrokeBorder_1/VBox/HBox/Button[3]</xpath>
-                    <rectangle x1="0.29669156883671294" y1="0.34440753045404204" x2="0.3137673425827108" y2="0.3798449612403101"/>
+                    <rectangle x1="0.3492462311557789" y1="0.34440753045404204" x2="0.3693467336683417" y2="0.3798449612403101"/>
                     <node>Button</node>
                     <attr name="class">button transparentBackground</attr>
                     <attr name="id">dictionaryBtnCopyElement</attr>
@@ -938,7 +936,7 @@
             <button id="btnPasteElement" uid="dictionaryBtnPasteElement" xpath="" owner="self" rows="" header="" columns="">
                 <info>
                     <xpath>/SplitPane/Content[1]/ScrollPane/com.sun.javafx.scene.control.skin.ScrollPaneSkin_3/com.sun.javafx.scene.control.skin.ScrollPaneSkin_4/GridPane/HBox/com.exactprosystems.jf.tool.custom.BorderWrapper_StrokeBorder_1[2]/com.exactprosystems.jf.tool.custom.BorderWrapper_StrokeBorder_1/com.exactprosystems.jf.tool.custom.BorderWrapper_StrokeBorder_1/VBox/HBox/Button[4]</xpath>
-                    <rectangle x1="0.31590181430096054" y1="0.34440753045404204" x2="0.3329775880469584" y2="0.3798449612403101"/>
+                    <rectangle x1="0.37185929648241206" y1="0.34440753045404204" x2="0.3919597989949749" y2="0.3798449612403101"/>
                     <node>Button</node>
                     <attr name="class">button transparentBackground</attr>
                     <attr name="id">dictionaryBtnPasteElement</attr>
@@ -948,7 +946,7 @@
             <button id="btnTestSection" uid="dictionaryBtnTestSection" xpath="" owner="self" rows="" header="" columns="">
                 <info>
                     <xpath>/SplitPane/Content[1]/ScrollPane/com.sun.javafx.scene.control.skin.ScrollPaneSkin_3/com.sun.javafx.scene.control.skin.ScrollPaneSkin_4/GridPane/HBox/com.exactprosystems.jf.tool.custom.BorderWrapper_StrokeBorder_1[2]/com.exactprosystems.jf.tool.custom.BorderWrapper_StrokeBorder_1/com.exactprosystems.jf.tool.custom.BorderWrapper_StrokeBorder_1/VBox/HBox/Button[5]</xpath>
-                    <rectangle x1="0.33511205976520814" y1="0.34440753045404204" x2="0.35218783351120597" y2="0.3798449612403101"/>
+                    <rectangle x1="0.3944723618090452" y1="0.34440753045404204" x2="0.41457286432160806" y2="0.3798449612403101"/>
                     <node>Button</node>
                     <attr name="class">button transparentBackground</attr>
                     <attr name="id">dictionaryBtnTestSection</attr>
@@ -958,7 +956,7 @@
             <button id="btnWizardElement" xpath=".//HBox[@id=&amp;quot;hBoxElement&amp;quot;]/WizardButton" owner="self" rows="" header="" columns="">
                 <info>
                     <xpath>/SplitPane/Content[1]/ScrollPane/com.sun.javafx.scene.control.skin.ScrollPaneSkin_3/com.sun.javafx.scene.control.skin.ScrollPaneSkin_4/GridPane/HBox/com.exactprosystems.jf.tool.custom.BorderWrapper_StrokeBorder_1[2]/com.exactprosystems.jf.tool.custom.BorderWrapper_StrokeBorder_1/com.exactprosystems.jf.tool.custom.BorderWrapper_StrokeBorder_1/VBox/HBox/WizardButton</xpath>
-                    <rectangle x1="0.35218783351120597" y1="0.34440753045404204" x2="0.36926360725720386" y2="0.3798449612403101"/>
+                    <rectangle x1="0.41457286432160806" y1="0.34440753045404204" x2="0.43467336683417085" y2="0.3798449612403101"/>
                     <node>WizardButton</node>
                     <attr name="class">button transparentBackground</attr>
                     <attr name="id">btnWizard</attr>

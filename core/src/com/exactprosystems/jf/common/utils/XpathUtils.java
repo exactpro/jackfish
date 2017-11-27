@@ -12,10 +12,7 @@ package com.exactprosystems.jf.common.utils;
 import com.exactprosystems.jf.api.app.*;
 import com.exactprosystems.jf.api.common.Str;
 import com.exactprosystems.jf.documents.guidic.Attr;
-import org.w3c.dom.Document;
-import org.w3c.dom.NamedNodeMap;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
+import org.w3c.dom.*;
 
 import javax.xml.xpath.*;
 import java.awt.Rectangle;
@@ -309,6 +306,10 @@ public class XpathUtils
 		{
 			return false;
 		}
+		if (identifier.contains("null"))
+		{
+			return false;
+		}
 		return predicate == null || predicate.test(identifier);
 	}
 
@@ -506,7 +507,23 @@ public class XpathUtils
 			for (List<Pair> caze : cases)
 			{
 				Locator locator = new Locator().kind(kind).id(id);
-				caze.forEach(p -> locator.set(p.kind, p.value));
+				for (Pair p : caze)
+				{
+					if (p.kind == LocatorFieldKind.CLAZZ)
+					{
+						String clazz = (String) locator.get(LocatorFieldKind.CLAZZ);
+						String del = " ";
+						if (Str.IsNullOrEmpty(clazz))
+						{
+							clazz = del = "";
+						}
+						locator.set(LocatorFieldKind.CLAZZ, clazz + del + p.value);
+					}
+					else
+					{
+						locator.set(p.kind, p.value);
+					}
+				}
 
 				if (tryLocator(locator, node) == 1)
 				{
@@ -538,7 +555,7 @@ public class XpathUtils
 			}
 			if (kind == LocatorFieldKind.TEXT)
 			{
-				String textContent = node.getTextContent();
+				String textContent = text(node);// node.hasChildNodes() && node.getFirstChild() instanceof Text ? node.getFirstChild().getTextContent() : node.getTextContent();
 				if (XpathUtils.isStable(textContent,this.pluginInfo::isStable))
 				{
 					list.add(new Pair(kind, textContent.trim()));
@@ -605,6 +622,11 @@ public class XpathUtils
 			{
 				return locator;
 			}
+			locator = new Locator().kind(this.kind).id(this.id).xpath(".//" + node.getNodeName());
+			if (tryLocator(locator, node) == 1)
+			{
+				return locator;
+			}
 
 			//create all pairs
 			List<StringPair> list = IntStream.range(0, node.hasAttributes() ? node.getAttributes().getLength() : 0)
@@ -613,10 +635,14 @@ public class XpathUtils
 					.map(attr -> new StringPair("@" + attr.getNodeName(), attr.getNodeValue()))
 					.collect(Collectors.toList());
 
-			String textContent = node.getTextContent();
+			String textContent = text(node);//.getTextContent();
+
 			if (isStable(textContent, this.pluginInfo::isStable))
 			{
+				//collect all text from node
 				list.add(new StringPair(".", textContent));
+				//collect text only from node
+				list.add(new StringPair("text()", textContent));
 			}
 
 			//shuffle all pair
