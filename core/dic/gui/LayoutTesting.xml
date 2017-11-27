@@ -1,12 +1,4 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
-<!-- Copyright (c) 2009-2017, Exactpro Systems -->
-<!-- Quality Assurance & Related Software Development for Innovative Trading Systems. -->
-<!-- London Stock Exchange Group. -->
-<!-- All rights reserved. -->
-<!-- This is unpublished, licensed software, confidential and proprietary -->
-<!-- information which is the property of Exactpro Systems or its licensors. -->
-<!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
 <dictionary>
     <window name="Main">
         <self>
@@ -95,6 +87,55 @@
             </button>
             <panel owner="owner"/>
         </run>
+        <onClose/>
+        <close/>
+    </window>
+    <window name="a">
+        <self/>
+        <onOpen/>
+        <run/>
+        <onClose/>
+        <close/>
+    </window>
+    <window name="b">
+        <self/>
+        <onOpen/>
+        <run/>
+        <onClose/>
+        <close/>
+    </window>
+    <window name="c">
+        <self/>
+        <onOpen/>
+        <run/>
+        <onClose/>
+        <close/>
+    </window>
+    <window name="d">
+        <self/>
+        <onOpen/>
+        <run/>
+        <onClose/>
+        <close/>
+    </window>
+    <window name="z">
+        <self/>
+        <onOpen/>
+        <run/>
+        <onClose/>
+        <close/>
+    </window>
+    <window name="g">
+        <self/>
+        <onOpen/>
+        <run/>
+        <onClose/>
+        <close/>
+    </window>
+    <window name="qwe">
+        <self/>
+        <onOpen/>
+        <run/>
         <onClose/>
         <close/>
     </window>

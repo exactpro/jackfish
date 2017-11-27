@@ -766,65 +766,63 @@ Shift+Ctrl+Z</attr>
         <onClose/>
         <close/>
     </window>
-    <window name="DictionaryTab">
+    <window name="DictionaryNavigate">
         <self>
-            <panel id="self" uid="dictionaryPane"/>
+            <panel id="Self" uid="" xpath=".//GridPane[@id=&amp;quot;mainGridPane&amp;quot;]/HBox"/>
         </self>
-        <onOpen>
-            <wait id="waitOpen" ref="self" addition="WaitToAppear" timeout="5000"/>
-        </onOpen>
+        <onOpen/>
         <run>
             <textBox id="findWindow" xpath=".//FindListView[@id=&amp;quot;findListWindow&amp;quot;]/CustomFieldWithButton" owner="self" rows="" header="" columns="">
                 <info>
                     <xpath>/SplitPane/Content[1]/ScrollPane/com.sun.javafx.scene.control.skin.ScrollPaneSkin_3/com.sun.javafx.scene.control.skin.ScrollPaneSkin_4/GridPane/HBox/com.exactprosystems.jf.tool.custom.BorderWrapper_StrokeBorder_1[1]/com.exactprosystems.jf.tool.custom.BorderWrapper_StrokeBorder_1/com.exactprosystems.jf.tool.custom.BorderWrapper_StrokeBorder_1/VBox/FindListView/CustomFieldWithButton</xpath>
-                    <rectangle x1="0.02135678391959799" y1="0.03765227021040975" x2="0.19974874371859297" y2="0.06644518272425248"/>
+                    <rectangle x1="0.018143009605122735" y1="0.03765227021040975" x2="0.1696905016008538" y2="0.06644518272425248"/>
                     <node>CustomFieldWithButton</node>
                     <attr name="class">text-input text-field custom-text-field customFieldWithButton</attr>
                 </info>
             </textBox>
-            <listView id="listViewWindow" xpath=".//FindListView[@id=&amp;quot;findListWindow&amp;quot;]/ListView" owner="self" visibility="Visible" rows="" header="" columns="">
+            <listView id="listViewWindow" xpath=".//FindListView[@id=&amp;quot;findListWindow&amp;quot;]/ListView" owner="self" rows="" header="" columns="">
                 <info>
                     <xpath>/SplitPane/Content[1]/ScrollPane/com.sun.javafx.scene.control.skin.ScrollPaneSkin_3/com.sun.javafx.scene.control.skin.ScrollPaneSkin_4/GridPane/HBox/com.exactprosystems.jf.tool.custom.BorderWrapper_StrokeBorder_1[1]/com.exactprosystems.jf.tool.custom.BorderWrapper_StrokeBorder_1/com.exactprosystems.jf.tool.custom.BorderWrapper_StrokeBorder_1/VBox/FindListView/ListView</xpath>
-                    <rectangle x1="0.02135678391959799" y1="0.07087486157253599" x2="0.19974874371859297" y2="0.33554817275747506"/>
+                    <rectangle x1="0.018143009605122735" y1="0.07087486157253599" x2="0.1696905016008538" y2="0.33554817275747506"/>
                     <node>ListView</node>
                     <attr name="class">list-view</attr>
                     <attr name="tooltip">""Use drag-n-drop to reorder elements"</attr>
                 </info>
             </listView>
-            <button id="btnNewDialog" uid="dictionaryBtnNewDialog" xpath="" owner="self" rows="" header="" columns="">
+            <button id="btnNewDialog" uid="dictionaryBtnNewDialog" owner="self" rows="" header="" columns="">
                 <info>
                     <xpath>/SplitPane/Content[1]/ScrollPane/com.sun.javafx.scene.control.skin.ScrollPaneSkin_3/com.sun.javafx.scene.control.skin.ScrollPaneSkin_4/GridPane/HBox/com.exactprosystems.jf.tool.custom.BorderWrapper_StrokeBorder_1[1]/com.exactprosystems.jf.tool.custom.BorderWrapper_StrokeBorder_1/com.exactprosystems.jf.tool.custom.BorderWrapper_StrokeBorder_1/VBox/HBox/Button[1]</xpath>
-                    <rectangle x1="0.02135678391959799" y1="0.34440753045404204" x2="0.0414572864321608" y2="0.3798449612403101"/>
+                    <rectangle x1="0.018143009605122735" y1="0.34440753045404204" x2="0.0352187833511206" y2="0.3798449612403101"/>
                     <node>Button</node>
                     <attr name="class">button transparentBackground</attr>
                     <attr name="id">dictionaryBtnNewDialog</attr>
                     <attr name="tooltip">Create new window</attr>
                 </info>
             </button>
-            <button id="btnDeleteDialog" uid="dictionaryBtnDeleteDialog" xpath="" owner="self" rows="" header="" columns="">
+            <button id="btnDeleteDialog" uid="dictionaryBtnDeleteDialog" owner="self" rows="" header="" columns="">
                 <info>
                     <xpath>/SplitPane/Content[1]/ScrollPane/com.sun.javafx.scene.control.skin.ScrollPaneSkin_3/com.sun.javafx.scene.control.skin.ScrollPaneSkin_4/GridPane/HBox/com.exactprosystems.jf.tool.custom.BorderWrapper_StrokeBorder_1[1]/com.exactprosystems.jf.tool.custom.BorderWrapper_StrokeBorder_1/com.exactprosystems.jf.tool.custom.BorderWrapper_StrokeBorder_1/VBox/HBox/Button[2]</xpath>
-                    <rectangle x1="0.04396984924623116" y1="0.34440753045404204" x2="0.06407035175879397" y2="0.3798449612403101"/>
+                    <rectangle x1="0.03735325506937033" y1="0.34440753045404204" x2="0.0544290288153682" y2="0.3798449612403101"/>
                     <node>Button</node>
                     <attr name="class">button transparentBackground</attr>
                     <attr name="id">dictionaryBtnDeleteDialog</attr>
                     <attr name="tooltip">Delete selected window</attr>
                 </info>
             </button>
-            <button id="btnCopyDialog" uid="dictionaryBtnCopyDialog" xpath="" owner="self" rows="" header="" columns="">
+            <button id="btnCopyDialog" uid="dictionaryBtnCopyDialog" owner="self" rows="" header="" columns="">
                 <info>
                     <xpath>/SplitPane/Content[1]/ScrollPane/com.sun.javafx.scene.control.skin.ScrollPaneSkin_3/com.sun.javafx.scene.control.skin.ScrollPaneSkin_4/GridPane/HBox/com.exactprosystems.jf.tool.custom.BorderWrapper_StrokeBorder_1[1]/com.exactprosystems.jf.tool.custom.BorderWrapper_StrokeBorder_1/com.exactprosystems.jf.tool.custom.BorderWrapper_StrokeBorder_1/VBox/HBox/Button[3]</xpath>
-                    <rectangle x1="0.06658291457286432" y1="0.34440753045404204" x2="0.08668341708542714" y2="0.3798449612403101"/>
+                    <rectangle x1="0.05656350053361793" y1="0.34440753045404204" x2="0.0736392742796158" y2="0.3798449612403101"/>
                     <node>Button</node>
                     <attr name="class">button transparentBackground</attr>
                     <attr name="id">dictionaryBtnCopyDialog</attr>
                     <attr name="tooltip">Copy current dialog with all elements</attr>
                 </info>
             </button>
-            <button id="btnPasteDialog" uid="dictionaryBtnPasteDialog" xpath="" owner="self" rows="" header="" columns="">
+            <button id="btnPasteDialog" uid="dictionaryBtnPasteDialog" owner="self" rows="" header="" columns="">
                 <info>
                     <xpath>/SplitPane/Content[1]/ScrollPane/com.sun.javafx.scene.control.skin.ScrollPaneSkin_3/com.sun.javafx.scene.control.skin.ScrollPaneSkin_4/GridPane/HBox/com.exactprosystems.jf.tool.custom.BorderWrapper_StrokeBorder_1[1]/com.exactprosystems.jf.tool.custom.BorderWrapper_StrokeBorder_1/com.exactprosystems.jf.tool.custom.BorderWrapper_StrokeBorder_1/VBox/HBox/Button[4]</xpath>
-                    <rectangle x1="0.08919597989949749" y1="0.34440753045404204" x2="0.1092964824120603" y2="0.3798449612403101"/>
+                    <rectangle x1="0.07577374599786553" y1="0.34440753045404204" x2="0.09284951974386339" y2="0.3798449612403101"/>
                     <node>Button</node>
                     <attr name="class">button transparentBackground</attr>
                     <attr name="id">dictionaryBtnPasteDialog</attr>
@@ -834,7 +832,7 @@ Shift+Ctrl+Z</attr>
             <button id="btnWizardWindow" xpath=".//HBox[@id=&amp;quot;hBoxWindow&amp;quot;]/WizardButton" owner="self" rows="" header="" columns="">
                 <info>
                     <xpath>/SplitPane/Content[1]/ScrollPane/com.sun.javafx.scene.control.skin.ScrollPaneSkin_3/com.sun.javafx.scene.control.skin.ScrollPaneSkin_4/GridPane/HBox/com.exactprosystems.jf.tool.custom.BorderWrapper_StrokeBorder_1[1]/com.exactprosystems.jf.tool.custom.BorderWrapper_StrokeBorder_1/com.exactprosystems.jf.tool.custom.BorderWrapper_StrokeBorder_1/VBox/HBox/WizardButton</xpath>
-                    <rectangle x1="0.11180904522613065" y1="0.34440753045404204" x2="0.13190954773869346" y2="0.3798449612403101"/>
+                    <rectangle x1="0.09498399146211313" y1="0.34440753045404204" x2="0.112059765208111" y2="0.3798449612403101"/>
                     <node>WizardButton</node>
                     <attr name="class">button transparentBackground</attr>
                     <attr name="id">btnWizard</attr>
@@ -844,7 +842,7 @@ Shift+Ctrl+Z</attr>
             <radioButton id="Self" uid="Self" owner="self" rows="" header="" columns="">
                 <info>
                     <xpath>/SplitPane/Content[1]/ScrollPane/com.sun.javafx.scene.control.skin.ScrollPaneSkin_3/com.sun.javafx.scene.control.skin.ScrollPaneSkin_4/GridPane/HBox/VBox/RadioButton[1]</xpath>
-                    <rectangle x1="0.22047738693467336" y1="0.150609080841639" x2="0.25125628140703515" y2="0.1716500553709856"/>
+                    <rectangle x1="0.1872998932764141" y1="0.150609080841639" x2="0.21344717182497333" y2="0.1716500553709856"/>
                     <node>RadioButton</node>
                     <attr name="class">radio-button</attr>
                     <attr name="id">Self</attr>
@@ -853,7 +851,7 @@ Shift+Ctrl+Z</attr>
             <radioButton id="OnOpen" uid="OnOpen" owner="self" rows="" header="" columns="">
                 <info>
                     <xpath>/SplitPane/Content[1]/ScrollPane/com.sun.javafx.scene.control.skin.ScrollPaneSkin_3/com.sun.javafx.scene.control.skin.ScrollPaneSkin_4/GridPane/HBox/VBox/RadioButton[2]</xpath>
-                    <rectangle x1="0.22047738693467336" y1="0.17497231450719822" x2="0.2707286432160804" y2="0.19601328903654483"/>
+                    <rectangle x1="0.1872998932764141" y1="0.17497231450719822" x2="0.22998932764140875" y2="0.19601328903654483"/>
                     <node>RadioButton</node>
                     <attr name="class">radio-button</attr>
                     <attr name="id">OnOpen</attr>
@@ -862,7 +860,7 @@ Shift+Ctrl+Z</attr>
             <radioButton id="Run" uid="Run" owner="self" rows="" header="" columns="">
                 <info>
                     <xpath>/SplitPane/Content[1]/ScrollPane/com.sun.javafx.scene.control.skin.ScrollPaneSkin_3/com.sun.javafx.scene.control.skin.ScrollPaneSkin_4/GridPane/HBox/VBox/RadioButton[3]</xpath>
-                    <rectangle x1="0.22047738693467336" y1="0.19933554817275748" x2="0.2518844221105528" y2="0.2203765227021041"/>
+                    <rectangle x1="0.1872998932764141" y1="0.19933554817275748" x2="0.21398078975453577" y2="0.2203765227021041"/>
                     <node>RadioButton</node>
                     <attr name="class">radio-button</attr>
                     <attr name="id">Run</attr>
@@ -871,7 +869,7 @@ Shift+Ctrl+Z</attr>
             <radioButton id="OnClose" uid="OnClose" owner="self" rows="" header="" columns="">
                 <info>
                     <xpath>/SplitPane/Content[1]/ScrollPane/com.sun.javafx.scene.control.skin.ScrollPaneSkin_3/com.sun.javafx.scene.control.skin.ScrollPaneSkin_4/GridPane/HBox/VBox/RadioButton[4]</xpath>
-                    <rectangle x1="0.22047738693467336" y1="0.2236987818383167" x2="0.271356783919598" y2="0.24473975636766335"/>
+                    <rectangle x1="0.1872998932764141" y1="0.2236987818383167" x2="0.2305229455709712" y2="0.24473975636766335"/>
                     <node>RadioButton</node>
                     <attr name="class">radio-button</attr>
                     <attr name="id">OnClose</attr>
@@ -880,7 +878,7 @@ Shift+Ctrl+Z</attr>
             <radioButton id="Close" uid="Close" owner="self" rows="" header="" columns="">
                 <info>
                     <xpath>/SplitPane/Content[1]/ScrollPane/com.sun.javafx.scene.control.skin.ScrollPaneSkin_3/com.sun.javafx.scene.control.skin.ScrollPaneSkin_4/GridPane/HBox/VBox/RadioButton[5]</xpath>
-                    <rectangle x1="0.22047738693467336" y1="0.24806201550387597" x2="0.25816582914572866" y2="0.2691029900332226"/>
+                    <rectangle x1="0.1872998932764141" y1="0.24806201550387597" x2="0.2193169690501601" y2="0.2691029900332226"/>
                     <node>RadioButton</node>
                     <attr name="class">radio-button</attr>
                     <attr name="id">Close</attr>
@@ -889,7 +887,7 @@ Shift+Ctrl+Z</attr>
             <textBox id="findElement" xpath=".//FindListView[@id=&amp;quot;findListElement&amp;quot;]/CustomFieldWithButton" owner="self" rows="" header="" columns="">
                 <info>
                     <xpath>/SplitPane/Content[1]/ScrollPane/com.sun.javafx.scene.control.skin.ScrollPaneSkin_3/com.sun.javafx.scene.control.skin.ScrollPaneSkin_4/GridPane/HBox/com.exactprosystems.jf.tool.custom.BorderWrapper_StrokeBorder_1[2]/com.exactprosystems.jf.tool.custom.BorderWrapper_StrokeBorder_1/com.exactprosystems.jf.tool.custom.BorderWrapper_StrokeBorder_1/VBox/FindListView/CustomFieldWithButton</xpath>
-                    <rectangle x1="0.30402010050251255" y1="0.03765227021040975" x2="0.4610552763819096" y2="0.06644518272425248"/>
+                    <rectangle x1="0.25827107790821774" y1="0.03765227021040975" x2="0.39167556029882605" y2="0.06644518272425248"/>
                     <node>CustomFieldWithButton</node>
                     <attr name="class">text-input text-field custom-text-field customFieldWithButton</attr>
                 </info>
@@ -897,56 +895,56 @@ Shift+Ctrl+Z</attr>
             <listView id="listViewElement" xpath=".//FindListView[@id=&amp;quot;findListElement&amp;quot;]/ListView" owner="self" rows="" header="" columns="">
                 <info>
                     <xpath>/SplitPane/Content[1]/ScrollPane/com.sun.javafx.scene.control.skin.ScrollPaneSkin_3/com.sun.javafx.scene.control.skin.ScrollPaneSkin_4/GridPane/HBox/com.exactprosystems.jf.tool.custom.BorderWrapper_StrokeBorder_1[2]/com.exactprosystems.jf.tool.custom.BorderWrapper_StrokeBorder_1/com.exactprosystems.jf.tool.custom.BorderWrapper_StrokeBorder_1/VBox/FindListView/ListView</xpath>
-                    <rectangle x1="0.30402010050251255" y1="0.07087486157253599" x2="0.4610552763819096" y2="0.33554817275747506"/>
+                    <rectangle x1="0.25827107790821774" y1="0.07087486157253599" x2="0.39167556029882605" y2="0.33554817275747506"/>
                     <node>ListView</node>
                     <attr name="class">list-view</attr>
                     <attr name="tooltip">""Use drag-n-drop to reorder elements"</attr>
                 </info>
             </listView>
-            <button id="btnNewElement" uid="dictionaryBtnNewElement" xpath="" owner="self" rows="" header="" columns="">
+            <button id="btnNewElement" uid="dictionaryBtnNewElement" owner="self" rows="" header="" columns="">
                 <info>
                     <xpath>/SplitPane/Content[1]/ScrollPane/com.sun.javafx.scene.control.skin.ScrollPaneSkin_3/com.sun.javafx.scene.control.skin.ScrollPaneSkin_4/GridPane/HBox/com.exactprosystems.jf.tool.custom.BorderWrapper_StrokeBorder_1[2]/com.exactprosystems.jf.tool.custom.BorderWrapper_StrokeBorder_1/com.exactprosystems.jf.tool.custom.BorderWrapper_StrokeBorder_1/VBox/HBox/Button[1]</xpath>
-                    <rectangle x1="0.30402010050251255" y1="0.34440753045404204" x2="0.3241206030150754" y2="0.3798449612403101"/>
+                    <rectangle x1="0.25827107790821774" y1="0.34440753045404204" x2="0.2753468516542156" y2="0.3798449612403101"/>
                     <node>Button</node>
                     <attr name="class">button transparentBackground</attr>
                     <attr name="id">dictionaryBtnNewElement</attr>
                     <attr name="tooltip">Create new Element</attr>
                 </info>
             </button>
-            <button id="btnDeleteElement" uid="dictionaryBtnDeleteElement" xpath="" owner="self" rows="" header="" columns="">
+            <button id="btnDeleteElement" uid="dictionaryBtnDeleteElement" owner="self" rows="" header="" columns="">
                 <info>
                     <xpath>/SplitPane/Content[1]/ScrollPane/com.sun.javafx.scene.control.skin.ScrollPaneSkin_3/com.sun.javafx.scene.control.skin.ScrollPaneSkin_4/GridPane/HBox/com.exactprosystems.jf.tool.custom.BorderWrapper_StrokeBorder_1[2]/com.exactprosystems.jf.tool.custom.BorderWrapper_StrokeBorder_1/com.exactprosystems.jf.tool.custom.BorderWrapper_StrokeBorder_1/VBox/HBox/Button[2]</xpath>
-                    <rectangle x1="0.32663316582914576" y1="0.34440753045404204" x2="0.34673366834170855" y2="0.3798449612403101"/>
+                    <rectangle x1="0.27748132337246534" y1="0.34440753045404204" x2="0.2945570971184632" y2="0.3798449612403101"/>
                     <node>Button</node>
                     <attr name="class">button transparentBackground</attr>
                     <attr name="id">dictionaryBtnDeleteElement</attr>
                     <attr name="tooltip">Delete current element</attr>
                 </info>
             </button>
-            <button id="btnCopyElement" uid="dictionaryBtnCopyElement" xpath="" owner="self" rows="" header="" columns="">
+            <button id="btnCopyElement" uid="dictionaryBtnCopyElement" owner="self" rows="" header="" columns="">
                 <info>
                     <xpath>/SplitPane/Content[1]/ScrollPane/com.sun.javafx.scene.control.skin.ScrollPaneSkin_3/com.sun.javafx.scene.control.skin.ScrollPaneSkin_4/GridPane/HBox/com.exactprosystems.jf.tool.custom.BorderWrapper_StrokeBorder_1[2]/com.exactprosystems.jf.tool.custom.BorderWrapper_StrokeBorder_1/com.exactprosystems.jf.tool.custom.BorderWrapper_StrokeBorder_1/VBox/HBox/Button[3]</xpath>
-                    <rectangle x1="0.3492462311557789" y1="0.34440753045404204" x2="0.3693467336683417" y2="0.3798449612403101"/>
+                    <rectangle x1="0.29669156883671294" y1="0.34440753045404204" x2="0.3137673425827108" y2="0.3798449612403101"/>
                     <node>Button</node>
                     <attr name="class">button transparentBackground</attr>
                     <attr name="id">dictionaryBtnCopyElement</attr>
                     <attr name="tooltip">Copy current element</attr>
                 </info>
             </button>
-            <button id="btnPasteElement" uid="dictionaryBtnPasteElement" xpath="" owner="self" rows="" header="" columns="">
+            <button id="btnPasteElement" uid="dictionaryBtnPasteElement" owner="self" rows="" header="" columns="">
                 <info>
                     <xpath>/SplitPane/Content[1]/ScrollPane/com.sun.javafx.scene.control.skin.ScrollPaneSkin_3/com.sun.javafx.scene.control.skin.ScrollPaneSkin_4/GridPane/HBox/com.exactprosystems.jf.tool.custom.BorderWrapper_StrokeBorder_1[2]/com.exactprosystems.jf.tool.custom.BorderWrapper_StrokeBorder_1/com.exactprosystems.jf.tool.custom.BorderWrapper_StrokeBorder_1/VBox/HBox/Button[4]</xpath>
-                    <rectangle x1="0.37185929648241206" y1="0.34440753045404204" x2="0.3919597989949749" y2="0.3798449612403101"/>
+                    <rectangle x1="0.31590181430096054" y1="0.34440753045404204" x2="0.3329775880469584" y2="0.3798449612403101"/>
                     <node>Button</node>
                     <attr name="class">button transparentBackground</attr>
                     <attr name="id">dictionaryBtnPasteElement</attr>
                     <attr name="tooltip">Paste copied element</attr>
                 </info>
             </button>
-            <button id="btnTestSection" uid="dictionaryBtnTestSection" xpath="" owner="self" rows="" header="" columns="">
+            <button id="btnTestSection" uid="dictionaryBtnTestSection" owner="self" rows="" header="" columns="">
                 <info>
                     <xpath>/SplitPane/Content[1]/ScrollPane/com.sun.javafx.scene.control.skin.ScrollPaneSkin_3/com.sun.javafx.scene.control.skin.ScrollPaneSkin_4/GridPane/HBox/com.exactprosystems.jf.tool.custom.BorderWrapper_StrokeBorder_1[2]/com.exactprosystems.jf.tool.custom.BorderWrapper_StrokeBorder_1/com.exactprosystems.jf.tool.custom.BorderWrapper_StrokeBorder_1/VBox/HBox/Button[5]</xpath>
-                    <rectangle x1="0.3944723618090452" y1="0.34440753045404204" x2="0.41457286432160806" y2="0.3798449612403101"/>
+                    <rectangle x1="0.33511205976520814" y1="0.34440753045404204" x2="0.35218783351120597" y2="0.3798449612403101"/>
                     <node>Button</node>
                     <attr name="class">button transparentBackground</attr>
                     <attr name="id">dictionaryBtnTestSection</attr>
@@ -956,7 +954,7 @@ Shift+Ctrl+Z</attr>
             <button id="btnWizardElement" xpath=".//HBox[@id=&amp;quot;hBoxElement&amp;quot;]/WizardButton" owner="self" rows="" header="" columns="">
                 <info>
                     <xpath>/SplitPane/Content[1]/ScrollPane/com.sun.javafx.scene.control.skin.ScrollPaneSkin_3/com.sun.javafx.scene.control.skin.ScrollPaneSkin_4/GridPane/HBox/com.exactprosystems.jf.tool.custom.BorderWrapper_StrokeBorder_1[2]/com.exactprosystems.jf.tool.custom.BorderWrapper_StrokeBorder_1/com.exactprosystems.jf.tool.custom.BorderWrapper_StrokeBorder_1/VBox/HBox/WizardButton</xpath>
-                    <rectangle x1="0.41457286432160806" y1="0.34440753045404204" x2="0.43467336683417085" y2="0.3798449612403101"/>
+                    <rectangle x1="0.35218783351120597" y1="0.34440753045404204" x2="0.36926360725720386" y2="0.3798449612403101"/>
                     <node>WizardButton</node>
                     <attr name="class">button transparentBackground</attr>
                     <attr name="id">btnWizard</attr>
@@ -985,6 +983,759 @@ Shift+Ctrl+Z</attr>
         <self/>
         <onOpen/>
         <run/>
+        <onClose/>
+        <close/>
+    </window>
+    <window name="DictionaryElement">
+        <self>
+            <any id="Self" xpath=".//GridPane[@id=&amp;quot;mainGridPane&amp;quot;]/BorderPane[1]"/>
+        </self>
+        <onOpen>
+            <wait id="waitOpen" ref="Self" addition="WaitToAppear" timeout="5000"/>
+        </onOpen>
+        <run>
+            <comboBox id="choiceBoxOwner" uid="choiceBoxOwner" owner="Self" rows="" header="" columns="">
+                <info>
+                    <xpath>/com.exactprosystems.jf.tool.custom.BorderWrapper_StrokeBorder_1/com.exactprosystems.jf.tool.custom.BorderWrapper_StrokeBorder_1/com.exactprosystems.jf.tool.custom.BorderWrapper_StrokeBorder_1/GridPane/GridPane[1]/HBox[1]/ChoiceBox</xpath>
+                    <rectangle x1="0.10242872228088701" y1="0.09066666666666666" x2="0.3189017951425554" y2="0.16266666666666665"/>
+                    <node>ChoiceBox</node>
+                    <attr name="class">choice-box</attr>
+                    <attr name="id">choiceBoxOwner</attr>
+                </info>
+            </comboBox>
+            <button id="btnGoToOwner" uid="btnGoToOwner" owner="Self" rows="" header="" columns="">
+                <info>
+                    <xpath>/com.exactprosystems.jf.tool.custom.BorderWrapper_StrokeBorder_1/com.exactprosystems.jf.tool.custom.BorderWrapper_StrokeBorder_1/com.exactprosystems.jf.tool.custom.BorderWrapper_StrokeBorder_1/GridPane/GridPane[1]/HBox[1]/Button</xpath>
+                    <rectangle x1="0.3189017951425554" y1="0.088" x2="0.351636747624076" y2="0.16266666666666665"/>
+                    <node>Button</node>
+                    <attr name="class">button</attr>
+                    <attr name="id">btnGoToOwner</attr>
+                </info>
+            </button>
+            <textBox id="id" uid="id" owner="Self" rows="" header="" columns="">
+                <info>
+                    <xpath>/com.exactprosystems.jf.tool.custom.BorderWrapper_StrokeBorder_1/com.exactprosystems.jf.tool.custom.BorderWrapper_StrokeBorder_1/com.exactprosystems.jf.tool.custom.BorderWrapper_StrokeBorder_1/GridPane/GridPane[1]/CustomFieldWithButton</xpath>
+                    <rectangle x1="0.10242872228088701" y1="0.17333333333333334" x2="0.351636747624076" y2="0.24266666666666667"/>
+                    <node>CustomFieldWithButton</node>
+                    <attr name="class">text-input text-field custom-text-field customFieldWithButton</attr>
+                    <attr name="id">id</attr>
+                </info>
+            </textBox>
+            <comboBox id="comboBoxControl" uid="comboBoxControl" owner="Self" rows="" header="" columns="">
+                <info>
+                    <xpath>/com.exactprosystems.jf.tool.custom.BorderWrapper_StrokeBorder_1/com.exactprosystems.jf.tool.custom.BorderWrapper_StrokeBorder_1/com.exactprosystems.jf.tool.custom.BorderWrapper_StrokeBorder_1/GridPane/GridPane[1]/ComboBox</xpath>
+                    <rectangle x1="0.10242872228088701" y1="0.2533333333333333" x2="0.351636747624076" y2="0.33066666666666666"/>
+                    <node>ComboBox</node>
+                    <attr name="class">combo-box-base combo-box</attr>
+                    <attr name="id">comboBoxControl</attr>
+                </info>
+            </comboBox>
+            <comboBox id="choiceBoxAddition" uid="choiceBoxAddition" owner="Self" rows="" header="" columns="">
+                <info>
+                    <xpath>/com.exactprosystems.jf.tool.custom.BorderWrapper_StrokeBorder_1/com.exactprosystems.jf.tool.custom.BorderWrapper_StrokeBorder_1/com.exactprosystems.jf.tool.custom.BorderWrapper_StrokeBorder_1/GridPane/GridPane[1]/ChoiceBox[1]</xpath>
+                    <rectangle x1="0.10242872228088701" y1="0.33866666666666667" x2="0.351636747624076" y2="0.4106666666666667"/>
+                    <node>ChoiceBox</node>
+                    <attr name="class">choice-box</attr>
+                    <attr name="id">choiceBoxAddition</attr>
+                </info>
+            </comboBox>
+            <textBox id="timeout" uid="timeout" owner="Self" rows="" header="" columns="">
+                <info>
+                    <xpath>/com.exactprosystems.jf.tool.custom.BorderWrapper_StrokeBorder_1/com.exactprosystems.jf.tool.custom.BorderWrapper_StrokeBorder_1/com.exactprosystems.jf.tool.custom.BorderWrapper_StrokeBorder_1/GridPane/GridPane[1]/NumberTextField</xpath>
+                    <rectangle x1="0.10242872228088701" y1="0.504" x2="0.351636747624076" y2="0.5733333333333334"/>
+                    <node>NumberTextField</node>
+                    <attr name="class">text-input text-field</attr>
+                    <attr name="id">timeout</attr>
+                </info>
+            </textBox>
+            <comboBox id="choiceBoxReference" uid="choiceBoxReference" owner="Self" rows="" header="" columns="">
+                <info>
+                    <xpath>/com.exactprosystems.jf.tool.custom.BorderWrapper_StrokeBorder_1/com.exactprosystems.jf.tool.custom.BorderWrapper_StrokeBorder_1/com.exactprosystems.jf.tool.custom.BorderWrapper_StrokeBorder_1/GridPane/GridPane[1]/ChoiceBox[2]</xpath>
+                    <rectangle x1="0.10242872228088701" y1="0.42133333333333334" x2="0.351636747624076" y2="0.4933333333333333"/>
+                    <node>ChoiceBox</node>
+                    <attr name="class">choice-box</attr>
+                    <attr name="id">choiceBoxReference</attr>
+                </info>
+            </comboBox>
+            <comboBox id="choiceBoxVisibility" uid="choiceBoxVisibility" owner="Self" rows="" header="" columns="">
+                <info>
+                    <xpath>/com.exactprosystems.jf.tool.custom.BorderWrapper_StrokeBorder_1/com.exactprosystems.jf.tool.custom.BorderWrapper_StrokeBorder_1/com.exactprosystems.jf.tool.custom.BorderWrapper_StrokeBorder_1/GridPane/GridPane[1]/ChoiceBox[3]</xpath>
+                    <rectangle x1="0.10242872228088701" y1="0.5866666666666667" x2="0.351636747624076" y2="0.6586666666666666"/>
+                    <node>ChoiceBox</node>
+                    <attr name="class">choice-box</attr>
+                    <attr name="id">choiceBoxVisibility</attr>
+                </info>
+            </comboBox>
+            <comboBox id="choiceBoxHeader" uid="choiceBoxHeader" owner="Self" rows="" header="" columns="">
+                <info>
+                    <xpath>/com.exactprosystems.jf.tool.custom.BorderWrapper_StrokeBorder_1/com.exactprosystems.jf.tool.custom.BorderWrapper_StrokeBorder_1/com.exactprosystems.jf.tool.custom.BorderWrapper_StrokeBorder_1/GridPane/GridPane[1]/ChoiceBox[4]</xpath>
+                    <rectangle x1="0.10242872228088701" y1="0.6693333333333333" x2="0.351636747624076" y2="0.7413333333333333"/>
+                    <node>ChoiceBox</node>
+                    <attr name="class">choice-box</attr>
+                    <attr name="id">choiceBoxHeader</attr>
+                </info>
+            </comboBox>
+            <comboBox id="choiceBoxRows" uid="choiceBoxRows" owner="Self" rows="" header="" columns="">
+                <info>
+                    <xpath>/com.exactprosystems.jf.tool.custom.BorderWrapper_StrokeBorder_1/com.exactprosystems.jf.tool.custom.BorderWrapper_StrokeBorder_1/com.exactprosystems.jf.tool.custom.BorderWrapper_StrokeBorder_1/GridPane/GridPane[1]/ChoiceBox[5]</xpath>
+                    <rectangle x1="0.10242872228088701" y1="0.7546666666666666" x2="0.351636747624076" y2="0.8266666666666667"/>
+                    <node>ChoiceBox</node>
+                    <attr name="class">choice-box</attr>
+                    <attr name="id">choiceBoxRows</attr>
+                </info>
+            </comboBox>
+            <checkBox id="checkBoxWeak" uid="checkBoxWeak" owner="Self" rows="" header="" columns="">
+                <info>
+                    <xpath>/com.exactprosystems.jf.tool.custom.BorderWrapper_StrokeBorder_1/com.exactprosystems.jf.tool.custom.BorderWrapper_StrokeBorder_1/com.exactprosystems.jf.tool.custom.BorderWrapper_StrokeBorder_1/GridPane/GridPane[1]/HBox[2]/CheckBox</xpath>
+                    <rectangle x1="0.10242872228088701" y1="0.8373333333333333" x2="0.16684266103484688" y2="0.888"/>
+                    <node>CheckBox</node>
+                    <attr name="class">check-box</attr>
+                    <attr name="id">checkBoxWeak</attr>
+                </info>
+            </checkBox>
+            <textBox id="uid" uid="uid" owner="Self" rows="" header="" columns="">
+                <info>
+                    <xpath>/com.exactprosystems.jf.tool.custom.BorderWrapper_StrokeBorder_1/com.exactprosystems.jf.tool.custom.BorderWrapper_StrokeBorder_1/com.exactprosystems.jf.tool.custom.BorderWrapper_StrokeBorder_1/GridPane/GridPane[2]/CustomFieldWithButton[1]</xpath>
+                    <rectangle x1="0.4572333685322069" y1="0.16533333333333333" x2="0.9651531151003168" y2="0.23466666666666666"/>
+                    <node>CustomFieldWithButton</node>
+                    <attr name="class">text-input text-field custom-text-field customFieldWithButton</attr>
+                    <attr name="id">uid</attr>
+                </info>
+            </textBox>
+            <textBox id="class" uid="class" owner="Self" rows="" header="" columns="">
+                <info>
+                    <xpath>/com.exactprosystems.jf.tool.custom.BorderWrapper_StrokeBorder_1/com.exactprosystems.jf.tool.custom.BorderWrapper_StrokeBorder_1/com.exactprosystems.jf.tool.custom.BorderWrapper_StrokeBorder_1/GridPane/GridPane[2]/CustomFieldWithButton[2]</xpath>
+                    <rectangle x1="0.4572333685322069" y1="0.24266666666666667" x2="0.9651531151003168" y2="0.312"/>
+                    <node>CustomFieldWithButton</node>
+                    <attr name="class">text-input text-field custom-text-field customFieldWithButton</attr>
+                    <attr name="id">class</attr>
+                </info>
+            </textBox>
+            <textBox id="name" uid="name" owner="Self" rows="" header="" columns="">
+                <info>
+                    <xpath>/com.exactprosystems.jf.tool.custom.BorderWrapper_StrokeBorder_1/com.exactprosystems.jf.tool.custom.BorderWrapper_StrokeBorder_1/com.exactprosystems.jf.tool.custom.BorderWrapper_StrokeBorder_1/GridPane/GridPane[2]/CustomFieldWithButton[3]</xpath>
+                    <rectangle x1="0.4572333685322069" y1="0.32" x2="0.9651531151003168" y2="0.3893333333333333"/>
+                    <node>CustomFieldWithButton</node>
+                    <attr name="class">text-input text-field custom-text-field customFieldWithButton</attr>
+                    <attr name="id">name</attr>
+                </info>
+            </textBox>
+            <textBox id="title" uid="title" owner="Self" rows="" header="" columns="">
+                <info>
+                    <xpath>/com.exactprosystems.jf.tool.custom.BorderWrapper_StrokeBorder_1/com.exactprosystems.jf.tool.custom.BorderWrapper_StrokeBorder_1/com.exactprosystems.jf.tool.custom.BorderWrapper_StrokeBorder_1/GridPane/GridPane[2]/CustomFieldWithButton[4]</xpath>
+                    <rectangle x1="0.4572333685322069" y1="0.3973333333333333" x2="0.9651531151003168" y2="0.4666666666666667"/>
+                    <node>CustomFieldWithButton</node>
+                    <attr name="class">text-input text-field custom-text-field customFieldWithButton</attr>
+                    <attr name="id">title</attr>
+                </info>
+            </textBox>
+            <textBox id="action" uid="action" owner="Self" rows="" header="" columns="">
+                <info>
+                    <xpath>/com.exactprosystems.jf.tool.custom.BorderWrapper_StrokeBorder_1/com.exactprosystems.jf.tool.custom.BorderWrapper_StrokeBorder_1/com.exactprosystems.jf.tool.custom.BorderWrapper_StrokeBorder_1/GridPane/GridPane[2]/CustomFieldWithButton[5]</xpath>
+                    <rectangle x1="0.4572333685322069" y1="0.4746666666666666" x2="0.9651531151003168" y2="0.5439999999999999"/>
+                    <node>CustomFieldWithButton</node>
+                    <attr name="class">text-input text-field custom-text-field customFieldWithButton</attr>
+                    <attr name="id">action</attr>
+                </info>
+            </textBox>
+            <textBox id="text" uid="text" owner="Self" rows="" header="" columns="">
+                <info>
+                    <xpath>/com.exactprosystems.jf.tool.custom.BorderWrapper_StrokeBorder_1/com.exactprosystems.jf.tool.custom.BorderWrapper_StrokeBorder_1/com.exactprosystems.jf.tool.custom.BorderWrapper_StrokeBorder_1/GridPane/GridPane[2]/CustomFieldWithButton[6]</xpath>
+                    <rectangle x1="0.4572333685322069" y1="0.5519999999999999" x2="0.9651531151003168" y2="0.6213333333333333"/>
+                    <node>CustomFieldWithButton</node>
+                    <attr name="class">text-input text-field custom-text-field customFieldWithButton</attr>
+                    <attr name="id">text</attr>
+                </info>
+            </textBox>
+            <textBox id="tooltip" uid="tooltip" owner="Self" rows="" header="" columns="">
+                <info>
+                    <xpath>/com.exactprosystems.jf.tool.custom.BorderWrapper_StrokeBorder_1/com.exactprosystems.jf.tool.custom.BorderWrapper_StrokeBorder_1/com.exactprosystems.jf.tool.custom.BorderWrapper_StrokeBorder_1/GridPane/GridPane[2]/CustomFieldWithButton[7]</xpath>
+                    <rectangle x1="0.4572333685322069" y1="0.632" x2="0.9651531151003168" y2="0.7013333333333334"/>
+                    <node>CustomFieldWithButton</node>
+                    <attr name="class">text-input text-field custom-text-field customFieldWithButton</attr>
+                    <attr name="id">tooltip</attr>
+                </info>
+            </textBox>
+            <textBox id="columns" uid="columns" owner="Self" rows="" header="" columns="">
+                <info>
+                    <xpath>/com.exactprosystems.jf.tool.custom.BorderWrapper_StrokeBorder_1/com.exactprosystems.jf.tool.custom.BorderWrapper_StrokeBorder_1/com.exactprosystems.jf.tool.custom.BorderWrapper_StrokeBorder_1/GridPane/GridPane[2]/CustomFieldWithButton[8]</xpath>
+                    <rectangle x1="0.4572333685322069" y1="0.7626666666666666" x2="0.9651531151003168" y2="0.832"/>
+                    <node>CustomFieldWithButton</node>
+                    <attr name="class">text-input text-field custom-text-field customFieldWithButton</attr>
+                    <attr name="id">columns</attr>
+                </info>
+            </textBox>
+            <textBox id="expression" uid="expression" owner="Self" rows="" header="" columns="">
+                <info>
+                    <xpath>/com.exactprosystems.jf.tool.custom.BorderWrapper_StrokeBorder_1/com.exactprosystems.jf.tool.custom.BorderWrapper_StrokeBorder_1/com.exactprosystems.jf.tool.custom.BorderWrapper_StrokeBorder_1/GridPane/GridPane[2]/CustomFieldWithButton[9]</xpath>
+                    <rectangle x1="0.4572333685322069" y1="0.8426666666666667" x2="0.9651531151003168" y2="0.9119999999999999"/>
+                    <node>CustomFieldWithButton</node>
+                    <attr name="class">text-input text-field custom-text-field customFieldWithButton</attr>
+                    <attr name="id">expression</attr>
+                </info>
+            </textBox>
+            <textBox id="xpath" uid="xpath" owner="Self" rows="" header="" columns="">
+                <info>
+                    <xpath>/com.exactprosystems.jf.tool.custom.BorderWrapper_StrokeBorder_1/com.exactprosystems.jf.tool.custom.BorderWrapper_StrokeBorder_1/com.exactprosystems.jf.tool.custom.BorderWrapper_StrokeBorder_1/GridPane/GridPane[2]/CustomFieldWithButton[10]</xpath>
+                    <rectangle x1="0.4572333685322069" y1="0.088" x2="0.9651531151003168" y2="0.15733333333333333"/>
+                    <node>CustomFieldWithButton</node>
+                    <attr name="class">text-input text-field custom-text-field customFieldWithButton</attr>
+                    <attr name="id">xpath</attr>
+                </info>
+            </textBox>
+        </run>
+        <onClose/>
+        <close/>
+    </window>
+    <window name="DictionaryActions">
+        <self>
+            <any id="Self" xpath=".//GridPane[@id=&amp;quot;mainGridPane&amp;quot;]/BorderPane[2]"/>
+        </self>
+        <onOpen/>
+        <run>
+            <tabPanel id="actionsTab" uid="actionsTab" owner="Self" rows="" header="" columns="">
+                <info>
+                    <xpath>/com.exactprosystems.jf.tool.custom.BorderWrapper_StrokeBorder_1/com.exactprosystems.jf.tool.custom.BorderWrapper_StrokeBorder_1/com.exactprosystems.jf.tool.custom.BorderWrapper_StrokeBorder_1/GridPane/VBox[1]/TabPane</xpath>
+                    <rectangle x1="0.01925320886814469" y1="0.2823834196891192" x2="0.2526254375729288" y2="0.9145077720207254"/>
+                    <node>TabPane</node>
+                    <attr name="class">tab-pane</attr>
+                    <attr name="id">actionsTab</attr>
+                </info>
+            </tabPanel>
+            <comboBox id="doComboBoxApps" uid="comboBoxApps" owner="Self" rows="" header="" columns="">
+                <info>
+                    <xpath>/com.exactprosystems.jf.tool.custom.BorderWrapper_StrokeBorder_1/com.exactprosystems.jf.tool.custom.BorderWrapper_StrokeBorder_1/com.exactprosystems.jf.tool.custom.BorderWrapper_StrokeBorder_1/GridPane/VBox[1]/GridPane/HBox/ComboBox</xpath>
+                    <rectangle x1="0.10793465577596265" y1="0.09067357512953368" x2="0.1966161026837806" y2="0.16580310880829016"/>
+                    <node>ComboBox</node>
+                    <attr name="class">combo-box-base combo-box</attr>
+                    <attr name="id">comboBoxApps</attr>
+                </info>
+            </comboBox>
+            <button id="doBtnStartApp" uid="dictionaryBtnStartApplication" owner="Self" rows="" header="" columns="">
+                <info>
+                    <xpath>/com.exactprosystems.jf.tool.custom.BorderWrapper_StrokeBorder_1/com.exactprosystems.jf.tool.custom.BorderWrapper_StrokeBorder_1/com.exactprosystems.jf.tool.custom.BorderWrapper_StrokeBorder_1/GridPane/VBox[1]/GridPane/HBox/Button[1]</xpath>
+                    <rectangle x1="0.1966161026837806" y1="0.08549222797927461" x2="0.21528588098016335" y2="0.1683937823834197"/>
+                    <node>Button</node>
+                    <attr name="class">button transparentBackground</attr>
+                    <attr name="id">dictionaryBtnStartApplication</attr>
+                    <attr name="tooltip">Start the selected application</attr>
+                </info>
+            </button>
+            <button id="doBtnConnectToApp" uid="dictionaryBtnConnectApplication" owner="Self" rows="" header="" columns="">
+                <info>
+                    <xpath>/com.exactprosystems.jf.tool.custom.BorderWrapper_StrokeBorder_1/com.exactprosystems.jf.tool.custom.BorderWrapper_StrokeBorder_1/com.exactprosystems.jf.tool.custom.BorderWrapper_StrokeBorder_1/GridPane/VBox[1]/GridPane/HBox/Button[2]</xpath>
+                    <rectangle x1="0.21528588098016335" y1="0.08549222797927461" x2="0.23395565927654607" y2="0.1683937823834197"/>
+                    <node>Button</node>
+                    <attr name="class">button transparentBackground</attr>
+                    <attr name="id">dictionaryBtnConnectApplication</attr>
+                    <attr name="tooltip">Connect the selected application</attr>
+                </info>
+            </button>
+            <button id="doBtnStopApplication" uid="dictionaryBtnStopApplication" owner="Self" rows="" header="" columns="">
+                <info>
+                    <xpath>/com.exactprosystems.jf.tool.custom.BorderWrapper_StrokeBorder_1/com.exactprosystems.jf.tool.custom.BorderWrapper_StrokeBorder_1/com.exactprosystems.jf.tool.custom.BorderWrapper_StrokeBorder_1/GridPane/VBox[1]/GridPane/HBox/Button[3]</xpath>
+                    <rectangle x1="0.23395565927654607" y1="0.08549222797927461" x2="0.2526254375729288" y2="0.1683937823834197"/>
+                    <node>Button</node>
+                    <attr name="class">button transparentBackground</attr>
+                    <attr name="id">dictionaryBtnStopApplication</attr>
+                    <attr name="tooltip">Stop the selected application</attr>
+                </info>
+            </button>
+            <comboBox id="doBoxAppsStore" uid="comboBoxAppsStore" owner="Self" rows="" header="" columns="">
+                <info>
+                    <xpath>/com.exactprosystems.jf.tool.custom.BorderWrapper_StrokeBorder_1/com.exactprosystems.jf.tool.custom.BorderWrapper_StrokeBorder_1/com.exactprosystems.jf.tool.custom.BorderWrapper_StrokeBorder_1/GridPane/VBox[1]/GridPane/ComboBox</xpath>
+                    <rectangle x1="0.10793465577596265" y1="0.1839378238341969" x2="0.2526254375729288" y2="0.2590673575129534"/>
+                    <node>ComboBox</node>
+                    <attr name="class">combo-box-base combo-box</attr>
+                    <attr name="id">comboBoxAppsStore</attr>
+                </info>
+            </comboBox>
+            <label id="imageArea" uid="imageArea" owner="Self" rows="" header="" columns="">
+                <info>
+                    <xpath>/com.exactprosystems.jf.tool.custom.BorderWrapper_StrokeBorder_1/com.exactprosystems.jf.tool.custom.BorderWrapper_StrokeBorder_1/com.exactprosystems.jf.tool.custom.BorderWrapper_StrokeBorder_1/GridPane/VBox[2]/ScrollPane/com.sun.javafx.scene.control.skin.ScrollPaneSkin_3/com.sun.javafx.scene.control.skin.ScrollPaneSkin_4/Label</xpath>
+                    <rectangle x1="0.26254375729288215" y1="0.08808290155440415" x2="0.9801633605600932" y2="0.9119170984455959"/>
+                    <node>Label</node>
+                    <attr name="class">label imageArea</attr>
+                    <attr name="id">imageArea</attr>
+                </info>
+            </label>
+        </run>
+        <onClose/>
+        <close/>
+    </window>
+    <window name="DictionaryActionsDoTab">
+        <self>
+            <any id="Self" xpath=".//TabPane/TabContentRegion[7]"/>
+        </self>
+        <onOpen>
+            <wait id="waitOpen" ref="Self" addition="WaitToAppear" timeout="5000"/>
+        </onOpen>
+        <run>
+            <textBox id="tfSendKeys" uid="tfSendKeys" owner="Self" rows="" header="" columns="">
+                <info>
+                    <xpath>/VBox/GridPane/CustomFieldWithButton</xpath>
+                    <rectangle x1="0.0" y1="0.05213270142180095" x2="0.665" y2="0.17535545023696683"/>
+                    <node>CustomFieldWithButton</node>
+                    <attr name="class">text-input text-field custom-text-field customFieldWithButton</attr>
+                    <attr name="id">tfSendKeys</attr>
+                </info>
+            </textBox>
+            <button id="btnSendKeys" owner="Self" text="Send keys" rows="" header="" columns="">
+                <info>
+                    <xpath>/VBox/GridPane/Button[1]</xpath>
+                    <rectangle x1="0.675" y1="0.047393364928909956" x2="1.0" y2="0.18009478672985785"/>
+                    <node>Button</node>
+                    <attr name="class">button</attr>
+                </info>
+            </button>
+            <button id="btnDoIt" owner="Self" text="Do it" rows="" header="" columns="">
+                <info>
+                    <xpath>/VBox/GridPane/Button[2]</xpath>
+                    <rectangle x1="0.675" y1="0.2180094786729858" x2="1.0" y2="0.35071090047393366"/>
+                    <node>Button</node>
+                    <attr name="class">button</attr>
+                </info>
+            </button>
+            <button id="btnFind" owner="Self" text="Find" rows="" header="" columns="">
+                <info>
+                    <xpath>/VBox/GridPane/Button[3]</xpath>
+                    <rectangle x1="0.3375" y1="0.3886255924170616" x2="0.665" y2="0.5213270142180095"/>
+                    <node>Button</node>
+                    <attr name="class">button</attr>
+                </info>
+            </button>
+            <button id="btnClick" owner="Self" text="Click" rows="" header="" columns="">
+                <info>
+                    <xpath>/VBox/GridPane/Button[4]</xpath>
+                    <rectangle x1="0.0" y1="0.3886255924170616" x2="0.3275" y2="0.5213270142180095"/>
+                    <node>Button</node>
+                    <attr name="class">button</attr>
+                </info>
+            </button>
+            <button id="btnGetVvalue" owner="Self" text="Get value" rows="" header="" columns="">
+                <info>
+                    <xpath>/VBox/GridPane/Button[5]</xpath>
+                    <rectangle x1="0.675" y1="0.3886255924170616" x2="1.0" y2="0.5213270142180095"/>
+                    <node>Button</node>
+                    <attr name="class">button</attr>
+                </info>
+            </button>
+            <textBox owner="Self" class="expressionEditor" rows="" header="" columns="">
+                <info>
+                    <xpath>/VBox/GridPane/ExpressionField</xpath>
+                    <rectangle x1="0.0" y1="0.2227488151658768" x2="0.665" y2="0.3459715639810427"/>
+                    <node>ExpressionField</node>
+                    <attr name="class">text-input text-field custom-text-field expressionEditor</attr>
+                </info>
+            </textBox>
+        </run>
+        <onClose/>
+        <close/>
+    </window>
+    <window name="DictionarActionsSwitchTab">
+        <self>
+            <any id="Self" xpath=".//TabPane/TabContentRegion[6]"/>
+        </self>
+        <onOpen>
+            <wait id="waitOpen" ref="Self" addition="WaitToAppear" timeout="5000"/>
+        </onOpen>
+        <run>
+            <comboBox id="cbWindows" uid="comboBoxWindows" owner="Self" rows="" header="" columns="">
+                <info>
+                    <xpath>/VBox/HBox[1]/ComboBox</xpath>
+                    <rectangle x1="0.17250000000000001" y1="0.047393364928909956" x2="0.9400000000000001" y2="0.18483412322274884"/>
+                    <node>ComboBox</node>
+                    <attr name="class">combo-box-base combo-box</attr>
+                    <attr name="id">comboBoxWindows</attr>
+                </info>
+            </comboBox>
+            <button id="cbUpdate" uid="cbUpdate" owner="Self" rows="" header="" columns="">
+                <info>
+                    <xpath>/VBox/HBox[1]/Button</xpath>
+                    <rectangle x1="0.9400000000000001" y1="0.05687203791469195" x2="1.0" y2="0.17535545023696683"/>
+                    <node>Button</node>
+                    <attr name="class">button transparentBackground</attr>
+                    <attr name="id">cbUpdate</attr>
+                </info>
+            </button>
+            <button id="btnSwitchToCurrent" owner="Self" text="Switch to current" rows="" header="" columns="">
+                <info>
+                    <xpath>/VBox/HBox[2]/Button[1]</xpath>
+                    <rectangle x1="0.0025" y1="0.23696682464454977" x2="0.5025000000000001" y2="0.3696682464454977"/>
+                    <node>Button</node>
+                    <attr name="class">button</attr>
+                </info>
+            </button>
+            <button id="btnSwitchToParent" owner="Self" text="Switch to parent" rows="" header="" columns="">
+                <info>
+                    <xpath>/VBox/HBox[2]/Button[2]</xpath>
+                    <rectangle x1="0.5125" y1="0.23696682464454977" x2="1.0" y2="0.3696682464454977"/>
+                    <node>Button</node>
+                    <attr name="class">button</attr>
+                </info>
+            </button>
+        </run>
+        <onClose/>
+        <close/>
+    </window>
+    <window name="DictionarActionsNavigateTab">
+        <self>
+            <any id="Self" xpath=".//TabPane/TabContentRegion[5]"/>
+        </self>
+        <onOpen>
+            <wait id="waitOpen" ref="Self" addition="WaitToAppear" timeout="5000"/>
+        </onOpen>
+        <run>
+            <button id="btnBack" owner="Self" text="Back" rows="" header="" columns="">
+                <info>
+                    <xpath>/VBox/GridPane/Button[1]</xpath>
+                    <rectangle x1="0.0" y1="0.047393364928909956" x2="0.495" y2="0.18009478672985785"/>
+                    <node>Button</node>
+                    <attr name="class">button</attr>
+                </info>
+            </button>
+            <button id="btnForward" owner="Self" text="Forward" rows="" header="" columns="">
+                <info>
+                    <xpath>/VBox/GridPane/Button[2]</xpath>
+                    <rectangle x1="0.505" y1="0.047393364928909956" x2="1.0" y2="0.18009478672985785"/>
+                    <node>Button</node>
+                    <attr name="class">button</attr>
+                </info>
+            </button>
+            <button id="btnRefresh" owner="Self" text="Refresh" rows="" header="" columns="">
+                <info>
+                    <xpath>/VBox/GridPane/Button[3]</xpath>
+                    <rectangle x1="0.0" y1="0.2180094786729858" x2="1.0" y2="0.35071090047393366"/>
+                    <node>Button</node>
+                    <attr name="class">button</attr>
+                </info>
+            </button>
+            <button id="btnCloseWindow" owner="Self" text="Close window" rows="" header="" columns="">
+                <info>
+                    <xpath>/VBox/GridPane/Button[4]</xpath>
+                    <rectangle x1="0.0" y1="0.3886255924170616" x2="1.0" y2="0.5213270142180095"/>
+                    <node>Button</node>
+                    <attr name="class">button</attr>
+                </info>
+            </button>
+        </run>
+        <onClose/>
+        <close/>
+    </window>
+    <window name="DictionarActionsNewTab">
+        <self>
+            <any id="Self" xpath=".//TabPane/TabContentRegion[4]"/>
+        </self>
+        <onOpen>
+            <wait id="waitOpen" ref="Self" addition="WaitToAppear" timeout="5000"/>
+        </onOpen>
+        <run>
+            <listView id="listViewParameters" uid="listView" owner="Self" rows="" header="" columns="">
+                <info>
+                    <xpath>/VBox/ScrollPane/com.sun.javafx.scene.control.skin.ScrollPaneSkin_3/com.sun.javafx.scene.control.skin.ScrollPaneSkin_4/ListView</xpath>
+                    <rectangle x1="0.0025" y1="0.04265402843601896" x2="0.9975" y2="0.8246445497630333"/>
+                    <node>ListView</node>
+                    <attr name="class">list-view</attr>
+                    <attr name="id">listView</attr>
+                </info>
+            </listView>
+            <button id="btnNewInstance" uid="btnNewInstance" owner="Self" rows="" header="" columns="">
+                <info>
+                    <xpath>/VBox/Button</xpath>
+                    <rectangle x1="0.0" y1="0.8672985781990522" x2="1.0" y2="1.0"/>
+                    <node>Button</node>
+                    <attr name="class">button</attr>
+                    <attr name="id">btnNewInstance</attr>
+                </info>
+            </button>
+        </run>
+        <onClose/>
+        <close/>
+    </window>
+    <window name="DictionarActionsPosSizeTab">
+        <self>
+            <any id="Self" xpath=".//TabPane/TabContentRegion[3]"/>
+        </self>
+        <onOpen>
+            <wait id="waitOpen" ref="Self" addition="WaitToAppear" timeout="5000"/>
+        </onOpen>
+        <run>
+            <button id="btnMove" owner="Self" text="Move" rows="" header="" columns="">
+                <info>
+                    <xpath>/VBox/GridPane/GridPane[1]/Button</xpath>
+                    <rectangle x1="0.0" y1="0.2180094786729858" x2="1.0" y2="0.35071090047393366"/>
+                    <node>Button</node>
+                    <attr name="class">button</attr>
+                </info>
+            </button>
+            <textBox id="ntfMoveToX" uid="ntfMoveToX" owner="Self" rows="" header="" columns="">
+                <info>
+                    <xpath>/VBox/GridPane/GridPane[1]/NumberTextField[1]</xpath>
+                    <rectangle x1="0.26" y1="0.05213270142180095" x2="0.5975" y2="0.17535545023696683"/>
+                    <node>NumberTextField</node>
+                    <attr name="class">text-input text-field</attr>
+                    <attr name="id">ntfMoveToX</attr>
+                </info>
+            </textBox>
+            <textBox id="ntfMoveToY" uid="ntfMoveToY" owner="Self" rows="" header="" columns="">
+                <info>
+                    <xpath>/VBox/GridPane/GridPane[1]/NumberTextField[2]</xpath>
+                    <rectangle x1="0.665" y1="0.05213270142180095" x2="1.0" y2="0.17535545023696683"/>
+                    <node>NumberTextField</node>
+                    <attr name="class">text-input text-field</attr>
+                    <attr name="id">ntfMoveToY</attr>
+                </info>
+            </textBox>
+            <button id="btnResize" owner="Self" text="Resize" rows="" header="" columns="">
+                <info>
+                    <xpath>/VBox/GridPane/GridPane[2]/Button</xpath>
+                    <rectangle x1="0.0" y1="0.7298578199052134" x2="1.0" y2="0.8625592417061612"/>
+                    <node>Button</node>
+                    <attr name="class">button</attr>
+                </info>
+            </button>
+            <radioButton id="rbMin" uid="rbMin" owner="Self" rows="" header="" columns="">
+                <info>
+                    <xpath>/VBox/GridPane/GridPane[2]/RadioButton[1]</xpath>
+                    <rectangle x1="0.0" y1="0.4123222748815166" x2="0.12" y2="0.5023696682464456"/>
+                    <node>RadioButton</node>
+                    <attr name="class">radio-button</attr>
+                    <attr name="id">rbMin</attr>
+                </info>
+            </radioButton>
+            <radioButton id="rbMax" uid="rbMax" owner="Self" rows="" header="" columns="">
+                <info>
+                    <xpath>/VBox/GridPane/GridPane[2]/RadioButton[2]</xpath>
+                    <rectangle x1="0.335" y1="0.4123222748815166" x2="0.4625" y2="0.5023696682464456"/>
+                    <node>RadioButton</node>
+                    <attr name="class">radio-button</attr>
+                    <attr name="id">rbMax</attr>
+                </info>
+            </radioButton>
+            <radioButton id="rbNormal" uid="rbNormal" owner="Self" rows="" header="" columns="">
+                <info>
+                    <xpath>/VBox/GridPane/GridPane[2]/RadioButton[3]</xpath>
+                    <rectangle x1="0.67" y1="0.4123222748815166" x2="0.85" y2="0.5023696682464456"/>
+                    <node>RadioButton</node>
+                    <attr name="class">radio-button</attr>
+                    <attr name="id">rbNormal</attr>
+                </info>
+            </radioButton>
+            <textBox id="ntfResizeH" uid="ntfResizeH" owner="Self" rows="" header="" columns="">
+                <info>
+                    <xpath>/VBox/GridPane/GridPane[2]/GridPane/NumberTextField[1]</xpath>
+                    <rectangle x1="0.26" y1="0.5639810426540285" x2="0.5975" y2="0.6872037914691944"/>
+                    <node>NumberTextField</node>
+                    <attr name="class">text-input text-field</attr>
+                    <attr name="id">ntfResizeH</attr>
+                </info>
+            </textBox>
+            <textBox id="ntfResizeW" uid="ntfResizeW" owner="Self" rows="" header="" columns="">
+                <info>
+                    <xpath>/VBox/GridPane/GridPane[2]/GridPane/NumberTextField[2]</xpath>
+                    <rectangle x1="0.665" y1="0.5639810426540285" x2="1.0" y2="0.6872037914691944"/>
+                    <node>NumberTextField</node>
+                    <attr name="class">text-input text-field</attr>
+                    <attr name="id">ntfResizeW</attr>
+                </info>
+            </textBox>
+            <radioButton id="rbSize" uid="rbSize" owner="Self" rows="" header="" columns="">
+                <info>
+                    <xpath>/VBox/GridPane/GridPane[2]/GridPane/RadioButton</xpath>
+                    <rectangle x1="0.0" y1="0.5829383886255924" x2="0.1275" y2="0.6729857819905214"/>
+                    <node>RadioButton</node>
+                    <attr name="class">radio-button</attr>
+                    <attr name="id">rbSize</attr>
+                </info>
+            </radioButton>
+        </run>
+        <onClose/>
+        <close/>
+    </window>
+    <window name="DictionarActionsPropsTab">
+        <self>
+            <any id="Self" xpath=".//TabPane/TabContentRegion[2]"/>
+        </self>
+        <onOpen>
+            <wait id="waitOpen" ref="Self" addition="WaitToAppear" timeout="5000"/>
+        </onOpen>
+        <run>
+            <comboBox id="cbGetProperty" uid="cbGetProperty" owner="Self" rows="" header="" columns="">
+                <info>
+                    <xpath>/VBox/GridPane/ComboBox[1]</xpath>
+                    <rectangle x1="0.0" y1="0.047393364928909956" x2="0.435" y2="0.18483412322274884"/>
+                    <node>ComboBox</node>
+                    <attr name="class">combo-box-base combo-box</attr>
+                    <attr name="id">cbGetProperty</attr>
+                </info>
+            </comboBox>
+            <comboBox id="cbSetProperty" uid="cbSetProperty" owner="Self" rows="" header="" columns="">
+                <info>
+                    <xpath>/VBox/GridPane/ComboBox[2]</xpath>
+                    <rectangle x1="0.0" y1="0.2180094786729858" x2="0.435" y2="0.35545023696682465"/>
+                    <node>ComboBox</node>
+                    <attr name="class">combo-box-base combo-box</attr>
+                    <attr name="id">cbSetProperty</attr>
+                </info>
+            </comboBox>
+            <button id="get" owner="Self" text="Get" rows="" header="" columns="">
+                <info>
+                    <xpath>/VBox/GridPane/Button[1]</xpath>
+                    <rectangle x1="0.8875000000000001" y1="0.047393364928909956" x2="1.0" y2="0.18009478672985785"/>
+                    <node>Button</node>
+                    <attr name="class">button</attr>
+                </info>
+            </button>
+            <button id="set" owner="Self" text="Set" rows="" header="" columns="">
+                <info>
+                    <xpath>/VBox/GridPane/Button[2]</xpath>
+                    <rectangle x1="0.8875000000000001" y1="0.2180094786729858" x2="0.995" y2="0.35071090047393366"/>
+                    <node>Button</node>
+                    <attr name="class">button</attr>
+                </info>
+            </button>
+            <textBox id="tfGet" xpath=".//GridPane/ExpressionField[1]" owner="Self" rows="" header="" columns="">
+                <info>
+                    <xpath>/VBox/GridPane/ExpressionField[1]</xpath>
+                    <rectangle x1="0.445" y1="0.05213270142180095" x2="0.8775000000000001" y2="0.17535545023696683"/>
+                    <node>ExpressionField</node>
+                    <attr name="class">text-input text-field custom-text-field expressionEditor</attr>
+                </info>
+            </textBox>
+            <textBox id="tfSEt" xpath=".//GridPane/ExpressionField[2]" owner="Self" rows="" header="" columns="">
+                <info>
+                    <xpath>/VBox/GridPane/ExpressionField[2]</xpath>
+                    <rectangle x1="0.445" y1="0.2227488151658768" x2="0.8775000000000001" y2="0.3459715639810427"/>
+                    <node>ExpressionField</node>
+                    <attr name="class">text-input text-field custom-text-field expressionEditor</attr>
+                </info>
+            </textBox>
+        </run>
+        <onClose/>
+        <close/>
+    </window>
+    <window name="DictionarActionsDialogTab">
+        <self>
+            <any id="Self" xpath=".//TabPane/TabContentRegion[1]"/>
+        </self>
+        <onOpen>
+            <wait id="waitOpen" ref="Self" addition="WaitToAppear" timeout="5000"/>
+        </onOpen>
+        <run>
+            <button id="btnMove" owner="Self" text="Move" rows="" header="" columns="">
+                <info>
+                    <xpath>/VBox/GridPane/GridPane[1]/Button</xpath>
+                    <rectangle x1="0.0" y1="0.2180094786729858" x2="1.0" y2="0.35071090047393366"/>
+                    <node>Button</node>
+                    <attr name="class">button</attr>
+                </info>
+            </button>
+            <textBox id="ntfDialogMoveToX" uid="ntfDialogMoveToX" owner="Self" rows="" header="" columns="">
+                <info>
+                    <xpath>/VBox/GridPane/GridPane[1]/NumberTextField[1]</xpath>
+                    <rectangle x1="0.26" y1="0.05213270142180095" x2="0.5975" y2="0.17535545023696683"/>
+                    <node>NumberTextField</node>
+                    <attr name="class">text-input text-field</attr>
+                    <attr name="id">ntfDialogMoveToX</attr>
+                </info>
+            </textBox>
+            <textBox id="ntfDialogMoveToY" uid="ntfDialogMoveToY" owner="Self" rows="" header="" columns="">
+                <info>
+                    <xpath>/VBox/GridPane/GridPane[1]/NumberTextField[2]</xpath>
+                    <rectangle x1="0.665" y1="0.05213270142180095" x2="1.0" y2="0.17535545023696683"/>
+                    <node>NumberTextField</node>
+                    <attr name="class">text-input text-field</attr>
+                    <attr name="id">ntfDialogMoveToY</attr>
+                </info>
+            </textBox>
+            <button id="btnResize" owner="Self" text="Resize" rows="" header="" columns="">
+                <info>
+                    <xpath>/VBox/GridPane/GridPane[2]/Button</xpath>
+                    <rectangle x1="0.0" y1="0.6966824644549764" x2="1.0" y2="0.8293838862559242"/>
+                    <node>Button</node>
+                    <attr name="class">button</attr>
+                </info>
+            </button>
+            <radioButton id="rbdMin" uid="rbdMin" owner="Self" rows="" header="" columns="">
+                <info>
+                    <xpath>/VBox/GridPane/GridPane[2]/RadioButton[1]</xpath>
+                    <rectangle x1="0.0" y1="0.40758293838862564" x2="0.12" y2="0.49763033175355453"/>
+                    <node>RadioButton</node>
+                    <attr name="class">radio-button</attr>
+                    <attr name="id">rbdMin</attr>
+                </info>
+            </radioButton>
+            <radioButton id="rbdMax" uid="rbdMax" owner="Self" rows="" header="" columns="">
+                <info>
+                    <xpath>/VBox/GridPane/GridPane[2]/RadioButton[2]</xpath>
+                    <rectangle x1="0.335" y1="0.40758293838862564" x2="0.4625" y2="0.49763033175355453"/>
+                    <node>RadioButton</node>
+                    <attr name="class">radio-button</attr>
+                    <attr name="id">rbdMax</attr>
+                </info>
+            </radioButton>
+            <radioButton id="rbdNormal" uid="rbdNormal" owner="Self" rows="" header="" columns="">
+                <info>
+                    <xpath>/VBox/GridPane/GridPane[2]/RadioButton[3]</xpath>
+                    <rectangle x1="0.67" y1="0.40758293838862564" x2="0.85" y2="0.49763033175355453"/>
+                    <node>RadioButton</node>
+                    <attr name="class">radio-button</attr>
+                    <attr name="id">rbdNormal</attr>
+                </info>
+            </radioButton>
+            <textBox id="ntfDialogResizeH" uid="ntfDialogResizeH" owner="Self" rows="" header="" columns="">
+                <info>
+                    <xpath>/VBox/GridPane/GridPane[2]/GridPane/NumberTextField[1]</xpath>
+                    <rectangle x1="0.26" y1="0.5450236966824645" x2="0.5975" y2="0.6682464454976303"/>
+                    <node>NumberTextField</node>
+                    <attr name="class">text-input text-field</attr>
+                    <attr name="id">ntfDialogResizeH</attr>
+                </info>
+            </textBox>
+            <textBox id="ntfDialogResizeW" uid="ntfDialogResizeW" owner="Self" rows="" header="" columns="">
+                <info>
+                    <xpath>/VBox/GridPane/GridPane[2]/GridPane/NumberTextField[2]</xpath>
+                    <rectangle x1="0.665" y1="0.5450236966824645" x2="1.0" y2="0.6682464454976303"/>
+                    <node>NumberTextField</node>
+                    <attr name="class">text-input text-field</attr>
+                    <attr name="id">ntfDialogResizeW</attr>
+                </info>
+            </textBox>
+            <radioButton id="rbdSize" uid="rbdSize" owner="Self" rows="" header="" columns="">
+                <info>
+                    <xpath>/VBox/GridPane/GridPane[2]/GridPane/RadioButton</xpath>
+                    <rectangle x1="0.0" y1="0.5639810426540285" x2="0.1275" y2="0.6540284360189574"/>
+                    <node>RadioButton</node>
+                    <attr name="class">radio-button</attr>
+                    <attr name="id">rbdSize</attr>
+                </info>
+            </radioButton>
+            <comboBox id="cbGetDialogProperty" uid="cbGetDialogProperty" owner="Self" rows="" header="" columns="">
+                <info>
+                    <xpath>/VBox/GridPane/GridPane[3]/ComboBox</xpath>
+                    <rectangle x1="0.0" y1="0.8578199052132702" x2="0.435" y2="0.9952606635071091"/>
+                    <node>ComboBox</node>
+                    <attr name="class">combo-box-base combo-box</attr>
+                    <attr name="id">cbGetDialogProperty</attr>
+                </info>
+            </comboBox>
+            <button id="brnGet" owner="Self" text="Get" rows="" header="" columns="">
+                <info>
+                    <xpath>/VBox/GridPane/GridPane[3]/Button</xpath>
+                    <rectangle x1="0.8875000000000001" y1="0.8578199052132702" x2="1.0" y2="0.9905213270142181"/>
+                    <node>Button</node>
+                    <attr name="class">button</attr>
+                </info>
+            </button>
+            <textBox id="tfGet" owner="Self" class="expressionEditor" rows="" header="" columns="">
+                <info>
+                    <xpath>/VBox/GridPane/GridPane[3]/ExpressionField</xpath>
+                    <rectangle x1="0.445" y1="0.8625592417061612" x2="0.8775000000000001" y2="0.9857819905213271"/>
+                    <node>ExpressionField</node>
+                    <attr name="class">text-input text-field custom-text-field expressionEditor</attr>
+                </info>
+            </textBox>
+        </run>
         <onClose/>
         <close/>
     </window>

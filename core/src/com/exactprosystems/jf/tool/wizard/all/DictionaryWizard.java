@@ -645,7 +645,26 @@ public class DictionaryWizard extends AbstractWizard
 			List<Node> nodeList;
 			try
 			{
-				nodeList = this.matcher.findAll(this.rootNode, locator);
+				String nodeName = null;
+				try
+				{
+					IExtraInfo info = control.getInfo();
+
+					if (info instanceof ExtraInfo)
+					{
+						String s = (String) ((ExtraInfo) info).get(ExtraInfo.nodeName);
+						if (!Str.IsNullOrEmpty(s))
+						{
+							nodeName = s;
+						}
+					}
+				}
+				catch (Exception e)
+				{
+					//nothing to do
+				}
+
+				nodeList = this.matcher.findAll(this.rootNode, locator, nodeName);
 				count = nodeList.size();
 				found = count > 0 ? nodeList.get(0) : null;
 			}
@@ -946,7 +965,17 @@ public class DictionaryWizard extends AbstractWizard
 			res = composeFromAttr(res, node, LocatorFieldKind.ACTION);
 		}
 		res = composeFromText(res, node);
-		return res == null ? null : res.trim();
+		if (res == null)
+		{
+			return null;
+		}
+		String trimmed = res.trim();
+		String capitalizeAllLetters = Arrays.stream(trimmed.split(" "))
+				//capitalize first letters
+				.map(part -> part.substring(0,1).toUpperCase() + part.substring(1))
+				.collect(Collectors.joining(""));
+
+		return capitalizeAllLetters.substring(0, 1).toLowerCase() + capitalizeAllLetters.substring(1);
 	}
 
 	private String composeFromAttr(String res, Node node, LocatorFieldKind kind)
