@@ -557,14 +557,13 @@
 															</styleClass>
 															<columnConstraints>
 																<ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
-																<ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
 																<ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="45.0" maxWidth="45.0"/>
 															</columnConstraints>
 															<rowConstraints>
 																<RowConstraints minHeight="10.0" prefHeight="32.0" maxHeight="32.0" vgrow="SOMETIMES"/>
 															</rowConstraints>
 															<children>
-																<ComboBox fx:id="cbGetDialogProperty" maxWidth="1.7976931348623157E308" prefWidth="150.0"/>
+																<ComboBox fx:id="cbGetDialogProperty" maxWidth="1.7976931348623157E308" prefWidth="450.0"/>
 																<Button onAction="#getDialogProperty" mnemonicParsing="false" GridPane.columnIndex="2">
 																	<text>
 																		<R fx:constant="DIALOGS_GET"/>

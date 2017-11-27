@@ -322,12 +322,6 @@ public abstract class AbstractControl implements IControl, Mutable
 	}
 
 	@Override
-	public void setID(String id)
-	{
-		this.id = id;
-	}
-	
-	@Override
 	public String getUID()
 	{
 		return this.uid;

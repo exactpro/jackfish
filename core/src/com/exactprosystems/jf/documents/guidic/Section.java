@@ -133,7 +133,14 @@ public class Section implements ISection, Mutable
 			control.setSection(this);
 			if(this.sectionKind == IWindow.SectionKind.Self)
 			{
-				control.setID("Self");
+				try
+				{
+					((AbstractControl) control).set(AbstractControl.idName, "Self");
+				}
+				catch (Exception e)
+				{
+
+				}
 			}
 			this.controls.add(index, (AbstractControl)control);
 		}

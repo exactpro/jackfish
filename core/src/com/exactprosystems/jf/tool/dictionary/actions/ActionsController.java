@@ -94,7 +94,6 @@ public class ActionsController implements Initializable, ContainingParent
 	public NumberTextField                ntfDialogResizeW;
 	public GridPane                       propDialogGridPane;
 	public ComboBox<String>               cbGetDialogProperty;
-	public ExpressionField                efGetDialogProperty;
 
 
 	private ExpressionField			expressionField;
@@ -176,10 +175,6 @@ public class ActionsController implements Initializable, ContainingParent
 		this.propGridPane.add(this.efGetProperty, 1, 0);
 		this.propGridPane.add(this.efSetProperty, 1, 1);
 		this.btnNewInstance.setDisable(true);
-
-		this.efGetDialogProperty = new ExpressionField(evaluator);
-		this.efGetDialogProperty.setHelperForExpressionField(null, null);
-		this.propDialogGridPane.add(this.efGetDialogProperty, 1, 0);
 	}
 
 	//region Do tab

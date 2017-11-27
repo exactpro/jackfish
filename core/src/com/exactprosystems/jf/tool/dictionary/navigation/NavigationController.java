@@ -190,7 +190,7 @@ public class NavigationController implements Initializable, ContainingParent
 		        () -> new Object[] { model, currentWindow() }, 
 		        () -> new Object[] { this.appConnection });
 		this.btnElementWizardManager.initButton(context, manager, 
-		        () -> new Object[] { model, currentWindow(), currentSection(), currentElement() }, 
+		        () -> new Object[] { model, currentWindow(), currentSection(), elementForWizard() },
 		        () -> new Object[] { this.appConnection });
 		
 		gridPane.add(this.pane, 0, 0);
@@ -379,6 +379,36 @@ public class NavigationController implements Initializable, ContainingParent
 	public IWindow currentWindow()
 	{
 		return this.listViewWindow.getSelectedItem();
+	}
+
+	private IControl elementForWizard()
+	{
+		if(currentElement() != null)
+		{
+			return currentElement();
+		}
+		else
+		{
+			try
+			{
+				SectionKind sc = currentSection();
+				if(sc == SectionKind.Self || sc == SectionKind.Run)
+				{
+					AbstractControl element = AbstractControl.create(ControlKind.Any);
+					if(sc == SectionKind.Self)
+					{
+						element.set(AbstractControl.idName, "Self");
+					}
+					currentWindow().getSection(sc).addControl(element);
+					return element;
+				}
+			}
+			catch (Exception e)
+			{
+
+			}
+			return null;
+		}
 	}
 
 	private IWindow.SectionKind currentSection()
