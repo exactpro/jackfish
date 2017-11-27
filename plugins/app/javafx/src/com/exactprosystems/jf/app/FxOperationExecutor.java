@@ -155,7 +155,16 @@ public class FxOperationExecutor extends AbstractOperationExecutor<EventTarget>
 			}
 			if (component instanceof ListView)
 			{
-				return ((ListView<?>) component).getItems()
+				ListView<?> listView = (ListView<?>) component;
+				if (onlyVisible)
+				{
+					return UtilsFx.runOnFxThreadAndWaitResult(() -> IntStream.range(0, listView.getItems().size())
+							.filter(i -> ((Node) listView.queryAccessibleAttribute(AccessibleAttribute.ITEM_AT_INDEX, i)).isVisible())
+							.mapToObj(listView.getItems()::get)
+							.map(Str::asString)
+							.collect(Collectors.toList()));
+				}
+				return listView.getItems()
 						.stream()
 						.map(Object::toString)
 						.collect(Collectors.toList());

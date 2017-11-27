@@ -243,6 +243,23 @@ public class MatcherFx
 			return result;
 		}
 
+		if (kind == LocatorFieldKind.CLAZZ && Objects.nonNull(objText))
+		{
+			String[] classes = locatorText.split(" ");
+			for (String aClass : classes)
+			{
+				if (aClass.startsWith("!"))
+				{
+					result = result && !objText.contains(aClass.substring(1));
+				}
+				else
+				{
+					result = result && objText.contains(aClass);
+				}
+			}
+			return result;
+		}
+
 		if (objText != null)
 		{
 			if (weak)
