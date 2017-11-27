@@ -19,15 +19,12 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Node;
 import javafx.scene.control.*;
-import javafx.scene.control.Dialog;
-import javafx.scene.control.Menu;
-import javafx.scene.control.MenuItem;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.HBox;
 
-import java.awt.*;
+import java.awt.MouseInfo;
 import java.io.File;
 import java.util.Optional;
 
@@ -122,13 +119,6 @@ public class ConfigurationTreeView extends TreeView<TreeNode>
 				((CustomTreeViewSkin<TreeNode>) this.getSkin()).scrollTo(newValue);
 			}
 		});
-	}
-
-	public static Optional<String> showInputDialog(String headerText, String initValue)
-	{
-		Dialog<String> dialog = new TextInputDialog(initValue);
-		dialog.setHeaderText(headerText);
-		return dialog.showAndWait();
 	}
 
 	public static ContextMenu add(String menuItemName, EventHandler<ActionEvent> eventHandler)

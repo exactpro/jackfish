@@ -819,6 +819,13 @@ public abstract class DialogsHelper
 		return dialog.showAndWait().filter(bt -> bt.getButtonData().equals(ButtonBar.ButtonData.OK_DONE)).isPresent();
 	}
 
+	public static Optional<String> showInputDialog(String headerText, String initValue)
+	{
+		Dialog<String> dialog = new TextInputDialog(initValue);
+		dialog.setHeaderText(headerText);
+		return dialog.showAndWait();
+	}
+
 	private static void displayHelp(String content)
 	{
 		WebView browser = new WebView();

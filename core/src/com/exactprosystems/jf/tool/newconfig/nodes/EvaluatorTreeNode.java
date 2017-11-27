@@ -11,6 +11,7 @@ package com.exactprosystems.jf.tool.newconfig.nodes;
 import com.exactprosystems.jf.api.common.SerializablePair;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.CssVariables;
+import com.exactprosystems.jf.tool.helpers.DialogsHelper;
 import com.exactprosystems.jf.tool.newconfig.ConfigurationFx;
 import com.exactprosystems.jf.tool.newconfig.ConfigurationTreeView;
 import javafx.scene.Node;
@@ -43,7 +44,7 @@ public class EvaluatorTreeNode extends TreeNode
 	public Optional<ContextMenu> contextMenu()
 	{
 		ContextMenu contextMenu = ConfigurationTreeView.add("Add import",
-				e -> ConfigurationTreeView.showInputDialog("Enter new import", "").ifPresent(
+				e -> DialogsHelper.showInputDialog("Enter new import", "").ifPresent(
 						res -> Common.tryCatch(() -> this.model.addNewEvaluatorImport(res), "Error on add new import")
 				));
 		contextMenu.getItems().addAll(

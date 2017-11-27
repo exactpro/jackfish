@@ -14,6 +14,7 @@ import com.exactprosystems.jf.common.MutableString;
 import com.exactprosystems.jf.documents.matrix.Matrix;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.CssVariables;
+import com.exactprosystems.jf.tool.helpers.DialogsHelper;
 import com.exactprosystems.jf.tool.newconfig.ConfigurationFx;
 import com.exactprosystems.jf.tool.newconfig.ConfigurationTreeView;
 import com.exactprosystems.jf.tool.newconfig.TablePair;
@@ -84,7 +85,7 @@ public class LibraryTreeNode extends TreeNode
 					.map(Common::getRelativePath)
 					.map(MenuItem::new)
 					.peek(item -> item.setOnAction(
-							e -> ConfigurationTreeView.showInputDialog("Enter new name", "")
+							e -> DialogsHelper.showInputDialog("Enter new name", "")
 									.ifPresent(name -> Common.tryCatch(() -> this.model.addNewLibrary(new File(item.getText()), name),
 											"Error on create new library")
 									)

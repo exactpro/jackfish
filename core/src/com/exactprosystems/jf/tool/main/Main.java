@@ -187,7 +187,7 @@ public class Main extends Application
 		{
 			for (SettingsValue item : settings.getValues(Settings.MAIN_NS, Settings.MATRIX_TOOLBAR))
 			{
-				this.addToToolbar(item.getKey());
+				this.addToToolbar(item.getKey(), item.getValue());
 			}
 			notifyPreloader(new Preloader.ProgressNotification(55));
 
@@ -693,13 +693,13 @@ public class Main extends Application
 		}
 	}
 
-	public void addToToolbar(String fullPath) throws Exception
+	public void addToToolbar(String fullPath, String visibleName) throws Exception
 	{
 		if (!this.toolbarMatrices.contains(fullPath))
 		{
-			this.controller.addToToolbar(fullPath);
+			this.controller.addToToolbar(fullPath, visibleName);
 			this.toolbarMatrices.add(fullPath);
-			this.settings.setValue(Settings.MAIN_NS, Settings.MATRIX_TOOLBAR, new File(fullPath).getPath(), new File(fullPath).getPath());
+			this.settings.setValue(Settings.MAIN_NS, Settings.MATRIX_TOOLBAR, new File(fullPath).getPath(), visibleName);
 			this.settings.saveIfNeeded();
 		}
 		else

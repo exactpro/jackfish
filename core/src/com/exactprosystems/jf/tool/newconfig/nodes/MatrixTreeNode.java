@@ -12,6 +12,7 @@ import com.exactprosystems.jf.api.common.SerializablePair;
 import com.exactprosystems.jf.documents.config.Configuration;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.CssVariables;
+import com.exactprosystems.jf.tool.helpers.DialogsHelper;
 import com.exactprosystems.jf.tool.newconfig.ConfigurationFx;
 import com.exactprosystems.jf.tool.newconfig.ConfigurationTreeView;
 import javafx.scene.Node;
@@ -107,7 +108,7 @@ public class MatrixTreeNode extends TreeNode
 			menu.getItems().addAll(
 					ConfigurationTreeView.createItem(OPEN_MATRIX,() -> this.model.openMatrix(file), "Error on on open matrix"),
 					ConfigurationTreeView.createItem(OPEN_AS_TEXT,() -> this.model.openPlainText(file), "Error on on open matrix"),
-					ConfigurationTreeView.createItem(ADD_NEW_MATRIX, () -> ConfigurationTreeView.showInputDialog("Enter new name", "").ifPresent(
+					ConfigurationTreeView.createItem(ADD_NEW_MATRIX, () -> DialogsHelper.showInputDialog("Enter new name", "").ifPresent(
 							name -> Common.tryCatch(() -> this.model.addNewMatrix(file, name), "Error on create new matrix")), "Error on add new matrix"),
 					ConfigurationTreeView.createItem(REMOVE_MATRIX, () -> this.model.removeMatrix(file), "Error on remove matrix"),
 					ConfigurationTreeView.createItem(ADD_TO_TOOLBAR, () -> this.model.addToToolbar(Common.getRelativePath(file.getPath())), "Error on add matrix to toolbar"),
@@ -124,7 +125,7 @@ public class MatrixTreeNode extends TreeNode
 			menu.getItems().addAll(
 					ConfigurationTreeView.createDisabledItem(OPEN_MATRIX),
 					ConfigurationTreeView.createDisabledItem(OPEN_AS_TEXT),
-					ConfigurationTreeView.createItem(ADD_NEW_MATRIX, () -> ConfigurationTreeView.showInputDialog("Enter new name", "").ifPresent(
+					ConfigurationTreeView.createItem(ADD_NEW_MATRIX, () -> DialogsHelper.showInputDialog("Enter new name", "").ifPresent(
 							name -> Common.tryCatch(() -> this.model.addNewMatrix(file, name), "Error on create new matrix")), "Error on add new matrix"),
 					ConfigurationTreeView.createDisabledItem(REMOVE_MATRIX),
 					ConfigurationTreeView.createDisabledItem(ADD_TO_TOOLBAR),

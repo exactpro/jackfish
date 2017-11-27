@@ -49,7 +49,7 @@ public class SqlTreeNode extends TreeNode
 	public Optional<ContextMenu> contextMenu()
 	{
 		ContextMenu menu = ConfigurationTreeView.add("Add new sql",
-				e -> ConfigurationTreeView.showInputDialog("Enter new sql name", "").ifPresent(
+				e -> DialogsHelper.showInputDialog("Enter new sql name", "").ifPresent(
 						res -> Common.tryCatch(() -> this.model.addNewSqlEntry(res), "Error on add new import"))
 		);
 		menu.getItems().addAll(

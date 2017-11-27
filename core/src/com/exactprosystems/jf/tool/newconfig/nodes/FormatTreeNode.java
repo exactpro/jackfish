@@ -12,6 +12,7 @@ import com.exactprosystems.jf.api.common.SerializablePair;
 import com.exactprosystems.jf.documents.config.Configuration;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.CssVariables;
+import com.exactprosystems.jf.tool.helpers.DialogsHelper;
 import com.exactprosystems.jf.tool.newconfig.ConfigurationFx;
 import com.exactprosystems.jf.tool.newconfig.ConfigurationTreeView;
 import com.exactprosystems.jf.tool.newconfig.TablePair;
@@ -50,7 +51,7 @@ public class FormatTreeNode extends TreeNode
 	public Optional<ContextMenu> contextMenu()
 	{
 		ContextMenu contextMenu = ConfigurationTreeView.add("Add format",
-				e -> ConfigurationTreeView.showInputDialog("Enter new format", "").ifPresent(
+				e -> DialogsHelper.showInputDialog("Enter new format", "").ifPresent(
 						res -> Common.tryCatch(() -> this.model.addNewAdditionalFormat(res), "Error on add new format")
 				));
 		contextMenu.getItems().addAll(

@@ -428,9 +428,10 @@ public class MainController implements Initializable, ContainingParent
 		Common.tryCatch(this.model::openReport, "Error on open report");
 	}
 
-	public void addToToolbar(String fullPath)
+	public void addToToolbar(String fullPath, String visibleName)
 	{
 		SplitMenuButton menuButton = new SplitMenuButton();
+		menuButton.setText(visibleName);
 		menuButton.setTooltip(new Tooltip(fullPath));
 		menuButton.setId("splitMenuButtonToolbar");
 		menuButton.getStyleClass().addAll(CssVariables.TRANSPARENT_BACKGROUND);

@@ -358,7 +358,7 @@ public class ConfigurationFx extends Configuration
 
 	public void renameMatrix(File file) throws Exception
 	{
-		String newName = ConfigurationTreeView.showInputDialog("Enter new name:", file.getName()).orElse(null);
+		String newName = DialogsHelper.showInputDialog("Enter new name:", file.getName()).orElse(null);
 		if (newName != null)
 		{
 			String newFilePath = getNewFilePath(file, newName);
@@ -430,7 +430,11 @@ public class ConfigurationFx extends Configuration
 
 	public void addToToolbar(String fullPath) throws Exception
 	{
-		this.model.addToToolbar(fullPath);
+		Optional<String> visibleName = DialogsHelper.showInputDialog("Enter a visible name", new File(fullPath).getName());
+		if (visibleName.isPresent())
+		{
+			this.model.addToToolbar(fullPath, visibleName.get());
+		}
 	}
 
 	//endregion
