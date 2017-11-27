@@ -49,6 +49,7 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicLong;
+import java.util.function.IntFunction;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -151,11 +152,7 @@ public class FxOperationExecutor extends AbstractOperationExecutor<EventTarget>
 						ListView<?> listView = ((ComboBoxListViewSkin) skin).getListView();
 						if (listView != null)
 						{
-							return UtilsFx.runOnFxThreadAndWaitResult(() -> IntStream.range(0, listView.getItems().size())
-									.filter(i -> ((Node) listView.queryAccessibleAttribute(AccessibleAttribute.ITEM_AT_INDEX, i)).isVisible())
-									.mapToObj(listView.getItems()::get)
-									.map(Str::asString)
-									.collect(Collectors.toList()));
+							return this.onlyVisibleElements(listView.getItems().size(), listView, listView.getItems()::get);
 						}
 					}
 				}
@@ -181,7 +178,24 @@ public class FxOperationExecutor extends AbstractOperationExecutor<EventTarget>
 			}
 			if (component instanceof TabPane)
 			{
-				return ((TabPane) component).getTabs()
+				TabPane tabPane = (TabPane) component;
+				if (onlyVisible)
+				{
+					return this.onlyVisibleElements(tabPane.getTabs().size(), tabPane, i ->
+					{
+						Tab tab = tabPane.getTabs().get(i);
+						if (Str.IsNullOrEmpty(tab.getText()))
+						{
+							Node graphic = tab.getGraphic();
+							if (Objects.nonNull(graphic))
+							{
+								return MatcherFx.getText(graphic);
+							}
+						}
+						return tab.getText();
+					});
+				}
+				return tabPane.getTabs()
 						.stream()
 						.map(Tab::getText)
 						.collect(Collectors.toList());
@@ -191,11 +205,7 @@ public class FxOperationExecutor extends AbstractOperationExecutor<EventTarget>
 				ListView<?> listView = (ListView<?>) component;
 				if (onlyVisible)
 				{
-					return UtilsFx.runOnFxThreadAndWaitResult(() -> IntStream.range(0, listView.getItems().size())
-							.filter(i -> ((Node) listView.queryAccessibleAttribute(AccessibleAttribute.ITEM_AT_INDEX, i)).isVisible())
-							.mapToObj(listView.getItems()::get)
-							.map(Str::asString)
-							.collect(Collectors.toList()));
+					return this.onlyVisibleElements(listView.getItems().size(), listView, listView.getItems()::get);
 				}
 				return listView.getItems()
 						.stream()
@@ -1395,6 +1405,15 @@ public class FxOperationExecutor extends AbstractOperationExecutor<EventTarget>
 	}
 
 	//region private methods
+	private List<String> onlyVisibleElements(int size, Node node, IntFunction<Object> function)
+	{
+		return UtilsFx.runOnFxThreadAndWaitResult(() -> IntStream.range(0, size)
+				.filter(i -> ((Node) node.queryAccessibleAttribute(AccessibleAttribute.ITEM_AT_INDEX, i)).isVisible())
+				.mapToObj(function)
+				.map(Str::asString)
+				.collect(Collectors.toList()));
+	}
+
 	private WrongParameterException tableException(EventTarget target)
 	{
 		return new WrongParameterException(String.format("Target not instance of Table. Target : %s", target));

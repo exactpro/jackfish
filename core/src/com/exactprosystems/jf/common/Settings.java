@@ -462,7 +462,6 @@ public class Settings
 
 	public synchronized void saveIfNeeded() throws Exception
 	{
-		//TODO always values is changed, because we not use method saved();
 		if (this.values.isChanged())
 		{
 			save();

@@ -19,10 +19,7 @@ import javafx.scene.layout.Pane;
 import javafx.stage.Window;
 import org.w3c.dom.Node;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @PluginDescription(
 		pluginName = "JAVAFX",
@@ -57,7 +54,7 @@ public class FxAppFactory extends AbstractApplicationFactory
 
 	static
 	{
-		Map<LocatorFieldKind, String> fieldMap = new HashMap<>();
+		Map<LocatorFieldKind, String> fieldMap = new EnumMap<>(LocatorFieldKind.class);
 
 		fieldMap.put(LocatorFieldKind.UID, "id");
 		fieldMap.put(LocatorFieldKind.ACTION, null);
