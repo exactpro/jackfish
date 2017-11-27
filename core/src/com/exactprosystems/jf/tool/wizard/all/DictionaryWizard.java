@@ -854,6 +854,7 @@ public class DictionaryWizard extends AbstractWizard
 			return;
 		}
 		Dialog<String> dialog = new Dialog<>();
+		DialogsHelper.centreDialog(dialog);
 		Common.addIcons(((Stage) dialog.getDialogPane().getScene().getWindow()));
 		dialog.setWidth(400.0);
 

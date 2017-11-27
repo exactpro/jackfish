@@ -113,6 +113,7 @@ public class WizardConfigurationController implements Initializable, ContainingP
 	public Boolean display()
 	{
 		Dialog<Boolean> dialog = new Dialog<>();
+		DialogsHelper.centreDialog(dialog);
 		Common.addIcons(((Stage) dialog.getDialogPane().getScene().getWindow()));
 		dialog.setResizable(true);
 		dialog.getDialogPane().getStylesheets().addAll(Theme.currentThemesPaths());

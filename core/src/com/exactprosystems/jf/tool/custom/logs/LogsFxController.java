@@ -15,6 +15,7 @@ import com.exactprosystems.jf.tool.ContainingParent;
 import com.exactprosystems.jf.tool.CssVariables;
 import com.exactprosystems.jf.tool.custom.find.FindPanel;
 import com.exactprosystems.jf.tool.custom.find.IFind;
+import com.exactprosystems.jf.tool.helpers.DialogsHelper;
 import com.exactprosystems.jf.tool.settings.Theme;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -69,6 +70,7 @@ public class LogsFxController implements Initializable, ContainingParent
 	public void setParent(Parent parent)
 	{
 		this.dialog = new Alert(Alert.AlertType.INFORMATION);
+		DialogsHelper.centreDialog(this.dialog);
 		Common.addIcons(((Stage) this.dialog.getDialogPane().getScene().getWindow()));
 		this.dialog.setResizable(true);
 		this.dialog.getDialogPane().setPrefWidth(600);

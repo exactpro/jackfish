@@ -10,6 +10,7 @@ package com.exactprosystems.jf.tool.git;
 
 import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.tool.Common;
+import com.exactprosystems.jf.tool.helpers.DialogsHelper;
 import javafx.geometry.Insets;
 import javafx.scene.control.*;
 import javafx.scene.layout.ColumnConstraints;
@@ -31,6 +32,7 @@ public class CredentialDialog
 	public void display(String username, String password)
 	{
 		Dialog dialog = new Dialog();
+		DialogsHelper.centreDialog(dialog);
 		Common.addIcons(((Stage) dialog.getDialogPane().getScene().getWindow()));
 		dialog.setResizable(true);
 

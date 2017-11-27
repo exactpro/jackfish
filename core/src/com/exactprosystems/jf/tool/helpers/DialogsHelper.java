@@ -46,6 +46,7 @@ import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.geometry.Rectangle2D;
 import javafx.geometry.VPos;
 import javafx.scene.Node;
 import javafx.scene.Parent;
@@ -59,14 +60,14 @@ import javafx.scene.layout.Region;
 import javafx.scene.text.Text;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
-import javafx.stage.DirectoryChooser;
-import javafx.stage.FileChooser;
-import javafx.stage.Modality;
-import javafx.stage.Stage;
+import javafx.stage.*;
 import javafx.util.Duration;
 import org.apache.log4j.Logger;
 
 import java.awt.Desktop;
+import java.awt.GraphicsDevice;
+import java.awt.GraphicsEnvironment;
+import java.awt.Rectangle;
 import java.io.File;
 import java.io.IOException;
 import java.io.StringReader;
@@ -94,9 +95,48 @@ public abstract class DialogsHelper
 		SaveFile
 	}
 
+	public static void centreDialog(Dialog<?> dialog)
+	{
+		Rectangle currentBounds = getCurrentScreenBounds();
+		dialog.showingProperty().addListener((observable, oldValue, newValue) -> {
+			if (newValue)
+			{
+				dialog.setX(currentBounds.getCenterX() - dialog.getWidth() / 2);
+				dialog.setY(currentBounds.getCenterY() - dialog.getHeight() / 2);
+			}
+		});
+	}
+
+	public static Rectangle getCurrentScreenBounds()
+	{
+		Stage mainStage = Common.node;
+		if (mainStage != null)
+		{
+			GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
+			GraphicsDevice[] devices = ge.getScreenDevices();
+			if (devices.length < 2)
+			{
+				return devices[0].getDefaultConfiguration().getBounds();
+			}
+			Rectangle stageRect = new Rectangle((int) mainStage.getX(), (int) mainStage.getY(), ((int) mainStage.getWidth()), ((int) mainStage.getHeight()));
+			return Arrays.stream(devices)
+					.map(gd -> gd.getDefaultConfiguration().getBounds())
+					.max((g1,g2) ->
+					{
+						Rectangle r1 = g1.getBounds().intersection(stageRect);
+						Rectangle r2 = g2.getBounds().intersection(stageRect);
+						return Double.compare(r1.getHeight() * r1.getWidth(), r2.getHeight() * r2.getWidth());
+					})
+					.orElse(devices[0].getDefaultConfiguration().getBounds());
+		}
+		Rectangle2D visualBounds = Screen.getPrimary().getVisualBounds();
+		return new Rectangle((int) visualBounds.getMinX(), (int) visualBounds.getMinY(), (int) visualBounds.getWidth(), (int) visualBounds.getHeight());
+	}
+
 	public static ButtonType showParametersDialog(String title, final Map<String, String> parameters, AbstractEvaluator evaluator, Function<String, ListProvider> function)
 	{
 		Dialog<ButtonType> dialog = new Dialog<>();
+		DialogsHelper.centreDialog(dialog);
 		Common.addIcons(((Stage) dialog.getDialogPane().getScene().getWindow()));
 		dialog.getDialogPane().setPrefHeight(500);
 		dialog.getDialogPane().setPrefWidth(500);
@@ -123,6 +163,7 @@ public abstract class DialogsHelper
 	public static ButtonType showFileChangedDialog(String fileName)
 	{
 		Dialog<ButtonType> dialog = new Alert(Alert.AlertType.CONFIRMATION);
+		DialogsHelper.centreDialog(dialog);
 		Common.addIcons(((Stage) dialog.getDialogPane().getScene().getWindow()));
 		dialog.setTitle("Warning");
 		dialog.getDialogPane().setHeaderText("File " + fileName + " was changed by another process");
@@ -138,6 +179,7 @@ public abstract class DialogsHelper
 		DateTimePickerSkin skin = new DateTimePickerSkin(picker);
 		Node popupContent = skin.getPopupContent();
 		Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+		DialogsHelper.centreDialog(alert);
 		Common.addIcons(((Stage) alert.getDialogPane().getScene().getWindow()));
 		alert.getDialogPane().setContent(popupContent);
 		alert.setTitle("Select date");
@@ -152,6 +194,7 @@ public abstract class DialogsHelper
 	public static boolean showQuestionDialog(String header, String body)
 	{
 		Dialog<ButtonType> dialog = new Alert(Alert.AlertType.CONFIRMATION);
+		DialogsHelper.centreDialog(dialog);
 		Common.addIcons(((Stage) dialog.getDialogPane().getScene().getWindow()));
 		dialog.getDialogPane().setMinHeight(Region.USE_PREF_SIZE);
 		dialog.setTitle("Warning");
@@ -165,6 +208,7 @@ public abstract class DialogsHelper
 	public static ButtonType showSaveFileDialog(String fileName)
 	{
 		Dialog<ButtonType> dialog = new Dialog<>();
+		DialogsHelper.centreDialog(dialog);
 		Common.addIcons(((Stage) dialog.getDialogPane().getScene().getWindow()));
 		dialog.setTitle("Save");
 		dialog.getDialogPane().setHeaderText("File " + fileName + " was changed.");
@@ -201,6 +245,7 @@ public abstract class DialogsHelper
 		pane.setTop(tf);
 		BorderPane.setAlignment(tf, Pos.CENTER);
 		Dialog<ButtonType> dialog = new Alert(Alert.AlertType.CONFIRMATION);
+		DialogsHelper.centreDialog(dialog);
 		Common.addIcons(((Stage) dialog.getDialogPane().getScene().getWindow()));
 		dialog.setHeaderText(title);
 		dialog.getDialogPane().setContent(pane);
@@ -283,6 +328,7 @@ public abstract class DialogsHelper
 		TextField tf = new TextField();
 		pane.setTop(tf);
 		Dialog<ButtonType> dialog = new Alert(Alert.AlertType.CONFIRMATION);
+		DialogsHelper.centreDialog(dialog);
 		Common.addIcons(((Stage) dialog.getDialogPane().getScene().getWindow()));
 		dialog.getDialogPane().setPrefWidth(500);
 		dialog.setHeaderText(title);
@@ -385,6 +431,7 @@ public abstract class DialogsHelper
 		TextField tf = new TextField();
 		pane.setTop(tf);
 		Dialog<ButtonType> dialog = new Alert(Alert.AlertType.CONFIRMATION);
+		DialogsHelper.centreDialog(dialog);
 		Common.addIcons(((Stage) dialog.getDialogPane().getScene().getWindow()));
 		dialog.getDialogPane().setPrefWidth(500);
 		dialog.setHeaderText(title);
@@ -543,6 +590,7 @@ public abstract class DialogsHelper
         String str = report.getContent();
         engine.loadContent(str);
 		Dialog<ButtonType> dialog = new Dialog<>();
+		DialogsHelper.centreDialog(dialog);
 		ButtonType close = new ButtonType("Close", ButtonBar.ButtonData.CANCEL_CLOSE);
 		dialog.getDialogPane().getButtonTypes().add(close);
 		dialog.initModality(Modality.NONE);
@@ -657,6 +705,7 @@ public abstract class DialogsHelper
 	public static void showAboutProgram()
 	{
 		Dialog<ButtonType> dialog = new Alert(Alert.AlertType.INFORMATION);
+		DialogsHelper.centreDialog(dialog);
 		Common.addIcons(((Stage) dialog.getDialogPane().getScene().getWindow()));
 		dialog.setTitle("About program");
 		dialog.getDialogPane().setPrefWidth(600);
@@ -730,6 +779,7 @@ public abstract class DialogsHelper
 				boolean addButton = configuration != null;
 				ReportBrowser reportBrowser = new ReportBrowser(factory.createContext(), file);
 				Dialog<ButtonType> dialog = new Dialog<>();
+				DialogsHelper.centreDialog(dialog);
 				Common.addIcons(((Stage) dialog.getDialogPane().getScene().getWindow()));
 				if (addButton)
 				{
@@ -779,6 +829,7 @@ public abstract class DialogsHelper
 	public static Alert createGitDialog(String title, Parent parent)
 	{
 		Alert dialog = new Alert(Alert.AlertType.INFORMATION);
+		DialogsHelper.centreDialog(dialog);
 		Common.addIcons(((Stage) dialog.getDialogPane().getScene().getWindow()));
 		dialog.initModality(Modality.WINDOW_MODAL);
 		dialog.initOwner(Common.node);
@@ -810,6 +861,7 @@ public abstract class DialogsHelper
 	public static boolean showYesNoDialog(String message, String question)
 	{
 		Dialog<ButtonType> dialog = new Alert(Alert.AlertType.CONFIRMATION);
+		DialogsHelper.centreDialog(dialog);
 		Common.addIcons(((Stage) dialog.getDialogPane().getScene().getWindow()));
 		dialog.setHeaderText(question);
 		dialog.getDialogPane().setPrefWidth(1000);
@@ -838,6 +890,7 @@ public abstract class DialogsHelper
 		BorderPane borderPane = new BorderPane();
 		borderPane.setCenter(browser);
 		Dialog<ButtonType> dialog = new Alert(Alert.AlertType.INFORMATION);
+		DialogsHelper.centreDialog(dialog);
 		Common.addIcons(((Stage) dialog.getDialogPane().getScene().getWindow()));
 		dialog.getDialogPane().setHeader(new Label());
 		dialog.setHeaderText("Help");

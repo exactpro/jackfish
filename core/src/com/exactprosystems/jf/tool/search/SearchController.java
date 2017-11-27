@@ -14,6 +14,7 @@ import com.exactprosystems.jf.documents.DocumentKind;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.ContainingParent;
 import com.exactprosystems.jf.tool.custom.BorderWrapper;
+import com.exactprosystems.jf.tool.helpers.DialogsHelper;
 import com.exactprosystems.jf.tool.search.results.AbstractResult;
 import com.exactprosystems.jf.tool.search.results.AggregateResult;
 import com.exactprosystems.jf.tool.search.results.FailedResult;
@@ -144,6 +145,7 @@ public class SearchController implements Initializable, ContainingParent
 	void show()
 	{
 		this.alert = new Alert(Alert.AlertType.INFORMATION);
+		DialogsHelper.centreDialog(this.alert);
 		this.alert.getDialogPane().getScene().getStylesheets().addAll(Theme.currentThemesPaths());
 		this.alert.getDialogPane().setHeader(new Label());
 		this.alert.initModality(Modality.WINDOW_MODAL);

@@ -840,6 +840,7 @@ public class MainController implements Initializable, ContainingParent
 		ListView<String> listView = new ListView<>();
 		listView.getItems().addAll(this.customTabPane.getTabs().stream().map(tab -> ((CustomTab) tab).getTitle()).collect(Collectors.toList()));
 		Dialog<ButtonType> dialog = new Alert(Alert.AlertType.CONFIRMATION);
+		DialogsHelper.centreDialog(dialog);
 		Common.addIcons(((Stage) dialog.getDialogPane().getScene().getWindow()));
 		dialog.getDialogPane().setContent(listView);
 		dialog.getDialogPane().setPrefHeight(400);

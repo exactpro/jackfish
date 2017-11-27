@@ -16,6 +16,7 @@ import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.ContainingParent;
 import com.exactprosystems.jf.tool.custom.expfield.ExpressionField;
 import com.exactprosystems.jf.tool.custom.table.CustomTable;
+import com.exactprosystems.jf.tool.helpers.DialogsHelper;
 import com.exactprosystems.jf.tool.settings.Theme;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
@@ -36,7 +37,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
-import static com.exactprosystems.jf.tool.custom.table.CustomTable.*;
+import static com.exactprosystems.jf.tool.custom.table.CustomTable.EditState;
 
 public class WatcherFxController implements Initializable, ContainingParent
 {
@@ -85,6 +86,7 @@ public class WatcherFxController implements Initializable, ContainingParent
 	public void setParent(Parent parent)
 	{
 		dialog = new Alert(Alert.AlertType.INFORMATION);
+		DialogsHelper.centreDialog(this.dialog);
 		Common.addIcons(((Stage) this.dialog.getDialogPane().getScene().getWindow()));
 		dialog.getDialogPane().setContent(parent);
 		dialog.initModality(Modality.NONE);

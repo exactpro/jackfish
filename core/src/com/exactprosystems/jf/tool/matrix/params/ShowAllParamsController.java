@@ -14,6 +14,7 @@ import com.exactprosystems.jf.documents.matrix.parser.Parameters;
 import com.exactprosystems.jf.documents.matrix.parser.items.TypeMandatory;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.ContainingParent;
+import com.exactprosystems.jf.tool.helpers.DialogsHelper;
 import com.exactprosystems.jf.tool.settings.Theme;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -110,7 +111,8 @@ public class ShowAllParamsController implements Initializable, ContainingParent
 	public ArrayList<Pair<ReadableValue, TypeMandatory>> show()
 	{
 		this.dialog = new Alert(Alert.AlertType.CONFIRMATION);
-		Common.addIcons(((Stage) dialog.getDialogPane().getScene().getWindow()));
+		DialogsHelper.centreDialog(this.dialog);
+		Common.addIcons(((Stage) this.dialog.getDialogPane().getScene().getWindow()));
 		this.dialog.setHeaderText(title);
 		this.dialog.setResizable(true);
 		this.dialog.getDialogPane().setContent(this.parent);

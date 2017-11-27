@@ -19,6 +19,7 @@ import com.exactprosystems.jf.tool.ContainingParent;
 import com.exactprosystems.jf.tool.CssVariables;
 import com.exactprosystems.jf.tool.custom.helper.HelperFx.IToString;
 import com.exactprosystems.jf.tool.dictionary.FindListView;
+import com.exactprosystems.jf.tool.helpers.DialogsHelper;
 import com.exactprosystems.jf.tool.settings.Theme;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -103,6 +104,7 @@ public class HelperControllerFx implements Initializable, ContainingParent
 	public void setParent(Parent parent)
 	{
 		this.dialog = new Alert(Alert.AlertType.CONFIRMATION);
+		DialogsHelper.centreDialog(this.dialog);
 		Common.addIcons(((Stage) this.dialog.getDialogPane().getScene().getWindow()));
 		DialogPane dialogPane = this.dialog.getDialogPane();
 		dialogPane.setPrefHeight(800);
@@ -359,6 +361,7 @@ public class HelperControllerFx implements Initializable, ContainingParent
 		public String showAndGet()
 		{
 			Dialog<ButtonType> dialog = new Alert(Alert.AlertType.CONFIRMATION);
+			DialogsHelper.centreDialog(dialog);
 			Common.addIcons(((Stage) dialog.getDialogPane().getScene().getWindow()));
 			dialog.getDialogPane().setContent(tableView);
 			dialog.getDialogPane().setPrefWidth(500);

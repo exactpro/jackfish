@@ -14,6 +14,7 @@ import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.documents.matrix.Matrix;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.ContainingParent;
+import com.exactprosystems.jf.tool.helpers.DialogsHelper;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.event.ActionEvent;
 import javafx.fxml.Initializable;
@@ -32,7 +33,7 @@ import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.stream.Collectors;
 
-import static com.exactprosystems.jf.tool.settings.Theme.*;
+import static com.exactprosystems.jf.tool.settings.Theme.currentThemesPaths;
 
 @SuppressWarnings("deprecation")
 public class ScheduleController implements Initializable, ContainingParent
@@ -164,7 +165,8 @@ public class ScheduleController implements Initializable, ContainingParent
 	public void show(Window window)
 	{
 		this.dialog = new Alert(Alert.AlertType.INFORMATION);
-		Common.addIcons(((Stage) dialog.getDialogPane().getScene().getWindow()));
+		DialogsHelper.centreDialog(this.dialog);
+		Common.addIcons(((Stage) this.dialog.getDialogPane().getScene().getWindow()));
 		this.dialog.setResizable(true);
 		this.dialog.initModality(Modality.NONE);
 		this.dialog.initOwner(window);

@@ -13,6 +13,7 @@ import com.exactprosystems.jf.tool.ContainingParent;
 import com.exactprosystems.jf.tool.CssVariables;
 import com.exactprosystems.jf.tool.git.GitBean;
 import com.exactprosystems.jf.tool.git.GitUtil;
+import com.exactprosystems.jf.tool.helpers.DialogsHelper;
 import com.exactprosystems.jf.tool.newconfig.CompareEnum;
 import com.exactprosystems.jf.tool.newconfig.nodes.BuildTree;
 import com.exactprosystems.jf.tool.settings.Theme;
@@ -137,6 +138,7 @@ public class GitStatusController implements Initializable, ContainingParent
 	void display(List<GitBean> list, String state)
 	{
 		Dialog<ButtonType> dialog = new Alert(Alert.AlertType.INFORMATION);
+		DialogsHelper.centreDialog(dialog);
 		Common.addIcons(((Stage) dialog.getDialogPane().getScene().getWindow()));
 		dialog.setResizable(true);
 		dialog.getDialogPane().getStylesheets().addAll(Theme.currentThemesPaths());

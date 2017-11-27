@@ -1240,6 +1240,7 @@ public class ConfigurationFx extends Configuration
 		ListView<String> listView = new ListView<>();
 		possibilities.stream().forEach(possibility -> listView.getItems().add(possibility.getDescription()));
 		Dialog<ButtonType> dialog = new Alert(Alert.AlertType.INFORMATION);
+		DialogsHelper.centreDialog(dialog);
 		Common.addIcons(((Stage) dialog.getDialogPane().getScene().getWindow()));
 		dialog.setHeaderText("Possibilities for " + entryName);
 		dialog.setTitle("Possibilities");

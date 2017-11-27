@@ -14,6 +14,7 @@ import com.exactprosystems.jf.tool.ContainingParent;
 import com.exactprosystems.jf.tool.CssVariables;
 import com.exactprosystems.jf.tool.custom.date.CustomDateTimePicker;
 import com.exactprosystems.jf.tool.custom.number.NumberTextField;
+import com.exactprosystems.jf.tool.helpers.DialogsHelper;
 import com.exactprosystems.jf.tool.settings.Theme;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.fxml.FXML;
@@ -118,6 +119,7 @@ public class StoreVariableController implements Initializable, ContainingParent
 	public void show()
 	{
 		Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+		DialogsHelper.centreDialog(alert);
 		Common.addIcons(((Stage) alert.getDialogPane().getScene().getWindow()));
 		alert.setResizable(true);
 		alert.setTitle(R.STORE_CONTROLLER_STORE.get());

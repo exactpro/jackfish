@@ -12,6 +12,7 @@ import com.exactprosystems.jf.functions.Notifier;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.CssVariables;
 
+import com.exactprosystems.jf.tool.helpers.DialogsHelper;
 import javafx.animation.*;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
@@ -32,6 +33,7 @@ import javafx.stage.Screen;
 import javafx.stage.Window;
 import javafx.util.Duration;
 
+import java.awt.Rectangle;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -126,8 +128,9 @@ public class Notifications
 
 		private void show(Window owner, final Notifications notification)
 		{
-			double screenWidth = screenBounds.getWidth();
-			double screenHeight = screenBounds.getHeight();
+			Rectangle currentBounds = DialogsHelper.getCurrentScreenBounds();
+			double screenWidth = currentBounds.getWidth() + currentBounds.getX();
+			double screenHeight = currentBounds.getHeight() + currentBounds.getY();
 			final Popup popup = new Popup();
 			popup.setAutoFix(false);
 

@@ -14,6 +14,7 @@ import com.exactprosystems.jf.sql.SqlConnection;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.ContainingParent;
 import com.exactprosystems.jf.tool.CssVariables;
+import com.exactprosystems.jf.tool.helpers.DialogsHelper;
 import com.exactprosystems.jf.tool.newconfig.ConfigurationFx;
 import com.exactprosystems.jf.tool.settings.Theme;
 import javafx.event.ActionEvent;
@@ -85,6 +86,7 @@ public class TestingConnectionFxController implements Initializable, ContainingP
 	public void display()
 	{
 		Dialog dialog = new Alert(Alert.AlertType.INFORMATION);
+		DialogsHelper.centreDialog(dialog);
 		Common.addIcons(((Stage) dialog.getDialogPane().getScene().getWindow()));
 		dialog.getDialogPane().setContent(this.parent);
 		dialog.setHeaderText("Test connection for " + this.name);

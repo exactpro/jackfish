@@ -185,6 +185,7 @@ public class SettingsPanelController implements Initializable, ContainingParent
 	public void display(String title)
 	{
 		this.dialog = new Dialog<>();
+		DialogsHelper.centreDialog(dialog);
 		Common.addIcons(((Stage) dialog.getDialogPane().getScene().getWindow()));
 		ButtonType save = new ButtonType("Save", ButtonBar.ButtonData.OK_DONE);
 		this.dialog.getDialogPane().getButtonTypes().addAll(save, ButtonType.CANCEL);

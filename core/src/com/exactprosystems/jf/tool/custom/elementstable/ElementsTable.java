@@ -410,6 +410,7 @@ public class ElementsTable extends TableView<TableBean>
 	private AbstractControl editElement(AbstractControl abstractControl)
 	{
 		Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+		DialogsHelper.centreDialog(alert);
 		Common.addIcons(((Stage) alert.getDialogPane().getScene().getWindow()));
 		alert.getDialogPane().getStylesheets().addAll(Theme.currentThemesPaths());
 		alert.getDialogPane().setHeader(new Label());
