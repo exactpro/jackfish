@@ -392,16 +392,14 @@ public class NavigationController implements Initializable, ContainingParent
 			try
 			{
 				SectionKind sc = currentSection();
-				if(sc == SectionKind.Self || sc == SectionKind.Run)
+				AbstractControl element = AbstractControl.create(ControlKind.Any);
+				if(sc == SectionKind.Self)
 				{
-					AbstractControl element = AbstractControl.create(ControlKind.Any);
-					if(sc == SectionKind.Self)
-					{
-						element.set(AbstractControl.idName, "Self");
-					}
-					currentWindow().getSection(sc).addControl(element);
-					return element;
+					element.set(AbstractControl.idName, "self");
 				}
+				currentWindow().getSection(sc).addControl(element);
+				return element;
+
 			}
 			catch (Exception e)
 			{
