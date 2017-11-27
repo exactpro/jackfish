@@ -698,8 +698,13 @@ public class Main extends Application
 		if (!this.toolbarMatrices.contains(fullPath))
 		{
 			this.controller.addToToolbar(fullPath);
+			this.toolbarMatrices.add(fullPath);
 			this.settings.setValue(Settings.MAIN_NS, Settings.MATRIX_TOOLBAR, new File(fullPath).getPath(), new File(fullPath).getPath());
 			this.settings.saveIfNeeded();
+		}
+		else
+		{
+			DialogsHelper.showInfo(String.format("Matrices %s already added to toolbar", fullPath));
 		}
 	}
 

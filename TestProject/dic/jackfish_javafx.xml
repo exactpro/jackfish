@@ -2,7 +2,7 @@
 <dictionary>
     <window name="Main">
         <self>
-            <any id="self" xpath="./Stage"/>
+            <any id="Self" uid="" xpath="./Stage"/>
         </self>
         <onOpen>
             <wait owner="self" ref="btnLoadMatrix" addition="WaitToAppear" timeout="10000"/>
@@ -11,7 +11,7 @@
             <button id="btnNewMatrix" uid="btnNewMatrix" owner="self" rows="" header="" columns="">
                 <info>
                     <xpath>/GridPane/BorderPane/VBox/ToolBar/HBox/Button[2]</xpath>
-                    <rectangle x1="0.0575" y1="0.05666666666666667" x2="0.0975" y2="0.11"/>
+                    <rectangle x1="0.026106696935300794" y1="0.033106134371957155" x2="0.04426787741203178" y2="0.06426484907497566"/>
                     <node>Button</node>
                     <attr name="class">button transparentBackground</attr>
                     <attr name="id">btnNewMatrix</attr>
@@ -21,7 +21,7 @@
             <button id="btnSaveDocument" uid="btnSaveDocument" owner="self" rows="" header="" columns="">
                 <info>
                     <xpath>/GridPane/BorderPane/VBox/ToolBar/HBox/Button[3]</xpath>
-                    <rectangle x1="0.115" y1="0.05666666666666667" x2="0.155" y2="0.11"/>
+                    <rectangle x1="0.05221339387060159" y1="0.033106134371957155" x2="0.07037457434733257" y2="0.06426484907497566"/>
                     <node>Button</node>
                     <attr name="class">button transparentBackground</attr>
                     <attr name="id">btnSaveDocument</attr>
@@ -31,7 +31,7 @@
             <button id="btnSaveAsDocument" uid="btnSaveAsDocument" owner="self" rows="" header="" columns="">
                 <info>
                     <xpath>/GridPane/BorderPane/VBox/ToolBar/HBox/Button[4]</xpath>
-                    <rectangle x1="0.16" y1="0.05666666666666667" x2="0.2" y2="0.11"/>
+                    <rectangle x1="0.07264472190692395" y1="0.033106134371957155" x2="0.09080590238365494" y2="0.06426484907497566"/>
                     <node>Button</node>
                     <attr name="class">button transparentBackground</attr>
                     <attr name="id">btnSaveAsDocument</attr>
@@ -41,7 +41,7 @@
             <button id="btnOpenMainLog" uid="btnOpenMainLog" owner="self" rows="" header="" columns="">
                 <info>
                     <xpath>/GridPane/BorderPane/VBox/ToolBar/HBox/Button[5]</xpath>
-                    <rectangle x1="0.20500000000000002" y1="0.05666666666666667" x2="0.245" y2="0.11"/>
+                    <rectangle x1="0.09307604994324631" y1="0.033106134371957155" x2="0.1112372304199773" y2="0.06426484907497566"/>
                     <node>Button</node>
                     <attr name="class">button transparentBackground</attr>
                     <attr name="id">btnOpenMainLog</attr>
@@ -52,7 +52,7 @@
             <button id="btnShowCalculator" uid="btnShowCalculator" owner="self" rows="" header="" columns="">
                 <info>
                     <xpath>/GridPane/BorderPane/VBox/ToolBar/HBox/Button[6]</xpath>
-                    <rectangle x1="0.25" y1="0.05666666666666667" x2="0.29" y2="0.11"/>
+                    <rectangle x1="0.11350737797956867" y1="0.033106134371957155" x2="0.13166855845629966" y2="0.06426484907497566"/>
                     <node>Button</node>
                     <attr name="class">button transparentBackground</attr>
                     <attr name="id">btnShowCalculator</attr>
@@ -63,7 +63,7 @@
             <button id="btnUndo" uid="btnUndo" owner="self" rows="" header="" columns="">
                 <info>
                     <xpath>/GridPane/BorderPane/VBox/ToolBar/HBox/Button[7]</xpath>
-                    <rectangle x1="0.3075" y1="0.05666666666666667" x2="0.34750000000000003" y2="0.11"/>
+                    <rectangle x1="0.13961407491486946" y1="0.033106134371957155" x2="0.15777525539160045" y2="0.06426484907497566"/>
                     <node>Button</node>
                     <attr name="class">button transparentBackground</attr>
                     <attr name="id">btnUndo</attr>
@@ -74,7 +74,7 @@ Ctrl+Z</attr>
             <button id="btnRedo" uid="btnRedo" owner="self" rows="" header="" columns="">
                 <info>
                     <xpath>/GridPane/BorderPane/VBox/ToolBar/HBox/Button[8]</xpath>
-                    <rectangle x1="0.3525" y1="0.05666666666666667" x2="0.3925" y2="0.11"/>
+                    <rectangle x1="0.16004540295119182" y1="0.033106134371957155" x2="0.1782065834279228" y2="0.06426484907497566"/>
                     <node>Button</node>
                     <attr name="class">button transparentBackground</attr>
                     <attr name="id">btnRedo</attr>
@@ -85,7 +85,7 @@ Shift+Ctrl+Z</attr>
             <tabPanel id="mainTabPanel" owner="self" class="customTabPane" rows="" header="" columns="">
                 <info>
                     <xpath>/GridPane/BorderPane/SplitPane/Content[2]/CustomTabPane</xpath>
-                    <rectangle x1="0.0525" y1="0.11833333333333335" x2="0.995" y2="0.9650000000000001"/>
+                    <rectangle x1="0.20374574347332575" y1="0.0691333982473223" x2="0.9977298524404086" y2="0.9795520934761441"/>
                     <node>CustomTabPane</node>
                     <attr name="class">tab-pane customTabPane</attr>
                 </info>
@@ -93,20 +93,31 @@ Shift+Ctrl+Z</attr>
             <button id="btnLoadMatrix" uid="btnLoadMatrix" owner="self" rows="" header="" columns="">
                 <info>
                     <xpath>/GridPane/BorderPane/VBox/ToolBar/HBox/Button[1]</xpath>
-                    <rectangle x1="0.0125" y1="0.05666666666666667" x2="0.0525" y2="0.11"/>
+                    <rectangle x1="0.0056753688989784334" y1="0.033106134371957155" x2="0.02383654937570942" y2="0.06426484907497566"/>
                     <node>Button</node>
                     <attr name="class">button transparentBackground</attr>
                     <attr name="id">btnLoadMatrix</attr>
                     <attr name="tooltip">Open matrix</attr>
                 </info>
             </button>
+            <button id="splitMenuButtonToolbar" uid="splitMenuButtonToolbar" owner="mainToolBar" addition="Many" rows="" header="" columns="">
+                <info>
+                    <xpath>/GridPane/BorderPane/VBox/ToolBar/HBox/SplitMenuButton</xpath>
+                    <rectangle x1="0.18047673098751418" y1="0.028237585199610518" x2="0.2241770715096481" y2="0.07010710808179163"/>
+                    <node>SplitMenuButton</node>
+                    <attr name="class">split-menu-button transparentBackground</attr>
+                    <attr name="id">splitMenuButtonToolbar</attr>
+                    <attr name="tooltip">matrices/ZipExample.jf</attr>
+                </info>
+            </button>
+            <any id="mainToolBar" uid="mainToolbar" owner="Self"/>
         </run>
         <onClose/>
         <close/>
     </window>
     <window name="MainMenu">
         <self>
-            <any id="self" xpath=".//MenuBar[contains(@class,&amp;quot;menu-bar&amp;quot;)]"/>
+            <any id="Self" xpath=".//MenuBar"/>
         </self>
         <onOpen/>
         <run>
@@ -759,13 +770,6 @@ Shift+Ctrl+Z</attr>
         <onClose/>
         <close/>
     </window>
-    <window name="MatrixTab">
-        <self/>
-        <onOpen/>
-        <run/>
-        <onClose/>
-        <close/>
-    </window>
     <window name="DictionaryNavigate">
         <self>
             <panel id="Self" uid="" xpath=".//GridPane[@id=&amp;quot;mainGridPane&amp;quot;]/HBox"/>
@@ -962,27 +966,6 @@ Shift+Ctrl+Z</attr>
                 </info>
             </button>
         </run>
-        <onClose/>
-        <close/>
-    </window>
-    <window name="VariablesTab">
-        <self/>
-        <onOpen/>
-        <run/>
-        <onClose/>
-        <close/>
-    </window>
-    <window name="PlainTextTab">
-        <self/>
-        <onOpen/>
-        <run/>
-        <onClose/>
-        <close/>
-    </window>
-    <window name="CsvTab">
-        <self/>
-        <onOpen/>
-        <run/>
         <onClose/>
         <close/>
     </window>
@@ -1332,7 +1315,7 @@ Shift+Ctrl+Z</attr>
         <onClose/>
         <close/>
     </window>
-    <window name="DictionarActionsSwitchTab">
+    <window name="DictionaryActionsSwitchTab">
         <self>
             <any id="Self" xpath=".//TabPane/TabContentRegion[6]"/>
         </self>
@@ -1378,7 +1361,7 @@ Shift+Ctrl+Z</attr>
         <onClose/>
         <close/>
     </window>
-    <window name="DictionarActionsNavigateTab">
+    <window name="DictionaryActionsNavigateTab">
         <self>
             <any id="Self" xpath=".//TabPane/TabContentRegion[5]"/>
         </self>
@@ -1422,7 +1405,7 @@ Shift+Ctrl+Z</attr>
         <onClose/>
         <close/>
     </window>
-    <window name="DictionarActionsNewTab">
+    <window name="DictionaryActionsNewTab">
         <self>
             <any id="Self" xpath=".//TabPane/TabContentRegion[4]"/>
         </self>
@@ -1452,7 +1435,7 @@ Shift+Ctrl+Z</attr>
         <onClose/>
         <close/>
     </window>
-    <window name="DictionarActionsPosSizeTab">
+    <window name="DictionaryActionsPosSizeTab">
         <self>
             <any id="Self" xpath=".//TabPane/TabContentRegion[3]"/>
         </self>
@@ -1552,7 +1535,7 @@ Shift+Ctrl+Z</attr>
         <onClose/>
         <close/>
     </window>
-    <window name="DictionarActionsPropsTab">
+    <window name="DictionaryActionsPropsTab">
         <self>
             <any id="Self" xpath=".//TabPane/TabContentRegion[2]"/>
         </self>
@@ -1614,7 +1597,7 @@ Shift+Ctrl+Z</attr>
         <onClose/>
         <close/>
     </window>
-    <window name="DictionarActionsDialogTab">
+    <window name="DictionaryActionsDialogTab">
         <self>
             <any id="Self" xpath=".//TabPane/TabContentRegion[1]"/>
         </self>
@@ -1736,6 +1719,34 @@ Shift+Ctrl+Z</attr>
                 </info>
             </textBox>
         </run>
+        <onClose/>
+        <close/>
+    </window>
+    <window name="MatrixTab">
+        <self/>
+        <onOpen/>
+        <run/>
+        <onClose/>
+        <close/>
+    </window>
+    <window name="VariablesTab">
+        <self/>
+        <onOpen/>
+        <run/>
+        <onClose/>
+        <close/>
+    </window>
+    <window name="PlainTextTab">
+        <self/>
+        <onOpen/>
+        <run/>
+        <onClose/>
+        <close/>
+    </window>
+    <window name="CsvTab">
+        <self/>
+        <onOpen/>
+        <run/>
         <onClose/>
         <close/>
     </window>

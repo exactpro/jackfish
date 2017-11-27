@@ -89,7 +89,8 @@ public class DictionaryFx extends GuiDictionary
 			IControl control = window.getFirstControl(SectionKind.Run);
 			displayElement(window, SectionKind.Run, control);
 		}
-		displayApplicationStatus(this.applicationConnector != null && this.applicationConnector.getAppConnection() != null ? ApplicationStatus.Connected : ApplicationStatus.Disconnected, null, null);
+		boolean isConnected = this.applicationConnector != null && this.applicationConnector.getAppConnection() != null;
+		displayApplicationStatus(isConnected ? ApplicationStatus.Connected : ApplicationStatus.Disconnected, isConnected ? this.applicationConnector.getAppConnection() : null, null);
 		displayApplicationControl(null);
 		restoreSettings(getFactory().getSettings());
 	}

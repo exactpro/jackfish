@@ -12,7 +12,10 @@ package com.exactprosystems.jf.common.utils;
 import com.exactprosystems.jf.api.app.*;
 import com.exactprosystems.jf.api.common.Str;
 import com.exactprosystems.jf.documents.guidic.Attr;
-import org.w3c.dom.*;
+import org.w3c.dom.Document;
+import org.w3c.dom.NamedNodeMap;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 import javax.xml.xpath.*;
 import java.awt.Rectangle;
@@ -179,6 +182,22 @@ public class XpathUtils
     	}
     	return res;
     }
+
+	public static List<Node> descedants(Node node)
+	{
+		List<Node> list = new ArrayList<>();
+		collectDescendants(node, list);
+		return list;
+	}
+
+	private static void collectDescendants(Node node, List<Node> nodes)
+	{
+		nodes.add(node);
+		NodeList childNodes = node.getChildNodes();
+		IntStream.range(0, childNodes.getLength())
+				.mapToObj(childNodes::item)
+				.forEach(child -> collectDescendants(child, nodes));
+	}
 
     public static String getParameters(Node node, boolean useText, List<String> parameters, Predicate<String> predicate)
     {
@@ -635,15 +654,22 @@ public class XpathUtils
 					.map(attr -> new StringPair("@" + attr.getNodeName(), attr.getNodeValue()))
 					.collect(Collectors.toList());
 
-			String textContent = text(node);//.getTextContent();
-
+			//add text only from node
+			String textContent = text(node);
 			if (isStable(textContent, this.pluginInfo::isStable))
 			{
-				//collect all text from node
-				list.add(new StringPair(".", textContent));
-				//collect text only from node
-				list.add(new StringPair("text()", textContent));
+				list.addAll(StringPair.textPairs(textContent));
 			}
+
+			//add text for all descedants
+			descedants(node)
+					.stream()
+					.filter(item -> item.getNodeType() == Node.TEXT_NODE)
+					.map(Node::getNodeValue)
+					.filter(text -> isStable(text, this.pluginInfo::isStable))
+					.distinct()
+					.map(StringPair::textPairs)
+					.forEach(list::addAll);
 
 			//shuffle all pair
 			List<List<StringPair>> pairList = IntStream.range(1, 1 << list.size())
@@ -704,6 +730,16 @@ public class XpathUtils
 			{
 				this.value = value;
 				this.key = key;
+			}
+
+			public static List<StringPair> textPairs(String value)
+			{
+				return Arrays.asList(
+						//collect all text from node
+						new StringPair(".", value),
+						//collect text only from node
+						new StringPair("text()", value)
+				);
 			}
 
 			public String[] list()
@@ -783,12 +819,13 @@ public class XpathUtils
 			List<Locator> locators = new ArrayList<>();
 
 			checkLocatorWithRelation(siblings, node, locators);
-			Optional<Locator> max = locators.stream().max(Comparator.comparingLong(l -> xpathWeight(l.getXpath())));
-			if (max.isPresent())
-			{
-				locators.clear();
-				return max.get();
-			}
+			//TODO think why we use it
+//			Optional<Locator> max = locators.stream().max(Comparator.comparingLong(l -> xpathWeight(l.getXpath())));
+//			if (max.isPresent())
+//			{
+//				locators.clear();
+//				return max.get();
+//			}
 
 			List<Node> list = new ArrayList<>();
 
@@ -806,7 +843,7 @@ public class XpathUtils
 
 			collectChild(parent, list, MAX_CHILD_DEEP - deep);
 			checkLocatorWithRelation(list, node, locators);
-			return locators.stream().max(Comparator.comparingLong(l -> xpathWeight(l.getXpath()))).orElse(null);
+			return locators.stream().min(Comparator.comparingLong(l -> xpathWeight(l.getXpath()))).orElse(null);
 		}
 
 		private void checkLocatorWithRelation(List<Node> nodes, Node node, List<Locator> locators)

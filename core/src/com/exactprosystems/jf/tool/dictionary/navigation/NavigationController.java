@@ -139,32 +139,41 @@ public class NavigationController implements Initializable, ContainingParent
 				e -> e.control.toString(),
 				(w, i) -> Common.tryCatch(() -> this.model.elementMove(currentWindow(), currentSection(), w.control,i), "Error on move element")
 		));
+
+		this.groupSection.selectedToggleProperty().addListener((observable, oldValue, newValue) ->
+		{
+			if (newValue != null)
+			{
+				this.changeSection(null);
+			}
+		});
+
 		this.vBoxElement.getChildren().add(0, this.listViewElement);
 		
-			ScrollPane scrollPaneWindow = new ScrollPane(this.vBoxWindow);
-			scrollPaneWindow.setFitToWidth(true);
-			scrollPaneWindow.setFitToHeight(true);
-			scrollPaneWindow.setHbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
-			scrollPaneWindow.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
-			this.dialog = BorderWrapper.wrap(this.vBoxWindow).title("Dialog").color(Theme.currentTheme().getReverseColor()).build();
-			double width = 350.0;
-			((Region) this.dialog).setMinWidth(width);
-			((Region) this.dialog).setMaxWidth(width);
-			((Region) this.dialog).setPrefWidth(width);
+		ScrollPane scrollPaneWindow = new ScrollPane(this.vBoxWindow);
+		scrollPaneWindow.setFitToWidth(true);
+		scrollPaneWindow.setFitToHeight(true);
+		scrollPaneWindow.setHbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
+		scrollPaneWindow.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
+		this.dialog = BorderWrapper.wrap(this.vBoxWindow).title("Dialog").color(Theme.currentTheme().getReverseColor()).build();
+		double width = 350.0;
+		((Region) this.dialog).setMinWidth(width);
+		((Region) this.dialog).setMaxWidth(width);
+		((Region) this.dialog).setPrefWidth(width);
 
-			HBox.setHgrow(this.dialog, Priority.ALWAYS);
+		HBox.setHgrow(this.dialog, Priority.ALWAYS);
 
-			ScrollPane scrollPaneElement = new ScrollPane(this.vBoxElement);
-			scrollPaneElement.setFitToWidth(true);
-			scrollPaneElement.setFitToHeight(true);
-			scrollPaneElement.setHbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
-			scrollPaneElement.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
-			this.element = BorderWrapper.wrap(this.vBoxElement).title("Element").color(Theme.currentTheme().getReverseColor()).build();
-			double widthForElement = 316;
-			((Region) this.element).setMinWidth(widthForElement);
-			((Region) this.element).setMaxWidth(widthForElement);
-			((Region) this.element).setPrefWidth(widthForElement);
-			HBox.setHgrow(this.element, Priority.ALWAYS);
+		ScrollPane scrollPaneElement = new ScrollPane(this.vBoxElement);
+		scrollPaneElement.setFitToWidth(true);
+		scrollPaneElement.setFitToHeight(true);
+		scrollPaneElement.setHbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
+		scrollPaneElement.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
+		this.element = BorderWrapper.wrap(this.vBoxElement).title("Element").color(Theme.currentTheme().getReverseColor()).build();
+		double widthForElement = 316;
+		((Region) this.element).setMinWidth(widthForElement);
+		((Region) this.element).setMaxWidth(widthForElement);
+		((Region) this.element).setPrefWidth(widthForElement);
+		HBox.setHgrow(this.element, Priority.ALWAYS);
 	}
 
 	public void init(DictionaryFx model, GridPane gridPane, Settings settings, CustomTab owner)
