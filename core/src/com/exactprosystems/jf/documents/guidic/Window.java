@@ -70,7 +70,7 @@ public class Window implements IWindow, Mutable
 		}
 		
 		Window newWindow = new Window();
-		newWindow.name = window.getName() + "_copy";
+		newWindow.name = window.getName();
 		newWindow.self = Section.createCopy(window.self);
 		newWindow.onOpen = Section.createCopy(window.onOpen);
 		newWindow.run = Section.createCopy(window.run);
@@ -395,5 +395,10 @@ public class Window implements IWindow, Mutable
 	
 	protected static final Logger logger = Logger.getLogger(Window.class);
 	private boolean changed = false;
+
+	private boolean compareSections(Section s1, Section s2)
+	{
+		return s1.getControls().removeAll(s2.getControls());
+	}
 
 }

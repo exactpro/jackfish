@@ -284,29 +284,38 @@ public class DictionaryFx extends GuiDictionary
 
 	public void dialogCopy(IWindow window) throws Exception
 	{
-		copyWindow = Window.createCopy((Window) window);
+		copyWindow = (Window)window;
 	}
 
 	public void dialogPaste(IWindow.SectionKind sectionKind) throws Exception
 	{
-		Window clone = Window.createCopy(copyWindow);
-		int indexOf = indexOf(clone);
-		Command undo = () -> Common.tryCatch(() ->
+		if(copyWindow != null)
 		{
-			removeWindow(clone);
-			Collection<IWindow> windows = getWindows();
-			IWindow oldWindow = (IWindow) windows.toArray()[Math.min(indexOf, windows.size() - 1)];
-			displayDialog(oldWindow, windows);
-			displayElement(oldWindow, sectionKind, oldWindow.getFirstControl(sectionKind));
-		}, "");
+			int indexOf = indexOf(copyWindow);
+			Window clone = Window.createCopy(copyWindow);
+			clone.setName(copyWindow.getName() + "_copy");
+			Command undo = () -> Common.tryCatch(() ->
+			{
+				removeWindow(clone);
+				Collection<IWindow> windows = getWindows();
+				IWindow oldWindow = (IWindow) windows.toArray()[Math.min(indexOf, windows.size() - 1)];
+				displayDialog(oldWindow, windows);
+				displayElement(oldWindow, sectionKind, oldWindow.getFirstControl(sectionKind));
+			}, "");
 
-		Command redo = () -> Common.tryCatch(() ->
+			Command redo = () -> Common.tryCatch(() ->
+			{
+				addWindow(clone);
+				displayDialog(clone, getWindows());
+				displayElement(clone, sectionKind, clone.getFirstControl(sectionKind));
+			}, "");
+			addCommand(undo, redo);
+		}
+		else
 		{
-			addWindow(clone);
-			displayDialog(clone, getWindows());
-			displayElement(clone, sectionKind, clone.getFirstControl(sectionKind));
-		}, "");
-		addCommand(undo, redo);
+			DialogsHelper.showError("No available dialogs for paste. Firstly copy some dialog before paste.");
+		}
+
 	}
 
 	public void dialogRename(IWindow window, String name) throws Exception

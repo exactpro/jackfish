@@ -181,7 +181,6 @@ public class DictionaryWizard extends AbstractWizard
 		try
 		{
 			this.copyWindow = Window.createCopy(this.currentWindow);
-			this.copyWindow.setName(this.currentWindow.getName());
 		}
 		catch (Exception e)
 		{
