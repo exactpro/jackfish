@@ -11,7 +11,6 @@ package com.exactprosystems.jf.app;
 
 import com.exactprosystems.jf.api.app.*;
 import com.exactprosystems.jf.api.client.ICondition;
-import com.exactprosystems.jf.api.common.Converter;
 import com.exactprosystems.jf.api.common.Str;
 import com.exactprosystems.jf.api.error.app.ElementNotFoundException;
 import com.exactprosystems.jf.api.error.app.FeatureNotSupportedException;
@@ -19,7 +18,6 @@ import com.exactprosystems.jf.api.error.app.TooManyElementsException;
 import com.exactprosystems.jf.api.error.app.WrongParameterException;
 import com.sun.javafx.scene.control.skin.ComboBoxListViewSkin;
 import javafx.application.Platform;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
 import javafx.event.Event;
 import javafx.event.EventTarget;
@@ -29,9 +27,6 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.control.*;
 import javafx.scene.input.*;
-import javafx.scene.layout.BackgroundFill;
-import javafx.scene.paint.Paint;
-import javafx.scene.text.Text;
 import javafx.util.StringConverter;
 import org.apache.log4j.Logger;
 import org.w3c.dom.Document;
@@ -69,7 +64,8 @@ public class FxOperationExecutor extends AbstractOperationExecutor<EventTarget>
     {
         super(useTrimText);
         this.logger = logger;
-    }
+		FxTableView.logger = UtilsFx.createLogger(FxTableView.class, logger);
+	}
 
 	@Override
 	protected String getValueDerived(EventTarget component) throws Exception
@@ -258,209 +254,6 @@ public class FxOperationExecutor extends AbstractOperationExecutor<EventTarget>
 	protected String scriptDerived(EventTarget component, String script) throws Exception
 	{
 		throw new FeatureNotSupportedException("script");
-	}
-
-	@Override
-	protected String getValueTableCellDerived(EventTarget target, int column, int row) throws Exception
-	{
-		return tryExecute(EMPTY_CHECK, ()->
-		{
-			if (target instanceof TableView)
-			{
-				TableView<?> tableView = (TableView) target;
-				this.checkTable(tableView, column, row);
-
-				Node cell = this.findCell(tableView, column, row);
-				return this.getCellValue(cell,tableView, column, row);
-			}
-			throw tableException(target);
-		}, e->
-		{
-			logger.error(String.format("getValueTableCellDerived(%s,%s,%s)", target, column, row));
-			logger.error(e.getMessage(), e);
-		});
-	}
-
-	@Override
-	protected Map<String, String> getRowDerived(EventTarget target, Locator additional, Locator header, boolean useNumericHeader, String[] columns, ICondition valueCondition, ICondition colorCondition) throws Exception
-	{
-		return tryExecute(EMPTY_CHECK, () ->
-		{
-			List<Map<String, Object>> listOfRows = new ArrayList<>();
-			if (target instanceof TableView)
-			{
-				TableView<?> tableView = (TableView<?>) target;
-				List<String> tableHeaders = getTableHeaders(tableView, columns);
-				for (int i = 0; i < tableView.getItems().size(); i++)
-				{
-					Map<String, Object> row = new LinkedHashMap<>();
-					for (int j = 0; j < tableHeaders.size(); j++)
-					{
-						row.put(tableHeaders.get(j), this.getCellValue(this.findCell(tableView, j, i), tableView, j, i));
-					}
-
-					if (Objects.nonNull(valueCondition) && valueCondition.isMatched(row))
-					{
-						listOfRows.add(row);
-					}
-				}
-				if (listOfRows.size() > 1)
-				{
-					throw new Exception("Too many rows");
-				}
-				if (listOfRows.isEmpty())
-				{
-					throw new Exception("No one row was found");
-				}
-				Map<String, String> map = new LinkedHashMap<>();
-				listOfRows.get(0).forEach((s, o) -> map.put(s, String.valueOf(o)));
-				return map;
-			}
-			throw tableException(target);
-		}, e->
-		{
-			logger.error(String.format("getRowDerived(%s,%s,%s,%s,%s,%s,%s)", target, additional, header, useNumericHeader, Arrays.toString(columns), valueCondition, colorCondition));
-			logger.error(e.getMessage(), e);
-		});
-	}
-
-	@Override
-	protected Map<String, String> getRowByIndexDerived(EventTarget target, Locator additional, Locator header, boolean useNumericHeader, String[] columns, int i) throws Exception
-	{
-		return tryExecute(EMPTY_CHECK, () ->
-		{
-			if (target instanceof TableView)
-			{
-				Map<String, String> result = new LinkedHashMap<>();
-				TableView<?> tableView = (TableView<?>) target;
-				List<String> tableHeaders = this.getTableHeaders(tableView, columns);
-				for (int j = 0; j < tableHeaders.size(); j++)
-				{
-					String cellValue = this.getCellValue(this.findCell(tableView, j, i), tableView, j, i);
-					result.put(tableHeaders.get(j), cellValue);
-				}
-				return result;
-			}
-			throw tableException(target);
-		}, e->
-		{
-			logger.error(String.format("getRowByIndex(%s,%s,%s,%s,%s,%s)", target, additional, header, useNumericHeader, Arrays.toString(columns), i));
-			logger.error(e.getMessage(), e);
-		});
-	}
-
-	@Override
-	protected Map<String, ValueAndColor> getRowWithColorDerived(EventTarget target, Locator additional, Locator header, boolean useNumericHeader, String[] columns, int i) throws Exception
-	{
-		return tryExecute(EMPTY_CHECK, () ->
-		{
-			Map<String, ValueAndColor> result = new LinkedHashMap<>();
-			if (target instanceof TableView)
-			{
-				TableView tableView = (TableView<?>) target;
-				List<String> tableHeaders = getTableHeaders(tableView, columns);
-				for (int j = 0; j < tableHeaders.size(); j++)
-				{
-					String headerName = tableHeaders.get(j);
-					String cellValue = this.getCellValue(this.findCell(tableView, j, i), tableView, j, i);
-
-					Color backgroundColor = Color.WHITE;
-					Color foregroundColor = Color.BLACK;
-					Paint fgPaint = null;
-
-					Node nodeTableCell = (Node) tableView.queryAccessibleAttribute(AccessibleAttribute.CELL_AT_ROW_COLUMN, i, j);
-					if (nodeTableCell instanceof TableCell<?, ?>)
-					{
-						TableCell tableCell = (TableCell) nodeTableCell;
-						backgroundColor = ((TableRow<?>) tableCell.getTableRow()).getBackground().getFills()
-								.stream()
-								.map(BackgroundFill::getFill)
-								.filter(paint -> paint instanceof javafx.scene.paint.Color)
-								.map(paint -> (javafx.scene.paint.Color)paint)
-								.filter(Objects::nonNull)
-								.findFirst()
-								.map(UtilsFx::convert)
-								.orElse(Color.WHITE);
-
-						if (tableCell.getGraphic() != null)
-						{
-							//use graphic
-							Node tableCellGraphic = tableCell.getGraphic();
-							if (tableCellGraphic instanceof Text)
-							{
-								fgPaint = ((Text) tableCellGraphic).getFill();
-							}
-							else if (tableCellGraphic instanceof Labeled)
-							{
-								fgPaint = ((Labeled) tableCellGraphic).getTextFill();
-							}
-							else
-							{
-								Locator emptyLocator = new Locator();
-								List<EventTarget> allDescendants = new MatcherFx(this.info, emptyLocator, tableCellGraphic).findAllDescedants();
-								for (EventTarget descendant : allDescendants)
-								{
-									if (descendant instanceof Labeled)
-									{
-										fgPaint = ((Labeled) descendant).getTextFill();
-										break;
-									}
-									if (descendant instanceof Text)
-									{
-										fgPaint = ((Text) descendant).getFill();
-										break;
-									}
-								}
-							}
-						}
-						else
-						{
-							fgPaint = tableCell.getTextFill();
-						}
-					}
-
-					if (fgPaint instanceof javafx.scene.paint.Color)
-					{
-						foregroundColor = UtilsFx.convert((javafx.scene.paint.Color) fgPaint);
-					}
-					result.put(headerName, new ValueAndColor(cellValue, foregroundColor, backgroundColor));
-				}
-				return result;
-			}
-			throw tableException(target);
-		}, e->
-		{
-			logger.error(String.format("getRowWithColorDerived(%s,%s,%s,%s,%s,%s)", target, additional, header, useNumericHeader, Arrays.toString(columns), i));
-			logger.error(e.getMessage(), e);
-		});
-	}
-
-	@Override
-	protected String[][] getTableDerived(EventTarget target, Locator additional, Locator header, boolean useNumericHeader, String[] columns) throws Exception
-	{
-		return tryExecute(EMPTY_CHECK, () ->
-		{
-			if (target instanceof TableView)
-			{
-				TableView<?> tableView = (TableView<?>) target;
-				int rowsCount = tableView.getItems().size();
-				int columnsCount = tableView.getColumns().size();
-
-				String[][] res = new String[rowsCount + 1][columnsCount];
-				ObservableList<? extends TableColumn<?, ?>> tableColumns = tableView.getColumns();
-
-				this.fillHeaders(res, tableView, columns);
-				IntStream.range(0, rowsCount).forEach(i ->
-						IntStream.range(0, tableColumns.size())
-								.forEach(j -> res[i + 1][j] = this.getCellValue(this.findCell(tableView, j, i), tableView, j, i)));
-				return res;
-			}
-			throw tableException(target);
-		}, e ->
-		{
-			this.logger.error(String.format("getTable(%s,%s,%s,%s,%s)", target, additional, header, useNumericHeader, Arrays.toString(columns)));
-			this.logger.error(e.getMessage(), e);
-		});
 	}
 
 	@Override
@@ -1186,6 +979,7 @@ public class FxOperationExecutor extends AbstractOperationExecutor<EventTarget>
 			}
 			else
 			{
+				//TODO think about it
 				executeEventList(drag, createMouseEventsList(MouseAction.Press, drag, startX, startY));
 				executeEventList(drop, createMouseEventsList(MouseAction.Drop, drop, endX, endY));
 				return true;
@@ -1235,36 +1029,105 @@ public class FxOperationExecutor extends AbstractOperationExecutor<EventTarget>
 
 	}
 
+	//region table methods
 	@Override
-	public boolean mouseTable(EventTarget component, int column, int row, MouseAction action) throws Exception
+	protected String getValueTableCellDerived(EventTarget target, int column, int row) throws Exception
 	{
 		return tryExecute(EMPTY_CHECK, ()->
 		{
-			if (component instanceof TableView)
+			if (target instanceof TableView)
 			{
-				TableView<?> tableView = (TableView) component;
-				this.checkTable(tableView, column, row);
-
-				Node cell = this.findCell(tableView, column, row);
-				if (cell != null)
-				{
-					if (cell instanceof TableCell<?, ?> && ((TableCell) cell).getGraphic() != null)
-					{
-						cell = ((TableCell) cell).getGraphic();
-					}
-					Point point = this.checkCoords(cell, Integer.MIN_VALUE, Integer.MIN_VALUE);
-
-					List<Event> eventList = createMouseEventsList(action, cell, point.x, point.y);
-					executeEventList(cell, eventList);
-
-					return true;
-				}
-				return false;
+				return new FxTableView((TableView<?>) target).getCellValue(column, row);
 			}
-			throw tableException(component);
+			throw tableException(target);
 		}, e->
 		{
-			logger.error(String.format("mouseTable(%s,%s,%s,%s)", component, column, row, action));
+			logger.error(String.format("getValueTableCellDerived(%s,%s,%s)", target, column, row));
+			logger.error(e.getMessage(), e);
+		});
+	}
+
+	@Override
+	protected Map<String, String> getRowDerived(EventTarget target, Locator additional, Locator header, boolean useNumericHeader, String[] columns, ICondition valueCondition, ICondition colorCondition) throws Exception
+	{
+		return tryExecute(EMPTY_CHECK, () ->
+		{
+			if (target instanceof TableView)
+			{
+				return new FxTableView((TableView<?>) target).getRow(columns, valueCondition, colorCondition);
+			}
+			throw tableException(target);
+		}, e->
+		{
+			logger.error(String.format("getRowDerived(%s,%s,%s,%s,%s,%s,%s)", target, additional, header, useNumericHeader, Arrays.toString(columns), valueCondition, colorCondition));
+			logger.error(e.getMessage(), e);
+		});
+	}
+
+	@Override
+	protected Map<String, String> getRowByIndexDerived(EventTarget target, Locator additional, Locator header, boolean useNumericHeader, String[] columns, int i) throws Exception
+	{
+		return tryExecute(EMPTY_CHECK, () ->
+		{
+			if (target instanceof TableView)
+			{
+				return new FxTableView((TableView<?>) target).getRowByIndex(columns, i);
+			}
+			throw tableException(target);
+		}, e->
+		{
+			logger.error(String.format("getRowByIndex(%s,%s,%s,%s,%s,%s)", target, additional, header, useNumericHeader, Arrays.toString(columns), i));
+			logger.error(e.getMessage(), e);
+		});
+	}
+
+	@Override
+	protected Map<String, ValueAndColor> getRowWithColorDerived(EventTarget target, Locator additional, Locator header, boolean useNumericHeader, String[] columns, int i) throws Exception
+	{
+		return tryExecute(EMPTY_CHECK, () ->
+		{
+			if (target instanceof TableView)
+			{
+				return new FxTableView((TableView<?>) target).getRowWithColor(columns, i, this.info);
+			}
+			throw tableException(target);
+		}, e->
+		{
+			logger.error(String.format("getRowWithColorDerived(%s,%s,%s,%s,%s,%s)", target, additional, header, useNumericHeader, Arrays.toString(columns), i));
+			logger.error(e.getMessage(), e);
+		});
+	}
+
+	@Override
+	protected String[][] getTableDerived(EventTarget target, Locator additional, Locator header, boolean useNumericHeader, String[] columns) throws Exception
+	{
+		return tryExecute(EMPTY_CHECK, () ->
+		{
+			if (target instanceof TableView)
+			{
+				return new FxTableView((TableView<?>) target).getTable(columns);
+			}
+			throw tableException(target);
+		}, e ->
+		{
+			this.logger.error(String.format("getTable(%s,%s,%s,%s,%s)", target, additional, header, useNumericHeader, Arrays.toString(columns)));
+			this.logger.error(e.getMessage(), e);
+		});
+	}
+
+	@Override
+	public List<String> getRowIndexes(EventTarget target, Locator additional, Locator header, boolean useNumericHeader, String[] columns, ICondition valueCondition, ICondition colorCondition) throws Exception
+	{
+		return tryExecute(EMPTY_CHECK, () ->
+		{
+			if (target instanceof TableView)
+			{
+				return new FxTableView((TableView<?>) target).getRowIndexes(columns, valueCondition, colorCondition);
+			}
+			throw tableException(target);
+		}, e->
+		{
+			logger.error(String.format("getRowDerived(%s,%s,%s,%s,%s,%s,%s)", target, additional, header, useNumericHeader, Arrays.toString(columns), valueCondition, colorCondition));
 			logger.error(e.getMessage(), e);
 		});
 	}
@@ -1276,10 +1139,7 @@ public class FxOperationExecutor extends AbstractOperationExecutor<EventTarget>
 		{
 			if (component instanceof TableView)
 			{
-				TableView<?> tableView = (TableView) component;
-				this.checkTable(tableView, column, row);
-
-				Node cell = this.findCell(tableView, column, row);
+				Node cell = new FxTableView((TableView<?>) component).findCell(column, row);
 				if (cell != null)
 				{
 					if (cell instanceof TableCell<?, ?> && ((TableCell) cell).getGraphic() != null)
@@ -1315,35 +1175,32 @@ public class FxOperationExecutor extends AbstractOperationExecutor<EventTarget>
 	}
 
 	@Override
-	public List<String> getRowIndexes(EventTarget target, Locator additional, Locator header, boolean useNumericHeader, String[] columns, ICondition valueCondition, ICondition colorCondition) throws Exception
+	public boolean mouseTable(EventTarget component, int column, int row, MouseAction action) throws Exception
 	{
-		return tryExecute(EMPTY_CHECK, () ->
+		return tryExecute(EMPTY_CHECK, ()->
 		{
-			if (target instanceof TableView)
+			if (component instanceof TableView)
 			{
-				List<String> rowNumbers = new ArrayList<>();
-				TableView<?> tableView = (TableView<?>) target;
-				List<String> tableHeaders = getTableHeaders(tableView, columns);
-				for (int i = 0; i < tableView.getItems().size(); i++)
+				Node cell = new FxTableView((TableView<?>) component).findCell(column, row);
+				if (cell != null)
 				{
-					Map<String, Object> row = new LinkedHashMap<>();
-					for (int j = 0; j < tableHeaders.size(); j++)
+					if (cell instanceof TableCell<?, ?> && ((TableCell) cell).getGraphic() != null)
 					{
-						String cellValue = this.getCellValue(this.findCell(tableView, j, i), tableView, j, i);
-						row.put(tableHeaders.get(j), cellValue);
+						cell = ((TableCell) cell).getGraphic();
 					}
+					Point point = this.checkCoords(cell, Integer.MIN_VALUE, Integer.MIN_VALUE);
 
-					if (Objects.nonNull(valueCondition) && valueCondition.isMatched(row))
-					{
-						rowNumbers.add(String.valueOf(i));
-					}
+					List<Event> eventList = createMouseEventsList(action, cell, point.x, point.y);
+					executeEventList(cell, eventList);
+
+					return true;
 				}
-				return rowNumbers;
+				return false;
 			}
-			throw tableException(target);
+			throw tableException(component);
 		}, e->
 		{
-			logger.error(String.format("getRowDerived(%s,%s,%s,%s,%s,%s,%s)", target, additional, header, useNumericHeader, Arrays.toString(columns), valueCondition, colorCondition));
+			logger.error(String.format("mouseTable(%s,%s,%s,%s)", component, column, row, action));
 			logger.error(e.getMessage(), e);
 		});
 	}
@@ -1355,7 +1212,7 @@ public class FxOperationExecutor extends AbstractOperationExecutor<EventTarget>
 		{
 			if (component instanceof TableView)
 			{
-				return ((TableView) component).getItems().size();
+				return new FxTableView((TableView<?>) component).size();
 			}
 			throw tableException(component);
 		}, e ->
@@ -1364,6 +1221,7 @@ public class FxOperationExecutor extends AbstractOperationExecutor<EventTarget>
 			logger.error(e.getMessage(), e);
 		});
 	}
+	//endregion
 
 	@Override
 	public Color getColorXY(EventTarget component, int x, int y) throws Exception
@@ -1417,85 +1275,6 @@ public class FxOperationExecutor extends AbstractOperationExecutor<EventTarget>
 	private WrongParameterException tableException(EventTarget target)
 	{
 		return new WrongParameterException(String.format("Target not instance of Table. Target : %s", target));
-	}
-
-	private void checkTable(TableView<?> tableView, int column, int row) throws Exception
-	{
-		if (tableView.getItems().size() < row)
-		{
-			throw new Exception(String.format("Can't get value for row %s because size of rows is %s", row, tableView.getItems().size()));
-		}
-
-		if (tableView.getColumns().size() < column)
-		{
-			throw new Exception(String.format("Can't get value for column %s because size of columns is %s", column, tableView.getColumns().size()));
-		}
-	}
-
-	private Node findCell(TableView<?> tableView, int column, int row)
-	{
-		Node cell = UtilsFx.runOnFxThreadAndWaitResult(() -> {
-			try
-			{
-				logger.debug(String.format("Start scroll to column %s", column));
-				tableView.scrollToColumnIndex(column);
-				logger.debug(String.format("Start scroll to row %s", row));
-				tableView.scrollTo(row);
-				logger.debug(String.format("Start getting cell"));
-				return (Node) tableView.queryAccessibleAttribute(AccessibleAttribute.CELL_AT_ROW_COLUMN, row, column);
-			}
-			catch (Exception e)
-			{
-				logger.error(String.format("findCell(%s,%s,%s)", tableView, column, row));
-				logger.error(e.getMessage(), e);
-			}
-			return null;
-		});
-		logger.debug(String.format("Found cell : %s", cell));
-		return cell;
-	}
-
-	private String getCellValue(Node cell, TableView<?> tableView, int column, int row)
-	{
-		if (cell != null)
-		{
-			if (cell instanceof TableCell<?, ?>)
-			{
-				TableCell tableCell = (TableCell) cell;
-				if (tableCell.getGraphic() == null)
-				{
-					return tableCell.getText();
-				}
-				else
-				{
-					return MatcherFx.getText(tableCell.getGraphic());
-				}
-			}
-		}
-		TableColumn<?,?> tableColumn = tableView.getColumns().get(column);
-		ObservableValue<?> cellObservableValue = tableColumn.getCellObservableValue(row);
-		return String.valueOf(cellObservableValue.getValue());
-	}
-
-	private List<String> getTableHeaders(TableView<?> tableView, String[] columns)
-	{
-		List<String> list = new ArrayList<>();
-		ObservableList<? extends TableColumn<?, ?>> tableColumns = tableView.getColumns();
-
-		for (int i = 0; i < tableColumns.size(); i++)
-		{
-			String columnName;
-			if (columns == null)
-			{
-				columnName = tableColumns.get(i).getText();
-			}
-			else
-			{
-				columnName = i < columns.length ? columns[i] : String.valueOf(i);
-			}
-			list.add(columnName.replace(' ', '_'));
-		}
-		return Converter.convertColumns(list);
 	}
 
 	private KeyCode getKeyCode(Keyboard key)
@@ -1631,32 +1410,6 @@ public class FxOperationExecutor extends AbstractOperationExecutor<EventTarget>
 				return 2;
 			default:
 				return 1;
-		}
-	}
-
-	private void fillHeaders(String[][] array, TableView<?> table, String[] customHeaders)
-	{
-		ObservableList<? extends TableColumn<?, ?>> columns = table.getColumns();
-
-		if (customHeaders != null)
-		{
-			for (int i = 0; i < columns.size(); i++)
-			{
-				if (i < customHeaders.length)
-				{
-					array[0][i] = customHeaders[i];
-
-				}
-				else
-				{
-					array[0][i] = String.valueOf(i);
-				}
-			}
-			return;
-		}
-		for (int i = 0; i < columns.size(); i++)
-		{
-			array[0][i] = columns.get(i).getText();
 		}
 	}
 
