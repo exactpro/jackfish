@@ -44,6 +44,7 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicLong;
+import java.util.function.Function;
 import java.util.function.IntFunction;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -82,11 +83,11 @@ public class FxOperationExecutor extends AbstractOperationExecutor<EventTarget>
 			}
 			if (component instanceof ComboBox)
 			{
-				return String.valueOf(((ComboBox) component).getSelectionModel().getSelectedItem());
+				return UtilsFx.runOnFxThreadAndWaitResult(() -> (String) ((ComboBox) component).queryAccessibleAttribute(AccessibleAttribute.TEXT));
 			}
 			if (component instanceof ChoiceBox)
 			{
-				return String.valueOf(((ChoiceBox) component).getSelectionModel().getSelectedItem());
+				return UtilsFx.runOnFxThreadAndWaitResult(() -> (String) ((ChoiceBox) component).queryAccessibleAttribute(AccessibleAttribute.TEXT));
 			}
 			if (component instanceof Label)
 			{
@@ -94,7 +95,9 @@ public class FxOperationExecutor extends AbstractOperationExecutor<EventTarget>
 			}
 			if (component instanceof ListView)
 			{
-				return String.valueOf(((ListView) component).getSelectionModel().getSelectedItem());
+				ListView listView = (ListView) component;
+				Node selectedCell = UtilsFx.runOnFxThreadAndWaitResult(() -> (Node) listView.queryAccessibleAttribute(AccessibleAttribute.ITEM_AT_INDEX, listView.getSelectionModel().getSelectedIndex()));
+				return MatcherFx.getText(selectedCell);
 			}
 			if (component instanceof ProgressBar)
 			{
@@ -137,19 +140,17 @@ public class FxOperationExecutor extends AbstractOperationExecutor<EventTarget>
 	{
 		return tryExecute(EMPTY_CHECK, ()->
 		{
+			//region combobox
 			if (component instanceof ComboBox)
 			{
 				ComboBox comboBox = (ComboBox) component;
 				if (onlyVisible)
 				{
 					Skin<?> skin = comboBox.getSkin();
-					if (skin instanceof ComboBoxListViewSkin<?>)
+					ListView<?> listView;
+					if (skin instanceof ComboBoxListViewSkin<?> && (listView = ((ComboBoxListViewSkin) skin).getListView()) != null)
 					{
-						ListView<?> listView = ((ComboBoxListViewSkin) skin).getListView();
-						if (listView != null)
-						{
-							return this.onlyVisibleElements(listView.getItems().size(), listView, listView.getItems()::get);
-						}
+						return this.elementsToString(listView.getItems().size(), listView, true);
 					}
 				}
 				StringConverter converter = comboBox.getConverter();
@@ -160,6 +161,9 @@ public class FxOperationExecutor extends AbstractOperationExecutor<EventTarget>
 				}
 				return list;
 			}
+			//endregion
+
+			//region choicebox
 			if (component instanceof ChoiceBox<?>)
 			{
 				//API can't allows get only visible elements
@@ -172,42 +176,51 @@ public class FxOperationExecutor extends AbstractOperationExecutor<EventTarget>
 				}
 				return list;
 			}
+			//endregion
+
+			//region tabPane
 			if (component instanceof TabPane)
 			{
 				TabPane tabPane = (TabPane) component;
+
+				Function<Tab, String> tabTextFunction = tab ->
+				{
+					if (Str.IsNullOrEmpty(tab.getText()))
+					{
+						Node graphic = tab.getGraphic();
+						if (Objects.nonNull(graphic))
+						{
+							return MatcherFx.getText(graphic);
+						}
+					}
+					return tab.getText();
+				};
+
 				if (onlyVisible)
 				{
 					return this.onlyVisibleElements(tabPane.getTabs().size(), tabPane, i ->
 					{
 						Tab tab = tabPane.getTabs().get(i);
-						if (Str.IsNullOrEmpty(tab.getText()))
-						{
-							Node graphic = tab.getGraphic();
-							if (Objects.nonNull(graphic))
-							{
-								return MatcherFx.getText(graphic);
-							}
-						}
-						return tab.getText();
+						return tabTextFunction.apply(tab);
 					});
 				}
 				return tabPane.getTabs()
 						.stream()
-						.map(Tab::getText)
+						.map(tabTextFunction)
 						.collect(Collectors.toList());
 			}
+			//endregion
+
+			//region listView
+
 			if (component instanceof ListView)
 			{
 				ListView<?> listView = (ListView<?>) component;
-				if (onlyVisible)
-				{
-					return this.onlyVisibleElements(listView.getItems().size(), listView, listView.getItems()::get);
-				}
-				return listView.getItems()
-						.stream()
-						.map(Object::toString)
-						.collect(Collectors.toList());
+				return this.elementsToString(listView.getItems().size(), listView, onlyVisible);
 			}
+
+			//endregion
+
 			throw new Exception("Target element does not has items");
 		}, e->
 		{
@@ -1269,6 +1282,16 @@ public class FxOperationExecutor extends AbstractOperationExecutor<EventTarget>
 				.filter(i -> ((Node) node.queryAccessibleAttribute(AccessibleAttribute.ITEM_AT_INDEX, i)).isVisible())
 				.mapToObj(function)
 				.map(Str::asString)
+				.collect(Collectors.toList()));
+	}
+
+	private List<String> elementsToString(int size, Node node, boolean onlyVisible)
+	{
+		return UtilsFx.runOnFxThreadAndWaitResult(() -> IntStream.range(0, size)
+				.mapToObj(i -> ((Node) node.queryAccessibleAttribute(AccessibleAttribute.ITEM_AT_INDEX, i)))
+				.filter(Objects::nonNull)
+				.filter(child -> !onlyVisible || child.isVisible())
+				.map(MatcherFx::getText)
 				.collect(Collectors.toList()));
 	}
 

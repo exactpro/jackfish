@@ -98,12 +98,10 @@ public abstract class DialogsHelper
 	public static void centreDialog(Dialog<?> dialog)
 	{
 		Rectangle currentBounds = getCurrentScreenBounds();
-		dialog.showingProperty().addListener((observable, oldValue, newValue) -> {
-			if (newValue)
-			{
-				dialog.setX(currentBounds.getCenterX() - dialog.getWidth() / 2);
-				dialog.setY(currentBounds.getCenterY() - dialog.getHeight() / 2);
-			}
+		dialog.getDialogPane().getScene().getWindow().addEventHandler(WindowEvent.WINDOW_SHOWN, e ->
+		{
+			dialog.setX(currentBounds.getCenterX() - dialog.getWidth() / 2);
+			dialog.setY(currentBounds.getCenterY() - dialog.getHeight() / 2);
 		});
 	}
 

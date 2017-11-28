@@ -21,6 +21,7 @@ import org.openqa.selenium.chrome.ChromeDriverService;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.firefox.GeckoDriverService;
 import org.openqa.selenium.ie.InternetExplorerDriverService;
+import org.openqa.selenium.remote.RemoteWebDriver;
 import org.w3c.dom.DOMException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -301,7 +302,11 @@ public class SeleniumRemoteApplication extends RemoteApplication
                             driver.manage().window().maximize();
                             logger.info("After driver.maximize()");
                         }
-                    }
+						if (driver.getWrappedDriver() instanceof RemoteWebDriver)
+						{
+							logger.debug("Current session id : " + ((RemoteWebDriver) driver.getWrappedDriver()).getSessionId());
+						}
+					}
                     catch (Exception e)
                     {
                     	te = e;

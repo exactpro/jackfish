@@ -433,17 +433,24 @@ public class MatcherFx
 		{
 			return ((Text) target).getText();
 		}
-		else if (target instanceof Button)
-		{
-			return ((Button) target).getText();
-		}
-		else if (target instanceof Label)
-		{
-			return ((Label) target).getText();
-		}
 		else if (target instanceof Tooltip)
 		{
-			return ((Tooltip) target).getText();
+			Tooltip tooltip = (Tooltip) target;
+			StringBuilder sb = new StringBuilder();
+			if (!Str.IsNullOrEmpty(tooltip.getText()))
+			{
+				sb.append(tooltip.getText());
+			}
+			Node graphic = tooltip.getGraphic();
+			if (graphic != null)
+			{
+				String graphicText = getText(graphic);
+				if (!Str.IsNullOrEmpty(graphicText))
+				{
+					sb.append(graphicText);
+				}
+			}
+			return sb.toString();
 		}
 		else if (target instanceof TextInputControl)
 		{
@@ -465,7 +472,23 @@ public class MatcherFx
 		}
 		else if (target instanceof Labeled)
 		{
-			return ((Labeled) target).getText();
+			Labeled labeled = (Labeled) target;
+			StringBuilder sb = new StringBuilder();
+			String text = labeled.getText();
+			if (!Str.IsNullOrEmpty(text))
+			{
+				sb.append(text);
+			}
+			Node graphic = labeled.getGraphic();
+			if (graphic != null)
+			{
+				String graphicText = getText(graphic);
+				if (!Str.IsNullOrEmpty(graphicText))
+				{
+					sb.append(graphicText);
+				}
+			}
+			return sb.toString();
 		}
 		else
 		{
