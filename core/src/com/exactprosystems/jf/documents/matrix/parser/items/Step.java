@@ -202,7 +202,7 @@ public class Step extends MatrixItem
     @Override
 	public String getItemName()
 	{
-		return super.getItemName() + " " + Str.asString(this.identify.getExpression());
+		return super.getItemName() + " " + Str.asString(this.identify.getValue());
 	}
     
     @Override
