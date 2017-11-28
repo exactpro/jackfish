@@ -178,6 +178,10 @@ public class DictionaryWizard extends AbstractWizard
 		this.currentConnection = super.get(AppConnection.class, parameters);
 		this.currentDictionary = super.get(DictionaryFx.class, parameters);
 		this.currentWindow = super.get(Window.class, parameters);
+		if(this.currentWindow.getSelfControl() == null)
+		{
+			return;
+		}
 		try
 		{
 			this.copyWindow = Window.createCopy(this.currentWindow);
