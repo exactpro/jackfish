@@ -24,9 +24,12 @@ import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.safari.SafariDriver;
 
 import java.io.File;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public enum Browser
 {
+
 	ANDROIDCHROME		("AndroidChrome"),
 	ANDROIDBROWSER		("AndroidBrowser"),
 	FIREFOX				("Firefox"),
@@ -35,6 +38,8 @@ public enum Browser
 	OPERA				("Opera"),
 	PHANTOMJS			("PhantomJS"),
 	SAFARI				("Safari");
+
+	private static final SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMdd_HHmmss_");
 
 	private String browserName;
 
@@ -59,7 +64,7 @@ public enum Browser
 					return new FirefoxDriver(profile);
 				}
 				DesiredCapabilities desiredCapabilities = DesiredCapabilities.firefox();
-				desiredCapabilities.setCapability(FirefoxDriver.SystemProperty.BROWSER_LOGFILE, "firefoxDriver.log");
+				desiredCapabilities.setCapability(FirefoxDriver.SystemProperty.BROWSER_LOGFILE, logFile("firefoxDriver.log"));
 				return new FirefoxDriver(desiredCapabilities);
 
 			case ANDROIDCHROME:
@@ -75,7 +80,7 @@ public enum Browser
 				return new ChromeDriver(chromeCapability);
 
 			case ANDROIDBROWSER:
-				System.setProperty(ChromeDriverService.CHROME_DRIVER_LOG_PROPERTY, "androidBrowser.log");
+				System.setProperty(ChromeDriverService.CHROME_DRIVER_LOG_PROPERTY, logFile("androidBrowser.log"));
 				System.setProperty(ChromeDriverService.CHROME_DRIVER_VERBOSE_LOG_PROPERTY, "true");
 
 				ChromeOptions browserOptions = new ChromeOptions();
@@ -92,7 +97,7 @@ public enum Browser
 				{
 					throw new Exception("You need set the 'ChromeDriverPath' parameter on plugin to valid value");
 				}
-				System.setProperty(ChromeDriverService.CHROME_DRIVER_LOG_PROPERTY, "chromeDriver.log");
+				System.setProperty(ChromeDriverService.CHROME_DRIVER_LOG_PROPERTY, logFile("chromeDriver.log"));
 				System.setProperty(ChromeDriverService.CHROME_DRIVER_VERBOSE_LOG_PROPERTY, "true");
 
 				ChromeOptions options = new ChromeOptions();
@@ -111,7 +116,7 @@ public enum Browser
 				DesiredCapabilities capabilities = DesiredCapabilities.internetExplorer();
 				capabilities.setCapability("ie.enableFullPageScreenshot", false);
 				capabilities.setCapability(InternetExplorerDriver.ENABLE_PERSISTENT_HOVERING, false);
-				capabilities.setCapability(InternetExplorerDriver.LOG_FILE, "ieDriver.log");
+				capabilities.setCapability(InternetExplorerDriver.LOG_FILE, logFile("ieDriver.log"));
 				capabilities.setCapability(InternetExplorerDriver.LOG_LEVEL, "DEBUG");
 				if (usePrivateMode)
 				{
@@ -133,5 +138,10 @@ public enum Browser
 				throw new Exception("Unknown browser : " + this.browserName);
 		}
 
+	}
+
+	private static String logFile(String init)
+	{
+		return formatter.format(new Date()) + init;
 	}
 }
