@@ -28,22 +28,18 @@ import com.exactprosystems.jf.tool.dictionary.navigation.NavigationController;
 import com.exactprosystems.jf.tool.helpers.DialogsHelper;
 import com.exactprosystems.jf.tool.helpers.ExpressionFieldsPane;
 import com.exactprosystems.jf.tool.settings.Theme;
-import javafx.collections.FXCollections;
+import javafx.embed.swing.SwingFXUtils;
 import javafx.event.ActionEvent;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.control.*;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
+import sun.awt.AppContext;
 
-import javax.imageio.ImageIO;
-import java.awt.image.BufferedImage;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.net.URL;
 import java.util.*;
 import java.util.function.Function;
@@ -56,13 +52,13 @@ public class ActionsController implements Initializable, ContainingParent
 {
 	public Label					imageArea;
 
-	public ComboBox<String>			comboBoxApps;
-	public ComboBox<String>         comboBoxAppsStore;
-	public Button					btnStartApplication;
-	public Button					btnConnectApplication;
-	public Button					btnStop;
-	public TextField				tfSendKeys;
-	public ComboBox<String>			comboBoxWindows;
+	public ComboBox<String> comboBoxApps;
+	public ComboBox<String> comboBoxAppsStore;
+	public Button           btnStartApplication;
+	public Button           btnConnectApplication;
+	public Button           btnStop;
+	public TextField        tfSendKeys;
+	public ComboBox<String> comboBoxTitles;
 
 	public GridPane					mainGrid;
 	public GridPane doGridPane;
@@ -114,9 +110,7 @@ public class ActionsController implements Initializable, ContainingParent
 	@Override
 	public void initialize(URL url, ResourceBundle resourceBundle)
 	{
-		imageArea.getStyleClass().add(CssVariables.IMAGE_AREA);
-		comboBoxWindows.setOnShowing(event -> tryCatch(() -> this.model.displayTitles(), "Error on update titles"));
-		comboBoxAppsStore.setOnShowing(event -> tryCatch(() -> this.model.displayStores(), "Error on update titles"));
+		this.imageArea.getStyleClass().add(CssVariables.IMAGE_AREA);
 		setDisable(true);
 		this.groupSection.selectedToggleProperty().addListener((observable, oldValue, newValue) -> setDisable(!(newValue != null && newValue == this.rbSize)));
 		this.rbMin.setUserData(Resize.Minimize);
@@ -148,20 +142,10 @@ public class ActionsController implements Initializable, ContainingParent
 		HBox.setHgrow(this.expressionField, Priority.ALWAYS);
 		this.expressionField.setHelperForExpressionField(null, null);
 
-		this.comboBoxApps.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> 
-		{
-			this.model.setCurrentAdapter(newValue);
-			this.info.setAppName(newValue);
-		});
+		this.comboBoxApps.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> this.model.setCurrentApp(newValue));
 
-		this.comboBoxAppsStore.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) ->
-		{
-			if(newValue != null)
-			{
-				this.model.setCurrentAdapterStore(newValue);
-				this.connectApplicationFromStore();
-			}
-		});
+		this.comboBoxAppsStore.setOnShowing(event -> this.comboBoxAppsStore.getItems().setAll(this.storedConnections()));
+		this.comboBoxAppsStore.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> this.model.setCurrentStoredApp(newValue));
 
 		gridPane.add(this.pane, 0, 1);
 		GridPane.setColumnSpan(this.pane, 2);
@@ -206,9 +190,9 @@ public class ActionsController implements Initializable, ContainingParent
 	//endregion
 
 	//region Switch tab
-	public void changeWindow(ActionEvent actionEvent)
+	public void changeTitle(ActionEvent actionEvent)
 	{
-		tryCatch(() -> this.model.switchTo(currentWindow()), "Error on switch window");
+		tryCatch(() -> this.model.switchTo(currentTitle()), "Error on switch window");
 	}
 
 	public void switchToParent(ActionEvent actionEvent)
@@ -334,7 +318,7 @@ public class ActionsController implements Initializable, ContainingParent
 
 	public void connectApplicationFromStore()
 	{
-		tryCatch(() -> this.model.connectToApplicationFromStore(currentAppStore()), "Error on connect application");
+		tryCatch(() -> this.model.connectToApplicationFromStore(currentStoredApp()), "Error on connect application");
 	}
 
 	public void stopConnection(ActionEvent actionEvent)
@@ -345,6 +329,30 @@ public class ActionsController implements Initializable, ContainingParent
 	// ------------------------------------------------------------------------------------------------------------------
 	// display* methods
 	// ------------------------------------------------------------------------------------------------------------------
+	public void displayTitles(Collection<String> titles)
+	{
+		this.comboBoxTitles.getItems().setAll(titles);
+	}
+
+	public void displayApplications(Collection<String> applications)
+	{
+		this.comboBoxApps.getItems().addAll(applications);
+	}
+
+	public void displayCurrentApplication(String app)
+	{
+		this.comboBoxApps.getSelectionModel().select(app);
+	}
+
+	public void displayImage(ImageWrapper imageWrapper)
+	{
+		this.imageArea.setGraphic(Optional.ofNullable(imageWrapper)
+				.map(iw -> new ImageView(SwingFXUtils.toFXImage(iw.getImage(), null)))
+				.orElse(null)
+		);
+	}
+
+
 	public void displayProperties(List<String> getProperties, List<String> setProperties, List<String> getDialogProperties)
 	{
 		this.cbGetProperty.getItems().setAll(getProperties);
@@ -376,27 +384,6 @@ public class ActionsController implements Initializable, ContainingParent
 		}
 	}
 
-	public void displayImage(ImageWrapper imageWrapper)
-	{
-		Common.runLater(() ->
-		{
-			tryCatch(() ->
-			{
-				ImageView imageView = null;
-				if (imageWrapper != null)
-				{
-					BufferedImage image = imageWrapper.getImage();
-					ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-					ImageIO.write(image, "jpg", outputStream);
-					Image imageFX = new Image(new ByteArrayInputStream(outputStream.toByteArray()));
-					imageView = new ImageView();
-					imageView.setImage(imageFX);
-				}
-				this.imageArea.setGraphic(imageView);
-			}, "Error on display image");
-		});
-	}
-
 	public void displayApplicationStatus(ApplicationStatus status, Throwable ifTrouble)
 	{
 		Common.runLater(() ->
@@ -412,7 +399,7 @@ public class ActionsController implements Initializable, ContainingParent
 						this.btnConnectApplication.setDisable(false);
 						this.btnStop.setDisable(true);
 						break;
-		
+
 					case Connecting:
 						this.comboBoxApps.setDisable(true);
 						this.comboBoxAppsStore.setDisable(true);
@@ -420,7 +407,7 @@ public class ActionsController implements Initializable, ContainingParent
 						this.btnConnectApplication.setDisable(true);
 						this.btnStop.setDisable(true);
 						break;
-		
+
 					case Connected:
 						this.comboBoxApps.setDisable(true);
 						this.comboBoxAppsStore.setDisable(true);
@@ -443,36 +430,12 @@ public class ActionsController implements Initializable, ContainingParent
 		});
 	}
 
-	public void displayTitles(Collection<String> titles)
-	{
-		if (titles != null)
-		{
-			this.comboBoxWindows.getItems().setAll(titles);
-		}
-		else
-		{
-			this.comboBoxWindows.getItems().setAll(FXCollections.observableArrayList());
-		}
-	}
-
 	public void refreshTitles()
 	{
 		tryCatch(() -> {
 			this.model.refreshTitles();
 			DialogsHelper.showNotifier("Titles refreshed successfully", Notifier.Success);
 		},"Error on refresh titles");
-	}
-
-	public void displayStoreActionControl(Collection<String> stories, String lastSelectedStore)
-	{
-		Common.runLater(() ->
-		{
-			if (stories!=null)
-			{
-				this.comboBoxAppsStore.getItems().setAll(stories);
-			}
-			this.comboBoxAppsStore.getSelectionModel().select(lastSelectedStore);
-		});
 	}
 
 	public void displayActionControl(Collection<String> entries, String entry, String title)
@@ -493,29 +456,42 @@ public class ActionsController implements Initializable, ContainingParent
 			 */
 			if (title != null)
 			{
-				this.comboBoxWindows.getSelectionModel().select(title);
+				this.comboBoxTitles.getSelectionModel().select(title);
 			}
 //			else
 //			{
-//				this.comboBoxWindows.getSelectionModel().selectFirst();
+//				this.comboBoxTitles.getSelectionModel().selectFirst();
 //			}
 
 		});
 	}
 
-	// ------------------------------------------------------------------------------------------------------------------
+	//region private methods
 	private String currentApp()
 	{
 		return this.comboBoxApps.getSelectionModel().getSelectedItem();
 	}
 
-	private String currentAppStore()
+	private String currentStoredApp()
 	{
 		return this.comboBoxAppsStore.getSelectionModel().getSelectedItem();
 	}
 
-	private String currentWindow()
+	private String currentTitle()
 	{
-		return this.comboBoxWindows.getSelectionModel().getSelectedItem();
+		return this.comboBoxTitles.getSelectionModel().getSelectedItem();
 	}
+
+	private Collection<String> storedConnections()
+	{
+		List<String> storedConnection = this.model.getFactory().getConfiguration().getStoreMap().entrySet()
+				.stream()
+				.filter(entry -> entry.getValue() instanceof AppContext)
+				.map(Map.Entry::getKey)
+				.collect(Collectors.toList());
+		storedConnection.add(0, "");
+		return storedConnection;
+	}
+
+	//endregion
 }

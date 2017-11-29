@@ -14,7 +14,7 @@ import com.exactprosystems.jf.api.app.Mutable;
 import java.util.Objects;
 import java.util.function.BiConsumer;
 
-public class MutableValue<T> implements Mutable, Getter<T>, Setter<T>, Cloneable
+public class MutableValue<T> implements Mutable, Setter<T>, MutableListener<T>
 {
     private T value = null;
     private boolean changed = false; 
@@ -71,7 +71,7 @@ public class MutableValue<T> implements Mutable, Getter<T>, Setter<T>, Cloneable
 	public void set(T value)
 	{
 		this.changed = this.changed || !Objects.equals(this.value, value);
-		if (this.changeListener != null)
+		if (this.changeListener != null && this.value != value)
 		{
 		    this.changeListener.accept(this.value, value);
 		}
@@ -110,6 +110,7 @@ public class MutableValue<T> implements Mutable, Getter<T>, Setter<T>, Cloneable
 	    }
 	}
 
+	@Override
 	public void setOnChangeListener(BiConsumer<T, T> listener)
 	{
 	    this.changeListener = listener;

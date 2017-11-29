@@ -13,24 +13,18 @@ import com.exactprosystems.jf.actions.gui.DialogGetProperties;
 import com.exactprosystems.jf.api.app.*;
 import com.exactprosystems.jf.api.app.IWindow.SectionKind;
 import com.exactprosystems.jf.api.common.ParametersKind;
-import com.exactprosystems.jf.common.Settings;
-import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
-import com.exactprosystems.jf.documents.config.Configuration;
+import com.exactprosystems.jf.documents.Document;
 import com.exactprosystems.jf.documents.matrix.parser.listeners.ListProvider;
 import com.exactprosystems.jf.tool.Common;
-import com.exactprosystems.jf.tool.ContainingParent;
 import com.exactprosystems.jf.tool.custom.console.ConsoleArea;
 import com.exactprosystems.jf.tool.custom.tab.CustomTab;
-import com.exactprosystems.jf.tool.custom.tab.CustomTabPane;
 import com.exactprosystems.jf.tool.dictionary.actions.ActionsController;
 import com.exactprosystems.jf.tool.dictionary.element.ElementInfoController;
 import com.exactprosystems.jf.tool.dictionary.navigation.NavigationController;
-import com.exactprosystems.jf.tool.helpers.DialogsHelper;
-import com.exactprosystems.jf.tool.settings.Theme;
-import javafx.fxml.Initializable;
-import javafx.scene.Parent;
+import com.exactprosystems.jf.tool.documents.AbstractDocumentController;
+import com.exactprosystems.jf.tool.documents.ControllerInfo;
+import javafx.fxml.FXML;
 import javafx.scene.control.SplitPane;
-import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
 import org.fxmisc.flowless.VirtualizedScrollPane;
@@ -42,100 +36,93 @@ import java.util.Collection;
 import java.util.ResourceBundle;
 import java.util.function.Function;
 
-public class DictionaryFxController implements Initializable, ContainingParent
+@ControllerInfo(resourceName = "DictionaryTab.fxml")
+public class DictionaryFxController extends AbstractDocumentController<DictionaryFx>
 {
-	public BorderPane dictionaryPane;
-
 	public enum Result
-	{ 
-		PASSED (Color.GREEN), FAILED (Color.RED), NOT_ALLOWED (Color.DARKGRAY);
-		
+	{
+		PASSED(Color.GREEN), FAILED(Color.RED), NOT_ALLOWED(Color.DARKGRAY);
+
 		private Result(Color color)
 		{
 			this.color = color;
 		}
-		
+
 		public Color getColor()
 		{
 			return this.color;
 		}
-		
+
 		private Color color;
-	} 
-
-	public SplitPane				splitPane;
-	public GridPane					mainGridPane;
-	private Parent					pane;
-	private CustomTab				tab;
-	private ConsoleArea 			area;
-	
-	private ActionsController		actionsController;
-	private ElementInfoController	elementInfoController;
-	private NavigationController	navigationController;
-	private Settings settings;
-
-	@Override
-	public void initialize(URL url, ResourceBundle resourceBundle)
-	{
-		createConsoleTextArea();
 	}
 
-	private void createConsoleTextArea()
+	@FXML
+	private SplitPane   splitPane;
+	@FXML
+	private GridPane    mainGridPane;
+	private ConsoleArea area;
+
+	private ActionsController     actionsController;
+	private ElementInfoController elementInfoController;
+	private NavigationController  navigationController;
+
+	//region Initializable
+	@Override
+	public void initialize(URL url, ResourceBundle resourceBundle)
 	{
 		this.area = new ConsoleArea();
 		this.area.setEditable(false);
 		this.area.setMaxHeight(250);
 		this.splitPane.getItems().add(new VirtualizedScrollPane<>(area));
 	}
+	//endregion
 
-	public void saved(String name)
-	{
-		this.tab.saved(name);
-	}
-
-	public void close() throws Exception
-	{
-		this.tab.close();
-		this.navigationController.close();
-		CustomTabPane.getInstance().removeTab(this.tab);
-	}
+	//region AbstractDocumentController
 
 	@Override
-	public void setParent(Parent parent)
+	protected void init(Document model, CustomTab customTab)
 	{
-		this.pane = parent;
-	}
-
-	public void init(final DictionaryFx model, Settings settings, Configuration configuration, AbstractEvaluator evaluator) throws Exception
-	{
-		this.settings = settings;
-		this.tab = CustomTabPane.getInstance().createTab(model);
-		this.tab.setContent(pane);
+		super.init(model, customTab);
 
 		this.navigationController = Common.loadController(NavigationController.class.getResource("Navigation.fxml"));
-		this.navigationController.init(model, this.mainGridPane, this.settings, this.tab);
+		this.navigationController.init(super.model, this, this.mainGridPane);
 
-		Settings.SettingsValue themePath = this.settings.getValueOrDefault(Settings.GLOBAL_NS, Settings.SETTINGS, Settings.THEME);
 		this.elementInfoController = Common.loadController(ElementInfoController.class.getResource("ElementInfo.fxml"));
-		this.elementInfoController.init(model, configuration, this.mainGridPane, this.navigationController, Theme.valueOf(themePath.getValue()).getPath());
+		this.elementInfoController.init(super.model, super.model.getFactory().getConfiguration(), this.mainGridPane, this.navigationController);
 
 		this.actionsController = Common.loadController(ActionsController.class.getResource("Actions.fxml"));
-		this.actionsController.init(model, this.mainGridPane, evaluator, this.navigationController, this.elementInfoController);
+		this.actionsController.init(super.model, this.mainGridPane, super.model.getEvaluator(), this.navigationController, this.elementInfoController);
 
-		CustomTabPane.getInstance().addTab(this.tab);
-		CustomTabPane.getInstance().selectTab(this.tab);
+		//region actions
+		super.model.getTitles().setOnAddAllListener((integer, collection) -> this.actionsController.displayTitles(DictionaryFx.convertToString(collection)));
+		super.model.getAppsList().setOnAddAllListener((integer, collection) -> this.actionsController.displayApplications(DictionaryFx.convertToString(collection)));
+		super.model.currentApp().setOnChangeListener((s, s2) -> this.actionsController.displayCurrentApplication(s2));
+		//TODO add listeners for events
+		//endregion
+
+		//region navigation
+		this.model.setOnChangeListener((integer, integer2) -> this.navigationController.displayDialogs(this.model.getWindows()));
+		this.model.setOnAddListener((integer, window) -> this.navigationController.addDialog(integer, window));
+		this.model.setOnRemoveListener((integer, window) -> this.navigationController.removeDialog(window));
+		this.model.currentWindow().setOnChangeListener((window, newValue) -> this.navigationController.displayDialog(newValue));
+		this.model.setChangeWindowName((newName, newName2) -> this.navigationController.dialogChangeName(newName2));
+		this.model.currentSection().setOnChangeListener((sectionKind, newValue) -> this.navigationController.displaySection(newValue));
+
+		this.model.currentElement().setOnChangeListener((iControl, newValue) -> {
+			this.navigationController.displayElement(newValue);
+			this.elementInfoController.displayElement(newValue);
+		});
+		this.model.currentElements().setOnAddAllListener((integer, collection) -> this.navigationController.displayElements(collection));
+		this.model.currentElements().setOnChangeListener((integer, collection) -> this.navigationController.clearElements());
+		//endregion
 	}
+
+	//endregion
 
 	public void println(String str)
 	{
 		Common.runLater(() -> this.area.appendDefaultTextOnNewLine(str));
 	}
-
-	public IWindow getCurrentWindow()
-	{
-		return this.navigationController.currentWindow();
-	}
-
 
 	// ------------------------------------------------------------------------------------------------------------------
 	// display* methods
@@ -145,11 +132,6 @@ public class DictionaryFxController implements Initializable, ContainingParent
 		this.navigationController.displayTestingControl(control, text, result);
 	}
 
-	public void displayTitle(String title)
-	{
-		Common.runLater(() -> this.tab.setTitle(title));
-	}
-
 	public void displayDialog(IWindow window, Collection<IWindow> windows)
 	{
 		this.navigationController.displayDialog(window, windows);
@@ -157,6 +139,7 @@ public class DictionaryFxController implements Initializable, ContainingParent
 
 	public void displaySection(SectionKind sectionKind)
 	{
+		//TODO
 		this.navigationController.displaySection(sectionKind);
 	}
 
@@ -197,23 +180,9 @@ public class DictionaryFxController implements Initializable, ContainingParent
 		}
 	}
 
-	public void displayTitles(Collection<String> titles)
-	{
-		this.actionsController.displayTitles(titles);
-	}
-
 	public void displayActionControl(Collection<String> entries, String entry, String title)
 	{
 		this.actionsController.displayActionControl(entries, entry, title);
 	}
 
-	public void displayStoreActionControl(Collection<String> stories, String lastSelectedStore)
-	{
-		this.actionsController.displayStoreActionControl(stories, lastSelectedStore);
-	}
-
-	public void showInfo(String info)
-	{
-		DialogsHelper.showInfo(info);
-	}
 }

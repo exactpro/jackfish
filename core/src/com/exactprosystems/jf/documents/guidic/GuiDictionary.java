@@ -20,7 +20,10 @@ import com.exactprosystems.jf.documents.DocumentInfo;
 import com.exactprosystems.jf.documents.DocumentKind;
 
 import javax.xml.XMLConstants;
-import javax.xml.bind.*;
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.Marshaller;
+import javax.xml.bind.UnmarshalException;
+import javax.xml.bind.Unmarshaller;
 import javax.xml.transform.Source;
 import javax.xml.transform.stream.StreamSource;
 import javax.xml.validation.Schema;
@@ -30,7 +33,7 @@ import java.io.Reader;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
-
+import java.util.function.BiConsumer;
 
 @DocumentInfo(
         kind = DocumentKind.GUI_DICTIONARY,
@@ -100,8 +103,6 @@ public class GuiDictionary extends AbstractDocument implements IGuiDictionary
     @Override
     public void save(String fileName) throws Exception
     {
-    	super.save(fileName);
-
     	File file = new File(fileName);
 
         JAXBContext jaxbContext = JAXBContext.newInstance(GuiDictionaryBean.jaxbContextClasses);
@@ -110,7 +111,8 @@ public class GuiDictionary extends AbstractDocument implements IGuiDictionary
         marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
         marshaller.setListener(new DictionaryMarshallerListener());
         marshaller.marshal(this.bean, file);
-    }
+		super.save(fileName);
+	}
 
     //endregion
 
@@ -164,6 +166,39 @@ public class GuiDictionary extends AbstractDocument implements IGuiDictionary
 	}
 
     //endregion
+
+	//region events methods
+	public void fire()
+	{
+		this.bean.windows.fire();
+	}
+
+	public void setOnChangeListener(BiConsumer<Integer, Integer> listener)
+	{
+		this.bean.windows.setOnChangeListener(listener);
+	}
+
+	public void setOnAddListener(BiConsumer<Integer, Window> listener)
+	{
+		this.bean.windows.setOnAddListener(listener);
+	}
+
+	public void setOnAddAllListener(BiConsumer<Integer, Collection<? extends Window>> listener)
+	{
+		this.bean.windows.setOnAddAllListener(listener);
+	}
+
+	public void setOnRemoveListener(BiConsumer<Integer, Window> listener)
+	{
+		this.bean.windows.setOnRemoveListener(listener);
+	}
+
+	public void setOnSetListener(BiConsumer<Integer, Window> listener)
+	{
+		this.bean.windows.setOnSetListener(listener);
+	}
+
+	//endregion
 
 	public void evaluateAll(AbstractEvaluator evaluator)
 	{

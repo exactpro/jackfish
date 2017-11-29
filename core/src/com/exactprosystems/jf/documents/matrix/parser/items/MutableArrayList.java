@@ -61,7 +61,7 @@ public class MutableArrayList<T extends Mutable> extends ArrayList<T> implements
 	{
 		this.changed = true;
 		boolean res = super.add(e);
-		onAdd(size(), e);
+		onAdd(size() - 1, e);
 		return res;
 	}
 

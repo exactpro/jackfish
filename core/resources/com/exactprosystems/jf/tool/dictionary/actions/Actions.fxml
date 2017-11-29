@@ -177,7 +177,7 @@
 													<children>
 														<Label text="Switch to:"/>
 														<Label minWidth="4.0"/>
-														<ComboBox fx:id="comboBoxWindows" maxWidth="1.7976931348623157E308" onAction="#changeWindow" prefWidth="150.0" HBox.hgrow="ALWAYS"/>
+														<ComboBox fx:id="comboBoxTitles" maxWidth="1.7976931348623157E308" onAction="#changeTitle" prefWidth="150.0" HBox.hgrow="ALWAYS"/>
 														<Button id="cbUpdate" onAction="#refreshTitles" styleClass="$transparentBackground"/>
 													</children>
 												</HBox>

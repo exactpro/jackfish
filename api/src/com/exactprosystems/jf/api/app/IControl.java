@@ -9,7 +9,7 @@
 
 package com.exactprosystems.jf.api.app;
 
-public interface IControl
+public interface IControl extends Mutable
 {
 	ControlKind 		getBindedClass();
 

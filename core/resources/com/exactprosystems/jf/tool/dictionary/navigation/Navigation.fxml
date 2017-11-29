@@ -29,15 +29,15 @@
 				<Label id="$verMid"/>
 				<HBox alignment="CENTER_LEFT" fx:id="hBoxWindow">
 					<children>
-						<Button id="dictionaryBtnNewDialog" fx:id="btnNewDialog" alignment="CENTER" mnemonicParsing="false" onAction="#newWindow" styleClass="$transparentBackground">
+						<Button id="dictionaryBtnNewDialog" fx:id="btnNewDialog" alignment="CENTER" mnemonicParsing="false" onAction="#newDialog" styleClass="$transparentBackground">
 							<tooltip>
-								<Tooltip text="Create new window"/>
+								<Tooltip text="Create new dialog"/>
 							</tooltip>
 						</Button>
 						<Label id="$horMin"/>
-						<Button id="dictionaryBtnDeleteDialog" fx:id="btnDeleteDialog" alignment="CENTER" mnemonicParsing="false" onAction="#deleteWindow" styleClass="$transparentBackground">
+						<Button id="dictionaryBtnDeleteDialog" fx:id="btnDeleteDialog" alignment="CENTER" mnemonicParsing="false" onAction="#removeDialog" styleClass="$transparentBackground">
 							<tooltip>
-								<Tooltip text="Delete selected window"/>
+								<Tooltip text="Delete selected dialog"/>
 							</tooltip>
 						</Button>
 						<Label id="$horMin"/>
@@ -60,19 +60,19 @@
 		<!--<Label id="$horMax"/>-->
 		<VBox HBox.hgrow="ALWAYS" alignment="CENTER_LEFT" maxWidth="100" minWidth="100" prefWidth="100">
 			<children>
-				<RadioButton id="Self" mnemonicParsing="false" onAction="#changeSection" text="Self">
+				<RadioButton id="Self" mnemonicParsing="false" text="Self">
 					<toggleGroup>
 						<ToggleGroup fx:id="groupSection"/>
 					</toggleGroup>
 				</RadioButton>
 				<Label id="$verMin"/>
-				<RadioButton id="OnOpen" mnemonicParsing="false" onAction="#changeSection" text="On open" toggleGroup="$groupSection"/>
+				<RadioButton id="OnOpen" mnemonicParsing="false" text="On open" toggleGroup="$groupSection"/>
 				<Label id="$verMin"/>
-				<RadioButton id="Run" mnemonicParsing="false" onAction="#changeSection" text="Run" toggleGroup="$groupSection"/>
+				<RadioButton id="Run" mnemonicParsing="false" text="Run" toggleGroup="$groupSection"/>
 				<Label id="$verMin"/>
-				<RadioButton id="OnClose" mnemonicParsing="false" onAction="#changeSection" text="On close" toggleGroup="$groupSection"/>
+				<RadioButton id="OnClose" mnemonicParsing="false" text="On close" toggleGroup="$groupSection"/>
 				<Label id="$verMin"/>
-				<RadioButton id="Close" mnemonicParsing="false" onAction="#changeSection" text="Close" toggleGroup="$groupSection"/>
+				<RadioButton id="Close" mnemonicParsing="false" text="Close" toggleGroup="$groupSection"/>
 			</children>
 		</VBox>
 		<!--<Label id="$horMax"/>-->

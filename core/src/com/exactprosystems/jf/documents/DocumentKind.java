@@ -9,6 +9,7 @@
 
 package com.exactprosystems.jf.documents;
 
+import com.exactprosystems.jf.tool.dictionary.DictionaryFxController;
 import com.exactprosystems.jf.tool.documents.AbstractDocumentController;
 import com.exactprosystems.jf.tool.documents.csv.CsvFxController;
 import com.exactprosystems.jf.tool.documents.text.PlainTextFxController;
@@ -19,7 +20,7 @@ public enum DocumentKind
 {
 	MATRIX(true, MatrixFxController.class),
 	LIBRARY(true, MatrixFxController.class),
-	GUI_DICTIONARY(false, null),
+	GUI_DICTIONARY(true, DictionaryFxController.class),
 	MESSAGE_DICTIONARY(false, null),
 	SYSTEM_VARS(true, SystemVarsFxController.class),
 	CONFIGURATION(false, null),

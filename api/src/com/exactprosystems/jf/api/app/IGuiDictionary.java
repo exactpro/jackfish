@@ -14,12 +14,12 @@ import java.util.Collection;
 public interface IGuiDictionary
 {
 	/**
-	 * @return first IWindow from a dictionary or null, if windows list are empty
+	 * @return first IWindow from a dictionary or null, if list of windows is empty
 	 */
 	IWindow 			getFirstWindow();
 	/**
 	 * @param name searching window name
-	 * @return IWindow or null, if window with not found by passed name
+	 * @return IWindow or null, if window not found by passed name
 	 */
 	IWindow 			getWindow(String name);
 	/**

@@ -37,6 +37,7 @@ import java.net.URL;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.ResourceBundle;
+import java.util.stream.Stream;
 
 import static com.exactprosystems.jf.tool.Common.get;
 import static com.exactprosystems.jf.tool.Common.tryCatch;
@@ -51,7 +52,6 @@ public class ElementInfoController implements Initializable, ContainingParent
 	public ChoiceBox<IControl> choiceBoxOwner;
 	public ChoiceBox<IControl> choiceBoxReference;
 	public CheckBox checkBoxWeak;
-	public CheckBox checkBoxUseNumericHeader = new CheckBox();
 	public CustomFieldWithButton tfID;
 	public CustomFieldWithButton tfUID;
 	public CustomFieldWithButton tfXpath;
@@ -95,7 +95,7 @@ public class ElementInfoController implements Initializable, ContainingParent
 		});
 	}
 
-	public void init(DictionaryFx model, Configuration configuration, GridPane gridPane, NavigationController navigation, String themePath)
+	public void init(DictionaryFx model, Configuration configuration, GridPane gridPane, NavigationController navigation)
 	{
 		this.navigation = navigation;
 		this.model = model;
@@ -148,11 +148,6 @@ public class ElementInfoController implements Initializable, ContainingParent
 	public void changeWeak(ActionEvent actionEvent)
 	{
 		tryCatch(() -> this.navigation.parameterSet(AbstractControl.weakName, this.checkBoxWeak.isSelected()), "Error on changing weakness");
-	}
-	
-	public void changeUseNumericHeader(ActionEvent actionEvent)
-	{
-		tryCatch(() -> this.navigation.parameterSet(AbstractControl.useNumericHeaderName, this.checkBoxUseNumericHeader.isSelected()), "Error on changing using numeric headers");
 	}
 	
 	public void clear(ActionEvent actionEvent)
@@ -258,11 +253,19 @@ public class ElementInfoController implements Initializable, ContainingParent
 			this.tfTimeout.setText(get(control, "0", IControl::getTimeout));
 
 			this.checkBoxWeak.setSelected(control != null && control.isWeak());
-			this.checkBoxUseNumericHeader.setSelected(control != null && control.useNumericHeader());
 			this.previousValue = "";
 			this.currentControl = control;
 			this.window = window;
 		});
+	}
+
+	public void displayElement(IControl control)
+	{
+		this.pane.setDisable(control == null);
+		if (control != null)
+		{
+
+		}
 	}
 
 	//============================================================
@@ -270,7 +273,7 @@ public class ElementInfoController implements Initializable, ContainingParent
 	//============================================================
 	private void setTextFieldListeners()
 	{
-		Arrays.stream(new CustomFieldWithButton[] {this.tfUID, this.tfXpath, this.tfClass, this.tfText, this.tfName, this.tfTooltip, this.tfColumns, this.tfAction, this.tfTitle, this.tfExpression})
+		Stream.of(this.tfUID, this.tfXpath, this.tfClass, this.tfText, this.tfName, this.tfTooltip, this.tfColumns, this.tfAction, this.tfTitle, this.tfExpression)
 				.forEach(tf -> {
 					tf.focusedProperty().addListener(textFocusListener(tf));
 					tf.setHandler(event -> {

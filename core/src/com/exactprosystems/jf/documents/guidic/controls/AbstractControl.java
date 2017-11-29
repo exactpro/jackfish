@@ -25,7 +25,7 @@ import java.rmi.RemoteException;
 
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.NONE)
-public abstract class AbstractControl implements IControl, Mutable
+public abstract class AbstractControl implements IControl
 {
 	protected static final Logger logger = Logger.getLogger(AbstractControl.class);
 

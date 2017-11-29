@@ -13,6 +13,7 @@ import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.custom.controls.field.CustomFieldWithButton;
 import javafx.beans.value.ChangeListener;
+import javafx.collections.ObservableList;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.control.Tooltip;
@@ -25,6 +26,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.BiPredicate;
 
+//TODO need code review!!!
 public class FindListView<T> extends VBox
 {
 	private ListView<T> listView;
@@ -50,20 +52,34 @@ public class FindListView<T> extends VBox
 	public void setData(List<T> data, boolean withClear)
 	{
 		this.data = data;
-		if (withClear)
-		{
-			this.listView.getItems().clear();
-		}
-		this.listView.getItems().addAll(new ArrayList<>(this.data));
-		if (!Str.IsNullOrEmpty(this.cfbFind.getText()))
-		{
-			this.filter(this.cfbFind.getText());
-		}
+		updateData(withClear);
+	}
+
+	public void removeItem(T item)
+	{
+		this.data.remove(item);
+		this.listView.getItems().remove(item);
+	}
+
+	public void addItem(T item)
+	{
+		this.data.add(item);
+		this.listView.getItems().add(item);
 	}
 
 	public void addItem(int index, T item)
 	{
 		this.data.add(index, item);
+		this.listView.getItems().add(index, item);
+	}
+
+	public void refresh()
+	{
+		ObservableList<T> items = this.listView.getItems();
+		int selectedIndex = this.listView.getSelectionModel().getSelectedIndex();
+		this.listView.setItems(null);
+		this.listView.setItems(items);
+		this.listView.getSelectionModel().select(selectedIndex);
 	}
 
 	public void setCellFactory(Callback<ListView<T>, ListCell<T>> value)
@@ -115,11 +131,23 @@ public class FindListView<T> extends VBox
 		return listView;
 	}
 
+	//region private methods
+	private void updateData(boolean withClear)
+	{
+		if (withClear)
+		{
+			this.listView.getItems().clear();
+		}
+		this.listView.getItems().addAll(new ArrayList<>(this.data));
+		if (!Str.IsNullOrEmpty(this.cfbFind.getText()))
+		{
+			this.filter(this.cfbFind.getText());
+		}
+	}
+
 	private void listeners()
 	{
-		this.cfbFind.textProperty().addListener((observable, oldValue, newValue) -> {
-			filter(newValue);
-		});
+		this.cfbFind.textProperty().addListener((observable, oldValue, newValue) -> filter(newValue));
 
 		this.cfbFind.setOnKeyReleased(keyEvent -> {
 			if (keyEvent.getCode() == KeyCode.ENTER && this.listView.getItems().size() == 1)
@@ -146,4 +174,5 @@ public class FindListView<T> extends VBox
 			this.data.stream().filter(t -> this.filter.test(t, newValue)).forEach(this.listView.getItems()::add);
 		}
 	}
+	//endregion
 }
