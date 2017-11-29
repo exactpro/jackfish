@@ -23,8 +23,6 @@ public @interface ActionFieldAttribute
 	String name() default "";
 
 	R constantDescription() default R.DEFAULT;
-	@Deprecated
-	String description() default "";
 
 	boolean mandatory();
 	DefaultValuePool def() default DefaultValuePool.Null;

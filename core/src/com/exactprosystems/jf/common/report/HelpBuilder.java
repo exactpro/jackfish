@@ -277,15 +277,4 @@ public class HelpBuilder extends ReportBuilder {
     protected void reportChart(ReportWriter writer, String title, String beforeTestCase, ChartBuilder chartBuilder) throws IOException {
         // ???
     }
-
-    public void printOut() throws  IOException{
-        String content = this.getContent();
-        System.out.println(content.length());
-        File file = new File("New_Help.html");
-        Path path = file.toPath();
-        Files.deleteIfExists(path);
-        PrintWriter pw =  new PrintWriter(file);
-        pw.print(content);
-        pw.close();
-    }
 }
