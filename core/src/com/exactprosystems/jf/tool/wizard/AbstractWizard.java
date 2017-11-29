@@ -24,6 +24,8 @@ import java.util.function.Supplier;
 
 public abstract class AbstractWizard implements Wizard
 {
+	private WizardDialog dialog;
+
 	protected Context      context;
 	protected WizardManager wizardManager;
 
@@ -37,10 +39,10 @@ public abstract class AbstractWizard implements Wizard
 	@Override
 	public WizardResult run()
 	{
-	    WizardDialog dialog = new WizardDialog(this, this.context);
-	    initDialog(dialog.getPane());
-	    dialog.expandTitle(getTitle());
-	    boolean succeed = dialog.showAndWait().orElse(false);
+	    this.dialog = new WizardDialog(this, this.context);
+	    initDialog(this.dialog.getPane());
+		this.dialog.expandTitle(getTitle());
+	    boolean succeed = this.dialog.showAndWait().orElse(false);
 
 	    if (succeed)
 	    {
@@ -87,4 +89,14 @@ public abstract class AbstractWizard implements Wizard
     protected abstract Supplier<List<WizardCommand> > getCommands();
 
 	protected void onRefused() {}
+
+	protected final void closeDialog()
+	{
+		if (this.dialog != null)
+		{
+			this.dialog.setResult(false);
+			this.dialog.close();
+		}
+	}
 }
+
