@@ -46,7 +46,7 @@ public class DictionaryFx extends GuiDictionary
 {
 	private static final String DIALOG_DICTIONARY_SETTINGS = "DictionarySettings";
 	private static AbstractControl copyControl;
-	private static Window          copyWindow;
+	private static CopyWindow          copyWindow;
 	private boolean isControllerInit = false;
 	private String                 currentAdapterStore;
 	private String                 currentAdapter;
@@ -284,21 +284,20 @@ public class DictionaryFx extends GuiDictionary
 
 	public void dialogCopy(IWindow window) throws Exception
 	{
-		copyWindow = (Window)window;
+		int indexOf = indexOf(window);
+		copyWindow = new CopyWindow(indexOf, Window.createCopy((Window)window));
 	}
 
 	public void dialogPaste(IWindow.SectionKind sectionKind) throws Exception
 	{
 		if(copyWindow != null)
 		{
-			int indexOf = indexOf(copyWindow);
-			Window clone = Window.createCopy(copyWindow);
-			clone.setName(copyWindow.getName() + "_copy");
+			Window clone = copyWindow.getWindow();
 			Command undo = () -> Common.tryCatch(() ->
 			{
 				removeWindow(clone);
 				Collection<IWindow> windows = getWindows();
-				IWindow oldWindow = (IWindow) windows.toArray()[Math.min(indexOf, windows.size() - 1)];
+				IWindow oldWindow = (IWindow) windows.toArray()[Math.min(copyWindow.getIndex(), windows.size() - 1)];
 				displayDialog(oldWindow, windows);
 				displayElement(oldWindow, sectionKind, oldWindow.getFirstControl(sectionKind));
 			}, "");
@@ -1203,5 +1202,25 @@ public class DictionaryFx extends GuiDictionary
 			throw new Exception("Can't find self control for current window.");
 		}
 		return selfControl.locator();
+	}
+
+	class CopyWindow{
+		private int index;
+		private Window window;
+
+
+		public CopyWindow(int index, Window window) {
+			this.index = index;
+			this.window = window;
+			this.window.setName(window.getName() + "_copy");
+		}
+
+		public int getIndex() {
+			return index;
+		}
+
+		public Window getWindow() {
+			return window;
+		}
 	}
 }

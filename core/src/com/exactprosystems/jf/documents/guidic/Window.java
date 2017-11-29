@@ -396,9 +396,4 @@ public class Window implements IWindow, Mutable
 	protected static final Logger logger = Logger.getLogger(Window.class);
 	private boolean changed = false;
 
-	private boolean compareSections(Section s1, Section s2)
-	{
-		return s1.getControls().removeAll(s2.getControls());
-	}
-
 }
