@@ -12,6 +12,7 @@ package com.exactprosystems.jf.app;
 import com.exactprosystems.jf.api.app.*;
 import com.exactprosystems.jf.api.common.SerializablePair;
 import com.exactprosystems.jf.api.common.Str;
+import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.api.error.app.NullParameterException;
 import com.exactprosystems.jf.common.CommonHelper;
 import com.exactprosystems.jf.common.MainRunner;
@@ -127,7 +128,7 @@ public class ApplicationPool implements IApplicationPool
 		}
 		catch (Throwable t)
 		{
-			logger.error(String.format("Error in connectToApplication(%s)", id));
+			logger.error(String.format(R.APP_POOL_ERROR_IN_CONNECT.get(), id));
 			logger.error(t.getMessage(), t);
 			throw new Exception(t.getMessage(), t);
 		}

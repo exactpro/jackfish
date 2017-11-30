@@ -98,7 +98,7 @@ public class FileSystemTreeNode extends TreeNode
 			{
 				ContextMenu menu = new ContextMenu();
 
-				if (f.getName().toLowerCase().endsWith("." + SystemVars.class.getAnnotation(DocumentInfo.class).extentioin()))
+				if (f.getName().toLowerCase().endsWith("." + SystemVars.class.getAnnotation(DocumentInfo.class).extension()))
 				{
 					MenuItem addCsv = new MenuItem("Add as user variables");
 					addCsv.setOnAction(e-> Common.tryCatch(() -> this.model.addUserVarsFile(f), "Error on add csv"));
@@ -110,7 +110,7 @@ public class FileSystemTreeNode extends TreeNode
 
 			Function<File, Common.Function> doubleClickFunction = f -> () ->
 			{
-				if (f.getName().toLowerCase().endsWith("." + Csv.class.getAnnotation(DocumentInfo.class).extentioin()))
+				if (f.getName().toLowerCase().endsWith("." + Csv.class.getAnnotation(DocumentInfo.class).extension()))
 				{
 					this.model.openCsv(f);
 				}

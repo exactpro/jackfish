@@ -866,8 +866,8 @@ public class Main extends Application
 			}
 	
 			String title		= String.format("Choose %s file", annotation.description());
-			String filter		= String.format("%s files (*.%s)", annotation.extentioin(), annotation.extentioin());
-			String extension	= String.format("*.%s", annotation.extentioin());
+			String filter		= String.format("%s files (*.%s)", annotation.extension(), annotation.extension());
+			String extension	= String.format("*.%s", annotation.extension());
 	
 			file = DialogsHelper.showOpenSaveDialog(title, filter, extension, mode);
 		}

@@ -562,9 +562,9 @@ public abstract class DialogsHelper
 			throw new Exception("Unknown type of document: " + docClass);
 		}
 		String title = "Save " + docClass.getSimpleName().toLowerCase();
-		String filter = annotation.extentioin() + " files(*." + annotation.extentioin() + ")";
-		String extension = "*." + annotation.extentioin();
-		String ext = "." + annotation.extentioin();
+		String filter = annotation.extension() + " files(*." + annotation.extension() + ")";
+		String extension = "*." + annotation.extension();
+		String ext = "." + annotation.extension();
 		File file = showOpenSaveDialog(title, filter, extension, OpenSaveMode.SaveFile);
 		if (file != null)
 		{

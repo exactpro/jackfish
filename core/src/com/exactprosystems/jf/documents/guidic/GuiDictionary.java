@@ -35,7 +35,7 @@ import java.util.Iterator;
 @DocumentInfo(
         kind = DocumentKind.GUI_DICTIONARY,
         newName = "NewDictionary",
-        extentioin = "xml",
+        extension = "xml",
         description = "Gui dictionary"
 )
 public class GuiDictionary extends AbstractDocument implements IGuiDictionary

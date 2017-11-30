@@ -11,6 +11,7 @@ package com.exactprosystems.jf.tool.custom.grideditor;
 import com.exactprosystems.jf.api.common.DateTime;
 import com.exactprosystems.jf.api.common.Str;
 import com.exactprosystems.jf.api.common.Sys;
+import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.common.undoredo.Command;
 import com.exactprosystems.jf.functions.*;
 import com.exactprosystems.jf.tool.helpers.DialogsHelper;
@@ -129,7 +130,7 @@ public class TableDataProvider implements DataProvider<String>
 		}
 		if (this.table.columnIsPresent(name))
 		{
-			DialogsHelper.showError(String.format("Column with name %s already present", name));
+			DialogsHelper.showError(String.format(R.COLUMN_IS_PRESENT_EXCEPTION.get(), name));
 			return;
 		}
 		Command undo = () ->

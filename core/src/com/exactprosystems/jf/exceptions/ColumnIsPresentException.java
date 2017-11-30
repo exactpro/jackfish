@@ -8,10 +8,12 @@
 ////////////////////////////////////////////////////////////////////////////////
 package com.exactprosystems.jf.exceptions;
 
+import com.exactprosystems.jf.api.common.i18n.R;
+
 public class ColumnIsPresentException extends RuntimeException
 {
 	public ColumnIsPresentException(String columnName)
 	{
-		super(String.format("Column with name %s already present", columnName));
+		super(String.format(R.COLUMN_IS_PRESENT_EXCEPTION.get(), columnName));
 	}
 }
