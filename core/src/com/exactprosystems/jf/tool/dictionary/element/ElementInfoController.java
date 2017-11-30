@@ -12,14 +12,12 @@ package com.exactprosystems.jf.tool.dictionary.element;
 import com.exactprosystems.jf.api.app.*;
 import com.exactprosystems.jf.api.common.Str;
 import com.exactprosystems.jf.documents.config.Configuration;
-import com.exactprosystems.jf.documents.guidic.controls.AbstractControl;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.ContainingParent;
 import com.exactprosystems.jf.tool.custom.BorderWrapper;
 import com.exactprosystems.jf.tool.custom.controls.field.CustomFieldWithButton;
 import com.exactprosystems.jf.tool.dictionary.DictionaryFx;
 import com.exactprosystems.jf.tool.dictionary.navigation.NavigationController;
-import com.exactprosystems.jf.tool.helpers.DialogsHelper;
 import com.exactprosystems.jf.tool.settings.Theme;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -134,20 +132,21 @@ public class ElementInfoController implements Initializable, ContainingParent
 								}, "Error on set supported controls");
 					}
 					this.comboBoxControl.setValue(temp);
-				}, this.changeControlKindListener);
-	}	
+//				}, this.changeControlKindListener);
+				}, null);
+	}
 	
 	//============================================================
 	// events methods
 	//============================================================
 	public void goToOwner(ActionEvent actionEvent)
 	{
-		tryCatch(() -> this.navigation.parameterGoToOwner(currentOwner()), "Error on go to the owner");
+//		tryCatch(() -> this.navigation.parameterGoToOwner(currentOwner()), "Error on go to the owner");
 	}
 
 	public void changeWeak(ActionEvent actionEvent)
 	{
-		tryCatch(() -> this.navigation.parameterSet(AbstractControl.weakName, this.checkBoxWeak.isSelected()), "Error on changing weakness");
+//		tryCatch(() -> this.navigation.parameterSet(AbstractControl.weakName, this.checkBoxWeak.isSelected()), "Error on changing weakness");
 	}
 	
 	public void clear(ActionEvent actionEvent)
@@ -156,7 +155,7 @@ public class ElementInfoController implements Initializable, ContainingParent
 			String id = ((Node) actionEvent.getSource()).getId();
 			TextField tf = (TextField) this.pane.lookup("#" + id);
 			tf.clear();
-			this.navigation.parameterSet(id, null);
+//			this.navigation.parameterSet(id, null);
 		}, "Error on clearing " + actionEvent); 
 	}
 
@@ -169,76 +168,76 @@ public class ElementInfoController implements Initializable, ContainingParent
 		{
 			this.pane.setDisable(control == null);
 
-			update(
-					this.choiceBoxOwner.getSelectionModel().selectedItemProperty(),
-					() -> {
-						this.choiceBoxOwner.getItems().clear();
-						this.choiceBoxOwner.getItems().add(null);
-						if (owners != null)
-						{
-							this.choiceBoxOwner.getItems().addAll(owners);
-						}
-						this.choiceBoxOwner.getSelectionModel().select(owner);
-					},
-					this.changeOwnerListener
-			);
-
-			update(
-					this.choiceBoxReference.getSelectionModel().selectedItemProperty(),
-					() -> {
-						this.choiceBoxReference.getItems().clear();
-						this.choiceBoxReference.getItems().add(null);
-						if (owners != null)
-						{
-							this.choiceBoxReference.getItems().addAll(owners);
-						}
-						this.choiceBoxReference.getSelectionModel().select(reference);
-					},
-					this.changeReferenceListener
-			);
-
-			update(
-					this.choiceBoxHeader.getSelectionModel().selectedItemProperty(),
-					() -> {
-						this.choiceBoxHeader.getItems().clear();
-						this.choiceBoxHeader.getItems().add(null);
-						if (rows != null)
-						{
-							this.choiceBoxHeader.getItems().addAll(rows);
-						}
-						this.choiceBoxHeader.getSelectionModel().select(header);
-					},
-					this.changeHeaderListener
-			);
-			update(
-					this.choiceBoxRows.getSelectionModel().selectedItemProperty(),
-					() -> {
-						this.choiceBoxRows.getItems().clear();
-						this.choiceBoxRows.getItems().add(null);
-						if (rows != null)
-						{
-							this.choiceBoxRows.getItems().addAll(rows);
-						}
-						this.choiceBoxRows.getSelectionModel().select(row);
-					},
-					this.changeRowsListener
-			);
-			update(
-					this.comboBoxControl.getSelectionModel().selectedItemProperty(),
-					() -> this.comboBoxControl.getSelectionModel().select(control == null ? null : control.getBindedClass()),
-					this.changeControlKindListener
-			);
-			update(
-					this.choiceBoxAddition.getSelectionModel().selectedItemProperty(),
-					() -> this.choiceBoxAddition.getSelectionModel().select(control == null ? null : control.getAddition()),
-					this.changeAdditionListener
-			);
-
-			update(
-					this.choiceBoxVisibility.getSelectionModel().selectedItemProperty(),
-					() -> this.choiceBoxVisibility.getSelectionModel().select(control == null ? null : control.getVisibility()),
-					this.changeVisibilityListener
-			);
+//			update(
+//					this.choiceBoxOwner.getSelectionModel().selectedItemProperty(),
+//					() -> {
+//						this.choiceBoxOwner.getItems().clear();
+//						this.choiceBoxOwner.getItems().add(null);
+//						if (owners != null)
+//						{
+//							this.choiceBoxOwner.getItems().addAll(owners);
+//						}
+//						this.choiceBoxOwner.getSelectionModel().select(owner);
+//					},
+//					this.changeOwnerListener
+//			);
+//
+//			update(
+//					this.choiceBoxReference.getSelectionModel().selectedItemProperty(),
+//					() -> {
+//						this.choiceBoxReference.getItems().clear();
+//						this.choiceBoxReference.getItems().add(null);
+//						if (owners != null)
+//						{
+//							this.choiceBoxReference.getItems().addAll(owners);
+//						}
+//						this.choiceBoxReference.getSelectionModel().select(reference);
+//					},
+//					this.changeReferenceListener
+//			);
+//
+//			update(
+//					this.choiceBoxHeader.getSelectionModel().selectedItemProperty(),
+//					() -> {
+//						this.choiceBoxHeader.getItems().clear();
+//						this.choiceBoxHeader.getItems().add(null);
+//						if (rows != null)
+//						{
+//							this.choiceBoxHeader.getItems().addAll(rows);
+//						}
+//						this.choiceBoxHeader.getSelectionModel().select(header);
+//					},
+//					this.changeHeaderListener
+//			);
+//			update(
+//					this.choiceBoxRows.getSelectionModel().selectedItemProperty(),
+//					() -> {
+//						this.choiceBoxRows.getItems().clear();
+//						this.choiceBoxRows.getItems().add(null);
+//						if (rows != null)
+//						{
+//							this.choiceBoxRows.getItems().addAll(rows);
+//						}
+//						this.choiceBoxRows.getSelectionModel().select(row);
+//					},
+//					this.changeRowsListener
+//			);
+//			update(
+//					this.comboBoxControl.getSelectionModel().selectedItemProperty(),
+//					() -> this.comboBoxControl.getSelectionModel().select(control == null ? null : control.getBindedClass()),
+//					this.changeControlKindListener
+//			);
+//			update(
+//					this.choiceBoxAddition.getSelectionModel().selectedItemProperty(),
+//					() -> this.choiceBoxAddition.getSelectionModel().select(control == null ? null : control.getAddition()),
+//					this.changeAdditionListener
+//			);
+//
+//			update(
+//					this.choiceBoxVisibility.getSelectionModel().selectedItemProperty(),
+//					() -> this.choiceBoxVisibility.getSelectionModel().select(control == null ? null : control.getVisibility()),
+//					this.changeVisibilityListener
+//			);
 			this.tfID.setText(get(control, "", IControl::getID));
 			this.tfUID.setText(get(control, "", IControl::getUID));
 			this.tfXpath.setText(get(control, "", IControl::getXpath));
@@ -292,7 +291,7 @@ public class ElementInfoController implements Initializable, ContainingParent
 
 	private void refreshElement()
 	{
-		tryCatch(() -> this.navigation.displayElementWithoutInfo(this.window), "Error on displaying element");
+//		tryCatch(() -> this.navigation.displayElementWithoutInfo(this.window), "Error on displaying element");
 	}
 
 	private void changeText(TextField source, String value)
@@ -300,7 +299,7 @@ public class ElementInfoController implements Initializable, ContainingParent
 		tryCatch(() -> {
 			if (!Str.areEqual(value, previousValue))
 			{
-				this.navigation.parameterSet(source.getId(), value, this.currentControl);
+//				this.navigation.parameterSet(source.getId(), value, this.currentControl);
 				previousValue = value;
 			}
 		}, "Error on changing " + source.getId());
@@ -311,7 +310,7 @@ public class ElementInfoController implements Initializable, ContainingParent
 		tryCatch(() -> {
 			if (!Str.areEqual(value, previousValue))
 			{
-				this.navigation.parameterSet(source.getId(), Integer.parseInt(value), this.currentControl);
+//				this.navigation.parameterSet(source.getId(), Integer.parseInt(value), this.currentControl);
 				previousValue = value;
 			}
 		}, "Error on changing " + source.getId());
@@ -345,26 +344,26 @@ public class ElementInfoController implements Initializable, ContainingParent
 	}
 
 	//change listeners
-	private ChangeListener<ControlKind> changeControlKindListener = (observable, oldValue, newValue) ->
-			tryCatch(() -> navigation.parameterSetControlKind(newValue), "Error on changing control kind");
-
-	private ChangeListener<IControl> changeOwnerListener = (observableValue, oldValue, newValue) ->
-			tryCatch(() -> navigation.parameterSetOwner(newValue == null ? null : newValue.getID()), "Error on changing owner");
-
-	private ChangeListener<IControl> changeReferenceListener = (observableValue, oldValue, newValue) ->
-			tryCatch(() -> navigation.parameterSetRef(newValue == null ? null : newValue.getID()), "Error on changing owner");
-
-	private ChangeListener<IControl> changeHeaderListener = ((observable, oldValue, newValue) ->
-			tryCatch(() -> this.navigation.parameterSet(AbstractControl.headerName, newValue == null ? null : newValue.getID()), "Error on changing header"));
-
-	private ChangeListener<IControl> changeRowsListener = ((observable, oldValue, newValue) ->
-			tryCatch(() -> this.navigation.parameterSet(AbstractControl.rowsName, newValue == null ? null : newValue.getID()), "Error on changing rows"));
-
-	private ChangeListener<Addition> changeAdditionListener = ((observable, oldValue, newValue) ->
-			tryCatch(() -> this.navigation.parameterSet(AbstractControl.additionName, newValue), "Error on changing addition") );
-
-	private ChangeListener<Visibility> changeVisibilityListener = ((observable, oldValue, newValue) ->
-			tryCatch(() -> this.navigation.parameterSet(AbstractControl.visibilityName, newValue), "Error on changing visibility") );
+//	private ChangeListener<ControlKind> changeControlKindListener = (observable, oldValue, newValue) ->
+//			tryCatch(() -> navigation.parameterSetControlKind(newValue), "Error on changing control kind");
+//
+//	private ChangeListener<IControl> changeOwnerListener = (observableValue, oldValue, newValue) ->
+//			tryCatch(() -> navigation.parameterSetOwner(newValue == null ? null : newValue.getID()), "Error on changing owner");
+//
+//	private ChangeListener<IControl> changeReferenceListener = (observableValue, oldValue, newValue) ->
+//			tryCatch(() -> navigation.parameterSetRef(newValue == null ? null : newValue.getID()), "Error on changing owner");
+//
+//	private ChangeListener<IControl> changeHeaderListener = ((observable, oldValue, newValue) ->
+//			tryCatch(() -> this.navigation.parameterSet(AbstractControl.headerName, newValue == null ? null : newValue.getID()), "Error on changing header"));
+//
+//	private ChangeListener<IControl> changeRowsListener = ((observable, oldValue, newValue) ->
+//			tryCatch(() -> this.navigation.parameterSet(AbstractControl.rowsName, newValue == null ? null : newValue.getID()), "Error on changing rows"));
+//
+//	private ChangeListener<Addition> changeAdditionListener = ((observable, oldValue, newValue) ->
+//			tryCatch(() -> this.navigation.parameterSet(AbstractControl.additionName, newValue), "Error on changing addition") );
+//
+//	private ChangeListener<Visibility> changeVisibilityListener = ((observable, oldValue, newValue) ->
+//			tryCatch(() -> this.navigation.parameterSet(AbstractControl.visibilityName, newValue), "Error on changing visibility") );
 
 	private String previousValue = "";
 
@@ -392,16 +391,16 @@ public class ElementInfoController implements Initializable, ContainingParent
 			if (!newValue && oldValue)
 			{
 			    String id = tf.getText();
-			    if (this.navigation.checkNewId(id))
-			    {
-    				changeText(tf, id);
-    				refreshElement();
-			    }
-			    else
-			    {
-	                DialogsHelper.showError("Element with id " + id + " already exists.");
-	                tf.setText(this.previousValue);
-			    }
+//			    if (this.navigation.checkNewId(id))
+//			    {
+//    				changeText(tf, id);
+//    				refreshElement();
+//			    }
+//			    else
+//			    {
+//	                DialogsHelper.showError("Element with id " + id + " already exists.");
+//	                tf.setText(this.previousValue);
+//			    }
 			}
 		});
 	}

@@ -9,8 +9,6 @@
 
 package com.exactprosystems.jf.tool.dictionary.navigation;
 
-import com.exactprosystems.jf.api.app.AppConnection;
-import com.exactprosystems.jf.api.app.ControlKind;
 import com.exactprosystems.jf.api.app.IControl;
 import com.exactprosystems.jf.api.app.IWindow;
 import com.exactprosystems.jf.api.app.IWindow.SectionKind;
@@ -28,11 +26,11 @@ import com.exactprosystems.jf.tool.dictionary.FindListView;
 import com.exactprosystems.jf.tool.helpers.DialogsHelper;
 import com.exactprosystems.jf.tool.settings.Theme;
 import com.exactprosystems.jf.tool.wizard.WizardButton;
-import javafx.beans.value.ChangeListener;
 import javafx.event.ActionEvent;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.Parent;
+import javafx.scene.SnapshotParameters;
 import javafx.scene.control.*;
 import javafx.scene.input.ClipboardContent;
 import javafx.scene.input.Dragboard;
@@ -52,14 +50,11 @@ import static com.exactprosystems.jf.tool.Common.tryCatch;
 
 public class NavigationController implements Initializable, ContainingParent
 {
-	public FindListView<IWindow> listViewWindow;
-	public FindListView<BorderPaneAndControl> listViewElement;
-
 	public ToggleGroup groupSection;
 	public VBox vBoxWindow;
-    public HBox hBoxWindow;
+	public HBox hBoxWindow;
 	public VBox vBoxElement;
-    public HBox hBoxElement;
+	public HBox hBoxElement;
 
 	public Button btnNewElement;
 	public Button btnDeleteElement;
@@ -70,25 +65,19 @@ public class NavigationController implements Initializable, ContainingParent
 	public Button btnCopyDialog;
 	public Button btnPasteDialog;
 	public Button btnTestWindow;
-    public WizardButton btnWindowWizardManager;
-    public WizardButton btnElementWizardManager;
+
+	private FindListView<IWindow> listViewWindow;
+	private FindListView<BorderPaneAndControl> listViewElement;
+
+	private WizardButton btnWindowWizardManager;
+	private WizardButton btnElementWizardManager;
 
 	private Parent pane;
 
 	private Node dialog;
 	private Node element;
 
-	private DictionaryFxController mainController;
 	private DictionaryFx model;
-
-	@Deprecated
-	private AppConnection appConnection;
-
-	@Deprecated
-	public void setAppConnection(AppConnection appConnection)
-	{
-		this.appConnection = appConnection;
-	}
 
 	@Override
 	public void setParent(Parent parent)
@@ -106,33 +95,19 @@ public class NavigationController implements Initializable, ContainingParent
 	{
 		this.listViewWindow = new FindListView<>((w, s) -> w.getName().toUpperCase().contains(s.toUpperCase()), true);
 		this.listViewWindow.setId("findListWindow");
-		this.listViewWindow.setCellFactory(param -> new CustomListCell<>(
-		        (w, s) -> this.model.checkDialogName(s),
-				(w, s) -> Common.tryCatch(() -> this.model.dialogRename(w, s), "Error on rename"),
-				IWindow::getName,
-				(d,i) -> Common.tryCatch(() -> this.model.dialogMove(d,currentSection(), i), "Error on move")
-		));
-		
 		this.vBoxWindow.getChildren().add(0, this.listViewWindow);
 
-		this.btnWindowWizardManager = WizardButton.normalButton();
-        this.hBoxWindow.getChildren().add(this.btnWindowWizardManager);
-
-		this.btnElementWizardManager = WizardButton.normalButton();
-		this.hBoxElement.getChildren().add(this.btnElementWizardManager);
-		
 		this.listViewElement = new FindListView<>((e, s) -> (!Str.IsNullOrEmpty(e.control.getID()) && e.control.getID().toUpperCase().contains(s.toUpperCase()) || (e.control.getBindedClass().getClazz().toUpperCase()
 				.contains(s.toUpperCase()))),
 				false);
 		this.listViewElement.setId("findListElement");
-		this.listViewElement.setCellFactory(param -> new CustomListCell<>(
-		        (w, s) -> this.model.checkNewId(w.control.getSection().getWindow(), w.control, s),
-				(w, s) -> {},
-				e -> e.control.toString(),
-				(w, i) -> Common.tryCatch(() -> this.model.elementMove(currentWindow(), currentSection(), w.control,i), "Error on move element")
-		));
-
 		this.vBoxElement.getChildren().add(0, this.listViewElement);
+
+		this.btnWindowWizardManager = WizardButton.normalButton();
+		this.hBoxWindow.getChildren().add(this.btnWindowWizardManager);
+
+		this.btnElementWizardManager = WizardButton.normalButton();
+		this.hBoxElement.getChildren().add(this.btnElementWizardManager);
 		
 		ScrollPane scrollPaneWindow = new ScrollPane(this.vBoxWindow);
 		scrollPaneWindow.setFitToWidth(true);
@@ -160,10 +135,22 @@ public class NavigationController implements Initializable, ContainingParent
 		HBox.setHgrow(this.element, Priority.ALWAYS);
 	}
 
-	public void init(DictionaryFx model, DictionaryFxController mainController, GridPane gridPane)
+	public void init(DictionaryFx model, GridPane gridPane)
 	{
-		this.mainController = mainController;
 		this.model = model;
+
+		this.listViewWindow.setCellFactory(param -> new CustomListCell<>(
+				(w, s) -> this.model.checkDialogName(s),
+				this.model::dialogRename,
+				IWindow::getName,
+				this.model::dialogMove
+		));
+		this.listViewElement.setCellFactory(param -> new CustomListCell<>(
+				(w, s) -> false,
+				(w, s) -> {},
+				e -> e.control.toString(),
+				(w, i) -> this.model.elementMove(w.control, i)
+		));
 
 		this.listViewWindow.addChangeListener((observable, oldValue, newValue) -> this.model.setCurrentWindow(newValue));
 		this.groupSection.selectedToggleProperty().addListener((observable, oldValue, newValue) -> this.model.setCurrentSection(this.currentSection()));
@@ -173,11 +160,11 @@ public class NavigationController implements Initializable, ContainingParent
 		WizardManager manager = model.getFactory().getWizardManager();
 		
 		this.btnWindowWizardManager.initButton(context, manager, 
-		        () -> new Object[] { model, currentWindow() }, 
-		        () -> new Object[] { this.appConnection });
+		        () -> new Object[] { this.model, this.model.getCurrentWindow() },
+		        () -> new Object[] { this.model.getApp() });
 		this.btnElementWizardManager.initButton(context, manager, 
-		        () -> new Object[] { model, currentWindow(), currentSection(), elementForWizard() },
-		        () -> new Object[] { this.appConnection });
+		        () -> new Object[] { this.model, this.model.getCurrentWindow(), this.model.getCurrentSection(), elementForWizard() },
+		        () -> new Object[] { this.model.getApp() });
 		
 		gridPane.add(this.pane, 0, 0);
 	}
@@ -204,35 +191,36 @@ public class NavigationController implements Initializable, ContainingParent
 	}
 	//endregion
 
-	// ------------------------------------------------------------------------------------------------------------------
+	//region element event handlers
 	public void newElement(ActionEvent actionEvent)
 	{
-		tryCatch(() -> this.model.elementNew(currentWindow(), currentSection()), "Error on new element");
+		tryCatch(() -> this.model.createNewElement(), "Error on new element");
 	}
 
 	public void deleteElement(ActionEvent actionEvent)
 	{
-		tryCatch(() -> this.model.elementDelete(currentWindow(), currentSection(), currentElement()), "Error on delete element");
+		this.model.removeCurrentElement();
 	}
 
 	public void copyElement(ActionEvent actionEvent)
 	{
-		tryCatch(() -> this.model.elementCopy(currentWindow(), currentSection(), currentElement()), "Error on copy element");
+		tryCatch(() -> this.model.elementCopy(), "Error on copy element");
 	}
 
 	public void pasteElement(ActionEvent actionEvent)
 	{
-		tryCatch(() -> this.model.elementPaste(currentWindow(), currentSection()), "Error on paste element");
+		tryCatch(() -> this.model.elementPaste(), "Error on paste element");
 	}
 
 	public void testingDialog(ActionEvent actionEvent)
 	{
-		Common.tryCatch(() -> this.model.dialogTest(currentWindow(), this.listViewElement.getItems().stream().map(b -> b.control).collect(Collectors.toList())), "Error on show testing dialog");
+		this.model.testingAllElements();
 	}
 
-	// ------------------------------------------------------------------------------------------------------------------
-	// pass-throw methods
-	// ------------------------------------------------------------------------------------------------------------------
+	//endregion
+
+	/*
+	TODO move it to ElementInfoController
 	public void parameterSetControlKind(ControlKind controlKind) throws Exception
 	{
 		this.model.parameterSetControlKind(currentWindow(), currentSection(), currentElement(), controlKind);
@@ -271,24 +259,31 @@ public class NavigationController implements Initializable, ContainingParent
 		}
 	}
 
+	public boolean checkNewId(String id)
+	{
+		return this.model.checkNewId(currentWindow(), currentElement(), id);
+	}
+	*/
+
+/* TODO move it to ActionsController
 	public void sendKeys(String text) throws Exception
 	{
-		this.model.sendKeys(text, currentElement(), currentWindow());
+		this.model.sendKeys(text);
 	}
 
 	public void getValue() throws Exception
 	{
-		this.model.getValue(currentElement(), currentWindow());
+		this.model.getValue();
 	}
 
 	public void click() throws Exception
 	{
-		this.model.click(currentElement(), currentWindow());
+		this.model.click();
 	}
 
 	public void find() throws Exception
 	{
-		this.model.find(currentElement(), currentWindow());
+		this.model.find();
 	}
 
 	public void switchToCurrent() throws Exception
@@ -300,15 +295,9 @@ public class NavigationController implements Initializable, ContainingParent
 	{
 		this.model.doIt(obj, currentElement(), currentWindow());
 	}
+*/
 
-	public boolean checkNewId(String id)
-	{
-		return this.model.checkNewId(currentWindow(), currentElement(), id);
-	}
-
-	// ------------------------------------------------------------------------------------------------------------------
-	// display* methods
-	// ------------------------------------------------------------------------------------------------------------------
+	// region display* methods
 	public void displayDialogs(Collection<IWindow> dialogs)
 	{
 		this.listViewWindow.setData(new ArrayList<>(dialogs), true);
@@ -368,23 +357,6 @@ public class NavigationController implements Initializable, ContainingParent
 		this.listViewElement.setData(Collections.emptyList(), true);
 	}
 
-
-	@Deprecated
-	public void displayDialog(IWindow window, Collection<IWindow> windows)
-	{
-		display(window, windows, this.listViewWindow, this.windowChangeListener);
-	}
-
-	@Deprecated
-	public void displayElement(IControl control, Collection<IControl> controls)
-	{
-		if (controls == null)
-		{
-			controls = new ArrayList<>();
-		}
-		display(new BorderPaneAndControl(control), controls.stream().map(BorderPaneAndControl::new).collect(Collectors.toList()), this.listViewElement, this.elementChangeListener);
-	}
-
 	public void displayTestingControl(IControl control, String text, DictionaryFxController.Result result)
 	{
 		Common.runLater(() ->
@@ -400,30 +372,25 @@ public class NavigationController implements Initializable, ContainingParent
 	// private methods
 	// ------------------------------------------------------------------------------------------------------------------
 
-
-	public IWindow currentWindow()
-	{
-		return this.listViewWindow.getSelectedItem();
-	}
-
 	private IControl elementForWizard()
 	{
-		if(currentElement() != null)
+		IControl currentElement = this.model.getCurrentElement();
+		if(currentElement != null)
 		{
-			return currentElement();
+			return currentElement;
 		}
 		else
 		{
 			try
 			{
-				SectionKind sc = currentSection();
-				AbstractControl element = AbstractControl.create(ControlKind.Any);
+				this.model.createNewElement();
+				IControl newElement = this.model.getCurrentElement();
+				SectionKind sc = this.model.getCurrentSection();
 				if(sc == SectionKind.Self)
 				{
-					element.set(AbstractControl.idName, "self");
+					((AbstractControl) newElement).set(AbstractControl.idName, "self");
 				}
-				currentWindow().getSection(sc).addControl(element);
-				return element;
+				return newElement;
 
 			}
 			catch (Exception e)
@@ -445,43 +412,6 @@ public class NavigationController implements Initializable, ContainingParent
 
 		return SectionKind.valueOf(name);
 	}
-
-	private IControl currentElement()
-	{
-		return this.listViewElement.getSelectedItem().control;
-	}
-
-	public void setChoiseBoxListeners()
-	{
-		this.listViewElement.addChangeListener(this.elementChangeListener);
-	}
-
-	public void close()
-	{
-	}
-
-	@Deprecated
-	private <T> void display(T item, Collection<T> items, FindListView<T> listView, ChangeListener<T> listener)
-	{
-		Common.runLater(() -> {
-			listView.removeChangeListener(listener);
-			if (items != null)
-			{
-				listView.setData(new ArrayList<>(items), true);
-			}
-			else
-			{
-				listView.setData(new ArrayList<>(), true);
-			}
-			listView.selectItem(item);
-			listView.addChangeListener(listener);
-		});
-	}
-
-	private ChangeListener<IWindow> windowChangeListener = (observable, oldValue, newValue) -> tryCatch(() -> model.windowChanged(newValue, currentSection()), "Error on select window.");
-
-	private ChangeListener<BorderPaneAndControl> elementChangeListener = (observable, oldValue, newValue) ->
-			tryCatch(() -> {if (newValue != null) model.elementChanged(currentWindow(), currentSection(), newValue.control);},"Error on select element");
 
 	private class BorderPaneAndControl
 	{
@@ -547,6 +477,7 @@ public class NavigationController implements Initializable, ContainingParent
 				{
 					Dragboard db = this.startDragAndDrop(TransferMode.MOVE);
 					ClipboardContent cc = new ClipboardContent();
+					db.setDragView(this.snapshot(new SnapshotParameters(), null));
 					int moveIndex = this.getListView().getItems().indexOf(this.getItem());
 					cc.putString(String.valueOf(moveIndex));
 					db.setContent(cc);

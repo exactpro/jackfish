@@ -9,12 +9,13 @@
 
 package com.exactprosystems.jf.tool.dictionary;
 
+import com.exactprosystems.jf.actions.ReadableValue;
 import com.exactprosystems.jf.actions.gui.DialogGetProperties;
-import com.exactprosystems.jf.api.app.*;
-import com.exactprosystems.jf.api.app.IWindow.SectionKind;
+import com.exactprosystems.jf.api.app.AppConnection;
+import com.exactprosystems.jf.api.app.IApplicationFactory;
 import com.exactprosystems.jf.api.common.ParametersKind;
+import com.exactprosystems.jf.common.Settings;
 import com.exactprosystems.jf.documents.Document;
-import com.exactprosystems.jf.documents.matrix.parser.listeners.ListProvider;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.custom.console.ConsoleArea;
 import com.exactprosystems.jf.tool.custom.tab.CustomTab;
@@ -29,12 +30,13 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
 import org.fxmisc.flowless.VirtualizedScrollPane;
 
+import java.io.File;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
+import java.util.Optional;
 import java.util.ResourceBundle;
-import java.util.function.Function;
+import java.util.stream.Collectors;
 
 @ControllerInfo(resourceName = "DictionaryTab.fxml")
 public class DictionaryFxController extends AbstractDocumentController<DictionaryFx>
@@ -78,25 +80,25 @@ public class DictionaryFxController extends AbstractDocumentController<Dictionar
 	//endregion
 
 	//region AbstractDocumentController
-
 	@Override
 	protected void init(Document model, CustomTab customTab)
 	{
 		super.init(model, customTab);
 
 		this.navigationController = Common.loadController(NavigationController.class.getResource("Navigation.fxml"));
-		this.navigationController.init(super.model, this, this.mainGridPane);
+		this.navigationController.init(super.model, this.mainGridPane);
 
 		this.elementInfoController = Common.loadController(ElementInfoController.class.getResource("ElementInfo.fxml"));
 		this.elementInfoController.init(super.model, super.model.getFactory().getConfiguration(), this.mainGridPane, this.navigationController);
 
 		this.actionsController = Common.loadController(ActionsController.class.getResource("Actions.fxml"));
-		this.actionsController.init(super.model, this.mainGridPane, super.model.getEvaluator(), this.navigationController, this.elementInfoController);
+		this.actionsController.init(super.model, this.mainGridPane, super.model.getEvaluator());
 
 		//region actions
 		super.model.getTitles().setOnAddAllListener((integer, collection) -> this.actionsController.displayTitles(DictionaryFx.convertToString(collection)));
 		super.model.getAppsList().setOnAddAllListener((integer, collection) -> this.actionsController.displayApplications(DictionaryFx.convertToString(collection)));
 		super.model.currentApp().setOnChangeListener((s, s2) -> this.actionsController.displayCurrentApplication(s2));
+		super.model.imageProperty().setOnChangeListener((imageWrapper, imageWrapper2) -> this.actionsController.displayImage(imageWrapper2));
 		//TODO add listeners for events
 		//endregion
 
@@ -115,74 +117,50 @@ public class DictionaryFxController extends AbstractDocumentController<Dictionar
 		this.model.currentElements().setOnAddAllListener((integer, collection) -> this.navigationController.displayElements(collection));
 		this.model.currentElements().setOnChangeListener((integer, collection) -> this.navigationController.clearElements());
 		//endregion
+
+		super.model.outProperty().setOnChangeListener((s, s2) -> Common.runLater(() -> this.area.appendDefaultTextOnNewLine(s2)));
+
+		super.model.appStatusProperty().setOnChangeListener((applicationStatusBean, applicationStatusBean2) -> this.displayApplicationStatus(applicationStatusBean2));
+	}
+
+	@Override
+	protected void restoreSettings(Settings settings)
+	{
+		String absolutePath = new File(super.model.getNameProperty().get()).getAbsolutePath();
+		Settings.SettingsValue value = settings.getValue(Settings.MAIN_NS, DictionaryFx.DIALOG_DICTIONARY_SETTINGS, absolutePath);
+		Optional.ofNullable(value).ifPresent(s -> super.model.setCurrentApp(s.getValue()));
 	}
 
 	//endregion
 
-	public void println(String str)
+	private void displayApplicationStatus(ApplicationStatusBean appStatusBean)
 	{
-		Common.runLater(() -> this.area.appendDefaultTextOnNewLine(str));
-	}
-
-	// ------------------------------------------------------------------------------------------------------------------
-	// display* methods
-	// ------------------------------------------------------------------------------------------------------------------
-	public void displayTestingControl(IControl control, String text, Result result)
-	{
-		this.navigationController.displayTestingControl(control, text, result);
-	}
-
-	public void displayDialog(IWindow window, Collection<IWindow> windows)
-	{
-		this.navigationController.displayDialog(window, windows);
-	}
-
-	public void displaySection(SectionKind sectionKind)
-	{
-		//TODO
-		this.navigationController.displaySection(sectionKind);
-	}
-
-	public void displayElement(Collection<IControl> controls, IControl control)
-	{
-		this.navigationController.displayElement(control, controls);
-	}
-
-	public void displayElementInfo(IWindow window, IControl control, Collection<IControl> owners, IControl owner, Collection<IControl> rows, IControl row, IControl header, IControl reference)
-	{
-		this.elementInfoController.displayInfo(window, control, owners, owner, rows, row, header, reference);
-	}
-
-	public void displayImage(ImageWrapper imageWrapper) throws Exception
-	{
-		this.actionsController.displayImage(imageWrapper);
-	}
-
-	public void displayApplicationStatus(ApplicationStatus status, Throwable throwable, AppConnection appConnection, Function<String, ListProvider> function)
-	{
-		this.navigationController.setAppConnection(appConnection);
-		this.actionsController.displayApplicationStatus(status, throwable);
-		if (appConnection != null)
+		this.actionsController.displayApplicationStatus(appStatusBean.getStatus(), appStatusBean.getThrowable());
+		AppConnection appCon = appStatusBean.getAppConnection();
+		if (appCon != null)
 		{
-			IApplicationFactory factory = appConnection.getApplication().getFactory();
+			IApplicationFactory factory = appCon.getApplication().getFactory();
 			String[] getProps = factory.wellKnownParameters(ParametersKind.GET_PROPERTY);
 			String[] setProps = factory.wellKnownParameters(ParametersKind.SET_PROPERTY);
 			String[] getDialogProps = {DialogGetProperties.sizeName, DialogGetProperties.positionName};
 			this.actionsController.displayProperties(Arrays.asList(getProps), Arrays.asList(setProps), Arrays.asList(getDialogProps));
 
 			String[] params = factory.wellKnownParameters(ParametersKind.NEW_INSTANCE);
-			this.actionsController.displayParameters(Arrays.asList(params), function);
+			this.actionsController.displayParametersForNewInstance(Arrays.asList(params), key -> {
+				if (factory.canFillParameter(key))
+				{
+					return () -> Arrays.stream(factory.listForParameter(key))
+							.map(this.model.getEvaluator()::createString)
+							.map(ReadableValue::new)
+							.collect(Collectors.toList());
+				}
+				return null;
+			});
 		}
 		else
 		{
 			this.actionsController.displayProperties(new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
-			this.actionsController.displayParameters(null, function);
+			this.actionsController.displayParametersForNewInstance(null, null);
 		}
 	}
-
-	public void displayActionControl(Collection<String> entries, String entry, String title)
-	{
-		this.actionsController.displayActionControl(entries, entry, title);
-	}
-
 }

@@ -133,8 +133,8 @@
 														<RowConstraints minHeight="10.0" prefHeight="32.0" maxHeight="32.0" vgrow="SOMETIMES"/>
 													</rowConstraints>
 													<children>
-														<CustomFieldWithButton fx:id="tfSendKeys" onAction="#sendKeysAction" GridPane.columnSpan="2"/>
-														<Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#sendKeysAction"  GridPane.columnIndex="2">
+														<CustomFieldWithButton fx:id="tfSendKeys" onAction="#sendKeys" GridPane.columnSpan="2"/>
+														<Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#sendKeys" GridPane.columnIndex="2">
 															<text>
 																<R fx:constant="ACTIONS_SEND_KEYS"/>
 															</text>
@@ -144,12 +144,12 @@
 																<R fx:constant="ACTIONS_DO_IT"/>
 															</text>
 														</Button>
-														<Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#findAction" GridPane.columnIndex="1" GridPane.rowIndex="2">
+														<Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#find" GridPane.columnIndex="1" GridPane.rowIndex="2">
 															<text>
 																<R fx:constant="ACTIONS_FIND"/>
 															</text>
 														</Button>
-														<Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#clickAction" GridPane.rowIndex="2">
+														<Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#click" GridPane.rowIndex="2">
 															<text>
 																<R fx:constant="ACTIONS_CLICK"/>
 															</text>
@@ -177,7 +177,7 @@
 													<children>
 														<Label text="Switch to:"/>
 														<Label minWidth="4.0"/>
-														<ComboBox fx:id="comboBoxTitles" maxWidth="1.7976931348623157E308" onAction="#changeTitle" prefWidth="150.0" HBox.hgrow="ALWAYS"/>
+														<ComboBox fx:id="comboBoxTitles" maxWidth="1.7976931348623157E308" prefWidth="150.0" HBox.hgrow="ALWAYS"/>
 														<Button id="cbUpdate" onAction="#refreshTitles" styleClass="$transparentBackground"/>
 													</children>
 												</HBox>
@@ -258,7 +258,7 @@
 										<VBox>
 											<Label id="$verMid"/>
 											<ScrollPane VBox.vgrow="ALWAYS" fitToHeight="true" fitToWidth="true">
-												<ListView fx:id="listView">
+												<ListView fx:id="lvNewInstance">
 
 												</ListView>
 											</ScrollPane>
@@ -504,7 +504,7 @@
 																		<R fx:constant="DIALOGS_RESIZE"/>
 																	</text>
 																</Button>
-																<RadioButton fx:id="rbdMin" mnemonicParsing="false">
+																<RadioButton fx:id="rbDialogMin" mnemonicParsing="false">
 																	<text>
 																		<R fx:constant="DIALOGS_MIN"/>
 																	</text>
@@ -512,12 +512,12 @@
 																		<ToggleGroup fx:id="dialogGroupSection"/>
 																	</toggleGroup>
 																</RadioButton>
-																<RadioButton fx:id="rbdMax" mnemonicParsing="false" GridPane.columnIndex="1" toggleGroup="$dialogGroupSection">
+																<RadioButton fx:id="rbDialogMax" mnemonicParsing="false" GridPane.columnIndex="1" toggleGroup="$dialogGroupSection">
 																	<text>
 																		<R fx:constant="DIALOGS_MAX"/>
 																	</text>
 																</RadioButton>
-																<RadioButton fx:id="rbdNormal" mnemonicParsing="false" GridPane.columnIndex="2" toggleGroup="$dialogGroupSection">
+																<RadioButton fx:id="rbDialogNormal" mnemonicParsing="false" GridPane.columnIndex="2" toggleGroup="$dialogGroupSection">
 																	<text>
 																		<R fx:constant="DIALOGS_NORMAL"/>
 																	</text>
@@ -541,7 +541,7 @@
 																		<Label text="W:" GridPane.columnIndex="3" GridPane.halignment="RIGHT"/>
 																		<NumberTextField fx:id="ntfDialogResizeH" GridPane.columnIndex="2"/>
 																		<NumberTextField fx:id="ntfDialogResizeW" GridPane.columnIndex="4"/>
-																		<RadioButton fx:id="rbdSize" mnemonicParsing="false" toggleGroup="$dialogGroupSection">
+																		<RadioButton fx:id="rbDialogSize" mnemonicParsing="false" toggleGroup="$dialogGroupSection">
 																			<text>
 																				<R fx:constant="DIALOGS_SIZE"/>
 																			</text>
