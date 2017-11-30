@@ -73,7 +73,7 @@ import java.util.stream.Stream;
 @DocumentInfo(
         kind = DocumentKind.CONFIGURATION,
 		newName = "NewConfiguration",
-		extentioin = "xml",
+		extension = "xml",
 		description = "Jackfish configuration"
 )
 public class Configuration extends AbstractDocument

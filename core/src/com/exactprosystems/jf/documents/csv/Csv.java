@@ -20,7 +20,7 @@ import java.io.Reader;
 @DocumentInfo(
             kind = DocumentKind.CSV,
             newName = "Csv", 
-            extentioin = "csv", 
+            extension = "csv",
             description = "CSV"
         )
 public class Csv extends AbstractDocument

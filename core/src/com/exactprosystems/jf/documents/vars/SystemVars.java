@@ -28,7 +28,7 @@ import java.util.stream.Collectors;
 @DocumentInfo(
         kind = DocumentKind.SYSTEM_VARS,
         newName = "NewVars",
-		extentioin = "ini",
+		extension = "ini",
 		description = "System variables"
 )
 public class SystemVars extends AbstractDocument

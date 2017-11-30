@@ -20,6 +20,6 @@ public @interface DocumentInfo
 {
     DocumentKind kind();
 	String newName();
-	String extentioin();
+	String extension();
 	String description();
 }

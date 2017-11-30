@@ -35,6 +35,6 @@ public class TooManyElementsException extends JFRemoteException
 	@Override
 	public ErrorKind getErrorKind()
 	{
-		return ErrorKind.ELEMENT_NOT_FOUND;
+		return ErrorKind.TOO_MANY_ELEMENTS;
 	}
 }

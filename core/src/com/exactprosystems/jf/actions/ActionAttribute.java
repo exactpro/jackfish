@@ -25,22 +25,9 @@ public @interface ActionAttribute
 	String suffix() default "";
 	boolean additionFieldsAllowed();
 	Class<?> outputType() default NullType.class;
-
-	@Deprecated
-	String generalDescription() default "";
 	R constantGeneralDescription() default R.DEFAULT;
-
-	@Deprecated
-	String additionalDescription() default "";
 	R constantAdditionalDescription() default R.DEFAULT;
-
-	@Deprecated
-	String outputDescription() default "No output value.";
 	R constantOutputDescription() default R.DEFAULT_OUTPUT_DESCRIPTION;
-
     Class<?>[] seeAlsoClass() default {};
-
-    @Deprecated
-	String examples() default "";
     R constantExamples() default R.DEFAULT;
 }

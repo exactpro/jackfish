@@ -28,7 +28,7 @@ import java.util.List;
 		additionFieldsAllowed 	   = false,
 		constantOutputDescription  = R.TABLE_COLUMN_AS_LIST_OUTPUT_DESC,
 		outputType				   = List.class,
-		examples 				   = "",
+        constantExamples           = R.TABLE_COLUMN_AS_LIST_EXAMPLE,
 		seeAlsoClass = { Table.class }
 	)
 public class TableColumnAsList extends AbstractAction

@@ -56,12 +56,12 @@ public class HelpActionItem extends MatrixItem
         report.itemIntermediate(item);
         report.putMark(this.actionClazz.getSimpleName());
         report.outLine(this, null, "{{`{{3" + "Action " + this.actionClazz.getSimpleName() + "3}}`}}", null);
-	    String generalDescription = attr.constantGeneralDescription() == R.DEFAULT ? attr.generalDescription() : attr.constantGeneralDescription().get();
+	    String generalDescription = attr.constantGeneralDescription().get();
 	    report.outLine(this, null, "{{`" + generalDescription + "`}}", null);
         if (attr.additionFieldsAllowed())
         {
             report.outLine(this, null, "{{`{{*Additional fields - Yes*}}`}}", null);
-			String additionalDescription = attr.constantAdditionalDescription() == R.DEFAULT ? attr.additionalDescription() : attr.constantAdditionalDescription().get();
+			String additionalDescription = attr.constantAdditionalDescription().get();
 			report.outLine(this, null, "{{`" + additionalDescription + "`}}", null);
         }
         else
@@ -69,7 +69,7 @@ public class HelpActionItem extends MatrixItem
             report.outLine(this, null, "{{`{{*Additional fields - No*}}`}}", null);
         }
         report.outLine(this, null, "{{`{{*Examples*}}`}}", null);
-		String examples = attr.constantExamples() == R.DEFAULT ? attr.examples() : attr.constantExamples().get();
+		String examples = attr.constantExamples().get();
 		if (report instanceof HelpBuilder){
             report.outLine(this, null, "{{`" + HTMLhelper.htmlescape(examples) + "`}}", null);
         }
@@ -97,7 +97,7 @@ public class HelpActionItem extends MatrixItem
                 continue;
             }
 
-            String fieldDescription = annotation.constantDescription() == R.DEFAULT ? annotation.description() : annotation.constantDescription().get();
+            String fieldDescription = annotation.constantDescription().get();
 	        if (annotation.mandatory())
             {
                 table.addValues(annotation.name(), f.getType().getSimpleName(), fieldDescription, "Yes", "");
@@ -110,7 +110,7 @@ public class HelpActionItem extends MatrixItem
 
         // Output
         table = report.addTable("{{*Output:*}}", null, true, false, new int[] { 30, 70 }, "Result type", "Description");
-		String outputDescription = attr.constantOutputDescription() == R.DEFAULT_OUTPUT_DESCRIPTION ? attr.outputDescription() : attr.constantOutputDescription().get();
+		String outputDescription = attr.constantOutputDescription().get();
 		table.addValues(attr.outputType().getSimpleName(), outputDescription);
 
     }

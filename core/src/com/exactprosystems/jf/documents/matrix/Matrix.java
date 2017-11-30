@@ -44,7 +44,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 @DocumentInfo(
         kind = DocumentKind.MATRIX,
         newName = "NewMatrix", 
-        extentioin = "jf", 
+        extension = "jf",
         description = "Matrix"
 )
 public class Matrix extends AbstractDocument implements IMatrix

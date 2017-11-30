@@ -33,7 +33,7 @@ import java.util.List;
 @DocumentInfo(
         kind = DocumentKind.MESSAGE_DICTIONARY,
 		newName = "NewDictionary", 
-		extentioin = "xml", 
+		extension = "xml",
 		description = "Message dictionary"
 )
 public class MessageDictionary extends AbstractDocument implements IMessageDictionary, Serializable

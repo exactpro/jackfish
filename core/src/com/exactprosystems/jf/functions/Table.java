@@ -1151,7 +1151,7 @@ public class Table implements List<RowTable>, Mutable
         {
             if (columnIsPresent(column))
             {
-                throw new ColumnIsPresentException(String.format("Column with name %s already present", column));
+                throw new ColumnIsPresentException(column);
             }
         }
         changed(true);

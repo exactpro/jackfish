@@ -53,16 +53,16 @@ public class CheckItemsAndActions {
         {
             ActionAttribute attr = clazz.getAnnotation(ActionAttribute.class);
             if (attr != null){
-	            String generalDescription = attr.constantGeneralDescription() == R.DEFAULT ? attr.generalDescription() : attr.constantGeneralDescription().get();
+	            String generalDescription = attr.constantGeneralDescription().get();
 	            checkPartOfAttribute(generalDescription, clazz.getSimpleName());
 
-				String examples = attr.constantExamples() == R.DEFAULT ? attr.examples() : attr.constantExamples().get();
+				String examples = attr.constantExamples().get();
 				checkPartOfAttribute(examples, clazz.getSimpleName());
 
-				String additionalDescription = attr.constantAdditionalDescription() == R.DEFAULT ? attr.additionalDescription() : attr.constantAdditionalDescription().get();
+				String additionalDescription = attr.constantAdditionalDescription().get();
                 checkPartOfAttribute(additionalDescription, clazz.getSimpleName());
 
-                String outputDescription = attr.constantOutputDescription() == R.DEFAULT_OUTPUT_DESCRIPTION ? attr.outputDescription() : attr.constantOutputDescription().get();
+                String outputDescription = attr.constantOutputDescription().get();
                 checkPartOfAttribute(outputDescription, clazz.getSimpleName());
             }
         }

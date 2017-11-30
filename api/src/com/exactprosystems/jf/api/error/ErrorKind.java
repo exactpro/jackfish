@@ -22,6 +22,7 @@ public enum ErrorKind
 	DIALOG_NOT_FOUND		("Dialog is not found"),
 	DIALOG_CHECK_LAYOUT		("Layout checking failed"),
 	ELEMENT_NOT_FOUND		("Element is not found"),
+	TOO_MANY_ELEMENTS		("Too many elements were found"),
 	FEATURE_NOT_SUPPORTED	("Feature is not supported"),
 	OPERATION_NOT_ALLOWED	("Operation is not allowed"),
 	ELEMENT_NOT_ENABLED		("Element is not enabled"),

@@ -21,7 +21,7 @@ import java.io.*;
 @DocumentInfo(
         kind = DocumentKind.PLAIN_TEXT,
         newName = "Text", 
-        extentioin = "txt", 
+        extension = "txt",
         description = "Plain text"
 )
 public class PlainText extends AbstractDocument

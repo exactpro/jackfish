@@ -25,7 +25,7 @@ import com.exactprosystems.jf.documents.matrix.parser.Parameters;
 		group 					   = ActionGroups.App,
 		constantGeneralDescription = R.APP_MOVE_GENERAL_DESC,
 		additionFieldsAllowed 	   = false,
-		examples 				   = "", // TODO add examples here. VMF 03.05.17
+		constantExamples 			= R.APP_MOVE_EXAMPLE,
 		seeAlsoClass 			   = {ApplicationStart.class, ApplicationConnectTo.class}
 )
 public class ApplicationMove extends AbstractAction

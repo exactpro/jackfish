@@ -30,7 +30,7 @@ import java.util.Map.Entry;
 		group					   = ActionGroups.Messages,
 		constantGeneralDescription = R.MESSAGE_REPORT_GENERAL_DESC,
 		additionFieldsAllowed 	   = false,
-		examples                   = "",
+        constantExamples            = R.MESSAGE_REPORT_EXAMPLE,
 		seeAlsoClass               = { MessageCreate.class }
 	)
 public class MessageReport extends AbstractAction 

@@ -14,6 +14,7 @@ import com.exactprosystems.jf.api.common.IContext;
 import com.exactprosystems.jf.api.common.Str;
 import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.api.error.JFRemoteException;
+import com.exactprosystems.jf.api.error.app.TooManyElementsException;
 import com.exactprosystems.jf.api.wizard.WizardAttribute;
 import com.exactprosystems.jf.api.wizard.WizardCategory;
 import com.exactprosystems.jf.api.wizard.WizardCommand;
@@ -178,10 +179,6 @@ public class DictionaryWizard extends AbstractWizard
 		this.currentConnection = super.get(AppConnection.class, parameters);
 		this.currentDictionary = super.get(DictionaryFx.class, parameters);
 		this.currentWindow = super.get(Window.class, parameters);
-		if(this.currentWindow.getSelfControl() == null)
-		{
-			return;
-		}
 		try
 		{
 			this.copyWindow = Window.createCopy(this.currentWindow);
@@ -455,7 +452,8 @@ public class DictionaryWizard extends AbstractWizard
 					message = cause.getErrorKind().toString() + ": " + cause.getMessage();
 				}
 				DialogsHelper.showError(message);
-			});
+                super.closeDialog();
+            });
 			this.wizardHelper.start();
 
 			this.wizardSettings = new WizardSettings(this.currentDictionary.getFactory().getSettings());
