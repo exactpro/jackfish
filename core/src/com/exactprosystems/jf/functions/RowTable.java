@@ -10,6 +10,7 @@
 package com.exactprosystems.jf.functions;
 
 import com.exactprosystems.jf.api.common.Str;
+import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.api.error.common.RowExpiredException;
 import com.exactprosystems.jf.api.error.common.WrongExpressionException;
 
@@ -113,7 +114,7 @@ public class RowTable implements Map<String, Object>, Cloneable
         Header header = this.table.headerByName(Str.asString(key));
 		if (header == null)
 		{
-			throw new WrongExpressionException(String.format("Header with name '%s' not found into table", key));
+			throw new WrongExpressionException(String.format(R.ROW_TABLE_HEADER_NOT_FOUND.get(), key));
 		}
 		Object value = this.currentRow.get(header);
         value = this.table.convertCell(this.currentRow, header, value, null);

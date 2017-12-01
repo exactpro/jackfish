@@ -15,6 +15,7 @@ import com.exactprosystems.jf.api.app.ImageWrapper;
 import com.exactprosystems.jf.api.app.Mutable;
 import com.exactprosystems.jf.api.common.Converter;
 import com.exactprosystems.jf.api.common.Str;
+import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.api.conditions.Condition;
 import com.exactprosystems.jf.api.error.common.WrongExpressionException;
 import com.exactprosystems.jf.common.CommonHelper;
@@ -604,7 +605,7 @@ public class Table implements List<RowTable>, Mutable
 				return this.sort(i, az, ignoreCase);
 			}
 		}
-		throw new Exception("Column this name \'" + colName + "\' not fount in the table");
+		throw new Exception(String.format(R.TABLE_COLUMN_NOT_FOUND.get(), colName));
 	}
 
 	public Table sort(int colNumber, boolean az, boolean ignoreCase)
@@ -1100,7 +1101,7 @@ public class Table implements List<RowTable>, Mutable
 				return;
 			}
 		}
-		throw new Exception(String.format("Column with name %s not presented into table", oldValue));
+		throw new Exception(String.format(R.TABLE_COLUMN_NOT_FOUND.get(), oldValue));
 	}
 
 	public void addValue(int index, Map<String, Object> map)
@@ -1318,7 +1319,7 @@ public class Table implements List<RowTable>, Mutable
 			}
 			if (!found)
 			{
-				throw new Exception("Column '" + column + "' is not found");
+				throw new Exception(String.format(R.TABLE_COLUMN_NOT_FOUND.get(), column));
 			}
 		}
 		return columnsIndexes;
@@ -1329,7 +1330,7 @@ public class Table implements List<RowTable>, Mutable
 		return Arrays.stream(this.headers)
 				.filter(h -> h.name.equals(name))
 				.findFirst()
-				.orElseThrow(() -> new WrongExpressionException(String.format("Can't find column with name '%s'", name)));
+				.orElseThrow(() -> new WrongExpressionException(String.format(R.TABLE_COLUMN_NOT_FOUND.get(), name)));
 	}
 
 	private Map<Header, Object> convert(Object[] arr)

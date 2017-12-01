@@ -15,6 +15,7 @@ import com.exactprosystems.jf.api.client.IClientFactory;
 import com.exactprosystems.jf.api.client.IClientsPool;
 import com.exactprosystems.jf.api.common.IContext;
 import com.exactprosystems.jf.api.common.Str;
+import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.api.error.app.NullParameterException;
 import com.exactprosystems.jf.common.CommonHelper;
 import com.exactprosystems.jf.common.MainRunner;
@@ -125,7 +126,7 @@ public class ClientsPool implements IClientsPool
 		{
 			if (connection == null || connection.isBad())
 			{
-				throw new Exception("The client " + connection + " is not loaded.");
+				throw new Exception(String.format(R.COMMON_CLIENT_IS_NOT_LOADED.get(), "" + connection));
 			}
 			
 			IClient client = connection.getClient();
@@ -146,7 +147,7 @@ public class ClientsPool implements IClientsPool
 		{
 			if (connection == null || connection.isBad())
 			{
-				throw new Exception("The client " + connection + " is not loaded.");
+				throw new Exception(String.format(R.COMMON_CLIENT_IS_NOT_LOADED.get(), "" + connection));
 			}
 			
 			IClient client = connection.getClient();
@@ -183,7 +184,7 @@ public class ClientsPool implements IClientsPool
 		ClientEntry entry = this.factory.getConfiguration().getClientEntry(id);
 		if (entry == null)
 		{
-			throw new Exception("'" + id + "' is not found.");
+			throw new Exception(id + R.COMMON_IS_NOT_FOUND.get());
 		}
 		
 		return entry;
@@ -212,7 +213,7 @@ public class ClientsPool implements IClientsPool
 			}
 			if (clientFactory == null)
 			{
-				throw new Exception("The client factory with id '" + id + "' is not found");
+				throw new Exception(String.format(R.COMMON_CLIENT_FACTORY_IS_NOT_FOUND.get(), id));
 			}
 			MessageDictionary dictionary = getDictionary(entry);
 			clientFactory.init(dictionary);

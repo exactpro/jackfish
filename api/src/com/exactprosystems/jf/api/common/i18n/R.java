@@ -694,6 +694,14 @@ public enum R
 
 	//endregion
 
+	//region api.wizard
+	WIZARD_CATEGORY_MATRIX,
+	WIZARD_CATEGORY_CONFIGURATION,
+	WIZARD_CATEGORY_GUI_DIC,
+	WIZARD_CATEGORY_MESSAGE_DIC,
+	WIZARD_CATEGORY_OTHER,
+	//endregion
+
 	//region tool
 
 	//region tool.main
@@ -979,9 +987,16 @@ public enum R
 	//endregion
 
 	//region app
-	APP_POOL_ERROR_IN_CONNECT,
+	APP_POOL_APP_IS_NOT_LOADED,
+	APP_POOL_LOAD_FACTORY,
 	//endregion
 
+	//region charts
+	X_AXIS,
+	Y_AXIS,
+	//endregion
+
+    //region common
 	//region common.documentation
 	SUPPORTED_CONTROLS,
 	DIFFERENCES,
@@ -1005,12 +1020,35 @@ public enum R
 	MARKER_KEY_O_DESCR,
 	MARKER_KEY_P_DESCR,
 	MARKER_KEY_Q_DESCR,
-	//endregion
+    //endregion
+    //endregion
+
+    //region documents
+    //endregion
 
 	//region exceptions
 	COLUMN_IS_PRESENT_EXCEPTION,
 	DIALOG_NOT_FOUND_EXCEPTION,
 	//endregion
+
+    //region functions
+    ROW_TABLE_HEADER_NOT_FOUND,
+    XML_CANT_SET_TEXT_EXCEPTION,
+    XML_SET_ATTR_EXCEPTION,
+    TABLE_COLUMN_NOT_FOUND,
+    //endregion
+
+    //region service
+    SERVICE_POOL_SERVICE_IS_NOT_LOADED,
+    SERVICE_POOL_SERVICE_ALREADY_STARTED,
+    SERVICE_POOL_NOT_FOUND,
+    //endregion
+
+    //region sql
+    DATA_BASE_POOL_DRIVER_NOT_FOUND,
+    DATA_BASE_POOL_JAR_DOESNT_CONTAINS,
+    DATA_BASE_POOL_NUMBER_OF_PARAMS,
+    //endregion
 
 	//----------------------
 	//PLUGINS part
@@ -1098,6 +1136,12 @@ public enum R
 	//API part
 	//----------------------
 
+	//region api.app
+	//endregion
+
+	//region api.client
+	//endregion
+
 	//region api.common
 	PARAMETERS_KIND_LOAD,
 	PARAMETERS_KIND_START,
@@ -1107,8 +1151,40 @@ public enum R
 	PARAMETERS_KIND_SET_PROPERTY,
 	PARAMETERS_KIND_ENCODE,
 	PARAMETERS_KIND_PROPS,
-	PARAMETERS_KIND_NEW_INSTANCE;
+	PARAMETERS_KIND_NEW_INSTANCE,
 	//endregion
+
+	//region api.conditions
+	//endregion
+
+	//region api.error
+
+	//region api.error.app
+	//endregion
+
+	//region api.error.client
+	//endregion
+
+	//region api.error.common
+	API_NULL_PARAMETER_EXCEPTION,
+	//endregion
+
+	//region api.error.conditions
+	//endregion
+
+	//endregion
+
+	//region api.service
+	//endregion
+
+	//----------------------
+	//COMMON part (for strings which can  used in whole project, not in only one part)
+	//----------------------
+	COMMON_VALUE,
+    COMMON_IS_NOT_FOUND,
+    COMMON_CLIENT_IS_NOT_LOADED,
+    COMMON_CLIENT_FACTORY_IS_NOT_FOUND,
+    COMMON_ACTION_NAME;
 
 
 	public static final String RESOURCE_BUNDLE_PATH = "com/exactprosystems/jf/ToolResourceBundle";

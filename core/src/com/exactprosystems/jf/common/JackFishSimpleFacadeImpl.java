@@ -17,6 +17,7 @@ import java.util.Date;
 import java.util.Random;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+import com.exactprosystems.jf.api.common.i18n.R;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -95,7 +96,7 @@ public class JackFishSimpleFacadeImpl implements IJackFishSimpleFacade {
 			throw new IllegalStateException("JackFishFacade not initialized. Call init() before doAction()");
 		}
 		if (actionName == null) {
-			throw new NullParameterException("'actionName' parmeter is null");
+			throw new NullParameterException(String.format(R.API_NULL_PARAMETER_EXCEPTION.get(), R.COMMON_ACTION_NAME.get()));
 		}
 
 		AbstractAction action = actionByName(actionName);

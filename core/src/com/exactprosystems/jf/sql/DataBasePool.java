@@ -9,6 +9,7 @@
 
 package com.exactprosystems.jf.sql;
 
+import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.api.error.JFSQLException;
 import com.exactprosystems.jf.common.MainRunner;
 import com.exactprosystems.jf.documents.DocumentFactory;
@@ -35,7 +36,7 @@ public class DataBasePool
 		
 		if (driver == null)
 		{
-			throw new Exception("The driver '" + sql + "' was not found.");
+			throw new Exception(String.format(R.DATA_BASE_POOL_DRIVER_NOT_FOUND.get(), sql));
 		}
 		
 		Connection connection = connection(sql, driver, server, base, user, password);
@@ -114,7 +115,7 @@ public class DataBasePool
 			SqlEntry entry = this.factory.getConfiguration().getSqlEntry(sql);
 			if (entry == null)
 			{
-				throw new Exception("'" + sql + "' is not found.");
+				throw new Exception(sql + R.COMMON_IS_NOT_FOUND.get());
 			}
 			
 			String jarName 	 = MainRunner.makeDirWithSubstitutions(entry.get(Configuration.sqlJar));
@@ -130,7 +131,7 @@ public class DataBasePool
 			
 			if (driver == null)
 			{
-				throw new Exception("Jar file '" + jarName + "' does not contain SQL Driver.");
+				throw new Exception(String.format(R.DATA_BASE_POOL_JAR_DOESNT_CONTAINS.get(), jarName));
 			}
 			
 			this.drivers.put(sql, driver);
@@ -144,7 +145,7 @@ public class DataBasePool
 		int index = 1;
 		int limit = query.getParameterMetaData().getParameterCount();
 		if (limit != objs.length){
-			throw new JFSQLException("Number of transferred params not equal number of required params in query");
+			throw new JFSQLException(R.DATA_BASE_POOL_NUMBER_OF_PARAMS.get());
 		}
 		for (Object obj : objs)
 		{

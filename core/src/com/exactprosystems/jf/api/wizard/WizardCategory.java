@@ -9,15 +9,17 @@
 
 package com.exactprosystems.jf.api.wizard;
 
+import com.exactprosystems.jf.api.common.i18n.R;
+
 public enum WizardCategory
 {
-    MATRIX              ("Matrix wizard"),
-    CONFIGURATION       ("Configuration wizard"),
-    GUI_DICTIONARY      ("GUI dictionary wizard"),
-    MESSAGE_DICTIONARY  ("Message dictionary wizard"),
-    OTHER               ("Universal wizard");
+    MATRIX              (R.WIZARD_CATEGORY_MATRIX),
+    CONFIGURATION       (R.WIZARD_CATEGORY_CONFIGURATION),
+    GUI_DICTIONARY      (R.WIZARD_CATEGORY_GUI_DIC),
+    MESSAGE_DICTIONARY  (R.WIZARD_CATEGORY_MESSAGE_DIC),
+    OTHER               (R.WIZARD_CATEGORY_OTHER);
     
-    private WizardCategory(String name)
+    private WizardCategory(R name)
     {
         this.name = name;
     }
@@ -25,8 +27,8 @@ public enum WizardCategory
     @Override
     public String toString()
     {
-        return this.name;
+        return this.name.get();
     }
 
-    private String name; 
+    private R name;
 }

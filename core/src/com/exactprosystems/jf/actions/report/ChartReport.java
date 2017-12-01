@@ -78,7 +78,7 @@ public class ChartReport extends AbstractAction
 		}
 		else
 		{
-			throw new NullParameterException(typeName);
+			throw new NullParameterException(String.format(R.API_NULL_PARAMETER_EXCEPTION.get(), typeName));
 		}
 
 		if (tabObj instanceof Table)

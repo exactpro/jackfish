@@ -10,6 +10,7 @@
 package com.exactprosystems.jf.charts;
 
 import com.exactprosystems.jf.actions.ReadableValue;
+import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.api.error.JFException;
 import com.exactprosystems.jf.api.error.common.NullParameterException;
 import com.exactprosystems.jf.common.report.ReportWriter;
@@ -49,7 +50,7 @@ public class BarChartBuilder extends ChartBuilder
 		Object lblColumn = params.get(labelColumnName);
 		if (lblColumn == null)
 		{
-			throw new NullParameterException(String.format("Parameter %s can't be null", labelColumnName));
+			throw new NullParameterException(String.format(R.API_NULL_PARAMETER_EXCEPTION.get(), labelColumnName));
 		}
 
 		this.labelColumn = "" + lblColumn;
@@ -95,8 +96,8 @@ public class BarChartBuilder extends ChartBuilder
 	@Override
 	public void helpToAddParameters(List<ReadableValue> list, Context context) throws Exception
 	{
-		list.add(new ReadableValue(labelColumnName, "X axis labels for bar chart"));
-		list.add(new ReadableValue(yAxisDescriptionName, "Y axis description for bar chart"));
+		list.add(new ReadableValue(labelColumnName, R.X_AXIS.get()));
+		list.add(new ReadableValue(yAxisDescriptionName, R.Y_AXIS.get()));
 	}
 
 	private String generateData()
