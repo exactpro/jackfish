@@ -135,7 +135,7 @@ public class CommandBuilder
 
 	public CommandBuilder displayControl(DictionaryFx dictionaryFx, Window window, Section section, IControl control)
 	{
-		this.commands.add(context -> Common.tryCatch(() -> dictionaryFx.displayElement(window, section.getSectionKind(), control), R.WIZARD_ERROR_ON_SHOW_ELEMENT.get()));
+		this.commands.add(context -> Common.tryCatch(() -> dictionaryFx.setCurrentElement(control), R.WIZARD_ERROR_ON_SHOW_ELEMENT.get()));
 		return this;
 	}
 
@@ -154,8 +154,8 @@ public class CommandBuilder
 	public CommandBuilder displayWindow(DictionaryFx dictionaryFx, Window window)
 	{
 		this.commands.add(context -> Common.tryCatch(() -> {
-			dictionaryFx.displayDialog(window, dictionaryFx.getWindows());
-			dictionaryFx.displayElement(window, IWindow.SectionKind.Run, window.getFirstControl(IWindow.SectionKind.Run));
+			dictionaryFx.setCurrentWindow(window);
+			dictionaryFx.setCurrentSection(IWindow.SectionKind.Run);
 		}, R.WIZARD_ERROR_ON_DISPLAY_WINDOW.get()));
 		return this;
 	}

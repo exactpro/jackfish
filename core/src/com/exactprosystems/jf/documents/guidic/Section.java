@@ -268,7 +268,7 @@ public class Section implements ISection, Mutable
 		return this.controls.remove(control);
 	}
 	
-	public void replaceControl(IControl control, IControl newControl)
+	public int replaceControl(IControl control, IControl newControl)
 	{
 		Iterator<AbstractControl> iter = this.controls.iterator();
 		int index = 0;
@@ -279,13 +279,13 @@ public class Section implements ISection, Mutable
 			{
 				iter.remove();
 				addControl(index, newControl);
-				return;
+				return index;
 			}
 			index++;
 		}
+		return -1;
 	}
 
-	
 	@Override
 	public String toString()
 	{

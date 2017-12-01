@@ -36,6 +36,7 @@ import java.io.File;
 import java.io.Serializable;
 import java.util.*;
 import java.util.function.BiConsumer;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 import static com.exactprosystems.jf.tool.Common.tryCatchThrow;
@@ -55,6 +56,8 @@ public class DictionaryFx extends GuiDictionary
 	private final MutableValue<String> out = new MutableValue<>();
 	private final MutableValue<ApplicationStatusBean> appStatus = new MutableValue<>();
 
+	private Task<Void> testingElementTask;
+
 	//region variables for ActionsController
 	private final MutableArrayList<MutableValue<String>> titlesList = new MutableArrayList<>();
 	private final MutableArrayList<MutableValue<String>> appsList = new MutableArrayList<>();
@@ -64,11 +67,15 @@ public class DictionaryFx extends GuiDictionary
 	//endregion
 
 	//region variables for NavigationController
-	private final MutableValue<IWindow> currentWindow = new MutableValue<>();
-	private final MutableValue<SectionKind> currentSection = new MutableValue<>();
-	private final MutableValue<IControl> currentElement = new MutableValue<>();
-	private final MutableArrayList<IControl> elements = new MutableArrayList<>();
-	private BiConsumer<IWindow, String> changeWindowName = (window, newName) -> {};
+	private final MutableValue<IWindow>              currentWindow         = new MutableValue<>();
+	private final MutableValue<SectionKind>          currentSection        = new MutableValue<>();
+	private final MutableValue<IControl>             currentElement        = new MutableValue<>();
+	private final MutableArrayList<IControl>         elements              = new MutableArrayList<>();
+	private final MutableArrayList<ControlWithState> testingElements       = new MutableArrayList<>();
+	private BiConsumer<IWindow, String>              changeWindowName      = (window, newName) -> {};
+	//TODO thiml about remove and add element consumer
+	private Consumer<IControl>                       removeElementConsumer = element -> {};
+	private BiConsumer<Integer, IControl>            addElementConsumer    = (i, e) -> {};
 	//endregion
 
 	//region variables for ElementInfoController
@@ -104,6 +111,12 @@ public class DictionaryFx extends GuiDictionary
 		super.display();
 		getNameProperty().fire();
 
+		if (this.applicationConnector == null)
+		{
+			this.applicationConnector = new ApplicationConnector(getFactory());
+		}
+		this.applicationConnector.setApplicationListener((status1, appConnection1, throwable) -> this.appStatus.set(new ApplicationStatusBean(status1, appConnection1, throwable)));
+
 		//display all windows
 		super.fire();
 		this.currentSection.set(SectionKind.Run);
@@ -111,9 +124,6 @@ public class DictionaryFx extends GuiDictionary
 
 		this.appsList.from(convertToMutable(getFactory().getConfiguration().getApplications()));
 		this.currentApp.fire();
-
-		this.applicationConnector = new ApplicationConnector(getFactory());
-		this.applicationConnector.setApplicationListener((status1, appConnection1, throwable) -> this.appStatus.set(new ApplicationStatusBean(status1, appConnection1, throwable)));
 
 		boolean isConnected = this.applicationConnector.getAppConnection() != null;
 		ApplicationStatus status = isConnected ? ApplicationStatus.Connected : ApplicationStatus.Disconnected;
@@ -230,6 +240,10 @@ public class DictionaryFx extends GuiDictionary
 	{
 		return this.elements;
 	}
+	MutableArrayList<ControlWithState> testingControls()
+	{
+		return this.testingElements;
+	}
 
 	MutableListener<IControl> currentElement()
 	{
@@ -242,6 +256,14 @@ public class DictionaryFx extends GuiDictionary
 	public IControl getCurrentElement()
 	{
 		return this.currentElement.get();
+	}
+	void onAddElement(BiConsumer<Integer, IControl> consumer)
+	{
+		this.addElementConsumer = consumer;
+	}
+	void onRemoveElement(Consumer<IControl> consumer)
+	{
+		this.removeElementConsumer = consumer;
 	}
 
 	MutableListener<ImageWrapper> imageProperty()
@@ -411,12 +433,14 @@ public class DictionaryFx extends GuiDictionary
 			Command undo = () ->
 			{
 				window.removeControl(newElement);
+				this.removeElementConsumer.accept(newElement);
 				this.currentElement.set(oldElement);
 			};
 
 			Command redo = () ->
 			{
 				window.addControl(this.currentSection.get(), newElement);
+				this.addElementConsumer.accept(newElement.getSection().getControls().size() - 1, newElement);
 				this.currentElement.set(newElement);
 			};
 			addCommand(undo, redo);
@@ -426,13 +450,17 @@ public class DictionaryFx extends GuiDictionary
 	public void removeCurrentElement()
 	{
 		IWindow window = this.currentWindow.get();
-		if (window != null)
+		SectionKind sectionKind = this.currentSection.get();
+		ISection section = window.getSection(sectionKind);
+		if (section instanceof Section)
 		{
 			IControl removedElement = this.currentElement.get();
+			int indexOf = ((Section) section).indexOf((AbstractControl) removedElement);
 
 			Command undo = () ->
 			{
-				window.addControl(this.currentSection.get(), removedElement);
+				section.addControl(indexOf, removedElement);
+				this.addElementConsumer.accept(indexOf, removedElement);
 				this.currentElement.set(removedElement);
 			};
 
@@ -446,8 +474,16 @@ public class DictionaryFx extends GuiDictionary
 				}
 				if (needRemove)
 				{
-					window.removeControl(removedElement);
-					this.currentElement.set(window.getFirstControl(this.currentSection.get()));
+					((Section) section).removeControl(removedElement);
+					this.removeElementConsumer.accept(removedElement);
+					if (section.getControls().isEmpty())
+					{
+						this.currentElement.set(null);
+					}
+					else
+					{
+						this.currentElement.set(((Section) section).getByIndex(Math.max(0, indexOf - 1)));
+					}
 				}
 			};
 			addCommand(undo, redo);
@@ -468,19 +504,21 @@ public class DictionaryFx extends GuiDictionary
 			AbstractControl copiedControl = AbstractControl.createCopy(copyControl);
 			IControl oldControl = this.currentElement.get();
 
-			SectionKind currentSection = this.currentSection.get();
+			SectionKind sectionKind = this.currentSection.get();
 			Command undo = () ->
 			{
 				window.removeControl(copiedControl);
+				this.removeElementConsumer.accept(copiedControl);
 				this.currentElement.set(oldControl);
 			};
 
 			Command redo = () ->
 			{
-				ISection section = window.getSection(currentSection);
+				ISection section = window.getSection(sectionKind);
 				if (section != null)
 				{
 					section.addControl(copiedControl);
+					this.addElementConsumer.accept(copiedControl.getSection().getControls().size() - 1, copiedControl);
 				}
 				this.currentElement.set(copiedControl);
 			};
@@ -505,14 +543,22 @@ public class DictionaryFx extends GuiDictionary
 		Command undo = () ->
 		{
 			window.removeControl(element);
+			this.removeElementConsumer.accept(element);
+
 			window.getSection(section).addControl(lastIndex, element);
+			this.addElementConsumer.accept(lastIndex, element);
+
 			this.currentElement.set(element);
 		};
 
 		Command redo = () ->
 		{
 			window.removeControl(element);
+			this.removeElementConsumer.accept(element);
+
 			window.getSection(section).addControl(newIndex, element);
+			this.addElementConsumer.accept(newIndex, element);
+
 			this.currentElement.set(element);
 		};
 		addCommand(undo, redo);
@@ -520,38 +566,49 @@ public class DictionaryFx extends GuiDictionary
 
 	public void testingAllElements()
 	{
-		//TODO add implementation
-	}
-	//endregion
-
-
-	//region TODO need remake
-	public void dialogTest(IWindow window, List<IControl> controls) throws Exception
-	{
-		Set<ControlKind> supported = this.applicationConnector.getAppConnection().getApplication().getFactory().supportedControlKinds();
-
-		Thread thread = new Thread(new Task<Void>()
+		if (this.testingElementTask != null && this.testingElementTask.isRunning())
+		{
+			this.testingElementTask.cancel();
+		}
+		this.testingElementTask = new Task<Void>()
 		{
 			@Override
 			protected Void call() throws Exception
 			{
-				checkIsWorking(() -> controls.forEach(control ->
+				DictionaryFx.this.checkIsWorking(() ->
 				{
-					try
+					DictionaryFx.this.testingElements.clear();
+					IWindow window = DictionaryFx.this.currentWindow.get();
+					SectionKind section = DictionaryFx.this.currentSection.get();
+					if (window == null || section == null)
 					{
-						if (!supported.contains(control.getBindedClass()))
-						{
-							controller.displayTestingControl(control, "Not allowed", DictionaryFxController.Result.NOT_ALLOWED);
-						}
-						else
-						{
-							Locator owner = getLocator(window.getOwnerControl(control));
-							Locator locator = getLocator(control);
+						return;
+					}
 
-							Collection<String> all = service().findAll(owner, locator);
-
-							DictionaryFxController.Result result = null;
-							if (all.size() == 1 || (Addition.Many.equals(control.getAddition()) && all.size() > 0))
+					Collection<IControl> testElements = window.getControls(section);
+					if (testElements.isEmpty())
+					{
+						return;
+					}
+					Set<ControlKind> supported = DictionaryFx.this.applicationConnector.getAppConnection().getApplication().getFactory().supportedControlKinds();
+					for (IControl element : testElements)
+					{
+						try
+						{
+							if (this.isCancelled())
+							{
+								return;
+							}
+							if (!supported.contains(element.getBindedClass()))
+							{
+								DictionaryFx.this.testingElements.add(new ControlWithState(element, "Not allowed", DictionaryFxController.Result.NOT_ALLOWED));
+								continue;
+							}
+							Locator ownerLocator = Optional.ofNullable(window.getOwnerControl(element)).map(IControl::locator).orElse(null);
+							Locator elementLocator = element.locator();
+							Collection<String> all = DictionaryFx.this.service().findAll(ownerLocator, elementLocator);
+							DictionaryFxController.Result result;
+							if (all.size() == 1 || (Objects.equals(element.getAddition(), Addition.Many) && !all.isEmpty()))
 							{
 								result = DictionaryFxController.Result.PASSED;
 							}
@@ -559,101 +616,111 @@ public class DictionaryFx extends GuiDictionary
 							{
 								result = DictionaryFxController.Result.FAILED;
 							}
-
-							controller.displayTestingControl(control, String.valueOf(all.size()), result);
+							DictionaryFx.this.testingElements.add(new ControlWithState(element, Integer.toString(all.size()), result));
+						}
+						catch (Exception e)
+						{
+							DictionaryFx.this.testingElements.add(new ControlWithState(element, "Error", DictionaryFxController.Result.FAILED));
 						}
 					}
-					catch (Exception e)
-					{
-						controller.displayTestingControl(control, "Error", DictionaryFxController.Result.FAILED);
-					}
-				}));
-
+				});
 				return null;
 			}
-		});
-		thread.setName("Test dialog, thread id : " + thread.getId());
+		};
+		Thread thread = new Thread(this.testingElementTask);
+		thread.setName("Thread testing all elements, thread id : " + thread.getId());
 		thread.start();
-
 	}
+	//endregion
 
-	public boolean checkNewId(IWindow currentWindow, IControl currentControl, String id)
+	//region element info
+	public boolean isValidId(String id)
 	{
-		if (Str.IsNullOrEmpty(id))
-		{
-			return true;
-		}
-		List<IControl> all = currentWindow.allMatched((s, c) -> !Objects.equals(currentControl, c) && Objects.equals(c.getID(), id));
-		return all.isEmpty();
+		return Str.IsNullOrEmpty(id)
+				|| this.currentWindow.get().allMatched((s, c) -> !Objects.equals(this.currentElement.get(), c) && Objects.equals(c.getID(), id)).isEmpty();
 	}
 
-	public void parameterSet(IWindow window, IWindow.SectionKind sectionKind, IControl control, String parameter, Object value) throws Exception
+	public void changeParameter(String parameterName, Object parameterValue) throws Exception
 	{
 		tryCatchThrow(() ->
 		{
-			if (control != null && control instanceof AbstractControl)
+			IControl element = this.currentElement.get();
+			if (element instanceof AbstractControl)
 			{
-				AbstractControl copy = AbstractControl.createCopy(control);
-				Object oldValue = copy.get(parameter);
+				AbstractControl control = (AbstractControl) element;
+				Object oldValue = control.get(parameterName);
+				if (Objects.equals(oldValue, parameterValue))
+				{
+					return;
+				}
 				Command undo = () -> Common.tryCatch(() ->
 				{
-					((AbstractControl) control).set(parameter, trimIfString(oldValue));
-					displayElement(window, sectionKind, control);
-				}, "");
+					control.set(parameterName, this.trimIfString(oldValue));
+					this.currentElement.fire();
+				},"");
 				Command redo = () -> Common.tryCatch(() ->
 				{
-					((AbstractControl) control).set(parameter, trimIfString(value));
-					displayElement(window, sectionKind, control);
+					control.set(parameterName, this.trimIfString(parameterValue));
+					this.currentElement.fire();
 				}, "");
-				addCommand(undo, redo);
+				super.addCommand(undo, redo);
 			}
-		}, "Cannot set field '" + parameter + "' to value '" + value + "'");
+		}, String.format("Cannot set field '%s' to value '%s'", parameterName, parameterValue));
 	}
 
-	public void parameterSetControlKind(IWindow window, IWindow.SectionKind sectionKind, IControl control, ControlKind kind) throws Exception
+	public void changeControlKind(ControlKind kind) throws Exception
 	{
-		if (control != null && window != null && sectionKind != null)
+		IControl element = this.currentElement.get();
+		if (kind == element.getBindedClass())
 		{
-			AbstractControl oldControl = AbstractControl.createCopy(control);
-			AbstractControl newControl = AbstractControl.createCopy(control, kind);
-			Command undo = () -> Common.tryCatch(() ->
+			return;
+		}
+		if (element instanceof AbstractControl)
+		{
+			AbstractControl oldControl = (AbstractControl) element;
+			AbstractControl newControl = AbstractControl.createCopy(element, kind);
+
+			IWindow window = this.currentWindow.get();
+			SectionKind sectionKind = this.currentSection.get();
+
+			Command undo = () ->
 			{
-				if (oldControl.getBindedClass() != newControl.getBindedClass())
-				{
-					Section section = (Section) window.getSection(sectionKind);
-					section.replaceControl(newControl, control);
-					displayElement(window, sectionKind, control);
-				}
-			}, "");
-			Command redo = () -> Common.tryCatch(() ->
+				Section section = (Section) window.getSection(sectionKind);
+				int index = section.replaceControl(newControl, oldControl);
+				this.removeElementConsumer.accept(newControl);
+				this.addElementConsumer.accept(index, oldControl);
+
+				this.currentElement.set(oldControl);
+			};
+			Command redo = () ->
 			{
-				if (control.getBindedClass() != kind)
-				{
-					Section section = (Section) window.getSection(sectionKind);
-					section.replaceControl(control, newControl);
-					displayElement(window, sectionKind, newControl);
-				}
-			}, "");
+				Section section = (Section) window.getSection(sectionKind);
+				int index = section.replaceControl(oldControl, newControl);
+				this.removeElementConsumer.accept(oldControl);
+				this.addElementConsumer.accept(index,newControl);
+				this.currentElement.set(newControl);
+			};
 			addCommand(undo, redo);
 		}
 	}
 
-	public void parameterGoToOwner(IWindow window, IControl owner) throws Exception
+	public void goToOwner()
 	{
-		checkIsWorking(() ->
+		IControl element = this.currentElement.get();
+		IWindow window = this.currentWindow.get();
+		if (element != null && window != null)
 		{
-			if (owner != null)
+			IControl ownerControl = window.getControlForName(null, element.getOwnerID());
+			if (ownerControl != null)
 			{
-				SectionKind sectionKind = owner.getSection().getSectionKind();
-				displaySection(sectionKind);
-				displayElement(window, sectionKind, owner);
+				this.currentSection.set(ownerControl.getSection().getSectionKind());
+				this.currentElement.set(ownerControl);
 			}
-		});
+		}
 	}
-
 	//endregion
 
-	//region application (looks good)
+	//region application
 	public void startApplication() throws Exception
 	{
 		this.applicationConnector.setIdAppEntry(this.currentApp().get());
@@ -695,7 +762,7 @@ public class DictionaryFx extends GuiDictionary
 
 	//endregion
 
-	//region Do tab (looks good)
+	//region Do tab
 	public void sendKeys(String text) throws Exception
 	{
 		this.checkIsWorking(() -> this.operate(Do.text(text), this.currentWindow.get(), this.currentElement.get()));
@@ -770,7 +837,7 @@ public class DictionaryFx extends GuiDictionary
 	}
 	//endregion
 
-	//region Switch tab (looks good)
+	//region Switch tab
 	public void switchTo(String selectedItem) throws Exception
 	{
 		if (selectedItem == null)
@@ -822,7 +889,7 @@ public class DictionaryFx extends GuiDictionary
 	}
 	//endregion
 
-	//region Navigate tab (looks good)
+	//region Navigate tab
 	public void navigateBack() throws Exception
 	{
 		this.checkIsWorking(() -> this.service().navigate(NavigateKind.BACK));
@@ -852,7 +919,7 @@ public class DictionaryFx extends GuiDictionary
 	}
 	//endregion
 
-	//region NewInstance tab (looks good)
+	//region NewInstance tab
 	public void newInstance(Map<String, String> parameters) throws Exception
 	{
 		this.checkIsWorking(() ->
@@ -869,7 +936,7 @@ public class DictionaryFx extends GuiDictionary
 	}
 	//endregion
 
-	//region Pos&Size tab (looks good)
+	//region Pos&Size tab
 	public void moveTo(int x, int y) throws Exception
 	{
 		this.checkIsWorking(() -> this.service().moveWindow(x, y));
@@ -881,7 +948,7 @@ public class DictionaryFx extends GuiDictionary
 	}
 	//endregion
 
-	//region Properties tab (looks good)
+	//region Properties tab
 	public void getProperty(String propertyName, Object propValue) throws Exception
 	{
 		this.checkIsWorking(() ->
@@ -929,7 +996,7 @@ public class DictionaryFx extends GuiDictionary
 
 	//endregion
 
-	//region Dialog tab (looks good)
+	//region Dialog tab
 	public void dialogMoveTo(int x, int y) throws Exception
 	{
 		this.checkIsWorking(() -> this.service().moveDialog(this.getSelfLocator(), x, y));
@@ -961,16 +1028,7 @@ public class DictionaryFx extends GuiDictionary
 	}
 	//endregion
 
-
-    private Object trimIfString(Object value)
-    {
-        if (value instanceof String)
-        {
-            return ((String)value).trim();
-        }
-        return value;
-    }
-    
+	//region private methods
 	private Optional<OperationResult> operate(Operation operation, IWindow window, IControl control) throws Exception
 	{
 		this.service().startNewDialog();
@@ -996,71 +1054,6 @@ public class DictionaryFx extends GuiDictionary
 		return Optional.of(result);
 	}
 
-	@Deprecated
-	private Locator getLocator(IControl control)
-	{
-		if (control != null)
-		{
-			return control.locator();
-		}
-		return null;
-	}
-
-	private void displayElementInfo(IWindow window, IWindow.SectionKind sectionKind, IControl control) throws Exception
-	{
-		Collection<IControl> controls = null;
-		Collection<IControl> owners = null;
-		Collection<IControl> rows = null;
-		IControl owner = null;
-		IControl row = null;
-		IControl header = null;
-		IControl reference = null;
-		if (window != null)
-		{
-			owners = controlsWithId(window, null);
-			owner = window.getOwnerControl(control);
-			rows = controlsWithId(window, null);
-			row = window.getRowsControl(control);
-			header = window.getHeaderControl(control);
-			reference = window.getReferenceControl(control);
-		}
-		this.controller.displayElementInfo(window, control, owners, owner, rows, row, header, reference);
-	}
-
-	public void displayElement(IWindow window, IWindow.SectionKind sectionKind, IControl control) throws Exception
-	{
-		Collection<IControl> controls = null;
-		Collection<IControl> owners = null;
-		Collection<IControl> rows = null;
-		IControl owner = null;
-		IControl row = null;
-		IControl header = null;
-		IControl reference = null;
-		if (window != null)
-		{
-			controls = window.getControls(sectionKind);
-			owners = controlsWithId(window, null);
-			owner = window.getOwnerControl(control);
-			rows = controlsWithId(window, null);
-			row = window.getRowsControl(control);
-			header = window.getHeaderControl(control);
-			reference = window.getReferenceControl(control);
-		}
-		this.controller.displaySection(sectionKind);
-		this.controller.displayElement(controls, control);
-		this.controller.displayElementInfo(window, control, owners, owner, rows, row, header, reference);
-	}
-
-	@Deprecated
-	private Collection<IControl> controlsWithId(IWindow window, IWindow.SectionKind sectionKind)
-	{
-		return window.getControls(sectionKind)
-				.stream()
-				.filter(c -> c.getID() != null && !c.getID().isEmpty())
-				.collect(Collectors.toList());
-	}
-
-	//region private methods (looks good)
 	private String generateNewDialogName(String initial)
 	{
 		List<String> list = getWindows().stream().map(IWindow::getName).collect(Collectors.toList());
@@ -1151,5 +1144,55 @@ public class DictionaryFx extends GuiDictionary
 			}
 		}
 	}
+
+	private Object trimIfString(Object value)
+	{
+		if (value instanceof String)
+		{
+			return ((String)value).trim();
+		}
+		return value;
+	}
 	//endregion
+
+	public class ControlWithState implements Mutable
+	{
+		private IControl                      control;
+		private String                        text;
+		private DictionaryFxController.Result result;
+
+		public ControlWithState(IControl control, String text, DictionaryFxController.Result result)
+		{
+			this.control = control;
+			this.text = text;
+			this.result = result;
+		}
+
+		public IControl getControl()
+		{
+			return control;
+		}
+
+		public String getText()
+		{
+			return text;
+		}
+
+		public DictionaryFxController.Result getResult()
+		{
+			return result;
+		}
+
+		@Override
+		public boolean isChanged()
+		{
+			return false;
+		}
+
+		@Override
+		public void saved()
+		{
+
+		}
+	}
 }

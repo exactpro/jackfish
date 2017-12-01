@@ -71,7 +71,7 @@ public class MutableValue<T> implements Mutable, Setter<T>, MutableListener<T>
 	public void set(T value)
 	{
 		this.changed = this.changed || !Objects.equals(this.value, value);
-		if (this.changeListener != null && this.value != value)
+		if (this.changeListener != null && !Objects.equals(this.value, value))
 		{
 		    this.changeListener.accept(this.value, value);
 		}

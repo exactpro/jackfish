@@ -43,6 +43,7 @@ import java.net.URL;
 import java.util.*;
 import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
+import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -135,7 +136,7 @@ public class NavigationController implements Initializable, ContainingParent
 		HBox.setHgrow(this.element, Priority.ALWAYS);
 	}
 
-	public void init(DictionaryFx model, GridPane gridPane)
+	public void init(DictionaryFx model, DictionaryFxController controller, Consumer<Parent> consumer)
 	{
 		this.model = model;
 
@@ -154,7 +155,7 @@ public class NavigationController implements Initializable, ContainingParent
 
 		this.listViewWindow.addChangeListener((observable, oldValue, newValue) -> this.model.setCurrentWindow(newValue));
 		this.groupSection.selectedToggleProperty().addListener((observable, oldValue, newValue) -> this.model.setCurrentSection(this.currentSection()));
-		this.listViewElement.addChangeListener((observable, oldValue, newValue) -> this.model.setCurrentElement(newValue == null ? null : newValue.control));
+		this.listViewElement.addChangeListener((observable, oldValue, newValue) -> controller.elementChanged(newValue == null ? null : newValue.control));
 
 		Context context = model.getFactory().createContext();
 		WizardManager manager = model.getFactory().getWizardManager();
@@ -165,8 +166,7 @@ public class NavigationController implements Initializable, ContainingParent
 		this.btnElementWizardManager.initButton(context, manager, 
 		        () -> new Object[] { this.model, this.model.getCurrentWindow(), this.model.getCurrentSection(), elementForWizard() },
 		        () -> new Object[] { this.model.getApp() });
-		
-		gridPane.add(this.pane, 0, 0);
+		consumer.accept(this.pane);
 	}
 
 	//region dialog event handlers
@@ -194,7 +194,7 @@ public class NavigationController implements Initializable, ContainingParent
 	//region element event handlers
 	public void newElement(ActionEvent actionEvent)
 	{
-		tryCatch(() -> this.model.createNewElement(), "Error on new element");
+		tryCatch(this.model::createNewElement, "Error on new element");
 	}
 
 	public void deleteElement(ActionEvent actionEvent)
@@ -204,12 +204,12 @@ public class NavigationController implements Initializable, ContainingParent
 
 	public void copyElement(ActionEvent actionEvent)
 	{
-		tryCatch(() -> this.model.elementCopy(), "Error on copy element");
+		tryCatch(this.model::elementCopy, "Error on copy element");
 	}
 
 	public void pasteElement(ActionEvent actionEvent)
 	{
-		tryCatch(() -> this.model.elementPaste(), "Error on paste element");
+		tryCatch(this.model::elementPaste, "Error on paste element");
 	}
 
 	public void testingDialog(ActionEvent actionEvent)
@@ -219,85 +219,8 @@ public class NavigationController implements Initializable, ContainingParent
 
 	//endregion
 
-	/*
-	TODO move it to ElementInfoController
-	public void parameterSetControlKind(ControlKind controlKind) throws Exception
-	{
-		this.model.parameterSetControlKind(currentWindow(), currentSection(), currentElement(), controlKind);
-	}
 
-	public void parameterGoToOwner(IControl control) throws Exception
-	{
-		this.model.parameterGoToOwner(currentWindow(), control);
-	}
-
-	public void parameterSetOwner(String ownerId) throws Exception
-	{
-		this.model.parameterSet(currentWindow(), currentSection(), currentElement(), AbstractControl.ownerIdName, ownerId);
-	}
-
-	public void parameterSetRef(String refId) throws Exception
-	{
-		this.model.parameterSet(currentWindow(), currentSection(), currentElement(), AbstractControl.refIdName, refId);
-	}
-
-	public void parameterSet(String parameter, Object value) throws Exception
-	{
-		this.model.parameterSet(currentWindow(), currentSection(), currentElement(), parameter, value);
-	}
-
-	public void parameterSet(String parameter, Object value, IControl control) throws Exception
-	{
-		this.model.parameterSet(currentWindow(), currentSection(), control, parameter, value);
-	}
-
-	public void displayElementWithoutInfo(IWindow window) throws Exception
-	{
-		if(window==currentWindow())
-		{
-			this.model.displayElementWithoutInfo(window, currentSection(), currentElement());
-		}
-	}
-
-	public boolean checkNewId(String id)
-	{
-		return this.model.checkNewId(currentWindow(), currentElement(), id);
-	}
-	*/
-
-/* TODO move it to ActionsController
-	public void sendKeys(String text) throws Exception
-	{
-		this.model.sendKeys(text);
-	}
-
-	public void getValue() throws Exception
-	{
-		this.model.getValue();
-	}
-
-	public void click() throws Exception
-	{
-		this.model.click();
-	}
-
-	public void find() throws Exception
-	{
-		this.model.find();
-	}
-
-	public void switchToCurrent() throws Exception
-	{
-		this.model.switchToCurrent(currentElement(), currentWindow());
-	}
-
-	public void doIt(Object obj) throws Exception
-	{
-		this.model.doIt(obj, currentElement(), currentWindow());
-	}
-*/
-
-	// region display* methods
+	//region display* methods
 	public void displayDialogs(Collection<IWindow> dialogs)
 	{
 		this.listViewWindow.setData(new ArrayList<>(dialogs), true);
@@ -331,17 +254,24 @@ public class NavigationController implements Initializable, ContainingParent
 				.map(toggle -> (RadioButton) toggle)
 				.filter(rb -> rb.getId().equals(kindName))
 				.findFirst()
-				.ifPresent(rb ->
-				{
-					rb.setSelected(true);
-					rb.fire();
-				});
+				.ifPresent(RadioButton::fire);
+	}
+
+	public void removeElement(IControl control)
+	{
+		this.listViewElement.removeItem(new BorderPaneAndControl(control));
+	}
+
+	public void addElement(int index, IControl control)
+	{
+		this.listViewElement.addItem(index, new BorderPaneAndControl(control));
 	}
 
 	public void displayElement(IControl control)
 	{
 		if (control != null)
 		{
+			this.listViewElement.refresh();
 			this.listViewElement.selectItem(new BorderPaneAndControl(control));
 		}
 	}
@@ -357,21 +287,20 @@ public class NavigationController implements Initializable, ContainingParent
 		this.listViewElement.setData(Collections.emptyList(), true);
 	}
 
-	public void displayTestingControl(IControl control, String text, DictionaryFxController.Result result)
+	public void displayTestingControls(DictionaryFx.ControlWithState elementWithState)
 	{
 		Common.runLater(() ->
 		{
-			int i = this.listViewElement.getItems().indexOf(new BorderPaneAndControl(control));
+			int i = this.listViewElement.getItems().indexOf(new BorderPaneAndControl(elementWithState.getControl()));
 			BorderPaneAndControl borderPaneAndControl = this.listViewElement.getItems().get(i);
-			borderPaneAndControl.getCount().setText(text);
-			borderPaneAndControl.getCount().setFill(result.getColor());
+			borderPaneAndControl.getText().setText(elementWithState.getText());
+			borderPaneAndControl.getText().setFill(elementWithState.getResult().getColor());
 		});
 	}
 
-	// ------------------------------------------------------------------------------------------------------------------
-	// private methods
-	// ------------------------------------------------------------------------------------------------------------------
+	//endregion
 
+	//region private
 	private IControl elementForWizard()
 	{
 		IControl currentElement = this.model.getCurrentElement();
@@ -418,25 +347,25 @@ public class NavigationController implements Initializable, ContainingParent
 		private IControl control;
 		private BorderPane pane;
 
-		private Text count;
+		private Text text;
 
-		public BorderPaneAndControl(IControl control)
+		private BorderPaneAndControl(IControl control)
 		{
 			this.control = control;
 			this.pane = new BorderPane();
-			this.count = new Text();
-			this.pane.setLeft(new Text(this.control != null ? this.control.toString() : ""));
-			this.pane.setRight(count);
+			this.text = new Text();
+			this.updatePane();
 		}
 
 		public BorderPane getPane()
 		{
+			this.updatePane();
 			return pane;
 		}
 
-		public Text getCount()
+		public Text getText()
 		{
-			return count;
+			return text;
 		}
 
 		@Override
@@ -458,6 +387,15 @@ public class NavigationController implements Initializable, ContainingParent
 		{
 			return control != null ? control.hashCode() : 0;
 		}
+
+		private void updatePane()
+		{
+			this.pane.setLeft(null);
+			this.pane.setRight(null);
+
+			this.pane.setLeft(new Text(this.control != null ? this.control.toString() : ""));
+			this.pane.setRight(this.text);
+		}
 	}
 
 	private class CustomListCell<T> extends ListCell<T>
@@ -467,7 +405,7 @@ public class NavigationController implements Initializable, ContainingParent
 		private Function<T, String> converter;
         private BiFunction<T, String, Boolean> checker;
 
-		public CustomListCell(BiFunction<T, String, Boolean> checker, BiConsumer<T, String> updater, Function<T, String> converter, BiConsumer<T, Integer> biConsumer)
+		private CustomListCell(BiFunction<T, String, Boolean> checker, BiConsumer<T, String> updater, Function<T, String> converter, BiConsumer<T, Integer> biConsumer)
 		{
 		    this.checker = checker;
 			this.updater = updater;
@@ -575,19 +513,20 @@ public class NavigationController implements Initializable, ContainingParent
 			});
 		}
 
-
 		private void checkAndRename()
-        {
-            if (this.checker.apply(getItem(), textField.getText()))
-            {
-                this.updater.accept(getItem(), textField.getText());
-                commitEdit(getItem());
-            }
-            else
-            {
-                DialogsHelper.showError("Dialog with name " + textField.getText() + " already exists.");   
-                cancelEdit();
-            }
+		{
+			if (this.checker.apply(getItem(), textField.getText()))
+			{
+				this.updater.accept(getItem(), textField.getText());
+				commitEdit(getItem());
+			}
+			else
+			{
+				DialogsHelper.showError("Dialog with name " + textField.getText() + " already exists.");
+				cancelEdit();
+			}
         }
 	}
+
+	//endregion
 }

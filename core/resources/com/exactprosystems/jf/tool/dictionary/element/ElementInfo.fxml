@@ -95,7 +95,7 @@
 						<ChoiceBox fx:id="choiceBoxRows" maxWidth="1.7976931348623157E308" GridPane.columnIndex="1" GridPane.rowIndex="8" />
 						<HBox prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="9">
 							<children>
-								<CheckBox fx:id="checkBoxWeak" mnemonicParsing="false" onAction="#changeWeak" text="Weak" />
+								<CheckBox fx:id="checkBoxWeak" mnemonicParsing="false" text="Weak" />
 								<Label />
 							</children>
 						</HBox>

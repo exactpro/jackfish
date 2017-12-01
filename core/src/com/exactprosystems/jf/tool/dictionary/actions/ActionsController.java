@@ -9,6 +9,7 @@
 
 package com.exactprosystems.jf.tool.dictionary.actions;
 
+import com.exactprosystems.jf.api.app.AppConnection;
 import com.exactprosystems.jf.api.app.ImageWrapper;
 import com.exactprosystems.jf.api.app.Resize;
 import com.exactprosystems.jf.api.common.Str;
@@ -35,10 +36,10 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
-import sun.awt.AppContext;
 
 import java.net.URL;
 import java.util.*;
+import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -47,7 +48,7 @@ import static com.exactprosystems.jf.tool.Common.tryCatch;
 
 public class ActionsController implements Initializable, ContainingParent
 {
-	public Label					imageArea;
+	public Label imageArea;
 
 	public ComboBox<String> comboBoxApps;
 	public ComboBox<String> comboBoxAppsStore;
@@ -57,8 +58,8 @@ public class ActionsController implements Initializable, ContainingParent
 	public TextField        tfSendKeys;
 	public ComboBox<String> comboBoxTitles;
 
-	public GridPane					mainGrid;
-	public GridPane doGridPane;
+	public GridPane                       mainGrid;
+	public GridPane                       doGridPane;
 	public NumberTextField                ntfMoveToX;
 	public NumberTextField                ntfMoveToY;
 	public ToggleGroup                    groupSection;
@@ -88,12 +89,11 @@ public class ActionsController implements Initializable, ContainingParent
 	public GridPane         propDialogGridPane;
 	public ComboBox<String> cbGetDialogProperty;
 
-
 	private ExpressionField doExpressionField;
 	private Parent          pane;
 
-	private DictionaryFx			model;
-	private AbstractEvaluator		evaluator;
+	private DictionaryFx      model;
+	private AbstractEvaluator evaluator;
 
 	@Override
 	public void setParent(Parent parent)
@@ -122,7 +122,7 @@ public class ActionsController implements Initializable, ContainingParent
 		this.rbDialogSize.setUserData(null);
 	}
 
-	public void init(DictionaryFx model, GridPane gridPane, AbstractEvaluator evaluator)
+	public void init(DictionaryFx model, AbstractEvaluator evaluator, Consumer<Parent> consumer)
 	{
 		this.model = model;
 		this.evaluator = evaluator;
@@ -131,7 +131,7 @@ public class ActionsController implements Initializable, ContainingParent
 		HBox.setHgrow(this.doExpressionField, Priority.ALWAYS);
 		this.doExpressionField.setHelperForExpressionField(null, null);
 
-		gridPane.add(this.pane, 0, 1);
+		consumer.accept(this.pane);
 		GridPane.setColumnSpan(this.pane, 2);
 
 		this.efGetProperty = new ExpressionField(evaluator);
@@ -152,7 +152,7 @@ public class ActionsController implements Initializable, ContainingParent
 		this.comboBoxTitles.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> tryCatch(() -> this.model.switchTo(newValue), "Error on switch to window"));
 	}
 
-	//region application (looks good)
+	//region application
 	public void startApplication(ActionEvent actionEvent)
 	{
 		tryCatch(() -> this.model.startApplication(), "Error on start application");
@@ -169,7 +169,7 @@ public class ActionsController implements Initializable, ContainingParent
 	}
 	//endregion
 
-	//region Do tab (looks good)
+	//region Do tab
 	public void sendKeys(ActionEvent actionEvent)
 	{
 		tryCatch(() -> this.model.sendKeys(this.tfSendKeys.getText()), "Error on send keys");
@@ -197,7 +197,7 @@ public class ActionsController implements Initializable, ContainingParent
 
 	//endregion
 
-	//region Switch tab (looks good)
+	//region Switch tab
 	public void switchToParent(ActionEvent actionEvent)
 	{
 		tryCatch(() -> this.model.switchToParent(), "Error on switch to current");
@@ -210,11 +210,11 @@ public class ActionsController implements Initializable, ContainingParent
 
 	public void refreshTitles(ActionEvent event)
 	{
-		tryCatch(() -> this.model.refreshTitles(),"Error on refresh titles");
+		tryCatch(() -> this.model.refreshTitles(), "Error on refresh titles");
 	}
 	//endregion
 
-	//region Navigate tab (looks good)
+	//region Navigate tab
 	public void navigateBack(ActionEvent event)
 	{
 		tryCatch(() -> this.model.navigateBack(), "Error on navigate back");
@@ -236,18 +236,17 @@ public class ActionsController implements Initializable, ContainingParent
 	}
 	//endregion
 
-	//region NewInstance tab (looks good)
+	//region NewInstance tab
 	public void newInstance(ActionEvent event)
 	{
-		tryCatch(() -> this.model.newInstance(this.lvNewInstance.getItems()
-				.stream()
-				.collect(Collectors.toMap(e -> e.getKey().getText(), e -> Str.IsNullOrEmpty(e.getValue().getText()) ? null : e.getValue().getText()))
-		), "Error on new instance");
+		tryCatch(() -> this.model.newInstance(
+				this.lvNewInstance.getItems().stream().collect(Collectors.toMap(e -> e.getKey().getText(), e -> Str.IsNullOrEmpty(e.getValue().getText()) ? null : e.getValue().getText()))),
+				"Error on new instance");
 
 	}
 	//endregion
 
-	//region Pos&Size tab (looks good)
+	//region Pos&Size tab
 	public void moveTo(ActionEvent e)
 	{
 		tryCatch(() -> this.model.moveTo(this.ntfMoveToX.getValue(), this.ntfMoveToY.getValue()), "Error on move to");
@@ -255,17 +254,25 @@ public class ActionsController implements Initializable, ContainingParent
 
 	public void resize(ActionEvent e)
 	{
-		Toggle selectedToggle = this.groupSection.getSelectedToggle();
+		tryCatch(() ->
+		{
+			Toggle selectedToggle = this.groupSection.getSelectedToggle();
 
-		int h = selectedToggle == this.rbSize ? this.ntfResizeH.getValue() : 0;
-		int w = selectedToggle == this.rbSize ? this.ntfResizeW.getValue() : 0;
+			if (selectedToggle == null)
+			{
+				throw new Exception("No one resizing parameter is filled.");
+			}
 
-		Resize resize = ((Resize) selectedToggle.getUserData());
-		tryCatch(() -> this.model.resize(resize , h ,w), "Error on resize");
+			int h = selectedToggle == this.rbSize ? this.ntfResizeH.getValue() : 0;
+			int w = selectedToggle == this.rbSize ? this.ntfResizeW.getValue() : 0;
+
+			Resize resize = ((Resize) selectedToggle.getUserData());
+			this.model.resize(resize, h, w);
+		}, "Error on resize");
 	}
 	//endregion
 
-	//region Property tab (looks good)
+	//region Property tab
 
 	public void getProperty(ActionEvent event)
 	{
@@ -279,7 +286,7 @@ public class ActionsController implements Initializable, ContainingParent
 
 	//endregion
 
-	//region Dialog (looks good)
+	//region Dialog
 	public void dialogMoveTo(ActionEvent event)
 	{
 		tryCatch(() -> this.model.dialogMoveTo(this.ntfDialogMoveToX.getValue(), this.ntfDialogMoveToY.getValue()), "Error on move to");
@@ -288,21 +295,20 @@ public class ActionsController implements Initializable, ContainingParent
 	public void dialogResize(ActionEvent event)
 	{
 		tryCatch(() ->
+		{
+			Toggle selectedToggle = this.dialogGroupSection.getSelectedToggle();
+
+			if (selectedToggle == null)
 			{
-				Toggle selectedToggle = this.dialogGroupSection.getSelectedToggle();
-
-				if(selectedToggle == null)
-				{
-					throw new Exception("No one resizing parameter is filled.");
-				}
-
-				int h = selectedToggle == this.rbDialogSize ? this.ntfDialogResizeH.getValue() : 0;
-				int w = selectedToggle == this.rbDialogSize ? this.ntfDialogResizeW.getValue() : 0;
-
-				Resize resize = ((Resize) selectedToggle.getUserData());
-				this.model.dialogResize(resize , h ,w);
+				throw new Exception("No one resizing parameter is filled.");
 			}
-			, "Error on resize");
+
+			int h = selectedToggle == this.rbDialogSize ? this.ntfDialogResizeH.getValue() : 0;
+			int w = selectedToggle == this.rbDialogSize ? this.ntfDialogResizeW.getValue() : 0;
+
+			Resize resize = ((Resize) selectedToggle.getUserData());
+			this.model.dialogResize(resize, h, w);
+		}, "Error on resize");
 	}
 
 	public void getDialogProperty(ActionEvent event)
@@ -312,7 +318,7 @@ public class ActionsController implements Initializable, ContainingParent
 
 	//endregion
 
-	//region display* methods (looks good)
+	//region display* methods
 	public void displayTitles(Collection<String> titles)
 	{
 		this.comboBoxTitles.getItems().setAll(titles);
@@ -330,12 +336,7 @@ public class ActionsController implements Initializable, ContainingParent
 
 	public void displayImage(ImageWrapper imageWrapper)
 	{
-		this.imageArea.setGraphic(Optional.ofNullable(imageWrapper)
-				.map(ImageWrapper::getImage)
-				.map(img -> SwingFXUtils.toFXImage(img, null))
-				.map(ImageView::new)
-				.orElse(null)
-		);
+		this.imageArea.setGraphic(Optional.ofNullable(imageWrapper).map(ImageWrapper::getImage).map(img -> SwingFXUtils.toFXImage(img, null)).map(ImageView::new).orElse(null));
 	}
 
 	public void displayProperties(List<String> getProperties, List<String> setProperties, List<String> getDialogProperties)
@@ -359,10 +360,7 @@ public class ActionsController implements Initializable, ContainingParent
 		}
 		else
 		{
-			this.lvNewInstance.getItems().setAll(names.stream()
-					.map(name -> new ExpressionFieldsPane(name, "", this.evaluator, function.apply(name)))
-					.collect(Collectors.toList())
-			);
+			this.lvNewInstance.getItems().setAll(names.stream().map(name -> new ExpressionFieldsPane(name, "", this.evaluator, function.apply(name))).collect(Collectors.toList()));
 			this.btnNewInstance.setDisable(false);
 		}
 	}
@@ -412,12 +410,12 @@ public class ActionsController implements Initializable, ContainingParent
 
 	//endregion
 
-	//region private methods (looks good)
+	//region private methods
 	private Collection<String> storedConnections()
 	{
 		List<String> storedConnection = this.model.getFactory().getConfiguration().getStoreMap().entrySet()
 				.stream()
-				.filter(entry -> entry.getValue() instanceof AppContext)
+				.filter(entry -> entry.getValue() instanceof AppConnection)
 				.map(Map.Entry::getKey)
 				.collect(Collectors.toList());
 		storedConnection.add(0, "");

@@ -371,6 +371,7 @@ public class Window implements IWindow, Mutable
     @Override
     public List<IControl> allMatched(BiFunction<ISection, IControl, Boolean> predicate)
     {
+    	//TODO think about, why we use bi predicate
         List<IControl> res = new ArrayList<>();
         this.allSections.values().forEach(s -> s.getControls().forEach(c -> 
         { 
