@@ -11,6 +11,7 @@ package com.exactprosystems.jf.service;
 
 import com.exactprosystems.jf.api.common.IContext;
 import com.exactprosystems.jf.api.common.exception.EmptyParameterException;
+import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.api.service.*;
 import com.exactprosystems.jf.common.MainRunner;
 import com.exactprosystems.jf.documents.DocumentFactory;
@@ -111,11 +112,11 @@ public class ServicePool implements IServicesPool
 	{
 		if (connection == null || connection.isStopped())
 		{
-			throw new Exception("The service " + connection + " is not loaded or already stopped.");
+			throw new Exception(String.format(R.SERVICE_POOL_SERVICE_IS_NOT_LOADED.get(), "" + connection));
 		}
 		if (this.serviceStatusMap.get(connection) == ServiceStatus.StartSuccessful)
 		{
-			throw new Exception(String.format("The service '%s' already started.", connection.getId()));
+			throw new Exception(String.format(R.SERVICE_POOL_SERVICE_ALREADY_STARTED.get(), connection.getId()));
 		}
 		try
 		{
@@ -142,7 +143,7 @@ public class ServicePool implements IServicesPool
 		{
 			if (connection == null || connection.isStopped())
 			{
-				throw new Exception("The service " + connection + " is not loaded or already stopped.");
+				throw new Exception(String.format(R.SERVICE_POOL_SERVICE_IS_NOT_LOADED.get(), "" + connection));
 			}
 			
 			connection.close();
@@ -192,7 +193,7 @@ public class ServicePool implements IServicesPool
 		ServiceEntry entry = this.factory.getConfiguration().getServiceEntry(serviceId);
 		if (entry == null)
 		{
-			throw new Exception("'" + serviceId + "' is not found.");
+			throw new Exception(serviceId + R.COMMON_IS_NOT_FOUND.get());
 		}
 		
 		return entry;
@@ -221,7 +222,7 @@ public class ServicePool implements IServicesPool
 			}
 			if (serviceFactory == null)
 			{
-				throw new Exception("The service factory with serviceId '" + serviceId + "' is not found");
+				throw new Exception(String.format(R.SERVICE_POOL_NOT_FOUND.get(), serviceId));
 			}
 			
 			this.serviceFactories.put(serviceId, serviceFactory);

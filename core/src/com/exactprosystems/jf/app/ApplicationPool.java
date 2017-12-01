@@ -128,7 +128,7 @@ public class ApplicationPool implements IApplicationPool
 		}
 		catch (Throwable t)
 		{
-			logger.error(String.format(R.APP_POOL_ERROR_IN_CONNECT.get(), id));
+			logger.error("Error in connectToApplication " + id);
 			logger.error(t.getMessage(), t);
 			throw new Exception(t.getMessage(), t);
 		}
@@ -142,7 +142,7 @@ public class ApplicationPool implements IApplicationPool
 		{
 			if (id == null)
 			{
-				throw new Exception("id");
+				throw new NullParameterException("id");
 			}
 			
 			// prepare initial parameters
@@ -210,7 +210,7 @@ public class ApplicationPool implements IApplicationPool
 		{
 			if (connection == null || !connection.isGood())
 			{
-				throw new Exception("The application " + connection + " is not loaded.");
+				throw new Exception(String.format(R.APP_POOL_APP_IS_NOT_LOADED.get(), connection));
 			}
 			
 			IApplication app = connection.getApplication();
@@ -275,7 +275,7 @@ public class ApplicationPool implements IApplicationPool
 		AppEntry entry = this.factory.getConfiguration().getAppEntry(id);
 		if (entry == null)
 		{
-			throw new Exception("'" + id + "' is not found.");
+			throw new Exception(id + R.COMMON_IS_NOT_FOUND.get());
 		}
 		
 		return entry;
@@ -308,7 +308,7 @@ public class ApplicationPool implements IApplicationPool
         			}
         			if (applicationFactory == null)
         			{
-        				throw new Exception("The application factory with id '" + id + "' is not found");
+        				throw new Exception(String.format(R.APP_POOL_LOAD_FACTORY.get(), id));
         			}
         			
         			GuiDictionary dictionary = getDictionary(entry);

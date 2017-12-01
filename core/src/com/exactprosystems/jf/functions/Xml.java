@@ -10,6 +10,7 @@
 package com.exactprosystems.jf.functions;
 
 import com.exactprosystems.jf.api.common.Str;
+import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.common.report.HTMLhelper;
 import com.exactprosystems.jf.common.report.ReportBuilder;
 import com.exactprosystems.jf.common.report.ReportTable;
@@ -218,7 +219,7 @@ public class Xml
 	{
 		if (this.node.getNodeType() == Node.DOCUMENT_NODE)
 		{
-			throw new Exception("Cant set text to document");
+			throw new Exception(R.XML_CANT_SET_TEXT_EXCEPTION.get());
 		}
 		this.node.setTextContent(text);
 	}
@@ -238,7 +239,7 @@ public class Xml
 	{
 		if (!(this.node instanceof Element))
 		{
-			throw new Exception("Attributes may sets only into Element");
+			throw new Exception(R.XML_SET_ATTR_EXCEPTION.get());
 		}
 		for (Entry<String, Object> entry : attr.entrySet())
 		{
