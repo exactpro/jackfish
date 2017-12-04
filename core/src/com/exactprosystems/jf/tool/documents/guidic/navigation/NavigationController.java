@@ -297,13 +297,14 @@ public class NavigationController implements Initializable, ContainingParent
 
 	public void displayTestingControls(DictionaryFx.ControlWithState elementWithState)
 	{
-		Common.runLater(() ->
-		{
-			int i = this.listViewElement.getItems().indexOf(new BorderPaneAndControl(elementWithState.getControl()));
-			BorderPaneAndControl borderPaneAndControl = this.listViewElement.getItems().get(i);
-			borderPaneAndControl.getText().setText(elementWithState.getText());
-			borderPaneAndControl.getText().setFill(elementWithState.getResult().getColor());
-		});
+		Common.runLater(() -> this.listViewElement.getItems().stream()
+				.filter(item -> item.control.equals(elementWithState.getControl()))
+				.findFirst()
+				.ifPresent(bpWithControl ->
+				{
+					bpWithControl.getText().setText(elementWithState.getText());
+					bpWithControl.getText().setFill(elementWithState.getResult().getColor());
+				}));
 	}
 
 	//endregion

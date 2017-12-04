@@ -450,7 +450,6 @@ public class FxOperationExecutor extends AbstractOperationExecutor<EventTarget>
 		Element node = doc.createElement("item");
 		node.setAttribute("name", treeItem.getValue().toString());
 		node.setUserData("node", treeItem.getGraphic(), null);
-		node.setUserData("item", treeItem, null);
 
 		if(current != null)
 		{
