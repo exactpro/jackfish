@@ -20,9 +20,9 @@ import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.ContainingParent;
 import com.exactprosystems.jf.tool.CssVariables;
 import com.exactprosystems.jf.tool.custom.BorderWrapper;
+import com.exactprosystems.jf.tool.custom.FindListView;
 import com.exactprosystems.jf.tool.documents.guidic.DictionaryFx;
 import com.exactprosystems.jf.tool.documents.guidic.DictionaryFxController;
-import com.exactprosystems.jf.tool.custom.FindListView;
 import com.exactprosystems.jf.tool.helpers.DialogsHelper;
 import com.exactprosystems.jf.tool.settings.Theme;
 import com.exactprosystems.jf.tool.wizard.WizardButton;
@@ -228,7 +228,6 @@ public class NavigationController implements Initializable, ContainingParent
 
 	//endregion
 
-
 	//region display* methods
 	public void displayDialogs(Collection<IWindow> dialogs)
 	{
@@ -430,7 +429,8 @@ public class NavigationController implements Initializable, ContainingParent
 				{
 					Dragboard db = this.startDragAndDrop(TransferMode.MOVE);
 					ClipboardContent cc = new ClipboardContent();
-					db.setDragView(this.snapshot(new SnapshotParameters(), null));
+					Text text = new Text(this.toString());
+					db.setDragView(text.snapshot(new SnapshotParameters(), null));
 					int moveIndex = this.getListView().getItems().indexOf(this.getItem());
 					cc.putString(String.valueOf(moveIndex));
 					db.setContent(cc);
@@ -541,6 +541,12 @@ public class NavigationController implements Initializable, ContainingParent
 				cancelEdit();
 			}
         }
+
+		@Override
+		public String toString()
+		{
+			return String.valueOf(this.getItem());
+		}
 	}
 
 	//endregion
