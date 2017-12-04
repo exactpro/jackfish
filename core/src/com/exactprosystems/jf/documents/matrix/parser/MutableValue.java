@@ -71,10 +71,7 @@ public class MutableValue<T> implements Mutable, Setter<T>, MutableListener<T>
 	public void set(T value)
 	{
 		this.changed = this.changed || !Objects.equals(this.value, value);
-		if (this.changeListener != null && !Objects.equals(this.value, value))
-		{
-		    this.changeListener.accept(this.value, value);
-		}
+		this.callListener(value);
 		this.value = value;
 	}
 	
@@ -104,10 +101,7 @@ public class MutableValue<T> implements Mutable, Setter<T>, MutableListener<T>
 	
 	public void fire()
 	{
-	    if (this.changeListener != null)
-	    {
-	        this.changeListener.accept(this.value, this.value);
-	    }
+		this.callListener(this.value);
 	}
 
 	@Override
@@ -119,5 +113,13 @@ public class MutableValue<T> implements Mutable, Setter<T>, MutableListener<T>
 	public boolean isNullOrEmpty()
 	{
 		return this.value == null || ("" + this.value).isEmpty(); 
+	}
+
+	private void callListener(T value)
+	{
+		if (this.changeListener != null)
+		{
+			this.changeListener.accept(this.value, value);
+		}
 	}
 }
