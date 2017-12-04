@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+<!-- Copyright (c) 2009-2017, Exactpro Systems -->
+<!-- Quality Assurance & Related Software Development for Innovative Trading Systems. -->
+<!-- London Stock Exchange Group. -->
+<!-- All rights reserved. -->
+<!-- This is unpublished, licensed software, confidential and proprietary -->
+<!-- information which is the property of Exactpro Systems or its licensors. -->
+<!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+
+<?import com.exactprosystems.jf.tool.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<HBox prefHeight="87.0" prefWidth="1453.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.exactprosystems.jf.tool.documents.guidic.navigation.NavigationController">
+	<fx:define>
+		<CssVariables fx:id="verMin" fx:constant="VERTICAL_MIN"/>
+		<CssVariables fx:id="verMid" fx:constant="VERTICAL_MID"/>
+		<CssVariables fx:id="verMax" fx:constant="VERTICAL_MAX"/>
+
+		<CssVariables fx:id="horMin" fx:constant="HORIZONTAL_MIN"/>
+		<CssVariables fx:id="horMid" fx:constant="HORIZONTAL_MID"/>
+		<CssVariables fx:id="horMax" fx:constant="HORIZONTAL_MAX"/>
+		<CssVariables fx:id="transparentBackground" fx:constant="TRANSPARENT_BACKGROUND"/>
+	</fx:define>
+	<children>
+		<VBox HBox.hgrow="ALWAYS" prefHeight="200.0" prefWidth="100.0" fx:id="vBoxWindow">
+			<children>
+				<Label id="$verMid"/>
+				<HBox alignment="CENTER_LEFT" fx:id="hBoxWindow">
+					<children>
+						<Button id="dictionaryBtnNewDialog" fx:id="btnNewDialog" alignment="CENTER" mnemonicParsing="false" onAction="#newDialog" styleClass="$transparentBackground">
+							<tooltip>
+								<Tooltip text="Create new dialog"/>
+							</tooltip>
+						</Button>
+						<Label id="$horMin"/>
+						<Button id="dictionaryBtnDeleteDialog" fx:id="btnDeleteDialog" alignment="CENTER" mnemonicParsing="false" onAction="#removeDialog" styleClass="$transparentBackground">
+							<tooltip>
+								<Tooltip text="Delete selected dialog"/>
+							</tooltip>
+						</Button>
+						<Label id="$horMin"/>
+						<Button id="dictionaryBtnCopyDialog" fx:id="btnCopyDialog" mnemonicParsing="false" onAction="#copyDialog" styleClass="$transparentBackground">
+							<tooltip>
+								<Tooltip text="Copy current dialog with all elements"/>
+							</tooltip>
+						</Button>
+						<Label id="$horMin"/>
+						<Button id="dictionaryBtnPasteDialog" fx:id="btnPasteDialog" mnemonicParsing="false" onAction="#pasteDialog" styleClass="$transparentBackground">
+							<tooltip>
+								<Tooltip text="Paste copied dialog"/>
+							</tooltip>
+						</Button>
+						<Label id="$horMin"/>
+					</children>
+				</HBox>
+			</children>
+		</VBox>
+		<!--<Label id="$horMax"/>-->
+		<VBox HBox.hgrow="ALWAYS" alignment="CENTER_LEFT" maxWidth="100" minWidth="100" prefWidth="100">
+			<children>
+				<RadioButton id="Self" mnemonicParsing="false" text="Self">
+					<toggleGroup>
+						<ToggleGroup fx:id="groupSection"/>
+					</toggleGroup>
+				</RadioButton>
+				<Label id="$verMin"/>
+				<RadioButton id="OnOpen" mnemonicParsing="false" text="On open" toggleGroup="$groupSection"/>
+				<Label id="$verMin"/>
+				<RadioButton id="Run" mnemonicParsing="false" text="Run" toggleGroup="$groupSection"/>
+				<Label id="$verMin"/>
+				<RadioButton id="OnClose" mnemonicParsing="false" text="On close" toggleGroup="$groupSection"/>
+				<Label id="$verMin"/>
+				<RadioButton id="Close" mnemonicParsing="false" text="Close" toggleGroup="$groupSection"/>
+			</children>
+		</VBox>
+		<!--<Label id="$horMax"/>-->
+		<VBox HBox.hgrow="ALWAYS" prefHeight="200.0" prefWidth="100.0" fx:id="vBoxElement" GridPane.columnIndex="2">
+			<children>
+				<Label id="$verMid"/>
+				<HBox fx:id="hBoxElement">
+					<children>
+						<Button id="dictionaryBtnNewElement" fx:id="btnNewElement" mnemonicParsing="false" onAction="#newElement" styleClass="$transparentBackground">
+							<tooltip>
+								<Tooltip text="Create new Element"/>
+							</tooltip>
+						</Button>
+						<Label id="$horMin"/>
+						<Button id="dictionaryBtnDeleteElement" fx:id="btnDeleteElement" mnemonicParsing="false" onAction="#deleteElement" styleClass="$transparentBackground">
+							<tooltip>
+								<Tooltip text="Delete current element"/>
+							</tooltip>
+						</Button>
+						<Label id="$horMin"/>
+						<Button id="dictionaryBtnCopyElement" fx:id="btnCopyElement" mnemonicParsing="false" onAction="#copyElement" styleClass="$transparentBackground">
+							<tooltip>
+								<Tooltip text="Copy current element"/>
+							</tooltip>
+						</Button>
+						<Label id="$horMin"/>
+						<Button id="dictionaryBtnPasteElement" fx:id="btnPasteElement" mnemonicParsing="false" onAction="#pasteElement" styleClass="$transparentBackground">
+							<tooltip>
+								<Tooltip text="Paste copied element"/>
+							</tooltip>
+						</Button>
+						<Label id="$horMin"/>
+						<Button id="dictionaryBtnTestSection" fx:id="btnTestWindow" mnemonicParsing="false" onAction="#testingDialog" styleClass="$transparentBackground">
+							<tooltip>
+								<Tooltip text="Test all controls into the current section"/>
+							</tooltip>
+						</Button>
+					</children>
+				</HBox>
+			</children>
+		</VBox>
+	</children>
+</HBox>
