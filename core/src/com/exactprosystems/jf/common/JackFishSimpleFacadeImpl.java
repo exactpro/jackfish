@@ -82,7 +82,7 @@ public class JackFishSimpleFacadeImpl implements IJackFishSimpleFacade {
 		}
 
 		if (!cfg.isValid()) {
-			throw new RuntimeException("Configuration is invalid! See the logs for details.");
+			throw new RuntimeException(R.JF_SIMPLE_FACADE_INIT_EXCEPTION.get());
 		}
 
 		ctx = factory.createContext();
@@ -93,7 +93,7 @@ public class JackFishSimpleFacadeImpl implements IJackFishSimpleFacade {
 	@Override
 	public Object doAction(String connection, String actionName, Parameters params) throws Exception {
 		if (!initialized.get()) {
-			throw new IllegalStateException("JackFishFacade not initialized. Call init() before doAction()");
+			throw new IllegalStateException(R.JF_SIMPLE_FACADE_DO_ACTION_EXCEPTION.get());
 		}
 		if (actionName == null) {
 			throw new NullParameterException(String.format(R.API_NULL_PARAMETER_EXCEPTION.get(), R.COMMON_ACTION_NAME.get()));
@@ -118,13 +118,13 @@ public class JackFishSimpleFacadeImpl implements IJackFishSimpleFacade {
 				return (AbstractAction) type.newInstance();
 			}
 		}
-		throw new RuntimeException("Action with name " + actionName + " is unknown.");
+		throw new RuntimeException(String.format(R.JF_SIMPLE_FACADE_BY_NAME_EXCEPTION.get(), actionName));
 	}
 
 	@Override
 	public String start(Parameters params) throws Exception {
 		if (!initialized.get()) {
-			throw new IllegalStateException("JackFishFacade not initialized. Call init() before start()");
+			throw new IllegalStateException(R.JF_SIMPLE_FACADE_START_EXCEPTION.get());
 		}
 
 		final String id = nextConnectionId();
@@ -148,7 +148,7 @@ public class JackFishSimpleFacadeImpl implements IJackFishSimpleFacade {
 	@Override
 	public String connectTo(Parameters params) throws Exception {
 		if (!initialized.get()) {
-			throw new IllegalStateException("JackFishFacade not initialized. Call init() before connectTo()");
+			throw new IllegalStateException(R.JF_SIMPLE_FACADE_CONNECT_TO_EXCEPTION.get());
 		}
 
 		final String id = nextConnectionId();
@@ -172,7 +172,7 @@ public class JackFishSimpleFacadeImpl implements IJackFishSimpleFacade {
 	@Override
 	public void stop(String connectionId, Parameters params) throws Exception {
 		if (!initialized.get()) {
-			throw new IllegalStateException("JackFishFacade not initialized. Call init() before stop()");
+			throw new IllegalStateException(R.JF_SIMPLE_FACADE_STOP_EXCEPTION.get());
 		}
 
 		final ApplicationStop action = new ApplicationStop();

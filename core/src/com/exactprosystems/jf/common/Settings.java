@@ -12,6 +12,7 @@ package com.exactprosystems.jf.common;
 import com.exactprosystems.jf.actions.ActionGroups;
 import com.exactprosystems.jf.api.app.Mutable;
 import com.exactprosystems.jf.api.common.Str;
+import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.documents.matrix.parser.ScreenshotKind;
 import com.exactprosystems.jf.documents.matrix.parser.Tokens;
 import com.exactprosystems.jf.documents.matrix.parser.items.MutableArrayList;
@@ -529,7 +530,7 @@ public class Settings
 		{
 			result = defaultSettings().getValue(ns, dialog, key);
 		}
-		return Optional.ofNullable(result).orElseThrow(() -> new IllegalArgumentException("No default settings for key " + key));
+		return Optional.ofNullable(result).orElseThrow(() -> new IllegalArgumentException(String.format(R.SETTINGS_GET_DEFAULT_VALUE_EXCEPTION.get(), key)));
 	}
 
 	public synchronized SettingsValue getValue(String ns, String dialog, String key)

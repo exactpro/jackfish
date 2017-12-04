@@ -9,6 +9,8 @@
 
 package com.exactprosystems.jf.common.evaluator;
 
+import com.exactprosystems.jf.api.common.i18n.R;
+
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.Writer;
@@ -43,7 +45,7 @@ public class LinkedProperties extends Properties
 	@Override
 	public synchronized Enumeration<Object> elements()
 	{
-		throw new UnsupportedOperationException("Enumerations are so old-school, don't use them, " + "use keySet() or entrySet() instead");
+		throw new UnsupportedOperationException(R.LINKED_PROPS_ELEMENTS_SO_OLD.get());
 	}
 
 	@Override

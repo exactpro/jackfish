@@ -10,6 +10,7 @@
 package com.exactprosystems.jf.common.evaluator;
 
 import com.exactprosystems.jf.api.common.Unique;
+import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.api.conditions.Condition;
 import org.mvel2.MVEL;
 import org.mvel2.ParserContext;
@@ -46,7 +47,7 @@ public class MvelEvaluator extends AbstractEvaluator
 			Serializable expr = (Serializable)compiled;
 			return MVEL.executeExpression(expr, makeVars());
 		}
-		throw new Exception("Wrong type of precompiled: " + compiled);
+		throw new Exception(R.MVEL_EVALUATOR_WRONG_TYPE_EXCEPTION.get() + compiled);
 	}
 
 	@Override
@@ -92,7 +93,7 @@ public class MvelEvaluator extends AbstractEvaluator
 	@Override
 	public void addImports(Collection<String> imports)
 	{
-		// JeckFish and MVEL could be loaded by different ClassLoaders (for example, by SF class-loader).
+		// JackFish and MVEL could be loaded by different ClassLoaders (for example, by SF class-loader).
 		// Specify proper classloader to load imports from this JAR
 		this.context.getParserConfiguration().setClassLoader(this.getClass().getClassLoader());
 		
