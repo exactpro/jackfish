@@ -35,6 +35,11 @@ repositories {
 		name "ArtifactoryLocal" //used for local builds
 		url "${project.rootDir}/artifactory"
 	}
+
+	maven {
+		name "ExactproArtifactory"
+		url "http://arti.exactpro.com/libs-release/"
+	}
 }
 
 dependencies {
@@ -169,8 +174,8 @@ subprojects {
 		maven {
 			name "ArtifactoryLocal" //used for local builds
 			url "${project.rootDir}/artifactory"
-
 		}
+		maven { url "http://arti.exactpro.com/libs-snapshot-local" }
 		mavenCentral()
 	}
 	
