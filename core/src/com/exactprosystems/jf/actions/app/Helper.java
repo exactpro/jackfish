@@ -14,11 +14,11 @@ import com.exactprosystems.jf.api.app.AppConnection;
 import com.exactprosystems.jf.api.app.IApplicationFactory;
 import com.exactprosystems.jf.api.common.ParametersKind;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
-import com.exactprosystems.jf.documents.config.Configuration;
 import com.exactprosystems.jf.documents.config.Context;
 import com.exactprosystems.jf.documents.matrix.Matrix;
 import com.exactprosystems.jf.documents.matrix.parser.Parameters;
 
+import java.util.Arrays;
 import java.util.List;
 
 class Helper
@@ -26,14 +26,17 @@ class Helper
 	private Helper()
 	{}
 
-	public static void applicationsNames(List<ReadableValue> list, Context context) throws Exception
+	/**
+	 * add to @param <b>list</b> all application names
+	 */
+	public static void applicationsNames(List<ReadableValue> list, Context context)
 	{
 		AbstractEvaluator evaluator = context.getEvaluator();
-		Configuration configuration = context.getConfiguration();
-		for (String str : configuration.getApplications())
-		{
-			list.add(new ReadableValue(evaluator.createString(str)));
-		}
+		context.getConfiguration().getApplications()
+				.stream()
+				.map(evaluator::createString)
+				.map(ReadableValue::new)
+				.forEach(list::add);
 	}
 	
 	public static IApplicationFactory getFactory(Matrix matrix, Context context, Parameters parameters, String appName, String connectionName) throws Exception
@@ -93,10 +96,9 @@ class Helper
 			String idName, String connectionName) throws Exception
 	{
 		IApplicationFactory factory = getFactory(matrix, context, parameters, idName, connectionName);
-		for (String arg : factory.wellKnownParameters(kind))
-		{
-			list.add(new ReadableValue(arg));
-		}
+		Arrays.stream(factory.wellKnownParameters(kind))
+				.map(ReadableValue::new)
+				.forEach(list::add);
 	}
 
 	public static boolean canFillParameter(Matrix matrix, Context context, Parameters parameters, 
@@ -109,12 +111,12 @@ class Helper
 	public static void fillListForParameter(List<ReadableValue> list, Matrix matrix, Context context, Parameters parameters, 
 			String idName, String connectionName, String parameterName) throws Exception
 	{
-		AbstractEvaluator evaluator = context.getEvaluator();
 		IApplicationFactory factory = getFactory(matrix, context, parameters, idName, connectionName);
-		for (String str : factory.listForParameter(parameterName))
-		{
-			list.add(new ReadableValue(evaluator.createString(str)));
-		}
+		AbstractEvaluator evaluator = context.getEvaluator();
+		Arrays.stream(factory.listForParameter(parameterName))
+				.map(evaluator::createString)
+				.map(ReadableValue::new)
+				.forEach(list::add);
 	}
 	
 }

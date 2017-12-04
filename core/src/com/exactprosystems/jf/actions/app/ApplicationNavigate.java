@@ -50,39 +50,29 @@ public class ApplicationNavigate extends AbstractAction
 	@Override
 	protected void listToFillParameterDerived(List<ReadableValue> list, Context context, String parameterToFill, Parameters parameters) throws Exception
 	{
-		switch (parameterToFill)
+		if (navigateKindName.equals(parameterToFill))
 		{
-			case navigateKindName:
-				Stream.of(NavigateKind.values())
-						.map(kind -> NavigateKind.class.getSimpleName() + "." + kind.name())
-						.map(ReadableValue::new)
-						.forEach(list::add);
-				break;
-			default:
-				break;
+			Stream.of(NavigateKind.values())
+					.map(navigateKind -> NavigateKind.class.getSimpleName() + "." + navigateKind.name())
+					.map(ReadableValue::new)
+					.forEach(list::add);
 		}
 	}
 
 	@Override
 	protected HelpKind howHelpWithParameterDerived(Context context, Parameters parameters, String fieldName) throws Exception
 	{
-		switch (fieldName)
+		if (navigateKindName.equals(fieldName))
 		{
-			case navigateKindName:
-				return HelpKind.ChooseFromList;
-
-			default:
-				return null;
+			return HelpKind.ChooseFromList;
 		}
-
+		return null;
 	}
 
 	@Override
 	public void doRealAction(Context context, ReportBuilder report, Parameters parameters, AbstractEvaluator evaluator) throws Exception
 	{
-		IApplication app = this.connection.getApplication();
-		IRemoteApplication service = app.service();
-		service.navigate(this.kind);
+		this.connection.getApplication().service().navigate(this.kind);
 		super.setResult(null);
 	}
 }

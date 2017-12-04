@@ -9,12 +9,7 @@
 
 package com.exactprosystems.jf.actions.app;
 
-import com.exactprosystems.jf.actions.AbstractAction;
-import com.exactprosystems.jf.actions.ActionAttribute;
-import com.exactprosystems.jf.actions.ActionFieldAttribute;
-import com.exactprosystems.jf.actions.ActionGroups;
-import com.exactprosystems.jf.actions.DefaultValuePool;
-import com.exactprosystems.jf.actions.ReadableValue;
+import com.exactprosystems.jf.actions.*;
 import com.exactprosystems.jf.actions.gui.*;
 import com.exactprosystems.jf.api.app.AppConnection;
 import com.exactprosystems.jf.api.app.IApplicationPool;
@@ -30,9 +25,9 @@ import com.exactprosystems.jf.documents.matrix.parser.Parameters;
 import com.exactprosystems.jf.documents.matrix.parser.items.TypeMandatory;
 import com.exactprosystems.jf.functions.HelpKind;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @ActionAttribute(
 		group						  = ActionGroups.App,
@@ -106,26 +101,24 @@ public class ApplicationConnectTo extends AbstractAction
 	{
 		IApplicationPool pool = context.getConfiguration().getApplicationPool();
 
-		Map<String, String> args = new HashMap<>();
-		for (Parameter parameter : parameters.select(TypeMandatory.Extra))
-		{
-			args.put(parameter.getName(), Str.asString(parameter.getValue()));
-		}
-		
-		AppConnection connection = null; 
+		Map<String, String> args = parameters.select(TypeMandatory.Extra)
+				.stream()
+				.collect(Collectors.toMap(Parameter::getName, par -> Str.asString(par.getValue())));
+
+		AppConnection appConnection;
 		if (this.connection == null)
 		{
-		    connection = pool.connectToApplication(this.id, args);
+			appConnection = pool.connectToApplication(this.id, args);
 		}
 		else
 		{
-		    connection = this.connection;
-		    pool.reconnectToApplication(connection, args);
+			appConnection = this.connection;
+			pool.reconnectToApplication(appConnection, args);
 		}
 		
-		if (connection.isGood())
+		if (appConnection.isGood())
 		{
-			super.setResult(connection);
+			super.setResult(appConnection);
 		}
 		else
 		{

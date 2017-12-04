@@ -56,8 +56,7 @@ public class ApplicationGetProperties extends AbstractAction
 	@Override
 	protected HelpKind howHelpWithParameterDerived(Context context, Parameters parameters, String fieldName) throws Exception
 	{
-		boolean res = Helper.canFillParameter(this.owner.getMatrix(), context, parameters, null, connectionName, fieldName);
-		return res ? HelpKind.ChooseFromList : null;
+		return Helper.canFillParameter(this.owner.getMatrix(), context, parameters, null, connectionName, fieldName) ? HelpKind.ChooseFromList : null;
 	}
 	
 	@Override
@@ -65,7 +64,6 @@ public class ApplicationGetProperties extends AbstractAction
 	{
 		Helper.fillListForParameter(list, this.owner.getMatrix(), context, parameters, null, connectionName, parameterToFill);
 	}
-	
 
 	@Override
 	public void doRealAction(Context context, ReportBuilder report, Parameters parameters, AbstractEvaluator evaluator) throws Exception

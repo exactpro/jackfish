@@ -52,8 +52,7 @@ public class ApplicationSetProperties extends AbstractAction
 	@Override
 	protected HelpKind howHelpWithParameterDerived(Context context, Parameters parameters, String fieldName) throws Exception
 	{
-		boolean res = Helper.canFillParameter(this.owner.getMatrix(), context, parameters, null, connectionName, fieldName);
-		return res ? HelpKind.ChooseFromList : null;
+		return Helper.canFillParameter(this.owner.getMatrix(), context, parameters, null, connectionName, fieldName) ? HelpKind.ChooseFromList : null;
 	}
 	
 	@Override
@@ -61,7 +60,6 @@ public class ApplicationSetProperties extends AbstractAction
 	{
 		Helper.fillListForParameter(list, this.owner.getMatrix(), context, parameters, null, connectionName, parameterToFill);
 	}
-	
 
 	@Override
 	public void doRealAction(Context context, ReportBuilder report, Parameters parameters, AbstractEvaluator evaluator) throws Exception
@@ -71,20 +69,20 @@ public class ApplicationSetProperties extends AbstractAction
 		
 		for (Parameter parameter : parameters.select(TypeMandatory.Extra))
 		{
-		    if (parameter.getValue() instanceof Serializable)
-		    {
-		        Serializable prop = (Serializable)parameter.getValue();
-    			service.setProperty(parameter.getName(), prop);
-		    }
-		    else if (parameter.getValue() == null)
+			if (parameter.getValue() instanceof Serializable)
+			{
+				Serializable prop = (Serializable)parameter.getValue();
+				service.setProperty(parameter.getName(), prop);
+			}
+			else if (parameter.getValue() == null)
 			{
 				service.setProperty(parameter.getName(), null);
 			}
 			else
-		    {
-		        super.setError("Parameter " + parameter.getName() + " should be Serializable type or empty.", ErrorKind.WRONG_PARAMETERS);
-		        return;
-		    }
+			{
+				super.setError("Parameter " + parameter.getName() + " should be Serializable type or empty.", ErrorKind.WRONG_PARAMETERS);
+				return;
+			}
 		}
 		super.setResult(null);
 	}

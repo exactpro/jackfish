@@ -36,13 +36,13 @@ import java.util.List;
 
 public class ApplicationResize extends AbstractAction
 {
-	public final static String connectionName 	= "AppConnection";
-	public final static String heightName 		= "Height";
-	public final static String widthName 		= "Width";
-	public final static String resizeName		= "Resize";
-	public final static String minimizeName 	= "Minimize";
-	public final static String maximizeName 	= "Maximize";
-	public final static String normalName		= "Normal";
+	public static final String connectionName 	= "AppConnection";
+	public static final String heightName 		= "Height";
+	public static final String widthName 		= "Width";
+	public static final String resizeName		= "Resize";
+	public static final String minimizeName 	= "Minimize";
+	public static final String maximizeName 	= "Maximize";
+	public static final String normalName		= "Normal";
 
 	@ActionFieldAttribute(name = connectionName, mandatory = true, constantDescription = R.APPLICATION_RESIZE_CONNECTION )
 	protected AppConnection	connection	= null;
@@ -77,7 +77,7 @@ public class ApplicationResize extends AbstractAction
 		{
 			case resizeName :
 				Arrays.stream(Resize.values())
-						.map(r -> Resize.class.getSimpleName()+"."+r.name())
+						.map(r -> Resize.class.getSimpleName() + "." + r.name())
 						.map(ReadableValue::new)
 						.forEach(list::add);
 				break;
@@ -91,36 +91,36 @@ public class ApplicationResize extends AbstractAction
 	@Override
 	public void doRealAction(Context context, ReportBuilder report, Parameters parameters, AbstractEvaluator evaluator) throws Exception
 	{
-        if (this.resize == null && this.width == null && this.height == null)
-        {
-            setError("No one resizing parameter is filled.", ErrorKind.WRONG_PARAMETERS);
-            return;
-        }
-        if (checkInt(widthName, this.width, parameters) || checkInt(heightName, this.height, parameters))
-        {
-            return;
-        }
-        if (parameters.getByName(resizeName) != null && this.resize == null)
-        {
-            setError("Parameter " + resizeName + " must be Resize.Maximize, Resize.Minimize or Resize.Normal", ErrorKind.WRONG_PARAMETERS);
-            return;
-        }
-        if (this.resize != null && (this.height != null || this.width != null))
-        {
-            setError("Need set resize or dimension, but no both together", ErrorKind.WRONG_PARAMETERS);
-            return;
-        }
-        if ((this.height == null && this.width != null) || (this.height != null && this.width == null))
-        {
-            setError("Need set both the parameters " + widthName + " and " + heightName, ErrorKind.WRONG_PARAMETERS);
-            return;
-        }
-        IApplication app = connection.getApplication();
-        app.service().resize(this.resize
-                , this.height == null ? 0 : this.height
-                , this.width  == null ? 0 : this.width);
+		if (this.resize == null && this.width == null && this.height == null)
+		{
+			setError("No one resizing parameter is filled.", ErrorKind.WRONG_PARAMETERS);
+			return;
+		}
+		if (checkInt(widthName, this.width, parameters) || checkInt(heightName, this.height, parameters))
+		{
+			return;
+		}
+		if (parameters.getByName(resizeName) != null && this.resize == null)
+		{
+			setError("Parameter " + resizeName + " must be Resize.Maximize, Resize.Minimize or Resize.Normal", ErrorKind.WRONG_PARAMETERS);
+			return;
+		}
+		if (this.resize != null && (this.height != null || this.width != null))
+		{
+			setError("Need set resize or dimension, but no both together", ErrorKind.WRONG_PARAMETERS);
+			return;
+		}
+		if ((this.height == null && this.width != null) || (this.height != null && this.width == null))
+		{
+			setError("Need set both the parameters " + widthName + " and " + heightName, ErrorKind.WRONG_PARAMETERS);
+			return;
+		}
+		IApplication app = connection.getApplication();
+		app.service().resize(this.resize
+				, this.height == null ? 0 : this.height
+				, this.width  == null ? 0 : this.width);
 
-        super.setResult(null);
+		super.setResult(null);
 	}
 
 	private boolean checkInt(String keyName, Object value, Parameters parameters)

@@ -335,11 +335,11 @@
         </parameters>
         <parameters>
             <key>jreArgs</key>
-            <value></value>
+            <value>-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=14000</value>
         </parameters>
         <parameters>
             <key>LogLevel</key>
-            <value></value>
+            <value>ALL</value>
         </parameters>
         <parameters>
             <key>TrimText</key>

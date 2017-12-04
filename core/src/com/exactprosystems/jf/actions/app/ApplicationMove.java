@@ -14,7 +14,6 @@ import com.exactprosystems.jf.actions.ActionAttribute;
 import com.exactprosystems.jf.actions.ActionFieldAttribute;
 import com.exactprosystems.jf.actions.ActionGroups;
 import com.exactprosystems.jf.api.app.AppConnection;
-import com.exactprosystems.jf.api.app.IApplication;
 import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.report.ReportBuilder;
@@ -46,8 +45,7 @@ public class ApplicationMove extends AbstractAction
 	@Override
 	protected void doRealAction(Context context, ReportBuilder report, Parameters parameters, AbstractEvaluator evaluator) throws Exception
 	{
-		IApplication application = this.connection.getApplication();
-		application.service().moveWindow(this.x, this.y);
+		this.connection.getApplication().service().moveWindow(this.x, this.y);
 		super.setResult(null);
 	}
 }

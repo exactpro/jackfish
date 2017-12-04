@@ -11,8 +11,8 @@ package com.exactprosystems.jf.actions.app;
 
 import com.exactprosystems.jf.actions.*;
 import com.exactprosystems.jf.api.app.AppConnection;
-import com.exactprosystems.jf.api.app.IApplication;
 import com.exactprosystems.jf.api.common.ParametersKind;
+import com.exactprosystems.jf.api.common.Str;
 import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.report.ReportBuilder;
@@ -22,9 +22,9 @@ import com.exactprosystems.jf.documents.matrix.parser.Parameters;
 import com.exactprosystems.jf.documents.matrix.parser.items.TypeMandatory;
 import com.exactprosystems.jf.functions.HelpKind;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @ActionAttribute(
 		group 						  = ActionGroups.App,
@@ -63,13 +63,10 @@ public class ApplicationNewInstance extends AbstractAction
 	@Override
 	protected void doRealAction(Context context, ReportBuilder report, Parameters parameters, AbstractEvaluator evaluator) throws Exception
 	{
-		Map<String, String> args = new HashMap<>();
-		for (Parameter parameter : parameters.select(TypeMandatory.Extra))
-		{
-			args.put(parameter.getName(), String.valueOf(parameter.getValue()));
-		}
-		IApplication app = this.connection.getApplication();
-		app.service().newInstance(args);
+		Map<String, String> args = parameters.select(TypeMandatory.Extra)
+				.stream()
+				.collect(Collectors.toMap(Parameter::getName, par -> Str.asString(par.getValue())));
+		this.connection.getApplication().service().newInstance(args);
 		super.setResult(null);
 	}
 }

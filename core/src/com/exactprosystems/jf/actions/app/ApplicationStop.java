@@ -33,14 +33,13 @@ public class ApplicationStop extends AbstractAction
 	@ActionFieldAttribute(name = connectionName, mandatory = true, constantDescription = R.APPLICATION_STOP_CONNECTION)
 	protected AppConnection	connection	= null;
 
-	@ActionFieldAttribute(name=needKillName, mandatory = false, def = DefaultValuePool.False, constantDescription = R.APPLICATION_STOP_NEED_KILL)
+	@ActionFieldAttribute(name = needKillName, mandatory = false, def = DefaultValuePool.False, constantDescription = R.APPLICATION_STOP_NEED_KILL)
 	protected Boolean needKill;
 
 	@Override
 	public void doRealAction(Context context, ReportBuilder report, Parameters parameters, AbstractEvaluator evaluator) throws Exception 
 	{
-		boolean kill = needKill;
-		context.getConfiguration().getApplicationPool().stopApplication(this.connection, kill);
+		context.getConfiguration().getApplicationPool().stopApplication(this.connection, this.needKill);
 		super.setResult(null);
 	}
 }

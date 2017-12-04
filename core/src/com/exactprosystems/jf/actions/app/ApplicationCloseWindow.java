@@ -15,6 +15,7 @@ import com.exactprosystems.jf.actions.ActionFieldAttribute;
 import com.exactprosystems.jf.actions.ActionGroups;
 import com.exactprosystems.jf.api.app.AppConnection;
 import com.exactprosystems.jf.api.app.IApplication;
+import com.exactprosystems.jf.api.common.Str;
 import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.api.error.ErrorKind;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
@@ -43,15 +44,15 @@ public class ApplicationCloseWindow extends AbstractAction
 	protected void doRealAction(Context context, ReportBuilder report, Parameters parameters, AbstractEvaluator evaluator) throws Exception
 	{
 		IApplication app = connection.getApplication();
-		String res = app.service().closeWindow();
+		String windowTitle = app.service().closeWindow();
 
-		if (res.equals(""))
+		if (Str.IsNullOrEmpty(windowTitle))
 		{
 			super.setError("Can not close the window", ErrorKind.ELEMENT_NOT_FOUND);
 		}
 		else
 		{
-			super.setResult(res);
+			super.setResult(windowTitle);
 		}
 	}
 }

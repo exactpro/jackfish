@@ -9,11 +9,7 @@
 
 package com.exactprosystems.jf.actions.app;
 
-import com.exactprosystems.jf.actions.AbstractAction;
-import com.exactprosystems.jf.actions.ActionAttribute;
-import com.exactprosystems.jf.actions.ActionFieldAttribute;
-import com.exactprosystems.jf.actions.ActionGroups;
-import com.exactprosystems.jf.actions.ReadableValue;
+import com.exactprosystems.jf.actions.*;
 import com.exactprosystems.jf.actions.gui.*;
 import com.exactprosystems.jf.api.app.AppConnection;
 import com.exactprosystems.jf.api.app.IApplicationPool;
@@ -29,9 +25,9 @@ import com.exactprosystems.jf.documents.matrix.parser.Parameters;
 import com.exactprosystems.jf.documents.matrix.parser.items.TypeMandatory;
 import com.exactprosystems.jf.functions.HelpKind;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @ActionAttribute(
 		group						  = ActionGroups.App,
@@ -49,7 +45,6 @@ import java.util.Map;
 public class ApplicationStart extends AbstractAction 
 {
 	public static final String idName 	= "AppId";
-
 
 	@ActionFieldAttribute(name = idName, mandatory = true, constantDescription = R.APPLICATION_START_APP_ID)
 	protected String id	= null;
@@ -98,12 +93,10 @@ public class ApplicationStart extends AbstractAction
 	{
 		IApplicationPool pool = context.getConfiguration().getApplicationPool();
 
-		Map<String, String> args = new HashMap<>();
-		for (Parameter parameter : parameters.select(TypeMandatory.Extra))
-		{
-			args.put(parameter.getName(), Str.asString(parameter.getValue()));
-		}
-		
+		Map<String, String> args = parameters.select(TypeMandatory.Extra)
+				.stream()
+				.collect(Collectors.toMap(Parameter::getName, par -> Str.asString(par.getValue())));
+
 		AppConnection connection = pool.startApplication(this.id, args);
 		if (connection.isGood())
 		{
