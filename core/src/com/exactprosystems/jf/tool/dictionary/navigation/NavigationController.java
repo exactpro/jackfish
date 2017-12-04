@@ -154,7 +154,16 @@ public class NavigationController implements Initializable, ContainingParent
 		));
 
 		this.listViewWindow.addChangeListener((observable, oldValue, newValue) -> this.model.setCurrentWindow(newValue));
-		this.groupSection.selectedToggleProperty().addListener((observable, oldValue, newValue) -> this.model.setCurrentSection(this.currentSection()));
+		this.groupSection.selectedToggleProperty().addListener((observable, oldValue, newValue) ->
+		{
+			SectionKind newSection = this.sectionFromToggle(newValue);
+			SectionKind oldSection = this.sectionFromToggle(oldValue);
+//			//change if needed
+			if (newSection != oldSection)
+			{
+				this.model.setCurrentSection(newSection);
+			}
+		});
 		this.listViewElement.addChangeListener((observable, oldValue, newValue) -> controller.elementChanged(newValue == null ? null : newValue.control));
 
 		Context context = model.getFactory().createContext();
@@ -330,9 +339,9 @@ public class NavigationController implements Initializable, ContainingParent
 		}
 	}
 
-	private IWindow.SectionKind currentSection()
+	private IWindow.SectionKind sectionFromToggle(Toggle toggle)
 	{
-		RadioButton radioButton = (RadioButton) this.groupSection.getSelectedToggle();
+		RadioButton radioButton = (RadioButton) toggle;
 		if (radioButton == null)
 		{
 			return IWindow.SectionKind.Run;
@@ -395,6 +404,12 @@ public class NavigationController implements Initializable, ContainingParent
 
 			this.pane.setLeft(new Text(this.control != null ? this.control.toString() : ""));
 			this.pane.setRight(this.text);
+		}
+
+		@Override
+		public String toString()
+		{
+			return String.valueOf(this.control);
 		}
 	}
 

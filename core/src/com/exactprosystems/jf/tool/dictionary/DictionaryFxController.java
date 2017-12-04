@@ -114,21 +114,12 @@ public class DictionaryFxController extends AbstractDocumentController<Dictionar
 		super.model.setOnChangeListener((integer, integer2) -> this.navigationController.displayDialogs(this.model.getWindows()));
 		super.model.setOnAddListener(this.navigationController::addDialog);
 		super.model.setOnRemoveListener((integer, window) -> this.navigationController.removeDialog(window));
-		super.model.currentWindow().setOnChangeListener((window, newValue) ->
-		{
-			System.err.println(">> new window : " + newValue);
-			this.navigationController.displayDialog(newValue);
-		});
+		super.model.currentWindow().setOnChangeListener((window, newValue) -> this.navigationController.displayDialog(newValue));
 		super.model.setChangeWindowName((newName, newName2) -> this.navigationController.dialogChangeName(newName2));
-		super.model.currentSection().setOnChangeListener((sectionKind, newValue) ->
-		{
-			System.err.println(">> new section : " + newValue);
-			this.navigationController.displaySection(newValue);
-		});
+		super.model.currentSection().setOnChangeListener((sectionKind, newValue) -> this.navigationController.displaySection(newValue));
 
 		super.model.currentElement().setOnChangeListener((iControl, newValue) ->
 		{
-			System.err.println(">> new element : " + newValue);
 			this.navigationController.displayElement(newValue);
 			this.elementInfoController.displayElement(newValue);
 		});

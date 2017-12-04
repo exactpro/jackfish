@@ -30,6 +30,7 @@ import java.util.function.BiPredicate;
 public class FindListView<T> extends VBox
 {
 	private ListView<T> listView;
+	private ChangeListener<T> changeListener;
 	private List<T> data;
 	private CustomFieldWithButton cfbFind;
 	private BiPredicate<T, String> filter;
@@ -75,11 +76,14 @@ public class FindListView<T> extends VBox
 
 	public void refresh()
 	{
-		ObservableList<T> items = this.listView.getItems();
-		int selectedIndex = this.listView.getSelectionModel().getSelectedIndex();
-		this.listView.setItems(null);
-		this.listView.setItems(items);
-		this.listView.getSelectionModel().select(selectedIndex);
+		this.updateSilently(() ->
+		{
+			ObservableList<T> items = this.listView.getItems();
+			int selectedIndex = this.listView.getSelectionModel().getSelectedIndex();
+			this.listView.setItems(null);
+			this.listView.setItems(items);
+			this.listView.getSelectionModel().select(selectedIndex);
+		});
 	}
 
 	public void setCellFactory(Callback<ListView<T>, ListCell<T>> value)
@@ -104,6 +108,7 @@ public class FindListView<T> extends VBox
 
 	public void addChangeListener(ChangeListener<T> changeListener)
 	{
+		this.changeListener = changeListener;
 		this.listView.getSelectionModel().selectedItemProperty().addListener(changeListener);
 	}
 
@@ -172,6 +177,19 @@ public class FindListView<T> extends VBox
 		else
 		{
 			this.data.stream().filter(t -> this.filter.test(t, newValue)).forEach(this.listView.getItems()::add);
+		}
+	}
+
+	private void updateSilently(Runnable function)
+	{
+		if (this.changeListener != null)
+		{
+			this.listView.getSelectionModel().selectedItemProperty().removeListener(this.changeListener);
+		}
+		function.run();
+		if (this.changeListener != null)
+		{
+			this.listView.getSelectionModel().selectedItemProperty().addListener(this.changeListener);
 		}
 	}
 	//endregion

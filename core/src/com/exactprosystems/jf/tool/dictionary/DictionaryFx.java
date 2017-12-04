@@ -120,7 +120,7 @@ public class DictionaryFx extends GuiDictionary
 		//display all windows
 		super.fire();
 		this.currentSection.set(SectionKind.Run);
-		this.setCurrentWindow(getFirstWindow());
+		this.setCurrentWindow(super.getFirstWindow());
 
 		this.appsList.from(convertToMutable(getFactory().getConfiguration().getApplications()));
 		this.currentApp.fire();
