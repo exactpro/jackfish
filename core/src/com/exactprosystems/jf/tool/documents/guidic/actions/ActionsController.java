@@ -7,7 +7,7 @@
 // information which is the property of Exactpro Systems or its licensors.
 ////////////////////////////////////////////////////////////////////////////////
 
-package com.exactprosystems.jf.tool.dictionary.actions;
+package com.exactprosystems.jf.tool.documents.guidic.actions;
 
 import com.exactprosystems.jf.api.app.AppConnection;
 import com.exactprosystems.jf.api.app.ImageWrapper;
@@ -21,8 +21,8 @@ import com.exactprosystems.jf.tool.CssVariables;
 import com.exactprosystems.jf.tool.custom.BorderWrapper;
 import com.exactprosystems.jf.tool.custom.expfield.ExpressionField;
 import com.exactprosystems.jf.tool.custom.number.NumberTextField;
-import com.exactprosystems.jf.tool.dictionary.ApplicationStatus;
-import com.exactprosystems.jf.tool.dictionary.DictionaryFx;
+import com.exactprosystems.jf.tool.documents.guidic.ApplicationStatus;
+import com.exactprosystems.jf.tool.documents.guidic.DictionaryFx;
 import com.exactprosystems.jf.tool.helpers.DialogsHelper;
 import com.exactprosystems.jf.tool.helpers.ExpressionFieldsPane;
 import com.exactprosystems.jf.tool.settings.Theme;

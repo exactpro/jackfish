@@ -16,7 +16,7 @@ import com.exactprosystems.jf.api.common.ParametersKind;
 import com.exactprosystems.jf.common.Settings;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.documents.DocumentFactory;
-import com.exactprosystems.jf.tool.dictionary.ApplicationStatus;
+import com.exactprosystems.jf.tool.documents.guidic.ApplicationStatus;
 import com.exactprosystems.jf.tool.helpers.DialogsHelper;
 
 import javafx.concurrent.Task;

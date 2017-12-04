@@ -31,7 +31,7 @@ import com.exactprosystems.jf.functions.Notifier;
 import com.exactprosystems.jf.functions.Table;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.custom.tab.CustomTab;
-import com.exactprosystems.jf.tool.dictionary.DictionaryFx;
+import com.exactprosystems.jf.tool.documents.guidic.DictionaryFx;
 import com.exactprosystems.jf.tool.documents.csv.CsvFx;
 import com.exactprosystems.jf.tool.documents.text.PlainTextFx;
 import com.exactprosystems.jf.tool.documents.vars.SystemVarsFx;

@@ -18,7 +18,7 @@ import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.ContainingParent;
 import com.exactprosystems.jf.tool.CssVariables;
 import com.exactprosystems.jf.tool.custom.helper.HelperFx.IToString;
-import com.exactprosystems.jf.tool.dictionary.FindListView;
+import com.exactprosystems.jf.tool.custom.FindListView;
 import com.exactprosystems.jf.tool.helpers.DialogsHelper;
 import com.exactprosystems.jf.tool.settings.Theme;
 import javafx.collections.FXCollections;

@@ -7,7 +7,7 @@
 // information which is the property of Exactpro Systems or its licensors.
 ////////////////////////////////////////////////////////////////////////////////
 
-package com.exactprosystems.jf.tool.dictionary;
+package com.exactprosystems.jf.tool.documents.guidic;
 
 public enum ApplicationStatus
 {

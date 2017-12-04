@@ -13,7 +13,7 @@
 <?import javafx.scene.control.SplitPane?>
 <?import javafx.scene.layout.*?>
 <?import java.lang.Double?>
-<BorderPane xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.exactprosystems.jf.tool.dictionary.DictionaryFxController">
+<BorderPane xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.exactprosystems.jf.tool.documents.guidic.DictionaryFxController">
 	<center>
 		<SplitPane fx:id="splitPane" dividerPositions="0.85" orientation="VERTICAL" >
 			<items>

@@ -26,7 +26,7 @@ import com.exactprosystems.jf.documents.matrix.parser.Parser;
 import com.exactprosystems.jf.documents.matrix.parser.items.MatrixItem;
 import com.exactprosystems.jf.functions.Table;
 import com.exactprosystems.jf.tool.Common;
-import com.exactprosystems.jf.tool.dictionary.DictionaryFx;
+import com.exactprosystems.jf.tool.documents.guidic.DictionaryFx;
 import org.apache.log4j.Logger;
 
 import java.io.Reader;

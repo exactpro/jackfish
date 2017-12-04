@@ -7,7 +7,7 @@
 // information which is the property of Exactpro Systems or its licensors.
 ////////////////////////////////////////////////////////////////////////////////
 
-package com.exactprosystems.jf.tool.dictionary.navigation;
+package com.exactprosystems.jf.tool.documents.guidic.navigation;
 
 import com.exactprosystems.jf.api.app.IControl;
 import com.exactprosystems.jf.api.app.IWindow;
@@ -20,9 +20,9 @@ import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.ContainingParent;
 import com.exactprosystems.jf.tool.CssVariables;
 import com.exactprosystems.jf.tool.custom.BorderWrapper;
-import com.exactprosystems.jf.tool.dictionary.DictionaryFx;
-import com.exactprosystems.jf.tool.dictionary.DictionaryFxController;
-import com.exactprosystems.jf.tool.dictionary.FindListView;
+import com.exactprosystems.jf.tool.documents.guidic.DictionaryFx;
+import com.exactprosystems.jf.tool.documents.guidic.DictionaryFxController;
+import com.exactprosystems.jf.tool.custom.FindListView;
 import com.exactprosystems.jf.tool.helpers.DialogsHelper;
 import com.exactprosystems.jf.tool.settings.Theme;
 import com.exactprosystems.jf.tool.wizard.WizardButton;

@@ -6,7 +6,7 @@
 // This is unpublished, licensed software, confidential and proprietary
 // information which is the property of Exactpro Systems or its licensors.
 ////////////////////////////////////////////////////////////////////////////////
-package com.exactprosystems.jf.tool.dictionary;
+package com.exactprosystems.jf.tool.custom;
 
 import com.exactprosystems.jf.api.common.Str;
 import com.exactprosystems.jf.api.common.i18n.R;
@@ -26,7 +26,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.BiPredicate;
 
-//TODO need code review!!!
 public class FindListView<T> extends VBox
 {
 	private ListView<T> listView;

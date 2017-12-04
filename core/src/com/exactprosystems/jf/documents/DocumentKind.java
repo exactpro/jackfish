@@ -9,7 +9,7 @@
 
 package com.exactprosystems.jf.documents;
 
-import com.exactprosystems.jf.tool.dictionary.DictionaryFxController;
+import com.exactprosystems.jf.tool.documents.guidic.DictionaryFxController;
 import com.exactprosystems.jf.tool.documents.AbstractDocumentController;
 import com.exactprosystems.jf.tool.documents.csv.CsvFxController;
 import com.exactprosystems.jf.tool.documents.text.PlainTextFxController;
