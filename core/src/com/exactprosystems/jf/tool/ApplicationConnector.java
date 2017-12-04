@@ -18,7 +18,6 @@ import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.documents.DocumentFactory;
 import com.exactprosystems.jf.tool.documents.guidic.ApplicationStatus;
 import com.exactprosystems.jf.tool.helpers.DialogsHelper;
-
 import javafx.concurrent.Task;
 import javafx.scene.control.ButtonType;
 
@@ -175,7 +174,7 @@ public class ApplicationConnector
 			protected Void call() throws Exception
 			{
 				IApplicationPool applicationPool = factory.getConfiguration().getApplicationPool();
-				update(ApplicationStatus.Connecting, null, true);
+				Common.runLater(() -> update(ApplicationStatus.Connecting, null, true));
 				if (isStart)
 				{
 					appConnection = applicationPool.startApplication(idAppEntry, parameters);

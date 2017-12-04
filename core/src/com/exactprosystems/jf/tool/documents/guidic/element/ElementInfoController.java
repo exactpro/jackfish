@@ -361,7 +361,7 @@ public class ElementInfoController implements Initializable, ContainingParent
 
 	private void selectControlKind(Collection<ControlKind> kinds, ControlKind kind)
 	{
-		if (!kinds.contains(kind) && this.model.getApp() != null)
+		if (kind != null && !kinds.contains(kind) && this.model.getApp() != null)
 		{
 			DialogsHelper.showError(String.format("Plugin %s doesn't support control %s. Control replacing to Any", this.model.getApp().getId(), kind));
 			this.comboBoxControl.getSelectionModel().select(ControlKind.Any);
