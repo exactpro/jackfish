@@ -28,6 +28,7 @@ import com.exactprosystems.jf.documents.vars.SystemVars;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.custom.store.StoreVariable;
 import com.exactprosystems.jf.tool.custom.tab.CustomTab;
+import com.exactprosystems.jf.tool.dictionary.DictionaryFx;
 import com.exactprosystems.jf.tool.documents.FxDocumentFactory;
 import com.exactprosystems.jf.tool.git.CredentialBean;
 import com.exactprosystems.jf.tool.git.CredentialDialog;
@@ -442,7 +443,11 @@ public class Main extends Application
 		Optional<File> optional = chooseFile(GuiDictionary.class, filePath, DialogsHelper.OpenSaveMode.OpenFile);
 		if (optional.isPresent())
 		{
-			loadDocument(optional.get(), DocumentKind.GUI_DICTIONARY);
+			Document dictionary = loadDocument(optional.get(), DocumentKind.GUI_DICTIONARY);
+			if (dictionary instanceof DictionaryFx)
+			{
+				((DictionaryFx) dictionary).setCurrentApp(entryName);
+			}
 		}
 	}
 

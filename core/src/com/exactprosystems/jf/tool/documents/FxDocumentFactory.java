@@ -127,7 +127,7 @@ public class FxDocumentFactory extends DocumentFactory
 	}
 
 	@Override
-	protected GuiDictionary createAppDictionary(String fileName, Configuration configuration) throws Exception
+	protected GuiDictionary createAppDictionary(String fileName, Configuration configuration)
 	{
 		return new DictionaryFx(fileName, this);
 	}

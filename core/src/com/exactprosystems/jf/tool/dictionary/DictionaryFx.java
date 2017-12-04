@@ -102,6 +102,7 @@ public class DictionaryFx extends GuiDictionary
 		super(fileName, factory);
 		this.currentApp.set(currentAdapter);
 		this.evaluator = factory.createEvaluator();
+		this.applicationConnector = new ApplicationConnector(factory);
 	}
 
 	//region AbstractDocument
@@ -111,10 +112,6 @@ public class DictionaryFx extends GuiDictionary
 		super.display();
 		getNameProperty().fire();
 
-		if (this.applicationConnector == null)
-		{
-			this.applicationConnector = new ApplicationConnector(getFactory());
-		}
 		this.applicationConnector.setApplicationListener((status1, appConnection1, throwable) -> this.appStatus.set(new ApplicationStatusBean(status1, appConnection1, throwable)));
 
 		//display all windows

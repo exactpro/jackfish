@@ -74,7 +74,7 @@ public class ConsoleDocumentFactory extends DocumentFactory
 	}
 
 	@Override
-	protected GuiDictionary createAppDictionary(String fileName, Configuration configuration) throws Exception
+	protected GuiDictionary createAppDictionary(String fileName, Configuration configuration)
 	{
 		return new GuiDictionary(fileName, this);
 	}
