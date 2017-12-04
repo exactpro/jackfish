@@ -18,12 +18,12 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface WizardAttribute
 {
-    String name();
-    String pictureName();
-    String shortDescription();
-    String detailedDescription();
-    WizardCategory category();
-    boolean experimental();
-    boolean strongCriteries();
-    Class<?>[] criteries() default {};
+	String name();
+	String pictureName();
+	String shortDescription();
+	String detailedDescription();
+	WizardCategory category();
+	boolean experimental();
+	boolean strongCriteries();
+	Class<?>[] criteries() default {};
 }

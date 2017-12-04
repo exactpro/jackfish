@@ -14,7 +14,7 @@ import com.exactprosystems.jf.api.common.IContext;
 public interface Wizard
 {
 	WizardManager manager();
-    void init(IContext context, WizardManager wizardManager, Object... parameters);
-    boolean beforeRun();
-    WizardResult run();
+	void init(IContext context, WizardManager wizardManager, Object... parameters);
+	boolean beforeRun();
+	WizardResult run();
 }
