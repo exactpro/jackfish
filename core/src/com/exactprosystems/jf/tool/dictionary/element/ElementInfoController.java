@@ -24,6 +24,7 @@ import com.exactprosystems.jf.tool.helpers.DialogsHelper;
 import com.exactprosystems.jf.tool.settings.Theme;
 import javafx.event.ActionEvent;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
@@ -71,7 +72,7 @@ public class ElementInfoController implements Initializable, ContainingParent
 	private String previousId = null;
 
 	private TextField editedTextField = null;
-
+	private List<Node> allNodes;
 	private transient boolean disableAllListeners = false;
 
 	@Override
@@ -89,6 +90,10 @@ public class ElementInfoController implements Initializable, ContainingParent
 			tf.maxWidthProperty().bind(this.fieldGrid.getColumnConstraints().get(1).maxWidthProperty());
 			tf.minWidthProperty().bind(this.fieldGrid.getColumnConstraints().get(1).minWidthProperty());
 		});
+
+		this.allNodes = Arrays.asList(
+				this.comboBoxControl, this.choiceBoxVisibility, this.choiceBoxAddition, this.choiceBoxHeader, this.choiceBoxRows, this.choiceBoxOwner, this.choiceBoxReference, this.checkBoxWeak,
+				this.tfID, this.tfUID, this.tfXpath, this.tfClass, this.tfText, this.tfName, this.tfTooltip, this.tfColumns, this.tfAction, this.tfTitle, this.tfExpression, this.tfTimeout, this.btnGoToOwner);
 	}
 
 	public void init(DictionaryFx model, Consumer<Parent> consumer)
@@ -124,6 +129,7 @@ public class ElementInfoController implements Initializable, ContainingParent
 		try
 		{
 			this.disableAllListeners = true;
+			this.allNodes.forEach(node -> node.setDisable(false));
 			this.pane.setDisable(control == null);
 
 			List<IControl> allControlsWithNonEmptyId = this.allControlsWithNonEmptyId(control);
@@ -163,6 +169,21 @@ public class ElementInfoController implements Initializable, ContainingParent
 			this.tfTooltip.setText(get(control, "", IControl::getTooltip));
 			this.tfColumns.setText(get(control, "", IControl::getColumns));
 			this.tfExpression.setText(get(control, "", IControl::getExpression));
+
+			if (control != null)
+			{
+				this.choiceBoxReference.setDisable(control.getBindedClass() != ControlKind.Wait);
+				this.tfTimeout.setDisable(control.getBindedClass() != ControlKind.Wait);
+
+				this.choiceBoxHeader.setDisable(control.getBindedClass() != ControlKind.Table);
+				this.choiceBoxRows.setDisable(control.getBindedClass() != ControlKind.Table);
+				this.tfColumns.setDisable(control.getBindedClass() != ControlKind.Table);
+
+				if (Str.IsNullOrEmpty(control.getOwnerID()))
+				{
+					this.btnGoToOwner.setDisable(true);
+				}
+			}
 		}
 		finally
 		{
@@ -193,6 +214,7 @@ public class ElementInfoController implements Initializable, ContainingParent
 		this.addListenersForTextFields();
 
 		this.addListenerForSelections(this.choiceBoxOwner.getSelectionModel(), AbstractControl.ownerIdName, this::mapper, "Error on change owner");
+		this.choiceBoxOwner.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> this.btnGoToOwner.setDisable(newValue == null));
 
 		this.comboBoxControl.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) ->
 				this.executeIfListenerEnable(() -> this.model.changeControlKind(newValue), "Error on change control kind"));
