@@ -9,14 +9,9 @@
 
 package com.exactprosystems.jf.actions.matrix;
 
-import com.exactprosystems.jf.actions.AbstractAction;
-import com.exactprosystems.jf.actions.ActionAttribute;
-import com.exactprosystems.jf.actions.ActionFieldAttribute;
-import com.exactprosystems.jf.actions.ActionGroups;
-import com.exactprosystems.jf.actions.DefaultValuePool;
+import com.exactprosystems.jf.actions.*;
 import com.exactprosystems.jf.api.common.MatrixConnection;
 import com.exactprosystems.jf.api.common.i18n.R;
-import com.exactprosystems.jf.api.error.common.MatrixException;
 import com.exactprosystems.jf.common.CommonHelper;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.report.ReportBuilder;
@@ -42,12 +37,12 @@ import java.util.Date;
 	)
 public class MatrixRunFromText extends AbstractAction 
 {
-	public final static String atName = "At";
-	public final static String textName = "Text";
-	public final static String parameterName = "Parameter";
+	public static final String atName        = "At";
+	public static final String textName      = "Text";
+	public static final String parameterName = "Parameter";
 
 	@ActionFieldAttribute(name = textName, mandatory = true, constantDescription = R.MATRIX_RUN_FROM_TEXT_TEXT)
-	protected Text text	= null;
+	protected Text text = null;
 
 	@ActionFieldAttribute(name = atName, mandatory = false, def = DefaultValuePool.Null, constantDescription = R.MATRIX_RUN_FROM_TEXT_AT)
 	protected Date at;
@@ -62,19 +57,15 @@ public class MatrixRunFromText extends AbstractAction
 	}
 	
 	@Override
-	public void doRealAction(Context context, ReportBuilder report, Parameters parameters, AbstractEvaluator evaluator) throws Exception 
+	public void doRealAction(Context context, ReportBuilder report, Parameters parameters, AbstractEvaluator evaluator) throws Exception
 	{
-        try(Reader reader = CommonHelper.readerFromString(this.text.toString()))
-        {
-            Matrix matrix = (Matrix)context.getFactory().createDocument(DocumentKind.MATRIX, "new");
-            matrix.load(reader);
+		try(Reader reader = CommonHelper.readerFromString(this.text.toString()))
+		{
+			Matrix matrix = (Matrix)context.getFactory().createDocument(DocumentKind.MATRIX, "new");
+			matrix.load(reader);
 			matrix.setOut(context.getOut());
-            MatrixConnection connection = matrix.start(this.at, this.parameter);
-            super.setResult(connection);
-        }
-        catch (MatrixException matrixException)
-        {
-            super.setError(matrixException.getMessage(), matrixException.getErrorKind());
-        }
+			MatrixConnection connection = matrix.start(this.at, this.parameter);
+			super.setResult(connection);
+		}
 	}
 }
