@@ -10,6 +10,7 @@
 package com.exactprosystems.jf.documents.matrix.parser.items;
 
 import com.csvreader.CsvWriter;
+import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.api.error.ErrorKind;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.report.ReportBuilder;
@@ -29,15 +30,8 @@ import java.util.List;
 import java.util.Map;
 
 @MatrixItemAttribute(
-        description 	= "This operator describes a subprogram. In parameters the program arguments are described, factual parameters are used with Call.\n " +
-							" SubCase is performed by the Call operator only." +
-							" SubCase operator can even be located in commented testcases.",
-		examples 		= "{{#\n" +
-							"#Id;#SubCase\n" +
-							"SUB1;\n" +
-							"#Action;#Greeting\n" +
-							"Print;'Hello!'\n" +
-							"#EndSubCase#}}",
+        constantGeneralDescription = R.SUB_CASE_DESCRIPTION,
+		constantExamples = R.SUB_CASE_EXAMPLE,
         shouldContain 	= { Tokens.SubCase },
         mayContain 		= { Tokens.Id, Tokens.Off, Tokens.RepOff },
         parents			= { TestCase.class, NameSpace.class },

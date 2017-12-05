@@ -10,6 +10,7 @@
 package com.exactprosystems.jf.documents.matrix.parser.items;
 
 import com.csvreader.CsvWriter;
+import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.api.error.ErrorKind;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.evaluator.Variables;
@@ -26,12 +27,8 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 @MatrixItemAttribute(
-		description 	= "This operator is used to describe an object as Text. It has its own mini editor.",
-		examples 		= "{{#\n" +
-							"#Id;#RawText\n" +
-							"TEXT1;Text\n" +
-							"\"Hello world\"\n" +
-							"#EndRawText#}}",
+		constantGeneralDescription = R.RAW_TEXT_DESCRIPTION,
+		constantExamples = R.RAW_TEXT_EXAMPLE,
 		shouldContain 	= { Tokens.RawText }, 
 		mayContain 		= { Tokens.Id, Tokens.Off, Tokens.RepOff, Tokens.Global, Tokens.Kind},
 		parents			= { Case.class, Else.class, For.class, ForEach.class, If.class,

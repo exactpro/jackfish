@@ -10,6 +10,7 @@
 package com.exactprosystems.jf.documents.matrix.parser.items;
 
 import com.csvreader.CsvWriter;
+import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.api.error.ErrorKind;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.evaluator.Variables;
@@ -25,13 +26,8 @@ import java.util.List;
 import java.util.Map;
 
 @MatrixItemAttribute(
-		description 	= "This operator is used to describe an object asTable. In matrix editor there is a special mini editor for  rowText and rawMessage for this operator.",
-		examples 		= "{{#\n" +
-							"#Id;#RawTable\n" +
-							"DATA1;Table\n" +
-							"@;newH\n" +
-							"0;newR\n" +
-							"#EndRawTable#}}",
+		constantGeneralDescription = R.RAW_TABLE_DESCRIPTION,
+		constantExamples = R.RAW_TABLE_EXAMPLE,
 		shouldContain 	= { Tokens.RawTable }, 
 		mayContain 		= { Tokens.Id, Tokens.Off, Tokens.RepOff, Tokens.Global }, 
 		parents			= { Case.class, Else.class, For.class, ForEach.class, If.class,
@@ -106,10 +102,10 @@ public class RawTable extends MatrixItem
 				if (prefCols < this.table.getHeaderSize() || prefRows < this.table.size())
 				{
 					return DialogsHelper.showQuestionDialog(
-							String.format("Current table size is [%s;%s] and given size is [%s;%s].The table will be cut ",
+							String.format(R.RAW_TABLE_CUT_INFO.get(),
 									  this.table.size(),  this.table.getHeaderSize()
 									, this.prefRows,      this.prefCols),
-							"Do you want to continue cutting the table?");
+							R.RAW_TABLE_CUT_CONFIRM.get());
 				}
 				return true;
 			});

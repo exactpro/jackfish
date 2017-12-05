@@ -8,6 +8,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 package com.exactprosystems.jf.documents.matrix.parser.items;
 
+import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.api.error.ErrorKind;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.report.HTMLhelper;
@@ -58,14 +59,14 @@ public class HelpItem extends MatrixItem
         report.itemIntermediate(item);
         report.putMark(this.itemClazz.getSimpleName());
         report.outLine(this, null, "{{`{{3" + this.itemClazz.getSimpleName() + "3}}`}}", null);
-        report.outLine(this, null, "{{`" + attribute.description() + "`}}", null);
+        report.outLine(this, null, "{{`" + attribute.constantGeneralDescription().get() + "`}}", null);
         report.outLine(this, null, "{{`{{*Examples*}}`}}", null);
         if (report instanceof HelpBuilder){
-            report.outLine(this, null, "{{`" + HTMLhelper.htmlescape(attribute.examples()) + "`}}", null);
+            report.outLine(this, null, "{{`" + HTMLhelper.htmlescape(attribute.constantExamples().get()) + "`}}", null);
         }
         else
         {
-            report.outLine(this, null, "{{`" + attribute.examples() + "`}}", null);
+            report.outLine(this, null, "{{`" + attribute.constantExamples().get() + "`}}", null);
         }
         if (attribute.seeAlsoClass().length != 0)
         {

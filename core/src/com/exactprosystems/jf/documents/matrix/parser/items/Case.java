@@ -10,6 +10,7 @@
 package com.exactprosystems.jf.documents.matrix.parser.items;
 
 import com.csvreader.CsvWriter;
+import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.documents.config.Context;
 import com.exactprosystems.jf.documents.matrix.parser.DisplayDriver;
@@ -24,41 +25,8 @@ import java.util.List;
 import java.util.Map;
 
 @MatrixItemAttribute(
-		description 	= "This operator is used to describe one variant to compare with for an operator Switch.\n" +
-							"In each operator  Case is given one of the variants that equals the expression from the operator Switch",
-		examples 		= "(Example #1)\n" +
-				"Or the operator Case is performed, which value is true (Example #2)\n" +
-				"After one of the blocks  case has been performed an operator  switch is being broken.\n" +
-				"Example #1:\n" +
-				"Variable a is transmitted into field  switch. The  Case will be performed which value matches a variable value.\n" +
-				"{{#\n" +
-				"#Switch\n" +
-				"a\n" +
-				"#Case\n" +
-				"1\n" +
-				"#Action;#Greeting\n" +
-				"Print;'Hello!'\n" +
-				"#Case\n" +
-				"2\n" +
-				"#Action;#Greeting\n" +
-				"Print;'Bye!'\n" +
-				"#EndSwitch#}} \n" +
-				"Logical data type which equals true is transferred into field  switch \n" +
-				"The Case will be performed, which field's expression will returns true." +
-				"{{#\n" +
-				"#Id;#Let\n" +
-				"expression;'Annoucements(425)'\n" +
-				"#Switch\n" +
-				"true\n" +
-				"#Case\n" +
-				"expression.matches('[\\\\w|\\\\s]+[(]425{1}[)]')\n" +
-				"#Action;#result\n" +
-				"Print;true\n" +
-				"#Case\n" +
-				"expression.matches('[\\\\w|\\\\s]+[(]455{1}[)]')\n" +
-				"#Action;#result\n" +
-				"Print;false\n" +
-				"#EndSwitch#}}",
+		constantGeneralDescription = R.CASE_DESCRIPTION,
+		constantExamples = R.CASE_EXAMPLE,
 		shouldContain 	= { Tokens.Case },
 		mayContain 		= { Tokens.Off, Tokens.RepOff }, 
         closes			= Switch.class,

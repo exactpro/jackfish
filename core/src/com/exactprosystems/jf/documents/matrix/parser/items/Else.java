@@ -10,6 +10,7 @@
 package com.exactprosystems.jf.documents.matrix.parser.items;
 
 import com.csvreader.CsvWriter;
+import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.documents.config.Context;
 import com.exactprosystems.jf.documents.matrix.parser.DisplayDriver;
 import com.exactprosystems.jf.documents.matrix.parser.SearchHelper;
@@ -18,19 +19,8 @@ import com.exactprosystems.jf.documents.matrix.parser.Tokens;
 import java.util.List;
 
 @MatrixItemAttribute(
-		description 	= "This operator describes a line of the operator If which is performed if condition  - false." +
-							" Line Else is only one for If.",
-		examples 		= "{{#\n" +
-							"#Id;#Let\n" +
-							"year;new DateTime().getYears(new Date())\n" +
-							"#If\n" +
-							"year == 2017\n" +
-							"#Action;#today\n" +
-							"Print;'is 2017'\n" +
-							"#Else\n" +
-							"#Action;#today\n" +
-							"Print;'is not 2017'\n" +
-							"#EndIf#}}",
+		constantGeneralDescription = R.ELSE_DESCRIPTION,
+		constantExamples = R.ELSE_EXAMPLE,
 		shouldContain 	= { Tokens.Else },
 		mayContain 		= { Tokens.Off, Tokens.RepOff }, 
 		parents			= { If.class }, 

@@ -12,6 +12,7 @@ package com.exactprosystems.jf.documents.matrix.parser.items;
 import com.csvreader.CsvWriter;
 import com.exactprosystems.jf.actions.*;
 import com.exactprosystems.jf.api.common.Str;
+import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.api.error.common.MatrixException;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.report.ReportBuilder;
@@ -24,7 +25,7 @@ import java.util.List;
 import java.util.Map;
 
 @MatrixItemAttribute(
-		description 		= "Adds new action into matrix",
+		constantGeneralDescription = R.ACTION_ITEM_DESCRIPTION,
 		shouldContain 		= { Tokens.Action},
 		mayContain 			= { Tokens.Id, Tokens.Off, Tokens.RepOff, Tokens.Global, Tokens.IgnoreErr, Tokens.Assert },
 		parents				= { Case.class, Else.class, For.class, ForEach.class, If.class,
@@ -284,7 +285,7 @@ public final class ActionItem extends MatrixItem
 		}
 		if (found == null)
 		{
-			throw new Exception("Action with name " + actionName + " is unknown.");
+			throw new Exception(String.format(R.ACTION_UNKNOWN_NAME_EXCEPTION.get(), actionName));
 		}
 
 		AbstractAction ret = (AbstractAction) found.newInstance();

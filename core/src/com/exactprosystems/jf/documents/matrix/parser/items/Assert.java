@@ -10,6 +10,7 @@
 package com.exactprosystems.jf.documents.matrix.parser.items;
 
 import com.csvreader.CsvWriter;
+import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.api.error.ErrorKind;
 import com.exactprosystems.jf.api.error.common.MatrixException;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
@@ -23,14 +24,8 @@ import java.util.List;
 import java.util.Map;
 
 @MatrixItemAttribute(
-		description 	= "This operator is used to check an assertion. If an assertion is correct, the matrix will run," +
-							" if an assertion is incorrect, the operator is terminated and it is reported in user's message." +
-							" This operator is used to check equality of expected and actual values." +
-							"Fields:\n" +
-							"Assert - assertion.\n" +
-							"Message - a message, which will be reported",
-		examples 		= "{{#\n" +
-							"#Assert;#Message\n" + "a == 10;'The value of ' + a + ' doesn match 10'#}}",
+		constantGeneralDescription = R.ASSERT_DESCRIPTION,
+		constantExamples = R.ASSERT_EXAMPLE,
 		shouldContain 	= { Tokens.Assert },
 		mayContain 		= { Tokens.Off, Tokens.RepOff, Tokens.Message }, 
 		parents			= { Case.class, Else.class, For.class, ForEach.class, If.class,
@@ -173,7 +168,7 @@ public class Assert extends MatrixItem
 				}
 			}
 
-			return new ReturnAndResult(start, Result.Failed, "Assert expression should be boolean", ErrorKind.EXPRESSION_ERROR, this);
+			return new ReturnAndResult(start, Result.Failed, R.ASSERT_EXPRESSION_EXCEPTION.get(), ErrorKind.EXPRESSION_ERROR, this);
 		}
 		catch (Exception e)
 		{

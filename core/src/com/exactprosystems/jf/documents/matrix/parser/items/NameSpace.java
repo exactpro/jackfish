@@ -10,6 +10,7 @@
 package com.exactprosystems.jf.documents.matrix.parser.items;
 
 import com.csvreader.CsvWriter;
+import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.api.error.ErrorKind;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.evaluator.Variables;
@@ -29,22 +30,8 @@ import java.util.List;
 import java.util.Map;
 
 @MatrixItemAttribute(
-        description 	= "This operator introduces a name space in the library in order to link to Subcase from this library. \n" +
-							"In the operator NameSpace are SubCases, which can be called with the use of Call - NameSpaceId.SubCase ID afterwards.\n" +
-							"The Id of NameSpace operator is the name of the creating library.\n" +
-							"In the name space {{@NameSpace@}} are {{@SubCase@}}.",
-		examples 		= "Create a library MyLibrary, which contains SubCase PrintHi.\n" +
-							"After the given matrix has been saved in a file, which is used to store libraries, it can be called in Call operator as following: \n" +
-							"MyLibrary.PrintHi\n" +
-							"{{#\n" +
-							"#Id;#NameSpace\n" +
-							"MyLibrary;\n" +
-							"#Id;#SubCase\n" +
-							"SUB1;\n" +
-							"#Action;#Greeting\n" +
-							"Print;'Hello!'\n" +
-							"#EndSubCase\n" +
-							"#EndNameSpace#}}",
+        constantGeneralDescription = R.NAME_SPACE_DESCRIPTION,
+		constantExamples = R.NAME_SPACE_EXAMPLE,
         shouldContain 	= { Tokens.NameSpace },
         mayContain 		= { Tokens.Id, Tokens.Off, Tokens.RepOff },
         parents			= { MatrixRoot.class },

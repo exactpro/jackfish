@@ -10,6 +10,7 @@
 package com.exactprosystems.jf.documents.matrix.parser.items;
 
 import com.csvreader.CsvWriter;
+import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.api.error.ErrorKind;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.report.ReportBuilder;
@@ -29,19 +30,8 @@ import java.util.List;
 import java.util.Map;
 
 @MatrixItemAttribute(
-		description 		= "This operator generates a failure in the current matrix place. If a failure given can't be proceeded" +
-								" by  OnError or by a global error handler, the current TestCase is failed. \n" +
-								"Parameter Fail can take a string value then an error with this message is generated and this message is shown" +
-								" instead of failure.  An operator Fail can be called in an error handler and a variable err can be passed to him. \n" +
-								"(see OnError). In this case an exact failure place can be found.",
-		examples 			= "{{#\n" +
-								"#Id;#TestCase;#Kind;#Depends;#For\n" +
-								"aa;Test case;Never;;\n" +
-								"#Fail\n" +
-								"'my error'\n" +
-								"#OnError\n" +
-								"#Action;#Where error was\n" +
-								"Print;err.Where#}}",
+		constantGeneralDescription = R.FAIL_DESCRIPTION,
+		constantExamples = R.FAIL_EXAMPLE,
 		shouldContain 		= { Tokens.Fail }, 
 		mayContain 			= { Tokens.Off, Tokens.RepOff }, 
 		parents				= { Case.class, Else.class, For.class, ForEach.class, If.class,
@@ -131,7 +121,7 @@ public class Fail extends MatrixItem
 			{
 				ReportTable table = report.addTable("Fail", null, true, true, new int[] { 50, 50 }, new String[] { "Expression", "Error" });
 
-				String msg = "Error in expression #Fail";
+				String msg = String.format(R.COMMON_ERROR_IN_EXPRESSION.get(), this.getClass().getSimpleName());
 				table.addValues(this.failValue.getExpression(), msg);
 				table.addValues(this.failValue.getValueAsString(), " <- Error in here");
 

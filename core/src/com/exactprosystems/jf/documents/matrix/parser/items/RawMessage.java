@@ -12,6 +12,7 @@ package com.exactprosystems.jf.documents.matrix.parser.items;
 import com.csvreader.CsvWriter;
 import com.exactprosystems.jf.api.client.*;
 import com.exactprosystems.jf.api.common.Str;
+import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.api.error.ErrorKind;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.evaluator.Variables;
@@ -33,13 +34,8 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
 @MatrixItemAttribute(
-		description 	= "This operator is used to describe an object MapMessage of the type given.",
-		examples 		= "{{#\n" +
-							"#Id;#RawMessage;#Client\n" +
-							"MSG1;none;FIX\n" +
-							"$;MessageType\n" +
-							"0;none\n" +
-							"#EndRawMessage#}}",
+		constantGeneralDescription = R.RAW_MESSAGE_DESCRIPTION,
+		constantExamples = R.RAW_MESSAGE_EXAMPLE,
 		shouldContain 	= { Tokens.RawMessage, Tokens.Client }, 
 		mayContain 		= { Tokens.Id, Tokens.Off, Tokens.RepOff, Tokens.Global }, 
 		parents			= { Case.class, Else.class, For.class, ForEach.class, If.class,
@@ -413,7 +409,7 @@ public class RawMessage extends MatrixItem
 			IClientFactory  factory = context.getConfiguration().getClientPool().loadClientFactory(this.clientName.get());
 			if (factory == null)
 			{
-				DialogsHelper.showError("Can't load factory " + this.clientName.get());
+				DialogsHelper.showError(String.format(R.RAW_MESSAGE_GET_DICTIONARY_ERROR.get(),this.clientName.get()));
 				return null;
 			}
 			return factory.getDictionary();
