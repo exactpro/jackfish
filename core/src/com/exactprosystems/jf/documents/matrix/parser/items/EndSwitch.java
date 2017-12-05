@@ -9,10 +9,11 @@
 
 package com.exactprosystems.jf.documents.matrix.parser.items;
 
+import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.documents.matrix.parser.Tokens;
 
 @MatrixItemAttribute(
-		description 	= "Marks end of switch statement.", 
+		constantGeneralDescription = R.END_SWITCH_DESCRIPTION,
 		shouldContain 	= { Tokens.EndSwitch }, 
 		mayContain 		= {}, 
 		closes 			= Switch.class,

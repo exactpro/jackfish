@@ -9,10 +9,11 @@
 
 package com.exactprosystems.jf.documents.matrix.parser.items;
 
+import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.documents.matrix.parser.Tokens;
 
 @MatrixItemAttribute(
-		description 	= "Marks end of namespace.", 
+		constantGeneralDescription = R.END_NAME_SPACE_DESCRIPTION,
 		shouldContain 	= { Tokens.EndNameSpace },
 		mayContain 		= { }, 
 		closes			= NameSpace.class,

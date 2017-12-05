@@ -9,10 +9,11 @@
 
 package com.exactprosystems.jf.documents.matrix.parser.items;
 
+import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.documents.matrix.parser.Tokens;
 
 @MatrixItemAttribute(
-		description 	= "Marks end of sub case.", 
+		constantGeneralDescription = R.END_SUBCASE_DESCRIPTION,
 		shouldContain 	= { Tokens.EndSubCase },
 		mayContain 		= { }, 
 		closes			= SubCase.class,

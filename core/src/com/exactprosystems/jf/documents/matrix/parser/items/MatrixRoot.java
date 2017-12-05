@@ -9,13 +9,14 @@
 
 package com.exactprosystems.jf.documents.matrix.parser.items;
 
+import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.documents.config.Context;
 import com.exactprosystems.jf.documents.matrix.parser.DisplayDriver;
 
 import java.io.File;
 
 @MatrixItemAttribute(
-		description 	= "Root element.",
+		constantGeneralDescription = R.MATRIX_ROOT_DESCRIPTION,
 		shouldContain 	= { },
 		mayContain 		= { },
 		real			= true,

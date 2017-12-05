@@ -9,10 +9,11 @@
 
 package com.exactprosystems.jf.documents.matrix.parser.items;
 
+import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.documents.matrix.parser.Tokens;
 
 @MatrixItemAttribute(
-description 	= "Closes the statement Message.", 
+constantGeneralDescription = R.END_RAW_MESSAGE_DESCRIPTION,
 shouldContain 	= { Tokens.EndRawMessage },
 mayContain 		= { }, 
 closes			= RawMessage.class,

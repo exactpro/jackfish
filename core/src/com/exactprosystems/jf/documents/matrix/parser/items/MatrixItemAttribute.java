@@ -23,8 +23,6 @@ import com.exactprosystems.jf.documents.matrix.parser.Tokens;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface MatrixItemAttribute
 {
-	@Deprecated
-	String description()  default "";
 	R constantGeneralDescription() default R.DEFAULT;
 	Class<?>[] seeAlsoClass() default {};
 	R constantExamples() default R.DEFAULT;

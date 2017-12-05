@@ -9,11 +9,12 @@
 
 package com.exactprosystems.jf.documents.matrix.parser.items;
 
+import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.documents.config.Context;
 import com.exactprosystems.jf.documents.matrix.parser.DisplayDriver;
 
 @MatrixItemAttribute(
-		description 	= "Only visual item",
+		constantGeneralDescription = R.END_DESCRIPTION,
 		shouldContain 	= { },
 		mayContain 		= { },
 		closes			= For.class,

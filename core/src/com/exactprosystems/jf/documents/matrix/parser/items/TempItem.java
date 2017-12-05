@@ -9,6 +9,7 @@
 package com.exactprosystems.jf.documents.matrix.parser.items;
 
 import com.exactprosystems.jf.actions.ActionsList;
+import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.documents.config.Context;
 import com.exactprosystems.jf.documents.guidic.controls.Table;
 import com.exactprosystems.jf.documents.matrix.parser.DisplayDriver;
@@ -22,7 +23,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @MatrixItemAttribute(
-		description = "Temp action",
+		constantGeneralDescription = R.TEMP_ITEM_DESCRIPTION,
 		shouldContain = {},
 		mayContain = {},
 		real = true,
