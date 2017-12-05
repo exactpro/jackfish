@@ -708,45 +708,52 @@ public class Table implements List<RowTable>, Mutable
 		return result;
 	}
 
-	public void upload(SqlConnection connection, String table) throws SQLException
+	public void upload(SqlConnection connection, String table) throws JFSQLException
 	{
-		Statement statement = null;
 		try
 		{
-			//TODO add check, that map.get(key) may be Blob or something else
-			statement = connection.getConnection().createStatement();
-			Header[] headers = this.headers;
-			int i = 0;
-			for (Map<Header, Object> map : this.innerList)
+			Statement statement = null;
+			try
 			{
-				StringBuilder sql = new StringBuilder("INSERT INTO ");
-				sql.append(table).append(" SET");
-
-				for (Header header : headers)
+				//TODO add check, that map.get(key) may be Blob or something else
+				statement = connection.getConnection().createStatement();
+				Header[] headers = this.headers;
+				int i = 0;
+				for (Map<Header, Object> map : this.innerList)
 				{
-					sql.append(" ").append(header.name).append("=");
-					sql.append("'").append(map.get(header)).append("',");
+					StringBuilder sql = new StringBuilder("INSERT INTO ");
+					sql.append(table).append(" SET");
+
+					for (Header header : headers)
+					{
+						sql.append(" ").append(header.name).append("=");
+						sql.append("'").append(map.get(header)).append("',");
+					}
+					sql.deleteCharAt(sql.length() - 1);
+					statement.addBatch(sql.toString());
+					if (i == 10)
+					{
+						statement.executeBatch();
+						i = 0;
+					}
+					else
+					{
+						i++;
+					}
 				}
-				sql.deleteCharAt(sql.length() - 1);
-				statement.addBatch(sql.toString());
-				if (i == 10)
+			}
+			finally
+			{
+				if (statement != null)
 				{
 					statement.executeBatch();
-					i = 0;
-				}
-				else
-				{
-					i++;
+					statement.close();
 				}
 			}
 		}
-		finally
+		catch (SQLException e)
 		{
-			if (statement != null)
-			{
-				statement.executeBatch();
-				statement.close();
-			}
+			throw new JFSQLException(e);
 		}
 	}
 
