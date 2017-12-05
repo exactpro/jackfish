@@ -17,7 +17,6 @@ import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.api.error.ErrorKind;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.report.ReportBuilder;
-import com.exactprosystems.jf.common.report.ReportTable;
 import com.exactprosystems.jf.documents.config.Context;
 import com.exactprosystems.jf.documents.matrix.parser.Parameter;
 import com.exactprosystems.jf.documents.matrix.parser.Parameters;
@@ -40,24 +39,24 @@ import static com.exactprosystems.jf.actions.gui.Helper.message;
 	)
 public class DialogCheckLayout extends AbstractAction
 {
-	public final static String	connectionName	= "AppConnection";
-	public final static String	dialogName		= "Dialog";
-	public final static String	doNotOpenName	= "DoNotOpen";
-	public final static String	doNotCloseName	= "DoNotClose";
-	public final static String	fieldsName		= "Fields";
-	public final static String  tableName		= "Table";
+	public static final String connectionName = "AppConnection";
+	public static final String dialogName     = "Dialog";
+	public static final String doNotOpenName  = "DoNotOpen";
+	public static final String doNotCloseName = "DoNotClose";
+	public static final String fieldsName     = "Fields";
+	public static final String tableName      = "Table";
 
 	@ActionFieldAttribute(name = connectionName, mandatory = true, constantDescription = R.DIALOG_CHECK_LAYOUT_APP_CONNECTION)
-	protected AppConnection		connection		= null;
+	protected AppConnection connection = null;
 
 	@ActionFieldAttribute(name = dialogName, mandatory = true, constantDescription = R.DIALOG_CHECK_LAYOUT_DIALOG)
-	protected String			dialog			= null;
+	protected String dialog = null;
 
 	@ActionFieldAttribute(name = doNotOpenName, mandatory = false, def = DefaultValuePool.False, constantDescription = R.DIALOG_CHECK_LAYOUT_DO_NOT_OPEN)
-	protected Boolean			doNotOpen;
+	protected Boolean doNotOpen;
 
 	@ActionFieldAttribute(name = doNotCloseName, mandatory = false, def = DefaultValuePool.False, constantDescription = R.DIALOG_CHECK_LAYOUT_DO_NOT_CLOSE)
-	protected Boolean			doNotClose;
+	protected Boolean doNotClose;
 
 	@ActionFieldAttribute(name = fieldsName, mandatory = false, def = DefaultValuePool.Null, constantDescription = R.DIALOG_CHECK_LAYOUT_FIELDS)
 	protected Map<String, Object> fields;
@@ -76,8 +75,9 @@ public class DialogCheckLayout extends AbstractAction
 				return HelpKind.ChooseFromList;
 			case connectionName:
 				return null;
+			default:
+				return null;
 		}
-		return null;
 	}
 
 	@Override
@@ -109,17 +109,13 @@ public class DialogCheckLayout extends AbstractAction
 	@Override
 	public void doRealAction(Context context, ReportBuilder report, Parameters parameters, AbstractEvaluator evaluator) throws Exception
 	{
-		IApplication app = connection.getApplication();
-		String id = connection.getId();
+		IApplication app = Helper.getApplication(this.connection);
+		String id = this.connection.getId();
 		IRemoteApplication service = app.service();
-		if (service == null)
-		{
-			throw new NullPointerException(String.format("Service with id '%s' not started yet", id));
-		}
-		IGuiDictionary dictionary = connection.getDictionary();
-		IWindow window = dictionary.getWindow(this.dialog);
-		Helper.throwExceptionIfDialogNull(window, this.dialog);
+		IGuiDictionary dictionary = app.getFactory().getDictionary();
 		Set<ControlKind> supportedControls = app.getFactory().supportedControlKinds();
+
+		IWindow window = Helper.getWindow(dictionary, this.dialog);
 
 		logger.debug("Process dialog: " + window);
 
@@ -138,7 +134,7 @@ public class DialogCheckLayout extends AbstractAction
 		else if (this.fields != null)
 		{
 			controlMap = new Parameters();
-			this.fields.forEach((key, value) -> controlMap.add(key, "" + value));
+			this.fields.forEach((key, value) -> controlMap.add(key, Str.asString(value)));
 			for (Parameter p : controlMap)
 			{
 				Object o = this.fields.get(p.getName());
@@ -157,7 +153,7 @@ public class DialogCheckLayout extends AbstractAction
 			controlMap = parameters.select(TypeMandatory.Extra);
 		}
 		window.checkParams(controlMap.keySet());
-
+		service.startNewDialog();
 		if (!this.doNotOpen)
 		{
 			SectionKind onOpen = SectionKind.OnOpen;
@@ -222,7 +218,6 @@ public class DialogCheckLayout extends AbstractAction
 			return;
 		}
 
-		
 		if (!this.doNotClose)
 		{
 			SectionKind onClose = SectionKind.OnClose;
@@ -256,19 +251,8 @@ public class DialogCheckLayout extends AbstractAction
 		return new Table(new String[]{"Base field", "Relative field", "Relation", "Actual", "Expected"}, evaluator);
 	}
 
-	private ReportTable createTable(ReportTable table, ReportBuilder report)
-	{
-		if (table != null)
-		{
-			return table;
-		}
-		return report.addTable("Layout mismatching", null, true, true, new int[]{20, 20, 20, 20, 20}, "Base field", "Relative field", "Relation", "Actual", "Expected");
-	}
-
 	private boolean checkControl(Set<ControlKind> supportedControls, IControl control)
 	{
 		return !supportedControls.contains(control.getBindedClass());
 	}
-
-
 }

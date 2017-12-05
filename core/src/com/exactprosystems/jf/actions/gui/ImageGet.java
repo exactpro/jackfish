@@ -37,38 +37,38 @@ import static com.exactprosystems.jf.actions.gui.Helper.message;
 	)
 public class ImageGet extends AbstractAction
 {
-	public final static String	connectionName	= "AppConnection";
-	public final static String	dialogName		= "Dialog";
-	public final static String	nameName		= "Name";
-	public final static String	descriptionName	= "Description";
-	public final static String 	x_leftUp 	= "X1";
-	public final static String	y_leftUp	= "Y1";
-	public final static String	x_rightDown	= "X2";
-	public final static String	y_rightDown	= "Y2";
+	public static final String connectionName  = "AppConnection";
+	public static final String dialogName      = "Dialog";
+	public static final String nameName        = "Name";
+	public static final String descriptionName = "Description";
+	public static final String x_leftUp        = "X1";
+	public static final String y_leftUp        = "Y1";
+	public static final String x_rightDown     = "X2";
+	public static final String y_rightDown     = "Y2";
 
 	@ActionFieldAttribute(name = connectionName, mandatory = true, constantDescription = R.IMAGE_GET_APP_CONNECTION)
-	protected AppConnection		connection		= null;
+	protected AppConnection connection = null;
 
 	@ActionFieldAttribute(name = dialogName, mandatory = false, constantDescription = R.IMAGE_GET_DIALOG)
-	protected String			dialog			= null;
+	protected String dialog = null;
 
 	@ActionFieldAttribute(name = nameName, mandatory = false, def = DefaultValuePool.Null, constantDescription = R.IMAGE_GET_NAME)
-	protected String			name;
+	protected String name;
 
 	@ActionFieldAttribute(name = descriptionName, mandatory = false, def = DefaultValuePool.EmptyString, constantDescription = R.IMAGE_GET_DESCRIPTION)
-	protected String			description;
+	protected String description;
 
 	@ActionFieldAttribute(name = x_leftUp, mandatory = false, def = DefaultValuePool.IntMin, constantDescription = R.IMAGE_GET_X1)
-	protected Integer			x1;
+	protected Integer x1;
 
 	@ActionFieldAttribute(name = y_leftUp, mandatory = false, def = DefaultValuePool.IntMin, constantDescription = R.IMAGE_GET_Y1)
-	protected Integer			y1;
+	protected Integer y1;
 
 	@ActionFieldAttribute(name = x_rightDown, mandatory = false, def = DefaultValuePool.IntMin, constantDescription = R.IMAGE_GET_X2)
-	protected Integer			x2;
+	protected Integer x2;
 
 	@ActionFieldAttribute(name = y_rightDown, mandatory = false, def = DefaultValuePool.IntMin, constantDescription = R.IMAGE_GET_Y2)
-	protected Integer			y2;
+	protected Integer y2;
 
 	@Override
 	protected HelpKind howHelpWithParameterDerived(Context context, Parameters parameters, String fieldName)
@@ -97,10 +97,11 @@ public class ImageGet extends AbstractAction
 	@Override
 	public void doRealAction(Context context, ReportBuilder report, Parameters parameters, AbstractEvaluator evaluator) throws Exception 
 	{
-		IApplication app = connection.getApplication();
-		String id = connection.getId();
+		IApplication app = Helper.getApplication(this.connection);
 		IRemoteApplication service = app.service();
-		ImageWrapper imageWrapper = null;
+		String id = this.connection.getId();
+
+		ImageWrapper imageWrapper;
 
 		if (this.dialog == null)
 		{
@@ -108,31 +109,25 @@ public class ImageGet extends AbstractAction
 		}
 		else
 		{
-			IGuiDictionary dictionary = connection.getDictionary();
-			IWindow window = dictionary.getWindow(this.dialog);
-			Helper.throwExceptionIfDialogNull(window, this.dialog);
+			IGuiDictionary dictionary = app.getFactory().getDictionary();
+			IWindow window = Helper.getWindow(dictionary, this.dialog);
 
 			if (this.name == null)
 			{
-				boolean found = false;
-				for(IControl self : window.getControls(SectionKind.Self))
+				IControl selfControl = window.getSelfControl();
+				if (selfControl == null)
 				{
-					found = true;
-					imageWrapper = service.getImage(null, self.locator());
-					break;
+					super.setError("Self control not found", ErrorKind.ELEMENT_NOT_FOUND);
+					return;
 				}
-	
-				if (!found)
-				{
-					throw new Exception("Cannot find any controls in dialog='" + window +"' in section " + SectionKind.Self);
-				}
+				imageWrapper = service.getImage(null, selfControl.locator());
 			}
 			else
 			{
 				IControl control = window.getControlForName(SectionKind.Run, this.name);
 				if (control == null)
 				{
-					super.setError(message(id, window, SectionKind.Self, null, null, "Self control is not found."), ErrorKind.ELEMENT_NOT_FOUND);
+					super.setError(message(id, window, SectionKind.Run, null, null, String.format("Element with name %s not found", this.name)), ErrorKind.ELEMENT_NOT_FOUND);
 					return;
 				}
 				IControl owner = window.getOwnerControl(control);

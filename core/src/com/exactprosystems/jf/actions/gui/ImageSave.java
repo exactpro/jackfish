@@ -9,11 +9,7 @@
 
 package com.exactprosystems.jf.actions.gui;
 
-import com.exactprosystems.jf.actions.AbstractAction;
-import com.exactprosystems.jf.actions.ActionAttribute;
-import com.exactprosystems.jf.actions.ActionFieldAttribute;
-import com.exactprosystems.jf.actions.ActionGroups;
-import com.exactprosystems.jf.actions.DefaultValuePool;
+import com.exactprosystems.jf.actions.*;
 import com.exactprosystems.jf.api.app.ImageWrapper;
 import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.api.error.ErrorKind;
@@ -24,7 +20,6 @@ import com.exactprosystems.jf.documents.matrix.parser.Parameters;
 import com.exactprosystems.jf.functions.HelpKind;
 
 import java.io.File;
-
 
 @ActionAttribute(
 		group					   = ActionGroups.GUI,
@@ -37,18 +32,18 @@ import java.io.File;
 	)
 public class ImageSave extends AbstractAction
 {
-	public final static String	imageName	= "Image";
-	public final static String	dirName		= "Dir";
-	public final static String	fileName	= "File";
-	
+	public static final String imageName = "Image";
+	public static final String dirName   = "Dir";
+	public static final String fileName  = "File";
+
 	@ActionFieldAttribute(name = imageName, mandatory = true, constantDescription = R.IMAGE_SAVE_IMAGE)
-	protected ImageWrapper		image;
+	protected ImageWrapper image;
 
 	@ActionFieldAttribute(name = dirName, mandatory = false, def = DefaultValuePool.Null, constantDescription = R.IMAGE_SAVE_DIR)
-	protected String			dir;
+	protected String dir;
 
 	@ActionFieldAttribute(name = fileName, mandatory = false, def = DefaultValuePool.Null, constantDescription = R.IMAGE_SAVE_FILE)
-	protected String			file;
+	protected String file;
 
 	@Override
 	protected HelpKind howHelpWithParameterDerived(Context context,	Parameters parameters, String fieldName) throws Exception
@@ -60,9 +55,9 @@ public class ImageSave extends AbstractAction
 				
 			case fileName:
 				return HelpKind.ChooseSaveFile;
+			default:
+				return null;
 		}
-		
-		return null;
 	}
 
 	@Override
@@ -71,28 +66,27 @@ public class ImageSave extends AbstractAction
 		if (this.file != null)
 		{
 			this.image.saveToFile(this.file);
-	        super.setResult(this.file);
+			super.setResult(this.file);
 		}
 		else if (this.dir != null)
 		{
-		    File dir = new File(this.dir);
-		    if (!dir.exists())
-		    {
-		        super.setError("Directory '" + this.dir + "' does not exist", ErrorKind.WRONG_PARAMETERS);
-		        return;
-		    }
-		    if (!dir.isDirectory())
-		    {
-                super.setError("'" + this.dir + "' is not a directory", ErrorKind.WRONG_PARAMETERS);
-                return;
-		    }
+			File savedDir = new File(this.dir);
+			if (!savedDir.exists())
+			{
+				super.setError("Directory '" + this.dir + "' does not exist", ErrorKind.WRONG_PARAMETERS);
+				return;
+			}
+			if (!savedDir.isDirectory())
+			{
+				super.setError("'" + this.dir + "' is not a directory", ErrorKind.WRONG_PARAMETERS);
+				return;
+			}
 			File path = this.image.saveToDir(this.dir);
-	        super.setResult(path.getAbsolutePath());
+			super.setResult(path.getAbsolutePath());
 		}
 		else
 		{
 			super.setError("Either dir or file should be filled.", ErrorKind.WRONG_PARAMETERS);
 		}
 	}
-
 }

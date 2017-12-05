@@ -12,6 +12,7 @@ package com.exactprosystems.jf.actions;
 import com.exactprosystems.jf.api.common.Str;
 import com.exactprosystems.jf.api.error.ErrorKind;
 import com.exactprosystems.jf.api.error.JFException;
+import com.exactprosystems.jf.api.error.JFRemoteException;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.evaluator.Variables;
 import com.exactprosystems.jf.common.report.ReportBuilder;
@@ -165,6 +166,11 @@ public abstract class AbstractAction implements Cloneable
 			{
 				setError("Errors in parameter expressions", ErrorKind.EXPRESSION_ERROR);
 			}
+		}
+		catch (JFRemoteException e)
+		{
+			logger.error(e.getMessage(), e);
+			setError(e.getMessage(), e.getErrorKind());
 		}
 		catch (JFException e)
 		{

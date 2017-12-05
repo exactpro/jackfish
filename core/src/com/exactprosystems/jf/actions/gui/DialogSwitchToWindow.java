@@ -32,26 +32,25 @@ import static com.exactprosystems.jf.actions.gui.Helper.message;
 	)
 public class DialogSwitchToWindow extends AbstractAction
 {
-	public static final String	connectionName	= "AppConnection";
-	public static final String	dialogName		= "Dialog";
-	public static final String frameName = "Frame";
+	public static final String connectionName = "AppConnection";
+	public static final String dialogName     = "Dialog";
+	public static final String frameName      = "Frame";
 
 	@ActionFieldAttribute(name = connectionName, mandatory = true, constantDescription = R.DIALOG_SWITCH_TO_WINDOW_APP_CONNECTION)
-	protected AppConnection		connection		= null;
+	protected AppConnection connection = null;
 
 	@ActionFieldAttribute(name = dialogName, mandatory = false, def = DefaultValuePool.Null, constantDescription = R.DIALOG_SWITCH_TO_WINDOW_DIALOG)
-	protected String			dialog;
+	protected String dialog;
 
 	@ActionFieldAttribute(name = frameName, mandatory = false, def = DefaultValuePool.Null, constantDescription = R.DIALOG_SWITCH_TO_WINDOW_FRAME)
-	protected String 			frame;
+	protected String frame;
 
 	@Override
 	protected HelpKind howHelpWithParameterDerived(Context context, Parameters parameters, String fieldName) throws Exception
 	{
-		switch (fieldName)
+		if (dialogName.equals(fieldName))
 		{
-			case dialogName:
-				return HelpKind.ChooseFromList;
+			return HelpKind.ChooseFromList;
 		}
 		return super.howHelpWithParameterDerived(context, parameters, fieldName);
 	}
@@ -59,31 +58,18 @@ public class DialogSwitchToWindow extends AbstractAction
 	@Override
 	protected void listToFillParameterDerived(List<ReadableValue> list, Context context, String parameterToFill, Parameters parameters) throws Exception
 	{
-		switch (parameterToFill)
+		if (dialogName.equals(parameterToFill))
 		{
-			case dialogName:
-				Helper.dialogsNames(context, super.owner.getMatrix(), this.connection, list);
-				break;
-
-			default:
-				break;
+			Helper.dialogsNames(context, super.owner.getMatrix(), this.connection, list);
 		}
 	}
 
 	@Override
 	protected void doRealAction(Context context, ReportBuilder report, Parameters parameters, AbstractEvaluator evaluator) throws Exception
 	{
-		if (connection == null)
-		{
-			throw new NullPointerException(String.format("Field with name '%s' can't be null", connectionName));
-		}
-		IApplication app = connection.getApplication();
-		String id = connection.getId();
+		IApplication app = Helper.getApplication(this.connection);
 		IRemoteApplication service = app.service();
-		if (service == null)
-		{
-			throw new NullPointerException(String.format("Service with id '%s' not started yet", id));
-		}
+		String id = this.connection.getId();
 		
 		if (this.dialog == null)
 		{
@@ -96,8 +82,7 @@ public class DialogSwitchToWindow extends AbstractAction
 				throw new Exception("Parameter 'frame' is needed for not-null 'dialog' parameter.");
 			}
 			IGuiDictionary dictionary = this.connection.getDictionary();
-			IWindow window = dictionary.getWindow(this.dialog);
-			Helper.throwExceptionIfDialogNull(window, this.dialog);
+			IWindow window = Helper.getWindow(dictionary, this.dialog);
 
 			logger.debug("Process dialog : " + window);
 			IControl element = window.getControlForName(null, frame);

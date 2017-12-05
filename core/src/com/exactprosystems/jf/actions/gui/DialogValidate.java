@@ -39,10 +39,10 @@ import static com.exactprosystems.jf.actions.gui.Helper.message;
 	)
 public class DialogValidate extends AbstractAction
 {
-	public final static String	connectionName	= "AppConnection";
-	public final static String	dialogName		= "Dialog";
-	public final static String	doNotOpenName	= "DoNotOpen";
-	public final static String	doNotCloseName	= "DoNotClose";
+	public static final String	connectionName	= "AppConnection";
+	public static final String	dialogName		= "Dialog";
+	public static final String	doNotOpenName	= "DoNotOpen";
+	public static final String	doNotCloseName	= "DoNotClose";
 
 	@ActionFieldAttribute(name = connectionName, mandatory = true, constantDescription = R.DIALOG_VALIDATE_APP_CONNECTION)
 	protected AppConnection		connection		= null;
@@ -67,8 +67,9 @@ public class DialogValidate extends AbstractAction
 				return HelpKind.ChooseFromList;
 			case connectionName:
 				return null;
+			default:
+				return HelpKind.ChooseFromList;
 		}
-		return HelpKind.ChooseFromList;
 	}
 
 	@Override
@@ -104,16 +105,11 @@ public class DialogValidate extends AbstractAction
 	@Override
 	public void doRealAction(Context context, ReportBuilder report, Parameters parameters, AbstractEvaluator evaluator) throws Exception
 	{
-		IApplication app = connection.getApplication();
-		String id = connection.getId();
+		IApplication app = Helper.getApplication(this.connection);
 		IRemoteApplication service = app.service();
-		if (service == null)
-		{
-			throw new NullPointerException(String.format("Service with id '%s' not started yet", id));
-		}
-		IGuiDictionary dictionary = connection.getDictionary();
-		IWindow window = dictionary.getWindow(this.dialog);
-		Helper.throwExceptionIfDialogNull(window, this.dialog);
+		String id = this.connection.getId();
+		IGuiDictionary dictionary = app.getFactory().getDictionary();
+		IWindow window = Helper.getWindow(dictionary, this.dialog);
 		
 		Set<ControlKind> supportedControls = app.getFactory().supportedControlKinds();
 
@@ -143,45 +139,38 @@ public class DialogValidate extends AbstractAction
 			}
 		}
 
-		//=====================================================================================================
-		
-		
 		boolean totalResult = true;
 		ReportTable table = report.addTable("Dialog validation", null, true, true, new int[] { 25, 65 }, "Field", "Result");
 		SectionKind run = SectionKind.Run;
 		logger.debug("Perform " + run);
 		ISection sectionRun = window.getSection(run);
-		
-		
-        for (Parameter parameter : parameters.select(TypeMandatory.Extra)) 
-        {
-            IControl control  = sectionRun.getControlById(parameter.getName());
-            if (control == null)
-            {
+		for (Parameter parameter : parameters.select(TypeMandatory.Extra))
+		{
+			IControl control = sectionRun.getControlById(parameter.getName());
+			if (control == null)
+			{
 				super.setError(message(id, window, run, null, null, "control with name '" + parameter.getName() + "' not found in the dictionry"), ErrorKind.LOCATOR_NOT_FOUND);
 				return;
-            }
+			}
 
-            int expectedSize = ((Number)parameter.getValue()).intValue();
-            if (expectedSize >= 0)
-            {
-                IControl owner = window.getOwnerControl(control);
-                Locator ownerLocator = owner == null? null : owner.locator();
-                Locator controlLocator = control.locator();
-                
-                Collection<String> found = service.findAll(ownerLocator, controlLocator);
-                int actualSize = found.size();
-                
-                if (expectedSize != actualSize)
-                {
-                    totalResult = false;
-                }
+			int expectedSize = ((Number) parameter.getValue()).intValue();
+			if (expectedSize >= 0)
+			{
+				IControl owner = window.getOwnerControl(control);
+				Locator ownerLocator = owner == null ? null : owner.locator();
+				Locator controlLocator = control.locator();
 
-                table.addValues(parameter.getName(), expectedSize == actualSize 
-                        ? "Passed" 
-                        : ("Failed expected: " + expectedSize + " actual: " + actualSize));
-            }
-        }
+				Collection<String> found = service.findAll(ownerLocator, controlLocator);
+				int actualSize = found.size();
+
+				if (expectedSize != actualSize)
+				{
+					totalResult = false;
+				}
+
+				table.addValues(parameter.getName(), expectedSize == actualSize ? "Passed" : ("Failed expected: " + expectedSize + " actual: " + actualSize));
+			}
+		}
 
 		if (!totalResult)
 		{
@@ -189,9 +178,6 @@ public class DialogValidate extends AbstractAction
 			return;
 		}
 
-		//=====================================================================================================
-
-		
 		if (!this.doNotClose)
 		{
 			SectionKind onClose = SectionKind.OnClose;

@@ -10,13 +10,14 @@
 package com.exactprosystems.jf.actions.gui;
 
 import com.exactprosystems.jf.actions.*;
-import com.exactprosystems.jf.api.app.*;
+import com.exactprosystems.jf.api.app.ImageWrapper;
 import com.exactprosystems.jf.api.common.Str;
 import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.report.ReportBuilder;
 import com.exactprosystems.jf.documents.config.Context;
 import com.exactprosystems.jf.documents.matrix.parser.Parameters;
+
 import java.awt.Rectangle;
 import java.awt.Toolkit;
 import java.awt.image.BufferedImage;
@@ -33,24 +34,23 @@ import java.awt.image.BufferedImage;
 	)
 public class DesktopScreenshot extends AbstractAction
 {
-	public final static String	descriptionName	= "Description";
-	
+	public static final String descriptionName = "Description";
+
 	@ActionFieldAttribute(name = descriptionName, mandatory = false, def = DefaultValuePool.EmptyString, constantDescription = R.DESKTOP_SCREENSHOT_DESCRIPTION_PARAM)
-	protected String			description;
+	protected String description;
 
 	@Override
-	public void doRealAction(Context context, ReportBuilder report, Parameters parameters, AbstractEvaluator evaluator) throws Exception 
+	public void doRealAction(Context context, ReportBuilder report, Parameters parameters, AbstractEvaluator evaluator) throws Exception
 	{
-        Rectangle desktopRect = new Rectangle(Toolkit.getDefaultToolkit().getScreenSize());
-        BufferedImage image = new java.awt.Robot().createScreenCapture(desktopRect);
+		Rectangle desktopRect = new Rectangle(Toolkit.getDefaultToolkit().getScreenSize());
+		BufferedImage image = new java.awt.Robot().createScreenCapture(desktopRect);
 
-        ImageWrapper imageWrapper =  new ImageWrapper(image);
+		ImageWrapper imageWrapper = new ImageWrapper(image);
 
 		if (!Str.IsNullOrEmpty(this.description))
 		{
 			imageWrapper.setDescription(this.description);
 		}
-        super.setResult(imageWrapper);
+		super.setResult(imageWrapper);
 	}
-
 }

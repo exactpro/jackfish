@@ -48,27 +48,27 @@ import static com.exactprosystems.jf.actions.gui.Helper.message;
 	)
 public class DialogFill extends AbstractAction
 {
-	public final static String	connectionName			= "AppConnection";
-	public final static String	dialogName				= "Dialog";
-	public final static String	doNotOpenName			= "DoNotOpen";
-	public final static String	doNotCloseName			= "DoNotClose";
-	public final static String	stopOnFailName			= "StopOnFail";
-	public static final String	fieldsName				= "Fields";
+	public static final String connectionName = "AppConnection";
+	public static final String dialogName     = "Dialog";
+	public static final String doNotOpenName  = "DoNotOpen";
+	public static final String doNotCloseName = "DoNotClose";
+	public static final String stopOnFailName = "StopOnFail";
+	public static final String fieldsName     = "Fields";
 
 	@ActionFieldAttribute(name = connectionName, mandatory = true, constantDescription = R.DIALOG_FILL_APP_CONNECTION)
-	protected AppConnection		connection			= null;
+	protected AppConnection connection = null;
 
 	@ActionFieldAttribute(name = dialogName, mandatory = true, constantDescription = R.DIALOG_FILL_DIALOG)
-	protected String			dialog				= null;
+	protected String dialog = null;
 
 	@ActionFieldAttribute(name = doNotOpenName, mandatory = false, def = DefaultValuePool.False, constantDescription = R.DIALOG_FILL_DO_NOT_OPEN)
-	protected Boolean			doNotOpen;
-	
+	protected Boolean doNotOpen;
+
 	@ActionFieldAttribute(name = doNotCloseName, mandatory = false, def = DefaultValuePool.False, constantDescription = R.DIALOG_FILL_DO_NOT_CLOSE)
-	protected Boolean			doNotClose;
-	
+	protected Boolean doNotClose;
+
 	@ActionFieldAttribute(name = stopOnFailName, mandatory = false, def = DefaultValuePool.True, constantDescription = R.DIALOG_FILL_STOP_ON_FAIL)
-	protected Boolean			stopOnFail;
+	protected Boolean stopOnFail;
 
 	@ActionFieldAttribute(name = fieldsName, mandatory = false, def = DefaultValuePool.Null, constantDescription = R.DIALOG_FILL_FIELDS)
 	protected Map<String, Object> fields;
@@ -81,10 +81,11 @@ public class DialogFill extends AbstractAction
 			case dialogName:
 			case doNotOpenName:
 			case doNotCloseName:
-			case stopOnFailName:	
+			case stopOnFailName:
 				return HelpKind.ChooseFromList;
+			default:
+				return null;
 		}
-		return null;
 	}
 
 	@Override
@@ -117,17 +118,12 @@ public class DialogFill extends AbstractAction
 	@Override
 	public void doRealAction(Context context, ReportBuilder report, Parameters parameters, AbstractEvaluator evaluator) throws Exception
 	{
-		IApplication app = connection.getApplication();
-		String id = connection.getId();
+		IApplication app = Helper.getApplication(this.connection);
+		String id = this.connection.getId();
 		IRemoteApplication service = app.service();
-		if (service == null)
-		{
-			super.setError("Connection is not established", ErrorKind.APPLICATION_ERROR);
-			return;
-		}
-		IGuiDictionary dictionary = connection.getDictionary();
-		IWindow window = dictionary.getWindow(this.dialog);
-		Helper.throwExceptionIfDialogNull(window, this.dialog);
+		IGuiDictionary dictionary = app.getFactory().getDictionary();
+
+		IWindow window = Helper.getWindow(dictionary, this.dialog);
 
         Set<ControlKind> supportedControls = app.getFactory().supportedControlKinds();
 
@@ -186,7 +182,7 @@ public class DialogFill extends AbstractAction
 		SectionKind run = SectionKind.Run;
 		logger.debug("Perform " + run);
 		ISection sectionRun = window.getSection(run);
-		String allReportErrors = "";
+		StringBuilder allReportErrors = new StringBuilder();
 		for (Parameter parameter : controlMap)
 		{
 			String name = parameter.getName();
@@ -248,7 +244,7 @@ public class DialogFill extends AbstractAction
 					}
 					else
 					{
-						allReportErrors += message;
+						allReportErrors.append(message);
 					}
 				}
 			}
@@ -283,7 +279,7 @@ public class DialogFill extends AbstractAction
 				if (!this.stopOnFail)
 				{
 					errorsValue.put(name, new MatrixError(mes, errorKind, this.owner));
-					allReportErrors += mes;
+					allReportErrors.append(mes);
 				}
 				else
 				{
@@ -292,8 +288,6 @@ public class DialogFill extends AbstractAction
 					super.setError(mes, errorKind);
 					return;
 				}
-				//can't throw exception. use setError and return
-				//				throw t;
 			}
 			catch (Exception e)
 			{
@@ -313,7 +307,7 @@ public class DialogFill extends AbstractAction
 
 					String message = message(id, window, run, control, null, e.getMessage());
 					errorsValue.put(name, new MatrixError(message, ErrorKind.EXCEPTION, owner));
-					allReportErrors += message;
+					allReportErrors.append(message);
 				}
 			}
 		}
@@ -344,9 +338,9 @@ public class DialogFill extends AbstractAction
 		{
 			super.setErrors(errorsValue);
 		}
-		if (!Str.IsNullOrEmpty(allReportErrors))
+		if (!Str.IsNullOrEmpty(allReportErrors.toString()))
 		{
-			super.setError(allReportErrors, ErrorKind.MANY_ERRORS);
+			super.setError(allReportErrors.toString(), ErrorKind.MANY_ERRORS);
 		}
 	}
 

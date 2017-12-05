@@ -38,14 +38,14 @@ import static com.exactprosystems.jf.actions.gui.Helper.message;
 )
 public class DialogClose extends AbstractAction
 {
-	public final static String	connectionName	= "AppConnection";
-	public final static String	dialogName		= "Dialog";
+	public static final String connectionName = "AppConnection";
+	public static final String dialogName     = "Dialog";
 
 	@ActionFieldAttribute(name = connectionName, mandatory = true, constantDescription = R.DIALOG_CLOSE_APP_CONNECTION)
-	protected AppConnection connection		= null;
+	protected AppConnection connection = null;
 
 	@ActionFieldAttribute(name = dialogName, mandatory = true, constantDescription = R.DIALOG_CLOSE_DIALOG)
-	protected String			dialog			= null;
+	protected String dialog = null;
 
 	@Override
 	protected HelpKind howHelpWithParameterDerived(Context context, Parameters parameters, String fieldName)
@@ -56,14 +56,9 @@ public class DialogClose extends AbstractAction
 	@Override
 	protected void listToFillParameterDerived(List<ReadableValue> list, Context context, String parameterToFill, Parameters parameters) throws Exception
 	{
-		switch (parameterToFill)
+		if (dialogName.equals(parameterToFill))
 		{
-			case dialogName:
-				Helper.dialogsNames(context, super.owner.getMatrix(), this.connection, list);
-				break;
-
-			default:
-
+			Helper.dialogsNames(context, super.owner.getMatrix(), this.connection, list);
 		}
 	}
 
@@ -76,17 +71,17 @@ public class DialogClose extends AbstractAction
 	@Override
 	protected void doRealAction(Context context, ReportBuilder report, Parameters parameters, AbstractEvaluator evaluator) throws Exception
 	{
-		IGuiDictionary dictionary = this.connection.getDictionary();
-		IWindow window = dictionary.getWindow(this.dialog);
-		Helper.throwExceptionIfDialogNull(window, this.dialog);
-		String id = connection.getId();
+		IApplication app = Helper.getApplication(this.connection);
+		IGuiDictionary dictionary = app.getFactory().getDictionary();
+		IRemoteApplication service = app.service();
+		String id = this.connection.getId();
+
+		IWindow window = Helper.getWindow(dictionary, this.dialog);
 
 		logger.debug("Process dialog : " + window);
 
-		IApplication app = this.connection.getApplication();
-		IRemoteApplication service = app.service();
 		IControl element = window.getSelfControl();
-		
+
 		if (element == null)
 		{
 			super.setError(message(id, window, SectionKind.Self, null, null, "Self control is not found."), ErrorKind.ELEMENT_NOT_FOUND);
@@ -113,10 +108,8 @@ public class DialogClose extends AbstractAction
 				}
 			}
 		}
-		
-		
+
 		int closed = service.closeAll(element.locator(), operations);
-		
 		super.setResult(closed);
 	}
 }
