@@ -11,6 +11,7 @@ package com.exactprosystems.jf.actions.clients;
 
 import com.exactprosystems.jf.actions.*;
 import com.exactprosystems.jf.api.client.ClientConnection;
+import com.exactprosystems.jf.api.client.IClient;
 import com.exactprosystems.jf.api.common.ParametersKind;
 import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.api.error.ErrorKind;
@@ -65,7 +66,9 @@ public class ClientConnect extends AbstractAction
 	@Override
 	public void doRealAction(Context context, ReportBuilder report, Parameters parameters, AbstractEvaluator evaluator) throws Exception
 	{
-		boolean res = this.connection.getClient().connect(context, this.socket, parameters.select(TypeMandatory.Extra).makeCopy());
+		IClient client = this.connection.getClient();
+
+		boolean res = client.connect(context, this.socket, parameters.select(TypeMandatory.Extra).makeCopy());
 		if (res)
 		{
 			super.setResult(null);

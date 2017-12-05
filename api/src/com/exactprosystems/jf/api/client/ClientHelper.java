@@ -11,13 +11,15 @@ package com.exactprosystems.jf.api.client;
 
 import com.exactprosystems.jf.api.common.Str;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 public class ClientHelper
 {
+	private ClientHelper()
+	{
+
+	}
+
 	public static Map<String, String> difference(MapMessage actual, ICondition[] conditions) throws Exception 
 	{
 		Map<String, String> result = new HashMap<String, String>();
@@ -67,31 +69,16 @@ public class ClientHelper
 		return msg.get(name);
 	}
 	
-	public static Set<Possibility> possebilities(Class<?> clazz)
+	public static Set<Possibility> possibilities(Class<?> clazz)
 	{
-		Set<Possibility> res = new HashSet<Possibility>();
-		ClientAttribute attr = clazz.getAnnotation(ClientAttribute.class);
-		for (Possibility possibility : attr.possibilities())
-		{
-			res.add(possibility);
-		}
-		return res;
+		return new HashSet<>(Arrays.asList(clazz.getAnnotation(ClientAttribute.class).possibilities()));
 	}
 	
 	public static void errorIfDisable(Class<?> clazz, Possibility possibility) throws PossibilityIsDisable
 	{
-		ClientAttribute attr = clazz.getAnnotation(ClientAttribute.class);
-		for (Possibility poss : attr.possibilities())
+		if (!Arrays.asList(clazz.getAnnotation(ClientAttribute.class).possibilities()).contains(possibility))
 		{
-			if (poss == possibility)
-			{
-				return;
-			}
+			throw new PossibilityIsDisable("For client " + clazz.getSimpleName() + " possibility " + possibility.getDescription() + " is not allowed.");
 		}
-		
-		throw new PossibilityIsDisable("For client " + clazz.getSimpleName() + " possibility " + possibility.getDescription() 
-				+ " is not allowed.");
 	}
-	
-
 }

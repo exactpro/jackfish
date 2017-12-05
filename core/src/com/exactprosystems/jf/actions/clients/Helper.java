@@ -81,7 +81,7 @@ public class Helper
 		IClientFactory factory = matrix.getDefaultClient();
 		if (factory == null)
 		{
-			throw new Exception("Choose default application at first.");
+			throw new Exception("Choose default client at first.");
 		}
 		
 		return factory;
@@ -198,4 +198,5 @@ public class Helper
 		}
 		return  field.getType().getJavaClass() == Boolean.class || field.getValues() != null && !field.getValues().isEmpty();
 	}
+
 }

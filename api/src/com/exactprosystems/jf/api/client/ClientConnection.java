@@ -43,7 +43,12 @@ public class ClientConnection implements AutoCloseable
 	{
 		return this.client == null;
 	}
-	
+
+	public String getId()
+	{
+		return id;
+	}
+
 	public IClient getClient()
 	{
 		return this.client;

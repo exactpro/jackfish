@@ -25,6 +25,7 @@ import com.exactprosystems.jf.documents.config.ClientEntry;
 import com.exactprosystems.jf.documents.config.Configuration;
 import com.exactprosystems.jf.documents.config.Parameter;
 import com.exactprosystems.jf.documents.msgdic.MessageDictionary;
+import com.exactprosystems.jf.exceptions.client.ClientNotLoadedException;
 import org.apache.log4j.Logger;
 
 import java.io.Reader;
@@ -126,7 +127,7 @@ public class ClientsPool implements IClientsPool
 		{
 			if (connection == null || connection.isBad())
 			{
-				throw new Exception(String.format(R.COMMON_CLIENT_IS_NOT_LOADED.get(), "" + connection));
+				throw new ClientNotLoadedException(connection);
 			}
 			
 			IClient client = connection.getClient();
@@ -147,7 +148,7 @@ public class ClientsPool implements IClientsPool
 		{
 			if (connection == null || connection.isBad())
 			{
-				throw new Exception(String.format(R.COMMON_CLIENT_IS_NOT_LOADED.get(), "" + connection));
+				throw new ClientNotLoadedException(connection);
 			}
 			
 			IClient client = connection.getClient();
