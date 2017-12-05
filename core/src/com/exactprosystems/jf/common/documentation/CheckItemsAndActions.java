@@ -42,8 +42,8 @@ public class CheckItemsAndActions {
                 continue;
             }
 
-            checkPartOfAttribute(attribute.description(), clazz.getSimpleName());
-            checkPartOfAttribute(attribute.examples(), clazz.getSimpleName());
+            checkPartOfAttribute(attribute.constantGeneralDescription().get(), clazz.getSimpleName());
+            checkPartOfAttribute(attribute.constantExamples().get(), clazz.getSimpleName());
 
         }
     }
@@ -83,7 +83,7 @@ public class CheckItemsAndActions {
                 closeCount +=1;
             }
             if (openCount != closeCount){
-                System.out.println(className);
+                System.out.println(className + " in string -> " + string);
             }
         }
     }

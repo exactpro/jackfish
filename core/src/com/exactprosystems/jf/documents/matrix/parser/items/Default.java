@@ -10,6 +10,7 @@
 package com.exactprosystems.jf.documents.matrix.parser.items;
 
 import com.csvreader.CsvWriter;
+import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.documents.config.Context;
 import com.exactprosystems.jf.documents.matrix.parser.DisplayDriver;
 import com.exactprosystems.jf.documents.matrix.parser.SearchHelper;
@@ -18,27 +19,8 @@ import com.exactprosystems.jf.documents.matrix.parser.Tokens;
 import java.util.List;
 
 @MatrixItemAttribute(
-		description 	= "This operator describes a line of the operator Switch, which wil be performed if none of Case has been worked. \n" +
-							"This operator is 1 only  and should be necessarily placed after all Case blocks.",
-		examples 		= "Variable number is transferred to the field switch. As variable value doesn't match any Case," +
-							" block Default will be performed." +
-							"{{# \n" +
-							"#Id;#Let\n" +
-							"number;0\n" +
-							"#Switch\n" +
-							"number\n" +
-							"#Case\n" +
-							"1\n" +
-							"#Action;#Greeting\n" +
-							"Print;'Hello!'\n" +
-							"#Case\n" +
-							"2\n" +
-							"#Action;#Greeting\n" +
-							"Print;'Hi!'\n" +
-							"#Default\n" +
-							"#Action;#Greeting\n" +
-							"Print;'Farewell'\n" +
-							"#EndSwitch#}}",
+		constantGeneralDescription = R.DEFAULT_DESCRIPTION,
+		constantExamples = R.DEFAULT_EXAMPLE,
 		shouldContain 	= { Tokens.Default },
 		mayContain 		= { Tokens.Off, Tokens.RepOff }, 
 		parents			= { Switch.class },

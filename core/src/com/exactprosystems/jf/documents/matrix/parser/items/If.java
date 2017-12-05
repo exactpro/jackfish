@@ -10,6 +10,7 @@
 package com.exactprosystems.jf.documents.matrix.parser.items;
 
 import com.csvreader.CsvWriter;
+import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.api.error.ErrorKind;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.report.ReportBuilder;
@@ -29,20 +30,8 @@ import java.util.List;
 import java.util.Map;
 
 @MatrixItemAttribute(
-        description 	= "This operator creates matrix branch depending on condition.  The operator if takes a logic expression." +
-							" If true is a result of this expression, a code block inside of if operator is performed. \n" +
-							"If the expression is false, the operator line Else is performed. If this line isn't there, an action is performed continually. ",
-		examples 		= "{{#\n" +
-							"#Id;#Let\n" +
-							"year;new DateTime().getYears(new Date())\n" +
-							"#If\n" +
-							"year == 2017\n" +
-							"#Action;#today\n" +
-							"Print;'is 2017'\n" +
-							"#Else\n" +
-							"#Action;#today\n" +
-							"Print;'is not 2017'\n" +
-							"#EndIf#}}",
+        constantGeneralDescription = R.IF_DESCRIPTION,
+		constantExamples = R.IF_EXAMPLE,
         shouldContain 	= { Tokens.If },
         mayContain 		= { Tokens.Off, Tokens.RepOff },
 		parents			= { Case.class, Else.class, For.class, ForEach.class, If.class,
@@ -157,7 +146,7 @@ public class If extends MatrixItem
 				ReportTable table = report.addTable("If", null, true, true, 
 						new int[] {50, 50}, new String[] {"Expression", "Error"});
 			
-				String msg = "Error in expression #If.\n"+this.condition.getValueAsString();
+				String msg = String.format(R.IF_EXPRESSION_EXCEPTION.get(), this.condition.getValueAsString());
 	        	table.addValues(this.condition.getExpression(), msg);
 
 	        	throw new Exception(msg);
@@ -184,7 +173,7 @@ public class If extends MatrixItem
 
 			}
 
-			throw new Exception("result is not type of Boolean");
+			throw new Exception(R.COMMON_RESULT_IS_NOT_BOOLEAN.get());
 		}
 		catch (Exception e)
 		{

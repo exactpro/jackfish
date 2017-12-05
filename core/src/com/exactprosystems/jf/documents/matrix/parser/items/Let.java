@@ -11,6 +11,7 @@ package com.exactprosystems.jf.documents.matrix.parser.items;
 
 import com.csvreader.CsvWriter;
 import com.exactprosystems.jf.api.common.Str;
+import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.api.error.ErrorKind;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.evaluator.Variables;
@@ -31,13 +32,8 @@ import java.util.List;
 import java.util.Map;
 
 @MatrixItemAttribute(
-		description 	= "This operator is used to name a variable and set a value. \n" +
-							"If there is no name, this expression is performed. The variable name is given In the left field," +
-							" in the right field is the variable value or expression, which result will be saved in the variable.",
-		examples 		= "The variable  greeting is set with value Hello Wolrd!" +
-							"{{#\n" +
-							"#Id;#Let\n" +
-							"greeting;'Hello world!'#}}",
+		constantGeneralDescription = R.LET_DESCRIPTION,
+		constantExamples = R.LET_EXAMPLE,
 		shouldContain 	= { Tokens.Let },
 		mayContain 		= { Tokens.Id, Tokens.Off, Tokens.RepOff, Tokens.Global }, 
 		parents			= { Case.class, Else.class, For.class, ForEach.class, If.class,

@@ -10,6 +10,7 @@
 package com.exactprosystems.jf.documents.matrix.parser.items;
 
 import com.csvreader.CsvWriter;
+import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.report.ReportBuilder;
 import com.exactprosystems.jf.documents.config.Context;
@@ -19,20 +20,8 @@ import com.exactprosystems.jf.documents.matrix.parser.listeners.IMatrixListener;
 import java.util.List;
 
 @MatrixItemAttribute(
-		description 	= "This operator is used to move to the next cycles iteration For, ForEach, While.\n" +
-							"The new iteration starts with checking if cycle conditions are true.",
-		examples 		= "Create a cycle from 1 to 10 with an operator For and display variable value a  in console." +
-							" If variable a = 9 start a cycle from the beginning with an operator Continue." +
-							"{{#\n" +
-							"#For;#From;#To;#Step\n" +
-							"a;1;10;1\n" +
-							"#If\n" +
-							"a == 9\n" +
-							"#Continue\n" +
-							"#EndIf\n" +
-							"#Action;#a\n" +
-							"Print;a\n" +
-							"#EndFor#}}",
+		constantGeneralDescription = R.CONTINUE_DESCRIPTION,
+		constantExamples = R.CONTINUE_EXAMPLE,
 		shouldContain 	= { Tokens.Continue },
 		mayContain 		= { Tokens.Off, Tokens.RepOff }, 
 		parents			= { Case.class, Else.class, For.class, ForEach.class, If.class,

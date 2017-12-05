@@ -24,11 +24,9 @@ import com.exactprosystems.jf.documents.matrix.parser.Tokens;
 public @interface MatrixItemAttribute
 {
 	@Deprecated
-	String description();
+	String description()  default "";
 	R constantGeneralDescription() default R.DEFAULT;
 	Class<?>[] seeAlsoClass() default {};
-	@Deprecated
-	String examples() default "";
 	R constantExamples() default R.DEFAULT;
 	Tokens[] shouldContain();
 	Tokens[] mayContain();

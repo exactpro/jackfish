@@ -12,6 +12,7 @@ package com.exactprosystems.jf.documents.matrix.parser.items;
 import com.csvreader.CsvWriter;
 import com.exactprosystems.jf.actions.ReadableValue;
 import com.exactprosystems.jf.api.common.Str;
+import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.api.error.ErrorKind;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.report.ReportBuilder;
@@ -28,8 +29,8 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 @MatrixItemAttribute(
-		description 	= "Sets up an event handler for all TestCases or Steps.",
-		examples 		= "{{#\n#SetHandler#}}",
+		constantGeneralDescription = R.SET_HANDLER_DESCRIPTION,
+		constantExamples = R.SET_HANDLER_EXAMPLE,
 		shouldContain 	= { Tokens.SetHandler },
 		mayContain 		= { Tokens.Off, Tokens.RepOff, Tokens.Kind },
 		real			= true,
@@ -71,7 +72,7 @@ public final class SetHandler extends MatrixItem
 		driver.showExpressionField(this, layout, 1, 1, Tokens.SetHandler.get(), this.name, this.name,
 			(str) -> 
 			{
-				String res = DialogsHelper.selectFromList("Choose sub case from list", new ReadableValue(str), context.subcases(this)).getValue();
+				String res = DialogsHelper.selectFromList(R.COMMON_CHOOSE_SUB_CASE.get(), new ReadableValue(str), context.subcases(this)).getValue();
 				return res;
 			},
 			(str) -> 

@@ -12,6 +12,7 @@ package com.exactprosystems.jf.documents.matrix.parser.items;
 import com.csvreader.CsvWriter;
 import com.exactprosystems.jf.actions.ReadableValue;
 import com.exactprosystems.jf.api.common.Str;
+import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.api.error.ErrorKind;
 import com.exactprosystems.jf.api.error.common.MatrixException;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
@@ -34,24 +35,8 @@ import java.util.Map;
 import java.util.Set;
 
 @MatrixItemAttribute(
-		description 	= "This operator is used to call a subprogram which is organized with SubCase. Call is performed with id SubCase giving name NameSpace - > NameSpace.SubCaseID\n" +
-				"SubCase that is being called can be in the current matrix as well as in the library (Project directory -> library).\n " +
-				" In case if SubCase returns any value, it is available via  id operator Call.\n" +
-				"If SubCase is being called with operator Call, factual parameters, which are used by performing  SubCase, can be transferred.  Arguments should be named. ",
-		examples 		= "1. Create SubCase with id Add and arguments firstNumber and secondNumber.\n" +
-				"2. In a given SubCase make a sum of parameters values firstNumber and secondNumber. Return result using an operator Return.\n" +
-				"3 Call SubCase Add with an operator Call and transfer two numbers as parameters. \n" +
-				"SubCase will make a sum of given values and return a result, which is accessible by using id SubCase - Add." +
-				"{{#\n" +
-				"#Id;#SubCase;#firstNumber;#secondNumber\n" +
-				"Add;;1;2\n" +
-				"#Id;#Let\n" +
-				"result;firstNumber + secondNumber\n" +
-				"#Return\n" +
-				"result\n" +
-				"#EndSubCase\n" +
-				"#Id;#Call;#firstNumber;#secondNumber\n" +
-				"CALL1;Add;1;2#}}",
+		constantGeneralDescription = R.CALL_DESCRIPTION,
+		constantExamples = R.CALL_EXAMPLE,
 		shouldContain 	= { Tokens.Call },
 
 		mayContain 		= { Tokens.Id, Tokens.Off, Tokens.RepOff },
@@ -102,7 +87,7 @@ public final class Call extends MatrixItem
 		driver.showExpressionField(this, layout, 1, 2, Tokens.Call.get(), this.name, this.name,
 			(str) -> 
 			{
-				String res = DialogsHelper.selectFromList("Choose sub case from list", new ReadableValue(str), context.subcases(this)).getValue();
+				String res = DialogsHelper.selectFromList(R.COMMON_CHOOSE_SUB_CASE.get(), new ReadableValue(str), context.subcases(this)).getValue();
 				if (Str.IsNullOrEmpty(res))
 				{
 					return res;
@@ -110,7 +95,7 @@ public final class Call extends MatrixItem
 				updateReference(context, res);
 				if (this.ref == null)
 				{
-					DialogsHelper.showError("Can't find sub case with id : [" + res + "]");
+					DialogsHelper.showError(String.format(R.CALL_CANT_FIND_SUBCASE.get(), res));
 				}
 				else
 				{
@@ -235,7 +220,7 @@ public final class Call extends MatrixItem
 		
 		if (this.ref == null)
 		{
-			listener.error(this.owner, this.getNumber(), this, "Subcase with id '" + this.name + "' is not found.");
+			listener.error(this.owner, this.getNumber(), this, String.format(R.CALL_CANT_FIND_SUBCASE.get(), this.name));
 		}
 		else
 		{
@@ -271,7 +256,7 @@ public final class Call extends MatrixItem
 			if (!parametersAreCorrect)
 			{
 				reportParameters(report, parameters);
-				throw new ParametersException("Errors in parameters expressions #Call", parameters);
+				throw new ParametersException(R.CALL_PARAMS_EXCEPTION.get(), parameters);
 			}
 			if (this.ref == null)
 			{
@@ -308,7 +293,7 @@ public final class Call extends MatrixItem
 				return new ReturnAndResult(start, Result.Passed, ret.getOut());
 			}
 			report.outLine(this, null, "Sub case '" + this.name + "' is not found.", null);
-			throw new MatrixException(super.getNumber(), this, "Sub case '" + this.name + "' is not found.");
+			throw new MatrixException(super.getNumber(), this, String.format(R.CALL_CANT_FIND_SUBCASE.get(), this.name));
 		}
 		catch (Exception e)
 		{

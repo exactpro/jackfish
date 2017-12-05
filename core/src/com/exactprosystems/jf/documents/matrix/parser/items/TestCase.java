@@ -11,6 +11,7 @@ package com.exactprosystems.jf.documents.matrix.parser.items;
 
 import com.csvreader.CsvWriter;
 import com.exactprosystems.jf.api.common.Str;
+import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.api.error.ErrorKind;
 import com.exactprosystems.jf.common.Settings;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
@@ -27,19 +28,8 @@ import com.exactprosystems.jf.functions.Table;
 import java.util.*;
 
 @MatrixItemAttribute(
-		description 	= "The main operator in matrix directory. It is used to logically divide matrix in steps." +
-							" This is the high level operator, can't be put in any other actions or operators including TestCase. \n" +
-							"All TestCase are performed one by one, independently of the performed results in previous testcases." +
-							" Nevertheless, the dependence can be set with the field Depends.  If TestCase from the parameter Depends is failed,the dependend one will be failed too.\n" +
-							"Each TestCase also contains Screenshot parameter which is used to specify when in the TestCase given a screenshot is made.  \n" +
-							"TestCase ID is used to shortly identify and link to it in the parameter BeforeTestCase of actions TableReport, TextReport etc.\n" +
-							"Each TestCase keeps the performed result in a separate line in a system table (see action ResultTable).\n" +
-							"TestCase which has an action ResultTable is always Passed.\n" +
-							"EachTestCase introduces its name space, that means actions and variables from one TestCase aren't accessible from another one.\n" +
-							"To get the access  from the different TestCase is essentially to enter the parameter  Global for an action.(mark checkbox with G)",
-		examples 		= "{{#\n" +
-							"#TestCase;#Kind;#Depends;#For\n" +
-							";;;#}}",
+		constantGeneralDescription = R.TEST_CASE_DESCRIPTION,
+		constantExamples = R.TEST_CASE_EXAMPLE,
 		shouldContain 	= { Tokens.TestCase },
 		mayContain 		= { Tokens.Id, Tokens.RepOff, Tokens.Off, Tokens.Kind, Tokens.For, Tokens.Depends },
 		parents			= { MatrixRoot.class },
@@ -286,7 +276,7 @@ public final class TestCase extends MatrixItem
 				//if TestCase with id depends.get() is not presented - return fail
 				if (!dependsTestCase.isPresent())
 				{
-					ret = new ReturnAndResult(start, Result.Failed, "Fail due the TestCase this id " + this.depends.get() + " is not found", ErrorKind.FAIL, this);
+					ret = new ReturnAndResult(start, Result.Failed, String.format(R.TEST_CASE_NOT_FOUND_EXCEPTION.get(), this.depends.get()), ErrorKind.FAIL, this);
 					updateTable(table, position, row, ret, ret.getError());
 					super.changeExecutingState(MatrixItemExecutingState.Failed);
 					return ret;
@@ -296,7 +286,7 @@ public final class TestCase extends MatrixItem
 				MatrixItem testCase = dependsTestCase.get();
 				if (testCase.result != null && testCase.result.getResult().isFail())
 				{
-					ret = new ReturnAndResult(start, Result.Failed, "Fail due the TestCase " + this.depends.get() + " is failed", ErrorKind.FAIL, this);
+					ret = new ReturnAndResult(start, Result.Failed, String.format(R.TEST_CASE_FAILED_EXCEPTION.get(), this.depends.get()), ErrorKind.FAIL, this);
 					updateTable(table, position, row, ret, ret.getError());
 					super.changeExecutingState(MatrixItemExecutingState.Failed);
 					return ret;

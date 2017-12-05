@@ -10,6 +10,7 @@
 package com.exactprosystems.jf.documents.matrix.parser.items;
 
 import com.csvreader.CsvWriter;
+import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.api.error.ErrorKind;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.report.ReportBuilder;
@@ -27,19 +28,8 @@ import java.util.List;
 import java.util.Map;
 
 @MatrixItemAttribute(
-		description 	= "Operator While is used to organized a cycle.",
-		examples 		= "Notify a variable a and set value 1 to it.\n" +
-							"While the variable value is a < 10 in  While cycle display its value in console  and increase it by 1." +
-							"{{#\n" +
-							"#Id;#Let\n" +
-							"a;1\n" +
-							"#While\n" +
-							"a < 10\n" +
-							"#Action;#a\n" +
-							"Print;a\n" +
-							"#Id;#Let\n" +
-							"a;a+1\n" +
-							"#EndWhile#}}",
+		constantGeneralDescription = R.WHILE_DESCRIPTION,
+		constantExamples = R.WHILE_EXAMPLE,
 		shouldContain 	= { Tokens.While },
 		mayContain 		= { Tokens.Off, Tokens.RepOff },
 		parents			= { Case.class, Else.class, For.class, ForEach.class, If.class,
@@ -211,13 +201,13 @@ public class While extends MatrixItem
         this.condition.evaluate(evaluator);
         if (!this.condition.isValid())
         {
-            throw new Exception("Error in expression #While");
+            throw new Exception(String.format(R.COMMON_ERROR_IN_EXPRESSION.get(), this.getClass().getSimpleName()));
         }
         
         Object bool = this.condition.getValue();
         if (! (bool instanceof Boolean))
         {
-            throw new Exception("result is not type of Boolean");
+            throw new Exception(R.COMMON_RESULT_IS_NOT_BOOLEAN.get());
         }
         return (Boolean)bool;
     }

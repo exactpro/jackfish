@@ -11,6 +11,7 @@ package com.exactprosystems.jf.documents.matrix.parser.items;
 
 import com.csvreader.CsvWriter;
 import com.exactprosystems.jf.api.common.Str;
+import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.api.error.ErrorKind;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.report.ReportBuilder;
@@ -31,18 +32,8 @@ import java.util.Map;
 import java.util.concurrent.atomic.AtomicReference;
 
 @MatrixItemAttribute(
-		description 	= "Operator For is used to organize a cycle which should be performed a given number of times. This cycle can for for increase and reduction. " +
-							"Fields:\n" +
-							"For - a variable is given what iteration will be performed by.\n" +
-							"From - a numeric value which a cycle will be started with is given. \n" +
-							"To - a numeric value which is reached and the last iteration will be performed.  \n" +
-				"Step - a step, which will change the value in the field from.",
-		examples 		= "{{#\n" +
-							"#For;#From;#To;#Step\n" +
-							"a;1;10;1\n" +
-							"#Action;#a\n" +
-							"Print;a\n" +
-							"#EndFor#}}",
+		constantGeneralDescription = R.FOR_DESCRIPTION,
+		constantExamples = R.FOR_EXAMPLE,
 		shouldContain 	= { Tokens.For, Tokens.From, Tokens.To },
 		mayContain 		= { Tokens.Step, Tokens.Off, Tokens.RepOff }, 
 		parents			= { Case.class, Else.class, For.class, ForEach.class, If.class,

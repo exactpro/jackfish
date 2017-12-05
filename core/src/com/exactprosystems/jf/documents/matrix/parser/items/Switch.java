@@ -10,6 +10,7 @@
 package com.exactprosystems.jf.documents.matrix.parser.items;
 
 import com.csvreader.CsvWriter;
+import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.api.error.ErrorKind;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.report.ReportBuilder;
@@ -29,22 +30,8 @@ import java.util.List;
 import java.util.Map;
 
 @MatrixItemAttribute(
-        description 	= "This operator allows to define multiple branches. With case and default the operator will be performed which condition is true. If no case suits, default is performed.",
-		examples 		= "In switch is transferred true in case are placed expressions as regular. \n" +
-							"In the field switch number 1 is passed, which matches the number from the first Case given. \n" +
-							"If number 2 is passed to Switch, the second Case is performed" +
-							"{{#\n" +
-							"#Switch\n" +
-							"1\n" +
-							"#Case\n" +
-							"1\n" +
-							"#Action;#Greeting\n" +
-							"Print;'Hello!'\n" +
-							"#Case\n" +
-							"2\n" +
-							"#Action;#Greeting\n" +
-							"Print;'Bye!'\n" +
-							"#EndSwitch#}}",
+        constantGeneralDescription = R.SWITCH_DESCRIPTION,
+		constantExamples = R.SWITCH_EXAMPLE,
         shouldContain 	= { Tokens.Switch },
         mayContain 		= { Tokens.Off, Tokens.RepOff },
 		parents			= { Case.class, Else.class, For.class, ForEach.class, If.class,
@@ -149,7 +136,7 @@ public class Switch extends MatrixItem
         {
         	if (!(child instanceof Case || child instanceof Default))
         	{
-        		listener.error(getMatrix(), getNumber(), this, "Switch must contain only Case or Default item. But contains " + child.getItemName());
+        		listener.error(getMatrix(), getNumber(), this, String.format(R.SWITCH_CHECK_EXCEPTION.get(), child.getItemName()));
         	}
 			//we already check all child of switch
 			//        	else
@@ -171,7 +158,7 @@ public class Switch extends MatrixItem
 				ReportTable table = report.addTable("Switch", null, true, true, 
 						new int[] {50, 50}, new String[] {"Expression", "Error"});
 			
-				String msg = "Error in expression #Switch";
+				String msg = String.format(R.COMMON_ERROR_IN_EXPRESSION.get(), this.getClass().getSimpleName());
 	        	table.addValues(this.switcher.getExpression(), msg);
 
 	        	throw new Exception(msg);
@@ -205,7 +192,7 @@ public class Switch extends MatrixItem
 					}
 					else
 					{
-						throw new Exception("Error in expression:" + item.getItemName());
+						throw new Exception(String.format(R.COMMON_ERROR_IN_EXPRESSION.get(), item.getItemName()));
 					}
 				}
 				else if (item instanceof Default)

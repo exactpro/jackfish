@@ -10,6 +10,7 @@
 package com.exactprosystems.jf.documents.matrix.parser.items;
 
 import com.csvreader.CsvWriter;
+import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.report.ReportBuilder;
 import com.exactprosystems.jf.documents.config.Context;
@@ -19,16 +20,8 @@ import com.exactprosystems.jf.documents.matrix.parser.listeners.IMatrixListener;
 import java.util.List;
 
 @MatrixItemAttribute(
-		description 	= "This operator is used to break cycles  for, forEach and while.",
-		examples 		= "Create cycle from 1 to 10 using an operator For, cycle when variable is a = 9 break a cycle using an operator Break." +
-							"{{#\n" +
-							"#For;#From;#To;#Step \n" +
-							"a;1;10;1 \n" +
-							"#If \n" +
-							"a == 9 \n" +
-							"#Break \n" +
-							"#EndIf \n" +
-							"#EndFor#}}",
+		constantGeneralDescription = R.BREAK_DESCRIPTION,
+		constantExamples = R.BREAK_EXAMPLE,
 		shouldContain 	= { Tokens.Break },
 		mayContain 		= { Tokens.Off, Tokens.RepOff },
 		parents			= { Case.class, Else.class, For.class, ForEach.class, If.class,

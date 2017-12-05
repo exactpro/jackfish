@@ -11,6 +11,7 @@ package com.exactprosystems.jf.documents.matrix.parser.items;
 
 import com.csvreader.CsvWriter;
 import com.exactprosystems.jf.api.common.Str;
+import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.api.error.ErrorKind;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.report.ReportBuilder;
@@ -32,16 +33,8 @@ import java.util.Map;
 import java.util.concurrent.atomic.AtomicReference;
 
 @MatrixItemAttribute(
-	description 	= "Operator ForEach is used to organize a cycle according the collection elements: massive, list, table, Map etc. \n" +
-						"Fields:\n" +
-						"ForEach - a variable name is given which is set with the next element value by each iteration.  \n" +
-						"In - a collection is given which is needed to organize a cycle.",
-	examples 		= "{{#\n" +
-						"#ForEach;#In\n" +
-						"a;['First', 'Second']\n" +
-						"#Action;#a\n" +
-						"Print;a\n" +
-						"#EndForEach#}}",
+	constantGeneralDescription = R.FOREACH_DESCRIPTION,
+	constantExamples = R.FOREACH_EXAMPLE,
 	shouldContain 	= { Tokens.ForEach, Tokens.In },
 	mayContain 		= { Tokens.Off, Tokens.RepOff }, 
 	parents			= { Case.class, Else.class, For.class, ForEach.class, If.class,
@@ -172,13 +165,13 @@ public final class ForEach extends MatrixItem
 
 			if (!this.in.evaluate(evaluator))
 			{
-				throw new Exception("Error in expression #In " + this.in.getValueAsString());
+				throw new Exception(String.format(R.FOREACH_EXCEPTION_IN.get(), this.in.getValueAsString()));
 			}
 
 			Object inValue = this.in.getValue();
 			if (!(inValue instanceof Iterable<?>))
 			{
-				throw new Exception("#In is not a collection");
+				throw new Exception(R.FOREACH_EXCEPTION.get());
 			}
 
 			Iterator<?> iterator = ((Iterable<?>)inValue).iterator(); 

@@ -11,6 +11,7 @@ package com.exactprosystems.jf.documents.matrix.parser.items;
 
 import com.csvreader.CsvWriter;
 import com.exactprosystems.jf.api.common.Str;
+import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.api.error.ErrorKind;
 import com.exactprosystems.jf.common.Settings;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
@@ -28,13 +29,8 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 @MatrixItemAttribute(
-		description 	= "This is an analogue of TestCase block , it is used to divide TestCase. \n" +
-							"Each Step keeps its result in a separate line in a system table  (see action ResultTable).\n" +
-							"Step which contains an action ResultTable is always Passed.",
-		examples 		= "{{#\n" +
-                            "#Step;#Kind\n" +
-							";\n" +
-							"#EndStep#}}",
+		constantGeneralDescription = R.STEP_DESCRIPTION,
+		constantExamples = R.STEP_EXAMPLE,
 		shouldContain 	= { Tokens.Step },
 		mayContain 		= { Tokens.IgnoreErr, Tokens.Id, Tokens.RepOff, Tokens.Off, Tokens.Kind, Tokens.For, Tokens.Depends },
 		parents			= { Case.class, Else.class, For.class, ForEach.class, If.class,
@@ -290,7 +286,7 @@ public class Step extends MatrixItem
 				//if step with id depends.get() is not presented - return fail
 				if (!dependsStep.isPresent())
 				{
-					ret = new ReturnAndResult(start, Result.StepFailed, "Fail due the Step this id " + this.depends.get() + " is not found", ErrorKind.FAIL, this);
+					ret = new ReturnAndResult(start, Result.StepFailed, String.format(R.STEP_NOT_FOUND_EXCEPTION.get(), this.depends.get()), ErrorKind.FAIL, this);
 					updateTable(table, position, row, ret, ret.getError());
 					super.changeExecutingState(MatrixItemExecutingState.Failed);
 					return ret;
@@ -300,7 +296,7 @@ public class Step extends MatrixItem
 				MatrixItem step = dependsStep.get();
 				if (step.result != null && step.result.getResult().isFail())
 				{
-					ret = new ReturnAndResult(start, Result.StepFailed, "Fail due the Step " + this.depends.get() + " is failed", ErrorKind.FAIL, this);
+					ret = new ReturnAndResult(start, Result.StepFailed, String.format(R.STEP_FAILED_EXCEPTION.get(), this.depends.get()), ErrorKind.FAIL, this);
 					updateTable(table, position, row, ret, ret.getError());
 					super.changeExecutingState(MatrixItemExecutingState.Failed);
 					return ret;
