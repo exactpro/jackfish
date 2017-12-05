@@ -31,22 +31,21 @@ import java.io.File;
 	)
 public class ReportShow extends AbstractAction 
 {
-	public final static String reportName = "Report";
+	public static final String reportName = "Report";
 
 	@ActionFieldAttribute(name = reportName, mandatory = true, constantDescription = R.REPORT_SHOW_REPORT)
-	protected String 	report 	= null;
+	protected String report = null;
 
-    @Override
-    protected HelpKind howHelpWithParameterDerived(Context context, Parameters parameters, String fieldName) throws Exception
-    {
-        switch (fieldName)
-        {
-            case reportName:
-                return HelpKind.ChooseOpenFile;
-        }
-        return null;
-    }
-	
+	@Override
+	protected HelpKind howHelpWithParameterDerived(Context context, Parameters parameters, String fieldName) throws Exception
+	{
+		if (reportName.equals(fieldName))
+		{
+			return HelpKind.ChooseOpenFile;
+		}
+		return null;
+	}
+
 	@Override
 	public void doRealAction(Context context, ReportBuilder report, Parameters parameters, AbstractEvaluator evaluator) throws Exception
 	{

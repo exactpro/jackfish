@@ -24,7 +24,8 @@ import com.exactprosystems.jf.documents.matrix.parser.items.TypeMandatory;
 import com.exactprosystems.jf.functions.HelpKind;
 import com.exactprosystems.jf.functions.Table;
 
-import java.awt.*;
+import java.awt.Color;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -37,41 +38,38 @@ import java.util.Map;
 )
 public class ChartReport extends AbstractAction
 {
-	public final static String 	titleName 			= "Title";
-	public final static String 	tableName 			= "Table";
-	public final static String	beforeTestCaseName	= "BeforeTestCase";
-	public final static String	typeName			= "Type";
-    public final static String  colorsName          = "Colors";
-	public final static String	toReportName		= "ToReport";
+	public static final String titleName          = "Title";
+	public static final String tableName          = "Table";
+	public static final String beforeTestCaseName = "BeforeTestCase";
+	public static final String typeName           = "Type";
+	public static final String colorsName         = "Colors";
+	public static final String toReportName       = "ToReport";
 
 	@ActionFieldAttribute(name = titleName, mandatory = true, constantDescription = R.CHART_REPORT_TITLE)
-	protected String 	title;
+	protected String title;
 
 	@ActionFieldAttribute(name = tableName, mandatory = true, constantDescription = R.CHART_REPORT_TABLE)
-	protected Table 	table;
+	protected Table table;
 
 	@ActionFieldAttribute(name = typeName, mandatory = true, constantDescription = R.CHART_REPORT_CHART_TYPE)
-	protected ChartKind			 chartType;
+	protected ChartKind chartType;
 
-    @ActionFieldAttribute(name=toReportName, mandatory = false, def = DefaultValuePool.Null, constantDescription = R.CHART_REPORT_TO_REPORT)
-    protected ReportBuilder toReport;
+	@ActionFieldAttribute(name = toReportName, mandatory = false, def = DefaultValuePool.Null, constantDescription = R.CHART_REPORT_TO_REPORT)
+	protected ReportBuilder toReport;
 
-    @ActionFieldAttribute(name = colorsName, mandatory = false, def = DefaultValuePool.Null, constantDescription = R.CHART_REPORT_COLORS)
-    protected Map<String, Color>    colors;
+	@ActionFieldAttribute(name = colorsName, mandatory = false, def = DefaultValuePool.Null, constantDescription = R.CHART_REPORT_COLORS)
+	protected Map<String, Color> colors;
 
 	@ActionFieldAttribute(name = beforeTestCaseName, mandatory = false, def = DefaultValuePool.Null, constantDescription = R.CHART_REPORT_BEFORE_TEST_CASE)
-	protected String			beforeTestCase;
+	protected String beforeTestCase;
 
 	@Override
 	public void helpToAddParametersDerived(List<ReadableValue> list, Context context, Parameters parameters) throws Exception
 	{
 		parameters.evaluateAll(context.getEvaluator());
-		Object kindObj 	= parameters.get(typeName);
-		Object tabObj 	= parameters.get(tableName);
 
-		ChartKind kind 	= null;
-		Table tab 		= null;
-
+		Object kindObj = parameters.get(typeName);
+		ChartKind kind;
 		if (kindObj instanceof ChartKind)
 		{
 			kind = (ChartKind) kindObj;
@@ -81,15 +79,9 @@ public class ChartReport extends AbstractAction
 			throw new NullParameterException(String.format(R.API_NULL_PARAMETER_EXCEPTION.get(), typeName));
 		}
 
-		if (tabObj instanceof Table)
-		{
-			tab = (Table) tabObj;
-		}
-		
 		ChartBuilder chartBuilder = ChartFactory.createStubChartBuilder(kind);
 		chartBuilder.helpToAddParameters(list, context);
 	}
-
 
 	@Override
 	protected HelpKind howHelpWithParameterDerived(Context context, Parameters parameters, String fieldName) throws Exception
@@ -99,27 +91,25 @@ public class ChartReport extends AbstractAction
 			case beforeTestCaseName:
 			case typeName:
 				return HelpKind.ChooseFromList;
+			default:
+				return null;
 		}
-		
-		return null;
 	}
 
-	
 	@Override
 	protected void listToFillParameterDerived(List<ReadableValue> list, Context context, String parameterToFill, Parameters parameters) throws Exception
 	{
 		switch (parameterToFill)
 		{
 			case typeName:
-				for (ChartKind kind : ChartKind.values())
-				{
-					list.add(new ReadableValue(ChartKind.class.getSimpleName() + "." + kind.name(), kind.getDescription()));
-				}
+				Arrays.stream(ChartKind.values())
+						.map(kind -> new ReadableValue(ChartKind.class.getSimpleName() + "." + kind.name(), kind.getDescription()))
+						.forEach(list::add);
 				break;
 			case beforeTestCaseName:
-				ActionsReportHelper.fillListForParameter(super.owner.getMatrix(),  list, context.getEvaluator());
+				ActionsReportHelper.fillListForParameter(super.owner.getMatrix(), list, context.getEvaluator());
 				break;
-				
+
 			default:
 		}
 	}

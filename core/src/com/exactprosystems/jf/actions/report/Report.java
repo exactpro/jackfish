@@ -10,6 +10,7 @@
 package com.exactprosystems.jf.actions.report;
 
 import com.exactprosystems.jf.actions.*;
+import com.exactprosystems.jf.api.common.Str;
 import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.report.ReportBuilder;
@@ -31,67 +32,61 @@ import java.util.List;
 	)
 public class Report extends AbstractAction 
 {
-    public final static String beforeTestCaseName = "BeforeTestCase";
-    public final static String strName            = "Str";
-    public final static String toReportName       = "ToReport";
+	public static final String beforeTestCaseName = "BeforeTestCase";
+	public static final String strName            = "Str";
+	public static final String toReportName       = "ToReport";
 
-	@ActionFieldAttribute(name=toReportName, mandatory = false, def = DefaultValuePool.Null, constantDescription = R.REPORT_TO_REPORT)
+	@ActionFieldAttribute(name = toReportName, mandatory = false, def = DefaultValuePool.Null, constantDescription = R.REPORT_TO_REPORT)
 	protected ReportBuilder toReport;
 
 	@ActionFieldAttribute(name = beforeTestCaseName, mandatory = false, def = DefaultValuePool.Null, constantDescription = R.REPORT_BEFORE_TEST_CASE)
-	protected String 	beforeTestCase 	= null;
+	protected String beforeTestCase = null;
 
 	@ActionFieldAttribute(name = strName, mandatory = false, def = DefaultValuePool.EmptyString, constantDescription = R.REPORT_MESSAGE)
-	protected String message; 
-	
-	@Override
-	public void doRealAction(Context context, ReportBuilder report, Parameters parameters, AbstractEvaluator evaluator) throws Exception
-	{
-		StringBuilder sb 	= new StringBuilder();
-		if (!message.isEmpty())
-		{
-			sb.append(message);
-			sb.append('\t');
-		}
-		
-		for (Parameter param : parameters.select(TypeMandatory.Extra))
-		{
-			sb.append(param.getName());
-			sb.append(" = ");
-			sb.append(param.getValue());
-			sb.append('\t');
-		}
-		
-		report = this.toReport == null ? report : this.toReport;
-		this.beforeTestCase = ActionsReportHelper.getBeforeTestCase(this.beforeTestCase, this.owner.getMatrix());
-		ReportTable info = report.addExplicitTable(sb.toString(), this.beforeTestCase, true, true, new int[] {});
-		info.addValues("");
-		
-		
-		super.setResult(null);
-	}
+	protected String message;
 
 	@Override
 	protected HelpKind howHelpWithParameterDerived(Context context, Parameters parameters, String fieldName) throws Exception
 	{
-		switch (fieldName)
+		if (beforeTestCaseName.equals(fieldName))
 		{
-			case beforeTestCaseName:
-				return HelpKind.ChooseFromList;
+			return HelpKind.ChooseFromList;
 		}
-
 		return null;
 	}
 
 	@Override
 	protected void listToFillParameterDerived(List<ReadableValue> list, Context context, String parameterToFill, Parameters parameters) throws Exception
 	{
-		switch (parameterToFill)
+		if (beforeTestCaseName.equals(parameterToFill))
 		{
-			case beforeTestCaseName:
-				ActionsReportHelper.fillListForParameter(super.owner.getMatrix(),  list, context.getEvaluator());
-				break;
-			default:
+			ActionsReportHelper.fillListForParameter(super.owner.getMatrix(), list, context.getEvaluator());
 		}
+	}
+
+	@Override
+	public void doRealAction(Context context, ReportBuilder report, Parameters parameters, AbstractEvaluator evaluator) throws Exception
+	{
+		StringBuilder sb = new StringBuilder();
+		if (!Str.IsNullOrEmpty(this.message))
+		{
+			sb.append(message);
+			sb.append('\t');
+		}
+
+		for (Parameter param : parameters.select(TypeMandatory.Extra))
+		{
+			sb.append(param.getName())
+					.append(" = ")
+					.append(param.getValue())
+					.append('\t');
+		}
+
+		report = this.toReport == null ? report : this.toReport;
+		this.beforeTestCase = ActionsReportHelper.getBeforeTestCase(this.beforeTestCase, this.owner.getMatrix());
+		ReportTable info = report.addExplicitTable(sb.toString(), this.beforeTestCase, true, true, new int[]{});
+		info.addValues("");
+
+		super.setResult(null);
 	}
 }

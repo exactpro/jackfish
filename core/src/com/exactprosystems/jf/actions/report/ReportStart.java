@@ -9,13 +9,7 @@
 
 package com.exactprosystems.jf.actions.report;
 
-import java.util.Date;
-
-import com.exactprosystems.jf.actions.AbstractAction;
-import com.exactprosystems.jf.actions.ActionAttribute;
-import com.exactprosystems.jf.actions.ActionFieldAttribute;
-import com.exactprosystems.jf.actions.ActionGroups;
-import com.exactprosystems.jf.actions.DefaultValuePool;
+import com.exactprosystems.jf.actions.*;
 import com.exactprosystems.jf.api.common.Str;
 import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.api.error.ErrorKind;
@@ -24,6 +18,8 @@ import com.exactprosystems.jf.common.report.ReportBuilder;
 import com.exactprosystems.jf.documents.config.Configuration;
 import com.exactprosystems.jf.documents.config.Context;
 import com.exactprosystems.jf.documents.matrix.parser.Parameters;
+
+import java.util.Date;
 
 @ActionAttribute(
 		group					   = ActionGroups.Report,
@@ -36,29 +32,29 @@ import com.exactprosystems.jf.documents.matrix.parser.Parameters;
 	)
 public class ReportStart extends AbstractAction 
 {
-	public final static String reportNameName  = "ReportName";
-	public final static String versionName     = "Version";
+	public static final String reportNameName = "ReportName";
+	public static final String versionName    = "Version";
 
 	@ActionFieldAttribute(name = reportNameName, mandatory = true, constantDescription = R.REPORT_START_REPORT_NAME)
-	protected String reportName; 
+	protected String reportName;
 
-    @ActionFieldAttribute(name = versionName, mandatory = false, def = DefaultValuePool.Null, constantDescription = R.REPORT_START_VERSION)
-    protected String version; 
+	@ActionFieldAttribute(name = versionName, mandatory = false, def = DefaultValuePool.Null, constantDescription = R.REPORT_START_VERSION)
+	protected String version;
 
 	@Override
 	public void doRealAction(Context context, ReportBuilder report, Parameters parameters, AbstractEvaluator evaluator) throws Exception
 	{
-	    if (Str.IsNullOrEmpty(this.reportName))
-	    {
-	        super.setError(reportNameName, ErrorKind.EMPTY_PARAMETER);
-	        return;
-	    }
-	    
-	    Configuration config = context.getConfiguration();
-	    ReportBuilder newReport = config.getReportFactory().createReportBuilder(config.getReports().get(), this.reportName, new Date());
-	    newReport.reportStarted(null, this.version);
-	    newReport.itemStarted(this.owner.getMatrix().getRoot());
-	    
+		if (Str.IsNullOrEmpty(this.reportName))
+		{
+			super.setError(reportNameName, ErrorKind.EMPTY_PARAMETER);
+			return;
+		}
+
+		Configuration config = context.getConfiguration();
+		ReportBuilder newReport = config.getReportFactory().createReportBuilder(config.getReports().get(), this.reportName, new Date());
+		newReport.reportStarted(null, this.version);
+		newReport.itemStarted(this.owner.getMatrix().getRoot());
+
 		super.setResult(newReport);
 	}
 }

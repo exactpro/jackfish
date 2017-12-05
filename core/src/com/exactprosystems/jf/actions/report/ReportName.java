@@ -27,19 +27,19 @@ import com.exactprosystems.jf.documents.matrix.parser.Parameters;
 	)
 public class ReportName extends AbstractAction 
 {
-	public final static String nameName = "Name";
-	public final static String failedStepsName = "FailedSteps";
-	public final static String passedStepsName = "PassedSteps";
+	public static final String nameName        = "Name";
+	public static final String failedStepsName = "FailedSteps";
+	public static final String passedStepsName = "PassedSteps";
 
 	@ActionFieldAttribute(name = nameName, mandatory = true, constantDescription = R.REPORT_NAME_NAME)
-	protected String name 		= "";
+	protected String name = "";
 
 	@ActionFieldAttribute(name = failedStepsName, mandatory = false, constantDescription = R.REPORT_NAME_FAILED_STEPS)
 	protected Integer failedSteps;
 
 	@ActionFieldAttribute(name = passedStepsName, mandatory = false, constantDescription = R.REPORT_NAME_PASSED_STEPS)
 	protected Integer passedSteps;
-	
+
 	@Override
 	public void doRealAction(Context context, ReportBuilder report, Parameters parameters, AbstractEvaluator evaluator) throws Exception
 	{
