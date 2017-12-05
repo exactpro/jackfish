@@ -11,6 +11,7 @@ package com.exactprosystems.jf.documents.matrix.parser;
 
 import com.csvreader.CsvReader;
 import com.csvreader.CsvWriter;
+import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.api.error.common.MatrixException;
 import com.exactprosystems.jf.common.CommonHelper;
 import com.exactprosystems.jf.documents.config.Configuration;
@@ -144,7 +145,7 @@ public class Parser
                     if (needFillValue)
                     {
                         throw new MatrixException(count, null,
-                                "Not value for header in action.  Matrix name '" + root.getItemName() + "'");
+                                String.format(R.PARSER_VALUE_EXCEPTION.get(), root.getItemName()));
                     }
                     else
                     {
@@ -171,7 +172,7 @@ public class Parser
                     if (itemAttr == null)
                     {
                         throw new MatrixException(count, null,
-                                "No header for action.  Matrix name '" + root.getItemName() + "'");
+                                String.format(R.PARSER_HEADER_EXCEPTION.get(), root.getItemName()));
                     }
 
                     needFillValue = false;
@@ -397,7 +398,7 @@ public class Parser
 			}
 		}
 		
-		throw new Exception("Unknown type '" + type + "' of item");
+		throw new Exception(String.format(R.PARSER_UNKNOWN_TYPE_EXCEPTION.get(), type));
 	}
 	
 
@@ -450,13 +451,13 @@ public class Parser
 
 		if (suitable.size() == 0)
 		{
-			throw new MatrixException(lineNumber, null, "Unknown syntax item " + Arrays.toString(tokens.toArray()));
+			throw new MatrixException(lineNumber, null, String.format(R.PARSER_UNKNOWN_SYNTAX_EXCEPTION.get(), Arrays.toString(tokens.toArray())));
 		}
 		
 		if (suitable.size() > 1)
 		{
 			String s = suitable.stream().map(i -> i.itemType.getSimpleName()).reduce(" ", String::concat);
-			throw new MatrixException(lineNumber, null, "Too many syntax items are suitable: " + s); 
+			throw new MatrixException(lineNumber, null, String.format(R.PARSER_TOO_MANY_SYNTAX_EXCEPTION.get(), s));
 		}
 
 		return suitable.get(0);

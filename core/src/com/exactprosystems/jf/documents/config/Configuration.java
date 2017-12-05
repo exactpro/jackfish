@@ -20,6 +20,7 @@ import com.exactprosystems.jf.api.common.Converter;
 import com.exactprosystems.jf.api.common.DateTime;
 import com.exactprosystems.jf.api.common.Str;
 import com.exactprosystems.jf.api.common.Sys;
+import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.api.conditions.Condition;
 import com.exactprosystems.jf.api.error.ErrorKind;
 import com.exactprosystems.jf.api.service.IServicesPool;
@@ -950,7 +951,7 @@ public class Configuration extends AbstractDocument
 
 			if (!baseType.isAssignableFrom(type))
 			{
-				throw new Exception("class '" + name + "' is not assignable from " + baseType.getName());
+				throw new Exception(String.format(R.CONFIGURATION_OBJECT_FROM_CLASS_NAME_EXCEPTION.get(), name, baseType.getName() ));
 			}
 
 			return (T)type.newInstance();

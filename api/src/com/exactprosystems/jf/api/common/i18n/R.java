@@ -769,6 +769,7 @@ public enum R
 	TOOL_PROJECT,
 	TOOL_SAVE_CONFIGURATION,
 	TOOL_RELOAD_CONFIGURATION,
+	EMPTY_CONFIGURATION_EXCEPTION,
 	//endregion
 
 	//region tool.wizard
@@ -1037,6 +1038,26 @@ public enum R
     //endregion
 
     //region documents
+
+	//region documents.config
+	CONFIGURATION_OBJECT_FROM_CLASS_NAME_EXCEPTION,
+	CONTEXT_SET_HANDLER_EXCEPTION,
+	//endregion
+
+	//region documents.matrix
+	PARAMETER_TYPE_EXCEPTION,
+	PARAMETER_ARRAY_EXCEPTION,
+	//endregion
+
+	//region documents.matrix.parser
+	PARSER_VALUE_EXCEPTION,
+	PARSER_HEADER_EXCEPTION,
+	PARSER_UNKNOWN_TYPE_EXCEPTION,
+	PARSER_UNKNOWN_SYNTAX_EXCEPTION,
+	PARSER_TOO_MANY_SYNTAX_EXCEPTION,
+	SCREENSHOTKIND_VALUE_BY_NAME_EXCEPTION,
+	//endregion
+
     //endregion
 
 	//region exceptions
