@@ -93,7 +93,4 @@ public class ApplicationSwitchTo extends AbstractAction
 			super.setResult(switchedTitle);
 		}
 	}
-
-
-
 }

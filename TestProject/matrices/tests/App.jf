@@ -705,7 +705,7 @@ Application Stop;;;
         APPSTP1;ApplicationStop;CALL_1
 
         #Id;#Action;#Assert;$Dialog;$AppConnection
-        DLGFLL1;DialogFill;This.Result == Result.Failed && This.Kind == ErrorKind.APPLICATION_ERROR;'Main';CALL_1
+        DLGFLL1;DialogFill;This.Result == Result.Failed && This.Kind == ErrorKind.APPLICATION_CLOSED;'Main';CALL_1
 
     #EndStep
 

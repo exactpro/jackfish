@@ -144,7 +144,7 @@ IMAGE_GET;ImageGet;;;
     IMGGET2;ImageGet;This.Result == Result.Failed && This.Kind == ErrorKind.DIALOG_NOT_FOUND;'NotExist';APPSTR1.Out
 
     #Id;#Action;#Assert;$Dialog;$Name;$AppConnection
-    IMGGET3;ImageGet;This.Result == Result.Failed && This.Kind == ErrorKind.EXCEPTION;'Empty';;APPSTR1.Out
+    IMGGET3;ImageGet;This.Result == Result.Failed && This.Kind == ErrorKind.ELEMENT_NOT_FOUND;'Empty';;APPSTR1.Out
 
     #Id;#Action;#Assert;$Dialog;$Name;$AppConnection
     IMGGET4;ImageGet;This.Result == Result.Failed && This.Kind == ErrorKind.ELEMENT_NOT_FOUND;'Main';'NotExistImage';APPSTR1.Out
