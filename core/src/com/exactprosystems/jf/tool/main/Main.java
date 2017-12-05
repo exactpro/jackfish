@@ -10,6 +10,7 @@
 package com.exactprosystems.jf.tool.main;
 
 import com.exactprosystems.jf.api.common.Str;
+import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.api.wizard.WizardManager;
 import com.exactprosystems.jf.common.CommonHelper;
 import com.exactprosystems.jf.common.MainRunner;
@@ -831,7 +832,7 @@ public class Main extends Application
 	{
 		if (this.config == null)
 		{
-			throw new EmptyConfigurationException("Open or create a configuration at first.");
+			throw new EmptyConfigurationException(R.EMPTY_CONFIGURATION_EXCEPTION.get());
 		}
 	}
 

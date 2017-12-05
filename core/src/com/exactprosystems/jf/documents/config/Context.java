@@ -13,6 +13,7 @@ import com.exactprosystems.jf.actions.ReadableValue;
 import com.exactprosystems.jf.api.common.IContext;
 import com.exactprosystems.jf.api.common.MatrixConnection;
 import com.exactprosystems.jf.api.common.Str;
+import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.api.error.ErrorKind;
 import com.exactprosystems.jf.api.error.common.WrongSubcaseNameException;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
@@ -155,7 +156,7 @@ public class Context implements IContext, AutoCloseable
                 	//check parameters of subcase.
 					if ((handlerKind == HandlerKind.OnStepError || handlerKind == HandlerKind.OnTestCaseError) && subCase.getParameters().isEmpty())
 					{
-						throw new WrongSubcaseNameException(String.format("Parameters count for handler %s (subCase %s) must be great that 0", handlerKind, name));
+						throw new WrongSubcaseNameException(String.format(R.CONTEXT_SET_HANDLER_EXCEPTION.get(), handlerKind, name));
 					}
 					this.handlers.put(handlerKind, name);
 				}

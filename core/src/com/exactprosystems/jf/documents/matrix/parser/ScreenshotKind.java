@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import com.exactprosystems.jf.api.common.Str;
+import com.exactprosystems.jf.api.common.i18n.R;
 
 public enum ScreenshotKind
 {
@@ -39,7 +40,7 @@ public enum ScreenshotKind
                 return a;
             }
         }
-        throw new Exception("Unknown name: " + name);
+        throw new Exception(String.format(R.SCREENSHOTKIND_VALUE_BY_NAME_EXCEPTION.get(), name));
     }
     
     public static List<String> names()

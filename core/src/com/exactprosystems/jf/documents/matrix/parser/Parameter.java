@@ -12,6 +12,7 @@ package com.exactprosystems.jf.documents.matrix.parser;
 import com.exactprosystems.jf.api.app.Mutable;
 import com.exactprosystems.jf.api.common.Converter;
 import com.exactprosystems.jf.api.common.Str;
+import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.documents.matrix.parser.items.MatrixItem;
 import com.exactprosystems.jf.documents.matrix.parser.items.TypeMandatory;
@@ -269,12 +270,12 @@ public class Parameter implements Mutable, Cloneable, Setter<String>, Getter<Str
 	            }
 	            else
 	            {
-	                throw new Exception("Type " + valueType.getName() + " is not the same type as " + type.getComponentType().getName());
+	                throw new Exception(String.format(R.PARAMETER_TYPE_EXCEPTION.get(), valueType.getName(), type.getComponentType().getName()));
 	            }
 	        }
 	        else if (!type.isArray() && valueType.isArray())
 	        {
-	            throw new Exception("Type " + valueType.getName() + " is an array. It needs an single object " + type.getName());
+	            throw new Exception(String.format(R.PARAMETER_TYPE_EXCEPTION.get(), valueType.getName(), type.getName()));
 	        }
 	        else 
 	        {

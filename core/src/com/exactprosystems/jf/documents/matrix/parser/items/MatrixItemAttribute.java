@@ -16,15 +16,20 @@ import java.lang.annotation.Target;
 
 import javax.lang.model.type.NullType;
 
+import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.documents.matrix.parser.Tokens;
 
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
 public @interface MatrixItemAttribute
 {
+	@Deprecated
 	String description();
+	R constantGeneralDescription() default R.DEFAULT;
 	Class<?>[] seeAlsoClass() default {};
+	@Deprecated
 	String examples() default "";
+	R constantExamples() default R.DEFAULT;
 	Tokens[] shouldContain();
 	Tokens[] mayContain();
 	Class<?>[] parents() default {};
