@@ -13,7 +13,6 @@ import com.exactprosystems.jf.actions.*;
 import com.exactprosystems.jf.api.client.MapMessage;
 import com.exactprosystems.jf.api.common.Str;
 import com.exactprosystems.jf.api.common.i18n.R;
-import com.exactprosystems.jf.api.error.ErrorKind;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.report.ReportBuilder;
 import com.exactprosystems.jf.documents.config.Context;
@@ -35,132 +34,120 @@ import java.util.Map.Entry;
 	)
 public class MessageReport extends AbstractAction 
 {
-    public final static String columnsField       = "Field";
-    public final static String columnValue        = "Value";
-    
-    public final static String messageName        = "MapMessage";
-    public final static String beforeTestCaseName = "BeforeTestCase";
-    public final static String titleName          = "Title";
-    public final static String toReportName       = "ToReport";
+	private static final String columnsField = "Field";
+	private static final String columnValue  = "Value";
+
+	public static final String messageName        = "MapMessage";
+	public static final String beforeTestCaseName = "BeforeTestCase";
+	public static final String titleName          = "Title";
+	public static final String toReportName       = "ToReport";
 
 	@ActionFieldAttribute(name = messageName, mandatory = true, constantDescription = R.MESSAGE_REPORT_MESSAGE)
-	protected MapMessage 	message 	= null;
+	protected MapMessage message = null;
 
 	@ActionFieldAttribute(name = titleName, mandatory = true, constantDescription = R.MESSAGE_REPORT_TITLE)
-	protected String 	title 	= null;
+	protected String title = null;
 
-    @ActionFieldAttribute(name=toReportName, mandatory = false, def = DefaultValuePool.Null, constantDescription = R.MESSAGE_REPORT_TO_REPORT)
-    protected ReportBuilder toReport;
+	@ActionFieldAttribute(name = toReportName, mandatory = false, def = DefaultValuePool.Null, constantDescription = R.MESSAGE_REPORT_TO_REPORT)
+	protected ReportBuilder toReport;
 
-    @ActionFieldAttribute(name = beforeTestCaseName, mandatory = false, def = DefaultValuePool.Null, constantDescription = R.MESSAGE_REPORT_BEFORE_TESTCASE)
-    protected String    beforeTestCase  = null;
+	@ActionFieldAttribute(name = beforeTestCaseName, mandatory = false, def = DefaultValuePool.Null, constantDescription = R.MESSAGE_REPORT_BEFORE_TESTCASE)
+	protected String beforeTestCase = null;
 
-    @Override
-    protected HelpKind howHelpWithParameterDerived(Context context, Parameters parameters, String fieldName) throws Exception
-    {
-        switch (fieldName)
-        {
-            case beforeTestCaseName:
-                return HelpKind.ChooseFromList;
-        }
+	@Override
+	protected HelpKind howHelpWithParameterDerived(Context context, Parameters parameters, String fieldName) throws Exception
+	{
+		if (beforeTestCaseName.equals(fieldName))
+		{
+			return HelpKind.ChooseFromList;
+		}
+		return null;
+	}
 
-        return null;
-    }
+	@Override
+	protected void listToFillParameterDerived(List<ReadableValue> list, Context context, String parameterToFill, Parameters parameters) throws Exception
+	{
+		if (beforeTestCaseName.equals(parameterToFill))
+		{
+			ActionsReportHelper.fillListForParameter(super.owner.getMatrix(), list, context.getEvaluator());
+		}
+	}
 
-    @Override
-    protected void listToFillParameterDerived(List<ReadableValue> list, Context context, String parameterToFill, Parameters parameters) throws Exception
-    {
-        switch (parameterToFill)
-        {
-            case beforeTestCaseName:
-                ActionsReportHelper.fillListForParameter(super.owner.getMatrix(),  list, context.getEvaluator());
-                break;
-            default:
-        }
-    }
+	@Override
+	public void doRealAction(Context context, ReportBuilder report, Parameters parameters, AbstractEvaluator evaluator) throws Exception
+	{
+		report = this.toReport == null ? report : this.toReport;
+		this.beforeTestCase = ActionsReportHelper.getBeforeTestCase(this.beforeTestCase, this.owner.getMatrix());
 
-    @Override
-    public void doRealAction(Context context, ReportBuilder report, Parameters parameters, AbstractEvaluator evaluator)
-            throws Exception
-    {
-        if (this.message == null)
-        {
-            super.setError(messageName, ErrorKind.EMPTY_PARAMETER);
-            return;
-        }
+		Table table = new Table(new String[]{columnsField, columnValue}, evaluator);
+		table.considerAsGroup(columnsField);
 
-        report = this.toReport == null ? report : this.toReport;
-        this.beforeTestCase = ActionsReportHelper.getBeforeTestCase(this.beforeTestCase, this.owner.getMatrix());
+		outMessage(table, this.message, "");
 
-        Table table = new Table(new String[] { columnsField, columnValue }, evaluator);
-        table.considerAsGroup(columnsField);
+		if (this.message.getSource() != null)
+		{
+			addRow(table, "Source", this.message.getSource());
+		}
 
-        outMessage(table, this.message, "");
+		table.report(report, this.title, this.beforeTestCase, false, true);
+		super.setResult(null);
+	}
 
-        if (this.message.getSource() != null)
-        {
-            addRow(table, "Source", this.message.getSource());
-        }
+	private void outMessage(Table table, MapMessage message, String path)
+	{
+		for (Entry<String, Object> entry : message.entrySet())
+		{
+			String name = entry.getKey();
+			Object value = entry.getValue();
 
-        table.report(report, this.title, this.beforeTestCase, false, true);
-        super.setResult(null);
-    }
-    
-    private void outMessage(Table table, MapMessage message, String path)
-    {
-        for (Entry<String, Object> entry : message.entrySet())
-        {
-            String name = entry.getKey();
-            Object value = entry.getValue();
-            
-            if (value.getClass().isArray())
-            {
-                int count = 0;
-                Object[] array = (Object[])value;
+			if (value.getClass().isArray())
+			{
+				int count = 0;
+				Object[] array = (Object[]) value;
 				String oldPath = path;
 				path = makePath(path, name + "( " + array.length + " )");
-				addRow(table, path+"/*", "");
+				addRow(table, path + "/*", "");
 
 				for (Object group : array)
-                {
-                    if (group instanceof MapMessage)
-                    {
-                        addRow(table, makePath(path, name + "[" + count + "]/*"), "");
-                        outMessage(table, (MapMessage)group, makePath(path, name));
-                    }
-                    count++;
-                }
+				{
+					if (group instanceof MapMessage)
+					{
+						addRow(table, makePath(path, name + "[" + count + "]/*"), "");
+						outMessage(table, (MapMessage) group, makePath(path, name));
+					}
+					count++;
+				}
 				path = oldPath;
 			}
 			else if (value instanceof MapMessage)
 			{
 				addRow(table, makePath(path, name), "");
-				outMessage(table, (MapMessage)value, makePath(path, name));
+				outMessage(table, (MapMessage) value, makePath(path, name));
 			}
 			else
 			{
 				addRow(table, makePath(path, name), Str.asString(value));
 			}
 		}
-    }
-    
-    private String makePath(String path, String addon)
-    {
-        if (Str.IsNullOrEmpty(path))
-        {
-            return addon;
-        }
-        return path + "/" + addon;
-    }
-    
-    private void addRow(Table table, String field, String value)
-    {
-        Map<String, Object> row = new LinkedHashMap<>();
-        row.put(columnsField, field);
-        row.put(columnValue,  value);
-        table.addValue(table.size(), row);
-    }
-    
-   
+	}
+
+	private String makePath(String path, String addon)
+	{
+		if (Str.IsNullOrEmpty(path))
+		{
+			return addon;
+		}
+		return path + "/" + addon;
+	}
+
+	private void addRow(Table table, String field, String value)
+	{
+		Map<String, Object> row = new LinkedHashMap<>();
+		row.put(columnsField, field);
+		row.put(columnValue, value);
+		table.addValue(table.size(), row);
+	}
+
+
 }
 

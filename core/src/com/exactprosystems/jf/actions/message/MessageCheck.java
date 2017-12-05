@@ -38,7 +38,7 @@ import java.util.Map.Entry;
 	)
 public class MessageCheck extends AbstractAction 
 {
-	public final static String actualName = "ActualMessage";
+	public static final String actualName = "ActualMessage";
 
 	@ActionFieldAttribute(name = actualName, mandatory = true, constantDescription = R.MESSAGE_CHECK_ACTUAL)
 	protected MapMessage actual = null;
@@ -46,26 +46,20 @@ public class MessageCheck extends AbstractAction
 	@Override
 	public void doRealAction(Context context, ReportBuilder report, Parameters parameters, AbstractEvaluator evaluator) throws Exception
 	{
-		if (this.actual == null)
-		{
-			super.setError("Actual object is null", ErrorKind.EMPTY_PARAMETER);
-			return;
-		}
-		
-		Map<String, String> diff = ClientHelper.difference(this.actual, Condition.convertToCondition(parameters.select(TypeMandatory.Extra).makeCopy())); 
-		
+		Map<String, String> diff = ClientHelper.difference(this.actual, Condition.convertToCondition(parameters.select(TypeMandatory.Extra).makeCopy()));
+
 		if (diff == null)
 		{
 			super.setResult(null);
 		}
 		else
 		{
-			ReportTable table = report.addTable("Mismatched fields:", null, true, true, new int[] { 20, 80 }, "Name", "Expected + Actual");
+			ReportTable table = report.addTable("Mismatched fields:", null, true, true, new int[]{20, 80}, "Name", "Expected + Actual");
 			for (Entry<String, String> entry : diff.entrySet())
 			{
 				table.addValues(entry.getKey(), entry.getValue());
 			}
-			
+
 			super.setError("The message does not match.", ErrorKind.NOT_EQUAL);
 		}
 	}
