@@ -9,18 +9,12 @@
 
 package com.exactprosystems.jf.actions.services;
 
-import com.exactprosystems.jf.actions.AbstractAction;
-import com.exactprosystems.jf.actions.ActionAttribute;
-import com.exactprosystems.jf.actions.ActionFieldAttribute;
-import com.exactprosystems.jf.actions.ActionGroups;
-import com.exactprosystems.jf.actions.ReadableValue;
+import com.exactprosystems.jf.actions.*;
 import com.exactprosystems.jf.api.common.i18n.R;
-import com.exactprosystems.jf.api.error.ErrorKind;
 import com.exactprosystems.jf.api.service.IServicesPool;
 import com.exactprosystems.jf.api.service.ServiceConnection;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.report.ReportBuilder;
-import com.exactprosystems.jf.documents.config.Configuration;
 import com.exactprosystems.jf.documents.config.Context;
 import com.exactprosystems.jf.documents.matrix.parser.Parameters;
 import com.exactprosystems.jf.functions.HelpKind;
@@ -38,10 +32,10 @@ import java.util.List;
 	)
 public class ServiceLoad extends AbstractAction 
 {
-	public final static String idName = "ServiceId";
+	public static final String idName = "ServiceId";
 
-	@ActionFieldAttribute(name = idName, mandatory = true, constantDescription = R.SERVICE_LOAD_ID )
-	protected String 		id	= null;
+	@ActionFieldAttribute(name = idName, mandatory = true, constantDescription = R.SERVICE_LOAD_ID)
+	protected String id = null;
 
 	@Override
 	protected HelpKind howHelpWithParameterDerived(Context context, Parameters parameters, String fieldName)
@@ -52,30 +46,18 @@ public class ServiceLoad extends AbstractAction
 	@Override
 	protected void listToFillParameterDerived(List<ReadableValue> list, Context context, String parameterToFill, Parameters parameters) throws Exception
 	{
-		Configuration configuration = context.getConfiguration();
-		switch (parameterToFill)
+		if (idName.equals(parameterToFill))
 		{
-			case idName:
-				ActionServiceHelper.serviceNames(list, context.getEvaluator(), configuration);
-				break;
-
-			default:
+			ActionServiceHelper.serviceNames(list, context.getEvaluator(), context.getConfiguration());
 		}
 	}
 
 	@Override
 	public void doRealAction(Context context, ReportBuilder report, Parameters parameters, AbstractEvaluator evaluator) throws Exception
 	{
-		try
-		{
-			IServicesPool servicesPool = context.getConfiguration().getServicesPool();
-			ServiceConnection connection = servicesPool.loadService(this.id);
-			
-			super.setResult(connection);
-		}
-		catch (Exception e)
-		{
-			super.setError(e.getMessage(), ErrorKind.SERVICE_ERROR);
-		}
+		IServicesPool servicesPool = context.getConfiguration().getServicesPool();
+		ServiceConnection connection = servicesPool.loadService(this.id);
+
+		super.setResult(connection);
 	}
 }

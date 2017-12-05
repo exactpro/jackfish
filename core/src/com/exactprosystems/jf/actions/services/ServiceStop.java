@@ -14,7 +14,6 @@ import com.exactprosystems.jf.actions.ActionAttribute;
 import com.exactprosystems.jf.actions.ActionFieldAttribute;
 import com.exactprosystems.jf.actions.ActionGroups;
 import com.exactprosystems.jf.api.common.i18n.R;
-import com.exactprosystems.jf.api.error.ErrorKind;
 import com.exactprosystems.jf.api.service.IServicesPool;
 import com.exactprosystems.jf.api.service.ServiceConnection;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
@@ -31,28 +30,16 @@ import com.exactprosystems.jf.documents.matrix.parser.Parameters;
 	)
 public class ServiceStop extends AbstractAction
 {
-	public final static String connectionName = "ServiceConnection";
+	public static final String connectionName = "ServiceConnection";
 
-	@ActionFieldAttribute(name = connectionName, mandatory = true, constantDescription = R.SERVICE_STOP_CONNECTION )
-	protected ServiceConnection	connection	= null;
+	@ActionFieldAttribute(name = connectionName, mandatory = true, constantDescription = R.SERVICE_STOP_CONNECTION)
+	protected ServiceConnection connection = null;
 
 	@Override
 	public void doRealAction(Context context, ReportBuilder report, Parameters parameters, AbstractEvaluator evaluator) throws Exception
 	{
-		if (this.connection == null)
-		{
-			super.setError("Connection is null", ErrorKind.EMPTY_PARAMETER);
-			return;
-		}
-		try
-		{
-			IServicesPool servicesPool = context.getConfiguration().getServicesPool();
-			servicesPool.stopService(connection);
-			super.setResult(null);
-		}
-		catch (Exception e)
-		{
-			super.setError(e.getMessage(), ErrorKind.SERVICE_ERROR);
-		}
+		IServicesPool servicesPool = context.getConfiguration().getServicesPool();
+		servicesPool.stopService(connection);
+		super.setResult(null);
 	}
 }

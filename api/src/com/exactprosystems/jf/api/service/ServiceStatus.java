@@ -10,6 +10,7 @@ package com.exactprosystems.jf.api.service;
 
 public enum ServiceStatus
 {
+	//TODO need refactor
 	NotStarted(null),
 
 	StartSuccessful(null),

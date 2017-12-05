@@ -12,6 +12,7 @@ package com.exactprosystems.jf.service;
 import com.exactprosystems.jf.api.common.IContext;
 import com.exactprosystems.jf.api.common.exception.EmptyParameterException;
 import com.exactprosystems.jf.api.common.i18n.R;
+import com.exactprosystems.jf.api.error.service.ServiceException;
 import com.exactprosystems.jf.api.service.*;
 import com.exactprosystems.jf.common.MainRunner;
 import com.exactprosystems.jf.documents.DocumentFactory;
@@ -72,14 +73,14 @@ public class ServicePool implements IServicesPool
 	}
 
 	@Override
-	public IServiceFactory loadServiceFactory(String serviceId) throws Exception
+	public IServiceFactory loadServiceFactory(String serviceId) throws ServiceException
 	{
 		ServiceEntry entry = parametersEntry(serviceId);
 		return loadServiceFactory(serviceId, entry);
 	}
 
 	@Override
-	public synchronized ServiceConnection loadService(String serviceId) throws Exception
+	public synchronized ServiceConnection loadService(String serviceId) throws ServiceException
 	{
 		try
 		{
@@ -103,20 +104,20 @@ public class ServicePool implements IServicesPool
 		{
 			logger.error(String.format("Error in loadService(%s)", serviceId));
 			logger.error(t.getMessage(), t);
-			throw new Exception(t.getMessage(), t);
+			throw new ServiceException(t.getMessage(), t);
 		}
 	}
 	
 	@Override
-	public synchronized void startService(IContext context, ServiceConnection connection, Map<String, Object> params) throws Exception
+	public synchronized void startService(IContext context, ServiceConnection connection, Map<String, Object> params) throws ServiceException
 	{
 		if (connection == null || connection.isStopped())
 		{
-			throw new Exception(String.format(R.SERVICE_POOL_SERVICE_IS_NOT_LOADED.get(), "" + connection));
+			throw new ServiceException(String.format(R.SERVICE_POOL_SERVICE_IS_NOT_LOADED.get(), "" + connection));
 		}
 		if (this.serviceStatusMap.get(connection) == ServiceStatus.StartSuccessful)
 		{
-			throw new Exception(String.format(R.SERVICE_POOL_SERVICE_ALREADY_STARTED.get(), connection.getId()));
+			throw new ServiceException(String.format(R.SERVICE_POOL_SERVICE_ALREADY_STARTED.get(), connection.getId()));
 		}
 		try
 		{
@@ -132,18 +133,18 @@ public class ServicePool implements IServicesPool
 			this.serviceStatusMap.replace(connection, startFailed);
 			logger.error(String.format("Error in startService(%s)", connection));
 			logger.error(e.getMessage(), e);
-			throw e;
+			throw new ServiceException(e.getMessage(), e);
 		}
 	}
 
 	@Override
-	public synchronized void stopService(ServiceConnection connection) throws Exception
+	public synchronized void stopService(ServiceConnection connection) throws ServiceException
 	{
 		try
 		{
 			if (connection == null || connection.isStopped())
 			{
-				throw new Exception(String.format(R.SERVICE_POOL_SERVICE_IS_NOT_LOADED.get(), "" + connection));
+				throw new ServiceException(String.format(R.SERVICE_POOL_SERVICE_IS_NOT_LOADED.get(), "" + connection));
 			}
 			
 			connection.close();
@@ -154,7 +155,7 @@ public class ServicePool implements IServicesPool
 		{
 			logger.error(String.format("Error in stopService(%s)", connection));
 			logger.error(e.getMessage(), e);
-			throw e;
+			throw new ServiceException(e.getMessage(), e);
 		}
 	}
 
@@ -188,44 +189,55 @@ public class ServicePool implements IServicesPool
 
 	//----------------------------------------------------------------------------------------------
 	
-	private ServiceEntry parametersEntry(String serviceId) throws Exception
+	private ServiceEntry parametersEntry(String serviceId) throws ServiceException
 	{
 		ServiceEntry entry = this.factory.getConfiguration().getServiceEntry(serviceId);
 		if (entry == null)
 		{
-			throw new Exception(serviceId + R.COMMON_IS_NOT_FOUND.get());
+			throw new ServiceException(serviceId + R.COMMON_IS_NOT_FOUND.get());
 		}
 		
 		return entry;
 	}
 	
 
-	private IServiceFactory loadServiceFactory(String serviceId, ServiceEntry entry) throws Exception
+	private IServiceFactory loadServiceFactory(String serviceId, ServiceEntry entry) throws ServiceException
 	{
 		IServiceFactory serviceFactory = this.serviceFactories.get(serviceId);
 		if (serviceFactory == null)
 		{
-			String jarName	= MainRunner.makeDirWithSubstitutions(entry.get(Configuration.serviceJar));
-			
-			List<URL> urls = new ArrayList<URL>();
-			urls.add(new URL("file:" + jarName));
-			
-			ClassLoader parent = getClass().getClassLoader();
-			URLClassLoader classLoader = new URLClassLoader(urls.toArray(new URL[] {}), parent);
-			
-			ServiceLoader<IServiceFactory> loader = ServiceLoader.load(IServiceFactory.class, classLoader);
-			Iterator<IServiceFactory> iterator = loader.iterator();
-			if(iterator.hasNext())
+			try
 			{
-				serviceFactory = iterator.next();
+				String jarName = MainRunner.makeDirWithSubstitutions(entry.get(Configuration.serviceJar));
+
+				List<URL> urls = new ArrayList<>();
+				urls.add(new URL("file:" + jarName));
+
+				ClassLoader parent = getClass().getClassLoader();
+				URLClassLoader classLoader = new URLClassLoader(urls.toArray(new URL[]{}), parent);
+
+				ServiceLoader<IServiceFactory> loader = ServiceLoader.load(IServiceFactory.class, classLoader);
+				Iterator<IServiceFactory> iterator = loader.iterator();
+				if (iterator.hasNext())
+				{
+					serviceFactory = iterator.next();
+					this.serviceFactories.put(serviceId, serviceFactory);
+				}
+				if (serviceFactory == null)
+				{
+					throw new ServiceException(String.format(R.SERVICE_POOL_NOT_FOUND.get(), serviceId));
+				}
+
 				this.serviceFactories.put(serviceId, serviceFactory);
 			}
-			if (serviceFactory == null)
+			catch (ServiceException e)
 			{
-				throw new Exception(String.format(R.SERVICE_POOL_NOT_FOUND.get(), serviceId));
+				throw e;
 			}
-			
-			this.serviceFactories.put(serviceId, serviceFactory);
+			catch (Exception e)
+			{
+				throw new ServiceException(e.getMessage(), e);
+			}
 		}
 		
 		return serviceFactory;

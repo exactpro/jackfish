@@ -9,17 +9,20 @@
 
 package com.exactprosystems.jf.actions.services;
 
-import java.util.List;
-
-import org.apache.log4j.Logger;
-
 import com.exactprosystems.jf.actions.ReadableValue;
 import com.exactprosystems.jf.api.service.ServiceConnection;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.documents.config.Configuration;
 
+import java.util.List;
+
 public class ActionServiceHelper
 {
+	private ActionServiceHelper()
+	{
+
+	}
+
 	public static ServiceConnection checkConnection(Object parameter) throws Exception
 	{
 		if (parameter == null)
@@ -32,19 +35,14 @@ public class ActionServiceHelper
 			return (ServiceConnection)parameter;
 		}
 		
-		throw new Exception("Connection is wrong");
+		throw new Exception("Connection is wrong. Service not loaded");
 	}
 
-	public static void serviceNames(List<ReadableValue> list, AbstractEvaluator evaluator, Configuration configuration) throws Exception
+	public static void serviceNames(List<ReadableValue> list, AbstractEvaluator evaluator, Configuration configuration)
 	{
-		for (String str : configuration.getServices())
-		{
-			String quoted = evaluator.createString(str);
-			list.add(new ReadableValue(quoted));
-		}
+		configuration.getServices().stream()
+				.map(evaluator::createString)
+				.map(ReadableValue::new)
+				.forEach(list::add);
 	}
-
-
-	@SuppressWarnings("unused")
-	private static final Logger logger = Logger.getLogger(ActionServiceHelper.class);
 }

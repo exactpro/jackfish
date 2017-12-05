@@ -16,6 +16,11 @@ public class ServiceException extends JFException
 {
 	private static final long	serialVersionUID	= 2653699261504393579L;
 
+	public ServiceException(String message, Throwable cause)
+	{
+		super(message, cause);
+	}
+
 	public ServiceException(String message)
 	{
 		super(message, null);

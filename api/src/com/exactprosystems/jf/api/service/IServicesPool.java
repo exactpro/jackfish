@@ -11,18 +11,19 @@ package com.exactprosystems.jf.api.service;
 
 import com.exactprosystems.jf.api.common.IContext;
 import com.exactprosystems.jf.api.common.IPool;
+import com.exactprosystems.jf.api.error.service.ServiceException;
 
 import java.util.List;
 import java.util.Map;
 
-public interface IServicesPool  extends IPool
+public interface IServicesPool extends IPool
 {
 	List<String> servicesNames();
 	List<ServiceConnection> getConnections();
-	IServiceFactory loadServiceFactory(String id) throws Exception;
-	ServiceConnection loadService(String id) throws Exception;
-	void startService(IContext context, ServiceConnection connection, Map<String, Object> params) throws Exception;
-	void stopService(ServiceConnection connection) throws Exception;
+	IServiceFactory loadServiceFactory(String id) throws ServiceException;
+	ServiceConnection loadService(String id) throws ServiceException;
+	void startService(IContext context, ServiceConnection connection, Map<String, Object> params) throws ServiceException;
+	void stopService(ServiceConnection connection) throws ServiceException;
 	void stopAllServices();
 
 	ServiceStatus getStatus(String id);
