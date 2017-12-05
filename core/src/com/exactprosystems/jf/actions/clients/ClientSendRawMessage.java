@@ -32,33 +32,27 @@ import java.util.List;
 	)
 public class ClientSendRawMessage extends AbstractAction
 {
-	public final static String connectionName = "ClientConnection";
-	public final static String dataName = "Data";
+	public static final String connectionName = "ClientConnection";
+	public static final String dataName       = "Data";
 
-	@ActionFieldAttribute(name = connectionName, mandatory = true, constantDescription = R.CLIENT_SEND_RAW_MESSAGE_CONNECTION )
-	protected ClientConnection	connection	= null;
+	@ActionFieldAttribute(name = connectionName, mandatory = true, constantDescription = R.CLIENT_SEND_RAW_MESSAGE_CONNECTION)
+	protected ClientConnection connection = null;
 
-	@ActionFieldAttribute(name = dataName, mandatory = true, constantDescription = R.CLIENT_SEND_RAW_MESSAGE_DATA )
-	protected byte[]	data	= null;
+	@ActionFieldAttribute(name = dataName, mandatory = true, constantDescription = R.CLIENT_SEND_RAW_MESSAGE_DATA)
+	protected byte[] data = null;
 
 	@Override
 	protected HelpKind howHelpWithParameterDerived(Context context, Parameters parameters, String fieldName) throws Exception
 	{
-		boolean res = Helper.canFillParameter(this.owner.getMatrix(), context, parameters, null, connectionName, fieldName);
-		return res ? HelpKind.ChooseFromList : null;
+		return Helper.canFillParameter(this.owner.getMatrix(), context, parameters, null, connectionName, fieldName) ? HelpKind.ChooseFromList : null;
 	}
 
 	@Override
 	protected void listToFillParameterDerived(List<ReadableValue> list, Context context, String parameterToFill, Parameters parameters) throws Exception
 	{
-		switch (parameterToFill)
+		if (dataName.equals(parameterToFill))
 		{
-			case dataName:
-				Helper.messageTypes(list, this.owner.getMatrix(), context, parameters, null, connectionName);
-				break;
-
-			default:
-				break;
+			Helper.messageTypes(list, this.owner.getMatrix(), context, parameters, null, connectionName);
 		}
 	}
 

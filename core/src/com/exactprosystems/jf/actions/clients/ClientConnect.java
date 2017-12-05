@@ -9,16 +9,8 @@
 
 package com.exactprosystems.jf.actions.clients;
 
-import java.net.Socket;
-import java.util.List;
-
-import com.exactprosystems.jf.actions.AbstractAction;
-import com.exactprosystems.jf.actions.ActionAttribute;
-import com.exactprosystems.jf.actions.ActionFieldAttribute;
-import com.exactprosystems.jf.actions.ActionGroups;
-import com.exactprosystems.jf.actions.ReadableValue;
+import com.exactprosystems.jf.actions.*;
 import com.exactprosystems.jf.api.client.ClientConnection;
-import com.exactprosystems.jf.api.client.IClient;
 import com.exactprosystems.jf.api.common.ParametersKind;
 import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.api.error.ErrorKind;
@@ -28,6 +20,9 @@ import com.exactprosystems.jf.documents.config.Context;
 import com.exactprosystems.jf.documents.matrix.parser.Parameters;
 import com.exactprosystems.jf.documents.matrix.parser.items.TypeMandatory;
 import com.exactprosystems.jf.functions.HelpKind;
+
+import java.net.Socket;
+import java.util.List;
 
 @ActionAttribute(
 		group 				  	      = ActionGroups.Clients,
@@ -40,11 +35,11 @@ import com.exactprosystems.jf.functions.HelpKind;
 )
 public class ClientConnect extends AbstractAction
 {
-	public final static String	connectionName		= "ClientConnection";
-	public final static String	socketName			= "Socket";
+	public static final String connectionName = "ClientConnection";
+	public static final String socketName     = "Socket";
 
 	@ActionFieldAttribute(name = connectionName, mandatory = true, constantDescription = R.CLIENT_CONNECT_CONNECTION)
-	protected ClientConnection	connection = null;
+	protected ClientConnection connection = null;
 
 	@ActionFieldAttribute(name = socketName, mandatory = true, constantDescription = R.CLIENT_CONNECT_SOCKET)
 	protected Socket socket = null;
@@ -58,8 +53,7 @@ public class ClientConnect extends AbstractAction
 	@Override
 	protected HelpKind howHelpWithParameterDerived(Context context, Parameters parameters, String fieldName) throws Exception
 	{
-		boolean res = Helper.canFillParameter(this.owner.getMatrix(), context, parameters, null, connectionName, fieldName);
-		return res ? HelpKind.ChooseFromList : null;
+		return Helper.canFillParameter(this.owner.getMatrix(), context, parameters, null, connectionName, fieldName) ? HelpKind.ChooseFromList : null;
 	}
 	
 	@Override
@@ -71,8 +65,7 @@ public class ClientConnect extends AbstractAction
 	@Override
 	public void doRealAction(Context context, ReportBuilder report, Parameters parameters, AbstractEvaluator evaluator) throws Exception
 	{
-		IClient client = this.connection.getClient();
-		boolean res = client.connect(context, this.socket, parameters.select(TypeMandatory.Extra).makeCopy());
+		boolean res = this.connection.getClient().connect(context, this.socket, parameters.select(TypeMandatory.Extra).makeCopy());
 		if (res)
 		{
 			super.setResult(null);

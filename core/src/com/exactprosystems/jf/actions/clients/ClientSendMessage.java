@@ -9,12 +9,7 @@
 
 package com.exactprosystems.jf.actions.clients;
 
-import com.exactprosystems.jf.actions.AbstractAction;
-import com.exactprosystems.jf.actions.ActionAttribute;
-import com.exactprosystems.jf.actions.ActionFieldAttribute;
-import com.exactprosystems.jf.actions.ActionGroups;
-import com.exactprosystems.jf.actions.DefaultValuePool;
-import com.exactprosystems.jf.actions.ReadableValue;
+import com.exactprosystems.jf.actions.*;
 import com.exactprosystems.jf.api.client.*;
 import com.exactprosystems.jf.api.common.ParametersKind;
 import com.exactprosystems.jf.api.common.i18n.R;
@@ -40,18 +35,18 @@ import java.util.List;
 	)
 public class ClientSendMessage extends AbstractAction
 {
-	public final static String connectionName = "ClientConnection";
-	public final static String messageTypeName = "MessageType";
-	public final static String checkName = "Check";
+	public static final String connectionName  = "ClientConnection";
+	public static final String messageTypeName = "MessageType";
+	public static final String checkName       = "Check";
 
-	@ActionFieldAttribute(name = connectionName, mandatory = true, constantDescription = R.CLIENT_SEND_MESSAGE_CONNECTION )
-	protected ClientConnection	connection	= null;
+	@ActionFieldAttribute(name = connectionName, mandatory = true, constantDescription = R.CLIENT_SEND_MESSAGE_CONNECTION)
+	protected ClientConnection connection = null;
 
-	@ActionFieldAttribute(name = messageTypeName, mandatory = true, constantDescription = R.CLIENT_SEND_MESSAGE_MESSAGE_TYPE )
-	protected String	messageType	= null;
+	@ActionFieldAttribute(name = messageTypeName, mandatory = true, constantDescription = R.CLIENT_SEND_MESSAGE_MESSAGE_TYPE)
+	protected String messageType = null;
 
-	@ActionFieldAttribute(name = checkName, mandatory = false, def = DefaultValuePool.True, constantDescription= R.CLIENT_SEND_MESSAGE_CHECK)
-	protected Boolean	check;
+	@ActionFieldAttribute(name = checkName, mandatory = false, def = DefaultValuePool.True, constantDescription = R.CLIENT_SEND_MESSAGE_CHECK)
+	protected Boolean check;
 
 	@Override
 	protected void helpToAddParametersDerived(List<ReadableValue> list, Context context, Parameters parameters) throws Exception
@@ -70,8 +65,7 @@ public class ClientSendMessage extends AbstractAction
 		{
 			return HelpKind.ChooseFromList;
 		}
-		boolean res = Helper.canFillParameter(this.owner.getMatrix(), context, parameters, null, connectionName, fieldName);
-		return res ? HelpKind.ChooseFromList : null;
+		return Helper.canFillParameter(this.owner.getMatrix(), context, parameters, null, connectionName, fieldName) ? HelpKind.ChooseFromList : null;
 	}
 	
 	@Override
@@ -120,6 +114,4 @@ public class ClientSendMessage extends AbstractAction
 			super.setResult(null);
 		}
 	}
-
-
 }

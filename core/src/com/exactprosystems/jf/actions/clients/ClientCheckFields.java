@@ -33,8 +33,8 @@ import com.exactprosystems.jf.documents.matrix.parser.Parameters;
 	)
 public class ClientCheckFields extends AbstractAction
 {
-	public final static String connectionName 	= "ClientConnection";
-	public final static String messageName 		= "MapMessage";
+	public static final String connectionName = "ClientConnection";
+	public static final String messageName    = "MapMessage";
 
 	@ActionFieldAttribute(name = connectionName, mandatory = true, constantDescription = R.CLIENT_CHECK_FIELDS_CONNECTION )
 	protected ClientConnection	connection	= null;

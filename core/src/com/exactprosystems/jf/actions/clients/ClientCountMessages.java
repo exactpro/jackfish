@@ -9,12 +9,7 @@
 
 package com.exactprosystems.jf.actions.clients;
 
-import com.exactprosystems.jf.actions.AbstractAction;
-import com.exactprosystems.jf.actions.ActionAttribute;
-import com.exactprosystems.jf.actions.ActionFieldAttribute;
-import com.exactprosystems.jf.actions.ActionGroups;
-import com.exactprosystems.jf.actions.DefaultValuePool;
-import com.exactprosystems.jf.actions.ReadableValue;
+import com.exactprosystems.jf.actions.*;
 import com.exactprosystems.jf.api.client.ClientConnection;
 import com.exactprosystems.jf.api.client.ClientHelper;
 import com.exactprosystems.jf.api.client.IClient;
@@ -43,21 +38,21 @@ import java.util.Map;
 		constantAdditionalDescription = R.CLIENT_COUNT_MESSAGES_ADDITIONAL_DESC,
 		constantExamples 			  = R.CLIENT_COUNT_MESSAGES_EXAMPLE
 	)
-public class ClientCountMessages extends AbstractAction 
+public class ClientCountMessages extends AbstractAction
 {
-	public final static String connectionName = "ClientConnection";
-	public final static String messageTypeName = "MessageType";
-	public final static String conditionsName = "Conditions";
+	public static final String connectionName  = "ClientConnection";
+	public static final String messageTypeName = "MessageType";
+	public static final String conditionsName  = "Conditions";
 
 	@ActionFieldAttribute(name = connectionName, mandatory = true, constantDescription = R.CLIENT_COUNT_MESSAGES_CONNECTION)
-	protected ClientConnection	connection	= null;
+	protected ClientConnection connection = null;
 
-	@ActionFieldAttribute(name = messageTypeName, mandatory = true, constantDescription = R.CLIENT_COUNT_MESSAGES_MESSAGE_TYPE )
-	protected String	messageType	= null;
+	@ActionFieldAttribute(name = messageTypeName, mandatory = true, constantDescription = R.CLIENT_COUNT_MESSAGES_MESSAGE_TYPE)
+	protected String messageType = null;
 
 	@ActionFieldAttribute(name = conditionsName, mandatory = false, def = DefaultValuePool.Null, constantDescription = R.CLIENT_COUNT_MESSAGES_CONDITIONS)
 	protected Condition[] conditions;
-	
+
 	@Override
 	protected void helpToAddParametersDerived(List<ReadableValue> list, Context context, Parameters parameters) throws Exception
 	{
@@ -71,42 +66,41 @@ public class ClientCountMessages extends AbstractAction
 		{
 			return HelpKind.ChooseFromList;
 		}
-		boolean res = Helper.canFillParameter(this.owner.getMatrix(), context, parameters, null, connectionName, fieldName);
-		return res ? HelpKind.ChooseFromList : null;
+		return Helper.canFillParameter(this.owner.getMatrix(), context, parameters, null, connectionName, fieldName) ? HelpKind.ChooseFromList : null;
 	}
-	
+
 	@Override
 	protected void listToFillParameterDerived(List<ReadableValue> list, Context context, String parameterToFill, Parameters parameters) throws Exception
 	{
 		switch (parameterToFill)
 		{
 			case messageTypeName:
-                list.add(new ReadableValue(context.getEvaluator().createString("*"), "Any messages"));
+				list.add(new ReadableValue(context.getEvaluator().createString("*"), "Any messages"));
 				Helper.messageTypes(list, this.owner.getMatrix(), context, parameters, null, connectionName);
 				break;
-				
+
 			default:
 				Helper.messageValues(list, context, this.owner.getMatrix(), parameters, null, connectionName, messageTypeName, parameterToFill);
 				break;
 		}
 	}
-	
+
 	@Override
 	public void doRealAction(Context context, ReportBuilder report, Parameters parameters, AbstractEvaluator evaluator)  throws Exception
 	{
 		IClient client = this.connection.getClient();
 		ClientHelper.errorIfDisable(client.getClass(), Possibility.Receiving);
-		Integer ret = null;
+		int countMessages;
 		Map<String, Object> additional = parameters.select(TypeMandatory.Extra).makeCopy();
 
 		if (!Str.areEqual(this.messageType, "*") || this.conditions != null || additional != null)
 		{
-			ret = client.countMessages(additional, this.messageType, this.conditions);
+			countMessages = client.countMessages(additional, this.messageType, this.conditions);
 		}
 		else
 		{
-			ret = client.totalMessages();
+			countMessages = client.totalMessages();
 		}
-		super.setResult(ret);
+		super.setResult(countMessages);
 	}
 }

@@ -32,10 +32,10 @@ import com.exactprosystems.jf.documents.matrix.parser.Parameters;
 	)
 public class ClientClearMessages extends AbstractAction 
 {
-	public final static String connectionName = "ClientConnection";
+	public static final String connectionName = "ClientConnection";
 
-	@ActionFieldAttribute(name = connectionName, mandatory = true, constantDescription = R.CLIENT_CLEAR_MESSAGES_CONNECTION )
-	protected ClientConnection	connection	= null;
+	@ActionFieldAttribute(name = connectionName, mandatory = true, constantDescription = R.CLIENT_CLEAR_MESSAGES_CONNECTION)
+	protected ClientConnection connection = null;
 
 	@Override
 	public void doRealAction(Context context, ReportBuilder report, Parameters parameters, AbstractEvaluator evaluator) throws Exception

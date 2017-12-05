@@ -28,6 +28,7 @@ import com.exactprosystems.jf.functions.HelpKind;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @ActionAttribute(
 		group					      = ActionGroups.Clients,
@@ -39,18 +40,18 @@ import java.util.Map;
 	)
 public class ClientCheckMessage extends AbstractAction 
 {
-	public final static String connectionName 	= "ClientConnection";
-	public final static String actualName = "ActualMessage";
-	public final static String expectedMessageTypeName 	= "ExpectedMessageType";
+	public static final String connectionName          = "ClientConnection";
+	public static final String actualName              = "ActualMessage";
+	public static final String expectedMessageTypeName = "ExpectedMessageType";
 
-	@ActionFieldAttribute(name = connectionName, mandatory = true, constantDescription = R.CLIENT_CHECK_MESSAGE_CONNECTION )
-	protected ClientConnection	connection	= null;
+	@ActionFieldAttribute(name = connectionName, mandatory = true, constantDescription = R.CLIENT_CHECK_MESSAGE_CONNECTION)
+	protected ClientConnection connection = null;
 
 	@ActionFieldAttribute(name = actualName, mandatory = true, constantDescription = R.CLIENT_CHECK_MESSAGE_ACTUAL)
 	protected MapMessage actual = null;
 
-	@ActionFieldAttribute(name = expectedMessageTypeName, mandatory = true, constantDescription = R.CLIENT_CHECK_MESSAGE_MESSAGE_TYPE )
-	protected String	messageType	= null;
+	@ActionFieldAttribute(name = expectedMessageTypeName, mandatory = true, constantDescription = R.CLIENT_CHECK_MESSAGE_MESSAGE_TYPE)
+	protected String messageType = null;
 
 	@Override
 	protected void helpToAddParametersDerived(List<ReadableValue> list, Context context, Parameters parameters) throws Exception
@@ -65,8 +66,7 @@ public class ClientCheckMessage extends AbstractAction
 		{
 			return HelpKind.ChooseFromList;
 		}
-		boolean res = Helper.canFillParameter(this.owner.getMatrix(), context, parameters, null, connectionName, fieldName);
-		return res ? HelpKind.ChooseFromList : null;
+		return Helper.canFillParameter(this.owner.getMatrix(), context, parameters, null, connectionName, fieldName) ? HelpKind.ChooseFromList : null;
 	}
 	
 	@Override
@@ -102,11 +102,7 @@ public class ClientCheckMessage extends AbstractAction
 			{
 				table.addValues(MapMessage.messageTypeName, "" + this.messageType + " is not " + this.actual.getMessageType());
 			}
-
-			if (diff != null)
-			{
-				diff.forEach((key, value) -> table.addValues(key, value));
-			}
+			Optional.ofNullable(diff).ifPresent(d -> d.forEach(table::addValues));
 
 			super.setError("The message does not match.", ErrorKind.NOT_EQUAL);
 		}

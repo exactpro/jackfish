@@ -9,19 +9,8 @@
 
 package com.exactprosystems.jf.actions.clients;
 
-import java.util.List;
-
-import com.exactprosystems.jf.actions.AbstractAction;
-import com.exactprosystems.jf.actions.ActionAttribute;
-import com.exactprosystems.jf.actions.ActionFieldAttribute;
-import com.exactprosystems.jf.actions.ActionGroups;
-import com.exactprosystems.jf.actions.DefaultValuePool;
-import com.exactprosystems.jf.actions.ReadableValue;
-import com.exactprosystems.jf.api.client.ClientConnection;
-import com.exactprosystems.jf.api.client.ClientHelper;
-import com.exactprosystems.jf.api.client.IClient;
-import com.exactprosystems.jf.api.client.MapMessage;
-import com.exactprosystems.jf.api.client.Possibility;
+import com.exactprosystems.jf.actions.*;
+import com.exactprosystems.jf.api.client.*;
 import com.exactprosystems.jf.api.common.ParametersKind;
 import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.api.conditions.Condition;
@@ -32,6 +21,8 @@ import com.exactprosystems.jf.documents.config.Context;
 import com.exactprosystems.jf.documents.matrix.parser.Parameters;
 import com.exactprosystems.jf.documents.matrix.parser.items.TypeMandatory;
 import com.exactprosystems.jf.functions.HelpKind;
+
+import java.util.List;
 
 @ActionAttribute(
 		group						  = ActionGroups.Clients,
@@ -45,24 +36,24 @@ import com.exactprosystems.jf.functions.HelpKind;
 	)
 public class ClientGetMessage extends AbstractAction 
 {
-	public final static String connectionName	= "ClientConnection";
-	public final static String conditionsName 	= "Conditions";
+	public final static String connectionName  = "ClientConnection";
+	public final static String conditionsName  = "Conditions";
 	public final static String messageTypeName = "MessageType";
-	public final static String timeoutName 		= "MessageTimeout";
-	public final static String removeName 		= "Remove";
+	public final static String timeoutName     = "MessageTimeout";
+	public final static String removeName      = "Remove";
 
-	@ActionFieldAttribute(name = connectionName, mandatory = true, constantDescription = R.CLIENT_GET_MESSAGE_CONNECTION )
-	protected ClientConnection	connection	= null;
+	@ActionFieldAttribute(name = connectionName, mandatory = true, constantDescription = R.CLIENT_GET_MESSAGE_CONNECTION)
+	protected ClientConnection connection = null;
 
-	@ActionFieldAttribute(name = messageTypeName, mandatory = true, constantDescription = R.CLIENT_GET_MESSAGE_MESSAGE_TYPE )
-	protected String	messageType	= null;
+	@ActionFieldAttribute(name = messageTypeName, mandatory = true, constantDescription = R.CLIENT_GET_MESSAGE_MESSAGE_TYPE)
+	protected String messageType = null;
 
-	@ActionFieldAttribute(name = conditionsName, mandatory = false, def = DefaultValuePool.Null, constantDescription=  R.CLIENT_GET_MESSAGE_CONDITIONS)
+	@ActionFieldAttribute(name = conditionsName, mandatory = false, def = DefaultValuePool.Null, constantDescription = R.CLIENT_GET_MESSAGE_CONDITIONS)
 	protected Condition[] conditions;
 
 	@ActionFieldAttribute(name = timeoutName, mandatory = false, def = DefaultValuePool.Int20000, constantDescription = R.CLIENT_GET_MESSAGE_TIMEOUT)
 	protected Integer timeout;
-	
+
 	@ActionFieldAttribute(name = removeName, mandatory = false, def = DefaultValuePool.True, constantDescription = R.CLIENT_GET_MESSAGE_REMOVE)
 	protected Boolean remove;
 
@@ -79,8 +70,7 @@ public class ClientGetMessage extends AbstractAction
 		{
 			return HelpKind.ChooseFromList;
 		}
-		boolean res = Helper.canFillParameter(this.owner.getMatrix(), context, parameters, null, connectionName, fieldName);
-		return res ? HelpKind.ChooseFromList : null;
+		return Helper.canFillParameter(this.owner.getMatrix(), context, parameters, null, connectionName, fieldName) ? HelpKind.ChooseFromList : null;
 	}
 	
 	@Override

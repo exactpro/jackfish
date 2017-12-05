@@ -33,10 +33,10 @@ import java.util.List;
 	)
 public class ClientSetProperties extends AbstractAction
 {
-	public final static String	connectionName	= "ClientConnection";
+	public static final String connectionName = "ClientConnection";
 
 	@ActionFieldAttribute(name = connectionName, mandatory = true, constantDescription = R.CLIENT_SET_PROPERTIES_CONNECTION)
-	protected ClientConnection	connection		= null;
+	protected ClientConnection connection = null;
 
 	@Override
 	protected void helpToAddParametersDerived(List<ReadableValue> list, Context context, Parameters parameters) throws Exception
@@ -47,8 +47,7 @@ public class ClientSetProperties extends AbstractAction
 	@Override
 	protected HelpKind howHelpWithParameterDerived(Context context, Parameters parameters, String fieldName) throws Exception
 	{
-		boolean res = Helper.canFillParameter(this.owner.getMatrix(), context, parameters, null, connectionName, fieldName);
-		return res ? HelpKind.ChooseFromList : null;
+		return Helper.canFillParameter(this.owner.getMatrix(), context, parameters, null, connectionName, fieldName) ? HelpKind.ChooseFromList : null;
 	}
 
 	@Override

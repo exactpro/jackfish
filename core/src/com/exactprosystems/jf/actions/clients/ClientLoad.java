@@ -9,13 +9,8 @@
 
 package com.exactprosystems.jf.actions.clients;
 
-import com.exactprosystems.jf.actions.AbstractAction;
-import com.exactprosystems.jf.actions.ActionAttribute;
-import com.exactprosystems.jf.actions.ActionFieldAttribute;
-import com.exactprosystems.jf.actions.ActionGroups;
-import com.exactprosystems.jf.actions.ReadableValue;
+import com.exactprosystems.jf.actions.*;
 import com.exactprosystems.jf.api.client.ClientConnection;
-import com.exactprosystems.jf.api.client.IClientsPool;
 import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.report.ReportBuilder;
@@ -36,10 +31,10 @@ import java.util.List;
 	)
 public class ClientLoad extends AbstractAction 
 {
-	public final static String idName = "ClientId";
+	public static final String idName = "ClientId";
 
-	@ActionFieldAttribute(name = idName, mandatory = true, constantDescription = R.CLIENT_LOAD_ID )
-	protected String 		id	= null;
+	@ActionFieldAttribute(name = idName, mandatory = true, constantDescription = R.CLIENT_LOAD_ID)
+	protected String id = null;
 
 	@Override
 	protected HelpKind howHelpWithParameterDerived(Context context, Parameters parameters, String fieldName) throws Exception
@@ -50,22 +45,16 @@ public class ClientLoad extends AbstractAction
 	@Override
 	protected void listToFillParameterDerived(List<ReadableValue> list, Context context, String parameterToFill, Parameters parameters) throws Exception
 	{
-		switch (parameterToFill)
+		if (idName.equals(parameterToFill))
 		{
-			case idName:
-				Helper.clientsNames(list, context);
-				break;
-
-			default:
+			Helper.clientsNames(list, context);
 		}
 	}
 
 	@Override
 	public void doRealAction(Context context, ReportBuilder report, Parameters parameters, AbstractEvaluator evaluator) throws Exception
 	{
-		IClientsPool client = context.getConfiguration().getClientPool();
-		ClientConnection connection = client.loadClient(this.id);
-		
+		ClientConnection connection = context.getConfiguration().getClientPool().loadClient(this.id);
 		super.setResult(connection);
 	}
 }
