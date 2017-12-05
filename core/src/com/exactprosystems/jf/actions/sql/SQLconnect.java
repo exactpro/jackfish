@@ -9,11 +9,7 @@
 
 package com.exactprosystems.jf.actions.sql;
 
-import com.exactprosystems.jf.actions.AbstractAction;
-import com.exactprosystems.jf.actions.ActionAttribute;
-import com.exactprosystems.jf.actions.ActionFieldAttribute;
-import com.exactprosystems.jf.actions.ActionGroups;
-import com.exactprosystems.jf.actions.ReadableValue;
+import com.exactprosystems.jf.actions.*;
 import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.api.error.ErrorKind;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
@@ -40,28 +36,26 @@ import java.util.List;
 	)
 public class SQLconnect  extends AbstractAction
 {
-	public final static String sqlName 		= "Sql";
-	public final static String serverName 	= "Server";
-	public final static String baseName 	= "Base";
-	public final static String userName 	= "User";
-	public final static String passwordName = "Password";
-
-
+	public static final String sqlName      = "Sql";
+	public static final String serverName   = "Server";
+	public static final String baseName     = "Base";
+	public static final String userName     = "User";
+	public static final String passwordName = "Password";
 
 	@ActionFieldAttribute(name = sqlName, mandatory = true, constantDescription = R.SQL_CONNECT_SQL)
-	protected String sql 		= "";
+	protected String sql = "";
 
 	@ActionFieldAttribute(name = serverName, mandatory = true, constantDescription = R.SQL_CONNECT_SERVER)
-	protected String server 	= "";
+	protected String server = "";
 
 	@ActionFieldAttribute(name = baseName, mandatory = true, constantDescription = R.SQL_CONNECT_BASE)
-	protected String base 		= "";
+	protected String base = "";
 
 	@ActionFieldAttribute(name = userName, mandatory = true, constantDescription = R.SQL_CONNECT_USER)
-	protected String user 		= "";
+	protected String user = "";
 
 	@ActionFieldAttribute(name = passwordName, mandatory = true, constantDescription = R.SQL_CONNECT_PASSWORD)
-	protected String password 	= "";
+	protected String password = "";
 
 	@Override
 	protected HelpKind howHelpWithParameterDerived(Context context, Parameters parameters, String fieldName)
@@ -72,40 +66,29 @@ public class SQLconnect  extends AbstractAction
 	@Override
 	protected void listToFillParameterDerived(List<ReadableValue> list, Context context, String parameterToFill, Parameters parameters) throws Exception
 	{
-		Configuration configuration = context.getConfiguration();
 		AbstractEvaluator evaluator = context.getEvaluator();
-		switch (parameterToFill)
+		if (sqlName.equals(parameterToFill))
 		{
-			case sqlName :
-				for (SqlEntry sqlEntry : configuration.getSqlEntries())
-				{
-					String quoted = evaluator.createString(sqlEntry.toString());
-					list.add(new ReadableValue(quoted));
-				}
-				break;
+			context.getConfiguration().getSqlEntries().stream()
+					.map(SqlEntry::toString)
+					.map(evaluator::createString)
+					.map(ReadableValue::new)
+					.forEach(list::add);
 		}
 	}
 
 	@Override
 	protected void doRealAction(Context context, ReportBuilder report, Parameters parameters, AbstractEvaluator evaluator) throws Exception
 	{
-		SqlConnection result;
-		try
-		{
-			result = context.getConfiguration().getDataBasesPool().connect(this.sql, this.server, this.base, this.user, this.password);
+		SqlConnection result = context.getConfiguration().getDataBasesPool().connect(this.sql, this.server, this.base, this.user, this.password);
 
-			if (result != null && !result.isClosed())
-			{
-				super.setResult(result);
-			}
-			else
-			{
-				super.setError("Can not connect to the data base", ErrorKind.SQL_ERROR);
-			}
-		}
-		catch (SQLException e)
+		if (result != null && !result.isClosed())
 		{
-			super.setError(e.getMessage(), ErrorKind.SQL_ERROR);
+			super.setResult(result);
+		}
+		else
+		{
+			super.setError("Can not connect to the data base", ErrorKind.SQL_ERROR);
 		}
 	}
 }

@@ -9,8 +9,7 @@
 
 package com.exactprosystems.jf.api.error;
 
-import com.exactprosystems.jf.api.error.ErrorKind;
-import com.exactprosystems.jf.api.error.JFException;
+import java.sql.SQLException;
 
 public class JFSQLException extends JFException
 {
@@ -21,7 +20,17 @@ public class JFSQLException extends JFException
         super(message, null);
     }
 
-    @Override
+	public JFSQLException(String message, Throwable cause)
+	{
+		super(message, cause);
+	}
+
+	public JFSQLException(SQLException e)
+	{
+		super(e.getMessage(), e);
+	}
+
+	@Override
     public ErrorKind getErrorKind()
     {
         return ErrorKind.SQL_ERROR;

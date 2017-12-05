@@ -9,8 +9,6 @@
 
 package com.exactprosystems.jf.actions.sql;
 
-import java.sql.SQLException;
-
 import com.exactprosystems.jf.actions.AbstractAction;
 import com.exactprosystems.jf.actions.ActionAttribute;
 import com.exactprosystems.jf.actions.ActionFieldAttribute;
@@ -48,15 +46,8 @@ public class SQLdisconnect extends AbstractAction
 		}
 		else
 		{
-			try
-			{
-				context.getConfiguration().getDataBasesPool().disconnect(this.connection);
-				super.setResult(null);
-			}
-			catch (SQLException e)
-			{
-				super.setError(e.getMessage(), ErrorKind.SQL_ERROR);
-			}
+			context.getConfiguration().getDataBasesPool().disconnect(this.connection);
+			super.setResult(null);
 		}
 	}
 }

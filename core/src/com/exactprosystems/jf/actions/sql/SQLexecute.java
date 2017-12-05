@@ -9,15 +9,12 @@
 
 package com.exactprosystems.jf.actions.sql;
 
-import java.sql.SQLException;
-
 import com.exactprosystems.jf.actions.AbstractAction;
 import com.exactprosystems.jf.actions.ActionAttribute;
 import com.exactprosystems.jf.actions.ActionFieldAttribute;
 import com.exactprosystems.jf.actions.ActionGroups;
 import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.api.error.ErrorKind;
-import com.exactprosystems.jf.api.error.JFSQLException;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.report.ReportBuilder;
 import com.exactprosystems.jf.documents.config.Context;
@@ -62,19 +59,8 @@ public class SQLexecute extends AbstractAction
 		}
 		else
 		{
-			try
-			{
-				boolean result = context.getConfiguration().getDataBasesPool().execute(this.connection, this.query, parameters.select(TypeMandatory.Extra).values().toArray());
-				super.setResult(result);
-			}
-			catch (SQLException e)
-			{
-				super.setError(e.getMessage(), ErrorKind.SQL_ERROR);
-			}
-			catch (JFSQLException e)
-			{
-				super.setError(e.getMessage(), ErrorKind.SQL_ERROR);
-			}
+			boolean result = context.getConfiguration().getDataBasesPool().execute(this.connection, this.query, parameters.select(TypeMandatory.Extra).values().toArray());
+			super.setResult(result);
 		}
 	}
 }

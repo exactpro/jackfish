@@ -17,6 +17,7 @@ import com.exactprosystems.jf.api.common.Converter;
 import com.exactprosystems.jf.api.common.Str;
 import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.api.conditions.Condition;
+import com.exactprosystems.jf.api.error.JFSQLException;
 import com.exactprosystems.jf.api.error.common.WrongExpressionException;
 import com.exactprosystems.jf.common.CommonHelper;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
@@ -115,7 +116,7 @@ public class Table implements List<RowTable>, Mutable
 		}
 	}
 
-    public Table(ResultSet set, AbstractEvaluator evaluator) throws Exception
+    public Table(ResultSet set, AbstractEvaluator evaluator) throws JFSQLException
 	{
 		this(evaluator);
 
@@ -165,7 +166,7 @@ public class Table implements List<RowTable>, Mutable
 		catch (Exception e)
 		{
 			logger.error(e.getMessage(), e);
-			throw e;
+			throw new JFSQLException(e.getMessage(), e);
 		}
 	}
 
