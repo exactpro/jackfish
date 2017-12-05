@@ -9,11 +9,7 @@
 
 package com.exactprosystems.jf.actions.system;
 
-import com.exactprosystems.jf.actions.AbstractAction;
-import com.exactprosystems.jf.actions.ActionAttribute;
-import com.exactprosystems.jf.actions.ActionFieldAttribute;
-import com.exactprosystems.jf.actions.ActionGroups;
-import com.exactprosystems.jf.actions.DefaultValuePool;
+import com.exactprosystems.jf.actions.*;
 import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.api.error.ErrorKind;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
@@ -33,8 +29,8 @@ import java.util.Date;
 	)
 public class Wait extends AbstractAction 
 {
-	public final static String timeName = "Time";
-	public final static String byTimeName = "ByTime";
+	public static final String timeName   = "Time";
+	public static final String byTimeName = "ByTime";
 
 	@ActionFieldAttribute(name = timeName, mandatory = false, def = DefaultValuePool.Null, constantDescription = R.WAIT_TIMEOUT)
 	protected Integer timeout;
@@ -47,23 +43,23 @@ public class Wait extends AbstractAction
 	{
 		return byTimeName.equals(fieldName) ? HelpKind.ChooseDateTime : null;
 	}
-	
+
 	@Override
 	public void doRealAction(Context context, ReportBuilder report, Parameters parameters, AbstractEvaluator evaluator) throws Exception
 	{
-        if (this.timeout != null)
+		if (this.timeout != null)
 		{
-			if(this.timeout <= 0)
+			if (this.timeout <= 0)
 			{
 				super.setResult(null);
 				return;
 			}
-		    sleepUpTo(context, System.currentTimeMillis() + this.timeout);
+			sleepUpTo(context, System.currentTimeMillis() + this.timeout);
 			super.setResult(null);
 		}
 		else if (this.byTime != null)
 		{
-            sleepUpTo(context, this.byTime.getTime());
+			sleepUpTo(context, this.byTime.getTime());
 			super.setResult(null);
 		}
 		else
@@ -73,27 +69,27 @@ public class Wait extends AbstractAction
 	}
 
 	private void sleepUpTo(Context context, long finish)
-    {
-	    long current;
+	{
+		long current;
 		long diff = finish - System.currentTimeMillis();
 		Matrix matrix = super.owner.getMatrix();
 		while ((current = System.currentTimeMillis()) < finish)
-	    {
-	        if (context.isStop())
-	        {
-	            break;
-	        }
-            try
-            {
+		{
+			if (context.isStop())
+			{
+				break;
+			}
+			try
+			{
 				context.getFactory().showWaits(diff, matrix);
 				long min = Math.min(100, finish - current);
 				diff -= min;
 				Thread.sleep(min);
-            }
-            catch (InterruptedException e)
-            {
-                // nothing to do
-            }
-	    }
-    }
+			}
+			catch (InterruptedException ignored)
+			{
+				// nothing to do
+			}
+		}
+	}
 }

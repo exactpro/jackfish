@@ -9,15 +9,7 @@
 
 package com.exactprosystems.jf.actions.system;
 
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Set;
-
-import com.exactprosystems.jf.actions.AbstractAction;
-import com.exactprosystems.jf.actions.ActionAttribute;
-import com.exactprosystems.jf.actions.ActionFieldAttribute;
-import com.exactprosystems.jf.actions.ActionGroups;
-import com.exactprosystems.jf.actions.DefaultValuePool;
+import com.exactprosystems.jf.actions.*;
 import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.api.error.ErrorKind;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
@@ -28,6 +20,10 @@ import com.exactprosystems.jf.documents.matrix.parser.Parameter;
 import com.exactprosystems.jf.documents.matrix.parser.Parameters;
 import com.exactprosystems.jf.documents.matrix.parser.items.TypeMandatory;
 import com.exactprosystems.jf.functions.Table;
+
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
 
 @ActionAttribute(
 		group 						  = ActionGroups.System,
@@ -40,10 +36,10 @@ import com.exactprosystems.jf.functions.Table;
 )
 public class ResultTableUserValue extends AbstractAction
 {
-	public final static String	matrixName		= "Matrix";
+	public static final String matrixName = "Matrix";
 
 	@ActionFieldAttribute(name = matrixName, mandatory = false, def = DefaultValuePool.Null, constantDescription = R.RESULT_TABLE_USER_VALUE_MATRIX)
-	protected MatrixConnectionImpl		matrix			= null;
+	protected MatrixConnectionImpl matrix;
 
 	@Override
 	public void doRealAction(Context context, ReportBuilder report, Parameters parameters, AbstractEvaluator evaluator) throws Exception
@@ -62,16 +58,16 @@ public class ResultTableUserValue extends AbstractAction
 		}
 		Set<String> predefinedColumns = new HashSet<>(Arrays.asList(Context.resultColumns));
 		Parameters extraParams = parameters.select(TypeMandatory.Extra);
-		
+
 		for (String name : extraParams.keySet())
 		{
-		    if (predefinedColumns.contains(name))
-		    {
-    		    super.setError("Parameter '" + name + "' is reserved word.", ErrorKind.WRONG_PARAMETERS);
-    		    return;
-		    }
+			if (predefinedColumns.contains(name))
+			{
+				super.setError("Parameter '" + name + "' is reserved word.", ErrorKind.WRONG_PARAMETERS);
+				return;
+			}
 		}
-		
+
 		for (Parameter parameter : extraParams)
 		{
 			String name = parameter.getName();
@@ -90,12 +86,12 @@ public class ResultTableUserValue extends AbstractAction
 					break;
 				}
 			}
-			
+
 			if (!found)
 			{
 				result.addColumns(name);
 			}
-			
+
 			result.changeValue(name, size - 1, value);
 		}
 

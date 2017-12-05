@@ -14,13 +14,13 @@ import com.exactprosystems.jf.actions.app.ApplicationResize;
 import com.exactprosystems.jf.api.app.*;
 import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.api.error.ErrorKind;
+import com.exactprosystems.jf.common.CommonHelper;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.report.ReportBuilder;
 import com.exactprosystems.jf.documents.config.Context;
 import com.exactprosystems.jf.documents.matrix.parser.Parameters;
 import com.exactprosystems.jf.functions.HelpKind;
 
-import java.util.Arrays;
 import java.util.List;
 
 import static com.exactprosystems.jf.actions.gui.Helper.message;
@@ -77,7 +77,7 @@ public class DialogResize extends AbstractAction
 		switch (parameterToFill)
 		{
 			case RESIZE_NAME:
-				Arrays.stream(Resize.values()).map(r -> Resize.class.getSimpleName() + "." + r.name()).map(ReadableValue::new).forEach(list::add);
+				list.addAll(CommonHelper.convertEnumsToReadableList(Resize.values()));
 				break;
 
 			case DIALOG_NAME:

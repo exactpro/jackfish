@@ -29,8 +29,8 @@ import com.exactprosystems.jf.documents.matrix.parser.Parameters;
 
 public class Store extends AbstractAction
 {
-	public final static String nameName = "Name";
-	public final static String valueName = "Value";
+	public static final String nameName  = "Name";
+	public static final String valueName = "Value";
 
 	@ActionFieldAttribute(name = nameName, mandatory = true, constantDescription = R.STORE_NAME)
 	protected String name = null;
@@ -42,7 +42,6 @@ public class Store extends AbstractAction
 	protected void doRealAction(Context context, ReportBuilder report, Parameters parameters, AbstractEvaluator evaluator) throws Exception
 	{
 		context.getConfiguration().storeGlobal(this.name, this.value);
-		
 		super.setResult(null);
 	}
 }

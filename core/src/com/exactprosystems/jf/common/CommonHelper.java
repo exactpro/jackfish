@@ -10,18 +10,12 @@
 
 package com.exactprosystems.jf.common;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
-import java.io.Reader;
-import java.io.StringReader;
-import java.io.UnsupportedEncodingException;
-import java.io.Writer;
+import com.exactprosystems.jf.actions.ReadableValue;
+
+import java.io.*;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class CommonHelper
 {
@@ -52,5 +46,17 @@ public class CommonHelper
     {
         return new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file), UTF8));
     }
+
+	public static <T extends Enum<T>> List<ReadableValue> convertEnumsToReadableList(Enum<T>[] array, java.util.function.Function<T, String> description)
+	{
+		return Arrays.stream(array)
+				.map(e -> new ReadableValue(e.getClass().getSimpleName() + "." + e.name(), description.apply(Enum.valueOf(e.getDeclaringClass(), e.name()))))
+				.collect(Collectors.toList());
+	}
+
+	public static <T extends Enum<T>> List<ReadableValue> convertEnumsToReadableList(Enum<T>[] array)
+	{
+		return convertEnumsToReadableList(array, en -> "");
+	}
 
 }

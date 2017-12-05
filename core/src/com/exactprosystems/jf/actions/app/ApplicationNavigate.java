@@ -10,8 +10,10 @@
 package com.exactprosystems.jf.actions.app;
 
 import com.exactprosystems.jf.actions.*;
-import com.exactprosystems.jf.api.app.*;
+import com.exactprosystems.jf.api.app.AppConnection;
+import com.exactprosystems.jf.api.app.NavigateKind;
 import com.exactprosystems.jf.api.common.i18n.R;
+import com.exactprosystems.jf.common.CommonHelper;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.report.ReportBuilder;
 import com.exactprosystems.jf.documents.config.Context;
@@ -19,7 +21,6 @@ import com.exactprosystems.jf.documents.matrix.parser.Parameters;
 import com.exactprosystems.jf.functions.HelpKind;
 
 import java.util.List;
-import java.util.stream.Stream;
 
 @ActionAttribute(
 		group 					      = ActionGroups.App,
@@ -52,10 +53,7 @@ public class ApplicationNavigate extends AbstractAction
 	{
 		if (navigateKindName.equals(parameterToFill))
 		{
-			Stream.of(NavigateKind.values())
-					.map(navigateKind -> NavigateKind.class.getSimpleName() + "." + navigateKind.name())
-					.map(ReadableValue::new)
-					.forEach(list::add);
+			list.addAll(CommonHelper.convertEnumsToReadableList(NavigateKind.values()));
 		}
 	}
 

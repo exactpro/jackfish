@@ -16,13 +16,13 @@ import com.exactprosystems.jf.api.app.IApplication;
 import com.exactprosystems.jf.api.app.Resize;
 import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.api.error.ErrorKind;
+import com.exactprosystems.jf.common.CommonHelper;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.report.ReportBuilder;
 import com.exactprosystems.jf.documents.config.Context;
 import com.exactprosystems.jf.documents.matrix.parser.Parameters;
 import com.exactprosystems.jf.functions.HelpKind;
 
-import java.util.Arrays;
 import java.util.List;
 
 @ActionAttribute(
@@ -76,10 +76,7 @@ public class ApplicationResize extends AbstractAction
 		switch (parameterToFill)
 		{
 			case resizeName :
-				Arrays.stream(Resize.values())
-						.map(r -> Resize.class.getSimpleName() + "." + r.name())
-						.map(ReadableValue::new)
-						.forEach(list::add);
+				list.addAll(CommonHelper.convertEnumsToReadableList(Resize.values()));
 				break;
 
 			default:

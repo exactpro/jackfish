@@ -18,7 +18,7 @@ import com.exactprosystems.jf.documents.matrix.parser.Parameters;
 import com.exactprosystems.jf.functions.HelpKind;
 
 import java.util.List;
-import java.util.Map.Entry;
+import java.util.Map;
 
 @ActionAttribute(
 		group 					   = ActionGroups.System,
@@ -32,38 +32,39 @@ import java.util.Map.Entry;
 
 public class Restore extends AbstractAction
 {
-	public final static String nameName = "Name";
-	public final static String asVarName = "AsVar";
+	public static final String nameName  = "Name";
+	public static final String asVarName = "AsVar";
 
 	@ActionFieldAttribute(name = nameName, mandatory = true, constantDescription = R.RESTORE_NAME)
-	protected String name = null;
+	protected String name;
 
 	@ActionFieldAttribute(name = asVarName, mandatory = false, def = DefaultValuePool.Null, constantDescription = R.RESTORE_AS_VAR)
 	protected String asVar;
-	
+
 	@Override
 	protected HelpKind howHelpWithParameterDerived(Context context, Parameters parameters, String fieldName) throws Exception
 	{
 		return nameName.equals(fieldName) ? HelpKind.ChooseFromList : null;
 	}
-	
+
 	@Override
 	protected void listToFillParameterDerived(List<ReadableValue> list, Context context, String parameterToFill, Parameters parameters) throws Exception
 	{
 		AbstractEvaluator evaluator = context.getEvaluator();
-		for(Entry<String, Object> entry : context.getConfiguration().getStoreMap().entrySet())
-		{
-			list.add(new ReadableValue(evaluator.createString(entry.getKey())));
-		}
+		context.getConfiguration().getStoreMap().entrySet().stream()
+				.map(Map.Entry::getKey)
+				.map(evaluator::createString)
+				.map(ReadableValue::new)
+				.forEach(list::add);
 	}
-	
+
 	@Override
 	protected void doRealAction(Context context, ReportBuilder report, Parameters parameters, AbstractEvaluator evaluator) throws Exception
 	{
 		Object res = context.getConfiguration().restoreGlobal(this.name);
-		if (asVar != null)
+		if (this.asVar != null)
 		{
-			if (owner.isGlobal())
+			if (super.owner.isGlobal())
 			{
 				context.getEvaluator().getGlobals().set(this.asVar, res);
 			}

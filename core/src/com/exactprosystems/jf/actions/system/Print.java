@@ -9,11 +9,8 @@
 
 package com.exactprosystems.jf.actions.system;
 
-import com.exactprosystems.jf.actions.AbstractAction;
-import com.exactprosystems.jf.actions.ActionAttribute;
-import com.exactprosystems.jf.actions.ActionFieldAttribute;
-import com.exactprosystems.jf.actions.ActionGroups;
-import com.exactprosystems.jf.actions.DefaultValuePool;
+import com.exactprosystems.jf.actions.*;
+import com.exactprosystems.jf.api.common.Str;
 import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.report.ReportBuilder;
@@ -32,21 +29,21 @@ import com.exactprosystems.jf.documents.matrix.parser.items.TypeMandatory;
 	)
 public class Print extends AbstractAction 
 {
-	public final static String strName = "Str";
+	public static final String strName = "Str";
 
 	@ActionFieldAttribute(name = strName, mandatory = false, def = DefaultValuePool.EmptyString, constantDescription = R.PRINT_MESSAGE)
-	protected String message; 
-	
+	protected String message;
+
 	@Override
 	public void doRealAction(Context context, ReportBuilder report, Parameters parameters, AbstractEvaluator evaluator) throws Exception
 	{
-		StringBuilder sb 	= new StringBuilder();
-		if (!message.isEmpty())
+		StringBuilder sb = new StringBuilder();
+		if (!Str.IsNullOrEmpty(this.message))
 		{
 			sb.append(message);
 			sb.append('\t');
 		}
-		
+
 		for (Parameter parameter : parameters.select(TypeMandatory.Extra))
 		{
 			sb.append(parameter.getName());
@@ -55,7 +52,7 @@ public class Print extends AbstractAction
 			sb.append('\t');
 		}
 		context.getOut().println(sb.toString());
-		
+
 		super.setResult(null);
 	}
 }

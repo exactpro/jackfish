@@ -63,8 +63,13 @@ import java.util.Date;
 import java.util.List;
 import java.util.function.Consumer;
 
-public abstract class Common
+public class Common
 {
+	private Common()
+	{
+
+	}
+
 	public static ProgressBar progressBar;
 	
 	// TODO move it to Main

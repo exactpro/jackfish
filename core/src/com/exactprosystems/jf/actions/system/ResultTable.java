@@ -44,22 +44,20 @@ import java.util.function.Function;
 )
 public class ResultTable extends AbstractAction
 {
-	public final static String decoratedName = "Decoraded";
-	public final static String matrixName = "Matrix";
+	public static final String decoratedName = "Decoraded";
+	public static final String matrixName    = "Matrix";
 
 	@ActionFieldAttribute(name = decoratedName, mandatory = true, constantDescription = R.RESULT_TABLE_DECORATED)
 	protected Boolean decorated;
 
-	@ActionFieldAttribute(name = matrixName, mandatory = false, def = DefaultValuePool.Null,  constantDescription = R.RESULT_TABLE_MATRIX)
-	protected MatrixConnectionImpl matrix = null;
+	@ActionFieldAttribute(name = matrixName, mandatory = false, def = DefaultValuePool.Null, constantDescription = R.RESULT_TABLE_MATRIX)
+	protected MatrixConnectionImpl matrix;
 
 	@Override
-	protected HelpKind howHelpWithParameterDerived(Context context,
-			Parameters parameters, String fieldName) throws Exception
+	protected HelpKind howHelpWithParameterDerived(Context context, Parameters parameters, String fieldName) throws Exception
 	{
-		switch (fieldName)
+		if (decoratedName.equals(fieldName))
 		{
-		case decoratedName:
 			return HelpKind.ChooseFromList;
 		}
 		return null;
@@ -68,26 +66,24 @@ public class ResultTable extends AbstractAction
 	@Override
 	protected void listToFillParameterDerived(List<ReadableValue> list, Context context, String parameterToFill, Parameters parameters) throws Exception
 	{
-		switch (parameterToFill)
+		if (decoratedName.equals(parameterToFill))
 		{
-			case decoratedName:
-				list.add(ReadableValue.TRUE);
-				list.add(ReadableValue.FALSE);
-				break;
+			list.add(ReadableValue.TRUE);
+			list.add(ReadableValue.FALSE);
+
 		}
 	}
-	
+
 	@Override
-	public void doRealAction(Context context, ReportBuilder report,
-			Parameters parameters, AbstractEvaluator evaluator) throws Exception
+	public void doRealAction(Context context, ReportBuilder report, Parameters parameters, AbstractEvaluator evaluator) throws Exception
 	{
-        Map<String, Object> map = new HashMap<String, Object>();
-        if (this.matrix == null)
-        {
-            map.put(Context.resultColumn, Result.Passed);
-        }
-        
-        Table result = this.matrix == null ? context.getTable() : this.matrix.getTable();
+		Map<String, Object> map = new HashMap<>();
+		if (this.matrix == null)
+		{
+			map.put(Context.resultColumn, Result.Passed);
+		}
+
+		Table result = this.matrix == null ? context.getTable() : this.matrix.getTable();
 		if (result == null)
 		{
 			super.setError("The result table is null", ErrorKind.EMPTY_PARAMETER);
@@ -95,15 +91,15 @@ public class ResultTable extends AbstractAction
 		}
 
 		Table copy = new Table(result);
-		if (report.reportIsOn()) {		//TODO zzz
+		if (report.reportIsOn())
+		{        //TODO zzz
 			copy.setValue(copy.size() - 1, map);
 		}
 
 		if (this.decorated)
 		{
 			String passed = report.decorateStyle(Result.Passed.name(), Result.Passed.getStyle());
-			Set<String> knownColumns = new HashSet<String>();
-			knownColumns.addAll(Arrays.asList(Context.resultColumns));
+			Set<String> knownColumns = new HashSet<>(Arrays.asList(Context.resultColumns));
 
 			for (RowTable row : copy)
 			{
@@ -116,48 +112,48 @@ public class ResultTable extends AbstractAction
 					{
 						String shortName = pathName.toString();
 						String matrixStr = report.decorateExpandingBlock(shortName, matrix.toString());
-						replace(row, Context.matrixColumn, 		e -> matrixStr);
+						this.replace(row, Context.matrixColumn, e -> matrixStr);
 					}
 				}
-				
-				Result res = (Result)row.get(Context.resultColumn);
+
+				Result res = (Result) row.get(Context.resultColumn);
 				String str = report.decorateStyle(row.get(Context.resultColumn), res == null ? "" : res.getStyle());
 				row.put(Context.resultColumn, str);
-				
-                String stepIdentity = Str.asString(row.get(Context.stepIdentityColumn));
-                row.put(Context.stepIdentityColumn, stepIdentity);
-                row.put(Context.stepColumn,         stepIdentity);
 
-				replace(row, Context.testCaseColumn, 		this::spaceIfNull);
-				replace(row, Context.testCaseIdColumn, 		this::spaceIfNull);
-				replace(row, Context.timeColumn, 			e -> report.decorateStyle(e == null ? "" : (e + " ms"), "ExecutionTime") );
-				
+				String stepIdentity = Str.asString(row.get(Context.stepIdentityColumn));
+				row.put(Context.stepIdentityColumn, stepIdentity);
+				row.put(Context.stepColumn, stepIdentity);
+
+				this.replace(row, Context.testCaseColumn, Str::asString);
+				this.replace(row, Context.testCaseIdColumn, Str::asString);
+				this.replace(row, Context.timeColumn, e -> report.decorateStyle(e == null ? "" : (e + " ms"), "ExecutionTime"));
+
 				Object error = row.get(Context.errorColumn);
 				if (error instanceof MatrixError)
 				{
-					MatrixError matrixError = (MatrixError)error;
+					MatrixError matrixError = (MatrixError) error;
 					String errorStr = report.decorateExpandingBlock(matrixError.Kind.toString(), matrixError.Message);
-					replace(row, Context.errorColumn, 		e -> errorStr);
+					replace(row, Context.errorColumn, e -> errorStr);
 				}
 				else
 				{
-					replace(row, Context.errorColumn, 		e -> passed);
+					replace(row, Context.errorColumn, e -> passed);
 				}
 
-                Object wrapper = row.get(Context.screenshotColumn);
-                if (wrapper instanceof ImageWrapper)
-                {
-                    ImageWrapper iw = (ImageWrapper)wrapper;
-                    
-                    String description = iw.getDescription() == null ? iw.toString() : iw.getDescription();
-                    String imageStr = report.decorateLink(description, report.getImageDir() + File.separator + iw.getName(report.getReportDir()));
-                    replace(row, Context.screenshotColumn,       e -> imageStr);
-                }
-                else
-                {
-                    replace(row, Context.screenshotColumn,       this::spaceIfNull);
-                }
-				
+				Object wrapper = row.get(Context.screenshotColumn);
+				if (wrapper instanceof ImageWrapper)
+				{
+					ImageWrapper iw = (ImageWrapper) wrapper;
+
+					String description = iw.getDescription() == null ? iw.toString() : iw.getDescription();
+					String imageStr = report.decorateLink(description, report.getImageDir() + File.separator + iw.getName(report.getReportDir()));
+					replace(row, Context.screenshotColumn, e -> imageStr);
+				}
+				else
+				{
+					replace(row, Context.screenshotColumn, Str::asString);
+				}
+
 				for (Entry<String, Object> entry : row.entrySet())
 				{
 					String key = entry.getKey();
@@ -170,7 +166,7 @@ public class ResultTable extends AbstractAction
 				}
 			}
 		}
-		
+
 		super.setResult(copy);
 	}
 
@@ -178,11 +174,6 @@ public class ResultTable extends AbstractAction
 	{
 		Object value = row.get(columnName);
 		row.put(columnName, func.apply(value));
-	}
-	
-	private String spaceIfNull(Object obj)
-	{
-		return obj == null ? "" : obj.toString();
 	}
 }
 

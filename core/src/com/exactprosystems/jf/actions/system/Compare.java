@@ -9,12 +9,7 @@
 
 package com.exactprosystems.jf.actions.system;
 
-import com.exactprosystems.jf.actions.AbstractAction;
-import com.exactprosystems.jf.actions.ActionAttribute;
-import com.exactprosystems.jf.actions.ActionFieldAttribute;
-import com.exactprosystems.jf.actions.ActionGroups;
-import com.exactprosystems.jf.actions.DefaultValuePool;
-import com.exactprosystems.jf.actions.ReadableValue;
+import com.exactprosystems.jf.actions.*;
 import com.exactprosystems.jf.api.common.Str;
 import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.api.error.ErrorKind;
@@ -27,11 +22,10 @@ import com.exactprosystems.jf.documents.matrix.parser.Result;
 import com.exactprosystems.jf.functions.HelpKind;
 import com.exactprosystems.jf.functions.Table;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Map.Entry;
+import java.util.Objects;
 
 @ActionAttribute(
         group                         = ActionGroups.System,
@@ -45,82 +39,78 @@ import java.util.Map.Entry;
     )
 public class Compare extends AbstractAction
 {
-    public final static String    dontFailName = "DoNotFail";
-    public final static String    actualName   = "Actual";
-    public final static String    expectedName = "Expected";
+	public static final String dontFailName = "DoNotFail";
+	public static final String actualName   = "Actual";
+	public static final String expectedName = "Expected";
 
-    @ActionFieldAttribute(name = actualName, mandatory = true, constantDescription = R.COMPARE_ACTUAL)
-    protected Map<String, Object> actual       = Collections.emptyMap();
+	@ActionFieldAttribute(name = actualName, mandatory = true, constantDescription = R.COMPARE_ACTUAL)
+	protected Map<String, Object> actual;
 
-    @ActionFieldAttribute(name = expectedName, mandatory = true, constantDescription = R.COMPARE_EXPECTED)
-    protected Map<String, Object> expected     = Collections.emptyMap();
+	@ActionFieldAttribute(name = expectedName, mandatory = true, constantDescription = R.COMPARE_EXPECTED)
+	protected Map<String, Object> expected;
 
-    @ActionFieldAttribute(name = dontFailName, mandatory = false, def = DefaultValuePool.False, constantDescription = R.COMPARE_DONT_FAIL)
-    protected Boolean             dontFail;
+	@ActionFieldAttribute(name = dontFailName, mandatory = false, def = DefaultValuePool.False, constantDescription = R.COMPARE_DONT_FAIL)
+	protected Boolean dontFail;
 
-    @Override
-    protected HelpKind howHelpWithParameterDerived(Context context, Parameters parameters, String fieldName)
-    {
-        switch (fieldName)
-        {
-            case dontFailName:
-                return HelpKind.ChooseFromList;
-        }
-        return null;
-    }
+	@Override
+	protected HelpKind howHelpWithParameterDerived(Context context, Parameters parameters, String fieldName)
+	{
+		if (dontFailName.equals(fieldName))
+		{
+			return HelpKind.ChooseFromList;
+		}
+		return null;
+	}
 
-    @Override
-    protected void listToFillParameterDerived(List<ReadableValue> list, Context context, String parameterToFill, Parameters parameters) throws Exception
-    {
-        switch (parameterToFill)
-        {
-            case dontFailName:
-                list.add(ReadableValue.TRUE);
-                list.add(ReadableValue.FALSE);
-                break;
-        }
-    }
+	@Override
+	protected void listToFillParameterDerived(List<ReadableValue> list, Context context, String parameterToFill, Parameters parameters) throws Exception
+	{
+		if (dontFailName.equals(parameterToFill))
+		{
+			list.add(ReadableValue.TRUE);
+			list.add(ReadableValue.FALSE);
+		}
+	}
 
-    @Override
-    public void doRealAction(Context context, ReportBuilder report, Parameters parameters, AbstractEvaluator evaluator)
-            throws Exception
-    {
-        String[] headers = new String[] { "Field", "Expected", "Actual", "Result" };
-        ReportTable table = report.addTable("Comparing fields:", null, true, true, new int[] { 25, 25, 25, 25 }, headers);
-        boolean res = true;
-        Table resultTable = new Table(headers, evaluator);
-        
-        for (Entry<String, Object> expectedEntry : this.expected.entrySet())
-        {
-            String name = expectedEntry.getKey();
-            Object expectedValue = expectedEntry.getValue();
-            
-            boolean found = this.actual.containsKey(name);
-            Object actualValue = this.actual.get(name);
-            Object[] line = null;
-            
-            if (found)
-            {
-                boolean comp =  Objects.equals(expectedValue, actualValue);
-                line = new Object[] { name, Str.asString(expectedValue), Str.asString(actualValue), comp ? Result.Passed : Result.Failed };
-                res = res && comp;
-            }
-            else
-            {
-                line = new Object[] { name, Str.asString(expectedValue), "<not found>", Result.Failed };
-                res = false;
-            }
-            
-            table.addValues(line);
-            resultTable.addValue(line);
-        }
+	@Override
+	public void doRealAction(Context context, ReportBuilder report, Parameters parameters, AbstractEvaluator evaluator) throws Exception
+	{
+		String[] headers = new String[]{"Field", "Expected", "Actual", "Result"};
+		ReportTable table = report.addTable("Comparing fields:", null, true, true, new int[]{25, 25, 25, 25}, headers);
+		boolean res = true;
+		Table resultTable = new Table(headers, evaluator);
 
-        super.setResult(resultTable);
+		for (Entry<String, Object> expectedEntry : this.expected.entrySet())
+		{
+			String name = expectedEntry.getKey();
+			Object expectedValue = expectedEntry.getValue();
 
-        if (!res && !this.dontFail)
-        {
-            super.setError("Object does not match.", ErrorKind.NOT_EQUAL);
-        }
-    }
-    
+			boolean found = this.actual.containsKey(name);
+			Object actualValue = this.actual.get(name);
+			Object[] line = null;
+
+			if (found)
+			{
+				boolean comp = Objects.equals(expectedValue, actualValue);
+				line = new Object[]{name, Str.asString(expectedValue), Str.asString(actualValue), comp ? Result.Passed : Result.Failed};
+				res = res && comp;
+			}
+			else
+			{
+				line = new Object[]{name, Str.asString(expectedValue), "<not found>", Result.Failed};
+				res = false;
+			}
+
+			table.addValues(line);
+			resultTable.addValue(line);
+		}
+
+		super.setResult(resultTable);
+
+		if (!res && !this.dontFail)
+		{
+			super.setError("Object does not match.", ErrorKind.NOT_EQUAL);
+		}
+	}
+
 }

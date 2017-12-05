@@ -16,6 +16,7 @@ import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.api.error.common.NullParameterException;
 import com.exactprosystems.jf.charts.ChartBuilder;
 import com.exactprosystems.jf.charts.ChartFactory;
+import com.exactprosystems.jf.common.CommonHelper;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.report.ReportBuilder;
 import com.exactprosystems.jf.documents.config.Context;
@@ -25,7 +26,6 @@ import com.exactprosystems.jf.functions.HelpKind;
 import com.exactprosystems.jf.functions.Table;
 
 import java.awt.Color;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -102,9 +102,7 @@ public class ChartReport extends AbstractAction
 		switch (parameterToFill)
 		{
 			case typeName:
-				Arrays.stream(ChartKind.values())
-						.map(kind -> new ReadableValue(ChartKind.class.getSimpleName() + "." + kind.name(), kind.getDescription()))
-						.forEach(list::add);
+				list.addAll(CommonHelper.convertEnumsToReadableList(ChartKind.values(), ChartKind::getDescription));
 				break;
 			case beforeTestCaseName:
 				ActionsReportHelper.fillListForParameter(super.owner.getMatrix(), list, context.getEvaluator());

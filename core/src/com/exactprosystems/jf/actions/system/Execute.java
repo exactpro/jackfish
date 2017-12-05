@@ -9,13 +9,7 @@
 
 package com.exactprosystems.jf.actions.system;
 
-import com.exactprosystems.jf.actions.AbstractAction;
-import com.exactprosystems.jf.actions.ActionAttribute;
-import com.exactprosystems.jf.actions.ActionFieldAttribute;
-import com.exactprosystems.jf.actions.ActionGroups;
-import com.exactprosystems.jf.actions.DefaultValuePool;
-import com.exactprosystems.jf.actions.ExecuteResult;
-import com.exactprosystems.jf.actions.ReadableValue;
+import com.exactprosystems.jf.actions.*;
 import com.exactprosystems.jf.api.common.ProcessTools;
 import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
@@ -24,9 +18,7 @@ import com.exactprosystems.jf.documents.config.Context;
 import com.exactprosystems.jf.documents.matrix.parser.Parameters;
 import com.exactprosystems.jf.functions.HelpKind;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.nio.charset.Charset;
 import java.util.List;
 
@@ -41,16 +33,16 @@ import java.util.List;
 	)
 public class Execute extends AbstractAction 
 {
-	public final static String commandName = "Command";
-	public final static String waitName = "Wait";
-	public final static String workDirName = "WorkDir";
+	public static final String commandName = "Command";
+	public static final String waitName    = "Wait";
+	public static final String workDirName = "WorkDir";
 
 	@ActionFieldAttribute(name = commandName, mandatory = true, constantDescription = R.EXECUTE_COMMAND)
-	protected String command 	= "";
+	protected String command;
 
 	@ActionFieldAttribute(name = waitName, mandatory = false, def = DefaultValuePool.True, constantDescription = R.EXECUTE_WAIT)
-	protected Boolean wait; 
-	
+	protected Boolean wait;
+
 	@ActionFieldAttribute(name = workDirName, mandatory = false, def = DefaultValuePool.Null, constantDescription = R.EXECUTE_WORK_DIR)
 	protected String workDir;
 	
@@ -70,22 +62,18 @@ public class Execute extends AbstractAction
 	@Override
 	protected void listToFillParameterDerived(List<ReadableValue> list, Context context, String parameterToFill, Parameters parameters) throws Exception
 	{
-		switch (parameterToFill)
+		if (waitName.equals(parameterToFill))
 		{
-			case waitName:
-				list.add(ReadableValue.TRUE);
-				list.add(ReadableValue.FALSE);
-				break;
-
-			default:
+			list.add(ReadableValue.TRUE);
+			list.add(ReadableValue.FALSE);
 		}
 	}
 
 	@Override
 	public void doRealAction(Context context, ReportBuilder report, Parameters parameters, AbstractEvaluator evaluator) throws Exception
 	{
-		Process process = null;
 		Runtime runtime = Runtime.getRuntime();
+		Process process;
 		if (this.workDir != null)
 		{
 			process = runtime.exec(this.command, null, new File(this.workDir));
@@ -95,33 +83,29 @@ public class Execute extends AbstractAction
 			process = runtime.exec(this.command);
 		}
 
-	    StringBuilder sb = new StringBuilder();
-	    int exitCode = 0;
-	    int pid = ProcessTools.processId(process);
-		
+		StringBuilder sb = new StringBuilder();
+		int exitCode = 0;
+		int pid = ProcessTools.processId(process);
+
 		if (this.wait)
 		{
-		    try(BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream(), Charset.defaultCharset())))
-		    {
-			    String line = "";			
-			    while ((line = reader.readLine()) != null) 
-			    {
-			    	sb.append(line + "\n");
-			    }		
-		    }
-		    try(BufferedReader reader = new BufferedReader(new InputStreamReader(process.getErrorStream(), Charset.defaultCharset())))
-		    {
-			    String line = "";			
-			    while ((line = reader.readLine()) != null) 
-			    {
-			    	sb.append(line + "\n");
-			    }		
-		    }
-		    exitCode = process.waitFor();
-		    
+			this.readFromStream(process.getInputStream(), sb);
+			this.readFromStream(process.getErrorStream(), sb);
+			exitCode = process.waitFor();
 		}
-	 
+
 		super.setResult(new ExecuteResult(sb.toString(), exitCode, pid));
 	}
 
+	private void readFromStream(InputStream stream, StringBuilder sb) throws IOException
+	{
+		try (BufferedReader reader = new BufferedReader(new InputStreamReader(stream, Charset.defaultCharset())))
+		{
+			String line;
+			while ((line = reader.readLine()) != null)
+			{
+				sb.append(line).append("\n");
+			}
+		}
+	}
 }
