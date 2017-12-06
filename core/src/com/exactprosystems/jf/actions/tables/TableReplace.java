@@ -16,7 +16,10 @@ import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.report.ReportBuilder;
 import com.exactprosystems.jf.documents.config.Context;
 import com.exactprosystems.jf.documents.matrix.parser.Parameters;
+import com.exactprosystems.jf.functions.HelpKind;
 import com.exactprosystems.jf.functions.Table;
+
+import java.util.List;
 
 @ActionAttribute(
 		group					   = ActionGroups.Tables,
@@ -52,6 +55,29 @@ public class TableReplace extends AbstractAction
 
 	@ActionFieldAttribute(name = matchCellname, mandatory = false, def = DefaultValuePool.Null, constantDescription = R.TABLE_REPLACE_MATCH_CELL)
 	protected Boolean matchCell;
+
+	@Override
+	protected HelpKind howHelpWithParameterDerived(Context context, Parameters parameters, String fieldName) throws Exception
+	{
+		return matchCellname.equals(fieldName) ? HelpKind.ChooseFromList : null;
+	}
+
+	@Override
+	protected void listToFillParameterDerived(List<ReadableValue> list, Context context, String parameterToFill, Parameters parameters) throws Exception
+	{
+		if (matchCellname.equals(parameterToFill))
+		{
+			list.add(ReadableValue.FALSE);
+			list.add(ReadableValue.TRUE);
+		}
+		super.listToFillParameterDerived(list, context, parameterToFill, parameters);
+	}
+
+	@Override
+	protected void helpToAddParametersDerived(List<ReadableValue> list, Context context, Parameters parameters) throws Exception
+	{
+		super.helpToAddParametersDerived(list, context, parameters);
+	}
 
 	@Override
 	public void doRealAction(Context context, ReportBuilder report, Parameters parameters, AbstractEvaluator evaluator) throws Exception

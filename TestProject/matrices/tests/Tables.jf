@@ -78,8 +78,8 @@ TABLE_ADD_COLUMNS;Test case;Never;;
         #Id;#Action;id;name
         TBL1;TableCreate;;
 
-        #Action;$Table;$Columns;$Index
-        TableAddColumns;TBL1.Out;'town';
+        #Action;$Table;$Columns
+        TableAddColumns;TBL1.Out;'town'
 
         #Assert;#Message
         TBL1.Out.getHeader(TBL1.Out.getHeaderSize() - 1).equals('town');'column was not added at the end'
@@ -2463,8 +2463,8 @@ TABLE_REPLACE;Test case;Never;;
         3;Anna;30
         #EndRawTable
 
-        #Action;$Replace;$Table;$Columns;$Search
-        TableReplace;'0';TC;'Column';''
+        #Action;$Replace;$Table;$Columns;$MatchCell;$Search
+        TableReplace;'0';TC;'Column';true;''
 
         #Assert;#Message
         TC[0].Column == '10' && TC[1].Column == '0' && TC[2].Column == '0' && TC[3].Column == '30';'Replacement was not made'
@@ -3339,7 +3339,7 @@ TABLE_REPORT;Test case;Never;;
         ~;"#EndRawTable"
         ~;""
         ~;""
-        ~;"#Id;#Action;$BeforeTestCase;$Table;$Title;$Columns;$Numbers;$ReportValues;$ToReport"
+        ~;"#Id;#Action;$BeforeTestCase;$Table;$Title;$Columns;$Numbers;$ReportValues"
         ~;"tt;TableReport;'Test';TC;'Title';{'Age' : 'Age of person'};true;true;"
         #EndRawText
 
@@ -3373,8 +3373,8 @@ TABLE_REPORT;Test case;Never;;
         ~;"#EndRawTable"
         ~;""
         ~;""
-        ~;"#Id;#Action;$BeforeTestCase;$Table;$Title;$Columns;$Numbers;$ReportValues;$ToReport"
-        ~;"tt;TableReport;'Test';TC;'Title';{'Age' : 'Age of person'};false;true;"
+        ~;"#Id;#Action;$BeforeTestCase;$Table;$Title;$Columns;$Numbers;$ReportValues"
+        ~;"tt;TableReport;'Test';TC;'Title';{'Age' : 'Age of person'};false;true"
         #EndRawText
 
         #Id;#Call;rawText
@@ -3411,8 +3411,8 @@ TABLE_REPORT;Test case;Never;;
         ~;"TableConsiderColumnsAs;TC;'Age'"
         ~;""
         ~;""
-        ~;"#Id;#Action;$BeforeTestCase;$Table;$Title;$Columns;$Numbers;$ReportValues;$ToReport"
-        ~;"tt;TableReport;'Test';TC;'Title';{'Age' : 'Age of person'};true;true;"
+        ~;"#Id;#Action;$BeforeTestCase;$Table;$Title;$Columns;$Numbers;$ReportValues"
+        ~;"tt;TableReport;'Test';TC;'Title';{'Age' : 'Age of person'};true;true"
         #EndRawText
 
         #Id;#Call;rawText
@@ -3456,8 +3456,8 @@ TABLE_REPORT;Test case;Never;;
         ~;"TableConsiderColumnsAs;TC;'Age'"
         ~;""
         ~;""
-        ~;"#Id;#Action;$BeforeTestCase;$Table;$Title;$Columns;$Numbers;$ReportValues;$ToReport"
-        ~;"tt;TableReport;'Test';TC;'Title';{'Age' : 'Age of person'};true;false;"
+        ~;"#Id;#Action;$BeforeTestCase;$Table;$Title;$Columns;$Numbers;$ReportValues"
+        ~;"tt;TableReport;'Test';TC;'Title';{'Age' : 'Age of person'};true;false"
         #EndRawText
 
         #Id;#Call;rawText
@@ -3498,8 +3498,8 @@ TABLE_REPORT;Test case;Never;;
         ~;"TableConsiderColumnsAs;TC;'Age'"
         ~;""
         ~;""
-        ~;"#Id;#Action;$BeforeTestCase;$Table;$Title;$Columns;$Numbers;$ReportValues;$ToReport"
-        ~;"tt;TableReport;'Test';TC;'Title';{'Age' : 'Age of person', 'City' : 'Team cities'};true;true;"
+        ~;"#Id;#Action;$BeforeTestCase;$Table;$Title;$Columns;$Numbers;$ReportValues"
+        ~;"tt;TableReport;'Test';TC;'Title';{'Age' : 'Age of person', 'City' : 'Team cities'};true;true"
         #EndRawText
 
         #Id;#Call;rawText
@@ -3545,8 +3545,8 @@ TABLE_REPORT;Test case;Never;;
         ~;"TableConsiderColumnsAs;TC;'Age'"
         ~;""
         ~;""
-        ~;"#Id;#Action;$BeforeTestCase;$Table;$Title;$Columns;$Numbers;$ReportValues;$ToReport"
-        ~;"tt;TableReport;'Test';TC;'Title';['Age','City'];true;true;"
+        ~;"#Id;#Action;$BeforeTestCase;$Table;$Title;$Columns;$Numbers;$ReportValues"
+        ~;"tt;TableReport;'Test';TC;'Title';['Age','City'];true;true"
         #EndRawText
 
         #Id;#Call;rawText
@@ -3594,8 +3594,8 @@ TABLE_REPORT;Test case;Never;;
         ~;"TableConsiderColumnsAs;TC;'Age'"
         ~;""
         ~;""
-        ~;"#Id;#Action;$BeforeTestCase;$Table;$Title;$Columns;$Numbers;$ReportValues;$ToReport"
-        ~;"tt;TableReport;'TABLE_REPORT';TC;'Title';['Age', 'City'];true;true;"
+        ~;"#Id;#Action;$BeforeTestCase;$Table;$Title;$Columns;$Numbers;$ReportValues"
+        ~;"tt;TableReport;'TABLE_REPORT';TC;'Title';['Age', 'City'];true;true"
         #EndRawText
 
         #Id;#Call;rawText
@@ -3631,8 +3631,8 @@ TABLE_REPORT;Test case;Never;;
         ~;"TableConsiderColumnsAs;TC;'Age'"
         ~;""
         ~;""
-        ~;"#Id;#Action;$BeforeTestCase;$Table;$Title;$Columns;$Numbers;$ReportValues;$ToReport"
-        ~;"tt;TableReport;'';TC;'Title';['Age', 'City'];true;true;"
+        ~;"#Id;#Action;$BeforeTestCase;$Table;$Title;$Columns;$Numbers;$ReportValues"
+        ~;"tt;TableReport;'';TC;'Title';['Age', 'City'];true;true"
         #EndRawText
 
         #Id;#Call;rawText
@@ -3722,8 +3722,8 @@ TABLE_REPORT;Test case;Never;;
         #Action;$Table;$Expression
         TableConsiderColumnsAs;TC;'Age'
 
-        #Id;#Action;$BeforeTestCase;$Table;$Title;$Columns;$Numbers;$ReportValues;$ToReport
-        tt;TableReport;'';TC;'Title';['Age', 'City'];true;true;
+        #Id;#Action;$BeforeTestCase;$Table;$Title;$Columns;$Numbers;$ReportValues
+        tt;TableReport;'';TC;'Title';['Age', 'City'];true;true
 
     #EndStep
 

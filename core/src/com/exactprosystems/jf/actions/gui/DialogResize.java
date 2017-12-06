@@ -93,23 +93,18 @@ public class DialogResize extends AbstractAction
 	@Override
 	protected void doRealAction(Context context, ReportBuilder report, Parameters parameters, AbstractEvaluator evaluator) throws Exception
 	{
-		if (this.resize == null && this.width == null && this.height == null)
+		if (this.resize == null && this.width == DefaultValuePool.IntMin.getValue() && this.height == DefaultValuePool.IntMin.getValue())
 		{
 			setError("No one resizing parameter is filled.", ErrorKind.WRONG_PARAMETERS);
 			return;
 		}
-		//TODO this check is unnecessary
-		if (checkInt(WIDTH_NAME, this.width, parameters) || checkInt(HEIGHT_NAME, this.height, parameters))
-		{
-			return;
-		}
-		//TODO this check is unnecessary
-		if (this.resize != null && (this.height != null || this.width != null))
+		if (this.resize != null && (this.height != DefaultValuePool.IntMin.getValue() || this.width != DefaultValuePool.IntMin.getValue()))
 		{
 			setError("Need set resize or dimension, but no both together", ErrorKind.WRONG_PARAMETERS);
 			return;
 		}
-		if ((this.height == DefaultValuePool.IntMin.getValue() && this.width != null) || (this.height != null && this.width == DefaultValuePool.IntMin.getValue()))
+		if ((this.height == DefaultValuePool.IntMin.getValue() && this.width != DefaultValuePool.IntMin.getValue())
+				|| (this.height != DefaultValuePool.IntMin.getValue() && this.width == DefaultValuePool.IntMin.getValue()))
 		{
 			setError("Need set both the parameters " + WIDTH_NAME + " and " + HEIGHT_NAME, ErrorKind.WRONG_PARAMETERS);
 			return;

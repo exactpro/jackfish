@@ -104,7 +104,7 @@ Dialog resize;Never;;
         DialogResize;This.Kind == ErrorKind.WRONG_PARAMETERS;'Dialog';appCon
 
         #Action;#Assert;$Dialog;$AppConnection;$Resize
-        DialogResize;This.Kind == ErrorKind.WRONG_PARAMETERS;'Dialog';appCon;
+        DialogResize;This.Kind == ErrorKind.EMPTY_PARAMETER;'Dialog';appCon;
 
         #Action;#Assert;$Dialog;$AppConnection;$Resize;$Height
         DialogResize;This.Kind == ErrorKind.WRONG_PARAMETERS;'Dialog';appCon;Resize.Maximize;10

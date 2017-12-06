@@ -248,8 +248,8 @@ MATRIX_RUN_FROM_TEXT;Test case;Never;;
         ~;"    #EndIf"
         #EndRawText
 
-        #Id;#Action;$Text;$Parameter
-        MXRN1;MatrixRunFromText;TEXT1;
+        #Id;#Action;$Text
+        MXRN1;MatrixRunFromText;TEXT1
 
         #Action;$Matrix
         MatrixWait;MXRN1.Out
@@ -397,8 +397,8 @@ MATRIX_RUN_FROM_TEXT;Test case;Never;;
         ~;"    Print;new Date()"
         #EndRawText
 
-        #Id;#Action;$Text;$At
-        MXRN1;MatrixRunFromText;TEXT1;
+        #Id;#Action;$Text
+        MXRN1;MatrixRunFromText;TEXT1
 
         #Action;$Matrix
         MatrixWait;MXRN1.Out
@@ -594,8 +594,8 @@ MATRIX_RUN;Test case;Never;;
 
     #Step;#Kind;#For;#Depends
     'matrix parameters null';;;
-        #Id;#Action;$Matrix;$Parameter
-        MXRN1;MatrixRun;'testdata/matrixrun/paramnull.jf';
+        #Id;#Action;$Matrix
+        MXRN1;MatrixRun;'testdata/matrixrun/paramnull.jf'
 
         #Action;$Matrix
         MatrixWait;MXRN1.Out
@@ -714,8 +714,8 @@ MATRIX_RUN;Test case;Never;;
         #Action;'matrix is going to start'
         Print;initDate
 
-        #Id;#Action;$Matrix;$At
-        MXRN1;MatrixRun;'testdata/matrixrun/printdate.jf';
+        #Id;#Action;$Matrix
+        MXRN1;MatrixRun;'testdata/matrixrun/printdate.jf'
 
         #Action;$Matrix
         MatrixWait;MXRN1.Out

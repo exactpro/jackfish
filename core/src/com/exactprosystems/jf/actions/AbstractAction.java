@@ -436,7 +436,7 @@ public abstract class AbstractAction implements Cloneable
 	                    }
 						else if (value == null && description.attribute.shouldFilled())
 						{
-							setError(String.format("NotMandatory parameter %s must be filled or not presented", name), ErrorKind.EMPTY_PARAMETER);
+							setError(String.format("NotMandatory parameter %s must be filled non null value or not presented", name), ErrorKind.EMPTY_PARAMETER);
 							allCorrect = false;
 						}
 						else

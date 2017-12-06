@@ -182,7 +182,7 @@ check  XmlAddNode;;;
         root;createXml
 
         #Action;#Assert;$Xml;parameter1;parameter2
-        XmlAddNode;This.Result == Result.Failed && This.Reason == 'Parameter #NodeName can\'t be null' && This.Kind == ErrorKind.EMPTY_PARAMETER;root;'par1';'par2'
+        XmlAddNode;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;root;'par1';'par2'
 
         #Action;#Assert;$Xml
         XmlAddNode;This.Result == Result.Failed && This.Kind == ErrorKind.WRONG_PARAMETERS;new Date()

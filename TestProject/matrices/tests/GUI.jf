@@ -137,14 +137,14 @@ VALIDATE;DialogValidate;;;
 
 #Id;#TestCase;#Kind;#Depends;#For
 IMAGE_GET;ImageGet;;;
-    #Id;#Action;$Dialog;$AppConnection
-    IMGGET1;ImageGet;;APPSTR1.Out
+    #Id;#Action;#Assert;$Dialog;$AppConnection
+    IMGGET1;ImageGet;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;;APPSTR1.Out
 
     #Id;#Action;#Assert;$Dialog;$AppConnection
     IMGGET2;ImageGet;This.Result == Result.Failed && This.Kind == ErrorKind.DIALOG_NOT_FOUND;'NotExist';APPSTR1.Out
 
     #Id;#Action;#Assert;$Dialog;$Name;$AppConnection
-    IMGGET3;ImageGet;This.Result == Result.Failed && This.Kind == ErrorKind.ELEMENT_NOT_FOUND;'Empty';;APPSTR1.Out
+    IMGGET3;ImageGet;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;'Empty';;APPSTR1.Out
 
     #Id;#Action;#Assert;$Dialog;$Name;$AppConnection
     IMGGET4;ImageGet;This.Result == Result.Failed && This.Kind == ErrorKind.ELEMENT_NOT_FOUND;'Main';'NotExistImage';APPSTR1.Out
@@ -233,7 +233,7 @@ SWITCH;DialogSwitchToWindow;;;
     DialogSwitchToWindow;APPSTR1.Out
 
     #Action;#Assert;$Dialog;$AppConnection
-    DialogSwitchToWindow;This.Result == Result.Failed && This.Kind == ErrorKind.EXCEPTION;'Main';APPSTR1.Out
+    DialogSwitchToWindow;This.Result == Result.Failed && This.Kind == ErrorKind.WRONG_PARAMETERS;'Main';APPSTR1.Out
 
     #Action;#Assert;$Dialog;$Frame;$AppConnection
     DialogSwitchToWindow;This.Result == Result.Failed && This.Kind == ErrorKind.ELEMENT_NOT_FOUND;'Main';'blabla';APPSTR1.Out

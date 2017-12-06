@@ -683,7 +683,7 @@ Application Resize;;;
         ApplicationResize;This.Kind == ErrorKind.WRONG_PARAMETERS;CALL_7
 
         #Action;#Assert;$AppConnection;$Resize
-        ApplicationResize;This.Kind == ErrorKind.WRONG_PARAMETERS;CALL_7;
+        ApplicationResize;This.Kind == ErrorKind.EMPTY_PARAMETER;CALL_7;
 
         #Action;#Assert;$AppConnection;$Height;$Resize
         ApplicationResize;This.Kind == ErrorKind.WRONG_PARAMETERS;CALL_7;10;Resize.Maximize
@@ -771,7 +771,7 @@ Application SwitchTo;;;
         APPSW2;ApplicationSwitchTo;This.Result == Result.Failed && This.Kind == ErrorKind.ELEMENT_NOT_FOUND;newURL;CALL_1
 
         #Id;#Action;#Assert;$SoftCondition;$AppConnection
-        APPSW2;ApplicationSwitchTo;This.Result == Result.Failed && This.Kind == ErrorKind.WRONG_PARAMETERS;;CALL_1
+        APPSW2;ApplicationSwitchTo;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;;CALL_1
 
         #Id;#Action;$AppConnection
         APPSTP1;ApplicationStop;CALL_1

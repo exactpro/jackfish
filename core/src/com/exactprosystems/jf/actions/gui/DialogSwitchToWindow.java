@@ -72,6 +72,11 @@ public class DialogSwitchToWindow extends AbstractAction
 			setError("Need set Dialog parameter with non null Frame parameter", ErrorKind.WRONG_PARAMETERS);
 			return;
 		}
+		if (!Str.IsNullOrEmpty(this.dialog) && Str.IsNullOrEmpty(this.frame))
+		{
+			setError("Need set Frame parameter with non null Dialog parameter", ErrorKind.WRONG_PARAMETERS);
+			return;
+		}
 
 		IApplication app = Helper.getApplication(this.connection);
 		IRemoteApplication service = app.service();
