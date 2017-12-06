@@ -41,7 +41,7 @@ public class MessageCheck extends AbstractAction
 	public static final String actualName = "ActualMessage";
 
 	@ActionFieldAttribute(name = actualName, mandatory = true, constantDescription = R.MESSAGE_CHECK_ACTUAL)
-	protected MapMessage actual = null;
+	protected MapMessage actual;
 
 	@Override
 	public void doRealAction(Context context, ReportBuilder report, Parameters parameters, AbstractEvaluator evaluator) throws Exception

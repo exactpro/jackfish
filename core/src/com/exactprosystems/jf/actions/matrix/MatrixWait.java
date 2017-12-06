@@ -31,7 +31,7 @@ public class MatrixWait extends AbstractAction
 	public static final String timeName   = "Time";
 
 	@ActionFieldAttribute(name = matrixName, mandatory = true, constantDescription = R.MATRIX_WAIT_MATRIX)
-	protected MatrixConnection matrix = null;
+	protected MatrixConnection matrix;
 
 	@ActionFieldAttribute(name = timeName, mandatory = false, def = DefaultValuePool.Long0, constantDescription = R.MATRIX_WAIT_TIME)
 	protected Long time;
@@ -39,12 +39,6 @@ public class MatrixWait extends AbstractAction
 	@Override
 	public void doRealAction(Context context, ReportBuilder report, Parameters parameters, AbstractEvaluator evaluator) throws Exception
 	{
-		if (this.time == null)
-		{
-			super.setError("Column '" + timeName + "' can't be empty.", ErrorKind.EMPTY_PARAMETER);
-			return;
-		}
-
 		boolean join = this.matrix.join(this.time);
 		if (!join)
 		{

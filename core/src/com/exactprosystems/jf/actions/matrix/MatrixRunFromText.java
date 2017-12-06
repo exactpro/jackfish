@@ -42,7 +42,7 @@ public class MatrixRunFromText extends AbstractAction
 	public static final String parameterName = "Parameter";
 
 	@ActionFieldAttribute(name = textName, mandatory = true, constantDescription = R.MATRIX_RUN_FROM_TEXT_TEXT)
-	protected Text text = null;
+	protected Text text;
 
 	@ActionFieldAttribute(name = atName, mandatory = false, def = DefaultValuePool.Null, constantDescription = R.MATRIX_RUN_FROM_TEXT_AT)
 	protected Date at;

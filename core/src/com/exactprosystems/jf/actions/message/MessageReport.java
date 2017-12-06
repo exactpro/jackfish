@@ -43,16 +43,16 @@ public class MessageReport extends AbstractAction
 	public static final String toReportName       = "ToReport";
 
 	@ActionFieldAttribute(name = messageName, mandatory = true, constantDescription = R.MESSAGE_REPORT_MESSAGE)
-	protected MapMessage message = null;
+	protected MapMessage message;
 
 	@ActionFieldAttribute(name = titleName, mandatory = true, constantDescription = R.MESSAGE_REPORT_TITLE)
-	protected String title = null;
+	protected String title;
 
 	@ActionFieldAttribute(name = toReportName, mandatory = false, def = DefaultValuePool.Null, constantDescription = R.MESSAGE_REPORT_TO_REPORT)
 	protected ReportBuilder toReport;
 
 	@ActionFieldAttribute(name = beforeTestCaseName, mandatory = false, def = DefaultValuePool.Null, constantDescription = R.MESSAGE_REPORT_BEFORE_TESTCASE)
-	protected String beforeTestCase = null;
+	protected String beforeTestCase;
 
 	@Override
 	protected HelpKind howHelpWithParameterDerived(Context context, Parameters parameters, String fieldName) throws Exception

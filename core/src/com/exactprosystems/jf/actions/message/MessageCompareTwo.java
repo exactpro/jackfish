@@ -32,10 +32,10 @@ public class MessageCompareTwo extends AbstractAction
 	public static final String excludeName  = "Exclude";
 
 	@ActionFieldAttribute(name = actualName, mandatory = true, constantDescription = R.MESSAGE_COMPARE_TWO_ACTUAL)
-	protected MapMessage actual = null;
+	protected MapMessage actual;
 
 	@ActionFieldAttribute(name = expectedName, mandatory = true, constantDescription = R.MESSAGE_COMPARE_TWO_EXPECTED)
-	protected MapMessage expected = null;
+	protected MapMessage expected;
 
 	@ActionFieldAttribute(name = excludeName, mandatory = false, def = DefaultValuePool.Null, constantDescription = R.MESSAGE_COMPARE_TWO_EXCLUDE)
 	protected String[] exclude;

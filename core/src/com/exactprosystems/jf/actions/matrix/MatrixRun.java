@@ -41,7 +41,7 @@ public class MatrixRun extends AbstractAction
 	public static final String parameterName = "Parameter";
 
 	@ActionFieldAttribute(name = matrixName, mandatory = true, constantDescription = R.MATRIX_RUN_MATRIX)
-	protected String matrix = null;
+	protected String matrix;
 
 	@ActionFieldAttribute(name = atName, mandatory = false, def = DefaultValuePool.Null, constantDescription = R.MATRIX_RUN_AT)
 	protected Date at;
