@@ -11,6 +11,7 @@ package com.exactprosystems.jf.actions;
 
 import com.exactprosystems.jf.api.common.Str;
 import com.exactprosystems.jf.api.error.ErrorKind;
+import com.exactprosystems.jf.api.error.IErrorKind;
 import com.exactprosystems.jf.api.error.JFException;
 import com.exactprosystems.jf.api.error.JFRemoteException;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
@@ -29,6 +30,7 @@ import org.apache.log4j.Logger;
 
 import javax.lang.model.type.NullType;
 import java.lang.reflect.Field;
+import java.rmi.ServerException;
 import java.util.*;
 import java.util.Map.Entry;
 import java.util.stream.Collectors;
@@ -167,12 +169,21 @@ public abstract class AbstractAction implements Cloneable
 				setError("Errors in parameter expressions", ErrorKind.EXPRESSION_ERROR);
 			}
 		}
-		catch (JFRemoteException e)
+		catch (ServerException e)
 		{
-			logger.error(e.getMessage(), e);
-			setError(e.getMessage(), e.getErrorKind());
+			Throwable cause = e.getCause();
+			if (cause instanceof IErrorKind)
+			{
+				logger.error(cause.getMessage(), cause);
+				setError(cause.getMessage(), ((IErrorKind) cause).getErrorKind());
+			}
+			else
+			{
+				logger.error(e.getMessage(), e);
+				setError("Exception occurred: " + (e.getCause() == null ? e.getMessage() : e.getCause().getMessage()), ErrorKind.EXCEPTION);
+			}
 		}
-		catch (JFException e)
+		catch (JFRemoteException | JFException e)
 		{
 			logger.error(e.getMessage(), e);
 			setError(e.getMessage(), e.getErrorKind());

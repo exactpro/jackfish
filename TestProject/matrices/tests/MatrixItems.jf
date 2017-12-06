@@ -406,7 +406,7 @@ check Switch Case Default;;;
 
         #OnError
             #Assert;#Message
-            err.Kind == ErrorKind.EXCEPTION && err.Message == 'Error in expression #Switch';'Assert is false'
+            err.Kind == ErrorKind.EXCEPTION && err.Message == 'Error in expression : Switch';'Assert is false'
 
 
     #EndStep
@@ -422,7 +422,7 @@ check Switch Case Default;;;
 
         #OnError
             #Assert;#Message
-            err.Kind == ErrorKind.EXCEPTION && err.Message == 'Error in expression:Case : asd';'Assert is false'
+            err.Kind == ErrorKind.EXCEPTION && err.Message == 'Error in expression : Case : asd';'Assert is false'
 
 
     #EndStep
@@ -664,7 +664,7 @@ check If / Else;;;
 
         #OnError
             #Assert;#Message
-            err.Message == 'result is not type of Boolean' && err.Kind == ErrorKind.EXCEPTION;'Assert is false'
+            err.Message == 'Result is not type of Boolean' && err.Kind == ErrorKind.EXCEPTION;'Assert is false'
 
 
     #EndStep
@@ -1124,7 +1124,7 @@ check While;;;
 
         #OnError
             #Assert;#Message
-            err.Kind == ErrorKind.EXCEPTION && err.Message == 'Error in expression #While';
+            err.Kind == ErrorKind.EXCEPTION && err.Message == 'Error in expression : While';
 
 
     #EndStep
@@ -1137,7 +1137,7 @@ check While;;;
 
         #OnError
             #Assert;#Message
-            err.Kind == ErrorKind.EXCEPTION && err.Message == 'result is not type of Boolean';
+            err.Kind == ErrorKind.EXCEPTION && err.Message == 'Result is not type of Boolean';
 
 
     #EndStep
@@ -1738,7 +1738,7 @@ check Fail;;;
 
         #OnError
             #Assert;#Message
-            err.Kind == ErrorKind.EXCEPTION && error == 'Error in expression #Fail';
+            err.Kind == ErrorKind.EXCEPTION && error == 'Error in expression : Fail';
 
 
     #EndStep

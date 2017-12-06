@@ -623,10 +623,10 @@ public abstract class RemoteApplication implements IRemoteApplication
 		{
 			return getDialogSizeDerived(owner);
 		}
-			catch (RemoteException e)
-			{
-				throw e;
-			}
+		catch (RemoteException e)
+		{
+			throw e;
+		}
 		catch (Exception e)
 		{
 			String msg = String.format("Error on getDialogSize(%s)", owner);
@@ -642,10 +642,10 @@ public abstract class RemoteApplication implements IRemoteApplication
 			return getDialogPositionDerived(owner);
 
 		}
-				catch (RemoteException e)
-				{
-					throw e;
-				}
+		catch (RemoteException e)
+		{
+			throw e;
+		}
 		catch (Exception e)
 		{
 			String msg = String.format("Error on getDialogPosition(%s)", owner);

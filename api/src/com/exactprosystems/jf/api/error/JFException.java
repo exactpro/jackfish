@@ -9,7 +9,7 @@
 
 package com.exactprosystems.jf.api.error;
 
-public abstract class JFException extends Exception
+public abstract class JFException extends Exception implements IErrorKind
 {
 	private static final long	serialVersionUID	= -1644249861399919968L;
 
@@ -22,6 +22,4 @@ public abstract class JFException extends Exception
 	{
 		super(message);
 	}
-	
-	public abstract ErrorKind getErrorKind();
 }

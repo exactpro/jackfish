@@ -9,7 +9,7 @@
 
 package com.exactprosystems.jf.api.error;
 
-public abstract class JFRuntimeException extends RuntimeException
+public abstract class JFRuntimeException extends RuntimeException implements IErrorKind
 {
     private static final long serialVersionUID = -2429503786251472815L;
 
@@ -22,6 +22,4 @@ public abstract class JFRuntimeException extends RuntimeException
 	{
 		super(message);
 	}
-	
-	public abstract ErrorKind getErrorKind();
 }
