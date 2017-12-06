@@ -34,14 +34,14 @@ import com.exactprosystems.jf.functions.Table;
 )
 public class TableRemoveRow extends AbstractAction
 {
-	public final static String tableName = "Table";
-	public static final String rowIndex = "Index";
+	public static final String tableName = "Table";
+	public static final String rowIndex  = "Index";
 
 	@ActionFieldAttribute(name = tableName, mandatory = true, constantDescription = R.TABLE_REMOVE_ROW_TABLE)
-	protected Table table = null;
+	protected Table table;
 
 	@ActionFieldAttribute(name = rowIndex, mandatory = true, constantDescription = R.TABLE_REMOVE_ROW_ROW)
-	protected Integer row = null;
+	protected Integer row;
 
 	@Override
 	protected void doRealAction(Context context, ReportBuilder report, Parameters parameters, AbstractEvaluator evaluator) throws Exception
@@ -52,6 +52,6 @@ public class TableRemoveRow extends AbstractAction
 			return;
 		}
 
-		super.setResult(table.removeRow(row));
+		super.setResult(this.table.removeRow(this.row));
 	}
 }

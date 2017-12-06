@@ -37,76 +37,70 @@ import java.util.Map;
 	)
 public class TableEdit extends AbstractAction 
 {
-    public static final String titleName          = "Title";
-    public final static String tableName          = "Table";
+	public static final String titleName = "Title";
+	public static final String tableName = "Table";
 
-    @ActionFieldAttribute(name=titleName, mandatory = true, constantDescription = R.TABLE_EDIT_TITLE)
-    protected String title;
+	@ActionFieldAttribute(name = titleName, mandatory = true, constantDescription = R.TABLE_EDIT_TITLE)
+	protected String title;
 
-    @ActionFieldAttribute(name = tableName, mandatory = true, constantDescription = R.TABLE_EDIT_TABLE)
-    protected Table     table   = null;
-	
-    @Override
-    protected HelpKind howHelpWithParameterDerived(Context context, Parameters parameters, String fieldName) throws Exception
-    {
-        switch (fieldName)
-        {
-            case titleName:
-            case tableName:
-                break;
+	@ActionFieldAttribute(name = tableName, mandatory = true, constantDescription = R.TABLE_EDIT_TABLE)
+	protected Table table;
 
-            default:
-                return HelpKind.ChooseFromList;
-        }
-        return null;
-    }
+	@Override
+	protected HelpKind howHelpWithParameterDerived(Context context, Parameters parameters, String fieldName) throws Exception
+	{
+		switch (fieldName)
+		{
+			case titleName:
+			case tableName:
+				break;
 
-    @Override
-    protected void listToFillParameterDerived(List<ReadableValue> list, Context context, String parameterToFill, Parameters parameters) throws Exception
-    {
-        switch (parameterToFill)
-        {
-            case titleName:
-            case tableName:
-                break;
-    
-            default:
-                list.add(ReadableValue.TRUE);
-                list.add(ReadableValue.FALSE);
-                break;
-        }
-    }
-	
+			default:
+				return HelpKind.ChooseFromList;
+		}
+		return null;
+	}
+
+	@Override
+	protected void listToFillParameterDerived(List<ReadableValue> list, Context context, String parameterToFill, Parameters parameters) throws Exception
+	{
+		switch (parameterToFill)
+		{
+			case titleName:
+			case tableName:
+				break;
+
+			default:
+				list.add(ReadableValue.TRUE);
+				list.add(ReadableValue.FALSE);
+				break;
+		}
+	}
+
 	@Override
 	public void doRealAction(Context context, ReportBuilder report, Parameters parameters, AbstractEvaluator evaluator) throws Exception
 	{
-		if (this.title == null)
-		{
-			super.setError("Title is null", ErrorKind.EMPTY_PARAMETER);
-			return;
-		}
-		
 		Map<String, Boolean> columns = new LinkedHashMap<>();
 		for (Parameter param : parameters.select(TypeMandatory.Extra))
 		{
-		    String name = param.getName();
-		    Object value = param.getValue();
-		    if (value == null)
-		    {
-		        columns.put(name, false);
-		    }
-		    else if (value instanceof Boolean)
-		    {
-		        columns.put(name, (Boolean)value);
-		    }
-		    else
-		    {
-		        super.setError("Parameter " + name, ErrorKind.WRONG_PARAMETERS);
-		        return;
-		    }
+			String name = param.getName();
+			Object value = param.getValue();
+			if (value == null)
+			{
+				columns.put(name, false);
+			}
+			else if (value instanceof Boolean)
+			{
+				columns.put(name, (Boolean) value);
+			}
+			else
+			{
+				super.setError(String.format("Parameter for column %s should be empty or true/false", name), ErrorKind.WRONG_PARAMETERS);
+				return;
+			}
 		}
-		
-        boolean input = context.getFactory().editTable(context.getEvaluator(), this.title, this.table, columns);
+
+		boolean input = context.getFactory().editTable(context.getEvaluator(), this.title, this.table, columns);
 		super.setResult(input);
 	}
 }

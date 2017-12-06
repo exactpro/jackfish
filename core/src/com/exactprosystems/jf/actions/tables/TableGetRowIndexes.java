@@ -9,14 +9,12 @@
 
 package com.exactprosystems.jf.actions.tables;
 
-import java.util.List;
 import com.exactprosystems.jf.actions.AbstractAction;
 import com.exactprosystems.jf.actions.ActionAttribute;
 import com.exactprosystems.jf.actions.ActionFieldAttribute;
 import com.exactprosystems.jf.actions.ActionGroups;
 import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.api.conditions.Condition;
-import com.exactprosystems.jf.api.error.ErrorKind;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.report.ReportBuilder;
 import com.exactprosystems.jf.documents.config.Context;
@@ -24,6 +22,8 @@ import com.exactprosystems.jf.documents.matrix.parser.Parameters;
 import com.exactprosystems.jf.documents.matrix.parser.items.RawTable;
 import com.exactprosystems.jf.documents.matrix.parser.items.TypeMandatory;
 import com.exactprosystems.jf.functions.Table;
+
+import java.util.List;
 
 @ActionAttribute(
 		group						  = ActionGroups.Tables,
@@ -38,10 +38,10 @@ import com.exactprosystems.jf.functions.Table;
 	)
 public class TableGetRowIndexes extends AbstractAction 
 {
-	public final static String tableName = "Table";
+	public static final String tableName = "Table";
 
 	@ActionFieldAttribute(name = tableName, mandatory = true, constantDescription = R.TABLE_GET_ROW_INDEXES_TABLE)
-	protected Table 	table 	= null;
+	protected Table table;
 
 	@Override
 	public void doRealAction(Context context, ReportBuilder report, Parameters parameters, AbstractEvaluator evaluator) throws Exception
@@ -50,8 +50,7 @@ public class TableGetRowIndexes extends AbstractAction
 
 		Condition[] conditions = Condition.convertToCondition(extra.makeCopy());
 		List<Integer> indexes = this.table.findAllIndexes(conditions);
-		
+
 		super.setResult(indexes);
 	}
 }
-

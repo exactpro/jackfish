@@ -33,16 +33,16 @@ import java.util.List;
 
 public class TableSort extends AbstractAction
 {
-	public static final String tableName = "Table";
-	public static final String columnName = "ColumnName";
-	public static final String ascendingName = "Ascending";
+	public static final String tableName      = "Table";
+	public static final String columnName     = "ColumnName";
+	public static final String ascendingName  = "Ascending";
 	public static final String ignoreCaseName = "IgnoreCase";
 
 	@ActionFieldAttribute(name = tableName, mandatory = true, constantDescription = R.TABLE_SORT_TABLE)
-	protected Table table = null;
+	protected Table table;
 
 	@ActionFieldAttribute(name = columnName, mandatory = true, constantDescription = R.TABLE_SORT_COLUMN_INDEX)
-	protected String columnIndex = null;
+	protected String column;
 
 	@ActionFieldAttribute(name = ascendingName, mandatory = false, def = DefaultValuePool.True, constantDescription = R.TABLE_SORT_ASCENDING)
 	protected Boolean ascending;
@@ -51,7 +51,7 @@ public class TableSort extends AbstractAction
 	protected Boolean ignoreCase;
 
 	@Override
-	protected HelpKind howHelpWithParameterDerived(Context context,	Parameters parameters, String fieldName) throws Exception
+	protected HelpKind howHelpWithParameterDerived(Context context, Parameters parameters, String fieldName) throws Exception
 	{
 		switch (fieldName)
 		{
@@ -73,12 +73,12 @@ public class TableSort extends AbstractAction
 				list.add(ReadableValue.TRUE);
 				list.add(ReadableValue.FALSE);
 				break;
-				
+
 			case columnName:
 				Object tab = parameters.get(tableName);
 				if (tab instanceof Table)
 				{
-					Table table = (Table)tab;
+					Table table = (Table) tab;
 					for (int index = 0; index < table.getHeaderSize(); index++)
 					{
 						list.add(new ReadableValue(context.getEvaluator().createString(table.getHeader(index))));
@@ -87,22 +87,16 @@ public class TableSort extends AbstractAction
 				break;
 		}
 	}
-	
+
 	@Override
 	protected void doRealAction(Context context, ReportBuilder report, Parameters parameters, AbstractEvaluator evaluator) throws Exception
 	{
-		if(this.ascending == null)
+		if (!this.table.columnIsPresent(this.column))
 		{
-			super.setError("Column 'Ascending' can't be empty string", ErrorKind.EMPTY_PARAMETER);
+			super.setError(String.format("Column '%s' doesn't exist in this table", this.column), ErrorKind.WRONG_PARAMETERS);
 			return;
 		}
 
-		if(!this.table.columnIsPresent(columnIndex))
-		{
-			super.setError("Column '" + columnIndex + "' doesn't exist in this table", ErrorKind.WRONG_PARAMETERS);
-			return;
-		}
-
-		super.setResult(this.table.sort(this.columnIndex, this.ascending, this.ignoreCase));
+		super.setResult(this.table.sort(this.column, this.ascending, this.ignoreCase));
 	}
 }

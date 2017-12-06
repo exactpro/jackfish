@@ -32,33 +32,33 @@ import com.exactprosystems.jf.functions.Table;
 	)
 public class TableSetValue extends AbstractAction 
 {
-	public final static String tableName = "Table";
-	public final static String indexName = "Index";
+	public static final String tableName = "Table";
+	public static final String indexName = "Index";
 
 	@ActionFieldAttribute(name = tableName, mandatory = true, constantDescription = R.TABLE_SET_VALUE_TABLE)
-	protected Table 	table 	= null;
+	protected Table table;
 
 	@ActionFieldAttribute(name = indexName, mandatory = true, constantDescription = R.TABLE_SET_VALUE_INDEX)
-	protected Integer	index 	= 0;
+	protected Integer index;
 
-    @Override
+	@Override
 	public void doRealAction(Context context, ReportBuilder report, Parameters parameters, AbstractEvaluator evaluator) throws Exception
 	{
-        Parameters params = parameters.select(TypeMandatory.Extra);
-        for (String name : params.keySet())
-        {
+		Parameters params = parameters.select(TypeMandatory.Extra);
+		for (String name : params.keySet())
+		{
 			if (name.isEmpty())
 			{
 				super.setError("The column name does not have to contain an empty value", ErrorKind.EMPTY_PARAMETER);
 				return;
 			}
 
-            if (!this.table.columnIsPresent(name))
-            {
-                super.setError("The header " + name + " does not exist in the table", ErrorKind.WRONG_PARAMETERS);
-                return;
-            }
-        }
+			if (!this.table.columnIsPresent(name))
+			{
+				super.setError(String.format("The header %s does not exist in the table", name), ErrorKind.WRONG_PARAMETERS);
+				return;
+			}
+		}
 
 		if (this.index >= this.table.size() || this.index < 0)
 		{

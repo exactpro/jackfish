@@ -9,13 +9,8 @@
 
 package com.exactprosystems.jf.actions.tables;
 
-import com.exactprosystems.jf.actions.AbstractAction;
-import com.exactprosystems.jf.actions.ActionAttribute;
-import com.exactprosystems.jf.actions.ActionFieldAttribute;
-import com.exactprosystems.jf.actions.ActionGroups;
-import com.exactprosystems.jf.actions.DefaultValuePool;
+import com.exactprosystems.jf.actions.*;
 import com.exactprosystems.jf.api.common.i18n.R;
-import com.exactprosystems.jf.api.error.ErrorKind;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.report.ReportBuilder;
 import com.exactprosystems.jf.documents.config.Context;
@@ -33,69 +28,54 @@ import com.exactprosystems.jf.functions.Table;
 	)
 public class TableConsiderColumnsAs extends AbstractAction
 {
-    public final static String tableName        = "Table";
-    public final static String asStringName     = "String";
-    public final static String asBooleanName    = "Boolean";
-    public final static String asIntegerName    = "Integer";
-    public final static String asDoubleName     = "Double";
-    public final static String asBigDecimalName = "BigDecimal";
-    public final static String asDateName       = "Date";
-    public final static String asExpressionName = "Expression";
-    public final static String asGroupName      = "Group";
-    public final static String asHyperlinkName  = "Hyperlink";
-    public final static String asColoredName    = "Colored";
+	public static final String tableName        = "Table";
+	public static final String asStringName     = "String";
+	public static final String asBooleanName    = "Boolean";
+	public static final String asIntegerName    = "Integer";
+	public static final String asDoubleName     = "Double";
+	public static final String asBigDecimalName = "BigDecimal";
+	public static final String asDateName       = "Date";
+	public static final String asExpressionName = "Expression";
+	public static final String asGroupName      = "Group";
+	public static final String asHyperlinkName  = "Hyperlink";
+	public static final String asColoredName    = "Colored";
 
 	@ActionFieldAttribute(name = tableName, mandatory = true, constantDescription = R.TABLE_CONSIDER_COLUMN_AS_TABLE)
-	protected Table 	table 	= null;
+	protected Table table;
 
 	@ActionFieldAttribute(name = asStringName, mandatory = false, def = DefaultValuePool.EmptyArrString, constantDescription = R.TABLE_CONSIDER_COLUMN_AS_STRING)
-	protected String[]	asString;
+	protected String[] asString;
 
 	@ActionFieldAttribute(name = asBooleanName, mandatory = false, def = DefaultValuePool.EmptyArrString, constantDescription = R.TABLE_CONSIDER_COLUMN_AS_BOOLEAN)
-	protected String[]	asBoolean;
+	protected String[] asBoolean;
 
 	@ActionFieldAttribute(name = asIntegerName, mandatory = false, def = DefaultValuePool.EmptyArrString, constantDescription = R.TABLE_CONSIDER_COLUMN_AS_INTEGER)
-	protected String[]	asInteger;
+	protected String[] asInteger;
 
 	@ActionFieldAttribute(name = asDoubleName, mandatory = false, def = DefaultValuePool.EmptyArrString, constantDescription = R.TABLE_CONSIDER_COLUMN_AS_DOUBLE)
-	protected String[]	asDouble;
+	protected String[] asDouble;
 
 	@ActionFieldAttribute(name = asBigDecimalName, mandatory = false, def = DefaultValuePool.EmptyArrString, constantDescription = R.TABLE_CONSIDER_COLUMN_AS_BIG_DECIMAL)
-	protected String[]	asBigDecimal;
+	protected String[] asBigDecimal;
 
 	@ActionFieldAttribute(name = asDateName, mandatory = false, def = DefaultValuePool.EmptyArrString, constantDescription = R.TABLE_CONSIDER_COLUMN_AS_DATE)
-	protected String[]	asDate;
+	protected String[] asDate;
 
 	@ActionFieldAttribute(name = asExpressionName, mandatory = false, def = DefaultValuePool.EmptyArrString, constantDescription = R.TABLE_CONSIDER_COLUMN_AS_EXPRESSION)
-	protected String[]	asExpression;
+	protected String[] asExpression;
 
-    @ActionFieldAttribute(name = asGroupName, mandatory = false, def = DefaultValuePool.EmptyArrString, constantDescription = R.TABLE_CONSIDER_COLUMN_AS_GROUP)
-    protected String[]  asGroup;
+	@ActionFieldAttribute(name = asGroupName, mandatory = false, def = DefaultValuePool.EmptyArrString, constantDescription = R.TABLE_CONSIDER_COLUMN_AS_GROUP)
+	protected String[] asGroup;
 
-    @ActionFieldAttribute(name = asHyperlinkName, mandatory = false, def = DefaultValuePool.EmptyArrString, constantDescription = R.TABLE_CONSIDER_COLUMN_AS_HYPERLINK)
-    protected String[]  asHyperlink;
+	@ActionFieldAttribute(name = asHyperlinkName, mandatory = false, def = DefaultValuePool.EmptyArrString, constantDescription = R.TABLE_CONSIDER_COLUMN_AS_HYPERLINK)
+	protected String[] asHyperlink;
 
-    @ActionFieldAttribute(name = asColoredName, mandatory = false, def = DefaultValuePool.EmptyArrString, constantDescription = R.TABLE_CONSIDER_COLUMN_AS_COLORED)
-    protected String[]  asColored;
+	@ActionFieldAttribute(name = asColoredName, mandatory = false, def = DefaultValuePool.EmptyArrString, constantDescription = R.TABLE_CONSIDER_COLUMN_AS_COLORED)
+	protected String[] asColored;
 
 	@Override
 	public void doRealAction(Context context, ReportBuilder report, Parameters parameters, AbstractEvaluator evaluator) throws Exception
 	{
-		if(this.asString == null
-		|| this.asBoolean == null
-		|| this.asInteger == null
-		|| this.asDouble == null
-		|| this.asBigDecimal == null
-		|| this.asDate == null
-		|| this.asExpression == null
-		|| this.asGroup == null
-		|| this.asHyperlink == null
-		|| this.asColored == null)
-		{
-			super.setError("Columns of considering can't be empty.", ErrorKind.EMPTY_PARAMETER);
-			return;
-		}
-
 		if (this.asString.length > 0)
 		{
 			this.table.considerAsString(this.asString);
@@ -124,18 +104,18 @@ public class TableConsiderColumnsAs extends AbstractAction
 		{
 			this.table.considerAsExpression(this.asExpression);
 		}
-        if (this.asGroup.length > 0)
-        {
-            this.table.considerAsGroup(this.asGroup);
-        }
-        if (this.asHyperlink.length > 0)
-        {
-            this.table.considerAsHyperlink(this.asHyperlink);
-        }
-        if (this.asColored.length > 0)
-        {
-            this.table.considerAsColored(this.asColored);
-        }
+		if (this.asGroup.length > 0)
+		{
+			this.table.considerAsGroup(this.asGroup);
+		}
+		if (this.asHyperlink.length > 0)
+		{
+			this.table.considerAsHyperlink(this.asHyperlink);
+		}
+		if (this.asColored.length > 0)
+		{
+			this.table.considerAsColored(this.asColored);
+		}
 
 		super.setResult(null);
 	}

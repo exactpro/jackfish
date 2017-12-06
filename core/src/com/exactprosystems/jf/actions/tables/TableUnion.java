@@ -18,7 +18,6 @@ import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.report.ReportBuilder;
 import com.exactprosystems.jf.documents.config.Context;
 import com.exactprosystems.jf.documents.matrix.parser.Parameters;
-import com.exactprosystems.jf.functions.RowTable;
 import com.exactprosystems.jf.functions.Table;
 
 @ActionAttribute(
@@ -29,24 +28,24 @@ import com.exactprosystems.jf.functions.Table;
 )
 public class TableUnion extends AbstractAction
 {
-	public final static String mainTableName = "MainTable";
-	public final static String unitedTableName = "UnitedTable";
+	public static final String mainTableName   = "MainTable";
+	public static final String unitedTableName = "UnitedTable";
 
 	@ActionFieldAttribute(name = mainTableName, mandatory = true, constantDescription = R.TABLE_UNION_MAIN_TABLE)
-	protected Table mainTable = null;
+	protected Table mainTable;
 
 	@ActionFieldAttribute(name = unitedTableName, mandatory = true, constantDescription = R.TABLE_UNION_UNITED_TABLE)
-	protected Table unitedTable = null;
+	protected Table unitedTable;
 
 	@Override
-	public void doRealAction(Context context, ReportBuilder report,	Parameters parameters, AbstractEvaluator evaluator) throws Exception
+	public void doRealAction(Context context, ReportBuilder report, Parameters parameters, AbstractEvaluator evaluator) throws Exception
 	{
 		boolean atLeastOneCoincidence = false;
 		for (int mainNum = 0; mainNum < this.mainTable.getHeaderSize(); mainNum++)
 		{
 			for (int unitedNum = 0; unitedNum < this.unitedTable.getHeaderSize(); unitedNum++)
 			{
-				if(this.mainTable.getHeader(mainNum).equals(this.unitedTable.getHeader(unitedNum)))
+				if (this.mainTable.getHeader(mainNum).equals(this.unitedTable.getHeader(unitedNum)))
 				{
 					atLeastOneCoincidence = true;
 					break;
@@ -54,12 +53,9 @@ public class TableUnion extends AbstractAction
 			}
 		}
 
-		if(atLeastOneCoincidence)
+		if (atLeastOneCoincidence)
 		{
-			for (RowTable row : this.unitedTable)
-			{
-				this.mainTable.add(row);
-			}
+			this.mainTable.addAll(this.unitedTable);
 		}
 
 		super.setResult(null);

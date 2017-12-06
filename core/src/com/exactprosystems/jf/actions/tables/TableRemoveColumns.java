@@ -27,14 +27,14 @@ import com.exactprosystems.jf.functions.Table;
 )
 public class TableRemoveColumns extends AbstractAction
 {
-	public static final String tableName = "Table";
+	public static final String tableName   = "Table";
 	public static final String columnsName = "Columns";
 
 	@ActionFieldAttribute(name = tableName, mandatory = true, constantDescription = R.TABLE_REMOVE_COLUMNS_TABLE)
-	protected Table table = null;
+	protected Table table;
 
 	@ActionFieldAttribute(name = columnsName, mandatory = true, constantDescription = R.TABLE_REMOVE_COLUMNS_COLUMNS)
-	protected String[] columns = new String[] {};
+	protected String[] columns;
 
 	@Override
 	protected void doRealAction(Context context, ReportBuilder report, Parameters parameters, AbstractEvaluator evaluator) throws Exception

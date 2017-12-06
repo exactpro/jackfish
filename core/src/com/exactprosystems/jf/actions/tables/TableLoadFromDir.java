@@ -22,6 +22,7 @@ import com.exactprosystems.jf.documents.matrix.parser.Parameters;
 import com.exactprosystems.jf.documents.matrix.parser.items.RawTable;
 import com.exactprosystems.jf.functions.HelpKind;
 import com.exactprosystems.jf.functions.Table;
+
 import java.io.File;
 
 @ActionAttribute(
@@ -36,26 +37,29 @@ import java.io.File;
 )
 public class TableLoadFromDir extends AbstractAction
 {
-    public final static String dirName = "Dir";
+	public static final String dirName = "Dir";
 
-    @ActionFieldAttribute(name = dirName, mandatory = true, constantDescription = R.TABLE_LOAD_FROM_DIR_DIRECTORY)
-    protected String directory = null;
+	@ActionFieldAttribute(name = dirName, mandatory = true, constantDescription = R.TABLE_LOAD_FROM_DIR_DIRECTORY)
+	protected String directory;
 
-    @Override
-    protected HelpKind howHelpWithParameterDerived(Context context, Parameters parameters, String fieldName)
-    {
-        return HelpKind.ChooseFolder;
-    }
+	@Override
+	protected HelpKind howHelpWithParameterDerived(Context context, Parameters parameters, String fieldName)
+	{
+		return HelpKind.ChooseFolder;
+	}
 
-    @Override
-    public void doRealAction(Context context, ReportBuilder report, Parameters parameters, AbstractEvaluator evaluator) throws Exception
-    {
-        File dir = new File(directory);
+	@Override
+	public void doRealAction(Context context, ReportBuilder report, Parameters parameters, AbstractEvaluator evaluator) throws Exception
+	{
+		File dir = new File(this.directory);
 
-        if (dir.exists() && dir.isDirectory()) {
-            super.setResult(new Table(directory,evaluator));
-        }else{
-            super.setError("Directory '" + directory + "' doesn't exists.", ErrorKind.WRONG_PARAMETERS);
-        }
-    }
+		if (dir.exists() && dir.isDirectory())
+		{
+			super.setResult(new Table(this.directory, evaluator));
+		}
+		else
+		{
+			super.setError(String.format("Directory '%s' doesn't exists.", this.directory), ErrorKind.WRONG_PARAMETERS);
+		}
+	}
 }

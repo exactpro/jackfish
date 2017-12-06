@@ -35,10 +35,6 @@ import com.exactprosystems.jf.functions.Table;
 	)
 public class TableCreate extends AbstractAction 
 {
-	public TableCreate()
-	{
-	}
-	
 	@Override
 	public void doRealAction(Context context, ReportBuilder report, Parameters parameters, AbstractEvaluator evaluator) throws Exception
 	{

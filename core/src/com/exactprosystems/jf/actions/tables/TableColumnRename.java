@@ -33,11 +33,10 @@ import com.exactprosystems.jf.functions.Table;
 )
 public class TableColumnRename extends AbstractAction
 {
-
 	public static final String tableName = "Table";
 
 	@ActionFieldAttribute(name = tableName, mandatory = true, constantDescription = R.TABLE_COLUMN_RENAME_TABLE)
-	protected Table table = null;
+	protected Table table;
 
 	@Override
 	protected void doRealAction(Context context, ReportBuilder report, Parameters parameters, AbstractEvaluator evaluator) throws Exception

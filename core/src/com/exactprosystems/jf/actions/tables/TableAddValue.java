@@ -9,11 +9,7 @@
 
 package com.exactprosystems.jf.actions.tables;
 
-import com.exactprosystems.jf.actions.AbstractAction;
-import com.exactprosystems.jf.actions.ActionAttribute;
-import com.exactprosystems.jf.actions.ActionFieldAttribute;
-import com.exactprosystems.jf.actions.ActionGroups;
-import com.exactprosystems.jf.actions.DefaultValuePool;
+import com.exactprosystems.jf.actions.*;
 import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.api.error.ErrorKind;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
@@ -33,36 +29,28 @@ import com.exactprosystems.jf.functions.Table;
 	)
 public class TableAddValue extends AbstractAction 
 {
-	public final static String tableName = "Table";
+	public static final String tableName = "Table";
 	public static final String indexName = "Index";
 
 	@ActionFieldAttribute(name = tableName, mandatory = true, constantDescription = R.TABLE_ADD_VALUE_TABLE)
-	protected Table 	table 	= null;
+	protected Table table;
 
 	@ActionFieldAttribute(name = indexName, mandatory = false, def = DefaultValuePool.IntMin, constantDescription = R.TABLE_ADD_VALUE_INDEX)
-	protected Integer	index;
+	protected Integer index;
 
 	@Override
 	public void doRealAction(Context context, ReportBuilder report, Parameters parameters, AbstractEvaluator evaluator) throws Exception
 	{
-
-		if (this.index == null)
+		Parameters params = parameters.select(TypeMandatory.Extra);
+		for (String name : params.keySet())
 		{
-			super.setError("Index is null", ErrorKind.EMPTY_PARAMETER);
-			return;
+			if (!this.table.columnIsPresent(name))
+			{
+				super.setError(String.format("The header %s does not exist in the table", name), ErrorKind.WRONG_PARAMETERS);
+				return;
+			}
 		}
-
-        Parameters params = parameters.select(TypeMandatory.Extra);
-        for (String name : params.keySet())
-        {
-            if (!this.table.columnIsPresent(name))
-            {
-                super.setError("The header " + name + " does not exist in the table", ErrorKind.WRONG_PARAMETERS);
-                return;
-            }
-        }
-	    
-		table.addValue(index, params.makeCopy());
+		this.table.addValue(this.index, params.makeCopy());
 		super.setResult(null);
 	}
 }

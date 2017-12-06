@@ -33,45 +33,38 @@ import java.util.List;
 	)
 public class TableColumnAsList extends AbstractAction
 {
-    public final static String tableName = "Table";
-    public final static String columnName = "Column";
-    public final static String getValuesName = "GetValues";
+	public static final String tableName     = "Table";
+	public static final String columnName    = "Column";
+	public static final String getValuesName = "GetValues";
 
-    @ActionFieldAttribute(name = tableName, mandatory = true, constantDescription = R.TABLE_COLUMN_AS_LIST_TABLE)
-    protected Table table = null;
+	@ActionFieldAttribute(name = tableName, mandatory = true, constantDescription = R.TABLE_COLUMN_AS_LIST_TABLE)
+	protected Table table;
 
-    @ActionFieldAttribute(name = columnName, mandatory = true, constantDescription = R.TABLE_COLUMN_AS_LIST_COLUMN)
-    protected String column = null;
+	@ActionFieldAttribute(name = columnName, mandatory = true, constantDescription = R.TABLE_COLUMN_AS_LIST_COLUMN)
+	protected String column;
 
-    @ActionFieldAttribute(name = getValuesName, mandatory = false, def = DefaultValuePool.False, constantDescription = R.TABLE_COLUMN_AS_LIST_GET_VALUES)
-    protected Boolean getValues;
+	@ActionFieldAttribute(name = getValuesName, mandatory = false, def = DefaultValuePool.False, constantDescription = R.TABLE_COLUMN_AS_LIST_GET_VALUES)
+	protected Boolean getValues;
 
+	@Override
+	protected HelpKind howHelpWithParameterDerived(Context context, Parameters parameters, String fieldName) throws Exception
+	{
+		if (getValuesName.equals(fieldName))
+		{
+			return HelpKind.ChooseFromList;
+		}
+		return null;
+	}
 
-    @Override
-    protected HelpKind howHelpWithParameterDerived(Context context, Parameters parameters, String fieldName) throws Exception
-    {
-        switch (fieldName)
-        {
-            case getValuesName:
-                return HelpKind.ChooseFromList;
-        }
-
-        return null;
-    }
-
-
-    @Override
-    protected void listToFillParameterDerived(List<ReadableValue> list, Context context, String parameterToFill, Parameters parameters) throws Exception
-    {
-        switch (parameterToFill)
-        {
-            case getValuesName:
-                list.add(ReadableValue.TRUE);
-                list.add(ReadableValue.FALSE);
-                break;
-            default:
-        }
-    }
+	@Override
+	protected void listToFillParameterDerived(List<ReadableValue> list, Context context, String parameterToFill, Parameters parameters) throws Exception
+	{
+		if (getValuesName.equals(parameterToFill))
+		{
+			list.add(ReadableValue.TRUE);
+			list.add(ReadableValue.FALSE);
+		}
+	}
 
 	@Override
 	public void doRealAction(Context context, ReportBuilder report, Parameters parameters, AbstractEvaluator evaluator) throws Exception
