@@ -40,7 +40,7 @@ public class Print extends AbstractAction
 		StringBuilder sb = new StringBuilder();
 		if (!Str.IsNullOrEmpty(this.message))
 		{
-			sb.append(message);
+			sb.append(this.message);
 			sb.append('\t');
 		}
 

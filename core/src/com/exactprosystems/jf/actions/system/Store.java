@@ -33,10 +33,10 @@ public class Store extends AbstractAction
 	public static final String valueName = "Value";
 
 	@ActionFieldAttribute(name = nameName, mandatory = true, constantDescription = R.STORE_NAME)
-	protected String name = null;
+	protected String name;
 
 	@ActionFieldAttribute(name = valueName, mandatory = false, constantDescription = R.STORE_VALUE)
-	protected Object value = null;
+	protected Object value;
 
 	@Override
 	protected void doRealAction(Context context, ReportBuilder report, Parameters parameters, AbstractEvaluator evaluator) throws Exception

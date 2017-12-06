@@ -64,7 +64,7 @@ public class Wait extends AbstractAction
 		}
 		else
 		{
-			super.setError("It is needed to set up either '" + timeName + "' or '" +byTimeName + "'.", ErrorKind.WRONG_PARAMETERS);
+			super.setError(String.format("It is needed to set up either '%s' or '%s'", timeName, byTimeName), ErrorKind.WRONG_PARAMETERS);
 		}
 	}
 
