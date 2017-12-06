@@ -27,21 +27,22 @@ import com.exactprosystems.jf.functions.Text;
         constantExamples           = R.TEXT_ADD_LINE_EXAMPLE,
         seeAlsoClass               = {TextReport.class, TextPerform.class, TextLoadFromFile.class, TextCreate.class, TextSaveToFile.class, TextSetValue.class}
 )
-public class TextAddLine extends AbstractAction {
-    public final static String textName = "Text";
-    public final static String lineName = "Line";
+public class TextAddLine extends AbstractAction
+{
+	public static final String textName = "Text";
+	public static final String lineName = "Line";
 
-    @ActionFieldAttribute(name = textName, mandatory = true, constantDescription = R.TEXT_ADD_LINE_TEXT)
-    protected Text text = null;
+	@ActionFieldAttribute(name = textName, mandatory = true, constantDescription = R.TEXT_ADD_LINE_TEXT)
+	protected Text text;
 
-    @ActionFieldAttribute(name = lineName, mandatory = true, constantDescription = R.TEXT_ADD_LINE_LINE)
-    protected String line = null;
+	@ActionFieldAttribute(name = lineName, mandatory = true, constantDescription = R.TEXT_ADD_LINE_LINE)
+	protected String line;
 
-    @Override
-    public void doRealAction(Context context, ReportBuilder report, Parameters parameters, AbstractEvaluator evaluator) throws Exception {
-        text.add(this.line);
-
-        super.setResult(null);
-    }
+	@Override
+	public void doRealAction(Context context, ReportBuilder report, Parameters parameters, AbstractEvaluator evaluator) throws Exception
+	{
+		this.text.add(this.line);
+		super.setResult(null);
+	}
 }
 

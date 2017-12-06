@@ -22,7 +22,6 @@ import com.exactprosystems.jf.documents.matrix.parser.Parameters;
 import com.exactprosystems.jf.functions.Text;
 
 import java.io.Reader;
-import java.io.StringReader;
 
 @ActionAttribute(
 		group					   = ActionGroups.Text,
@@ -37,18 +36,17 @@ import java.io.StringReader;
 	)
 public class TextCreate extends AbstractAction 
 {
-	public final static String contentName = "Content";
+	public static final String contentName = "Content";
 
 	@ActionFieldAttribute(name = contentName, mandatory = true, constantDescription = R.TEXT_CREATE_CONTENT)
-	protected String 	content 	= null;
+	protected String content;
 
 	@Override
 	public void doRealAction(Context context, ReportBuilder report, Parameters parameters, AbstractEvaluator evaluator) throws Exception
 	{
 		try (Reader reader = CommonHelper.readerFromString(this.content))
 		{
-			Text text = new Text(reader);
-			super.setResult(text);
+			super.setResult(new Text(reader));
 		}
 	}
 }

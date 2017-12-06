@@ -31,29 +31,28 @@ import com.exactprosystems.jf.functions.Text;
 	)
 public class TextSetValue extends AbstractAction 
 {
-	public final static String textName = "Text";
-	public final static String lineName = "Line";
-	public final static String indexName = "Index";
+	public static final String textName  = "Text";
+	public static final String lineName  = "Line";
+	public static final String indexName = "Index";
 
 	@ActionFieldAttribute(name = textName, mandatory = true, constantDescription = R.TEXT_SET_VALUE_TEXT)
-	protected Text 	text 	= null;
+	protected Text text;
 
 	@ActionFieldAttribute(name = lineName, mandatory = true, constantDescription = R.TEXT_SET_VALUE_LINE)
-	protected String	line 	= null;
+	protected String line;
 
 	@ActionFieldAttribute(name = indexName, mandatory = true, constantDescription = R.TEXT_SET_VALUE_INDEX)
-	protected Integer	index 	= 0;
+	protected Integer index;
 
 	@Override
 	public void doRealAction(Context context, ReportBuilder report, Parameters parameters, AbstractEvaluator evaluator) throws Exception
 	{
 		if (index < 0 || index >= this.text.size())
 		{
-			super.setError("Index '" + index + "' is out of bounds", ErrorKind.WRONG_PARAMETERS);
+			super.setError(String.format("Index '%s' is out of bounds", this.index), ErrorKind.WRONG_PARAMETERS);
 			return;
 		}
-
-		text.set(this.index, this.line);
+		this.text.set(this.index, this.line);
 
 		super.setResult(null);
 	}

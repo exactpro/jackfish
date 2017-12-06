@@ -33,17 +33,17 @@ import com.exactprosystems.jf.functions.Text;
 	)
 public class TextSaveToFile extends AbstractAction 
 {
-	public final static String textName = "Text";
-	public final static String fileNameName = "File";
+	public static final String textName     = "Text";
+	public static final String fileNameName = "File";
 
 	@ActionFieldAttribute(name = textName, mandatory = true, constantDescription = R.TEXT_SAVE_TO_FILE_TEXT)
-	protected Text 	text 	= null;
+	protected Text text;
 
 	@ActionFieldAttribute(name = fileNameName, mandatory = true, constantDescription = R.TEXT_SAVE_TO_FILE_FILE)
-	protected String 	fileName 	= null;
+	protected String fileName;
 
 	@Override
-	protected HelpKind howHelpWithParameterDerived(Context context,	Parameters parameters, String fieldName) throws Exception
+	protected HelpKind howHelpWithParameterDerived(Context context, Parameters parameters, String fieldName) throws Exception
 	{
 		return fileNameName.equals(fieldName) ? HelpKind.ChooseSaveFile : null;
 	}

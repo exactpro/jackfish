@@ -32,17 +32,15 @@ import com.exactprosystems.jf.functions.Text;
 	)
 public class TextPerform extends AbstractAction 
 {
-	public final static String textName = "Text";
+	public static final String textName = "Text";
 
 	@ActionFieldAttribute(name = textName, mandatory = true, constantDescription = R.TEXT_PERFORM_TEXT)
-	protected Text 	text 	= null;
+	protected Text text;
 
 	@Override
 	public void doRealAction(Context context, ReportBuilder report, Parameters parameters, AbstractEvaluator evaluator) throws Exception
 	{
-		Text result = text.perform(evaluator);
-		
-		super.setResult(result);
+		super.setResult(this.text.perform(evaluator));
 	}
 }
 

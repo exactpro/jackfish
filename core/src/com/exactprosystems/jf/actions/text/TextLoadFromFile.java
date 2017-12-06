@@ -33,13 +33,13 @@ import com.exactprosystems.jf.functions.Text;
 	)
 public class TextLoadFromFile extends AbstractAction 
 {
-	public final static String fileName 		= "File";
+	public static final String fileName = "File";
 
 	@ActionFieldAttribute(name = fileName, mandatory = true, constantDescription = R.TEXT_LOAD_FROM_FILE_FILE)
-	protected String 	file 	= null;
+	protected String file;
 
 	@Override
-	protected HelpKind howHelpWithParameterDerived(Context context,	Parameters parameters, String fieldName) throws Exception
+	protected HelpKind howHelpWithParameterDerived(Context context, Parameters parameters, String fieldName) throws Exception
 	{
 		return fileName.equals(fieldName) ? HelpKind.ChooseOpenFile : null;
 	}
