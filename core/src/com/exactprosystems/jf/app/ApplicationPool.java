@@ -36,9 +36,10 @@ import java.util.stream.Collectors;
 public class ApplicationPool implements IApplicationPool
 {
 	private static final Logger logger = Logger.getLogger(ApplicationPool.class);
-	private DocumentFactory factory;
-	private Map<String, IApplicationFactory> appFactories;
-	private Set<AppConnection> connections;
+
+	private final DocumentFactory                  factory;
+	private final Map<String, IApplicationFactory> appFactories;
+	private final Set<AppConnection>               connections;
 
 	public ApplicationPool(DocumentFactory factory)
 	{
@@ -53,7 +54,7 @@ public class ApplicationPool implements IApplicationPool
 	{
 		try
 		{
-			IApplicationFactory applicationFactory = loadFactory(id);
+			IApplicationFactory applicationFactory = this.loadFactory(id);
 			return applicationFactory != null;
 		}
 		catch (Exception e)
@@ -71,7 +72,6 @@ public class ApplicationPool implements IApplicationPool
 	public Set<ControlKind> supportedControlKinds(String id) throws Exception
 	{
 		IApplicationFactory applicationFactory = loadFactory(id);
-
 		return applicationFactory.supportedControlKinds();
 	}
 
@@ -82,7 +82,7 @@ public class ApplicationPool implements IApplicationPool
 				.stream()
 				.map(AppEntry::toString)
 				.collect(Collectors.toList());
-	}	
+	}
 
 	@Override
 	public boolean isLoaded(String id)
@@ -93,7 +93,7 @@ public class ApplicationPool implements IApplicationPool
 	@Override
 	public IApplicationFactory loadApplicationFactory(String id) throws Exception
 	{
-		return loadFactory(id);
+		return this.loadFactory(id);
 	}
 
 	@Override
@@ -107,10 +107,10 @@ public class ApplicationPool implements IApplicationPool
 			}
 
 			// prepare initial parameters
-			AppEntry entry = parametersEntry(id);
+			AppEntry entry = this.parametersEntry(id);
 
-			Map<String, String> driverParameters = getDriverParameters(entry);
-			final IApplicationFactory applicationFactory = loadFactory(id, entry);
+			Map<String, String> driverParameters = this.getDriverParameters(entry);
+			final IApplicationFactory applicationFactory = this.loadFactory(id, entry);
 			final IApplication application = applicationFactory.createApplication();
 			application.init(this, applicationFactory);
 			String remoteClassName = applicationFactory.getRemoteClassName();
@@ -133,10 +133,9 @@ public class ApplicationPool implements IApplicationPool
 			throw new Exception(t.getMessage(), t);
 		}
 	}
-	
-	
+
 	@Override
-	public AppConnection 	startApplication(String id, Map<String, String> parameters) throws Exception
+	public AppConnection startApplication(String id, Map<String, String> parameters) throws Exception
 	{
 		try
 		{
@@ -146,10 +145,10 @@ public class ApplicationPool implements IApplicationPool
 			}
 			
 			// prepare initial parameters
-			AppEntry entry = parametersEntry(id);
+			AppEntry entry = this.parametersEntry(id);
 
-			Map<String, String> driverParameters = getDriverParameters(entry);
-			final IApplicationFactory applicationFactory = loadFactory(id, entry);
+			Map<String, String> driverParameters = this.getDriverParameters(entry);
+			final IApplicationFactory applicationFactory = this.loadFactory(id, entry);
 			final IApplication application = applicationFactory.createApplication();
 			application.init(this, applicationFactory);
 			String remoteClassName = applicationFactory.getRemoteClassName();
@@ -174,28 +173,27 @@ public class ApplicationPool implements IApplicationPool
 			throw new Exception(t.getMessage(), t);
 		}
 	}
-	
 
-    @Override
-    public void reconnectToApplication(AppConnection connection, Map<String, String> parameters) throws Exception
-    {
-        try
-        {
-            IApplication application = connection.getApplication(); 
-            int pid = application.reconnect(parameters);
-            connection.setProcessId(pid);
-        }
-        catch (InterruptedException e)
-        {
-            throw new InterruptedException(e.getMessage());
-        }
-        catch (Throwable t)
-        {
-            logger.error(String.format("Error in reConnectToApplication(%s)", connection));
-            logger.error(t.getMessage(), t);
-            throw new Exception(t.getMessage(), t);
-        }
-    }
+	@Override
+	public void reconnectToApplication(AppConnection connection, Map<String, String> parameters) throws Exception
+	{
+		try
+		{
+			IApplication application = connection.getApplication();
+			int pid = application.reconnect(parameters);
+			connection.setProcessId(pid);
+		}
+		catch (InterruptedException e)
+		{
+			throw new InterruptedException(e.getMessage());
+		}
+		catch (Throwable t)
+		{
+			logger.error(String.format("Error in reConnectToApplication(%s)", connection));
+			logger.error(t.getMessage(), t);
+			throw new Exception(t.getMessage(), t);
+		}
+	}
 
 	@Override
 	public List<AppConnection> getConnections()
@@ -228,7 +226,6 @@ public class ApplicationPool implements IApplicationPool
 	@Override
 	public void stopAllApplications(boolean needKill) throws Exception
 	{
-		//java.util.ConcurrentModificationException
 		for (AppConnection connection : this.connections.toArray(new AppConnection[this.connections.size()]))
 		{
 			try
@@ -244,30 +241,30 @@ public class ApplicationPool implements IApplicationPool
 	}
 	//endregion
 
-    public GuiDictionary getDictionary(AppEntry entry) throws Exception
-    {
-        String dictionaryName = entry.get(Configuration.appDicPath);
-        dictionaryName = MainRunner.makeDirWithSubstitutions(dictionaryName);
+	public GuiDictionary getDictionary(AppEntry entry) throws Exception
+	{
+		String dictionaryName = entry.get(Configuration.appDicPath);
+		dictionaryName = MainRunner.makeDirWithSubstitutions(dictionaryName);
 
-        GuiDictionary dictionary = null;
-        if (!Str.IsNullOrEmpty(dictionaryName))
-        {
-            dictionary = (GuiDictionary) this.factory.createDocument(DocumentKind.GUI_DICTIONARY, dictionaryName);
-            try (Reader reader = CommonHelper.readerFromFileName(dictionaryName))
-            {
-                dictionary.load(reader);
-            }
-            AbstractEvaluator evaluator = this.factory.createEvaluator();
-            dictionary.evaluateAll(evaluator);
-        }
-        return dictionary;
-    }	    
+		GuiDictionary dictionary = null;
+		if (!Str.IsNullOrEmpty(dictionaryName))
+		{
+			dictionary = (GuiDictionary) this.factory.createDocument(DocumentKind.GUI_DICTIONARY, dictionaryName);
+			try (Reader reader = CommonHelper.readerFromFileName(dictionaryName))
+			{
+				dictionary.load(reader);
+			}
+			AbstractEvaluator evaluator = this.factory.createEvaluator();
+			dictionary.evaluateAll(evaluator);
+		}
+		return dictionary;
+	}
 
-    //region private methods
+	//region private methods
 	private IApplicationFactory loadFactory(String id) throws Exception
 	{
-		AppEntry entry = parametersEntry(id);
-		return loadFactory(id, entry);
+		AppEntry entry = this.parametersEntry(id);
+		return this.loadFactory(id, entry);
 	}
 
 	private AppEntry parametersEntry(String id) throws Exception
@@ -280,57 +277,49 @@ public class ApplicationPool implements IApplicationPool
 		
 		return entry;
 	}
-	
+
 	private IApplicationFactory loadFactory(String id, AppEntry entry) throws Exception
 	{
-	    IApplicationFactory applicationFactory = this.appFactories.get(id);
-        if (applicationFactory == null)
-        {
-            synchronized (this.appFactories)
-            {
-        		applicationFactory = this.appFactories.get(id);
-        		if (applicationFactory == null)
-        		{
-        			String jarName	= entry.get(Configuration.appJar);
-        			jarName	= MainRunner.makeDirWithSubstitutions(jarName); 
-        			
-        			List<URL> urls = new ArrayList<>();
-        			urls.add(new URL("file:" + jarName));
-        
-        			ClassLoader parent = getClass().getClassLoader();
-        			URLClassLoader classLoader = new URLClassLoader(urls.toArray(new URL[] {}), parent);
-        			
-        			ServiceLoader<IApplicationFactory> loader = ServiceLoader.load(IApplicationFactory.class, classLoader);
-        			Iterator<IApplicationFactory> iterator = loader.iterator();
-        			if(iterator.hasNext())
-        			{
-        				applicationFactory = iterator.next();
-        			}
-        			if (applicationFactory == null)
-        			{
-        				throw new Exception(String.format(R.APP_POOL_LOAD_FACTORY.get(), id));
-        			}
-        			
-        			GuiDictionary dictionary = getDictionary(entry);
-        			applicationFactory.init(dictionary);
-        			this.appFactories.put(id, applicationFactory);
-                }
-        	}
-        }
+		//check that we loaded a entry before
+		IApplicationFactory applicationFactory = this.appFactories.get(id);
+		if (applicationFactory == null)
+		{
+			synchronized (this.appFactories)
+			{
+				applicationFactory = this.appFactories.get(id);
+				if (applicationFactory == null)
+				{
+					String jarName = entry.get(Configuration.appJar);
+					jarName = MainRunner.makeDirWithSubstitutions(jarName);
+
+					ClassLoader parent = this.getClass().getClassLoader();
+					URLClassLoader classLoader = new URLClassLoader(new URL[]{new URL("file:" + jarName)}, parent);
+
+					ServiceLoader<IApplicationFactory> loader = ServiceLoader.load(IApplicationFactory.class, classLoader);
+					Iterator<IApplicationFactory> iterator = loader.iterator();
+					if (iterator.hasNext())
+					{
+						applicationFactory = iterator.next();
+					}
+					if (applicationFactory == null)
+					{
+						throw new Exception(String.format(R.APP_POOL_LOAD_FACTORY.get(), id));
+					}
+
+					GuiDictionary dictionary = this.getDictionary(entry);
+					applicationFactory.init(dictionary);
+					this.appFactories.put(id, applicationFactory);
+				}
+			}
+		}
 		return applicationFactory;
 	}
 	
 	private Map<String, String> getDriverParameters(AppEntry entry)
 	{
-		List<Parameter> list = entry.getParameters();
-		Map<String, String> driverParameters = new HashMap<>();
-		for (Parameter param : list)
-		{
-            String key   = param.getKey();
-            String value = MainRunner.makeDirWithSubstitutions(param.getValue());
-            driverParameters.put(key, value);
-		}
-		return driverParameters;
+		return entry.getParameters()
+				.stream()
+				.collect(Collectors.toMap(Parameter::getKey, par -> MainRunner.makeDirWithSubstitutions(par.getValue())));
 	}
 	//endregion
 }
