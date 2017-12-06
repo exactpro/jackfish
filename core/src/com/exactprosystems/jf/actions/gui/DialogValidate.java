@@ -45,16 +45,16 @@ public class DialogValidate extends AbstractAction
 	public static final String	doNotCloseName	= "DoNotClose";
 
 	@ActionFieldAttribute(name = connectionName, mandatory = true, constantDescription = R.DIALOG_VALIDATE_APP_CONNECTION)
-	protected AppConnection		connection		= null;
+	protected AppConnection connection;
 
 	@ActionFieldAttribute(name = dialogName, mandatory = true, constantDescription = R.DIALOG_VALIDATE_DIALOG)
-	protected String			dialog			= null;
+	protected String dialog;
 
 	@ActionFieldAttribute(name = doNotOpenName, mandatory = false, def = DefaultValuePool.False, constantDescription = R.DIALOG_VALIDATE_DO_NOT_OPEN)
-	protected Boolean			doNotOpen;
+	protected Boolean doNotOpen;
 
 	@ActionFieldAttribute(name = doNotCloseName, mandatory = false, def = DefaultValuePool.False, constantDescription = R.DIALOG_VALIDATE_DO_NOT_CLOSE)
-	protected Boolean			doNotClose;
+	protected Boolean doNotClose;
 
 	@Override
 	protected HelpKind howHelpWithParameterDerived(Context context, Parameters parameters, String fieldName)

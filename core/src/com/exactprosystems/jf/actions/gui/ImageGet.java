@@ -138,9 +138,9 @@ public class ImageGet extends AbstractAction
 
 		if (imageWrapper != null)
 		{
-			if(x1 != Integer.MIN_VALUE && y1 != Integer.MIN_VALUE && x2 != Integer.MIN_VALUE && y2 != Integer.MIN_VALUE)
+			if(this.x1 != Integer.MIN_VALUE && this.y1 != Integer.MIN_VALUE && this.x2 != Integer.MIN_VALUE && this.y2 != Integer.MIN_VALUE)
 			{
-				imageWrapper = imageWrapper.cutImage(x1, y1, x2, y2);
+				imageWrapper = imageWrapper.cutImage(this.x1, this.y1, this.x2, this.y2);
 			}
 			imageWrapper.setDescription(this.description);
 		}

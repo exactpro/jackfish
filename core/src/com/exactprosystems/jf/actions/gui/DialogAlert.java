@@ -38,10 +38,10 @@ public class DialogAlert extends AbstractAction
 	public static final String textName       = "Text";
 
 	@ActionFieldAttribute(name = connectionName, mandatory = true, constantDescription = R.DIALOG_ALERT_APP_CONNECTION)
-	protected AppConnection connection = null;
+	protected AppConnection connection;
 
 	@ActionFieldAttribute(name = performName, mandatory = true, constantDescription = R.DIALOG_ALERT_PERFORM_KIND)
-	protected PerformKind perform = null;
+	protected PerformKind perform;
 
 	@ActionFieldAttribute(name = textName, mandatory = false, def = DefaultValuePool.Null, constantDescription = R.DIALOG_ALERT_TEXT)
 	protected String text;

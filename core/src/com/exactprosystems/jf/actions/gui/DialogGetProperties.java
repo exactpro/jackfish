@@ -40,10 +40,10 @@ import static com.exactprosystems.jf.actions.gui.Helper.message;
 )
 public class DialogGetProperties extends AbstractAction
 {
-	public final static String connectionName = "AppConnection";
-	public final static String dialogName     = "Dialog";
-	public final static String sizeName       = "Size";
-	public final static String positionName   = "Position";
+	public static final String connectionName = "AppConnection";
+	public static final String dialogName     = "Dialog";
+	public static final String sizeName       = "Size";
+	public static final String positionName   = "Position";
 
 	@ActionFieldAttribute(name = connectionName, mandatory = true, constantDescription = R.DIALOG_GET_PROPERTIES_APP_CONNECTION)
 	protected AppConnection connection;
@@ -51,10 +51,10 @@ public class DialogGetProperties extends AbstractAction
 	@ActionFieldAttribute(name = dialogName, mandatory = true, constantDescription = R.DIALOG_GET_PROPERTIES_DIALOG)
 	protected String dialog;
 
-	@ActionFieldAttribute(name = sizeName, mandatory = false, constantDescription = R.DIALOG_GET_PROPERTIES_SIZE)
+	@ActionFieldAttribute(name = sizeName, shouldFilled = false, mandatory = false, constantDescription = R.DIALOG_GET_PROPERTIES_SIZE)
 	protected String size;
 
-	@ActionFieldAttribute(name = positionName, mandatory = false, constantDescription = R.DIALOG_GET_PROPERTIES_POSITION)
+	@ActionFieldAttribute(name = positionName, shouldFilled = false, mandatory = false, constantDescription = R.DIALOG_GET_PROPERTIES_POSITION)
 	protected String position;
 
 	@Override

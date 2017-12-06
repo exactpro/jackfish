@@ -42,10 +42,10 @@ public class DialogClose extends AbstractAction
 	public static final String dialogName     = "Dialog";
 
 	@ActionFieldAttribute(name = connectionName, mandatory = true, constantDescription = R.DIALOG_CLOSE_APP_CONNECTION)
-	protected AppConnection connection = null;
+	protected AppConnection connection;
 
 	@ActionFieldAttribute(name = dialogName, mandatory = true, constantDescription = R.DIALOG_CLOSE_DIALOG)
-	protected String dialog = null;
+	protected String dialog;
 
 	@Override
 	protected HelpKind howHelpWithParameterDerived(Context context, Parameters parameters, String fieldName)

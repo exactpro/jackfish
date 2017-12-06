@@ -47,10 +47,10 @@ public class DialogCheckLayout extends AbstractAction
 	public static final String tableName      = "Table";
 
 	@ActionFieldAttribute(name = connectionName, mandatory = true, constantDescription = R.DIALOG_CHECK_LAYOUT_APP_CONNECTION)
-	protected AppConnection connection = null;
+	protected AppConnection connection;
 
 	@ActionFieldAttribute(name = dialogName, mandatory = true, constantDescription = R.DIALOG_CHECK_LAYOUT_DIALOG)
-	protected String dialog = null;
+	protected String dialog;
 
 	@ActionFieldAttribute(name = doNotOpenName, mandatory = false, def = DefaultValuePool.False, constantDescription = R.DIALOG_CHECK_LAYOUT_DO_NOT_OPEN)
 	protected Boolean doNotOpen;

@@ -37,12 +37,12 @@ public class DialogSwitchToWindow extends AbstractAction
 	public static final String frameName      = "Frame";
 
 	@ActionFieldAttribute(name = connectionName, mandatory = true, constantDescription = R.DIALOG_SWITCH_TO_WINDOW_APP_CONNECTION)
-	protected AppConnection connection = null;
+	protected AppConnection connection;
 
-	@ActionFieldAttribute(name = dialogName, mandatory = false, def = DefaultValuePool.Null, constantDescription = R.DIALOG_SWITCH_TO_WINDOW_DIALOG)
+	@ActionFieldAttribute(name = dialogName, mandatory = false, constantDescription = R.DIALOG_SWITCH_TO_WINDOW_DIALOG)
 	protected String dialog;
 
-	@ActionFieldAttribute(name = frameName, mandatory = false, def = DefaultValuePool.Null, constantDescription = R.DIALOG_SWITCH_TO_WINDOW_FRAME)
+	@ActionFieldAttribute(name = frameName, mandatory = false, constantDescription = R.DIALOG_SWITCH_TO_WINDOW_FRAME)
 	protected String frame;
 
 	@Override
@@ -67,6 +67,12 @@ public class DialogSwitchToWindow extends AbstractAction
 	@Override
 	protected void doRealAction(Context context, ReportBuilder report, Parameters parameters, AbstractEvaluator evaluator) throws Exception
 	{
+		if (!Str.IsNullOrEmpty(this.frame) && Str.IsNullOrEmpty(this.dialog))
+		{
+			setError("Need set Dialog parameter with non null Frame parameter", ErrorKind.WRONG_PARAMETERS);
+			return;
+		}
+
 		IApplication app = Helper.getApplication(this.connection);
 		IRemoteApplication service = app.service();
 		String id = this.connection.getId();
@@ -77,11 +83,7 @@ public class DialogSwitchToWindow extends AbstractAction
 		}
 		else
 		{
-			if (this.frame == null)
-			{
-				throw new Exception("Parameter 'frame' is needed for not-null 'dialog' parameter.");
-			}
-			IGuiDictionary dictionary = this.connection.getDictionary();
+			IGuiDictionary dictionary = app.getFactory().getDictionary();
 			IWindow window = Helper.getWindow(dictionary, this.dialog);
 
 			logger.debug("Process dialog : " + window);

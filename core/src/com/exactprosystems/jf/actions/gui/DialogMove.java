@@ -35,16 +35,16 @@ import static com.exactprosystems.jf.actions.gui.Helper.message;
 )
 public class DialogMove extends AbstractAction
 {
-	private static final String CONNECTION_NAME   = "AppConnection";
-	private static final String DIALOG_NAME       = "Dialog";
-	private static final String X_COORDINATE_NAME = "X";
-	private static final String Y_COORDINATE_NAME = "Y";
+	public static final String CONNECTION_NAME   = "AppConnection";
+	public static final String DIALOG_NAME       = "Dialog";
+	public static final String X_COORDINATE_NAME = "X";
+	public static final String Y_COORDINATE_NAME = "Y";
 
 	@ActionFieldAttribute(name = CONNECTION_NAME, mandatory = true, constantDescription = R.DIALOG_MOVE_CONNECTION)
-	protected AppConnection connection = null;
+	protected AppConnection connection;
 
 	@ActionFieldAttribute(name = DIALOG_NAME, mandatory = true, constantDescription = R.DIALOG_MOVE_DIALOG)
-	protected String dialog = null;
+	protected String dialog;
 
 	@ActionFieldAttribute(name = X_COORDINATE_NAME, mandatory = true, def = DefaultValuePool.IntMin, constantDescription = R.DIALOG_MOVE_X_COORDINATE)
 	protected Integer x;

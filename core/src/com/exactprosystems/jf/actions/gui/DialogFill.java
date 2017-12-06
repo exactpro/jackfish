@@ -56,10 +56,10 @@ public class DialogFill extends AbstractAction
 	public static final String fieldsName     = "Fields";
 
 	@ActionFieldAttribute(name = connectionName, mandatory = true, constantDescription = R.DIALOG_FILL_APP_CONNECTION)
-	protected AppConnection connection = null;
+	protected AppConnection connection;
 
 	@ActionFieldAttribute(name = dialogName, mandatory = true, constantDescription = R.DIALOG_FILL_DIALOG)
-	protected String dialog = null;
+	protected String dialog;
 
 	@ActionFieldAttribute(name = doNotOpenName, mandatory = false, def = DefaultValuePool.False, constantDescription = R.DIALOG_FILL_DO_NOT_OPEN)
 	protected Boolean doNotOpen;

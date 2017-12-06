@@ -47,10 +47,10 @@ public class ApplicationResize extends AbstractAction
 	@ActionFieldAttribute(name = connectionName, mandatory = true, constantDescription = R.APPLICATION_RESIZE_CONNECTION)
 	protected AppConnection connection;
 
-	@ActionFieldAttribute(name = heightName, mandatory = false, def = DefaultValuePool.Null, constantDescription = R.APPLICATION_RESIZE_HEIGHT)
+	@ActionFieldAttribute(name = heightName, mandatory = false, def = DefaultValuePool.IntMin, constantDescription = R.APPLICATION_RESIZE_HEIGHT)
 	protected Integer height;
 
-	@ActionFieldAttribute(name = widthName, mandatory = false, def = DefaultValuePool.Null, constantDescription = R.APPLICATION_RESIZE_WIDTH)
+	@ActionFieldAttribute(name = widthName, mandatory = false, def = DefaultValuePool.IntMin, constantDescription = R.APPLICATION_RESIZE_WIDTH)
 	protected Integer width;
 
 	@ActionFieldAttribute(name = resizeName, mandatory = false, def = DefaultValuePool.Null, constantDescription = R.APPLICATION_RESIZE_RESIZE)
@@ -109,15 +109,14 @@ public class ApplicationResize extends AbstractAction
 			setError("Need set resize or dimension, but no both together", ErrorKind.WRONG_PARAMETERS);
 			return;
 		}
-		if ((this.height == null && this.width != null) || (this.height != null && this.width == null))
+		if ((this.height == DefaultValuePool.IntMin.getValue() && this.width != null) || (this.height != null && this.width == DefaultValuePool.IntMin.getValue()))
 		{
 			setError("Need set both the parameters " + widthName + " and " + heightName, ErrorKind.WRONG_PARAMETERS);
 			return;
 		}
-		IApplication app = connection.getApplication();
-		app.service().resize(this.resize
-				, this.height == null ? 0 : this.height
-				, this.width  == null ? 0 : this.width);
+
+		IApplication app = Helper.getApplication(this.connection);
+		app.service().resize(this.resize, this.height, this.width);
 
 		super.setResult(null);
 	}

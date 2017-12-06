@@ -9,6 +9,7 @@
 
 package com.exactprosystems.jf.actions;
 
+import com.exactprosystems.jf.api.common.Str;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.documents.matrix.Matrix;
 import com.exactprosystems.jf.documents.matrix.parser.items.TestCase;
@@ -40,6 +41,10 @@ public class ActionsReportHelper
 
 	public static String getBeforeTestCase(String testCaseId, Matrix matrix)
 	{
+		if (Str.IsNullOrEmpty(testCaseId))
+		{
+			return null;
+		}
 		return matrix.listOfIds(TestCase.class)
 				.stream()
 				.filter(st -> st.equals(testCaseId))

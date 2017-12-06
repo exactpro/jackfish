@@ -35,22 +35,22 @@ import static com.exactprosystems.jf.actions.gui.Helper.message;
 )
 public class DialogResize extends AbstractAction
 {
-	private static final String CONNECTION_NAME = "AppConnection";
-	private static final String DIALOG_NAME     = "Dialog";
-	private static final String RESIZE_NAME     = "Resize";
-	private static final String HEIGHT_NAME     = "Height";
-	private static final String WIDTH_NAME      = "Width";
+	public static final String CONNECTION_NAME = "AppConnection";
+	public static final String DIALOG_NAME     = "Dialog";
+	public static final String RESIZE_NAME     = "Resize";
+	public static final String HEIGHT_NAME     = "Height";
+	public static final String WIDTH_NAME      = "Width";
 
 	@ActionFieldAttribute(name = CONNECTION_NAME, mandatory = true, constantDescription = R.DIALOG_RESIZE_CONNECTION)
-	protected AppConnection connection = null;
+	protected AppConnection connection;
 
 	@ActionFieldAttribute(name = DIALOG_NAME, mandatory = true, constantDescription = R.DIALOG_RESIZE_DIALOG)
-	protected String dialog = null;
+	protected String dialog;
 
-	@ActionFieldAttribute(name = HEIGHT_NAME, mandatory = false, def = DefaultValuePool.Null, constantDescription = R.DIALOG_RESIZE_HEIGHT)
+	@ActionFieldAttribute(name = HEIGHT_NAME, mandatory = false, def = DefaultValuePool.IntMin, constantDescription = R.DIALOG_RESIZE_HEIGHT)
 	protected Integer height;
 
-	@ActionFieldAttribute(name = WIDTH_NAME, mandatory = false, def = DefaultValuePool.Null, constantDescription = R.DIALOG_RESIZE_WIDTH)
+	@ActionFieldAttribute(name = WIDTH_NAME, mandatory = false, def = DefaultValuePool.IntMin, constantDescription = R.DIALOG_RESIZE_WIDTH)
 	protected Integer width;
 
 	@ActionFieldAttribute(name = RESIZE_NAME, mandatory = false, def = DefaultValuePool.Null, constantDescription = R.DIALOG_RESIZE_RESIZE)
@@ -98,16 +98,18 @@ public class DialogResize extends AbstractAction
 			setError("No one resizing parameter is filled.", ErrorKind.WRONG_PARAMETERS);
 			return;
 		}
+		//TODO this check is unnecessary
 		if (checkInt(WIDTH_NAME, this.width, parameters) || checkInt(HEIGHT_NAME, this.height, parameters))
 		{
 			return;
 		}
+		//TODO this check is unnecessary
 		if (this.resize != null && (this.height != null || this.width != null))
 		{
 			setError("Need set resize or dimension, but no both together", ErrorKind.WRONG_PARAMETERS);
 			return;
 		}
-		if ((this.height == null && this.width != null) || (this.height != null && this.width == null))
+		if ((this.height == DefaultValuePool.IntMin.getValue() && this.width != null) || (this.height != null && this.width == DefaultValuePool.IntMin.getValue()))
 		{
 			setError("Need set both the parameters " + WIDTH_NAME + " and " + HEIGHT_NAME, ErrorKind.WRONG_PARAMETERS);
 			return;
@@ -129,8 +131,7 @@ public class DialogResize extends AbstractAction
 			return;
 		}
 
-		app.service().resizeDialog(element.locator(), this.resize, this.height == null ? 0 : this.height, this.width == null ? 0 : this.width);
-
+		app.service().resizeDialog(element.locator(), this.resize, this.height, this.width);
 		super.setResult(null);
 	}
 
