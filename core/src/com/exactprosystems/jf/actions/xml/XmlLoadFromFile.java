@@ -35,28 +35,28 @@ import java.io.File;
 	)
 public class XmlLoadFromFile extends AbstractAction 
 {
-	public final static String fileName 		= "File";
+	public static final String fileName = "File";
 
 	@ActionFieldAttribute(name = fileName, mandatory = true, constantDescription = R.XML_LOAD_FROM_FILE_FILE)
-	protected String 	file 	= null;
-	
+	protected String file;
+
 	@Override
 	protected HelpKind howHelpWithParameterDerived(Context context, Parameters parameters, String fieldName) throws Exception
 	{
 		return fileName.equals(fieldName) ? HelpKind.ChooseOpenFile : null;
 	}
-	
+
 	@Override
 	public void doRealAction(Context context, ReportBuilder report, Parameters parameters, AbstractEvaluator evaluator) throws Exception
 	{
 		if (!new File(this.file).exists())
 		{
-			setError("File '" + this.file + "' does not exists", ErrorKind.WRONG_PARAMETERS);
+			setError(String.format("File '%s' does not exists", this.file), ErrorKind.WRONG_PARAMETERS);
 			return;
 		}
 		if (new File(this.file).isDirectory())
 		{
-			setError("Cant load xml file from directory '" + this.file + "'", ErrorKind.WRONG_PARAMETERS);
+			setError(String.format("Cant load xml file from directory '%s'", this.file), ErrorKind.WRONG_PARAMETERS);
 			return;
 		}
 		super.setResult(new Xml(this.file));

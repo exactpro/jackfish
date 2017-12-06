@@ -32,21 +32,21 @@ import com.exactprosystems.jf.functions.Xml;
 	)
 public class XmlSelect extends AbstractAction 
 {
-	public final static String xmlName = "Xml";
-	public final static String nodeNameName = "NodeName";
-	public final static String xpathName = "Xpath";
+	public static final String xmlName      = "Xml";
+	public static final String nodeNameName = "NodeName";
+	public static final String xpathName    = "Xpath";
 
 	@ActionFieldAttribute(name = xmlName, mandatory = true, constantDescription = R.XML_SELECT_XML)
-	protected Xml 	xml 	= null;
+	protected Xml xml;
 
 	@ActionFieldAttribute(name = nodeNameName, mandatory = true, constantDescription = R.XML_SELECT_NODE_NAME)
-	protected String 	nodeName 	= null;
+	protected String nodeName;
 
 	@ActionFieldAttribute(name = xpathName, mandatory = true, constantDescription = R.XML_SELECT_X_PATH)
-	protected String 	xpath 	= null;
+	protected String xpath;
 
 	@Override
-	protected HelpKind howHelpWithParameterDerived(Context context,	Parameters parameters, String fieldName) throws Exception
+	protected HelpKind howHelpWithParameterDerived(Context context, Parameters parameters, String fieldName) throws Exception
 	{
 		return xpathName.equals(fieldName) ? HelpKind.BuildXPath : null;
 	}

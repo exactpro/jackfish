@@ -31,15 +31,15 @@ import java.util.List;
 	)
 public class XmlCompare extends AbstractAction 
 {
-	public final static String actualName          = "Actual";
-	public final static String expectedName        = "Expected";
-	public final static String ignoreNodeOrderName = "IgnoreNodeOrder";
+	public static final String actualName          = "Actual";
+	public static final String expectedName        = "Expected";
+	public static final String ignoreNodeOrderName = "IgnoreNodeOrder";
 
 	@ActionFieldAttribute(name = actualName, mandatory = true, constantDescription = R.XML_COMPARE_ACTUAL)
-	protected Xml actual = null;
+	protected Xml actual;
 
 	@ActionFieldAttribute(name = expectedName, mandatory = true, constantDescription = R.XML_COMPARE_EXPECTED)
-	protected Xml expected = null;
+	protected Xml expected;
 
 	@ActionFieldAttribute(name = ignoreNodeOrderName, mandatory = false, def = DefaultValuePool.False, constantDescription = R.XML_COMPARE_IGNORE_NODE_ORDER)
 	protected Boolean ignoreNodesOrder;
@@ -47,10 +47,9 @@ public class XmlCompare extends AbstractAction
 	@Override
 	protected HelpKind howHelpWithParameterDerived(Context context, Parameters parameters, String fieldName) throws Exception
 	{
-		switch (fieldName)
+		if (ignoreNodeOrderName.equals(fieldName))
 		{
-			case ignoreNodeOrderName :
-				return HelpKind.ChooseFromList;
+			return HelpKind.ChooseFromList;
 		}
 		return super.howHelpWithParameterDerived(context, parameters, fieldName);
 	}
@@ -58,11 +57,10 @@ public class XmlCompare extends AbstractAction
 	@Override
 	protected void listToFillParameterDerived(List<ReadableValue> list, Context context, String parameterToFill, Parameters parameters) throws Exception
 	{
-		switch (parameterToFill)
+		if (ignoreNodeOrderName.equals(parameterToFill))
 		{
-			case ignoreNodeOrderName:
-				list.add(ReadableValue.TRUE);
-				list.add(ReadableValue.FALSE);
+			list.add(ReadableValue.TRUE);
+			list.add(ReadableValue.FALSE);
 		}
 	}
 

@@ -23,7 +23,6 @@ import org.w3c.dom.Document;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
-
 @ActionAttribute(
         group                      = ActionGroups.XML,
         constantGeneralDescription = R.XML_CREATE_GENERAL_DESC,
@@ -32,12 +31,12 @@ import javax.xml.parsers.DocumentBuilderFactory;
 )
 public class XmlCreate extends AbstractAction
 {
-    @Override
-    public void doRealAction(Context context, ReportBuilder report, Parameters parameters, AbstractEvaluator evaluator) throws Exception
-    {
-        DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
-        DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
-        Document document = docBuilder.newDocument();
-        super.setResult(new Xml(document));
-    }
+	@Override
+	public void doRealAction(Context context, ReportBuilder report, Parameters parameters, AbstractEvaluator evaluator) throws Exception
+	{
+		DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
+		DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
+		Document document = docBuilder.newDocument();
+		super.setResult(new Xml(document));
+	}
 }

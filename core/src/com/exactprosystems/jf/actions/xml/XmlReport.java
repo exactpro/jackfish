@@ -29,55 +29,50 @@ import java.util.List;
 	)
 public class XmlReport extends AbstractAction 
 {
-    public final static String xmlName            = "Xml";
-    public final static String beforeTestCaseName = "BeforeTestCase";
-    public final static String titleName          = "Title";
-    public final static String toReportName       = "ToReport";
+	public static final String xmlName            = "Xml";
+	public static final String beforeTestCaseName = "BeforeTestCase";
+	public static final String titleName          = "Title";
+	public static final String toReportName       = "ToReport";
 
 	@ActionFieldAttribute(name = xmlName, mandatory = true, constantDescription = R.XML_REPORT_XML)
-	protected Xml 	xml 	= null;
+	protected Xml xml;
 
 	@ActionFieldAttribute(name = titleName, mandatory = true, constantDescription = R.XML_REPORT_TITLE)
-	protected String 	title 	= null;
+	protected String title;
 
-	@ActionFieldAttribute(name=toReportName, mandatory = false, def = DefaultValuePool.Null, constantDescription = R.XML_REPORT_TO_REPORT)
+	@ActionFieldAttribute(name = toReportName, mandatory = false, constantDescription = R.XML_REPORT_TO_REPORT)
 	protected ReportBuilder toReport;
 
-	@ActionFieldAttribute(name = beforeTestCaseName, mandatory = false, def = DefaultValuePool.Null, constantDescription = R.XML_REPORT_BEFORE_TESTCASE)
-	protected String 	beforeTestCase 	= null;
-
-	@Override
-	public void doRealAction(Context context, ReportBuilder report, Parameters parameters, AbstractEvaluator evaluator) throws Exception
-	{
-	    report = this.toReport == null ? report : this.toReport;
-		this.beforeTestCase = ActionsReportHelper.getBeforeTestCase(this.beforeTestCase, this.owner.getMatrix());
-		this.xml.report(report, this.beforeTestCase, Str.asString(this.title));
-		
-		super.setResult(null);
-	}
+	@ActionFieldAttribute(name = beforeTestCaseName, mandatory = false, constantDescription = R.XML_REPORT_BEFORE_TESTCASE)
+	protected String beforeTestCase;
 
 	@Override
 	protected HelpKind howHelpWithParameterDerived(Context context, Parameters parameters, String fieldName) throws Exception
 	{
-		switch (fieldName)
+		if (beforeTestCaseName.equals(fieldName))
 		{
-			case beforeTestCaseName:
-				return HelpKind.ChooseFromList;
+			return HelpKind.ChooseFromList;
 		}
-
-		return null;
+		return super.howHelpWithParameterDerived(context, parameters, fieldName);
 	}
 
 	@Override
 	protected void listToFillParameterDerived(List<ReadableValue> list, Context context, String parameterToFill, Parameters parameters) throws Exception
 	{
-		switch (parameterToFill)
+		if (beforeTestCaseName.equals(parameterToFill))
 		{
-			case beforeTestCaseName:
-				ActionsReportHelper.fillListForParameter(super.owner.getMatrix(),  list, context.getEvaluator());
-				break;
-			default:
+			ActionsReportHelper.fillListForParameter(super.owner.getMatrix(), list, context.getEvaluator());
 		}
+	}
+
+	@Override
+	public void doRealAction(Context context, ReportBuilder report, Parameters parameters, AbstractEvaluator evaluator) throws Exception
+	{
+		report = this.toReport == null ? report : this.toReport;
+		this.beforeTestCase = ActionsReportHelper.getBeforeTestCase(this.beforeTestCase, this.owner.getMatrix());
+		this.xml.report(report, this.beforeTestCase, Str.asString(this.title));
+
+		super.setResult(null);
 	}
 }
 

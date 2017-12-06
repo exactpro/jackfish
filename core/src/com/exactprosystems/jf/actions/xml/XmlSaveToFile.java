@@ -31,21 +31,21 @@ import com.exactprosystems.jf.functions.Xml;
 	)
 public class XmlSaveToFile extends AbstractAction 
 {
-	public final static String xmlName = "Xml";
-	public final static String fileNameName = "File";
+	public static final String xmlName      = "Xml";
+	public static final String fileNameName = "File";
 
 	@ActionFieldAttribute(name = xmlName, mandatory = true, constantDescription = R.XML_SAVE_TO_FILE_XML)
-	protected Xml 	xml 	= null;
+	protected Xml xml;
 
 	@ActionFieldAttribute(name = fileNameName, mandatory = true, constantDescription = R.XML_SAVE_TO_FILE_FILE_NAME)
-	protected String 	fileName 	= null;
+	protected String fileName;
 
 	@Override
-	protected HelpKind howHelpWithParameterDerived(Context context,	Parameters parameters, String fieldName) throws Exception
+	protected HelpKind howHelpWithParameterDerived(Context context, Parameters parameters, String fieldName) throws Exception
 	{
 		return fileNameName.equals(fieldName) ? HelpKind.ChooseSaveFile : null;
 	}
-	
+
 	@Override
 	public void doRealAction(Context context, ReportBuilder report, Parameters parameters, AbstractEvaluator evaluator) throws Exception
 	{

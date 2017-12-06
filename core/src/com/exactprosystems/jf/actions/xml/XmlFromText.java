@@ -35,15 +35,15 @@ import java.io.Reader;
 )
 public class XmlFromText extends AbstractAction
 {
-	public final static String textName		= "Text";
+	public static final String textName = "Text";
 
 	@ActionFieldAttribute(name = textName, mandatory = true, constantDescription = R.XML_FROM_TEXT_TEXT)
-	protected Text text = null;
+	protected Text text;
 
 	@Override
 	public void doRealAction(Context context, ReportBuilder report, Parameters parameters, AbstractEvaluator evaluator) throws Exception
 	{
-		try(Reader reader = CommonHelper.readerFromString(this.text.toString()))
+		try (Reader reader = CommonHelper.readerFromString(this.text.toString()))
 		{
 			super.setResult(new Xml(reader));
 		}

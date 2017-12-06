@@ -9,8 +9,6 @@
 
 package com.exactprosystems.jf.actions.xml;
 
-import java.util.List;
-
 import com.exactprosystems.jf.actions.AbstractAction;
 import com.exactprosystems.jf.actions.ActionAttribute;
 import com.exactprosystems.jf.actions.ActionFieldAttribute;
@@ -21,6 +19,8 @@ import com.exactprosystems.jf.common.report.ReportBuilder;
 import com.exactprosystems.jf.documents.config.Context;
 import com.exactprosystems.jf.documents.matrix.parser.Parameters;
 import com.exactprosystems.jf.functions.Xml;
+
+import java.util.List;
 
 @ActionAttribute(
 		group 					   = ActionGroups.XML,
@@ -34,14 +34,14 @@ import com.exactprosystems.jf.functions.Xml;
 
 public class XmlChildren extends AbstractAction
 {
-	public final static String	xmlName			= "Xml";
+	public static final String xmlName = "Xml";
 
 	@ActionFieldAttribute(name = xmlName, mandatory = true, constantDescription = R.XML_CHILDREN_XML)
-	protected Xml				xml				= null;
+	protected Xml xml;
 
 	@Override
 	public void doRealAction(Context context, ReportBuilder report, Parameters parameters, AbstractEvaluator evaluator) throws Exception
 	{
-		super.setResult(xml.getChildren());
+		super.setResult(this.xml.getChildren());
 	}
 }

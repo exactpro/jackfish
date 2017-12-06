@@ -9,11 +9,7 @@
 
 package com.exactprosystems.jf.actions.xml;
 
-import com.exactprosystems.jf.actions.AbstractAction;
-import com.exactprosystems.jf.actions.ActionAttribute;
-import com.exactprosystems.jf.actions.ActionFieldAttribute;
-import com.exactprosystems.jf.actions.ActionGroups;
-import com.exactprosystems.jf.actions.DefaultValuePool;
+import com.exactprosystems.jf.actions.*;
 import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.report.ReportBuilder;
@@ -31,14 +27,14 @@ import com.exactprosystems.jf.functions.Xml;
 	)
 public class XmlSetNode extends AbstractAction 
 {
-	public final static String xmlName = "Xml";
-	public final static String textName = "Text";
+	public static final String xmlName  = "Xml";
+	public static final String textName = "Text";
 
 	@ActionFieldAttribute(name = xmlName, mandatory = true, constantDescription = R.XML_SET_NODE_XML)
-	protected Xml 	xml 	= null;
+	protected Xml xml;
 
-	@ActionFieldAttribute(name = textName, mandatory = false, def = DefaultValuePool.Null, constantDescription = R.XML_SET_NODE_TEXT)
-	protected String 	text;
+	@ActionFieldAttribute(name = textName, mandatory = false, constantDescription = R.XML_SET_NODE_TEXT)
+	protected String text;
 
 	@Override
 	public void doRealAction(Context context, ReportBuilder report, Parameters parameters, AbstractEvaluator evaluator) throws Exception
@@ -47,7 +43,7 @@ public class XmlSetNode extends AbstractAction
 		{
 			this.xml.setText(this.text);
 		}
-		
+
 		this.xml.setAttributes(parameters.select(TypeMandatory.Extra).makeCopy());
 		super.setResult(null);
 	}

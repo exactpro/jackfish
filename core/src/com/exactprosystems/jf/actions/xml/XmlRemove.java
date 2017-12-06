@@ -29,17 +29,17 @@ import com.exactprosystems.jf.functions.Xml;
 	)
 public class XmlRemove extends AbstractAction 
 {
-	public final static String xmlName = "Xml";
-	public final static String xpathName = "Xpath";
+	public static final String xmlName   = "Xml";
+	public static final String xpathName = "Xpath";
 
 	@ActionFieldAttribute(name = xmlName, mandatory = true, constantDescription = R.XML_REMOVE_XML)
-	protected Xml 	xml;
+	protected Xml xml;
 
 	@ActionFieldAttribute(name = xpathName, mandatory = true, constantDescription = R.XML_REMOVE_XPATH)
-	protected String 	xpath;
-	
+	protected String xpath;
+
 	@Override
-	protected HelpKind howHelpWithParameterDerived(Context context,	Parameters parameters, String fieldName) throws Exception
+	protected HelpKind howHelpWithParameterDerived(Context context, Parameters parameters, String fieldName) throws Exception
 	{
 		return xpathName.equals(fieldName) ? HelpKind.BuildXPath : null;
 	}
