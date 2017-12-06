@@ -30,11 +30,11 @@ import com.exactprosystems.jf.documents.matrix.parser.Parameters;
 public class ApplicationMove extends AbstractAction
 {
 	public static final String connectionName = "AppConnection";
-	public static final String xName = "X";
-	public static final String yName = "Y";
+	public static final String xName          = "X";
+	public static final String yName          = "Y";
 
-	@ActionFieldAttribute(name = connectionName, mandatory = true, constantDescription = R.APPLICATION_MOVE_CONNECTION )
-	protected AppConnection connection = null;
+	@ActionFieldAttribute(name = connectionName, mandatory = true, constantDescription = R.APPLICATION_MOVE_CONNECTION)
+	protected AppConnection connection;
 
 	@ActionFieldAttribute(name = xName, mandatory = true, constantDescription = R.APPLICATION_MOVE_X)
 	protected Integer x;

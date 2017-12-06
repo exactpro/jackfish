@@ -34,7 +34,7 @@ public class ClientLoad extends AbstractAction
 	public static final String idName = "ClientId";
 
 	@ActionFieldAttribute(name = idName, mandatory = true, constantDescription = R.CLIENT_LOAD_ID)
-	protected String id = null;
+	protected String id;
 
 	@Override
 	protected HelpKind howHelpWithParameterDerived(Context context, Parameters parameters, String fieldName) throws Exception

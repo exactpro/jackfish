@@ -36,11 +36,11 @@ public class ClientCheckFields extends AbstractAction
 	public static final String connectionName = "ClientConnection";
 	public static final String messageName    = "MapMessage";
 
-	@ActionFieldAttribute(name = connectionName, mandatory = true, constantDescription = R.CLIENT_CHECK_FIELDS_CONNECTION )
-	protected ClientConnection	connection	= null;
+	@ActionFieldAttribute(name = connectionName, mandatory = true, constantDescription = R.CLIENT_CHECK_FIELDS_CONNECTION)
+	protected ClientConnection connection;
 
-	@ActionFieldAttribute(name = messageName, mandatory = true, constantDescription = R.CLIENT_CHECK_FIELDS_MESSAGE )
-	protected MapMessage	message	= null; 
+	@ActionFieldAttribute(name = messageName, mandatory = true, constantDescription = R.CLIENT_CHECK_FIELDS_MESSAGE)
+	protected MapMessage message;
 
 	@Override
 	public void doRealAction(Context context, ReportBuilder report, Parameters parameters, AbstractEvaluator evaluator) throws Exception

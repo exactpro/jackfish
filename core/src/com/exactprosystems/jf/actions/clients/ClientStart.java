@@ -11,7 +11,6 @@ package com.exactprosystems.jf.actions.clients;
 
 import com.exactprosystems.jf.actions.*;
 import com.exactprosystems.jf.api.client.ClientConnection;
-import com.exactprosystems.jf.api.client.IClient;
 import com.exactprosystems.jf.api.common.ParametersKind;
 import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.api.error.ErrorKind;
@@ -39,7 +38,7 @@ public class ClientStart extends AbstractAction
 	public static final String connectionName = "ClientConnection";
 
 	@ActionFieldAttribute(name = connectionName, mandatory = true, constantDescription = R.CLIENT_START_CONNECTION)
-	protected ClientConnection connection = null;
+	protected ClientConnection connection;
 
 	@Override
 	protected void helpToAddParametersDerived(List<ReadableValue> list, Context context, Parameters parameters) throws Exception
@@ -62,8 +61,7 @@ public class ClientStart extends AbstractAction
 	@Override
 	public void doRealAction(Context context, ReportBuilder report, Parameters parameters, AbstractEvaluator evaluator) throws Exception
 	{
-		IClient client = this.connection.getClient();
-		boolean res = client.start(context, parameters.select(TypeMandatory.Extra).makeCopy());
+		boolean res = context.getConfiguration().getClientPool().startClient(context, this.connection, parameters.select(TypeMandatory.Extra).makeCopy());
 		if (res)
 		{
 			super.setResult(true);

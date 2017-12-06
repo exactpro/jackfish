@@ -38,10 +38,10 @@ import java.util.List;
 )
 public class ApplicationSetProperties extends AbstractAction
 {
-	public static final String	connectionName	= "AppConnection";
+	public static final String connectionName = "AppConnection";
 
 	@ActionFieldAttribute(name = connectionName, mandatory = true, constantDescription = R.APPLICATION_SET_PROPERTIES_CONNECTION)
-	protected AppConnection		connection		= null;
+	protected AppConnection connection;
 
 	@Override
 	protected void helpToAddParametersDerived(List<ReadableValue> list, Context context, Parameters parameters) throws Exception
@@ -64,7 +64,7 @@ public class ApplicationSetProperties extends AbstractAction
 	@Override
 	public void doRealAction(Context context, ReportBuilder report, Parameters parameters, AbstractEvaluator evaluator) throws Exception
 	{
-		IApplication app = connection.getApplication();
+		IApplication app = Helper.getApplication(this.connection);
 		IRemoteApplication service = app.service();
 		
 		for (Parameter parameter : parameters.select(TypeMandatory.Extra))

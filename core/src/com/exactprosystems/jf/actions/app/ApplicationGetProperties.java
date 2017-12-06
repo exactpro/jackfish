@@ -45,7 +45,7 @@ public class ApplicationGetProperties extends AbstractAction
 	public static final String	connectionName	= "AppConnection";
 
 	@ActionFieldAttribute(name = connectionName, mandatory = true, constantDescription = R.APPLICATION_GET_PROPERTIES_CONNECTION)
-	protected AppConnection		connection		= null;
+	protected AppConnection connection;
 
 	@Override
 	protected void helpToAddParametersDerived(List<ReadableValue> list, Context context, Parameters parameters) throws Exception
@@ -69,8 +69,8 @@ public class ApplicationGetProperties extends AbstractAction
 	public void doRealAction(Context context, ReportBuilder report, Parameters parameters, AbstractEvaluator evaluator) throws Exception
 	{
 		Map<String, Object> outValue = new LinkedHashMap<>();
-		
-		IApplication app = connection.getApplication();
+
+		IApplication app = Helper.getApplication(this.connection);
 		IRemoteApplication service = app.service();
 		
 		for (Parameter parameter : parameters.select(TypeMandatory.Extra))

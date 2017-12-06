@@ -33,14 +33,14 @@ import java.util.List;
 )
 public class ApplicationNavigate extends AbstractAction
 {
-	public static final String connectionName = "AppConnection";
+	public static final String connectionName   = "AppConnection";
 	public static final String navigateKindName = "Navigate";
 
 	@ActionFieldAttribute(name = connectionName, mandatory = true, constantDescription = R.APPLICATION_NAVIGATE_CONNECTION)
-	protected AppConnection connection = null;
+	protected AppConnection connection;
 
 	@ActionFieldAttribute(name = navigateKindName, mandatory = true, constantDescription = R.APPLICATION_NAVIGATE_KIND)
-	protected NavigateKind kind = null;
+	protected NavigateKind kind;
 
 	@Override
 	protected void helpToAddParametersDerived(List<ReadableValue> list, Context context, Parameters parameters) throws Exception

@@ -14,7 +14,6 @@ import com.exactprosystems.jf.actions.ActionAttribute;
 import com.exactprosystems.jf.actions.ActionFieldAttribute;
 import com.exactprosystems.jf.actions.ActionGroups;
 import com.exactprosystems.jf.api.client.ClientConnection;
-import com.exactprosystems.jf.api.client.IClient;
 import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.report.ReportBuilder;
@@ -33,13 +32,12 @@ public class ClientStop extends AbstractAction
 	public static final String connectionName = "ClientConnection";
 
 	@ActionFieldAttribute(name = connectionName, mandatory = true, constantDescription = R.CLIENT_STOP_CONNECTION)
-	protected ClientConnection connection = null;
+	protected ClientConnection connection;
 
 	@Override
 	public void doRealAction(Context context, ReportBuilder report, Parameters parameters, AbstractEvaluator evaluator) throws Exception
 	{
-		IClient client = this.connection.getClient();
-		client.stop();
+		context.getConfiguration().getClientPool().stopClient(this.connection);
 		super.setResult(null);
 	}
 }

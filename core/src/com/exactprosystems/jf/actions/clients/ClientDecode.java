@@ -36,10 +36,10 @@ public class ClientDecode extends AbstractAction
 	public static final String arrayName      = "Array";
 
 	@ActionFieldAttribute(name = connectionName, mandatory = true, constantDescription = R.CLIENT_DECODE_CONNECTION)
-	protected ClientConnection connection = null;
+	protected ClientConnection connection;
 
 	@ActionFieldAttribute(name = arrayName, mandatory = true, constantDescription = R.CLIENT_DECODE_ARRAY)
-	protected Byte[] array = null;
+	protected Byte[] array;
 
 	@Override
 	public void doRealAction(Context context, ReportBuilder report, Parameters parameters, AbstractEvaluator evaluator) throws Exception

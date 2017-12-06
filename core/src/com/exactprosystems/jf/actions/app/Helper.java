@@ -11,12 +11,15 @@ package com.exactprosystems.jf.actions.app;
 
 import com.exactprosystems.jf.actions.ReadableValue;
 import com.exactprosystems.jf.api.app.AppConnection;
+import com.exactprosystems.jf.api.app.IApplication;
 import com.exactprosystems.jf.api.app.IApplicationFactory;
+import com.exactprosystems.jf.api.app.IRemoteApplication;
 import com.exactprosystems.jf.api.common.ParametersKind;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.documents.config.Context;
 import com.exactprosystems.jf.documents.matrix.Matrix;
 import com.exactprosystems.jf.documents.matrix.parser.Parameters;
+import com.exactprosystems.jf.exceptions.app.ApplicationWasClosedException;
 
 import java.util.Arrays;
 import java.util.List;
@@ -118,5 +121,20 @@ class Helper
 				.map(ReadableValue::new)
 				.forEach(list::add);
 	}
-	
+
+	/**
+	 * @return IApplication instance from passed AppConnection, if connection is alive
+	 * @throws ApplicationWasClosedException if connection was closed ( via ApplicationStop action)
+	 */
+	public static IApplication getApplication(AppConnection connection) throws ApplicationWasClosedException
+	{
+		IApplication app = connection.getApplication();
+		String id = connection.getId();
+		IRemoteApplication service = app.service();
+		if (service == null)
+		{
+			throw new ApplicationWasClosedException(String.format("App with id '%s' was closed before", id));
+		}
+		return app;
+	}
 }

@@ -20,10 +20,32 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface ActionFieldAttribute
 {
-	String name() default "";
+	/**
+	 * @return field name for injecting values
+	 */
+	String name();
 
+	/**
+	 * @return description for the field.
+	 */
 	R constantDescription() default R.DEFAULT;
 
+	/**
+	 * Mandatory mean's, that field should has not null value.
+	 * @return true, if the field is mandatory and false otherwise <br>
+	 */
 	boolean mandatory();
+
+	/**
+	 * This attribute need for <b>not mandatory</b> and not filled fields
+	 * @return true, if parameter should be filled. Otherwise false
+	 */
+	boolean shouldFilled() default true;
+
+	/**
+	 * @return default value to field from DefaultValuePool.
+	 *
+	 * @see com.exactprosystems.jf.actions.DefaultValuePool
+	 */
 	DefaultValuePool def() default DefaultValuePool.Null;
 }

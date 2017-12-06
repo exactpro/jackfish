@@ -35,10 +35,10 @@ public class ClientEncode extends AbstractAction
 	public static final String messageName    = "MapMessage";
 
 	@ActionFieldAttribute(name = connectionName, mandatory = true, constantDescription = R.CLIENT_ENCODE_CONNECTION)
-	protected ClientConnection connection = null;
+	protected ClientConnection connection;
 
 	@ActionFieldAttribute(name = messageName, mandatory = true, constantDescription = R.CLIENT_ENCODE_MESSAGE)
-	protected MapMessage message = null;
+	protected MapMessage message;
 	
 	@Override
 	public void doRealAction(Context context, ReportBuilder report, Parameters parameters, AbstractEvaluator evaluator) throws Exception

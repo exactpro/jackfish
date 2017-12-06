@@ -40,10 +40,10 @@ public class ClientSendMessage extends AbstractAction
 	public static final String checkName       = "Check";
 
 	@ActionFieldAttribute(name = connectionName, mandatory = true, constantDescription = R.CLIENT_SEND_MESSAGE_CONNECTION)
-	protected ClientConnection connection = null;
+	protected ClientConnection connection;
 
 	@ActionFieldAttribute(name = messageTypeName, mandatory = true, constantDescription = R.CLIENT_SEND_MESSAGE_MESSAGE_TYPE)
-	protected String messageType = null;
+	protected String messageType;
 
 	@ActionFieldAttribute(name = checkName, mandatory = false, def = DefaultValuePool.True, constantDescription = R.CLIENT_SEND_MESSAGE_CHECK)
 	protected Boolean check;

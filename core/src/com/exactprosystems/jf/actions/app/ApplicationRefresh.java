@@ -33,12 +33,12 @@ public class ApplicationRefresh extends AbstractAction
 	public static final String connectionName = "AppConnection";
 
 	@ActionFieldAttribute(name = connectionName, mandatory = true, constantDescription = R.APPLICATION_REFRESH_CONNECTION)
-	protected AppConnection	connection	= null;
+	protected AppConnection connection;
 
 	@Override
 	public void doRealAction(Context context, ReportBuilder report, Parameters parameters, AbstractEvaluator evaluator) throws Exception
 	{
-		this.connection.getApplication().service().refresh();
+		Helper.getApplication(this.connection).service().refresh();
 		super.setResult(null);
 	}
 }

@@ -36,17 +36,17 @@ import java.util.List;
 	)
 public class ClientGetMessage extends AbstractAction 
 {
-	public final static String connectionName  = "ClientConnection";
-	public final static String conditionsName  = "Conditions";
-	public final static String messageTypeName = "MessageType";
-	public final static String timeoutName     = "MessageTimeout";
-	public final static String removeName      = "Remove";
+	public static final String connectionName  = "ClientConnection";
+	public static final String conditionsName  = "Conditions";
+	public static final String messageTypeName = "MessageType";
+	public static final String timeoutName     = "MessageTimeout";
+	public static final String removeName      = "Remove";
 
 	@ActionFieldAttribute(name = connectionName, mandatory = true, constantDescription = R.CLIENT_GET_MESSAGE_CONNECTION)
-	protected ClientConnection connection = null;
+	protected ClientConnection connection;
 
 	@ActionFieldAttribute(name = messageTypeName, mandatory = true, constantDescription = R.CLIENT_GET_MESSAGE_MESSAGE_TYPE)
-	protected String messageType = null;
+	protected String messageType;
 
 	@ActionFieldAttribute(name = conditionsName, mandatory = false, def = DefaultValuePool.Null, constantDescription = R.CLIENT_GET_MESSAGE_CONDITIONS)
 	protected Condition[] conditions;

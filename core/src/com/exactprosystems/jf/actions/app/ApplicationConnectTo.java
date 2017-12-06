@@ -44,14 +44,14 @@ import java.util.stream.Collectors;
 	)
 public class ApplicationConnectTo extends AbstractAction 
 {
-	public static final String idName 			= "AppId";
-    public static final String connectionName   = "AppConnection";
+	public static final String idName         = "AppId";
+	public static final String connectionName = "AppConnection";
 
 	@ActionFieldAttribute(name = idName, mandatory = true, constantDescription = R.APPLICATION_CONNECT_TO_ID)
-	protected String 		id	= null;
+	protected String id = null;
 
-    @ActionFieldAttribute(name = connectionName, mandatory = false, def = DefaultValuePool.Null, constantDescription = R.APPLICATION_CONNECT_TO_CONNECTION)
-    protected AppConnection connection = null;
+	@ActionFieldAttribute(name = connectionName, mandatory = false, def = DefaultValuePool.Null, constantDescription = R.APPLICATION_CONNECT_TO_CONNECTION)
+	protected AppConnection connection;
 
 	@Override
 	protected void helpToAddParametersDerived(List<ReadableValue> list, Context context, Parameters parameters) throws Exception
@@ -68,16 +68,16 @@ public class ApplicationConnectTo extends AbstractAction
 			case idName:
 				res = true;
 				break;
-				
+
 			case connectionName:
-			    res = false;
-			    break;
-				
+				res = false;
+				break;
+
 			default:
 				res = Helper.canFillParameter(this.owner.getMatrix(), context, parameters, idName, null, fieldName);
 				break;
-		}	
-		
+		}
+
 		return res ? HelpKind.ChooseFromList : null;
 	}
 
@@ -96,8 +96,8 @@ public class ApplicationConnectTo extends AbstractAction
 		}
 	}
 
-    @Override
-	public void doRealAction(Context context, ReportBuilder report, Parameters parameters, AbstractEvaluator evaluator) throws Exception 
+	@Override
+	public void doRealAction(Context context, ReportBuilder report, Parameters parameters, AbstractEvaluator evaluator) throws Exception
 	{
 		IApplicationPool pool = context.getConfiguration().getApplicationPool();
 
@@ -115,7 +115,7 @@ public class ApplicationConnectTo extends AbstractAction
 			appConnection = this.connection;
 			pool.reconnectToApplication(appConnection, args);
 		}
-		
+
 		if (appConnection.isGood())
 		{
 			super.setResult(appConnection);

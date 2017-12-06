@@ -121,7 +121,7 @@ public class ClientsPool implements IClientsPool
 	}
 	
 	@Override
-	public void startClient(IContext context, ClientConnection connection, Map<String, Object> params) throws Exception
+	public boolean startClient(IContext context, ClientConnection connection, Map<String, Object> params) throws Exception
 	{
 		try
 		{
@@ -131,7 +131,7 @@ public class ClientsPool implements IClientsPool
 			}
 			
 			IClient client = connection.getClient();
-			client.start(context, params);
+			return client.start(context, params);
 		}
 		catch (Exception e)
 		{

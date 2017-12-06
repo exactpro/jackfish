@@ -28,10 +28,10 @@ import com.exactprosystems.jf.documents.matrix.parser.Parameters;
 public class ApplicationStop extends AbstractAction 
 {
 	public static final String connectionName = "AppConnection";
-	public static final String needKillName = "Kill";
+	public static final String needKillName   = "Kill";
 
 	@ActionFieldAttribute(name = connectionName, mandatory = true, constantDescription = R.APPLICATION_STOP_CONNECTION)
-	protected AppConnection	connection	= null;
+	protected AppConnection connection;
 
 	@ActionFieldAttribute(name = needKillName, mandatory = false, def = DefaultValuePool.False, constantDescription = R.APPLICATION_STOP_NEED_KILL)
 	protected Boolean needKill;

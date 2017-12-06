@@ -39,8 +39,8 @@ public class ApplicationNewInstance extends AbstractAction
 {
 	public static final String connectionName = "AppConnection";
 
-	@ActionFieldAttribute(name = connectionName, mandatory = true, constantDescription = R.APPLICATION_NEW_INSTANCE_CONNECTION )
-	protected AppConnection connection	= null;
+	@ActionFieldAttribute(name = connectionName, mandatory = true, constantDescription = R.APPLICATION_NEW_INSTANCE_CONNECTION)
+	protected AppConnection connection;
 
 	@Override
 	protected void helpToAddParametersDerived(List<ReadableValue> list, Context context, Parameters parameters) throws Exception
@@ -53,20 +53,20 @@ public class ApplicationNewInstance extends AbstractAction
 	{
 		return Helper.canFillParameter(this.owner.getMatrix(), context, parameters, null, connectionName, fieldName) ? HelpKind.ChooseFromList : null;
 	}
-	
+
 	@Override
 	protected void listToFillParameterDerived(List<ReadableValue> list, Context context, String parameterToFill, Parameters parameters) throws Exception
 	{
 		Helper.fillListForParameter(list, this.owner.getMatrix(), context, parameters, null, connectionName, parameterToFill);
 	}
-	
+
 	@Override
 	protected void doRealAction(Context context, ReportBuilder report, Parameters parameters, AbstractEvaluator evaluator) throws Exception
 	{
 		Map<String, String> args = parameters.select(TypeMandatory.Extra)
 				.stream()
 				.collect(Collectors.toMap(Parameter::getName, par -> Str.asString(par.getValue())));
-		this.connection.getApplication().service().newInstance(args);
+		Helper.getApplication(this.connection).service().newInstance(args);
 		super.setResult(null);
 	}
 }

@@ -45,7 +45,7 @@ public class ApplicationSwitchTo extends AbstractAction
 	public static final String softConditionName = "SoftCondition";
 
 	@ActionFieldAttribute(name = connectionName, mandatory = true, constantDescription = R.APPLICATION_SWITCH_TO_CONNECTION)
-	protected AppConnection	connection	= null;
+	protected AppConnection connection;
 
 	@ActionFieldAttribute(name = softConditionName, mandatory = false, def = DefaultValuePool.True, constantDescription = R.APPLICATION_SWITCH_TO_SOFT_CONDITION)
 	protected Boolean softCondition;
@@ -61,7 +61,7 @@ public class ApplicationSwitchTo extends AbstractAction
 	{
 		return Helper.canFillParameter(this.owner.getMatrix(), context, parameters, null, connectionName, fieldName) ? HelpKind.ChooseFromList : null;
 	}
-    
+
 	@Override
 	protected void listToFillParameterDerived(List<ReadableValue> list, Context context, String parameterToFill, Parameters parameters) throws Exception
 	{
@@ -71,17 +71,11 @@ public class ApplicationSwitchTo extends AbstractAction
 	@Override
 	public void doRealAction(Context context, ReportBuilder report, Parameters parameters, AbstractEvaluator evaluator) throws Exception 
 	{
-		if (this.softCondition == null)
-		{
-			super.setError(softConditionName + " is null", ErrorKind.WRONG_PARAMETERS);
-			return;
-		}
-
 		Map<String, String> map = parameters.select(TypeMandatory.Extra)
 				.stream()
 				.collect(Collectors.toMap(Parameter::getName, par -> Str.asString(par.getValue())));
 
-		IApplication app = this.connection.getApplication();
+		IApplication app = Helper.getApplication(this.connection);
 		String switchedTitle = app.service().switchTo(map, this.softCondition);
 		
 		if (Str.IsNullOrEmpty(switchedTitle))

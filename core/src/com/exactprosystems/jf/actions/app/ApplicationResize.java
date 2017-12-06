@@ -36,21 +36,21 @@ import java.util.List;
 
 public class ApplicationResize extends AbstractAction
 {
-	public static final String connectionName 	= "AppConnection";
-	public static final String heightName 		= "Height";
-	public static final String widthName 		= "Width";
-	public static final String resizeName		= "Resize";
-	public static final String minimizeName 	= "Minimize";
-	public static final String maximizeName 	= "Maximize";
-	public static final String normalName		= "Normal";
+	public static final String connectionName = "AppConnection";
+	public static final String heightName     = "Height";
+	public static final String widthName      = "Width";
+	public static final String resizeName     = "Resize";
+	public static final String minimizeName   = "Minimize";
+	public static final String maximizeName   = "Maximize";
+	public static final String normalName     = "Normal";
 
-	@ActionFieldAttribute(name = connectionName, mandatory = true, constantDescription = R.APPLICATION_RESIZE_CONNECTION )
-	protected AppConnection	connection	= null;
+	@ActionFieldAttribute(name = connectionName, mandatory = true, constantDescription = R.APPLICATION_RESIZE_CONNECTION)
+	protected AppConnection connection;
 
-	@ActionFieldAttribute(name = heightName, mandatory = false, def = DefaultValuePool.Null, constantDescription = R.APPLICATION_RESIZE_HEIGHT )
+	@ActionFieldAttribute(name = heightName, mandatory = false, def = DefaultValuePool.Null, constantDescription = R.APPLICATION_RESIZE_HEIGHT)
 	protected Integer height;
 
-	@ActionFieldAttribute(name = widthName, mandatory = false, def = DefaultValuePool.Null, constantDescription = R.APPLICATION_RESIZE_WIDTH )
+	@ActionFieldAttribute(name = widthName, mandatory = false, def = DefaultValuePool.Null, constantDescription = R.APPLICATION_RESIZE_WIDTH)
 	protected Integer width;
 
 	@ActionFieldAttribute(name = resizeName, mandatory = false, def = DefaultValuePool.Null, constantDescription = R.APPLICATION_RESIZE_RESIZE)
@@ -93,10 +93,12 @@ public class ApplicationResize extends AbstractAction
 			setError("No one resizing parameter is filled.", ErrorKind.WRONG_PARAMETERS);
 			return;
 		}
+		//TODO this check is unnecessary
 		if (checkInt(widthName, this.width, parameters) || checkInt(heightName, this.height, parameters))
 		{
 			return;
 		}
+		//TODO this check is unnecessary
 		if (parameters.getByName(resizeName) != null && this.resize == null)
 		{
 			setError("Parameter " + resizeName + " must be Resize.Maximize, Resize.Minimize or Resize.Normal", ErrorKind.WRONG_PARAMETERS);

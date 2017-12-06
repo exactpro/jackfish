@@ -40,10 +40,10 @@ public class ClientConnect extends AbstractAction
 	public static final String socketName     = "Socket";
 
 	@ActionFieldAttribute(name = connectionName, mandatory = true, constantDescription = R.CLIENT_CONNECT_CONNECTION)
-	protected ClientConnection connection = null;
+	protected ClientConnection connection;
 
 	@ActionFieldAttribute(name = socketName, mandatory = true, constantDescription = R.CLIENT_CONNECT_SOCKET)
-	protected Socket socket = null;
+	protected Socket socket;
 
 	@Override
 	protected void helpToAddParametersDerived(List<ReadableValue> list, Context context, Parameters parameters) throws Exception

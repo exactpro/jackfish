@@ -35,14 +35,13 @@ public class ClientSendMapMessage extends AbstractAction
 	public static final String checkName      = "Check";
 
 	@ActionFieldAttribute(name = connectionName, mandatory = true, constantDescription = R.CLIENT_SEND_MAP_MESSAGE_CONNECTION)
-	protected ClientConnection connection = null;
+	protected ClientConnection connection;
 
 	@ActionFieldAttribute(name = messageName, mandatory = true, constantDescription = R.CLIENT_SEND_MAP_MESSAGE_MESSAGE)
-	protected MapMessage message = null;
+	protected MapMessage message;
 
 	@ActionFieldAttribute(name = checkName, mandatory = false, def = DefaultValuePool.True, constantDescription = R.CLIENT_SEND_MAP_MESSAGE_CHECK)
 	protected Boolean check;
-
 
 	@Override
 	protected HelpKind howHelpWithParameterDerived(Context context, Parameters parameters, String fieldName) throws Exception

@@ -38,12 +38,12 @@ public class ApplicationCloseWindow extends AbstractAction
 	public static final String APP_CONNECTION_NAME = "AppConnection";
 
 	@ActionFieldAttribute(name = APP_CONNECTION_NAME, mandatory = true, constantDescription = R.APP_CONNECTION_NAME_DESCRIPTION)
-	protected AppConnection connection = null;
+	protected AppConnection connection;
 
 	@Override
 	protected void doRealAction(Context context, ReportBuilder report, Parameters parameters, AbstractEvaluator evaluator) throws Exception
 	{
-		IApplication app = connection.getApplication();
+		IApplication app = Helper.getApplication(this.connection);
 		String windowTitle = app.service().closeWindow();
 
 		if (Str.IsNullOrEmpty(windowTitle))

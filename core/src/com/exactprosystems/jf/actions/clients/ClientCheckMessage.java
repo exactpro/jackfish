@@ -45,13 +45,13 @@ public class ClientCheckMessage extends AbstractAction
 	public static final String expectedMessageTypeName = "ExpectedMessageType";
 
 	@ActionFieldAttribute(name = connectionName, mandatory = true, constantDescription = R.CLIENT_CHECK_MESSAGE_CONNECTION)
-	protected ClientConnection connection = null;
+	protected ClientConnection connection;
 
 	@ActionFieldAttribute(name = actualName, mandatory = true, constantDescription = R.CLIENT_CHECK_MESSAGE_ACTUAL)
-	protected MapMessage actual = null;
+	protected MapMessage actual;
 
 	@ActionFieldAttribute(name = expectedMessageTypeName, mandatory = true, constantDescription = R.CLIENT_CHECK_MESSAGE_MESSAGE_TYPE)
-	protected String messageType = null;
+	protected String messageType;
 
 	@Override
 	protected void helpToAddParametersDerived(List<ReadableValue> list, Context context, Parameters parameters) throws Exception

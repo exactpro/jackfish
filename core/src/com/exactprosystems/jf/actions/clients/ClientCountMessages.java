@@ -45,10 +45,10 @@ public class ClientCountMessages extends AbstractAction
 	public static final String conditionsName  = "Conditions";
 
 	@ActionFieldAttribute(name = connectionName, mandatory = true, constantDescription = R.CLIENT_COUNT_MESSAGES_CONNECTION)
-	protected ClientConnection connection = null;
+	protected ClientConnection connection;
 
 	@ActionFieldAttribute(name = messageTypeName, mandatory = true, constantDescription = R.CLIENT_COUNT_MESSAGES_MESSAGE_TYPE)
-	protected String messageType = null;
+	protected String messageType;
 
 	@ActionFieldAttribute(name = conditionsName, mandatory = false, def = DefaultValuePool.Null, constantDescription = R.CLIENT_COUNT_MESSAGES_CONDITIONS)
 	protected Condition[] conditions;

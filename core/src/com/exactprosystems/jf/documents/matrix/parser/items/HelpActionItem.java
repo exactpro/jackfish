@@ -11,7 +11,6 @@ package com.exactprosystems.jf.documents.matrix.parser.items;
 import com.exactprosystems.jf.actions.AbstractAction;
 import com.exactprosystems.jf.actions.ActionAttribute;
 import com.exactprosystems.jf.actions.ActionFieldAttribute;
-import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.api.error.ErrorKind;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.report.HTMLhelper;
@@ -86,8 +85,8 @@ public class HelpActionItem extends MatrixItem
         
         // Input
         Field[] fields = clazz.getDeclaredFields();
-        ReportTable table = report.addTable("{{*Input:*}}", null, true, false, new int[] { 15, 15, 50, 10, 10 }, "Field name", "Field type",
-                "Description", "Mandatory", "Default");
+        ReportTable table = report.addTable("{{*Input:*}}", null, true, false, new int[] { 15, 15, 50, 5, 7 ,8 }, "Field name", "Field type",
+                "Description", "Mandatory", "Default", "Should filled");
 
         for (Field f : fields)
         {
@@ -100,11 +99,11 @@ public class HelpActionItem extends MatrixItem
             String fieldDescription = annotation.constantDescription().get();
 	        if (annotation.mandatory())
             {
-                table.addValues(annotation.name(), f.getType().getSimpleName(), fieldDescription, "Yes", "");
+                table.addValues(annotation.name(), f.getType().getSimpleName(), fieldDescription, "Yes", "", "Yes");
             }
             else
             {
-                table.addValues(annotation.name(), f.getType().getSimpleName(), fieldDescription, "No", annotation.def());
+                table.addValues(annotation.name(), f.getType().getSimpleName(), fieldDescription, "No", annotation.def(), annotation.shouldFilled());
             }
         }
 

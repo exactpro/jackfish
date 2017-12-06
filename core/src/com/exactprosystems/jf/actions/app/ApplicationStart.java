@@ -44,10 +44,10 @@ import java.util.stream.Collectors;
 	)
 public class ApplicationStart extends AbstractAction 
 {
-	public static final String idName 	= "AppId";
+	public static final String idName = "AppId";
 
 	@ActionFieldAttribute(name = idName, mandatory = true, constantDescription = R.APPLICATION_START_APP_ID)
-	protected String id	= null;
+	protected String id;
 	
 	@Override
 	protected void helpToAddParametersDerived(List<ReadableValue> list, Context context, Parameters parameters) throws Exception
@@ -58,7 +58,7 @@ public class ApplicationStart extends AbstractAction
 	@Override
 	protected HelpKind howHelpWithParameterDerived(Context context, Parameters parameters, String fieldName) throws Exception
 	{
-		boolean res = false;
+		boolean res;
 		switch (fieldName)
 		{
 			case idName:

@@ -36,7 +36,7 @@ public class ClientSetProperties extends AbstractAction
 	public static final String connectionName = "ClientConnection";
 
 	@ActionFieldAttribute(name = connectionName, mandatory = true, constantDescription = R.CLIENT_SET_PROPERTIES_CONNECTION)
-	protected ClientConnection connection = null;
+	protected ClientConnection connection;
 
 	@Override
 	protected void helpToAddParametersDerived(List<ReadableValue> list, Context context, Parameters parameters) throws Exception

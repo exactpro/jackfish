@@ -36,10 +36,10 @@ public class ClientSendRawMessage extends AbstractAction
 	public static final String dataName       = "Data";
 
 	@ActionFieldAttribute(name = connectionName, mandatory = true, constantDescription = R.CLIENT_SEND_RAW_MESSAGE_CONNECTION)
-	protected ClientConnection connection = null;
+	protected ClientConnection connection;
 
 	@ActionFieldAttribute(name = dataName, mandatory = true, constantDescription = R.CLIENT_SEND_RAW_MESSAGE_DATA)
-	protected byte[] data = null;
+	protected byte[] data;
 
 	@Override
 	protected HelpKind howHelpWithParameterDerived(Context context, Parameters parameters, String fieldName) throws Exception

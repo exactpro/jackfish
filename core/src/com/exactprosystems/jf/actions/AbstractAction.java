@@ -431,14 +431,19 @@ public abstract class AbstractAction implements Cloneable
 	                    Object value = parameter.getValue();
 	                    if (value == null && description.attribute.mandatory())
 	                    {
-	                        setError("Mandatory parameter " + name + " is empty", ErrorKind.EMPTY_PARAMETER);
+	                    	setError(String.format("Mandatory parameter %s is empty", name), ErrorKind.EMPTY_PARAMETER);
 	                        allCorrect = false;
 	                    }
-	                    else
-	                    {
-	                        description.field.setAccessible(true);
-	                        description.field.set(this, value);
-	                    }
+						else if (value == null && description.attribute.shouldFilled())
+						{
+							setError(String.format("NotMandatory parameter %s must be filled or not presented", name), ErrorKind.EMPTY_PARAMETER);
+							allCorrect = false;
+						}
+						else
+						{
+							description.field.setAccessible(true);
+							description.field.set(this, value);
+						}
                 	}
                 	else
                 	{

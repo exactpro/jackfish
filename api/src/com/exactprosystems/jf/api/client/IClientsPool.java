@@ -9,11 +9,11 @@
 
 package com.exactprosystems.jf.api.client;
 
-import java.util.List;
-import java.util.Map;
-
 import com.exactprosystems.jf.api.common.IContext;
 import com.exactprosystems.jf.api.common.IPool;
+
+import java.util.List;
+import java.util.Map;
 
 public interface IClientsPool  extends IPool
 {
@@ -21,7 +21,7 @@ public interface IClientsPool  extends IPool
 	
 	IClientFactory 		loadClientFactory(String id) throws Exception;
 	ClientConnection 	loadClient(String id) throws Exception;
-	void 				startClient(IContext context, ClientConnection connection, Map<String, Object> params) throws Exception;
+	boolean				startClient(IContext context, ClientConnection connection, Map<String, Object> params) throws Exception;
 	void 				stopClient(ClientConnection connection) throws Exception;
 }
 
