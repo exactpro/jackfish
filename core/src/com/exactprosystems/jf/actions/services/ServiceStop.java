@@ -33,7 +33,7 @@ public class ServiceStop extends AbstractAction
 	public static final String connectionName = "ServiceConnection";
 
 	@ActionFieldAttribute(name = connectionName, mandatory = true, constantDescription = R.SERVICE_STOP_CONNECTION)
-	protected ServiceConnection connection = null;
+	protected ServiceConnection connection;
 
 	@Override
 	public void doRealAction(Context context, ReportBuilder report, Parameters parameters, AbstractEvaluator evaluator) throws Exception

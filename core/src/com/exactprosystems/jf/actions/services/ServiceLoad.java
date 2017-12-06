@@ -35,7 +35,7 @@ public class ServiceLoad extends AbstractAction
 	public static final String idName = "ServiceId";
 
 	@ActionFieldAttribute(name = idName, mandatory = true, constantDescription = R.SERVICE_LOAD_ID)
-	protected String id = null;
+	protected String id;
 
 	@Override
 	protected HelpKind howHelpWithParameterDerived(Context context, Parameters parameters, String fieldName)

@@ -37,8 +37,8 @@ public class ServiceStart extends AbstractAction
 {
 	public static final String connectionName = "ServiceConnection";
 
-	@ActionFieldAttribute(name = connectionName, mandatory = true, constantDescription = R.SERVICE_START_CONNECTION )
-	protected ServiceConnection	connection	= null;
+	@ActionFieldAttribute(name = connectionName, mandatory = true, constantDescription = R.SERVICE_START_CONNECTION)
+	protected ServiceConnection connection;
 
 	@Override
 	protected HelpKind howHelpWithParameterDerived(Context context, Parameters parameters, String fieldName) throws Exception
