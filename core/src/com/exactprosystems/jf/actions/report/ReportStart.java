@@ -10,9 +10,7 @@
 package com.exactprosystems.jf.actions.report;
 
 import com.exactprosystems.jf.actions.*;
-import com.exactprosystems.jf.api.common.Str;
 import com.exactprosystems.jf.api.common.i18n.R;
-import com.exactprosystems.jf.api.error.ErrorKind;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.report.ReportBuilder;
 import com.exactprosystems.jf.documents.config.Configuration;
@@ -44,12 +42,6 @@ public class ReportStart extends AbstractAction
 	@Override
 	public void doRealAction(Context context, ReportBuilder report, Parameters parameters, AbstractEvaluator evaluator) throws Exception
 	{
-		if (Str.IsNullOrEmpty(this.reportName))
-		{
-			super.setError(reportNameName, ErrorKind.EMPTY_PARAMETER);
-			return;
-		}
-
 		Configuration config = context.getConfiguration();
 		ReportBuilder newReport = config.getReportFactory().createReportBuilder(config.getReports().get(), this.reportName, new Date());
 		newReport.reportStarted(null, this.version);

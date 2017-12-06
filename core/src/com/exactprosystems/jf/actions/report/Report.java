@@ -40,7 +40,7 @@ public class Report extends AbstractAction
 	protected ReportBuilder toReport;
 
 	@ActionFieldAttribute(name = beforeTestCaseName, mandatory = false, def = DefaultValuePool.Null, constantDescription = R.REPORT_BEFORE_TEST_CASE)
-	protected String beforeTestCase = null;
+	protected String beforeTestCase;
 
 	@ActionFieldAttribute(name = strName, mandatory = false, def = DefaultValuePool.EmptyString, constantDescription = R.REPORT_MESSAGE)
 	protected String message;

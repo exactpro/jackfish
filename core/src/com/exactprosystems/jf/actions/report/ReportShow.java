@@ -34,7 +34,7 @@ public class ReportShow extends AbstractAction
 	public static final String reportName = "Report";
 
 	@ActionFieldAttribute(name = reportName, mandatory = true, constantDescription = R.REPORT_SHOW_REPORT)
-	protected String report = null;
+	protected String report;
 
 	@Override
 	protected HelpKind howHelpWithParameterDerived(Context context, Parameters parameters, String fieldName) throws Exception
@@ -51,7 +51,7 @@ public class ReportShow extends AbstractAction
 	{
 		if (!new File(this.report).exists())
 		{
-			setError("File not found", ErrorKind.WRONG_PARAMETERS);
+			setError(String.format("Report by path %s not found", this.report), ErrorKind.WRONG_PARAMETERS);
 			return;
 		}
 		context.showReport(this.report);

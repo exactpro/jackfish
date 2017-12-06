@@ -32,7 +32,7 @@ public class ReportName extends AbstractAction
 	public static final String passedStepsName = "PassedSteps";
 
 	@ActionFieldAttribute(name = nameName, mandatory = true, constantDescription = R.REPORT_NAME_NAME)
-	protected String name = "";
+	protected String name;
 
 	@ActionFieldAttribute(name = failedStepsName, mandatory = false, constantDescription = R.REPORT_NAME_FAILED_STEPS)
 	protected Integer failedSteps;
