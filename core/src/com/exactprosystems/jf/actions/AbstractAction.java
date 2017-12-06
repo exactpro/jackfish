@@ -66,21 +66,36 @@ public abstract class AbstractAction implements Cloneable
 	}
 
 	//region Getters / Setters
+
+	/**
+	 * @return result from the action.
+	 * @see Result
+	 */
 	public final Result getResult()
 	{
 		return this.action.Result;
 	}
 
+	/**
+	 * @return a object value - result of executing the action
+	 */
 	public final Object getOut()
 	{
 		return this.action.Out;
 	}
 
+	/**
+	 * @return String representation, why the action was failed
+	 */
 	public final String getReason()
 	{
 		return this.action.Reason;
 	}
 
+	/**
+	 * @return ErrorKind for the failed action
+	 * @see ErrorKind
+	 */
 	public final ErrorKind getErrorKind()
 	{
 		return this.action.Kind;
@@ -97,6 +112,10 @@ public abstract class AbstractAction implements Cloneable
 	//endregion
 
 	//region Public members
+
+	/**
+	 * Add all mandatory fields to parameters. Added parameters have empty value and type Mandatory.
+	 */
 	public void addParameters(Parameters parameters)
 	{
 		this.getFieldsAttributes().entrySet()
@@ -109,6 +128,10 @@ public abstract class AbstractAction implements Cloneable
 				});
 	}
 
+	/**
+	 * Check the action for extra and missing parameters.<br>
+	 * If these parameters are present, then will notify error on listener
+	 */
 	public final void checkAction(IMatrixListener listener, ActionItem owner, Parameters parameters)
 	{
 		List<String> extraFields = this.checkExtraFields(parameters.keySet());
@@ -125,6 +148,11 @@ public abstract class AbstractAction implements Cloneable
 		}
 	}
 
+	/**
+	 * Execute the action.
+	 * @return result of executing.
+	 * @see AbstractAction#getResult()
+	 */
 	public final Result doAction(Context context, AbstractEvaluator evaluator, ReportBuilder report, Parameters parameters, String actionId, Parameter assertBool)
 	{
 		try
@@ -203,6 +231,10 @@ public abstract class AbstractAction implements Cloneable
 		return this.action.Result;
     }
 
+	/**
+	 * @return suffix for the action. <br>
+	 * If the action has output type is NullType, will returned empty string
+	 */
 	public final String actionSuffix()
 	{
 		return Optional.ofNullable(this.getClass().getAnnotation(ActionAttribute.class))
@@ -275,6 +307,9 @@ public abstract class AbstractAction implements Cloneable
 		}
 	}
 
+	/**
+	 * init default values for all not mandatory fields in the action
+	 */
 	public final void initDefaultValues()
 	{
 		try
