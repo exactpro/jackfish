@@ -47,7 +47,7 @@ public class ActionsReportHelper
 		}
 		return matrix.listOfIds(TestCase.class)
 				.stream()
-				.filter(st -> st.equals(testCaseId))
+				.filter(testCaseId::equals)
 				.findFirst()
 				.orElse(null);
 	}

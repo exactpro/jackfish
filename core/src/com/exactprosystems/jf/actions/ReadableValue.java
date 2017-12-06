@@ -11,7 +11,10 @@ package com.exactprosystems.jf.actions;
 
 public class ReadableValue
 {
-	public static final ReadableValue TRUE = new ReadableValue("true");
+	private final String value;
+	private final String description;
+
+	public static final ReadableValue TRUE  = new ReadableValue("true");
 	public static final ReadableValue FALSE = new ReadableValue("false");
 
 	public ReadableValue(String value, String description)
@@ -61,7 +64,4 @@ public class ReadableValue
 	{
 		return this.value;
 	}
-	
-	private String value;
-	private String description;
 }

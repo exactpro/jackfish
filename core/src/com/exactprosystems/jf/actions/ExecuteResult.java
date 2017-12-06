@@ -12,9 +12,7 @@ package com.exactprosystems.jf.actions;
 public class ExecuteResult
 {
 	public String Text;
-
 	public int ExitCode;
-
 	public int PID;
 
 	public ExecuteResult(String text, int exitCode, int pid)

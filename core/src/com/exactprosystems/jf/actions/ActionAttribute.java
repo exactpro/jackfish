@@ -28,6 +28,6 @@ public @interface ActionAttribute
 	R constantGeneralDescription() default R.DEFAULT;
 	R constantAdditionalDescription() default R.DEFAULT;
 	R constantOutputDescription() default R.DEFAULT_OUTPUT_DESCRIPTION;
-    Class<?>[] seeAlsoClass() default {};
-    R constantExamples() default R.DEFAULT;
+	Class<?>[] seeAlsoClass() default {};
+	R constantExamples() default R.DEFAULT;
 }
