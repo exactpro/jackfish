@@ -14,14 +14,12 @@ import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.api.error.ErrorKind;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.report.ReportBuilder;
-import com.exactprosystems.jf.documents.config.Configuration;
 import com.exactprosystems.jf.documents.config.Context;
 import com.exactprosystems.jf.documents.config.SqlEntry;
 import com.exactprosystems.jf.documents.matrix.parser.Parameters;
 import com.exactprosystems.jf.functions.HelpKind;
 import com.exactprosystems.jf.sql.SqlConnection;
 
-import java.sql.SQLException;
 import java.util.List;
 
 @ActionAttribute(
@@ -43,19 +41,19 @@ public class SQLconnect  extends AbstractAction
 	public static final String passwordName = "Password";
 
 	@ActionFieldAttribute(name = sqlName, mandatory = true, constantDescription = R.SQL_CONNECT_SQL)
-	protected String sql = "";
+	protected String sql;
 
 	@ActionFieldAttribute(name = serverName, mandatory = true, constantDescription = R.SQL_CONNECT_SERVER)
-	protected String server = "";
+	protected String server;
 
 	@ActionFieldAttribute(name = baseName, mandatory = true, constantDescription = R.SQL_CONNECT_BASE)
-	protected String base = "";
+	protected String base;
 
 	@ActionFieldAttribute(name = userName, mandatory = true, constantDescription = R.SQL_CONNECT_USER)
-	protected String user = "";
+	protected String user;
 
 	@ActionFieldAttribute(name = passwordName, mandatory = true, constantDescription = R.SQL_CONNECT_PASSWORD)
-	protected String password = "";
+	protected String password;
 
 	@Override
 	protected HelpKind howHelpWithParameterDerived(Context context, Parameters parameters, String fieldName)

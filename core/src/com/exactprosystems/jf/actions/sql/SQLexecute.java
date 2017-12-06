@@ -36,14 +36,14 @@ import com.exactprosystems.jf.sql.SqlConnection;
 	)
 public class SQLexecute extends AbstractAction
 {
-	public final static String connectionName 	= "Connection";
-	public final static String queryName 		= "Query";
+	public static final String connectionName = "Connection";
+	public static final String queryName      = "Query";
 
 	@ActionFieldAttribute(name = connectionName, mandatory = true, constantDescription = R.SQL_EXECUTE_CONNECTION)
-	protected SqlConnection connection 		= null;
+	protected SqlConnection connection;
 
 	@ActionFieldAttribute(name = queryName, mandatory = true, constantDescription = R.SQL_EXECUTE_QUERY)
-	protected String query 	= "";
+	protected String query;
 
 	@Override
 	protected HelpKind howHelpWithParameterDerived(Context context, Parameters parameters, String fieldName) throws Exception
@@ -54,13 +54,12 @@ public class SQLexecute extends AbstractAction
 	@Override
 	protected void doRealAction(Context context, ReportBuilder report, Parameters parameters, AbstractEvaluator evaluator) throws Exception
 	{
-		if(this.connection.isClosed()){
-			super.setError("Connection is not established", ErrorKind.SQL_ERROR);
-		}
-		else
+		if (this.connection.isClosed())
 		{
-			boolean result = context.getConfiguration().getDataBasesPool().execute(this.connection, this.query, parameters.select(TypeMandatory.Extra).values().toArray());
-			super.setResult(result);
+			super.setError("Connection is not established", ErrorKind.SQL_ERROR);
+			return;
 		}
+		boolean result = context.getConfiguration().getDataBasesPool().execute(this.connection, this.query, parameters.select(TypeMandatory.Extra).values().toArray());
+		super.setResult(result);
 	}
 }

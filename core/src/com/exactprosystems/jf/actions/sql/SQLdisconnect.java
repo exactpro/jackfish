@@ -14,7 +14,6 @@ import com.exactprosystems.jf.actions.ActionAttribute;
 import com.exactprosystems.jf.actions.ActionFieldAttribute;
 import com.exactprosystems.jf.actions.ActionGroups;
 import com.exactprosystems.jf.api.common.i18n.R;
-import com.exactprosystems.jf.api.error.ErrorKind;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.report.ReportBuilder;
 import com.exactprosystems.jf.documents.config.Context;
@@ -31,23 +30,15 @@ import com.exactprosystems.jf.sql.SqlConnection;
 	)
 public class SQLdisconnect extends AbstractAction
 {
-	public final static  String connectionName = "Connection";
+	public static final String connectionName = "Connection";
 
 	@ActionFieldAttribute(name = connectionName, mandatory = true, constantDescription = R.SQL_DISCONNECT_CONNECTION)
-	protected SqlConnection connection 		= null;
+	protected SqlConnection connection;
 
 	@Override
-	protected void doRealAction(Context context,
-			ReportBuilder report, Parameters parameters, AbstractEvaluator evaluator) throws Exception
+	protected void doRealAction(Context context, ReportBuilder report, Parameters parameters, AbstractEvaluator evaluator) throws Exception
 	{
-		if (this.connection == null)
-		{
-			super.setError("Connection is null", ErrorKind.EMPTY_PARAMETER);
-		}
-		else
-		{
-			context.getConfiguration().getDataBasesPool().disconnect(this.connection);
-			super.setResult(null);
-		}
+		context.getConfiguration().getDataBasesPool().disconnect(this.connection);
+		super.setResult(null);
 	}
 }

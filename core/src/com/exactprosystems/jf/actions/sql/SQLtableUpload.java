@@ -31,29 +31,28 @@ import com.exactprosystems.jf.sql.SqlConnection;
 	)
 public class SQLtableUpload extends AbstractAction
 {
-	public final static String connectionName 	= "Connection";
-	public final static String tableName 		= "Table";
-	public final static String dataName 		= "Data";
+	public static final String connectionName = "Connection";
+	public static final String tableName      = "Table";
+	public static final String dataName       = "Data";
 
 	@ActionFieldAttribute(name = connectionName, mandatory = true, constantDescription = R.SQL_TABLE_UPLOAD_CONNECTION)
-	protected SqlConnection connection 		= null;
+	protected SqlConnection connection;
 
 	@ActionFieldAttribute(name = tableName, mandatory = true, constantDescription = R.SQL_TABLE_UPLOAD_TABLE)
-	protected String table 	= "";
+	protected String table;
 
 	@ActionFieldAttribute(name = dataName, mandatory = true, constantDescription = R.SQL_TABLE_UPLOAD_DATA)
-	protected Table data 	= null;
+	protected Table data;
 
 	@Override
 	protected void doRealAction(Context context, ReportBuilder report, Parameters parameters, AbstractEvaluator evaluator) throws Exception
 	{
-		if(this.connection.isClosed()){
-			super.setError("Connection is not established", ErrorKind.SQL_ERROR);
-		}
-		else
+		if (this.connection.isClosed())
 		{
-			this.data.upload(this.connection, this.table);
-			super.setResult(null);
+			super.setError("Connection is not established", ErrorKind.SQL_ERROR);
+			return;
 		}
+		this.data.upload(this.connection, this.table);
+		super.setResult(null);
 	}
 }
