@@ -24,9 +24,10 @@ public class RefactorRemoveParameters extends Refactor
 
 	public RefactorRemoveParameters(MatrixItem item, int[] parameterIndexes)
 	{
-		this.message = String.format("Remove parameter with indexes %s from item %s from a matrix %s"
+		this.message = String.format("Remove parameters with indexes %s from %s [%s] from a matrix %s"
 				, Arrays.toString(parameterIndexes)
 				, item
+				, item.getNumber()
 				, Common.getRelativePath(item.getMatrix().getNameProperty().get())
 		);
 		commands = CommandBuilder.start()

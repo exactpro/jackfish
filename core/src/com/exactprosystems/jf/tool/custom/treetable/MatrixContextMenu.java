@@ -271,6 +271,7 @@ public class MatrixContextMenu extends ContextMenu
 	private void gotoLine(MatrixTreeView tree)
 	{
 		TextInputDialog dialog = new TextInputDialog();
+		DialogsHelper.centreDialog(dialog);
 		dialog.getDialogPane().getStylesheets().addAll(Theme.currentThemesPaths());
 		dialog.getDialogPane().setHeader(new Pane());
 		dialog.setTitle("Enter line number");

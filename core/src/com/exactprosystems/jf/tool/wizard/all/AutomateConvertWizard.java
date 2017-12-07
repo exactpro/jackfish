@@ -9,9 +9,12 @@
 
 package com.exactprosystems.jf.tool.wizard.all;
 
+import com.exactprosystems.jf.actions.AbstractAction;
+import com.exactprosystems.jf.actions.ActionFieldAttribute;
 import com.exactprosystems.jf.actions.app.ApplicationResize;
 import com.exactprosystems.jf.api.app.Resize;
 import com.exactprosystems.jf.api.common.IContext;
+import com.exactprosystems.jf.api.common.Str;
 import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.api.wizard.WizardAttribute;
 import com.exactprosystems.jf.api.wizard.WizardCategory;
@@ -38,10 +41,7 @@ import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.function.BooleanSupplier;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
@@ -70,7 +70,8 @@ public class AutomateConvertWizard extends AbstractWizard
 	private Task<List<Refactor>> task;
 
 	private final List<Converter> CONVERTER_LIST = Arrays.asList(
-			new ApplicationResizeConverter()
+			new ApplicationResizeConverter(),
+			new ActionRemoveEmptyNotMandatoryFields()
 	);
 
 	@Override
@@ -180,6 +181,8 @@ public class AutomateConvertWizard extends AbstractWizard
 			if (newValue != null)
 			{
 				shortDescription.setText(newValue.shortDescription());
+				this.listView.getItems().clear();
+				Optional.ofNullable(this.task).ifPresent(Task::cancel);
 			}
 		});
 
@@ -279,6 +282,61 @@ public class AutomateConvertWizard extends AbstractWizard
 								list.add(new RefactorAddParameter(item, parameter, -1));
 							}
 						}
+					}
+				});
+			}, DocumentKind.MATRIX, DocumentKind.LIBRARY);
+
+			return list;
+		}
+	}
+
+	private class ActionRemoveEmptyNotMandatoryFields implements Converter
+	{
+		@Override
+		public String toString()
+		{
+			return this.getClass().getSimpleName();
+		}
+
+		@Override
+		public String shortDescription()
+		{
+			return R.WIZARD_REMOVE_EMPTY_PARAMETERS.get();
+		}
+
+		@Override
+		public List<Refactor> scan(BooleanSupplier stopSupplier)
+		{
+			List<Refactor> list = new ArrayList<>();
+			configuration.forEach(document ->
+			{
+				if (stopSupplier.getAsBoolean())
+				{
+					return;
+				}
+				Matrix matrix = (Matrix) document;
+				MatrixItem root = matrix.getRoot();
+				root.bypass(item ->
+				{
+					if (stopSupplier.getAsBoolean())
+					{
+						return;
+					}
+					if (item instanceof ActionItem)
+					{
+						ActionItem actionItem = (ActionItem) item;
+						Class<? extends AbstractAction> actionClass = actionItem.getActionClass();
+						Parameters parameters = actionItem.getParameters();
+
+						parameters.stream()
+								.filter(parameter -> Str.IsNullOrEmpty(parameter.getExpression()))
+								//check that parameter is presented on a class ( this means, that parameter is mandatory or notMandatory)
+								.filter(parameter -> Arrays.stream(actionClass.getDeclaredFields())
+										.map(field ->  field.getAnnotation(ActionFieldAttribute.class))
+										.filter(Objects::nonNull)
+										.anyMatch(annotation -> annotation.name().equals(parameter.getName()) && annotation.shouldFilled()))
+								.map(parameter -> new int[]{parameters.getIndex(parameter)})
+								.forEach(indexArray -> list.add(new RefactorRemoveParameters(actionItem, indexArray)));
 					}
 				});
 			}, DocumentKind.MATRIX, DocumentKind.LIBRARY);
