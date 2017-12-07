@@ -604,8 +604,8 @@ RF;RegressionFramework
             #Id;#Action
             xml;XmlCreate
 
-            #Id;#Action;name;failures;tests;time;$Content;$NodeName;$Xml
-            rootNode;XmlAddNode;testSet.test_set;failures;totalCount;totalTime / 1000;;'testsuites';xml.Out
+            #Id;#Action;name;failures;tests;time;$NodeName;$Xml
+            rootNode;XmlAddNode;testSet.test_set;failures;totalCount;totalTime / 1000;'testsuites';xml.Out
 
             #Id;#Action;$Xpath;$Xml
             XML1;XmlFindFirst;'//testsuites';xml.Out
