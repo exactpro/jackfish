@@ -224,8 +224,11 @@ Application stop;;;
         #Id;#Action;$AppConnection;$Kill
         APPSTP6;ApplicationStop;APPSTR5.Out;true
 
+        #Action;$AppConnection
+        ApplicationStop;app.Out
+
         #Id;#Action;#Assert;$AppConnection;Rectangle
-        APPPAR1;ApplicationGetProperties;This.Result == Result.Failed && This.Kind == ErrorKind.EXCEPTION;app.Out;
+        APPPAR1;ApplicationGetProperties;This.Result == Result.Failed && This.Kind == ErrorKind.APPLICATION_CLOSED;app.Out;
 
         #Id;#Action;$AppConnection
         APPSTP5;ApplicationStop;app.Out
@@ -367,7 +370,7 @@ Dialog resize;Never;;
         DialogResize;This.Kind == ErrorKind.WRONG_PARAMETERS;'Dialog';appCon
 
         #Action;#Assert;$Dialog;$AppConnection;$Resize
-        DialogResize;This.Kind == ErrorKind.WRONG_PARAMETERS;'Dialog';appCon;
+        DialogResize;This.Kind == ErrorKind.EMPTY_PARAMETER;'Dialog';appCon;
 
         #Action;#Assert;$Dialog;$AppConnection;$Resize;$Height
         DialogResize;This.Kind == ErrorKind.WRONG_PARAMETERS;'Dialog';appCon;Resize.Maximize;10
