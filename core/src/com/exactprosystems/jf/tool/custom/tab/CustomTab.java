@@ -9,6 +9,7 @@
 
 package com.exactprosystems.jf.tool.custom.tab;
 
+import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.common.CommonHelper;
 import com.exactprosystems.jf.documents.Document;
 import com.exactprosystems.jf.documents.DocumentKind;
@@ -119,7 +120,7 @@ public class CustomTab extends Tab
 					{
 						if(!warningIsShow.get())
 						{
-							Common.tryCatch(CustomTab.this::reload, "Error on reload");
+							Common.tryCatch(CustomTab.this::reload, R.CUSTOM_TAB_ERROR_ON_RELOAD.get());
 							warningIsShow.set(true);
 						}
 					}
@@ -135,7 +136,7 @@ public class CustomTab extends Tab
 			crossButton.setVisible(isSelected());
 			if (isSelected() && watcher.isChanged())
 			{
-				Common.tryCatch(CustomTab.this::reload, "Error on reload");
+				Common.tryCatch(CustomTab.this::reload, R.CUSTOM_TAB_ERROR_ON_RELOAD.get());
 			}
 		});
 		this.document.getChangedProperty().setOnChangeListener((oldFlag, flag) ->
@@ -195,7 +196,7 @@ public class CustomTab extends Tab
 						this.document.display();
 					}
 					this.document.saved();
-				}, "Error on reload");
+				}, R.CUSTOM_TAB_ERROR_ON_RELOAD.get());
 			}
 			saved(this.document.getNameProperty().get());
 			synchronized (warningIsShow)

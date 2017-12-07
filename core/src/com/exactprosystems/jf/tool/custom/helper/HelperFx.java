@@ -13,6 +13,7 @@ import com.exactprosystems.jf.api.common.DescriptionAttribute;
 import com.exactprosystems.jf.api.common.FieldParameter;
 import com.exactprosystems.jf.api.common.HideAttribute;
 import com.exactprosystems.jf.api.common.Str;
+import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.evaluator.Variables;
 import com.exactprosystems.jf.documents.matrix.Matrix;
@@ -70,7 +71,7 @@ public class HelperFx
 			}
 			catch (Exception e)
 			{
-				this.controller.compileFailed("Compile error.\n" + e.getMessage());
+				this.controller.compileFailed(String.format(R.HELPER_ERROR_COMPILE.get(), e.getMessage()));
 				return;
 			}
 			try
@@ -127,7 +128,7 @@ public class HelperFx
 			}
 			catch (Exception e)
 			{
-				this.controller.evaluateFailed("Can't evaluate.\n" + e.getMessage());
+				this.controller.evaluateFailed(String.format(R.HELPER_ERROR_EVALUATE.get(), e.getMessage()));
 			}
 		}
 	}
@@ -161,7 +162,7 @@ public class HelperFx
 					data.add(new SimpleVariable(id + ".Out", res));
 				}
 			}));
-		}, "Error on set variables");
+		}, R.HELPER_ERROR_SET_VARIABLES.get());
 	}
 
 	//============================================================

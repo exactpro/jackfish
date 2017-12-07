@@ -10,6 +10,7 @@
 package com.exactprosystems.jf.tool.custom.table;
 
 import com.exactprosystems.jf.api.common.Str;
+import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.CssVariables;
 import javafx.collections.FXCollections;
@@ -134,14 +135,14 @@ public class CustomTable<T> extends TableView<T>
 		ContextMenu contextMenu = new ContextMenu();
 	    if(allowAdd)
         {
-            MenuItem itemAdd = new MenuItem("Add new variable");
+            MenuItem itemAdd = new MenuItem(R.CUSTOM_TABLE_ADD_NEW.get());
 			itemAdd.setOnAction(event -> addItem());
             contextMenu.getItems().add(0, itemAdd);
         }
 
-		MenuItem removeSelected = new MenuItem("Remove selected");
+		MenuItem removeSelected = new MenuItem(R.CUSTOM_TABLE_REMOVE_SELECTED.get());
 		removeSelected.setGraphic(new ImageView(new Image(CssVariables.Icons.DELETE_ICON)));
-		MenuItem removeAll = new MenuItem("Remove all");
+		MenuItem removeAll = new MenuItem(R.CUSTOM_TABLE_REMOVE_ALL.get());
 
 		contextMenu.getItems().addAll(removeSelected, removeAll);
 		setContextMenu(contextMenu);

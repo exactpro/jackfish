@@ -8,6 +8,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 package com.exactprosystems.jf.tool.custom.scaledimage;
 
+import com.exactprosystems.jf.api.common.i18n.R;
 import javafx.scene.Group;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
@@ -60,7 +61,7 @@ public class CustomGrid
 	{
 		if (this.group == null)
 		{
-			throw new RuntimeException("Before show grid, you need to set group");
+			throw new RuntimeException(R.CUSTOM_GRID_ERROR.get());
 		}
 		if (!isShow)
 		{

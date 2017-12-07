@@ -230,17 +230,17 @@ public class HelperControllerFx implements Initializable, ContainingParent
 	// ============================================================
 	public void voidVisible(ActionEvent event)
 	{
-		Common.tryCatch(() -> evaluate(getText()), "Error on change visible void methods");
+		Common.tryCatch(() -> evaluate(getText()), R.HELPER_ERROR_VOID_METHODS.get());
 	}
 
 	public void staticVisible(ActionEvent event)
 	{
-		Common.tryCatch(() -> evaluate(getText()), "Error on change visible static methods");
+		Common.tryCatch(() -> evaluate(getText()), R.HELPER_ERROR_STATIC_METHODS.get());
 	}
 
 	public void sorting(ActionEvent event)
 	{
-		Common.tryCatch(() -> evaluate(getText()), "Error on sorting methods");
+		Common.tryCatch(() -> evaluate(getText()), R.HELPER_ERROR_ON_SORTING_METHODS.get());
 	}
 
 	public void showAllVars(ActionEvent event)
@@ -257,7 +257,7 @@ public class HelperControllerFx implements Initializable, ContainingParent
 				styleClassedTextArea.insertText(position, varName);
 				styleClassedTextArea.moveTo(position + varName.length());
 			});
-		}, "Error on show all vars");
+		}, R.HELPER_ERROR_ON_ALL_VARS.get());
 	}
 
 	// ============================================================
@@ -283,10 +283,10 @@ public class HelperControllerFx implements Initializable, ContainingParent
 			{
 				evaluate(styleClassedTextArea.getText());
 				event.consume();
-			}, "Error on showing");
+			}, R.HELPER_ERROR_ON_SHOWING.get());
 		});
 
-		this.styleClassedTextArea.textProperty().addListener((observableValue, before, after) -> Common.tryCatch(() -> evaluate(after), "Error on evaluate"));
+		this.styleClassedTextArea.textProperty().addListener((observableValue, before, after) -> Common.tryCatch(() -> evaluate(after), R.HELPER_ERROR_ON_EVALUATE.get()));
 
 		this.listMembers.getListView().setOnMouseClicked(mouseEvent -> Common.tryCatch(() ->
 		{
@@ -324,7 +324,7 @@ public class HelperControllerFx implements Initializable, ContainingParent
 					}
 				}
 			}
-		}, "Error on function insertion"));
+		}, R.HELPER_ERROR_ON_FUNCTION_INSERT.get()));
 
 		styleClassedTextArea.selectedTextProperty().addListener((observableValue, before, after) ->
 		{
@@ -338,7 +338,7 @@ public class HelperControllerFx implements Initializable, ContainingParent
 				{
 					evaluate(after);
 				}
-			}, "Error on evaluate");
+			}, R.HELPER_ERROR_ON_EVALUATE.get());
 		});
 	}
 
@@ -376,7 +376,7 @@ public class HelperControllerFx implements Initializable, ContainingParent
 						Optional.ofNullable(tableView.getSelectionModel().getSelectedItem()).ifPresent(i -> name = i.getName());
 						dialog.close();
 					}
-				}, "Error on click");
+				}, R.HELPER_ERROR_ON_CLICK.get());
 			});
 
 			tableView.setOnKeyPressed(keyEvent -> {
@@ -386,7 +386,7 @@ public class HelperControllerFx implements Initializable, ContainingParent
 						Optional.ofNullable(tableView.getSelectionModel().getSelectedItem()).ifPresent(i -> name = i.getName());
 						dialog.close();
 					}
-				}, "Error on key pressed");
+				}, R.HELPER_ERROR_ON_KEY_PRESSED.get());
 			});
 			dialog.getDialogPane().getStylesheets().addAll(Theme.currentThemesPaths());
 			Optional<ButtonType> optional = dialog.showAndWait();

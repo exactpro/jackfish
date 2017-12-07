@@ -11,6 +11,7 @@ package com.exactprosystems.jf.tool.custom.treetable;
 
 import com.exactprosystems.jf.actions.ReadableValue;
 import com.exactprosystems.jf.api.client.*;
+import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.tool.custom.expfield.ExpressionField;
 import javafx.collections.FXCollections;
@@ -241,7 +242,7 @@ public class RawMessageTreeView extends TreeView<RawMessageTreeView.MessageBean>
 	{
 		ContextMenu contextMenu = new ContextMenu();
 
-		MenuItem addAllRequired = new MenuItem("Add all required");
+		MenuItem addAllRequired = new MenuItem(R.RAW_MESSAGE_TV_ADD_ALL_REQUIRED.get());
 		addAllRequired.setOnAction(e -> {
 			TreeItem<MessageBean> selectedItem = this.getSelectionModel().getSelectedItem();
 			IMessage message = this.dictionary.getMessage(selectedItem.getValue().name);
@@ -257,13 +258,13 @@ public class RawMessageTreeView extends TreeView<RawMessageTreeView.MessageBean>
 			}
 		});
 
-		MenuItem addField = new MenuItem("Add fields");
+		MenuItem addField = new MenuItem(R.RAW_MESSAGE_TV_ADD_FIELDS.get());
 		addField.setOnAction(e -> {
 			//TODO display dialog listView with checkboxes;
 
 		});
 
-		MenuItem addNodeItem = new MenuItem("Add item");
+		MenuItem addNodeItem = new MenuItem(R.RAW_MESSAGE_TV_ADD_ITEM.get());
 		addNodeItem.setOnAction(e ->
 		{
 			TreeItem<MessageBean> selectedItem = this.getSelectionModel().getSelectedItem();
@@ -271,7 +272,7 @@ public class RawMessageTreeView extends TreeView<RawMessageTreeView.MessageBean>
 		});
 
 
-		MenuItem addGroup = new MenuItem("Add group");
+		MenuItem addGroup = new MenuItem(R.RAW_MESSAGE_TV_ADD_GROUP.get());
 		addGroup.setOnAction(e ->
 		{
 			TreeItem<MessageBean> selectedItem = this.getSelectionModel().getSelectedItem();

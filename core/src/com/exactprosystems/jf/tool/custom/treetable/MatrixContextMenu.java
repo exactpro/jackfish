@@ -10,6 +10,7 @@
 package com.exactprosystems.jf.tool.custom.treetable;
 
 import com.exactprosystems.jf.actions.AbstractAction;
+import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.api.wizard.Wizard;
 import com.exactprosystems.jf.api.wizard.WizardManager;
 import com.exactprosystems.jf.common.Settings;
@@ -64,39 +65,39 @@ public class MatrixContextMenu extends ContextMenu
 
 		setAutoHide(true);
 
-		MenuItem breakPoint = new MenuItem("Breakpoint", new ImageView(new Image(CssVariables.Icons.BREAK_POINT_ICON)));
+		MenuItem breakPoint = new MenuItem(R.MATRIX_CM_BREAKPOINT.get(), new ImageView(new Image(CssVariables.Icons.BREAK_POINT_ICON)));
 		breakPoint.setAccelerator(Common.getShortcut(settings, Settings.BREAK_POINT));
 		breakPoint.setOnAction(event -> breakPoint(matrix, tree));
 
-		MenuItem addItem = new MenuItem("Add item", new ImageView(new Image(CssVariables.Icons.ADD_BEFORE_ICON)));
+		MenuItem addItem = new MenuItem(R.MATRIX_CM_ADD_ITEM.get(), new ImageView(new Image(CssVariables.Icons.ADD_BEFORE_ICON)));
 		addItem.setAccelerator(Common.getShortcut(settings, Settings.ADD_ITEMS));
 		addItem.setOnAction(event -> addItem(tree, matrix));
 
-		MenuItem deleteItem = new MenuItem("Delete", new ImageView(new Image(CssVariables.Icons.DELETE_ICON)));
+		MenuItem deleteItem = new MenuItem(R.MATRIX_CM_DELETE.get(), new ImageView(new Image(CssVariables.Icons.DELETE_ICON)));
 		deleteItem.setAccelerator(Common.getShortcut(settings, Settings.DELETE_ITEM));
 		deleteItem.setOnAction(event -> deleteCurrentItems(matrix, tree));
 
-		MenuItem copy = new MenuItem("Copy", new ImageView(new Image(CssVariables.Icons.COPY_ICON)));
+		MenuItem copy = new MenuItem(R.MATRIX_CM_COPY.get(), new ImageView(new Image(CssVariables.Icons.COPY_ICON)));
 		copy.setAccelerator(Common.getShortcut(settings, Settings.COPY_ITEMS));
 		copy.setOnAction(event -> copyItems(matrix, tree));
 
-		MenuItem cut = new MenuItem("Cut", new ImageView(new Image(CssVariables.Icons.CUT_ICON)));
+		MenuItem cut = new MenuItem(R.MATRIX_CM_CUT.get(), new ImageView(new Image(CssVariables.Icons.CUT_ICON)));
 		cut.setAccelerator(Common.getShortcut(settings, Settings.CUT_ITEMS));
 		cut.setOnAction(event -> cutItems(matrix, tree));
 
-		MenuItem pasteBefore = new MenuItem("Paste", new ImageView(new Image(CssVariables.Icons.PASTE_ICON)));
+		MenuItem pasteBefore = new MenuItem(R.MATRIX_CM_PASTE.get(), new ImageView(new Image(CssVariables.Icons.PASTE_ICON)));
 		pasteBefore.setAccelerator(Common.getShortcut(settings, Settings.PASTE_ITEMS));
 		pasteBefore.setOnAction(event -> pasteItems(matrix, tree));
 
-		MenuItem gotoItem = new MenuItem("Go to line ...", new ImageView(new Image(CssVariables.Icons.GO_TO_LINE_ICON)));
+		MenuItem gotoItem = new MenuItem(R.MATRIX_CM_GO_TO_LINE.get(), new ImageView(new Image(CssVariables.Icons.GO_TO_LINE_ICON)));
 		gotoItem.setAccelerator(Common.getShortcut(settings, Settings.GO_TO_LINE));
 		gotoItem.setOnAction(event -> gotoLine(tree));
 
-		MenuItem help = new MenuItem("Help", new ImageView(new Image(CssVariables.Icons.HELP_ICON)));
+		MenuItem help = new MenuItem(R.MATRIX_CM_HELP.get(), new ImageView(new Image(CssVariables.Icons.HELP_ICON)));
 		help.setAccelerator(Common.getShortcut(settings, Settings.HELP));
 		help.setOnAction(showHelp(context, tree));
 
-		MenuItem parAdd = new MenuItem("Add param to end", new ImageView(new Image(CssVariables.Icons.ADD_PARAMETER_ICON)));
+		MenuItem parAdd = new MenuItem(R.MATRIX_CM_ADD_ITEM.get(), new ImageView(new Image(CssVariables.Icons.ADD_PARAMETER_ICON)));
 		parAdd.setAccelerator(Common.getShortcut(settings, Settings.ADD_PARAMETER));
 		parAdd.setOnAction(event -> addParameter(matrix, tree));
 
@@ -226,7 +227,7 @@ public class MatrixContextMenu extends ContextMenu
 		{
 			MatrixItem item = treeView.currentItem();
 			matrix.insertNew(item, Tokens.TempItem.get(), null);
-		}, "Error on add before");
+		}, R.MATRIX_CM_ERROR_ON_ADD.get());
 	}
 
 	private void breakPoint(MatrixFx matrix, MatrixTreeView tree)
@@ -249,7 +250,7 @@ public class MatrixContextMenu extends ContextMenu
 
 	private void copyItems(MatrixFx matrix, MatrixTreeView tree)
 	{
-		Common.tryCatch(() -> matrix.copy(tree.currentItems()), "Error on copy");
+		Common.tryCatch(() -> matrix.copy(tree.currentItems()), R.MATRIX_CM_ERROR_ON_COPY.get());
 	}
 
 	private void cutItems(MatrixFx matrix, MatrixTreeView tree)
@@ -265,7 +266,7 @@ public class MatrixContextMenu extends ContextMenu
 			MatrixItem item = tree.currentItem();
 			MatrixItem[] inserted = matrix.paste(item);
 			Common.runLater(() -> Arrays.stream(inserted).map(tree::find).forEach(treeItem -> tree.expand(treeItem, !this.fold)));
-		}, "Error on paste");
+		}, R.MATRIX_CM_ERROR_ON_PASTE.get());
 	}
 
 	private void gotoLine(MatrixTreeView tree)
@@ -274,7 +275,7 @@ public class MatrixContextMenu extends ContextMenu
 		DialogsHelper.centreDialog(dialog);
 		dialog.getDialogPane().getStylesheets().addAll(Theme.currentThemesPaths());
 		dialog.getDialogPane().setHeader(new Pane());
-		dialog.setTitle("Enter line number");
+		dialog.setTitle(R.MATRIX_CM_ENTER_NUMBER.get());
 		dialog.getEditor().textProperty().addListener((observable, oldValue, newValue) ->
 		{
 			if (!newValue.isEmpty() && !newValue.matches(Common.UINT_REGEXP))
@@ -292,7 +293,7 @@ public class MatrixContextMenu extends ContextMenu
 				TreeItem<MatrixItem> treeItem = tree.find(matrixItem -> matrixItem.getNumber() == index);
 				if (treeItem == null)
 				{
-					DialogsHelper.showError(String.format("Matrix item with number '%d' not found", index));
+					DialogsHelper.showError(String.format(R.MATRIX_CM_ERROR_ON_MATRIX_NUMBER.get(), index));
 				}
 				else
 				{
@@ -339,7 +340,7 @@ public class MatrixContextMenu extends ContextMenu
 					MatrixItem help = DocumentationBuilder.createHelpForItem(report, context, item);
 					DialogsHelper.showHelpDialog(context, item.getClass().getSimpleName(), report, help);
 				}
-			}, "Error on show help");
+			}, R.MATRIX_CM_ERROR_ON_SHOW_HELP.get());
 		}
 	}
 }

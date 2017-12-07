@@ -9,6 +9,7 @@
 
 package com.exactprosystems.jf.tool.custom.treetable;
 
+import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.common.Settings;
 import com.exactprosystems.jf.documents.matrix.parser.items.End;
 import com.exactprosystems.jf.documents.matrix.parser.items.MatrixItem;
@@ -263,14 +264,14 @@ public class MatrixTreeView extends TreeTableView<MatrixItem>
 			{
 				MatrixTreeView.this.requestFocus();
 			}
-		}, "Error on do actions by shortcuts"));
+		}, R.MATRIX_TREE_VIEW_ERROR_ON_DO.get()));
 
 		setOnKeyReleased(keyEvent -> Common.tryCatch(() -> {
 			if (SettingsPanel.match(settings, keyEvent, Settings.SHOW_ALL))
 			{
 				row.hideExpressionsResults();
 			}
-		}, "Error on hide all"));
+		}, R.MATRIX_TREE_VIEW_ERROR_ON_HIDE.get()));
 	}
 
 	private void initTable()
@@ -323,7 +324,7 @@ public class MatrixTreeView extends TreeTableView<MatrixItem>
 
 			private void updateTooltip()
 			{
-				this.box.setTooltip(new Tooltip("Set report " + (this.box.isSelected() ? "on" : "off") + " item"));
+				this.box.setTooltip(new Tooltip(String.format(R.MATRIX_TREE_VIEW_SET_REPORT_ITEM.get(), (this.box.isSelected() ? R.COMMON_ON.get(): R.COMMON_OFF.get()) )));
 			}
 
 			@Override
@@ -361,7 +362,7 @@ public class MatrixTreeView extends TreeTableView<MatrixItem>
 
 			private void updateTooltip()
 			{
-				this.box.setTooltip(new Tooltip("Set item " + (this.box.isSelected() ? "on" : "off")));
+				this.box.setTooltip(new Tooltip(String.format(R.MATRIX_TREE_VIEW_SET_ITEM.get(), (this.box.isSelected() ? R.COMMON_ON.get(): R.COMMON_OFF.get()) )));
 			}
 
 			@Override

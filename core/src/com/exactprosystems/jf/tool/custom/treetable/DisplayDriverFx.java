@@ -12,6 +12,7 @@ package com.exactprosystems.jf.tool.custom.treetable;
 import com.exactprosystems.jf.api.client.IMessageDictionary;
 import com.exactprosystems.jf.api.client.MapMessage;
 import com.exactprosystems.jf.api.common.Str;
+import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.common.CommonHelper;
 import com.exactprosystems.jf.common.Settings;
 import com.exactprosystems.jf.common.highlighter.Highlighter;
@@ -585,7 +586,7 @@ public class DisplayDriverFx implements DisplayDriver
 			{
 				if (Str.IsNullOrEmpty(numberField.getText()))
 				{
-					DialogsHelper.showInfo("Field can't be empty. Initial size was setted");
+					DialogsHelper.showInfo(R.DISPLAY_DRIVER_FX_EMPTY_FIELD.get());
 					numberField.setText("" + initialValue);
 				}
 				set.set(numberField.getValue());
@@ -733,7 +734,7 @@ public class DisplayDriverFx implements DisplayDriver
 					matrixFx.load(reader);
 					context.getFactory().showDocument(matrixFx);
 				}
-			}, "Couldn't open the matrix " + matrix.getNameProperty().get());
+			}, String.format(R.DISPLAY_DRIVER_FX_CANT_OPEN.get(), matrix.getNameProperty().get()));
 			tab = Common.checkDocument(matrix);
 		}
 		if (tab != null)

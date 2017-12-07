@@ -12,6 +12,7 @@ package com.exactprosystems.jf.tool.custom.treetable;
 
 import com.exactprosystems.jf.actions.AbstractAction;
 import com.exactprosystems.jf.actions.ReadableValue;
+import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.api.wizard.Wizard;
 import com.exactprosystems.jf.api.wizard.WizardManager;
 import com.exactprosystems.jf.common.Settings;
@@ -69,28 +70,28 @@ public class MatrixParametersContextMenu extends MatrixContextMenu
 		super.setAutoHide(true);
 		super.setHideOnEscape(true);
 		
-		this.parRemove = new MenuItem("Remove");
+		this.parRemove = new MenuItem(R.MATRIX_PCM_REMOVE.get());
 		this.parRemove.setGraphic(new ImageView(new Image(CssVariables.Icons.REMOVE_PARAMETER_ICON)));
 		this.parRemove.setOnAction(event -> changeParameters(event, matrix::parameterRemove));
 
-		this.parMoveLeft = new MenuItem("Move to left");
+		this.parMoveLeft = new MenuItem(R.MATRIX_PCM_MOVE_LEFT.get());
 		this.parMoveLeft.setGraphic(new ImageView(new Image(CssVariables.Icons.MOVE_LEFT_ICON)));
 		this.parMoveLeft.setOnAction(event -> changeParameters(event, matrix::parameterMoveLeft));
 
-		this.parMoveRight = new MenuItem("Move to right");
+		this.parMoveRight = new MenuItem(R.MATRIX_PCM_MOVE_RIGHT.get());
 		this.parMoveRight.setGraphic(new ImageView(new Image(CssVariables.Icons.MOVE_RIGHT_ICON)));
 		this.parMoveRight.setOnAction(event -> changeParameters(event, matrix::parameterMoveRight));
 
-		this.parAdd = new MenuItem("Add param after");
+		this.parAdd = new MenuItem(R.MATRIX_PCM_ADD.get());
 		this.parAdd.setGraphic(new ImageView(new Image(CssVariables.Icons.ADD_PARAMETER_ICON)));
 		this.parAdd.setOnAction(event -> changeParameters(event, matrix::parameterInsert));
 
-		this.parShowAll = new MenuItem("All parameters ...",new ImageView(new Image(CssVariables.Icons.ALL_PARAMETERS_ICON)));
+		this.parShowAll = new MenuItem(R.MATRIX_PCM_ALL.get(),new ImageView(new Image(CssVariables.Icons.ALL_PARAMETERS_ICON)));
 		this.parShowAll.setAccelerator(Common.getShortcut(settings, Settings.ALL_PARAMETERS));
 		this.parShowAll.setOnAction(event -> allParameters(context, matrix, event));
 
 		//TODO add icon
-		MenuItem parameterWizard = new MenuItem("For parameter");
+		MenuItem parameterWizard = new MenuItem(R.MATRIX_PCM_FOR.get());
 		parameterWizard.setOnAction(event ->
 		{
 			WizardManager manager = context.getFactory().getWizardManager();
@@ -103,10 +104,10 @@ public class MatrixParametersContextMenu extends MatrixContextMenu
 			List<Class<? extends Wizard>> suitable  = manager.suitableWizards(criteries);
 			if (suitable.isEmpty())
 			{
-				DialogsHelper.showInfo("No one wizard is accessible here");
+				DialogsHelper.showInfo(R.MATRIX_PCM_WIZARD_ERROR.get());
 				return;
 			}
-			Class<? extends Wizard> wizardClass = DialogsHelper.selectFromList("Choose wizard", null, suitable, manager::nameOf);
+			Class<? extends Wizard> wizardClass = DialogsHelper.selectFromList(R.MATRIX_PCM_CHOOSE_WIZARD.get(), null, suitable, manager::nameOf);
 			manager.runWizard(wizardClass, context, criteries);
 		});
 
@@ -197,7 +198,7 @@ public class MatrixParametersContextMenu extends MatrixContextMenu
 				matrix.parameterInsert(actionItem, this.index, result);
 			}
 
-		}, "Error on show all parameters");
+		}, R.MATRIX_PCM_ERROR_SHOW_ALL.get());
 	}
 
 	private MatrixItem getActionItem(Event event)
