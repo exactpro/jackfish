@@ -13,9 +13,9 @@ import com.exactprosystems.jf.api.error.JFException;
 
 public class ApplicationWasClosedException extends JFException
 {
-	public ApplicationWasClosedException(String message)
+	public ApplicationWasClosedException(String appId)
 	{
-		super(message);
+		super(String.format("App with id '%s' was closed before", appId));
 	}
 
 	@Override

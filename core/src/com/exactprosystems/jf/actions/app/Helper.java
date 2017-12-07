@@ -133,7 +133,7 @@ class Helper
 		IRemoteApplication service = app.service();
 		if (service == null)
 		{
-			throw new ApplicationWasClosedException(String.format("App with id '%s' was closed before", id));
+			throw new ApplicationWasClosedException(id);
 		}
 		return app;
 	}

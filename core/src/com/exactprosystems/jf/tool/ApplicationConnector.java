@@ -73,7 +73,7 @@ public class ApplicationConnector
 		}
 		if (this.appConnection != null)
 		{
-			this.appConnection.close();
+			this.factory.getConfiguration().getApplicationPool().stopApplication(this.appConnection, false);
 			this.appConnection = null;
 		}
 
