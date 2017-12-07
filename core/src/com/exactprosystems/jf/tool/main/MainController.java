@@ -447,7 +447,18 @@ public class MainController implements Initializable, ContainingParent
 		MenuItem open = new MenuItem("Open");
 		open.setOnAction(e -> Common.tryCatch(() -> this.model.loadMatrix(fullPath), "Error on open matrix"));
 
-		menuButton.getItems().addAll(remove, open);
+		MenuItem rename = new MenuItem("Rename");
+		rename.setOnAction(e -> Common.tryCatch(() ->
+		{
+			Optional<String> newName = DialogsHelper.showInputDialog("Enter a new name", visibleName);
+			if (newName.isPresent())
+			{
+				this.model.renameFromToolbar(fullPath, newName.get());
+				menuButton.setText(newName.get());
+			}
+		}, "Error on rename"));
+
+		menuButton.getItems().addAll(remove, open, rename);
 		this.mainToolbar.getItems().add(menuButton);
 	}
 	//endregion

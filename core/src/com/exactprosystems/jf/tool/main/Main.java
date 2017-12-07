@@ -721,6 +721,12 @@ public class Main extends Application
 		this.settings.saveIfNeeded();
 	}
 
+	public void renameFromToolbar(String fullPath, String newName) throws Exception
+	{
+		this.settings.setValue(Settings.MAIN_NS, Settings.MATRIX_TOOLBAR, fullPath, newName);
+		this.settings.saveIfNeeded();
+	}
+
 	//endregion
 
 	public CustomTab createCustomTab(Document document)
