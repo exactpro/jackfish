@@ -220,7 +220,7 @@ public class TableDataProvider implements DataProvider<String>
 	{
 		if (rowsIndexes.length == this.table.size())
 		{
-			DialogsHelper.showError("Can't remove all rows from table");
+			DialogsHelper.showError(R.CANT_REMOVE_ALL_ROWS.get());
 			return;
 		}
 

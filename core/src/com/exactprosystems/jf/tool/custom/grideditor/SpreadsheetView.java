@@ -9,6 +9,7 @@
 package com.exactprosystems.jf.tool.custom.grideditor;
 
 import com.exactprosystems.jf.api.common.Sys;
+import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.helpers.DialogsHelper;
 import javafx.application.Platform;
@@ -587,13 +588,13 @@ public class SpreadsheetView extends Control
 	{
 		final ContextMenu contextMenu = new ContextMenu();
 		contextMenu.setAutoHide(true);
-		MenuItem addRowBefore = new MenuItem("Add before");
+		MenuItem addRowBefore = new MenuItem(R.SSW_ADD_BEFORE.get());
 		addRowBefore.setOnAction(e -> addRowBefore(this.getSelectionModel().getSelectedCells().get(0).getRow()));
 
-		MenuItem addRowAfter = new MenuItem("Add after");
+		MenuItem addRowAfter = new MenuItem(R.SSW_ADD_AFTER.get());
 		addRowAfter.setOnAction(e -> addRowAfter(this.getSelectionModel().getSelectedCells().get(0).getRow()));
 
-		MenuItem moveUpRow = new MenuItem("Move up this row");
+		MenuItem moveUpRow = new MenuItem(R.SSW_MOVE_UP.get());
 		moveUpRow.setOnAction(e ->
 				{
 					int currentRow = this.getSelectionModel().getSelectedCells().get(0).getRow();
@@ -601,7 +602,7 @@ public class SpreadsheetView extends Control
 				}
 		);
 
-		MenuItem moveDownRow = new MenuItem("Move down this row");
+		MenuItem moveDownRow = new MenuItem(R.SSW_MOVE_DOWN.get());
 		moveDownRow.setOnAction(e ->
 				{
 					int currentRow = this.getSelectionModel().getSelectedCells().get(0).getRow();
@@ -609,19 +610,19 @@ public class SpreadsheetView extends Control
 				}
 		);
 
-		MenuItem removeRow = new MenuItem("Remove rows");
+		MenuItem removeRow = new MenuItem(R.SSW_REMOVE.get());
 		removeRow.setOnAction(e -> removeRows(this.getSelectionModel().getSelectedCells().stream().map(TablePositionBase::getRow).distinct().collect(Collectors.toList())));
 
-		MenuItem copyItems = new MenuItem("Copy");
+		MenuItem copyItems = new MenuItem(R.SSW_COPY.get());
 		copyItems.setOnAction(event -> copy(false));
 
-		MenuItem copyWithHeader = new MenuItem("Copy with header");
+		MenuItem copyWithHeader = new MenuItem(R.SSW_COPY_WITH_HEADER.get());
 		copyWithHeader.setOnAction(event -> copy(true));
 
-		MenuItem pasteItems = new MenuItem("Paste");
+		MenuItem pasteItems = new MenuItem(R.SSW_PASTE.get());
 		pasteItems.setOnAction(event -> paste(false));
 
-		MenuItem pasteWithHeader = new MenuItem("Paste with header");
+		MenuItem pasteWithHeader = new MenuItem(R.SSW_PASTE_WITH_HEADER.get());
 		pasteWithHeader.setOnAction(event -> paste(true));
 		contextMenu.getItems().addAll(addRowBefore, addRowAfter, removeRow, moveUpRow, moveDownRow, new SeparatorMenuItem(), copyItems, copyWithHeader, pasteItems, pasteWithHeader);
 		return contextMenu;
@@ -660,7 +661,7 @@ public class SpreadsheetView extends Control
 		List<TablePosition> selectedCells = this.getSelectionModel().getSelectedCells();
 		if (selectedCells.size() != 1)
 		{
-			DialogsHelper.showInfo("Can't paste to selected cells, cause selected cell is not one");
+			DialogsHelper.showInfo(R.SSW_PASTE_ERROR.get());
 			return;
 		}
 		TablePosition selectedCell = selectedCells.get(0);

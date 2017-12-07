@@ -9,6 +9,7 @@
 package com.exactprosystems.jf.tool.custom.expfield;
 
 import com.exactprosystems.jf.actions.ReadableValue;
+import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.documents.matrix.Matrix;
 import com.exactprosystems.jf.documents.matrix.parser.listeners.ListProvider;
@@ -113,7 +114,7 @@ public class ExpressionField extends CustomField
 		setErrorHandler(e ->
 		{
 			logger.error(e.getMessage(), e);
-			DialogsHelper.showError(String.format("Error on configuration [%s]", e.getMessage()));
+			DialogsHelper.showError(String.format(R.ERROR_ON_CONFIGURATION.get(), e.getMessage()));
 		});
 
 	}

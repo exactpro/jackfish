@@ -9,6 +9,7 @@
 package com.exactprosystems.jf.tool.custom.grideditor;
 
 import com.exactprosystems.jf.api.common.Str;
+import com.exactprosystems.jf.api.common.i18n.R;
 import javafx.beans.Observable;
 import javafx.collections.ObservableList;
 import javafx.scene.control.*;
@@ -61,13 +62,13 @@ public final class SpreadsheetColumn {
 		final ContextMenu contextMenu = new ContextMenu();
 		contextMenu.setAutoHide(true);
 
-		MenuItem addColumnBefore = new MenuItem("Add column before");
+		MenuItem addColumnBefore = new MenuItem(R.SSC_ADD_BEFORE.get());
 		addColumnBefore.setOnAction(e -> this.spreadsheetView.addColumn(this.spreadsheetView.getColumns().indexOf(this)));
 
-		MenuItem addColumnAfter = new MenuItem("Add column after");
+		MenuItem addColumnAfter = new MenuItem(R.SSC_ADD_AFTER.get());
 		addColumnAfter.setOnAction(e -> this.spreadsheetView.addColumn(this.spreadsheetView.getColumns().indexOf(this) + 1));
 
-		MenuItem moveLeftColumn = new MenuItem("Move left this column");
+		MenuItem moveLeftColumn = new MenuItem(R.SSC_MOVE_LEFT.get());
 		moveLeftColumn.setOnAction(e ->
 			{
 				int currentColumn = this.spreadsheetView.getColumns().indexOf(this);
@@ -75,7 +76,7 @@ public final class SpreadsheetColumn {
 			}
 		);
 
-		MenuItem moveRightColumn = new MenuItem("Move right this column");
+		MenuItem moveRightColumn = new MenuItem(R.SSC_MOVE_RIGTH.get());
 		moveRightColumn.setOnAction(e ->
 			{
 				int currentColumn = this.spreadsheetView.getColumns().indexOf(this);
@@ -83,7 +84,7 @@ public final class SpreadsheetColumn {
 			}
 		);
 
-		MenuItem removeColumn = new MenuItem("Remove columns");
+		MenuItem removeColumn = new MenuItem(R.SSC_REMOVE.get());
 		removeColumn.setOnAction(e -> this.spreadsheetView.removeColumns(
 				this.spreadsheetView.getSelectionModel()
 						.getSelectedCells()
@@ -94,13 +95,13 @@ public final class SpreadsheetColumn {
 				)
 		);
 
-		MenuItem renameColumn = new MenuItem("Rename");
+		MenuItem renameColumn = new MenuItem(R.SSC_RENAME.get());
 		renameColumn.setOnAction(e -> startRenameColumn());
 
-		MenuItem switchOffColumn = new MenuItem("Switch off");
+		MenuItem switchOffColumn = new MenuItem(R.SSC_SWITCH_OFF.get());
 		switchOffColumn.setOnAction(e -> this.spreadsheetView.switchColumn(false, this.spreadsheetView.getColumns().indexOf(this)));
 
-		MenuItem switchOnColumn = new MenuItem("Switch on");
+		MenuItem switchOnColumn = new MenuItem(R.SSC_SWITCH_ON.get());
 		switchOnColumn.setOnAction(e -> this.spreadsheetView.switchColumn(true, this.spreadsheetView.getColumns().indexOf(this)));
 
 		contextMenu.getItems().addAll(addColumnBefore,addColumnAfter, removeColumn, renameColumn, switchOffColumn, switchOnColumn, moveLeftColumn, moveRightColumn);

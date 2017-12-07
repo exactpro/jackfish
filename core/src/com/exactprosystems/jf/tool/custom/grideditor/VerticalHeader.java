@@ -8,6 +8,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 package com.exactprosystems.jf.tool.custom.grideditor;
 
+import com.exactprosystems.jf.api.common.i18n.R;
 import javafx.beans.InvalidationListener;
 import javafx.beans.Observable;
 import javafx.beans.property.DoubleProperty;
@@ -463,19 +464,19 @@ public class VerticalHeader extends StackPane
 		final ContextMenu contextMenu = new ContextMenu();
 		contextMenu.setAutoHide(true);
 
-		MenuItem addRowBefore = new MenuItem("Add before row " + row);
+		MenuItem addRowBefore = new MenuItem(String.format(R.VERTICAL_HEADER_ADD_BEFORE.get(), row));
 		addRowBefore.setOnAction(e -> this.spreadsheetView.addRowBefore(row));
 
-		MenuItem addRowAfter = new MenuItem("Add after row " + row);
+		MenuItem addRowAfter = new MenuItem(String.format(R.VERTICAL_HEADER_ADD_AFTER.get(), row));
 		addRowAfter.setOnAction(e -> this.spreadsheetView.addRowAfter(row));
 
-		MenuItem moveUpRow = new MenuItem("Move up this row");
+		MenuItem moveUpRow = new MenuItem(R.VERTICAL_HEADER_MOVE_UP.get());
 		moveUpRow.setOnAction(e -> this.spreadsheetView.swapRows(row, row - 1));
 
-		MenuItem moveDownRow = new MenuItem("Move down this row");
+		MenuItem moveDownRow = new MenuItem(R.VERTICAL_HEADER_MOVE_DOWN.get());
 		moveDownRow.setOnAction(e -> this.spreadsheetView.swapRows(row, row + 1));
 
-		MenuItem removeRow = new MenuItem("Remove rows");
+		MenuItem removeRow = new MenuItem(R.VERTICAL_HEADER_REMOVE.get());
 		removeRow.setOnAction(e -> this.spreadsheetView.removeRows(this.spreadsheetView.getSelectionModel().getSelectedCells().stream().map(TablePositionBase::getRow).distinct().collect(Collectors.toList())));
 
 		contextMenu.getItems().addAll(addRowBefore, addRowAfter, moveUpRow, moveDownRow, removeRow);

@@ -13,6 +13,7 @@ import com.exactprosystems.jf.api.app.Addition;
 import com.exactprosystems.jf.api.app.ControlKind;
 import com.exactprosystems.jf.api.app.Visibility;
 import com.exactprosystems.jf.api.common.Str;
+import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.documents.guidic.controls.AbstractControl;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.CssVariables;
@@ -298,16 +299,16 @@ public class ElementsTable extends TableView<TableBean>
 
 					Button btnEdit = new Button();
 					btnEdit.setId("btnEdit");
-					btnEdit.setTooltip(new Tooltip("Edit element"));
+					btnEdit.setTooltip(new Tooltip(R.EDIT_ELEMENT.get()));
 					btnEdit.getStyleClass().add(CssVariables.TRANSPARENT_BACKGROUND);
-					btnEdit.setOnAction(e -> Common.tryCatch(() -> editElement(item), "Error on edit element"));
+					btnEdit.setOnAction(e -> Common.tryCatch(() -> editElement(item), R.ERROR_ON_EDIT.get()));
 
 					Button btnRemove = new Button();
 					btnRemove.setId("btnRemove");
-					btnRemove.setTooltip(new Tooltip("Remove element"));
+					btnRemove.setTooltip(new Tooltip(R.REMOVE_ELEMENT.get()));
 					btnRemove.getStyleClass().add(CssVariables.TRANSPARENT_BACKGROUND);
 					btnRemove.setOnAction(e -> {
-						boolean needRemove = DialogsHelper.showQuestionDialog("Remove element", "Are you sure to remove this element?");
+						boolean needRemove = DialogsHelper.showQuestionDialog(R.REMOVE_ELEMENT.get(), R.REMOVE_ELEMENT_QUESTION.get());
 						if (needRemove)
 						{
 							Optional.ofNullable(removeConsumer).ifPresent(c -> c.accept(item.getAbstractControl(), item.getNode()));
@@ -317,7 +318,7 @@ public class ElementsTable extends TableView<TableBean>
 
 					Button btnRelation = new Button();
 					btnRelation.setId("btnRelation");
-					btnRelation.setTooltip(new Tooltip("Set relation"));
+					btnRelation.setTooltip(new Tooltip(R.SET_RELATION.get()));
 					btnRelation.getStyleClass().add(CssVariables.TRANSPARENT_BACKGROUND);
 					btnRelation.setOnAction(e -> Optional.ofNullable(updateConsumer).ifPresent(c -> c.accept(item.getAbstractControl(), item.getNode())));
 					box.getChildren().addAll(btnEdit, btnRelation, btnRemove);
@@ -414,7 +415,7 @@ public class ElementsTable extends TableView<TableBean>
 		Common.addIcons(((Stage) alert.getDialogPane().getScene().getWindow()));
 		alert.getDialogPane().getStylesheets().addAll(Theme.currentThemesPaths());
 		alert.getDialogPane().setHeader(new Label());
-		alert.setTitle("Change element");
+		alert.setTitle(R.CHANGE_ELEMENT.get());
 		GridPane gridPane = new GridPane();
 		gridPane.setPrefWidth(800);
 		gridPane.setMaxWidth(Double.MAX_VALUE);
@@ -446,25 +447,25 @@ public class ElementsTable extends TableView<TableBean>
 
 		int index = 0;
 
-		addComboToLeftPane(gridPane, "Owner : ", abstractControl.getOwnerID(), newOwner -> Common.tryCatch(()->abstractControl.set(AbstractControl.ownerIdName, newOwner), "Error on set parameters"), index++, new ArrayList<>());
-		addComboToLeftPane(gridPane, "Additional : ", abstractControl.getAddition(), newAdd -> Common.tryCatch(()->abstractControl.set(AbstractControl.additionName, newAdd), "Error on set parameters"), index++, Arrays.asList(
+		addComboToLeftPane(gridPane, "Owner : ", abstractControl.getOwnerID(), newOwner -> Common.tryCatch(()->abstractControl.set(AbstractControl.ownerIdName, newOwner), R.ERROR_ON_SET_PARAMETER.get()), index++, new ArrayList<>());
+		addComboToLeftPane(gridPane, "Additional : ", abstractControl.getAddition(), newAdd -> Common.tryCatch(()->abstractControl.set(AbstractControl.additionName, newAdd), R.ERROR_ON_SET_PARAMETER.get()), index++, Arrays.asList(
 				Addition.values()));
-		addComboToLeftPane(gridPane, "Ref : ", abstractControl.getRefID(), refId -> Common.tryCatch(()->abstractControl.set(AbstractControl.refIdName, refId), "Error on set parameters"), index++, new ArrayList<>());
-		addToLeftPane(gridPane, "Timeout : ", String.valueOf(abstractControl.getTimeout()), newTimeout -> Common.tryCatch(()->abstractControl.set(AbstractControl.timeoutName, newTimeout), "Error on set parameters"), index++);
-		addComboToLeftPane(gridPane, "Visibility : ", abstractControl.getVisibility(), newVis -> Common.tryCatch(()->abstractControl.set(AbstractControl.visibilityName, newVis), "Error on set parameters"),index++, Arrays.asList(
+		addComboToLeftPane(gridPane, "Ref : ", abstractControl.getRefID(), refId -> Common.tryCatch(()->abstractControl.set(AbstractControl.refIdName, refId), R.ERROR_ON_SET_PARAMETER.get()), index++, new ArrayList<>());
+		addToLeftPane(gridPane, "Timeout : ", String.valueOf(abstractControl.getTimeout()), newTimeout -> Common.tryCatch(()->abstractControl.set(AbstractControl.timeoutName, newTimeout), R.ERROR_ON_SET_PARAMETER.get()), index++);
+		addComboToLeftPane(gridPane, "Visibility : ", abstractControl.getVisibility(), newVis -> Common.tryCatch(()->abstractControl.set(AbstractControl.visibilityName, newVis), R.ERROR_ON_SET_PARAMETER.get()),index++, Arrays.asList(
 				Visibility.values()));
-		addToLeftPane(gridPane, "Columns : ", abstractControl.getColumns(), newColumns -> Common.tryCatch(() -> abstractControl.set(AbstractControl.columnsName, newColumns), "Error on set new columns"),index++ );
-		addCheckBoxToLeftPane(gridPane, "Weak", abstractControl.isWeak(), newWeak -> Common.tryCatch(() -> abstractControl.set(AbstractControl.weakName, newWeak), "Error on set new columns"),index++ );
+		addToLeftPane(gridPane, "Columns : ", abstractControl.getColumns(), newColumns -> Common.tryCatch(() -> abstractControl.set(AbstractControl.columnsName, newColumns), R.ERROR_ON_SET_NEW_COLUMN.get()),index++ );
+		addCheckBoxToLeftPane(gridPane, "Weak", abstractControl.isWeak(), newWeak -> Common.tryCatch(() -> abstractControl.set(AbstractControl.weakName, newWeak), R.ERROR_ON_SET_NEW_COLUMN.get()),index++ );
 		index = 1;
 
-		addXpathToPane(gridPane, abstractControl.getXpath(), newId -> Common.tryCatch(() -> abstractControl.set(AbstractControl.xpathName, newId), "Error on set parameter"));
-		addToRightPane(gridPane, "UID : ", abstractControl.getUID(), newId -> Common.tryCatch(() -> abstractControl.set(AbstractControl.uidName, newId), "Error on set parameter"), index++);
-		addToRightPane(gridPane, "Class : ", abstractControl.getClazz(), newId -> Common.tryCatch(() -> abstractControl.set(AbstractControl.clazzName, newId), "Error on set parameter"), index++);
-		addToRightPane(gridPane, "Name : ", abstractControl.getName(), newId -> Common.tryCatch(() -> abstractControl.set(AbstractControl.nameName, newId), "Error on set parameter"), index++);
-		addToRightPane(gridPane, "Title : ", abstractControl.getTitle(), newId -> Common.tryCatch(() -> abstractControl.set(AbstractControl.titleName, newId), "Error on set parameter"), index++);
-		addToRightPane(gridPane, "Action : ", abstractControl.getAction(), newId -> Common.tryCatch(() -> abstractControl.set(AbstractControl.actionName, newId), "Error on set parameter"), index++);
-		addToRightPane(gridPane, "Text : ", abstractControl.getText(), newId -> Common.tryCatch(() -> abstractControl.set(AbstractControl.textName, newId), "Error on set parameter"), index++);
-		addToRightPane(gridPane, "Tooltip : ", abstractControl.getTooltip(), newId -> Common.tryCatch(() -> abstractControl.set(AbstractControl.tooltipName, newId), "Error on set parameter"), index++);
+		addXpathToPane(gridPane, abstractControl.getXpath(), newId -> Common.tryCatch(() -> abstractControl.set(AbstractControl.xpathName, newId), R.ERROR_ON_SET_PARAMETER.get()));
+		addToRightPane(gridPane, "UID : ", abstractControl.getUID(), newId -> Common.tryCatch(() -> abstractControl.set(AbstractControl.uidName, newId), R.ERROR_ON_SET_PARAMETER.get()), index++);
+		addToRightPane(gridPane, "Class : ", abstractControl.getClazz(), newId -> Common.tryCatch(() -> abstractControl.set(AbstractControl.clazzName, newId), R.ERROR_ON_SET_PARAMETER.get()), index++);
+		addToRightPane(gridPane, "Name : ", abstractControl.getName(), newId -> Common.tryCatch(() -> abstractControl.set(AbstractControl.nameName, newId), R.ERROR_ON_SET_PARAMETER.get()), index++);
+		addToRightPane(gridPane, "Title : ", abstractControl.getTitle(), newId -> Common.tryCatch(() -> abstractControl.set(AbstractControl.titleName, newId), R.ERROR_ON_SET_PARAMETER.get()), index++);
+		addToRightPane(gridPane, "Action : ", abstractControl.getAction(), newId -> Common.tryCatch(() -> abstractControl.set(AbstractControl.actionName, newId), R.ERROR_ON_SET_PARAMETER.get()), index++);
+		addToRightPane(gridPane, "Text : ", abstractControl.getText(), newId -> Common.tryCatch(() -> abstractControl.set(AbstractControl.textName, newId), R.ERROR_ON_SET_PARAMETER.get()), index++);
+		addToRightPane(gridPane, "Tooltip : ", abstractControl.getTooltip(), newId -> Common.tryCatch(() -> abstractControl.set(AbstractControl.tooltipName, newId), R.ERROR_ON_SET_PARAMETER.get()), index++);
 
 		Optional<ButtonType> buttonType = alert.showAndWait();
 		if (buttonType.isPresent())
