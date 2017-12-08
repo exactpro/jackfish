@@ -10,6 +10,7 @@
 package com.exactprosystems.jf.tool.documents;
 
 import com.exactprosystems.jf.actions.ReadableValue;
+import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.api.wizard.WizardManager;
 import com.exactprosystems.jf.common.Settings;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
@@ -210,7 +211,7 @@ public class FxDocumentFactory extends DocumentFactory
 		ControllerInfo info = controllerClass.getAnnotation(ControllerInfo.class);
 		if (info == null)
 		{
-			throw new Exception("ControllerInfo attribute is not found for " + controllerClass);
+			throw new Exception(String.format(R.FX_DOC_FACTORY_ERROR_INFO.get(), controllerClass));
 		}
 
 		URL resource = FxDocumentFactory.class.getResource(info.resourceName());

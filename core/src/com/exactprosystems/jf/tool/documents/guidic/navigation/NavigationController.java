@@ -13,6 +13,7 @@ import com.exactprosystems.jf.api.app.IControl;
 import com.exactprosystems.jf.api.app.IWindow;
 import com.exactprosystems.jf.api.app.IWindow.SectionKind;
 import com.exactprosystems.jf.api.common.Str;
+import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.api.wizard.WizardManager;
 import com.exactprosystems.jf.documents.config.Context;
 import com.exactprosystems.jf.documents.guidic.controls.AbstractControl;
@@ -115,7 +116,7 @@ public class NavigationController implements Initializable, ContainingParent
 		scrollPaneWindow.setFitToHeight(true);
 		scrollPaneWindow.setHbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
 		scrollPaneWindow.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
-		this.dialog = BorderWrapper.wrap(this.vBoxWindow).title("Dialog").color(Theme.currentTheme().getReverseColor()).build();
+		this.dialog = BorderWrapper.wrap(this.vBoxWindow).title(R.COMMON_DIALOG.get()).color(Theme.currentTheme().getReverseColor()).build();
 		double width = 350.0;
 		((Region) this.dialog).setMinWidth(width);
 		((Region) this.dialog).setMaxWidth(width);
@@ -128,7 +129,7 @@ public class NavigationController implements Initializable, ContainingParent
 		scrollPaneElement.setFitToHeight(true);
 		scrollPaneElement.setHbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
 		scrollPaneElement.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
-		this.element = BorderWrapper.wrap(this.vBoxElement).title("Element").color(Theme.currentTheme().getReverseColor()).build();
+		this.element = BorderWrapper.wrap(this.vBoxElement).title(R.COMMON_ELEMENT.get()).color(Theme.currentTheme().getReverseColor()).build();
 		double widthForElement = 316;
 		((Region) this.element).setMinWidth(widthForElement);
 		((Region) this.element).setMaxWidth(widthForElement);
@@ -191,19 +192,19 @@ public class NavigationController implements Initializable, ContainingParent
 
 	public void copyDialog(ActionEvent actionEvent)
 	{
-		tryCatch(() -> this.model.dialogCopy(), "Error on copy dialog");
+		tryCatch(() -> this.model.dialogCopy(), R.NAVIGATION_CONTROLLER_COPY_DIALOG.get());
 	}
 
 	public void pasteDialog(ActionEvent actionEvent)
 	{
-		tryCatch(() -> this.model.dialogPaste(), "Error on paste dialog");
+		tryCatch(() -> this.model.dialogPaste(), R.NAVIGATION_CONTROLLER_PASTE_DIALOG.get());
 	}
 	//endregion
 
 	//region element event handlers
 	public void newElement(ActionEvent actionEvent)
 	{
-		tryCatch(this.model::createNewElement, "Error on new element");
+		tryCatch(this.model::createNewElement, R.NAVIGATION_CONTROLLER_NEW_ELEMENT.get());
 	}
 
 	public void deleteElement(ActionEvent actionEvent)
@@ -213,12 +214,12 @@ public class NavigationController implements Initializable, ContainingParent
 
 	public void copyElement(ActionEvent actionEvent)
 	{
-		tryCatch(this.model::elementCopy, "Error on copy element");
+		tryCatch(this.model::elementCopy, R.NAVIGATION_CONTROLLER_COPY_ELEMENT.get());
 	}
 
 	public void pasteElement(ActionEvent actionEvent)
 	{
-		tryCatch(this.model::elementPaste, "Error on paste element");
+		tryCatch(this.model::elementPaste, R.NAVIGATION_CONTROLLER_PASTE_ELEMENT.get());
 	}
 
 	public void testingDialog(ActionEvent actionEvent)
