@@ -563,6 +563,15 @@ public class DictionaryWizard extends AbstractWizard
 			this.clearRelation(node);
 			this.findElement(ac, true);
 		});
+
+		this.tableView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) ->
+		{
+			if (newValue != null)
+			{
+				Node selectedNode = newValue.getNode();
+				this.xmlTreeView.select(selectedNode);
+			}
+		});
 	}
 
 	private void updateOnButtons()
