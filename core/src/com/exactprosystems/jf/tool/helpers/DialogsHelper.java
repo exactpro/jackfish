@@ -12,6 +12,7 @@ package com.exactprosystems.jf.tool.helpers;
 import com.exactprosystems.jf.actions.ReadableValue;
 import com.exactprosystems.jf.api.common.Str;
 import com.exactprosystems.jf.api.common.Sys;
+import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.common.Settings;
 import com.exactprosystems.jf.common.documentation.DocumentationBuilder;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
@@ -138,7 +139,7 @@ public abstract class DialogsHelper
 		Common.addIcons(((Stage) dialog.getDialogPane().getScene().getWindow()));
 		dialog.getDialogPane().setPrefHeight(500);
 		dialog.getDialogPane().setPrefWidth(500);
-		dialog.setTitle("Parameters");
+		dialog.setTitle(R.DIALOGS_HELPER_PARAMETERS.get());
 		ButtonType btnYes = new ButtonType(title, ButtonBar.ButtonData.YES);
 		dialog.getDialogPane().getButtonTypes().addAll(btnYes);
 		ListView<ExpressionFieldsPane> listView = new ListView<>();
@@ -163,9 +164,9 @@ public abstract class DialogsHelper
 		Dialog<ButtonType> dialog = new Alert(Alert.AlertType.CONFIRMATION);
 		DialogsHelper.centreDialog(dialog);
 		Common.addIcons(((Stage) dialog.getDialogPane().getScene().getWindow()));
-		dialog.setTitle("Warning");
-		dialog.getDialogPane().setHeaderText("File " + fileName + " was changed by another process");
-		dialog.getDialogPane().setContentText("Reload it?");
+		dialog.setTitle(R.DIALOGS_HELPER_WARNING.get());
+		dialog.getDialogPane().setHeaderText(String.format(R.DIALOGS_HELPER_FILE_CHANGE_HEADER.get(), fileName));
+		dialog.getDialogPane().setContentText(R.DIALOGS_HELPER_FILE_CHANGE_CONTENT.get());
 		dialog.getDialogPane().getStylesheets().addAll(Theme.currentThemesPaths());
 		Optional<ButtonType> buttonType = dialog.showAndWait();
 		return buttonType.orElse(ButtonType.CANCEL);
@@ -180,8 +181,8 @@ public abstract class DialogsHelper
 		DialogsHelper.centreDialog(alert);
 		Common.addIcons(((Stage) alert.getDialogPane().getScene().getWindow()));
 		alert.getDialogPane().setContent(popupContent);
-		alert.setTitle("Select date");
-		alert.setHeaderText("Choose date");
+		alert.setTitle(R.DIALOGS_HELPER_DT_PICKER_TITLE.get());
+		alert.setHeaderText(R.DIALOGS_HELPER_DT_PICKER_HEADER.get());
 		alert.getDialogPane().getStylesheets().addAll(Theme.currentThemesPaths());
 		Optional<ButtonType> buttonType = alert.showAndWait();
 		Optional<ButtonType> btnOk = buttonType.filter(bt -> bt.getButtonData().equals(ButtonBar.ButtonData.OK_DONE));
@@ -195,7 +196,7 @@ public abstract class DialogsHelper
 		DialogsHelper.centreDialog(dialog);
 		Common.addIcons(((Stage) dialog.getDialogPane().getScene().getWindow()));
 		dialog.getDialogPane().setMinHeight(Region.USE_PREF_SIZE);
-		dialog.setTitle("Warning");
+		dialog.setTitle(R.DIALOGS_HELPER_WARNING.get());
 		dialog.getDialogPane().setHeaderText(header);
 		dialog.getDialogPane().setContentText(body);
 		dialog.getDialogPane().getStylesheets().addAll(Theme.currentThemesPaths());
@@ -208,9 +209,9 @@ public abstract class DialogsHelper
 		Dialog<ButtonType> dialog = new Dialog<>();
 		DialogsHelper.centreDialog(dialog);
 		Common.addIcons(((Stage) dialog.getDialogPane().getScene().getWindow()));
-		dialog.setTitle("Save");
-		dialog.getDialogPane().setHeaderText("File " + fileName + " was changed.");
-		dialog.getDialogPane().setContentText("Do you want to save?");
+		dialog.setTitle(R.DIALOGS_HELPER_SAVE.get());
+		dialog.getDialogPane().setHeaderText(R.DIALOGS_HELPER_SAVE_FILE_HEADER.get());
+		dialog.getDialogPane().setContentText(R.DIALOGS_HELPER_SAVE_FILE_CONTENT.get());
 		dialog.getDialogPane().getButtonTypes().addAll(ButtonType.YES, ButtonType.NO, ButtonType.CANCEL);
 		dialog.getDialogPane().getStylesheets().addAll(Theme.currentThemesPaths());
 		Optional<ButtonType> res = dialog.showAndWait();
@@ -225,7 +226,7 @@ public abstract class DialogsHelper
 	{
 		if (list == null || list.isEmpty())
 		{
-			showInfo("Nothing to show");
+			showInfo(R.DIALOGS_HELPER_NOTHING_TO_SHOW.get());
 			return;
 		}
 		if (list.size() == 1)
@@ -312,7 +313,7 @@ public abstract class DialogsHelper
 
 		if (list == null || list.isEmpty())
 		{
-			showInfo("Nothing to show");
+			showInfo(R.DIALOGS_HELPER_NOTHING_TO_SHOW.get());
 			return result[0];
 		}
 		if (list.size() == 1)
@@ -400,7 +401,7 @@ public abstract class DialogsHelper
 
 		if (list == null || list.isEmpty())
 		{
-			showInfo("Nothing to show");
+			showInfo(R.DIALOGS_HELPER_NOTHING_TO_SHOW.get());
 			return result[0];
 		}
 		if (list.size() == 1)
@@ -513,7 +514,7 @@ public abstract class DialogsHelper
 				return fileChooser.showOpenDialog(Common.node);
 
 			default:
-				throw new RuntimeException("Unsupported mode" + mode);
+				throw new RuntimeException(R.DIALOGS_HELPER_UNSUPPORTED_MODE.get() + mode);
 		}
 	}
 
@@ -559,10 +560,10 @@ public abstract class DialogsHelper
 		}
 		if (annotation == null)
 		{
-			throw new Exception("Unknown type of document: " + docClass);
+			throw new Exception(R.DIALOGS_HELPER_EXCEPTION_UNKNOWN_TYPE.get() + docClass);
 		}
-		String title = "Save " + docClass.getSimpleName().toLowerCase();
-		String filter = annotation.extension() + " files(*." + annotation.extension() + ")";
+		String title = String.format(R.DIALOGS_HELPER_SAVE_AS_TITLE.get(), docClass.getSimpleName().toLowerCase());
+		String filter =String.format(R.DIALOGS_HELPER_SAVE_AS_FILTER.get(), annotation.extension(), annotation.extension());
 		String extension = "*." + annotation.extension();
 		String ext = "." + annotation.extension();
 		File file = showOpenSaveDialog(title, filter, extension, OpenSaveMode.SaveFile);
@@ -589,7 +590,7 @@ public abstract class DialogsHelper
         engine.loadContent(str);
 		Dialog<ButtonType> dialog = new Dialog<>();
 		DialogsHelper.centreDialog(dialog);
-		ButtonType close = new ButtonType("Close", ButtonBar.ButtonData.CANCEL_CLOSE);
+		ButtonType close = new ButtonType(R.COMMON_CLOSE.get(), ButtonBar.ButtonData.CANCEL_CLOSE);
 		dialog.getDialogPane().getButtonTypes().add(close);
 		dialog.initModality(Modality.NONE);
 		dialog.getDialogPane().lookupButton(close).setVisible(false);
@@ -599,7 +600,7 @@ public abstract class DialogsHelper
         dialog.getDialogPane().setPrefHeight(768);
         dialog.setResizable(true);
         dialog.getDialogPane().setHeader(new Label());
-        dialog.setTitle("Help for " + name);
+        dialog.setTitle(String.format(R.DIALOGS_HELPER_HELP_FOR.get(), name));
         dialog.setHeaderText(null);
         dialog.getDialogPane().getStylesheets().addAll(Theme.currentThemesPaths());
         dialog.show();
@@ -705,7 +706,7 @@ public abstract class DialogsHelper
 		Dialog<ButtonType> dialog = new Alert(Alert.AlertType.INFORMATION);
 		DialogsHelper.centreDialog(dialog);
 		Common.addIcons(((Stage) dialog.getDialogPane().getScene().getWindow()));
-		dialog.setTitle("About program");
+		dialog.setTitle(R.DIALOGS_HELPER_ABOUT_PROGRAM.get());
 		dialog.getDialogPane().setPrefWidth(600);
 		dialog.getDialogPane().setPrefHeight(250);
 		GridPane grid = new GridPane();
@@ -713,11 +714,11 @@ public abstract class DialogsHelper
 		grid.setHgap(8);
 		Image img = new Image(CssVariables.Icons.LOGO_FISH);
 		dialog.setResizable(true);
-		String version = String.format("Version : %25s", VersionInfo.getVersion());
-		String name = "JackFish";
+		String version = String.format(R.DIALOGS_HELPER_VERSION_FORMAT.get(), VersionInfo.getVersion());
+		String name = R.COMMON_JACKFISH.get();
 		Text nameText = new Text(name);
 		nameText.setFont(javafx.scene.text.Font.font(30));
-		String copyright = version + "\n\n\nThis is unpublished, licensed software, confidential and proprietary information which is the\nproperty of Exactpro Systems, LLC or its licensors.\nQuality Assurance & Related Development for Innovative Trading Systems.\n\nCopyright (c) 2009-2017, Exactpro Systems, LLC. All rights reserved.";
+		String copyright = version + R.DIALOGS_HELPER_COPYRIGHT.get();
 		Text copyrightTxt = new Text(copyright);
 		dialog.getDialogPane().setHeader(new Label());
 		ImageView logo = new ImageView(img);
@@ -745,7 +746,7 @@ public abstract class DialogsHelper
 		}
 		catch (Exception e)
 		{
-			String message = "Error on .\n" + e.getMessage();
+			String message = R.DIALOGS_HELPER_ERROR_ON.get() + e.getMessage();
 			logger.error(message);
 			logger.error(e.getMessage(), e);
 			DialogsHelper.showError(message);
@@ -765,7 +766,7 @@ public abstract class DialogsHelper
 			}
 			else
 			{
-				DialogsHelper.showError("Desktop is not supported. Used internal report browser");
+				DialogsHelper.showError(R.DIALOGS_HELPER_DESKTOP_NOT_SUPPORTED.get());
 			}
 		}
 		Common.runLater(() ->
@@ -781,15 +782,15 @@ public abstract class DialogsHelper
 				Common.addIcons(((Stage) dialog.getDialogPane().getScene().getWindow()));
 				if (addButton)
 				{
-					dialog.getDialogPane().getButtonTypes().add(new ButtonType("Open", ButtonBar.ButtonData.OTHER));
+					dialog.getDialogPane().getButtonTypes().add(new ButtonType(R.COMMON_OPEN.get(), ButtonBar.ButtonData.OTHER));
 				}
-				dialog.getDialogPane().getButtonTypes().add(new ButtonType("Close", ButtonBar.ButtonData.CANCEL_CLOSE));
+				dialog.getDialogPane().getButtonTypes().add(new ButtonType(R.COMMON_CLOSE.get(), ButtonBar.ButtonData.CANCEL_CLOSE));
 				dialog.setResizable(true);
 				dialog.getDialogPane().setPrefWidth(1024);
 				dialog.getDialogPane().setPrefHeight(768);
 				dialog.getDialogPane().setContent(reportBrowser);
 				dialog.initModality(Modality.NONE);
-				dialog.setTitle("Report");
+				dialog.setTitle(R.DIALOGS_HELPER_REPORT_TITLE.get());
 				if (matrName[0] == null)
 				{
 					Matcher matcher = Pattern.compile("\\d+_\\d+_(.+?)_(FAILED|PASSED|RUNNING)\\.html").matcher(file.getAbsolutePath());
@@ -799,10 +800,10 @@ public abstract class DialogsHelper
 					}
 					else
 					{
-						matrName[0] = "Unknown matrix";
+						matrName[0] = R.DIALOGS_HELPER_UNKNOWN_MATRIX.get();
 					}
 				}
-				dialog.setHeaderText("Report for " + matrName[0]);
+				dialog.setHeaderText(String.format(R.DIALOGS_HELPER_REPORT_FOR.get(), matrName[0]));
 				dialog.getDialogPane().getStylesheets().addAll(Theme.currentThemesPaths());
 				Optional<ButtonType> buttonType = dialog.showAndWait();
 				buttonType.filter(bt -> bt.getButtonData().equals(ButtonBar.ButtonData.OTHER)).ifPresent(type -> Common.tryCatch(() ->
@@ -814,8 +815,8 @@ public abstract class DialogsHelper
 						matrix.load(new StringReader(name));
 						matrix.display();
 					}
-				}, "Error on open matrix from report"));
-			}, "Error on show report");
+				}, R.DIALOGS_HELPER_ERROR_ON_OPEN.get()));
+			}, R.DIALOGS_HELPER_ERROR_ON_SHOW.get());
 		});
 	}
 
@@ -864,8 +865,8 @@ public abstract class DialogsHelper
 		dialog.setHeaderText(question);
 		dialog.getDialogPane().setPrefWidth(1000);
 		dialog.setContentText(message);
-		((Button) dialog.getDialogPane().lookupButton(ButtonType.CANCEL)).setText("No");
-		((Button) dialog.getDialogPane().lookupButton(ButtonType.OK)).setText("Yes");
+		((Button) dialog.getDialogPane().lookupButton(ButtonType.CANCEL)).setText(R.COMMON_NO.get());
+		((Button) dialog.getDialogPane().lookupButton(ButtonType.OK)).setText(R.COMMON_YES.get());
 		return dialog.showAndWait().filter(bt -> bt.getButtonData().equals(ButtonBar.ButtonData.OK_DONE)).isPresent();
 	}
 
@@ -891,10 +892,10 @@ public abstract class DialogsHelper
 		DialogsHelper.centreDialog(dialog);
 		Common.addIcons(((Stage) dialog.getDialogPane().getScene().getWindow()));
 		dialog.getDialogPane().setHeader(new Label());
-		dialog.setHeaderText("Help");
+		dialog.setHeaderText(R.COMMON_HELP.get());
 		GridPane grid = (GridPane) dialog.getDialogPane().lookup(".header-panel");
 		grid.setStyle("-fx-font-size: 30;");
-		dialog.setTitle("Actions help");
+		dialog.setTitle(R.DIALOGS_HELPER_ACTIONS_HELP.get());
 		dialog.setResizable(true);
 		dialog.getDialogPane().setContent(borderPane);
 		dialog.getDialogPane().lookupButton(ButtonType.OK).setVisible(false);
@@ -932,7 +933,7 @@ public abstract class DialogsHelper
 	private static void createContextMenu(WebView webView)
 	{
 		ContextMenu contextMenu = new ContextMenu();
-		MenuItem copy = new MenuItem("Copy");
+		MenuItem copy = new MenuItem(R.COMMON_COPY.get());
 		copy.setOnAction(e -> Sys.copyToClipboard((String) webView.getEngine().executeScript("window.getSelection().toString()")));
 
 		contextMenu.getItems().addAll(copy);
