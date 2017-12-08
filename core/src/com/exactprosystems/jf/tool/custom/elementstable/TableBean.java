@@ -9,7 +9,6 @@
 
 package com.exactprosystems.jf.tool.custom.elementstable;
 
-import com.exactprosystems.jf.api.app.ControlKind;
 import com.exactprosystems.jf.api.common.Str;
 import com.exactprosystems.jf.documents.guidic.controls.AbstractControl;
 import org.w3c.dom.Node;
@@ -44,23 +43,7 @@ public class TableBean
 
 	public String getId()
 	{
-		return id;
-	}
-
-	public void setId(String id)
-	{
-		this.id = id;
-	}
-
-	public ControlKind getControlKind()
-	{
-		return this.abstractControl.getBindedClass();
-	}
-
-	public void setControlKind(ControlKind controlKind)
-	{
-		//TODO
-
+		return this.abstractControl.getID();
 	}
 
 	public boolean getXpath()

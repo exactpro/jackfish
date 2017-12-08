@@ -829,7 +829,6 @@ public class DictionaryWizard extends AbstractWizard
 					TableBean e = new TableBean(copyControl);
 					e.setStyle(CssVariables.FOUND_ONE_ELEMENT);
 					e.setCount(1);
-					e.setId(copyControl.getID());
 					e.setNode(node);
 					this.tableView.getItems().add(e);
 				}
