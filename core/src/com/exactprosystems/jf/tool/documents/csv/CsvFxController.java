@@ -10,6 +10,7 @@
 package com.exactprosystems.jf.tool.documents.csv;
 
 import com.exactprosystems.jf.actions.ReadableValue;
+import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.documents.Document;
 import com.exactprosystems.jf.documents.DocumentInfo;
 import com.exactprosystems.jf.documents.csv.Csv;
@@ -60,7 +61,7 @@ public class CsvFxController extends AbstractDocumentController<CsvFx>
 				this.model.load(new FileReader(this.model.getNameProperty().get()));
 				this.model.display();
 			}
-		}, "Error on set delimiter");
+		}, R.CSV_FX_CONTROLLER_ERROR_DELIMITER.get());
 	}
 
 	public void init(Document model, CustomTab customTab)

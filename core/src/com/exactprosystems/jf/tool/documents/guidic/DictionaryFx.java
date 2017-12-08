@@ -13,6 +13,7 @@ import com.exactprosystems.jf.actions.gui.DialogGetProperties;
 import com.exactprosystems.jf.api.app.*;
 import com.exactprosystems.jf.api.app.IWindow.SectionKind;
 import com.exactprosystems.jf.api.common.Str;
+import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.common.Settings;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.undoredo.Command;
@@ -73,7 +74,7 @@ public class DictionaryFx extends GuiDictionary
 	private final MutableArrayList<IControl>         elements              = new MutableArrayList<>();
 	private final MutableArrayList<ControlWithState> testingElements       = new MutableArrayList<>();
 	private BiConsumer<IWindow, String>              changeWindowName      = (window, newName) -> {};
-	//TODO thiml about remove and add element consumer
+	//TODO think about remove and add element consumer
 	private Consumer<IControl>                       removeElementConsumer = element -> {};
 	private BiConsumer<Integer, IControl>            addElementConsumer    = (i, e) -> {};
 	//endregion
@@ -360,7 +361,7 @@ public class DictionaryFx extends GuiDictionary
 		}
 		else
 		{
-			DialogsHelper.showError("No available dialogs for paste. Firstly copy some dialog before paste.");
+			DialogsHelper.showError(R.DICTIONARY_FX_NO_DIALOGS_FOR_PASTE.get());
 		}
 
 	}
@@ -424,7 +425,7 @@ public class DictionaryFx extends GuiDictionary
 		{
 			AbstractControl newElement = AbstractControl.create(ControlKind.Any);
 			IControl firstControl = window.getFirstControl(SectionKind.Self);
-			Optional.ofNullable(firstControl).ifPresent(owner -> Common.tryCatch(() -> newElement.set(AbstractControl.ownerIdName, owner.getID()), "Error on set owner owner"));
+			Optional.ofNullable(firstControl).ifPresent(owner -> Common.tryCatch(() -> newElement.set(AbstractControl.ownerIdName, owner.getID()), R.DICTIONARY_FX_ERROR_ON_SET_OWNER.get()));
 
 			IControl oldElement = this.currentElement.get();
 			Command undo = () ->
@@ -467,7 +468,7 @@ public class DictionaryFx extends GuiDictionary
 				boolean needRemove = true;
 				if (ref)
 				{
-					needRemove = DialogsHelper.showQuestionDialog("This element is the owner for other elements", "Remove it anyway?");
+					needRemove = DialogsHelper.showQuestionDialog(R.DICTIONARY_FX_REMOVE_HEADER.get(), R.DICTIONARY_FX_REMOVE_BODY.get());
 				}
 				if (needRemove)
 				{
@@ -617,7 +618,7 @@ public class DictionaryFx extends GuiDictionary
 						}
 						catch (Exception e)
 						{
-							DictionaryFx.this.testingElements.add(new ControlWithState(element, "Error", DictionaryFxController.Result.FAILED));
+							DictionaryFx.this.testingElements.add(new ControlWithState(element, R.COMMON_ERROR.get(), DictionaryFxController.Result.FAILED));
 						}
 					}
 				});
@@ -662,7 +663,7 @@ public class DictionaryFx extends GuiDictionary
 				}, "");
 				super.addCommand(undo, redo);
 			}
-		}, String.format("Cannot set field '%s' to value '%s'", parameterName, parameterValue));
+		}, String.format(R.DICTIONARY_FX_SET_FIELD_ERROR.get(), parameterName, parameterValue));
 	}
 
 	public void changeControlKind(ControlKind kind) throws Exception
@@ -787,11 +788,11 @@ public class DictionaryFx extends GuiDictionary
 				{
 					if (check.isOk())
 					{
-						this.out.set("Check is passed");
+						this.out.set(R.DICTIONARY_FX_CHECK_PASS.get());
 					}
 					else
 					{
-						this.out.set("Check is failed:");
+						this.out.set(R.DICTIONARY_FX_CHECK_FAIL.get());
 						check.getErrors().forEach(this.out::set);
 					}
 				});
@@ -881,7 +882,7 @@ public class DictionaryFx extends GuiDictionary
 		this.checkIsWorking(() ->
 		{
 			this.titlesList.from(convertToMutable(service().titles()));
-			DialogsHelper.showNotifier("Titles refreshed successfully", Notifier.Success);
+			DialogsHelper.showNotifier(R.DICTIONARY_FX_TITLES_REFRESH.get(), Notifier.Success);
 		});
 	}
 	//endregion
@@ -909,7 +910,7 @@ public class DictionaryFx extends GuiDictionary
 				String closedWindow = this.service().closeWindow();
 				if (Str.IsNullOrEmpty(closedWindow))
 				{
-					throw new Exception("Can not close the window");
+					throw new Exception(R.DICTIONARY_FX_CANT_CLOSE_WINDOW.get());
 				}
 			}
 		);
@@ -961,7 +962,7 @@ public class DictionaryFx extends GuiDictionary
 				}
 				else
 				{
-					throw new Exception("You must set only Serializable or null value");
+					throw new Exception(R.DICTIONARY_FX_SERIALIZABLE_ONLY.get());
 				}
 
 				Optional.ofNullable(property)
@@ -985,7 +986,7 @@ public class DictionaryFx extends GuiDictionary
 				}
 				else
 				{
-					throw new Exception("You must set only Serializable or null value");
+					throw new Exception(R.DICTIONARY_FX_SERIALIZABLE_ONLY.get());
 				}
 			}
 		);
@@ -1106,7 +1107,7 @@ public class DictionaryFx extends GuiDictionary
 		return Optional.ofNullable(this.currentWindow.get())
 				.map(IWindow::getSelfControl)
 				.map(IControl::locator)
-				.orElseThrow(() -> new Exception("Can't find self control for current window."));
+				.orElseThrow(() -> new Exception(R.DICTIONARY_FX_SELF_CONTROL_ERROR.get()));
 	}
 
 	private boolean isApplicationRun()
@@ -1114,7 +1115,7 @@ public class DictionaryFx extends GuiDictionary
 		boolean isRun = this.applicationConnector != null && this.applicationConnector.getAppConnection() != null && this.applicationConnector.getAppConnection().isGood();
 		if (!isRun)
 		{
-			DialogsHelper.showInfo("Start a application before doing any actions");
+			DialogsHelper.showInfo(R.DICTIONARY_FX_START_BEFORE.get());
 		}
 		return isRun;
 	}
@@ -1125,7 +1126,7 @@ public class DictionaryFx extends GuiDictionary
 		{
 			if (this.isWorking)
 			{
-				DialogsHelper.showInfo("Please wait until previous command will be complete");
+				DialogsHelper.showInfo(R.DICTIONARY_FX_WAIT.get());
 			}
 			else
 			{

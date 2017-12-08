@@ -13,6 +13,7 @@ import com.exactprosystems.jf.api.app.AppConnection;
 import com.exactprosystems.jf.api.app.ImageWrapper;
 import com.exactprosystems.jf.api.app.Resize;
 import com.exactprosystems.jf.api.common.Str;
+import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.documents.matrix.parser.listeners.ListProvider;
 import com.exactprosystems.jf.tool.Common;
@@ -99,7 +100,7 @@ public class ActionsController implements Initializable, ContainingParent
 	public void setParent(Parent parent)
 	{
 		this.pane = parent;
-		Common.runLater(() -> ((BorderPane) this.pane).setCenter(BorderWrapper.wrap(this.mainGrid).title("Actions").color(Theme.currentTheme().getReverseColor()).build()));
+		Common.runLater(() -> ((BorderPane) this.pane).setCenter(BorderWrapper.wrap(this.mainGrid).title(R.ACTIONS_CONTROLLER_TITLE.get()).color(Theme.currentTheme().getReverseColor()).build()));
 	}
 
 	@Override
@@ -149,50 +150,50 @@ public class ActionsController implements Initializable, ContainingParent
 		this.comboBoxAppsStore.setOnShowing(event -> this.comboBoxAppsStore.getItems().setAll(this.storedConnections()));
 		this.comboBoxAppsStore.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> this.model.setCurrentStoredApp(newValue));
 
-		this.comboBoxTitles.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> tryCatch(() -> this.model.switchTo(newValue), "Error on switch to window"));
+		this.comboBoxTitles.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> tryCatch(() -> this.model.switchTo(newValue), R.ACTIONS_CONTROLLER_ERROR_ON_SWITCH.get()));
 	}
 
 	//region application
 	public void startApplication(ActionEvent actionEvent)
 	{
-		tryCatch(() -> this.model.startApplication(), "Error on start application");
+		tryCatch(() -> this.model.startApplication(), R.ACTIONS_CONTROLLER_ERROR_ON_START.get());
 	}
 
 	public void connectApplication(ActionEvent actionEvent)
 	{
-		tryCatch(() -> this.model.connectToApplication(), "Error on connect application");
+		tryCatch(() -> this.model.connectToApplication(), R.ACTIONS_CONTROLLER_ERROR_ON_CONNECT.get());
 	}
 
 	public void stopConnection(ActionEvent actionEvent)
 	{
-		tryCatch(() -> this.model.stopApplication(), "Error on stop application");
+		tryCatch(() -> this.model.stopApplication(), R.ACTIONS_CONTROLLER_ERROR_ON_STOP.get());
 	}
 	//endregion
 
 	//region Do tab
 	public void sendKeys(ActionEvent actionEvent)
 	{
-		tryCatch(() -> this.model.sendKeys(this.tfSendKeys.getText()), "Error on send keys");
+		tryCatch(() -> this.model.sendKeys(this.tfSendKeys.getText()), R.ACTIONS_CONTROLLER_ERROR_ON_SEND_KEYS.get());
 	}
 
 	public void doIt(ActionEvent actionEvent)
 	{
-		tryCatch(() -> this.model.doIt(this.doExpressionField.getEvaluatedValue()), "Error on operate");
+		tryCatch(() -> this.model.doIt(this.doExpressionField.getEvaluatedValue()), R.ACTIONS_CONTROLLER_ERROR_ON_OPERATE.get());
 	}
 
 	public void click(ActionEvent actionEvent)
 	{
-		tryCatch(() -> this.model.click(), "Error on click");
+		tryCatch(() -> this.model.click(), R.ACTIONS_CONTROLLER_ERROR_ON_CLICK.get());
 	}
 
 	public void find(ActionEvent actionEvent)
 	{
-		tryCatch(() -> this.model.find(), "Error on find");
+		tryCatch(() -> this.model.find(), R.ACTIONS_CONTROLLER_ERROR_ON_FIND.get());
 	}
 
 	public void getValue(ActionEvent actionEvent)
 	{
-		tryCatch(() -> this.model.getValue(), "Error on get value");
+		tryCatch(() -> this.model.getValue(), R.ACTIONS_CONTROLLER_ERROR_ON_GET_VALUE.get());
 	}
 
 	//endregion
@@ -200,39 +201,39 @@ public class ActionsController implements Initializable, ContainingParent
 	//region Switch tab
 	public void switchToParent(ActionEvent actionEvent)
 	{
-		tryCatch(() -> this.model.switchToParent(), "Error on switch to current");
+		tryCatch(() -> this.model.switchToParent(), R.ACTIONS_CONTROLLER_ERROR_ON_SWITCH_TO_CURRENT.get());
 	}
 
 	public void switchToCurrent(ActionEvent actionEvent)
 	{
-		tryCatch(() -> this.model.switchToCurrent(), "Error on switch to current");
+		tryCatch(() -> this.model.switchToCurrent(), R.ACTIONS_CONTROLLER_ERROR_ON_SWITCH_TO_CURRENT.get());
 	}
 
 	public void refreshTitles(ActionEvent event)
 	{
-		tryCatch(() -> this.model.refreshTitles(), "Error on refresh titles");
+		tryCatch(() -> this.model.refreshTitles(), R.ACTIONS_CONTROLLER_ERROR_ON_REFRESH_TITLES.get());
 	}
 	//endregion
 
 	//region Navigate tab
 	public void navigateBack(ActionEvent event)
 	{
-		tryCatch(() -> this.model.navigateBack(), "Error on navigate back");
+		tryCatch(() -> this.model.navigateBack(), R.ACTIONS_CONTROLLER_ERROR_ON_NAVIGATE_BACK.get());
 	}
 
 	public void navigateForward(ActionEvent event)
 	{
-		tryCatch(() -> this.model.navigateForward(), "Error on navigate forward");
+		tryCatch(() -> this.model.navigateForward(), R.ACTIONS_CONTROLLER_ERROR_ON_NAVIGATE_FORWARD.get());
 	}
 
 	public void refresh(ActionEvent actionEvent)
 	{
-		tryCatch(() -> this.model.refresh(), "Error on refresh");
+		tryCatch(() -> this.model.refresh(), R.ACTIONS_CONTROLLER_ERROR_ON_REFRESH.get());
 	}
 
 	public void closeWindow(ActionEvent event)
 	{
-		tryCatch(() -> this.model.closeWindow(), "Error on close window");
+		tryCatch(() -> this.model.closeWindow(), R.ACTIONS_CONTROLLER_ERROR_ON_CLOSE_WINDOW.get());
 	}
 	//endregion
 
@@ -241,7 +242,7 @@ public class ActionsController implements Initializable, ContainingParent
 	{
 		tryCatch(() -> this.model.newInstance(
 				this.lvNewInstance.getItems().stream().collect(Collectors.toMap(e -> e.getKey().getText(), e -> Str.IsNullOrEmpty(e.getValue().getText()) ? null : e.getValue().getText()))),
-				"Error on new instance");
+				R.ACTIONS_CONTROLLER_ERROR_ON_NEW_INSTANCE.get());
 
 	}
 	//endregion
@@ -249,7 +250,7 @@ public class ActionsController implements Initializable, ContainingParent
 	//region Pos&Size tab
 	public void moveTo(ActionEvent e)
 	{
-		tryCatch(() -> this.model.moveTo(this.ntfMoveToX.getValue(), this.ntfMoveToY.getValue()), "Error on move to");
+		tryCatch(() -> this.model.moveTo(this.ntfMoveToX.getValue(), this.ntfMoveToY.getValue()), R.ACTIONS_CONTROLLER_ERROR_ON_MOVE_TO.get());
 	}
 
 	public void resize(ActionEvent e)
@@ -260,7 +261,7 @@ public class ActionsController implements Initializable, ContainingParent
 
 			if (selectedToggle == null)
 			{
-				throw new Exception("No one resizing parameter is filled.");
+				throw new Exception(R.ACTIONS_CONTROLLER_ERROR_ON_FILL_RESIZE.get());
 			}
 
 			int h = selectedToggle == this.rbSize ? this.ntfResizeH.getValue() : 0;
@@ -268,7 +269,7 @@ public class ActionsController implements Initializable, ContainingParent
 
 			Resize resize = ((Resize) selectedToggle.getUserData());
 			this.model.resize(resize, h, w);
-		}, "Error on resize");
+		}, R.ACTIONS_CONTROLLER_ERROR_ON_RESIZE.get());
 	}
 	//endregion
 
@@ -276,12 +277,12 @@ public class ActionsController implements Initializable, ContainingParent
 
 	public void getProperty(ActionEvent event)
 	{
-		tryCatch(() -> this.model.getProperty(this.cbGetProperty.getSelectionModel().getSelectedItem(), this.efGetProperty.getEvaluatedValue()), "Error on get property");
+		tryCatch(() -> this.model.getProperty(this.cbGetProperty.getSelectionModel().getSelectedItem(), this.efGetProperty.getEvaluatedValue()), R.ACTIONS_CONTROLLER_ERROR_ON_GET_PROP.get());
 	}
 
 	public void setProperty(ActionEvent event)
 	{
-		tryCatch(() -> this.model.setProperty(this.cbSetProperty.getSelectionModel().getSelectedItem(), this.efSetProperty.getEvaluatedValue()), "Error on set property");
+		tryCatch(() -> this.model.setProperty(this.cbSetProperty.getSelectionModel().getSelectedItem(), this.efSetProperty.getEvaluatedValue()), R.ACTIONS_CONTROLLER_ERROR_ON_SET_PROP.get());
 	}
 
 	//endregion
@@ -289,7 +290,7 @@ public class ActionsController implements Initializable, ContainingParent
 	//region Dialog
 	public void dialogMoveTo(ActionEvent event)
 	{
-		tryCatch(() -> this.model.dialogMoveTo(this.ntfDialogMoveToX.getValue(), this.ntfDialogMoveToY.getValue()), "Error on move to");
+		tryCatch(() -> this.model.dialogMoveTo(this.ntfDialogMoveToX.getValue(), this.ntfDialogMoveToY.getValue()), R.ACTIONS_CONTROLLER_ERROR_ON_MOVE_TO.get());
 	}
 
 	public void dialogResize(ActionEvent event)
@@ -300,7 +301,7 @@ public class ActionsController implements Initializable, ContainingParent
 
 			if (selectedToggle == null)
 			{
-				throw new Exception("No one resizing parameter is filled.");
+				throw new Exception(R.ACTIONS_CONTROLLER_ERROR_ON_FILL_RESIZE.get());
 			}
 
 			int h = selectedToggle == this.rbDialogSize ? this.ntfDialogResizeH.getValue() : 0;
@@ -308,12 +309,12 @@ public class ActionsController implements Initializable, ContainingParent
 
 			Resize resize = ((Resize) selectedToggle.getUserData());
 			this.model.dialogResize(resize, h, w);
-		}, "Error on resize");
+		}, R.ACTIONS_CONTROLLER_ERROR_ON_RESIZE.get());
 	}
 
 	public void getDialogProperty(ActionEvent event)
 	{
-		tryCatch(() -> this.model.dialogGetProperty(this.cbGetDialogProperty.getValue()), "Error on get property");
+		tryCatch(() -> this.model.dialogGetProperty(this.cbGetDialogProperty.getValue()), R.ACTIONS_CONTROLLER_ERROR_ON_GET_PROP.get());
 	}
 
 	//endregion

@@ -14,6 +14,7 @@ import com.exactprosystems.jf.api.app.ControlKind;
 import com.exactprosystems.jf.api.app.IControl;
 import com.exactprosystems.jf.api.app.Visibility;
 import com.exactprosystems.jf.api.common.Str;
+import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.documents.guidic.controls.AbstractControl;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.ContainingParent;
@@ -79,7 +80,7 @@ public class ElementInfoController implements Initializable, ContainingParent
 	public void setParent(Parent parent)
 	{
 		this.pane = parent;
-		Common.runLater(() -> ((BorderPane) this.pane).setCenter(BorderWrapper.wrap(this.mainGrid).color(Theme.currentTheme().getReverseColor()).title("Element info").build()));
+		Common.runLater(() -> ((BorderPane) this.pane).setCenter(BorderWrapper.wrap(this.mainGrid).color(Theme.currentTheme().getReverseColor()).title(R.ELEMENT_IC_TITLE.get()).build()));
 	}
 
 	@Override
@@ -213,20 +214,20 @@ public class ElementInfoController implements Initializable, ContainingParent
 	{
 		this.addListenersForTextFields();
 
-		this.addListenerForSelections(this.choiceBoxOwner.getSelectionModel(), AbstractControl.ownerIdName, this::mapper, "Error on change owner");
+		this.addListenerForSelections(this.choiceBoxOwner.getSelectionModel(), AbstractControl.ownerIdName, this::mapper, R.ELEMENT_IC_ERROR_ON_CHANGE_OWNER.get());
 		this.choiceBoxOwner.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> this.btnGoToOwner.setDisable(newValue == null));
 
 		this.comboBoxControl.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) ->
-				this.executeIfListenerEnable(() -> this.model.changeControlKind(newValue), "Error on change control kind"));
+				this.executeIfListenerEnable(() -> this.model.changeControlKind(newValue), R.ELEMENT_IC_ERROR_ON_CHANGE_CK.get()));
 
-		this.addListenerForSelections(this.choiceBoxAddition.getSelectionModel(), AbstractControl.additionName, null, "Error on change addition");
-		this.addListenerForSelections(this.choiceBoxReference.getSelectionModel(), AbstractControl.refIdName, this::mapper, "Error on change reference");
-		this.addListenerForSelections(this.choiceBoxVisibility.getSelectionModel(), AbstractControl.visibilityName, null, "Error on change visibility");
-		this.addListenerForSelections(this.choiceBoxHeader.getSelectionModel(), AbstractControl.headerName, this::mapper, "Error on change header");
-		this.addListenerForSelections(this.choiceBoxRows.getSelectionModel(), AbstractControl.rowsName, this::mapper, "Error on change rows");
+		this.addListenerForSelections(this.choiceBoxAddition.getSelectionModel(), AbstractControl.additionName, null, R.ELEMENT_IC_ERROR_ON_CHANGE_ADDITION.get());
+		this.addListenerForSelections(this.choiceBoxReference.getSelectionModel(), AbstractControl.refIdName, this::mapper, R.ELEMENT_IC_ERROR_ON_CHANGE_REFERENCE.get());
+		this.addListenerForSelections(this.choiceBoxVisibility.getSelectionModel(), AbstractControl.visibilityName, null, R.ELEMENT_IC_ERROR_ON_CHANGE_VISIBILITY.get());
+		this.addListenerForSelections(this.choiceBoxHeader.getSelectionModel(), AbstractControl.headerName, this::mapper, R.ELEMENT_IC_ERROR_ON_CHANGE_HEADER.get());
+		this.addListenerForSelections(this.choiceBoxRows.getSelectionModel(), AbstractControl.rowsName, this::mapper, R.ELEMENT_IC_ERROR_ON_CHANGE_ROWS.get());
 
 		this.checkBoxWeak.selectedProperty().addListener((observable, oldValue, newValue) ->
-				this.executeIfListenerEnable(() -> this.model.changeParameter(AbstractControl.weakName, this.checkBoxWeak.isSelected()),"Error on change weakness"));
+				this.executeIfListenerEnable(() -> this.model.changeParameter(AbstractControl.weakName, this.checkBoxWeak.isSelected()),R.ELEMENT_IC_ERROR_ON_CHANGE_WEAKNESS.get()));
 	}
 
 	private void addListenersForTextFields()
@@ -267,7 +268,7 @@ public class ElementInfoController implements Initializable, ContainingParent
 				}
 				else
 				{
-					DialogsHelper.showError(String.format("Element with id %s already exists.", id));
+					DialogsHelper.showError(String.format(R.ELEMENT_IC_ERROR_ELEMENT_EXISTS.get(), id));
 					this.tfID.setText(this.previousId);
 				}
 				this.previousId = null;
@@ -296,12 +297,12 @@ public class ElementInfoController implements Initializable, ContainingParent
 
 	private void changeText(TextField textField)
 	{
-		this.executeIfListenerEnable(() -> this.model.changeParameter(textField.getId(), textField.getText()), String.format("Error on update field '%s'", textField.getId()));
+		this.executeIfListenerEnable(() -> this.model.changeParameter(textField.getId(), textField.getText()), String.format(R.ELEMENT_IC_ERROR_ON_UPDATE_FIELD.get(), textField.getId()));
 	}
 
 	private void changeInt(TextField textField)
 	{
-		this.executeIfListenerEnable(() -> this.model.changeParameter(textField.getId(), Integer.parseInt(textField.getText())), String.format("Error on update field '%s'", textField.getId()));
+		this.executeIfListenerEnable(() -> this.model.changeParameter(textField.getId(), Integer.parseInt(textField.getText())), String.format(R.ELEMENT_IC_ERROR_ON_UPDATE_FIELD.get(), textField.getId()));
 	}
 
 	private <T> void addListenerForSelections(SingleSelectionModel<T> selectionModel, String propName, Function<T, String> mapper, String errorMsg)
@@ -363,7 +364,7 @@ public class ElementInfoController implements Initializable, ContainingParent
 	{
 		if (kind != null && !kinds.contains(kind) && this.model.getApp() != null)
 		{
-			DialogsHelper.showError(String.format("Plugin %s doesn't support control %s. Control replacing to Any", this.model.getApp().getId(), kind));
+			DialogsHelper.showError(String.format(R.ELEMENT_IC_ERROR_SUPPORT_CONTROL.get(), this.model.getApp().getId(), kind));
 			this.comboBoxControl.getSelectionModel().select(ControlKind.Any);
 		}
 		else

@@ -9,6 +9,7 @@
 
 package com.exactprosystems.jf.tool.documents.vars;
 
+import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.documents.Document;
 import com.exactprosystems.jf.documents.matrix.parser.Parameter;
 import com.exactprosystems.jf.tool.CssVariables;
@@ -45,7 +46,7 @@ public class SystemVarsFxController extends AbstractDocumentController<SystemVar
 	public void init(Document model, CustomTab customTab)
 	{
 		super.init(model, customTab);
-		this.tableView.setAddListener(() -> tryCatch(SystemVarsFxController.this.model::addNewVariable, "Error on adding new var"));
+		this.tableView.setAddListener(() -> tryCatch(SystemVarsFxController.this.model::addNewVariable, R.SYSTEMS_VARS_FX_CONTR_ERROR.get()));
 		this.tableView.setDeleteListener(this.model::removeParameters);
 		createTable();
 
