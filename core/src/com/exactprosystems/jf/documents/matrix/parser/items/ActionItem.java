@@ -58,7 +58,17 @@ public final class ActionItem extends MatrixItem
 	public ActionItem(ActionItem actionItem)
 	{
 		this.assertBool = new Parameter(actionItem.assertBool);
-		this.action = actionItem.action;
+		try
+		{
+			if (actionItem.action != null)
+			{
+				this.action = this.actionByName(actionItem.action.getClass().getSimpleName());
+			}
+		}
+		catch (Exception e)
+		{
+			//never happens
+		}
 	}
 
 	@Override
@@ -90,8 +100,8 @@ public final class ActionItem extends MatrixItem
 		driver.showParameters(this, layout, 1, 2, this.parameters, () -> this.id.get() + ".In.", false);
 		driver.showCheckBox(this, layout, 2, 0, "G", this.global, this.global);
 		driver.showCheckBox(this, layout, 2, 0, "I", this.ignoreErr, this.ignoreErr);
-		driver.showToggleButton(this, layout, 2, 1, 
-		        b -> driver.hide(this, layout, 3, b), 
+		driver.showToggleButton(this, layout, 2, 1,
+		        b -> driver.hide(this, layout, 3, b),
 		        b -> "Asserts", !(this.assertBool.isExpressionNullOrEmpty()));
 		driver.showLabel(this, layout, 3, 0, Tokens.Assert.get());
 		driver.showExpressionField(this, layout, 3, 1, Tokens.Assert.get(), this.assertBool, this.assertBool, null, null, null, null);
@@ -113,7 +123,7 @@ public final class ActionItem extends MatrixItem
 		{
 			return null;
 		}
-		
+
 		return this.action.howHelpWithParameter(context, parameter, this.parameters);
 	}
 
@@ -164,7 +174,7 @@ public final class ActionItem extends MatrixItem
     	super.saved();
     	this.assertBool.saved();
     }
-	
+
 	//==============================================================================================
 	// Protected members should be overridden
 	//==============================================================================================
