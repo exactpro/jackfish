@@ -237,6 +237,7 @@ public class NavigationController implements Initializable, ContainingParent
 	public void addDialog(int index, IWindow dialog)
 	{
 		this.listViewWindow.addItem(index, dialog);
+		this.listViewWindow.select(index);
 	}
 
 	public void removeDialog(IWindow dialog)
@@ -273,6 +274,7 @@ public class NavigationController implements Initializable, ContainingParent
 	public void addElement(int index, IControl control)
 	{
 		this.listViewElement.addItem(index, new BorderPaneAndControl(control));
+		this.listViewElement.select(index);
 	}
 
 	public void displayElement(IControl control)

@@ -93,11 +93,13 @@ public class FindListView<T> extends VBox
 	public void select(int index)
 	{
 		this.listView.getSelectionModel().select(index);
+		this.listView.scrollTo(index);
 	}
 
 	public void select(T item)
 	{
 		this.listView.getSelectionModel().select(item);
+		this.listView.scrollTo(item);
 	}
 
 	public void setFilter(BiPredicate<T, String> filter)
