@@ -17,9 +17,11 @@ import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.input.Dragboard;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.function.Predicate;
 
 public class CustomTabPane extends TabPane
 {
@@ -107,6 +109,21 @@ public class CustomTabPane extends TabPane
 		return new CustomTab(doc, this);
 	}
 
+	public CustomTab getTabByDoc(Document document)
+	{
+		return this.getTab(tab -> tab.getDocument().equals(document));
+	}
+
+	public CustomTab getTabByFileName(String fileName)
+	{
+		return this.getTab(tab -> tab.getDocument().getNameProperty().get().equals(fileName));
+	}
+
+	public CustomTab getTabByFile(File file)
+	{
+		return this.getTab(tab -> new File(tab.getDocument().getNameProperty().get()).getAbsolutePath().equals(file.getAbsolutePath()));
+	}
+
 	ObjectProperty<Tab> draggingTabProperty()
 	{
 		return draggingTab;
@@ -115,6 +132,17 @@ public class CustomTabPane extends TabPane
 	ObjectProperty<Tab> droppedTabProperty()
 	{
 		return droppedTab;
+	}
+
+	//region private methods
+	private CustomTab getTab(Predicate<CustomTab> predicate)
+	{
+		return this.getTabs()
+				.stream()
+				.map(t -> (CustomTab) t)
+				.filter(predicate)
+				.findFirst()
+				.orElse(null);
 	}
 
 	private void addTempTabs()
@@ -142,4 +170,5 @@ public class CustomTabPane extends TabPane
 		this.getTabs().removeAll(this.tempTabList);
 		this.tempTabList.clear();
 	}
+	//endregion
 }

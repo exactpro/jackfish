@@ -185,7 +185,8 @@ public class Common
 		}
 	}
 
-	// TODO move it to CustomTab
+	// TODO move it to CustomTabPane
+	@Deprecated
 	public static CustomTab checkDocument(Document doc)
 	{
 		return CustomTabPane.getInstance().getTabs()
@@ -196,6 +197,8 @@ public class Common
 				.orElse(null);
 	}
 
+	// TODO move it to CustomTabPane
+	@Deprecated
 	public static CustomTab checkDocument(String fileName)
 	{
 		return CustomTabPane.getInstance().getTabs()
@@ -206,6 +209,8 @@ public class Common
 				.orElse(null);
 	}
 
+	// TODO move it to CustomTabPane
+	@Deprecated
 	public static CustomTab checkDocument(File file)
 	{
 		return CustomTabPane.getInstance().getTabs()
