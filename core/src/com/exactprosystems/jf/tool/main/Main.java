@@ -142,7 +142,7 @@ public class Main extends Application
 		catch (Exception e)
 		{
 			logger.error(e.getMessage(), e);
-			DialogsHelper.showError("Settings are invalid. Using default settings.");
+			DialogsHelper.showError(R.MAIN_INVALID_SETTINGS.get());
 			this.settings = Settings.defaultSettings();
 		}
 
@@ -216,7 +216,7 @@ public class Main extends Application
 		}
 		catch (Exception e)
 		{
-			logger.error("Error on restore opened documents");
+			logger.error(R.MAIN_ERROR_ON_RESTORE_DOCS.get());
 			logger.error(e.getMessage(), e);
 		}
 		notifyPreloader(new Preloader.ProgressNotification(100));
@@ -566,7 +566,7 @@ public class Main extends Application
 	{
 		if (document == null)
 		{
-			DialogsHelper.showInfo("Nothing to save");
+			DialogsHelper.showInfo(R.MAIN_NOTHING_TO_SAVE.get());
 			return;
 		}
 		File file = DialogsHelper.showSaveAsDialog(document);
@@ -577,7 +577,7 @@ public class Main extends Application
 
 			document.save(file.getPath());
 			document.saved();
-			DialogsHelper.showInfo(document.getNameProperty().get() + " is saved successfully.");
+			DialogsHelper.showInfo(String.format(R.MAIN_SAVE_SUCCESS.get(), document.getNameProperty().get()));
 			if (document instanceof Matrix)
 			{
 				this.settings.remove(Settings.MAIN_NS, DocumentKind.MATRIX.name(), new File(lastName).getName());
@@ -603,7 +603,7 @@ public class Main extends Application
 		{
 			document.save(document.getNameProperty().get());
 			document.saved();
-			DialogsHelper.showInfo(document.getNameProperty().get() + " is saved successfully.");
+			DialogsHelper.showInfo(String.format(R.MAIN_SAVE_SUCCESS.get(), document.getNameProperty().get()));
 		}
 	}
 
@@ -613,7 +613,7 @@ public class Main extends Application
 		{
 			documentSave(document);
 		}
-		DialogsHelper.showSuccess("All files successful saved");
+		DialogsHelper.showSuccess(R.MAIN_ALL_FILES_SUCCESS.get());
 	}
 
 	public void undo(Document document) throws Exception
@@ -654,7 +654,7 @@ public class Main extends Application
 	//region Reports
 	public void openReport() throws Exception
 	{
-		File file = DialogsHelper.showOpenSaveDialog("Choose report", "HTML files (*.html)", "*.html", OpenSaveMode.OpenFile);
+		File file = DialogsHelper.showOpenSaveDialog(R.MAIN_OPEN_REPORT_TITLE.get(), R.MAIN_OPEN_REPORT_FILTER.get(), "*.html", OpenSaveMode.OpenFile);
 		openReport(file);
 	}
 
@@ -710,7 +710,7 @@ public class Main extends Application
 		}
 		else
 		{
-			DialogsHelper.showInfo(String.format("Matrices %s already added to toolbar", fullPath));
+			DialogsHelper.showInfo(String.format(R.MAIN_ADD_TO_TOOLBAR.get(), fullPath));
 		}
 	}
 
@@ -802,7 +802,7 @@ public class Main extends Application
 	{
 		if (!file.getAbsolutePath().contains(new File("").getAbsolutePath()))
 		{
-			DialogsHelper.showInfo("Can't scroll to out of project scope");
+			DialogsHelper.showInfo(R.MAIN_SHOW_INFO_CONFIG.get());
 			return;
 		}
 		if (this.config instanceof ConfigurationFx)
@@ -847,7 +847,7 @@ public class Main extends Application
 		DocumentInfo annotation = clazz.getAnnotation(DocumentInfo.class);
 		if (annotation == null)
 		{
-			throw new Exception("Unknown type of document: " + clazz);
+			throw new Exception(String.format(R.MAIN_UNKNOWN_TYPE_OF_DOC.get(),"" + clazz));
 		}
 
 		return checkName(annotation.newName());
@@ -874,11 +874,11 @@ public class Main extends Application
 			DocumentInfo annotation = clazz.getAnnotation(DocumentInfo.class);
 			if (annotation == null)
 			{
-				throw new Exception("Unknown type of document: " + clazz);
+				throw new Exception(String.format(R.MAIN_UNKNOWN_TYPE_OF_DOC.get(),"" + clazz));
 			}
 	
-			String title		= String.format("Choose %s file", annotation.description());
-			String filter		= String.format("%s files (*.%s)", annotation.extension(), annotation.extension());
+			String title		= String.format(R.MAIN_CHOOSE_FILE_TITLE.get(), annotation.description());
+			String filter		= String.format(R.MAIN_CHOOSE_FILE_FILTER.get(), annotation.extension(), annotation.extension());
 			String extension	= String.format("*.%s", annotation.extension());
 	
 			file = DialogsHelper.showOpenSaveDialog(title, filter, extension, mode);
@@ -900,7 +900,7 @@ public class Main extends Application
         }
         if (!file.exists())
         {
-            DialogsHelper.showError(String.format("File with name %s not found", file.getAbsoluteFile()));
+            DialogsHelper.showError(String.format(R.MAIN_LOAD_DOC_NOT_FOUND.get(), file.getAbsoluteFile()));
             throw new FileNotFoundException();
         }
         try
@@ -945,7 +945,7 @@ public class Main extends Application
         catch (Exception e)
         {
             logger.error(e.getMessage(), e);
-            DialogsHelper.showError("Error on load " + doc.getClass().getSimpleName() + "'" + file + "'");
+			DialogsHelper.showError(String.format(R.MAIN_LOAD_DOC_ERROR_CLASS.get(), doc.getClass().getSimpleName(), "" + file));
         }
 
         return null;

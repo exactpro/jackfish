@@ -175,12 +175,12 @@ public class MainController implements Initializable, ContainingParent
 	//region Action events
 	public void reloadConfiguration(ActionEvent event)
 	{
-		Common.tryCatch(() -> this.model.refreshConfig(), "Error on refresh configuration");
+		Common.tryCatch(() -> this.model.refreshConfig(), R.MAIN_CONTROLLER_ERROR_ON_REFRESH_CONF.get());
 	}
 
 	public void saveConfiguration(ActionEvent event)
 	{
-		Common.tryCatch(() -> this.model.saveConfig(), "Error on save config");
+		Common.tryCatch(() -> this.model.saveConfig(), R.MAIN_CONTROLLER_ERROR_ON_SAVE_CONF.get());
 	}
 	//endregion
 
@@ -224,7 +224,7 @@ public class MainController implements Initializable, ContainingParent
 
 			this.matrixStart.setAccelerator(Common.getShortcut(settings, Settings.START_MATRIX));
 			this.matrixStop.setAccelerator(Common.getShortcut(settings, Settings.STOP_MATRIX));
-		}, "Error on set tooltips or images"));
+		}, R.MAIN_CONTROLLER_ERROR_ON_SET_TOOLTIP.get()));
 	}
 
 	private String shortcutsName(String shortName)
@@ -280,7 +280,7 @@ public class MainController implements Initializable, ContainingParent
 		Common.addIcons(this.stage);
 		initializeButtons(settings);
 
-		Menu wizard = new Menu("Wizard");
+		Menu wizard = new Menu(R.COMMON_WIZARD.get());
 		wizard.setId("wizard");
 		this.menuHelp.getItems().add(0, wizard);
 
@@ -315,7 +315,7 @@ public class MainController implements Initializable, ContainingParent
 					map.get(wizardCategory).getItems().add(menuItem);
 				});
 
-		Menu menuAll = new Menu("All");
+		Menu menuAll = new Menu(R.COMMON_ALL.get());
 		menuAll.getItems().addAll(map.values().stream()
 				.map(Menu::getItems)
 				.flatMap(Collection::stream)
@@ -349,68 +349,68 @@ public class MainController implements Initializable, ContainingParent
 	//region Configuration
 	public void openProject(ActionEvent actionEvent)
 	{
-		Common.tryCatch(() -> this.model.openProject(null, this.projectPane), "Error on load configuration");
+		Common.tryCatch(() -> this.model.openProject(null, this.projectPane), R.MAIN_CONTROLLER_ERROR_ON_LOAD_CONF.get());
 	}
 
 	public void createProject(ActionEvent actionEvent)
 	{
-		Common.tryCatch(() -> this.model.createNewProject(this.projectPane), "Error on create new configuration");
+		Common.tryCatch(() -> this.model.createNewProject(this.projectPane), R.MAIN_CONTROLLER_ERROR_ON_CREATE_NEW_CONF.get());
 	}
 
 	public void projectFromGit(ActionEvent actionEvent)
 	{
-		Common.tryCatch(() -> this.model.projectFromGit(this.projectPane), "Error on clone project from git");
+		Common.tryCatch(() -> this.model.projectFromGit(this.projectPane), R.MAIN_CONTROLLER_ERROR_ON_CLONE_PROJECT.get());
 	}
 	//endregion
 
 	//region Dictionary
 	public void loadDictionary(ActionEvent event)
 	{
-		Common.tryCatch(() -> this.model.loadDictionary(null, null), "Error on load dictionary");
+		Common.tryCatch(() -> this.model.loadDictionary(null, null), R.MAIN_CONTROLLER_ERROR_ON_LOAD_DIC.get());
 	}
 
 	public void newDictionary(ActionEvent event)
 	{
-		Common.tryCatch(this.model::newDictionary, "Error on create new dictionary");
+		Common.tryCatch(this.model::newDictionary, R.MAIN_CONTROLLER_ERROR_ON_CREATE_DIC.get());
 	}
 	//endregion
 
 	//region System vars
 	public void loadSystemVars(ActionEvent event)
 	{
-		Common.tryCatch(() -> this.model.loadSystemVars(null), "Error on load system vars");
+		Common.tryCatch(() -> this.model.loadSystemVars(null), R.MAIN_CONTROLLER_ERROR_ON_LOAD_VARS.get());
 	}
 
 	public void newSystemVars(ActionEvent event)
 	{
-		Common.tryCatch(this.model::newSystemVars, "Error on create new system vars");
+		Common.tryCatch(this.model::newSystemVars, R.MAIN_CONTROLLER_ERROR_ON_CREATE_VARS.get());
 	}
 	//endregion
 
 	//region Matrix
 	public void loadMatrix(ActionEvent event)
 	{
-		Common.tryCatch(() -> this.model.loadMatrix(null), "Error on load matrix");
+		Common.tryCatch(() -> this.model.loadMatrix(null), R.MAIN_CONTROLLER_ERROR_ON_LOAD_MATRIX.get());
 	}
 
 	public void newMatrix(ActionEvent event)
 	{
-		Common.tryCatch(this.model::newMatrix, "Error on create new matrix");
+		Common.tryCatch(this.model::newMatrix, R.MAIN_CONTROLLER_ERROR_ON_CREATE_MATRIX.get());
 	}
 
 	public void newLibrary(ActionEvent event)
 	{
-		Common.tryCatch(this.model::newLibrary, "Error on create new matrix");
+		Common.tryCatch(this.model::newLibrary, R.MAIN_CONTROLLER_ERROR_ON_CREATE_MATRIX.get());
 	}
 
 	public void startMatrix(ActionEvent actionEvent)
 	{
-		Common.tryCatch(() -> this.model.startMatrix(currentDocument()), "Error on start matrix");
+		Common.tryCatch(() -> this.model.startMatrix(currentDocument()), R.MAIN_CONTROLLER_ERROR_ON_START_MATRIX.get());
 	}
 
 	public void stopMatrix(ActionEvent actionEvent)
 	{
-		Common.tryCatch(() -> this.model.stopMatrix(currentDocument()), "Error on stop matrix");
+		Common.tryCatch(() -> this.model.stopMatrix(currentDocument()), R.MAIN_CONTROLLER_ERROR_ON_STOP_MATRIX.get());
 	}
 
 	public void matrixSchedule(ActionEvent event)
@@ -420,12 +420,12 @@ public class MainController implements Initializable, ContainingParent
 
 	public void runFromFile(ActionEvent actionEvent)
 	{
-		Common.tryCatch(this.model::runMatrixFromFile, "Error on run matrix from file");
+		Common.tryCatch(this.model::runMatrixFromFile, R.MAIN_CONTROLLER_ERROR_ON_RUN_MATRIX.get());
 	}
 
 	public void openReport(ActionEvent actionEvent)
 	{
-		Common.tryCatch(this.model::openReport, "Error on open report");
+		Common.tryCatch(this.model::openReport, R.MAIN_CONTROLLER_ERROR_ON_OPEN_REPORT.get());
 	}
 
 	public void addToToolbar(String fullPath, String visibleName)
@@ -436,27 +436,27 @@ public class MainController implements Initializable, ContainingParent
 		menuButton.setId("splitMenuButtonToolbar");
 		menuButton.getStyleClass().addAll(CssVariables.TRANSPARENT_BACKGROUND);
 
-		menuButton.setOnAction(e -> Common.tryCatch(() -> this.model.runMatrixFromFile(new File(fullPath)), "Error on start matrix"));
+		menuButton.setOnAction(e -> Common.tryCatch(() -> this.model.runMatrixFromFile(new File(fullPath)), R.MAIN_CONTROLLER_ERROR_ON_START_MATRIX.get()));
 
-		MenuItem remove = new MenuItem("Remove");
+		MenuItem remove = new MenuItem(R.COMMON_REMOVE.get());
 		remove.setOnAction(e -> {
-			Common.tryCatch(() -> this.model.removeFromToolbar(fullPath), "Error on remove from toolbar");
+			Common.tryCatch(() -> this.model.removeFromToolbar(fullPath), R.MAIN_CONTROLLER_ERROR_ON_TOOLBAR.get());
 			this.mainToolbar.getItems().remove(menuButton);
 		});
 
-		MenuItem open = new MenuItem("Open");
-		open.setOnAction(e -> Common.tryCatch(() -> this.model.loadMatrix(fullPath), "Error on open matrix"));
+		MenuItem open = new MenuItem(R.COMMON_OPEN.get());
+		open.setOnAction(e -> Common.tryCatch(() -> this.model.loadMatrix(fullPath), R.MAIN_CONTROLLER_ERROR_ON_OPEN_MATRIX.get()));
 
-		MenuItem rename = new MenuItem("Rename");
+		MenuItem rename = new MenuItem(R.COMMON_RENAME.get());
 		rename.setOnAction(e -> Common.tryCatch(() ->
 		{
-			Optional<String> newName = DialogsHelper.showInputDialog("Enter a new name", visibleName);
+			Optional<String> newName = DialogsHelper.showInputDialog(R.MAIN_CONTROLLER_ENTER_NAME.get(), visibleName);
 			if (newName.isPresent())
 			{
 				this.model.renameFromToolbar(fullPath, newName.get());
 				menuButton.setText(newName.get());
 			}
-		}, "Error on rename"));
+		}, R.MAIN_CONTROLLER_ERROR_ON_RENAME.get()));
 
 		menuButton.getItems().addAll(remove, open, rename);
 		this.mainToolbar.getItems().add(menuButton);
@@ -466,150 +466,150 @@ public class MainController implements Initializable, ContainingParent
 	//region Plain text
 	public void loadPlainText(ActionEvent event)
 	{
-		Common.tryCatch(() -> this.model.loadPlainText(null), "Error on load plain text");
+		Common.tryCatch(() -> this.model.loadPlainText(null), R.MAIN_CONTROLLER_ERROR_ON_LOAD_PLAIN.get());
 	}
 
 	public void newPlainText(ActionEvent event)
 	{
-		Common.tryCatch(this.model::newPlainText, "Error on create new plain text");
+		Common.tryCatch(this.model::newPlainText, R.MAIN_CONTROLLER_ERROR_ON_CREATE_PLAIN.get());
 	}
 	//endregion
 
 	//region Csv
 	public void loadCsv(ActionEvent event)
 	{
-		Common.tryCatch(() -> this.model.loadCsv(null), "Error on load csv file");
+		Common.tryCatch(() -> this.model.loadCsv(null), R.MAIN_CONTROLLER_ERROR_ON_LOAD_CSV.get());
 	}
 
 	public void newCsv(ActionEvent event)
 	{
-		Common.tryCatch(this.model::newCsv, "Error on create new csv file");
+		Common.tryCatch(this.model::newCsv, R.MAIN_CONTROLLER_ERROR_ON_CREATE_CSV.get());
 	}
 	//endregion
 
 	//region Document
 	public void saveAsDocument(ActionEvent event)
 	{
-		Common.tryCatch(() -> this.model.documentSaveAs(currentDocument()), "Error on save document as");
+		Common.tryCatch(() -> this.model.documentSaveAs(currentDocument()), R.MAIN_CONTROLLER_ERROR_ON_SAVE_DOC_AS.get());
 	}
 
 	public void saveDocument(ActionEvent event)
 	{
-		Common.tryCatch(() -> this.model.documentSave(currentDocument()), "Error on save document");
+		Common.tryCatch(() -> this.model.documentSave(currentDocument()), R.MAIN_CONTROLLER_ERROR_ON_SAVE_DOC.get());
 	}
 
 	public void saveAll(ActionEvent actionEvent)
 	{
-		Common.tryCatch(this.model::documentsSaveAll, "Error on save all");
+		Common.tryCatch(this.model::documentsSaveAll, R.MAIN_CONTROLLER_ERROR_ON_SAVE_ALL.get());
 	}
 
 	public void undo(ActionEvent actionEvent)
 	{
-		Common.tryCatch(() -> this.model.undo(currentDocument()), "Error on undo document");
+		Common.tryCatch(() -> this.model.undo(currentDocument()), R.MAIN_CONTROLLER_ERROR_ON_UNDO.get());
 	}
 
 	public void redo(ActionEvent actionEvent)
 	{
-		Common.tryCatch(() -> this.model.redo(currentDocument()), "Error on redo document");
+		Common.tryCatch(() -> this.model.redo(currentDocument()), R.MAIN_CONTROLLER_ERROR_ON_REDO.get());
 	}
 	//endregion
 
 	//region other events
 	public void search(ActionEvent actionEvent)
 	{
-		Common.tryCatch(this.model::search, "Error on show search");
+		Common.tryCatch(this.model::search, R.MAIN_CONTROLLER_ERROR_ON_SHOW_SEARCH.get());
 	}
 
 	public void showStore(ActionEvent actionEvent)
 	{
-		Common.tryCatch(this.model::store, "Error on show store");
+		Common.tryCatch(this.model::store, R.MAIN_CONTROLLER_ERROR_ON_SHOW_STORE.get());
 	}
 
 	public void showAllTabs(ActionEvent actionEvent)
 	{
-		Common.tryCatch(this::showAllTabs, "Error on show all tabs");
+		Common.tryCatch(this::showAllTabs, R.MAIN_CONTROLLER_ERROR_ALL_TABS.get());
 	}
 
 	public void closeApplication(ActionEvent actionEvent)
 	{
-		Common.tryCatch(this.model::closeApplication, "Error on close application");
+		Common.tryCatch(this.model::closeApplication, R.MAIN_CONTROLLER_ERROR_ON_CLOSE_APP.get());
 	}
 
 	public void showSettingsPanel(ActionEvent actionEvent)
 	{
-		Common.tryCatch(() -> new SettingsPanel(this.settings).show(), "Error on show settings panel");
+		Common.tryCatch(() -> new SettingsPanel(this.settings).show(), R.MAIN_CONTROLLER_ERROR_ON_SHOW_PANEL.get());
 	}
 
 	public void showAboutProgram(ActionEvent actionEvent)
 	{
-		Common.tryCatch(DialogsHelper::showAboutProgram, "Error on show about program");
+		Common.tryCatch(DialogsHelper::showAboutProgram, R.MAIN_CONTROLLER_ERROR_ON_SHOW_ABOUT.get());
 	}
 
     public void showActionsHelp(ActionEvent event)
     {
-        Common.tryCatch(() -> DialogsHelper.showActionsHelp(factory), "Error on show actions panel");
+        Common.tryCatch(() -> DialogsHelper.showActionsHelp(factory), R.MAIN_CONTROLLER_ERROR_ACTIONS_PANEL.get());
     }
 
 	public void showCalculator(ActionEvent event)
 	{
-		Common.tryCatch(model::showCalculator, "Error on show calculator");
+		Common.tryCatch(model::showCalculator, R.MAIN_CONTROLLER_ERROR_ON_SHOW_CALC.get());
 	}
 
 	public void showCalculator(AbstractEvaluator evaluator)
 	{
-		DialogsHelper.showHelperDialog("<none>", evaluator, "'Helper'", null);
+		DialogsHelper.showHelperDialog("<none>", evaluator, R.MAIN_CONTROLLER_SHOW_CALC_VALUE.get(), null);
 	}
 	//endregion
 
 	//region Git
 	public void gitStatus(ActionEvent event)
 	{
-		Common.tryCatch(this.model::gitStatus, "Error on show status");
+		Common.tryCatch(this.model::gitStatus, R.MAIN_CONTROLLER_ERROR_ON_SHOW_STATUS.get());
 	}
 
 	public void gitMerge(ActionEvent event)
 	{
-		Common.tryCatch(this.model::gitMerge, "Error on merge");
+		Common.tryCatch(this.model::gitMerge, R.MAIN_CONTROLLER_ERROR_ON_MERGE.get());
 	}
 
 	public void gitBranches(ActionEvent event)
 	{
-		Common.tryCatch(this.model::gitBranches, "Error on show branches");
+		Common.tryCatch(this.model::gitBranches, R.MAIN_CONTROLLER_ERROR_ON_BRANCHES.get());
 	}
 
 	public void gitTags(ActionEvent event)
 	{
-		Common.tryCatch(this.model::gitTags, "Error on show tags");
+		Common.tryCatch(this.model::gitTags, R.MAIN_CONTROLLER_ERROR_ON_SHOW_TAGS.get());
 	}
 
 	public void gitChangeCredential(ActionEvent event)
 	{
-		Common.tryCatch(this.model::changeCredential, "Error on show status");
+		Common.tryCatch(this.model::changeCredential, R.MAIN_CONTROLLER_ERROR_ON_STATUS.get());
 	}
 
 	public void gitClone(ActionEvent event)
 	{
-		Common.tryCatch(() -> this.model.projectFromGit(this.projectPane), "Error on clone repository");
+		Common.tryCatch(() -> this.model.projectFromGit(this.projectPane), R.MAIN_CONTROLLER_ERROR_ON_REPOSITORY.get());
 	}
 
 	public void gitCommit(ActionEvent event)
 	{
-		Common.tryCatch(this.model::gitCommit, "Error on commit");
+		Common.tryCatch(this.model::gitCommit, R.MAIN_CONTROLLER_ERROR_ON_COMMIT.get());
 	}
 
 	public void gitPush(ActionEvent event)
 	{
-		Common.tryCatch(this.model::gitPush, "Error on push");
+		Common.tryCatch(this.model::gitPush, R.MAIN_CONTROLLER_ERROR_ON_PUSH.get());
 	}
 
 	public void gitPull(ActionEvent event)
 	{
-		Common.tryCatch(this.model::gitPull, "Error on pull");
+		Common.tryCatch(this.model::gitPull, R.MAIN_CONTROLLER_ERROR_ON_PULL.get());
 	}
 
 	public void gitReset(ActionEvent event)
 	{
-		Common.tryCatch(this.model::gitReset, "Error on reset");
+		Common.tryCatch(this.model::gitReset, R.MAIN_CONTROLLER_ERROR_ON_RESET.get());
 	}
 	//endregion
 
@@ -699,7 +699,7 @@ public class MainController implements Initializable, ContainingParent
 					}
 				}
 			}
-		}, "Error on set Shortcuts"));
+		}, R.MAIN_CONTROLLER_ERROR_ON_SET_SHORTCUTS.get()));
 	}
 
 	public void openMainLog(ActionEvent actionEvent)
@@ -726,12 +726,12 @@ public class MainController implements Initializable, ContainingParent
 					this.model.removeMatrixFromSettings(lastMatrix.getKey());
 				}
 
-			}, "Error on load matrix"));
+			}, R.MAIN_CONTROLLER_ERROR_ON_LOAD_MATRIX.get()));
 			fileLastOpenMatrix.getItems().add(menuItem);
 		});
 		fileLastOpenMatrix.getItems().add(new SeparatorMenuItem());
-		MenuItem clearList = new MenuItem("Clear list");
-		clearList.setOnAction(actionEvent -> Common.tryCatch(model::clearFileLastOpenMatrix, "Error on clear list"));
+		MenuItem clearList = new MenuItem(R.MAIN_CONTROLLER_CLEAR_LIST.get());
+		clearList.setOnAction(actionEvent -> Common.tryCatch(model::clearFileLastOpenMatrix, R.MAIN_CONTROLLER_ERROR_ON_CLEAR_LIST.get()));
 		fileLastOpenMatrix.getItems().add(clearList);
 	}
 
@@ -858,7 +858,7 @@ public class MainController implements Initializable, ContainingParent
 		dialog.getDialogPane().setPrefWidth(432);
 		dialog.getDialogPane().setPadding(new Insets(0,0,0,-11));
 		dialog.setHeaderText("");
-		dialog.setTitle("Choose tab");
+		dialog.setTitle(R.MAIN_CONTROLLER_CHOOSE_TAB.get());
 
 		listView.setOnMouseClicked(mouseEvent ->
 		{
@@ -912,7 +912,7 @@ public class MainController implements Initializable, ContainingParent
 				}
 				catch (Exception e)
 				{
-					logger.error("Error on update RAM");
+					logger.error(R.MAIN_CONTROLLER_ERROR_ON_RAM);
 					logger.error(e.getMessage(), e);
 					return;
 				}

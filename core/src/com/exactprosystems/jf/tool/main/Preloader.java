@@ -10,6 +10,7 @@
 package com.exactprosystems.jf.tool.main;
 
 import com.exactprosystems.jf.api.common.DateTime;
+import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.common.version.VersionInfo;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.CssVariables;
@@ -45,7 +46,7 @@ public class Preloader extends javafx.application.Preloader
 
 		anchorPane.setId("preloaderPane");
 
-		Text copyrightText = new Text("@ 2009-" + DateTime.getYears(DateTime.current()) + " Exactpro Systems. All rights reserved.");
+		Text copyrightText = new Text(String.format(R.PRELOADER_COPYRIGHT.get(),DateTime.getYears(DateTime.current())));
 		copyrightText.setId("textLogo");
 
 		AnchorPane.setBottomAnchor(copyrightText, GRID_SIZE * 2);
@@ -86,7 +87,7 @@ public class Preloader extends javafx.application.Preloader
 		this.preloaderStage = primaryStage;
 		this.preloaderStage.setScene(getScene());
 		this.preloaderStage.initStyle(StageStyle.UNDECORATED);
-		this.preloaderStage.setTitle("Loading...");
+		this.preloaderStage.setTitle(R.PRELOADER_LOADING.get());
 		Common.addIcons(this.preloaderStage);
 		this.preloaderStage.show();
 	}

@@ -210,7 +210,7 @@ public abstract class DialogsHelper
 		DialogsHelper.centreDialog(dialog);
 		Common.addIcons(((Stage) dialog.getDialogPane().getScene().getWindow()));
 		dialog.setTitle(R.DIALOGS_HELPER_SAVE.get());
-		dialog.getDialogPane().setHeaderText(R.DIALOGS_HELPER_SAVE_FILE_HEADER.get());
+		dialog.getDialogPane().setHeaderText(String.format(R.DIALOGS_HELPER_SAVE_FILE_HEADER.get(), fileName));
 		dialog.getDialogPane().setContentText(R.DIALOGS_HELPER_SAVE_FILE_CONTENT.get());
 		dialog.getDialogPane().getButtonTypes().addAll(ButtonType.YES, ButtonType.NO, ButtonType.CANCEL);
 		dialog.getDialogPane().getStylesheets().addAll(Theme.currentThemesPaths());
