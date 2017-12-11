@@ -41,7 +41,6 @@ import com.exactprosystems.jf.tool.custom.label.CommentsLabel;
 import com.exactprosystems.jf.tool.custom.number.NumberSpinner;
 import com.exactprosystems.jf.tool.custom.number.NumberTextField;
 import com.exactprosystems.jf.tool.custom.tab.CustomTab;
-import com.exactprosystems.jf.tool.custom.tab.CustomTabPane;
 import com.exactprosystems.jf.tool.documents.AbstractDocumentController;
 import com.exactprosystems.jf.tool.helpers.DialogsHelper;
 import com.exactprosystems.jf.tool.matrix.MatrixFx;
@@ -532,7 +531,6 @@ public class DisplayDriverFx implements DisplayDriver
 		{
 			Common.sizeHeightComments(label, 0, 1, 2);
 		}
-		label.prefWidthProperty().bind(CustomTabPane.getInstance().getScene().getWindow().widthProperty().subtract(20 + 15));
 		label.setPrefHeight(Common.setHeightComments(label.getText()));
 		label.setListener(() ->
 		{

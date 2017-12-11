@@ -128,18 +128,6 @@ public class Common
 		thread.setName("Focused node with delay : " + node + " , thread id : " + thread.getId());
 		thread.start();
 
-	/*	Thread thread = new Thread(new Task<Void>()
-		{
-			@Override
-			protected Void call() throws Exception
-			{
-				Thread.sleep(delay);
-				Common.runLater(node::requestFocus);
-				return null;
-			}
-		});
-		thread.setName("Focused node with delay : " + node + " , thread id : " + thread.getId());
-		thread.start();*/
 	}
 
 	public static boolean appIsFocused()
