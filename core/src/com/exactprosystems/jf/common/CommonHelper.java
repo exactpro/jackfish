@@ -11,16 +11,26 @@
 package com.exactprosystems.jf.common;
 
 import com.exactprosystems.jf.actions.ReadableValue;
+import com.exactprosystems.jf.api.common.IFactory;
+import com.exactprosystems.jf.api.common.IPool;
+import org.apache.log4j.Logger;
 
 import java.io.*;
+import java.net.URL;
+import java.net.URLClassLoader;
 import java.util.Arrays;
+import java.util.Iterator;
 import java.util.List;
+import java.util.ServiceLoader;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 public class CommonHelper
 {
     private final static String UTF8 = "UTF-8"; 
-    
+
+    private CommonHelper()
+	{}
     
     public static Reader readerFromFileName(String fileName) throws UnsupportedEncodingException, FileNotFoundException
     {
@@ -59,4 +69,46 @@ public class CommonHelper
 		return convertEnumsToReadableList(array, en -> "");
 	}
 
+	/**
+	 * Use this method for load factory for any IPool
+	 * @param clazz from which will taking class loader
+	 * @param factoryClass instance this class will return
+	 * @param jarName path to jar, which will loaded
+	 * @param exceptionSupplier exception, if something will wrong
+	 * @param logger for notice the main exception
+	 * @return instance of loaded IFactory
+	 *
+	 * @see IFactory
+	 * @see IPool
+	 */
+	public static <R extends IFactory, X extends Throwable> R loadFactory(Class<? extends IPool> clazz, Class<R> factoryClass, String jarName, Supplier<X> exceptionSupplier, Logger logger) throws X
+	{
+		if (!new File(jarName).exists() || !new File(jarName).isFile())
+		{
+			throw exceptionSupplier.get();
+		}
+		try
+		{
+			ClassLoader parent = clazz.getClassLoader();
+			URLClassLoader classLoader = new URLClassLoader(new URL[]{new URL("file:" + jarName)}, parent);
+
+			ServiceLoader<R> loader = ServiceLoader.load(factoryClass, classLoader);
+			Iterator<R> iterator = loader.iterator();
+			R factory = null;
+			if (iterator.hasNext())
+			{
+				factory = iterator.next();
+			}
+			if (factory == null)
+			{
+				throw exceptionSupplier.get();
+			}
+			return factory;
+		}
+		catch (Exception e)
+		{
+			logger.error(e.getMessage(), e);
+			throw exceptionSupplier.get();
+		}
+	}
 }

@@ -23,11 +23,10 @@ import com.exactprosystems.jf.documents.config.AppEntry;
 import com.exactprosystems.jf.documents.config.Configuration;
 import com.exactprosystems.jf.documents.config.Parameter;
 import com.exactprosystems.jf.documents.guidic.GuiDictionary;
+import com.exactprosystems.jf.exceptions.app.ApplicationWasClosedException;
 import org.apache.log4j.Logger;
 
 import java.io.Reader;
-import java.net.URL;
-import java.net.URLClassLoader;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentSkipListSet;
@@ -107,7 +106,7 @@ public class ApplicationPool implements IApplicationPool
 			}
 
 			// prepare initial parameters
-			AppEntry entry = this.parametersEntry(id);
+			AppEntry entry = this.getEntryById(id);
 
 			Map<String, String> driverParameters = this.getDriverParameters(entry);
 			final IApplicationFactory applicationFactory = this.loadFactory(id, entry);
@@ -145,7 +144,7 @@ public class ApplicationPool implements IApplicationPool
 			}
 			
 			// prepare initial parameters
-			AppEntry entry = this.parametersEntry(id);
+			AppEntry entry = this.getEntryById(id);
 
 			Map<String, String> driverParameters = this.getDriverParameters(entry);
 			final IApplicationFactory applicationFactory = this.loadFactory(id, entry);
@@ -208,11 +207,11 @@ public class ApplicationPool implements IApplicationPool
 		{
 			if (connection == null || !connection.isGood())
 			{
-				throw new Exception(String.format(R.APP_POOL_APP_IS_NOT_LOADED.get(), connection));
+				throw new ApplicationWasClosedException(connection == null ? "unknown" : connection.getId());
 			}
-			
+
 			IApplication app = connection.getApplication();
-            this.connections.remove(connection);
+			this.connections.remove(connection);
 			app.stop(needKill);
 		}
 		catch (Exception e)
@@ -224,7 +223,7 @@ public class ApplicationPool implements IApplicationPool
 	}
 
 	@Override
-	public void stopAllApplications(boolean needKill) throws Exception
+	public void stopAllApplications(boolean needKill)
 	{
 		for (AppConnection connection : this.connections.toArray(new AppConnection[this.connections.size()]))
 		{
@@ -263,19 +262,14 @@ public class ApplicationPool implements IApplicationPool
 	//region private methods
 	private IApplicationFactory loadFactory(String id) throws Exception
 	{
-		AppEntry entry = this.parametersEntry(id);
+		AppEntry entry = this.getEntryById(id);
 		return this.loadFactory(id, entry);
 	}
 
-	private AppEntry parametersEntry(String id) throws Exception
+	private AppEntry getEntryById(String id) throws Exception
 	{
-		AppEntry entry = this.factory.getConfiguration().getAppEntry(id);
-		if (entry == null)
-		{
-			throw new Exception(id + R.COMMON_IS_NOT_FOUND.get());
-		}
-		
-		return entry;
+		return Optional.ofNullable(this.factory.getConfiguration().getAppEntry(id))
+				.orElseThrow(() -> new Exception(String.format("Application with id %s not found", id)));
 	}
 
 	private IApplicationFactory loadFactory(String id, AppEntry entry) throws Exception
@@ -292,19 +286,11 @@ public class ApplicationPool implements IApplicationPool
 					String jarName = entry.get(Configuration.appJar);
 					jarName = MainRunner.makeDirWithSubstitutions(jarName);
 
-					ClassLoader parent = this.getClass().getClassLoader();
-					URLClassLoader classLoader = new URLClassLoader(new URL[]{new URL("file:" + jarName)}, parent);
-
-					ServiceLoader<IApplicationFactory> loader = ServiceLoader.load(IApplicationFactory.class, classLoader);
-					Iterator<IApplicationFactory> iterator = loader.iterator();
-					if (iterator.hasNext())
-					{
-						applicationFactory = iterator.next();
-					}
-					if (applicationFactory == null)
-					{
-						throw new Exception(String.format(R.APP_POOL_LOAD_FACTORY.get(), id));
-					}
+					applicationFactory = CommonHelper.loadFactory(this.getClass()
+							, IApplicationFactory.class
+							, jarName
+							, () -> new Exception(String.format(R.APP_POOL_LOAD_FACTORY.get(), id))
+							, logger);
 
 					GuiDictionary dictionary = this.getDictionary(entry);
 					applicationFactory.init(dictionary);
