@@ -325,11 +325,13 @@ public class XpathWizard extends AbstractWizard
 	@Override
 	protected Supplier<List<WizardCommand>> getCommands()
 	{
+		//TODO remove unnecessary copy control
 		AbstractControl copy = this.currentControl;
 		try
 		{
 			copy = AbstractControl.createCopy(this.currentControl);
 			copy.set(AbstractControl.xpathName, this.cfMainExpression.getText());
+			this.currentControl.set(AbstractControl.xpathName, this.cfMainExpression.getText());
 		}
 		catch (Exception e)
 		{
@@ -338,8 +340,8 @@ public class XpathWizard extends AbstractWizard
 
 		AbstractControl replace = copy;
 		return () -> CommandBuilder.start()
-				.replaceControl(this.currentSection, this.currentControl, replace)
-				.displayControl(this.currentDictionary, this.currentWindow, this.currentSection, replace)
+//				.replaceControl(this.currentSection, this.currentControl, replace)
+				.displayControl(this.currentDictionary, this.currentWindow, this.currentSection, this.currentControl)
 				.build();
 	}
 
