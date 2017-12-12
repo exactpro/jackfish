@@ -363,6 +363,13 @@ public class Do
 		return new Operation().click();
 	}
 
+	static final String clickWithAction = "Do mouse @action for the current component\nIf current component is table, then click to cell with index @x column and @y row";
+	@DescriptionAttribute(text = Do.clickWithAction)
+	public static Operation click(@FieldParameter(name = "action") MouseAction action)
+	{
+		return new Operation().click(action);
+	}
+
 	static final String clickWithCoor = "Click to current component with coordinates @x and @y.\nIf current component is table, then click to cell with index @x column and @y row";
 	@DescriptionAttribute(text = Do.clickWithCoor)
 	public static Operation click(@FieldParameter(name = "x") int x, @FieldParameter(name = "y") int y)

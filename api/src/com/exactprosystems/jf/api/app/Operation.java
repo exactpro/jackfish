@@ -484,6 +484,13 @@ public class Operation implements Iterable<Part>, Serializable
 		return this;
 	}
 
+	@DescriptionAttribute(text = Do.clickWithAction)
+	public Operation click(@FieldParameter(name = "action") MouseAction action)
+	{
+		this.list.add(new Part(OperationKind.CLICK).setMouseAction(action));
+		return this;
+	}
+
 	@DescriptionAttribute(text = Do.clickWithCoor)
 	public Operation click(@FieldParameter(name = "x") int x, @FieldParameter(name = "y") int y)
 	{
