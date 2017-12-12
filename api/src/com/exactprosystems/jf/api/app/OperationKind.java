@@ -11,10 +11,7 @@ package com.exactprosystems.jf.api.app;
 
 import com.exactprosystems.jf.api.common.Str;
 import com.exactprosystems.jf.api.conditions.ColorCondition;
-import com.exactprosystems.jf.api.error.app.ControlNotSupportedException;
-import com.exactprosystems.jf.api.error.app.ElementNotEnabled;
-import com.exactprosystems.jf.api.error.app.ElementNotFoundException;
-import com.exactprosystems.jf.api.error.app.OperationNotAllowedException;
+import com.exactprosystems.jf.api.error.app.*;
 
 import java.awt.*;
 import java.rmi.RemoteException;
@@ -188,7 +185,7 @@ public enum OperationKind
 		{
 			Locator locator = holder.get(LocatorKind.Element);
 			boolean onlyVisible = locator != null && locator.getVisibility() == Visibility.Visible;
-			result.setList(executor.getList(holder.getList(), onlyVisible));
+			result.setList(executor.getList(holder.getValue(), onlyVisible));
 			return true;
 		}
 	},
@@ -1079,7 +1076,48 @@ public enum OperationKind
 
 			return true;
 		}
-	}, 
+	},
+
+	USE_CELL_COMPONENT("useCell")
+	{
+		@Override
+		protected <T> boolean operateDerived(Part part, OperationExecutor<T> executor, Holder<T> holder, OperationResult result) throws Exception
+		{
+			T newOwner = executor.lookAtTable(holder.getValue(), holder.get(LocatorKind.Rows), holder.get(LocatorKind.Header), part.x, part.y);
+			holder.put(LocatorKind.Element, part.locator);
+			List<T> all = executor.findAll(part.locator.getControlKind(), newOwner, part.locator);
+			if (all.size() > 1)
+			{
+				throw new TooManyElementsException(part.locator);
+			}
+			if (all.isEmpty())
+			{
+				throw new ElementNotFoundException(part.locator);
+			}
+			holder.setValue(all.get(0));
+			return true;
+		}
+
+		@Override
+		protected String formulaTemplate(Part part)
+		{
+			if (part.y == Integer.MIN_VALUE)
+			{
+				return part.locatorId == null ? ".use(%3$s, %15$s)" : ".use(%3$s, %13$s)";
+			}
+			else
+			{
+				return part.locatorId == null ? ".use(%3$s, %4$s, %15$s)" : ".use(%3$s, %4$s, %13$s)";
+			}
+
+		}
+
+		@Override
+		protected boolean checkEnabled()
+		{
+			return true;
+		}
+	},
 
 	NONE("none") 
 	{
@@ -1128,22 +1166,22 @@ public enum OperationKind
 	public String toFormula(Part part)
 	{
 		return String.format(formulaTemplate(part),
-								part.operation,
-								part.i,
-								part.x,
-								part.y,
-								part.d,
-								part.b,
-								part.str,
-								part.text,
-								part.valueCondition,
-								part.colorCondition,
-								part.mouse,
-								part.key,
-								part.locatorId,
-								part.locatorKind,
-								part.locator,
-								part.toAppear,
+								part.operation,			//1
+								part.i,					//2
+								part.x,					//3
+								part.y,					//4
+								part.d,					//5
+								part.b,					//6
+								part.str,				//7
+								part.text,				//8
+								part.valueCondition,	//9
+								part.colorCondition,	//10
+								part.mouse,				//11
+								part.key,				//12
+								part.locatorId,			//13
+								part.locatorKind,		//14
+								part.locator,			//15
+								part.toAppear,			//16
 								pruneList(part.list)
 							);
 	}

@@ -647,5 +647,33 @@ public class Operation implements Iterable<Part>, Serializable
 		return this;
 	}
 
+	@DescriptionAttribute(text = Do.useLocatorForTableCell)
+	public Operation use(@FieldParameter(name = "x") int x, @FieldParameter(name = "y") int y, @FieldParameter(name = "locator") Locator locator)
+	{
+		this.list.add(new Part(OperationKind.USE_CELL_COMPONENT).setX(x).setY(y).setLocator(locator));
+		return this;
+	}
+
+	@DescriptionAttribute(text = Do.useLocatorIdForTableCell)
+	public Operation use(@FieldParameter(name = "x") int x, @FieldParameter(name = "y") int y, @FieldParameter(name = "locatorId") String locatorId)
+	{
+		this.list.add(new Part(OperationKind.USE_CELL_COMPONENT).setLocatorKind(LocatorKind.Element).setX(x).setY(y).setLocatorId(locatorId));
+		return this;
+	}
+
+	@DescriptionAttribute(text = Do.useLocatorForTableRow)
+	public Operation use(@FieldParameter(name = "y") int y, @FieldParameter(name = "locator") Locator locator)
+	{
+		this.list.add(new Part(OperationKind.USE_CELL_COMPONENT).setY(y).setLocator(locator));
+		return this;
+	}
+
+	@DescriptionAttribute(text = Do.useLocatorIdForTableRow)
+	public Operation use(@FieldParameter(name = "y") int y, @FieldParameter(name = "locatorId") String locatorId)
+	{
+		this.list.add(new Part(OperationKind.USE_CELL_COMPONENT).setLocatorKind(LocatorKind.Element).setY(y).setLocatorId(locatorId));
+		return this;
+	}
+
 	protected List<Part> list;
 }
