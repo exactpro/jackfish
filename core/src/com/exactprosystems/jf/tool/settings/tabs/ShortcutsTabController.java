@@ -10,6 +10,7 @@
 package com.exactprosystems.jf.tool.settings.tabs;
 
 import com.exactprosystems.jf.api.common.Str;
+import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.common.Settings;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.ContainingParent;
@@ -277,8 +278,8 @@ public class ShortcutsTabController implements Initializable, ContainingParent, 
 	{
 		this.treeView.getRoot().getChildren().clear();
 
-		TreeItem<GridPane> treeItemNavigation = new TreeItem<>(createGridPane("Navigation"));
-		TreeItem<GridPane> treeItemActions = new TreeItem<>(createGridPane("Actions"));
+		TreeItem<GridPane> treeItemNavigation = new TreeItem<>(createGridPane(R.SHORTCUTS_TAB_CONTR_NAVIGATION.get()));
+		TreeItem<GridPane> treeItemActions = new TreeItem<>(createGridPane(R.SHORTCUTS_TAB_CONTR_ACTIONS.get()));
 
 		this.treeView.getRoot().getChildren().addAll(treeItemNavigation, treeItemActions);
 
@@ -410,7 +411,7 @@ public class ShortcutsTabController implements Initializable, ContainingParent, 
 						{
 							this.textField.getStyleClass().add(CssVariables.INCORRECT_FIELD);
 						}
-						this.textField.setTooltip(new Tooltip("This shortcut used " + otherShortcut));
+						this.textField.setTooltip(new Tooltip(String.format(R.SHORTCUTS_TAB_CONTR_SHORTCUTS_USED.get(), otherShortcut)));
 					}
 					else
 					{

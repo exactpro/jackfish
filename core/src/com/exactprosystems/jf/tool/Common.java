@@ -12,6 +12,7 @@ package com.exactprosystems.jf.tool;
 import com.exactprosystems.jf.api.app.IControl;
 import com.exactprosystems.jf.api.common.DateTime;
 import com.exactprosystems.jf.api.common.Str;
+import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.api.error.app.ProxyException;
 import com.exactprosystems.jf.common.Settings;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
@@ -181,7 +182,7 @@ public class Common
 		}
 		catch (IOException e)
 		{
-			throw new RuntimeException("Can't load resource: " + resource, e);
+			throw new RuntimeException(R.COMM_CANT_LOAD_RESOURCE.get() + resource, e);
 		}
 	}
 
@@ -597,7 +598,6 @@ public class Common
 
 	public static boolean confirmFileDelete(String name)
 	{
-		return DialogsHelper.showQuestionDialog("Removing", String.format("Are you sure you want "
-				+"to remove %s?\nYou can't undo this action.", name));
+		return DialogsHelper.showQuestionDialog(R.COMM_FILE_DELETE_HEADER.get(), String.format(R.COMM_FILE_DELETE_BODY.get(), name));
 	}
 }

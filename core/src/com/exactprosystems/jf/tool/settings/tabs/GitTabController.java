@@ -9,6 +9,7 @@
 
 package com.exactprosystems.jf.tool.settings.tabs;
 
+import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.common.Settings;
 import com.exactprosystems.jf.tool.ContainingParent;
 import com.exactprosystems.jf.tool.custom.controls.field.CustomFieldWithButton;
@@ -44,14 +45,14 @@ public class GitTabController implements Initializable, ContainingParent, ITabHe
 		this.cfKnownHost = new CustomFieldWithButton();
 		this.cfKnownHost.setButtonText("...");
 		this.cfKnownHost.setHandler(e -> {
-			File file = DialogsHelper.showOpenSaveDialog("Choose known host file", "All files", "*", DialogsHelper.OpenSaveMode.OpenFile);
+			File file = DialogsHelper.showOpenSaveDialog(R.GIT_TAB_CONTR_CHOOSE_HOST.get(), "All files", "*", DialogsHelper.OpenSaveMode.OpenFile);
 			Optional.ofNullable(file).map(File::getAbsolutePath).ifPresent(this.cfKnownHost::setText);
 		});
 		this.gridGit.add(this.cfKnownHost, 1, 0);
 		this.cfSSHIdentity = new CustomFieldWithButton();
 		this.cfSSHIdentity.setButtonText("...");
 		this.cfSSHIdentity.setHandler(e -> {
-			File file = DialogsHelper.showOpenSaveDialog("Choose ssh identity file", "All files", "*", DialogsHelper.OpenSaveMode.OpenFile);
+			File file = DialogsHelper.showOpenSaveDialog(R.GIT_TAB_CONTR_CHOOSE_SSH.get(), "All files", "*", DialogsHelper.OpenSaveMode.OpenFile);
 			Optional.ofNullable(file).map(File::getAbsolutePath).ifPresent(this.cfSSHIdentity::setText);
 		});
 		this.gridGit.add(this.cfSSHIdentity, 1, 1);

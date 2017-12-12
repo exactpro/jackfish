@@ -13,6 +13,7 @@ import com.exactprosystems.jf.api.app.AppConnection;
 import com.exactprosystems.jf.api.app.IApplicationFactory;
 import com.exactprosystems.jf.api.app.IApplicationPool;
 import com.exactprosystems.jf.api.common.ParametersKind;
+import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.common.Settings;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.documents.DocumentFactory;
@@ -115,23 +116,23 @@ public class ApplicationConnector
 		AbstractEvaluator evaluator = this.factory.createEvaluator();
 		if (this.appConnection != null)
 		{
-			throw new Exception("You need to stop old application, before run new");
+			throw new Exception(R.APP_CON_STOP_BEFORE_RUN.get());
 		}
 		if (idAppEntry == null)
 		{
-			throw new Exception("You should choose app entry at first.");
+			throw new Exception(R.APP_CON_CLOSE_FIRSTLY.get());
 		}
 		IApplicationPool applicationPool	= this.factory.getConfiguration().getApplicationPool();
 		IApplicationFactory appFactory 		= applicationPool.loadApplicationFactory(idAppEntry);
 
 		String parametersName 		= isStart ? startParameters : connectParameters;
-		String title 				= isStart ? "Start " : "Connect ";
+		String title 				= isStart ? R.COMMON_START.get() : R.COMMON_CONNECT.get();
 		String[] strings 			= appFactory.wellKnownParameters(isStart ? ParametersKind.START : ParametersKind.CONNECT);
 
 		Settings settings = this.factory.getSettings();
 		final Map<String, String> parameters = settings.getMapValues(Settings.APPLICATION + idAppEntry, parametersName, strings);
 
-		ButtonType desision = DialogsHelper.showParametersDialog(title + idAppEntry, parameters, evaluator, str ->
+		ButtonType desision = DialogsHelper.showParametersDialog(title + " "+ idAppEntry, parameters, evaluator, str ->
 		{
 			if (appFactory.canFillParameter(str))
 			{
@@ -165,7 +166,7 @@ public class ApplicationConnector
 			}
 			catch (Exception e)
 			{
-				throw new Exception ("Error in " + name + " = " + expression + " :" + e.getMessage(), e);
+				throw new Exception (R.COMMON_ERROR_IN.get() + " " + name + " = " + expression + " :" + e.getMessage(), e);
 			}
 		}
 		this.task = new Task<Void>()

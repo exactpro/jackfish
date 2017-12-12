@@ -1012,12 +1012,42 @@ public enum R
 	SCHEDULE_REPORT,
 	//endregion
 
-	//region tool.git
+	//region tool.git todo
 	CREDENTIAL_DIALOG_USERNAME,
 	CREDENTIAL_DIALOG_PASSWORD,
 	CREDENTIAL_DIALOG_CREDENTIAL,
 	CREDENTIAL_DIALOG_STORE_CREDENTIAL,
 	//endregion
+
+    //region tool.matrix todo
+    //endregion
+
+    //region tool.newconfig todo
+    //endregion
+
+    //region tool.search
+	SEARCH_SELECT_SCOPES,
+	SEARCH_ERROR_PLAIN_TEXT,
+	SEARCH_ERROR_OPEN_MATRIX,
+	SEARCH_ERROR_OPEN_DICTIONARY,
+	SEARCH_ERROR_OPEN_VARS,
+	SEARCH_ERROR_OPEN_FILE,
+	SEARCH_INVALID_REGEXP,
+	SEARCH_INVALID_FILE_MASK,
+	AGGREGATE_RESULT_SCROLL,
+	AGGREGATE_RESULT_OPEN_AS_PLAIN,
+	AGGREGATE_RESULT_OPEN_AS_DOC,
+    //endregion
+
+    //region tool.settings
+    SETTINGS_PANEL_CONTR_SAVE_PASS,
+    SETTINGS_PANEL_CONTR_SAVE_FAIL,
+	GIT_TAB_CONTR_CHOOSE_HOST,
+	GIT_TAB_CONTR_CHOOSE_SSH,
+	SHORTCUTS_TAB_CONTR_NAVIGATION,
+	SHORTCUTS_TAB_CONTR_ACTIONS,
+	SHORTCUTS_TAB_CONTR_SHORTCUTS_USED,
+    //endregion
 
     //region tool.helpers
     DIALOGS_HELPER_PARAMETERS,
@@ -1255,11 +1285,17 @@ public enum R
 	FX_DOC_FACTORY_ERROR_INFO,
 	//endregion
 
+    APP_CON_STOP_BEFORE_RUN,
+    APP_CON_CLOSE_FIRSTLY,
+    COMM_CANT_LOAD_RESOURCE,
+    COMM_FILE_DELETE_HEADER,
+    COMM_FILE_DELETE_BODY,
 	//endregion
 
 	//region app
 	APP_POOL_APP_IS_NOT_LOADED,
 	APP_POOL_LOAD_FACTORY,
+    APP_POOL_ID_NOT_FOUND,
 	//endregion
 
 	//region charts
@@ -1412,6 +1448,7 @@ public enum R
 	//region exceptions
 	COLUMN_IS_PRESENT_EXCEPTION,
 	DIALOG_NOT_FOUND_EXCEPTION,
+    APP_WAS_CLOSED_EXCEPTION,
 	//endregion
 
     //region functions
@@ -1587,7 +1624,13 @@ public enum R
     COMMON_REMOVE,
     COMMON_RENAME,
     COMMON_WIZARD,
-    COMMON_ALL;
+    COMMON_ALL,
+    COMMON_START,
+    COMMON_CONNECT,
+    COMMON_ERROR_IN,
+    COMMON_SAVE,
+    COMMON_SETTINGS;
+
 
 
 	public static final String RESOURCE_BUNDLE_PATH = "com/exactprosystems/jf/ToolResourceBundle";

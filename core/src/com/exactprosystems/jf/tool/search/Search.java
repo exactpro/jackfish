@@ -10,6 +10,7 @@
 package com.exactprosystems.jf.tool.search;
 
 import com.exactprosystems.jf.api.common.Str;
+import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.common.CommonHelper;
 import com.exactprosystems.jf.common.Settings;
 import com.exactprosystems.jf.documents.Document;
@@ -85,7 +86,7 @@ public class Search
 		}
 		if (kinds.length == 0)
 		{
-			this.controller.displayFailedResult(new FailedResult("Select one or more scopes"));
+			this.controller.displayFailedResult(new FailedResult(R.SEARCH_SELECT_SCOPES.get()));
 			this.controller.finishFind();
 			return;
 		}
@@ -119,32 +120,32 @@ public class Search
 
 	public void openAsPlainText(File file)
 	{
-		Common.tryCatch(() -> this.model.loadPlainText(file.getAbsolutePath()), "Error on open plain text");
+		Common.tryCatch(() -> this.model.loadPlainText(file.getAbsolutePath()), R.SEARCH_ERROR_PLAIN_TEXT.get());
 	}
 
 	public void openAsMatrix(File file)
 	{
-		Common.tryCatch(() -> this.model.loadMatrix(file.getAbsolutePath()), "Error on open matrix");
+		Common.tryCatch(() -> this.model.loadMatrix(file.getAbsolutePath()), R.SEARCH_ERROR_OPEN_MATRIX.get());
 	}
 
 	public void openAsGuiDic(File file)
 	{
-		Common.tryCatch(() -> this.model.loadDictionary(file.getAbsolutePath(), null), "Error on open dictionary");
+		Common.tryCatch(() -> this.model.loadDictionary(file.getAbsolutePath(), null), R.SEARCH_ERROR_OPEN_DICTIONARY.get());
 	}
 
 	public void openAsVars(File file)
 	{
-		Common.tryCatch(() -> this.model.loadSystemVars(file.getAbsolutePath()), "Error on open vars");
+		Common.tryCatch(() -> this.model.loadSystemVars(file.getAbsolutePath()), R.SEARCH_ERROR_OPEN_VARS.get());
 	}
 
 	public void openAsHtml(File file)
 	{
-		Common.tryCatch(() -> this.model.openReport(file), "Error on open file");
+		Common.tryCatch(() -> this.model.openReport(file), R.SEARCH_ERROR_OPEN_FILE.get());
 	}
 
 	public void openAsDocWithNavToRow(File file, int index, DocumentKind kind)
 	{
-		Common.tryCatch(() -> this.goToItemInMatrix(file, index, kind), "Error on open file");
+		Common.tryCatch(() -> this.goToItemInMatrix(file, index, kind), R.SEARCH_ERROR_OPEN_FILE.get());
 	}
 
 	//region private methods
@@ -188,7 +189,7 @@ public class Search
 			}
 			catch (PatternSyntaxException e)
 			{
-				return "Invalid regexp pattern";
+				return R.SEARCH_INVALID_REGEXP.get();
 			}
 		}
 		if (fileMask != null)
@@ -199,7 +200,7 @@ public class Search
 			}
 			catch (PatternSyntaxException e)
 			{
-				return "Invalid file mask pattern";
+				return R.SEARCH_INVALID_FILE_MASK.get();
 			}
 		}
 		return null;

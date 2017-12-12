@@ -9,6 +9,7 @@
 
 package com.exactprosystems.jf.tool.search.results;
 
+import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.documents.DocumentKind;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.CssVariables;
@@ -65,13 +66,13 @@ public class AggregateResult extends AbstractResult
 		Button btnShowInTree = new Button();
 		btnShowInTree.getStyleClass().add(CssVariables.TRANSPARENT_BACKGROUND);
 		btnShowInTree.setId("dictionaryBtnXpathHelper");
-		btnShowInTree.setTooltip(new Tooltip("Scroll from configuration"));
+		btnShowInTree.setTooltip(new Tooltip(R.AGGREGATE_RESULT_SCROLL.get()));
 		btnShowInTree.setOnAction(e -> this.model.scrollFromConfig(file));
 
 		Button btnOpenAsPlainText = new Button();
 		btnOpenAsPlainText.setId("btnOpenAsPlainText");
 		btnOpenAsPlainText.getStyleClass().addAll(CssVariables.TRANSPARENT_BACKGROUND);
-		btnOpenAsPlainText.setTooltip(new Tooltip("Open as plain text"));
+		btnOpenAsPlainText.setTooltip(new Tooltip(R.AGGREGATE_RESULT_OPEN_AS_PLAIN.get()));
 		btnOpenAsPlainText.setOnAction(e -> this.model.openAsPlainText(file));
 
 		boolean needAdd = true;
@@ -103,7 +104,7 @@ public class AggregateResult extends AbstractResult
 			Button btnOpenAsDocument = new Button();
 			btnOpenAsDocument.getStyleClass().addAll(CssVariables.TRANSPARENT_BACKGROUND);
 			btnOpenAsDocument.setId("btnOpenAsDocument");
-			btnOpenAsDocument.setTooltip(new Tooltip("Open as document"));
+			btnOpenAsDocument.setTooltip(new Tooltip(R.AGGREGATE_RESULT_OPEN_AS_DOC.get()));
 			Consumer<File> finalConsumer = consumer;
 			btnOpenAsDocument.setOnAction(e -> finalConsumer.accept(file));
 			box.getChildren().addAll(btnOpenAsDocument, Common.createSpacer(Common.SpacerEnum.HorizontalMin));

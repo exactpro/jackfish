@@ -269,7 +269,7 @@ public class ApplicationPool implements IApplicationPool
 	private AppEntry getEntryById(String id) throws Exception
 	{
 		return Optional.ofNullable(this.factory.getConfiguration().getAppEntry(id))
-				.orElseThrow(() -> new Exception(String.format("Application with id %s not found", id)));
+				.orElseThrow(() -> new Exception(String.format(R.APP_POOL_ID_NOT_FOUND.get(), id)));
 	}
 
 	private IApplicationFactory loadFactory(String id, AppEntry entry) throws Exception

@@ -9,6 +9,7 @@
 
 package com.exactprosystems.jf.tool.settings;
 
+import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.common.Settings;
 import com.exactprosystems.jf.common.Settings.SettingsValue;
 import com.exactprosystems.jf.tool.Common;
@@ -82,7 +83,7 @@ public class SettingsPanel
 		displayShortcuts();
 		displayMain();
 		displayWizard();
-		this.controller.display("Settings");
+		this.controller.display(R.COMMON_SETTINGS.get());
 	}
 
 	private void displayGit()

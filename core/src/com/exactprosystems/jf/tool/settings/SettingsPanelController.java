@@ -9,6 +9,7 @@
 
 package com.exactprosystems.jf.tool.settings;
 
+import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.common.Settings;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.ContainingParent;
@@ -187,7 +188,7 @@ public class SettingsPanelController implements Initializable, ContainingParent
 		this.dialog = new Dialog<>();
 		DialogsHelper.centreDialog(dialog);
 		Common.addIcons(((Stage) dialog.getDialogPane().getScene().getWindow()));
-		ButtonType save = new ButtonType("Save", ButtonBar.ButtonData.OK_DONE);
+		ButtonType save = new ButtonType(R.COMMON_SAVE.get(), ButtonBar.ButtonData.OK_DONE);
 		this.dialog.getDialogPane().getButtonTypes().addAll(save, ButtonType.CANCEL);
 		ButtonBar.setButtonData(this.dialog.getDialogPane().lookupButton(save), ButtonBar.ButtonData.OTHER);
 		this.dialog.getDialogPane().setContent(this.pane);
@@ -205,11 +206,11 @@ public class SettingsPanelController implements Initializable, ContainingParent
 		{
 			if (save())
 			{
-				DialogsHelper.showInfo(String.format("Settings saved to file [%s] %n Restart application for all changes apply", Settings.SETTINGS_PATH));
+				DialogsHelper.showInfo(String.format(R.SETTINGS_PANEL_CONTR_SAVE_PASS.get(), Settings.SETTINGS_PATH));
 			}
 			else
 			{
-				DialogsHelper.showError("Error to save.\nSee log for details");
+				DialogsHelper.showError(R.SETTINGS_PANEL_CONTR_SAVE_FAIL.get());
 			}
 		});
 	}
