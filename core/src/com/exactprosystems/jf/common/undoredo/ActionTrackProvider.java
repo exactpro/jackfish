@@ -13,13 +13,8 @@ import java.util.Optional;
 
 public class ActionTrackProvider
 {
-	private ArrayDeque<DoubleCommand> undoArray = new ArrayDeque<>();
-	private ArrayDeque<DoubleCommand> redoArray = new ArrayDeque<>();
-
-	public ActionTrackProvider()
-	{
-
-	}
+	private final ArrayDeque<DoubleCommand> undoArray = new ArrayDeque<>();
+	private final ArrayDeque<DoubleCommand> redoArray = new ArrayDeque<>();
 
 	public void addCommand(Command undo, Command redo)
 	{
@@ -37,16 +32,9 @@ public class ActionTrackProvider
 	public boolean undo()
 	{
 		DoubleCommand last = this.undoArray.pollLast();
-		Optional.ofNullable(last).ifPresent(command -> 
+		Optional.ofNullable(last).ifPresent(command ->
 		{
-			try 
-			{
-				command.undo.execute();
-			} 
-			catch (Exception e) 
-			{
-				e.printStackTrace();
-			}
+			command.undo.execute();
 			this.redoArray.add(last);
 		});
 		return last != null;
@@ -55,16 +43,9 @@ public class ActionTrackProvider
 	public boolean redo()
 	{
 		DoubleCommand last = this.redoArray.pollLast();
-		Optional.ofNullable(last).ifPresent(command -> 
+		Optional.ofNullable(last).ifPresent(command ->
 		{
-			try 
-			{
-				command.redo.execute();
-			} 
-			catch (Exception e) 
-			{
-				e.printStackTrace();
-			}
+			command.redo.execute();
 			this.undoArray.add(last);
 		});
 		return last != null;
@@ -72,10 +53,10 @@ public class ActionTrackProvider
 
 	private class DoubleCommand
 	{
-	    public Command undo;
-	    public Command redo;
+		Command undo;
+		Command redo;
 
-		public DoubleCommand(Command undo, Command redo)
+		DoubleCommand(Command undo, Command redo)
 		{
 			this.undo = undo;
 			this.redo = redo;
