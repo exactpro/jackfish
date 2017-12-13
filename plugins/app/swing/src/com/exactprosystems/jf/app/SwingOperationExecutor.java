@@ -285,7 +285,11 @@ public class SwingOperationExecutor extends AbstractOperationExecutor<ComponentF
 			if(component.target instanceof JTable)
 			{
 				JTable table = (JTable) component.target;
-				return new JTableCellFixture(this.currentRobot, new JTableCell(table, x, y));
+				Container fakeCell = new Container();
+				fakeCell.add(table
+						.getCellRenderer(x, y)
+						.getTableCellRendererComponent(table, table.getValueAt(x, y), true, true, x, y));
+				return getFixture(fakeCell);
 			}
 		}
 		catch (Exception e)
@@ -332,15 +336,6 @@ public class SwingOperationExecutor extends AbstractOperationExecutor<ComponentF
 				{
 					executeAction(action, treeItem.getTree(), pointPair.ii.x - pointPair.i.width/2 + point.x, pointPair.ii.y - pointPair.i.height/2 + point.y);
 				}
-				return true;
-			}
-			if (target instanceof JTableCell)
-			{
-				JTableCell tableCell = (JTableCell) target;
-				JTable table = tableCell.getTable();
-				point = new JTableLocation().pointAt(table, x, y);
-				table.scrollRectToVisible(table.getCellRect(x, y, false));
-				executeAction(action, table, point.x, point.y);
 				return true;
 			}
 
@@ -2383,10 +2378,6 @@ public class SwingOperationExecutor extends AbstractOperationExecutor<ComponentF
 		else if (component instanceof JTreeItem)
 		{
 			return (ComponentFixture<T>) new JTreeItemFixture(this.currentRobot, (JTreeItem) component);
-		}
-		else if (component instanceof JTableCell)
-		{
-			return (ComponentFixture<T>) new JTableCellFixture(this.currentRobot, (JTableCell) component);
 		}
 		else if (component instanceof JSplitPane)
 		{
