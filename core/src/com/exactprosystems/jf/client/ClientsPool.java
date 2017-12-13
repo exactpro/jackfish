@@ -15,8 +15,8 @@ import com.exactprosystems.jf.api.client.IClientFactory;
 import com.exactprosystems.jf.api.client.IClientsPool;
 import com.exactprosystems.jf.api.common.IContext;
 import com.exactprosystems.jf.api.common.Str;
+import com.exactprosystems.jf.api.common.exception.EmptyParameterException;
 import com.exactprosystems.jf.api.common.i18n.R;
-import com.exactprosystems.jf.api.error.app.NullParameterException;
 import com.exactprosystems.jf.common.CommonHelper;
 import com.exactprosystems.jf.common.MainRunner;
 import com.exactprosystems.jf.documents.DocumentFactory;
@@ -29,17 +29,17 @@ import com.exactprosystems.jf.exceptions.client.ClientNotLoadedException;
 import org.apache.log4j.Logger;
 
 import java.io.Reader;
-import java.net.URL;
-import java.net.URLClassLoader;
-import java.util.*;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
 public class ClientsPool implements IClientsPool
 {
 	private static final Logger logger = Logger.getLogger(ClientsPool.class);
-	private DocumentFactory factory;
-	private Map<String, IClientFactory> clientFactories;
+	private final DocumentFactory             factory;
+	private final Map<String, IClientFactory> clientFactories;
 
 	public ClientsPool(DocumentFactory factory)
 	{
@@ -53,9 +53,7 @@ public class ClientsPool implements IClientsPool
 	{
 		try
 		{
-			ClientEntry entry = parametersEntry(id);
-			IClientFactory clientFactory = loadClientFactory(id, entry);
-			return clientFactory != null;
+			return this.loadClientFactory(id) != null;
 		}
 		catch (Exception e)
 		{
@@ -80,8 +78,8 @@ public class ClientsPool implements IClientsPool
 	@Override
 	public IClientFactory loadClientFactory(String id) throws Exception
 	{
-		ClientEntry entry = parametersEntry(id);
-		return loadClientFactory(id, entry);
+		ClientEntry entry = this.getEntryById(id);
+		return this.loadClientFactory(id, entry);
 	}
 
 	@Override
@@ -91,20 +89,15 @@ public class ClientsPool implements IClientsPool
 		{
 			if (id == null)
 			{
-				throw new NullParameterException("id");
+				throw new EmptyParameterException("id");
 			}
 			
-			ClientEntry entry = parametersEntry(id);
-			IClientFactory clientFactory = loadClientFactory(id, entry);
+			ClientEntry entry = this.getEntryById(id);
+			IClientFactory clientFactory = this.loadClientFactory(id, entry);
 
-			List<Parameter> list = entry.getParameters();
-			Map<String, String> map = new HashMap<>();
-			for (Parameter param : list)
-			{
-			    String key   = param.getKey();
-			    String value = MainRunner.makeDirWithSubstitutions(param.getValue());
-				map.put(key, value);
-			}
+			Map<String, String> map = entry.getParameters()
+					.stream()
+					.collect(Collectors.toMap(Parameter::getKey, p -> MainRunner.makeDirWithSubstitutions(p.getValue())));
 
 			int limit = Integer.parseInt(entry.get(Configuration.clientLimit));
 			
@@ -112,7 +105,7 @@ public class ClientsPool implements IClientsPool
 			client.init(this, clientFactory, limit, map);
 			return new ClientConnection(client, id, clientFactory.getDictionary());
 		}
-		catch (Throwable t)
+		catch (Exception t)
 		{
 			logger.error(String.format("Error in loadClient(%s)", id));
 			logger.error(t.getMessage(), t);
@@ -180,15 +173,10 @@ public class ClientsPool implements IClientsPool
 		return dictionary;
 	}
 	
-	private ClientEntry parametersEntry(String id) throws Exception
+	private ClientEntry getEntryById(String id) throws Exception
 	{
-		ClientEntry entry = this.factory.getConfiguration().getClientEntry(id);
-		if (entry == null)
-		{
-			throw new Exception(id + R.COMMON_IS_NOT_FOUND.get());
-		}
-		
-		return entry;
+		return Optional.ofNullable(this.factory.getConfiguration().getClientEntry(id))
+				.orElseThrow(() -> new Exception(id + R.COMMON_IS_NOT_FOUND.get()));
 	}
 
 	private IClientFactory loadClientFactory(String id, ClientEntry entry) throws Exception
@@ -197,27 +185,15 @@ public class ClientsPool implements IClientsPool
 		if (clientFactory == null)
 		{
 			String jarName	= MainRunner.makeDirWithSubstitutions(entry.get(Configuration.clientJar)); 
+			clientFactory = CommonHelper.loadFactory(this.getClass()
+					,IClientFactory.class
+					, jarName
+					, () -> new Exception(String.format(R.COMMON_CLIENT_FACTORY_IS_NOT_FOUND.get(), id))
+					, logger);
 			
-			
-			List<URL> urls = new ArrayList<>();
-			urls.add(new URL("file:" + jarName));
-			
-			ClassLoader parent = getClass().getClassLoader();
-			URLClassLoader classLoader = new URLClassLoader(urls.toArray(new URL[] {}), parent);
-			
-			ServiceLoader<IClientFactory> loader = ServiceLoader.load(IClientFactory.class, classLoader);
-			Iterator<IClientFactory> iterator = loader.iterator();
-			if(iterator.hasNext())
-			{
-				clientFactory = iterator.next();
-				this.clientFactories.put(id, clientFactory);
-			}
-			if (clientFactory == null)
-			{
-				throw new Exception(String.format(R.COMMON_CLIENT_FACTORY_IS_NOT_FOUND.get(), id));
-			}
 			MessageDictionary dictionary = getDictionary(entry);
 			clientFactory.init(dictionary);
+
 			this.clientFactories.put(id, clientFactory);
 		}
 		return clientFactory;

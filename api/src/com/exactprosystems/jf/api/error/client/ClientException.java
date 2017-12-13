@@ -21,9 +21,14 @@ public class ClientException extends JFException
 		super(message, null);
 	}
 
+	public ClientException(String message, Throwable cause)
+	{
+		super(message, cause);
+	}
+
 	@Override
 	public ErrorKind getErrorKind()
 	{
-		return ErrorKind.SERVICE_ERROR;
+		return ErrorKind.CLIENT_ERROR;
 	}
 }
