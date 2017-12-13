@@ -9,22 +9,26 @@
 
 package com.exactprosystems.jf.common.report;
 
+import com.exactprosystems.jf.api.client.MapMessage;
+import com.exactprosystems.jf.api.common.DateTime;
+import com.exactprosystems.jf.documents.matrix.parser.Parser;
+import org.apache.log4j.Logger;
+
 import java.math.BigInteger;
 import java.text.DecimalFormat;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.Map;
-import java.util.Map.Entry;
-
-import org.apache.log4j.Logger;
-
-import com.exactprosystems.jf.api.client.MapMessage;
-import com.exactprosystems.jf.api.common.DateTime;
-import com.exactprosystems.jf.documents.matrix.parser.Parser;
+import java.util.stream.Collectors;
 
 public class ReportHelper
 {
-	public static final String objToString(Object obj, boolean addQuotes)
+	protected static final Logger logger = Logger.getLogger(ReportHelper.class);
+
+	private ReportHelper()
+	{}
+
+	public static String objToString(Object obj, boolean addQuotes)
 	{
 		String result = "";
 		
@@ -78,19 +82,10 @@ public class ReportHelper
 			}
 			else if (obj instanceof Map<?, ?>)
 			{
-				String separator = "";
-				StringBuilder sb = new StringBuilder();
-				sb.append("[ ");
-				for (Entry<?, ?> entry : ((Map<?,?>)obj).entrySet())
-				{
-					sb.append(separator);
-					sb.append(entry.getKey());
-					sb.append(" : ");
-					sb.append(entry.getValue());
-					separator = ", ";
-				}
-				sb.append(" ]");
-				result =  sb.toString();
+				result = ((Map<?,?> ) obj).entrySet()
+						.stream()
+						.map(entry -> entry.getKey() + " : " + entry.getValue())
+						.collect(Collectors.joining(", ", "[ ", " ]"));
 			}
 			else 
 			{
@@ -105,6 +100,4 @@ public class ReportHelper
 			
 		return result;
 	}
-
-	protected static final Logger logger = Logger.getLogger(ReportHelper.class);
 }

@@ -14,15 +14,19 @@ import java.io.InputStream;
 
 public abstract class ReportWriter  
 {
-    public abstract ReportWriter newline() throws IOException;
-    
-	public abstract ReportWriter fwrite(String fmt, Object... args) throws IOException; 
-	
-	public abstract ReportWriter fwrite(String str) throws IOException; 
-	
+	public final ReportWriter newline() throws IOException
+	{
+		this.fwrite(System.lineSeparator());
+		return this;
+	}
+
+	public abstract ReportWriter fwrite(String fmt, Object... args) throws IOException;
+
+	public abstract ReportWriter fwrite(String str) throws IOException;
+
 	public abstract void close() throws IOException;
-	
+
 	public abstract void include(InputStream in) throws IOException;
-	
+
 	public abstract String fileName();
 }

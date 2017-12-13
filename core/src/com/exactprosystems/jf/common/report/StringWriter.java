@@ -16,68 +16,61 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
-class StringWriter extends  ReportWriter  
+class StringWriter extends ReportWriter
 {
-	public StringWriter() 
+	private StringBuilder builder;
+	protected static final Logger logger = Logger.getLogger(StringWriter.class);
+
+	public StringWriter()
 	{
+		super();
 		this.builder = new StringBuilder();
 	}
-	
-    @Override
-    public ReportWriter newline() throws IOException
-    {
-        this.builder.append('\n');
-        return this;
-    }
 
-    @Override
-	public ReportWriter fwrite(String fmt, Object... args) throws IOException 
+	@Override
+	public ReportWriter fwrite(String fmt, Object... args)
 	{
 		this.builder.append(String.format(fmt, args));
 		return this;
 	}
-	
+
 	@Override
-	public ReportWriter fwrite(String str) throws IOException 
+	public ReportWriter fwrite(String str)
 	{
 		this.builder.append(str);
 		return this;
 	}
-	
+
 	@Override
 	public void include(InputStream in) throws IOException
 	{
 		BufferedReader reader = new BufferedReader(new InputStreamReader(in));
-		
+
 		String line;
 		while ((line = reader.readLine()) != null)
 		{
 			this.builder.append(line);
 			this.builder.append("\n\r");
 		}
-		
+
 		in.close();
 	}
-	
+
 	@Override
-	public void close() throws IOException
+	public void close()
 	{
+		this.builder.setLength(0);
 	}
-	
+
 	@Override
 	public String fileName()
 	{
 		return null;
 	}
-	
+
 	@Override
 	public String toString()
 	{
 		return this.builder.toString();
 	}
-	
-	private StringBuilder builder;
-	
-	
-	protected static final Logger logger = Logger.getLogger(StringWriter.class);
 }

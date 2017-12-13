@@ -9,31 +9,21 @@
 
 package com.exactprosystems.jf.common.report;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.Writer;
+import java.io.*;
 
 public class FileReportWriter extends ReportWriter
 {
+	private Writer writer;
+	private String fileName;
+
 	public FileReportWriter(String fileName) throws IOException 
 	{
 		this.fileName = fileName;
 		this.writer = new BufferedWriter(new FileWriter(fileName));
 	}
-	
-    @Override
-    public ReportWriter newline() throws IOException
-    {
-        this.writer.write("\n");
-        return this;
-    }
 
-    @Override
-	public ReportWriter fwrite(String fmt, Object... args) throws IOException 
+	@Override
+	public ReportWriter fwrite(String fmt, Object... args) throws IOException
 	{
 		this.writer.write(String.format(fmt, args));
 		return this;
@@ -61,7 +51,7 @@ public class FileReportWriter extends ReportWriter
 		while ((line = reader.readLine()) != null)
 		{
 			this.writer.write(line);
-			this.writer.write("\n\r");
+			super.newline();
 		}
 		
 		in.close();
@@ -72,9 +62,5 @@ public class FileReportWriter extends ReportWriter
 	{
 		return this.fileName;
 	}
-	
-	private Writer writer;
-
-	private String fileName;
 
 }

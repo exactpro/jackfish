@@ -14,10 +14,8 @@ import com.exactprosystems.jf.common.documentation.TexReportBuilder;
 import java.io.IOException;
 import java.util.Date;
 
-
 public class TexReportFactory extends ReportFactory
 {
-
 	@Override
 	public ReportBuilder createReportBuilder(String outputPath, String matrixName, Date currentTime) throws IOException
 	{

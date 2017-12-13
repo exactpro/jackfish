@@ -14,6 +14,14 @@ import java.util.List;
 
 public class ReportTable
 {
+	private boolean        decorated;
+	private boolean        bordered;
+	private String         title;
+	private String         beforeTestcase;
+	private String[]       columns;
+	private int[]          widths;
+	private List<Object[]> data;
+
 	public ReportTable(String title, String beforeTestcase, boolean decorated, boolean bordered, int[] widths, String[] columns)
 	{
 		this.title = title;
@@ -24,11 +32,11 @@ public class ReportTable
 		this.widths = widths;
 	}
 
-	public void addValues(Object ... values)
+	public void addValues(Object... values)
 	{
 		if (this.data == null)
 		{
-			this.data = new ArrayList<Object[]>();
+			this.data = new ArrayList<>();
 		}
 
 		this.data.add(values);
@@ -49,31 +57,23 @@ public class ReportTable
 		return this.decorated;
 	}
 
-    public boolean isBordered()
-    {
-        return this.bordered;
-    }
+	public boolean isBordered()
+	{
+		return this.bordered;
+	}
 
 	public String[] getColumns()
 	{
 		return this.columns;
 	}
 
-    public int[] getWidths()
-    {
-        return this.widths;
-    }
+	public int[] getWidths()
+	{
+		return this.widths;
+	}
 
 	public List<Object[]> getData()
 	{
 		return this.data;
 	}
-
-	protected boolean decorated;
-    protected boolean bordered;
-	protected String title;
-	protected String beforeTestcase;
-	protected String[] columns;
-    protected int[] widths;
-	protected List<Object[]> data;
 }

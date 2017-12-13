@@ -15,7 +15,6 @@ import java.util.Date;
 
 public class HTMLReportFactory extends ReportFactory
 {
-
 	@Override
 	public ReportBuilder createReportBuilder(String outputPath, String matrixName, Date currentTime) throws IOException
 	{

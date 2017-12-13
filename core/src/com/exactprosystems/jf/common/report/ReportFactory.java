@@ -12,7 +12,6 @@ package com.exactprosystems.jf.common.report;
 import java.io.IOException;
 import java.util.Date;
 
-
 public abstract class ReportFactory
 {
 	public abstract ReportBuilder createReportBuilder(String outputPath, String matrixName, Date currentTime) throws IOException;

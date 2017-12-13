@@ -100,25 +100,24 @@ public class HTMLhelper
 			{ "yuml", new Integer(255) }, // я - lowercase y, umlaut
 			{ "euro", new Integer(8364) }, // Euro symbol
 		};
-	static Map<String, Integer> e2i = new HashMap<String, Integer>();
-	static Map<Integer, String> i2e = new HashMap<Integer, String>();
+	static Map<String, Integer> e2i = new HashMap<>();
+	static Map<Integer, String> i2e = new HashMap<>();
 	static
 	{
-		for (int i = 0; i < entities.length; ++i)
+		for (Object[] entity : entities)
 		{
-			e2i.put((String)entities[i][0], (Integer)entities[i][1]);
-			i2e.put((Integer)entities[i][1], (String)entities[i][0]);
+			e2i.put((String) entity[0], (Integer) entity[1]);
+			i2e.put((Integer) entity[1], (String) entity[0]);
 		}
 	}
-	
-	
+
 	public static String htmlMarker(String marker)
 	{
-		boolean theme = Theme.currentTheme().equals(Theme.WHITE);
 		if (marker == null)
 		{
 			return "";
 		}
+		boolean theme = Theme.currentTheme().equals(Theme.WHITE);
 
 		switch (marker)
 		{
@@ -173,8 +172,10 @@ public class HTMLhelper
 			// italic
 			case OM + "/": return "<i>";
 			case "/" + CM: return "</i>";
+
+			default:
+				return "";
 		}
-		return "";
 	}
 
 	/**
@@ -194,33 +195,34 @@ public class HTMLhelper
 			return null;
 		}
 		s1 = s1.trim();
-		
-		StringBuffer buf = new StringBuffer();
+
+		StringBuilder sb = new StringBuilder();
 		int i;
 		for (i = 0; i < s1.length(); ++i)
 		{
 			char ch = s1.charAt(i);
-			String entity = (String) i2e.get(new Integer((int) ch));
+			String entity = i2e.get(new Integer((int) ch));
 			if (entity == null)
 			{
 				if (((int) ch) > 128)
 				{
-					buf.append("&#" + ((int) ch) + ";");
-				} 
+					sb.append("&#").append((int) ch).append(";");
+				}
 				else if (ch == '\n')
 				{
-					buf.append("<br>");
+					sb.append("<br>");
 				}
 				else
 				{
-					buf.append(ch);
+					sb.append(ch);
 				}
-			} else
+			}
+			else
 			{
-				buf.append("&" + entity + ";");
+				sb.append("&").append(entity).append(";");
 			}
 		}
-		return buf.toString();
+		return sb.toString();
 	}
 
 	/**
@@ -235,7 +237,7 @@ public class HTMLhelper
 		{
 			return null;
 		}
-		StringBuffer buf = new StringBuffer();
+		StringBuilder sb = new StringBuilder();
 		int i;
 		for (i = 0; i < s1.length(); ++i)
 		{
@@ -245,7 +247,7 @@ public class HTMLhelper
 				int semi = s1.indexOf(';', i + 1);
 				if (semi == -1)
 				{
-					buf.append(ch);
+					sb.append(ch);
 					continue;
 				}
 				String entity = s1.substring(i + 1, semi);
@@ -253,23 +255,26 @@ public class HTMLhelper
 				if (entity.charAt(0) == '#')
 				{
 					iso = new Integer(entity.substring(1));
-				} else
+				}
+				else
 				{
-					iso = (Integer) e2i.get(entity);
+					iso = e2i.get(entity);
 				}
 				if (iso == null)
 				{
-					buf.append("&" + entity + ";");
-				} else
+					sb.append("&").append(entity).append(";");
+				}
+				else
 				{
-					buf.append((char) (iso.intValue()));
+					sb.append((char) (iso.intValue()));
 				}
 				i = semi;
-			} else
+			}
+			else
 			{
-				buf.append(ch);
+				sb.append(ch);
 			}
 		}
-		return buf.toString();
+		return sb.toString();
 	}
 }
