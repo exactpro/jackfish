@@ -55,14 +55,14 @@ public class ApplicationConnector
 		this.factory = factory;
 	}
 
-	public Optional<AppConnection> startApplication()  throws Exception
+	public void startApplication()  throws Exception
 	{
-		return runApplication(true);
+		runApplication(true);
 	}
 
-	public Optional<AppConnection> connectApplication()  throws Exception
+	public void connectApplication()  throws Exception
 	{
-		return runApplication(false);
+		runApplication(false);
 	}
 
 	public void stopApplication() throws Exception
@@ -111,7 +111,7 @@ public class ApplicationConnector
 		return Optional.ofNullable(this.applicationListener);
 	}
 
-	private Optional<AppConnection> runApplication(boolean isStart) throws Exception
+	private void runApplication(boolean isStart) throws Exception
 	{
 		AbstractEvaluator evaluator = this.factory.createEvaluator();
 		if (this.appConnection != null)
@@ -146,7 +146,7 @@ public class ApplicationConnector
 
 		if (desision == ButtonType.CANCEL)
 		{
-			return Optional.empty();
+			return;
 		}
 
 		settings.setMapValues(Settings.APPLICATION + idAppEntry, parametersName, parameters);
@@ -194,7 +194,6 @@ public class ApplicationConnector
 		thread.setName("Start app " + this.idAppEntry + ", thread id : " + thread.getId());
 		thread.setDaemon(true);
 		thread.start();
-		return Optional.empty();
 	}
 
 	private void update(ApplicationStatus status, Throwable exception, boolean progressBarVisible)
