@@ -1725,7 +1725,23 @@ Shift+Ctrl+Z</attr>
     <window name="MatrixTab">
         <self/>
         <onOpen/>
-        <run/>
+        <run>
+            <table id="matrixView" xpath=".//MatrixTreeView"/>
+        </run>
+        <onClose/>
+        <close/>
+    </window>
+    <window name="MatrixTreeView">
+        <self>
+            <any id="self" uid="mainScrollPane" xpath=""/>
+        </self>
+        <onOpen/>
+        <run>
+            <table id="matrixTreeView" xpath=".//MatrixTreeView" owner="self"/>
+            <row id="row" xpath="." owner="matrixView"/>
+            <button id="showAdditional" owner="self" text="Show additional"/>
+            <any id="itemCell" xpath="./MatrixItemCell" owner="self"/>
+        </run>
         <onClose/>
         <close/>
     </window>

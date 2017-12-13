@@ -35,6 +35,7 @@ import javafx.scene.control.ButtonType;
 
 import java.io.File;
 import java.io.Serializable;
+import java.rmi.ServerException;
 import java.util.*;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
@@ -1134,6 +1135,12 @@ public class DictionaryFx extends GuiDictionary
 				try
 				{
 					a.call();
+				}
+				catch (ServerException e)
+				{
+					Optional.ofNullable(e.getCause())
+							.map(Throwable::getMessage)
+							.ifPresent(DialogsHelper::showError);
 				}
 				finally
 				{
