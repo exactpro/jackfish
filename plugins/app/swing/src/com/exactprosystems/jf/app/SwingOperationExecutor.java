@@ -279,7 +279,21 @@ public class SwingOperationExecutor extends AbstractOperationExecutor<ComponentF
     @Override
 	public ComponentFixture<Component> lookAtTable(ComponentFixture<Component> component, Locator additional, Locator header, int x, int y) throws Exception
 	{
-		throw new FeatureNotSupportedException("lookAtTable");
+		logger.info("findIntoTable(" + component.target.getName() + ", " + x + ", " + y + ")" + (additional == null ? "" : "additional " + additional));
+		try
+		{
+			if(component.target instanceof JTable)
+			{
+				JTable table = (JTable) component.target;
+				return new JTableCellFixture(this.currentRobot, new JTableCell(table, x, y));
+			}
+		}
+		catch (Exception e)
+		{
+			logger.error(e.getMessage(), e);
+			throw new RemoteException("Error on find into table");
+		}
+		return null;
 	}
 
 	@Override
@@ -318,6 +332,15 @@ public class SwingOperationExecutor extends AbstractOperationExecutor<ComponentF
 				{
 					executeAction(action, treeItem.getTree(), pointPair.ii.x - pointPair.i.width/2 + point.x, pointPair.ii.y - pointPair.i.height/2 + point.y);
 				}
+				return true;
+			}
+			if (target instanceof JTableCell)
+			{
+				JTableCell tableCell = (JTableCell) target;
+				JTable table = tableCell.getTable();
+				point = new JTableLocation().pointAt(table, x, y);
+				table.scrollRectToVisible(table.getCellRect(x, y, false));
+				executeAction(action, table, point.x, point.y);
 				return true;
 			}
 
@@ -2015,42 +2038,6 @@ public class SwingOperationExecutor extends AbstractOperationExecutor<ComponentF
 		return boundsAndCoordinates.ii;
 	}
 
-	private class JTreeItemFixture extends ComponentFixture<Component>
-	{
-		JTreeItemFixture(Robot robot, JTreeItem target)
-		{
-			super(robot, target);
-		}
-	}
-
-	private class JTreeItem extends JComponent
-	{
-		JTree tree;
-		TreePath path;
-
-		JTreeItem(JTree tree, TreePath path)
-		{
-			this.tree = tree;
-			this.path = path;
-		}
-
-		JTree getTree()
-		{
-			return tree;
-		}
-
-		TreePath getPath()
-		{
-			return path;
-		}
-
-		@Override
-		public boolean isVisible()
-		{
-			return this.tree.isVisible(this.path);
-		}
-	}
-
 	private Document convertTreeToXMLDoc(JTree tree) throws ParserConfigurationException, XPathExpressionException
 	{
 		Document doc = DocumentBuilderFactory.newInstance().newDocumentBuilder().newDocument();
@@ -2396,6 +2383,10 @@ public class SwingOperationExecutor extends AbstractOperationExecutor<ComponentF
 		else if (component instanceof JTreeItem)
 		{
 			return (ComponentFixture<T>) new JTreeItemFixture(this.currentRobot, (JTreeItem) component);
+		}
+		else if (component instanceof JTableCell)
+		{
+			return (ComponentFixture<T>) new JTableCellFixture(this.currentRobot, (JTableCell) component);
 		}
 		else if (component instanceof JSplitPane)
 		{
