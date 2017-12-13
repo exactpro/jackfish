@@ -116,7 +116,8 @@ public class ElementInfoController implements Initializable, ContainingParent
 		{
 			this.disableAllListeners = true;
 			ControlKind selectedItem = this.comboBoxControl.getSelectionModel().getSelectedItem();
-			this.comboBoxControl.getItems().setAll(supportedControls);
+			this.comboBoxControl.getItems().clear();
+			this.comboBoxControl.getItems().addAll(supportedControls);
 			this.selectControlKind(supportedControls, selectedItem);
 		}
 		finally

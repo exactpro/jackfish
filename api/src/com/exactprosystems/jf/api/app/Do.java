@@ -363,6 +363,13 @@ public class Do
 		return new Operation().click();
 	}
 
+	static final String clickWithAction = "Do mouse @action for the current component\nIf current component is table, then click to cell with index @x column and @y row";
+	@DescriptionAttribute(text = Do.clickWithAction)
+	public static Operation click(@FieldParameter(name = "action") MouseAction action)
+	{
+		return new Operation().click(action);
+	}
+
 	static final String clickWithCoor = "Click to current component with coordinates @x and @y.\nIf current component is table, then click to cell with index @x column and @y row";
 	@DescriptionAttribute(text = Do.clickWithCoor)
 	public static Operation click(@FieldParameter(name = "x") int x, @FieldParameter(name = "y") int y)
@@ -501,6 +508,34 @@ public class Do
 	public static Operation use(@FieldParameter(name = "locatorId") String locatorId, @FieldParameter(name = "locatorKind") LocatorKind locatorKind)
 	{
 		return new Operation().use(locatorId, locatorKind);
+	}
+
+	static final String useLocatorForTableCell = "Change context to component, which will found into the cell by column @x and row @y and dynamic locator @locator";
+	@DescriptionAttribute(text = Do.useLocatorForTableCell)
+	public static Operation use(@FieldParameter(name = "x") int x, @FieldParameter(name = "y") int y, @FieldParameter(name = "locator") Locator locator)
+	{
+		return new Operation().use(x, y, locator);
+	}
+
+	static final String useLocatorIdForTableCell = "Change context to component, which will found into the cell by column @x and row @y and element with id @locatorId from a dictionary";
+	@DescriptionAttribute(text = Do.useLocatorIdForTableCell)
+	public static Operation use(@FieldParameter(name = "x") int x, @FieldParameter(name = "y") int y, @FieldParameter(name = "locatorId") String locatorId)
+	{
+		return new Operation().use(x, y, locatorId);
+	}
+
+	static final String useLocatorForTableRow = "Change context to component, which will found into the row by row @x and and dynamic locator @locator";
+	@DescriptionAttribute(text = Do.useLocatorForTableRow)
+	public static Operation use(@FieldParameter(name = "y") int y, @FieldParameter(name = "locator") Locator locator)
+	{
+		return new Operation().use(y, locator);
+	}
+
+	static final String useLocatorIdForTableRow = "Change context to component, which will found into the row by row @x and and element with id @locatorId from a dictionary";
+	@DescriptionAttribute(text = Do.useLocatorIdForTableRow)
+	public static Operation use(@FieldParameter(name = "y") int y, @FieldParameter(name = "locatorId") String locatorId)
+	{
+		return new Operation().use(y, locatorId);
 	}
 	//endregion
 

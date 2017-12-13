@@ -9,12 +9,12 @@
 
 package com.exactprosystems.jf.api.app;
 
+import com.exactprosystems.jf.api.error.app.ElementNotFoundException;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import com.exactprosystems.jf.api.error.app.ElementNotFoundException;
 
 class Holder<T>
 {
@@ -56,21 +56,6 @@ class Holder<T>
 	}
 
 	public T getValue() throws Exception
-	{
-		if (isEmpty())
-		{
-			throw new ElementNotFoundException(locators.get(LocatorKind.Element));
-		}
-
-		if (index >= this.list.size() || index < 0)
-		{
-			throw new Exception("Wrong index in 'use(" + index + ")' cause size is " +  this.list.size() + " for locator " + locators.get(LocatorKind.Element));
-		}
-
-		return this.list.get(this.index);
-	}
-
-	public T getList() throws Exception
 	{
 		if (isEmpty())
 		{

@@ -484,6 +484,13 @@ public class Operation implements Iterable<Part>, Serializable
 		return this;
 	}
 
+	@DescriptionAttribute(text = Do.clickWithAction)
+	public Operation click(@FieldParameter(name = "action") MouseAction action)
+	{
+		this.list.add(new Part(OperationKind.CLICK).setMouseAction(action));
+		return this;
+	}
+
 	@DescriptionAttribute(text = Do.clickWithCoor)
 	public Operation click(@FieldParameter(name = "x") int x, @FieldParameter(name = "y") int y)
 	{
@@ -644,6 +651,34 @@ public class Operation implements Iterable<Part>, Serializable
 	public Operation wait(@FieldParameter(name = "locator") Locator locator, @FieldParameter(name = "ms") int ms, @FieldParameter(name = "toAppear") boolean toAppear)
 	{
 		this.list.add(new Part(OperationKind.WAIT).setInt(ms).setLocator(locator).setToAppear(toAppear));
+		return this;
+	}
+
+	@DescriptionAttribute(text = Do.useLocatorForTableCell)
+	public Operation use(@FieldParameter(name = "x") int x, @FieldParameter(name = "y") int y, @FieldParameter(name = "locator") Locator locator)
+	{
+		this.list.add(new Part(OperationKind.USE_CELL_COMPONENT).setX(x).setY(y).setLocator(locator));
+		return this;
+	}
+
+	@DescriptionAttribute(text = Do.useLocatorIdForTableCell)
+	public Operation use(@FieldParameter(name = "x") int x, @FieldParameter(name = "y") int y, @FieldParameter(name = "locatorId") String locatorId)
+	{
+		this.list.add(new Part(OperationKind.USE_CELL_COMPONENT).setLocatorKind(LocatorKind.Element).setX(x).setY(y).setLocatorId(locatorId));
+		return this;
+	}
+
+	@DescriptionAttribute(text = Do.useLocatorForTableRow)
+	public Operation use(@FieldParameter(name = "y") int y, @FieldParameter(name = "locator") Locator locator)
+	{
+		this.list.add(new Part(OperationKind.USE_CELL_COMPONENT).setY(y).setLocator(locator));
+		return this;
+	}
+
+	@DescriptionAttribute(text = Do.useLocatorIdForTableRow)
+	public Operation use(@FieldParameter(name = "y") int y, @FieldParameter(name = "locatorId") String locatorId)
+	{
+		this.list.add(new Part(OperationKind.USE_CELL_COMPONENT).setLocatorKind(LocatorKind.Element).setY(y).setLocatorId(locatorId));
 		return this;
 	}
 
