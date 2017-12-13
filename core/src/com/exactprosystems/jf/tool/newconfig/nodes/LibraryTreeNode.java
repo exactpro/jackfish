@@ -9,6 +9,7 @@
 package com.exactprosystems.jf.tool.newconfig.nodes;
 
 import com.exactprosystems.jf.api.common.SerializablePair;
+import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.common.MainRunner;
 import com.exactprosystems.jf.common.MutableString;
 import com.exactprosystems.jf.documents.matrix.Matrix;
@@ -54,7 +55,7 @@ public class LibraryTreeNode extends TreeNode
 	@Override
 	public Node getView()
 	{
-		return new Text("library");
+		return new Text(R.LIBRARY_TN_VIEW.get());
 	}
 
 	@Override
@@ -72,34 +73,34 @@ public class LibraryTreeNode extends TreeNode
 				ConfigurationTreeView.createDisabledItem(OPEN_LIBRARY),
 				ConfigurationTreeView.createDisabledItem(OPEN_AS_TEXT),
 				ConfigurationTreeView.createDisabledItem(REMOVE_LIBRARY),
-				ConfigurationTreeView.createItem(REFRESH_LIBRARY, () -> this.model.updateLibraries(), "Error on refresh libs")
+				ConfigurationTreeView.createItem(REFRESH_LIBRARY, () -> this.model.updateLibraries(), R.LIBRARY_TN_REFRESH_LIBS.get())
 		);
 
 		boolean isLibEmpty = this.model.getLibrariesValue().isEmpty();
 		if (!isLibEmpty)
 		{
-			Menu addLibrary = new Menu("Add new library to", new ImageView(new Image(CssVariables.Icons.ADD_PARAMETER_ICON)));
+			Menu addLibrary = new Menu(R.LIBRARY_TN_ADD_NEW_TO.get(), new ImageView(new Image(CssVariables.Icons.ADD_PARAMETER_ICON)));
 			this.model.getLibrariesValue()
 					.stream()
 					.map(mutableString -> MainRunner.makeDirWithSubstitutions(mutableString.get()))
 					.map(Common::getRelativePath)
 					.map(MenuItem::new)
 					.peek(item -> item.setOnAction(
-							e -> DialogsHelper.showInputDialog("Enter new name", "")
+							e -> DialogsHelper.showInputDialog(R.LIBRARY_TN_ENTER_NAME.get(), "")
 									.ifPresent(name -> Common.tryCatch(() -> this.model.addNewLibrary(new File(item.getText()), name),
-											"Error on create new library")
+											R.LIBRARY_TN_ERROR_ON_CREATE.get())
 									)
 							)
 					).forEach(addLibrary.getItems()::add);
 
-			Menu excludeLibrary = new Menu("Exclude library folder", new ImageView(new Image(CssVariables.Icons.REMOVE_PARAMETER_ICON)));
+			Menu excludeLibrary = new Menu(R.LIBRARY_TN_EXCLUDE_FOLDER.get(), new ImageView(new Image(CssVariables.Icons.REMOVE_PARAMETER_ICON)));
 			this.model.getLibrariesValue()
 					.stream()
 					.map(MutableString::get)
 					.map(Common::getRelativePath)
 					.map(MenuItem::new)
 					.peek(item -> item.setOnAction(
-							e -> Common.tryCatch(() -> this.model.excludeLibraryDirectory(item.getText()), "Error on exclude library folder")
+							e -> Common.tryCatch(() -> this.model.excludeLibraryDirectory(item.getText()), R.LIBRARY_TN_ERROR_ON_EXCLUDE.get())
 						)
 					).forEach(excludeLibrary.getItems()::add);
 
@@ -108,7 +109,7 @@ public class LibraryTreeNode extends TreeNode
 
 		menu.getItems().addAll(
 				new SeparatorMenuItem(),
-				ConfigurationTreeView.createDisabledItem("Git", null)
+				ConfigurationTreeView.createDisabledItem(R.COMMON_GIT.get(), null)
 		);
 
 		return Optional.of(menu);
@@ -164,17 +165,17 @@ public class LibraryTreeNode extends TreeNode
 		{
 			ContextMenu menu = new ContextMenu();
 			menu.getItems().addAll(
-					ConfigurationTreeView.createItem(OPEN_LIBRARY, () -> model.openLibrary(this.fullPath), "Error on open library file"),
-					ConfigurationTreeView.createItem(OPEN_AS_TEXT, () -> model.openPlainText(new File(this.fullPath)), "Error on open library file"),
-					ConfigurationTreeView.createItem(REMOVE_LIBRARY, () -> model.removeLibrary(this.namespace), "Error on remove library"),
+					ConfigurationTreeView.createItem(OPEN_LIBRARY, () -> model.openLibrary(this.fullPath), R.LIBRARY_TN_ERROR_ON_OPEN_FILE.get()),
+					ConfigurationTreeView.createItem(OPEN_AS_TEXT, () -> model.openPlainText(new File(this.fullPath)), R.LIBRARY_TN_ERROR_ON_OPEN_FILE.get()),
+					ConfigurationTreeView.createItem(REMOVE_LIBRARY, () -> model.removeLibrary(this.namespace), R.LIBRARY_TN_ERROR_ON_REMOVE.get()),
 					ConfigurationTreeView.createDisabledItem(ADD_NEW_LIBRARY),
 					ConfigurationTreeView.createDisabledItem(EXCLUDE_LIB_FOLDER),
 					ConfigurationTreeView.createDisabledItem(REFRESH_LIBRARY),
 					new SeparatorMenuItem(),
-					ConfigurationTreeView.createDisabledItem("Git", null)
+					ConfigurationTreeView.createDisabledItem(R.COMMON_GIT.get(), null)
 			);
-			MenuItem itemRemove = new MenuItem("Remove library", new ImageView(new Image(CssVariables.Icons.REMOVE_PARAMETER_ICON)));
-			itemRemove.setOnAction(e -> Common.tryCatch(() -> model.removeLibrary(this.namespace), "Error on remove library"));
+			MenuItem itemRemove = new MenuItem(R.LIBRARY_TN_REMOVE_LIBRARY.get(), new ImageView(new Image(CssVariables.Icons.REMOVE_PARAMETER_ICON)));
+			itemRemove.setOnAction(e -> Common.tryCatch(() -> model.removeLibrary(this.namespace), R.LIBRARY_TN_ERROR_ON_REMOVE.get()));
 			return Optional.of(menu);
 		}
 

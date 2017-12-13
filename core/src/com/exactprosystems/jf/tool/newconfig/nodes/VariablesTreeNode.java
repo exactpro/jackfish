@@ -9,6 +9,7 @@
 package com.exactprosystems.jf.tool.newconfig.nodes;
 
 import com.exactprosystems.jf.api.common.SerializablePair;
+import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.common.MainRunner;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.CssVariables;
@@ -48,7 +49,7 @@ public class VariablesTreeNode extends TreeNode
 		menu.getItems().addAll(
 				ConfigurationTreeView.createDisabledItem(REMOVE_VARS_FILE),
 				ConfigurationTreeView.createDisabledItem(OPEN_VARS_FILE),
-				ConfigurationTreeView.createDisabledItem("Git", null)
+				ConfigurationTreeView.createDisabledItem(R.COMMON_GIT.get(), null)
 		);
 		return Optional.of(menu);
 	}
@@ -56,7 +57,7 @@ public class VariablesTreeNode extends TreeNode
 	@Override
 	public Node getView()
 	{
-		return new Text("vars");
+		return new Text(R.VARS_TN_VIEW.get());
 	}
 
 	@Override
@@ -75,8 +76,8 @@ public class VariablesTreeNode extends TreeNode
 			{
 				ContextMenu menu = new ContextMenu();
 				menu.getItems().addAll(
-						ConfigurationTreeView.createItem(REMOVE_VARS_FILE, () -> model.excludeVarsFile(file), "Error on remove vars file"),
-						ConfigurationTreeView.createItem(OPEN_VARS_FILE, () -> model.openVariableFile(new File(file)), "Error on load system variable")
+						ConfigurationTreeView.createItem(REMOVE_VARS_FILE, () -> model.excludeVarsFile(file), R.VARS_TN_ERROR_ON_REMOVE.get()),
+						ConfigurationTreeView.createItem(OPEN_VARS_FILE, () -> model.openVariableFile(new File(file)), R.VARS_TN_ERROR_ON_SAVE.get())
 				);
 				menu.getItems().addAll(super.contextMenu().orElse(new ContextMenu()).getItems());
 				return Optional.of(menu);

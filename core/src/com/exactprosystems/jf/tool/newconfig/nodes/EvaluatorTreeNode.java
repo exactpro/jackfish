@@ -9,6 +9,7 @@
 package com.exactprosystems.jf.tool.newconfig.nodes;
 
 import com.exactprosystems.jf.api.common.SerializablePair;
+import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.CssVariables;
 import com.exactprosystems.jf.tool.helpers.DialogsHelper;
@@ -43,9 +44,9 @@ public class EvaluatorTreeNode extends TreeNode
 	@Override
 	public Optional<ContextMenu> contextMenu()
 	{
-		ContextMenu contextMenu = ConfigurationTreeView.add("Add import",
-				e -> DialogsHelper.showInputDialog("Enter new import", "").ifPresent(
-						res -> Common.tryCatch(() -> this.model.addNewEvaluatorImport(res), "Error on add new import")
+		ContextMenu contextMenu = ConfigurationTreeView.add(R.EVALUATOR_TREE_NODE_ADD_IMPORT.get(),
+				e -> DialogsHelper.showInputDialog(R.EVALUATOR_TREE_NODE_ENTER_IMPORT.get(), "").ifPresent(
+						res -> Common.tryCatch(() -> this.model.addNewEvaluatorImport(res), R.EVALUATOR_TREE_NODE_ERROR_ON_ADD.get())
 				));
 		contextMenu.getItems().addAll(
 				ConfigurationTreeView.createDisabledItem(REMOVE_IMPORT),
@@ -58,7 +59,7 @@ public class EvaluatorTreeNode extends TreeNode
 	@Override
 	public Node getView()
 	{
-		return new Text("evaluator");
+		return new Text(R.EVALUATOR_TREE_NODE_EVALUATOR.get());
 	}
 
 	@Override
@@ -100,8 +101,8 @@ public class EvaluatorTreeNode extends TreeNode
 			ContextMenu menu = new ContextMenu();
 			menu.getItems().addAll(
 				ConfigurationTreeView.createDisabledItem(ADD_IMPORT),
-				ConfigurationTreeView.createItem(REMOVE_IMPORT, () -> remove(this.evaluatorImport), "Error on remove import"),
-				ConfigurationTreeView.createItem(REPLACE_IMPORT, this::replaceEvaluator, "Error on remove import")
+				ConfigurationTreeView.createItem(REMOVE_IMPORT, () -> remove(this.evaluatorImport), R.EVALUATOR_TREE_NODE_ERROR_REMOVE.get()),
+				ConfigurationTreeView.createItem(REPLACE_IMPORT, this::replaceEvaluator, R.EVALUATOR_TREE_NODE_ERROR_REMOVE.get())
 			);
 			return Optional.of(menu);
 		}
@@ -130,7 +131,7 @@ public class EvaluatorTreeNode extends TreeNode
 			dialog.setResizable(true);
 			dialog.setTitle("Replace");
 			dialog.setHeaderText("Enter new evaluator");
-			dialog.showAndWait().ifPresent(str -> Common.tryCatch(() -> model.replaceEvaluatorImport(this.evaluatorImport, str), "Error on change evaluator import"));
+			dialog.showAndWait().ifPresent(str -> Common.tryCatch(() -> model.replaceEvaluatorImport(this.evaluatorImport, str), R.EVALUATOR_TREE_NODE_ERROR_CHANGE.get()));
 		}
 	}
 }

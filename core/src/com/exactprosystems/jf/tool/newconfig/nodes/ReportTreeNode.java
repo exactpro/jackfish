@@ -9,6 +9,7 @@
 package com.exactprosystems.jf.tool.newconfig.nodes;
 
 import com.exactprosystems.jf.api.common.SerializablePair;
+import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.tool.CssVariables;
 import com.exactprosystems.jf.tool.newconfig.ConfigurationFx;
 import com.exactprosystems.jf.tool.newconfig.ConfigurationTreeView;
@@ -48,10 +49,10 @@ public class ReportTreeNode extends TreeNode
 		menu.getItems().addAll(
 				ConfigurationTreeView.createDisabledItem(OPER_REPORT),
 				ConfigurationTreeView.createDisabledItem(REMOVE_REPORT),
-				ConfigurationTreeView.createItem(CLEAR_FOLDER, () -> this.model.clearReportFolder(), "Error on clear folder"),
-				ConfigurationTreeView.createItem(REFRESH, () -> this.model.updateReport(), "Error on refresh report folder"),
+				ConfigurationTreeView.createItem(CLEAR_FOLDER, () -> this.model.clearReportFolder(), R.REPORT_TN_ERROR_ON_CLEAR.get()),
+				ConfigurationTreeView.createItem(REFRESH, () -> this.model.updateReport(), R.REPORT_TN_ERROR_ON_REFRESH.get()),
 				new SeparatorMenuItem(),
-				ConfigurationTreeView.createDisabledItem("Git", null)
+				ConfigurationTreeView.createDisabledItem(R.COMMON_GIT.get(), null)
 		);
 		return Optional.of(menu);
 	}
@@ -59,7 +60,7 @@ public class ReportTreeNode extends TreeNode
 	@Override
 	public Node getView()
 	{
-		return new Text("Report folder");
+		return new Text(R.REPORT_TN_VIEW.get());
 	}
 
 	@Override
@@ -78,8 +79,8 @@ public class ReportTreeNode extends TreeNode
 				ContextMenu menu = new ContextMenu();
 
 				menu.getItems().addAll(
-						ConfigurationTreeView.createItem(OPER_REPORT, () -> this.model.openReport(file), "Error on open report"),
-						ConfigurationTreeView.createItem(REMOVE_REPORT, () -> this.model.removeReport(file), "Error on remove report"),
+						ConfigurationTreeView.createItem(OPER_REPORT, () -> this.model.openReport(file), R.REPORT_TN_ERROR_ON_OPEN.get()),
+						ConfigurationTreeView.createItem(REMOVE_REPORT, () -> this.model.removeReport(file), R.REPORT_TN_ERROR_ON_REMOVE.get()),
 						ConfigurationTreeView.createDisabledItem(CLEAR_FOLDER),
 						ConfigurationTreeView.createDisabledItem(REFRESH)
 				);

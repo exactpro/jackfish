@@ -9,6 +9,7 @@
 package com.exactprosystems.jf.tool.newconfig.nodes;
 
 import com.exactprosystems.jf.api.common.SerializablePair;
+import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.documents.config.ClientEntry;
 import com.exactprosystems.jf.documents.config.Configuration;
 import com.exactprosystems.jf.tool.Common;
@@ -58,11 +59,11 @@ public class ClientTreeNode extends TreeNode
 	public Optional<ContextMenu> contextMenu()
 	{
 		ContextMenu menu = ConfigurationTreeView.add(
-				"Add client",
-				e -> DialogsHelper.showInputDialog("Enter new client name", "").ifPresent(
-						res -> Common.tryCatch(() -> this.model.addNewClientEntry(res), "Error on add new client")));
+				R.CLIENT_TREE_NODE_ADD_CLIENT.get(),
+				e -> DialogsHelper.showInputDialog(R.CLIENT_TREE_NODE_ENTRE_NEW_NAME.get(), "").ifPresent(
+						res -> Common.tryCatch(() -> this.model.addNewClientEntry(res), R.CLIENT_TREE_NODE_ERROR_ADD_NEW_CLIENT.get())));
 		menu.getItems().addAll(
-				ConfigurationTreeView.createItem(TEST_VERSION, () -> this.model.testClientVersion(), "Error on test app version"),
+				ConfigurationTreeView.createItem(TEST_VERSION, () -> this.model.testClientVersion(), R.CLIENT_TREE_NODE_ERROR_ON_TEST.get()),
 				ConfigurationTreeView.createDisabledItem(REFRESH),
 				ConfigurationTreeView.createDisabledItem(EXCLUDE_CLIENT_DIC_FOLDER),
 				ConfigurationTreeView.createDisabledItem(OPEN_DICTIONARY),
@@ -77,7 +78,7 @@ public class ClientTreeNode extends TreeNode
 	@Override
 	public Node getView()
 	{
-		return new Text("Client entries");
+		return new Text(R.CLIENT_TREE_NODE_CLIENT_ENTRIES.get());
 	}
 
 	@Override
@@ -114,10 +115,10 @@ public class ClientTreeNode extends TreeNode
 					ConfigurationTreeView.createDisabledItem(REFRESH),
 					ConfigurationTreeView.createDisabledItem(EXCLUDE_CLIENT_DIC_FOLDER),
 					ConfigurationTreeView.createDisabledItem(OPEN_DICTIONARY),
-					ConfigurationTreeView.createItem(REMOVE, () -> model.removeClientEntry(getEntry()), String.format("Error on remove entry '%s'", getEntry().toString())),
-					ConfigurationTreeView.createItem(SHOW_POSSIBILITIES, () -> model.showPossibilities(getEntry()), String.format("Error on show possibilities for entry '%s'", getEntry().toString())),
-					ConfigurationTreeView.createItem(ADD_ALL_KNOWN_PARAMETERS, () -> model.addAllClientParams(getEntry()),String.format("Error on add all parameters for entry '%s'", getEntry())),
-					ConfigurationTreeView.createDisabledItem("Git", null)
+					ConfigurationTreeView.createItem(REMOVE, () -> model.removeClientEntry(getEntry()), String.format(R.CLIENT_TREE_NODE_ERROR_REMOVE_ENTRY.get(), getEntry().toString())),
+					ConfigurationTreeView.createItem(SHOW_POSSIBILITIES, () -> model.showPossibilities(getEntry()), String.format(R.CLIENT_TREE_NODE_ERROR_ON_SHOW_POSSIBILITIES.get(), getEntry().toString())),
+					ConfigurationTreeView.createItem(ADD_ALL_KNOWN_PARAMETERS, () -> model.addAllClientParams(getEntry()),String.format(R.CLIENT_TREE_NODE_ERROR_ADD_ALL_PARAMS.get(), getEntry())),
+					ConfigurationTreeView.createDisabledItem(R.COMMON_GIT.get(), null)
 			);
 			return Optional.of(menu);
 		}
@@ -164,10 +165,10 @@ public class ClientTreeNode extends TreeNode
 				List<TablePair> list = new ArrayList<>();
 				list.add(TablePair.TablePairBuilder.create(Configuration.clientDescription, getEntry().get(Configuration.clientDescription)).edit(true).build());
 				list.add(TablePair.TablePairBuilder.create(Configuration.clientJar, getEntry().get(Configuration.clientJar)).edit(true).pathFunc(
-						() -> DialogsHelper.showOpenSaveDialog("Choose client for " + getEntry().toString(), "Jar files(*.jar)", "*.jar", DialogsHelper.OpenSaveMode.OpenFile))
+						() -> DialogsHelper.showOpenSaveDialog(String.format(R.CLIENT_TREE_NODE_CHOOSE_CLIENT.get(), getEntry().toString()), R.COMMON_JAR_FILTER.get(), "*.jar", DialogsHelper.OpenSaveMode.OpenFile))
 						.build());
 				list.add(TablePair.TablePairBuilder.create(Configuration.clientDictionary, getEntry().get(Configuration.clientDictionary)).edit(true).pathFunc(
-						() -> DialogsHelper.showOpenSaveDialog("Choose client dictionary", "Xml files(*.xml)", "*.xml", DialogsHelper.OpenSaveMode.OpenFile))
+						() -> DialogsHelper.showOpenSaveDialog(R.CLIENT_TREE_NODE_CHOOSE_CLIENT_DIC.get(), R.COMMON_XML_FILTER.get(), "*.xml", DialogsHelper.OpenSaveMode.OpenFile))
 						.build());
 				list.add(TablePair.TablePairBuilder.create(Configuration.clientLimit, getEntry().get(Configuration.clientLimit)).edit(true).build());
 				getEntry().getParameters().stream().map(parameter -> new TablePair(parameter.getKey(), parameter.getValue())).forEach(list::add);
@@ -203,7 +204,7 @@ public class ClientTreeNode extends TreeNode
 		@Override
 		public Node getView()
 		{
-			return new Text("Client dictionaries");
+			return new Text(R.CLIENT_TREE_NODE_CLIENT_DIC.get());
 		}
 
 		@Override
@@ -220,13 +221,13 @@ public class ClientTreeNode extends TreeNode
 			ret.getItems().addAll(
 					ConfigurationTreeView.createDisabledItem(ADD_NEW_CLIENT),
 					ConfigurationTreeView.createDisabledItem(TEST_VERSION),
-					ConfigurationTreeView.createItem(REFRESH, () -> this.model.updateClientDictionaries(), "Error on refresh client dictionaries"),
+					ConfigurationTreeView.createItem(REFRESH, () -> this.model.updateClientDictionaries(), R.CLIENT_TREE_NODE_REFRESH_CLIENT_DIC.get()),
 					ConfigurationTreeView.createDisabledItem(EXCLUDE_CLIENT_DIC_FOLDER),
 					ConfigurationTreeView.createDisabledItem(OPEN_DICTIONARY),
 					ConfigurationTreeView.createDisabledItem(REMOVE),
 					ConfigurationTreeView.createDisabledItem(SHOW_POSSIBILITIES),
 					ConfigurationTreeView.createDisabledItem(ADD_ALL_KNOWN_PARAMETERS),
-					ConfigurationTreeView.createDisabledItem("Git", null)
+					ConfigurationTreeView.createDisabledItem(R.COMMON_GIT.get(), null)
 			);
 			return Optional.of(ret);
 		}
@@ -241,7 +242,7 @@ public class ClientTreeNode extends TreeNode
 						ConfigurationTreeView.createDisabledItem(ADD_NEW_CLIENT),
 						ConfigurationTreeView.createDisabledItem(TEST_VERSION),
 						ConfigurationTreeView.createDisabledItem(REFRESH),
-						ConfigurationTreeView.createItem(EXCLUDE_CLIENT_DIC_FOLDER, () -> model.excludeClientDictionaryFolder(file.getName()), "Error on excluded matrix directory"),
+						ConfigurationTreeView.createItem(EXCLUDE_CLIENT_DIC_FOLDER, () -> model.excludeClientDictionaryFolder(file.getName()), R.CLIENT_TREE_NODE_ERROR_EXCLUDED_DIR.get()),
 						ConfigurationTreeView.createDisabledItem(OPEN_DICTIONARY),
 						ConfigurationTreeView.createDisabledItem(REMOVE),
 						ConfigurationTreeView.createDisabledItem(SHOW_POSSIBILITIES),
@@ -257,7 +258,7 @@ public class ClientTreeNode extends TreeNode
 						ConfigurationTreeView.createDisabledItem(TEST_VERSION),
 						ConfigurationTreeView.createDisabledItem(REFRESH),
 						ConfigurationTreeView.createDisabledItem(EXCLUDE_CLIENT_DIC_FOLDER),
-						ConfigurationTreeView.createItem(OPEN_DICTIONARY, () -> this.model.openClientDictionary(file), "Error on open client dictionary"),
+						ConfigurationTreeView.createItem(OPEN_DICTIONARY, () -> this.model.openClientDictionary(file), R.CLIENT_TREE_NODE_ERROR_OPEN_DIC.get()),
 						ConfigurationTreeView.createDisabledItem(REMOVE),
 						ConfigurationTreeView.createDisabledItem(SHOW_POSSIBILITIES),
 						ConfigurationTreeView.createDisabledItem(ADD_ALL_KNOWN_PARAMETERS)

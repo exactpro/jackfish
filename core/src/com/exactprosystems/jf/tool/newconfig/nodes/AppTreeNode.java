@@ -11,6 +11,7 @@ package com.exactprosystems.jf.tool.newconfig.nodes;
 import com.exactprosystems.jf.api.app.AppConnection;
 import com.exactprosystems.jf.api.app.IApplicationPool;
 import com.exactprosystems.jf.api.common.SerializablePair;
+import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.api.wizard.Wizard;
 import com.exactprosystems.jf.api.wizard.WizardManager;
 import com.exactprosystems.jf.documents.config.AppEntry;
@@ -66,19 +67,19 @@ public class AppTreeNode extends TreeNode
 	@Override
 	public Optional<ContextMenu> contextMenu()
 	{
-		ContextMenu menu = ConfigurationTreeView.add("Add new app",
-				e -> DialogsHelper.showInputDialog("Enter new app name", "")
-						.ifPresent(res -> Common.tryCatch(() -> this.model.addNewAppEntry(res), "Error on add new application")));
+		ContextMenu menu = ConfigurationTreeView.add(R.APP_TREE_NODE_ADD_NEW_APP.get(),
+				e -> DialogsHelper.showInputDialog(R.APP_TREE_NODE_ENTER_NEW_NAME.get(), "")
+						.ifPresent(res -> Common.tryCatch(() -> this.model.addNewAppEntry(res), R.APP_TREE_NODE_ERROR_ON_ADD.get())));
 		menu.getItems().addAll(
-				ConfigurationTreeView.createItem(TEST_VERSION, () -> this.model.testAppVersion(), "Error on test app version"),
-				ConfigurationTreeView.createMenu(CLOSE_APPS, ConfigurationTreeView.createItem(ALL, null, this::closeAllApplication, "Error on close all application")),
+				ConfigurationTreeView.createItem(TEST_VERSION, () -> this.model.testAppVersion(), R.APP_TREE_NODE_ERROR_ON_TEST.get()),
+				ConfigurationTreeView.createMenu(CLOSE_APPS, ConfigurationTreeView.createItem(ALL, null, this::closeAllApplication, R.APP_TREE_NODE_ERROR_ON_CLOSE.get())),
 				ConfigurationTreeView.createDisabledItem(REFRESH),
 				ConfigurationTreeView.createDisabledItem(EXCLUDE_APP_DIC_FOLDER),
 				ConfigurationTreeView.createDisabledItem(OPEN_DICTIONARY),
 				ConfigurationTreeView.createDisabledItem(REMOVE),
 				ConfigurationTreeView.createDisabledItem(ADD_ALL_KNOWN_PARAMS),
 				ConfigurationTreeView.createDisabledItem(SHOW_HELP),
-				ConfigurationTreeView.createDisabledItem("Git", null)
+				ConfigurationTreeView.createDisabledItem(R.COMMON_GIT.get(), null)
 		);
 		return Optional.of(menu);
 	}
@@ -104,7 +105,7 @@ public class AppTreeNode extends TreeNode
 										appConnection.toString()
 										, null
 										, () -> applicationPool.stopApplication(appConnection, true)
-										, "Error on stop application. See log for details"
+										, R.APP_TREE_NODE_ERROR_ON_STOP.get()
 								))
 								.collect(Collectors.toList())
 						);
@@ -116,7 +117,7 @@ public class AppTreeNode extends TreeNode
 	@Override
 	public Node getView()
 	{
-		return new Text("App entries");
+		return new Text(R.APP_TREE_NODE_APP_ENTRIES.get());
 	}
 
 	@Override
@@ -218,12 +219,12 @@ public class AppTreeNode extends TreeNode
 					ConfigurationTreeView.createDisabledMenu(CLOSE_APPS),
 					ConfigurationTreeView.createDisabledItem(REFRESH),
 					ConfigurationTreeView.createDisabledItem(EXCLUDE_APP_DIC_FOLDER),
-					ConfigurationTreeView.createItem(OPEN_DICTIONARY, () -> model.openAppsDictionary(getEntry()), "Error on open dictionary"),
-					ConfigurationTreeView.createItem(REMOVE, () -> model.removeAppEntry(getEntry()), String.format("Error on remove entry '%s'", getEntry().toString())),
-					ConfigurationTreeView.createItem(ADD_ALL_KNOWN_PARAMS, () -> model.addAllAppParams(getEntry()), String.format("Error on add all parameters for entry '%s'", getEntry())),
-					ConfigurationTreeView.createItem(SHOW_HELP, () -> model.showAppHelp(getEntry()), "Error on show help"),
+					ConfigurationTreeView.createItem(OPEN_DICTIONARY, () -> model.openAppsDictionary(getEntry()), R.APP_TREE_NODE_ERROR_OPEN_DIC.get()),
+					ConfigurationTreeView.createItem(REMOVE, () -> model.removeAppEntry(getEntry()), String.format(R.APP_TREE_NODE_ERROR_REMOVE_ENTRY.get(), getEntry().toString())),
+					ConfigurationTreeView.createItem(ADD_ALL_KNOWN_PARAMS, () -> model.addAllAppParams(getEntry()), String.format(R.APP_TREE_NODE_ERROR_ADD_ALL_PARAMS.get(), getEntry())),
+					ConfigurationTreeView.createItem(SHOW_HELP, () -> model.showAppHelp(getEntry()), R.APP_TREE_NODE_ERROR_SHOW_HELP.get()),
 					menuWizard,
-					ConfigurationTreeView.createDisabledItem("Git", null)
+					ConfigurationTreeView.createDisabledItem(R.COMMON_GIT.get(), null)
 			);
 			return Optional.of(menu);
 		}
@@ -236,10 +237,10 @@ public class AppTreeNode extends TreeNode
 				List<TablePair> list = new ArrayList<>();
 				list.add(TablePair.TablePairBuilder.create(Configuration.appDescription, getEntry().get(Configuration.appDescription)).edit(true).build());
 				list.add(TablePair.TablePairBuilder.create(Configuration.appJar, getEntry().get(Configuration.appJar)).edit(true).pathFunc(
-						() -> DialogsHelper.showOpenSaveDialog("Choose plugin for adapter "+getEntry().toString(), "Jar files(*.jar)", "*.jar", DialogsHelper.OpenSaveMode.OpenFile))
+						() -> DialogsHelper.showOpenSaveDialog(String.format(R.APP_TREE_NODE_CHOOSE_PLUGIN.get(), getEntry().toString()), R.COMMON_JAR_FILTER.get(), "*.jar", DialogsHelper.OpenSaveMode.OpenFile))
 						.build());
 				list.add(TablePair.TablePairBuilder.create(Configuration.appDicPath, getEntry().get(Configuration.appDicPath)).edit(true).pathFunc(
-						() -> DialogsHelper.showOpenSaveDialog("Choose dictionary", "Xml files(*.xml)", "*.xml", DialogsHelper.OpenSaveMode.OpenFile))
+						() -> DialogsHelper.showOpenSaveDialog(R.APP_TREE_NODE_CHOOSE_DIC.get(), R.COMMON_XML_FILTER.get(), "*.xml", DialogsHelper.OpenSaveMode.OpenFile))
 						.build());
 				list.add(TablePair.TablePairBuilder.create(Configuration.appWorkDir, getEntry().get(Configuration.appWorkDir)).edit(true).build());
 				list.add(TablePair.TablePairBuilder.create(Configuration.appStartPort, getEntry().get(Configuration.appStartPort)).edit(true).build());
@@ -278,7 +279,7 @@ public class AppTreeNode extends TreeNode
 		@Override
 		public Node getView()
 		{
-			return new Text("App dictionaries");
+			return new Text(R.APP_TREE_NODE_APP_DIC.get());
 		}
 
 		@Override
@@ -296,13 +297,13 @@ public class AppTreeNode extends TreeNode
 					ConfigurationTreeView.createDisabledItem(ADD_NEW_APP),
 					ConfigurationTreeView.createDisabledItem(TEST_VERSION),
 					ConfigurationTreeView.createDisabledMenu(CLOSE_APPS),
-					ConfigurationTreeView.createItem(REFRESH, () -> this.model.updateAppDictionaries(), "Error on refresh app dictionaries"),
+					ConfigurationTreeView.createItem(REFRESH, () -> this.model.updateAppDictionaries(), R.APP_TREE_NODE_ERROR_REFRESH_APP_DIC.get()),
 					ConfigurationTreeView.createDisabledItem(EXCLUDE_APP_DIC_FOLDER),
 					ConfigurationTreeView.createDisabledItem(OPEN_DICTIONARY),
 					ConfigurationTreeView.createDisabledItem(REMOVE),
 					ConfigurationTreeView.createDisabledItem(ADD_ALL_KNOWN_PARAMS),
 					ConfigurationTreeView.createDisabledItem(SHOW_HELP),
-					ConfigurationTreeView.createDisabledItem("Git", null)
+					ConfigurationTreeView.createDisabledItem(R.COMMON_GIT.get(), null)
 			);
 			return Optional.of(ret);
 		}
@@ -317,7 +318,7 @@ public class AppTreeNode extends TreeNode
 						ConfigurationTreeView.createDisabledItem(TEST_VERSION),
 						ConfigurationTreeView.createDisabledMenu(CLOSE_APPS),
 						ConfigurationTreeView.createDisabledItem(REFRESH),
-						ConfigurationTreeView.createItem(EXCLUDE_APP_DIC_FOLDER, () -> model.excludeAppDictionaryFolder(file.getName()), "Error on excluded matrix directory"),
+						ConfigurationTreeView.createItem(EXCLUDE_APP_DIC_FOLDER, () -> model.excludeAppDictionaryFolder(file.getName()), R.APP_TREE_NODE_ERROR_EXCLUDED_DIR.get()),
 						ConfigurationTreeView.createDisabledItem(OPEN_DICTIONARY),
 						ConfigurationTreeView.createDisabledItem(REMOVE),
 						ConfigurationTreeView.createDisabledItem(ADD_ALL_KNOWN_PARAMS),
@@ -333,7 +334,7 @@ public class AppTreeNode extends TreeNode
 						ConfigurationTreeView.createDisabledMenu(CLOSE_APPS),
 						ConfigurationTreeView.createDisabledItem(REFRESH),
 						ConfigurationTreeView.createDisabledItem(EXCLUDE_APP_DIC_FOLDER),
-						ConfigurationTreeView.createItem(OPEN_DICTIONARY, () -> this.model.openAppsDictionary(file), "Error on open app dictionary"),
+						ConfigurationTreeView.createItem(OPEN_DICTIONARY, () -> this.model.openAppsDictionary(file), R.APP_TREE_NODE_ERROR_OPEN_DIC.get()),
 						ConfigurationTreeView.createDisabledItem(REMOVE),
 						ConfigurationTreeView.createDisabledItem(ADD_ALL_KNOWN_PARAMS),
 						ConfigurationTreeView.createDisabledItem(SHOW_HELP)

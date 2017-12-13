@@ -9,6 +9,7 @@
 package com.exactprosystems.jf.tool.newconfig.nodes;
 
 import com.exactprosystems.jf.api.common.SerializablePair;
+import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.common.Settings;
 import com.exactprosystems.jf.documents.config.Configuration;
 import com.exactprosystems.jf.documents.config.SqlEntry;
@@ -48,9 +49,9 @@ public class SqlTreeNode extends TreeNode
 	@Override
 	public Optional<ContextMenu> contextMenu()
 	{
-		ContextMenu menu = ConfigurationTreeView.add("Add new sql",
-				e -> DialogsHelper.showInputDialog("Enter new sql name", "").ifPresent(
-						res -> Common.tryCatch(() -> this.model.addNewSqlEntry(res), "Error on add new import"))
+		ContextMenu menu = ConfigurationTreeView.add(R.SQL_TN_ADD_NEW.get(),
+				e -> DialogsHelper.showInputDialog(R.SQL_TN_ENTER_NEW_NAME.get(), "").ifPresent(
+						res -> Common.tryCatch(() -> this.model.addNewSqlEntry(res), R.SQL_TN_ERROR_ON_ADD_IMPORT.get()))
 		);
 		menu.getItems().addAll(
 				ConfigurationTreeView.createDisabledItem(REMOVE_SQL),
@@ -62,7 +63,7 @@ public class SqlTreeNode extends TreeNode
 	@Override
 	public Node getView()
 	{
-		return new Text("Sql entries");
+		return new Text(R.SQL_TN_VIEW.get());
 	}
 
 	@Override
@@ -85,7 +86,7 @@ public class SqlTreeNode extends TreeNode
 		Settings settings = this.model.getFactory().getSettings();
 		String s = entry.get(Configuration.entryName);
 		List<Settings.SettingsValue> values = settings.getValues(Settings.GLOBAL_NS, Settings.SQL + s);
-		Common.tryCatchThrow(() -> this.showTestSqlPanel(entry, values), "Error on show testing panel");
+		Common.tryCatchThrow(() -> this.showTestSqlPanel(entry, values), R.SQL_TN_ERROR_ON_SHOW_TESTING_PANEL.get());
 	}
 
 	private void showTestSqlPanel(SqlEntry entry, List<Settings.SettingsValue> values)
@@ -95,7 +96,7 @@ public class SqlTreeNode extends TreeNode
 			this.testSqlController = Common.loadController(TestingConnectionFxController.class.getResource("TestingConnectionFx.fxml"));
 			this.testSqlController.init(model, entry.toString(), values);
 			this.testSqlController.display();
-			}, "Error on show test sql panel");
+			}, R.SQL_TN_ERROR_ON_SHOW_TEST_PANEL.get());
 	}
 
 	
@@ -112,8 +113,8 @@ public class SqlTreeNode extends TreeNode
 			ContextMenu menu = new ContextMenu();
 			menu.getItems().addAll(
 					ConfigurationTreeView.createDisabledItem(ADD_NEW_SQL),
-					ConfigurationTreeView.createItem(REMOVE_SQL, () -> model.removeSqlEntry(getEntry()), "Error on remove sql entry"),
-					ConfigurationTreeView.createItem(TEST, () -> testSqlEntry(getEntry()), "Error on test sql entry")
+					ConfigurationTreeView.createItem(REMOVE_SQL, () -> model.removeSqlEntry(getEntry()), R.SQL_TN_ERROR_ON_REMOVE_ENTRY.get()),
+					ConfigurationTreeView.createItem(TEST, () -> testSqlEntry(getEntry()), R.SQL_TN_ERROR_ON_TEST_ENTRY.get())
 			);
 			return Optional.of(menu);
 		}
@@ -125,7 +126,7 @@ public class SqlTreeNode extends TreeNode
 			{
 				List<TablePair> list = new ArrayList<>();
 				list.add(TablePair.TablePairBuilder.create(Configuration.sqlJar, getEntry().get(Configuration.sqlJar)).edit(true).pathFunc(
-						() -> DialogsHelper.showOpenSaveDialog("Choose sql", "Jar files(*.jar)", "*.jar", DialogsHelper.OpenSaveMode.OpenFile))
+						() -> DialogsHelper.showOpenSaveDialog(R.SQL_TN_CHOOSE_SQL.get(), R.COMMON_JAR_FILTER.get(), "*.jar", DialogsHelper.OpenSaveMode.OpenFile))
 						.build());
 				list.add(TablePair.TablePairBuilder.create(Configuration.sqlConnection, getEntry().get(Configuration.sqlConnection)).edit(true).build());
 				return list;

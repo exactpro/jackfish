@@ -9,6 +9,7 @@
 package com.exactprosystems.jf.tool.newconfig.nodes;
 
 import com.exactprosystems.jf.api.common.SerializablePair;
+import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.documents.config.Configuration;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.CssVariables;
@@ -50,9 +51,9 @@ public class FormatTreeNode extends TreeNode
 	@Override
 	public Optional<ContextMenu> contextMenu()
 	{
-		ContextMenu contextMenu = ConfigurationTreeView.add("Add format",
-				e -> DialogsHelper.showInputDialog("Enter new format", "").ifPresent(
-						res -> Common.tryCatch(() -> this.model.addNewAdditionalFormat(res), "Error on add new format")
+		ContextMenu contextMenu = ConfigurationTreeView.add(R.FORMAT_TN_ADD_FORMAT.get(),
+				e -> DialogsHelper.showInputDialog(R.FORMAT_TN_ENTER_NEW.get(), "").ifPresent(
+						res -> Common.tryCatch(() -> this.model.addNewAdditionalFormat(res), R.FORMAT_TN_ERROR_ON_ADD.get())
 				));
 		contextMenu.getItems().addAll(
 				ConfigurationTreeView.createDisabledItem(REMOVE_FORMAT),
@@ -64,7 +65,7 @@ public class FormatTreeNode extends TreeNode
 	@Override
 	public Node getView()
 	{
-		return new Text("format");
+		return new Text(R.FORMAT_TN_VIEW.get());
 	}
 
 	@Override
@@ -80,7 +81,7 @@ public class FormatTreeNode extends TreeNode
 	@Override
 	public void updateParameter(String key, String value)
 	{
-		Common.tryCatch(() -> this.model.changeFormat(key, value), "Error on change format");
+		Common.tryCatch(() -> this.model.changeFormat(key, value), R.FORMAT_TN_ERROR_ON_CHANGE.get());
 	}
 
 	@Override
@@ -121,8 +122,8 @@ public class FormatTreeNode extends TreeNode
 			ContextMenu menu = new ContextMenu();
 			menu.getItems().addAll(
 					ConfigurationTreeView.createDisabledItem(ADD_FORMAT),
-					ConfigurationTreeView.createItem(REMOVE_FORMAT, () -> model.removeAdditionalFormat(this.name), "Error on remove format"),
-					ConfigurationTreeView.createItem(REPLACE_FORMAT, this::replaceFormat, "Error on replace format")
+					ConfigurationTreeView.createItem(REMOVE_FORMAT, () -> model.removeAdditionalFormat(this.name), R.FORMAT_TN_ERROR_ON_REMOVE.get()),
+					ConfigurationTreeView.createItem(REPLACE_FORMAT, this::replaceFormat, R.FORMAT_TN_ERROR_ON_REPLACE.get())
 			);
 			return Optional.of(menu);
 		}
@@ -149,9 +150,9 @@ public class FormatTreeNode extends TreeNode
 		{
 			Dialog<String> dialog = new TextInputDialog(this.name);
 			dialog.setResizable(true);
-			dialog.setTitle("Replace");
-			dialog.setHeaderText("Enter new format");
-			dialog.showAndWait().ifPresent(str -> Common.tryCatch(() -> model.replaceAdditionalFormat(this.name, str), "Error on change replace format"));
+			dialog.setTitle(R.FORMAT_TN_REPLACE.get());
+			dialog.setHeaderText(R.FORMAT_TN_ENTER_NEW.get());
+			dialog.showAndWait().ifPresent(str -> Common.tryCatch(() -> model.replaceAdditionalFormat(this.name, str), R.FORMAT_TB_ERROR_REPLACE_FORMAT.get()));
 		}
 
 	}

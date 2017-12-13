@@ -9,6 +9,7 @@
 package com.exactprosystems.jf.tool.newconfig.nodes;
 
 import com.exactprosystems.jf.api.common.SerializablePair;
+import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.documents.config.Configuration;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.CssVariables;
@@ -56,7 +57,7 @@ public class MatrixTreeNode extends TreeNode
 	@Override
 	public Node getView()
 	{
-		return new Text("matrix");
+		return new Text(R.MATRIX_TN_VIEW.get());
 	}
 
 	@Override
@@ -77,10 +78,10 @@ public class MatrixTreeNode extends TreeNode
 				ConfigurationTreeView.createDisabledItem(ADD_TO_TOOLBAR),
 				ConfigurationTreeView.createDisabledItem(REMOVE_MATRIX_FOLDER),
 				ConfigurationTreeView.createDisabledItem(EXCLUDE_MATRIX_FOLDER),
-				ConfigurationTreeView.createItem(REFRESH_MATRIX, () -> this.model.updateMatrices(), "Error on refresh matrices"),
+				ConfigurationTreeView.createItem(REFRESH_MATRIX, () -> this.model.updateMatrices(), R.MATRIX_TN_ERROR_ON_REFRESH.get()),
 				ConfigurationTreeView.createDisabledItem(RENAME_MATRIX),
 				new SeparatorMenuItem(),
-				ConfigurationTreeView.createDisabledItem("Git", null)
+				ConfigurationTreeView.createDisabledItem(R.COMMON_GIT.get(), null)
 		);
 		return Optional.of(menu);
 	}
@@ -96,7 +97,7 @@ public class MatrixTreeNode extends TreeNode
 					ConfigurationTreeView.createDisabledItem(OPEN_AS_TEXT),
 					ConfigurationTreeView.createDisabledItem(REMOVE_MATRIX),
 					ConfigurationTreeView.createDisabledItem(ADD_TO_TOOLBAR),
-					ConfigurationTreeView.createItem(EXCLUDE_MATRIX_FOLDER, () -> model.excludeMatrixDirectory(file.getName()), "Error on remove matrix directory"),
+					ConfigurationTreeView.createItem(EXCLUDE_MATRIX_FOLDER, () -> model.excludeMatrixDirectory(file.getName()), R.MATRIX_TN_ERROR_ON_REMOVE_DIR.get()),
 					ConfigurationTreeView.createDisabledItem(REFRESH_MATRIX),
 					ConfigurationTreeView.createDisabledItem(RENAME_MATRIX)
 			);
@@ -106,16 +107,16 @@ public class MatrixTreeNode extends TreeNode
 		{
 			ContextMenu menu = new ContextMenu();
 			menu.getItems().addAll(
-					ConfigurationTreeView.createItem(OPEN_MATRIX,() -> this.model.openMatrix(file), "Error on on open matrix"),
-					ConfigurationTreeView.createItem(OPEN_AS_TEXT,() -> this.model.openPlainText(file), "Error on on open matrix"),
-					ConfigurationTreeView.createItem(ADD_NEW_MATRIX, () -> DialogsHelper.showInputDialog("Enter new name", "").ifPresent(
-							name -> Common.tryCatch(() -> this.model.addNewMatrix(file, name), "Error on create new matrix")), "Error on add new matrix"),
-					ConfigurationTreeView.createItem(REMOVE_MATRIX, () -> this.model.removeMatrix(file), "Error on remove matrix"),
-					ConfigurationTreeView.createItem(ADD_TO_TOOLBAR, () -> this.model.addToToolbar(Common.getRelativePath(file.getPath())), "Error on add matrix to toolbar"),
+					ConfigurationTreeView.createItem(OPEN_MATRIX,() -> this.model.openMatrix(file), R.MATRIX_TN_ERROR_ON_OPEN_MATRIX.get()),
+					ConfigurationTreeView.createItem(OPEN_AS_TEXT,() -> this.model.openPlainText(file), R.MATRIX_TN_ERROR_ON_OPEN_MATRIX.get()),
+					ConfigurationTreeView.createItem(ADD_NEW_MATRIX, () -> DialogsHelper.showInputDialog(R.MATRIX_TN_ENTER_NEW_NAME.get(), "").ifPresent(
+							name -> Common.tryCatch(() -> this.model.addNewMatrix(file, name), R.MATRIX_TN_ERROR_ON_CREATE_MATRIX.get())), R.MATRIX_TN_ERROR_ON_ADD_MATRIX.get()),
+					ConfigurationTreeView.createItem(REMOVE_MATRIX, () -> this.model.removeMatrix(file), R.MATRIX_TN_ERROR_ON_REMOVE.get()),
+					ConfigurationTreeView.createItem(ADD_TO_TOOLBAR, () -> this.model.addToToolbar(Common.getRelativePath(file.getPath())), R.MATRIX_TN_ERROR_ADD_TO_TOOLBAR.get()),
 					ConfigurationTreeView.createDisabledItem(REMOVE_MATRIX_FOLDER),
 					ConfigurationTreeView.createDisabledItem(EXCLUDE_MATRIX_FOLDER),
 					ConfigurationTreeView.createDisabledItem(REFRESH_MATRIX),
-					ConfigurationTreeView.createItem(RENAME_MATRIX, () -> this.model.renameMatrix(file), "Error on rename matrix")
+					ConfigurationTreeView.createItem(RENAME_MATRIX, () -> this.model.renameMatrix(file), R.MATRIX_TN_ERROR_ON_RENAME.get())
 			);
 			return menu;
 		};
@@ -125,11 +126,11 @@ public class MatrixTreeNode extends TreeNode
 			menu.getItems().addAll(
 					ConfigurationTreeView.createDisabledItem(OPEN_MATRIX),
 					ConfigurationTreeView.createDisabledItem(OPEN_AS_TEXT),
-					ConfigurationTreeView.createItem(ADD_NEW_MATRIX, () -> DialogsHelper.showInputDialog("Enter new name", "").ifPresent(
-							name -> Common.tryCatch(() -> this.model.addNewMatrix(file, name), "Error on create new matrix")), "Error on add new matrix"),
+					ConfigurationTreeView.createItem(ADD_NEW_MATRIX, () -> DialogsHelper.showInputDialog(R.MATRIX_TN_ENTER_NEW_NAME.get(), "").ifPresent(
+							name -> Common.tryCatch(() -> this.model.addNewMatrix(file, name), R.MATRIX_TN_ERROR_ON_CREATE_MATRIX.get())), R.MATRIX_TN_ERROR_ON_ADD_MATRIX.get()),
 					ConfigurationTreeView.createDisabledItem(REMOVE_MATRIX),
 					ConfigurationTreeView.createDisabledItem(ADD_TO_TOOLBAR),
-					ConfigurationTreeView.createItem(REMOVE_MATRIX_FOLDER, () -> this.model.removeMatrix(file), "Error on remove folder"),
+					ConfigurationTreeView.createItem(REMOVE_MATRIX_FOLDER, () -> this.model.removeMatrix(file), R.MATRIX_TN_ERROR_ON_REMOVE_FOLDER.get()),
 					ConfigurationTreeView.createDisabledItem(EXCLUDE_MATRIX_FOLDER),
 					ConfigurationTreeView.createDisabledItem(REFRESH_MATRIX),
 					ConfigurationTreeView.createDisabledItem(RENAME_MATRIX)
@@ -138,7 +139,7 @@ public class MatrixTreeNode extends TreeNode
 		};
 		matricesValue.forEach(file -> new BuildTree(new File(file), this.treeItem,model.getFileComparator())
 				.fileFilter(f -> ConfigurationFx.getExtension(f.getAbsolutePath()).equals(Configuration.matrixExt)).menuTopFolder(topFolderMenu)
-				.doubleClickEvent(f -> () -> Common.tryCatch(() -> this.model.openMatrix(f), "Error on open matrix file")).menuFiles(menuFiles)
+				.doubleClickEvent(f -> () -> Common.tryCatch(() -> this.model.openMatrix(f), R.MATRIX_TN_ERROR_ON_OPEN_MATRIX_FILE.get())).menuFiles(menuFiles)
 				.menuFolder(menuFolders).byPass());
 	}
 

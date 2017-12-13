@@ -8,6 +8,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 package com.exactprosystems.jf.tool.newconfig.wizard;
 
+import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.ContainingParent;
 import com.exactprosystems.jf.tool.CssVariables;
@@ -58,7 +59,7 @@ public class WizardConfigurationController implements Initializable, ContainingP
 	{
 		this.cfChooseFolder.setButtonText("...");
 		this.cfChooseFolder.setHandler(event -> {
-			File file = DialogsHelper.showDirChooseDialog("Choose folder to create new project", this.cfChooseFolder.getText());
+			File file = DialogsHelper.showDirChooseDialog(R.WIZARD_CC_CHOOSE_FOLDER.get(), this.cfChooseFolder.getText());
 			Optional.ofNullable(file).ifPresent(f -> {
 				this.model.setFolderDir(f);
 				this.cfChooseFolder.setText(f.getAbsolutePath());
@@ -117,7 +118,7 @@ public class WizardConfigurationController implements Initializable, ContainingP
 		Common.addIcons(((Stage) dialog.getDialogPane().getScene().getWindow()));
 		dialog.setResizable(true);
 		dialog.getDialogPane().getStylesheets().addAll(Theme.currentThemesPaths());
-		dialog.setTitle("New Project");
+		dialog.setTitle(R.WIZARD_CC_DISPLAY_TITLE.get());
 //		dialog.getDialogPane().setHeader(new Label());
 		dialog.getDialogPane().setContent(this.parent);
 		dialog.setResultConverter(param -> {
@@ -126,8 +127,8 @@ public class WizardConfigurationController implements Initializable, ContainingP
 			return !param.getButtonData().equals(ButtonBar.ButtonData.CANCEL_CLOSE);
 		});
 
-		ButtonType buttonCreate = new ButtonType("Create", ButtonBar.ButtonData.OK_DONE);
-		ButtonType buttonClose = new ButtonType("Cancel", ButtonBar.ButtonData.CANCEL_CLOSE);
+		ButtonType buttonCreate = new ButtonType(R.WIZARD_CC_BUTTON_CREATE.get(), ButtonBar.ButtonData.OK_DONE);
+		ButtonType buttonClose = new ButtonType(R.WIZARD_CC_BUTTON_CANCEL.get(), ButtonBar.ButtonData.CANCEL_CLOSE);
 		dialog.getDialogPane().getButtonTypes().addAll(buttonCreate, buttonClose);
 		Node btnCreate = dialog.getDialogPane().lookupButton(buttonCreate);
 		ButtonBar.setButtonData(btnCreate, ButtonBar.ButtonData.OTHER);

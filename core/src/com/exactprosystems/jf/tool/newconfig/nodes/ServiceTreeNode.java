@@ -9,6 +9,7 @@
 package com.exactprosystems.jf.tool.newconfig.nodes;
 
 import com.exactprosystems.jf.api.common.SerializablePair;
+import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.api.service.ServiceConnection;
 import com.exactprosystems.jf.api.service.ServiceStatus;
 import com.exactprosystems.jf.documents.config.Configuration;
@@ -55,12 +56,12 @@ public class ServiceTreeNode extends TreeNode
 	@Override
 	public Optional<ContextMenu> contextMenu()
 	{
-		ContextMenu menu = ConfigurationTreeView.add("Add service",
-				e -> DialogsHelper.showInputDialog("Enter new service name", "")
-						.ifPresent(res -> Common.tryCatch(() -> this.model.addNewServiceEntry(res), "Error on add new service")));
+			ContextMenu menu = ConfigurationTreeView.add(R.SERVICE_TN_ADD_SERVICE.get(),
+				e -> DialogsHelper.showInputDialog(R.SERVICE_TN_ENTER_NEW_NAME.get(), "")
+						.ifPresent(res -> Common.tryCatch(() -> this.model.addNewServiceEntry(res), R.SERVICE_TN_ERROR_ON_ADD_NEW.get())));
 		menu.getItems().addAll(
-				ConfigurationTreeView.createItem(TEST_VERSION, () -> this.model.testServiceVersion(), "Error on test service version"),
-				ConfigurationTreeView.createMenu(CLOSE_SERVICES, ConfigurationTreeView.createItem(ALL, null, () -> this.model.stopAllServices(), "Error on stop all services")),
+				ConfigurationTreeView.createItem(TEST_VERSION, () -> this.model.testServiceVersion(), R.SERVICE_TN_ERROR_ON_TEST_VERSION.get()),
+				ConfigurationTreeView.createMenu(CLOSE_SERVICES, ConfigurationTreeView.createItem(ALL, null, () -> this.model.stopAllServices(), R.SERVICE_TN_ERROR_ON_STOP_ALL.get())),
 				ConfigurationTreeView.createDisabledItem(REMOVE),
 				ConfigurationTreeView.createDisabledItem(START_SERVICE),
 				ConfigurationTreeView.createDisabledItem(STOP_SERVICE),
@@ -89,7 +90,7 @@ public class ServiceTreeNode extends TreeNode
 										connection.toString()
 										, null
 										, () -> this.model.stopService(connection)
-										, "Error on stop application. See log for details"
+										, R.SERVICE_TN_ERROR_ON_STOP_APP.get()
 								))
 								.collect(Collectors.toList())
 						);
@@ -100,7 +101,7 @@ public class ServiceTreeNode extends TreeNode
 	@Override
 	public Node getView()
 	{
-		return new Text("Service entries");
+		return new Text(R.SERVICE_TN_VIEW.get());
 	}
 
 	@Override
@@ -136,14 +137,14 @@ public class ServiceTreeNode extends TreeNode
 					ConfigurationTreeView.createDisabledItem(ADD_NEW_SERVICE),
 					ConfigurationTreeView.createDisabledItem(TEST_VERSION),
 					ConfigurationTreeView.createDisabledMenu(CLOSE_SERVICES),
-					ConfigurationTreeView.createItem(REMOVE, () -> model.removeServiceEntry(getEntry()), String.format("Error on remove entry '%s'", getEntry().toString())),
-					ConfigurationTreeView.createItem(ADD_ALL_KNOWN_PARAMS,() -> model.addAllServiceParams(getEntry()), String.format("Error on add all parameters for entry '%s'", getEntry()))
+					ConfigurationTreeView.createItem(REMOVE, () -> model.removeServiceEntry(getEntry()), String.format(R.SERVICE_TN_ERROR_REMOVE_ENTRY.get(), getEntry().toString())),
+					ConfigurationTreeView.createItem(ADD_ALL_KNOWN_PARAMS,() -> model.addAllServiceParams(getEntry()), String.format(R.SERVICE_TN_ERROR_ADD_ALL_PARAMS.get(), getEntry()))
 			);
-			MenuItem startService = new MenuItem("Start service");
-			startService.setOnAction(e -> Common.tryCatch(() -> model.startService(getEntry()), "Error on start entry"));
+			MenuItem startService = new MenuItem(R.SERVICE_TN_START_SERVICE.get());
+			startService.setOnAction(e -> Common.tryCatch(() -> model.startService(getEntry()), R.SERVICE_TN_ERROR_ON_START.get()));
 
-			MenuItem stopService = new MenuItem("Stop service");
-			stopService.setOnAction(e -> Common.tryCatch(() -> model.stopService(getEntry()), "Error on stop entry"));
+			MenuItem stopService = new MenuItem(R.SERVICE_TN_STOP_SERVICE.get());
+			stopService.setOnAction(e -> Common.tryCatch(() -> model.stopService(getEntry()), R.SERVICE_TN_ERROR_ON_STOP.get()));
 			if (getSupportedEntry() != null && !getSupportedEntry().isSupported())
 			{
 				startService.setDisable(true);
@@ -208,7 +209,7 @@ public class ServiceTreeNode extends TreeNode
 				List<TablePair> list = new ArrayList<>();
 				list.add(TablePair.TablePairBuilder.create(Configuration.serviceDescription, getEntry().get(Configuration.serviceDescription)).edit(true).build());
 				list.add(TablePair.TablePairBuilder.create(Configuration.serviceJar, getEntry().get(Configuration.serviceJar)).edit(true).pathFunc(
-						() -> DialogsHelper.showOpenSaveDialog("Choose service", "Jar files(*.jar)", "*.jar", DialogsHelper.OpenSaveMode.OpenFile))
+						() -> DialogsHelper.showOpenSaveDialog(R.SERVICE_TN_CHOOSE_SERVICE.get(), R.COMMON_JAR_FILTER.get(), "*.jar", DialogsHelper.OpenSaveMode.OpenFile))
 						.build());
 				getEntry().getParameters().stream()
 						.map(parameter -> new TablePair(parameter.getKey(), parameter.getValue()))

@@ -8,6 +8,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 package com.exactprosystems.jf.tool.newconfig.nodes;
 
+import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.documents.DocumentKind;
 import com.exactprosystems.jf.documents.config.Configuration;
 import com.exactprosystems.jf.tool.Common;
@@ -42,20 +43,20 @@ public class ConfigurationTreeNode extends TreeNode
 	{
 		ContextMenu menu = new ContextMenu();
 
-		MenuItem refresh = new MenuItem("Refresh", new ImageView(new Image(CssVariables.Icons.REFRESH)));
-		refresh.setOnAction(e -> Common.tryCatch(() -> model.refresh(), "Error on refresh configuration"));
+		MenuItem refresh = new MenuItem(R.CONF_TREE_NODE_REFRESH.get(), new ImageView(new Image(CssVariables.Icons.REFRESH)));
+		refresh.setOnAction(e -> Common.tryCatch(() -> model.refresh(), R.CONF_TREE_NODE_ERROR_ON_REFRESH_CONF.get()));
 
-		Menu menuNew = new Menu("New");
+		Menu menuNew = new Menu(R.COMMON_NEW.get());
 		menuNew.getItems().addAll(
-				createNewDocumentMenuItem("Dictionary", DocumentKind.GUI_DICTIONARY),
-				createNewDocumentMenuItem("System variables", DocumentKind.SYSTEM_VARS),
-				createNewDocumentMenuItem("Matrix", DocumentKind.MATRIX),
-				createNewDocumentMenuItem("Library", () -> this.model.newLibrary()),
-				createNewDocumentMenuItem("Plain text", DocumentKind.PLAIN_TEXT),
-				createNewDocumentMenuItem("CSV", DocumentKind.CSV)
+				createNewDocumentMenuItem(R.COMMON_DICTIONARY.get(), DocumentKind.GUI_DICTIONARY),
+				createNewDocumentMenuItem(R.CONF_TREE_NODE_SYSTEM_VARS.get(), DocumentKind.SYSTEM_VARS),
+				createNewDocumentMenuItem(R.COMMON_MATRIX.get(), DocumentKind.MATRIX),
+				createNewDocumentMenuItem(R.CONF_TREE_NODE_LIBRARY.get(), () -> this.model.newLibrary()),
+				createNewDocumentMenuItem(R.CONF_TREE_NODE_PLAIN_TEXT.get(), DocumentKind.PLAIN_TEXT),
+				createNewDocumentMenuItem(R.COMMON_CSV.get(), DocumentKind.CSV)
 		);
-		MenuItem newDictionary = new MenuItem("Dictionary");
-		newDictionary.setOnAction(e -> Common.tryCatch(() -> this.model.newDocument(DocumentKind.GUI_DICTIONARY), "Error on create new dictionary"));
+		MenuItem newDictionary = new MenuItem(R.COMMON_DICTIONARY.get());
+		newDictionary.setOnAction(e -> Common.tryCatch(() -> this.model.newDocument(DocumentKind.GUI_DICTIONARY), R.CONF_TREE_NODE_ERROR_ON_CREATE_DIC.get()));
 
 		menu.getItems().add(menuNew);
 
@@ -114,14 +115,14 @@ public class ConfigurationTreeNode extends TreeNode
 	private MenuItem createNewDocumentMenuItem(String name, DocumentKind kind)
 	{
 		MenuItem menuItem = new MenuItem(name);
-		menuItem.setOnAction(e -> Common.tryCatch(() -> this.model.newDocument(kind), "Error on create new " + name.toLowerCase()));
+		menuItem.setOnAction(e -> Common.tryCatch(() -> this.model.newDocument(kind), String.format(R.CONF_TREE_NODE_ERROR_ON_CREATE_NEW.get(), name.toLowerCase())));
 		return menuItem;
 	}
 
 	private MenuItem createNewDocumentMenuItem(String name, Common.Function fn)
 	{
 		MenuItem menuItem = new MenuItem(name);
-		menuItem.setOnAction(e -> Common.tryCatch(fn, "Error on create new " + name.toLowerCase()));
+		menuItem.setOnAction(e -> Common.tryCatch(fn, String.format(R.CONF_TREE_NODE_ERROR_ON_CREATE_NEW.get(), name.toLowerCase())));
 		return menuItem;
 	}
 }

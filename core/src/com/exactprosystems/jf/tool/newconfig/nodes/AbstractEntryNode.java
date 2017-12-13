@@ -8,6 +8,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 package com.exactprosystems.jf.tool.newconfig.nodes;
 
+import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.documents.config.Entry;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.CssVariables;
@@ -75,7 +76,7 @@ public abstract class AbstractEntryNode<T extends Entry> extends TreeNode
 				String text = "";
 				if (!supportedEntry.isSupported())
 				{
-				    text = "Not supported";
+				    text = R.ABSTRACT_ENTRY_NODE_NOT_SUPPORTED.get();
 					icon = new Image(CssVariables.Icons.UNSUPPORT_ENTRY_ICON);
 				}
 				Text exceptionText = new Text(text);
@@ -129,7 +130,7 @@ public abstract class AbstractEntryNode<T extends Entry> extends TreeNode
 		Common.tryCatch(() -> {
 			this.model.changeEntry(entry, key, value);
 			cache.remove(this.entry);
-		}, String.format("Error on set value of '%s' to parameter '%s' on class '%s'", value, key, entry.getClass()));
+		}, String.format(R.ABSTRACT_ENTRY_NODE_ERROR.get(), value, key, entry.getClass()));
 	}
 	//endregion
 

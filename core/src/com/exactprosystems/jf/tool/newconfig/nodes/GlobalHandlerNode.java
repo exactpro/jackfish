@@ -12,6 +12,7 @@ package com.exactprosystems.jf.tool.newconfig.nodes;
 import com.exactprosystems.jf.actions.ReadableValue;
 import com.exactprosystems.jf.api.common.SerializablePair;
 import com.exactprosystems.jf.api.common.Str;
+import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.documents.config.HandlerKind;
 import com.exactprosystems.jf.functions.HelpKind;
 import com.exactprosystems.jf.tool.Common;
@@ -41,7 +42,7 @@ public class GlobalHandlerNode extends TreeNode
 
 	public GlobalHandlerNode(ConfigurationFx model, TreeItem<TreeNode> globalHandlerTreeItem)
 	{
-		this.view = new Text("Global handlers");
+		this.view = new Text(R.GLOBAL_HANDLER_NODE_VIEW.get());
 		this.model = model;
 		this.globalHandlerTreeItem = globalHandlerTreeItem;
 		this.view.setOpacity(isEnable() ? 1.0 : 0.5);
@@ -125,7 +126,7 @@ public class GlobalHandlerNode extends TreeNode
 
 			menu.getItems().addAll(
 					changeEnable,
-					ConfigurationTreeView.createItem(CHANGE_HANDLER, this::changeHandler, "Error on change handler")
+					ConfigurationTreeView.createItem(CHANGE_HANDLER, this::changeHandler, R.GLOBAL_HANDLER_NODE_ERROR_CHANGE.get())
 			);
 
 			return Optional.of(menu);
@@ -142,9 +143,9 @@ public class GlobalHandlerNode extends TreeNode
 					list,
 					-1
 			);
-			dialog.setTitle("Choose subCase for handler " + this.kind.name());
+			dialog.setTitle(String.format(R.GLOBAL_HANDLER_NODE_CHOOSE_SUBCASE.get(), this.kind.name()));
 			Optional<Object> value = dialog.showAndWait();
-			value.ifPresent(v -> Common.tryCatch(() -> model.updateHandlerValue(this.kind, Str.asString(v)), "Error on update value"));
+			value.ifPresent(v -> Common.tryCatch(() -> model.updateHandlerValue(this.kind, Str.asString(v)), R.GLOBAL_HANDLER_NODE_ERROR_UPDATE.get()));
 		}
 
 		@Override

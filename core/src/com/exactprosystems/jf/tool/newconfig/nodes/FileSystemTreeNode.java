@@ -8,6 +8,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 package com.exactprosystems.jf.tool.newconfig.nodes;
 
+import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.documents.DocumentInfo;
 import com.exactprosystems.jf.documents.csv.Csv;
 import com.exactprosystems.jf.documents.vars.SystemVars;
@@ -44,7 +45,7 @@ public class FileSystemTreeNode extends TreeNode
 	@Override
 	public Node getView()
 	{
-		return new Text("File system");
+		return new Text(R.FILE_SYSTEM_TN_VIEW.get());
 	}
 
 	@Override
@@ -75,20 +76,20 @@ public class FileSystemTreeNode extends TreeNode
 			{
 				ContextMenu menu = new ContextMenu();
 
-				MenuItem itemAddAsMatrix = new MenuItem("Use as matrix src", new ImageView(new Image(CssVariables.Icons.MATRIX_ICON)));
-				itemAddAsMatrix.setOnAction(e -> Common.tryCatch(() -> model.useAsMatrix(ConfigurationFx.path(f)), "Error on add folder as matrix src"));
+				MenuItem itemAddAsMatrix = new MenuItem(R.FILE_SYSTEM_TN_USE_AS_MATRIX.get(), new ImageView(new Image(CssVariables.Icons.MATRIX_ICON)));
+				itemAddAsMatrix.setOnAction(e -> Common.tryCatch(() -> model.useAsMatrix(ConfigurationFx.path(f)), R.FILE_SYSTEM_TN_ERROR_AS_MATRIX.get()));
 
-				MenuItem itemAddAsLibrary = new MenuItem("Use as library src", new ImageView(new Image(CssVariables.Icons.LIBRARY_ICON)));
-				itemAddAsLibrary.setOnAction(e -> Common.tryCatch(() -> model.useAsLibrary(ConfigurationFx.path(f)), "Error on add folder as library"));
+				MenuItem itemAddAsLibrary = new MenuItem(R.FILE_SYSTEM_TN_USE_AS_LIBRARY.get(), new ImageView(new Image(CssVariables.Icons.LIBRARY_ICON)));
+				itemAddAsLibrary.setOnAction(e -> Common.tryCatch(() -> model.useAsLibrary(ConfigurationFx.path(f)), R.FILE_SYSTEM_TN_ERROR_AS_LIBRARY.get()));
 
-				MenuItem itemAddAsAppDic = new MenuItem("Use as app dictionary", new ImageView(new Image(CssVariables.Icons.APP_DICTIONARY_ICON)));
-				itemAddAsAppDic.setOnAction(e -> Common.tryCatch(() -> model.useAsAppDictionaryFolder(ConfigurationFx.path(f)), "Error on add folder as app dictionary"));
+				MenuItem itemAddAsAppDic = new MenuItem(R.FILE_SYSTEM_TN_USE_AS_APP.get(), new ImageView(new Image(CssVariables.Icons.APP_DICTIONARY_ICON)));
+				itemAddAsAppDic.setOnAction(e -> Common.tryCatch(() -> model.useAsAppDictionaryFolder(ConfigurationFx.path(f)), R.FILE_SYSTEM_TN_ERROR_AS_APP.get()));
 
-				MenuItem itemAddAsClientDic = new MenuItem("Use as Client dictionary", new ImageView(new Image(CssVariables.Icons.CLIENT_DICTIONARY_ICON)));
-				itemAddAsClientDic.setOnAction(e -> Common.tryCatch(() -> model.useAsClientDictionaryFolder(ConfigurationFx.path(f)), "Error on add folder as client dictionary"));
+				MenuItem itemAddAsClientDic = new MenuItem(R.FILE_SYSTEM_TN_USE_AS_CLIENT.get(), new ImageView(new Image(CssVariables.Icons.CLIENT_DICTIONARY_ICON)));
+				itemAddAsClientDic.setOnAction(e -> Common.tryCatch(() -> model.useAsClientDictionaryFolder(ConfigurationFx.path(f)), R.FILE_SYSTEM_TN_ERROR_AS_CLIENT.get()));
 
-				MenuItem itemSetReportDir = new MenuItem("Set report dir", new ImageView(new Image(CssVariables.Icons.REPORT_ICON)));
-				itemSetReportDir.setOnAction(e -> Common.tryCatch(() -> model.setReportFolder(f.getName()), "Error on set report folder"));
+				MenuItem itemSetReportDir = new MenuItem(R.FILE_SYSTEM_TN_SET_DIR.get(), new ImageView(new Image(CssVariables.Icons.REPORT_ICON)));
+				itemSetReportDir.setOnAction(e -> Common.tryCatch(() -> model.setReportFolder(f.getName()), R.FILE_SYSTEM_TN_ERROR_SET.get()));
 
 				menu.getItems().addAll(itemAddAsMatrix, itemAddAsLibrary, itemAddAsAppDic, itemAddAsClientDic, itemSetReportDir);
 				return menu;
@@ -100,8 +101,8 @@ public class FileSystemTreeNode extends TreeNode
 
 				if (f.getName().toLowerCase().endsWith("." + SystemVars.class.getAnnotation(DocumentInfo.class).extension()))
 				{
-					MenuItem addCsv = new MenuItem("Add as user variables");
-					addCsv.setOnAction(e-> Common.tryCatch(() -> this.model.addUserVarsFile(f), "Error on add csv"));
+					MenuItem addCsv = new MenuItem(R.FILE_SYSTEM_TN_ADD_VAR.get());
+					addCsv.setOnAction(e-> Common.tryCatch(() -> this.model.addUserVarsFile(f), R.FILE_SYSTEM_TN_ERROR_ADD_CSV.get()));
 					menu.getItems().add(addCsv);
 				}
 
