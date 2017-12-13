@@ -84,6 +84,7 @@ public class FxAppFactory extends AbstractApplicationFactory
 		info.addTypes(ControlKind.Splitter, SplitPane.class.getName());
 		info.addTypes(ControlKind.Spinner, Spinner.class.getName());
 		info.addTypes(ControlKind.Table, TableView.class.getName());
+		info.addTypes(ControlKind.Row, TreeTableRow.class.getName(), TableRow.class.getName());
 		info.addTypes(ControlKind.TabPanel, TabPane.class.getName());
 		info.addTypes(ControlKind.TextBox, TextInputControl.class.getName());
 		info.addTypes(ControlKind.ToggleButton, ToggleButton.class.getName());

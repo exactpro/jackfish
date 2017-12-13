@@ -32,7 +32,7 @@ import java.util.stream.IntStream;
 
 class FxTableView
 {
-	static Logger       logger;
+	static        Logger       logger;
 	private final TableView<?> tableView;
 	private final int          rowCount;
 	private final int          colCount;
@@ -63,7 +63,7 @@ class FxTableView
 		return resultTable;
 	}
 
-	String getCellValue(int columnIndex, int rowIndex) throws TableOutOfBoundsException
+	String getCellValue(int columnIndex, int rowIndex)
 	{
 		this.checkTable(columnIndex, rowIndex);
 		Node cell = this.findCell(columnIndex, rowIndex);
@@ -75,28 +75,66 @@ class FxTableView
 		return this.getStringCellValue(columnIndex, rowIndex);
 	}
 
-	public Node findCell(int columnIndex, int rowIndex) throws TableOutOfBoundsException
+	/**
+	 * Return node by passed row and column indexes.
+	 *
+	 * @param columnIndex for finding cell. If column index is {@link Integer#MIN_VALUE} - will return TableRow
+	 * @param rowIndex    for finding cell.
+	 * @return Node
+	 */
+	public Node findCell(int columnIndex, int rowIndex)
 	{
-		this.checkTable(columnIndex, rowIndex);
-		Node cell = UtilsFx.runOnFxThreadAndWaitResult(() -> {
-			try
+		if (columnIndex == Integer.MIN_VALUE)
+		{
+			if (this.rowCount < rowIndex)
 			{
-				logger.debug(String.format("Start scroll to column %s", columnIndex));
-				this.tableView.scrollToColumnIndex(columnIndex);
-				logger.debug(String.format("Start scroll to row %s", rowIndex));
+				throw new TableOutOfBoundsException(String.format("Can't get value for row %s because size of rows is %s", rowIndex, tableView.getItems().size()));
+			}
+			Node cell = UtilsFx.runOnFxThreadAndWaitResult(() -> {
+				this.tableView.scrollToColumnIndex(0);
 				this.tableView.scrollTo(rowIndex);
-				logger.debug("Start getting cell");
-				return (Node) tableView.queryAccessibleAttribute(AccessibleAttribute.CELL_AT_ROW_COLUMN, rowIndex, columnIndex);
-			}
-			catch (Exception e)
+				return (Node) this.tableView.queryAccessibleAttribute(AccessibleAttribute.CELL_AT_ROW_COLUMN, rowIndex, 0);
+			});
+			if (cell instanceof TableCell)
 			{
-				logger.error(String.format("findCell(%s,%s,%s)", tableView, columnIndex, rowIndex));
-				logger.error(e.getMessage(), e);
+				return ((TableCell) cell).getTableRow();
 			}
-			return null;
-		});
-		logger.debug(String.format("Found cell : %s", cell));
-		return cell;
+
+			SimpleRow tableRow = new SimpleRow();
+			for (int i = 0; i < this.colCount; i++)
+			{
+				int finalI = i;
+				tableRow.add(UtilsFx.runOnFxThreadAndWaitResult(() -> {
+					this.tableView.scrollToColumnIndex(finalI);
+					this.tableView.scrollTo(rowIndex);
+					return (Node) this.tableView.queryAccessibleAttribute(AccessibleAttribute.CELL_AT_ROW_COLUMN, rowIndex, finalI);
+				}));
+			}
+			return tableRow;
+		}
+		else
+		{
+			this.checkTable(columnIndex, rowIndex);
+			Node cell = UtilsFx.runOnFxThreadAndWaitResult(() -> {
+				try
+				{
+					logger.debug(String.format("Start scroll to column %s", columnIndex));
+					this.tableView.scrollToColumnIndex(columnIndex);
+					logger.debug(String.format("Start scroll to row %s", rowIndex));
+					this.tableView.scrollTo(rowIndex);
+					logger.debug("Start getting cell");
+					return (Node) tableView.queryAccessibleAttribute(AccessibleAttribute.CELL_AT_ROW_COLUMN, rowIndex, columnIndex);
+				}
+				catch (Exception e)
+				{
+					logger.error(String.format("findCell(%s,%s,%s)", tableView, columnIndex, rowIndex));
+					logger.error(e.getMessage(), e);
+				}
+				return null;
+			});
+			logger.debug(String.format("Found cell : %s", cell));
+			return cell;
+		}
 	}
 
 	Map<String, String> getRow(String[] columns, ICondition valueCondition, ICondition colorCondition) throws Exception
@@ -259,7 +297,7 @@ class FxTableView
 
 	private String getCellValue(Node cell)
 	{
-		if (cell instanceof TableCell<?,?>)
+		if (cell instanceof TableCell<?, ?>)
 		{
 			TableCell tableCell = (TableCell) cell;
 			if (tableCell.getGraphic() == null)
@@ -276,7 +314,7 @@ class FxTableView
 
 	private String getStringCellValue(int columnIndex, int rowIndex)
 	{
-		TableColumn<?,?> tableColumn = this.tableView.getColumns().get(columnIndex);
+		TableColumn<?, ?> tableColumn = this.tableView.getColumns().get(columnIndex);
 		ObservableValue<?> cellObservableValue = tableColumn.getCellObservableValue(rowIndex);
 		return String.valueOf(cellObservableValue.getValue());
 	}

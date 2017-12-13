@@ -21,6 +21,7 @@ import javafx.application.Platform;
 import javafx.collections.ObservableList;
 import javafx.event.Event;
 import javafx.event.EventTarget;
+import javafx.event.EventType;
 import javafx.geometry.Bounds;
 import javafx.scene.AccessibleAttribute;
 import javafx.scene.Node;
@@ -53,19 +54,22 @@ import static com.exactprosystems.jf.app.UtilsFx.tryExecute;
 
 public class FxOperationExecutor extends AbstractOperationExecutor<EventTarget>
 {
-    private Logger logger;
+	private Logger logger;
 
-    private boolean isAltDown = false;
-    private boolean isShiftDown = false;
-    private boolean isControlDown = false;
+	private boolean isAltDown     = false;
+	private boolean isShiftDown   = false;
+	private boolean isControlDown = false;
 
-    private static final UtilsFx.ICheck EMPTY_CHECK = () -> {};
+	private static final UtilsFx.ICheck EMPTY_CHECK = () ->
+	{
+	};
 
-    public FxOperationExecutor(boolean useTrimText, Logger logger)
-    {
-        super(useTrimText);
-        this.logger = logger;
+	public FxOperationExecutor(boolean useTrimText, Logger logger)
+	{
+		super(useTrimText);
+		this.logger = logger;
 		FxTableView.logger = UtilsFx.createLogger(FxTableView.class, logger);
+		FxTreeTableView.logger = UtilsFx.createLogger(FxTreeTableView.class, logger);
 	}
 
 	@Override
@@ -302,8 +306,7 @@ public class FxOperationExecutor extends AbstractOperationExecutor<EventTarget>
 	@Override
 	public List<EventTarget> findAll(ControlKind controlKind, EventTarget window, Locator locator) throws Exception
 	{
-		return tryExecute(EMPTY_CHECK,
-				() -> new MatcherFx(this.info, locator, window).findAll(),
+		return tryExecute(EMPTY_CHECK, new MatcherFx(this.info, locator, window)::findAll,
 				e->
 				{
 					logger.error(String.format("findAll(%s,%s,%s)", controlKind, window, locator));
@@ -435,41 +438,6 @@ public class FxOperationExecutor extends AbstractOperationExecutor<EventTarget>
 
 		Object result = expr.evaluate(document, XPathConstants.NODESET);
 		return (NodeList) result;
-	}
-
-	private Document convertTreeToXMLDoc(TreeView tree) throws ParserConfigurationException
-	{
-		Document doc = DocumentBuilderFactory.newInstance().newDocumentBuilder().newDocument();
-		org.w3c.dom.Node root = doc.getDocumentElement();
-		createDom(doc, tree.getRoot(), root);
-		return doc;
-	}
-
-	private void createDom(Document doc, TreeItem treeItem, org.w3c.dom.Node current)
-	{
-		Element node = doc.createElement("item");
-		node.setAttribute("name", treeItem.getValue().toString());
-		node.setUserData("node", treeItem.getGraphic(), null);
-
-		if(current != null)
-		{
-			current.appendChild(node);
-		}
-		else
-		{
-			doc.appendChild(node);
-		}
-
-		for (Object o : treeItem.getChildren())
-		{
-			createDom(doc, (TreeItem) o, node);
-		}
-	}
-
-	@Override
-	public EventTarget lookAtTable(EventTarget table, Locator additional, Locator header, int x, int y) throws Exception
-	{
-		throw new FeatureNotSupportedException("lookAtTable");
 	}
 
 	@Override
@@ -1003,16 +971,6 @@ public class FxOperationExecutor extends AbstractOperationExecutor<EventTarget>
 		});
 	}
 
-	private void sleep(long time)
-	{
-		try
-		{
-			Thread.sleep(time);
-		}
-		catch (Exception e)
-		{}
-	}
-
 	@Override
 	public boolean scrollTo(EventTarget component, int index) throws Exception
 	{
@@ -1043,6 +1001,27 @@ public class FxOperationExecutor extends AbstractOperationExecutor<EventTarget>
 
 	//region table methods
 	@Override
+	public EventTarget lookAtTable(EventTarget table, Locator additional, Locator header, int x, int y) throws Exception
+	{
+		return tryExecute(EMPTY_CHECK, () ->
+		{
+			if (table instanceof TableView)
+			{
+				return new FxTableView((TableView<?>) table).findCell(x, y);
+			}
+			if (table instanceof TreeTableView)
+			{
+				return new FxTreeTableView((TreeTableView) table).findCell(x, y);
+			}
+			throw this.tableOrTreeTableException(table);
+		}, e ->
+		{
+			logger.error(String.format("lookAtTable(%s,%s,%s,%d,%d)", table, additional, header, x, y));
+			logger.error(e.getMessage(),e);
+		});
+	}
+
+	@Override
 	protected String getValueTableCellDerived(EventTarget target, int column, int row) throws Exception
 	{
 		return tryExecute(EMPTY_CHECK, ()->
@@ -1051,7 +1030,11 @@ public class FxOperationExecutor extends AbstractOperationExecutor<EventTarget>
 			{
 				return new FxTableView((TableView<?>) target).getCellValue(column, row);
 			}
-			throw tableException(target);
+			if (target instanceof TreeTableView)
+			{
+				return new FxTreeTableView((TreeTableView) target).getCellValue(column, row);
+			}
+			throw tableOrTreeTableException(target);
 		}, e->
 		{
 			logger.error(String.format("getValueTableCellDerived(%s,%s,%s)", target, column, row));
@@ -1068,7 +1051,11 @@ public class FxOperationExecutor extends AbstractOperationExecutor<EventTarget>
 			{
 				return new FxTableView((TableView<?>) target).getRow(columns, valueCondition, colorCondition);
 			}
-			throw tableException(target);
+			if (target instanceof TreeTableView)
+			{
+				return new FxTreeTableView((TreeTableView) target).getRow(columns, valueCondition, colorCondition);
+			}
+			throw tableOrTreeTableException(target);
 		}, e->
 		{
 			logger.error(String.format("getRowDerived(%s,%s,%s,%s,%s,%s,%s)", target, additional, header, useNumericHeader, Arrays.toString(columns), valueCondition, colorCondition));
@@ -1085,7 +1072,11 @@ public class FxOperationExecutor extends AbstractOperationExecutor<EventTarget>
 			{
 				return new FxTableView((TableView<?>) target).getRowByIndex(columns, i);
 			}
-			throw tableException(target);
+			if (target instanceof TreeTableView)
+			{
+				return new FxTreeTableView((TreeTableView) target).getRowByIndex(columns, i);
+			}
+			throw tableOrTreeTableException(target);
 		}, e->
 		{
 			logger.error(String.format("getRowByIndex(%s,%s,%s,%s,%s,%s)", target, additional, header, useNumericHeader, Arrays.toString(columns), i));
@@ -1102,7 +1093,11 @@ public class FxOperationExecutor extends AbstractOperationExecutor<EventTarget>
 			{
 				return new FxTableView((TableView<?>) target).getRowWithColor(columns, i, this.info);
 			}
-			throw tableException(target);
+			if (target instanceof TreeTableView)
+			{
+				return new FxTreeTableView((TreeTableView) target).getRowWithColor(columns, i, this.info);
+			}
+			throw tableOrTreeTableException(target);
 		}, e->
 		{
 			logger.error(String.format("getRowWithColorDerived(%s,%s,%s,%s,%s,%s)", target, additional, header, useNumericHeader, Arrays.toString(columns), i));
@@ -1119,7 +1114,11 @@ public class FxOperationExecutor extends AbstractOperationExecutor<EventTarget>
 			{
 				return new FxTableView((TableView<?>) target).getTable(columns);
 			}
-			throw tableException(target);
+			if (target instanceof TreeTableView)
+			{
+				return new FxTreeTableView((TreeTableView<?>) target).getTable(columns);
+			}
+			throw tableOrTreeTableException(target);
 		}, e ->
 		{
 			this.logger.error(String.format("getTable(%s,%s,%s,%s,%s)", target, additional, header, useNumericHeader, Arrays.toString(columns)));
@@ -1136,7 +1135,11 @@ public class FxOperationExecutor extends AbstractOperationExecutor<EventTarget>
 			{
 				return new FxTableView((TableView<?>) target).getRowIndexes(columns, valueCondition, colorCondition);
 			}
-			throw tableException(target);
+			if (target instanceof TreeTableView)
+			{
+				return new FxTreeTableView((TreeTableView) target).getRowIndexes(columns, valueCondition, colorCondition);
+			}
+			throw tableOrTreeTableException(target);
 		}, e->
 		{
 			logger.error(String.format("getRowDerived(%s,%s,%s,%s,%s,%s,%s)", target, additional, header, useNumericHeader, Arrays.toString(columns), valueCondition, colorCondition));
@@ -1149,36 +1152,50 @@ public class FxOperationExecutor extends AbstractOperationExecutor<EventTarget>
 	{
 		return tryExecute(EMPTY_CHECK, ()->
 		{
+			Node cell;
+
 			if (component instanceof TableView)
 			{
-				Node cell = new FxTableView((TableView<?>) component).findCell(column, row);
-				if (cell != null)
+				cell = new FxTableView((TableView<?>) component).findCell(column, row);
+				if (cell instanceof TableCell<?, ?> && ((TableCell) cell).getGraphic() != null)
 				{
-					if (cell instanceof TableCell<?, ?> && ((TableCell) cell).getGraphic() != null)
-					{
-						cell = ((TableCell) cell).getGraphic();
-					}
-					if (!(cell instanceof TextInputControl))
-					{
-						Locator locator = new Locator();
-						locator.kind(ControlKind.TextBox);
-						List<EventTarget> all = new MatcherFx(this.info, locator, cell).findAll();
-						if (all.isEmpty())
-						{
-							throw new Exception("Cant set text to not text element");
-						}
-						TextInputControl cellBox = (TextInputControl) all.get(0);
-						cellBox.setText(text);
-					}
-					else
-					{
-						((TextInputControl) cell).setText(text);
-					}
-					return true;
+					cell = ((TableCell) cell).getGraphic();
 				}
-				return false;
 			}
-			throw tableException(component);
+			else if (component instanceof TreeTableView)
+			{
+				cell = new FxTreeTableView((TreeTableView<?>) component).findCell(column, row);
+				if (cell instanceof TreeTableCell<?, ?> && ((TreeTableCell) cell).getGraphic() != null)
+				{
+					cell = ((TreeTableCell) cell).getGraphic();
+				}
+			}
+			else
+			{
+				throw tableOrTreeTableException(component);
+			}
+
+			if (cell != null)
+			{
+				if (!(cell instanceof TextInputControl))
+				{
+					Locator locator = new Locator();
+					locator.kind(ControlKind.TextBox);
+					List<EventTarget> all = new MatcherFx(this.info, locator, cell).findAll();
+					if (all.isEmpty())
+					{
+						throw new Exception("Cant set text to not text element");
+					}
+					TextInputControl cellBox = (TextInputControl) all.get(0);
+					cellBox.setText(text);
+				}
+				else
+				{
+					((TextInputControl) cell).setText(text);
+				}
+				return true;
+			}
+			return false;
 		}, e->
 		{
 			logger.error(String.format("mouseTable(%s,%s,%s,%s)", component, column, row, text));
@@ -1191,25 +1208,39 @@ public class FxOperationExecutor extends AbstractOperationExecutor<EventTarget>
 	{
 		return tryExecute(EMPTY_CHECK, ()->
 		{
+			Node cell;
+
 			if (component instanceof TableView)
 			{
-				Node cell = new FxTableView((TableView<?>) component).findCell(column, row);
-				if (cell != null)
+				cell = new FxTableView((TableView<?>) component).findCell(column, row);
+				if (cell instanceof TableCell<?, ?> && ((TableCell) cell).getGraphic() != null)
 				{
-					if (cell instanceof TableCell<?, ?> && ((TableCell) cell).getGraphic() != null)
-					{
-						cell = ((TableCell) cell).getGraphic();
-					}
-					Point point = this.checkCoords(cell, Integer.MIN_VALUE, Integer.MIN_VALUE);
-
-					List<Event> eventList = createMouseEventsList(action, cell, point.x, point.y);
-					executeEventList(cell, eventList);
-
-					return true;
+					cell = ((TableCell) cell).getGraphic();
 				}
-				return false;
 			}
-			throw tableException(component);
+			else if (component instanceof TreeTableView)
+			{
+				cell = new FxTreeTableView((TreeTableView) component).findCell(column, row);
+				if (cell instanceof TreeTableCell<?, ?> && ((TreeTableCell) cell).getGraphic() != null)
+				{
+					cell = ((TreeTableCell) cell).getGraphic();
+				}
+			}
+			else
+			{
+				throw tableOrTreeTableException(component);
+			}
+
+			if (cell != null)
+			{
+				Point point = this.checkCoords(cell, Integer.MIN_VALUE, Integer.MIN_VALUE);
+
+				List<Event> eventList = createMouseEventsList(action, cell, point.x, point.y);
+				this.executeEventList(cell, eventList);
+
+				return true;
+			}
+			return false;
 		}, e->
 		{
 			logger.error(String.format("mouseTable(%s,%s,%s,%s)", component, column, row, action));
@@ -1226,7 +1257,11 @@ public class FxOperationExecutor extends AbstractOperationExecutor<EventTarget>
 			{
 				return new FxTableView((TableView<?>) component).size();
 			}
-			throw tableException(component);
+			if (component instanceof TreeTableView)
+			{
+				return new FxTreeTableView((TreeTableView) component).size();
+			}
+			throw tableOrTreeTableException(component);
 		}, e ->
 		{
 			logger.error(String.format("getTableSize(%s,%s,%s,%s)", component, additional, header, useNumericHeader));
@@ -1294,9 +1329,9 @@ public class FxOperationExecutor extends AbstractOperationExecutor<EventTarget>
 				.collect(Collectors.toList()));
 	}
 
-	private WrongParameterException tableException(EventTarget target)
+	private WrongParameterException tableOrTreeTableException(EventTarget target)
 	{
-		return new WrongParameterException(String.format("Target not instance of Table. Target : %s", target));
+		return new WrongParameterException(String.format("Target not instance of Table or TreeTable. Target : %s", target));
 	}
 
 	private KeyCode getKeyCode(Keyboard key)
@@ -1435,6 +1470,11 @@ public class FxOperationExecutor extends AbstractOperationExecutor<EventTarget>
 		}
 	}
 
+	private interface CreateEventFunction
+	{
+		MouseEvent create(EventType<MouseEvent> type, int clickCount, MouseButton mb);
+	}
+
 	private List<Event> createMouseEventsList(MouseAction action, EventTarget target, int x, int y) throws Exception
 	{
 		MouseButton mb;
@@ -1443,54 +1483,63 @@ public class FxOperationExecutor extends AbstractOperationExecutor<EventTarget>
 		Point respectScene = getPointRespectScene(target);
 		int clickCount = getClickCount(action);
 
-		result.add(new MouseEvent(MouseEvent.MOUSE_ENTERED_TARGET, respectScene.x + x, respectScene.y + y, rectangle.x + x, rectangle.y + y, MouseButton.NONE,
-				clickCount, isShiftDown, isControlDown, isAltDown, false, false,
-				false, false, true, false, false, null));
-		result.add(new MouseEvent(MouseEvent.MOUSE_MOVED, respectScene.x + x, respectScene.y + y, rectangle.x + x, rectangle.y + y, MouseButton.NONE,
-				clickCount, isShiftDown, isControlDown, isAltDown, false, false,
-				false, false, true, false, false, null));
+		CreateEventFunction createEvent = (type,click, mouseButton) ->
+				new MouseEvent(type, respectScene.x + x, respectScene.y + y, rectangle.x + x, rectangle.y + y, mouseButton,
+						click,isShiftDown, isControlDown, isAltDown, false, mouseButton == MouseButton.PRIMARY,
+						false, mouseButton == MouseButton.SECONDARY, false, mouseButton == MouseButton.SECONDARY, false, null);
+
+		result.add(createEvent.create(MouseEvent.MOUSE_ENTERED_TARGET, 1, MouseButton.NONE));
+		result.add(createEvent.create(MouseEvent.MOUSE_MOVED, 1, MouseButton.NONE));
+
 		switch (action)
 		{
 			case LeftClick:
-			case LeftDoubleClick:
-				mb = MouseButton.PRIMARY;
-				result.add(new MouseEvent(MouseEvent.MOUSE_PRESSED, respectScene.x + x, respectScene.y + y, rectangle.x + x, rectangle.y + y, mb,
-						clickCount, isShiftDown, isControlDown, isAltDown, false, true,
-						false, false, true, false, false, null));
-				result.add(new MouseEvent(MouseEvent.MOUSE_RELEASED, respectScene.x + x, respectScene.y + y, rectangle.x + x, rectangle.y + y, mb,
-						clickCount, isShiftDown, isControlDown, isAltDown, false, true,
-						false, false, true, false, false, null));
-				result.add(new MouseEvent(MouseEvent.MOUSE_CLICKED, respectScene.x + x, respectScene.y + y, rectangle.x + x, rectangle.y + y, mb,
-						clickCount, isShiftDown, isControlDown, isAltDown, false, true,
-						false, false, true, false, false, null));
+				result.add(createEvent.create(MouseEvent.MOUSE_PRESSED, 1, MouseButton.PRIMARY));
+				result.add(createEvent.create(MouseEvent.MOUSE_RELEASED, 1, MouseButton.PRIMARY));
+				result.add(createEvent.create(MouseEvent.MOUSE_CLICKED, 1, MouseButton.PRIMARY));
 				return result;
+
+			case LeftDoubleClick:
+				result.add(createEvent.create(MouseEvent.MOUSE_PRESSED, 1, MouseButton.PRIMARY));
+				result.add(createEvent.create(MouseEvent.MOUSE_RELEASED, 1, MouseButton.PRIMARY));
+				result.add(createEvent.create(MouseEvent.MOUSE_CLICKED, 1, MouseButton.PRIMARY));
+
+				result.add(createEvent.create(MouseEvent.MOUSE_PRESSED, 2, MouseButton.PRIMARY));
+				result.add(createEvent.create(MouseEvent.MOUSE_RELEASED, 2, MouseButton.PRIMARY));
+				result.add(createEvent.create(MouseEvent.MOUSE_CLICKED, 2, MouseButton.PRIMARY));
+				return result;
+
+				//TODO think about context menu
 			case RightClick:
+				result.add(createEvent.create(MouseEvent.MOUSE_PRESSED, 1, MouseButton.SECONDARY));
+				result.add(createEvent.create(MouseEvent.MOUSE_RELEASED, 1, MouseButton.SECONDARY));
+				result.add(createEvent.create(MouseEvent.MOUSE_CLICKED, 1, MouseButton.SECONDARY));
+				return result;
+
 			case RightDoubleClick:
-				mb = MouseButton.SECONDARY;
-				result.add(new MouseEvent(MouseEvent.MOUSE_PRESSED, respectScene.x + x, respectScene.y + y, rectangle.x + x, rectangle.y + y, mb,
-						clickCount, isShiftDown, isControlDown, isAltDown, false, false,
-						false, true, true, true, true, null));
-				result.add(new MouseEvent(MouseEvent.MOUSE_RELEASED, respectScene.x + x, respectScene.y + y, rectangle.x + x, rectangle.y + y, mb,
-						clickCount, isShiftDown, isControlDown, isAltDown, false, false,
-						false, true, true, true, true, null));
-				result.add(new MouseEvent(MouseEvent.MOUSE_CLICKED, respectScene.x + x, respectScene.y + y, rectangle.x + x, rectangle.y + y, mb,
-						clickCount, isShiftDown, isControlDown, isAltDown, false, false,
-						false, true, true, true, true, null));
+				result.add(createEvent.create(MouseEvent.MOUSE_PRESSED, 1, MouseButton.SECONDARY));
+				result.add(createEvent.create(MouseEvent.MOUSE_RELEASED, 1, MouseButton.SECONDARY));
+				result.add(createEvent.create(MouseEvent.MOUSE_CLICKED, 1, MouseButton.SECONDARY));
+
+				result.add(createEvent.create(MouseEvent.MOUSE_PRESSED, 2, MouseButton.SECONDARY));
+				result.add(createEvent.create(MouseEvent.MOUSE_RELEASED, 2, MouseButton.SECONDARY));
+				result.add(createEvent.create(MouseEvent.MOUSE_CLICKED, 2, MouseButton.SECONDARY));
+
 				return result;
 			case Press:
 				mb = MouseButton.PRIMARY;
 				result.add(new MouseEvent(MouseEvent.MOUSE_PRESSED, respectScene.x + x, respectScene.y + y, rectangle.x + x, rectangle.y + y, mb,
 						clickCount, isShiftDown, isControlDown, isAltDown, false, true,
-						false, false, true, false, false, null));
+						false, false, false, false, false, null));
 				return result;
 			case Drop:
 				mb = MouseButton.PRIMARY;
 				result.add(new MouseEvent(MouseEvent.MOUSE_DRAGGED, respectScene.x + x, respectScene.y + y, rectangle.x + x, rectangle.y + y, mb,
 						clickCount, isShiftDown, isControlDown, isAltDown, false, true,
-						false, false, true, false, false, null));
+						false, false, false, false, false, null));
 				result.add(new MouseEvent(MouseEvent.MOUSE_RELEASED, respectScene.x + x, respectScene.y + y, rectangle.x + x, rectangle.y + y, mb,
 						clickCount, isShiftDown, isControlDown, isAltDown, false, true,
-						false, false, true, false, false, null));
+						false, false, false, false, false, null));
 				return result;
 			default:
 				return result;
@@ -1514,7 +1563,7 @@ public class FxOperationExecutor extends AbstractOperationExecutor<EventTarget>
 		return new Point(0, 0);
 	}
 
-	private Point checkCoords(EventTarget eventTarget, int x, int y) throws Exception
+	private Point checkCoords(EventTarget eventTarget, int x, int y)
 	{
 		Point res;
 		Rectangle rectangle = MatcherFx.getRect(eventTarget, false);
@@ -1539,6 +1588,45 @@ public class FxOperationExecutor extends AbstractOperationExecutor<EventTarget>
 	{
 		Rectangle rectangle = MatcherFx.getRect(target, false);
 		return new Point(rectangle.x + x, rectangle.y + y);
+	}
+
+	private Document convertTreeToXMLDoc(TreeView tree) throws ParserConfigurationException
+	{
+		Document doc = DocumentBuilderFactory.newInstance().newDocumentBuilder().newDocument();
+		org.w3c.dom.Node root = doc.getDocumentElement();
+		createDom(doc, tree.getRoot(), root);
+		return doc;
+	}
+
+	private void createDom(Document doc, TreeItem treeItem, org.w3c.dom.Node current)
+	{
+		Element node = doc.createElement("item");
+		node.setAttribute("name", treeItem.getValue().toString());
+		node.setUserData("node", treeItem.getGraphic(), null);
+
+		if(current != null)
+		{
+			current.appendChild(node);
+		}
+		else
+		{
+			doc.appendChild(node);
+		}
+
+		for (Object o : treeItem.getChildren())
+		{
+			createDom(doc, (TreeItem) o, node);
+		}
+	}
+
+	private void sleep(long time)
+	{
+		try
+		{
+			Thread.sleep(time);
+		}
+		catch (Exception e)
+		{}
 	}
 	//endregion
 }

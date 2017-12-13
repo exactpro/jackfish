@@ -92,7 +92,7 @@ public class UtilsFx
 		{
 			logger.addAppender(((Appender) allAppenders.nextElement()));
 		}
-		logger.setLevel(logger.getLevel());
+		logger.setLevel(baseLogger.getLevel());
 		return logger;
 	}
 
