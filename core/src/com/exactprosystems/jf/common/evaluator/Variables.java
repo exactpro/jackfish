@@ -14,8 +14,6 @@ import java.util.Map;
 
 public abstract class Variables
 {
-	public void check(VariableCheckListener listener) {}
-	
 	public abstract void set(Map<String, Object> predef);
 	
 	public abstract void set(String name, Object value);

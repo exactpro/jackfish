@@ -17,6 +17,11 @@ public class MvelVariables extends Variables
 {
 	private Map<String, Object> var = new HashMap<>();
 
+	public MvelVariables()
+	{
+		super();
+	}
+
 	@Override
 	public void set(Map<String, Object> predef)
 	{
@@ -32,10 +37,7 @@ public class MvelVariables extends Variables
 	@Override
 	public void delete(List<String> list)
 	{
-		for (String name : list)
-		{
-			this.var.remove(name); 
-		}
+		list.forEach(this.var::remove);
 	}
 
 	@Override
@@ -59,6 +61,6 @@ public class MvelVariables extends Variables
 	@Override
 	public void clear()
 	{
-	    this.var.clear();
+		this.var.clear();
 	}
 }

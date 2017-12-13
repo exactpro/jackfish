@@ -20,21 +20,23 @@ import org.mvel2.templates.TemplateRuntime;
 
 import java.io.Serializable;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
 public class MvelEvaluator extends AbstractEvaluator 
 {
-    private ParserContext context = new ParserContext();
-    private Variables     globals = new MvelVariables();
-    private Variables     locals  = new MvelVariables();
+	private ParserContext context = new ParserContext();
+	private Variables     globals = new MvelVariables();
+	private Variables     locals  = new MvelVariables();
 
     public MvelEvaluator()
 	{
+		super();
 	}
-	
+
 	@Override
-	protected Object rawCompile(String expression)  throws Exception
+	protected Object rawCompile(String expression)
 	{
 		return MVEL.compileExpression(expression, this.context);
 	}
@@ -44,24 +46,24 @@ public class MvelEvaluator extends AbstractEvaluator
 	{
 		if (compiled instanceof Serializable)
 		{
-			Serializable expr = (Serializable)compiled;
-			return MVEL.executeExpression(expr, makeVars());
+			Serializable expr = (Serializable) compiled;
+			return MVEL.executeExpression(expr, this.makeVars());
 		}
 		throw new Exception(R.MVEL_EVALUATOR_WRONG_TYPE_EXCEPTION.get() + compiled);
 	}
 
 	@Override
-	protected Object rawEvaluate(String expression) throws Exception
+	protected Object rawEvaluate(String expression)
 	{
 		Serializable expr = MVEL.compileExpression(expression, this.context);
-		return MVEL.executeExpression(expr, makeVars());
+		return MVEL.executeExpression(expr, this.makeVars());
 	}
 
 	@Override
 	protected String rawTemplateEvaluate(String expression)
 	{
 		CompiledTemplate expr = TemplateCompiler.compileTemplate(expression);
-		return (String)TemplateRuntime.execute(expr, makeVars());
+		return (String) TemplateRuntime.execute(expr, this.makeVars());
 	}
 
 	@Override
@@ -73,9 +75,9 @@ public class MvelEvaluator extends AbstractEvaluator
 	@Override
 	public Variables createLocals()
 	{
-		 MvelVariables vars = new MvelVariables();
-	     vars.set(this.locals.getVars());
-		 return vars;
+		MvelVariables vars = new MvelVariables();
+		vars.set(this.locals.getVars());
+		return vars;
 	}
 
 	@Override
@@ -96,17 +98,14 @@ public class MvelEvaluator extends AbstractEvaluator
 		// JackFish and MVEL could be loaded by different ClassLoaders (for example, by SF class-loader).
 		// Specify proper classloader to load imports from this JAR
 		this.context.getParserConfiguration().setClassLoader(this.getClass().getClassLoader());
-		
-		this.context.addPackageImport("java.util");
+
+		this.context.addPackageImport(Collections.class.getPackage().getName());
 		this.context.addPackageImport(Condition.class.getPackage().getName());
 		this.context.addPackageImport(Unique.class.getPackage().getName());
-		
-		for (String imp : imports)
-		{
-			this.context.addPackageImport(imp);
-		}
+
+		imports.forEach(this.context::addPackageImport);
 	}
-	
+
 	@Override
 	public String createString(String val)
 	{
@@ -116,12 +115,13 @@ public class MvelEvaluator extends AbstractEvaluator
 		}
 		return null;
 	}
-	
-    private Map<String, Object> makeVars()
-    {
-        Map<String, Object> vars = new HashMap<>();
-        vars.putAll(this.globals.getVars());
-        vars.putAll(this.locals.getVars());
-        return vars;
-    }
+
+	//region private methods
+	private Map<String, Object> makeVars()
+	{
+		Map<String, Object> vars = new HashMap<>(this.globals.getVars());
+		vars.putAll(this.locals.getVars());
+		return vars;
+	}
+	//endregion
 }

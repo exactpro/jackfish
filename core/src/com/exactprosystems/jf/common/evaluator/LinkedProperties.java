@@ -18,28 +18,29 @@ import java.util.*;
 
 public class LinkedProperties extends Properties
 {
-	private Map<Object, Object>	linkMap				= new LinkedHashMap<>();
+	private Map<Object, Object> linkMap = new LinkedHashMap<>();
 
 	public LinkedProperties()
 	{
+		super();
 	}
-	
+
 	@Override
 	public synchronized Object put(Object key, Object value)
 	{
-		return linkMap.put(key, value);
+		return this.linkMap.put(key, value);
 	}
 
 	@Override
 	public synchronized boolean contains(Object value)
 	{
-		return linkMap.containsValue(value);
+		return this.linkMap.containsValue(value);
 	}
 
 	@Override
 	public boolean containsValue(Object value)
 	{
-		return linkMap.containsValue(value);
+		return this.linkMap.containsValue(value);
 	}
 
 	@Override
@@ -51,19 +52,19 @@ public class LinkedProperties extends Properties
 	@Override
 	public Set<Map.Entry<Object, Object>> entrySet()
 	{
-		return linkMap.entrySet();
+		return this.linkMap.entrySet();
 	}
 
 	@Override
 	public synchronized void clear()
 	{
-		linkMap.clear();
+		this.linkMap.clear();
 	}
 
 	@Override
 	public synchronized boolean containsKey(Object key)
 	{
-		return linkMap.containsKey(key);
+		return this.linkMap.containsKey(key);
 	}
 
 	@Override
@@ -72,7 +73,7 @@ public class LinkedProperties extends Properties
 		BufferedWriter bw = (writer instanceof BufferedWriter) ? (BufferedWriter) writer : new BufferedWriter(writer);
 		synchronized (this)
 		{
-			for (Map.Entry<Object, Object> entry : linkMap.entrySet())
+			for (Map.Entry<Object, Object> entry : this.linkMap.entrySet())
 			{
 				bw.write(entry.getKey() + "=" + entry.getValue());
 				bw.newLine();
@@ -80,6 +81,5 @@ public class LinkedProperties extends Properties
 		}
 		bw.flush();
 	}
-	private static final long	serialVersionUID	= 1L;
 }
 
