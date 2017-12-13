@@ -9,6 +9,7 @@
 
 package com.exactprosystems.jf.tool.newconfig;
 
+import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.api.wizard.WizardManager;
 import com.exactprosystems.jf.documents.config.Context;
 import com.exactprosystems.jf.tool.Common;
@@ -80,7 +81,7 @@ public class ConfigurationToolBar extends ToolBar
 		radioButton.setToggleGroup(group);
 		radioButton.setUserData(compareEnum);
 		radioButton.setGraphic(imageByEnum(compareEnum));
-		radioButton.setTooltip(new Tooltip("Sorting via " + compareEnum.getName().toLowerCase()));
+		radioButton.setTooltip(new Tooltip(String.format(R.CONFIG_TOOL_BAR_SORTING_VIA.get(), compareEnum.getName().toLowerCase())));
 		if (compareEnum == initEnum)
 		{
 			radioButton.setSelected(true);

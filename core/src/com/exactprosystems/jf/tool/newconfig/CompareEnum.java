@@ -9,6 +9,8 @@
 
 package com.exactprosystems.jf.tool.newconfig;
 
+import com.exactprosystems.jf.api.common.i18n.R;
+
 import java.io.File;
 import java.util.Comparator;
 
@@ -39,7 +41,7 @@ public enum CompareEnum
 		@Override
 		public String getName()
 		{
-			return "Alphabet asc";
+			return R.COMPARE_ENUM_ALPHABET_ASC.get();
 		}
 	},
 
@@ -68,7 +70,7 @@ public enum CompareEnum
 		@Override
 		public String getName()
 		{
-			return "Alphabet desc";
+			return R.COMPARE_ENUM_ALPHABET_DESC.get();
 		}
 	},
 
@@ -97,7 +99,7 @@ public enum CompareEnum
 		@Override
 		public String getName()
 		{
-			return "Date asc";
+			return R.COMPARE_ENUM_DATE_ASC.get();
 		}
 	},
 
@@ -126,7 +128,7 @@ public enum CompareEnum
 		@Override
 		public String getName()
 		{
-			return "Date desc";
+			return R.COMPARE_ENUM_DATE_DESC.get();
 		}
 	};
 
