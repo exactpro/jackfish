@@ -119,30 +119,38 @@ public final class SpreadsheetColumn {
 		tf.toFront();
 		tf.requestFocus();
 		tf.setOnKeyPressed(e1 -> {
+			if (!this.isColumnEditable)
+			{
+				return;
+			}
 			if (e1.getCode().equals(KeyCode.ENTER))
 			{
+				this.isColumnEditable = false;
 				this.spreadsheetView.renameColumn(this, tf.getText());
 				this.column.setGraphic(null);
-				isColumnEditable = false;
 			}
 			if (e1.getCode().equals(KeyCode.ESCAPE))
 			{
-				this.column.setGraphic(null);
 				isColumnEditable = false;
+				this.column.setGraphic(null);
 			}
 		});
 
 		tf.focusedProperty().addListener((observable, oldValue1, newValue) -> {
+			if (!this.isColumnEditable)
+			{
+				return;
+			}
 			if (!newValue && !tf.getText().equals(column.getText()))
 			{
+				isColumnEditable = false;
 				this.spreadsheetView.renameColumn(this, tf.getText());
 				this.column.setGraphic(null);
-				isColumnEditable = false;
 			}
 			else
 			{
-				this.column.setGraphic(null);
 				isColumnEditable = false;
+				this.column.setGraphic(null);
 			}
 		});
 	}
