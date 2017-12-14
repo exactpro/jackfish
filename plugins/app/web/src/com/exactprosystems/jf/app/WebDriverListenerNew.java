@@ -208,6 +208,7 @@ public class WebDriverListenerNew implements WebDriver, JavascriptExecutor,
 		if (this.webDriver instanceof Interactive)
 		{
 			((Interactive) this.webDriver).perform(actions);
+			return;
 		}
 		throw this.create("perform");
 	}
@@ -218,6 +219,7 @@ public class WebDriverListenerNew implements WebDriver, JavascriptExecutor,
 		if (this.webDriver instanceof Interactive)
 		{
 			((Interactive) this.webDriver).resetInputState();
+			return;
 		}
 		throw this.create("resetInputState");
 	}
@@ -497,8 +499,7 @@ public class WebDriverListenerNew implements WebDriver, JavascriptExecutor,
 		@Override
 		public WebElement findElement(By by)
 		{
-			WebElement temp = this.element.findElement(by);
-			return temp;
+			return this.element.findElement(by);
 		}
 
 		@Override
@@ -526,7 +527,7 @@ public class WebDriverListenerNew implements WebDriver, JavascriptExecutor,
 		}
 
 		@Override
-		public <X> X getScreenshotAs(OutputType<X> target) throws WebDriverException
+		public <X> X getScreenshotAs(OutputType<X> target)
 		{
 			return this.element.getScreenshotAs(target);
 		}
@@ -534,9 +535,9 @@ public class WebDriverListenerNew implements WebDriver, JavascriptExecutor,
 		@Override
 		public Coordinates getCoordinates()
 		{
-			if (this.element instanceof Locatable)
+			if (this.element instanceof org.openqa.selenium.interactions.internal.Locatable)
 			{
-				return ((Locatable) this.element).getCoordinates();
+				return ((org.openqa.selenium.interactions.internal.Locatable) this.element).getCoordinates();
 			}
 			throw new UnsupportedOperationException("Current element instance does not locatable");
 		}
