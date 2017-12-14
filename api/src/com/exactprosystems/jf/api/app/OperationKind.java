@@ -723,9 +723,7 @@ public enum OperationKind
 		@Override
 		public <T> boolean operateDerived(Part part, OperationExecutor<T> executor, Holder<T> holder, OperationResult result) throws Exception
 		{
-			Locator locator = holder.get(LocatorKind.Element);
-			boolean onlyVisible = locator != null && locator.getVisibility() == Visibility.Visible;
-		    return executor.selectByIndex(holder.getValue(), part.i, onlyVisible);
+		    return executor.selectByIndex(holder.getValue(), part.i);
 		}
 	},
 	
@@ -746,9 +744,7 @@ public enum OperationKind
 		@Override
 		public <T> boolean operateDerived(Part part, OperationExecutor<T> executor, Holder<T> holder, OperationResult result) throws Exception
 		{
-			Locator locator = holder.get(LocatorKind.Element);
-			boolean onlyVisible = locator != null && locator.getVisibility() == Visibility.Visible;
-		    return executor.select(holder.getValue(), part.text, onlyVisible);
+		    return executor.select(holder.getValue(), part.text);
 		}
 	},
 	

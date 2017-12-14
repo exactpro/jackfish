@@ -557,7 +557,7 @@ public class SwingOperationExecutor extends AbstractOperationExecutor<ComponentF
 	}
 
 	@Override
-	public boolean selectByIndex(ComponentFixture <Component> component, final int index, boolean onlyVisible) throws Exception
+	public boolean selectByIndex(ComponentFixture <Component> component, final int index) throws Exception
 	{
 		try
 		{
@@ -629,7 +629,7 @@ public class SwingOperationExecutor extends AbstractOperationExecutor<ComponentF
 	}
 
 	@Override
-	public boolean select(ComponentFixture <Component> component, String selectedText, boolean onlyVisible) throws Exception
+	public boolean select(ComponentFixture <Component> component, String selectedText) throws Exception
 	{
 		try
 		{

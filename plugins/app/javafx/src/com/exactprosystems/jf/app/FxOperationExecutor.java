@@ -603,7 +603,7 @@ public class FxOperationExecutor extends AbstractOperationExecutor<EventTarget>
 	}
 
 	@Override
-	public boolean select(EventTarget component, String selectedText, boolean onlyVisible) throws Exception
+	public boolean select(EventTarget component, String selectedText) throws Exception
 	{
 		return tryExecute(EMPTY_CHECK,
 				()->
@@ -665,7 +665,7 @@ public class FxOperationExecutor extends AbstractOperationExecutor<EventTarget>
 	}
 
 	@Override
-	public boolean selectByIndex(EventTarget component, int index, boolean onlyVisible) throws Exception
+	public boolean selectByIndex(EventTarget component, int index) throws Exception
 	{
 		return tryExecute(EMPTY_CHECK,
 				() ->

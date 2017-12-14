@@ -167,23 +167,21 @@ public interface OperationExecutor<T>
 	 * Select the child from the component by text
 	 * @param component which use as owner for selecting
 	 * @param selectedText text of child, which need set selected
-	 * @param onlyVisible mean, return only visible (on the screen) items or all items.
 	 * @return true, if operation was execute successful
 	 *
 	 * @see ControlKind
 	 */
-	boolean						select(T component, String selectedText, boolean onlyVisible) throws Exception;
+	boolean						select(T component, String selectedText) throws Exception;
 	/**
 	 * Available kinds : {@link ControlKind#ComboBox}, {@link ControlKind#TabPanel} and {@link ControlKind#ListView} <br>
 	 * Select the child from the component by index
 	 * @param component which use as owner for selecting
 	 * @param index index of child, which need set selected
-	 * @param onlyVisible mean, return only visible (on the screen) items or all items.
 	 * @return true, if operation was execute successful
 	 *
 	 * @see ControlKind
 	 */
-	boolean						selectByIndex(T component, int index, boolean onlyVisible) throws Exception;
+	boolean						selectByIndex(T component, int index) throws Exception;
 	/**
 	 * Available kinds : {@link ControlKind#Menu}, {@link ControlKind#MenuItem} and {@link ControlKind#Tree} <br>
 	 * Expand or collapse (depends of boolean parameter) the component
