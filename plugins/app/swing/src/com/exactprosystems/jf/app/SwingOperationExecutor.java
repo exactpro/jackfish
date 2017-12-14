@@ -13,10 +13,7 @@ import com.exactprosystems.jf.api.app.*;
 import com.exactprosystems.jf.api.client.ICondition;
 import com.exactprosystems.jf.api.common.Converter;
 import com.exactprosystems.jf.api.conditions.StringCondition;
-import com.exactprosystems.jf.api.error.app.ElementNotFoundException;
-import com.exactprosystems.jf.api.error.app.FeatureNotSupportedException;
-import com.exactprosystems.jf.api.error.app.OperationNotAllowedException;
-import com.exactprosystems.jf.api.error.app.WrongParameterException;
+import com.exactprosystems.jf.api.error.app.*;
 import org.apache.log4j.Logger;
 import org.fest.swing.awt.AWT;
 import org.fest.swing.core.ComponentMatcher;
@@ -288,6 +285,16 @@ public class SwingOperationExecutor extends AbstractOperationExecutor<ComponentF
 			{
 				JTable table = (JTable) component.target;
 				Container fakeCell = new Container();
+
+				if (row > table.getRowCount())
+				{
+					throw new TableOutOfBoundsException(String.format("Can't get value for row %s because size of rows is %s", row, table.getRowCount()));
+				}
+
+				if (column > table.getColumnCount())
+				{
+					throw new TableOutOfBoundsException(String.format("Can't get value for column %s because size of columns is %s", column, table.getColumnCount()));
+				}
 
 				if(column < 0)
 				{
