@@ -384,7 +384,7 @@ public class WinOperationExecutorJNA extends AbstractOperationExecutor<UIProxyJN
 				for (int i = 0; i < nodes.getLength(); i++)
 				{
 					UIProxyJNA element = new UIProxyJNA(nodes.item(i).getAttributes().getNamedItem(RUNTIME_ID_ATTRIBUTE).getNodeValue());
-					if(checkVisible(element))
+					if("true".equalsIgnoreCase(this.driver.elementAttribute(element, AttributeKind.VISIBLE)))
 					{
 						this.driver.doPatternCall(element, WindowPattern.SelectionItemPattern, "Select", null, -1);
 					}
@@ -393,7 +393,7 @@ public class WinOperationExecutorJNA extends AbstractOperationExecutor<UIProxyJN
 			else
 			{
 				UIProxyJNA element = new UIProxyJNA(findItem(component, selectedText));
-				if(checkVisible(element))
+				if("true".equalsIgnoreCase(this.driver.elementAttribute(element, AttributeKind.VISIBLE)))
 				{
 					this.driver.doPatternCall(element, WindowPattern.SelectionItemPattern, "Select", null, -1);
 				}
@@ -1241,7 +1241,7 @@ public class WinOperationExecutorJNA extends AbstractOperationExecutor<UIProxyJN
 			for (int i = 0; i < itemsCount; i++)
 			{
 				UIProxyJNA elem = new UIProxyJNA(Arrays.copyOfRange(items, 0, itemLength));
-				if(checkVisible(elem))
+				if("true".equalsIgnoreCase(this.driver.elementAttribute(elem, AttributeKind.VISIBLE)))
 				{
 					list.add(elem);
 				}
@@ -1313,11 +1313,6 @@ public class WinOperationExecutorJNA extends AbstractOperationExecutor<UIProxyJN
 		{
 			this.driver.doPatternCall(component, WindowPattern.ExpandCollapsePattern, "Collapse", null, -1);
 		}
-	}
-
-	private boolean checkVisible(UIProxyJNA elem) throws Exception
-	{
-		return "true".equalsIgnoreCase(this.driver.elementAttribute(elem, AttributeKind.VISIBLE));
 	}
 
 	private Rectangle stringToRect(String stringRect) throws RemoteException
