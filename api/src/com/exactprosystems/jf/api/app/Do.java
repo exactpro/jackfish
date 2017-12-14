@@ -510,14 +510,18 @@ public class Do
 		return new Operation().use(locatorId, locatorKind);
 	}
 
-	static final String useLocatorForTableCell = "Change context to component, which will found into the cell by column @x and row @y and dynamic locator @locator";
+	static final String useLocatorForTableCell =
+			"Change context to component, which will found into the cell by column @x and row @y and dynamic locator @locator\n\n" +
+			"Example: Do.use(1,1,new Locator().kind(ControlKind.Label).text('yourText').visibility(Visibility.Visible)).getValue()";
 	@DescriptionAttribute(text = Do.useLocatorForTableCell)
 	public static Operation use(@FieldParameter(name = "x") int x, @FieldParameter(name = "y") int y, @FieldParameter(name = "locator") Locator locator)
 	{
 		return new Operation().use(x, y, locator);
 	}
 
-	static final String useLocatorIdForTableCell = "Change context to component, which will found into the cell by column @x and row @y and element with id @locatorId from a dictionary";
+	static final String useLocatorIdForTableCell =
+			"Change context to component, which will found into the cell by column @x and row @y and element with id @locatorId from a dictionary\n\n" +
+			"Example: Do.use(1,1,'locatorId').getValue()";
 	@DescriptionAttribute(text = Do.useLocatorIdForTableCell)
 	public static Operation use(@FieldParameter(name = "x") int x, @FieldParameter(name = "y") int y, @FieldParameter(name = "locatorId") String locatorId)
 	{
