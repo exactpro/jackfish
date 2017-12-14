@@ -879,7 +879,7 @@ public class SeleniumOperationExecutor extends AbstractOperationExecutor<WebElem
 	}
 
 	@Override
-	public boolean selectByIndex(WebElement component, int index) throws Exception
+	public boolean selectByIndex(WebElement component, int index, boolean onlyVisible) throws Exception
 	{
 		scrollToElement(component);
 		switch (component.getTagName())
@@ -903,7 +903,7 @@ public class SeleniumOperationExecutor extends AbstractOperationExecutor<WebElem
 	}
 
 	@Override
-	public boolean select(WebElement component, String selectedText) throws Exception
+	public boolean select(WebElement component, String selectedText, boolean onlyVisible) throws Exception
 	{
 		scrollToElement(component);
 		switch (component.getTagName())

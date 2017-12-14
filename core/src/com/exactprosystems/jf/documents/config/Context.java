@@ -217,7 +217,7 @@ public class Context implements IContext, AutoCloseable
                 }
                 else
                 {
-                    return new ReturnAndResult(start, Result.Failed, "Handler " + name + " is not found",
+                    return new ReturnAndResult(start, Result.Failed, String.format(R.CONTEXT_HANDLER_NOT_FOUND.get(), name),
                             ErrorKind.FAIL, item);
                 }
             }

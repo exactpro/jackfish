@@ -275,7 +275,7 @@ public class Parameter implements Mutable, Cloneable, Setter<String>, Getter<Str
 	        }
 	        else if (!type.isArray() && valueType.isArray())
 	        {
-	            throw new Exception(String.format(R.PARAMETER_TYPE_EXCEPTION.get(), valueType.getName(), type.getName()));
+	            throw new Exception(String.format(R.PARAMETER_ARRAY_EXCEPTION.get(), valueType.getName(), type.getName()));
 	        }
 	        else 
 	        {

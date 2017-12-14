@@ -1249,7 +1249,7 @@ public class Table implements List<RowTable>, Mutable
 	{
 		if (index >= this.innerList.size())
 		{
-			throw new IndexOutOfBoundsException("Index : " + index + " , Size : " + this.innerList.size());
+			throw new IndexOutOfBoundsException(String.format(R.TABLE_IOOB_EXCEPTION.get(), index, this.innerList.size()));
 		}
 	}
 
@@ -1289,7 +1289,7 @@ public class Table implements List<RowTable>, Mutable
 	    ReportTable result = table;
 		if (result == null)
 		{
-		    result = report.addTable("Differences", null, true, true, new int[]{30, 35, 35}, "Description", "Expected", "Actual");
+		    result = report.addTable(R.TABLE_DIFFERENCES.get(), null, true, true, new int[]{30, 35, 35}, R.TABLE_DESCRIPTION.get(), R	.TABLE_EXPECTED.get(), R.TABLE_ACTUAL.get());
 		}
 		result.addValues(name, expectedValue, actualValue);
         differences.addValue(new String[] { name, expectedValue, actualValue } );

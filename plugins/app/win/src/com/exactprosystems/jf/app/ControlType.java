@@ -62,17 +62,27 @@ public enum ControlType
         this.id = id;
     }
 
-    public String getName() {
+    public String getName()
+    {
         return name;
     }
 
-    public int getId() {
+    public int getId()
+    {
         return id;
     }
 
-    public static ControlType get(String name) {
-        for (ControlType type : values()) {
-            if (type.getName().equals(name)) {
+    public String getStringId()
+    {
+        return Integer.toString(id);
+    }
+
+    public static ControlType get(String name)
+    {
+        for (ControlType type : values())
+        {
+            if (type.getName().equals(name))
+            {
                 return type;
             }
         }

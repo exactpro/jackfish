@@ -13,6 +13,7 @@ import com.exactprosystems.jf.api.app.IControl;
 import com.exactprosystems.jf.api.app.ISection;
 import com.exactprosystems.jf.api.app.IWindow;
 import com.exactprosystems.jf.api.app.Mutable;
+import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import org.apache.log4j.Logger;
 
@@ -292,7 +293,7 @@ public class Window implements IWindow, Mutable
 		
 		if (errors.size() >  0)
 		{
-			throw new Exception("The following fields are missing in the dictionary: " + Arrays.toString(errors.toArray()));
+			throw new Exception(R.WINDOW_CHECK_PARAMS_EXCEPTION.get() + Arrays.toString(errors.toArray()));
 		}
 	}
 

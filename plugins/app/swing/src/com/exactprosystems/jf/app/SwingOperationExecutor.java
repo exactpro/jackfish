@@ -13,10 +13,7 @@ import com.exactprosystems.jf.api.app.*;
 import com.exactprosystems.jf.api.client.ICondition;
 import com.exactprosystems.jf.api.common.Converter;
 import com.exactprosystems.jf.api.conditions.StringCondition;
-import com.exactprosystems.jf.api.error.app.ElementNotFoundException;
-import com.exactprosystems.jf.api.error.app.FeatureNotSupportedException;
-import com.exactprosystems.jf.api.error.app.OperationNotAllowedException;
-import com.exactprosystems.jf.api.error.app.WrongParameterException;
+import com.exactprosystems.jf.api.error.app.*;
 import org.apache.log4j.Logger;
 import org.fest.swing.awt.AWT;
 import org.fest.swing.core.ComponentMatcher;
@@ -289,6 +286,16 @@ public class SwingOperationExecutor extends AbstractOperationExecutor<ComponentF
 				JTable table = (JTable) component.target;
 				Container fakeCell = new Container();
 
+				if (row > table.getRowCount())
+				{
+					throw new TableOutOfBoundsException(String.format("Can't get value for row %s because size of rows is %s", row, table.getRowCount()));
+				}
+
+				if (column > table.getColumnCount())
+				{
+					throw new TableOutOfBoundsException(String.format("Can't get value for column %s because size of columns is %s", column, table.getColumnCount()));
+				}
+
 				if(column < 0)
 				{
 					for(int col=0; col<table.getColumnCount(); col++)
@@ -550,7 +557,7 @@ public class SwingOperationExecutor extends AbstractOperationExecutor<ComponentF
 	}
 
 	@Override
-	public boolean selectByIndex(ComponentFixture<Component> component, final int index) throws Exception
+	public boolean selectByIndex(ComponentFixture <Component> component, final int index, boolean onlyVisible) throws Exception
 	{
 		try
 		{
@@ -622,7 +629,7 @@ public class SwingOperationExecutor extends AbstractOperationExecutor<ComponentF
 	}
 
 	@Override
-	public boolean select(ComponentFixture<Component> component, String selectedText) throws Exception
+	public boolean select(ComponentFixture <Component> component, String selectedText, boolean onlyVisible) throws Exception
 	{
 		try
 		{

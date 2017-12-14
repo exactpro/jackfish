@@ -11,6 +11,7 @@ package com.exactprosystems.jf.documents.matrix;
 
 import com.exactprosystems.jf.api.common.Converter;
 import com.exactprosystems.jf.api.common.MatrixState;
+import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.report.ReportBuilder;
 import com.exactprosystems.jf.documents.config.Configuration;
@@ -100,7 +101,7 @@ public class MatrixEngine implements AutoCloseable
 		StringBuilder errorMsg = new StringBuilder();
 		if (!this.matrix.checkMatrix(this.context, evaluator, errorMsg))
 		{
-			throw new MatrixException(0, null, "Matrix is incorrect. Errors : " + errorMsg.toString());
+			throw new MatrixException(0, null, String.format(R.MATRIX_ENGINE_MATRIX_INCORRECT.get(), errorMsg.toString()));
 		}
 		
         changeState(MatrixState.Waiting);

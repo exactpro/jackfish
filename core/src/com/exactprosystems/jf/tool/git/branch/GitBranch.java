@@ -9,6 +9,7 @@
 
 package com.exactprosystems.jf.tool.git.branch;
 
+import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.git.CredentialBean;
 import com.exactprosystems.jf.tool.git.GitUtil;
@@ -35,7 +36,7 @@ public class GitBranch
 
 	void newBranch(String newName)
 	{
-		DialogsHelper.showInfo("Start creating branch");
+		DialogsHelper.showInfo(R.GIT_BRANCH_START.get());
 		this.controller.setDisable(true);
 		Task<Void> task = new Task<Void>()
 		{
@@ -48,12 +49,12 @@ public class GitBranch
 		};
 		task.setOnFailed(e -> {
 			this.controller.setDisable(false);
-			DialogsHelper.showError("Error on create new branch");
+			DialogsHelper.showError(R.GIT_BRANCH_ERROR_CREATE.get());
 		});
 		task.setOnSucceeded(e -> {
 			this.controller.setDisable(false);
-			DialogsHelper.showSuccess("New branch was created");
-			Common.tryCatch(() -> this.controller.updateBranches(GitUtil.getBranches(this.credentialBean)), "Error on create new branch");
+			DialogsHelper.showSuccess(R.GIT_BRANCH_CREATED.get());
+			Common.tryCatch(() -> this.controller.updateBranches(GitUtil.getBranches(this.credentialBean)), R.GIT_BRANCH_ERROR_CREATE.get());
 		});
 		new Thread(task).start();
 	}
@@ -72,7 +73,7 @@ public class GitBranch
 
 	void deleteBranch(GitUtil.Branch branch) throws Exception
 	{
-		if (DialogsHelper.showYesNoDialog("Are you sure, that you want to delete the branch?", "Delete branch"))
+		if (DialogsHelper.showYesNoDialog(R.GIT_BRANCH_DELETE_MESSAGE.get(), R.GIT_BRANCH_DELETE_QUESTION.get()))
 		{
 			GitUtil.deleteBranch(this.credentialBean, branch);
 			this.controller.updateBranches(GitUtil.getBranches(this.credentialBean));
