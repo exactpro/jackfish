@@ -12,6 +12,7 @@ package com.exactprosystems.jf.tool.matrix.params;
 import com.exactprosystems.jf.actions.AbstractAction;
 import com.exactprosystems.jf.actions.ReadableValue;
 import com.exactprosystems.jf.api.common.DateTime;
+import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.documents.config.Context;
 import com.exactprosystems.jf.documents.matrix.parser.FormulaGenerator;
@@ -312,7 +313,7 @@ public class ParametersPane extends CustomScrollPane
 						case ChooseOpenFile:
 							expressionField.setFirstActionListener(str ->
 							{
-								File file = DialogsHelper.showOpenSaveDialog("Choose file to open", "All files", "*.*", OpenSaveMode.OpenFile);
+								File file = DialogsHelper.showOpenSaveDialog(R.PARAM_PANE_CHOOSE_FILE_TO_OPEN.get(), R.COMMON_ALL_FILES.get(), "*.*", OpenSaveMode.OpenFile);
 								if (file != null)
 								{
 									return this.context.getEvaluator().createString(Common.getRelativePath(file.getAbsolutePath()));
@@ -324,7 +325,7 @@ public class ParametersPane extends CustomScrollPane
 						case ChooseSaveFile:
 							expressionField.setFirstActionListener(str ->
 							{
-								File file = DialogsHelper.showOpenSaveDialog("Choose file to save", "All files", "*.*", OpenSaveMode.SaveFile);
+								File file = DialogsHelper.showOpenSaveDialog(R.PARAM_PANE_CHOOSE_FILE_TO_SAVE.get(), R.COMMON_ALL_FILES.get(), "*.*", OpenSaveMode.SaveFile);
 								if (file != null)
 								{
 									return this.context.getEvaluator().createString(Common.getRelativePath(file.getAbsolutePath()));
@@ -336,7 +337,7 @@ public class ParametersPane extends CustomScrollPane
 						case ChooseFolder:
 							expressionField.setFirstActionListener(str ->
 							{
-								File file = DialogsHelper.showDirChooseDialog("Choose directory");
+								File file = DialogsHelper.showDirChooseDialog(R.PARAM_PANE_CHOOSE_DIR.get());
 								if (file != null)
 								{
 									return this.context.getEvaluator().createString(Common.getRelativePath(file.getAbsolutePath()));

@@ -10,6 +10,7 @@
 package com.exactprosystems.jf.tool.matrix;
 
 import com.exactprosystems.jf.api.common.Str;
+import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.common.Settings;
 import com.exactprosystems.jf.documents.Document;
 import com.exactprosystems.jf.documents.config.Context;
@@ -170,7 +171,7 @@ public class MatrixFxController extends AbstractDocumentController<MatrixFx> imp
 	{
 		this.model.clearExecutingState();
 		this.refresh();
-		String format = String.format("Matrix '%s' started...", matrix.getNameProperty().get());
+		String format = String.format(R.MATRIX_FX_CONTR_MATRIX_STARTED.get(), matrix.getNameProperty().get());
 		Common.runLater(() -> {
 			this.area.clear();
 			this.area.appendDefaultTextOnNewLine(format);
@@ -180,7 +181,7 @@ public class MatrixFxController extends AbstractDocumentController<MatrixFx> imp
 	@Override
 	public void matrixFinished(final Matrix matrix, final int passed, final int failed)
 	{
-		Common.runLater(() -> this.area.appendDefaultTextOnNewLine(String.format("Matrix '%s' finished.", matrix.getNameProperty().get())));
+		Common.runLater(() -> this.area.appendDefaultTextOnNewLine(String.format(R.MATRIX_FX_CONTR_MATRIX_FINISHED.get(), matrix.getNameProperty().get())));
 		this.forceRefresh();
 		this.disableButtons(false);
 	}
@@ -218,7 +219,7 @@ public class MatrixFxController extends AbstractDocumentController<MatrixFx> imp
 		Optional.ofNullable(this.watcher).ifPresent(WatcherFx::update);
 		TreeItem<MatrixItem> treeItem = this.tree.find(item);
 		Common.runLater(() -> {
-			this.area.appendDefaultTextOnNewLine(String.format("%d : Paused on ", item.getNumber()));
+			this.area.appendDefaultTextOnNewLine(String.format(R.MATRIX_FX_CONTR_PAUSED_ON.get(), item.getNumber()));
 			this.area.appendMatrixItemLink(String.format("%s", item.getItemName()), treeItem);
 			this.tree.scrollTo(this.tree.getRow(treeItem));
 		});
@@ -284,11 +285,11 @@ public class MatrixFxController extends AbstractDocumentController<MatrixFx> imp
 		this.efParameter = new ExpressionField(context.getEvaluator());
 		HBox.setHgrow(this.efParameter, Priority.ALWAYS);
 		this.efParameter.setStretchable(false);
-		this.efParameter.setPromptText("Parameter for start");
+		this.efParameter.setPromptText(R.MATRIX_FX_CONTR_PARAMETER_FOR_START.get());
 		this.efParameter.setMaxWidth(250.0);
 		this.efParameter.setPrefWidth(250.0);
 		this.efParameter.setMinWidth(250.0);
-		this.efParameter.setHelperForExpressionField("Parameter for start", super.model);
+		this.efParameter.setHelperForExpressionField(R.MATRIX_FX_CONTR_PARAMETER_FOR_START.get(), super.model);
 		this.bottomBox.getChildren().addAll(this.efParameter, Common.createSpacer(Common.SpacerEnum.HorizontalMin), new Separator(Orientation.VERTICAL));
 		this.efParameter.textProperty().addListener((observable, oldValue, newValue) -> {
 			Object value = null;
@@ -370,7 +371,7 @@ public class MatrixFxController extends AbstractDocumentController<MatrixFx> imp
 	private void startMatrix(ActionEvent event)
 	{
 		this.disableButtons(true);
-		tryCatch(this.model::startMatrix, "Error on starting matrix. See the matrix output for details.");
+		tryCatch(this.model::startMatrix, R.MATRIX_FX_CONTR_ERROR_ON_START.get());
 	}
 
 	@FXML
@@ -390,7 +391,7 @@ public class MatrixFxController extends AbstractDocumentController<MatrixFx> imp
 	private void toggleTracing(ActionEvent event)
 	{
 		boolean b = tbTracing.isSelected();
-		tbTracing.getTooltip().setText("Color " + (b ? "on" : "off"));
+		tbTracing.getTooltip().setText(b ? R.MATRIX_FX_CONTR_COLOR_ON.get() : R.MATRIX_FX_CONTR_COLOR_OFF.get());
 		this.context.setTracing(b);
 		this.refresh();
 		this.tree.setTracing(b);
@@ -468,7 +469,7 @@ public class MatrixFxController extends AbstractDocumentController<MatrixFx> imp
 
 	private void mark(boolean flag)
 	{
-		tryCatch(() -> this.model.markFirstLevel(flag), "Error on marking all items");
+		tryCatch(() -> this.model.markFirstLevel(flag), R.MATRIX_FX_CONTR_ERROR_ON_MARKING.get());
 		refresh();
 	}
 
@@ -560,19 +561,19 @@ public class MatrixFxController extends AbstractDocumentController<MatrixFx> imp
 					showFindPanel(null);
 				}
 			}
-		}, "Error on setting shortcuts"));
+		}, R.MATRIX_FX_CONTR_ERROR_SET_SHORTCUTS.get()));
 
 	}
 
 	private void initializeButtons(final Settings settings)
 	{
-		this.btnStartMatrix.setTooltip(new Tooltip("Start\n" + getShortcutTooltip(settings, Settings.START_MATRIX)));
-		this.btnStopMatrix.setTooltip(new Tooltip("Stop\n" + getShortcutTooltip(settings, Settings.STOP_MATRIX)));
-		this.btnPauseMatrix.setTooltip(new Tooltip("Pause\n" + getShortcutTooltip(settings, Settings.PAUSE_MATRIX)));
-		this.btnPauseMatrix.setTooltip(new Tooltip("Step\n" + getShortcutTooltip(settings, Settings.STEP_MATRIX)));
-		this.btnFind.setTooltip(new Tooltip("Find\n" + getShortcutTooltip(settings, Settings.FIND_ON_MATRIX)));
+		this.btnStartMatrix.setTooltip(new Tooltip(R.COMMON_START.get() + "\n" + getShortcutTooltip(settings, Settings.START_MATRIX)));
+		this.btnStopMatrix.setTooltip(new Tooltip(R.COMMON_STOP.get() + "\n" + getShortcutTooltip(settings, Settings.STOP_MATRIX)));
+		this.btnPauseMatrix.setTooltip(new Tooltip(R.COMMON_PAUSE.get() + "\n" + getShortcutTooltip(settings, Settings.PAUSE_MATRIX)));
+		this.btnStepMatrix.setTooltip(new Tooltip(R.COMMON_STEP.get() + "\n" + getShortcutTooltip(settings, Settings.STEP_MATRIX)));
+		this.btnFind.setTooltip(new Tooltip(R.COMMON_FIND.get() + "\n" + getShortcutTooltip(settings, Settings.FIND_ON_MATRIX)));
 
-		this.tbTracing.setTooltip(new Tooltip("Color off"));
+		this.tbTracing.setTooltip(new Tooltip(R.MATRIX_FX_CONTR_COLOR_OFF.get()));
 		this.tbTracing.getStyleClass().add(CssVariables.TOGGLE_BUTTON_WITHOUT_BORDER);
 	}
 
@@ -590,7 +591,7 @@ public class MatrixFxController extends AbstractDocumentController<MatrixFx> imp
 				this.watcher = new WatcherFx(btnWatch.getScene().getWindow(), matrix, context);
 			}
 			this.watcher.show();
-		}, "Error on showing watcher ");
+		}, R.MATRIX_FX_CONTR_ERROR_SHOW_WATCHER.get());
 	}
 
 	private Object getParameter() throws Exception

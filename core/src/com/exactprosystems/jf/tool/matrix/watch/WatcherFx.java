@@ -9,6 +9,7 @@
 
 package com.exactprosystems.jf.tool.matrix.watch;
 
+import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.common.Settings;
 import com.exactprosystems.jf.documents.config.Context;
 import com.exactprosystems.jf.tool.Common;
@@ -103,7 +104,7 @@ public class WatcherFx
 	{
 		if (text == null || text.isEmpty())
 		{
-			DialogsHelper.showError("Can't create variable with empty name");
+			DialogsHelper.showError(R.WATCHER_FX_EMPTY_NAME_ERROR.get());
 			return;
 		}
 		Optional<Settings.SettingsValue> first = values.stream().filter(value -> value.getKey().equals(text)).findFirst();
@@ -111,7 +112,7 @@ public class WatcherFx
 		{
 			if (showError)
 			{
-				DialogsHelper.showInfo(String.format("Watcher already contains expression this name '%s'", text));
+				DialogsHelper.showInfo(String.format(R.WATCHER_FX_NAME_ALREADY_EXISTS.get(), text));
 			}
 			return;
 		}
