@@ -11,6 +11,7 @@ package com.exactprosystems.jf.app;
 import org.openqa.selenium.*;
 import org.openqa.selenium.interactions.*;
 import org.openqa.selenium.interactions.internal.Coordinates;
+import org.openqa.selenium.interactions.internal.Locatable;
 import org.openqa.selenium.internal.*;
 
 import java.util.ArrayList;
@@ -535,9 +536,9 @@ public class WebDriverListenerNew implements WebDriver, JavascriptExecutor,
 		@Override
 		public Coordinates getCoordinates()
 		{
-			if (this.element instanceof org.openqa.selenium.interactions.internal.Locatable)
+			if (this.element instanceof Locatable)
 			{
-				return ((org.openqa.selenium.interactions.internal.Locatable) this.element).getCoordinates();
+				return ((Locatable) this.element).getCoordinates();
 			}
 			throw new UnsupportedOperationException("Current element instance does not locatable");
 		}
