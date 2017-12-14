@@ -83,7 +83,7 @@ public interface OperationExecutor<T>
 	 * @param table is table, which use for found cell as owner
 	 * @param additional locator, for found rows of the table
 	 * @param header locator, for found headers of the table
-	 * @param x is column index. If column index is {@link Integer#MIN_VALUE}, will returned Row of table
+	 * @param x is column index. If column index is {@link Integer#MIN_VALUE}, will returned row of table by index row index
 	 * @param y is row index.
 	 * @return cell from the table by passed parameters
 	 *
