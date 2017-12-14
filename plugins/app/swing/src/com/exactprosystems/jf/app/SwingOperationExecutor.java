@@ -39,6 +39,7 @@ import org.w3c.dom.NodeList;
 import sun.awt.AppContext;
 
 import javax.swing.*;
+import javax.swing.table.TableCellRenderer;
 import javax.swing.text.JTextComponent;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreeNode;
@@ -286,9 +287,33 @@ public class SwingOperationExecutor extends AbstractOperationExecutor<ComponentF
 			{
 				JTable table = (JTable) component.target;
 				Container fakeCell = new Container();
-				fakeCell.add(table
-						.getCellRenderer(x, y)
-						.getTableCellRendererComponent(table, table.getValueAt(x, y), true, true, x, y));
+
+				if(x < 0)
+				{
+					fakeCell.add(table
+							.getCellRenderer(y, 0)
+							.getTableCellRendererComponent(table, table.getValueAt(y, 0), true, true, y, 0));
+				}
+				else if(y < 0)
+				{
+					TableCellRenderer renderer;
+					if(table.getTableHeader().getColumnModel().getColumn(x).getHeaderRenderer() == null)
+					{
+						renderer = table.getTableHeader().getDefaultRenderer();
+					}
+					else
+					{
+						renderer = table.getColumnModel().getColumn(x).getHeaderRenderer();
+					}
+					fakeCell.add(renderer
+							.getTableCellRendererComponent(table, table.getColumnModel().getColumn(x).getHeaderValue(), true, true, 0, x));
+				}
+				else
+				{
+					fakeCell.add(table
+							.getCellRenderer(y, x)
+							.getTableCellRendererComponent(table, table.getValueAt(y, x), true, true, y, x));
+				}
 				return getFixture(fakeCell);
 			}
 		}
