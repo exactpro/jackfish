@@ -336,24 +336,34 @@ public class WinOperationExecutorJNA extends AbstractOperationExecutor<UIProxyJN
 	}
 
 	@Override
-	public boolean selectByIndex(UIProxyJNA component, int index) throws Exception
+	public boolean selectByIndex(UIProxyJNA component, int index, boolean onlyVisible) throws Exception
 	{
 		try
 		{
-			List<UIProxyJNA> elementsList = Collections.emptyList();
+			String controlTypeId;
 			String attribute = this.driver.elementAttribute(component, AttributeKind.TYPE_NAME);
-			if (attribute.equalsIgnoreCase(ControlType.List.getName()) || attribute.equalsIgnoreCase(ControlType.ComboBox.getName()))
+			if (attribute.equalsIgnoreCase(ControlType.List.getName()) ||
+				attribute.equalsIgnoreCase(ControlType.ComboBox.getName()))
 			{
-				elementsList = findComponents(component, WindowTreeScope.Descendants, WindowProperty.ControlTypeProperty, "" + ControlType.ListItem.getId());
+				controlTypeId = ControlType.ListItem.getStringId();
 			}
-			if (attribute.equalsIgnoreCase(ControlType.Tab.getName()))
+			else if (attribute.equalsIgnoreCase(ControlType.Tab.getName()))
 			{
-				elementsList = findComponents(component, WindowTreeScope.Descendants, WindowProperty.ControlTypeProperty, "" + ControlType.TabItem.getId());
+				controlTypeId = ControlType.TabItem.getStringId();
 			}
-			if (attribute.equalsIgnoreCase(ControlType.Tree.getName()))
+			else if (attribute.equalsIgnoreCase(ControlType.Tree.getName()))
 			{
-				elementsList = findComponents(component, WindowTreeScope.Descendants, WindowProperty.ControlTypeProperty, "" + ControlType.TreeItem.getId());
+				controlTypeId = ControlType.TreeItem.getStringId();
 			}
+			else
+			{
+				return true;
+			}
+			List<UIProxyJNA> elementsList = findComponents(component,
+					WindowTreeScope.Descendants,
+					WindowProperty.ControlTypeProperty,
+					controlTypeId,
+					onlyVisible);
 			this.driver.doPatternCall(elementsList.get(index), WindowPattern.SelectionItemPattern, "Select", null, -1);
 			return true;
 		}
@@ -364,7 +374,7 @@ public class WinOperationExecutorJNA extends AbstractOperationExecutor<UIProxyJN
 	}
 
 	@Override
-	public boolean select(UIProxyJNA component, String selectedText) throws Exception
+	public boolean select(UIProxyJNA component, String selectedText, boolean onlyVisible) throws Exception
 	{
 		try
 		{
@@ -374,14 +384,20 @@ public class WinOperationExecutorJNA extends AbstractOperationExecutor<UIProxyJN
 				NodeList nodes = findNodesInTreeByXpath(convertTreeToXMLDoc(component), selectedText);
 				for (int i = 0; i < nodes.getLength(); i++)
 				{
-					String runtimeId = nodes.item(i).getAttributes().getNamedItem(RUNTIME_ID_ATTRIBUTE).getNodeValue();
-					this.driver.doPatternCall(new UIProxyJNA(runtimeId), WindowPattern.SelectionItemPattern, "Select", null, -1);
+					UIProxyJNA element = new UIProxyJNA(nodes.item(i).getAttributes().getNamedItem(RUNTIME_ID_ATTRIBUTE).getNodeValue());
+					if(checkVisible(element, onlyVisible))
+					{
+						this.driver.doPatternCall(element, WindowPattern.SelectionItemPattern, "Select", null, -1);
+					}
 				}
 			}
 			else
 			{
-				int[] itemId = findItem(component, selectedText);
-				this.driver.doPatternCall(new UIProxyJNA(itemId), WindowPattern.SelectionItemPattern, "Select", null, -1);
+				UIProxyJNA element = new UIProxyJNA(findItem(component, selectedText));
+				if(checkVisible(element, onlyVisible))
+				{
+					this.driver.doPatternCall(element, WindowPattern.SelectionItemPattern, "Select", null, -1);
+				}
 			}
 			return true;
 		}
@@ -842,27 +858,27 @@ public class WinOperationExecutorJNA extends AbstractOperationExecutor<UIProxyJN
 			String attribute = this.driver.elementAttribute(component, AttributeKind.TYPE_NAME);
 			if (attribute.equalsIgnoreCase(ControlType.ComboBox.getName()))
 			{
-				elementsList = findComponents(component, WindowTreeScope.Children, WindowProperty.ControlTypeProperty, Integer.toString(ControlType.List.getId()));
+				elementsList = findComponents(component, WindowTreeScope.Children, WindowProperty.ControlTypeProperty, ControlType.List.getStringId(), false);
 				if(elementsList.isEmpty())
 				{
-					elementsList = findComponents(component, WindowTreeScope.Children, WindowProperty.ControlTypeProperty, Integer.toString(ControlType.ListItem.getId()));
+					elementsList = findComponents(component, WindowTreeScope.Children, WindowProperty.ControlTypeProperty, ControlType.ListItem.getStringId(), false);
 				}
 				else
 				{
-					elementsList = findComponents(elementsList.get(0), WindowTreeScope.Children, WindowProperty.ControlTypeProperty, Integer.toString(ControlType.ListItem.getId()));
+					elementsList = findComponents(elementsList.get(0), WindowTreeScope.Children, WindowProperty.ControlTypeProperty, ControlType.ListItem.getStringId(), false);
 				}
 			}
 			if (attribute.equalsIgnoreCase(ControlType.List.getName()))
 			{
-				elementsList = findComponents(component, WindowTreeScope.Children, WindowProperty.ControlTypeProperty, Integer.toString(ControlType.ListItem.getId()));
+				elementsList = findComponents(component, WindowTreeScope.Children, WindowProperty.ControlTypeProperty, ControlType.ListItem.getStringId(), false);
 			}
 			if (attribute.equalsIgnoreCase(ControlType.Tab.getName()))
 			{
-				elementsList = findComponents(component, WindowTreeScope.Children, WindowProperty.ControlTypeProperty, Integer.toString(ControlType.TabItem.getId()));
+				elementsList = findComponents(component, WindowTreeScope.Children, WindowProperty.ControlTypeProperty, ControlType.TabItem.getStringId(), false);
 			}
 			if (attribute.equalsIgnoreCase(ControlType.Tree.getName()))
 			{
-				elementsList = findComponents(component, WindowTreeScope.Descendants, WindowProperty.ControlTypeProperty, Integer.toString(ControlType.TreeItem.getId()));
+				elementsList = findComponents(component, WindowTreeScope.Descendants, WindowProperty.ControlTypeProperty, ControlType.TreeItem.getStringId(), false);
 			}
 			if (index > elementsList.size() || index < 0)
 			{
@@ -988,7 +1004,7 @@ public class WinOperationExecutorJNA extends AbstractOperationExecutor<UIProxyJN
 			String attribute = this.driver.elementAttribute(component, AttributeKind.TYPE_NAME);
 			if (attribute.equalsIgnoreCase(ControlType.Tree.getName()))
 			{
-				List<UIProxyJNA> elementsList = findComponents(component, WindowTreeScope.Descendants, WindowProperty.ControlTypeProperty, "" + ControlType.TreeItem.getId());
+				List<UIProxyJNA> elementsList = findComponents(component, WindowTreeScope.Descendants, WindowProperty.ControlTypeProperty, ControlType.TreeItem.getStringId(), false);
 				Map<String, Object> values = new HashMap<>();
 				for (int i = 0; i < elementsList.size(); i++) {
 					values.clear();
@@ -1205,26 +1221,31 @@ public class WinOperationExecutorJNA extends AbstractOperationExecutor<UIProxyJN
 		return availablePatterns.contains(pattern);
 	}
 
-	private List<UIProxyJNA> findComponents(UIProxyJNA component, WindowTreeScope scope, WindowProperty property, String string) throws Exception
+	private List<UIProxyJNA> findComponents(UIProxyJNA component, WindowTreeScope scope, WindowProperty property, String controlTypeId, boolean onlyVisible) throws Exception
 	{
 		try
 		{
 			int length = 100;
 			int[] arr = new int[length];
-			int count = this.driver.findAll(arr, component, scope, property, string);
+			int count = this.driver.findAll(arr, component, scope, property, controlTypeId);
 			if (count > length)
 			{
 				length = count;
 				arr = new int[length];
-				this.driver.findAll(arr, component, scope, property, string);
+				this.driver.findAll(arr, component, scope, property, controlTypeId);
 			}
 			ArrayList<UIProxyJNA> list = new ArrayList<>();
 
 			int itemsCount = arr[0];
 			int itemLength = arr[1];
 			int[] items = Arrays.copyOfRange(arr, 2, arr.length);
-			for (int i = 0; i < itemsCount; i++) {
-				list.add(new UIProxyJNA(Arrays.copyOfRange(items, 0, itemLength)));
+			for (int i = 0; i < itemsCount; i++)
+			{
+				UIProxyJNA elem = new UIProxyJNA(Arrays.copyOfRange(items, 0, itemLength));
+				if(checkVisible(elem, onlyVisible))
+				{
+					list.add(elem);
+				}
 				items = Arrays.copyOfRange(items, itemLength+1, items.length);
 			}
 			return list;
@@ -1293,6 +1314,11 @@ public class WinOperationExecutorJNA extends AbstractOperationExecutor<UIProxyJN
 		{
 			this.driver.doPatternCall(component, WindowPattern.ExpandCollapsePattern, "Collapse", null, -1);
 		}
+	}
+
+	private boolean checkVisible(UIProxyJNA elem, boolean onlyVisible) throws Exception
+	{
+		return !onlyVisible || "true".equalsIgnoreCase(this.driver.elementAttribute(elem, AttributeKind.VISIBLE));
 	}
 
 	private Rectangle stringToRect(String stringRect) throws RemoteException

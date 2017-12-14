@@ -358,7 +358,7 @@
             </sdk:DataGrid.Columns>
         </sdk:DataGrid>
         <sdk:AutoCompleteBox Height="28" Margin="10,0,53,29" VerticalAlignment="Bottom" x:Name="autocompleteBox" IsDropDownOpen="True" ItemsSource="{Binding Collection, Source={StaticResource ComboBoxData}}" FilterMode="None" ItemTemplate="{StaticResource ItemTemplate}" d:LayoutOverrides="LeftMargin, RightMargin, TopMargin, BottomMargin"/>
-        <sdk:TreeView x:Name="treeView" Grid.Column="1" Margin="10,80,10,62">
+        <sdk:TreeView x:Name="treeView" Grid.Column="1" Margin="10,10,10,132">
             <sdk:TreeViewItem Header="Green" Height="200" Margin="0" Width="200" IsExpanded="True">
                 <sdk:TreeViewItem Header="Yellow" Height="23" Margin="0,0,-15,0" Width="200"/>
                 <sdk:TreeViewItem Header="Orange" Height="25" Margin="0,0,-15,0" Width="200"/>
@@ -369,10 +369,21 @@
                 </sdk:TreeViewItem>
             </sdk:TreeViewItem>
         </sdk:TreeView>
-        <sdk:TreeView x:Name="treeView1" Grid.Column="2" Margin="11,80,10,62" DataContext="{Binding Source={StaticResource TreeViewDataSource}}" ItemsSource="{Binding Collection}" ItemTemplate="{StaticResource ItemTemplate2}"/>
+        <sdk:TreeView x:Name="treeView1" Grid.Column="2" Margin="11,10,10,132" DataContext="{Binding Source={StaticResource TreeViewDataSource}}" ItemsSource="{Binding Collection}" ItemTemplate="{StaticResource ItemTemplate2}"/>
         <ComboBox x:Name="comboboxSimple2" Height="15" Margin="0,10,15,0" VerticalAlignment="Top" HorizontalAlignment="Right" Width="26" d:LayoutOverrides="TopMargin, BottomMargin">
             <ComboBoxItem x:Name="Second" Content="Second"/>
             <ComboBoxItem x:Name="Third" Content="Third"/>
         </ComboBox>
+        <sdk:TabControl x:Name="tabControl" Grid.Column="1" Height="53" Margin="10,0,10,74" VerticalAlignment="Bottom" d:LayoutOverrides="LeftPosition, RightPosition">
+            <sdk:TabItem Header="Tab1">
+                <Grid Background="#FF909DC9"/>
+            </sdk:TabItem>
+            <sdk:TabItem Header="Tab2 (notVisible)" Visibility="Collapsed">
+                <Grid Background="#FFC99090"/>
+            </sdk:TabItem>
+            <sdk:TabItem Header="Tab3">
+                <Grid Background="#FFBFAA26"/>
+            </sdk:TabItem>
+        </sdk:TabControl>
     </Grid>
 </UserControl>
