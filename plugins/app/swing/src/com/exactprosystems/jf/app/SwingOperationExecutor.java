@@ -39,6 +39,7 @@ import org.w3c.dom.NodeList;
 import sun.awt.AppContext;
 
 import javax.swing.*;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.text.JTextComponent;
 import javax.swing.tree.DefaultMutableTreeNode;
@@ -278,9 +279,9 @@ public class SwingOperationExecutor extends AbstractOperationExecutor<ComponentF
     }
 
     @Override
-	public ComponentFixture<Component> lookAtTable(ComponentFixture<Component> component, Locator additional, Locator header, int x, int y) throws Exception
+	public ComponentFixture<Component> lookAtTable(ComponentFixture<Component> component, Locator additional, Locator header, int column, int row) throws Exception
 	{
-		logger.info("findIntoTable(" + component.target.getName() + ", " + x + ", " + y + ")" + (additional == null ? "" : "additional " + additional));
+		logger.info("findIntoTable(" + component.target.getName() + ", " + column + ", " + row + ")" + (additional == null ? "" : "additional " + additional));
 		try
 		{
 			if(component.target instanceof JTable)
@@ -288,31 +289,26 @@ public class SwingOperationExecutor extends AbstractOperationExecutor<ComponentF
 				JTable table = (JTable) component.target;
 				Container fakeCell = new Container();
 
-				if(x < 0)
+				if(column < 0)
 				{
-					fakeCell.add(table
-							.getCellRenderer(y, 0)
-							.getTableCellRendererComponent(table, table.getValueAt(y, 0), true, true, y, 0));
-				}
-				else if(y < 0)
-				{
-					TableCellRenderer renderer;
-					if(table.getTableHeader().getColumnModel().getColumn(x).getHeaderRenderer() == null)
+					for(int col=0; col<table.getColumnCount(); col++)
 					{
-						renderer = table.getTableHeader().getDefaultRenderer();
+						TableCellRenderer cellRenderer = table.getColumnModel().getColumn(col).getCellRenderer();
+						if(cellRenderer != null)
+						{
+							fakeCell.add(cellRenderer.getTableCellRendererComponent(table, table.getValueAt(row, col), true, true, row, col));
+						}
+						else
+						{
+							fakeCell.add(new DefaultTableCellRenderer().getTableCellRendererComponent(table, table.getValueAt(row, col), true, true, row, col));
+						}
 					}
-					else
-					{
-						renderer = table.getColumnModel().getColumn(x).getHeaderRenderer();
-					}
-					fakeCell.add(renderer
-							.getTableCellRendererComponent(table, table.getColumnModel().getColumn(x).getHeaderValue(), true, true, 0, x));
 				}
 				else
 				{
 					fakeCell.add(table
-							.getCellRenderer(y, x)
-							.getTableCellRendererComponent(table, table.getValueAt(y, x), true, true, y, x));
+							.getCellRenderer(row, column)
+							.getTableCellRendererComponent(table, table.getValueAt(row, column), true, true, row, column));
 				}
 				return getFixture(fakeCell);
 			}
