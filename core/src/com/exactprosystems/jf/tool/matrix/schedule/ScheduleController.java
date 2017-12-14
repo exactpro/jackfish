@@ -217,27 +217,27 @@ public class ScheduleController implements Initializable, ContainingParent
 	//region Action methods
 	public void startSelected(ActionEvent actionEvent)
 	{
-		Common.tryCatch(() -> this.model.startSelected(getSelected()), "Error on start matrices");
+		Common.tryCatch(() -> this.model.startSelected(getSelected()), R.SCHEDULE_CONTR_ERROR_START.get());
 	}
 
 	public void stopSelected(ActionEvent actionEvent)
 	{
-		Common.tryCatch(() -> this.model.stopSelected(getSelected()), "Error on stop matrices");
+		Common.tryCatch(() -> this.model.stopSelected(getSelected()), R.SCHEDULE_CONTR_ERROR_STOP.get());
 	}
 
 	public void destroySelected(ActionEvent actionEvent)
 	{
-		Common.tryCatch(() -> this.model.destroySelected(getSelected()), "Error on stop matrices");
+		Common.tryCatch(() -> this.model.destroySelected(getSelected()), R.SCHEDULE_CONTR_ERROR_STOP.get());
 	}
 
 	public void showSelected(ActionEvent actionEvent)
 	{
-		Common.tryCatch(() -> this.model.showSelected(getSelected()), "Error on show matrices");
+		Common.tryCatch(() -> this.model.showSelected(getSelected()), R.SCHEDULE_CONTR_ERROR_SHOW.get());
 	}
 
 	public void loadSeveral(ActionEvent actionEvent)
 	{
-		Common.tryCatch(this.model::loadSeveral, "Error on load matrices");
+		Common.tryCatch(this.model::loadSeveral, R.SCHEDULE_CONTR_ERROR_LOAD.get());
 	}
 
 	public void showReport(Matrix matrix)

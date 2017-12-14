@@ -10,6 +10,7 @@
 package com.exactprosystems.jf.tool.matrix.schedule;
 
 import com.exactprosystems.jf.api.common.MatrixState;
+import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.documents.DocumentFactory;
 import com.exactprosystems.jf.documents.DocumentKind;
 import com.exactprosystems.jf.documents.matrix.Matrix;
@@ -56,17 +57,17 @@ public class MatrixScheduler implements DocumentFactory.MatrixStateChanged
 
 	void startSelected(List<Matrix> collect)
 	{
-		collect.forEach(matrix -> Common.tryCatch(() -> matrix.start(null, null), "Error on start matrix"));
+		collect.forEach(matrix -> Common.tryCatch(() -> matrix.start(null, null), R.MATRIX_SCHEDULER_ERROR_START_MATRIX.get()));
 	}
 
 	void stopSelected(List<Matrix> collect)
 	{
-		collect.forEach(matrix -> Common.tryCatch(matrix::stop, "Error on start matrix"));
+		collect.forEach(matrix -> Common.tryCatch(matrix::stop, R.MATRIX_SCHEDULER_ERROR_START_MATRIX.get()));
 	}
 
 	void destroySelected(List<Matrix> collect)
 	{
-		collect.forEach(runner -> Common.tryCatch(runner::close, "Error on start runner"));
+		collect.forEach(runner -> Common.tryCatch(runner::close, R.MATRIX_SCHEDULER_ERROR_START_MATRIX.get()));
 	}
 
 	void showSelected(List<Matrix> collect)
@@ -83,15 +84,15 @@ public class MatrixScheduler implements DocumentFactory.MatrixStateChanged
 				}
 				catch (Exception e)
 				{
-					DialogsHelper.showError("Couldn't open the matrix " + matrix);
+					DialogsHelper.showError(String.format(R.MATRIX_SCHEDULER_OPER_MATRIX_ERROR.get(), "" + matrix));
 				}
 			}
-		}, "Error on start matrix"));
+		}, R.MATRIX_SCHEDULER_ERROR_START_MATRIX.get()));
 	}
 
 	void loadSeveral()
 	{
-		List<File> files = DialogsHelper.showMultipleDialog("Choose matrices", "jf files (*.jf)", "*.jf");
+		List<File> files = DialogsHelper.showMultipleDialog(R.MATRIX_SCHEDULER_CHOOSE_MATRICES.get(), R.COMMON_JF_FILTER.get(), "*.jf");
 		if (files != null)
 		{
 			files.stream()
@@ -101,6 +102,6 @@ public class MatrixScheduler implements DocumentFactory.MatrixStateChanged
 	}
 
 	void showReport(Matrix matrix){
-		Common.tryCatch(((MatrixFx) matrix)::showResult, "Error on report open");
+		Common.tryCatch(((MatrixFx) matrix)::showResult, R.MATRIX_SCHEDULER_ERROR_OPEN_REPORT.get());
 	}
 }

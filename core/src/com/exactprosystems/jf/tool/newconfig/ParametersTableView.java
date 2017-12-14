@@ -8,6 +8,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 package com.exactprosystems.jf.tool.newconfig;
 
+import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.custom.controls.field.CustomFieldWithButton;
 import com.exactprosystems.jf.tool.newconfig.nodes.TreeNode;
@@ -31,11 +32,11 @@ public class ParametersTableView extends TableView<TablePair>
 	{
 		this.hide();
 		TableColumn<TablePair, String> keyColumn = new TableColumn<>();
-		keyColumn.setText("Parameter");
+		keyColumn.setText(R.COMMON_PARAMETER.get());
 		keyColumn.setCellValueFactory(new PropertyValueFactory<>("key"));
 		keyColumn.setCellFactory(e -> new TableContextMenuCell());
 		TableColumn<TablePair, String> valueColumn = new TableColumn<>();
-		valueColumn.setText("Value");
+		valueColumn.setText(R.COMMON_VALUE.get());
 		valueColumn.setCellValueFactory(new PropertyValueFactory<>("value"));
 		valueColumn.setCellFactory(e -> new TableColumnCell());
 		valueColumn.setOnEditCommit(e ->

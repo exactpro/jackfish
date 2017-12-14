@@ -9,6 +9,7 @@
 package com.exactprosystems.jf.tool.newconfig;
 
 import com.exactprosystems.jf.api.common.SerializablePair;
+import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.CssVariables;
 import com.exactprosystems.jf.tool.custom.skin.CustomTreeViewSkin;
@@ -57,7 +58,7 @@ public class ConfigurationTreeView extends TreeView<TreeNode>
 			TreeItem<TreeNode> selectedItem = this.getSelectionModel().getSelectedItem();
 			if (selectedItem != null && selectedItem.getChildren().size() == 0 && event.getClickCount() == 2)
 			{
-				Optional.ofNullable(selectedItem.getValue().onDoubleClickEvent()).ifPresent(fnc -> Common.tryCatch(fnc, "Error on call"));
+				Optional.ofNullable(selectedItem.getValue().onDoubleClickEvent()).ifPresent(fnc -> Common.tryCatch(fnc, R.CONFIG_TREE_VIEW_ERROR_CALL.get()));
 			}
 		});
 
@@ -66,7 +67,7 @@ public class ConfigurationTreeView extends TreeView<TreeNode>
 			TreeItem<TreeNode> selectedItem = this.getSelectionModel().getSelectedItem();
 			if (selectedItem != null && selectedItem.getChildren().size() == 0 && event.getCode() == KeyCode.ENTER)
 			{
-				Optional.ofNullable(selectedItem.getValue().onDoubleClickEvent()).ifPresent(fnc -> Common.tryCatch(fnc, "Error on call"));
+				Optional.ofNullable(selectedItem.getValue().onDoubleClickEvent()).ifPresent(fnc -> Common.tryCatch(fnc, R.CONFIG_TREE_VIEW_ERROR_CALL.get()));
 			}
 		});
 		this.setCellFactory(param -> new TreeCell<TreeNode>()
@@ -134,24 +135,24 @@ public class ConfigurationTreeView extends TreeView<TreeNode>
 	{
 		ContextMenu contextMenu = new ContextMenu();
 
-		javafx.scene.control.Menu menu = new javafx.scene.control.Menu("Git");
+		javafx.scene.control.Menu menu = new javafx.scene.control.Menu(R.COMMON_GIT.get());
 
-		MenuItem itemClone = new MenuItem("Clone");
+		MenuItem itemClone = new MenuItem(R.TOOL_CLONE.get());
 		itemClone.setOnAction(e -> System.out.println(String.format("file %s Clone", file)));
 
-		MenuItem itemPull = new MenuItem("Pull");
+		MenuItem itemPull = new MenuItem(R.TOOL_PULL.get());
 		itemPull.setOnAction(e -> System.out.println(String.format("file %s Pull", file)));
 
-		MenuItem itemCommit = new MenuItem("Commit");
+		MenuItem itemCommit = new MenuItem(R.TOOL_COMMIT.get());
 		itemCommit.setOnAction(e -> System.out.println(String.format("file %s Commit", file)));
 
-		MenuItem itemPush = new MenuItem("Push");
+		MenuItem itemPush = new MenuItem(R.TOOL_PUSH.get());
 		itemPush.setOnAction(e -> System.out.println(String.format("file %s Push", file)));
 
-		MenuItem itemReset = new MenuItem("Reset");
+		MenuItem itemReset = new MenuItem(R.TOOL_RESET.get());
 		itemReset.setOnAction(e -> System.out.println(String.format("file %s Reset", file)));
 
-		MenuItem itemIgnore = new MenuItem("Ignore");
+		MenuItem itemIgnore = new MenuItem(R.TOOL_IGNORE.get());
 		itemIgnore.setOnAction(e -> System.out.println(String.format("file %s Ignore", file)));
 
 		menu.getItems().addAll(itemClone, itemPull, itemCommit, itemPush, itemReset, itemIgnore);

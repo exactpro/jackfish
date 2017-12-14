@@ -15,6 +15,7 @@ import com.exactprosystems.jf.api.client.Possibility;
 import com.exactprosystems.jf.api.common.IPool;
 import com.exactprosystems.jf.api.common.ParametersKind;
 import com.exactprosystems.jf.api.common.Str;
+import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.api.service.IServiceFactory;
 import com.exactprosystems.jf.api.service.IServicesPool;
 import com.exactprosystems.jf.api.service.ServiceConnection;
@@ -142,7 +143,7 @@ public class ConfigurationFx extends Configuration
 	public void refresh() throws Exception
 	{
 		super.refresh();
-		DialogsHelper.showSuccess("Configuration was refreshed successful!");
+		DialogsHelper.showSuccess(R.CONFIG_FX_REFRESH_SUCCESS.get());
 	}
 
 	@Override
@@ -358,7 +359,7 @@ public class ConfigurationFx extends Configuration
 
 	public void renameMatrix(File file) throws Exception
 	{
-		String newName = DialogsHelper.showInputDialog("Enter new name:", file.getName()).orElse(null);
+		String newName = DialogsHelper.showInputDialog(R.CONFIG_FX_ENTER_NAME.get(), file.getName()).orElse(null);
 		if (newName != null)
 		{
 			String newFilePath = getNewFilePath(file, newName);
@@ -366,8 +367,8 @@ public class ConfigurationFx extends Configuration
 			if (tmp.exists())
 			{
 				if (!DialogsHelper.showQuestionDialog(
-						String.format("A file with path %s already exists. The file will rewrited", tmp.getPath())
-						, "Do you want to continue?"
+						String.format(R.CONFIG_FX_FILE_EXISTS.get(), tmp.getPath())
+						, R.CONFIG_FX_CONTINUE_QUESTION.get()
 				))
 				{
 					return;
@@ -382,8 +383,8 @@ public class ConfigurationFx extends Configuration
 				if (document.isChanged())
 				{
 					needContinue = DialogsHelper.showQuestionDialog(
-							"A File was changed. Before renaming the file will save."
-							,"Would you like to continue?"
+							R.CONFIG_FX_FILE_CHANGED.get()
+							,R.CONFIG_FX_CONTINUE_QUESTION.get()
 					);
 				}
 				if (needContinue)
@@ -430,7 +431,7 @@ public class ConfigurationFx extends Configuration
 
 	public void addToToolbar(String fullPath) throws Exception
 	{
-		Optional<String> visibleName = DialogsHelper.showInputDialog("Enter a visible name", new File(fullPath).getName());
+		Optional<String> visibleName = DialogsHelper.showInputDialog(R.CONFIG_FX_ENTER_VISIBLE_NAME.get(), new File(fullPath).getName());
 		if (visibleName.isPresent())
 		{
 			this.model.addToToolbar(fullPath, visibleName.get());
@@ -479,11 +480,9 @@ public class ConfigurationFx extends Configuration
 		boolean needRemove = true;
 		if (collect.size() > 1)
 		{
-			needRemove = DialogsHelper.showQuestionDialog("Current library contains many namespaces : "
-							+ collect
-							.stream()
-							.collect(Collectors.joining(",", "[", "]"))
-					, "Remove it anyway?");
+			needRemove = DialogsHelper.showQuestionDialog(String.format(R.CONFIG_FX_MANY_NAMESPACES.get(),
+					collect.stream().collect(Collectors.joining(",", "[", "]")))
+					, R.CONFIG_FX_REMOVE_ANYWAY.get());
 		}
 		if (needRemove)
 		{
@@ -638,7 +637,7 @@ public class ConfigurationFx extends Configuration
 
 	public void openClientDictionary(File file) throws Exception
 	{
-		System.out.println(String.format("CLIENT DICTIONARY PATH '%s' ARE OPENED", path(file)));
+		System.out.println(String.format(R.CONFIG_FX_OPEN_CLIENT_DIC.get(), path(file)));
 	}
 
 	public void updateClientDictionaries()
@@ -684,17 +683,17 @@ public class ConfigurationFx extends Configuration
 			final String idEntry = entry.toString();
 			if (getServicesPool().getStatus(entry.toString()) == ServiceStatus.StartSuccessful)
 			{
-				DialogsHelper.showInfo(String.format("Entry with id '%s' already started", idEntry));
+				DialogsHelper.showInfo(String.format(R.CONFIG_FX_ENTRY_ALREADY_STARTED.get(), idEntry));
 				return;
 			}
 			String parametersName = "StartParameters";
-			String title = "Start ";
+			String title = R.COMMON_START.get();
 			String[] strings = getServicesPool().loadServiceFactory(idEntry).wellKnownParameters(ParametersKind.START);
 			Settings settings = getFactory().getSettings();
 			final Map<String, String> parameters = settings.getMapValues(Settings.SERVICE + idEntry, parametersName, strings);
 
 			AbstractEvaluator evaluator = createEvaluator();
-			ButtonType buttonType = DialogsHelper.showParametersDialog(title + idEntry, parameters, evaluator, key -> null);
+			ButtonType buttonType = DialogsHelper.showParametersDialog(title + " " + idEntry, parameters, evaluator, key -> null);
 			if (buttonType == ButtonType.CANCEL)
 			{
 				return;
@@ -714,7 +713,7 @@ public class ConfigurationFx extends Configuration
 				}
 				catch (Exception e)
 				{
-					throw new Exception("Error in " + name + " = " + expression + " :" + e.getMessage(), e);
+					throw new Exception(R.COMMON_ERROR_IN.get() + " " + name + " = " + expression + " :" + e.getMessage(), e);
 				}
 			}
 
@@ -968,11 +967,11 @@ public class ConfigurationFx extends Configuration
 	{
 		if (name == null || name.isEmpty())
 		{
-			throw new Exception("Empty " + clazz.getSimpleName() + " entry name");
+			throw new Exception(String.format(R.CONFIG_FX_EMPTY_ENTRY_NAME.get(), clazz.getSimpleName()));
 		}
 		if (list.stream().anyMatch(entry -> entry.toString().equals(name)))
 		{
-			throw new Exception(String.format("%s entry with name %s is already present", clazz.getSimpleName(), name));
+			throw new Exception(String.format(R.CONFIG_FX_ENTRY_ALREADY_PRESENT.get(), clazz.getSimpleName(), name));
 		}
 
 		T entry = clazz.newInstance();
@@ -993,7 +992,7 @@ public class ConfigurationFx extends Configuration
 	{
 		if (name == null || name.isEmpty())
 		{
-			throw new Exception("Empty " + clazz.getSimpleName() + " entry name");
+			throw new Exception(String.format(R.CONFIG_FX_EMPTY_ENTRY_NAME.get(), clazz.getSimpleName()));
 		}
 
 		List<T> lastList = new ArrayList<>();
@@ -1186,7 +1185,7 @@ public class ConfigurationFx extends Configuration
 		File newFile = new File(path(where) + File.separator + newFileName);
 		if (!newFile.createNewFile())
 		{
-			throw new Exception("Can't create new file");
+			throw new Exception(R.CONFIG_FX_CANT_CREATE_FILE.get());
 		}
 		return newFile;
 	}
@@ -1242,8 +1241,8 @@ public class ConfigurationFx extends Configuration
 		Dialog<ButtonType> dialog = new Alert(Alert.AlertType.INFORMATION);
 		DialogsHelper.centreDialog(dialog);
 		Common.addIcons(((Stage) dialog.getDialogPane().getScene().getWindow()));
-		dialog.setHeaderText("Possibilities for " + entryName);
-		dialog.setTitle("Possibilities");
+		dialog.setHeaderText(String.format(R.CONFIG_FX_POSSIBILITIES_FOR.get(), entryName));
+		dialog.setTitle(R.CONFIG_FX_POSSIBILITIES.get());
 		dialog.getDialogPane().setContent(listView);
 		dialog.getDialogPane().setPrefWidth(500);
 		dialog.getDialogPane().setPrefHeight(300);

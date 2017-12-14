@@ -9,6 +9,7 @@
 
 package com.exactprosystems.jf.tool.newconfig;
 
+import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.api.service.ServiceStatus;
 import com.exactprosystems.jf.common.MutableString;
 import com.exactprosystems.jf.documents.config.*;
@@ -86,37 +87,37 @@ public class ConfigurationFxController implements Initializable, ContainingParen
 	// ============================================================
 	public void displayEvaluator(List<String> imports) 
 	{
-		Common.tryCatch(() -> this.evaluatorTreeNode.display(imports), "Error on display evaluator");
+		Common.tryCatch(() -> this.evaluatorTreeNode.display(imports), R.CONF_FX_CONTR_ERROR_DISPLAY_EVALUATOR.get());
 	}
 
 	public void displayFormat(String timeFormat, String dateFormat, String dateTimeFormat, List<String> additionFormats)
 	{
-		Common.tryCatch(() -> this.formatTreeNode.display(timeFormat, dateFormat, dateTimeFormat, additionFormats),"Error on display evaluator");
+		Common.tryCatch(() -> this.formatTreeNode.display(timeFormat, dateFormat, dateTimeFormat, additionFormats), R.CONF_FX_CONTR_ERROR_DISPLAY_EVALUATOR.get());
 	}
 
 	public void displayMatrix(List<String> matricesValue)
 	{
-		Common.tryCatch(() -> this.matrixTreeNode.display(matricesValue), "Error on display matrix");
+		Common.tryCatch(() -> this.matrixTreeNode.display(matricesValue), R.CONF_FX_CONTR_ERROR_DISPLAY_MATRIX.get());
 	}
 
 	public void displayLibrary(Map<String, Matrix> map)
 	{
-		Common.tryCatch(() -> this.libTreeNode.display(map), "Error on display libs");
+		Common.tryCatch(() -> this.libTreeNode.display(map), R.CONF_FX_CONTR_ERROR_DISPLAY_LIBS.get());
 	}
 
 	public void displayVars(List<String> userVarsValue)
 	{
-		Common.tryCatch(() -> this.varsTreeNode.display(userVarsValue), "Error on display vars");
+		Common.tryCatch(() -> this.varsTreeNode.display(userVarsValue), R.CONF_FX_CONTR_ERROR_DISPLAY_VARS.get());
 	}
 
 	public void displaySql(List<SqlEntry> sqlEntries) 
 	{
-		Common.tryCatch(() -> this.sqlTreeNode.display(sqlEntries), "Error on display sql entries");
+		Common.tryCatch(() -> this.sqlTreeNode.display(sqlEntries), R.CONF_FX_CONTR_ERROR_DISPLAY_SQL.get());
 	}
 
 	public void displayGlobalHandler(Map<HandlerKind, String> map)
 	{
-		Common.tryCatch(() -> this.globalHandlerNode.display(map), "Error on display sql entries");
+		Common.tryCatch(() -> this.globalHandlerNode.display(map), R.CONF_FX_CONTR_ERROR_DISPLAY_SQL.get());
 	}
 
 	public void displayClient(List<ClientEntry> clientEntries)
@@ -127,12 +128,12 @@ public class ConfigurationFxController implements Initializable, ContainingParen
 						.map(MutableString::get)
 						.map(File::new)
 						.collect(Collectors.toList())
-		),"Error on display client entries");
+		), R.CONF_FX_CONTR_ERROR_DISPLAY_CLIENT_ENTRIES.get());
 	}
 
 	public void displayService(List<ServiceEntry> serviceEntries, Map<String, ServiceStatus> statusMap)
 	{
-		Common.tryCatch(() -> this.serviceTreeNode.display(serviceEntries, statusMap),"Error on display service entries");
+		Common.tryCatch(() -> this.serviceTreeNode.display(serviceEntries, statusMap), R.CONF_FX_CONTR_ERROR_DISPLAY_SERVICE_ENTRIES.get());
 	}
 
 	public void displayApp(List<AppEntry> appEntries)
@@ -143,22 +144,22 @@ public class ConfigurationFxController implements Initializable, ContainingParen
 							.map(MutableString::get)
 							.map(File::new)
 							.collect(Collectors.toList())
-		), "Error on display apps entries");
+		), R.CONF_FX_CONTR_ERROR_DISPLAY_APP_ENTRIES.get());
 	}
 
 	public void displayReport(String reportsValue)
 	{
-		Common.tryCatch(() -> this.reportTreeNode.display(reportsValue), "Error on display report folder");
+		Common.tryCatch(() -> this.reportTreeNode.display(reportsValue), R.CONF_FX_CONTR_ERROR_DISPLAY_FOLDER.get());
 	}
 
 	public void displayFileSystem(List<String> ignoreFiles)
 	{
-		Common.tryCatch(() -> this.fileSystemTreeNode.display(new File(".").listFiles(), ignoreFiles), "Error on display sql entries");
+		Common.tryCatch(() -> this.fileSystemTreeNode.display(new File(".").listFiles(), ignoreFiles), R.CONF_FX_CONTR_ERROR_DISPLAY_SQL.get());
 	}
 
 	public void successfulSave()
 	{
-		DialogsHelper.showSuccess("Config successfully saved");
+		DialogsHelper.showSuccess(R.CONF_FX_CONTR_CONFIG_SAVED.get());
 	}
 
 	public void scrollToFile(File file)

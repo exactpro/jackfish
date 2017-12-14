@@ -13,6 +13,7 @@ import com.exactprosystems.jf.actions.AbstractAction;
 import com.exactprosystems.jf.actions.ReadableValue;
 import com.exactprosystems.jf.api.common.Str;
 import com.exactprosystems.jf.api.common.Sys;
+import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.common.Settings;
 import com.exactprosystems.jf.common.undoredo.Command;
 import com.exactprosystems.jf.documents.DocumentFactory;
@@ -207,7 +208,7 @@ public class MatrixFx extends Matrix
 		{
 			if (items.stream().map(MatrixItem::getParent).distinct().count() != 1)
 			{
-				DialogsHelper.showInfo("Only neighbors can be removed");
+				DialogsHelper.showInfo(R.MATRIX_FX_NEIGHBORS_REMOVE.get());
 				return;
 			}
 			List<Temp> collect = items.stream().map(item -> new Temp(item.getParent(), item, super.getIndex(item))).collect(Collectors.toList());
@@ -396,7 +397,7 @@ public class MatrixFx extends Matrix
 	{
 		if (list == null || list.stream().map(MatrixItem::getParent).distinct().count() != 1)
 		{
-			DialogsHelper.showInfo("Only neighbors can be copied");
+			DialogsHelper.showInfo(R.MATRIX_FX_NEIGHBORS_COPY.get());
 			return;
 		}
 		Parser parser = new Parser();
@@ -472,7 +473,7 @@ public class MatrixFx extends Matrix
 			if (!getEngine().isRunning())
 			{
 				this.getEngine().getContext().getOut().println((String) null);
-				this.getEngine().getContext().getOut().println("Matrix will start at " + (this.startDate == null ? new Date() : this.startDate));
+				this.getEngine().getContext().getOut().println(R.MATRIX_FX_START_AT.get() + " " + (this.startDate == null ? new Date() : this.startDate));
 			}
 
 			getEngine().start(this.startDate, this.parameter);
@@ -485,7 +486,7 @@ public class MatrixFx extends Matrix
 		{
 			getEngine().stop();
 			super.matrixListener.matrixFinished(this, 0, 0);
-			this.getEngine().getContext().getOut().println("Matrix stopped");
+			this.getEngine().getContext().getOut().println(R.MATRIX_FX_MATRIX_STOPPED.get());
 			this.timer.set(-1L);
 		}
 	}

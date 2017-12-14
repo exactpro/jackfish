@@ -10,6 +10,7 @@
 package com.exactprosystems.jf.tool.matrix.params;
 
 import com.exactprosystems.jf.api.common.Str;
+import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.documents.matrix.parser.Parameter;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.custom.expfield.ExpressionField;
@@ -63,14 +64,14 @@ public class ParameterGridPane extends GridPane
 			ChangeListener<Boolean> keyListener = (observable, oldValue, newValue) -> {
 				if (!oldValue && newValue)
 				{
-					Common.tryCatch(selectRow, "Error on select current row");
+					Common.tryCatch(selectRow, R.PARAM_GRID_PANE_ERROR_CURRENT_ROW.get());
 				}
 				String oldText = this.parameter.getName();
 				String newText = ((TextField) this.key).getText();
 				if (!newValue && oldValue && !Str.areEqual(oldText, newText))
 				{
 					// Common.tryCatch(() -> getMatrix().parameterSetName(this.matrixItem, index, newText), "Error on change parameters");
-					Common.tryCatch(() -> consumer.accept(this.index, newText), "Error on change parameters");
+					Common.tryCatch(() -> consumer.accept(this.index, newText), R.PARAM_GRID_PANE_ERROR_CHANGE_PARAMS.get());
 				}
 				if (!newValue && oldValue)
 				{
@@ -88,14 +89,14 @@ public class ParameterGridPane extends GridPane
 			ChangeListener<Boolean> valueListener = (observable, oldValue, newValue) -> {
 				if (newValue && !oldValue)
 				{
-					Common.tryCatch(selectRow, "Error on select current row");
+					Common.tryCatch(selectRow, R.PARAM_GRID_PANE_ERROR_CURRENT_ROW.get());
 				}
 				String oldText = this.parameter.getExpression();
 				String newText = this.value.getText();
 				if (!newValue && oldValue/* && !Str.areEqual(oldText, newText)*/)
 				{
 					// Common.tryCatch(() -> getMatrix().parameterSetValue(this.matrixItem, index, expressionField.getText()), "Error on change parameters");
-					Common.tryCatch(() -> consumer.accept(this.index, this.value.getText()), "Error on change parameters");
+					Common.tryCatch(() -> consumer.accept(this.index, this.value.getText()), R.PARAM_GRID_PANE_ERROR_CHANGE_PARAMS.get());
 				}
 			};
 			this.value.setChangingValueListener(valueListener);
