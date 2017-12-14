@@ -15,12 +15,14 @@ import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeDriverService;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.firefox.FirefoxDriverLogLevel;
+import org.openqa.selenium.firefox.FirefoxOptions;
 import org.openqa.selenium.firefox.FirefoxProfile;
 import org.openqa.selenium.ie.InternetExplorerDriver;
 import org.openqa.selenium.ie.InternetExplorerDriverService;
+import org.openqa.selenium.ie.InternetExplorerOptions;
 import org.openqa.selenium.opera.OperaDriver;
 import org.openqa.selenium.phantomjs.PhantomJSDriver;
-import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.safari.SafariDriver;
 
 import java.io.File;
@@ -58,14 +60,15 @@ public enum Browser
 		switch (this)
 		{
 			case FIREFOX:
+				FirefoxOptions firefoxOptions = new FirefoxOptions();
 				if (!Str.IsNullOrEmpty(firefoxProfileDir))
 				{
 					FirefoxProfile profile = new FirefoxProfile(new File(firefoxProfileDir));
-					return new FirefoxDriver(profile);
+					firefoxOptions.setProfile(profile);
 				}
-				DesiredCapabilities desiredCapabilities = DesiredCapabilities.firefox();
-				desiredCapabilities.setCapability(FirefoxDriver.SystemProperty.BROWSER_LOGFILE, logFile("firefoxDriver.log"));
-				return new FirefoxDriver(desiredCapabilities);
+				firefoxOptions.setLogLevel(FirefoxDriverLogLevel.INFO);
+				firefoxOptions.setCapability(FirefoxDriver.SystemProperty.BROWSER_LOGFILE, logFile("firefoxDriver.log"));
+				return new FirefoxDriver(firefoxOptions);
 
 			case ANDROIDCHROME:
 				System.setProperty(ChromeDriverService.CHROME_DRIVER_LOG_PROPERTY, "androidChrome.log");
@@ -74,10 +77,7 @@ public enum Browser
 				ChromeOptions chromeOptions = new ChromeOptions();
 				chromeOptions.setExperimentalOption("androidPackage", "com.android.chrome");
 
-				DesiredCapabilities chromeCapability = new DesiredCapabilities();
-				chromeCapability.setCapability(ChromeOptions.CAPABILITY, chromeOptions);
-
-				return new ChromeDriver(chromeCapability);
+				return new ChromeDriver(chromeOptions);
 
 			case ANDROIDBROWSER:
 				System.setProperty(ChromeDriverService.CHROME_DRIVER_LOG_PROPERTY, logFile("androidBrowser.log"));
@@ -87,10 +87,7 @@ public enum Browser
 				browserOptions.setExperimentalOption("androidPackage", "com.android.browser");
 				browserOptions.setExperimentalOption("androidActivity","com.android.browser.BrowserActivity");
 
-				DesiredCapabilities capabilities_browser = new DesiredCapabilities();
-				capabilities_browser.setCapability(ChromeOptions.CAPABILITY, browserOptions);
-
-				return new ChromeDriver(capabilities_browser);
+				return new ChromeDriver(browserOptions);
 				
 			case CHROME:
 				if (Str.IsNullOrEmpty(System.getProperty(ChromeDriverService.CHROME_DRIVER_EXE_PROPERTY)))
@@ -113,17 +110,17 @@ public enum Browser
 				{
 					throw new Exception("You need set the 'IEDriverPath' parameter on plugin to valid value");
 				}
-				DesiredCapabilities capabilities = DesiredCapabilities.internetExplorer();
-				capabilities.setCapability("ie.enableFullPageScreenshot", false);
-				capabilities.setCapability(InternetExplorerDriver.ENABLE_PERSISTENT_HOVERING, false);
-				capabilities.setCapability(InternetExplorerDriver.LOG_FILE, logFile("ieDriver.log"));
-				capabilities.setCapability(InternetExplorerDriver.LOG_LEVEL, "DEBUG");
+				InternetExplorerOptions ieOptions = new InternetExplorerOptions();
+				ieOptions.setCapability("ie.enableFullPageScreenshot", false);
+				ieOptions.setCapability(InternetExplorerDriver.ENABLE_PERSISTENT_HOVERING, false);
+				ieOptions.setCapability(InternetExplorerDriver.LOG_FILE, logFile("ieDriver.log"));
+				ieOptions.setCapability(InternetExplorerDriver.LOG_LEVEL, "DEBUG");
 				if (usePrivateMode)
 				{
-					capabilities.setCapability(InternetExplorerDriver.FORCE_CREATE_PROCESS, true);
-					capabilities.setCapability(InternetExplorerDriver.IE_SWITCHES, "-private");
+					ieOptions.setCapability(InternetExplorerDriver.FORCE_CREATE_PROCESS, true);
+					ieOptions.setCapability(InternetExplorerDriver.IE_SWITCHES, "-private");
 				}
-				return new InternetExplorerDriver(capabilities);
+				return new InternetExplorerDriver(ieOptions);
 
 			case OPERA:
 				return new OperaDriver();

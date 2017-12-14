@@ -102,7 +102,7 @@
         </parameters>
         <parameters>
             <key>GeckoDriverPath</key>
-            <value>unix/geckodriver-linux-0.11.1-x64.</value>
+            <value>unix/geckodriver-linux-0.19.1-x64.</value>
         </parameters>
         <parameters>
             <key>LogLevel</key>
@@ -126,7 +126,7 @@
         </parameters>
         <parameters>
             <key>IEDriverPath</key>
-            <value>win/iedriverserver-2.53.1-x64.exe</value>
+            <value>win/iedriverserver-3.8.0-x64.exe</value>
         </parameters>
         <parameters>
             <key>ChromeDriverBinary</key>
@@ -154,7 +154,7 @@
         </parameters>
         <parameters>
             <key>GeckoDriverPath</key>
-            <value>win/geckodriver-win-0.11.1-x64.exe</value>
+            <value>win/geckodriver-win-0.19.1-x64.exe</value>
         </parameters>
         <parameters>
             <key>LogLevel</key>

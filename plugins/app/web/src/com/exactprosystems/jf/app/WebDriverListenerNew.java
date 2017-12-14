@@ -11,15 +11,18 @@ package com.exactprosystems.jf.app;
 import org.openqa.selenium.*;
 import org.openqa.selenium.interactions.*;
 import org.openqa.selenium.interactions.internal.Coordinates;
-import org.openqa.selenium.internal.Locatable;
-import org.openqa.selenium.internal.WrapsDriver;
-import org.openqa.selenium.internal.WrapsElement;
+import org.openqa.selenium.internal.*;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
-public class WebDriverListenerNew implements WebDriver, JavascriptExecutor, HasInputDevices, TakesScreenshot, WrapsDriver, HasTouchScreen
+public class WebDriverListenerNew implements WebDriver, JavascriptExecutor,
+		FindsById, FindsByClassName, FindsByLinkText, FindsByName,
+		FindsByCssSelector, FindsByTagName, FindsByXPath,
+		HasInputDevices, HasCapabilities, Interactive, TakesScreenshot,
+		WrapsDriver, HasTouchScreen
 {
 	private final WebDriver webDriver;
 
@@ -28,6 +31,7 @@ public class WebDriverListenerNew implements WebDriver, JavascriptExecutor, HasI
 		this.webDriver = webDriver;
 	}
 
+	//region WebDriver
 	@Override
 	public void get(String url)
 	{
@@ -108,6 +112,14 @@ public class WebDriverListenerNew implements WebDriver, JavascriptExecutor, HasI
 	}
 
 	@Override
+	public Options manage()
+	{
+		return this.webDriver.manage();
+	}
+	//endregion
+
+	//region JavascriptExecutor
+	@Override
 	public Object executeScript(String script, Object... args)
 	{
 		if (this.webDriver instanceof JavascriptExecutor)
@@ -127,12 +139,9 @@ public class WebDriverListenerNew implements WebDriver, JavascriptExecutor, HasI
 		throw new UnsupportedOperationException("Current driver instance does not support executing javascript");
 	}
 
-	@Override
-	public Options manage()
-	{
-		return this.webDriver.manage();
-	}
+	//endregion
 
+	//region HasInputDevices
 	@Override
 	public Keyboard getKeyboard()
 	{
@@ -140,7 +149,7 @@ public class WebDriverListenerNew implements WebDriver, JavascriptExecutor, HasI
 		{
 			return new KeyboardListener(this.webDriver);
 		}
-		throw new UnsupportedOperationException("Current driver does not implement advanced user interactions yet.");
+		throw this.create("getKeyboard");
 	}
 
 	@Override
@@ -150,9 +159,11 @@ public class WebDriverListenerNew implements WebDriver, JavascriptExecutor, HasI
 		{
 			return new MouseListener(this.webDriver);
 		}
-		throw new UnsupportedOperationException("Current driver does not implement advanced user interactions yet.");
+		throw this.create("getMouse");
 	}
+	//endregion
 
+	//region WrapsDriver
 	@Override
 	public WebDriver getWrappedDriver()
 	{
@@ -165,24 +176,242 @@ public class WebDriverListenerNew implements WebDriver, JavascriptExecutor, HasI
 			return this.webDriver;
 		}
 	}
+	//endregion
 
+	//region TakesScreenshot
 	@Override
-	public <X> X getScreenshotAs(OutputType<X> target) throws WebDriverException
+	public <X> X getScreenshotAs(OutputType<X> target)
 	{
 		if (this.webDriver instanceof TakesScreenshot)
 		{
 			return ((TakesScreenshot) this.webDriver).getScreenshotAs(target);
 		}
-		throw new UnsupportedOperationException("Current driver instance does not support taking screenshots");
+		throw this.create("getScreenshotAs");
 	}
+	//endregion
 
+	//region HasTouchDevices
 	public TouchScreen getTouch()
 	{
 		if (this.webDriver instanceof HasTouchScreen)
 		{
 			return ((HasTouchScreen) this.webDriver).getTouch();
 		}
-		throw new UnsupportedOperationException("Underlying driver does not implement advanced user interactions yet.");
+		throw this.create("getTouch");
+	}
+	//endregion
+
+	//region Interactive
+	@Override
+	public void perform(Collection<Sequence> actions)
+	{
+		if (this.webDriver instanceof Interactive)
+		{
+			((Interactive) this.webDriver).perform(actions);
+		}
+		throw this.create("perform");
+	}
+
+	@Override
+	public void resetInputState()
+	{
+		if (this.webDriver instanceof Interactive)
+		{
+			((Interactive) this.webDriver).resetInputState();
+		}
+		throw this.create("resetInputState");
+	}
+	//endregion
+
+	//region HasCapabilities
+	@Override
+	public Capabilities getCapabilities()
+	{
+		if (this.webDriver instanceof HasCapabilities)
+		{
+			return ((HasCapabilities) this.webDriver).getCapabilities();
+		}
+		throw this.create("getCapabilities");
+	}
+	//endregion
+
+	//region FindsByClassName
+	@Override
+	public WebElement findElementByClassName(String using)
+	{
+		if (this.webDriver instanceof FindsByClassName)
+		{
+			return ((FindsByClassName) this.webDriver).findElementByClassName(using);
+		}
+		throw this.create("findElementByClassName");
+	}
+
+	@Override
+	public List<WebElement> findElementsByClassName(String using)
+	{
+		if (this.webDriver instanceof FindsByClassName)
+		{
+			return ((FindsByClassName) this.webDriver).findElementsByClassName(using);
+		}
+		throw this.create("findElementsByClassName");
+	}
+	//endregion
+
+	//region FindsByCssSelector
+	@Override
+	public WebElement findElementByCssSelector(String using)
+	{
+		if (this.webDriver instanceof FindsByCssSelector)
+		{
+			return ((FindsByCssSelector) this.webDriver).findElementByCssSelector(using);
+		}
+		throw this.create("FindElementByCssSelector");
+	}
+
+	@Override
+	public List<WebElement> findElementsByCssSelector(String using)
+	{
+		if (this.webDriver instanceof FindsByCssSelector)
+		{
+			return ((FindsByCssSelector) this.webDriver).findElementsByCssSelector(using);
+		}
+		throw this.create("FindElementsByCssSelector");
+	}
+	//endregion
+
+	//region FindsById
+	@Override
+	public WebElement findElementById(String using)
+	{
+		if (this.webDriver instanceof FindsById)
+		{
+			return ((FindsById) this.webDriver).findElementById(using);
+		}
+		throw this.create("findElementById");
+	}
+
+	@Override
+	public List<WebElement> findElementsById(String using)
+	{
+		if (this.webDriver instanceof FindsById)
+		{
+			return ((FindsById) this.webDriver).findElementsById(using);
+		}
+		throw this.create("findElementsById");
+	}
+	//endregion
+
+	//region FindsByLinkText
+	@Override
+	public WebElement findElementByLinkText(String using)
+	{
+		if (this.webDriver instanceof FindsByLinkText)
+		{
+			return ((FindsByLinkText) this.webDriver).findElementByLinkText(using);
+		}
+		throw this.create("findElementByLinkText");
+	}
+
+	@Override
+	public List<WebElement> findElementsByLinkText(String using)
+	{
+		if (this.webDriver instanceof FindsByLinkText)
+		{
+			return ((FindsByLinkText) this.webDriver).findElementsByLinkText(using);
+		}
+		throw this.create("findElementsByLinkText");
+	}
+
+	@Override
+	public WebElement findElementByPartialLinkText(String using)
+	{
+		if (this.webDriver instanceof FindsByLinkText)
+		{
+			return ((FindsByLinkText) this.webDriver).findElementByPartialLinkText(using);
+		}
+		throw this.create("findElementByPartialLinkText");
+	}
+
+	@Override
+	public List<WebElement> findElementsByPartialLinkText(String using)
+	{
+		if (this.webDriver instanceof FindsByLinkText)
+		{
+			return ((FindsByLinkText) this.webDriver).findElementsByPartialLinkText(using);
+		}
+		throw this.create("findElementsByPartialLinkText");
+	}
+	//endregion
+
+	//region FindsByName
+	@Override
+	public WebElement findElementByName(String using)
+	{
+		if (this.webDriver instanceof FindsByName)
+		{
+			return ((FindsByName) this.webDriver).findElementByName(using);
+		}
+		throw this.create("findElementByName");
+	}
+
+	@Override
+	public List<WebElement> findElementsByName(String using)
+	{
+		if (this.webDriver instanceof FindsByName)
+		{
+			return ((FindsByName) this.webDriver).findElementsByName(using);
+		}
+		throw this.create("findElementsByName");
+	}
+	//endregion
+
+	//region FindsByTagName
+	@Override
+	public WebElement findElementByTagName(String using)
+	{
+		if (this.webDriver instanceof FindsByTagName)
+		{
+			return ((FindsByTagName) this.webDriver).findElementByTagName(using);
+		}
+		throw this.create("findElementByTagName");
+	}
+
+	@Override
+	public List<WebElement> findElementsByTagName(String using)
+	{
+		if (this.webDriver instanceof FindsByTagName)
+		{
+			return ((FindsByTagName) this.webDriver).findElementsByTagName(using);
+		}
+		throw this.create("findElementsByTagName");
+	}
+	//endregion
+
+	//region FindsByXPath
+	@Override
+	public WebElement findElementByXPath(String using)
+	{
+		if (this.webDriver instanceof FindsByXPath)
+		{
+			return ((FindsByXPath) this.webDriver).findElementByXPath(using);
+		}
+		throw this.create("findElementByXPath");
+	}
+
+	@Override
+	public List<WebElement> findElementsByXPath(String using)
+	{
+		if (this.webDriver instanceof FindsByXPath)
+		{
+			return ((FindsByXPath) this.webDriver).findElementsByXPath(using);
+		}
+		throw this.create("findElementsByXPath");
+	}
+	//endregion
+
+	private UnsupportedOperationException create(String methodName)
+	{
+		return new UnsupportedOperationException("Current driver instance does not support " + methodName);
 	}
 
 	private WebElement createWebElement(WebElement element)
