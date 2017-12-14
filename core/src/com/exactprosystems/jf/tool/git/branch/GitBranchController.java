@@ -9,6 +9,7 @@
 
 package com.exactprosystems.jf.tool.git.branch;
 
+import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.ContainingParent;
 import com.exactprosystems.jf.tool.git.GitUtil;
@@ -66,7 +67,7 @@ public class GitBranchController implements Initializable, ContainingParent
 	void init(GitBranch model)
 	{
 		this.model = model;
-		this.dialog = DialogsHelper.createGitDialog("Branches", this.parent);
+		this.dialog = DialogsHelper.createGitDialog(R.GIT_BRANCH_CONTR_INIT_TITLE.get(), this.parent);
 		initTree();
 	}
 
@@ -106,7 +107,7 @@ public class GitBranchController implements Initializable, ContainingParent
 	public void newBranch(ActionEvent actionEvent)
 	{
 		TextInputDialog inputDialog = new TextInputDialog();
-		inputDialog.setTitle("Enter branch name");
+		inputDialog.setTitle(R.GIT_BRANCH_CONTR_ENTER_NAME.get());
 		inputDialog.getDialogPane().setHeader(new Label());
 		Node node = inputDialog.getDialogPane().lookupButton(ButtonType.OK);
 		inputDialog.getEditor().textProperty().addListener((observable, oldValue, newValue) -> {
@@ -125,7 +126,7 @@ public class GitBranchController implements Initializable, ContainingParent
 		String oldName = value.getFullName();
 
 		TextInputDialog inputDialog = new TextInputDialog();
-		inputDialog.setTitle("Enter new name");
+		inputDialog.setTitle(R.GIT_BRANCH_CONTR_ENTER_NEW_NAME.get());
 		inputDialog.getDialogPane().setHeader(new Label());
 		Node node = inputDialog.getDialogPane().lookupButton(ButtonType.OK);
 		inputDialog.getEditor().textProperty().addListener((observable, oldValue, newValue) -> {
@@ -135,7 +136,7 @@ public class GitBranchController implements Initializable, ContainingParent
 			}
 		});
 		Optional<String> newName = inputDialog.showAndWait();
-		newName.ifPresent(name -> Common.tryCatch(() -> this.model.renameBranch(oldName, name), "Error on rename branch"));
+		newName.ifPresent(name -> Common.tryCatch(() -> this.model.renameBranch(oldName, name), R.GIT_BRANCH_CONTR_ERROR_RENAME.get()));
 	}
 
 	public void checkoutBranch(ActionEvent actionEvent)
@@ -146,7 +147,7 @@ public class GitBranchController implements Initializable, ContainingParent
 		if (branch != null && !branch.isLocal())
 		{
 			TextInputDialog inputDialog = new TextInputDialog();
-			inputDialog.setTitle("Enter branch name");
+			inputDialog.setTitle(R.GIT_BRANCH_CONTR_ENTER_NAME.get());
 			inputDialog.getEditor().setText(selectedItem.getValue().getSimpleName());
 			inputDialog.getDialogPane().setHeader(new Label());
 			Node node = inputDialog.getDialogPane().lookupButton(ButtonType.OK);
@@ -167,7 +168,7 @@ public class GitBranchController implements Initializable, ContainingParent
 			}
 		}
 		String finalBranchName = branchName;
-		Common.tryCatch(() -> this.model.checkout(branch.getFullName(), finalBranchName), "Error on checkout");
+		Common.tryCatch(() -> this.model.checkout(branch.getFullName(), finalBranchName), R.GIT_BRANCH_CONTR_ERROR_CHECKOUT.get());
 	}
 
 	public void mergeBranch(ActionEvent actionEvent)
@@ -179,7 +180,7 @@ public class GitBranchController implements Initializable, ContainingParent
 	{
 		TreeItem<GitUtil.Branch> selectedItem = this.treeView.getSelectionModel().getSelectedItem();
 		GitUtil.Branch branch = selectedItem.getValue();
-		Common.tryCatch(() -> this.model.deleteBranch(branch), "Error on delete branch");
+		Common.tryCatch(() -> this.model.deleteBranch(branch), R.GIT_BRANCH_CONTR_ERROR_DELETE.get());
 	}
 
 	//region private methods

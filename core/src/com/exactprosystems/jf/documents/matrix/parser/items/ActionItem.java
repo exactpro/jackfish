@@ -215,7 +215,7 @@ public final class ActionItem extends MatrixItem
 		}
 		catch (Exception e)
 		{
-			throw new MatrixException(super.getNumber(), this, "Can not to find the action: " + actionName);
+			throw new MatrixException(super.getNumber(), this, String.format(R.ACTION_ITEM_CANT_FIND_ACTION.get(), actionName));
 		}
 	}
 

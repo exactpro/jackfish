@@ -9,6 +9,7 @@
 
 package com.exactprosystems.jf.tool.git.clone;
 
+import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.ContainingParent;
 import com.exactprosystems.jf.tool.CssVariables;
@@ -69,7 +70,7 @@ public class GitCloneController implements Initializable, ContainingParent
 	{
 		this.cfLocation.setButtonText("...");
 		this.cfLocation.setHandler(event -> {
-			File file = DialogsHelper.showDirChooseDialog("Choose folder to clone project", this.cfLocation.getText());
+			File file = DialogsHelper.showDirChooseDialog(R.GIT_CLONE_CONTR_CHOOSE_FOLDER.get(), this.cfLocation.getText());
 			Optional.ofNullable(file).map(File::getAbsolutePath).ifPresent(this.cfLocation::setText);
 		});
 		this.cfLocation.textProperty().addListener((observable, oldValue, newValue) -> {
@@ -109,12 +110,12 @@ public class GitCloneController implements Initializable, ContainingParent
 	{
 		this.displayStatus(true);
 		Common.tryCatch(() -> this.model.cloneProject(this.cfLocation.getText(), this.tfURI.getText(), this.tfProjectName.getText(), this.cbOpenProject.isSelected(), this.monitor),
-				"Error on clone project");
+				R.GIT_CLONE_CONTR_CLONE_ERROR.get());
 	}
 
 	public void setDisable(boolean flag)
 	{
-		this.btnCancel.setText(flag ? "Cancel" : "Close");
+		this.btnCancel.setText(flag ? R.COMMON_CANCEL.get() : R.COMMON_CLOSE.get());
 		if (flag)
 		{
 			this.btnClone.disableProperty().unbind();
@@ -139,7 +140,7 @@ public class GitCloneController implements Initializable, ContainingParent
 
 	public void cancel(ActionEvent actionEvent)
 	{
-		Common.tryCatch(this.model::cancel, "Error on cancel");
+		Common.tryCatch(this.model::cancel, R.GIT_CLONE_CONTR_ERROR_CANCEL.get());
 	}
 
 	public void show()
@@ -195,7 +196,7 @@ public class GitCloneController implements Initializable, ContainingParent
 
 	private void initDialog()
 	{
-		this.dialog = DialogsHelper.createGitDialog("Clone Project", this.parent);
+		this.dialog = DialogsHelper.createGitDialog(R.GIT_CLONE_CONTR_INIT_DIALOG_TITLE.get(), this.parent);
 		displayStatus(false);
 	}
 

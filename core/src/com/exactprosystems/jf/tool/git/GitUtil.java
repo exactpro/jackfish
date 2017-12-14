@@ -9,6 +9,7 @@
 package com.exactprosystems.jf.tool.git;
 
 import com.exactprosystems.jf.api.common.Str;
+import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.git.merge.editor.Chunk;
 import com.exactprosystems.jf.tool.git.pull.GitPullBean;
@@ -117,7 +118,7 @@ public class GitUtil
 						case UP_TO_DATE:
 							break;
 						case REJECTED_NONFASTFORWARD:
-							throw new Exception("You need to pull your local copy, merge and after that push");
+							throw new Exception(R.GIT_UTIL_GIT_PUSH_EXCEPTION.get());
 						case REJECTED_NODELETE:
 							break;
 						case REJECTED_REMOTE_CHANGED:
@@ -211,7 +212,7 @@ public class GitUtil
 			}
 			catch (CheckoutConflictException cce)
 			{
-				throw new Exception("\nNeed to commit the files before pulling : " + cce.getConflictingPaths().toString());
+				throw new Exception(R.GIT_UTIL_GIT_PULL_EXCEPTION.get() + cce.getConflictingPaths().toString());
 			}
 		}
 	}

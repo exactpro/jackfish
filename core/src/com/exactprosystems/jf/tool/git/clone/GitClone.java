@@ -8,6 +8,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 package com.exactprosystems.jf.tool.git.clone;
 
+import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.git.CredentialBean;
 import com.exactprosystems.jf.tool.git.GitUtil;
@@ -63,14 +64,14 @@ public class GitClone
 			@Override
 			protected Void call() throws Exception
 			{
-				DialogsHelper.showInfo("Start cloning");
+				DialogsHelper.showInfo(R.GIT_CLONE_START.get());
 				GitUtil.gitClone(uri, projectFolder, credentialBean, monitor);
 				return null;
 			}
 		};
 		this.task.setOnSucceeded(e -> {
 			this.controller.setDisable(false);
-			DialogsHelper.showSuccess("Successful cloning repo " + uri);
+			DialogsHelper.showSuccess(String.format(R.GIT_CLONE_SUCCESS.get(), uri));
 			if (openProject)
 			{
 				locationToCloningConfig = projectFolder.getAbsolutePath();
@@ -78,13 +79,13 @@ public class GitClone
 			this.controller.hide();
 		});
 		this.task.setOnCancelled(e -> {
-			DialogsHelper.showInfo("Task canceled by user");
+			DialogsHelper.showInfo(R.GIT_CLONE_CANCELED_BY_USER.get());
 			this.controller.setDisable(false);
 		});
 		this.task.setOnFailed(e -> {
 			Throwable exception = e.getSource().getException();
 			logger.error(exception.getMessage(), exception);
-			DialogsHelper.showError("Error on cloning repository " + exception.getMessage());
+			DialogsHelper.showError(String.format(R.GIT_CLONE_ERROR.get(), exception.getMessage()));
 			this.controller.setDisable(false);
 		});
 		new Thread(this.task).start();
