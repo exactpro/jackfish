@@ -12,16 +12,21 @@ package com.exactprosystems.jf.common;
 import com.exactprosystems.jf.api.app.Mutable;
 import com.exactprosystems.jf.api.common.Str;
 
-import java.util.Objects;
-
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.XmlValue;
+import java.util.Objects;
 
 @XmlAccessorType(XmlAccessType.NONE)
 public class MutableString implements Mutable
 {
+	@XmlValue
+	protected String str = null;
+
+	@XmlTransient
+	protected boolean changed = false;
+
 	public MutableString()
 	{
 		this("");
@@ -34,12 +39,6 @@ public class MutableString implements Mutable
 	}
 
 	@Override
-	public String toString()
-	{
-		return this.str == null ? "" : this.str;
-	}
-	
-	@Override
 	public boolean isChanged()
 	{
 		return this.changed;
@@ -50,56 +49,58 @@ public class MutableString implements Mutable
 	{
 		this.changed = false;
 	}
-	
+
 	public String get()
 	{
 		return this.str;
 	}
-	
+
 	public void set(String str)
 	{
-		this.changed = changed || !Str.areEqual(this.str, str);
+		this.changed = this.changed || !Str.areEqual(this.str, str);
 		this.str = str;
 	}
 
 	public void set(MutableString str)
 	{
-		set(str.get());
+		this.set(str.str);
+	}
+
+	public boolean isEmpty()
+	{
+		return Str.IsNullOrEmpty(this.str);
+	}
+
+	public boolean equals(String s)
+	{
+		return this.str.equals(s);
+	}
+
+	@Override
+	public String toString()
+	{
+		return this.str == null ? "" : this.str;
 	}
 
 	@Override
 	public boolean equals(Object o)
 	{
 		if (this == o)
+		{
 			return true;
-		if (o == null || getClass() != o.getClass())
+		}
+		if (o == null || this.getClass() != o.getClass())
+		{
 			return false;
+		}
 
 		MutableString that = (MutableString) o;
-
-		return str != null ? str.equals(that.str) : that.str == null;
-
-	}
-
-	public boolean isEmpty()
-	{
-	    return this.str == null || this.str.isEmpty();
-	}
-	
-	public boolean equals(String s)
-	{
-		return this.get().equals(s);
+		return this.str != null ? this.str.equals(that.str) : that.str == null;
 	}
 
 	@Override
 	public int hashCode()
 	{
-		return  Objects.hashCode(str);
+		return Objects.hashCode(this.str);
 	}
-
-	@XmlValue
-	protected String str = null;
-	
-	@XmlTransient
-	protected boolean changed = false;
 }

@@ -11,6 +11,11 @@ package com.exactprosystems.jf.common.version;
 
 public class VersionInfo
 {
+	private VersionInfo()
+	{
+
+	}
+
 	private static final String LOCAL_BUILD = "LocalBuild";
 
 	public static String getVersion()

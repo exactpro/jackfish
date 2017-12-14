@@ -55,6 +55,44 @@ import java.util.List;
 
 public class MainRunner
 {
+	private static String restartFileName = "${JF}/.restart.txt";
+	private static int    magicNumber     = 7;
+
+	private static final Logger logger = Logger.getLogger(MainRunner.class);
+
+	static String logFileName = ".log.xml";
+	static
+	{
+		// http://stackoverflow.com/a/19053462
+		// non-configured log4j doesn't have Appenders
+		boolean loggerConfigured = Logger.getRootLogger().getAllAppenders().hasMoreElements();
+
+		if (!loggerConfigured)
+		{
+			if (!new File(logFileName).exists())
+			{
+				try (	BufferedReader reader = new BufferedReader(new InputStreamReader(MainRunner.class.getResourceAsStream(logFileName)));
+						 BufferedWriter writer = new BufferedWriter(new FileWriter(logFileName)))
+				{
+					String line = null;
+
+					while ((line = reader.readLine()) != null)
+					{
+						writer.append(line);
+						writer.newLine();
+					}
+				}
+				catch (IOException e)
+				{
+					e.printStackTrace();
+					System.exit(1);
+				}
+			}
+
+			DOMConfigurator.configure(logFileName);
+		}
+	}
+
 	@SuppressWarnings("static-access")
 	public static void main(String[] args)
 	{
@@ -112,7 +150,6 @@ public class MainRunner
 					.withDescription("Save the documentation in specified folder.")
 					.create("docs");
 
-            //Option saveDocs     = new Option("docs",    "Save the documentation in rtf format." );
 			Option saveSchema 	= new Option("schema", 	"Save the config schema." );
 			Option help 		= new Option("help", 	"Print this message." );
 			Option versionOut 	= new Option("version", "Print version only.");
@@ -147,52 +184,52 @@ public class MainRunner
 			//---------------------------------------------------------------------------------------------------------------------
 			// parsing main options that can lead to exit immediately
 			//---------------------------------------------------------------------------------------------------------------------
-		    try 
-		    {
-		        // parse the command line arguments
-		        line = parser.parse( options, args );
-		    }
-		    catch( ParseException exp ) 
-		    {
-		        // oops, something went wrong
-		        System.out.println( "Incorrect parameters: " + exp.getMessage() );
-		        
-		        printHelp(options);
-		        
-		        System.exit(1);
-		        return;
-		    }
+			try
+			{
+				// parse the command line arguments
+				line = parser.parse(options, args);
+			}
+			catch (ParseException exp)
+			{
+				// oops, something went wrong
+				System.out.println("Incorrect parameters: " + exp.getMessage());
 
-            if (line.hasOption(saveSchema.getOpt()))
-		    {
-				saveSchema(ConfigurationBean.class, 		"schema_conf.xsd");
-				saveSchema(MessageDictionaryBean.class, 	"schema_mess.xsd");
-				saveSchema(GuiDictionaryBean.class, 		"schema_gui.xsd");
-				
-		    	System.exit(0);
-		    }
+				printHelp(options);
 
-            if (line.hasOption(saveDocs.getOpt()))
-            {
+				System.exit(1);
+				return;
+			}
+
+			if (line.hasOption(saveSchema.getOpt()))
+			{
+				saveSchema(ConfigurationBean.class,			"schema_conf.xsd");
+				saveSchema(MessageDictionaryBean.class,		"schema_mess.xsd");
+				saveSchema(GuiDictionaryBean.class,			"schema_gui.xsd");
+
+				System.exit(0);
+			}
+
+			if (line.hasOption(saveDocs.getOpt()))
+			{
 				String dir = line.getOptionValue(saveDocs.getOpt());
 				saveDocs(dir);
 
-                System.exit(0);
-            }
+				System.exit(0);
+			}
 
-            if (line.hasOption(versionOut.getOpt()))
-		    {
+			if (line.hasOption(versionOut.getOpt()))
+			{
 				printVersion();
-				
-		    	System.exit(0);
-		    }
-		    
-		    if (line.hasOption(help.getOpt()))
-		    {
-		    	printHelp(options);
-		    	System.exit(0);
-		    }
-		    
+
+				System.exit(0);
+			}
+
+			if (line.hasOption(help.getOpt()))
+			{
+				printHelp(options);
+				System.exit(0);
+			}
+
 			String verboseString = line.getOptionValue(traceLevel.getOpt());
 			VerboseLevel verboseLevel = VerboseLevel.All;
 			if (verboseString != null)
@@ -208,7 +245,7 @@ public class MainRunner
 				// check if this launch is a result of restarting for changing current directory
 				//---------------------------------------------------------------------------------------------------------------------
 				configString = getRestartConfig(configString);
-				line = rebuidCommadnLine(line, options, configName, configString);
+				line = rebuidCommandLine(line, options, configName, configString);
 				
 				//---------------------------------------------------------------------------------------------------------------------
 				// check if we need restarting app from another directory
@@ -247,16 +284,10 @@ public class MainRunner
 			System.out.println("Error: " + e.getMessage());
 			exitCode = 2;
 		}
-		finally
-		{
-		}
 
-	
 		System.exit(exitCode);
 	}
 
-	
-	
 	public static Path needToChangeDirectory(String fileName)
 	{
 		if (fileName != null)
@@ -304,10 +335,7 @@ public class MainRunner
 		return template.replace("${JF}", home);
 	}
 
-
-	
-	private static void runInConsoleMode(CommandLine line, String configString, VerboseLevel verboseLevel, 
-			Option startAtName, Option inputName, Option outputName, Option shortPaths) throws Exception
+	private static void runInConsoleMode(CommandLine line, String configString, VerboseLevel verboseLevel, Option startAtName, Option inputName, Option outputName, Option shortPaths) throws Exception
 	{
 		printVersion();
 
@@ -323,7 +351,7 @@ public class MainRunner
 			}
 			catch (Exception e)
 			{
-				e.printStackTrace(System.err);
+				e.printStackTrace();
 			}
 			
 			if (!configuration.isValid())
@@ -340,8 +368,8 @@ public class MainRunner
 
 		if (!line.hasOption(inputName.getOpt()))
 		{
-		    System.out.println(String.format("Error: need %s parameter.", inputName.getOpt()));
-		    return;
+			System.out.println(String.format("Error: need %s parameter.", inputName.getOpt()));
+			return;
 		}
 		
 		configuration.refresh();
@@ -382,7 +410,7 @@ public class MainRunner
 		}
 		
 		boolean showShortPaths = line.hasOption(shortPaths.getOpt()); 
-		boolean allPassed = processMatrix(factory, inputFile, startAt, verboseLevel, showShortPaths);
+		boolean allPassed = processMatrix(factory, inputFile, startAt, showShortPaths);
 		System.exit(allPassed ? 0 : 1);
 	}
 
@@ -394,13 +422,10 @@ public class MainRunner
 		String[] guiArgs = configString != null ? new String[]{ configString, usernameValue, passwordValue } : new String[]{};
 		LauncherImpl.launchApplication(Main.class, Preloader.class, guiArgs);
 		String config = Main.getConfigName();
-		if (config != null)
+		if (config != null && line.hasOption(child.getOpt()))
 		{
-		    if (line.hasOption(child.getOpt()))
-		    {
-				createRestartConfig(config);
-		    	System.exit(magicNumber);
-		    }
+			createRestartConfig(config);
+			System.exit(magicNumber);
 		}
 
 		return config;
@@ -410,7 +435,7 @@ public class MainRunner
 	{
 		HelpFormatter formatter = new HelpFormatter();
 		formatter.printHelp(
-				"java -jar " + Configuration.projectName, 
+				"java -jar " + Configuration.projectName.toLowerCase() + ".jar",
 				"Options", options, 
 				"Exit code:\n"
 				+ "   0 : all testcases have passed\n"
@@ -424,20 +449,19 @@ public class MainRunner
 		System.out.println(Configuration.projectName + "  ver." + VersionInfo.getVersion());
 	}
 
-	private static boolean processMatrix(DocumentFactory factory, File matrix,  
-			Date startAt, VerboseLevel verboseLevel, boolean showShortPaths)
+	private static boolean processMatrix(DocumentFactory factory, File matrix, Date startAt, boolean showShortPaths)
 	{
 		try
 		{
 			logger.info(String.format("Processing '%s' start at '%s'", matrix.getName(), startAt.toString()));
 
-			try(    Reader reader = CommonHelper.readerFromFile(matrix) )
+			try (Reader reader = CommonHelper.readerFromFile(matrix))
 			{
-			    Matrix doc = (Matrix)factory.createDocument(DocumentKind.MATRIX, matrix.getPath());
-			    doc.load(reader);
-			    
-			    MatrixConnection connection = doc.start(startAt, null);
-			    connection.join(0);
+				Matrix doc = (Matrix) factory.createDocument(DocumentKind.MATRIX, matrix.getPath());
+				doc.load(reader);
+
+				MatrixConnection connection = doc.start(startAt, null);
+				connection.join(0);
 				return connection.failed() == 0;
 			}
 			catch (Exception e)
@@ -454,9 +478,9 @@ public class MainRunner
 		return false;
 	}
 	
-	private static CommandLine rebuidCommadnLine(CommandLine line, Options options, Option configName, String configString) throws ParseException
+	private static CommandLine rebuidCommandLine(CommandLine line, Options options, Option configName, String configString) throws ParseException
 	{
-		List<String> arguments = new ArrayList<String>();
+		List<String> arguments = new ArrayList<>();
 		for (Option option : line.getOptions())
 		{
 			StringBuilder sb = new StringBuilder();
@@ -478,10 +502,9 @@ public class MainRunner
 		return new GnuParser().parse(options, arguments.toArray(new String[] {}));
 	}
 
-
 	private static int restartProcessInNewDir(Path workDir, CommandLine line, Option child) throws Exception
 	{
-		List<String> args = new ArrayList<String>();
+		List<String> args = new ArrayList<>();
 		for (Option option : line.getOptions())
 		{
 			String arg = "-" + option.getOpt();
@@ -506,7 +529,7 @@ public class MainRunner
 		List<String> jvmParameters = runtimeMxBean.getInputArguments();
 
 		// compose all command-line parameters to launch another process
-		List<String> commandLine = new ArrayList<String>();
+		List<String> commandLine = new ArrayList<>();
 		add(commandLine, javaRuntime);
 		
 		if (jvmParameters != null)
@@ -528,15 +551,12 @@ public class MainRunner
 			add(commandLine, jarName.getAbsolutePath());
 			add(commandLine, Main.class.getCanonicalName());
 		}
-		
-		if (args != null)
+
+		for (String arg : args)
 		{
-			for (String arg : args)
-			{
-				add(commandLine, arg);
-			}
+			add(commandLine, arg);
 		}
-		
+
 		// launch the process
 		ProcessBuilder builder = new ProcessBuilder(commandLine);
 		builder
@@ -559,58 +579,56 @@ public class MainRunner
 			list.add(str);
 		}
 	}
-	
-    private static void saveDocs(String dir) throws Exception
-    {
-        DocumentFactory factory = new ConsoleDocumentFactory(VerboseLevel.Errors);
-        Configuration configuration = (Configuration) factory.createDocument(DocumentKind.CONFIGURATION, null); 
-        factory.setConfiguration(configuration);
-        Context context = factory.createContext();
-        ReportFactory reportFactory = new TexReportFactory();
-        if (!Files.exists(Paths.get(dir)))
-        {
+
+	private static void saveDocs(String dir) throws Exception
+	{
+		DocumentFactory factory = new ConsoleDocumentFactory(VerboseLevel.Errors);
+		Configuration configuration = (Configuration) factory.createDocument(DocumentKind.CONFIGURATION, null);
+		factory.setConfiguration(configuration);
+		Context context = factory.createContext();
+		ReportFactory reportFactory = new TexReportFactory();
+		if (!Paths.get(dir).toFile().exists())
+		{
 			Files.createDirectories(Paths.get(dir));
 		}
-        ReportBuilder report = reportFactory.createReportBuilder(dir, "UserManual_v." + VersionInfo.getVersion() + ".tex", new Date());
-        MatrixItem help = DocumentationBuilder.createUserManual(report, context);
-        report.reportStarted(null, VersionInfo.getVersion());
-        help.execute(context, context.getMatrixListener(), context.getEvaluator(), report);
-        report.reportFinished(0, 0, null, null);
-        System.out.println("Documentation has been created.");
-    }
-	
+		ReportBuilder report = reportFactory.createReportBuilder(dir, "UserManual_v." + VersionInfo.getVersion() + ".tex", new Date());
+		MatrixItem help = DocumentationBuilder.createUserManual(report, context);
+		report.reportStarted(null, VersionInfo.getVersion());
+		help.execute(context, context.getMatrixListener(), context.getEvaluator(), report);
+		report.reportFinished(0, 0, null, null);
+		System.out.println("Documentation has been created.");
+	}
+
 	private static void saveSchema(Class<?> clazz, final String fileName)
 	{
 		try
 		{
-			JAXBContext jaxbContext = JAXBContext.newInstance(new Class[] { clazz});
-			
+			JAXBContext jaxbContext = JAXBContext.newInstance(new Class[]{clazz});
+
 			SchemaOutputResolver sor = new SchemaOutputResolver()
 			{
-				
 				@Override
 				public Result createOutput(String namespaceUri, String suggestedFileName) throws IOException
 				{
 					System.out.println(fileName);
-					
+
 					File file = new File(fileName);
-			        
+
 					StreamResult result = new StreamResult(file);
-			        result.setSystemId(file.toURI().toURL().toString());
-			        return result;
+					result.setSystemId(file.toURI().toURL().toString());
+					return result;
 				}
-			}; 
-			
-			
+			};
+
 			try
 			{
 				jaxbContext.generateSchema(sor);
-			} 
+			}
 			catch (IOException e)
 			{
 				logger.error(e.getMessage(), e);
 			}
-		} 
+		}
 		catch (JAXBException e)
 		{
 			logger.error(e.getMessage(), e);
@@ -658,44 +676,5 @@ public class MainRunner
 			a[i] = arg.startsWith("-password") ? "-password=*****" : arg;
 		}
 		return a;
-	}
-	
-	private static String 	restartFileName = "${JF}/.restart.txt";
-	private static int 		magicNumber = 7;
-	
-	private static final Logger logger = Logger.getLogger(MainRunner.class);
-	
-	
-	static String logFileName = ".log.xml";
-	static
-	{
-		// http://stackoverflow.com/a/19053462
-		// non-configured log4j doesn't have Appenders
-		boolean loggerConfigured = Logger.getRootLogger().getAllAppenders().hasMoreElements();
-		
-		if (!loggerConfigured)
-		{
-			if (!new File(logFileName).exists())
-			{
-				try (	BufferedReader reader = new BufferedReader(new InputStreamReader(MainRunner.class.getResourceAsStream(logFileName)));
-						BufferedWriter writer = new BufferedWriter(new FileWriter(logFileName)))
-				{
-					String line = null;
-	
-					while ((line = reader.readLine()) != null)
-					{
-						writer.append(line);
-						writer.newLine();
-					}
-				}
-				catch (IOException e)
-				{
-					e.printStackTrace();
-					System.exit(1);
-				}
-			}
-	
-			DOMConfigurator.configure(logFileName);
-		}
 	}
 }

@@ -12,6 +12,7 @@ package com.exactprosystems.jf.common;
 import com.exactprosystems.jf.actions.ActionGroups;
 import com.exactprosystems.jf.api.app.Mutable;
 import com.exactprosystems.jf.api.common.Str;
+import com.exactprosystems.jf.api.common.i18n.Locales;
 import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.documents.matrix.parser.ScreenshotKind;
 import com.exactprosystems.jf.documents.matrix.parser.Tokens;
@@ -19,7 +20,6 @@ import com.exactprosystems.jf.documents.matrix.parser.items.MutableArrayList;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.newconfig.CompareEnum;
 import com.exactprosystems.jf.tool.settings.Theme;
-import com.exactprosystems.jf.api.common.i18n.Locales;
 import com.exactprosystems.jf.tool.wizard.WizardSettings;
 import javafx.scene.input.KeyCombination;
 import org.apache.log4j.Logger;
@@ -32,7 +32,6 @@ import java.io.File;
 import java.io.Reader;
 import java.io.Writer;
 import java.util.*;
-import java.util.Map.Entry;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -40,7 +39,10 @@ import java.util.stream.Stream;
 @XmlAccessorType(XmlAccessType.NONE)
 public class Settings
 {
-	public final static String SETTINGS_PATH	= ".settings.xml";
+	private static final Logger logger = Logger.getLogger(Settings.class);
+	private static Comparator<SettingsValue> comparator = Comparator.comparingLong(sv -> sv.getTime().getTime());
+
+	public static final String SETTINGS_PATH	= ".settings.xml";
 
 	public static final String	FONT			= "Font";
 	public static final String	SETTINGS 		= "Main";
@@ -150,8 +152,8 @@ public class Settings
 		}
 	}
 
-	public final static String GLOBAL_NS	= "GLOBAL";
-	public final static String APPLICATION	= "APP_";
+	public static final String GLOBAL_NS	= "GLOBAL";
+	public static final String APPLICATION	= "APP_";
 	public static final String SERVICE 		= "SRV_";
 	public static final String CLIENT 		= "CLN_";
 	public static final String SQL			= "SQL_";
@@ -196,12 +198,6 @@ public class Settings
 			this.time = new Date();
 		}
 
-		@Override
-		public String toString()
-		{
-			return "{" + this.ns + ":" + this.dialog + ":" + this.key + "=" + this.value + "}";
-		}
-
 		public String getNs()
 		{
 			return this.ns;
@@ -234,33 +230,6 @@ public class Settings
 		}
 
 		@Override
-		public boolean equals(Object o)
-		{
-			if (this == o)
-				return true;
-			if (o == null || getClass() != o.getClass())
-				return false;
-
-			SettingsValue that = (SettingsValue) o;
-
-			if (!ns.equals(that.ns))
-				return false;
-			if (!dialog.equals(that.dialog))
-				return false;
-			return key.equals(that.key);
-
-		}
-
-		@Override
-		public int hashCode()
-		{
-			int result = ns.hashCode();
-			result = 31 * result + dialog.hashCode();
-			result = 31 * result + key.hashCode();
-			return result;
-		}
-
-		@Override
 		public boolean isChanged()
 		{
 			return this.changed;
@@ -270,6 +239,39 @@ public class Settings
 		public void saved()
 		{
 			this.changed = false;
+		}
+
+		@Override
+		public String toString()
+		{
+			return "{" + this.ns + ":" + this.dialog + ":" + this.key + "=" + this.value + "}";
+		}
+
+		@Override
+		public boolean equals(Object o)
+		{
+			if (this == o)
+				return true;
+			if (o == null || this.getClass() != o.getClass())
+				return false;
+
+			SettingsValue that = (SettingsValue) o;
+
+			if (!this.ns.equals(that.ns))
+				return false;
+			if (!this.dialog.equals(that.dialog))
+				return false;
+			return this.key.equals(that.key);
+
+		}
+
+		@Override
+		public int hashCode()
+		{
+			int result = this.ns.hashCode();
+			result = 31 * result + this.dialog.hashCode();
+			result = 31 * result + this.key.hashCode();
+			return result;
 		}
 	}
 
@@ -284,10 +286,15 @@ public class Settings
 		this.values = new MutableArrayList<>();
 	}
 
+	/**
+	 * Load a settings from passed file name. If loading was failed, will return {@link Settings#defaultSettings()}
+	 * @param fileName file, from which will load settings
+	 * @return If loading was failed, will return {@link Settings#defaultSettings()}. Otherwise will return loaded settings
+	 */
 	public static Settings load(String fileName)
 	{
 		File file = new File(fileName);
-		Settings settings = null;
+		Settings settings;
 		Settings defaultSettings = defaultSettings();
 		if (file.exists())
 		{
@@ -311,6 +318,7 @@ public class Settings
 			settings = defaultSettings;
 		}
 		Settings finalSettings = settings;
+		//add all default settings for loaded settings
 		defaultSettings.values.stream()
 				.filter(sv -> !finalSettings.values.contains(sv))
 				.forEach(finalSettings.values::add);
@@ -321,6 +329,10 @@ public class Settings
 	//region default settings
 	private static Settings DEFAULT_SETTINGS;
 
+	/**
+	 * Create default settings.
+	 * @return default settings.
+	 */
 	public static Settings defaultSettings()
 	{
 		if (DEFAULT_SETTINGS == null)
@@ -333,9 +345,9 @@ public class Settings
 					MAX_LAST_COUNT,"10",
 					TIME_NOTIFICATION,"5",
 					THEME, Theme.WHITE.name(),
-					USE_FULL_SCREEN,"false",
-					USE_EXTERNAL_REPORT_VIEWER, "false",
-					USE_FULLSCREEN_XPATH,"false",
+					USE_FULL_SCREEN, Boolean.FALSE.toString(),
+					USE_EXTERNAL_REPORT_VIEWER, Boolean.FALSE.toString(),
+					USE_FULLSCREEN_XPATH, Boolean.FALSE.toString(),
 					LANGUAGE, Locales.ENGLISH.name(),
 					COPYRIGHT,"",
 					FONT, "System$13"
@@ -414,8 +426,8 @@ public class Settings
 
 			DEFAULT_SETTINGS.setMapValues(GLOBAL_NS, MATRIX_NAME, mapOf(
 					MATRIX_DEFAULT_SCREENSHOT, ScreenshotKind.Never.name(),
-					MATRIX_POPUPS, "false",
-					MATRIX_FOLD_ITEMS, "false"
+					MATRIX_POPUPS, Boolean.FALSE.toString(),
+					MATRIX_FOLD_ITEMS, Boolean.FALSE.toString()
 			));
 
 			DEFAULT_SETTINGS.setMapValues(GLOBAL_NS, GIT, mapOf(
@@ -446,6 +458,11 @@ public class Settings
 	}
 	//endregion
 
+	/**
+	 * Save settings to the passed file
+	 * @param fileName file, which use for saving the settings
+	 * @throws Exception file not found or the character encoding is not supported.
+	 */
 	public synchronized void save(String fileName) throws Exception
 	{
 		try (Writer writer = CommonHelper.writerToFileName(fileName))
@@ -461,96 +478,131 @@ public class Settings
 		}
 	}
 
+	/**
+	 * Save the settings, if they were changed
+	 * @throws Exception if saving was failed
+	 */
 	public synchronized void saveIfNeeded() throws Exception
 	{
 		if (this.values.isChanged())
 		{
-			save();
+			this.save();
 		}
 	}
 
+	/**
+	 * Save settings. If the loaded file is null, will use default settings path {@link Settings#SETTINGS_PATH}
+	 * @throws Exception if saving was failed
+	 */
 	private void save() throws Exception
 	{
 		if (this.fileName != null)
 		{
-			save(this.fileName);
+			this.save(this.fileName);
 		}
 		else
 		{
-			save(SETTINGS_PATH);
+			this.save(SETTINGS_PATH);
 		}
 	}
 
+	/**
+	 * @return all namespaces from settings
+	 */
 	public synchronized Set<String> getNamespaces()
 	{
-		Set<String> set = new HashSet<String>();
-		for (SettingsValue value : this.values)
-		{
-			if (value.getNs() != null)
-			{
-				set.add(value.getNs());
-			}
-		}
-		return set;
+		return this.values.stream()
+				.map(SettingsValue::getNs)
+				.filter(Objects::nonNull)
+				.collect(Collectors.toSet());
 	}
 
+	/**
+	 * Return map values from the settings for the passed namespace, dialog and names.
+	 * @param ns namespace, used for getting values
+	 * @param dialog dialog, used for getting values
+	 * @param names array of names, which need be returned
+	 * @return map values for the passed namespace, dialog and names.
+	 */
 	public Map<String, String> getMapValues(String ns, String dialog, String[] names)
 	{
-		Map<String, String> res = new HashMap<String, String>();
+		Map<String, String> res = new HashMap<>();
 		for (String s : names)
 		{
 			res.put(s, null);
 		}
 
-		for (SettingsValue value : getValues(ns, dialog))
-		{
-			res.put(value.getKey(), value.getValue());
-		}
+		this.getValues(ns, dialog).forEach(value -> res.put(value.getKey(), value.getValue()));
 		return res;
 	}
 
+	/**
+	 * Return list of values from settings by passed namespace and dialog
+	 * @param ns namespace, which used for getting values
+	 * @param dialog dialog, which used for getting values
+	 * @return list of {@link SettingsValue} for passed namespace and dialog
+	 *
+	 * @see SettingsValue
+	 */
 	public synchronized List<SettingsValue> getValues(String ns, String dialog)
 	{
-		List<SettingsValue> res = new ArrayList<SettingsValue>();
-		for (SettingsValue value : this.values)
-		{
-			if (Str.areEqual(ns, value.getNs())
-					&& Str.areEqual(dialog, value.getDialog()))
-			{
-				res.add(value);
-			}
-		}
-		return res;
+		return this.values.stream()
+				.filter(value -> Str.areEqual(ns, value.getNs()) && Str.areEqual(dialog, value.getDialog()))
+				.collect(Collectors.toList());
 	}
 
+	/**
+	 * Return the settings value for the passed namespace, dialog and key.<br>
+	 * If setting with name from passed namespace and dialog not found, will return default setting for the passed namespace and dialog
+	 * @param ns namespace, which used for getting setting
+	 * @param dialog dialog, which used for getting setting
+	 * @param key key, which used for getting settings
+	 * @return setting value by passed arguments.
+	 *
+	 * @throws IllegalArgumentException if default value for passed namespace and dialog not found.
+	 */
 	public SettingsValue getValueOrDefault(String ns, String dialog, String key)
 	{
-		SettingsValue result = getValue(ns, dialog, key);
+		SettingsValue result = this.getValue(ns, dialog, key);
 		if (result == null)
 		{
 			result = defaultSettings().getValue(ns, dialog, key);
 		}
-		return Optional.ofNullable(result).orElseThrow(() -> new IllegalArgumentException(String.format(R.SETTINGS_GET_DEFAULT_VALUE_EXCEPTION.get(), key)));
+		return Optional.ofNullable(result)
+				.orElseThrow(() -> new IllegalArgumentException(String.format(R.SETTINGS_GET_DEFAULT_VALUE_EXCEPTION.get(), key)));
 	}
 
+	/**
+	 * Return the settings value for the passed namespace, dialog and key.<br>
+	 * If setting with name from passed namespace and dialog not found, will return null
+	 * @param ns namespace, which used for getting setting
+	 * @param dialog dialog, which used for getting setting
+	 * @param key key, which used for getting settings
+	 * @return setting value by passed arguments.
+	 */
 	public synchronized SettingsValue getValue(String ns, String dialog, String key)
 	{
-		for (SettingsValue value : this.values)
-		{
-			if (Str.areEqual(ns, value.getNs())
-					&& Str.areEqual(dialog, value.getDialog())
-					&& Str.areEqual(key, value.getKey()))
-			{
-				return value;
-			}
-		}
-		return null;
+		return this.values.stream()
+				.filter(value -> Str.areEqual(ns, value.getNs()) && Str.areEqual(dialog, value.getDialog()) && Str.areEqual(key, value.getKey()))
+				.findFirst()
+				.orElse(null);
 	}
 
+	/**
+	 * Set value for the passed namespace, dialog and key <br>
+	 * If the settings value more than max, the youngest settings will removed.
+	 * If the setting by passed namespace, dialog and key will no found, will create new settingValue and stored into the settings.
+	 * 
+	 * @param ns namespace, which will used for found setting
+	 * @param dialog dialog, which will used for found setting
+	 * @param key key, which will used for found settings
+	 * @param max max count of settings.
+	 * @param newValue value, which will be setting to found setting.
+	 */
 	public synchronized void setValue(String ns, String dialog, String key, int max, String newValue)
 	{
-		List<SettingsValue> list = getValues(ns, dialog);
-		Collections.sort(list, comparator);
+		List<SettingsValue> list = this.getValues(ns, dialog);
+		list.sort(comparator);
 		for (SettingsValue value : list)
 		{
 			if (value.getKey() != null && value.getKey().equals(key))
@@ -563,14 +615,24 @@ public class Settings
 		{
 			list.remove(list.size() - 1);
 		}
-		removeAll(ns, dialog);
+		this.removeAll(ns, dialog);
 		this.values.addAll(list);
+
 		SettingsValue settingsValue = new SettingsValue(ns, dialog, key);
 		settingsValue.setValue(newValue);
 
 		this.values.add(settingsValue);
 	}
 
+	/**
+	 * Set value for the passed namespace, dialog and key <br>
+	 * If the setting by passed namespace, dialog and key will no found, will create new settingValue and stored into the settings.
+	 *
+	 * @param ns namespace, which will used for found setting
+	 * @param dialog dialog, which will used for found setting
+	 * @param key key, which will used for found settings
+	 * @param newValue value, which will be setting to found setting.
+	 */
 	public synchronized void setValue(String ns, String dialog, String key, String newValue)
 	{
 		for (SettingsValue value : this.values)
@@ -590,14 +652,23 @@ public class Settings
 		this.values.add(value);
 	}
 
+	/**
+	 * Set map values to the settings. <br>
+	 * For each entry from map, will execute method {@link Settings#setValue(String, String, String, String)},
+	 * where 3rd parameter is map key and 4rd parameter is map value.
+	 * 
+	 * @see Settings#setValue(String, String, String, String) 
+	 */
 	public void setMapValues(String ns, String dialog, Map<String, String> values)
 	{
-		for (Entry<String, String> entry : values.entrySet())
-		{
-			setValue(ns, dialog, entry.getKey(), entry.getValue());
-		}
+		values.forEach((key, value) -> this.setValue(ns, dialog, key, value));
 	}
 
+	/**
+	 * Remove all settings value from the settings, which matches passed namespace and dialog
+	 * @param ns namespace, which used for found setting value, which will removed
+	 * @param dialog dialog, which used for found setting value, which will removed
+	 */
 	public synchronized void removeAll(String ns, String dialog)
 	{
 		this.values = this.values.stream()
@@ -605,6 +676,12 @@ public class Settings
 				.collect(Collectors.toCollection(MutableArrayList::new));
 	}
 
+	/**
+	 * Remove settings value from the settings, which matches passed namespace, dialog and key
+	 * @param ns namespace, which used for found setting value, which will removed
+	 * @param dialog dialog, which used for found setting value, which will removed
+	 * @param key key, which used for found setting value, which will removed
+	 */
 	public synchronized void remove(String ns, String dialog, String key)
 	{
 		this.values = this.values.stream()
@@ -632,6 +709,9 @@ public class Settings
 		return map;
 	}
 
+	/**
+	 * Remove all from the settings
+	 */
 	public synchronized void clear()
 	{
 		this.values.clear();
@@ -666,9 +746,4 @@ public class Settings
 				.filter(Objects::nonNull)
 				.collect(Collectors.toList());
 	}
-
-	private final static Logger logger = Logger.getLogger(Settings.class);
-
-	private static Comparator<SettingsValue> comparator = (o1, o2) -> (int)(o2.time.getTime() - o1.time.getTime());
-
 }
