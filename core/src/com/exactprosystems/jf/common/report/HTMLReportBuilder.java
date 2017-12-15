@@ -38,6 +38,11 @@ public class HTMLReportBuilder extends ReportBuilder
 	private static final int          columnCount       = 7;
 	private              StringWriter jsWriter          = new StringWriter();
 
+	public HTMLReportBuilder()
+	{
+		super();
+	}
+
 	public HTMLReportBuilder(String outputPath, String matrixName, Date currentTime) throws IOException
 	{
 		super(outputPath, matrixName, currentTime);
