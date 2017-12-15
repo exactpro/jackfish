@@ -8,6 +8,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 package com.exactprosystems.jf.tool.git.commit;
 
+import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.git.CredentialBean;
 import com.exactprosystems.jf.tool.git.GitBean;
@@ -74,7 +75,7 @@ public class GitCommit
 					@Override
 					protected Void call() throws Exception
 					{
-						DialogsHelper.showInfo("Start commiting");
+						DialogsHelper.showInfo(R.GIT_COMMIT_START.get());
 						GitUtil.gitCommit(credential, list.stream().map(GitBean::getFile).collect(Collectors.toList()), msg, isAmend);
 						return null;
 					}
@@ -84,22 +85,22 @@ public class GitCommit
 		service.start();
 		service.setOnSucceeded(e -> {
 			this.controller.setDisable(false);
-			DialogsHelper.showSuccess("Successful commiting");
+			DialogsHelper.showSuccess(R.GIT_COMMIT_SUCCESS.get());
 			this.controller.hide();
 			if (!isCommit)
 			{
-				Common.tryCatch(this.model::gitPush, "Error on push");
+				Common.tryCatch(this.model::gitPush, R.GIT_COMMIT_ERROR_ON_PUSH.get());
 			}
 		});
 		service.setOnCancelled(e -> {
-			DialogsHelper.showInfo("Task canceled by user");
+			DialogsHelper.showInfo(R.GIT_COMMIT_CANCELED_BY_USER.get());
 			this.controller.setDisable(false);
 		});
 		service.setOnFailed(e ->
 		{
 			Throwable exception = e.getSource().getException();
 			logger.error(exception.getMessage(), exception);
-			DialogsHelper.showError("Error on commiting\n" + exception.getMessage());
+			DialogsHelper.showError(String.format(R.GIT_COMMIT_ERROR.get(), exception.getMessage()));
 			this.controller.setDisable(false);
 		});
 	}

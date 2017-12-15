@@ -8,6 +8,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 package com.exactprosystems.jf.tool.git.merge.editor;
 
+import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.ContainingParent;
 import com.exactprosystems.jf.tool.CssVariables;
@@ -64,7 +65,7 @@ public class MergeEditorController implements Initializable, ContainingParent
 
 	private void initDialog(String fileName)
 	{
-		this.dialog = DialogsHelper.createGitDialog("Merge editor for file \'"+fileName+"\'", this.parent);
+		this.dialog = DialogsHelper.createGitDialog(String.format(R.MERGE_EDITOR_CONTR_MERGE_FOR_FILE.get(), fileName), this.parent);
 	}
 
 	public void save(ActionEvent actionEvent)
@@ -75,12 +76,12 @@ public class MergeEditorController implements Initializable, ContainingParent
 				.map(node -> (TextArea)node)
 				.map(TextArea::getText)
 				.collect(Collectors.joining("\n"))
-		), "Error on save result");
+		), R.MERGE_EDITOR_CONTR_ERROR_SAVE_RESULT.get());
 	}
 
 	public void close(ActionEvent actionEvent)
 	{
-		Common.tryCatch(() -> this.model.close(), "Error on close");
+		Common.tryCatch(() -> this.model.close(), R.MERGE_EDITOR_CONTR_ERROR_ON_CLOSE.get());
 	}
 
 	public void acceptYours(ActionEvent actionEvent)

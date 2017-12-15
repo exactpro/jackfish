@@ -8,6 +8,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 package com.exactprosystems.jf.tool.git.commit;
 
+import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.ContainingParent;
 import com.exactprosystems.jf.tool.git.GitBean;
@@ -68,7 +69,7 @@ public class GitCommitController implements Initializable, ContainingParent
 	{
 		if (this.tableView.getItems().stream().filter(GitBean::isChecked).count() == 0)
 		{
-			DialogsHelper.showInfo("Need select one or more files to commit");
+			DialogsHelper.showInfo(R.GIT_COMMIT_CONTR_SELECT_FILES.get());
 			return;
 		}
 		Common.tryCatch(() -> this.model.commit(this.taMessage.getText(), this.tableView.getItems().stream().filter(GitBean::isChecked).collect(Collectors.toList()), false), "Error on commit");
@@ -81,7 +82,7 @@ public class GitCommitController implements Initializable, ContainingParent
 
 	public void close(ActionEvent actionEvent)
 	{
-		Common.tryCatch(this.model::close, "Error on close/cancel");
+		Common.tryCatch(this.model::close, R.GIT_COMMIT_CONTR_ERROR_CLOSE_CANCEL.get());
 	}
 	//endregion
 
@@ -97,7 +98,7 @@ public class GitCommitController implements Initializable, ContainingParent
 
 	public void setDisable(boolean flag)
 	{
-		this.btnClose.setText(flag ? "Cancel" : "Close");
+		this.btnClose.setText(flag ? R.COMMON_CANCEL.get() : R.COMMON_CLOSE.get());
 		if (flag)
 		{
 			this.btnCommit.disableProperty().unbind();
@@ -119,7 +120,7 @@ public class GitCommitController implements Initializable, ContainingParent
 	//region private methods
 	private void initDialog()
 	{
-		this.dialog = DialogsHelper.createGitDialog("Commit", this.parent);
+		this.dialog = DialogsHelper.createGitDialog(R.TOOL_COMMIT.get(), this.parent);
 	}
 
 	private void initTable()
@@ -138,11 +139,11 @@ public class GitCommitController implements Initializable, ContainingParent
 		checkedColumn.setMaxWidth(30);
 		checkedColumn.setMinWidth(30);
 
-		TableColumn<GitBean, String> fileColumn = new TableColumn<>("Name");
+		TableColumn<GitBean, String> fileColumn = new TableColumn<>(R.COMMON_NAME.get());
 		fileColumn.setCellValueFactory(new PropertyValueFactory<>("file"));
 		fileColumn.prefWidthProperty().bind(this.tableView.widthProperty().subtract(30.0 + 100.0 + 2.0));
 
-		TableColumn<GitBean, GitBean.Status> statusColumn = new TableColumn<>("Status");
+		TableColumn<GitBean, GitBean.Status> statusColumn = new TableColumn<>(R.TOOL_STATUS.get());
 		statusColumn.setCellValueFactory(new PropertyValueFactory<>("status"));
 		statusColumn.setPrefWidth(100);
 		statusColumn.setMaxWidth(100);

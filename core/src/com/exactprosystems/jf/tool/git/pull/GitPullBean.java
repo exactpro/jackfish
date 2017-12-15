@@ -8,6 +8,8 @@
 ////////////////////////////////////////////////////////////////////////////////
 package com.exactprosystems.jf.tool.git.pull;
 
+import com.exactprosystems.jf.api.common.i18n.R;
+
 public class GitPullBean
 {
 	private final String fileName;
@@ -37,7 +39,7 @@ public class GitPullBean
 	@Override
 	public String toString()
 	{
-		return this.fileName + " needMerge : " + this.needMerge;
+		return String.format(R.GIT_PULL_BEAN_NEED_MERGE.get(), this.fileName, this.needMerge);
 	}
 
 	@Override

@@ -8,6 +8,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 package com.exactprosystems.jf.tool.git.merge;
 
+import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.ContainingParent;
 import com.exactprosystems.jf.tool.helpers.DialogsHelper;
@@ -69,17 +70,17 @@ public class GitMergeController implements Initializable, ContainingParent
 	//region actions methods
 	public void acceptTheirs(ActionEvent actionEvent)
 	{
-		Common.tryCatch(() -> this.model.acceptTheirs(this.tableView.getSelectionModel().getSelectedItem()), "Error on accept theirs");
+		Common.tryCatch(() -> this.model.acceptTheirs(this.tableView.getSelectionModel().getSelectedItem()), R.GIT_MERGE_CONTR_ACCEPT_THEIRS.get());
 	}
 
 	public void acceptYours(ActionEvent actionEvent)
 	{
-		Common.tryCatch(() -> this.model.acceptYours(this.tableView.getSelectionModel().getSelectedItem()), "Error on accept yours");
+		Common.tryCatch(() -> this.model.acceptYours(this.tableView.getSelectionModel().getSelectedItem()), R.GIT_MERGE_CONTR_ACCEPT_YOURS.get());
 	}
 
 	public void merge(ActionEvent actionEvent)
 	{
-		Common.tryCatch(() -> this.model.merge(this.tableView.getSelectionModel().getSelectedItem()), "Error on merge");
+		Common.tryCatch(() -> this.model.merge(this.tableView.getSelectionModel().getSelectedItem()), R.GIT_MERGE_CONTR_ERROR_ON_MERGE.get());
 	}
 
 	public void close(ActionEvent actionEvent)
@@ -91,13 +92,13 @@ public class GitMergeController implements Initializable, ContainingParent
 	//region private methods
 	private void initDialog()
 	{
-		this.dialog = DialogsHelper.createGitDialog("Resolve conflicts", this.parent);
+		this.dialog = DialogsHelper.createGitDialog(R.GIT_MERGE_CONTR_RESOLVE_CONFLICTS.get(), this.parent);
 	}
 
 	private void initTable()
 	{
 		this.tableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
-		TableColumn<GitMergeBean, String> nameColumn = new TableColumn<>("Name");
+		TableColumn<GitMergeBean, String> nameColumn = new TableColumn<>(R.COMMON_NAME.get());
 		nameColumn.setCellValueFactory(new PropertyValueFactory<>("fileName"));
 
 		this.tableView.getColumns().add(nameColumn);

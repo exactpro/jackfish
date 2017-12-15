@@ -8,6 +8,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 package com.exactprosystems.jf.tool.git.pull;
 
+import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.git.CredentialBean;
 import com.exactprosystems.jf.tool.git.GitUtil;
@@ -71,7 +72,7 @@ public class GitPull
 					@Override
 					protected List<GitPullBean> call() throws Exception
 					{
-						DialogsHelper.showInfo("Start pulling");
+						DialogsHelper.showInfo(R.GIT_PULL_START.get());
 						return GitUtil.gitPull(credential, monitor, remoteBranchName);
 					}
 				};
@@ -79,19 +80,19 @@ public class GitPull
 		};
 		service.start();
 		service.setOnSucceeded(e -> Common.tryCatch(() -> {
-			DialogsHelper.showSuccess("Successful pulling");
+			DialogsHelper.showSuccess(R.GIT_PULL_SUCCESS.get());
 			this.displayFiles(((List<GitPullBean>) e.getSource().getValue()));
-			this.controller.endPulling("Pull done. All files up to date");
-		}, "Error on display files"));
+			this.controller.endPulling(R.GIT_PULL_DONE.get());
+		}, R.GIT_PULL_ERROR_ON_DISPLAY.get()));
 		service.setOnCancelled(e -> {
-			DialogsHelper.showInfo("Task canceled by user");
+			DialogsHelper.showInfo(R.GIT_PULL_CANCELED_BY_USER.get());
 			this.controller.endPulling("");
 		});
 		service.setOnFailed(e -> {
 			Throwable exception = e.getSource().getException();
 			logger.error(exception.getMessage(), exception);
-			DialogsHelper.showError("Error on pulling" + exception.getMessage());
-			this.controller.endPulling("Error on pulling");
+			DialogsHelper.showError(R.GIT_PULL_ERROR_ON_PULLING.get() + exception.getMessage());
+			this.controller.endPulling(R.GIT_PULL_ERROR_ON_PULLING.get());
 		});
 	}
 

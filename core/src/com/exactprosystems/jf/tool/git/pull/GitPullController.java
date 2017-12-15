@@ -8,6 +8,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 package com.exactprosystems.jf.tool.git.pull;
 
+import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.ContainingParent;
 import com.exactprosystems.jf.tool.git.CredentialBean;
@@ -83,7 +84,7 @@ public class GitPullController implements Initializable, ContainingParent
 
 	public void close(ActionEvent actionEvent)
 	{
-		Common.tryCatch(this.model::close, "Error on close/cancel");
+		Common.tryCatch(this.model::close, R.GIT_PULL_CONTR_ERROR_CLOSE_CANCEL.get());
 	}
 
 	//endregion
@@ -100,13 +101,13 @@ public class GitPullController implements Initializable, ContainingParent
 
 	public void pull(ActionEvent actionEvent)
 	{
-		Common.tryCatch(() -> this.model.pull(this.progressMonitor, this.cbBranches.getSelectionModel().getSelectedItem()), "Error on pulling");
+		Common.tryCatch(() -> this.model.pull(this.progressMonitor, this.cbBranches.getSelectionModel().getSelectedItem()), R.GIT_PULL_CONTR_ERROR_PULLING.get());
 	}
 
 	public void startPulling()
 	{
 		this.vbox.setVisible(true);
-		this.vbox.getChildren().add(new Text("Start pulling..."));
+		this.vbox.getChildren().add(new Text(R.GIT_PULL_CONTR_START_PULLING.get()));
 	}
 
 	public void endPulling(String text)
@@ -117,7 +118,7 @@ public class GitPullController implements Initializable, ContainingParent
 			e.setFill(Color.GREEN);
 			this.vbox.getChildren().add(e);
 		});
-		this.btnCancel.setText("Close");
+		this.btnCancel.setText(R.COMMON_CLOSE.get());
 	}
 
 	public void displayFiles(List<GitPullBean> list)
@@ -128,17 +129,17 @@ public class GitPullController implements Initializable, ContainingParent
 	//region private methods
 	private void initDialog()
 	{
-		this.dialog = DialogsHelper.createGitDialog("Pulling", this.parent);
+		this.dialog = DialogsHelper.createGitDialog(R.GIT_PULL_CONTR_PULLING.get(), this.parent);
 		this.progressMonitor = new VBoxProgressMonitor(this.vbox);
 	}
 
 	private void initTable()
 	{
-		TableColumn<GitPullBean, String> nameColumn = new TableColumn<>("File name");
+		TableColumn<GitPullBean, String> nameColumn = new TableColumn<>(R.GIT_PULL_CONTR_FILE_NAME.get());
 		nameColumn.setCellValueFactory(new PropertyValueFactory<>("fileName"));
 		nameColumn.prefWidthProperty().bind(this.tableView.widthProperty().multiply(0.6));
 
-		TableColumn<GitPullBean, Boolean> mergeColumn = new TableColumn<>("Merge");
+		TableColumn<GitPullBean, Boolean> mergeColumn = new TableColumn<>(R.GIT_PULL_CONTR_MERGE.get());
 		mergeColumn.setCellValueFactory(new PropertyValueFactory<>("needMerge"));
 		mergeColumn.prefWidthProperty().bind(this.tableView.widthProperty().multiply(0.4));
 		mergeColumn.setCellFactory(p -> new TableCell<GitPullBean, Boolean>(){
@@ -155,10 +156,10 @@ public class GitPullController implements Initializable, ContainingParent
 					if (item)
 					{
 						SplitMenuButton menuButton = new SplitMenuButton();
-						menuButton.setText("Need merge");
-						MenuItem acceptTheirs = new MenuItem("Accept Theirs");
-						MenuItem acceptYours = new MenuItem("Accept Yours");
-						MenuItem merge = new MenuItem("Merge");
+						menuButton.setText(R.GIT_PULL_CONTR_NEED_MERGE.get());
+						MenuItem acceptTheirs = new MenuItem(R.GIT_PULL_CONTR_ACCEPT_THEIRS.get());
+						MenuItem acceptYours = new MenuItem(R.GIT_PULL_CONTR_ACCEPT_YOURS.get());
+						MenuItem merge = new MenuItem(R.GIT_PULL_CONTR_MERGE.get());
 
 						menuButton.getItems().addAll(acceptTheirs, acceptYours, merge);
 
@@ -167,29 +168,29 @@ public class GitPullController implements Initializable, ContainingParent
 							GitUtil.mergeTheirs(credential, pullBean.getFileName());
 							pullBean.resolve();
 							refresh();
-						}, "Error on accept theirs"));
+						}, R.GIT_PULL_CONTR_ERROR_THEIRS.get()));
 
 						acceptYours.setOnAction(e -> Common.tryCatch(() -> {
 							GitPullBean pullBean = (GitPullBean) getTableRow().getItem();
 							GitUtil.mergeYours(credential, pullBean.getFileName());
 							pullBean.resolve();
 							refresh();
-						}, "Error on accept ours"));
+						}, R.GIT_PULL_CONTR_ERROR_YOURS.get()));
 
 						merge.setOnAction(e -> Common.tryCatch(() -> {
 							model.merge((GitPullBean) getTableRow().getItem());
 							refresh();
-						}, "Error on merge"));
+						}, R.GIT_PULL_CONTR_ERROR_ON_MERGE.get()));
 
 						menuButton.setOnAction(e -> Common.tryCatch(() -> {
 							model.merge((GitPullBean) getTableRow().getItem());
 							refresh();
-						}, "Error on merge"));
+						}, R.GIT_PULL_CONTR_ERROR_ON_MERGE.get()));
 						setGraphic(menuButton);
 					}
 					else
 					{
-						setGraphic(new Label("All ok"));
+						setGraphic(new Label(R.GIT_PULL_CONTR_ALL_OK.get()));
 					}
 				}
 			}
