@@ -93,6 +93,9 @@ testcases;Never;;
         #Id;#Action;$Dialog;$AppConnection;TextBox
         DLGFLL1;DialogFill;'Main';appCon;Do.keyDown(Keyboard.CONTROL).press(Keyboard.T).keyUp(Keyboard.CONTROL)
 
+        #Action;$Time
+        Wait;3000
+
         #Id;#Action;Title;$AppConnection
         APPSW1;ApplicationSwitchTo;'Mock html';appCon
 
@@ -136,7 +139,7 @@ testcases;Never;;
         DLGFLL1;DialogFill;'Main';appCon;Do.click();Do.text('',true).click().move().keyDown(Keyboard.CONTROL).keyDown(Keyboard.SHIFT).keyDown(Keyboard.ALT).press(Keyboard.A).keyUp(Keyboard.ALT).keyUp(Keyboard.SHIFT).keyUp(Keyboard.CONTROL).getValue();Do.getValue()
 
         #Id;#Let
-        expected;'TextBox_down_17' + getNewLine(plugin) + 'TextBox_down_16' + getNewLine(plugin) + 'TextBox_down_18' + getNewLine(plugin) + 'TextBox_down_65' + getNewLine(plugin) + 'TextBox_up_65' + getNewLine(plugin) + 'TextBox_up_16' + getNewLine(plugin) + 'TextBox_up_17' + getNewLine(plugin) + 'TextBox_up_18'
+        expected;'TextBox_down_17' + getNewLine(plugin) + 'TextBox_down_16' + getNewLine(plugin) + 'TextBox_down_18' + getNewLine(plugin) + 'TextBox_down_65' + getNewLine(plugin) + 'TextBox_up_65' + getNewLine(plugin) + 'TextBox_up_18' + getNewLine(plugin) + 'TextBox_up_16' + getNewLine(plugin) + 'TextBox_up_17'
 
         #Assert;#Message
         DLGFLL1.Out.protocolText == expected;DLGFLL1.Out.protocolText + ' != ' + expected

@@ -1023,16 +1023,13 @@ public class SeleniumOperationExecutor extends AbstractOperationExecutor<WebElem
 		{
 			try
 			{
-				scrollToElement(component);
-				CharSequence key = getKey(keyboard);
-				String chord = Keys.chord(
-						this.isControlDown ? Keys.CONTROL : "",
-						this.isShiftDown ? Keys.SHIFT : "",
-						this.isAltDown ? Keys.ALT : "",
-						key
-				);
+				this.scrollToElement(component);
+				CharSequence key = this.getKey(keyboard);
 
-				new Actions(this.driver).sendKeys(chord).perform();
+				Actions actions = new Actions(this.driver);
+				this.addModifiers(actions);
+				actions.sendKeys(key).perform();
+
 				return true;
 			}
 			catch (StaleElementReferenceException e)
@@ -1049,6 +1046,7 @@ public class SeleniumOperationExecutor extends AbstractOperationExecutor<WebElem
 	public boolean upAndDown(WebElement component, Keyboard keyboard, boolean down) throws Exception
 	{
 		scrollToElement(component);
+		Actions actions = new Actions(this.driver);
 		switch (keyboard)
 		{
 			case SHIFT:
@@ -1063,6 +1061,11 @@ public class SeleniumOperationExecutor extends AbstractOperationExecutor<WebElem
 			default:
 				break;
 		}
+		if (!down)
+		{
+			this.addModifiers(actions);
+		}
+		actions.perform();
 
 		return true;
 	}
