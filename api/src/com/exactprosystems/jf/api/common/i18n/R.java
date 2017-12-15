@@ -1013,7 +1013,7 @@ public enum R
 	SCHEDULE_REPORT,
 	//endregion
 
-	//region tool.git todo
+	//region tool.git
 
 	//region tool.git.branch
 	GIT_BRANCH_START,
@@ -1081,6 +1081,45 @@ public enum R
 	GIT_PULL_CONTR_ERROR_YOURS,
 	GIT_PULL_CONTR_ERROR_ON_MERGE,
 	GIT_PULL_CONTR_ALL_OK,
+	//endregion
+
+    //region tool.git.push
+    GIT_PUSH_START,
+    GIT_PUSH_SUCCESS,
+    GIT_PUSH_CANCELED_BY_USER,
+    GIT_PUSH_ERROR_ON_PUSHING,
+    GIT_PUSH_ERROR_ON_DISPLAY,
+    GIT_PUSH_COMMITS,
+    GIT_PUSH_ERROR_ON_CLOSE,
+    GIT_PUSH_ERROR_ON_PUSH,
+    //endregion
+
+    //region tool.git.reset
+    GIT_RESET_CONTR_ERROR_ON_SELECT,
+    GIT_RESET_CONTR_ERROR_ON_RESET,
+    GIT_RESET_CONTR_INIT_DIALOG_TITLE,
+    GIT_RESET_CONTR_COLUMN_ID,
+    GIT_RESET_CONTR_USERNAME,
+    GIT_RESET_CONTR_DATE,
+    GIT_RESET_TO,
+    //endregion
+
+	//region tool.git.status
+	GIT_STATUS_CONTR_ERROR_ON_REVERT,
+	GIT_STATUS_CONTR_GIT_STATUS,
+	GIT_STATUS_CONTR_UP_TO_DATE,
+	//endregion
+
+	//region tool.git.tag
+	GIT_TAG_START,
+	GIT_TAG_ERROR_ON_PUSH,
+	GIT_TAG_ALL_PUSHED,
+	GIT_TAG_ERROR_ON_UPDATE_TASK,
+	GIT_TAG_CONTR_INIT_TITLE,
+	GIT_TAG_CONTR_ERROR_ON_DELETE,
+	GIT_TAG_CONTR_ENTER_VERSION,
+	GIT_TAG_CONTR_ENTER_MESSAGE,
+	GIT_TAG_CONTR_ERROR_ON_PUSH,
 	//endregion
 
 	CREDENTIAL_DIALOG_USERNAME,
@@ -1848,6 +1887,8 @@ public enum R
 	//API part
 	//----------------------
 
+    //region api
+
 	//region api.app
 	//endregion
 
@@ -1888,6 +1929,8 @@ public enum R
 
 	//region api.service
 	//endregion
+
+    //endregion
 
 	//----------------------
 	//COMMON part (for strings which can  used in whole project, not in only one part)
