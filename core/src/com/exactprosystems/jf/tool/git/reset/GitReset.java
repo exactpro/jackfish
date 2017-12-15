@@ -8,6 +8,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 package com.exactprosystems.jf.tool.git.reset;
 
+import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.git.GitUtil;
 import com.exactprosystems.jf.tool.helpers.DialogsHelper;
@@ -38,7 +39,7 @@ public class GitReset
 	{
 		String commitId = bean.getCommitId();
 		GitUtil.gitReset(this.model.getCredential(), commitId);
-		DialogsHelper.showSuccess("Reset to " + commitId);
+		DialogsHelper.showSuccess(String.format(R.GIT_RESET_TO.get(), commitId));
 		this.controller.hide();
 	}
 

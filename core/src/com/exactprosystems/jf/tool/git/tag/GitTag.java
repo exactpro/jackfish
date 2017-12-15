@@ -9,6 +9,7 @@
 
 package com.exactprosystems.jf.tool.git.tag;
 
+import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.git.CredentialBean;
 import com.exactprosystems.jf.tool.git.GitUtil;
@@ -50,7 +51,7 @@ public class GitTag
 
 	void pushTag() throws Exception
 	{
-		DialogsHelper.showInfo("Start pushing tags...");
+		DialogsHelper.showInfo(R.GIT_TAG_START.get());
 		this.controller.setDisable(true);
 		Task<Void> task = new Task<Void>()
 		{
@@ -63,12 +64,12 @@ public class GitTag
 		};
 		task.setOnFailed(e -> {
 			this.controller.setDisable(false);
-			DialogsHelper.showError("Error on push tags");
+			DialogsHelper.showError(R.GIT_TAG_ERROR_ON_PUSH.get());
 		});
 		task.setOnSucceeded(e -> {
 			this.controller.setDisable(false);
-			DialogsHelper.showSuccess("All tags was pushed");
-			Common.tryCatch(() -> this.controller.updateTags(GitUtil.getTags(this.credentialBean)), "Error on updateTask");
+			DialogsHelper.showSuccess(R.GIT_TAG_ALL_PUSHED.get());
+			Common.tryCatch(() -> this.controller.updateTags(GitUtil.getTags(this.credentialBean)), R.GIT_TAG_ERROR_ON_UPDATE_TASK.get());
 		});
 		new Thread(task).start();
 	}

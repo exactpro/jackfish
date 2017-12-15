@@ -9,6 +9,7 @@
 
 package com.exactprosystems.jf.tool.git.push;
 
+import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.git.CredentialBean;
 import com.exactprosystems.jf.tool.git.GitUtil;
@@ -80,7 +81,7 @@ public class GitPush
 					@Override
 					protected Void call() throws Exception
 					{
-						DialogsHelper.showInfo("Start pushing");
+						DialogsHelper.showInfo(R.GIT_PUSH_START.get());
 						GitUtil.gitPush(credential, remoteBranchName);
 						return null;
 					}
@@ -90,17 +91,17 @@ public class GitPush
 		service.start();
 		service.setOnSucceeded(e -> {
 			this.controller.setDisable(false);
-			DialogsHelper.showSuccess("Successful pushing");
+			DialogsHelper.showSuccess(R.GIT_PUSH_SUCCESS.get());
 			this.controller.hide();
 		});
 		service.setOnCancelled(e -> {
-			DialogsHelper.showInfo("Task canceled by user");
+			DialogsHelper.showInfo(R.GIT_PUSH_CANCELED_BY_USER.get());
 			this.controller.setDisable(false);
 		});
 		service.setOnFailed(e -> {
 			Throwable exception = e.getSource().getException();
 			logger.error(exception.getMessage(), exception);
-			DialogsHelper.showError("Error on pushing\n" + exception.getMessage());
+			DialogsHelper.showError(String.format(R.GIT_PUSH_ERROR_ON_PUSHING.get(), exception.getMessage()));
 			this.controller.setDisable(false);
 		});
 	}
