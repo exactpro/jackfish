@@ -1084,7 +1084,7 @@ public class SeleniumOperationExecutor extends AbstractOperationExecutor<WebElem
 			try
 			{
 				scrollToElement(component);
-				Actions customAction = new Actions(this.driver);
+				Actions customAction = new Actions(this.driver.getKeyboard(), this.driver.getMouse());
 				int height = component.getSize().getHeight();
 				int width = component.getSize().getWidth();
 				double step = width/100d;
