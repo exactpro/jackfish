@@ -59,7 +59,6 @@ class StringWriter extends ReportWriter
 	@Override
 	public void close()
 	{
-		this.builder.setLength(0);
 	}
 
 	@Override
