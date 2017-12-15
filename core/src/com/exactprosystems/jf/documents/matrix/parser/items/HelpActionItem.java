@@ -103,7 +103,7 @@ public class HelpActionItem extends MatrixItem
             }
             else
             {
-                table.addValues(annotation.name(), f.getType().getSimpleName(), fieldDescription, "No", annotation.def(), annotation.shouldFilled());
+                table.addValues(annotation.name(), f.getType().getSimpleName(), fieldDescription, "No", annotation.def(), annotation.shouldFilled() ? "Yes" : "No");
             }
         }
 

@@ -9,6 +9,7 @@
 
 package com.exactprosystems.jf.tool.git.tag;
 
+import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.ContainingParent;
 import com.exactprosystems.jf.tool.git.GitUtil;
@@ -55,7 +56,7 @@ public class GitTagController implements Initializable, ContainingParent
 	void init(GitTag model)
 	{
 		this.model = model;
-		this.dialog = DialogsHelper.createGitDialog("Tags", this.parent);
+		this.dialog = DialogsHelper.createGitDialog(R.GIT_TAG_CONTR_INIT_TITLE.get(), this.parent);
 		this.listView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
 			if (newValue != null)
 			{
@@ -107,13 +108,13 @@ public class GitTagController implements Initializable, ContainingParent
 
 	public void deleteTag(ActionEvent actionEvent)
 	{
-		Common.tryCatch(() -> this.model.deleteTag(this.listView.getSelectionModel().getSelectedItem().getFullname()), "Error on delete tag");
+		Common.tryCatch(() -> this.model.deleteTag(this.listView.getSelectionModel().getSelectedItem().getFullname()), R.GIT_TAG_CONTR_ERROR_ON_DELETE.get());
 	}
 
 	public void newTag(ActionEvent actionEvent)
 	{
 		TextInputDialog versionDialog = new TextInputDialog();
-		versionDialog.setTitle("Enter the version");
+		versionDialog.setTitle(R.GIT_TAG_CONTR_ENTER_VERSION.get());
 		versionDialog.getDialogPane().setHeader(new Label());
 		Node node = versionDialog.getDialogPane().lookupButton(ButtonType.OK);
 		versionDialog.getEditor().textProperty().addListener((observable, oldValue, newValue) -> {
@@ -132,18 +133,18 @@ public class GitTagController implements Initializable, ContainingParent
 			return;
 		}
 		TextInputDialog messageDialog = new TextInputDialog();
-		messageDialog.setTitle("Enter the message");
+		messageDialog.setTitle(R.GIT_TAG_CONTR_ENTER_MESSAGE.get());
 		messageDialog.getDialogPane().setHeader(new Label());
 		Optional<String> msg = messageDialog.showAndWait();
 		if (!msg.isPresent())
 		{
 			return;
 		}
-		Common.tryCatch(() -> this.model.newTag(version.get(), msg.get()), "Error on delete tag");
+		Common.tryCatch(() -> this.model.newTag(version.get(), msg.get()), R.GIT_TAG_CONTR_ERROR_ON_DELETE.get());
 	}
 
 	public void pushTag(ActionEvent actionEvent)
 	{
-		Common.tryCatch(() -> this.model.pushTag(), "Error on push tag");
+		Common.tryCatch(() -> this.model.pushTag(), R.GIT_TAG_CONTR_ERROR_ON_PUSH.get());
 	}
 }

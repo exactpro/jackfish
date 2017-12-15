@@ -8,6 +8,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 package com.exactprosystems.jf.tool.git.status;
 
+import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.ContainingParent;
 import com.exactprosystems.jf.tool.CssVariables;
@@ -79,7 +80,7 @@ public class GitStatusController implements Initializable, ContainingParent
 					});
 					beanList.forEach(gb -> gb.setMatch(true));
 				}
-			}, "Error");
+			}, R.COMMON_ERROR.get());
 			refreshTree();
 		});
 	}
@@ -98,7 +99,7 @@ public class GitStatusController implements Initializable, ContainingParent
 	{
 		Set<String> set = new HashSet<>();
 		byPass(this.treeView.getRoot(), treeItem -> collect(set, treeItem));
-		Common.tryCatch(() -> this.model.revertPaths(set), "Error on revert selected items");
+		Common.tryCatch(() -> this.model.revertPaths(set), R.GIT_STATUS_CONTR_ERROR_ON_REVERT.get());
 	}
 
 	private void byPass(TreeItem<GitBean> item, Consumer<TreeItem<GitBean>> consumer)
@@ -111,12 +112,12 @@ public class GitStatusController implements Initializable, ContainingParent
 	{
 		List<GitBean> list = new ArrayList<>();
 		byPass(this.treeView.getRoot(), list, GitBean::isChecked);
-		Common.tryCatch(() -> this.model.ignoreFiles(list.stream().map(GitBean::getFile).collect(Collectors.toList())), "Error on revert selected items");
+		Common.tryCatch(() -> this.model.ignoreFiles(list.stream().map(GitBean::getFile).collect(Collectors.toList())), R.GIT_STATUS_CONTR_ERROR_ON_REVERT.get());
 	}
 
 	public void ignoreByPattern(ActionEvent actionEvent)
 	{
-		Common.tryCatch(() -> this.model.ignoreByPattern(this.tfPattern.getText()), "Error on revert selected items");
+		Common.tryCatch(() -> this.model.ignoreByPattern(this.tfPattern.getText()), R.GIT_STATUS_CONTR_ERROR_ON_REVERT.get());
 	}
 
 	public void select(ActionEvent actionEvent)
@@ -142,11 +143,11 @@ public class GitStatusController implements Initializable, ContainingParent
 		Common.addIcons(((Stage) dialog.getDialogPane().getScene().getWindow()));
 		dialog.setResizable(true);
 		dialog.getDialogPane().getStylesheets().addAll(Theme.currentThemesPaths());
-		dialog.setTitle("Git status");
+		dialog.setTitle(R.GIT_STATUS_CONTR_GIT_STATUS.get());
 		Text headerLabel = new Text(state);
 		if (list.isEmpty())
 		{
-			headerLabel.setText(headerLabel.getText() + " , Already up-to-date");
+			headerLabel.setText(String.format(R.GIT_STATUS_CONTR_UP_TO_DATE.get(), headerLabel.getText()));
 		}
 		BorderPane pane = new BorderPane();
 		pane.setCenter(headerLabel);

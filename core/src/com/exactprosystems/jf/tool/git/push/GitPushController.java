@@ -9,6 +9,7 @@
 
 package com.exactprosystems.jf.tool.git.push;
 
+import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.ContainingParent;
 import com.exactprosystems.jf.tool.git.reset.FileWithStatusBean;
@@ -63,7 +64,7 @@ public class GitPushController implements Initializable, ContainingParent
 		this.listViewCommits.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
 			if (newValue != null)
 			{
-				Common.tryCatch(() -> listViewChanges.getItems().setAll(newValue.getFiles()), "Error on display files");
+				Common.tryCatch(() -> listViewChanges.getItems().setAll(newValue.getFiles()), R.GIT_PUSH_ERROR_ON_DISPLAY.get());
 			}
 		});
 
@@ -98,7 +99,7 @@ public class GitPushController implements Initializable, ContainingParent
 	void init(GitPush model)
 	{
 		this.model = model;
-		this.dialog = DialogsHelper.createGitDialog("Push commits", this.parent);
+		this.dialog = DialogsHelper.createGitDialog(R.GIT_PUSH_COMMITS.get(), this.parent);
 	}
 
 	void show()
@@ -145,7 +146,7 @@ public class GitPushController implements Initializable, ContainingParent
 
 	void setDisable(boolean flag)
 	{
-		this.btnClose.setText(flag ? "Cancel" : "Close");
+		this.btnClose.setText(flag ? R.COMMON_CANCEL.get() : R.COMMON_CLOSE.get());
 		this.btnPush.setDisable(flag);
 		this.cbBranch.setDisable(flag);
 		this.listViewChanges.setDisable(flag);
@@ -154,12 +155,12 @@ public class GitPushController implements Initializable, ContainingParent
 
 	public void close(ActionEvent event)
 	{
-		Common.tryCatch(this.model::close, "Error on close cancel");
+		Common.tryCatch(this.model::close, R.GIT_PUSH_ERROR_ON_CLOSE.get());
 	}
 
 
 	public void push(ActionEvent actionEvent)
 	{
-		Common.tryCatch(() -> this.model.push(this.cbBranch.getEditor().getText()), "Error on push");
+		Common.tryCatch(() -> this.model.push(this.cbBranch.getEditor().getText()), R.GIT_PUSH_ERROR_ON_PUSH.get());
 	}
 }

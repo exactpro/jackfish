@@ -8,6 +8,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 package com.exactprosystems.jf.tool.git.reset;
 
+import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.ContainingParent;
 import com.exactprosystems.jf.tool.helpers.DialogsHelper;
@@ -39,7 +40,7 @@ public class GitResetController implements Initializable, ContainingParent
 	public void initialize(URL location, ResourceBundle resources)
 	{
 		this.tableView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-			Common.tryCatch(() -> this.model.select(newValue), "Error on select");
+			Common.tryCatch(() -> this.model.select(newValue), R.GIT_RESET_CONTR_ERROR_ON_SELECT.get());
 		});
 	}
 	//endregion
@@ -51,7 +52,7 @@ public class GitResetController implements Initializable, ContainingParent
 
 	public void reset(ActionEvent actionEvent)
 	{
-		Common.tryCatch(() -> this.model.reset(this.tableView.getSelectionModel().getSelectedItem()), "Error on reset");
+		Common.tryCatch(() -> this.model.reset(this.tableView.getSelectionModel().getSelectedItem()), R.GIT_RESET_CONTR_ERROR_ON_RESET.get());
 	}
 
 	//region ContainingParent
@@ -100,18 +101,18 @@ public class GitResetController implements Initializable, ContainingParent
 	//region private methods
 	private void initDialog()
 	{
-		this.dialog = DialogsHelper.createGitDialog("Git reset", this.parent);
+		this.dialog = DialogsHelper.createGitDialog(R.GIT_RESET_CONTR_INIT_DIALOG_TITLE.get(), this.parent);
 	}
 
 	private void initTable()
 	{
-		TableColumn<GitResetBean, String> commitColumn = new TableColumn<>("CommitId");
+		TableColumn<GitResetBean, String> commitColumn = new TableColumn<>(R.GIT_RESET_CONTR_COLUMN_ID.get());
 		commitColumn.setCellValueFactory(new PropertyValueFactory<>("commitId"));
 
-		TableColumn<GitResetBean, String> usernameColumn = new TableColumn<>("Username");
+		TableColumn<GitResetBean, String> usernameColumn = new TableColumn<>(R.GIT_RESET_CONTR_USERNAME.get());
 		usernameColumn.setCellValueFactory(new PropertyValueFactory<>("username"));
 
-		TableColumn<GitResetBean, Date> dateColumn = new TableColumn<>("Date");
+		TableColumn<GitResetBean, Date> dateColumn = new TableColumn<>(R.GIT_RESET_CONTR_DATE.get());
 		dateColumn.setCellValueFactory(new PropertyValueFactory<>("date"));
 		dateColumn.setCellFactory(p -> new TableCell<GitResetBean, Date>(){
 			@Override
