@@ -375,14 +375,23 @@
             <ComboBoxItem x:Name="Third" Content="Third"/>
         </ComboBox>
         <sdk:TabControl x:Name="tabControl" Grid.Column="1" Height="53" Margin="10,0,10,74" VerticalAlignment="Bottom" d:LayoutOverrides="LeftPosition, RightPosition">
-            <sdk:TabItem Header="Tab1">
+            <sdk:TabItem Header="a">
                 <Grid Background="#FF909DC9"/>
             </sdk:TabItem>
-            <sdk:TabItem Header="Tab2 (notVisible)" Visibility="Collapsed">
+            <sdk:TabItem Header="b" Visibility="Collapsed">
                 <Grid Background="#FFC99090"/>
             </sdk:TabItem>
-            <sdk:TabItem Header="Tab3">
+            <sdk:TabItem Header="c">
                 <Grid Background="#FFBFAA26"/>
+            </sdk:TabItem>
+            <sdk:TabItem Header="d" Visibility="Collapsed" Background="#FF3D8B20">
+                <Grid Background="#FF640707"/>
+            </sdk:TabItem>
+            <sdk:TabItem Header="e" Background="#FF8712AA">
+                <Grid Background="#FF134976"/>
+            </sdk:TabItem>
+            <sdk:TabItem Header="f" Background="#FF4C8F14">
+                <Grid Background="#FF0A9511"/>
             </sdk:TabItem>
         </sdk:TabControl>
     </Grid>

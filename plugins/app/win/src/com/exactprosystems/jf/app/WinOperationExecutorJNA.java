@@ -336,7 +336,7 @@ public class WinOperationExecutorJNA extends AbstractOperationExecutor<UIProxyJN
 	}
 
 	@Override
-	public boolean selectByIndex(UIProxyJNA component, int index) throws Exception
+	public boolean selectByIndex(UIProxyJNA component, int indexOnlyVisible) throws Exception
 	{
 		try
 		{
@@ -359,11 +359,20 @@ public class WinOperationExecutorJNA extends AbstractOperationExecutor<UIProxyJN
 			{
 				return true;
 			}
-			List<UIProxyJNA> elementsList = findComponents(component,
-					WindowTreeScope.Descendants,
-					WindowProperty.ControlTypeProperty,
-					controlTypeId);
-			this.driver.doPatternCall(elementsList.get(index), WindowPattern.SelectionItemPattern, "Select", null, -1);
+			List<UIProxyJNA> elements = findComponents(component,WindowTreeScope.Descendants,WindowProperty.ControlTypeProperty,controlTypeId);
+			int countNotVisible = 0;
+			for (int indexAll = 0; indexAll < elements.size(); indexAll++)
+			{
+				if("false".equalsIgnoreCase(this.driver.elementAttribute(elements.get(indexAll), AttributeKind.VISIBLE)))
+				{
+					countNotVisible++;
+				}
+				if(indexAll == indexOnlyVisible + countNotVisible)
+				{
+					this.driver.doPatternCall(elements.get(indexAll), WindowPattern.SelectionItemPattern, "Select", null, -1);
+					break;
+				}
+			}
 			return true;
 		}
 		catch(WrongParameterException ignored)
@@ -1238,13 +1247,8 @@ public class WinOperationExecutorJNA extends AbstractOperationExecutor<UIProxyJN
 			int itemsCount = arr[0];
 			int itemLength = arr[1];
 			int[] items = Arrays.copyOfRange(arr, 2, arr.length);
-			for (int i = 0; i < itemsCount; i++)
-			{
-				UIProxyJNA elem = new UIProxyJNA(Arrays.copyOfRange(items, 0, itemLength));
-				if("true".equalsIgnoreCase(this.driver.elementAttribute(elem, AttributeKind.VISIBLE)))
-				{
-					list.add(elem);
-				}
+			for (int i = 0; i < itemsCount; i++) {
+				list.add(new UIProxyJNA(Arrays.copyOfRange(items, 0, itemLength)));
 				items = Arrays.copyOfRange(items, itemLength+1, items.length);
 			}
 			return list;
