@@ -19,13 +19,21 @@ import javax.xml.bind.annotation.XmlElement;
 import java.util.Arrays;
 import java.util.EnumMap;
 import java.util.Map;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import static com.exactprosystems.jf.documents.config.Configuration.*;
 
+/**
+ * A xml bean for GlobalHandler from a configuration
+ *
+ * @see Configuration
+ */
 @XmlAccessorType(XmlAccessType.NONE)
 public class GlobalHandler implements Mutable
 {
+	private boolean changed = false;
+
 	@XmlElement(name = onTestCaseStart)
 	protected MutableString onTestCaseStartValue;
 
@@ -82,8 +90,6 @@ public class GlobalHandler implements Mutable
 		this.onStepErrorValue.saved();
 	}
 
-	private boolean changed = false;
-
 	public void setValue(GlobalHandler handler)
 	{
 		this.onTestCaseStartValue.set(handler.onTestCaseStartValue);
@@ -139,8 +145,8 @@ public class GlobalHandler implements Mutable
 	{
 		return Arrays.stream(HandlerKind.values())
 				.collect(Collectors.toMap(
-						kind -> kind
-						, kind -> getGlobalHandler(kind).get()
+						  Function.identity()
+						, kind -> this.getGlobalHandler(kind).get()
 						, (u,v) -> u /*never happened, because key is enum*/
 						, () -> new EnumMap<>(HandlerKind.class))
 				);

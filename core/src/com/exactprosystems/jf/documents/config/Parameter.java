@@ -15,6 +15,11 @@ import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 
+/**
+ * A xml bean for any parameter from a configuration
+ *
+ * @see Configuration
+ */
 @XmlAccessorType(XmlAccessType.NONE)
 public class Parameter implements Mutable
 {
@@ -91,6 +96,4 @@ public class Parameter implements Mutable
 	{
 		return key != null ? key.hashCode() : 0;
 	}
-
-
 }

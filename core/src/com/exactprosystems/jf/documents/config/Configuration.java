@@ -153,26 +153,25 @@ public class Configuration extends AbstractDocument
 	private static final MutableArrayList<MutableString> DEFAULT_IMPORTS = new MutableArrayList<>();
 	static
 	{
-        DEFAULT_IMPORTS.add(new MutableString(List.class.getCanonicalName()));
-        DEFAULT_IMPORTS.add(new MutableString(Map.class.getCanonicalName()));
-        DEFAULT_IMPORTS.add(new MutableString(VersionInfo.class.getPackage().getName()));
+		DEFAULT_IMPORTS.add(new MutableString(List.class.getCanonicalName()));
+		DEFAULT_IMPORTS.add(new MutableString(Map.class.getCanonicalName()));
+		DEFAULT_IMPORTS.add(new MutableString(VersionInfo.class.getPackage().getName()));
 
-        DEFAULT_IMPORTS.add(new MutableString(Instant.class.getPackage().getName()));
-        DEFAULT_IMPORTS.add(new MutableString(MathContext.class.getPackage().getName()));
-        DEFAULT_IMPORTS.add(new MutableString(List.class.getPackage().getName()));
+		DEFAULT_IMPORTS.add(new MutableString(Instant.class.getPackage().getName()));
+		DEFAULT_IMPORTS.add(new MutableString(MathContext.class.getPackage().getName()));
 		DEFAULT_IMPORTS.add(new MutableString(Matcher.class.getPackage().getName()));
-        DEFAULT_IMPORTS.add(new MutableString(File.class.getPackage().getName()));
+		DEFAULT_IMPORTS.add(new MutableString(File.class.getPackage().getName()));
 		DEFAULT_IMPORTS.add(new MutableString(String.class.getPackage().getName()));
-        DEFAULT_IMPORTS.add(new MutableString(Color.class.getPackage().getName()));
-        DEFAULT_IMPORTS.add(new MutableString(ActionEvent.class.getPackage().getName()));
+		DEFAULT_IMPORTS.add(new MutableString(Color.class.getPackage().getName()));
+		DEFAULT_IMPORTS.add(new MutableString(ActionEvent.class.getPackage().getName()));
 
-        DEFAULT_IMPORTS.add(new MutableString(Table.class.getPackage().getName()));
-        DEFAULT_IMPORTS.add(new MutableString(Do.class.getPackage().getName()));
+		DEFAULT_IMPORTS.add(new MutableString(Table.class.getPackage().getName()));
+		DEFAULT_IMPORTS.add(new MutableString(Do.class.getPackage().getName()));
 		DEFAULT_IMPORTS.add(new MutableString(Condition.class.getPackage().getName()));
-        DEFAULT_IMPORTS.add(new MutableString(AbstractClient.class.getPackage().getName()));
-        DEFAULT_IMPORTS.add(new MutableString(ErrorKind.class.getPackage().getName()));
-        DEFAULT_IMPORTS.add(new MutableString(Result.class.getPackage().getName()));
-        DEFAULT_IMPORTS.add(new MutableString(Sys.class.getPackage().getName()));
+		DEFAULT_IMPORTS.add(new MutableString(AbstractClient.class.getPackage().getName()));
+		DEFAULT_IMPORTS.add(new MutableString(ErrorKind.class.getPackage().getName()));
+		DEFAULT_IMPORTS.add(new MutableString(Result.class.getPackage().getName()));
+		DEFAULT_IMPORTS.add(new MutableString(Sys.class.getPackage().getName()));
 
 		DEFAULT_IMPORTS.add(new MutableString(org.mvel2.MVEL.class.getPackage().getName()));
 	}
@@ -183,7 +182,9 @@ public class Configuration extends AbstractDocument
 		DEFAULT_FORMATS.add(new MutableString("dd.MM.yyyy HH:mm:ss"));
 		DEFAULT_FORMATS.add(new MutableString("yyyy/MM/dd HH:mm:ss.SSS"));
 		DEFAULT_FORMATS.add(new MutableString("yyyyMMdd-HH:mm:ss.SSS"));
+
 		DEFAULT_FORMATS.add(new MutableString("dd/MM/yyyy"));
+
 		DEFAULT_FORMATS.add(new MutableString("HH.mm"));
 		DEFAULT_FORMATS.add(new MutableString("HH:mm:ss"));
 		DEFAULT_FORMATS.add(new MutableString("HH:mm:ss Z"));
@@ -193,45 +194,46 @@ public class Configuration extends AbstractDocument
 	public static final MutableString DEFAULT_DATE = new MutableString("dd.MM.yyyy");
 	public static final MutableString DEFAULT_DATE_TIME = new MutableString("dd.MM.yyyy HH:mm:ss.SSS");
 
-    protected ConfigurationBean       bean;
+	protected ConfigurationBean bean;
 
-    protected String                  reportFactoryValue = HTMLReportFactory.class.getSimpleName();
-    protected String                  evaluatorValue     = MvelEvaluator.class.getSimpleName();
-    protected boolean                 changed;
-    protected ReportFactory           reportFactoryObj;
-    protected Map<String, Matrix>     libs;
-    protected Map<String, Date>       documentsActuality;
-    protected Map<String, Object>     globals;
-    protected Set<SystemVars>         systemVars;
-    protected ClientsPool             clients;
-    protected ServicePool             services;
-    protected ApplicationPool         applications;
-    protected DataBasePool            databases;
-    protected Date                    lastUpdate         = new Date();
-    protected final List<Document>    subordinates       = new ArrayList<>();
-    protected boolean                 valid              = false;
+	protected String reportFactoryValue = HTMLReportFactory.class.getSimpleName();
 
-    private static final Logger logger = Logger.getLogger(Configuration.class);
+	protected       boolean             changed;
+	protected       ReportFactory       reportFactoryObj;
+	protected       Map<String, Matrix> libs;
+	protected       Map<String, Date>   documentsActuality;
+	protected final Map<String, Object> globals;
+	protected       Set<SystemVars>     systemVars;
+	protected       ClientsPool         clients;
+	protected       ServicePool         services;
+	protected       ApplicationPool     applications;
+	protected       DataBasePool        databases;
 
-    //endregion
+	protected       Date           lastUpdate   = new Date();
+	protected final List<Document> subordinates = new ArrayList<>();
+	protected       boolean        valid        = false;
+
+	private static final Logger logger = Logger.getLogger(Configuration.class);
+
+	//endregion
 
 	public Configuration(String fileName, DocumentFactory factory)
 	{
 		super(fileName, factory);
-		
-		this.bean                       = new ConfigurationBean(); 
 
-		this.changed 					= false;
+		this.bean = new ConfigurationBean();
 
-		this.globals 					= new HashMap<>();
-		this.clients 					= new ClientsPool(factory);
-		this.services 					= new ServicePool(factory);
-		this.applications 				= new ApplicationPool(factory);
-		this.databases 					= new DataBasePool(factory);
+		this.changed = false;
 
-		this.libs 						= new HashMap<>();
-		this.documentsActuality 		= new HashMap<>();
-		this.systemVars					= new HashSet<>();
+		this.globals = new HashMap<>();
+		this.clients = new ClientsPool(factory);
+		this.services = new ServicePool(factory);
+		this.applications = new ApplicationPool(factory);
+		this.databases = new DataBasePool(factory);
+
+		this.libs = new HashMap<>();
+		this.documentsActuality = new HashMap<>();
+		this.systemVars = new HashSet<>();
 	}
 
 	public Configuration()
@@ -259,6 +261,7 @@ public class Configuration extends AbstractDocument
 		return config;
 	}
 
+	//region public getters
 	public MutableString getTime()
 	{
 		return this.bean.timeValue;
@@ -279,21 +282,21 @@ public class Configuration extends AbstractDocument
 		return this.bean.reportsValue;
 	}
 
-    public MutableString getVersion()
-    {
-        return this.bean.versionValue;
-    }
+	public MutableString getVersion()
+	{
+		return this.bean.versionValue;
+	}
 
 	public MutableString getVars()
 	{
 		return this.bean.varsValue;
 	}
 
-    public MutableArrayList<MutableString> getImports()
-    {
-        return this.bean.importsValue;
-    }
-    
+	public MutableArrayList<MutableString> getImports()
+	{
+		return this.bean.importsValue;
+	}
+
 	public MutableArrayList<MutableString> getUserVars()
 	{
 		return this.bean.userVarsValue;
@@ -304,32 +307,10 @@ public class Configuration extends AbstractDocument
 		return this.bean.globalHandlerValue;
 	}
 
-	public void addSubcaseFromLibs(List<ReadableValue> list)
+	public MutableArrayList<MutableString> getFormatsValue()
 	{
-		for (Map.Entry<String, Matrix> entry : getLibs().entrySet())
-		{
-			final String name = entry.getKey();
-			Matrix lib = entry.getValue();
-
-			if (lib != null)
-			{
-				MatrixItem mitem = lib.getRoot().find(false, NameSpace.class, name);
-				if(mitem != null)
-				{
-					mitem.stream()
-							.filter(item -> item instanceof SubCase && !list.contains(new ReadableValue(item.getId())))
-							.map(item -> (SubCase) item)
-							.map(sc -> new ReadableValue(name + "." + sc.getId(), sc.getName()))
-							.forEach(list::add);
-				}
-			}
-		}
+		return this.bean.formatsValue;
 	}
-
-    public MutableArrayList<MutableString> getFormatsValue()
-    {
-        return this.bean.formatsValue;
-    }
 
 	public MutableArrayList<MutableString> getAppDictionariesValue()
 	{
@@ -371,6 +352,161 @@ public class Configuration extends AbstractDocument
 		return this.databases;
 	}
 
+	public SqlEntry getSqlEntry(String name)
+	{
+		return this.getEntry(name, this.bean.sqlEntriesValue);
+	}
+
+	public List<SqlEntry> getSqlEntries()
+	{
+		return this.bean.sqlEntriesValue;
+	}
+
+	public ClientEntry getClientEntry(String name)
+	{
+		return this.getEntry(name, this.bean.clientEntriesValue);
+	}
+
+	public List<ClientEntry> getClientEntries()
+	{
+		return this.bean.clientEntriesValue;
+	}
+
+	public ServiceEntry getServiceEntry(String name)
+	{
+		return this.getEntry(name, this.bean.serviceEntriesValue);
+	}
+
+	public List<ServiceEntry> getServiceEntries()
+	{
+		return this.bean.serviceEntriesValue;
+	}
+
+	public AppEntry getAppEntry(String name)
+	{
+		return this.getEntry(name, this.bean.appEntriesValue);
+	}
+
+	public List<AppEntry> getAppEntries()
+	{
+		return this.bean.appEntriesValue;
+	}
+
+	public final ReportFactory getReportFactory()
+	{
+		return this.reportFactoryObj;
+	}
+
+	public final Collection<String> getClients()
+	{
+		return this.bean.clientEntriesValue.stream().map(Entry::toString).collect(Collectors.toList());
+	}
+
+	public final Collection<String> getServices()
+	{
+		return this.bean.serviceEntriesValue.stream().map(Entry::toString).collect(Collectors.toList());
+	}
+
+	public final Collection<String> getApplications()
+	{
+		return this.bean.appEntriesValue.stream().map(Entry::toString).collect(Collectors.toList());
+	}
+
+	public Matrix getLib(String name)
+	{
+		return this.libs.get(name);
+	}
+
+	public Map<String, Matrix> getLibs()
+	{
+		return this.libs;
+	}
+
+	public final boolean isValid()
+	{
+		return this.valid;
+	}
+
+	/**
+	 * Create evaluator
+	 * @throws Exception if some of system variables failed to evaluating
+	 *
+	 * @see AbstractEvaluator
+	 * @see MvelEvaluator
+	 */
+	public AbstractEvaluator createEvaluator() throws Exception
+	{
+		AbstractEvaluator evaluator = new MvelEvaluator();
+		evaluator.addImports(toStringList(DEFAULT_IMPORTS));
+		evaluator.addImports(toStringList(this.bean.importsValue));
+
+		for (SystemVars sysVars : this.systemVars)
+		{
+			sysVars.injectVariables(evaluator);
+		}
+		evaluator.reset(this.getVersion().toString());
+
+		return evaluator;
+	}
+
+	public Date getLastUpdateDate()
+	{
+		return new DateTime(this.lastUpdate);
+	}
+
+	/**
+	 * @return <b>copy</b> of stored map
+	 */
+	public Map<String, Object> getStoreMap()
+	{
+		return new LinkedHashMap<>(this.globals);
+	}
+
+	/**
+	 * @return List of registered documents, which was registered via {@link Configuration#register(Document)}
+	 */
+	public List<Document> getSubordinates()
+	{
+		return subordinates;
+	}
+	//endregion
+
+	/**
+	 * Add to the passed list all subcases from all libraries ( which has namespace parent item)
+	 *
+	 * @see NameSpace
+	 * @see SubCase
+	 */
+	public void addSubcaseFromLibs(List<ReadableValue> list)
+	{
+		for (Map.Entry<String, Matrix> entry : this.getLibs().entrySet())
+		{
+			final String name = entry.getKey();
+			Matrix lib = entry.getValue();
+
+			if (lib != null)
+			{
+				MatrixItem nameSpaceItem = lib.getRoot().find(false, NameSpace.class, name);
+				if(nameSpaceItem != null)
+				{
+					nameSpaceItem.stream()
+							.filter(item -> item instanceof SubCase && !list.contains(new ReadableValue(item.getId())))
+							.map(item -> (SubCase) item)
+							.map(sc -> new ReadableValue(name + "." + sc.getId(), sc.getName()))
+							.forEach(list::add);
+				}
+			}
+		}
+	}
+
+	/**
+	 * Store a object in stored map.<br>
+	 * If name is null, the object via passed name will removed from the stored map. <br>
+	 * Otherwise for the stored map will added new entry.
+	 *
+	 * @param name name stored value
+	 * @param value stored value
+	 */
 	public void storeGlobal(String name, Object value)
 	{
 		synchronized (this.globals)
@@ -386,6 +522,9 @@ public class Configuration extends AbstractDocument
 		}
 	}
 
+	/**
+	 * @return a object from a stored map by the passed name
+	 */
 	public Object restoreGlobal(String name)
 	{
 		synchronized (this.globals)
@@ -394,41 +533,202 @@ public class Configuration extends AbstractDocument
 		}
 	}
 
-	public AbstractEvaluator createEvaluator() throws Exception
-	{
-		AbstractEvaluator evaluator	= objectFromClassName(this.evaluatorValue, AbstractEvaluator.class);
-		evaluator.addImports(toStringList(DEFAULT_IMPORTS));
-		evaluator.addImports(toStringList(this.bean.importsValue));
-
-		for (SystemVars sysVars : this.systemVars)
-		{
-			sysVars.injectVariables(evaluator);
-		}
-		evaluator.reset("" + getVersion());
-
-		return evaluator;
-	}
-
-	public Date getLastUpdateDate()
-	{
-		return new DateTime(this.lastUpdate);
-	}
-
+	/**
+	 * Refresh configuration.
+	 * @throws Exception if something went wrong
+	 */
 	public void refresh()  throws Exception
 	{
-		refreshVars();
-		refreshLibs();
-		refreshMatrices();
-		refreshAppDictionaries();
-		refreshClientDictionaries();
-		refreshReport();
+		this.refreshVars();
+		this.refreshLibs();
+		this.refreshMatrices();
+		this.refreshAppDictionaries();
+		this.refreshClientDictionaries();
+		this.refreshReport();
 
 		this.lastUpdate = new Date();
 		
-		display();
+		this.display();
+	}
+
+	/**
+	 * Register the passed {@link Document} into the configuration ( it mean add the passed document to the {@link Configuration#subordinates}
+	 * @param doc registered document
+	 *
+	 * @see Document
+	 * @see Configuration#getSubordinates()
+	 */
+	public final void register(Document doc)
+	{
+		synchronized (this.subordinates)
+		{
+			this.subordinates.add(doc);
+		}
+	}
+
+	/**
+	 * Unregister the passed {@link Document} into the configuration (remove the passed document from the collection {@link Configuration#subordinates} <br>
+	 * @param doc registered document
+	 *
+	 * @see Document
+	 */
+	public final void unregister(Document doc)
+	{
+		synchronized (this.subordinates)
+		{
+			this.subordinates.remove(doc);
+		}
+	}
+
+	/**
+	 * For each registered document (as file) by passed {@link DocumentKind} array will apply {@link BiConsumer} applier.
+	 *
+	 * @param applier {@link java.util.function.BiFunction}
+	 * @param kinds array of kinds, which need be get around
+	 */
+	public void forEachFile(BiConsumer<File, DocumentKind> applier, DocumentKind... kinds)
+	{
+		for (DocumentKind kind : kinds)
+		{
+			switch (kind)
+			{
+				case CONFIGURATION:
+					applier.accept(new File(this.getNameProperty().get()), kind);
+					break;
+
+				case SYSTEM_VARS:
+					this.systemVars.stream()
+							.map(v -> new File(v.getNameProperty().get()))
+							.forEach(file -> applier.accept(file, kind));
+					break;
+
+				case GUI_DICTIONARY:
+					this.bean.appDictionariesValue.forEach(ms ->
+					{
+						File folderFile = new File(MainRunner.makeDirWithSubstitutions(ms.get()));
+						this.applyToAllFile(folderFile, applier, kind);
+					});
+					break;
+
+				case MESSAGE_DICTIONARY:
+					this.bean.clientDictionariesValue.forEach(ms ->
+					{
+						File folderFile = new File(MainRunner.makeDirWithSubstitutions(ms.get()));
+						this.applyToAllFile(folderFile, applier, kind);
+					});
+					break;
+
+				case LIBRARY:
+					this.libs.values().stream()
+							.map(v -> new File(v.getNameProperty().get()))
+							.forEach(file -> applier.accept(file, kind));
+					break;
+
+				case MATRIX:
+					this.bean.matricesValue.forEach(ms ->
+					{
+						File folderFile = new File(MainRunner.makeDirWithSubstitutions(ms.get()));
+						this.applyToAllFile(folderFile, applier, kind);
+					});
+					break;
+
+				case REPORTS:
+					this.applyToAllFile(new File(this.bean.reportsValue.get()), applier, kind);
+					break;
+
+				case PLAIN_TEXT:
+					List<File> excludeFiles = new ArrayList<>();
+					excludeFiles.add(new File(this.getNameProperty().get()));
+
+					excludeFiles.addAll(files(this.systemVars.stream(), ms -> ms.getNameProperty().get()));
+					excludeFiles.addAll(files(this.bean.appDictionariesValue.stream(), ms -> MainRunner.makeDirWithSubstitutions(ms.get())));
+					excludeFiles.addAll(files(this.bean.clientDictionariesValue.stream(), ms -> MainRunner.makeDirWithSubstitutions(ms.get())));
+					excludeFiles.addAll(files(this.libs.values().stream(), ms -> getNameProperty().get()));
+					excludeFiles.addAll(files(this.bean.matricesValue.stream(), ms -> MainRunner.makeDirWithSubstitutions(ms.get())));
+					excludeFiles.add(new File(this.bean.reportsValue.get()));
+					List<String> ex = excludeFiles.stream()
+							.map(ConfigurationFx::path)
+							.collect(Collectors.toList());
+					this.applyToAllFile(new File("."), applier, DocumentKind.PLAIN_TEXT, file -> ex.contains(ConfigurationFx.path(file)));
+					break;
+
+				default:
+
+			}
+		}
+	}
+
+	/**
+	 * For each registered document by passed {@link DocumentKind} array will apply {@link Consumer} applier
+	 * @param applier {@link Consumer}
+	 * @param kinds array of document kinds, which need be get around
+	 */
+	public void forEach(Consumer<Document> applier, DocumentKind... kinds)
+	{
+		DocumentFactory consoleFactory = new ConsoleDocumentFactory(VerboseLevel.None);
+		consoleFactory.setConfiguration(this);
+
+		for (DocumentKind kind : kinds)
+		{
+			switch (kind)
+			{
+				case CONFIGURATION:
+					applier.accept(this);
+					break;
+
+				case SYSTEM_VARS:
+					this.systemVars.forEach(applier);
+					break;
+
+				case GUI_DICTIONARY:
+					this.bean.appDictionariesValue.forEach(ms ->
+					{
+						File folderFile = new File(MainRunner.makeDirWithSubstitutions(ms.get()));
+						this.applyToAll(folderFile, kind, consoleFactory, applier);
+					});
+					break;
+
+				case MESSAGE_DICTIONARY:
+					this.bean.clientDictionariesValue.forEach(ms ->
+					{
+						File folderFile = new File(MainRunner.makeDirWithSubstitutions(ms.get()));
+						this.applyToAll(folderFile, kind, consoleFactory, applier);
+					});
+					break;
+
+				case LIBRARY:
+					this.libs.values().forEach(applier);
+					break;
+
+				case MATRIX:
+					this.bean.matricesValue.forEach(ms ->
+					{
+						File folderFile = new File(MainRunner.makeDirWithSubstitutions(ms.get()));
+						this.applyToAll(folderFile, kind, consoleFactory, applier);
+					});
+					break;
+
+				default:
+
+			}
+		}
+	}
+
+	/**
+	 * Replace all entries from the {@link Configuration#globals} storedMap to entries from the passed map
+	 */
+	public void storeMap(Map<String, Object> map)
+	{
+		this.globals.clear();
+		this.globals.putAll(map);
 	}
 
 	//region protected methods, may be overrided
+
+	/**
+	 * Refresh all libraries.<br>
+	 * If some of a library was changed, the library will reloaded.
+	 */
 	protected void refreshLibs()
 	{
 		if (this.bean.librariesValue == null)
@@ -463,16 +763,19 @@ public class Configuration extends AbstractDocument
 		}
 	}
 
+	/**
+	 * Reload all variables
+	 */
 	protected void refreshVars()
 	{
 		try
 		{
 			this.systemVars.clear();
 
-			setUserVariablesFromMask(this.bean.varsValue.get());
-			for (MutableString userVars : this.bean.userVarsValue)
+			this.setUserVariablesFromMask(this.bean.varsValue.get());
+			for (MutableString userVariables : this.bean.userVarsValue)
 			{
-				setUserVariablesFromMask(userVars.get());
+				this.setUserVariablesFromMask(userVariables.get());
 			}
 		}
 		catch (Exception e)
@@ -484,6 +787,10 @@ public class Configuration extends AbstractDocument
 	protected void refreshMatrices()
 	{}
 
+	/**
+	 * Refresh all app dictionaries<br>
+	 * If a dictionary was changed, the dictionary will reloaded.
+	 */
 	protected void refreshAppDictionaries()
 	{
 		for (AppEntry entry : this.bean.appEntriesValue)
@@ -528,8 +835,13 @@ public class Configuration extends AbstractDocument
 	{}
 	//endregion
 
-    //region interface Document
-    @Override
+	//region interface Document
+
+	/**
+	 * Load a configuration from a passed {@link Reader} object
+	 * @throws Exception if configuration can't be loaded
+	 */
+	@Override
 	public void load(Reader reader) throws Exception
 	{
 		super.load(reader);
@@ -550,13 +862,12 @@ public class Configuration extends AbstractDocument
 			unmarshaller.setEventHandler(event ->
 			{
 				System.out.println("Error in configuration : " + event);
-
 				return false;
 			});
 
 			this.bean = (ConfigurationBean) unmarshaller.unmarshal(reader);
 			this.changed = false;
-			this.reportFactoryObj		= objectFromClassName(reportFactoryValue, ReportFactory.class);
+			this.reportFactoryObj = new HTMLReportFactory();
 
 			DateTime.setFormats(this.bean.timeValue.get(), this.bean.dateValue.get(), this.bean.dateTimeValue.get());
 			Converter.setFormats(toStringList(this.bean.formatsValue));
@@ -565,14 +876,24 @@ public class Configuration extends AbstractDocument
 		}
 		catch (UnmarshalException e)
 		{
+			logger.error(e.getCause().getMessage(), e.getCause());
 			throw new Exception(e.getCause().getMessage(), e.getCause());
 		}
 	}
 
-    @Override
-    public boolean canClose() throws Exception
-    {
-    	boolean res = true;
+	/**
+	 * Check, can we close the configuration or not <br>
+	 * Checked configuration and all subordinates from the configuration
+	 *
+	 * @see Configuration#subordinates
+	 *
+	 * @return true, if config can be closed and false otherwise.
+	 * @throws Exception if something went wrong
+	 */
+	@Override
+	public boolean canClose() throws Exception
+	{
+		boolean res = true;
 
 		synchronized (this.subordinates)
 		{
@@ -582,19 +903,27 @@ public class Configuration extends AbstractDocument
 			}
 		}
 		return res;
-    }
+	}
 
-    @Override
+	/**
+	 * Close the configuration. <br>
+	 * Before closing the configuration, will all subordinates saved into the setting as opened file and will closed.<br>
+	 * This method should be invoked only after check {@link Configuration#canClose()}
+	 * @throws Exception if something went wrong
+	 *
+	 * @see Configuration#getSubordinates()
+	 * @see Configuration#canClose()
+	 */
+	@Override
 	public void close() throws Exception
 	{
 		super.close();
-		Settings settings = getFactory().getSettings();
+		Settings settings = super.getFactory().getSettings();
 
 		Set<Document> copy;
 		synchronized (this.subordinates)
 		{
-			copy = new HashSet<>();
-			copy.addAll(this.subordinates);
+			copy = new HashSet<>(this.subordinates);
 		}
 
 		// save list of all opened documents ...
@@ -621,42 +950,42 @@ public class Configuration extends AbstractDocument
 
 		this.services.stopAllServices();
 		this.applications.stopAllApplications(true);
-    }
+	}
 
-    @Override
-    public void save(String fileName) throws Exception
-    {
-    	super.save(fileName);
+	/**
+	 * Save the configuration to file with path fileName
+	 * @param fileName file path to save the configuration
+	 * @throws Exception if file for saving not found
+	 */
+	@Override
+	public void save(String fileName) throws Exception
+	{
+		super.save(fileName);
 
-        try(OutputStream os = new FileOutputStream(new File(fileName)))
-        {
-            JAXBContext jaxbContext = JAXBContext.newInstance(ConfigurationBean.jaxbContextClasses);
+		try (OutputStream os = new FileOutputStream(new File(fileName)))
+		{
+			JAXBContext jaxbContext = JAXBContext.newInstance(ConfigurationBean.jaxbContextClasses);
 
-            Marshaller marshaller = jaxbContext.createMarshaller();
-            marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
-            marshaller.marshal(this.bean, os);
+			Marshaller marshaller = jaxbContext.createMarshaller();
+			marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
+			marshaller.marshal(this.bean, os);
 
-			saved();
-        }
-        catch (FileNotFoundException e)
-        {
-            logger.error(String.format("File '%s' is not found.",fileName));
-            throw e;
-        }
-    }
+			this.saved();
+		}
+		catch (FileNotFoundException e)
+		{
+			logger.error(String.format("File '%s' is not found.", fileName));
+			throw e;
+		}
+	}
 
-    //endregion
+	//endregion
 
 	//region interface Mutable
 	@Override
 	public boolean isChanged()
 	{
-		if (this.changed)
-		{
-			return true;
-		}
-
-		return this.bean.isChanged();
+		return this.changed || this.bean.isChanged();
 	}
 
 	@Override
@@ -670,236 +999,26 @@ public class Configuration extends AbstractDocument
 
 	//endregion
 
-    public void forEachFile(BiConsumer<File, DocumentKind> applier, DocumentKind... kinds)
-    {
-		for (DocumentKind kind : kinds)
-		{
-			switch (kind)
-			{
-				case CONFIGURATION:
-					applier.accept(new File(this.getNameProperty().get()), kind);
-					break;
-                
-				case SYSTEM_VARS:
-					this.systemVars.stream().map(v -> new File(v.getNameProperty().get())).forEach(file -> applier.accept(file, kind));
-					break;
-                
-				case GUI_DICTIONARY:
-					this.bean.appDictionariesValue.forEach(ms ->
-					{
-						File folderFile = new File(MainRunner.makeDirWithSubstitutions(ms.get()));
-						applyToAllFile(folderFile, applier, kind);
-					});
-					break;
-                
-				case MESSAGE_DICTIONARY:
-					this.bean.clientDictionariesValue.forEach(ms ->
-					{
-						File folderFile = new File(MainRunner.makeDirWithSubstitutions(ms.get()));
-						applyToAllFile(folderFile, applier, kind);
-					});
-					break;
-                
-				case LIBRARY:
-					this.libs.values().stream().map(v -> new File(v.getNameProperty().get())).forEach(file -> applier.accept(file, kind));
-					break;
-                
-				case MATRIX:
-					this.bean.matricesValue.forEach(ms ->
-					{
-						File folderFile = new File(MainRunner.makeDirWithSubstitutions(ms.get()));
-						applyToAllFile(folderFile, applier, kind);
-					});
-					break;
-
-				case REPORTS:
-					applyToAllFile(new File(this.bean.reportsValue.get()), applier, kind);
-					break;
-
-				case PLAIN_TEXT:
-					List<File> excludeFiles = new ArrayList<>();
-					excludeFiles.add(new File(this.getNameProperty().get()));
-
-					excludeFiles.addAll(files(this.systemVars.stream(), ms -> ms.getNameProperty().get()));
-					excludeFiles.addAll(files(this.bean.appDictionariesValue.stream(), ms -> MainRunner.makeDirWithSubstitutions(ms.get())));
-					excludeFiles.addAll(files(this.bean.clientDictionariesValue.stream(), ms -> MainRunner.makeDirWithSubstitutions(ms.get())));
-					excludeFiles.addAll(files(this.libs.values().stream(), ms -> getNameProperty().get()));
-					excludeFiles.addAll(files(this.bean.matricesValue.stream(), ms -> MainRunner.makeDirWithSubstitutions(ms.get())));
-					excludeFiles.add(new File(this.bean.reportsValue.get()));
-					List<String> ex = excludeFiles.stream().map(ConfigurationFx::path).collect(Collectors.toList());
-					applyToAllFile(new File("."), applier, DocumentKind.PLAIN_TEXT, file -> ex.contains(ConfigurationFx.path(file)));
-					break;
-
-				default:
-
-			}
-		}
-        
-	}
-
-	public void forEach(Consumer<Document> applier, DocumentKind... kinds)
-	{
-		DocumentFactory consoleFactory = new ConsoleDocumentFactory(VerboseLevel.None);
-		consoleFactory.setConfiguration(this);
-		
-		for (DocumentKind kind : kinds)
-		{
-			switch (kind)
-			{
-			case CONFIGURATION:
-				applier.accept(this);
-				break;
-				
-			case SYSTEM_VARS:
-				this.systemVars.forEach(applier);
-				break;
-				
-			case GUI_DICTIONARY:
-				this.bean.appDictionariesValue.forEach(ms ->
-				{
-					File folderFile = new File(MainRunner.makeDirWithSubstitutions(ms.get()));
-					applyToAll(folderFile, kind, consoleFactory, applier);
-				});
-				break;
-				
-			case MESSAGE_DICTIONARY:
-				this.bean.clientDictionariesValue.forEach(ms ->
-				{
-					File folderFile = new File(MainRunner.makeDirWithSubstitutions(ms.get()));
-					applyToAll(folderFile, kind, consoleFactory, applier);
-				});
-				break;
-				
-			case LIBRARY:
-				this.libs.values().forEach(applier);
-				break;
-				
-			case MATRIX:
-				this.bean.matricesValue.forEach(ms -> 
-				{
-					File folderFile = new File(MainRunner.makeDirWithSubstitutions(ms.get()));
-					applyToAll(folderFile, kind, consoleFactory, applier);
-				});
-				break;
-
-			default:
-
-			}
-		}
-	}
-	
-	public SqlEntry getSqlEntry(String name)
-	{
-		return getEntry(name, this.bean.sqlEntriesValue);
-	}
-
-	public List<SqlEntry> getSqlEntries()
-	{
-		return this.bean.sqlEntriesValue;
-	}
-
-	public ClientEntry getClientEntry(String name)
-	{
-		return getEntry(name, this.bean.clientEntriesValue);
-	}
-
-	public List<ClientEntry> getClientEntries()
-	{
-		return this.bean.clientEntriesValue;
-	}
-
-	public ServiceEntry getServiceEntry(String name)
-	{
-		return getEntry(name, this.bean.serviceEntriesValue);
-	}
-
-	public List<ServiceEntry> getServiceEntries()
-	{
-		return this.bean.serviceEntriesValue;
-	}
-
-	public AppEntry getAppEntry(String name)
-	{
-		return getEntry(name, this.bean.appEntriesValue);
-	}
-
-	public List<AppEntry> getAppEntries()
-	{
-		return this.bean.appEntriesValue;
-	}
-
-	public final ReportFactory getReportFactory()
-	{
-		return this.reportFactoryObj;
-	}
-
-	public final Collection<String> getClients()
-	{
-		return this.bean.clientEntriesValue.stream().map(Entry::toString).collect(Collectors.toList());
-	}
-
-	public final Collection<String> getServices()
-	{
-		return this.bean.serviceEntriesValue.stream().map(Entry::toString).collect(Collectors.toList());
-	}
-
-	public final Collection<String> getApplications()
-	{
-		return this.bean.appEntriesValue.stream().map(Entry::toString).collect(Collectors.toList());
-	}
-
-	public Matrix getLib(String name)
-	{
-		return this.libs.get(name);
-	}
-
-	public Map<String, Matrix> getLibs()
-	{
-		return this.libs;
-	}
-
-	public final boolean isValid()
-	{
-		return this.valid;
-	}
-
-	public final void register(Document doc)
-	{
-		synchronized (this.subordinates)
-		{
-			this.subordinates.add(doc);
-		}
-	}
-
-	public final void unregister(Document doc)
-	{
-		synchronized (this.subordinates)
-		{
-			this.subordinates.remove(doc);
-		}
-	}
-
-	public Map<String, Object> getStoreMap()
-	{
-		return new LinkedHashMap<>(this.globals);
-	}
-
-	public void storeMap(Map<String, Object> map)
-	{
-		this.globals = map;
-	}
-
-	public List<Document> getSubordinates()
-	{
-		return subordinates;
-	}
-
+	/**
+	 * Convert the passed MutableList of MutableString to a simple List of String
+	 *
+	 * @see MutableArrayList
+	 * @see MutableString
+	 */
 	public static List<String> toStringList(MutableArrayList<MutableString> str)
 	{
 		return str.stream().map(a -> MainRunner.makeDirWithSubstitutions(a.get())).collect(Collectors.toList());
 	}
+
 	//region private methods
 
+	/**
+	 * Get entry by passed name from entries list
+	 * @param name of entry, which should be returned
+	 * @param entries list of entries
+	 * @param <T> type of entry ( child of {@link Entry} class)
+	 * @return a entry or null, if entry by passed name not found in the passed list of entries
+	 */
 	private <T extends Entry> T getEntry(String name, List<T> entries)
 	{
 		if (entries == null)
@@ -912,6 +1031,9 @@ public class Configuration extends AbstractDocument
 				.orElse(null);
 	}
 
+	/**
+	 * Load a library by passed file name and stored into {@link Configuration#libs}
+	 */
 	private void loadLibrary(File libFile)
 	{
 		try (Reader reader = CommonHelper.readerFromFile(libFile))
@@ -977,6 +1099,11 @@ public class Configuration extends AbstractDocument
 		return type;
 	}
 
+	/**
+	 * Load a userVariables file and stored into {@link Configuration#systemVars}
+	 * @param userVariablesFileName a name of file, which will load as SystemVariables
+	 * @throws Exception if load a SystemFile was failed
+	 */
 	private void setUserVariablesFromMask(String userVariablesFileName)  throws Exception
 	{
 		if (Str.IsNullOrEmpty(userVariablesFileName))
@@ -1005,15 +1132,16 @@ public class Configuration extends AbstractDocument
 			{
 				Arrays.stream(files).forEach(file -> applyToAll(file, kind, factory, applier));
 			}
-		} else
+		}
+		else
 		{
 			try
 			{
 				Document doc = factory.createDocument(kind, Common.getRelativePath(path.getAbsolutePath()));
-                try (Reader reader = CommonHelper.readerFromFileName(doc.getNameProperty().get()))
-                {
-                    doc.load(reader);
-                }
+				try (Reader reader = CommonHelper.readerFromFileName(doc.getNameProperty().get()))
+				{
+					doc.load(reader);
+				}
 				applier.accept(doc);
 			} 
 			catch (Exception e)
@@ -1039,7 +1167,7 @@ public class Configuration extends AbstractDocument
 			File[] files = path.listFiles();
 			if (files != null)
 			{
-				Arrays.stream(files).forEach(file -> applyToAllFile(file, applier, kind, filter));
+				Arrays.stream(files).forEach(file -> this.applyToAllFile(file, applier, kind, filter));
 			}
 		}
 		else
