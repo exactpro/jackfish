@@ -189,8 +189,8 @@ SUBCASES;;;;
 
     #Id;#SubCase;controlName;operationName;operationKind;expected;actual;pluginName;result
     PRINT;Print_result;control.Name;operation.Name;operation.Kind;expected;actual;plugin;'Passed'
-        #Off;#Action;
-        1;Print;pluginName + ' - ' + controlName + ' - ' + result + ' - ' + operationName
+        #Action;
+        Print;pluginName + ' - ' + controlName + ' - ' + result + ' - ' + operationName
 
         #If
         result.equals('Failed')
