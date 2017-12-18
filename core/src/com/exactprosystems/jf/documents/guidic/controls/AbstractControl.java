@@ -11,16 +11,17 @@ package com.exactprosystems.jf.documents.guidic.controls;
 
 import com.exactprosystems.jf.api.app.*;
 import com.exactprosystems.jf.api.common.Str;
+import com.exactprosystems.jf.api.error.app.OperationNotAllowedException;
 import com.exactprosystems.jf.common.ControlsAttributes;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.report.HTMLhelper;
 import com.exactprosystems.jf.documents.guidic.ExtraInfo;
-
 import org.apache.log4j.Logger;
 
 import javax.xml.bind.annotation.*;
 import java.lang.reflect.Field;
 import java.rmi.RemoteException;
+import java.rmi.ServerException;
 
 
 @XmlRootElement
@@ -29,27 +30,27 @@ public abstract class AbstractControl implements IControl
 {
 	protected static final Logger logger = Logger.getLogger(AbstractControl.class);
 
-	public static final String idName				= "id";
-	public static final String uidName				= "uid";
-	public static final String ownerIdName			= "owner";
-    public static final String refIdName            = "ref";
-    public static final String xpathName            = "xpath";
-	public static final String clazzName			= "class";
-	public static final String nameName 			= "name";
-	public static final String titleName			= "title";
-	public static final String actionName			= "action";
-	public static final String textName				= "text";
-	public static final String tooltipName			= "tooltip";
-	public static final String additionName			= "addition";
-	public static final String visibilityName		= "visibility";
-	public static final String weakName				= "weak";
-	public static final String timeoutName			= "timeout";
-	public static final String expressionName		= "expression";
-	public static final String rowsName 			= "rows";
-	public static final String headerName 			= "header";
-	public static final String columnsName 			= "columns";
+	public static final String idName               = "id";
+	public static final String uidName              = "uid";
+	public static final String ownerIdName          = "owner";
+	public static final String refIdName            = "ref";
+	public static final String xpathName            = "xpath";
+	public static final String clazzName            = "class";
+	public static final String nameName             = "name";
+	public static final String titleName            = "title";
+	public static final String actionName           = "action";
+	public static final String textName             = "text";
+	public static final String tooltipName          = "tooltip";
+	public static final String additionName         = "addition";
+	public static final String visibilityName       = "visibility";
+	public static final String weakName             = "weak";
+	public static final String timeoutName          = "timeout";
+	public static final String expressionName       = "expression";
+	public static final String rowsName             = "rows";
+	public static final String headerName           = "header";
+	public static final String columnsName          = "columns";
 	public static final String useNumericHeaderName = "useNumericHeader";
-	public static final String infoName 			= "info";
+	public static final String infoName             = "info";
 
 	@XmlAttribute(name = idName)
 	protected String id;
@@ -63,10 +64,9 @@ public abstract class AbstractControl implements IControl
 	@XmlAttribute(name = ownerIdName)
 	protected String ownerId;
 
-    @XmlAttribute(name = refIdName)
-    protected String refId;
+	@XmlAttribute(name = refIdName)
+	protected String refId;
 
-	
 	@XmlAttribute(name = clazzName)
 	protected String clazz;
 
@@ -118,10 +118,10 @@ public abstract class AbstractControl implements IControl
 	@XmlTransient
 	private Operation operationFromExpression;
 
-    @XmlTransient
+	@XmlTransient
 	private boolean changed;
 
-    @XmlTransient
+	@XmlTransient
 	private ISection section;
 	
 	public AbstractControl() 
@@ -134,12 +134,23 @@ public abstract class AbstractControl implements IControl
     @Override
     public String toString() 
     {
-        return getBindedClass() + (id == null ? "" : " [" + id + "]");
+        return getBindedClass() + (this.id == null ? "" : " [" + this.id + "]");
     }
 
+	//region static creating methods
+	/**
+	 * Create the copy of passed control. If the passed control is null, will return null.
+	 * And into the copy control will set owner,rows and header link, if they not null
+	 *
+	 * @see IControl
+	 */
 	public static AbstractControl createCopy(IControl control, IControl owner, IControl rows, IControl header) throws Exception
 	{
 		AbstractControl abstractControl = createCopy(control);
+		if (abstractControl == null)
+		{
+			return null;
+		}
 		if (owner != null)
 		{
 			abstractControl.set(ownerIdName, owner.getID());
@@ -155,6 +166,10 @@ public abstract class AbstractControl implements IControl
 		return abstractControl;
 	}
 
+	/**
+	 * @param control from which will create copy.
+	 * @return a copy of the passed control. If a passed control is null, will return null
+	 */
 	public static AbstractControl createCopy(IControl control) throws Exception
 	{
 		if (control == null)
@@ -164,71 +179,101 @@ public abstract class AbstractControl implements IControl
         return createCopy(control, control.getBindedClass());
 	}
 
-    public static AbstractControl createCopy(IControl control, ControlKind kind) throws Exception
-    {
-    	if (control == null || kind == null)
-    	{
-    		return null;
-    	}
-    	
-        AbstractControl copy = create(kind);
+	/**
+	 * Create copy of control by passed controlKind and control ( from control will get all fields)
+	 * @param control a base control for copying
+	 * @param kind a kind of copied control
+	 * @return a copy of AbstractControl, based on passed control and kind
+	 */
+	public static AbstractControl createCopy(IControl control, ControlKind kind) throws Exception
+	{
+		if (control == null || kind == null)
+		{
+			return null;
+		}
 
-        copy.set(idName,				control.getID() 			);
-		copy.set(uidName,				control.getUID() 			);
-		copy.set(xpathName,				control.getXpath() 			);
-		copy.set(ownerIdName,			control.getOwnerID() 		);
-		copy.set(clazzName,				control.getClazz() 			);
-		copy.set(nameName,				control.getName() 			);
-		copy.set(titleName,				control.getTitle() 			);
-		copy.set(actionName,			control.getAction() 		);
-		copy.set(textName,				control.getText() 			);
-		copy.set(tooltipName,			control.getTooltip() 		);
-		copy.set(additionName,			control.getAddition() 		);
-		copy.set(visibilityName,		control.getVisibility()		);
-		copy.set(weakName,	 			control.isWeak() 			);
-		copy.set(timeoutName, 			control.getTimeout() 		);
-		copy.set(expressionName,		control.getExpression()		);
-		copy.set(rowsName,				control.getRowsId()			);
-		copy.set(headerName,			control.getHeaderId()		);
-		copy.set(columnsName,			control.getColumns()		);
-		copy.set(useNumericHeaderName,	control.useNumericHeader()	);
-        copy.set(infoName,              control.getInfo()           );
-        copy.set(refIdName,             control.getRefID()          );
+		AbstractControl copy = create(kind);
 
-        return copy;
-    }
+		copy.set(idName, control.getID());
+		copy.set(uidName, control.getUID());
+		copy.set(xpathName, control.getXpath());
+		copy.set(ownerIdName, control.getOwnerID());
+		copy.set(clazzName, control.getClazz());
+		copy.set(nameName, control.getName());
+		copy.set(titleName, control.getTitle());
+		copy.set(actionName, control.getAction());
+		copy.set(textName, control.getText());
+		copy.set(tooltipName, control.getTooltip());
+		copy.set(additionName, control.getAddition());
+		copy.set(visibilityName, control.getVisibility());
+		copy.set(weakName, control.isWeak());
+		copy.set(timeoutName, control.getTimeout());
+		copy.set(expressionName, control.getExpression());
+		copy.set(rowsName, control.getRowsId());
+		copy.set(headerName, control.getHeaderId());
+		copy.set(columnsName, control.getColumns());
+		copy.set(useNumericHeaderName, control.useNumericHeader());
+		copy.set(infoName, control.getInfo());
+		copy.set(refIdName, control.getRefID());
 
+		return copy;
+	}
+
+	/**
+	 * Create a AbstractControl based on ControlKind.
+	 * Creating will via {@link Class#forName(String)}
+	 * @param kind a type of created ControlKind
+	 * @return a AbstractControl based on ControlKind
+	 * @throws Exception if something went wrong
+	 *
+	 * @see ControlKind
+	 */
 	public static AbstractControl create(ControlKind kind) throws Exception
 	{
 		Class<?> clazz = Class.forName(AbstractControl.class.getPackage().getName() + "." + kind.getClazz());
 		return ((AbstractControl) clazz.newInstance());
 	}
 
-    public static AbstractControl create(Locator locator, String ownerId) throws Exception
-    {
-        AbstractControl ret = create(locator.getControlKind());
-        ret.id = locator.getId();
-        ret.uid = locator.getUid();
-        ret.xpath = locator.getXpath();
-        ret.ownerId = ownerId;
-        ret.clazz = locator.getClazz();
-        ret.name = locator.getName();
-        ret.title = locator.getTitle();
-        ret.action = locator.getAction();
-        ret.text = locator.getText();
-        ret.tooltip = locator.getTooltip();
-        ret.expression = locator.getExpression();
-        ret.addition = locator.getAddition();
-        ret.visibility = locator.getVisibility();
-        ret.weak = locator.isWeak();
-        ret.timeout = 0;
-        ret.useNumericHeader = locator.useNumericHeader();
-        ret.rows = "";
-        ret.header = "";
-        ret.columns = "";
-        return ret;
-    }	 
+	/**
+	 * Create new AbstractControl from passed locator and ownerId
+	 *
+	 * @param locator a locator, which used for creating new AbstractControl
+	 * @param ownerId a ownerId, which will passed into new AbstractControl
+	 * @return a new AbstractControl from passed parameters
+	 *
+	 * @throws Exception if something went wrong
+	 *
+	 * @see Locator
+	 */
+	public static AbstractControl create(Locator locator, String ownerId) throws Exception
+	{
+		AbstractControl ret = create(locator.getControlKind());
+		ret.id = locator.getId();
+		ret.uid = locator.getUid();
+		ret.xpath = locator.getXpath();
+		ret.ownerId = ownerId;
+		ret.clazz = locator.getClazz();
+		ret.name = locator.getName();
+		ret.title = locator.getTitle();
+		ret.action = locator.getAction();
+		ret.text = locator.getText();
+		ret.tooltip = locator.getTooltip();
+		ret.expression = locator.getExpression();
+		ret.addition = locator.getAddition();
+		ret.visibility = locator.getVisibility();
+		ret.weak = locator.isWeak();
+		ret.timeout = 0;
+		ret.useNumericHeader = locator.useNumericHeader();
+		ret.rows = "";
+		ret.header = "";
+		ret.columns = "";
+		return ret;
+	}
 
+	/**
+	 * Create the dummy locator.
+	 * @throws Exception if something went wrong
+	 */
 	public static AbstractControl createDummy() throws Exception
 	{
 		AbstractControl ret = create(ControlKind.Any);
@@ -239,6 +284,7 @@ public abstract class AbstractControl implements IControl
 		ret.name = IControl.DUMMY;
 		return ret;
 	}
+	//endregion
 
 	public boolean changedControlKind(ControlKind kind)
 	{
@@ -261,28 +307,25 @@ public abstract class AbstractControl implements IControl
 		this.tooltip = locator.getTooltip();
 	}
 
-    //------------------------------------------------------------------------------------------------------------------
-    // interface Mutable
-    //------------------------------------------------------------------------------------------------------------------
+	//region  interface Mutable
 	@Override
-    public boolean isChanged()
+	public boolean isChanged()
 	{
 		return this.changed;
 	}
-	
+
 	@Override
 	public void saved()
 	{
 		this.changed = false;
 	}
-	
-    //------------------------------------------------------------------------------------------------------------------
-    // interface IControl
-    //------------------------------------------------------------------------------------------------------------------
+	//endregion
+
+	//region interface IControl
 	@Override
 	public final ControlKind getBindedClass()
 	{
-		return getClass().getAnnotation(ControlsAttributes.class).bindedClass();
+		return this.getClass().getAnnotation(ControlsAttributes.class).bindedClass();
 	}
 
 	@Override
@@ -298,13 +341,13 @@ public abstract class AbstractControl implements IControl
 	}
 
 	@Override
-	public String getXpath() 
+	public String getXpath()
 	{
 		return this.xpath;
 	}
 
 	@Override
-	public String getOwnerID() 
+	public String getOwnerID()
 	{
 		return this.ownerId;
 	}
@@ -312,11 +355,11 @@ public abstract class AbstractControl implements IControl
 	@Override
 	public String getRefID()
 	{
-	    return this.refId;
+		return this.refId;
 	}
-	
+
 	@Override
-	public String getID() 
+	public String getID()
 	{
 		return this.id;
 	}
@@ -368,7 +411,7 @@ public abstract class AbstractControl implements IControl
 	{
 		return this.timeout == null ? 0 : this.timeout;
 	}
-	
+
 	@Override
 	public String getExpression()
 	{
@@ -414,7 +457,7 @@ public abstract class AbstractControl implements IControl
 	@Override
 	public IExtraInfo getInfo()
 	{
-	    return this.info;
+		return this.info;
 	}
 
 	@Override
@@ -426,42 +469,63 @@ public abstract class AbstractControl implements IControl
 	@Override
 	public Locator locator()
 	{
-	    Locator res = new Locator(this);
-	    if (this.section != null && this.refId != null)
-	    {
-	        IControl refControl = this.section.getWindow().getControlForName(null, this.refId);
-	        if (refControl != null)
-	        {
-	        	res.kind(refControl.getBindedClass());
-                res.uid(refControl.getUID());
-                res.clazz(refControl.getClazz());
-                res.xpath(refControl.getXpath());
-                res.name(refControl.getName());
-                res.title(refControl.getTitle());
-                res.action(refControl.getAction());
-                res.text(refControl.getText());
-                res.tooltip(refControl.getTooltip());
-	        }
-	    }
+		Locator res = new Locator(this);
+		if (this.section != null && this.refId != null)
+		{
+			IControl refControl = this.section.getWindow().getControlForName(null, this.refId);
+			if (refControl != null)
+			{
+				res.kind(refControl.getBindedClass());
+				res.uid(refControl.getUID());
+				res.clazz(refControl.getClazz());
+				res.xpath(refControl.getXpath());
+				res.name(refControl.getName());
+				res.title(refControl.getTitle());
+				res.action(refControl.getAction());
+				res.text(refControl.getText());
+				res.tooltip(refControl.getTooltip());
+			}
+		}
 		return res;
 	}
-	
+
+	/**
+	 * Create the operation from the passed object value, execute it and return the instance of {@link OperationResult} <br>
+	 * If passed object value is {@code null}, will getting the {@link AbstractControl#operationFromExpression}.<br>
+	 * If the operationFromExpression will {@code null}, will create a new Operation : <br>
+	 * <ul>
+	 *    <li>if the AbstractControl has addition {@link Addition#Many}, will create {@link Operation#count()} operation<br></li>
+	 *    <li>Otherwise will create {@link Operation#create()} empty operation and invoke method {@link IControl#prepare(Part, Object)}</li>
+	 * </ul>
+	 * @param remote the remote object, which will execute the created operation
+	 * @param window a window, which used as owner for the AbstractControl
+	 * @param value a operation value
+	 * @return OperationResult, which contains result of executing the created operation
+	 * @throws Exception if something went wrong
+	 *
+	 * @see IRemoteApplication
+	 * @see Operation
+	 * @see OperationResult
+	 * @see IControl
+	 * @see IControl#prepare(Part, Object)
+	 */
 	@Override
-	public final OperationResult operate(IRemoteApplication remote, IWindow window, Object value)  throws Exception
+	public final OperationResult operate(IRemoteApplication remote, IWindow window, Object value) throws Exception
 	{
 		try
 		{
-			IControl ow = window.getOwnerControl(this);
-			Locator owner = ow == null ? null : ow.locator();
+			IControl ownerControl = window.getOwnerControl(this);
+			Locator ownerLocator = ownerControl == null ? null : ownerControl.locator();
 
 			IControl rowsControl = window.getRowsControl(this);
-			Locator rows = rowsControl == null ? null : rowsControl.locator();
+			Locator rowsLocator = rowsControl == null ? null : rowsControl.locator();
 
 			IControl headerControl = window.getHeaderControl(this);
-			Locator header = headerControl == null ? null : headerControl.locator();
-			Locator element = locator();
+			Locator headerLocator = headerControl == null ? null : headerControl.locator();
 
-			Operation operation = null;
+			Locator element = this.locator();
+
+			Operation operation;
 			if (value instanceof Operation)
 			{
 				operation = (Operation) value;
@@ -478,12 +542,13 @@ public abstract class AbstractControl implements IControl
 			{
 				operation = Operation.create();
 				Part part = operation.addPart(getBindedClass().defaultOperation());
-				prepare(part, value);
+				this.prepare(part, value);
 			}
 
 			operation.tune(window);
-			return remote.operate(owner, element, rows, header, operation);
+			return remote.operate(ownerLocator, element, rowsLocator, headerLocator, operation);
 		}
+		//TODO think about catch ServerException
 		catch (Exception e)
 		{
 			logger.error(e.getMessage(), e);
@@ -491,8 +556,22 @@ public abstract class AbstractControl implements IControl
 		}
 	}
 
+	/**
+	 * Create the spec object from the passed object value, execute it and return the instance of {@link CheckingLayoutResult} <br>
+	 * If the passed object is {@code null}, will create a new {@link DoSpec#visible()}
+	 * @param remote the remote object, which will execute the created spec
+	 * @param window a window, which used as owner for the AbstractControl
+	 * @param value a spec value
+	 * @return CheckingLayoutResult, which contains result of executing the created spec object
+	 * @throws Exception if something went wrong
+	 *
+	 * @see IRemoteApplication
+	 * @see Spec
+	 * @see CheckingLayoutResult
+	 * @see IControl
+	 */
 	@Override
-	public final CheckingLayoutResult checkLayout(IRemoteApplication remote, IWindow window, Object value)  throws Exception
+	public final CheckingLayoutResult checkLayout(IRemoteApplication remote, IWindow window, Object value) throws Exception
 	{
 		try
 		{
@@ -501,7 +580,7 @@ public abstract class AbstractControl implements IControl
 
 			Locator element = locator();
 
-			Spec spec = null;
+			Spec spec;
 			if (value instanceof Spec)
 			{
 				spec = (Spec) value;
@@ -514,6 +593,20 @@ public abstract class AbstractControl implements IControl
 			spec.tune(window);
 			return remote.checkLayout(owner, element, spec);
 		}
+		catch (ServerException se)
+		{
+			logger.error(se.getMessage(), se);
+			if (se.getCause() instanceof OperationNotAllowedException)
+			{
+				return new CheckingLayoutResult();
+			}
+			if (se.getCause() != null)
+			{
+				throw new Exception(se.getCause().getMessage(), se.getCause());
+			}
+			throw se;
+		}
+		//TODO this is bad code. remove it and check test
 		catch (RemoteException re)
 		{
 			logger.error(re.getMessage(), re);
@@ -530,12 +623,26 @@ public abstract class AbstractControl implements IControl
 		}
 	}
 
+	/**
+	 * Prepare the passed operation for the any instance of AbstractControl. See override methods
+	 * @param operationPart a part of the operation
+	 * @param value a value, which should be prepared
+	 * @throws Exception if something went wrong
+	 */
 	@Override
-	public void prepare(Part operationPart, Object value)  throws Exception
-	{ }
+	public void prepare(Part operationPart, Object value) throws Exception
+	{
+	}
 
-    //------------------------------------------------------------------------------------------------------------------
+	//endregion
 
+	/**
+	 * Try to evaluate the {@link AbstractControl#expression}.
+	 * If a evaluated value instanceof {@link Operation}, the value {@link AbstractControl#operationFromExpression} will filled
+	 * @param evaluator a evaluator, which used for evaluating
+	 *
+	 * @see AbstractEvaluator
+	 */
 	public void evaluate(AbstractEvaluator evaluator)
 	{
 		if (!Str.IsNullOrEmpty(this.expression))
@@ -557,24 +664,24 @@ public abstract class AbstractControl implements IControl
 	
 	public void correctAllXml()
 	{
-	    if (this.info != null)
-	    {
-	        this.info.correctAllXml();
-	    }
-		
-		this.id = xmlToText(this.id); 
-		this.uid= xmlToText(this.uid);
-		this.xpath = xmlToText(this.xpath);
-		this.ownerId = xmlToText(this.ownerId);
-		this.refId = xmlToText(this.refId);
-		this.clazz = xmlToText(this.clazz);
-		this.name = xmlToText(this.name);
-		this.title = xmlToText(this.title);
-		this.action= xmlToText(this.action);
-		this.text = xmlToText(this.text);
-		this.tooltip = xmlToText(this.tooltip);
-		this.expression = xmlToText(this.expression);
-		this.columns = xmlToText(this.columns);
+		if (this.info != null)
+		{
+			this.info.correctAllXml();
+		}
+
+		this.id = this.xmlToText(this.id);
+		this.uid= this.xmlToText(this.uid);
+		this.xpath = this.xmlToText(this.xpath);
+		this.ownerId = this.xmlToText(this.ownerId);
+		this.refId = this.xmlToText(this.refId);
+		this.clazz = this.xmlToText(this.clazz);
+		this.name = this.xmlToText(this.name);
+		this.title = this.xmlToText(this.title);
+		this.action= this.xmlToText(this.action);
+		this.text = this.xmlToText(this.text);
+		this.tooltip = this.xmlToText(this.tooltip);
+		this.expression = this.xmlToText(this.expression);
+		this.columns = this.xmlToText(this.columns);
 		
 		if (!Str.IsNullOrEmpty(this.ownerId) && !Str.IsNullOrEmpty(this.xpath) && this.xpath.startsWith("//"))
 		{
@@ -584,29 +691,29 @@ public abstract class AbstractControl implements IControl
 
 	public void correctAllText()
 	{
-        if (this.info != null)
-        {
-            this.info.correctAllText();
-        }
+		if (this.info != null)
+		{
+			this.info.correctAllText();
+		}
 		
-		this.id = textToXml(this.id); 
-		this.uid= textToXml(this.uid);
-		this.xpath = textToXml(this.xpath);
-		this.ownerId = textToXml(this.ownerId);
-		this.refId = textToXml(this.refId);
-		this.clazz = textToXml(this.clazz);
-		this.name = textToXml(this.name);
-		this.title = textToXml(this.title);
-		this.action= textToXml(this.action);
-		this.text = textToXml(this.text);
-		this.tooltip = textToXml(this.tooltip);
-		this.expression = textToXml(this.expression);
-		this.rows = textToXml(this.rows);
-		this.header = textToXml(this.header);
-		this.columns = textToXml(this.columns);
-		this.weak = booleanToXml(this.weak);
-		this.useNumericHeader = booleanToXml(this.useNumericHeader);
-		this.timeout = integerToXml(this.timeout);
+		this.id = this.textToXml(this.id);
+		this.uid= this.textToXml(this.uid);
+		this.xpath = this.textToXml(this.xpath);
+		this.ownerId = this.textToXml(this.ownerId);
+		this.refId = this.textToXml(this.refId);
+		this.clazz = this.textToXml(this.clazz);
+		this.name = this.textToXml(this.name);
+		this.title = this.textToXml(this.title);
+		this.action= this.textToXml(this.action);
+		this.text = this.textToXml(this.text);
+		this.tooltip = this.textToXml(this.tooltip);
+		this.expression = this.textToXml(this.expression);
+		this.rows = this.textToXml(this.rows);
+		this.header = this.textToXml(this.header);
+		this.columns = this.textToXml(this.columns);
+		this.weak = this.booleanToXml(this.weak);
+		this.useNumericHeader = this.booleanToXml(this.useNumericHeader);
+		this.timeout = this.integerToXml(this.timeout);
 	}
 
 	private String xmlToText(String source)
@@ -630,34 +737,40 @@ public abstract class AbstractControl implements IControl
 
 	private Integer integerToXml(Integer i)
 	{
-		if (i == null || i.intValue() == 0)
+		if (i == null || i == 0)
 		{
 			return null;
 		}
 		return i;
 	}
 
+	/**
+	 * Set value via reflection
+	 */
 	static void set(Class<?> clazz, Object object, String name, Object value) throws Exception
 	{
 		Field[] fields = clazz.getDeclaredFields();
 		for (Field field : fields)
 		{
-		    XmlElement elem = field.getAnnotation(XmlElement.class);
-		    if (elem != null && elem.name().equals(name))
-		    {
-		        field.set(object, value);
-                continue;
-		    }
-		    
+			XmlElement elem = field.getAnnotation(XmlElement.class);
+			if (elem != null && elem.name().equals(name))
+			{
+				field.set(object, value);
+				continue;
+			}
+
 			XmlAttribute attr = field.getAnnotation(XmlAttribute.class);
 			if (attr != null && attr.name().equals(name))
 			{
-		        field.set(object, value);
+				field.set(object, value);
 				continue;
 			}
 		}
 	}
 
+	/**
+	 * Get value via reflection
+	 */
 	static Object get(Class<?> clazz, Object object, String name) throws Exception
 	{
 		Field[] fields = clazz.getDeclaredFields();
@@ -679,6 +792,12 @@ public abstract class AbstractControl implements IControl
 		return null;
 	}
 
+	/**
+	 * Set the field with passed name passed value
+	 * @param name of field
+	 * @param value the value, which need set to the field
+	 * @throws Exception if field by passed name not found
+	 */
 	public void set(String name, Object value) throws Exception
 	{
 		Object oldValue = get(AbstractControl.class, this, name);

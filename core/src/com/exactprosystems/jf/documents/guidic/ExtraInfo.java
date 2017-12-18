@@ -26,10 +26,10 @@ public class ExtraInfo implements Mutable, IExtraInfo
 {
 	protected static final Logger logger = Logger.getLogger(ExtraInfo.class);
 
-	public static final String xpathName			= "xpath";
-	public static final String rectangleName		= "rectangle";
-	public static final String nodeName				= "node";
-	public static final String attrName				= "attr";
+	public static final String xpathName     = "xpath";
+	public static final String rectangleName = "rectangle";
+	public static final String nodeName      = "node";
+	public static final String attrName      = "attr";
 
 	@XmlElement(name = xpathName)
 	protected String xpath;
@@ -43,51 +43,45 @@ public class ExtraInfo implements Mutable, IExtraInfo
 	@XmlElement(name = attrName)
 	protected List<Attr> attributes;
 
-
-    @XmlTransient
+	@XmlTransient
 	private boolean changed;
 
-	public ExtraInfo() 
+	public ExtraInfo()
 	{
 		this.changed = false;
 	}
-	
-    @Override
-    public String toString() 
-    {
-        return getClass().getSimpleName()  + ":" + hashCode();
-    }
 
-    public static ExtraInfo create()
-    {
+	public static ExtraInfo create()
+	{
 		return new ExtraInfo();
-    }
+	}
 
-    //region interface Mutable
+	//region interface Mutable
+
 	@Override
-    public boolean isChanged()
+	public boolean isChanged()
 	{
 		return this.changed;
 	}
-	
+
 	@Override
 	public void saved()
 	{
 		this.changed = false;
 	}
-	
-    //endregion
+
+	//endregion
 
 	public void correctAllXml()
 	{
-		this.node = xmlToText(this.node); 
-		this.xpath= xmlToText(this.xpath);
+		this.node = this.xmlToText(this.node);
+		this.xpath = this.xmlToText(this.xpath);
 	}
 
 	public void correctAllText()
 	{
-		this.node = textToXml(this.node); 
-		this.xpath= textToXml(this.xpath);
+		this.node = this.textToXml(this.node);
+		this.xpath = this.textToXml(this.xpath);
 	}
 
 	public void set(String name, Object value) throws Exception
@@ -101,6 +95,12 @@ public class ExtraInfo implements Mutable, IExtraInfo
 	public Object get(String name) throws Exception
 	{
 		return get(ExtraInfo.class, this, name);
+	}
+
+	@Override
+	public String toString()
+	{
+		return getClass().getSimpleName() + ":" + hashCode();
 	}
 
 	//region private methods

@@ -13,6 +13,7 @@ import com.exactprosystems.jf.api.app.IControl;
 import com.exactprosystems.jf.api.app.ISection;
 import com.exactprosystems.jf.api.app.IWindow;
 import com.exactprosystems.jf.api.app.Mutable;
+import com.exactprosystems.jf.api.common.Str;
 import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import org.apache.log4j.Logger;
@@ -20,6 +21,7 @@ import org.apache.log4j.Logger;
 import javax.xml.bind.annotation.*;
 import java.util.*;
 import java.util.function.BiFunction;
+import java.util.stream.Collectors;
 
 @XmlRootElement(name = "window")
 @XmlAccessorType(XmlAccessType.NONE)
@@ -42,18 +44,20 @@ public class Window implements IWindow, Mutable
 
 	@XmlElement(name = "close")
 	private Section close;
-	
+
+	protected static final Logger logger = Logger.getLogger(Window.class);
 	private Map<SectionKind, Section> allSections;
-	
+	private boolean changed = false;
+
 	public Window()
 	{
-		this.self 		= new Section();
-		this.onOpen 	= new Section();
-		this.run 		= new Section();
-		this.onClose 	= new Section();
-		this.close		= new Section();
+		this.self = new Section();
+		this.onOpen = new Section();
+		this.run = new Section();
+		this.onClose = new Section();
+		this.close = new Section();
 
-		this.allSections = new LinkedHashMap<>();
+		this.allSections = new EnumMap<>(SectionKind.class);
 	}
 
 	public Window(String name)
@@ -63,13 +67,19 @@ public class Window implements IWindow, Mutable
 		this.name = name;
 	}
 
+	/**
+	 * Create the copy based on passed window
+	 * @param window the window, which used for create copy
+	 * @return the new window, based on the passed window. If the passed window is {@code null} will returned {@code null}
+	 * @throws Exception something went wrong
+	 */
 	public static Window createCopy(Window window) throws Exception
 	{
 		if (window == null)
 		{
 			return null;
 		}
-		
+
 		Window newWindow = new Window();
 		newWindow.name = window.getName();
 		newWindow.self = Section.createCopy(window.self);
@@ -77,7 +87,7 @@ public class Window implements IWindow, Mutable
 		newWindow.run = Section.createCopy(window.run);
 		newWindow.onClose = Section.createCopy(window.onClose);
 		newWindow.close = Section.createCopy(window.close);
-		newWindow.allSections = new LinkedHashMap<>();
+		newWindow.allSections = new EnumMap<>(SectionKind.class);
 		newWindow.correctAll();
 		newWindow.changed = false;
 		return newWindow;
@@ -85,28 +95,19 @@ public class Window implements IWindow, Mutable
 	
 	public void correctAll()
 	{
-		correctOne(SectionKind.Self, 		this.self);
-		correctOne(SectionKind.OnOpen, 		this.onOpen);
-		correctOne(SectionKind.Run, 		this.run);
-		correctOne(SectionKind.OnClose, this.onClose);
-		correctOne(SectionKind.Close,		this.close);
-	}
-	
-	private void correctOne(SectionKind kind, Section section)
-	{
-		this.allSections.put(kind, section);
-		section.setSection(this, kind);
+		this.correctOne(SectionKind.Self, this.self);
+		this.correctOne(SectionKind.OnOpen, this.onOpen);
+		this.correctOne(SectionKind.Run, this.run);
+		this.correctOne(SectionKind.OnClose, this.onClose);
+		this.correctOne(SectionKind.Close, this.close);
 	}
 
-	@Override
-	public String toString()
+	public void evaluateAll(AbstractEvaluator evaluator)
 	{
-		return this.name;
+		this.allSections.values().forEach(section -> section.evaluateAll(evaluator));
 	}
 
-    //------------------------------------------------------------------------------------------------------------------
-    // interface Mutable
-    //------------------------------------------------------------------------------------------------------------------
+	//region interface Mutable
 	@Override
 	public boolean isChanged()
 	{
@@ -123,20 +124,17 @@ public class Window implements IWindow, Mutable
 		}
 		return false;
 	}
-	
+
 	@Override
 	public void saved()
 	{
 		this.changed = false;
-		for(Section control : this.allSections.values())
-		{
-			control.saved();
-		}
+		this.allSections.values().forEach(Section::saved);
 	}
-	
-    //------------------------------------------------------------------------------------------------------------------
-    // interface IWindow
-    //------------------------------------------------------------------------------------------------------------------
+
+	//endregion
+
+	//region interface IWindow
 	@Override
 	public void setName(String name)
 	{
@@ -147,14 +145,14 @@ public class Window implements IWindow, Mutable
 	@Override
 	public String getName()
 	{
-		return name;
+		return this.name;
 	}
 
 	@Override
-    public ISection getSection(SectionKind section) 
-    {
-    	return this.allSections.get(section);
-    }
+	public ISection getSection(SectionKind section)
+	{
+		return this.allSections.get(section);
+	}
 
 	@Override
 	public boolean hasReferences(IControl control)
@@ -163,16 +161,10 @@ public class Window implements IWindow, Mutable
 		{
 			return false;
 		}
-		
-		for (Section section : this.allSections.values())
-		{
-			if (section.hasReferences(control))
-			{
-				return true;
-			}
-		}
-		
-		return false;
+
+		return this.allSections.values()
+				.stream()
+				.anyMatch(section -> section.hasReferences(control));
 	}
 
 	@Override
@@ -190,38 +182,30 @@ public class Window implements IWindow, Mutable
 	@Override
 	public void addControl(SectionKind kind, IControl control)
 	{
-		Section section = this.allSections.get(kind);
-		if (section == null)
-		{
-			section = new Section();
-			this.allSections.put(kind, section);
-		}
+		Section section = this.allSections.computeIfAbsent(kind, sectionKind -> new Section());
 		section.addControl(control);
 		section.setSection(this, kind);
 	}
 
 	@Override
-    public Collection<IControl> getControls(SectionKind kind)
-    {
-        List<IControl> result = new ArrayList<>();
+	public Collection<IControl> getControls(SectionKind kind)
+	{
 		if (kind == null)
 		{
-	        for(ISection section : this.allSections.values())
-	        {
-	        	result.addAll(section.getControls());
-	        }
+			return this.allSections.values()
+					.stream()
+					.map(ISection::getControls)
+					.flatMap(Collection::stream)
+					.collect(Collectors.toList());
 		}
 		else
 		{
-			Section section = this.allSections.get(kind); 
-			if (section != null)
-			{
-	        	result.addAll(section.getControls());
-			}
+			return Optional.ofNullable(this.allSections.get(kind))
+					.map(Section::getControls)
+					.orElseGet(ArrayList::new);
 		}
-        return result;
-    }
-    
+	}
+
 	@Override
 	public IControl getFirstControl(SectionKind kind)
 	{
@@ -229,12 +213,9 @@ public class Window implements IWindow, Mutable
 		{
 			kind = SectionKind.Run;
 		}
-		Section section = this.allSections.get(kind); 
-		if (section != null)
-		{
-			return section.getFirstControl();
-		}
-		return null;
+		return Optional.ofNullable(this.allSections.get(kind))
+				.map(ISection::getFirstControl)
+				.orElse(null);
 	}
 
 	@Override
@@ -242,27 +223,21 @@ public class Window implements IWindow, Mutable
 	{
 		if (kind == null)
 		{
-			for (ISection section : this.allSections.values())
-			{
-				IControl control = section.getControlById(name);
-				if (control != null)
-				{
-					return control;
-				}
-			}
+			return this.allSections.values()
+					.stream()
+					.map(section -> section.getControlById(name))
+					.filter(Objects::nonNull)
+					.findFirst()
+					.orElse(null);
 		}
 		else
 		{
-			Section section = this.allSections.get(kind); 
-			if (section != null)
-			{
-				return section.getControlById(name);
-			}
+			return Optional.ofNullable(this.allSections.get(kind))
+					.map(section -> section.getControlById(name))
+					.orElse(null);
 		}
-		
-		return null;
 	}
-	
+
 	@Override
 	public void checkParams(Collection<String> params) throws Exception
 	{
@@ -277,9 +252,9 @@ public class Window implements IWindow, Mutable
 			}
 			for (IControl control : this.run.getControls())
 			{
-				String controlFieldName = control.getID(); 
-				
-				if (controlFieldName != null && controlFieldName.equals(fieldName))
+				String controlFieldName = control.getID();
+
+				if (Str.areEqual(controlFieldName, fieldName))
 				{
 					found = true;
 					break;
@@ -290,8 +265,8 @@ public class Window implements IWindow, Mutable
 				errors.add(fieldName);
 			}
 		}
-		
-		if (errors.size() >  0)
+
+		if (!errors.isEmpty())
 		{
 			throw new Exception(R.WINDOW_CHECK_PARAMS_EXCEPTION.get() + Arrays.toString(errors.toArray()));
 		}
@@ -300,39 +275,30 @@ public class Window implements IWindow, Mutable
 	@Override
 	public boolean containsControl(String controlName)
 	{
-		for (ISection section : this.allSections.values())
-		{
-			IControl control = section.getControlById(controlName);
-			if (control != null)
-			{
-				return true;
-			}
-		}
-		return false;
+		return this.allSections.values()
+				.stream()
+				.map(section -> section.getControlById(name))
+				.anyMatch(Objects::nonNull);
 	}
 
 	@Override
 	public IControl getSelfControl()
 	{
-		if (this.self != null)
-		{
-			Iterator<IControl> iterator = this.self.getControls().iterator();
-			if (iterator.hasNext())
-			{
-				return iterator.next();
-			}
-		}
-		return null;
+		return Optional.ofNullable(this.self)
+				.map(selfSection -> selfSection.getControls().iterator())
+				.filter(Iterator::hasNext)
+				.map(Iterator::next)
+				.orElse(null);
 	}
-	
+
 	@Override
 	public IControl getOwnerControl(IControl control)
 	{
 		if (control != null && control.getOwnerID() != null && !control.getOwnerID().isEmpty())
 		{
-			return getControlForName(null, control.getOwnerID());
+			return this.getControlForName(null, control.getOwnerID());
 		}
-		
+
 		return null;
 	}
 
@@ -341,7 +307,7 @@ public class Window implements IWindow, Mutable
 	{
 		if (control != null && control.getRefID() != null && !control.getRefID().isEmpty())
 		{
-			return getControlForName(null, control.getRefID());
+			return this.getControlForName(null, control.getRefID());
 		}
 
 		return null;
@@ -352,7 +318,7 @@ public class Window implements IWindow, Mutable
 	{
 		if (control != null && control.getRowsId() != null && !control.getRowsId().isEmpty())
 		{
-			return getControlForName(null, control.getRowsId());
+			return this.getControlForName(null, control.getRowsId());
 		}
 
 		return null;
@@ -363,39 +329,38 @@ public class Window implements IWindow, Mutable
 	{
 		if (control != null && control.getHeaderId() != null && !control.getHeaderId().isEmpty())
 		{
-			return getControlForName(null, control.getHeaderId());
+			return this.getControlForName(null, control.getHeaderId());
 		}
 
 		return null;
 	}
 
-    @Override
-    public List<IControl> allMatched(BiFunction<ISection, IControl, Boolean> predicate)
-    {
-    	//TODO think about, why we use bi predicate
-        List<IControl> res = new ArrayList<>();
-        this.allSections.values().forEach(s -> s.getControls().forEach(c -> 
-        { 
-            if (predicate.apply(s, c))
-            { 
-                res.add(c); 
-            } 
-        } ));
-        return res;
-    }
-
-
-	//------------------------------------------------------------------------------------------------------------------
-	public void evaluateAll(AbstractEvaluator evaluator)
+	@Override
+	public List<IControl> allMatched(BiFunction<ISection, IControl, Boolean> predicate)
 	{
-		for (Section section : this.allSections.values())
-		{
-			section.evaluateAll(evaluator);
-		}
+		//TODO think about, why we use bi predicate
+		List<IControl> res = new ArrayList<>();
+		this.allSections.values().forEach(s -> s.getControls().forEach(c -> {
+			if (predicate.apply(s, c))
+			{
+				res.add(c);
+			}
+		}));
+		return res;
+	}
+	//endregion
+
+	@Override
+	public String toString()
+	{
+		return this.name;
 	}
 
-	
-	protected static final Logger logger = Logger.getLogger(Window.class);
-	private boolean changed = false;
-
+	//region private methods
+	private void correctOne(SectionKind kind, Section section)
+	{
+		this.allSections.put(kind, section);
+		section.setSection(this, kind);
+	}
+	//endregion
 }
