@@ -9,8 +9,17 @@
 
 package com.exactprosystems.jf.api.app;
 
+/**
+ * A interface for any changeable objects
+ */
 public interface Mutable
 {
+	/**
+	 * @return true, if a object will changed. This method should check all important fields of the object
+	 */
 	boolean 		isChanged();
+	/**
+	 * Notify, that all changes for the object were saved
+	 */
 	void			saved();
 }

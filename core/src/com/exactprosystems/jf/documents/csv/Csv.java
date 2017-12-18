@@ -17,6 +17,9 @@ import com.exactprosystems.jf.functions.Table;
 
 import java.io.Reader;
 
+/**
+ * Class for Csv documents.
+ */
 @DocumentInfo(
             kind = DocumentKind.CSV,
             newName = "Csv", 
@@ -25,6 +28,9 @@ import java.io.Reader;
         )
 public class Csv extends AbstractDocument
 {
+	protected Table table;
+	protected char tableDelimiter = ';';
+
 	public Csv(String fileName, DocumentFactory factory)
 	{
 		super(fileName, factory);
@@ -71,8 +77,8 @@ public class Csv extends AbstractDocument
 	@Override
 	public void saved()
 	{
-		super.saved();
 		this.table.saved();
+		super.saved();
 	}
 
 	//endregion
@@ -81,8 +87,4 @@ public class Csv extends AbstractDocument
 	{
 		this.tableDelimiter = delimiter;
 	}
-
-	protected Table			table;
-
-	protected char			tableDelimiter	= ';';
 }
