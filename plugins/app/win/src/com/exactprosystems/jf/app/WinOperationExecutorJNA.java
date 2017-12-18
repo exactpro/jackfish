@@ -350,6 +350,21 @@ public class WinOperationExecutorJNA extends AbstractOperationExecutor<UIProxyJN
 			else if (attribute.equalsIgnoreCase(ControlType.Tab.getName()))
 			{
 				controlTypeId = ControlType.TabItem.getStringId();
+				List<UIProxyJNA> elements = findComponents(component,WindowTreeScope.Descendants,WindowProperty.ControlTypeProperty,controlTypeId);
+				int countNotVisible = 0;
+				for (int indexAll = 0; indexAll < elements.size(); indexAll++)
+				{
+					if("false".equalsIgnoreCase(this.driver.elementAttribute(elements.get(indexAll), AttributeKind.VISIBLE)))
+					{
+						countNotVisible++;
+					}
+					if(indexAll == indexOnlyVisible + countNotVisible)
+					{
+						this.driver.doPatternCall(elements.get(indexAll), WindowPattern.SelectionItemPattern, "Select", null, -1);
+						break;
+					}
+				}
+				return true;
 			}
 			else if (attribute.equalsIgnoreCase(ControlType.Tree.getName()))
 			{
@@ -359,20 +374,9 @@ public class WinOperationExecutorJNA extends AbstractOperationExecutor<UIProxyJN
 			{
 				return true;
 			}
+
 			List<UIProxyJNA> elements = findComponents(component,WindowTreeScope.Descendants,WindowProperty.ControlTypeProperty,controlTypeId);
-			int countNotVisible = 0;
-			for (int indexAll = 0; indexAll < elements.size(); indexAll++)
-			{
-				if("false".equalsIgnoreCase(this.driver.elementAttribute(elements.get(indexAll), AttributeKind.VISIBLE)))
-				{
-					countNotVisible++;
-				}
-				if(indexAll == indexOnlyVisible + countNotVisible)
-				{
-					this.driver.doPatternCall(elements.get(indexAll), WindowPattern.SelectionItemPattern, "Select", null, -1);
-					break;
-				}
-			}
+			this.driver.doPatternCall(elements.get(indexOnlyVisible), WindowPattern.SelectionItemPattern, "Select", null, -1);
 			return true;
 		}
 		catch(WrongParameterException ignored)
@@ -393,19 +397,21 @@ public class WinOperationExecutorJNA extends AbstractOperationExecutor<UIProxyJN
 				for (int i = 0; i < nodes.getLength(); i++)
 				{
 					UIProxyJNA element = new UIProxyJNA(nodes.item(i).getAttributes().getNamedItem(RUNTIME_ID_ATTRIBUTE).getNodeValue());
-					if("true".equalsIgnoreCase(this.driver.elementAttribute(element, AttributeKind.VISIBLE)))
-					{
-						this.driver.doPatternCall(element, WindowPattern.SelectionItemPattern, "Select", null, -1);
-					}
+					this.driver.doPatternCall(element, WindowPattern.SelectionItemPattern, "Select", null, -1);
 				}
 			}
-			else
+			else if (attribute.equalsIgnoreCase(ControlType.Tab.getName()))
 			{
 				UIProxyJNA element = new UIProxyJNA(findItem(component, selectedText));
 				if("true".equalsIgnoreCase(this.driver.elementAttribute(element, AttributeKind.VISIBLE)))
 				{
 					this.driver.doPatternCall(element, WindowPattern.SelectionItemPattern, "Select", null, -1);
 				}
+			}
+			else
+			{
+				UIProxyJNA element = new UIProxyJNA(findItem(component, selectedText));
+				this.driver.doPatternCall(element, WindowPattern.SelectionItemPattern, "Select", null, -1);
 			}
 			return true;
 		}
