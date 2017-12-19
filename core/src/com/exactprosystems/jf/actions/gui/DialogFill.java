@@ -16,6 +16,8 @@ import com.exactprosystems.jf.api.common.Str;
 import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.api.error.ErrorKind;
 import com.exactprosystems.jf.api.error.IErrorKind;
+import com.exactprosystems.jf.api.error.JFException;
+import com.exactprosystems.jf.api.error.JFRemoteException;
 import com.exactprosystems.jf.api.error.app.*;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.report.ReportBuilder;
@@ -225,7 +227,7 @@ public class DialogFill extends AbstractAction
 					Object value = res.getValue();
 					if (value instanceof org.w3c.dom.Document)
 					{
-						value = new Xml((org.w3c.dom.Document)value);
+						value = new Xml((org.w3c.dom.Document) value);
 					}
 					if (value instanceof String[][])
 					{
@@ -247,6 +249,23 @@ public class DialogFill extends AbstractAction
 					{
 						allReportErrors.append(message);
 					}
+				}
+			}
+			catch (JFRemoteException | JFException e)
+			{
+				logger.error(e.getMessage(), e);
+				ErrorKind errorKind = e.getErrorKind();
+				String msg = message(id, window, run, control, null, e.getMessage());
+				errorsValue.put(name, new MatrixError(msg, errorKind, this.owner));
+				if (!stopOnFail)
+				{
+					allReportErrors.append(msg);
+				}
+				else
+				{
+					super.setErrors(errorsValue);
+					super.setError(msg.length() > 35 ? msg.split(" ")[0] + msg.substring(0, 35) + " ... See log for more details" : msg, errorKind);
+					return;
 				}
 			}
 			catch (ServerException e)

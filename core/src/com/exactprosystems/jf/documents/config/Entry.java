@@ -100,8 +100,11 @@ public abstract class Entry implements Mutable
 
 	public List<Parameter> getParameters()
 	{
-		return Optional.ofNullable(this.parameters)
-				.orElse(new MutableArrayList<>());
+		if (this.parameters == null)
+		{
+			this.parameters = new MutableArrayList<>();
+		}
+		return this.parameters;
 	}
 	//endregion
 
