@@ -544,6 +544,11 @@ public class FxOperationExecutor extends AbstractOperationExecutor<EventTarget>
 					default:
 						break;
 				}
+
+				ArrayList<InputEvent> events = new ArrayList<>();
+				events.add(new KeyEvent(null, component, b ? KeyEvent.KEY_PRESSED : KeyEvent.KEY_RELEASED, "", "", getKeyCode(key), this.isShiftDown, this.isControlDown, this.isAltDown, false));
+				Platform.runLater(() -> events.stream().peek(e -> logger.debug("Event : " + e)).forEach(e -> Event.fireEvent(component, e)));
+
 				return true;
 			},
 			e->

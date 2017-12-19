@@ -416,15 +416,13 @@ Text {
 
 .consoleDefaultText {
 	-fx-fill : -fx-text-base-color;
-
 }
 .consolePausedItem {
 	-fx-fill : -fx-company-color-light;
     -fx-cursor: hand;
 }
 .consoleErrorItem {
-	-fx-fill : red;
-
+	-fx-fill : salmon;
 }
 
 /*Sql test*/
