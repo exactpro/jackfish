@@ -32,7 +32,7 @@ import java.util.stream.Collectors;
 
 public class MainController implements Initializable
 {
-    @FXML private ListView<String> listView;
+    @FXML private ListView<String> ListView;
     @FXML private Button notEnabledButton;
     @FXML private Button notVisibleButton;
     @FXML private Button clearButton;
@@ -47,30 +47,30 @@ public class MainController implements Initializable
     @FXML private Label selectLabel;
     @FXML private Label moveLabel;
     @FXML private Label checkedLabel;
-    @FXML private Slider slider;
+    @FXML private Slider Slider;
     @FXML private MenuBar menu;
-    @FXML private Button protocolClear;
-    @FXML private TextArea protocol;
-    @FXML private TreeView<String> treeView;
-    @FXML private CheckBox checkBox;
-    @FXML private RadioButton green;
-    @FXML private RadioButton yellow;
-    @FXML private RadioButton orange;
-    @FXML private RadioButton blue;
-    @FXML private ComboBox<String> comboBox;
-    @FXML private Spinner spinner;
-    @FXML private SplitPane splitter;
-    @FXML private TabPane tabPanel;
-    @FXML private ScrollBar scrollBar;
-    @FXML private ProgressBar progressBar;
-    @FXML private Pane panel;
-    @FXML private TextField textEdit;
-    @FXML private ToggleButton toggleButton;
-    @FXML private Button any;
-    @FXML private Label centralLabel;
-    @FXML private ImageView image;
-    @FXML private TableView<MockTable.TableData> table;
-    @FXML private Button button;
+    @FXML private Button ProtocolClear;
+    @FXML private TextArea Protocol;
+    @FXML private TreeView<String> TreeView;
+    @FXML private CheckBox CheckBox;
+    @FXML private RadioButton Green;
+    @FXML private RadioButton Yellow;
+    @FXML private RadioButton Orange;
+    @FXML private RadioButton Blue;
+    @FXML private ComboBox<String> ComboBox;
+    @FXML private Spinner Spinner;
+    @FXML private SplitPane Splitter;
+    @FXML private TabPane TabPanel;
+    @FXML private ScrollBar ScrollBar;
+    @FXML private ProgressBar ProgressBar;
+    @FXML private Pane Panel;
+    @FXML private TextField TextBox;
+    @FXML private ToggleButton ToggleButton;
+    @FXML private Button Any;
+    @FXML private Label CentralLabel;
+    @FXML private ImageView Image;
+    @FXML private TableView<MockTable.TableData> Table;
+    @FXML private Button Button;
 
     private static final String CLICK = "_click";
     private static final String DOUBLE_CLICK = "_double_click";
@@ -89,16 +89,17 @@ public class MainController implements Initializable
     public void initialize(URL location, ResourceBundle resources)
     {
         mainModel = new MainModel();
-        comboBox.getItems().addAll(mainModel.getData());
-        table.getColumns().addAll(mainModel.getTable().getHeaders());
-        table.setItems(mainModel.getTable().getTableData());
-        treeView.setRoot(mainModel.getTree().getRoot());
+        ComboBox.getItems().addAll(mainModel.getData());
+        Table.getColumns().addAll(mainModel.getTable().getHeaders());
+        Table.setItems(mainModel.getTable().getTableData());
+        TreeView.setRoot(mainModel.getTree().getRoot());
         menu.getMenus().addAll(mainModel.getMenu().getMenus());
-        slider.valueProperty().addListener((observable, oldValue, newValue) -> sliderLabel.setText("Slider_" + String.valueOf(newValue.intValue())));
-        textEdit.textProperty().addListener((observable, oldValue, newValue) -> centralLabel.setText("TextEdit_" + newValue));
-        checkBox.selectedProperty().addListener((observable, oldValue, newValue) -> checkedLabel.setText("CheckBox_" + (newValue ? "checked" : "unchecked")));
-        comboBox.valueProperty().addListener((observable, oldValue, newValue) -> centralLabel.setText("ComboBox_" + newValue));
-        listView.getItems().addAll(mainModel.getData());
+        Slider.valueProperty().addListener((observable, oldValue, newValue) -> sliderLabel.setText("Slider_" + String.valueOf(newValue.intValue())));
+        TextBox
+				.textProperty().addListener((observable, oldValue, newValue) -> CentralLabel.setText("TextEdit_" + newValue));
+        CheckBox.selectedProperty().addListener((observable, oldValue, newValue) -> checkedLabel.setText("CheckBox_" + (newValue ? "checked" : "unchecked")));
+        ComboBox.valueProperty().addListener((observable, oldValue, newValue) -> CentralLabel.setText("ComboBox_" + newValue));
+        ListView.getItems().addAll(mainModel.getData());
 
 		this.tb = new TableView<>();
 		tb.setMinHeight(150);
@@ -303,7 +304,7 @@ public class MainController implements Initializable
 
     public void clickHandler(MouseEvent mouseEvent)
     {
-        centralLabel.setText(getFormattedName(mouseEvent.getSource()) + (mouseEvent.getClickCount() == 1 ? CLICK : DOUBLE_CLICK));
+        CentralLabel.setText(getFormattedName(mouseEvent.getSource()) + (mouseEvent.getClickCount() == 1 ? CLICK : DOUBLE_CLICK));
     }
 
     public void moveHandler(MouseEvent mouseEvent)
@@ -323,7 +324,7 @@ public class MainController implements Initializable
 
     public void doProtocolClear()
     {
-		this.protocol.clear();
+		this.Protocol.clear();
 		this.printColors();
 	}
 
@@ -351,22 +352,27 @@ public class MainController implements Initializable
 
     public void releasedHandler(KeyEvent keyEvent)
     {
-        protocol.appendText(getFormattedName(keyEvent.getSource()) + UP + keyEvent.getCode().impl_getCode() + NEW_LINE);
+        Protocol.appendText(getFormattedName(keyEvent.getSource()) + UP + keyEvent.getCode().impl_getCode() + NEW_LINE);
     }
 
     public void pressHandler(KeyEvent keyEvent)
     {
-        protocol.appendText(getFormattedName(keyEvent.getSource()) + DOWN + keyEvent.getCode().impl_getCode() + NEW_LINE);
+        Protocol.appendText(getFormattedName(keyEvent.getSource()) + DOWN + keyEvent.getCode().impl_getCode() + NEW_LINE);
     }
 
     public void typedHandler(KeyEvent keyEvent)
     {
-        protocol.appendText(getFormattedName(keyEvent.getSource()) + PRESS + (int)keyEvent.getCharacter().toCharArray()[0] + NEW_LINE);
+        Protocol.appendText(getFormattedName(keyEvent.getSource()) + PRESS + (int)keyEvent.getCharacter().toCharArray()[0] + NEW_LINE);
     }
 
     private String getFormattedName(Object object)
     {
         Node node = (Node) object;
-        return node.getId().substring(0,1).toUpperCase() + node.getId().substring(1);
+//		String stringId = node.getId().substring(0, 1).toUpperCase() + node.getId().substring(1);
+		if("CentralLabel".equalsIgnoreCase(node.getId()))
+		{
+			return "Label";
+		}
+		return node.getId();
     }
 }

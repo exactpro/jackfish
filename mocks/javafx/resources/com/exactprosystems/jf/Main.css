@@ -37,8 +37,7 @@
 .combo-box,
 .radio-button,
 .check-box,
-#protocolClear,
-#colorButton {
+#protocolClear {
     -fx-pref-width  : small-width;
     -fx-pref-height : small-height;
 }

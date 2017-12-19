@@ -42,6 +42,8 @@ public class Main extends Application
                 stage.setTitle("JavaFx Mock");
                 stage.setScene(new Scene(root, 800, 800));
                 stage.setOnCloseRequest(event -> Platform.exit());
+                stage.setX(200);
+                stage.setY(32);
                 stage.show();
             }
         },

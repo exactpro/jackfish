@@ -535,7 +535,7 @@ public class WinOperationExecutorJNA extends AbstractOperationExecutor<UIProxyJN
 				try
 				{
 					this.driver.clearCache();
-					int size = -1;
+					int size;
 					try
 					{
 						List<UIProxyJNA> elements = this.findAll(null, locator);
@@ -587,7 +587,7 @@ public class WinOperationExecutorJNA extends AbstractOperationExecutor<UIProxyJN
 	{
 		try
 		{
-			this.driver.doPatternCall(component, WindowPattern.RangeValuePattern, "SetValue", "" + value, 2);
+			this.driver.doPatternCall(component, WindowPattern.RangeValuePattern, "SetValue", Double.toString(value), 2);
 			return true;
 		}
 		catch (RemoteException e)
