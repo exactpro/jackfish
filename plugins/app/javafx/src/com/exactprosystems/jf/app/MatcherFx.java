@@ -61,7 +61,7 @@ public class MatcherFx
 		}
 		this.locator = locator;
 		this.info = info;
-		this.owner = owner;
+		this.owner = owner == null ? UtilsFx.currentRoot() : owner;
 
 		String locatorXpath = this.locator.getXpath();
 		if (!Str.IsNullOrEmpty(locatorXpath) && owner != null)
