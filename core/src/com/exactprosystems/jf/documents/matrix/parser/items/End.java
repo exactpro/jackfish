@@ -29,7 +29,7 @@ public class End extends MatrixItem
 	{
 		super();
 		this.parent = startItem;
-		this.setNubmer(-1);
+		super.setNumber(-1);
 	}
 
 	/**
@@ -38,9 +38,10 @@ public class End extends MatrixItem
 	public End(End end)
 	{
 		this.parent = end.parent.makeCopy();
-		this.setNubmer(-1);
+		super.setNumber(-1);
 	}
 
+	//region override from MatrixItem
 	@Override
 	protected MatrixItem makeCopy()
 	{
@@ -54,4 +55,5 @@ public class End extends MatrixItem
 		driver.showLabel(this, layout, 0, 0, "End " + this.parent.getClass().getSimpleName());
 		return layout;
 	}
+	//endregion
 }

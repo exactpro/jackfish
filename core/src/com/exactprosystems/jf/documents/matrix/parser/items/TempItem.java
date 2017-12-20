@@ -19,7 +19,6 @@ import com.exactprosystems.jf.functions.Text;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 import java.util.stream.Collectors;
 
 @MatrixItemAttribute(
@@ -32,84 +31,83 @@ import java.util.stream.Collectors;
 		hasChildren = false)
 public class TempItem extends MatrixItem
 {
+	private             ArrayList<String> list   = new ArrayList<>();
+	private             boolean           isInit = false;
+	public static final String            CALL   = "Call ";
+
 	@Override
 	protected MatrixItem makeCopy()
 	{
 		return new TempItem();
 	}
 
-	private ArrayList<String> list = new ArrayList<>();
-
-	//TODO think about remove this field
-	private boolean isInit = false;
-
-	public static final String CALL = "Call ";
-
+	//region override from MatrixItem
 	@Override
 	protected Object displayYourself(DisplayDriver driver, Context context)
 	{
-		fillList(context);
+		this.fillList(context);
 
 		Object layout = driver.createLayout(this, 1);
 		driver.showAutoCompleteBox(this, layout, 0, 0, () -> list,  () -> "", s -> {
-			if (!isInit)
+			if (!this.isInit)
 			{
-		        MatrixItem parent = this.getParent();
-		        int index = parent.index(this);
-		        MatrixItem newItem = null;
-		        try
-		        {
-		            if (Tokens.containsIgnoreCase(s))
-		            {
-		                if (s.equalsIgnoreCase(Tokens.RawTable.get()))
-		                {
-		                    newItem = Parser.createItem(Tokens.RawTable.get(), Table.class.getSimpleName());
-		                }
-		                else if (s.equalsIgnoreCase(Tokens.RawMessage.get()))
-		                {
-		                    newItem = Parser.createItem(Tokens.RawMessage.get(), "none");
-		                }
-		                else if (s.equalsIgnoreCase(Tokens.RawText.get()))
-		                {
-		                    newItem = Parser.createItem(Tokens.RawText.get(), Text.class.getSimpleName());
-		                }
-		                else
-		                {
-		                    newItem = Parser.createItem(s, null);
-		                }
-		            }
-		            else if (s.startsWith(CALL))
+				MatrixItem parent = super.getParent();
+				int index = parent.index(this);
+				MatrixItem newItem;
+				try
+				{
+					if (Tokens.containsIgnoreCase(s))
+					{
+						if (s.equalsIgnoreCase(Tokens.RawTable.get()))
+						{
+							newItem = Parser.createItem(Tokens.RawTable.get(), Table.class.getSimpleName());
+						}
+						else if (s.equalsIgnoreCase(Tokens.RawMessage.get()))
+						{
+							newItem = Parser.createItem(Tokens.RawMessage.get(), "none");
+						}
+						else if (s.equalsIgnoreCase(Tokens.RawText.get()))
+						{
+							newItem = Parser.createItem(Tokens.RawText.get(), Text.class.getSimpleName());
+						}
+						else
+						{
+							newItem = Parser.createItem(s, null);
+						}
+					}
+					else if (s.startsWith(CALL))
 					{
 						String name = s.substring(CALL.length(), s.length());
 
 						newItem = Parser.createItem(Tokens.Call.get(), name);
-						((Call) newItem).updateReference(context,name);
+						((Call) newItem).updateReference(context, name);
 						newItem.addKnownParameters();
 					}
 					else
 					{
 						newItem = Parser.createItem(Tokens.Action.get(), s);
 					}
-					newItem.init(getMatrix(), getMatrix());
-		            newItem.createId();
-					this.getSource().insert(this.getParent(), index, newItem);
-		            driver.setCurrentItem(newItem, getMatrix(), false);
-		        }
-		        catch (Exception ignored)
-		        {}
-		        finally
-		        {
-		            this.remove();
-		            driver.deleteItem(this);
-		            getMatrix().enumerate();
-		        }
+					newItem.init(super.getMatrix(), super.getMatrix());
+					newItem.createId();
+					super.getSource().insert(parent, index, newItem);
+					driver.setCurrentItem(newItem, super.getMatrix(), false);
+				}
+				catch (Exception ignored)
+				{}
+				finally
+				{
+					super.remove();
+					driver.deleteItem(this);
+					super.getMatrix().enumerate();
+				}
 
-		        getMatrix().getChangedProperty().set(true);
+				super.getMatrix().getChangedProperty().set(true);
 				this.isInit = true;
 			}
 		});
 		return layout;
 	}
+	//endregion
 
 	private void fillList(Context context)
 	{
@@ -121,14 +119,6 @@ public class TempItem extends MatrixItem
 				Tokens.RawMessage.get(), Tokens.RawText.get(), Tokens.NameSpace.get(), Tokens.Let.get(), Tokens.Step.get(),
 				Tokens.Assert.get(), Tokens.SetHandler.get()));
 
-
-		List<String> subcases = context.subcases(this).stream().map(readableValue -> CALL + readableValue.getValue()).collect(Collectors.toList());
-		list.addAll(subcases);
-	}
-
-	@Override
-	public boolean isChanged()
-	{
-		return false;
+		list.addAll(context.subcases(this).stream().map(readableValue -> CALL + readableValue.getValue()).collect(Collectors.toList()));
 	}
 }

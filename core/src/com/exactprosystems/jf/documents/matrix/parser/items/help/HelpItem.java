@@ -6,9 +6,8 @@
 // This is unpublished, licensed software, confidential and proprietary
 // information which is the property of Exactpro Systems or its licensors.
 ////////////////////////////////////////////////////////////////////////////////
-package com.exactprosystems.jf.documents.matrix.parser.items;
+package com.exactprosystems.jf.documents.matrix.parser.items.help;
 
-import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.api.error.ErrorKind;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.report.HTMLhelper;
@@ -18,6 +17,10 @@ import com.exactprosystems.jf.documents.config.Context;
 import com.exactprosystems.jf.documents.matrix.parser.Parameters;
 import com.exactprosystems.jf.documents.matrix.parser.Result;
 import com.exactprosystems.jf.documents.matrix.parser.ReturnAndResult;
+import com.exactprosystems.jf.documents.matrix.parser.items.ActionItem;
+import com.exactprosystems.jf.documents.matrix.parser.items.MatrixItem;
+import com.exactprosystems.jf.documents.matrix.parser.items.MatrixItemAttribute;
+import com.exactprosystems.jf.documents.matrix.parser.items.TempItem;
 import com.exactprosystems.jf.documents.matrix.parser.listeners.IMatrixListener;
 
 import java.util.Arrays;

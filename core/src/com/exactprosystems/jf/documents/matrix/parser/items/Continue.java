@@ -27,9 +27,9 @@ import java.util.List;
 		parents			= { Case.class, Else.class, For.class, ForEach.class, If.class,
 							OnError.class, Step.class, SubCase.class, TestCase.class, While.class },
 		real			= true,
-		hasValue 		= false, 
+		hasValue 		= false,
 		hasParameters 	= false,
-        hasChildren 	= false,
+		hasChildren = false,
 		seeAlsoClass 	= {For.class, While.class, Break.class}
 )
 public class Continue extends MatrixItem
@@ -45,11 +45,12 @@ public class Continue extends MatrixItem
 		return new Continue();
 	}
 
+	//region override from MatrixItem
 	@Override
 	protected Object displayYourself(DisplayDriver driver, Context context)
 	{
 		Object layout = driver.createLayout(this, 2);
-		driver.showComment(this, layout, 0, 0, getComments());
+		driver.showComment(this, layout, 0, 0, super.getComments());
 		driver.showTitle(this, layout, 1, 0, Tokens.Continue.get(), context.getFactory().getSettings());
 
 		return layout;
@@ -72,4 +73,5 @@ public class Continue extends MatrixItem
 	{
 		return new ReturnAndResult(start, Result.Continue, null); 
 	}
+	//endregion
 }

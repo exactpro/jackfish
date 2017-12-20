@@ -23,7 +23,6 @@ import com.exactprosystems.jf.documents.config.Context;
 import com.exactprosystems.jf.documents.matrix.Matrix;
 import com.exactprosystems.jf.documents.matrix.parser.*;
 import com.exactprosystems.jf.documents.matrix.parser.items.ActionItem;
-import com.exactprosystems.jf.documents.matrix.parser.items.CommentString;
 import com.exactprosystems.jf.documents.matrix.parser.items.End;
 import com.exactprosystems.jf.documents.matrix.parser.items.MatrixItem;
 import com.exactprosystems.jf.functions.Table;
@@ -518,7 +517,7 @@ public class DisplayDriverFx implements DisplayDriver
 	}
 
 	@Override
-	public void showComment(MatrixItem item, Object layout, int row, int column, List<CommentString> comments)
+	public void showComment(MatrixItem item, Object layout, int row, int column, List<MutableValue<String>> comments)
 	{
 		GridPane pane = (GridPane) layout;
 
@@ -829,17 +828,17 @@ public class DisplayDriverFx implements DisplayDriver
 		return Common.computeTextWidth(font, text, 0.0D) + 40;
 	}
 
-	private List<CommentString> fromStr(String str)
+	private List<MutableValue<String>> fromStr(String str)
 	{
 		return Arrays.stream(str.split("\n"))
-				.map(CommentString::new)
+				.map(MutableValue::new)
 				.collect(Collectors.toList());
 	}
 
-	private String fromList(List<CommentString> list)
+	private String fromList(List<MutableValue<String>> list)
 	{
 		return list.stream()
-				.map(CommentString::toString)
+				.map(MutableValue::get)
 				.collect(Collectors.joining("\n"));
 	}
 

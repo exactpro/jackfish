@@ -16,14 +16,7 @@ import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.report.ReportBuilder;
 import com.exactprosystems.jf.common.report.ReportTable;
 import com.exactprosystems.jf.documents.config.Context;
-import com.exactprosystems.jf.documents.matrix.parser.DisplayDriver;
-import com.exactprosystems.jf.api.error.common.MatrixException;
-import com.exactprosystems.jf.documents.matrix.parser.Parameter;
-import com.exactprosystems.jf.documents.matrix.parser.Parameters;
-import com.exactprosystems.jf.documents.matrix.parser.Result;
-import com.exactprosystems.jf.documents.matrix.parser.ReturnAndResult;
-import com.exactprosystems.jf.documents.matrix.parser.SearchHelper;
-import com.exactprosystems.jf.documents.matrix.parser.Tokens;
+import com.exactprosystems.jf.documents.matrix.parser.*;
 import com.exactprosystems.jf.documents.matrix.parser.listeners.IMatrixListener;
 
 import java.util.List;
@@ -44,7 +37,7 @@ import java.util.Map;
 )
 public class Fail extends MatrixItem
 {
-	private Parameter	failValue	= null;
+	private final Parameter failValue;
 
 	public Fail()
 	{
@@ -66,40 +59,35 @@ public class Fail extends MatrixItem
 		return new Fail(this);
 	}
 
-	//==============================================================================================
-	// Interface Mutable
-	//==============================================================================================
-    @Override
-    public boolean isChanged()
-    {
-    	if (this.failValue.isChanged())
-    	{
-    		return true;
-    	}
-    	return super.isChanged();
-    }
+	//region Interface Mutable
+	@Override
+	public boolean isChanged()
+	{
+		return this.failValue.isChanged() || super.isChanged();
+	}
 
-    @Override
-    public void saved()
-    {
-    	super.saved();
-    	this.failValue.saved();
-    }
+	@Override
+	public void saved()
+	{
+		super.saved();
+		this.failValue.saved();
+	}
 
-	//==============================================================================================
+	//endregion
+
+	//region override from MatrixItem
 	@Override
 	protected Object displayYourself(DisplayDriver driver, Context context)
 	{
 		Object layout = driver.createLayout(this, 2);
-		driver.showComment(this, layout, 0, 0, getComments());
+		driver.showComment(this, layout, 0, 0, super.getComments());
 		driver.showTitle(this, layout, 1, 0, Tokens.Fail.get(), context.getFactory().getSettings());
 		driver.showExpressionField(this, layout, 1, 1, Tokens.Fail.get(), this.failValue, this.failValue, null, null, null, null);
-
 		return layout;
 	}
 
 	@Override
-	protected void initItSelf(Map<Tokens, String> systemParameters) throws MatrixException
+	protected void initItSelf(Map<Tokens, String> systemParameters)
 	{
 		this.failValue.setExpression(systemParameters.get(Tokens.Fail));
 	}
@@ -119,19 +107,19 @@ public class Fail extends MatrixItem
 			this.failValue.evaluate(evaluator);
 			if (!this.failValue.isValid())
 			{
-				ReportTable table = report.addTable("Fail", null, true, true, new int[] { 50, 50 }, new String[] { "Expression", "Error" });
+				ReportTable table = report.addTable("Fail", null, true, true, new int[] { 50, 50 }, "Expression", "Error");
 
 				String msg = String.format(R.COMMON_ERROR_IN_EXPRESSION.get(), this.getClass().getSimpleName());
 				table.addValues(this.failValue.getExpression(), msg);
 				table.addValues(this.failValue.getValueAsString(), " <- Error in here");
 
-				throw new Exception(msg);
+				return new ReturnAndResult(start, Result.Failed, msg, ErrorKind.EXCEPTION, this);
 			}
 
 			Object eval = this.failValue.getValue();
-			if (this.failValue != null)
+			if (eval != null)
 			{
-				ReportTable table = report.addTable("Fail", null, true, true, new int[] { 50, 50 }, new String[] { "Expression", "Value" });
+				ReportTable table = report.addTable("Fail", null, true, true, new int[] { 50, 50 }, "Expression", "Value");
 
 				table.addValues(this.failValue.getExpression(), eval);
 
@@ -148,7 +136,7 @@ public class Fail extends MatrixItem
 		catch (Exception e)
 		{
 			logger.error(e.getMessage(), e);
-            listener.error(this.owner, getNumber(), this, e.getMessage());
+			listener.error(this.owner, super.getNumber(), this, e.getMessage());
 			return new ReturnAndResult(start, Result.Failed, e.getMessage(), ErrorKind.EXCEPTION, this);
 		}
 	}
@@ -165,4 +153,5 @@ public class Fail extends MatrixItem
 		return SearchHelper.matches(Tokens.Fail.get(), what, caseSensitive, wholeWord)
 				|| SearchHelper.matches(this.failValue.getExpression(), what, caseSensitive, wholeWord);
 	}
+	//endregion
 }

@@ -15,7 +15,6 @@ import com.exactprosystems.jf.common.Settings;
 import com.exactprosystems.jf.common.highlighter.Highlighter;
 import com.exactprosystems.jf.documents.config.Context;
 import com.exactprosystems.jf.documents.matrix.Matrix;
-import com.exactprosystems.jf.documents.matrix.parser.items.CommentString;
 import com.exactprosystems.jf.documents.matrix.parser.items.MatrixItem;
 import com.exactprosystems.jf.functions.Table;
 import com.exactprosystems.jf.functions.Text;
@@ -40,7 +39,7 @@ public interface DisplayDriver
 	void 		showTextArea		(MatrixItem item, Object layout, int row, int column, Text text, Consumer<List<String>> consumer, Highlighter highlighter);
 	void		updateTextArea		(MatrixItem item, Object layout, Text text);
 	void		showAutoCompleteBox	(MatrixItem item, Object layout, int row, int column, Supplier<List<String>> wordsSupplier, Getter<String> init, Setter<String> supplier);
-	void 		showComment			(MatrixItem item, Object layout, int row, int column, List<CommentString> lines);
+	void 		showComment			(MatrixItem item, Object layout, int row, int column, List<MutableValue<String>> lines);
 	void 		showButton			(MatrixItem item, Object layout, int row, int column, String name, Consumer<MatrixItem> action);
 
 	void		showSpinner(MatrixItem item, Object layout, int row, int column, double prefWidth, Setter<Integer> set, Getter<Integer> get, int minValue, int maxValue);

@@ -110,7 +110,7 @@ public class Matrix extends AbstractDocument implements IMatrix
 	public void enumerate()
 	{
 		AtomicInteger count = new AtomicInteger(0);
-		Optional.ofNullable(this.root).ifPresent(root -> root.bypass(item -> item.setNubmer(count.getAndIncrement())));
+		Optional.ofNullable(this.root).ifPresent(root -> root.bypass(item -> item.setNumber(count.getAndIncrement())));
 	}
 	
 	@Override

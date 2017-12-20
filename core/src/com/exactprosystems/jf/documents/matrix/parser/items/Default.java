@@ -24,11 +24,11 @@ import java.util.List;
 		shouldContain 	= { Tokens.Default },
 		mayContain 		= { Tokens.Off, Tokens.RepOff }, 
 		parents			= { Switch.class },
-        closes			= Switch.class,
-        real 			= true,
+		closes			= Switch.class,
+		real 			= true,
 		hasValue 		= false, 
 		hasParameters 	= false,
-        hasChildren 	= true,
+		hasChildren 	= true,
 		seeAlsoClass 	= {For.class, While.class, Break.class}
 )
 public class Default extends MatrixItem
@@ -44,11 +44,12 @@ public class Default extends MatrixItem
 		return new Default();
 	}
 
+	//region override from MatrixItem
 	@Override
 	protected Object displayYourself(DisplayDriver driver, Context context)
 	{
 		Object layout = driver.createLayout(this, 2);
-		driver.showComment(this, layout, 0, 0, getComments());
+		driver.showComment(this, layout, 0, 0, super.getComments());
 		driver.showTitle(this, layout, 1, 0, Tokens.Default.get(), context.getFactory().getSettings());
 
 		return layout;
@@ -60,10 +61,11 @@ public class Default extends MatrixItem
 		super.addParameter(firstLine, TypeMandatory.System, Tokens.Default.get());
 	}
 
-    @Override
-    protected boolean matchesDerived(String what, boolean caseSensitive, boolean wholeWord)
-    {
-        return SearchHelper.matches(Tokens.Default.get(), what, caseSensitive, wholeWord);
-    }
+	@Override
+	protected boolean matchesDerived(String what, boolean caseSensitive, boolean wholeWord)
+	{
+		return SearchHelper.matches(Tokens.Default.get(), what, caseSensitive, wholeWord);
+	}
+	//endregion
 }
 

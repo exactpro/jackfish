@@ -7,7 +7,7 @@
 // information which is the property of Exactpro Systems or its licensors.
 ////////////////////////////////////////////////////////////////////////////////
 
-package com.exactprosystems.jf.documents.matrix.parser.items;
+package com.exactprosystems.jf.documents.matrix.parser.items.help;
 
 import java.io.BufferedReader;
 import java.io.InputStream;
@@ -24,6 +24,7 @@ import com.exactprosystems.jf.documents.config.Context;
 import com.exactprosystems.jf.documents.matrix.parser.Parameters;
 import com.exactprosystems.jf.documents.matrix.parser.Result;
 import com.exactprosystems.jf.documents.matrix.parser.ReturnAndResult;
+import com.exactprosystems.jf.documents.matrix.parser.items.MatrixItem;
 import com.exactprosystems.jf.documents.matrix.parser.listeners.IMatrixListener;
 
 public class HelpText extends MatrixItem

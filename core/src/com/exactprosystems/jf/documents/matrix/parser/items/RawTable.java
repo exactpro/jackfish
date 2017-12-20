@@ -11,7 +11,6 @@ package com.exactprosystems.jf.documents.matrix.parser.items;
 
 import com.csvreader.CsvWriter;
 import com.exactprosystems.jf.api.common.i18n.R;
-import com.exactprosystems.jf.api.error.ErrorKind;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.evaluator.Variables;
 import com.exactprosystems.jf.common.report.ReportBuilder;
@@ -42,12 +41,11 @@ import java.util.Map;
 public class RawTable extends MatrixItem
 {
 	private MutableValue<String> typeName;
-	private Table table;
+	private Table                table;
+	private boolean firstUsing = true;
 
 	private int prefCols;
 	private int prefRows;
-
-	private boolean firstUsing = true;
 
 	public RawTable()
 	{
@@ -80,16 +78,16 @@ public class RawTable extends MatrixItem
 	{
 		Object layout = driver.createLayout(this, 3);
 
-		driver.showComment(this, layout, 0, 0, getComments());
-		driver.showTextBox(this, layout, 1, 0, this.id, this.id, () -> this.id.get());
+		driver.showComment(this, layout, 0, 0, super.getComments());
+		driver.showTextBox(this, layout, 1, 0, super.id, super.id, () -> super.id.get());
 		driver.showTitle(this, layout, 1, 1, Tokens.RawTable.get(), context.getFactory().getSettings());
 		driver.showLabel(this, layout, 1, 2, this.typeName.get());
-		driver.showCheckBox(this, layout, 1, 3, "Global", this.global, this.global);
+		driver.showCheckBox(this, layout, 1, 3, "Global", super.global, super.global);
 		driver.showGrid(this, layout, 2, 0, this.table);
 		driver.showToggleButton(this, layout, 1, 4, 
-		        b -> driver.hide(this, layout, 2, b), 
-		        b -> b ? "Hide" : "Show", this.table.size() != 0);
-		driver.hide(this, layout, 2, this.table.size() == 0);
+				b -> driver.hide(this, layout, 2, b),
+				b -> b ? "Hide" : "Show", !this.table.isEmpty());
+		driver.hide(this, layout, 2, this.table.isEmpty());
 
         driver.showLabel(this, layout, 1, 5, "rows =");
 		driver.showSpinner(this, layout, 1, 6, 75, v -> this.prefRows = v, () -> this.prefRows, 0, 250);
@@ -113,25 +111,20 @@ public class RawTable extends MatrixItem
 		return layout;
 	}
 
-	// ==============================================================================================
-	// Getters / setters
-	// ==============================================================================================
+	//region public Getters / setters
+
 	public String getType()
 	{
 		return this.typeName.get();
 	}
 
-	// ==============================================================================================
-	// Interface Mutable
-	// ==============================================================================================
+	//endregion
+
+	//region Interface Mutable
 	@Override
 	public boolean isChanged()
 	{
-		if (this.typeName.isChanged() || this.table.isChanged())
-		{
-			return true;
-		}
-		return super.isChanged();
+		return this.typeName.isChanged() || this.table.isChanged() || super.isChanged();
 	}
 
 	@Override
@@ -141,10 +134,9 @@ public class RawTable extends MatrixItem
 		this.typeName.saved();
 		this.table.saved();
 	}
+	//endregion
 
-	// ==============================================================================================
-	// Protected members should be overridden
-	// ==============================================================================================
+	//region override from MatrixItem
 	@Override
 	public void processRawData(String[] str)
 	{
@@ -181,7 +173,7 @@ public class RawTable extends MatrixItem
 	@Override
 	protected void writePrefixItSelf(CsvWriter writer, List<String> firstLine, List<String> secondLine)
 	{
-		addParameter(firstLine, secondLine, TypeMandatory.System, Tokens.RawTable.get(), this.typeName.get());
+		super.addParameter(firstLine, secondLine, TypeMandatory.System, Tokens.RawTable.get(), this.typeName.get());
 	}
 	
 	@Override
@@ -198,7 +190,6 @@ public class RawTable extends MatrixItem
 
 		super.addParameter(line, TypeMandatory.System, Tokens.EndRawTable.get());
 	}
-	
 
 	@Override
 	protected boolean matchesDerived(String what, boolean caseSensitive, boolean wholeWord)
@@ -207,15 +198,14 @@ public class RawTable extends MatrixItem
 	}
 
 	@Override
-	protected ReturnAndResult executeItSelf(long start, Context context, IMatrixListener listener, AbstractEvaluator evaluator,
-			ReportBuilder report, Parameters parameters)
+	protected ReturnAndResult executeItSelf(long start, Context context, IMatrixListener listener, AbstractEvaluator evaluator, ReportBuilder report, Parameters parameters)
 	{
 		try
 		{
 			this.table.setEvaluator(evaluator);
 			this.table.report(report, Tokens.RawTable.get(), null, false, false);
 
-			Variables vars = isGlobal() ? evaluator.getGlobals() : evaluator.getLocals();
+			Variables vars = super.isGlobal() ? evaluator.getGlobals() : evaluator.getLocals();
 
 			ReturnAndResult ret = new ReturnAndResult(start, Result.Passed, new Table(this.table));
 
@@ -229,13 +219,9 @@ public class RawTable extends MatrixItem
 		catch (Exception e)
 		{
 			logger.error(e.getMessage(), e);
-			listener.error(this.owner, getNumber(), this, e.getMessage());
-			return new ReturnAndResult(start, Result.Failed, e.getMessage(), ErrorKind.EXCEPTION, this);
+			return super.createReturn(e.getMessage(), listener, start);
 		}
 	}
 
-
-	// ==============================================================================================
-	// Private members
-	// ==============================================================================================
+	//endregion
 }

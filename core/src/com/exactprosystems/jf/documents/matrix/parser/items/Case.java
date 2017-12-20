@@ -13,12 +13,7 @@ import com.csvreader.CsvWriter;
 import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.documents.config.Context;
-import com.exactprosystems.jf.documents.matrix.parser.DisplayDriver;
-import com.exactprosystems.jf.api.error.common.MatrixException;
-import com.exactprosystems.jf.documents.matrix.parser.Parameter;
-import com.exactprosystems.jf.documents.matrix.parser.Parameters;
-import com.exactprosystems.jf.documents.matrix.parser.SearchHelper;
-import com.exactprosystems.jf.documents.matrix.parser.Tokens;
+import com.exactprosystems.jf.documents.matrix.parser.*;
 import com.exactprosystems.jf.documents.matrix.parser.listeners.IMatrixListener;
 
 import java.util.List;
@@ -29,17 +24,17 @@ import java.util.Map;
 		constantExamples = R.CASE_EXAMPLE,
 		shouldContain 	= { Tokens.Case },
 		mayContain 		= { Tokens.Off, Tokens.RepOff }, 
-        closes			= Switch.class,
+		closes			= Switch.class,
 		parents			= { Switch.class },
-        real			= true,
+		real			= true,
 		hasValue 		= true, 
 		hasParameters 	= false,
-        hasChildren 	= true,
+		hasChildren 	= true,
 		seeAlsoClass 	= {Switch.class}
 	)
 public class Case extends MatrixItem
 {
-	private Parameter variant;
+	private final Parameter variant;
 
 	public Case()
 	{
@@ -61,35 +56,29 @@ public class Case extends MatrixItem
 		return new Case(this);
 	}
 
-	//==============================================================================================
-	// Interface Mutable
-	//==============================================================================================
-    @Override
-    public boolean isChanged()
-    {
-    	if (this.variant.isChanged())
-    	{
-    		return true;
-    	}
-    	return super.isChanged();
-    }
+	//region Interface Mutable
+	@Override
+	public boolean isChanged()
+	{
+		return this.variant.isChanged() || super.isChanged();
+	}
 
-    @Override
-    public void saved()
-    {
-    	super.saved();
-    	this.variant.saved();
-    }
+	@Override
+	public void saved()
+	{
+		super.saved();
+		this.variant.saved();
+	}
+	//endregion
 
-    //==============================================================================================
+	//region region override from MatrixItem
 	@Override
 	protected Object displayYourself(DisplayDriver driver, Context context)
 	{
 		Object layout = driver.createLayout(this, 2);
-		driver.showComment(this, layout, 0, 0, getComments());
+		driver.showComment(this, layout, 0, 0, super.getComments());
 		driver.showTitle(this, layout, 1, 0, Tokens.Case.get(), context.getFactory().getSettings());
 		driver.showExpressionField(this, layout, 1, 1, Tokens.Case.get(), this.variant, this.variant, null, null, null, null);
-
 		return layout;
 	}
 
@@ -100,7 +89,7 @@ public class Case extends MatrixItem
 	}
 	
 	@Override
-	protected void initItSelf(Map<Tokens, String> systemParameters) throws MatrixException
+	protected void initItSelf(Map<Tokens, String> systemParameters)
 	{
 		this.variant.setExpression(systemParameters.get(Tokens.Case));
 	}
@@ -114,17 +103,18 @@ public class Case extends MatrixItem
 	@Override
 	protected boolean matchesDerived(String what, boolean caseSensitive, boolean wholeWord)
 	{
-		return SearchHelper.matches(Tokens.Case.get(), what, caseSensitive, wholeWord) ||
-				SearchHelper.matches(this.variant.getExpression(), what, caseSensitive, wholeWord);
+		return SearchHelper.matches(Tokens.Case.get(), what, caseSensitive, wholeWord)
+				|| SearchHelper.matches(this.variant.getExpression(), what, caseSensitive, wholeWord);
 	}
 
-    @Override
-    protected void checkItSelf(Context context, AbstractEvaluator evaluator, IMatrixListener listener, Parameters parameters)
-    {
-        super.checkItSelf(context, evaluator, listener, parameters);
-        this.variant.prepareAndCheck(evaluator, listener, this);
-    }
-    
+	@Override
+	protected void checkItSelf(Context context, AbstractEvaluator evaluator, IMatrixListener listener, Parameters parameters)
+	{
+		super.checkItSelf(context, evaluator, listener, parameters);
+		this.variant.prepareAndCheck(evaluator, listener, this);
+	}
+	//endregion
+
 	public Parameter getVariant()
 	{
 		return this.variant;

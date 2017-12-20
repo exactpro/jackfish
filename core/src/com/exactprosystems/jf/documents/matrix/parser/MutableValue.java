@@ -96,7 +96,7 @@ public class MutableValue<T> implements Mutable, Setter<T>, MutableListener<T>
 	@Override
 	public String toString()
 	{
-		return "" + (this.value == null ? "" : this.value.toString());
+		return this.value == null ? "" : this.value.toString();
 	}
 	
 	public void fire()

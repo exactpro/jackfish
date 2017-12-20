@@ -11,11 +11,23 @@ package com.exactprosystems.jf.documents.matrix.parser.items;
 
 import com.exactprosystems.jf.api.error.ErrorKind;
 
+/**
+ * The class representing the matrix error bean.
+ * Has fields:
+ * <ul>
+ * <li>{@link MatrixError#Where} : the place ( item), where was error</li>
+ * <li>{@link MatrixError#Message} : the error message</li>
+ * <li>{@link MatrixError#Kind} : the error kind of error</li>
+ * </ul>
+ *
+ * @see ErrorKind
+ * @see MatrixItem
+ */
 public class MatrixError
 {
-	public MatrixItem 	Where;
-	public String 		Message;
-	public ErrorKind 	Kind;
+	public MatrixItem Where;
+	public String     Message;
+	public ErrorKind  Kind;
 
 	public MatrixError(MatrixError error)
 	{
@@ -29,11 +41,11 @@ public class MatrixError
 
 	public MatrixError(String message, ErrorKind kind, MatrixItem where)
 	{
-		this.Message 	= message;
-		this.Kind 		= kind;
-		this.Where 		= where;
+		this.Message = message;
+		this.Kind = kind;
+		this.Where = where;
 	}
-	
+
 	@Override
 	public String toString()
 	{

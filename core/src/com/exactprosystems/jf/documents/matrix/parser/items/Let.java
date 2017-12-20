@@ -12,20 +12,12 @@ package com.exactprosystems.jf.documents.matrix.parser.items;
 import com.csvreader.CsvWriter;
 import com.exactprosystems.jf.api.common.Str;
 import com.exactprosystems.jf.api.common.i18n.R;
-import com.exactprosystems.jf.api.error.ErrorKind;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.evaluator.Variables;
 import com.exactprosystems.jf.common.report.ReportBuilder;
 import com.exactprosystems.jf.common.report.ReportTable;
 import com.exactprosystems.jf.documents.config.Context;
-import com.exactprosystems.jf.documents.matrix.parser.DisplayDriver;
-import com.exactprosystems.jf.api.error.common.MatrixException;
-import com.exactprosystems.jf.documents.matrix.parser.Parameter;
-import com.exactprosystems.jf.documents.matrix.parser.Parameters;
-import com.exactprosystems.jf.documents.matrix.parser.Result;
-import com.exactprosystems.jf.documents.matrix.parser.ReturnAndResult;
-import com.exactprosystems.jf.documents.matrix.parser.SearchHelper;
-import com.exactprosystems.jf.documents.matrix.parser.Tokens;
+import com.exactprosystems.jf.documents.matrix.parser.*;
 import com.exactprosystems.jf.documents.matrix.parser.listeners.IMatrixListener;
 
 import java.util.List;
@@ -45,12 +37,12 @@ import java.util.Map;
 	)
 public class Let extends MatrixItem
 {
-	private Parameter value = null;
+	private final Parameter value;
 
 	public Let()
 	{
 		super();
-		this.value = new Parameter(Tokens.Let.get(),	null); 
+		this.value = new Parameter(Tokens.Let.get(), null);
 	}
 
 	/**
@@ -67,27 +59,22 @@ public class Let extends MatrixItem
 		return new Let(this);
 	}
 
-	//==============================================================================================
-	// Interface Mutable
-	//==============================================================================================
-    @Override
-    public boolean isChanged()
-    {
-    	if (this.value.isChanged())
-    	{
-    		return true;
-    	}
-    	return super.isChanged();
-    }
+	//region Interface Mutable
+	@Override
+	public boolean isChanged()
+	{
+		return this.value.isChanged() || super.isChanged();
+	}
 
-    @Override
-    public void saved()
-    {
-    	super.saved();
-    	this.value.saved();
-    }
+	@Override
+	public void saved()
+	{
+		super.saved();
+		this.value.saved();
+	}
+	//endregion
 
-	//==============================================================================================
+	//region override from MatrixItem
 	@Override
 	protected Object displayYourself(DisplayDriver driver, Context context)
 	{
@@ -110,19 +97,18 @@ public class Let extends MatrixItem
 
 	@Override
 	protected void initItSelf(Map<Tokens, String> systemParameters)
-			throws MatrixException
 	{
 		this.value.setExpression(systemParameters.get(Tokens.Let));
 	}
 
-    @Override
-    protected void checkItSelf(Context context, AbstractEvaluator evaluator, IMatrixListener listener, Parameters parameters)
-    {
-    	// do not call super.checkItSelf(...) because id may be the same for several Let items.
+	@Override
+	protected void checkItSelf(Context context, AbstractEvaluator evaluator, IMatrixListener listener, Parameters parameters)
+	{
+		// do not call super.checkItSelf(...) because id may be the same for several Let items.
 		super.checkValidId(this.id, listener);
-        this.value.prepareAndCheck(evaluator, listener, this);
-    }
-	
+		this.value.prepareAndCheck(evaluator, listener, this);
+	}
+
 	@Override
 	protected ReturnAndResult executeItSelf(long start, Context context, IMatrixListener listener, AbstractEvaluator evaluator, ReportBuilder report, Parameters parameters)
 	{
@@ -131,36 +117,33 @@ public class Let extends MatrixItem
 			this.value.evaluate(evaluator);
 			if (!this.value.isValid())
 			{
-				ReportTable table = report.addTable("Let", null, true, true, 
-						new int[] {50, 50}, new String[] {"Expression", "Error"});
-			
+				ReportTable table = report.addTable("Let", null, true, true, new int[] {50, 50}, "Expression", "Error");
+
 				String msg = "Error in expression #Let";
-	        	table.addValues(this.value.getExpression(), msg);
+				table.addValues(this.value.getExpression(), msg);
 				table.addValues(this.value.getValueAsString(), " <- Error in here");
 
-	        	throw new Exception(msg);
+				return super.createReturn(msg, listener, start);
 			}
-			
+
 			Object val = this.value.getValue();
-			Variables vars = isGlobal() ? evaluator.getGlobals() : evaluator.getLocals();
-			if (!Str.IsNullOrEmpty(getId()))
+			Variables vars = super.isGlobal() ? evaluator.getGlobals() : evaluator.getLocals();
+			if (!Str.IsNullOrEmpty(super.getId()))
 			{
-				vars.set(getId(), val);
+				vars.set(super.getId(), val);
 			}
-			
-			ReportTable table = report.addTable("Let", null, true, true, 
-					new int[] {50, 50}, new String[] {"Expression", "Value"});
-		
-        	table.addValues(this.value.getExpression(), val);
+
+			ReportTable table = report.addTable("Let", null, true, true, new int[] {50, 50}, "Expression", "Value");
+
+			table.addValues(this.value.getExpression(), val);
 			report.itemIntermediate(this);
-	
+
 			return new ReturnAndResult(start, Result.Passed, val);
 		}
 		catch (Exception e)
 		{
 			logger.error(e.getMessage(), e);
-			listener.error(this.owner, getNumber(), this, e.getMessage());
-			return new ReturnAndResult(start, Result.Failed, e.getMessage(), ErrorKind.EXCEPTION, this);
+			return super.createReturn(e.getMessage(), listener, start);
 		}
 	}
 
@@ -176,6 +159,6 @@ public class Let extends MatrixItem
 		return SearchHelper.matches(Tokens.Let.get(), what, caseSensitive, wholeWord) ||
 				SearchHelper.matches(this.value.getExpression(), what, caseSensitive, wholeWord);
 	}
-
+	//endregion
 }
 

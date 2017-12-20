@@ -7,26 +7,29 @@
 // information which is the property of Exactpro Systems or its licensors.
 ////////////////////////////////////////////////////////////////////////////////
 
-package com.exactprosystems.jf.documents.matrix.parser.items;
+package com.exactprosystems.jf.documents.matrix.parser.items.end;
 
 import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.documents.matrix.parser.Tokens;
+import com.exactprosystems.jf.documents.matrix.parser.items.MatrixItem;
+import com.exactprosystems.jf.documents.matrix.parser.items.MatrixItemAttribute;
+import com.exactprosystems.jf.documents.matrix.parser.items.While;
 
 @MatrixItemAttribute(
-		constantGeneralDescription = R.END_FOR_DESCRIPTION,
-		shouldContain 	= { Tokens.EndFor },
+		constantGeneralDescription = R.END_WHILE_DESCRIPTION,
+		shouldContain 	= { Tokens.EndWhile },
 		mayContain 		= { }, 
-		closes			= For.class,
+		closes			= While.class,
 		real			= false,
 		hasValue 		= false, 
-		hasParameters 	= false, 
-        hasChildren 	= false
-	)
-public class EndFor extends MatrixItem
+		hasParameters 	= false,
+		hasChildren 	= false
+)
+public class EndWhile extends MatrixItem
 {
 	@Override
 	protected MatrixItem makeCopy()
 	{
-		return new EndFor();
+		return new EndWhile();
 	}
 }

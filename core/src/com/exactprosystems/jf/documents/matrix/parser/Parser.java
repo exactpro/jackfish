@@ -17,6 +17,7 @@ import com.exactprosystems.jf.common.CommonHelper;
 import com.exactprosystems.jf.documents.config.Configuration;
 import com.exactprosystems.jf.documents.matrix.parser.items.*;
 
+import com.exactprosystems.jf.documents.matrix.parser.items.end.*;
 import org.apache.log4j.Logger;
 
 import javax.lang.model.type.NullType;

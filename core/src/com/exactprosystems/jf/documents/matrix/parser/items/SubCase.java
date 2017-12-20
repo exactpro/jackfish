@@ -10,20 +10,13 @@
 package com.exactprosystems.jf.documents.matrix.parser.items;
 
 import com.csvreader.CsvWriter;
+import com.exactprosystems.jf.api.common.Str;
 import com.exactprosystems.jf.api.common.i18n.R;
-import com.exactprosystems.jf.api.error.ErrorKind;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.report.ReportBuilder;
 import com.exactprosystems.jf.common.report.ReportTable;
 import com.exactprosystems.jf.documents.config.Context;
-import com.exactprosystems.jf.documents.matrix.parser.DisplayDriver;
-import com.exactprosystems.jf.documents.matrix.parser.MutableValue;
-import com.exactprosystems.jf.documents.matrix.parser.Parameter;
-import com.exactprosystems.jf.documents.matrix.parser.Parameters;
-import com.exactprosystems.jf.documents.matrix.parser.Result;
-import com.exactprosystems.jf.documents.matrix.parser.ReturnAndResult;
-import com.exactprosystems.jf.documents.matrix.parser.SearchHelper;
-import com.exactprosystems.jf.documents.matrix.parser.Tokens;
+import com.exactprosystems.jf.documents.matrix.parser.*;
 import com.exactprosystems.jf.documents.matrix.parser.listeners.IMatrixListener;
 
 import java.util.List;
@@ -43,9 +36,8 @@ import java.util.Map;
 )
 public final class SubCase extends MatrixItem
 {
-	private boolean	call	= false;
-
-	private MutableValue<String> name;
+	private boolean call = false;
+	private final MutableValue<String> name;
 
 	public SubCase()
 	{
@@ -64,34 +56,66 @@ public final class SubCase extends MatrixItem
 		return new SubCase(this);
 	}
 
-	//==============================================================================================
-	// Interface Mutable
-	//==============================================================================================
-    @Override
-    public boolean isChanged()
-    {
-    	if (this.name.isChanged())
-    	{
-    		return true;
-    	}
-    	return super.isChanged();
-    }
+	//region Interface Mutable
+	@Override
+	public boolean isChanged()
+	{
+		return this.name.isChanged() || super.isChanged();
+	}
 
-    @Override
-    public void saved()
-    {
-    	super.saved();
-    	this.name.saved();
-    }
+	@Override
+	public void saved()
+	{
+		super.saved();
+		this.name.saved();
+	}
 
-	//==============================================================================================
+	//endregion
 
+	public void setRealParameters(Parameters realParameters)
+	{
+		this.call = true;
+		Parameters parametersSource = super.getParameters();
+		realParameters.forEach(parametersSource::replaceIfExists);
+	}
+
+	//region public Getters / setters
+	public String getName()
+	{
+		return this.name.get();
+	}
+
+	@Override
+	public Object get(Tokens key)
+	{
+		if (key == Tokens.SubCase)
+		{
+			return this.name.get();
+		}
+		return super.get(key);
+	}
+
+	@Override
+	public void set(Tokens key, Object value)
+	{
+		if (key == Tokens.SubCase)
+		{
+			this.name.set((String) value);
+		}
+		else
+		{
+			super.set(key, value);
+		}
+	}
+	//endregion
+
+	//region override from MatrixItem
 	@Override
 	protected Object displayYourself(DisplayDriver driver, Context context)
 	{
 		Object layout = driver.createLayout(this, 2);
-		driver.showComment(this, layout, 0, 0, getComments());
-		driver.showTextBox(this, layout, 1, 0, this.id, this.id, () -> this.id.get());
+		driver.showComment(this, layout, 0, 0, super.getComments());
+		driver.showTextBox(this, layout, 1, 0, super.id, super.id, () -> super.id.get());
 		driver.showTitle(this, layout, 1, 1, Tokens.SubCase.get(), context.getFactory().getSettings());
 		driver.showTextBox(this, layout, 1, 2, this.name, this.name, null);
 		driver.showParameters(this, layout, 1, 3, this.parameters, () -> "", true);
@@ -99,59 +123,12 @@ public final class SubCase extends MatrixItem
 		return layout;
 	}
 
-	// ==============================================================================================
-	// Getters / setters
-	// ==============================================================================================
-	public String getName()
-	{
-		return this.name.get();
-	}
-
-	public void setRealParameters(Parameters realParameters)
-	{
-		this.call = true;
-
-		Parameters parametersSource = getParameters();
-
-		for (Parameter entry : realParameters)
-		{
-			parametersSource.replaceIfExists(entry);
-		}
-
-	}
-	
-    @Override
-    public Object get(Tokens key)
-    {
-        switch (key)
-        {
-        case SubCase:
-            return this.name.get();
-        default:
-            return super.get(key);
-        }
-    }
-    
-    @Override
-    public void set(Tokens key, Object value)
-    {
-        switch (key)
-        {
-        case SubCase:
-            this.name.set((String)value);
-        default:
-            super.set(key, value);
-        }
-    }
-
-	// ==============================================================================================
-	// Protected members should be overridden
-	// ==============================================================================================
 	@Override
 	public String getItemName()
 	{
-		return super.getItemName() + " " + (this.name == null || this.name.isNullOrEmpty() ? "" : "(" + this.name + ")") + (super.getId() == null || super.getId().isEmpty() ? "" : " ( id : " +
-				super.getId() + " )");
+		return super.getItemName() + " "
+				+ (this.name.isNullOrEmpty() ? "" : "(" + this.name + ")")
+				+ (Str.IsNullOrEmpty(super.getId()) ? "" : " ( id : " + super.getId() + " )");
 	}
 
 	@Override
@@ -169,21 +146,17 @@ public final class SubCase extends MatrixItem
 	@Override
 	protected void writePrefixItSelf(CsvWriter writer, List<String> firstLine, List<String> secondLine)
 	{
-		addParameter(firstLine, secondLine, TypeMandatory.System, Tokens.SubCase.get(), this.name.get());
-
-		for (Parameter entry : getParameters())
-		{
-			super.addParameter(firstLine, secondLine, TypeMandatory.Extra, entry.getName(), entry.getExpression());
-		}
+		super.addParameter(firstLine, secondLine, TypeMandatory.System, Tokens.SubCase.get(), this.name.get());
+		super.getParameters().forEach(entry -> super.addParameter(firstLine, secondLine, TypeMandatory.Extra, entry.getName(), entry.getExpression()));
 	}
 
 	@Override
 	protected boolean matchesDerived(String what, boolean caseSensitive, boolean wholeWord)
 	{
-		return SearchHelper.matches(Tokens.SubCase.get(), what, caseSensitive, wholeWord) ||
-				SearchHelper.matches(getId(), what, caseSensitive, wholeWord) ||
-				SearchHelper.matches(this.name.get(), what, caseSensitive, wholeWord) ||
-				getParameters().matches(what, caseSensitive, wholeWord);
+		return SearchHelper.matches(Tokens.SubCase.get(), what, caseSensitive, wholeWord)
+				|| SearchHelper.matches(getId(), what, caseSensitive, wholeWord)
+				|| SearchHelper.matches(this.name.get(), what, caseSensitive, wholeWord)
+				|| super.getParameters().matches(what, caseSensitive, wholeWord);
 	}
 
 	@Override
@@ -193,63 +166,49 @@ public final class SubCase extends MatrixItem
 	}
 
 	@Override
-	protected void beforeReport(ReportBuilder report)
-	{
-	    super.beforeReport(report);
-	}
-
-	@Override
-	protected void checkItSelf(Context context, AbstractEvaluator evaluator, IMatrixListener listener, Parameters parameters)
-	{
-		super.checkItSelf(context, evaluator, listener, parameters);
-	}
-
-	@Override
 	protected ReturnAndResult executeItSelf(long start, Context context, IMatrixListener listener, AbstractEvaluator evaluator, ReportBuilder report, Parameters parameters)
 	{
 		if (!this.call)
 		{
 			return new ReturnAndResult(start, Result.NotExecuted);
 		}
-
 		try
 		{
-		    evaluator.getLocals().clear();
+			evaluator.getLocals().clear();
 			evaluator.getLocals().set(parameters.makeCopy());
 
 			reportParameters(report, parameters);
 			report.itemIntermediate(this);
 
-			ReturnAndResult ret = executeChildren(start, context, listener, evaluator, report, new Class<?>[] { OnError.class });
+			ReturnAndResult returnAndResult = super.executeChildren(start, context, listener, evaluator, report, new Class<?>[]{OnError.class});
 
-			Result result = ret.getResult();
-			
+			Result result = returnAndResult.getResult();
+
 			if (result.isFail())
 			{
 				MatrixItem branchOnError = super.find(false, OnError.class, null);
 				if (branchOnError != null && branchOnError instanceof OnError)
 				{
-					((OnError)branchOnError).setError(ret.getError());
-					
-					ret = branchOnError.execute(context, listener, evaluator, report);
-					result = ret.getResult();
+					((OnError) branchOnError).setError(returnAndResult.getError());
+
+					returnAndResult = branchOnError.execute(context, listener, evaluator, report);
+					result = returnAndResult.getResult();
 				}
 			}
 			if (result == Result.Return)
 			{
-				return new ReturnAndResult(start, ret);
+				return new ReturnAndResult(start, returnAndResult);
 			}
 			else
 			{
-				return new ReturnAndResult(start, ret.getError(), result);
+				return new ReturnAndResult(start, returnAndResult.getError(), result);
 			}
 
 		}
 		catch (Exception e)
 		{
 			logger.error(e.getMessage(), e);
-			listener.error(this.owner, getNumber(), this, e.getMessage());
-			return new ReturnAndResult(start, Result.Failed, e.getMessage(), ErrorKind.EXCEPTION, this);
+			return super.createReturn(e.getMessage(), listener, start);
 		}
 		finally
 		{
@@ -257,22 +216,14 @@ public final class SubCase extends MatrixItem
 		}
 	}
 
-	@Override
-	protected void afterReport(ReportBuilder report)
-	{
-	    super.afterReport(report);
-	}
+	//endregion
 
-	// ==============================================================================================
-	// Private members
-	// ==============================================================================================
+	//region private methods
 	private void reportParameters(ReportBuilder report, Parameters parameters)
 	{
-		ReportTable table = report.addTable("Input parameters", null, true, true, new int[] { 20, 40, 40 }, new String[] { "Parameter", "Expression", "Value" });
-
-		for (Parameter parameter : parameters)
-		{
-			table.addValues(parameter.getName(), parameter.getExpression(), parameter.getValue());
-		}
+		ReportTable table = report.addTable("Input parameters", null, true, true, new int[] { 20, 40, 40 }, "Parameter", "Expression", "Value");
+		parameters.forEach(parameter -> table.addValues(parameter.getName(), parameter.getExpression(), parameter.getValue()));
 	}
+
+	//endregion
 }

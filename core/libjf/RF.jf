@@ -1139,7 +1139,7 @@ RF;RegressionFramework
             #EndFor
 
             #Action;$Replace;$Table;$Search;$Columns
-            TableReplace;'';resultTable;null;stepHeaders.toArray()
+            TableReplace;'';resultTable;'null';stepHeaders.toArray()
 
             #Action;$Replace;$Table;$Columns;$MatchCell;$Search
             TableReplace;'Failed';resultTable;{'Execution Status'};true;0
