@@ -40,6 +40,7 @@ INIT;;;;
     26;;matrices/tests/JavaFxPlugin;;q;;;;1;
     27;;matrices/tests/Zip;;q;;;;1;
     28;;matrices/tests/CheckLayout;;q;;;;1;
+    29;;matrices/tests/TestRFnew;;q;;;;1;
     #EndRawTable
 
     #Id;#RawTable

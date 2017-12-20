@@ -1245,7 +1245,7 @@ RF;RegressionFramework
         TableReplace;table;{ 'step', 'error' };true;'null';''
 
         #Action;$Table;$Columns;$MatchCell;$Search;$Replace
-        TableReplace;table;{ 'screenshot'};true;null;''
+        TableReplace;table;{ 'screenshot'};true;'null';''
 
         #Action;$Table;$Colored;$Hyperlink
         TableConsiderColumnsAs;table;'result';'screenshot'
