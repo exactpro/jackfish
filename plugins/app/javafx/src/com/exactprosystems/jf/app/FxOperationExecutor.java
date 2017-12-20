@@ -760,8 +760,16 @@ public class FxOperationExecutor extends AbstractOperationExecutor<EventTarget>
 							String currentText = field.getText();
 							field.setText(currentText + text);
 						}
-
 						return true;
+					}
+					else if(component instanceof ComboBox)
+					{
+						ComboBox comboBox = (ComboBox) component;
+						if(comboBox.isEditable())
+						{
+							comboBox.getEditor().setText(text);
+							return true;
+						}
 					}
 					throw new Exception("Cant set text to not input control");
 				},
@@ -993,6 +1001,14 @@ public class FxOperationExecutor extends AbstractOperationExecutor<EventTarget>
 				TreeView treeView = (TreeView) component;
 				treeView.scrollTo(index);
 				Platform.runLater(treeView::layout);
+				return true;
+			}
+			if (component instanceof ComboBox)
+			{
+				ComboBox comboBox = (ComboBox) component;
+				ListView listView = ((ComboBoxListViewSkin) comboBox.getSkin()).getListView();
+				listView.scrollTo(index);
+				Platform.runLater(listView::layout);
 				return true;
 			}
 			return false;

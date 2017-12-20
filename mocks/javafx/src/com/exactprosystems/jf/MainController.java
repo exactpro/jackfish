@@ -8,6 +8,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 package com.exactprosystems.jf;
 
+import com.sun.javafx.scene.control.skin.ComboBoxListViewSkin;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -16,6 +17,7 @@ import javafx.geometry.Pos;
 import javafx.scene.AccessibleAttribute;
 import javafx.scene.Group;
 import javafx.scene.Node;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.*;
@@ -89,14 +91,28 @@ public class MainController implements Initializable
     public void initialize(URL location, ResourceBundle resources)
     {
         mainModel = new MainModel();
+        TreeView.setOnScrollTo(event -> scrollPrint(TreeView.getId()));
+        ListView.setOnScrollTo(event -> scrollPrint(ListView.getId()));
         ComboBox.getItems().addAll(mainModel.getData());
+        if(ComboBox.isEditable())
+		{
+			TextField boxEditor = ComboBox.getEditor();
+			boxEditor.setOnKeyPressed(event -> pressHandlerCustom(event, ComboBox.getId()));
+			boxEditor.setOnKeyTyped(event -> typeHandlerCustom(event, ComboBox.getId()));
+			boxEditor.setOnKeyReleased(event -> releaseHandlerCustom(event, ComboBox.getId()));
+		}
+		else
+		{
+			ComboBox.setOnKeyReleased(this::releasedHandler);
+			ComboBox.setOnKeyPressed(this::pressHandler);
+			ComboBox.setOnKeyTyped(this::typedHandler);
+		}
         Table.getColumns().addAll(mainModel.getTable().getHeaders());
         Table.setItems(mainModel.getTable().getTableData());
         TreeView.setRoot(mainModel.getTree().getRoot());
         menu.getMenus().addAll(mainModel.getMenu().getMenus());
         Slider.valueProperty().addListener((observable, oldValue, newValue) -> sliderLabel.setText("Slider_" + String.valueOf(newValue.intValue())));
-        TextBox
-				.textProperty().addListener((observable, oldValue, newValue) -> CentralLabel.setText("TextEdit_" + newValue));
+        TextBox.textProperty().addListener((observable, oldValue, newValue) -> CentralLabel.setText("TextBox_" + newValue));
         CheckBox.selectedProperty().addListener((observable, oldValue, newValue) -> checkedLabel.setText("CheckBox_" + (newValue ? "checked" : "unchecked")));
         ComboBox.valueProperty().addListener((observable, oldValue, newValue) -> CentralLabel.setText("ComboBox_" + newValue));
         ListView.getItems().addAll(mainModel.getData());
@@ -355,6 +371,26 @@ public class MainController implements Initializable
         Protocol.appendText(getFormattedName(keyEvent.getSource()) + UP + keyEvent.getCode().impl_getCode() + NEW_LINE);
     }
 
+	public void scrollPrint(String text)
+	{
+		Protocol.appendText(text + "_scroll" + NEW_LINE);
+	}
+
+	private void releaseHandlerCustom(KeyEvent keyEvent, String text)
+	{
+		Protocol.appendText(text + UP + keyEvent.getCode().impl_getCode() + NEW_LINE);
+	}
+
+    private void pressHandlerCustom(KeyEvent keyEvent, String text)
+    {
+        Protocol.appendText(text + DOWN + keyEvent.getCode().impl_getCode() + NEW_LINE);
+    }
+
+    private void typeHandlerCustom(KeyEvent keyEvent, String text)
+    {
+        Protocol.appendText(text + PRESS + (int)keyEvent.getCharacter().toCharArray()[0] + NEW_LINE);
+    }
+
     public void pressHandler(KeyEvent keyEvent)
     {
         Protocol.appendText(getFormattedName(keyEvent.getSource()) + DOWN + keyEvent.getCode().impl_getCode() + NEW_LINE);
@@ -368,11 +404,11 @@ public class MainController implements Initializable
     private String getFormattedName(Object object)
     {
         Node node = (Node) object;
-//		String stringId = node.getId().substring(0, 1).toUpperCase() + node.getId().substring(1);
-		if("CentralLabel".equalsIgnoreCase(node.getId()))
-		{
-			return "Label";
-		}
-		return node.getId();
+		return "CentralLabel".equalsIgnoreCase(node.getId()) ? "Label" : node.getId();
     }
+
+    public void init()
+	{
+		((ComboBoxListViewSkin) ComboBox.getSkin()).getListView().setOnScrollTo(event -> scrollPrint(ComboBox.getId()));
+	}
 }

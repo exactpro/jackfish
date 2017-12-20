@@ -36,13 +36,13 @@
             <radioButton id="RadioButton1" owner="owner" class="javax.swing.JRadioButton" action="Yellow" text="Yellow" addition="Many"/>
             <toolTip id="Tooltip" owner="owner" text="Tooltip" addition="Many"/>
             <menu id="Menu2" xpath="" owner="owner" class="" name="menu2" action="" text=""/>
-            <any id="Any" uid="Button" owner="owner" addition="Many"/>
+            <any id="Any" uid="Any" owner="owner" addition="Many"/>
             <wait id="Wait" owner="owner" addition="Many"/>
             <label id="moveLabel" uid="moveLabel" owner="owner" text=""/>
             <button id="Button1" owner="owner" class="javax.swing.JButton" name="ButtonMany" addition="Many"/>
             <button id="buttonShowArea" uid="showButton" owner="owner" name="" text=""/>
             <button id="buttonHideArea" uid="hideButton" owner="owner" name="" text=""/>
-            <button id="countButton" uid="countButton" owner="" name=""/>
+            <button id="countButton" uid="plusButton" owner="" name=""/>
             <button id="countButtonClear" uid="clearButton" owner="" name="countButtonClear"/>
             <label id="countLabel" uid="countLabel" owner="" name=""/>
             <label id="pressLabel" uid="pressLabel" owner="" name=""/>
@@ -57,6 +57,7 @@
             <label id="selectLabel" uid="selectLabel" owner="owner" name=""/>
             <textBox id="protocolText" uid="Protocol" owner="" name=""/>
             <button id="protocolClear" uid="ProtocolClear" owner="" name=""/>
+            <button id="slider_bar" xpath=".//com.sun.javafx.scene.control.skin.SliderSkin_1[contains(@class,&amp;quot;thumb&amp;quot;)]" owner="owner"/>
         </run>
         <onClose/>
         <close/>
