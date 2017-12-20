@@ -490,6 +490,11 @@ public class MatcherFx
 			}
 			return sb.toString();
 		}
+		else if (target instanceof ComboBox)
+		{
+			ComboBox comboBox = (ComboBox) target;
+			return comboBox.isEditable() ? comboBox.getEditor().getText() : comboBox.getValue().toString();
+		}
 		else
 		{
 			return null;
