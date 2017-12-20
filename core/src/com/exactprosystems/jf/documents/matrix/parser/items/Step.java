@@ -92,10 +92,10 @@ public class Step extends MatrixItem
 		switch (key)
 		{
 			case Kind:
-				this.kind.set((String)value);
+				this.kind.accept((String)value);
 				break;
 			case Depends:
-				this.depends.set((String)value);
+				this.depends.accept((String)value);
 				break;
 			default:
 				super.set(key, value);
@@ -138,10 +138,10 @@ public class Step extends MatrixItem
 	protected void initItSelf(Map<Tokens, String> systemParameters)
 	{
 		this.identify.setExpression(systemParameters.get(Tokens.Step));
-		this.kind.set(systemParameters.get(Tokens.Kind));
+		this.kind.accept(systemParameters.get(Tokens.Kind));
 		this.plugin.setExpression(systemParameters.get(Tokens.For));
-		this.depends.set(systemParameters.get(Tokens.Depends));
-		super.ignoreErr.set(false);
+		this.depends.accept(systemParameters.get(Tokens.Depends));
+		super.ignoreErr.accept(false);
 	}
 
 	@Override

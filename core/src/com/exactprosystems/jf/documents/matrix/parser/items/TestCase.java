@@ -59,8 +59,8 @@ public final class TestCase extends MatrixItem
 	public TestCase(String name)
 	{
 		this();
-		this.name.set(name);
-		this.kind.set(ScreenshotKind.Never.name());
+		this.name.accept(name);
+		this.kind.accept(ScreenshotKind.Never.name());
 	}
 
 	public TestCase(TestCase testCase)
@@ -100,13 +100,13 @@ public final class TestCase extends MatrixItem
 		switch (key)
 		{
 			case TestCase:
-				this.name.set((String) value);
+				this.name.accept((String) value);
 				break;
 			case Kind:
-				this.kind.set((String) value);
+				this.kind.accept((String) value);
 				break;
 			case Depends:
-				this.depends.set((String) value);
+				this.depends.accept((String) value);
 				break;
 			default:
 				super.set(key, value);
@@ -181,9 +181,9 @@ public final class TestCase extends MatrixItem
 	protected void initItSelf(Map<Tokens, String> systemParameters)
 	{
 		this.plugin.setExpression(systemParameters.get(Tokens.For));
-		this.name.set(systemParameters.get(Tokens.TestCase));
-		this.kind.set(systemParameters.get(Tokens.Kind));
-		this.depends.set(systemParameters.get(Tokens.Depends));
+		this.name.accept(systemParameters.get(Tokens.TestCase));
+		this.kind.accept(systemParameters.get(Tokens.Kind));
+		this.depends.accept(systemParameters.get(Tokens.Depends));
 	}
 
 	@Override

@@ -67,7 +67,7 @@ public abstract class AbstractDocument implements Document
 		DocumentInfo annotation = getClass().getAnnotation(DocumentInfo.class);
 		if (annotation != null)
 		{
-			this.nameProperty.set(annotation.newName());
+			this.nameProperty.accept(annotation.newName());
 		}
 	}
 	
@@ -79,7 +79,7 @@ public abstract class AbstractDocument implements Document
 	@Override
 	public void save(String fileName) throws Exception
 	{
-        this.nameProperty.set(fileName);
+        this.nameProperty.accept(fileName);
 		Optional.ofNullable(this.saveConsumer).ifPresent(consumer -> consumer.accept(this));
 	}
 
@@ -114,7 +114,7 @@ public abstract class AbstractDocument implements Document
         redo.execute();
         this.provider.addCommand(undo, redo);
         afterRedoUndo();
-        this.changedProperty.set(true);
+        this.changedProperty.accept(true);
     }
     
     @Override
@@ -122,7 +122,7 @@ public abstract class AbstractDocument implements Document
     {
         if (this.provider.undo())
         {
-            this.changedProperty.set(true);
+            this.changedProperty.accept(true);
             afterRedoUndo();
         }
     }
@@ -132,7 +132,7 @@ public abstract class AbstractDocument implements Document
     {
         if (this.provider.redo())
         {
-            this.changedProperty.set(true);
+            this.changedProperty.accept(true);
             afterRedoUndo();
         }
     }
@@ -152,7 +152,7 @@ public abstract class AbstractDocument implements Document
 	@Override
 	public void saved()
 	{
-	    this.changedProperty.set(false);
+	    this.changedProperty.accept(false);
 		this.provider.clear();
 	}
 

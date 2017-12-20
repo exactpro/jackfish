@@ -304,7 +304,7 @@ public abstract class MatrixItem implements IMatrixItem, Mutable, Cloneable
 
 	public final void setId(String id)
 	{
-		this.id.set(id);
+		this.id.accept(id);
 	}
 
 	/**
@@ -405,7 +405,7 @@ public abstract class MatrixItem implements IMatrixItem, Mutable, Cloneable
 	 */
 	public void setOff(boolean off)
 	{
-		this.off.set(off);
+		this.off.accept(off);
 	}
 
 	/**
@@ -417,7 +417,7 @@ public abstract class MatrixItem implements IMatrixItem, Mutable, Cloneable
 	 */
 	public void setRepOff(boolean off)
 	{
-		this.repOff.set(off);
+		this.repOff.accept(off);
 	}
 
 	/**
@@ -462,19 +462,19 @@ public abstract class MatrixItem implements IMatrixItem, Mutable, Cloneable
 		switch (key)
 		{
 			case Id:
-				this.id.set((String) value);
+				this.id.accept((String) value);
 				break;
 			case Off:
-				this.off.set((Boolean) value);
+				this.off.accept((Boolean) value);
 				break;
 			case RepOff:
-				this.repOff.set((Boolean) value);
+				this.repOff.accept((Boolean) value);
 				break;
 			case Global:
-				this.global.set((Boolean) value);
+				this.global.accept((Boolean) value);
 				break;
 			case IgnoreErr:
-				this.ignoreErr.set((Boolean) value);
+				this.ignoreErr.accept((Boolean) value);
 				break;
 			default:
 				break;
@@ -523,11 +523,11 @@ public abstract class MatrixItem implements IMatrixItem, Mutable, Cloneable
 					.collect(Collectors.toCollection(MutableArrayList::new));
 		}
 
-		this.id.set(systemParameters.get(Tokens.Id));
-		this.off.set(this.isTrue(hasValue, systemParameters, Tokens.Off));
-		this.repOff.set(this.isTrue(hasValue, systemParameters, Tokens.RepOff));
-		this.global.set(this.isTrue(hasValue, systemParameters, Tokens.Global));
-		this.ignoreErr.set(this.isTrue(hasValue, systemParameters, Tokens.IgnoreErr));
+		this.id.accept(systemParameters.get(Tokens.Id));
+		this.off.accept(this.isTrue(hasValue, systemParameters, Tokens.Off));
+		this.repOff.accept(this.isTrue(hasValue, systemParameters, Tokens.RepOff));
+		this.global.accept(this.isTrue(hasValue, systemParameters, Tokens.Global));
+		this.ignoreErr.accept(this.isTrue(hasValue, systemParameters, Tokens.IgnoreErr));
 
 		if (userParameters != null)
 		{
@@ -562,7 +562,7 @@ public abstract class MatrixItem implements IMatrixItem, Mutable, Cloneable
 			count++;
 		}
 
-		this.id.set(newId);
+		this.id.accept(newId);
 	}
 
 	/**

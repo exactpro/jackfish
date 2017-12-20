@@ -111,8 +111,8 @@ public final class SetHandler extends MatrixItem
 	@Override
 	protected void initItSelf(Map<Tokens, String> systemParameters)
 	{
-		this.name.set(systemParameters.get(Tokens.SetHandler));
-		this.kind.set(systemParameters.get(Tokens.Kind));
+		this.name.accept(systemParameters.get(Tokens.SetHandler));
+		this.kind.accept(systemParameters.get(Tokens.Kind));
 	}
 
 	@Override

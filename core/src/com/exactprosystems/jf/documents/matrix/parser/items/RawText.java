@@ -52,7 +52,7 @@ public class RawText extends MatrixItem
 	{
 		super();
 		this.text = new Text();
-		this.text.setChangeListener(flag -> super.owner.getChangedProperty().set(flag));
+		this.text.setChangeListener(flag -> super.owner.getChangedProperty().accept(flag));
 		this.description = new MutableValue<>();
 		this.highlighterMutableValue = new MutableValue<>(Highlighter.None.name());
 	}
@@ -130,7 +130,7 @@ public class RawText extends MatrixItem
 		driver.showComboBox(this, layout, 1, 6, newValue -> {
 					if (newValue != null)
 					{
-						this.highlighterMutableValue.set(newValue);
+						this.highlighterMutableValue.accept(newValue);
 						driver.displayHighlight(layout, Highlighter.byName(newValue));
 					}
 				}, this.highlighterMutableValue,
@@ -145,7 +145,7 @@ public class RawText extends MatrixItem
 		if (this.firstUsing)
 		{
 			this.text = new Text();
-			this.text.setChangeListener(flag -> Optional.ofNullable(super.owner).ifPresent(own -> own.getChangedProperty().set(flag)));
+			this.text.setChangeListener(flag -> Optional.ofNullable(super.owner).ifPresent(own -> own.getChangedProperty().accept(flag)));
 			this.firstUsing = false;
 			this.text.add(this.extractData(str));
 			return;
@@ -163,8 +163,8 @@ public class RawText extends MatrixItem
 	@Override
 	protected void initItSelf(Map<Tokens, String> systemParameters)
 	{
-        this.description.set(systemParameters.get(Tokens.RawText));
-		this.highlighterMutableValue.set(systemParameters.getOrDefault(Tokens.Kind, Highlighter.None.name()));
+        this.description.accept(systemParameters.get(Tokens.RawText));
+		this.highlighterMutableValue.accept(systemParameters.getOrDefault(Tokens.Kind, Highlighter.None.name()));
 	}
 
 	@Override

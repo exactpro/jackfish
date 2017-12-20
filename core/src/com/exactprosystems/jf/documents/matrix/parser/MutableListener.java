@@ -9,8 +9,12 @@
 package com.exactprosystems.jf.documents.matrix.parser;
 
 import java.util.function.BiConsumer;
+import java.util.function.Supplier;
 
-public interface MutableListener<T> extends Getter<T>
+public interface MutableListener<T> extends Supplier<T>
 {
+	/**
+	 * Set the listener for observing a value
+	 */
 	void setOnChangeListener(BiConsumer<T, T> listener);
 }

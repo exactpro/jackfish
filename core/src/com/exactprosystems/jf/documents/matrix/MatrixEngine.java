@@ -206,7 +206,7 @@ public class MatrixEngine implements AutoCloseable
 
 	private void changeState(MatrixState newState)
     {
-	    this.matrix.getStateProperty().set(newState);
+	    this.matrix.getStateProperty().accept(newState);
 		if (newState == MatrixState.Finished)
 		{
 			try

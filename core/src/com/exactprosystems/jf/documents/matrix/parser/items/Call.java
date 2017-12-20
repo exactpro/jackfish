@@ -144,7 +144,7 @@ public final class Call extends MatrixItem
 	{
 		if (key == Tokens.Call)
 		{
-			this.name.set((String) value);
+			this.name.accept((String) value);
 		}
 		else
 		{
@@ -169,8 +169,8 @@ public final class Call extends MatrixItem
 	@Override
 	protected void initItSelf(Map<Tokens, String> systemParameters)
 	{
-		this.name.set(systemParameters.get(Tokens.Call)); 
-		this.id.set(systemParameters.get(Tokens.Id)); 
+		this.name.accept(systemParameters.get(Tokens.Call));
+		this.id.accept(systemParameters.get(Tokens.Id));
 	}
 
 	@Override

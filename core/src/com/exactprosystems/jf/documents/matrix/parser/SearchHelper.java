@@ -11,19 +11,14 @@ package com.exactprosystems.jf.documents.matrix.parser;
 
 public class SearchHelper
 {
+	private SearchHelper()
+	{
+
+	}
+
 	public static boolean matches(String str, String what, boolean caseSensitive, boolean wholeWord)
 	{
-		if (str == null)
-		{
-			return false;
-		}
-
-		if (what == null)
-		{
-			return false;
-		}
-
-		if (what.isEmpty())
+		if (str == null || what == null || what.isEmpty())
 		{
 			return false;
 		}

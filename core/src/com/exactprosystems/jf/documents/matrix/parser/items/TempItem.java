@@ -101,7 +101,7 @@ public class TempItem extends MatrixItem
 					super.getMatrix().enumerate();
 				}
 
-				super.getMatrix().getChangedProperty().set(true);
+				super.getMatrix().getChangedProperty().accept(true);
 				this.isInit = true;
 			}
 		});

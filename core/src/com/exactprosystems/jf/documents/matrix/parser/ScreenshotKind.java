@@ -9,12 +9,12 @@
 
 package com.exactprosystems.jf.documents.matrix.parser;
 
+import com.exactprosystems.jf.api.common.Str;
+import com.exactprosystems.jf.api.common.i18n.R;
+
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
-
-import com.exactprosystems.jf.api.common.Str;
-import com.exactprosystems.jf.api.common.i18n.R;
 
 public enum ScreenshotKind
 {
@@ -25,26 +25,24 @@ public enum ScreenshotKind
     OnStartOrError,
     OnFinishOrError,
     ;
-    
-    public static ScreenshotKind valueByName(String name) throws Exception
-    {
-        if (Str.IsNullOrEmpty(name))
-        {
-            return Never;
-        }
 
-        for (ScreenshotKind a : values())
-        {
-            if(a.name().equals(name))
-            {
-                return a;
-            }
-        }
-        throw new Exception(String.format(R.SCREENSHOTKIND_VALUE_BY_NAME_EXCEPTION.get(), name));
-    }
-    
-    public static List<String> names()
-    {
-        return Arrays.stream(values()).map(k -> k.name()).collect(Collectors.toList()) ;
-    }
+	public static ScreenshotKind valueByName(String name) throws Exception
+	{
+		if (Str.IsNullOrEmpty(name))
+		{
+			return Never;
+		}
+
+		return Arrays.stream(values())
+				.filter(kind -> kind.name().equals(name))
+				.findFirst()
+				.orElseThrow(() -> new Exception(String.format(R.SCREENSHOTKIND_VALUE_BY_NAME_EXCEPTION.get(), name)));
+	}
+
+	public static List<String> names()
+	{
+		return Arrays.stream(values())
+				.map(Enum::name)
+				.collect(Collectors.toList());
+	}
 }

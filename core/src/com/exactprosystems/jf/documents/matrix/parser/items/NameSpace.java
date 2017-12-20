@@ -102,7 +102,7 @@ public final class NameSpace extends MatrixItem
 	{
 		if (key == Tokens.NameSpace)
 		{
-			this.name.set((String) value);
+			this.name.accept((String) value);
 		}
 		else
 		{
@@ -121,7 +121,7 @@ public final class NameSpace extends MatrixItem
 	@Override
 	protected void initItSelf(Map<Tokens, String> systemParameters)
 	{
-		this.name.set(systemParameters.get(Tokens.NameSpace));
+		this.name.accept(systemParameters.get(Tokens.NameSpace));
 	}
 
 	@Override

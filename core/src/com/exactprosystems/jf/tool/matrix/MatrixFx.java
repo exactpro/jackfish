@@ -234,11 +234,11 @@ public class MatrixFx extends Matrix
 	{
 		if (needShow)
 		{
-			this.timer.set(ms);
+			this.timer.accept(ms);
 		}
 		else
 		{
-			this.timer.set(-1L);
+			this.timer.accept(-1L);
 		}
 	}
 
@@ -487,7 +487,7 @@ public class MatrixFx extends Matrix
 			getEngine().stop();
 			super.matrixListener.matrixFinished(this, 0, 0);
 			this.getEngine().getContext().getOut().println(R.MATRIX_FX_MATRIX_STOPPED.get());
-			this.timer.set(-1L);
+			this.timer.accept(-1L);
 		}
 	}
 
@@ -541,7 +541,7 @@ public class MatrixFx extends Matrix
 			insert(parent, index + i, item);
 		}
 		enumerate();
-		super.getChangedProperty().set(true);
+		super.getChangedProperty().accept(true);
 	}
 
 	private void storeSettings(Settings settings) throws Exception

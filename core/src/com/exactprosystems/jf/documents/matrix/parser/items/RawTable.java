@@ -161,7 +161,7 @@ public class RawTable extends MatrixItem
 	@Override
 	protected void initItSelf(Map<Tokens, String> systemParameters)
 	{
-		this.typeName.set(systemParameters.get(Tokens.RawTable));
+		this.typeName.accept(systemParameters.get(Tokens.RawTable));
 	}
 
 	@Override

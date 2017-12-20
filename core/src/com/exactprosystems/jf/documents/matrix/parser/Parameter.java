@@ -21,9 +21,27 @@ import org.apache.log4j.Logger;
 
 import java.lang.reflect.Array;
 import java.util.Optional;
+import java.util.function.Consumer;
+import java.util.function.Supplier;
 
-public class Parameter implements Mutable, Cloneable, Setter<String>, Getter<String>
+/**
+ * The class, which present any parameter.
+ * The parameter has name and expression
+ */
+public class Parameter implements Mutable, Consumer<String>, Supplier<String>
 {
+	protected static final Logger logger = Logger.getLogger(Parameter.class);
+
+	private MutableValue<String> description;
+
+	private   String        name;
+	private   Object        compiled;
+	private   boolean       changed;
+	protected String        expression;
+	protected Object        value;
+	protected boolean       isValid;
+	protected TypeMandatory type;
+
 	public Parameter(String name, String expression)
 	{
 		this.name = name;
@@ -55,21 +73,30 @@ public class Parameter implements Mutable, Cloneable, Setter<String>, Getter<Str
 		}
 	}
 
+	/**
+	 * Set the description for this parameter
+	 * @param description the new description
+	 */
 	public void setDescription(String description)
 	{
-		if (this.description == null)
-		{
-			this.description = new MutableValue<>(description);
-		}
-		this.description.set(description);
+		this.description = Optional.ofNullable(this.description).orElseGet(MutableValue::new);
+		this.description.accept(description);
 		this.changed = true;
 	}
 
+	/**
+	 * @return the description of this parameter. If description is not present, will return {@code null}
+	 */
 	public String getDescription()
 	{
-		return Optional.ofNullable(this.description).map(MutableValue::get).orElse(null);
+		return Optional.ofNullable(this.description)
+				.map(MutableValue::get)
+				.orElse(null);
 	}
 
+	/**
+	 * Set for this parameter all values from passed parameter
+	 */
 	public void setAll(Parameter parameter)
 	{
 		this.setExpression(parameter.expression);
@@ -81,6 +108,7 @@ public class Parameter implements Mutable, Cloneable, Setter<String>, Getter<Str
 		this.description = new MutableValue<>(parameter.getDescription());
 	}
 
+	//region interface Mutable
 	@Override
 	public boolean isChanged()
 	{
@@ -92,38 +120,55 @@ public class Parameter implements Mutable, Cloneable, Setter<String>, Getter<Str
 	{
 		this.changed = false;
 	}
+	//endregion
 
+	//region interface Supplier
+
+	/**
+	 * @return the expression
+	 */
 	@Override
 	public String get()
 	{
-		return getExpression();
+		return this.getExpression();
 	}
+	//endregion
 
+	//region interface Consumer
+	/**
+	 * Set the new expression
+	 */
 	@Override
-	public void set(String value)
+	public void accept(String value)
 	{
-		setExpression(value);
+		this.setExpression(value);
 	}
+	//endregion
 
-	
 	public boolean matches(String what, boolean caseSensitive, boolean wholeWord)
 	{
 		return SearchHelper.matches(this.name, what, caseSensitive, wholeWord)
 				|| SearchHelper.matches(this.expression, what, caseSensitive, wholeWord)
-				|| SearchHelper.matches(getDescription(), what, caseSensitive, wholeWord)
+				|| SearchHelper.matches(this.getDescription(), what, caseSensitive, wholeWord)
 				;
 	}
 
+	/**
+	 * Set the new expression for this parameter
+	 */
 	public void setExpression(String expression)
 	{
-		this.changed = changed || !Str.areEqual(this.expression, expression);
+		this.changed = this.changed || !Str.areEqual(this.expression, expression);
 		this.expression = expression;
 		this.compiled = null;
 	}
 
+	/**
+	 * Set the new name for this parameter
+	 */
 	public void setName(String name)
 	{
-		this.changed = changed || !Str.areEqual(this.name, name);
+		this.changed = this.changed || !Str.areEqual(this.name, name);
 		this.name = name;
 	}
 
@@ -137,21 +182,33 @@ public class Parameter implements Mutable, Cloneable, Setter<String>, Getter<Str
 		return this.expression;
 	}
 
+	/**
+	 * @return the evaluated value from the expression. If expression not evaluated yet, will return {@code null}
+	 */
 	public Object getValue()
 	{
 		return this.value;
 	}
 
-    public void setValue(Object value)
-    {
-        this.value = value;
-    }
+	/**
+	 * Set the value for this parameter
+	 */
+	public void setValue(Object value)
+	{
+		this.value = value;
+	}
 
+	/**
+	 * @return string representation of this value. If value is null, will return string "null"
+	 */
 	public String getValueAsString()
 	{
 		return "" + this.value;
 	}
 
+	/**
+	 * @return true, if evaluating the expression was successful. Otherwise false
+	 */
 	public boolean isValid()
 	{
 		return this.isValid;
@@ -159,7 +216,7 @@ public class Parameter implements Mutable, Cloneable, Setter<String>, Getter<Str
 
 	public boolean isExpressionNullOrEmpty()
 	{
-		return this.expression == null || this.expression.isEmpty();
+		return Str.IsNullOrEmpty(this.expression);
 	}
 
 	public TypeMandatory getType()
@@ -167,13 +224,15 @@ public class Parameter implements Mutable, Cloneable, Setter<String>, Getter<Str
 		return this.type;
 	}
 
-
 	public void setType(TypeMandatory type)
 	{
 		this.changed = changed || !(this.type != null && this.type == type);
 		this.type = type;
 	}
-	
+
+	/**
+	 * Try to compile the expression. If compiling was failed, will notify listener error
+	 */
 	public void prepareAndCheck(AbstractEvaluator evaluator, IMatrixListener listener, MatrixItem item)
 	{
 		try
@@ -186,6 +245,11 @@ public class Parameter implements Mutable, Cloneable, Setter<String>, Getter<Str
 		}
 	}
 
+	/**
+	 * Try to evaluate the expression via passed evaluator
+	 *
+	 * @return true, if evaluating was successful
+	 */
 	public boolean evaluate(AbstractEvaluator evaluator)
 	{
 		this.value = null;
@@ -196,7 +260,7 @@ public class Parameter implements Mutable, Cloneable, Setter<String>, Getter<Str
 			{
 				this.compiled = evaluator.compile(this.expression);
 			}
-			
+
 			if (this.compiled != null)
 			{
 				this.value = evaluator.execute(this.compiled);
@@ -209,7 +273,7 @@ public class Parameter implements Mutable, Cloneable, Setter<String>, Getter<Str
 		}
 		return this.isValid;
 	}
-	
+
 	public void reset()
 	{
 		this.isValid = false;
@@ -225,81 +289,73 @@ public class Parameter implements Mutable, Cloneable, Setter<String>, Getter<Str
 		return this.name + " : " + this.expression;
 	}
 
-    public final void correctType(Class<?> type) throws Exception
-    {
-    	try
-    	{
-    		this.isValid = true;
+	/**
+	 * Try to convert the evaluating value to passed type.
+	 * If converting was failed, the value will has type String and value - exception message
+	 */
+	public final void correctType(Class<?> type)
+	{
+		try
+		{
+			this.isValid = true;
 
-    		if (this.value == null)
-	        {
-	            return;
-	        }
+			if (this.value == null)
+			{
+				return;
+			}
 
-	        Class<?> valueType = value.getClass();
+			Class<?> valueType = value.getClass();
 
-	        if (type == Object.class)
-	        {
-	            return;
-	        }
-	        else if (type.isArray() && valueType.isArray())
-	        {
-	        	if (valueType.getComponentType() == type.getComponentType())
-	        	{
-	        		return;
-	        	}
+			if (type == Object.class)
+			{
+				return;
+			}
+			else if (type.isArray() && valueType.isArray())
+			{
+				if (valueType.getComponentType() == type.getComponentType())
+				{
+					return;
+				}
 
-	        	if (valueType.getComponentType() == byte.class)
-	        	{
-	        		this.value = Converter.convertByteArray(type.getComponentType(), this.value);
-	        		return;
-	        	}
-	        	
-	        	this.value = Converter.convertArray(type.getComponentType(), this.value);
-	            return;
-	        }
-	        else if (type.isArray() && !valueType.isArray())
-	        {
-	            if (type.getComponentType().isAssignableFrom(valueType))
-	            {
-	                Object[] array = (Object[])Array.newInstance(type.getComponentType(), 1);
+				if (valueType.getComponentType() == byte.class)
+				{
+					this.value = Converter.convertByteArray(type.getComponentType(), this.value);
+					return;
+				}
 
-	                array[0] = value;
-	                this.value = Converter.convertArray(type.getComponentType(), array);
-	                return;
-	            }
-	            else
-	            {
-	                throw new Exception(String.format(R.PARAMETER_TYPE_EXCEPTION.get(), valueType.getName(), type.getComponentType().getName()));
-	            }
-	        }
-	        else if (!type.isArray() && valueType.isArray())
-	        {
-	            throw new Exception(String.format(R.PARAMETER_ARRAY_EXCEPTION.get(), valueType.getName(), type.getName()));
-	        }
-	        else 
-	        {
-	            this.value = Converter.convertToType(this.value, type);
-	        }
-    	}
-        catch (Exception e)
-        {
-        	this.isValid = false;
-        	this.value = e.getMessage(); 
-        	
-        	logger.error(e.getMessage(), e);
-        }
-    }
+				this.value = Converter.convertArray(type.getComponentType(), this.value);
+				return;
+			}
+			else if (type.isArray() && !valueType.isArray())
+			{
+				if (type.getComponentType().isAssignableFrom(valueType))
+				{
+					Object[] array = (Object[]) Array.newInstance(type.getComponentType(), 1);
 
-    private MutableValue<String> description;
+					array[0] = value;
+					this.value = Converter.convertArray(type.getComponentType(), array);
+					return;
+				}
+				else
+				{
+					throw new Exception(String.format(R.PARAMETER_TYPE_EXCEPTION.get(), valueType.getName(), type.getComponentType().getName()));
+				}
+			}
+			else if (!type.isArray() && valueType.isArray())
+			{
+				throw new Exception(String.format(R.PARAMETER_ARRAY_EXCEPTION.get(), valueType.getName(), type.getName()));
+			}
+			else
+			{
+				this.value = Converter.convertToType(this.value, type);
+			}
+		}
+		catch (Exception e)
+		{
+			this.isValid = false;
+			this.value = e.getMessage();
 
-	private    String name;
-	protected  String expression;
-	private    Object compiled;
-	protected  Object value;
-	protected  boolean isValid;
-	protected  TypeMandatory type;
-	private    boolean changed;
-
-    protected static final Logger logger = Logger.getLogger(Parameter.class);
+			logger.error(e.getMessage(), e);
+		}
+	}
 }

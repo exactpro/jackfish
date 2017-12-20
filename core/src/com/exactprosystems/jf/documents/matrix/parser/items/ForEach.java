@@ -103,7 +103,7 @@ public final class ForEach extends MatrixItem
 	@Override
 	protected void initItSelf(Map<Tokens, String> systemParameters)
 	{
-		this.var.set(systemParameters.get(Tokens.ForEach));
+		this.var.accept(systemParameters.get(Tokens.ForEach));
 		this.in.setExpression(systemParameters.get(Tokens.In));
 	}
 

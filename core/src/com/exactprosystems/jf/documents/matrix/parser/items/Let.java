@@ -82,7 +82,7 @@ public class Let extends MatrixItem
 		
 		driver.showComment	(this, layout, 0, 0, getComments());
 		driver.showCheckBox	(this, layout, 1, 0, "Global", this.global, this.global);
-		driver.showTextBox	(this, layout, 1, 1, this.id::set, this.id::get, this.id::get);
+		driver.showTextBox	(this, layout, 1, 1, this.id::accept, this.id::get, this.id::get);
 		driver.showTitle	(this, layout, 1, 2, Tokens.Let.get(), context.getFactory().getSettings());
 		driver.showExpressionField(this, layout, 1, 3, Tokens.Let.get(), this.value, this.value, null, null, null, null);
 

@@ -39,7 +39,7 @@ public class PlainText extends AbstractDocument
 	public void load(Reader reader) throws Exception
 	{
 		super.load(reader);
-		this.property.set(read(reader));
+		this.property.accept(read(reader));
 		this.property.saved();
 	}
 

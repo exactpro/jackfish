@@ -11,38 +11,38 @@ package com.exactprosystems.jf.documents.matrix.parser;
 
 public enum Result
 {
-	Break          ("Break"),
-	Continue       ("Continue"),
-	Return         ("Return"),
-	Passed         ("Passed"),
-	Failed         ("Failed"),
-    StepFailed     ("Failed"),
-	Ignored        ("Ignored"),
-	NotExecuted    ("NotExecuted"),
-	Off            ("Off"),
-	Stopped        ("Stopped"),
+	Break      ("Break"),
+	Continue   ("Continue"),
+	Return     ("Return"),
+	Passed     ("Passed"),
+	Failed     ("Failed"),
+    StepFailed ("Failed"),
+	Ignored    ("Ignored"),
+	NotExecuted("NotExecuted"),
+	Off        ("Off"),
+	Stopped    ("Stopped"),
 	;
-    
-    private Result(String name)
-    {
-        this.name = name;
-    }
+	private String name;
 
-    @Override
-    public String toString()
-    {
-        return this.name;
-    }
-    
-    public boolean isFail()
-    {
-        return this == Failed || this == StepFailed;
-    }
-    
+	Result(String name)
+	{
+		this.name = name;
+	}
+
+	@Override
+	public String toString()
+	{
+		return this.name;
+	}
+
+	public boolean isFail()
+	{
+		return this == Failed || this == StepFailed;
+	}
+
 	public String getStyle()
 	{
 		return this.name;
 	}
-	
-	private String name;
+
 }

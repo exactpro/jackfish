@@ -100,7 +100,7 @@ public final class SubCase extends MatrixItem
 	{
 		if (key == Tokens.SubCase)
 		{
-			this.name.set((String) value);
+			this.name.accept((String) value);
 		}
 		else
 		{
@@ -134,7 +134,7 @@ public final class SubCase extends MatrixItem
 	@Override
 	protected void initItSelf(Map<Tokens, String> systemParameters)
 	{
-		this.name.set(systemParameters.get(Tokens.SubCase));
+		this.name.accept(systemParameters.get(Tokens.SubCase));
 	}
 
 	@Override

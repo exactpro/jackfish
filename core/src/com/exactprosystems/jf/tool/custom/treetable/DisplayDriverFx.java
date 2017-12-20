@@ -42,7 +42,6 @@ import com.exactprosystems.jf.tool.custom.number.NumberTextField;
 import com.exactprosystems.jf.tool.custom.tab.CustomTab;
 import com.exactprosystems.jf.tool.documents.AbstractDocumentController;
 import com.exactprosystems.jf.tool.helpers.DialogsHelper;
-import com.exactprosystems.jf.tool.matrix.MatrixFx;
 import com.exactprosystems.jf.tool.matrix.MatrixFxController;
 import com.exactprosystems.jf.tool.matrix.params.ParametersPane;
 import javafx.collections.FXCollections;
@@ -195,7 +194,7 @@ public class DisplayDriverFx implements DisplayDriver
 	}
 
 	@Override
-	public void showCheckBox(MatrixItem item, Object layout, int row, int column, String name, Setter<Boolean> setter, Getter<Boolean> getter)
+	public void showCheckBox(MatrixItem item, Object layout, int row, int column, String name, Consumer<Boolean> setter, Supplier<Boolean> getter)
 	{
 		GridPane pane = (GridPane) layout;
 		CheckBox checkBox = new CheckBox(name);
@@ -219,12 +218,12 @@ public class DisplayDriverFx implements DisplayDriver
 
 			Command undo = () ->
 			{
-				setter.set(lastValue);
+				setter.accept(lastValue);
 				checkBox.setSelected(lastValue);
 			};
 			Command redo = () ->
 			{
-				setter.set(value);
+				setter.accept(value);
 				checkBox.setSelected(value);
 			};
 			item.getMatrix().addCommand(undo, redo);
@@ -234,7 +233,7 @@ public class DisplayDriverFx implements DisplayDriver
 	}
 
 	@Override
-	public void showComboBox(MatrixItem item, Object layout, int row, int column, Setter<String> setter, Getter<String> getter, Supplier<List<String>> handler, Function<String, Boolean> needUpdate)
+	public void showComboBox(MatrixItem item, Object layout, int row, int column, Consumer<String> setter, Supplier<String> getter, Supplier<List<String>> handler, Function<String, Boolean> needUpdate)
 	{
 		GridPane pane = (GridPane) layout;
 		ComboBox<String> comboBox = new ComboBox<>();
@@ -260,12 +259,12 @@ public class DisplayDriverFx implements DisplayDriver
 
 			Command undo = () ->
 			{
-				setter.set(lastValue);
+				setter.accept(lastValue);
 				comboBox.getSelectionModel().select(lastValue);
 			};
 			Command redo = () ->
 			{
-				setter.set(newValue);
+				setter.accept(newValue);
 				comboBox.getSelectionModel().select(newValue);
 			};
 			item.getMatrix().addCommand(undo, redo);
@@ -287,7 +286,7 @@ public class DisplayDriverFx implements DisplayDriver
 	}
 
 	@Override
-	public void showTextBox(MatrixItem item, Object layout, int row, int column, Setter<String> set, Getter<String> getter, FormulaGenerator generator)
+	public void showTextBox(MatrixItem item, Object layout, int row, int column, Consumer<String> set, Supplier<String> getter, FormulaGenerator generator)
 	{
 		GridPane pane = (GridPane) layout;
 
@@ -313,13 +312,13 @@ public class DisplayDriverFx implements DisplayDriver
 
 				Command undo = () ->
 				{
-					set.set(lastValue);
+					set.accept(lastValue);
 					textBox.setText(lastValue);
 					stretchIfCan(textBox);
 				};
 				Command redo = () ->
 				{
-					set.set(value);
+					set.accept(value);
 					textBox.setText(value);
 					stretchIfCan(textBox);
 				};
@@ -340,7 +339,7 @@ public class DisplayDriverFx implements DisplayDriver
 	}
 
 	@Override
-	public void showExpressionField(MatrixItem item, Object layout, int row, int column, String name, Setter<String> set, Getter<String> get, Function<String, String> firstHandler, Function<String, String> secondHandler, Character first, Character second)
+	public void showExpressionField(MatrixItem item, Object layout, int row, int column, String name, Consumer<String> set, Supplier<String> get, Function<String, String> firstHandler, Function<String, String> secondHandler, Character first, Character second)
 	{
 		GridPane pane = (GridPane) layout;
 
@@ -366,12 +365,12 @@ public class DisplayDriverFx implements DisplayDriver
 
 				Command undo = () ->
 				{
-					set.set(lastValue);
+					set.accept(lastValue);
 					field.setText(lastValue);
 				};
 				Command redo = () ->
 				{
-					set.set(value);
+					set.accept(value);
 					field.setText(value);
 				};
 				item.getMatrix().addCommand(undo, redo);
@@ -459,7 +458,7 @@ public class DisplayDriverFx implements DisplayDriver
 	}
 
 	@Override
-	public void showAutoCompleteBox(MatrixItem item, Object layout, int row, int column, Supplier<List<String>> wordsSupplier, Getter<String> init, Setter<String> supplier)
+	public void showAutoCompleteBox(MatrixItem item, Object layout, int row, int column, Supplier<List<String>> wordsSupplier, Supplier<String> init, Consumer<String> supplier)
 	{
 		GridPane pane = (GridPane) layout;
 
@@ -571,7 +570,7 @@ public class DisplayDriverFx implements DisplayDriver
 	}
 
 	@Override
-	public void showSpinner(MatrixItem item, Object layout, int row, int column, double prefWidth, Setter<Integer> set, Getter<Integer> get, int minValue, int maxValue)
+	public void showSpinner(MatrixItem item, Object layout, int row, int column, double prefWidth, Consumer<Integer> set, Supplier<Integer> get, int minValue, int maxValue)
 	{
 		GridPane pane = ((GridPane) layout);
 
@@ -586,7 +585,7 @@ public class DisplayDriverFx implements DisplayDriver
 					DialogsHelper.showInfo(R.DISPLAY_DRIVER_FX_EMPTY_FIELD.get());
 					numberField.setText("" + initialValue);
 				}
-				set.set(numberField.getValue());
+				set.accept(numberField.getValue());
 			}
 		});
 		NumberSpinner spinner = new NumberSpinner(numberField);
@@ -705,12 +704,6 @@ public class DisplayDriverFx implements DisplayDriver
 								.ifPresent(Common::setFocusedFast);
 					}
 				});
-	}
-
-	@Override
-	public void setupCall(MatrixItem item, String reference, Parameters parameters)
-	{
-		((MatrixFx) item.getMatrix()).setupCall(item, reference, parameters);
 	}
 
 	@Override
@@ -842,17 +835,17 @@ public class DisplayDriverFx implements DisplayDriver
 				.collect(Collectors.joining("\n"));
 	}
 
-	private void accept(List<String> words, Setter<String> supplier, TextField field)
+	private void accept(List<String> words, Consumer<String> supplier, TextField field)
 	{
 		field.getStyleClass().removeAll(CssVariables.COMPILE_FAILED, CssVariables.EVALUATE_SUCCESS);
 		Optional<String> first = words.stream().filter(field.getText()::equalsIgnoreCase).findFirst();
 		if (first.isPresent())
 		{
-			supplier.set(first.get());
+			supplier.accept(first.get());
 		}
 		else
 		{
-			supplier.set("");
+			supplier.accept("");
 			field.clear();
 		}
 	}

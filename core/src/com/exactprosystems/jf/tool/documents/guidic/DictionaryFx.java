@@ -22,7 +22,6 @@ import com.exactprosystems.jf.documents.guidic.GuiDictionary;
 import com.exactprosystems.jf.documents.guidic.Section;
 import com.exactprosystems.jf.documents.guidic.Window;
 import com.exactprosystems.jf.documents.guidic.controls.AbstractControl;
-import com.exactprosystems.jf.documents.matrix.parser.Getter;
 import com.exactprosystems.jf.documents.matrix.parser.MutableListener;
 import com.exactprosystems.jf.documents.matrix.parser.MutableValue;
 import com.exactprosystems.jf.documents.matrix.parser.items.MutableArrayList;
@@ -39,6 +38,7 @@ import java.rmi.ServerException;
 import java.util.*;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 import static com.exactprosystems.jf.tool.Common.tryCatchThrow;
@@ -86,7 +86,7 @@ public class DictionaryFx extends GuiDictionary
 
 	public static List<String> convertToString(Collection<? extends MutableValue<String>> collection)
 	{
-		return collection.stream().map(Getter::get).collect(Collectors.toList());
+		return collection.stream().map(Supplier::get).collect(Collectors.toList());
 	}
 
 	public static List<MutableValue<String>> convertToMutable(Collection<? extends String> collection)
@@ -102,7 +102,7 @@ public class DictionaryFx extends GuiDictionary
 	public DictionaryFx(String fileName, DocumentFactory factory, String currentAdapter)
 	{
 		super(fileName, factory);
-		this.currentApp.set(currentAdapter);
+		this.currentApp.accept(currentAdapter);
 		this.evaluator = factory.createEvaluator();
 		this.applicationConnector = new ApplicationConnector(factory);
 	}
@@ -114,11 +114,11 @@ public class DictionaryFx extends GuiDictionary
 		super.display();
 		getNameProperty().fire();
 
-		this.applicationConnector.setApplicationListener((status1, appConnection1, throwable) -> this.appStatus.set(new ApplicationStatusBean(status1, appConnection1, throwable)));
+		this.applicationConnector.setApplicationListener((status1, appConnection1, throwable) -> this.appStatus.accept(new ApplicationStatusBean(status1, appConnection1, throwable)));
 
 		//display all windows
 		super.fire();
-		this.currentSection.set(SectionKind.Run);
+		this.currentSection.accept(SectionKind.Run);
 		this.setCurrentWindow(super.getFirstWindow());
 
 		this.appsList.from(convertToMutable(getFactory().getConfiguration().getApplications()));
@@ -127,7 +127,7 @@ public class DictionaryFx extends GuiDictionary
 		boolean isConnected = this.applicationConnector.getAppConnection() != null;
 		ApplicationStatus status = isConnected ? ApplicationStatus.Connected : ApplicationStatus.Disconnected;
 		AppConnection appConnection = isConnected ? this.applicationConnector.getAppConnection() : null;
-		this.appStatus.set(new ApplicationStatusBean(status, appConnection, null));
+		this.appStatus.accept(new ApplicationStatusBean(status, appConnection, null));
 	}
 
 	@Override
@@ -185,7 +185,7 @@ public class DictionaryFx extends GuiDictionary
 	}
 	public void setCurrentStoredApp(String currentAdapterStore)
 	{
-		this.currentStoredApp.set(currentAdapterStore);
+		this.currentStoredApp.accept(currentAdapterStore);
 		this.connectToApplicationFromStore();
 	}
 
@@ -195,7 +195,7 @@ public class DictionaryFx extends GuiDictionary
 	}
 	public void setCurrentApp(String adapter)
 	{
-		this.currentApp.set(adapter);
+		this.currentApp.accept(adapter);
 		this.applicationConnector.setIdAppEntry(adapter);
 	}
 	public AppConnection getApp()
@@ -209,7 +209,7 @@ public class DictionaryFx extends GuiDictionary
 	}
 	public void setCurrentWindow(IWindow window)
 	{
-		this.currentWindow.set(window);
+		this.currentWindow.accept(window);
 		this.displayElements();
 	}
 	public IWindow getCurrentWindow()
@@ -227,7 +227,7 @@ public class DictionaryFx extends GuiDictionary
 	}
 	public void setCurrentSection(SectionKind sectionKind)
 	{
-		this.currentSection.set(sectionKind);
+		this.currentSection.accept(sectionKind);
 		this.displayElements();
 	}
 	public SectionKind getCurrentSection()
@@ -250,7 +250,7 @@ public class DictionaryFx extends GuiDictionary
 	}
 	public void setCurrentElement(IControl control)
 	{
-		this.currentElement.set(control);
+		this.currentElement.accept(control);
 	}
 	public IControl getCurrentElement()
 	{
@@ -293,13 +293,13 @@ public class DictionaryFx extends GuiDictionary
 		Command undo = () ->
 		{
 			super.removeWindow(newWindow);
-			this.currentWindow.set(oldWindow);
+			this.currentWindow.accept(oldWindow);
 		};
 
 		Command redo = () ->
 		{
 			super.addWindow(newWindow);
-			this.currentWindow.set(newWindow);
+			this.currentWindow.accept(newWindow);
 		};
 
 		addCommand(undo, redo);
@@ -313,7 +313,7 @@ public class DictionaryFx extends GuiDictionary
 		Command undo = () ->
 		{
 			super.addWindow(indexOf, (Window) window);
-			this.currentWindow.set(window);
+			this.currentWindow.accept(window);
 		};
 
 		Command redo = () ->
@@ -322,12 +322,12 @@ public class DictionaryFx extends GuiDictionary
 			int size = getWindows().size();
 			if (size == 0)
 			{
-				this.currentWindow.set(null);
+				this.currentWindow.accept(null);
 			}
 			else
 			{
 				IWindow newWindow = super.getWindows().toArray(new IWindow[size])[Math.max(0, indexOf - 1)];
-				this.currentWindow.set(newWindow);
+				this.currentWindow.accept(newWindow);
 			}
 		};
 
@@ -350,13 +350,13 @@ public class DictionaryFx extends GuiDictionary
 			Command undo = () ->
 			{
 				super.removeWindow(copiedWindow);
-				this.currentWindow.set(oldWindow);
+				this.currentWindow.accept(oldWindow);
 			};
 
 			Command redo = () ->
 			{
 				super.addWindow(copiedWindow);
-				this.currentWindow.set(copiedWindow);
+				this.currentWindow.accept(copiedWindow);
 			};
 			addCommand(undo, redo);
 		}
@@ -401,7 +401,7 @@ public class DictionaryFx extends GuiDictionary
 		{
 			super.removeWindow(window);
 			super.addWindow(lastIndex, (Window) window);
-			this.currentWindow.set(window);
+			this.currentWindow.accept(window);
 		};
 		Command redo = () ->
 		{
@@ -433,14 +433,14 @@ public class DictionaryFx extends GuiDictionary
 			{
 				window.removeControl(newElement);
 				this.removeElementConsumer.accept(newElement);
-				this.currentElement.set(oldElement);
+				this.currentElement.accept(oldElement);
 			};
 
 			Command redo = () ->
 			{
 				window.addControl(this.currentSection.get(), newElement);
 				this.addElementConsumer.accept(newElement.getSection().getControls().size() - 1, newElement);
-				this.currentElement.set(newElement);
+				this.currentElement.accept(newElement);
 			};
 			addCommand(undo, redo);
 		}
@@ -460,7 +460,7 @@ public class DictionaryFx extends GuiDictionary
 			{
 				section.addControl(indexOf, removedElement);
 				this.addElementConsumer.accept(indexOf, removedElement);
-				this.currentElement.set(removedElement);
+				this.currentElement.accept(removedElement);
 			};
 
 			Command redo = () ->
@@ -477,11 +477,11 @@ public class DictionaryFx extends GuiDictionary
 					this.removeElementConsumer.accept(removedElement);
 					if (section.getControls().isEmpty())
 					{
-						this.currentElement.set(null);
+						this.currentElement.accept(null);
 					}
 					else
 					{
-						this.currentElement.set(((Section) section).getByIndex(Math.max(0, indexOf - 1)));
+						this.currentElement.accept(((Section) section).getByIndex(Math.max(0, indexOf - 1)));
 					}
 				}
 			};
@@ -508,7 +508,7 @@ public class DictionaryFx extends GuiDictionary
 			{
 				window.removeControl(copiedControl);
 				this.removeElementConsumer.accept(copiedControl);
-				this.currentElement.set(oldControl);
+				this.currentElement.accept(oldControl);
 			};
 
 			Command redo = () ->
@@ -519,7 +519,7 @@ public class DictionaryFx extends GuiDictionary
 					section.addControl(copiedControl);
 					this.addElementConsumer.accept(copiedControl.getSection().getControls().size() - 1, copiedControl);
 				}
-				this.currentElement.set(copiedControl);
+				this.currentElement.accept(copiedControl);
 			};
 
 			addCommand(undo, redo);
@@ -547,7 +547,7 @@ public class DictionaryFx extends GuiDictionary
 			window.getSection(section).addControl(lastIndex, element);
 			this.addElementConsumer.accept(lastIndex, element);
 
-			this.currentElement.set(element);
+			this.currentElement.accept(element);
 		};
 
 		Command redo = () ->
@@ -558,7 +558,7 @@ public class DictionaryFx extends GuiDictionary
 			window.getSection(section).addControl(newIndex, element);
 			this.addElementConsumer.accept(newIndex, element);
 
-			this.currentElement.set(element);
+			this.currentElement.accept(element);
 		};
 		addCommand(undo, redo);
 	}
@@ -689,7 +689,7 @@ public class DictionaryFx extends GuiDictionary
 				this.removeElementConsumer.accept(newControl);
 				this.addElementConsumer.accept(index, oldControl);
 
-				this.currentElement.set(oldControl);
+				this.currentElement.accept(oldControl);
 			};
 			Command redo = () ->
 			{
@@ -697,7 +697,7 @@ public class DictionaryFx extends GuiDictionary
 				int index = section.replaceControl(oldControl, newControl);
 				this.removeElementConsumer.accept(oldControl);
 				this.addElementConsumer.accept(index,newControl);
-				this.currentElement.set(newControl);
+				this.currentElement.accept(newControl);
 			};
 			addCommand(undo, redo);
 		}
@@ -712,8 +712,8 @@ public class DictionaryFx extends GuiDictionary
 			IControl ownerControl = window.getControlForName(null, element.getOwnerID());
 			if (ownerControl != null)
 			{
-				this.currentSection.set(ownerControl.getSection().getSectionKind());
-				this.currentElement.set(ownerControl);
+				this.currentSection.accept(ownerControl.getSection().getSectionKind());
+				this.currentElement.accept(ownerControl);
 			}
 		}
 	}
@@ -739,14 +739,14 @@ public class DictionaryFx extends GuiDictionary
 		{
 			this.applicationConnector.setIdAppEntry(null);
 			this.applicationConnector.setAppConnection(null);
-			this.appStatus.set(new ApplicationStatusBean(ApplicationStatus.Disconnected, null, null));
+			this.appStatus.accept(new ApplicationStatusBean(ApplicationStatus.Disconnected, null, null));
 		}
 		else
 		{
 			AppConnection appConnection = (AppConnection) getFactory().getConfiguration().getStoreMap().get(storedAppId);
 			this.applicationConnector.setIdAppEntry(appConnection.getId());
 			this.applicationConnector.setAppConnection(appConnection);
-			this.appStatus.set(new ApplicationStatusBean(ApplicationStatus.ConnectingFromStore, appConnection, null));
+			this.appStatus.accept(new ApplicationStatusBean(ApplicationStatus.ConnectingFromStore, appConnection, null));
 		}
 	}
 
@@ -755,7 +755,7 @@ public class DictionaryFx extends GuiDictionary
 		if (!getFactory().getConfiguration().getStoreMap().values().contains(this.applicationConnector.getAppConnection()))
 		{
 			this.applicationConnector.stopApplication();
-			this.appStatus.set(new ApplicationStatusBean(ApplicationStatus.Disconnected, null, null));
+			this.appStatus.accept(new ApplicationStatusBean(ApplicationStatus.Disconnected, null, null));
 		}
 	}
 
@@ -778,7 +778,7 @@ public class DictionaryFx extends GuiDictionary
 				Operation operation = (Operation) obj;
 
 				Optional<OperationResult> result = this.operate(operation, window, element);
-				result.ifPresent(operate -> this.out.set(operate.humanablePresentation()));
+				result.ifPresent(operate -> this.out.accept(operate.humanablePresentation()));
 			}
 			else if (obj instanceof Spec)
 			{
@@ -789,12 +789,12 @@ public class DictionaryFx extends GuiDictionary
 				{
 					if (check.isOk())
 					{
-						this.out.set(R.DICTIONARY_FX_CHECK_PASS.get());
+						this.out.accept(R.DICTIONARY_FX_CHECK_PASS.get());
 					}
 					else
 					{
-						this.out.set(R.DICTIONARY_FX_CHECK_FAIL.get());
-						check.getErrors().forEach(this.out::set);
+						this.out.accept(R.DICTIONARY_FX_CHECK_FAIL.get());
+						check.getErrors().forEach(this.out::accept);
 					}
 				});
 			}
@@ -808,7 +808,7 @@ public class DictionaryFx extends GuiDictionary
 
 	public void find() throws Exception
 	{
-		this.image.set(null);
+		this.image.accept(null);
 		this.checkIsWorking(() ->
 		{
 			IWindow window = this.currentWindow.get();
@@ -819,10 +819,10 @@ public class DictionaryFx extends GuiDictionary
 
 			IRemoteApplication service = this.service();
 			Collection<String> all = service.findAll(owner, locator);
-			all.forEach(this.out::set);
+			all.forEach(this.out::accept);
 
 			ImageWrapper imageWrapper = service.getImage(owner, locator);
-			this.image.set(imageWrapper);
+			this.image.accept(imageWrapper);
 		});
 	}
 
@@ -831,7 +831,7 @@ public class DictionaryFx extends GuiDictionary
 		this.checkIsWorking(() ->
 		{
 			Optional<OperationResult> operate = this.operate(Do.getValue(), this.currentWindow.get(), this.currentElement.get());
-			operate.ifPresent(opResult -> this.out.set(opResult.humanablePresentation()));
+			operate.ifPresent(opResult -> this.out.accept(opResult.humanablePresentation()));
 		});
 	}
 	//endregion
@@ -968,7 +968,7 @@ public class DictionaryFx extends GuiDictionary
 
 				Optional.ofNullable(property)
 						.map(Serializable::toString)
-						.ifPresent(this.out::set);
+						.ifPresent(this.out::accept);
 			}
 		);
 	}
@@ -1021,7 +1021,7 @@ public class DictionaryFx extends GuiDictionary
 					{
 						result = this.service().getDialogPosition(selfLocator).toString();
 					}
-					Optional.ofNullable(result).ifPresent(this.out::set);
+					Optional.ofNullable(result).ifPresent(this.out::accept);
 				}
 		);
 	}

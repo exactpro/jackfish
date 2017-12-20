@@ -337,7 +337,7 @@ public class MatrixTreeView extends TreeTableView<MatrixItem>
 					updateTooltip();
 					box.setOnAction(event -> {
 						item.setRepOff(box.isSelected());
-						matrix.getChangedProperty().set(true);
+						matrix.getChangedProperty().accept(true);
 						updateTooltip();
 						refresh();
 					});
@@ -375,7 +375,7 @@ public class MatrixTreeView extends TreeTableView<MatrixItem>
 					updateTooltip();
 					box.setOnAction(event -> {
 						item.setOff(box.isSelected());
-						matrix.getChangedProperty().set(true);
+						matrix.getChangedProperty().accept(true);
 						updateTooltip();
 						refresh();
 					});

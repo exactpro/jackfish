@@ -105,9 +105,9 @@ public class PlainTextFxController extends AbstractDocumentController<PlainTextF
 		super.init(model, customTab);
 
 		this.textArea.richChanges().addObserver(change -> {
-			this.model.getProperty().set(this.textArea.getText());
+			this.model.getProperty().accept(this.textArea.getText());
 			//TODO think about it
-			this.model.getChangedProperty().set(true);
+			this.model.getChangedProperty().accept(true);
 		});
 		this.model.getHighlighter().setOnChangeListener((o, n) -> this.cbHighlighting.getSelectionModel().select(n));
 

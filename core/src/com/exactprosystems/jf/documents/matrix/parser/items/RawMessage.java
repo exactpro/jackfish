@@ -103,7 +103,7 @@ public class RawMessage extends MatrixItem
 		driver.showLabel(this, layout, 1, 4, "Message type");
 		driver.showComboBox(this, layout, 1, 5, str ->
 		{
-			this.typeName.set(str);
+			this.typeName.accept(str);
 			this.message.setMessageType(str);
 			IMessageDictionary dictionary = getDictionary(context);
 			updateMessage(str, dictionary);
@@ -198,8 +198,8 @@ public class RawMessage extends MatrixItem
 	@Override
 	protected void initItSelf(Map<Tokens, String> systemParameters)
 	{
-		this.typeName.set(systemParameters.get(Tokens.RawMessage));
-		this.clientName.set(systemParameters.get(Tokens.Client));
+		this.typeName.accept(systemParameters.get(Tokens.RawMessage));
+		this.clientName.accept(systemParameters.get(Tokens.Client));
 		Map<String, Object> map = new LinkedHashMap<>();
 		this.message = new MapMessage(this.typeName.get(), map, null);
 
