@@ -33,9 +33,9 @@ import java.util.stream.Collectors;
 )
 public class SystemVars extends AbstractDocument
 {
-    private Parameters parameters;
+	private final Parameters parameters;
 
-    public SystemVars(String fileName, DocumentFactory factory)
+	public SystemVars(String fileName, DocumentFactory factory)
 	{
 		super(fileName, factory);
 		this.parameters = new Parameters();
@@ -47,9 +47,9 @@ public class SystemVars extends AbstractDocument
 	{
 		try (BufferedReader br = new BufferedReader(reader))
 		{
-			String line = null;
 			this.parameters.clear();
 			String lastDescription = null;
+			String line;
 			while ((line = br.readLine()) != null)
 			{
 				if (line.isEmpty())
@@ -77,7 +77,7 @@ public class SystemVars extends AbstractDocument
 					lastDescription = null;
 				}
 			}
-			this.parameters.evaluateAll(this.getFactory().createEvaluator());
+			this.parameters.evaluateAll(super.getFactory().createEvaluator());
 		}
 	}
 
@@ -87,27 +87,26 @@ public class SystemVars extends AbstractDocument
 		return true;
 	}
 
-    @Override
-    public void save(String fileName) throws Exception
-    {
-        LinkedProperties prop = new LinkedProperties();
-        this.parameters.forEach(parameter ->
-        {
-            String name = "";
-            if (!Str.IsNullOrEmpty(parameter.getDescription()))
-            {
-                name = "#" + parameter.getDescription() + System.lineSeparator();
-            }
-            prop.put(name + parameter.getName(), parameter.getExpression());
-        });
-        prop.store(new FileWriter(fileName), null);
+	@Override
+	public void save(String fileName) throws Exception
+	{
+		LinkedProperties prop = new LinkedProperties();
+		this.parameters.forEach(parameter -> {
+			String name = "";
+			if (!Str.IsNullOrEmpty(parameter.getDescription()))
+			{
+				name = "#" + parameter.getDescription() + System.lineSeparator();
+			}
+			prop.put(name + parameter.getName(), parameter.getExpression());
+		});
+		prop.store(new FileWriter(fileName), null);
 		super.save(fileName);
 	}
 
 	@Override
 	protected void afterRedoUndo()
 	{
-		this.parameters.evaluateAll(this.getFactory().createEvaluator());
+		this.parameters.evaluateAll(super.getFactory().createEvaluator());
 	}
 
 	//endregion
@@ -116,7 +115,7 @@ public class SystemVars extends AbstractDocument
 	@Override
 	public boolean isChanged()
 	{
-		return this.parameters.isChanged();
+		return this.parameters.isChanged() || super.isChanged();
 	}
 
 	@Override
@@ -141,6 +140,11 @@ public class SystemVars extends AbstractDocument
 		return this.parameters;
 	}
 
+	/**
+	 * Inject the parameters to the passed evaluator.
+	 *
+	 * @throws Exception if some of a parameter from the parameters are invalid
+	 */
 	public void injectVariables(AbstractEvaluator evaluator) throws Exception
 	{
 		for (Parameter entry : this.parameters)
@@ -151,6 +155,5 @@ public class SystemVars extends AbstractDocument
 
 			evaluator.init(key, result);
 		}
-
 	}
 }

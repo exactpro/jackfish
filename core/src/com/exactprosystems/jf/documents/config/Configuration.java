@@ -985,7 +985,7 @@ public class Configuration extends AbstractDocument
 	@Override
 	public boolean isChanged()
 	{
-		return this.changed || this.bean.isChanged();
+		return this.changed || this.bean.isChanged() || super.isChanged();
 	}
 
 	@Override

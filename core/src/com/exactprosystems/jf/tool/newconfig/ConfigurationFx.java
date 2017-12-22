@@ -168,7 +168,7 @@ public class ConfigurationFx extends Configuration
 	}
 
 	@Override
-	public void create() throws Exception
+	public void create()
 	{
 		super.create();
 	}

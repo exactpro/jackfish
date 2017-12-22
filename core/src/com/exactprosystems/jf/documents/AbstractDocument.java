@@ -20,16 +20,15 @@ import java.util.function.Consumer;
 
 public abstract class AbstractDocument implements Document
 {
-    protected DocumentFactory     factory;
-    private ActionTrackProvider   provider = new ActionTrackProvider();
+	private final ActionTrackProvider provider = new ActionTrackProvider();
+	private final   MutableValue<String>  nameProperty;
+	private final   MutableValue<Boolean> changedProperty;
+	protected final DocumentFactory       factory;
 
-    private MutableValue<String>  nameProperty;
-    private MutableValue<Boolean> changedProperty;
+	private Consumer<Document> closeConsumer;
+	private Consumer<Document> saveConsumer;
 
-    private Consumer<Document>    closeConsumer;
-    private Consumer<Document>    saveConsumer;
-
-    public AbstractDocument(String fileName, DocumentFactory factory)
+	public AbstractDocument(String fileName, DocumentFactory factory)
 	{
 		this.factory = factory;
 		this.nameProperty = new MutableValue<>(fileName);
@@ -61,10 +60,14 @@ public abstract class AbstractDocument implements Document
 		return Objects.equals(this.getNameProperty(), other.getNameProperty());
 	}
 
+	//region interface Document
+	/**
+	 * Create a new document. The base method change only the name for the document
+	 */
 	@Override
-	public void create() throws Exception
+	public void create()
 	{
-		DocumentInfo annotation = getClass().getAnnotation(DocumentInfo.class);
+		DocumentInfo annotation = this.getClass().getAnnotation(DocumentInfo.class);
 		if (annotation != null)
 		{
 			this.nameProperty.accept(annotation.newName());
@@ -75,11 +78,21 @@ public abstract class AbstractDocument implements Document
 	public void load(Reader reader) throws Exception
 	{
 	}
-	
+
+	/**
+	 * Save the document to a file with passed name.
+	 * After saving, a save consumer will calling ( if the consumer is present)
+	 *
+	 * @param fileName a fileName, which will use for save the document
+	 *
+	 * @throws Exception if something went wrong (e.g. file for saving not found)
+	 *
+	 * @see Document#onSave(Consumer)
+	 */
 	@Override
 	public void save(String fileName) throws Exception
 	{
-        this.nameProperty.accept(fileName);
+		this.nameProperty.accept(fileName);
 		Optional.ofNullable(this.saveConsumer).ifPresent(consumer -> consumer.accept(this));
 	}
 
@@ -92,7 +105,7 @@ public abstract class AbstractDocument implements Document
 	@Override
 	public void display() throws Exception
 	{
-	    this.nameProperty.fire();
+		this.nameProperty.fire();
 	}
 
 	@Override
@@ -109,59 +122,76 @@ public abstract class AbstractDocument implements Document
 	}
 
 	@Override
-    public void addCommand(Command undo, Command redo)
-    {
-        redo.execute();
-        this.provider.addCommand(undo, redo);
-        afterRedoUndo();
-        this.changedProperty.accept(true);
-    }
-    
-    @Override
-    public void undo()
-    {
-        if (this.provider.undo())
-        {
-            this.changedProperty.accept(true);
-            afterRedoUndo();
-        }
-    }
+	public void addCommand(Command undo, Command redo)
+	{
+		redo.execute();
+		this.provider.addCommand(undo, redo);
+		this.afterRedoUndo();
+		this.changedProperty.accept(true);
+	}
 
-    @Override
-    public void redo()
-    {
-        if (this.provider.redo())
-        {
-            this.changedProperty.accept(true);
-            afterRedoUndo();
-        }
-    }
+	@Override
+	public void undo()
+	{
+		if (this.provider.undo())
+		{
+			this.changedProperty.accept(true);
+			this.afterRedoUndo();
+		}
+	}
 
-    @Override
-    public MutableValue<String> getNameProperty()
-    {
-        return this.nameProperty;
-    }
-    
-    @Override
-    public MutableValue<Boolean> getChangedProperty()
-    {
-        return this.changedProperty;
-    }
+	@Override
+	public void redo()
+	{
+		if (this.provider.redo())
+		{
+			this.changedProperty.accept(true);
+			this.afterRedoUndo();
+		}
+	}
 
+	@Override
+	public MutableValue<String> getNameProperty()
+	{
+		return this.nameProperty;
+	}
+
+	@Override
+	public MutableValue<Boolean> getChangedProperty()
+	{
+		return this.changedProperty;
+	}
+
+	@Override
+	public DocumentFactory getFactory()
+	{
+		return this.factory;
+	}
+	//endregion
+
+	//region interface Mutable
 	@Override
 	public void saved()
 	{
-	    this.changedProperty.accept(false);
+		this.nameProperty.saved();
+		this.changedProperty.accept(false);
 		this.provider.clear();
 	}
 
-    @Override
-    public DocumentFactory getFactory()
-    {
-        return this.factory;
-    }
+	@Override
+	public boolean isChanged()
+	{
+		return this.nameProperty.isChanged() || this.changedProperty.isChanged();
+	}
 
+	//endregion
+
+	/**
+	 * This method called after executing any undo or redo commands.
+	 * Override this methods for so something after executing a undo or redo commands
+	 *
+	 * @see AbstractDocument#addCommand(Command, Command)
+	 */
 	protected void afterRedoUndo()
 	{
 	}

@@ -496,8 +496,7 @@ public class Main extends Application
 	//region Create documents
 	public void newDictionary() throws Exception
 	{
-		checkConfig();
-		createDocument(this.factory.createDocument(DocumentKind.GUI_DICTIONARY, newName(GuiDictionary.class)));
+		newDocument(DocumentKind.GUI_DICTIONARY, newName(GuiDictionary.class), doc -> {});
 	}
 
 	public void newMatrix() throws Exception
@@ -844,6 +843,7 @@ public class Main extends Application
 
 	private String newName(Class<? extends Document> clazz) throws Exception
 	{
+		this.checkConfig();
 		DocumentInfo annotation = clazz.getAnnotation(DocumentInfo.class);
 		if (annotation == null)
 		{
@@ -958,6 +958,7 @@ public class Main extends Application
 		this.controller.updateFileLastMatrix(this.settings.getValues(Settings.MAIN_NS, DocumentKind.MATRIX.name()));
 	}
 
+	@Deprecated
 	private void createDocument(Document doc) throws Exception
 	{
 		if (doc == null)

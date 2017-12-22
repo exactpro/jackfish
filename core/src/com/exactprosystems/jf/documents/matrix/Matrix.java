@@ -221,7 +221,7 @@ public class Matrix extends AbstractDocument implements IMatrix
 	}
 
 	@Override
-	public void create() throws Exception
+	public void create()
 	{
 		super.create();
 
@@ -281,7 +281,7 @@ public class Matrix extends AbstractDocument implements IMatrix
 	@Override
 	public final boolean isChanged()
 	{
-		return this.root.isChanged();
+		return this.root.isChanged() || super.isChanged();
 	}
 
 	@Override

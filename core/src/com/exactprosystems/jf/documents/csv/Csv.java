@@ -71,7 +71,7 @@ public class Csv extends AbstractDocument
 	@Override
 	public boolean isChanged()
 	{
-		return this.table.isChanged();
+		return this.table.isChanged() || super.isChanged();
 	}
 
 	@Override

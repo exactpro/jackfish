@@ -37,9 +37,8 @@ public interface Document extends Mutable
 
 	/**
 	 * Create a new document. The created document has all default values
-	 * @throws Exception if creating was failed.
 	 */
-	void create() throws Exception;
+	void create();
 
 	/**
 	 * Display the current document
@@ -62,8 +61,11 @@ public interface Document extends Mutable
 	boolean canClose() throws Exception;
 
 	/**
-	 * Close the document
+	 * Close the document and remove from the configuration
+	 *
 	 * @throws Exception if closing was failed
+	 *
+	 * @see com.exactprosystems.jf.documents.config.Configuration#unregister(Document)
 	 */
 	void close() throws Exception;
 

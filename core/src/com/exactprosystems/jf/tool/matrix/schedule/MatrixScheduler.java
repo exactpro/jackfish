@@ -36,7 +36,7 @@ public class MatrixScheduler implements DocumentFactory.MatrixStateChanged
 		this.controller = Common.loadController(MatrixScheduler.class.getResource("Schedule.fxml"));
 		this.controller.init(this);
 		this.factory = factory;
-		this.factory.setMatrixChangeLlistener(this);
+		this.factory.setMatrixChangeListener(this);
 	}
 
 	public void show(Window window)

@@ -12,12 +12,16 @@ package com.exactprosystems.jf.functions;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.math.BigDecimal;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.Objects;
 
-class Header implements Cloneable
+/**
+ * A header for the {@link Table}
+ */
+class Header
 {
-	public String name;
+	String name;
 	Header.HeaderType type;
 	public int index;
 
@@ -25,16 +29,17 @@ class Header implements Cloneable
 	{
 		STRING		(String.class),
 		BOOL		(Boolean.class),
-		INT			(Integer.class),	
+		INT			(Integer.class),
 		DOUBLE		(Double.class),
 		DATE		(Date.class),
 		BIG_DECIMAL	(BigDecimal.class),
 		EXPRESSION	(Object.class),
-		GROUP       (String.class),
-        HYPERLINK   (String.class),
-        COLORED     (String.class),
+		GROUP		(String.class),
+		HYPERLINK	(String.class),
+		COLORED		(String.class),
 		;
-		
+		Class<?> clazz;
+
 		HeaderType(Class<?> clazz)
 		{
 			this.clazz = clazz;
@@ -42,14 +47,10 @@ class Header implements Cloneable
 		
 		public static Header.HeaderType forName(String columnClassName)
 		{
-			for (Header.HeaderType item : values())
-			{
-				if (item.clazz.getSimpleName().equals(columnClassName))
-				{
-					return item;
-				}
-			}
-			return null;
+			return Arrays.stream(values())
+					.filter(item -> item.clazz.getSimpleName().equals(columnClassName))
+					.findFirst()
+					.orElse(null);
 		}
 
 		public int compare(Object obj1, Object obj2, boolean ignoreCase)
@@ -72,9 +73,7 @@ class Header implements Cloneable
 						return ((int) compareTo.invoke(obj1, obj2));
 					}
 					catch (NoSuchMethodException | InvocationTargetException | IllegalAccessException e)
-					{
-						e.printStackTrace();
-					}
+					{}
 					return 0;
 				}
 			}
@@ -83,15 +82,13 @@ class Header implements Cloneable
 				return String.valueOf(obj1).compareTo(String.valueOf(obj2));
 			}
 		}
-
-		public Class<?> clazz;
 	}
 
 	public Header(String name, Header.HeaderType type)
 	{
 		this.name = name;
 		this.type = type;
-		this.index = getIndex();
+		this.index = this.getIndex();
 	}
 
 	/**
@@ -101,9 +98,8 @@ class Header implements Cloneable
 	{
 		this.name = header.name;
 		this.type = header.type;
-		this.index = getIndex();
+		this.index = this.getIndex();
 	}
-
 
 	@Override
 	public String toString()
@@ -116,7 +112,7 @@ class Header implements Cloneable
 	{
 		if (this == o)
 			return true;
-		if (o == null || getClass() != o.getClass())
+		if (o == null || this.getClass() != o.getClass())
 			return false;
 
 		Header header = (Header) o;
@@ -129,8 +125,10 @@ class Header implements Cloneable
 		return index;
 	}
 
+	//region private methods
 	private int getIndex()
 	{
 		return Table.index++;
 	}
+	//endregion
 }

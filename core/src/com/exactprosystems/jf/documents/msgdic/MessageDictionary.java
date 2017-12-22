@@ -127,7 +127,7 @@ public class MessageDictionary extends AbstractDocument implements IMessageDicti
 		{
 			return true;
 		}
-		return this.bean.isChanged();
+		return this.bean.isChanged() || super.isChanged();
 	}
 
 	@Override

@@ -156,7 +156,7 @@ public class GuiDictionary extends AbstractDocument implements IGuiDictionary
 	@Override
 	public boolean isChanged()
 	{
-		return this.bean.isChanged();
+		return this.bean.isChanged() || super.isChanged();
 	}
 	
 	@Override
