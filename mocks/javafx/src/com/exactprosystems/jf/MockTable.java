@@ -38,6 +38,7 @@ class MockTable
         this.head2 = new TableColumn<>("Head2");
         this.head2.setCellValueFactory(new PropertyValueFactory<>("head2"));
         this.head2.setCellFactory(TextFieldTableCell.forTableColumn(new DefaultStringConverter()));
+        this.head2.setOnEditCommit(event -> tableData.get(event.getTablePosition().getRow()).setHead2(event.getNewValue()));
         this.head3 = new TableColumn<>("Head3");
         this.head3.setCellValueFactory(new PropertyValueFactory<>("head3"));
     }

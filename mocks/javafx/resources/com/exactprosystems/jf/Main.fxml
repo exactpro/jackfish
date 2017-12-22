@@ -19,7 +19,7 @@
     </top>
     <center>
         <VBox fx:id="vBox">
-            <GridPane>
+            <GridPane fx:id="gridPane">
                 <padding>
                     <Insets top="5" left="5"/>
                 </padding>
@@ -52,7 +52,7 @@
                 <fx:define>
                     <ToggleGroup fx:id="RadioGroup"/>
                 </fx:define>
-                <RadioButton    fx:id="Green"           GridPane.rowIndex="0" GridPane.columnIndex="4" onMouseClicked="#clickHandler" onMouseMoved="#moveHandlerRadio" onKeyPressed="#pressHandler" onKeyReleased="#releasedHandler" onKeyTyped="#typedHandler" text="Green" toggleGroup="$RadioGroup"/>
+                <RadioButton    fx:id="RadioButton"     GridPane.rowIndex="0" GridPane.columnIndex="4" onMouseClicked="#clickHandler" onMouseMoved="#moveHandlerRadio" onKeyPressed="#pressHandler" onKeyReleased="#releasedHandler" onKeyTyped="#typedHandler" text="Green" toggleGroup="$RadioGroup"/>
                 <RadioButton    fx:id="Yellow"          GridPane.rowIndex="1" GridPane.columnIndex="4" onMouseClicked="#clickHandler" onMouseMoved="#moveHandlerRadio" onKeyPressed="#pressHandler" onKeyReleased="#releasedHandler" onKeyTyped="#typedHandler" text="Yellow" toggleGroup="$RadioGroup"/>
                 <RadioButton    fx:id="Orange"          GridPane.rowIndex="2" GridPane.columnIndex="4" onMouseClicked="#clickHandler" onMouseMoved="#moveHandlerRadio" onKeyPressed="#pressHandler" onKeyReleased="#releasedHandler" onKeyTyped="#typedHandler" text="Orange" toggleGroup="$RadioGroup"/>
                 <RadioButton    fx:id="Blue"            GridPane.rowIndex="3" GridPane.columnIndex="4" onMouseClicked="#clickHandler" onMouseMoved="#moveHandlerRadio" onKeyPressed="#pressHandler" onKeyReleased="#releasedHandler" onKeyTyped="#typedHandler" text="Blue" toggleGroup="$RadioGroup"/>
@@ -110,7 +110,7 @@
     </center>
     <bottom>
         <StackPane translateX="-8" translateY="-37">
-            <Button fx:id="colorButton" text="#red" minHeight="25" prefHeight="25" maxHeight="25" minWidth="100" prefWidth="100" maxWidth="100" onAction="#changeTableCell"/>
+            <Button fx:id="colorButton" text="#red" minHeight="25" prefHeight="25" maxHeight="25" minWidth="100" prefWidth="100" maxWidth="100"/>
         </StackPane>
     </bottom>
 </BorderPane>

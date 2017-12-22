@@ -110,7 +110,7 @@ public class FxOperationExecutor extends AbstractOperationExecutor<EventTarget>
 			}
 			if (component instanceof Slider)
 			{
-				return String.valueOf(((Slider) component).getValue());
+				return String.valueOf(Double.valueOf(((Slider) component).getValue()).intValue());
 			}
 			if (component instanceof SplitPane)
 			{
@@ -1178,6 +1178,14 @@ public class FxOperationExecutor extends AbstractOperationExecutor<EventTarget>
 				{
 					cell = ((TableCell) cell).getGraphic();
 				}
+				else if(cell instanceof TextFieldTableCell)
+				{
+					TableView tableView = (TableView) component;
+					tableView.edit(row, (TableColumn) tableView.getColumns().get(column));
+					((TextFieldTableCell) cell).commitEdit(text);
+					tableView.refresh();
+					return true;
+				}
 			}
 			else if (component instanceof TreeTableView)
 			{
@@ -1194,11 +1202,7 @@ public class FxOperationExecutor extends AbstractOperationExecutor<EventTarget>
 
 			if (cell != null)
 			{
-				if (cell instanceof TextFieldTableCell)
-				{
-					((TextFieldTableCell) cell).updateItem(text, false);
-				}
-				else if (cell instanceof TextInputControl)
+				if (cell instanceof TextInputControl)
 				{
 					((TextInputControl) cell).setText(text);
 				}

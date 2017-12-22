@@ -18,10 +18,10 @@ import javafx.scene.AccessibleAttribute;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.control.*;
-import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.*;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
@@ -34,7 +34,8 @@ import java.util.stream.Collectors;
 
 public class MainController implements Initializable
 {
-    @FXML private ListView<String> ListView;
+	@FXML private GridPane gridPane;
+	@FXML private ListView<String> ListView;
     @FXML private Button notEnabledButton;
     @FXML private Button notVisibleButton;
     @FXML private Button clearButton;
@@ -55,7 +56,7 @@ public class MainController implements Initializable
     @FXML private TextArea Protocol;
     @FXML private TreeView<String> TreeView;
     @FXML private CheckBox CheckBox;
-    @FXML private RadioButton Green;
+    @FXML private RadioButton RadioButton;
     @FXML private RadioButton Yellow;
     @FXML private RadioButton Orange;
     @FXML private RadioButton Blue;
@@ -280,26 +281,6 @@ public class MainController implements Initializable
 				System.out.println(tableRow.getBackground().getFills().stream().map(bf -> bf.getFill()).collect(Collectors.toList()));
 			}
 		}
-	}
-
-	// TODO for test change cell
-	public void changeTableCell(ActionEvent actionEvent)
-	{
-//		Table.edit(1, Table.getColumns().get(1));
-
-		int col = 1;
-		int row = 1;
-
-		Node cell = (Node) Table.queryAccessibleAttribute(AccessibleAttribute.CELL_AT_ROW_COLUMN, row, col);
-		TextFieldTableCell fieldTableCell = (TextFieldTableCell) cell;
-		String text = "test";
-		Table.getItems().get(row).setHead2(text);
-
-//		TableColumn tableColumn = Table.getColumns().get(1);
-//		ObservableValue cellObservableValue = tableColumn.getCellObservableValue(1);
-
-		fieldTableCell.updateItem(text, false);
-		Protocol.appendText(((Labeled) cell).getText() + NEW_LINE);
 	}
 
 	class A

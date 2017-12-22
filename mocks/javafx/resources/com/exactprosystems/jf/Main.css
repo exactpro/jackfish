@@ -54,11 +54,11 @@
 .table-view .table-row-cell:selected,
 .table-view .table-row-cell:focused,
 .table-view .table-row-cell:filled {
-	-fx-background-color: transparent;
+	-fx-background-color: white;
 }
 
-.table-view .table-cell{
-    -fx-text-fill: #515151;
+.table-view .table-cell {
+    -fx-text-fill: #333333;
 }
 
 .tree-view {
