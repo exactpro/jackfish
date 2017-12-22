@@ -13,6 +13,8 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.control.cell.TextFieldTableCell;
+import javafx.util.converter.DefaultStringConverter;
 
 import java.util.Arrays;
 import java.util.List;
@@ -35,6 +37,7 @@ class MockTable
         this.head1.setCellValueFactory(new PropertyValueFactory<>("head1"));
         this.head2 = new TableColumn<>("Head2");
         this.head2.setCellValueFactory(new PropertyValueFactory<>("head2"));
+        this.head2.setCellFactory(TextFieldTableCell.forTableColumn(new DefaultStringConverter()));
         this.head3 = new TableColumn<>("Head3");
         this.head3.setCellValueFactory(new PropertyValueFactory<>("head3"));
     }

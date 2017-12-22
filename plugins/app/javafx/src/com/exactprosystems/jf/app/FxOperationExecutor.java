@@ -27,6 +27,7 @@ import javafx.scene.AccessibleAttribute;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.control.*;
+import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.input.*;
 import javafx.util.StringConverter;
 import org.apache.log4j.Logger;
@@ -750,27 +751,22 @@ public class FxOperationExecutor extends AbstractOperationExecutor<EventTarget>
 				{
 					if (component instanceof TextInputControl)
 					{
-						TextInputControl field = (TextInputControl) component;
-						if (clear)
-						{
-							field.setText(text);
-						}
-						else
-						{
-							String currentText = field.getText();
-							field.setText(currentText + text);
-						}
-						return true;
+						return enterTextToField(clear, (TextInputControl) component, text);
 					}
-					else if(component instanceof ComboBox)
+
+					if (component instanceof ComboBox)
 					{
 						ComboBox comboBox = (ComboBox) component;
 						if(comboBox.isEditable())
 						{
-							comboBox.getEditor().setText(text);
-							return true;
+							return enterTextToField(clear, comboBox.getEditor(), text);
+						}
+						else
+						{
+							throw new Exception("ComboBox is not editable");
 						}
 					}
+
 					throw new Exception("Cant set text to not input control");
 				},
 				e ->
@@ -1198,7 +1194,15 @@ public class FxOperationExecutor extends AbstractOperationExecutor<EventTarget>
 
 			if (cell != null)
 			{
-				if (!(cell instanceof TextInputControl))
+				if (cell instanceof TextFieldTableCell)
+				{
+					((TextFieldTableCell) cell).updateItem(text, false);
+				}
+				else if (cell instanceof TextInputControl)
+				{
+					((TextInputControl) cell).setText(text);
+				}
+				else
 				{
 					Locator locator = new Locator();
 					locator.kind(ControlKind.TextBox);
@@ -1209,10 +1213,6 @@ public class FxOperationExecutor extends AbstractOperationExecutor<EventTarget>
 					}
 					TextInputControl cellBox = (TextInputControl) all.get(0);
 					cellBox.setText(text);
-				}
-				else
-				{
-					((TextInputControl) cell).setText(text);
 				}
 				return true;
 			}
@@ -1648,6 +1648,20 @@ public class FxOperationExecutor extends AbstractOperationExecutor<EventTarget>
 		}
 		catch (Exception e)
 		{}
+	}
+
+	private boolean enterTextToField(boolean clear, TextInputControl field, String text)
+	{
+		if (clear)
+		{
+			field.setText(text);
+		}
+		else
+		{
+			String currentText = field.getText();
+			field.setText(currentText + text);
+		}
+		return true;
 	}
 	//endregion
 }

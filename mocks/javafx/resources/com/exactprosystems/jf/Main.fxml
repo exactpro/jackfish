@@ -110,7 +110,7 @@
     </center>
     <bottom>
         <StackPane translateX="-8" translateY="-37">
-            <Button fx:id="colorButton" text="#red" minHeight="25" prefHeight="25" maxHeight="25" minWidth="100" prefWidth="100" maxWidth="100"/>
+            <Button fx:id="colorButton" text="#red" minHeight="25" prefHeight="25" maxHeight="25" minWidth="100" prefWidth="100" maxWidth="100" onAction="#changeTableCell"/>
         </StackPane>
     </bottom>
 </BorderPane>

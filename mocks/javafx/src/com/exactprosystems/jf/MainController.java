@@ -17,8 +17,8 @@ import javafx.geometry.Pos;
 import javafx.scene.AccessibleAttribute;
 import javafx.scene.Group;
 import javafx.scene.Node;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.*;
 import javafx.scene.layout.BorderPane;
@@ -282,6 +282,26 @@ public class MainController implements Initializable
 		}
 	}
 
+	// TODO for test change cell
+	public void changeTableCell(ActionEvent actionEvent)
+	{
+//		Table.edit(1, Table.getColumns().get(1));
+
+		int col = 1;
+		int row = 1;
+
+		Node cell = (Node) Table.queryAccessibleAttribute(AccessibleAttribute.CELL_AT_ROW_COLUMN, row, col);
+		TextFieldTableCell fieldTableCell = (TextFieldTableCell) cell;
+		String text = "test";
+		Table.getItems().get(row).setHead2(text);
+
+//		TableColumn tableColumn = Table.getColumns().get(1);
+//		ObservableValue cellObservableValue = tableColumn.getCellObservableValue(1);
+
+		fieldTableCell.updateItem(text, false);
+		Protocol.appendText(((Labeled) cell).getText() + NEW_LINE);
+	}
+
 	class A
 	{
 		public String a;
@@ -410,5 +430,6 @@ public class MainController implements Initializable
     public void init()
 	{
 		((ComboBoxListViewSkin) ComboBox.getSkin()).getListView().setOnScrollTo(event -> scrollPrint(ComboBox.getId()));
+		Table.setEditable(true);
 	}
 }
