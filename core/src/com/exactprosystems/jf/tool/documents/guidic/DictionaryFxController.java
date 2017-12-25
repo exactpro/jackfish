@@ -21,11 +21,11 @@ import com.exactprosystems.jf.documents.Document;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.custom.console.ConsoleArea;
 import com.exactprosystems.jf.tool.custom.tab.CustomTab;
+import com.exactprosystems.jf.tool.documents.AbstractDocumentController;
+import com.exactprosystems.jf.tool.documents.ControllerInfo;
 import com.exactprosystems.jf.tool.documents.guidic.actions.ActionsController;
 import com.exactprosystems.jf.tool.documents.guidic.element.ElementInfoController;
 import com.exactprosystems.jf.tool.documents.guidic.navigation.NavigationController;
-import com.exactprosystems.jf.tool.documents.AbstractDocumentController;
-import com.exactprosystems.jf.tool.documents.ControllerInfo;
 import javafx.fxml.FXML;
 import javafx.scene.control.SplitPane;
 import javafx.scene.layout.GridPane;
@@ -178,6 +178,13 @@ public class DictionaryFxController extends AbstractDocumentController<Dictionar
 		String absolutePath = new File(super.model.getNameProperty().get()).getAbsolutePath();
 		Settings.SettingsValue value = settings.getValue(Settings.MAIN_NS, DictionaryFx.DIALOG_DICTIONARY_SETTINGS, absolutePath);
 		Optional.ofNullable(value).ifPresent(s -> super.model.setCurrentApp(s.getValue()));
+
+		//key='value' , key2='value , 2'
+		Settings.SettingsValue variables = settings.getValue(Settings.MAIN_NS, DictionaryFx.DIALOG_STORED_VARIABLES, absolutePath);
+		Optional.ofNullable(variables)
+				.map(Settings.SettingsValue::getValue)
+				.map(DictionaryFx.CONVERTER::fromString)
+				.ifPresent(this.model.parametersProperty()::from);
 	}
 
 	//endregion

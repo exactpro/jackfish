@@ -11,7 +11,6 @@ package com.exactprosystems.jf.tool.wizard.all.layout;
 
 import com.exactprosystems.jf.actions.gui.DialogCheckLayout;
 import com.exactprosystems.jf.api.app.*;
-import com.exactprosystems.jf.api.common.IContext;
 import com.exactprosystems.jf.api.common.Str;
 import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.api.error.JFRemoteException;
@@ -21,6 +20,7 @@ import com.exactprosystems.jf.api.wizard.WizardCommand;
 import com.exactprosystems.jf.api.wizard.WizardManager;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.utils.XpathUtils;
+import com.exactprosystems.jf.documents.config.Context;
 import com.exactprosystems.jf.documents.matrix.Matrix;
 import com.exactprosystems.jf.documents.matrix.parser.Parameters;
 import com.exactprosystems.jf.documents.matrix.parser.Tokens;
@@ -171,12 +171,12 @@ public class LayoutWizard extends AbstractWizard
 
 	//region AbstractWizard methods
 	@Override
-	public void init(IContext context, WizardManager wizardManager, Object... parameters)
+	public void init(Context context, WizardManager wizardManager, Object... parameters)
 	{
 		super.init(context, wizardManager, parameters);
 		this.matrix = super.get(MatrixFx.class, parameters);
 		this.item = super.get(MatrixItem.class, parameters);
-		this.evaluator = this.matrix.getFactory().createEvaluator();
+		this.evaluator = context.getEvaluator();
 	}
 
 	@Override
@@ -847,7 +847,7 @@ public class LayoutWizard extends AbstractWizard
 
 	private RelationButton createRelation(IControl top, IControl left)
 	{
-		RelationButton btn = new RelationButton(createFormula(top, left), top, left);
+		RelationButton btn = new RelationButton(createFormula(top, left), top, left, this.evaluator);
 		btn.setToggleGroup(this.viewGroup);
 		btn.setOnAction(e -> this.bpView.setCenter(btn.createView()));
 		return btn;
@@ -855,7 +855,7 @@ public class LayoutWizard extends AbstractWizard
 
 	private RelationButton emptyButton()
 	{
-		RelationButton btn = new RelationButton();
+		RelationButton btn = new RelationButton(this.evaluator);
 		btn.setToggleGroup(this.viewGroup);
 		btn.setVisible(false);
 		btn.setDisable(true);
@@ -1100,20 +1100,23 @@ public class LayoutWizard extends AbstractWizard
 
 	public class RelationButton extends ToggleButton
 	{
+		private final AbstractEvaluator evaluator;
 		private Spec formula;
 		private String topName;
 		private String leftName;
 		private IControl control;
 		private VBox boxWithFields;
 
-		public RelationButton()
+		public RelationButton(AbstractEvaluator evaluator)
 		{
 			super();
+			this.evaluator = evaluator;
 		}
 
-		public RelationButton(Spec formula, IControl topControl, IControl leftControl)
+		public RelationButton(Spec formula, IControl topControl, IControl leftControl, AbstractEvaluator evaluator)
 		{
 			super();
+			this.evaluator = evaluator;
 			this.setMaxHeight(Double.MAX_VALUE);
 			this.setMaxWidth(Double.MAX_VALUE);
 
@@ -1266,7 +1269,7 @@ public class LayoutWizard extends AbstractWizard
 			{
 				try
 				{
-					CheckingLayoutResult res = this.control.checkLayout(service(), currentWindow, func);
+					CheckingLayoutResult res = this.control.checkLayout(service(), currentWindow, func, this.evaluator);
 					if (!res.isOk())
 					{
 						return res.getErrors();
@@ -1291,7 +1294,7 @@ public class LayoutWizard extends AbstractWizard
 			}
 			try
 			{
-				CheckingLayoutResult res = this.control.checkLayout(service(), currentWindow, this.formula);
+				CheckingLayoutResult res = this.control.checkLayout(service(), currentWindow, this.formula, this.evaluator);
 				if (!res.isOk())
 				{
 					return res.getErrors();

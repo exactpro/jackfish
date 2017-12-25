@@ -13,7 +13,6 @@ import com.exactprosystems.jf.actions.AbstractAction;
 import com.exactprosystems.jf.actions.ActionFieldAttribute;
 import com.exactprosystems.jf.actions.app.ApplicationResize;
 import com.exactprosystems.jf.api.app.Resize;
-import com.exactprosystems.jf.api.common.IContext;
 import com.exactprosystems.jf.api.common.Str;
 import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.api.wizard.WizardAttribute;
@@ -22,6 +21,7 @@ import com.exactprosystems.jf.api.wizard.WizardCommand;
 import com.exactprosystems.jf.api.wizard.WizardManager;
 import com.exactprosystems.jf.documents.DocumentKind;
 import com.exactprosystems.jf.documents.config.Configuration;
+import com.exactprosystems.jf.documents.config.Context;
 import com.exactprosystems.jf.documents.matrix.Matrix;
 import com.exactprosystems.jf.documents.matrix.parser.Parameter;
 import com.exactprosystems.jf.documents.matrix.parser.Parameters;
@@ -75,7 +75,7 @@ public class AutomateConvertWizard extends AbstractWizard
 	);
 
 	@Override
-	public void init(IContext context, WizardManager wizardManager, Object... parameters)
+	public void init(Context context, WizardManager wizardManager, Object... parameters)
 	{
 		super.init(context, wizardManager, parameters);
 		this.configuration = get(Configuration.class, parameters);

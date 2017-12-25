@@ -11,9 +11,9 @@ package com.exactprosystems.jf.tool.wizard.all;
 
 import com.exactprosystems.jf.actions.DefaultValuePool;
 import com.exactprosystems.jf.actions.tables.TableLoadFromFile;
-import com.exactprosystems.jf.api.common.IContext;
 import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.api.wizard.*;
+import com.exactprosystems.jf.documents.config.Context;
 import com.exactprosystems.jf.documents.matrix.parser.Parameters;
 import com.exactprosystems.jf.documents.matrix.parser.items.ActionItem;
 import com.exactprosystems.jf.functions.Table;
@@ -50,7 +50,7 @@ public class TableWizard extends AbstractWizard
     private String     fileName;
 
     @Override
-    public void init(IContext context, WizardManager wizardManager, Object... parameters) {
+    public void init(Context context, WizardManager wizardManager, Object... parameters) {
         super.init(context, wizardManager, parameters);
         this.actionItem = super.get(ActionItem.class, parameters);
     }

@@ -24,6 +24,8 @@ import com.exactprosystems.jf.documents.guidic.Window;
 import com.exactprosystems.jf.documents.guidic.controls.AbstractControl;
 import com.exactprosystems.jf.documents.matrix.parser.MutableListener;
 import com.exactprosystems.jf.documents.matrix.parser.MutableValue;
+import com.exactprosystems.jf.documents.matrix.parser.Parameter;
+import com.exactprosystems.jf.documents.matrix.parser.Parameters;
 import com.exactprosystems.jf.documents.matrix.parser.items.MutableArrayList;
 import com.exactprosystems.jf.functions.Notifier;
 import com.exactprosystems.jf.tool.ApplicationConnector;
@@ -31,6 +33,7 @@ import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.helpers.DialogsHelper;
 import javafx.concurrent.Task;
 import javafx.scene.control.ButtonType;
+import javafx.util.StringConverter;
 
 import java.io.File;
 import java.io.Serializable;
@@ -46,6 +49,42 @@ import static com.exactprosystems.jf.tool.Common.tryCatchThrow;
 public class DictionaryFx extends GuiDictionary
 {
 	public static final String DIALOG_DICTIONARY_SETTINGS = "DictionarySettings";
+	public static final String DIALOG_STORED_VARIABLES = "DictionaryStoredVariables";
+
+	public static final StringConverter<Parameters> CONVERTER = new StringConverter<Parameters>()
+	{
+		//key='value',,,key2='value2',,,
+		private static final String TRIPLE_COMMA_SEPARATOR = ",,,";
+		private static final String KEY_VALUE_SEPARATOR = "=";
+
+		@Override
+		public String toString(Parameters params)
+		{
+			return params.stream()
+					.map(p -> p.getName() + KEY_VALUE_SEPARATOR + p.getExpression())
+					.collect(Collectors.joining(TRIPLE_COMMA_SEPARATOR));
+		}
+
+		@Override
+		public Parameters fromString(String string)
+		{
+			Parameters parameters = new Parameters();
+			String[] split = string.split(TRIPLE_COMMA_SEPARATOR);
+			for (String s : split)
+			{
+				String[] keyValue = s.split(KEY_VALUE_SEPARATOR);
+				if (keyValue.length > 1)
+				{
+					String name = keyValue[0];
+					String value = Arrays.stream(keyValue, 1, keyValue.length).collect(Collectors.joining());
+					parameters.add(name, value);
+				}
+			}
+
+			return parameters;
+		}
+	};
+
 	private static final String NEW_DIALOG_NAME = "NewDialog";
 
 	private static AbstractControl copyControl;
@@ -66,6 +105,7 @@ public class DictionaryFx extends GuiDictionary
 	private final MutableValue<String> currentStoredApp = new MutableValue<>("");
 	private final MutableValue<String> currentApp = new MutableValue<>("");
 	private final MutableValue<ImageWrapper> image = new MutableValue<>();
+	private final Parameters evaluatedParameters = new Parameters();
 	//endregion
 
 	//region variables for NavigationController
@@ -105,6 +145,13 @@ public class DictionaryFx extends GuiDictionary
 		this.currentApp.accept(currentAdapter);
 		this.evaluator = factory.createEvaluator();
 		this.applicationConnector = new ApplicationConnector(factory);
+		this.evaluatedParameters.setOnAddAllListener((integer, parameters) ->
+		{
+			this.evaluator.getLocals().clear();
+			parameters.stream()
+					.peek(p -> p.evaluate(this.evaluator))
+					.forEach(parameter -> this.evaluator.getLocals().set(parameter.getName(), parameter.getValue()));
+		});
 	}
 
 	//region AbstractDocument
@@ -278,6 +325,11 @@ public class DictionaryFx extends GuiDictionary
 	MutableListener<ApplicationStatusBean> appStatusProperty()
 	{
 		return this.appStatus;
+	}
+
+	public Parameters parametersProperty()
+	{
+		return this.evaluatedParameters;
 	}
 
 	//endregion
@@ -1037,7 +1089,7 @@ public class DictionaryFx extends GuiDictionary
 
 		//TODO why we create copy?
 		AbstractControl abstractControl = AbstractControl.createCopy(control, owner, rows, header);
-		OperationResult result = abstractControl.operate(this.service(), window, operation);
+		OperationResult result = abstractControl.operate(this.service(), window, operation, this.evaluator);
 		return Optional.of(result);
 	}
 
@@ -1049,7 +1101,7 @@ public class DictionaryFx extends GuiDictionary
 
 		//TODO why we create copy?
 		AbstractControl abstractControl = AbstractControl.createCopy(control, owner, rows, header);
-		CheckingLayoutResult result = abstractControl.checkLayout(this.service(), window, spec);
+		CheckingLayoutResult result = abstractControl.checkLayout(this.service(), window, spec, this.evaluator);
 		return Optional.of(result);
 	}
 
@@ -1100,6 +1152,17 @@ public class DictionaryFx extends GuiDictionary
 		{
 			settings.remove(Settings.MAIN_NS, DIALOG_DICTIONARY_SETTINGS, absolutePath);
 		}
+
+		//save evaluated values
+		if (!this.evaluator.getLocals().getVars().isEmpty())
+		{
+			settings.setValue(Settings.MAIN_NS, DIALOG_STORED_VARIABLES, absolutePath, CONVERTER.toString(this.evaluatedParameters));
+		}
+		else
+		{
+			settings.remove(Settings.MAIN_NS, DIALOG_STORED_VARIABLES, absolutePath);
+		}
+
 		settings.saveIfNeeded();
 	}
 

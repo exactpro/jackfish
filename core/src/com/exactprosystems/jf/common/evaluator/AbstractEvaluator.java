@@ -9,11 +9,13 @@
 
 package com.exactprosystems.jf.common.evaluator;
 
+import com.exactprosystems.jf.api.app.ITemplateEvaluator;
+
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
-public abstract class AbstractEvaluator 
+public abstract class AbstractEvaluator implements ITemplateEvaluator
 {
 	public static final String              EVALUATOR_NAME = "evaluator";
 	public static final String              VERSION_NAME   = "config_version";
@@ -89,7 +91,7 @@ public abstract class AbstractEvaluator
 	}
 
 	/**
-	 * Replace all templates from a template to string representation of a object
+	 * Replace all templates from the passed template to string representation of a object
 	 * @param template which need be evaluated
 	 * @return evaluated text
 	 * @throws Exception if evaluated was failed.

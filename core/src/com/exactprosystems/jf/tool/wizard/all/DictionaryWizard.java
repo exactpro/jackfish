@@ -10,7 +10,6 @@
 package com.exactprosystems.jf.tool.wizard.all;
 
 import com.exactprosystems.jf.api.app.*;
-import com.exactprosystems.jf.api.common.IContext;
 import com.exactprosystems.jf.api.common.Str;
 import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.api.error.JFRemoteException;
@@ -19,6 +18,7 @@ import com.exactprosystems.jf.api.wizard.WizardCategory;
 import com.exactprosystems.jf.api.wizard.WizardCommand;
 import com.exactprosystems.jf.api.wizard.WizardManager;
 import com.exactprosystems.jf.common.utils.XpathUtils;
+import com.exactprosystems.jf.documents.config.Context;
 import com.exactprosystems.jf.documents.guidic.*;
 import com.exactprosystems.jf.documents.guidic.Window;
 import com.exactprosystems.jf.documents.guidic.controls.AbstractControl;
@@ -171,7 +171,7 @@ public class DictionaryWizard extends AbstractWizard
 
 	//region AbstractWizard methods
 	@Override
-	public void init(IContext context, WizardManager wizardManager, Object... parameters)
+	public void init(Context context, WizardManager wizardManager, Object... parameters)
 	{
 		super.init(context, wizardManager, parameters);
 

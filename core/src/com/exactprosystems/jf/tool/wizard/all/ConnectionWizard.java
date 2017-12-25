@@ -9,7 +9,6 @@
 
 package com.exactprosystems.jf.tool.wizard.all;
 
-import com.exactprosystems.jf.api.common.IContext;
 import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.api.wizard.WizardAttribute;
 import com.exactprosystems.jf.api.wizard.WizardCategory;
@@ -186,7 +185,7 @@ public class ConnectionWizard extends AbstractWizard {
     }
 
     @Override
-    public void init(IContext context, WizardManager wizardManager, Object... parameters) {
+    public void init(Context context, WizardManager wizardManager, Object... parameters) {
         super.init(context, wizardManager, parameters);
 
         this.appEntry= get(AppEntry.class, parameters);

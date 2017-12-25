@@ -130,7 +130,7 @@ public class DialogValidate extends AbstractAction
 					return;
 				}
 
-				OperationResult res = control.operate(service, window, null);
+				OperationResult res = control.operate(service, window, null, evaluator);
 				if (!res.isOk())
 				{
 					super.setError(message(id, window, onOpen, control, res.getLocator(), "" + res.getValue()), ErrorKind.NOT_EQUAL);
@@ -190,7 +190,7 @@ public class DialogValidate extends AbstractAction
 					return;
 				}
 
-				OperationResult res = control.operate(service, window, null);
+				OperationResult res = control.operate(service, window, null, evaluator);
 				if (!res.isOk())
 				{
 					super.setError(message(id, window, onClose, control, res.getLocator(), " returned 'false'. Process is stopped."), ErrorKind.NOT_EQUAL);

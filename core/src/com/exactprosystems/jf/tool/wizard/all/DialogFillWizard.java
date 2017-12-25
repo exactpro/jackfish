@@ -11,14 +11,15 @@ package com.exactprosystems.jf.tool.wizard.all;
 
 import com.exactprosystems.jf.actions.gui.DialogFill;
 import com.exactprosystems.jf.api.app.*;
-import com.exactprosystems.jf.api.common.IContext;
 import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.api.error.JFRemoteException;
 import com.exactprosystems.jf.api.wizard.WizardAttribute;
 import com.exactprosystems.jf.api.wizard.WizardCategory;
 import com.exactprosystems.jf.api.wizard.WizardCommand;
 import com.exactprosystems.jf.api.wizard.WizardManager;
+import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.utils.XpathUtils;
+import com.exactprosystems.jf.documents.config.Context;
 import com.exactprosystems.jf.documents.matrix.parser.Tokens;
 import com.exactprosystems.jf.documents.matrix.parser.items.MatrixItem;
 import com.exactprosystems.jf.documents.matrix.parser.items.MatrixItemAttribute;
@@ -78,6 +79,7 @@ import java.util.stream.Collectors;
 )
 public class DialogFillWizard extends AbstractWizard
 {
+	private AbstractEvaluator        evaluator;
     private MatrixFx                 currentMatrix;
     private DictionaryFx             dictionary;
     private ComboBox<ConnectionBean> storedConnections;
@@ -98,12 +100,13 @@ public class DialogFillWizard extends AbstractWizard
 
 
     @Override
-    public void init(IContext context, WizardManager wizardManager, Object... parameters)
+    public void init(Context context, WizardManager wizardManager, Object... parameters)
     {
         super.init(context, wizardManager, parameters);
         this.currentMatrix = super.get(MatrixFx.class, parameters);
         this.currentItem = get(MatrixItem.class, parameters);
         this.isAbleHasChild = currentItem.getClass().getAnnotation(MatrixItemAttribute.class).hasChildren();
+		this.evaluator = context.getEvaluator();
     }
 
     @Override
@@ -229,7 +232,7 @@ public class DialogFillWizard extends AbstractWizard
 		{
 			try
 			{
-				String value = String.valueOf(control.operate(this.service, this.currentDialog, Do.getValue()).getValue());
+				String value = String.valueOf(control.operate(this.service, this.currentDialog, Do.getValue(), this.evaluator).getValue());
 				String operation = getDefaultAction(control, value);
 				this.resultListView.getItems().add(new ResultBean(name, operation));
 			}

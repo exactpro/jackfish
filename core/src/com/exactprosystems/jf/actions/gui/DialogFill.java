@@ -170,7 +170,7 @@ public class DialogFill extends AbstractAction
 					return;
 				}
 
-				OperationResult res = control.operate(service, window, null);
+				OperationResult res = control.operate(service, window, null, evaluator);
 				if (!res.isOk())
 				{
 					super.setError(message(id, window, onOpen, control, res.getLocator(), "" + res.getValue()), ErrorKind.OPERATION_FAILED);
@@ -221,7 +221,7 @@ public class DialogFill extends AbstractAction
 
 			try
 			{
-				OperationResult res = control.operate(service, window, obj);
+				OperationResult res = control.operate(service, window, obj, evaluator);
 				if (res.isOk())
 				{
 					Object value = res.getValue();
@@ -323,7 +323,7 @@ public class DialogFill extends AbstractAction
 					return;
 				}
 
-				OperationResult res = control.operate(service, window, null);
+				OperationResult res = control.operate(service, window, null, evaluator);
 				if (!res.isOk())
 				{
 					super.setError(message(id, window, onClose, control, res.getLocator(), "" + res.getValue()), ErrorKind.OPERATION_FAILED);

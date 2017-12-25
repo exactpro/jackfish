@@ -9,7 +9,6 @@
 
 package com.exactprosystems.jf.tool.wizard;
 
-import com.exactprosystems.jf.api.common.IContext;
 import com.exactprosystems.jf.api.wizard.Wizard;
 import com.exactprosystems.jf.api.wizard.WizardCommand;
 import com.exactprosystems.jf.api.wizard.WizardManager;
@@ -30,9 +29,9 @@ public abstract class AbstractWizard implements Wizard
 	protected WizardManager wizardManager;
 
 	@Override
-	public void init(IContext context, WizardManager wizardManager, Object... parameters)
+	public void init(Context context, WizardManager wizardManager, Object... parameters)
 	{
-		this.context = (Context)context;
+		this.context = context;
 		this.wizardManager = wizardManager;
 	}
 

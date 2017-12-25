@@ -22,6 +22,7 @@ import javax.xml.bind.annotation.*;
 import java.lang.reflect.Field;
 import java.rmi.RemoteException;
 import java.rmi.ServerException;
+import java.util.stream.Stream;
 
 
 @XmlRootElement
@@ -286,6 +287,32 @@ public abstract class AbstractControl implements IControl
 	}
 	//endregion
 
+	public static void evaluateTemplate(Locator locator, ITemplateEvaluator templateEvaluator)
+	{
+		if (locator == null)
+		{
+			return;
+		}
+		Stream.of(LocatorFieldKind.XPATH,LocatorFieldKind.UID,LocatorFieldKind.CLAZZ
+				,LocatorFieldKind.NAME,LocatorFieldKind.TITLE,LocatorFieldKind.ACTION
+				,LocatorFieldKind.TEXT,LocatorFieldKind.TOOLTIP)
+				.filter(fieldKind -> locator.get(fieldKind) != null && !Str.IsNullOrEmpty(String.valueOf(locator.get(fieldKind))))
+				.forEach(fieldKind ->
+				{
+					String value = String.valueOf(locator.get(fieldKind));
+					try
+					{
+						value = templateEvaluator.templateEvaluate(value);
+					}
+					catch (Exception e)
+					{
+						//TODO add whatever
+						e.printStackTrace();
+					}
+					locator.set(fieldKind, value);
+				});
+	}
+
 	public boolean changedControlKind(ControlKind kind)
 	{
 		if (kind == null)
@@ -500,6 +527,7 @@ public abstract class AbstractControl implements IControl
 	 * @param remote the remote object, which will execute the created operation
 	 * @param window a window, which used as owner for the AbstractControl
 	 * @param value a operation value
+	 * @param templateEvaluator the evaluator, for compile templates, which can be on description of the element
 	 * @return OperationResult, which contains result of executing the created operation
 	 * @throws Exception if something went wrong
 	 *
@@ -510,7 +538,7 @@ public abstract class AbstractControl implements IControl
 	 * @see IControl#prepare(Part, Object)
 	 */
 	@Override
-	public final OperationResult operate(IRemoteApplication remote, IWindow window, Object value) throws Exception
+	public final OperationResult operate(IRemoteApplication remote, IWindow window, Object value, ITemplateEvaluator templateEvaluator) throws Exception
 	{
 		try
 		{
@@ -546,6 +574,12 @@ public abstract class AbstractControl implements IControl
 			}
 
 			operation.tune(window);
+
+			this.evaluateTemplate(ownerLocator, templateEvaluator);
+			this.evaluateTemplate(element, templateEvaluator);
+			this.evaluateTemplate(rowsLocator, templateEvaluator);
+			this.evaluateTemplate(headerLocator, templateEvaluator);
+
 			return remote.operate(ownerLocator, element, rowsLocator, headerLocator, operation);
 		}
 		//TODO think about catch ServerException
@@ -562,6 +596,7 @@ public abstract class AbstractControl implements IControl
 	 * @param remote the remote object, which will execute the created spec
 	 * @param window a window, which used as owner for the AbstractControl
 	 * @param value a spec value
+	 * @param templateEvaluator the evaluator, for compile templates, which can be on description of the element
 	 * @return CheckingLayoutResult, which contains result of executing the created spec object
 	 * @throws Exception if something went wrong
 	 *
@@ -571,7 +606,7 @@ public abstract class AbstractControl implements IControl
 	 * @see IControl
 	 */
 	@Override
-	public final CheckingLayoutResult checkLayout(IRemoteApplication remote, IWindow window, Object value) throws Exception
+	public final CheckingLayoutResult checkLayout(IRemoteApplication remote, IWindow window, Object value, ITemplateEvaluator templateEvaluator) throws Exception
 	{
 		try
 		{
@@ -591,6 +626,10 @@ public abstract class AbstractControl implements IControl
 			}
 
 			spec.tune(window);
+
+			evaluateTemplate(owner, templateEvaluator);
+			evaluateTemplate(element, templateEvaluator);
+
 			return remote.checkLayout(owner, element, spec);
 		}
 		catch (ServerException se)
@@ -716,34 +755,6 @@ public abstract class AbstractControl implements IControl
 		this.timeout = this.integerToXml(this.timeout);
 	}
 
-	private String xmlToText(String source)
-	{
-		return HTMLhelper.htmlunescape(source);
-	}
-
-	private String textToXml(String source)
-	{
-		return HTMLhelper.htmlescape(source);
-	}
-
-	private Boolean booleanToXml(Boolean b)
-	{
-		if (b == null || !b)
-		{
-			return null;
-		}
-		return true;
-	}
-
-	private Integer integerToXml(Integer i)
-	{
-		if (i == null || i == 0)
-		{
-			return null;
-		}
-		return i;
-	}
-
 	/**
 	 * Set value via reflection
 	 */
@@ -811,6 +822,35 @@ public abstract class AbstractControl implements IControl
 		return get(AbstractControl.class, this, name);
 	}
 
+	//region private methods
+	private String xmlToText(String source)
+	{
+		return HTMLhelper.htmlunescape(source);
+	}
+
+	private String textToXml(String source)
+	{
+		return HTMLhelper.htmlescape(source);
+	}
+
+	private Boolean booleanToXml(Boolean b)
+	{
+		if (b == null || !b)
+		{
+			return null;
+		}
+		return true;
+	}
+
+	private Integer integerToXml(Integer i)
+	{
+		if (i == null || i == 0)
+		{
+			return null;
+		}
+		return i;
+	}
+
 	private <T> void checkField(T oldValue, T newValue, boolean zeroIsNull)
 	{
 		if (!this.changed)
@@ -835,4 +875,5 @@ public abstract class AbstractControl implements IControl
 			}
 		}
 	}
+	//endregion
 }

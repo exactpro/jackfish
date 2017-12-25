@@ -9,7 +9,7 @@
 
 package com.exactprosystems.jf.api.wizard;
 
-import com.exactprosystems.jf.api.common.IContext;
+import com.exactprosystems.jf.documents.config.Context;
 
 public interface Wizard
 {
@@ -26,7 +26,7 @@ public interface Wizard
 	 * @param wizardManager wizardManager for initializing
 	 * @param parameters parameters, which will passed to initialize the wizard
 	 */
-	void init(IContext context, WizardManager wizardManager, Object... parameters);
+	void init(Context context, WizardManager wizardManager, Object... parameters);
 
 	/**
 	 * Check, that the wizard has correct parameters

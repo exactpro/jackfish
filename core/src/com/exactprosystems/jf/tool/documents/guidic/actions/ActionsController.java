@@ -170,6 +170,13 @@ public class ActionsController implements Initializable, ContainingParent
 	}
 	//endregion
 
+	public void showEditVariables(ActionEvent event)
+	{
+		new EditVariableDialog(this.model.parametersProperty(), this.evaluator)
+				.showAndWait()
+				.ifPresent(this.model.parametersProperty()::from);
+	}
+
 	//region Do tab
 	public void sendKeys(ActionEvent actionEvent)
 	{

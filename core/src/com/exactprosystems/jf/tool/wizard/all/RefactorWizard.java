@@ -10,7 +10,6 @@
 package com.exactprosystems.jf.tool.wizard.all;
 
 import com.exactprosystems.jf.actions.ReadableValue;
-import com.exactprosystems.jf.api.common.IContext;
 import com.exactprosystems.jf.api.common.Str;
 import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.api.wizard.WizardAttribute;
@@ -18,6 +17,7 @@ import com.exactprosystems.jf.api.wizard.WizardCategory;
 import com.exactprosystems.jf.api.wizard.WizardCommand;
 import com.exactprosystems.jf.api.wizard.WizardManager;
 import com.exactprosystems.jf.documents.config.Configuration;
+import com.exactprosystems.jf.documents.config.Context;
 import com.exactprosystems.jf.documents.matrix.Matrix;
 import com.exactprosystems.jf.documents.matrix.parser.Tokens;
 import com.exactprosystems.jf.documents.matrix.parser.items.Call;
@@ -175,7 +175,7 @@ public class RefactorWizard extends AbstractWizard
     }
 
     @Override
-    public void init(IContext context, WizardManager wizardManager, Object... parameters)
+    public void init(Context context, WizardManager wizardManager, Object... parameters)
     {
         super.init(context, wizardManager, parameters);
 
