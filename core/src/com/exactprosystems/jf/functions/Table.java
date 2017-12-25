@@ -1522,8 +1522,8 @@ public class Table implements List<RowTable>, Mutable
 
 	private Map<Header, Object> convert(Map<String, Object> map)
 	{
-		Map<Header, Object> result = map.entrySet().stream()
-				.collect(Collectors.toMap(e -> this.headerByName(e.getKey()), Entry::getValue, (a, b) -> b, LinkedHashMap::new));
+		Map<Header, Object> result = new LinkedHashMap<>();
+		map.forEach((key, value) -> result.put(this.headerByName(key), value));
 		Set<Header> keys = result.keySet();
 		Arrays.stream(this.headers)
 				.filter(h -> !keys.contains(h))

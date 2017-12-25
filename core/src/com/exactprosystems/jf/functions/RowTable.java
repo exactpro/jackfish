@@ -166,10 +166,14 @@ public class RowTable implements Map<String, Object>, Cloneable
 	public Set<Map.Entry<String, Object>> entrySet()
 	{
 		this.checkRow();
-		return this.currentRow.entrySet().stream()
-				.filter(entry -> entry.getKey() != null)
-				.collect(Collectors.toMap(entry -> entry.getKey().name, Entry::getValue, (a, b) -> b, LinkedHashMap::new))
-				.entrySet();
+		Map<String, Object> res = new LinkedHashMap<>();
+		this.currentRow.forEach((key, value) -> {
+			if (key != null)
+			{
+				res.put(key.name, value);
+			}
+		});
+		return res.entrySet();
 	}
 
 	//endregion
