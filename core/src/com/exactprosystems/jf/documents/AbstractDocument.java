@@ -174,7 +174,7 @@ public abstract class AbstractDocument implements Document
 	public void saved()
 	{
 		this.nameProperty.saved();
-		this.changedProperty.accept(false);
+		this.changedProperty.saved();
 		this.provider.clear();
 	}
 

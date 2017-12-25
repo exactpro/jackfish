@@ -24,7 +24,6 @@ import com.exactprosystems.jf.documents.guidic.Window;
 import com.exactprosystems.jf.documents.guidic.controls.AbstractControl;
 import com.exactprosystems.jf.documents.matrix.parser.MutableListener;
 import com.exactprosystems.jf.documents.matrix.parser.MutableValue;
-import com.exactprosystems.jf.documents.matrix.parser.Parameter;
 import com.exactprosystems.jf.documents.matrix.parser.Parameters;
 import com.exactprosystems.jf.documents.matrix.parser.items.MutableArrayList;
 import com.exactprosystems.jf.functions.Notifier;
@@ -655,7 +654,10 @@ public class DictionaryFx extends GuiDictionary
 								DictionaryFx.this.testingElements.add(new ControlWithState(element, "Not allowed", DictionaryFxController.Result.NOT_ALLOWED));
 								continue;
 							}
-							Locator ownerLocator = Optional.ofNullable(window.getOwnerControl(element)).map(IControl::locator).orElse(null);
+							Locator ownerLocator = Optional.ofNullable(window.getOwnerControl(element))
+									.map(IControl::locator)
+									.map(control -> IControl.evaluateTemplate(control, evaluator))
+									.orElse(null);
 							Locator elementLocator = element.locator();
 							Collection<String> all = DictionaryFx.this.service().findAll(ownerLocator, elementLocator);
 							DictionaryFxController.Result result;
@@ -866,12 +868,19 @@ public class DictionaryFx extends GuiDictionary
 			IWindow window = this.currentWindow.get();
 			IControl element = this.currentElement.get();
 
-			Locator owner = Optional.ofNullable(window.getOwnerControl(element)).map(IControl::locator).orElse(null);
-			Locator locator = Optional.ofNullable(element).map(IControl::locator).orElse(null);
+			Locator owner = Optional.ofNullable(window.getOwnerControl(element))
+					.map(IControl::locator)
+					.map(control -> IControl.evaluateTemplate(control, this.evaluator))
+					.orElse(null);
+
+			Locator locator = Optional.ofNullable(element)
+					.map(IControl::locator)
+					.map(control -> IControl.evaluateTemplate(control, this.evaluator))
+					.orElse(null);
 
 			IRemoteApplication service = this.service();
 			Collection<String> all = service.findAll(owner, locator);
-			all.forEach(this.out::accept);
+			all.forEach(this.out);
 
 			ImageWrapper imageWrapper = service.getImage(owner, locator);
 			this.image.accept(imageWrapper);
@@ -920,7 +929,7 @@ public class DictionaryFx extends GuiDictionary
 						owner = ownerElement.locator();
 					}
 				}
-				this.service().switchToFrame(owner, element.locator());
+				this.service().switchToFrame(IControl.evaluateTemplate(owner, evaluator), IControl.evaluateTemplate(element.locator(), evaluator));
 			}
 		});
 	}
@@ -1050,12 +1059,12 @@ public class DictionaryFx extends GuiDictionary
 	//region Dialog tab
 	public void dialogMoveTo(int x, int y) throws Exception
 	{
-		this.checkIsWorking(() -> this.service().moveDialog(this.getSelfLocator(), x, y));
+		this.checkIsWorking(() -> this.service().moveDialog(IControl.evaluateTemplate(this.getSelfLocator(), this.evaluator), x, y));
 	}
 
 	public void dialogResize(Resize resize, int h, int w) throws Exception
 	{
-		this.checkIsWorking(() -> this.service().resizeDialog(getSelfLocator(), resize, h, w));
+		this.checkIsWorking(() -> this.service().resizeDialog(IControl.evaluateTemplate(this.getSelfLocator(), this.evaluator), resize, h, w));
 	}
 
 	public void dialogGetProperty(String propertyName) throws Exception
@@ -1067,11 +1076,11 @@ public class DictionaryFx extends GuiDictionary
 					String result = null;
 					if (Str.areEqual(propertyName, DialogGetProperties.sizeName))
 					{
-						result = this.service().getDialogSize(selfLocator).toString();
+						result = this.service().getDialogSize(IControl.evaluateTemplate(selfLocator, this.evaluator)).toString();
 					}
 					if (Str.areEqual(propertyName, DialogGetProperties.positionName))
 					{
-						result = this.service().getDialogPosition(selfLocator).toString();
+						result = this.service().getDialogPosition(IControl.evaluateTemplate(selfLocator, this.evaluator)).toString();
 					}
 					Optional.ofNullable(result).ifPresent(this.out::accept);
 				}

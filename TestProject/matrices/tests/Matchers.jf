@@ -23,11 +23,14 @@ EXPECTED;;;;
     9;x;Button31;Do.get();'Button'
     10;x;Button32;Do.get();'Button'
     11;x;Button33;Do.get();'Button'
-    12;;ButtonMany;Do.count();2
-    13;;ButtonManyNotPass;Do.count();1
-    14;;ButtonManyNotFail;Do.count();ErrorKind.ELEMENT_NOT_FOUND
-    15;x;ListBoxVisibility;Do.scrollTo(30).delay(1000).getList();'[29, 30, 31, 32, 33, 34, 35]'
-    16;x;ListBoxNormal;Do.scrollTo(30).delay(1000).getList();'[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99, 100]'
+    12;x;uidTemplate;Do.get();'Button'
+    13;x;xpathTemplate;Do.get();'Button'
+    14;;xpathTemplateNotFound;Do.get();ErrorKind.ELEMENT_NOT_FOUND
+    15;;ButtonMany;Do.count();2
+    16;;ButtonManyNotPass;Do.count();1
+    17;;ButtonManyNotFail;Do.count();ErrorKind.ELEMENT_NOT_FOUND
+    18;x;ListBoxVisibility;Do.scrollTo(30).delay(1000).getList();'[29, 30, 31, 32, 33, 34, 35]'
+    19;x;ListBoxNormal;Do.scrollTo(30).delay(1000).getList();'[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99, 100]'
     #EndRawTable
 
     #Action;$Table;$Expression
@@ -42,8 +45,8 @@ INIT;;;;
     #Call;plugin
     RUN;'Swing'
 
-    #Call;plugin
-    RUN;'Win'
+    #Off;#Call;plugin
+    1;RUN;'Win'
 
     #Id;#Action;$Decoraded
     RESTBL1;ResultTable;true
@@ -108,7 +111,7 @@ SUBCASES;;;;
     #EndSubCase
 
     #Id;#SubCase;plugin
-    RUN;Run;'Win'
+    RUN;Run;'Swing'
         #Call;plugin
         START;plugin
 
@@ -116,6 +119,12 @@ SUBCASES;;;;
         '\'' + plugin + '\' plugin';;;
             #Id;#Let
             map;new LinkedHashMap()
+
+            #Id;#Let
+            xpathTemplate;'Button'
+
+            #Id;#Let
+            nameTemplate;'Button'
 
             #ForEach;#In
             row;table

@@ -20,9 +20,7 @@ import org.apache.log4j.Logger;
 
 import javax.xml.bind.annotation.*;
 import java.lang.reflect.Field;
-import java.rmi.RemoteException;
 import java.rmi.ServerException;
-import java.util.stream.Stream;
 
 
 @XmlRootElement
@@ -287,32 +285,6 @@ public abstract class AbstractControl implements IControl
 	}
 	//endregion
 
-	public static void evaluateTemplate(Locator locator, ITemplateEvaluator templateEvaluator)
-	{
-		if (locator == null)
-		{
-			return;
-		}
-		Stream.of(LocatorFieldKind.XPATH,LocatorFieldKind.UID,LocatorFieldKind.CLAZZ
-				,LocatorFieldKind.NAME,LocatorFieldKind.TITLE,LocatorFieldKind.ACTION
-				,LocatorFieldKind.TEXT,LocatorFieldKind.TOOLTIP)
-				.filter(fieldKind -> locator.get(fieldKind) != null && !Str.IsNullOrEmpty(String.valueOf(locator.get(fieldKind))))
-				.forEach(fieldKind ->
-				{
-					String value = String.valueOf(locator.get(fieldKind));
-					try
-					{
-						value = templateEvaluator.templateEvaluate(value);
-					}
-					catch (Exception e)
-					{
-						//TODO add whatever
-						e.printStackTrace();
-					}
-					locator.set(fieldKind, value);
-				});
-	}
-
 	public boolean changedControlKind(ControlKind kind)
 	{
 		if (kind == null)
@@ -573,12 +545,12 @@ public abstract class AbstractControl implements IControl
 				this.prepare(part, value);
 			}
 
-			operation.tune(window);
+			operation.tune(window, templateEvaluator);
 
-			this.evaluateTemplate(ownerLocator, templateEvaluator);
-			this.evaluateTemplate(element, templateEvaluator);
-			this.evaluateTemplate(rowsLocator, templateEvaluator);
-			this.evaluateTemplate(headerLocator, templateEvaluator);
+			IControl.evaluateTemplate(ownerLocator, templateEvaluator);
+			IControl.evaluateTemplate(element, templateEvaluator);
+			IControl.evaluateTemplate(rowsLocator, templateEvaluator);
+			IControl.evaluateTemplate(headerLocator, templateEvaluator);
 
 			return remote.operate(ownerLocator, element, rowsLocator, headerLocator, operation);
 		}
@@ -624,11 +596,10 @@ public abstract class AbstractControl implements IControl
 			{
 				spec = DoSpec.visible();
 			}
+			spec.tune(window, templateEvaluator);
 
-			spec.tune(window);
-
-			evaluateTemplate(owner, templateEvaluator);
-			evaluateTemplate(element, templateEvaluator);
+			IControl.evaluateTemplate(owner, templateEvaluator);
+			IControl.evaluateTemplate(element, templateEvaluator);
 
 			return remote.checkLayout(owner, element, spec);
 		}
@@ -644,16 +615,6 @@ public abstract class AbstractControl implements IControl
 				throw new Exception(se.getCause().getMessage(), se.getCause());
 			}
 			throw se;
-		}
-		//TODO this is bad code. remove it and check test
-		catch (RemoteException re)
-		{
-			logger.error(re.getMessage(), re);
-			if (re.getMessage().contains("is not allowed"))
-			{
-				return new CheckingLayoutResult();
-			}
-			throw re;
 		}
 		catch (Exception e)
 		{

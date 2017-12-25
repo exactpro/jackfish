@@ -327,7 +327,7 @@ public class DialogFillWizard extends AbstractWizard
         this.grid.getChildren().remove(text);
         this.grid.getChildren().remove(this.imageViewWithScale);
         this.grid.add(this.imageViewWithScale, 0, 1, 3, 3);
-		this.wizardLoader = new WizardLoader(this.appConnection, selfControl, (image, doc) ->
+		this.wizardLoader = new WizardLoader(this.appConnection, selfControl, this.evaluator, (image, doc) ->
 		{
 			this.imageViewWithScale.displayImage(image);
 			this.document = doc;

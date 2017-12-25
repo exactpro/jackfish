@@ -30,7 +30,7 @@ public class Piece implements Serializable
 		return this.kind.toFormula(this.name, this.range, "" + this.a, "" + this.b, "" + this.text, this.text2, "" + this.color);
 	}
 	
-	public void tune(IWindow window) throws Exception
+	public void tune(IWindow window, ITemplateEvaluator templateEvaluator) throws Exception
 	{
 		if (this.name != null && !this.name.isEmpty())
 		{
@@ -40,11 +40,11 @@ public class Piece implements Serializable
 				throw new Exception("Cannot find control in dialog='" + window +"' section='Run' name='" + this.name + "'");
 			}
 			
-			this.locator = control.locator();
+			this.locator = IControl.evaluateTemplate(control.locator(), templateEvaluator);
 			IControl ownerControl = window.getOwnerControl(control);
 			if (ownerControl != null)
 			{
-				this.owner = ownerControl.locator();
+				this.owner = IControl.evaluateTemplate(ownerControl.locator(), templateEvaluator);
 			}
 		}
 	}
@@ -102,17 +102,16 @@ public class Piece implements Serializable
 		this.color = color;
 		return this;
 	}
-	
 
 	protected PieceKind kind;
-	protected String name;
-	protected Locator owner;
-	protected Locator locator;
-	protected long a;
-	protected long b;
-	protected Range range;
-	protected String text;
-	protected String text2;
-	protected Color color;
+	protected String    name;
+	protected Locator   owner;
+	protected Locator   locator;
+	protected long      a;
+	protected long      b;
+	protected Range     range;
+	protected String    text;
+	protected String    text2;
+	protected Color     color;
 
 }

@@ -160,7 +160,7 @@ public class DialogValidate extends AbstractAction
 				Locator ownerLocator = owner == null ? null : owner.locator();
 				Locator controlLocator = control.locator();
 
-				Collection<String> found = service.findAll(ownerLocator, controlLocator);
+				Collection<String> found = service.findAll(IControl.evaluateTemplate(ownerLocator, evaluator), IControl.evaluateTemplate(controlLocator, evaluator));
 				int actualSize = found.size();
 
 				if (expectedSize != actualSize)

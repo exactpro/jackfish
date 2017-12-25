@@ -47,11 +47,11 @@ public class Spec implements Iterable<Piece>, Serializable
 		return sb.toString();
 	}
 	
-	public void tune(IWindow window) throws Exception
+	public void tune(IWindow window, ITemplateEvaluator templateEvaluator) throws Exception
 	{
 		for (Piece piece : this.list)
 		{
-			piece.tune(window);
+			piece.tune(window, templateEvaluator);
 		}
 	}
 	

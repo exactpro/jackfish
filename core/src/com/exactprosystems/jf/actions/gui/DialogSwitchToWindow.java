@@ -103,7 +103,7 @@ public class DialogSwitchToWindow extends AbstractAction
 			{
 				owner = window.getControlForName(null, element.getOwnerID()).locator();
 			}
-			service.switchToFrame(owner, element.locator());
+			service.switchToFrame(IControl.evaluateTemplate(owner, evaluator), IControl.evaluateTemplate(element.locator(), evaluator));
 		}
 
 		this.setResult(null);

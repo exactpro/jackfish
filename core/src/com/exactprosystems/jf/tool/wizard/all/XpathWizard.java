@@ -18,6 +18,7 @@ import com.exactprosystems.jf.api.wizard.WizardAttribute;
 import com.exactprosystems.jf.api.wizard.WizardCategory;
 import com.exactprosystems.jf.api.wizard.WizardCommand;
 import com.exactprosystems.jf.api.wizard.WizardManager;
+import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.utils.XpathUtils;
 import com.exactprosystems.jf.documents.config.Context;
 import com.exactprosystems.jf.documents.guidic.Section;
@@ -123,6 +124,7 @@ public class XpathWizard extends AbstractWizard
 		}
 	}
 
+	private AbstractEvaluator evaluator;
 	private AppConnection   currentConnection = null;
 	private WizardMatcher	wizardMatcher	  = null;
 	private PluginInfo		pluginInfo		  = null;
@@ -171,6 +173,7 @@ public class XpathWizard extends AbstractWizard
 		{
 			this.ownerControl = this.currentWindow.getSelfControl();
 		}
+		this.evaluator = context.getEvaluator();
 	}
 
 	@Override
@@ -369,7 +372,7 @@ public class XpathWizard extends AbstractWizard
 				self = this.currentWindow.getSelfControl();
 			}
 
-			this.wizardHelper = new WizardLoader(this.currentConnection, self, (image, doc) ->
+			this.wizardHelper = new WizardLoader(this.currentConnection, self, this.evaluator, (image, doc) ->
 			{
 				this.imageViewWithScale.displayImage(image);
 

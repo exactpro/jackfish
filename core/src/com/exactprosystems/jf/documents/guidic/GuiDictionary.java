@@ -162,6 +162,7 @@ public class GuiDictionary extends AbstractDocument implements IGuiDictionary
 	@Override
 	public void saved()
 	{
+		super.saved();
 		this.bean.saved();
 	}
 

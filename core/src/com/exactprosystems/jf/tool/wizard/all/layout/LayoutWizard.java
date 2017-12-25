@@ -625,7 +625,7 @@ public class LayoutWizard extends AbstractWizard
 				PluginInfo info = this.appConnection.getApplication().getFactory().getInfo();
 				this.wizardMatcher = new WizardMatcher(info);
 
-				this.wizardLoader = new WizardLoader(this.appConnection, newDialog.getSelfControl(), (image, doc) ->
+				this.wizardLoader = new WizardLoader(this.appConnection, newDialog.getSelfControl(), this.evaluator, (image, doc) ->
 				{
 					this.cbDialogs.setDisable(false);
 					Collection<IControl> controls = newDialog.getControls(IWindow.SectionKind.Run);
@@ -871,7 +871,7 @@ public class LayoutWizard extends AbstractWizard
 		try
 		{
 			IControl topOwner = this.currentWindow.getOwnerControl(topControl);
-			top = service().getRectangle(topOwner == null ? null : topOwner.locator(), topControl.locator());
+			top = service().getRectangle(IControl.evaluateTemplate(topOwner, this.evaluator), IControl.evaluateTemplate(topControl, this.evaluator));
 
 			if (topControl == leftControl)
 			{
@@ -880,7 +880,7 @@ public class LayoutWizard extends AbstractWizard
 			else
 			{
 				IControl leftOwner = this.currentWindow.getOwnerControl(leftControl);
-				left = service().getRectangle(leftOwner == null ? null : leftOwner.locator(), leftControl.locator());
+				left = service().getRectangle(IControl.evaluateTemplate(leftOwner, this.evaluator), IControl.evaluateTemplate(leftControl, this.evaluator));
 			}
 		}
 		catch (Exception e)

@@ -126,7 +126,7 @@ public class DialogResize extends AbstractAction
 			return;
 		}
 
-		app.service().resizeDialog(element.locator(), this.resize, this.height, this.width);
+		app.service().resizeDialog(IControl.evaluateTemplate(element.locator(), evaluator), this.resize, this.height, this.width);
 		super.setResult(null);
 	}
 
