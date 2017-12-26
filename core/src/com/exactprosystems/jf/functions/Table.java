@@ -1510,9 +1510,11 @@ public class Table implements List<RowTable>, Mutable
 
 	private Map<Header, Object> convert(Object[] arr)
 	{
-		Map<Header, Object> res = IntStream.range(0, Math.min(this.headers.length, arr.length))
-				.boxed()
-				.collect(Collectors.toMap(i -> this.headers[i], i -> arr[i], (a, b) -> b, LinkedHashMap::new));
+		Map<Header, Object> res = new LinkedHashMap<>();
+		for (int i = 0; i < Math.min(this.headers.length, arr.length); i++)
+		{
+			res.put(this.headers[i], arr[i]);
+		}
 		Set<Header> keys = res.keySet();
 		Arrays.stream(this.headers)
 				.filter(h -> !keys.contains(h))
