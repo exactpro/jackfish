@@ -493,7 +493,7 @@ public class MatcherFx
 		else if (target instanceof ComboBox)
 		{
 			ComboBox comboBox = (ComboBox) target;
-			return comboBox.isEditable() ? comboBox.getEditor().getText() : comboBox.getValue().toString();
+			return comboBox.isEditable() ? comboBox.getEditor().getText() : Str.asString(comboBox.getValue());
 		}
 		else
 		{
