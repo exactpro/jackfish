@@ -20,12 +20,11 @@ import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.*;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.Pane;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
 
 import java.net.URL;
 import java.util.Objects;
@@ -35,7 +34,7 @@ import java.util.stream.Collectors;
 public class MainController implements Initializable
 {
 	@FXML private GridPane gridPane;
-	@FXML private ListView<String> ListView;
+	@FXML private ListView<String> List;
     @FXML private Button notEnabledButton;
     @FXML private Button notVisibleButton;
     @FXML private Button clearButton;
@@ -54,7 +53,7 @@ public class MainController implements Initializable
     @FXML private MenuBar menu;
     @FXML private Button ProtocolClear;
     @FXML private TextArea Protocol;
-    @FXML private TreeView<String> TreeView;
+    @FXML private TreeView<String> Tree;
     @FXML private CheckBox CheckBox;
     @FXML private RadioButton RadioButton;
     @FXML private RadioButton Yellow;
@@ -92,8 +91,8 @@ public class MainController implements Initializable
     public void initialize(URL location, ResourceBundle resources)
     {
         mainModel = new MainModel();
-        TreeView.setOnScrollTo(event -> scrollPrint(TreeView.getId()));
-        ListView.setOnScrollTo(event -> scrollPrint(ListView.getId()));
+        Tree.setOnScrollTo(event -> scrollPrint(Tree.getId()));
+        List.setOnScrollTo(event -> scrollPrint(List.getId()));
         ComboBox.getItems().addAll(mainModel.getData());
         if(ComboBox.isEditable())
 		{
@@ -110,13 +109,13 @@ public class MainController implements Initializable
 		}
         Table.getColumns().addAll(mainModel.getTable().getHeaders());
         Table.setItems(mainModel.getTable().getTableData());
-        TreeView.setRoot(mainModel.getTree().getRoot());
+        Tree.setRoot(mainModel.getTree().getRoot());
         menu.getMenus().addAll(mainModel.getMenu().getMenus());
         Slider.valueProperty().addListener((observable, oldValue, newValue) -> sliderLabel.setText("Slider_" + String.valueOf(newValue.intValue())));
         TextBox.textProperty().addListener((observable, oldValue, newValue) -> CentralLabel.setText("TextBox_" + newValue));
         CheckBox.selectedProperty().addListener((observable, oldValue, newValue) -> checkedLabel.setText("CheckBox_" + (newValue ? "checked" : "unchecked")));
         ComboBox.valueProperty().addListener((observable, oldValue, newValue) -> CentralLabel.setText("ComboBox_" + newValue));
-        ListView.getItems().addAll(mainModel.getData());
+        List.getItems().addAll(mainModel.getData());
 
 		this.tb = new TableView<>();
 		tb.setMinHeight(150);
@@ -377,6 +376,16 @@ public class MainController implements Initializable
 		Protocol.appendText(text + "_scroll" + NEW_LINE);
 	}
 
+	public void moveHandlerCustom(MouseEvent mouseEvent, String text)
+	{
+		moveLabel.setText(text + MOVE);
+	}
+
+	public void clickHandlerCustom(MouseEvent mouseEvent, String text)
+	{
+		CentralLabel.setText(text + (mouseEvent.getClickCount() == 1 ? CLICK : DOUBLE_CLICK));
+	}
+
 	private void releaseHandlerCustom(KeyEvent keyEvent, String text)
 	{
 		Protocol.appendText(text + UP + keyEvent.getCode().impl_getCode() + NEW_LINE);
@@ -412,5 +421,31 @@ public class MainController implements Initializable
 	{
 		((ComboBoxListViewSkin) ComboBox.getSkin()).getListView().setOnScrollTo(event -> scrollPrint(ComboBox.getId()));
 		Table.setEditable(true);
+		showDialog();
+		ScrollBar.valueProperty().addListener((observable, oldValue, newValue) -> sliderLabel.setText("ScrollBar_" + newValue.intValue()));
+	}
+
+	private void showDialog()
+	{
+		ButtonType button = new ButtonType("Ok", ButtonBar.ButtonData.OK_DONE);
+		Dialog dialog = new Dialog();
+		String titleDialog = "Dialog";
+		dialog.setTitle(titleDialog);
+		dialog.initModality(Modality.NONE);
+		dialog.setResizable(true);
+		dialog.setX(1050);
+		dialog.setY(300);
+		dialog.getDialogPane().setPrefSize(150, 200);
+		dialog.getDialogPane().getButtonTypes().add(button);
+		dialog.getDialogPane().lookupButton(button);
+
+		Stage stage = (Stage)dialog.getDialogPane().getScene().getWindow();
+		stage.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> clickHandlerCustom(event, titleDialog));
+		stage.addEventHandler(MouseEvent.MOUSE_MOVED, event -> moveHandlerCustom(event, titleDialog));
+		stage.addEventHandler(KeyEvent.KEY_PRESSED, event -> pressHandlerCustom(event, titleDialog));
+		stage.addEventHandler(KeyEvent.KEY_RELEASED, event -> releaseHandlerCustom(event, titleDialog));
+		stage.addEventHandler(KeyEvent.KEY_TYPED, event -> typeHandlerCustom(event, titleDialog));
+
+		dialog.show();
 	}
 }

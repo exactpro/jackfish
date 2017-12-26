@@ -21,7 +21,7 @@ INIT;Test case;;;
     getNewLine;1;def (pl) {if(pl == 'InternetExplorer') {return '\n'\u003b}if(pl == 'Chrome' || pl == 'JavaFx') {return '\n'\u003b}if(pl == 'Swing') {return '\r\n'\u003b}if(pl == 'Win') {return '\r\n'\u003b}}\u003b
 
     #Id;#Global;#Let
-    getAttr;1;def (pl) {if(pl == 'InternetExplorer' || pl == 'Chrome' || pl == 'Swing' || pl == 'Win') {return '\'name\''\u003b}if(pl == 'JavaFx') {return '\'id\''\u003b}}\u003b
+    getAttr;1;def (pl, c) {if(pl == 'InternetExplorer' || pl == 'Chrome' || pl == 'Swing' || pl == 'Win') {return '\'name\''\u003b}if(pl == 'JavaFx') {if (c=='Dialog') {return '\'title\''} else {return '\'id\''}}}\u003b
 
     // {Chrome,InternetExplorer,Swing,Win} or All
     #Id;#Global;#RawTable
@@ -29,21 +29,21 @@ INIT;Test case;;;
     @;On;Name;Before;getRowPar;expand;collapse;expandPar;collapsePar;getRow;colorPar;toggle;getAttr;getAttrPar;getValue;selectInt;select;get;setValue;text;textTrue;getList;check;getListPar;getValuePar;selectPar;scrollTo;clickXYPar;clickDoubleXYPar
     0;x;Label;'Do.use(\'protocolClear\').click()';'\'tr_3_td_3\'';;;'\'Menu2/MenuItem2/MenuItem3\'';'\'Menu2/MenuItem2/MenuItem3\'';;'new Color(246,246,246)';;'CentralLabel';'\'CentralLabel\'';'CentralLabel';;;'CentralLabel';;;;;'CentralLabel';'new ArrayList([\'Green\',\'Yellow\', \'Orange\',\'Blue\']),false';'\'CentralLabel\'';'\'\'';;'2,2';'2,2,MouseAction.LeftDoubleClick'
     1;x;Button;'Do.use(\'protocolClear\').click()';'\'tr_3_td_3\'';;;'\'Menu2/MenuItem2/MenuItem3\'';'\'Menu2/MenuItem2/MenuItem3\'';;'new Color(246,246,246)';;'Button';'\'Button\'';'Button';;;'Button';;;;;'Button';'new ArrayList([\'Green\',\'Yellow\', \'Orange\',\'Blue\']),false';'\'Button\'';'\'\'';;'2,2';'2,2,MouseAction.LeftDoubleClick'
-    2;x;TextBox;'Do.use(\'protocolClear\').click()';'\'tr_3_td_3\'';;;'\'Menu2/MenuItem2/MenuItem3\'';'\'Menu2/MenuItem2/MenuItem3\'';;'new Color(246,246,246)';;'TextBox';'\'TextBox\'';'';;;'';;'GreenGreen';'Green';;'';'new ArrayList([\'Green\',\'Yellow\', \'Orange\',\'Blue\']),false';'\'\'';'\'\'';;'2,2';'2,2,MouseAction.LeftDoubleClick'
+    2;x;TextBox;'Do.use(\'protocolClear\').click()';'\'tr_3_td_3\'';;;'\'Menu2/MenuItem2/MenuItem3\'';'\'Menu2/MenuItem2/MenuItem3\'';;'new Color(246,246,246)';;'TextBox';'\'TextBox\'';'Green';;;'Green';;'GreenGreen';'Green';;'Green';'new ArrayList([\'Green\',\'Yellow\', \'Orange\',\'Blue\']),false';'\'Green\'';'\'\'';;'2,2';'2,2,MouseAction.LeftDoubleClick'
     3;x;Any;'Do.use(\'protocolClear\').click()';'\'tr_3_td_3\'';;;'\'Menu2/MenuItem2/MenuItem3\'';'\'Menu2/MenuItem2/MenuItem3\'';;'new Color(246,246,246)';;'Any';'\'Any\'';;;;;;;;;true;'new ArrayList([\'Green\',\'Yellow\', \'Orange\',\'Blue\']),false';'\'\'';'\'\'';;'2,2';'2,2,MouseAction.LeftDoubleClick'
     4;x;CheckBox;'Do.use(\'protocolClear\').click()';'\'tr_3_td_3\'';;;'\'Menu2/MenuItem2/MenuItem3\'';'\'Menu2/MenuItem2/MenuItem3\'';;'new Color(246,246,246)';getExp(plugin,'true','true','true','true','On');'CheckBox';'\'CheckBox\'';getExp(plugin,true,true,true,true,'On');;;'CheckBox';;;;;true;'new ArrayList([\'Green\',\'Yellow\', \'Orange\',\'Blue\']),false';getExp(plugin,'\'true\'','\'true\'','\'true\'','\'true\'','\'On\'');'\'\'';;'2,2';'2,2,MouseAction.LeftDoubleClick'
     5;x;ToggleButton;'Do.use(\'protocolClear\').click()';'\'tr_3_td_3\'';;;'\'Menu2/MenuItem2/MenuItem3\'';'\'Menu2/MenuItem2/MenuItem3\'';;'new Color(246,246,246)';getExp(plugin,'true','true','true','true','On');'ToggleButton';'\'ToggleButton\'';getExp(plugin,true,true,true,true,'On');;;'ToggleButton';;;;;true;'new ArrayList([\'Green\',\'Yellow\', \'Orange\',\'Blue\']),false';getExp(plugin,'\'true\'','\'true\'','\'true\'','\'true\'','\'On\'');'\'\'';;'2,2';'2,2,MouseAction.LeftDoubleClick'
-    6;x;ComboBox;'Do.use(\'protocolClear\').click()';'\'tr_3_td_3\'';;;'\'Menu2/MenuItem2/MenuItem3\'';'\'Menu2/MenuItem2/MenuItem3\'';;'new Color(246,246,246)';;'ComboBox';'\'ComboBox\'';'Green';'Green';'Blue';'Green';;'GreenGreen';'Green';'[Green, Yellow, Orange, Blue]';'Green';'new ArrayList([\'Green\',\'Yellow\', \'Orange\',\'Blue\']),false';'\'Green\'';'\'Blue\'';control.Name + '_scroll';'2,2';'2,2,MouseAction.LeftDoubleClick'
+    6;x;ComboBox;'Do.use(\'protocolClear\').click()';'\'tr_3_td_3\'';;;'\'Menu2/MenuItem2/MenuItem3\'';'\'Menu2/MenuItem2/MenuItem3\'';;'new Color(246,246,246)';;'ComboBox';'\'ComboBox\'';'Green';'Green';'Blue';'Green';;getExp(plugin,'Green','Green','GreenGreen','GreenGreen','GreenGreen');'Green';'[Green, Yellow, Orange, Blue]';'Green';'new ArrayList([\'Green\',\'Yellow\', \'Orange\',\'Blue\']),false';'\'Green\'';'\'Blue\'';control.Name + '_scroll';'2,2';'2,2,MouseAction.LeftDoubleClick'
     7;x;Table;'Do.use(\'protocolClear\').click()';'\'tr_3_td_3\'';;;'\'Menu2/MenuItem2/MenuItem3\'';'\'Menu2/MenuItem2/MenuItem3\'';'{Head1=tr_3_td_1, Head2=tr_3_td_2, Head3=tr_3_td_3}';'new Color(246,246,246)';;getExp(plugin,'Table','Table','Table','Table','DataGridView');getExp(plugin,'\'Table\'','\'Table\'','\'Table\'','\'Table\'','\'DataGridView\'');'tr_2_td_2';;;;;getExp(plugin,'tr_2_td_2','tr_2_td_2','Green','Green','Green');getExp(plugin,'tr_2_td_2','tr_2_td_2','Green','Green','Green');;'tr_2_td_2';'new ArrayList([\'Green\',\'Yellow\', \'Orange\',\'Blue\']),false';'\'tr_2_td_2\'';'\'\'';;'2,2';'2,2,MouseAction.LeftDoubleClick'
-    8;x;Slider;'Do.use(\'protocolClear\').click().use(\'Slider\').setValue(0)';'\'tr_3_td_3\'';;;'\'Menu2/MenuItem2/MenuItem3\'';'\'Menu2/MenuItem2/MenuItem3\'';;'new Color(246,246,246)';;getExp(plugin,'Slider','Slider','Slider','Slider','');getExp(plugin,'\'Slider\'','\'Slider\'','\'Slider\'','\'Slider\'','\'\'');getExp(plugin,'','',0,0,'0');;;;'Slider_30';;;;getExp(plugin,'','',0,0,'0');'new ArrayList([\'Green\',\'Yellow\', \'Orange\',\'Blue\']),false';getExp(plugin,'\'\'','\'\'','0','0','0');'\'\'';;'2,2';'2,2,MouseAction.LeftDoubleClick'
+    8;x;Slider;'Do.use(\'protocolClear\').click().use(\'Slider\').setValue(0)';'\'tr_3_td_3\'';;;'\'Menu2/MenuItem2/MenuItem3\'';'\'Menu2/MenuItem2/MenuItem3\'';;'new Color(246,246,246)';;getExp(plugin,'Slider','Slider','Slider','Slider','');getExp(plugin,'\'Slider\'','\'Slider\'','\'Slider\'','\'Slider\'','\'\'');getExp(plugin,'','',0,0.0,'0');;;;'Slider_30';;;;getExp(plugin,'','',0,0.0,'0');'new ArrayList([\'Green\',\'Yellow\', \'Orange\',\'Blue\']),false';getExp(plugin,'\'\'','\'\'','0','0.0','0');'\'\'';;'2,2';'2,2,MouseAction.LeftDoubleClick'
     9;x;RadioButton;'Do.use(\'protocolClear\').click()';'\'tr_3_td_3\'';;;'\'Menu2/MenuItem2/MenuItem3\'';'\'Menu2/MenuItem2/MenuItem3\'';;'new Color(246,246,246)';getExp(plugin,'true','true','true','true','True');getExp(plugin,'RadioButton','RadioButton','RadioButton','RadioButton','Green');getExp(plugin,'\'RadioButton\'','\'RadioButton\'','\'RadioButton\'','\'RadioButton\'','\'Green\'');getExp(plugin,'false','false','false','false','False');;;'Green';;;;;false;'new ArrayList([\'Green\',\'Yellow\', \'Orange\',\'Blue\']),false';getExp(plugin,'\'false\'','\'false\'','\'false\'','\'false\'','\'False\'');'\'\'';;'2,2';'2,2,MouseAction.LeftDoubleClick'
-    10;x;ProgressBar;'Do.use(\'protocolClear\').click()';'\'tr_3_td_3\'';;;'\'Menu2/MenuItem2/MenuItem3\'';'\'Menu2/MenuItem2/MenuItem3\'';;'new Color(246,246,246)';;getExp(plugin,'ProgressBar','ProgressBar','ProgressBar','ProgressBar','');getExp(plugin,'\'ProgressBar\'','\'ProgressBar\'','\'ProgressBar\'','\'ProgressBar\'','\'\'');10;;;;;;;;true;'new ArrayList([\'Green\',\'Yellow\', \'Orange\',\'Blue\']),false';'\'10\'';'\'\'';;'2,2';'2,2,MouseAction.LeftDoubleClick'
+    10;x;ProgressBar;'Do.use(\'protocolClear\').click()';'\'tr_3_td_3\'';;;'\'Menu2/MenuItem2/MenuItem3\'';'\'Menu2/MenuItem2/MenuItem3\'';;'new Color(246,246,246)';;getExp(plugin,'ProgressBar','ProgressBar','ProgressBar','ProgressBar','');getExp(plugin,'\'ProgressBar\'','\'ProgressBar\'','\'ProgressBar\'','\'ProgressBar\'','\'\'');getExp(plugin,10,10,10,0.3,10);;;;;;;;true;'new ArrayList([\'Green\',\'Yellow\', \'Orange\',\'Blue\']),false';getExp(plugin,'\'10\'','\'10\'','\'10\'','\'0.3\'','\'10\'');'\'\'';;'2,2';'2,2,MouseAction.LeftDoubleClick'
     11;x;Panel;'Do.use(\'protocolClear\').click()';'\'tr_3_td_3\'';;;'\'Menu2/MenuItem2/MenuItem3\'';'\'Menu2/MenuItem2/MenuItem3\'';;'new Color(246,246,246)';;'Panel';'\'Panel\'';'Panel';;;;;'Panel';'Panel';;true;'new ArrayList([\'Green\',\'Yellow\', \'Orange\',\'Blue\']),false';'\'Panel\'';'\'\'';;'2,2';'2,2,MouseAction.LeftDoubleClick'
     12;x;List;getExp(plugin,'Do.use(\'protocolClear\').click()','Do.use(\'protocolClear\').click()','Do.use(\'protocolClear\').click().use(\'List\').select(\'Green\')','Do.use(\'protocolClear\').click().use(\'List\').select(\'Green\')','Do.use(\'protocolClear\').click().use(\'List\').select(\'Green\')');'\'tr_3_td_3\'';;;'\'Menu2/MenuItem2/MenuItem3\'';'\'Menu2/MenuItem2/MenuItem3\'';;'new Color(246,246,246)';;getExp(plugin,'List','List','List','List','tab2');getExp(plugin,'\'List\'','\'List\'','\'List\'','\'List\'','\'tab2\'');getExp(plugin,'Green\nYellow\nOrange\nBlue','Green\nYellow\nOrange\nBlue','Green','Green','Green');getExp(plugin,'Green\nYellow\nOrange\nBlue','Green\nYellow\nOrange\nBlue','Green','Green','Green');getExp(plugin,'Green\nYellow\nOrange\nBlue','Green\nYellow\nOrange\nBlue','Blue','Blue','Blue');;;;;'[Green, Yellow, Orange, Blue]';true;'new ArrayList([\'Green\',\'Yellow\', \'Orange\',\'Blue\']),false';getExp(plugin,'\'Green\nYellow\nOrange\nBlue\'','\'Green\nYellow\nOrange\nBlue\'','\'Green\'','\'Green\'','\'Green\'');'\'Blue\'';control.Name + '_scroll';'2,2';'2,2,MouseAction.LeftDoubleClick'
     13;x;Dialog;'Do.use(\'protocolClear\').click()';'\'tr_3_td_3\'';;;'\'Menu2/MenuItem2/MenuItem3\'';'\'Menu2/MenuItem2/MenuItem3\'';;'new Color(246,246,246)';;'Dialog';'\'Dialog\'';;;;;;;;;true;'new ArrayList([\'Green\',\'Yellow\', \'Orange\',\'Blue\']),false';'\'\'';'\'\'';;'50,80';'50,80,MouseAction.LeftDoubleClick'
     14;x;Image;'Do.use(\'protocolClear\').click()';'\'tr_3_td_3\'';;;'\'Menu2/MenuItem2/MenuItem3\'';'\'Menu2/MenuItem2/MenuItem3\'';;'new Color(246,246,246)';;'Image';'\'Image\'';;;;;;;;;true;'new ArrayList([\'Green\',\'Yellow\', \'Orange\',\'Blue\']),false';'\'\'';'\'\'';;'2,2';'2,2,MouseAction.LeftDoubleClick'
     15;x;Wait;'Do.use(\'protocolClear\').click()';'\'tr_3_td_3\'';;;'\'Menu2/MenuItem2/MenuItem3\'';'\'Menu2/MenuItem2/MenuItem3\'';;'new Color(246,246,246)';;'Wait';'\'Wait\'';;;;;;;;;true;'new ArrayList([\'Green\',\'Yellow\', \'Orange\',\'Blue\']),false';'\'\'';'\'\'';;'2,2';'2,2,MouseAction.LeftDoubleClick'
-    16;x;ScrollBar;'Do.use(\'protocolClear\').click()';'\'tr_3_td_3\'';;;'\'Menu2/MenuItem2/MenuItem3\'';'\'Menu2/MenuItem2/MenuItem3\'';;'new Color(246,246,246)';;'ScrollBar';'\'ScrollBar\'';0;;;;'ScrollBar_30';;;;true;'new ArrayList([\'Green\',\'Yellow\', \'Orange\',\'Blue\']),false';'\'0\'';'\'\'';;'2,2';'2,2,MouseAction.LeftDoubleClick'
+    16;x;ScrollBar;'Do.use(\'protocolClear\').click()';'\'tr_3_td_3\'';;;'\'Menu2/MenuItem2/MenuItem3\'';'\'Menu2/MenuItem2/MenuItem3\'';;'new Color(246,246,246)';;'ScrollBar';'\'ScrollBar\'';getExp(plugin,'','',0,0.0,'0');;;;'ScrollBar_30';;;;true;'new ArrayList([\'Green\',\'Yellow\', \'Orange\',\'Blue\']),false';'\'0.0\'';'\'\'';;'2,2';'2,2,MouseAction.LeftDoubleClick'
     17;x;Tree;getExp(plugin,'Do.use(\'protocolClear\').click()','Do.use(\'protocolClear\').click()','Do.use(\'protocolClear\').click().use(\'Tree\').expand(\'//item[@name=\\\'Green\\\']\').select(\'//item[@name=\\\'Green\\\']\')','Do.use(\'protocolClear\').click().use(\'Tree\').expand(\'//item[@name=\\\'Green\\\']\').select(\'//item[@name=\\\'Green\\\']\')','Do.use(\'protocolClear\').click().use(\'Tree\').expand(\'//item[@name=\\\'Green\\\']\').select(\'//item[@name=\\\'Green\\\']\').scrollTo(4)');'\'tr_3_td_3\'';getExp(plugin,'','','Expand_[Green, colors]','colors_expand','colors_expand');getExp(plugin,'','','Collapse_[Green, colors]','colors_collapse','colors_collapse');getExp(plugin,'\'\'','\'\'','\'//item[@name=\\\'colors\\\']\'','\'//item[@name=\\\'colors\\\']\'','\'//item[@name=\\\'colors\\\']\'');getExp(plugin,'\'\'','\'\'','\'//item[@name=\\\'colors\\\']\'','\'//item[@name=\\\'colors\\\']\'','\'//item[@name=\\\'colors\\\']\'');;'new Color(246,246,246)';;'Tree';'\'Tree\'';getExp(plugin,'','','[Green]','[Green]','YellowOrangeBluecolors');getExp(plugin,'','','Green','Green','YellowOrangeBluecolors');getExp(plugin,'','','[Green, Blue]','Blue','Blue');;;;;;true;'new ArrayList([\'Green\',\'Yellow\', \'Orange\',\'Blue\']),false';'\'\'';getExp(plugin,'','','\'//item[@name=\\\'Blue\\\']\'','\'//item[@name=\\\'Blue\\\']\'','\'//item[@name=\\\'Blue\\\']\'');control.Name + '_scroll';'2,2';'2,2,MouseAction.LeftDoubleClick'
     18;x;Splitter;'Do.use(\'protocolClear\').click().use(\'Splitter\').setValue(125)';'\'[JTree][Orange]\'';;;'\'Menu2/MenuItem2/MenuItem3\'';'\'Menu2/MenuItem2/MenuItem3\'';;'new Color(246,246,246)';;'Splitter';'\'Splitter\'';125;;;;'Splitter_30';;;;true;'new ArrayList([\'Green\',\'Yellow\', \'Orange\',\'Blue\']),false';'\'125\'';'\'\'';;'2,2';'2,2,MouseAction.LeftDoubleClick'
     19;x;Tooltip;'Do.use(\'protocolClear\').click().use(\'Menu2\').move()';'\'[JTree][Orange]\'';;;'\'Menu2/MenuItem2/MenuItem3\'';'\'Menu2/MenuItem2/MenuItem3\'';;'new Color(246,246,246)';;;'\'Tooltip\'';'Tooltip';;;'Tooltip';;;;;true;'new ArrayList([\'Green\',\'Yellow\', \'Orange\',\'Blue\']),false';'\'Tooltip\'';'\'\'';;'2,2';'2,2,MouseAction.LeftDoubleClick'
@@ -62,9 +62,9 @@ INIT;Test case;;;
     0;x;check;OperationKind.CHECK;;Do.use(control);Do.use(control).check(par);true;control.getValuePar
     1;x;checkFALSE;OperationKind.CHECK;;Do.use(control);Do.use(control).check(par,false);true;control.getValuePar
     2;x;checkXY;OperationKind.CHECK_XY;;Do.use(control);Do.use(control).check(par,1,1);true;control.getValuePar
-    3;x;checkRegexp;OperationKind.CHECK_REGEXP;;Do.use(control);Do.use(control).checkRegexp('\\w*');true;control.getValuePar
-    4;x;checkRegexpFALSE;OperationKind.CHECK_REGEXP;;Do.use(control);Do.use(control).checkRegexp('\\w*',false);true;control.getValuePar
-    5;x;checkRegexpXY;OperationKind.CHECK_REGEXP_XY;;Do.use(control);Do.use(control).checkRegexp('\\w*',1,1);true;control.getValuePar
+    3;x;checkRegexp;OperationKind.CHECK_REGEXP;;Do.use(control);Do.use(control).checkRegexp('[a-zA-Z0-9_.]+');true;control.getValuePar
+    4;x;checkRegexpFALSE;OperationKind.CHECK_REGEXP;;Do.use(control);Do.use(control).checkRegexp('[a-zA-Z0-9_.]+',false);true;control.getValuePar
+    5;x;checkRegexpXY;OperationKind.CHECK_REGEXP_XY;;Do.use(control);Do.use(control).checkRegexp('[a-zA-Z0-9_.]+',1,1);true;control.getValuePar
     6;x;checkAttr;OperationKind.CHECK_ATTR;;Do.use(control);Do.use(control).checkAttr(attr,par);true;control.getAttrPar
     7;x;checkAttrRegexp;OperationKind.CHECK_ATTR_REGEXP;;Do.use(control);Do.use(control).checkAttrRegexp(attr,'[a-zA-Z0-9_ ]*',true);true;control.getAttrPar
     8;x;checkList;OperationKind.CHECK_LIST;;Do.use(control);Do.use(control).checkList(par);true;control.getListPar
@@ -78,8 +78,8 @@ INIT;Test case;;;
     16;x;clickXY;OperationKind.CLICK_XY;;Do.use(control).delay(amount).click(par);Do.use('centralLabel').getValue();control.Name + '_click';control.clickXYPar
     17;x;forech;OperationKind.FOREACH;;Do.use(control).foreach(Do.click(par));Do.use('centralLabel').getValue();control.Name + '_double_click';control.clickDoubleXYPar
     18;x;setValue;OperationKind.SET;;Do.use(control).setValue(30);Do.use('sliderLabel').getValue();control.setValue;
-    19;x;text;OperationKind.TEXT;;Do.use(control).text('Green');Do.use(control).get();control.text;
-    20;x;textTrue;OperationKind.TEXT;;Do.use(control).text('Green',true);Do.use(control).get();control.textTrue;
+    19;x;text;OperationKind.TEXT;;Do.use(control).text('Green');Do.use(control).getValue();control.text;
+    20;x;textTrue;OperationKind.TEXT;;Do.use(control).text('Green',true);Do.use(control).getValue();control.textTrue;
     21;x;textXY;OperationKind.TEXT_XY;;Do.use(control).text('Green',1,1);Do.use(control).getValue(1,1);control.text;
     22;x;push;OperationKind.PUSH;;Do.use(control).push();Do.use('pushLabel').getValue();control.Name + '_push';
     23;x;getList;OperationKind.GET_LIST;;Do.use(control);Do.use(control).getList();control.getList;
@@ -100,8 +100,8 @@ INIT;Test case;;;
     38;x;getTable;OperationKind.GET_TABLE;;Do.use(control);Do.use(control).getTable();'Table [Head1, Head2, Head3]:3';
     39;x;expand;OperationKind.EXPAND;;Do.use(control).expand(par);Do.use('selectLabel').getValue();control.expand;control.expandPar
     40;x;collapse;OperationKind.COLLAPSE;;Do.use(control).collapse(par);Do.use('selectLabel').getValue();control.collapse;control.collapsePar
-    41;x;wait;OperationKind.WAIT;;Do.use('buttonShowArea').click().wait('buttonHideArea', 10000, true);Do.use('buttonHideArea').getAttr(attr).click();'hideButton';
-    42;x;delay;OperationKind.DELAY;;Do.use('buttonShowArea').click().delay(100);Do.use('buttonHideArea').getAttr(attr).click();'hideButton';
+    41;x;wait;OperationKind.WAIT;;Do.use('buttonShowArea').click().wait('buttonHideArea', 10000, true);Do.use('buttonHideArea').get().click();'hideButton';
+    42;x;delay;OperationKind.DELAY;;Do.use('buttonShowArea').click().delay(100);Do.use('buttonHideArea').get().click();'hideButton';
     43;x;repeat;OperationKind.REPEAT;;Do.use('countButtonClear').click().use('countButton').repeat(2, Do.click());Do.use('countLabel').getValue();2;
     44;x;press;OperationKind.PRESS;;Do.use(control).press(Keyboard.A).delay(100);Do.use('protocolText').getValue();getExp(plugin,control.Name + '_down_65' + getNewLine(plugin) + control.Name + '_press_97' + getNewLine(plugin) + control.Name + '_up_65',control.Name + '_down_65' + getNewLine(plugin) + control.Name + '_press_97' + getNewLine(plugin) + control.Name + '_up_65',control.Name + '_down_65' + getNewLine(plugin) + control.Name + '_press_65' + getNewLine(plugin) + control.Name + '_up_65',control.Name + '_down_65' + getNewLine(plugin) + control.Name + '_press_97' + getNewLine(plugin) + control.Name + '_up_65',control.Name + '_down_65' + getNewLine(plugin) + control.Name + '_press_97' + getNewLine(plugin) + control.Name + '_up_65');
     45;x;keyDown;OperationKind.KEY_DOWN;;Do.use(control).keyDown(Keyboard.SHIFT).press(Keyboard.A).keyUp(Keyboard.SHIFT).delay(100);Do.use('protocolText').getValue();control.Name + '_down_16' + getNewLine(plugin) + control.Name + '_down_65' + getNewLine(plugin) + control.Name + '_press_65' + getNewLine(plugin) + control.Name + '_up_65' + getNewLine(plugin) + control.Name + '_up_16';
@@ -208,8 +208,8 @@ SUBCASES;;;;
             TableAddValue;table_result;pluginName;controlName;operationName;expected;actual;result
 
         #Else
-            #Off;#Action;$Table;Plugin;Control;Operation;Expected;Actual;Result
-            1;TableAddValue;table_result;pluginName;controlName;operationName;expected;actual;result
+            #Action;$Table;Plugin;Control;Operation;Expected;Actual;Result
+            TableAddValue;table_result;pluginName;controlName;operationName;expected;actual;result
 
 
         #EndIf
@@ -217,7 +217,7 @@ SUBCASES;;;;
     #EndSubCase
 
     #Id;#SubCase;plugin
-    RUN;Run;'JavaFx'
+    RUN;Run;'InternetExplorer'
         #Step;#Kind;#For;#Depends
         'start application';;;
             #Id;#Action;Plugin;Control;Operation;Expected;Actual;Result
@@ -353,10 +353,10 @@ SUBCASES;;;;
                     #If
                     operation.Operation.contains('attr') || operation.After.contains('attr')
                         #Id;#Let
-                        op;op.replace('attr',getAttr(plugin))
+                        op;op.replace('attr',getAttr(plugin, control.Name))
 
                         #Id;#Let
-                        after;after.replace('attr',getAttr(plugin))
+                        after;after.replace('attr',getAttr(plugin, control.Name))
 
                     #EndIf
 

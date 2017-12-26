@@ -38,16 +38,19 @@
                 <TableView      fx:id="Table"           GridPane.rowIndex="1" GridPane.columnIndex="0" onMouseClicked="#clickHandler" onMouseMoved="#moveHandler" onKeyPressed="#pressHandler" onKeyReleased="#releasedHandler" onKeyTyped="#typedHandler" GridPane.columnSpan="2" GridPane.rowSpan="3"/>
                 <Button         fx:id="Any"             GridPane.rowIndex="1" GridPane.columnIndex="3" onMouseClicked="#clickHandler" onMouseMoved="#moveHandler" onKeyPressed="#pressHandler" onKeyReleased="#releasedHandler" onKeyTyped="#typedHandler" text="Any"/>
                 <ToggleButton   fx:id="ToggleButton"    GridPane.rowIndex="2" GridPane.columnIndex="3" onMouseClicked="#clickHandler" onMouseMoved="#moveHandler" onKeyPressed="#pressHandler" onKeyReleased="#releasedHandler" onKeyTyped="#typedHandler" text="ToggleButton" selected="true"/>
-                <TextField      fx:id="TextBox"         GridPane.rowIndex="3" GridPane.columnIndex="3" onMouseClicked="#clickHandler" onMouseMoved="#moveHandler" onKeyPressed="#pressHandler" onKeyReleased="#releasedHandler" onKeyTyped="#typedHandler" />
-                <Pane           fx:id="Panel"           GridPane.rowIndex="4" GridPane.columnIndex="3" onMouseClicked="#clickHandler" onMouseMoved="#moveHandler" onKeyPressed="#pressHandler" onKeyReleased="#releasedHandler" onKeyTyped="#typedHandler" styleClass="pane"/>
+                <TextField      fx:id="TextBox"         GridPane.rowIndex="3" GridPane.columnIndex="3" onMouseClicked="#clickHandler" onMouseMoved="#moveHandler" onKeyPressed="#pressHandler" onKeyReleased="#releasedHandler" onKeyTyped="#typedHandler" text="Green"/>
                 <ProgressBar    fx:id="ProgressBar"     GridPane.rowIndex="5" GridPane.columnIndex="3" onMouseClicked="#clickHandler" onMouseMoved="#moveHandler" onKeyPressed="#pressHandler" onKeyReleased="#releasedHandler" onKeyTyped="#typedHandler" progress="0.3"/>
                 <ScrollBar      fx:id="ScrollBar"       GridPane.rowIndex="6" GridPane.columnIndex="3" onMouseClicked="#clickHandler" onMouseMoved="#moveHandler" onKeyPressed="#pressHandler" onKeyReleased="#releasedHandler" onKeyTyped="#typedHandler" />
                 <ComboBox       fx:id="ComboBox"        GridPane.rowIndex="8" GridPane.columnIndex="3" onMouseClicked="#clickHandler" onMouseMoved="#moveHandler" editable="true" value="Green" />
                 <CheckBox       fx:id="CheckBox"        GridPane.rowIndex="4" GridPane.columnIndex="4" onMouseClicked="#clickHandler" onMouseMoved="#moveHandler" onKeyPressed="#pressHandler" onKeyReleased="#releasedHandler" onKeyTyped="#typedHandler" text="CheckBox" selected="true"/>
-                <TreeView       fx:id="TreeView"        GridPane.rowIndex="0" GridPane.columnIndex="2" onMouseClicked="#clickHandler" onMouseMoved="#moveHandler" onKeyPressed="#pressHandler" onKeyReleased="#releasedHandler" onKeyTyped="#typedHandler" GridPane.rowSpan="3"/>
+                <TreeView       fx:id="Tree"            GridPane.rowIndex="0" GridPane.columnIndex="2" onMouseClicked="#clickHandler" onMouseMoved="#moveHandler" onKeyPressed="#pressHandler" onKeyReleased="#releasedHandler" onKeyTyped="#typedHandler" GridPane.rowSpan="3"/>
                 <TextArea       fx:id="Protocol"        GridPane.rowIndex="0" GridPane.columnIndex="5" GridPane.rowSpan="9" GridPane.columnSpan="2"/>
                 <Button         fx:id="ProtocolClear"   GridPane.rowIndex="9" GridPane.columnIndex="6" onAction="#doProtocolClear" text="Clear"/>
-                <ListView       fx:id="ListView"        GridPane.rowIndex="5" GridPane.columnIndex="4" onMouseClicked="#clickHandler" onMouseMoved="#moveHandlerRadio" onKeyPressed="#pressHandler" onKeyReleased="#releasedHandler" onKeyTyped="#typedHandler" GridPane.rowSpan="2"/>
+                <ListView       fx:id="List"            GridPane.rowIndex="5" GridPane.columnIndex="4" onMouseClicked="#clickHandler" onMouseMoved="#moveHandler" onKeyPressed="#pressHandler" onKeyReleased="#releasedHandler" onKeyTyped="#typedHandler" GridPane.rowSpan="2"/>
+
+                <StackPane      fx:id="Panel"           GridPane.rowIndex="4" GridPane.columnIndex="3" onMouseClicked="#clickHandler" onMouseMoved="#moveHandler" onKeyPressed="#pressHandler" onKeyReleased="#releasedHandler" onKeyTyped="#typedHandler" styleClass="pane">
+                    <Label text="Panel"/>
+                </StackPane>
 
                 <fx:define>
                     <ToggleGroup fx:id="RadioGroup"/>
@@ -94,8 +97,8 @@
                 <Slider fx:id="Slider" onMouseClicked="#clickHandler" onMouseMoved="#moveHandler" onKeyPressed="#pressHandler" onKeyReleased="#releasedHandler" onKeyTyped="#typedHandler" />
             </StackPane>
             <HBox>
-                <Button fx:id="showButton" text="Show Area" onAction="#doShowButton"/>
-                <Button fx:id="hideButton" text="Hide Area" visible="false" onAction="#doHideButton"/>
+                <Button fx:id="showButton" text="showButton" onAction="#doShowButton"/>
+                <Button fx:id="hideButton" text="hideButton" visible="false" onAction="#doHideButton"/>
             </HBox>
             <HBox>
                 <Button fx:id="clearButton" text="Clear" onAction="#doClearCount"/>

@@ -110,7 +110,7 @@ public class FxOperationExecutor extends AbstractOperationExecutor<EventTarget>
 			}
 			if (component instanceof Slider)
 			{
-				return String.valueOf(Double.valueOf(((Slider) component).getValue()).intValue());
+				return String.valueOf(((Slider) component).getValue());
 			}
 			if (component instanceof SplitPane)
 			{
@@ -131,6 +131,10 @@ public class FxOperationExecutor extends AbstractOperationExecutor<EventTarget>
 			if (component instanceof Tooltip)
 			{
 				return ((Tooltip) component).getText();
+			}
+			if (component instanceof ScrollBar)
+			{
+				return String.valueOf(((ScrollBar) component).getValue());
 			}
 			return MatcherFx.getText(component);
 		}, e->
@@ -307,7 +311,18 @@ public class FxOperationExecutor extends AbstractOperationExecutor<EventTarget>
 	@Override
 	public List<EventTarget> findAll(ControlKind controlKind, EventTarget window, Locator locator) throws Exception
 	{
-		return tryExecute(EMPTY_CHECK, new MatcherFx(this.info, locator, window)::findAll,
+		return tryExecute(EMPTY_CHECK,
+				()->
+				{
+					if(window == null)
+					{
+						return new MatcherFx(this.info, locator, UtilsFx.currentRoot()).findAll();
+					}
+					else
+					{
+						return new MatcherFx(this.info, locator, window).findAll();
+					}
+				},
 				e->
 				{
 					logger.error(String.format("findAll(%s,%s,%s)", controlKind, window, locator));
@@ -766,8 +781,7 @@ public class FxOperationExecutor extends AbstractOperationExecutor<EventTarget>
 							throw new Exception("ComboBox is not editable");
 						}
 					}
-
-					throw new Exception("Cant set text to not input control");
+					return true;
 				},
 				e ->
 				{

@@ -26,7 +26,7 @@ public class Main extends Application
     public void start(Stage primaryStage) throws Exception
     {
         Mock.MAIN.createWindow(primaryStage, new FXMLLoader(getClass().getResource("Main.fxml")));
-        Mock.ADDITIONAL.createWindow(new Stage(), new FXMLLoader(getClass().getResource("Additional.fxml")));
+//        Mock.ADDITIONAL.createWindow(new Stage(), new FXMLLoader(getClass().getResource("Additional.fxml")));
     }
 
     private enum Mock

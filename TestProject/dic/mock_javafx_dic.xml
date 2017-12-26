@@ -24,8 +24,8 @@
             <label id="Label" uid="CentralLabel" owner="owner" text="" addition="Many"/>
             <progressBar id="ProgressBar" uid="ProgressBar" owner="owner" addition="Many"/>
             <panel id="Panel" uid="Panel" owner="owner" addition="Many"/>
-            <dialog id="Dialog" title="Dialog" addition="Many"/>
-            <listView id="List" uid="ListView" owner="owner" addition="Many"/>
+            <dialog id="Dialog" uid="" xpath="" title="Dialog" addition="Many"/>
+            <listView id="List" uid="List" owner="owner" addition="Many"/>
             <menu id="Menu" uid="Menu" owner="owner" addition="Many"/>
             <menuItem id="MenuItem" owner="owner" text="MenuItem" addition="Many"/>
             <menu id="Menu1" owner="owner" text="JMenu 1"/>
