@@ -131,9 +131,7 @@ public class Text implements List<String>, Mutable, Cloneable
 	@Override
 	public String toString()
 	{
-		return this.list.stream()
-				.map(line -> line + System.lineSeparator())
-				.collect(Collectors.joining());
+		return this.list.stream().collect(Collectors.joining(System.lineSeparator()));
 	}
 
 	//region interface List
