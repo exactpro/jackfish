@@ -24,6 +24,7 @@ import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.report.ReportBuilder;
 import com.exactprosystems.jf.common.report.ReportHelper;
 import com.exactprosystems.jf.common.report.ReportTable;
+import com.exactprosystems.jf.documents.config.Configuration;
 import com.exactprosystems.jf.exceptions.ColumnIsPresentException;
 import com.exactprosystems.jf.sql.SqlConnection;
 import org.apache.log4j.Logger;
@@ -1149,7 +1150,7 @@ public class Table implements List<RowTable>, Mutable
 				{
 					value = source;
 				}
-				record[count++] = Str.asString(value);
+				record[count++] = Str.asString(value).replaceAll(String.valueOf(Configuration.matrixDelimiter), Configuration.unicodeDelimiter);
 			}
 			writer.writeRecord(record, true);
 		}

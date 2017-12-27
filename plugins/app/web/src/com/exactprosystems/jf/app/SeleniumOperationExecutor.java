@@ -1158,7 +1158,6 @@ public class SeleniumOperationExecutor extends AbstractOperationExecutor<WebElem
 	@Override
 	protected String getValueDerived(WebElement component) throws Exception
 	{
-		//TODO make this method
 		Exception real = null;
 		int repeat = 1;
 		do
@@ -1169,8 +1168,10 @@ public class SeleniumOperationExecutor extends AbstractOperationExecutor<WebElem
 				if ("input".equals(component.getTagName()) || "progress".equals(component.getTagName()) || "textarea".equals(component.getTagName()))
 				{
 					String attr = component.getAttribute("type");
-					if(attr!=null) {
-						if (attr.equals("checkbox") || attr.equals("radio")) {
+					if(attr!=null)
+					{
+						if (attr.equals("checkbox") || attr.equals("radio"))
+						{
 							return String.valueOf(component.isSelected());
 						}
 					}
@@ -1179,6 +1180,15 @@ public class SeleniumOperationExecutor extends AbstractOperationExecutor<WebElem
 				else if (component.getTagName().equals("select"))
 				{
 					return new Select(component).getFirstSelectedOption().getText();
+				}
+				//TODO think about how to work with slider in web or just remove it
+				else if (component.getTagName().equals("div"))
+				{
+					List <WebElement> list = component.findElements(By.xpath("child::span[contains(@class, 'slider')]"));
+					if(!list.isEmpty())
+					{
+						return list.get(0).getAttribute("style");
+					}
 				}
 				return component.getText();
 			}
