@@ -14,6 +14,7 @@ import com.exactprosystems.jf.api.common.exception.EmptyParameterException;
 import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.api.error.service.ServiceException;
 import com.exactprosystems.jf.api.service.*;
+import com.exactprosystems.jf.common.CommonHelper;
 import com.exactprosystems.jf.common.MainRunner;
 import com.exactprosystems.jf.documents.DocumentFactory;
 import com.exactprosystems.jf.documents.config.Configuration;
@@ -22,14 +23,25 @@ import com.exactprosystems.jf.documents.config.Parameter;
 import com.exactprosystems.jf.documents.config.ServiceEntry;
 import org.apache.log4j.Logger;
 
-import java.net.URL;
-import java.net.URLClassLoader;
 import java.util.*;
 import java.util.concurrent.ConcurrentSkipListSet;
 import java.util.stream.Collectors;
 
 public class ServicePool implements IServicesPool
 {
+	private static final Logger logger = Logger.getLogger(ServicePool.class);
+
+	private final DocumentFactory                       factory;
+	/**
+	 * A map of service by service status
+	 */
+	private final Map<ServiceConnection, ServiceStatus> serviceStatusMap;
+	/**
+	 * The cache for loaded services
+	 */
+	private final Map<String, IServiceFactory>          serviceFactories;
+	private final Set<ServiceConnection>                connections;
+
 	public ServicePool(DocumentFactory factory)
 	{
 		this.factory = factory;
@@ -38,13 +50,14 @@ public class ServicePool implements IServicesPool
 		this.connections = new ConcurrentSkipListSet<>(Comparator.comparingInt(ServiceConnection::hashCode));
 	}
 
+	//region IPool interface
 	@Override
 	public boolean isSupported(String serviceId)
 	{
 		try
 		{
-			ServiceEntry entry = parametersEntry(serviceId);
-			IServiceFactory serviceFactory = loadServiceFactory(serviceId, entry);
+			ServiceEntry entry = this.getEntryById(serviceId);
+			IServiceFactory serviceFactory = this.loadServiceFactory(serviceId, entry);
 			return serviceFactory != null;
 		}
 		catch (Exception e)
@@ -54,15 +67,15 @@ public class ServicePool implements IServicesPool
 
 		return false;
 	}
+	//endregion
 
+	//region IServicePool interface
 	@Override
 	public List<String> servicesNames()
 	{
-		return this.factory.getConfiguration()
-				.getServiceEntries()
+		return this.factory.getConfiguration().getServiceEntries()
 				.stream()
 				.map(Entry::toString)
-				.filter(Objects::nonNull)
 				.collect(Collectors.toList());
 	}
 
@@ -75,8 +88,8 @@ public class ServicePool implements IServicesPool
 	@Override
 	public IServiceFactory loadServiceFactory(String serviceId) throws ServiceException
 	{
-		ServiceEntry entry = parametersEntry(serviceId);
-		return loadServiceFactory(serviceId, entry);
+		ServiceEntry entry = this.getEntryById(serviceId);
+		return this.loadServiceFactory(serviceId, entry);
 	}
 
 	@Override
@@ -89,8 +102,8 @@ public class ServicePool implements IServicesPool
 				throw new EmptyParameterException("serviceId");
 			}
 			
-			ServiceEntry entry = parametersEntry(serviceId);
-			IServiceFactory serviceFactory = loadServiceFactory(serviceId, entry);
+			ServiceEntry entry = this.getEntryById(serviceId);
+			IServiceFactory serviceFactory = this.loadServiceFactory(serviceId, entry);
 			List<Parameter> list = entry.getParameters();
 			Map<String, String> map = list.stream().collect(Collectors.toMap(Parameter::getKey, parameter -> MainRunner.makeDirWithSubstitutions(parameter.getValue())));
 			IService service = serviceFactory.createService();
@@ -100,7 +113,7 @@ public class ServicePool implements IServicesPool
 
 			return connection;
 		}
-		catch (Throwable t)
+		catch (Exception t)
 		{
 			logger.error(String.format("Error in loadService(%s)", serviceId));
 			logger.error(t.getMessage(), t);
@@ -187,9 +200,13 @@ public class ServicePool implements IServicesPool
 				.orElse(ServiceStatus.NotStarted);
 	}
 
-	//----------------------------------------------------------------------------------------------
-	
-	private ServiceEntry parametersEntry(String serviceId) throws ServiceException
+	//endregion
+
+	//region private methods
+	/**
+	 * Get entry by the passed id. If entry not found, will throw {@link ServiceException}
+	 */
+	private ServiceEntry getEntryById(String serviceId) throws ServiceException
 	{
 		ServiceEntry entry = this.factory.getConfiguration().getServiceEntry(serviceId);
 		if (entry == null)
@@ -199,7 +216,6 @@ public class ServicePool implements IServicesPool
 		
 		return entry;
 	}
-	
 
 	private IServiceFactory loadServiceFactory(String serviceId, ServiceEntry entry) throws ServiceException
 	{
@@ -208,31 +224,16 @@ public class ServicePool implements IServicesPool
 		{
 			try
 			{
-				String jarName = MainRunner.makeDirWithSubstitutions(entry.get(Configuration.serviceJar));
+				String jarName = entry.get(Configuration.appJar);
+				jarName = MainRunner.makeDirWithSubstitutions(jarName);
 
-				List<URL> urls = new ArrayList<>();
-				urls.add(new URL("file:" + jarName));
-
-				ClassLoader parent = getClass().getClassLoader();
-				URLClassLoader classLoader = new URLClassLoader(urls.toArray(new URL[]{}), parent);
-
-				ServiceLoader<IServiceFactory> loader = ServiceLoader.load(IServiceFactory.class, classLoader);
-				Iterator<IServiceFactory> iterator = loader.iterator();
-				if (iterator.hasNext())
-				{
-					serviceFactory = iterator.next();
-					this.serviceFactories.put(serviceId, serviceFactory);
-				}
-				if (serviceFactory == null)
-				{
-					throw new ServiceException(String.format(R.SERVICE_POOL_NOT_FOUND.get(), serviceId));
-				}
+				serviceFactory = CommonHelper.loadFactory(this.getClass()
+						, IServiceFactory.class
+						, jarName
+						, () -> new Exception(String.format(R.SERVICE_POOL_NOT_FOUND.get(), serviceId))
+						, logger);
 
 				this.serviceFactories.put(serviceId, serviceFactory);
-			}
-			catch (ServiceException e)
-			{
-				throw e;
 			}
 			catch (Exception e)
 			{
@@ -242,11 +243,5 @@ public class ServicePool implements IServicesPool
 		
 		return serviceFactory;
 	}
-
-	private Map<ServiceConnection, ServiceStatus> serviceStatusMap;
-	private DocumentFactory factory;
-	private Map<String, IServiceFactory> serviceFactories;
-	private static final Logger logger = Logger.getLogger(ServicePool.class);
-	private Set<ServiceConnection> connections;
-
+	//endregion
 }
