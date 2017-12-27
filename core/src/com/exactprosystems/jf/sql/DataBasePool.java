@@ -24,11 +24,11 @@ import java.util.*;
 
 public class DataBasePool
 {
-	private final DocumentFactory     factory;
-	private final Map<String, Driver> drivers;
-
 	private static final String USER     = "user";
 	private static final String PASSWORD = "password";
+
+	private final DocumentFactory     factory;
+	private final Map<String, Driver> drivers;
 
 	public DataBasePool(DocumentFactory factory)
 	{
@@ -77,7 +77,7 @@ public class DataBasePool
 	{
 		try (PreparedStatement query = connection.getConnection().prepareStatement(text, Statement.RETURN_GENERATED_KEYS))
 		{
-			fillParameters(objs, query);
+			this.fillParameters(objs, query);
 
 			query.execute();
 
@@ -129,6 +129,7 @@ public class DataBasePool
 		}
 	}
 
+	//region private methods
 	private Driver getDriver(String sql) throws JFSQLException
 	{
 		if (sql == null)
@@ -166,10 +167,6 @@ public class DataBasePool
 				this.drivers.put(sql, driver);
 				DriverManager.registerDriver(driver);
 			}
-			catch (JFSQLException e)
-			{
-				throw e;
-			}
 			catch (Exception e)
 			{
 				throw new JFSQLException(e.getMessage(), e);
@@ -178,7 +175,6 @@ public class DataBasePool
 		return driver;
 	}
 
-	//region private methods
 	private void fillParameters(Object[] objs, PreparedStatement query) throws JFSQLException
 	{
 		try

@@ -12,30 +12,33 @@ package com.exactprosystems.jf.sql;
 import java.sql.Connection;
 import java.sql.SQLException;
 
-public class SqlConnection implements AutoCloseable 
+public class SqlConnection implements AutoCloseable
 {
+	private final String     sql;
+	private       Connection connection;
+
 	protected SqlConnection(Connection connection, String sql)
 	{
 		this.connection = connection;
 		this.sql = sql;
 	}
-	
+
 	@Override
 	public void close() throws SQLException
 	{
-		if (!isClosed())
+		if (!this.isClosed())
 		{
 			this.connection.close();
 		}
 		this.connection = null;
 	}
-	
+
 	@Override
 	public String toString()
 	{
-		return SqlConnection.class.getSimpleName() + "{" + this.sql + ":" + hashCode() + ", closed=" + isClosed() + "}";
+		return SqlConnection.class.getSimpleName() + "{" + this.sql + ":" + this.hashCode() + ", closed=" + this.isClosed() + "}";
 	}
-	
+
 	public boolean isClosed()
 	{
 		try
@@ -47,13 +50,9 @@ public class SqlConnection implements AutoCloseable
 			return true;
 		}
 	}
-	
+
 	public Connection getConnection()
 	{
 		return this.connection;
 	}
-
-	private Connection connection;
-	
-	private String sql;
 }
