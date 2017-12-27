@@ -173,10 +173,10 @@ DialogMove;;;
         currentY;APPPAR1.Out.Position.getY()
 
         #Id;#Let
-        newX;currentX + 10
+        newX;currentX + 100
 
         #Id;#Let
-        newY;currentY + 10
+        newY;currentY + 100
 
         #Action;$Dialog;$X;$Y;$AppConnection
         DialogMove;'Dialog';newX;newY;appCon

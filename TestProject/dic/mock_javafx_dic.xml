@@ -110,7 +110,7 @@
     </window>
     <window name="Dialog">
         <self>
-            <dialog id="DialogD" xpath=".//Stage[contains(@title,&amp;quot;Dialog&amp;quot;)]" title="" addition="Many"/>
+            <dialog id="DialogD" xpath="" title="Dialog" addition="Many"/>
         </self>
         <onOpen/>
         <run>

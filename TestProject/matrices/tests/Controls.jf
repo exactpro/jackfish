@@ -35,7 +35,7 @@ INIT;Test case;;;
     5;x;ToggleButton;'Do.use(\'protocolClear\').click()';'\'tr_3_td_3\'';;;'\'Menu2/MenuItem2/MenuItem3\'';'\'Menu2/MenuItem2/MenuItem3\'';;'new Color(246,246,246)';getExp(plugin,'true','true','true','true','On');'ToggleButton';'\'ToggleButton\'';getExp(plugin,true,true,true,true,'On');;;'ToggleButton';;;;;true;'new ArrayList([\'Green\',\'Yellow\', \'Orange\',\'Blue\']),false';getExp(plugin,'\'true\'','\'true\'','\'true\'','\'true\'','\'On\'');'\'\'';;'2,2';'2,2,MouseAction.LeftDoubleClick'
     6;x;ComboBox;'Do.use(\'protocolClear\').click()';'\'tr_3_td_3\'';;;'\'Menu2/MenuItem2/MenuItem3\'';'\'Menu2/MenuItem2/MenuItem3\'';;'new Color(246,246,246)';;'ComboBox';'\'ComboBox\'';'Green';'Green';'Blue';'Green';;getExp(plugin,'Green','Green','GreenGreen','GreenGreen','GreenGreen');'Green';'[Green, Yellow, Orange, Blue]';'Green';'new ArrayList([\'Green\',\'Yellow\', \'Orange\',\'Blue\']),false';'\'Green\'';'\'Blue\'';control.Name + '_scroll';'2,2';'2,2,MouseAction.LeftDoubleClick'
     7;x;Table;'Do.use(\'protocolClear\').click()';'\'tr_3_td_3\'';;;'\'Menu2/MenuItem2/MenuItem3\'';'\'Menu2/MenuItem2/MenuItem3\'';'{Head1=tr_3_td_1, Head2=tr_3_td_2, Head3=tr_3_td_3}';'new Color(246,246,246)';;getExp(plugin,'Table','Table','Table','Table','DataGridView');getExp(plugin,'\'Table\'','\'Table\'','\'Table\'','\'Table\'','\'DataGridView\'');'tr_2_td_2';;;;;getExp(plugin,'tr_2_td_2','tr_2_td_2','Green','Green','Green');getExp(plugin,'tr_2_td_2','tr_2_td_2','Green','Green','Green');;'tr_2_td_2';'new ArrayList([\'Green\',\'Yellow\', \'Orange\',\'Blue\']),false';'\'tr_2_td_2\'';'\'\'';;'2,2';'2,2,MouseAction.LeftDoubleClick'
-    8;x;Slider;'Do.use(\'protocolClear\').click().use(\'Slider\').setValue(0)';'\'tr_3_td_3\'';;;'\'Menu2/MenuItem2/MenuItem3\'';'\'Menu2/MenuItem2/MenuItem3\'';;'new Color(246,246,246)';;getExp(plugin,'Slider','Slider','Slider','Slider','');getExp(plugin,'\'Slider\'','\'Slider\'','\'Slider\'','\'Slider\'','\'\'');getExp(plugin,'','',0,0.0,'0');;;;'Slider_30';;;;getExp(plugin,'','',0,0.0,'0');'new ArrayList([\'Green\',\'Yellow\', \'Orange\',\'Blue\']),false';getExp(plugin,'\'\'','\'\'','0','0.0','0');'\'\'';;'2,2';'2,2,MouseAction.LeftDoubleClick'
+    8;x;Slider;'Do.use(\'protocolClear\').click().use(\'Slider\').setValue(0)';'\'tr_3_td_3\'';;;'\'Menu2/MenuItem2/MenuItem3\'';'\'Menu2/MenuItem2/MenuItem3\'';;'new Color(246,246,246)';;getExp(plugin,'Slider','Slider','Slider','Slider','');getExp(plugin,'\'Slider\'','\'Slider\'','\'Slider\'','\'Slider\'','\'\'');getExp(plugin,'left: 0%\u003b','left: 0%\u003b',0,0.0,'0');;;;'Slider_30';;;;true;'new ArrayList([\'Green\',\'Yellow\', \'Orange\',\'Blue\']),false';getExp(plugin,'\'left: 0%\u003b\'','\'left: 0%\u003b\'',0,0.0,'0');'\'\'';;'2,2';'2,2,MouseAction.LeftDoubleClick'
     9;x;RadioButton;'Do.use(\'protocolClear\').click()';'\'tr_3_td_3\'';;;'\'Menu2/MenuItem2/MenuItem3\'';'\'Menu2/MenuItem2/MenuItem3\'';;'new Color(246,246,246)';getExp(plugin,'true','true','true','true','True');getExp(plugin,'RadioButton','RadioButton','RadioButton','RadioButton','Green');getExp(plugin,'\'RadioButton\'','\'RadioButton\'','\'RadioButton\'','\'RadioButton\'','\'Green\'');getExp(plugin,'false','false','false','false','False');;;'Green';;;;;false;'new ArrayList([\'Green\',\'Yellow\', \'Orange\',\'Blue\']),false';getExp(plugin,'\'false\'','\'false\'','\'false\'','\'false\'','\'False\'');'\'\'';;'2,2';'2,2,MouseAction.LeftDoubleClick'
     10;x;ProgressBar;'Do.use(\'protocolClear\').click()';'\'tr_3_td_3\'';;;'\'Menu2/MenuItem2/MenuItem3\'';'\'Menu2/MenuItem2/MenuItem3\'';;'new Color(246,246,246)';;getExp(plugin,'ProgressBar','ProgressBar','ProgressBar','ProgressBar','');getExp(plugin,'\'ProgressBar\'','\'ProgressBar\'','\'ProgressBar\'','\'ProgressBar\'','\'\'');getExp(plugin,10,10,10,0.3,10);;;;;;;;true;'new ArrayList([\'Green\',\'Yellow\', \'Orange\',\'Blue\']),false';getExp(plugin,'\'10\'','\'10\'','\'10\'','\'0.3\'','\'10\'');'\'\'';;'2,2';'2,2,MouseAction.LeftDoubleClick'
     11;x;Panel;'Do.use(\'protocolClear\').click()';'\'tr_3_td_3\'';;;'\'Menu2/MenuItem2/MenuItem3\'';'\'Menu2/MenuItem2/MenuItem3\'';;'new Color(246,246,246)';;'Panel';'\'Panel\'';'Panel';;;;;'Panel';'Panel';;true;'new ArrayList([\'Green\',\'Yellow\', \'Orange\',\'Blue\']),false';'\'Panel\'';'\'\'';;'2,2';'2,2,MouseAction.LeftDoubleClick'
@@ -62,11 +62,11 @@ INIT;Test case;;;
     0;x;check;OperationKind.CHECK;;Do.use(control);Do.use(control).check(par);true;control.getValuePar
     1;x;checkFALSE;OperationKind.CHECK;;Do.use(control);Do.use(control).check(par,false);true;control.getValuePar
     2;x;checkXY;OperationKind.CHECK_XY;;Do.use(control);Do.use(control).check(par,1,1);true;control.getValuePar
-    3;x;checkRegexp;OperationKind.CHECK_REGEXP;;Do.use(control);Do.use(control).checkRegexp('[a-zA-Z0-9_.]+');true;control.getValuePar
-    4;x;checkRegexpFALSE;OperationKind.CHECK_REGEXP;;Do.use(control);Do.use(control).checkRegexp('[a-zA-Z0-9_.]+',false);true;control.getValuePar
-    5;x;checkRegexpXY;OperationKind.CHECK_REGEXP_XY;;Do.use(control);Do.use(control).checkRegexp('[a-zA-Z0-9_.]+',1,1);true;control.getValuePar
+    3;x;checkRegexp;OperationKind.CHECK_REGEXP;;Do.use(control);Do.use(control).checkRegexp('(\\w+|\\p{Punct}|\\s)+');true;control.getValuePar
+    4;x;checkRegexpFALSE;OperationKind.CHECK_REGEXP;;Do.use(control);Do.use(control).checkRegexp('(\\w+|\\p{Punct}|\\s)+',false);true;control.getValuePar
+    5;x;checkRegexpXY;OperationKind.CHECK_REGEXP_XY;;Do.use(control);Do.use(control).checkRegexp('(\\w+|\\p{Punct}|\\s)+',1,1);true;control.getValuePar
     6;x;checkAttr;OperationKind.CHECK_ATTR;;Do.use(control);Do.use(control).checkAttr(attr,par);true;control.getAttrPar
-    7;x;checkAttrRegexp;OperationKind.CHECK_ATTR_REGEXP;;Do.use(control);Do.use(control).checkAttrRegexp(attr,'[a-zA-Z0-9_ ]*',true);true;control.getAttrPar
+    7;x;checkAttrRegexp;OperationKind.CHECK_ATTR_REGEXP;;Do.use(control);Do.use(control).checkAttrRegexp(attr,'(\\w+|\\p{Punct}|\\s)+',true);true;control.getAttrPar
     8;x;checkList;OperationKind.CHECK_LIST;;Do.use(control);Do.use(control).checkList(par);true;control.getListPar
     9;x;checkColor;OperationKind.CHECK_COLOR_XY;;Do.use('colorButton');Do.use('colorButton').checkColor(5,5,new Color(255,0,0));true;control.colorPar
     10;x;getAttr;OperationKind.GET_ATTR;;Do.use(control);Do.use(control).getAttr(attr);control.getAttr;
@@ -217,7 +217,7 @@ SUBCASES;;;;
     #EndSubCase
 
     #Id;#SubCase;plugin
-    RUN;Run;'InternetExplorer'
+    RUN;Run;'Chrome'
         #Step;#Kind;#For;#Depends
         'start application';;;
             #Id;#Action;Plugin;Control;Operation;Expected;Actual;Result

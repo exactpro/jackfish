@@ -71,7 +71,7 @@ public class FxAppFactory extends AbstractApplicationFactory
 		info.addTypes(ControlKind.Button, ButtonBase.class.getName());
 		info.addTypes(ControlKind.CheckBox, CheckBox.class.getName());
 		info.addTypes(ControlKind.ComboBox, ComboBox.class.getName(), ChoiceBox.class.getName());
-		info.addTypes(ControlKind.Dialog, Stage.class.getName());
+		info.addTypes(ControlKind.Dialog, Dialog.class.getName(), Stage.class.getName());
 		info.addTypes(ControlKind.Frame, Window.class.getName());
 		info.addTypes(ControlKind.Label, Label.class.getName());
 		info.addTypes(ControlKind.ListView, ListView.class.getName());

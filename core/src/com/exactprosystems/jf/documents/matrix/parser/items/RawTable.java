@@ -14,6 +14,7 @@ import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.evaluator.Variables;
 import com.exactprosystems.jf.common.report.ReportBuilder;
+import com.exactprosystems.jf.documents.config.Configuration;
 import com.exactprosystems.jf.documents.config.Context;
 import com.exactprosystems.jf.documents.matrix.parser.*;
 import com.exactprosystems.jf.documents.matrix.parser.listeners.IMatrixListener;
@@ -21,6 +22,7 @@ import com.exactprosystems.jf.functions.Table;
 import com.exactprosystems.jf.tool.helpers.DialogsHelper;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -148,7 +150,11 @@ public class RawTable extends MatrixItem
 			return;
 		}
 
-		this.table.addValue(str);
+		String[] escapedStr = Arrays.stream(str)
+				.map(s -> s.replaceAll(Configuration.unicodeDelimiter, String.valueOf(Configuration.matrixDelimiter)))
+				.toArray(String[]::new);
+
+		this.table.addValue(escapedStr);
 		this.prefRows = this.table.size();
 	}
 	
