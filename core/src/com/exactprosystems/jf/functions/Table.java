@@ -1390,6 +1390,12 @@ public class Table implements List<RowTable>, Mutable
 		}
 	}
 
+	/**
+	 * Set a header from the headers by passed index new passed name.
+	 * If the header has the same name, nothing will happens
+	 *
+	 * @throws ColumnIsPresentException if the headers contains a header with the passed name
+	 */
 	public void setHeader(int index, String s)
 	{
 		if (this.headers[index] != null && Str.areEqual(this.headers[index].name, s))

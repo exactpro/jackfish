@@ -26,6 +26,9 @@ import java.io.*;
 )
 public class PlainText extends AbstractDocument
 {
+	/**
+	 * The field, which contains text, which used on this class
+	 */
 	protected final MutableValue<String> property;
 
 	public PlainText(String fileName, DocumentFactory factory)

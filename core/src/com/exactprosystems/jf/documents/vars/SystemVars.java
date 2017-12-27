@@ -127,6 +127,9 @@ public class SystemVars extends AbstractDocument
 
 	//endregion
 
+	/**
+	 * Replace the old parameter to the new passed parameters
+	 */
 	public void setParameters(List<Parameter> parameters)
 	{
 		this.parameters.clear();

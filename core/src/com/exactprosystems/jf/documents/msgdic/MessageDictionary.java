@@ -22,12 +22,16 @@ import org.apache.log4j.Logger;
 
 import javax.xml.XMLConstants;
 import javax.xml.bind.*;
-import javax.xml.bind.annotation.*;
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlElement;
 import javax.xml.transform.Source;
 import javax.xml.transform.stream.StreamSource;
 import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
-import java.io.*;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.OutputStream;
+import java.io.Reader;
 import java.util.List;
 
 @DocumentInfo(
@@ -36,58 +40,51 @@ import java.util.List;
 		extension = "xml",
 		description = "Message dictionary"
 )
-public class MessageDictionary extends AbstractDocument implements IMessageDictionary, Serializable
+public class MessageDictionary extends AbstractDocument implements IMessageDictionary
 {
-    private static final long serialVersionUID = 8949804056711432386L;
-    private static final Logger logger = Logger.getLogger(MessageDictionary.class);
+	private static final Logger logger = Logger.getLogger(MessageDictionary.class);
 
-    protected MessageDictionaryBean bean;
-    
-    public MessageDictionary()
-    {
-        this(null, null);
-    }
+	protected boolean               changed;
+	private   MessageDictionaryBean bean;
 
-    public MessageDictionary(String fileName, DocumentFactory factory)
-    {
-        super(fileName, factory);
-        this.bean = new MessageDictionaryBean();
-        this.changed = false;
-    }
+	public MessageDictionary()
+	{
+		this(null, null);
+	}
 
-	//----------------------------------------------------------------------------------------------------------------------
-	// interface Document
-	//----------------------------------------------------------------------------------------------------------------------
-	
+	public MessageDictionary(String fileName, DocumentFactory factory)
+	{
+		super(fileName, factory);
+		this.bean = new MessageDictionaryBean();
+		this.changed = false;
+	}
+
+	//region interface Document
+
 	@Override
 	public void load(Reader reader) throws Exception
 	{
 		try
 		{
 			super.load(reader);
-			
+
 			JAXBContext jaxbContext = JAXBContext.newInstance(MessageDictionaryBean.jaxbContextClasses);
-	
+
 			SchemaFactory schemaFactory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
 			Source schemaFile = new StreamSource(Xsd.class.getResourceAsStream("MessageDictionary.xsd"));
 			Schema schema = schemaFactory.newSchema(schemaFile);
-	
+
 			Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
-	
+
 			unmarshaller.setSchema(schema);
-			unmarshaller.setEventHandler(new ValidationEventHandler()
+			unmarshaller.setEventHandler(event ->
 			{
-				@Override
-				public boolean handleEvent(ValidationEvent event)
-				{
-				    logger.error(event);
-					System.out.println("Error in message dictionary : " + event);
-					return false;
-				}
+				logger.error(event);
+				System.out.println("Error in message dictionary : " + event);
+				return false;
 			});
-	
+
 			this.bean = ((MessageDictionaryBean) unmarshaller.unmarshal(reader));
-			
 			this.changed = true;
 		}
 		catch (UnmarshalException e)
@@ -97,16 +94,16 @@ public class MessageDictionary extends AbstractDocument implements IMessageDicti
 	}
 
 	@Override
-	public boolean canClose() throws Exception
+	public boolean canClose()
 	{
-    	return true;
+		return true;
 	}
 
 	@Override
 	public void save(String fileName) throws Exception
 	{
 		super.save(fileName);
-		
+
 		try (OutputStream os = new FileOutputStream(new File(fileName)))
 		{
 			JAXBContext jaxbContext = JAXBContext.newInstance(MessageDictionaryBean.jaxbContextClasses);
@@ -117,17 +114,13 @@ public class MessageDictionary extends AbstractDocument implements IMessageDicti
 		}
 	}
 
-	//----------------------------------------------------------------------------------------------------------------------
-	// interface Mutable
-	//----------------------------------------------------------------------------------------------------------------------
+	//endregion
+
+	//region interface Mutable
 	@Override
 	public boolean isChanged()
 	{
-		if (this.changed)
-		{
-			return true;
-		}
-		return this.bean.isChanged() || super.isChanged();
+		return this.changed || this.bean.isChanged() || super.isChanged();
 	}
 
 	@Override
@@ -135,114 +128,102 @@ public class MessageDictionary extends AbstractDocument implements IMessageDicti
 	{
 		this.changed = false;
 		this.bean.saved();
+		super.saved();
 	}
 
-	//----------------------------------------------------------------------------------------------------------------------
-	// interface IMessageDictionary
-	//----------------------------------------------------------------------------------------------------------------------
-    @Override
-    public String getFilePath()
-    {
-        return getNameProperty().get();
-    }
+	//endregion
+
+	//region interface IMessageDictionary
+	@Override
+	public String getFilePath()
+	{
+		return super.getNameProperty().get();
+	}
 
 	@Override
 	public String getDescription()
 	{
 		return this.bean.description;
 	}
-	
+
 	@Override
-	public IField 			getField(String name)
+	public IField getField(String name)
 	{
-		for (Field field : this.bean.fields.fields)
-		{
-			String str = field.getName();
-			if (str != null && str.equals(name))
-			{
-				return field;
-			}
-		}
-			
-		return null; 
-	}
-	
-	@SuppressWarnings("unchecked")
-	@Override
-	public List<IField>	getFields()
-	{
-		return this.bean.fields.fields == null ? null : (List<IField>)(List<?>) this.bean.fields.fields;
+		return this.bean.fields.fields.stream()
+				.filter(field -> field.getName() != null && field.getName().equals(name))
+				.findFirst()
+				.orElse(null);
 	}
 
 	@Override
-	public IMessage 		getMessageByName(String name)
+	public List<IField> getFields()
 	{
+		return this.bean.fields.fields == null ? null : (List<IField>) (List<? extends IField>) this.bean.fields.fields;
+	}
+
+	@Override
+	public IMessage getMessageByName(String name)
+	{
+		return this.bean.messages.messages.stream()
+				.filter(message -> message.getName() != null && message.getName().equals(name))
+				.findFirst()
+				.orElse(null);
+	}
+
+	@Override
+	public IMessage getMessage(String name)
+	{
+		if (name == null)
+		{
+			return null;
+		}
+
 		for (Message mess : this.bean.messages.messages)
 		{
-			String str = mess.getName();
-			if (str != null && str.equals(name))
+			if (name.equals(mess.getName()))
 			{
 				return mess;
 			}
-		}
-			
-		return null; 
-	}
 
-	@Override
-	public IMessage 		getMessage(String name)
-	{
-	    if (name == null)
-	    {
-	        return null;
-	    }
-	    
-		for (Message mess : this.bean.messages.messages)
-		{
-		    if (name.equals(mess.getName()))
-		    {
-		        return mess;
-		    }
-		    
 			IAttribute attr = mess.getAttribute("MessageType");
 			if (attr == null)
 			{
 				continue;
 			}
-			
+
 			String str = attr.getValue();
 			if (str != null && str.equals(name))
 			{
 				return mess;
 			}
 		}
-			
-		return null; 
+
+		return null;
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
-	public List<IMessage>	getMessages()
+	public List<IMessage> getMessages()
 	{
-		return this.bean.messages.messages == null ? null : (List<IMessage>)(List<?>) this.bean.messages.messages;
+		return this.bean.messages.messages == null ? null : (List<IMessage>) (List<?>) this.bean.messages.messages;
 	}
 
-	//----------------------------------------------------------------------------------------------------------------------
+	//endregion
 
 	@Override
 	public String toString()
 	{
-		return getClass().getSimpleName() + ":" + this.bean.name + " <" + getNameProperty() + ">";
+		return this.getClass().getSimpleName() + ":" + this.bean.name + " <" + super.getNameProperty() + ">";
 	}
-	
+
 	public void set(String name, Object value) throws Exception
 	{
-		if(set(MessageDictionary.class, this, name, value))
+		if (set(MessageDictionary.class, this, name, value))
 		{
 			this.changed = true;
 		}
 	}
 
+	//region private methods
 	private static boolean set(Class<?> clazz, Object object, String name, Object value) throws Exception
 	{
 		java.lang.reflect.Field[] fields = clazz.getDeclaredFields();
@@ -277,15 +258,14 @@ public class MessageDictionary extends AbstractDocument implements IMessageDicti
 		return false;
 	}
 
-    private static boolean areEqual(Object o1, Object o2)
-    {
-    	if (o1 == null)
-    	{
-    		return o1 == o2;
-    	}
-    	
-    	return o1.equals(o2);
-    }
+	private static boolean areEqual(Object o1, Object o2)
+	{
+		if (o1 == null)
+		{
+			return o2 == null;
+		}
 
-	protected boolean 			changed;
+		return o1.equals(o2);
+	}
+	//endregion
 }
