@@ -150,11 +150,9 @@ public class RawTable extends MatrixItem
 			return;
 		}
 
-		String[] escapedStr = Arrays.stream(str)
-				.map(s -> s.replaceAll(Configuration.unicodeDelimiter, String.valueOf(Configuration.matrixDelimiter)))
-				.toArray(String[]::new);
+		Arrays.setAll(str, value -> str[value].replaceAll(Configuration.unicodeDelimiter, String.valueOf(Configuration.matrixDelimiter)));
 
-		this.table.addValue(escapedStr);
+		this.table.addValue(str);
 		this.prefRows = this.table.size();
 	}
 	

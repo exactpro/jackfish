@@ -123,43 +123,20 @@ INIT;Test case;;;
 
 #Id;#TestCase;#Kind;#Depends;#For
 EXECUTE;;;;
-    #Id;#Global;#Let
-    adapter;1;parameter
+    #Off;#Call;plugin
+    1;RUN;'JavaFx'
 
-    #If
-    adapter == 'JavaFx'
-        #Call;plugin
-        RUN;'JavaFx'
+    #Call;plugin
+    RUN;'Chrome'
 
-    #EndIf
+    #Call;plugin
+    RUN;'Swing'
 
-    #If
-    adapter == 'InternetExplorer'
-        #Call;plugin
-        RUN;'InternetExplorer'
+    #Call;plugin
+    RUN;'Win'
 
-    #EndIf
-
-    #If
-    adapter == 'Chrome'
-        #Call;plugin
-        RUN;'Chrome'
-
-    #EndIf
-
-    #If
-    adapter == 'Swing'
-        #Call;plugin
-        RUN;'Swing'
-
-    #EndIf
-
-    #If
-    adapter == 'Win'
-        #Call;plugin
-        RUN;'Win'
-
-    #EndIf
+    #Call;plugin
+    RUN;'InternetExplorer'
 
     #Id;#Action;$Decoraded
     RESTBL1;ResultTable;true
@@ -217,7 +194,7 @@ SUBCASES;;;;
     #EndSubCase
 
     #Id;#SubCase;plugin
-    RUN;Run;'Chrome'
+    RUN;Run;'InternetExplorer'
         #Step;#Kind;#For;#Depends
         'start application';;;
             #Id;#Action;Plugin;Control;Operation;Expected;Actual;Result
