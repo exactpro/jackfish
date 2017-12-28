@@ -27,25 +27,19 @@ public class ConsoleArea<T> extends StyleClassedTextArea
 
 	public ConsoleArea()
 	{
-		createContextMenu();
+		this.createContextMenu();
 	}
 
 	public ConsoleArea(Consumer<T> consumer)
 	{
-		createContextMenu();
+		this.createContextMenu();
 		this.list = new ArrayList<>();
-		this.setMouseOverTextDelay(Duration.ofMillis(10));
-		this.addEventHandler(MouseOverTextEvent.MOUSE_OVER_TEXT_BEGIN, e -> this.charIndex = e.getCharacterIndex());
-		this.setOnMouseReleased(event -> {
-			for (Link link : this.list)
-			{
-				if (this.charIndex > link.getStart() && this.charIndex < link.getEnd())
-				{
-					consumer.accept(link.getItem());
-					break;
-				}
-			}
-		});
+		super.setMouseOverTextDelay(Duration.ofMillis(10));
+		super.addEventHandler(MouseOverTextEvent.MOUSE_OVER_TEXT_BEGIN, e -> this.charIndex = e.getCharacterIndex());
+		super.setOnMouseReleased(event -> this.list.stream()
+				.filter(link -> this.charIndex > link.getStart() && this.charIndex < link.getEnd())
+				.findFirst()
+				.ifPresent(link -> consumer.accept(link.getItem())));
 	}
 
 	public void appendDefaultText(String text)
@@ -68,23 +62,23 @@ public class ConsoleArea<T> extends StyleClassedTextArea
 		this.appendStyledText(text, this.getText().length() > 0, null, CssVariables.CONSOLE_ERROR_ITEM);
 	}
 
-	public void appendMatrixItemLink(String text, T item)
+	public void appendLink(String text, T item)
 	{
 		this.appendStyledText(text, false, item, CssVariables.CONSOLE_PAUSED_ITEM);
 	}
 
 	private void appendStyledText(String text, boolean newLine, T item, String style)
 	{
-		int start = this.getLength();
-		this.appendText(newLine ? "\n" + text : text);
-		this.setStyleClass(start, this.getLength(), style);
+		int start = super.getLength();
+		super.appendText(newLine ? System.lineSeparator() + text : text);
+		super.setStyleClass(start, super.getLength(), style);
 		if (item != null)
 		{
-			this.list.add(new Link(start, this.getLength(), item));
+			this.list.add(new Link(start, super.getLength(), item));
 		}
-		if (this.totalHeightEstimateProperty().getValue() != null)
+		if (super.totalHeightEstimateProperty().getValue() != null)
 		{
-			this.setEstimatedScrollY(this.getTotalHeightEstimate() - this.getHeight());
+			super.setEstimatedScrollY(super.getTotalHeightEstimate() - super.getHeight());
 		}
 	}
 
@@ -108,14 +102,14 @@ public class ConsoleArea<T> extends StyleClassedTextArea
 		itemClear.setOnAction(e -> this.clear());
 		contextMenu.getItems().addAll(itemClear);
 
-		this.setOnContextMenuRequested(e -> contextMenu.show(this.getScene().getWindow(), MouseInfo.getPointerInfo().getLocation().getX(), MouseInfo.getPointerInfo().getLocation().getY()));
+		super.setOnContextMenuRequested(e -> contextMenu.show(super.getScene().getWindow(), MouseInfo.getPointerInfo().getLocation().getX(), MouseInfo.getPointerInfo().getLocation().getY()));
 	}
 
 	private class Link
 	{
-		int                  start;
-		int                  end;
-		T item;
+		int start;
+		int end;
+		T   item;
 
 		private Link(int start, int end, T item)
 		{
@@ -124,17 +118,17 @@ public class ConsoleArea<T> extends StyleClassedTextArea
 			this.item = item;
 		}
 
-		public int getStart()
+		private int getStart()
 		{
 			return start;
 		}
 
-		public int getEnd()
+		private int getEnd()
 		{
 			return end;
 		}
 
-		public T getItem()
+		private T getItem()
 		{
 			return item;
 		}

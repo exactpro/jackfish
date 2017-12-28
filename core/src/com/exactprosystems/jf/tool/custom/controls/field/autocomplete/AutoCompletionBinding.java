@@ -24,122 +24,22 @@ import java.util.Collection;
 
 public abstract class AutoCompletionBinding<T> implements EventTarget
 {
-	private static final long AUTO_COMPLETE_DELAY = 1;
-	private final Node completionTarget;
+	private static final long   AUTO_COMPLETE_DELAY = 1;
+	private final        Object suggestionsTaskLock = new Object();
+	private final Node                 completionTarget;
 	private final AutoCompletePopup<T> autoCompletionPopup;
-	private final Object suggestionsTaskLock = new Object();
 
-	private FetchSuggestionsTask suggestionsTask = null;
-	protected Callback<String, Collection<T>> suggestionProvider = null;
-	private boolean ignoreInputChanges = false;
+	protected Callback<String, Collection<T>>                      suggestionProvider;
+	private   ObjectProperty<EventHandler<AutoCompletionEvent<T>>> onAutoCompleted;
+	private       FetchSuggestionsTask suggestionsTask     = null;
+	private       boolean              ignoreInputChanges  = false;
+	private final EventHandlerManager  eventHandlerManager = new EventHandlerManager(this);
 
-	protected AutoCompletionBinding(Node completionTarget, Callback<String, Collection<T>> suggestionProvider, StringConverter<T> converter)
-	{
-		this.completionTarget = completionTarget;
-		this.suggestionProvider = suggestionProvider;
-		this.autoCompletionPopup = new AutoCompletePopup<>();
-		this.autoCompletionPopup.setConverter(converter);
-
-		autoCompletionPopup.setOnSuggestion(sce -> {
-			try
-			{
-				setIgnoreInputChanges(true);
-				completeUserInput(sce.getSuggestion());
-				fireAutoCompletion(sce.getSuggestion());
-				hidePopup();
-			}
-			finally
-			{
-				setIgnoreInputChanges(false);
-			}
-		});
-	}
-
-	public final void setUserInput(String userText)
-	{
-		if (!isIgnoreInputChanges())
-		{
-			onUserInputChanged(userText);
-		}
-	}
-
-	public Node getCompletionTarget()
-	{
-		return completionTarget;
-	}
-
-	public abstract void dispose();
-
-	protected abstract void completeUserInput(T completion);
-
-
-	protected void showPopup()
-	{
-		autoCompletionPopup.show(completionTarget);
-		selectFirstSuggestion(autoCompletionPopup);
-	}
-
-	protected void hidePopup()
-	{
-		autoCompletionPopup.hide();
-	}
-
-	protected void fireAutoCompletion(T completion)
-	{
-		Event.fireEvent(this, new AutoCompletionEvent<>(completion));
-	}
-
-	private void selectFirstSuggestion(AutoCompletePopup<?> autoCompletionPopup)
-	{
-		Skin<?> skin = autoCompletionPopup.getSkin();
-		if (skin instanceof AutoCompletePopupSkin)
-		{
-			AutoCompletePopupSkin<?> au = (AutoCompletePopupSkin<?>) skin;
-			ListView<?> li = (ListView<?>) au.getNode();
-			if (li.getItems() != null && !li.getItems().isEmpty())
-			{
-				li.getSelectionModel().select(0);
-			}
-		}
-	}
-
-	private final void onUserInputChanged(final String userText)
-	{
-		synchronized (suggestionsTaskLock)
-		{
-			if (suggestionsTask != null && suggestionsTask.isRunning())
-			{
-				suggestionsTask.cancel();
-			}
-			// create a new fetcher task
-			suggestionsTask = new FetchSuggestionsTask(userText);
-			Thread thread = new Thread(suggestionsTask);
-			thread.setName("Show popup autocomplete textField, thread id : " + thread.getId());
-			thread.start();
-		}
-	}
-
-	private boolean isIgnoreInputChanges()
-	{
-		return ignoreInputChanges;
-	}
-
-	private void setIgnoreInputChanges(boolean state)
-	{
-		ignoreInputChanges = state;
-	}
-
-	public interface ISuggestionRequest
-	{
-		boolean isCancelled();
-		String getUserText();
-	}
-
-	private class FetchSuggestionsTask extends Task<Void> implements ISuggestionRequest
+	private class FetchSuggestionsTask extends Task<Void>
 	{
 		private final String userText;
 
-		public FetchSuggestionsTask(String userText)
+		private FetchSuggestionsTask(String userText)
 		{
 			this.userText = userText;
 		}
@@ -150,14 +50,14 @@ public abstract class AutoCompletionBinding<T> implements EventTarget
 			Callback<String, Collection<T>> provider = suggestionProvider;
 			if (provider != null)
 			{
-				long start_time = System.currentTimeMillis();
+				long startTime = System.currentTimeMillis();
 				final Collection<T> fetchedSuggestions = provider.call(this.userText);
-				long sleep_time = start_time + AUTO_COMPLETE_DELAY - System.currentTimeMillis();
-				if (sleep_time > 0 && !isCancelled())
+				long sleepTime = startTime + AUTO_COMPLETE_DELAY - System.currentTimeMillis();
+				if (sleepTime > 0 && !super.isCancelled())
 				{
-					Thread.sleep(sleep_time);
+					Thread.sleep(sleepTime);
 				}
-				if (!isCancelled())
+				if (!super.isCancelled())
 				{
 					Common.runLater(() -> {
 						if (fetchedSuggestions != null && !fetchedSuggestions.isEmpty())
@@ -178,58 +78,138 @@ public abstract class AutoCompletionBinding<T> implements EventTarget
 			}
 			return null;
 		}
-
-		@Override
-		public String getUserText()
-		{
-			return userText;
-		}
 	}
 
-	@SuppressWarnings("serial")
-	public static class AutoCompletionEvent<TE> extends Event
+	public static class AutoCompletionEvent<S> extends Event
 	{
-		@SuppressWarnings("rawtypes")
-		static final EventType<AutoCompletionEvent> AUTO_COMPLETED = new EventType<>("AUTO_COMPLETED"); //$NON-NLS-1$
+		static final EventType<AutoCompletionEvent> AUTO_COMPLETED = new EventType<>("AUTO_COMPLETED");
+		private final S completion;
 
-		private final TE completion;
-
-		AutoCompletionEvent(TE completion)
+		AutoCompletionEvent(S completion)
 		{
 			super(AUTO_COMPLETED);
 			this.completion = completion;
 		}
 
-		public TE getCompletion()
+		public S getCompletion()
 		{
 			return completion;
 		}
 	}
 
+	AutoCompletionBinding(Node completionTarget, Callback<String, Collection<T>> suggestionProvider, StringConverter<T> converter)
+	{
+		this.completionTarget = completionTarget;
+		this.suggestionProvider = suggestionProvider;
+		this.autoCompletionPopup = new AutoCompletePopup<>();
+		this.autoCompletionPopup.setConverter(converter);
+		this.autoCompletionPopup.setOnSuggestion(sce -> {
+			try
+			{
+				this.ignoreInputChanges = true;
+				this.completeUserInput(sce.getSuggestion());
+				this.fireAutoCompletion(sce.getSuggestion());
+				this.hidePopup();
+			}
+			finally
+			{
+				this.ignoreInputChanges = false;
+			}
+		});
+	}
 
-	private ObjectProperty<EventHandler<AutoCompletionEvent<T>>> onAutoCompleted;
+	public Node getCompletionTarget()
+	{
+		return this.completionTarget;
+	}
 
 	public final void setOnAutoCompleted(EventHandler<AutoCompletionEvent<T>> value)
 	{
-		onAutoCompletedProperty().set(value);
+		this.onAutoCompletedProperty().set(value);
 	}
 
 	public final EventHandler<AutoCompletionEvent<T>> getOnAutoCompleted()
 	{
-		return onAutoCompleted == null ? null : onAutoCompleted.get();
+		return this.onAutoCompleted == null ? null : this.onAutoCompleted.get();
 	}
 
-	private final ObjectProperty<EventHandler<AutoCompletionEvent<T>>> onAutoCompletedProperty()
+	final void setUserInput(String userText)
 	{
-		if (onAutoCompleted == null)
+		if (!this.ignoreInputChanges)
 		{
-			onAutoCompleted = new ObjectPropertyBase<EventHandler<AutoCompletionEvent<T>>>()
+			this.onUserInputChanged(userText);
+		}
+	}
+
+	void hidePopup()
+	{
+		this.autoCompletionPopup.hide();
+	}
+
+	@Override
+	public EventDispatchChain buildEventDispatchChain(EventDispatchChain tail)
+	{
+		return tail.prepend(eventHandlerManager);
+	}
+
+	//region abstract methods
+	public abstract void dispose();
+
+	protected abstract void completeUserInput(T completion);
+	//endregion
+
+	//region private methods
+	private void fireAutoCompletion(T completion)
+	{
+		Event.fireEvent(this, new AutoCompletionEvent<>(completion));
+	}
+
+	private void showPopup()
+	{
+		this.autoCompletionPopup.show(this.completionTarget);
+		this.selectFirstSuggestion(this.autoCompletionPopup);
+	}
+
+	private void selectFirstSuggestion(AutoCompletePopup<?> autoCompletionPopup)
+	{
+		Skin<?> skin = autoCompletionPopup.getSkin();
+		if (skin instanceof AutoCompletePopupSkin)
+		{
+			AutoCompletePopupSkin<?> au = (AutoCompletePopupSkin<?>) skin;
+			ListView<?> li = (ListView<?>) au.getNode();
+			if (li.getItems() != null && !li.getItems().isEmpty())
 			{
-				@SuppressWarnings({"rawtypes", "unchecked"})
+				li.getSelectionModel().select(0);
+			}
+		}
+	}
+
+	private void onUserInputChanged(final String userText)
+	{
+		synchronized (this.suggestionsTaskLock)
+		{
+			if (this.suggestionsTask != null && this.suggestionsTask.isRunning())
+			{
+				this.suggestionsTask.cancel();
+			}
+			// create a new fetcher task
+			this.suggestionsTask = new FetchSuggestionsTask(userText);
+			Thread thread = new Thread(suggestionsTask);
+			thread.setName("Show popup autocomplete textField, thread id : " + thread.getId());
+			thread.start();
+		}
+	}
+
+	private ObjectProperty<EventHandler<AutoCompletionEvent<T>>> onAutoCompletedProperty()
+	{
+		if (this.onAutoCompleted == null)
+		{
+			this.onAutoCompleted = new ObjectPropertyBase<EventHandler<AutoCompletionEvent<T>>>()
+			{
 				@Override
 				protected void invalidated()
 				{
-					eventHandlerManager.setEventHandler(AutoCompletionEvent.AUTO_COMPLETED, (EventHandler<AutoCompletionEvent>) (Object) get());
+					eventHandlerManager.setEventHandler(AutoCompletionEvent.AUTO_COMPLETED, super.get());
 				}
 
 				@Override
@@ -241,20 +221,12 @@ public abstract class AutoCompletionBinding<T> implements EventTarget
 				@Override
 				public String getName()
 				{
-					return "onAutoCompleted"; //$NON-NLS-1$
+					return "onAutoCompleted";
 				}
 			};
 		}
-		return onAutoCompleted;
+		return this.onAutoCompleted;
 	}
-
-	private final EventHandlerManager eventHandlerManager = new EventHandlerManager(this);
-
-	@Override
-	public EventDispatchChain buildEventDispatchChain(EventDispatchChain tail)
-	{
-		return tail.prepend(eventHandlerManager);
-	}
-
+	//endregion
 
 }

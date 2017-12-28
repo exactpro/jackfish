@@ -20,41 +20,60 @@ import javafx.scene.input.MouseButton;
 public class AutoCompletePopupSkin<T> implements Skin<AutoCompletePopup<T>>
 {
 	private final AutoCompletePopup<T> control;
-	private final ListView<T> suggestionList;
-	final int LIST_CELL_HEIGHT = 24;
+	private final ListView<T>          suggestionList;
+	private static final int LIST_CELL_HEIGHT = 24;
 
 	public AutoCompletePopupSkin(AutoCompletePopup<T> control)
 	{
 		this.control = control;
-		suggestionList = new ListView<>(control.getSuggestions());
-
-		suggestionList.getStyleClass().add(AutoCompletePopup.DEFAULT_STYLE_CLASS);
-		suggestionList.prefHeightProperty().bind(Bindings.min(control.visibleRowCountProperty(), Bindings.size(suggestionList.getItems())).multiply(LIST_CELL_HEIGHT).add(5));
-		suggestionList.setCellFactory(TextFieldListCell.forListView(control.getConverter()));
-		registerEventListener();
+		this.suggestionList = new ListView<>(control.getSuggestions());
+		this.suggestionList.getStyleClass().add(AutoCompletePopup.DEFAULT_STYLE_CLASS);
+		this.suggestionList.prefHeightProperty().bind(Bindings.min(control.visibleRowCountProperty(), Bindings.size(this.suggestionList.getItems())).multiply(LIST_CELL_HEIGHT).add(5));
+		this.suggestionList.setCellFactory(TextFieldListCell.forListView(control.getConverter()));
+		this.registerEventListener();
 	}
 
+	//region interface Skin
+	@Override
+	public Node getNode()
+	{
+		return this.suggestionList;
+	}
+
+	@Override
+	public AutoCompletePopup<T> getSkinnable()
+	{
+		return this.control;
+	}
+
+	@Override
+	public void dispose()
+	{
+	}
+	//endregion
+
+	//region private methods
 	private void registerEventListener()
 	{
-		suggestionList.setOnMouseClicked(me -> {
-			if (me.getButton() == MouseButton.PRIMARY)
+		this.suggestionList.setOnMouseClicked(mouseEvent ->
+		{
+			if (mouseEvent.getButton() == MouseButton.PRIMARY)
 			{
-				onSuggestionChoosen(suggestionList.getSelectionModel().getSelectedItem());
+				this.onSuggestionChosen(this.suggestionList.getSelectionModel().getSelectedItem());
 			}
 		});
-
-
-		suggestionList.setOnKeyPressed(ke -> {
-			switch (ke.getCode())
+		this.suggestionList.setOnKeyPressed(keyEvent ->
+		{
+			switch (keyEvent.getCode())
 			{
 				case ENTER:
 				case TAB:
-					onSuggestionChoosen(suggestionList.getSelectionModel().getSelectedItem());
+					this.onSuggestionChosen(this.suggestionList.getSelectionModel().getSelectedItem());
 					break;
 				case ESCAPE:
-					if (control.isHideOnEscape())
+					if (this.control.isHideOnEscape())
 					{
-						control.hide();
+						this.control.hide();
 					}
 					break;
 				default:
@@ -63,29 +82,12 @@ public class AutoCompletePopupSkin<T> implements Skin<AutoCompletePopup<T>>
 		});
 	}
 
-	private void onSuggestionChoosen(T suggestion)
+	private void onSuggestionChosen(T suggestion)
 	{
 		if (suggestion != null)
 		{
-			Event.fireEvent(control, new AutoCompletePopup.SuggestionEvent<>(suggestion));
+			Event.fireEvent(this.control, new AutoCompletePopup.SuggestionEvent<>(suggestion));
 		}
 	}
-
-
-	@Override
-	public Node getNode()
-	{
-		return suggestionList;
-	}
-
-	@Override
-	public AutoCompletePopup<T> getSkinnable()
-	{
-		return control;
-	}
-
-	@Override
-	public void dispose()
-	{
-	}
+	//endregion
 }

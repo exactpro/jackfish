@@ -17,11 +17,27 @@ import java.util.Collection;
 
 /**
  * Represents a binding between a text field and a auto-completion popup
- *
- * @param <T>
  */
 public class AutoCompletionTextFieldBinding<T> extends AutoCompletionBinding<T>
 {
+	private final StringConverter<T> converter;
+
+	private final ChangeListener<String> textChangeListener = (obs, oldText, newText) ->
+	{
+		if (this.getCompletionTarget().isFocused())
+		{
+			super.setUserInput(newText);
+		}
+	};
+
+	private final ChangeListener<Boolean> focusChangedListener = (obs, oldFocused, newFocused) ->
+	{
+		if (!newFocused)
+		{
+			super.hidePopup();
+		}
+	};
+
 	private static <T> StringConverter<T> defaultStringConverter()
 	{
 		return new StringConverter<T>()
@@ -40,8 +56,6 @@ public class AutoCompletionTextFieldBinding<T> extends AutoCompletionBinding<T>
 		};
 	}
 
-	private StringConverter<T> converter;
-
 	public AutoCompletionTextFieldBinding(final TextField textField, Callback<String, Collection<T>> suggestionProvider)
 	{
 		this(textField, suggestionProvider, AutoCompletionTextFieldBinding.defaultStringConverter());
@@ -52,8 +66,8 @@ public class AutoCompletionTextFieldBinding<T> extends AutoCompletionBinding<T>
 		super(textField, suggestionProvider, converter);
 		this.converter = converter;
 
-		getCompletionTarget().textProperty().addListener(textChangeListener);
-		getCompletionTarget().focusedProperty().addListener(focusChangedListener);
+		this.getCompletionTarget().textProperty().addListener(this.textChangeListener);
+		this.getCompletionTarget().focusedProperty().addListener(this.focusChangedListener);
 	}
 
 	public void updateProvider(Callback<String, Collection<T>> suggestionProvider)
@@ -70,27 +84,15 @@ public class AutoCompletionTextFieldBinding<T> extends AutoCompletionBinding<T>
 	@Override
 	public void dispose()
 	{
-		getCompletionTarget().textProperty().removeListener(textChangeListener);
-		getCompletionTarget().focusedProperty().removeListener(focusChangedListener);
+		this.getCompletionTarget().textProperty().removeListener(this.textChangeListener);
+		this.getCompletionTarget().focusedProperty().removeListener(this.focusChangedListener);
 	}
 
 	@Override
 	protected void completeUserInput(T completion)
 	{
-		String newText = converter.toString(completion);
-		getCompletionTarget().setText(newText);
-		getCompletionTarget().positionCaret(newText.length());
+		String newText = this.converter.toString(completion);
+		this.getCompletionTarget().setText(newText);
+		this.getCompletionTarget().positionCaret(newText.length());
 	}
-
-	private final ChangeListener<String> textChangeListener = (obs, oldText, newText) -> {
-		if (getCompletionTarget().isFocused())
-		{
-			setUserInput(newText);
-		}
-	};
-
-	private final ChangeListener<Boolean> focusChangedListener = (obs, oldFocused, newFocused) -> {
-		if (!newFocused)
-			hidePopup();
-	};
 }

@@ -27,96 +27,18 @@ import javafx.util.StringConverter;
 
 public class AutoCompletePopup<T> extends PopupControl
 {
-	private final static int TITLE_HEIGHT = 28;
-	private final ObservableList<T> suggestions = FXCollections.observableArrayList();
+	private static final int               TITLE_HEIGHT        = 28;
+	public static final  String            DEFAULT_STYLE_CLASS = "auto-complete-popup";
+	private final        ObservableList<T> suggestions         = FXCollections.observableArrayList();
+	private              IntegerProperty   visibleRowCount     = new SimpleIntegerProperty(this, "visibleRowCount", 10);
 	private StringConverter<T> converter;
-
-	private IntegerProperty visibleRowCount = new SimpleIntegerProperty(this, "visibleRowCount", 10);
-
-	public static class SuggestionEvent<TE> extends Event
-	{
-		public static final EventType<SuggestionEvent> SUGGESTION = new EventType<>("SUGGESTION");
-
-		private final TE suggestion;
-
-		public SuggestionEvent(TE suggestion)
-		{
-			super(SUGGESTION);
-			this.suggestion = suggestion;
-		}
-
-		public TE getSuggestion()
-		{
-			return suggestion;
-		}
-	}
-
-	public AutoCompletePopup()
-	{
-		this.setAutoFix(true);
-		this.setAutoHide(true);
-		this.setHideOnEscape(true);
-
-		getStyleClass().add(DEFAULT_STYLE_CLASS);
-	}
-
-	public ObservableList<T> getSuggestions()
-	{
-		return suggestions;
-	}
-
-	public void show(Node node)
-	{
-		if (node.getScene() == null || node.getScene().getWindow() == null)
-		{
-			return;
-		}
-
-		if (isShowing())
-		{
-			return;
-		}
-
-		Window parent = node.getScene().getWindow();
-		this.show(parent, parent.getX() + node.localToScene(0, 0).getX() +
-				node.getScene().getX(), parent.getY() + node.localToScene(0, 0).getY() +
-				node.getScene().getY() + TITLE_HEIGHT);
-
-	}
-
-	public void setConverter(StringConverter<T> converter)
-	{
-		this.converter = converter;
-	}
-
-	public StringConverter<T> getConverter()
-	{
-		return converter;
-	}
-
-	public final IntegerProperty visibleRowCountProperty()
-	{
-		return visibleRowCount;
-	}
-
-	private final EventHandlerManager eventHandlerManager = new EventHandlerManager(this);
-
-	public final ObjectProperty<EventHandler<SuggestionEvent<T>>> onSuggestionProperty()
-	{
-		return onSuggestion;
-	}
-
-	public final void setOnSuggestion(EventHandler<SuggestionEvent<T>> value)
-	{
-		onSuggestionProperty().set(value);
-	}
-
-	private ObjectProperty<EventHandler<SuggestionEvent<T>>> onSuggestion = new ObjectPropertyBase<EventHandler<SuggestionEvent<T>>>()
+	private final EventHandlerManager                              eventHandlerManager = new EventHandlerManager(this);
+	private       ObjectProperty<EventHandler<SuggestionEvent<T>>> onSuggestion        = new ObjectPropertyBase<EventHandler<SuggestionEvent<T>>>()
 	{
 		@Override
 		protected void invalidated()
 		{
-			eventHandlerManager.setEventHandler(SuggestionEvent.SUGGESTION, (EventHandler<SuggestionEvent>) (Object) get());
+			eventHandlerManager.setEventHandler(SuggestionEvent.SUGGESTION_EVENT_TYPE, super.get());
 		}
 
 		@Override
@@ -128,23 +50,92 @@ public class AutoCompletePopup<T> extends PopupControl
 		@Override
 		public String getName()
 		{
-			return "onSuggestion"; //$NON-NLS-1$
+			return "onSuggestion";
 		}
 	};
+
+	public static class SuggestionEvent<S> extends Event
+	{
+		public static final EventType<SuggestionEvent> SUGGESTION_EVENT_TYPE = new EventType<>("SUGGESTION_EVENT_TYPE");
+		private final S suggestion;
+
+		public SuggestionEvent(S suggestion)
+		{
+			super(SUGGESTION_EVENT_TYPE);
+			this.suggestion = suggestion;
+		}
+
+		public S getSuggestion()
+		{
+			return suggestion;
+		}
+	}
+
+	public AutoCompletePopup()
+	{
+		super.setAutoFix(true);
+		super.setAutoHide(true);
+		super.setHideOnEscape(true);
+
+		super.getStyleClass().add(DEFAULT_STYLE_CLASS);
+	}
+
+	public ObservableList<T> getSuggestions()
+	{
+		return this.suggestions;
+	}
+
+	public void show(Node node)
+	{
+		if (node.getScene() == null || node.getScene().getWindow() == null)
+		{
+			return;
+		}
+
+		if (super.isShowing())
+		{
+			return;
+		}
+
+		Window parent = node.getScene().getWindow();
+		this.show(parent, parent.getX() + node.localToScene(0, 0).getX() + node.getScene().getX(), parent.getY() + node.localToScene(0, 0).getY() + node.getScene().getY() + TITLE_HEIGHT);
+
+	}
+
+	public void setConverter(StringConverter<T> converter)
+	{
+		this.converter = converter;
+	}
+
+	public StringConverter<T> getConverter()
+	{
+		return this.converter;
+	}
+
+	public final IntegerProperty visibleRowCountProperty()
+	{
+		return this.visibleRowCount;
+	}
+
+	public final ObjectProperty<EventHandler<SuggestionEvent<T>>> onSuggestionProperty()
+	{
+		return this.onSuggestion;
+	}
+
+	public final void setOnSuggestion(EventHandler<SuggestionEvent<T>> value)
+	{
+		this.onSuggestion.set(value);
+	}
 
 	@Override
 	public EventDispatchChain buildEventDispatchChain(EventDispatchChain tail)
 	{
-		return super.buildEventDispatchChain(tail).append(eventHandlerManager);
+		return super.buildEventDispatchChain(tail).append(this.eventHandlerManager);
 	}
-
-
-	public static final String DEFAULT_STYLE_CLASS = "auto-complete-popup"; //$NON-NLS-1$
 
 	@Override
 	protected Skin<?> createDefaultSkin()
 	{
 		return new AutoCompletePopupSkin<>(this);
 	}
-
 }
