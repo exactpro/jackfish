@@ -209,7 +209,7 @@ public abstract class AutoCompletionBinding<T> implements EventTarget
 				@Override
 				protected void invalidated()
 				{
-					eventHandlerManager.setEventHandler(AutoCompletionEvent.AUTO_COMPLETED, super.get());
+					eventHandlerManager.setEventHandler(AutoCompletionEvent.AUTO_COMPLETED,(EventHandler<AutoCompletionEvent>) (Object)  super.get());
 				}
 
 				@Override

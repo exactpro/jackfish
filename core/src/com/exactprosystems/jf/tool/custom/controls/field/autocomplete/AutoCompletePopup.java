@@ -38,7 +38,7 @@ public class AutoCompletePopup<T> extends PopupControl
 		@Override
 		protected void invalidated()
 		{
-			eventHandlerManager.setEventHandler(SuggestionEvent.SUGGESTION_EVENT_TYPE, super.get());
+			eventHandlerManager.setEventHandler(SuggestionEvent.SUGGESTION_EVENT_TYPE, (EventHandler<SuggestionEvent>) (Object) super.get());
 		}
 
 		@Override
