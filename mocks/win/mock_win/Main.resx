@@ -471,6 +471,9 @@
   <data name="&gt;&gt;panel1.ZOrder" xml:space="preserve">
     <value>33</value>
   </data>
+  <data name="Slider.AccessibleName" xml:space="preserve">
+    <value>Slider</value>
+  </data>
   <data name="Slider.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
     <value>NoControl</value>
   </data>
@@ -542,6 +545,9 @@
   </data>
   <data name="&gt;&gt;Table3.ZOrder" xml:space="preserve">
     <value>27</value>
+  </data>
+  <data name="ProgressBar.AccessibleName" xml:space="preserve">
+    <value>ProgressBar</value>
   </data>
   <data name="ProgressBar.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
     <value>NoControl</value>
