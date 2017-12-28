@@ -22,26 +22,28 @@ import javafx.scene.layout.GridPane;
 
 import java.time.LocalDateTime;
 
-public class DateTimePickerSkin extends DatePickerSkin {
+public class DateTimePickerSkin extends DatePickerSkin
+{
+	private final DateTimePicker datePicker;
+	private DatePickerContent    content;
 
-	private DateTimePicker datePicker;
-	private DatePickerContent ret;
-
-	public DateTimePickerSkin(DateTimePicker datePicker){
+	public DateTimePickerSkin(DateTimePicker datePicker)
+	{
 		super(datePicker);
 		this.datePicker = datePicker;
 	}
 
 	@Override
-	public Node getPopupContent() {
-		if (ret == null)
+	public Node getPopupContent()
+	{
+		if (this.content == null)
 		{
-			ret = (DatePickerContent) super.getPopupContent();
+			this.content = (DatePickerContent) super.getPopupContent();
 			LocalDateTime dateTime = datePicker.getDateTime();
 
 			Slider hours = new Slider(0, 23, (dateTime.getHour()));
 			Label hoursValue = new Label("Hours: ");
-			NumberSpinner hoursSpinner = new NumberSpinner(new NumberTextField(dateTime.getHour(),0,23));
+			NumberSpinner hoursSpinner = new NumberSpinner(new NumberTextField(dateTime.getHour(), 0, 23));
 			hoursSpinner.setPrefWidth(55);
 			hoursSpinner.setMaxWidth(55);
 
@@ -76,32 +78,28 @@ public class DateTimePickerSkin extends DatePickerSkin {
 			grid.add(secondsTextField, 1, 2);
 			grid.add(seconds, 2, 2);
 
-			ret.getChildren().add(grid);
+			this.content.getChildren().add(grid);
 
-			hours.valueProperty().addListener((observable, oldValue, newValue) -> {
-				datePicker.setDateTime(datePicker.getDateTime().withHour(newValue.intValue()));
+			hours.valueProperty().addListener((observable, oldValue, newValue) ->
+			{
+				this.datePicker.setDateTime(this.datePicker.getDateTime().withHour(newValue.intValue()));
 				hoursSpinner.getNumberField().setText(String.valueOf(newValue.intValue()));
 			});
-
-			minutes.valueProperty().addListener((observable, oldValue, newValue) -> {
-				datePicker.setDateTime(datePicker.getDateTime().withMinute(newValue.intValue()));
+			minutes.valueProperty().addListener((observable, oldValue, newValue) ->
+			{
+				this.datePicker.setDateTime(datePicker.getDateTime().withMinute(newValue.intValue()));
 				minutesSpinner.getNumberField().setText(String.valueOf(newValue.intValue()));
 			});
-
-			seconds.valueProperty().addListener((observable, oldValue, newValue) -> {
-				datePicker.setDateTime(datePicker.getDateTime().withSecond(newValue.intValue()));
+			seconds.valueProperty().addListener((observable, oldValue, newValue) ->
+			{
+				this.datePicker.setDateTime(datePicker.getDateTime().withSecond(newValue.intValue()));
 				secondsTextField.getNumberField().setText(String.valueOf(newValue.intValue()));
 			});
 
-			hoursSpinner.getNumberField().textProperty().addListener((observable, oldValue, newValue) ->
-					hours.setValue(hoursSpinner.getValue()));
-
-			minutesSpinner.getNumberField().textProperty().addListener((observable, oldValue, newValue) ->
-					minutes.setValue(minutesSpinner.getValue()));
-
-			secondsTextField.getNumberField().textProperty().addListener((observable, oldValue, newValue) ->
-					seconds.setValue(secondsTextField.getValue()));
+			hoursSpinner.getNumberField().textProperty().addListener((observable, oldValue, newValue) -> hours.setValue(hoursSpinner.getValue()));
+			minutesSpinner.getNumberField().textProperty().addListener((observable, oldValue, newValue) -> minutes.setValue(minutesSpinner.getValue()));
+			secondsTextField.getNumberField().textProperty().addListener((observable, oldValue, newValue) -> seconds.setValue(secondsTextField.getValue()));
 		}
-		return ret;
+		return this.content;
 	}
 }

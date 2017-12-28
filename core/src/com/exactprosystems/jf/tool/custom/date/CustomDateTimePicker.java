@@ -24,10 +24,11 @@ import java.util.Optional;
 
 public class CustomDateTimePicker extends HBox
 {
-	private TextField editor;
-	private Date initialDate;
-	private SimpleDateFormat formatter = new SimpleDateFormat(Common.DATE_TIME_PATTERN);
-	private ChangeDate listener;
+	private final SimpleDateFormat FORMATTER = new SimpleDateFormat(Common.DATE_TIME_PATTERN);
+
+	private       Date       initialDate;
+	private final TextField  editor;
+	private final ChangeDate listener;
 
 	public interface ChangeDate
 	{
@@ -42,25 +43,16 @@ public class CustomDateTimePicker extends HBox
 	public CustomDateTimePicker(Date initial, ChangeDate listener)
 	{
 		super();
-		this.setAlignment(Pos.CENTER);
 		this.listener = listener;
-		this.editor = new TextField(formatter.format(initial));
+		this.editor = new TextField(FORMATTER.format(initial));
 		this.initialDate = initial;
+		super.setAlignment(Pos.CENTER);
 		Label label = new Label("", new ImageView(new Image(CssVariables.Icons.DATE_ICON)));
-		this.getChildren().addAll(this.editor, label);
-		this.setSpacing(4.0);
+		super.getChildren().addAll(this.editor, label);
+		super.setSpacing(4.0);
 		this.editor.setEditable(false);
-		this.editor.setOnKeyPressed(event -> show());
-		label.setOnMouseClicked(event -> show());
-	}
-
-	private Date show()
-	{
-		Date date = DialogsHelper.showDateTimePicker(this.initialDate);
-		this.editor.setText(formatter.format(date));
-		Optional.ofNullable(listener).ifPresent(lis -> lis.change(date));
-		this.initialDate = date;
-		return this.initialDate;
+		this.editor.setOnKeyPressed(event -> this.show());
+		label.setOnMouseClicked(event -> this.show());
 	}
 
 	public Date getDate()
@@ -68,4 +60,12 @@ public class CustomDateTimePicker extends HBox
 		return this.initialDate;
 	}
 
+	private Date show()
+	{
+		Date date = DialogsHelper.showDateTimePicker(this.initialDate);
+		this.editor.setText(FORMATTER.format(date));
+		Optional.ofNullable(listener).ifPresent(lis -> lis.change(date));
+		this.initialDate = date;
+		return this.initialDate;
+	}
 }
