@@ -26,7 +26,7 @@ INIT;;;;
     12;;matrices/tests/XML;;q;;;;1;
     13;;matrices/tests/SQL;;q;;;;1;
     14;;matrices/tests/Matrix;;q;;;;1;
-    15;;matrices/tests/Controls;;q;;;;1;
+    15;;matrices/tests/Controls;;q;0;4;;1;
     16;;matrices/tests/Keys/KeysChrome;;q;;;;1;
     17;;matrices/tests/Keys/KeysInternetExplorer;;q;;;;1;
     18;x;matrices/tests/Keys/KeysFirefox;;q;;;;1;
