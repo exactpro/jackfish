@@ -224,7 +224,7 @@ public class ServicePool implements IServicesPool
 		{
 			try
 			{
-				String jarName = entry.get(Configuration.appJar);
+				String jarName = entry.get(Configuration.serviceJar);
 				jarName = MainRunner.makeDirWithSubstitutions(jarName);
 
 				serviceFactory = CommonHelper.loadFactory(this.getClass()
