@@ -35,26 +35,22 @@ import java.util.function.Function;
 
 public class ExpressionField extends CustomField
 {
-	private static final Logger	logger	= Logger.getLogger(ExpressionField.class);
-
-	private AbstractEvaluator			evaluator;
-
-	private StackPane					firstPane;
-	private StackPane					secondPane;
-
-	private HBox						hBox;
-
-	private ErrorHandler				errorHandler;
-	private Function<String, String>	firstAction;
-	private Function<String, String>	secondAction;
-
-	private ChangeListener<Boolean> valueListener;
-	private ChangeListener<Boolean> focusListener;
-	private ChangeListener<Boolean> globalListener;
-
-	private boolean isStretchable;
-
+	private static final Logger logger = Logger.getLogger(ExpressionField.class);
 	private static final int MIN_WIDTH = 80;
+
+	private final AbstractEvaluator evaluator;
+	private       StackPane         firstPane;
+	private       StackPane         secondPane;
+	private       HBox              hBox;
+	private       boolean           isStretchable;
+
+	private ErrorHandler             errorHandler;
+	private Function<String, String> firstAction;
+	private Function<String, String> secondAction;
+
+	private final ChangeListener<Boolean> globalListener;
+	private       ChangeListener<Boolean> valueListener;
+	private       ChangeListener<Boolean> focusListener;
 
 	public ExpressionField(AbstractEvaluator evaluator)
 	{
@@ -64,17 +60,17 @@ public class ExpressionField extends CustomField
 	public ExpressionField(AbstractEvaluator evaluator, String text)
 	{
 		super(text);
-		this.setMinWidth(MIN_WIDTH);
-		this.setPrefWidth(MIN_WIDTH);
 		this.evaluator = evaluator;
-		this.getStyleClass().add(CssVariables.EXPRESSION_EDITOR);
+		super.setMinWidth(MIN_WIDTH);
+		super.setPrefWidth(MIN_WIDTH);
+		super.getStyleClass().add(CssVariables.EXPRESSION_EDITOR);
 		this.globalListener = (observable, oldValue, newValue) ->
 		{
 			Optional.ofNullable(this.valueListener).ifPresent(listener -> listener.changed(observable, oldValue, newValue));
 			Optional.ofNullable(this.focusListener).ifPresent(listener -> listener.changed(observable, oldValue, newValue));
-			stretchField(this.getText());
+			this.stretchField(super.getText());
 		};
-		this.focusedProperty().addListener(this.globalListener);
+		super.focusedProperty().addListener(this.globalListener);
 
 		Label firstLabel = new Label("≡");
 		firstLabel.getStyleClass().setAll(CssVariables.EXPRESSION_BUTTON);
@@ -91,27 +87,28 @@ public class ExpressionField extends CustomField
 		this.hBox = new HBox();
 		this.hBox.setSpacing(5);
 		this.hBox.setAlignment(Pos.CENTER);
-		this.rightProperty().set(this.hBox);
-		disableDefaultContextMenu();
-		listeners();
-		showButtons();
-		stretchField(this.getText());
+		super.rightProperty().set(this.hBox);
+		this.disableDefaultContextMenu();
+		this.listeners();
+		this.showButtons();
+		this.stretchField(this.getText());
 	}
 
+	//region public API
 	public void clearListener()
 	{
-		this.focusedProperty().removeListener(this.globalListener);
+		super.focusedProperty().removeListener(this.globalListener);
 	}
 
 	public void setOnContextMenuRequest(EventHandler<ContextMenuEvent> event)
 	{
-		this.setOnContextMenuRequested(event);
-		this.setContextMenu(new ContextMenu());
+		super.setOnContextMenuRequested(event);
+		super.setContextMenu(new ContextMenu());
 	}
 
 	public void setNotifierForErrorHandler()
 	{
-		setErrorHandler(e ->
+		this.setErrorHandler(e ->
 		{
 			logger.error(e.getMessage(), e);
 			DialogsHelper.showError(String.format(R.ERROR_ON_CONFIGURATION.get(), e.getMessage()));
@@ -121,9 +118,9 @@ public class ExpressionField extends CustomField
 
 	public void setChooserForExpressionField(String title, ListProvider provider)
 	{
-		setFirstActionListener(str ->
+		this.setFirstActionListener(str ->
 		{
-			String currentText = getText();
+			String currentText = super.getText();
 			try
 			{
 				List<ReadableValue> list = provider.getList();
@@ -133,9 +130,9 @@ public class ExpressionField extends CustomField
 			}
 			catch (Exception e)
 			{
-				if (errorHandler != null)
+				if (this.errorHandler != null)
 				{
-					errorHandler.error(e);
+					this.errorHandler.error(e);
 				}
 				else
 				{
@@ -148,7 +145,7 @@ public class ExpressionField extends CustomField
 
 	public void setHelperForExpressionField(String title, Matrix matrix)
 	{
-		setSecondActionListener(str -> DialogsHelper.showHelperDialog(title, evaluator, str, matrix) );
+		this.setSecondActionListener(str -> DialogsHelper.showHelperDialog(title, evaluator, str, matrix));
 	}
 
 	public void setErrorHandler(ErrorHandler handler)
@@ -159,13 +156,13 @@ public class ExpressionField extends CustomField
 	public void setFirstActionListener(Function<String, String> handler)
 	{
 		this.firstAction = handler;
-		showButtons();
+		this.showButtons();
 	}
 
 	public void setSecondActionListener(Function<String, String> handler)
 	{
 		this.secondAction = handler;
-		showButtons();
+		this.showButtons();
 	}
 
 	public void setChangingValueListener(ChangeListener<Boolean> changeListener)
@@ -180,13 +177,13 @@ public class ExpressionField extends CustomField
 
 	public void sizeTextField()
 	{
-		String text = getText();
+		String text = super.getText();
 		this.stretchField(text);
 	}
 
 	public Object getEvaluatedValue() throws Exception
 	{
-		return this.evaluator != null ? this.evaluator.evaluate(this.getText()) : null;
+		return this.evaluator != null ? this.evaluator.evaluate(super.getText()) : null;
 	}
 
 	private String savedText;
@@ -194,35 +191,35 @@ public class ExpressionField extends CustomField
 
 	public void showShadowText()
 	{
-		if (isShadowTextIsNotPresented)
+		if (this.isShadowTextIsNotPresented)
 		{
-			savedText = this.getText();
-			isShadowTextIsNotPresented = false;
+			this.savedText = super.getText();
+			this.isShadowTextIsNotPresented = false;
 			if (this.evaluator != null)
 			{
 				String shadowText;
 				try
 				{
-					shadowText = String.valueOf(this.evaluator.evaluate(this.getText()));
-					this.getStyleClass().add(CssVariables.CORRECT_FIELD);
+					shadowText = String.valueOf(this.evaluator.evaluate(super.getText()));
+					super.getStyleClass().add(CssVariables.CORRECT_FIELD);
 				}
 				catch (Exception e)
 				{
 					shadowText = "Error";
-					this.getStyleClass().add(CssVariables.INCORRECT_FIELD);
+					super.getStyleClass().add(CssVariables.INCORRECT_FIELD);
 				}
-				this.setEditable(false);
-				this.setText(shadowText);
+				super.setEditable(false);
+				super.setText(shadowText);
 			}
 		}
 	}
 
 	public void hideShadowText()
 	{
-		this.getStyleClass().removeAll(CssVariables.INCORRECT_FIELD, CssVariables.CORRECT_FIELD);
-		this.setText(savedText);
-		this.setEditable(true);
-		isShadowTextIsNotPresented = true;
+		super.getStyleClass().removeAll(CssVariables.INCORRECT_FIELD, CssVariables.CORRECT_FIELD);
+		super.setText(this.savedText);
+		super.setEditable(true);
+		this.isShadowTextIsNotPresented = true;
 	}
 
 	public void setNameFirst(String name)
@@ -239,29 +236,29 @@ public class ExpressionField extends CustomField
 	{
 		this.isStretchable = flag;
 	}
+	//endregion
 
 	//region private methods
 	private void listeners()
 	{
 		this.firstPane.setOnMouseClicked(mouseEvent ->
 		{
-			if (firstAction != null)
+			if (this.firstAction != null)
 			{
-				setText(firstAction.apply(getText()));
-				this.requestFocus();
+				super.setText(this.firstAction.apply(super.getText()));
+				super.requestFocus();
 			}
 		});
-
 		this.secondPane.setOnMouseClicked(mouseEvent ->
 		{
-			if (secondAction != null)
+			if (this.secondAction != null)
 			{
-				setText(secondAction.apply(getText()));
-				this.requestFocus();
+				super.setText(this.secondAction.apply(super.getText()));
+				super.requestFocus();
 			}
 		});
 
-		this.setOnKeyReleased(keyEvent ->
+		super.setOnKeyReleased(keyEvent ->
 		{
 			if (keyEvent.getCode() == KeyCode.F4)
 			{
@@ -272,24 +269,22 @@ public class ExpressionField extends CustomField
 				this.secondPane.getOnMouseClicked().handle(null);
 			}
 		});
-
-		this.setOnDragDropped(event ->
+		super.setOnDragDropped(event ->
 		{
 			Dragboard dragboard = event.getDragboard();
-			boolean b = false;
+			boolean isCompleted = false;
 			if (dragboard.hasString())
 			{
 				String str = dragboard.getString();
-				this.setText(str);
-				stretchField(str);
-				Optional.ofNullable(valueListener).ifPresent(listener -> listener.changed(null, true, false));
-				b = true;
+				super.setText(str);
+				this.stretchField(str);
+				Optional.ofNullable(this.valueListener).ifPresent(listener -> listener.changed(null, true, false));
+				isCompleted = true;
 			}
-			event.setDropCompleted(b);
+			event.setDropCompleted(isCompleted);
 			event.consume();
 		});
-
-		this.setOnDragOver(event ->
+		super.setOnDragOver(event ->
 		{
 			if (event.getGestureSource() != this && event.getDragboard().hasString())
 			{
@@ -297,20 +292,19 @@ public class ExpressionField extends CustomField
 			}
 			event.consume();
 		});
-
-		this.textProperty().addListener((observable, oldValue, newValue) ->
+		super.textProperty().addListener((observable, oldValue, newValue) ->
 		{
 			if (this.isStretchable)
 			{
-				stretchField(newValue);
+				this.stretchField(newValue);
 			}
 		});
 	}
 
 	private void disableDefaultContextMenu()
 	{
-		final EventDispatcher eventDispatcher = this.getEventDispatcher();
-		this.setEventDispatcher((event, eventDispatchChain) ->
+		final EventDispatcher eventDispatcher = super.getEventDispatcher();
+		super.setEventDispatcher((event, eventDispatchChain) ->
 		{
 			if (event instanceof MouseEvent)
 			{
@@ -326,9 +320,9 @@ public class ExpressionField extends CustomField
 
 	private void stretchField(String text)
 	{
-		if (isShadowTextIsNotPresented)
+		if (this.isShadowTextIsNotPresented)
 		{
-			Common.runLater(() -> this.setPrefWidth(Common.computeTextWidth(this.getFont(), text, 0.0D) + 40));
+			Common.runLater(() -> super.setPrefWidth(Common.computeTextWidth(super.getFont(), text, 0.0D) + 40));
 		}
 	}
 
@@ -337,11 +331,11 @@ public class ExpressionField extends CustomField
 		this.hBox.getChildren().clear();
 		if (this.firstAction != null)
 		{
-			this.hBox.getChildren().add(firstPane);
+			this.hBox.getChildren().add(this.firstPane);
 		}
 		if (this.secondAction != null)
 		{
-			this.hBox.getChildren().add(secondPane);
+			this.hBox.getChildren().add(this.secondPane);
 		}
 	}
 	//endregion
