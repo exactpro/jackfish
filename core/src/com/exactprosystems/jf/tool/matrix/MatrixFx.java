@@ -362,12 +362,8 @@ public class MatrixFx extends Matrix
 	{
 		int number = item.getNumber();
 		Parameters last = new Parameters(item.getParameters());
-		Command undo = () -> {
-			findAndCallParameters(number, par -> par.setValue(last), -1);
-		};
-		Command redo = () -> {
-			findAndCallParameters(number, par -> par.setValue(parameters), -1);
-		};
+		Command undo = () -> findAndCallParameters(number, par -> par.setValue(last), -1);
+		Command redo = () -> findAndCallParameters(number, par -> par.setValue(new Parameters(parameters)), -1);
 		addCommand(undo, redo);
 	}
 

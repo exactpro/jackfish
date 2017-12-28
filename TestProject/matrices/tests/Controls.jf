@@ -135,21 +135,6 @@ EXECUTE;;;;
     #Id;#Call;plugin
     CALL_3;RUN;pluginName
 
-    #Off;#Call;plugin
-    1;RUN;'JavaFx'
-
-    #Off;#Call;plugin
-    1;RUN;'Chrome'
-
-    #Off;#Call;plugin
-    1;RUN;'Swing'
-
-    #Off;#Call;plugin
-    1;RUN;'Win'
-
-    #Off;#Call;plugin
-    1;RUN;'InternetExplorer'
-
     #Id;#Action;$Decoraded
     RESTBL1;ResultTable;true
 

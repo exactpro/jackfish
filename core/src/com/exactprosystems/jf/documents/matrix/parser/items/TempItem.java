@@ -81,7 +81,6 @@ public class TempItem extends MatrixItem
 
 						newItem = Parser.createItem(Tokens.Call.get(), name);
 						((Call) newItem).updateReference(context, name);
-						newItem.addKnownParameters();
 					}
 					else
 					{
@@ -90,6 +89,12 @@ public class TempItem extends MatrixItem
 					newItem.init(super.getMatrix(), super.getMatrix());
 					newItem.createId();
 					super.getSource().insert(parent, index, newItem);
+					if (newItem instanceof Call)
+					{
+						((Call) newItem).updateReference(context, "" + newItem.get(Tokens.Call));
+						newItem.addKnownParameters();
+						super.getMatrix().setupCall(newItem, null, newItem.getParameters());
+					}
 					driver.setCurrentItem(newItem, super.getMatrix(), false);
 				}
 				catch (Exception ignored)

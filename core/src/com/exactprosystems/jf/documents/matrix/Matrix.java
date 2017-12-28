@@ -25,6 +25,7 @@ import com.exactprosystems.jf.documents.DocumentInfo;
 import com.exactprosystems.jf.documents.DocumentKind;
 import com.exactprosystems.jf.documents.config.Context;
 import com.exactprosystems.jf.documents.matrix.parser.MutableValue;
+import com.exactprosystems.jf.documents.matrix.parser.Parameters;
 import com.exactprosystems.jf.documents.matrix.parser.Parser;
 import com.exactprosystems.jf.documents.matrix.parser.Result;
 import com.exactprosystems.jf.documents.matrix.parser.items.MatrixItem;
@@ -434,6 +435,11 @@ public class Matrix extends AbstractDocument implements IMatrix
 			return this.root.count(what);
 		}
 		return 0;
+	}
+
+	public void setupCall(MatrixItem item, String reference, Parameters parameters)
+	{
+
 	}
 	//endregion
 
