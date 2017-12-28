@@ -31,20 +31,20 @@ import java.util.stream.Stream;
 
 public class FindPanel<T> extends BorderPane
 {
-	private CustomFieldWithButton cfFind;
-	private Button		btnPrevious;
-	private Button		btnNext;
-	private CheckBox	checkBoxMatchCase;
-	private CheckBox	checkBoxWords;
-	private Label		lblFind;
+	private final CustomFieldWithButton cfFind;
+	private final Button                btnPrevious;
+	private final Button                btnNext;
+	private final CheckBox              checkBoxMatchCase;
+	private final CheckBox              checkBoxWords;
+	private final Label                 lblFind;
 
-	private IFind<T>	iFind;
-	private List<T>		results;
-	private int			currentElement;
+	private IFind<T> iFindListener;
+	private List<T>  results;
+	private int      currentElement;
 
 	public FindPanel()
 	{
-		this.getStyleClass().add(CssVariables.FIND_PANEL);
+		super.getStyleClass().add(CssVariables.FIND_PANEL);
 		this.cfFind = new CustomFieldWithButton();
 		this.btnPrevious = new Button();
 		this.btnNext = new Button();
@@ -54,14 +54,14 @@ public class FindPanel<T> extends BorderPane
 		this.lblFind.setPrefWidth(100);
 		this.lblFind.setMaxWidth(100);
 		this.lblFind.setMinWidth(100);
-		createPane();
-		initialize();
+		this.createPane();
+		this.initialize();
 	}
 
-	public FindPanel(IFind<T> iFind)
+	public FindPanel(IFind<T> iFindListener)
 	{
 		this();
-		this.iFind = iFind;
+		this.iFindListener = iFindListener;
 	}
 
 	@Override
@@ -73,19 +73,19 @@ public class FindPanel<T> extends BorderPane
 
 	public void setListener(IFind<T> iFind)
 	{
-		this.iFind = iFind;
+		this.iFindListener = iFind;
 	}
 
 	//region private methods
 	private void createPane()
 	{
 		BorderPane.setAlignment(cfFind, Pos.CENTER);
-		this.setCenter(cfFind);
+		super.setCenter(cfFind);
 
 		Label find = new Label(R.FIND_PANEL_MATCH_CASE_FIND.get());
 		BorderPane.setMargin(find, new Insets(0, 10, 0, 0));
 		BorderPane.setAlignment(find, Pos.CENTER);
-		this.setLeft(find);
+		super.setLeft(find);
 
 		HBox hBox = new HBox();
 		hBox.setAlignment(Pos.CENTER_LEFT);
@@ -93,20 +93,22 @@ public class FindPanel<T> extends BorderPane
 		HBox.setMargin(this.btnPrevious, new Insets(0, 0, 0, 10));
 		hBox.getChildren().addAll(this.btnPrevious, this.btnNext, this.checkBoxMatchCase, this.checkBoxWords, this.lblFind, new Label());
 		BorderPane.setAlignment(hBox, Pos.CENTER_LEFT);
-		this.setRight(hBox);
+		super.setRight(hBox);
 	}
 
 	private void initialize()
 	{
 		Common.runLater(() ->
 		{
-			btnPrevious.setTooltip(new Tooltip(R.FIND_PANEL_MATCH_CASE_FIND_PREVIOUS.get()));
-			btnNext.setTooltip(new Tooltip(R.FIND_PANEL_MATCH_CASE_FIND_NEXT.get()));
-			Common.customizeLabeled(btnNext, CssVariables.TRANSPARENT_BACKGROUND, CssVariables.Icons.FIND_NEXT);
-			Common.customizeLabeled(btnPrevious, CssVariables.TRANSPARENT_BACKGROUND, CssVariables.Icons.FIND_PREVIOUS);
+			this.btnPrevious.setTooltip(new Tooltip(R.FIND_PANEL_MATCH_CASE_FIND_PREVIOUS.get()));
+			Common.customizeLabeled(this.btnNext, CssVariables.TRANSPARENT_BACKGROUND, CssVariables.Icons.FIND_NEXT);
+
+			this.btnNext.setTooltip(new Tooltip(R.FIND_PANEL_MATCH_CASE_FIND_NEXT.get()));
+			Common.customizeLabeled(this.btnPrevious, CssVariables.TRANSPARENT_BACKGROUND, CssVariables.Icons.FIND_PREVIOUS);
 		});
 
-		this.cfFind.textProperty().addListener((observableValue, s, t1) -> Optional.ofNullable(this.iFind).ifPresent(findPanel -> {
+		this.cfFind.textProperty().addListener((observableValue, s, t1) -> Optional.ofNullable(this.iFindListener).ifPresent(findPanel ->
+		{
 			if (!t1.isEmpty())
 			{
 				this.findElements(t1);
@@ -118,7 +120,7 @@ public class FindPanel<T> extends BorderPane
 			}
 		}));
 
-		cfFind.setOnKeyPressed(keyEvent ->
+		this.cfFind.setOnKeyPressed(keyEvent ->
 		{
 			if (keyEvent.getCode() == KeyCode.F3 && keyEvent.isShiftDown())
 			{
@@ -130,37 +132,38 @@ public class FindPanel<T> extends BorderPane
 			}
 		});
 
-		Stream.of(this.checkBoxWords, this.checkBoxMatchCase).forEach(cb -> cb.setOnAction(event -> {
+		Stream.of(this.checkBoxWords, this.checkBoxMatchCase).forEach(cb -> cb.setOnAction(event ->
+		{
 			if (!this.cfFind.getText().isEmpty())
 			{
-				findElements(this.cfFind.getText());
+				this.findElements(this.cfFind.getText());
 			}
 		}));
 
 		this.btnPrevious.setOnAction(actionEvent ->
 		{
-			if (this.iFind != null && !results.isEmpty())
+			if (this.iFindListener != null && !results.isEmpty())
 			{
 				this.currentElement--;
 				if (this.currentElement < 0)
 				{
 					this.currentElement = this.results.size() - 1;
 				}
-				this.iFind.find(this.results.get(this.currentElement));
+				this.iFindListener.find(this.results.get(this.currentElement));
 				this.lblFind.setText(MessageFormat.format(R.FIND_PANEL_MATCH_CASE_FIND_FOUND_2.get(), this.currentElement + 1, this.results.size()));
 			}
 		});
 
 		this.btnNext.setOnAction(actionEvent ->
 		{
-			if (this.iFind != null && !this.results.isEmpty())
+			if (this.iFindListener != null && !this.results.isEmpty())
 			{
 				this.currentElement++;
 				if (this.currentElement == this.results.size())
 				{
 					this.currentElement = 0;
 				}
-				this.iFind.find(this.results.get(this.currentElement));
+				this.iFindListener.find(this.results.get(this.currentElement));
 				this.lblFind.setText(MessageFormat.format(R.FIND_PANEL_MATCH_CASE_FIND_FOUND_2.get(), this.currentElement + 1, this.results.size()));
 			}
 		});
@@ -170,7 +173,7 @@ public class FindPanel<T> extends BorderPane
 
 	private void findElements(String text)
 	{
-		this.results = this.iFind.findItem(text, checkBoxMatchCase.isSelected(), checkBoxWords.isSelected());
+		this.results = this.iFindListener.findItem(text, checkBoxMatchCase.isSelected(), checkBoxWords.isSelected());
 		this.currentElement = -1;
 		if (this.results.isEmpty())
 		{
