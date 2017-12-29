@@ -102,10 +102,10 @@ INIT;Test case;;;
     40;x;collapse;OperationKind.COLLAPSE;;Do.use(control).collapse(par);Do.use('selectLabel').getValue();control.collapse;control.collapsePar
     41;x;wait;OperationKind.WAIT;;Do.use('buttonShowArea').click().wait('buttonHideArea', 10000, true);Do.use('buttonHideArea').get().click();'hideButton';
     42;x;delay;OperationKind.DELAY;;Do.use('buttonShowArea').click().delay(100);Do.use('buttonHideArea').get().click();'hideButton';
-    43;x;repeat;OperationKind.REPEAT;;Do.use('countButtonClear').click().use('countButton').repeat(2, Do.click());Do.use('countLabel').getValue();2;
-    44;x;press;OperationKind.PRESS;;Do.use(control).press(Keyboard.A).delay(amount);Do.use('protocolText').getValue();getExp(plugin,control.Name + '_down_65' + getNewLine(plugin) + control.Name + '_press_97' + getNewLine(plugin) + control.Name + '_up_65',control.Name + '_down_65' + getNewLine(plugin) + control.Name + '_press_97' + getNewLine(plugin) + control.Name + '_up_65',control.Name + '_down_65' + getNewLine(plugin) + control.Name + '_press_65' + getNewLine(plugin) + control.Name + '_up_65',control.Name + '_down_65' + getNewLine(plugin) + control.Name + '_press_97' + getNewLine(plugin) + control.Name + '_up_65',control.Name + '_down_65' + getNewLine(plugin) + control.Name + '_press_97' + getNewLine(plugin) + control.Name + '_up_65');
-    45;x;keyDown;OperationKind.KEY_DOWN;;Do.use(control).keyDown(Keyboard.SHIFT).press(Keyboard.A).keyUp(Keyboard.SHIFT).delay(amount);Do.use('protocolText').getValue();control.Name + '_down_16' + getNewLine(plugin) + control.Name + '_down_65' + getNewLine(plugin) + control.Name + '_press_65' + getNewLine(plugin) + control.Name + '_up_65' + getNewLine(plugin) + control.Name + '_up_16';
-    46;x;keyUp;OperationKind.KEY_UP;;Do.use(control).keyDown(Keyboard.SHIFT).press(Keyboard.A).keyUp(Keyboard.SHIFT).delay(amount);Do.use('protocolText').getValue();control.Name + '_down_16' + getNewLine(plugin) + control.Name + '_down_65' + getNewLine(plugin) + control.Name + '_press_65' + getNewLine(plugin) + control.Name + '_up_65' + getNewLine(plugin) + control.Name + '_up_16';
+    43;x;repeat;OperationKind.REPEAT;Do.use('countButtonClear').click();Do.use('countButton').repeat(2, Do.click());Do.use('countLabel').getValue();2;
+    44;x;press;OperationKind.PRESS;Do.use('countButtonClear').click();Do.use(control).press(Keyboard.A);Do.use('protocolText').getValue();getExp(plugin,control.Name + '_down_65' + getNewLine(plugin) + control.Name + '_press_97' + getNewLine(plugin) + control.Name + '_up_65',control.Name + '_down_65' + getNewLine(plugin) + control.Name + '_press_97' + getNewLine(plugin) + control.Name + '_up_65',control.Name + '_down_65' + getNewLine(plugin) + control.Name + '_press_65' + getNewLine(plugin) + control.Name + '_up_65',control.Name + '_down_65' + getNewLine(plugin) + control.Name + '_press_97' + getNewLine(plugin) + control.Name + '_up_65',control.Name + '_down_65' + getNewLine(plugin) + control.Name + '_press_97' + getNewLine(plugin) + control.Name + '_up_65');
+    45;x;keyDown;OperationKind.KEY_DOWN;Do.use('countButtonClear').click();Do.use(control).keyDown(Keyboard.SHIFT).press(Keyboard.A).keyUp(Keyboard.SHIFT);Do.use('protocolText').getValue();control.Name + '_down_16' + getNewLine(plugin) + control.Name + '_down_65' + getNewLine(plugin) + control.Name + '_press_65' + getNewLine(plugin) + control.Name + '_up_65' + getNewLine(plugin) + control.Name + '_up_16';
+    46;x;keyUp;OperationKind.KEY_UP;Do.use('countButtonClear').click();Do.use(control).keyDown(Keyboard.SHIFT).press(Keyboard.A).keyUp(Keyboard.SHIFT);Do.use('protocolText').getValue();control.Name + '_down_16' + getNewLine(plugin) + control.Name + '_down_65' + getNewLine(plugin) + control.Name + '_press_65' + getNewLine(plugin) + control.Name + '_up_65' + getNewLine(plugin) + control.Name + '_up_16';
     47;x;isEnabledTRUE;OperationKind.IS_ENABLED;;Do.use(control);Do.use(control).isEnabled();true;
     48;x;isVisibleTRUE;OperationKind.IS_VISIBLE;;Do.use(control);Do.use(control).isVisible();true;
     49;x;isEnabledFALSE;OperationKind.IS_ENABLED;;Do.use('notEnabledButton');Do.use('notEnabledButton').isEnabled();false;
@@ -124,10 +124,10 @@ INIT;Test case;;;
 #Id;#TestCase;#Kind;#Depends;#For
 EXECUTE;;;;
     #Assert;#Message
-    isdef parameter && parameter >= 0 && parameter <=4;'Parater for the matrix shoud be defind and has value from 0 to 4. Actual : ' + parameter
+    isdef parameter && parameter >= 0 && parameter <=3;'Parater for the matrix shoud be defind and has value from 0 to 4. Actual : ' + parameter
 
     #Id;#Let
-    allPlugins;['JavaFx', 'Chrome', 'Swing', 'Win', 'InternetExplorer']
+    allPlugins;['InternetExplorer', 'Win', 'Swing', 'Chrome']
 
     #Id;#Let
     pluginName;allPlugins[parameter]
