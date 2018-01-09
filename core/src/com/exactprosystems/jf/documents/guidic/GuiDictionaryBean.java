@@ -21,37 +21,37 @@ import javax.xml.bind.annotation.*;
 @XmlRootElement(name = "dictionary")
 public class GuiDictionaryBean implements Mutable
 {
-    @XmlElement(name = "window")
-    protected MutableArrayList<Window> windows;
+	@XmlElement(name = "window")
+	protected MutableArrayList<Window> windows;
 
-    public static final Class<?>[] jaxbContextClasses =
-        {
-            GuiDictionaryBean.class,
-            Window.class,
-            Section.class,
-            AbstractControl.class,
-            ExtraInfo.class,
-            Rect.class,
-            Attr.class,
-            Addition.class,
-        };
+	public static final Class<?>[] jaxbContextClasses =
+		{
+			GuiDictionaryBean.class,
+			Window.class,
+			Section.class,
+			AbstractControl.class,
+			ExtraInfo.class,
+			Rect.class,
+			Attr.class,
+			Addition.class,
+		};
 
-    public GuiDictionaryBean()
-    {
-        this.windows = new MutableArrayList<>();
-    }
+	public GuiDictionaryBean()
+	{
+		this.windows = new MutableArrayList<>();
+	}
 
 	//region interface Mutable
 	@Override
-    public boolean isChanged()
-    {
+	public boolean isChanged()
+	{
 		return this.windows.isChanged();
-    }
+	}
 
-    @Override
-    public void saved()
-    {
+	@Override
+	public void saved()
+	{
 		this.windows.saved();
-    }
+	}
 	//endregion
 }

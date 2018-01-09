@@ -120,7 +120,7 @@ public class ImageGet extends AbstractAction
 					super.setError("Self control not found", ErrorKind.ELEMENT_NOT_FOUND);
 					return;
 				}
-				imageWrapper = service.getImage(null, selfControl.locator());
+				imageWrapper = service.getImage(null, IControl.evaluateTemplate(selfControl, evaluator));
 			}
 			else
 			{
@@ -131,8 +131,8 @@ public class ImageGet extends AbstractAction
 					return;
 				}
 				IControl owner = window.getOwnerControl(control);
-				
-				imageWrapper = service.getImage(owner == null ? null : owner.locator(), control.locator());
+
+				imageWrapper = service.getImage(IControl.evaluateTemplate(owner, evaluator), IControl.evaluateTemplate(control.locator(), evaluator));
 			}
 		}
 

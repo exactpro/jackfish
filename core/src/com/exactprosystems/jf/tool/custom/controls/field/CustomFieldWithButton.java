@@ -17,33 +17,22 @@ import javafx.scene.layout.StackPane;
 
 public class CustomFieldWithButton extends CustomField
 {
-	private Label label;
+	private Label     label;
 	private StackPane stackPane;
 
 	/**
-	 *  default constructor. Button - X, handler - clear().
+	 * default constructor. Button - X, handler - clear().
 	 */
 	public CustomFieldWithButton(String text)
 	{
 		super(text);
-		this.getStyleClass().add(CssVariables.CUSTOM_FIELD_WITH_BUTTON);
-		updateStyle("X", event -> this.clear());
+		super.getStyleClass().add(CssVariables.CUSTOM_FIELD_WITH_BUTTON);
+		this.updateStyle("X", event -> super.clear());
 	}
 
 	public CustomFieldWithButton()
 	{
 		this("");
-	}
-
-	private void updateStyle(String buttonText, EventHandler<MouseEvent> handler)
-	{
-		this.label = new Label(buttonText);
-		label.getStyleClass().addAll(CssVariables.CUSTOM_FIELD_CUSTOM_BUTTON);
-		this.stackPane = new StackPane(label);
-		stackPane.getStyleClass().addAll(CssVariables.CUSTOM_FIELD_CUSTOM_PANE);
-		stackPane.setCursor(Cursor.DEFAULT);
-		stackPane.setOnMouseReleased(handler);
-		this.rightProperty().set(stackPane);
 	}
 
 	public void setHandler(EventHandler<MouseEvent> handler)
@@ -54,5 +43,16 @@ public class CustomFieldWithButton extends CustomField
 	public void setButtonText(String text)
 	{
 		this.label.setText(text);
+	}
+
+	private void updateStyle(String buttonText, EventHandler<MouseEvent> handler)
+	{
+		this.label = new Label(buttonText);
+		this.label.getStyleClass().addAll(CssVariables.CUSTOM_FIELD_CUSTOM_BUTTON);
+		this.stackPane = new StackPane(this.label);
+		this.stackPane.getStyleClass().addAll(CssVariables.CUSTOM_FIELD_CUSTOM_PANE);
+		this.stackPane.setCursor(Cursor.DEFAULT);
+		this.stackPane.setOnMouseReleased(handler);
+		super.rightProperty().set(this.stackPane);
 	}
 }

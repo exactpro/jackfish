@@ -168,7 +168,7 @@ public class ConfigurationFx extends Configuration
 	}
 
 	@Override
-	public void create() throws Exception
+	public void create()
 	{
 		super.create();
 	}
@@ -410,7 +410,7 @@ public class ConfigurationFx extends Configuration
 		File file = createNewFile(parentFolder, fileName, Configuration.matrixExt);
 		Matrix matrix = (Matrix)getFactory().createDocument(DocumentKind.MATRIX, path(file));
 		matrix.create();
-		matrix.display();
+		getFactory().showDocument(matrix);
 		matrix.save(path(file));
 		displayMatrix();
 	}

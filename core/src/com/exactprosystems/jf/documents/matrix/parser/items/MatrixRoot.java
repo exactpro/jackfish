@@ -42,6 +42,7 @@ public class MatrixRoot extends MatrixItem
 		return new MatrixRoot(this.matrixName);
 	}
 
+	//region region override from MatrixItem
 	public String getMatrixName()
 	{
 		return this.matrixName;
@@ -58,4 +59,5 @@ public class MatrixRoot extends MatrixItem
 	{
 		return "Matrix " + "(" + this.matrixName + ")";
 	}
+	//endregion
 }

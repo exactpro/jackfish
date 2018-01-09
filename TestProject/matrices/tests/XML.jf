@@ -954,7 +954,7 @@ check XmlReport;;;
         CALL_1;expand;appCon
 
         #Id;#Action;#Assert;$Dialog;$AppConnection;MockElement
-        DLGFLL6;DialogFill;This.Result == Result.Failed && This.Reason.contains('No one element was found');'DialogForTestReport';appCon;Do.use('MainTable',LocatorKind.Owner).use(locator, LocatorKind.Element).isVisible()
+        DLGFLL6;DialogFill;This.Result == Result.Failed && This.Kind == ErrorKind.ELEMENT_NOT_FOUND;'DialogForTestReport';appCon;Do.use('MainTable',LocatorKind.Owner).use(locator, LocatorKind.Element).isVisible()
 
         #Call;appCon
         stopBrowser;appCon

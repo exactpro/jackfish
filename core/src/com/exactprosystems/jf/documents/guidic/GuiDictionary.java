@@ -59,11 +59,11 @@ public class GuiDictionary extends AbstractDocument implements IGuiDictionary
 	@Override
 	public String toString()
 	{
-		return getClass().getSimpleName() + " <" + getNameProperty() + ">";
+		return this.getClass().getSimpleName() + " <" + getNameProperty() + ">";
 	}
 
-    //region AbstractDocument
-    @Override
+	//region AbstractDocument
+	@Override
 	public void load(Reader reader) throws Exception
 	{
 		try
@@ -94,30 +94,30 @@ public class GuiDictionary extends AbstractDocument implements IGuiDictionary
 		}
 	}
 
-    @Override
-    public boolean canClose() throws Exception
-    {
-    	return true;
-    }
+	@Override
+	public boolean canClose() throws Exception
+	{
+		return true;
+	}
 
-    @Override
-    public void save(String fileName) throws Exception
-    {
-    	File file = new File(fileName);
+	@Override
+	public void save(String fileName) throws Exception
+	{
+		File file = new File(fileName);
 
-        JAXBContext jaxbContext = JAXBContext.newInstance(GuiDictionaryBean.jaxbContextClasses);
+		JAXBContext jaxbContext = JAXBContext.newInstance(GuiDictionaryBean.jaxbContextClasses);
 
-        Marshaller marshaller = jaxbContext.createMarshaller();
-        marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
-        marshaller.setListener(new DictionaryMarshallerListener());
-        marshaller.marshal(this.bean, file);
+		Marshaller marshaller = jaxbContext.createMarshaller();
+		marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
+		marshaller.setListener(new DictionaryMarshallerListener());
+		marshaller.marshal(this.bean, file);
 		super.save(fileName);
 	}
 
-    //endregion
+	//endregion
 
-    //region interface IGuiDictionary
-    @Override
+	//region interface IGuiDictionary
+	@Override
 	public Collection<IWindow> getWindows()
 	{
 		return new ArrayList<>(this.bean.windows);
@@ -156,12 +156,13 @@ public class GuiDictionary extends AbstractDocument implements IGuiDictionary
 	@Override
 	public boolean isChanged()
 	{
-		return this.bean.isChanged();
+		return this.bean.isChanged() || super.isChanged();
 	}
 	
 	@Override
 	public void saved()
 	{
+		super.saved();
 		this.bean.saved();
 	}
 

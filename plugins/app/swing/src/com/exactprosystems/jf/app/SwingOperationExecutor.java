@@ -842,7 +842,6 @@ public class SwingOperationExecutor extends AbstractOperationExecutor<ComponentF
 				}
 			}
 			return true;
-			//throw new OperationNotAllowedException(String.format("Component %s does not support text entering", component.target));
 		}
 		catch (RemoteException e)
 		{

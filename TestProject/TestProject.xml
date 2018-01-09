@@ -322,6 +322,22 @@
     </appEntry>
     <appEntry>
         <name>JAVAFX</name>
+        <parameters>
+            <key>jreExec</key>
+            <value></value>
+        </parameters>
+        <parameters>
+            <key>jreArgs</key>
+            <value></value>
+        </parameters>
+        <parameters>
+            <key>LogLevel</key>
+            <value>ALL</value>
+        </parameters>
+        <parameters>
+            <key>TrimText</key>
+            <value></value>
+        </parameters>
         <appDicPath>dic/mock_javafx_dic.xml</appDicPath>
         <appJar>${JF}/apps/javafx.jar</appJar>
         <appWorkDir>${JF}/apps</appWorkDir>

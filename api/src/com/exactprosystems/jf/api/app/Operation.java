@@ -107,11 +107,11 @@ public class Operation implements Iterable<Part>, Serializable
 		return new Operation();
 	}
 
-	public void tune(IWindow window) throws Exception
+	public void tune(IWindow window, ITemplateEvaluator templateEvaluator) throws Exception
 	{
 		for (Part part : this.list)
 		{
-			part.tune(window);
+			part.tune(window, templateEvaluator);
 		}
 	}
 	

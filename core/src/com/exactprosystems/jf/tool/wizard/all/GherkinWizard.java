@@ -9,12 +9,12 @@
 
 package com.exactprosystems.jf.tool.wizard.all;
 
-import com.exactprosystems.jf.api.common.IContext;
 import com.exactprosystems.jf.api.wizard.WizardAttribute;
 import com.exactprosystems.jf.api.wizard.WizardCategory;
 import com.exactprosystems.jf.api.wizard.WizardCommand;
 import com.exactprosystems.jf.api.wizard.WizardManager;
 import com.exactprosystems.jf.common.highlighter.Highlighter;
+import com.exactprosystems.jf.documents.config.Context;
 import com.exactprosystems.jf.documents.matrix.parser.Tokens;
 import com.exactprosystems.jf.documents.matrix.parser.items.MatrixItem;
 import com.exactprosystems.jf.documents.matrix.parser.items.TestCase;
@@ -115,7 +115,7 @@ public class GherkinWizard extends AbstractWizard
     }
 
     @Override
-    public void init(IContext context, WizardManager wizardManager, Object... parameters)
+    public void init(Context context, WizardManager wizardManager, Object... parameters)
     {
         super.init(context, wizardManager, parameters);
 

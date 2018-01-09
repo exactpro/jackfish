@@ -1139,7 +1139,7 @@ RF;RegressionFramework
             #EndFor
 
             #Action;$Replace;$Table;$Search;$Columns
-            TableReplace;'';resultTable;null;stepHeaders.toArray()
+            TableReplace;'';resultTable;'null';stepHeaders.toArray()
 
             #Action;$Replace;$Table;$Columns;$MatchCell;$Search
             TableReplace;'Failed';resultTable;{'Execution Status'};true;0
@@ -1245,7 +1245,7 @@ RF;RegressionFramework
         TableReplace;table;{ 'step', 'error' };true;'null';''
 
         #Action;$Table;$Columns;$MatchCell;$Search;$Replace
-        TableReplace;table;{ 'screenshot'};true;null;''
+        TableReplace;table;{ 'screenshot'};true;'null';''
 
         #Action;$Table;$Colored;$Hyperlink
         TableConsiderColumnsAs;table;'result';'screenshot'

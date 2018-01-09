@@ -18,11 +18,19 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
+/**
+ * A xml bean for any Entry from a configuration
+ *
+ * @see Configuration
+ */
 @XmlAccessorType(XmlAccessType.NONE)
 public abstract class Entry implements Mutable
 {
+	private boolean changed = false;
+
 	@XmlElement(name = Configuration.entryName)
 	protected String entryNameValue;
 
@@ -32,7 +40,7 @@ public abstract class Entry implements Mutable
 	@Override
 	public String toString()
 	{
-		return this.entryNameValue == null ? "" : this.entryNameValue;
+		return Optional.ofNullable(this.entryNameValue).orElse("");
 	}
 
 	//region interface Mutable
@@ -58,17 +66,18 @@ public abstract class Entry implements Mutable
 		{
 			this.parameters.saved();
 		}
-		changed = false;
+		this.changed = false;
 	}
 	//endregion
 
+	//region public methods
 	public final String get(String name)
 	{
 		if (Str.areEqual(name, Configuration.entryName))
 		{
 			return this.entryNameValue;
 		}
-		return this.getParameter(name).orElse(getDerived(name));
+		return this.getParameter(name).orElse(this.getDerived(name));
 	}
 
 	public final void set(String name, Object value)
@@ -86,14 +95,8 @@ public abstract class Entry implements Mutable
 			this.getParameters().get(index).setValue("" + value);
 			return;
 		}
-		setDerived(name, value);
+		this.setDerived(name, value);
 	}
-
-	//region abstract methods
-	protected abstract String getDerived(String name);
-	
-	protected abstract void setDerived(String name, Object value);
-	//endregion
 
 	public List<Parameter> getParameters()
 	{
@@ -103,15 +106,22 @@ public abstract class Entry implements Mutable
 		}
 		return this.parameters;
 	}
+	//endregion
 
+	//region abstract methods
+	protected abstract String getDerived(String name);
+	
+	protected abstract void setDerived(String name, Object value);
+	//endregion
+
+	//region private methods
 	private Optional<String> getParameter(String key)
 	{
 		return this.getParameters()
 				.stream()
-				.filter(p -> p.key != null && p.key.equals(key))
+				.filter(p -> Objects.nonNull(p.key) && p.key.equals(key))
 				.map(Parameter::getValue)
 				.findFirst();
 	}
-	
-	private boolean changed = false;
+	//endregion
 }

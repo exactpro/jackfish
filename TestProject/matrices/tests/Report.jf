@@ -180,7 +180,7 @@ Check Report with parameter beforeTestCase;Never;;
 
     // check that element outside table
     #Id;#Action;#Assert;$Dialog;$AppConnection;MockElement
-    DLGFLL5;DialogFill;This.Result == Result.Failed && This.Reason.contains('No one element was found');'DialogForTestReport';appCon;Do.use('MainTable', LocatorKind.Owner).use(locator, LocatorKind.Element).isVisible()
+    DLGFLL5;DialogFill;This.Result == Result.Failed && This.Kind == ErrorKind.ELEMENT_NOT_FOUND;'DialogForTestReport';appCon;Do.use('MainTable', LocatorKind.Owner).use(locator, LocatorKind.Element).isVisible()
 
     #Id;#Call;appCon
     CALL_2;testLib.stopBrowser;appCon
@@ -882,7 +882,7 @@ report chart Pie chart;;;
 #TestCase;#Kind;#Depends;#For
 subcases;;;
     #Id;#SubCase;rawText
-    runMatrix;returned value - path to report;TEXT
+    runMatrix;returned value - path to report;TEXT1
         #Id;#Action;$Text
         MXRN1;MatrixRunFromText;rawText
 

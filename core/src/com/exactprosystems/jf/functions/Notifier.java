@@ -11,5 +11,16 @@ package com.exactprosystems.jf.functions;
 
 public enum Notifier
 {
-	Error, Success, Info
+	/**
+	 * Error notifier type
+	 */
+	Error,
+	/**
+	 * Success notifier type
+ 	 */
+	Success,
+	/**
+	 * Info notifier type
+	 */
+	Info
 }

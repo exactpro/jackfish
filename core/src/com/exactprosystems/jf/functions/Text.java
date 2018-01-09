@@ -19,32 +19,34 @@ import org.apache.log4j.Logger;
 import java.io.*;
 import java.util.*;
 import java.util.function.Consumer;
+import java.util.stream.Collectors;
 
 public class Text implements List<String>, Mutable, Cloneable
 {
-	private boolean changed;
-	private Consumer<Boolean> changeListener;
-	private List<String> list;
 	private static final Logger logger = Logger.getLogger(Text.class);
+
+	private       boolean           changed;
+	private       Consumer<Boolean> changeListener;
+	private final List<String>      list;
 
 	public Text()
 	{
 		this.changed = false;
-		this.list = new ArrayList<String>();
+		this.list = new ArrayList<>();
 	}
-	
+
 	public Text(Reader reader) throws IOException
 	{
 		this();
-		read(reader);
+		this.read(reader);
 	}
 
-	public Text(String fileName) throws FileNotFoundException, IOException
+	public Text(String fileName) throws IOException
 	{
 		this();
 		try (Reader reader = CommonHelper.readerFromFileName(fileName))
 		{
-			read(reader);
+			this.read(reader);
 		}
 	}
 
@@ -56,10 +58,8 @@ public class Text implements List<String>, Mutable, Cloneable
 		this();
 		this.list.addAll(text.list);
 	}
-	
-	//==============================================================================================
-	// Interface Mutable
-	//==============================================================================================
+
+	//region Interface Mutable
 	@Override
 	public boolean isChanged()
 	{
@@ -72,16 +72,22 @@ public class Text implements List<String>, Mutable, Cloneable
 		this.changed = false;
 	}
 
+	//endregion
+
 	public void setChangeListener(Consumer<Boolean> changeListener)
 	{
 		this.changeListener = changeListener;
 	}
 
+	/**
+	 * Save the text to the file by passed file name
+	 * @return true, if save was successful
+	 */
 	public boolean save(String fileName)
 	{
 		try (Writer writer = CommonHelper.writerToFileName(fileName))
 		{
-			save(writer);
+			this.save(writer);
 		}
 		catch (IOException e)
 		{
@@ -90,50 +96,45 @@ public class Text implements List<String>, Mutable, Cloneable
 		}
 		return true;
 	}
-	
-	public void report(ReportBuilder report, String beforeTestcase, String title) throws Exception
+
+	/**
+	 * Report the text
+	 */
+	public void report(ReportBuilder report, String beforeTestcase, String title)
 	{
-        if (beforeTestcase != null || report.reportIsOn())
-        {
-    		ReportTable table = report.addExplicitTable(title, beforeTestcase, true, true, new int[] {});
-    		
-    		for(String list : this.list)
-    		{
-    			table.addValues(list);
-    		}
-        }
+		if (beforeTestcase != null || report.reportIsOn())
+		{
+			ReportTable table = report.addExplicitTable(title, beforeTestcase, true, true, new int[0]);
+			this.list.forEach(table::addValues);
+		}
 	}
 
+	/**
+	 * Evaluate the text. Each line will evaluate via {@link AbstractEvaluator#templateEvaluate(String)}
+	 *
+	 * @return a new {@link Text} object, which has all evaluated lines
+	 *
+	 * @throws Exception if evaluated some of lines was failed
+	 */
 	public Text perform(AbstractEvaluator evaluator) throws Exception
 	{
-		List<String> res = new ArrayList<String>();
+		List<String> evaluatedLines = new ArrayList<>();
 		for (String line : this.list)
 		{
-			res.add(evaluator.templateEvaluate(line));
+			evaluatedLines.add(evaluator.templateEvaluate(line));
 		}
 		Text result = new Text();
-		result.list = res;
-		changed(true);
-
+		result.list.addAll(evaluatedLines);
 		return result;
 	}
-	
+
 	@Override
 	public String toString()
 	{
-		StringBuilder sb = new StringBuilder();
-		for (String line : this.list)
-		{
-			sb.append(line).append('\n');
-		}
-		
-		return sb.toString();
+		return this.list.stream().collect(Collectors.joining(System.lineSeparator()));
 	}
-	
 
-	//------------------------------------------------------------------------------------------------------------------
-	// interface List
-	//------------------------------------------------------------------------------------------------------------------
+	//region interface List
 	@Override
 	public int size()
 	{
@@ -173,14 +174,14 @@ public class Text implements List<String>, Mutable, Cloneable
 	@Override
 	public boolean add(String e)
 	{
-		changed(true);
+		this.changed(true);
 		return this.list.add(e);
 	}
 
 	@Override
 	public boolean remove(Object o)
 	{
-		changed(true);
+		this.changed(true);
 		return this.list.remove(o);
 	}
 
@@ -193,21 +194,21 @@ public class Text implements List<String>, Mutable, Cloneable
 	@Override
 	public boolean addAll(Collection<? extends String> c)
 	{
-		changed(true);
+		this.changed(true);
 		return this.list.addAll(c);
 	}
 
 	@Override
 	public boolean addAll(int index, Collection<? extends String> c)
 	{
-		changed(true);
+		this.changed(true);
 		return this.list.addAll(index, c);
 	}
 
 	@Override
 	public boolean removeAll(Collection<?> c)
 	{
-		changed(true);
+		this.changed(true);
 		return this.list.removeAll(c);
 	}
 
@@ -220,7 +221,7 @@ public class Text implements List<String>, Mutable, Cloneable
 	@Override
 	public void clear()
 	{
-		changed(true);
+		this.changed(true);
 		this.list.clear();
 	}
 
@@ -233,27 +234,21 @@ public class Text implements List<String>, Mutable, Cloneable
 	@Override
 	public String set(int index, String element)
 	{
-		changed(true);
+		this.changed(true);
 		return this.list.set(index, element);
 	}
 
 	@Override
 	public void add(int index, String element)
 	{
-		changed(true);
+		this.changed(true);
 		this.list.add(index, element);
-	}
-
-	private void changed(boolean flag)
-	{
-		this.changed = true;
-		Optional.ofNullable(this.changeListener).ifPresent(c -> c.accept(this.changed));
 	}
 
 	@Override
 	public String remove(int index)
 	{
-		changed(true);
+		this.changed(true);
 		return this.list.remove(index);
 	}
 
@@ -287,7 +282,15 @@ public class Text implements List<String>, Mutable, Cloneable
 		return this.list.subList(fromIndex, toIndex);
 	}
 
-	//------------------------------------------------------------------------------------------------------------------
+	//endregion
+
+	//region private methods
+	private void changed(boolean flag)
+	{
+		this.changed = true;
+		Optional.ofNullable(this.changeListener).ifPresent(c -> c.accept(true));
+	}
+
 	private void save(Writer writer) throws IOException
 	{
 		try (BufferedWriter buffWriter = new BufferedWriter(writer))
@@ -305,11 +308,12 @@ public class Text implements List<String>, Mutable, Cloneable
 		this.list.clear();
 		try (BufferedReader buffReader = new BufferedReader(reader))
 		{
-			String line = null;
-			while((line = buffReader.readLine()) != null)
+			String line;
+			while ((line = buffReader.readLine()) != null)
 			{
 				this.list.add(line);
 			}
 		}
 	}
+	//endregion
 }

@@ -13,20 +13,20 @@ import com.exactprosystems.jf.documents.matrix.parser.Parser;
 
 public enum TypeMandatory
 {
-    System      (Parser.systemPrefix),
-    Mandatory   (Parser.knownPrefix),
-    NotMandatory(Parser.knownPrefix),
-    Extra       ("");
+	System(Parser.systemPrefix),
+	Mandatory(Parser.knownPrefix),
+	NotMandatory(Parser.knownPrefix),
+	Extra("");
 
-    private TypeMandatory(String prefix)
-    {
-        this.prefix = prefix;
-    }
-    
-    public String getPrefix()
-    {
-        return this.prefix;
-    }
-    
-    private String prefix;
+	private String prefix;
+
+	TypeMandatory(String prefix)
+	{
+		this.prefix = prefix;
+	}
+
+	public String getPrefix()
+	{
+		return this.prefix;
+	}
 }

@@ -7,7 +7,7 @@
 // information which is the property of Exactpro Systems or its licensors.
 ////////////////////////////////////////////////////////////////////////////////
 
-package com.exactprosystems.jf.documents.matrix.parser.items;
+package com.exactprosystems.jf.documents.matrix.parser.items.help;
 
 import com.exactprosystems.jf.api.error.ErrorKind;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
@@ -16,62 +16,48 @@ import com.exactprosystems.jf.documents.config.Context;
 import com.exactprosystems.jf.documents.matrix.parser.Parameters;
 import com.exactprosystems.jf.documents.matrix.parser.Result;
 import com.exactprosystems.jf.documents.matrix.parser.ReturnAndResult;
+import com.exactprosystems.jf.documents.matrix.parser.items.MatrixItem;
 import com.exactprosystems.jf.documents.matrix.parser.listeners.IMatrixListener;
-import com.exactprosystems.jf.functions.Table;
+import com.exactprosystems.jf.functions.Content;
 
-import java.util.Collections;
-
-
-public class HelpTable extends MatrixItem
+public class HelpContent extends MatrixItem
 {
-	private String str;
-	private Table table;
-	private int[]  widths;
-	private boolean bordered;
+	private String title;
+	private Content content;
 
-    public HelpTable(String str, Table table, boolean bordered, int[] widths)
+    public HelpContent(String title, Content content)
     {
-        this.str = str;
-        this.table = table;
-        this.widths = widths;
-        this.bordered = bordered;
+    	this.title = title;
+    	this.content = content;
     }
-
-    public HelpTable(String str, Table table, int[] widths)
-	{
-        this(str, table, false, widths);
-	}
 
 	/**
 	 * copy constructor
 	 */
-	public HelpTable(HelpTable helpTable)
+	public HelpContent(HelpContent helpContent)
 	{
-		this.str = helpTable.str;
-		this.table = new Table(helpTable.table);
-		this.widths = new int[helpTable.widths.length];
-		System.arraycopy(helpTable.widths, 0, this.widths, 0, helpTable.widths.length);
-		this.bordered = helpTable.bordered;
+		this.title = helpContent.title;
+		this.content = new Content(helpContent.content);
 	}
 
 	@Override
 	protected MatrixItem makeCopy()
 	{
-		return new HelpTable(this);
+		return new HelpContent(this);
 	}
 
 	@Override
-	public String getItemName()
-	{
-		return this.str;
-	}
-	
-	@Override
-	protected ReturnAndResult executeItSelf(long start, Context context, IMatrixListener listener, AbstractEvaluator evaluator, ReportBuilder report, Parameters parameters)
-	{
+    public String getItemName()
+    {
+        return "";
+    }
+    
+    @Override
+    protected ReturnAndResult executeItSelf(long start, Context context, IMatrixListener listener, AbstractEvaluator evaluator, ReportBuilder report, Parameters parameters)
+    {
         try
         {
-            this.table.report(report, this.str, null, false, true, this.bordered, Collections.emptyMap(), this.widths);
+        	report.outContent(this, null, this.content, this.title);
         }
         catch (Exception e)
         {
@@ -79,5 +65,5 @@ public class HelpTable extends MatrixItem
             return new ReturnAndResult(start, Result.Failed, e.getMessage(), ErrorKind.EXCEPTION, this);
         }
         return new ReturnAndResult(start, Result.Passed); 
-	}
+    }
 }

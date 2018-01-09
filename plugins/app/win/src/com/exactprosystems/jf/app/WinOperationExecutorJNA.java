@@ -350,6 +350,21 @@ public class WinOperationExecutorJNA extends AbstractOperationExecutor<UIProxyJN
 			else if (attribute.equalsIgnoreCase(ControlType.Tab.getName()))
 			{
 				controlTypeId = ControlType.TabItem.getStringId();
+				List<UIProxyJNA> elements = findComponents(component,WindowTreeScope.Descendants,WindowProperty.ControlTypeProperty,controlTypeId);
+				int countNotVisible = 0;
+				for (int indexAll = 0; indexAll < elements.size(); indexAll++)
+				{
+					if("false".equalsIgnoreCase(this.driver.elementAttribute(elements.get(indexAll), AttributeKind.VISIBLE)))
+					{
+						countNotVisible++;
+					}
+					if(indexAll == indexOnlyVisible + countNotVisible)
+					{
+						this.driver.doPatternCall(elements.get(indexAll), WindowPattern.SelectionItemPattern, "Select", null, -1);
+						break;
+					}
+				}
+				return true;
 			}
 			else if (attribute.equalsIgnoreCase(ControlType.Tree.getName()))
 			{
@@ -359,20 +374,9 @@ public class WinOperationExecutorJNA extends AbstractOperationExecutor<UIProxyJN
 			{
 				return true;
 			}
+
 			List<UIProxyJNA> elements = findComponents(component,WindowTreeScope.Descendants,WindowProperty.ControlTypeProperty,controlTypeId);
-			int countNotVisible = 0;
-			for (int indexAll = 0; indexAll < elements.size(); indexAll++)
-			{
-				if("false".equalsIgnoreCase(this.driver.elementAttribute(elements.get(indexAll), AttributeKind.VISIBLE)))
-				{
-					countNotVisible++;
-				}
-				if(indexAll == indexOnlyVisible + countNotVisible)
-				{
-					this.driver.doPatternCall(elements.get(indexAll), WindowPattern.SelectionItemPattern, "Select", null, -1);
-					break;
-				}
-			}
+			this.driver.doPatternCall(elements.get(indexOnlyVisible), WindowPattern.SelectionItemPattern, "Select", null, -1);
 			return true;
 		}
 		catch(WrongParameterException ignored)
@@ -393,19 +397,21 @@ public class WinOperationExecutorJNA extends AbstractOperationExecutor<UIProxyJN
 				for (int i = 0; i < nodes.getLength(); i++)
 				{
 					UIProxyJNA element = new UIProxyJNA(nodes.item(i).getAttributes().getNamedItem(RUNTIME_ID_ATTRIBUTE).getNodeValue());
-					if("true".equalsIgnoreCase(this.driver.elementAttribute(element, AttributeKind.VISIBLE)))
-					{
-						this.driver.doPatternCall(element, WindowPattern.SelectionItemPattern, "Select", null, -1);
-					}
+					this.driver.doPatternCall(element, WindowPattern.SelectionItemPattern, "Select", null, -1);
 				}
 			}
-			else
+			else if (attribute.equalsIgnoreCase(ControlType.Tab.getName()))
 			{
 				UIProxyJNA element = new UIProxyJNA(findItem(component, selectedText));
 				if("true".equalsIgnoreCase(this.driver.elementAttribute(element, AttributeKind.VISIBLE)))
 				{
 					this.driver.doPatternCall(element, WindowPattern.SelectionItemPattern, "Select", null, -1);
 				}
+			}
+			else
+			{
+				UIProxyJNA element = new UIProxyJNA(findItem(component, selectedText));
+				this.driver.doPatternCall(element, WindowPattern.SelectionItemPattern, "Select", null, -1);
 			}
 			return true;
 		}
@@ -529,7 +535,7 @@ public class WinOperationExecutorJNA extends AbstractOperationExecutor<UIProxyJN
 				try
 				{
 					this.driver.clearCache();
-					int size = -1;
+					int size;
 					try
 					{
 						List<UIProxyJNA> elements = this.findAll(null, locator);
@@ -581,7 +587,7 @@ public class WinOperationExecutorJNA extends AbstractOperationExecutor<UIProxyJN
 	{
 		try
 		{
-			this.driver.doPatternCall(component, WindowPattern.RangeValuePattern, "SetValue", "" + value, 2);
+			this.driver.doPatternCall(component, WindowPattern.RangeValuePattern, "SetValue", Double.toString(value), 2);
 			return true;
 		}
 		catch (RemoteException e)
@@ -692,7 +698,6 @@ public class WinOperationExecutorJNA extends AbstractOperationExecutor<UIProxyJN
 	@Override
 	public String getDerived(UIProxyJNA component) throws Exception
 	{
-		//TODO need remake, cause get() need return text of component, not value;
 		try
 		{
 			int length = 100;
@@ -704,60 +709,54 @@ public class WinOperationExecutorJNA extends AbstractOperationExecutor<UIProxyJN
 				arr = new int[length];
 				this.driver.getPatterns(arr, component);
 			}
-			boolean isSelectionPatternPresent = false;
-			boolean isSelectionItemPatternPresent = false;
-			boolean isTogglePattern = false;
-			boolean isTextPattern = false;
-			boolean isRangeValuePattern = false;
+
+			int patterns = 0;
+			final int SELECTION_PATTERN = 1;
+            final int SELECTION_ITEM_PATTERN = 1 << 1;
+            final int TOGGLE_PATTERN = 1 << 2;
+            final int TEXT_PATTERN = 1 << 3;
+            final int RANGE_PATTERN = 1 << 4;
+            final int VALUE_PATTERN = 1 << 5;
 
 			for (int p : arr)
 			{
 				if (WindowPattern.TogglePattern.getId() == p)
 				{
-					isTogglePattern = true;
+					patterns += TOGGLE_PATTERN;
 				}
 				if (WindowPattern.SelectionItemPattern.getId() == p)
 				{
-					isSelectionItemPatternPresent = true;
+					patterns += SELECTION_ITEM_PATTERN;
 				}
 				if (WindowPattern.SelectionPattern.getId() == p)
 				{
-					isSelectionPatternPresent = true;
+                    patterns += SELECTION_PATTERN;
 				}
 				if (WindowPattern.TextPattern.getId() == p)
 				{
-					isTextPattern = true;
+                    patterns += TEXT_PATTERN;
 				}
 				if (WindowPattern.RangeValuePattern.getId() == p)
 				{
-					isRangeValuePattern = true;
+                    patterns += RANGE_PATTERN;
 				}
-			}
-			String result;
-			if (isSelectionPatternPresent)
-			{
-				result = this.driver.getProperty(component, WindowProperty.SelectionProperty);
-			}
-			else if (isTogglePattern)
-			{
-				result = this.driver.getProperty(component, WindowProperty.NameProperty);
-			}
-			else if (isTextPattern)
-			{
-				result = this.driver.getProperty(component, WindowProperty.IsTextPatternAvailableProperty);
-			}
-			else if (isRangeValuePattern)
-			{
-				result = this.driver.getProperty(component, WindowProperty.IsRangeValuePatternAvailableProperty);
-			}
-			else {
-				result = this.driver.getProperty(component, WindowProperty.ValueProperty);
-				if (Str.IsNullOrEmpty(result)) {
-					result = this.driver.getProperty(component, WindowProperty.NameProperty);
+				if (WindowPattern.ValuePattern.getId() == p)
+				{
+                    patterns += VALUE_PATTERN;
 				}
 			}
 
-			return result;
+			switch (patterns)
+            {
+                case VALUE_PATTERN:                     return this.driver.getProperty(component, WindowProperty.ValueProperty);
+				case VALUE_PATTERN + TEXT_PATTERN:      return this.driver.getProperty(component, WindowProperty.ValueProperty);
+                case VALUE_PATTERN + SELECTION_PATTERN: return this.driver.getProperty(component, WindowProperty.ValueProperty);
+                case SELECTION_PATTERN:           	    return this.driver.getProperty(component, WindowProperty.SelectionProperty);
+                case TOGGLE_PATTERN:                 	return this.driver.getProperty(component, WindowProperty.NameProperty);
+                case TEXT_PATTERN:                     	return this.driver.getProperty(component, WindowProperty.IsTextPatternAvailableProperty);
+                case RANGE_PATTERN:                   	return this.driver.getProperty(component, WindowProperty.IsRangeValuePatternAvailableProperty);
+                default:                            	return this.driver.getProperty(component, WindowProperty.NameProperty);
+            }
 		}
 		catch (RemoteException e)
 		{

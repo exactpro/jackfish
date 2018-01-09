@@ -18,10 +18,10 @@ public class ConsoleErrorMatrixListener extends MatrixListener
 	public void error(Matrix matrix, int lineNumber, MatrixItem item, String message)
 	{
 		super.error(matrix, lineNumber, item, message);
-		
+
 		if (item != null)
 		{
-            System.out.println(String.format("%s[%3d] %s %s", matrix.getNameProperty().get(), item.getNumber(), item.getPath(), message));
+			System.out.println(String.format("%s[%3d] %s %s", matrix.getNameProperty().get(), item.getNumber(), item.getPath(), message));
 		}
 		else
 		{

@@ -27,6 +27,7 @@ import javafx.scene.AccessibleAttribute;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.control.*;
+import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.input.*;
 import javafx.util.StringConverter;
 import org.apache.log4j.Logger;
@@ -130,6 +131,10 @@ public class FxOperationExecutor extends AbstractOperationExecutor<EventTarget>
 			if (component instanceof Tooltip)
 			{
 				return ((Tooltip) component).getText();
+			}
+			if (component instanceof ScrollBar)
+			{
+				return String.valueOf(((ScrollBar) component).getValue());
 			}
 			return MatcherFx.getText(component);
 		}, e->
@@ -306,7 +311,18 @@ public class FxOperationExecutor extends AbstractOperationExecutor<EventTarget>
 	@Override
 	public List<EventTarget> findAll(ControlKind controlKind, EventTarget window, Locator locator) throws Exception
 	{
-		return tryExecute(EMPTY_CHECK, new MatcherFx(this.info, locator, window)::findAll,
+		return tryExecute(EMPTY_CHECK,
+				()->
+				{
+					if(window == null)
+					{
+						return new MatcherFx(this.info, locator, UtilsFx.currentRoot()).findAll();
+					}
+					else
+					{
+						return new MatcherFx(this.info, locator, window).findAll();
+					}
+				},
 				e->
 				{
 					logger.error(String.format("findAll(%s,%s,%s)", controlKind, window, locator));
@@ -544,6 +560,11 @@ public class FxOperationExecutor extends AbstractOperationExecutor<EventTarget>
 					default:
 						break;
 				}
+
+				ArrayList<InputEvent> events = new ArrayList<>();
+				events.add(new KeyEvent(null, component, b ? KeyEvent.KEY_PRESSED : KeyEvent.KEY_RELEASED, "", "", getKeyCode(key), this.isShiftDown, this.isControlDown, this.isAltDown, false));
+				Platform.runLater(() -> events.stream().peek(e -> logger.debug("Event : " + e)).forEach(e -> Event.fireEvent(component, e)));
+
 				return true;
 			},
 			e->
@@ -745,20 +766,22 @@ public class FxOperationExecutor extends AbstractOperationExecutor<EventTarget>
 				{
 					if (component instanceof TextInputControl)
 					{
-						TextInputControl field = (TextInputControl) component;
-						if (clear)
+						return enterTextToField(clear, (TextInputControl) component, text);
+					}
+
+					if (component instanceof ComboBox)
+					{
+						ComboBox comboBox = (ComboBox) component;
+						if(comboBox.isEditable())
 						{
-							field.setText(text);
+							return enterTextToField(clear, comboBox.getEditor(), text);
 						}
 						else
 						{
-							String currentText = field.getText();
-							field.setText(currentText + text);
+							throw new Exception("ComboBox is not editable");
 						}
-
-						return true;
 					}
-					throw new Exception("Cant set text to not input control");
+					return true;
 				},
 				e ->
 				{
@@ -990,6 +1013,14 @@ public class FxOperationExecutor extends AbstractOperationExecutor<EventTarget>
 				Platform.runLater(treeView::layout);
 				return true;
 			}
+			if (component instanceof ComboBox)
+			{
+				ComboBox comboBox = (ComboBox) component;
+				ListView listView = ((ComboBoxListViewSkin) comboBox.getSkin()).getListView();
+				listView.scrollTo(index);
+				Platform.runLater(listView::layout);
+				return true;
+			}
 			return false;
 		}, e ->
 		{
@@ -1161,6 +1192,14 @@ public class FxOperationExecutor extends AbstractOperationExecutor<EventTarget>
 				{
 					cell = ((TableCell) cell).getGraphic();
 				}
+				else if(cell instanceof TextFieldTableCell)
+				{
+					TableView tableView = (TableView) component;
+					tableView.edit(row, (TableColumn) tableView.getColumns().get(column));
+					((TextFieldTableCell) cell).commitEdit(text);
+					tableView.refresh();
+					return true;
+				}
 			}
 			else if (component instanceof TreeTableView)
 			{
@@ -1177,7 +1216,11 @@ public class FxOperationExecutor extends AbstractOperationExecutor<EventTarget>
 
 			if (cell != null)
 			{
-				if (!(cell instanceof TextInputControl))
+				if (cell instanceof TextInputControl)
+				{
+					((TextInputControl) cell).setText(text);
+				}
+				else
 				{
 					Locator locator = new Locator();
 					locator.kind(ControlKind.TextBox);
@@ -1188,10 +1231,6 @@ public class FxOperationExecutor extends AbstractOperationExecutor<EventTarget>
 					}
 					TextInputControl cellBox = (TextInputControl) all.get(0);
 					cellBox.setText(text);
-				}
-				else
-				{
-					((TextInputControl) cell).setText(text);
 				}
 				return true;
 			}
@@ -1627,6 +1666,20 @@ public class FxOperationExecutor extends AbstractOperationExecutor<EventTarget>
 		}
 		catch (Exception e)
 		{}
+	}
+
+	private boolean enterTextToField(boolean clear, TextInputControl field, String text)
+	{
+		if (clear)
+		{
+			field.setText(text);
+		}
+		else
+		{
+			String currentText = field.getText();
+			field.setText(currentText + text);
+		}
+		return true;
 	}
 	//endregion
 }

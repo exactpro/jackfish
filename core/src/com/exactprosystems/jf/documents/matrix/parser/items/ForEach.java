@@ -12,19 +12,10 @@ package com.exactprosystems.jf.documents.matrix.parser.items;
 import com.csvreader.CsvWriter;
 import com.exactprosystems.jf.api.common.Str;
 import com.exactprosystems.jf.api.common.i18n.R;
-import com.exactprosystems.jf.api.error.ErrorKind;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.report.ReportBuilder;
 import com.exactprosystems.jf.documents.config.Context;
-import com.exactprosystems.jf.documents.matrix.parser.DisplayDriver;
-import com.exactprosystems.jf.api.error.common.MatrixException;
-import com.exactprosystems.jf.documents.matrix.parser.MutableValue;
-import com.exactprosystems.jf.documents.matrix.parser.Parameter;
-import com.exactprosystems.jf.documents.matrix.parser.Parameters;
-import com.exactprosystems.jf.documents.matrix.parser.Result;
-import com.exactprosystems.jf.documents.matrix.parser.ReturnAndResult;
-import com.exactprosystems.jf.documents.matrix.parser.SearchHelper;
-import com.exactprosystems.jf.documents.matrix.parser.Tokens;
+import com.exactprosystems.jf.documents.matrix.parser.*;
 import com.exactprosystems.jf.documents.matrix.parser.listeners.IMatrixListener;
 
 import java.util.Iterator;
@@ -47,14 +38,13 @@ import java.util.concurrent.atomic.AtomicReference;
 )
 public final class ForEach extends MatrixItem
 {
-
-	private MutableValue<String>	var;
-	private Parameter				in;
+	private final MutableValue<String> var;
+	private final Parameter            in;
 
 	public ForEach()
 	{
 		super();
-		this.var = new MutableValue<String>();
+		this.var = new MutableValue<>();
 		this.in = new Parameter(Tokens.In.get(), null);
 	}
 
@@ -73,17 +63,11 @@ public final class ForEach extends MatrixItem
 		return new ForEach(this);
 	}
 
-	// ==============================================================================================
-	// Interface Mutable
-	// ==============================================================================================
+	//region Interface Mutable
 	@Override
 	public boolean isChanged()
 	{
-		if (this.var.isChanged() || this.in.isChanged())
-		{
-			return true;
-		}
-		return super.isChanged();
+		return this.var.isChanged() || this.in.isChanged() || super.isChanged();
 	}
 
 	@Override
@@ -94,23 +78,21 @@ public final class ForEach extends MatrixItem
 		this.in.saved();
 	}
 
-	// ==============================================================================================
-	// implements Displayed
-	// ==============================================================================================
+	//endregion
+
+	//region override from MatrixItem
 	@Override
 	protected Object displayYourself(DisplayDriver driver, Context context)
 	{
 		Object layout = driver.createLayout(this, 2);
-		driver.showComment(this, layout, 0, 0, getComments());
+		driver.showComment(this, layout, 0, 0, super.getComments());
 		driver.showTitle(this, layout, 1, 0, Tokens.ForEach.get(), context.getFactory().getSettings());
-		driver.showTextBox(this, layout, 1, 1, this.var, this.var, () -> this.var.get());
+		driver.showTextBox(this, layout, 1, 1, this.var, this.var, this.var::get);
 		driver.showTitle(this, layout, 1, 2, Tokens.In.get(), context.getFactory().getSettings());
 		driver.showExpressionField(this, layout, 1, 3, Tokens.In.get(), this.in, this.in, null, null, null, null);
 
 		return layout;
 	}
-
-	// ==============================================================================================
 
 	@Override
 	public String getItemName()
@@ -119,9 +101,9 @@ public final class ForEach extends MatrixItem
 	}
 
 	@Override
-	protected void initItSelf(Map<Tokens, String> systemParameters) throws MatrixException
+	protected void initItSelf(Map<Tokens, String> systemParameters)
 	{
-		this.var.set(systemParameters.get(Tokens.ForEach));
+		this.var.accept(systemParameters.get(Tokens.ForEach));
 		this.in.setExpression(systemParameters.get(Tokens.In));
 	}
 
@@ -160,87 +142,87 @@ public final class ForEach extends MatrixItem
 	{
 		try
 		{
-			ReturnAndResult ret = null;
-			Result result = null;
+			ReturnAndResult returnAndResult;
+			Result result;
 
 			if (!this.in.evaluate(evaluator))
 			{
-				throw new Exception(String.format(R.FOREACH_EXCEPTION_IN.get(), this.in.getValueAsString()));
+				return super.createReturn(String.format(R.FOREACH_EXCEPTION_IN.get(), this.in.getValueAsString()), listener, start);
 			}
 
 			Object inValue = this.in.getValue();
 			if (!(inValue instanceof Iterable<?>))
 			{
-				throw new Exception(R.FOREACH_EXCEPTION.get());
+				return super.createReturn(R.FOREACH_EXCEPTION.get(), listener, start);
 			}
 
-			Iterator<?> iterator = ((Iterable<?>)inValue).iterator(); 
+			Iterator<?> iterator = ((Iterable<?>) inValue).iterator();
 			int count = 0;
-            AtomicReference<Object> current = new AtomicReference<>(null);
+			AtomicReference<Object> current = new AtomicReference<>(null);
 
-			while (checkCondition(iterator, current, evaluator))
+			while (this.checkCondition(iterator, current, evaluator))
 			{
 				report.outLine(this, null, String.format("loop %s = %s", this.var, Str.asString(current.get())), count++);
 
-				ret = executeChildren(start, context, listener, evaluator, report, new Class<?>[] { OnError.class });
-				result = ret.getResult();
+				returnAndResult = super.executeChildren(start, context, listener, evaluator, report, new Class<?>[]{OnError.class});
+				result = returnAndResult.getResult();
 
 				if (result.isFail())
 				{
 					MatrixItem branchOnError = super.find(false, OnError.class, null);
 					if (branchOnError != null && branchOnError instanceof OnError)
 					{
-						((OnError) branchOnError).setError(ret.getError());
+						((OnError) branchOnError).setError(returnAndResult.getError());
 
-						ret = branchOnError.execute(context, listener, evaluator, report);
-						result = ret.getResult();
+						returnAndResult = branchOnError.execute(context, listener, evaluator, report);
+						result = returnAndResult.getResult();
 					}
 					else
 					{
-						return ret;
+						return returnAndResult;
 					}
 				}
-				
-                if(result == Result.Break)
-                {
-                    break;
-                }
-                if (result.isFail())
-                {
-                    return new ReturnAndResult(start, ret.getError(), result);
-                }
-                if (result == Result.Stopped || result == Result.Return)
-                {
-                    return new ReturnAndResult(start, result, ret.getOut());
-                }
-                if (result == Result.Continue)
-                {
-                    continue;
-                }
-            }
 
-            return new ReturnAndResult(start, Result.Passed, null);
+				if (result == Result.Break)
+				{
+					break;
+				}
+				if (result.isFail())
+				{
+					return new ReturnAndResult(start, returnAndResult.getError(), result);
+				}
+				if (result == Result.Stopped || result == Result.Return)
+				{
+					return new ReturnAndResult(start, result, returnAndResult.getOut());
+				}
+				if (result == Result.Continue)
+				{
+					continue;
+				}
+			}
+
+			return new ReturnAndResult(start, Result.Passed, null);
 		}
 		catch (Exception e)
 		{
 			logger.error(e.getMessage(), e);
-			listener.error(this.owner, getNumber(), this, e.getMessage());
-			return new ReturnAndResult(start, Result.Failed, e.getMessage(), ErrorKind.EXCEPTION, this);
+			return super.createReturn(e.getMessage(), listener, start);
 		}
 	}
-	
+	//endregion
+
+	//region private methods
+
 	private boolean checkCondition(Iterator<?> iterator, AtomicReference<Object> current, AbstractEvaluator evaluator)
 	{
-	    boolean ret = iterator.hasNext();
-	    
-	    if (ret)
-	    {
-            Object currentValue = iterator.next();
-            current.set(currentValue);
-            evaluator.getLocals().set(this.var.get(), currentValue);
-	    }
-	    
-	    return ret;
+		boolean ret = iterator.hasNext();
+		if (ret)
+		{
+			Object currentValue = iterator.next();
+			current.set(currentValue);
+			evaluator.getLocals().set(this.var.get(), currentValue);
+		}
+		return ret;
 	}
-
+	//endregion
 }

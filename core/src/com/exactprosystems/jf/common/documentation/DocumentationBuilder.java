@@ -28,6 +28,7 @@ import com.exactprosystems.jf.documents.config.Context;
 import com.exactprosystems.jf.documents.guidic.controls.AbstractControl;
 import com.exactprosystems.jf.documents.matrix.parser.Parser;
 import com.exactprosystems.jf.documents.matrix.parser.items.*;
+import com.exactprosystems.jf.documents.matrix.parser.items.help.*;
 import com.exactprosystems.jf.functions.Content;
 import com.exactprosystems.jf.functions.ContentItem;
 import com.exactprosystems.jf.functions.Table;
@@ -220,13 +221,13 @@ public class DocumentationBuilder
 
     private static void addContent(MatrixItem root, String title, Content content) throws Exception
     {
-        MatrixItem contentItem = new HelpContent(title, content); 
+        MatrixItem contentItem = new HelpContent(title, content);
         root.insert(root.count(), contentItem);
     }
 
     private static void addPicture(MatrixItem root, String title, int width, InputStream stream) throws Exception
     {
-        MatrixItem picture = new HelpPicture(title, stream, width); 
+        MatrixItem picture = new HelpPicture(title, stream, width);
         root.insert(root.count(), picture);
     }
 

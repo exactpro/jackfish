@@ -100,12 +100,12 @@ public class DialogGetProperties extends AbstractAction
 		{
 			if (parameter.getName().equals(sizeName))
 			{
-				Dimension dialogSize = service.getDialogSize(selfControl.locator());
+				Dimension dialogSize = service.getDialogSize(IControl.evaluateTemplate(selfControl.locator(), evaluator));
 				result.put(parameter.getName(), dialogSize);
 			}
 			if (parameter.getName().equals(positionName))
 			{
-				Point dialogPosition = service.getDialogPosition(selfControl.locator());
+				Point dialogPosition = service.getDialogPosition(IControl.evaluateTemplate(selfControl.locator(), evaluator));
 				result.put(parameter.getName(), dialogPosition);
 			}
 		}

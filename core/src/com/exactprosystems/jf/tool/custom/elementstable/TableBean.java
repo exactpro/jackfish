@@ -15,18 +15,16 @@ import org.w3c.dom.Node;
 
 public class TableBean
 {
-	private String      id;
-	private boolean     isNew;
-	private int         count;
 	private TableBean option = this;
+	private boolean         isNew;
+	private int             count;
 	private AbstractControl abstractControl;
-	private Node node;
-	private String style;
+	private Node            node;
+	private String          style;
 
 	public TableBean(AbstractControl abstractControl)
 	{
 		this.abstractControl = abstractControl;
-		this.id = this.abstractControl.getID();
 		this.isNew = false;
 		this.count = 0;
 	}
@@ -35,7 +33,6 @@ public class TableBean
 	{
 		return node;
 	}
-
 	public void setNode(Node node)
 	{
 		this.node = node;
@@ -55,7 +52,6 @@ public class TableBean
 	{
 		return isNew;
 	}
-
 	public void setIsNew(boolean aNew)
 	{
 		isNew = aNew;
@@ -65,7 +61,6 @@ public class TableBean
 	{
 		return count;
 	}
-
 	public void setCount(int count)
 	{
 		this.count = count;
@@ -75,7 +70,6 @@ public class TableBean
 	{
 		return abstractControl;
 	}
-
 	public void setAbstractControl(AbstractControl abstractControl)
 	{
 		this.abstractControl = abstractControl;
@@ -85,7 +79,6 @@ public class TableBean
 	{
 		return style;
 	}
-
 	public void setStyle(String style)
 	{
 		this.style = style;
@@ -95,7 +88,6 @@ public class TableBean
 	{
 		return option;
 	}
-
 	public void setOption(TableBean option)
 	{
 		this.option = option;

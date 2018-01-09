@@ -9,6 +9,8 @@
 
 package com.exactprosystems.jf.documents.matrix.parser;
 
+import java.util.Arrays;
+
 public enum Tokens
 {
 	TempItem,
@@ -70,25 +72,13 @@ public enum Tokens
 	
 	public static boolean contains(String name)
 	{
-		for (Tokens token : values())
-		{
-			if (token.name().equals(name))
-			{
-				return true;
-			}
-		}
-		return false;
+		return Arrays.stream(values())
+				.anyMatch(token -> token.name().equals(name));
 	}
 
 	public static boolean containsIgnoreCase(String name)
 	{
-		for (Tokens token : values())
-		{
-			if (token.name().equals(name))
-			{
-				return true;
-			}
-		}
-		return false;
+		return Arrays.stream(values())
+				.anyMatch(token -> token.name().equalsIgnoreCase(name));
 	}
 }

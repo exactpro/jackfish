@@ -10,28 +10,42 @@
 package com.exactprosystems.jf.documents.matrix.parser;
 
 import com.exactprosystems.jf.api.error.ErrorKind;
+import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
+import com.exactprosystems.jf.common.report.ReportBuilder;
+import com.exactprosystems.jf.documents.config.Context;
 import com.exactprosystems.jf.documents.matrix.parser.items.MatrixError;
 import com.exactprosystems.jf.documents.matrix.parser.items.MatrixItem;
+import com.exactprosystems.jf.documents.matrix.parser.listeners.IMatrixListener;
 
+/**
+ * This class used for return result of executing a Matrix item
+ *
+ * @see MatrixItem#execute(Context, IMatrixListener, AbstractEvaluator, ReportBuilder)
+ */
 public class ReturnAndResult
 {
-    public ReturnAndResult(long start, ReturnAndResult other, Result result)
-    {
-        this.time   = System.currentTimeMillis() - start;
-        this.result = result;
-        this.out    = other.out;
-        this.error  = other.error;
-    }
-    
-    public ReturnAndResult(long start, ReturnAndResult other)
-    {
-        this.time   = System.currentTimeMillis() - start;
-        this.result = other.result;
-        this.out    = other.out;
-        this.error  = other.error;
-    }
-    
-    public ReturnAndResult(long start, MatrixError error, Result result)
+	private Result      result;
+	private Object      out;
+	private MatrixError error;
+	private long        time;
+
+	public ReturnAndResult(long start, ReturnAndResult other, Result result)
+	{
+		this.time = System.currentTimeMillis() - start;
+		this.result = result;
+		this.out = other.out;
+		this.error = other.error;
+	}
+
+	public ReturnAndResult(long start, ReturnAndResult other)
+	{
+		this.time = System.currentTimeMillis() - start;
+		this.result = other.result;
+		this.out = other.out;
+		this.error = other.error;
+	}
+
+	public ReturnAndResult(long start, MatrixError error, Result result)
 	{
 		this.time = System.currentTimeMillis() - start;
 		this.result = result;
@@ -53,12 +67,12 @@ public class ReturnAndResult
 		this.result = result;
 		this.out = out;
 	}
-	
-	public ReturnAndResult (long start, Result result)
+
+	public ReturnAndResult(long start, Result result)
 	{
 		this(start, result, null);
 	}
-	
+
 	public Result getResult()
 	{
 		return this.result;
@@ -73,14 +87,9 @@ public class ReturnAndResult
 	{
 		return this.error;
 	}
-	
+
 	public long getTime()
 	{
 		return this.time;
 	}
-
-	private Result result;
-	private Object out;
-	private MatrixError error;
-	private long time;
 }

@@ -13,7 +13,6 @@ import com.exactprosystems.jf.api.app.ControlKind;
 import com.exactprosystems.jf.api.app.IControl;
 import com.exactprosystems.jf.api.app.ISection;
 import com.exactprosystems.jf.api.app.IWindow;
-import com.exactprosystems.jf.api.common.IContext;
 import com.exactprosystems.jf.api.common.Str;
 import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.api.wizard.WizardAttribute;
@@ -22,6 +21,7 @@ import com.exactprosystems.jf.api.wizard.WizardCommand;
 import com.exactprosystems.jf.api.wizard.WizardManager;
 import com.exactprosystems.jf.app.ApplicationPool;
 import com.exactprosystems.jf.documents.config.AppEntry;
+import com.exactprosystems.jf.documents.config.Context;
 import com.exactprosystems.jf.documents.guidic.GuiDictionary;
 import com.exactprosystems.jf.documents.guidic.Section;
 import com.exactprosystems.jf.documents.guidic.controls.AbstractControl;
@@ -68,7 +68,7 @@ public class SupportedControlWizard extends AbstractWizard
 	private TreeView<SimpleBean> treeView;
 
 	@Override
-	public void init(IContext context, WizardManager wizardManager, Object... parameters)
+	public void init(Context context, WizardManager wizardManager, Object... parameters)
 	{
 		super.init(context, wizardManager, parameters);
 

@@ -9,9 +9,9 @@
 
 package com.exactprosystems.jf.documents;
 
-import com.exactprosystems.jf.tool.documents.guidic.DictionaryFxController;
 import com.exactprosystems.jf.tool.documents.AbstractDocumentController;
 import com.exactprosystems.jf.tool.documents.csv.CsvFxController;
+import com.exactprosystems.jf.tool.documents.guidic.DictionaryFxController;
 import com.exactprosystems.jf.tool.documents.text.PlainTextFxController;
 import com.exactprosystems.jf.tool.documents.vars.SystemVarsFxController;
 import com.exactprosystems.jf.tool.matrix.MatrixFxController;
@@ -44,7 +44,7 @@ public enum DocumentKind
 
 	public Class<? extends AbstractDocumentController<? extends Document>> getClazz()
 	{
-		return clazz;
+		return this.clazz;
 	}
 
 	public static <T extends Document> DocumentKind byDocument(T doc)

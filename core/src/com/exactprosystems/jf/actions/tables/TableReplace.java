@@ -53,7 +53,7 @@ public class TableReplace extends AbstractAction
 	@ActionFieldAttribute(name = regexpName, mandatory = false, def = DefaultValuePool.Null, constantDescription = R.TABLE_REPLACE_REGEXP)
 	protected String regexp;
 
-	@ActionFieldAttribute(name = matchCellname, mandatory = false, def = DefaultValuePool.Null, constantDescription = R.TABLE_REPLACE_MATCH_CELL)
+	@ActionFieldAttribute(name = matchCellname, mandatory = false, def = DefaultValuePool.True, constantDescription = R.TABLE_REPLACE_MATCH_CELL)
 	protected Boolean matchCell;
 
 	@Override

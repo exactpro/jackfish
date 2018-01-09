@@ -21,15 +21,24 @@ import com.exactprosystems.jf.documents.matrix.parser.*;
 import com.exactprosystems.jf.documents.matrix.parser.listeners.IMatrixListener;
 import com.exactprosystems.jf.functions.HelpKind;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
+/**
+ * A owner for all AbstractActions.
+ * This class a layer from MatrixItem to AbstractAction
+ *
+ * @see MatrixItem
+ * @see AbstractAction
+ */
 @MatrixItemAttribute(
 		constantGeneralDescription = R.ACTION_ITEM_DESCRIPTION,
 		shouldContain 		= { Tokens.Action},
 		mayContain 			= { Tokens.Id, Tokens.Off, Tokens.RepOff, Tokens.Global, Tokens.IgnoreErr, Tokens.Assert },
 		parents				= { Case.class, Else.class, For.class, ForEach.class, If.class,
-	    						OnError.class, Step.class, SubCase.class, TestCase.class, While.class },
+								OnError.class, Step.class, SubCase.class, TestCase.class, While.class },
 		real				= true,
 		hasValue 			= true,
 		hasParameters 		= true,
@@ -49,7 +58,7 @@ public final class ActionItem extends MatrixItem
 	public ActionItem(String actionName) throws Exception
 	{
 		this();
-		this.action = actionByName(actionName);
+		this.action = this.actionByName(actionName);
 	}
 
 	/**
@@ -79,44 +88,44 @@ public final class ActionItem extends MatrixItem
 		return actionItem;
 	}
 
-	public Class<? extends AbstractAction> getActionClass()
-	{
-	    return this.action.getClass();
-	}
-
 	@Override
 	public String toString()
 	{
 		return super.toString() + ":" + this.action.toString();
 	}
 
-	@Override
-	protected Object displayYourself(DisplayDriver driver, Context context)
-	{
-		Object layout = driver.createLayout(this, 4);
-		driver.showComment(this, layout, 0, 0, getComments());
-		driver.showTextBox(this, layout, 1, 0, this.id, this.id, () -> this.id.get() + ".Out");
-		driver.showTitle(this, layout, 1, 1, getActionName(), context.getFactory().getSettings());
-		driver.showParameters(this, layout, 1, 2, this.parameters, () -> this.id.get() + ".In.", false);
-		driver.showCheckBox(this, layout, 2, 0, "G", this.global, this.global);
-		driver.showCheckBox(this, layout, 2, 0, "I", this.ignoreErr, this.ignoreErr);
-		driver.showToggleButton(this, layout, 2, 1,
-		        b -> driver.hide(this, layout, 3, b),
-		        b -> "Asserts", !(this.assertBool.isExpressionNullOrEmpty()));
-		driver.showLabel(this, layout, 3, 0, Tokens.Assert.get());
-		driver.showExpressionField(this, layout, 3, 1, Tokens.Assert.get(), this.assertBool, this.assertBool, null, null, null, null);
-		driver.hide(this, layout, 3, this.assertBool.isExpressionNullOrEmpty());
-		return layout;
-	}
+	//region Getters / setters
 
-	//==============================================================================================
-	// Getters / setters
-	//==============================================================================================
+	/**
+	 * @return the name of action or "null" if action is null
+	 */
 	public String getActionName()
 	{
-		return this.action != null ? this.action.getClass().getSimpleName() : "null";
+		return Optional.ofNullable(this.action)
+				.map(act -> act.getClass().getSimpleName())
+				.orElse("null");
 	}
 
+	/**
+	 * @return the class of the action or null, if actions is null
+	 */
+	public Class<? extends AbstractAction> getActionClass()
+	{
+		return Optional.ofNullable(this.action)
+				.map(AbstractAction::getClass)
+				.orElse(null);
+	}
+
+	/**
+	 * Return kind of help, how user can fill the passed parameter
+	 * @param context a context for evaluating
+	 * @param parameter a parameter, for which should return type of help
+	 * @return type of help or null.
+	 * @throws Exception if something went wrong
+	 *
+	 * @see AbstractAction#howHelpWithParameter(Context, String, Parameters)
+	 * @see HelpKind
+	 */
 	public HelpKind howHelpWithParameter(Context context, String parameter) throws Exception
 	{
 		if (Str.IsNullOrEmpty(parameter))
@@ -127,23 +136,45 @@ public final class ActionItem extends MatrixItem
 		return this.action.howHelpWithParameter(context, parameter, this.parameters);
 	}
 
+	/**
+	 * Return list of possible values, how we can fill the passed parameter
+	 * @param context a context for evaluating
+	 * @param parameter a parameter, which should be filled
+	 *
+	 * @return List of possible values
+	 *
+	 * @throws Exception if something went wrong
+	 *
+	 * @see AbstractAction#listToFillParameter(Context, String, Parameters)
+	 */
 	public List<ReadableValue> listToFillParameter(Context context, String parameter) throws Exception
 	{
 		return this.action.listToFillParameter(context, parameter, this.parameters);
 	}
 
+	/**
+	 * Return map of all parameters, which can used on the action
+	 * @param context a context for evaluating
+	 *
+	 * @return a map of all parameters, which can used on the action
+	 *
+	 * @throws Exception is something went wrong
+	 *
+	 * @see AbstractAction#helpToAddParameters(Context, Parameters)
+	 */
 	public Map<ReadableValue, TypeMandatory> helpToAddParameters(Context context) throws Exception
 	{
 		return this.action.helpToAddParameters(context, this.parameters);
 	}
 
+	/**
+	 * Set this object as owner for the action
+	 */
 	public void setOwner()
 	{
-		if (this.action != null)
-		{
-			this.action.setOwner(this);
-		}
+		Optional.ofNullable(this.action).ifPresent(act -> act.setOwner(this));
 	}
+
 
 	public ActionGroups group()
 	{
@@ -154,30 +185,43 @@ public final class ActionItem extends MatrixItem
 	{
 		return !Str.IsNullOrEmpty(this.assertBool.getExpression());
 	}
+	//endregion
 
-	//==============================================================================================
-	// Interface Mutable
-	//==============================================================================================
-    @Override
-    public boolean isChanged()
-    {
-    	if (this.assertBool.isChanged() )
-    	{
-    		return true;
-    	}
-    	return super.isChanged();
-    }
+	//region Interface Mutable
+	@Override
+	public boolean isChanged()
+	{
+		return this.assertBool.isChanged() || super.isChanged();
+	}
 
-    @Override
-    public void saved()
-    {
-    	super.saved();
-    	this.assertBool.saved();
-    }
+	@Override
+	public void saved()
+	{
+		super.saved();
+		this.assertBool.saved();
+	}
+	//endregion
 
-	//==============================================================================================
-	// Protected members should be overridden
-	//==============================================================================================
+	//region override from MatrixItem
+	@Override
+	protected Object displayYourself(DisplayDriver driver, Context context)
+	{
+		Object layout = driver.createLayout(this, 4);
+		driver.showComment(this, layout, 0, 0, super.getComments());
+		driver.showTextBox(this, layout, 1, 0, this.id, this.id, () -> this.id.get() + ".Out");
+		driver.showTitle(this, layout, 1, 1, this.getActionName(), context.getFactory().getSettings());
+		driver.showParameters(this, layout, 1, 2, this.parameters, () -> this.id.get() + ".In.", false);
+		driver.showCheckBox(this, layout, 2, 0, "G", this.global, this.global);
+		driver.showCheckBox(this, layout, 2, 0, "I", this.ignoreErr, this.ignoreErr);
+		driver.showToggleButton(this, layout, 2, 1,
+				b -> driver.hide(this, layout, 3, b),
+				b -> "Asserts", !(this.assertBool.isExpressionNullOrEmpty()));
+		driver.showLabel(this, layout, 3, 0, Tokens.Assert.get());
+		driver.showExpressionField(this, layout, 3, 1, Tokens.Assert.get(), this.assertBool, this.assertBool, null, null, null, null);
+		driver.hide(this, layout, 3, this.assertBool.isExpressionNullOrEmpty());
+		return layout;
+	}
+
 	@Override
 	public void correctParametersType()
 	{
@@ -193,10 +237,7 @@ public final class ActionItem extends MatrixItem
 	@Override
 	public void addKnownParameters()
 	{
-		if (this.action != null)
-		{
-			this.action.addParameters(this.parameters);
-		}
+		Optional.ofNullable(this.action).ifPresent(act -> act.addParameters(this.parameters));
 	}
 
 	@Override
@@ -204,12 +245,11 @@ public final class ActionItem extends MatrixItem
 	{
 		String actionName = systemParameters.get(Tokens.Action);
 		this.assertBool.setExpression(systemParameters.get(Tokens.Assert));
-
 		try
 		{
 			if (this.action == null)
 			{
-				this.action = actionByName(actionName);
+				this.action = this.actionByName(actionName);
 				this.action.setOwner(this);
 			}
 		}
@@ -222,12 +262,10 @@ public final class ActionItem extends MatrixItem
 	@Override
 	protected String itemSuffixSelf()
 	{
-		if (this.action != null)
-		{
-			String res = this.action.actionSuffix();
-			return Str.IsNullOrEmpty(res) ? null : res;
-		}
-		return null;
+		return Optional.ofNullable(this.action)
+				.map(AbstractAction::actionSuffix)
+				.filter(suf -> !Str.IsNullOrEmpty(suf))
+				.orElse(null);
 	}
 
 	@Override
@@ -240,10 +278,7 @@ public final class ActionItem extends MatrixItem
 			super.addParameter(firstLine, secondLine, TypeMandatory.System, Tokens.Assert.get(), this.assertBool.getExpression());
 		}
 
-		for (Parameter parameter : getParameters())
-		{
-			super.addParameter(firstLine, secondLine, parameter.getType(), parameter.getName(), parameter.getExpression());
-		}
+		super.getParameters().forEach(parameter -> super.addParameter(firstLine, secondLine, parameter.getType(), parameter.getName(), parameter.getExpression()));
 	}
 
 	@Override
@@ -276,30 +311,20 @@ public final class ActionItem extends MatrixItem
 		return SearchHelper.matches(this.action.getClass().getSimpleName(), what, caseSensitive, wholeWord) ||
 				SearchHelper.matches(this.assertBool.getExpression(), what, caseSensitive, wholeWord) ||
 				SearchHelper.matches(Tokens.Action.get(), what, caseSensitive, wholeWord) ||
-				getParameters().matches(what, caseSensitive, wholeWord);
+				super.getParameters().matches(what, caseSensitive, wholeWord);
 	}
 
-	//==============================================================================================
-	// Private members
-	//==============================================================================================
+	//endregion
+
+	//region private methods
 	private AbstractAction actionByName(String actionName) throws Exception
 	{
-		Class<?> found = null;
-		for (Class<?> type : ActionsList.actions)
-		{
-			if (type.getSimpleName().equals(actionName))
-			{
-				found = type;
-				break;
-			}
-		}
-		if (found == null)
-		{
-			throw new Exception(String.format(R.ACTION_UNKNOWN_NAME_EXCEPTION.get(), actionName));
-		}
-
-		AbstractAction ret = (AbstractAction) found.newInstance();
-
-		return ret;
+		Class<?> found = Arrays.stream(ActionsList.actions)
+				.filter(type -> actionName.equals(type.getSimpleName()))
+				.findFirst()
+				.orElseThrow(() -> new Exception(String.format(R.ACTION_UNKNOWN_NAME_EXCEPTION.get(), actionName)));
+		return (AbstractAction) found.newInstance();
 	}
+
+	//endregion
 }

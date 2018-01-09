@@ -26,7 +26,10 @@ import java.io.*;
 )
 public class PlainText extends AbstractDocument
 {
-	protected MutableValue<String>		property;
+	/**
+	 * The field, which contains text, which used on this class
+	 */
+	protected final MutableValue<String> property;
 
 	public PlainText(String fileName, DocumentFactory factory)
 	{
@@ -39,7 +42,7 @@ public class PlainText extends AbstractDocument
 	public void load(Reader reader) throws Exception
 	{
 		super.load(reader);
-		this.property.set(read(reader));
+		this.property.accept(this.read(reader));
 		this.property.saved();
 	}
 
@@ -52,17 +55,26 @@ public class PlainText extends AbstractDocument
 	@Override
 	public void save(String fileName) throws Exception
 	{
-		write(fileName);
+		this.write(fileName);
 		super.save(fileName);
-		saved();
+		this.saved();
 	}
 	//endregion
 
+	//region interface Mutable
 	@Override
 	public boolean isChanged()
 	{
-		return this.property.isChanged();
+		return this.property.isChanged() || super.isChanged();
 	}
+
+	@Override
+	public void saved()
+	{
+		super.saved();
+		this.property.saved();
+	}
+	//endregion
 
 	public MutableValue<String> getProperty()
 	{
@@ -75,10 +87,10 @@ public class PlainText extends AbstractDocument
 		StringBuilder sb = new StringBuilder();
 		try (BufferedReader buffReader = new BufferedReader(reader))
 		{
-			String line = null;
+			String line;
 			while ((line = buffReader.readLine()) != null)
 			{
-				sb.append(line).append('\n');
+				sb.append(line).append(System.lineSeparator());
 			}
 		}
 		return sb.toString();
@@ -86,10 +98,10 @@ public class PlainText extends AbstractDocument
 
 	private void write(String fileName) throws IOException
 	{
-		try (Writer writer = CommonHelper.writerToFileName(fileName); 
-		     BufferedWriter buffWriter = new BufferedWriter(writer))
+		try (Writer writer = CommonHelper.writerToFileName(fileName);
+			 BufferedWriter buffWriter = new BufferedWriter(writer))
 		{
-			for (String line : this.property.get().split("\n"))
+			for (String line : this.property.get().split(System.lineSeparator()))
 			{
 				buffWriter.write(line);
 				buffWriter.newLine();

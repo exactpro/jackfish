@@ -92,7 +92,7 @@ public class DialogMove extends AbstractAction
 		}
 
 		Locator selfLocator = selfControl.locator();
-		service.moveDialog(selfLocator, this.x, this.y);
+		service.moveDialog(IControl.evaluateTemplate(selfLocator, evaluator), this.x, this.y);
 
 		super.setResult(null);
 	}

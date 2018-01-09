@@ -35,7 +35,7 @@ import java.util.*;
 import java.util.Map.Entry;
 import java.util.stream.Collectors;
 
-public abstract class AbstractAction implements Cloneable
+public abstract class AbstractAction
 {
 	protected static final Logger logger = Logger.getLogger(AbstractAction.class);
 
@@ -68,7 +68,7 @@ public abstract class AbstractAction implements Cloneable
 	//region Getters / Setters
 
 	/**
-	 * @return result from the action.
+	 * @return result from the action. If Result is null, it mean, that executing was failed
 	 * @see Result
 	 */
 	public final Result getResult()
@@ -111,7 +111,7 @@ public abstract class AbstractAction implements Cloneable
 
 	//endregion
 
-	//region Public members
+	//region public methods
 
 	/**
 	 * Add all mandatory fields to parameters. Added parameters have empty value and type Mandatory.
@@ -150,8 +150,15 @@ public abstract class AbstractAction implements Cloneable
 
 	/**
 	 * Execute the action.
+	 * <p>
+	 * After executing the action will check the assert field.
+	 * If the action executing was failed, but assert return true, the action will has {@link Result#Passed}
+	 * <p>
+	 * If {@link Action#Result} is {@code null}, it mean, that the action works incorrectly and will throw exception
 	 * @return result of executing.
+	 *
 	 * @see AbstractAction#getResult()
+	 * @see AbstractAction#doRealAction(Context, ReportBuilder, Parameters, AbstractEvaluator)
 	 */
 	public final Result doAction(Context context, AbstractEvaluator evaluator, ReportBuilder report, Parameters parameters, String actionId, Parameter assertBool)
 	{
@@ -232,8 +239,8 @@ public abstract class AbstractAction implements Cloneable
     }
 
 	/**
-	 * @return suffix for the action. <br>
-	 * If the action has output type is NullType, will returned empty string
+	 * @return a suffix for the action. <br>
+	 * If the action has output type is {@link NullType}, will returned empty string
 	 */
 	public final String actionSuffix()
 	{
@@ -243,6 +250,18 @@ public abstract class AbstractAction implements Cloneable
 				.orElse("");
 	}
 
+	/**
+	 * Return type of help, how user can fill the passed parameter
+	 * @param context a matrix context
+	 * @param fieldName the name of parameter, for which should return kind of help
+	 * @param parameters the list of all action parameters
+	 *
+	 * @return type of help, or null.
+	 *
+	 * @throws Exception if something went wrong
+	 *
+	 * @see HelpKind
+	 */
 	public final HelpKind howHelpWithParameter(Context context, String fieldName, Parameters parameters) throws Exception
 	{
 		if (parameters.containsKey(fieldName))
@@ -252,6 +271,16 @@ public abstract class AbstractAction implements Cloneable
 		return null;
 	}
 
+	/**
+	 * Return list of possible values, how we can fill the passed parameter
+	 * @param context a matrix context
+	 * @param parameterToFill the name of parameter, for which should return a list
+	 * @param parameters all parameters from the action
+	 *
+	 * @return a list of possible values
+	 *
+	 * @throws Exception if something went wrong
+	 */
 	public final List<ReadableValue> listToFillParameter(Context context, String parameterToFill, Parameters parameters) throws Exception
 	{
 		AbstractEvaluator evaluator = context.getEvaluator();
@@ -267,6 +296,15 @@ public abstract class AbstractAction implements Cloneable
 		return Collections.emptyList();
 	}
 
+	/**
+	 * Return map of all known parameters, which can used on the action
+	 * @param context a matrix context
+	 * @param parameters the list of all parameters from the action
+	 *
+	 * @return map of all known parameters
+	 *
+	 * @throws Exception if something went wrong
+	 */
 	public final Map<ReadableValue, TypeMandatory> helpToAddParameters(Context context, Parameters parameters) throws Exception
 	{
 		Map<ReadableValue, TypeMandatory> res = new LinkedHashMap<>();
@@ -308,7 +346,7 @@ public abstract class AbstractAction implements Cloneable
 	}
 
 	/**
-	 * init default values for all not mandatory fields in the action
+	 * Init default values ( via reflection) for all not mandatory fields in the action
 	 */
 	public final void initDefaultValues()
 	{

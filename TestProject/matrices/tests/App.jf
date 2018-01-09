@@ -627,13 +627,13 @@ Application Refresh;;;
         CALL_1;appStart
 
         #Id;#Action;$Dialog;$AppConnection;TextBox;TextBox
-        DLGFLL1;DialogFill;'Main';CALL_1;text;Do.check(text)
+        DLGFLL1;DialogFill;'Main';CALL_1;Do.text(text,true);Do.check(text)
 
         #Id;#Action;$AppConnection
         APPR1;ApplicationRefresh;CALL_1
 
         #Id;#Action;#Assert;$Dialog;$AppConnection;TextBox
-        DLGFLL1;DialogFill;This.Result == Result.Passed && This.Out.TextBox.isEmpty();'Main';CALL_1;Do.getValue()
+        DLGFLL1;DialogFill;This.Result == Result.Passed && This.Out.TextBox == 'Green';'Main';CALL_1;Do.getValue()
 
         #Id;#Action;$AppConnection
         APPSTP1;ApplicationStop;CALL_1

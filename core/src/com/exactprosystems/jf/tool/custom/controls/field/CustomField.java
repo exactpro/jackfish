@@ -17,10 +17,12 @@ import javafx.scene.control.TextField;
 
 public abstract class CustomField extends TextField
 {
+	private ObjectProperty<Node> right = new SimpleObjectProperty<>(this, "right");
+
 	public CustomField(String text)
 	{
 		super(text);
-		getStyleClass().add(CssVariables.CUSTOM_TEXT_FIELD);
+		super.getStyleClass().add(CssVariables.CUSTOM_TEXT_FIELD);
 	}
 
 	public CustomField()
@@ -28,18 +30,14 @@ public abstract class CustomField extends TextField
 		this("");
 	}
 
-	private ObjectProperty<Node> right = new SimpleObjectProperty<>(this, "right");
-
 	public final ObjectProperty<Node> rightProperty()
 	{
 		return right;
 	}
-
 	public final Node getRight()
 	{
 		return right.get();
 	}
-
 	public final void setRight(Node value)
 	{
 		right.set(value);

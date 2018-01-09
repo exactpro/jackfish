@@ -1,12 +1,4 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
-<!-- Copyright (c) 2009-2017, Exactpro Systems -->
-<!-- Quality Assurance & Related Software Development for Innovative Trading Systems. -->
-<!-- London Stock Exchange Group. -->
-<!-- All rights reserved. -->
-<!-- This is unpublished, licensed software, confidential and proprietary -->
-<!-- information which is the property of Exactpro Systems or its licensors. -->
-<!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
 <dictionary>
     <window name="Main">
         <self>
@@ -228,6 +220,9 @@
             <button id="ButtonInvisibleEnabled" uid="" class="" name="invisibleButton" text="" visibility="Enable"/>
             <button id="ButtonWeak" uid="" class="" name="Button" text="" weak="true"/>
             <button id="ButtonWeakNot" uid="" class="" name="Button" text=""/>
+            <button id="uidTemplate" uid="" owner="Owner1" name="@{nameTemplate}"/>
+            <button id="xpathTemplate" uid="" xpath=".//JButton[@name=&amp;quot;@{xpathTemplate}&amp;quot;]" owner="Owner1"/>
+            <button id="xpathTemplateNotFound" uid="" xpath=".//button[@name=&amp;quot;@{xpathTemplate}&amp;quot;]" owner="Owner1" name=""/>
         </run>
         <onClose/>
         <close/>

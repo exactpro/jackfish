@@ -9,46 +9,39 @@
 
 package com.exactprosystems.jf.documents.msgdic;
 
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlAttribute;
-import javax.xml.bind.annotation.XmlSchemaType;
-import javax.xml.bind.annotation.XmlType;
-import javax.xml.bind.annotation.XmlValue;
-import javax.xml.bind.annotation.adapters.CollapsedStringAdapter;
-import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
-
 import com.exactprosystems.jf.api.client.IAttribute;
 import com.exactprosystems.jf.api.client.IType;
 
+import javax.xml.bind.annotation.*;
+import javax.xml.bind.annotation.adapters.CollapsedStringAdapter;
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
+
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "Attribute", propOrder = { "value" })
+@XmlType(name = "Attribute", propOrder = {"value"})
 public class Attribute implements IAttribute
 {
+	@XmlAttribute(name = "name", required = true)
+	@XmlJavaTypeAdapter(CollapsedStringAdapter.class)
+	@XmlSchemaType(name = "NMTOKEN")
+	protected String name;
+
+	@XmlValue
+	protected String value;
+
+	@XmlAttribute(name = "type")
+	protected JavaType type;
+
 	public Attribute()
 	{
 	}
-	
+
 	@Override
 	public String toString()
 	{
 		return this.name + "=" + this.value;
 	}
 
-	@XmlValue
-	protected String	value;
-
-	@XmlAttribute(name = "name", required = true)
-	@XmlJavaTypeAdapter(CollapsedStringAdapter.class)
-	@XmlSchemaType(name = "NMTOKEN")
-	protected String	name;
-	
-	@XmlAttribute(name = "type")
-	protected JavaType	type;
-
-	//----------------------------------------------------------------------------------------------------------------------
-	// interface IAttribute
-	//----------------------------------------------------------------------------------------------------------------------
+	//region interface IAttribute
 	@Override
 	public String getValue()
 	{
@@ -66,5 +59,7 @@ public class Attribute implements IAttribute
 	{
 		return this.type;
 	}
+
+	//endregion
 
 }

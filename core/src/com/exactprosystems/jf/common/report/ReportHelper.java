@@ -54,7 +54,7 @@ public class ReportHelper
 			{
 				if (addQuotes)
 				{
-					result = "" + Parser.prefferedQuotes + obj + Parser.prefferedQuotes;
+					result = "" + Parser.preferredQuotes + obj + Parser.preferredQuotes;
 				}
 				else
 				{

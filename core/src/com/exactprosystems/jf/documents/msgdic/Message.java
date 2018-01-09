@@ -25,6 +25,9 @@ import java.util.stream.Collectors;
 @XmlType(name = "Message", propOrder = {"fields"})
 public class Message extends Field implements IMessage
 {
+	@XmlElement(name = "field")
+	protected List<Field> fields = new ArrayList<>();
+
 	public Message()
 	{
 	}
@@ -35,13 +38,7 @@ public class Message extends Field implements IMessage
 		return Message.class.getSimpleName() + "{" + this.fields + "}";
 	}
 
-	@XmlElement(name = "field")
-	protected List<Field> fields = new ArrayList<>();
-
-	//----------------------------------------------------------------------------------------------------------------------
-	// interface IMessage
-	//----------------------------------------------------------------------------------------------------------------------
-	@SuppressWarnings("unchecked")
+	//region interface IMessage
 	@Override
 	public List<IField> getFields()
 	{
@@ -53,9 +50,23 @@ public class Message extends Field implements IMessage
 	@Override
 	public List<IField> getMessageField()
 	{
-		return this.fields.stream().map(f -> (IField) f).collect(Collectors.toList());
+		return this.fields.stream()
+				.map(f -> (IField) f)
+				.collect(Collectors.toList());
 	}
 
+	@Override
+	public IField getField(String name)
+	{
+		return this.fields.stream()
+				.filter(field -> field.getName() != null && field.getName().equals(name))
+				.findFirst()
+				.orElse(null);
+	}
+
+	//endregion
+
+	//region private methods
 	private static void addAllField(List<IField> list, List<IField> messageList)
 	{
 		//TODO think about this method
@@ -92,19 +103,5 @@ public class Message extends Field implements IMessage
 			}
 		}
 	}
-
-	@Override
-	public IField getField(String name)
-	{
-		for (IField field : getFields())
-		{
-			String str = field.getName();
-			if (str != null && str.equals(name))
-			{
-				return field;
-			}
-		}
-
-		return null;
-	}
+	//endregion
 }

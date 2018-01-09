@@ -11,7 +11,6 @@ package com.exactprosystems.jf.documents.matrix.parser.items;
 
 import com.csvreader.CsvWriter;
 import com.exactprosystems.jf.api.common.i18n.R;
-import com.exactprosystems.jf.api.error.ErrorKind;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.evaluator.Variables;
 import com.exactprosystems.jf.common.highlighter.Highlighter;
@@ -42,18 +41,18 @@ import java.util.stream.Collectors;
 )
 public class RawText extends MatrixItem
 {
-    private static final String RAW_PREFIX = "~";
-	private MutableValue<String>    highlighterMutableValue;
-	private MutableValue<String>    description;
-	private Text                    text;
+	private static final String RAW_PREFIX = "~";
 
-	private boolean					firstUsing	= true;
+	private MutableValue<String> highlighterMutableValue;
+	private MutableValue<String> description;
+	private Text                 text;
+	private boolean firstUsing = true;
 
 	public RawText()
 	{
 		super();
 		this.text = new Text();
-		this.text.setChangeListener(flag -> this.owner.getChangedProperty().set(flag));
+		this.text.setChangeListener(flag -> super.owner.getChangedProperty().accept(flag));
 		this.description = new MutableValue<>();
 		this.highlighterMutableValue = new MutableValue<>(Highlighter.None.name());
 	}
@@ -74,15 +73,33 @@ public class RawText extends MatrixItem
 		return new RawText(this);
 	}
 
+	//region Interface Mutable
+	@Override
+	public boolean isChanged()
+	{
+		return this.text.isChanged() || this.description.isChanged() || super.isChanged();
+	}
+
+	@Override
+	public void saved()
+	{
+		super.saved();
+		this.text.saved();
+		this.description.saved();
+	}
+	//endregion
+
+	//region override from MatrixItem
+
 	@Override
 	protected Object displayYourself(DisplayDriver driver, Context context)
 	{
 		Object layout = driver.createLayout(this, 3);
-		driver.showComment(this, layout, 0, 0, getComments());
-		driver.showTextBox(this, layout, 1, 0, this.id, this.id, () -> this.id.get());
+		driver.showComment(this, layout, 0, 0, super.getComments());
+		driver.showTextBox(this, layout, 1, 0, super.id, super.id, () -> super.id.get());
 		driver.showTitle(this, layout, 1, 1, Tokens.RawText.get(), context.getFactory().getSettings());
 		driver.showTextBox(this, layout, 1, 2, this.description, this.description, () -> this.description.get());
-		driver.showCheckBox(this, layout, 1, 3, "Global", this.global, this.global);
+		driver.showCheckBox(this, layout, 1, 3, "Global", super.global, super.global);
 		driver.showTextArea(this, layout, 2, 0, this.text, list -> {
 			List<String> oldList = new ArrayList<>(this.text.subList(0, this.text.size()));
 			if (list.equals(oldList))
@@ -93,93 +110,51 @@ public class RawText extends MatrixItem
 			{
 				this.text.clear();
 				this.text.addAll(oldList);
-				driver.updateTextArea(this, layout, text);
+				driver.updateTextArea(this, layout, this.text);
 			};
 
 			Command redo = () ->
 			{
 				this.text.clear();
 				this.text.addAll(list);
-				driver.updateTextArea(this, layout, text);
+				driver.updateTextArea(this, layout, this.text);
 			};
-			this.owner.addCommand(undo, redo);
+			super.owner.addCommand(undo, redo);
 
 		}, Highlighter.byName(this.highlighterMutableValue.get()));
-		driver.showToggleButton(this, layout, 1, 4, 
-		        b -> driver.hide(this, layout, 2, b),
-		        b -> b ? "Hide" : "Show", this.text.size() > 0);
+		driver.showToggleButton(this, layout, 1, 4,
+				b -> driver.hide(this, layout, 2, b),
+				b -> b ? "Hide" : "Show", !this.text.isEmpty());
 
 		driver.showLabel(this, layout, 1, 5, "Highlighting:");
 		driver.showComboBox(this, layout, 1, 6, newValue -> {
 					if (newValue != null)
 					{
-						this.highlighterMutableValue.set(newValue);
+						this.highlighterMutableValue.accept(newValue);
 						driver.displayHighlight(layout, Highlighter.byName(newValue));
 					}
 				}, this.highlighterMutableValue,
-				() -> Arrays.stream(Highlighter.values()).map(Highlighter::name).collect(Collectors.toList()), (str) -> true);
+				() -> Arrays.stream(Highlighter.values()).map(Highlighter::name).collect(Collectors.toList()), str -> true);
 
 		return layout;
 	}
 
-	// ==============================================================================================
-	// Getters / setters
-	// ==============================================================================================
-
-	// ==============================================================================================
-	// Interface Mutable
-	// ==============================================================================================
-	@Override
-	public boolean isChanged()
-	{
-		if (this.text.isChanged() || this.description.isChanged())
-		{
-			return true;
-		}
-		return super.isChanged();
-	}
-
-	@Override
-	public void saved()
-	{
-		super.saved();
-		this.text.saved();
-		this.description.saved();
-	}
-
-	// ==============================================================================================
-	// Protected members should be overridden
-	// ==============================================================================================
 	@Override
 	public void processRawData(String[] str)
 	{
 		if (this.firstUsing)
 		{
 			this.text = new Text();
-			this.text.setChangeListener(flag -> Optional.ofNullable(this.owner).ifPresent(own -> own.getChangedProperty().set(flag)));
+			this.text.setChangeListener(flag -> Optional.ofNullable(super.owner).ifPresent(own -> own.getChangedProperty().accept(flag)));
 			this.firstUsing = false;
-		    this.text.add(extractData(str));
-
+			this.text.add(this.extractData(str));
 			return;
 		}
 
 		this.text.add(extractData(str));
 	}
 
-	private String extractData(String[] str)
-    {
-	    if (str == null || str.length == 0)
-	    {
-	        return "";
-	    }
-	    if (str.length > 1 && str[0].endsWith(RAW_PREFIX))
-	    {
-	        return str[1];
-	    }
-        return str[0];
-    }
-
-    @Override
+	@Override
 	public String getItemName()
 	{
 		return super.getItemName() + " " + (this.description.get() == null ? "" : this.description.get());
@@ -188,8 +163,8 @@ public class RawText extends MatrixItem
 	@Override
 	protected void initItSelf(Map<Tokens, String> systemParameters)
 	{
-        this.description.set(systemParameters.get(Tokens.RawText));
-		this.highlighterMutableValue.set(systemParameters.getOrDefault(Tokens.Kind, Highlighter.None.name()));
+        this.description.accept(systemParameters.get(Tokens.RawText));
+		this.highlighterMutableValue.accept(systemParameters.getOrDefault(Tokens.Kind, Highlighter.None.name()));
 	}
 
 	@Override
@@ -201,8 +176,8 @@ public class RawText extends MatrixItem
 	@Override
 	protected void writePrefixItSelf(CsvWriter writer, List<String> firstLine, List<String> secondLine)
 	{
-		addParameter(firstLine, secondLine, TypeMandatory.System, Tokens.RawText.get(), this.description.get());
-		addParameter(firstLine, secondLine, TypeMandatory.System, Tokens.Kind.get(), this.highlighterMutableValue.get());
+		super.addParameter(firstLine, secondLine, TypeMandatory.System, Tokens.RawText.get(), this.description.get());
+		super.addParameter(firstLine, secondLine, TypeMandatory.System, Tokens.Kind.get(), this.highlighterMutableValue.get());
 	}
 
 	@Override
@@ -210,10 +185,10 @@ public class RawText extends MatrixItem
 	{
 		try
 		{
-		    for (String str : this.text)
-		    {
-		        writer.writeRecord(new String[] { indent +  RAW_PREFIX, "\"" + str.replace("\"", "\"\"")  + "\""}, true);
-		    }
+			for (String str : this.text)
+			{
+				writer.writeRecord(new String[]{indent + RAW_PREFIX, "\"" + str.replace("\"", "\"\"") + "\""}, true);
+			}
 		}
 		catch (IOException e)
 		{
@@ -227,7 +202,7 @@ public class RawText extends MatrixItem
 	protected boolean matchesDerived(String what, boolean caseSensitive, boolean wholeWord)
 	{
 		return SearchHelper.matches(this.text.toString(), what, caseSensitive, wholeWord)
-		        || SearchHelper.matches(this.description.get(), what, caseSensitive, wholeWord);
+				|| SearchHelper.matches(this.description.get(), what, caseSensitive, wholeWord);
 	}
 
 	@Override
@@ -236,13 +211,12 @@ public class RawText extends MatrixItem
 		try
 		{
 			this.text.report(report, null, this.description.get());
-			Variables vars = isGlobal() ? evaluator.getGlobals() : evaluator.getLocals();
+			Variables vars = super.isGlobal() ? evaluator.getGlobals() : evaluator.getLocals();
 			
 			ReturnAndResult ret = new ReturnAndResult(start, Result.Passed, new Text(this.text));
 
-			if (super.getId() != null && !super.getId().isEmpty())
+			if (!super.id.isNullOrEmpty())
 			{
-				// set variable into local name space
 				vars.set(super.getId(), ret.getOut());
 			}
 
@@ -251,12 +225,25 @@ public class RawText extends MatrixItem
 		catch (Exception e)
 		{
 			logger.error(e.getMessage(), e);
-			listener.error(this.owner, getNumber(), this, e.getMessage());
-			return new ReturnAndResult(start, Result.Failed, e.getMessage(), ErrorKind.EXCEPTION, this);
+			return super.createReturn(e.getMessage(), listener, start);
 		}
 	}
 
-	// ==============================================================================================
-	// Private members
-	// ==============================================================================================
+	//endregion
+	
+	//region Private members
+	private String extractData(String[] str)
+	{
+		if (str == null || str.length == 0)
+		{
+			return "";
+		}
+		if (str.length > 1 && str[0].endsWith(RAW_PREFIX))
+		{
+			return str[1];
+		}
+		return str[0];
+	}
+	
+	//endregion
 }

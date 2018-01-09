@@ -13,6 +13,13 @@ import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 
+/**
+ * A xml bean for any ClientEntry from a configuration
+ *
+ * @see Configuration
+ * @see Configuration#getClientEntries()
+ * @see Entry
+ */
 @XmlAccessorType(XmlAccessType.NONE)
 public class ClientEntry extends Entry
 {
@@ -37,8 +44,8 @@ public class ClientEntry extends Entry
 			case Configuration.clientJar:			return this.clientJarNameValue;
 			case Configuration.clientLimit:			return Integer.toString(this.clientLimitValue);
 			case Configuration.clientDictionary:	return this.clientDictionaryValue;
+			default: return null;
 		}
-		return null;
 	}
 
 	@Override
@@ -50,6 +57,7 @@ public class ClientEntry extends Entry
 			case Configuration.clientJar:			this.clientJarNameValue		= "" + value;	return;
 			case Configuration.clientLimit:			this.clientLimitValue		= Integer.parseInt("" +value);	return;
 			case Configuration.clientDictionary:	this.clientDictionaryValue	= "" + value;	return;
+			default: return;
 		}
 	}
 }

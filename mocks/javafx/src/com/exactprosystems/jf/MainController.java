@@ -8,6 +8,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 package com.exactprosystems.jf;
 
+import com.sun.javafx.scene.control.skin.ComboBoxListViewSkin;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -19,11 +20,11 @@ import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.*;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.Pane;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
 
 import java.net.URL;
 import java.util.Objects;
@@ -32,7 +33,8 @@ import java.util.stream.Collectors;
 
 public class MainController implements Initializable
 {
-    @FXML private ListView<String> listView;
+	@FXML private GridPane gridPane;
+	@FXML private ListView<String> List;
     @FXML private Button notEnabledButton;
     @FXML private Button notVisibleButton;
     @FXML private Button clearButton;
@@ -47,30 +49,30 @@ public class MainController implements Initializable
     @FXML private Label selectLabel;
     @FXML private Label moveLabel;
     @FXML private Label checkedLabel;
-    @FXML private Slider slider;
+    @FXML private Slider Slider;
     @FXML private MenuBar menu;
-    @FXML private Button protocolClear;
-    @FXML private TextArea protocol;
-    @FXML private TreeView<String> treeView;
-    @FXML private CheckBox checkBox;
-    @FXML private RadioButton green;
-    @FXML private RadioButton yellow;
-    @FXML private RadioButton orange;
-    @FXML private RadioButton blue;
-    @FXML private ComboBox<String> comboBox;
-    @FXML private Spinner spinner;
-    @FXML private SplitPane splitter;
-    @FXML private TabPane tabPanel;
-    @FXML private ScrollBar scrollBar;
-    @FXML private ProgressBar progressBar;
-    @FXML private Pane panel;
-    @FXML private TextField textEdit;
-    @FXML private ToggleButton toggleButton;
-    @FXML private Button any;
-    @FXML private Label centralLabel;
-    @FXML private ImageView image;
-    @FXML private TableView<MockTable.TableData> table;
-    @FXML private Button button;
+    @FXML private Button ProtocolClear;
+    @FXML private TextArea Protocol;
+    @FXML private TreeView<String> Tree;
+    @FXML private CheckBox CheckBox;
+    @FXML private RadioButton RadioButton;
+    @FXML private RadioButton Yellow;
+    @FXML private RadioButton Orange;
+    @FXML private RadioButton Blue;
+    @FXML private ComboBox<String> ComboBox;
+    @FXML private Spinner Spinner;
+    @FXML private SplitPane Splitter;
+    @FXML private TabPane TabPanel;
+    @FXML private ScrollBar ScrollBar;
+    @FXML private ProgressBar ProgressBar;
+    @FXML private Pane Panel;
+    @FXML private TextField TextBox;
+    @FXML private ToggleButton ToggleButton;
+    @FXML private Button Any;
+    @FXML private Label CentralLabel;
+    @FXML private ImageView Image;
+    @FXML private TableView<MockTable.TableData> Table;
+    @FXML private Button Button;
 
     private static final String CLICK = "_click";
     private static final String DOUBLE_CLICK = "_double_click";
@@ -89,16 +91,31 @@ public class MainController implements Initializable
     public void initialize(URL location, ResourceBundle resources)
     {
         mainModel = new MainModel();
-        comboBox.getItems().addAll(mainModel.getData());
-        table.getColumns().addAll(mainModel.getTable().getHeaders());
-        table.setItems(mainModel.getTable().getTableData());
-        treeView.setRoot(mainModel.getTree().getRoot());
+        Tree.setOnScrollTo(event -> scrollPrint(Tree.getId()));
+        List.setOnScrollTo(event -> scrollPrint(List.getId()));
+        ComboBox.getItems().addAll(mainModel.getData());
+        if(ComboBox.isEditable())
+		{
+			TextField boxEditor = ComboBox.getEditor();
+			boxEditor.setOnKeyPressed(event -> pressHandlerCustom(event, ComboBox.getId()));
+			boxEditor.setOnKeyTyped(event -> typeHandlerCustom(event, ComboBox.getId()));
+			boxEditor.setOnKeyReleased(event -> releaseHandlerCustom(event, ComboBox.getId()));
+		}
+		else
+		{
+			ComboBox.setOnKeyReleased(this::releasedHandler);
+			ComboBox.setOnKeyPressed(this::pressHandler);
+			ComboBox.setOnKeyTyped(this::typedHandler);
+		}
+        Table.getColumns().addAll(mainModel.getTable().getHeaders());
+        Table.setItems(mainModel.getTable().getTableData());
+        Tree.setRoot(mainModel.getTree().getRoot());
         menu.getMenus().addAll(mainModel.getMenu().getMenus());
-        slider.valueProperty().addListener((observable, oldValue, newValue) -> sliderLabel.setText("Slider_" + String.valueOf(newValue.intValue())));
-        textEdit.textProperty().addListener((observable, oldValue, newValue) -> centralLabel.setText("TextEdit_" + newValue));
-        checkBox.selectedProperty().addListener((observable, oldValue, newValue) -> checkedLabel.setText("CheckBox_" + (newValue ? "checked" : "unchecked")));
-        comboBox.valueProperty().addListener((observable, oldValue, newValue) -> centralLabel.setText("ComboBox_" + newValue));
-        listView.getItems().addAll(mainModel.getData());
+        Slider.valueProperty().addListener((observable, oldValue, newValue) -> sliderLabel.setText("Slider_" + String.valueOf(newValue.intValue())));
+        TextBox.textProperty().addListener((observable, oldValue, newValue) -> CentralLabel.setText("TextBox_" + newValue));
+        CheckBox.selectedProperty().addListener((observable, oldValue, newValue) -> checkedLabel.setText("CheckBox_" + (newValue ? "checked" : "unchecked")));
+        ComboBox.valueProperty().addListener((observable, oldValue, newValue) -> CentralLabel.setText("ComboBox_" + newValue));
+        List.getItems().addAll(mainModel.getData());
 
 		this.tb = new TableView<>();
 		tb.setMinHeight(150);
@@ -303,7 +320,7 @@ public class MainController implements Initializable
 
     public void clickHandler(MouseEvent mouseEvent)
     {
-        centralLabel.setText(getFormattedName(mouseEvent.getSource()) + (mouseEvent.getClickCount() == 1 ? CLICK : DOUBLE_CLICK));
+        CentralLabel.setText(getFormattedName(mouseEvent.getSource()) + (mouseEvent.getClickCount() == 1 ? CLICK : DOUBLE_CLICK));
     }
 
     public void moveHandler(MouseEvent mouseEvent)
@@ -323,7 +340,7 @@ public class MainController implements Initializable
 
     public void doProtocolClear()
     {
-		this.protocol.clear();
+		this.Protocol.clear();
 		this.printColors();
 	}
 
@@ -351,22 +368,84 @@ public class MainController implements Initializable
 
     public void releasedHandler(KeyEvent keyEvent)
     {
-        protocol.appendText(getFormattedName(keyEvent.getSource()) + UP + keyEvent.getCode().impl_getCode() + NEW_LINE);
+        Protocol.appendText(getFormattedName(keyEvent.getSource()) + UP + keyEvent.getCode().impl_getCode() + NEW_LINE);
+    }
+
+	public void scrollPrint(String text)
+	{
+		Protocol.appendText(text + "_scroll" + NEW_LINE);
+	}
+
+	public void moveHandlerCustom(MouseEvent mouseEvent, String text)
+	{
+		moveLabel.setText(text + MOVE);
+	}
+
+	public void clickHandlerCustom(MouseEvent mouseEvent, String text)
+	{
+		CentralLabel.setText(text + (mouseEvent.getClickCount() == 1 ? CLICK : DOUBLE_CLICK));
+	}
+
+	private void releaseHandlerCustom(KeyEvent keyEvent, String text)
+	{
+		Protocol.appendText(text + UP + keyEvent.getCode().impl_getCode() + NEW_LINE);
+	}
+
+    private void pressHandlerCustom(KeyEvent keyEvent, String text)
+    {
+        Protocol.appendText(text + DOWN + keyEvent.getCode().impl_getCode() + NEW_LINE);
+    }
+
+    private void typeHandlerCustom(KeyEvent keyEvent, String text)
+    {
+        Protocol.appendText(text + PRESS + (int)keyEvent.getCharacter().toCharArray()[0] + NEW_LINE);
     }
 
     public void pressHandler(KeyEvent keyEvent)
     {
-        protocol.appendText(getFormattedName(keyEvent.getSource()) + DOWN + keyEvent.getCode().impl_getCode() + NEW_LINE);
+        Protocol.appendText(getFormattedName(keyEvent.getSource()) + DOWN + keyEvent.getCode().impl_getCode() + NEW_LINE);
     }
 
     public void typedHandler(KeyEvent keyEvent)
     {
-        protocol.appendText(getFormattedName(keyEvent.getSource()) + PRESS + (int)keyEvent.getCharacter().toCharArray()[0] + NEW_LINE);
+        Protocol.appendText(getFormattedName(keyEvent.getSource()) + PRESS + (int)keyEvent.getCharacter().toCharArray()[0] + NEW_LINE);
     }
 
     private String getFormattedName(Object object)
     {
         Node node = (Node) object;
-        return node.getId().substring(0,1).toUpperCase() + node.getId().substring(1);
+		return "CentralLabel".equalsIgnoreCase(node.getId()) ? "Label" : node.getId();
     }
+
+    public void init()
+	{
+		((ComboBoxListViewSkin) ComboBox.getSkin()).getListView().setOnScrollTo(event -> scrollPrint(ComboBox.getId()));
+		Table.setEditable(true);
+		showDialog();
+		ScrollBar.valueProperty().addListener((observable, oldValue, newValue) -> sliderLabel.setText("ScrollBar_" + newValue.intValue()));
+	}
+
+	private void showDialog()
+	{
+		ButtonType button = new ButtonType("Ok", ButtonBar.ButtonData.OK_DONE);
+		Dialog dialog = new Dialog();
+		String titleDialog = "Dialog";
+		dialog.setTitle(titleDialog);
+		dialog.initModality(Modality.NONE);
+		dialog.setResizable(true);
+		dialog.setX(1050);
+		dialog.setY(300);
+		dialog.getDialogPane().setPrefSize(150, 200);
+		dialog.getDialogPane().getButtonTypes().add(button);
+		dialog.getDialogPane().lookupButton(button);
+
+		Stage stage = (Stage)dialog.getDialogPane().getScene().getWindow();
+		stage.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> clickHandlerCustom(event, titleDialog));
+		stage.addEventHandler(MouseEvent.MOUSE_MOVED, event -> moveHandlerCustom(event, titleDialog));
+		stage.addEventHandler(KeyEvent.KEY_PRESSED, event -> pressHandlerCustom(event, titleDialog));
+		stage.addEventHandler(KeyEvent.KEY_RELEASED, event -> releaseHandlerCustom(event, titleDialog));
+		stage.addEventHandler(KeyEvent.KEY_TYPED, event -> typeHandlerCustom(event, titleDialog));
+
+		dialog.show();
+	}
 }

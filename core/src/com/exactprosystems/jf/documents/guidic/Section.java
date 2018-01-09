@@ -9,18 +9,13 @@
 
 package com.exactprosystems.jf.documents.guidic;
 
-import com.exactprosystems.jf.api.app.Addition;
-import com.exactprosystems.jf.api.app.IControl;
-import com.exactprosystems.jf.api.app.ISection;
-import com.exactprosystems.jf.api.app.IWindow;
-import com.exactprosystems.jf.api.app.Mutable;
+import com.exactprosystems.jf.api.app.*;
 import com.exactprosystems.jf.api.common.Str;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.documents.guidic.controls.*;
 import com.exactprosystems.jf.documents.matrix.parser.items.MutableArrayList;
 
 import javax.xml.bind.annotation.*;
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
@@ -62,18 +57,21 @@ public class Section implements ISection, Mutable
 		@XmlElement(name="slider",			type=Slider.class),
 	})
 	private MutableArrayList<AbstractControl> controls;
-	
-    @XmlTransient
-    private Window.SectionKind sectionKind;
-	
-    @XmlTransient
-    private IWindow window;
-	
+
+	@XmlTransient
+	private Window.SectionKind sectionKind;
+
+	@XmlTransient
+	private IWindow window;
+
 	public Section()
 	{
 		this.controls = new MutableArrayList<>();
 	}
 
+	/**
+	 * Create section copy based on passed section
+	 */
 	public static Section createCopy(Section section) throws Exception
 	{
 		Section newSection = new Section();
@@ -91,7 +89,7 @@ public class Section implements ISection, Mutable
 		return newSection;
 	}
 
-    //region interface ISection
+	//region interface ISection
 	@Override
 	public boolean hasReferences(IControl control)
 	{
@@ -106,8 +104,8 @@ public class Section implements ISection, Mutable
             String refId  = ctrl.getRefID();
 			String rowsId  = ctrl.getRowsId();
 			String headerId = ctrl.getHeaderId();
-			
-			if (     ownerId != null && ownerId.equals(control.getID()) 
+
+			if (     ownerId != null && ownerId.equals(control.getID())
 			        || refId != null && refId.equals(control.getID())
 			        || headerId != null && headerId.equals(control.getID())
 			        || rowsId != null && rowsId.equals(control.getID()))
@@ -122,7 +120,7 @@ public class Section implements ISection, Mutable
 	@Override
 	public void addControl(IControl control)
 	{
-		addControl(this.controls.size(), control);
+		this.addControl(this.controls.size(), control);
 	}
 
 	@Override
@@ -131,19 +129,14 @@ public class Section implements ISection, Mutable
 		if (control != null && control instanceof AbstractControl)
 		{
 			control.setSection(this);
-			if(this.sectionKind == IWindow.SectionKind.Self)
+			if(this.sectionKind == IWindow.SectionKind.Self && this.controls.isEmpty())
 			{
-				if(this.controls.isEmpty())
+				try
 				{
-					try
-					{
-						((AbstractControl) control).set(AbstractControl.idName, "self");
-					}
-					catch (Exception e)
-					{
-
-					}
+					((AbstractControl) control).set(AbstractControl.idName, "self");
 				}
+				catch (Exception ignored)
+				{}
 			}
 			this.controls.add(index, (AbstractControl)control);
 		}
@@ -154,10 +147,7 @@ public class Section implements ISection, Mutable
 	{
 	    this.window = window;
 		this.sectionKind = sectionKind;
-		for (AbstractControl control : this.controls)
-		{
-			control.setSection(this);
-		}
+		this.controls.forEach(control -> control.setSection(this));
 	}
 
 	@Override
@@ -193,10 +183,10 @@ public class Section implements ISection, Mutable
 	@Override
 	public IControl getControlByIdAndValue(String name, Object obj) 
 	{
-		IControl result = getControlById(name);
+		IControl result = this.getControlById(name);
 		if (result != null && result.getAddition() != null && result.getAddition() == Addition.SwitchByValue)
 		{
-			result = getControlById(name+obj);
+			result = this.getControlById(name + obj);
 		}
 		return result;
 	}
@@ -216,11 +206,11 @@ public class Section implements ISection, Mutable
 		return this.sectionKind;
 	}
 
-    @Override
-    public IWindow getWindow()
-    {
-        return this.window;
-    }
+	@Override
+	public IWindow getWindow()
+	{
+		return this.window;
+	}
 	//endregion
 
     //region interface Mutable
@@ -236,22 +226,37 @@ public class Section implements ISection, Mutable
 		this.controls.saved();
 	}
     //endregion
-	
+
+	/**
+	 * Evaluate all controls (only expression fields) from the section
+	 * @param evaluator evaluator for evaluating
+	 *
+	 * @see AbstractControl#evaluate(AbstractEvaluator)
+	 */
 	public void evaluateAll(AbstractEvaluator evaluator)
 	{
 		this.controls.forEach(c -> c.evaluate(evaluator));
 	}
 
+	/**
+	 * Remove all controls from the section
+	 */
 	public void clearSection()
 	{
 		this.controls.clear();
 	}
-	
+
+	/**
+	 * @return index of the passed control
+	 */
 	public int indexOf(AbstractControl control)
 	{
 		return this.controls.indexOf(control);
 	}
 
+	/**
+	 * @return AbstractControl by index from the section
+	 */
 	public AbstractControl getByIndex(int index)
 	{
 		return this.controls.get(index);
@@ -262,12 +267,24 @@ public class Section implements ISection, Mutable
 		control.setSection(this);
 		this.controls.set(position, control);
 	}
-	
+
+	/**
+	 * Remove the passed control from the section
+	 * @return true, if removing was successful. Otherwise return false
+	 */
 	public boolean removeControl(IControl control)
 	{
 		return this.controls.remove(control);
 	}
-	
+
+	/**
+	 * Replace the old control to the new control
+	 * @param control the old control, which will replacing
+	 * @param newControl the new control, which will inserting instead the old control
+	 * @return index of inserting the new control
+	 *
+	 * @see IControl
+	 */
 	public int replaceControl(IControl control, IControl newControl)
 	{
 		Iterator<AbstractControl> iter = this.controls.iterator();
@@ -278,7 +295,7 @@ public class Section implements ISection, Mutable
 			if (next.equals(control))
 			{
 				iter.remove();
-				addControl(index, newControl);
+				this.addControl(index, newControl);
 				return index;
 			}
 			index++;
@@ -289,6 +306,6 @@ public class Section implements ISection, Mutable
 	@Override
 	public String toString()
 	{
-		return getClass().getSimpleName() + " size=" + this.controls.size();
+		return this.getClass().getSimpleName() + " size=" + this.controls.size();
 	}
 }

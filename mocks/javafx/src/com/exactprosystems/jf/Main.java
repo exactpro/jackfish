@@ -10,13 +10,10 @@ package com.exactprosystems.jf;
 
 import javafx.application.Application;
 import javafx.application.Platform;
-import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.stage.Modality;
 import javafx.stage.Stage;
-import javafx.stage.WindowEvent;
+import java.io.IOException;
 
 public class Main extends Application
 {
@@ -28,8 +25,8 @@ public class Main extends Application
     @Override
     public void start(Stage primaryStage) throws Exception
     {
-        Mock.MAIN.createWindow(primaryStage, FXMLLoader.load(getClass().getResource("Main.fxml")));
-        Mock.ADDITIONAL.createWindow(new Stage(), FXMLLoader.load(getClass().getResource("Additional.fxml")));
+        Mock.MAIN.createWindow(primaryStage, new FXMLLoader(getClass().getResource("Main.fxml")));
+//        Mock.ADDITIONAL.createWindow(new Stage(), new FXMLLoader(getClass().getResource("Additional.fxml")));
     }
 
     private enum Mock
@@ -37,28 +34,34 @@ public class Main extends Application
         MAIN
         {
             @Override
-            public void createWindow(Stage stage, Parent root)
+            public void createWindow(Stage stage, FXMLLoader loader) throws IOException
             {
+                loader.load();
                 stage.setTitle("JavaFx Mock");
-                stage.setScene(new Scene(root, 800, 800));
+                stage.setScene(new Scene(loader.getRoot(), 800, 800));
                 stage.setOnCloseRequest(event -> Platform.exit());
+                stage.setX(200);
+                stage.setY(32);
                 stage.show();
+                MainController controller = loader.getController();
+                controller.init();
             }
         },
 
         ADDITIONAL
         {
             @Override
-            void createWindow(Stage stage, Parent root)
+            void createWindow(Stage stage, FXMLLoader loader) throws IOException
             {
+                loader.load();
                 stage.setTitle("Dialog");
-                stage.setScene(new Scene(root, 150, 200));
+                stage.setScene(new Scene(loader.getRoot(), 150, 200));
                 stage.setX(1500);
                 stage.setY(300);
                 stage.show();
             }
         };
 
-        abstract void createWindow(Stage stage, Parent root);
+        abstract void createWindow(Stage stage, FXMLLoader loader) throws IOException;
     }
 }

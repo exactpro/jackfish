@@ -37,8 +37,7 @@
 .combo-box,
 .radio-button,
 .check-box,
-#protocolClear,
-#colorButton {
+#protocolClear {
     -fx-pref-width  : small-width;
     -fx-pref-height : small-height;
 }
@@ -50,6 +49,16 @@
 .table-view {
     -fx-pref-width  : large-width;
     -fx-pref-height : large-height;
+}
+
+.table-view .table-row-cell:selected,
+.table-view .table-row-cell:focused,
+.table-view .table-row-cell:filled {
+	-fx-background-color: white;
+}
+
+.table-view .table-cell {
+    -fx-text-fill: #333333;
 }
 
 .tree-view {

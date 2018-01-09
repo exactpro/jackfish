@@ -15,8 +15,8 @@ import com.exactprosystems.jf.api.common.Str;
 import com.exactprosystems.jf.charts.ChartBuilder;
 import com.exactprosystems.jf.common.version.VersionInfo;
 import com.exactprosystems.jf.documents.config.Configuration;
+import com.exactprosystems.jf.documents.matrix.parser.MutableValue;
 import com.exactprosystems.jf.documents.matrix.parser.Result;
-import com.exactprosystems.jf.documents.matrix.parser.items.CommentString;
 import com.exactprosystems.jf.documents.matrix.parser.items.MatrixItem;
 import com.exactprosystems.jf.functions.Content;
 import com.exactprosystems.jf.tool.Common;
@@ -321,7 +321,7 @@ public class HTMLReportBuilder extends ReportBuilder
 		//region display header
 
 		String collect = item.getComments().stream()
-				.map(CommentString::toString)
+				.map(MutableValue::toString)
 				.collect(Collectors.joining("<br>\n"));
 
 		if (!collect.isEmpty())

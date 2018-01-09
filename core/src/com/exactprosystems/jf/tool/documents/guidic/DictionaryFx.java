@@ -22,9 +22,9 @@ import com.exactprosystems.jf.documents.guidic.GuiDictionary;
 import com.exactprosystems.jf.documents.guidic.Section;
 import com.exactprosystems.jf.documents.guidic.Window;
 import com.exactprosystems.jf.documents.guidic.controls.AbstractControl;
-import com.exactprosystems.jf.documents.matrix.parser.Getter;
 import com.exactprosystems.jf.documents.matrix.parser.MutableListener;
 import com.exactprosystems.jf.documents.matrix.parser.MutableValue;
+import com.exactprosystems.jf.documents.matrix.parser.Parameters;
 import com.exactprosystems.jf.documents.matrix.parser.items.MutableArrayList;
 import com.exactprosystems.jf.functions.Notifier;
 import com.exactprosystems.jf.tool.ApplicationConnector;
@@ -32,6 +32,7 @@ import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.helpers.DialogsHelper;
 import javafx.concurrent.Task;
 import javafx.scene.control.ButtonType;
+import javafx.util.StringConverter;
 
 import java.io.File;
 import java.io.Serializable;
@@ -39,6 +40,7 @@ import java.rmi.ServerException;
 import java.util.*;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 import static com.exactprosystems.jf.tool.Common.tryCatchThrow;
@@ -46,6 +48,42 @@ import static com.exactprosystems.jf.tool.Common.tryCatchThrow;
 public class DictionaryFx extends GuiDictionary
 {
 	public static final String DIALOG_DICTIONARY_SETTINGS = "DictionarySettings";
+	public static final String DIALOG_STORED_VARIABLES = "DictionaryStoredVariables";
+
+	public static final StringConverter<Parameters> CONVERTER = new StringConverter<Parameters>()
+	{
+		//key='value',,,key2='value2',,,
+		private static final String TRIPLE_COMMA_SEPARATOR = ",,,";
+		private static final String KEY_VALUE_SEPARATOR = "=";
+
+		@Override
+		public String toString(Parameters params)
+		{
+			return params.stream()
+					.map(p -> p.getName() + KEY_VALUE_SEPARATOR + p.getExpression())
+					.collect(Collectors.joining(TRIPLE_COMMA_SEPARATOR));
+		}
+
+		@Override
+		public Parameters fromString(String string)
+		{
+			Parameters parameters = new Parameters();
+			String[] split = string.split(TRIPLE_COMMA_SEPARATOR);
+			for (String s : split)
+			{
+				String[] keyValue = s.split(KEY_VALUE_SEPARATOR);
+				if (keyValue.length > 1)
+				{
+					String name = keyValue[0];
+					String value = Arrays.stream(keyValue, 1, keyValue.length).collect(Collectors.joining());
+					parameters.add(name, value);
+				}
+			}
+
+			return parameters;
+		}
+	};
+
 	private static final String NEW_DIALOG_NAME = "NewDialog";
 
 	private static AbstractControl copyControl;
@@ -66,6 +104,7 @@ public class DictionaryFx extends GuiDictionary
 	private final MutableValue<String> currentStoredApp = new MutableValue<>("");
 	private final MutableValue<String> currentApp = new MutableValue<>("");
 	private final MutableValue<ImageWrapper> image = new MutableValue<>();
+	private final Parameters evaluatedParameters = new Parameters();
 	//endregion
 
 	//region variables for NavigationController
@@ -86,7 +125,7 @@ public class DictionaryFx extends GuiDictionary
 
 	public static List<String> convertToString(Collection<? extends MutableValue<String>> collection)
 	{
-		return collection.stream().map(Getter::get).collect(Collectors.toList());
+		return collection.stream().map(Supplier::get).collect(Collectors.toList());
 	}
 
 	public static List<MutableValue<String>> convertToMutable(Collection<? extends String> collection)
@@ -102,9 +141,16 @@ public class DictionaryFx extends GuiDictionary
 	public DictionaryFx(String fileName, DocumentFactory factory, String currentAdapter)
 	{
 		super(fileName, factory);
-		this.currentApp.set(currentAdapter);
+		this.currentApp.accept(currentAdapter);
 		this.evaluator = factory.createEvaluator();
 		this.applicationConnector = new ApplicationConnector(factory);
+		this.evaluatedParameters.setOnAddAllListener((integer, parameters) ->
+		{
+			this.evaluator.getLocals().clear();
+			parameters.stream()
+					.peek(p -> p.evaluate(this.evaluator))
+					.forEach(parameter -> this.evaluator.getLocals().set(parameter.getName(), parameter.getValue()));
+		});
 	}
 
 	//region AbstractDocument
@@ -114,11 +160,11 @@ public class DictionaryFx extends GuiDictionary
 		super.display();
 		getNameProperty().fire();
 
-		this.applicationConnector.setApplicationListener((status1, appConnection1, throwable) -> this.appStatus.set(new ApplicationStatusBean(status1, appConnection1, throwable)));
+		this.applicationConnector.setApplicationListener((status1, appConnection1, throwable) -> this.appStatus.accept(new ApplicationStatusBean(status1, appConnection1, throwable)));
 
 		//display all windows
 		super.fire();
-		this.currentSection.set(SectionKind.Run);
+		this.currentSection.accept(SectionKind.Run);
 		this.setCurrentWindow(super.getFirstWindow());
 
 		this.appsList.from(convertToMutable(getFactory().getConfiguration().getApplications()));
@@ -127,7 +173,7 @@ public class DictionaryFx extends GuiDictionary
 		boolean isConnected = this.applicationConnector.getAppConnection() != null;
 		ApplicationStatus status = isConnected ? ApplicationStatus.Connected : ApplicationStatus.Disconnected;
 		AppConnection appConnection = isConnected ? this.applicationConnector.getAppConnection() : null;
-		this.appStatus.set(new ApplicationStatusBean(status, appConnection, null));
+		this.appStatus.accept(new ApplicationStatusBean(status, appConnection, null));
 	}
 
 	@Override
@@ -185,7 +231,7 @@ public class DictionaryFx extends GuiDictionary
 	}
 	public void setCurrentStoredApp(String currentAdapterStore)
 	{
-		this.currentStoredApp.set(currentAdapterStore);
+		this.currentStoredApp.accept(currentAdapterStore);
 		this.connectToApplicationFromStore();
 	}
 
@@ -195,7 +241,7 @@ public class DictionaryFx extends GuiDictionary
 	}
 	public void setCurrentApp(String adapter)
 	{
-		this.currentApp.set(adapter);
+		this.currentApp.accept(adapter);
 		this.applicationConnector.setIdAppEntry(adapter);
 	}
 	public AppConnection getApp()
@@ -209,7 +255,7 @@ public class DictionaryFx extends GuiDictionary
 	}
 	public void setCurrentWindow(IWindow window)
 	{
-		this.currentWindow.set(window);
+		this.currentWindow.accept(window);
 		this.displayElements();
 	}
 	public IWindow getCurrentWindow()
@@ -227,7 +273,7 @@ public class DictionaryFx extends GuiDictionary
 	}
 	public void setCurrentSection(SectionKind sectionKind)
 	{
-		this.currentSection.set(sectionKind);
+		this.currentSection.accept(sectionKind);
 		this.displayElements();
 	}
 	public SectionKind getCurrentSection()
@@ -250,7 +296,7 @@ public class DictionaryFx extends GuiDictionary
 	}
 	public void setCurrentElement(IControl control)
 	{
-		this.currentElement.set(control);
+		this.currentElement.accept(control);
 	}
 	public IControl getCurrentElement()
 	{
@@ -280,6 +326,11 @@ public class DictionaryFx extends GuiDictionary
 		return this.appStatus;
 	}
 
+	public Parameters parametersProperty()
+	{
+		return this.evaluatedParameters;
+	}
+
 	//endregion
 
 	//region work with dialogs
@@ -293,13 +344,13 @@ public class DictionaryFx extends GuiDictionary
 		Command undo = () ->
 		{
 			super.removeWindow(newWindow);
-			this.currentWindow.set(oldWindow);
+			this.currentWindow.accept(oldWindow);
 		};
 
 		Command redo = () ->
 		{
 			super.addWindow(newWindow);
-			this.currentWindow.set(newWindow);
+			this.currentWindow.accept(newWindow);
 		};
 
 		addCommand(undo, redo);
@@ -313,7 +364,7 @@ public class DictionaryFx extends GuiDictionary
 		Command undo = () ->
 		{
 			super.addWindow(indexOf, (Window) window);
-			this.currentWindow.set(window);
+			this.currentWindow.accept(window);
 		};
 
 		Command redo = () ->
@@ -322,12 +373,12 @@ public class DictionaryFx extends GuiDictionary
 			int size = getWindows().size();
 			if (size == 0)
 			{
-				this.currentWindow.set(null);
+				this.currentWindow.accept(null);
 			}
 			else
 			{
 				IWindow newWindow = super.getWindows().toArray(new IWindow[size])[Math.max(0, indexOf - 1)];
-				this.currentWindow.set(newWindow);
+				this.currentWindow.accept(newWindow);
 			}
 		};
 
@@ -350,13 +401,13 @@ public class DictionaryFx extends GuiDictionary
 			Command undo = () ->
 			{
 				super.removeWindow(copiedWindow);
-				this.currentWindow.set(oldWindow);
+				this.currentWindow.accept(oldWindow);
 			};
 
 			Command redo = () ->
 			{
 				super.addWindow(copiedWindow);
-				this.currentWindow.set(copiedWindow);
+				this.currentWindow.accept(copiedWindow);
 			};
 			addCommand(undo, redo);
 		}
@@ -401,7 +452,7 @@ public class DictionaryFx extends GuiDictionary
 		{
 			super.removeWindow(window);
 			super.addWindow(lastIndex, (Window) window);
-			this.currentWindow.set(window);
+			this.currentWindow.accept(window);
 		};
 		Command redo = () ->
 		{
@@ -433,14 +484,14 @@ public class DictionaryFx extends GuiDictionary
 			{
 				window.removeControl(newElement);
 				this.removeElementConsumer.accept(newElement);
-				this.currentElement.set(oldElement);
+				this.currentElement.accept(oldElement);
 			};
 
 			Command redo = () ->
 			{
 				window.addControl(this.currentSection.get(), newElement);
 				this.addElementConsumer.accept(newElement.getSection().getControls().size() - 1, newElement);
-				this.currentElement.set(newElement);
+				this.currentElement.accept(newElement);
 			};
 			addCommand(undo, redo);
 		}
@@ -460,7 +511,7 @@ public class DictionaryFx extends GuiDictionary
 			{
 				section.addControl(indexOf, removedElement);
 				this.addElementConsumer.accept(indexOf, removedElement);
-				this.currentElement.set(removedElement);
+				this.currentElement.accept(removedElement);
 			};
 
 			Command redo = () ->
@@ -477,11 +528,11 @@ public class DictionaryFx extends GuiDictionary
 					this.removeElementConsumer.accept(removedElement);
 					if (section.getControls().isEmpty())
 					{
-						this.currentElement.set(null);
+						this.currentElement.accept(null);
 					}
 					else
 					{
-						this.currentElement.set(((Section) section).getByIndex(Math.max(0, indexOf - 1)));
+						this.currentElement.accept(((Section) section).getByIndex(Math.max(0, indexOf - 1)));
 					}
 				}
 			};
@@ -508,7 +559,7 @@ public class DictionaryFx extends GuiDictionary
 			{
 				window.removeControl(copiedControl);
 				this.removeElementConsumer.accept(copiedControl);
-				this.currentElement.set(oldControl);
+				this.currentElement.accept(oldControl);
 			};
 
 			Command redo = () ->
@@ -519,7 +570,7 @@ public class DictionaryFx extends GuiDictionary
 					section.addControl(copiedControl);
 					this.addElementConsumer.accept(copiedControl.getSection().getControls().size() - 1, copiedControl);
 				}
-				this.currentElement.set(copiedControl);
+				this.currentElement.accept(copiedControl);
 			};
 
 			addCommand(undo, redo);
@@ -547,7 +598,7 @@ public class DictionaryFx extends GuiDictionary
 			window.getSection(section).addControl(lastIndex, element);
 			this.addElementConsumer.accept(lastIndex, element);
 
-			this.currentElement.set(element);
+			this.currentElement.accept(element);
 		};
 
 		Command redo = () ->
@@ -558,7 +609,7 @@ public class DictionaryFx extends GuiDictionary
 			window.getSection(section).addControl(newIndex, element);
 			this.addElementConsumer.accept(newIndex, element);
 
-			this.currentElement.set(element);
+			this.currentElement.accept(element);
 		};
 		addCommand(undo, redo);
 	}
@@ -603,7 +654,10 @@ public class DictionaryFx extends GuiDictionary
 								DictionaryFx.this.testingElements.add(new ControlWithState(element, "Not allowed", DictionaryFxController.Result.NOT_ALLOWED));
 								continue;
 							}
-							Locator ownerLocator = Optional.ofNullable(window.getOwnerControl(element)).map(IControl::locator).orElse(null);
+							Locator ownerLocator = Optional.ofNullable(window.getOwnerControl(element))
+									.map(IControl::locator)
+									.map(control -> IControl.evaluateTemplate(control, evaluator))
+									.orElse(null);
 							Locator elementLocator = element.locator();
 							Collection<String> all = DictionaryFx.this.service().findAll(ownerLocator, elementLocator);
 							DictionaryFxController.Result result;
@@ -689,7 +743,7 @@ public class DictionaryFx extends GuiDictionary
 				this.removeElementConsumer.accept(newControl);
 				this.addElementConsumer.accept(index, oldControl);
 
-				this.currentElement.set(oldControl);
+				this.currentElement.accept(oldControl);
 			};
 			Command redo = () ->
 			{
@@ -697,7 +751,7 @@ public class DictionaryFx extends GuiDictionary
 				int index = section.replaceControl(oldControl, newControl);
 				this.removeElementConsumer.accept(oldControl);
 				this.addElementConsumer.accept(index,newControl);
-				this.currentElement.set(newControl);
+				this.currentElement.accept(newControl);
 			};
 			addCommand(undo, redo);
 		}
@@ -712,8 +766,8 @@ public class DictionaryFx extends GuiDictionary
 			IControl ownerControl = window.getControlForName(null, element.getOwnerID());
 			if (ownerControl != null)
 			{
-				this.currentSection.set(ownerControl.getSection().getSectionKind());
-				this.currentElement.set(ownerControl);
+				this.currentSection.accept(ownerControl.getSection().getSectionKind());
+				this.currentElement.accept(ownerControl);
 			}
 		}
 	}
@@ -739,14 +793,14 @@ public class DictionaryFx extends GuiDictionary
 		{
 			this.applicationConnector.setIdAppEntry(null);
 			this.applicationConnector.setAppConnection(null);
-			this.appStatus.set(new ApplicationStatusBean(ApplicationStatus.Disconnected, null, null));
+			this.appStatus.accept(new ApplicationStatusBean(ApplicationStatus.Disconnected, null, null));
 		}
 		else
 		{
 			AppConnection appConnection = (AppConnection) getFactory().getConfiguration().getStoreMap().get(storedAppId);
 			this.applicationConnector.setIdAppEntry(appConnection.getId());
 			this.applicationConnector.setAppConnection(appConnection);
-			this.appStatus.set(new ApplicationStatusBean(ApplicationStatus.ConnectingFromStore, appConnection, null));
+			this.appStatus.accept(new ApplicationStatusBean(ApplicationStatus.ConnectingFromStore, appConnection, null));
 		}
 	}
 
@@ -755,7 +809,7 @@ public class DictionaryFx extends GuiDictionary
 		if (!getFactory().getConfiguration().getStoreMap().values().contains(this.applicationConnector.getAppConnection()))
 		{
 			this.applicationConnector.stopApplication();
-			this.appStatus.set(new ApplicationStatusBean(ApplicationStatus.Disconnected, null, null));
+			this.appStatus.accept(new ApplicationStatusBean(ApplicationStatus.Disconnected, null, null));
 		}
 	}
 
@@ -778,7 +832,7 @@ public class DictionaryFx extends GuiDictionary
 				Operation operation = (Operation) obj;
 
 				Optional<OperationResult> result = this.operate(operation, window, element);
-				result.ifPresent(operate -> this.out.set(operate.humanablePresentation()));
+				result.ifPresent(operate -> this.out.accept(operate.humanablePresentation()));
 			}
 			else if (obj instanceof Spec)
 			{
@@ -789,12 +843,12 @@ public class DictionaryFx extends GuiDictionary
 				{
 					if (check.isOk())
 					{
-						this.out.set(R.DICTIONARY_FX_CHECK_PASS.get());
+						this.out.accept(R.DICTIONARY_FX_CHECK_PASS.get());
 					}
 					else
 					{
-						this.out.set(R.DICTIONARY_FX_CHECK_FAIL.get());
-						check.getErrors().forEach(this.out::set);
+						this.out.accept(R.DICTIONARY_FX_CHECK_FAIL.get());
+						check.getErrors().forEach(this.out::accept);
 					}
 				});
 			}
@@ -808,21 +862,28 @@ public class DictionaryFx extends GuiDictionary
 
 	public void find() throws Exception
 	{
-		this.image.set(null);
+		this.image.accept(null);
 		this.checkIsWorking(() ->
 		{
 			IWindow window = this.currentWindow.get();
 			IControl element = this.currentElement.get();
 
-			Locator owner = Optional.ofNullable(window.getOwnerControl(element)).map(IControl::locator).orElse(null);
-			Locator locator = Optional.ofNullable(element).map(IControl::locator).orElse(null);
+			Locator owner = Optional.ofNullable(window.getOwnerControl(element))
+					.map(IControl::locator)
+					.map(control -> IControl.evaluateTemplate(control, this.evaluator))
+					.orElse(null);
+
+			Locator locator = Optional.ofNullable(element)
+					.map(IControl::locator)
+					.map(control -> IControl.evaluateTemplate(control, this.evaluator))
+					.orElse(null);
 
 			IRemoteApplication service = this.service();
 			Collection<String> all = service.findAll(owner, locator);
-			all.forEach(this.out::set);
+			all.forEach(this.out);
 
 			ImageWrapper imageWrapper = service.getImage(owner, locator);
-			this.image.set(imageWrapper);
+			this.image.accept(imageWrapper);
 		});
 	}
 
@@ -831,7 +892,7 @@ public class DictionaryFx extends GuiDictionary
 		this.checkIsWorking(() ->
 		{
 			Optional<OperationResult> operate = this.operate(Do.getValue(), this.currentWindow.get(), this.currentElement.get());
-			operate.ifPresent(opResult -> this.out.set(opResult.humanablePresentation()));
+			operate.ifPresent(opResult -> this.out.accept(opResult.humanablePresentation()));
 		});
 	}
 	//endregion
@@ -868,7 +929,7 @@ public class DictionaryFx extends GuiDictionary
 						owner = ownerElement.locator();
 					}
 				}
-				this.service().switchToFrame(owner, element.locator());
+				this.service().switchToFrame(IControl.evaluateTemplate(owner, evaluator), IControl.evaluateTemplate(element.locator(), evaluator));
 			}
 		});
 	}
@@ -968,7 +1029,7 @@ public class DictionaryFx extends GuiDictionary
 
 				Optional.ofNullable(property)
 						.map(Serializable::toString)
-						.ifPresent(this.out::set);
+						.ifPresent(this.out::accept);
 			}
 		);
 	}
@@ -998,12 +1059,12 @@ public class DictionaryFx extends GuiDictionary
 	//region Dialog tab
 	public void dialogMoveTo(int x, int y) throws Exception
 	{
-		this.checkIsWorking(() -> this.service().moveDialog(this.getSelfLocator(), x, y));
+		this.checkIsWorking(() -> this.service().moveDialog(IControl.evaluateTemplate(this.getSelfLocator(), this.evaluator), x, y));
 	}
 
 	public void dialogResize(Resize resize, int h, int w) throws Exception
 	{
-		this.checkIsWorking(() -> this.service().resizeDialog(getSelfLocator(), resize, h, w));
+		this.checkIsWorking(() -> this.service().resizeDialog(IControl.evaluateTemplate(this.getSelfLocator(), this.evaluator), resize, h, w));
 	}
 
 	public void dialogGetProperty(String propertyName) throws Exception
@@ -1015,13 +1076,13 @@ public class DictionaryFx extends GuiDictionary
 					String result = null;
 					if (Str.areEqual(propertyName, DialogGetProperties.sizeName))
 					{
-						result = this.service().getDialogSize(selfLocator).toString();
+						result = this.service().getDialogSize(IControl.evaluateTemplate(selfLocator, this.evaluator)).toString();
 					}
 					if (Str.areEqual(propertyName, DialogGetProperties.positionName))
 					{
-						result = this.service().getDialogPosition(selfLocator).toString();
+						result = this.service().getDialogPosition(IControl.evaluateTemplate(selfLocator, this.evaluator)).toString();
 					}
-					Optional.ofNullable(result).ifPresent(this.out::set);
+					Optional.ofNullable(result).ifPresent(this.out::accept);
 				}
 		);
 	}
@@ -1037,7 +1098,7 @@ public class DictionaryFx extends GuiDictionary
 
 		//TODO why we create copy?
 		AbstractControl abstractControl = AbstractControl.createCopy(control, owner, rows, header);
-		OperationResult result = abstractControl.operate(this.service(), window, operation);
+		OperationResult result = abstractControl.operate(this.service(), window, operation, this.evaluator);
 		return Optional.of(result);
 	}
 
@@ -1049,7 +1110,7 @@ public class DictionaryFx extends GuiDictionary
 
 		//TODO why we create copy?
 		AbstractControl abstractControl = AbstractControl.createCopy(control, owner, rows, header);
-		CheckingLayoutResult result = abstractControl.checkLayout(this.service(), window, spec);
+		CheckingLayoutResult result = abstractControl.checkLayout(this.service(), window, spec, this.evaluator);
 		return Optional.of(result);
 	}
 
@@ -1100,6 +1161,17 @@ public class DictionaryFx extends GuiDictionary
 		{
 			settings.remove(Settings.MAIN_NS, DIALOG_DICTIONARY_SETTINGS, absolutePath);
 		}
+
+		//save evaluated values
+		if (!this.evaluator.getLocals().getVars().isEmpty())
+		{
+			settings.setValue(Settings.MAIN_NS, DIALOG_STORED_VARIABLES, absolutePath, CONVERTER.toString(this.evaluatedParameters));
+		}
+		else
+		{
+			settings.remove(Settings.MAIN_NS, DIALOG_STORED_VARIABLES, absolutePath);
+		}
+
 		settings.saveIfNeeded();
 	}
 

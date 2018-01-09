@@ -45,11 +45,11 @@ public class Part implements Serializable
 		this.locator = null;
 	}
 
-	public void tune(IWindow window) throws Exception
+	public void tune(IWindow window, ITemplateEvaluator templateEvaluator) throws Exception
 	{
 		if (this.kind == OperationKind.REPEAT && this.operation != null)
 		{
-			this.operation.tune(window);
+			this.operation.tune(window, templateEvaluator);
 		}
 
 		if (this.locatorId != null && !this.locatorId.isEmpty() && this.locatorKind != null)
@@ -83,7 +83,7 @@ public class Part implements Serializable
 				}
 			}
 
-			this.locator = control == null ? null : control.locator();
+			this.locator = IControl.evaluateTemplate(control, templateEvaluator);
 		}
 	}
 

@@ -107,6 +107,7 @@
 							</children>
 						</GridPane>
 						<Label id="$verMax"/>
+						<Button text="Edit variables" maxWidth="Infinity" onAction="#showEditVariables"/>
 						<TabPane id="actionsTab" prefHeight="200.0" prefWidth="200.0" tabClosingPolicy="UNAVAILABLE" VBox.vgrow="ALWAYS">
 							<tabs>
 								<Tab>

@@ -6,11 +6,9 @@
 // This is unpublished, licensed software, confidential and proprietary
 // information which is the property of Exactpro Systems or its licensors.
 ////////////////////////////////////////////////////////////////////////////////
+package com.exactprosystems.jf.api.app;
 
-package com.exactprosystems.jf.documents.matrix.parser;
-
-@FunctionalInterface
-public interface Getter <T>
+public interface ITemplateEvaluator
 {
-	T get();
+	String templateEvaluate(String value) throws Exception;
 }

@@ -57,11 +57,12 @@ public final class OnError extends MatrixItem
 		this.matrixError = error;
 	}
 
+	//region region override from MatrixItem
 	@Override
 	protected Object displayYourself(DisplayDriver driver, Context context)
 	{
 		Object layout = driver.createLayout(this, 2);
-		driver.showComment(this, layout, 0, 0, getComments());
+		driver.showComment(this, layout, 0, 0, super.getComments());
 		driver.showTitle(this, layout, 1, 0, Tokens.OnError.get(), context.getFactory().getSettings());
 
 		return layout;
@@ -84,11 +85,12 @@ public final class OnError extends MatrixItem
 	{
 		try
 		{
-			evaluator.getLocals().getVars().put(Parser.error, 	this.matrixError == null ? null : this.matrixError.Message);
-			evaluator.getLocals().getVars().put(Parser.err, 	this.matrixError == null ? new MatrixError("Unknown", ErrorKind.OTHER, this) : this.matrixError);
+			evaluator.getLocals().getVars().put(Parser.error, this.matrixError == null ? null : this.matrixError.Message);
+			evaluator.getLocals().getVars().put(Parser.err, this.matrixError == null ? new MatrixError("Unknown", ErrorKind.OTHER, this) : this.matrixError);
+
 			ReturnAndResult ret = super.executeItSelf(start, context, listener, evaluator, report, parameters);
 			Result result = ret.getResult();
-					
+
 			if (result.isFail())
 			{
 				MatrixItem branchOnError = super.find(false, OnError.class, null);
@@ -105,8 +107,8 @@ public final class OnError extends MatrixItem
 		catch (Exception e)
 		{
 			logger.error(e.getMessage(), e);
-			listener.error(this.owner, getNumber(), this, e.getMessage());
-			return new ReturnAndResult(start, Result.Failed, e.getMessage(), ErrorKind.EXCEPTION, this);
+			return super.createReturn(e.getMessage(), listener, start);
 		}
 	}
+	//endregion
 }

@@ -130,7 +130,7 @@ public class DialogValidate extends AbstractAction
 					return;
 				}
 
-				OperationResult res = control.operate(service, window, null);
+				OperationResult res = control.operate(service, window, null, evaluator);
 				if (!res.isOk())
 				{
 					super.setError(message(id, window, onOpen, control, res.getLocator(), "" + res.getValue()), ErrorKind.NOT_EQUAL);
@@ -160,7 +160,7 @@ public class DialogValidate extends AbstractAction
 				Locator ownerLocator = owner == null ? null : owner.locator();
 				Locator controlLocator = control.locator();
 
-				Collection<String> found = service.findAll(ownerLocator, controlLocator);
+				Collection<String> found = service.findAll(IControl.evaluateTemplate(ownerLocator, evaluator), IControl.evaluateTemplate(controlLocator, evaluator));
 				int actualSize = found.size();
 
 				if (expectedSize != actualSize)
@@ -190,7 +190,7 @@ public class DialogValidate extends AbstractAction
 					return;
 				}
 
-				OperationResult res = control.operate(service, window, null);
+				OperationResult res = control.operate(service, window, null, evaluator);
 				if (!res.isOk())
 				{
 					super.setError(message(id, window, onClose, control, res.getLocator(), " returned 'false'. Process is stopped."), ErrorKind.NOT_EQUAL);

@@ -34,8 +34,14 @@ import com.exactprosystems.jf.functions.Table;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * A simple implementation of DocumentFactory.
+ * This class used only on running in console mode
+ */
 public class ConsoleDocumentFactory extends DocumentFactory
 {
+	private VerboseLevel verboseLevel;
+
 	public ConsoleDocumentFactory(VerboseLevel verboseLevel)
 	{
 		super();
@@ -44,7 +50,7 @@ public class ConsoleDocumentFactory extends DocumentFactory
 	}
 
 	@Override
-	protected Context createContext(Configuration configuration, IMatrixListener matrixListener) throws Exception
+	protected Context createContext(Configuration configuration, IMatrixListener matrixListener)
 	{
 		return new Context(this, matrixListener, System.out, rep -> {});
 	}
@@ -68,7 +74,7 @@ public class ConsoleDocumentFactory extends DocumentFactory
 	}
 
 	@Override
-	protected MessageDictionary createClientDictionary(String fileName, Configuration configuration) throws Exception
+	protected MessageDictionary createClientDictionary(String fileName, Configuration configuration)
 	{
 		return new MessageDictionary(fileName, this);
 	}
@@ -80,19 +86,19 @@ public class ConsoleDocumentFactory extends DocumentFactory
 	}
 
 	@Override
-	protected Csv createCsv(String fileName, Configuration configuration) throws Exception
+	protected Csv createCsv(String fileName, Configuration configuration)
 	{
 		return new Csv(fileName, this);
 	}
 
 	@Override
-	protected PlainText createPlainText(String fileName, Configuration configuration) throws Exception
+	protected PlainText createPlainText(String fileName, Configuration configuration)
 	{
 		return new PlainText(fileName, this);
 	}
 
 	@Override
-	protected SystemVars createVars(String fileName, Configuration configuration) throws Exception
+	protected SystemVars createVars(String fileName, Configuration configuration)
 	{
 		return new SystemVars(fileName, this);
 	}
@@ -100,34 +106,34 @@ public class ConsoleDocumentFactory extends DocumentFactory
 	@Override
 	protected IMatrixListener createMatrixListener()
 	{
-		IMatrixListener matrixListener 	= null;
+		IMatrixListener matrixListener = null;
 		switch (this.verboseLevel)
 		{
 			case None:
-				matrixListener 	= new MatrixListener();
+				matrixListener = new MatrixListener();
 				break;
 			case Errors:
-				matrixListener 	= new ConsoleErrorMatrixListener();
+				matrixListener = new ConsoleErrorMatrixListener();
 				break;
 			case All:
-				matrixListener 	= new ConsoleMatrixListener(true);
+				matrixListener = new ConsoleMatrixListener(true);
 				break;
 		}
 
 		return matrixListener;
 	}
-	
+
 	@Override
-	public void 				error(Exception exeption)
+	public void error(Exception exception)
 	{
-		if (exeption != null)
+		if (exception != null)
 		{
-			exeption.printStackTrace(System.err);
+			exception.printStackTrace();
 		}
 	}
-	
+
 	@Override
-	public void 				popup(String message, Notifier notifier)
+	public void popup(String message, Notifier notifier)
 	{
 		System.out.printf("[%s] %s %n", notifier, message);
 	}
@@ -161,6 +167,4 @@ public class ConsoleDocumentFactory extends DocumentFactory
 	{
 
 	}
-
-	private VerboseLevel verboseLevel;
 }

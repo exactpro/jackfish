@@ -12,7 +12,7 @@ TextCreate;Never;;
     TestString;'My String 1234567890!@#$%^&*()\\//'
 
     #Id;#Action;#Assert;$Content
-    TXT1;TextCreate;This.Result == Result.Passed && This.Out.toString() == TestString + '\n';TestString
+    TXT1;TextCreate;This.Result == Result.Passed && This.Out.toString() == TestString;TestString
 
     // Negative Testing
     #Id;#Action;#Assert;$Content
@@ -59,7 +59,7 @@ TextLoadFromFile;;;
     TextSaveToFile;TXT14.Out;new File('').getAbsolutePath().replace(File.separator, '/') + '/testdata/ForTextTests.txt'
 
     #Id;#Action;#Assert;$File
-    TXT4;TextLoadFromFile;This.Out.toString() == testString + '\n';new File('').getAbsolutePath().replace(File.separator, '/') + '/testdata/ForTextTests.txt'
+    TXT4;TextLoadFromFile;This.Out.toString() == testString;new File('').getAbsolutePath().replace(File.separator, '/') + '/testdata/ForTextTests.txt'
 
     #Id;#Action;#Assert;$File
     TXT5;TextLoadFromFile;This.Result == Result.Failed && This.Kind == ErrorKind.EXCEPTION;'fileThatDoesNotExist'
@@ -80,7 +80,7 @@ TextPerform;;;
     TXT11;TextCreate;'My test string length is not @{size}'
 
     #Id;#Action;#Assert;$Text
-    TXT6;TextPerform;This.Out.toString() == 'My test string length is not 10000\n';TXT7.Out
+    TXT6;TextPerform;This.Out.toString() == 'My test string length is not 10000';TXT7.Out
 
     #Id;#Action;#Assert;$Text
     TXT9;TextPerform;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;
@@ -149,7 +149,7 @@ TextSaveToFile;;;
     TextSaveToFile;TXT13.Out;new File('').getAbsolutePath().replace(File.separator, '/') + '/testdata/ForTextTests.txt'
 
     #Id;#Action;#Assert;$File
-    TXT15;TextLoadFromFile;This.Out.toString() == testString + '\n';new File('').getAbsolutePath().replace(File.separator, '/') + '/testdata/ForTextTests.txt'
+    TXT15;TextLoadFromFile;This.Out.toString() == testString;new File('').getAbsolutePath().replace(File.separator, '/') + '/testdata/ForTextTests.txt'
 
     #Id;#Action;#Assert;$File
     TXT17;TextLoadFromFile;This.Result == Result.Failed && This.Kind == ErrorKind.EXCEPTION;'test3333333.txt'

@@ -14,9 +14,9 @@ import com.exactprosystems.jf.api.app.IControl;
 import com.exactprosystems.jf.api.app.IRemoteApplication;
 import com.exactprosystems.jf.api.app.Locator;
 import com.exactprosystems.jf.api.common.Converter;
+import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.utils.XpathUtils;
 import com.exactprosystems.jf.tool.Common;
-import javafx.application.Platform;
 import javafx.concurrent.Task;
 import javafx.util.Pair;
 import org.apache.log4j.Logger;
@@ -34,14 +34,14 @@ public class WizardLoader
 
 	private Task<Pair<BufferedImage, Document>> task;
 
-	public WizardLoader(AppConnection currentConnection, IControl self, BiConsumer<BufferedImage, Document> onSuccess, Consumer<Throwable> onError)
+	public WizardLoader(AppConnection currentConnection, IControl self, AbstractEvaluator evaluator, BiConsumer<BufferedImage, Document> onSuccess, Consumer<Throwable> onError)
 	{
 		this.task = new Task<Pair<BufferedImage, Document>>()
 		{
 			@Override
 			protected Pair<BufferedImage, Document> call() throws Exception
 			{
-				Locator selfLocator = self == null ? null : self.locator();
+				Locator selfLocator = IControl.evaluateTemplate(self, evaluator);
 				IRemoteApplication service = currentConnection.getApplication().service();
 
 				if (this.isCancelled())

@@ -25,6 +25,7 @@ import com.exactprosystems.jf.documents.DocumentInfo;
 import com.exactprosystems.jf.documents.DocumentKind;
 import com.exactprosystems.jf.documents.config.Context;
 import com.exactprosystems.jf.documents.matrix.parser.MutableValue;
+import com.exactprosystems.jf.documents.matrix.parser.Parameters;
 import com.exactprosystems.jf.documents.matrix.parser.Parser;
 import com.exactprosystems.jf.documents.matrix.parser.Result;
 import com.exactprosystems.jf.documents.matrix.parser.items.MatrixItem;
@@ -34,104 +35,109 @@ import com.exactprosystems.jf.documents.matrix.parser.items.TestCase;
 import com.exactprosystems.jf.documents.matrix.parser.listeners.IMatrixListener;
 import org.apache.log4j.Logger;
 
-import java.io.*;
-import java.util.ArrayList;
+import java.io.PrintStream;
+import java.io.Reader;
+import java.io.StringWriter;
+import java.io.Writer;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 @DocumentInfo(
-        kind = DocumentKind.MATRIX,
-        newName = "NewMatrix", 
-        extension = "jf",
-        description = "Matrix"
+		kind = DocumentKind.MATRIX,
+		newName = "NewMatrix",
+		extension = "jf",
+		description = "Matrix"
 )
 public class Matrix extends AbstractDocument implements IMatrix
 {
-    public static final String           EMPTY_STRING     = "<empty>";
-    private static final Logger          logger           = Logger.getLogger(Matrix.class);
+	public static final  String EMPTY_STRING = "<empty>";
+	private static final Logger logger       = Logger.getLogger(Matrix.class);
 
-    private IClientFactory               defaultClient;
-    private IApplicationFactory          defaultApp;
+	private IClientFactory      defaultClient;
+	private IApplicationFactory defaultApp;
 
-    private boolean                      isLibrary;
-    private int                          count            = 0;
-    private MatrixItem                   root             = null;
-    protected IMatrixListener              matrixListener   = null;
-    private MatrixEngine                 engine           = null;
-    private MutableValue<MatrixState>    stateProperty    = new MutableValue<>(MatrixState.Created);
+	private   boolean         isLibrary;
+	private   MatrixItem      root;
+	protected IMatrixListener matrixListener;
+	private int                       count         = 0;
+	private MatrixEngine              engine        = null;
+	private MutableValue<MatrixState> stateProperty = new MutableValue<>(MatrixState.Created);
 
 	public Matrix(String matrixName, DocumentFactory factory, IMatrixListener matrixListener, boolean isLibrary)
 	{
-		super(matrixName, factory); 
+		super(matrixName, factory);
 
-        if (!isLibrary)
-        {
-            this.engine = new MatrixEngine(factory.createContext(), this);
-        }
-        
+		if (!isLibrary)
+		{
+			this.engine = new MatrixEngine(factory.createContext(), this);
+		}
+
 		this.isLibrary = isLibrary;
 		this.root = new MatrixRoot(matrixName);
 		this.matrixListener = matrixListener;
-
-//		if (!getNameProperty().isNullOrEmpty())
-//		{
-//			if (!matrixListener.isOk())
-//			{
-//				String mgs = matrixListener.getExceptionMessage();
-//				logger.error(mgs);
-//				throw new Exception("Matrix did not executed cause errors." + mgs);
-//			}
-//
-//		}
 	}
 
-	public MatrixEngine getEngine()
-	{
-	    return this.engine;
-	}
-
-	public void setOut(PrintStream out)
-	{
-		Optional.ofNullable(this.engine).ifPresent(e -> e.getContext().setOut(out));
-	}
-	
-	public MutableValue<MatrixState> getStateProperty()
-	{
-	    return this.stateProperty;
-	}
-	
-	public void setListener(IMatrixListener listener)
-	{
-		this.matrixListener = listener;
-	}
-
-	public void enumerate()
-	{
-		AtomicInteger count = new AtomicInteger(0);
-		Optional.ofNullable(this.root).ifPresent(root -> root.bypass(item -> item.setNubmer(count.getAndIncrement())));
-	}
-	
 	@Override
 	public String toString()
 	{
-		return getNameProperty().toString();
+		return super.getNameProperty().toString();
 	}
-	
+
 	public Matrix makeCopy()
 	{
-		Matrix copy = new Matrix(getNameProperty().get(), getFactory(), this.matrixListener, this.isLibrary);
+		Matrix copy = new Matrix(super.getNameProperty().get(), super.getFactory(), this.matrixListener, this.isLibrary);
 		copy.root = this.root.createCopy();
 		copy.root.init(copy, copy);
 		copy.enumerate();
 		return copy;
 	}
 
-	
-	// ==============================================================================================================================
-	// interface IMatrix
-	// ==============================================================================================================================
+	//region public Setters / Getters
+	public MatrixEngine getEngine()
+	{
+		return this.engine;
+	}
+
+	public void setOut(PrintStream out)
+	{
+		Optional.ofNullable(this.engine).ifPresent(e -> e.getContext().setOut(out));
+	}
+
+	public MutableValue<MatrixState> getStateProperty()
+	{
+		return this.stateProperty;
+	}
+
+	public void setListener(IMatrixListener listener)
+	{
+		this.matrixListener = listener;
+	}
+
+	/**
+	 * Return the property, which mean, the matrix is library or not.
+	 * If the matrix is library, the matrix has not matrix engine, therefore, can't be executed
+	 *
+	 * @return true, if the matrix is library
+	 */
+	public boolean isLibrary()
+	{
+		return this.isLibrary;
+	}
+
+	/**
+	 * @return a root of the matrix
+	 */
+	public MatrixItem getRoot()
+	{
+		return this.root;
+	}
+	//endregion
+
+	//region interface IMatrix
 	@Override
 	public void setDefaultApp(String id)
 	{
@@ -142,7 +148,7 @@ public class Matrix extends AbstractDocument implements IMatrix
 		}
 		try
 		{
-			this.defaultApp = getFactory().getConfiguration().getApplicationPool().loadApplicationFactory(id);
+			this.defaultApp = super.getFactory().getConfiguration().getApplicationPool().loadApplicationFactory(id);
 		}
 		catch (Exception e)
 		{
@@ -155,7 +161,7 @@ public class Matrix extends AbstractDocument implements IMatrix
 	{
 		return this.defaultApp;
 	}
-	
+
 	@Override
 	public void setDefaultClient(String id)
 	{
@@ -173,68 +179,57 @@ public class Matrix extends AbstractDocument implements IMatrix
 			logger.error(e.getMessage(), e);
 		}
 	}
-	
+
 	@Override
 	public IClientFactory getDefaultClient()
 	{
 		return this.defaultClient;
 	}
 
-    @Override
-    public MatrixConnection start(Date time, Object parameter) throws Exception
-    {
-        MatrixConnection res = new MatrixConnectionImpl(this);
-        if (getEngine() != null)
-        {
-            getEngine().start(time, parameter);
-        }
-        
-        return res;
-    }
+	@Override
+	public MatrixConnection start(Date time, Object parameter) throws Exception
+	{
+		MatrixConnection res = new MatrixConnectionImpl(this);
+		if (this.engine != null)
+		{
+			this.engine.start(time, parameter);
+		}
+		return res;
+	}
 
-    @Override
-    public void stop()
-    {
-        if (getEngine() != null)
-        {
-            getEngine().stop();
-        }
-    }
+	@Override
+	public void stop()
+	{
+		if (this.engine != null)
+		{
+			this.engine.stop();
+		}
+	}
 
-	// ==============================================================================================================================
-	// AbstractDocument
-	// ==============================================================================================================================
+	//endregion
+
+	//region AbstractDocument
 	@Override
 	public void load(Reader reader) throws Exception
 	{
 		super.load(reader);
-		this.root = new MatrixRoot(getNameProperty().get());
-		StringBuffer buffer = new StringBuffer();
-		try (BufferedReader rawReader = new BufferedReader(reader))
-		{
-			String line = null;
-			while ((line = rawReader.readLine()) != null)
-			{
-				buffer.append(line).append('\n');
-			}
-			Reader stringReader = CommonHelper.readerFromString(buffer.toString());
 
-			Parser parser = new Parser();
-			this.root = parser.readMatrix(this.root, stringReader);
-			this.root.init(this, this);
-			enumerate();
-		}
+		this.root = new MatrixRoot(super.getNameProperty().get());
+		Parser parser = new Parser();
+		this.root = parser.readMatrix(this.root, reader);
+		this.root.init(this, this);
+		this.enumerate();
 	}
 
 	@Override
-	public void create() throws Exception
+	public void create()
 	{
 		super.create();
 
-		this.root = new MatrixRoot(getNameProperty().get());
+		this.root = new MatrixRoot(super.getNameProperty().get());
 		this.root.init(this, this);
 
-		if (this.isLibrary())
+		if (this.isLibrary)
 		{
 			NameSpace item = new NameSpace();
 			this.root.insert(0, item);
@@ -252,16 +247,16 @@ public class Matrix extends AbstractDocument implements IMatrix
 	{
 		return true;
 	}
-	
-    @Override
-    public void close() throws Exception
-    {
-        if (this.engine != null)
-        {
-            this.engine.close();
-        }
+
+	@Override
+	public void close() throws Exception
+	{
+		if (this.engine != null)
+		{
+			this.engine.close();
+		}
 		super.close();
-    }
+	}
 
 	@Override
 	public void save(String fileName) throws Exception
@@ -273,22 +268,21 @@ public class Matrix extends AbstractDocument implements IMatrix
 		}
 		super.save(fileName);
 	}
-	
+
 	@Override
 	public void display() throws Exception
 	{
-	    super.display();
-	    
-	    this.stateProperty.fire();
+		super.display();
+		this.stateProperty.fire();
 	}
 
-	// ==============================================================================================================================
-	// interface Mutable
-	// ==============================================================================================================================
+	//endregion
+
+	//region interface Mutable
 	@Override
 	public final boolean isChanged()
 	{
-		return this.root.isChanged();
+		return this.root.isChanged() || super.isChanged();
 	}
 
 	@Override
@@ -298,78 +292,77 @@ public class Matrix extends AbstractDocument implements IMatrix
 		this.root.saved();
 	}
 
-	// ==============================================================================================================================
+	//endregion
 
-	public char[] getMatrixBuffer() throws Exception
+	//region public methods
+	/**
+	 * Set a number for all matrix item. The start number is 0, and it set to MatrixRoot
+	 */
+	public void enumerate()
 	{
-		Parser parser = new Parser();
-		StringWriter stringWriter = new StringWriter();
-		parser.saveMatrix(this.root, stringWriter);
-		return stringWriter.getBuffer().toString().toCharArray();
+		AtomicInteger currentNumber = new AtomicInteger(0);
+		Optional.ofNullable(this.root)
+				.ifPresent(root -> root.bypass(item -> item.setNumber(currentNumber.getAndIncrement())));
 	}
 
-	// ==============================================================================================================================
-	// interface to edit Matrix
-	// ==============================================================================================================================
-	public boolean isLibrary()
-	{
-		return this.isLibrary;
-	}
-	
+	/**
+	 * Set the passed text as the comment to the first item from a MatrixRoot ( if this first item is present)
+	 */
 	public void addCopyright(String text)
 	{
 		Optional.ofNullable(this.getRoot().get(0)).ifPresent(first -> first.addCopyright(text));
 	}
 
-	public MatrixItem getRoot()
-	{
-		return this.root;
-	}
-	
 	public List<String> listOfIds(Class<? extends MatrixItem> clazz)
 	{
-		final List<String> res = new ArrayList<>();
-
-		this.getRoot().bypass(item ->
-		{
-			if (item.getClass() == clazz && !Str.IsNullOrEmpty(item.getId()))
-			{
-				res.add(item.getId());
-			}
-		});
-
-		return res;
+		return this.getRoot().stream()
+				.filter(item -> item.getClass() == clazz && !Str.IsNullOrEmpty(item.getId()))
+				.map(MatrixItem::getId)
+				.collect(Collectors.toList());
 	}
-    
+
+	/**
+	 * Return count of children for the passed item.
+	 * If the passed item is null, the root item will use
+	 *
+	 * @return count of children for the passed item
+	 *
+	 * @see MatrixItem#count()
+	 */
 	public int count(MatrixItem item)
 	{
-		if (item == null)
-		{
-			return this.root.count();
-		}
-		return item.count();
+		return item == null ? this.root.count() : item.count();
 	}
 
+	/**
+	 * Get index of the passed item. If item is MatrixRoot, will return -1
+	 *
+	 * @return index of the item or -1, if item not found in the tree
+	 */
 	public int getIndex(MatrixItem item)
 	{
 		if (item == null)
 		{
-			return getIndex(this.root);
+			return this.getIndex(this.root);
 		}
-		if (item.getParent() != null)
+		MatrixItem parent = item.getParent();
+		if (parent != null)
 		{
-			for (int i = 0; i < item.getParent().count(); i++)
-			{
-				if (item.getParent().get(i) == item)
-				{
-					return i;
-				}
-			}
+			return IntStream.range(0, parent.count())
+					.filter(i -> parent.get(i) == item)
+					.findFirst()
+					.orElse(-1);
 		}
-		
+
 		return -1;
 	}
-	
+
+	/**
+	 * Get a item, which will found from children on the passed item by passed index.
+	 * If the passed item is null, the root item will used
+	 *
+	 * @see MatrixItem#get(int)
+	 */
 	public MatrixItem get(MatrixItem item, int index)
 	{
 		if (item == null)
@@ -379,6 +372,16 @@ public class Matrix extends AbstractDocument implements IMatrix
 		return item.get(index);
 	}
 
+	/**
+	 * Insert the passed item to the passed what in the passed index.
+	 * If the passed what is null, the root item will used
+	 *
+	 * @param item the parent item for inserting
+	 * @param index the index for inserting
+	 * @param what the item, which will use for inserting
+	 *
+	 * @see MatrixItem#insert(int, MatrixItem)
+	 */
 	public void insert(MatrixItem item, int index, MatrixItem what)
 	{
 		MatrixItem parent = item;
@@ -389,6 +392,12 @@ public class Matrix extends AbstractDocument implements IMatrix
 		parent.insert(index, what);
 	}
 
+	/**
+	 * Remove the passed item ( if item is not null)
+	 * @param item the item, which used for removing
+	 *
+	 * @see MatrixItem#remove()
+	 */
 	public void remove(MatrixItem item)
 	{
 		if (item != null)
@@ -396,28 +405,29 @@ public class Matrix extends AbstractDocument implements IMatrix
 			item.remove();
 		}
 	}
-	
-	// ==============================================================================================================================
+
 	public final List<MatrixItem> find(final String what, final boolean caseSensitive, final boolean wholeWord)
 	{
-		final List<MatrixItem> res = new ArrayList<>();
-
-		this.getRoot().bypass(item ->
-		{
-			if (item.matches(what, caseSensitive, wholeWord))
-			{
-				res.add(item);
-			}
-		});
-
-		return res;
+		return this.getRoot().stream()
+				.filter(item -> item.matches(what, caseSensitive, wholeWord))
+				.collect(Collectors.toList());
 	}
 
+	/**
+	 * @return index of current executed item
+	 */
 	public int currentItem()
 	{
 		return this.count;
 	}
-	
+
+	/**
+	 * Return count of children, which has the passed result.
+	 * If the root of the matrix is null, will return 0
+	 * @return the count of children, which have the passed result
+	 *
+	 * @see MatrixItem#count(Result)
+	 */
 	public int countResult(Result what)
 	{
 		if (this.root != null)
@@ -427,6 +437,19 @@ public class Matrix extends AbstractDocument implements IMatrix
 		return 0;
 	}
 
+	public void setupCall(MatrixItem item, String reference, Parameters parameters)
+	{
+
+	}
+	//endregion
+
+	/**
+	 * Check the matrix.
+	 * @param error a builder for collect errors
+	 * @return true, if matrix is ok
+	 *
+	 * @see MatrixItem#check(Context, AbstractEvaluator, IMatrixListener)
+	 */
 	protected boolean checkMatrix(Context context, AbstractEvaluator evaluator, StringBuilder error)
 	{
 		this.matrixListener.reset(this);
@@ -438,22 +461,18 @@ public class Matrix extends AbstractDocument implements IMatrix
 			error.append(this.matrixListener.getExceptionMessage());
 			return false;
 		}
-		
+
 		return true;
 	}
-	
+
 	protected void start(Context context, AbstractEvaluator evaluator, ReportBuilder report)
 	{
-		assert (context != null);
-		assert (evaluator != null);
-		assert (report != null);
 		Date startTime = new Date();
-
 		this.matrixListener.matrixStarted(this);
 
 		try
 		{
-			report.reportStarted(getMatrixBuffer(), VersionInfo.getVersion());
+			report.reportStarted(this.getMatrixBuffer(), VersionInfo.getVersion());
 		}
 		catch (Exception e)
 		{
@@ -476,16 +495,25 @@ public class Matrix extends AbstractDocument implements IMatrix
 			logger.error(e.getMessage(), e);
 		}
 
-		Date finishTime = new Date();
 		try
 		{
-			report.reportFinished(getRoot().count(Result.Failed), getRoot().count(Result.Passed), startTime, finishTime);
+			report.reportFinished(this.countResult(Result.Failed), this.countResult(Result.Passed), startTime, new Date());
 		}
 		catch (Exception e)
 		{
 			logger.error(e.getMessage(), e);
 		}
-		this.matrixListener.matrixFinished(this, countResult(Result.Passed), countResult(Result.Failed));
+		this.matrixListener.matrixFinished(this, this.countResult(Result.Passed), this.countResult(Result.Failed));
 	}
+
+	//region private methods
+	private char[] getMatrixBuffer() throws Exception
+	{
+		Parser parser = new Parser();
+		StringWriter stringWriter = new StringWriter();
+		parser.saveMatrix(this.root, stringWriter);
+		return stringWriter.getBuffer().toString().toCharArray();
+	}
+	//endregion
 
 }

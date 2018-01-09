@@ -12,7 +12,6 @@ package com.exactprosystems.jf.documents.matrix.parser.items;
 import com.csvreader.CsvWriter;
 import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.api.error.ErrorKind;
-import com.exactprosystems.jf.api.error.common.MatrixException;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.report.ReportBuilder;
 import com.exactprosystems.jf.common.report.ReportTable;
@@ -37,8 +36,8 @@ import java.util.Map;
 	)
 public class Assert extends MatrixItem
 {
-	private Parameter assertion = null;
-	private Parameter message = null;
+	private final Parameter assertion;
+	private final Parameter message;
 
 	public Assert()
 	{
@@ -61,17 +60,11 @@ public class Assert extends MatrixItem
 		return new Assert(this);
 	}
 
-	//==============================================================================================
-	// Interface Mutable
-	//==============================================================================================
+	//region Interface Mutable
 	@Override
 	public boolean isChanged()
 	{
-		if (this.assertion.isChanged() || this.message.isChanged())
-		{
-			return true;
-		}
-		return super.isChanged();
+		return this.assertion.isChanged() || this.message.isChanged() || super.isChanged();
 	}
 
 	@Override
@@ -81,13 +74,14 @@ public class Assert extends MatrixItem
 		this.assertion.saved();
 		this.message.saved();
 	}
+	//endregion
 
-	//==============================================================================================
+	//region override from MatrixItem
 	@Override
 	protected Object displayYourself(DisplayDriver driver, Context context)
 	{
 		Object layout = driver.createLayout(this, 2);
-		driver.showComment(this, layout, 0, 0, getComments());
+		driver.showComment(this, layout, 0, 0, super.getComments());
 		driver.showTitle(this, layout, 1, 0, Tokens.Assert.get(), context.getFactory().getSettings());
 		driver.showExpressionField(this, layout, 1, 1, Tokens.Assert.get(), this.assertion, this.assertion, null, null, null, null);
 		driver.showLabel(this, layout, 1, 2, Tokens.Message.get());
@@ -103,12 +97,11 @@ public class Assert extends MatrixItem
 	}
 
 	@Override
-	protected void initItSelf(Map<Tokens, String> systemParameters) throws MatrixException
+	protected void initItSelf(Map<Tokens, String> systemParameters)
 	{
 		this.assertion.setExpression(systemParameters.get(Tokens.Assert));
 		this.message.setExpression(systemParameters.get(Tokens.Message));
 	}
-
 
 	@Override
 	protected void checkItSelf(Context context, AbstractEvaluator evaluator, IMatrixListener listener, Parameters parameters)
@@ -127,7 +120,7 @@ public class Assert extends MatrixItem
 			this.message.evaluate(evaluator);
 			if (!this.assertion.isValid() || !this.message.isValid())
 			{
-				ReportTable table = report.addTable("Assert", null, true, true, new int[]{50, 50}, new String[]{"Expression", "Error"});
+				ReportTable table = report.addTable("Assert", null, true, true, new int[]{50, 50}, "Expression", "Error");
 
 				String msg = "Error in expression ";
 				if (!this.assertion.isValid())
@@ -148,19 +141,19 @@ public class Assert extends MatrixItem
 			Object eval = this.assertion.getValue();
 			if (eval instanceof Boolean)
 			{
-				ReportTable table = report.addTable("Assert", null, true, true, new int[]{50, 50}, new String[]{"Expression", "Value"});
+				ReportTable table = report.addTable("Assert", null, true, true, new int[]{50, 50}, "Expression", "Value");
 
 				boolean bool = (Boolean) eval;
 				if (bool)
 				{
-					table.addValues(this.assertion.getExpression(), bool);
+					table.addValues(this.assertion.getExpression(), true);
 					report.itemIntermediate(this);
 
 					return new ReturnAndResult(start, Result.Passed, null);
 				}
 				else
 				{
-					table.addValues(this.assertion.getExpression(), bool);
+					table.addValues(this.assertion.getExpression(), false);
 					table.addValues(this.message.getExpression(), this.message.getValueAsString());
 					report.itemIntermediate(this);
 
@@ -173,7 +166,7 @@ public class Assert extends MatrixItem
 		catch (Exception e)
 		{
 			logger.error(e.getMessage(), e);
-			listener.error(this.owner, getNumber(), this, e.getMessage());
+			listener.error(this.owner, super.getNumber(), this, e.getMessage());
 			return new ReturnAndResult(start, Result.Failed, e.getMessage(), ErrorKind.EXCEPTION, this);
 		}
 	}
@@ -188,8 +181,11 @@ public class Assert extends MatrixItem
 	@Override
 	protected boolean matchesDerived(String what, boolean caseSensitive, boolean wholeWord)
 	{
-		return SearchHelper.matches(Tokens.Assert.get(), what, caseSensitive, wholeWord) || SearchHelper.matches(this.assertion.getExpression(), what, caseSensitive, wholeWord)
+		return SearchHelper.matches(Tokens.Assert.get(), what, caseSensitive, wholeWord)
+				|| SearchHelper.matches(this.assertion.getExpression(), what, caseSensitive, wholeWord)
 				|| SearchHelper.matches(this.message.getExpression(), what, caseSensitive, wholeWord);
 	}
+
+	//endregion
 }
 

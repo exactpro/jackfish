@@ -51,27 +51,6 @@ Test chrome;Never;;
     'start app with chromedriverbinary';;;
     #EndStep
 
-    #Step;#Kind;#For;#Depends
-    'test most used actions';Never;;
-        #Id;#Action;$AppId;Browser;URL
-        APPSTR4;ApplicationStart;mockWebApp;'Chrome';mockWebURL
-
-        #Id;#Call;app
-        CALL_1;checkBrowser;APPSTR4.Out
-
-        #Action;$AppConnection
-        ApplicationStop;APPSTR4.Out
-
-        #OnError
-            #Action;$AppConnection
-            ApplicationStop;APPSTR4.Out
-
-            #Fail
-            err
-
-
-    #EndStep
-
 
 // Test for selenium 3+
 #Off;#TestCase;#Kind;#Depends;#For
@@ -162,22 +141,6 @@ Test chrome;Never;;
     #EndStep
 
 
-#TestCase;#Kind;#Depends;#For
-subcase;;;
-    #Id;#SubCase;app
-    checkBrowser;;APPSTR4.Out
-        #Id;#Action;$Dialog;$AppConnection;Button;centralLabel
-        DLGFLL1;DialogFill;'Main';app;Do.push();Do.check('Button_click')
-
-        #Id;#Action;$Dialog;$AppConnection;TextBox;centralLabel
-        DLGFLL1;DialogFill;'Main';app;'someText';Do.check('TextBox_someText')
-
-        #Id;#Action;$Dialog;$AppConnection;TextBox;centralLabel
-        DLGFLL1;DialogFill;'Main';app;Do.press(Keyboard.W);Do.check('TextBox_someTextw')
-
-    #EndSubCase
-
-
 #Id;#TestCase;#Kind;#Depends;#For
 Properties;Dialog get properties;;;
     #Id;#Step;#Kind;#For;#Depends
@@ -227,10 +190,10 @@ DialogMove;;;
 
     #EndStep
 
-    #Id;#TestCase;#Kind;#Depends;#For
-    Stop;;;;
-        #Action;$AppConnection
-        ApplicationStop;APPSTR5.Out
 
+#Id;#TestCase;#Kind;#Depends;#For
+Stop;;;;
+    #Action;$AppConnection
+    ApplicationStop;APPSTR5.Out
 
 

@@ -61,7 +61,7 @@ public class MatcherFx
 		}
 		this.locator = locator;
 		this.info = info;
-		this.owner = owner;
+		this.owner = owner == null ? UtilsFx.currentRoot() : owner;
 
 		String locatorXpath = this.locator.getXpath();
 		if (!Str.IsNullOrEmpty(locatorXpath) && owner != null)
@@ -489,6 +489,11 @@ public class MatcherFx
 				}
 			}
 			return sb.toString();
+		}
+		else if (target instanceof ComboBox)
+		{
+			ComboBox comboBox = (ComboBox) target;
+			return comboBox.isEditable() ? comboBox.getEditor().getText() : Str.asString(comboBox.getValue());
 		}
 		else
 		{

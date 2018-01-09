@@ -23,33 +23,33 @@ import java.util.Date;
 
 public class DateTimePicker extends DatePicker
 {
-	private ObjectProperty<LocalDateTime> dateTimeValue;
 	private static DateTimeFormatter formatter = DateTimeFormatter.ofPattern(Common.DATE_TIME_PATTERN);
+	private final ObjectProperty<LocalDateTime> dateTimeValue;
 
-	public DateTimePicker(Date initial)
+	public DateTimePicker(Date initialDate)
 	{
 		super();
 		this.dateTimeValue = new SimpleObjectProperty<>();
-		this.getEditor().textProperty().addListener((observable, oldValue, newValue) -> {
+		super.getEditor().textProperty().addListener((observable, oldValue, newValue) ->
+		{
 			try
 			{
-				setDateTime(LocalDateTime.parse(newValue, formatter));
+				this.setDateTime(LocalDateTime.parse(newValue, formatter));
 			}
-			catch (Exception e)
-			{
-			}
+			catch (Exception ignored)
+			{}
 		});
-		if (initial != null)
+		if (initialDate != null)
 		{
-			dateTimeValueProperty().setValue(Common.convert(initial));
-			this.setValue(Common.convert(initial).toLocalDate());
+			dateTimeValueProperty().setValue(Common.convert(initialDate));
+			super.setValue(Common.convert(initialDate).toLocalDate());
 		}
 		else
 		{
 			dateTimeValueProperty().setValue(LocalDateTime.now());
-			this.setValue(LocalDate.now());
+			super.setValue(LocalDate.now());
 		}
-		setConverter(new StringConverter<LocalDate>()
+		super.setConverter(new StringConverter<LocalDate>()
 		{
 			@Override
 			public String toString(LocalDate object)
@@ -63,9 +63,8 @@ public class DateTimePicker extends DatePicker
 				return LocalDate.parse(string, formatter);
 			}
 		});
-		valueProperty().addListener((observable, oldValue, newValue) -> {
-			this.dateTimeValue.set(this.dateTimeValue.getValue().withYear(newValue.getYear()).withMonth(newValue.getMonthValue()).withDayOfMonth(newValue.getDayOfMonth()));
-		});
+		super.valueProperty().addListener((observable, oldValue, newValue) ->
+				this.dateTimeValue.set(this.dateTimeValue.getValue().withYear(newValue.getYear()).withMonth(newValue.getMonthValue()).withDayOfMonth(newValue.getDayOfMonth())));
 	}
 
 	public Date getDate()
@@ -74,7 +73,8 @@ public class DateTimePicker extends DatePicker
 	}
 
 	@Override
-	protected Skin<?> createDefaultSkin () {
+	protected Skin<?> createDefaultSkin()
+	{
 		return new DateTimePickerSkin(this);
 	}
 
@@ -88,10 +88,8 @@ public class DateTimePicker extends DatePicker
 		this.dateTimeValue.set(value);
 	}
 
-	public ObjectProperty<LocalDateTime> dateTimeValueProperty(){
-		if (dateTimeValue == null){
-			dateTimeValue = new SimpleObjectProperty<>();
-		}
-		return dateTimeValue;
+	public ObjectProperty<LocalDateTime> dateTimeValueProperty()
+	{
+		return this.dateTimeValue;
 	}
 }

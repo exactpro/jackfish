@@ -166,7 +166,7 @@ public class DialogCheckLayout extends AbstractAction
 					return;
 				}
 
-				OperationResult res = control.operate(service, window, null);
+				OperationResult res = control.operate(service, window, null, evaluator);
 				if (!res.isOk())
 				{
 					super.setError(message(id, window, onOpen, control, res.getLocator(), "" + res.getValue()), ErrorKind.DIALOG_CHECK_LAYOUT);
@@ -198,7 +198,7 @@ public class DialogCheckLayout extends AbstractAction
 				return;
 			}
 			
-			CheckingLayoutResult res = control.checkLayout(service, window, obj);
+			CheckingLayoutResult res = control.checkLayout(service, window, obj, evaluator);
 			totalResult = totalResult && res.isOk();
 			
 			if (!res.isOk())
@@ -230,7 +230,7 @@ public class DialogCheckLayout extends AbstractAction
 					return;
 				}
 
-				OperationResult res = control.operate(service, window, null);
+				OperationResult res = control.operate(service, window, null, evaluator);
 				if (!res.isOk())
 				{
 					super.setError(message(id, window, onClose, control, res.getLocator(), " returned 'false'. Process is stopped."), ErrorKind.DIALOG_CHECK_LAYOUT);

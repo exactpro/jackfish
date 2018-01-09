@@ -359,9 +359,9 @@ public class MockApp
 		this.showHidePanel.setName("panelWithHiddenArea");
 		JPanel hiddenPanel = new JPanel();
 
-		JButton buttonShowArea = new JButton("Show area");
+		JButton buttonShowArea = new JButton("showButton");
 		buttonShowArea.setName("showButton");
-		JButton buttonHideArea = new JButton("Hide area");
+		JButton buttonHideArea = new JButton("hideButton");
 		buttonHideArea.setName("hideButton");
 
 		hiddenPanel.add(buttonHideArea);
@@ -621,6 +621,7 @@ public class MockApp
 	private void createPanelInput()
 	{
 		textField = new JTextField();
+		textField.setText("Green");
 		textField.setOpaque(true);
 		String name = "TextBox";
 		addListeners(textField, name);

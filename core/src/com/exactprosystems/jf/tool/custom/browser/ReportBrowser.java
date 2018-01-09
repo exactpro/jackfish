@@ -48,14 +48,14 @@ import java.util.stream.IntStream;
 public class ReportBrowser extends BorderPane
 {
 	private TabPane tabPane;
-	private File reportFile;
+	private File    reportFile;
 
 	public ReportBrowser(Context context, File reportFile)
 	{
 		this.getStyleClass().add(CssVariables.BROWSER);
 		this.reportFile = reportFile;
-		initTabPane(context);
-		initToolbar();
+		this.initTabPane(context);
+		this.initToolbar();
 	}
 
 	public String getMatrix()
@@ -115,62 +115,19 @@ public class ReportBrowser extends BorderPane
 	{
 		private WebEngine engine;
 		private Hyperlink crossButton;
-		private Text textTab;
-		private Boolean ctrlC = false;
+		private Text      textTab;
+		private boolean ctrlC = false;
 
-		private void createContextMenu(WebView webView)
-		{
-			ContextMenu contextMenu = new ContextMenu();
-			MenuItem copy = new MenuItem("Copy");
-			copy.setOnAction(e ->
-			{
-				String selection;
-				selection = (String) webView.getEngine().executeScript("window.getSelection().toString()");
-				StringSelection stringSelection = new StringSelection(selection);
-				Toolkit.getDefaultToolkit().getSystemClipboard().setContents(stringSelection, null);
-			});
-
-			contextMenu.getItems().addAll(copy);
-
-			webView.setOnMousePressed(e ->
-			{
-				if (e.getButton() == MouseButton.SECONDARY)
-				{
-					contextMenu.show(webView, e.getScreenX(), e.getScreenY());
-				}
-				else
-				{
-					contextMenu.hide();
-				}
-			});
-		}
-
-		private void createCtrlCHandler(WebView view) {
-			view.addEventHandler(KeyEvent.KEY_PRESSED, event -> {
-				if(new KeyCodeCombination(KeyCode.C, KeyCombination.CONTROL_DOWN).match(event))
-				{
-					ctrlC = true;
-				}
-			});
-			view.addEventHandler(KeyEvent.KEY_RELEASED, event -> {
-				if(event.getCode().equals(KeyCode.CONTROL) && ctrlC)
-				{
-					ctrlC = false;
-					Sys.copyToClipboard((String) view.getEngine().executeScript("window.getSelection().toString()"));
-				}
-			});
-		}
-
-		public CustomBrowserTab(Context context)
+		private CustomBrowserTab(Context context)
 		{
 			WebView view = new WebView();
 			this.engine = view.getEngine();
 			this.setContent(view);
 			view.setContextMenuEnabled(false);
-			createContextMenu(view);
-			createCtrlCHandler(view);
+			this.createContextMenu(view);
+			this.createCtrlCHandler(view);
 
-			textTab = new Text();
+			this.textTab = new Text();
 			this.textTab.setText("New tab...");
 			Worker<Void> loadWorker = this.engine.getLoadWorker();
 			loadWorker.stateProperty().addListener((observable, oldValue, newValue) ->
@@ -185,38 +142,36 @@ public class ReportBrowser extends BorderPane
 					}
 					this.textTab.setText(title);
 
-					EventListener listener = evt ->
+					EventListener listener = evt -> Common.runLater(() ->
 					{
-						Common.runLater(() -> {
-							EventTarget aElement = evt.getTarget();
-							if (aElement instanceof Element)
+						EventTarget aElement = evt.getTarget();
+						if (aElement instanceof Element)
+						{
+							Element element = (Element) aElement;
+							String matrixSourcePath = element.getAttribute("source");
+							final int number = Integer.parseInt(element.getTextContent());
+							CustomTab customTab = Common.checkDocument(new File(matrixSourcePath));
+							//if custom tab null - load matrix
+							if (customTab == null)
 							{
-								Element element = (Element) aElement;
-								String matrixSourcePath = element.getAttribute("source");
-								final int number = Integer.parseInt(element.getTextContent());
-								CustomTab customTab = Common.checkDocument(new File(matrixSourcePath));
-								//if custom tab null - load matrix
-								if (customTab == null)
+								Common.tryCatch(() -> {
+									Matrix matrix = (Matrix) context.getFactory().createDocument(DocumentKind.MATRIX, matrixSourcePath);
+									matrix.load(new FileReader(matrixSourcePath));
+									context.getFactory().showDocument(matrix);
+								}, "Error on load matrix");
+								customTab = Common.checkDocument(new File(matrixSourcePath));
+							}
+							if (customTab != null)
+							{
+								AbstractDocumentController<? extends com.exactprosystems.jf.documents.Document> controller = customTab.getController();
+								if (controller instanceof MatrixFxController)
 								{
-									Common.tryCatch(() -> {
-										Matrix matrix = (Matrix) context.getFactory().createDocument(DocumentKind.MATRIX, matrixSourcePath);
-										matrix.load(new FileReader(matrixSourcePath));
-										context.getFactory().showDocument(matrix);
-									}, "Error on load matrix");
-									customTab = Common.checkDocument(new File(matrixSourcePath));
-								}
-								if (customTab != null)
-								{
-									AbstractDocumentController<? extends com.exactprosystems.jf.documents.Document> controller = customTab.getController();
-									if (controller instanceof MatrixFxController)
-									{
-										customTab.getTabPane().getSelectionModel().select(customTab);
-										((MatrixFxController) controller).setCurrent(number);
-									}
+									customTab.getTabPane().getSelectionModel().select(customTab);
+									((MatrixFxController) controller).setCurrent(number);
 								}
 							}
-						});
-					};
+						}
+					});
 
 					Document doc = this.engine.getDocument();
 					NodeList allA = doc.getElementsByTagName("a");
@@ -228,7 +183,7 @@ public class ReportBrowser extends BorderPane
 				}
 			});
 
-			this.setClosable(false);
+			super.setClosable(false);
 			this.crossButton = new Hyperlink();
 			Image image = new Image(CssVariables.Icons.CLOSE_BUTTON_ICON);
 			this.crossButton.setGraphic(new ImageView(image));
@@ -237,42 +192,82 @@ public class ReportBrowser extends BorderPane
 			HBox box = new HBox();
 			box.setAlignment(Pos.CENTER_RIGHT);
 			box.getChildren().addAll(this.textTab, this.crossButton);
-			this.setGraphic(box);
+			super.setGraphic(box);
 
-			this.engine.setCreatePopupHandler(param ->
-			{
+			this.engine.setCreatePopupHandler(param -> {
 				CustomBrowserTab customTab = new CustomBrowserTab(context);
 				this.getTabPane().getTabs().add(customTab);
 				this.getTabPane().getSelectionModel().select(customTab);
 				// RM38890 the tab needs be resized for display image
-				changeSize(customTab);
+				this.changeSize(customTab);
 				return customTab.engine;
 			});
 
 			this.crossButton.setDisable(true);
 			this.crossButton.setVisible(false);
-			this.setOnSelectionChanged(arg0 ->
-			{
-				crossButton.setDisable(!isSelected());
-				crossButton.setVisible(isSelected());
+			super.setOnSelectionChanged(arg0 -> {
+				this.crossButton.setDisable(!super.isSelected());
+				this.crossButton.setVisible(super.isSelected());
 			});
 
-			this.crossButton.setOnAction(actionEvent ->
-			{
-				ObservableList<Tab> tabs = this.getTabPane().getTabs();
+			this.crossButton.setOnAction(actionEvent -> {
+				ObservableList<Tab> tabs = super.getTabPane().getTabs();
 				tabs.remove(this);
-				if (tabs.size() == 0)
+				if (tabs.isEmpty())
 				{
-					ReportBrowser.this.getScene().getWindow().hide();
+					ReportBrowser.super.getScene().getWindow().hide();
+				}
+			});
+		}
+
+		private void createContextMenu(WebView webView)
+		{
+			ContextMenu contextMenu = new ContextMenu();
+			MenuItem copy = new MenuItem("Copy");
+			copy.setOnAction(e -> {
+				String selection = (String) webView.getEngine().executeScript("window.getSelection().toString()");
+				StringSelection stringSelection = new StringSelection(selection);
+				Toolkit.getDefaultToolkit().getSystemClipboard().setContents(stringSelection, null);
+			});
+
+			contextMenu.getItems().addAll(copy);
+
+			webView.setOnMousePressed(e -> {
+				if (e.getButton() == MouseButton.SECONDARY)
+				{
+					contextMenu.show(webView, e.getScreenX(), e.getScreenY());
+				}
+				else
+				{
+					contextMenu.hide();
+				}
+			});
+		}
+
+		private void createCtrlCHandler(WebView view)
+		{
+			view.addEventHandler(KeyEvent.KEY_PRESSED, event ->
+			{
+				if (new KeyCodeCombination(KeyCode.C, KeyCombination.CONTROL_DOWN).match(event))
+				{
+					this.ctrlC = true;
+				}
+			});
+			view.addEventHandler(KeyEvent.KEY_RELEASED, event ->
+			{
+				if (event.getCode().equals(KeyCode.CONTROL) && ctrlC)
+				{
+					this.ctrlC = false;
+					Sys.copyToClipboard((String) view.getEngine().executeScript("window.getSelection().toString()"));
 				}
 			});
 		}
 
 		private void changeSize(CustomBrowserTab customTab)
 		{
-			Timer animTimer = new Timer();
+			Timer animateTimer = new Timer();
 			Stage stage = (Stage) customTab.getTabPane().getScene().getWindow();
-			animTimer.scheduleAtFixedRate(new TimerTask()
+			animateTimer.scheduleAtFixedRate(new TimerTask()
 			{
 				int i = 0;
 
@@ -286,7 +281,7 @@ public class ReportBrowser extends BorderPane
 					}
 					else
 					{
-						this.cancel();
+						super.cancel();
 					}
 					i++;
 				}
@@ -294,17 +289,17 @@ public class ReportBrowser extends BorderPane
 			}, 0, 25);
 		}
 
-		public void load(File file)
+		private void load(File file)
 		{
 			this.engine.load(file.toURI().toASCIIString());
 		}
 
-		public void reload()
+		private void reload()
 		{
 			this.engine.reload();
 		}
 
-		public void back()
+		private void back()
 		{
 			final WebHistory history = this.engine.getHistory();
 			ObservableList<WebHistory.Entry> entryList = history.getEntries();
@@ -317,7 +312,7 @@ public class ReportBrowser extends BorderPane
 			this.engine.load(url);
 		}
 
-		public void forward()
+		private void forward()
 		{
 			final WebHistory history = this.engine.getHistory();
 			ObservableList<WebHistory.Entry> entryList = history.getEntries();

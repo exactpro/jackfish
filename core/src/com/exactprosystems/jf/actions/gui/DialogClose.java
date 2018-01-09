@@ -109,7 +109,7 @@ public class DialogClose extends AbstractAction
 			}
 		}
 
-		int closed = service.closeAll(element.locator(), operations);
+		int closed = service.closeAll(IControl.evaluateTemplate(element.locator(), evaluator), operations);
 		super.setResult(closed);
 	}
 }

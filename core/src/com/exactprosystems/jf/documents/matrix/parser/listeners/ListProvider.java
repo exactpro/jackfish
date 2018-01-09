@@ -16,5 +16,5 @@ import java.util.List;
 @FunctionalInterface
 public interface ListProvider
 {
-	public abstract List<ReadableValue> getList() throws Exception;
+	List<ReadableValue> getList() throws Exception;
 }

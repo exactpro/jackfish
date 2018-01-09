@@ -51,6 +51,7 @@ namespace mock_win
             fillListView();
             fillContextMenu();
             ComboBox.SelectedIndex = 0;
+            TextBox.Text = "Green";
             CentralLabel.Text = "CentralLabel";
             createDialog();
             createMenu();

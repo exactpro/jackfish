@@ -13,6 +13,13 @@ import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 
+/**
+ * A xml bean for any AppEntry from a configuration
+ *
+ * @see Configuration
+ * @see Configuration#getAppEntries()
+ * @see Entry
+ */
 @XmlAccessorType(XmlAccessType.NONE)
 public class AppEntry extends Entry
 {
@@ -40,9 +47,9 @@ public class AppEntry extends Entry
 			case Configuration.appDicPath: 		return this.appDicPathValue;
 			case Configuration.appJar: 			return this.appJarNameValue;
 			case Configuration.appWorkDir: 		return this.appWorkDirValue;
-			case Configuration.appStartPort:		return this.appStartPortValue;
+			case Configuration.appStartPort:	return this.appStartPortValue;
+			default: return null;
 		}
-		return null;
 	}
 
 	@Override
@@ -55,6 +62,7 @@ public class AppEntry extends Entry
 			case Configuration.appJar: 			this.appJarNameValue	= "" + value;	return;
 			case Configuration.appWorkDir: 		this.appWorkDirValue	= "" + value;	return;
 			case Configuration.appStartPort:	this.appStartPortValue	= "" + value;	return;
+			default: return;
 		}
 	}
 }

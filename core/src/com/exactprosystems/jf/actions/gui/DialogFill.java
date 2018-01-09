@@ -15,6 +15,9 @@ import com.exactprosystems.jf.api.app.IWindow.SectionKind;
 import com.exactprosystems.jf.api.common.Str;
 import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.api.error.ErrorKind;
+import com.exactprosystems.jf.api.error.IErrorKind;
+import com.exactprosystems.jf.api.error.JFException;
+import com.exactprosystems.jf.api.error.JFRemoteException;
 import com.exactprosystems.jf.api.error.app.*;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.report.ReportBuilder;
@@ -167,7 +170,7 @@ public class DialogFill extends AbstractAction
 					return;
 				}
 
-				OperationResult res = control.operate(service, window, null);
+				OperationResult res = control.operate(service, window, null, evaluator);
 				if (!res.isOk())
 				{
 					super.setError(message(id, window, onOpen, control, res.getLocator(), "" + res.getValue()), ErrorKind.OPERATION_FAILED);
@@ -218,13 +221,13 @@ public class DialogFill extends AbstractAction
 
 			try
 			{
-				OperationResult res = control.operate(service, window, obj);
+				OperationResult res = control.operate(service, window, obj, evaluator);
 				if (res.isOk())
 				{
 					Object value = res.getValue();
 					if (value instanceof org.w3c.dom.Document)
 					{
-						value = new Xml((org.w3c.dom.Document)value);
+						value = new Xml((org.w3c.dom.Document) value);
 					}
 					if (value instanceof String[][])
 					{
@@ -248,44 +251,44 @@ public class DialogFill extends AbstractAction
 					}
 				}
 			}
-			catch (ServerException e) // TODO disgusting code. we need to redo it any way.
+			catch (JFRemoteException | JFException e)
 			{
-				//Todo i think, that all exception from remote side need be instance of JFRemoteException
-				RemoteException t = (RemoteException) e.getCause();
-				String mes = message(id, window, run, control, null, t.getMessage());
-
-				ErrorKind errorKind = ErrorKind.EXCEPTION;
-				if (t instanceof ElementNotFoundException)
+				logger.error(e.getMessage(), e);
+				ErrorKind errorKind = e.getErrorKind();
+				String msg = message(id, window, run, control, null, e.getMessage());
+				errorsValue.put(name, new MatrixError(msg, errorKind, this.owner));
+				if (!stopOnFail)
 				{
-					errorKind = ErrorKind.ELEMENT_NOT_FOUND;
-				}
-				else if (t instanceof OperationNotAllowedException)
-				{
-					errorKind = ErrorKind.OPERATION_NOT_ALLOWED;
-				}
-				else if (t instanceof ControlNotSupportedException)
-				{
-					errorKind = ErrorKind.CONTROL_NOT_SUPPORTED;
-				}
-				else if (t instanceof FeatureNotSupportedException)
-				{
-					errorKind = ErrorKind.FEATURE_NOT_SUPPORTED;
-				}
-				else if (t instanceof NullParameterException)
-				{
-					errorKind = ErrorKind.EMPTY_PARAMETER;
-				}
-
-				if (!this.stopOnFail)
-				{
-					errorsValue.put(name, new MatrixError(mes, errorKind, this.owner));
-					allReportErrors.append(mes);
+					allReportErrors.append(msg);
 				}
 				else
 				{
-					errorsValue.put(name, new MatrixError(mes, errorKind, owner));
 					super.setErrors(errorsValue);
-					super.setError(mes, errorKind);
+					super.setError(msg.length() > 35 ? msg.split(" ")[0] + msg.substring(0, 35) + " ... See log for more details" : msg, errorKind);
+					return;
+				}
+			}
+			catch (ServerException e)
+			{
+				logger.error(e.getMessage(), e);
+				ErrorKind errorKind = ErrorKind.EXCEPTION;
+				String msg = message(id, window, run, control, null, e.getMessage());
+
+				if (e.getCause() instanceof IErrorKind)
+				{
+					errorKind = ((IErrorKind) e.getCause()).getErrorKind();
+					msg = message(id, window, run, control, null, e.getCause().getMessage());
+				}
+
+				errorsValue.put(name, new MatrixError(msg, errorKind, this.owner));
+				if (!stopOnFail)
+				{
+					allReportErrors.append(msg);
+				}
+				else
+				{
+					super.setErrors(errorsValue);
+					super.setError(msg.length() > 35 ? msg.split(" ")[0] + msg.substring(0, 35) + " ... See log for more details" : msg, errorKind);
 					return;
 				}
 			}
@@ -293,20 +296,16 @@ public class DialogFill extends AbstractAction
 			{
 				String msg = e.getMessage();
 				logger.error(msg, e);
+				String message = message(id, window, run, control, null, msg);
+				errorsValue.put(name, new MatrixError(message, ErrorKind.EXCEPTION, owner));
 				if (this.stopOnFail)
 				{
-
-					String message = message(id, window, run, control, null, msg);
-					errorsValue.put(name, new MatrixError(message, ErrorKind.EXCEPTION, owner));
 					super.setErrors(errorsValue);
 					super.setError(msg.length() > 35 ? message.split(" ")[0] + msg.substring(0, 35) + " ... See log for more details" : message, ErrorKind.EXCEPTION);
 					return;
 				}
 				else
 				{
-
-					String message = message(id, window, run, control, null, e.getMessage());
-					errorsValue.put(name, new MatrixError(message, ErrorKind.EXCEPTION, owner));
 					allReportErrors.append(message);
 				}
 			}
@@ -324,7 +323,7 @@ public class DialogFill extends AbstractAction
 					return;
 				}
 
-				OperationResult res = control.operate(service, window, null);
+				OperationResult res = control.operate(service, window, null, evaluator);
 				if (!res.isOk())
 				{
 					super.setError(message(id, window, onClose, control, res.getLocator(), "" + res.getValue()), ErrorKind.OPERATION_FAILED);

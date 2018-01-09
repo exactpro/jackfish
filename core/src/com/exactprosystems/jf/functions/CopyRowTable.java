@@ -18,44 +18,40 @@ import java.util.stream.Collectors;
 
 public class CopyRowTable extends RowTable implements Cloneable
 {
-    private Map<String, Object> source;
-
-    public CopyRowTable(Map<String, Object> map)
-	{
-	    this();
-		if (map == null)
-		{
-			throw new NullPointerException("map");
-		}
-		this.source.putAll(map);
-	}
+	private Map<String, Object> source;
 
 	public CopyRowTable()
 	{
-	    super(null, 0);
-	    this.source = new LinkedHashMap<>();
-	    
+		super(null, 0);
+		this.source = new LinkedHashMap<>();
+	}
+
+	public CopyRowTable(Map<String, Object> map)
+	{
+		this();
+		Objects.requireNonNull(map, "map");
+		this.source.putAll(map);
 	}
 	
-    public void makeStrValues(Set<String> names)
-    {
-        this.source = this.source.entrySet()
-                .stream()
-                .filter(e -> names.contains(e.getKey()))
-                .collect(Collectors.toMap(Entry::getKey, v -> Str.asString(v.getValue()), (k, v) -> k, LinkedHashMap::new));
-    }
+	public void makeStrValues(Set<String> names)
+	{
+		this.source = this.source.entrySet()
+				.stream()
+				.filter(e -> names.contains(e.getKey()))
+				.collect(Collectors.toMap(Entry::getKey, v -> Str.asString(v.getValue()), (k, v) -> k, LinkedHashMap::new));
+	}
 
-    @Override
+	@Override
 	public String toString()
 	{
 		return this.source.toString();
 	}
-	
+
 	@Override
-    public int hashCode()
-    {
-        return Objects.hashCode(this.source);
-    }
+	public int hashCode()
+	{
+		return Objects.hashCode(this.source);
+	}
 
 	@Override
 	public boolean equals(Object obj)
@@ -68,7 +64,7 @@ public class CopyRowTable extends RowTable implements Cloneable
 		{
 			return false;
 		}
-		if (getClass() != obj.getClass())
+		if (this.getClass() != obj.getClass())
 		{
 			return false;
 		}
@@ -135,12 +131,9 @@ public class CopyRowTable extends RowTable implements Cloneable
 			return false;
 		}
 		return true;
-    }
+	}
 
-	//==============================================================================================
-	// Interface Map
-	//==============================================================================================
-
+	//region Interface Map
 	@Override
 	public int size()
 	{
@@ -168,25 +161,25 @@ public class CopyRowTable extends RowTable implements Cloneable
 	@Override
 	public Object get(Object key)
 	{
-	    Object value = this.source.get(key);
-        if(value instanceof Exception)
-        {
-            Exception e = (Exception) value;
-            throw new WrongExpressionException(e.getMessage());
-        }
-        return value;
+		Object value = this.source.get(key);
+		if (value instanceof Exception)
+		{
+			Exception e = (Exception) value;
+			throw new WrongExpressionException(e.getMessage());
+		}
+		return value;
 	}
 
 	@Override
 	public Object put(String key, Object value)
 	{
-	    return this.source.put(key, value);
+		return this.source.put(key, value);
 	}
 
 	@Override
 	public Object remove(Object key)
 	{
-	    return this.source.remove(key);
+		return this.source.remove(key);
 	}
 
 	@Override
@@ -198,13 +191,13 @@ public class CopyRowTable extends RowTable implements Cloneable
 	@Override
 	public void clear()
 	{
-	    this.source.clear();
+		this.source.clear();
 	}
 
 	@Override
 	public Set<String> keySet()
 	{
-	    return this.source.keySet();
+		return this.source.keySet();
 	}
 
 	@Override
@@ -216,6 +209,7 @@ public class CopyRowTable extends RowTable implements Cloneable
 	@Override
 	public Set<Map.Entry<String, Object>> entrySet()
 	{
-	    return this.source.entrySet();
+		return this.source.entrySet();
 	}
+	//endregion
 }

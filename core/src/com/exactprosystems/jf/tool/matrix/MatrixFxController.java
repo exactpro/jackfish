@@ -220,7 +220,7 @@ public class MatrixFxController extends AbstractDocumentController<MatrixFx> imp
 		TreeItem<MatrixItem> treeItem = this.tree.find(item);
 		Common.runLater(() -> {
 			this.area.appendDefaultTextOnNewLine(String.format(R.MATRIX_FX_CONTR_PAUSED_ON.get(), item.getNumber()));
-			this.area.appendMatrixItemLink(String.format("%s", item.getItemName()), treeItem);
+			this.area.appendLink(String.format("%s", item.getItemName()), treeItem);
 			this.tree.scrollTo(this.tree.getRow(treeItem));
 		});
 	}

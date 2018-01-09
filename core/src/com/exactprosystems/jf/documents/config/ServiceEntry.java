@@ -13,6 +13,13 @@ import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 
+/**
+ * A xml bean for any ServiceEntry from a configuration
+ *
+ * @see Configuration
+ * @see Configuration#getServiceEntries()
+ * @see Entry
+ */
 @XmlAccessorType(XmlAccessType.NONE)
 public class ServiceEntry extends Entry
 {

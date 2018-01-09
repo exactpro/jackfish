@@ -10,7 +10,6 @@
 package com.exactprosystems.jf.tool.wizard.all;
 
 import com.exactprosystems.jf.api.app.*;
-import com.exactprosystems.jf.api.common.IContext;
 import com.exactprosystems.jf.api.common.Str;
 import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.api.error.JFRemoteException;
@@ -18,7 +17,9 @@ import com.exactprosystems.jf.api.wizard.WizardAttribute;
 import com.exactprosystems.jf.api.wizard.WizardCategory;
 import com.exactprosystems.jf.api.wizard.WizardCommand;
 import com.exactprosystems.jf.api.wizard.WizardManager;
+import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.utils.XpathUtils;
+import com.exactprosystems.jf.documents.config.Context;
 import com.exactprosystems.jf.documents.guidic.*;
 import com.exactprosystems.jf.documents.guidic.Window;
 import com.exactprosystems.jf.documents.guidic.controls.AbstractControl;
@@ -129,6 +130,8 @@ import java.util.stream.Collectors;
 )
 public class DictionaryWizard extends AbstractWizard
 {
+	private AbstractEvaluator evaluator;
+
 	private AppConnection currentConnection = null;
 	private DictionaryFx  currentDictionary = null;
 	private Window        currentWindow     = null;
@@ -171,13 +174,14 @@ public class DictionaryWizard extends AbstractWizard
 
 	//region AbstractWizard methods
 	@Override
-	public void init(IContext context, WizardManager wizardManager, Object... parameters)
+	public void init(Context context, WizardManager wizardManager, Object... parameters)
 	{
 		super.init(context, wizardManager, parameters);
 
 		this.currentConnection = super.get(AppConnection.class, parameters);
 		this.currentDictionary = super.get(DictionaryFx.class, parameters);
 		this.currentWindow = super.get(Window.class, parameters);
+		this.evaluator = context.getEvaluator();
 		try
 		{
 			this.copyWindow = Window.createCopy(this.currentWindow);
@@ -430,11 +434,16 @@ public class DictionaryWizard extends AbstractWizard
 			}
 
 
-			this.wizardHelper = new WizardLoader(this.currentConnection, self, (image, doc) ->
+			this.wizardHelper = new WizardLoader(this.currentConnection, self, this.evaluator, (image, doc) ->
 			{
 				this.imageViewWithScale.displayImage(image);
-				this.dialogRectangle = Common.tryCatch(() -> this.currentConnection.getApplication().service().getRectangle(null, Optional.ofNullable(this.copyWindow.getSelfControl()).map(IControl::locator).orElse(null)),
-						R.WIZARD_DICTIONARY_EXCEPTION.get(), new Rectangle(0, 0, 0, 0));
+				this.dialogRectangle = Common.tryCatch(() -> this.currentConnection.getApplication()
+								.service()
+								.getRectangle(null, Optional.ofNullable(this.copyWindow.getSelfControl())
+										.map(IControl::locator)
+										.map(control -> IControl.evaluateTemplate(control, this.evaluator))
+										.orElse(null))
+						, R.WIZARD_DICTIONARY_EXCEPTION.get(), new Rectangle(0, 0, 0, 0));
 				this.document = doc;
 				this.rootNode = XpathUtils.getFirst(this.document, "/*");
 				this.xmlTreeView.displayDocument(this.document);

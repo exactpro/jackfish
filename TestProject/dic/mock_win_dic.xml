@@ -1,12 +1,4 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
-<!-- Copyright (c) 2009-2017, Exactpro Systems -->
-<!-- Quality Assurance & Related Software Development for Innovative Trading Systems. -->
-<!-- London Stock Exchange Group. -->
-<!-- All rights reserved. -->
-<!-- This is unpublished, licensed software, confidential and proprietary -->
-<!-- information which is the property of Exactpro Systems or its licensors. -->
-<!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
 <dictionary>
     <window name="Main">
         <self/>
@@ -130,6 +122,9 @@
             <listView id="ListBoxNormal" uid="listBox1" class="" name="" text=""/>
             <comboBox id="ComboBoxNormal" uid="ComboBox" class="" name="" action="" addition="Many"/>
             <comboBox id="ComboBoxVisibility" uid="ComboBox" class="" name="" action="" addition="Many" visibility="Visible"/>
+            <button id="uidTemplate" uid="@{nameTemplate}" owner="Owner1"/>
+            <button id="xpathTemplate" uid="" xpath=".//button[@uid=&amp;quot;@{xpathTemplate}&amp;quot;]" owner="Owner1"/>
+            <button id="xpathTemplateNotFound" uid="" xpath=".//button[@uid=&amp;quot;@{anotherXpathTemplate}&amp;quot;]" owner="Owner1" name=""/>
         </run>
         <onClose/>
         <close/>

@@ -14,18 +14,14 @@ import com.exactprosystems.jf.documents.matrix.parser.items.MatrixItem;
 import com.exactprosystems.jf.documents.matrix.parser.items.MutableArrayList;
 import com.exactprosystems.jf.documents.matrix.parser.items.TypeMandatory;
 import com.exactprosystems.jf.documents.matrix.parser.listeners.IMatrixListener;
-import org.apache.log4j.Logger;
 
 import java.util.*;
 import java.util.Map.Entry;
 import java.util.stream.Collectors;
 
- public class Parameters extends MutableArrayList<Parameter> implements Cloneable//, Map<String, Object>
+ public class Parameters extends MutableArrayList<Parameter>
 {
-    private static final long serialVersionUID = -4631358668566907225L;
-    private static final Logger logger = Logger.getLogger(Parameters.class);
-    
-    public Parameters()
+	public Parameters()
 	{
 	}
 
@@ -42,16 +38,19 @@ import java.util.stream.Collectors;
 	public Map<String, Object> makeCopy()
 	{
 		Map<String, Object> result = new LinkedHashMap<>();
-		forEach(e -> result.put(e.getName(), e.getValue()));
+		super.forEach(e -> result.put(e.getName(), e.getValue()));
 		return result;
 	}
 
 	public void setValue(Parameters value)
 	{
-		clear();
-		addAll(value);
+		super.clear();
+		super.addAll(value);
 	}
 
+	/**
+	 * @return new parameters, which has all parameter with passed types from this
+	 */
 	public Parameters select(TypeMandatory ... types)
 	{
 		if (types == null || types.length == 0)
@@ -61,26 +60,30 @@ import java.util.stream.Collectors;
 
 		Set<TypeMandatory> set = new HashSet<>(Arrays.asList(types));
 		Parameters result = new Parameters();
-		result.addAll(stream().filter(param -> set.contains(param.type)).collect(Collectors.toList()));
+		result.addAll(super.stream().filter(param -> set.contains(param.type)).collect(Collectors.toList()));
 		return result;
 	}
 
+	/**
+	 * @return true, if any parameter has name like the passed key
+	 */
 	public boolean containsKey(Object key)
 	{
-		for (Parameter parameter : this)
-		{
-			if (parameter.getName() != null && parameter.getName().equals(key))
-			{
-				return true;
-			}
-		}
-		
-		return false;
+		return super.stream()
+				.anyMatch(parameter -> parameter.getName() != null && parameter.getName().equals(key));
 	}
 
+	/**
+	 * @return
+	 * <ul>
+	 *   <li> {@code } null, if a parameter by passed name not found</li>
+	 *   <li> if a parameter found alone, will return value of the parameter </li>
+	 *   <li> if found many parameters, will return list of values of these parameters </li>
+	 * </ul>
+	 */
 	public Object get(String key)
 	{
-		List<Object> result = stream()
+		List<Object> result = super.stream()
 				.filter(parameter -> parameter.getName() != null && parameter.getName().equals(key))
 				.map(Parameter::getValue)
 				.collect(Collectors.toList());
@@ -93,37 +96,60 @@ import java.util.stream.Collectors;
 		}
 	}
 
+	/**
+	 * @return set of names of all parameters
+	 */
 	public Set<String> keySet()
 	{
-		return stream().map(Parameter::getName).collect(Collectors.toCollection(LinkedHashSet::new));
+		return super.stream()
+				.map(Parameter::getName)
+				.collect(Collectors.toCollection(LinkedHashSet::new));
 	}
 
+	/**
+	 * @return collection of values of all parameters
+	 */
 	public Collection<Object> values()
 	{
-		return stream().map(Parameter::getValue).collect(Collectors.toList());
+		return super.stream()
+				.map(Parameter::getValue)
+				.collect(Collectors.toList());
 	}
 
+	/**
+	 * @return entry set of all parameters.
+	 *
+	 * @see ParametersEntry
+	 */
 	public Set<Entry<String, Object>> entrySet()
 	{
-		return stream().map(parameter -> new ParametersEntry<>(parameter.getName(), parameter.getValue()))
-		        .collect(Collectors.toCollection(LinkedHashSet::new));
+		return super.stream()
+				.map(parameter -> new ParametersEntry<>(parameter.getName(), parameter.getValue()))
+				.collect(Collectors.toCollection(LinkedHashSet::new));
 	}
 
+	/**
+	 * @return Parameter by passed index
+	 */
 	public Parameter getByIndex(int index)
 	{
-		return get(index);
-	}
-	
-	public Parameter getByName(String name)
-	{
-		Optional<Parameter> first = stream().filter(param -> param.getName() != null && param.getName().equals(name)).findFirst();
-		if (first.isPresent())
-		{
-			return first.get();
-		}
-		return null;
+		return super.get(index);
 	}
 
+	/**
+	 * @return a parameter by passed name. If the parameter not found, will return null
+	 */
+	public Parameter getByName(String name)
+	{
+		return super.stream()
+				.filter(param -> param.getName() != null && param.getName().equals(name))
+				.findFirst()
+				.orElse(null);
+	}
+
+	/**
+	 * @return index of the passed parameter. If the passed parameter not found in this collection, will return -1
+	 */
 	public int getIndex(Parameter parameter)
 	{
 		int count = 0;
@@ -137,15 +163,18 @@ import java.util.stream.Collectors;
 		}
 		return -1;
 	}
-	
-	public void set (int index, String name, String expression, TypeMandatory type)
+
+	/**
+	 * Set passed values to a parameter by passed index. If out of range, nothing happens
+	 */
+	public void set(int index, String name, String expression, TypeMandatory type)
 	{
-		if (index < 0 || index >= size())
+		if (index < 0 || index >= super.size())
 		{
 			return;
 		}
 		
-		Parameter param = get(index);
+		Parameter param = super.get(index);
 		if (param != null)
 		{
 			param.reset();
@@ -154,15 +183,17 @@ import java.util.stream.Collectors;
 			param.setType(type);
 		}
 	}
-	
+
+	/**
+	 * @return a parameter expression or null, if the parameter by passed name not found
+	 */
 	public String getExpression(String parameterName)
 	{
-		Optional<Parameter> first = stream().filter(param -> param.getName() != null && param.getName().equals(parameterName)).findFirst();
-		if (first.isPresent())
-		{
-			return first.get().getExpression();
-		}
-		return null;
+		return super.stream()
+				.filter(param -> param.getName() != null && param.getName().equals(parameterName))
+				.findFirst()
+				.map(Parameter::getExpression)
+				.orElse(null);
 	}
 
 	public void retain(Parameters expectedParameters)
@@ -182,8 +213,8 @@ import java.util.stream.Collectors;
 
 	final class ParametersEntry<K, V> implements Map.Entry<K, V>
 	{
-		private final K	key;
-		private V		value;
+		private final K key;
+		private       V value;
 
 		public ParametersEntry(K key, V value)
 		{
@@ -212,13 +243,12 @@ import java.util.stream.Collectors;
 		}
 	}
 	
-	//------------------------------------------------------------------------------------------------------------------
 	@Override
 	public String toString()
 	{
 		StringBuilder sb = new StringBuilder(getClass().getSimpleName());
 		sb.append(":");
-		sb.append(size());
+		sb.append(super.size());
 		sb.append("\n{");
 		String comma = "\n";
 		for (Parameter p : this)
@@ -230,128 +260,169 @@ import java.util.stream.Collectors;
 		sb.append("\n}");
 		return sb.toString();
 	}
-	
-	//------------------------------------------------------------------------------------------------------------------
 
-	
+	/**
+	 * Add a new parameter, which has passed values, to the end of this parameters.
+	 */
 	public void add(String name, String expression, TypeMandatory mandatory)
 	{
 		Parameter par = new Parameter(name, expression);
 		par.setType(mandatory);
-		add(par);
+		super.add(par);
 	}
-	
-    public void add(String name, String expression)
-    {
-        add(name, expression, null);
-    }
-    
+
+	/**
+	 * Add a new parameter, which has passed values, to the end of this parameters.
+	 */
+	public void add(String name, String expression)
+	{
+		this.add(name, expression, null);
+	}
+
+	/**
+	 * Replace values of a parameter, which will found by name of the passed parameter, to values from the passed parameter.
+	 * If a parameter not found, nothing happens
+	 */
 	public void replaceIfExists(Parameter parameter)
 	{
 		String name = parameter.getName();
-		stream().filter(p -> p.getName() != null && p.getName().equals(name))
-		    .findFirst()
-		    .ifPresent(p -> 
-    		{
-    			p.setAll(parameter);
-    			p.expression = parameter.expression;
-    			p.value = parameter.value;
-    			p.isValid = parameter.isValid;
-    			p.type = parameter.type;
-    		});
+		super.stream()
+				.filter(p -> p.getName() != null && p.getName().equals(name))
+				.findFirst()
+				.ifPresent(p ->
+				{
+					p.setAll(parameter);
+					p.expression = parameter.expression;
+					p.value = parameter.value;
+					p.isValid = parameter.isValid;
+					p.type = parameter.type;
+				});
 	}
-	
+
+	/**
+	 * Insert a new parameter, which has passed value, by passed index
+	 */
 	public void insert(int index, String name, String expression, TypeMandatory type)
 	{
-		if (index == -1) return;
+		if (index == -1)
+		{
+			return;
+		}
 		Parameter element = new Parameter(name, expression);
 		element.setType(type);
-		add(Math.min(index, size()), element);
+		super.add(Math.min(index, super.size()), element);
 	}
 
+	/**
+	 * @return true, if parameter by passed index can be removed. Only parameters, which has type {@link TypeMandatory#NotMandatory} and {@link TypeMandatory#Extra} can be removed.
+	 */
 	public boolean canRemove(int index)
 	{
-		return index >= 0 && index <= size() - 1 && !get(index).getType().equals(TypeMandatory.Mandatory);
+		return index >= 0
+				&& index <= super.size() - 1
+				&& !super.get(index).getType().equals(TypeMandatory.Mandatory);
 	}
 
+	/**
+	 * @return true, if parameter can move ( if index greater than -1)
+	 */
 	public boolean canMove(int index)
 	{
 		return index > -1;
 	}
 
+	/**
+	 * Move a parameter by passed index to left. If the parameter is first of this collection, this parameter will move to end of this collection
+	 * @param index index of parameter, which should moved
+	 */
 	public void moveLeft(int index)
 	{
-		if (index == -1) return;
+		if (index == -1)
+		{
+			return;
+		}
 		boolean flag = index == 0;
-		Parameter parameter = get(index);
-		remove(index);
+		Parameter parameter = super.get(index);
+		super.remove(index);
 		if (flag)
 		{
-			add(parameter);
+			super.add(parameter);
 		}
 		else
 		{
-			add(index - 1, parameter);
+			super.add(index - 1, parameter);
 		}
 	}
 
+	/**
+	 * Move a parameter by passed index to right. If the parameter is last of this collection, this parameter will move to start of this collection
+	 * @param index index of parameter, which should moved
+	 */
 	public void moveRight(int index)
 	{
-		if (index == -1) return;
-		boolean flag = index == size() -1 ;
-		Parameter parameter = get(index);
-		remove(index);
+		if (index == -1)
+		{
+			return;
+		}
+		boolean flag = index == size() - 1;
+		Parameter parameter = super.get(index);
+		super.remove(index);
 		if (flag)
 		{
-			add(0,parameter);
+			super.add(0, parameter);
 		}
 		else
 		{
-			add(index + 1, parameter);
+			super.add(index + 1, parameter);
 		}
 	}
-	
+
+	/**
+	 * Set passed type to a parameter by passed index
+	 */
 	public void setType(int index, TypeMandatory type)
 	{
-		get(index).setType(type);
+		super.get(index).setType(type);
 	}
 
 	public void resetAll()
 	{
-		forEach(Parameter::reset);
-	}
-	
-	public void prepareAndCheck(AbstractEvaluator evaluator, IMatrixListener listener, MatrixItem item)
-	{
-		for (Parameter param : this)
-		{
-			param.prepareAndCheck(evaluator, listener, item);
-		}
+		super.forEach(Parameter::reset);
 	}
 
+	/**
+	 * Prepare and check all parameters from this collection
+	 *
+	 * @see Parameter#prepareAndCheck(AbstractEvaluator, IMatrixListener, MatrixItem)
+	 */
+	public void prepareAndCheck(AbstractEvaluator evaluator, IMatrixListener listener, MatrixItem item)
+	{
+		this.forEach(param -> param.prepareAndCheck(evaluator, listener, item));
+	}
+
+	/**
+	 * Try to evaluate all parameters from this collection.
+	 * @return true, if all parameters evaluated successful
+	 *
+	 * @see Parameter#evaluate(AbstractEvaluator)
+	 */
 	public boolean evaluateAll(AbstractEvaluator evaluator)
 	{
 		boolean result = true;
-		
+
 		for (Parameter param : this)
 		{
 			boolean resOne = param.evaluate(evaluator);
-			result = result && resOne; 
+			result = result && resOne;
 		}
-		
+
 		return result;
 	}
-	
+
 	public final boolean matches(String what, boolean caseSensitive, boolean wholeWord)
 	{
-		for (Parameter parameter : this)
-		{
-			if (parameter.matches(what, caseSensitive, wholeWord))
-			{
-				return true;
-			}
-		}
-		return false;
+		return super.stream()
+				.anyMatch(parameter -> parameter.matches(what, caseSensitive, wholeWord));
 	}
 
 }

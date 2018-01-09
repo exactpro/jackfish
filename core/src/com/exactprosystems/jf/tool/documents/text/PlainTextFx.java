@@ -136,7 +136,7 @@ public class PlainTextFx extends PlainText
 	void replaceAll(String replaceTo)
 	{
 		String newString = this.matcher.reset(this.property.get()).replaceAll(replaceTo);
-		this.property.set(newString);
+		this.property.accept(newString);
 	}
 
 	void replaceCurrent(String replacement)
@@ -150,7 +150,7 @@ public class PlainTextFx extends PlainText
 			matcher.appendReplacement(sb, replacement);
 			matcher.appendTail(sb);
 			String newString = sb.toString();
-			this.property.set(newString);
+			this.property.accept(newString);
 		}
 	}
 
