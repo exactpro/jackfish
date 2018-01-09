@@ -27,6 +27,7 @@ import org.openqa.selenium.safari.SafariDriver;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
+import java.util.Collections;
 import java.util.Date;
 
 public enum Browser
@@ -118,7 +119,7 @@ public enum Browser
 				if (usePrivateMode)
 				{
 					ieOptions.setCapability(InternetExplorerDriver.FORCE_CREATE_PROCESS, true);
-					ieOptions.setCapability(InternetExplorerDriver.IE_SWITCHES, "-private");
+					ieOptions.setCapability(InternetExplorerDriver.IE_SWITCHES, Collections.singletonList("-private"));
 				}
 				return new InternetExplorerDriver(ieOptions);
 
