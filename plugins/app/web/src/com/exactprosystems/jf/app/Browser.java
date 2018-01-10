@@ -27,7 +27,6 @@ import org.openqa.selenium.safari.SafariDriver;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
-import java.util.Collections;
 import java.util.Date;
 
 public enum Browser
@@ -111,17 +110,27 @@ public enum Browser
 				{
 					throw new Exception("You need set the 'IEDriverPath' parameter on plugin to valid value");
 				}
-				InternetExplorerOptions ieOptions = new InternetExplorerOptions();
-				ieOptions.setCapability("ie.enableFullPageScreenshot", false);
-				ieOptions.setCapability(InternetExplorerDriver.ENABLE_PERSISTENT_HOVERING, false);
-				ieOptions.setCapability(InternetExplorerDriver.LOG_FILE, logFile("ieDriver.log"));
-				ieOptions.setCapability(InternetExplorerDriver.LOG_LEVEL, "DEBUG");
 				if (usePrivateMode)
 				{
+					CustomInternetExplorerOptions ieOptions = new CustomInternetExplorerOptions();
+					ieOptions.setCapability("ie.enableFullPageScreenshot", false);
+					ieOptions.setCapability(InternetExplorerDriver.ENABLE_PERSISTENT_HOVERING, false);
+					ieOptions.setCapability(InternetExplorerDriver.LOG_FILE, logFile("ieDriver.log"));
+					ieOptions.setCapability(InternetExplorerDriver.LOG_LEVEL, "DEBUG");
 					ieOptions.setCapability(InternetExplorerDriver.FORCE_CREATE_PROCESS, true);
-					ieOptions.setCapability(InternetExplorerDriver.IE_SWITCHES, Collections.singletonList("-private"));
+					ieOptions.setCapability(InternetExplorerDriver.IE_SWITCHES, "-private");
+					return new CustomInternetExplorerDriver(ieOptions);
 				}
-				return new InternetExplorerDriver(ieOptions);
+				else
+				{
+					InternetExplorerOptions ieOptions = new InternetExplorerOptions();
+					ieOptions.setCapability("ie.enableFullPageScreenshot", false);
+					ieOptions.setCapability(InternetExplorerDriver.ENABLE_PERSISTENT_HOVERING, false);
+					ieOptions.setCapability(InternetExplorerDriver.LOG_FILE, logFile("ieDriver.log"));
+					ieOptions.setCapability(InternetExplorerDriver.LOG_LEVEL, "DEBUG");
+					return new InternetExplorerDriver(ieOptions);
+				}
+
 
 			case OPERA:
 				return new OperaDriver();
