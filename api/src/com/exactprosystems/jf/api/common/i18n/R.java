@@ -1013,6 +1013,16 @@ public enum R
 	SCHEDULE_REPORT,
 	//endregion
 
+	//region tool.matrix.watch
+	WATCHER_ADD_NEW,
+	WATCHER_ADD_ALL,
+	WATCHER_FX_CONTR_ERROR_ALL,
+	WATCHER_FX_CONTR_ERROR_NEW,
+	WATCHER_FX_CONTR_ERROR_CLOSE,
+	WATCHER_FX_CONTR_WATCHER,
+	WATCHER_FX_CONTR_WATCHER_FOR,
+	//endregion
+
 	//region tool.git
 
 	//region tool.git.branch
@@ -1406,6 +1416,12 @@ public enum R
 	REPORT_BROWSER_ERROR_ON_LOAD,
 	//endregion
 
+	//region tool.custom.date
+	DATE_TIME_PICKER_SKIN_HOURS,
+	DATE_TIME_PICKER_SKIN_MINUTES,
+	DATE_TIME_PICKER_SKIN_SECONDS,
+	//endregion
+
 	//region tool.custom.logs
 	LOGS_SELECT_FILE,
 	LOGS_REFRESH,
@@ -1464,6 +1480,8 @@ public enum R
 	VERTICAL_HEADER_MOVE_UP,
 	VERTICAL_HEADER_MOVE_DOWN,
 	VERTICAL_HEADER_REMOVE,
+	RECTANGLE_SELECTION_GRID_RANGE,
+	SPREADSHEET_CELL_BASE_TO_STRING,
 	//endregion
 
 	//region tool.custom.helper
@@ -1813,6 +1831,9 @@ public enum R
 	DATA_BASE_POOL_SQL_ID_NULL,
     //endregion
 
+	SUPPORTED_ENTRY_TRUE,
+	SUPPORTED_ENTRY_FALSE,
+
 	//----------------------
 	//PLUGINS part
 	//----------------------
@@ -1998,7 +2019,10 @@ public enum R
 	COMMON_IS_DIR,
 	COMMON_CLEAR,
 	COMMON_CLASS,
-	 ;
+	COMMON_EXPRESSION,
+	COMMON_RESULT,
+
+	;
 
 
 

@@ -4,6 +4,8 @@
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
+<?import com.exactprosystems.jf.api.common.i18n.R?>
+
 
 <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
 <!-- Copyright (c) 2009-2017, Exactpro Systems -->
@@ -25,7 +27,15 @@
         <RowConstraints maxHeight="43" minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
     </rowConstraints>
     <children>
-        <Button fx:id="btnAddNewExpression" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#addNewExpression" text="Add new" GridPane.columnIndex="1" GridPane.rowIndex="1" GridPane.valignment="BOTTOM" />
-        <Button fx:id="btnAddAll" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#addAll" text="Add all" GridPane.columnIndex="2" GridPane.rowIndex="1" GridPane.valignment="BOTTOM" />
+        <Button fx:id="btnAddNewExpression" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#addNewExpression" GridPane.columnIndex="1" GridPane.rowIndex="1" GridPane.valignment="BOTTOM" >
+            <text>
+                <R fx:constant="WATCHER_ADD_NEW"/>
+            </text>
+        </Button>
+        <Button fx:id="btnAddAll" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#addAll" GridPane.columnIndex="2" GridPane.rowIndex="1" GridPane.valignment="BOTTOM" >
+            <text>
+                <R fx:constant="WATCHER_ADD_ALL"/>
+            </text>
+        </Button>
     </children>
 </GridPane>

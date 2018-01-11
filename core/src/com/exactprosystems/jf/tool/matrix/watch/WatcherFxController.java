@@ -9,6 +9,7 @@
 
 package com.exactprosystems.jf.tool.matrix.watch;
 
+import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.common.Settings;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.documents.matrix.Matrix;
@@ -99,14 +100,14 @@ public class WatcherFxController implements Initializable, ContainingParent
 		this.model = model;
 		this.table.setDeleteListener(this.model::removeItems);
 		this.expressionField = new ExpressionField(evaluator);
-		this.expressionField.setHelperForExpressionField("Watcher", matrix);
+		this.expressionField.setHelperForExpressionField(R.WATCHER_FX_CONTR_WATCHER.get(), matrix);
 		this.expressionField.setMaxWidth(1.7976931348623157E308);
 		this.mainGrid.add(expressionField, 0, 1);
 		this.mainGrid.setPadding(new Insets(0,16,5,16));
 		this.dialog.getDialogPane().setHeader(new Label());
 		GridPane.setValignment(this.expressionField, VPos.BOTTOM);
-		this.table.completeFirstColumn("Expression", "key", EditState.TEXTFIELD, false);
-		this.table.completeSecondColumn("Result", "value", EditState.TEXTFIELD_READONLY, true);
+		this.table.completeFirstColumn(R.COMMON_EXPRESSION.get(), "key", EditState.TEXTFIELD, false);
+		this.table.completeSecondColumn(R.COMMON_RESULT.get(), "value", EditState.TEXTFIELD_READONLY, true);
 		this.table.onFinishEditFirstColumn((value, newValue) -> this.model.updateRow(newValue, this.table.getItems().indexOf(value)));
 		listeners();
 	}
@@ -116,9 +117,9 @@ public class WatcherFxController implements Initializable, ContainingParent
 		if (!isShow())
 		{
 			this.dialog.getDialogPane().getStylesheets().addAll(Theme.currentThemesPaths());
-			this.dialog.setTitle("Watcher for " + text);
+			this.dialog.setTitle(String.format(R.WATCHER_FX_CONTR_WATCHER_FOR.get(), text));
 			Optional<ButtonType> buttonType = this.dialog.showAndWait();
-			buttonType.filter(bt -> bt.getButtonData().equals(ButtonBar.ButtonData.OK_DONE)).ifPresent(bt -> Common.tryCatch(this.model::saveData, "Error on close watcher"));
+			buttonType.filter(bt -> bt.getButtonData().equals(ButtonBar.ButtonData.OK_DONE)).ifPresent(bt -> Common.tryCatch(this.model::saveData, R.WATCHER_FX_CONTR_ERROR_CLOSE.get()));
 		}
 	}
 
@@ -157,12 +158,12 @@ public class WatcherFxController implements Initializable, ContainingParent
 	//============================================================
 	public void addAll(ActionEvent event)
 	{
-		Common.tryCatch(this.model::addAllVariables, "Error on add all variables");
+		Common.tryCatch(this.model::addAllVariables, R.WATCHER_FX_CONTR_ERROR_ALL.get());
 	}
 
 	public void addNewExpression(ActionEvent event)
 	{
-		Common.tryCatch(() -> this.model.newVariable(this.expressionField.getText(), true), "Error on add new expression");
+		Common.tryCatch(() -> this.model.newVariable(this.expressionField.getText(), true), R.WATCHER_FX_CONTR_ERROR_NEW.get());
 	}
 
 	//============================================================

@@ -9,6 +9,8 @@
 
 package com.exactprosystems.jf.tool;
 
+import com.exactprosystems.jf.api.common.i18n.R;
+
 public class SupportedEntry
 {
 	private boolean isSupported;
@@ -31,6 +33,6 @@ public class SupportedEntry
 	@Override
 	public String toString()
 	{
-		return "SupportedEntry{ isSupported=" + isSupported + " }";
+		return isSupported ? R.SUPPORTED_ENTRY_TRUE.get() : R.SUPPORTED_ENTRY_FALSE.get();
 	}
 }

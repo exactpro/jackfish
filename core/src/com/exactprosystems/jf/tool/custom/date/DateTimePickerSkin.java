@@ -9,6 +9,7 @@
 
 package com.exactprosystems.jf.tool.custom.date;
 
+import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.tool.custom.number.NumberSpinner;
 import com.exactprosystems.jf.tool.custom.number.NumberTextField;
 import com.sun.javafx.scene.control.skin.DatePickerContent;
@@ -42,20 +43,20 @@ public class DateTimePickerSkin extends DatePickerSkin
 			LocalDateTime dateTime = datePicker.getDateTime();
 
 			Slider hours = new Slider(0, 23, (dateTime.getHour()));
-			Label hoursValue = new Label("Hours: ");
+			Label hoursValue = new Label(R.DATE_TIME_PICKER_SKIN_HOURS.get() + " ");
 			NumberSpinner hoursSpinner = new NumberSpinner(new NumberTextField(dateTime.getHour(), 0, 23));
 			hoursSpinner.setPrefWidth(55);
 			hoursSpinner.setMaxWidth(55);
 
 			Slider minutes = new Slider(0, 59, dateTime.getMinute());
-			Label minutesValue = new Label("Minutes: ");
+			Label minutesValue = new Label(R.DATE_TIME_PICKER_SKIN_MINUTES.get() + " ");
 			NumberTextField numberField = new NumberTextField(dateTime.getMinute(), 0, 59);
 			NumberSpinner minutesSpinner = new NumberSpinner(numberField);
 			minutesSpinner.setPrefWidth(55);
 			minutesSpinner.setMaxWidth(55);
 
 			Slider seconds = new Slider(0, 59, dateTime.getSecond());
-			Label secondsValue = new Label("Seconds: ");
+			Label secondsValue = new Label(R.DATE_TIME_PICKER_SKIN_SECONDS.get() + " ");
 			NumberSpinner secondsTextField = new NumberSpinner(new NumberTextField(dateTime.getSecond(), 0, 59));
 			secondsTextField.setPrefWidth(55);
 			secondsTextField.setMaxWidth(55);

@@ -8,6 +8,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 package com.exactprosystems.jf.tool.custom.grideditor;
 
+import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.tool.CssVariables;
 import com.sun.javafx.event.EventHandlerManager;
 import javafx.beans.property.*;
@@ -166,7 +167,7 @@ public class SpreadsheetCellBase implements SpreadsheetCell, EventTarget
 	@Override
 	public String toString()
 	{
-		return "cell[" + row + "][" + column + "]";
+		return String.format(R.SPREADSHEET_CELL_BASE_TO_STRING.get(), row, column);
 	}
 
 

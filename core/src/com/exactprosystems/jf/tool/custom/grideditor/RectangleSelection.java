@@ -8,6 +8,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 package com.exactprosystems.jf.tool.custom.grideditor;
 
+import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.tool.CssVariables;
 import javafx.beans.InvalidationListener;
 import javafx.beans.Observable;
@@ -340,12 +341,7 @@ public class RectangleSelection extends Rectangle
 		@Override
 		public String toString()
 		{
-			return "GridRange{" +
-					"top=" + top +
-					", bottom=" + bottom +
-					", left=" + left +
-					", right=" + right +
-					'}';
+			return String.format(R.RECTANGLE_SELECTION_GRID_RANGE.get(), top, bottom, left, right);
 		}
 	}
 }
