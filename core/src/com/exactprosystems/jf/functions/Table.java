@@ -1785,12 +1785,17 @@ public class Table implements List<RowTable>, Mutable
 		{
 			File directory = new File(dirName);
 
+			String name = R.COMMON_NAME.get();
+			String size = R.COMMON_SIZE.get();
+			String date = R.COMMON_DATE.get();
+			String isDir = R.COMMON_IS_DIR.get();
+			String hidden = R.COMMON_HIDDEN.get();
 			this.headers = null;
-			this.addColumns("Name", "Size", "Date", "Is directory", "Hidden");
-			this.considerAsString("Name");
-			this.considerAsBoolean("Is directory", "Hidden");
-			this.considerAsDouble("Size");
-			this.considerAsDate("Date");
+			this.addColumns(name, size, date, isDir, hidden);
+			this.considerAsString(name);
+			this.considerAsBoolean(isDir, hidden);
+			this.considerAsDouble(size);
+			this.considerAsDate(date);
 			File[] files = directory.listFiles();
 			if (files != null)
 			{

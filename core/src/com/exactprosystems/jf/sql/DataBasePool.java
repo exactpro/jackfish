@@ -134,7 +134,7 @@ public class DataBasePool
 	{
 		if (sql == null)
 		{
-			throw new JFSQLException("SQL entry id is null");
+			throw new JFSQLException(R.DATA_BASE_POOL_SQL_ID_NULL.get());
 		}
 
 		Driver driver = this.drivers.get(sql);

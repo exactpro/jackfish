@@ -9,6 +9,7 @@
 package com.exactprosystems.jf.tool.custom.browser;
 
 import com.exactprosystems.jf.api.common.Sys;
+import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.documents.DocumentKind;
 import com.exactprosystems.jf.documents.config.Context;
 import com.exactprosystems.jf.documents.matrix.Matrix;
@@ -158,7 +159,7 @@ public class ReportBrowser extends BorderPane
 									Matrix matrix = (Matrix) context.getFactory().createDocument(DocumentKind.MATRIX, matrixSourcePath);
 									matrix.load(new FileReader(matrixSourcePath));
 									context.getFactory().showDocument(matrix);
-								}, "Error on load matrix");
+								}, R.REPORT_BROWSER_ERROR_ON_LOAD.get());
 								customTab = Common.checkDocument(new File(matrixSourcePath));
 							}
 							if (customTab != null)
@@ -223,7 +224,7 @@ public class ReportBrowser extends BorderPane
 		private void createContextMenu(WebView webView)
 		{
 			ContextMenu contextMenu = new ContextMenu();
-			MenuItem copy = new MenuItem("Copy");
+			MenuItem copy = new MenuItem(R.COMMON_COPY.get());
 			copy.setOnAction(e -> {
 				String selection = (String) webView.getEngine().executeScript("window.getSelection().toString()");
 				StringSelection stringSelection = new StringSelection(selection);

@@ -9,6 +9,7 @@
 
 package com.exactprosystems.jf.tool.custom.xmltree;
 
+import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.documents.matrix.parser.SearchHelper;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.CssVariables;
@@ -338,7 +339,7 @@ public class XmlTreeView extends AnchorPane
 	{
 		this.waitingNode = new BorderPane();
 		this.waitingNode.setCenter(new ProgressIndicator(ProgressIndicator.INDETERMINATE_PROGRESS));
-		this.waitingNode.setBottom(new Text("Waiting for document..."));
+		this.waitingNode.setBottom(new Text(R.XML_TREE_VIEW_WAITING.get()));
 		AnchorPane.setLeftAnchor(this.waitingNode, 50.0);
 		AnchorPane.setTopAnchor(this.waitingNode, 50.0);
 

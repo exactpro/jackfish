@@ -9,6 +9,7 @@
 
 package com.exactprosystems.jf.tool.custom.console;
 
+import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.tool.CssVariables;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
@@ -98,7 +99,7 @@ public class ConsoleArea<T> extends StyleClassedTextArea
 		contextMenu.setAutoFix(true);
 		contextMenu.setAutoHide(true);
 
-		MenuItem itemClear = new MenuItem("Clear");
+		MenuItem itemClear = new MenuItem(R.COMMON_CLEAR.get());
 		itemClear.setOnAction(e -> this.clear());
 		contextMenu.getItems().addAll(itemClear);
 

@@ -9,6 +9,7 @@
 
 package com.exactprosystems.jf.tool.custom.scaledimage;
 
+import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.CssVariables;
 import com.exactprosystems.jf.tool.custom.controls.rect.DecoratedRectangle;
@@ -92,7 +93,7 @@ public class ImageViewWithScale extends BorderPane
 		this.customGrid = new CustomGrid();
 		this.customGrid.setGroup(this.group);
 
-		Label lblColorName = new Label("Pixel color :");
+		Label lblColorName = new Label(R.IMAGE_VIEW_PIXEL_COLOR.get());
 
 		this.scrollPane.setFitToHeight(true);
 		this.scrollPane.setFitToWidth(true);
@@ -233,7 +234,7 @@ public class ImageViewWithScale extends BorderPane
 	{
 		this.waitingNode = new BorderPane();
 		((BorderPane) this.waitingNode).setCenter(new ProgressIndicator(ProgressIndicator.INDETERMINATE_PROGRESS));
-		((BorderPane) this.waitingNode).setBottom(new Text("Waiting for image..."));
+		((BorderPane) this.waitingNode).setBottom(new Text(R.IMAGE_VIEW_WAITING.get()));
 
 		AnchorPane.setLeftAnchor(this.waitingNode, 50.0);
 		AnchorPane.setTopAnchor(this.waitingNode, 50.0);

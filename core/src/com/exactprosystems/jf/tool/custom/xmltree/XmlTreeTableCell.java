@@ -10,6 +10,7 @@
 package com.exactprosystems.jf.tool.custom.xmltree;
 
 import com.exactprosystems.jf.api.common.Str;
+import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.common.utils.XpathUtils;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.CssVariables;
@@ -34,7 +35,7 @@ public class XmlTreeTableCell extends TreeTableCell<XmlItem, XmlItem>
 		ContextMenu menu = new ContextMenu();
 		menu.setAutoHide(true);
 
-		MenuItem copyText = new MenuItem("Copy node");
+		MenuItem copyText = new MenuItem(R.XML_TREE_TABLE_CELL_COPY_NODE.get());
 		copyText.setOnAction(event -> Optional.ofNullable(this.getTreeTableRow().getTreeItem().getValue()).ifPresent(value -> Common.copyText(value.getText())));
 		menu.getItems().add(copyText);
 
@@ -98,7 +99,7 @@ public class XmlTreeTableCell extends TreeTableCell<XmlItem, XmlItem>
 		Text t = new Text(text);
 		t.setOnContextMenuRequested(event -> {
 
-			MenuItem item = new MenuItem("Copy " + text);
+			MenuItem item = new MenuItem(R.COMMON_COPY.get() + " " + text);
 			item.setOnAction(e -> Common.copyText(text));
 			if (t.getParent().getParent() instanceof XmlTreeTableCell)
 			{

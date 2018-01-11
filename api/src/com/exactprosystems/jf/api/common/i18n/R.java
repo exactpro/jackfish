@@ -1402,6 +1402,10 @@ public enum R
 
 	//region tool.custom
 
+	//region tool.custom.browser
+	REPORT_BROWSER_ERROR_ON_LOAD,
+	//endregion
+
 	//region tool.custom.logs
 	LOGS_SELECT_FILE,
 	LOGS_REFRESH,
@@ -1482,6 +1486,8 @@ public enum R
 
 	//region tool.custom.scaledimage
 	CUSTOM_GRID_ERROR,
+	IMAGE_VIEW_WAITING,
+	IMAGE_VIEW_PIXEL_COLOR,
 	//endregion
 
 	//region tool.custom.store
@@ -1541,6 +1547,11 @@ public enum R
 	RAW_MESSAGE_TV_ADD_ITEM,
 	RAW_MESSAGE_TV_ADD_GROUP,
 
+	//endregion
+
+	//region tool.custom.xmltree
+	XML_TREE_TABLE_CELL_COPY_NODE,
+	XML_TREE_VIEW_WAITING,
 	//endregion
 
 	//endregion
@@ -1787,7 +1798,7 @@ public enum R
 	TABLE_EXPECTED,
 	TABLE_ACTUAL,
 
-		//endregion
+	//endregion
 
     //region service
     SERVICE_POOL_SERVICE_IS_NOT_LOADED,
@@ -1799,6 +1810,7 @@ public enum R
     DATA_BASE_POOL_DRIVER_NOT_FOUND,
     DATA_BASE_POOL_JAR_DOESNT_CONTAINS,
     DATA_BASE_POOL_NUMBER_OF_PARAMS,
+	DATA_BASE_POOL_SQL_ID_NULL,
     //endregion
 
 	//----------------------
@@ -1979,7 +1991,14 @@ public enum R
     COMMON_CSV,
 	COMMON_PARAMETER,
 	COMMON_ALL_FILES,
-	COMMON_CANCEL;
+	COMMON_CANCEL,
+	COMMON_SIZE,
+	COMMON_DATE,
+	COMMON_HIDDEN,
+	COMMON_IS_DIR,
+	COMMON_CLEAR,
+	COMMON_CLASS,
+	 ;
 
 
 
