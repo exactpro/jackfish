@@ -94,6 +94,9 @@ public class Helper
 		IMessageDictionary dic = factory.getDictionary();
 		for (IField message : dic.getMessages())
 		{
+			list.add(new ReadableValue(evaluator.createString(message.getName())));
+
+			/* TODO attribute entity_type - available only for FIX
 			IAttribute entityType = message.getAttribute("entity_type");
 			if (entityType == null)
 			{
@@ -116,7 +119,7 @@ public class Helper
 			{
 				quoted = evaluator.createString(message.getName());
 				list.add(new ReadableValue(quoted));
-			}
+			}*/
 		}
 	}
 
