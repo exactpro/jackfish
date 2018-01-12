@@ -16,13 +16,13 @@ import java.util.*;
 
 public class MapMessage implements Map<String, Object>, Serializable, Mutable
 {
-	private static final long	serialVersionUID	= -1159773416112486653L;
-	
+	private static final long serialVersionUID = -1159773416112486653L;
+
 	public static final String messageTypeName = "MessageType";
 	private boolean changed;
-	private String messageType = null;
-	private Map<String, Object> fields = new LinkedHashMap<>();
-	private String source = null;
+	private String              messageType = null;
+	private Map<String, Object> fields      = new LinkedHashMap<>();
+	private String              source      = null;
 
 	private List<String> errors = null;
 
@@ -30,7 +30,7 @@ public class MapMessage implements Map<String, Object>, Serializable, Mutable
 	{
 		this(null, null, source);
 	}
-	
+
 	public MapMessage(Map<String, Object> map, String source)
 	{
 		this(null, map, source);
@@ -93,20 +93,20 @@ public class MapMessage implements Map<String, Object>, Serializable, Mutable
 		{
 			this.errors = new ArrayList<String>();
 		}
-		
+
 		this.errors.add(error);
 	}
-	
+
 	public boolean isCorrect()
 	{
 		return this.errors == null || this.errors.isEmpty();
 	}
-	
+
 	public String getMessageType()
 	{
 		return this.messageType;
 	}
-	
+
 	public void setMessageType(String messageType)
 	{
 		this.messageType = messageType;
@@ -114,15 +114,67 @@ public class MapMessage implements Map<String, Object>, Serializable, Mutable
 
 	public String getSource()
 	{
-	    return this.source;
+		return this.source;
 	}
-	
+
 	@Override
 	public String toString()
 	{
-       return MapMessage.class.getSimpleName() + " [" + messageTypeName + ":" + getMessageType() + "]";
+		return MapMessage.class.getSimpleName() + " [" + messageTypeName + ":" + getMessageType() + "]";
 	}
-	
+
+	public static String humanToString(MapMessage mapMessage)
+	{
+		StringBuilder sb = new StringBuilder("MessageType : ")
+				.append(mapMessage.messageType);
+		for (Entry<String, Object> entry : mapMessage.fields.entrySet())
+		{
+			sb.append("[key : ")
+					.append(entry.getKey())
+					.append(" ; value : ");
+			if (entry.getValue() instanceof List)
+			{
+				List list = (List) entry.getValue();
+				if (!list.isEmpty() && list.get(0) instanceof MapMessage)
+				{
+					for (Object obj : list)
+					{
+						sb.append(humanToString((MapMessage) obj));
+					}
+				}
+				else
+				{
+					sb.append(list.toString());
+				}
+			}
+			else if (entry.getValue().getClass().isArray())
+			{
+				Object[] array = (Object[]) entry.getValue();
+				if (array.length > 0 && array[0] instanceof MapMessage)
+				{
+					for (Object obj : array)
+					{
+						sb.append(humanToString((MapMessage) obj));
+					}
+				}
+				else
+				{
+					sb.append(Arrays.toString(array));
+				}
+			}
+			else if (entry.getValue() instanceof MapMessage)
+			{
+				sb.append(humanToString((MapMessage) entry.getValue()));
+			}
+			else
+			{
+				sb.append(entry.getValue());
+			}
+			sb.append("]");
+		}
+		return sb.toString();
+	}
+
 	public boolean extendEquals(MapMessage obj, String[] exculde)
 	{
 		if (this == obj)
@@ -139,9 +191,9 @@ public class MapMessage implements Map<String, Object>, Serializable, Mutable
 			{
 				return false;
 			}
-		} 
-		
-		List<String> list =  exculde == null ? new ArrayList<String>() : Arrays.asList(exculde);
+		}
+
+		List<String> list = exculde == null ? new ArrayList<String>() : Arrays.asList(exculde);
 
 		Iterator<Entry<String, Object>> iter = entrySet().iterator();
 		while (iter.hasNext())
@@ -152,7 +204,7 @@ public class MapMessage implements Map<String, Object>, Serializable, Mutable
 			{
 				continue;
 			}
-			
+
 			Object value = entry.getValue();
 			if (value == null)
 			{
@@ -160,7 +212,7 @@ public class MapMessage implements Map<String, Object>, Serializable, Mutable
 				{
 					return false;
 				}
-			} 
+			}
 			else
 			{
 				Object otherValue = obj.get(key);
@@ -176,39 +228,39 @@ public class MapMessage implements Map<String, Object>, Serializable, Mutable
 						return false;
 					}
 
-					Object[] arrValue = (Object[])value;
-					Object[] arrOtherValue = (Object[])otherValue;
+					Object[] arrValue = (Object[]) value;
+					Object[] arrOtherValue = (Object[]) otherValue;
 					if (arrValue.length != arrOtherValue.length)
 					{
 						return false;
 					}
-					
+
 					for (int i = 0; i < arrValue.length; i++)
 					{
 						Object val1 = arrValue[i];
 						Object val2 = arrOtherValue[i];
-						
+
 						if (val1 != null && val2 != null && val1 instanceof MapMessage && val2 instanceof MapMessage)
 						{
-							if (!((MapMessage)val1).extendEquals((MapMessage)val2, null))
+							if (!((MapMessage) val1).extendEquals((MapMessage) val2, null))
 							{
 								return false;
 							}
 						}
 					}
-					
+
 				}
 				else if (!value.equals(obj.get(key)))
 				{
 					return false;
 				}
 			}
-		}		
-		
-		
+		}
+
+
 		return true;
 	}
-	
+
 	@Override
 	public int size()
 	{

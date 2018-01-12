@@ -50,7 +50,7 @@
   		<appender-ref ref="LogMainFile"/>
  	</logger>
 	<logger name="com.exactprosystems.jf.client">
-  		<level value="INFO"/>
+  		<level value="DEBUG"/>
   		<appender-ref ref="LogMainFile"/>
  	</logger>
 	<logger name="com.exactprosystems.jf.common">
