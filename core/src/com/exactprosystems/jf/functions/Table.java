@@ -1785,7 +1785,7 @@ public class Table implements List<RowTable>, Mutable
 		{
 			File directory = new File(dirName);
 
-			String name = R.COMMON_NAME.get();
+			String name = R.COMMON_SHIFT_NAME.get();
 			String size = R.COMMON_SIZE.get();
 			String date = R.COMMON_DATE.get();
 			String isDir = R.COMMON_IS_DIR.get();

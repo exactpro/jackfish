@@ -401,7 +401,7 @@ public class HelperControllerFx implements Initializable, ContainingParent
 			tableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
 
 			final TableColumn<SimpleVariable, String> nameColumn = new TableColumn<>();
-			nameColumn.setText(R.COMMON_NAME.get());
+			nameColumn.setText(R.COMMON_SHIFT_NAME.get());
 			nameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
 			final TableColumn<SimpleVariable, String> clazzColumn = new TableColumn<>();
 			clazzColumn.setText(R.COMMON_CLASS.get());

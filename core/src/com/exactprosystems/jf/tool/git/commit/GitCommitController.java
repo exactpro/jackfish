@@ -139,7 +139,7 @@ public class GitCommitController implements Initializable, ContainingParent
 		checkedColumn.setMaxWidth(30);
 		checkedColumn.setMinWidth(30);
 
-		TableColumn<GitBean, String> fileColumn = new TableColumn<>(R.COMMON_NAME.get());
+		TableColumn<GitBean, String> fileColumn = new TableColumn<>(R.COMMON_SHIFT_NAME.get());
 		fileColumn.setCellValueFactory(new PropertyValueFactory<>("file"));
 		fileColumn.prefWidthProperty().bind(this.tableView.widthProperty().subtract(30.0 + 100.0 + 2.0));
 
