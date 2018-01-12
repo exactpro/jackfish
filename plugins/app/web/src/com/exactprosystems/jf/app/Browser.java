@@ -55,7 +55,7 @@ public enum Browser
 		return browserName;
 	}
 
-	public WebDriver createDriver(String pathToBinary, String firefoxProfileDir, boolean usePrivateMode) throws Exception
+	public WebDriver createDriver(String pathToBinary, String firefoxProfileDir, boolean usePrivateMode, boolean isDriverLogging) throws Exception
 	{
 		switch (this)
 		{
@@ -66,23 +66,30 @@ public enum Browser
 					FirefoxProfile profile = new FirefoxProfile(new File(firefoxProfileDir));
 					firefoxOptions.setProfile(profile);
 				}
-				firefoxOptions.setLogLevel(FirefoxDriverLogLevel.INFO);
-				firefoxOptions.setCapability(FirefoxDriver.SystemProperty.BROWSER_LOGFILE, logFile("firefoxDriver.log"));
+				if(isDriverLogging)
+				{
+					firefoxOptions.setLogLevel(FirefoxDriverLogLevel.INFO);
+					firefoxOptions.setCapability(FirefoxDriver.SystemProperty.BROWSER_LOGFILE, logFile("firefoxDriver.log"));
+				}
 				return new FirefoxDriver(firefoxOptions);
 
 			case ANDROIDCHROME:
-				System.setProperty(ChromeDriverService.CHROME_DRIVER_LOG_PROPERTY, "androidChrome.log");
-				System.setProperty(ChromeDriverService.CHROME_DRIVER_VERBOSE_LOG_PROPERTY, "true");
-
+				if(isDriverLogging)
+				{
+					System.setProperty(ChromeDriverService.CHROME_DRIVER_LOG_PROPERTY, "androidChrome.log");
+					System.setProperty(ChromeDriverService.CHROME_DRIVER_VERBOSE_LOG_PROPERTY, "true");
+				}
 				ChromeOptions chromeOptions = new ChromeOptions();
 				chromeOptions.setExperimentalOption("androidPackage", "com.android.chrome");
 
 				return new ChromeDriver(chromeOptions);
 
 			case ANDROIDBROWSER:
-				System.setProperty(ChromeDriverService.CHROME_DRIVER_LOG_PROPERTY, logFile("androidBrowser.log"));
-				System.setProperty(ChromeDriverService.CHROME_DRIVER_VERBOSE_LOG_PROPERTY, "true");
-
+				if(isDriverLogging)
+				{
+					System.setProperty(ChromeDriverService.CHROME_DRIVER_LOG_PROPERTY, logFile("androidBrowser.log"));
+					System.setProperty(ChromeDriverService.CHROME_DRIVER_VERBOSE_LOG_PROPERTY, "true");
+				}
 				ChromeOptions browserOptions = new ChromeOptions();
 				browserOptions.setExperimentalOption("androidPackage", "com.android.browser");
 				browserOptions.setExperimentalOption("androidActivity","com.android.browser.BrowserActivity");
@@ -94,9 +101,11 @@ public enum Browser
 				{
 					throw new Exception("You need set the 'ChromeDriverPath' parameter on plugin to valid value");
 				}
-				System.setProperty(ChromeDriverService.CHROME_DRIVER_LOG_PROPERTY, logFile("chromeDriver.log"));
-				System.setProperty(ChromeDriverService.CHROME_DRIVER_VERBOSE_LOG_PROPERTY, "true");
-
+				if(isDriverLogging)
+				{
+					System.setProperty(ChromeDriverService.CHROME_DRIVER_LOG_PROPERTY, logFile("chromeDriver.log"));
+					System.setProperty(ChromeDriverService.CHROME_DRIVER_VERBOSE_LOG_PROPERTY, "true");
+				}
 				ChromeOptions options = new ChromeOptions();
 				options.addArguments("--disable-extensions");
 				if (pathToBinary != null && !pathToBinary.isEmpty())
@@ -115,8 +124,11 @@ public enum Browser
 					CustomInternetExplorerOptions ieOptions = new CustomInternetExplorerOptions();
 					ieOptions.setCapability("ie.enableFullPageScreenshot", false);
 					ieOptions.setCapability(InternetExplorerDriver.ENABLE_PERSISTENT_HOVERING, false);
-					ieOptions.setCapability(InternetExplorerDriver.LOG_FILE, logFile("ieDriver.log"));
-					ieOptions.setCapability(InternetExplorerDriver.LOG_LEVEL, "DEBUG");
+					if(isDriverLogging)
+					{
+						ieOptions.setCapability(InternetExplorerDriver.LOG_FILE, logFile("ieDriver.log"));
+						ieOptions.setCapability(InternetExplorerDriver.LOG_LEVEL, "DEBUG");
+					}
 					ieOptions.setCapability(InternetExplorerDriver.FORCE_CREATE_PROCESS, true);
 					ieOptions.setCapability(InternetExplorerDriver.IE_SWITCHES, "-private");
 					return new CustomInternetExplorerDriver(ieOptions);
@@ -126,8 +138,11 @@ public enum Browser
 					InternetExplorerOptions ieOptions = new InternetExplorerOptions();
 					ieOptions.setCapability("ie.enableFullPageScreenshot", false);
 					ieOptions.setCapability(InternetExplorerDriver.ENABLE_PERSISTENT_HOVERING, false);
-					ieOptions.setCapability(InternetExplorerDriver.LOG_FILE, logFile("ieDriver.log"));
-					ieOptions.setCapability(InternetExplorerDriver.LOG_LEVEL, "DEBUG");
+					if(isDriverLogging)
+					{
+						ieOptions.setCapability(InternetExplorerDriver.LOG_FILE, logFile("ieDriver.log"));
+						ieOptions.setCapability(InternetExplorerDriver.LOG_LEVEL, "DEBUG");
+					}
 					return new InternetExplorerDriver(ieOptions);
 				}
 

@@ -114,5 +114,15 @@ public class ProxyWebApp extends ProxyApplication
 		{
 			parameters.put(WebAppFactory.usePrivateMode, Boolean.valueOf(usePrivateMode).toString());
 		}
+
+		String isDriverLogging = driverParameters.get(WebAppFactory.isDriverLogging);
+		if (!Str.IsNullOrEmpty(isDriverLogging))
+		{
+			parameters.put(WebAppFactory.isDriverLogging, Boolean.valueOf(isDriverLogging).toString());
+		}
+		else
+		{
+			parameters.put(WebAppFactory.isDriverLogging, "false");
+		}
 	}
 }

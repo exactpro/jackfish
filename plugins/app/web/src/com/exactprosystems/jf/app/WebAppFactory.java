@@ -44,6 +44,8 @@ public class WebAppFactory extends AbstractApplicationFactory
     public static final String   firefoxProfileDir        = "FirefoxProfileDirectory";
 	@PluginFieldDescription(parameter = "UsePrivateMode", description = R.WEB_PLUGIN_PRIVATE_MODE, example = "true")
     public static final String   usePrivateMode           = "UsePrivateMode";
+	@PluginFieldDescription(parameter = "IsDriverLogging", description = R.WEB_PLUGIN_IS_DRIVER_LOGGING, example = "true")
+	public static final String   isDriverLogging           = "IsDriverLogging";
 
 	@PluginFieldDescription(parameter = "Browser", description = R.WEB_PLUGIN_BROWSER, example = "'Chrome'")
     public static final String   browserName              = "Browser";
@@ -143,7 +145,7 @@ public class WebAppFactory extends AbstractApplicationFactory
 		switch (kind)
 		{
 			case LOAD:		    return new String[] { jreExecName, jreArgsName, chromeDriverPathName, geckoDriverPathName, ieDriverPathName, 
-			        chromeDriverBinary, firefoxProfileDir, usePrivateMode, logLevel, trimTextName };
+			        chromeDriverBinary, firefoxProfileDir, usePrivateMode, isDriverLogging, logLevel, trimTextName };
 			case START:         return new String[] { browserName, urlName };
 			case GET_PROPERTY:  return new String[] { propertyUrlName, propertyTitle, propertyAllTitles, propertyCookie, propertyAllCookies };
             case SET_PROPERTY:  return new String[] { propertyUrlName, propertyTitle, propertyAddCookie, propertyRemoveCookie, propertyRemoveAllCookies };

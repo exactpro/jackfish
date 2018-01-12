@@ -274,6 +274,12 @@ public class SeleniumRemoteApplication extends RemoteApplication
 				logger.info("Use private mode for browser");
 			}
 
+			boolean isDriverLogging = args.get(WebAppFactory.isDriverLogging) != null;
+			if (isDriverLogging)
+			{
+				logger.info("isDriverLogging = true" );
+			}
+
 
 			logger.info("Starting " + browserName + " on " + url);
 
@@ -291,7 +297,7 @@ public class SeleniumRemoteApplication extends RemoteApplication
 							te =  new Exception("Wrong browser name.");
 							throw te;
 						}
-                        driver = new WebDriverListenerNew(browser.createDriver(chromeDriverBinary, firefoxProfileDirectory, usePrivateMode));
+                        driver = new WebDriverListenerNew(browser.createDriver(chromeDriverBinary, firefoxProfileDirectory, usePrivateMode, isDriverLogging));
                         operationExecutor = new SeleniumOperationExecutor(driver, logger, SeleniumRemoteApplication.super.useTrimText);
 
                         logger.info("Before driver.get(" + url + ")");
