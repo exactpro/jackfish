@@ -40,7 +40,7 @@ public class FindListView<T> extends VBox
 		this.listView = new ListView<>();
 		this.listView.setTooltip(new Tooltip(R.DRAG_N_DROP_LIST_TOOLTIP.get()));
 		this.cfbFind = new CustomFieldWithButton();
-		this.cfbFind.setPromptText("find");
+		this.cfbFind.setPromptText(R.FIND_LIST_VIEW_FIND.get());
 		this.getChildren().add(this.cfbFind);
 		this.getChildren().add(Common.createSpacer(Common.SpacerEnum.VerticalMin));
 		this.getChildren().add(this.listView);

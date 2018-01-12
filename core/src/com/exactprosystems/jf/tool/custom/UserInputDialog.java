@@ -12,6 +12,7 @@ package com.exactprosystems.jf.tool.custom;
 import com.exactprosystems.jf.actions.ReadableValue;
 import com.exactprosystems.jf.api.common.Converter;
 import com.exactprosystems.jf.api.common.Str;
+import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.functions.HelpKind;
 import com.exactprosystems.jf.tool.Common;
@@ -82,7 +83,7 @@ public class UserInputDialog extends Dialog<Object>
 					openFile.setNameSecond(helpKind.getLabel());
 					openFile.setSecondActionListener(str -> {
 						this.timer.stop();
-						File file = DialogsHelper.showOpenSaveDialog("Choose file to open", "All files", "*.*", DialogsHelper.OpenSaveMode.OpenFile);
+						File file = DialogsHelper.showOpenSaveDialog(R.USER_INPUT_DIALOG_CHOOSE_FILE.get(), R.COMMON_ALL_FILES.get(), "*.*", DialogsHelper.OpenSaveMode.OpenFile);
 						this.timer.play();
 						if (file != null)
 						{
@@ -98,7 +99,7 @@ public class UserInputDialog extends Dialog<Object>
 					chooseFolder.setNameSecond(helpKind.getLabel());
 					chooseFolder.setSecondActionListener(str -> {
 						this.timer.stop();
-						File file = DialogsHelper.showDirChooseDialog("Choose directory");
+						File file = DialogsHelper.showDirChooseDialog(R.USER_INPUT_DIALOG_CHOOSE_DIR.get());
 						this.timer.play();
 						if (file != null)
 						{
@@ -227,7 +228,7 @@ public class UserInputDialog extends Dialog<Object>
 	private ExpressionField createExpressionField(AbstractEvaluator evaluator, String defaultExpression)
 	{
 		ExpressionField expressionField = new ExpressionField(evaluator, defaultExpression);
-		expressionField.setHelperForExpressionField("Title", null);
+		expressionField.setHelperForExpressionField(R.USER_INPUT_DIALOG_TITLE.get(), null);
 		expressionField.setMaxWidth(Double.MAX_VALUE);
 		GridPane.setHgrow(expressionField, Priority.ALWAYS);
 		GridPane.setFillWidth(expressionField, true);

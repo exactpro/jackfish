@@ -296,7 +296,7 @@ public class RawMessageTreeView extends TreeView<RawMessageTreeView.MessageBean>
 		List<IAttribute> values = field.getValues();
 		if (values != null && !values.isEmpty())
 		{
-			expressionField.setChooserForExpressionField("Choose for " + fieldName, () -> values.stream()
+			expressionField.setChooserForExpressionField(R.RAW_MESSAGE_TREE_VIEW_CHOOSE_FOR.get() + " " + fieldName, () -> values.stream()
 					.map(iAttribute -> new ReadableValue(iAttribute.getValue(), iAttribute.getName()))
 					.collect(Collectors.toList())
 			);
@@ -348,7 +348,7 @@ public class RawMessageTreeView extends TreeView<RawMessageTreeView.MessageBean>
 		@Override
 		public String toString()
 		{
-			return "Name= '" + name + '\'' + (this.value.length() > 0 ? ", Value= '" + value + '\'' : "");
+			return this.value.length() > 0 ? String.format(R.MESSAGE_BEAN_TO_STRING_WITH_VALUE.get(), name, value) : String.format(R.MESSAGE_BEAN_TO_STRING.get(), name);
 		}
 
 		@Override

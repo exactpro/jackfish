@@ -43,11 +43,11 @@ public class CsvFxController extends AbstractDocumentController<CsvFx>
 	{
 		super.initialize(url, resourceBundle);
 		this.cbDelimiter.getItems().addAll(
-				new ReadableValue(",", "comma"),
-				new ReadableValue(";", "semicolon"),
-				new ReadableValue(":", "colon"),
-				new ReadableValue("-", "dash"),
-				new ReadableValue("\t", "tab")
+				new ReadableValue(",", R.CSV_FX_CONTR_COMMA.get()),
+				new ReadableValue(";", R.CSV_FX_CONTR_SEMICOLON.get()),
+				new ReadableValue(":", R.CSV_FX_CONTR_COLON.get()),
+				new ReadableValue("-", R.CSV_FX_CONTR_DASH.get()),
+				new ReadableValue("\t", R.CSV_FX_CONTR_TAB.get())
 		);
 		this.cbDelimiter.getSelectionModel().select(1);
 	}

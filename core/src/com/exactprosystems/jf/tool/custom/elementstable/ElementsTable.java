@@ -56,7 +56,7 @@ public class ElementsTable extends TableView<TableBean>
 		super.setEditable(true);
 		super.setRowFactory(row -> new CustomRowFactory());
 
-		TableColumn<TableBean, String> columnId = new TableColumn<>("Id");
+		TableColumn<TableBean, String> columnId = new TableColumn<>(R.ELEMENTS_TABLE_ID.get());
 		columnId.setCellValueFactory(new PropertyValueFactory<>("id"));
 		columnId.setEditable(true);
 		columnId.setCellFactory(e -> new TableCell<TableBean, String>()
@@ -134,7 +134,7 @@ public class ElementsTable extends TableView<TableBean>
 		columnId.setOnEditCommit(event -> Common.tryCatch(() -> event.getRowValue().getAbstractControl().set("id", event.getNewValue()), ""));
 		columnId.setMinWidth(100.0);
 
-		TableColumn<TableBean, ControlKind> columnKind = new TableColumn<>("Kind");
+		TableColumn<TableBean, ControlKind> columnKind = new TableColumn<>(R.ELEMENTS_TABLE_KIND.get());
 		columnKind.setCellValueFactory(new PropertyValueFactory<>("controlKind"));
 		columnKind.setOnEditCommit(event ->
 		{
@@ -207,21 +207,21 @@ public class ElementsTable extends TableView<TableBean>
 
 		int value = 50;
 
-		TableColumn<TableBean, Boolean> columnIsXpath = new TableColumn<>("Xpath");
+		TableColumn<TableBean, Boolean> columnIsXpath = new TableColumn<>(R.ELEMENTS_TABLE_XPATH.get());
 		columnIsXpath.setCellValueFactory(new PropertyValueFactory<>("xpath"));
 		columnIsXpath.setCellFactory(e -> new IconTableCell(CssVariables.Icons.MARK_ICON));
 		columnIsXpath.setPrefWidth(value);
 		columnIsXpath.setMaxWidth(value);
 		columnIsXpath.setMinWidth(value);
 
-		TableColumn<TableBean, Boolean> columnIsNew = new TableColumn<>("New");
+		TableColumn<TableBean, Boolean> columnIsNew = new TableColumn<>(R.ELEMENTS_TABLE_NEW.get());
 		columnIsNew.setCellValueFactory(new PropertyValueFactory<>("isNew"));
 		columnIsNew.setCellFactory(e -> new IconTableCell(CssVariables.Icons.MARK_ICON));
 		columnIsNew.setPrefWidth(value);
 		columnIsNew.setMaxWidth(value);
 		columnIsNew.setMinWidth(value);
 
-		TableColumn<TableBean, Integer> columnCount = new TableColumn<>("Count");
+		TableColumn<TableBean, Integer> columnCount = new TableColumn<>(R.ELEMENTS_TABLE_COUNT.get());
 		columnCount.setCellValueFactory(new PropertyValueFactory<>("count"));
 		columnCount.setCellFactory(e -> new TableCell<TableBean, Integer>()
 		{
@@ -244,7 +244,7 @@ public class ElementsTable extends TableView<TableBean>
 		columnCount.setMaxWidth(value);
 		columnCount.setMinWidth(value);
 
-		TableColumn<TableBean, TableBean> columnOption = new TableColumn<>("Option");
+		TableColumn<TableBean, TableBean> columnOption = new TableColumn<>(R.ELEMENTS_TABLE_OPTION.get());
 		columnOption.setCellValueFactory(new PropertyValueFactory<>("option"));
 		columnOption.setPrefWidth(100);
 		columnOption.setMaxWidth(100);
@@ -426,23 +426,23 @@ public class ElementsTable extends TableView<TableBean>
 
 		int index = 0;
 
-		this.addComboToLeftPane(gridPane, "Owner : ", abstractControl.getOwnerID(), newOwner -> Common.tryCatch(()->abstractControl.set(AbstractControl.ownerIdName, newOwner), R.ERROR_ON_SET_PARAMETER.get()), index++, new ArrayList<>());
-		this.addComboToLeftPane(gridPane, "Additional : ", abstractControl.getAddition(), newAdd -> Common.tryCatch(()->abstractControl.set(AbstractControl.additionName, newAdd), R.ERROR_ON_SET_PARAMETER.get()), index++, Arrays.asList(Addition.values()));
-		this.addComboToLeftPane(gridPane, "Ref : ", abstractControl.getRefID(), refId -> Common.tryCatch(()->abstractControl.set(AbstractControl.refIdName, refId), R.ERROR_ON_SET_PARAMETER.get()), index++, new ArrayList<>());
-		this.addToLeftPane(gridPane, "Timeout : ", String.valueOf(abstractControl.getTimeout()), newTimeout -> Common.tryCatch(()->abstractControl.set(AbstractControl.timeoutName, newTimeout), R.ERROR_ON_SET_PARAMETER.get()), index++);
-		this.addComboToLeftPane(gridPane, "Visibility : ", abstractControl.getVisibility(), newVis -> Common.tryCatch(()->abstractControl.set(AbstractControl.visibilityName, newVis), R.ERROR_ON_SET_PARAMETER.get()),index++, Arrays.asList(Visibility.values()));
-		this.addToLeftPane(gridPane, "Columns : ", abstractControl.getColumns(), newColumns -> Common.tryCatch(() -> abstractControl.set(AbstractControl.columnsName, newColumns), R.ERROR_ON_SET_NEW_COLUMN.get()),index++ );
-		this.addCheckBoxToLeftPane(gridPane, "Weak", abstractControl.isWeak(), newWeak -> Common.tryCatch(() -> abstractControl.set(AbstractControl.weakName, newWeak), R.ERROR_ON_SET_NEW_COLUMN.get()),index++ );
+		this.addComboToLeftPane(gridPane, R.ELEMENTS_TABLE_OWNER.get() + " : ", abstractControl.getOwnerID(), newOwner -> Common.tryCatch(()->abstractControl.set(AbstractControl.ownerIdName, newOwner), R.ERROR_ON_SET_PARAMETER.get()), index++, new ArrayList<>());
+		this.addComboToLeftPane(gridPane, R.ELEMENTS_TABLE_ADDITIONAL.get() + " : ", abstractControl.getAddition(), newAdd -> Common.tryCatch(()->abstractControl.set(AbstractControl.additionName, newAdd), R.ERROR_ON_SET_PARAMETER.get()), index++, Arrays.asList(Addition.values()));
+		this.addComboToLeftPane(gridPane, R.ELEMENTS_TABLE_REF.get() + " : ", abstractControl.getRefID(), refId -> Common.tryCatch(()->abstractControl.set(AbstractControl.refIdName, refId), R.ERROR_ON_SET_PARAMETER.get()), index++, new ArrayList<>());
+		this.addToLeftPane(gridPane, R.ELEMENTS_TABLE_TIMEOUT.get() + " : ", String.valueOf(abstractControl.getTimeout()), newTimeout -> Common.tryCatch(()->abstractControl.set(AbstractControl.timeoutName, newTimeout), R.ERROR_ON_SET_PARAMETER.get()), index++);
+		this.addComboToLeftPane(gridPane, R.ELEMENTS_TABLE_VISIBILITY.get() + " : ", abstractControl.getVisibility(), newVis -> Common.tryCatch(()->abstractControl.set(AbstractControl.visibilityName, newVis), R.ERROR_ON_SET_PARAMETER.get()),index++, Arrays.asList(Visibility.values()));
+		this.addToLeftPane(gridPane, R.ELEMENTS_TABLE_COLUMNS.get() + " : ", abstractControl.getColumns(), newColumns -> Common.tryCatch(() -> abstractControl.set(AbstractControl.columnsName, newColumns), R.ERROR_ON_SET_NEW_COLUMN.get()),index++ );
+		this.addCheckBoxToLeftPane(gridPane, R.ELEMENTS_TABLE_WEAK.get(), abstractControl.isWeak(), newWeak -> Common.tryCatch(() -> abstractControl.set(AbstractControl.weakName, newWeak), R.ERROR_ON_SET_NEW_COLUMN.get()),index++ );
 		index = 1;
 
 		this.addXpathToPane(gridPane, abstractControl.getXpath(), newId -> Common.tryCatch(() -> abstractControl.set(AbstractControl.xpathName, newId), R.ERROR_ON_SET_PARAMETER.get()));
-		this.addToRightPane(gridPane, "UID : ", abstractControl.getUID(), newId -> Common.tryCatch(() -> abstractControl.set(AbstractControl.uidName, newId), R.ERROR_ON_SET_PARAMETER.get()), index++);
-		this.addToRightPane(gridPane, "Class : ", abstractControl.getClazz(), newId -> Common.tryCatch(() -> abstractControl.set(AbstractControl.clazzName, newId), R.ERROR_ON_SET_PARAMETER.get()), index++);
-		this.addToRightPane(gridPane, "Name : ", abstractControl.getName(), newId -> Common.tryCatch(() -> abstractControl.set(AbstractControl.nameName, newId), R.ERROR_ON_SET_PARAMETER.get()), index++);
-		this.addToRightPane(gridPane, "Title : ", abstractControl.getTitle(), newId -> Common.tryCatch(() -> abstractControl.set(AbstractControl.titleName, newId), R.ERROR_ON_SET_PARAMETER.get()), index++);
-		this.addToRightPane(gridPane, "Action : ", abstractControl.getAction(), newId -> Common.tryCatch(() -> abstractControl.set(AbstractControl.actionName, newId), R.ERROR_ON_SET_PARAMETER.get()), index++);
-		this.addToRightPane(gridPane, "Text : ", abstractControl.getText(), newId -> Common.tryCatch(() -> abstractControl.set(AbstractControl.textName, newId), R.ERROR_ON_SET_PARAMETER.get()), index++);
-		this.addToRightPane(gridPane, "Tooltip : ", abstractControl.getTooltip(), newId -> Common.tryCatch(() -> abstractControl.set(AbstractControl.tooltipName, newId), R.ERROR_ON_SET_PARAMETER.get()), index++);
+		this.addToRightPane(gridPane, R.ELEMENTS_TABLE_UID.get() + " : ", abstractControl.getUID(), newId -> Common.tryCatch(() -> abstractControl.set(AbstractControl.uidName, newId), R.ERROR_ON_SET_PARAMETER.get()), index++);
+		this.addToRightPane(gridPane, R.ELEMENTS_TABLE_CLASS.get() + " : ", abstractControl.getClazz(), newId -> Common.tryCatch(() -> abstractControl.set(AbstractControl.clazzName, newId), R.ERROR_ON_SET_PARAMETER.get()), index++);
+		this.addToRightPane(gridPane, R.ELEMENTS_TABLE_NAME.get() + " : ", abstractControl.getName(), newId -> Common.tryCatch(() -> abstractControl.set(AbstractControl.nameName, newId), R.ERROR_ON_SET_PARAMETER.get()), index++);
+		this.addToRightPane(gridPane, R.ELEMENTS_TABLE_TITLE.get() + " : ", abstractControl.getTitle(), newId -> Common.tryCatch(() -> abstractControl.set(AbstractControl.titleName, newId), R.ERROR_ON_SET_PARAMETER.get()), index++);
+		this.addToRightPane(gridPane, R.ELEMENTS_TABLE_ACTION.get() + " : ", abstractControl.getAction(), newId -> Common.tryCatch(() -> abstractControl.set(AbstractControl.actionName, newId), R.ERROR_ON_SET_PARAMETER.get()), index++);
+		this.addToRightPane(gridPane, R.ELEMENTS_TABLE_TEXT.get() + " : ", abstractControl.getText(), newId -> Common.tryCatch(() -> abstractControl.set(AbstractControl.textName, newId), R.ERROR_ON_SET_PARAMETER.get()), index++);
+		this.addToRightPane(gridPane, R.ELEMENTS_TABLE_TOOLTIP.get() + " : ", abstractControl.getTooltip(), newId -> Common.tryCatch(() -> abstractControl.set(AbstractControl.tooltipName, newId), R.ERROR_ON_SET_PARAMETER.get()), index++);
 
 		return alert.showAndWait()
 				.filter(type -> type == ButtonType.OK)
@@ -497,7 +497,7 @@ public class ElementsTable extends TableView<TableBean>
 
 	private void addXpathToPane(GridPane pane, String value, Consumer<String> consumer)
 	{
-		Label lbl = new Label("Xpath : ");
+		Label lbl = new Label(R.ELEMENTS_TABLE_XPATH.get() + " : ");
 		HBox box = new HBox();
 		box.setAlignment(Pos.CENTER);
 
