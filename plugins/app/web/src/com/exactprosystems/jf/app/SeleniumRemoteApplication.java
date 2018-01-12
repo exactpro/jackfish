@@ -274,10 +274,14 @@ public class SeleniumRemoteApplication extends RemoteApplication
 				logger.info("Use private mode for browser");
 			}
 
-			boolean isDriverLogging = args.get(WebAppFactory.isDriverLogging) != null;
+			boolean isDriverLogging = Boolean.valueOf(args.get(WebAppFactory.isDriverLogging));
 			if (isDriverLogging)
 			{
 				logger.info("isDriverLogging = true" );
+			}
+			else
+			{
+				logger.info("isDriverLogging = false" );
 			}
 
 
