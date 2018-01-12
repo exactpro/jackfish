@@ -98,7 +98,7 @@ public class GitMergeController implements Initializable, ContainingParent
 	private void initTable()
 	{
 		this.tableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
-		TableColumn<GitMergeBean, String> nameColumn = new TableColumn<>(R.COMMON_NAME.get());
+		TableColumn<GitMergeBean, String> nameColumn = new TableColumn<>(R.COMMON_SHIFT_NAME.get());
 		nameColumn.setCellValueFactory(new PropertyValueFactory<>("fileName"));
 
 		this.tableView.getColumns().add(nameColumn);
