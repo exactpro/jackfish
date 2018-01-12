@@ -80,6 +80,7 @@ public class Message extends Field implements IMessage
 		//TODO think about this method
 		for (IField field : fieldsList)
 		{
+			list.add(field);
 			IField ref = field.getReference();
 			if (ref != null)
 			{
@@ -100,15 +101,15 @@ public class Message extends Field implements IMessage
 						addAllField(list, refMessage.getFields());
 					}
 				}
-				else
-				{
-					list.add(ref);
-				}
+//				else
+//				{
+//					list.add(ref);
+//				}
 			}
-			else
-			{
-				list.add(field);
-			}
+//			else
+//			{
+//				list.add(field);
+//			}
 		}
 	}
 	//endregion

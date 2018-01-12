@@ -113,7 +113,10 @@ public class Helper
 		{
 			throw new Exception("The field with name='" + fieldName + "' is unknown.");
 		}
-		
+		if (field.getReference() != null)
+		{
+			field = field.getReference();
+		}
 		Class<?> type = field.getType().getJavaClass();
 		boolean needQuotes = type != null && (type == String.class || type == Character.class);
 		if (type == Boolean.class)
@@ -171,7 +174,27 @@ public class Helper
 		IField field = dic.getField(parameterName);
 		if (field == null)
 		{
+			IMessage messageByType = dic.getMessage(parameters.getByName("MessageType").getValueAsString());
+			if (messageByType == null)
+			{
+				return false;
+			}
+			return checkField(messageByType.getField(parameterName));
+		}
+
+		return checkField(field);
+	}
+
+	private static boolean checkField(IField field)
+	{
+		if (field == null)
+		{
 			return false;
+		}
+		IField reference = field.getReference();
+		if (reference != null)
+		{
+			return reference.getType().getJavaClass() == Boolean.class || reference.getValues() != null && !reference.getValues().isEmpty();
 		}
 		return  field.getType().getJavaClass() == Boolean.class || field.getValues() != null && !field.getValues().isEmpty();
 	}
