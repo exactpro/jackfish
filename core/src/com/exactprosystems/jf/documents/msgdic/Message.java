@@ -64,13 +64,21 @@ public class Message extends Field implements IMessage
 				.orElse(null);
 	}
 
+	public IField getDeepField(String name)
+	{
+		return this.getFields().stream()
+				.filter(field -> field.getName() != null && field.getName().equals(name))
+				.findFirst()
+				.orElse(null);
+	}
+
 	//endregion
 
 	//region private methods
-	private static void addAllField(List<IField> list, List<IField> messageList)
+	private static void addAllField(List<IField> list, List<IField> fieldsList)
 	{
 		//TODO think about this method
-		for (IField field : messageList)
+		for (IField field : fieldsList)
 		{
 			IField ref = field.getReference();
 			if (ref != null)

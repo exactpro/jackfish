@@ -92,35 +92,9 @@ public class Helper
 		IClientFactory factory = getFactory(matrix, context, parameters, clientName, connectionName);
 		AbstractEvaluator evaluator = context.getEvaluator();
 		IMessageDictionary dic = factory.getDictionary();
-		for (IField message : dic.getMessages())
-		{
-			list.add(new ReadableValue(evaluator.createString(message.getName())));
-
-			/* TODO attribute entity_type - available only for FIX
-			IAttribute entityType = message.getAttribute("entity_type");
-			if (entityType == null)
-			{
-				continue;
-			}
-
-			String quoted = "";
-			String entity = entityType.getValue();
-			if ("Message".equals(entity))
-			{
-				IAttribute attrMessageType = message.getAttribute("MessageType");
-				if (attrMessageType != null)
-				{
-					quoted = evaluator.createString(attrMessageType.getValue());
-				}
-
-				list.add(new ReadableValue(quoted, message.getName()));
-			}
-			else if ("Group".equals(entity))
-			{
-				quoted = evaluator.createString(message.getName());
-				list.add(new ReadableValue(quoted));
-			}*/
-		}
+		dic.getMessages().stream()
+				.map(message -> new ReadableValue(evaluator.createString(message.getName())))
+				.forEach(list::add);
 	}
 
 	public static void messageValues(List<ReadableValue> list, Context context, Matrix matrix, Parameters parameters, String clientName, String connectionName, String messageTypeName, String fieldName) throws Exception
@@ -134,7 +108,7 @@ public class Helper
 		{
 			throw new Exception("The message with message type='" + messageType + "' is unknown.");
 		}
-		IField field = message.getField(fieldName);
+		IField field = message.getDeepField(fieldName);
 		if (field == null)
 		{
 			throw new Exception("The field with name='" + fieldName + "' is unknown.");
