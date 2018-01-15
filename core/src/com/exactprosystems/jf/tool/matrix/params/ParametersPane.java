@@ -123,6 +123,10 @@ public class ParametersPane extends CustomScrollPane
 			else
 			{
 				exist.updateParameter(par);
+				if (this.matrixItem instanceof ActionItem)
+				{
+					updateExpressionField(this.context, (ActionItem) this.matrixItem, par, exist.getExpressionField());
+				}
 			}
 			exist.updateIndex(this.parameters.getIndex(par));
 			if (i == selectedIndex)
@@ -260,100 +264,7 @@ public class ParametersPane extends CustomScrollPane
 			expressionField.setStretchable(true);
 			if (this.matrixItem instanceof ActionItem)
 			{
-				ActionItem actionItem = (ActionItem) this.matrixItem;
-				HelpKind howHelp = null;
-
-				try
-				{
-					howHelp = actionItem.howHelpWithParameter(this.context, par.getName());
-				}
-				catch (Exception e)
-				{
-				}
-
-				AbstractEvaluator evaluator = this.context.getEvaluator();
-
-				if (howHelp != null)
-				{
-					expressionField.setNameFirst(howHelp.getLabel());
-					switch (howHelp)
-					{
-						case BuildQuery:
-							break;
-
-						case ChooseDateTime:
-							expressionField.setFirstActionListener(str ->
-							{
-								Date date = null;
-								if (expressionField.getText() != null)
-								{
-									try
-									{
-										date = (Date) evaluator.evaluate(expressionField.getText());
-									}
-									catch (Exception e)
-									{
-										date = DateTime.current();
-									}
-								}
-
-
-								Date res = DialogsHelper.showDateTimePicker(date);
-								if (res != null)
-								{
-									LocalDateTime ldt = Common.convert(res);
-									return String.format("DateTime.date(%d, %d, %d,  %d, %d, %d)",
-											//				because localDateTime begin month from 1, not 0
-											ldt.getYear(), ldt.getMonthValue() - 1, ldt.getDayOfMonth(), ldt.getHour(), ldt.getMinute(), ldt.getSecond());
-								}
-								return expressionField.getText();
-							});
-							break;
-
-						case ChooseOpenFile:
-							expressionField.setFirstActionListener(str ->
-							{
-								File file = DialogsHelper.showOpenSaveDialog(R.PARAM_PANE_CHOOSE_FILE_TO_OPEN.get(), R.COMMON_ALL_FILES.get(), "*.*", OpenSaveMode.OpenFile);
-								if (file != null)
-								{
-									return this.context.getEvaluator().createString(Common.getRelativePath(file.getAbsolutePath()));
-								}
-								return str;
-							});
-							break;
-
-						case ChooseSaveFile:
-							expressionField.setFirstActionListener(str ->
-							{
-								File file = DialogsHelper.showOpenSaveDialog(R.PARAM_PANE_CHOOSE_FILE_TO_SAVE.get(), R.COMMON_ALL_FILES.get(), "*.*", OpenSaveMode.SaveFile);
-								if (file != null)
-								{
-									return this.context.getEvaluator().createString(Common.getRelativePath(file.getAbsolutePath()));
-								}
-								return str;
-							});
-							break;
-
-						case ChooseFolder:
-							expressionField.setFirstActionListener(str ->
-							{
-								File file = DialogsHelper.showDirChooseDialog(R.PARAM_PANE_CHOOSE_DIR.get());
-								if (file != null)
-								{
-									return this.context.getEvaluator().createString(Common.getRelativePath(file.getAbsolutePath()));
-								}
-								return str;
-							});
-							break;
-
-						case ChooseFromList:
-							expressionField.setChooserForExpressionField(par.getName(), () -> actionItem.listToFillParameter(this.context, par.getName()));
-							break;
-
-						default:
-							break;
-					}
-				}
+				updateExpressionField(this.context, (ActionItem) this.matrixItem, par, expressionField);
 			}
 			expressionField.setContextMenu(empty);
 			expressionField.setOnContextMenuRequested(contextMenuHandler);
@@ -366,6 +277,106 @@ public class ParametersPane extends CustomScrollPane
 		tempGrid.setOnContextMenuRequested(contextMenuHandler);
 
 		return tempGrid;
+	}
+
+	private static void updateExpressionField(Context context, ActionItem actionItem, Parameter par, ExpressionField expressionField)
+	{
+		HelpKind howHelp = null;
+		try
+		{
+			howHelp = actionItem.howHelpWithParameter(context, par.getName());
+		}
+		catch (Exception e)
+		{
+		}
+
+		AbstractEvaluator evaluator = context.getEvaluator();
+
+		if (howHelp != null)
+		{
+			expressionField.setNameFirst(howHelp.getLabel());
+			switch (howHelp)
+			{
+				case BuildQuery:
+					break;
+
+				case ChooseDateTime:
+					expressionField.setFirstActionListener(str ->
+					{
+						Date date = null;
+						if (expressionField.getText() != null)
+						{
+							try
+							{
+								date = (Date) evaluator.evaluate(expressionField.getText());
+							}
+							catch (Exception e)
+							{
+								date = DateTime.current();
+							}
+						}
+
+
+						Date res = DialogsHelper.showDateTimePicker(date);
+						if (res != null)
+						{
+							LocalDateTime ldt = Common.convert(res);
+							return String.format("DateTime.date(%d, %d, %d,  %d, %d, %d)",
+									//				because localDateTime begin month from 1, not 0
+									ldt.getYear(), ldt.getMonthValue() - 1, ldt.getDayOfMonth(), ldt.getHour(), ldt.getMinute(), ldt.getSecond());
+						}
+						return expressionField.getText();
+					});
+					break;
+
+				case ChooseOpenFile:
+					expressionField.setFirstActionListener(str ->
+					{
+						File file = DialogsHelper.showOpenSaveDialog(R.PARAM_PANE_CHOOSE_FILE_TO_OPEN.get(), R.COMMON_ALL_FILES.get(), "*.*", OpenSaveMode.OpenFile);
+						if (file != null)
+						{
+							return context.getEvaluator().createString(Common.getRelativePath(file.getAbsolutePath()));
+						}
+						return str;
+					});
+					break;
+
+				case ChooseSaveFile:
+					expressionField.setFirstActionListener(str ->
+					{
+						File file = DialogsHelper.showOpenSaveDialog(R.PARAM_PANE_CHOOSE_FILE_TO_SAVE.get(), R.COMMON_ALL_FILES.get(), "*.*", OpenSaveMode.SaveFile);
+						if (file != null)
+						{
+							return context.getEvaluator().createString(Common.getRelativePath(file.getAbsolutePath()));
+						}
+						return str;
+					});
+					break;
+
+				case ChooseFolder:
+					expressionField.setFirstActionListener(str ->
+					{
+						File file = DialogsHelper.showDirChooseDialog(R.PARAM_PANE_CHOOSE_DIR.get());
+						if (file != null)
+						{
+							return context.getEvaluator().createString(Common.getRelativePath(file.getAbsolutePath()));
+						}
+						return str;
+					});
+					break;
+
+				case ChooseFromList:
+					expressionField.setChooserForExpressionField(par.getName(), () -> actionItem.listToFillParameter(context, par.getName()));
+					break;
+
+				default:
+					break;
+			}
+		}
+		else
+		{
+			expressionField.setFirstActionListener(null);
+		}
 	}
 
 	private void focusedParent(final Node node)
