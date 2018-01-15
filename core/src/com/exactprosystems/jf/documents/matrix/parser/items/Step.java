@@ -209,10 +209,12 @@ public class Step extends MatrixItem
 	}
 
 	@Override
-	protected void beforeReport(ReportBuilder report)
+	protected void beforeReport(ReportBuilder report, Context context)
 	{
-		super.beforeReport(report);
+		super.beforeReport(report, context);
 		report.putMark(this.id.get());
+		AbstractEvaluator evaluator = context.getEvaluator();
+		this.identify.evaluate(evaluator);
 	}
 
 	@Override

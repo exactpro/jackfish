@@ -626,7 +626,7 @@ public abstract class MatrixItem implements IMatrixItem, Mutable, Cloneable
 			report.reportSwitch(false);
 		}
 
-		this.beforeReport(report);
+		this.beforeReport(report, context);
 		report.itemStarted(this);
 		report.itemIntermediate(this);
 
@@ -1143,7 +1143,7 @@ public abstract class MatrixItem implements IMatrixItem, Mutable, Cloneable
 	 * Write something before executing the item
 	 * @param report instance of ReportBuilder
 	 */
-	protected void beforeReport(ReportBuilder report)
+	protected void beforeReport(ReportBuilder report, Context context)
 	{
 	}
 
