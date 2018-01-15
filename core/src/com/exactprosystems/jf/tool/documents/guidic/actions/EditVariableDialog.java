@@ -9,6 +9,7 @@
 package com.exactprosystems.jf.tool.documents.guidic.actions;
 
 import com.exactprosystems.jf.api.common.Str;
+import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.documents.matrix.parser.Parameter;
 import com.exactprosystems.jf.documents.matrix.parser.Parameters;
@@ -30,7 +31,7 @@ public class EditVariableDialog extends Dialog<Parameters>
 	EditVariableDialog(Parameters parameters, AbstractEvaluator evaluator)
 	{
 		super();
-		super.setTitle("Edit variables");
+		super.setTitle(R.EDIT_VARIABLE_DIALOG_TITLE.get());
 		super.initModality(Modality.APPLICATION_MODAL);
 		super.initOwner(Common.node);
 		super.setResizable(true);
@@ -44,13 +45,13 @@ public class EditVariableDialog extends Dialog<Parameters>
 		tableView.setEditable(true);
 		tableView.setColumnResizePolicy(CONSTRAINED_RESIZE_POLICY);
 
-		TableColumn<Parameter, String> nameColumn = new TableColumn<>("Name");
+		TableColumn<Parameter, String> nameColumn = new TableColumn<>(R.EDIT_VARIABLE_DIALOG_NAME.get());
 		nameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
 		nameColumn.setCellFactory(tsTableColumn -> new CustomTableCell());
 		nameColumn.setEditable(true);
 		nameColumn.setOnEditCommit(event -> event.getRowValue().setName(event.getNewValue()));
 
-		TableColumn<Parameter, String> expressionColumn = new TableColumn<>("Expression");
+		TableColumn<Parameter, String> expressionColumn = new TableColumn<>(R.EDIT_VARIABLE_DIALOG_EXPRESSION.get());
 		expressionColumn.setCellValueFactory(new PropertyValueFactory<>("expression"));
 		expressionColumn.setCellFactory(tsTableColumn -> new CustomTableCell());
 		expressionColumn.setEditable(true);
@@ -61,12 +62,12 @@ public class EditVariableDialog extends Dialog<Parameters>
 			this.update(tableView);
 		});
 
-		TableColumn<Parameter, String> valueColumn = new TableColumn<>("Value");
+		TableColumn<Parameter, String> valueColumn = new TableColumn<>(R.EDIT_VARIABLE_DIALOG_VALUE.get());
 		valueColumn.setCellValueFactory(new PropertyValueFactory<>("valueAsString"));
 		valueColumn.setCellFactory(tsTableColumn -> new CustomTableCell());
 		valueColumn.setEditable(false);
 
-		TableColumn<Parameter, Parameter> removeColumn = new TableColumn<>("Del");
+		TableColumn<Parameter, Parameter> removeColumn = new TableColumn<>(R.EDIT_VARIABLE_DIALOG_DEL.get());
 		removeColumn.setCellValueFactory(param -> new SimpleObjectProperty<>(param.getValue()));
 
 		removeColumn.setCellFactory(param -> {
@@ -98,10 +99,10 @@ public class EditVariableDialog extends Dialog<Parameters>
 
 		BorderPane paneContainer = new BorderPane();
 		paneContainer.setCenter(tableView);
-		Button btnAddNewParameter = new Button("Add new variable");
+		Button btnAddNewParameter = new Button(R.EDIT_VARIABLE_DIALOG_ADD_NEW.get());
 		btnAddNewParameter.setOnAction(e ->
 		{
-			Parameter newParameter = new Parameter("name", "'expression'");
+			Parameter newParameter = new Parameter(R.EDIT_VARIABLE_DIALOG_PARAM_NAME.get(), R.EDIT_VARIABLE_DIALOG_EXPRESSION_VALUE.get());
 			tableView.getItems().add(newParameter);
 			newParameter.evaluate(evaluator);
 		});

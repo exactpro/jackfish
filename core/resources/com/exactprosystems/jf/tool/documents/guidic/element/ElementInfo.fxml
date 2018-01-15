@@ -22,6 +22,8 @@
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.RowConstraints?>
+<?import com.exactprosystems.jf.api.common.i18n.R?>
+
 
 <BorderPane prefHeight="514.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8.0.112" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.exactprosystems.jf.tool.documents.guidic.element.ElementInfoController">
 	<fx:define>
@@ -70,16 +72,30 @@
 						<RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="NEVER" />
 					</rowConstraints>
 					<children>
-						<Label text="Owner:" GridPane.halignment="RIGHT" GridPane.rowIndex="0" GridPane.valignment="CENTER" />
-						<Label text="ID:" GridPane.halignment="RIGHT" GridPane.rowIndex="1" GridPane.valignment="CENTER" />
-						<Label text="Control:" GridPane.halignment="RIGHT" GridPane.rowIndex="2" GridPane.valignment="CENTER" />
-						<Label text="Addition:" GridPane.halignment="RIGHT" GridPane.rowIndex="3" GridPane.valignment="CENTER" />
-						<Label text="Ref:" GridPane.halignment="RIGHT" GridPane.rowIndex="4" GridPane.valignment="CENTER" />
-						<Label text="Timeout:" GridPane.halignment="RIGHT" GridPane.rowIndex="5" GridPane.valignment="CENTER" />
+						<Label GridPane.halignment="RIGHT" GridPane.rowIndex="0" GridPane.valignment="CENTER" >
+							<text><R fx:constant="ELEMENT_INF0_OWNER"/></text>
+						</Label>
+						<Label GridPane.halignment="RIGHT" GridPane.rowIndex="1" GridPane.valignment="CENTER" >
+							<text><R fx:constant="ELEMENT_INF0_ID"/></text>
+						</Label>
+						<Label GridPane.halignment="RIGHT" GridPane.rowIndex="2" GridPane.valignment="CENTER" >
+							<text><R fx:constant="ELEMENT_INF0_CONTROL"/></text>
+						</Label>
+						<Label GridPane.halignment="RIGHT" GridPane.rowIndex="3" GridPane.valignment="CENTER" >
+							<text><R fx:constant="ELEMENT_INF0_ADDITION"/></text>
+						</Label>
+						<Label GridPane.halignment="RIGHT" GridPane.rowIndex="4" GridPane.valignment="CENTER" >
+							<text><R fx:constant="ELEMENT_INF0_REF"/></text>
+						</Label>
+						<Label GridPane.halignment="RIGHT" GridPane.rowIndex="5" GridPane.valignment="CENTER" >
+							<text><R fx:constant="ELEMENT_INF0_TIMEOUT"/></text>
+						</Label>
 						<HBox alignment="CENTER_LEFT" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="0">
 							<children>
 								<ChoiceBox fx:id="choiceBoxOwner" maxWidth="1.7976931348623157E308" prefWidth="150.0" HBox.hgrow="ALWAYS" />
-								<Button fx:id="btnGoToOwner" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#goToOwner" text="G" />
+								<Button fx:id="btnGoToOwner" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#goToOwner">
+									<text><R fx:constant="ELEMENT_INF0_G"/></text>
+								</Button>
 							</children>
 						</HBox>
 						<CustomFieldWithButton id="id" fx:id="tfID" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="1" />
@@ -87,15 +103,23 @@
 						<ChoiceBox fx:id="choiceBoxAddition" maxWidth="1.7976931348623157E308" prefWidth="150.0" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="3" />
 						<NumberTextField id="timeout" fx:id="tfTimeout" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="5" />
 						<ChoiceBox fx:id="choiceBoxReference" maxWidth="1.7976931348623157E308" prefWidth="150.0" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="4" />
-						<Label text="Visibility:" GridPane.halignment="RIGHT" GridPane.rowIndex="6" />
+						<Label GridPane.halignment="RIGHT" GridPane.rowIndex="6" >
+							<text><R fx:constant="ELEMENT_INF0_VISIBILITY"/></text>
+						</Label>
 						<ChoiceBox fx:id="choiceBoxVisibility" maxWidth="1.7976931348623157E308" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="6" />
-						<Label text="Header:" GridPane.halignment="RIGHT" GridPane.rowIndex="7" />
+						<Label GridPane.halignment="RIGHT" GridPane.rowIndex="7" >
+							<text><R fx:constant="ELEMENT_INF0_HEADER"/></text>
+						</Label>
 						<ChoiceBox fx:id="choiceBoxHeader" maxWidth="1.7976931348623157E308" GridPane.columnIndex="1" GridPane.rowIndex="7" />
-						<Label text="Rows:" GridPane.halignment="RIGHT" GridPane.rowIndex="8" />
+						<Label GridPane.halignment="RIGHT" GridPane.rowIndex="8" >
+							<text><R fx:constant="ELEMENT_INF0_ROWS"/></text>
+						</Label>
 						<ChoiceBox fx:id="choiceBoxRows" maxWidth="1.7976931348623157E308" GridPane.columnIndex="1" GridPane.rowIndex="8" />
 						<HBox prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="9">
 							<children>
-								<CheckBox fx:id="checkBoxWeak" mnemonicParsing="false" text="Weak" />
+								<CheckBox fx:id="checkBoxWeak" mnemonicParsing="false">
+									<text><R fx:constant="ELEMENT_INF0_WEAK"/></text>
+								</CheckBox>
 								<Label />
 							</children>
 						</HBox>
@@ -107,16 +131,38 @@
 						<CssVariables fx:constant="VGAP_MIN" />
 					</styleClass>
 					<children>
-						<Label text="UID:" GridPane.halignment="RIGHT" GridPane.rowIndex="1" />
-						<Label text="Xpath:" GridPane.halignment="RIGHT" />
-						<Label text="Class:" GridPane.halignment="RIGHT" GridPane.rowIndex="2" />
-						<Label text="Name:" GridPane.halignment="RIGHT" GridPane.rowIndex="3" />
-						<Label text="Title:" GridPane.halignment="RIGHT" GridPane.rowIndex="4" />
-						<Label text="Action:" GridPane.halignment="RIGHT" GridPane.rowIndex="5" />
-						<Label text="Text:" GridPane.halignment="RIGHT" GridPane.rowIndex="6" />
-						<Label text="Tooltip:" GridPane.halignment="RIGHT" GridPane.rowIndex="7" />
-						<Label text="Columns:" GridPane.halignment="RIGHT" GridPane.rowIndex="9" />
-						<Label text="Expression:" GridPane.halignment="RIGHT" GridPane.rowIndex="10" />
+						<Label GridPane.halignment="RIGHT" GridPane.rowIndex="1" >
+							<text><R fx:constant="ELEMENT_INF0_UID"/></text>
+						</Label>
+						<Label GridPane.halignment="RIGHT" >
+							<text><R fx:constant="ELEMENT_INF0_XPATH"/></text>
+						</Label>
+						<Label GridPane.halignment="RIGHT" GridPane.rowIndex="2" >
+							<text><R fx:constant="ELEMENT_INF0_CLASS"/></text>
+						</Label>
+						<Label GridPane.halignment="RIGHT" GridPane.rowIndex="3" >
+							<text><R fx:constant="ELEMENT_INF0_NAME"/></text>
+						</Label>
+						<Label GridPane.halignment="RIGHT" GridPane.rowIndex="4" >
+							<text>
+								<R fx:constant="ELEMENT_INF0_TITLE"/>
+							</text>
+						</Label>
+						<Label GridPane.halignment="RIGHT" GridPane.rowIndex="5" >
+							<text><R fx:constant="ELEMENT_INF0_ACTION"/></text>
+						</Label>
+						<Label GridPane.halignment="RIGHT" GridPane.rowIndex="6" >
+							<text><R fx:constant="ELEMENT_INF0_TEXT"/></text>
+						</Label>
+						<Label GridPane.halignment="RIGHT" GridPane.rowIndex="7" >
+							<text><R fx:constant="ELEMENT_INF0_TOOLTIP"/></text>
+						</Label>
+						<Label GridPane.halignment="RIGHT" GridPane.rowIndex="9" >
+							<text><R fx:constant="ELEMENT_INF0_COLUMNS"/></text>
+						</Label>
+						<Label GridPane.halignment="RIGHT" GridPane.rowIndex="10" >
+							<text><R fx:constant="ELEMENT_INF0_EXPRESSION"/></text>
+						</Label>
 						<CustomFieldWithButton id="uid" fx:id="tfUID" GridPane.columnIndex="1" GridPane.rowIndex="1" />
 						<CustomFieldWithButton id="class" fx:id="tfClass" GridPane.columnIndex="1" GridPane.rowIndex="2" />
 						<CustomFieldWithButton id="name" fx:id="tfName" GridPane.columnIndex="1" GridPane.rowIndex="3" />

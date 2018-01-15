@@ -12,6 +12,8 @@
 <?import com.exactprosystems.jf.tool.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
+<?import com.exactprosystems.jf.api.common.i18n.R?>
+
 <HBox prefHeight="87.0" prefWidth="1453.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.exactprosystems.jf.tool.documents.guidic.navigation.NavigationController">
 	<fx:define>
 		<CssVariables fx:id="verMin" fx:constant="VERTICAL_MIN"/>
@@ -31,25 +33,41 @@
 					<children>
 						<Button id="dictionaryBtnNewDialog" fx:id="btnNewDialog" alignment="CENTER" mnemonicParsing="false" onAction="#newDialog" styleClass="$transparentBackground">
 							<tooltip>
-								<Tooltip text="Create new dialog"/>
+								<Tooltip>
+									<text>
+										<R fx:constant="NAVIGATION_CREATE"/>
+									</text>
+								</Tooltip>
 							</tooltip>
 						</Button>
 						<Label id="$horMin"/>
 						<Button id="dictionaryBtnDeleteDialog" fx:id="btnDeleteDialog" alignment="CENTER" mnemonicParsing="false" onAction="#removeDialog" styleClass="$transparentBackground">
 							<tooltip>
-								<Tooltip text="Delete selected dialog"/>
+								<Tooltip>
+									<text>
+										<R fx:constant="NAVIGATION_DELETE"/>
+									</text>
+								</Tooltip>
 							</tooltip>
 						</Button>
 						<Label id="$horMin"/>
 						<Button id="dictionaryBtnCopyDialog" fx:id="btnCopyDialog" mnemonicParsing="false" onAction="#copyDialog" styleClass="$transparentBackground">
 							<tooltip>
-								<Tooltip text="Copy current dialog with all elements"/>
+								<Tooltip>
+									<text>
+										<R fx:constant="NAVIGATION_COPY"/>
+									</text>
+								</Tooltip>
 							</tooltip>
 						</Button>
 						<Label id="$horMin"/>
 						<Button id="dictionaryBtnPasteDialog" fx:id="btnPasteDialog" mnemonicParsing="false" onAction="#pasteDialog" styleClass="$transparentBackground">
 							<tooltip>
-								<Tooltip text="Paste copied dialog"/>
+								<Tooltip>
+									<text>
+										<R fx:constant="NAVIGATION_PASTE"/>
+									</text>
+								</Tooltip>
 							</tooltip>
 						</Button>
 						<Label id="$horMin"/>
@@ -60,19 +78,38 @@
 		<!--<Label id="$horMax"/>-->
 		<VBox HBox.hgrow="ALWAYS" alignment="CENTER_LEFT" maxWidth="100" minWidth="100" prefWidth="100">
 			<children>
-				<RadioButton id="Self" mnemonicParsing="false" text="Self">
+				<RadioButton id="Self" mnemonicParsing="false">
+					<text>
+						<R fx:constant="NAVIGATION_SELF"/>
+					</text>
 					<toggleGroup>
 						<ToggleGroup fx:id="groupSection"/>
 					</toggleGroup>
 				</RadioButton>
 				<Label id="$verMin"/>
-				<RadioButton id="OnOpen" mnemonicParsing="false" text="On open" toggleGroup="$groupSection"/>
+				<RadioButton id="OnOpen" mnemonicParsing="false" toggleGroup="$groupSection">
+					<text>
+						<R fx:constant="NAVIGATION_ON_OPEN"/>
+					</text>
+				</RadioButton>
 				<Label id="$verMin"/>
-				<RadioButton id="Run" mnemonicParsing="false" text="Run" toggleGroup="$groupSection"/>
+				<RadioButton id="Run" mnemonicParsing="false" toggleGroup="$groupSection">
+					<text>
+						<R fx:constant="NAVIGATION_RUN"/>
+					</text>
+				</RadioButton>
 				<Label id="$verMin"/>
-				<RadioButton id="OnClose" mnemonicParsing="false" text="On close" toggleGroup="$groupSection"/>
+				<RadioButton id="OnClose" mnemonicParsing="false" toggleGroup="$groupSection">
+					<text>
+						<R fx:constant="NAVIGATION_ON_CLOSE"/>
+					</text>
+				</RadioButton>
 				<Label id="$verMin"/>
-				<RadioButton id="Close" mnemonicParsing="false" text="Close" toggleGroup="$groupSection"/>
+				<RadioButton id="Close" mnemonicParsing="false" toggleGroup="$groupSection">
+					<text>
+						<R fx:constant="NAVIGATION_CLOSE"/>
+					</text>
+				</RadioButton>
 			</children>
 		</VBox>
 		<!--<Label id="$horMax"/>-->
@@ -83,31 +120,51 @@
 					<children>
 						<Button id="dictionaryBtnNewElement" fx:id="btnNewElement" mnemonicParsing="false" onAction="#newElement" styleClass="$transparentBackground">
 							<tooltip>
-								<Tooltip text="Create new Element"/>
+								<Tooltip>
+									<text>
+										<R fx:constant="NAVIGATION_CREATE_ELEMENT"/>
+									</text>
+								</Tooltip>
 							</tooltip>
 						</Button>
 						<Label id="$horMin"/>
 						<Button id="dictionaryBtnDeleteElement" fx:id="btnDeleteElement" mnemonicParsing="false" onAction="#deleteElement" styleClass="$transparentBackground">
 							<tooltip>
-								<Tooltip text="Delete current element"/>
+								<Tooltip>
+									<text>
+										<R fx:constant="NAVIGATION_DELETE_ELEMENT"/>
+									</text>
+								</Tooltip>
 							</tooltip>
 						</Button>
 						<Label id="$horMin"/>
 						<Button id="dictionaryBtnCopyElement" fx:id="btnCopyElement" mnemonicParsing="false" onAction="#copyElement" styleClass="$transparentBackground">
 							<tooltip>
-								<Tooltip text="Copy current element"/>
+								<Tooltip>
+									<text>
+										<R fx:constant="NAVIGATION_COPY_ELEMENT"/>
+									</text>
+								</Tooltip>
 							</tooltip>
 						</Button>
 						<Label id="$horMin"/>
 						<Button id="dictionaryBtnPasteElement" fx:id="btnPasteElement" mnemonicParsing="false" onAction="#pasteElement" styleClass="$transparentBackground">
 							<tooltip>
-								<Tooltip text="Paste copied element"/>
+								<Tooltip>
+									<text>
+										<R fx:constant="NAVIGATION_PASTE_ELEMENT"/>
+									</text>
+								</Tooltip>
 							</tooltip>
 						</Button>
 						<Label id="$horMin"/>
 						<Button id="dictionaryBtnTestSection" fx:id="btnTestWindow" mnemonicParsing="false" onAction="#testingDialog" styleClass="$transparentBackground">
 							<tooltip>
-								<Tooltip text="Test all controls into the current section"/>
+								<Tooltip>
+									<text>
+										<R fx:constant="NAVIGATION_TEST_ALL"/>
+									</text>
+								</Tooltip>
 							</tooltip>
 						</Button>
 					</children>

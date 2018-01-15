@@ -541,7 +541,7 @@ public class NavigationController implements Initializable, ContainingParent
 			}
 			else
 			{
-				DialogsHelper.showError("Dialog with name " + textField.getText() + " already exists.");
+				DialogsHelper.showError(String.format(R.NAVIGATION_CONTR_DIALOG_EXISTS.get(), textField.getText()));
 				cancelEdit();
 			}
         }
