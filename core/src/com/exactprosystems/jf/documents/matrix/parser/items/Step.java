@@ -198,7 +198,8 @@ public class Step extends MatrixItem
 	@Override
 	public String getItemName()
 	{
-		return super.getItemName() + " " + Str.asString(this.identify.getValue());
+		String s = this.identify.isValid() ? Str.asString(this.identify.getValue()) : Str.asString(this.identify.getExpression());
+		return super.getItemName() + " " + s;
 	}
 
 	@Override
