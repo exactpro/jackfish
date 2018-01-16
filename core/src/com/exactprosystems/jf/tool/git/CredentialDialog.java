@@ -66,7 +66,7 @@ public class CredentialDialog
 			this.consumer.accept(tfUsername.getText().isEmpty() ? null : tfUsername.getText(), pfPassword.getText());
 			return null;
 		});
-		ButtonType buttonOk = new ButtonType("Ok", ButtonBar.ButtonData.OK_DONE);
+		ButtonType buttonOk = new ButtonType(R.COMMON_OK.get(), ButtonBar.ButtonData.OK_DONE);
 		dialog.getDialogPane().getButtonTypes().setAll(buttonOk);
 		dialog.getDialogPane().setContent(gridPane);
 		dialog.getDialogPane().lookupButton(buttonOk).disableProperty().bind(tfUsername.textProperty().isEmpty().or(pfPassword.textProperty().isEmpty()));

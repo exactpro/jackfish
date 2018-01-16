@@ -13,7 +13,7 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
-
+<?import com.exactprosystems.jf.api.common.i18n.R?>
 <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
 <!-- Copyright (c) 2009-2017, Exactpro Systems -->
 <!-- Quality Assurance & Related Software Development for Innovative Trading Systems. -->
@@ -56,19 +56,31 @@
 					<children>
 						<HBox alignment="CENTER_RIGHT" GridPane.rowIndex="2">
 							<children>
-								<Label prefHeight="16.0" prefWidth="120.0" text="Location to clone :" GridPane.rowIndex="2" />
+								<Label prefHeight="16.0" prefWidth="120.0" GridPane.rowIndex="2" >
+									<text>
+										<R fx:constant="GIT_CLONE_LOCATION"/>
+									</text>
+								</Label>
 								<Label />
 							</children>
 						</HBox>
 						<HBox alignment="CENTER_RIGHT">
 							<children>
-								<Label text="URI :" />
+								<Label >
+									<text>
+										<R fx:constant="GIT_CLONE_URI"/>
+									</text>
+								</Label>
 								<Label />
 							</children>
 						</HBox>
 						<HBox alignment="CENTER_RIGHT" GridPane.rowIndex="1">
 							<children>
-								<Label text="Project Name :" GridPane.rowIndex="1" />
+								<Label  GridPane.rowIndex="1" >
+									<text>
+										<R fx:constant="GIT_CLONE_PROJECT_NAME"/>
+									</text>
+								</Label>
 								<Label />
 							</children>
 						</HBox>
@@ -77,11 +89,23 @@
 						<TextField fx:id="tfProjectName" GridPane.columnIndex="1" GridPane.rowIndex="1" />
 						<HBox alignment="CENTER_RIGHT" prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="4">
 							<children>
-								<CheckBox fx:id="cbOpenProject" text="Open project" />
+								<CheckBox fx:id="cbOpenProject"  >
+									<text>
+										<R fx:constant="GIT_CLONE_OPEN"/>
+									</text>
+								</CheckBox>
 								<Label />
-								<Button fx:id="btnClone" mnemonicParsing="false" onAction="#cloneProject" text="Clone" />
+								<Button fx:id="btnClone" mnemonicParsing="false" onAction="#cloneProject" >
+									<text>
+										<R fx:constant="GIT_CLONE_CLOSE"/>
+									</text>
+								</Button>
 								<Label />
-								<Button fx:id="btnCancel" mnemonicParsing="false" onAction="#cancel" text="Cancel" />
+								<Button fx:id="btnCancel" mnemonicParsing="false" onAction="#cancel"  >
+									<text>
+										<R fx:constant="GIT_CLONE_CANCEL"/>
+									</text>
+								</Button>
 							</children>
 						</HBox>
 						<ScrollPane fx:id="scrollPane" prefHeight="200.0" prefWidth="200.0" GridPane.columnSpan="2" GridPane.fillHeight="true" GridPane.fillWidth="true" GridPane.rowIndex="3">

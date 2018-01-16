@@ -63,10 +63,10 @@ public class SystemVarsFxController extends AbstractDocumentController<SystemVar
 
 	private void createTable()
 	{
-		this.tableView.completeFirstColumn("Name", "name", EditState.TEXTFIELD, false);
-		this.tableView.completeSecondColumn("Expression", "expression", EditState.TEXTFIELD, false);
-		this.tableView.completeThirdColumn("Value", "valueAsString", EditState.TEXTFIELD_READONLY, true);
-		this.tableView.completeFourthColumn("Description", "description", EditState.TEXTFIELD, true);
+		this.tableView.completeFirstColumn(R.SYSTEM_VARS_FX_CONTR_NAME.get(), "name", EditState.TEXTFIELD, false);
+		this.tableView.completeSecondColumn(R.SYSTEM_VARS_FX_CONTR_EXPRESSION.get(), "expression", EditState.TEXTFIELD, false);
+		this.tableView.completeThirdColumn(R.SYSTEM_VARS_FX_CONTR_VALUE.get(), "valueAsString", EditState.TEXTFIELD_READONLY, true);
+		this.tableView.completeFourthColumn(R.SYSTEM_VARS_FX_CONTR_DESCRIPTION.get(), "description", EditState.TEXTFIELD, true);
 		this.tableView.onFinishEditFirstColumn((par, value) -> this.model.updateNameRow(current(), value));
 		this.tableView.onFinishEditSecondColumn((par, value) -> this.model.updateExpressionRow(current(), value));
 		this.tableView.onFinishEditFourthColumn((par, value) -> this.model.updateDescriptionRow(current(), value));

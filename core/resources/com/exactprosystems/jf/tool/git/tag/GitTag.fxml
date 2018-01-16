@@ -3,6 +3,7 @@
 <?import com.exactprosystems.jf.tool.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
+<?import com.exactprosystems.jf.api.common.i18n.R?>
 <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
 <!-- Copyright (c) 2009-2017, Exactpro Systems -->
 <!-- Quality Assurance & Related Software Development for Innovative Trading Systems. -->
@@ -33,11 +34,17 @@
 								<Label id="$horMid" />
 								<VBox alignment="TOP_CENTER" prefHeight="370.0" prefWidth="178.0" BorderPane.alignment="CENTER" HBox.hgrow="ALWAYS">
 									<children>
-										<Button fx:id="btnNewTag" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#newTag" text="New tag" VBox.vgrow="ALWAYS" />
+										<Button fx:id="btnNewTag" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#newTag" VBox.vgrow="ALWAYS" >
+											<text><R fx:constant="GIT_TAG_NEW_TAG"/></text>
+										</Button>
 										<Label id="$verMid" />
-										<Button fx:id="btnPushTags" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#pushTag" text="Push all tags" VBox.vgrow="ALWAYS" />
+										<Button fx:id="btnPushTags" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#pushTag" VBox.vgrow="ALWAYS" >
+											<text><R fx:constant="GIT_TAG_PUSH_ALL"/></text>
+										</Button>
 										<Label id="$verMax" />
-										<Button fx:id="btnDeleteTag" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#deleteTag" text="Delete tag" />
+										<Button fx:id="btnDeleteTag" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#deleteTag" >
+											<text><R fx:constant="GIT_TAG_DELETE_TAG"/></text>
+										</Button>
 									</children>
 								</VBox>
 							</children>
@@ -53,7 +60,9 @@
 		<Label id="$verMid" />
 		<HBox alignment="CENTER_RIGHT" prefHeight="25.0" prefWidth="200.0">
 			<children>
-				<Button fx:id="btnClose" mnemonicParsing="false" text="Close" onAction="#hide" />
+				<Button fx:id="btnClose" mnemonicParsing="false" onAction="#hide" >
+					<text><R fx:constant="GIT_TAG_CLOSE"/></text>
+				</Button>
 				<Label id="$horMid" />
 			</children>
 		</HBox>

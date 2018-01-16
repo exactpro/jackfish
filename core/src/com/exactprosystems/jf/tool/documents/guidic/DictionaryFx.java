@@ -651,7 +651,7 @@ public class DictionaryFx extends GuiDictionary
 							}
 							if (!supported.contains(element.getBindedClass()))
 							{
-								DictionaryFx.this.testingElements.add(new ControlWithState(element, "Not allowed", DictionaryFxController.Result.NOT_ALLOWED));
+								DictionaryFx.this.testingElements.add(new ControlWithState(element, R.DICTIONARY_FX_NOT_ALLOWED.get(), DictionaryFxController.Result.NOT_ALLOWED));
 								continue;
 							}
 							Locator ownerLocator = Optional.ofNullable(window.getOwnerControl(element))

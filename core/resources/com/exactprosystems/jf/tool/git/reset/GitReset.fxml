@@ -5,7 +5,7 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-
+<?import com.exactprosystems.jf.api.common.i18n.R?>
 <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
 <!-- Copyright (c) 2009-2017, Exactpro Systems -->
 <!-- Quality Assurance & Related Software Development for Innovative Trading Systems. -->
@@ -37,7 +37,9 @@
 					<children>
 						<VBox fx:id="vboxFiles" prefHeight="200.0" prefWidth="100.0" GridPane.rowIndex="2" />
 						<Label fx:id="lblCommitMessage" alignment="TOP_LEFT" contentDisplay="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" wrapText="true" GridPane.rowIndex="1" />
-						<Label text="Commit message:" />
+						<Label >
+							<text><R fx:constant="GIT_RESET_COMMIT_MESSAGE"/></text>
+						</Label>
 					</children>
 					<BorderPane.margin>
 						<Insets left="3.0" />
@@ -52,8 +54,12 @@
 	<bottom>
 		<HBox alignment="CENTER_RIGHT" prefHeight="55.0" prefWidth="600.0" spacing="20.0" BorderPane.alignment="CENTER">
 			<children>
-				<Button mnemonicParsing="false" onAction="#reset" text="Reset" />
-				<Button mnemonicParsing="false" onAction="#cancel" text="Cancel" />
+				<Button mnemonicParsing="false" onAction="#reset" >
+					<text><R fx:constant="GIT_RESET_RESET"/></text>
+				</Button>
+				<Button mnemonicParsing="false" onAction="#cancel" >
+					<text><R fx:constant="GIT_RESET_CANCEL"/></text>
+				</Button>
 			</children>
 			<BorderPane.margin>
 				<Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />

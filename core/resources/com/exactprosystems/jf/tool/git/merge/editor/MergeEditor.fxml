@@ -3,6 +3,7 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
+<?import com.exactprosystems.jf.api.common.i18n.R ?>
 <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
 <!-- Copyright (c) 2009-2017, Exactpro Systems -->
 <!-- Quality Assurance & Related Software Development for Innovative Trading Systems. -->
@@ -16,8 +17,16 @@
 	<top>
 		<ToolBar prefHeight="40.0" prefWidth="200.0" BorderPane.alignment="CENTER">
 			<items>
-				<Button mnemonicParsing="false" onAction="#acceptYours" text="Accept yours"/>
-				<Button mnemonicParsing="false" onAction="#acceptTheirs" text="Accept theirs"/>
+				<Button mnemonicParsing="false" onAction="#acceptYours" >
+					<text>
+						<R fx:constant="MERGE_EDITOR_ACCEPT_YOURS"/>
+					</text>
+				</Button>
+				<Button mnemonicParsing="false" onAction="#acceptTheirs" >
+					<text>
+						<R fx:constant="MERGE_EDITOR_ACCEPT_THEIRS"/>
+					</text>
+				</Button>
 			</items>
 			<BorderPane.margin>
 				<Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
@@ -27,8 +36,16 @@
 	<bottom>
 		<HBox alignment="CENTER_RIGHT" prefHeight="46.0" prefWidth="600.0" spacing="20.0" BorderPane.alignment="CENTER">
 			<children>
-				<Button mnemonicParsing="false" onAction="#save" text="Save"/>
-				<Button mnemonicParsing="false" onAction="#close" text="Close"/>
+				<Button mnemonicParsing="false" onAction="#save" >
+					<text>
+						<R fx:constant="MERGE_EDITOR_SAVE"/>
+					</text>
+				</Button>
+				<Button mnemonicParsing="false" onAction="#close" >
+					<text>
+						<R fx:constant="MERGE_EDITOR_CLOSE"/>
+					</text>
+				</Button>
 			</children>
 			<BorderPane.margin>
 				<Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
@@ -68,9 +85,21 @@
 						<RowConstraints maxHeight="30.0" minHeight="30.0" prefHeight="30.0" vgrow="SOMETIMES"/>
 					</rowConstraints>
 					<children>
-						<Label text="Your version"/>
-						<Label text="Result" GridPane.columnIndex="2"/>
-						<Label text="Their version" GridPane.columnIndex="4"/>
+						<Label >
+							<text>
+								<R fx:constant="MERGE_EDITOR_YOUR_VERSION"/>
+							</text>
+						</Label>
+						<Label GridPane.columnIndex="2">
+							<text>
+								<R fx:constant="MERGE_EDITOR_RESULT"/>
+							</text>
+						</Label>
+						<Label GridPane.columnIndex="4">
+							<text>
+								<R fx:constant="MERGE_EDITOR_THEIR_VERSION"/>
+							</text>
+						</Label>
 					</children>
 				</GridPane>
 			</top>

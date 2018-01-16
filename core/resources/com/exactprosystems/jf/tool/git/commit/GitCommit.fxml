@@ -4,7 +4,7 @@
 <?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-
+<?import com.exactprosystems.jf.api.common.i18n.R?>
 <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
 <!-- Copyright (c) 2009-2017, Exactpro Systems -->
 <!-- Quality Assurance & Related Software Development for Innovative Trading Systems. -->
@@ -35,7 +35,11 @@
 						<TextArea fx:id="taMessage" prefHeight="58.0" prefWidth="586.0" BorderPane.alignment="CENTER"/>
 					</center>
 					<top>
-						<Label text="Commit message" BorderPane.alignment="BOTTOM_LEFT"/>
+						<Label BorderPane.alignment="BOTTOM_LEFT">
+							<text>
+								<R fx:constant="GIT_COMMIT_MESSAGE"/>
+							</text>
+						</Label>
 					</top>
 				</BorderPane>
 			</bottom>
@@ -44,14 +48,25 @@
 	<bottom>
 		<HBox alignment="CENTER_RIGHT" prefHeight="41.0" prefWidth="600.0" spacing="20.0" BorderPane.alignment="CENTER">
 			<children>
-				<SplitMenuButton text="Commit" fx:id="btnCommit" onAction="#commitSelected">
+				<SplitMenuButton fx:id="btnCommit" onAction="#commitSelected">
+					<text>
+						<R fx:constant="GIT_COMMIT_COMMIT"/>
+					</text>
 					<items>
-						<MenuItem onAction="#pushSelected" text="Commit and push"/>
+						<MenuItem onAction="#pushSelected" >
+							<text>
+								<R fx:constant="GIT_COMMIT_COMMIT_PUSH"/>
+							</text>
+						</MenuItem>
 					</items>
 				</SplitMenuButton>
 				<!--<Button fx:id="btnCommit" mnemonicParsing="false" onAction="#commitSelected" text="Commit" />-->
 				<!--<Button fx:id="btnPush" mnemonicParsing="false" onAction="#pushSelected" text="Commit and Push" />-->
-				<Button fx:id="btnClose" mnemonicParsing="false" onAction="#close" text="Close" />
+				<Button fx:id="btnClose" mnemonicParsing="false" onAction="#close" >
+					<text>
+						<R fx:constant="GIT_COMMIT_CLOSE"/>
+					</text>
+				</Button>
 			</children>
 			<padding>
 				<Insets left="7.0" right="7.0" />

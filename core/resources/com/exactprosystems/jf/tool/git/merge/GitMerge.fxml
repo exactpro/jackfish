@@ -4,6 +4,7 @@
 <?import javafx.scene.control.*?>
 <?import java.lang.*?>
 <?import javafx.scene.layout.*?>
+<?import com.exactprosystems.jf.api.common.i18n.R?>
 
 
 <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
@@ -25,9 +26,15 @@
    <right>
       <VBox prefHeight="385.0" prefWidth="172.0" spacing="20.0" BorderPane.alignment="CENTER">
          <children>
-            <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#acceptTheirs" text="Accept theirs" />
-            <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#acceptYours" text="Accept yours" />
-            <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#merge" text="Merge" />
+            <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#acceptTheirs" >
+               <text><R fx:constant="GIT_MERGE_ACCEPT_THEIRS"/></text>
+            </Button>
+            <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#acceptYours" >
+               <text><R fx:constant="GIT_MERGE_ACCEPT_YOURS"/></text>
+            </Button>
+            <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#merge" >
+               <text><R fx:constant="GIT_MERGE_MERGE"/></text>
+            </Button>
          </children>
          <BorderPane.margin>
             <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
@@ -35,7 +42,8 @@
       </VBox>
    </right>
    <bottom>
-      <Button mnemonicParsing="false" onAction="#close" text="Close" BorderPane.alignment="CENTER_RIGHT">
+      <Button mnemonicParsing="false" onAction="#close" BorderPane.alignment="CENTER_RIGHT">
+         <text><R fx:constant="GIT_MERGE_CLOSE"/></text>
          <BorderPane.margin>
             <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
          </BorderPane.margin>

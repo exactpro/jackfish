@@ -3,6 +3,7 @@
 <?import com.exactprosystems.jf.tool.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
+<?import com.exactprosystems.jf.api.common.i18n.R?>
 <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
 <!-- Copyright (c) 2009-2017, Exactpro Systems -->
 <!-- Quality Assurance & Related Software Development for Innovative Trading Systems. -->
@@ -30,8 +31,12 @@
 					<bottom>
 						<HBox alignment="CENTER_RIGHT" prefHeight="41.0" prefWidth="600.0" spacing="20.0" BorderPane.alignment="CENTER">
 							<children>
-								<Button fx:id="btnPush" mnemonicParsing="false" onAction="#push" text="Push"/>
-								<Button fx:id="btnClose" mnemonicParsing="false" onAction="#close" text="Close"/>
+								<Button fx:id="btnPush" mnemonicParsing="false" onAction="#push" >
+									<text><R fx:constant="GIT_PUSH_PUSH"/></text>
+								</Button>
+								<Button fx:id="btnClose" mnemonicParsing="false" onAction="#close" >
+									<text><R fx:constant="GIT_PUSH_CLOSE"/></text>
+								</Button>
 							</children>
 						</HBox>
 					</bottom>

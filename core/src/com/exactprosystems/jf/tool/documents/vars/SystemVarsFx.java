@@ -9,6 +9,7 @@
 
 package com.exactprosystems.jf.tool.documents.vars;
 
+import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.common.undoredo.Command;
 import com.exactprosystems.jf.documents.DocumentFactory;
 import com.exactprosystems.jf.documents.matrix.parser.Parameter;
@@ -121,7 +122,7 @@ public class SystemVarsFx extends SystemVars
 		};
 		Command redo = () -> 
 		{ 
-			this.getParameters().add("name", "'expression'"); 
+			this.getParameters().add(R.SYSTEM_VARS_FX_NAME.get(), R.SYSTEM_VARS_FX_EXPRESSION.get());
 		};
 		addCommand(undo, redo);
 	}

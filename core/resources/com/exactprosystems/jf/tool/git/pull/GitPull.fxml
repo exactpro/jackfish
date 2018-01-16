@@ -4,6 +4,7 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
+<?import com.exactprosystems.jf.api.common.i18n.R?>
 <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
 <!-- Copyright (c) 2009-2017, Exactpro Systems -->
 <!-- Quality Assurance & Related Software Development for Innovative Trading Systems. -->
@@ -26,7 +27,9 @@
 	<bottom>
 		<HBox alignment="CENTER_RIGHT" prefHeight="36.0" prefWidth="600.0" spacing="20.0" BorderPane.alignment="CENTER">
 			<children>
-				<Button fx:id="btnCancel" mnemonicParsing="false" onAction="#close" text="Cancel"/>
+				<Button fx:id="btnCancel" mnemonicParsing="false" onAction="#close" >
+					<text><R fx:constant="GIT_PULL_CANCEL"/></text>
+				</Button>
 			</children>
 		</HBox>
 	</bottom>
@@ -43,11 +46,15 @@
 	<top>
 		<HBox alignment="CENTER_LEFT" prefHeight="25.0" prefWidth="200.0">
 			<children>
-				<Label text="Pull from :"/>
+				<Label >
+					<text><R fx:constant="GIT_PULL_PULL_FROM"/></text>
+				</Label>
 				<Label id="$horMid"/>
 				<ComboBox fx:id="cbBranches" maxWidth="1.7976931348623157E308" prefWidth="150.0" HBox.hgrow="ALWAYS"/>
 				<Label id="$horMid"/>
-				<Button mnemonicParsing="false" onAction="#pull" text="Pull"/>
+				<Button mnemonicParsing="false" onAction="#pull" >
+					<text><R fx:constant="GIT_PULL_PULL"/></text>
+				</Button>
 			</children>
 		</HBox>
 	</top>

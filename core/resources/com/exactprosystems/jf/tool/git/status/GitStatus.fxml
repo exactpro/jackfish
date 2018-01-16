@@ -15,19 +15,30 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TextField?>
+<?import com.exactprosystems.jf.api.common.i18n.R?>
 <BorderPane fx:id="borderPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8"
 			xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.exactprosystems.jf.tool.git.status.GitStatusController">
 	<top>
 		<VBox BorderPane.alignment="CENTER">
 			<HBox prefHeight="30.0" minHeight="30.0" maxHeight="30.0">
-				<Button mnemonicParsing="false" onAction="#revertSelected" text="Revert selected"/>
-				<Button mnemonicParsing="false" onAction="#ignoreSelected" text="Ignore selected"/>
-				<Button mnemonicParsing="false" onAction="#ignoreByPattern" text="Ignore by pattern"/>
+				<Button mnemonicParsing="false" onAction="#revertSelected" >
+					<text><R fx:constant="GIT_STATUS_REVERT_SELECTED"/></text>
+				</Button>
+				<Button mnemonicParsing="false" onAction="#ignoreSelected" >
+					<text><R fx:constant="GIT_STATUS_IGNORE_SELECTED"/></text>
+				</Button>
+				<Button mnemonicParsing="false" onAction="#ignoreByPattern" >
+					<text><R fx:constant="GIT_STATUS_IGNORE_BY_PATTERN"/></text>
+				</Button>
 			</HBox>
 			<HBox alignment="CENTER">
-				<Label text="File pattern : "/>
+				<Label >
+					<text><R fx:constant="GIT_STATUS_FILE_PATTERN"/></text>
+				</Label>
 				<TextField fx:id="tfPattern" HBox.hgrow="ALWAYS"/>
-				<Button text="Select" onAction="#select"/>
+				<Button onAction="#select">
+					<text><R fx:constant="GIT_STATUS_SELECT"/></text>
+				</Button>
 			</HBox>
 		</VBox>
 	</top>
