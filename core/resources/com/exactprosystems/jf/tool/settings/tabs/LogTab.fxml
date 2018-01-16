@@ -5,7 +5,7 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-
+<?import com.exactprosystems.jf.api.common.i18n.R?>
 <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
 <!-- Copyright (c) 2009-2017, Exactpro Systems -->
 <!-- Quality Assurance & Related Software Development for Innovative Trading Systems. -->
@@ -30,21 +30,37 @@
 				<RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
 			</rowConstraints>
 			<children>
-				<Label text="FATAL :" />
+				<Label >
+					<text><R fx:constant="LOG_TAB_FATAL"/></text>>
+				</Label>
 				<ColorPicker fx:id="cpFatal" maxWidth="1.7976931348623157E308" GridPane.columnIndex="1" />
-				<Label text="ERROR :" GridPane.rowIndex="1" />
+				<Label GridPane.rowIndex="1" >
+					<text><R fx:constant="LOG_TAB_ERROR"/></text>>
+				</Label>
 				<ColorPicker fx:id="cpError" maxWidth="1.7976931348623157E308" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-				<Label text="WARN :" GridPane.rowIndex="2" />
+				<Label  GridPane.rowIndex="2">
+					<text><R fx:constant="LOG_TAB_WARN"/></text>>
+				</Label>
 				<ColorPicker fx:id="cpWarn" maxWidth="1.7976931348623157E308" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-				<Label text="ALL :" GridPane.rowIndex="3" />
+				<Label GridPane.rowIndex="3" >
+					<text><R fx:constant="LOG_TAB_ALL"/></text>>
+				</Label>
 				<ColorPicker fx:id="cpAll" maxWidth="1.7976931348623157E308" GridPane.columnIndex="1" GridPane.rowIndex="3" />
-				<Label text="INFO :" GridPane.columnIndex="2" />
+				<Label GridPane.columnIndex="2" >
+					<text><R fx:constant="LOG_TAB_INFO"/></text>>
+				</Label>
 				<ColorPicker fx:id="cpInfo" maxWidth="1.7976931348623157E308" GridPane.columnIndex="3" />
-				<Label text="DEBUG :" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+				<Label GridPane.columnIndex="2" GridPane.rowIndex="1" >
+					<text><R fx:constant="LOG_TAB_DEBUG"/></text>>
+				</Label>
 				<ColorPicker fx:id="cpDebug" maxWidth="1.7976931348623157E308" GridPane.columnIndex="3" GridPane.rowIndex="1" />
-				<Label text="TRACE :" GridPane.columnIndex="2" GridPane.rowIndex="2" />
+				<Label GridPane.columnIndex="2" GridPane.rowIndex="2">
+					<text><R fx:constant="LOG_TAB_TRACE"/></text>>
+				</Label>
 				<ColorPicker fx:id="cpTrace" maxWidth="1.7976931348623157E308" GridPane.columnIndex="3" GridPane.rowIndex="2" />
-				<Button text="Restore default" onAction="#restoreDefaults" GridPane.columnIndex="3" GridPane.rowIndex="3" GridPane.halignment="RIGHT" GridPane.valignment="CENTER"/>
+				<Button onAction="#restoreDefaults" GridPane.columnIndex="3" GridPane.rowIndex="3" GridPane.halignment="RIGHT" GridPane.valignment="CENTER">
+					<text><R fx:constant="LOG_TAB_RESTORE_DEFAULT"/></text>>
+				</Button>
 			</children>
 		</GridPane>
 	</children>

@@ -4,7 +4,7 @@
 <?import com.exactprosystems.jf.tool.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-
+<?import com.exactprosystems.jf.api.common.i18n.R ?>
 <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
 <!-- Copyright (c) 2009-2017, Exactpro Systems -->
 <!-- Quality Assurance & Related Software Development for Innovative Trading Systems. -->
@@ -38,13 +38,21 @@
 						<Label id="$verMid" />
 						<ColorPicker fx:id="colorPicker" maxWidth="150.0" />
 						<Label id="$verMin" />
-						<Button fx:id="btnDefault" maxWidth="150.0" mnemonicParsing="false" onAction="#defaultColor" text="Default" />
+						<Button fx:id="btnDefault" maxWidth="150.0" mnemonicParsing="false" onAction="#defaultColor" >
+							<text><R fx:constant="COLORS_TAB_DEFAULT"/></text>
+						</Button>
 						<Label id="$verMax" />
-						<Button maxWidth="150.0" mnemonicParsing="false" onAction="#expandAll" text="Expand all" />
+						<Button maxWidth="150.0" mnemonicParsing="false" onAction="#expandAll" >
+							<text><R fx:constant="COLORS_TAB_EXPAND_ALL"/></text>
+						</Button>
 						<Label id="$verMin" />
-						<Button maxWidth="150.0" mnemonicParsing="false" onAction="#collapseAll" text="Collapse all" />
+						<Button maxWidth="150.0" mnemonicParsing="false" onAction="#collapseAll" >
+							<text><R fx:constant="COLORS_TAB_COLLAPSE_ALL"/></text>
+						</Button>
 						<Label id="$verMin" />
-						<Button maxWidth="150.0" mnemonicParsing="false" onAction="#clearAll" text="Clear all" />
+						<Button maxWidth="150.0" mnemonicParsing="false" onAction="#clearAll" >
+							<text><R fx:constant="COLORS_TAB_CLEAR_ALL"/></text>
+						</Button>
 					</children>
 				</VBox>
 				<Label id="$horMax" />
@@ -64,6 +72,8 @@
 				<Label id="$verMax" BorderPane.alignment="CENTER" />
 			</bottom>
 		</BorderPane>
-		<Button text="Restore default" onAction="#restoreDefaults" GridPane.columnIndex="1" GridPane.rowIndex="1" GridPane.halignment="RIGHT" GridPane.valignment="CENTER"/>
+		<Button onAction="#restoreDefaults" GridPane.columnIndex="1" GridPane.rowIndex="1" GridPane.halignment="RIGHT" GridPane.valignment="CENTER">
+			<text><R fx:constant="COLORS_TAB_RESTORE_DEFAULT"/></text>
+		</Button>
 	</children>
 </GridPane>

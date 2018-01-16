@@ -13,6 +13,7 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
+<?import com.exactprosystems.jf.api.common.i18n.R?>
 <StackPane prefHeight="582.0" prefWidth="964.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.exactprosystems.jf.tool.matrix.MatrixFxController">
 	<fx:define>
 		<CssVariables fx:id="transparentBackground" fx:constant="TRANSPARENT_BACKGROUND"/>
@@ -44,17 +45,24 @@
 								<HBox fx:id="hBox" alignment="CENTER_RIGHT" prefHeight="43.0" prefWidth="916.0" GridPane.columnIndex="1" GridPane.rowIndex="2" GridPane.valignment="CENTER">
 									<children>
 										<Label minWidth="8"/>
-										<SplitMenuButton mnemonicParsing="false" text="On/Off">
+										<SplitMenuButton mnemonicParsing="false" >
+											<text><R fx:constant="MATRIX_FX_ON_OFF"/></text>
 											<items>
-												<MenuItem mnemonicParsing="false" onAction="#markAll" text="Switch off all"/>
-												<MenuItem mnemonicParsing="false" onAction="#unmarkAll" text="Switch on all"/>
+												<MenuItem mnemonicParsing="false" onAction="#markAll" >
+													<text><R fx:constant="MATRIX_FX_SWITCH_OFF_ALL"/></text>
+												</MenuItem>
+												<MenuItem mnemonicParsing="false" onAction="#unmarkAll" >
+													<text><R fx:constant="MATRIX_FX_SWITCH_ON_ALL"/></text>
+												</MenuItem>
 											</items>
 										</SplitMenuButton>
 										<Label minWidth="8"/>
 										<ToggleButton id="matrixBtnFind" fx:id="btnFind" mnemonicParsing="false" onAction="#showFindPanel" styleClass="$transparentBackground"/>
 										<Button id="matrixBtnWatch" fx:id="btnWatch" mnemonicParsing="false" onAction="#showWatch" styleClass="$transparentBackground">
 											<tooltip>
-												<Tooltip text="Open watcher"/>
+												<Tooltip >
+													<text><R fx:constant="MATRIX_FX_OPEN_WATCHER"/></text>
+												</Tooltip>
 											</tooltip>
 										</Button>
 										<ToggleButton id="matrixToggleTracing" fx:id="tbTracing" mnemonicParsing="false" onAction="#toggleTracing" styleClass="$transparentBackground"/>
@@ -63,12 +71,16 @@
 										<Button id="matrixBtnPauseMatrix" fx:id="btnPauseMatrix" mnemonicParsing="false" onAction="#pauseMatrix" styleClass="$transparentBackground"/>
 										<Button id="matrixBtnStepMatrix" fx:id="btnStepMatrix" mnemonicParsing="false" onAction="#stepMatrix" styleClass="$transparentBackground">
 											<tooltip>
-												<Tooltip text="Step matrix (Execute current item and stop on next)"/>
+												<Tooltip >
+													<text><R fx:constant="MATRIX_FX_STEP_MATRIX"/></text>
+												</Tooltip>
 											</tooltip>
 										</Button>
 										<Button id="matrixBtnShowResult" fx:id="btnShowResult" mnemonicParsing="false" onAction="#showResult" styleClass="$transparentBackground">
 											<tooltip>
-												<Tooltip text="Show report for the matrix"/>
+												<Tooltip >
+													<text><R fx:constant="MATRIX_FX_SHOW_REPORT"/></text>
+												</Tooltip>
 											</tooltip>
 										</Button>
 									</children>
@@ -79,7 +91,8 @@
 								<HBox fx:id="bottomBox" alignment="CENTER_LEFT" GridPane.rowIndex="2">
 									<children>
 										<Label id="$horMin"/>
-										<Label text="Default app">
+										<Label>
+											<text><R fx:constant="MATRIX_FX_DEFAULT_APP"/></text>
 											<padding>
 												<Insets left="4.0" right="4.0"/>
 											</padding>
@@ -89,7 +102,8 @@
 										<Label id="$horMin"/>
 										<Separator orientation="VERTICAL" prefHeight="35.0" prefWidth="0.0"/>
 										<Label id="$horMin"/>
-										<Label text="Default client" BorderPane.alignment="CENTER_LEFT">
+										<Label BorderPane.alignment="CENTER_LEFT">
+											<text><R fx:constant="MATRIX_FX_DEFAULT_CLIENT"/></text>
 											<padding>
 												<Insets right="4.0"/>
 											</padding>

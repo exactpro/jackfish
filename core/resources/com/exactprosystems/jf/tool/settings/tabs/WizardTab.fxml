@@ -2,7 +2,7 @@
 <?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-
+<?import com.exactprosystems.jf.api.common.i18n.R?>
 <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
 <!-- Copyright (c) 2009-2017, Exactpro Systems -->
 <!-- Quality Assurance & Related Software Development for Innovative Trading Systems. -->
@@ -28,14 +28,28 @@
 				<RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
 			</rowConstraints>
 			<children>
-				<Label text="Min" GridPane.columnIndex="1"/>
-				<Label text="Max" GridPane.columnIndex="2"/>
+				<Label GridPane.columnIndex="1">
+					<text><R fx:constant="WIZARD_TAB_MIN"/></text>
+				</Label>
+				<Label GridPane.columnIndex="2">
+					<text><R fx:constant="WIZARD_TAB_MAX"/></text>
+				</Label>
 
-				<Label text="Type : " GridPane.rowIndex="1"/>
-				<Label text="Path : " GridPane.rowIndex="2"/>
-				<Label text="Size : " GridPane.rowIndex="3"/>
-				<Label text="Position : " GridPane.rowIndex="4"/>
-				<Label text="Attr : " GridPane.rowIndex="5"/>
+				<Label GridPane.rowIndex="1">
+					<text><R fx:constant="WIZARD_TAB_TYPE"/></text>
+				</Label>
+				<Label GridPane.rowIndex="2">
+					<text><R fx:constant="WIZARD_TAB_PATH"/></text>
+				</Label>
+				<Label GridPane.rowIndex="3">
+					<text><R fx:constant="WIZARD_TAB_SIZE"/></text>
+				</Label>
+				<Label GridPane.rowIndex="4">
+					<text><R fx:constant="WIZARD_TAB_POSITION"/></text>
+				</Label>
+				<Label GridPane.rowIndex="5">
+					<text><R fx:constant="WIZARD_TAB_ATTR"/></text>
+				</Label>
 
 				<TextField fx:id="tfTypeMin" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
 				<TextField fx:id="tfTypeMax" GridPane.columnIndex="2" GridPane.rowIndex="1"/>
@@ -52,10 +66,14 @@
 				<TextField fx:id="tfAttrMin" GridPane.columnIndex="1" GridPane.rowIndex="5"/>
 				<TextField fx:id="tfAttrMax" GridPane.columnIndex="2" GridPane.rowIndex="5"/>
 
-				<Label text="Threshold : " GridPane.rowIndex="6"/>
+				<Label GridPane.rowIndex="6">
+					<text><R fx:constant="WIZARD_TAB_THRESHOLD"/></text>
+				</Label>
 				<TextField fx:id="tfThreshold" GridPane.rowIndex="6" GridPane.columnIndex="1"/>
 
-				<Button text="Restore default" GridPane.rowIndex="6" GridPane.columnIndex="2" onAction="#restoreDefaults" GridPane.valignment="CENTER" GridPane.halignment="RIGHT"/>
+				<Button GridPane.rowIndex="6" GridPane.columnIndex="2" onAction="#restoreDefaults" GridPane.valignment="CENTER" GridPane.halignment="RIGHT">
+					<text><R fx:constant="WIZARD_TAB_RESTORE_DEFAULT"/></text>
+				</Button>
 			</children>
 		</GridPane>
 	</children>

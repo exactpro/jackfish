@@ -13,6 +13,7 @@
 <?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
+<?import com.exactprosystems.jf.api.common.i18n.R?>
 
 <AnchorPane prefHeight="200.0" prefWidth="200.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.exactprosystems.jf.tool.settings.tabs.GitTabController">
 	<children>
@@ -27,9 +28,15 @@
 				<RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
 			</rowConstraints>
 			<children>
-				<Label text="Git known hosts :" GridPane.halignment="RIGHT" />
-				<Label text="Git SSH identity :" GridPane.halignment="RIGHT" GridPane.rowIndex="1" />
-				<Button text="Restore default" onAction="#restoreDefaults" GridPane.columnIndex="1" GridPane.rowIndex="2" GridPane.halignment="RIGHT" GridPane.valignment="CENTER"/>
+				<Label GridPane.halignment="RIGHT" >
+					<text><R fx:constant="GIT_TAB_HOSTS"/></text>
+				</Label>
+				<Label GridPane.halignment="RIGHT" GridPane.rowIndex="1" >
+					<text><R fx:constant="GIT_TAB_SSH"/></text>
+				</Label>
+				<Button onAction="#restoreDefaults" GridPane.columnIndex="1" GridPane.rowIndex="2" GridPane.halignment="RIGHT" GridPane.valignment="CENTER">
+					<text><R fx:constant="GIT_TAB_RESTORE_DEFAULT"/></text>
+				</Button>
 			</children>
 		</GridPane>
 	</children>

@@ -3,6 +3,7 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
+<?import com.exactprosystems.jf.api.common.i18n.R?>
 <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
 <!-- Copyright (c) 2009-2017, Exactpro Systems -->
 <!-- Quality Assurance & Related Software Development for Innovative Trading Systems. -->
@@ -23,16 +24,26 @@
 		<RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
 	</rowConstraints>
 	<children>
-		<Label text="ShortCuts for :"/>
+		<Label >
+			<text><R fx:constant="SHORTCUTS_TAB_FOR"/></text>
+		</Label>
 		<ComboBox fx:id="cbShortcutsName" prefWidth="150.0" GridPane.columnIndex="1"/>
 		<VBox alignment="TOP_CENTER" prefHeight="200.0" prefWidth="100.0" spacing="8.0" GridPane.columnIndex="2" GridPane.rowIndex="1">
 			<children>
-				<Button fx:id="btnAccept" disable="true" mnemonicParsing="false" onAction="#acceptShortCuts" prefWidth="150.0" text="Accept"/>
-				<Button fx:id="btnDefault" disable="true" mnemonicParsing="false" onAction="#defaultShortCuts" prefWidth="150.0" text="Default"/>
-				<Button fx:id="btnDelete" disable="true" mnemonicParsing="false" onAction="#deleteShortcuts" prefWidth="150.0" text="Delete"/>
+				<Button fx:id="btnAccept" disable="true" mnemonicParsing="false" onAction="#acceptShortCuts" prefWidth="150.0" >
+					<text><R fx:constant="SHORTCUTS_TAB_ACCEPT"/></text>
+				</Button>
+				<Button fx:id="btnDefault" disable="true" mnemonicParsing="false" onAction="#defaultShortCuts" prefWidth="150.0" >
+					<text><R fx:constant="SHORTCUTS_TAB_DEFAULT"/></text>
+				</Button>
+				<Button fx:id="btnDelete" disable="true" mnemonicParsing="false" onAction="#deleteShortcuts" prefWidth="150.0" >
+					<text><R fx:constant="SHORTCUTS_TAB_DELETE"/></text>
+				</Button>
 			</children>
 		</VBox>
-		<Button text="Restore default" onAction="#restoreDefaults" GridPane.columnIndex="2" GridPane.rowIndex="2" GridPane.halignment="RIGHT" GridPane.valignment="BOTTOM"/>
+		<Button onAction="#restoreDefaults" GridPane.columnIndex="2" GridPane.rowIndex="2" GridPane.halignment="RIGHT" GridPane.valignment="BOTTOM">
+			<text><R fx:constant="SHORTCUTS_TAB_RESTORE_DEFAULT"/></text>
+		</Button>
 	</children>
 	<padding>
 		<Insets bottom="8.0" left="8.0" right="8.0" top="8.0"/>

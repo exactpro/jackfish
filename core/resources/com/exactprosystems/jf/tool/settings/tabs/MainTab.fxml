@@ -2,6 +2,7 @@
 <?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
+<?import com.exactprosystems.jf.api.common.i18n.R?>
 <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
 <!-- Copyright (c) 2009-2017, Exactpro Systems -->
 <!-- Quality Assurance & Related Software Development for Innovative Trading Systems. -->
@@ -43,17 +44,20 @@
 				<RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
 			</rowConstraints>
 			<children>
-				<Label text="Max last matrix count :" GridPane.halignment="RIGHT">
+				<Label GridPane.halignment="RIGHT">
+					<text><R fx:constant="MAIN_TAB_MAX_COUNT"/></text>
 					<GridPane.margin>
 						<Insets right="4.0"/>
 					</GridPane.margin>
 				</Label>
-				<Label text="Time notification :" GridPane.rowIndex="1">
+				<Label GridPane.rowIndex="1">
+					<text><R fx:constant="MAIN_TAB_TIME_NOTIFICATION"/></text>
 					<GridPane.margin>
 						<Insets right="4.0"/>
 					</GridPane.margin>
 				</Label>
-				<Label text="sec." GridPane.columnIndex="2" GridPane.rowIndex="1">
+				<Label GridPane.columnIndex="2" GridPane.rowIndex="1">
+					<text><R fx:constant="MAIN_TAB_SEC"/></text>
 					<GridPane.margin>
 						<Insets left="4.0"/>
 					</GridPane.margin>
@@ -62,34 +66,52 @@
 		</GridPane>
 		<Separator prefWidth="200.0" GridPane.columnSpan="2" GridPane.rowIndex="2"/>
 
-		<Label text="Theme :" GridPane.halignment="RIGHT" GridPane.rowIndex="3"/>
+		<Label  GridPane.halignment="RIGHT" GridPane.rowIndex="3">
+			<text><R fx:constant="MAIN_TAB_THEME"/></text>
+		</Label>
 		<ComboBox fx:id="comboBoxTheme" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="3"/>
 
-		<Label text="Font :" GridPane.halignment="RIGHT" GridPane.rowIndex="4"/>
+		<Label  GridPane.halignment="RIGHT" GridPane.rowIndex="4">
+			<text><R fx:constant="MAIN_TAB_FONT"/></text>
+		</Label>
 		<ComboBox fx:id="cbFontFamily" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="4"/>
 
-		<Label text="Font size :" GridPane.rowIndex="5"/>
+		<Label GridPane.rowIndex="5">
+			<text><R fx:constant="MAIN_TAB_FONT_SIZE"/></text>
+		</Label>
 		<ComboBox fx:id="cbFontSize" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="5"/>
 
-		<Label text="Select language: " GridPane.rowIndex="6" visible="false"/>
+		<Label GridPane.rowIndex="6" visible="false">
+			<text><R fx:constant="MAIN_TAB_SELECT_LANGUAGE"/></text>
+		</Label>
 		<ComboBox fx:id="selectLanguage" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="6" visible="false"/>
 
-		<CheckBox fx:id="useFullScreen" mnemonicParsing="false" text="Use fullscreen mode" GridPane.columnIndex="1" GridPane.rowIndex="7"/>
-		<CheckBox fx:id="useExternalReportViewer" mnemonicParsing="false" text="Use external report viewer" GridPane.columnIndex="1" GridPane.rowIndex="8"/>
-		<CheckBox fx:id="useFullScreenXpath" mnemonicParsing="false" text="Use fullscreen xpath dialog" GridPane.columnIndex="1" GridPane.rowIndex="9"/>
+		<CheckBox fx:id="useFullScreen" mnemonicParsing="false" GridPane.columnIndex="1" GridPane.rowIndex="7">
+			<text><R fx:constant="MAIN_TAB_FULLSCREEN_MODE"/></text>
+		</CheckBox>
+		<CheckBox fx:id="useExternalReportViewer" mnemonicParsing="false" GridPane.columnIndex="1" GridPane.rowIndex="8">
+			<text><R fx:constant="MAIN_TAB_VIEWER"/></text>
+		</CheckBox>
+		<CheckBox fx:id="useFullScreenXpath" mnemonicParsing="false" GridPane.columnIndex="1" GridPane.rowIndex="9">
+			<text><R fx:constant="MAIN_TAB_XPATH"/></text>
+		</CheckBox>
 
-		<Label text="Copyright" GridPane.halignment="LEFT" GridPane.rowIndex="10" GridPane.valignment="BOTTOM">
+		<Label GridPane.halignment="LEFT" GridPane.rowIndex="10" GridPane.valignment="BOTTOM">
+			<text><R fx:constant="MAIN_TAB_COPYRIGHT"/></text>
 			<GridPane.margin>
 				<Insets bottom="8.0"/>
 			</GridPane.margin>
 		</Label>
-		<TextArea fx:id="taCopyright" prefHeight="200.0" prefWidth="200.0" promptText="Copyright" GridPane.columnSpan="2" GridPane.rowIndex="11">
+		<TextArea fx:id="taCopyright" prefHeight="200.0" prefWidth="200.0"  GridPane.columnSpan="2" GridPane.rowIndex="11">
+			<promptText><R fx:constant="MAIN_TAB_COPYRIGHT"/></promptText>
 			<GridPane.margin>
 				<Insets right="5.0"/>
 			</GridPane.margin>
 		</TextArea>
 
-		<Button text="Restore default" onAction="#restoreDefaults" GridPane.columnIndex="1" GridPane.rowIndex="12" GridPane.halignment="RIGHT" GridPane.valignment="CENTER"/>
+		<Button onAction="#restoreDefaults" GridPane.columnIndex="1" GridPane.rowIndex="12" GridPane.halignment="RIGHT" GridPane.valignment="CENTER">
+			<text><R fx:constant="MAIN_TAB_RESTORE_DEFAULT"/></text>
+		</Button>
 	</children>
 	<padding>
 		<Insets bottom="8.0" left="8.0" right="8.0" top="8.0"/>
