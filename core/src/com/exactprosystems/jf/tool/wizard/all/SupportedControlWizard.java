@@ -41,22 +41,14 @@ import java.util.Set;
 import java.util.function.Supplier;
 
 @WizardAttribute(
-		name            	= "Supported controls wizard",
+		name            	= R.SUPPORTED_CONTROLS_WIZARD_NAME,
 		pictureName         = "SupportWizard.jpg",
 		category            = WizardCategory.GUI_DICTIONARY,
-		shortDescription    = "This wizard check dictionary on supported control",
+		shortDescription    = R.SUPPORTED_CONTROL_WIZARD_SHORT_DESCRIPTION,
 		experimental 		= false,
 		strongCriteries     = true,
 		criteries           = { ApplicationPool.class, AppEntry.class },
-		detailedDescription =
-				  "Since {{$build 4.5.2$}} before execute operation, the tool check, that current control is supported for a started plugin."
-				+ "{{`All supported controls for a plugin shows on help for the plugin.`}}"
-				+ "{{`The wizard can help check all controls from dictionary very easy.`}}"
-				+ "{{`The wizard is simple tree with changed one parameter - new control value. For all not supported control need change control to valid value`}}"
-				+ "{{`For example, for web plugin the tool does't support control {{*treeItem*}} and {{*menuItem*}}.`}}"
-				+ "{{`In tree root element is name of dictionary. All children of root element it is windows.`}}"
-				+ "{{` Children of windows - section. And child of sections it is controls with not supported control`}}"
-				+ "{{`After changing controls and press the button {{$Accept$}} the dictionary will saved"
+		detailedDescription = R.SUPPORTED_CONTROL_WIZARD_DETAILED_DESCRIPTION
 )
 public class SupportedControlWizard extends AbstractWizard
 {

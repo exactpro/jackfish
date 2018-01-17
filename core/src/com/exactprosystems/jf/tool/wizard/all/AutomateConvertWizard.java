@@ -47,18 +47,14 @@ import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 @WizardAttribute(
-		name = "Universal automate wizard",
+		name = R.AUTOMATE_CONVERT_WIZARD_NAME,
 		pictureName = "AutomateConverterWizard.png",
 		category = WizardCategory.CONFIGURATION,
-		shortDescription = "This wizard can help users automatically change something.",
+		shortDescription = R.AUTOMATE_CONVERT_WIZARD_SHORT_DESCRIPTION,
 		experimental = false,
 		strongCriteries = true,
 		criteries = {Configuration.class},
-		detailedDescription ="{{`This wizard can help users automatically change matrix, dictionaries and etc, when added new features.`}}"
-				+"{{`User need select one of available converters from the {{$combobox$}}`}}"
-				+"{{`On {{$area$}} below under combobox will show short description about the converter`}}"
-				+"{{`After that, user need click the button {{$Scan$}} and wait, until wizard will find documents`}}"
-				+"{{`And after that, user can accept changes by pushing the button Accept or refused by pushing the button Refused`}}"
+		detailedDescription = R.AUTOMATE_CONVERT_WIZARD_DETAILED_DESCRIPTION
 )
 public class AutomateConvertWizard extends AbstractWizard
 {

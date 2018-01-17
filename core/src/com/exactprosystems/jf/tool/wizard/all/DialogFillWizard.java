@@ -62,17 +62,11 @@ import java.util.stream.Collectors;
 
 
 @WizardAttribute(
-        name                = "DialogFill wizard",
+        name                = R.DIALOG_FILL_WIZARD_NAME,
         pictureName         = "DialogFillWizard.png",
         category            = WizardCategory.MATRIX,
-        shortDescription    = "This wizard creates DialogFills.",
-        detailedDescription = "{{`First of all you need to select one of your stored connection and dialog in it.`}}"
-                + "{{`In top-right corner will appear a list of control from selected dialog.`}}"
-                + "{{`In center will appear image of selected dialog.`}}"
-                + "{{`You can select controls from list and image both.`}}"
-                + "{{`After 'Scan' button was pressed you will see list of controls and their values in bottom-right corner.`}}"
-                + "{{`On press 'Accept' button in matrix will be created DialogFill with selected controls and already filled 'Do' actions.`}}"
-                + "{{`Wizard works only with next kind of control: TextBox, Button, CheckBox, RadioButton, Label, Spinner and elements with 'Many' addition`}}",
+        shortDescription    = R.DIALOG_FILL_WIZARD_SHORT_DESCRIPTION,
+        detailedDescription = R.DIALOG_FILL_WIZARD_DETAILED_DESCRIPTION,
         experimental        = false,
         strongCriteries     = true,
         criteries           = {MatrixItem.class, MatrixFx.class}

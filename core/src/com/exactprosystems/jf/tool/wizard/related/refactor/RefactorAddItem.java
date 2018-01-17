@@ -11,6 +11,7 @@ package com.exactprosystems.jf.tool.wizard.related.refactor;
 
 import java.util.List;
 
+import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.api.wizard.WizardCommand;
 import com.exactprosystems.jf.documents.matrix.Matrix;
 import com.exactprosystems.jf.documents.matrix.parser.items.MatrixItem;
@@ -24,7 +25,7 @@ public class RefactorAddItem extends Refactor
 
 	public RefactorAddItem(Matrix matrix, MatrixItem where, MatrixItem item, int index)
 	{
-        this.message = "Add " + item + " '" + item.getId() +  "' to '" + Common.getRelativePath(matrix.getNameProperty().get()) + "'";
+        this.message = String.format(R.REFACTOR_ADD_ITEM_MESSAGE.get(), item, item.getId(), Common.getRelativePath(matrix.getNameProperty().get()));
         CommandBuilder builder = CommandBuilder.start();
         builder.addMatrixItem(matrix, where, item, index);
         builder.saveDocument(matrix);

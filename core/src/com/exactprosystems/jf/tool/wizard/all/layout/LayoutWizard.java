@@ -73,41 +73,14 @@ import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 @WizardAttribute(
-		name = "Layout wizard",
+		name = R.LAYOUT_WIZARD_NAME,
 		pictureName = "LayoutWizard.png",
 		category = WizardCategory.MATRIX,
-		shortDescription = "This wizard creates RawTable and action DialogCheckLayout",
+		shortDescription = R.LAYOUT_WIZARD_SHORT_DESCRIPTION,
 		strongCriteries = false,
 		experimental = false,
 		criteries = {MatrixFx.class, MatrixItem.class, End.class},
-		detailedDescription = "{{`First of all you need to select one of stored connection and dialog.`}}"
-				+ "{{`For store connection user may use {{$ConnectionWizard$}} or store the connection inside a matrix.`}}"
-				+ "{{`In top left corner will appear image of selected dialog.`}}"
-				+ "{{`Then you need to select one or more controls in the list or the image.`}}"
-				+ "{{`After it you may check options under image:`}}"
-				+ "{{`RadioButton {{$Number$}} - will generate DoSpec function with number. E.g. {{$DoSpec.width(10)$}}.`}}"
-				+ "{{`RadioButton {{$About$}} - will generate DoSpec function with function about. Boundary values from 90% to 110%. E.g. {{$DoSpec.width(about(10))$}}.`}}"
-				+ "{{`RadioButton {{$Less$}} - will generate DoSpec function with function less. E.g. {{$DoSpec.width(less(11))$}}.`}}"
-				+ "{{`RadioButton {{$Great$}} - will generate DoSpec function with function great. E.g. {{$DoSpec.width(great(9))$}}.`}}"
-				+ "{{`RadioButton {{$Between$}} - will generate DoSpec function with function great.Boundary values from 0% to 200% E.g. {{$DoSpec.width(between(0, 20))$}}.`}}"
-				+ "{{`After you need choose which distance will generating : {{$All$}} or only {{$Significant$}}.`}}"
-				+ "{{`Then you may select or deselect group functions : `}}"
-				+ "{{`visible : {{*DoSpec.visible*}}`}}"
-				+ "{{`count : {{*DoSpec.count*}}`}}"
-				+ "{{`dimension : {{*DoSpec.width*}} and {{*DoSpec.height*}}`}}"
-				+ "{{`contains : {{*DoSpec.contains*}}`}}"
-				+ "{{`near : {{*DoSpec.left*}}, {{*DoSpec.right*}}, {{*DoSpec.top*}} and {{*DoSpec.bottom*}}`}}"
-				+ "{{`in-functions : {{*DoSpec.inLeft*}}, {{*DoSpec.inRight*}}, {{*DoSpec.inTop*}} and {{*DoSpec.inBottom*}}`}}"
-				+ "{{`on-functions : {{*DoSpec.onLeft*}}, {{*DoSpec.onRight*}}, {{*DoSpec.onTop*}} and {{*DoSpec.onBottom*}}`}}"
-				+ "{{`align : {{*DoSpec.lAlign*}}, {{*DoSpec.rAlign*}}, {{*DoSpec.tAlign*}} and {{*DoSpec.bAlign*}}`}}`}}"
-				+ "{{`horizontal centered : {{*DoSpec.hCentered*}}`}}"
-				+ "{{`vertical centered : {{*DoSpec.vCentered*}}`}}"
-				+ "{{`For selected controls will be generated the table with relations between controls.`}}"
-				+ "{{`User can see created relation by switching a toggle button at intersection controls.`}}"
-				+ "{{`User can edit created relation (add/remove/edit functions) and {{$save$}} it or {{$check$}}.`}}"
-				+ "{{`User can check whole table by pushing the {{$Check table$}} button.`}}"
-				+ "{{`The check result will appear in the area at the bottom of the wizard.`}}"
-				+ "{{`After press 'Accept' button, in the matrix will be added 2 items - {{$RowTable$}} with relations and action {{$DialogCheckLayout$}} with link on the RowTable`}}"
+		detailedDescription = R.LAYOUT_WIZARD_DETAILED_DESCRIPTION
 )
 public class LayoutWizard extends AbstractWizard
 {

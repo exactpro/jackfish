@@ -39,17 +39,14 @@ import java.util.List;
 import java.util.function.Supplier;
 
 @WizardAttribute(
-        name = "Connection wizard",
+        name = R.CONNECTION_WIZARD_NAME,
         pictureName = "ConnectionWizard.png",
         category = WizardCategory.OTHER,
-        shortDescription = "Wizard creates a connection and saves it into the Store (View->Store).",
+        shortDescription = R.CONNECTION_WIZARD_SHORT_DESCRIPTION,
         experimental = false,
         strongCriteries = true,
         criteries = {ApplicationPool.class, AppEntry.class},
-        detailedDescription = "{{`You can use saved connection in dictionary and matrices.`}}"
-                + "{{`On the top side of the Wizard are located known button for start, connect and stop an application.`}}"
-                + "{{`Under the buttons is the connection status indicator.`}}"
-                + "{{`Under the indicator you can see the textfield for name of variable for the created connection.`}}"
+        detailedDescription = R.CONNECTION_WIZARD_DETAILED_DESCRIPTION
 
 )
 public class ConnectionWizard extends AbstractWizard {

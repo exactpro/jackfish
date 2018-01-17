@@ -9,6 +9,8 @@
 
 package com.exactprosystems.jf.api.wizard;
 
+import com.exactprosystems.jf.api.common.i18n.R;
+
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -23,7 +25,7 @@ public @interface WizardAttribute
 	 *
 	 * @see Wizard
 	 */
-	String name();
+	R name();
 
 	/**
 	 * @return the name of picture for a wizard
@@ -37,14 +39,14 @@ public @interface WizardAttribute
 	 *
 	 * @see Wizard
 	 */
-	String shortDescription();
+	R shortDescription();
 
 	/**
 	 * @return the detailed description for a wizard
 	 *
 	 * @see Wizard
 	 */
-	String detailedDescription();
+	R detailedDescription();
 
 	/**
 	 * @return the WizardCategory enum for a wizard

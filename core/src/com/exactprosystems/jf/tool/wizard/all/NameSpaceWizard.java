@@ -47,19 +47,14 @@ import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 @WizardAttribute(
-        name = "NameSpace wizard",
+        name = R.NAMESPACE_WIZARD_NAME,
         pictureName = "NameSpaceWizard.png",
         category = WizardCategory.MATRIX,
-        shortDescription = "This wizard helps to move SubCases between NameSpaces",
+        shortDescription = R.NAMESPACE_WIZARD_SHORT_DESCRIPTION,
         experimental = false,
         strongCriteries = true,
         criteries = {MatrixFx.class, NameSpace.class},
-        detailedDescription = "{{`Wizard moves SubCases from one NameSpace to another and brings changes to the all affected matrices`}}"
-                +"{{`Simply choose SubCases that you want to move.`}}"
-                +"{{`Than choose another NameSpace in dropbox and press Scan(important).`}}"
-                +"{{`After you will see the list of changes in section below.`}}"
-                +"{{`Press accept to apply changes.`}}"
-                +"{{`Better make backup of your files before.`}}"
+        detailedDescription = R.NAMESPACE_WIZARD_DETAILED_DESCRIPTION
 )
 public class NameSpaceWizard extends AbstractWizard {
 
@@ -116,7 +111,7 @@ public class NameSpaceWizard extends AbstractWizard {
 
         GridPane pane = new GridPane();
 
-        Button refresh = new Button("Scan");
+        Button refresh = new Button(R.NAMESPACE_WIZARD_SCAN.get());
         refresh.setOnAction(event -> createCommands());
         indicator.setProgress(ProgressIndicator.INDETERMINATE_PROGRESS);
 

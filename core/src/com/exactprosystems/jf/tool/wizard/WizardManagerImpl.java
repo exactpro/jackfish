@@ -54,7 +54,7 @@ public class WizardManagerImpl implements WizardManager
 	@Override
 	public String nameOf(Class<? extends Wizard> wizard)
 	{
-		return convert(wizard, WizardAttribute::name);
+		return convert(wizard, WizardAttribute::name).get();
 	}
 
 	@Override
@@ -66,13 +66,13 @@ public class WizardManagerImpl implements WizardManager
 	@Override
 	public String shortDescriptionOf(Class<? extends Wizard> wizard)
 	{
-		return convert(wizard, WizardAttribute::shortDescription);
+		return convert(wizard, WizardAttribute::shortDescription).get();
 	}
 
 	@Override
 	public String detailedDescriptionOf(Class<? extends Wizard> wizard)
 	{
-		return convert(wizard, WizardAttribute::detailedDescription);
+		return convert(wizard, WizardAttribute::detailedDescription).get();
 	}
 
 	@Override

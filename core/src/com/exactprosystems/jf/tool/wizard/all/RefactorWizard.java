@@ -50,20 +50,14 @@ import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 @WizardAttribute(
-        name                = "Refactor wizard", 
+        name                = R.REFACTOR_WIZARD_NAME,
         pictureName         = "RefactorWizard.jpg", 
         category            = WizardCategory.MATRIX, 
-        shortDescription    = "This wizard helps to manage SubCases.", 
+        shortDescription    = R.REFACTOR_WIZARD_SHORT_DESCRIPTION,
         experimental        = false, 
         strongCriteries     = true, 
         criteries           = { MatrixFx.class, SubCase.class }, 
-        detailedDescription = "{{`The wizard needs for move SubCases from one NameSpace to another.`}}"
-                + "{{`On the top of the wizard you can see information about ID of the current SubCase and NameSpace. And text fields for a new ID.`}}"
-                + "{{`Press Scan button to see which files will be affected.`}}"
-                + "{{`The wizard serves for move SubCase from one NameSpace to another and bring changes to the all affected matrices.`}}"
-                + "{{`For rename of a SubCase just type new ID in the text field.`}}"
-                + "{{`For move a SubCase select another NameSpace in the combobox.`}}"
-                + "{{`You can both rename and move SubCase at once.`}}"
+        detailedDescription = R.REFACTOR_WIZARD_DETAILED_DESCRIPTION
 )
 public class RefactorWizard extends AbstractWizard
 {
@@ -122,7 +116,7 @@ public class RefactorWizard extends AbstractWizard
             String currentText = this.nextNamespace.getText();
             List<ReadableValue> list = getNamespaces();
             ReadableValue value = new ReadableValue(currentText);
-            value = DialogsHelper.selectFromList("Namespases", value, list);
+            value = DialogsHelper.selectFromList(R.REFACTOR_WIZARD_NAMESPACES.get(), value, list);
             this.nextNamespace.setText(value.getValue());
         });
         
@@ -136,11 +130,11 @@ public class RefactorWizard extends AbstractWizard
         pane.setVgap(8);
         pane.setHgap(4);
 
-        Button refresh = new Button("Scan");
+        Button refresh = new Button(R.REFACTOR_WIZARD_SCAN.get());
         refresh.setOnAction(event -> scanChangeds() );
 
-        pane.add(new Label("SubCase:"), 0, 0);
-        pane.add(new Label("NameSpace:"), 0, 1);
+        pane.add(new Label(R.REFACTOR_WIZARD_SUBCASE.get()), 0, 0);
+        pane.add(new Label(R.REFACTOR_WIZARD_NAMESPACE.get()), 0, 1);
         pane.add(this.prevSubcase, 1, 0);
         pane.add(this.prevNamespace, 1, 1);
         pane.add(new Label("==>"), 2, 0);
@@ -148,7 +142,7 @@ public class RefactorWizard extends AbstractWizard
         pane.add(this.nextSubcase, 3, 0);
         pane.add(this.nextNamespace, 3, 1);
         pane.add(refresh, 0, 3);
-        pane.add(new Label("Affected files: "), 1, 3, 2, 1);
+        pane.add(new Label(R.REFACTOR_WIZARD_AFFECTED_FILES.get()), 1, 3, 2, 1);
         pane.add(this.listView, 0, 4, 4, 1);
 
         borderPane.setCenter(pane);
@@ -168,7 +162,7 @@ public class RefactorWizard extends AbstractWizard
         }
     	else
     	{
-    	    DialogsHelper.showError("Wrong parameters.");
+    	    DialogsHelper.showError(R.REFACTOR_WIZARD_WRONG_PARAMETERS.get());
     	}
 
     	return () -> list;

@@ -9,6 +9,7 @@
 
 package com.exactprosystems.jf.tool.wizard.all;
 
+import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.api.wizard.WizardAttribute;
 import com.exactprosystems.jf.api.wizard.WizardCategory;
 import com.exactprosystems.jf.api.wizard.WizardCommand;
@@ -50,56 +51,14 @@ import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 @WizardAttribute(
-        name            = "Gherkin wizard",
+        name            = R.GHERKIN_WIZARD_NAME,
         pictureName         = "GherkinWizard.jpg",
         category            = WizardCategory.MATRIX,
-        shortDescription    = "This wizard create matrix structure from Gherkin code",
+        shortDescription    = R.GHERKIN_WIZARD_SHORT_DESCRIPTION,
         experimental 		= false,
         strongCriteries     = true,
         criteries           = { TestCase.class, MatrixFx.class },
-		detailedDescription = "{{`On left side editor, in which pasting Gherkin text. The editor has highlighting of Gherkin keywords.`}}"
-				+ "{{`When you pasting a text, you may push the button {{$Preview$}} on right side for show preview structure.`}}"
-				+ "{{`On a {{$tree$}}, under the button Preview, shows simple structure of matrix.`}}"
-				+ "{{`The {{$Future$}} keyword will translated to comment for first TestCase`}}"
-				+ "{{`The {{$Scenario$}} keywords will translated to TestCase with description`}}"
-				+ "{{`The other steps ({{$Given, And, etc$}}) will translated to Step with description`}}"
-				+ "{{``}}"
-				+ "{{`{{3Example:3}}`}}"
-				+ "{{`For a Gherkin code above will generate next items ( after push the button {{$Accept$}} ):`}}"
-				+ "{{#// Some terse yet descriptive text of what is desired\n"
-				+ "// In order to realize a named business value\n"
-				+ "// As an explicit system actor\n"
-				+ "// I want to gain some beneficial outcome which furthers the goal\n"
-				+ "#TestCase;#Kind;#Depends;#For\n"
-				+ "TestCase (Scenario) Some determinable business situation;;;\n"
-				+ "    #Step;#Kind;#For;#Depends\n"
-				+ "    'Step [Given ] some precondition';;;\n"
-				+ "    #EndStep\n"
-				+ "\n"
-				+ "    #Step;#Kind;#For;#Depends\n"
-				+ "    'Step [And ] some other precondition';;;\n"
-				+ "    #EndStep\n"
-				+ "\n"
-				+ "    #Step;#Kind;#For;#Depends\n"
-				+ "    'Step [When ] some action by the actor';;;\n"
-				+ "    #EndStep\n"
-				+ "\n"
-				+ "    #Step;#Kind;#For;#Depends\n"
-				+ "    'Step [And ] some other action';;;\n"
-				+ "    #EndStep\n"
-				+ "\n"
-				+ "    #Step;#Kind;#For;#Depends\n"
-				+ "    'Step [And ] yet another action';;;\n"
-				+ "    #EndStep\n"
-				+ "\n"
-				+ "    #Step;#Kind;#For;#Depends\n"
-				+ "    'Step [Then ] some testable outcome is achieved';;;\n"
-				+ "    #EndStep\n"
-				+ "\n"
-				+ "    #Step;#Kind;#For;#Depends\n"
-				+ "    'Step [And ] something else we can check happens too';;;\n"
-				+ "    #EndStep\n"
-				+ "#}}"
+		detailedDescription = R.GHERKIN_WIZARD_DETAILED_DESCRIPTION
         )
 public class GherkinWizard extends AbstractWizard
 {
@@ -168,7 +127,7 @@ public class GherkinWizard extends AbstractWizard
         textArea.textProperty().addListener((observable, oldValue, newValue) -> this.stringProperty.set(newValue));
         VBox vBox = new VBox();
         vBox.setMaxWidth(Double.MAX_VALUE);
-        vBox.getChildren().addAll(new Label("Enter or paste Gherkin code below :"),
+        vBox.getChildren().addAll(new Label(R.GHERKIN_WIZARD_ENTER_CODE.get()),
                 Common.createSpacer(Common.SpacerEnum.VerticalMax), Common.createSpacer(Common.SpacerEnum.VerticalMin));
         vBox.getChildren().add(textArea);
         VBox.setVgrow(textArea, Priority.ALWAYS);
@@ -183,7 +142,7 @@ public class GherkinWizard extends AbstractWizard
         box.setMinWidth(350.0);
 
         box.setAlignment(Pos.TOP_LEFT);
-        Button preview = new Button("Preview");
+        Button preview = new Button(R.GHERKIN_WIZARD_PREVIEW.get());
         preview.setOnAction(e -> showPreview(treeView.getRoot()));
         box.getChildren().addAll(preview, Common.createSpacer(Common.SpacerEnum.VerticalMid));
         box.getChildren().add(treeView);
@@ -203,7 +162,7 @@ public class GherkinWizard extends AbstractWizard
                     : Arrays.stream(comment.split("\n")).collect(Collectors.toCollection(ArrayList::new));
             HashMap<Tokens, String> systemParameters = new HashMap<>();
             systemParameters.put(Tokens.TestCase, "TestCase (" + child.getKeyword().trim() + ") " + child.getName());
-            Common.tryCatch(() -> testCase.init(this.currentMatrix, comments, systemParameters, null), "Error");
+            Common.tryCatch(() -> testCase.init(this.currentMatrix, comments, systemParameters, null), R.COMMON_ERROR.get());
             list.add(testCase);
             return testCase;
         }, (step, scenario) ->
@@ -211,7 +170,7 @@ public class GherkinWizard extends AbstractWizard
             MatrixItem stepItem = CommandBuilder.create(this.currentMatrix, Tokens.Step.get(), null);
             HashMap<Tokens, String> systemMap = new HashMap<>();
             systemMap.put(Tokens.Step, "'Step [" + step.getKeyword() + "] " + step.getText() + "'");
-            Common.tryCatch(() -> stepItem.init(this.currentMatrix, null, systemMap, null), "Error");
+            Common.tryCatch(() -> stepItem.init(this.currentMatrix, null, systemMap, null), R.COMMON_ERROR.get());
             scenario.insert(scenario.count(), stepItem);
         }, onError);
         return list;
@@ -234,7 +193,7 @@ public class GherkinWizard extends AbstractWizard
             return scenario;
         }, (step, scenario) -> scenario.getChildren()
                 .add(new TreeItem<>("Step [" + step.getKeyword() + "] " + step.getText())),
-                e -> root.getChildren().setAll(new TreeItem<>("Some error with parsing text")));
+                e -> root.getChildren().setAll(new TreeItem<>(R.GHERKIN_WIZARD_ERROR_PARSING.get())));
     }
 
     private <T> void parse(BiFunction<ScenarioDefinition, String, T> testCaseConsumer, BiConsumer<Step, T> stepConsumer,

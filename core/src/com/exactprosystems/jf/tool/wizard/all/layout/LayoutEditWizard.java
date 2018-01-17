@@ -49,7 +49,7 @@ import java.util.Map;
 import java.util.function.Supplier;
 import java.util.stream.Stream;
 
-@WizardAttribute(name = "Layout edit wizard", pictureName = "LayoutWizard.png", shortDescription = "Short description", detailedDescription = "Detailed description",
+@WizardAttribute(name = R.LAYOUT_EDIT_WIZARD_NAME, pictureName = "LayoutWizard.png", shortDescription = R.LAYOUT_EDIT_WIZARD_SHORT_DESCRIPTION, detailedDescription = R.LAYOUT_EDIT_WIZARD_DETAILED_DESCRIPTION,
 				 criteries = {MatrixFx.class, RawTable.class}, experimental = true, strongCriteries = true, category = WizardCategory.MATRIX
 
 )

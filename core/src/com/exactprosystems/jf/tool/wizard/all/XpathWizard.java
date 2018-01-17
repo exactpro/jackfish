@@ -56,19 +56,14 @@ import java.util.stream.IntStream;
 import static com.exactprosystems.jf.common.utils.XpathUtils.*;
 
 @WizardAttribute(
-        name 				= "Xpath wizard",
+        name 				= R.XPATH_WIZARD_NAME,
         pictureName 		= "XpathWizard.png",
         category 			= WizardCategory.GUI_DICTIONARY,
-        shortDescription 	= "This wizard help to build xpath expression to find an element on screen.",
+        shortDescription 	= R.XPATH_WIZARD_SHORT_DESCRIPTION,
         experimental 		= false,
         strongCriteries 	= true,
         criteries 			= { DictionaryFx.class, Window.class, SectionKind.class, AbstractControl.class },
-		detailedDescription = "{{`The wizard has a screenshot of an application in the top and a tree of elements in the bottom.`}}"
-				+ "{{`For select an element you can use selector (next to zoom button) for selecting items on the image or use elements tree.`}}"
-				+ "{{`On the bottom of the wizard is Helper which helps to make xpath for an element.`}}"
-				+ "{{`On the right bottom corner of the Helper is \"magic\" button which creates the best xpath for the current control.`}}"
-				+ "{{`On press accept button xpath will be bound with current control.`}}"
-				+ "{{`On press refuse button xpath nothing will happen.`}}"
+		detailedDescription = R.XPATH_WIZARD_DETAILED_DESCRIPTION
 )
 public class XpathWizard extends AbstractWizard
 {
@@ -80,7 +75,7 @@ public class XpathWizard extends AbstractWizard
 			this.btnXpath.setAlignment(Pos.BASELINE_LEFT);
 			this.btnXpath.setMaxWidth(Double.MAX_VALUE);
 			BorderPane.setAlignment(this.btnXpath, Pos.CENTER_LEFT);
-			this.btnCopyToRelative = new Button("Rel");
+			this.btnCopyToRelative = new Button(R.XPATH_WIZARD_COPY_TO_RELATIVE.get());
 			this.labelXpathCount = new Label("0");
 			this.labelXpathCount.setMaxWidth(30.0);
 			this.labelXpathCount.setPrefWidth(30.0);

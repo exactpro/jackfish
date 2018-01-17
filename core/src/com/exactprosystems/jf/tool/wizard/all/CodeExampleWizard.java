@@ -9,6 +9,7 @@
 
 package com.exactprosystems.jf.tool.wizard.all;
 
+import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.api.wizard.*;
 import com.exactprosystems.jf.documents.config.Context;
 import com.exactprosystems.jf.documents.matrix.parser.Parser;
@@ -24,11 +25,11 @@ import java.util.List;
 import java.util.function.Supplier;
 
 @WizardAttribute(
-        name 				= "Code example wizard",
+        name 				= R.CODE_EXAMPLE_WIZARD_NAME,
         pictureName 		= "GherkinWizard.jpg",
         category 			= WizardCategory.MATRIX,
-        shortDescription 	= "This wizard create example in java code from matrix.",
-        detailedDescription = "This wizard create example in java code from matrix",
+        shortDescription 	= R.CODE_EXAMPLE_WIZARD_SHORT_DESCRIPTION,
+        detailedDescription = R.CODE_EXAMPLE_WIZARD_DETAILED_DESCRIPTION,
         experimental 		= true,
         strongCriteries 	= true,
         criteries 			= { MatrixItem.class, MatrixFx.class }

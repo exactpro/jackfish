@@ -32,12 +32,11 @@ import java.util.*;
 import java.util.function.Supplier;
 
 @WizardAttribute(
-        name 				= "Table wizard ",
+        name 				= R.TABLE_WIZARD_NAME,
         pictureName 		= "TableWizard.png",
         category 			= WizardCategory.MATRIX,
-        shortDescription 	= "This wizard makes it easier to work with tables.",
-        detailedDescription = "{{`This wizard allowed for TableLoadFromFile action.`}}" +
-                "{{`With it, you can change a table directly in the matrix, without using other tools.`}}",
+        shortDescription 	= R.TABLE_WIZARD_SHORT_DESCRIPTION,
+        detailedDescription = R.TABLE_WIZARD_DETAILED_DESCRIPTION,
         experimental 		= false,
         strongCriteries 	= false,
         criteries 			= { ActionItem.class, MatrixFx.class }
