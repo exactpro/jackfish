@@ -9,6 +9,7 @@
 
 package com.exactprosystems.jf.documents.matrix.parser.items.help;
 
+import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.api.error.ErrorKind;
 import com.exactprosystems.jf.api.wizard.Wizard;
 import com.exactprosystems.jf.api.wizard.WizardManager;
@@ -79,8 +80,8 @@ public class HelpWizardItem extends MatrixItem
 		}
 
 		report.outLine(this, null, "{{`" + shortDescription + "`}}", null);
-		report.outLine(this, null, "{{`{{*Wizard category: *}} " + category + "`}}", null);
-		report.outImage(this, null, null, bytes, "{{* View example *}}", -1, ImageReportMode.AsEmbeddedImage);
+		report.outLine(this, null, "{{`{{*" + R.HELP_WIZARD_ITEM_WIZARD_CATEGORY.get() + " *}} " + category + "`}}", null);
+		report.outImage(this, null, null, bytes, "{{* " + R.HELP_WIZARD_ITEM_VIEW_EXAMPLE.get() + " *}}", -1, ImageReportMode.AsEmbeddedImage);
 		report.outLine(this, null, "{{`" + detailedDescription + "`}}", null);
 	}
 

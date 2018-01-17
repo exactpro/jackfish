@@ -9,6 +9,7 @@
 package com.exactprosystems.jf.documents.matrix.parser.items.help;
 
 import com.exactprosystems.jf.api.common.DescriptionAttribute;
+import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.api.error.ErrorKind;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.report.ReportBuilder;
@@ -60,7 +61,7 @@ public class HelpClass extends MatrixItem
         Method[] methods = clazz.getDeclaredMethods();
         if (methods.length != 0)
         {
-            report.outLine(this, null, "{{`{{5Methods5}}`}}", null);
+            report.outLine(this, null, "{{`{{5" + R.HELP_CLASS_METHODS.get() + "5}}`}}", null);
             for (Method method : methods)
             {
             	DescriptionAttribute methodAttribute = method.getAnnotation(DescriptionAttribute.class);
