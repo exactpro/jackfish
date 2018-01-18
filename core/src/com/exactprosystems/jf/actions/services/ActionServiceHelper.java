@@ -10,6 +10,7 @@
 package com.exactprosystems.jf.actions.services;
 
 import com.exactprosystems.jf.actions.ReadableValue;
+import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.api.service.ServiceConnection;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.documents.config.Configuration;
@@ -27,7 +28,7 @@ public class ActionServiceHelper
 	{
 		if (parameter == null)
 		{
-			throw new Exception("Connection is null.");
+			throw new Exception(R.SERVICE_HELPER_CONNECTION_IS_NULL.get());
 		}
 		
 		if (parameter instanceof ServiceConnection)
@@ -35,7 +36,7 @@ public class ActionServiceHelper
 			return (ServiceConnection)parameter;
 		}
 		
-		throw new Exception("Connection is wrong. Service not loaded");
+		throw new Exception(R.SERVICE_HELPER_SERVICE_NOT_LOADED.get());
 	}
 
 	public static void serviceNames(List<ReadableValue> list, AbstractEvaluator evaluator, Configuration configuration)

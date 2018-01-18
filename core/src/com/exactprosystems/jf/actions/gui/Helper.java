@@ -13,6 +13,7 @@ import com.exactprosystems.jf.actions.ReadableValue;
 import com.exactprosystems.jf.api.app.*;
 import com.exactprosystems.jf.api.app.IWindow.SectionKind;
 import com.exactprosystems.jf.api.common.Str;
+import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.documents.config.Context;
 import com.exactprosystems.jf.documents.matrix.Matrix;
@@ -75,7 +76,7 @@ class Helper
 
 		if (dictionary == null)
 		{
-			throw new Exception("You need to set up default application");
+			throw new Exception(R.GUI_HELPER_CHOOSE_DEFAULT_APP.get());
 		}
 		return dictionary;
 	}

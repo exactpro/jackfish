@@ -109,7 +109,7 @@ public class MessageCreate extends AbstractAction
 					}
 					else
 					{
-						throw new Exception(String.format("For field '%s' value is an array, but not of type Map", name));
+						throw new Exception(String.format(R.MESSAGE_CREATE_VALUE_ERROR.get(), name));
 					}
 
 				}

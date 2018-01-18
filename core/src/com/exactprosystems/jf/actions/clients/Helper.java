@@ -13,6 +13,7 @@ import com.exactprosystems.jf.actions.ReadableValue;
 import com.exactprosystems.jf.api.client.*;
 import com.exactprosystems.jf.api.common.ParametersKind;
 import com.exactprosystems.jf.api.common.Str;
+import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.documents.config.Context;
 import com.exactprosystems.jf.documents.matrix.Matrix;
@@ -81,7 +82,7 @@ public class Helper
 		IClientFactory factory = matrix.getDefaultClient();
 		if (factory == null)
 		{
-			throw new Exception("Choose default client at first.");
+			throw new Exception(R.CLIENTS_HELPER_CHOOSE_CLIENT_ERROR.get());
 		}
 		
 		return factory;
@@ -106,12 +107,12 @@ public class Helper
 		IMessage message = dic.getMessage(messageType);
 		if (message == null)
 		{
-			throw new Exception("The message with message type='" + messageType + "' is unknown.");
+			throw new Exception(String.format(R.CLIENTS_HELPER_UNKNOWN_MESSAGE_TYPE.get(), messageType));
 		}
 		IField field = message.getDeepField(fieldName);
 		if (field == null)
 		{
-			throw new Exception("The field with name='" + fieldName + "' is unknown.");
+			throw new Exception(String.format(R.CLIENTS_HELPER_UNKNOWN_FIELD_NAME.get(), fieldName));
 		}
 		if (field.getReference() != null)
 		{
@@ -157,7 +158,7 @@ public class Helper
 				IMessage message = dic.getMessage(messageType);
 				if (message == null)
 				{
-					throw new Exception("The message with message type='" + messageType + "' is unknown.");
+					throw new Exception(String.format(R.CLIENTS_HELPER_UNKNOWN_MESSAGE_TYPE.get(), messageType));
 				}
 				for (IField field : message.getFields())
 				{

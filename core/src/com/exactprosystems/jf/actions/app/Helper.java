@@ -15,6 +15,7 @@ import com.exactprosystems.jf.api.app.IApplication;
 import com.exactprosystems.jf.api.app.IApplicationFactory;
 import com.exactprosystems.jf.api.app.IRemoteApplication;
 import com.exactprosystems.jf.api.common.ParametersKind;
+import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.documents.config.Context;
 import com.exactprosystems.jf.documents.matrix.Matrix;
@@ -89,7 +90,7 @@ class Helper
 		IApplicationFactory factory = matrix.getDefaultApp();
 		if (factory == null)
 		{
-			throw new Exception("Choose default application at first.");
+			throw new Exception(R.ACTIONS_HELPER_CHOOSE_APP_ERROR.get());
 		}
 		
 		return factory;
