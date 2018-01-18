@@ -36,10 +36,6 @@ public class SqlTreeNode extends TreeNode
 	private ConfigurationFx model;
 	private TestingConnectionFxController	testSqlController;
 
-	private static final SerializablePair<String, String> ADD_NEW_SQL = new SerializablePair<>("Add new sql", CssVariables.Icons.ADD_PARAMETER_ICON);
-	private static final SerializablePair<String, String> REMOVE_SQL = new SerializablePair<>("Remove", CssVariables.Icons.REMOVE_PARAMETER_ICON);
-	private static final SerializablePair<String, String> TEST = new SerializablePair<>("Test", null);
-
 	public SqlTreeNode(ConfigurationFx model, TreeItem<TreeNode> treeItem)
 	{
 		this.treeItem = treeItem;
@@ -54,8 +50,8 @@ public class SqlTreeNode extends TreeNode
 						res -> Common.tryCatch(() -> this.model.addNewSqlEntry(res), R.SQL_TN_ERROR_ON_ADD_IMPORT.get()))
 		);
 		menu.getItems().addAll(
-				ConfigurationTreeView.createDisabledItem(REMOVE_SQL),
-				ConfigurationTreeView.createDisabledItem(TEST)
+				ConfigurationTreeView.createDisabledItem(remove()),
+				ConfigurationTreeView.createDisabledItem(test())
 		);
 		return Optional.of(menu);
 	}
@@ -99,6 +95,21 @@ public class SqlTreeNode extends TreeNode
 			}, R.SQL_TN_ERROR_ON_SHOW_TEST_PANEL.get());
 	}
 
+	private SerializablePair<String, String> addNew()
+	{
+		return new SerializablePair<>(R.SQL_TREE_NODE_ADD_NEW.get(), CssVariables.Icons.ADD_PARAMETER_ICON);
+	}
+
+	private SerializablePair<String, String> remove()
+	{
+		return new SerializablePair<>(R.SQL_TREE_NODE_REMOVE.get(), CssVariables.Icons.REMOVE_PARAMETER_ICON);
+	}
+
+	private SerializablePair<String, String> test()
+	{
+		return new SerializablePair<>(R.SQL_TREE_NODE_TEST.get(), null);
+	}
+
 	
 	private class SqlEntryNode extends AbstractEntryNode<SqlEntry>
 	{
@@ -112,9 +123,9 @@ public class SqlTreeNode extends TreeNode
 		{
 			ContextMenu menu = new ContextMenu();
 			menu.getItems().addAll(
-					ConfigurationTreeView.createDisabledItem(ADD_NEW_SQL),
-					ConfigurationTreeView.createItem(REMOVE_SQL, () -> model.removeSqlEntry(getEntry()), R.SQL_TN_ERROR_ON_REMOVE_ENTRY.get()),
-					ConfigurationTreeView.createItem(TEST, () -> testSqlEntry(getEntry()), R.SQL_TN_ERROR_ON_TEST_ENTRY.get())
+					ConfigurationTreeView.createDisabledItem(addNew()),
+					ConfigurationTreeView.createItem(remove(), () -> model.removeSqlEntry(getEntry()), R.SQL_TN_ERROR_ON_REMOVE_ENTRY.get()),
+					ConfigurationTreeView.createItem(test(), () -> testSqlEntry(getEntry()), R.SQL_TN_ERROR_ON_TEST_ENTRY.get())
 			);
 			return Optional.of(menu);
 		}

@@ -13,6 +13,7 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
+<?import com.exactprosystems.jf.api.common.i18n.R?>
 <GridPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="296.0" prefWidth="338.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.exactprosystems.jf.tool.newconfig.testing.TestingConnectionFxController">
   <columnConstraints>
     <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
@@ -38,11 +39,21 @@
             <Insets right="5.0" />
          </GridPane.margin>
       </CustomFieldWithButton>
-      <Label text="Sql server" GridPane.rowIndex="1" />
-      <Label text="Server" GridPane.rowIndex="2" />
-      <Label text="Database name" GridPane.rowIndex="3" />
-      <Label text="User" GridPane.rowIndex="4" />
-      <Label text="Password" GridPane.rowIndex="5" />
+       <Label GridPane.rowIndex="1" >
+           <text><R fx:constant="TESTING_CONNECTION_FX_SQL_SERVER"/></text>
+       </Label>
+      <Label GridPane.rowIndex="2">
+          <text><R fx:constant="TESTING_CONNECTION_FX_SERVER"/></text>
+      </Label>
+      <Label GridPane.rowIndex="3" >
+          <text><R fx:constant="TESTING_CONNECTION_FX_DATABASE_NAME"/></text>
+      </Label>
+      <Label GridPane.rowIndex="4" >
+          <text><R fx:constant="TESTING_CONNECTION_FX_USER"/></text>
+      </Label>
+      <Label GridPane.rowIndex="5" >
+          <text><R fx:constant="TESTING_CONNECTION_FX_PASSWORD"/></text>
+      </Label>
       <CustomFieldWithButton fx:id="tfUser" GridPane.columnIndex="1" GridPane.rowIndex="4">
          <GridPane.margin>
             <Insets right="5.0" />
@@ -54,7 +65,9 @@
          </GridPane.margin>
       </PasswordField>
       <Label fx:id="lblTest" GridPane.rowIndex="6" />
-      <Button mnemonicParsing="false" onAction="#testConnection" text="Test" GridPane.columnIndex="1" GridPane.rowIndex="6" />
+      <Button mnemonicParsing="false" onAction="#testConnection" GridPane.columnIndex="1" GridPane.rowIndex="6" >
+          <text><R fx:constant="TESTING_CONNECTION_FX_TEST"/></text>
+      </Button>
       <Label fx:id="lblServer" GridPane.columnIndex="1" GridPane.rowIndex="1" />
    </children>
 </GridPane>

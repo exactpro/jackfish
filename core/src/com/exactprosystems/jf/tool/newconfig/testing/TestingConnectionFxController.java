@@ -9,6 +9,7 @@
 
 package com.exactprosystems.jf.tool.newconfig.testing;
 
+import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.common.Settings;
 import com.exactprosystems.jf.sql.SqlConnection;
 import com.exactprosystems.jf.tool.Common;
@@ -89,7 +90,7 @@ public class TestingConnectionFxController implements Initializable, ContainingP
 		DialogsHelper.centreDialog(dialog);
 		Common.addIcons(((Stage) dialog.getDialogPane().getScene().getWindow()));
 		dialog.getDialogPane().setContent(this.parent);
-		dialog.setHeaderText("Test connection for " + this.name);
+		dialog.setHeaderText(String.format(R.TESTING_CONNECTION_FX_CONTR_TEST.get(), this.name));
 		dialog.getDialogPane().getStylesheets().addAll(Theme.currentThemesPaths());
 		dialog.show();
 	}
@@ -97,13 +98,13 @@ public class TestingConnectionFxController implements Initializable, ContainingP
 	public void displayConnectionGood()
 	{
 		lblTest.getStyleClass().addAll(CssVariables.SQL_CONNECTION_VALID);
-		lblTest.setText("Connected!");
+		lblTest.setText(R.TESTING_CONNECTION_FX_CONTR_CONNECTED.get());
 	}
 
 	public void displayConnectionBad(String message)
 	{
 		lblTest.getStyleClass().addAll(CssVariables.SQL_CONNECTION_INVALID);
-		lblTest.setText("Failed!");
+		lblTest.setText(R.TESTING_CONNECTION_FX_CONTR_FAILED.get());
 		Optional.ofNullable(message).ifPresent(msg -> 
 		{
 			if (lblTest.getTooltip() != null)
@@ -137,7 +138,7 @@ public class TestingConnectionFxController implements Initializable, ContainingP
 			{
 				displayConnectionBad(null);
 			}
-		}, "Error on test sql connection");
+		}, R.TESTING_CONNECTION_FX_CONTR_ERROR.get());
 	}
 
 }

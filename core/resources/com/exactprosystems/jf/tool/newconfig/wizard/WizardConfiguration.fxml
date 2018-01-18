@@ -5,7 +5,7 @@
 <?import com.exactprosystems.jf.tool.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-
+<?import com.exactprosystems.jf.api.common.i18n.R?>
 <?import javafx.geometry.Insets?>
 <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
 <!-- Copyright (c) 2009-2017, Exactpro Systems -->
@@ -47,9 +47,13 @@
                 <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
               </rowConstraints>
                <children>
-                  <Label text="Project name :" />
+                   <Label >
+                       <text><R fx:constant="WIZARD_CONFIGURATION_PROJECT_NAME"/></text>
+                   </Label>
                   <TextField fx:id="tfProjectName" GridPane.columnIndex="1"/>
-                  <Label text="Project location :" GridPane.rowIndex="1"/>
+                  <Label GridPane.rowIndex="1">
+                      <text><R fx:constant="WIZARD_CONFIGURATION_PROJECT_LOCATION"/></text>
+                  </Label>
                   <CustomFieldWithButton fx:id="cfChooseFolder" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
                </children>
             </GridPane>
@@ -69,12 +73,24 @@
                 <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
               </rowConstraints>
                <children>
-                  <CheckBox fx:id="cbMatrixFolder" mnemonicParsing="false" selected="true" text="Matrix" />
-                  <CheckBox fx:id="cbLibraryFolder" mnemonicParsing="false" selected="true" text="Library" GridPane.rowIndex="1" />
-                  <CheckBox fx:id="cbAppFolder" mnemonicParsing="false" selected="true" text="App dic" GridPane.columnIndex="1" />
-                  <CheckBox fx:id="cbClientFolder" mnemonicParsing="false" selected="true" text="Client dic" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                  <CheckBox fx:id="cbVariablesFolder" mnemonicParsing="false" selected="true" text="Variables" GridPane.columnIndex="2" />
-                  <CheckBox fx:id="cbReportFolder" mnemonicParsing="false" selected="true" text="Report" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+                  <CheckBox fx:id="cbMatrixFolder" mnemonicParsing="false" selected="true" >
+                      <text><R fx:constant="WIZARD_CONFIGURATION_MATRIX"/></text>
+                  </CheckBox>
+                  <CheckBox fx:id="cbLibraryFolder" mnemonicParsing="false" selected="true" GridPane.rowIndex="1" >
+                      <text><R fx:constant="WIZARD_CONFIGURATION_LIBRARY"/></text>
+                  </CheckBox>
+                  <CheckBox fx:id="cbAppFolder" mnemonicParsing="false" selected="true" GridPane.columnIndex="1" >
+                      <text><R fx:constant="WIZARD_CONFIGURATION_APP_DIC"/></text>
+                  </CheckBox>
+                  <CheckBox fx:id="cbClientFolder" mnemonicParsing="false" selected="true" GridPane.columnIndex="1" GridPane.rowIndex="1" >
+                      <text><R fx:constant="WIZARD_CONFIGURATION_CLIENT_DIC"/></text>
+                  </CheckBox>
+                  <CheckBox fx:id="cbVariablesFolder" mnemonicParsing="false" selected="true"  GridPane.columnIndex="2" >
+                      <text><R fx:constant="WIZARD_CONFIGURATION_VARIABLES"/></text>
+                  </CheckBox>
+                  <CheckBox fx:id="cbReportFolder" mnemonicParsing="false" selected="true" GridPane.columnIndex="2" GridPane.rowIndex="1" >
+                      <text><R fx:constant="WIZARD_CONFIGURATION_REPORT"/></text>
+                  </CheckBox>
                </children>
             </GridPane>
             <Label id="$verMax" />

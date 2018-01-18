@@ -37,15 +37,6 @@ public class LibraryTreeNode extends TreeNode
 	private ConfigurationFx model;
 	private TreeItem<TreeNode> treeItem;
 
-	private static final SerializablePair<String, String> REFRESH_LIBRARY = new SerializablePair<>("Refresh", CssVariables.Icons.REFRESH);
-
-	private static final SerializablePair<String, String> ADD_NEW_LIBRARY = new SerializablePair<>("Add new library to", CssVariables.Icons.ADD_PARAMETER_ICON);
-	private static final SerializablePair<String, String> EXCLUDE_LIB_FOLDER = new SerializablePair<>("Exclude library folder", CssVariables.Icons.REMOVE_PARAMETER_ICON);
-	private static final SerializablePair<String, String> OPEN_LIBRARY = new SerializablePair<>("Open library", CssVariables.Icons.LIBRARY_ICON);
-	private static final SerializablePair<String, String> OPEN_AS_TEXT = new SerializablePair<>("Open as text", CssVariables.Icons.LIBRARY_ICON);
-	private static final SerializablePair<String, String> REMOVE_LIBRARY = new SerializablePair<>("Remove library", CssVariables.Icons.REMOVE_PARAMETER_ICON);
-
-
 	public LibraryTreeNode(ConfigurationFx configuration, TreeItem<TreeNode> treeItem)
 	{
 		this.model = configuration;
@@ -70,10 +61,10 @@ public class LibraryTreeNode extends TreeNode
 		ContextMenu menu = new ContextMenu();
 
 		menu.getItems().addAll(
-				ConfigurationTreeView.createDisabledItem(OPEN_LIBRARY),
-				ConfigurationTreeView.createDisabledItem(OPEN_AS_TEXT),
-				ConfigurationTreeView.createDisabledItem(REMOVE_LIBRARY),
-				ConfigurationTreeView.createItem(REFRESH_LIBRARY, () -> this.model.updateLibraries(), R.LIBRARY_TN_REFRESH_LIBS.get())
+				ConfigurationTreeView.createDisabledItem(openLibrary()),
+				ConfigurationTreeView.createDisabledItem(openAsText()),
+				ConfigurationTreeView.createDisabledItem(remove()),
+				ConfigurationTreeView.createItem(refresh(), () -> this.model.updateLibraries(), R.LIBRARY_TN_REFRESH_LIBS.get())
 		);
 
 		boolean isLibEmpty = this.model.getLibrariesValue().isEmpty();
@@ -165,12 +156,12 @@ public class LibraryTreeNode extends TreeNode
 		{
 			ContextMenu menu = new ContextMenu();
 			menu.getItems().addAll(
-					ConfigurationTreeView.createItem(OPEN_LIBRARY, () -> model.openLibrary(this.fullPath), R.LIBRARY_TN_ERROR_ON_OPEN_FILE.get()),
-					ConfigurationTreeView.createItem(OPEN_AS_TEXT, () -> model.openPlainText(new File(this.fullPath)), R.LIBRARY_TN_ERROR_ON_OPEN_FILE.get()),
-					ConfigurationTreeView.createItem(REMOVE_LIBRARY, () -> model.removeLibrary(this.namespace), R.LIBRARY_TN_ERROR_ON_REMOVE.get()),
-					ConfigurationTreeView.createDisabledItem(ADD_NEW_LIBRARY),
-					ConfigurationTreeView.createDisabledItem(EXCLUDE_LIB_FOLDER),
-					ConfigurationTreeView.createDisabledItem(REFRESH_LIBRARY),
+					ConfigurationTreeView.createItem(openLibrary(), () -> model.openLibrary(this.fullPath), R.LIBRARY_TN_ERROR_ON_OPEN_FILE.get()),
+					ConfigurationTreeView.createItem(openAsText(), () -> model.openPlainText(new File(this.fullPath)), R.LIBRARY_TN_ERROR_ON_OPEN_FILE.get()),
+					ConfigurationTreeView.createItem(remove(), () -> model.removeLibrary(this.namespace), R.LIBRARY_TN_ERROR_ON_REMOVE.get()),
+					ConfigurationTreeView.createDisabledItem(addNew()),
+					ConfigurationTreeView.createDisabledItem(excludeFolder()),
+					ConfigurationTreeView.createDisabledItem(refresh()),
 					new SeparatorMenuItem(),
 					ConfigurationTreeView.createDisabledItem(R.COMMON_GIT.get(), null)
 			);
@@ -186,5 +177,35 @@ public class LibraryTreeNode extends TreeNode
 			list.add(TablePair.TablePairBuilder.create("path", this.fullPath).edit(false).build());
 			return list;
 		}
+	}
+
+	private SerializablePair<String, String> refresh()
+	{
+		return new SerializablePair<>(R.LIBRARY_TREE_NODE_REFRESH.get(), CssVariables.Icons.REFRESH);
+	}
+
+	private SerializablePair<String, String> addNew()
+	{
+		return new SerializablePair<>(R.LIBRARY_TREE_NODE_ADD_NEW.get(), CssVariables.Icons.ADD_PARAMETER_ICON);
+	}
+
+	private SerializablePair<String, String> excludeFolder()
+	{
+		return new SerializablePair<>(R.LIBRARY_TREE_NODE_EXCLUDE_FOLDER.get(), CssVariables.Icons.REMOVE_PARAMETER_ICON);
+	}
+
+	private SerializablePair<String, String> openLibrary()
+	{
+		return new SerializablePair<>(R.LIBRARY_TREE_NODE_OPEN.get(), CssVariables.Icons.LIBRARY_ICON);
+	}
+
+	private SerializablePair<String, String> openAsText()
+	{
+		return new SerializablePair<>(R.LIBRARY_TREE_NODE_OPEN_AS_TEXT.get(), CssVariables.Icons.LIBRARY_ICON);
+	}
+
+	private SerializablePair<String, String> remove()
+	{
+		return new SerializablePair<>(R.LIBRARY_TREE_NODE_REMOVE.get(), CssVariables.Icons.REMOVE_PARAMETER_ICON);
 	}
 }

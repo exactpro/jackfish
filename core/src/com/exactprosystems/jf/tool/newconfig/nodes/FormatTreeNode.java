@@ -38,10 +38,6 @@ public class FormatTreeNode extends TreeNode
 	private String dateFormat;
 	private String dateTimeFormat;
 
-	private static final SerializablePair<String, String> ADD_FORMAT = new SerializablePair<>("Add format", CssVariables.Icons.ADD_PARAMETER_ICON);
-	private static final SerializablePair<String, String> REMOVE_FORMAT = new SerializablePair<>("Remove", CssVariables.Icons.REMOVE_PARAMETER_ICON);
-	private static final SerializablePair<String, String> REPLACE_FORMAT = new SerializablePair<>("Replace", null);
-
 	public FormatTreeNode(ConfigurationFx configuration, TreeItem<TreeNode> treeItem)
 	{
 		this.model = configuration;
@@ -56,8 +52,8 @@ public class FormatTreeNode extends TreeNode
 						res -> Common.tryCatch(() -> this.model.addNewAdditionalFormat(res), R.FORMAT_TN_ERROR_ON_ADD.get())
 				));
 		contextMenu.getItems().addAll(
-				ConfigurationTreeView.createDisabledItem(REMOVE_FORMAT),
-				ConfigurationTreeView.createDisabledItem(REPLACE_FORMAT)
+				ConfigurationTreeView.createDisabledItem(remove()),
+				ConfigurationTreeView.createDisabledItem(replace())
 		);
 		return Optional.of(contextMenu);
 	}
@@ -121,9 +117,9 @@ public class FormatTreeNode extends TreeNode
 		{
 			ContextMenu menu = new ContextMenu();
 			menu.getItems().addAll(
-					ConfigurationTreeView.createDisabledItem(ADD_FORMAT),
-					ConfigurationTreeView.createItem(REMOVE_FORMAT, () -> model.removeAdditionalFormat(this.name), R.FORMAT_TN_ERROR_ON_REMOVE.get()),
-					ConfigurationTreeView.createItem(REPLACE_FORMAT, this::replaceFormat, R.FORMAT_TN_ERROR_ON_REPLACE.get())
+					ConfigurationTreeView.createDisabledItem(addNew()),
+					ConfigurationTreeView.createItem(remove(), () -> model.removeAdditionalFormat(this.name), R.FORMAT_TN_ERROR_ON_REMOVE.get()),
+					ConfigurationTreeView.createItem(replace(), this::replaceFormat, R.FORMAT_TN_ERROR_ON_REPLACE.get())
 			);
 			return Optional.of(menu);
 		}
@@ -155,6 +151,21 @@ public class FormatTreeNode extends TreeNode
 			dialog.showAndWait().ifPresent(str -> Common.tryCatch(() -> model.replaceAdditionalFormat(this.name, str), R.FORMAT_TB_ERROR_REPLACE_FORMAT.get()));
 		}
 
+	}
+
+	private SerializablePair<String, String> addNew()
+	{
+		return new SerializablePair<>(R.FORMAT_TREE_NODE_ADD_FORMAT.get(), CssVariables.Icons.ADD_PARAMETER_ICON);
+	}
+
+	private SerializablePair<String, String> remove()
+	{
+		return new SerializablePair<>(R.FORMAT_TREE_NODE_REMOVE.get(), CssVariables.Icons.REMOVE_PARAMETER_ICON);
+	}
+
+	private SerializablePair<String, String> replace()
+	{
+		return new SerializablePair<>(R.FORMAT_TREE_NODE_REPLACE.get(), null);
 	}
 
 }

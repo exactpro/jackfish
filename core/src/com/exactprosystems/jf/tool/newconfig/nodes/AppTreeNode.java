@@ -45,16 +45,6 @@ public class AppTreeNode extends TreeNode
 
 	private static final String ALL = "All";
 
-	private static final SerializablePair<String, String> ADD_NEW_APP = new SerializablePair<>("Add new app", CssVariables.Icons.ADD_PARAMETER_ICON);
-	private static final SerializablePair<String, String> TEST_VERSION = new SerializablePair<>("Test versions", null);
-	private static final SerializablePair<String, String> CLOSE_APPS = new SerializablePair<>("Stop apps", null);
-	private static final SerializablePair<String, String> REFRESH = new SerializablePair<>("Refresh", CssVariables.Icons.REFRESH);
-	private static final SerializablePair<String, String> EXCLUDE_APP_DIC_FOLDER = new SerializablePair<>("Exclude app dictionary folder", CssVariables.Icons.REMOVE_PARAMETER_ICON);
-	private static final SerializablePair<String, String> OPEN_DICTIONARY = new SerializablePair<>("Open dictionary", CssVariables.Icons.APP_DICTIONARY_ICON);
-	private static final SerializablePair<String, String> REMOVE = new SerializablePair<>("Remove", CssVariables.Icons.REMOVE_PARAMETER_ICON);
-	private static final SerializablePair<String, String> ADD_ALL_KNOWN_PARAMS = new SerializablePair<>("Add all known parameters", null);
-	private static final SerializablePair<String, String> SHOW_HELP = new SerializablePair<>("Show help", CssVariables.Icons.HELP_ICON);
-
 	public AppTreeNode(ConfigurationFx model, TreeItem<TreeNode> treeItem)
 	{
 		this.treeItem = treeItem;
@@ -71,14 +61,14 @@ public class AppTreeNode extends TreeNode
 				e -> DialogsHelper.showInputDialog(R.APP_TREE_NODE_ENTER_NEW_NAME.get(), "")
 						.ifPresent(res -> Common.tryCatch(() -> this.model.addNewAppEntry(res), R.APP_TREE_NODE_ERROR_ON_ADD.get())));
 		menu.getItems().addAll(
-				ConfigurationTreeView.createItem(TEST_VERSION, () -> this.model.testAppVersion(), R.APP_TREE_NODE_ERROR_ON_TEST.get()),
-				ConfigurationTreeView.createMenu(CLOSE_APPS, ConfigurationTreeView.createItem(ALL, null, this::closeAllApplication, R.APP_TREE_NODE_ERROR_ON_CLOSE.get())),
-				ConfigurationTreeView.createDisabledItem(REFRESH),
-				ConfigurationTreeView.createDisabledItem(EXCLUDE_APP_DIC_FOLDER),
-				ConfigurationTreeView.createDisabledItem(OPEN_DICTIONARY),
-				ConfigurationTreeView.createDisabledItem(REMOVE),
-				ConfigurationTreeView.createDisabledItem(ADD_ALL_KNOWN_PARAMS),
-				ConfigurationTreeView.createDisabledItem(SHOW_HELP),
+				ConfigurationTreeView.createItem(testVersion(), () -> this.model.testAppVersion(), R.APP_TREE_NODE_ERROR_ON_TEST.get()),
+				ConfigurationTreeView.createMenu(closeApp(), ConfigurationTreeView.createItem(ALL, null, this::closeAllApplication, R.APP_TREE_NODE_ERROR_ON_CLOSE.get())),
+				ConfigurationTreeView.createDisabledItem(refresh()),
+				ConfigurationTreeView.createDisabledItem(excludeFolder()),
+				ConfigurationTreeView.createDisabledItem(open()),
+				ConfigurationTreeView.createDisabledItem(remove()),
+				ConfigurationTreeView.createDisabledItem(addAllKnowParameters()),
+				ConfigurationTreeView.createDisabledItem(showHelp()),
 				ConfigurationTreeView.createDisabledItem(R.COMMON_GIT.get(), null)
 		);
 		return Optional.of(menu);
@@ -89,7 +79,7 @@ public class AppTreeNode extends TreeNode
 	{
 		contextMenu.getItems()
 				.stream()
-				.filter(item -> item.getText().equals(CLOSE_APPS.getKey()))
+				.filter(item -> item.getText().equals(closeApp().getKey()))
 				.findFirst()
 				.map(item -> (Menu) item)
 				.ifPresent(menu -> {
@@ -214,15 +204,15 @@ public class AppTreeNode extends TreeNode
 			}).collect(Collectors.toList()));
 
 			menu.getItems().addAll(
-					ConfigurationTreeView.createDisabledItem(ADD_NEW_APP),
-					ConfigurationTreeView.createDisabledItem(TEST_VERSION),
-					ConfigurationTreeView.createDisabledMenu(CLOSE_APPS),
-					ConfigurationTreeView.createDisabledItem(REFRESH),
-					ConfigurationTreeView.createDisabledItem(EXCLUDE_APP_DIC_FOLDER),
-					ConfigurationTreeView.createItem(OPEN_DICTIONARY, () -> model.openAppsDictionary(getEntry()), R.APP_TREE_NODE_ERROR_OPEN_DIC.get()),
-					ConfigurationTreeView.createItem(REMOVE, () -> model.removeAppEntry(getEntry()), String.format(R.APP_TREE_NODE_ERROR_REMOVE_ENTRY.get(), getEntry().toString())),
-					ConfigurationTreeView.createItem(ADD_ALL_KNOWN_PARAMS, () -> model.addAllAppParams(getEntry()), String.format(R.APP_TREE_NODE_ERROR_ADD_ALL_PARAMS.get(), getEntry())),
-					ConfigurationTreeView.createItem(SHOW_HELP, () -> model.showAppHelp(getEntry()), R.APP_TREE_NODE_ERROR_SHOW_HELP.get()),
+					ConfigurationTreeView.createDisabledItem(addNew()),
+					ConfigurationTreeView.createDisabledItem(testVersion()),
+					ConfigurationTreeView.createDisabledMenu(closeApp()),
+					ConfigurationTreeView.createDisabledItem(refresh()),
+					ConfigurationTreeView.createDisabledItem(excludeFolder()),
+					ConfigurationTreeView.createItem(open(), () -> model.openAppsDictionary(getEntry()), R.APP_TREE_NODE_ERROR_OPEN_DIC.get()),
+					ConfigurationTreeView.createItem(remove(), () -> model.removeAppEntry(getEntry()), String.format(R.APP_TREE_NODE_ERROR_REMOVE_ENTRY.get(), getEntry().toString())),
+					ConfigurationTreeView.createItem(addAllKnowParameters(), () -> model.addAllAppParams(getEntry()), String.format(R.APP_TREE_NODE_ERROR_ADD_ALL_PARAMS.get(), getEntry())),
+					ConfigurationTreeView.createItem(showHelp(), () -> model.showAppHelp(getEntry()), R.APP_TREE_NODE_ERROR_SHOW_HELP.get()),
 					menuWizard,
 					ConfigurationTreeView.createDisabledItem(R.COMMON_GIT.get(), null)
 			);
@@ -294,15 +284,15 @@ public class AppTreeNode extends TreeNode
 			Optional<ContextMenu> contextMenu = super.contextMenu();
 			ContextMenu ret = contextMenu.orElse(new ContextMenu());
 			ret.getItems().addAll(
-					ConfigurationTreeView.createDisabledItem(ADD_NEW_APP),
-					ConfigurationTreeView.createDisabledItem(TEST_VERSION),
-					ConfigurationTreeView.createDisabledMenu(CLOSE_APPS),
-					ConfigurationTreeView.createItem(REFRESH, () -> this.model.updateAppDictionaries(), R.APP_TREE_NODE_ERROR_REFRESH_APP_DIC.get()),
-					ConfigurationTreeView.createDisabledItem(EXCLUDE_APP_DIC_FOLDER),
-					ConfigurationTreeView.createDisabledItem(OPEN_DICTIONARY),
-					ConfigurationTreeView.createDisabledItem(REMOVE),
-					ConfigurationTreeView.createDisabledItem(ADD_ALL_KNOWN_PARAMS),
-					ConfigurationTreeView.createDisabledItem(SHOW_HELP),
+					ConfigurationTreeView.createDisabledItem(addNew()),
+					ConfigurationTreeView.createDisabledItem(testVersion()),
+					ConfigurationTreeView.createDisabledMenu(closeApp()),
+					ConfigurationTreeView.createItem(refresh(), () -> this.model.updateAppDictionaries(), R.APP_TREE_NODE_ERROR_REFRESH_APP_DIC.get()),
+					ConfigurationTreeView.createDisabledItem(excludeFolder()),
+					ConfigurationTreeView.createDisabledItem(open()),
+					ConfigurationTreeView.createDisabledItem(remove()),
+					ConfigurationTreeView.createDisabledItem(addAllKnowParameters()),
+					ConfigurationTreeView.createDisabledItem(showHelp()),
 					ConfigurationTreeView.createDisabledItem(R.COMMON_GIT.get(), null)
 			);
 			return Optional.of(ret);
@@ -314,30 +304,30 @@ public class AppTreeNode extends TreeNode
 			Function<File, ContextMenu> topFolderFunc = file -> {
 				ContextMenu menu = new ContextMenu();
 				menu.getItems().addAll(
-						ConfigurationTreeView.createDisabledItem(ADD_NEW_APP),
-						ConfigurationTreeView.createDisabledItem(TEST_VERSION),
-						ConfigurationTreeView.createDisabledMenu(CLOSE_APPS),
-						ConfigurationTreeView.createDisabledItem(REFRESH),
-						ConfigurationTreeView.createItem(EXCLUDE_APP_DIC_FOLDER, () -> model.excludeAppDictionaryFolder(file.getName()), R.APP_TREE_NODE_ERROR_EXCLUDED_DIR.get()),
-						ConfigurationTreeView.createDisabledItem(OPEN_DICTIONARY),
-						ConfigurationTreeView.createDisabledItem(REMOVE),
-						ConfigurationTreeView.createDisabledItem(ADD_ALL_KNOWN_PARAMS),
-						ConfigurationTreeView.createDisabledItem(SHOW_HELP)
+						ConfigurationTreeView.createDisabledItem(addNew()),
+						ConfigurationTreeView.createDisabledItem(testVersion()),
+						ConfigurationTreeView.createDisabledMenu(closeApp()),
+						ConfigurationTreeView.createDisabledItem(refresh()),
+						ConfigurationTreeView.createItem(excludeFolder(), () -> model.excludeAppDictionaryFolder(file.getName()), R.APP_TREE_NODE_ERROR_EXCLUDED_DIR.get()),
+						ConfigurationTreeView.createDisabledItem(open()),
+						ConfigurationTreeView.createDisabledItem(remove()),
+						ConfigurationTreeView.createDisabledItem(addAllKnowParameters()),
+						ConfigurationTreeView.createDisabledItem(showHelp())
 				);
 				return menu;
 			};
 			Function<File,ContextMenu> filesFunc = file ->  {
 				ContextMenu menu = new ContextMenu();
 				menu.getItems().addAll(
-						ConfigurationTreeView.createDisabledItem(ADD_NEW_APP),
-						ConfigurationTreeView.createDisabledItem(TEST_VERSION),
-						ConfigurationTreeView.createDisabledMenu(CLOSE_APPS),
-						ConfigurationTreeView.createDisabledItem(REFRESH),
-						ConfigurationTreeView.createDisabledItem(EXCLUDE_APP_DIC_FOLDER),
-						ConfigurationTreeView.createItem(OPEN_DICTIONARY, () -> this.model.openAppsDictionary(file), R.APP_TREE_NODE_ERROR_OPEN_DIC.get()),
-						ConfigurationTreeView.createDisabledItem(REMOVE),
-						ConfigurationTreeView.createDisabledItem(ADD_ALL_KNOWN_PARAMS),
-						ConfigurationTreeView.createDisabledItem(SHOW_HELP)
+						ConfigurationTreeView.createDisabledItem(addNew()),
+						ConfigurationTreeView.createDisabledItem(testVersion()),
+						ConfigurationTreeView.createDisabledMenu(closeApp()),
+						ConfigurationTreeView.createDisabledItem(refresh()),
+						ConfigurationTreeView.createDisabledItem(excludeFolder()),
+						ConfigurationTreeView.createItem(open(), () -> this.model.openAppsDictionary(file), R.APP_TREE_NODE_ERROR_OPEN_DIC.get()),
+						ConfigurationTreeView.createDisabledItem(remove()),
+						ConfigurationTreeView.createDisabledItem(addAllKnowParameters()),
+						ConfigurationTreeView.createDisabledItem(showHelp())
 				);
 				return menu;
 			};
@@ -350,5 +340,49 @@ public class AppTreeNode extends TreeNode
 							.byPass()
 			);
 		}
+	}
+
+	private static SerializablePair<String, String> addNew()
+	{
+		return new SerializablePair<>(R.APP_TREE_NODE_ADD_NEW_APP.get(), CssVariables.Icons.ADD_PARAMETER_ICON);
+	}
+
+	private static SerializablePair<String, String> testVersion()
+	{
+		return new SerializablePair<>(R.APP_TREE_NODE_TEST_VERSION.get(), null);
+	}
+
+	private static SerializablePair<String, String> closeApp()
+	{
+		return new SerializablePair<>(R.APP_TREE_NODE_STOP_APP.get(), null);
+	}
+
+	private static SerializablePair<String, String> refresh()
+	{
+		return new SerializablePair<>(R.APP_TREE_NODE_REFRESH.get(), CssVariables.Icons.REFRESH);
+	}
+
+	private static SerializablePair<String, String> excludeFolder()
+	{
+		return new SerializablePair<>(R.APP_TREE_NODE_EXCLUDE_FOLDER.get(), CssVariables.Icons.REMOVE_PARAMETER_ICON);
+	}
+
+	private static SerializablePair<String, String> open()
+	{
+		return new SerializablePair<>(R.APP_TREE_NODE_OPEN_DICTIONARY.get(), CssVariables.Icons.APP_DICTIONARY_ICON);
+	}
+	private static SerializablePair<String, String> remove()
+	{
+		return new SerializablePair<>(R.APP_TREE_NODE_REMOVE.get(), CssVariables.Icons.REMOVE_PARAMETER_ICON);
+	}
+
+	private static SerializablePair<String, String> addAllKnowParameters()
+	{
+		return new SerializablePair<>(R.APP_TREE_NODE_ADD_ALL_KNOWN_PARAMETERS.get(), null);
+	}
+
+	private static SerializablePair<String, String> showHelp()
+	{
+		return new SerializablePair<>(R.APP_TREE_NODE_SHOW_HELP.get(), CssVariables.Icons.HELP_ICON);
 	}
 }

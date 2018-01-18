@@ -31,10 +31,6 @@ public class EvaluatorTreeNode extends TreeNode
 	private ConfigurationFx model;
 	private TreeItem<TreeNode> evaluatorTreeItem;
 
-	private static final SerializablePair<String, String> ADD_IMPORT = new SerializablePair<>("Add import", CssVariables.Icons.ADD_PARAMETER_ICON);
-	private static final SerializablePair<String, String> REMOVE_IMPORT = new SerializablePair<>("Remove", CssVariables.Icons.REMOVE_PARAMETER_ICON);
-	private static final SerializablePair<String, String> REPLACE_IMPORT = new SerializablePair<>("Replace", null);
-
 	public EvaluatorTreeNode(ConfigurationFx configuration, TreeItem<TreeNode> treeItem)
 	{
 		this.model = configuration;
@@ -49,8 +45,8 @@ public class EvaluatorTreeNode extends TreeNode
 						res -> Common.tryCatch(() -> this.model.addNewEvaluatorImport(res), R.EVALUATOR_TREE_NODE_ERROR_ON_ADD.get())
 				));
 		contextMenu.getItems().addAll(
-				ConfigurationTreeView.createDisabledItem(REMOVE_IMPORT),
-				ConfigurationTreeView.createDisabledItem(REPLACE_IMPORT)
+				ConfigurationTreeView.createDisabledItem(remove()),
+				ConfigurationTreeView.createDisabledItem(replace())
 		);
 
 		return Optional.of(contextMenu);
@@ -100,9 +96,9 @@ public class EvaluatorTreeNode extends TreeNode
 		{
 			ContextMenu menu = new ContextMenu();
 			menu.getItems().addAll(
-				ConfigurationTreeView.createDisabledItem(ADD_IMPORT),
-				ConfigurationTreeView.createItem(REMOVE_IMPORT, () -> remove(this.evaluatorImport), R.EVALUATOR_TREE_NODE_ERROR_REMOVE.get()),
-				ConfigurationTreeView.createItem(REPLACE_IMPORT, this::replaceEvaluator, R.EVALUATOR_TREE_NODE_ERROR_REMOVE.get())
+				ConfigurationTreeView.createDisabledItem(addNew()),
+				ConfigurationTreeView.createItem(remove(), () -> remove(this.evaluatorImport), R.EVALUATOR_TREE_NODE_ERROR_REMOVE.get()),
+				ConfigurationTreeView.createItem(replace(), this::replaceEvaluator, R.EVALUATOR_TREE_NODE_ERROR_REMOVE.get())
 			);
 			return Optional.of(menu);
 		}
@@ -130,8 +126,23 @@ public class EvaluatorTreeNode extends TreeNode
 			Dialog<String> dialog = new TextInputDialog(this.evaluatorImport);
 			dialog.setResizable(true);
 			dialog.setTitle("Replace");
-			dialog.setHeaderText("Enter new evaluator");
+			dialog.setHeaderText(R.EVALUATOR_TREE_NODE_ENTER_NEW.get());
 			dialog.showAndWait().ifPresent(str -> Common.tryCatch(() -> model.replaceEvaluatorImport(this.evaluatorImport, str), R.EVALUATOR_TREE_NODE_ERROR_CHANGE.get()));
 		}
+	}
+
+	private SerializablePair<String, String> addNew()
+	{
+		return new SerializablePair<>(R.EVALUATOR_TREE_NODE_ADD_IMPORT.get(), CssVariables.Icons.ADD_PARAMETER_ICON);
+	}
+
+	private SerializablePair<String, String> remove()
+	{
+		return new SerializablePair<>(R.EVALUATOR_TREE_NODE_REMOVE.get(), CssVariables.Icons.REMOVE_PARAMETER_ICON);
+	}
+
+	private SerializablePair<String, String> replace()
+	{
+		return new SerializablePair<>(R.EVALUATOR_TREE_NODE_REPLACE.get(), null);
 	}
 }
