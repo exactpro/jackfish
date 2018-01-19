@@ -37,6 +37,16 @@ public class ClientTreeNode extends TreeNode
 	private TreeItem<TreeNode>			clientTreeItem;
 	private ClientDictionaryTreeNode	clientDictionaryTreeNode;
 
+
+	private static final SerializablePair<R, String> ADD_NEW_CLIENT = new SerializablePair<>(R.CLIENT_TREE_NODE_ADD_NEW_CLIENT, CssVariables.Icons.ADD_PARAMETER_ICON);
+	private static final SerializablePair<R, String> TEST_VERSION = new SerializablePair<>(R.CLIENT_TREE_NODE_TEST_VERSIONS, null);
+	private static final SerializablePair<R, String> REFRESH = new SerializablePair<>(R.CLIENT_TREE_NODE_REFRESH, CssVariables.Icons.REFRESH);
+	private static final SerializablePair<R, String> EXCLUDE_CLIENT_DIC_FOLDER = new SerializablePair<>(R.CLIENT_TREE_NODE_EXCLUDE_FOLDER, CssVariables.Icons.REMOVE_PARAMETER_ICON);
+	private static final SerializablePair<R, String> OPEN_DICTIONARY = new SerializablePair<>(R.CLIENT_TREE_NODE_OPEN_DICTIONARY, CssVariables.Icons.APP_DICTIONARY_ICON);
+	private static final SerializablePair<R, String> REMOVE = new SerializablePair<>(R.CLIENT_TREE_NODE_REMOVE, CssVariables.Icons.REMOVE_PARAMETER_ICON);
+	private static final SerializablePair<R, String> SHOW_POSSIBILITIES = new SerializablePair<>(R.CLIENT_TREE_NODE_POSSIBILITIES, null);
+	private static final SerializablePair<R, String> ADD_ALL_KNOWN_PARAMETERS = new SerializablePair<>(R.CLIENT_TREE_NODE_ADD_ALL_KNOWN_PARAMETERS, CssVariables.Icons.HELP_ICON);
+
 	public ClientTreeNode(ConfigurationFx model, TreeItem<TreeNode> treeItem)
 	{
 		this.model = model;
@@ -54,13 +64,13 @@ public class ClientTreeNode extends TreeNode
 				e -> DialogsHelper.showInputDialog(R.CLIENT_TREE_NODE_ENTRE_NEW_NAME.get(), "").ifPresent(
 						res -> Common.tryCatch(() -> this.model.addNewClientEntry(res), R.CLIENT_TREE_NODE_ERROR_ADD_NEW_CLIENT.get())));
 		menu.getItems().addAll(
-				ConfigurationTreeView.createItem(testVersion(), () -> this.model.testClientVersion(), R.CLIENT_TREE_NODE_ERROR_ON_TEST.get()),
-				ConfigurationTreeView.createDisabledItem(refresh()),
-				ConfigurationTreeView.createDisabledItem(excludeFolder()),
-				ConfigurationTreeView.createDisabledItem(open()),
-				ConfigurationTreeView.createDisabledItem(remove()),
-				ConfigurationTreeView.createDisabledItem(showPossibilities()),
-				ConfigurationTreeView.createDisabledItem(addAllKnowParameters()),
+				ConfigurationTreeView.createItem(TEST_VERSION, () -> this.model.testClientVersion(), R.CLIENT_TREE_NODE_ERROR_ON_TEST.get()),
+				ConfigurationTreeView.createDisabledItem(REFRESH),
+				ConfigurationTreeView.createDisabledItem(EXCLUDE_CLIENT_DIC_FOLDER),
+				ConfigurationTreeView.createDisabledItem(OPEN_DICTIONARY),
+				ConfigurationTreeView.createDisabledItem(REMOVE),
+				ConfigurationTreeView.createDisabledItem(SHOW_POSSIBILITIES),
+				ConfigurationTreeView.createDisabledItem(ADD_ALL_KNOWN_PARAMETERS),
 				ConfigurationTreeView.createDisabledItem(R.COMMON_GIT.get(), null)
 		);
 		return Optional.of(menu);
@@ -101,14 +111,14 @@ public class ClientTreeNode extends TreeNode
 		{
 			ContextMenu menu = new ContextMenu();
 			menu.getItems().addAll(
-					ConfigurationTreeView.createDisabledItem(addNew()),
-					ConfigurationTreeView.createDisabledItem(testVersion()),
-					ConfigurationTreeView.createDisabledItem(refresh()),
-					ConfigurationTreeView.createDisabledItem(excludeFolder()),
-					ConfigurationTreeView.createDisabledItem(open()),
-					ConfigurationTreeView.createItem(remove(), () -> model.removeClientEntry(getEntry()), String.format(R.CLIENT_TREE_NODE_ERROR_REMOVE_ENTRY.get(), getEntry().toString())),
-					ConfigurationTreeView.createItem(showPossibilities(), () -> model.showPossibilities(getEntry()), String.format(R.CLIENT_TREE_NODE_ERROR_ON_SHOW_POSSIBILITIES.get(), getEntry().toString())),
-					ConfigurationTreeView.createItem(addAllKnowParameters(), () -> model.addAllClientParams(getEntry()),String.format(R.CLIENT_TREE_NODE_ERROR_ADD_ALL_PARAMS.get(), getEntry())),
+					ConfigurationTreeView.createDisabledItem(ADD_NEW_CLIENT),
+					ConfigurationTreeView.createDisabledItem(TEST_VERSION),
+					ConfigurationTreeView.createDisabledItem(REFRESH),
+					ConfigurationTreeView.createDisabledItem(EXCLUDE_CLIENT_DIC_FOLDER),
+					ConfigurationTreeView.createDisabledItem(OPEN_DICTIONARY),
+					ConfigurationTreeView.createItem(REMOVE, () -> model.removeClientEntry(getEntry()), String.format(R.CLIENT_TREE_NODE_ERROR_REMOVE_ENTRY.get(), getEntry().toString())),
+					ConfigurationTreeView.createItem(SHOW_POSSIBILITIES, () -> model.showPossibilities(getEntry()), String.format(R.CLIENT_TREE_NODE_ERROR_ON_SHOW_POSSIBILITIES.get(), getEntry().toString())),
+					ConfigurationTreeView.createItem(ADD_ALL_KNOWN_PARAMETERS, () -> model.addAllClientParams(getEntry()),String.format(R.CLIENT_TREE_NODE_ERROR_ADD_ALL_PARAMS.get(), getEntry())),
 					ConfigurationTreeView.createDisabledItem(R.COMMON_GIT.get(), null)
 			);
 			return Optional.of(menu);
@@ -210,14 +220,14 @@ public class ClientTreeNode extends TreeNode
 			Optional<ContextMenu> menu = super.contextMenu();
 			ContextMenu ret = menu.orElse(new ContextMenu());
 			ret.getItems().addAll(
-					ConfigurationTreeView.createDisabledItem(addNew()),
-					ConfigurationTreeView.createDisabledItem(testVersion()),
-					ConfigurationTreeView.createItem(refresh(), () -> this.model.updateClientDictionaries(), R.CLIENT_TREE_NODE_REFRESH_CLIENT_DIC.get()),
-					ConfigurationTreeView.createDisabledItem(excludeFolder()),
-					ConfigurationTreeView.createDisabledItem(open()),
-					ConfigurationTreeView.createDisabledItem(remove()),
-					ConfigurationTreeView.createDisabledItem(showPossibilities()),
-					ConfigurationTreeView.createDisabledItem(addAllKnowParameters()),
+					ConfigurationTreeView.createDisabledItem(ADD_NEW_CLIENT),
+					ConfigurationTreeView.createDisabledItem(TEST_VERSION),
+					ConfigurationTreeView.createItem(REFRESH, () -> this.model.updateClientDictionaries(), R.CLIENT_TREE_NODE_REFRESH_CLIENT_DIC.get()),
+					ConfigurationTreeView.createDisabledItem(EXCLUDE_CLIENT_DIC_FOLDER),
+					ConfigurationTreeView.createDisabledItem(OPEN_DICTIONARY),
+					ConfigurationTreeView.createDisabledItem(REMOVE),
+					ConfigurationTreeView.createDisabledItem(SHOW_POSSIBILITIES),
+					ConfigurationTreeView.createDisabledItem(ADD_ALL_KNOWN_PARAMETERS),
 					ConfigurationTreeView.createDisabledItem(R.COMMON_GIT.get(), null)
 			);
 			return Optional.of(ret);
@@ -230,14 +240,14 @@ public class ClientTreeNode extends TreeNode
 			{
 				ContextMenu menu = new ContextMenu();
 				menu.getItems().addAll(
-						ConfigurationTreeView.createDisabledItem(addNew()),
-						ConfigurationTreeView.createDisabledItem(testVersion()),
-						ConfigurationTreeView.createDisabledItem(refresh()),
-						ConfigurationTreeView.createItem(excludeFolder(), () -> model.excludeClientDictionaryFolder(file.getName()), R.CLIENT_TREE_NODE_ERROR_EXCLUDED_DIR.get()),
-						ConfigurationTreeView.createDisabledItem(open()),
-						ConfigurationTreeView.createDisabledItem(remove()),
-						ConfigurationTreeView.createDisabledItem(showPossibilities()),
-						ConfigurationTreeView.createDisabledItem(addAllKnowParameters())
+						ConfigurationTreeView.createDisabledItem(ADD_NEW_CLIENT),
+						ConfigurationTreeView.createDisabledItem(TEST_VERSION),
+						ConfigurationTreeView.createDisabledItem(REFRESH),
+						ConfigurationTreeView.createItem(EXCLUDE_CLIENT_DIC_FOLDER, () -> model.excludeClientDictionaryFolder(file.getName()), R.CLIENT_TREE_NODE_ERROR_EXCLUDED_DIR.get()),
+						ConfigurationTreeView.createDisabledItem(OPEN_DICTIONARY),
+						ConfigurationTreeView.createDisabledItem(REMOVE),
+						ConfigurationTreeView.createDisabledItem(SHOW_POSSIBILITIES),
+						ConfigurationTreeView.createDisabledItem(ADD_ALL_KNOWN_PARAMETERS)
 				);
 				return menu;
 			};
@@ -245,14 +255,14 @@ public class ClientTreeNode extends TreeNode
 			{
 				ContextMenu menu = new ContextMenu();
 				menu.getItems().addAll(
-						ConfigurationTreeView.createDisabledItem(addNew()),
-						ConfigurationTreeView.createDisabledItem(testVersion()),
-						ConfigurationTreeView.createDisabledItem(refresh()),
-						ConfigurationTreeView.createDisabledItem(excludeFolder()),
-						ConfigurationTreeView.createItem(open(), () -> this.model.openClientDictionary(file), R.CLIENT_TREE_NODE_ERROR_OPEN_DIC.get()),
-						ConfigurationTreeView.createDisabledItem(remove()),
-						ConfigurationTreeView.createDisabledItem(showPossibilities()),
-						ConfigurationTreeView.createDisabledItem(addAllKnowParameters())
+						ConfigurationTreeView.createDisabledItem(ADD_NEW_CLIENT),
+						ConfigurationTreeView.createDisabledItem(TEST_VERSION),
+						ConfigurationTreeView.createDisabledItem(REFRESH),
+						ConfigurationTreeView.createDisabledItem(EXCLUDE_CLIENT_DIC_FOLDER),
+						ConfigurationTreeView.createItem(OPEN_DICTIONARY, () -> this.model.openClientDictionary(file), R.CLIENT_TREE_NODE_ERROR_OPEN_DIC.get()),
+						ConfigurationTreeView.createDisabledItem(REMOVE),
+						ConfigurationTreeView.createDisabledItem(SHOW_POSSIBILITIES),
+						ConfigurationTreeView.createDisabledItem(ADD_ALL_KNOWN_PARAMETERS)
 				);
 				return menu;
 			};
@@ -261,45 +271,5 @@ public class ClientTreeNode extends TreeNode
 					.doubleClickEvent(f -> () -> this.model.openClientDictionary(f)).menuTopFolder(topFolderFunc).menuFiles(filesFunc).byPass());
 		}
 
-	}
-
-	private static SerializablePair<String, String> addNew()
-	{
-		return new SerializablePair<>(R.CLIENT_TREE_NODE_ADD_NEW_CLIENT.get(), CssVariables.Icons.ADD_PARAMETER_ICON);
-	}
-
-	private static SerializablePair<String, String> testVersion()
-	{
-		return new SerializablePair<>(R.CLIENT_TREE_NODE_REMOVE.get(), null);
-	}
-
-	private static SerializablePair<String, String> refresh()
-	{
-		return new SerializablePair<>(R.CLIENT_TREE_NODE_REFRESH.get(), CssVariables.Icons.REFRESH);
-	}
-
-	private static SerializablePair<String, String> excludeFolder()
-	{
-		return new SerializablePair<>(R.CLIENT_TREE_NODE_EXCLUDE_FOLDER.get(), CssVariables.Icons.REMOVE_PARAMETER_ICON);
-	}
-
-	private static SerializablePair<String, String> open()
-	{
-		return new SerializablePair<>(R.CLIENT_TREE_NODE_OPEN_DICTIONARY.get(), CssVariables.Icons.APP_DICTIONARY_ICON);
-	}
-
-	private static SerializablePair<String, String> remove()
-	{
-		return new SerializablePair<>(R.CLIENT_TREE_NODE_REMOVE.get(), CssVariables.Icons.REMOVE_PARAMETER_ICON);
-	}
-
-	private static SerializablePair<String, String> showPossibilities()
-	{
-		return new SerializablePair<>(R.CLIENT_TREE_NODE_POSSIBILITIES.get(), null);
-	}
-
-	private static SerializablePair<String, String> addAllKnowParameters()
-	{
-		return new SerializablePair<>(R.CLIENT_TREE_NODE_ADD_ALL_KNOWN_PARAMETERS.get(), CssVariables.Icons.HELP_ICON);
 	}
 }

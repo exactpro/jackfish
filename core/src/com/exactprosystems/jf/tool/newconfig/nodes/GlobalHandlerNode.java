@@ -38,6 +38,7 @@ public class GlobalHandlerNode extends TreeNode
 	private TreeItem<TreeNode> globalHandlerTreeItem;
 
 	private final Text view;
+	private final SerializablePair<R, String> CHANGE_HANDLER	= new SerializablePair<>(R.GLOBAL_HANDLER_NODE_CHANGE_HANDLER, null);
 
 	public GlobalHandlerNode(ConfigurationFx model, TreeItem<TreeNode> globalHandlerTreeItem)
 	{
@@ -70,7 +71,7 @@ public class GlobalHandlerNode extends TreeNode
 			this.model.getGlobalHandler().setEnabled(!enabled);
 			this.view.setOpacity(isEnable() ? 1.0 : 0.5);
 		});
-		menu.getItems().addAll(changeEnable, ConfigurationTreeView.createDisabledItem(changeHadler()));
+		menu.getItems().addAll(changeEnable, ConfigurationTreeView.createDisabledItem(CHANGE_HANDLER));
 		return Optional.of(menu);
 	}
 
@@ -125,7 +126,7 @@ public class GlobalHandlerNode extends TreeNode
 
 			menu.getItems().addAll(
 					changeEnable,
-					ConfigurationTreeView.createItem(changeHadler(), this::changeHandler, R.GLOBAL_HANDLER_NODE_ERROR_CHANGE.get())
+					ConfigurationTreeView.createItem(CHANGE_HANDLER, this::changeHandler, R.GLOBAL_HANDLER_NODE_ERROR_CHANGE.get())
 			);
 
 			return Optional.of(menu);
@@ -152,10 +153,5 @@ public class GlobalHandlerNode extends TreeNode
 		{
 			return this::changeHandler;
 		}
-	}
-
-	private SerializablePair<String, String> changeHadler()
-	{
-		return new SerializablePair<>(R.GLOBAL_HANDLER_NODE_CHANGE_HANDLER.get(), null);
 	}
 }

@@ -160,9 +160,9 @@ public class ConfigurationTreeView extends TreeView<TreeNode>
 		return contextMenu;
 	}
 
-	public static Menu createMenu(SerializablePair<String, String> pair, MenuItem ... items)
+	public static Menu createMenu(SerializablePair<R, String> pair, MenuItem ... items)
 	{
-		Menu menu = new Menu(pair.getKey());
+		Menu menu = new Menu(pair.getKey().get());
 		if (pair.getValue() != null)
 		{
 			menu.setGraphic(new ImageView(new Image(pair.getValue())));
@@ -171,7 +171,7 @@ public class ConfigurationTreeView extends TreeView<TreeNode>
 		return menu;
 	}
 
-	public static Menu createDisabledMenu(SerializablePair<String, String> pair)
+	public static Menu createDisabledMenu(SerializablePair<R, String> pair)
 	{
 		Menu menu = createMenu(pair);
 		menu.setDisable(true);
@@ -183,9 +183,9 @@ public class ConfigurationTreeView extends TreeView<TreeNode>
 		return createItem(name, image, fn, error, false);
 	}
 
-	public static MenuItem createItem(SerializablePair<String, String> pair, Common.Function fn, String error)
+	public static MenuItem createItem(SerializablePair<R, String> pair, Common.Function fn, String error)
 	{
-		return createItem(pair.getKey(), pair.getValue(), fn, error);
+		return createItem(pair.getKey().get(), pair.getValue(), fn, error);
 	}
 
 	public static MenuItem createDisabledItem(String name, String image)
@@ -193,9 +193,9 @@ public class ConfigurationTreeView extends TreeView<TreeNode>
 		return createItem(name, image, null, null, true);
 	}
 
-	public static MenuItem createDisabledItem(SerializablePair<String, String> pair)
+	public static MenuItem createDisabledItem(SerializablePair<R, String> pair)
 	{
-		return createItem(pair.getKey(), pair.getValue(), null, null, true);
+		return createItem(pair.getKey().get(), pair.getValue(), null, null, true);
 	}
 
 	private static MenuItem createItem(String name, String image, Common.Function fn, String error, boolean isDisabled)

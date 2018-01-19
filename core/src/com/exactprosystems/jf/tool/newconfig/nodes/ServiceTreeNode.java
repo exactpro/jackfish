@@ -39,6 +39,14 @@ public class ServiceTreeNode extends TreeNode
 
 	private static final String ALL = "All";
 
+	private static final SerializablePair<R, String> ADD_NEW_SERVICE = new SerializablePair<>(R.SERVICE_TREE_NODE_ADD_NEW_SERVICE, CssVariables.Icons.ADD_PARAMETER_ICON);
+	private static final SerializablePair<R, String> TEST_VERSION = new SerializablePair<>(R.SERVICE_TREE_NODE_TEST_VERSION, null);
+	private static final SerializablePair<R, String> CLOSE_SERVICES = new SerializablePair<>(R.SERVICE_TREE_NODE_CLOSE_SERVICES, null);
+	private static final SerializablePair<R, String> REMOVE = new SerializablePair<>(R.SERVICE_TREE_NODE_REMOVE, CssVariables.Icons.REMOVE_PARAMETER_ICON);
+	private static final SerializablePair<R, String> START_SERVICE = new SerializablePair<>(R.SERVICE_TREE_NODE_START_SERVICE, CssVariables.Icons.REFRESH);
+	private static final SerializablePair<R, String> STOP_SERVICE = new SerializablePair<>(R.SERVICE_TREE_NODE_STOP_SERVICE, CssVariables.Icons.REFRESH);
+	private static final SerializablePair<R, String> ADD_ALL_KNOWN_PARAMS = new SerializablePair<>(R.SERVICE_TREE_NODE_ADD_ALL_KNOWN_PARAMETERS, null);
+
 	public ServiceTreeNode(ConfigurationFx model, TreeItem<TreeNode> treeItem)
 	{
 		this.model = model;
@@ -48,16 +56,16 @@ public class ServiceTreeNode extends TreeNode
 	@Override
 	public Optional<ContextMenu> contextMenu()
 	{
-			ContextMenu menu = ConfigurationTreeView.add(R.SERVICE_TN_ADD_SERVICE.get(),
+		ContextMenu menu = ConfigurationTreeView.add(R.SERVICE_TN_ADD_SERVICE.get(),
 				e -> DialogsHelper.showInputDialog(R.SERVICE_TN_ENTER_NEW_NAME.get(), "")
 						.ifPresent(res -> Common.tryCatch(() -> this.model.addNewServiceEntry(res), R.SERVICE_TN_ERROR_ON_ADD_NEW.get())));
 		menu.getItems().addAll(
-				ConfigurationTreeView.createItem(testVersion(), () -> this.model.testServiceVersion(), R.SERVICE_TN_ERROR_ON_TEST_VERSION.get()),
-				ConfigurationTreeView.createMenu(close(), ConfigurationTreeView.createItem(ALL, null, () -> this.model.stopAllServices(), R.SERVICE_TN_ERROR_ON_STOP_ALL.get())),
-				ConfigurationTreeView.createDisabledItem(remove()),
-				ConfigurationTreeView.createDisabledItem(start()),
-				ConfigurationTreeView.createDisabledItem(stop()),
-				ConfigurationTreeView.createDisabledItem(addAllKnownParams())
+				ConfigurationTreeView.createItem(TEST_VERSION, () -> this.model.testServiceVersion(), R.SERVICE_TN_ERROR_ON_TEST_VERSION.get()),
+				ConfigurationTreeView.createMenu(CLOSE_SERVICES, ConfigurationTreeView.createItem(ALL, null, () -> this.model.stopAllServices(), R.SERVICE_TN_ERROR_ON_STOP_ALL.get())),
+				ConfigurationTreeView.createDisabledItem(REMOVE),
+				ConfigurationTreeView.createDisabledItem(START_SERVICE),
+				ConfigurationTreeView.createDisabledItem(STOP_SERVICE),
+				ConfigurationTreeView.createDisabledItem(ADD_ALL_KNOWN_PARAMS)
 		);
 		return Optional.of(menu);
 	}
@@ -67,7 +75,7 @@ public class ServiceTreeNode extends TreeNode
 	{
 		contextMenu.getItems()
 				.stream()
-				.filter(item -> item.getText().equals(close().getKey()))
+				.filter(item -> item.getText().equals(CLOSE_SERVICES.getKey()))
 				.findFirst()
 				.map(item -> (Menu)item)
 				.ifPresent(menu -> {
@@ -126,11 +134,11 @@ public class ServiceTreeNode extends TreeNode
 		{
 			ContextMenu menu = new ContextMenu();
 			menu.getItems().addAll(
-					ConfigurationTreeView.createDisabledItem(addNew()),
-					ConfigurationTreeView.createDisabledItem(testVersion()),
-					ConfigurationTreeView.createDisabledMenu(close()),
-					ConfigurationTreeView.createItem(remove(), () -> model.removeServiceEntry(getEntry()), String.format(R.SERVICE_TN_ERROR_REMOVE_ENTRY.get(), getEntry().toString())),
-					ConfigurationTreeView.createItem(addAllKnownParams(),() -> model.addAllServiceParams(getEntry()), String.format(R.SERVICE_TN_ERROR_ADD_ALL_PARAMS.get(), getEntry()))
+					ConfigurationTreeView.createDisabledItem(ADD_NEW_SERVICE),
+					ConfigurationTreeView.createDisabledItem(TEST_VERSION),
+					ConfigurationTreeView.createDisabledMenu(CLOSE_SERVICES),
+					ConfigurationTreeView.createItem(REMOVE, () -> model.removeServiceEntry(getEntry()), String.format(R.SERVICE_TN_ERROR_REMOVE_ENTRY.get(), getEntry().toString())),
+					ConfigurationTreeView.createItem(ADD_ALL_KNOWN_PARAMS,() -> model.addAllServiceParams(getEntry()), String.format(R.SERVICE_TN_ERROR_ADD_ALL_PARAMS.get(), getEntry()))
 			);
 			MenuItem startService = new MenuItem(R.SERVICE_TN_START_SERVICE.get());
 			startService.setOnAction(e -> Common.tryCatch(() -> model.startService(getEntry()), R.SERVICE_TN_ERROR_ON_START.get()));
@@ -222,40 +230,4 @@ public class ServiceTreeNode extends TreeNode
 		}
 
 	}
-
-	private SerializablePair<String, String> addNew()
-	{
-		return new SerializablePair<>(R.SERVICE_TREE_NODE_ADD_NEW_SERVICE.get(), CssVariables.Icons.ADD_PARAMETER_ICON);
-	}
-
-	private SerializablePair<String, String> testVersion()
-	{
-		return new SerializablePair<>(R.SERVICE_TREE_NODE_TEST_VERSION.get(), null);
-	}
-
-	private SerializablePair<String, String> close()
-	{
-		return new SerializablePair<>(R.SERVICE_TREE_NODE_CLOSE_SERVICES.get(), null);
-	}
-
-	private SerializablePair<String, String> remove()
-	{
-		return new SerializablePair<>(R.SERVICE_TREE_NODE_REMOVE.get(), CssVariables.Icons.REMOVE_PARAMETER_ICON);
-	}
-
-	private SerializablePair<String, String> start()
-	{
-		return new SerializablePair<>(R.SERVICE_TREE_NODE_START_SERVICE.get(), CssVariables.Icons.REFRESH);
-	}
-
-	private SerializablePair<String, String> stop()
-	{
-		return new SerializablePair<>(R.SERVICE_TREE_NODE_STOP_SERVICE.get(), CssVariables.Icons.REFRESH);
-	}
-
-	private SerializablePair<String, String> addAllKnownParams()
-	{
-		return new SerializablePair<>(R.SERVICE_TREE_NODE_ADD_ALL_KNOWN_PARAMETERS.get(), null);
-	}
-
 }

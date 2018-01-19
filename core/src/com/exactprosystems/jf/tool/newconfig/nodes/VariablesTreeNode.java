@@ -32,6 +32,8 @@ public class VariablesTreeNode extends TreeNode
 	private ConfigurationFx		model;
 	private TreeItem<TreeNode>	variablesTreeNode;
 
+	private static final SerializablePair<R, String> REMOVE_VARS_FILE = new SerializablePair<>(R.VARIABLES_TREE_NODE_REMOVE_VARS, CssVariables.Icons.REMOVE_PARAMETER_ICON);
+	private static final SerializablePair<R, String> OPEN_VARS_FILE = new SerializablePair<>(R.VARIABLES_TREE_NODE_OPEN_VARS_FILE, CssVariables.Icons.VARS_ICON);
 
 	public VariablesTreeNode(ConfigurationFx model, TreeItem<TreeNode> variablesTreeNode)
 	{
@@ -44,8 +46,8 @@ public class VariablesTreeNode extends TreeNode
 	{
 		ContextMenu menu = new ContextMenu();
 		menu.getItems().addAll(
-				ConfigurationTreeView.createDisabledItem(removeVars()),
-				ConfigurationTreeView.createDisabledItem(openVars()),
+				ConfigurationTreeView.createDisabledItem(REMOVE_VARS_FILE),
+				ConfigurationTreeView.createDisabledItem(OPEN_VARS_FILE),
 				ConfigurationTreeView.createDisabledItem(R.COMMON_GIT.get(), null)
 		);
 		return Optional.of(menu);
@@ -73,8 +75,8 @@ public class VariablesTreeNode extends TreeNode
 			{
 				ContextMenu menu = new ContextMenu();
 				menu.getItems().addAll(
-						ConfigurationTreeView.createItem(removeVars(), () -> model.excludeVarsFile(file), R.VARS_TN_ERROR_ON_REMOVE.get()),
-						ConfigurationTreeView.createItem(openVars(), () -> model.openVariableFile(new File(file)), R.VARS_TN_ERROR_ON_SAVE.get())
+						ConfigurationTreeView.createItem(REMOVE_VARS_FILE, () -> model.excludeVarsFile(file), R.VARS_TN_ERROR_ON_REMOVE.get()),
+						ConfigurationTreeView.createItem(OPEN_VARS_FILE, () -> model.openVariableFile(new File(file)), R.VARS_TN_ERROR_ON_SAVE.get())
 				);
 				menu.getItems().addAll(super.contextMenu().orElse(new ContextMenu()).getItems());
 				return Optional.of(menu);
@@ -94,15 +96,5 @@ public class VariablesTreeNode extends TreeNode
 				return list;
 			}
 		}).map(e -> new TreeItem<TreeNode>(e)).forEach(i -> this.variablesTreeNode.getChildren().add(i));
-	}
-
-	private SerializablePair<String, String> removeVars()
-	{
-		return new SerializablePair<>(R.VARIABLES_TREE_NODE_REMOVE_VARS.get(), CssVariables.Icons.REMOVE_PARAMETER_ICON);
-	}
-
-	private SerializablePair<String, String> openVars()
-	{
-		return new SerializablePair<>(R.VARIABLES_TREE_NODE_OPEN_VARS_FILE.get(), CssVariables.Icons.VARS_ICON);
 	}
 }

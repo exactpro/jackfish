@@ -36,6 +36,10 @@ public class SqlTreeNode extends TreeNode
 	private ConfigurationFx model;
 	private TestingConnectionFxController	testSqlController;
 
+	private static final SerializablePair<R, String> ADD_NEW_SQL = new SerializablePair<>(R.SQL_TREE_NODE_ADD_NEW, CssVariables.Icons.ADD_PARAMETER_ICON);
+	private static final SerializablePair<R, String> REMOVE_SQL = new SerializablePair<>(R.SQL_TREE_NODE_REMOVE, CssVariables.Icons.REMOVE_PARAMETER_ICON);
+	private static final SerializablePair<R, String> TEST = new SerializablePair<>(R.SQL_TREE_NODE_TEST, null);
+
 	public SqlTreeNode(ConfigurationFx model, TreeItem<TreeNode> treeItem)
 	{
 		this.treeItem = treeItem;
@@ -50,8 +54,8 @@ public class SqlTreeNode extends TreeNode
 						res -> Common.tryCatch(() -> this.model.addNewSqlEntry(res), R.SQL_TN_ERROR_ON_ADD_IMPORT.get()))
 		);
 		menu.getItems().addAll(
-				ConfigurationTreeView.createDisabledItem(remove()),
-				ConfigurationTreeView.createDisabledItem(test())
+				ConfigurationTreeView.createDisabledItem(REMOVE_SQL),
+				ConfigurationTreeView.createDisabledItem(TEST)
 		);
 		return Optional.of(menu);
 	}
@@ -92,25 +96,10 @@ public class SqlTreeNode extends TreeNode
 			this.testSqlController = Common.loadController(TestingConnectionFxController.class.getResource("TestingConnectionFx.fxml"));
 			this.testSqlController.init(model, entry.toString(), values);
 			this.testSqlController.display();
-			}, R.SQL_TN_ERROR_ON_SHOW_TEST_PANEL.get());
+		}, R.SQL_TN_ERROR_ON_SHOW_TEST_PANEL.get());
 	}
 
-	private SerializablePair<String, String> addNew()
-	{
-		return new SerializablePair<>(R.SQL_TREE_NODE_ADD_NEW.get(), CssVariables.Icons.ADD_PARAMETER_ICON);
-	}
 
-	private SerializablePair<String, String> remove()
-	{
-		return new SerializablePair<>(R.SQL_TREE_NODE_REMOVE.get(), CssVariables.Icons.REMOVE_PARAMETER_ICON);
-	}
-
-	private SerializablePair<String, String> test()
-	{
-		return new SerializablePair<>(R.SQL_TREE_NODE_TEST.get(), null);
-	}
-
-	
 	private class SqlEntryNode extends AbstractEntryNode<SqlEntry>
 	{
 		public SqlEntryNode(ConfigurationFx model, SqlEntry sqlEntry)
@@ -123,9 +112,9 @@ public class SqlTreeNode extends TreeNode
 		{
 			ContextMenu menu = new ContextMenu();
 			menu.getItems().addAll(
-					ConfigurationTreeView.createDisabledItem(addNew()),
-					ConfigurationTreeView.createItem(remove(), () -> model.removeSqlEntry(getEntry()), R.SQL_TN_ERROR_ON_REMOVE_ENTRY.get()),
-					ConfigurationTreeView.createItem(test(), () -> testSqlEntry(getEntry()), R.SQL_TN_ERROR_ON_TEST_ENTRY.get())
+					ConfigurationTreeView.createDisabledItem(ADD_NEW_SQL),
+					ConfigurationTreeView.createItem(REMOVE_SQL, () -> model.removeSqlEntry(getEntry()), R.SQL_TN_ERROR_ON_REMOVE_ENTRY.get()),
+					ConfigurationTreeView.createItem(TEST, () -> testSqlEntry(getEntry()), R.SQL_TN_ERROR_ON_TEST_ENTRY.get())
 			);
 			return Optional.of(menu);
 		}

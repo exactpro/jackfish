@@ -36,8 +36,7 @@ public class ServiceHelper
 			}
 		}
 		
-		throw new ServicePossibilityIsDisabled("For client " + clazz.getSimpleName() + " possibility " + possibility.getDescription() 
-				+ " is not allowed.");
+		throw new ServicePossibilityIsDisabled(String.format("For client %s possibility %s is not allowed.", clazz.getSimpleName(), possibility.getDescription()));
 	}
 	
 
