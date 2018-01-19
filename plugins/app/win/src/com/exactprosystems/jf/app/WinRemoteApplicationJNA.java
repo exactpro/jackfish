@@ -11,6 +11,7 @@ package com.exactprosystems.jf.app;
 import com.exactprosystems.jf.api.app.*;
 import com.exactprosystems.jf.api.common.Converter;
 import com.exactprosystems.jf.api.common.Str;
+import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.api.error.app.ElementNotFoundException;
 import com.exactprosystems.jf.api.error.app.FeatureNotSupportedException;
 import org.apache.log4j.*;
@@ -115,13 +116,13 @@ public class WinRemoteApplicationJNA extends RemoteApplication
 				}
 				catch (IllegalArgumentException e)
 				{
-					throw new Exception("Parameter " + WinAppFactory.controlKindName + " must be only of " + Arrays.toString(ControlKind.values()) + " or empty/null");
+					throw new Exception(String.format(R.WIN_REMOTE_APP_JNA_PARAMETER_EMPTY_NULL.get(), WinAppFactory.controlKindName, Arrays.toString(ControlKind.values())));
 				}
 			}
 
 			if (height == Integer.MIN_VALUE && width == Integer.MIN_VALUE && pid  == Integer.MIN_VALUE && controlKind == null && ( Str.IsNullOrEmpty(title) || title.equals("null")))
 			{
-				throw new Exception("At least one of params (MainWindow, ControlKind, Height, PID, Width) must be filled");
+				throw new Exception(R.WIN_REMOTE_APP_JNA_PARAMS_MUST_BE_FILLED.get());
 			}
 
 			boolean alwaysToFront = Boolean.valueOf(args.get(WinAppFactory.alwaysToFront));
@@ -158,11 +159,11 @@ public class WinRemoteApplicationJNA extends RemoteApplication
 
 			if (Str.IsNullOrEmpty(exec) || exec.equals("null"))
 			{
-				throw new Exception("Exec can't be null or empty.");
+				throw new Exception(R.WIN_REMOTE_APP_JNA_EXEC_CANT_BE_NULL.get());
 			}
 			if (Str.IsNullOrEmpty(workDir) || workDir.equals("null"))
 			{
-				throw new Exception("WorkDir can't be null or empty.");
+				throw new Exception(R.WIN_REMOTE_APP_JNA_WORKDIR_CANT_BE_NULL.get());
 			}
 			boolean alwaysToFront = Boolean.valueOf(args.get(WinAppFactory.alwaysToFront));
 			this.logger.info("##########################################################################################################");
@@ -393,7 +394,7 @@ public class WinRemoteApplicationJNA extends RemoteApplication
 				UIProxyJNA currentWindow = currentWindow();
 				if (currentWindow == null)
 				{
-					throw new ElementNotFoundException("Current window not found");
+					throw new ElementNotFoundException(R.WIN_REMOTE_APP_JNA_CURRENT_WINDOW_NOT_FOUND.get());
 				}
 				return this.operationExecutor.getRectangle(currentWindow);
 			}
@@ -500,7 +501,7 @@ public class WinRemoteApplicationJNA extends RemoteApplication
 			UIProxyJNA currentWindow = currentWindow();
 			if (currentWindow == null)
 			{
-				throw new ElementNotFoundException("Current window not found");
+				throw new ElementNotFoundException(R.WIN_REMOTE_APP_JNA_CURRENT_WINDOW_NOT_FOUND.get());
 			}
 			this.driver.doPatternCall(currentWindow, WindowPattern.TransformPattern, "Move", x + "%" + y, 1);
 		}
@@ -672,7 +673,7 @@ public class WinRemoteApplicationJNA extends RemoteApplication
 		}
 		if (arr[0] > 1)
 		{
-			throw new Exception("Found more that one main windows : " + arr[0]);
+			throw new Exception(String.format(R.WIN_REMOTE_APP_JNA_TOO_MUCH_MAIN_WINDOWS.get(), arr[0]));
 		}
 		int[] windowRuntimeId = new int[arr[1]];
 		System.arraycopy(arr, 2, windowRuntimeId, 0, arr[1]);
@@ -695,7 +696,7 @@ public class WinRemoteApplicationJNA extends RemoteApplication
 			}
 			catch (NumberFormatException e)
 			{
-				throw new Exception(String.format("Parameter %s must be from 0 to %s or empty/null", parameterName, Integer.MAX_VALUE));
+				throw new Exception(String.format(R.WIN_REMOTE_APP_JNA_PARAM_MUST_BE_MORE_ZERO.get(), parameterName, Integer.MAX_VALUE));
 			}
 		}
 		return value;

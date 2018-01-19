@@ -1,5 +1,6 @@
 package com.exactprosystems.jf.app;
 
+import com.exactprosystems.jf.api.common.i18n.R;
 import org.openqa.selenium.Capabilities;
 import org.openqa.selenium.Platform;
 import org.openqa.selenium.WebDriverException;
@@ -100,7 +101,7 @@ public class CustomInternetExplorerDriver extends RemoteWebDriver
 		Platform current = Platform.getCurrent();
 		if (!current.is(Platform.WINDOWS))
 		{
-			throw new WebDriverException(String.format("You appear to be running %s. The IE driver only runs on Windows.", current));
+			throw new WebDriverException(String.format(R.CUSTOM_IE_DRIVER_OS_EXCEPTON.get(), current));
 		}
 	}
 }

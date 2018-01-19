@@ -13,6 +13,7 @@ import com.exactprosystems.jf.api.app.PluginInfo;
 import com.exactprosystems.jf.api.app.ValueAndColor;
 import com.exactprosystems.jf.api.client.ICondition;
 import com.exactprosystems.jf.api.common.Converter;
+import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.api.error.app.TableOutOfBoundsException;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
@@ -88,7 +89,7 @@ class FxTableView
 		{
 			if (this.rowCount < rowIndex)
 			{
-				throw new TableOutOfBoundsException(String.format("Can't get value for row %s because size of rows is %s", rowIndex, tableView.getItems().size()));
+				throw new TableOutOfBoundsException(String.format(R.FX_TABLE_VIEW_TOOB_EXCEPTION.get(), rowIndex, tableView.getItems().size()));
 			}
 			Node cell = UtilsFx.runOnFxThreadAndWaitResult(() -> {
 				this.tableView.scrollToColumnIndex(0);
@@ -141,7 +142,7 @@ class FxTableView
 	{
 		if (valueCondition == null)
 		{
-			throw new Exception("Cant find row via null condition");
+			throw new Exception(R.FX_TABLE_VIEW_GET_ROW_NULL_CONDITION.get());
 		}
 		List<String> tableHeaders = this.getTableHeaders(columns);
 		List<Map<String, Object>> listOfRows = IntStream.range(0, this.rowCount)
@@ -150,18 +151,18 @@ class FxTableView
 						.collect(Collectors.toMap(
 								tableHeaders::get
 								, j -> (Object) this.getCellValue(j, row)
-								, (u,v) -> { throw new IllegalStateException(String.format("Duplicate key %s", u)); }
+								, (u,v) -> { throw new IllegalStateException(String.format(R.FX_TABLE_VIEW_GET_ROW_DUPLICATE_KEY.get(), u)); }
 								, LinkedHashMap::new))
 				)
 				.filter(valueCondition::isMatched)
 				.collect(Collectors.toList());
 		if (listOfRows.size() > 1)
 		{
-			throw new Exception("Too many rows");
+			throw new Exception(R.FX_TABLE_VIEW_TOO_MANY_ROWS.get());
 		}
 		if (listOfRows.isEmpty())
 		{
-			throw new Exception("No one row was found");
+			throw new Exception(R.FX_TABLE_VIEW_NO_ONE_ROWS.get());
 		}
 		Map<String, String> map = new LinkedHashMap<>();
 		listOfRows.get(0).forEach((s, o) -> map.put(s, String.valueOf(o)));
@@ -172,7 +173,7 @@ class FxTableView
 	{
 		if (valueCondition == null)
 		{
-			throw new Exception("Cant find row via null condition");
+			throw new Exception(R.FX_TABLE_VIEW_GET_ROW_NULL_CONDITION.get());
 		}
 		List<String> rowNumbers = new ArrayList<>();
 		List<String> tableHeaders = this.getTableHeaders(columns);
@@ -323,12 +324,12 @@ class FxTableView
 	{
 		if (this.rowCount < row)
 		{
-			throw new TableOutOfBoundsException(String.format("Can't get value for row %s because size of rows is %s", row, tableView.getItems().size()));
+			throw new TableOutOfBoundsException(String.format(R.FX_TABLE_VIEW_TOOB_EXCEPTION.get(), row, tableView.getItems().size()));
 		}
 
 		if (this.colCount < column)
 		{
-			throw new TableOutOfBoundsException(String.format("Can't get value for column %s because size of columns is %s", column, tableView.getColumns().size()));
+			throw new TableOutOfBoundsException(String.format(R.FX_TABLE_VIEW_COLUMN_TOOB_EXCEPTION.get(), column, tableView.getColumns().size()));
 		}
 	}
 

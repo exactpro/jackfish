@@ -12,6 +12,7 @@ package com.exactprosystems.jf.app;
 import com.exactprosystems.jf.api.app.*;
 import com.exactprosystems.jf.api.client.ICondition;
 import com.exactprosystems.jf.api.common.Str;
+import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.api.error.app.ElementNotFoundException;
 import com.exactprosystems.jf.api.error.app.FeatureNotSupportedException;
 import com.exactprosystems.jf.api.error.app.TooManyElementsException;
@@ -230,7 +231,7 @@ public class FxOperationExecutor extends AbstractOperationExecutor<EventTarget>
 
 			//endregion
 
-			throw new Exception("Target element does not has items");
+			throw new Exception(R.FX_OPERATION_EXECUTOR_ELEMENT_NO_ITEMS.get());
 		}, e->
 		{
 			logger.error(String.format("getListDerived(%s,%s)", component, onlyVisible));
@@ -736,7 +737,7 @@ public class FxOperationExecutor extends AbstractOperationExecutor<EventTarget>
 				NodeList nodes = findNodesInTreeByXpath(convertTreeToXMLDoc(tree), path);
 				if (nodes.getLength() == 0)
 				{
-					throw new WrongParameterException("Path '" + path + "' is not found in the tree.");
+					throw new WrongParameterException(String.format(R.FX_OPERATION_EXECUTOR_EXPAND_EXCEPTION.get(), path));
 				}
 				for (int i = nodes.getLength() - 1; i >= 0; i--)
 				{
@@ -778,7 +779,7 @@ public class FxOperationExecutor extends AbstractOperationExecutor<EventTarget>
 						}
 						else
 						{
-							throw new Exception("ComboBox is not editable");
+							throw new Exception(R.FX_OPERATION_EXECUTOR_TEXT_EXCEPTION.get());
 						}
 					}
 					return true;
@@ -893,7 +894,7 @@ public class FxOperationExecutor extends AbstractOperationExecutor<EventTarget>
 			}
 			else
 			{
-				throw new WrongParameterException(String.format("Component is not instance of TreeView. Component : %s", component));
+				throw new WrongParameterException(String.format(R.FX_OPERATION_EXECUTOR_GET_TREE_EXCEPTION.get(), component));
 			}
 		}, e ->
 		{
@@ -1227,7 +1228,7 @@ public class FxOperationExecutor extends AbstractOperationExecutor<EventTarget>
 					List<EventTarget> all = new MatcherFx(this.info, locator, cell).findAll();
 					if (all.isEmpty())
 					{
-						throw new Exception("Cant set text to not text element");
+						throw new Exception(R.FX_OPERATION_EXECUTOR_TEXT_TABLE_CELL_EXCEPTION.get());
 					}
 					TextInputControl cellBox = (TextInputControl) all.get(0);
 					cellBox.setText(text);
@@ -1370,7 +1371,7 @@ public class FxOperationExecutor extends AbstractOperationExecutor<EventTarget>
 
 	private WrongParameterException tableOrTreeTableException(EventTarget target)
 	{
-		return new WrongParameterException(String.format("Target not instance of Table or TreeTable. Target : %s", target));
+		return new WrongParameterException(String.format(R.FX_OPERATION_EXECUTOR_NOT_TABLE.get(), target));
 	}
 
 	private KeyCode getKeyCode(Keyboard key)
@@ -1589,7 +1590,7 @@ public class FxOperationExecutor extends AbstractOperationExecutor<EventTarget>
 	{
 		if (!MatcherFx.isVisible(target))
 		{
-			throw new UnsupportedOperationException(String.format("Target %s is not visible", MatcherFx.targetToString(target)));
+			throw new UnsupportedOperationException(String.format(R.FX_OPERATION_EXECUTOR_TARGET_IS_NOT_VISIBLE.get(), MatcherFx.targetToString(target)));
 		}
 		if (target instanceof Node)
 		{

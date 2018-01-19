@@ -8,6 +8,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 package com.exactprosystems.jf.app;
 
+import com.exactprosystems.jf.api.common.i18n.R;
 import org.openqa.selenium.*;
 import org.openqa.selenium.interactions.*;
 import org.openqa.selenium.interactions.internal.Coordinates;
@@ -127,7 +128,7 @@ public class WebDriverListenerNew implements WebDriver, JavascriptExecutor,
 		{
 			return ((JavascriptExecutor) this.webDriver).executeScript(script, args);
 		}
-		throw new UnsupportedOperationException("Current driver instance does not support executing javascript");
+		throw new UnsupportedOperationException(R.WEB_DRIVER_LISTENER_NO_JS.get());
 	}
 
 	@Override
@@ -137,7 +138,7 @@ public class WebDriverListenerNew implements WebDriver, JavascriptExecutor,
 		{
 			return ((JavascriptExecutor) this.webDriver).executeAsyncScript(script, args);
 		}
-		throw new UnsupportedOperationException("Current driver instance does not support executing javascript");
+		throw new UnsupportedOperationException(R.WEB_DRIVER_LISTENER_NO_JS.get());
 	}
 
 	//endregion
@@ -414,7 +415,7 @@ public class WebDriverListenerNew implements WebDriver, JavascriptExecutor,
 
 	private UnsupportedOperationException create(String methodName)
 	{
-		return new UnsupportedOperationException("Current driver instance does not support " + methodName);
+		return new UnsupportedOperationException(String.format(R.WEB_DRIVER_LISTENER_DRIVER_UNSUPPORT.get(), methodName));
 	}
 
 	private WebElement createWebElement(WebElement element)
@@ -540,7 +541,7 @@ public class WebDriverListenerNew implements WebDriver, JavascriptExecutor,
 			{
 				return ((Locatable) this.element).getCoordinates();
 			}
-			throw new UnsupportedOperationException("Current element instance does not locatable");
+			throw new UnsupportedOperationException(R.WEB_DRIVER_LISTENER_NOT_LOCATABLE.get());
 		}
 
 		@Override

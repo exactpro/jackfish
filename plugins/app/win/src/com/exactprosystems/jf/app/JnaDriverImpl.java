@@ -12,6 +12,7 @@ package com.exactprosystems.jf.app;
 import com.exactprosystems.jf.api.app.*;
 import com.exactprosystems.jf.api.client.ICondition;
 import com.exactprosystems.jf.api.common.Str;
+import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.api.conditions.Condition;
 import com.exactprosystems.jf.api.error.app.*;
 import com.sun.jna.Native;
@@ -52,7 +53,7 @@ public class JnaDriverImpl
 		}
 		catch (Exception e)
 		{
-			throw new ProxyException(e.getMessage(), "internal error", e);
+			throw new ProxyException(e.getMessage(), R.JNA_DRIVER_IMPL_INTERNAL_ERROR.get(), e);
 		}
 		String dll = pathDll.toString();
 
@@ -62,7 +63,7 @@ public class JnaDriverImpl
 		}
 		else
 		{
-			throw new InternalErrorException("Dll is  not found");
+			throw new InternalErrorException(R.JNA_DRIVER_IMPL_DLL_NOT_FOUND.get());
 		}
 	}
 

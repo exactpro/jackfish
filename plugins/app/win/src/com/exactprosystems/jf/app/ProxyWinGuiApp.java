@@ -13,6 +13,7 @@ import com.exactprosystems.jf.api.app.AbstractApplicationFactory;
 import com.exactprosystems.jf.api.app.ProxyApplication;
 import com.exactprosystems.jf.api.common.SerializablePair;
 import com.exactprosystems.jf.api.common.Str;
+import com.exactprosystems.jf.api.common.i18n.R;
 
 import java.util.Arrays;
 import java.util.Map;
@@ -23,7 +24,7 @@ public class ProxyWinGuiApp extends ProxyApplication
 	{
 		if (!isWindows())
 		{
-			throw new Exception("This adapter needs Windows.");
+			throw new Exception(R.PROXY_WIN_GUI_APP_NEED_WINDOWS.get());
 		}
 	}
 	

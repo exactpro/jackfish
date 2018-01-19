@@ -9,6 +9,7 @@
 
 package com.exactprosystems.jf.app;
 
+import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.api.error.app.ApplicationClosedException;
 import com.sun.javafx.application.PlatformImpl;
 import com.sun.javafx.stage.StageHelper;
@@ -117,7 +118,7 @@ public class UtilsFx
 		debug(String.format("Found %s stages", stages.size()));
 		if (stages.isEmpty())
 		{
-			throw new RuntimeException("No one stages was found");
+			throw new RuntimeException(R.UTILS_FX_NO_ON_STAGES.get());
 		}
 
 		return stages.stream()
@@ -139,7 +140,7 @@ public class UtilsFx
 				l.error(e.getMessage(), e);
 				l.error(e.getCause() != null ? e.getCause().getMessage() : "cause is null", e.getCause());
 			});
-			throw new ApplicationClosedException("Application was closed");
+			throw new ApplicationClosedException(R.UTILS_FX_APP_WAS_CLOSED.get());
 		}
 	}
 

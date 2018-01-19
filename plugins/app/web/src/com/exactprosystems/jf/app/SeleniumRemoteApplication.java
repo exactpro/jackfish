@@ -12,6 +12,7 @@ package com.exactprosystems.jf.app;
 import com.exactprosystems.jf.api.app.*;
 import com.exactprosystems.jf.api.common.Converter;
 import com.exactprosystems.jf.api.common.Str;
+import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.api.error.app.FeatureNotSupportedException;
 import com.exactprosystems.jf.api.error.app.TimeoutException;
 import com.exactprosystems.jf.app.WebAppFactory.WhereToOpen;
@@ -229,11 +230,11 @@ public class SeleniumRemoteApplication extends RemoteApplication
 			String url = args.get(WebAppFactory.urlName);
 			if (Str.IsNullOrEmpty(browserName) || browserName.equals("null"))
 			{
-				throw new Exception("Browser can't be null or empty.");
+				throw new Exception(R.SELENIUM_REMOTE_APP_EMPTY_BROWSER_EXCEPTION.get());
 			}
 			if (Str.IsNullOrEmpty(url) || url.equals("null"))
 			{
-				throw new Exception("URL can't be null or empty.");
+				throw new Exception(R.SELENIUM_REMOTE_APP_EMPTY_URL_EXCEPTION.get());
 			}
 
 			String chromeDriverPath = args.get(WebAppFactory.chromeDriverPathName);
@@ -298,7 +299,7 @@ public class SeleniumRemoteApplication extends RemoteApplication
                     	try {
 							browser = Browser.valueOf(browserName.toUpperCase());
 						} catch (Exception e){
-							te =  new Exception("Wrong browser name.");
+							te =  new Exception(R.SELENIUM_REMOTE_APP_WRONG_BROWSER_NAME.get());
 							throw te;
 						}
                         driver = new WebDriverListenerNew(browser.createDriver(chromeDriverBinary, firefoxProfileDirectory, usePrivateMode, isDriverLogging));
@@ -349,12 +350,12 @@ public class SeleniumRemoteApplication extends RemoteApplication
                 t.interrupt();
                 this.driver = null;
                 logger.info("Before throw");
-                throw new TimeoutException("Page loading");
+                throw new TimeoutException(R.SELENIUM_REMOTE_APP_PAGE_LOADING.get());
             }			
             
             if (this.driver == null || this.operationExecutor == null)
             {
-                throw new Exception("Driver creation is failed");
+                throw new Exception(R.SELENIUM_REMOTE_APP_FAIL_DRIVER_CREATION.get());
             }
 		}
 		catch (Exception e)
@@ -405,7 +406,7 @@ public class SeleniumRemoteApplication extends RemoteApplication
 		}
 		catch (NoAlertPresentException e)
 		{
-			throw new RemoteException("Alert is not present");
+			throw new RemoteException(R.SELENIUM_REMOTE_APP_ALERT_IS_NOT_PRESENT.get());
 		}
 		return this.currentAlert.getText();
 	}
@@ -431,7 +432,7 @@ public class SeleniumRemoteApplication extends RemoteApplication
 		logger.debug(String.format("setAlertTextDerived(%s,%s)", text, performKind));
 		if (this.currentAlert == null)
 		{
-			throw new RemoteException("Alert is not present");
+			throw new RemoteException(R.SELENIUM_REMOTE_APP_ALERT_IS_NOT_PRESENT.get());
 		}
 		if (!Str.IsNullOrEmpty(text))
 		{
@@ -512,13 +513,13 @@ public class SeleniumRemoteApplication extends RemoteApplication
 	@Override
 	protected java.awt.Dimension getDialogSizeDerived(Locator owner) throws Exception
 	{
-		throw new FeatureNotSupportedException("Get dialog size");
+		throw new FeatureNotSupportedException(R.SELENIUM_REMOTE_APP_GET_DIALOG_SIZE.get());
 	}
 
 	@Override
 	protected java.awt.Point getDialogPositionDerived(Locator owner) throws Exception
 	{
-		throw new FeatureNotSupportedException("Get dialog position");
+		throw new FeatureNotSupportedException(R.SELENIUM_REMOTE_APP_GET_DIALOG_POSITION.get());
 	}
 
 	@Override
@@ -619,12 +620,12 @@ public class SeleniumRemoteApplication extends RemoteApplication
 			List<WebElement> owners = this.driver.findElements(byOwner);
 			if (owners.isEmpty())
 			{
-				throw new RemoteException("Owner was not found.");
+				throw new RemoteException(R.SELENIUM_REMOTE_APP_OWNER_NOT_FOUND.get());
 			}
 
 			if (owners.size() > 1)
 			{
-				throw new RemoteException(owners.size() + " owners were found instead 1.");
+				throw new RemoteException(String.format(R.SELENIUM_REMOTE_APP_TOO_MUCH_OWNERS.get(), owners.size()));
 			}
 			ownerElement = owners.get(0);
 		}
@@ -693,7 +694,7 @@ public class SeleniumRemoteApplication extends RemoteApplication
 
 				if (returnRectangle.isEmpty())
 				{
-					throw new Exception("Element out of screen");
+					throw new Exception(R.SELENIUM_OPERATION_EXECUTOR_ELEMENT_OUT_OF_SCREEN.get());
 				}
 
 				BufferedImage bufferedImage = getImage();
@@ -839,7 +840,7 @@ public class SeleniumRemoteApplication extends RemoteApplication
 		String url = args.get(WebAppFactory.urlName);
 		if (url == null)
 		{
-			throw new Exception("url is null");
+			throw new Exception(R.SELENIUM_REMOTE_APP_URL_IS_NULL.get());
 		}
 		
 		WhereToOpen whereToOpen = WhereToOpen.OpenInTab;

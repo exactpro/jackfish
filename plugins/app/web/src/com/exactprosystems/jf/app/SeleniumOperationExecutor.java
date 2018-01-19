@@ -13,6 +13,7 @@ import com.exactprosystems.jf.api.app.*;
 import com.exactprosystems.jf.api.client.ICondition;
 import com.exactprosystems.jf.api.common.Converter;
 import com.exactprosystems.jf.api.common.Str;
+import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.api.error.app.ElementNotFoundException;
 import com.exactprosystems.jf.api.error.app.TooManyElementsException;
 import com.exactprosystems.jf.api.error.app.WrongParameterException;
@@ -188,7 +189,7 @@ public class SeleniumOperationExecutor extends AbstractOperationExecutor<WebElem
 			catch (Exception e)
 			{
 				logger.error(e.getMessage(), e);
-				throw new RemoteException("Error on drag and drop");
+				throw new RemoteException(R.SELENIUM_OPERATION_EXECUTOR_ERROR_DRAG_AND_DROP.get());
 			}
 		}
 		while (++repeat < repeatLimit);
@@ -236,7 +237,7 @@ public class SeleniumOperationExecutor extends AbstractOperationExecutor<WebElem
 	{
 		if (index > list.size() || index < 0)
 		{
-			throw new WrongParameterException("Cant scroll to index " + index + ". Child size : " + list.size());
+			throw new WrongParameterException(String.format(R.SELENIUM_OPERATION_EXECUTOR_CANT_SCROLL_TO_INDEX.get(), index,  list.size()));
 		}
 	}
 
@@ -465,7 +466,7 @@ public class SeleniumOperationExecutor extends AbstractOperationExecutor<WebElem
 
 		if (returnRectangle.isEmpty())
 		{
-			throw new Exception("Element out of screen");
+			throw new Exception(R.SELENIUM_OPERATION_EXECUTOR_ELEMENT_OUT_OF_SCREEN.get());
 		}
 
 		try (ByteArrayInputStream bytes = new ByteArrayInputStream(driver.getScreenshotAs(OutputType.BYTES)))
@@ -642,7 +643,7 @@ public class SeleniumOperationExecutor extends AbstractOperationExecutor<WebElem
 			catch (Exception e)
 			{
 				logger.error(e.getMessage(), e);
-				throw new RemoteException("Error on find into table");
+				throw new RemoteException(R.SELENIUM_OPERATION_EXECUTOR_ERROR_ON_FIND_INTO_TABLE.get());
 			}
 		}
 		while (++repeat < repeatLimit);
@@ -684,7 +685,7 @@ public class SeleniumOperationExecutor extends AbstractOperationExecutor<WebElem
 					case Move:
 						if (this.driver.getWrappedDriver() instanceof SafariDriver)
 						{
-							throw new RemoteException("Don't support");
+							throw new RemoteException(R.SELENIUM_OPERATION_EXECUTOR_DONT_SUPPORT.get());
 						}
 						if (x == Integer.MIN_VALUE || y == Integer.MIN_VALUE)
 						{
@@ -735,7 +736,7 @@ public class SeleniumOperationExecutor extends AbstractOperationExecutor<WebElem
 					case LeftDoubleClick:
 						if (this.driver.getWrappedDriver() instanceof SafariDriver)
 						{
-							throw new RemoteException("Don't support");
+							throw new RemoteException(R.SELENIUM_OPERATION_EXECUTOR_DONT_SUPPORT.get());
 						}
 						if (driver.getWrappedDriver() instanceof ChromeDriver)
 						{
@@ -757,7 +758,7 @@ public class SeleniumOperationExecutor extends AbstractOperationExecutor<WebElem
 					case RightClick:
 						if (this.driver.getWrappedDriver() instanceof SafariDriver)
 						{
-							throw new RemoteException("Don't support");
+							throw new RemoteException(R.SELENIUM_OPERATION_EXECUTOR_DONT_SUPPORT.get());
 						}
 						if (x == Integer.MIN_VALUE || y == Integer.MIN_VALUE)
 						{
@@ -891,7 +892,7 @@ public class SeleniumOperationExecutor extends AbstractOperationExecutor<WebElem
 				List<WebElement> list = component.findElements(By.xpath("child::li"));
 				if (index > list.size())
 				{
-					throw new RemoteException("Can't select element by index " + index + " ,because found " + list.size() + " elements");
+					throw new RemoteException(String.format(R.SELENIUM_OPERATION_EXECUTOR_CANT_FIND_BY_INDEX.get(), index, list.size()));
 				}
 				scrollTo(component, index);
 				list.get(index).click();
@@ -922,7 +923,7 @@ public class SeleniumOperationExecutor extends AbstractOperationExecutor<WebElem
 						return true;
 					}
 				}
-				throw new RemoteException("element with text '" + selectedText + "' was not found in the list");
+				throw new RemoteException(String.format(R.SELENIUM_OPERATION_EXECUTOR_NOT_FOUND_IN_THE_LIST.get(), selectedText));
 			default:
 				return true;
 		}
@@ -1075,7 +1076,7 @@ public class SeleniumOperationExecutor extends AbstractOperationExecutor<WebElem
 	{
 		if (this.driver.getWrappedDriver() instanceof SafariDriver)
 		{
-			throw new Exception("Doesn't support");
+			throw new Exception(R.SELENIUM_OPERATION_EXECUTOR_DONT_SUPPORT.get());
 		}
 		Exception real;
 		int repeat = 1;
@@ -1429,12 +1430,12 @@ public class SeleniumOperationExecutor extends AbstractOperationExecutor<WebElem
 				if (rows.isEmpty())
 				{
 					logger.error("Table is empty");
-					throw new RemoteException("Table is empty");
+					throw new RemoteException(R.SELENIUM_OPERATION_EXECUTOR_EMPTY_TABLE.get());
 				}
 
 				if (i < 0 || i > rows.size() - 1)
 				{
-					throw new RemoteException("Invalid index=[" + i + "]. Maximum index=[" + (rows.size() - 1) + "].");
+					throw new RemoteException(String.format(R.SELENIUM_OPERATION_EXECUTOR_INVALID_INDEX.get(), i, rows.size() -1));
 				}
 				return valueFromRow(rows.get(i), headers);
 			}
@@ -1565,7 +1566,7 @@ public class SeleniumOperationExecutor extends AbstractOperationExecutor<WebElem
 			Element firstTr = doc.select(tag_tr).first();
 			if (firstTr == null)
 			{
-				throw new RemoteException("Headers not found. Check your header locator or table locator");
+				throw new RemoteException(R.SELENIUM_OPERATION_EXECUTOR_HEADERS_NOT_FOUND.get());
 			}
 			headerElements = firstTr.children();
 			ArrayList<Element> newHeaders = new ArrayList<>();
@@ -1856,7 +1857,7 @@ public class SeleniumOperationExecutor extends AbstractOperationExecutor<WebElem
 		List<WebElement> rows = grid.findElement(By.xpath("child::" + tag_tbody)).findElements(By.xpath("child::" + tag_tr));
 		if (rows.isEmpty())
 		{
-			throw new RemoteException("Table is empty");
+			throw new RemoteException(R.SELENIUM_OPERATION_EXECUTOR_EMPTY_TABLE.get());
 		}
 		WebElement firstRow = rows.get(0);
 		markRowIsHeader(firstRow, true);
@@ -1900,7 +1901,7 @@ public class SeleniumOperationExecutor extends AbstractOperationExecutor<WebElem
 		List<WebElement> tbodyElements = grid.findElements(By.xpath("child::" + tag_tbody));
 		if (tbodyElements.isEmpty())
 		{
-			throw new RemoteException("Table is empty");
+			throw new RemoteException(R.SELENIUM_OPERATION_EXECUTOR_EMPTY_TABLE.get());
 		}
 
 		WebElement firstTbody = tbodyElements.get(0);
@@ -1908,7 +1909,7 @@ public class SeleniumOperationExecutor extends AbstractOperationExecutor<WebElem
 		List<WebElement> trs = firstTbody.findElements(By.xpath("child::tr"));
 		if (trs.isEmpty())
 		{
-			throw new RemoteException("Table is empty");
+			throw new RemoteException(R.SELENIUM_OPERATION_EXECUTOR_EMPTY_TABLE.get());
 		}
 
 		return trs.get(0).findElements(By.xpath("child::*"));
@@ -2094,7 +2095,7 @@ public class SeleniumOperationExecutor extends AbstractOperationExecutor<WebElem
 		Element first = doc.select(tag_tbody).first();
 		if (first == null)
 		{
-			throw new Exception("Can't find tag tbody in current table");
+			throw new Exception(R.SELENIUM_OPERATION_EXECUTOR_CANT_FIND_TAG_IN_TABLE.get());
 		}
 		return first.children();
 	}

@@ -12,6 +12,7 @@ package com.exactprosystems.jf.app;
 import com.exactprosystems.jf.api.app.*;
 import com.exactprosystems.jf.api.client.ICondition;
 import com.exactprosystems.jf.api.common.Converter;
+import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.api.conditions.StringCondition;
 import com.exactprosystems.jf.api.error.app.*;
 import org.apache.log4j.Logger;
@@ -227,7 +228,7 @@ public class SwingOperationExecutor extends AbstractOperationExecutor<ComponentF
 		{
 			logger.error(String.format("findAll(%s, %s)", owner, element));
 			logger.error(e.getMessage(), e);
-			throw new ElementNotFoundException("Unable to find component ", element);
+			throw new ElementNotFoundException(R.SWING_OPERATION_EXECUTOR_UNABLE_TO_FIND_ELEMENT.get(), element);
 		}
 	}
 
@@ -247,7 +248,7 @@ public class SwingOperationExecutor extends AbstractOperationExecutor<ComponentF
 		{
 			logger.error(String.format("find(%s, %s)", owner, element));
 			logger.error(e.getMessage(), e);
-			throw new ElementNotFoundException("Unable to find component ", element);
+			throw new ElementNotFoundException(R.SWING_OPERATION_EXECUTOR_UNABLE_TO_FIND_ELEMENT.get(), element);
 		}
 	}
 
@@ -288,12 +289,12 @@ public class SwingOperationExecutor extends AbstractOperationExecutor<ComponentF
 
 				if (row > table.getRowCount())
 				{
-					throw new TableOutOfBoundsException(String.format("Can't get value for row %s because size of rows is %s", row, table.getRowCount()));
+					throw new TableOutOfBoundsException(String.format(R.FX_TABLE_VIEW_TOOB_EXCEPTION.get(), row, table.getRowCount()));
 				}
 
 				if (column > table.getColumnCount())
 				{
-					throw new TableOutOfBoundsException(String.format("Can't get value for column %s because size of columns is %s", column, table.getColumnCount()));
+					throw new TableOutOfBoundsException(String.format(R.FX_TABLE_VIEW_COLUMN_TOOB_EXCEPTION.get(), column, table.getColumnCount()));
 				}
 
 				if(column < 0)
@@ -323,7 +324,7 @@ public class SwingOperationExecutor extends AbstractOperationExecutor<ComponentF
 		catch (Exception e)
 		{
 			logger.error(e.getMessage(), e);
-			throw new RemoteException("Error on find into table");
+			throw new RemoteException(R.SWING_OPERATION_EXECUTOR_ERROR_ON_FIND_INTO_TABLE.get());
 		}
 		return null;
 	}
@@ -563,7 +564,7 @@ public class SwingOperationExecutor extends AbstractOperationExecutor<ComponentF
 		{
 			if (!component.target.isEnabled())
 			{
-				throw new OperationNotAllowedException("Component " + component + " is disabled.");
+				throw new OperationNotAllowedException(String.format(R.SWING_OPERATION_EXECUTOR_COMPONENT_IS_DISABLED.get(), component));
 			}
 
 			this.currentRobot.waitForIdle();
@@ -635,7 +636,7 @@ public class SwingOperationExecutor extends AbstractOperationExecutor<ComponentF
 		{
 			if (!component.target.isEnabled())
 			{
-				throw new OperationNotAllowedException("Component " + component + " is disabled.");
+				throw new OperationNotAllowedException(String.format(R.SWING_OPERATION_EXECUTOR_COMPONENT_IS_DISABLED.get(), component));
 			}
 
 			this.currentRobot.waitForIdle();
@@ -758,7 +759,7 @@ public class SwingOperationExecutor extends AbstractOperationExecutor<ComponentF
 				}
 				else
 				{
-					throw new WrongParameterException("The menu element was not found in path '" + path + "'");
+					throw new WrongParameterException(String.format(R.SWING_OPERATION_EXECUTOR_MENU_ELEMENT_NOT_FOUND.get(), path));
 				}
 			}
 			else if (currentComponent instanceof JTree)
@@ -767,7 +768,7 @@ public class SwingOperationExecutor extends AbstractOperationExecutor<ComponentF
 				NodeList nodes = findNodesInTreeByXpath(convertTreeToXMLDoc(tree), path);
 				if (nodes.getLength() == 0)
 				{
-					throw new WrongParameterException("Path '" + path + "' is not found in the tree.");
+					throw new WrongParameterException(String.format(R.SWING_OPERATION_EXECUTOR_PATH_NOT_FOUND_IN_THE_TREE.get(), path));
 				}
 				TreePath[] rows = new TreePath[nodes.getLength()];
 				for (int i = nodes.getLength() - 1; i >= 0; i--)
@@ -823,7 +824,7 @@ public class SwingOperationExecutor extends AbstractOperationExecutor<ComponentF
 				JComboBox jComboBox = component.targetCastedTo(JComboBox.class);
 				if (!jComboBox.isEditable())
 				{
-					throw new Exception("ComboBox is not editable");
+					throw new Exception(R.SWING_OPERATION_EXECUTOR_COMBOBOX_IS_NOT_EDITABLE.get());
 				}
 				Component editorComponent = jComboBox.getEditor().getEditorComponent();
 				if (editorComponent instanceof JTextComponent)
@@ -1186,7 +1187,7 @@ public class SwingOperationExecutor extends AbstractOperationExecutor<ComponentF
 						String name = entry.getKey();
 						Integer colIndex = fieldIndexes.get(name);
 						if (colIndex == null) {
-							throw new WrongParameterException("The column '" + name + "' is not found. Possible values are: " + humanReadableHeaders(fieldIndexes));
+							throw new WrongParameterException(String.format(R.SWING_OPERATION_EXECUTOR_COLUMN_NOT_FOUND.get(), name, humanReadableHeaders(fieldIndexes)));
 						}
 						String value = String.valueOf(getValueTableCell(fixture, Integer.parseInt(rowsIndexes.get(0)), colIndex));
 
@@ -1204,7 +1205,7 @@ public class SwingOperationExecutor extends AbstractOperationExecutor<ComponentF
 				JTree tree = component.targetCastedTo(JTree.class);
 				int index = findIndex(tree, path);
 				if (index == -1) {
-					throw new WrongParameterException("Path '" + path + "' is not found in the tree.");
+					throw new WrongParameterException(String.format(R.SWING_OPERATION_EXECUTOR_PATH_NOT_FOUND_IN_THE_TREE.get(), path));
 				}
 				ret.put("value", convertJTreeToPathsList((JTree)component.target).get(index));
 				return ret;
@@ -2143,7 +2144,7 @@ public class SwingOperationExecutor extends AbstractOperationExecutor<ComponentF
 			case "JComboBox":	return ((JComboBox<?>) component).getModel();
 			case "JList":		return ((JList<?>) component).getModel();
 			case "JTabbedPane":	return new TabbedPaneModel((JTabbedPane) component);
-			default:			throw new Error("Element " + component.getName() + " does not have list model. Please try another element.");
+			default:			throw new Error(String.format(R.SWING_OPERATION_EXECUTOR_DOESNT_HAVE_LIST_MODEL.get(), component.getName()));
 		}
 	}
 

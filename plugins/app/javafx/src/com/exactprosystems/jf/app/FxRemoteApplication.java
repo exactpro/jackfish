@@ -12,6 +12,7 @@ package com.exactprosystems.jf.app;
 import com.exactprosystems.jf.api.app.*;
 import com.exactprosystems.jf.api.common.ProcessTools;
 import com.exactprosystems.jf.api.common.Str;
+import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.api.error.app.FeatureNotSupportedException;
 import com.exactprosystems.jf.api.error.app.NullParameterException;
 import com.exactprosystems.jf.api.error.app.WrongParameterException;
@@ -118,13 +119,13 @@ public class FxRemoteApplication extends RemoteApplication
 		String mainClass = args.get(FxAppFactory.mainClassName);
 		if (Str.IsNullOrEmpty(mainClass))
 		{
-			throw new NullParameterException("MainClass can't be empty or null");
+			throw new NullParameterException("MainClass");
 		}
 
 		String jarName = args.get(FxAppFactory.jarName);
 		if (Str.IsNullOrEmpty(jarName))
 		{
-			throw new NullParameterException("Jar can't be empty or null");
+			throw new NullParameterException("Jar");
 		}
 
 		String arguments = args.get(FxAppFactory.argsName);
@@ -286,7 +287,7 @@ public class FxRemoteApplication extends RemoteApplication
 				return new Dimension(width, height);
 			}
 
-			throw new FeatureNotSupportedException(String.format("Self %s is not dialog or window", owner));
+			throw new FeatureNotSupportedException(String.format(R.FX_REMOTE_APPLICATION_NOT_DIALOG_OR_WINDOW.get(), owner));
 		}, e ->
 		{
 			logger.error(String.format("getDialogSizeDerived %s", owner));
@@ -316,7 +317,7 @@ public class FxRemoteApplication extends RemoteApplication
 				return new Point(x, y);
 			}
 
-			throw new FeatureNotSupportedException(String.format("Self %s is not dialog or window", owner));
+			throw new FeatureNotSupportedException(String.format(R.FX_REMOTE_APPLICATION_NOT_DIALOG_OR_WINDOW.get(), owner));
 
 		}, e ->
 		{
@@ -634,7 +635,7 @@ public class FxRemoteApplication extends RemoteApplication
 				{
 					if (!this.isInit)
 					{
-						throw new Exception("Application is not init");
+						throw new Exception(R.FX_REMOTE_APPLICATION_IS_NOT_INIT_EXCEPTION.get());
 					}
 				}, func,log);
 	}
@@ -679,12 +680,12 @@ public class FxRemoteApplication extends RemoteApplication
 		{
 			if(!dialog.isResizable())
 			{
-				throw new FeatureNotSupportedException(String.format("Dialog '%s' can't resize.", dialog));
+				throw new FeatureNotSupportedException(String.format(R.FX_REMOTE_APPLICATION_DIALOG_CANT_RESIZE.get(), dialog));
 			}
 
 			if (resize != null)
 			{
-				throw new WrongParameterException("Can't resize. Please use width and height as parameters in action DialogResize for resizing current dialog.");
+				throw new WrongParameterException(R.FX_REMOTE_APPLICATION_USE_DIALOG_RESIZE.get());
 			}
 			else
 			{

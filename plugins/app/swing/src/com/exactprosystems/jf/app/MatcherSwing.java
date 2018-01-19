@@ -12,6 +12,7 @@ package com.exactprosystems.jf.app;
 import com.exactprosystems.jf.api.app.*;
 import com.exactprosystems.jf.api.common.Converter;
 import com.exactprosystems.jf.api.common.Str;
+import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.api.error.app.ElementNotFoundException;
 import com.exactprosystems.jf.api.error.app.NullParameterException;
 import org.apache.log4j.Logger;
@@ -70,7 +71,7 @@ public class MatcherSwing<T extends Component> extends GenericTypeMatcher<T>
             catch (Exception pe)
             {
                 logger.error(pe.getMessage(), pe);
-                throw new ElementNotFoundException("Wrong xpath: " + xpath, locator);
+                throw new ElementNotFoundException(String.format(R.MATCHER_SWING_WRONG_XPATH.get(), xpath), locator);
             }
         }
 

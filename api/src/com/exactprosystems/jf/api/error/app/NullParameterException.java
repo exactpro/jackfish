@@ -18,7 +18,7 @@ public class NullParameterException extends JFRemoteException
 
 	public NullParameterException(String message)
 	{
-		super(message, null);
+		super(String.format("%s can't be null or empty", message), null);
 	}
 
 	@Override

@@ -12,6 +12,7 @@ import com.exactprosystems.jf.api.app.*;
 import com.exactprosystems.jf.api.client.ICondition;
 import com.exactprosystems.jf.api.common.Converter;
 import com.exactprosystems.jf.api.common.Str;
+import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.api.conditions.Condition;
 import com.exactprosystems.jf.api.error.app.*;
 import org.apache.log4j.Logger;
@@ -115,11 +116,11 @@ public class WinOperationExecutorJNA extends AbstractOperationExecutor<UIProxyJN
 				List<UIProxyJNA> allOwners = findAll(null, owner);
 				if (allOwners.isEmpty())
 				{
-					throw new ElementNotFoundException("Owner was not found. Owner: ", owner);
+					throw new ElementNotFoundException(R.WIN_OPERATION_EXECUTOR_JNA_OWNER_NOT_FOUND.get(), owner);
 				}
 				if (allOwners.size() > 1)
 				{
-					throw new ElementNotFoundException(allOwners.size() + " owners were found instead 1. Owner: ", owner);
+					throw new ElementNotFoundException(String .format(R.WIN_OPERATION_EXECUTOR_JNA_TOO_MUCH_OWNERS.get(), allOwners.size()), owner);
 				}
 				ownerElement = allOwners.get(0);
 			}
@@ -154,7 +155,7 @@ public class WinOperationExecutorJNA extends AbstractOperationExecutor<UIProxyJN
 			}
 			if (list.size() > 1)
 			{
-				throw new ElementNotFoundException("Found " + list.size() + " elements instead 1. Element : ", element);
+				throw new ElementNotFoundException(String.format(R.WIN_OPERATION_EXECUTOR_JNA_TOO_MUCH_ELEMENTS.get(), list.size()), element);
 			}
 			return list.get(0);
 		}
@@ -436,7 +437,7 @@ public class WinOperationExecutorJNA extends AbstractOperationExecutor<UIProxyJN
 					NodeList nodes = findNodesInTreeByXpath(convertTreeToXMLDoc(component), path);
 					if (nodes.getLength() == 0)
 					{
-						throw new WrongParameterException("Path '" + path + "' is not found in the tree.");
+						throw new WrongParameterException(String.format(R.WIN_OPERATION_EXECUTOR_JNA_NO_PATH_IN_TREE.get(), path));
 					}
 
 					for (int i = nodes.getLength() - 1; i >= 0; i--)
@@ -777,7 +778,7 @@ public class WinOperationExecutorJNA extends AbstractOperationExecutor<UIProxyJN
 		{
 			if (!AttributeKind.isSupported(name))
 			{
-				throw new OperationNotAllowedException("Unsupported attribute value. Can use only : " + Arrays.toString(AttributeKind.values()));
+				throw new OperationNotAllowedException(String.format(R.WIN_OPERATION_EXECUTOR_JNA_UNSUPPORTED_ATTR_VALUE.get(), Arrays.toString(AttributeKind.values())));
 			}
 
 			AttributeKind kind = AttributeKind.valueOf(name.toUpperCase());
@@ -889,7 +890,7 @@ public class WinOperationExecutorJNA extends AbstractOperationExecutor<UIProxyJN
 			}
 			if (index > elementsList.size() || index < 0)
 			{
-				throw new WrongParameterException("Cant scroll to index " + index + ". Child size : " + elementsList.size());
+				throw new WrongParameterException(String.format(R.WIN_OPERATION_EXECUTOR_JNA_CANT_SCROLL_TO_INDEX.get(), index, elementsList.size()));
 			}
 
 			UIProxyJNA element = elementsList.get(index);
@@ -1285,7 +1286,7 @@ public class WinOperationExecutorJNA extends AbstractOperationExecutor<UIProxyJN
 			int foundElementCount = arr[0];
 			if (foundElementCount > 1)
 			{
-				throw new WrongParameterException("Inside current component found " + foundElementCount + " elements with name " + selectedText);
+				throw new WrongParameterException(String.format(R.WIN_OPERATION_EXECUTOR_JNA_INSIDE_CURRENT_COMPONENT.get(), foundElementCount, selectedText));
 			}
 			this.logger.info("Getting array : " + Arrays.toString(arr));
 			int itemLength = arr[1];
@@ -1333,7 +1334,7 @@ public class WinOperationExecutorJNA extends AbstractOperationExecutor<UIProxyJN
 		}
 		else
 		{
-			throw new RemoteException("returned rectangle not matches pattern " + RECTANGLE_PATTERN+" , rect : " + stringRect);
+			throw new RemoteException(String.format(R.WIN_OPERATION_EXECUTOR_JNA_RECTANGLE_PATTERN_EXCEPTION.get(), RECTANGLE_PATTERN, stringRect));
 		}
 		return rectangle;
 	}

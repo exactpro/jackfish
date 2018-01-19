@@ -12,6 +12,7 @@ package com.exactprosystems.jf.app;
 import com.exactprosystems.jf.api.app.*;
 import com.exactprosystems.jf.api.common.ProcessTools;
 import com.exactprosystems.jf.api.common.Str;
+import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.api.error.app.FeatureNotSupportedException;
 import com.exactprosystems.jf.api.error.app.NullParameterException;
 import com.exactprosystems.jf.api.error.app.WrongParameterException;
@@ -137,7 +138,7 @@ public class SwingRemoteApplication extends RemoteApplication
 			}
 			if (app == null)
 			{
-				throw new Exception("Can't initialize application");
+				throw new Exception(R.SWING_REMOTE_APP_CANT_INIT_APP.get());
 			}
 
 			this.currentRobot = new RobotListener(BasicRobot.robotWithCurrentAwtHierarchy());
@@ -161,12 +162,12 @@ public class SwingRemoteApplication extends RemoteApplication
 		String mainClass = args.get(SwingAppFactory.mainClassName);
 		if (Str.IsNullOrEmpty(mainClass))
 		{
-			throw new NullParameterException("MainClass can't be null");
+			throw new NullParameterException("MainClass");
 		}
 		String jar = args.get(SwingAppFactory.jarName);
 		if (Str.IsNullOrEmpty(jar))
 		{
-			throw new NullParameterException("Jar can't be null");
+			throw new NullParameterException("Jar");
 		}
 		String arg = args.get(SwingAppFactory.argsName);
 
@@ -329,7 +330,7 @@ public class SwingRemoteApplication extends RemoteApplication
 		}
 		else
 		{
-			throw new FeatureNotSupportedException(String.format("Self %s is not in a Window", owner));
+			throw new FeatureNotSupportedException(String.format(R.SWING_REMOTE_APP_SELF_IS_NOT_A_WINDOW.get(), owner));
 		}
 	}
 
@@ -343,7 +344,7 @@ public class SwingRemoteApplication extends RemoteApplication
 		}
 		else
 		{
-			throw new FeatureNotSupportedException(String.format("Self %s is not in a Dialog or Frame", owner));
+			throw new FeatureNotSupportedException(String.format(R.SWING_REMOTE_APP_SELF_IS_NOT_DIALOG_OR_FRAME.get(), owner));
 		}
 	}
 
@@ -654,7 +655,7 @@ public class SwingRemoteApplication extends RemoteApplication
 			}
 			else
 			{
-				throw new FeatureNotSupportedException(String.format("Self %s is not in a Window", owner));
+				throw new FeatureNotSupportedException(String.format(R.SWING_REMOTE_APP_SELF_IS_NOT_A_WINDOW.get(), owner));
 			}
 		}
 		catch (RemoteException e)
@@ -718,7 +719,7 @@ public class SwingRemoteApplication extends RemoteApplication
 			}
 			if(window instanceof JDialog)
 			{
-				throw new WrongParameterException("Can't resize. Please use width and height as parameters in action DialogResize for resizing current dialog.");
+				throw new WrongParameterException(R.SWING_REMOTE_APP_USE_DIALOG_RESIZE.get());
 			}
 		}
 		else

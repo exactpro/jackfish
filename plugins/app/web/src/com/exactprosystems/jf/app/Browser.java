@@ -10,6 +10,7 @@
 package com.exactprosystems.jf.app;
 
 import com.exactprosystems.jf.api.common.Str;
+import com.exactprosystems.jf.api.common.i18n.R;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeDriverService;
@@ -99,7 +100,7 @@ public enum Browser
 			case CHROME:
 				if (Str.IsNullOrEmpty(System.getProperty(ChromeDriverService.CHROME_DRIVER_EXE_PROPERTY)))
 				{
-					throw new Exception("You need set the 'ChromeDriverPath' parameter on plugin to valid value");
+					throw new Exception(R.BROWSER_SET_CHROME_PATH_EXCEPTION.get());
 				}
 				if(isDriverLogging)
 				{
@@ -117,7 +118,7 @@ public enum Browser
 			case INTERNETEXPLORER:
 				if (Str.IsNullOrEmpty(System.getProperty(InternetExplorerDriverService.IE_DRIVER_EXE_PROPERTY)))
 				{
-					throw new Exception("You need set the 'IEDriverPath' parameter on plugin to valid value");
+					throw new Exception(R.BROWSER_SET_IE_PATH_EXCEPTION.get());
 				}
 				if (usePrivateMode)
 				{
@@ -157,7 +158,7 @@ public enum Browser
 				return new SafariDriver();
 
 			default:
-				throw new Exception("Unknown browser : " + this.browserName);
+				throw new Exception(String.format(R.BROWSER_UNKNOWN.get(), this.browserName));
 		}
 
 	}
