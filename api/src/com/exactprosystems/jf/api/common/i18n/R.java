@@ -2470,7 +2470,7 @@ public enum R
 
 
 
-	public static final String RESOURCE_BUNDLE_PATH = "com/exactprosystems/jf/ToolResourceBundle";
+	public static final String RESOURCE_BUNDLE_PATH = "com/exactprosystems/jf/api/ToolResourceBundle";
 	private static final ResourceBundle bundle = ResourceBundle.getBundle(RESOURCE_BUNDLE_PATH, new UTF8Control());
 
 
