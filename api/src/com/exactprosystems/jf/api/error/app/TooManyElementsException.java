@@ -10,6 +10,7 @@
 package com.exactprosystems.jf.api.error.app;
 
 import com.exactprosystems.jf.api.app.Locator;
+import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.api.error.ErrorKind;
 import com.exactprosystems.jf.api.error.JFRemoteException;
 
@@ -29,7 +30,7 @@ public class TooManyElementsException extends JFRemoteException
 
 	public TooManyElementsException(Locator locator)
 	{
-		super("Too many elements were found. Element: " + locator, null);
+		super(String.format(R.TOO_MANY_ELEMENTS_EXCEPTION_MESSAGE.get(), locator), null);
 	}
 
 	@Override

@@ -10,6 +10,7 @@
 package com.exactprosystems.jf.api.error.common;
 
 import com.exactprosystems.jf.api.common.IMatrixItem;
+import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.api.error.ErrorKind;
 import com.exactprosystems.jf.api.error.JFException;
 
@@ -19,12 +20,12 @@ public class MatrixException extends JFException
 
 	public MatrixException(int lineNumber, IMatrixItem item, Exception ex)
 	{
-		super("Matrix error in #" + lineNumber + (item == null ? " " : " '" + item.getItemName() + "' ") + ex.getMessage());
+		super(R.MATRIX_EXCEPTION_MESSAGE.get() + lineNumber + (item == null ? " " : " '" + item.getItemName() + "' ") + ex.getMessage());
 	}
 	
 	public MatrixException(int lineNumber, IMatrixItem item, String msg)
 	{
-		super("Matrix error in #" + lineNumber + (item == null ? " " : " '" + item.getItemName() + "' ") + msg);
+		super(R.MATRIX_EXCEPTION_MESSAGE.get() + lineNumber + (item == null ? " " : " '" + item.getItemName() + "' ") + msg);
 	}
 
 

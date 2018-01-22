@@ -9,6 +9,7 @@
 
 package com.exactprosystems.jf.api.error.app;
 
+import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.api.error.ErrorKind;
 import com.exactprosystems.jf.api.error.JFRemoteException;
 
@@ -18,7 +19,7 @@ public class NullParameterException extends JFRemoteException
 
 	public NullParameterException(String message)
 	{
-		super(String.format("%s can't be null or empty", message), null);
+		super(String.format(R.NULL_PARAMETER_EXCEPTION_MESSAGE.get(), message), null);
 	}
 
 	@Override

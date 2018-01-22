@@ -9,6 +9,7 @@
 package com.exactprosystems.jf.api.error.app;
 
 import com.exactprosystems.jf.api.app.Locator;
+import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.api.error.ErrorKind;
 import com.exactprosystems.jf.api.error.JFRemoteException;
 
@@ -23,7 +24,7 @@ public class ElementNotFoundException extends JFRemoteException
 
 	public ElementNotFoundException(int x, int y)
 	{
-		super(String.format("Element not found by location (%d,%d)", x, y), null);
+		super(String.format(R.ELEMENT_NOT_FOUND_EXCEPTION_BY_LOCATION.get(), x, y), null);
 	}
 
 	public ElementNotFoundException(String msg, Locator locator)
@@ -33,7 +34,7 @@ public class ElementNotFoundException extends JFRemoteException
 
 	public ElementNotFoundException(Locator locator)
 	{
-		super("No one element was found. Element: " + locator, null);
+		super(String.format(R.ELEMENT_NOT_FOUND_EXCEPTION_NO_ELEMENTS.get(), locator), null);
 	}
 
 	@Override
