@@ -2202,6 +2202,15 @@ public enum R
 	//region plugins
 	PLUGIN_COMMON_DESCRIPTION,
 
+	//region plugins.client
+	FIX_CODEC_BEGINSTRING_IS_EMPTY,
+	FIX_CODEC_UNKNOWN_VALUE,
+	FIX_CODEC_UNKNOWN_GROUP,
+	FIX_CODEC_CONVERT_VALUE_EXCEPTION,
+	SFC_CLIENT_NOT_SUPPORTED,
+	SFC_CLIENT_TIMEOUT_MUST_BE_POSITIVE,
+	//endregion
+
 	//region plugins.app.web
 	WEB_PLUGIN_DESCRIPTION,
 	WEB_PLUGIN_DIFFERENCE,
@@ -2401,6 +2410,7 @@ public enum R
 	//endregion
 
 	//region api.service
+	SERVICE_HELPER_POSSIBILITY_IS_NOT_ALLOWED,
 	//endregion
 
     //endregion
@@ -2463,7 +2473,6 @@ public enum R
 	COMMON_EXPRESSION,
 	COMMON_RESULT,
 	COMMON_OK,
-
 
 
 	;

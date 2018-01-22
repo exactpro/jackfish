@@ -9,6 +9,8 @@
 
 package com.exactprosystems.jf.api.service;
 
+import com.exactprosystems.jf.api.common.i18n.R;
+
 import java.util.HashSet;
 import java.util.Set;
 
@@ -36,7 +38,7 @@ public class ServiceHelper
 			}
 		}
 		
-		throw new ServicePossibilityIsDisabled(String.format("For client %s possibility %s is not allowed.", clazz.getSimpleName(), possibility.getDescription()));
+		throw new ServicePossibilityIsDisabled(String.format(R.SERVICE_HELPER_POSSIBILITY_IS_NOT_ALLOWED.get(), clazz.getSimpleName(), possibility.getDescription()));
 	}
 	
 
